@@ -1,199 +1,114 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85EF36D17;
-	Mon,  5 May 2025 11:22:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0F287E0E4;
+	Mon,  5 May 2025 11:24:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746444176; cv=none; b=tvCpk4URv8aueV8kNj8GhdKdUste2cFpmRwAKBLuGUyS+Z7DFkpUw1Gq26IIH9RICEMmiOYT8qGROc0r17x+C4xwijeVzlJI7aFlCjHFUWj0+1SCVNEcpHdAQxjHO6xkopM2QdwSpjXmVgNgSpvT648bNJLkdQU7QKhVMr2t67M=
+	t=1746444278; cv=none; b=TrVHSVCxKMoDQ+6E0VRrWikiFtJ8FFhax3k34/kINL5ZQltpGlvw0mRumbZv0iSMiqgSioh2eBMMSELdJh5Mn/1yahVJl4u0Qik77+FnnU5lqowqaiX1hu+5RljSBM/uznmkNsR326Ufhk2ktcUeX1Zyv+l8Wz2NDD2RrZVNpJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746444176; c=relaxed/simple;
-	bh=X7f/cj2HyCw5T24zVizPuI3ejjSC/I4KfwGIek8QsVE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=o7YqcQRSwuFs7Zqfr8QgTGbN95iwsOlY/oQfHzLCob3KTR79CkYAn4SR2vWbek8m0Ryys/Iru9Ntk5fMTCoGQXYOApNQ37TvYrLWEGPZM3gQc80KPvzfZSJR3ChgMxRF9cwgE66sD1ku0dawO3jqHZmngoLgT+0+xYY3IG3XqGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=dngknP3B; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1746444278; c=relaxed/simple;
+	bh=iqwoq9xbHDlu5Z9FDtyIPBE0+xJrB8yd2XeOEFojo3I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HrF8xqzV8eeM8A4H49Q34JzbwbM353RvSQXAa+jD2ehrHQATTgEcs/VWdAAbhY+KsYjwz0KSe6W5XRae4pjng3G9NVQ+cLOiwolZjqXwzoM5uopLtSOuUuSFIvn6wHQjGlfSRrjP4heOep1p7dWuqJOFrAGwkiFlFD5cPKqQWps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U6py1Kug; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="dngknP3B"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 8428D1FCEE;
-	Mon,  5 May 2025 11:22:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1746444170;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BjQD6/4ZASrQpmuxOr/8hzy+9Fqcd4Ygjsti998CXt4=;
-	b=dngknP3B2/vVmzmsbaZxjuZILonwn1c7s6KP+leUH2BrK41WmAJ3r2zE0ccLwPB4wpBLzT
-	JUXW0vkq4VwyeHl3/ucynqrRsnTi85cb3eztsVpv+p4OzzL17kaM2dsaLTtnLxkh6Xc/ON
-	clU6u/QuPeMjTz7YdipPU6gbqmxfgQX+ipKfIVjFyyyFkCHwf5ParQX1yatiTBo/obF9nC
-	Ou5RRD21tdkElQ9rvlhNgLylZpNhJjsmny3GfYwbTSQvCLifHN++17o8zo67wunEZCHZgt
-	JgH0CwAwK+UOKoPI5wri7ICjZoPWrJC2d36EjvwpV1hPU+SCbPyP6aC0i+8Xlg==
-Date: Mon, 5 May 2025 13:22:47 +0200
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-To: Cosmin Tanislav <demonsingur@gmail.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Wolfram Sang
- <wsa+renesas@sang-engineering.com>, Mauro Carvalho Chehab
- <mchehab@kernel.org>, Romain Gantois <romain.gantois@bootlin.com>, Arnd
- Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-media@vger.kernel.org
-Subject: Re: [PATCH v4 3/9] i2c: atr: split up i2c_atr_get_mapping_by_addr()
-Message-ID: <20250505132247.3ba8af2a@booty>
-In-Reply-To: <f3bf2c93-31ac-4881-9ca3-ddc33cf3ded3@gmail.com>
-References: <20250428102516.933571-1-demonsingur@gmail.com>
-	<20250428102516.933571-4-demonsingur@gmail.com>
-	<20250430163307.528671a8@booty>
-	<f3bf2c93-31ac-4881-9ca3-ddc33cf3ded3@gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U6py1Kug"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 205FBC4CEE4;
+	Mon,  5 May 2025 11:24:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746444277;
+	bh=iqwoq9xbHDlu5Z9FDtyIPBE0+xJrB8yd2XeOEFojo3I=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=U6py1KugRFeX3NyyN8rGouoR5IKVV9GVNlAdttpWOBUyLnBOTqe7MwxQgrxVMQ/OV
+	 Dz6RAuH7sLDee1t77W3uMUgzoRuKExk4Xysuh5WFeXV+24nY0ro6dZeEIfb/N54CFA
+	 Lhqcj9jw/pFhAAHKBLK3Nu0SN7nxOYM+jJ7V811GtQ1G4YDLk7coDZHyCBjYkH2ppc
+	 I1NBNLBKdtVv2p3d/TgfTRbD8zo1GPo5D8fK4ypREpwg4vqZ1rR4CuNyvN7Mlk9UJm
+	 vNE1mmS+NETG5Vwz8F7PtQjFEXClQ+LA9xpNHzDV17CMqWV86wJM7E4rBuhda+ZHiR
+	 NVVuhlh17Pwvg==
+Message-ID: <604c4257-619f-4433-a02f-b6e1f4144ecb@kernel.org>
+Date: Mon, 5 May 2025 13:24:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] MIPS: Loongson64: Add missing '#interrupt-cells' for
+ loongson64c_ls7a
+To: WangYuli <wangyuli@uniontech.com>, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, tsbogend@alpha.franken.de
+Cc: devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
+ linux-kernel@vger.kernel.org, jiaxun.yang@flygoat.com,
+ chenhuacai@kernel.org, yangtiezhu@loongson.cn, zhanjun@uniontech.com,
+ niecheng1@uniontech.com, guanwentao@uniontech.com
+References: <6E749D043BC7BD99+20250416034548.805069-1-wangyuli@uniontech.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <6E749D043BC7BD99+20250416034548.805069-1-wangyuli@uniontech.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkedtleeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeelffefgfehhfdtvdefueefieevkefggfelkeeiudetkeektedvhedukefgvddvnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegsohhothihpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtohepuggvmhhonhhsihhnghhurhesghhmrghilhdrtghomhdprhgtphhtthhopehtohhmihdrvhgrlhhkvghinhgvnhesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtohepfihsrgdorhgvnhgvs
- hgrshesshgrnhhgqdgvnhhgihhnvggvrhhinhhgrdgtohhmpdhrtghpthhtohepmhgthhgvhhgrsgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhomhgrihhnrdhgrghnthhoihhssegsohhothhlihhnrdgtohhmpdhrtghpthhtoheprghrnhgusegrrhhnuggsrdguvgdprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehlihhnuhigqdhivdgtsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-GND-Sasl: luca.ceresoli@bootlin.com
 
-On Mon, 5 May 2025 13:26:54 +0300
-Cosmin Tanislav <demonsingur@gmail.com> wrote:
-
-> On 4/30/25 5:33 PM, Luca Ceresoli wrote:
-> > On Mon, 28 Apr 2025 13:25:08 +0300
-> > Cosmin Tanislav <demonsingur@gmail.com> wrote:
-> >   
-> >> The i2c_atr_get_mapping_by_addr() function handles three separate
-> >> usecases: finding an existing mapping, creating a new mapping, or
-> >> replacing an existing mapping if a new mapping cannot be created
-> >> because there aren't enough aliases available.
-> >>
-> >> Split up the function into three different functions handling its
-> >> individual usecases to prepare for better usage of each one.
-> >>
-> >> Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>  
-> > 
-> > This function has become quite complex over time, so this looks like a
-> > good cleanup by itself even not counting the advantages coming with the
-> > following patches.
-> > 
-> > I have only one small remark, see below.
-> >   
-> >> diff --git a/drivers/i2c/i2c-atr.c b/drivers/i2c/i2c-atr.c
-> >> index 939fb95fe781..184c57c31e60 100644
-> >> --- a/drivers/i2c/i2c-atr.c
-> >> +++ b/drivers/i2c/i2c-atr.c
-> >> @@ -239,9 +239,23 @@ static void i2c_atr_release_alias(struct i2c_atr_alias_pool *alias_pool, u16 ali
-> >>   	spin_unlock(&alias_pool->lock);
-> >>   }
-> >>   
-> >> -/* Must be called with alias_pairs_lock held */
-> >>   static struct i2c_atr_alias_pair *
-> >> -i2c_atr_get_mapping_by_addr(struct i2c_atr_chan *chan, u16 addr)
-> >> +i2c_atr_find_mapping_by_addr(struct i2c_atr_chan *chan, u16 addr)
-> >> +{
-> >> +	struct i2c_atr_alias_pair *c2a;
-> >> +
-> >> +	lockdep_assert_held(&chan->alias_pairs_lock);
-> >> +
-> >> +	list_for_each_entry(c2a, &chan->alias_pairs, node) {
-> >> +		if (c2a->addr == addr)
-> >> +			return c2a;
-> >> +	}
-> >> +
-> >> +	return NULL;
-> >> +}
-> >> +
-> >> +static struct i2c_atr_alias_pair *
-> >> +i2c_atr_replace_mapping_by_addr(struct i2c_atr_chan *chan, u16 addr)
-> >>   {
-> >>   	struct i2c_atr *atr = chan->atr;
-> >>   	struct i2c_atr_alias_pair *c2a;
-> >> @@ -254,41 +268,57 @@ i2c_atr_get_mapping_by_addr(struct i2c_atr_chan *chan, u16 addr)
-> >>   
-> >>   	alias_pairs = &chan->alias_pairs;
-> >>   
-> >> -	list_for_each_entry(c2a, alias_pairs, node) {
-> >> -		if (c2a->addr == addr)
-> >> -			return c2a;
-> >> +	if (unlikely(list_empty(alias_pairs)))
-> >> +		return NULL;
-> >> +
-> >> +	list_for_each_entry_reverse(c2a, alias_pairs, node) {
-> >> +		if (!c2a->fixed) {
-> >> +			found = true;
-> >> +			break;
-> >> +		}
-> >>   	}
-> >>   
-> >> +	if (!found)
-> >> +		return NULL;
-> >> +
-> >> +	atr->ops->detach_addr(atr, chan->chan_id, c2a->addr);
-> >> +	c2a->addr = addr;
-> >> +
-> >> +	list_move(&c2a->node, alias_pairs);
-> >> +
-> >> +	alias = c2a->alias;
-> >> +
-> >> +	ret = atr->ops->attach_addr(atr, chan->chan_id, c2a->addr, c2a->alias);
-> >> +	if (ret) {
-> >> +		dev_err(atr->dev, "failed to attach 0x%02x on channel %d: err %d\n",
-> >> +			addr, chan->chan_id, ret);
-> >> +		i2c_atr_destroy_c2a(&c2a);
-> >> +		i2c_atr_release_alias(chan->alias_pool, alias);
-> >> +		return NULL;
-> >> +	}
-> >> +
-> >> +	return c2a;
-> >> +}
-> >> +
-> >> +static struct i2c_atr_alias_pair *
-> >> +i2c_atr_create_mapping_by_addr(struct i2c_atr_chan *chan, u16 addr)  
-> > 
-> > I would move the _create function before the _replace one, because
-> > that's the logical order in which they are called.
-> >   
+On 16/04/2025 05:45, WangYuli wrote:
+> Similar to commit 98a9e2ac3755 ("MIPS: Loongson64: DTS: Fix msi node for ls7a").
 > 
-> Sadly the diff actually becomes bigger by doing this.
-> before: 78 insertions(+), 32 deletions(-)
-> after: 84 insertions(+), 38 deletions(-)
+> Fix follow warnings:
+>   arch/mips/boot/dts/loongson/loongson64c_4core_ls7a.dts:28.31-36.4: Warning (interrupt_provider): /bus@10000000/msi-controller@2ff00000: Missing '#interrupt-cells' in interrupt provider
+>   arch/mips/boot/dts/loongson/loongson64c_4core_ls7a.dtb: Warning (interrupt_map): Failed prerequisite 'interrupt_provider'
+> 
+> Fixes: 24af105962c8 ("MIPS: Loongson64: DeviceTree for LS7A PCH")
+> Tested-by: WangYuli <wangyuli@uniontech.com>
 
-The diff size is not at all the primary goal. I just epected it would
-reduce, but OK, it does not matter.
+This is redundant.
 
-> If we were to put things in a logical order then should we put _find()
-> after create(), or after replace()? There's no specific order in that
-> case. I think we should keep things as-is as it matches the previous
-> branches of the code, just split into separate functions.
+> Signed-off-by: WangYuli <wangyuli@uniontech.com>
 
-Definitely find, create, replace. It's the order in which they are
-executed, as clearly visible i2c_atr_get_mapping_by_addr(). It's also
-the logical order in the old code, even though it is visually looking
-reverse:
+This implies testing... unless you mean that everything you send is by
+default untested? But then please read carefully submitting patches.
 
-[old] i2c_atr_find_mapping_by_addr():
-  - list_for_each_entry()   # then new _find
-  - i2c_atr_reserve_alias() # this is the 1st half of the new _create
-  - if (success)
-    - i2c_atr_create_c2a()  # 2nd half of the new _create
-  - else
-    - list_for_each_entry_reverse... atr->ops->detach_addr...
-      list_move...          # the new _replace
-
-This has of course no impact on the actual executed code, it's just a
-matter of code organization which I believe should be intuitive when
-doable with a small effort.
-
-Luca
-
--- 
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Best regards,
+Krzysztof
