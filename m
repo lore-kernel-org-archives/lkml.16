@@ -1,44 +1,54 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A54833839CF;
-	Mon,  5 May 2025 23:09:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0101A381DF5;
+	Mon,  5 May 2025 23:09:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486597; cv=none; b=QX2tJx7NBSWbWvksQ+8VAsTMUP0dF5axFlUAvQ6NDMik2LkryDvvyf0u34qKQ5qEk/C2ioXfjHpwhOJSL7njB9njo1tkHqNboHCItkwPvBThHd8rlu6cDXv0EhI2a9cUaVMvOj++shTHRvXmYvIcrRsFL38SpL0GjfbLlhE9FeA=
+	t=1746486571; cv=none; b=BgKw0fW5RDFRNBfiUenER61kxR4odS2zNtiRyb5pp6oermC5Jsbe3Gf0uIA1TIMp7j/qGQD2Dvjq7OE9rFN7Eigw7uyMcD9xNrJMxp/qWzEpjKeCfxChozXSzmVHvjTXMiRKtxD3Tm1NNclcbGdp90DL6ct6oGGzhzv+zfdhtss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486597; c=relaxed/simple;
-	bh=lkCow9aFHOi/x4Px6TzwC+L8hhao+BnCcCkhTxHb3WM=;
+	s=arc-20240116; t=1746486571; c=relaxed/simple;
+	bh=nzUV9tgjnukF7hG64rvR+C0pNLtSPqeM60qMohGRKDo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=E+w1x38x0IsoHcI9I3Nn0nlKxD6+3R4DK8sBcRpNqTyJiH/muRWrGF6e6s9xOIeqY/VTT7+tljXFaVh7aCvQ/dFUVbHnaav09YdvXiI92jDB3HzeJdM/N/Cpue7mfdkJl/OzCsL51kYIi5hnPXHjUUdC+W7A6Dkhp38j73FHaO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FnJSKJPp; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=b0GHi41rzUHUqdVO6bIgqBuOiVUtLBnHNu2NfK2S/iB8MDGw8CKYPliflKPJnhLHzwCuMlT2iCVdjGce5nKGcRrIVx4Ybsbp1SK2T2k7njykJGSOsPGteQXWnR5mn/wzepBlOez+EaB6AM+zYohFk4dsMhmzw+6nF20RwirZ2Fk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iY69dcXy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FnJSKJPp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79663C4CEED;
-	Mon,  5 May 2025 23:09:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iY69dcXy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82ACBC4CEE4;
+	Mon,  5 May 2025 23:09:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486596;
-	bh=lkCow9aFHOi/x4Px6TzwC+L8hhao+BnCcCkhTxHb3WM=;
+	s=k20201202; t=1746486569;
+	bh=nzUV9tgjnukF7hG64rvR+C0pNLtSPqeM60qMohGRKDo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FnJSKJPp0LiRm+JPKW6e581Bf8SdxrAxQC3NaF7EU+j6HndnwWWJhZUsi2/hGzbA/
-	 efA6a2HNpgoHGEyV33EqjYCDBDeSrUPa09xuARdodeTGSRHQvoI5BhH4GYO4jo+bHk
-	 XhByQkHCR+s2t4OvJGK0/okZtmHFzMn3iazm/BurqoXW/SHnbLMUwUp6auDroKasgp
-	 bE2MmR01iL/bDYtrk6MEJKLNynEI7zOapZ442BCNPuMnou1fOiGwa7JqQnVMplZTpx
-	 ygEkRhdcZjiJ/IbXxdjbU2bjFOJWwWtW0FDWgtVoppCp+KXtgNSQykZvb/4FtXwm8S
-	 WD3IsdwTyHC+w==
+	b=iY69dcXyv2P9OsxFJIgxV9pC3E1XHqczc3a8sR//bi5f2vH69AB9CCVI8SHuO4tgU
+	 ZeshqbNKaNeUWRbjRmJh5L77xfT9yJ6s2PYuiBZdTXCqvhUlVrHm6d7w4rUjoRnuKA
+	 5/JXqPqtiMHb+lbS6NGPLhBVHeap98go4cwb+JKa8BcX7J3rCRDji8pt+bKfWPkD/m
+	 eYjF/zInNGrQRLaKPzHgWGjFthl1JPb22Nwb5qSOZb55qmcGhQEUmzIk1s7xfRuffp
+	 ev2Qw9c/S+j9+HQVAw0XdLfjbFCY4EfoqDABfscUQBcQfDv84uMLPOkLNU5z913Jna
+	 KbhAY8AgjeKkQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Hector Martin <marcan@marcan.st>,
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Sven Peter <sven@svenpeter.dev>,
+Cc: Alexander Sverdlin <alexander.sverdlin@siemens.com>,
+	Siddharth Vadapalli <s-vadapalli@ti.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Jakub Kicinski <kuba@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	j@jannau.net,
-	asahi@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.1 109/212] soc: apple: rtkit: Implement OSLog buffers properly
-Date: Mon,  5 May 2025 19:04:41 -0400
-Message-Id: <20250505230624.2692522-109-sashal@kernel.org>
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	pabeni@redhat.com,
+	alexander.sverdlin@gmail.com,
+	aleksander.lobakin@intel.com,
+	lorenzo@kernel.org,
+	hkallweit1@gmail.com,
+	u.kleine-koenig@baylibre.com,
+	nicolas.dichtel@6wind.com,
+	linux-omap@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.1 095/212] net: ethernet: ti: cpsw_new: populate netdev of_node
+Date: Mon,  5 May 2025 19:04:27 -0400
+Message-Id: <20250505230624.2692522-95-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505230624.2692522-1-sashal@kernel.org>
 References: <20250505230624.2692522-1-sashal@kernel.org>
@@ -53,154 +63,35 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.1.136
 Content-Transfer-Encoding: 8bit
 
-From: Hector Martin <marcan@marcan.st>
+From: Alexander Sverdlin <alexander.sverdlin@siemens.com>
 
-[ Upstream commit a06398687065e0c334dc5fc4d2778b5b87292e43 ]
+[ Upstream commit 7ff1c88fc89688c27f773ba956f65f0c11367269 ]
 
-Apparently nobody can figure out where the old logic came from, but it
-seems like it has never been actually used on any supported firmware to
-this day. OSLog buffers were apparently never requested.
+So that of_find_net_device_by_node() can find CPSW ports and other DSA
+switches can be stacked downstream. Tested in conjunction with KSZ8873.
 
-But starting with 13.3, we actually need this implemented properly for
-MTP (and later AOP) to work, so let's actually do that.
-
-Signed-off-by: Hector Martin <marcan@marcan.st>
-Reviewed-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-Link: https://lore.kernel.org/r/20250226-apple-soc-misc-v2-2-c3ec37f9021b@svenpeter.dev
-Signed-off-by: Sven Peter <sven@svenpeter.dev>
+Reviewed-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Alexander Sverdlin <alexander.sverdlin@siemens.com>
+Link: https://patch.msgid.link/20250303074703.1758297-1-alexander.sverdlin@siemens.com
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/apple/rtkit-internal.h |  1 +
- drivers/soc/apple/rtkit.c          | 56 ++++++++++++++++++------------
- 2 files changed, 35 insertions(+), 22 deletions(-)
+ drivers/net/ethernet/ti/cpsw_new.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/soc/apple/rtkit-internal.h b/drivers/soc/apple/rtkit-internal.h
-index 24bd619ec5e48..1da1dfd9cb199 100644
---- a/drivers/soc/apple/rtkit-internal.h
-+++ b/drivers/soc/apple/rtkit-internal.h
-@@ -48,6 +48,7 @@ struct apple_rtkit {
+diff --git a/drivers/net/ethernet/ti/cpsw_new.c b/drivers/net/ethernet/ti/cpsw_new.c
+index 6e70aa1cc7bf1..42684cb83606a 100644
+--- a/drivers/net/ethernet/ti/cpsw_new.c
++++ b/drivers/net/ethernet/ti/cpsw_new.c
+@@ -1411,6 +1411,7 @@ static int cpsw_create_ports(struct cpsw_common *cpsw)
+ 		ndev->netdev_ops = &cpsw_netdev_ops;
+ 		ndev->ethtool_ops = &cpsw_ethtool_ops;
+ 		SET_NETDEV_DEV(ndev, dev);
++		ndev->dev.of_node = slave_data->slave_node;
  
- 	struct apple_rtkit_shmem ioreport_buffer;
- 	struct apple_rtkit_shmem crashlog_buffer;
-+	struct apple_rtkit_shmem oslog_buffer;
- 
- 	struct apple_rtkit_shmem syslog_buffer;
- 	char *syslog_msg_buffer;
-diff --git a/drivers/soc/apple/rtkit.c b/drivers/soc/apple/rtkit.c
-index 1ec0c3ba0be22..968f9f6333936 100644
---- a/drivers/soc/apple/rtkit.c
-+++ b/drivers/soc/apple/rtkit.c
-@@ -65,8 +65,9 @@ enum {
- #define APPLE_RTKIT_SYSLOG_MSG_SIZE  GENMASK_ULL(31, 24)
- 
- #define APPLE_RTKIT_OSLOG_TYPE GENMASK_ULL(63, 56)
--#define APPLE_RTKIT_OSLOG_INIT	1
--#define APPLE_RTKIT_OSLOG_ACK	3
-+#define APPLE_RTKIT_OSLOG_BUFFER_REQUEST 1
-+#define APPLE_RTKIT_OSLOG_SIZE GENMASK_ULL(55, 36)
-+#define APPLE_RTKIT_OSLOG_IOVA GENMASK_ULL(35, 0)
- 
- #define APPLE_RTKIT_MIN_SUPPORTED_VERSION 11
- #define APPLE_RTKIT_MAX_SUPPORTED_VERSION 12
-@@ -255,15 +256,21 @@ static int apple_rtkit_common_rx_get_buffer(struct apple_rtkit *rtk,
- 					    struct apple_rtkit_shmem *buffer,
- 					    u8 ep, u64 msg)
- {
--	size_t n_4kpages = FIELD_GET(APPLE_RTKIT_BUFFER_REQUEST_SIZE, msg);
- 	u64 reply;
- 	int err;
- 
-+	/* The different size vs. IOVA shifts look odd but are indeed correct this way */
-+	if (ep == APPLE_RTKIT_EP_OSLOG) {
-+		buffer->size = FIELD_GET(APPLE_RTKIT_OSLOG_SIZE, msg);
-+		buffer->iova = FIELD_GET(APPLE_RTKIT_OSLOG_IOVA, msg) << 12;
-+	} else {
-+		buffer->size = FIELD_GET(APPLE_RTKIT_BUFFER_REQUEST_SIZE, msg) << 12;
-+		buffer->iova = FIELD_GET(APPLE_RTKIT_BUFFER_REQUEST_IOVA, msg);
-+	}
-+
- 	buffer->buffer = NULL;
- 	buffer->iomem = NULL;
- 	buffer->is_mapped = false;
--	buffer->iova = FIELD_GET(APPLE_RTKIT_BUFFER_REQUEST_IOVA, msg);
--	buffer->size = n_4kpages << 12;
- 
- 	dev_dbg(rtk->dev, "RTKit: buffer request for 0x%zx bytes at %pad\n",
- 		buffer->size, &buffer->iova);
-@@ -288,11 +295,21 @@ static int apple_rtkit_common_rx_get_buffer(struct apple_rtkit *rtk,
- 	}
- 
- 	if (!buffer->is_mapped) {
--		reply = FIELD_PREP(APPLE_RTKIT_SYSLOG_TYPE,
--				   APPLE_RTKIT_BUFFER_REQUEST);
--		reply |= FIELD_PREP(APPLE_RTKIT_BUFFER_REQUEST_SIZE, n_4kpages);
--		reply |= FIELD_PREP(APPLE_RTKIT_BUFFER_REQUEST_IOVA,
--				    buffer->iova);
-+		/* oslog uses different fields and needs a shifted IOVA instead of size */
-+		if (ep == APPLE_RTKIT_EP_OSLOG) {
-+			reply = FIELD_PREP(APPLE_RTKIT_OSLOG_TYPE,
-+					   APPLE_RTKIT_OSLOG_BUFFER_REQUEST);
-+			reply |= FIELD_PREP(APPLE_RTKIT_OSLOG_SIZE, buffer->size);
-+			reply |= FIELD_PREP(APPLE_RTKIT_OSLOG_IOVA,
-+					    buffer->iova >> 12);
-+		} else {
-+			reply = FIELD_PREP(APPLE_RTKIT_SYSLOG_TYPE,
-+					   APPLE_RTKIT_BUFFER_REQUEST);
-+			reply |= FIELD_PREP(APPLE_RTKIT_BUFFER_REQUEST_SIZE,
-+					    buffer->size >> 12);
-+			reply |= FIELD_PREP(APPLE_RTKIT_BUFFER_REQUEST_IOVA,
-+					    buffer->iova);
-+		}
- 		apple_rtkit_send_message(rtk, ep, reply, NULL, false);
- 	}
- 
-@@ -474,25 +491,18 @@ static void apple_rtkit_syslog_rx(struct apple_rtkit *rtk, u64 msg)
- 	}
- }
- 
--static void apple_rtkit_oslog_rx_init(struct apple_rtkit *rtk, u64 msg)
--{
--	u64 ack;
--
--	dev_dbg(rtk->dev, "RTKit: oslog init: msg: 0x%llx\n", msg);
--	ack = FIELD_PREP(APPLE_RTKIT_OSLOG_TYPE, APPLE_RTKIT_OSLOG_ACK);
--	apple_rtkit_send_message(rtk, APPLE_RTKIT_EP_OSLOG, ack, NULL, false);
--}
--
- static void apple_rtkit_oslog_rx(struct apple_rtkit *rtk, u64 msg)
- {
- 	u8 type = FIELD_GET(APPLE_RTKIT_OSLOG_TYPE, msg);
- 
- 	switch (type) {
--	case APPLE_RTKIT_OSLOG_INIT:
--		apple_rtkit_oslog_rx_init(rtk, msg);
-+	case APPLE_RTKIT_OSLOG_BUFFER_REQUEST:
-+		apple_rtkit_common_rx_get_buffer(rtk, &rtk->oslog_buffer,
-+						 APPLE_RTKIT_EP_OSLOG, msg);
- 		break;
- 	default:
--		dev_warn(rtk->dev, "RTKit: Unknown oslog message: %llx\n", msg);
-+		dev_warn(rtk->dev, "RTKit: Unknown oslog message: %llx\n",
-+			 msg);
- 	}
- }
- 
-@@ -773,6 +783,7 @@ int apple_rtkit_reinit(struct apple_rtkit *rtk)
- 
- 	apple_rtkit_free_buffer(rtk, &rtk->ioreport_buffer);
- 	apple_rtkit_free_buffer(rtk, &rtk->crashlog_buffer);
-+	apple_rtkit_free_buffer(rtk, &rtk->oslog_buffer);
- 	apple_rtkit_free_buffer(rtk, &rtk->syslog_buffer);
- 
- 	kfree(rtk->syslog_msg_buffer);
-@@ -935,6 +946,7 @@ static void apple_rtkit_free(void *data)
- 
- 	apple_rtkit_free_buffer(rtk, &rtk->ioreport_buffer);
- 	apple_rtkit_free_buffer(rtk, &rtk->crashlog_buffer);
-+	apple_rtkit_free_buffer(rtk, &rtk->oslog_buffer);
- 	apple_rtkit_free_buffer(rtk, &rtk->syslog_buffer);
- 
- 	kfree(rtk->syslog_msg_buffer);
+ 		if (!napi_ndev) {
+ 			/* CPSW Host port CPDMA interface is shared between
 -- 
 2.39.5
 
