@@ -1,224 +1,163 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2CC217B50F
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 13:12:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A52A2441A7;
+	Mon,  5 May 2025 13:14:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746450779; cv=none; b=UhwWktvmWOXRTFeAuSJmOl82VkAQq/O5mW6SgBmz6a8Pb+PVC1mr+y7nQXaIrCw6sZJ6QDTCteT1p3UPrqO7XPmCwP4tjOcpW8iAlvSpKTAY+80pJTPwtK3zvTVQM3gJzRou9z/ebVc09kkr8ZHpNlUgpHtFdiGeTsF7XjxV7tc=
+	t=1746450845; cv=none; b=nEeof6QjRGnUX34sIKegM3j1vXryQ6KrjC7slEF9K6oFUdiW9Ytx6mbmlPhFOyjU9QVqLEuZISM7InO4uC7U7ywnF8/5bHnflrHgc7XX8dd+51bx1J1XmK+KdTor46k+uPtemTLzsr5PM6rETvDcV9NTTg9vMOUSmSeW7sdZZqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746450779; c=relaxed/simple;
-	bh=+3SZVu3mOE6JWF/lVbjUNNPQXe2+gGC9qYUKy8nTzeU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jgbb92ecUSywIDfwV/mr3d2wUI+EGPTgEZ0wCJQgZrERJ/SqRyVD5FLDQyqU56xDhRcubaxsmGQWik00vQ+uc8gbgsoxcl6mxTIEC+9FAceLGChyabfDcOed40wYsMu497n1LNnulNrac2fBEeVnOdIltKbQe5QXAXj2q4Nx/KA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=PsD8s2OA; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=M/XQayTp; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=PsD8s2OA; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=M/XQayTp; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1746450845; c=relaxed/simple;
+	bh=rh5r3++/cA66sANgpELESWc1a6Bz3LRTgNCDDH+oo78=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WSnxrwofwbqvTU+KTsOJXX8QMWgBXXLOjqDZsVj2vbwLdiFdHZZ6J8smjcTT2x+ci5TrkvaZ4qq9sZvMmWI3Suj1EQU0iny+pB3TwTZru/Q6K2c+uXOPluA6hH1zqna1fBdmF4yzZTUxqCTVzBXeH4aNVEAVzPz5T8idBeKDmx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ErlmEeoQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="PsD8s2OA";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="M/XQayTp";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="PsD8s2OA";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="M/XQayTp"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id B90231F794;
-	Mon,  5 May 2025 13:12:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1746450775; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vAzJhDQ3oZg78MFDLniHbP1StB2cbsxdD5OCjTZpEKk=;
-	b=PsD8s2OAk8HAgWOBE//B317AlN87M8IHR+cuwgkJzAfIwxbSt02R45V/a3kxFue5nwJmVD
-	8XHzBjey8HaPW1Yq5nvRl2XrVC5qBeJ/5J+0VxiphLzo79OTN5QLKDXpu/L2sme+hHUFLj
-	pZbGOWb+9mPlhwPeFxGPIQQKGdGBJ68=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1746450775;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vAzJhDQ3oZg78MFDLniHbP1StB2cbsxdD5OCjTZpEKk=;
-	b=M/XQayTp70ZfCozRwUMXL29V1Kt6hPCENGQCfFLAqMhlTMlk1VcxXnm1JWX/hHjQTb1+J9
-	yc6ZCEO38tVMZBAw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1746450775; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vAzJhDQ3oZg78MFDLniHbP1StB2cbsxdD5OCjTZpEKk=;
-	b=PsD8s2OAk8HAgWOBE//B317AlN87M8IHR+cuwgkJzAfIwxbSt02R45V/a3kxFue5nwJmVD
-	8XHzBjey8HaPW1Yq5nvRl2XrVC5qBeJ/5J+0VxiphLzo79OTN5QLKDXpu/L2sme+hHUFLj
-	pZbGOWb+9mPlhwPeFxGPIQQKGdGBJ68=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1746450775;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vAzJhDQ3oZg78MFDLniHbP1StB2cbsxdD5OCjTZpEKk=;
-	b=M/XQayTp70ZfCozRwUMXL29V1Kt6hPCENGQCfFLAqMhlTMlk1VcxXnm1JWX/hHjQTb1+J9
-	yc6ZCEO38tVMZBAw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9A00E1372E;
-	Mon,  5 May 2025 13:12:55 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id sSUxJVe5GGhwLwAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Mon, 05 May 2025 13:12:55 +0000
-Message-ID: <8edbd2be-d495-4bfc-a9f3-6eaae7a66d91@suse.cz>
-Date: Mon, 5 May 2025 15:12:55 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ErlmEeoQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B9E9C4CEEF;
+	Mon,  5 May 2025 13:14:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746450844;
+	bh=rh5r3++/cA66sANgpELESWc1a6Bz3LRTgNCDDH+oo78=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ErlmEeoQS4jRoMaKLfhNgYD6aSH4PLxk8/OSxa3ZfiRiwh7JSoen7nlZoJF64Co5F
+	 zCKICpaqCMziHVxoxTmVXm/04lZ2KQEf2P8J6JvjgOtwYZqrEeAQsXHc5cRBrxu2j0
+	 z2v+ZAy/v1Gh9AkEm9GnV1wroOqSU984Er3P7ZtJtFVT7QQupvJJ7L8QMefDydEdzK
+	 xKdt80+RfT0/GJio1SJy5ubXyasdcaW3ZWxX/y0KfQburHe13LHfNwC/bpkkWN07X9
+	 aBB7ICWkumiVsJzm/yt5cGaWL4OxfLD6L0i2fFATmKDse1cnKLN8CBJDWO1PkZld5a
+	 mivzKzIzwYXjw==
+Date: Mon, 5 May 2025 14:13:57 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Gustavo Silva <gustavograzs@gmail.com>
+Cc: Alex Lanzano <lanzano.alex@gmail.com>, David Lechner
+ <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy
+ Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] iio: imu: bmi270: add channel for step counter
+Message-ID: <20250505141357.4d1760bf@jic23-huawei>
+In-Reply-To: <swswxbwejqyrekr2bvjf4p5lglodg3hlgl5ckiluxpazzl3chn@ga3uriqvmv7b>
+References: <20250424-bmi270-events-v1-0-a6c722673e5f@gmail.com>
+	<20250424-bmi270-events-v1-1-a6c722673e5f@gmail.com>
+	<20250426144020.2633f9cb@jic23-huawei>
+	<swswxbwejqyrekr2bvjf4p5lglodg3hlgl5ckiluxpazzl3chn@ga3uriqvmv7b>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/codetag: sub in advance when free non-compound high
- order pages
-Content-Language: en-US
-To: David Wang <00107082@163.com>, akpm@linux-foundation.org,
- surenb@google.com, mhocko@suse.com, jackmanb@google.com, hannes@cmpxchg.org,
- ziy@nvidia.com
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- Shakeel Butt <shakeel.butt@linux.dev>
-References: <20250504061923.66914-1-00107082@163.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <20250504061923.66914-1-00107082@163.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	FREEMAIL_TO(0.00)[163.com,linux-foundation.org,google.com,suse.com,cmpxchg.org,nvidia.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	MIME_TRACE(0.00)[0:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[163.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:mid]
-X-Spam-Flag: NO
-X-Spam-Level: 
 
-On 5/4/25 08:19, David Wang wrote:
-> When page is non-compound, page[0] could be released by other
-> thread right after put_page_testzero failed in current thread,
-> pgalloc_tag_sub_pages afterwards would manipulate an invalid
-> page for accounting remaining pages:
+On Sat, 26 Apr 2025 21:19:13 -0300
+Gustavo Silva <gustavograzs@gmail.com> wrote:
+
+> On Sat, Apr 26, 2025 at 02:40:20PM +0100, Jonathan Cameron wrote:
+> > On Thu, 24 Apr 2025 21:14:50 -0300
+> > Gustavo Silva <gustavograzs@gmail.com> wrote:
+> >   
+> > > Add a channel for enabling/disabling the step counter, reading the
+> > > number of steps and resetting the counter.
+> > > 
+> > > Signed-off-by: Gustavo Silva <gustavograzs@gmail.com>  
+> > Hi Gustavo,
+> > 
+> > This is tripping over the somewhat theoretical requirement for
+> > regmap to be provided with DMA safe buffers for bulk accesses.
+> > 
+> > Jonathan
+> >   
 > 
-> [timeline]   [thread1]                     [thread2]
->   |          alloc_page non-compound
->   V
->   |                                        get_page, rf counter inc
->   V
->   |          in ___free_pages
->   |          put_page_testzero fails
->   V
->   |                                        put_page, page released
->   V
->   |          in ___free_pages,
->   |          pgalloc_tag_sub_pages
->   |          manipulate an invalid page
->   V
->   V
+> Hi Jonathan,
 > 
-> Move the tag page accounting ahead, and only account remaining pages
-> for non-compound pages with non-zero order.
+> Thanks for the review. I've got a few questions inline.
 > 
-> Signed-off-by: David Wang <00107082@163.com>
+> > > ---
+> > >  drivers/iio/imu/bmi270/bmi270_core.c | 127 +++++++++++++++++++++++++++++++++++
+> > >  1 file changed, 127 insertions(+)
+> > > 
+> > > diff --git a/drivers/iio/imu/bmi270/bmi270_core.c b/drivers/iio/imu/bmi270/bmi270_core.c
+> > > index a86be5af5ccb1f010f2282ee31c47f284c1bcc86..f09d8dead9df63df5ae8550cf473b5573374955b 100644
+> > > --- a/drivers/iio/imu/bmi270/bmi270_core.c
+> > > +++ b/drivers/iio/imu/bmi270/bmi270_core.c
+> > > @@ -31,6 +31,8 @@  
+> >   
+> > >  /* See datasheet section 4.6.14, Temperature Sensor */
+> > >  #define BMI270_TEMP_OFFSET				11776
+> > >  #define BMI270_TEMP_SCALE				1953125
+> > > @@ -111,6 +118,7 @@ struct bmi270_data {
+> > >  	struct iio_trigger *trig;
+> > >  	 /* Protect device's private data from concurrent access */
+> > >  	struct mutex mutex;
+> > > +	int steps_enabled;  
+> > 
+> > Seems a little odd to have a thing called _enabled as an integer.
+> > Probably better as a bool even though that will require slightly more
+> > code to handle read / write.
+> >   
+> I agree that a bool might be more appropriate in this case. I decided to
+> use an int to keep consistency with other drivers, specifically bma400
+> and the iio dummy driver.
+> If you prefer, I'll use a bool here and after this series submit a patch
+> updating those drivers as well.
 
-Hmm, I think the problem was introduced by 51ff4d7486f0 ("mm: avoid extra
-mem_alloc_profiling_enabled() checks"). Previously we'd get the tag pointer
-upfront and avoid the page use-after-free.
+Yes. I think that would be a nice little logical improvement here and in those
+drivers.  Not particularly critical though!
 
-It would likely be nicer to fix it by going back to that approach for
-___free_pages(), while hopefully keeping the optimisations of 51ff4d7486f0
-for the other call sites where it applies?
-
-> ---
->  mm/page_alloc.c | 36 +++++++++++++++++++++++++++++++++---
->  1 file changed, 33 insertions(+), 3 deletions(-)
 > 
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index 5669baf2a6fe..c42e41ed35fe 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -1163,12 +1163,25 @@ static inline void pgalloc_tag_sub_pages(struct page *page, unsigned int nr)
->  		this_cpu_sub(tag->counters->bytes, PAGE_SIZE * nr);
->  }
->  
-> +static inline void pgalloc_tag_add_pages(struct page *page, unsigned int nr)
-> +{
-> +	struct alloc_tag *tag;
-> +
-> +	if (!mem_alloc_profiling_enabled())
-> +		return;
-> +
-> +	tag = __pgalloc_tag_get(page);
-> +	if (tag)
-> +		this_cpu_add(tag->counters->bytes, PAGE_SIZE * nr);
-> +}
-> +
->  #else /* CONFIG_MEM_ALLOC_PROFILING */
->  
->  static inline void pgalloc_tag_add(struct page *page, struct task_struct *task,
->  				   unsigned int nr) {}
->  static inline void pgalloc_tag_sub(struct page *page, unsigned int nr) {}
->  static inline void pgalloc_tag_sub_pages(struct page *page, unsigned int nr) {}
-> +static inline void pgalloc_tag_add_pages(struct page *page, unsigned int nr) {}
->  
->  #endif /* CONFIG_MEM_ALLOC_PROFILING */
->  
-> @@ -5065,11 +5078,28 @@ static void ___free_pages(struct page *page, unsigned int order,
->  {
->  	/* get PageHead before we drop reference */
->  	int head = PageHead(page);
-> +	/*
-> +	 * For remaining pages other than the first page of
-> +	 * a non-compound allocation, we decrease its tag
-> +	 * pages in advance, in case the first page is released
-> +	 * by other thread inbetween our put_page_testzero and any
-> +	 * accounting behavior afterwards.
-> +	 */
-> +	unsigned int remaining_tag_pages = 0;
->  
-> -	if (put_page_testzero(page))
-> +	if (order > 0 && !head) {
-> +		if (unlikely(page_ref_count(page) > 1)) {
-> +			remaining_tag_pages = (1 << order) - 1;
-> +			pgalloc_tag_sub_pages(page, remaining_tag_pages);
-> +		}
-> +	}
-> +
-> +	if (put_page_testzero(page)) {
-> +		/* no need special treat for remaining pages, add it back. */
-> +		if (unlikely(remaining_tag_pages > 0))
-> +			pgalloc_tag_add_pages(page, remaining_tag_pages);
->  		__free_frozen_pages(page, order, fpi_flags);
-> -	else if (!head) {
-> -		pgalloc_tag_sub_pages(page, (1 << order) - 1);
-> +	} else if (!head) {
->  		while (order-- > 0)
->  			__free_frozen_pages(page + (1 << order), order,
->  					    fpi_flags);
+> >   
+> > >  
+> > >  	/*
+> > >  	 * Where IIO_DMA_MINALIGN may be larger than 8 bytes, align to
+> > > @@ -282,6 +290,99 @@ static const struct  bmi270_odr_item bmi270_odr_table[] = {
+> > >  	},
+> > >  };
+> > >  
+> > > +enum bmi270_feature_reg_id {
+> > > +	BMI270_SC_26_REG,
+> > > +};
+> > > +
+> > > +struct bmi270_feature_reg {
+> > > +	u8 page;
+> > > +	u8 addr;
+> > > +};
+> > > +
+> > > +static const struct bmi270_feature_reg bmi270_feature_regs[] = {
+> > > +	[BMI270_SC_26_REG] = {
+> > > +		.page = 6,
+> > > +		.addr = 0x32,
+> > > +	},
+> > > +};
+> > > +
+> > > +static int bmi270_write_feature_reg(struct bmi270_data *data,
+> > > +				    enum bmi270_feature_reg_id id,
+> > > +				    u16 val)
+> > > +{
+> > > +	const struct bmi270_feature_reg *reg = &bmi270_feature_regs[id];
+> > > +	int ret;
+> > > +
+> > > +	ret = regmap_write(data->regmap, BMI270_FEAT_PAGE_REG, reg->page);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	return regmap_bulk_write(data->regmap, reg->addr, &val, sizeof(val));  
+> > 
+> > For a regmap on top of an SPI bus. I think we are still requiring DMA safe
+> > buffers until we can get confirmation that the API guarantees that isn't
+> > needed.  (there is another thread going on where we are trying to get that
+> > confirmation).
+> > 
+> > That is a pain here because this can run concurrently with buffered
+> > capture and as such I think we can't just put a additional element after
+> > data->data but instead need to mark that new element __aligned(IIO_DMA_MINALIGN)
+> > as well (and add a comment that it can be used concurrently with data->data).
+> >  
+> Just to clarify, when you say data->data, are you referring to the
+> bmi270_data::buffer variable? That used to be called 'data' but it was
+> changed to 'buffer' in commit 16c94de2a.
 
+Yes.  The one marked __aligned(IIO_DMA_MINALIGN)
+I was looking at old code I guess!
+
+Jonathan
