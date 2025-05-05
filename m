@@ -1,40 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6176829CB56;
-	Mon,  5 May 2025 22:45:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05E4A35FAEA;
+	Mon,  5 May 2025 22:45:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485143; cv=none; b=N9QMhroALzeBan/vpKVM2mve3JZsZeqD+MAEFSgJQjhWRlvI7P+/3dVWZPuIgVJ6rJaM/uW4GThU4AWQ8NKRgIFYYT8h2YfokPLwQtK0lYNbAI+vrlKDHXJhJdGfapYoxcekzRKaVfaVHqKPKWzpdzWmoAYBmH3OkgxG/t2enP8=
+	t=1746485138; cv=none; b=llg6XhgLvtY83qs99AK1T2sOu1J9xAOWN2qMOAqhcwBI72kbTu4ork4T+qNiBBm1unCJfxjVvUfCQ7MwsK2Zoc6dEJ4lRJCHYJeO3otHkPf6Bk6bw5jPIqecDmG6kZ8fz08ItJpw7FdBUW/sPJjshdSNPGTTbV0tPyRrf9rTj1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485143; c=relaxed/simple;
-	bh=Ztz+nIN4jVsm5dk1LbPMMQ3xifHEySLYwovq03zpYkw=;
+	s=arc-20240116; t=1746485138; c=relaxed/simple;
+	bh=env492LK+vvyLJ2wPesu0+se6FFVuWBfgNvAhXjV/bs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=drlWdQvVgOqLbPjkNFwRZMh5MUYv4z9v1GKVWiTyfwD6heI+YiliLyY6161wUjgoQjYOt6P31BsasX7TU/8srxkJG5FAMtju3cct2Kv5jlsjykEcbZSuU3buO6W4gVvC6X7peXvW93hIh053XzLPLXM1ZmF6tSQnzcwTE1CJtf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QiVFqIso; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=nGgVY2NBFJ7txBqcHwATdsJMoL5keDHqaYdzqf5fNP3HWOfJ7cqMOXyZNx49sni03VmKq2jbGYINICIZ6pE3mkmTLNZdWPawEiR3ucRXidPUrt1XIqxTC/N+Y3e0/bgbcuUYRvCJymjtKteC2Xrg4zm3Gn6CraWyl+lWw4rQf2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a4PaeK/J; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QiVFqIso"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 361F6C4CEF1;
-	Mon,  5 May 2025 22:45:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a4PaeK/J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 650B1C4CEEE;
+	Mon,  5 May 2025 22:45:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485141;
-	bh=Ztz+nIN4jVsm5dk1LbPMMQ3xifHEySLYwovq03zpYkw=;
+	s=k20201202; t=1746485136;
+	bh=env492LK+vvyLJ2wPesu0+se6FFVuWBfgNvAhXjV/bs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QiVFqIso5MyEiVmXaMBqv9nOl4HuXmxrZkQgTdIdPguD85GKch6K0l+beC5Z1C5jj
-	 EX5lgZKz7IwXnJf7hEHD+5/A/XVMz4x+xgFQn3YJ+eb34Qb1PJZ0Bj6+h4bMmu4hku
-	 7bL6ipx0umnzYJhpHzTiS/dr6YX+oyjLIw5s+WJ4VvinzOE82//0RLU6am2dJbNZWx
-	 XqqqdHZGAgsDQQLoNjURq0LM41qtOrkpiF9qKMHgiaeFtluNyvHQpj0fPaDjMJR2N6
-	 gGt5bDeVHSd1yNazJxlLcSgks7KHpPgmApuuNO5UYlmkOv7WJMOp44fP0guHedm15J
-	 T5fCNcl+pN2gQ==
+	b=a4PaeK/JbirVJaFcUsI3EfG5OogzoIz/fo5RbNHIm0ljtVeHexXYo3BaactODoaZB
+	 0qcTTAXTZgk/bDRyaGnyspqqqLEqnbZ3CGjlOojNzv4252vlCc1lWm5p34VWuAsX/8
+	 oK+Q7eYUsfyEWkVv4bfSSgzDughFdLeLwlv/I5HECzWjDV/kyIwP0QGCySnJD7biRr
+	 rpn6pDPUfJYEmP9cIc5r93wiDCKT9CYWmbZB/BBJVFczV1KoJxSMhNjmnjiRiCRtW/
+	 qMZTsD2DipiOPZm7zWYsj3MKn3Fd/rn9oFOMxK1PABdZGoPO1Gw/QXJaCjyJFcIxwt
+	 DzP3kVN5U5Hnw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>,
+Cc: Andreas Schwab <schwab@linux-m68k.org>,
+	Rob Herring <robh@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
 	Sasha Levin <sashal@kernel.org>,
-	linux-rtc@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 181/486] rtc: ds1307: stop disabling alarms on probe
-Date: Mon,  5 May 2025 18:34:17 -0400
-Message-Id: <20250505223922.2682012-181-sashal@kernel.org>
+	mpe@ellerman.id.au,
+	mahesh@linux.ibm.com,
+	sourabhjain@linux.ibm.com,
+	linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 6.12 178/486] powerpc/prom_init: Fixup missing #size-cells on PowerBook6,7
+Date: Mon,  5 May 2025 18:34:14 -0400
+Message-Id: <20250505223922.2682012-178-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -49,36 +54,42 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+From: Andreas Schwab <schwab@linux-m68k.org>
 
-[ Upstream commit dcec12617ee61beed928e889607bf37e145bf86b ]
+[ Upstream commit 7e67ef889c9ab7246547db73d524459f47403a77 ]
 
-It is a bad practice to disable alarms on probe or remove as this will
-prevent alarms across reboots.
+Similar to the PowerMac3,1, the PowerBook6,7 is missing the #size-cells
+property on the i2s node.
 
-Link: https://lore.kernel.org/r/20250303223744.1135672-1-alexandre.belloni@bootlin.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Depends-on: commit 045b14ca5c36 ("of: WARN on deprecated #address-cells/#size-cells handling")
+Signed-off-by: Andreas Schwab <schwab@linux-m68k.org>
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
+[maddy: added "commit" work in depends-on to avoid checkpatch error]
+Signed-off-by: Madhavan Srinivasan <maddy@linux.ibm.com>
+Link: https://patch.msgid.link/875xmizl6a.fsf@igel.home
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-ds1307.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ arch/powerpc/kernel/prom_init.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/rtc/rtc-ds1307.c b/drivers/rtc/rtc-ds1307.c
-index 872e0b679be48..5efbe69bf5ca8 100644
---- a/drivers/rtc/rtc-ds1307.c
-+++ b/drivers/rtc/rtc-ds1307.c
-@@ -1807,10 +1807,8 @@ static int ds1307_probe(struct i2c_client *client)
- 		 * For some variants, be sure alarms can trigger when we're
- 		 * running on Vbackup (BBSQI/BBSQW)
- 		 */
--		if (want_irq || ds1307_can_wakeup_device) {
-+		if (want_irq || ds1307_can_wakeup_device)
- 			regs[0] |= DS1337_BIT_INTCN | chip->bbsqi_bit;
--			regs[0] &= ~(DS1337_BIT_A2IE | DS1337_BIT_A1IE);
--		}
+diff --git a/arch/powerpc/kernel/prom_init.c b/arch/powerpc/kernel/prom_init.c
+index 935568d68196d..b1dc4cb9f78e6 100644
+--- a/arch/powerpc/kernel/prom_init.c
++++ b/arch/powerpc/kernel/prom_init.c
+@@ -2982,11 +2982,11 @@ static void __init fixup_device_tree_pmac(void)
+ 	char type[8];
+ 	phandle node;
  
- 		regmap_write(ds1307->regmap, DS1337_REG_CONTROL,
- 			     regs[0]);
+-	// Some pmacs are missing #size-cells on escc nodes
++	// Some pmacs are missing #size-cells on escc or i2s nodes
+ 	for (node = 0; prom_next_node(&node); ) {
+ 		type[0] = '\0';
+ 		prom_getprop(node, "device_type", type, sizeof(type));
+-		if (prom_strcmp(type, "escc"))
++		if (prom_strcmp(type, "escc") && prom_strcmp(type, "i2s"))
+ 			continue;
+ 
+ 		if (prom_getproplen(node, "#size-cells") != PROM_ERROR)
 -- 
 2.39.5
 
