@@ -1,99 +1,111 @@
-Received: from outbound.mr.icloud.com (p-west2-cluster4-host11-snip4-10.eps.apple.com [57.103.69.141])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BABE1F5859
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 09:27:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.69.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98B221F91E3
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 09:27:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746437234; cv=none; b=sKMWGqQTZfBqs9NOFaTryL74PHiLBAkPugySI/VUSuc1K+JNTGpy/xSk1Wep4sd+fgl+W1RRvj9PknMXkF+3S97wt7cU+8nN47sBargLsu2RLhl0JjhwTq1S8Bdz4C/3Y0dMOTWDQeUytuqaLEQm/1sSwWdp/mKDp5rN7/2i+n0=
+	t=1746437253; cv=none; b=ifWOFt+/cutz5RJ3PsAWoX2Xj1nv/SqS+oP0F3lbU3lKhiwpxoJZds2+RQ9Sym0h/GK8Gu5TIECEQAOLpfxjxUcruWdhY7XGwu/izE+crPwREG8e5II4v3p/8yMtvvQ4lYswfwicLAAnfRFUDeWVHAGZHOOKvtmK4rHh9Ky2b8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746437234; c=relaxed/simple;
-	bh=pZyvOLFBKuApBznDeYImuouwzRpCU3KDlc0PkMx5eSc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=H8w3CXrff5qdg1MAHS2qWyHtJQbqn+k26OZqZoPHomqjy1+jSX/FAty6hbY7940Lv1sQ0JKFGmDMUYFcpccIhMuzRXqsLLAQCvjt+/LIBQbcWD81kOWHEgFQqXBZrXiOESEiqyYZqKKHgsmvXNMubUt9Gicep9/BRvr5ckRlnGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=GjA/xLbq; arc=none smtp.client-ip=57.103.69.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	s=arc-20240116; t=1746437253; c=relaxed/simple;
+	bh=VCmoWmJTvqlgEOq6zbWHFFjE8aX3WtnAN6LuKDcJFH8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=KmnOV4R870ksg2WhHC2vHrD/enolP8x033pME19um3lveiUlHvulJyTsL3MSoB7JOgC6InYmEtQxPp+MuokmUe8aMZFntZAN/myEGzTnG7WrAngwCVSJSB951e+Fx98CWAE74QZMFXit11HT0CHtO0pXsys68Ex5BD2bLLxis0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VH+sS4Vs; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="GjA/xLbq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; bh=+bNZg9fhVqFS5rCqRU6rBW1/wv3PMXLvMLVWs2j/KyM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:x-icloud-hme;
-	b=GjA/xLbqdr/I9oJV3mGDLUAJadgDR/S8G9EDCoyT/8nPPwYExbovI4c7aMVbfcrrr
-	 D6ZFYTx5ZfGxjPljqwFizpGvZbUF2ojCbSepJdd9Sx2s0uEEC82o+vVY9Xk6gtIPau
-	 x5l+0YCkFq/2m/Fp3azm5BRjdUNEwgInBeAxR29IMZ63WHMgcE4st3Jm9Zpng9j0+8
-	 Q36S8leE/evJ4GvSmJDOsQ/8602YAkgYHdmrEryAyTXiUbaEPghWBB0Sggi5KS5LLO
-	 XvALObq55jXvNqMv8XmG40nUzZHTp1mcgankt83K9Lq+59EnWy4ZkSUi7NZqjGsylR
-	 OyR8Y1W3gljiA==
-Received: from [192.168.1.26] (unknown [17.57.152.38])
-	by outbound.mr.icloud.com (Postfix) with ESMTPSA id D06521800175;
-	Mon,  5 May 2025 09:27:07 +0000 (UTC)
-From: Zijun Hu <zijun_hu@icloud.com>
-Date: Mon, 05 May 2025 17:26:51 +0800
-Subject: [PATCH] PM: wakeup: Delete space in the end of string shown by
- pm_show_wakelocks()
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VH+sS4Vs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746437250;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=l0RexrooVEAiTnjYfMDdv53LIbR51/bbTVhj6k4gjWQ=;
+	b=VH+sS4Vs4q0zGaYKw8HleSNrTO7NMxuFKTApal3+iu6glI7V8Nhnphyez9R7dNQtUpelna
+	bvaXtFzQu2WbeTnSr/seoeke0LoTnT1f2ITmVyVWKYiAe/zGBdeFTQXlMRYHtfGKhSnnQT
+	mea8s4athiDT/HNDlj4pfHSvtNHs9kw=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-516-pLGTdMW_MPmGvBbgygUBLg-1; Mon, 05 May 2025 05:27:29 -0400
+X-MC-Unique: pLGTdMW_MPmGvBbgygUBLg-1
+X-Mimecast-MFC-AGG-ID: pLGTdMW_MPmGvBbgygUBLg_1746437249
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-4769273691dso73571381cf.1
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 02:27:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746437249; x=1747042049;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=l0RexrooVEAiTnjYfMDdv53LIbR51/bbTVhj6k4gjWQ=;
+        b=qnYCzeg38jY6wrWkTbpQ+wryVa7KUws5/Abhbl7qJqcRN4wpRDsg9MB43pdL3Hh4ih
+         vDVhU4brQW9qAYPDgxflb8F8uUITv9M03hTNeJf8O85WNLTo6qQJklgcEMMpOBatI1CX
+         zlulbkSbSko32YSbXQiSc7zwjPJ8gXRXGZbH5hTNVYL8F82FBreds60m5aPQQdg3EHNg
+         5WIKoonE08NIvP7d5fDNt3DCyp9fzMyCH9qNhu3sEDyDVBGXZg9Vd8osOvXy5hzrRafB
+         RlatM5AYJdLPQHWtoIMLStnOWc94u05ZgPrs7oyTvQrvQWGENxJ9BIsp/b1TYlbUAHy7
+         Cl9A==
+X-Gm-Message-State: AOJu0YzRCQ/188Wh1WQI4h/wQi8dGwrxsoh4egORrnnXI05l/UpUlDKd
+	TBrwAFwkw9AK+UJFQuf8U5guOf05r2eb2g/JQPZXFLmOoiMVNPYGTww8HeKN+BLswUnUBbcioiZ
+	cnIJjVPed/YJOT/AHQ5G7uJIbXCRKZv9aT5xhqBILtFdbRqfLLoUOtGxs+E7hYw==
+X-Gm-Gg: ASbGncswJrbJRN7dhqyLQMYI/wMlVqK8RPZeUGKXSO46ik6KDfdgWdyAtNvdvXRN8gY
+	ZViaO8hLXscpXz8ibd20n5gOwRoOdnwDttYTki0lUQbmJxx7nLLb1GdmQ5OmNg8Z2QWaiiCeEb0
+	VTBWb9GnfIDBcwPYbxFNtN2dV1D8pKRROq5K1aVbTZUcR73cxgL4MBsOgKtkH4E8zGdu5QWqrXf
+	5ZfCdgon10Cch8tfboVo1w/bAT9skt60wl1/+HcA0UpxR/F/voKhYKQKrqe+NhB33UskWoYRcKe
+	NEqbTkxxNFJYT5WNilRioN1PTlzd1lNFYNogZpDSHg==
+X-Received: by 2002:a05:622a:11c9:b0:476:b7e2:385c with SMTP id d75a77b69052e-48dff3e0e3dmr100492611cf.2.1746437248834;
+        Mon, 05 May 2025 02:27:28 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF/m1KDaJj1j7Rb7thoAV6E+uqq6uO9rXBEssgmcDxA3L86RFMfhiWPFXAgyoIIP0edVrBL1w==
+X-Received: by 2002:a05:622a:11c9:b0:476:b7e2:385c with SMTP id d75a77b69052e-48dff3e0e3dmr100492471cf.2.1746437248557;
+        Mon, 05 May 2025 02:27:28 -0700 (PDT)
+Received: from localhost ([195.166.127.210])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-48b98d0fc7esm55680821cf.73.2025.05.05.02.27.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 May 2025 02:27:28 -0700 (PDT)
+From: Javier Martinez Canillas <javierm@redhat.com>
+To: Thomas Zimmermann <tzimmermann@suse.de>, Marcus Folkesson
+ <marcus.folkesson@gmail.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, David
+ Lechner <david@lechnology.com>
+Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v2] drm/sitronix: move tiny Sitronix drivers to their
+ own subdir
+In-Reply-To: <27a5f519-de87-4fab-b465-bb89ae5b988b@suse.de>
+References: <20250503-sitronix-v2-1-5efbed896be2@gmail.com>
+ <27a5f519-de87-4fab-b465-bb89ae5b988b@suse.de>
+Date: Mon, 05 May 2025 11:27:25 +0200
+Message-ID: <87r013wgoy.fsf@minerva.mail-host-address-is-not-set>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250505-fix_power-v1-1-0f7f2c2f338c@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAFqEGGgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDINRNy6yIL8gvTy3STTQxMU42TDQxtrRMUwKqLyhKBUqCzYqOra0FAOa
- qtVRbAAAA
-X-Change-ID: 20250505-fix_power-a443c1a4399f
-To: "Rafael J. Wysocki" <rafael@kernel.org>, 
- Pavel Machek <pavel@kernel.org>, Len Brown <len.brown@intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Zijun Hu <zijun_hu@icloud.com>, linux-pm@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
-X-Mailer: b4 0.14.2
-X-Proofpoint-ORIG-GUID: E-w5mm_cnpnXz-v57WN_7T6JAalSQppo
-X-Proofpoint-GUID: E-w5mm_cnpnXz-v57WN_7T6JAalSQppo
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-05_04,2025-04-30_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 clxscore=1015
- phishscore=0 malwarescore=0 spamscore=0 suspectscore=0 adultscore=0
- bulkscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2505050089
+Content-Type: text/plain
 
-From: Zijun Hu <quic_zijuhu@quicinc.com>
+Thomas Zimmermann <tzimmermann@suse.de> writes:
 
-pm_show_wakelocks() is called to generate a string when showing attributes
-/sys/power/wake_(lock|unlock), but the string ends with an unwanted space
-the space was added back by mistake by commit c9d967b2ce40
-("PM: wakeup: simplify the output logic of pm_show_wakelocks()").
+Hello Thomas,
 
-Remove the unwanted space.
+> Hi,
+>
+> there's one major issue here. You must not change the Kconfig symbols or 
+> you'll break kernel updates for a lot of people. So those TINYDRM_* must 
+> remain as is.
+>
 
-Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
----
- kernel/power/wakelock.c | 3 +++
- 1 file changed, 3 insertions(+)
+I disagree. The https://docs.kernel.org/admin-guide/abi.html document
+explictly states that Kconfig symbols are not an ABI, and userspace
+should not rely on these not changing over time.
 
-diff --git a/kernel/power/wakelock.c b/kernel/power/wakelock.c
-index 52571dcad768b988eaadbd3ce98a4ac42dd2f7dd..4e941999a53ba69410f4526d5d55c32312c36140 100644
---- a/kernel/power/wakelock.c
-+++ b/kernel/power/wakelock.c
-@@ -49,6 +49,9 @@ ssize_t pm_show_wakelocks(char *buf, bool show_active)
- 			len += sysfs_emit_at(buf, len, "%s ", wl->name);
- 	}
- 
-+	if (len > 0)
-+		--len;
-+
- 	len += sysfs_emit_at(buf, len, "\n");
- 
- 	mutex_unlock(&wakelocks_lock);
+> Best regards
+> Thomas
+>
 
----
-base-commit: 393d0c54cae31317deaa9043320c5fd9454deabc
-change-id: 20250505-fix_power-a443c1a4399f
-
-Best regards,
 -- 
-Zijun Hu <quic_zijuhu@quicinc.com>
+Best regards,
+
+Javier Martinez Canillas
+Core Platforms
+Red Hat
 
