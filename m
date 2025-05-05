@@ -1,435 +1,130 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BA8D219FC;
-	Mon,  5 May 2025 03:12:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62DBD224D7;
+	Mon,  5 May 2025 03:25:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746414776; cv=none; b=FRWnJB5KBRstUtjqpC8jPvSo/RE0MMtclQG0md5GxN/cXvSSz4ifDA7VwLFf/uDJAqy3R06rJb2vxV/9jreqC0+HuciUpBttTYueJkd0PYp+glNND1TYE93ad3WPnMflPIp8JM0lKfp8gcSY+CsLbIHSolfQVcCs7SRKQAdbYY4=
+	t=1746415531; cv=none; b=D6emiQ1pSU5YDRJAw3OGYJULItZNFfP3uMQjN+P3Kf5FGc2iXBZvOGaUq8SwxNepxI/ISkfsV0Pd1xRCqlaM0VjGsl0cDoPRbYkwzsj8PYFSyF9GZOj7nrj6irkoSbJFJz9hJhjkLetdjMt5DVT4CwRUgYtYY6uB9RacLMqhRcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746414776; c=relaxed/simple;
-	bh=sIOLIvnuhbx0x5mI+qGYBj4UWxJSZ/LvcsLkVTl3CAc=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=fhHB6bV1kPVyAwrKP2+Y73mdlDoSe594TaI7y9QkEBZAMVVYuUv2NzKbGteji4hyXFC+ZVyzrngDllOil7dwzVYoFR12fdTxmyFiR/j3CZrNwRHAzEookMVKnQWcbxZ0EZ0nRSWdM96ouNdknVRvPQHC3mNnSDWSAtPgnRHqD/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Bni77eoQ; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746415531; c=relaxed/simple;
+	bh=WQ3Y6TozHjcszycO/5Fy0Ct+sqIqP6bA5sbvJA+1b1w=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Tz4/O1YFyA57bFXiH159p4bHAd2OBaIwn7A3dV4kgnSUEHb3yGWuTnxquf1lsTrUjNARsyRdm9CObR4tzTKoaTcvmJTOmHs3r56QB0pqmkoovV2vVkpk/BI5R4VvXwq0HQz2zEqBuE3u+LjjZwOv86U0VDt1jfY+djANjhQK1aQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=iLqbb994; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bni77eoQ"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2ff784dc055so3467598a91.1;
-        Sun, 04 May 2025 20:12:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746414773; x=1747019573; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=TlgSStpSYXQ2a9TUV+lZAcOUuuATCiZr4BxvCgwoP5Y=;
-        b=Bni77eoQlwkCjR6nPhsmL72oGQLiXdTvJQxeR2sVTtQuRMgtY/qB5jGw5wNBEm7Tp+
-         OliRMFHNpzNUmC+Z/EJbz229c8yvl2vuGekOc105miJckZkTF+2BMo01QCnwpQgD/QcO
-         KWnZAtwAMsr1mo93E5UeAaid8EAcQjTHnDQ9iEu4Qz5hDyEGvZGYpQ/12kWjTvo1Iw0o
-         YaSgP/SHxqazbsiKSn4R1qlBMZV8CPh6E9SvbyNQklAEo8Uc/ohsbGu3Ak8ssxdyqncQ
-         Yruvwz9pZ9F++3IX5fJRbqEWWln/IRE9IMMF5NlcY4YHbGyIiyIx6w96PXmHlRGs4gac
-         3iXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746414773; x=1747019573;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TlgSStpSYXQ2a9TUV+lZAcOUuuATCiZr4BxvCgwoP5Y=;
-        b=YQir3ApTh+9DR4nLqiHDjQME+1/Mz50MeuGnyOf7b1lld5hao6HeBprE9Qi5Tywjzr
-         1ROHvpYKTDjCiFuJLntdVDS937O4GD4cauFsAMWEtwvgpWv8BWzct1E3p1Pod3/RTAd1
-         Xl9Hatk3Sqf7E0z5bMR6PLiu+7zh7tVDwzaKnPLFr7XLAaKxVGR/7a+abUDFTOowJ3NC
-         mzppq6+V3eo7GZjVC/5x6vxXnSJljhEpMWKUKv3UDbvl955woetLCVltyAbZBc9wm8Ka
-         f+sGKpCkOs/ZsKcF/UXyZeM5a2BaGG1v23+TlndW/wTHBdRtz1OXjxqCQAOV+OYmVXkH
-         YBJA==
-X-Forwarded-Encrypted: i=1; AJvYcCVDV4SI+GvoWy4jUx1/Xr1hW2J0RwRf95j5XwKAv7pDAEdMOJyADQ5BdCf7vSpvlYSxGCXQ33TOAB+HLuy+@vger.kernel.org, AJvYcCVNVjtRX9zyewCTUVaG/1/BuvOzrCgczV8X3jP1V0i542g1QiefjrRIA3AGoZItGtV9B7l7l/ejXj4=@vger.kernel.org, AJvYcCVQFpF62Iq67XaDS2SSkAnmc2rRnzw8+0U/15Z4FbJA3WDUCp/87hNP2cNScyb7AIT3E5wb9Vaa2Y5siI0h5Ks=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOaHSJ5nYqHczbNCBT2cN/ZYe4fIoF2nrgwn1+5vbtcZLIEf7b
-	F6Zr24XAuuwlEJMBlSph1/Hv47jxyx28wJzf1nvJNl/+Vh98fdn3
-X-Gm-Gg: ASbGncu46bAWl2zxczwgotXLSDQH8kpBWK5ompFuyOBzA4HEPDHZHvm8e1Rmx5R9FRs
-	CJA9F+jp/SSWo7hRlvXkhwCTJ0e5eoFdBXeQDQJBU/ODxZjdCkyZ7IqZpWVZtO0tSgLscRdyMPy
-	07jB2FOABiYaqApaIkfA2krHJUwCx36/gkxeuCTlKEgS6GNlOpl8ABAFtYylScZKpcyLolgWPif
-	a2pPzjW2O2eUH1311ej12JLsVks6o1JEDm9s5Xh13WzGNFQMUT3O4eU8YtOhR+xchmyCrZ/Z208
-	vhs7sbqYINj8kE0Dd4HaDsVDMnJ2X0O+CJt4lNz4/Vu4Natj
-X-Google-Smtp-Source: AGHT+IEIGQK5pJPC9ad+ktF++Wil1ARW/ydqEqUl7LMXOEO9CEBc8/2iFt8F3CH+dqvY45W3k63u+g==
-X-Received: by 2002:a17:90b:4c51:b0:2ee:b4bf:2d06 with SMTP id 98e67ed59e1d1-30a5ae52d16mr10505882a91.19.1746414773098;
-        Sun, 04 May 2025 20:12:53 -0700 (PDT)
-Received: from [192.168.0.150] ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30a4762672bsm7527392a91.32.2025.05.04.20.12.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 04 May 2025 20:12:52 -0700 (PDT)
-Message-ID: <2b9baf30-53ae-4653-8043-afbc2e396107@gmail.com>
-Date: Mon, 5 May 2025 10:12:47 +0700
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="iLqbb994"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1746415523;
+	bh=lKe+3z9qDbIImdydW4/rrbpy3NKtwJLSKxk/lL0cWXg=;
+	h=Date:From:To:Cc:Subject:From;
+	b=iLqbb994tEKP7k4cDRY0xSz5MXLWd2LhRHLItO090sSOFyGFHHjfInmVHob2RGCj9
+	 0vAUePkS3/WN+RJT0B82vEx9qrWXKguch1rfjnhChYgN3puN48s9wOh8c9FTLVUyfs
+	 CQ9ABkKEu/WCBPjq1M8OQ8CN6TysPRfdlddIpb/61VaYnUuLjqhwGGB4FJ9AspavNW
+	 Mgd0M2ygS4qDiD4TPjRZ5WSE+NT7ellTIdHPMD0E1lBY5QcuQaSSUYHEhOwWFxHta5
+	 bzzQal3ygPtg7YJy8vRymjTExnuMAIVIBPpMc3oPi7YbRs2EiyQty8j3g7EjjpG14Y
+	 6kb/hfXKRRLew==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZrRjt5hkzz4x21;
+	Mon,  5 May 2025 13:25:21 +1000 (AEST)
+Date: Mon, 5 May 2025 13:25:20 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Caleb Sander Mateos <csander@purestorage.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>, Ming Lei <ming.lei@redhat.com>
+Subject: linux-next: manual merge of the block tree with Linus' tree
+Message-ID: <20250505132520.0a33799d@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/7] nova-core: docs: Document vbios layout
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Joel Fernandes <joelagnelf@nvidia.com>, linux-kernel@vger.kernel.org,
- Danilo Krummrich <dakr@kernel.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Jonathan Corbet <corbet@lwn.net>
-Cc: nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- Alexandre Courbot <acourbot@nvidia.com>, John Hubbard <jhubbard@nvidia.com>,
- Shirish Baskaran <sbaskaran@nvidia.com>, Alistair Popple
- <apopple@nvidia.com>, Timur Tabi <ttabi@nvidia.com>,
- Ben Skeggs <bskeggs@nvidia.com>, rust-for-linux@vger.kernel.org,
- linux-doc@vger.kernel.org
-References: <20250503040802.1411285-1-joelagnelf@nvidia.com>
- <20250503040802.1411285-4-joelagnelf@nvidia.com> <aBgp5ZTIArRukRk8@archie.me>
-Content-Language: en-US
-In-Reply-To: <aBgp5ZTIArRukRk8@archie.me>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/ORy99xAHlAcUtpuq6ZdWgpU";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On 5/5/25 10:00, Bagas Sanjaya wrote:
-> On Sat, May 03, 2025 at 12:07:55AM -0400, Joel Fernandes wrote:
->> +Here is a block diagram of the VBIOS layout::
->> +
->> + ┌────────────────────────────────────────────────────────────────────────┐
->> + │ VBIOS (Starting at ROM_OFFSET: 0x300000)                               │
->> + ├────────────────────────────────────────────────────────────────────────┤
->> + │ ┌───────────────────────────────────────────────┐                      │
->> + │ │ PciAt Image (Type 0x00)                       │                      │
->> + │ ├───────────────────────────────────────────────┤                      │
->> + │ │ ┌───────────────────┐                         │                      │
->> + │ │ │ ROM Header        │                         │                      │
->> + │ │ │ (Signature 0xAA55)│                         │                      │
->> + │ │ └───────────────────┘                         │                      │
->> + │ │         │ rom header's pci_data_struct_offset │                      │
->> + │ │         │ points to the PCIR structure        │                      │
->> + │ │         V                                     │                      │
->> + │ │ ┌───────────────────┐                         │                      │
->> + │ │ │ PCIR Structure    │                         │                      │
->> + │ │ │ (Signature "PCIR")│                         │                      │
->> + │ │ │ last_image: 0x80  │                         │                      │
->> + │ │ │ image_len: size   │                         │                      │
->> + │ │ │ in 512-byte units │                         │                      │
->> + │ │ └───────────────────┘                         │                      │
->> + │ │         │                                     │                      │
->> + │ │         │ NPDE immediately follows PCIR       │                      │
->> + │ │         V                                     │                      │
->> + │ │ ┌───────────────────┐                         │                      │
->> + │ │ │ NPDE Structure    │                         │                      │
->> + │ │ │ (Signature "NPDE")│                         │                      │
->> + │ │ │ last_image: 0x00  │                         │                      │
->> + │ │ └───────────────────┘                         │                      │
->> + │ │                                               │                      │
->> + │ │ ┌───────────────────┐                         │                      │
->> + │ │ │ BIT Header        │ (Signature scanning     │                      │
->> + │ │ │ (Signature "BIT") │  provides the location  │                      │
->> + │ │ └───────────────────┘  of the BIT table)      │                      │
->> + │ │         │ header is                           │                      │
->> + │ │         | followed by a table of tokens       │                      │
->> + │ │         V one of which is for falcon data.    │                      │
->> + │ │ ┌───────────────────┐                         │                      │
->> + │ │ │ BIT Tokens        │                         │                      │
->> + │ | |  ______________   |                         |                      |
->> + │ │ │ │ Falcon Data │   │                         │                      │
->> + │ │ │ │ Token (0x70)│---+------------>------------┼──+                   │
->> + │ │ │ └─────────────┘   │  falcon_data_ptr()      │  │                   │
->> + │ │ └───────────────────┘                         │  V                   │
->> + │ └───────────────────────────────────────────────┘  │                   │
->> + │              (no gap between images)               │                   │
->> + │ ┌───────────────────────────────────────────────┐  │                   │
->> + │ │ EFI Image (Type 0x03)                         │  │                   │
->> + │ ├───────────────────────────────────────────────┤  │                   │
->> + │ | Contains the UEFI GOP driver (Graphics Output)|  |                   |
->> + │ │ ┌───────────────────┐                         │  │                   │
->> + │ │ │ ROM Header        │                         │  │                   │
->> + │ │ +───────────────────+                         │  │                   │
->> + │ │ │ PCIR Structure    │                         │  │                   │
->> + │ │ +───────────────────+                         │  │                   │
->> + │ │ │ NPDE Structure    │                         │  │                   │
->> + │ │ └───────────────────┘                         │  │                   │
->> + │ │ │ Image data        │                         │  │                   │
->> + │ │ └───────────────────┘                         │  │                   │
->> + │ └───────────────────────────────────────────────┘  │                   │
->> + │              (no gap between images)               │                   │
->> + │ ┌───────────────────────────────────────────────┐  │                   │
->> + │ │ First FwSec Image (Type 0xE0)                 │  │                   │
->> + │ ├───────────────────────────────────────────────┤  │                   │
->> + │ │ ┌───────────────────┐                         │  │                   │
->> + │ │ │ ROM Header        │                         │  │                   │
->> + │ │ +───────────────────+                         │  │                   │
->> + │ │ │ PCIR Structure    │                         │  │                   │
->> + │ │ +───────────────────+                         │  │                   │
->> + │ │ │ NPDE Structure    │                         │  │                   │
->> + │ │ └───────────────────┘                         │  │                   │
->> + │ │ │ Image data        │                         │  │                   │
->> + │ │ └───────────────────┘                         │  │                   │
->> + │ └───────────────────────────────────────────────┘  │                   │
->> + │              (no gap between images)               │                   │
->> + │ ┌───────────────────────────────────────────────┐  │                   │
->> + │ │ Second FwSec Image (Type 0xE0)                │  │                   │
->> + │ ├───────────────────────────────────────────────┤  │                   │
->> + │ │ ┌───────────────────┐                         │  │                   │
->> + │ │ │ ROM Header        │                         │  │                   │
->> + │ │ +───────────────────+                         │  │                   │
->> + │ │ │ PCIR Structure    │                         │  │                   │
->> + │ │ +───────────────────+                         │  │                   │
->> + │ │ │ NPDE Structure    │                         │  │                   │
->> + │ │ └───────────────────┘                         │  │                   │
->> + │ │                                               │  │                   │
->> + │ │ ┌───────────────────┐                         │  │                   │
->> + │ │ │ PMU Lookup Table  │ <- falcon_data_offset   │<─┘                   │
->> + │ │ │ ┌─────────────┐   │    pmu_lookup_table     │                      │
->> + │ │ │ │ Entry 0x85  │   │                         │                      │
->> + │ │ │ │ FWSEC_PROD  │   │                         │                      │
->> + │ │ │ └─────────────┘   │                         │                      │
->> + │ │ └───────────────────┘                         │                      │
->> + │ │         │                                     │                      │
->> + │ │         │ points to                           │                      │
->> + │ │         V                                     │                      │
->> + │ │ ┌───────────────────┐                         │                      │
->> + │ │ │ FalconUCodeDescV3 │ <- falcon_ucode_offset  │                      │
->> + │ │ │ (FWSEC Firmware)  │    fwsec_header()       │                      │
->> + │ │ └───────────────────┘                         │                      │
->> + │ │         │   immediately followed  by...       │                      │
->> + │ │         V                                     │                      │
->> + │ │ ┌────────────────────────────┐                │                      │
->> + │ │ │ Signatures + FWSEC Ucode   │                │                      │
->> + │ │ │ fwsec_sigs(), fwsec_ucode()│                │                      │
->> + │ │ └────────────────────────────┘                │                      │
->> + │ └───────────────────────────────────────────────┘______________________│
-> 
-> Diagram borders look messy in htmldocs output (due to Unicode characters
-> ─ and │), so I use ASCII dash and vertical bar instead:
-> 
-> ---- >8 ----
-> diff --git a/Documentation/gpu/nova/core/vbios.rst b/Documentation/gpu/nova/core/vbios.rst
-> index dd6ac891e5f1d0..c68ef0e7b70124 100644
-> --- a/Documentation/gpu/nova/core/vbios.rst
-> +++ b/Documentation/gpu/nova/core/vbios.rst
-> @@ -56,112 +56,113 @@ The VBIOS layout is roughly a series of concatenated images as follows:
->   
->   Here is a block diagram of the VBIOS layout::
->   
-> - ┌────────────────────────────────────────────────────────────────────────┐
-> - │ VBIOS (Starting at ROM_OFFSET: 0x300000)                               │
-> - ├────────────────────────────────────────────────────────────────────────┤
-> - │ ┌───────────────────────────────────────────────┐                      │
-> - │ │ PciAt Image (Type 0x00)                       │                      │
-> - │ ├───────────────────────────────────────────────┤                      │
-> - │ │ ┌───────────────────┐                         │                      │
-> - │ │ │ ROM Header        │                         │                      │
-> - │ │ │ (Signature 0xAA55)│                         │                      │
-> - │ │ └───────────────────┘                         │                      │
-> - │ │         │ rom header's pci_data_struct_offset │                      │
-> - │ │         │ points to the PCIR structure        │                      │
-> - │ │         V                                     │                      │
-> - │ │ ┌───────────────────┐                         │                      │
-> - │ │ │ PCIR Structure    │                         │                      │
-> - │ │ │ (Signature "PCIR")│                         │                      │
-> - │ │ │ last_image: 0x80  │                         │                      │
-> - │ │ │ image_len: size   │                         │                      │
-> - │ │ │ in 512-byte units │                         │                      │
-> - │ │ └───────────────────┘                         │                      │
-> - │ │         │                                     │                      │
-> - │ │         │ NPDE immediately follows PCIR       │                      │
-> - │ │         V                                     │                      │
-> - │ │ ┌───────────────────┐                         │                      │
-> - │ │ │ NPDE Structure    │                         │                      │
-> - │ │ │ (Signature "NPDE")│                         │                      │
-> - │ │ │ last_image: 0x00  │                         │                      │
-> - │ │ └───────────────────┘                         │                      │
-> - │ │                                               │                      │
-> - │ │ ┌───────────────────┐                         │                      │
-> - │ │ │ BIT Header        │ (Signature scanning     │                      │
-> - │ │ │ (Signature "BIT") │  provides the location  │                      │
-> - │ │ └───────────────────┘  of the BIT table)      │                      │
-> - │ │         │ header is                           │                      │
-> - │ │         | followed by a table of tokens       │                      │
-> - │ │         V one of which is for falcon data.    │                      │
-> - │ │ ┌───────────────────┐                         │                      │
-> - │ │ │ BIT Tokens        │                         │                      │
-> - │ | |  ______________   |                         |                      |
-> - │ │ │ │ Falcon Data │   │                         │                      │
-> - │ │ │ │ Token (0x70)│---+------------>------------┼──+                   │
-> - │ │ │ └─────────────┘   │  falcon_data_ptr()      │  │                   │
-> - │ │ └───────────────────┘                         │  V                   │
-> - │ └───────────────────────────────────────────────┘  │                   │
-> - │              (no gap between images)               │                   │
-> - │ ┌───────────────────────────────────────────────┐  │                   │
-> - │ │ EFI Image (Type 0x03)                         │  │                   │
-> - │ ├───────────────────────────────────────────────┤  │                   │
-> - │ | Contains the UEFI GOP driver (Graphics Output)|  |                   |
-> - │ │ ┌───────────────────┐                         │  │                   │
-> - │ │ │ ROM Header        │                         │  │                   │
-> - │ │ +───────────────────+                         │  │                   │
-> - │ │ │ PCIR Structure    │                         │  │                   │
-> - │ │ +───────────────────+                         │  │                   │
-> - │ │ │ NPDE Structure    │                         │  │                   │
-> - │ │ └───────────────────┘                         │  │                   │
-> - │ │ │ Image data        │                         │  │                   │
-> - │ │ └───────────────────┘                         │  │                   │
-> - │ └───────────────────────────────────────────────┘  │                   │
-> - │              (no gap between images)               │                   │
-> - │ ┌───────────────────────────────────────────────┐  │                   │
-> - │ │ First FwSec Image (Type 0xE0)                 │  │                   │
-> - │ ├───────────────────────────────────────────────┤  │                   │
-> - │ │ ┌───────────────────┐                         │  │                   │
-> - │ │ │ ROM Header        │                         │  │                   │
-> - │ │ +───────────────────+                         │  │                   │
-> - │ │ │ PCIR Structure    │                         │  │                   │
-> - │ │ +───────────────────+                         │  │                   │
-> - │ │ │ NPDE Structure    │                         │  │                   │
-> - │ │ └───────────────────┘                         │  │                   │
-> - │ │ │ Image data        │                         │  │                   │
-> - │ │ └───────────────────┘                         │  │                   │
-> - │ └───────────────────────────────────────────────┘  │                   │
-> - │              (no gap between images)               │                   │
-> - │ ┌───────────────────────────────────────────────┐  │                   │
-> - │ │ Second FwSec Image (Type 0xE0)                │  │                   │
-> - │ ├───────────────────────────────────────────────┤  │                   │
-> - │ │ ┌───────────────────┐                         │  │                   │
-> - │ │ │ ROM Header        │                         │  │                   │
-> - │ │ +───────────────────+                         │  │                   │
-> - │ │ │ PCIR Structure    │                         │  │                   │
-> - │ │ +───────────────────+                         │  │                   │
-> - │ │ │ NPDE Structure    │                         │  │                   │
-> - │ │ └───────────────────┘                         │  │                   │
-> - │ │                                               │  │                   │
-> - │ │ ┌───────────────────┐                         │  │                   │
-> - │ │ │ PMU Lookup Table  │ <- falcon_data_offset   │<─┘                   │
-> - │ │ │ ┌─────────────┐   │    pmu_lookup_table     │                      │
-> - │ │ │ │ Entry 0x85  │   │                         │                      │
-> - │ │ │ │ FWSEC_PROD  │   │                         │                      │
-> - │ │ │ └─────────────┘   │                         │                      │
-> - │ │ └───────────────────┘                         │                      │
-> - │ │         │                                     │                      │
-> - │ │         │ points to                           │                      │
-> - │ │         V                                     │                      │
-> - │ │ ┌───────────────────┐                         │                      │
-> - │ │ │ FalconUCodeDescV3 │ <- falcon_ucode_offset  │                      │
-> - │ │ │ (FWSEC Firmware)  │    fwsec_header()       │                      │
-> - │ │ └───────────────────┘                         │                      │
-> - │ │         │   immediately followed  by...       │                      │
-> - │ │         V                                     │                      │
-> - │ │ ┌────────────────────────────┐                │                      │
-> - │ │ │ Signatures + FWSEC Ucode   │                │                      │
-> - │ │ │ fwsec_sigs(), fwsec_ucode()│                │                      │
-> - │ │ └────────────────────────────┘                │                      │
-> - │ └───────────────────────────────────────────────┘______________________│
-> + ┌------------------------------------------------------------------------┐
-> + | VBIOS (Starting at ROM_OFFSET: 0x300000)                               |
-> + ├------------------------------------------------------------------------┤
-> + | ┌-----------------------------------------------┐                      |
-> + | | PciAt Image (Type 0x00)                       |                      |
-> + | ├-----------------------------------------------┤                      |
-> + | | ┌-------------------┐                         |                      |
-> + | | | ROM Header        |                         |                      |
-> + | | | (Signature 0xAA55)|                         |                      |
-> + | | └-------------------┘                         |                      |
-> + | |         | rom header's pci_data_struct_offset |                      |
-> + | |         | points to the PCIR structure        |                      |
-> + | |         V                                     |                      |
-> + | | ┌-------------------┐                         |                      |
-> + | | | PCIR Structure    |                         |                      |
-> + | | | (Signature "PCIR")|                         |                      |
-> + | | | last_image: 0x80  |                         |                      |
-> + | | | image_len: size   |                         |                      |
-> + | | | in 512-byte units |                         |                      |
-> + | | └-------------------┘                         |                      |
-> + | |         |                                     |                      |
-> + | |         | NPDE immediately follows PCIR       |                      |
-> + | |         V                                     |                      |
-> + | | ┌-------------------┐                         |                      |
-> + | | | NPDE Structure    |                         |                      |
-> + | | | (Signature "NPDE")|                         |                      |
-> + | | | last_image: 0x00  |                         |                      |
-> + | | └-------------------┘                         |                      |
-> + | |                                               |                      |
-> + | | ┌-------------------┐                         |                      |
-> + | | | BIT Header        | (Signature scanning     |                      |
-> + | | | (Signature "BIT") |  provides the location  |                      |
-> + | | └-------------------┘  of the BIT table)      |                      |
-> + | |         | header is                           |                      |
-> + | |         | followed by a table of tokens       |                      |
-> + | |         V one of which is for falcon data.    |                      |
-> + | | ┌-------------------┐                         |                      |
-> + | | | BIT Tokens        |                         |                      |
-> + | | | ┌-------------┐   |                         |                      |
-> + | | | | Falcon Data |   |                         |                      |
-> + | | | | Token (0x70)|---+------------>------------┼--+                   |
-> + | | | └-------------┘   |  falcon_data_ptr()      |  |                   |
-> + | | └-------------------┘                         |  V                   |
-> + | └-----------------------------------------------┘  |                   |
-> + |              (no gap between images)               |                   |
-> + | ┌-----------------------------------------------┐  |                   |
-> + | | EFI Image (Type 0x03)                         |  |                   |
-> + | ├-----------------------------------------------┤  |                   |
-> + | | Contains the UEFI GOP driver (Graphics Output)|  |                   |
-> + | | ┌-------------------┐                         |  |                   |
-> + | | | ROM Header        |                         |  |                   |
-> + | | +-------------------+                         |  |                   |
-> + | | | PCIR Structure    |                         |  |                   |
-> + | | +-------------------+                         |  |                   |
-> + | | | NPDE Structure    |                         |  |                   |
-> + | | └-------------------┘                         |  |                   |
-> + | | | Image data        |                         |  |                   |
-> + | | └-------------------┘                         |  |                   |
-> + | └-----------------------------------------------┘  |                   |
-> + |              (no gap between images)               |                   |
-> + | ┌-----------------------------------------------┐  |                   |
-> + | | First FwSec Image (Type 0xE0)                 |  |                   |
-> + | ├-----------------------------------------------┤  |                   |
-> + | | ┌-------------------┐                         |  |                   |
-> + | | | ROM Header        |                         |  |                   |
-> + | | +-------------------+                         |  |                   |
-> + | | | PCIR Structure    |                         |  |                   |
-> + | | +-------------------+                         |  |                   |
-> + | | | NPDE Structure    |                         |  |                   |
-> + | | └-------------------┘                         |  |                   |
-> + | | | Image data        |                         |  |                   |
-> + | | └-------------------┘                         |  |                   |
-> + | └-----------------------------------------------┘  |                   |
-> + |              (no gap between images)               |                   |
-> + | ┌-----------------------------------------------┐  |                   |
-> + | | Second FwSec Image (Type 0xE0)                |  |                   |
-> + | ├-----------------------------------------------┤  |                   |
-> + | | ┌-------------------┐                         |  |                   |
-> + | | | ROM Header        |                         |  |                   |
-> + | | +-------------------+                         |  |                   |
-> + | | | PCIR Structure    |                         |  |                   |
-> + | | +-------------------+                         |  |                   |
-> + | | | NPDE Structure    |                         |  |                   |
-> + | | └-------------------┘                         |  |                   |
-> + | |                                               |  |                   |
-> + | | ┌-------------------┐                         |  |                   |
-> + | | | PMU Lookup Table  | <- falcon_data_offset   |<-┘                   |
-> + | | | ┌-------------┐   |    pmu_lookup_table     |                      |
-> + | | | | Entry 0x85  |   |                         |                      |
-> + | | | | FWSEC_PROD  |   |                         |                      |
-> + | | | └-------------┘   |                         |                      |
-> + | | └-------------------┘                         |                      |
-> + | |         |                                     |                      |
-> + | |         | points to                           |                      |
-> + | |         V                                     |                      |
-> + | | ┌-------------------┐                         |                      |
-> + | | | FalconUCodeDescV3 | <- falcon_ucode_offset  |                      |
-> + | | | (FWSEC Firmware)  |    fwsec_header()       |                      |
-> + | | └-------------------┘                         |                      |
-> + | |         |   immediately followed  by...       |                      |
-> + | |         V                                     |                      |
-> + | | ┌----------------------------┐                |                      |
-> + | | | Signatures + FWSEC Ucode   |                |                      |
-> + | | | fwsec_sigs(), fwsec_ucode()|                |                      |
-> + | | └----------------------------┘                |                      |
-> + | └-----------------------------------------------┘                      |
-> + └------------------------------------------------------------------------┘
->   
+--Sig_/ORy99xAHlAcUtpuq6ZdWgpU
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Addendum: I'm using Roboto Mono on my htmldocs build (using custom style 
-sheet). The diagram looks fine with default Alabaster font stack 
-(Consolas). If you disagree you can ignore above diff.
+Hi all,
 
-Thanks.
+Today's linux-next merge of the block tree got a conflict in:
 
--- 
-An old man doll... just what I always wanted! - Clara
+  drivers/block/ublk_drv.c
+
+between commit:
+
+  69edf98be844 ("ublk: decouple zero copy from user copy")
+
+from Linus' tree and commit:
+
+  2a86eec6396f ("ublk: take const ubq pointer in ublk_get_iod()")
+
+from the block tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/block/ublk_drv.c
+index f9032076bc06,02e52b066318..000000000000
+--- a/drivers/block/ublk_drv.c
++++ b/drivers/block/ublk_drv.c
+@@@ -201,10 -208,20 +208,15 @@@ struct ublk_params_header=20
+  static void ublk_stop_dev_unlocked(struct ublk_device *ub);
+  static void ublk_abort_queue(struct ublk_device *ub, struct ublk_queue *u=
+bq);
+  static inline struct request *__ublk_check_and_get_req(struct ublk_device=
+ *ub,
+ -		struct ublk_queue *ubq, int tag, size_t offset);
+ +		const struct ublk_queue *ubq, int tag, size_t offset);
+  static inline unsigned int ublk_req_build_flags(struct request *req);
+- static inline struct ublksrv_io_desc *ublk_get_iod(struct ublk_queue *ubq,
+- 						   int tag);
++=20
++ static inline struct ublksrv_io_desc *
++ ublk_get_iod(const struct ublk_queue *ubq, unsigned tag)
++ {
++ 	return &ubq->io_cmd_buf[tag];
++ }
++=20
+ -static inline bool ublk_dev_is_user_copy(const struct ublk_device *ub)
+ -{
+ -	return ub->dev_info.flags & (UBLK_F_USER_COPY | UBLK_F_SUPPORT_ZERO_COPY=
+);
+ -}
+ -
+  static inline bool ublk_dev_is_zoned(const struct ublk_device *ub)
+  {
+  	return ub->dev_info.flags & UBLK_F_ZONED;
+
+--Sig_/ORy99xAHlAcUtpuq6ZdWgpU
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgYL6AACgkQAVBC80lX
+0GwSpQgAmTM4tTcvcrSIJgcUCOCtAxW4cZ/JtyWPDMHr3Wx7Urj6nFAmhp1GY6lE
+5nxTOus5P7i/fqSNGDXpTmcny9kRIrF23XjjBeqtGGTg0zm3OdDHjrhunayvMYyx
+geaMs8u5rjrXYiK7BB3vO3+/LT0cteMy1s4WdNaSJWzjRYbZV7LMSzEP5T7+Jb+C
+qwx9Rv/LvYEg21YMiGU9mlqwHiV1G/KZO2TBy/ZpoNepXd41IEcsYHWL+dKQgcvF
+yE+EbViacoWPI8LLLvp7BV7kePjI2GU5k8BWch/yEGBTcrSEXJpGZn9dG6m56cqB
+17c+DbjgTg+kbTnORFveriUuSjMJDQ==
+=7paI
+-----END PGP SIGNATURE-----
+
+--Sig_/ORy99xAHlAcUtpuq6ZdWgpU--
