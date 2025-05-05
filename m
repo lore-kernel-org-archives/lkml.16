@@ -1,48 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 395701474B8;
-	Mon,  5 May 2025 22:54:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 199D02D642C;
+	Mon,  5 May 2025 22:54:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485689; cv=none; b=FVibT3rZT1KA+32GSELJOkgb+RrDPMv323EazPXFBEzieXC3tDxWWtvd8uVfcSp6uGzzVQHyeoUbARMN+p5pWoNXnUwA24myWr3DZ32UgXC6dQCjmMBmMVtrkWExODj6+rs5Hb+Q8FIBWD7Wy4l/va+eFlRscQNv83lGUKry/1A=
+	t=1746485694; cv=none; b=FAye/m70LDmraAmlXtP4dnmkIS5H6cCC7Ux35PGobYh33GF64OF14nmAo0naj7BE0EY6jXSi/cYyv42QxqAGk7GmiOIEWGAqyM2MyuTwgDuOdaIdwRf00hHNBkxj2A0ZKQaFVDVqQrlwJ7SCqI8HaDbTlTdW3Kn/NLABiUg9/9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485689; c=relaxed/simple;
-	bh=VVgmndga1VaSEzVBYDI4b53/Gvrf7qNKSw0GXrRXzHw=;
+	s=arc-20240116; t=1746485694; c=relaxed/simple;
+	bh=KaG4hW4B91bEHj0KR2xNtLQpGmyZ0d0EEHW0MAaGRXk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=CsFfwWa4o2q3em2csac4GgIwReQeAh4EMSnK2jcm19ypuu8EneLN2KKbBOsbiHCtJv1f7mJgVPwka28nqKzwqAm+suqb6tGdOYGbGXli7JTJ4LzAf2MuBAWRT4E2I8/CUC021UWgbMbSAFV3YJqy/rMr13SWbe/oajoLYeNezbg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t/ThmBnN; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Hanp/XgVSX5IBW14pluZUiy1qkkO71iL93T+fgcnhLlr6iuCSSxTKvdRChrHzmQtaBOKca4XhD5ydMdyjy4Vj+HzdA9CnrSocnjkZ3zvPYUL52yd0LwHcRaD3wu5STFJS6kll6ak8P/gwg40UWPlOBTqAsNOyU/ipg3N4j1M5L4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SkahdUX3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t/ThmBnN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B03F1C4CEE4;
-	Mon,  5 May 2025 22:54:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SkahdUX3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF505C4CEEE;
+	Mon,  5 May 2025 22:54:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485689;
-	bh=VVgmndga1VaSEzVBYDI4b53/Gvrf7qNKSw0GXrRXzHw=;
+	s=k20201202; t=1746485694;
+	bh=KaG4hW4B91bEHj0KR2xNtLQpGmyZ0d0EEHW0MAaGRXk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=t/ThmBnNDUPoAHYVD/lJUO+OihvSVYG5+UN7EcP9Pr03i2irSnUNO2r/GRYF5lgPK
-	 JQbPJvdeS4K8JvJ4i001Rh/iTItO72aV2a6FSNM/wh04saVqIDG1sN0uUd9ca6URO7
-	 WrnvoDIlIQBGmgpAssBLEPN2TGb3BWP3jTLVA0NWa6o2XS1Epu8OPB4q+nywKU2Xt9
-	 BQibEC6FjovilEvbzs9nAFG4xSgdvDhRId0iYa+PHYHcU4sGa7E9dpZcDzbgHr/zJi
-	 7LTPhMA8/qj6TrWD3BoN9YZWl8ExH/la9DVn/ED5KrvFkgafhpqOtZT650IsKk1HIb
-	 6o0gVekAfpemg==
+	b=SkahdUX3PUrlG8N/58vFNfIm1gzaub1+3V5JMY/x0N8ZdJFBJeCtzfAhfTvhQaFno
+	 bm6ff9g5+wdzh+8TkoXZyVkFK9HxuQcUNP6yRkBn2u3Ioro8ju4gAEF3qpeMZlWyZz
+	 LMXxIeb6Bh+7uCQCk599c3K76xOPSq2fdvJ311pgBFPx9eZ64wwybc7+RHrhJTrhxm
+	 KjCNf04hkVNqyXuI6D+B4a9atn46me1lPYcjsk5FUo/xdXEHzDcbM0U7TAKT+e7MxE
+	 so1Z6+ieE5/dEyH3tJB8gfohoUibFz91O/Xm3YZpYmn01ihNjkfK8DKnOOBQWjzqzR
+	 93dwSNrg56BnA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Eric Dumazet <edumazet@google.com>,
-	Jason Xing <kerneljasonxing@gmail.com>,
+Cc: Antoine Tenart <atenart@kernel.org>,
 	Jakub Kicinski <kuba@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
 	davem@davemloft.net,
+	edumazet@google.com,
 	pabeni@redhat.com,
-	kuniyu@amazon.com,
 	sdf@fomichev.me,
-	ahmed.zaki@intel.com,
+	jdamato@fastly.com,
 	aleksander.lobakin@intel.com,
 	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 427/486] net: flush_backlog() small changes
-Date: Mon,  5 May 2025 18:38:23 -0400
-Message-Id: <20250505223922.2682012-427-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.12 429/486] net-sysfs: remove rtnl_trylock from queue attributes
+Date: Mon,  5 May 2025 18:38:25 -0400
+Message-Id: <20250505223922.2682012-429-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -57,73 +56,375 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Eric Dumazet <edumazet@google.com>
+From: Antoine Tenart <atenart@kernel.org>
 
-[ Upstream commit cbe08724c18078564abefbf6591078a7c98e5e0f ]
+[ Upstream commit b0b6fcfa6ad8433e22b050c72cfbeec2548744b9 ]
 
-Add READ_ONCE() around reads of skb->dev->reg_state, because
-this field can be changed from other threads/cpus.
+Similar to the commit removing remove rtnl_trylock from device
+attributes we here apply the same technique to networking queues.
 
-Instead of calling dev_kfree_skb_irq() and kfree_skb()
-while interrupts are masked and locks held,
-use a temporary list and use __skb_queue_purge_reason()
-
-Use SKB_DROP_REASON_DEV_READY drop reason to better
-describe why these skbs are dropped.
-
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reviewed-by: Jason Xing <kerneljasonxing@gmail.com>
-Link: https://patch.msgid.link/20250204144825.316785-1-edumazet@google.com
+Signed-off-by: Antoine Tenart <atenart@kernel.org>
+Link: https://patch.msgid.link/20250204170314.146022-5-atenart@kernel.org
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/dev.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ net/core/net-sysfs.c | 147 ++++++++++++++++++++++++++-----------------
+ 1 file changed, 89 insertions(+), 58 deletions(-)
 
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 7b7b36c43c82c..2ba2160dd093a 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -6034,16 +6034,18 @@ static DEFINE_PER_CPU(struct work_struct, flush_works);
- static void flush_backlog(struct work_struct *work)
- {
- 	struct sk_buff *skb, *tmp;
-+	struct sk_buff_head list;
- 	struct softnet_data *sd;
+diff --git a/net/core/net-sysfs.c b/net/core/net-sysfs.c
+index 05cf5347f25e8..b398a2e0c243d 100644
+--- a/net/core/net-sysfs.c
++++ b/net/core/net-sysfs.c
+@@ -1213,9 +1213,11 @@ static int net_rx_queue_change_owner(struct net_device *dev, int num,
+  */
+ struct netdev_queue_attribute {
+ 	struct attribute attr;
+-	ssize_t (*show)(struct netdev_queue *queue, char *buf);
+-	ssize_t (*store)(struct netdev_queue *queue,
+-			 const char *buf, size_t len);
++	ssize_t (*show)(struct kobject *kobj, struct attribute *attr,
++			struct netdev_queue *queue, char *buf);
++	ssize_t (*store)(struct kobject *kobj, struct attribute *attr,
++			 struct netdev_queue *queue, const char *buf,
++			 size_t len);
+ };
+ #define to_netdev_queue_attr(_attr) \
+ 	container_of(_attr, struct netdev_queue_attribute, attr)
+@@ -1232,7 +1234,7 @@ static ssize_t netdev_queue_attr_show(struct kobject *kobj,
+ 	if (!attribute->show)
+ 		return -EIO;
  
-+	__skb_queue_head_init(&list);
- 	local_bh_disable();
- 	sd = this_cpu_ptr(&softnet_data);
- 
- 	backlog_lock_irq_disable(sd);
- 	skb_queue_walk_safe(&sd->input_pkt_queue, skb, tmp) {
--		if (skb->dev->reg_state == NETREG_UNREGISTERING) {
-+		if (READ_ONCE(skb->dev->reg_state) == NETREG_UNREGISTERING) {
- 			__skb_unlink(skb, &sd->input_pkt_queue);
--			dev_kfree_skb_irq(skb);
-+			__skb_queue_tail(&list, skb);
- 			rps_input_queue_head_incr(sd);
- 		}
- 	}
-@@ -6051,14 +6053,16 @@ static void flush_backlog(struct work_struct *work)
- 
- 	local_lock_nested_bh(&softnet_data.process_queue_bh_lock);
- 	skb_queue_walk_safe(&sd->process_queue, skb, tmp) {
--		if (skb->dev->reg_state == NETREG_UNREGISTERING) {
-+		if (READ_ONCE(skb->dev->reg_state) == NETREG_UNREGISTERING) {
- 			__skb_unlink(skb, &sd->process_queue);
--			kfree_skb(skb);
-+			__skb_queue_tail(&list, skb);
- 			rps_input_queue_head_incr(sd);
- 		}
- 	}
- 	local_unlock_nested_bh(&softnet_data.process_queue_bh_lock);
- 	local_bh_enable();
-+
-+	__skb_queue_purge_reason(&list, SKB_DROP_REASON_DEV_READY);
+-	return attribute->show(queue, buf);
++	return attribute->show(kobj, attr, queue, buf);
  }
  
- static bool flush_required(int cpu)
+ static ssize_t netdev_queue_attr_store(struct kobject *kobj,
+@@ -1246,7 +1248,7 @@ static ssize_t netdev_queue_attr_store(struct kobject *kobj,
+ 	if (!attribute->store)
+ 		return -EIO;
+ 
+-	return attribute->store(queue, buf, count);
++	return attribute->store(kobj, attr, queue, buf, count);
+ }
+ 
+ static const struct sysfs_ops netdev_queue_sysfs_ops = {
+@@ -1254,7 +1256,8 @@ static const struct sysfs_ops netdev_queue_sysfs_ops = {
+ 	.store = netdev_queue_attr_store,
+ };
+ 
+-static ssize_t tx_timeout_show(struct netdev_queue *queue, char *buf)
++static ssize_t tx_timeout_show(struct kobject *kobj, struct attribute *attr,
++			       struct netdev_queue *queue, char *buf)
+ {
+ 	unsigned long trans_timeout = atomic_long_read(&queue->trans_timeout);
+ 
+@@ -1272,18 +1275,18 @@ static unsigned int get_netdev_queue_index(struct netdev_queue *queue)
+ 	return i;
+ }
+ 
+-static ssize_t traffic_class_show(struct netdev_queue *queue,
+-				  char *buf)
++static ssize_t traffic_class_show(struct kobject *kobj, struct attribute *attr,
++				  struct netdev_queue *queue, char *buf)
+ {
+ 	struct net_device *dev = queue->dev;
+-	int num_tc, tc;
+-	int index;
++	int num_tc, tc, index, ret;
+ 
+ 	if (!netif_is_multiqueue(dev))
+ 		return -ENOENT;
+ 
+-	if (!rtnl_trylock())
+-		return restart_syscall();
++	ret = sysfs_rtnl_lock(kobj, attr, queue->dev);
++	if (ret)
++		return ret;
+ 
+ 	index = get_netdev_queue_index(queue);
+ 
+@@ -1310,24 +1313,25 @@ static ssize_t traffic_class_show(struct netdev_queue *queue,
+ }
+ 
+ #ifdef CONFIG_XPS
+-static ssize_t tx_maxrate_show(struct netdev_queue *queue,
+-			       char *buf)
++static ssize_t tx_maxrate_show(struct kobject *kobj, struct attribute *attr,
++			       struct netdev_queue *queue, char *buf)
+ {
+ 	return sysfs_emit(buf, "%lu\n", queue->tx_maxrate);
+ }
+ 
+-static ssize_t tx_maxrate_store(struct netdev_queue *queue,
+-				const char *buf, size_t len)
++static ssize_t tx_maxrate_store(struct kobject *kobj, struct attribute *attr,
++				struct netdev_queue *queue, const char *buf,
++				size_t len)
+ {
+-	struct net_device *dev = queue->dev;
+ 	int err, index = get_netdev_queue_index(queue);
++	struct net_device *dev = queue->dev;
+ 	u32 rate = 0;
+ 
+ 	if (!capable(CAP_NET_ADMIN))
+ 		return -EPERM;
+ 
+ 	/* The check is also done later; this helps returning early without
+-	 * hitting the trylock/restart below.
++	 * hitting the locking section below.
+ 	 */
+ 	if (!dev->netdev_ops->ndo_set_tx_maxrate)
+ 		return -EOPNOTSUPP;
+@@ -1336,18 +1340,21 @@ static ssize_t tx_maxrate_store(struct netdev_queue *queue,
+ 	if (err < 0)
+ 		return err;
+ 
+-	if (!rtnl_trylock())
+-		return restart_syscall();
++	err = sysfs_rtnl_lock(kobj, attr, dev);
++	if (err)
++		return err;
+ 
+ 	err = -EOPNOTSUPP;
+ 	if (dev->netdev_ops->ndo_set_tx_maxrate)
+ 		err = dev->netdev_ops->ndo_set_tx_maxrate(dev, index, rate);
+ 
+-	rtnl_unlock();
+ 	if (!err) {
+ 		queue->tx_maxrate = rate;
++		rtnl_unlock();
+ 		return len;
+ 	}
++
++	rtnl_unlock();
+ 	return err;
+ }
+ 
+@@ -1391,16 +1398,17 @@ static ssize_t bql_set(const char *buf, const size_t count,
+ 	return count;
+ }
+ 
+-static ssize_t bql_show_hold_time(struct netdev_queue *queue,
+-				  char *buf)
++static ssize_t bql_show_hold_time(struct kobject *kobj, struct attribute *attr,
++				  struct netdev_queue *queue, char *buf)
+ {
+ 	struct dql *dql = &queue->dql;
+ 
+ 	return sysfs_emit(buf, "%u\n", jiffies_to_msecs(dql->slack_hold_time));
+ }
+ 
+-static ssize_t bql_set_hold_time(struct netdev_queue *queue,
+-				 const char *buf, size_t len)
++static ssize_t bql_set_hold_time(struct kobject *kobj, struct attribute *attr,
++				 struct netdev_queue *queue, const char *buf,
++				 size_t len)
+ {
+ 	struct dql *dql = &queue->dql;
+ 	unsigned int value;
+@@ -1419,15 +1427,17 @@ static struct netdev_queue_attribute bql_hold_time_attribute __ro_after_init
+ 	= __ATTR(hold_time, 0644,
+ 		 bql_show_hold_time, bql_set_hold_time);
+ 
+-static ssize_t bql_show_stall_thrs(struct netdev_queue *queue, char *buf)
++static ssize_t bql_show_stall_thrs(struct kobject *kobj, struct attribute *attr,
++				   struct netdev_queue *queue, char *buf)
+ {
+ 	struct dql *dql = &queue->dql;
+ 
+ 	return sysfs_emit(buf, "%u\n", jiffies_to_msecs(dql->stall_thrs));
+ }
+ 
+-static ssize_t bql_set_stall_thrs(struct netdev_queue *queue,
+-				  const char *buf, size_t len)
++static ssize_t bql_set_stall_thrs(struct kobject *kobj, struct attribute *attr,
++				  struct netdev_queue *queue, const char *buf,
++				  size_t len)
+ {
+ 	struct dql *dql = &queue->dql;
+ 	unsigned int value;
+@@ -1453,13 +1463,15 @@ static ssize_t bql_set_stall_thrs(struct netdev_queue *queue,
+ static struct netdev_queue_attribute bql_stall_thrs_attribute __ro_after_init =
+ 	__ATTR(stall_thrs, 0644, bql_show_stall_thrs, bql_set_stall_thrs);
+ 
+-static ssize_t bql_show_stall_max(struct netdev_queue *queue, char *buf)
++static ssize_t bql_show_stall_max(struct kobject *kobj, struct attribute *attr,
++				  struct netdev_queue *queue, char *buf)
+ {
+ 	return sysfs_emit(buf, "%u\n", READ_ONCE(queue->dql.stall_max));
+ }
+ 
+-static ssize_t bql_set_stall_max(struct netdev_queue *queue,
+-				 const char *buf, size_t len)
++static ssize_t bql_set_stall_max(struct kobject *kobj, struct attribute *attr,
++				 struct netdev_queue *queue, const char *buf,
++				 size_t len)
+ {
+ 	WRITE_ONCE(queue->dql.stall_max, 0);
+ 	return len;
+@@ -1468,7 +1480,8 @@ static ssize_t bql_set_stall_max(struct netdev_queue *queue,
+ static struct netdev_queue_attribute bql_stall_max_attribute __ro_after_init =
+ 	__ATTR(stall_max, 0644, bql_show_stall_max, bql_set_stall_max);
+ 
+-static ssize_t bql_show_stall_cnt(struct netdev_queue *queue, char *buf)
++static ssize_t bql_show_stall_cnt(struct kobject *kobj, struct attribute *attr,
++				  struct netdev_queue *queue, char *buf)
+ {
+ 	struct dql *dql = &queue->dql;
+ 
+@@ -1478,8 +1491,8 @@ static ssize_t bql_show_stall_cnt(struct netdev_queue *queue, char *buf)
+ static struct netdev_queue_attribute bql_stall_cnt_attribute __ro_after_init =
+ 	__ATTR(stall_cnt, 0444, bql_show_stall_cnt, NULL);
+ 
+-static ssize_t bql_show_inflight(struct netdev_queue *queue,
+-				 char *buf)
++static ssize_t bql_show_inflight(struct kobject *kobj, struct attribute *attr,
++				 struct netdev_queue *queue, char *buf)
+ {
+ 	struct dql *dql = &queue->dql;
+ 
+@@ -1490,13 +1503,16 @@ static struct netdev_queue_attribute bql_inflight_attribute __ro_after_init =
+ 	__ATTR(inflight, 0444, bql_show_inflight, NULL);
+ 
+ #define BQL_ATTR(NAME, FIELD)						\
+-static ssize_t bql_show_ ## NAME(struct netdev_queue *queue,		\
+-				 char *buf)				\
++static ssize_t bql_show_ ## NAME(struct kobject *kobj,			\
++				 struct attribute *attr,		\
++				 struct netdev_queue *queue, char *buf)	\
+ {									\
+ 	return bql_show(buf, queue->dql.FIELD);				\
+ }									\
+ 									\
+-static ssize_t bql_set_ ## NAME(struct netdev_queue *queue,		\
++static ssize_t bql_set_ ## NAME(struct kobject *kobj,			\
++				struct attribute *attr,			\
++				struct netdev_queue *queue,		\
+ 				const char *buf, size_t len)		\
+ {									\
+ 	return bql_set(buf, len, &queue->dql.FIELD);			\
+@@ -1582,19 +1598,21 @@ static ssize_t xps_queue_show(struct net_device *dev, unsigned int index,
+ 	return len < PAGE_SIZE ? len : -EINVAL;
+ }
+ 
+-static ssize_t xps_cpus_show(struct netdev_queue *queue, char *buf)
++static ssize_t xps_cpus_show(struct kobject *kobj, struct attribute *attr,
++			     struct netdev_queue *queue, char *buf)
+ {
+ 	struct net_device *dev = queue->dev;
+ 	unsigned int index;
+-	int len, tc;
++	int len, tc, ret;
+ 
+ 	if (!netif_is_multiqueue(dev))
+ 		return -ENOENT;
+ 
+ 	index = get_netdev_queue_index(queue);
+ 
+-	if (!rtnl_trylock())
+-		return restart_syscall();
++	ret = sysfs_rtnl_lock(kobj, attr, queue->dev);
++	if (ret)
++		return ret;
+ 
+ 	/* If queue belongs to subordinate dev use its map */
+ 	dev = netdev_get_tx_queue(dev, index)->sb_dev ? : dev;
+@@ -1605,18 +1623,21 @@ static ssize_t xps_cpus_show(struct netdev_queue *queue, char *buf)
+ 		return -EINVAL;
+ 	}
+ 
+-	/* Make sure the subordinate device can't be freed */
+-	get_device(&dev->dev);
++	/* Increase the net device refcnt to make sure it won't be freed while
++	 * xps_queue_show is running.
++	 */
++	dev_hold(dev);
+ 	rtnl_unlock();
+ 
+ 	len = xps_queue_show(dev, index, tc, buf, XPS_CPUS);
+ 
+-	put_device(&dev->dev);
++	dev_put(dev);
+ 	return len;
+ }
+ 
+-static ssize_t xps_cpus_store(struct netdev_queue *queue,
+-			      const char *buf, size_t len)
++static ssize_t xps_cpus_store(struct kobject *kobj, struct attribute *attr,
++			      struct netdev_queue *queue, const char *buf,
++			      size_t len)
+ {
+ 	struct net_device *dev = queue->dev;
+ 	unsigned int index;
+@@ -1640,9 +1661,10 @@ static ssize_t xps_cpus_store(struct netdev_queue *queue,
+ 		return err;
+ 	}
+ 
+-	if (!rtnl_trylock()) {
++	err = sysfs_rtnl_lock(kobj, attr, dev);
++	if (err) {
+ 		free_cpumask_var(mask);
+-		return restart_syscall();
++		return err;
+ 	}
+ 
+ 	err = netif_set_xps_queue(dev, mask, index);
+@@ -1656,26 +1678,34 @@ static ssize_t xps_cpus_store(struct netdev_queue *queue,
+ static struct netdev_queue_attribute xps_cpus_attribute __ro_after_init
+ 	= __ATTR_RW(xps_cpus);
+ 
+-static ssize_t xps_rxqs_show(struct netdev_queue *queue, char *buf)
++static ssize_t xps_rxqs_show(struct kobject *kobj, struct attribute *attr,
++			     struct netdev_queue *queue, char *buf)
+ {
+ 	struct net_device *dev = queue->dev;
+ 	unsigned int index;
+-	int tc;
++	int tc, ret;
+ 
+ 	index = get_netdev_queue_index(queue);
+ 
+-	if (!rtnl_trylock())
+-		return restart_syscall();
++	ret = sysfs_rtnl_lock(kobj, attr, dev);
++	if (ret)
++		return ret;
+ 
+ 	tc = netdev_txq_to_tc(dev, index);
++
++	/* Increase the net device refcnt to make sure it won't be freed while
++	 * xps_queue_show is running.
++	 */
++	dev_hold(dev);
+ 	rtnl_unlock();
+-	if (tc < 0)
+-		return -EINVAL;
+ 
+-	return xps_queue_show(dev, index, tc, buf, XPS_RXQS);
++	ret = tc >= 0 ? xps_queue_show(dev, index, tc, buf, XPS_RXQS) : -EINVAL;
++	dev_put(dev);
++	return ret;
+ }
+ 
+-static ssize_t xps_rxqs_store(struct netdev_queue *queue, const char *buf,
++static ssize_t xps_rxqs_store(struct kobject *kobj, struct attribute *attr,
++			      struct netdev_queue *queue, const char *buf,
+ 			      size_t len)
+ {
+ 	struct net_device *dev = queue->dev;
+@@ -1699,9 +1729,10 @@ static ssize_t xps_rxqs_store(struct netdev_queue *queue, const char *buf,
+ 		return err;
+ 	}
+ 
+-	if (!rtnl_trylock()) {
++	err = sysfs_rtnl_lock(kobj, attr, dev);
++	if (err) {
+ 		bitmap_free(mask);
+-		return restart_syscall();
++		return err;
+ 	}
+ 
+ 	cpus_read_lock();
 -- 
 2.39.5
 
