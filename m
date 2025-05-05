@@ -1,42 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ECBC1A3056;
-	Mon,  5 May 2025 05:23:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46A3D78F26;
+	Mon,  5 May 2025 05:25:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746422588; cv=none; b=ZE+9OenSNwFMYZ3HyqUdXEaPE1zmzeHRtFCLFIBT0XEP1ZS5xJQxp6qWAALP2+i5wx0IpCxpD7gpD1G+NakpieUgJ8n+BsT7lWGydBgSmJdrlMw83WlghhfgKRslmKTpNqnDdRUmRhB2Vk8ryMu0artjRVV/S7d7gDJxqktF+y0=
+	t=1746422708; cv=none; b=anpcoTbXc1zu9Udjc36tFGNiu4YE3UrwC520bmIpNet7zSGMjEGQKappZKXU6ENgJ1gHRsxOrSFDJpcAtvuNFihSbugaFHqwDn+VnShIph7/jYhD1hCaNKl3DFTWkbuIu7uxB8umbEdup55rLRD5xBT2Q1krMBXWlIYDew7LqDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746422588; c=relaxed/simple;
-	bh=dQVaf1cnvda5ZxCt/F2DCOLIgjM50oOzDMkhmfbkQI4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=k7MY7OT0XbkJZqIC7r4rShHbcS3tFfmORH06ov1GPEBDBeK6NWrxLhnnh2M2fYjn9fQ0SHoYLklZFICIZh4aFzMnOjnXxzJ2Y3eM5PvBfzKpZyrP/Zo0aIdvqz2hVadSISMrS9CGyTDJpucb8qaGEX2ZxTZJnqFmnchGLAp13V0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E+gVblwb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746422708; c=relaxed/simple;
+	bh=gqLQSv5UjOL9/2FaltDUuXflgvx0PDLFqookN2zeQ0U=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YalTSj0tH83xG+oX+SOC18TVqIfv03KZA9FAAAjeT008FXYIU0z4i2Op3WB0xaRBeStJZitFHYiRPlNmLJeOcnzqlDMTvhm3npJD/J20B+IDbiVUApPvO4f8R/03bKajmzyGrTr/Jo89dSwDi8ep0UK+BJvO5vUXXyP8Rf4U+48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KfPU20/b; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E+gVblwb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 101E5C4CEE4;
-	Mon,  5 May 2025 05:23:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KfPU20/b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB3A5C4CEE4;
+	Mon,  5 May 2025 05:25:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746422587;
-	bh=dQVaf1cnvda5ZxCt/F2DCOLIgjM50oOzDMkhmfbkQI4=;
+	s=k20201202; t=1746422707;
+	bh=gqLQSv5UjOL9/2FaltDUuXflgvx0PDLFqookN2zeQ0U=;
 	h=From:To:Cc:Subject:Date:From;
-	b=E+gVblwbL92g3x7hlclyidOfykEFS6RyPQ+lkOQ6mocIPgw9Uji0PLoaXdFkxlFux
-	 LmFsGS6I9i6L5nU6JfsBC6XSvtZob+vpetxRHATkvDjiXCDF3FYHMeN0uO5u4khivM
-	 D6hA5ssBI3pSAI8flxa5tFGJb3VqWJzBjyQcvGueH+rsS5YAJdJvSnXTf6fWgVX82z
-	 p3XAXdX2J1sTcNFpFW+mXXhaZgn112Pqu78vqsZJlPVurXjx6myunZWjrWIvYZcRWc
-	 QgCp8G7G1Qv0+XZJl8M/bVotPEvhtvZjNypWW/XH+y1Dln8kAdjl+PWdr+ng0IGOO/
-	 D/+0/pewOcBQQ==
+	b=KfPU20/bIFUy43MnrFC1/6MQmcMePl0M4g8tf2tB09i+iI6iLslBvqfHGWAyCOfy+
+	 NnFSdwLwmqwfEIIVEHDmvvy/MtvTiYKtdKgOsfFo0Bi/XQ2r0Z+mJ2T5k8yPIJPUNV
+	 CGEeLokoNqcv5cyXTqQIaJ4EUO2DecXmHjy+AQ6CLajDaMr8QMxTDxVlh1hVUg89o/
+	 YNZXJdiuXNJvUQW7v0opmcFFkfus6+6IWLYd29xpcAYquSsk+MaS7CE4MmtN1R3bLL
+	 Jr3xs3Cv/jBrQBmmfhJKYTllogvriNA/p9Ufg9KDrzusfibir9v/hooEhaRGH6q1Fg
+	 sZAr+s+Nmx9Dw==
 From: Arnd Bergmann <arnd@kernel.org>
-To: Mark Brown <broonie@kernel.org>
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Chen-Yu Tsai <wenst@chromium.org>
 Cc: Arnd Bergmann <arnd@arndb.de>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Shenghao Ding <shenghao-ding@ti.com>,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] ALSA: hda/tas2781: select CONFIG_CRC8 for SND_HDA_SCODEC_TAS2781_I2C
-Date: Mon,  5 May 2025 07:21:21 +0200
-Message-Id: <20250505052303.1812002-1-arnd@kernel.org>
+	Zhang Rui <rui.zhang@intel.com>,
+	Lukasz Luba <lukasz.luba@arm.com>,
+	Julien Panis <jpanis@baylibre.com>,
+	=?UTF-8?q?N=C3=ADcolas=20F=2E=20R=2E=20A=2E=20Prado?= <nfraprado@collabora.com>,
+	Nicolas Pitre <npitre@baylibre.com>,
+	Colin Ian King <colin.i.king@gmail.com>,
+	linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: [PATCH] thermal/drivers/mediatek/lvts: remove unused lvts_debugfs_exit
+Date: Mon,  5 May 2025 07:24:52 +0200
+Message-Id: <20250505052502.1812867-1-arnd@kernel.org>
 X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -48,29 +56,31 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-The crc8 function is used by the common fmwlib module, so this has
-to be selected directly to avoid a link failure:
+When debugfs is disabled, the function has no reference any more:
 
-ERROR: modpost: "crc8" [sound/soc/codecs/snd-soc-tas2781-fmwlib.ko] undefined!
+drivers/thermal/mediatek/lvts_thermal.c:266:13: error: 'lvts_debugfs_exit' defined but not used [-Werror=unused-function]
+  266 | static void lvts_debugfs_exit(struct lvts_domain *lvts_td) { }
+      |             ^~~~~~~~~~~~~~~~~
 
-Fixes: 9fa6a693ad8d ("ALSA: hda/tas2781: Remove tas2781_spi_fwlib.c and leverage SND_SOC_TAS2781_FMWLIB")
+Fixes: ef280c17a840 ("thermal/drivers/mediatek/lvts: Fix debugfs unregister on failure")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- sound/soc/codecs/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/thermal/mediatek/lvts_thermal.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
-index d97ec8176ad5..21df6783dc26 100644
---- a/sound/soc/codecs/Kconfig
-+++ b/sound/soc/codecs/Kconfig
-@@ -2026,6 +2026,7 @@ config SND_SOC_TAS2781_COMLIB_I2C
+diff --git a/drivers/thermal/mediatek/lvts_thermal.c b/drivers/thermal/mediatek/lvts_thermal.c
+index c0be4ca55c7b..985925147ac0 100644
+--- a/drivers/thermal/mediatek/lvts_thermal.c
++++ b/drivers/thermal/mediatek/lvts_thermal.c
+@@ -263,8 +263,6 @@ static inline int lvts_debugfs_init(struct device *dev,
+ 	return 0;
+ }
  
- config SND_SOC_TAS2781_FMWLIB
- 	select SND_SOC_TAS2781_COMLIB
-+	select CRC8
- 	tristate
- 	default n
+-static void lvts_debugfs_exit(struct lvts_domain *lvts_td) { }
+-
+ #endif
  
+ static int lvts_raw_to_temp(u32 raw_temp, int temp_factor)
 -- 
 2.39.5
 
