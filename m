@@ -1,106 +1,108 @@
-Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACF0F1A23B0
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 11:38:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 158621A316A
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 11:39:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746445133; cv=none; b=h/9r0gMj8jG2L8dy1nhfXoREv6Vabhn6fTNMKHrJpbUdjbHYsghJDfDWYhbIjHzxJtwa5+JEEkcrUQa0snWBoo5jlc9NM2/2OECJXBngLp4M7PukAC4fmOubAVHpv9/QWxV4cWF894kL7wbOMF5YBkEg5n3MThuCEMIqFLs8KDQ=
+	t=1746445174; cv=none; b=McABqqylm5vIK2yspexADvHrs/bSi5TphjiKa2zdu8YXWYpzgRdHdsCqDw1wWBYeI4nA944vDntnYDt0O99WXfzzaVHzqPn7SLjjGEsxEfoNnolGQsilYMu3I4dsem02BCQeYyYedUoQkUUnRMJoudIqE/LTRw+k8uTXs0Gyeis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746445133; c=relaxed/simple;
-	bh=4H9HY5RqGL162neIVzWOm8Uj2ZqBpnwCSCJKABZ2oIE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bNxnrmjvwk4OvyJDa2UqRZam7RGSbTglIfe2gpDsizjwt28t7QjausRbk2Ks/+d5zBGdY82wuIIRC+eMZkP/u0yNmEWzOkA1ubEVk0FwYe2uZECDKor9KeYO6UGsdZ24+eH9y0z6plyGSLqObdUaaFrieWVSuROU/QbAshtIwYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=i30gJ5hX; arc=none smtp.client-ip=209.85.167.172
+	s=arc-20240116; t=1746445174; c=relaxed/simple;
+	bh=ivuMF4AiyTS/4JYqXd/Q51GmUAE+wVce2hJ7HRmspx0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kaSZ7o9KOpJ9mfLPPN1gFY1uicmpRHUhW/JatdVp5C967hKMMlBZS1GyAE4ST/kx8vRlXW0AamxIZJSmio+ZAAH/NDKpjoTxpamtWn/PbQiAE+bg0C9O/FWocYBhV3hHg3URgfzblfEUrvCEZbeVgFdZr9HOfxk8TNZ0JasEySA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Yo9G/U4g; arc=none smtp.client-ip=209.85.128.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i30gJ5hX"
-Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-3f8ae3ed8f4so3082738b6e.3
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 04:38:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Yo9G/U4g"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43d0359b1fcso26616085e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 04:39:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746445131; x=1747049931; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9GMQp9j85OZqKlkrHyZMpU/XUq0rYEnvHyaTGQjhBF4=;
-        b=i30gJ5hXlJlom8grIMq6E4Kt+LXqfIUaNG29RrZnFUNkYeOANhrJ83grVdp6SCxXjD
-         kgAlXe/tT3pSNH5CYc+SER6H4SxxW3Wo3gter9/KUx58/hgx4LS6xvDJxJ2gR2b0d4aT
-         WX+koe5U7b9CzPGOSXWzhGir6EmpEfM8jpspB3OT5EyoRPsAuy7lqOIU5DV9ab7OLfzt
-         ZSZ+0ofjRuUtOwa09PoXMvPyYx+j1yfPKQMIWC4fhoi+2YyP4uQbsHbBHgIO9Jq2VYAI
-         v8Lk52shWaIlYO1Gvd7C3REa03pkvcOOyPEl41VfwGuO+5DOI75Ca4jPqg20UuJ9KJDy
-         uIsQ==
+        d=linaro.org; s=google; t=1746445171; x=1747049971; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=XnllKV8s3Tx8+pvOlOa62d3loJC0CAU43X1zb3557EY=;
+        b=Yo9G/U4gm5ENY1N56ruYbEY9yTflS7Mb3qHRiK7rIphbVVKBzqyhQWFyJe6sbfLsiv
+         S+9GXlD3x5qI2ENniiOHEpxnC7ge6fDOazIkA4SxLzveGKIQ9Lu22rupbaL+Q/s7uYqH
+         94t+MNJBPErNEkCuRZbHNqA8OG3xHlEBF4FM1ZystO6tJ8nwCt7ShqVnCGLU+OSSI6Ch
+         MshNUT8awgHOqewzJxVOA/547zFl7IluW38JSi4+eMnY8D2ULEoAMxHyvkZFwo4C8/9j
+         dE9YHB1ZvxETW7rlvV3Qa/mY6P1ewJrAzA7C5bJuMNHvjM5uaJl74OPr/XzXZ9P+XMl4
+         k0aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746445131; x=1747049931;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9GMQp9j85OZqKlkrHyZMpU/XUq0rYEnvHyaTGQjhBF4=;
-        b=Uv6l1ZNh60ToVfEmskfcoEiHIikecMQObcBcDRXiGhM8aAnGMpR+TkK3agTOZfIVQi
-         G5SooCKY/0ez3JQjgAfZLk/Xmz+oHjpBzvYrj5fEVe5OOe+tkfxG6LHsRG0Jd8lKlAJz
-         4Y4isPYyISXpZpSvS8hNZWvs95pQvFVpr9FKmIii28tp8a9+DixmfIRHHgoiwQ+T7aPt
-         J1B/bAQFUKzbO40vFClaO2qyJQyUaS+2FwVhChRgPdpGOrLbCm23zQdALV2qjqi0Rwp5
-         nukeI239u81uPgOSPVulzO8YAKseZVBmJPYxfyPClYWqA8s9agDUafuPXlmkxeZepc7U
-         Oo/g==
-X-Gm-Message-State: AOJu0Yz96ZM+412BvUW1iUTeRVaOADEgXXCEEiYRIiUihQlL6K7LsKjy
-	pA49Pdc7o3czqMcn9h/U3a2JyZiWlpjFZKi6njKZj0PtDn0biqt3N4W2UnBLmvR1vS+VQKNJROn
-	OsZZ5kX45qIQJikl8++dcS850FYZRlOuJ8zoQrQ==
-X-Gm-Gg: ASbGnct3qdfxbF4/jaNUyUh3mYfKdxVg76hLDTXOlCEEOIvdPVNVv/RNVAhyhYJwvF/
-	9k0BVEfYSHqo3BD5QZ9OJSBMk8lYNff1pIkVqBZ5TUPZQV9BeV3E3m1fDl+O7wv7JgdVz0nzly6
-	ru1/V1FAFQGAcVq3sbJAhe8zU=
-X-Google-Smtp-Source: AGHT+IFsXXtVZfrIMVAYeKVEaw/tyOZiD5EOR3pAScS4csZ0mXU9Ezu4MEU3Ox8q9DYU0yBa6wml39ms50QahdcbUm8=
-X-Received: by 2002:a05:6808:1a1c:b0:402:11c2:253e with SMTP id
- 5614622812f47-403536715ffmr4977375b6e.21.1746445130746; Mon, 05 May 2025
- 04:38:50 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746445171; x=1747049971;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XnllKV8s3Tx8+pvOlOa62d3loJC0CAU43X1zb3557EY=;
+        b=KQx9X3+K4cpIT+udZI3CxaclYlwR8NZnEC/7ZGYuoIaWTJlnDBDeZMW5vDxVfV/hbo
+         PAZ348EVmfCK6bvOVVChLiOxYJ1pS7YSgplxsVGnBrC/a4E+xilgrF31sxTiULoloFmg
+         uK+H9g2/dOdhZTkxa8XTlSRwlZry/l+RC6JIggNuX6/wQM+HBozdQm2HO9fURz7lwJRR
+         9ZmAYg+CM6cP6bQSSZF8CuKXDJn02e/VC2TH1JzHf1qdjpjanDa/FPjJgyj3k2TTNBwW
+         a0xBFOcspKtL9DH+o+8Gf9Z3f0gpN+M2XIB/z+AL9zAf8Q3bqwpQt8gSBM24VYWOiBWV
+         M8ig==
+X-Forwarded-Encrypted: i=1; AJvYcCVGcN4Awz6U/Isan/rw6/dhMFmfYPqjxrrwlffYzZ7CxfAS5bjwdF9ap81xXPiDavzn3XU55m8YGTag+Rc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywyc6Mm3CenxEoNuvzl/iAyK9F4sQDHiN8QOL/SNA1vVDqgAaIJ
+	cVnMj61+cyowfpUr208HLp83NkB67s4oLjAyZkpEysEc4u3gI8idzioesTPYbbo=
+X-Gm-Gg: ASbGncviHWaAXrxXS2vwDnhmFSE+I2gcgRm05vqd6RcgdH0rDYY0fIn9//q4NXkiaw1
+	vYDNn3QvIdUut0OqV2AAiuYtCSSzakhD479Mj80DKaicsg6stgFvN0r3Z2TZAdEXfIUIveak/z4
+	58MnMHES9HdzMVG5G/M4JkuwgcFlbi0jPuYYEuAruCizbZJ4lG8tLzBEC0vyZWPB5diczxK34Io
+	XRVAOcp4FHNYgOJTOQmupZjnZ77t5CVgKFTqyQvObCdvvLraY3S5L4s8zSygAiY9i+4voAkKgXB
+	kOW7fRWIzSYN0sNuO4eYh9CIVrDtf+lQU47hL0j7j7lCVA==
+X-Google-Smtp-Source: AGHT+IEa20MlrBHGITVX3bXAuaInVkSaScwYRHy4y22UhCPjKxK+cq5tGX/c8wkWOhLGOqkhp1PM5g==
+X-Received: by 2002:a05:600c:4e47:b0:43b:bb72:1dce with SMTP id 5b1f17b1804b1-441b7481655mr136942135e9.5.1746445171320;
+        Mon, 05 May 2025 04:39:31 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-441b2b20aa6sm178602255e9.27.2025.05.05.04.39.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 May 2025 04:39:30 -0700 (PDT)
+Date: Mon, 5 May 2025 14:39:17 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Cristian Marussi <cristian.marussi@arm.com>,
+	Linus Walleij <linus.walleij@linaro.org>, arm-scmi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
+Subject: [RFC 5/7] pinctrl: Delete PIN_CONFIG_OUTPUT_IMPEDANCE_OHMS support
+Message-ID: <81fb0a1b0cf15d73e7635081594d8650bf1a258d.1746443762.git.dan.carpenter@linaro.org>
+References: <cover.1746443762.git.dan.carpenter@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250502100049.1746335-1-jens.wiklander@linaro.org>
- <20250502100049.1746335-10-jens.wiklander@linaro.org> <aBTpiMIevmAmp5vr@casper.infradead.org>
-In-Reply-To: <aBTpiMIevmAmp5vr@casper.infradead.org>
-From: Jens Wiklander <jens.wiklander@linaro.org>
-Date: Mon, 5 May 2025 13:38:38 +0200
-X-Gm-Features: ATxdqUHaC_cUwJGh0_wJGsfxAOxe5bhlKMecpe-U61GAupKguhd7Rz5skfHcbL8
-Message-ID: <CAHUa44HOq91O0yUWVUKcUzYv9j3xqOU3WsDg9KDXiExcdPO8fQ@mail.gmail.com>
-Subject: Re: [PATCH v8 09/14] cma: export cma_alloc() and cma_release()
-To: Matthew Wilcox <willy@infradead.org>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
-	op-tee@lists.trustedfirmware.org, linux-arm-kernel@lists.infradead.org, 
-	Olivier Masse <olivier.masse@nxp.com>, Thierry Reding <thierry.reding@gmail.com>, 
-	Yong Wu <yong.wu@mediatek.com>, Sumit Semwal <sumit.semwal@linaro.org>, 
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey <Brian.Starkey@arm.com>, 
-	John Stultz <jstultz@google.com>, "T . J . Mercier" <tjmercier@google.com>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Sumit Garg <sumit.garg@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, azarrabi@qti.qualcomm.com, 
-	Simona Vetter <simona.vetter@ffwll.ch>, Daniel Stone <daniel@fooishbar.org>, 
-	Rouven Czerwinski <rouven.czerwinski@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1746443762.git.dan.carpenter@linaro.org>
 
-Hi,
+The argument for PIN_CONFIG_OUTPUT_IMPEDANCE_OHMS is supposed to
+be expressed in terms of ohms.  But the pinctrl-scmi driver was
+implementing it the same as PIN_CONFIG_OUTPUT and writing either a
+zero or one to the pin.
 
-On Fri, May 2, 2025 at 5:50=E2=80=AFPM Matthew Wilcox <willy@infradead.org>=
- wrote:
->
-> On Fri, May 02, 2025 at 11:59:23AM +0200, Jens Wiklander wrote:
-> > Export the two functions cma_alloc() and cma_release().
->
-> Why?  This is clearly part of a larger series, but you've given those of
-> us who are subscribed to linux-mm absolutely no information about why
-> you want to do this.
+The SCMI protocol doesn't have an support configuration type so just
+delete this code instead of fixing it.
 
-I'm sorry, it's part of this patch: set
-https://lore.kernel.org/lkml/20250502100049.1746335-1-jens.wiklander@linaro=
-.org/
- I'll CC a bit more in the next version of the patch set.
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+---
+ drivers/pinctrl/pinctrl-scmi.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-It's needed if the TEE subsystem is built as a load module.
+diff --git a/drivers/pinctrl/pinctrl-scmi.c b/drivers/pinctrl/pinctrl-scmi.c
+index 362a6d2c3c68..f369f0354e43 100644
+--- a/drivers/pinctrl/pinctrl-scmi.c
++++ b/drivers/pinctrl/pinctrl-scmi.c
+@@ -262,9 +262,6 @@ static int pinctrl_scmi_map_pinconf_type(enum pin_config_param param,
+ 	case PIN_CONFIG_OUTPUT_ENABLE:
+ 		*type = SCMI_PIN_OUTPUT_MODE;
+ 		break;
+-	case PIN_CONFIG_OUTPUT_IMPEDANCE_OHMS:
+-		*type = SCMI_PIN_OUTPUT_VALUE;
+-		break;
+ 	case PIN_CONFIG_POWER_SOURCE:
+ 		*type = SCMI_PIN_POWER_SOURCE;
+ 		break;
+-- 
+2.47.2
 
-Thanks,
-Jens
