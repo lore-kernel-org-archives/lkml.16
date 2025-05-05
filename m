@@ -1,130 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEB192E62C;
-	Mon,  5 May 2025 07:10:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59B602E62C;
+	Mon,  5 May 2025 07:14:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746429044; cv=none; b=ah1ZV9crsUTi57vRncicoItKmtof9u60DgCYKiu19ubUw4xUXQCwnXD0r2oe8CIsl44RgN0boy/GRbfBTorwBGVhu1dNxDm1/LlT3zaABOZWjayPcEXy7io/Ee5GRGoRDSYO5bDeZQP743Y6wT20lf+Fv4pdRglYyq8BvtiJR5o=
+	t=1746429275; cv=none; b=k776wsqLdTyUWBnyFw2+/IYPaxaJjvCmCc0xv/VsWthZBzLO1yRBKqdZKBO7ZrWCaXhqUX7SCeNYQie/mYfc09/NQDqwSEZiCgLG21Bb74tuzhhyGsUibcgz0Al7UjTsEFofa/j3ElaHm8wNvGk2zGvavz5FRrWj7ejEVETnJDA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746429044; c=relaxed/simple;
-	bh=xBd+W3ZoyuxN5L3bU9S3LAlbhway874q22Inxj9LXn8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NuI9bUv069y0z6rE7geeN5Al6/u32WzgICyELPEpfNamxYQ0RMDxuaJ4icuNNOQ2mG4g17TXaCiTtoaegBvZ+HOZXuTQcRZOfD0wePkDls9A5/13worApBAT0aEqhCRQ4Ft1m34OklaSRdmTA0G05Ms1IHFyXqcIjYvOa6XBuRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TgtrVWA2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746429275; c=relaxed/simple;
+	bh=ZqbgTFa9JXaATrM/UKF+9Mf3mzlYyVqltlYj9s+p6Kw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dkQY2kJ/sFMcC1Phy70WHgwyNhqczItORDQHzr5Z3V5qeKar4TST+dv8Vm1FDcf6vX3GvtKef78YyZg2vfdnwyYbNdGbKquHH3PkYvdbgRh1r+w9OFrnh2hApmOAUl8J2GL+L7XJCF0GedYjQ0DmOVxEOaKGPIGJT64HcApLb+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=sYzFqotT; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TgtrVWA2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE61BC4CEE4;
-	Mon,  5 May 2025 07:10:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746429043;
-	bh=xBd+W3ZoyuxN5L3bU9S3LAlbhway874q22Inxj9LXn8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TgtrVWA2Ac/YcSXOLl1HDzO2Cb+zrUUkOZKCkD5w69+NPjMcrPfo/wwOFTLPG4/Iv
-	 8odhs+/z0+i0+tcFkwc0TmYdUzTaxX3Dbu7JgugjXyryREHgUjqrFo82DgGAOP/8p3
-	 Zy3vWvP4ddQ1L2ZxqFU7MTnfPw0XOu9k8LYZZLUUO02Yc5aeHUJtmH6/6HyIk261i9
-	 sOuYg1Ew0RQkOwk2+JNHQ6XuzI56x0Koi+hQsNFXgVdYQKWGdytpsAolhQ/vxPWsVI
-	 deyIddsjQZZVWaQ4hgGQCW3XkFnfo1iD6KwMCS4HkfES/7TG6a2MV+eYuicyudcLDC
-	 zXrcnsTRjLWSQ==
-Date: Mon, 5 May 2025 09:10:38 +0200
-From: Carlos Maiolino <cem@kernel.org>
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: Charalampos Mitrodimas <charmitro@posteo.net>, 
-	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] xfs: Verify DA node btree hash order
-Message-ID: <wk2tqzdfersvwespapxgjwujb5nc2nvmvntdsj7uunxhcvxznb@sjli3e3i6rhp>
-References: <6Fo_nCBU7RijxC1Kg6qD573hCAQBTcddQlb7i0E9C7tbpPIycSQ8Vt3BeW-1DqdayPO9EzyJLyNgxpH6rfts4g==@protonmail.internalid>
- <20250412-xfs-hash-check-v1-1-fec1fef5d006@posteo.net>
- <dyo3cdnqg3zocge2ygspovdlrjjo2dbwefbvq6w5mcbjgs3bdj@diwkyidcrpjg>
- <lbaob9s1_tUxYvjGHQenkwdnv3WRsD4qjMur4VE5ELE_Ph4Q388PDEmb8bOGuSRnRpbC0mAW-du5eG2UpwmpGg==@protonmail.internalid>
- <20250501141249.GA25675@frogsfrogsfrogs>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="sYzFqotT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1746429266;
+	bh=HGXhisl5k+Q4Wf2F0QHV+DiOw5/o1HTutjf5uWAtzb8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=sYzFqotTYOPML3fmLF/AUXGpOrYLLWNpBtzp1Df0kZmgjC1mYdxK5T7LzBmWKM5zR
+	 Ow3oxhdQMYn76jBTMnd8uCEr7VBWMjdU2Q6Nf0lNaAEk+XtpsHLdPfyTGNLcKlqoM5
+	 aL9Weyivz1RuOB0Zf8P0S3JMPUELqnSJhJZzwpw9A4epGE0hrFXlO9tDMfmj3IQw0D
+	 E8x9XAr8zAiuEEEmumm/347dlYcZjskFwnW+r2j52pynNTSJclZfvtFH6fOqZRLUvy
+	 RKgdZquxxvjaDE5377d4VvMhaw1S+vd8H82i9Eh/EWzzmZ1DaS4j8Pir0BYS5x2mU2
+	 7e67CvfwwI5/A==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZrXpB11kZz4x1V;
+	Mon,  5 May 2025 17:14:25 +1000 (AEST)
+Date: Mon, 5 May 2025 17:14:25 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Greg KH <greg@kroah.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Naman Jain
+ <namjain@linux.microsoft.com>, Thomas =?UTF-8?B?V2Vpw59zY2h1aA==?=
+ <linux@weissschuh.net>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the char-misc tree
+Message-ID: <20250505171425.0d4169e2@canb.auug.org.au>
+In-Reply-To: <20250505161215.58a03af0@canb.auug.org.au>
+References: <20250505160831.73e797b7@canb.auug.org.au>
+	<20250505161215.58a03af0@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250501141249.GA25675@frogsfrogsfrogs>
+Content-Type: multipart/signed; boundary="Sig_/7ZapFkYBP.o_yIrBt1OkQ/Z";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Thu, May 01, 2025 at 07:12:49AM -0700, Darrick J. Wong wrote:
-> On Wed, Apr 30, 2025 at 11:23:57AM +0200, Carlos Maiolino wrote:
-> > On Sat, Apr 12, 2025 at 08:03:57PM +0000, Charalampos Mitrodimas wrote:
-> > > The xfs_da3_node_verify() function checks the integrity of directory
-> > > and attribute B-tree node blocks. However, it was missing a check to
-> > > ensure that the hash values of the btree entries within the node are
-> > > strictly increasing, as required by the B-tree structure.
-> > >
-> > > Add a loop to iterate through the btree entries and verify that each
-> > > entry's hash value is greater than the previous one. If an
-> > > out-of-order hash value is detected, return failure to indicate
-> > > corruption.
-> > >
-> > > This addresses the "XXX: hash order check?" comment and improves
-> > > corruption detection for DA node blocks.
-> > >
-> > > Signed-off-by: Charalampos Mitrodimas <charmitro@posteo.net>
-> > > ---
-> > >  fs/xfs/libxfs/xfs_da_btree.c | 11 ++++++++++-
-> > >  1 file changed, 10 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/fs/xfs/libxfs/xfs_da_btree.c b/fs/xfs/libxfs/xfs_da_btree.c
-> > > index 17d9e6154f1978ce5a5cb82176eea4d6b9cd768d..6c748911e54619c3ceae9b81f55cf61da6735f01 100644
-> > > --- a/fs/xfs/libxfs/xfs_da_btree.c
-> > > +++ b/fs/xfs/libxfs/xfs_da_btree.c
-> > > @@ -247,7 +247,16 @@ xfs_da3_node_verify(
-> > >  	    ichdr.count > mp->m_attr_geo->node_ents)
-> > >  		return __this_address;
-> > >
-> > > -	/* XXX: hash order check? */
-> > > +	/* Check hash order */
-> > > +	uint32_t prev_hash = be32_to_cpu(ichdr.btree[0].hashval);
-> > > +
-> > > +	for (int i = 1; i < ichdr.count; i++) {
-> > > +		uint32_t curr_hash = be32_to_cpu(ichdr.btree[i].hashval);
-> > > +
-> > > +		if (curr_hash <= prev_hash)
-> > > +			return __this_address;
-> > > +		prev_hash = curr_hash;
-> > > +	}
-> >
-> > Hmmm. Do you have any numbers related to the performance impact of this patch?
-> >
-> > IIRC for very populated directories we can end up having many entries here. It's
-> > not uncommon to have filesystems with millions of entries in a single directory.
-> > Now we'll be looping over all those entries here during verification, which could
-> > scale to many interactions on this loop.
-> > I'm not sure if I'm right here, but this seems to add a big performance penalty
-> > for directory writes, so I'm curious about the performance implications of this
-> > patch.
-> 
-> It's only a single dabtree block, which will likely be warm in cache
-> due to the crc32c validation.
+--Sig_/7ZapFkYBP.o_yIrBt1OkQ/Z
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I assumed this could be called to verify a leaf block, a look at the code
-seems that's not the case, so, this is perhaps harmless related to performance.
+Hi all,
 
-> 
-> But if memory serves, one can create a large enough dir (or xattr)
-> structure such that a dabtree node gets written out with a bunch of
-> entries with the same hashval.  That was the subject of the correction
-> made in commit b7b81f336ac02f ("xfs_repair: fix incorrect dabtree
-> hashval comparison") so I've been wondering if this passes the xfs/599
-> test?  Or am I just being dumb?
-> 
-> --D
-> 
-> > >
-> > >  	return NULL;
-> > >  }
-> > >
-> > > ---
-> > > base-commit: ecd5d67ad602c2c12e8709762717112ef0958767
-> > > change-id: 20250412-xfs-hash-check-be7397881a2c
-> > >
-> > > Best regards,
-> > > --
-> > > Charalampos Mitrodimas <charmitro@posteo.net>
-> > >
+On Mon, 5 May 2025 16:12:15 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
+rote:
+>
+> On Mon, 5 May 2025 16:08:31 +1000 Stephen Rothwell <sfr@canb.auug.org.au>=
+ wrote:
 > >
+> > After merging the char-misc tree, today's linux-next build (x86_64
+> > allmodconfig) failed like this:
+> >=20
+> > drivers/hv/vmbus_drv.c:1893:22: error: initialization of 'const struct =
+bin_attribute * const*' from incompatible pointer type 'struct bin_attribut=
+e **' [-Wincompatible-pointer-types]
+> >  1893 |         .bin_attrs =3D vmbus_chan_bin_attrs,
+> >       |                      ^~~~~~~~~~~~~~~~~~~~
+> > drivers/hv/vmbus_drv.c:1893:22: note: (near initialization for 'vmbus_c=
+han_group.<anonymous>.bin_attrs')
+> >=20
+> > Caused by commit
+> >=20
+> >   f31fe8165d36 ("uio_hv_generic: Fix sysfs creation path for ring buffe=
+r")
+> >=20
+> > interacting with commit
+> >=20
+> >   9bec944506fa ("sysfs: constify attribute_group::bin_attrs")
+> >=20
+> > from the driver-core tree.
+> >=20
+> > I have applied the following merge fixup for today. =20
+>=20
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Mon, 5 May 2025 15:56:12 +1000
+> Subject: [PATCH] uio_hv_generic: constify bin_attribute definitions
+>=20
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> ---
+>  drivers/hv/vmbus_drv.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+> index e3d51a316316..857109bb99a0 100644
+> --- a/drivers/hv/vmbus_drv.c
+> +++ b/drivers/hv/vmbus_drv.c
+> @@ -1815,7 +1815,7 @@ static int hv_mmap_ring_buffer_wrapper(struct file =
+*filp, struct kobject *kobj,
+>  	return channel->mmap_ring_buffer(channel, vma);
+>  }
+> =20
+> -static struct bin_attribute chan_attr_ring_buffer =3D {
+> +static const struct bin_attribute chan_attr_ring_buffer =3D {
+>  	.attr =3D {
+>  		.name =3D "ring",
+>  		.mode =3D 0600,
+> @@ -1841,7 +1841,7 @@ static struct attribute *vmbus_chan_attrs[] =3D {
+>  	NULL
+>  };
+> =20
+> -static struct bin_attribute *vmbus_chan_bin_attrs[] =3D {
+> +static const struct bin_attribute *vmbus_chan_bin_attrs[] =3D {
+>  	&chan_attr_ring_buffer,
+>  	NULL
+>  };
+> --=20
+> 2.47.2
+
+It occurred to me that the above patch could be applied directly to the
+char-misc tree if vmbus_chan_bin_attrs was assigned to .bin_attrs_new
+instead of .bin_attrs (later in the file), right?
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/7ZapFkYBP.o_yIrBt1OkQ/Z
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgYZVEACgkQAVBC80lX
+0GwnSwf/Wplht6l90ljMl3jyqW80UAcTKj9vsdF7yHpcOZ+oqe4xWgIDeNqTQlNN
+1dszItOrL4nOXWTLCLzJ3qk56702iwC5E+qF7wc5p87Rm/I9a0ccWsaZ0bjJsXcv
+TLkhUNzKjgCrZmFXYmeyZRTnf3lRB7n7Af7zbNuuSuKqxDWW+2rIPa2GVhK8HJ6d
+GSjfS+AvTg5p6vzTxxYJgPmoQfJxZpPcb82LbecPgZ1n876wkDjfTC7OEF3eCc0Q
+TME6lbQakIN8VApU5n2mH7urNwbF8nS/LPXrUtSu2KILPQqqQSdgV+RORq63ZSTe
+FB4lEt5ga6NrOaTUvaLN4WTQCfJUoA==
+=bi2s
+-----END PGP SIGNATURE-----
+
+--Sig_/7ZapFkYBP.o_yIrBt1OkQ/Z--
