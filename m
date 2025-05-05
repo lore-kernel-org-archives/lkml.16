@@ -1,44 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07C7C27FD6F;
-	Mon,  5 May 2025 22:54:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F3B82D5CE3;
+	Mon,  5 May 2025 22:54:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485648; cv=none; b=K4yV9cwI7Bz7Rua2An/q9saIjgeJ8gRlGG/eCpZesoB6Tx6WMG9kYq0e8LOT7e9wl3nM0aY15uc3jdPHTzSIaKQcZAf9UuDB3yZFRO9ftGN47MoTWZvP67Cif7s97tlEesD8Qp6rz6VNO4vfnQo8+EBX8b98UtLlNmuBz624OvI=
+	t=1746485667; cv=none; b=AQvRG6z/FTOb9EeMdnYsmDGBr/8MKed9f4F0OfmCpDgMV3jlkVj7+Isf/jsG3pRTTQFO+cP6zQxTieUb4wADBRFRPVj7X4WmhBxhbvzYXQWoXhSInQqsG6POWZ/tPsrfmznxGM+Z3d6OjDVUczT0hzypPH4C44eFHvGw3ReUf0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485648; c=relaxed/simple;
-	bh=FyPVEdiuuOSc6/CVteyEDB15r2CyN4aVdbmYOJNlU0g=;
+	s=arc-20240116; t=1746485667; c=relaxed/simple;
+	bh=hOVXQ8hrVPIa6fSbCTeDHxx+YNdQgAt3z5l5k0HhAAE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PBkNpk+Fwa6nbxNnHoXM5iPhG91A4WtOyPyESZJklfgTx1ovKGpEcTMpn8tucto3Dp+xt8wn810uCpV9GL1tRBb2dPsbnWlNITTvVhqr9gKwX23lg3Acc1qIaIRM7fVbPf/LwdaYNb8WyHReEZlD5A3TiJXZGmXKPjLfP4gjRMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UyhIUQ1w; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Tr36rUaEMtVN8hYV52x0i6TOgPZy5gWkITylVXpHoIX9gVILzJ3VcXh+gBvsC3VaOdrn+hq5UAEhPVqAIrfvvyyWPW9X79ri+C6IgwwV5CugbvRnnJPSkSMwLH2suj+y4aqDZ54oB7MoyAurftnP5kZ1WWsv3nRNqJ8hhLVZCVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S1IM59ec; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UyhIUQ1w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E36FCC4CEED;
-	Mon,  5 May 2025 22:54:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S1IM59ec"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58FDEC4CEED;
+	Mon,  5 May 2025 22:54:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485647;
-	bh=FyPVEdiuuOSc6/CVteyEDB15r2CyN4aVdbmYOJNlU0g=;
+	s=k20201202; t=1746485666;
+	bh=hOVXQ8hrVPIa6fSbCTeDHxx+YNdQgAt3z5l5k0HhAAE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=UyhIUQ1wKKnkJw3Y0vcwcgQHinGHimkjuJFApnBW5b2w76MAIE5/xmxFK9/9Q3bVy
-	 NwEzbjUeasU3hfHHZIlPEdi+sTACG1lFrvIB0TWrDJxBMNKs3WHeQQPPzpzeMzVWcS
-	 0eJchqTFrCNKMwfYGSYeF5aLAGdITT0xNDAM76VQjT1vzaxnPw1zP7uaFrbjS0aHv7
-	 F5VkCnr8AcNLmz747tu9b47xgSDjHB6aORyrImltHL5DITemYX1jdwaEtAMdpz3lCq
-	 fBSWVG+Tjhit/Y0y5CX/XQvTYIjAfY7gFDm9yOZIAvdMDroDee9pVY25YOMDr3a0mF
-	 5gxoxOCVdPTAA==
+	b=S1IM59ecSrMdMppxGzNcIDf2AUBk7ygKGPXlTRnq8+3Yys3y+zBtttI5spYeA0sXk
+	 eDYtRoZy5Cyv7RRtR//upvCihxPunCcudF1eL2fG9z7WYDDS4p9J/xkBG1GpF1kyZB
+	 QC11VDRK53bqfxIfwdWnacxNMeNC/LN8tcWHhdCsETNetaxg0aZk6kR3O7lzM0CfJo
+	 0re6N8DSnaFIFHmB06De2bNHPEKYwWDROVbvuxQ/g4J4x2zu43qZ3kK/KB72ZVDHzJ
+	 DoQh0Zru4DlA0K1gz5nq7Ye8wI21H8+FI++O+t4TFrYqqtE60OAvWnDyRxNxjx+Wnx
+	 GCLgyoOS5Zr7A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Zhang Yi <yi.zhang@huawei.com>,
-	Jan Kara <jack@suse.cz>,
-	Ojaswin Mujoo <ojaswin@linux.ibm.com>,
-	Theodore Ts'o <tytso@mit.edu>,
+Cc: Depeng Shao <quic_depengs@quicinc.com>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
 	Sasha Levin <sashal@kernel.org>,
-	adilger.kernel@dilger.ca,
-	linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 404/486] ext4: remove writable userspace mappings before truncating page cache
-Date: Mon,  5 May 2025 18:38:00 -0400
-Message-Id: <20250505223922.2682012-404-sashal@kernel.org>
+	rfoss@kernel.org,
+	todor.too@gmail.com,
+	bryan.odonoghue@linaro.org,
+	mchehab@kernel.org,
+	linux-media@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 417/486] media: qcom: camss: csid: Only add TPG v4l2 ctrl if TPG hardware is available
+Date: Mon,  5 May 2025 18:38:13 -0400
+Message-Id: <20250505223922.2682012-417-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -53,183 +55,138 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Zhang Yi <yi.zhang@huawei.com>
+From: Depeng Shao <quic_depengs@quicinc.com>
 
-[ Upstream commit 17207d0bb209e8b40f27d7f3f96e82a78af0bf2c ]
+[ Upstream commit 2f1361f862a68063f37362f1beb400e78e289581 ]
 
-When zeroing a range of folios on the filesystem which block size is
-less than the page size, the file's mapped blocks within one page will
-be marked as unwritten, we should remove writable userspace mappings to
-ensure that ext4_page_mkwrite() can be called during subsequent write
-access to these partial folios. Otherwise, data written by subsequent
-mmap writes may not be saved to disk.
+There is no CSID TPG on some SoCs, so the v4l2 ctrl in CSID driver
+shouldn't be registered. Checking the supported TPG modes to indicate
+if the TPG hardware exists or not and only registering v4l2 ctrl for
+CSID only when the TPG hardware is present.
 
- $mkfs.ext4 -b 1024 /dev/vdb
- $mount /dev/vdb /mnt
- $xfs_io -t -f -c "pwrite -S 0x58 0 4096" -c "mmap -rw 0 4096" \
-               -c "mwrite -S 0x5a 2048 2048" -c "fzero 2048 2048" \
-               -c "mwrite -S 0x59 2048 2048" -c "close" /mnt/foo
-
- $od -Ax -t x1z /mnt/foo
- 000000 58 58 58 58 58 58 58 58 58 58 58 58 58 58 58 58
- *
- 000800 59 59 59 59 59 59 59 59 59 59 59 59 59 59 59 59
- *
- 001000
-
- $umount /mnt && mount /dev/vdb /mnt
- $od -Ax -t x1z /mnt/foo
- 000000 58 58 58 58 58 58 58 58 58 58 58 58 58 58 58 58
- *
- 000800 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- *
- 001000
-
-Fix this by introducing ext4_truncate_page_cache_block_range() to remove
-writable userspace mappings when truncating a partial folio range.
-Additionally, move the journal data mode-specific handlers and
-truncate_pagecache_range() into this function, allowing it to serve as a
-common helper that correctly manages the page cache in preparation for
-block range manipulations.
-
-Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Reviewed-by: Ojaswin Mujoo <ojaswin@linux.ibm.com>
-Link: https://patch.msgid.link/20241220011637.1157197-2-yi.zhang@huaweicloud.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Depeng Shao <quic_depengs@quicinc.com>
+Signed-off-by: Hans Verkuil <hverkuil@xs4all.nl>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/ext4.h    |  2 ++
- fs/ext4/extents.c | 19 ++++----------
- fs/ext4/inode.c   | 63 +++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 70 insertions(+), 14 deletions(-)
+ .../media/platform/qcom/camss/camss-csid.c    | 60 +++++++++++--------
+ 1 file changed, 35 insertions(+), 25 deletions(-)
 
-diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-index 75df7eeee50d8..c2e6989a568c2 100644
---- a/fs/ext4/ext4.h
-+++ b/fs/ext4/ext4.h
-@@ -3013,6 +3013,8 @@ extern int ext4_inode_attach_jinode(struct inode *inode);
- extern int ext4_can_truncate(struct inode *inode);
- extern int ext4_truncate(struct inode *);
- extern int ext4_break_layouts(struct inode *);
-+extern int ext4_truncate_page_cache_block_range(struct inode *inode,
-+						loff_t start, loff_t end);
- extern int ext4_punch_hole(struct file *file, loff_t offset, loff_t length);
- extern void ext4_set_inode_flags(struct inode *, bool init);
- extern int ext4_alloc_da_blocks(struct inode *inode);
-diff --git a/fs/ext4/extents.c b/fs/ext4/extents.c
-index 60909af2d4a53..ba3419958a832 100644
---- a/fs/ext4/extents.c
-+++ b/fs/ext4/extents.c
-@@ -4667,22 +4667,13 @@ static long ext4_zero_range(struct file *file, loff_t offset,
- 			goto out_mutex;
+diff --git a/drivers/media/platform/qcom/camss/camss-csid.c b/drivers/media/platform/qcom/camss/camss-csid.c
+index 858db5d4ca75c..e51f2ed3f0315 100644
+--- a/drivers/media/platform/qcom/camss/camss-csid.c
++++ b/drivers/media/platform/qcom/camss/camss-csid.c
+@@ -683,11 +683,13 @@ static int csid_set_stream(struct v4l2_subdev *sd, int enable)
+ 	int ret;
+ 
+ 	if (enable) {
+-		ret = v4l2_ctrl_handler_setup(&csid->ctrls);
+-		if (ret < 0) {
+-			dev_err(csid->camss->dev,
+-				"could not sync v4l2 controls: %d\n", ret);
+-			return ret;
++		if (csid->testgen.nmodes != CSID_PAYLOAD_MODE_DISABLED) {
++			ret = v4l2_ctrl_handler_setup(&csid->ctrls);
++			if (ret < 0) {
++				dev_err(csid->camss->dev,
++					"could not sync v4l2 controls: %d\n", ret);
++				return ret;
++			}
  		}
  
--		/*
--		 * For journalled data we need to write (and checkpoint) pages
--		 * before discarding page cache to avoid inconsitent data on
--		 * disk in case of crash before zeroing trans is committed.
--		 */
--		if (ext4_should_journal_data(inode)) {
--			ret = filemap_write_and_wait_range(mapping, start,
--							   end - 1);
--			if (ret) {
--				filemap_invalidate_unlock(mapping);
--				goto out_mutex;
--			}
-+		/* Now release the pages and zero block aligned part of pages */
-+		ret = ext4_truncate_page_cache_block_range(inode, start, end);
-+		if (ret) {
-+			filemap_invalidate_unlock(mapping);
-+			goto out_mutex;
- 		}
+ 		if (!csid->testgen.enabled &&
+@@ -761,7 +763,8 @@ static void csid_try_format(struct csid_device *csid,
+ 		break;
  
--		/* Now release the pages and zero block aligned part of pages */
--		truncate_pagecache_range(inode, start, end - 1);
- 		inode_set_mtime_to_ts(inode, inode_set_ctime_current(inode));
+ 	case MSM_CSID_PAD_SRC:
+-		if (csid->testgen_mode->cur.val == 0) {
++		if (csid->testgen.nmodes == CSID_PAYLOAD_MODE_DISABLED ||
++		    csid->testgen_mode->cur.val == 0) {
+ 			/* Test generator is disabled, */
+ 			/* keep pad formats in sync */
+ 			u32 code = fmt->code;
+@@ -811,7 +814,8 @@ static int csid_enum_mbus_code(struct v4l2_subdev *sd,
  
- 		ret = ext4_alloc_file_blocks(file, lblk, max_blocks, new_size,
-diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-index 819be57bb4ecf..38fe9a213d09b 100644
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -31,6 +31,7 @@
- #include <linux/writeback.h>
- #include <linux/pagevec.h>
- #include <linux/mpage.h>
-+#include <linux/rmap.h>
- #include <linux/namei.h>
- #include <linux/uio.h>
- #include <linux/bio.h>
-@@ -3879,6 +3880,68 @@ int ext4_update_disksize_before_punch(struct inode *inode, loff_t offset,
+ 		code->code = csid->res->formats->formats[code->index].code;
+ 	} else {
+-		if (csid->testgen_mode->cur.val == 0) {
++		if (csid->testgen.nmodes == CSID_PAYLOAD_MODE_DISABLED ||
++		    csid->testgen_mode->cur.val == 0) {
+ 			struct v4l2_mbus_framefmt *sink_fmt;
+ 
+ 			sink_fmt = __csid_get_format(csid, sd_state,
+@@ -1190,7 +1194,8 @@ static int csid_link_setup(struct media_entity *entity,
+ 
+ 		/* If test generator is enabled */
+ 		/* do not allow a link from CSIPHY to CSID */
+-		if (csid->testgen_mode->cur.val != 0)
++		if (csid->testgen.nmodes != CSID_PAYLOAD_MODE_DISABLED &&
++		    csid->testgen_mode->cur.val != 0)
+ 			return -EBUSY;
+ 
+ 		sd = media_entity_to_v4l2_subdev(remote->entity);
+@@ -1283,24 +1288,27 @@ int msm_csid_register_entity(struct csid_device *csid,
+ 		 MSM_CSID_NAME, csid->id);
+ 	v4l2_set_subdevdata(sd, csid);
+ 
+-	ret = v4l2_ctrl_handler_init(&csid->ctrls, 1);
+-	if (ret < 0) {
+-		dev_err(dev, "Failed to init ctrl handler: %d\n", ret);
+-		return ret;
+-	}
++	if (csid->testgen.nmodes != CSID_PAYLOAD_MODE_DISABLED) {
++		ret = v4l2_ctrl_handler_init(&csid->ctrls, 1);
++		if (ret < 0) {
++			dev_err(dev, "Failed to init ctrl handler: %d\n", ret);
++			return ret;
++		}
+ 
+-	csid->testgen_mode = v4l2_ctrl_new_std_menu_items(&csid->ctrls,
+-				&csid_ctrl_ops, V4L2_CID_TEST_PATTERN,
+-				csid->testgen.nmodes, 0, 0,
+-				csid->testgen.modes);
++		csid->testgen_mode =
++			v4l2_ctrl_new_std_menu_items(&csid->ctrls,
++						     &csid_ctrl_ops, V4L2_CID_TEST_PATTERN,
++						     csid->testgen.nmodes, 0, 0,
++						     csid->testgen.modes);
+ 
+-	if (csid->ctrls.error) {
+-		dev_err(dev, "Failed to init ctrl: %d\n", csid->ctrls.error);
+-		ret = csid->ctrls.error;
+-		goto free_ctrl;
+-	}
++		if (csid->ctrls.error) {
++			dev_err(dev, "Failed to init ctrl: %d\n", csid->ctrls.error);
++			ret = csid->ctrls.error;
++			goto free_ctrl;
++		}
+ 
+-	csid->subdev.ctrl_handler = &csid->ctrls;
++		csid->subdev.ctrl_handler = &csid->ctrls;
++	}
+ 
+ 	ret = csid_init_formats(sd, NULL);
+ 	if (ret < 0) {
+@@ -1331,7 +1339,8 @@ int msm_csid_register_entity(struct csid_device *csid,
+ media_cleanup:
+ 	media_entity_cleanup(&sd->entity);
+ free_ctrl:
+-	v4l2_ctrl_handler_free(&csid->ctrls);
++	if (csid->testgen.nmodes != CSID_PAYLOAD_MODE_DISABLED)
++		v4l2_ctrl_handler_free(&csid->ctrls);
+ 
  	return ret;
  }
- 
-+static inline void ext4_truncate_folio(struct inode *inode,
-+				       loff_t start, loff_t end)
-+{
-+	unsigned long blocksize = i_blocksize(inode);
-+	struct folio *folio;
-+
-+	/* Nothing to be done if no complete block needs to be truncated. */
-+	if (round_up(start, blocksize) >= round_down(end, blocksize))
-+		return;
-+
-+	folio = filemap_lock_folio(inode->i_mapping, start >> PAGE_SHIFT);
-+	if (IS_ERR(folio))
-+		return;
-+
-+	if (folio_mkclean(folio))
-+		folio_mark_dirty(folio);
-+	folio_unlock(folio);
-+	folio_put(folio);
-+}
-+
-+int ext4_truncate_page_cache_block_range(struct inode *inode,
-+					 loff_t start, loff_t end)
-+{
-+	unsigned long blocksize = i_blocksize(inode);
-+	int ret;
-+
-+	/*
-+	 * For journalled data we need to write (and checkpoint) pages
-+	 * before discarding page cache to avoid inconsitent data on disk
-+	 * in case of crash before freeing or unwritten converting trans
-+	 * is committed.
-+	 */
-+	if (ext4_should_journal_data(inode)) {
-+		ret = filemap_write_and_wait_range(inode->i_mapping, start,
-+						   end - 1);
-+		if (ret)
-+			return ret;
-+		goto truncate_pagecache;
-+	}
-+
-+	/*
-+	 * If the block size is less than the page size, the file's mapped
-+	 * blocks within one page could be freed or converted to unwritten.
-+	 * So it's necessary to remove writable userspace mappings, and then
-+	 * ext4_page_mkwrite() can be called during subsequent write access
-+	 * to these partial folios.
-+	 */
-+	if (!IS_ALIGNED(start | end, PAGE_SIZE) &&
-+	    blocksize < PAGE_SIZE && start < inode->i_size) {
-+		loff_t page_boundary = round_up(start, PAGE_SIZE);
-+
-+		ext4_truncate_folio(inode, start, min(page_boundary, end));
-+		if (end > page_boundary)
-+			ext4_truncate_folio(inode,
-+					    round_down(end, PAGE_SIZE), end);
-+	}
-+
-+truncate_pagecache:
-+	truncate_pagecache_range(inode, start, end - 1);
-+	return 0;
-+}
-+
- static void ext4_wait_dax_page(struct inode *inode)
+@@ -1344,7 +1353,8 @@ void msm_csid_unregister_entity(struct csid_device *csid)
  {
- 	filemap_invalidate_unlock(inode->i_mapping);
+ 	v4l2_device_unregister_subdev(&csid->subdev);
+ 	media_entity_cleanup(&csid->subdev.entity);
+-	v4l2_ctrl_handler_free(&csid->ctrls);
++	if (csid->testgen.nmodes != CSID_PAYLOAD_MODE_DISABLED)
++		v4l2_ctrl_handler_free(&csid->ctrls);
+ }
+ 
+ inline bool csid_is_lite(struct csid_device *csid)
 -- 
 2.39.5
 
