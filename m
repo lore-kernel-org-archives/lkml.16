@@ -1,364 +1,125 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D33B1420DD;
-	Mon,  5 May 2025 12:41:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE5501F91C8
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 12:43:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746448888; cv=none; b=NhGvqbkR4Zp+iCVp6KQfN5uqwSLGy4BY4x3Un4qvtijH8MU/XqSpZoUdkM6QTg5HR6E82AjoTco1QIDmQxnRNZZx8SKJg0y2zkyIAsECuGU6MqQX5ZtN/2u+37x2UN+x9xBPOLY7b3mHWO5AaFQEkWqjeVVjR2yj7REWJ1XbWIA=
+	t=1746448995; cv=none; b=gwPvDcZHT5NYaaTvaJtkf+PC8I2N1r6Urnq1DEpn3fAKEOAT3AXrGCoFddywlFId612oy640Hfohf/czLXUHNL4SQTLfg56O4q2xqZdkMcBSOBxfvXdC9Pe24uobmuWslR0GaxIfgJFFlQQjxi+WlwHTejT6ZSurZZK1m0wEAQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746448888; c=relaxed/simple;
-	bh=K7/r93gMVtiQomrAP7Kf64AVeAYyV95x4wsHrc+xwns=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Xzh0Rlp1xwkWq8125Y8IRNwuZaUtpTmHXedeU44u8xvvQKzK9rI0Ih5w8OEKGgULtDYx9wWRkXUkOflGfjbaHJ2eZuAnf6i+eCV2U6eXyipM1dJE61891Ay11n+05AND/96/ud6CXUt/Zm64X9toBGNxRuP/IdQVhkMhC4TMmdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=PNA6UtsW; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1746448995; c=relaxed/simple;
+	bh=HYUXz0uTzbs4y12iQ7Hl8w+ODH8OZ50a2Wiu1UFClhM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h4FbmhWI2i5OJp2Fgn3PtR760fH6NZUTt+dDQnR1BjRZyk8kUXs4xceGxSk8P92PK0ijMUXTwaRsb0lG6KXGGBPRgPcOjMIsB0yKpgcJ22OCviFvZ+EV3Yt49uQaxVNswnniVs2FizAWYH2LK1CfiTtYe3XYEcURvS9jtJSM0/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d8JneqtG; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="PNA6UtsW"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 545BO5X7027324;
-	Mon, 5 May 2025 12:41:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	xhKaY2yVdE0YCztbUpXFgDca9yS1IyhlGgxz8hZXZRA=; b=PNA6UtsW26xyTZe8
-	WeeVN5szmdYwUilKxMdBECAcH7ScVVG+mkL/GYVCJh00cac+jxjb8/BD+IwHyBko
-	4puTsP2BnFtbuCWXBrCWE3kY3OM5VKTvQcIE/1nvpsexRY97ND9kUM6jiOPSqQQ9
-	fXo8vPdTmY1yEl0UbzWVqKRiEyvCZ/lAVjdobixiVAriEWZgfJJ9opPChzhbeC5Z
-	HupiCKeB2oGfo/4HKPmNsLZMWdP6dorPubne0qNpeWPsN7+jOPauJ2gS5xkPoTj3
-	mGXiZvIvxzZbuSG3TuvaxBSnk+EbZ5xqV7JNxUWPiCliK1DsLLYebe2oaADWLQbH
-	Bkizrg==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46d9ep474x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 05 May 2025 12:41:20 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 545CfJ5c001997
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 5 May 2025 12:41:19 GMT
-Received: from [10.151.37.100] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 5 May 2025
- 05:41:16 -0700
-Message-ID: <5add1d76-8f18-4d59-ae28-74885865c9dd@quicinc.com>
-Date: Mon, 5 May 2025 18:11:13 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d8JneqtG"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2295d78b433so40927885ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 05:43:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746448993; x=1747053793; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=itsdfpxgqr9T28YDfLuBCV4kCGXrZvdi4BFAEN1n0j4=;
+        b=d8JneqtGWk8KqfWzB5QXZvw1PXUqcQ//JGmqJbEn6Hbp3Q1oYN6jfKxFcC1ToKjf0Q
+         b5EhzC9qRYqMOaEZqvsiAElHcxJUN0T1qrmTXByygoWV4vMTAaFqu1zb3J1z/32nsq5F
+         6mNh0CZblkieXsR45zEvQzsKp8qyOtNNJESP3L6tdiiNAdgCahgAwbVRZMMoI/qr9dJ+
+         Wm2TUgrVh+MisrZlxO+/2CQqU0Pfq0fNBlsaARFIiCIsbUgu7JGDnBeLFVkEGo9JFq5m
+         v4OuJ+tkMUh4nbYi3YVaCu3HZ3MC5MIrxuv4arnYjneXC8rGAxFsrNAZ1+qGrrbPC/CQ
+         CJHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746448993; x=1747053793;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=itsdfpxgqr9T28YDfLuBCV4kCGXrZvdi4BFAEN1n0j4=;
+        b=KJxsNsCh9lIiIFjzufN5hMdq/P4dkLv8go9x57P/FW1+FglMX9NnarmW6TVuGS2a8H
+         kG0bDXK95hVEaUdQl1kmjuoza1aRJS/buZlRfS9paBzvjN+tRZYGERd4G0OIM295mRAS
+         o8/s6y7sGBrf/1ieyghOYwcBEDITvs2jz3pONaTI/9zTC0V6H6WxBqHuSjpvXB51989K
+         s93EhLHscDwmV9wSuprO4iHFEO1E8NA5eoKXNTJWOkXG90cp9RTjHrunzNPad/3Y5S3/
+         0pZs8JuuXwUS0DT7HvEJRGfbg3R5+/FthMHp/5PszvpPilbksDxDWa5aHSyspThuf3/9
+         t1zA==
+X-Forwarded-Encrypted: i=1; AJvYcCXGlSL1BhERKg+hRF/AX9RMUD5NndkWHaqd2WIp81j3TdcLLuK81TY9FLsN++kmPGuwmhOSRWffqJkSFNs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxUo8kisXWPsbVyxHpD/sKzvFDecZyAJkwPvmZKkQAzHGGhxlfm
+	YhbwauFucTOrIotH3eQAVd7LgUfa8iznuotDkypvVVyivBI/Mz7G
+X-Gm-Gg: ASbGnctlJWEAHyiwasryHSoZfv+OLT4byr+1F6UftVpWXVMcTEGhNC0ODE4izAxBla2
+	d71/cG3/VLM8orVLRMBwPwwPxc++AQQ0WYdT5mKv+ImUhPIn/JRwFVpfIiLc1AU9VGnhtz9qEG5
+	/UhDB8T66EYH2RmGHffxNQasfG7Q6J6Qc3KITDnSRk+i4pCDKAW5h8g0+3F/ZEuHLP5nipWHpf6
+	cECATCVtpov622p205+kcv39ANA0evXz8QGbALUBoFODACZSnk4P21ttXV3lBwqx1E1wa5nYepL
+	sDUi/iDJ9Td3qexKKOmk8gb+pHo/YC7pSnszxsnpdOFn07/9ftCjQQIOY9pnDxB18d4=
+X-Google-Smtp-Source: AGHT+IG2KkrrZuW4JZYAu2SgF1mIQ5x6uKuF20k8DiGK8/U7q4/P+FzZt88l6w+tkDWWksMwAnmVlg==
+X-Received: by 2002:a17:903:2f07:b0:21f:45d:21fb with SMTP id d9443c01a7336-22e1e8c1dcemr101041235ad.3.1746448992997;
+        Mon, 05 May 2025 05:43:12 -0700 (PDT)
+Received: from vaxr-BM6660-BM6360 ([2001:288:7001:2703:bd19:74c5:b39c:cda])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e194aa391sm41645485ad.154.2025.05.05.05.43.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 May 2025 05:43:12 -0700 (PDT)
+Date: Mon, 5 May 2025 20:43:06 +0800
+From: I Hsin Cheng <richard120310@gmail.com>
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	neil.armstrong@linaro.org, maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com,
+	simona@ffwll.ch, khilman@baylibre.com, jbrunet@baylibre.com,
+	dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	skhan@linuxfoundation.org
+Subject: Re: [PATCH] drm/meson: Cast mode->clock to unsigned long long
+Message-ID: <aBiyWnKKGMpMYnJ1@vaxr-BM6660-BM6360>
+References: <20250429190724.330883-1-richard120310@gmail.com>
+ <d5a8e781-6936-4c83-83d1-92daa2da8ca2@wanadoo.fr>
+ <CAFBinCCL6OQrbQ_UY_nhnbodN2TquuKPk9unhp3YjpR5u=EXag@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V4 2/2] mailbox: tmelite-qmp: Introduce TMEL QMP mailbox
- driver
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, <jassisinghbrar@gmail.com>,
-        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <andersson@kernel.org>,
-        <konradybcio@kernel.org>, <manivannan.sadhasivam@linaro.org>,
-        <dmitry.baryshkov@linaro.org>
-References: <20250327181750.3733881-1-quic_srichara@quicinc.com>
- <20250327181750.3733881-3-quic_srichara@quicinc.com>
- <848fd819-7e57-4340-a78a-37eaf779c6b2@oss.qualcomm.com>
-Content-Language: en-US
-From: Sricharan Ramabadhran <quic_srichara@quicinc.com>
-In-Reply-To: <848fd819-7e57-4340-a78a-37eaf779c6b2@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=EOUG00ZC c=1 sm=1 tr=0 ts=6818b1f0 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
- a=jOZ_KDUAQI6EowgXWJYA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: oTslHk-XMyuHtgAwZQU8qcC7e_DP3PcP
-X-Proofpoint-GUID: oTslHk-XMyuHtgAwZQU8qcC7e_DP3PcP
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA1MDEyMSBTYWx0ZWRfX+ZBVfkuibGRa
- BUk3/Dk9/sa3paTzS85TmgVo/nfSJyxTi3OMwPsqi7S+sugItS6uXjxcY/MtfkrkEAdGVd4LN62
- IbGPiD+PjHB/LVo1eJ5AZUV6BqHhgPZvhf14JI6R1lPcA6uXs4FbJD+A/qpQxCF7cWdXkOtn5yR
- 2PtEjbeLXztjnDsU0j05ycQKW3KujprwHeyvBquTS9R5RnY1FbD7gSHG6cWCdhU7QTvyBA7Ygy9
- dKToQ+wgJuhbPFw3RhIgtCKWyDVfdcCIBfextcJeYcSgIyEpRMtTBIklw+kbflideESWqkiUS3e
- MgqZj1URPwTpxUMmCBfTLqJ+Malwo2ixFHUNiCawnKcShtyqClpOVJafJ5lbHF7WJwuVOKCO6rl
- NRbZmXugU/1uI1C4kDKmpMpkjyLNc+9C5EkxZcKkawl00miXk4Rl6e343gJmd30FEOpAgxvT
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-05_05,2025-05-05_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 clxscore=1011 impostorscore=0 spamscore=0 lowpriorityscore=0
- bulkscore=0 phishscore=0 suspectscore=0 mlxlogscore=999 mlxscore=0
- priorityscore=1501 malwarescore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2504070000 definitions=main-2505050121
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAFBinCCL6OQrbQ_UY_nhnbodN2TquuKPk9unhp3YjpR5u=EXag@mail.gmail.com>
 
+On Sun, May 04, 2025 at 11:06:06PM +0200, Martin Blumenstingl wrote:
+> On Tue, Apr 29, 2025 at 11:00 PM Christophe JAILLET
+> <christophe.jaillet@wanadoo.fr> wrote:
+> >
+> > Le 29/04/2025 à 21:07, I Hsin Cheng a écrit :
+> > > Coverity scan reported the usage of "mode->clock * 1000" may lead to
+> > > integer overflow. Cast the type of "mode->clock" to "unsigned long long"
+> > > when utilizing it to avoid potential integer overflow issue.
+> > >
+> > > Link: https://scan5.scan.coverity.com/#/project-view/10074/10063?selectedIssue=1646759
+> > > Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
+> > > ---
+> > >   drivers/gpu/drm/meson/meson_encoder_hdmi.c | 4 ++--
+> > >   1 file changed, 2 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/drivers/gpu/drm/meson/meson_encoder_hdmi.c b/drivers/gpu/drm/meson/meson_encoder_hdmi.c
+> > > index 7752d8ac85f0..fe3d3ff7c432 100644
+> > > --- a/drivers/gpu/drm/meson/meson_encoder_hdmi.c
+> > > +++ b/drivers/gpu/drm/meson/meson_encoder_hdmi.c
+> > > @@ -75,7 +75,7 @@ static void meson_encoder_hdmi_set_vclk(struct meson_encoder_hdmi *encoder_hdmi,
+> > >       unsigned long long venc_freq;
+> > >       unsigned long long hdmi_freq;
+> > >
+> > > -     vclk_freq = mode->clock * 1000;
+> > > +     vclk_freq = (unsigned long long) mode->clock * 1000;
+> >
+> > Hi,
+> >
+> > maybe, using 1000ULL instead would do the same, but would be less verbose?
+> Agreed, that would make the code more similar to drm_hdmi_compute_mode_clock().
+> The goal is to switch to drm_hdmi_compute_mode_clock() mid-term anyways.
 
+Hi,
 
-On 4/26/2025 3:14 PM, Konrad Dybcio wrote:
-> On 3/27/25 7:17 PM, Sricharan R wrote:
->> From: Sricharan Ramabadhran <quic_srichara@quicinc.com>
->>
->> This mailbox facilitates the communication between the TMEL server
->> subsystem (Trust Management Engine Lite) and the TMEL client
->> (APPSS/BTSS/AUDIOSS), used for secure services like secure image
->> authentication, enable/disable efuses, crypto services etc. Each client in
->> the SoC has its own block of message RAM and IRQ for communication with the
->> TMEL SS. The protocol used to communicate in the message RAM is known as
->> Qualcomm Messaging Protocol (QMP).
->>
->> Remote proc driver subscribes to this mailbox and uses the
->> mbox_send_message to use TMEL to securely authenticate/teardown the images.
->>
->> Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
->> ---
-> 
-> [...]
-> 
->> +/*
->> + * mbox data can be shared over mem or sram
->> + */
-> 
-> /* foo */
-> 
-ok.
+Thanks for your review and suggestions !
+I'll make the corresponding changes and send v2.
 
-> [...]
-> 
->> +enum ipc_type {
->> +	IPC_MBOX_MEM,
->> +	IPC_MBOX_SRAM,
->> +};
->> +
->> +/*
->> + * mbox header indicates the type of payload and action required.
->> + */
->> +struct ipc_header {
->> +	u8 ipc_type:1;
->> +	u8 msg_len:7;
->> +	u8 msg_type;
->> +	u8 action_id;
->> +	s8 response;
->> +};
-> 
-> You said in the changelog that __packed is not required.. I suppose it's
-> technically correct, but I think it's good practice to add it on anything
-> that's bounced between blocks and is of fixed size
-> 
-ok.
+Best regards,
+I Hsin Cheng
 
-> [...]
-> 
->> +/**
->> + * tmel_qmp_send_irq() - send an irq to a remote entity as an event signal.
->> + * @mdev: Which remote entity that should receive the irq.
->> + */
->> +static inline void tmel_qmp_send_irq(struct qmp_device *mdev)
->> +{
->> +	writel(mdev->mcore.val, mdev->mcore_desc);
->> +	/* Ensure desc update is visible before IPC */
->> +	wmb();
-> 
-> writel (non _relaxed) already includes a write barrier, to ensure write
-> observability at the other endpoint, you'd have to read back the register
-> instead
-> 
-ok
-
->> +
->> +	dev_dbg(mdev->dev, "%s: mcore 0x%x ucore 0x%x", __func__,
->> +		mdev->mcore.val, mdev->ucore.val);
->> +
->> +	mbox_send_message(mdev->mbox_chan, NULL);
->> +	mbox_client_txdone(mdev->mbox_chan, 0);
->> +}
->> +  
->> +/**
->> + * tmel_qmp_send_data() - Send the data to remote and notify.
->> + * @mdev: qmp_device to send the data to.
->> + * @data: Data to be sent to remote processor, should be in the format of
->> + *	  a kvec.
->> + *
->> + * Copy the data to the channel's mailbox and notify remote subsystem of new
->> + * data. This function will return an error if the previous message sent has
->> + * not been read.
-> 
-> This is not valid kerneldoc, check make W=1, there are many cases in
-> this file
-> 
-ok, but i ran kerneldoc check and did not get any error. Anyways let me
-re-check with W=1 once.
-
-> [...]
-> 
->> +	/* read remote_desc from mailbox register */
-> 
-> All other comments start with an uppercase letter, please make it
-> consistent
-> 
-ok.
-
-> [...]
-> 
->> +	mdev->ucore.val = readl(mdev->ucore_desc);
->> +
->> +	dev_dbg(mdev->dev, "%s: mcore 0x%x ucore 0x%x", __func__,
->> +		mdev->mcore.val, mdev->ucore.val);
->> +
->> +	spin_lock_irqsave(&mdev->tx_lock, flags);
->> +
->> +	/* Check if remote link down */
->> +	if (mdev->local_state >= LINK_CONNECTED &&
->> +	    !(mdev->ucore.bits.link_state)) {
->> +		mdev->local_state = LINK_NEGOTIATION;
->> +		mdev->mcore.bits.link_state_ack = mdev->ucore.bits.link_state;
-> 
-> You dereference into local_state, mcore and ucore a lot - consider
-> creating a variable to reduce the constant ->/.-age
-> 
-ok
-
-> [...]
-> 
->> +	if (sizeof(struct ipc_header) + msg_size <= QMP_MBOX_IPC_PACKET_SIZE) {
->> +		/* Mbox only */
->> +		msg_hdr->ipc_type = IPC_MBOX_MEM;
->> +		msg_hdr->msg_len = msg_size;
->> +		memcpy((void *)mbox_payload, msg_buf, msg_size);
->> +	} else if (msg_size <= QMP_SRAM_IPC_MAX_BUF_SIZE) {
-> 
->> +		/* SRAM */
->> +		msg_hdr->ipc_type = IPC_MBOX_SRAM;
->> +		msg_hdr->msg_len = 8;
-> 
-> I think we should check for == and not <= to rule out some partially
-> transacted messages
-> 
-ok, will fix.
-
-> [...]
-> 
->> +
->> +		tdev->sram_dma_addr = dma_map_single(tdev->dev, msg_buf,
->> +						     msg_size,
->> +						     DMA_BIDIRECTIONAL);
->> +		ret = dma_mapping_error(tdev->dev, tdev->sram_dma_addr);
->> +		if (ret) {
->> +			dev_err(tdev->dev, "SRAM DMA mapping error: %d\n", ret);
->> +			return ret;
->> +		}
->> +
->> +		sram_payload->payload_ptr = tdev->sram_dma_addr;
->> +		sram_payload->payload_len = msg_size;
->> +	} else {
->> +		dev_err(tdev->dev, "Invalid payload length: %zu\n", msg_size);
->> +		return -EINVAL;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +/**
->> + * tmel_unprepare_message() - Get the response data back for client
->> + * @tdev: the tmel device
->> + * @msg_buf: payload to be sent
->> + * @msg_size: size of the payload
->> + */
->> +static inline void tmel_unprepare_message(struct tmel *tdev, void *msg_buf, size_t msg_size)
->> +{
->> +	struct tmel_ipc_pkt *ipc_pkt = (struct tmel_ipc_pkt *)tdev->pkt.iov_base;
->> +	struct mbox_payload *mbox_payload = &ipc_pkt->payload.mbox_payload;
->> +
->> +	if (ipc_pkt->msg_hdr.ipc_type == IPC_MBOX_MEM) {
->> +		memcpy(msg_buf, mbox_payload, msg_size);
->> +	} else if (ipc_pkt->msg_hdr.ipc_type == IPC_MBOX_SRAM) {
->> +		dma_unmap_single(tdev->dev, tdev->sram_dma_addr, msg_size, DMA_BIDIRECTIONAL);
->> +		tdev->sram_dma_addr = 0;
->> +	}
->> +}
->> +
->> +static inline bool tmel_rx_done(struct tmel *tdev)
->> +{
->> +	return tdev->rx_done;
->> +}
->> +
->> +/**
->> + * tmel_process_request() - process client msg and wait for response
->> + * @tdev: the tmel device
->> + * @msg_uid: msg_type/action_id combo
->> + * @msg_buf: payload to be sent
->> + * @msg_size: size of the payload
->> + */
->> +static inline int tmel_process_request(struct tmel *tdev, u32 msg_uid,
->> +				       void *msg_buf, size_t msg_size)
->> +{
->> +	struct qmp_device *mdev = tdev->mdev;
->> +	struct tmel_ipc_pkt *resp_ipc_pkt;
->> +	struct mbox_chan *chan;
->> +	unsigned long jiffies;
->> +	long time_left = 0;
->> +	int ret = 0;
->> +
->> +	chan = &tdev->ctrl.chans[0];
->> +
->> +	if (!msg_buf || !msg_size) {
->> +		dev_err(tdev->dev, "Invalid msg_buf or msg_size\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	tdev->rx_done = false;
->> +
->> +	ret = tmel_prepare_msg(tdev, msg_uid, msg_buf, msg_size);
->> +	if (ret)
->> +		return ret;
->> +
->> +	tdev->pkt.iov_len = sizeof(struct tmel_ipc_pkt);
->> +	tdev->pkt.iov_base = (void *)tdev->ipc_pkt;
->> +
->> +	tmel_qmp_send_data(mdev, &tdev->pkt);
->> +	jiffies = msecs_to_jiffies(QMP_SEND_TIMEOUT);
->> +
->> +	time_left = wait_event_interruptible_timeout(tdev->waitq,
->> +						     tmel_rx_done(tdev),
->> +						     jiffies);
->> +
-> 
-> Unexpected \n
-> 
-ok.
-
-> [...]
-> 
->> +	if (ret) {
->> +		dev_err(dev, "Failed to send IPC: %d\n", ret);
->> +	} else if (smsg->msg.resp.status) {
->> +		dev_err(dev, "Failed with status: %d", smsg->msg.resp.status);
->> +		ret = smsg->msg.resp.status ? -EINVAL : 0;
-> 
-> Do the internal error numbers correspond to linux errnos?
-> 
-> E.g. is there an TMEL_ERROR_TIMEDOUT that could be mapped to
-> ETIMEDOUT?
-> 
-There is no direct mapping, hence this sideband conversion.
-
-> [...]
-> 
->> +	/*
->> +	 * Kick start the SM from the negotiation phase
-> 
-> Please spell out state machine, it's not obvious
-> 
-ok.
-
-> [...]
-> 
->> +
->> +	ret = platform_get_irq(pdev, 0);
-> 
-> This return value is never checked
-> 
-ok, will fix.
-
-Regards,
-  Sricharan
