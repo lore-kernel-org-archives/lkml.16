@@ -1,100 +1,115 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F39B52F5F86;
-	Mon,  5 May 2025 23:17:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 814493A80FC;
+	Mon,  5 May 2025 23:17:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487045; cv=none; b=hTW3+uDjsLqA2P4Xun49i3Am5f354fbow+vj07queds2mny36L3HYlYs2Ecjh2K6eqlZWEI5nDlQqlMC5j87N56s+qSpgz+TRA5y1qDCk5AXMltfEF9rU8GfZSwAc1lxTlJFBS/Ho2owvka9Jm/28Rhc7Nugtp4lu2pTQ/Oj+fg=
+	t=1746487041; cv=none; b=GTjs6arqIBOTpr1myGmxS3POcdeXKLZ48A6xFyNxUckc25SU5W0u24tJemFlgTHzNbZs0JSCRfSrHfUTmSYsiAsAt2KWfcR3EwYFxDS1mgHqmLtcOw+2fr0ypV7mX60RWUF9oj+INBVomioRyg9qZU5Tgyro8gQqdZhMgAw+ZNI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487045; c=relaxed/simple;
-	bh=jxorT5kC7+ch9b4vT4OAtlzC+qRhXbPQIT2KwokeOtQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gAdD6vGWYglx5HB05ngXeeyM/U1Pfae0nSnbPVDo27UamNrktZJ4GhaBbVm/PsjEpN95G2fRPEktL9IM4THlZeN0a9mAGTW/mqLItA/JzJ7QsMzxsOtQhNGfW9+zjgQoS0m8XbGQvQCXZ6prNa1+TbpLad8PCbiL02Leu7ke4x8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FY52MbnK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746487041; c=relaxed/simple;
+	bh=eUfjuqWwgzc7HEzgfWaIoJCRqEYULkjhX5zB3ZSy8Ts=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=iTdBJzp7X6mmUmbvnYE/YXWzqBrTEu69lEbde0nayAQkoHPEkuAzTcrANL+JMEAJx0tqovOMVD+s2mSvDLCuRgGbNQH/WSekN6xWZCu9qKRmyXpivNH/oQHVG4czv+0wpv5eM732+eahh+miQPMq15sFjcKUGk4P/TmZV69x7bA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b79HvWEm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FY52MbnK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52A73C4CEED;
-	Mon,  5 May 2025 23:17:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b79HvWEm"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 54ABBC4CEEE;
+	Mon,  5 May 2025 23:17:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487044;
-	bh=jxorT5kC7+ch9b4vT4OAtlzC+qRhXbPQIT2KwokeOtQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FY52MbnK8wSDBIAbSnVm754zyjCuvwF//uAKU54Fp/uOWfvyCqJH+g78BPwBCfuOd
-	 3o2S1blG8dSNOdgD9YwdwE2Fvxic5ki2nI8SUyPtxNofI463E6BUXw1xFt1YuCtUAO
-	 a/6YOwgAY+UZksbpLkh27CuLjmwwJHkWVa2dYnR4XeP3tB/r+6SryKUgP+pv0ztFG6
-	 w4mAcD9eW6JRgwFjxSMVfRsJg8s3fyrmwI1ZxuryEalsnTse4bOvZDRwFIBJHte0SR
-	 vA5lRbWhxpU0+1l/d7brYh4pv2rhqluYxZ/ijentmQc62BqujJYKz7RkJQeQ3gfefx
-	 4IxVpUrUapxqA==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: William Tu <witu@nvidia.com>,
-	Daniel Jurgens <danielj@nvidia.com>,
-	Tariq Toukan <tariqt@nvidia.com>,
-	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	saeedm@nvidia.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 124/153] net/mlx5e: set the tx_queue_len for pfifo_fast
-Date: Mon,  5 May 2025 19:12:51 -0400
-Message-Id: <20250505231320.2695319-124-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250505231320.2695319-1-sashal@kernel.org>
-References: <20250505231320.2695319-1-sashal@kernel.org>
+	s=k20201202; t=1746487041;
+	bh=eUfjuqWwgzc7HEzgfWaIoJCRqEYULkjhX5zB3ZSy8Ts=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=b79HvWEmOgjvCrM3BDAPa2gI30QcgO4pbzLHgnyJAAZG6R8ww/QoXocZw9202IB7z
+	 mKWiaSbAEh67S40nmAv79NnsYxmQN2d+ST0RqOR+73xPKkhh1QGe5Lfg9twZLhjuJV
+	 Q70UT0noss7qnTlgfgVknkznocX5s4PEHiUZAyQkmIammg5NGBti4zAG0d6GWK3ov9
+	 1xYKzbzYogCtla/YGah9pxFA0X61dsQQCjhihVxR2In79HGi2Hm+MkxN3ncUBbwzd5
+	 e1aMvbYw0MOM9HrTOc8K1nrDUY6THSgngV175I2Yzjw3zGtyRbA3TzjG+YtanKKAo+
+	 KlOgivg3MSvOg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4318FC3ABB6;
+	Mon,  5 May 2025 23:17:21 +0000 (UTC)
+From: Aaron Kling via B4 Relay <devnull+webgeek1234.gmail.com@kernel.org>
+Subject: [PATCH v5 0/3] PCI: tegra: Allow building as a module
+Date: Mon, 05 May 2025 18:17:19 -0500
+Message-Id: <20250505-pci-tegra-module-v5-0-827aaac998ba@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.15.181
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAP9GGWgC/23PTQ6CMBAF4KuYrq2Zmc4IuvIexkUpBZuImKJEY
+ 7i7RRf+sXwvme9l7qrzMfhOrWd3FX0futAeU5D5TLm9PdZehzJlRUACBo0+uaDPvo5WN215OXi
+ duaJEJz4DW6l0doq+Ctcnud2lvA/duY2350KPY/vCmOAf61GDdmCxytOYsN3UjQ2HhWsbNWI9f
+ QL5BEAjgGi5WCExL38B8wYEaAIwCRBZWl5lhsoMfgH+BGQC4ARAnhci5LjArxeGYXgAwJpL2HM
+ BAAA=
+X-Change-ID: 20250313-pci-tegra-module-7cbd1c5e70af
+To: Thomas Gleixner <tglx@linutronix.de>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+ Thierry Reding <thierry.reding@gmail.com>, 
+ Jonathan Hunter <jonathanh@nvidia.com>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+ linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, 
+ Aaron Kling <webgeek1234@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1746487040; l=1598;
+ i=webgeek1234@gmail.com; s=20250217; h=from:subject:message-id;
+ bh=eUfjuqWwgzc7HEzgfWaIoJCRqEYULkjhX5zB3ZSy8Ts=;
+ b=PPOCuy8fWxrudoIzuE1qc7uG79iuQLKGG/jVPH4ve4vcbV36e3ZeLTq9Ho3LNkHHYIoECpcYS
+ oV33CYQ4v5iDW9PE+038JE4R2iUQU/1eoEnSjdQL8SghnA82UDOro5j
+X-Developer-Key: i=webgeek1234@gmail.com; a=ed25519;
+ pk=TQwd6q26txw7bkK7B8qtI/kcAohZc7bHHGSD7domdrU=
+X-Endpoint-Received: by B4 Relay for webgeek1234@gmail.com/20250217 with
+ auth_id=342
+X-Original-From: Aaron Kling <webgeek1234@gmail.com>
+Reply-To: webgeek1234@gmail.com
 
-From: William Tu <witu@nvidia.com>
-
-[ Upstream commit a38cc5706fb9f7dc4ee3a443f61de13ce1e410ed ]
-
-By default, the mq netdev creates a pfifo_fast qdisc. On a
-system with 16 core, the pfifo_fast with 3 bands consumes
-16 * 3 * 8 (size of pointer) * 1024 (default tx queue len)
-= 393KB. The patch sets the tx qlen to representor default
-value, 128 (1<<MLX5E_REP_PARAMS_DEF_LOG_SQ_SIZE), which
-consumes 16 * 3 * 8 * 128 = 49KB, saving 344KB for each
-representor at ECPF.
-
-Signed-off-by: William Tu <witu@nvidia.com>
-Reviewed-by: Daniel Jurgens <danielj@nvidia.com>
-Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
-Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-Link: https://patch.msgid.link/20250209101716.112774-9-tariqt@nvidia.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en_rep.c | 2 ++
- 1 file changed, 2 insertions(+)
+Changes in v5:
+- Copy commit message exactly word for word on patch 1, as required by reviewer
+- Delete remove callback in patch 3, per request
+- Don't clean up debugfs, per request, which drops patch 4 entirely
+- Link to v4: https://lore.kernel.org/r/20250505-pci-tegra-module-v4-0-088b552c4b1a@gmail.com
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c b/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
-index de168d8cf33f7..3c8bfedeafffd 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
-@@ -642,6 +642,8 @@ static void mlx5e_build_rep_netdev(struct net_device *netdev,
- 	netdev->ethtool_ops = &mlx5e_rep_ethtool_ops;
- 
- 	netdev->watchdog_timeo    = 15 * HZ;
-+	if (mlx5_core_is_ecpf(mdev))
-+		netdev->tx_queue_len = 1 << MLX5E_REP_PARAMS_DEF_LOG_SQ_SIZE;
- 
- #if IS_ENABLED(CONFIG_MLX5_CLS_ACT)
- 	netdev->hw_features    |= NETIF_F_HW_TC;
+Changes in v4:
+- Updated commit messages for patches 1 and 2, per review
+- Link to v3: https://lore.kernel.org/r/20250502-pci-tegra-module-v3-0-556a49732d70@gmail.com
+
+Changes in v3:
+- Add patch to drop remove callback, per request
+- Link to v2: https://lore.kernel.org/r/20250428-pci-tegra-module-v2-0-c11a4b912446@gmail.com
+
+Changes in v2:
+- Add patch to export tegra_cpuidle_pcie_irqs_in_use as required when
+  building pci-tegra as a module for arm
+- Drop module exit to prevent module unloading, as requested
+- Link to v1: https://lore.kernel.org/r/20250420-pci-tegra-module-v1-0-c0a1f831354a@gmail.com
+
+---
+Aaron Kling (3):
+      irqdomain: Export irq_domain_free_irqs
+      cpuidle: tegra: Export tegra_cpuidle_pcie_irqs_in_use
+      PCI: tegra: Allow building as a module
+
+ drivers/cpuidle/cpuidle-tegra.c    |  1 +
+ drivers/pci/controller/Kconfig     |  2 +-
+ drivers/pci/controller/pci-tegra.c | 29 ++++-------------------------
+ kernel/irq/irqdomain.c             |  1 +
+ 4 files changed, 7 insertions(+), 26 deletions(-)
+---
+base-commit: 18352e73612d60b81790d2437845276ae499b64a
+change-id: 20250313-pci-tegra-module-7cbd1c5e70af
+
+Best regards,
 -- 
-2.39.5
+Aaron Kling <webgeek1234@gmail.com>
+
 
