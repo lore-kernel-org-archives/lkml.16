@@ -1,573 +1,206 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E35F224C668;
-	Mon,  5 May 2025 12:16:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAD7324EABC
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 12:17:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746447422; cv=none; b=XnZ5UQuSFv9wkb8qMoe3bvx12YlsxomN4OeryOSKT+za5zDy53MHOL1xU1bKpYH8yJ6JTia7z5lsGxW3I85+5k/4ixptsGwAaXRsKKnMiPHBlnZ4QEgda229KAjwj0eEkZqsmaaj5yVXjGPwF2WBwOk6+vnBiBhQ+LlujUUXtWA=
+	t=1746447428; cv=none; b=gz2rlmy723TctGwEfYYq1eFrHXhTCPOZ41HHhngywnM5tBcohYhT1MLaXyjRtlJvMa+pAie5ErcX8YnwKbEGenClgMfBA+sMCI/74xBMezMMxiu4u8yUKjvAl6cjUseayJOShSQUuRiKDPJB1skOOO8L7IXeHc+AnvfNLD7IAus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746447422; c=relaxed/simple;
-	bh=X5IrLcOfwIuI91baMFWQlUw8w0RcvcFcoEUVtY7RB8E=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Bg7FJqEAnG7MKCkbxHmSmEKUfs27KKfNL8Jp4RbIQw1J+Pjr4eI5Emzrz/faqwWKUNXT66pqckHWuJWMvM5BFzk7r9+KEPSMnT8jE1YQjGHyxG4+tzA74u9tNoUmTQa8SWTzbu+g5BSY+uFwlEzIZPZEK8ElMF5fDBsJECnY+I0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=HzfDfvDM; arc=none smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1746447428; c=relaxed/simple;
+	bh=NlALIoe0iC3WSYUHgCo9Umj2JugDI/3o+WdAPXUGUuU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gV8nn8vs8uUk9jwgC9CJYXxbMsMr9kOz1XgrhSQ2Op30y5GVMSkYK4lmKCJVRoTtMeNqb3r5hyNGY4pganxs9afyIsuuVmNhk3TgylBIIE/vztvouDjvMYLTaF1MYnDjWXgC6bB6iUtE935mI7f83IxWUGvqn/LSJTPHFZ+lufU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=NwwMaSql; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="HzfDfvDM"
-X-UUID: d63be72229aa11f0813e4fe1310efc19-20250505
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=PDrjQLrgCOGlD1G5NZ3v24S+BslDmlzYRM05njM6UbE=;
-	b=HzfDfvDMhSFcJ8UhfRKgd4Wzi2xlqBivigDdLwOnXZVPF4q5rxS2Cuiqer9kw88I7BBGWix6so2s2dyQdKUEcRutAwa5SrjTaSDJ1IrY9bmv0Niwg4jpeOCa6cPIDNzW9vcmt+yP5/F3QROWwhExuMwY/CNSHa6MN5FcOxXp2Yw=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.2.1,REQID:402dea40-214a-4f37-90ad-875ee0382cb0,IP:0,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
-	elease,TS:0
-X-CID-META: VersionHash:0ef645f,CLOUDID:f143c62b-be47-4281-8f30-e6479b5e1210,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3
-	,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV
-	:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: d63be72229aa11f0813e4fe1310efc19-20250505
-Received: from mtkmbs14n1.mediatek.inc [(172.21.101.75)] by mailgw01.mediatek.com
-	(envelope-from <sirius.wang@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 986170758; Mon, 05 May 2025 20:16:56 +0800
-Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
- mtkmbs11n2.mediatek.inc (172.21.101.187) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Mon, 5 May 2025 20:16:55 +0800
-Received: from mtksitap99.mediatek.inc (10.233.130.16) by
- mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.39 via Frontend Transport; Mon, 5 May 2025 20:16:55 +0800
-From: Sirius Wang <sirius.wang@mediatek.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
-	<matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>, Sean Wang <sean.wang@mediatek.com>
-CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
-	<wenst@chromium.org>, Sirius Wang <sirius.wang@mediatek.com>
-Subject: [PATCH 2/2] WIP: arm64: dts: mt8189: Add mt8189 dts evaluation board and Mafefile
-Date: Mon, 5 May 2025 20:15:46 +0800
-Message-ID: <20250505121627.3944728-3-sirius.wang@mediatek.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250505121627.3944728-1-sirius.wang@mediatek.com>
-References: <20250505121627.3944728-1-sirius.wang@mediatek.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="NwwMaSql"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 545BG4oN015271
+	for <linux-kernel@vger.kernel.org>; Mon, 5 May 2025 12:17:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=cBmlj28SvCZ4M7S1nnJEd0Nu
+	gRbJw27zy6tWxbAN08U=; b=NwwMaSqlGyqRvyKGNJ4+C1B+9YKaFTYBTkNhornd
+	2AOd2MXeKxG06zHKKNR3jr0sGT7YdDLBl0UiI17t9lhK1rK7ZHil4PlrTxPqONyt
+	L+ikGsVhbN44SDGelGLeWz6jMuEw9vUu3zWMkhXx1y3eznr4EzjzExJpDi/FepjS
+	p4/V9e3Y2d1AnhcLVjzH0u3h5bo3lAtoYoQWXXoCZp+8m/qZbmKcsSny5GONbOR1
+	SKBmedWBK17f/h0Y5GDKY9Ta0H7bUiUBJTvmw4AUw8FrToMn6m7WfQAClFmzFin7
+	6maa2wsCbtJBguMt74RI30b/CH9YNhBPniGkZe4F1Ssgag==
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46dd3n3wyu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 12:17:03 +0000 (GMT)
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6f4f15ab411so148424676d6.3
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 05:17:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746447423; x=1747052223;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cBmlj28SvCZ4M7S1nnJEd0NugRbJw27zy6tWxbAN08U=;
+        b=O1IHewjKD0Bn0kBIBnHdZ0viLo0z3cuRShNMlsrIlzvPpmqzfFgkhoKOCuRcHHCf5A
+         lDYkvy+3pAg9CX6ZoLhAMMiNzinjaTBrqrS8L1SCxg+9MVCXMb7idPlK83bZ57K/8O46
+         b7scIHaEeF664e4x5PvZ9y1v3BTdE4ZfwUfcPzp71ZPQaXe/nGKI2Z4cfYYGOCOfsnCQ
+         fqaEa3m9NIFfIkSgT+kdabzUxxheUI9fp5Qp5yZVjFVV7o3q9KkLIE/KLsfdub2mTtZc
+         k3zMabuWVoaEucctYXB86AZLOv4ahk5tPnRDM1ONjnosNM1SDfeYs2g5tHRNmTeL41ei
+         Wnag==
+X-Forwarded-Encrypted: i=1; AJvYcCVRjMVBwHRZmH1ZbJK55OUNSZIamERiGVQh73C8bsE56ewBy5b+KpJo9oHSFvNiuxGJcBNB1Q160UcLxbw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNkrxxUtz9ze6aJr0Of45b+px0qy9UH+Wx1CBvOJJ4WUbI2nsl
+	9fM7WktcQrWGpwfNJGCYZxlNqS28LJ8R2xmQmLkyb5DWEl73H2GAzd6ROnLonFb7VR4oFkIUrHS
+	X4Oxw5J4m77cDXCQJHrYnXH27/3XEn1a2wlCt9lq3dK+zUgvr+c3b8brUPl3msOE=
+X-Gm-Gg: ASbGncsCWJFJrYwFKivL7pa3elvIRQ8SpkOgCfSxkqvusyqbD9Ic3z4TxBJ/EaiffH3
+	kA5eNjs4g8HlvYwRDfQe+FP21+xSdDb35J1vrfUFlpZ+p4QCa+9sRlybJuO6r8DdSQXQb/PQxZr
+	kAhIbqMHCY7Grk2ydtbTLNarV4eoE4jRpkJz7dneV/mWTuOLy3SPXjweQ3S0f1cvJQ2RJY9KvP4
+	Its8uIIcLInD6XNiBgWYy9JI/194LrZBnRz1awpmnpifZLAQ0NtBWOXeclN3Pk3zxn34Z4VAa2j
+	a2zJ2m9tPOY8JzOS0EDAGptJTY+LFZaulsSGRrpRrmNRqymKdcTRm2gN6DBHvGsuLgwIDjwZQUc
+	=
+X-Received: by 2002:ad4:5e89:0:b0:6e8:fa72:be4c with SMTP id 6a1803df08f44-6f528c36377mr90487096d6.1.1746447423076;
+        Mon, 05 May 2025 05:17:03 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHI2miDMGBi18VyNdPKWOTeIPliK5ntOZYPJ0fwhi2n4q9Zd33W6e8RHT8wR9jc3kvFT4tTjg==
+X-Received: by 2002:ad4:5e89:0:b0:6e8:fa72:be4c with SMTP id 6a1803df08f44-6f528c36377mr90486786d6.1.1746447422724;
+        Mon, 05 May 2025 05:17:02 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ea94b176dsm1684252e87.14.2025.05.05.05.17.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 May 2025 05:17:01 -0700 (PDT)
+Date: Mon, 5 May 2025 15:17:00 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Stephan Gerhold <stephan.gerhold@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Caleb Connolly <caleb.connolly@linaro.org>,
+        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-serial@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: qcom: bam_dma: keep remotely controlled units
+ on during boot
+Message-ID: <aw6tjh5q6t75bif4jyusrdvroq53lbwlljo5cdgzrofn3a4loz@ixuu3yw4ucil>
+References: <20250503-bam-dma-reset-v1-1-266b6cecb844@oss.qualcomm.com>
+ <aBh9WL2OMjTqBJch@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aBh9WL2OMjTqBJch@linaro.org>
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA1MDExNyBTYWx0ZWRfXwMZ/ZWXECUzJ
+ hgFwPB4Rg4cjQLuapcUtKEQG1FVd3pVhd39ZfNzMfDSUO2EKPABL1MMl86vK+w6zppwDiFV8T/w
+ Znx1lixf41xtCmKcVHf9iTmkE6kQMEpJRdFUHYbZCdObARuaQBzPYBV5QvlOFrRQ+CutCY0nTsW
+ tIGiRo5xKu25VVgnXIzXwAFxwQ1fdqLLY/uVg6yrYEixvAQzWQ7cSUrk3LppUMecqjUtsvtF4y7
+ b1NTIlp+Bc4XqnKjepNS0DXOxPxrnQzOXLjKTFdXRz5glVCG5Q00cT6XkWO6jA7+f5qT3Sjh20V
+ wCcSGC/j50q0nSuM8lowjrFGdDWM4k7UtbgD7bECNgAL6Jpk7+OIZHrLYRefpMtvKF0A5ZtfX7V
+ BjDecFWzOHbi5lpYb9wi3vAYGW+WITCtlqcAnsTCwfR+3P8743ZoaEge7fSHPw2ohJ0Uq2hj
+X-Proofpoint-GUID: PtvANbGd9eYmuGlEWshLHs-y93SxiKvC
+X-Proofpoint-ORIG-GUID: PtvANbGd9eYmuGlEWshLHs-y93SxiKvC
+X-Authority-Analysis: v=2.4 cv=UNDdHDfy c=1 sm=1 tr=0 ts=6818ac3f cx=c_pps
+ a=oc9J++0uMp73DTRD5QyR2A==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=-oSGpTHasqKTVeQyqFYA:9 a=CjuIK1q_8ugA:10
+ a=iYH6xdkBrDN1Jqds4HTS:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-05_05,2025-05-05_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxlogscore=999 adultscore=0 suspectscore=0 clxscore=1015 lowpriorityscore=0
+ mlxscore=0 phishscore=0 priorityscore=1501 spamscore=0 bulkscore=0
+ malwarescore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505050117
 
-MT8189 is a SoC based on 64bit ARMv8 architecture. It contains 6 CA55
-and 2 CA78 cores. MT8189 share many HW IP with MT8188 series.
+On Mon, May 05, 2025 at 10:56:56AM +0200, Stephan Gerhold wrote:
+> On Sat, May 03, 2025 at 03:41:43AM +0300, Dmitry Baryshkov wrote:
+> > The commit 0ac9c3dd0d6f ("dmaengine: qcom: bam_dma: fix runtime PM
+> > underflow") made sure the BAM DMA device gets suspended, disabling the
+> > bam_clk. However for remotely controlled BAM DMA devices the clock might
+> > be disabled prematurely (e.g. in case of the earlycon this frequently
+> > happens before UART driver is able to probe), which causes device reset.
+> > 
+> > Use sync_state callback to ensure that bam_clk stays on until all users
+> > are probed (and are able to vote upon corresponding clocks).
+> > 
+> > Fixes: 0ac9c3dd0d6f ("dmaengine: qcom: bam_dma: fix runtime PM underflow")
+> > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> 
+> Thanks for the patch! I actually created almost the same patch on
+> Friday, after struggling with this issue on DB410c when trying to add
+> the MPM as wakeup-parent for GPIOs. :-)
+> 
+> How is this issue related to _remotely-controlled_ BAMs?
 
-We add basic chip support for MediaTek MT8189 on evaluation board.
+My understanding is that for locally controlled BAMs we can disable the
+clock at the probe time as all the users of the BAM will be probed
+before accessing the BAM. In case of a remotely controlled BAM there can
+be a user (e.g. UART) which is running, but didn't request DMA channel
+yet.
 
-BUG=b:387230785
-TEST=emerge-skywalker chromeos-kernel-6_6
+Please correct me if I'm wrong here.
 
-Signed-off-by: Sirius Wang <sirius.wang@mediatek.com>
----
- arch/arm64/boot/dts/mediatek/Makefile       |   1 +
- arch/arm64/boot/dts/mediatek/mt8189-evb.dts |  20 +
- arch/arm64/boot/dts/mediatek/mt8189.dtsi    | 441 ++++++++++++++++++++
- 3 files changed, 462 insertions(+)
- create mode 100644 arch/arm64/boot/dts/mediatek/mt8189-evb.dts
- create mode 100644 arch/arm64/boot/dts/mediatek/mt8189.dtsi
+> The BAM clock will get disabled for all types of BAM control, so I don't
+> think the type of BAM control plays any role here. The BLSP DMA instance
+> that would most likely interfere with UART earlycon is
+> controlled-remotely on some SoCs (e.g. MSM8916), but currently not all
+> of them (e.g. MSM8974, IPQ8074, IPQ9574, ...).
 
-diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
-index 3aa06476c6c0..ad2ac9e1bb79 100644
---- a/arch/arm64/boot/dts/mediatek/Makefile
-+++ b/arch/arm64/boot/dts/mediatek/Makefile
-@@ -87,6 +87,7 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt8188-geralt-ciri-sku4.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8188-geralt-ciri-sku5.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8188-geralt-ciri-sku6.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8188-geralt-ciri-sku7.dtb
-+dtb-$(CONFIG_ARCH_MEDIATEK) += mt8189-evb.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8192-asurada-hayato-r1.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8192-asurada-spherion-r0.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8192-evb.dtb
-diff --git a/arch/arm64/boot/dts/mediatek/mt8189-evb.dts b/arch/arm64/boot/dts/mediatek/mt8189-evb.dts
-new file mode 100644
-index 000000000000..e5d9ce1b8e61
---- /dev/null
-+++ b/arch/arm64/boot/dts/mediatek/mt8189-evb.dts
-@@ -0,0 +1,20 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+/*
-+ * Copyright (C) 2025 MediaTek Inc.
-+ * Author: Sirius Wang <sirius.wang@mediatek.com>
-+ */
-+/dts-v1/;
-+#include "mt8189.dtsi"
-+
-+/ {
-+	model = "MediaTek MT8189 evaluation board";
-+	compatible = "mediatek,mt8189-evb", "mediatek,mt8189";
-+
-+	chosen: chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/mediatek/mt8189.dtsi b/arch/arm64/boot/dts/mediatek/mt8189.dtsi
-new file mode 100644
-index 000000000000..de59d858bcf3
---- /dev/null
-+++ b/arch/arm64/boot/dts/mediatek/mt8189.dtsi
-@@ -0,0 +1,441 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+/*
-+ * Copyright (c) 2025 MediaTek Inc.
-+ */
-+
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/phy/phy.h>
-+#include <dt-bindings/reset/ti-syscon.h>
-+
-+/ {
-+	compatible = "mediatek,mt8189";
-+	interrupt-parent = <&gic>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			reg = <0x000>;
-+			enable-method = "psci";
-+			clock-frequency = <2000000000>;
-+			capacity-dmips-mhz = <742>;
-+			cpu-idle-states = <&cpuoff_l &clusteroff_l &mcusysoff_l &system_vcore &s2idle>;
-+			i-cache-size = <32768>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <128>;
-+			d-cache-size = <32768>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
-+			next-level-cache = <&l2_0>;
-+			performance-domains = <&performance 0>;
-+			#cooling-cells = <2>;
-+		};
-+
-+		cpu1: cpu@100 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			reg = <0x100>;
-+			enable-method = "psci";
-+			clock-frequency = <2000000000>;
-+			capacity-dmips-mhz = <742>;
-+			cpu-idle-states = <&cpuoff_l &clusteroff_l &mcusysoff_l &system_vcore &s2idle>;
-+			i-cache-size = <32768>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <128>;
-+			d-cache-size = <32768>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
-+			next-level-cache = <&l2_0>;
-+			performance-domains = <&performance 0>;
-+			#cooling-cells = <2>;
-+		};
-+
-+		cpu2: cpu@200 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			reg = <0x200>;
-+			enable-method = "psci";
-+			clock-frequency = <2000000000>;
-+			capacity-dmips-mhz = <742>;
-+			cpu-idle-states = <&cpuoff_l &clusteroff_l &mcusysoff_l &system_vcore &s2idle>;
-+			i-cache-size = <32768>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <128>;
-+			d-cache-size = <32768>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
-+			next-level-cache = <&l2_0>;
-+			performance-domains = <&performance 0>;
-+			#cooling-cells = <2>;
-+		};
-+
-+		cpu3: cpu@300 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			reg = <0x300>;
-+			enable-method = "psci";
-+			clock-frequency = <2000000000>;
-+			capacity-dmips-mhz = <742>;
-+			cpu-idle-states = <&cpuoff_l &clusteroff_l &mcusysoff_l &system_vcore &s2idle>;
-+			i-cache-size = <32768>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <128>;
-+			d-cache-size = <32768>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
-+			next-level-cache = <&l2_0>;
-+			performance-domains = <&performance 0>;
-+			#cooling-cells = <2>;
-+		};
-+
-+		cpu4: cpu@400 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			reg = <0x400>;
-+			enable-method = "psci";
-+			clock-frequency = <2000000000>;
-+			capacity-dmips-mhz = <742>;
-+			cpu-idle-states = <&cpuoff_l &clusteroff_l &mcusysoff_l &system_vcore &s2idle>;
-+			i-cache-size = <32768>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <128>;
-+			d-cache-size = <32768>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
-+			next-level-cache = <&l2_0>;
-+			performance-domains = <&performance 0>;
-+			#cooling-cells = <2>;
-+		};
-+
-+		cpu5: cpu@500 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			reg = <0x500>;
-+			enable-method = "psci";
-+			clock-frequency = <2000000000>;
-+			capacity-dmips-mhz = <742>;
-+			cpu-idle-states = <&cpuoff_l &clusteroff_l &mcusysoff_l &system_vcore &s2idle>;
-+			i-cache-size = <32768>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <128>;
-+			d-cache-size = <32768>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
-+			next-level-cache = <&l2_0>;
-+			performance-domains = <&performance 0>;
-+			#cooling-cells = <2>;
-+		};
-+
-+		cpu6: cpu@600 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a78";
-+			reg = <0x600>;
-+			enable-method = "psci";
-+			clock-frequency = <3000000000>;
-+			capacity-dmips-mhz = <958>;
-+			cpu-idle-states = <&cpuoff_m &clusteroff_m &mcusysoff_m &system_vcore &s2idle>;
-+			i-cache-size = <65536>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			d-cache-size = <65536>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <256>;
-+			next-level-cache = <&l2_1>;
-+			performance-domains = <&performance 1>;
-+			#cooling-cells = <2>;
-+		};
-+
-+		cpu7: cpu@700 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a78";
-+			reg = <0x700>;
-+			enable-method = "psci";
-+			clock-frequency = <3000000000>;
-+			capacity-dmips-mhz = <958>;
-+			cpu-idle-states = <&cpuoff_m &clusteroff_m &mcusysoff_m &system_vcore &s2idle>;
-+			i-cache-size = <65536>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			d-cache-size = <65536>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <256>;
-+			next-level-cache = <&l2_1>;
-+			performance-domains = <&performance 1>;
-+			#cooling-cells = <2>;
-+		};
-+
-+		cpu-map {
-+			cluster0 {
-+				core0 {
-+					cpu = <&cpu0>;
-+				};
-+				core1 {
-+					cpu = <&cpu1>;
-+				};
-+				core2 {
-+					cpu = <&cpu2>;
-+				};
-+				core3 {
-+					cpu = <&cpu3>;
-+				};
-+				core4 {
-+					cpu = <&cpu4>;
-+				};
-+				core5 {
-+					cpu = <&cpu5>;
-+				};
-+			};
-+
-+			cluster1 {
-+				core0 {
-+					cpu = <&cpu6>;
-+				};
-+				core1 {
-+					cpu = <&cpu7>;
-+				};
-+			};
-+		};
-+
-+		idle-states {
-+			entry-method = "arm,psci";
-+
-+			cpuoff_l: cpuoff-l {
-+				compatible = "arm,idle-state";
-+				arm,psci-suspend-param = <0x00010000>;
-+				local-timer-stop;
-+				entry-latency-us = <97>;
-+				exit-latency-us = <252>;
-+				min-residency-us = <6710>;
-+			};
-+
-+			cpuoff_m: cpuoff-m {
-+				compatible = "arm,idle-state";
-+				arm,psci-suspend-param = <0x00010000>;
-+				local-timer-stop;
-+				entry-latency-us = <53>;
-+				exit-latency-us = <143>;
-+				min-residency-us = <2120>;
-+			};
-+
-+			cpuoff_b: cpuoff-b {
-+				compatible = "arm,idle-state";
-+				arm,psci-suspend-param = <0x00010000>;
-+				local-timer-stop;
-+				entry-latency-us = <40>;
-+				exit-latency-us = <107>;
-+				min-residency-us = <2580>;
-+			};
-+
-+			clusteroff_l: clusteroff-l {
-+				compatible = "arm,idle-state";
-+				arm,psci-suspend-param = <0x01010001>;
-+				local-timer-stop;
-+				entry-latency-us = <109>;
-+				exit-latency-us = <325>;
-+				min-residency-us = <6710>;
-+			};
-+
-+			clusteroff_m: clusteroff-m {
-+				compatible = "arm,idle-state";
-+				arm,psci-suspend-param = <0x01010001>;
-+				local-timer-stop;
-+				entry-latency-us = <59>;
-+				exit-latency-us = <188>;
-+				min-residency-us = <2120>;
-+			};
-+
-+			clusteroff_b: clusteroff-b {
-+				compatible = "arm,idle-state";
-+				arm,psci-suspend-param = <0x01010001>;
-+				local-timer-stop;
-+				entry-latency-us = <43>;
-+				exit-latency-us = <138>;
-+				min-residency-us = <2580>;
-+			};
-+
-+			mcusysoff_l: mcusysoff-l {
-+				compatible = "arm,idle-state";
-+				arm,psci-suspend-param = <0x02010007>;
-+				local-timer-stop;
-+				entry-latency-us = <1357>;
-+				exit-latency-us = <835>;
-+				min-residency-us = <6710>;
-+			};
-+
-+			mcusysoff_m: mcusysoff-m {
-+				compatible = "arm,idle-state";
-+				arm,psci-suspend-param = <0x02010007>;
-+				local-timer-stop;
-+				entry-latency-us = <1202>;
-+				exit-latency-us = <679>;
-+				min-residency-us = <2120>;
-+			};
-+
-+			mcusysoff_b: mcusysoff-b {
-+				compatible = "arm,idle-state";
-+				arm,psci-suspend-param = <0x02010007>;
-+				local-timer-stop;
-+				entry-latency-us = <1143>;
-+				exit-latency-us = <611>;
-+				min-residency-us = <2580>;
-+			};
-+
-+			system_vcore: system-vcore {
-+				compatible = "arm,idle-state";
-+				arm,psci-suspend-param = <0x020100ff>;
-+				local-timer-stop;
-+				entry-latency-us = <940>;
-+				exit-latency-us = <3500>;
-+				min-residency-us = <35200>;
-+			};
-+
-+			s2idle: s2idle {
-+				compatible = "arm,idle-state";
-+				arm,psci-suspend-param = <0x020180ff>;
-+				local-timer-stop;
-+				entry-latency-us = <10000>;
-+				exit-latency-us = <10000>;
-+				min-residency-us = <4294967295>;
-+			};
-+		};
-+
-+		l2_0: l2-cache0 {
-+			compatible = "cache";
-+			cache-level = <2>;
-+			cache-size = <131072>;
-+			cache-line-size = <64>;
-+			cache-sets = <512>;
-+			next-level-cache = <&l3_0>;
-+			cache-unified;
-+		};
-+
-+		l2_1: l2-cache1 {
-+			compatible = "cache";
-+			cache-level = <2>;
-+			cache-size = <262144>;
-+			cache-line-size = <64>;
-+			cache-sets = <512>;
-+			next-level-cache = <&l3_0>;
-+			cache-unified;
-+		};
-+
-+		l3_0: l3-cache {
-+			compatible = "cache";
-+			cache-level = <3>;
-+			cache-size = <1048576>;
-+			cache-line-size = <64>;
-+			cache-sets = <2048>;
-+			cache-unified;
-+		};
-+	};
-+
-+	psci {
-+		compatible = "arm,psci-1.0";
-+		method = "smc";
-+	};
-+
-+	clocks {
-+		clk_null: clk-null {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <0>;
-+		};
-+
-+		clk32k: clk32k {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <32000>;
-+		};
-+
-+		clk26m: clk26m {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <26000000>;
-+		};
-+
-+		clk13m: clk13m {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <13000000>;
-+		};
-+
-+		ulposc: ulposc {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <520000000>;
-+		};
-+
-+		ulposc3: ulposc3 {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <26000000>;
-+		};
-+
-+		clk104m: clk104m {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <104000000>;
-+		};
-+	};
-+
-+	memory: memory {
-+		device_type = "memory";
-+		reg = <0 0x40000000 0 0xC0000000>;
-+	};
-+
-+	timer: timer {
-+		compatible = "arm,armv8-timer";
-+		interrupt-parent = <&gic>;
-+		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH 0>,
-+				<GIC_PPI 14 IRQ_TYPE_LEVEL_HIGH 0>,
-+				<GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH 0>,
-+				<GIC_PPI 10 IRQ_TYPE_LEVEL_HIGH 0>;
-+		clock-frequency = <13000000>;
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+		dma-ranges = <0x0 0x0 0x0 0x0 0x10 0x0>;
-+
-+		performance: performance-controller@11bc10 {
-+			compatible = "mediatek,cpufreq-hw";
-+			reg = <0 0x0011bc10 0 0x120>, <0 0x0011bd30 0 0x120>;
-+			#performance-domain-cells = <1>;
-+		};
-+
-+		gic: interrupt-controller@c000000 {
-+			compatible = "arm,gic-v3";
-+			#interrupt-cells = <4>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			#redistributor-regions = <1>;
-+			interrupt-parent = <&gic>;
-+			interrupt-controller;
-+			reg = <0 0xc000000 0 0x40000>, /* distributor */
-+			      <0 0xc040000 0 0x200000>; /* redistributor */
-+			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH 0>;
-+		};
-+
-+		uart0: serial@11001000 {
-+			compatible = "mediatek,mt6577-uart";
-+			reg = <0 0x11001000 0 0x1000>;
-+			interrupts = <GIC_SPI 397 IRQ_TYPE_LEVEL_HIGH 0>;
-+			clocks = <&clk26m>;
-+			clock-names = "baud", "bus";
-+			uart-line = <0>;
-+		};
-+	};
-+};
+This probably means that the definition of the flag needs to be
+clarified and maybe some of those platforms should use it.
+
+> The fixes tag also doesn't look correct to me, since commit 0ac9c3dd0d6f
+> ("dmaengine: qcom: bam_dma: fix runtime PM underflow") only changed the
+> behavior for BAMs with "if (!bdev->bamclk)". This applies to some/most
+> remotely-controlled BAMs, but the issue we have here occurs only because
+> we do have a clock and cause it to get disabled prematurely.
+
+Well... It is a commit which broke earlycon on on db410c.
+
+I started to describe here the usecase of the remotely-controlled DMA
+controller being used by the BLSP and then I understood, that I myself
+don't completely understand if the issue is because DMA block is
+controlled remotely (and we should not be disabling it because the BLSP
+still attempts to use it) or if it's a simple case of the clock being
+shared between several consumers and one of the consumers shutting it
+down before other running consumers had a chance to vote on it.
+
+> Checking for if (bdev->bamclk) would probably make more sense. In my
+> patch I did it just unconditionally, because runtime PM is currently
+> a no-op for BAMs without clock anyway.
+
+Please share your patch.
+
+> 
+> I think it's also worth noting in the commit message that this is sort
+> of a stop-gap solution. The root problem is that the earlycon code
+> doesn't claim the clock while active. Any of the drivers that consume
+> this shared clock could trigger the issue, I had to fix a similar issue
+> in the spi-qup driver before in commit 0c331fd1dccf ("spi: qup: Request
+> DMA before enabling clocks"). On some SoCs (e.g. MSM8974), we have
+> "dmas" currently only on &blsp2_i2c5, so the UART controller wouldn't
+> even be considered as consumer to wait for before calling the bam_dma
+> .sync_state.
+> 
+> It may be more reliable to implement something like in
+> drivers/clk/imx/clk.c imx_register_uart_clocks(), which tries to claim
+> only the actually used UART clocks until late_initcall_sync(). That
+> would at least make it independent from individual drivers, but assumes
+> the UART driver can actually probe before late_initcall_sync() ...
+> Most of this code is generic though, so perhaps releasing the clocks
+> could be hooked up somewhere generic, when earlycon exits ...?
+
+The spi-qup commit looks like another stop-gap workaround. Let's add CCF
+and serial maintainers to the discussion with the hope of finding some
+generic solution.
+
+Most likely the easiest solution for Qualcomm platforms is to add
+additional vote on earlycon clocks and then to try to generalise that.
+
+> 
+> Thanks,
+> Stephan
+
 -- 
-2.45.2
-
+With best wishes
+Dmitry
