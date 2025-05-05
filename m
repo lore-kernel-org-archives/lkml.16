@@ -1,453 +1,237 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7578478F26;
-	Mon,  5 May 2025 05:22:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFF821993B2
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 05:23:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746422556; cv=none; b=auQlqZm2QATVgYAXmWannwJyYfhGy4gogh6jR53jnCJMB6KxclgiB2L092HFmxs9L8k1RsX6aBzh9uotKGsdNCHYsF6obuZ4aFCFgRHfzbfaFlRZvAYc7g+W6cN4Udq+jKQWntNvhX4U7ivp8fH9uUJEASC9MMWR33qIk4Um7xY=
+	t=1746422585; cv=none; b=bzej/vHsZNvV8CPrLMK2hU8i7m4iqfkUDn+MXlx+YmrQrgVuhRtwckyTm8gy5XgWtpkwqSTzCXyEFM2mSGDPPY/Wmh9Vnf1ZWo1zw6EqPML/LtJlMlJ7XLvf9D4lccj5wnAgixo32kuk7rKRIK+dQf3McU1B9Lfs2jbHb9+O2mA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746422556; c=relaxed/simple;
-	bh=dk/UqMR+ikv/VOGtmFIjLNimfOtmdKbf3rJ31G7HsMA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kb7m3Wc/s8edAXX2ZVIr901lbyj7WQ9gxRAoGBpPTS7soulv1mFmBoOzzocLbK49ut28TbrnQPKKc57fDX04RvMaGJSeaXuvlmuG5Ef2WxAJMcqXkKgmG8ZApx1GDaxomKDhD7WmxB7kL+PSV2LaMl9YpMDIZXny02yI/VTcbjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VGOa/yII; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VGOa/yII"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFCD8C4CEE4;
-	Mon,  5 May 2025 05:22:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746422555;
-	bh=dk/UqMR+ikv/VOGtmFIjLNimfOtmdKbf3rJ31G7HsMA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VGOa/yIIOZs3mBBR3O6FcmzBvDRRqZ3Va0qf/oTlkmra6BYzbkF4sjqVikP7x95B5
-	 3//H3mT4un8pZySB4D+HQDprRgdYxKIetXpLv/ivcR5pC5ey3ltk/k4kv8gyb6skXJ
-	 z32nY6AsJgGlQ5GiH1vESx+AcNOhJ7R14eGxRf18DPGoNNqFFtiINY0Bliypg0KXkI
-	 3tWMtjRUAX+Ni49ogXiP1xXqF/zGwvk0M77cCGBbJX0jw2+TMCRRRA55ogXRy4sic1
-	 KBeiuJGXaVBjqRxGC8t1aUq50Fl5J43dRu5Z6EjskKpabyFMb1QNdblvDh4Q0RZg3W
-	 gWXeTmwkRivXw==
-Date: Sun, 4 May 2025 22:22:35 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: John Garry <john.g.garry@oracle.com>
-Cc: brauner@kernel.org, hch@lst.de, viro@zeniv.linux.org.uk, jack@suse.cz,
-	cem@kernel.org, linux-fsdevel@vger.kernel.org, dchinner@redhat.com,
-	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ojaswin@linux.ibm.com, ritesh.list@gmail.com,
-	martin.petersen@oracle.com, linux-ext4@vger.kernel.org,
-	linux-block@vger.kernel.org, catherine.hoang@oracle.com,
-	linux-api@vger.kernel.org
-Subject: Re: [PATCH v10 13/15] xfs: add xfs_calc_atomic_write_unit_max()
-Message-ID: <20250505052235.GW25675@frogsfrogsfrogs>
-References: <20250501165733.1025207-1-john.g.garry@oracle.com>
- <20250501165733.1025207-14-john.g.garry@oracle.com>
+	s=arc-20240116; t=1746422585; c=relaxed/simple;
+	bh=tzwmhQRPZDK3Xt2ZXWSqFbIwwt0o3daqDftBVjmQHsA=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=eR21nPIuKauaMDsLGJaYAHDbVj0kHWeez9ce3xK0o2fP43ZPlV/H9itOAmUCG4HGYGJqQX63zU0HexD1Dvaujgcn1+HyjEzT2Zn+LnQj/FY+C7UvGTYmPlZv09B3AoBmMtvt6TCB45ayp5/RbU3+mhEJpw7ecQABg8/hm0uzEzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d8a9b1c84eso51914585ab.2
+        for <linux-kernel@vger.kernel.org>; Sun, 04 May 2025 22:23:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746422583; x=1747027383;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=as/mnPUqjdpOxFtkgE3apIVNnCbaDSd5xglEArfysU4=;
+        b=Wk8xw3NOdSgEMz5mH9I4fQ7UJkVdJ936PueC6ceMxVTtTDXoOa2C8oCDFBznG5YGsB
+         xT/EYmp+DJyo9YDdTE3z3BeUVGLVH9BYWQHdNMl3bsAcsnFNrK6LAJr9aN2VUHqQ/Qiy
+         Y2gY3W+gckZG+nCOnUvBwaKunyFO+o7Fm44KhWKpK0RxaGpSqzxuiQ2hW6Dv6dY7LUPz
+         Fk1XAjzgA7nUd/e/Rkh3HEqqo9yBnn+ZGtvAQDK9Govwr/5W9i6jZ9CQnsrZt+WO4Q6M
+         FCzQBalZ8Alu0xLsGJWECboNVxS5HbMQzDRKkjAB+VeAF6O46SCpN1MREj+XmkGiqRjR
+         kGIA==
+X-Forwarded-Encrypted: i=1; AJvYcCVWfNYdXe3p//OwG1NBQcQIk1j5AoIQ8fQuJZm4wh6zT/p6V3ROO5iX/TSJWDEwbEijTuSo+2zHFb/i3N4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwB5L+d7tvU0vvhmX+tn4zV/DSTa0HlyXcaotd53OnElz84BGNC
+	o/r7NZ+1vkMJDi0jmY829KW2n79OLmjnT/VT/l1AnjtU9svpUokVmi6PKu0zq5e3IiUyHrJZ3/9
+	HISj8thtx610ldHw6SM1bmMqZ0KtobyBVkMSx7lxE1DN/ztwiEQwgFXo=
+X-Google-Smtp-Source: AGHT+IFPKaggKgNuETI4Ee9DUNLKo0oJ3cm4ID9+ndFSu8JV/YPDzoQoWQjZHJHVEpUE9oOAIaJUbHniFEqhPkatlh23ZLKOsonQ
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250501165733.1025207-14-john.g.garry@oracle.com>
+X-Received: by 2002:a05:6e02:1845:b0:3d2:aa73:7b7a with SMTP id
+ e9e14a558f8ab-3da5b2a5bdbmr59695055ab.12.1746422582866; Sun, 04 May 2025
+ 22:23:02 -0700 (PDT)
+Date: Sun, 04 May 2025 22:23:02 -0700
+In-Reply-To: <20250505045149.1718-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68184b36.a70a0220.254cdc.0043.GAE@google.com>
+Subject: Re: [syzbot] [bluetooth?] KASAN: slab-out-of-bounds Read in hci_cmd_sync_alloc
+From: syzbot <syzbot+5fe2d5bfbfbec0b675a0@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, May 01, 2025 at 04:57:31PM +0000, John Garry wrote:
-> Now that CoW-based atomic writes are supported, update the max size of an
-> atomic write for the data device.
-> 
-> The limit of a CoW-based atomic write will be the limit of the number of
-> logitems which can fit into a single transaction.
-> 
-> In addition, the max atomic write size needs to be aligned to the agsize.
-> Limit the size of atomic writes to the greatest power-of-two factor of the
-> agsize so that allocations for an atomic write will always be aligned
-> compatibly with the alignment requirements of the storage.
-> 
-> Function xfs_atomic_write_logitems() is added to find the limit the number
-> of log items which can fit in a single transaction.
-> 
-> Amend the max atomic write computation to create a new transaction
-> reservation type, and compute the maximum size of an atomic write
-> completion (in fsblocks) based on this new transaction reservation.
-> Initially, tr_atomic_write is a clone of tr_itruncate, which provides a
-> reasonable level of parallelism.  In the next patch, we'll add a mount
-> option so that sysadmins can configure their own limits.
-> 
-> [djwong: use a new reservation type for atomic write ioends, refactor
-> group limit calculations]
-> 
-> Reviewed-by: Darrick J. Wong <djwong@kernel.org>
-> Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-> [jpg: rounddown power-of-2 always]
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> Signed-off-by: John Garry <john.g.garry@oracle.com>
-> ---
->  fs/xfs/libxfs/xfs_trans_resv.c | 94 ++++++++++++++++++++++++++++++++++
->  fs/xfs/libxfs/xfs_trans_resv.h |  2 +
->  fs/xfs/xfs_mount.c             | 81 +++++++++++++++++++++++++++++
->  fs/xfs/xfs_mount.h             |  6 +++
->  fs/xfs/xfs_reflink.c           | 16 ++++++
->  fs/xfs/xfs_reflink.h           |  2 +
->  fs/xfs/xfs_trace.h             | 60 ++++++++++++++++++++++
->  7 files changed, 261 insertions(+)
-> 
-> diff --git a/fs/xfs/libxfs/xfs_trans_resv.c b/fs/xfs/libxfs/xfs_trans_resv.c
-> index a841432abf83..e73c09fbd24c 100644
-> --- a/fs/xfs/libxfs/xfs_trans_resv.c
-> +++ b/fs/xfs/libxfs/xfs_trans_resv.c
-> @@ -22,6 +22,12 @@
->  #include "xfs_rtbitmap.h"
->  #include "xfs_attr_item.h"
->  #include "xfs_log.h"
-> +#include "xfs_defer.h"
-> +#include "xfs_bmap_item.h"
-> +#include "xfs_extfree_item.h"
-> +#include "xfs_rmap_item.h"
-> +#include "xfs_refcount_item.h"
-> +#include "xfs_trace.h"
->  
->  #define _ALLOC	true
->  #define _FREE	false
-> @@ -1394,3 +1400,91 @@ xfs_trans_resv_calc(
->  	 */
->  	xfs_calc_default_atomic_ioend_reservation(mp, resp);
->  }
-> +
-> +/*
-> + * Return the per-extent and fixed transaction reservation sizes needed to
-> + * complete an atomic write.
-> + */
-> +STATIC unsigned int
-> +xfs_calc_atomic_write_ioend_geometry(
-> +	struct xfs_mount	*mp,
-> +	unsigned int		*step_size)
-> +{
-> +	const unsigned int	efi = xfs_efi_log_space(1);
-> +	const unsigned int	efd = xfs_efd_log_space(1);
-> +	const unsigned int	rui = xfs_rui_log_space(1);
-> +	const unsigned int	rud = xfs_rud_log_space();
-> +	const unsigned int	cui = xfs_cui_log_space(1);
-> +	const unsigned int	cud = xfs_cud_log_space();
-> +	const unsigned int	bui = xfs_bui_log_space(1);
-> +	const unsigned int	bud = xfs_bud_log_space();
-> +
-> +	/*
-> +	 * Maximum overhead to complete an atomic write ioend in software:
-> +	 * remove data fork extent + remove cow fork extent + map extent into
-> +	 * data fork.
-> +	 *
-> +	 * tx0: Creates a BUI and a CUI and that's all it needs.
-> +	 *
-> +	 * tx1: Roll to finish the BUI.  Need space for the BUD, an RUI, and
-> +	 * enough space to relog the CUI (== CUI + CUD).
-> +	 *
-> +	 * tx2: Roll again to finish the RUI.  Need space for the RUD and space
-> +	 * to relog the CUI.
-> +	 *
-> +	 * tx3: Roll again, need space for the CUD and possibly a new EFI.
-> +	 *
-> +	 * tx4: Roll again, need space for an EFD.
-> +	 *
-> +	 * If the extent referenced by the pair of BUI/CUI items is not the one
-> +	 * being currently processed, then we need to reserve space to relog
-> +	 * both items.
-> +	 */
-> +	const unsigned int	tx0 = bui + cui;
-> +	const unsigned int	tx1 = bud + rui + cui + cud;
-> +	const unsigned int	tx2 = rud + cui + cud;
-> +	const unsigned int	tx3 = cud + efi;
-> +	const unsigned int	tx4 = efd;
-> +	const unsigned int	relog = bui + bud + cui + cud;
-> +
-> +	const unsigned int	per_intent = max(max3(tx0, tx1, tx2),
-> +						 max3(tx3, tx4, relog));
-> +
-> +	/* Overhead to finish one step of each intent item type */
-> +	const unsigned int	f1 = xfs_calc_finish_efi_reservation(mp, 1);
-> +	const unsigned int	f2 = xfs_calc_finish_rui_reservation(mp, 1);
-> +	const unsigned int	f3 = xfs_calc_finish_cui_reservation(mp, 1);
-> +	const unsigned int	f4 = xfs_calc_finish_bui_reservation(mp, 1);
-> +
-> +	/* We only finish one item per transaction in a chain */
-> +	*step_size = max(f4, max3(f1, f2, f3));
-> +
-> +	return per_intent;
-> +}
-> +
-> +/*
-> + * Compute the maximum size (in fsblocks) of atomic writes that we can complete
-> + * given the existing log reservations.
-> + */
-> +xfs_extlen_t
-> +xfs_calc_max_atomic_write_fsblocks(
-> +	struct xfs_mount		*mp)
-> +{
-> +	const struct xfs_trans_res	*resv = &M_RES(mp)->tr_atomic_ioend;
-> +	unsigned int			per_intent = 0;
-> +	unsigned int			step_size = 0;
-> +	unsigned int			ret = 0;
-> +
-> +	if (resv->tr_logres > 0) {
-> +		per_intent = xfs_calc_atomic_write_ioend_geometry(mp,
-> +				&step_size);
-> +
-> +		if (resv->tr_logres >= step_size)
-> +			ret = (resv->tr_logres - step_size) / per_intent;
-> +	}
-> +
-> +	trace_xfs_calc_max_atomic_write_fsblocks(mp, per_intent, step_size,
-> +			resv->tr_logres, ret);
-> +
-> +	return ret;
-> +}
-> diff --git a/fs/xfs/libxfs/xfs_trans_resv.h b/fs/xfs/libxfs/xfs_trans_resv.h
-> index 670045d417a6..a6d303b83688 100644
-> --- a/fs/xfs/libxfs/xfs_trans_resv.h
-> +++ b/fs/xfs/libxfs/xfs_trans_resv.h
-> @@ -121,4 +121,6 @@ unsigned int xfs_calc_itruncate_reservation_minlogsize(struct xfs_mount *mp);
->  unsigned int xfs_calc_write_reservation_minlogsize(struct xfs_mount *mp);
->  unsigned int xfs_calc_qm_dqalloc_reservation_minlogsize(struct xfs_mount *mp);
->  
-> +xfs_extlen_t xfs_calc_max_atomic_write_fsblocks(struct xfs_mount *mp);
-> +
->  #endif	/* __XFS_TRANS_RESV_H__ */
-> diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
-> index 00b53f479ece..9c40914afabd 100644
-> --- a/fs/xfs/xfs_mount.c
-> +++ b/fs/xfs/xfs_mount.c
-> @@ -666,6 +666,80 @@ xfs_agbtree_compute_maxlevels(
->  	mp->m_agbtree_maxlevels = max(levels, mp->m_refc_maxlevels);
->  }
->  
-> +/* Maximum atomic write IO size that the kernel allows. */
-> +static inline xfs_extlen_t xfs_calc_atomic_write_max(struct xfs_mount *mp)
-> +{
-> +	return rounddown_pow_of_two(XFS_B_TO_FSB(mp, MAX_RW_COUNT));
-> +}
-> +
-> +static inline unsigned int max_pow_of_two_factor(const unsigned int nr)
-> +{
-> +	return 1 << (ffs(nr) - 1);
-> +}
-> +
-> +/*
-> + * If the data device advertises atomic write support, limit the size of data
-> + * device atomic writes to the greatest power-of-two factor of the AG size so
-> + * that every atomic write unit aligns with the start of every AG.  This is
-> + * required so that the per-AG allocations for an atomic write will always be
-> + * aligned compatibly with the alignment requirements of the storage.
-> + *
-> + * If the data device doesn't advertise atomic writes, then there are no
-> + * alignment restrictions and the largest out-of-place write we can do
-> + * ourselves is the number of blocks that user files can allocate from any AG.
-> + */
-> +static inline xfs_extlen_t xfs_calc_perag_awu_max(struct xfs_mount *mp)
-> +{
-> +	if (mp->m_ddev_targp->bt_bdev_awu_min > 0)
-> +		return max_pow_of_two_factor(mp->m_sb.sb_agblocks);
-> +	return rounddown_pow_of_two(mp->m_ag_max_usable);
-> +}
-> +
-> +/*
-> + * Reflink on the realtime device requires rtgroups, and atomic writes require
-> + * reflink.
-> + *
-> + * If the realtime device advertises atomic write support, limit the size of
-> + * data device atomic writes to the greatest power-of-two factor of the rtgroup
-> + * size so that every atomic write unit aligns with the start of every rtgroup.
-> + * This is required so that the per-rtgroup allocations for an atomic write
-> + * will always be aligned compatibly with the alignment requirements of the
-> + * storage.
-> + *
-> + * If the rt device doesn't advertise atomic writes, then there are no
-> + * alignment restrictions and the largest out-of-place write we can do
-> + * ourselves is the number of blocks that user files can allocate from any
-> + * rtgroup.
-> + */
-> +static inline xfs_extlen_t xfs_calc_rtgroup_awu_max(struct xfs_mount *mp)
-> +{
-> +	struct xfs_groups	*rgs = &mp->m_groups[XG_TYPE_RTG];
-> +
-> +	if (mp->m_rtdev_targp && mp->m_rtdev_targp->bt_bdev_awu_min > 0)
-> +		return max_pow_of_two_factor(rgs->blocks);
-> +	return rounddown_pow_of_two(rgs->blocks);
+Hello,
 
-Note: rounddown_pow_of_two returns an undefined result (and an UBSAN
-warning) if rgs->blocks is zero.  I'm not sure why fstests didn't barf
-up errors about this until now.
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+INFO: task hung in hci_cmd_sync_clear
 
-Oh, that's right, I forgot to run QA on Friday night because I was too
-exhausted to remember.  And here it is *Sunday* night and I'm doing QA
-work for ... some reason.  Oh, so it won't get in the way of other work
-... tomorrow?  WTF is wrong with me.
+INFO: task syz-executor:6385 blocked for more than 143 seconds.
+      Not tainted 6.15.0-rc5-syzkaller-g92a09c47464d-dirty #0
+      Blocked by coredump.
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:syz-executor    state:D stack:23880 pid:6385  tgid:6385  ppid:1      task_flags:0x40054c flags:0x00004006
+Call Trace:
+ <TASK>
+ context_switch kernel/sched/core.c:5382 [inline]
+ __schedule+0x116f/0x5de0 kernel/sched/core.c:6767
+ __schedule_loop kernel/sched/core.c:6845 [inline]
+ schedule+0xe7/0x3a0 kernel/sched/core.c:6860
+ schedule_timeout+0x257/0x290 kernel/time/sleep_timeout.c:75
+ do_wait_for_common kernel/sched/completion.c:95 [inline]
+ __wait_for_common+0x2fc/0x4e0 kernel/sched/completion.c:116
+ __flush_work+0x7d7/0xcc0 kernel/workqueue.c:4244
+ __cancel_work_sync+0x10c/0x130 kernel/workqueue.c:4364
+ hci_cmd_sync_clear+0x33/0x100 net/bluetooth/hci_sync.c:655
+ hci_unregister_dev+0x1b8/0x620 net/bluetooth/hci_core.c:2674
+ vhci_release+0x79/0xf0 drivers/bluetooth/hci_vhci.c:665
+ __fput+0x3ff/0xb70 fs/file_table.c:465
+ task_work_run+0x14d/0x240 kernel/task_work.c:227
+ exit_task_work include/linux/task_work.h:40 [inline]
+ do_exit+0xafb/0x2c30 kernel/exit.c:953
+ do_group_exit+0xd3/0x2a0 kernel/exit.c:1102
+ get_signal+0x2673/0x26d0 kernel/signal.c:3034
+ arch_do_signal_or_restart+0x8f/0x7d0 arch/x86/kernel/signal.c:337
+ exit_to_user_mode_loop kernel/entry/common.c:111 [inline]
+ exit_to_user_mode_prepare include/linux/entry-common.h:329 [inline]
+ __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
+ syscall_exit_to_user_mode+0x150/0x2a0 kernel/entry/common.c:218
+ do_syscall_64+0xda/0x260 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f4ebbb8d2d0
+RSP: 002b:00007ffd82122880 EFLAGS: 00000293 ORIG_RAX: 0000000000000101
+RAX: 0000000000000003 RBX: 0000000000000002 RCX: 00007f4ebbb8d2d0
+RDX: 0000000000000002 RSI: 00007ffd82122990 RDI: 00000000ffffff9c
+RBP: 00007ffd82122990 R08: 0000000000000000 R09: 00007ffd82122647
+R10: 0000000000000000 R11: 0000000000000293 R12: 0000000000000258
+R13: 00000000000927c0 R14: 000000000002393a R15: 00007ffd82122990
+ </TASK>
 
---D
+Showing all locks held in the system:
+1 lock held by khungtaskd/41:
+ #0: ffffffff8e3bf5c0 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire include/linux/rcupdate.h:331 [inline]
+ #0: ffffffff8e3bf5c0 (rcu_read_lock){....}-{1:3}, at: rcu_read_lock include/linux/rcupdate.h:841 [inline]
+ #0: ffffffff8e3bf5c0 (rcu_read_lock){....}-{1:3}, at: debug_show_all_locks+0x36/0x1c0 kernel/locking/lockdep.c:6764
+2 locks held by getty/5727:
+ #0: ffff8880276460a0 (&tty->ldisc_sem){++++}-{0:0}, at: tty_ldisc_ref_wait+0x24/0x80 drivers/tty/tty_ldisc.c:243
+ #1: ffffc9000343b2f0 (&ldata->atomic_read_lock){+.+.}-{4:4}, at: n_tty_read+0x41b/0x14f0 drivers/tty/n_tty.c:2222
+3 locks held by kworker/u33:2/5995:
+ #0: ffff88804e1bd148 ((wq_completion)hci0){+.+.}-{0:0}, at: process_one_work+0x12a2/0x1b70 kernel/workqueue.c:3213
+ #1: ffffc900016cfd18 ((work_completion)(&hdev->cmd_sync_work)){+.+.}-{0:0}, at: process_one_work+0x929/0x1b70 kernel/workqueue.c:3214
+ #2: ffff888035efcd80 (&hdev->req_lock){+.+.}-{4:4}, at: hci_cmd_sync_work+0x175/0x430 net/bluetooth/hci_sync.c:331
+2 locks held by syz-executor/11948:
 
-> +}
-> +
-> +/* Compute the maximum atomic write unit size for each section. */
-> +static inline void
-> +xfs_calc_atomic_write_unit_max(
-> +	struct xfs_mount	*mp)
-> +{
-> +	struct xfs_groups	*ags = &mp->m_groups[XG_TYPE_AG];
-> +	struct xfs_groups	*rgs = &mp->m_groups[XG_TYPE_RTG];
-> +
-> +	const xfs_extlen_t	max_write = xfs_calc_atomic_write_max(mp);
-> +	const xfs_extlen_t	max_ioend = xfs_reflink_max_atomic_cow(mp);
-> +	const xfs_extlen_t	max_agsize = xfs_calc_perag_awu_max(mp);
-> +	const xfs_extlen_t	max_rgsize = xfs_calc_rtgroup_awu_max(mp);
-> +
-> +	ags->awu_max = min3(max_write, max_ioend, max_agsize);
-> +	rgs->awu_max = min3(max_write, max_ioend, max_rgsize);
-> +
-> +	trace_xfs_calc_atomic_write_unit_max(mp, max_write, max_ioend,
-> +			max_agsize, max_rgsize);
-> +}
-> +
->  /* Compute maximum possible height for realtime btree types for this fs. */
->  static inline void
->  xfs_rtbtree_compute_maxlevels(
-> @@ -1082,6 +1156,13 @@ xfs_mountfs(
->  		xfs_zone_gc_start(mp);
->  	}
->  
-> +	/*
-> +	 * Pre-calculate atomic write unit max.  This involves computations
-> +	 * derived from transaction reservations, so we must do this after the
-> +	 * log is fully initialized.
-> +	 */
-> +	xfs_calc_atomic_write_unit_max(mp);
-> +
->  	return 0;
->  
->   out_agresv:
-> diff --git a/fs/xfs/xfs_mount.h b/fs/xfs/xfs_mount.h
-> index e67bc3e91f98..e2abf31438e0 100644
-> --- a/fs/xfs/xfs_mount.h
-> +++ b/fs/xfs/xfs_mount.h
-> @@ -119,6 +119,12 @@ struct xfs_groups {
->  	 * SMR hard drives.
->  	 */
->  	xfs_fsblock_t		start_fsb;
-> +
-> +	/*
-> +	 * Maximum length of an atomic write for files stored in this
-> +	 * collection of allocation groups, in fsblocks.
-> +	 */
-> +	xfs_extlen_t		awu_max;
->  };
->  
->  struct xfs_freecounter {
-> diff --git a/fs/xfs/xfs_reflink.c b/fs/xfs/xfs_reflink.c
-> index 218dee76768b..ad3bcb76d805 100644
-> --- a/fs/xfs/xfs_reflink.c
-> +++ b/fs/xfs/xfs_reflink.c
-> @@ -1040,6 +1040,22 @@ xfs_reflink_end_atomic_cow(
->  	return error;
->  }
->  
-> +/* Compute the largest atomic write that we can complete through software. */
-> +xfs_extlen_t
-> +xfs_reflink_max_atomic_cow(
-> +	struct xfs_mount	*mp)
-> +{
-> +	/* We cannot do any atomic writes without out of place writes. */
-> +	if (!xfs_can_sw_atomic_write(mp))
-> +		return 0;
-> +
-> +	/*
-> +	 * Atomic write limits must always be a power-of-2, according to
-> +	 * generic_atomic_write_valid.
-> +	 */
-> +	return rounddown_pow_of_two(xfs_calc_max_atomic_write_fsblocks(mp));
-> +}
-> +
->  /*
->   * Free all CoW staging blocks that are still referenced by the ondisk refcount
->   * metadata.  The ondisk metadata does not track which inode created the
-> diff --git a/fs/xfs/xfs_reflink.h b/fs/xfs/xfs_reflink.h
-> index 412e9b6f2082..36cda724da89 100644
-> --- a/fs/xfs/xfs_reflink.h
-> +++ b/fs/xfs/xfs_reflink.h
-> @@ -68,4 +68,6 @@ extern int xfs_reflink_update_dest(struct xfs_inode *dest, xfs_off_t newlen,
->  
->  bool xfs_reflink_supports_rextsize(struct xfs_mount *mp, unsigned int rextsize);
->  
-> +xfs_extlen_t xfs_reflink_max_atomic_cow(struct xfs_mount *mp);
-> +
->  #endif /* __XFS_REFLINK_H */
-> diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
-> index 9554578c6da4..d5ae00f8e04c 100644
-> --- a/fs/xfs/xfs_trace.h
-> +++ b/fs/xfs/xfs_trace.h
-> @@ -170,6 +170,66 @@ DEFINE_ATTR_LIST_EVENT(xfs_attr_list_notfound);
->  DEFINE_ATTR_LIST_EVENT(xfs_attr_leaf_list);
->  DEFINE_ATTR_LIST_EVENT(xfs_attr_node_list);
->  
-> +TRACE_EVENT(xfs_calc_atomic_write_unit_max,
-> +	TP_PROTO(struct xfs_mount *mp, unsigned int max_write,
-> +		 unsigned int max_ioend, unsigned int max_agsize,
-> +		 unsigned int max_rgsize),
-> +	TP_ARGS(mp, max_write, max_ioend, max_agsize, max_rgsize),
-> +	TP_STRUCT__entry(
-> +		__field(dev_t, dev)
-> +		__field(unsigned int, max_write)
-> +		__field(unsigned int, max_ioend)
-> +		__field(unsigned int, max_agsize)
-> +		__field(unsigned int, max_rgsize)
-> +		__field(unsigned int, data_awu_max)
-> +		__field(unsigned int, rt_awu_max)
-> +	),
-> +	TP_fast_assign(
-> +		__entry->dev = mp->m_super->s_dev;
-> +		__entry->max_write = max_write;
-> +		__entry->max_ioend = max_ioend;
-> +		__entry->max_agsize = max_agsize;
-> +		__entry->max_rgsize = max_rgsize;
-> +		__entry->data_awu_max = mp->m_groups[XG_TYPE_AG].awu_max;
-> +		__entry->rt_awu_max = mp->m_groups[XG_TYPE_RTG].awu_max;
-> +	),
-> +	TP_printk("dev %d:%d max_write %u max_ioend %u max_agsize %u max_rgsize %u data_awu_max %u rt_awu_max %u",
-> +		  MAJOR(__entry->dev), MINOR(__entry->dev),
-> +		  __entry->max_write,
-> +		  __entry->max_ioend,
-> +		  __entry->max_agsize,
-> +		  __entry->max_rgsize,
-> +		  __entry->data_awu_max,
-> +		  __entry->rt_awu_max)
-> +);
-> +
-> +TRACE_EVENT(xfs_calc_max_atomic_write_fsblocks,
-> +	TP_PROTO(struct xfs_mount *mp, unsigned int per_intent,
-> +		 unsigned int step_size, unsigned int logres,
-> +		 unsigned int blockcount),
-> +	TP_ARGS(mp, per_intent, step_size, logres, blockcount),
-> +	TP_STRUCT__entry(
-> +		__field(dev_t, dev)
-> +		__field(unsigned int, per_intent)
-> +		__field(unsigned int, step_size)
-> +		__field(unsigned int, logres)
-> +		__field(unsigned int, blockcount)
-> +	),
-> +	TP_fast_assign(
-> +		__entry->dev = mp->m_super->s_dev;
-> +		__entry->per_intent = per_intent;
-> +		__entry->step_size = step_size;
-> +		__entry->logres = logres;
-> +		__entry->blockcount = blockcount;
-> +	),
-> +	TP_printk("dev %d:%d per_intent %u step_size %u logres %u blockcount %u",
-> +		  MAJOR(__entry->dev), MINOR(__entry->dev),
-> +		  __entry->per_intent,
-> +		  __entry->step_size,
-> +		  __entry->logres,
-> +		  __entry->blockcount)
-> +);
-> +
->  TRACE_EVENT(xlog_intent_recovery_failed,
->  	TP_PROTO(struct xfs_mount *mp, const struct xfs_defer_op_type *ops,
->  		 int error),
-> -- 
-> 2.31.1
-> 
-> 
+=============================================
+
+NMI backtrace for cpu 2
+CPU: 2 UID: 0 PID: 41 Comm: khungtaskd Not tainted 6.15.0-rc5-syzkaller-g92a09c47464d-dirty #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+ nmi_cpu_backtrace+0x27b/0x390 lib/nmi_backtrace.c:113
+ nmi_trigger_cpumask_backtrace+0x29c/0x300 lib/nmi_backtrace.c:62
+ trigger_all_cpu_backtrace include/linux/nmi.h:158 [inline]
+ check_hung_uninterruptible_tasks kernel/hung_task.c:274 [inline]
+ watchdog+0xf70/0x12c0 kernel/hung_task.c:437
+ kthread+0x3c2/0x780 kernel/kthread.c:464
+ ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+Sending NMI from CPU 2 to CPUs 0-1,3:
+NMI backtrace for cpu 3
+CPU: 3 UID: 0 PID: 64 Comm: kworker/u32:3 Not tainted 6.15.0-rc5-syzkaller-g92a09c47464d-dirty #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+Workqueue: bat_events batadv_nc_worker
+RIP: 0010:hlock_class kernel/locking/lockdep.c:245 [inline]
+RIP: 0010:mark_lock+0x63/0x610 kernel/locking/lockdep.c:4732
+Code: 6d 41 bd 01 00 00 00 89 d9 41 d3 e5 4d 63 ed 41 0f b7 44 24 20 66 25 ff 1f 0f b7 c0 48 0f a3 05 73 d6 12 14 0f 83 86 00 00 00 <48> 8d 04 80 48 8d 04 80 48 8d 04 c5 60 bf aa 95 4c 89 ea 48 23 50
+RSP: 0018:ffffc90000b5f940 EFLAGS: 00000003
+RAX: 0000000000000007 RBX: 0000000000000009 RCX: 0000000000000000
+RDX: 0000000000000008 RSI: ffff8880205e0b40 RDI: ffff8880205e0000
+RBP: ffffc90000b5f9d8 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: ffffffff8e3bf5c0 R12: ffff8880205e0b40
+R13: 0000000000000200 R14: ffff8880205e0000 R15: ffff8880205e0000
+FS:  0000000000000000(0000) GS:ffff8880d6cdf000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b2e75ffff CR3: 000000002e962000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ mark_usage kernel/locking/lockdep.c:4675 [inline]
+ __lock_acquire+0x499/0x1ba0 kernel/locking/lockdep.c:5189
+ lock_acquire kernel/locking/lockdep.c:5866 [inline]
+ lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5823
+ rcu_lock_acquire include/linux/rcupdate.h:331 [inline]
+ rcu_read_lock include/linux/rcupdate.h:841 [inline]
+ batadv_nc_purge_orig_hash net/batman-adv/network-coding.c:408 [inline]
+ batadv_nc_worker+0x16a/0x1030 net/batman-adv/network-coding.c:719
+ process_one_work+0x9cc/0x1b70 kernel/workqueue.c:3238
+ process_scheduled_works kernel/workqueue.c:3319 [inline]
+ worker_thread+0x6c8/0xf10 kernel/workqueue.c:3400
+ kthread+0x3c2/0x780 kernel/kthread.c:464
+ ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+NMI backtrace for cpu 0
+CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted 6.15.0-rc5-syzkaller-g92a09c47464d-dirty #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+RIP: 0010:pv_native_safe_halt+0xf/0x20 arch/x86/kernel/paravirt.c:81
+Code: 15 62 02 c3 cc cc cc cc 0f 1f 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa eb 07 0f 00 2d 73 1a 1d 00 fb f4 <c3> cc cc cc cc 66 2e 0f 1f 84 00 00 00 00 00 66 90 90 90 90 90 90
+RSP: 0018:ffffffff8e007e10 EFLAGS: 00000286
+RAX: 0000000000353fd5 RBX: 0000000000000000 RCX: ffffffff8b6cd419
+RDX: 0000000000000000 RSI: ffffffff8dbe124f RDI: ffffffff8bf482e0
+RBP: fffffbfff1c12ee8 R08: 0000000000000001 R09: ffffed100d4865bd
+R10: ffff88806a432deb R11: 0000000000000000 R12: 0000000000000000
+R13: ffffffff8e097740 R14: ffffffff90850510 R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff8880d69df000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 0000000030b80000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ arch_safe_halt arch/x86/include/asm/paravirt.h:107 [inline]
+ default_idle+0x13/0x20 arch/x86/kernel/process.c:748
+ default_idle_call+0x6d/0xb0 kernel/sched/idle.c:117
+ cpuidle_idle_call kernel/sched/idle.c:185 [inline]
+ do_idle+0x391/0x510 kernel/sched/idle.c:325
+ cpu_startup_entry+0x4f/0x60 kernel/sched/idle.c:423
+ rest_init+0x16b/0x2b0 init/main.c:743
+ start_kernel+0x3e9/0x4d0 init/main.c:1099
+ x86_64_start_reservations+0x18/0x30 arch/x86/kernel/head64.c:513
+ x86_64_start_kernel+0xb0/0xc0 arch/x86/kernel/head64.c:494
+ common_startup_64+0x13e/0x148
+ </TASK>
+NMI backtrace for cpu 1
+CPU: 1 UID: 0 PID: 0 Comm: swapper/1 Not tainted 6.15.0-rc5-syzkaller-g92a09c47464d-dirty #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+RIP: 0010:pv_native_safe_halt+0xf/0x20 arch/x86/kernel/paravirt.c:81
+Code: 15 62 02 c3 cc cc cc cc 0f 1f 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa eb 07 0f 00 2d 73 1a 1d 00 fb f4 <c3> cc cc cc cc 66 2e 0f 1f 84 00 00 00 00 00 66 90 90 90 90 90 90
+RSP: 0018:ffffc90000177df8 EFLAGS: 00000286
+RAX: 00000000003033b7 RBX: 0000000000000001 RCX: ffffffff8b6cd419
+RDX: 0000000000000000 RSI: ffffffff8dbe124f RDI: ffffffff8bf482e0
+RBP: ffffed1003ad0488 R08: 0000000000000001 R09: ffffed100d4a65bd
+R10: ffff88806a532deb R11: 0000000000000000 R12: 0000000000000001
+R13: ffff88801d682440 R14: ffffffff90850510 R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff8880d6adf000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b2e75ffff CR3: 000000004c951000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ arch_safe_halt arch/x86/include/asm/paravirt.h:107 [inline]
+ default_idle+0x13/0x20 arch/x86/kernel/process.c:748
+ default_idle_call+0x6d/0xb0 kernel/sched/idle.c:117
+ cpuidle_idle_call kernel/sched/idle.c:185 [inline]
+ do_idle+0x391/0x510 kernel/sched/idle.c:325
+ cpu_startup_entry+0x4f/0x60 kernel/sched/idle.c:423
+ start_secondary+0x21d/0x2b0 arch/x86/kernel/smpboot.c:315
+ common_startup_64+0x13e/0x148
+ </TASK>
+
+
+Tested on:
+
+commit:         92a09c47 Linux 6.15-rc5
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=10c1d0f4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b39cb28b0a399ed3
+dashboard link: https://syzkaller.appspot.com/bug?extid=5fe2d5bfbfbec0b675a0
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=13eff0f4580000
+
