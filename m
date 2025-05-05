@@ -1,43 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3F76280A22;
-	Mon,  5 May 2025 22:58:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AF1C3703D6;
+	Mon,  5 May 2025 22:58:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485888; cv=none; b=SF+FGfbBU4GqZerWnJ3Lp1f9XS8W25rMfiwRBW387Jkt/U0bC3DFo3eQ9YSWd6Da+WNMDU/zcMRCzX3btUTNvhm353ElKrhKlWfe9d7IA0H4G1RnpDwx5goSl9rruw0/acj3JfHlKPO9jJVEeEtEN9jo+6aKNGYwp6QsAIZQafY=
+	t=1746485901; cv=none; b=lhpbyCw3EAUZ6C3ZlOtRqTl6pwnfy/RSVicPKiKffixQPJdy6Cqleo/DYOIhuCRNERLFOrrNX0yVKtWjLxs62cBydEpke0uFsVKZ+E3KhsONo2jXG+9PfcPOzg4SIkFntt09gH6+5LEXkM6GcL7VrdDPeVr5ntlRXwdg1VlOaoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485888; c=relaxed/simple;
-	bh=o6c5QcpxJdFwSOi4BUO2WlfrwA2X2QhZ89EvFtu3CGE=;
+	s=arc-20240116; t=1746485901; c=relaxed/simple;
+	bh=rK8UgpSEnGG6WpUj0pfBe+FyfH9qHFqoFjKvOIgzK70=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=KAL92huoVbMV3wiZ55AechUSuKagaZkoEtkMIud587Y7TCI/ZRfiVajBu28hfLiVsOF3GaZ5CeD9pkVbz52+DFblvgNCw6GEaUyDnGrl51hXeBjISA9ATSmsQVcmbH+i+M2Pjnkg8UWxr6m72laY1Hc6qrBJP5VkOvmGjQskGpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E7C//cyl; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=gg4E6/qefx+SK/wOy2BBm4XmYXnns0wKfNG8oq8eaYvIEWsnB+jnKV94xfkKWxcMW5eaizH1a/VGJzO1pz45ATdVdqEytVpo7UhvMetmIuBGja2v6xbxNEf4mQTYVdrcygq+4H8Th6Kli8Jq/j3DRRG+btH44Rj6bzsfM1auaGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B2rvLQQz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E7C//cyl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC4BFC4CEED;
-	Mon,  5 May 2025 22:58:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B2rvLQQz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CA8BC4CEE4;
+	Mon,  5 May 2025 22:58:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485887;
-	bh=o6c5QcpxJdFwSOi4BUO2WlfrwA2X2QhZ89EvFtu3CGE=;
+	s=k20201202; t=1746485901;
+	bh=rK8UgpSEnGG6WpUj0pfBe+FyfH9qHFqoFjKvOIgzK70=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=E7C//cylFwMI95T+Yh/+H8vubPbqiv7J4MWa/gJlj2awtWohU7VfCGamd1wSOGtKm
-	 n1mxlaYF54kz5AipT8+1Dai4GATkUTA6rUd/cSt+tnMRxeuM228XlMlQv1SW08SJCN
-	 Z5PIVZv8Dt7my7AN3TVY9R8TtGTmFRMrKHaV8w1DBoCYFlk+WznA6Esh2aH9AVmw8t
-	 qYiVx03jO/EPE9EFbnLP4bG3DtmViw4gyDvwFr/0AYWpkdFHJo7vGXRGhdX7v5UwIa
-	 DgAL9DE4UwnDlINcafg4WukxtRbHFRk/BL8NAXx/rJ5wl59ZPEJ6SmVwHtLylGNpu/
-	 CJ3xJBK6sM5nQ==
+	b=B2rvLQQzRDJ3JsLrKEzd/ot0nZ2Gf34/MzzJ6uWzRWjD+ncZ1w6ZkC/dUwKlb/kfC
+	 oyEycdzXDsm8XfTKGTPM+Cf0cSjWGFT1hT8eq5Mr6meSUjmOWpO5MR/iHsqCGkKfpO
+	 SoGnRvCYjJRVZ5GB6n+WiryMbQVzyVa4aWWd5dXueTj18Ruq3UTZPHI+UGzG9H9jDZ
+	 wFDMSPxCKjakJTuTCHN0Htes/Hg6eormlulUbV7MtMZ6rnCsp2IyHuyreAnbuTM9s9
+	 T+S3mjgOL2uGdfLMbcddSk+iETMpKKKH98aq46xwrTib9Ko5dlS81Cy5ELY6yo1zB7
+	 xppwSbHuPiSYw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Filipe Manana <fdmanana@suse.com>,
-	David Sterba <dsterba@suse.com>,
+Cc: Tiwei Bie <tiwei.btw@antgroup.com>,
+	Johannes Berg <johannes.berg@intel.com>,
 	Sasha Levin <sashal@kernel.org>,
-	clm@fb.com,
-	josef@toxicpanda.com,
-	linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 049/294] btrfs: send: return -ENAMETOOLONG when attempting a path that is too long
-Date: Mon,  5 May 2025 18:52:29 -0400
-Message-Id: <20250505225634.2688578-49-sashal@kernel.org>
+	richard@nod.at,
+	anton.ivanov@cambridgegreys.com,
+	johannes@sipsolutions.net,
+	rppt@kernel.org,
+	dave.hansen@linux.intel.com,
+	akpm@linux-foundation.org,
+	richard.weiyang@gmail.com,
+	kevin.brodsky@arm.com,
+	benjamin.berg@intel.com,
+	linux-um@lists.infradead.org
+Subject: [PATCH AUTOSEL 6.6 055/294] um: Update min_low_pfn to match changes in uml_reserved
+Date: Mon,  5 May 2025 18:52:35 -0400
+Message-Id: <20250505225634.2688578-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -52,43 +59,34 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Tiwei Bie <tiwei.btw@antgroup.com>
 
-[ Upstream commit a77749b3e21813566cea050bbb3414ae74562eba ]
+[ Upstream commit e82cf3051e6193f61e03898f8dba035199064d36 ]
 
-When attempting to build a too long path we are currently returning
--ENOMEM, which is very odd and misleading. So update fs_path_ensure_buf()
-to return -ENAMETOOLONG instead. Also, while at it, move the WARN_ON()
-into the if statement's expression, as it makes it clear what is being
-tested and also has the effect of adding 'unlikely' to the statement,
-which allows the compiler to generate better code as this condition is
-never expected to happen.
+When uml_reserved is updated, min_low_pfn must also be updated
+accordingly. Otherwise, min_low_pfn will not accurately reflect
+the lowest available PFN.
 
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Tiwei Bie <tiwei.btw@antgroup.com>
+Link: https://patch.msgid.link/20250221041855.1156109-1-tiwei.btw@antgroup.com
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/send.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ arch/um/kernel/mem.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/btrfs/send.c b/fs/btrfs/send.c
-index aa1e6d88a72c7..e2ead36e5be42 100644
---- a/fs/btrfs/send.c
-+++ b/fs/btrfs/send.c
-@@ -487,10 +487,8 @@ static int fs_path_ensure_buf(struct fs_path *p, int len)
- 	if (p->buf_len >= len)
- 		return 0;
+diff --git a/arch/um/kernel/mem.c b/arch/um/kernel/mem.c
+index 38d5a71a579bc..f6c766b2bdf5e 100644
+--- a/arch/um/kernel/mem.c
++++ b/arch/um/kernel/mem.c
+@@ -68,6 +68,7 @@ void __init mem_init(void)
+ 	map_memory(brk_end, __pa(brk_end), uml_reserved - brk_end, 1, 1, 0);
+ 	memblock_free((void *)brk_end, uml_reserved - brk_end);
+ 	uml_reserved = brk_end;
++	min_low_pfn = PFN_UP(__pa(uml_reserved));
  
--	if (len > PATH_MAX) {
--		WARN_ON(1);
--		return -ENOMEM;
--	}
-+	if (WARN_ON(len > PATH_MAX))
-+		return -ENAMETOOLONG;
- 
- 	path_len = p->end - p->start;
- 	old_buf_len = p->buf_len;
+ 	/* this will put all low memory onto the freelists */
+ 	memblock_free_all();
 -- 
 2.39.5
 
