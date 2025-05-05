@@ -1,62 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0E702E62C3;
-	Mon,  5 May 2025 23:04:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F3C837AACA;
+	Mon,  5 May 2025 23:04:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486259; cv=none; b=Ap9ibdDfvNbXm8tfMbY/K7PSxmlKvHBkRLCCyngS9RLIXqk074TqJhMrMH5TijwV/n9bctovaoDcHAbo4YiE9L67KmJ+EGBf58AQwv/Tp6JlnQfHPhVg3L+zwtArSAldO5UmHQ0SuGl40rICADX+uYHxBg6/yaSJy25baKWzEUc=
+	t=1746486294; cv=none; b=XPLBOWcrPfU7n3+I94QEuGcIAqNb3pretxRcY34+ipRwx7BVIQZr4sXUiQ3zdr7IC6nhu4gVzMW85chwIRP6a4ijhC7st/RzSCKDvAssNINqCmpGqQ88PsXuYLWSb1K3FkDgiafbP3RvgTK3iKEjkCij7B9OdKedduysYBMg0J8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486259; c=relaxed/simple;
-	bh=9jXK83eDDEbj9eepUBjb69Lo4Doz+C0DzdurWImoQwo=;
+	s=arc-20240116; t=1746486294; c=relaxed/simple;
+	bh=1iAwpExQ0pLsNJ5i+j+9eFH8gGqdDp6OsXzfHS0ofUc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=g4a4tmUyiksdQZtzkPWxZlzmF09YIyVMkRGC66ORg7JjtkvreRhL/S9mLI1y/k849WYOQKQGQZeQMUJwZuxFPE6doJ1d8eQXqrkKfOgsBRwddkd/vz+jTWU9PIGRXekvAkwiRrMzDeKGS90ZH0Us2r0QiQOGEEECgKe1gOqYXys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KAC86Ai5; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=kcGY7w1Bd+n0kCLc9J2t73341nAd9ZjCmtdstXJ/pos7HVC5LUswIocyCdH54CdRn6Jf1HQ3qrEyv7TLqUuiT4KmMJDSNpdukhhWV6lmxs6FARtUM6B2xIcckC7nBqCsIem6SYbzPVK6Ns36wdxqfCQZ+2KjoZP22YiwvgIEgTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LMe6qjPO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KAC86Ai5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F34BC4CEED;
-	Mon,  5 May 2025 23:04:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LMe6qjPO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C69E8C4CEEF;
+	Mon,  5 May 2025 23:04:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486257;
-	bh=9jXK83eDDEbj9eepUBjb69Lo4Doz+C0DzdurWImoQwo=;
+	s=k20201202; t=1746486293;
+	bh=1iAwpExQ0pLsNJ5i+j+9eFH8gGqdDp6OsXzfHS0ofUc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KAC86Ai52Qv6d8OXPTauGEtDWgu2QMf2e2rMTyivpfJxEYsQZyNDCr3A0h8InONae
-	 yGs2x6ZHTqVBkllbwkN+QEGxeqYITNX49psZfgznvLmVNTEcOQ8IGtRTdE7ayNzZbo
-	 codDupLYGrrC8eZkOhO1FoAavBYTtewTebICG2ksRCpn2OFYMPwbgoEXpVUzXQ/gxg
-	 OW3soDBr3BtWTRwAoNSt7X1+22x/ZgUORh1EIAWKPDmJ2jk4zRxiYykRzqJCYINFXF
-	 rjY5RnsJPrlr0ZR0r2p7d//Bna0BEz2mor7qMbNb1GtZHu7zVWvITC2gqaZwTaIUuU
-	 AkfKzW3zAJIvg==
+	b=LMe6qjPO4TWvB/rKatS0YLQEDjQPo9VVx53HL6GyjLfMmM6lZbeodt+8g4Y8pv9Zl
+	 HLwys2z6MlUNPAiKHRWHmPNQLVy3WOMKpLtINNWV9dIcZgtgUZS5aq/UypG50BsEcO
+	 i5sZ8s1ZqMGpQzifNJvK1cJ+wPSdlXf0az3OuTUqp0tHIDm/5UUg1/pff4AnKw/zgE
+	 AxwTwKsN30szMBuwmi6JCAKXP8dYTvymiEzfY9qVS1jpz3dl6RoBiSS0JPNLjeTx84
+	 DYV40V2FRDf2MiZEovLiMibkS5M9HA/wToO98nWaysk0fOywr/VR107enNaa5gMZ0Q
+	 EyAhuJa4WmCeA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Joshua Aberback <joshua.aberback@amd.com>,
-	Alvin Lee <alvin.lee2@amd.com>,
-	Wayne Lin <wayne.lin@amd.com>,
-	Daniel Wheeler <daniel.wheeler@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
+Cc: Kuniyuki Iwashima <kuniyu@amazon.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Ido Schimmel <idosch@nvidia.com>,
+	Jakub Kicinski <kuba@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	harry.wentland@amd.com,
-	sunpeng.li@amd.com,
-	christian.koenig@amd.com,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	rodrigo.siqueira@amd.com,
-	Alvin.Lee2@amd.com,
-	dillon.varone@amd.com,
-	alex.hung@amd.com,
-	Austin.Zheng@amd.com,
-	chris.park@amd.com,
-	rostrows@amd.com,
-	yi-lchen@amd.com,
-	PeiChen.Huang@amd.com,
-	aurabindo.pillai@amd.com,
-	linux@treblig.org,
-	Samson.Tam@amd.com,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 6.6 227/294] drm/amd/display: Increase block_sequence array size
-Date: Mon,  5 May 2025 18:55:27 -0400
-Message-Id: <20250505225634.2688578-227-sashal@kernel.org>
+	davem@davemloft.net,
+	dsahern@kernel.org,
+	pabeni@redhat.com,
+	netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 242/294] ip: fib_rules: Fetch net from fib_rule in fib[46]_rule_configure().
+Date: Mon,  5 May 2025 18:55:42 -0400
+Message-Id: <20250505225634.2688578-242-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -71,44 +55,59 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Joshua Aberback <joshua.aberback@amd.com>
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
 
-[ Upstream commit 3a7810c212bcf2f722671dadf4b23ff70a7d23ee ]
+[ Upstream commit 5a1ccffd30a08f5a2428cd5fbb3ab03e8eb6c66d ]
 
-[Why]
-It's possible to generate more than 50 steps in hwss_build_fast_sequence,
-for example with a 6-pipe asic where all pipes are in one MPC chain. This
-overflows the block_sequence buffer and corrupts block_sequence_steps,
-causing a crash.
+The following patch will not set skb->sk from VRF path.
 
-[How]
-Expand block_sequence to 100 items. A naive upper bound on the possible
-number of steps for a 6-pipe asic, ignoring the potential for steps to be
-mutually exclusive, is 91 with current code, therefore 100 is sufficient.
+Let's fetch net from fib_rule->fr_net instead of sock_net(skb->sk)
+in fib[46]_rule_configure().
 
-Reviewed-by: Alvin Lee <alvin.lee2@amd.com>
-Signed-off-by: Joshua Aberback <joshua.aberback@amd.com>
-Signed-off-by: Wayne Lin <wayne.lin@amd.com>
-Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
+Reviewed-by: Ido Schimmel <idosch@nvidia.com>
+Tested-by: Ido Schimmel <idosch@nvidia.com>
+Link: https://patch.msgid.link/20250207072502.87775-5-kuniyu@amazon.com
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/inc/core_types.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/ipv4/fib_rules.c  | 4 ++--
+ net/ipv6/fib6_rules.c | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/inc/core_types.h b/drivers/gpu/drm/amd/display/dc/inc/core_types.h
-index eaad1260bfd18..4b284ce669ae5 100644
---- a/drivers/gpu/drm/amd/display/dc/inc/core_types.h
-+++ b/drivers/gpu/drm/amd/display/dc/inc/core_types.h
-@@ -532,7 +532,7 @@ struct dc_state {
- 	 */
- 	struct bw_context bw_ctx;
+diff --git a/net/ipv4/fib_rules.c b/net/ipv4/fib_rules.c
+index 513f475c6a534..298a9944a3d1e 100644
+--- a/net/ipv4/fib_rules.c
++++ b/net/ipv4/fib_rules.c
+@@ -222,9 +222,9 @@ static int fib4_rule_configure(struct fib_rule *rule, struct sk_buff *skb,
+ 			       struct nlattr **tb,
+ 			       struct netlink_ext_ack *extack)
+ {
+-	struct net *net = sock_net(skb->sk);
++	struct fib4_rule *rule4 = (struct fib4_rule *)rule;
++	struct net *net = rule->fr_net;
+ 	int err = -EINVAL;
+-	struct fib4_rule *rule4 = (struct fib4_rule *) rule;
  
--	struct block_sequence block_sequence[50];
-+	struct block_sequence block_sequence[100];
- 	unsigned int block_sequence_steps;
- 	struct dc_dmub_cmd dc_dmub_cmd[10];
- 	unsigned int dmub_cmd_count;
+ 	if (!inet_validate_dscp(frh->tos)) {
+ 		NL_SET_ERR_MSG(extack,
+diff --git a/net/ipv6/fib6_rules.c b/net/ipv6/fib6_rules.c
+index 6eeab21512ba9..e0f0c5f8cccda 100644
+--- a/net/ipv6/fib6_rules.c
++++ b/net/ipv6/fib6_rules.c
+@@ -350,9 +350,9 @@ static int fib6_rule_configure(struct fib_rule *rule, struct sk_buff *skb,
+ 			       struct nlattr **tb,
+ 			       struct netlink_ext_ack *extack)
+ {
++	struct fib6_rule *rule6 = (struct fib6_rule *)rule;
++	struct net *net = rule->fr_net;
+ 	int err = -EINVAL;
+-	struct net *net = sock_net(skb->sk);
+-	struct fib6_rule *rule6 = (struct fib6_rule *) rule;
+ 
+ 	if (!inet_validate_dscp(frh->tos)) {
+ 		NL_SET_ERR_MSG(extack,
 -- 
 2.39.5
 
