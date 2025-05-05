@@ -1,45 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B85938AC6B;
-	Mon,  5 May 2025 23:01:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C228F2DCB4C;
+	Mon,  5 May 2025 23:01:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486067; cv=none; b=CvYx3yoB8zqdg8cSY13djxCxdjQemRpiBAiYIijF3nJ6YF0qRG1bVrbJ02lh78I9eD098is6yyrlhaa1x7nIN3odLYo+42FlH7n/k+lPAyvxyXPuG9/H8u7J7rXQJDr+ORXGBkv6WPf2IAyO+sJNabDryUmmMTmA7uCElttfqeQ=
+	t=1746486071; cv=none; b=t3L2iEUqyR6yV8QQKNtOf0bAyLnwTBT5+2qFq+r/MoY+ncoJb/xWFVH0f5daL7O/pkql0RRRFIvacuRqY3zKjMxSfkf2S2/wB0Yb/PpZUdsa7GACNmq1m8Qu3jMfJrUvwjiiYNuQN3We0rhXDeUXzv+6+BwNhRJPRBYYa2Plf5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486067; c=relaxed/simple;
-	bh=hPkjsLeqWZe4ntLeAR3nTRoxsVbfSj08SPdFKyCJqvI=;
+	s=arc-20240116; t=1746486071; c=relaxed/simple;
+	bh=CIOyiHhIcQe3oubqf8zVbmf/WHGd27a2psRoGPh9+r4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=uKDzRdX5ULeuox5YaV4r7HmoTQke4u5xYhuVxZ5Lds6r+FzRnnjDQ0ManXzhxGZZwoJqlIB5tHfkcRfGvVUxBndpRo6OcbzwORAlGfUO420qp/Tt5/wi8AKlXyMlMXT4vTS9NePpNr26tDboZ/R8L04ZaANfS7UN278Bq4O4XNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZW8ATfXb; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=dGxW4U4nI/wY9N/Kr9FtpkGIBCAzT/Oxtavenir5SC/gmG1Z4yFoiiIofzIL0aJGNVMN7mkf7HncFZBlgnyZIcRU0MLOKp12Z6YXz/OgNQs7mTnHEozpR/PI8XvL55t6h4R76InIrJlbNJFvZmzNfSoF0E/WnXbjZKW6UfrGYA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=soYu2KYe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZW8ATfXb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4C7AC4CEEE;
-	Mon,  5 May 2025 23:01:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="soYu2KYe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 288B7C4CEEF;
+	Mon,  5 May 2025 23:01:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486066;
-	bh=hPkjsLeqWZe4ntLeAR3nTRoxsVbfSj08SPdFKyCJqvI=;
+	s=k20201202; t=1746486070;
+	bh=CIOyiHhIcQe3oubqf8zVbmf/WHGd27a2psRoGPh9+r4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZW8ATfXbthDj/wsZeu/I6+vh+5maXpFAA2/7gN91Ch0wqtGxg+tfnLc3ExpMwHPSt
-	 h1OFEJUFphajON1PBch9A3RlnA7Ou+XWNA5lGgo+Lid8MqnF7bsKqtyB75m4qrWUS7
-	 griPEVhLxiW6AbrT5Y2QZ5Q8nt9PsQcLsqLmv+1BNaW8cUyhtc5VjiNVrN3uPmFoso
-	 F7ubkzawlIbvekJ5Grhfs68Nl9r2HDtkmnANqbhglp+UXSVhVEPoccdlYG+Pr8ZW86
-	 HYIP69pNX5lHqU+jyyNHNPA7HsXKVtC6WkEuZl1kURd02bG/zbkROgjfVDtuH3N24H
-	 bwneLplt66NkQ==
+	b=soYu2KYeWvO8Ydt1WpN+MYlVn0Zzc9ganCObCNo0C0X76xHvWX8S6HxW0hN9aMx8d
+	 wgDlTWsbKrR4k/vdluo+AnFgPl3JJvaJEQFb6MPRlm9RnlbnAuAaHbaLDOw8WIDnJ/
+	 BsL/xJxsKiU8136pFg+4MOlB9gTDZJhES64zvF3QrHbc9V1+6Fsc7HhiwvThcNMFQM
+	 wFf+grX2/ud3C5KWDrGf1tHukssRq+Tb/wCwwJH4G3KhW7TuDIuV8+UHx8oNuG4oEq
+	 WAo0yc3UGAvqOJfDwtxUbOWHNssVyZaekfGE8cNOAfCrsHK2tegjhfFExetkNQub6Y
+	 8fDLWzNmC8h7g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: "Rob Herring (Arm)" <robh@kernel.org>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	James Clark <james.clark@linaro.org>,
-	Will Deacon <will@kernel.org>,
+Cc: Vinith Kumar R <quic_vinithku@quicinc.com>,
+	Tamizh Chelvam Raja <quic_tamizhr@quicinc.com>,
+	Jeff Johnson <quic_jjohnson@quicinc.com>,
+	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
 	Sasha Levin <sashal@kernel.org>,
-	mark.rutland@arm.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 136/294] perf: arm_pmuv3: Call kvm_vcpu_pmu_resync_el0() before enabling counters
-Date: Mon,  5 May 2025 18:53:56 -0400
-Message-Id: <20250505225634.2688578-136-sashal@kernel.org>
+	jjohnson@kernel.org,
+	linux-wireless@vger.kernel.org,
+	ath12k@lists.infradead.org
+Subject: [PATCH AUTOSEL 6.6 139/294] wifi: ath12k: Report proper tx completion status to mac80211
+Date: Mon,  5 May 2025 18:53:59 -0400
+Message-Id: <20250505225634.2688578-139-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -54,41 +54,54 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: "Rob Herring (Arm)" <robh@kernel.org>
+From: Vinith Kumar R <quic_vinithku@quicinc.com>
 
-[ Upstream commit 04bd15c4cbc3f7bd2399d1baab958c5e738dbfc9 ]
+[ Upstream commit d2d9c9b8de725e1006d3aa3d18678a732f5d3584 ]
 
-Counting events related to setup of the PMU is not desired, but
-kvm_vcpu_pmu_resync_el0() is called just after the PMU counters have
-been enabled. Move the call to before enabling the counters.
+Currently Tx completion for few exception packets are received from
+firmware and the tx status updated to mac80211. The tx status values of
+HAL_WBM_REL_HTT_TX_COMP_STATUS_DROP and HAL_WBM_REL_HTT_TX_COMP_STATUS_TTL
+are considered as tx failure and reported as tx failure to mac80211.
+But these failure status is due to internal firmware tx drop and these
+packets were not tried to transmit in the air.
+In case of mesh this invalid tx status report might trigger mpath broken
+issue due to increase in mpath fail average.
+So do not report these tx status as tx failure instead free the skb
+by calling ieee80211_free_txskb(), and that will be accounted as dropped
+frame.
 
-Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
-Tested-by: James Clark <james.clark@linaro.org>
-Link: https://lore.kernel.org/r/20250218-arm-brbe-v19-v20-1-4e9922fc2e8e@kernel.org
-Signed-off-by: Will Deacon <will@kernel.org>
+Tested-on: QCN9274 hw2.0 PCI WLAN.WBE.1.3.1-00173-QCAHKSWPL_SILICONZ-1
+
+Signed-off-by: Vinith Kumar R <quic_vinithku@quicinc.com>
+Signed-off-by: Tamizh Chelvam Raja <quic_tamizhr@quicinc.com>
+Acked-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+Link: https://patch.msgid.link/20241122173432.2064858-1-quic_tamizhr@quicinc.com
+Signed-off-by: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/perf/arm_pmuv3.c | 4 ++--
+ drivers/net/wireless/ath/ath12k/dp_tx.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
-index 0e8f54168cb64..0858e6096453e 100644
---- a/drivers/perf/arm_pmuv3.c
-+++ b/drivers/perf/arm_pmuv3.c
-@@ -751,10 +751,10 @@ static void armv8pmu_start(struct arm_pmu *cpu_pmu)
- 	else
- 		armv8pmu_disable_user_access();
+diff --git a/drivers/net/wireless/ath/ath12k/dp_tx.c b/drivers/net/wireless/ath/ath12k/dp_tx.c
+index e025e4d0e7678..25a9d4c4fae76 100644
+--- a/drivers/net/wireless/ath/ath12k/dp_tx.c
++++ b/drivers/net/wireless/ath/ath12k/dp_tx.c
+@@ -422,13 +422,13 @@ ath12k_dp_tx_process_htt_tx_complete(struct ath12k_base *ab,
  
-+	kvm_vcpu_pmu_resync_el0();
-+
- 	/* Enable all counters */
- 	armv8pmu_pmcr_write(armv8pmu_pmcr_read() | ARMV8_PMU_PMCR_E);
--
--	kvm_vcpu_pmu_resync_el0();
- }
- 
- static void armv8pmu_stop(struct arm_pmu *cpu_pmu)
+ 	switch (wbm_status) {
+ 	case HAL_WBM_REL_HTT_TX_COMP_STATUS_OK:
+-	case HAL_WBM_REL_HTT_TX_COMP_STATUS_DROP:
+-	case HAL_WBM_REL_HTT_TX_COMP_STATUS_TTL:
+ 		ts.acked = (wbm_status == HAL_WBM_REL_HTT_TX_COMP_STATUS_OK);
+ 		ts.ack_rssi = le32_get_bits(status_desc->info2,
+ 					    HTT_TX_WBM_COMP_INFO2_ACK_RSSI);
+ 		ath12k_dp_tx_htt_tx_complete_buf(ab, msdu, tx_ring, &ts);
+ 		break;
++	case HAL_WBM_REL_HTT_TX_COMP_STATUS_DROP:
++	case HAL_WBM_REL_HTT_TX_COMP_STATUS_TTL:
+ 	case HAL_WBM_REL_HTT_TX_COMP_STATUS_REINJ:
+ 	case HAL_WBM_REL_HTT_TX_COMP_STATUS_INSPECT:
+ 		ath12k_dp_tx_free_txbuf(ab, msdu, mac_id, tx_ring);
 -- 
 2.39.5
 
