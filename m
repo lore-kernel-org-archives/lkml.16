@@ -1,44 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA83E278756;
-	Mon,  5 May 2025 22:55:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00388278769;
+	Mon,  5 May 2025 22:55:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485749; cv=none; b=fHAMB2m2l5H/ssSdDZ+FRbGXfQo+V6EuR0MuJyvWiQePR/6mNQhLlJ9i7B1IUCT6ApVqB2zM87VJBBeewBns4jgQaeBnOn4zqPWMHUIbzUuECcZCO0bZqXK3KOGWvES9MCw4zrVQu6AKb9GQErM1hA54TlSm4cgQsC1a4FbqioA=
+	t=1746485754; cv=none; b=ake2TGQRbERuY1Jelk6Y0EjhDDh8m4afTzJo13R6DN2vTD8rmaim6lMSF9zJXVfC+wo98TJFfuAfyODAZ5IuYSxCs89+hutn5Ms1WkAhl0lcVm9j7zLtiEpeR85qEyhU5FQ4UG3FfZqcOej6pmdP2kkaJAEpFnT1RwBoyTSE2+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485749; c=relaxed/simple;
-	bh=0BuTBr0C59E9qlzxwKYDLEEcHNLFQ4OLcJ9A0iAYOI0=;
+	s=arc-20240116; t=1746485754; c=relaxed/simple;
+	bh=62Bhk/VVD4D0spqYKktOS5Xr1IEPMTNipmkICGhPAWA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gXrdzWmuz6OgHXiRULBAS1eSRXZBhezvWek4vtRVS3cxeIL89pQCrnpxGkUEVE+s5eKojSBZX6Epz3oOtgfk5Ae4TBIRWZgtwgnixcU86HH/8dIOya9GEaXrmMzaTbspSPFq7Z+Lz9glX/r1E8Z+Svh/hSSWWYAH1hlRluMICNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OAs1wMe1; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=a7o9H7qI+/YklAg2B5q1Yl0/VuigMKje5a2DKI5EgC5WSoBRTOBry/xBroV2ftuUX3DLrIRzHnCYgvJWRu4sFW/am91xVT7JDbHchnB6qtg7JRP2kkuF4yF103SEmW/PUs9pof4m1rL+pE9s2b15NKuwXv1v2+7wj9zDMykC3fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AyBCWyhE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OAs1wMe1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92BB9C4CEE4;
-	Mon,  5 May 2025 22:55:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AyBCWyhE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43389C4CEEF;
+	Mon,  5 May 2025 22:55:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485749;
-	bh=0BuTBr0C59E9qlzxwKYDLEEcHNLFQ4OLcJ9A0iAYOI0=;
+	s=k20201202; t=1746485752;
+	bh=62Bhk/VVD4D0spqYKktOS5Xr1IEPMTNipmkICGhPAWA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=OAs1wMe1RBSwoSX1Lj6ue1TLg0ipnuFd1V/XAgJNF0MHWj01hxcwRapnW9+xDNh+v
-	 9paFKNu0GWERa1bTMC0YAncxGiMJPPRa4uBAKyuvux3Z9NhmspjktpO18FZEY06PGS
-	 RTNYRosQD82C/f6TXmwrbEku1RHrHoB9Zv9+3WcSVCNWT/A43u9nMkB84mhVhQCsvw
-	 Ky+tdqQ2qG3ani/tYOWjOe10Iy8QFUnDWeOKEUtvEEUp+/4qp6z+Vfvm0ad7GggSiP
-	 WybpI6C2lLl9FMP8wEwAirHmTaSaJfqGVC4O/kRTQvfFOfqb8TnOVGpHhmTkRRVdaX
-	 r+tCoXatg8dpw==
+	b=AyBCWyhE2H8JAUPVOjSpyL3dlP3QN6QM3nBte0Ttsy52tGwE53yv09Q+rTHDHo3+/
+	 X4rDWGxyi+BBTUWYcN5yk0A/GE8jkWM+FDyuSjUd0dgBi7wlEjHqxluZ+uiLPOHuHI
+	 A/VYMw1vNNToCNr0OxFGl+MTvzPRDaxdYqbSoJ8MSqmm8qtqRbwkfnn7f21+r5DX/g
+	 LUG5L61xuVB/CXW1a5sAAOh3bfA2XaHuh74XQkrgDnam/BKd7ikXNMAN2dl1ZsnBBg
+	 3ZT0CJmw/c1U2Ip3/7R4qtlpvvsZgGUKJY7+KV1HWMyKzRi9KNPdzMc68lEwJpPkv5
+	 Klj3LZUceq+xQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
+Cc: Ping-Ke Shih <pkshih@realtek.com>,
 	Sasha Levin <sashal@kernel.org>,
-	mturquette@baylibre.com,
-	sboyd@kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 461/486] clk: renesas: rzg2l-cpg: Refactor Runtime PM clock validation
-Date: Mon,  5 May 2025 18:38:57 -0400
-Message-Id: <20250505223922.2682012-461-sashal@kernel.org>
+	linux-wireless@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 464/486] wifi: rtw89: add wiphy_lock() to work that isn't held wiphy_lock() yet
+Date: Mon,  5 May 2025 18:39:00 -0400
+Message-Id: <20250505223922.2682012-464-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -53,163 +49,69 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Ping-Ke Shih <pkshih@realtek.com>
 
-[ Upstream commit f6f73b891bf6beff069fcacc7b4a796e1009bf26 ]
+[ Upstream commit ebfc9199df05d37b67f4d1b7ee997193f3d2e7c8 ]
 
-Refactor rzg2l_cpg_attach_dev to delegate clock validation for Runtime PM
-to the updated rzg2l_cpg_is_pm_clk function. Ensure validation of clocks
-associated with the power domain while excluding external and core clocks.
-Prevent incorrect Runtime PM management for clocks outside the domain's
-scope.
+To ensure where are protected by driver mutex can also be protected by
+wiphy_lock(), so afterward we can remove driver mutex safely.
 
-Update rzg2l_cpg_is_pm_clk to operate on a per-power-domain basis. Verify
-clkspec.np against the domain's device node, check argument validity, and
-validate clock type (CPG_MOD). Use the no_pm_mod_clks array to exclude
-specific clocks from PM management.
-
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/20241216210201.239855-1-prabhakar.mahadev-lad.rj@bp.renesas.com
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Ping-Ke Shih <pkshih@realtek.com>
+Link: https://patch.msgid.link/20250122060310.31976-2-pkshih@realtek.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/renesas/rzg2l-cpg.c | 102 +++++++++++++++++---------------
- 1 file changed, 54 insertions(+), 48 deletions(-)
+ drivers/net/wireless/realtek/rtw89/regd.c | 2 ++
+ drivers/net/wireless/realtek/rtw89/ser.c  | 4 ++++
+ 2 files changed, 6 insertions(+)
 
-diff --git a/drivers/clk/renesas/rzg2l-cpg.c b/drivers/clk/renesas/rzg2l-cpg.c
-index 229f4540b219e..97d42328fa81a 100644
---- a/drivers/clk/renesas/rzg2l-cpg.c
-+++ b/drivers/clk/renesas/rzg2l-cpg.c
-@@ -1549,28 +1549,6 @@ static int rzg2l_cpg_reset_controller_register(struct rzg2l_cpg_priv *priv)
- 	return devm_reset_controller_register(priv->dev, &priv->rcdev);
+diff --git a/drivers/net/wireless/realtek/rtw89/regd.c b/drivers/net/wireless/realtek/rtw89/regd.c
+index bb064a086970b..e8df68818da01 100644
+--- a/drivers/net/wireless/realtek/rtw89/regd.c
++++ b/drivers/net/wireless/realtek/rtw89/regd.c
+@@ -695,6 +695,7 @@ void rtw89_regd_notifier(struct wiphy *wiphy, struct regulatory_request *request
+ 	struct ieee80211_hw *hw = wiphy_to_ieee80211_hw(wiphy);
+ 	struct rtw89_dev *rtwdev = hw->priv;
+ 
++	wiphy_lock(wiphy);
+ 	mutex_lock(&rtwdev->mutex);
+ 	rtw89_leave_ps_mode(rtwdev);
+ 
+@@ -712,6 +713,7 @@ void rtw89_regd_notifier(struct wiphy *wiphy, struct regulatory_request *request
+ 
+ exit:
+ 	mutex_unlock(&rtwdev->mutex);
++	wiphy_unlock(wiphy);
  }
  
--static bool rzg2l_cpg_is_pm_clk(struct rzg2l_cpg_priv *priv,
--				const struct of_phandle_args *clkspec)
--{
--	const struct rzg2l_cpg_info *info = priv->info;
--	unsigned int id;
--	unsigned int i;
--
--	if (clkspec->args_count != 2)
--		return false;
--
--	if (clkspec->args[0] != CPG_MOD)
--		return false;
--
--	id = clkspec->args[1] + info->num_total_core_clks;
--	for (i = 0; i < info->num_no_pm_mod_clks; i++) {
--		if (info->no_pm_mod_clks[i] == id)
--			return false;
--	}
--
--	return true;
--}
--
- /**
-  * struct rzg2l_cpg_pm_domains - RZ/G2L PM domains data structure
-  * @onecell_data: cell data
-@@ -1595,45 +1573,73 @@ struct rzg2l_cpg_pd {
- 	u16 id;
- };
+ /* Maximum Transmit Power field (@raw) can be EIRP or PSD.
+diff --git a/drivers/net/wireless/realtek/rtw89/ser.c b/drivers/net/wireless/realtek/rtw89/ser.c
+index 7b203bb7f151a..02c2ac12f197a 100644
+--- a/drivers/net/wireless/realtek/rtw89/ser.c
++++ b/drivers/net/wireless/realtek/rtw89/ser.c
+@@ -156,9 +156,11 @@ static void ser_state_run(struct rtw89_ser *ser, u8 evt)
+ 	rtw89_debug(rtwdev, RTW89_DBG_SER, "ser: %s receive %s\n",
+ 		    ser_st_name(ser), ser_ev_name(ser, evt));
  
-+static bool rzg2l_cpg_is_pm_clk(struct rzg2l_cpg_pd *pd,
-+				const struct of_phandle_args *clkspec)
-+{
-+	if (clkspec->np != pd->genpd.dev.of_node || clkspec->args_count != 2)
-+		return false;
-+
-+	switch (clkspec->args[0]) {
-+	case CPG_MOD: {
-+		struct rzg2l_cpg_priv *priv = pd->priv;
-+		const struct rzg2l_cpg_info *info = priv->info;
-+		unsigned int id = clkspec->args[1];
-+
-+		if (id >= priv->num_mod_clks)
-+			return false;
-+
-+		id += info->num_total_core_clks;
-+
-+		for (unsigned int i = 0; i < info->num_no_pm_mod_clks; i++) {
-+			if (info->no_pm_mod_clks[i] == id)
-+				return false;
-+		}
-+
-+		return true;
-+	}
-+
-+	case CPG_CORE:
-+	default:
-+		return false;
-+	}
-+}
-+
- static int rzg2l_cpg_attach_dev(struct generic_pm_domain *domain, struct device *dev)
- {
- 	struct rzg2l_cpg_pd *pd = container_of(domain, struct rzg2l_cpg_pd, genpd);
--	struct rzg2l_cpg_priv *priv = pd->priv;
- 	struct device_node *np = dev->of_node;
- 	struct of_phandle_args clkspec;
- 	bool once = true;
- 	struct clk *clk;
-+	unsigned int i;
- 	int error;
--	int i = 0;
--
--	while (!of_parse_phandle_with_args(np, "clocks", "#clock-cells", i,
--					   &clkspec)) {
--		if (rzg2l_cpg_is_pm_clk(priv, &clkspec)) {
--			if (once) {
--				once = false;
--				error = pm_clk_create(dev);
--				if (error) {
--					of_node_put(clkspec.np);
--					goto err;
--				}
--			}
--			clk = of_clk_get_from_provider(&clkspec);
-+
-+	for (i = 0; !of_parse_phandle_with_args(np, "clocks", "#clock-cells", i, &clkspec); i++) {
-+		if (!rzg2l_cpg_is_pm_clk(pd, &clkspec)) {
- 			of_node_put(clkspec.np);
--			if (IS_ERR(clk)) {
--				error = PTR_ERR(clk);
--				goto fail_destroy;
--			}
-+			continue;
-+		}
++	wiphy_lock(rtwdev->hw->wiphy);
+ 	mutex_lock(&rtwdev->mutex);
+ 	rtw89_leave_lps(rtwdev);
+ 	mutex_unlock(&rtwdev->mutex);
++	wiphy_unlock(rtwdev->hw->wiphy);
  
--			error = pm_clk_add_clk(dev, clk);
-+		if (once) {
-+			once = false;
-+			error = pm_clk_create(dev);
- 			if (error) {
--				dev_err(dev, "pm_clk_add_clk failed %d\n",
--					error);
--				goto fail_put;
-+				of_node_put(clkspec.np);
-+				goto err;
- 			}
--		} else {
--			of_node_put(clkspec.np);
- 		}
--		i++;
-+		clk = of_clk_get_from_provider(&clkspec);
-+		of_node_put(clkspec.np);
-+		if (IS_ERR(clk)) {
-+			error = PTR_ERR(clk);
-+			goto fail_destroy;
-+		}
-+
-+		error = pm_clk_add_clk(dev, clk);
-+		if (error) {
-+			dev_err(dev, "pm_clk_add_clk failed %d\n", error);
-+			goto fail_put;
-+		}
- 	}
+ 	ser->st_tbl[ser->state].st_func(ser, evt);
+ }
+@@ -707,9 +709,11 @@ static void ser_l2_reset_st_hdl(struct rtw89_ser *ser, u8 evt)
  
- 	return 0;
+ 	switch (evt) {
+ 	case SER_EV_STATE_IN:
++		wiphy_lock(rtwdev->hw->wiphy);
+ 		mutex_lock(&rtwdev->mutex);
+ 		ser_l2_reset_st_pre_hdl(ser);
+ 		mutex_unlock(&rtwdev->mutex);
++		wiphy_unlock(rtwdev->hw->wiphy);
+ 
+ 		ieee80211_restart_hw(rtwdev->hw);
+ 		ser_set_alarm(ser, SER_RECFG_TIMEOUT, SER_EV_L2_RECFG_TIMEOUT);
 -- 
 2.39.5
 
