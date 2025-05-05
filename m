@@ -1,231 +1,146 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7939D20ADEE
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 11:59:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C4941E32C6
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 12:01:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746446349; cv=none; b=rOycKf72McOE7umSpseFDVX4QNPwYlAeSR0+USe1bIMKNTtycURZs0TXkJgxVaWcjCGl3RGdp9s5PD8DgnN2NK7iP7cEzjPQH4bgrS880yEiu/vpsmoQaevT8z0KMWxZnsjuUARnytnv8XYHnYR48X/S+A6j1MY697BFavAtxgI=
+	t=1746446500; cv=none; b=OfEvHRil7kYHtxnweqnVwEhJ3FRm+Bi2rcyJ7zTNJ/ePwyH1yMwX2ZttNKX080uJt7RjnDL2YEFrQM/Y0KfwNpRlO0KYjdgEFB5k9lrYHxVnvvx1GZE3VW2f9GNsBxz3gclcGg/qqqgENXrI0yABmcDbOvwRdGM0wc6SIsWX1kQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746446349; c=relaxed/simple;
-	bh=FGuR2WBMXMvdjCd1ovjlhudh3LWd/ZGssire864V+jY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VDMeYNRszVR7TaJLhmhomXCZ+v35ACJVGcoJRhHQ+uT4VB67ODH7uDzNZho+UHXwchM2zM2Kk2ZN6vwI5vmGaJfp4hJNTOSxdQ/SqQEqKHdZtzMPIFhtLwQTVwBImDwtxEXdd36VqdZRuZnBbDpzT3J4kd99aKBqrSW2fF3JOtc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=IzwHVUWj; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1746446500; c=relaxed/simple;
+	bh=yKXMOm/860GCcP8OoAHCINoXDy4EwSWPW0EDzkxq178=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LQaEF/DaRCTWMBalV+0VkHBfh+yMrQIPViRzvmjjrbwm7DbYdTgxHhMMf+J6+x6ew6/Kas1v4gKPkZS4IL0c82Sf4lvAKA8totf46yv0H3K9L8rui3+tNOYKcatcHF7H5Qd5ugzY/cUUtHqewnxyD1cZhq5lzdkAcTq72BRtr4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=blgC4oHI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="IzwHVUWj"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 545BJS5i030901
-	for <linux-kernel@vger.kernel.org>; Mon, 5 May 2025 11:59:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Fc5osDce5Ixp5n1NZs7mSFVdO0qDnEBm9TZBSOSJaog=; b=IzwHVUWjTSN2aTmN
-	0IPLo//J+Zxdxh8FtBA8UKJ7kvNC6g+mk1Nyx6JgENgjB7iSAWdxaJe0sbw/06Yx
-	rI0moqbfIK7VFeEzrfag5tOCxAtPLGtRISnnrU3EugHQbuhuTQ1mLn3Qo9ujWUvy
-	fLWLGqdXGl1rq9M9oukIM0trKrsS9nx9J8rSek+aOFY11cmZ7bwh/xlxKMwI8ME0
-	XZwDaJgrzDkUw3ksftk4vxB6U2C162O2dy0nV66qHrYinprt9IRxBdaiAyl1MUWx
-	BJ6yPf5iJzQmpNkxalDBL/TejWUfJFCxnAFOX2Jvul5ILCohX2ayaf4tIxsw5iUu
-	QL/3Aw==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46da3rv1ey-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 11:59:06 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7caee990721so29322385a.1
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 04:59:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746446345; x=1747051145;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Fc5osDce5Ixp5n1NZs7mSFVdO0qDnEBm9TZBSOSJaog=;
-        b=plE/TvUZh43Khk9aGIk1xyHic7Stie8MAxAzqh1TIJh+g9pDeynnjbmZIqhKEmoBtR
-         Ibudb2kBnkybZhamdFghxN5l2PFS6yR35FdlUVovfIuk7UXUPL+HNX1d7G8NlGgu8YGl
-         tWSUZKdMA405oZlTdyW8QF53NFKlKK1ZjN2/hdQG86KP4B8I5huwlT99KfBdrYTsauzH
-         C5E/fV5MC3LAfofaNd1e3v7tMSvjBDufZlIJxKnNkXPbYv5aChATRadSP063R5NKbhoV
-         exphId1LQwPC9zzsbl+UtKs8wnRDF2o8HGP3AZ6imEmxSenKSeWyMjI0COl1CdBHJZJE
-         shVw==
-X-Forwarded-Encrypted: i=1; AJvYcCXVY4TM10+O3F7Ow42O0BnMVYywJfIeT49FfGCzU1VOc8H2rVtM0nJF3wyJJg9abHCDrOvBpcS/lIkh4ZM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YywMT6OtTSkGIjcv3VQf6+UeTCKi08PlOvPOAw1pS+OPC13I9Kt
-	SxOKaVdDFqsjZj06Tr7RafOfEBz3gteganf8g1Yer3F5UnefRg479KQznhvFqYbMacyH7OX1kan
-	kDBcqbbLzK1P2oLyr1bSsN8Q4YRg1AhPU5T+2Kju6Id1OPHc5M7iL6X4tjKqoD9Y=
-X-Gm-Gg: ASbGncu3AZSzz8byzQ4Sa/odQOAP9f3C/UyLoFDcxu6n3kinsEFJOYre/khqBza5tDB
-	eGhWI6XYin6tGUAVURTQb+v3kUh3jcdecPAmCuJP2/Jr6zNUhrbQuRc1VuV+M7kjnDSzuQZ2wvc
-	pKfIObefJ9sLAiD1aszFCyvhHKPTaJAPi4mFeiQDPQCUzFqUmyQ/CZrLg6HTPyrUsIx2N4sks8Q
-	rfW6uwr1zcOGN+H2aEBbBLBpdtnXj9Zb91GbSrsmCkrRwJHuVzDvTk2x6GFeF7CdD9FuGH7S3NV
-	0SmqLy1+bevdGtn7aZpc4jvROLmnOzH7MTEPftKSN2Ax0glXXGQZzGxcee+KPRCg7hyz6Eb5jE0
-	shBgjMX/fkK+nOxK0axLrf/uiAC52ZwBssIELY/9m0k6k69FqMGHlgMx3N3SNgCxQeWyw
-X-Received: by 2002:a05:620a:4001:b0:7c5:9a37:c418 with SMTP id af79cd13be357-7cae3b1604amr1093369785a.51.1746446344927;
-        Mon, 05 May 2025 04:59:04 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHxsMcGBcuXzdzsMZLmfG4jCCth/aIBhqNnJlAxtHNCdoHctJUXgi2+jH+zw6iGwmYPEzBLZg==
-X-Received: by 2002:a05:620a:4001:b0:7c5:9a37:c418 with SMTP id af79cd13be357-7cae3b1604amr1093364085a.51.1746446344392;
-        Mon, 05 May 2025 04:59:04 -0700 (PDT)
-Received: from ?IPV6:2001:14bb:671:42db:aca9:2ffd:84bc:ddc5? (2001-14bb-671-42db-aca9-2ffd-84bc-ddc5.rev.dnainternet.fi. [2001:14bb:671:42db:aca9:2ffd:84bc:ddc5])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ea94c8d40sm1695574e87.98.2025.05.05.04.58.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 05 May 2025 04:59:03 -0700 (PDT)
-Message-ID: <9afd098c-edd3-44fa-8efe-99f2e9c9a525@oss.qualcomm.com>
-Date: Mon, 5 May 2025 14:58:58 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="blgC4oHI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAE17C4CEE9
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 12:01:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746446500;
+	bh=yKXMOm/860GCcP8OoAHCINoXDy4EwSWPW0EDzkxq178=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=blgC4oHIW3wAP8A1QsMnVaof+kTjscjbnt5LtnKStIlkn1n3AMYE6CpRv2nZoLw0I
+	 cM8rLUPe+WUP2EUPzRYSFeKCCyqXfZ0QIph55SbTXsGgxYwQzgt7vH33V6lqG7C1A+
+	 tbhrVH32TUbCB2Nc+HFfTTDvEqRhYbYu3gGxMZVeWGCcBhuohjcuK44P3SP8eT2tmw
+	 ITi/rFVwohdPgEOnUrQFNROOmuOGuD8ayHxQbFFmSUhGyKiIf1izXUvVrTA2+nBUvH
+	 uFXyDeYvNxF1Z3qkaobTDSk31w5+S1AmtshN7z1TYj4peYHOSE0B+jBdcHIQP3v/60
+	 oTv+bNp5JaxHQ==
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5499c5d9691so5080902e87.2
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 05:01:39 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWYKS7QtuOva/Zup9C7ipHceo2oxmbnNRFFCZP8rItBOA//j89wcMQuLHs2L5OILKuf87vbfgLV8UsUDAo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxao3THflNX4MYNodn7HocahF0+oJjoLo/39N9f1eKWF+2UJqH0
+	q+puLWsEesq/3L3op0d271nRUOYVGo1F2sAU5RYiCpA+2x0SR9PyXSPJQdybUrSxtq+FNMXhr+K
+	YY8MIjSpz0Ym1O9X5vjPMQl0W8vo=
+X-Google-Smtp-Source: AGHT+IHNfl/k0nKX7HHii+yFbjen/cpwNpNeEkkE0EhxxcaZldi84IfCIcrHLIOQSGaQnm60lEF7YLNiGZxwP6wXMi8=
+X-Received: by 2002:a2e:bd0e:0:b0:30b:c569:4689 with SMTP id
+ 38308e7fff4ca-32351f257d4mr22226601fa.27.1746446498310; Mon, 05 May 2025
+ 05:01:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: (subset) [PATCH v2 00/34] drm: convert all bridges to
- devm_drm_bridge_alloc()
-To: Luca Ceresoli <luca.ceresoli@bootlin.com>,
-        Inki Dae
- <inki.dae@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>
-Cc: Maxime Ripard <mripard@kernel.org>,
-        Louis Chauvet <louis.chauvet@bootlin.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Andrzej Hajda <andrzej.hajda@intel.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Robert Foss <rfoss@kernel.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Douglas Anderson
- <dianders@chromium.org>,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Anusha Srivatsa
- <asrivats@redhat.com>,
-        Paul Kocialkowski <paulk@sys-base.io>,
-        Dmitry Baryshkov <lumag@kernel.org>, Hui Pu <Hui.Pu@gehealthcare.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        dri-devel@lists.freedesktop.org, asahi@lists.linux.dev,
-        linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev,
-        imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Adam Ford <aford173@gmail.com>,
-        Adrien Grassein <adrien.grassein@gmail.com>,
-        Aleksandr Mishin <amishin@t-argos.ru>,
-        Andy Yan <andy.yan@rock-chips.com>,
-        AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-        Benson Leung <bleung@chromium.org>,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Christoph Fritz <chf.fritz@googlemail.com>,
-        Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
-        Detlev Casanova <detlev.casanova@collabora.com>,
-        Dharma Balasubiramani <dharma.b@microchip.com>,
-        Guenter Roeck <groeck@chromium.org>, Heiko Stuebner <heiko@sntech.de>,
-        Jani Nikula <jani.nikula@intel.com>, Janne Grunau <j@jannau.net>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Jesse Van Gavere <jesseevg@gmail.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Liu Ying <victor.liu@nxp.com>,
-        Manikandan Muralidharan <manikandan.m@microchip.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>, Phong LE <ple@baylibre.com>,
-        Sasha Finkelstein <fnkl.kernel@gmail.com>,
-        Sugar Zhang <sugar.zhang@rock-chips.com>,
-        Sui Jingfeng <sui.jingfeng@linux.dev>,
-        Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
-        Vitalii Mordan <mordan@ispras.ru>,
-        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
-        "Rob Herring (Arm)" <robh@kernel.org>,
-        Hsin-Te Yuan
- <yuanhsinte@chromium.org>,
-        Pin-yen Lin <treapking@chromium.org>, Xin Ji <xji@analogixsemi.com>,
-        Aradhya Bhatia <a-bhatia1@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-        Ian Ray <ian.ray@ge.com>, Martyn Welch <martyn.welch@collabora.co.uk>,
-        Peter Senna Tschudin <peter.senna@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Herve Codina
- <herve.codina@bootlin.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        Bjorn Andersson <quic_bjorande@quicinc.com>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        Rob Clark <robdclark@gmail.com>
-References: <20250424-drm-bridge-convert-to-alloc-api-v2-0-8f91a404d86b@bootlin.com>
- <174591887152.961603.7706063017853945511.b4-ty@bootlin.com>
- <832a9db0-cf8a-4d35-8a98-08053fbd6723@bootlin.com>
- <20250430-arrogant-marmoset-of-justice-92ced3@houat>
- <20250505130648.22ec8716@booty>
-Content-Language: en-US
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-In-Reply-To: <20250505130648.22ec8716@booty>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: PgvboQoBthhwFqu-sObvkvbMDcN7Da7y
-X-Authority-Analysis: v=2.4 cv=cpWbk04i c=1 sm=1 tr=0 ts=6818a80a cx=c_pps
- a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=P-IC7800AAAA:8 a=H8qqLt0gxxJlsNWwv3EA:9
- a=QEXdDO2ut3YA:10 a=bTQJ7kPSJx9SKPbeHEYW:22 a=d3PnA9EDa4IxuAV0gXij:22
-X-Proofpoint-GUID: PgvboQoBthhwFqu-sObvkvbMDcN7Da7y
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA1MDExNCBTYWx0ZWRfXwL8RRzYlSGIG
- AvxzDpWo6VFWnH5Ral3cuA1W0tLklPETiXOFihertRPA/wzD2jn2Q4Db/q5j7QS5Q1nNyfCSdGJ
- oLuISzMcNpjYZ2ZOQX2WGw4I44ppXNgeLiwzwWG2lNgkWD7pssZ90wm4kwhs9koJV7+1yRU3tqK
- 5gdmGJvDvKDgCSF+qYVMax4mYNR1/1tBu39MG3yBx84IS08rJ5YNAliNstyxgHludzndev7zhf9
- 8P6jbsLos8f0yOwQD/HCyFym3Vff/rOept7v/k+fnYXD0/nisRIm80UBpezqeOyJmPS/+tVNvfG
- bVlYCPMp7+NrZ8pngWaIl0HMWOsZXd9bo0ma2GpKqisQwh+YMw21VbN8iV7OgG5j57mNvcwJiTd
- 0cumkyHvYcFw30QtqJOUCXdPidYhvC1XjL71V14Gpwf6QhWFBr3i+LmHU5qT6wmRHDKxDmh8
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-05_05,2025-04-30_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxscore=0 spamscore=0 lowpriorityscore=0 phishscore=0 adultscore=0
- malwarescore=0 suspectscore=0 bulkscore=0 priorityscore=1501 mlxlogscore=999
- clxscore=1015 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505050114
+References: <20250504184342.125253-1-ubizjak@gmail.com> <dd4c1795-ee0f-4589-9430-d759e59d5b96@zytor.com>
+ <CAMj1kXHLfa2OzT+mo8qFxp5NtLHxaxnO3+skt_we=QOTtPFUqw@mail.gmail.com>
+ <79AB4DAE-18EE-4F3C-980F-46304C021EC1@zytor.com> <CAMj1kXHG8JPLR5BjhSh+nJLhFoC-cT+-me4nc5kHXSxFUaw1aQ@mail.gmail.com>
+ <D503B59D-AE83-4B2A-BC26-13F01A18C14B@zytor.com>
+In-Reply-To: <D503B59D-AE83-4B2A-BC26-13F01A18C14B@zytor.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Mon, 5 May 2025 14:01:26 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXF68cZ1B-hf845x8bkYZJW1kn69QenVoHnrjAeFRrXbsw@mail.gmail.com>
+X-Gm-Features: ATxdqUE_1SqOu31UeqEZ9aqvciZPPMBGKf0BwUcXfuKE72VyHS3naqyuEkdV0UE
+Message-ID: <CAMj1kXF68cZ1B-hf845x8bkYZJW1kn69QenVoHnrjAeFRrXbsw@mail.gmail.com>
+Subject: Re: [PATCH -tip] x86/asm: Use %a instead of %c(%%rip) in rip_rel_ptr()
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Uros Bizjak <ubizjak@gmail.com>, x86@kernel.org, linux-kernel@vger.kernel.org, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 05/05/2025 14:06, Luca Ceresoli wrote:
-> Inki, Kyungmin, Seung-Woo, Alim,
-> 
-> On Wed, 30 Apr 2025 10:08:14 +0200
-> Maxime Ripard <mripard@kernel.org> wrote:
-> 
->> Inki, Kyungmin, Seung-Woo, sorry for the mishap. Do you agree with the
->> following patch, and it going through drm-misc?
->>
->> https://lore.kernel.org/dri-devel/20250424-drm-bridge-convert-to-alloc-api-v2-14-8f91a404d86b@bootlin.com/
->>
->> If not, we'll revert.
-> 
-> Did you have a chance to have a look at the patch mentioned by Maxime?
-> 
-> It was applied to drm-misc-next by mistake. Not your mistake of course,
-> but now it's there so if you don't reply anything it will have to be
-> reverted, and then sent again to go through all the review process to
-> be hopefully re-applied in the future.
-> 
-> If you agree with keeping it in drm-misc-next, that would be less noise
-> for everybody.
-> 
-> I'm going to send v3 very soon, so it would be good to decide what to
-> do before that.
+On Mon, 5 May 2025 at 13:50, H. Peter Anvin <hpa@zytor.com> wrote:
+>
+> On May 5, 2025 3:42:46 AM PDT, Ard Biesheuvel <ardb@kernel.org> wrote:
+> >On Mon, 5 May 2025 at 08:09, H. Peter Anvin <hpa@zytor.com> wrote:
+> >>
+> >> On May 4, 2025 10:48:19 PM PDT, Ard Biesheuvel <ardb@kernel.org> wrote:
+> >> >On Mon, 5 May 2025 at 04:59, H. Peter Anvin <hpa@zytor.com> wrote:
+> >> >>
+> >> >> On 5/4/25 11:43, Uros Bizjak wrote:
+> >> >> > The "a" asm operand modifier substitutes a memory reference, with the
+> >> >> > actual operand treated as address.  For x86_64, when a symbol is
+> >> >> > provided, the "a" modifier emits "sym(%rip)" instead of "sym".
+> >> >> >
+> >> >
+> >> >Clang does not
+> >> >
+> >> >https://godbolt.org/z/5Y58T45f5
+> >> >
+> >> >> > No functional changes intended.
+> >> >> >
+> >> >
+> >> >NAK. There is a functional change with Clang, which does not emit
+> >> >%(rip), and this is the whole point of this thing.
+> >> >
+> >> >> > Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+> >> >> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> >> >> > Cc: Ingo Molnar <mingo@kernel.org>
+> >> >> > Cc: Borislav Petkov <bp@alien8.de>
+> >> >> > Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> >> >> > Cc: "H. Peter Anvin" <hpa@zytor.com>
+> >> >> > Cc: Ard Biesheuvel <ardb@kernel.org>
+> >> >> > ---
+> >> >> >   arch/x86/include/asm/asm.h | 2 +-
+> >> >> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> >> >> >
+> >> >> > diff --git a/arch/x86/include/asm/asm.h b/arch/x86/include/asm/asm.h
+> >> >> > index f963848024a5..d7610b99b8d8 100644
+> >> >> > --- a/arch/x86/include/asm/asm.h
+> >> >> > +++ b/arch/x86/include/asm/asm.h
+> >> >> > @@ -116,7 +116,7 @@
+> >> >> >   #ifndef __ASSEMBLER__
+> >> >> >   static __always_inline __pure void *rip_rel_ptr(void *p)
+> >> >> >   {
+> >> >> > -     asm("leaq %c1(%%rip), %0" : "=r"(p) : "i"(p));
+> >> >> > +     asm("leaq %a1, %0" : "=r"(p) : "i"(p));
+> >> >> >
+> >> >> >       return p;
+> >> >> >   }
+> >> >>
+> >> >> Also, this function really should be __attribute_const__ rather than __pure.
+> >> >>
+> >> >
+> >> >No it should really not.
+> >> >
+> >> >rip_rel_ptr() will yield different results depending on whether it is
+> >> >called [by the same code] from the 1:1 mapping or the ordinary kernel
+> >> >virtual mapping of memory, and this is basically the entire reason we
+> >> >need it in the first place.
+> >> >
+> >> >Lying to the compiler about this is not a good idea imo.
+> >>
+> >> Goddamnit, another clang bug. Someone fix the damned thing, please...
+> >
+> >How is this a bug? The %a modifier is documented as producing a memory
+> >reference - the fact that GCC on x86_64 always emits a RIP-relative
+> >reference regardless of whether we are generating PIC code or not is
+> >an implementation detail, and not fundamental to yield correct code.
+> >
+> >Clang produces something that matches the constraints that we gave it
+> >- we cannot blame the tools for the mess of our own making where we
+> >call C code from alternative mappings of memory, while we lie to the
+> >compiler that the code is position dependent and non-relocatable.
+>
+> It is documented to produce an (%rip) reference in the gcc documentation, and gcc is the reference for inline assembly.
+>
 
-For the record: even though I'm not happy with msm-related patches going 
-through drm-misc without additional ack from our side, I think reverting 
-those and reapplying them later will create a bigger mess. So, I'm fine 
-with keeping drm/msm/* bridged patches in.
+Got a link? The one below documents it as a generic modifier, and does
+not mention rIP at all.
 
--- 
-With best wishes
-Dmitry
+https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html#Generic-Operand-Modifiers
+
+> Furthermore, documentation is not reality. Code is.
+
+Not sure I follow your point here. You claim Clang is buggy because
+GCC does not behave according to its own documentation?
