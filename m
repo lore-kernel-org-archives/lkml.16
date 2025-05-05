@@ -1,41 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FB6F2750E0;
-	Mon,  5 May 2025 23:03:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9D4439261E;
+	Mon,  5 May 2025 23:03:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486205; cv=none; b=rtAqrGD4I9sCtIMpfF5wRr4gm44z3vNURGzvRdQ1i+AoHh16yGnqyCGoKlAFpIyKx7T2QRrjl4bxZK5G9g0c61aqpt6V4sotQKr5AtWL9S3JqcekIxCwHC5W9EiWlhrto6HPfwjBGG6LXM14OS7vB5l1EPMqOLPzgkYzpMl9RXE=
+	t=1746486191; cv=none; b=Nr+liYDnRp7IJwCZlZXBubqngnlpL+UHGlp1Yav1MPaV4gKa/9Km/65Ek3PWwABZW+ioGXZhUtc83ZU85VxDakhX8AkuzT0jZ4GeTk4j9UDk9RKm05Xc5/mb7YJy/OMSO42SmS65dhPmAf+kwV68BKVGdWG95mSwkclmCXnIDac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486205; c=relaxed/simple;
-	bh=l/fE66EQd0oDkDJxz9EZ4fSDv3180mfWuZEG3FfUzVg=;
+	s=arc-20240116; t=1746486191; c=relaxed/simple;
+	bh=yctKwRPr9mErDz2aDpiNtK9SI/fSKXIOhr98raWzloA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=AVh9BCEmo+9Eh29PXE3psOHFD2ukYaa3nMHs60n0yFEV6DTsinwzeWMADqTp/QyRzV4yOU7F/MLeCjWIiTNaTtuB0AGXbXxOGeBdHe6D+pDRT/95pNSltnOE5k0O4ohenlJT07tl/nDADFZrrYyByCVRAag35BHX7XfNd09NfT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T7WbPU9B; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=muC5QORvcm8m5pRJscmGkcEYkwItOWlMN/T8KLVk46qNdF2NYU0YKOqml7aIAadNh0G6M6aeujPr32CLi+kX1t0ZaGKqlpLZDdoyp2UF6DOfTbIi07PuR91PlfTj2qq0qnm3tICZIQ83VMgabfKSvo0qSD45nIbYj0kzBXKnFXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LZ500TVk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T7WbPU9B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB685C4CEEF;
-	Mon,  5 May 2025 23:03:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LZ500TVk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A380FC4CEE4;
+	Mon,  5 May 2025 23:03:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486204;
-	bh=l/fE66EQd0oDkDJxz9EZ4fSDv3180mfWuZEG3FfUzVg=;
+	s=k20201202; t=1746486190;
+	bh=yctKwRPr9mErDz2aDpiNtK9SI/fSKXIOhr98raWzloA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=T7WbPU9Bk9J/dlh4GfoxfhNwu8AnDeX1Mb+wk8qwfrLwQDevFOYyhlcV7PgzoASCg
-	 upi5ijuydULRgPTPUTz/ow538/laAr+TQDJeYglSOqs4ghx+Yd9VrP0jwbQaw1c/eq
-	 Q+1PVW2WuC7bMuQN3bUOQDEFws/i7bELLw94T8vJIeZxwRiX+2MAEre4IJU0MyQfvd
-	 0sI6gGfrS+oeN9DhUqD34davqCqBSQu+NmsRn9ln5eHgpwbS/HcN4JNHMPFqSbYRG9
-	 Lb/M1bormv7/QKCPQCeV3YdWZyVuRYHdC2ztyDTfNQS6y9/X9gweyE8LsppFqS15YE
-	 QCKntdnzy6wmQ==
+	b=LZ500TVk5ERuF7F7zCJna+LVcHZO9HsVPzTYIt3Q6YY6e3LMZdLCtwvLFf0L9Hu+U
+	 K0Nx/bU+/PYw/ugopKQMjUDPn0nI+1hQIJUuoub3dzpVODoFxgU2F3o0mGaANk8q6u
+	 /X5IF5JVMJUIi4VVn579IxoQt7HIGibVj8duliLzgCtd7+/DOtdr3d8ZX+1ZU2RliE
+	 +6JE3zNfSfSQuuHMfZDT07ODWxvGaavBOi7eoffTmFB3OGeomCsImwvmYYCnvPKnWF
+	 blx4lWtPMG03O8uTsVQM3ZpjRypEqnifkUdF2EOqYHFhfSnOpa+5sP2lrWuyeKzsdc
+	 ryaVHIXGuuOmg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Valentin Caron <valentin.caron@foss.st.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
+Cc: Hans Verkuil <hverkuil@xs4all.nl>,
+	"Artem S . Tashkinov" <aros@gmx.com>,
+	Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 204/294] pinctrl: devicetree: do not goto err when probing hogs in pinctrl_dt_to_map
-Date: Mon,  5 May 2025 18:55:04 -0400
-Message-Id: <20250505225634.2688578-204-sashal@kernel.org>
+	mchehab@kernel.org,
+	linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 195/294] media: test-drivers: vivid: don't call schedule in loop
+Date: Mon,  5 May 2025 18:54:55 -0400
+Message-Id: <20250505225634.2688578-195-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -50,107 +53,126 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Valentin Caron <valentin.caron@foss.st.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
 
-[ Upstream commit c98868e816209e568c9d72023ba0bc1e4d96e611 ]
+[ Upstream commit e4740118b752005cbed339aec9a1d1c43620e0b9 ]
 
-Cross case in pinctrl framework make impossible to an hogged pin and
-another, not hogged, used within the same device-tree node. For example
-with this simplified device-tree :
+Artem reported that the CPU load was 100% when capturing from
+vivid at low resolution with ffmpeg.
 
-  &pinctrl {
-    pinctrl_pin_1: pinctrl-pin-1 {
-      pins = "dummy-pinctrl-pin";
-    };
-  };
+This was caused by:
 
-  &rtc {
-    pinctrl-names = "default"
-    pinctrl-0 = <&pinctrl_pin_1 &rtc_pin_1>
+while (time_is_after_jiffies(cur_jiffies + wait_jiffies) &&
+       !kthread_should_stop())
+        schedule();
 
-    rtc_pin_1: rtc-pin-1 {
-      pins = "dummy-rtc-pin";
-    };
-  };
+If there are no other processes running that can be scheduled,
+then this is basically a busy-loop.
 
-"pinctrl_pin_1" configuration is never set. This produces this path in
-the code:
+Change it to wait_event_interruptible_timeout() which doesn't
+have that problem.
 
-  really_probe()
-    pinctrl_bind_pins()
-    | devm_pinctrl_get()
-    |   pinctrl_get()
-    |     create_pinctrl()
-    |       pinctrl_dt_to_map()
-    |         // Hog pin create an abort for all pins of the node
-    |         ret = dt_to_map_one_config()
-    |         | /* Do not defer probing of hogs (circular loop) */
-    |         | if (np_pctldev == p->dev->of_node)
-    |         |   return -ENODEV;
-    |         if (ret)
-    |           goto err
-    |
-    call_driver_probe()
-      stm32_rtc_probe()
-        pinctrl_enable()
-          pinctrl_claim_hogs()
-            create_pinctrl()
-              for_each_maps(maps_node, i, map)
-                // Not hog pin is skipped
-                if (pctldev && strcmp(dev_name(pctldev->dev),
-                                      map->ctrl_dev_name))
-                  continue;
-
-At the first call of create_pinctrl() the hogged pin produces an abort to
-avoid a defer of hogged pins. All other pin configurations are trashed.
-
-At the second call, create_pinctrl is now called with pctldev parameter to
-get hogs, but in this context only hogs are set. And other pins are
-skipped.
-
-To handle this, do not produce an abort in the first call of
-create_pinctrl(). Classic pin configuration will be set in
-pinctrl_bind_pins() context. And the hogged pin configuration will be set
-in pinctrl_claim_hogs() context.
-
-Signed-off-by: Valentin Caron <valentin.caron@foss.st.com>
-Link: https://lore.kernel.org/20250116170009.2075544-1-valentin.caron@foss.st.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Hans Verkuil <hverkuil@xs4all.nl>
+Reported-by: Artem S. Tashkinov <aros@gmx.com>
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=219570
+Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/devicetree.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/media/test-drivers/vivid/vivid-kthread-cap.c  | 11 ++++++++---
+ drivers/media/test-drivers/vivid/vivid-kthread-out.c  | 11 ++++++++---
+ .../media/test-drivers/vivid/vivid-kthread-touch.c    | 11 ++++++++---
+ drivers/media/test-drivers/vivid/vivid-sdr-cap.c      | 11 ++++++++---
+ 4 files changed, 32 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/pinctrl/devicetree.c b/drivers/pinctrl/devicetree.c
-index 5ee746cb81f59..6520b88db1105 100644
---- a/drivers/pinctrl/devicetree.c
-+++ b/drivers/pinctrl/devicetree.c
-@@ -143,10 +143,14 @@ static int dt_to_map_one_config(struct pinctrl *p,
- 		pctldev = get_pinctrl_dev_from_of_node(np_pctldev);
- 		if (pctldev)
- 			break;
--		/* Do not defer probing of hogs (circular loop) */
-+		/*
-+		 * Do not defer probing of hogs (circular loop)
-+		 *
-+		 * Return 1 to let the caller catch the case.
-+		 */
- 		if (np_pctldev == p->dev->of_node) {
- 			of_node_put(np_pctldev);
--			return -ENODEV;
-+			return 1;
- 		}
+diff --git a/drivers/media/test-drivers/vivid/vivid-kthread-cap.c b/drivers/media/test-drivers/vivid/vivid-kthread-cap.c
+index 42048727d7ff3..b8cdffc9a1e9e 100644
+--- a/drivers/media/test-drivers/vivid/vivid-kthread-cap.c
++++ b/drivers/media/test-drivers/vivid/vivid-kthread-cap.c
+@@ -765,9 +765,14 @@ static int vivid_thread_vid_cap(void *data)
+ 			next_jiffies_since_start = jiffies_since_start;
+ 
+ 		wait_jiffies = next_jiffies_since_start - jiffies_since_start;
+-		while (time_is_after_jiffies(cur_jiffies + wait_jiffies) &&
+-		       !kthread_should_stop())
+-			schedule();
++		if (!time_is_after_jiffies(cur_jiffies + wait_jiffies))
++			continue;
++
++		wait_queue_head_t wait;
++
++		init_waitqueue_head(&wait);
++		wait_event_interruptible_timeout(wait, kthread_should_stop(),
++					cur_jiffies + wait_jiffies - jiffies);
  	}
- 	of_node_put(np_pctldev);
-@@ -265,6 +269,8 @@ int pinctrl_dt_to_map(struct pinctrl *p, struct pinctrl_dev *pctldev)
- 			ret = dt_to_map_one_config(p, pctldev, statename,
- 						   np_config);
- 			of_node_put(np_config);
-+			if (ret == 1)
-+				continue;
- 			if (ret < 0)
- 				goto err;
- 		}
+ 	dprintk(dev, 1, "Video Capture Thread End\n");
+ 	return 0;
+diff --git a/drivers/media/test-drivers/vivid/vivid-kthread-out.c b/drivers/media/test-drivers/vivid/vivid-kthread-out.c
+index fac6208b51da8..015a7b166a1e6 100644
+--- a/drivers/media/test-drivers/vivid/vivid-kthread-out.c
++++ b/drivers/media/test-drivers/vivid/vivid-kthread-out.c
+@@ -235,9 +235,14 @@ static int vivid_thread_vid_out(void *data)
+ 			next_jiffies_since_start = jiffies_since_start;
+ 
+ 		wait_jiffies = next_jiffies_since_start - jiffies_since_start;
+-		while (time_is_after_jiffies(cur_jiffies + wait_jiffies) &&
+-		       !kthread_should_stop())
+-			schedule();
++		if (!time_is_after_jiffies(cur_jiffies + wait_jiffies))
++			continue;
++
++		wait_queue_head_t wait;
++
++		init_waitqueue_head(&wait);
++		wait_event_interruptible_timeout(wait, kthread_should_stop(),
++					cur_jiffies + wait_jiffies - jiffies);
+ 	}
+ 	dprintk(dev, 1, "Video Output Thread End\n");
+ 	return 0;
+diff --git a/drivers/media/test-drivers/vivid/vivid-kthread-touch.c b/drivers/media/test-drivers/vivid/vivid-kthread-touch.c
+index fa711ee36a3fb..c862689786b69 100644
+--- a/drivers/media/test-drivers/vivid/vivid-kthread-touch.c
++++ b/drivers/media/test-drivers/vivid/vivid-kthread-touch.c
+@@ -135,9 +135,14 @@ static int vivid_thread_touch_cap(void *data)
+ 			next_jiffies_since_start = jiffies_since_start;
+ 
+ 		wait_jiffies = next_jiffies_since_start - jiffies_since_start;
+-		while (time_is_after_jiffies(cur_jiffies + wait_jiffies) &&
+-		       !kthread_should_stop())
+-			schedule();
++		if (!time_is_after_jiffies(cur_jiffies + wait_jiffies))
++			continue;
++
++		wait_queue_head_t wait;
++
++		init_waitqueue_head(&wait);
++		wait_event_interruptible_timeout(wait, kthread_should_stop(),
++					cur_jiffies + wait_jiffies - jiffies);
+ 	}
+ 	dprintk(dev, 1, "Touch Capture Thread End\n");
+ 	return 0;
+diff --git a/drivers/media/test-drivers/vivid/vivid-sdr-cap.c b/drivers/media/test-drivers/vivid/vivid-sdr-cap.c
+index a81f26b769883..1dd59c710dae7 100644
+--- a/drivers/media/test-drivers/vivid/vivid-sdr-cap.c
++++ b/drivers/media/test-drivers/vivid/vivid-sdr-cap.c
+@@ -206,9 +206,14 @@ static int vivid_thread_sdr_cap(void *data)
+ 			next_jiffies_since_start = jiffies_since_start;
+ 
+ 		wait_jiffies = next_jiffies_since_start - jiffies_since_start;
+-		while (time_is_after_jiffies(cur_jiffies + wait_jiffies) &&
+-		       !kthread_should_stop())
+-			schedule();
++		if (!time_is_after_jiffies(cur_jiffies + wait_jiffies))
++			continue;
++
++		wait_queue_head_t wait;
++
++		init_waitqueue_head(&wait);
++		wait_event_interruptible_timeout(wait, kthread_should_stop(),
++					cur_jiffies + wait_jiffies - jiffies);
+ 	}
+ 	dprintk(dev, 1, "SDR Capture Thread End\n");
+ 	return 0;
 -- 
 2.39.5
 
