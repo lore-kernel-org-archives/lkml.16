@@ -1,55 +1,52 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1472F2BE114;
-	Mon,  5 May 2025 22:48:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 961E12BEC31;
+	Mon,  5 May 2025 22:48:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485289; cv=none; b=O4yVb8rNWaYt63N4L0hbL1Bwm330rz8C60hTE+RL/pK1JlF3gBHDVADnDtKQMYExeYLImF7odeq/B6DCEf47SmxVbMvTp7DFGNQLjimqbz+QxwcU+t5oJ1O+8YhTJWk16q3JrsIuHXDYG0HEL+rurmu37KMmtTGso4RXkxmGI0A=
+	t=1746485295; cv=none; b=oaYfA7pIM/E8tAFvdAJXO9RPlGiCk3ZVShSvD7Yr5MNreiazNGaH5JQGvRZ/85rV6T6i1KXMmNr7cGbhRWPCcUuQ5QV0JbAZpfira94wdK0r1uNglMSI1ho1RHWHgi4/Og412EoZqiqBjvZcy3JeBVkrkL0Hlp8E2Vqvapqgvww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485289; c=relaxed/simple;
-	bh=UJYaaSdAosLjH5lr2Dnr+yXpG1ZNSt1L5gHT7QYyB/w=;
+	s=arc-20240116; t=1746485295; c=relaxed/simple;
+	bh=O2mn++1uinwWnkH+yXKQUTW2RQxr5fSjFwSzt/Zof3A=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=KJhOqdmRVwO4IdymZhXFb1FNYGNwiUCK9wus3oa4u2io7yTtv8cZ2w7FxyrHk3ioSo7jMy7XwN+PZmUNWjnJOgg7xfyXE8SKAqiAmNKMzjFZ4KVZgVQx/v1jyZLVS8fzoW9ENiOrpOVYVYpnpfPozgAgaigt63Rirw/AZD/BPSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j3jSimZ/; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=abigqQoC5x1rSAmGjO6SA7dJVjGGzf/G07st3PEnN0TG2GopceA+JRyPunbCHQKq7XfiOXt6ei2TEHlhk5bEitS0+IfFbfMJA6NwUCPbpFi3cjr8ih1HPdlHhbgI/77BGfacxhjnIVwiKpPYhJgl92WaLgCwcWhtsRSu1GGk2+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OnRrDcLr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j3jSimZ/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85BB7C4CEE4;
-	Mon,  5 May 2025 22:48:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OnRrDcLr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDC4BC4CEE4;
+	Mon,  5 May 2025 22:48:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485288;
-	bh=UJYaaSdAosLjH5lr2Dnr+yXpG1ZNSt1L5gHT7QYyB/w=;
+	s=k20201202; t=1746485295;
+	bh=O2mn++1uinwWnkH+yXKQUTW2RQxr5fSjFwSzt/Zof3A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=j3jSimZ/zJuP0WoJHbH/x2ajOxKM2B8WCcOcXlgmPa+Ce4VGPM8vBBf59H++sDCUR
-	 YU5XMJdbaw2l2NZ2Ku/XauEev0paxtMYyS9NNS6nzrPHUeuoCxh6AkdRtmEwDAxJDq
-	 PiOI5rCei35X8B6kjblMzJIsXIf+2aD0bl4G+2/dasu8GdCV+yMf/IN3MUd8j7Ug/g
-	 4CTm45TQjGegIf4SjGauohv3CaOlVXoFPwxzM9/EOLjZPDhgYvFmo4XkY96sL48l9e
-	 MCpiJ8o607OKlscoMUW2S/th2ENpFHDbyfNKU1AE1w3l4237X8kYqnqi5bfgQePc8g
-	 wDZfPt0Vj0nvg==
+	b=OnRrDcLrKYTX4LdYkbHmSEf/PkxU96FR0PjKDEq4Sv52eN/M0g9zEAlTLPeZwVIFG
+	 FTtmg4mNSifm1OoMPAPmCxAvBEZj+hiaMvD1Jg12HzLP8dkVmNiV62RKXIc7jd2Lu/
+	 443ftYAl+hQpvCcxI9NXZa6zHNV+5SkAZORFJMLrNiOGVmSG8bEUW0+svuZmMtLNeU
+	 Oeiy8PDtQezlJ/E5UoCY0WUaXVPcPckJPbiNmZKEK/eCvl9f5wzyytcACbWah2/5ub
+	 008OwnYQAILWU+ozobwZkuCUOUfCK+h0lWwXdXzeeiDQl1E6nWQFJU2jBzWLrPxrqU
+	 6n/G5MnSTq25g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Charlene Liu <Charlene.Liu@amd.com>,
-	Alvin Lee <alvin.lee2@amd.com>,
-	Zaeem Mohamed <zaeem.mohamed@amd.com>,
-	Daniel Wheeler <daniel.wheeler@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
+Cc: =?UTF-8?q?N=C3=ADcolas=20F=2E=20R=2E=20A=2E=20Prado?= <nfraprado@collabora.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	harry.wentland@amd.com,
-	sunpeng.li@amd.com,
-	christian.koenig@amd.com,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	jun.lei@amd.com,
-	Daniel.Sa@amd.com,
-	alex.hung@amd.com,
-	rostrows@amd.com,
-	Wayne.Lin@amd.com,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 6.12 253/486] drm/amd/display: fix dcn4x init failed
-Date: Mon,  5 May 2025 18:35:29 -0400
-Message-Id: <20250505223922.2682012-253-sashal@kernel.org>
+	lgirdwood@gmail.com,
+	perex@perex.cz,
+	tiwai@suse.com,
+	matthias.bgg@gmail.com,
+	ckeepax@opensource.cirrus.com,
+	krzysztof.kozlowski@linaro.org,
+	Parker.Yang@mediatek.com,
+	yr.yang@mediatek.com,
+	linux-sound@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: [PATCH AUTOSEL 6.12 255/486] ASoC: mediatek: mt8188: Treat DMIC_GAINx_CUR as non-volatile
+Date: Mon,  5 May 2025 18:35:31 -0400
+Message-Id: <20250505223922.2682012-255-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -59,99 +56,56 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Charlene Liu <Charlene.Liu@amd.com>
+From: Nícolas F. R. A. Prado <nfraprado@collabora.com>
 
-[ Upstream commit 23ef388a84c72b0614a6c10f866ffeac7e807719 ]
+[ Upstream commit 7d87bde21c73731ddaf15e572020f80999c38ee3 ]
 
-[why]
-failed due to cmdtable not created.
-switch atombios cmdtable as default.
+The DMIC_GAINx_CUR registers contain the current (as in present) gain of
+each DMIC. During capture, this gain will ramp up until a target value
+is reached, and therefore the register is volatile since it is updated
+automatically by hardware.
 
-Reviewed-by: Alvin Lee <alvin.lee2@amd.com>
-Signed-off-by: Charlene Liu <Charlene.Liu@amd.com>
-Signed-off-by: Zaeem Mohamed <zaeem.mohamed@amd.com>
-Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+However, after capture the register's value returns to the value that
+was written to it. So reading these registers returns the current gain,
+and writing configures the initial gain for every capture.
+
+>From an audio configuration perspective, reading the instantaneous gain
+is not really useful. Instead, reading back the initial gain that was
+configured is the desired behavior. For that reason, consider the
+DMIC_GAINx_CUR registers as non-volatile, so the regmap's cache can be
+used to retrieve the values, rather than requiring pm runtime resuming
+the device.
+
+Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Link: https://patch.msgid.link/20250225-genio700-dmic-v2-3-3076f5b50ef7@collabora.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/bios/command_table2.c     | 9 ---------
- .../gpu/drm/amd/display/dc/bios/command_table_helper2.c  | 3 +--
- 2 files changed, 1 insertion(+), 11 deletions(-)
+ sound/soc/mediatek/mt8188/mt8188-afe-pcm.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/bios/command_table2.c b/drivers/gpu/drm/amd/display/dc/bios/command_table2.c
-index 7d18f372ce7ab..6bc59b7ef007b 100644
---- a/drivers/gpu/drm/amd/display/dc/bios/command_table2.c
-+++ b/drivers/gpu/drm/amd/display/dc/bios/command_table2.c
-@@ -101,7 +101,6 @@ static void init_dig_encoder_control(struct bios_parser *bp)
- 		bp->cmd_tbl.dig_encoder_control = encoder_control_digx_v1_5;
- 		break;
- 	default:
--		dm_output_to_console("Don't have dig_encoder_control for v%d\n", version);
- 		bp->cmd_tbl.dig_encoder_control = encoder_control_fallback;
- 		break;
- 	}
-@@ -238,7 +237,6 @@ static void init_transmitter_control(struct bios_parser *bp)
- 		bp->cmd_tbl.transmitter_control = transmitter_control_v1_7;
- 		break;
- 	default:
--		dm_output_to_console("Don't have transmitter_control for v%d\n", crev);
- 		bp->cmd_tbl.transmitter_control = transmitter_control_fallback;
- 		break;
- 	}
-@@ -408,8 +406,6 @@ static void init_set_pixel_clock(struct bios_parser *bp)
- 		bp->cmd_tbl.set_pixel_clock = set_pixel_clock_v7;
- 		break;
- 	default:
--		dm_output_to_console("Don't have set_pixel_clock for v%d\n",
--			 BIOS_CMD_TABLE_PARA_REVISION(setpixelclock));
- 		bp->cmd_tbl.set_pixel_clock = set_pixel_clock_fallback;
- 		break;
- 	}
-@@ -554,7 +550,6 @@ static void init_set_crtc_timing(struct bios_parser *bp)
- 			set_crtc_using_dtd_timing_v3;
- 		break;
- 	default:
--		dm_output_to_console("Don't have set_crtc_timing for v%d\n", dtd_version);
- 		bp->cmd_tbl.set_crtc_timing = NULL;
- 		break;
- 	}
-@@ -671,8 +666,6 @@ static void init_enable_crtc(struct bios_parser *bp)
- 		bp->cmd_tbl.enable_crtc = enable_crtc_v1;
- 		break;
- 	default:
--		dm_output_to_console("Don't have enable_crtc for v%d\n",
--			 BIOS_CMD_TABLE_PARA_REVISION(enablecrtc));
- 		bp->cmd_tbl.enable_crtc = NULL;
- 		break;
- 	}
-@@ -864,8 +857,6 @@ static void init_set_dce_clock(struct bios_parser *bp)
- 		bp->cmd_tbl.set_dce_clock = set_dce_clock_v2_1;
- 		break;
- 	default:
--		dm_output_to_console("Don't have set_dce_clock for v%d\n",
--			 BIOS_CMD_TABLE_PARA_REVISION(setdceclock));
- 		bp->cmd_tbl.set_dce_clock = NULL;
- 		break;
- 	}
-diff --git a/drivers/gpu/drm/amd/display/dc/bios/command_table_helper2.c b/drivers/gpu/drm/amd/display/dc/bios/command_table_helper2.c
-index 73458e2951034..df8139bda142b 100644
---- a/drivers/gpu/drm/amd/display/dc/bios/command_table_helper2.c
-+++ b/drivers/gpu/drm/amd/display/dc/bios/command_table_helper2.c
-@@ -87,8 +87,7 @@ bool dal_bios_parser_init_cmd_tbl_helper2(
- 		return true;
- 
- 	default:
--		/* Unsupported DCE */
--		BREAK_TO_DEBUGGER();
-+		*h = dal_cmd_tbl_helper_dce112_get_table2();
- 		return false;
- 	}
- }
+diff --git a/sound/soc/mediatek/mt8188/mt8188-afe-pcm.c b/sound/soc/mediatek/mt8188/mt8188-afe-pcm.c
+index 73e5c63aeec87..d36520c6272dd 100644
+--- a/sound/soc/mediatek/mt8188/mt8188-afe-pcm.c
++++ b/sound/soc/mediatek/mt8188/mt8188-afe-pcm.c
+@@ -2855,10 +2855,6 @@ static bool mt8188_is_volatile_reg(struct device *dev, unsigned int reg)
+ 	case AFE_DMIC3_SRC_DEBUG_MON0:
+ 	case AFE_DMIC3_UL_SRC_MON0:
+ 	case AFE_DMIC3_UL_SRC_MON1:
+-	case DMIC_GAIN1_CUR:
+-	case DMIC_GAIN2_CUR:
+-	case DMIC_GAIN3_CUR:
+-	case DMIC_GAIN4_CUR:
+ 	case ETDM_IN1_MONITOR:
+ 	case ETDM_IN2_MONITOR:
+ 	case ETDM_OUT1_MONITOR:
 -- 
 2.39.5
 
