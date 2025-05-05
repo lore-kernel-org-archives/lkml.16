@@ -1,151 +1,110 @@
-Received: from smtp-fw-80008.amazon.com (smtp-fw-80008.amazon.com [99.78.197.219])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BBA525A2AD;
-	Mon,  5 May 2025 19:45:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.219
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D1D36DCE1
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 19:47:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746474308; cv=none; b=tUTYFWxlJjUg6GBUtJwY407x1sFiHynIZ8/1WzQjSKs1OziEPtIH0Cx4CgjrnMM3IcgeGYTZT9Z+izvGQvZ1j3Ux67a9ywtypK4+BKLJjhoVEZgVDlREfGNT9D41B0CdFhRQ6QHQgn7j+IQxTk51fxtzGpPfw9e5F2u7Z6hEg4I=
+	t=1746474422; cv=none; b=gbSBkz+Afqx2kq+mbJQr5bAM8ZsG4+cuVbm2xLWqEZ/wiqdlTYIM7dD/NnQ0RyW42LQx8x+PWoQD5me0I12mAgfntS74dbPIxNSO9jTnB9zCTzF8KeszEGuG6ELqAmZ2YBkgEvk43WmAQ/NQHqPWGRzs9/Be5JKkjJKMsILU3HU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746474308; c=relaxed/simple;
-	bh=E5D00Fn3Ews3NrcKKo40oyb0gzJDlFcBX1biTaaaB/M=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NHyRcxsFHfKcU7+aoWOlhZLFpnJaXTTufXHpHW4FWjMa6DOirTwLWwU+vTkApk89Ef9siptKh0pMa4JUG9+L4f9QsORcANd2PKKGNFPife0mufLOCvY6Ii1VIWp87urA1fo6pShXmbD7Gtt0fuPq3Fr4H50+GT9wtKNb1j42Vq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=mg74TtMj; arc=none smtp.client-ip=99.78.197.219
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1746474422; c=relaxed/simple;
+	bh=gHO9fquV+zDgJiymZ5293Xw5P7vTTrARFXDIotkcy9k=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=FzsKNpXMYktC61PuPhMG0/zd/jr/0JNpLS9HBOuM5YR856ze7b6IQONdQfIF5N9qyiUvqPLlbGDnj7N1+rT+9mRJqVpyKiG1qRZg9BGlpkNQB+c1sHlsvH4MVeHDBlj3bWAtz9eUGczOSOpD9Wc6c6ufFNMEPCbkgKkQPzJ44JA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=Iqwdar3u; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="mg74TtMj"
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="Iqwdar3u"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-301a4d5156aso6352224a91.1
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 12:47:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1746474306; x=1778010306;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=in13V4Hpf+rM5riCqQp8PkhP40WaDgpbmkmr0PaeIdU=;
-  b=mg74TtMjtX5BsB7/ecNyyiha/yPhviJqK8hNBpLaygWG4iRQB+IPxXS3
-   m++796nkesS725aK6nKi1ZtYB1Qj01sSsdk90v192n0JXULNgA7bMoitK
-   Yyxu73OQ3a/KOBCyP6YttORTdG6GcipFSicy5rSyXe5dBWPu49w7ylTuX
-   g=;
-X-IronPort-AV: E=Sophos;i="6.15,264,1739836800"; 
-   d="scan'208";a="193851574"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
-  by smtp-border-fw-80008.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 19:45:04 +0000
-Received: from EX19MTAUWC001.ant.amazon.com [10.0.21.151:50948]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.10.32:2525] with esmtp (Farcaster)
- id a2fb1d49-05fb-4bfc-b186-5b0439853504; Mon, 5 May 2025 19:45:04 +0000 (UTC)
-X-Farcaster-Flow-ID: a2fb1d49-05fb-4bfc-b186-5b0439853504
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Mon, 5 May 2025 19:45:03 +0000
-Received: from 6c7e67bfbae3.amazon.com (10.187.170.18) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Mon, 5 May 2025 19:44:59 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <kuniyu@amazon.com>
-CC: <alexander@mihalicyn.com>, <bluca@debian.org>, <brauner@kernel.org>,
-	<daan.j.demeyer@gmail.com>, <davem@davemloft.net>, <david@readahead.eu>,
-	<edumazet@google.com>, <horms@kernel.org>, <jack@suse.cz>,
-	<jannh@google.com>, <kuba@kernel.org>, <lennart@poettering.net>,
-	<linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<me@yhndnzj.com>, <netdev@vger.kernel.org>, <oleg@redhat.com>,
-	<pabeni@redhat.com>, <viro@zeniv.linux.org.uk>, <zbyszek@in.waw.pl>
-Subject: Re: [PATCH RFC v3 08/10] net, pidfs, coredump: only allow coredumping tasks to connect to coredump socket
-Date: Mon, 5 May 2025 12:44:30 -0700
-Message-ID: <20250505194451.22723-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250505193828.21759-1-kuniyu@amazon.com>
-References: <20250505193828.21759-1-kuniyu@amazon.com>
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1746474419; x=1747079219; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Plt6knEw0shoMZnzf8M4P2C9rMIfWDgHR7NQgQL6Uzo=;
+        b=Iqwdar3u63rvXa/MpAnbXNYy19YZgJgHnzUCcqqyT/AL1sDLmL2rXYakDMexVBeliY
+         VQLE6YPgzO9gmmcnlHxWFCnogLzKTtGcsm4rrB1qWRmVCYuebWSfWHLxbo1XNo05eiB6
+         lDFpXXbwoPzTIMQdAYWnIbpGw3zQY3jB2KeUOO61D/dQwv2PkfG5eQVdKnmreFGjFRu3
+         6iecEWgFKjfi1tULahqk6Dbov55yRCEYw+kkGS6Df+hyRyNbUswFZ1QPdHY4+vhTZlN6
+         FSKclSTSmlbUP1/j9orKZ++7WKnOsGTP30F24JkZoxIMHnWNMN8lM3EE1YIDK9MFMogC
+         MccQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746474419; x=1747079219;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Plt6knEw0shoMZnzf8M4P2C9rMIfWDgHR7NQgQL6Uzo=;
+        b=aZbH+G19W/yrxLys/NA0XMSw894axbJRwFRZpL1XHxyprD464U33eVzaA+EQF03kKf
+         wTqEC1vJtYxfVAT/85b0Y64e66HGbTMBvvzzak5Dv1P9og70tJq7jazhpTStCxXc5eDn
+         aFVHwgfW/kpPlD6UswupWiMzhf4zz3uKL7T4htsjqV5AiRYI0UpIhscDFjgibznSXpDE
+         w6Ra3uJTKtS/REEXNQgkiFZdRkiYYL0ywiOlvdO46Fw1PLajgxwE4BqWgcNa5/Ln6FVx
+         xZFm6Ly5EKD0RXcMkZtc5/OZqLWS30c3cCFwFUSlJGGNJQKWS/JjdpFlV7HDA5tjptKT
+         giDA==
+X-Forwarded-Encrypted: i=1; AJvYcCUREh9rj1GJtYtTKPgVJPcNVn5B15wBQ3s9KqlMtswPXce6gmJRKyVQy6N6J4VcsnSrved7f+/rRVVQ9I8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIfvOzlOHaSp4Og7UUATJpx90GIIiKXIvE+0LQusGIIAVYZNUV
+	gOfKS288NB0n531ADSTpP8yz3Qj6rLYjNcZuyFKh8zzT5LMNJQEdgs1BED8+MR0=
+X-Gm-Gg: ASbGnctaUbwAYg4/jHoFm/k5PaqRx5X6tBpPJlKVgNma61L+l2UHnut7t23udWu3COq
+	6pt6iHS4kvWF/kplxgtaTWgDtDts4llqrqZLj4YkxgbfU/OAUZ6bKY0DJsli+M2LrB5X6scyvel
+	sg6KonQ9UN6HPKoVR2Zj3ZPgkoLl1PHRZAtesS47SD5xChXuIBS8XQiyZ3TNVpdtbTmj1KoqxB8
+	m3K+7jnFee6DzvxrqhXqp6D6JYSU8GypZOPCCVGumigLhs97RSZJL1IQ5HhSsBOideIuNRvsR5p
+	M+iCeFL0+/z482A3t91D9gvcEf5R1HDxvdQ+3fyBd0hZI0wBOgEkGw==
+X-Google-Smtp-Source: AGHT+IF9N2TMIjAxtdrrQ2QWC7apsZXf1n2ya4YvkWtGuqNlHbY6PxtJ98wUVfZSK5UimT5DfxWc6Q==
+X-Received: by 2002:a17:90b:2744:b0:2fe:b8b9:5aa6 with SMTP id 98e67ed59e1d1-30a800a11cfmr172541a91.31.1746474419573;
+        Mon, 05 May 2025 12:46:59 -0700 (PDT)
+Received: from atishp.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e15228ce9sm59083085ad.163.2025.05.05.12.46.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 May 2025 12:46:59 -0700 (PDT)
+From: Atish Patra <atishp@rivosinc.com>
+Date: Mon, 05 May 2025 12:46:53 -0700
+Subject: [PATCH] RISC-V: KVM: Remove experimental tag for RISC-V
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: EX19D043UWA004.ant.amazon.com (10.13.139.41) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250505-kvm_tag_change-v1-1-6dbf6af240af@rivosinc.com>
+X-B4-Tracking: v=1; b=H4sIAKwVGWgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDINTNLsuNL0lMj4fKpqQmGpkYmxomGpuaKgE1FRSlpmVWgA2Mjq2tBQA
+ HM59HYAAAAA==
+X-Change-ID: 20250505-kvm_tag_change-dea24351a355
+To: Anup Patel <anup@brainfault.org>, Atish Patra <atishp@atishpatra.org>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>
+Cc: kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, 
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Atish Patra <atishp@rivosinc.com>
+X-Mailer: b4 0.15-dev-42535
 
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-Date: Mon, 5 May 2025 12:35:50 -0700
-> From: Jann Horn <jannh@google.com>
-> Date: Mon, 5 May 2025 21:10:28 +0200
-> > On Mon, May 5, 2025 at 8:41 PM Kuniyuki Iwashima <kuniyu@amazon.com> wrote:
-> > > From: Christian Brauner <brauner@kernel.org>
-> > > Date: Mon, 5 May 2025 16:06:40 +0200
-> > > > On Mon, May 05, 2025 at 03:08:07PM +0200, Jann Horn wrote:
-> > > > > On Mon, May 5, 2025 at 1:14 PM Christian Brauner <brauner@kernel.org> wrote:
-> > > > > > Make sure that only tasks that actually coredumped may connect to the
-> > > > > > coredump socket. This restriction may be loosened later in case
-> > > > > > userspace processes would like to use it to generate their own
-> > > > > > coredumps. Though it'd be wiser if userspace just exposed a separate
-> > > > > > socket for that.
-> > > > >
-> > > > > This implementation kinda feels a bit fragile to me... I wonder if we
-> > > > > could instead have a flag inside the af_unix client socket that says
-> > > > > "this is a special client socket for coredumping".
-> > > >
-> > > > Should be easily doable with a sock_flag().
-> > >
-> > > This restriction should be applied by BPF LSM.
-> > 
-> > I think we shouldn't allow random userspace processes to connect to
-> > the core dump handling service and provide bogus inputs; that
-> > unnecessarily increases the risk that a crafted coredump can be used
-> > to exploit a bug in the service. So I think it makes sense to enforce
-> > this restriction in the kernel.
-> 
-> It's already restricted by /proc/sys/kernel/core_pattern.
-> We don't need a duplicated logic.
-> 
-> Even when the process holding the listener dies, you can
-> still avoid such a leak.
-> 
-> e.g.
-> 
-> 1. Set up a listener
-> 2. Put the socket into a bpf map
-> 3. Attach LSM at connect()
-> 
-> Then, the LSM checks if the destination socket is
-> 
->   * listening on the name specified in /proc/sys/kernel/core_pattern
->   * exists in the associated BPF map
+RISC-V KVM port is no longer experimental. Let's remove it to avoid
+confusion.
 
-and LSM can check if the source socket is a kernel socket too.
+Signed-off-by: Atish Patra <atishp@rivosinc.com>
+---
+ arch/riscv/kvm/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/arch/riscv/kvm/Kconfig b/arch/riscv/kvm/Kconfig
+index 0c3cbb0915ff..704c2899197e 100644
+--- a/arch/riscv/kvm/Kconfig
++++ b/arch/riscv/kvm/Kconfig
+@@ -18,7 +18,7 @@ menuconfig VIRTUALIZATION
+ if VIRTUALIZATION
+ 
+ config KVM
+-	tristate "Kernel-based Virtual Machine (KVM) support (EXPERIMENTAL)"
++	tristate "Kernel-based Virtual Machine (KVM) support"
+ 	depends on RISCV_SBI && MMU
+ 	select HAVE_KVM_IRQCHIP
+ 	select HAVE_KVM_IRQ_ROUTING
 
-> 
-> So, if the socket is dies and a malicious user tries to hijack
-> the core_pattern name, LSM still rejects such connect().
-> 
-> Later, the admin can restart the program with different core_pattern.
-> 
-> 
-> > 
-> > My understanding is that BPF LSM creates fairly tight coupling between
-> > userspace and the kernel implementation, and it is kind of unwieldy
-> > for userspace. (I imagine the "man 5 core" manpage would get a bit
-> > longer and describe more kernel implementation detail if you tried to
-> > show how to write a BPF LSM that is capable of detecting unix domain
-> > socket connections to a specific address that are not initiated by
-> > core dumping.) I would like to keep it possible to implement core
-> > userspace functionality in a best-practice way without needing eBPF.
-> 
-> I think the untrusted user scenario is paranoia in most cases,
-> and the man page just says "if you really care, use BPF LSM".
-> 
-> If someone can listen on a name AND set it to core_pattern, most
-> likely something worse already happened.
-> 
-> 
-> > 
-> > > It's hard to loosen such a default restriction as someone might
-> > > argue that's unexpected and regression.
-> > 
-> > If userspace wants to allow other processes to connect to the core
-> > dumping service, that's easy to implement - userspace can listen on a
-> > separate address that is not subject to these restrictions.
-> > 
+---
+base-commit: f15d97df5afae16f40ecef942031235d1c6ba14f
+change-id: 20250505-kvm_tag_change-dea24351a355
+--
+Regards,
+Atish patra
+
