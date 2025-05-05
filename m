@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04EE1288C29;
-	Mon,  5 May 2025 23:06:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1606396EDE;
+	Mon,  5 May 2025 23:06:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486407; cv=none; b=f7pfcto84QFJQs5C42trLhRgIx9qzciM1XFb/irzi+XZFy8VYZFDKKarlakJdWZ4T2atQmPbB1N8PhGbcV+2smupZpf9TdQkPpkBa6mW2YoNW0GRagLZq5Yl+zxcL6zZfzNRA34RKC/UvxOe4DKOdUdBzB3M8CA0LrqpzUYSME8=
+	t=1746486397; cv=none; b=rHp8v9lqoDQGut/l/a3XMiNao9e3ivT1Dgy690g77hnHcct6SHbqNWfrotELx8WpEjTHTpee7wGpoo0xGfAcd9LGq2XLeF7dJV7H7NpOC+rPi6S7b2g5R3ozPEHwQiW1W+zJL13gxgTVVhxZVKw7gPTNiQHn2x4G6GM95VifYBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486407; c=relaxed/simple;
-	bh=zEWgyvgE0K3/6juLqJn8ugmpW06gemNbsD2fMXiHnzM=;
+	s=arc-20240116; t=1746486397; c=relaxed/simple;
+	bh=m2GFJbyIvE55mB9sL7la2Qs3ZSWL0oLBjNaV/X80mp4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nqY9mkY/kvrhF0wqyMjAs+o5g1DIsLm7TxnXpOpuyuGLEIEOEZjzT1HZXGdo9RD0Cn4bVs9krvWO8MBm80M2gZP01ets18kNvbZ2Vux3xHjlBok6lqJZxwYLnfnc9QJL3A/04y1QIdjlvfkH5Rxli0UkLgO2y9rrK8Bmq/Jc3OM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pkqt+POw; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=j9luuiGJxwJW/HHBQRAZODIVUxsYoyDFHSBU3+u5OEdaiDoFrEDQOcwRrY9LYtDSmCd2Zy8hL7H8TJPmJIiK+iBOFuqy4906L6cLNzsl4bLRGyvI8oBDyjzlr2KDYpOT6JjV8JMuUO0dCrBCbEhWjXuOPdtCHC4wHaPzIbZPHmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e8dP6+MD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pkqt+POw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45597C4CEF1;
-	Mon,  5 May 2025 23:06:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e8dP6+MD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 052F5C4CEF1;
+	Mon,  5 May 2025 23:06:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486405;
-	bh=zEWgyvgE0K3/6juLqJn8ugmpW06gemNbsD2fMXiHnzM=;
+	s=k20201202; t=1746486395;
+	bh=m2GFJbyIvE55mB9sL7la2Qs3ZSWL0oLBjNaV/X80mp4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Pkqt+POw8OFS+cUjFhbDIWLBsudRtxjNfd3hFdcL6EpUToCEv1Wykvu6Ayi5dsI04
-	 PxFDXmdRPkwGn+XABxoav8nVgks9jVRsMo0LTc4WXth8KpoWEXP+WaP7ogqTDwFfoC
-	 MHqE8SXDOTpLLizXTsiu6qK6X0R8MaXIkYflWLttg4cdBzN+3woicjIm7pP/O46hgF
-	 4fPRYdyp5xayOcLsES83Xy2ew3Yv7dFy1gv/89ozBycHdXBkBU8h/2SMMOSVsmwlXh
-	 7HpSX4NKXM01bqPk3O+TK/RYIArWWAIj7FzQWf9UI1HiBgOsM9Rktu35YOf2xgvPcO
-	 tTM3q8mn6X1zA==
+	b=e8dP6+MDzZYcqJ+NfokNkVk+kyisLRLlQZn4GHZ4p1ss8aNzwyHYb3BFbCCCqXFfV
+	 bKGq9yXQtBlv69Vbt6LYpXmhLWm36DyFRR5XWoot0NqP7z8JkpXJ/OnJGvvQHZu8wi
+	 aHDVV8FDnEJIrLqGUtTiLZK17f77uDEM0lXF6DkSctdIc/G2+hAWY/9+9GpJrVq8Kp
+	 avj68vOnaOOs2kDFFJMn3FfCOQL2M/VgUKGceoUvDuw9wKZb3DI7y1MHLVt743QTiD
+	 QFPkrbB9/1mjGd59SRaW4R3O3JZSWwtnMn9vHOoo7/x96wwlcmGiVyZBzwqvhTGVH1
+	 uuqotkUouEcfw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Tudor Ambarus <tudor.ambarus@linaro.org>,
-	Jassi Brar <jassisinghbrar@gmail.com>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 6.1 012/212] mailbox: use error ret code of of_parse_phandle_with_args()
-Date: Mon,  5 May 2025 19:03:04 -0400
-Message-Id: <20250505230624.2692522-12-sashal@kernel.org>
+Cc: Matt Johnston <matt@codeconstruct.com.au>,
+	Miklos Szeredi <mszeredi@redhat.com>,
+	Sasha Levin <sashal@kernel.org>,
+	miklos@szeredi.hu,
+	linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.1 006/212] fuse: Return EPERM rather than ENOSYS from link()
+Date: Mon,  5 May 2025 19:02:58 -0400
+Message-Id: <20250505230624.2692522-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505230624.2692522-1-sashal@kernel.org>
 References: <20250505230624.2692522-1-sashal@kernel.org>
@@ -49,43 +51,34 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.1.136
 Content-Transfer-Encoding: 8bit
 
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
+From: Matt Johnston <matt@codeconstruct.com.au>
 
-[ Upstream commit 24fdd5074b205cfb0ef4cd0751a2d03031455929 ]
+[ Upstream commit 8344213571b2ac8caf013cfd3b37bc3467c3a893 ]
 
-In case of error, of_parse_phandle_with_args() returns -EINVAL when the
-passed index is negative, or -ENOENT when the index is for an empty
-phandle. The mailbox core overwrote the error return code with a less
-precise -ENODEV. Use the error returned code from
-of_parse_phandle_with_args().
+link() is documented to return EPERM when a filesystem doesn't support
+the operation, return that instead.
 
-Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
-Signed-off-by: Jassi Brar <jassisinghbrar@gmail.com>
+Link: https://github.com/libfuse/libfuse/issues/925
+Signed-off-by: Matt Johnston <matt@codeconstruct.com.au>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mailbox/mailbox.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ fs/fuse/dir.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/mailbox/mailbox.c b/drivers/mailbox/mailbox.c
-index 4229b9b5da98f..6f54501dc7762 100644
---- a/drivers/mailbox/mailbox.c
-+++ b/drivers/mailbox/mailbox.c
-@@ -350,11 +350,12 @@ struct mbox_chan *mbox_request_channel(struct mbox_client *cl, int index)
+diff --git a/fs/fuse/dir.c b/fs/fuse/dir.c
+index c431abbf48e66..0dbacdd7bb0d8 100644
+--- a/fs/fuse/dir.c
++++ b/fs/fuse/dir.c
+@@ -1068,6 +1068,8 @@ static int fuse_link(struct dentry *entry, struct inode *newdir,
+ 	else if (err == -EINTR)
+ 		fuse_invalidate_attr(inode);
  
- 	mutex_lock(&con_mutex);
++	if (err == -ENOSYS)
++		err = -EPERM;
+ 	return err;
+ }
  
--	if (of_parse_phandle_with_args(dev->of_node, "mboxes",
--				       "#mbox-cells", index, &spec)) {
-+	ret = of_parse_phandle_with_args(dev->of_node, "mboxes", "#mbox-cells",
-+					 index, &spec);
-+	if (ret) {
- 		dev_dbg(dev, "%s: can't parse \"mboxes\" property\n", __func__);
- 		mutex_unlock(&con_mutex);
--		return ERR_PTR(-ENODEV);
-+		return ERR_PTR(ret);
- 	}
- 
- 	chan = ERR_PTR(-EPROBE_DEFER);
 -- 
 2.39.5
 
