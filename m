@@ -1,51 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45DAF2BCF46;
-	Mon,  5 May 2025 22:54:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE9D02D4B52;
+	Mon,  5 May 2025 22:54:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485670; cv=none; b=O0Tip5FjEefhdRX8zOGuqsaxMaZ2QrafzKS/7XtB6G9pN1wkf9wC3OPA8Bx5D2yVTuXI14T8rm1aygH8Eli4WXwqUfENiRt6bffuefLPNLT48cif/y79NR1x+7208Ypa3jr1R6xQ4idq46hYTwwJrExBR4wxlNuktsUAAmm23dg=
+	t=1746485663; cv=none; b=YdjAo947wTy4vz1thUcPMbbk9idzctnoNXX43uE1tOZJeEb7jZeSAFosBpVuwY4plSoJwpLDctwETS4Nj1K5Xtl+7TGh3ReLlQdChJ8do64y919tPuGOLsIH8JXUrZh28D7oy1vwWSbYJrThBC8cIIKoKS49HXwIC9YP0jmlJvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485670; c=relaxed/simple;
-	bh=QllDEA0wxQmEYPCZ0PctIfoSoTB7ZtFb1wtsfCkJV1M=;
+	s=arc-20240116; t=1746485663; c=relaxed/simple;
+	bh=z77jfmyej/yMnuJrkNXx+aARPMalx131fcoxPVu2lzw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=eCF5+cGVPdVWvcUx8K7djCNmJaByv3UQVS3q9zWUWpqDyryt51VIPYwj/jNGrcKAXqZgl+PntzXvd418tvPDfCualIQIhH+owRHyAScZ5FpzCgkmCyYkIYz45vs+9La/oNiW7jJVd8g/F2ZwCg1+Gr+0Fs9I6AehaGxvodJqH0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S/GQ9JMA; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=bw7IVmXRyYleV2l5A/+SN5VmvnE77BGpJVI0T/XoG+WCECiKmepGpnLRAgEDvrxjmtev40VgVkWqfvs3xrlXmD0jNRIl9mUH6Dze+FGhdpgswkrJa/Yf9fmi1a7pQsMA8q5w9Z5FzZVPZdsUlEKAplDi5+uiYAziw/GpF1cnXME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uAylgQ5Z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S/GQ9JMA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 832E7C4CEED;
-	Mon,  5 May 2025 22:54:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uAylgQ5Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47BC1C4CEE4;
+	Mon,  5 May 2025 22:54:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485670;
-	bh=QllDEA0wxQmEYPCZ0PctIfoSoTB7ZtFb1wtsfCkJV1M=;
+	s=k20201202; t=1746485662;
+	bh=z77jfmyej/yMnuJrkNXx+aARPMalx131fcoxPVu2lzw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=S/GQ9JMA1p7QAaoATRRL95OCm36Om6+rrFCDqOF9zunbgDpO7rHBKdoosx4A5WaQh
-	 OvEIG3G3A3qDt2noZ853SVOdCLdzwApKwLng/QEp6izSAdLnECjFxcgwscp6Xvwd3R
-	 cYTHjprwV2ZaYJyOIrXCsZx5APkc0jYUmefpmaihKYqGTOrH2LlvaKSjUdZ7ffX/OF
-	 v9ul/Yd7TtFaqmed52qspx3dH/hxG0CnXIXym/jsC0XzYvQBD0oM0+N+EIY3H4jYZU
-	 oDdp3EUkQptU3oyonfB12kDpCkXNiUhzn+tzVbOna1xuuJyjbkEgMlwRfKJUukHbR7
-	 wZdmFof92E+WQ==
+	b=uAylgQ5Ztjw/ozNGzJU8m38h0tOi97s2NbpJ1rZJFLfLLx6tXAvO6hhuNO6bT5csP
+	 dDzOOhkjaun+8tx9vcxBMwFt95w59jf5bPr3fMMPrxH0nru+cwA98oPTNznTFp2TbR
+	 sCUgvM1uDgYnQ02ivRLJEZ8lMx2MB6TNjctHJdq4NBSdD/k0vz6xIIC4rsWjkdYnBI
+	 Ljz0Us2JXUKVJukHmi/FrAI7HOOHsCaLgypN9ZHvJ6NXmcYVMLTMcHa6yANkfg7usv
+	 E+p7+JJsHiYCujLHtR3MsAzJrsXx7TCYALtcyRJku42Cid4DrSUPtWrx/idwK0HFwt
+	 DUi2fzkUGq67g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
-	FUKAUMI Naoki <naoki@radxa.com>,
-	Heiko Stuebner <heiko@sntech.de>,
+Cc: Oleg Nesterov <oleg@redhat.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Christian Brauner <brauner@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	hjc@rock-chips.com,
-	andy.yan@rock-chips.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	dri-devel@lists.freedesktop.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.12 419/486] drm/rockchip: vop2: Improve display modes handling on RK3588 HDMI0
-Date: Mon,  5 May 2025 18:38:15 -0400
-Message-Id: <20250505223922.2682012-419-sashal@kernel.org>
+	akpm@linux-foundation.org,
+	mhocko@suse.com,
+	Liam.Howlett@Oracle.com,
+	mjguzik@gmail.com,
+	alexjlzheng@tencent.com,
+	pasha.tatashin@soleen.com
+Subject: [PATCH AUTOSEL 6.12 414/486] exit: change the release_task() paths to call flush_sigqueue() lockless
+Date: Mon,  5 May 2025 18:38:10 -0400
+Message-Id: <20250505223922.2682012-414-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -60,110 +56,80 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+From: Oleg Nesterov <oleg@redhat.com>
 
-[ Upstream commit 2c1268e7aad0819f38e56134bbc2095fd95fde1b ]
+[ Upstream commit fb3bbcfe344e64a46574a638b051ffd78762c12d ]
 
-The RK3588 specific implementation is currently quite limited in terms
-of handling the full range of display modes supported by the connected
-screens, e.g. 2560x1440@75Hz, 2048x1152@60Hz, 1024x768@60Hz are just a
-few of them.
+A task can block a signal, accumulate up to RLIMIT_SIGPENDING sigqueues,
+and exit. In this case __exit_signal()->flush_sigqueue() called with irqs
+disabled can trigger a hard lockup, see
+https://lore.kernel.org/all/20190322114917.GC28876@redhat.com/
 
-Additionally, it doesn't cope well with non-integer refresh rates like
-59.94, 29.97, 23.98, etc.
+Fortunately, after the recent posixtimer changes sys_timer_delete() paths
+no longer try to clear SIGQUEUE_PREALLOC and/or free tmr->sigq, and after
+the exiting task passes __exit_signal() lock_task_sighand() can't succeed
+and pid_task(tmr->it_pid) will return NULL.
 
-Make use of HDMI0 PHY PLL as a more accurate DCLK source to handle
-all display modes up to 4K@60Hz.
+This means that after __exit_signal(tsk) nobody can play with tsk->pending
+or (if group_dead) with tsk->signal->shared_pending, so release_task() can
+safely call flush_sigqueue() after write_unlock_irq(&tasklist_lock).
 
-Tested-by: FUKAUMI Naoki <naoki@radxa.com>
-Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-Link: https://patchwork.freedesktop.org/patch/msgid/20250204-vop2-hdmi0-disp-modes-v3-3-d71c6a196e58@collabora.com
+TODO:
+	- we can probably shift posix_cpu_timers_exit() as well
+	- do_sigaction() can hit the similar problem
+
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+Link: https://lore.kernel.org/r/20250206152314.GA14620@redhat.com
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+Signed-off-by: Christian Brauner <brauner@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/rockchip/rockchip_drm_vop2.c | 34 ++++++++++++++++++++
- 1 file changed, 34 insertions(+)
+ kernel/exit.c | 19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
-index 2aab2a0956788..5d7df4c3b08c4 100644
---- a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
-@@ -157,6 +157,7 @@ struct vop2_video_port {
- 	struct drm_crtc crtc;
- 	struct vop2 *vop2;
- 	struct clk *dclk;
-+	struct clk *dclk_src;
- 	unsigned int id;
- 	const struct vop2_video_port_data *data;
+diff --git a/kernel/exit.c b/kernel/exit.c
+index c94d23ccd1520..2bdd34192a796 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -201,20 +201,13 @@ static void __exit_signal(struct task_struct *tsk)
+ 	__unhash_process(tsk, group_dead);
+ 	write_sequnlock(&sig->stats_lock);
  
-@@ -211,6 +212,7 @@ struct vop2 {
- 	struct clk *hclk;
- 	struct clk *aclk;
- 	struct clk *pclk;
-+	struct clk *pll_hdmiphy0;
+-	/*
+-	 * Do this under ->siglock, we can race with another thread
+-	 * doing sigqueue_free() if we have SIGQUEUE_PREALLOC signals.
+-	 */
+-	flush_sigqueue(&tsk->pending);
+ 	tsk->sighand = NULL;
+ 	spin_unlock(&sighand->siglock);
  
- 	/* optional internal rgb encoder */
- 	struct rockchip_rgb *rgb;
-@@ -219,6 +221,8 @@ struct vop2 {
- 	struct vop2_win win[];
- };
+ 	__cleanup_sighand(sighand);
+ 	clear_tsk_thread_flag(tsk, TIF_SIGPENDING);
+-	if (group_dead) {
+-		flush_sigqueue(&sig->shared_pending);
++	if (group_dead)
+ 		tty_kref_put(tty);
+-	}
+ }
  
-+#define VOP2_MAX_DCLK_RATE		600000000
-+
- #define vop2_output_if_is_hdmi(x)	((x) == ROCKCHIP_VOP2_EP_HDMI0 || \
- 					 (x) == ROCKCHIP_VOP2_EP_HDMI1)
- 
-@@ -1051,6 +1055,9 @@ static void vop2_crtc_atomic_disable(struct drm_crtc *crtc,
- 
- 	vop2_crtc_disable_irq(vp, VP_INT_DSP_HOLD_VALID);
- 
-+	if (vp->dclk_src)
-+		clk_set_parent(vp->dclk, vp->dclk_src);
-+
- 	clk_disable_unprepare(vp->dclk);
- 
- 	vop2->enable_count--;
-@@ -2071,6 +2078,27 @@ static void vop2_crtc_atomic_enable(struct drm_crtc *crtc,
- 
- 	vop2_vp_write(vp, RK3568_VP_MIPI_CTRL, 0);
- 
+ static void delayed_put_task_struct(struct rcu_head *rhp)
+@@ -283,6 +276,16 @@ void release_task(struct task_struct *p)
+ 	proc_flush_pid(thread_pid);
+ 	put_pid(thread_pid);
+ 	release_thread(p);
 +	/*
-+	 * Switch to HDMI PHY PLL as DCLK source for display modes up
-+	 * to 4K@60Hz, if available, otherwise keep using the system CRU.
++	 * This task was already removed from the process/thread/pid lists
++	 * and lock_task_sighand(p) can't succeed. Nobody else can touch
++	 * ->pending or, if group dead, signal->shared_pending. We can call
++	 * flush_sigqueue() lockless.
 +	 */
-+	if (vop2->pll_hdmiphy0 && clock <= VOP2_MAX_DCLK_RATE) {
-+		drm_for_each_encoder_mask(encoder, crtc->dev, crtc_state->encoder_mask) {
-+			struct rockchip_encoder *rkencoder = to_rockchip_encoder(encoder);
++	flush_sigqueue(&p->pending);
++	if (thread_group_leader(p))
++		flush_sigqueue(&p->signal->shared_pending);
 +
-+			if (rkencoder->crtc_endpoint_id == ROCKCHIP_VOP2_EP_HDMI0) {
-+				if (!vp->dclk_src)
-+					vp->dclk_src = clk_get_parent(vp->dclk);
-+
-+				ret = clk_set_parent(vp->dclk, vop2->pll_hdmiphy0);
-+				if (ret < 0)
-+					drm_warn(vop2->drm,
-+						 "Could not switch to HDMI0 PHY PLL: %d\n", ret);
-+				break;
-+			}
-+		}
-+	}
-+
- 	clk_set_rate(vp->dclk, clock);
+ 	put_task_struct_rcu_user(p);
  
- 	vop2_post_config(crtc);
-@@ -3242,6 +3270,12 @@ static int vop2_bind(struct device *dev, struct device *master, void *data)
- 		return PTR_ERR(vop2->pclk);
- 	}
- 
-+	vop2->pll_hdmiphy0 = devm_clk_get_optional(vop2->dev, "pll_hdmiphy0");
-+	if (IS_ERR(vop2->pll_hdmiphy0)) {
-+		drm_err(vop2->drm, "failed to get pll_hdmiphy0\n");
-+		return PTR_ERR(vop2->pll_hdmiphy0);
-+	}
-+
- 	vop2->irq = platform_get_irq(pdev, 0);
- 	if (vop2->irq < 0) {
- 		drm_err(vop2->drm, "cannot find irq for vop2\n");
+ 	p = leader;
 -- 
 2.39.5
 
