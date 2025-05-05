@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9BAC28B7EC;
-	Mon,  5 May 2025 23:22:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ABE337F956;
+	Mon,  5 May 2025 23:22:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487328; cv=none; b=ZLDuYlZGrgfYGnXSIVvzo58Wfh2QmO/OZl3YOi6oSctSQ9ATarTquUj8xnJI66srwwAR6hshYpv2DQ4dm9DfX7HlLeC4WD/s+3WM1nFWincZj/HYiCgdc7aAUwkkPZ/2H06CWpCQStMqTMtXXyHBMHxKSIZCiGBvv0KKB3exsQ0=
+	t=1746487335; cv=none; b=SZtyc8jEJas37ZrlXNE7mci6TBZHPR2Gdivu50j8+VKgD+hF8FA7trcKq42bzB/mZXr6UAxHBsrbw4IDY1eyvs6w3ohIyK20rTQmTrn37uJrxDLf5cTP9+mBz+DhO7a8qkcX30vK1g4GBvbnABNcdV35FgH0tEqjA0sPjoAePxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487328; c=relaxed/simple;
-	bh=9J/hAcUA8PxogD6w8rN8nr7ZfzjH2zUPbNoujqwzwHM=;
+	s=arc-20240116; t=1746487335; c=relaxed/simple;
+	bh=deWMExZlTsov2QDeAFquKoWOnR4Wsp9FplU2CGgtVOc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=FI8Tdm8tTIUZQgtE57CEaTy0RWF7MSO3424hgl32lqhXYOuy+njk8Jy1NO3K1poftcDh+ZQjwJB6OwhLaRgkNlc4p2NluHwPSzIHiiB4xMjBcJE3/5hx+I7Dpj7NNk89VyyCdgZ6ih1UDDyMgwHkUR+C8CW5tSF5ejUX4dii4ao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r5yBPCwf; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=DDj3AVrguEkgzhdf721cHFusC2xQyWXyY4OZOSeCGGI1XoVXgDO/7rn4Cy29DYfSrjpH42mxg+Af+CHd7VQK+df6DmnbW94mJBAi0/leFStNtifncZEzIMcf5bZaxSsiPJ9LmXgC77EIMaESQhhKMpTagQV5uzVg3fAV5xj5zyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WbVgAOcA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r5yBPCwf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C541C4CEEE;
-	Mon,  5 May 2025 23:22:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WbVgAOcA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 589D4C4CEF4;
+	Mon,  5 May 2025 23:22:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487327;
-	bh=9J/hAcUA8PxogD6w8rN8nr7ZfzjH2zUPbNoujqwzwHM=;
+	s=k20201202; t=1746487334;
+	bh=deWMExZlTsov2QDeAFquKoWOnR4Wsp9FplU2CGgtVOc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=r5yBPCwf1nLTqdII3kaXTuECClKeb9Lq5TRe2zmVFeZiRzjr4JFgsjHCFC9xeSfg7
-	 7sWPqR4ISpXPxT4E/nQYTVChzIAcHzhQQfrKhk2et+yXBdlDDp3S+A+JVFO72o0cQx
-	 tOWwHK6s45KSW9nMZZ55YVyGOoxomYuazbbSbHx6PwkVokxX5eXmiZPg3bUpnGLJH9
-	 1RfM8vw/oHNIE4YGyT4WoFk4BDcnflOJanyBHlmQ3VzEC05imx2ptFmWegfAi52wOl
-	 DE8+yi+2K+A1jDEjUvEEFHTrJI2gQzldwNZEyvvCpDfKOgvW3QbaW57DJxbdYtAjK0
-	 0K/ANC7RAK3rw==
+	b=WbVgAOcAUaQAX2BR0i2HcoRIxSIc4qUUkNCMrTHsNjDyZdx96fP5NN6QYRWAW1LlP
+	 7dAGqFO6hYdc+WDVsuduxzL01krqbEApftWWnh2delQxCzU14eYTkPkSiV98ABdtdR
+	 wPd2RDDVaCFZolp6UvGcNMJ/G55md1wXthhcGsybUY/EQ3fp6A3bLF6UNkm6nKX7RC
+	 aslYgQGJZKXLbirq8HVr5YFQfkTVF6hykon9wwX+/xGAhj/Nkz9S0dPb30HHIokSsA
+	 eRLCBOgojRfuaFq3p3oSECGrqfFMbO6MKhnGFqeEjUfkzpuV1BVrB+tyZBUIdOdFpI
+	 7tkMJYjp9T/JA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jing Su <jingsusu@didiglobal.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 08/79] dql: Fix dql->limit value when reset.
-Date: Mon,  5 May 2025 19:20:40 -0400
-Message-Id: <20250505232151.2698893-8-sashal@kernel.org>
+Cc: Erick Shepherd <erick.shepherd@ni.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Sasha Levin <sashal@kernel.org>,
+	linux-mmc@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 12/79] mmc: host: Wait for Vdd to settle on card power off
+Date: Mon,  5 May 2025 19:20:44 -0400
+Message-Id: <20250505232151.2698893-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505232151.2698893-1-sashal@kernel.org>
 References: <20250505232151.2698893-1-sashal@kernel.org>
@@ -49,44 +51,44 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.4.293
 Content-Transfer-Encoding: 8bit
 
-From: Jing Su <jingsusu@didiglobal.com>
+From: Erick Shepherd <erick.shepherd@ni.com>
 
-[ Upstream commit 3a17f23f7c36bac3a3584aaf97d3e3e0b2790396 ]
+[ Upstream commit 31e75ed964582257f59156ce6a42860e1ae4cc39 ]
 
-Executing dql_reset after setting a non-zero value for limit_min can
-lead to an unreasonable situation where dql->limit is less than
-dql->limit_min.
+The SD spec version 6.0 section 6.4.1.5 requires that Vdd must be
+lowered to less than 0.5V for a minimum of 1 ms when powering off a
+card. Increase wait to 15 ms so that voltage has time to drain down
+to 0.5V and cards can power off correctly. Issues with voltage drain
+time were only observed on Apollo Lake and Bay Trail host controllers
+so this fix is limited to those devices.
 
-For instance, after setting
-/sys/class/net/eth*/queues/tx-0/byte_queue_limits/limit_min,
-an ifconfig down/up operation might cause the ethernet driver to call
-netdev_tx_reset_queue, which in turn invokes dql_reset.
-
-In this case, dql->limit is reset to 0 while dql->limit_min remains
-non-zero value, which is unexpected. The limit should always be
-greater than or equal to limit_min.
-
-Signed-off-by: Jing Su <jingsusu@didiglobal.com>
-Link: https://patch.msgid.link/Z9qHD1s/NEuQBdgH@pilot-ThinkCentre-M930t-N000
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Erick Shepherd <erick.shepherd@ni.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Link: https://lore.kernel.org/r/20250314195021.1588090-1-erick.shepherd@ni.com
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/dynamic_queue_limits.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mmc/host/sdhci-pci-core.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/lib/dynamic_queue_limits.c b/lib/dynamic_queue_limits.c
-index e659a027036ec..f6807062b32a3 100644
---- a/lib/dynamic_queue_limits.c
-+++ b/lib/dynamic_queue_limits.c
-@@ -116,7 +116,7 @@ EXPORT_SYMBOL(dql_completed);
- void dql_reset(struct dql *dql)
- {
- 	/* Reset all dynamic values */
--	dql->limit = 0;
-+	dql->limit = dql->min_limit;
- 	dql->num_queued = 0;
- 	dql->num_completed = 0;
- 	dql->last_obj_cnt = 0;
+diff --git a/drivers/mmc/host/sdhci-pci-core.c b/drivers/mmc/host/sdhci-pci-core.c
+index 390caef1bdabc..22978057b94a1 100644
+--- a/drivers/mmc/host/sdhci-pci-core.c
++++ b/drivers/mmc/host/sdhci-pci-core.c
+@@ -669,8 +669,12 @@ static void sdhci_intel_set_power(struct sdhci_host *host, unsigned char mode,
+ 
+ 	sdhci_set_power(host, mode, vdd);
+ 
+-	if (mode == MMC_POWER_OFF)
++	if (mode == MMC_POWER_OFF) {
++		if (slot->chip->pdev->device == PCI_DEVICE_ID_INTEL_APL_SD ||
++		    slot->chip->pdev->device == PCI_DEVICE_ID_INTEL_BYT_SD)
++			usleep_range(15000, 17500);
+ 		return;
++	}
+ 
+ 	/*
+ 	 * Bus power might not enable after D3 -> D0 transition due to the
 -- 
 2.39.5
 
