@@ -1,50 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FDAA2D3F8E;
-	Mon,  5 May 2025 22:53:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE4B62D47A0;
+	Mon,  5 May 2025 22:53:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485604; cv=none; b=d1uHZO/aFYd1eVHK3WpTfuAYaL3SHppWkEwxPBLP80OsaPa9er9eVpdz/lDyy4x8HSauVF6g0aHo2yBQqSb48OOplw6UF1mslz22qKQizlEa5i5qy/SRuQ88my5TO+KJbxLr5c5+TdNj98pMfup3CsI9fxvRw6MNpPeZgalEyHI=
+	t=1746485618; cv=none; b=bQDYLR/p/X/bz6LmsdP0htXWtJ5joLNhqBHsMolUVOH+SqR33m5i/i6PAiqJMDcsjEshTVjggg5TFbS9VQ6D7jMcGYG2XD0VaxuXOJexeVzH17CO3bfPc6JVQ3v3PZ2brvBRDNSyiQDtJpSPXWDrIxH0WgliJPvHMxGl7y/tGOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485604; c=relaxed/simple;
-	bh=CetfJIbeQxqv4yBRvTwQlTG7mgijiurlfSPO2AauUUU=;
+	s=arc-20240116; t=1746485618; c=relaxed/simple;
+	bh=7qWmpSCbmCkbyX0HI+xB5K/1jBgksHFuwBEjz21DAnk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=eGjWeHMFtTSl8B/M5mCUNA9iREx6kwzboxZVPM0u0whVROZ1D+z1b/VKMAyDY59w2OyMEE+aLEY0RDe1aLqRxQl1W/kPF4ztqxYFYeCIhVlQEfWpi/5JM/E38WpOcTO+37mNEIl/lew3LYe6+3ddshuhz/lso9pvpgATfmIztZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nYquS4II; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=OIKSJmzsG169FW4MrohfCZ2ZWrFuNxQ9DhKGpkHhSGn9vE3ipk15Y0TGgqVUKJFwQ8N99BkBisjxbFbgozDMSu7yNlC+O2VFNYiKlv8zjCTkphZziLZlKJVrIDUdQRVCaXdZXoz4+OKYptxYTEz2NOkF65f+7PUhF0fJw3awz+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PcMBiFvX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nYquS4II"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE09BC4CEED;
-	Mon,  5 May 2025 22:53:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PcMBiFvX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13184C4CEE4;
+	Mon,  5 May 2025 22:53:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485604;
-	bh=CetfJIbeQxqv4yBRvTwQlTG7mgijiurlfSPO2AauUUU=;
+	s=k20201202; t=1746485617;
+	bh=7qWmpSCbmCkbyX0HI+xB5K/1jBgksHFuwBEjz21DAnk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nYquS4II2NKrArPztuH9a63qsVEyt0XbAYKIZgIef3eoff/7JvnyFdNgyJuroeCDV
-	 wKf68MEWdCkpXwo/qpRtJTqecboiZzAyxC4ubvnzZ6QXL2Cc7amesPdw+86eDk/zG3
-	 x2uMjtgV3ovuzg6JWZxZIVACNYkgRZpo9OJE4dJSbmFylbZBjmRD0zRNYBPicZXEmH
-	 cQE5FFvGbkcdnC52lQckle/lNE3MgbxLLCHYcqnh6PD70EkezSHMDs+SqSjU0pgl0Z
-	 Yq7aGHigytdYiyg+lTan4CDaopOdUpKrA/cc0KdtdZet7sW8dp8XbdTtKvtQ+xSLcM
-	 dC6XPsQd5zuPA==
+	b=PcMBiFvXiIaSnDQjbdUluVClVXpSbHpf2L2sIFseSPm5vx8locbZqt0E4t9w4/OvD
+	 xw2XTjrCwcPQgvtQ5KFekuqn3yIebZpD+dYVX7LUkdKX09C1cxnBtQWixqTWegrVNP
+	 3zcGv0bK7PRO/7GpoRlCELMJJ59HylIhKEpCbM4phAB3FbkXCCyHrodFMsjo5215Ew
+	 DIamv5HvpnmQpD/tnB5tmZIoaG3eJpY9xICE8mm7eyvTrWRBj2VVp4UQAXPOtQFPuT
+	 yCJ3RIKZj1qBgUORczsQv+m0WngUNSjg2fLG8BxQhegO+EtySCJSyZ9ORJWtLsYfQF
+	 uc5jLH/BZozkg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: William Tu <witu@nvidia.com>,
-	Bodong Wang <bodong@nvidia.com>,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	Tariq Toukan <tariqt@nvidia.com>,
-	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
-	Jakub Kicinski <kuba@kernel.org>,
+Cc: Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+	Johannes Berg <johannes.berg@intel.com>,
 	Sasha Levin <sashal@kernel.org>,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 382/486] net/mlx5e: reduce rep rxq depth to 256 for ECPF
-Date: Mon,  5 May 2025 18:37:38 -0400
-Message-Id: <20250505223922.2682012-382-sashal@kernel.org>
+	linux-wireless@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 389/486] wifi: iwlwifi: don't warn during reprobe
+Date: Mon,  5 May 2025 18:37:45 -0400
+Message-Id: <20250505223922.2682012-389-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -59,73 +50,41 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: William Tu <witu@nvidia.com>
+From: Miri Korenblit <miriam.rachel.korenblit@intel.com>
 
-[ Upstream commit b9cc8f9d700867aaa77aedddfea85e53d5e5d584 ]
+[ Upstream commit 696cca64308dc641d0bbe4aa2c09dd9752aa288d ]
 
-By experiments, a single queue representor netdev consumes kernel
-memory around 2.8MB, and 1.8MB out of the 2.8MB is due to page
-pool for the RXQ. Scaling to a thousand representors consumes 2.8GB,
-which becomes a memory pressure issue for embedded devices such as
-BlueField-2 16GB / BlueField-3 32GB memory.
+During reprobe, the sw state is being destroyd, and so is the
+connection. When the peer STA is being removed, the opmode sends a
+command to flush the TXQs of the STA and uses iwl_trans_wait_txq_empty.
 
-Since representor netdevs mostly handles miss traffic, and ideally,
-most of the traffic will be offloaded, reduce the default non-uplink
-rep netdev's RXQ default depth from 1024 to 256 if mdev is ecpf eswitch
-manager. This saves around 1MB of memory per regular RQ,
-(1024 - 256) * 2KB, allocated from page pool.
+This one warns if the FW is not alive, but it really shouldn't if
+there is a FW error - and return silently instead, just like we do when
+sending a hcmd.
 
-With rxq depth of 256, the netlink page pool tool reports
-$./tools/net/ynl/cli.py --spec Documentation/netlink/specs/netdev.yaml \
-	 --dump page-pool-get
- {'id': 277,
-  'ifindex': 9,
-  'inflight': 128,
-  'inflight-mem': 786432,
-  'napi-id': 775}]
-
-This is due to mtu 1500 + headroom consumes half pages, so 256 rxq
-entries consumes around 128 pages (thus create a page pool with
-size 128), shown above at inflight.
-
-Note that each netdev has multiple types of RQs, including
-Regular RQ, XSK, PTP, Drop, Trap RQ. Since non-uplink representor
-only supports regular rq, this patch only changes the regular RQ's
-default depth.
-
-Signed-off-by: William Tu <witu@nvidia.com>
-Reviewed-by: Bodong Wang <bodong@nvidia.com>
-Reviewed-by: Saeed Mahameed <saeedm@nvidia.com>
-Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
-Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-Link: https://patch.msgid.link/20250209101716.112774-8-tariqt@nvidia.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Miri Korenblit <miriam.rachel.korenblit@intel.com>
+Reviewed-by: Johannes Berg <johannes.berg@intel.com>
+Link: https://patch.msgid.link/20250205145347.76425b10e5a0.I3bf0de2eb090a8b94c4e36d93dd91df61fadb808@changeid
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en_rep.c | 3 +++
+ drivers/net/wireless/intel/iwlwifi/iwl-trans.c | 3 +++
  1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c b/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
-index fd1f460b7be65..18ec392d17404 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
-@@ -65,6 +65,7 @@
- #define MLX5E_REP_PARAMS_DEF_LOG_SQ_SIZE \
- 	max(0x7, MLX5E_PARAMS_MINIMUM_LOG_SQ_SIZE)
- #define MLX5E_REP_PARAMS_DEF_NUM_CHANNELS 1
-+#define MLX5E_REP_PARAMS_DEF_LOG_RQ_SIZE 0x8
+diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-trans.c b/drivers/net/wireless/intel/iwlwifi/iwl-trans.c
+index c88e4c20b505f..783f9c1254130 100644
+--- a/drivers/net/wireless/intel/iwlwifi/iwl-trans.c
++++ b/drivers/net/wireless/intel/iwlwifi/iwl-trans.c
+@@ -455,6 +455,9 @@ IWL_EXPORT_SYMBOL(iwl_trans_txq_enable_cfg);
  
- static const char mlx5e_rep_driver_name[] = "mlx5e_rep";
- 
-@@ -854,6 +855,8 @@ static void mlx5e_build_rep_params(struct net_device *netdev)
- 
- 	/* RQ */
- 	mlx5e_build_rq_params(mdev, params);
-+	if (!mlx5e_is_uplink_rep(priv) && mlx5_core_is_ecpf(mdev))
-+		params->log_rq_mtu_frames = MLX5E_REP_PARAMS_DEF_LOG_RQ_SIZE;
- 
- 	/* If netdev is already registered (e.g. move from nic profile to uplink,
- 	 * RTNL lock must be held before triggering netdev notifiers.
+ int iwl_trans_wait_txq_empty(struct iwl_trans *trans, int queue)
+ {
++	if (unlikely(test_bit(STATUS_FW_ERROR, &trans->status)))
++		return -EIO;
++
+ 	if (WARN_ONCE(trans->state != IWL_TRANS_FW_ALIVE,
+ 		      "bad state = %d\n", trans->state))
+ 		return -EIO;
 -- 
 2.39.5
 
