@@ -1,132 +1,159 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-190e.mail.infomaniak.ch (smtp-190e.mail.infomaniak.ch [185.125.25.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FA66201004;
-	Mon,  5 May 2025 15:44:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37ACC25DD1E
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 15:44:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746459852; cv=none; b=TSLxG/0OTHyHM/npQl29kATYj3U9VY2vr/8W/dRP+yeO/aYZsVhPB48Fl2NqKgodXfLHPUK+H9B9Aq5lrA296LGKn4z3L40Bno7yhJGHLbu2WfW8WhSw8mFDhhBjZOe/RcVCnrPLiG5kyIZnxyiHcyNGRioT6RTl6MQe0MmnrkA=
+	t=1746459876; cv=none; b=WbjpT1nF6Jj8cIbm0aPzeBLh3ZBi0jNNkKctgIWaDS3ALHDioOisvZBJP7eFnzimFDLE66FHjL5lZ/bxH3TXIfQAR9wxOpsbXRh1jOg6nnZ7i13NJ58ae/MW5iekoR4/mRKfRxS1RtKU4LQrkIa5SOUTxKA9K5pVPMXyZq17KAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746459852; c=relaxed/simple;
-	bh=QS8dg5Szhy9yOKcqWeqbeXZjnglqgCLYD3ZcvqvMcCM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=U9n3zbiYS+Z1H5uoskumOXqr0Azah8bEEdyaAd3CZEGqJRwaZrc+nIwid56UPhIOyyMn0KNSGR31r5jYgPtmOtZb3Hk7HPXV6R1VqSb6USzak/HkTwK3khzjwUWdXxz500qBvrlKlXXPFRwTUV+S8w0XlVyo0BhXVmjmTzKd+rk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hoxXpH/s; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746459876; c=relaxed/simple;
+	bh=BsYMs8WnXsSN2AsX4JfQ2IaUBn2ookufJHLnCM/5lAo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WmrMvI5W24MKqqo1G0WrVfmVnO7qAcxvsanYiw5UEEy8MTB7SRCp0UeV0oh0VrhcrLelqGqYcdsT+GL4NDsY3LlA+hZsvYzakHT4WRTO1yms+n2vMs4JXZOmrE2dD+wiTDEv6mFWKYzrziPNMI8HcmiIz5ECS3c9VdfKplhR3wo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=AId87KmO; arc=none smtp.client-ip=185.125.25.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hoxXpH/s"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF991C4CEF0;
-	Mon,  5 May 2025 15:44:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746459851;
-	bh=QS8dg5Szhy9yOKcqWeqbeXZjnglqgCLYD3ZcvqvMcCM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=hoxXpH/smgixxZOLB0h6+9wBw4YUKoDsFKZMkbhcm75sdDJqdHdm/Ry3geaytxpw6
-	 nAMzU92gh2z5OYXm+mqnIZ79WAu9iHGmXCjMApTJkCH9cunE8YMRhSAd/IXVP5Dvdx
-	 ft8a9nHz8Q/23pZNN0+m+DfeDFSwNki6KttQLWuwzvbQt+x2+gJ87fxPm15yZny4xQ
-	 v+mr1vkhPwLsUQjG9VpkNJLsAdTK9GPg0NrcKTm/punInWGZA/p8/UPA20n5Cy6t2J
-	 6/gJX9WadHwzzCrFCq8DOXD6GlqPBbleWgsTq8sE/GHmk8KLIlz+wy585Ygu8G4FdD
-	 M3YxbZ4tYLL0Q==
-Date: Mon, 5 May 2025 16:44:01 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Jonathan Santos <Jonathan.Santos@analog.com>
-Cc: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
- <andy@kernel.org>, <nuno.sa@analog.com>, <Michael.Hennerich@analog.com>,
- <marcelo.schmitt@analog.com>, <robh@kernel.org>, <krzk+dt@kernel.org>,
- <conor+dt@kernel.org>, <marcelo.schmitt1@gmail.com>,
- <linus.walleij@linaro.org>, <brgl@bgdev.pl>, <lgirdwood@gmail.com>,
- <broonie@kernel.org>, <jonath4nns@gmail.com>, <dlechner@baylibre.com>
-Subject: Re: [PATCH v6 01/11] dt-bindings: trigger-source: add generic GPIO
- trigger source
-Message-ID: <20250505164401.64cd3da7@jic23-huawei>
-In-Reply-To: <f76579f8aa040125568c044c86761211a2e2f5ae.1745605382.git.Jonathan.Santos@analog.com>
-References: <cover.1745605382.git.Jonathan.Santos@analog.com>
-	<f76579f8aa040125568c044c86761211a2e2f5ae.1745605382.git.Jonathan.Santos@analog.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="AId87KmO"
+Received: from smtp-3-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:4:17::246c])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4Zrlzk5cZtzVv4;
+	Mon,  5 May 2025 17:38:26 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
+	s=20191114; t=1746459506;
+	bh=68OOBF5p1DncYHeXZUijCt379OyAlKkz3EBeF/6YpjE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AId87KmOnan4eggIloma+UYO5IxpyYuiFVBZmwFB4HD5WvrGwY7lXHH0hZzZlkLah
+	 3KBIIJ6iwlL0zLtrr4zfE/4cc8B3XP+6Da/hyXk/j1l/eOzUqojSYfT3+GxuJEL/Qh
+	 19V4BhcmM9xUfB0QfAr4VMKyZtySYthU7MWgakp8=
+Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4Zrlzh4wPJzgm4;
+	Mon,  5 May 2025 17:38:24 +0200 (CEST)
+Date: Mon, 5 May 2025 17:38:23 +0200
+From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Eric Dumazet <edumazet@google.com>, 
+	Kuniyuki Iwashima <kuniyu@amazon.com>, Oleg Nesterov <oleg@redhat.com>, linux-fsdevel@vger.kernel.org, 
+	Jann Horn <jannh@google.com>, "David S. Miller" <davem@davemloft.net>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Daan De Meyer <daan.j.demeyer@gmail.com>, 
+	David Rheinsberg <david@readahead.eu>, Jakub Kicinski <kuba@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Lennart Poettering <lennart@poettering.net>, Luca Boccassi <bluca@debian.org>, Mike Yuan <me@yhndnzj.com>, 
+	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	Alexander Mikhalitsyn <alexander@mihalicyn.com>, linux-security-module@vger.kernel.org
+Subject: Re: [PATCH RFC v3 00/10] coredump: add coredump socket
+Message-ID: <20250505.oceziek1aiHu@digikod.net>
+References: <20250505-work-coredump-socket-v3-0-e1832f0e1eae@kernel.org>
+ <20250505.aFia3choo1aw@digikod.net>
+ <20250505-unberechenbar-kosenamen-da3fb108080e@brauner>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250505-unberechenbar-kosenamen-da3fb108080e@brauner>
+X-Infomaniak-Routing: alpha
 
-On Sun, 27 Apr 2025 21:12:02 -0300
-Jonathan Santos <Jonathan.Santos@analog.com> wrote:
-
-> Inspired by pwm-trigger, create a new binding for using a GPIO
-> line as a trigger source.
+On Mon, May 05, 2025 at 04:56:04PM +0200, Christian Brauner wrote:
+> On Mon, May 05, 2025 at 04:41:28PM +0200, Mickaël Salaün wrote:
+> > On Mon, May 05, 2025 at 01:13:38PM +0200, Christian Brauner wrote:
+> > > Coredumping currently supports two modes:
+> > > 
+> > > (1) Dumping directly into a file somewhere on the filesystem.
+> > > (2) Dumping into a pipe connected to a usermode helper process
+> > >     spawned as a child of the system_unbound_wq or kthreadd.
+> > > 
+> > > For simplicity I'm mostly ignoring (1). There's probably still some
+> > > users of (1) out there but processing coredumps in this way can be
+> > > considered adventurous especially in the face of set*id binaries.
+> > > 
+> > > The most common option should be (2) by now. It works by allowing
+> > > userspace to put a string into /proc/sys/kernel/core_pattern like:
+> > > 
+> > >         |/usr/lib/systemd/systemd-coredump %P %u %g %s %t %c %h
+> > > 
+> > > The "|" at the beginning indicates to the kernel that a pipe must be
+> > > used. The path following the pipe indicator is a path to a binary that
+> > > will be spawned as a usermode helper process. Any additional parameters
+> > > pass information about the task that is generating the coredump to the
+> > > binary that processes the coredump.
+> > > 
+> > > In the example core_pattern shown above systemd-coredump is spawned as a
+> > > usermode helper. There's various conceptual consequences of this
+> > > (non-exhaustive list):
+> > > 
+> > > - systemd-coredump is spawned with file descriptor number 0 (stdin)
+> > >   connected to the read-end of the pipe. All other file descriptors are
+> > >   closed. That specifically includes 1 (stdout) and 2 (stderr). This has
+> > >   already caused bugs because userspace assumed that this cannot happen
+> > >   (Whether or not this is a sane assumption is irrelevant.).
+> > > 
+> > > - systemd-coredump will be spawned as a child of system_unbound_wq. So
+> > >   it is not a child of any userspace process and specifically not a
+> > >   child of PID 1. It cannot be waited upon and is in a weird hybrid
+> > >   upcall which are difficult for userspace to control correctly.
+> > > 
+> > > - systemd-coredump is spawned with full kernel privileges. This
+> > >   necessitates all kinds of weird privilege dropping excercises in
+> > >   userspace to make this safe.
+> > > 
+> > > - A new usermode helper has to be spawned for each crashing process.
+> > > 
+> > > This series adds a new mode:
+> > > 
+> > > (3) Dumping into an abstract AF_UNIX socket.
+> > > 
+> > > Userspace can set /proc/sys/kernel/core_pattern to:
+> > > 
+> > >         @linuxafsk/coredump_socket
+> > > 
+> > > The "@" at the beginning indicates to the kernel that the abstract
+> > > AF_UNIX coredump socket will be used to process coredumps.
+> > > 
+> > > The coredump socket uses the fixed address "linuxafsk/coredump.socket"
+> > > for now.
+> > > 
+> > > The coredump socket is located in the initial network namespace. To bind
+> > > the coredump socket userspace must hold CAP_SYS_ADMIN in the initial
+> > > user namespace. Listening and reading can happen from whatever
+> > > unprivileged context is necessary to safely process coredumps.
+> > > 
+> > > When a task coredumps it opens a client socket in the initial network
+> > > namespace and connects to the coredump socket. For now only tasks that
+> > > are acctually coredumping are allowed to connect to the initial coredump
+> > > socket.
+> > 
+> > I think we should avoid using abstract UNIX sockets, especially for new
 > 
-> Link: https://lore.kernel.org/linux-iio/20250207-dlech-mainline-spi-engine-offload-2-v8-3-e48a489be48c@baylibre.com/
+> Abstract unix sockets are at the core of a modern Linux system. During
+> boot alone about 100 or so are created on a modern system when I counted
+> during testing. Sorry, but this is a no-show argument.
 
-David, given you did the pwm one, maybe give this a quick look.
+These kind of socket being used does not mean they should be used for
+new interfaces. :)
 
-Maybe it's worth generalising to cover all trigger sources in MAINTAINERS?
+AFAIK, these socket types are currently only used for IPC, not between a
+kernel interface and user space.  This patch series changes this
+assumption.
 
-Thanks. Otherwise I obviously need a DT review before taking this and maybe the GPIO
-element suggests Linus W or Bartosz might be other good reviewers?
+Security policies already in place can block abstract connections, and
+it might not be possible to differenciate between a kernel or user space
+peer with the current configuration.  Please Cc the LSM mailing list for
+such new interfaces.
 
-Jonathan
+You cut and ignored most of my reply, which explained my reasoning and
+proposed an alternative:
+> > interfaces, because it is hard to properly control such access.  Can we
+> > create new dedicated AF_UNIX protocols instead?  One could be used by a
+> > privileged process in the initial namespace to create a socket to
+> > collect coredumps, and the other could be dedicatde to coredumped
+> > proccesses.  Such (coredump collector) file descriptor or new (proxy)
+> > socketpair ones could be passed to containers.
 
-> Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
-> ---
-> v6 Changes:
-> * Changed description.
-> * Fixed typos and replaced GPIO pin with GPIO line.
-> * Added link reference for pwm-trigger.
-> 
-> v5 Changes:
-> * New patch in v5.
-> ---
->  .../bindings/trigger-source/gpio-trigger.yaml | 40 +++++++++++++++++++
->  1 file changed, 40 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/trigger-source/gpio-trigger.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/trigger-source/gpio-trigger.yaml b/Documentation/devicetree/bindings/trigger-source/gpio-trigger.yaml
-> new file mode 100644
-> index 000000000000..1331d153ee82
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/trigger-source/gpio-trigger.yaml
-> @@ -0,0 +1,40 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/trigger-source/gpio-trigger.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Generic trigger source using GPIO
-> +
-> +description: A GPIO used as a trigger source.
-> +
-> +maintainers:
-> +  - Jonathan Santos <Jonathan.Santos@analog.com>
-> +
-> +properties:
-> +  compatible:
-> +    const: gpio-trigger
-> +
-> +  '#trigger-source-cells':
-> +    const: 0
-> +
-> +  gpios:
-> +    maxItems: 1
-> +    description: GPIO to be used as a trigger source.
-> +
-> +required:
-> +  - compatible
-> +  - '#trigger-source-cells'
-> +  - gpios
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    trigger {
-> +        compatible = "gpio-trigger";
-> +        #trigger-source-cells = <0>;
-> +        gpios = <&gpio1 15 GPIO_ACTIVE_HIGH>;
-> +    };
-
+Only one new "protocol" would be required though (because the client
+side is created by the kernel).  That would be a backward compatible
+change, and such socket type could easily be identified by other part of
+the kernel, including access control mechanisms.
