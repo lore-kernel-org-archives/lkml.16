@@ -1,49 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E714D370B16;
-	Mon,  5 May 2025 22:46:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1A0E2BD91F;
+	Mon,  5 May 2025 22:46:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485212; cv=none; b=VAQNPZNJYAVb/salNaRwZ7u2opXlSPDfT8Nopzood5FFcD3y/rB4puEiKKIXBZivTNN8w/Qu3AMHqjiZSrlMKlE29BNmNIJIhEQtlBXha1FbplSVns9q7OwT3QOCji7zWrkf9ESZ5MljpWKEloTWYKHkLEdPcwnN7Xkr5mSY0JU=
+	t=1746485217; cv=none; b=AR0QxwbvEsp5wrXK7NdUh9C5fycuXXO6zolI9sice3x1pg9dLiJ/BkT9Dc3I5PRzLDmZ10VhGZjC9enJB8CowxMNloTE4s1DC62L0Vf+SWfiQn8fHVGBnh86UfcAu1xNUTKgZmS1oRsvkzDCKTzSYo9VfGOk4hus3xHAHuG6RlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485212; c=relaxed/simple;
-	bh=8S/5I22qd4S0oH7P51ixZiHczSeXqwMQkKM+m4qTrFo=;
+	s=arc-20240116; t=1746485217; c=relaxed/simple;
+	bh=QabyW7IDfbdIpSIYKsp+1fCXpESt0TfXLUD4PM4j3rU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=q3IEf+Hls3ZMYmDw0dVFC9zDbmKGLz1DteI0SzvHi4tHMXSX9Zjo/TwVVaNd8bSWq81b6RgKZFZ+WSHp0n5q34mu78vILnvWFKYIq0VMdm86oWwEsVcNL9If/voqUEkSCOpH8yQgHcJ5CpXxv8tzGVwZcReev4QLfKwmHAK0cEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AzHaMdgL; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=tMRq5BngW0Xw4QnQjfxNpaMiswpg5cTcoo+eZfyxWwItw14VZ3IWzy69lJonYsdINW4I7gxc/wfGIx4qzAynpIgxX8RVlQWEqgdkE2GR0LBQVFnGr/3tjgCyg94FV0CQHm4qxlm6Sisag+PUvYqZ6vt2sqhgVJxvtWZruy0Ds0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=liaw8ixq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AzHaMdgL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E75A0C4CEEF;
-	Mon,  5 May 2025 22:46:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="liaw8ixq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2E93C4CEE4;
+	Mon,  5 May 2025 22:46:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485211;
-	bh=8S/5I22qd4S0oH7P51ixZiHczSeXqwMQkKM+m4qTrFo=;
+	s=k20201202; t=1746485217;
+	bh=QabyW7IDfbdIpSIYKsp+1fCXpESt0TfXLUD4PM4j3rU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=AzHaMdgLnZTWxOs3wo+pHODzHkhlxPbxbBuNFxmqVmGrjKcpFmAmE0dh1lRnupjDm
-	 4gZUyQyyMSEumTPNQCs5BEkJEmwyGpiYb7Zau0IZRXVC+8fPc42RulqLYWHFSfRLcG
-	 6F8VO1tI9g6uqaE+Fo1SpakJgDKWqtAKH0kLsH9tzUULKPlOInt10R04eDKkd/W+BG
-	 4NuPVMOjxviy6H5IzeQOAaVPeeWF8IBgmwvkYnUXMVIjMz39a/8OrFBqvKkartSqGe
-	 d3N6mmmOPwU0VUNubI32iB2glJ5mMgCfD7K4Xz98RuOOXHjbO+rd5LArz7C7i+O1iL
-	 WEGluETPRWGog==
+	b=liaw8ixqgGnBmshQgaaxKBo+wAqu04YeIyQHIaMw5F2nqehbx6d2X/SHwGlToeBsr
+	 MOH14NhsSJF5mxIA2WWU/4lhMc/fZqbolRsfb1ZPwiI1YHMMSaAC1ju8xnx4Vq5kqW
+	 cenlIZOgjjH3MrY5CvbzrImyrAXiBTUF+s+hlv/uFNfAfKvPr1IiXnihcLuZrYx1KD
+	 j7U25O9DPXqaTEagxXeN4YClqRS8otQ6q6zT3RUbASVqzXDpy738PlL+Y8gLry3LfK
+	 8W5zFnrO10mIicPhtsLtjgDAMxZVrqzQ1HL7onTGERcOebAogu8b1rKeITLgUIV4Me
+	 fTRZhz1NkKCmg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Saket Kumar Bhaskar <skb99@linux.ibm.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	Marco Elver <elver@google.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Ian Rogers <irogers@google.com>,
-	Frederic Weisbecker <fweisbec@gmail.com>,
+Cc: Kuniyuki Iwashima <kuniyu@amazon.com>,
+	Eric Dumazet <edumazet@google.com>,
+	David Ahern <dsahern@kernel.org>,
+	Jakub Kicinski <kuba@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 213/486] perf/hw_breakpoint: Return EOPNOTSUPP for unsupported breakpoint type
-Date: Mon,  5 May 2025 18:34:49 -0400
-Message-Id: <20250505223922.2682012-213-sashal@kernel.org>
+	davem@davemloft.net,
+	pabeni@redhat.com,
+	netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 216/486] ipv4: fib: Move fib_valid_key_len() to rtm_to_fib_config().
+Date: Mon,  5 May 2025 18:34:52 -0400
+Message-Id: <20250505223922.2682012-216-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -58,52 +54,126 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Saket Kumar Bhaskar <skb99@linux.ibm.com>
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
 
-[ Upstream commit 061c991697062f3bf87b72ed553d1d33a0e370dd ]
+[ Upstream commit 254ba7e6032d3fc738050d500b0c1d8197af90ca ]
 
-Currently, __reserve_bp_slot() returns -ENOSPC for unsupported
-breakpoint types on the architecture. For example, powerpc
-does not support hardware instruction breakpoints. This causes
-the perf_skip BPF selftest to fail, as neither ENOENT nor
-EOPNOTSUPP is returned by perf_event_open for unsupported
-breakpoint types. As a result, the test that should be skipped
-for this arch is not correctly identified.
+fib_valid_key_len() is called in the beginning of fib_table_insert()
+or fib_table_delete() to check if the prefix length is valid.
 
-To resolve this, hw_breakpoint_event_init() should exit early by
-checking for unsupported breakpoint types using
-hw_breakpoint_slots_cached() and return the appropriate error
-(-EOPNOTSUPP).
+fib_table_insert() and fib_table_delete() are called from 3 paths
 
-Signed-off-by: Saket Kumar Bhaskar <skb99@linux.ibm.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Marco Elver <elver@google.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Frederic Weisbecker <fweisbec@gmail.com>
-Link: https://lore.kernel.org/r/20250303092451.1862862-1-skb99@linux.ibm.com
+  - ip_rt_ioctl()
+  - inet_rtm_newroute() / inet_rtm_delroute()
+  - fib_magic()
+
+In the first ioctl() path, rtentry_to_fib_config() checks the prefix
+length with bad_mask().  Also, fib_magic() always passes the correct
+prefix: 32 or ifa->ifa_prefixlen, which is already validated.
+
+Let's move fib_valid_key_len() to the rtnetlink path, rtm_to_fib_config().
+
+While at it, 2 direct returns in rtm_to_fib_config() are changed to
+goto to match other places in the same function
+
+Signed-off-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
+Reviewed-by: David Ahern <dsahern@kernel.org>
+Link: https://patch.msgid.link/20250228042328.96624-12-kuniyu@amazon.com
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/events/hw_breakpoint.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ net/ipv4/fib_frontend.c | 18 ++++++++++++++++--
+ net/ipv4/fib_trie.c     | 22 ----------------------
+ 2 files changed, 16 insertions(+), 24 deletions(-)
 
-diff --git a/kernel/events/hw_breakpoint.c b/kernel/events/hw_breakpoint.c
-index 6c2cb4e4f48da..8f3f624419aa9 100644
---- a/kernel/events/hw_breakpoint.c
-+++ b/kernel/events/hw_breakpoint.c
-@@ -950,9 +950,10 @@ static int hw_breakpoint_event_init(struct perf_event *bp)
- 		return -ENOENT;
+diff --git a/net/ipv4/fib_frontend.c b/net/ipv4/fib_frontend.c
+index 793e6781399a4..5b7c41333d6fc 100644
+--- a/net/ipv4/fib_frontend.c
++++ b/net/ipv4/fib_frontend.c
+@@ -829,19 +829,33 @@ static int rtm_to_fib_config(struct net *net, struct sk_buff *skb,
+ 		}
+ 	}
  
- 	/*
--	 * no branch sampling for breakpoint events
-+	 * Check if breakpoint type is supported before proceeding.
-+	 * Also, no branch sampling for breakpoint events.
- 	 */
--	if (has_branch_stack(bp))
-+	if (!hw_breakpoint_slots_cached(find_slot_idx(bp->attr.bp_type)) || has_branch_stack(bp))
- 		return -EOPNOTSUPP;
++	if (cfg->fc_dst_len > 32) {
++		NL_SET_ERR_MSG(extack, "Invalid prefix length");
++		err = -EINVAL;
++		goto errout;
++	}
++
++	if (cfg->fc_dst_len < 32 && (ntohl(cfg->fc_dst) << cfg->fc_dst_len)) {
++		NL_SET_ERR_MSG(extack, "Invalid prefix for given prefix length");
++		err = -EINVAL;
++		goto errout;
++	}
++
+ 	if (cfg->fc_nh_id) {
+ 		if (cfg->fc_oif || cfg->fc_gw_family ||
+ 		    cfg->fc_encap || cfg->fc_mp) {
+ 			NL_SET_ERR_MSG(extack,
+ 				       "Nexthop specification and nexthop id are mutually exclusive");
+-			return -EINVAL;
++			err = -EINVAL;
++			goto errout;
+ 		}
+ 	}
  
- 	err = register_perf_hw_breakpoint(bp);
+ 	if (has_gw && has_via) {
+ 		NL_SET_ERR_MSG(extack,
+ 			       "Nexthop configuration can not contain both GATEWAY and VIA");
+-		return -EINVAL;
++		err = -EINVAL;
++		goto errout;
+ 	}
+ 
+ 	if (!cfg->fc_table)
+diff --git a/net/ipv4/fib_trie.c b/net/ipv4/fib_trie.c
+index 09e31757e96c7..cc86031d2050f 100644
+--- a/net/ipv4/fib_trie.c
++++ b/net/ipv4/fib_trie.c
+@@ -1193,22 +1193,6 @@ static int fib_insert_alias(struct trie *t, struct key_vector *tp,
+ 	return 0;
+ }
+ 
+-static bool fib_valid_key_len(u32 key, u8 plen, struct netlink_ext_ack *extack)
+-{
+-	if (plen > KEYLENGTH) {
+-		NL_SET_ERR_MSG(extack, "Invalid prefix length");
+-		return false;
+-	}
+-
+-	if ((plen < KEYLENGTH) && (key << plen)) {
+-		NL_SET_ERR_MSG(extack,
+-			       "Invalid prefix for given prefix length");
+-		return false;
+-	}
+-
+-	return true;
+-}
+-
+ static void fib_remove_alias(struct trie *t, struct key_vector *tp,
+ 			     struct key_vector *l, struct fib_alias *old);
+ 
+@@ -1229,9 +1213,6 @@ int fib_table_insert(struct net *net, struct fib_table *tb,
+ 
+ 	key = ntohl(cfg->fc_dst);
+ 
+-	if (!fib_valid_key_len(key, plen, extack))
+-		return -EINVAL;
+-
+ 	pr_debug("Insert table=%u %08x/%d\n", tb->tb_id, key, plen);
+ 
+ 	fi = fib_create_info(cfg, extack);
+@@ -1723,9 +1704,6 @@ int fib_table_delete(struct net *net, struct fib_table *tb,
+ 
+ 	key = ntohl(cfg->fc_dst);
+ 
+-	if (!fib_valid_key_len(key, plen, extack))
+-		return -EINVAL;
+-
+ 	l = fib_find_node(t, &tp, key);
+ 	if (!l)
+ 		return -ESRCH;
 -- 
 2.39.5
 
