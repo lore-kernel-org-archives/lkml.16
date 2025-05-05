@@ -1,42 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 442F62F7C5B;
-	Mon,  5 May 2025 23:19:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4379272E60;
+	Mon,  5 May 2025 23:19:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487178; cv=none; b=ccX8Nt+vSJP3GnDx9HqBteoH4yy2s2AwIg3Q4rpVDKfBBjRFbPzG5jGl2sFacgZ58as80L4O5dKbURdsjrI+e4SnHW9orDt9wodctRTGXB4qQmdeF7IEUifUonhjBlcOCGjHd+992TC9CH0WG+xjAWlyC94YuXV755KaXASubRY=
+	t=1746487186; cv=none; b=a68imzOdlyGRK589CN0Q95ELX+AdGs6ClTgB/UOJ+Fjis+OWwi18PiOfeRL35eD8iVqzhoRQzzPVuXnKBnSbx+/jkYWHxL+BTuDndmeJUn7S76r/kpmNMPZ6HDZ7fc7oZP0q+bq52asJg1jbeFpj1bsiVPxQ1NxRN8X0d5iFYHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487178; c=relaxed/simple;
-	bh=quJUHlrNvh6BDlXRUEyzXmngo9dhRmrwthDK3udwpDE=;
+	s=arc-20240116; t=1746487186; c=relaxed/simple;
+	bh=GXQQVWklXWNAEB0XwIb9nq+0BoP+bo7EBFoAE8e69kU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=iikSTEVTlIy4tWS5+MEimvATaNfibs1Mhq3bpG6ISiiI48tg7CFvQ4qlJ/o8HkqgLXrQA8mjRuDfpREkt6a2yb/aNE1JoECT/rj5qivEEE5hSAWVHxXNr3bga+0+5+xLTkPFNIBhprGdldvUf9YNaS8yNAuqyh/2r0UbiKQO8wQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TZiLTBL+; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=BQE8Uc1DJpho8+f6bzWaQP4gykzNb1H1xebgt48/uV3KJHPStcQc4mzvkIwgM9hQZlPpl5crx1uxM47aT01MRZ7AEZFaZOQB7AISM723MzkYifV5J5d0SYYVeTXN3s6HQritqN4qn4Qr7nJEA0z3OejqLwhh8RCpJ6pmcbP9qw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TWSHEYeM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TZiLTBL+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56763C4CEE4;
-	Mon,  5 May 2025 23:19:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TWSHEYeM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A252C4CEEF;
+	Mon,  5 May 2025 23:19:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487178;
-	bh=quJUHlrNvh6BDlXRUEyzXmngo9dhRmrwthDK3udwpDE=;
+	s=k20201202; t=1746487185;
+	bh=GXQQVWklXWNAEB0XwIb9nq+0BoP+bo7EBFoAE8e69kU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TZiLTBL+DevRdyKwhDBiA3n53db4qCVZDwQQnG18NDpEMMkNXigNfcsJp2UyHlNJr
-	 ycaonNp7MXC2WFkMlaC3rOA8SEPlapprJRXOlSEm50SpU9i1ZASA1T4++xypYPyLiP
-	 pyFXCRJyJFX2mE5qx3oFYsYnOYXWJ17WHpavn3xG56/lk2lIXEDBh3DWp+eq73DyGd
-	 qw1duWXExSB7poSom1gg9WBYQvm7mCzVEtk2KRXiabxlIBpgcWAnJidkaqIVrPTxmv
-	 dJW3AdP+E+5v5+YCxmiiFH1R1iaP/gAzD+XmGQSP6hHu5yqXExZ/uJnDVvLnSrh+8N
-	 MGKyHvtrL8g6w==
+	b=TWSHEYeMoboShy+JhAkTUT7RS5eU1KZu/WyLZrZVvg8/Rrr5eEADVpaOSNkUvQ5Pb
+	 A2HbUnFBnECXrf5UHAHb6S07y0l60lTfuCljihpNDNBH5Xgl7W00iQ5wWnz21JxZFj
+	 pFA2/PUvTQqPl979U1bcheW+LK5JJM/FwidAicYSC8PQOpRSW6hmob4QFKLsQoUumb
+	 Rv/jXMdE4dTL9/hFcOH9wlCfNAFXox7on5h1+sVqk5Zlw5150S4vxmHvutnSHJjBJM
+	 qnR27k8hmOwKmMSrCJrejKFEQ5DhuqPr3rcvOPFx9Lai8KimLzPtFSx/UhHQJKYOmT
+	 KJ0N9D+UhTEAQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Markus Elfring <elfring@users.sourceforge.net>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
+Cc: Hans Verkuil <hverkuil@xs4all.nl>,
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
 	mchehab@kernel.org,
+	christophe.jaillet@wanadoo.fr,
+	ribalda@chromium.org,
 	linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 043/114] media: c8sectpfe: Call of_node_put(i2c_bus) only once in c8sectpfe_probe()
-Date: Mon,  5 May 2025 19:17:06 -0400
-Message-Id: <20250505231817.2697367-43-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10 047/114] media: cx231xx: set device_caps for 417
+Date: Mon,  5 May 2025 19:17:10 -0400
+Message-Id: <20250505231817.2697367-47-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505231817.2697367-1-sashal@kernel.org>
 References: <20250505231817.2697367-1-sashal@kernel.org>
@@ -51,42 +53,38 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.10.237
 Content-Transfer-Encoding: 8bit
 
-From: Markus Elfring <elfring@users.sourceforge.net>
+From: Hans Verkuil <hverkuil@xs4all.nl>
 
-[ Upstream commit b773530a34df0687020520015057075f8b7b4ac4 ]
+[ Upstream commit a79efc44b51432490538a55b9753a721f7d3ea42 ]
 
-An of_node_put(i2c_bus) call was immediately used after a pointer check
-for an of_find_i2c_adapter_by_node() call in this function implementation.
-Thus call such a function only once instead directly before the check.
+The video_device for the MPEG encoder did not set device_caps.
 
-This issue was transformed by using the Coccinelle software.
+Add this, otherwise the video device can't be registered (you get a
+WARN_ON instead).
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+Not seen before since currently 417 support is disabled, but I found
+this while experimenting with it.
+
 Signed-off-by: Hans Verkuil <hverkuil@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/media/usb/cx231xx/cx231xx-417.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c b/drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c
-index b7e0ec265b70c..6e3b3643a2cdb 100644
---- a/drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c
-+++ b/drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c
-@@ -811,13 +811,12 @@ static int c8sectpfe_probe(struct platform_device *pdev)
- 		}
- 		tsin->i2c_adapter =
- 			of_find_i2c_adapter_by_node(i2c_bus);
-+		of_node_put(i2c_bus);
- 		if (!tsin->i2c_adapter) {
- 			dev_err(&pdev->dev, "No i2c adapter found\n");
--			of_node_put(i2c_bus);
- 			ret = -ENODEV;
- 			goto err_clk_disable;
- 		}
--		of_node_put(i2c_bus);
- 
- 		tsin->rst_gpio = of_get_named_gpio(child, "reset-gpios", 0);
- 
+diff --git a/drivers/media/usb/cx231xx/cx231xx-417.c b/drivers/media/usb/cx231xx/cx231xx-417.c
+index c5e21785fafe2..02343e88cc618 100644
+--- a/drivers/media/usb/cx231xx/cx231xx-417.c
++++ b/drivers/media/usb/cx231xx/cx231xx-417.c
+@@ -1722,6 +1722,8 @@ static void cx231xx_video_dev_init(
+ 	vfd->lock = &dev->lock;
+ 	vfd->release = video_device_release_empty;
+ 	vfd->ctrl_handler = &dev->mpeg_ctrl_handler.hdl;
++	vfd->device_caps = V4L2_CAP_READWRITE | V4L2_CAP_STREAMING |
++			   V4L2_CAP_VIDEO_CAPTURE;
+ 	video_set_drvdata(vfd, dev);
+ 	if (dev->tuner_type == TUNER_ABSENT) {
+ 		v4l2_disable_ioctl(vfd, VIDIOC_G_FREQUENCY);
 -- 
 2.39.5
 
