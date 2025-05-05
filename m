@@ -1,50 +1,47 @@
 Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A918E19CC22;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E66CB269B02;
 	Mon,  5 May 2025 18:49:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746470985; cv=none; b=O7FFlxB849Sm168qjZafjOCTIXCwXsDr4hhP0ztSnzXsmRiwbIHJUxQwPKMFRfjq+qSZXtSgc4WEP9Ug/fk9crIrN57XnLN5FpweDJyFbQAKSxxg4Rcw/NCkgWO76+tvrH1k7V23j+90umJobWtp7/semlqBMHgRyhZiEi5V+KM=
+	t=1746470986; cv=none; b=XgmP0euhSCZ1V/23lf6f1Iax7twsldZraC/GVvCfbxh/ajVr8MCBDsXVbTk8HADYacxFlvmAmEcOlg0gEp3IkrzYu2bemPmzTVS11uZGKtNMzn5ZD+93fiPioNaBNSrra3Xkg5tJJgX9tXu8bCM1G+29rwQ0OYOqrUHvoLhrJ0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746470985; c=relaxed/simple;
-	bh=0UX04jtlgTNdeY9qnlTEG0Y1NBKHXwDo+YBtMn+bcm4=;
+	s=arc-20240116; t=1746470986; c=relaxed/simple;
+	bh=R8M59vxHAjUlkD4wexaKntih0q/NCGKUE+K4wXaJ7YA=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=meySWt/yW5nAYdUIoqzZDGNo9z90BXuhy2DjoIfhlYXk07Q8fpXpxxqjONBxgjS75jrX7sgk8CFnqeyHx3vFb22KzSGgK22IV66zHp1n/+F+AhY6hwI4h+Dh3VAemnOz5XTjS4BZBZMGI8teXtE4+Lte9tRZKpb+3W1kgBcdw7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=Etsucjkc; arc=none smtp.client-ip=193.68.50.107
+	 MIME-Version:Content-Type; b=AMUkZcUP/bZ62JdiLUOXqK2hXqKGy32UR+O48gHhR+7G19bGuXxxOz7HzmUIv5fn74Ln+RfTGIuvFDHESK0rlyUzTd9Q9YE0ax6wYBXMk2xpNmXpHNlaCs/NFmUb8JsmDaXJXrETUXQrNGSZACrB2Lzxg0okEIOnl1MObFmLRYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=e8cXzcSy; arc=none smtp.client-ip=193.68.50.107
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="Etsucjkc"
+	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="e8cXzcSy"
 Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
-	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 7FD0BA0ACD;
-	Mon,  5 May 2025 20:49:41 +0200 (CEST)
+	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 73B05A09FF;
+	Mon,  5 May 2025 20:49:40 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
 	:cc:content-transfer-encoding:content-type:content-type:date
 	:from:from:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=mail; bh=A8eEJvFMu/G8fSNsQRyZ
-	7m8pQKvtChPB4Eaz2stzIqQ=; b=Etsucjkcd5P/kAVx7Ys7kErnTcIn23B0EUE0
-	4CRXWX0ZQgdUaE2KbyFQh2Dsk5ldPEcXVFRsFd4+lS2SOHDIQjTu5+kiMMqF6PNQ
-	6bSE+SE6WoKH2IdgB9zadLjJlfC3TvcW5SCrFYdDn4/gyEJrFiT0ErQw2Hsznuvr
-	6E46cG/WTITq9UcD3qNcf+yHdoocAKHMVZNXTaHuOqPDXNeY0kRzPdFB3qiFmcMy
-	c1sfg0RUxllma9YfAHwf12b8JcxE4RrgPzWYMgAAc2dK7vHwzW4dK7xCc5LalBdg
-	7yKWxWFSpH2Mt4jsVgszd42OVoHFWrVNSPmYXewRqq/rOAfya6r2R95C8AM6b4JH
-	nke/uLp0wiI3tWjRuZlURZ3R5ZLt8Em6ffWmfqAy8N7/ML6UHgX04sowG4rdvJb+
-	k7iOTGZ6mKsiUkAbB9GlDcq8SpZYfx3LgkkU5M52wKv0loDfi/uCqtUAcC1BWVPc
-	rcBy/zvGQGMRd5IYgXZUeAe1o2LC1akG6eO3Q4nLKdovVmCcUwxoxtVIv8l9x5HP
-	W3B/SIv6hqFzaruHVCOTBbd2HvhGFAeYvAJmdUR4WS00+OZvDE+nusuV+Z38lXln
-	1Ha0JIZQ4BOhOgN1qu8PIs627gTT+wypnZGG/Rq+7mslNcYWBSBM8BIyT+0leRj7
-	xDPVDuU=
+	:reply-to:subject:subject:to:to; s=mail; bh=Ev/Q0RIsmgy1mBqoL4mI
+	cg60ZAPn1CqjIwINVPt8wj8=; b=e8cXzcSyQPxXYdsu/U42CdYPKRUSg0Z0SQ1z
+	Y3SasSSCXe5iGzcK1CoS5lrAyoqikJpJi9PjpfMRaDgnsmCME0dwDDNx+KuQ9L6F
+	7XNNhlN8znhvOADpwDfzWtBWjAEGXL2SyZ8hrKJ3DXgwPWKsb6icoFLB5GfXP0cb
+	MoBjdjue4nQ+oWPayhOWopS+05UHMhCnBnpG5oH4Hzh6suAcyNYt7Ld2x/UCyQB0
+	2VdmOiAOUf8+/VXNtmF9uuapIdO15TYg95PZTcaSiAGnDg6svQLEdW/VS6nsuYdN
+	feukDGtGCe7ghrlOefnAdsy6fC0/26+GUua34Su7IP19JtejdWik81D5XzKoSpNY
+	JJ3C7V4LCvTe9rSn4sZQlIZz7OSH1fzeKf9YtiotGTa5fvdf9CgVytJv6bjZY1Ls
+	pbm4U0nuMxNycvNkXIt/X4PHwiJDGG+VZXANtY+zEan+P5cCRHCHXv5OyuBpOnI/
+	mNtb2Oziv72ETHwECJcO/6ybG2J8JcQZ0kEB1o1Qw9tDEaLTpmt7NyGxxHKUWvQR
+	93OqPDPkIFmTMiDbHKbfXoZLO/7G95N3B3/bTVD8e7qcrKJYEyZtZ8tI3Pld8vph
+	z5qxcNOgPF/ALp5nOgCoYhqzuhnn0GL7vKh27cKgW6pmUFmfDdPp5o34P/IL/lX0
+	njMOkMI=
 From: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>
-To: <linux-spi@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>
-CC: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>, Mark Brown
-	<broonie@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, "Alexandre
- Belloni" <alexandre.belloni@bootlin.com>, Claudiu Beznea
-	<claudiu.beznea@tuxon.dev>
-Subject: [PATCH v5 2/2] spi: atmel-quadspi: Use `devm_dma_request_chan()`
-Date: Mon, 5 May 2025 20:49:34 +0200
-Message-ID: <20250505184936.312274-3-csokas.bence@prolan.hu>
+To: <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>, Vinod Koul
+	<vkoul@kernel.org>
+Subject: [PATCH v5 1/2] dma: Add devm_dma_request_chan()
+Date: Mon, 5 May 2025 20:49:33 +0200
+Message-ID: <20250505184936.312274-2-csokas.bence@prolan.hu>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250505184936.312274-1-csokas.bence@prolan.hu>
 References: <20250505184936.312274-1-csokas.bence@prolan.hu>
@@ -56,122 +53,86 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1746470980;VERSION=7990;MC=561884614;ID=217953;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
+X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1746470979;VERSION=7990;MC=2492889595;ID=217952;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
 X-ESET-Antispam: OK
 X-EsetResult: clean, is OK
 X-EsetId: 37303A2980D94853667166
 
-Leave releasing of DMA channels up to the devm facilities. This way we can
-eliminate the rest of the "goto ladder".
+Expand the arsenal of devm functions for DMA devices, this time for
+requesting channels.
 
 Signed-off-by: Bence Csókás <csokas.bence@prolan.hu>
 ---
- drivers/spi/atmel-quadspi.c | 44 ++++++++++---------------------------
- 1 file changed, 11 insertions(+), 33 deletions(-)
+ drivers/dma/dmaengine.c   | 30 ++++++++++++++++++++++++++++++
+ include/linux/dmaengine.h |  7 +++++++
+ 2 files changed, 37 insertions(+)
 
-diff --git a/drivers/spi/atmel-quadspi.c b/drivers/spi/atmel-quadspi.c
-index e7b61dc4ce67..ef1416bbdf89 100644
---- a/drivers/spi/atmel-quadspi.c
-+++ b/drivers/spi/atmel-quadspi.c
-@@ -1285,18 +1285,20 @@ static int atmel_qspi_dma_init(struct spi_controller *ctrl)
- 	struct atmel_qspi *aq = spi_controller_get_devdata(ctrl);
- 	int ret;
- 
--	aq->rx_chan = dma_request_chan(&aq->pdev->dev, "rx");
-+	aq->rx_chan = devm_dma_request_chan(&aq->pdev->dev, "rx");
- 	if (IS_ERR(aq->rx_chan)) {
- 		aq->rx_chan = NULL;
- 		return dev_err_probe(&aq->pdev->dev, PTR_ERR(aq->rx_chan),
- 				     "RX DMA channel is not available\n");
- 	}
- 
--	aq->tx_chan = dma_request_chan(&aq->pdev->dev, "tx");
-+	aq->tx_chan = devm_dma_request_chan(&aq->pdev->dev, "tx");
- 	if (IS_ERR(aq->tx_chan)) {
- 		ret = dev_err_probe(&aq->pdev->dev, PTR_ERR(aq->tx_chan),
- 				    "TX DMA channel is not available\n");
--		goto release_rx_chan;
-+		aq->rx_chan = NULL;
-+		aq->tx_chan = NULL;
-+		return ret;
- 	}
- 
- 	ctrl->dma_rx = aq->rx_chan;
-@@ -1307,20 +1309,6 @@ static int atmel_qspi_dma_init(struct spi_controller *ctrl)
- 		 dma_chan_name(aq->tx_chan), dma_chan_name(aq->rx_chan));
- 
- 	return 0;
--
--release_rx_chan:
--	dma_release_channel(aq->rx_chan);
--	aq->rx_chan = NULL;
--	aq->tx_chan = NULL;
--	return ret;
--}
--
--static void atmel_qspi_dma_release(struct atmel_qspi *aq)
--{
--	if (aq->rx_chan)
--		dma_release_channel(aq->rx_chan);
--	if (aq->tx_chan)
--		dma_release_channel(aq->tx_chan);
+diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+index 758fcd0546d8..ca13cd39330b 100644
+--- a/drivers/dma/dmaengine.c
++++ b/drivers/dma/dmaengine.c
+@@ -926,6 +926,36 @@ void dma_release_channel(struct dma_chan *chan)
  }
+ EXPORT_SYMBOL_GPL(dma_release_channel);
  
- static const struct atmel_qspi_ops atmel_qspi_ops = {
-@@ -1425,14 +1413,13 @@ static int atmel_qspi_probe(struct platform_device *pdev)
- 
- 	/* Request the IRQ */
- 	irq = platform_get_irq(pdev, 0);
--	if (irq < 0) {
--		err = irq;
--		goto dma_release;
--	}
-+	if (irq < 0)
-+		return irq;
++static void dmaenginem_release_channel(void *chan)
++{
++	dma_release_channel(chan);
++}
 +
- 	err = devm_request_irq(&pdev->dev, irq, atmel_qspi_interrupt,
- 			       0, dev_name(&pdev->dev), aq);
- 	if (err)
--		goto dma_release;
-+		return err;
++/**
++ * devm_dma_request_chan - try to allocate an exclusive slave channel
++ * @dev:	pointer to client device structure
++ * @name:	slave channel name
++ *
++ * Returns pointer to appropriate DMA channel on success or an error pointer.
++ *
++ * The operation is managed and will be undone on driver detach.
++ */
++
++struct dma_chan *devm_dma_request_chan(struct device *dev, const char *name)
++{
++	struct dma_chan *chan = dma_request_chan(dev, name);
++	int ret = 0;
++
++	if (!IS_ERR(chan))
++		ret = devm_add_action_or_reset(dev, dmaenginem_release_channel, chan);
++
++	if (ret)
++		return ERR_PTR(ret);
++
++	return chan;
++}
++EXPORT_SYMBOL_GPL(devm_dma_request_chan);
++
+ /**
+  * dmaengine_get - register interest in dma_channels
+  */
+diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+index bb146c5ac3e4..6de7c05d6bd8 100644
+--- a/include/linux/dmaengine.h
++++ b/include/linux/dmaengine.h
+@@ -1524,6 +1524,7 @@ struct dma_chan *__dma_request_channel(const dma_cap_mask_t *mask,
  
- 	pm_runtime_set_autosuspend_delay(&pdev->dev, 500);
- 	pm_runtime_use_autosuspend(&pdev->dev);
-@@ -1441,22 +1428,16 @@ static int atmel_qspi_probe(struct platform_device *pdev)
+ struct dma_chan *dma_request_chan(struct device *dev, const char *name);
+ struct dma_chan *dma_request_chan_by_mask(const dma_cap_mask_t *mask);
++struct dma_chan *devm_dma_request_chan(struct device *dev, const char *name);
  
- 	err = atmel_qspi_init(aq);
- 	if (err)
--		goto dma_release;
-+		return err;
- 
- 	err = spi_register_controller(ctrl);
- 	if (err)
--		goto dma_release;
-+		return err;
- 
- 	pm_runtime_mark_last_busy(&pdev->dev);
- 	pm_runtime_put_autosuspend(&pdev->dev);
- 
- 	return 0;
--
--dma_release:
--	if (aq->caps->has_dma)
--		atmel_qspi_dma_release(aq);
--
--	return err;
+ void dma_release_channel(struct dma_chan *chan);
+ int dma_get_slave_caps(struct dma_chan *chan, struct dma_slave_caps *caps);
+@@ -1560,6 +1561,12 @@ static inline struct dma_chan *dma_request_chan_by_mask(
+ {
+ 	return ERR_PTR(-ENODEV);
  }
- 
- static int atmel_qspi_sama7g5_suspend(struct atmel_qspi *aq)
-@@ -1506,9 +1487,6 @@ static void atmel_qspi_remove(struct platform_device *pdev)
- 
- 	ret = pm_runtime_get_sync(&pdev->dev);
- 	if (ret >= 0) {
--		if (aq->caps->has_dma)
--			atmel_qspi_dma_release(aq);
--
- 		if (aq->caps->has_gclk) {
- 			ret = atmel_qspi_sama7g5_suspend(aq);
- 			if (ret)
++
++static inline struct dma_chan *devm_dma_request_chan(struct device *dev, const char *name)
++{
++	return ERR_PTR(-ENODEV);
++}
++
+ static inline void dma_release_channel(struct dma_chan *chan)
+ {
+ }
 -- 
 2.49.0
 
