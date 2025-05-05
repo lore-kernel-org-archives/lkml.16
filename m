@@ -1,90 +1,191 @@
-Received: from smtp-fw-9105.amazon.com (smtp-fw-9105.amazon.com [207.171.188.204])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B065226B95B;
-	Mon,  5 May 2025 18:41:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.188.204
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB2D21B0F31;
+	Mon,  5 May 2025 18:42:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746470517; cv=none; b=ulgsXlsivrXJSq1TDMp2tbrDcvwGfY7JJnWGfgsMew2Gix9FjWRXDqB1DkyoPEA5qt+T2bIQ93Mb7xvsIt3kGrxL63D3fy2ncg69boGSjQ2QyFXpyizCxyWmIi0YDhozOKwx/RG3yiW7e1LN/lTiJmrFCassrkjGD3ldC3rUfsg=
+	t=1746470537; cv=none; b=hBeaFNChOsWuqVTTNQWfYAIqmREenIixPEy5JJJY8a+tM5Fb8Yh+pTqIwkov0mppZh+m3HJG9EeruT8C23iIlK0K8EC8+fensEFu5MA4eo4mDo/Z3VNwwZ+TAOAkmm9JwV+jBmmfp8RWZckAqNDNT8eKHFhPuJvm7R2MdrdJl6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746470517; c=relaxed/simple;
-	bh=0FKqzIZqpRDgytT3ZyiY95cLaU6PsvUZkhQ3BP23iMQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BO0Zqh64MI2C0muxSSsPHVhkK96gniJPY9oJgYA9NBK45bXu97A+m+TodVUiDkv0ne9RvaAKyhByKdZktRpK/w4GnhTV2QVPgZzdtMR/s4CSmYC0OHWCT3U10AU9Gyy+Q3MdCSLFHDhweTBmhSBRyCDF0voP9z67IyJWerh/WD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=A44qZa+0; arc=none smtp.client-ip=207.171.188.204
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1746470537; c=relaxed/simple;
+	bh=WsVm1VWhGB/q4UiDgJw4yMWmXTJdExntWW8us53Bh/4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=S628Ge3R53BUfRwr6GW/JM6cTUu4khSh/ReZAnhOxLmr7tW8MR6yuUyVgonIYD8USLxnk0Lr/pQWx2Ldv6R/PQ+27/LOv+I0WniFGGz7DOw8cGSvej6BqEv5rPhD3rP7HiYRpn7DL4jlrWa+QmI29tDsyxVYy5hiegbM6rGdmRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cKc/2tY7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="A44qZa+0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1746470516; x=1778006516;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=jzsJ5oRudDtZ2RKXtGkIO8UfccGcREzhv5fccqsAE2o=;
-  b=A44qZa+0EWOhNIJ6M2N+fSYU/Fxh/MItG6L36rHYwueWgLmUqVcsqmdA
-   qTSDFqs1F2vWfXzWYIOTVgvYRhzD3lQLj6nVe52GAG0K5P4H829GIs+ed
-   sHCKsZt6UxbQMNJdNgxrHF+8g4ledDI16nkvBfBtzcnJ7CZ+NyZzwG/F9
-   U=;
-X-IronPort-AV: E=Sophos;i="6.15,264,1739836800"; 
-   d="scan'208";a="16777511"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
-  by smtp-border-fw-9105.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 18:41:50 +0000
-Received: from EX19MTAUWC001.ant.amazon.com [10.0.38.20:21691]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.21.231:2525] with esmtp (Farcaster)
- id 116f77bc-4965-47e3-ba00-f67fffc1ce7a; Mon, 5 May 2025 18:41:49 +0000 (UTC)
-X-Farcaster-Flow-ID: 116f77bc-4965-47e3-ba00-f67fffc1ce7a
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Mon, 5 May 2025 18:41:48 +0000
-Received: from 6c7e67bfbae3.amazon.com (10.187.170.18) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Mon, 5 May 2025 18:41:44 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <brauner@kernel.org>
-CC: <alexander@mihalicyn.com>, <bluca@debian.org>, <daan.j.demeyer@gmail.com>,
-	<davem@davemloft.net>, <david@readahead.eu>, <edumazet@google.com>,
-	<horms@kernel.org>, <jack@suse.cz>, <jannh@google.com>, <kuba@kernel.org>,
-	<kuniyu@amazon.com>, <lennart@poettering.net>,
-	<linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<me@yhndnzj.com>, <netdev@vger.kernel.org>, <oleg@redhat.com>,
-	<pabeni@redhat.com>, <viro@zeniv.linux.org.uk>, <zbyszek@in.waw.pl>
-Subject: Re: [PATCH RFC v3 08/10] net, pidfs, coredump: only allow coredumping tasks to connect to coredump socket
-Date: Mon, 5 May 2025 11:40:26 -0700
-Message-ID: <20250505184136.14852-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250505-dompteur-hinhalten-204b1e16bd02@brauner>
-References: <20250505-dompteur-hinhalten-204b1e16bd02@brauner>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cKc/2tY7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2312C4CEE4;
+	Mon,  5 May 2025 18:42:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746470537;
+	bh=WsVm1VWhGB/q4UiDgJw4yMWmXTJdExntWW8us53Bh/4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=cKc/2tY7I2KB0TePdp8Ms5GA6WLpmkSNtLG4wW++4Ho1tEwdtjNXd2kMLh/eMf6vy
+	 vX6b94sG5BXKyh4McwhxanJbFRFwCwRmJBuJQRtZ2hBNAKW5lwCoxbO0BxCKFU1Q5n
+	 1QxTLBV1Zv7f90aZXNEOldeZgw02NJNGlNIcvZszYb6tTlX1U4XwBBpSuqS1xv738G
+	 DUbqRBCwrnRkLrvfebmHXSwxVXuqoNZ3Se3/EqUXCtJlg40b4eMD6ws71Ky5UQHAZR
+	 fEUG1tp6twf0tNT3+KKSAjsNe+j957+tok2IS2J2QVzHWmWNBZkH2D8ghiYePwxWhp
+	 s2LH5kGSH2ldw==
+Date: Mon, 5 May 2025 19:42:04 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Eason Yang <j2anfernee@gmail.com>
+Cc: lars@metafoo.de, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com,
+ javier.carrasco.cruz@gmail.com, alisadariana@gmail.com,
+ olivier.moysan@foss.st.com, tgamblin@baylibre.com, eblanc@baylibre.com,
+ antoniu.miclaus@analog.com, andriy.shevchenko@linux.intel.com,
+ gstols@baylibre.com, ramona.nechita@analog.com, matteomartelli3@gmail.com,
+ marcelo.schmitt@analog.com, chanh@os.amperecomputing.com,
+ KWLIU@nuvoton.com, yhyang2@nuvoton.com, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 2/2] iio: adc: add support for Nuvoton NCT7201
+Message-ID: <20250505194204.3ef319a2@jic23-huawei>
+In-Reply-To: <20250505092600.962675-3-j2anfernee@gmail.com>
+References: <20250505092600.962675-1-j2anfernee@gmail.com>
+	<20250505092600.962675-3-j2anfernee@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: EX19D043UWC001.ant.amazon.com (10.13.139.202) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Christian Brauner <brauner@kernel.org>
-Date: Mon, 5 May 2025 16:06:40 +0200
-> On Mon, May 05, 2025 at 03:08:07PM +0200, Jann Horn wrote:
-> > On Mon, May 5, 2025 at 1:14 PM Christian Brauner <brauner@kernel.org> wrote:
-> > > Make sure that only tasks that actually coredumped may connect to the
-> > > coredump socket. This restriction may be loosened later in case
-> > > userspace processes would like to use it to generate their own
-> > > coredumps. Though it'd be wiser if userspace just exposed a separate
-> > > socket for that.
-> > 
-> > This implementation kinda feels a bit fragile to me... I wonder if we
-> > could instead have a flag inside the af_unix client socket that says
-> > "this is a special client socket for coredumping".
+On Mon,  5 May 2025 17:26:00 +0800
+Eason Yang <j2anfernee@gmail.com> wrote:
+
+> Add Nuvoton NCT7201/NCT7202 system voltage monitor 12-bit ADC driver
 > 
-> Should be easily doable with a sock_flag().
+> NCT7201/NCT7202 supports up to 12 analog voltage monitor inputs and up
+> to 4 SMBus addresses by ADDR pin. Meanwhile, ALERT# hardware event pins
+> for independent alarm signals, and all the threshold values could be set
+> for system protection without any timing delay. It also supports reset
+> input RSTIN# to recover system from a fault condition.
+> 
+> Currently, only single-edge mode conversion and threshold events are
+> supported.
 
-This restriction should be applied by BPF LSM.
+As below. Setup of threshold events seems to be here, but not the interrupt
+handler that would call iio_push_event() to actually notify userspace they
+occurred.  Is the intent they are getting wired to something else?
 
-It's hard to loosen such a default restriction as someone might
-argue that's unexpected and regression.
+Even if that is the intent we normally cross wire them to the host as well
+so as to be able to find out what happened.  The use in here of client->irq
+implies such wiring but no sign of it being handled.
+
+
+Jonathan
+
+
+> 
+> Signed-off-by: Eason Yang <j2anfernee@gmail.com>
+> ---
+>  MAINTAINERS               |   1 +
+>  drivers/iio/adc/Kconfig   |  11 +
+>  drivers/iio/adc/Makefile  |   1 +
+>  drivers/iio/adc/nct7201.c | 462 ++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 475 insertions(+)
+>  create mode 100644 drivers/iio/adc/nct7201.c
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 85b031ad7082..065202ab8fe7 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -17378,6 +17378,7 @@ M:	Eason Yang <j2anfernee@gmail.com>
+>  L:	linux-iio@vger.kernel.org
+>  S:	Maintained
+>  F:	Documentation/devicetree/bindings/iio/adc/nuvoton,nct7201.yaml
+> +F:	drivers/iio/adc/nct7201.c
+>  
+>  NVIDIA (rivafb and nvidiafb) FRAMEBUFFER DRIVER
+>  M:	Antonino Daplas <adaplas@gmail.com>
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index 6529df1a498c..6d6af1b51b5e 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -1092,6 +1092,17 @@ config NAU7802
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called nau7802.
+>  
+> +config NCT7201
+> +	tristate "Nuvoton Instruments NCT7201 and NCT7202 Power Monitor"
+> +	depends on I2C
+> +	select REGMAP_I2C
+> +	help
+> +	  If you say yes here you get support for the Nuvoton NCT7201 and
+> +	  NCT7202 Voltage Monitor.
+> +
+> +	  This driver can also be built as a module. If so, the module
+> +	  will be called nct7201.
+> +
+>  config NPCM_ADC
+>  	tristate "Nuvoton NPCM ADC driver"
+>  	depends on ARCH_NPCM || COMPILE_TEST
+> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+> index 3e918c3eec69..54e8a7541af6 100644
+> --- a/drivers/iio/adc/Makefile
+> +++ b/drivers/iio/adc/Makefile
+> @@ -97,6 +97,7 @@ obj-$(CONFIG_MESON_SARADC) += meson_saradc.o
+>  obj-$(CONFIG_MP2629_ADC) += mp2629_adc.o
+>  obj-$(CONFIG_MXS_LRADC_ADC) += mxs-lradc-adc.o
+>  obj-$(CONFIG_NAU7802) += nau7802.o
+> +obj-$(CONFIG_NCT7201) += nct7201.o
+>  obj-$(CONFIG_NPCM_ADC) += npcm_adc.o
+>  obj-$(CONFIG_PAC1921) += pac1921.o
+>  obj-$(CONFIG_PAC1934) += pac1934.o
+> diff --git a/drivers/iio/adc/nct7201.c b/drivers/iio/adc/nct7201.c
+> new file mode 100644
+> index 000000000000..0dadf699162a
+> --- /dev/null
+> +++ b/drivers/iio/adc/nct7201.c
+> @@ -0,0 +1,462 @@
+
+> +static const struct iio_event_spec nct7201_events[] = {
+> +	{
+> +		.type = IIO_EV_TYPE_THRESH,
+> +		.dir = IIO_EV_DIR_RISING,
+> +		.mask_separate = BIT(IIO_EV_INFO_VALUE) |
+> +				 BIT(IIO_EV_INFO_ENABLE),
+> +	}, {
+> +		.type = IIO_EV_TYPE_THRESH,
+> +		.dir = IIO_EV_DIR_FALLING,
+> +		.mask_separate = BIT(IIO_EV_INFO_VALUE) |
+> +				 BIT(IIO_EV_INFO_ENABLE),
+> +	},
+I'd missed this before but you spend lots of time setting up event
+detectors etc which all looks good, but where are they actually signalled?
+
+The irq handler seems to be missing.
+
+> +};
+
+> +static int nct7201_init_chip(struct nct7201_chip_info *chip)
+> +{
+> +	struct device *dev = regmap_get_device(chip->regmap);
+> +	__le16 data = cpu_to_le16(GENMASK(chip->num_vin_channels - 1, 0));
+> +	unsigned int value;
+> +	int err;
+> +
+> +	err = regmap_write(chip->regmap, NCT7201_REG_CONFIGURATION,
+> +			   NCT7201_BIT_CONFIGURATION_RESET);
+> +	if (err)
+> +		return dev_err_probe(dev, err, "Failed to reset chip\n");
+> +
+> +	/*
+> +	 * After about 25 msecs, the device should be ready and then the power-up
+> +	 * bit will be set to 1. If not, wait for it.
+
+Trivial but you don't "wait for it."  That's the right choice here but the comment is
+misleading.
+
+> +	 */
+> +	fsleep(25 * USEC_PER_MSEC);
+> +
+> +	err = regmap_read(chip->regmap, NCT7201_REG_BUSY_STATUS, &value);
+> +	if (err)
+> +		return dev_err_probe(dev, err, "Failed to read busy status\n");
+> +	if (!(value & NCT7201_BIT_PWR_UP))
+> +		return dev_err_probe(dev, -EIO, "Failed to power up after reset\n");
+> +
