@@ -1,46 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D47482D2CD3;
-	Mon,  5 May 2025 23:02:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D4662DEB97;
+	Mon,  5 May 2025 23:02:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486128; cv=none; b=Kdss8E/KpYD3MbFrEQnzwF0ej9tIuSXb2OJDRnI9PyhcTU9/EV7yoc/XAkL2O4TH6d5MpoTgCZervBG9nL4m+XsNgOkbhLUvDNNfweAPMuVs8R+GXF8uqvLL2G/JyIXxUKLk2NeHide0Td4Gpzm+FFIZQwIP3eGYbqK4n4z+C0k=
+	t=1746486137; cv=none; b=QIq7zsDzsEl3tMUJUbg0suzme13ZHA24IHw0H4iJtdnB7W3vFA5B35/33K14PQqrab3avPAa9v9R+zBnen9CjoCkKzGi7qNj5ctN6XTpFS2rMvmcZ80lX6ZlpgGeb5aUf4Wf8Xgzj3pWZ+26Zsl+gdK/XlWx2dEKjJdWDkg5yxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486128; c=relaxed/simple;
-	bh=oQclxnIaI4lHrzdjhuHJdETat9Mz0A7+aU01aLzbpaM=;
+	s=arc-20240116; t=1746486137; c=relaxed/simple;
+	bh=1POYf0LwGw6uahw9yIbWbRozUWFElzKFLk8W9wbKX/0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=RnSjMeCatXXQSNcpOPloSaI15lew2N50xm8hlkFJeYY9I8YaztPsBgRSzpBhDNPHU51kI/EAncGOi+9iKNM6kVbBaK/LsGLCfCE7AdCFhSOy9HTuR8T1BmJaBVYRkIAvYRylfAJ56Tpyd5G4LsSFwRw6DfI1LEKgFJ/mO2xpLDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dQwT6+E3; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=QclX0ZTs36htxyW9BDQrc+l+PdQTHmgDP9XHrq8C7afQjaXzo6yW7cP5OHaHLESFVWNXytEUPJnF5Vp2ngYJN26KkTeHFjVPPEk1kWot8SYCeUxv9IPAIpwaeSB5m9LXnvIn4fQmQDqQhMSA7EMoZomOfn3JyJwzofxk2oYygPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h0Y4C8l4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dQwT6+E3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3752EC4CEED;
-	Mon,  5 May 2025 23:02:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h0Y4C8l4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C29BFC4CEED;
+	Mon,  5 May 2025 23:02:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486127;
-	bh=oQclxnIaI4lHrzdjhuHJdETat9Mz0A7+aU01aLzbpaM=;
+	s=k20201202; t=1746486136;
+	bh=1POYf0LwGw6uahw9yIbWbRozUWFElzKFLk8W9wbKX/0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dQwT6+E3CeAvoM5I42EPQ/u+wQAzToiqwRrvl93UM11cIaX4qR8jrQ4hSA5lohCiO
-	 AIyc9+ZHWIVKN9P3+9v3DP/+7otEMjulqOok4LrR+aAbD+3yS+SO8jBUnYp6a/NMBU
-	 TfopEkVLCopyrd66upR9k7DBrx7NmmI6bg+DyCO5a+JEY6iomjSYnL9fl2U1VnfRiC
-	 fZ2O/KxIi7kT9YknPZTkHtnIvV+nIXE0OCzvbF6vUoOsPEQBCMAXdTtBrKg+DwnJJo
-	 yYcs/9ntLFSEaGz+4k+SUbk4b/YNqF86paHhxUHIBnI8fKpGaIYukgzDenbpbM8xzO
-	 4iGnGlfTGOAuw==
+	b=h0Y4C8l4cNVl9SA0/iDB7fwC/nw11kiEdpioaUagTkt3mkYE5oynCWTBTK/968CWL
+	 73vPYFjrX4orNhVUMbUQDMON9q+lSVLqpn/P2zzkGSM2U9LrBxxCTeH+kjrw6Dlnu7
+	 lUzBOZVxygu3gojhBiLhj7lNwLkRMVHkG8yMMEg/mA481lJfToJuHlD6KJolVqXQuR
+	 sx0bleNGj+DLTKBYhb6iK4vjWhEX86OuNPVdbFwVPgbAWlBtT+SiKYBYmHQX4eMNHe
+	 299D33xAFp3TmXKTCRNPL4yPIBlLrWikg/X0N3dwwhj3TOibbhNeHEwyrCXmvinADJ
+	 /ry2xudBXApcA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jinliang Zheng <alexjlzheng@gmail.com>,
-	Jinliang Zheng <alexjlzheng@tencent.com>,
-	Tianxiang Peng <txpeng@tencent.com>,
-	Hao Peng <flyingpeng@tencent.com>,
-	Mikulas Patocka <mpatocka@redhat.com>,
+Cc: Herbert Xu <herbert@gondor.apana.org.au>,
 	Sasha Levin <sashal@kernel.org>,
-	agk@redhat.com,
-	snitzer@kernel.org,
-	dm-devel@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.6 166/294] dm: fix unconditional IO throttle caused by REQ_PREFLUSH
-Date: Mon,  5 May 2025 18:54:26 -0400
-Message-Id: <20250505225634.2688578-166-sashal@kernel.org>
+	davem@davemloft.net,
+	linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 170/294] crypto: ahash - Set default reqsize from ahash_alg
+Date: Mon,  5 May 2025 18:54:30 -0400
+Message-Id: <20250505225634.2688578-170-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -55,80 +50,64 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Jinliang Zheng <alexjlzheng@gmail.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
 
-[ Upstream commit 88f7f56d16f568f19e1a695af34a7f4a6ce537a6 ]
+[ Upstream commit 9e01aaa1033d6e40f8d7cf4f20931a61ce9e3f04 ]
 
-When a bio with REQ_PREFLUSH is submitted to dm, __send_empty_flush()
-generates a flush_bio with REQ_OP_WRITE | REQ_PREFLUSH | REQ_SYNC,
-which causes the flush_bio to be throttled by wbt_wait().
+Add a reqsize field to struct ahash_alg and use it to set the
+default reqsize so that algorithms with a static reqsize are
+not forced to create an init_tfm function.
 
-An example from v5.4, similar problem also exists in upstream:
-
-    crash> bt 2091206
-    PID: 2091206  TASK: ffff2050df92a300  CPU: 109  COMMAND: "kworker/u260:0"
-     #0 [ffff800084a2f7f0] __switch_to at ffff80004008aeb8
-     #1 [ffff800084a2f820] __schedule at ffff800040bfa0c4
-     #2 [ffff800084a2f880] schedule at ffff800040bfa4b4
-     #3 [ffff800084a2f8a0] io_schedule at ffff800040bfa9c4
-     #4 [ffff800084a2f8c0] rq_qos_wait at ffff8000405925bc
-     #5 [ffff800084a2f940] wbt_wait at ffff8000405bb3a0
-     #6 [ffff800084a2f9a0] __rq_qos_throttle at ffff800040592254
-     #7 [ffff800084a2f9c0] blk_mq_make_request at ffff80004057cf38
-     #8 [ffff800084a2fa60] generic_make_request at ffff800040570138
-     #9 [ffff800084a2fae0] submit_bio at ffff8000405703b4
-    #10 [ffff800084a2fb50] xlog_write_iclog at ffff800001280834 [xfs]
-    #11 [ffff800084a2fbb0] xlog_sync at ffff800001280c3c [xfs]
-    #12 [ffff800084a2fbf0] xlog_state_release_iclog at ffff800001280df4 [xfs]
-    #13 [ffff800084a2fc10] xlog_write at ffff80000128203c [xfs]
-    #14 [ffff800084a2fcd0] xlog_cil_push at ffff8000012846dc [xfs]
-    #15 [ffff800084a2fda0] xlog_cil_push_work at ffff800001284a2c [xfs]
-    #16 [ffff800084a2fdb0] process_one_work at ffff800040111d08
-    #17 [ffff800084a2fe00] worker_thread at ffff8000401121cc
-    #18 [ffff800084a2fe70] kthread at ffff800040118de4
-
-After commit 2def2845cc33 ("xfs: don't allow log IO to be throttled"),
-the metadata submitted by xlog_write_iclog() should not be throttled.
-But due to the existence of the dm layer, throttling flush_bio indirectly
-causes the metadata bio to be throttled.
-
-Fix this by conditionally adding REQ_IDLE to flush_bio.bi_opf, which makes
-wbt_should_throttle() return false to avoid wbt_wait().
-
-Signed-off-by: Jinliang Zheng <alexjlzheng@tencent.com>
-Reviewed-by: Tianxiang Peng <txpeng@tencent.com>
-Reviewed-by: Hao Peng <flyingpeng@tencent.com>
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/dm.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ crypto/ahash.c        | 4 ++++
+ include/crypto/hash.h | 3 +++
+ 2 files changed, 7 insertions(+)
 
-diff --git a/drivers/md/dm.c b/drivers/md/dm.c
-index 5dd0a42463a2b..9ea868bd0d129 100644
---- a/drivers/md/dm.c
-+++ b/drivers/md/dm.c
-@@ -1536,14 +1536,18 @@ static void __send_empty_flush(struct clone_info *ci)
- {
- 	struct dm_table *t = ci->map;
- 	struct bio flush_bio;
-+	blk_opf_t opf = REQ_OP_WRITE | REQ_PREFLUSH | REQ_SYNC;
+diff --git a/crypto/ahash.c b/crypto/ahash.c
+index 709ef09407991..6168f3532f552 100644
+--- a/crypto/ahash.c
++++ b/crypto/ahash.c
+@@ -427,6 +427,7 @@ static int crypto_ahash_init_tfm(struct crypto_tfm *tfm)
+ 	hash->setkey = ahash_nosetkey;
+ 
+ 	crypto_ahash_set_statesize(hash, alg->halg.statesize);
++	crypto_ahash_set_reqsize(hash, alg->reqsize);
+ 
+ 	if (tfm->__crt_alg->cra_type != &crypto_ahash_type)
+ 		return crypto_init_shash_ops_async(tfm);
+@@ -599,6 +600,9 @@ static int ahash_prepare_alg(struct ahash_alg *alg)
+ 	if (alg->halg.statesize == 0)
+ 		return -EINVAL;
+ 
++	if (alg->reqsize && alg->reqsize < alg->halg.statesize)
++		return -EINVAL;
 +
-+	if ((ci->io->orig_bio->bi_opf & (REQ_IDLE | REQ_SYNC)) ==
-+	    (REQ_IDLE | REQ_SYNC))
-+		opf |= REQ_IDLE;
+ 	err = hash_prepare_alg(&alg->halg);
+ 	if (err)
+ 		return err;
+diff --git a/include/crypto/hash.h b/include/crypto/hash.h
+index f7c2a22cd776d..c0d472fdc82e6 100644
+--- a/include/crypto/hash.h
++++ b/include/crypto/hash.h
+@@ -153,6 +153,7 @@ struct ahash_request {
+  *	      This is a counterpart to @init_tfm, used to remove
+  *	      various changes set in @init_tfm.
+  * @clone_tfm: Copy transform into new object, may allocate memory.
++ * @reqsize: Size of the request context.
+  * @halg: see struct hash_alg_common
+  */
+ struct ahash_alg {
+@@ -169,6 +170,8 @@ struct ahash_alg {
+ 	void (*exit_tfm)(struct crypto_ahash *tfm);
+ 	int (*clone_tfm)(struct crypto_ahash *dst, struct crypto_ahash *src);
  
- 	/*
- 	 * Use an on-stack bio for this, it's safe since we don't
- 	 * need to reference it after submit. It's just used as
- 	 * the basis for the clone(s).
- 	 */
--	bio_init(&flush_bio, ci->io->md->disk->part0, NULL, 0,
--		 REQ_OP_WRITE | REQ_PREFLUSH | REQ_SYNC);
-+	bio_init(&flush_bio, ci->io->md->disk->part0, NULL, 0, opf);
++	unsigned int reqsize;
++
+ 	struct hash_alg_common halg;
+ };
  
- 	ci->bio = &flush_bio;
- 	ci->sector_count = 0;
 -- 
 2.39.5
 
