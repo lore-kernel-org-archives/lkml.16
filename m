@@ -1,301 +1,106 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9CFB194A6C
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 16:34:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A289626AAB5
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 16:34:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746462845; cv=none; b=fxKxWdrAyhR5j9Y67TjGFJZwvAy/kaPvmwiui3nUlm/fP05fWV1nTbFTjd0MGpuzGKDJswfGqA+vREePSMr7DoDn3x2/cy+a19/cocZ9JmUoLCINGCUklHzjMnVtdWClZVW2d2YqtKwJ0d2z35RAU5CDx/d8L2BcmrCt2FtwKsI=
+	t=1746462860; cv=none; b=Cojxj1WWngzqn5gIkv1oGCucjPTgGi9Zpbzi7ODnYRf9YAbL8Hjm2ocQO0MehiOonXLxbbVojr7/GZEzVtWo2k3tOeov5OZUvidf4b6tjXR4DbPMdkl9UJaxht4xlBxiMcjQzFySP3mPIbWytB2eHf8ZXdoLxBSMbF6F8v/0CAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746462845; c=relaxed/simple;
-	bh=ZUdQ8e073ixU4cLB0bqOKNy/fnMe5Asq5Q6r+NH3CdI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uqgn7L185Fy5/hrkSLKJST5TTkdVaulUsGyB+PIqMGzZ3Jnnui8BbwrgUsH6o2zwB+GWBebWkgdq/QJEuouy7vdIeAvMwH4Bfdy+MjACNnTJ4WcPN6MAFzAgIFvORdtqwDTL4+SvkdDXVq1wMHNEhjdhiQmQhQJ4BVFk9vexCQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Fjjqu5kx; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Fjjqu5kx"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cfe808908so116315e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 09:34:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746462841; x=1747067641; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Cp9xG8IzZ6A+sCM3e//b/xF89Qt5DTbc6K0sQ70LgNM=;
-        b=Fjjqu5kxIDckj/65HS0mnj4PmCeuvUCrvF0cRmUVwiHHxOOfD4LC776bWU4ryYAJZ+
-         FP1hQkCGBa4A+yJgaKUr1YqEvbGYwu0P1cY7GQ7g1IDDNdgVPtznnMIZvgcIPiNnHlQR
-         IGTnSnmoPayqp7+zO3vzR+yp4V7ktqDPEUtiCw8TKnVQPa4OO7v60QMC9XkEsXYQdhFA
-         DcFDp7QmsJlGXPRhmmE4Hq2sniOamQIn2aICjZFtGcptcyMQ2NRQn84fnyNN2n2rOXHu
-         xYjb2prfU7LNup9idIy3crcsJuGniV9Yx16Ti25GWb8sse/qbWlyw2CcoWiMI/Fne+xj
-         iL2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746462841; x=1747067641;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Cp9xG8IzZ6A+sCM3e//b/xF89Qt5DTbc6K0sQ70LgNM=;
-        b=Bo4j/mALfXTXU801iqwUyrSy4uM/9ds9MFYpfBx5Y83xdBibs/+9VzkYPTrB6qBdy5
-         xXzkO47MOwHj+R7POavGcWdeF+VIMXGphRlDqKFSTTmx+Jz8YKNQGO7Jb36h0xUQDhTq
-         O+LvPi5EdybHIgIrbHMRa/KReoovThEpB1P//cWIBgQZ48BHUs8RcYipp7rkSbFRsdri
-         iv9lU4vflkdMu1nNSafZohaR4HSZSXY4NEF+LcvHsOxMlRyiuFNCRR1EFHX4R6lm9Tcc
-         hR+3Wt3+LbieZD1/dAi3zC7QpylIJBfimiLHAufGulVgQpip0XHVK+g1hEO0u0eYNrjH
-         QroQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVQV3EVSuZUijAlwhLgCg7NyHvplz4+RJObYgNYV34Cl17bbKp2Cpt422J32X+muf3WQyTC7MDh6vRNZss=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9Kww7hmuGtbUMPFpTJXlj713SPPmCiUeL6XIyuyi/C75c96Df
-	SxX/NzHrpBZonXwRTYxPNrzsvg30gyvafkN6et3HRsGeXQhyf2DdwuqPOW1rmecn/fVwIBrjFWw
-	or69eXxdYzsM91akwxYd2zGKbgO82TUQ+xR87
-X-Gm-Gg: ASbGncsj1+97OTed2rHb53DouHI9sQZYQOdrTcEbt91DiJKZqWC4SJVLMIwwLqePFqC
-	QmlS4uWiZPaLOLXanGyKN0dEVcyQEyq+eFZvFfa9FhOS7sQXJZonxDRFFUTr+Iee8ODXRMUbihG
-	+rx3hv3aLxGUNh0AAQpRyr
-X-Google-Smtp-Source: AGHT+IGQyGO5uVSmpnPnkE3FDZ4KT+CnyY7gWk8P1H5yWIU1LA4t6+ZiezZ9eO866m7rRnEE4b46YYgj28ToiihwpHE=
-X-Received: by 2002:a05:600c:3b82:b0:439:9434:1b6c with SMTP id
- 5b1f17b1804b1-441cf9b141dmr171795e9.3.1746462840937; Mon, 05 May 2025
- 09:34:00 -0700 (PDT)
+	s=arc-20240116; t=1746462860; c=relaxed/simple;
+	bh=CW770d+fDaAWrrz9w9a8CWzd2O84j7SkZzT4r0lCr0k=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WAEBZNGYOoQMAUwM3aKn55mEWsQmiIzTTkwkYdfTVLYYX7t9fJf6Rt2bLAhKeTUSO1UAtAUM0weOCw4Px8HCHq/3lINWMiI2wBoz3ATGsPCgsv5PedTJXa5q+jNlhTDQf33ryZj0bI1yWH9xzenBtC//yNC4sB+Qzk86wb6cbf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42BB4C4CEE4;
+	Mon,  5 May 2025 16:34:18 +0000 (UTC)
+Date: Mon, 5 May 2025 12:34:23 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Prakash Sangappa <prakash.sangappa@oracle.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, "mathieu.desnoyers@efficios.com"
+ <mathieu.desnoyers@efficios.com>, "tglx@linutronix.de"
+ <tglx@linutronix.de>, "bigeasy@linutronix.de" <bigeasy@linutronix.de>,
+ "kprateek.nayak@amd.com" <kprateek.nayak@amd.com>
+Subject: Re: [PATCH V3 1/4] Sched: Scheduler time slice extension
+Message-ID: <20250505123423.3494a18b@gandalf.local.home>
+In-Reply-To: <4D9FC618-1BD6-4126-8B1D-96ECD497CA90@oracle.com>
+References: <20250502015955.3146733-1-prakash.sangappa@oracle.com>
+	<20250502015955.3146733-2-prakash.sangappa@oracle.com>
+	<20250502090529.GU4198@noisy.programming.kicks-ass.net>
+	<20250502090643.3809b6f5@batman.local.home>
+	<C3F85063-68B5-4C6D-B95F-27B72DBFA178@oracle.com>
+	<20250505104830.36f22a4d@gandalf.local.home>
+	<4D9FC618-1BD6-4126-8B1D-96ECD497CA90@oracle.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250504224149.1033867-1-tjmercier@google.com>
- <20250504224149.1033867-3-tjmercier@google.com> <26ca8ddf-0d78-462f-a47d-a1128b2e058f@amd.com>
-In-Reply-To: <26ca8ddf-0d78-462f-a47d-a1128b2e058f@amd.com>
-From: "T.J. Mercier" <tjmercier@google.com>
-Date: Mon, 5 May 2025 09:33:48 -0700
-X-Gm-Features: ATxdqUHRGgaUPb2TsqMguMaRajHe7gmAlhGQ8JWKvVw_IFJV369f1ssTaaa65I4
-Message-ID: <CABdmKX2iNk22h-KxUr4yvZO80yeRRjMfoC7yjiZ-aR_f1k402g@mail.gmail.com>
-Subject: Re: [PATCH v2 2/6] bpf: Add dmabuf iterator
-To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Cc: sumit.semwal@linaro.org, ast@kernel.org, daniel@iogearbox.net, 
-	andrii@kernel.org, martin.lau@linux.dev, skhan@linuxfoundation.org, 
-	song@kernel.org, alexei.starovoitov@gmail.com, linux-kernel@vger.kernel.org, 
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linaro-mm-sig@lists.linaro.org, linux-doc@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, android-mm@google.com, 
-	simona@ffwll.ch, corbet@lwn.net, eddyz87@gmail.com, yonghong.song@linux.dev, 
-	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me, 
-	jolsa@kernel.org, mykolal@fb.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 5, 2025 at 4:17=E2=80=AFAM Christian K=C3=B6nig <christian.koen=
-ig@amd.com> wrote:
->
-> On 5/5/25 00:41, T.J. Mercier wrote:
-> > The dmabuf iterator traverses the list of all DMA buffers.
-> >
-> > DMA buffers are refcounted through their associated struct file. A
-> > reference is taken on each buffer as the list is iterated to ensure eac=
-h
-> > buffer persists for the duration of the bpf program execution without
-> > holding the list mutex.
-> >
-> > Signed-off-by: T.J. Mercier <tjmercier@google.com>
-> > ---
-> >  kernel/bpf/Makefile      |   3 +
-> >  kernel/bpf/dmabuf_iter.c | 134 +++++++++++++++++++++++++++++++++++++++
-> >  2 files changed, 137 insertions(+)
-> >  create mode 100644 kernel/bpf/dmabuf_iter.c
-> >
-> > diff --git a/kernel/bpf/Makefile b/kernel/bpf/Makefile
-> > index 70502f038b92..3a335c50e6e3 100644
-> > --- a/kernel/bpf/Makefile
-> > +++ b/kernel/bpf/Makefile
-> > @@ -53,6 +53,9 @@ obj-$(CONFIG_BPF_SYSCALL) +=3D relo_core.o
-> >  obj-$(CONFIG_BPF_SYSCALL) +=3D btf_iter.o
-> >  obj-$(CONFIG_BPF_SYSCALL) +=3D btf_relocate.o
-> >  obj-$(CONFIG_BPF_SYSCALL) +=3D kmem_cache_iter.o
-> > +ifeq ($(CONFIG_DMA_SHARED_BUFFER),y)
-> > +obj-$(CONFIG_BPF_SYSCALL) +=3D dmabuf_iter.o
-> > +endif
-> >
-> >  CFLAGS_REMOVE_percpu_freelist.o =3D $(CC_FLAGS_FTRACE)
-> >  CFLAGS_REMOVE_bpf_lru_list.o =3D $(CC_FLAGS_FTRACE)
-> > diff --git a/kernel/bpf/dmabuf_iter.c b/kernel/bpf/dmabuf_iter.c
-> > new file mode 100644
-> > index 000000000000..968762e11f73
-> > --- /dev/null
-> > +++ b/kernel/bpf/dmabuf_iter.c
-> > @@ -0,0 +1,134 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/* Copyright (c) 2025 Google LLC */
-> > +#include <linux/bpf.h>
-> > +#include <linux/btf_ids.h>
-> > +#include <linux/dma-buf.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/seq_file.h>
-> > +
-> > +BTF_ID_LIST_SINGLE(bpf_dmabuf_btf_id, struct, dma_buf)
-> > +DEFINE_BPF_ITER_FUNC(dmabuf, struct bpf_iter_meta *meta, struct dma_bu=
-f *dmabuf)
-> > +
-> > +static struct dma_buf *get_next_dmabuf(struct dma_buf *dmabuf)
-> > +{
-> > +     struct dma_buf *ret =3D NULL;
-> > +
-> > +     /*
-> > +      * Look for the first/next buffer we can obtain a reference to.
-> > +      *
-> > +      * The list mutex does not protect a dmabuf's refcount, so it can=
- be
-> > +      * zeroed while we are iterating. We cannot call get_dma_buf() si=
-nce the
-> > +      * caller of this program may not already own a reference to the =
-buffer.
-> > +      */
-> > +     mutex_lock(&dmabuf_list_mutex);
-> > +     if (dmabuf) {
->
-> That looks like you try to mangle the start and next functionality in jus=
-t one function.
->
-> I would just inline that into the dmabuf_iter_seq_start() and dmabuf_iter=
-_seq_next() functions.
+On Mon, 5 May 2025 15:58:12 +0000
+Prakash Sangappa <prakash.sangappa@oracle.com> wrote:
 
-Primarily this is to share between the open coded iterator (next
-patch) and this normal iterator since I didn't want to duplicate the
-same list traversal code across both of them.
->
->
-> > +             dma_buf_put(dmabuf);
-> > +             list_for_each_entry_continue(dmabuf, &dmabuf_list, list_n=
-ode) {
->
-> That you can put the DMA-buf and then still uses it in list_for_each_entr=
-y_continue() only works because the mutex is locked in the destroy path.
+> Yes the application would only call they system call to yield cpu, if the=
+ extension is granted.=20
+>=20
+> The =E2=80=98RSEQ_CS_FLAG_DELAY_RESCHED=E2=80=99 bit in the =E2=80=98rseq=
+=E2=80=99 structure  is cleared when the=20
+> time extension is granted. This would indicate to the application that a =
+time extension was
+> granted. The application is expected to call the system call if this bit =
+got cleared.
+>=20
+> However, It is possible that the thread gets rescheduled within the exten=
+ded time window due=20
+> to another wakeup or runtime expiry, which the user thread would not know=
+ unless we add
+> another bit to indicate it got rescheduled in the extended time. Also, if=
+ the task=E2=80=99s critical section
+> ran longer and the hrtick rescheduled the thread, the application would n=
+ot know.
+>=20
+> Or we need to guarantee the thread will not get rescheduled in the extend=
+ed time?
+>=20
+> I believe it would be same with your patch also.=20
 
-Yup, this was deliberate.
->
->
-> I strongly suggest to just put those two functions into drivers/dma-buf/d=
-ma-buf.c right next to the __dma_buf_debugfs_list_add() and __dma_buf_debug=
-fs_list_del() functions.
+So, my patch had a bit that got set when an extension happened.
 
-By two functions, you mean a get_first_dmabuf(void) and a
-get_next_dmabuf(struct dma_buf*)? To make the dma_buf_put() call a
-little less scary since all the mutex ops are right there?
->
->
-> Apart from those style suggestions looks good to me from the technical si=
-de, but I'm not an expert for the BPF stuff.
->
-> Regards,
-> Christian.
+Bit zero was set by the kernel.
 
-Thanks for your comments and reviews!
+Bits 1-31 was a counter (so that the code could nest).
 
-> > +                     if (file_ref_get(&dmabuf->file->f_ref)) {
-> > +                             ret =3D dmabuf;
-> > +                             break;
-> > +                     }
-> > +             }
-> > +     } else {
-> > +             list_for_each_entry(dmabuf, &dmabuf_list, list_node) {
-> > +                     if (file_ref_get(&dmabuf->file->f_ref)) {
-> > +                             ret =3D dmabuf;
-> > +                             break;
-> > +                     }
-> > +             }
-> > +     }
-> > +     mutex_unlock(&dmabuf_list_mutex);
-> > +     return ret;
-> > +}
-> > +
-> > +static void *dmabuf_iter_seq_start(struct seq_file *seq, loff_t *pos)
-> > +{
-> > +     if (*pos)
-> > +             return NULL;
-> > +
-> > +     return get_next_dmabuf(NULL);
-> > +}
-> > +
-> > +static void *dmabuf_iter_seq_next(struct seq_file *seq, void *v, loff_=
-t *pos)
-> > +{
-> > +     struct dma_buf *dmabuf =3D v;
-> > +
-> > +     ++*pos;
-> > +
-> > +     return get_next_dmabuf(dmabuf);
-> > +}
-> > +
-> > +struct bpf_iter__dmabuf {
-> > +     __bpf_md_ptr(struct bpf_iter_meta *, meta);
-> > +     __bpf_md_ptr(struct dma_buf *, dmabuf);
-> > +};
-> > +
-> > +static int __dmabuf_seq_show(struct seq_file *seq, void *v, bool in_st=
-op)
-> > +{
-> > +     struct bpf_iter_meta meta =3D {
-> > +             .seq =3D seq,
-> > +     };
-> > +     struct bpf_iter__dmabuf ctx =3D {
-> > +             .meta =3D &meta,
-> > +             .dmabuf =3D v,
-> > +     };
-> > +     struct bpf_prog *prog =3D bpf_iter_get_info(&meta, in_stop);
-> > +
-> > +     if (prog)
-> > +             return bpf_iter_run_prog(prog, &ctx);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int dmabuf_iter_seq_show(struct seq_file *seq, void *v)
-> > +{
-> > +     return __dmabuf_seq_show(seq, v, false);
-> > +}
-> > +
-> > +static void dmabuf_iter_seq_stop(struct seq_file *seq, void *v)
-> > +{
-> > +     struct dma_buf *dmabuf =3D v;
-> > +
-> > +     if (dmabuf)
-> > +             dma_buf_put(dmabuf);
-> > +}
-> > +
-> > +static const struct seq_operations dmabuf_iter_seq_ops =3D {
-> > +     .start  =3D dmabuf_iter_seq_start,
-> > +     .next   =3D dmabuf_iter_seq_next,
-> > +     .stop   =3D dmabuf_iter_seq_stop,
-> > +     .show   =3D dmabuf_iter_seq_show,
-> > +};
-> > +
-> > +static void bpf_iter_dmabuf_show_fdinfo(const struct bpf_iter_aux_info=
- *aux,
-> > +                                     struct seq_file *seq)
-> > +{
-> > +     seq_puts(seq, "dmabuf iter\n");
-> > +}
-> > +
-> > +static const struct bpf_iter_seq_info dmabuf_iter_seq_info =3D {
-> > +     .seq_ops                =3D &dmabuf_iter_seq_ops,
-> > +     .init_seq_private       =3D NULL,
-> > +     .fini_seq_private       =3D NULL,
-> > +     .seq_priv_size          =3D 0,
-> > +};
-> > +
-> > +static struct bpf_iter_reg bpf_dmabuf_reg_info =3D {
-> > +     .target                 =3D "dmabuf",
-> > +     .feature                =3D BPF_ITER_RESCHED,
-> > +     .show_fdinfo            =3D bpf_iter_dmabuf_show_fdinfo,
-> > +     .ctx_arg_info_size      =3D 1,
-> > +     .ctx_arg_info           =3D {
-> > +             { offsetof(struct bpf_iter__dmabuf, dmabuf),
-> > +               PTR_TO_BTF_ID_OR_NULL },
-> > +     },
-> > +     .seq_info               =3D &dmabuf_iter_seq_info,
-> > +};
-> > +
-> > +static int __init dmabuf_iter_init(void)
-> > +{
-> > +     bpf_dmabuf_reg_info.ctx_arg_info[0].btf_id =3D bpf_dmabuf_btf_id[=
-0];
-> > +     return bpf_iter_reg_target(&bpf_dmabuf_reg_info);
-> > +}
-> > +
-> > +late_initcall(dmabuf_iter_init);
->
+On exiting the critical section a task would call something like:
+
+static inline bool dec_extend(volatile unsigned *ptr)
+{
+	if (*ptr & ~1)
+		asm volatile("subl %b1,%0"
+				: "+m" (*(volatile char *)ptr)
+				: "iq" (0x2)
+				: "memory");
+
+	return *ptr =3D=3D 1;
+}
+
+[..]
+	if (dec_extend(&rseq_map->cr_counter)) {
+		rseq_map->cr_counter =3D 0;
+		yield();
+	}
+
+That is, the user space task would increment the counter by two when
+entering a critical section and decrement it by two when exiting. If the
+counter ends up as 1, then it not only is out of all nested critical
+sections, it also knows it was extended and will schedule out.
+
+My kernel patches would set the bit if it extended the time slice, but if
+it then scheduled the task, it would clear it again. That way when the task
+is scheduled back on the CPU it will not call yield() again.
+
+-- Steve
