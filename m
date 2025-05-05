@@ -1,91 +1,116 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC90C239E80;
-	Mon,  5 May 2025 23:06:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD1CD396ED5;
+	Mon,  5 May 2025 23:06:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486371; cv=none; b=O+UmfWCVLVxKbBy6cQXkWMyZ0A/cxe9VmOPS0JNRn/qcdGF2oKG4Oth5q9kHoff6PJVrsj40jAdRfgZNUnbcnpDn6GdOz3Nxfg/gVOx2AT77sfZi5wxfAA+emUVScrkxXncqgfVpfiqZpYtTNz8vOSktZSCW/XHkQq5eIsmToUM=
+	t=1746486394; cv=none; b=ka39qpECuW+wtJ8P62Ws2NgzcEe+eZZWkEDViGJmHCNwCuLl2yQbDfRaS+vRsk3xo+VB43qtU50Kl8jJnUWU7ieWCCnde9TRkmX6y9iX6tW87+9cHZyHCQF6qm/ybjpqOgg0Mg1bqvKCKK70QJvVz2usfTKU+VAscjkpwsCGFoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486371; c=relaxed/simple;
-	bh=Eu0Vxmjy+j96zmKQbWqFv06fTIOV9pidgP4pHpT+D9Q=;
+	s=arc-20240116; t=1746486394; c=relaxed/simple;
+	bh=d8HLwVBJXftHhGusazL9mjEIpHK7Wy8ygOPuVThl/EQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PdSyjzsLM1Lr2KIybnYEhdprTrsB8FaxgyE4NQCs9smA33BLx9O6OA5MteYGigxhWU4ss4UZTzYotfn8Y9BLSviYhTwyO3PdEbUCuI4vbZe/S0TX7eTj3/yVKDXOn7LEcxQWWfVBlLSGai3iYC6I9/nDO8xWn7B7ZD8YhXIdIKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WHXa2kfy; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=H0GhUPt868NaCpdgq9yLp8HQOjPh2ceEzRePnEL/Z0xBUI50M/ClJTz5Y1a45/cUPmFnHkqtTGWP0aBAfs7SDHa2nPXr+oExFBSxLdcmegp8sRXN3jHJhDoy1Yg4gPccpTbh2z1g0YHbmtsXp/149XyMVQ100jmFUqZ159CbVgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BP8qUy/Z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WHXa2kfy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7036C4CEEE;
-	Mon,  5 May 2025 23:06:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BP8qUy/Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C89EC4CEF2;
+	Mon,  5 May 2025 23:06:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486371;
-	bh=Eu0Vxmjy+j96zmKQbWqFv06fTIOV9pidgP4pHpT+D9Q=;
+	s=k20201202; t=1746486393;
+	bh=d8HLwVBJXftHhGusazL9mjEIpHK7Wy8ygOPuVThl/EQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WHXa2kfyWrlErSsszY91+kJ03HPDAHe3cl+XseLM6he9ulJf0WH4zDgfgMdZ3NJT1
-	 pkj41wH/hyJzDP5j4h37kwmXHweUs9DOdJ/D1cc4PO/zGtOblTikG0l0M9wg+Cv1Y7
-	 jocJhzkD16//o4dVFEDkXXPnKS7LtfONdMArXMHltiK7hz6XTp/Zq3zvvbYqohUZ7X
-	 ntQKURoM3aXmkjFqmsV9CuiqOvMd6/dLnXkQFUaYKVE9Ca0VDpd1EG6FaWXnc1iM1X
-	 AWna2lslumUPgCxpl8+p84o+PLYXIdf8i3faQtp1ZOQEQ1r1xipJ6bIqJsvC1PTWb2
-	 wepUwGrPh7KSA==
+	b=BP8qUy/ZMQUvGxZ9TJL7hiDTdEC+w70lytOKcG4b7Sr2IsLMJVm1lMoMZVpdiJeYX
+	 DekgQ+/6Jb9qTu4bQcNc6B6oYRTquG00aCpvsWvHtk3u9Q48iiM/VR38O/4itId/hY
+	 DlDopeomTh8+ksRCs7YDHuYjubJ4l9lVz56aXqGDT3J8c/9DfMSOAaXtDX05uKWgBI
+	 D/yc7oCg+EGLzyHZu1QArNemQUuQKU5j+dv3rnAoptBLjJcrscYnKb5mUx8OX2dtNV
+	 rM8EEpQJZHM2odojJBRldNS2yu2QrDIfj2+v5z59NnhiS/MYC5xa6XAUoU1YlTmgmA
+	 Vs749/sziTXLg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: P Praneesh <quic_ppranees@quicinc.com>,
-	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+Cc: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+	Steve French <stfrench@microsoft.com>,
 	Sasha Levin <sashal@kernel.org>,
-	jjohnson@kernel.org,
-	linux-wireless@vger.kernel.org,
-	ath12k@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.6 289/294] wifi: ath12k: Fix end offset bit definition in monitor ring descriptor
-Date: Mon,  5 May 2025 18:56:29 -0400
-Message-Id: <20250505225634.2688578-289-sashal@kernel.org>
+	sfrench@samba.org,
+	linux-cifs@vger.kernel.org,
+	samba-technical@lists.samba.org
+Subject: [PATCH AUTOSEL 6.1 004/212] cifs: Fix querying and creating MF symlinks over SMB1
+Date: Mon,  5 May 2025 19:02:56 -0400
+Message-Id: <20250505230624.2692522-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
-References: <20250505225634.2688578-1-sashal@kernel.org>
+In-Reply-To: <20250505230624.2692522-1-sashal@kernel.org>
+References: <20250505230624.2692522-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.89
+X-stable-base: Linux 6.1.136
 Content-Transfer-Encoding: 8bit
 
-From: P Praneesh <quic_ppranees@quicinc.com>
+From: Pali Rohár <pali@kernel.org>
 
-[ Upstream commit 6788a666000d600bd8f2e9f991cad9cc805e7f01 ]
+[ Upstream commit 4236ac9fe5b8b42756070d4abfb76fed718e87c2 ]
 
-End offset for the monitor destination ring descriptor is defined as
-16 bits, while the firmware definition specifies only 12 bits.
-The remaining bits (bit 12 to bit 15) are reserved and may contain
-junk values, leading to invalid information retrieval. Fix this issue
-by updating the correct genmask values.
+Old SMB1 servers without CAP_NT_SMBS do not support CIFS_open() function
+and instead SMBLegacyOpen() needs to be used. This logic is already handled
+in cifs_open_file() function, which is server->ops->open callback function.
 
-Tested-on: QCN9274 hw2.0 PCI WLAN.WBE.1.3.1-00173-QCAHKSWPL_SILICONZ-1
-Tested-on: WCN7850 hw2.0 PCI WLAN.HMT.1.0.c5-00481-QCAHMTSWPL_V1.0_V2.0_SILICONZ-3
+So for querying and creating MF symlinks use open callback function instead
+of CIFS_open() function directly.
 
-Signed-off-by: P Praneesh <quic_ppranees@quicinc.com>
-Link: https://patch.msgid.link/20241223060132.3506372-8-quic_ppranees@quicinc.com
-Signed-off-by: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+This change fixes querying and creating new MF symlinks on Windows 98.
+Currently cifs_query_mf_symlink() is not able to detect MF symlink and
+cifs_create_mf_symlink() is failing with EIO error.
+
+Signed-off-by: Pali Rohár <pali@kernel.org>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath12k/hal_desc.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/smb/client/link.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath12k/hal_desc.h b/drivers/net/wireless/ath/ath12k/hal_desc.h
-index 6c17adc6d60b5..1bb840c2bef57 100644
---- a/drivers/net/wireless/ath/ath12k/hal_desc.h
-+++ b/drivers/net/wireless/ath/ath12k/hal_desc.h
-@@ -2918,7 +2918,7 @@ struct hal_mon_buf_ring {
+diff --git a/fs/smb/client/link.c b/fs/smb/client/link.c
+index c0f101fc1e5d0..d71feb3fdbd2c 100644
+--- a/fs/smb/client/link.c
++++ b/fs/smb/client/link.c
+@@ -269,7 +269,7 @@ cifs_query_mf_symlink(unsigned int xid, struct cifs_tcon *tcon,
+ 	struct cifs_open_parms oparms;
+ 	struct cifs_io_parms io_parms = {0};
+ 	int buf_type = CIFS_NO_BUFFER;
+-	FILE_ALL_INFO file_info;
++	struct cifs_open_info_data query_data;
  
- #define HAL_MON_DEST_COOKIE_BUF_ID      GENMASK(17, 0)
+ 	oparms = (struct cifs_open_parms) {
+ 		.tcon = tcon,
+@@ -281,11 +281,11 @@ cifs_query_mf_symlink(unsigned int xid, struct cifs_tcon *tcon,
+ 		.fid = &fid,
+ 	};
  
--#define HAL_MON_DEST_INFO0_END_OFFSET		GENMASK(15, 0)
-+#define HAL_MON_DEST_INFO0_END_OFFSET		GENMASK(11, 0)
- #define HAL_MON_DEST_INFO0_FLUSH_DETECTED	BIT(16)
- #define HAL_MON_DEST_INFO0_END_OF_PPDU		BIT(17)
- #define HAL_MON_DEST_INFO0_INITIATOR		BIT(18)
+-	rc = CIFS_open(xid, &oparms, &oplock, &file_info);
++	rc = tcon->ses->server->ops->open(xid, &oparms, &oplock, &query_data);
+ 	if (rc)
+ 		return rc;
+ 
+-	if (file_info.EndOfFile != cpu_to_le64(CIFS_MF_SYMLINK_FILE_SIZE)) {
++	if (query_data.fi.EndOfFile != cpu_to_le64(CIFS_MF_SYMLINK_FILE_SIZE)) {
+ 		rc = -ENOENT;
+ 		/* it's not a symlink */
+ 		goto out;
+@@ -324,7 +324,7 @@ cifs_create_mf_symlink(unsigned int xid, struct cifs_tcon *tcon,
+ 		.fid = &fid,
+ 	};
+ 
+-	rc = CIFS_open(xid, &oparms, &oplock, NULL);
++	rc = tcon->ses->server->ops->open(xid, &oparms, &oplock, NULL);
+ 	if (rc)
+ 		return rc;
+ 
 -- 
 2.39.5
 
