@@ -1,260 +1,90 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-9105.amazon.com (smtp-fw-9105.amazon.com [207.171.188.204])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F07726771B
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 18:39:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B065226B95B;
+	Mon,  5 May 2025 18:41:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.188.204
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746470386; cv=none; b=ZzGKA/RP70gg/M1NTuaMdbLFEpMPD8SPyVXJT3UZGu8Ig/sGWUwfcd4a6DsZWPZL51Y358KMrbtFW/FIPSz7dr0HzY+SseyU2gnTdcMPZW5h3g6JgGXl5w0JH+j831D7nMqEX25LeJkPAMCtcAxOQL3CZfpPtiiN0P31ACRv9ic=
+	t=1746470517; cv=none; b=ulgsXlsivrXJSq1TDMp2tbrDcvwGfY7JJnWGfgsMew2Gix9FjWRXDqB1DkyoPEA5qt+T2bIQ93Mb7xvsIt3kGrxL63D3fy2ncg69boGSjQ2QyFXpyizCxyWmIi0YDhozOKwx/RG3yiW7e1LN/lTiJmrFCassrkjGD3ldC3rUfsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746470386; c=relaxed/simple;
-	bh=up9a1YM4tArFppHFNdrFADc8/CKFM14Jqw3tI56B5t0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=cIhEhisYDUabL/AQ/nd+E6n3EsKqw0oxqyj5bq1wmefaHdt6vSEC/yHZf9aj6jkbmE6Y7S73cGq9NVoL1bXmhkgv+Ic/jPpwmnMekAmMlkOZ9Q9R1Ab+wLdymLhSLVsje3ZTyifJ8N5YnOUH/X1RkLt87hs+S7fn70CzOcinck0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=isovalent.com; spf=pass smtp.mailfrom=isovalent.com; dkim=pass (2048-bit key) header.d=isovalent.com header.i=@isovalent.com header.b=Ez5ZNQhB; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=isovalent.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=isovalent.com
+	s=arc-20240116; t=1746470517; c=relaxed/simple;
+	bh=0FKqzIZqpRDgytT3ZyiY95cLaU6PsvUZkhQ3BP23iMQ=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BO0Zqh64MI2C0muxSSsPHVhkK96gniJPY9oJgYA9NBK45bXu97A+m+TodVUiDkv0ne9RvaAKyhByKdZktRpK/w4GnhTV2QVPgZzdtMR/s4CSmYC0OHWCT3U10AU9Gyy+Q3MdCSLFHDhweTBmhSBRyCDF0voP9z67IyJWerh/WD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=A44qZa+0; arc=none smtp.client-ip=207.171.188.204
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=isovalent.com header.i=@isovalent.com header.b="Ez5ZNQhB"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-39ee5ac4321so5786755f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 11:39:43 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="A44qZa+0"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=isovalent.com; s=google; t=1746470382; x=1747075182; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qvnaQmeST1mheRYMccMqZNEEW84cIcZjY0Sub0+nVyg=;
-        b=Ez5ZNQhB2DPtSJ/ev1UVhohZo9QZBU6MvtM5gk7cYrJ55DfwwTb3fa7h1ulvav6xsD
-         2hJ3Bb85POmNr2B1OmJz03iY6iOA+w6aHUHwG734N2TpRTuvKMPyBq4QXQN5Q5yWxavb
-         Odzg0h5CmFR/qMdNtSfZ0Y7rG/Tcl0sHRMXnE/OXemN+EQq+GpZsN198oOBDxUJguWHO
-         K9jekQtMIVjIYCi1zcSOVRJGoXCGgCPszScJWyklfV5bzxMOPmnNvHiTnOAMicltDlCl
-         xLJieyIHaP3U9UlTgmV0fu7Cq0wwSZj2GxOCK/AC/6RrYanfVr2uOQevurx8qDr5o+H9
-         9PFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746470382; x=1747075182;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qvnaQmeST1mheRYMccMqZNEEW84cIcZjY0Sub0+nVyg=;
-        b=AvA+zMls4XB2Es35t/VZzg7s7hAiDJ1AzVpQnizF6lLLjdBA5xzHIfiUTqZJpIo7Sd
-         cvwOk+EYmB6OdLgz0bTsgA4MFOKsdRMpIMe+878IMYuNZmH1pm4PfZNRJzgWx26Iuo0M
-         MbARIrKA75hHB5RDY5thWGMV0n49qkuSMoxmMnJxZhukve9NAWrxekeRGYjsmH+dhtUd
-         5GhY78a+377p+STe8tAlNt6jCJUhzyYxRhwtPto4dlsnagnhgKby28zFpT/msgmPuCpf
-         FA9tWvuY9F2i+06ClazIWf2JUwRjZRAWUmwp6Mh8XZMDl07XJIK0N30sh9NOlynHhtPY
-         ItoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW1F2S2yIgi6fSxmQFsIk0Xmfxu5Ytq7HE4Yi2wJT4BKfLjVYKYFAHabyKjbiSSaqd0aiK0KJponSKH17A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCJuUxIfQ7BGhJRRXctA5GZySL6VtqWtr2QhfmE8PnM29nxJwD
-	zxHXhquhXHGydUMk7Smy9OVLvDrGQwKXRjvj+R6Zgk6wISIOcCNLMJwhwqI4YjM=
-X-Gm-Gg: ASbGnct6CxeYzHxoWXLwALhj+heDK4bLn0xyNRGpRwIXDPAZx5qhKQwnzpXnEGZwLBq
-	OcnsEUEIrcjsu8cQqJaR/7NL1uGD1wj7Bp0ljSMz+Xi3ro5zetDIoCHqyrubtOmkgWbwxuZJKC7
-	7TSFD61LdosHIHvsTQ7Lw0dmhlDvxELJ5pkUy+fGa6Q56Xi+7DCpBzEW0F1/Qt2dqEdQjk6N7gd
-	pDnP2ANBdZ6CCRuacXy6wHKeNCfxoZ93t7pObtIB4S6b3WJca+f7rouUg6tGXEXs/ueaVw2v2lJ
-	mfkJWKZZx2g5QQCxuBpF2iW6T4RK0bxSZAjP3B5/d8wqUiTNbOyxyKumME3nUfz+oWG525csgNf
-	cYinyT31CQ/KB6ihowxWU+zvDEkpMycUsE/Nq
-X-Google-Smtp-Source: AGHT+IGaP9tNm2c0RziJEdBKRZpIsFJ5xqDJC0msO6dFV0yZufxPJ59rvap8ssGSpPlqeWLjv0NnQA==
-X-Received: by 2002:a05:6000:1887:b0:38f:4acd:975c with SMTP id ffacd0b85a97d-3a09fd96325mr7274351f8f.27.1746470382270;
-        Mon, 05 May 2025 11:39:42 -0700 (PDT)
-Received: from [192.168.1.240] (0.0.6.0.0.0.0.0.0.0.0.0.0.0.0.0.f.f.6.2.a.5.a.7.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:7a5a:26ff::600])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099ae8117sm11328877f8f.56.2025.05.05.11.39.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 11:39:42 -0700 (PDT)
-From: Lorenz Bauer <lmb@isovalent.com>
-Date: Mon, 05 May 2025 19:38:45 +0100
-Subject: [PATCH bpf-next v3 3/3] libbpf: Use mmap to parse vmlinux BTF from
- sysfs
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1746470516; x=1778006516;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=jzsJ5oRudDtZ2RKXtGkIO8UfccGcREzhv5fccqsAE2o=;
+  b=A44qZa+0EWOhNIJ6M2N+fSYU/Fxh/MItG6L36rHYwueWgLmUqVcsqmdA
+   qTSDFqs1F2vWfXzWYIOTVgvYRhzD3lQLj6nVe52GAG0K5P4H829GIs+ed
+   sHCKsZt6UxbQMNJdNgxrHF+8g4ledDI16nkvBfBtzcnJ7CZ+NyZzwG/F9
+   U=;
+X-IronPort-AV: E=Sophos;i="6.15,264,1739836800"; 
+   d="scan'208";a="16777511"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
+  by smtp-border-fw-9105.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 18:41:50 +0000
+Received: from EX19MTAUWC001.ant.amazon.com [10.0.38.20:21691]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.21.231:2525] with esmtp (Farcaster)
+ id 116f77bc-4965-47e3-ba00-f67fffc1ce7a; Mon, 5 May 2025 18:41:49 +0000 (UTC)
+X-Farcaster-Flow-ID: 116f77bc-4965-47e3-ba00-f67fffc1ce7a
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Mon, 5 May 2025 18:41:48 +0000
+Received: from 6c7e67bfbae3.amazon.com (10.187.170.18) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Mon, 5 May 2025 18:41:44 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <brauner@kernel.org>
+CC: <alexander@mihalicyn.com>, <bluca@debian.org>, <daan.j.demeyer@gmail.com>,
+	<davem@davemloft.net>, <david@readahead.eu>, <edumazet@google.com>,
+	<horms@kernel.org>, <jack@suse.cz>, <jannh@google.com>, <kuba@kernel.org>,
+	<kuniyu@amazon.com>, <lennart@poettering.net>,
+	<linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<me@yhndnzj.com>, <netdev@vger.kernel.org>, <oleg@redhat.com>,
+	<pabeni@redhat.com>, <viro@zeniv.linux.org.uk>, <zbyszek@in.waw.pl>
+Subject: Re: [PATCH RFC v3 08/10] net, pidfs, coredump: only allow coredumping tasks to connect to coredump socket
+Date: Mon, 5 May 2025 11:40:26 -0700
+Message-ID: <20250505184136.14852-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250505-dompteur-hinhalten-204b1e16bd02@brauner>
+References: <20250505-dompteur-hinhalten-204b1e16bd02@brauner>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250505-vmlinux-mmap-v3-3-5d53afa060e8@isovalent.com>
-References: <20250505-vmlinux-mmap-v3-0-5d53afa060e8@isovalent.com>
-In-Reply-To: <20250505-vmlinux-mmap-v3-0-5d53afa060e8@isovalent.com>
-To: Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, 
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
- Martin KaFai Lau <martin.lau@linux.dev>, 
- Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
- Yonghong Song <yonghong.song@linux.dev>, 
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
- Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, 
- Shuah Khan <shuah@kernel.org>
-Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, 
- bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- Lorenz Bauer <lmb@isovalent.com>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: EX19D043UWC001.ant.amazon.com (10.13.139.202) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-Teach libbpf to use mmap when parsing vmlinux BTF from /sys. We don't
-apply this to fall-back paths on the regular file system because there
-is no way to ensure that modifications underlying the MAP_PRIVATE
-mapping are not visible to the process.
+From: Christian Brauner <brauner@kernel.org>
+Date: Mon, 5 May 2025 16:06:40 +0200
+> On Mon, May 05, 2025 at 03:08:07PM +0200, Jann Horn wrote:
+> > On Mon, May 5, 2025 at 1:14 PM Christian Brauner <brauner@kernel.org> wrote:
+> > > Make sure that only tasks that actually coredumped may connect to the
+> > > coredump socket. This restriction may be loosened later in case
+> > > userspace processes would like to use it to generate their own
+> > > coredumps. Though it'd be wiser if userspace just exposed a separate
+> > > socket for that.
+> > 
+> > This implementation kinda feels a bit fragile to me... I wonder if we
+> > could instead have a flag inside the af_unix client socket that says
+> > "this is a special client socket for coredumping".
+> 
+> Should be easily doable with a sock_flag().
 
-Signed-off-by: Lorenz Bauer <lmb@isovalent.com>
----
- tools/lib/bpf/btf.c | 83 ++++++++++++++++++++++++++++++++++++++++++++++-------
- 1 file changed, 72 insertions(+), 11 deletions(-)
+This restriction should be applied by BPF LSM.
 
-diff --git a/tools/lib/bpf/btf.c b/tools/lib/bpf/btf.c
-index b7513d4cce55b263310c341bc254df6364e829d9..3006c1ebb97ed899eb519b10927491d87ccdaca5 100644
---- a/tools/lib/bpf/btf.c
-+++ b/tools/lib/bpf/btf.c
-@@ -12,6 +12,7 @@
- #include <sys/utsname.h>
- #include <sys/param.h>
- #include <sys/stat.h>
-+#include <sys/mman.h>
- #include <linux/kernel.h>
- #include <linux/err.h>
- #include <linux/btf.h>
-@@ -120,6 +121,9 @@ struct btf {
- 	/* whether base_btf should be freed in btf_free for this instance */
- 	bool owns_base;
- 
-+	/* whether raw_data is a (read-only) mmap */
-+	bool raw_data_is_mmap;
-+
- 	/* BTF object FD, if loaded into kernel */
- 	int fd;
- 
-@@ -951,6 +955,17 @@ static bool btf_is_modifiable(const struct btf *btf)
- 	return (void *)btf->hdr != btf->raw_data;
- }
- 
-+static void btf_free_raw_data(struct btf *btf)
-+{
-+	if (btf->raw_data_is_mmap) {
-+		munmap(btf->raw_data, btf->raw_size);
-+		btf->raw_data_is_mmap = false;
-+	} else {
-+		free(btf->raw_data);
-+	}
-+	btf->raw_data = NULL;
-+}
-+
- void btf__free(struct btf *btf)
- {
- 	if (IS_ERR_OR_NULL(btf))
-@@ -970,7 +985,7 @@ void btf__free(struct btf *btf)
- 		free(btf->types_data);
- 		strset__free(btf->strs_set);
- 	}
--	free(btf->raw_data);
-+	btf_free_raw_data(btf);
- 	free(btf->raw_data_swapped);
- 	free(btf->type_offs);
- 	if (btf->owns_base)
-@@ -1030,7 +1045,7 @@ struct btf *btf__new_empty_split(struct btf *base_btf)
- 	return libbpf_ptr(btf_new_empty(base_btf));
- }
- 
--static struct btf *btf_new(const void *data, __u32 size, struct btf *base_btf)
-+static struct btf *btf_new_no_copy(void *data, __u32 size, struct btf *base_btf)
- {
- 	struct btf *btf;
- 	int err;
-@@ -1050,12 +1065,7 @@ static struct btf *btf_new(const void *data, __u32 size, struct btf *base_btf)
- 		btf->start_str_off = base_btf->hdr->str_len;
- 	}
- 
--	btf->raw_data = malloc(size);
--	if (!btf->raw_data) {
--		err = -ENOMEM;
--		goto done;
--	}
--	memcpy(btf->raw_data, data, size);
-+	btf->raw_data = data;
- 	btf->raw_size = size;
- 
- 	btf->hdr = btf->raw_data;
-@@ -1081,6 +1091,24 @@ static struct btf *btf_new(const void *data, __u32 size, struct btf *base_btf)
- 	return btf;
- }
- 
-+static struct btf *btf_new(const void *data, __u32 size, struct btf *base_btf)
-+{
-+	struct btf *btf;
-+	void *raw_data;
-+
-+	raw_data = malloc(size);
-+	if (!raw_data)
-+		return ERR_PTR(-ENOMEM);
-+
-+	memcpy(raw_data, data, size);
-+
-+	btf = btf_new_no_copy(raw_data, size, base_btf);
-+	if (IS_ERR(btf))
-+		free(raw_data);
-+
-+	return btf;
-+}
-+
- struct btf *btf__new(const void *data, __u32 size)
- {
- 	return libbpf_ptr(btf_new(data, size, NULL));
-@@ -1354,6 +1382,37 @@ struct btf *btf__parse_raw_split(const char *path, struct btf *base_btf)
- 	return libbpf_ptr(btf_parse_raw(path, base_btf));
- }
- 
-+static struct btf *btf_parse_raw_mmap(const char *path, struct btf *base_btf)
-+{
-+	struct stat st;
-+	void *data;
-+	struct btf *btf;
-+	int fd;
-+
-+	fd = open(path, O_RDONLY);
-+	if (fd < 0)
-+		return libbpf_err_ptr(-errno);
-+
-+	if (fstat(fd, &st) < 0) {
-+		close(fd);
-+		return libbpf_err_ptr(-errno);
-+	}
-+
-+	data = mmap(NULL, st.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
-+	close(fd);
-+
-+	if (data == MAP_FAILED)
-+		return NULL;
-+
-+	btf = btf_new_no_copy(data, st.st_size, base_btf);
-+	if (!btf)
-+		munmap(data, st.st_size);
-+	else
-+		btf->raw_data_is_mmap = true;
-+
-+	return btf;
-+}
-+
- static struct btf *btf_parse(const char *path, struct btf *base_btf, struct btf_ext **btf_ext)
- {
- 	struct btf *btf;
-@@ -1659,8 +1718,7 @@ struct btf *btf__load_from_kernel_by_id(__u32 id)
- static void btf_invalidate_raw_data(struct btf *btf)
- {
- 	if (btf->raw_data) {
--		free(btf->raw_data);
--		btf->raw_data = NULL;
-+		btf_free_raw_data(btf);
- 	}
- 	if (btf->raw_data_swapped) {
- 		free(btf->raw_data_swapped);
-@@ -5290,7 +5348,10 @@ struct btf *btf__load_vmlinux_btf(void)
- 		pr_warn("kernel BTF is missing at '%s', was CONFIG_DEBUG_INFO_BTF enabled?\n",
- 			sysfs_btf_path);
- 	} else {
--		btf = btf__parse(sysfs_btf_path, NULL);
-+		btf = btf_parse_raw_mmap(sysfs_btf_path, NULL);
-+		if (IS_ERR_OR_NULL(btf))
-+			btf = btf__parse(sysfs_btf_path, NULL);
-+
- 		if (!btf) {
- 			err = -errno;
- 			pr_warn("failed to read kernel BTF from '%s': %s\n",
-
--- 
-2.49.0
-
+It's hard to loosen such a default restriction as someone might
+argue that's unexpected and regression.
