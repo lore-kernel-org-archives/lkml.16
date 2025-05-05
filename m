@@ -1,84 +1,192 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2648019995E;
-	Mon,  5 May 2025 07:33:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DB201AAA1F;
+	Mon,  5 May 2025 07:33:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746430394; cv=none; b=ZZJIKsau3Kx2zUqvUEBN+AZlc/8qcI/4iSZdmo1AL2/A/jU4NPMTrnO69Cv+F3O3O9kp2StQjZVlnmdSY6CLp5sF7Ce+K6IDz8oiEuypur1SfznnN/G3UtJYtPD24C0/v8ITWgN39/mPYxEmROXkmNpbDi+k7Y3WpdNo722u0LY=
+	t=1746430394; cv=none; b=n/qM0mjUcYsWIYPrUTjNC5mJ2YwJWeFJ18pjalUtvZihpsmP3E8b4Usk9wpYw+Nqk+zwI7a8/N61hXr9tsUJFwwSm37KVO0wk5ytuGOphBjD0+LUyJwnDYU6bABmB18CBq/0KoUR+/7Bkt2/gP7GgI6eJrLXBKKZJHgcebmqRQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746430394; c=relaxed/simple;
-	bh=o9Ua9es+nDQSCTMlF2S5n70GzvrIm3GZj9ppMhDTiO8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gWu3mur00NrRfbx5l3ejOjVnIi0rEucBSBEZj58qkDwtRX8FO3yjv9MBextWEODpq2t/gO3bTpHg1THiDG8zzM224PTT5Pu1/WjINtWNo7/OoOejzZuYpAsBEKYLZu7I13n38dt7FQ6wApdT3I4mul/5qF+W4DpYflQWQq+4980=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=XSwnb6jG; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	bh=AqOHYLAKEMOVfCfoPPUkBYDLm8AEpL2ZvA3H2A6fh7o=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=cPqqvDGzsAWlHm03hPAKRfd4HnOxT3llLXUCG5f99yI40w7sbGcSv9Z51xxpmHrmD6eW1t44flr0+r28Ryo8x4FQPVJ0V+KfMP1u5tinNo0coIMUHBuC7S7xMJ67yVKUnXC8kW1V8cgU0w72KExUeLvPTf35wcAOgM2fyhkP+gg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=PMwr6FOt; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="XSwnb6jG"
-Received: from francesco-nb (248.201.173.83.static.wline.lns.sme.cust.swisscom.ch [83.173.201.248])
-	by mail11.truemail.it (Postfix) with ESMTPA id 98E3E1F842;
-	Mon,  5 May 2025 09:33:00 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1746430381;
-	bh=/zksZ8p8UU1t+kGoN2N2Kk+JAb77n7Fw4YIg48JHLvo=; h=From:To:Subject;
-	b=XSwnb6jGDpr1y0ta615f3VPtth08iehvZCxcn5LdnaodpKe+HSAJ3/US6VskIKZMY
-	 1XYDDlYzIhgEUl9KthaarKKGUCgX+22Dnd0z07Py9D7cxW1Pg56W/QooSmwN7UldfL
-	 gu06tdtucnyd/hHvLKe8NbVBucRuLuJHNrE9r5+LaoA8Ficm9rLENY/f3yBLlahn/q
-	 0Utt/4sdkeexqCy1qnAbqkwMaDHcAPqsUhXSJ+g/Otgm6qCdZd3mdCVsYRxaT9btKu
-	 PyAbzMAg9Q+v09LgNmb5v+Nlnq6Y0beou9IC6xmEhQuzimXRTRgDOi9esSaK+qYkQN
-	 aPcBFyz2fSPvw==
-Date: Mon, 5 May 2025 09:32:55 +0200
-From: Francesco Dolcini <francesco@dolcini.it>
-To: "Ivan T. Ivanov" <iivanov@suse.de>
-Cc: Francesco Dolcini <francesco@dolcini.it>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Jeff Chen <jeff.chen_1@nxp.com>,
-	Pete Hsieh <tsung-hsien.hsieh@nxp.com>,
-	Brian Norris <briannorris@chromium.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mmc@vger.kernel.org
-Subject: Re: [PATCH do not merge 0/4] wifi: mwifiex: add iw61x support
-Message-ID: <20250505073255.GA12817@francesco-nb>
-References: <20250326-mwifiex-iw61x-v1-0-ff875ed35efc@pengutronix.de>
- <20250331065026.GA12444@francesco-nb>
- <20250429125928.pw7k4raw52jyvyaj@localhost.localdomain>
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="PMwr6FOt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1746430393; x=1777966393;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=AqOHYLAKEMOVfCfoPPUkBYDLm8AEpL2ZvA3H2A6fh7o=;
+  b=PMwr6FOtCo2U6U80S7Yb+R3VqMDSoQroP+2eIEFl0TTp32TGdxIgD9HD
+   j71oU/DzCuLwrK/fJ4WmLZwlQ2dUhNW3B0xtGt6QV+q7tI1a37Ag9Go8e
+   irx6oZ6c5H0+SexIe05COIz3qI8TOeQ1rsZzqjx3Gl45YrQ1KP0GF5BN7
+   Vasvb7awNn0hyDBYIzYt/KpMfQHl9CQYLJA1PqEXcoLXKGciIoI9hJyqk
+   HIX6NGD9HF+EA+vI1/X+ECuuO49ZIrWVv7iI1gtRLLP+guKyOVEGxgIki
+   IMWQVM0DJdzvDPZajEyZJLJkzLukxo0MK5CtLmFsOrnD3bm6VALA2nSK6
+   A==;
+X-CSE-ConnectionGUID: we+1GUIsRwCKmoJC4zLVXw==
+X-CSE-MsgGUID: 4cOdXlr9QU6G3mdzYA/oQQ==
+X-IronPort-AV: E=Sophos;i="6.15,262,1739862000"; 
+   d="scan'208";a="41706941"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 05 May 2025 00:33:06 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Mon, 5 May 2025 00:33:01 -0700
+Received: from che-ld-unglab06.microchip.com (10.10.85.11) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.2507.44 via Frontend Transport; Mon, 5 May 2025 00:32:58 -0700
+From: Thangaraj Samynathan <thangaraj.s@microchip.com>
+To: <netdev@vger.kernel.org>
+CC: <bryan.whitehead@microchip.com>, <UNGLinuxDriver@microchip.com>,
+	<andrew+netdev@lunn.ch>, <davem@davemloft.net>, <edumazet@google.com>,
+	<kuba@kernel.org>, <pabeni@redhat.com>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v1 net-next] net: lan743x: configure interrupt  moderation timers based on speed
+Date: Mon, 5 May 2025 12:59:43 +0530
+Message-ID: <20250505072943.123943-1-thangaraj.s@microchip.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250429125928.pw7k4raw52jyvyaj@localhost.localdomain>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Tue, Apr 29, 2025 at 03:59:28PM +0300, Ivan T. Ivanov wrote:
-> On 03-31 08:50, Francesco Dolcini wrote:
-> > Message-ID: <20250331065026.GA12444@francesco-nb>
-> > On Wed, Mar 26, 2025 at 01:18:30PM +0100, Sascha Hauer wrote:
-> > > This series adds iw61x support to the mwifiex driver. It works for me,
-> > > but is not yet ready to be merged. Some people showed interest in it, so
-> > > I am sending it here.
+Configures the interrupt moderation timer value to 64us for 2.5G,
+150us for 1G, 330us for 10/100M. Earlier this was 400us for all
+speeds. This improvess UDP TX and Bidirectional performance to
+2.3Gbps from 1.4Gbps in 2.5G. These values are derived after
+experimenting with different values.
 
-...
+Signed-off-by: Thangaraj Samynathan <thangaraj.s@microchip.com>
+---
+ drivers/net/ethernet/microchip/lan743x_main.c | 61 +++++++++++--------
+ drivers/net/ethernet/microchip/lan743x_main.h |  5 +-
+ 2 files changed, 41 insertions(+), 25 deletions(-)
 
-> > > Not sure what these are about, I can't see these handled in the
-> > > downstream mwifiex driver as well. Could also be there is some parsing
-> > > error. Nevertheless the driver seems to work.
-> 
-> Yep, it is working. Thank you! I am testing this on FRDM-iMX93, which has
-> IW612 revision 1.0.
-> 
-> I have to use nxp/sd_w61x_v1.bin.se on this board and NULL firmware_sdiouart
-> because it seems that firmware return 1 as "strap" value, even if WiFi
-> is definitely connected over SDIO.
-
-Wi-Fi is always connected over SDIO (for IW61x), the strapping is
-related to the interface used for BT. In the past it was common to have
-options for having BT over SDIO or UART or USB, but for IW61x it seems
-that UART is the only available option.
-
-Francesco
+diff --git a/drivers/net/ethernet/microchip/lan743x_main.c b/drivers/net/ethernet/microchip/lan743x_main.c
+index e2d6bfb5d693..6d570132f409 100644
+--- a/drivers/net/ethernet/microchip/lan743x_main.c
++++ b/drivers/net/ethernet/microchip/lan743x_main.c
+@@ -620,27 +620,6 @@ static int lan743x_intr_open(struct lan743x_adapter *adapter)
+ 		lan743x_csr_write(adapter, INT_VEC_EN_SET,
+ 				  INT_VEC_EN_(0));
+ 
+-	if (!(adapter->csr.flags & LAN743X_CSR_FLAG_IS_A0)) {
+-		lan743x_csr_write(adapter, INT_MOD_CFG0, LAN743X_INT_MOD);
+-		lan743x_csr_write(adapter, INT_MOD_CFG1, LAN743X_INT_MOD);
+-		lan743x_csr_write(adapter, INT_MOD_CFG2, LAN743X_INT_MOD);
+-		lan743x_csr_write(adapter, INT_MOD_CFG3, LAN743X_INT_MOD);
+-		lan743x_csr_write(adapter, INT_MOD_CFG4, LAN743X_INT_MOD);
+-		lan743x_csr_write(adapter, INT_MOD_CFG5, LAN743X_INT_MOD);
+-		lan743x_csr_write(adapter, INT_MOD_CFG6, LAN743X_INT_MOD);
+-		lan743x_csr_write(adapter, INT_MOD_CFG7, LAN743X_INT_MOD);
+-		if (adapter->is_pci11x1x) {
+-			lan743x_csr_write(adapter, INT_MOD_CFG8, LAN743X_INT_MOD);
+-			lan743x_csr_write(adapter, INT_MOD_CFG9, LAN743X_INT_MOD);
+-			lan743x_csr_write(adapter, INT_MOD_MAP0, 0x00007654);
+-			lan743x_csr_write(adapter, INT_MOD_MAP1, 0x00003210);
+-		} else {
+-			lan743x_csr_write(adapter, INT_MOD_MAP0, 0x00005432);
+-			lan743x_csr_write(adapter, INT_MOD_MAP1, 0x00000001);
+-		}
+-		lan743x_csr_write(adapter, INT_MOD_MAP2, 0x00FFFFFF);
+-	}
+-
+ 	/* enable interrupts */
+ 	lan743x_csr_write(adapter, INT_EN_SET, INT_BIT_MAS_);
+ 	ret = lan743x_intr_test_isr(adapter);
+@@ -3035,6 +3014,31 @@ static void lan743x_phylink_mac_link_down(struct phylink_config *config,
+ 	netif_tx_stop_all_queues(netdev);
+ }
+ 
++static void lan743x_config_int_mod(struct lan743x_adapter *adapter, u32 int_mod)
++{
++	if (!(adapter->csr.flags & LAN743X_CSR_FLAG_IS_A0)) {
++		lan743x_csr_write(adapter, INT_MOD_CFG0, int_mod);
++		lan743x_csr_write(adapter, INT_MOD_CFG1, int_mod);
++		lan743x_csr_write(adapter, INT_MOD_CFG2, int_mod);
++		lan743x_csr_write(adapter, INT_MOD_CFG3, int_mod);
++		lan743x_csr_write(adapter, INT_MOD_CFG4, int_mod);
++		lan743x_csr_write(adapter, INT_MOD_CFG5, int_mod);
++		lan743x_csr_write(adapter, INT_MOD_CFG6, int_mod);
++		lan743x_csr_write(adapter, INT_MOD_CFG7, int_mod);
++		if (adapter->is_pci11x1x) {
++			lan743x_csr_write(adapter, INT_MOD_CFG8, int_mod);
++			lan743x_csr_write(adapter, INT_MOD_CFG9, int_mod);
++
++			lan743x_csr_write(adapter, INT_MOD_MAP0, 0x00007654);
++			lan743x_csr_write(adapter, INT_MOD_MAP1, 0x00003210);
++		} else {
++			lan743x_csr_write(adapter, INT_MOD_MAP0, 0x00005432);
++			lan743x_csr_write(adapter, INT_MOD_MAP1, 0x00000001);
++		}
++		lan743x_csr_write(adapter, INT_MOD_MAP2, 0x00FFFFFF);
++	}
++}
++
+ static void lan743x_phylink_mac_link_up(struct phylink_config *config,
+ 					struct phy_device *phydev,
+ 					unsigned int link_an_mode,
+@@ -3044,6 +3048,7 @@ static void lan743x_phylink_mac_link_up(struct phylink_config *config,
+ {
+ 	struct net_device *netdev = to_net_dev(config->dev);
+ 	struct lan743x_adapter *adapter = netdev_priv(netdev);
++	u32 int_mod;
+ 	int mac_cr;
+ 	u8 cap;
+ 
+@@ -3052,15 +3057,23 @@ static void lan743x_phylink_mac_link_up(struct phylink_config *config,
+ 	 * Resulting value corresponds to SPEED_10
+ 	 */
+ 	mac_cr &= ~(MAC_CR_CFG_H_ | MAC_CR_CFG_L_);
+-	if (speed == SPEED_2500)
++	if (speed == SPEED_2500) {
+ 		mac_cr |= MAC_CR_CFG_H_ | MAC_CR_CFG_L_;
+-	else if (speed == SPEED_1000)
++		int_mod = LAN743X_INT_MOD_2_5G;
++	} else if (speed == SPEED_1000) {
+ 		mac_cr |= MAC_CR_CFG_H_;
+-	else if (speed == SPEED_100)
++		int_mod = LAN743X_INT_MOD_1G;
++	} else if (speed == SPEED_100) {
+ 		mac_cr |= MAC_CR_CFG_L_;
++		int_mod = LAN743X_INT_MOD_100M;
++	} else {
++		int_mod = LAN743X_INT_MOD_10M;
++	}
+ 
+ 	lan743x_csr_write(adapter, MAC_CR, mac_cr);
+ 
++	lan743x_config_int_mod(adapter, int_mod);
++
+ 	lan743x_ptp_update_latency(adapter, speed);
+ 
+ 	/* Flow Control operation */
+diff --git a/drivers/net/ethernet/microchip/lan743x_main.h b/drivers/net/ethernet/microchip/lan743x_main.h
+index db5fc73e41cc..189d979356a0 100644
+--- a/drivers/net/ethernet/microchip/lan743x_main.h
++++ b/drivers/net/ethernet/microchip/lan743x_main.h
+@@ -860,7 +860,10 @@ struct lan743x_adapter;
+ #define LAN743X_USED_RX_CHANNELS	(4)
+ #define LAN743X_USED_TX_CHANNELS	(1)
+ #define PCI11X1X_USED_TX_CHANNELS	(4)
+-#define LAN743X_INT_MOD	(400)
++#define LAN743X_INT_MOD_2_5G		(64)
++#define LAN743X_INT_MOD_1G		(150)
++#define LAN743X_INT_MOD_100M		(330)
++#define LAN743X_INT_MOD_10M		(330)
+ 
+ #if (LAN743X_USED_RX_CHANNELS > LAN743X_MAX_RX_CHANNELS)
+ #error Invalid LAN743X_USED_RX_CHANNELS
+-- 
+2.25.1
 
