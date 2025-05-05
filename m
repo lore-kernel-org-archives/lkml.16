@@ -1,45 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A60E23899E8;
-	Mon,  5 May 2025 23:00:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 934D5280CD4;
+	Mon,  5 May 2025 23:01:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486054; cv=none; b=giun41b4qRO8Q2Ad4ypgxPOAbuWVG/J5YEGncS8NMhtD7Dtj6otS+mrqclDmypXOFqARJnxKABNiw51pwMq0FRWLTFIHxAsFtjiZOLf+oiIxLq/+WeGIZBPzXrhN1L9fex/sAo+I3trQZWeCxpBPh/pbICTPo2NvzAbmDRSDjnA=
+	t=1746486063; cv=none; b=HUmEbQL7EjQD2bCNC9DDcEANVnJTjgIWK4JTZ9jSggACyuRnjMQ6I9mxivm8+jTEUGK6xzkHCwgSfP2nhqoK74HqG9ip6UgEuHCMpZN7f8Fdk/oxmgsxmpQmiy8aXWgcMD6He2SVeVwrkt8mxJage48jixtC5p4AbKE7zmLK28U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486054; c=relaxed/simple;
-	bh=otCOWJG6YRdM730a62hXw38ZLebPfilfEAfuCxr/aU4=;
+	s=arc-20240116; t=1746486063; c=relaxed/simple;
+	bh=MXOQDxvoxZwCvztOb/nRkBb3IOyqdqZ21qE1mtIk2Y8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=kVh7inWRZBki/4FupHllo1ylDWEOOxDgbeEbm705aqOb4UThpca+d+jGDv/drOlMH02lrMRg2kgcicJxUhRijxnx3aQDDqKUhFahEgJ//FUJBw8HIW6jyiImJCY7nbTVbkzRTmrXOrYlRDCJtlELWcLKhTFoTRI4fFGPTC/IPLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iP3frJMb; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=hHZf+ej1fC1FpkE6tcmkAuDRB6UEAr8Bpct89CWL8lVMFnwUkJ3Vqx83CoMewVKD2JDORtd+Gqyiw/Io9Cajw1H1Yy/mgg4Y8Ztwxaz0o7U4D8BaZ9iCakPC1wXg+oIVE3RdYpQnAs7sklLKcCFviPa6MgVXVqOu9b4eXDaE4Go=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hF86d9FD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iP3frJMb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BB69C4CEED;
-	Mon,  5 May 2025 23:00:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hF86d9FD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2B8FC4CEED;
+	Mon,  5 May 2025 23:01:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486053;
-	bh=otCOWJG6YRdM730a62hXw38ZLebPfilfEAfuCxr/aU4=;
+	s=k20201202; t=1746486063;
+	bh=MXOQDxvoxZwCvztOb/nRkBb3IOyqdqZ21qE1mtIk2Y8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iP3frJMbIzwZRNAb9hlnHhP+ARw8SHjn9hEUhGStLzxQe2PzQxfscG5KB66k3Y1nl
-	 LxfE+9DkE5dDC1LNjQDXJUseZA8ygYO7e47v/ysztxxxgvz6SVlsn+51xBnc6QD4O+
-	 dOtcrMXPB2/kH5uxphfU+Dg94ns7EohMgdDYmHG4MM7awOLiJCVmP2iXLCN591psMl
-	 eMTw7C+DbXLF6pfKzwH6BcJtnvlEGCpuzWwJLKipQ/oOOO+n57Abq11S4noDONxMPd
-	 /9J8BvgD7MTrISIWv0Ihw1EuPUgK0xoNYpAE0hS4diKC/p1EWYbDBSNeheR2urO+hP
-	 sinCW08nCchaA==
+	b=hF86d9FDOiBVeE9HMhQHLs0ZH9vStAtZAqnNkZedsnb49GHXerc6lVi1qrpeRXde6
+	 dbi53iamv59P1l7yepaiZziaZ4OvVx7eS0YK8u52SESXuHgw+n1Ui7IRnoh1T+980o
+	 8f/UoC3aIOF6syLKi7n8LEYYddr/QmtMJPRzQmmE9/VE/e6QrMjzpfzmm/MMhiGQg8
+	 t1QhuRkoGbs3Bw51Zm6KnTXSvdbrIKdMhQCY+KLCHDI0d9sJuIdQ8wmtgtKFyaDjv5
+	 GO5V+Qy+t9qoMm/Obp8egsaP2qU8XrIkiSUgISVOGv4fkDuWnpMhQcBCS4V2w1lxGn
+	 DWx3cqKfLQEHg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ricardo Ribalda <ribalda@chromium.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Yunke Cao <yunkec@google.com>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
+Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	CK Hu <ck.hu@mediatek.com>,
+	Chun-Kuang Hu <chunkuang.hu@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	laurent.pinchart@ideasonboard.com,
-	mchehab@kernel.org,
-	linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 129/294] media: uvcvideo: Handle uvc menu translation inside uvc_get_le_value
-Date: Mon,  5 May 2025 18:53:49 -0400
-Message-Id: <20250505225634.2688578-129-sashal@kernel.org>
+	p.zabel@pengutronix.de,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	matthias.bgg@gmail.com,
+	dri-devel@lists.freedesktop.org,
+	linux-mediatek@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 6.6 134/294] drm/mediatek: mtk_dpi: Add checks for reg_h_fre_con existence
+Date: Mon,  5 May 2025 18:53:54 -0400
+Message-Id: <20250505225634.2688578-134-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -54,159 +57,49 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Ricardo Ribalda <ribalda@chromium.org>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
-[ Upstream commit 9109a0b4cb10fd681e9c6e9a4497a6fec5b91c39 ]
+[ Upstream commit 8c9da7cd0bbcc90ab444454fecf535320456a312 ]
 
-map->get() gets a value from an uvc_control in "UVC format" and converts
-it to a value that can be consumed by v4l2.
+In preparation for adding support for newer DPI instances which
+do support direct-pin but do not have any H_FRE_CON register,
+like the one found in MT8195 and MT8188, add a branch to check
+if the reg_h_fre_con variable was declared in the mtk_dpi_conf
+structure for the probed SoC DPI version.
 
-Instead of using a special get function for V4L2_CTRL_TYPE_MENU, we
-were converting from uvc_get_le_value in two different places.
+As a note, this is useful specifically only for cases in which
+the support_direct_pin variable is true, so mt8195-dpintf is
+not affected by any issue.
 
-Move the conversion to uvc_get_le_value().
-
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Tested-by: Yunke Cao <yunkec@google.com>
-Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-Link: https://lore.kernel.org/r/20250203-uvc-roi-v17-4-5900a9fed613@chromium.org
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Hans Verkuil <hverkuil@xs4all.nl>
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
+Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Link: https://patchwork.kernel.org/project/dri-devel/patch/20250217154836.108895-6-angelogioacchino.delregno@collabora.com/
+Signed-off-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/uvc/uvc_ctrl.c | 77 +++++++++++++-------------------
- 1 file changed, 32 insertions(+), 45 deletions(-)
+ drivers/gpu/drm/mediatek/mtk_dpi.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/usb/uvc/uvc_ctrl.c b/drivers/media/usb/uvc/uvc_ctrl.c
-index 028c4a5049af9..5926a9dfb0b1f 100644
---- a/drivers/media/usb/uvc/uvc_ctrl.c
-+++ b/drivers/media/usb/uvc/uvc_ctrl.c
-@@ -815,6 +815,25 @@ static inline void uvc_clear_bit(u8 *data, int bit)
- 	data[bit >> 3] &= ~(1 << (bit & 7));
- }
+diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
+index 54fc3f819577e..6391afdf202e2 100644
+--- a/drivers/gpu/drm/mediatek/mtk_dpi.c
++++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
+@@ -410,12 +410,13 @@ static void mtk_dpi_config_swap_input(struct mtk_dpi *dpi, bool enable)
  
-+static s32 uvc_menu_to_v4l2_menu(struct uvc_control_mapping *mapping, s32 val)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; BIT(i) <= mapping->menu_mask; ++i) {
-+		u32 menu_value;
-+
-+		if (!test_bit(i, &mapping->menu_mask))
-+			continue;
-+
-+		menu_value = uvc_mapping_get_menu_value(mapping, i);
-+
-+		if (menu_value == val)
-+			return i;
-+	}
-+
-+	return val;
-+}
-+
- /*
-  * Extract the bit string specified by mapping->offset and mapping->size
-  * from the little-endian data stored at 'data' and return the result as
-@@ -849,6 +868,16 @@ static s32 uvc_get_le_value(struct uvc_control_mapping *mapping,
- 	if (mapping->data_type == UVC_CTRL_DATA_TYPE_SIGNED)
- 		value |= -(value & (1 << (mapping->size - 1)));
- 
-+	/* If it is a menu, convert from uvc to v4l2. */
-+	if (mapping->v4l2_type != V4L2_CTRL_TYPE_MENU)
-+		return value;
-+
-+	switch (query) {
-+	case UVC_GET_CUR:
-+	case UVC_GET_DEF:
-+		return uvc_menu_to_v4l2_menu(mapping, value);
-+	}
-+
- 	return value;
- }
- 
-@@ -1013,32 +1042,6 @@ static int uvc_ctrl_populate_cache(struct uvc_video_chain *chain,
- 	return 0;
- }
- 
--static s32 __uvc_ctrl_get_value(struct uvc_control_mapping *mapping,
--				const u8 *data)
--{
--	s32 value = mapping->get(mapping, UVC_GET_CUR, data);
--
--	if (mapping->v4l2_type == V4L2_CTRL_TYPE_MENU) {
--		unsigned int i;
--
--		for (i = 0; BIT(i) <= mapping->menu_mask; ++i) {
--			u32 menu_value;
--
--			if (!test_bit(i, &mapping->menu_mask))
--				continue;
--
--			menu_value = uvc_mapping_get_menu_value(mapping, i);
--
--			if (menu_value == value) {
--				value = i;
--				break;
--			}
--		}
--	}
--
--	return value;
--}
--
- static int __uvc_ctrl_load_cur(struct uvc_video_chain *chain,
- 			       struct uvc_control *ctrl)
+ static void mtk_dpi_config_2n_h_fre(struct mtk_dpi *dpi)
  {
-@@ -1089,8 +1092,8 @@ static int __uvc_ctrl_get(struct uvc_video_chain *chain,
- 	if (ret < 0)
- 		return ret;
- 
--	*value = __uvc_ctrl_get_value(mapping,
--				uvc_ctrl_data(ctrl, UVC_CTRL_DATA_CURRENT));
-+	*value = mapping->get(mapping, UVC_GET_CUR,
-+			      uvc_ctrl_data(ctrl, UVC_CTRL_DATA_CURRENT));
- 
- 	return 0;
+-	mtk_dpi_mask(dpi, dpi->conf->reg_h_fre_con, H_FRE_2N, H_FRE_2N);
++	if (dpi->conf->reg_h_fre_con)
++		mtk_dpi_mask(dpi, dpi->conf->reg_h_fre_con, H_FRE_2N, H_FRE_2N);
  }
-@@ -1240,7 +1243,6 @@ static int __uvc_query_v4l2_ctrl(struct uvc_video_chain *chain,
+ 
+ static void mtk_dpi_config_disable_edge(struct mtk_dpi *dpi)
  {
- 	struct uvc_control_mapping *master_map = NULL;
- 	struct uvc_control *master_ctrl = NULL;
--	unsigned int i;
+-	if (dpi->conf->edge_sel_en)
++	if (dpi->conf->edge_sel_en && dpi->conf->reg_h_fre_con)
+ 		mtk_dpi_mask(dpi, dpi->conf->reg_h_fre_con, 0, EDGE_SEL_EN);
+ }
  
- 	memset(v4l2_ctrl, 0, sizeof(*v4l2_ctrl));
- 	v4l2_ctrl->id = mapping->id;
-@@ -1283,21 +1285,6 @@ static int __uvc_query_v4l2_ctrl(struct uvc_video_chain *chain,
- 		v4l2_ctrl->minimum = ffs(mapping->menu_mask) - 1;
- 		v4l2_ctrl->maximum = fls(mapping->menu_mask) - 1;
- 		v4l2_ctrl->step = 1;
--
--		for (i = 0; BIT(i) <= mapping->menu_mask; ++i) {
--			u32 menu_value;
--
--			if (!test_bit(i, &mapping->menu_mask))
--				continue;
--
--			menu_value = uvc_mapping_get_menu_value(mapping, i);
--
--			if (menu_value == v4l2_ctrl->default_value) {
--				v4l2_ctrl->default_value = i;
--				break;
--			}
--		}
--
- 		return 0;
- 
- 	case V4L2_CTRL_TYPE_BOOLEAN:
-@@ -1580,7 +1567,7 @@ void uvc_ctrl_status_event(struct uvc_video_chain *chain,
- 		uvc_ctrl_set_handle(handle, ctrl, NULL);
- 
- 	list_for_each_entry(mapping, &ctrl->info.mappings, list) {
--		s32 value = __uvc_ctrl_get_value(mapping, data);
-+		s32 value = mapping->get(mapping, UVC_GET_CUR, data);
- 
- 		/*
- 		 * handle may be NULL here if the device sends auto-update
 -- 
 2.39.5
 
