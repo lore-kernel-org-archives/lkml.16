@@ -1,42 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FB4938941B;
-	Mon,  5 May 2025 23:12:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 498803881C5;
+	Mon,  5 May 2025 23:12:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486754; cv=none; b=HBuu5m9C89H3I0m+DVYKwfkwxGJGDbymT+Fx1fG4CLOqWCuJEhH5FzQofF2vAOSrqTxg4IlA+s/Nj3zxk4EwoyybIBpkDqt6zmcf2C6ajhFn16c7+4jpacqNNH5/VJU3s+tLS7o8gPXye6hxtvggwPiGQfHuatUkuNPiWX+1o70=
+	t=1746486740; cv=none; b=TzFaom/n2z1o1vKqegU8xwDttLG0QPIM/yeXqJvQQ9I3v+kZdNEJ5GnhERJXkaEO63WcCOwhMFtNis4wpYNrGTcOyXYoyzDKxKgv6yOkVq8Q9/wGr0tJpeqXLPKxLeQsJq5pQsjEKWvSD2qjD/mL1wksqaucD3NqXFwEu98WH5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486754; c=relaxed/simple;
-	bh=788CtGvCa95o+T3He2vlXoee2SK5ejxA/X5PkcOwfu8=;
+	s=arc-20240116; t=1746486740; c=relaxed/simple;
+	bh=Ez/jSodbLkn4e8mEWZfdyFweRuhKDIMFaYvLfFdFQvo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=biOxwn98S09vB/YTVyAOjGbIdVvngV4WdNM6pV0aTFrMXWi7E1fCjQfLVIodjdW5TcrvBIIlesnPrcGbXbwSfUcHl4eHvXRD9axdYctQwr6GseMMJqo6DyIa2A/m5EheNMYTq29zCRdQvu4lGPy/StpTwLiOJfZH0bIJQllqLLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qNvrKQe0; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ul/LhzNq1NqopkkRr4HP0LPzMQau05bpAGEyCOoj7df7tZjxLWKA7LUF9W5AuEz8XrNQPmjjc1pGYNqmMBRqo5pkXVV+9654FYlrezFlolAyvAep80wXdzbT+nQ+ba+XEJ3kxmZj9qvr2ATA+pSDxYiJHdPOTkhNCQtWNZei6Lk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EGZXE2H9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qNvrKQe0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7371C4CEF4;
-	Mon,  5 May 2025 23:12:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EGZXE2H9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F4CCC4CEEE;
+	Mon,  5 May 2025 23:12:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486753;
-	bh=788CtGvCa95o+T3He2vlXoee2SK5ejxA/X5PkcOwfu8=;
+	s=k20201202; t=1746486739;
+	bh=Ez/jSodbLkn4e8mEWZfdyFweRuhKDIMFaYvLfFdFQvo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qNvrKQe0MkWlvy4PC+l/tTXtrUfaufuoDpBuJ0/jCRVbD/qIjHgjFtAVLrw9QCCjh
-	 TbkQI7xTAHbRQQpEz8RxddJfN8SMvJmyEsen4o9A8fcu+tkbF1ACqT7uQGd7OwjDY8
-	 79RXMED3YT0UFn0fyCuKdiTthlkZESnM7KYUIQ6mT6wFu5zx9h8On6UIk3DIKe/Aa4
-	 7JaYT47pF02bpjsFAbhNUcmMdD5+AhittgGVButbccMRsee3BN8cGnr+1pn2Ok2l9h
-	 HOUTRRODehYIzUDmd3JlEyv5wmBsHwiKmBrFQKIBnzR0tNJF+c5F3CKEOX0U+HDy5D
-	 NVurJzOqZOafg==
+	b=EGZXE2H9T2UETQacJNWWMi7rour6oj6VJ7GvNeVK3YvYaaEwWwoht+eeD3xShWdPX
+	 jThaJyGXduagEup3yRx0T7zNPpW/6RTxH7jmk4J88Yf2kab2jnFMMN793KQmv2ggzT
+	 /NfUhLq5Jf3wZDZ/pDNhnBrA4DTU8ECspWxOEKrxkFubQBIabBB92L86ix6Z+5knpp
+	 HaZ1D1GWXC8mFIgQnQ9TRjpiRph2cgSe/6dD+lCq8dJ59eUMsVFoS5ONKNqyGrN90U
+	 w4ivyjlnrizrLdPKMmT95L9UI9wWWYghssrm9PqeLRUe+Uy4b15CQkvAYjdlZMRYYQ
+	 54gauL3yNaFoA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Andrey Vatoropin <a.vatoropin@crpt.ru>,
-	Guenter Roeck <linux@roeck-us.net>,
+Cc: Johannes Berg <johannes.berg@intel.com>,
+	Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+	Miri Korenblit <miriam.rachel.korenblit@intel.com>,
 	Sasha Levin <sashal@kernel.org>,
-	jdelvare@suse.com,
-	linux-hwmon@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 185/212] hwmon: (xgene-hwmon) use appropriate type for the latency value
-Date: Mon,  5 May 2025 19:05:57 -0400
-Message-Id: <20250505230624.2692522-185-sashal@kernel.org>
+	johannes@sipsolutions.net,
+	linux-wireless@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.1 178/212] wifi: mac80211: remove misplaced drv_mgd_complete_tx() call
+Date: Mon,  5 May 2025 19:05:50 -0400
+Message-Id: <20250505230624.2692522-178-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505230624.2692522-1-sashal@kernel.org>
 References: <20250505230624.2692522-1-sashal@kernel.org>
@@ -51,43 +52,39 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.1.136
 Content-Transfer-Encoding: 8bit
 
-From: Andrey Vatoropin <a.vatoropin@crpt.ru>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit 8df0f002827e18632dcd986f7546c1abf1953a6f ]
+[ Upstream commit f4995cdc4d02d0abc8e9fcccad5c71ce676c1e3f ]
 
-The expression PCC_NUM_RETRIES * pcc_chan->latency is currently being
-evaluated using 32-bit arithmetic.
+In the original commit 15fae3410f1d ("mac80211: notify driver on
+mgd TX completion") I evidently made a mistake and placed the
+call in the "associated" if, rather than the "assoc_data". Later
+I noticed the missing call and placed it in commit c042600c17d8
+("wifi: mac80211: adding missing drv_mgd_complete_tx() call"),
+but didn't remove the wrong one. Remove it now.
 
-Since a value of type 'u64' is used to store the eventual result,
-and this result is later sent to the function usecs_to_jiffies with
-input parameter unsigned int, the current data type is too wide to
-store the value of ctx->usecs_lat.
-
-Change the data type of "usecs_lat" to a more suitable (narrower) type.
-
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
-
-Signed-off-by: Andrey Vatoropin <a.vatoropin@crpt.ru>
-Link: https://lore.kernel.org/r/20250204095400.95013-1-a.vatoropin@crpt.ru
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Reviewed-by: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
+Signed-off-by: Miri Korenblit <miriam.rachel.korenblit@intel.com>
+Link: https://patch.msgid.link/20250205110958.6ed954179bbf.Id8ef8835b7e6da3bf913c76f77d201017dc8a3c9@changeid
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/xgene-hwmon.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/mac80211/mlme.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/hwmon/xgene-hwmon.c b/drivers/hwmon/xgene-hwmon.c
-index 207084d55044a..6768dbf390390 100644
---- a/drivers/hwmon/xgene-hwmon.c
-+++ b/drivers/hwmon/xgene-hwmon.c
-@@ -111,7 +111,7 @@ struct xgene_hwmon_dev {
+diff --git a/net/mac80211/mlme.c b/net/mac80211/mlme.c
+index 8f0e6d7fe7167..b300972c31500 100644
+--- a/net/mac80211/mlme.c
++++ b/net/mac80211/mlme.c
+@@ -7312,7 +7312,6 @@ int ieee80211_mgd_deauth(struct ieee80211_sub_if_data *sdata,
+ 		ieee80211_report_disconnect(sdata, frame_buf,
+ 					    sizeof(frame_buf), true,
+ 					    req->reason_code, false);
+-		drv_mgd_complete_tx(sdata->local, sdata, &info);
+ 		return 0;
+ 	}
  
- 	phys_addr_t		comm_base_addr;
- 	void			*pcc_comm_addr;
--	u64			usecs_lat;
-+	unsigned int		usecs_lat;
- };
- 
- /*
 -- 
 2.39.5
 
