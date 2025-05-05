@@ -1,41 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F0552857E0;
-	Mon,  5 May 2025 23:22:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10A403BA891;
+	Mon,  5 May 2025 23:22:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487336; cv=none; b=BZtsClj4opKM0owVpdoYlSl9PLFjCdlHpaE+osMgk0ci0Ed0jhBy+SgVRSZ08BXYO2Rr329aN/T1TXdvSqPYGD3HTVWOjG1dYU5ZvLV7ItmzfB3QR1K0aVqSCICafRkXV+5AAFd8ew1KVMoDSVMqrOpb2R+Kkt+fBn2/6XnEqXA=
+	t=1746487344; cv=none; b=RttU+hD8ed9xHKt/Lj05UxqgDNVhViILwizkuIrQ+41WFtwG8XtKJNe87wCp1ZP8Ue8z0QfYrbHCdN+sK8UdHSuB5YgC6rrPrfhG8Is9S7pD0ZEH9l86JpjDLmP+Bufuw7SpcR/cndIuzrYnaTfmTBv9lc6Wq2FVbmWwHekE4Tg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487336; c=relaxed/simple;
-	bh=2+joGTOuELpfJHei7VE7uNXX5PJBBzKmn6u5+mhbDzE=;
+	s=arc-20240116; t=1746487344; c=relaxed/simple;
+	bh=dhO1wySfaom7bX0z5B2dpNT2HGt71Dc6VZn6YqH1lgI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=uzpy1J+sp18uR1xgvhTiSHPbmjPQ2yYN7ZRS5IUAEO49VizFD/IgAircVskDFK2U9EwrSBUjHHh1Ouv9/K9X7FZp5lBWlD0vAYGuuibrJfcltsfSBtD1S/sprh2ca5LBmCBVCd9iNPnPSmHOSJ3HGKZSyALO8Q5gmLB1gKdDFUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qLehSAdq; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ii6BzofR3shYlIrU0v0SSWaVv5QPtrVQ+7SU9826+S4F+Gg23n5f/RAwhVd+LOHh1PpEZQyeJ90pWJOU7m13AAAW8STvS6Laus6Li0WTbKeHbAKo1TcX7TPbYdZ9NFryUN36EROcEge1N7CfgNFRbg9HOEK3hWt3X7W5SciD/mY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pm69Mmf7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qLehSAdq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B743C4CEEE;
-	Mon,  5 May 2025 23:22:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pm69Mmf7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 605FFC4CEE4;
+	Mon,  5 May 2025 23:22:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487335;
-	bh=2+joGTOuELpfJHei7VE7uNXX5PJBBzKmn6u5+mhbDzE=;
+	s=k20201202; t=1746487342;
+	bh=dhO1wySfaom7bX0z5B2dpNT2HGt71Dc6VZn6YqH1lgI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qLehSAdqONx6rXh5OlvYEabYus+ehz2DB07a2ftUGHJwhAHZj31KQDkHP2fwsNgkE
-	 +Hcwm9gag3MKe2/XrvlaICntGBKxMNxO0mwbG3zzA5FIzf0weldcUfXvbzkWvzrUcS
-	 mkKyIawDopKPUVatJVec0UM5l/gERwaZYfNtk/Qh23vd3HB8zHZQR5iOyqQlyeksYr
-	 2Ib2ecceUhuN7x0SCqEYmh2ngoyrglkzFL9KO3Kk9y6bjlrgvVa3yQQ66gajjLruNU
-	 XDwucdrWhYkdGoetoPcVkVyFFUVLzBlANPg53+dl52pzQr15NfoZq+vyLnLnuCod7r
-	 8lV7pTgFv7YzQ==
+	b=Pm69Mmf7cPq4nylToYoYWEqM5zGM6MzPyHAgrFywlKUKQGIgTwhb2lxvzxbbloPUD
+	 Iz1IEkDRfyxjDt9pYfwUHt4FiG1WZfoN2D63XXtji6w6HbN00hGW9Ao6YxyeFsx8Je
+	 DpgXsKQBZPCjIlXPgVgxfgvoZdaYneJivwyLE9hzu9A/Ci3DrfNhuD0cTf/K1bqO8U
+	 hrbIaI6UJrR4vv/GAZwKXKq/8bV9XSJIpLm+cnYcM1wfgmJmt0yQPmG73aF7T3O31u
+	 0DN6kWI/l+nXlARbZzxwNffCCeWRXTNxetl29SUK391hVJ02WR0/VrA1QmhRWZZFL9
+	 6xHI1M1MJpB/A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Vitalii Mordan <mordan@ispras.ru>,
-	Andi Shyti <andi.shyti@kernel.org>,
+Cc: Tiwei Bie <tiwei.btw@antgroup.com>,
+	Johannes Berg <johannes.berg@intel.com>,
 	Sasha Levin <sashal@kernel.org>,
-	linux-i2c@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 13/79] i2c: pxa: fix call balance of i2c->clk handling routines
-Date: Mon,  5 May 2025 19:20:45 -0400
-Message-Id: <20250505232151.2698893-13-sashal@kernel.org>
+	richard@nod.at,
+	anton.ivanov@cambridgegreys.com,
+	johannes@sipsolutions.net,
+	rppt@kernel.org,
+	dave.hansen@linux.intel.com,
+	akpm@linux-foundation.org,
+	richard.weiyang@gmail.com,
+	kevin.brodsky@arm.com,
+	benjamin.berg@intel.com,
+	linux-um@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 17/79] um: Update min_low_pfn to match changes in uml_reserved
+Date: Mon,  5 May 2025 19:20:49 -0400
+Message-Id: <20250505232151.2698893-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505232151.2698893-1-sashal@kernel.org>
 References: <20250505232151.2698893-1-sashal@kernel.org>
@@ -50,39 +59,34 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.4.293
 Content-Transfer-Encoding: 8bit
 
-From: Vitalii Mordan <mordan@ispras.ru>
+From: Tiwei Bie <tiwei.btw@antgroup.com>
 
-[ Upstream commit be7113d2e2a6f20cbee99c98d261a1fd6fd7b549 ]
+[ Upstream commit e82cf3051e6193f61e03898f8dba035199064d36 ]
 
-If the clock i2c->clk was not enabled in i2c_pxa_probe(), it should not be
-disabled in any path.
+When uml_reserved is updated, min_low_pfn must also be updated
+accordingly. Otherwise, min_low_pfn will not accurately reflect
+the lowest available PFN.
 
-Found by Linux Verification Center (linuxtesting.org) with Klever.
-
-Signed-off-by: Vitalii Mordan <mordan@ispras.ru>
-Signed-off-by: Andi Shyti <andi.shyti@kernel.org>
-Link: https://lore.kernel.org/r/20250212172803.1422136-1-mordan@ispras.ru
+Signed-off-by: Tiwei Bie <tiwei.btw@antgroup.com>
+Link: https://patch.msgid.link/20250221041855.1156109-1-tiwei.btw@antgroup.com
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-pxa.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/um/kernel/mem.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
-index d0c557c8d80f5..c5a6e7527baf7 100644
---- a/drivers/i2c/busses/i2c-pxa.c
-+++ b/drivers/i2c/busses/i2c-pxa.c
-@@ -1284,7 +1284,10 @@ static int i2c_pxa_probe(struct platform_device *dev)
- 				i2c->adap.name);
- 	}
+diff --git a/arch/um/kernel/mem.c b/arch/um/kernel/mem.c
+index 417ff647fb377..06fb50218136d 100644
+--- a/arch/um/kernel/mem.c
++++ b/arch/um/kernel/mem.c
+@@ -49,6 +49,7 @@ void __init mem_init(void)
+ 	map_memory(brk_end, __pa(brk_end), uml_reserved - brk_end, 1, 1, 0);
+ 	memblock_free(__pa(brk_end), uml_reserved - brk_end);
+ 	uml_reserved = brk_end;
++	min_low_pfn = PFN_UP(__pa(uml_reserved));
  
--	clk_prepare_enable(i2c->clk);
-+	ret = clk_prepare_enable(i2c->clk);
-+	if (ret)
-+		return dev_err_probe(&dev->dev, ret,
-+				     "failed to enable clock\n");
- 
- 	if (i2c->use_pio) {
- 		i2c->adap.algo = &i2c_pxa_pio_algorithm;
+ 	/* this will put all low memory onto the freelists */
+ 	memblock_free_all();
 -- 
 2.39.5
 
