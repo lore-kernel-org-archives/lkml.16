@@ -1,50 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 144D9356E6F;
-	Mon,  5 May 2025 22:41:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 603A22989B5;
+	Mon,  5 May 2025 22:41:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746484906; cv=none; b=t7OabUw9UD30pYJWnrBSrGVpezfM54Iw8MgbBYdcdgCxufaqNVxS6ft39aQc74Og51E8+PF8fQZCfVmdRSO9Cw9DOA80aBXTNDinu2X5wVLj3aebprbiQKkiw7IEX8rZJ2qqKLDG5Dk44g2xI2LQjzAqpmbWjntw27mhPstLXYg=
+	t=1746484913; cv=none; b=sutCEGjORXZD8dI1XABYQCbBrD/Q/57cHT9ah28yb0kSOfjQqntSeAzwooI6EmLSKaDl08+PRH580nMV9RbcIPCq6rCySXsQ8SXlKOx5DqHD5wK/wqxVSD5nl7JgbBekWUNRjm4M8co5Jud99eHuJpS5UMSdpemop6pfx0Mug5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746484906; c=relaxed/simple;
-	bh=QtQv3X+lPsoDtfdQq6HuEskCPyP8I2gQ4J+aw3KQrV0=;
+	s=arc-20240116; t=1746484913; c=relaxed/simple;
+	bh=zDEroN2ZyG+zGdZLrHEcWtUXEe3RlIjowoe2bxEc+mE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mQAvi9mNxaC9AAEntP0Yy9ycXDlnMKwRFI3oYLVRxgX1sKRLxGRlOiifqzuOg0vr1ijJ2QlqLlzSaR+stjuSyVI6nID0jFwVk5ZFjn7f9nBo3D9U3MY8Ag6lCI112zcTptJIXuxqmJ2brVFSsnuTuCaaL9w9RzBBc60gx7lXK6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fXEVexpH; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=eLGwdetFdElomxQILV8Ystb7kffpY2ySg3IiYU1bWQIfi3/UmZE5T354EosxREyFIUlwtZBVGRooz0sssnwSTZiPyq5XY2Gtv/sa3jiSfQayaTvjhQ30rE2cpjDdHWWVCvKTSEsyp90lqt9tvSRQzTwFB9ibun/GwNuNUe8q3qs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qYz+qpqU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fXEVexpH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C439C4CEED;
-	Mon,  5 May 2025 22:41:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qYz+qpqU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 464BBC4CEED;
+	Mon,  5 May 2025 22:41:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746484905;
-	bh=QtQv3X+lPsoDtfdQq6HuEskCPyP8I2gQ4J+aw3KQrV0=;
+	s=k20201202; t=1746484913;
+	bh=zDEroN2ZyG+zGdZLrHEcWtUXEe3RlIjowoe2bxEc+mE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fXEVexpHuN8IV8jfhqxgoGvnyDI3YbjeeAs4u+EWtpe5aXUEylq9aHvga6g5FZ+tL
-	 TxdP7X/cFrugSnU3QDHSESDzXzqmh0pzGhv2YagqyLS9ciLKc+IXWGsgm03aAfDfLS
-	 AecWdo4yYiSLb2tqnU5b/jNvS73YQXI5jRPrbx4DTqmH6Ty5nV2O9EWNNKatOJEd2J
-	 MA4me6SmQr47TlL01X6wtYC5rJpEenHps0lispTeT2YQaATXiKVto4OF0yvmVGss+2
-	 On/+DH98w/ls2RARr0tvtq1Kf8IVIuEmVPgrmk8fKr49vgNtZOjBJh3GW+xI2LKgdd
-	 MF0qg8aQkpxYw==
+	b=qYz+qpqUSjBDROjG4FFr98fi+i78mH9IpXtJytdVx7HU21uM+jXRa8cvV0FGLmJte
+	 gilytlaS8lVmN5GkS92NQ7KddnM5fd0lWhNhwQs/oH1C9nsIj9hYcRHhmb7jhJGQ56
+	 5gEEoDwNQGiiQrTxb9VDMmEzlv2kiCNTpcbAmGSFKIblb7MLSvjns7ad20jGprIWW6
+	 ygUg6qAbgzTRPcg/987RE2M4KkFqNtHW3v7L6YcvglsZWCIgkrlyDJb6+DHuRmNKtl
+	 CpcInyFIwNesgetqjur5MpSQ5K18IMrC7Zj3BLCi+cflZp6L85O11CEnEUQp+pSxfn
+	 UBdJY5fRV9Thg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Sohil Mehta <sohil.mehta@intel.com>,
-	Ingo Molnar <mingo@kernel.org>,
+Cc: Boris Burkov <boris@bur.io>,
+	Filipe Manana <fdmanana@suse.com>,
+	David Sterba <dsterba@suse.com>,
 	Sasha Levin <sashal@kernel.org>,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	gautham.shenoy@amd.com,
-	peterz@infradead.org,
-	brgerst@gmail.com,
-	patryk.wlazlyn@linux.intel.com,
-	kprateek.nayak@amd.com
-Subject: [PATCH AUTOSEL 6.12 067/486] x86/smpboot: Fix INIT delay assignment for extended Intel Families
-Date: Mon,  5 May 2025 18:32:23 -0400
-Message-Id: <20250505223922.2682012-67-sashal@kernel.org>
+	clm@fb.com,
+	josef@toxicpanda.com,
+	linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 072/486] btrfs: make btrfs_discard_workfn() block_group ref explicit
+Date: Mon,  5 May 2025 18:32:28 -0400
+Message-Id: <20250505223922.2682012-72-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -59,48 +53,104 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Sohil Mehta <sohil.mehta@intel.com>
+From: Boris Burkov <boris@bur.io>
 
-[ Upstream commit 7a2ad752746bfb13e89a83984ecc52a48bae4969 ]
+[ Upstream commit 895c6721d310c036dcfebb5ab845822229fa35eb ]
 
-Some old crusty CPUs need an extra delay that slows down booting. See
-the comment above 'init_udelay' for details. Newer CPUs don't need the
-delay.
+Currently, the async discard machinery owns a ref to the block_group
+when the block_group is queued on a discard list. However, to handle
+races with discard cancellation and the discard workfn, we have a
+specific logic to detect that the block_group is *currently* running in
+the workfn, to protect the workfn's usage amidst cancellation.
 
-Right now, for Intel, Family 6 and only Family 6 skips the delay. That
-leaves out both the Family 15 (Pentium 4s) and brand new Family 18/19
-models.
+As far as I can tell, this doesn't have any overt bugs (though
+finish_discard_pass() and remove_from_discard_list() racing can have a
+surprising outcome for the caller of remove_from_discard_list() in that
+it is again added at the end).
 
-The omission of Family 15 (Pentium 4s) seems like an oversight and 18/19
-do not need the delay.
+But it is needlessly complicated to rely on locking and the nullity of
+discard_ctl->block_group. Simplify this significantly by just taking a
+refcount while we are in the workfn and unconditionally drop it in both
+the remove and workfn paths, regardless of if they race.
 
-Skip the delay on all Intel processors Family 6 and beyond.
-
-Signed-off-by: Sohil Mehta <sohil.mehta@intel.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20250219184133.816753-11-sohil.mehta@intel.com
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: Boris Burkov <boris@bur.io>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/smpboot.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ fs/btrfs/discard.c | 34 ++++++++++++++++------------------
+ 1 file changed, 16 insertions(+), 18 deletions(-)
 
-diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-index f1fac08fdef28..2c451de702c87 100644
---- a/arch/x86/kernel/smpboot.c
-+++ b/arch/x86/kernel/smpboot.c
-@@ -681,9 +681,9 @@ static void __init smp_quirk_init_udelay(void)
- 		return;
+diff --git a/fs/btrfs/discard.c b/fs/btrfs/discard.c
+index e815d165cccc2..d6eef4bd9e9d4 100644
+--- a/fs/btrfs/discard.c
++++ b/fs/btrfs/discard.c
+@@ -167,13 +167,7 @@ static bool remove_from_discard_list(struct btrfs_discard_ctl *discard_ctl,
+ 	block_group->discard_eligible_time = 0;
+ 	queued = !list_empty(&block_group->discard_list);
+ 	list_del_init(&block_group->discard_list);
+-	/*
+-	 * If the block group is currently running in the discard workfn, we
+-	 * don't want to deref it, since it's still being used by the workfn.
+-	 * The workfn will notice this case and deref the block group when it is
+-	 * finished.
+-	 */
+-	if (queued && !running)
++	if (queued)
+ 		btrfs_put_block_group(block_group);
  
- 	/* if modern processor, use no delay */
--	if (((boot_cpu_data.x86_vendor == X86_VENDOR_INTEL) && (boot_cpu_data.x86 == 6)) ||
--	    ((boot_cpu_data.x86_vendor == X86_VENDOR_HYGON) && (boot_cpu_data.x86 >= 0x18)) ||
--	    ((boot_cpu_data.x86_vendor == X86_VENDOR_AMD) && (boot_cpu_data.x86 >= 0xF))) {
-+	if ((boot_cpu_data.x86_vendor == X86_VENDOR_INTEL && boot_cpu_data.x86_vfm >= INTEL_PENTIUM_PRO) ||
-+	    (boot_cpu_data.x86_vendor == X86_VENDOR_HYGON && boot_cpu_data.x86 >= 0x18) ||
-+	    (boot_cpu_data.x86_vendor == X86_VENDOR_AMD   && boot_cpu_data.x86 >= 0xF)) {
- 		init_udelay = 0;
+ 	spin_unlock(&discard_ctl->lock);
+@@ -260,9 +254,10 @@ static struct btrfs_block_group *peek_discard_list(
+ 			block_group->discard_cursor = block_group->start;
+ 			block_group->discard_state = BTRFS_DISCARD_EXTENTS;
+ 		}
+-		discard_ctl->block_group = block_group;
+ 	}
+ 	if (block_group) {
++		btrfs_get_block_group(block_group);
++		discard_ctl->block_group = block_group;
+ 		*discard_state = block_group->discard_state;
+ 		*discard_index = block_group->discard_index;
+ 	}
+@@ -493,9 +488,20 @@ static void btrfs_discard_workfn(struct work_struct *work)
+ 
+ 	block_group = peek_discard_list(discard_ctl, &discard_state,
+ 					&discard_index, now);
+-	if (!block_group || !btrfs_run_discard_work(discard_ctl))
++	if (!block_group)
+ 		return;
++	if (!btrfs_run_discard_work(discard_ctl)) {
++		spin_lock(&discard_ctl->lock);
++		btrfs_put_block_group(block_group);
++		discard_ctl->block_group = NULL;
++		spin_unlock(&discard_ctl->lock);
++		return;
++	}
+ 	if (now < block_group->discard_eligible_time) {
++		spin_lock(&discard_ctl->lock);
++		btrfs_put_block_group(block_group);
++		discard_ctl->block_group = NULL;
++		spin_unlock(&discard_ctl->lock);
+ 		btrfs_discard_schedule_work(discard_ctl, false);
  		return;
  	}
+@@ -547,15 +553,7 @@ static void btrfs_discard_workfn(struct work_struct *work)
+ 	spin_lock(&discard_ctl->lock);
+ 	discard_ctl->prev_discard = trimmed;
+ 	discard_ctl->prev_discard_time = now;
+-	/*
+-	 * If the block group was removed from the discard list while it was
+-	 * running in this workfn, then we didn't deref it, since this function
+-	 * still owned that reference. But we set the discard_ctl->block_group
+-	 * back to NULL, so we can use that condition to know that now we need
+-	 * to deref the block_group.
+-	 */
+-	if (discard_ctl->block_group == NULL)
+-		btrfs_put_block_group(block_group);
++	btrfs_put_block_group(block_group);
+ 	discard_ctl->block_group = NULL;
+ 	__btrfs_discard_schedule_work(discard_ctl, now, false);
+ 	spin_unlock(&discard_ctl->lock);
 -- 
 2.39.5
 
