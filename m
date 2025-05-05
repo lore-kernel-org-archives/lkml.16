@@ -1,45 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C72182BD93C;
-	Mon,  5 May 2025 22:47:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A9F729CB49;
+	Mon,  5 May 2025 22:48:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485276; cv=none; b=EEaIXN1dkBmPOgPvOXEiP0xLnI9bAc17wLKo+fePpaeDwbqRQxocKe2tn/Jh7KPn+y5feoM1FCoT6ptQ0OY0OcK+RjaLsXTT3Ix0uYOTeJogWw7bkv/sJr2VbQ2lxHyKhQLA3u5UKyfubl0E0pr42Avg2Ff3XT6gDnE+KMNstBQ=
+	t=1746485281; cv=none; b=ILzeQVWnqs4sAS4ZWz5Sd/9mqjn8QutQxa6AO54cqm7IeuA0E4bToojlR1VUIIfhoaL8tnO283VJ1UEVwBqQ8CwGqsv1CGVC8c5ZcGcRDqNIH54ih4TjEvlHU58pOt+dngw3dwDlTz6gd4RuHNfA98t7CMmqe5U4CanjbFxcVRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485276; c=relaxed/simple;
-	bh=AnJiToNCPr/S/WOOBUm3yVZqa2oZ2oRMSRSFdaJ7JeM=;
+	s=arc-20240116; t=1746485281; c=relaxed/simple;
+	bh=Svz4wnp7COiUCkLASvgsNelQAE+ZagYIac/R1LzByOo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=f6urNId3Cw5JYA+Xju3q7XB8R5XnxDSc5Ye8SCVtxzAxG1TltRKkcjHINgq0LXlMPNAs7TC6aIQAPsHgyzQsUwGWhH2/ryhe2lsJzvX9b0/56Sm4T7sHZZ1iIF/+dSJNW2s8Ji4PdHIsobgdsYB3xaMeY49DRya9D/nEhW7BIUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G/2eIm1d; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Ivh9vhohltidVb85+5HzM8Pcii4cHKGvABcyq5WbXZtMG86e4CR2OQ2GMBgcCw3deVByyHgI+v7fESqhLWtFsYXP+nYwCBRvNfWkpCDdMbHmneHmybgybcmBZWglWVVSmNBDq6dJ+WFB5ZOznZ6/04+T8Ikk3nNvcZ1/olESRXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k7NRojKo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G/2eIm1d"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96A3BC4CEF1;
-	Mon,  5 May 2025 22:47:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k7NRojKo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1440C4CEE4;
+	Mon,  5 May 2025 22:47:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485276;
-	bh=AnJiToNCPr/S/WOOBUm3yVZqa2oZ2oRMSRSFdaJ7JeM=;
+	s=k20201202; t=1746485281;
+	bh=Svz4wnp7COiUCkLASvgsNelQAE+ZagYIac/R1LzByOo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=G/2eIm1dJD2x0BaHTrz5wur0sgDJzyJWisoFLU/T3+OKjuh4/qEWtttstaxGtOH7X
-	 q84By2xbLB/QkgdoWaYfB9kQoK7rQSe+/U3KN+x8ARv16k2/rlfAqu3+HQ8HGg1QmR
-	 kZ0fS5ruu0M2iIi3/7OLALuECZTyIhsdF1RiERDlCT8rRzE+kPHxy5gG5/ic3/Jh19
-	 x9gVaUwi1z3WflTy95bfvEla/m3knLjfjSvJRFzJnv55dsTU9sC40ZC+5vTgOq4j6z
-	 4lE9XRhpbSXsamuLPJXWN3yfCte0kRgpRzhchCK49mCVky3S6c6OqpVX6rkOgh9cHd
-	 I32obbP32M2tQ==
+	b=k7NRojKoPV/A/pxs5He/OQYX0z7vsNDhB4Wd5Y/TzDHUbYhJuLe60MgCVGlQUr1DB
+	 FHczpphjNj8G6U7jPllzcXk/3k3Il9O6YMoYWgF9PPiL4lxtYCQpjNfD1+d1S4Lc6v
+	 p3V6OZ6wpL8pITLND0561Al9qdellX83jAfljWqjWL9lyrApMbki+ZPGpKxIQj6SeD
+	 YP1zYJAevaJYqj2G4hLT7LS04Tud2AwFqkTLHPtOZzpyEDdABdFvyn3o/dNPSW5Oln
+	 MK53zXKA6U66p4eOlACGOw0XhTmXt5dib3tUUMTDw5YE+zCexz9gA17qzpX/cEw5EW
+	 czIC23xbABbAA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Amery Hung <amery.hung@bytedance.com>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Martin KaFai Lau <martin.lau@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
+Cc: Nir Lichtman <nir@lichtman.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Masahiro Yamada <yamada.masahiro@socionext.com>,
+	Michal Marek <michal.lkml@markovi.net>,
 	Sasha Levin <sashal@kernel.org>,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 249/486] bpf: Search and add kfuncs in struct_ops prologue and epilogue
-Date: Mon,  5 May 2025 18:35:25 -0400
-Message-Id: <20250505223922.2682012-249-sashal@kernel.org>
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org
+Subject: [PATCH AUTOSEL 6.12 251/486] x86/build: Fix broken copy command in genimage.sh when making isoimage
+Date: Mon,  5 May 2025 18:35:27 -0400
+Message-Id: <20250505223922.2682012-251-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -54,84 +58,55 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Amery Hung <amery.hung@bytedance.com>
+From: Nir Lichtman <nir@lichtman.org>
 
-[ Upstream commit d519594ee2445d7cd1ad51f4db4cee58f8213400 ]
+[ Upstream commit e451630226bd09dc730eedb4e32cab1cc7155ae8 ]
 
-Currently, add_kfunc_call() is only invoked once before the main
-verification loop. Therefore, the verifier could not find the
-bpf_kfunc_btf_tab of a new kfunc call which is not seen in user defined
-struct_ops operators but introduced in gen_prologue or gen_epilogue
-during do_misc_fixup(). Fix this by searching kfuncs in the patching
-instruction buffer and add them to prog->aux->kfunc_tab.
+Problem: Currently when running the "make isoimage" command there is an
+error related to wrong parameters passed to the cp command:
 
-Signed-off-by: Amery Hung <amery.hung@bytedance.com>
-Acked-by: Eduard Zingerman <eddyz87@gmail.com>
-Acked-by: Martin KaFai Lau <martin.lau@kernel.org>
-Link: https://lore.kernel.org/r/20250225233545.285481-1-ameryhung@gmail.com
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+  "cp: missing destination file operand after 'arch/x86/boot/isoimage/'"
+
+This is caused because FDINITRDS is an empty array.
+
+Solution: Check if FDINITRDS is empty before executing the "cp" command,
+similar to how it is done in the case of hdimage.
+
+Signed-off-by: Nir Lichtman <nir@lichtman.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Michal Marek <michal.lkml@markovi.net>
+Link: https://lore.kernel.org/r/20250110120500.GA923218@lichtman.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/verifier.c | 25 ++++++++++++++++++++++++-
- 1 file changed, 24 insertions(+), 1 deletion(-)
+ arch/x86/boot/genimage.sh | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index 8656208aa4bbb..294fbafbeba75 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -2987,6 +2987,21 @@ bpf_jit_find_kfunc_model(const struct bpf_prog *prog,
- 	return res ? &res->func_model : NULL;
- }
- 
-+static int add_kfunc_in_insns(struct bpf_verifier_env *env,
-+			      struct bpf_insn *insn, int cnt)
-+{
-+	int i, ret;
-+
-+	for (i = 0; i < cnt; i++, insn++) {
-+		if (bpf_pseudo_kfunc_call(insn)) {
-+			ret = add_kfunc_call(env, insn->imm, insn->off);
-+			if (ret < 0)
-+				return ret;
-+		}
-+	}
-+	return 0;
-+}
-+
- static int add_subprog_and_kfunc(struct bpf_verifier_env *env)
- {
- 	struct bpf_subprog_info *subprog = env->subprog_info;
-@@ -19768,7 +19783,7 @@ static int convert_ctx_accesses(struct bpf_verifier_env *env)
- {
- 	struct bpf_subprog_info *subprogs = env->subprog_info;
- 	const struct bpf_verifier_ops *ops = env->ops;
--	int i, cnt, size, ctx_field_size, delta = 0, epilogue_cnt = 0;
-+	int i, cnt, size, ctx_field_size, ret, delta = 0, epilogue_cnt = 0;
- 	const int insn_cnt = env->prog->len;
- 	struct bpf_insn *epilogue_buf = env->epilogue_buf;
- 	struct bpf_insn *insn_buf = env->insn_buf;
-@@ -19797,6 +19812,10 @@ static int convert_ctx_accesses(struct bpf_verifier_env *env)
- 				return -ENOMEM;
- 			env->prog = new_prog;
- 			delta += cnt - 1;
-+
-+			ret = add_kfunc_in_insns(env, epilogue_buf, epilogue_cnt - 1);
-+			if (ret < 0)
-+				return ret;
- 		}
- 	}
- 
-@@ -19817,6 +19836,10 @@ static int convert_ctx_accesses(struct bpf_verifier_env *env)
- 
- 			env->prog = new_prog;
- 			delta += cnt - 1;
-+
-+			ret = add_kfunc_in_insns(env, insn_buf, cnt - 1);
-+			if (ret < 0)
-+				return ret;
- 		}
- 	}
- 
+diff --git a/arch/x86/boot/genimage.sh b/arch/x86/boot/genimage.sh
+index c9299aeb7333e..3882ead513f74 100644
+--- a/arch/x86/boot/genimage.sh
++++ b/arch/x86/boot/genimage.sh
+@@ -22,6 +22,7 @@
+ # This script requires:
+ #   bash
+ #   syslinux
++#   genisoimage
+ #   mtools (for fdimage* and hdimage)
+ #   edk2/OVMF (for hdimage)
+ #
+@@ -251,7 +252,9 @@ geniso() {
+ 	cp "$isolinux" "$ldlinux" "$tmp_dir"
+ 	cp "$FBZIMAGE" "$tmp_dir"/linux
+ 	echo default linux "$KCMDLINE" > "$tmp_dir"/isolinux.cfg
+-	cp "${FDINITRDS[@]}" "$tmp_dir"/
++	if [ ${#FDINITRDS[@]} -gt 0 ]; then
++		cp "${FDINITRDS[@]}" "$tmp_dir"/
++	fi
+ 	genisoimage -J -r -appid 'LINUX_BOOT' -input-charset=utf-8 \
+ 		    -quiet -o "$FIMAGE" -b isolinux.bin \
+ 		    -c boot.cat -no-emul-boot -boot-load-size 4 \
 -- 
 2.39.5
 
