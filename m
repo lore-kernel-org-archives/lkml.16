@@ -1,87 +1,90 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from sender3-pp-f112.zoho.com (sender3-pp-f112.zoho.com [136.143.184.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E886268FD5;
-	Mon,  5 May 2025 16:22:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746462168; cv=none; b=HYcnYTz7U64bCo6IeU7Ak8Z/qtG1KUo4Kge/SMbH33GRG/63HCbwbc6Tbh+lBTLp3ELL2p6/stFHumnztkBkktI0eZNvbC5JSvRISF+Ny1241IM9w9yj4BGIeDkb27T1xr8shv+2DDYWdaVjS9rwfiHHO3OlMUqfEJcErgodhTk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746462168; c=relaxed/simple;
-	bh=U94D0rf+Tz1Qaqv9zk2XngTeTq3q3AWGj+6MFpuqQFA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JUSJm7wCq5Qh5X6G/OvKlpXmnKeqVzgm/YpJ98ovKTWmiNF/4X/szbtag6AVlgU6p5BamQp9yJ3eDOyD90oKOHKMc5hJoO2kyFbxF1OVDXswu6p1ptEocxfF9xs13Zu9Zo+OTOnqEasIJDaAyxbjCLCRzv8EbJ0mNg23OxltBwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=PzhGe4+U; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3F961CD1F
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 16:23:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.184.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746462185; cv=pass; b=tF+Hn4REB5U6g/62jGo6vt9rnOpF4Zoa0y4IBSVdPtfXwM0N4vI+Pfu0QA9Kjf0oUi5nJ/tcQDP9yMKs8LQYnGmcDzf2kBCzcVK68IVFMe5SnqG2JfDNp8HlnLjnd1cgpm9aevLSoEaN6Pl2dwOwhUMSR54vjZPV/Tjd906PWKs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746462185; c=relaxed/simple;
+	bh=7OvQ9Fo0tUTXljcF2N+k29uN7bcPhl/8/tSD+MUKVZs=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=iEv6qQ/LMuX1JOjsVIhjvG0fDe+8v1aCgCoHVQK+55DiA1xTP8LyqGoB0os+9M/Uv+Wo3rxbnfU9oeCdG1sT49AUK9hovEHTX36mes6jzI8FfId4lhaENKhHRbglofEuP7G4v3WH50pX91VF1EbhIx61L9iSiUPtNQ7hCa9f43M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=ZPhpFQpD; arc=pass smtp.client-ip=136.143.184.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="PzhGe4+U"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
-	In-Reply-To:References; bh=xs39UXgzFwF1+wT9Gyk6TYjcusmYwVS1IaNsKw2rJOk=; b=Pz
-	hGe4+UicHqlww1QoOoupIHSX/TuLJYAfrBjJfItptZSJStCxBrXvixgHFbpnBEdB7m6NLBG3+lN2p
-	Y1YTWyH0dlMzGt9XkOaU9eXHkXFP16giPd5Kcav59heYCHsByF1ZV1Dx5JBUX4XDxcwQVjU0pZolG
-	FVDZewJjvsmZJ6I=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uByaV-00Bc1H-ER; Mon, 05 May 2025 18:22:39 +0200
-Date: Mon, 5 May 2025 18:22:39 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Rob Herring <robh@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-	Gregory Clement <gregory.clement@bootlin.com>,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: interrupt-controller: Convert
- marvell,orion-bridge-intc to DT schema
-Message-ID: <2a0d5fb1-0fb9-4758-98e7-57a274a25d8d@lunn.ch>
-References: <20250505144743.1290672-1-robh@kernel.org>
- <dd9795f1-872a-4f7f-b4df-52cee65151a7@lunn.ch>
- <CAL_JsqJx9ayQkwGP9Hjh+UfnDauW0Shcx0VjD02Nb8Yv21v0pQ@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="ZPhpFQpD"
+ARC-Seal: i=1; a=rsa-sha256; t=1746462161; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=Z/pEykjnon0LWQmbob4yKSYuKsmWmcHky+HCf9cBweMRAte5XDu0iJpCfRiDeGYGqy3GNi7BRJOi1jD9t+5fD+DL2j1SpFFoirXxwLvBgv5fEhG2atZT5cwFLrUDz7XB1QthxkBfImJpuM5Pf7YczZKBoG/YwNsMOn2qDPHOBdc=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1746462161; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=Cn34lMEWOSB8EK9h95x7SSV4y9boi8anfMX1Giz4Mis=; 
+	b=jxM6qLSgW54nnqKwt23RPf41T0Bf9oklvHKepYq41mhEalUZQoHNqSgixChXnQ/rFiNIMnLei4k38BjHUHkeMimvnzwH1/tj0ceuo5XSkrhrrg+w95F8OZIrJbNeBfzPnWEPr3ZJAasSNBdw/aOfeUuBDBRvJasTzGgGRrrf+M0=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
+	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1746462161;
+	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:From:From:To:To:Cc:Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=Cn34lMEWOSB8EK9h95x7SSV4y9boi8anfMX1Giz4Mis=;
+	b=ZPhpFQpD5dzmzC0l9ZimFix67MJ/zDeGB3W4LKqi1CBXX6ZYiks6l9usZNiwzxq4
+	EQdVM4ipZPIc/rPy90WEJWOCHn7dfM6SP3E9oGSolShBNNZWjLYyVnI163B/zPRxpDI
+	TA1eaLNEvE0wkkNVnNNNnp/FuUafcTC8x132VXqk=
+Received: by mx.zohomail.com with SMTPS id 174646215944673.6589727735876;
+	Mon, 5 May 2025 09:22:39 -0700 (PDT)
+Message-ID: <c3ae2790-20d8-4220-848e-7b02b185e893@collabora.com>
+Date: Mon, 5 May 2025 19:22:35 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAL_JsqJx9ayQkwGP9Hjh+UfnDauW0Shcx0VjD02Nb8Yv21v0pQ@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] virtgpu: deallocate capsets on device deinit
+From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+To: Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
+ David Airlie <airlied@redhat.com>, Gerd Hoffmann <kraxel@redhat.com>,
+ Gurchetan Singh <gurchetansingh@chromium.org>, Chia-I Wu
+ <olvaffe@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Simona Vetter <simona@ffwll.ch>
+Cc: =?UTF-8?Q?Alex_Benn=C3=A9e?= <alex.bennee@linaro.org>,
+ Viresh Kumar <viresh.kumar@linaro.org>, dri-devel@lists.freedesktop.org,
+ virtualization@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250505-virtgpu-queue-cleanup-v1-v1-0-810923da2b1e@linaro.org>
+ <20250505-virtgpu-queue-cleanup-v1-v1-3-810923da2b1e@linaro.org>
+ <5271820d-7afd-45e5-8103-b7d4fc818278@collabora.com>
+Content-Language: en-US
+In-Reply-To: <5271820d-7afd-45e5-8103-b7d4fc818278@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 
-On Mon, May 05, 2025 at 11:01:27AM -0500, Rob Herring wrote:
-> On Mon, May 5, 2025 at 10:09 AM Andrew Lunn <andrew@lunn.ch> wrote:
-> >
-> > > +++ b/Documentation/devicetree/bindings/interrupt-controller/marvell,orion-bridge-intc.yaml
-> > > @@ -0,0 +1,53 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > +---
-> > > +$id: http://devicetree.org/schemas/interrupt-controller/marvell,orion-bridge-intc.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Marvell Orion SoC Bridge Interrupt Controller
-> > > +
-> > > +maintainers:
-> > > +  - Andrew Lunn <andrew@lunn.ch>
-> > > +  - Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-> >
-> > You should probably drop Sebastian. I've not heard from him in years.
+On 5/5/25 18:58, Dmitry Osipenko wrote:
+> On 5/5/25 11:59, Manos Pitsidianakis wrote:
+>> diff --git a/drivers/gpu/drm/virtio/virtgpu_kms.c b/drivers/gpu/drm/virtio/virtgpu_kms.c
+>> index 7b3c4d314f8eee692e2842a7056d6dc64936fc2f..a8b751179332b9ec2fbba1392a6ee0e638a5192e 100644
+>> --- a/drivers/gpu/drm/virtio/virtgpu_kms.c
+>> +++ b/drivers/gpu/drm/virtio/virtgpu_kms.c
+>> @@ -286,6 +286,10 @@ void virtio_gpu_deinit(struct drm_device *dev)
+>>  	flush_work(&vgdev->cursorq.dequeue_work);
+>>  	flush_work(&vgdev->config_changed_work);
+>>  	virtio_reset_device(vgdev->vdev);
+>> +	spin_lock(&vgdev->display_info_lock);
+>> +	drmm_kfree(dev, vgdev->capsets);
+>> +	vgdev->capsets = NULL;
+>> +	spin_unlock(&vgdev->display_info_lock);
 > 
-> Okay. I would have (probably) if he was not still listed in
-> MAINTAINERS. Perhaps should be dropped from there too?
+> Isn't this lock superfluous?
 
-Yes.
+Wait a minute, vgdev->capsets is allocated using drmm, hence it's
+auto-freed when DRM device is freed. This patch shouldn't be needed.
 
-Jakub Kicinski has a script he runs about once a year which compares
-MAINTAINER entries for networking against activity on the netdev
-list. Any email address which has not been active for a few years gets
-a patch to remove it from MAINTAINERS and sometimes add an entry to
-CREDITs. Maybe this can be generalised, run it against all the lore
-archive?
-
-	Andrew
+-- 
+Best regards,
+Dmitry
