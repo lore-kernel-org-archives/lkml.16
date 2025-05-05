@@ -1,151 +1,285 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 629C51FC104;
-	Mon,  5 May 2025 09:50:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF62BF4F1
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 09:51:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746438624; cv=none; b=jCwPd3lVQmN7Tg5w6A2OSdgSrK0Z8V8q+CEY5lg0guH/NCpiPPazFXk9MU77jLzp6MSzEhRZRAoqtM8alM2zPgkGTFpGEcwWyJd19odN0/3aIZiJNmPrqnkbrZu+FsRL1mY8bloGkykapj1Oy3JPxNhTE1Q32t9FJTpTVeekDNE=
+	t=1746438710; cv=none; b=u2oj8eq50fpbmg2f6NzupKxlT3xy8xi7ceStsoDz2SN0LXOESqqFUbpKdCPIpP2Yzj5Gzkmo7y/nl8pxdDQ165ASBVS+2oqKr+lnCqSr2CgpJl5VjMHEamQ19nKhh0GM3RrueX1MtP0IMKnCEhZkH/fBTfXLsghpebORhmkLYU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746438624; c=relaxed/simple;
-	bh=xyNkvtslKHGj6JJUlrcFQwYQudHJaqcW3/RXrny9o0A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cfQv8BUJ2vhqfuMbLtN3yacUvnS6MhNLdKs3i5MRrWywuIBrS2rbQBMDPTtkChAsW/Rmbav2ke0/pSZYrzPZqQ5i242eZGCTMImou5sq4LGTy9n/hytU27H6gKYW2Bhojz2Xy5AX75co1Mr8enXdGmAyDwvRtDfvCYfZZj1Ff7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VdqKkyld; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746438710; c=relaxed/simple;
+	bh=hjLXcSsWgHNnpJyCC6pKmusgdK1DykweXrwFWxrCgZ4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fVLitRIDhBj9GHi3fwQijGdLSVRYHoCH7b5kZstKYIKNM3YUveJjfGg4VfIQDdurFZ3VotfgOC0+wqxvxFt+0VeIlCD76lHM6JJfvo/xlTO5T5Yu7W1GJ4lgznOfyuHFdmcAU1LOYn8cBmiH9a0rJHdOLn1nfLAnrUp5d59z7S0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LSOPijaO; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VdqKkyld"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBE61C4CEF0;
-	Mon,  5 May 2025 09:50:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746438623;
-	bh=xyNkvtslKHGj6JJUlrcFQwYQudHJaqcW3/RXrny9o0A=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=VdqKkyldwr6C0AjZBEWX0c4a5iCB/FtV5oWWZOPhFiCZvkrPReHgLynFOse6P7RgK
-	 xB0gl+zHJDOjXhHeTixnOw8Xq1RTXsYuwTDQ5IOYEMlPPDsDOi/Gk14ec2fXfUddf3
-	 /xkwcpv7egkXU4AgYvKMRYmvzauzJefn7h/aWGRHHR7plsLG+Z2gFLKier2zFKh+BN
-	 DDqlaIlyTkvCp7H6H/qvh2Q/eBpJ5HhRN1v+4xRaPyoABD+Ky+cWbMadxTzomm/byA
-	 eFXa7M5xSzHxv26OaFMqhjPnTpK+2bzkOLhfX7Wm1QJKR6RjJMqrI2zXKaAdyr07eO
-	 mH8V1LsqXgbgg==
-Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-2d4e91512b4so2518919fac.1;
-        Mon, 05 May 2025 02:50:23 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU6haZDk7J0CnYJBCsEGnAg+bZS31Az01HQ6hBVkoz/v7Gt9lEOP9RFN9c23z7kVezkEOFZeMofHmhUMA==@vger.kernel.org, AJvYcCW8WAlNsSpQ8jvstnvtHBls7J5xquf7b3IA3q9T6/KJFNuW+cgQdFCfQSKLCQX4I+uQ1QCYjw9qn4ZXrF/i@vger.kernel.org, AJvYcCXNYZey0Js8+DP1i9vkNO4CCy6YmF/io1pBHlmtwHMzyW+cQG0zlbL6BgTlwEz4lhLQ+uSMcJ6Tw7qT@vger.kernel.org, AJvYcCXfrkMwT8zQ1++5+lHtq/y+bgvsvSzXhxrxodkn+Lu205upAtXIrEdOg8h6DKgO/XL8IHYni4YCiCiy65Xi@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpUHDe2lSpvwHikbqg9z4kEBDBIfiSaHsn5nAasOhSbGY+ToPC
-	lJptTKo3H+U3CHj3b1EpHQjKBySR4zTpeSxHD3vpUdJ1p7Tf3WfulW2MmzbPv5NtKgoSGkHHThb
-	orFvrjLnx2PAwC7CJ81UP1HiXmpI=
-X-Google-Smtp-Source: AGHT+IEbp+k5+o2JOgK5gAOvr06vFjcOrkxIY+uU1aZ/s1RgB369NC8JEtjjJebp1ckQu/uB3ghNe8BjSnyzBcwjw1c=
-X-Received: by 2002:a05:6871:78e:b0:2c1:6663:f603 with SMTP id
- 586e51a60fabf-2dae83f34fcmr3628380fac.19.1746438623034; Mon, 05 May 2025
- 02:50:23 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LSOPijaO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746438707;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=ewS6Vik8l5cRJ8KrBPd45Zc0hKMID54cVJfZTT1QyCc=;
+	b=LSOPijaOmrfz5oAX7g3ph9dE24EE3JB4okdzAk5pUNfIYfYfEnFBTpKvX+Z+OK0VXIDAsc
+	wL800kbjqR+/8m/HcPnnN45LdHSCzhIBbYVJkLvb6YsbntCIRL06cbk11xWDo9v8f8NxSd
+	4nhb9JWDH4ulq4guJKuIh5drJI8Ww2U=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-674-yFHmBqkcOEi585DPuptvlQ-1; Mon, 05 May 2025 05:51:46 -0400
+X-MC-Unique: yFHmBqkcOEi585DPuptvlQ-1
+X-Mimecast-MFC-AGG-ID: yFHmBqkcOEi585DPuptvlQ_1746438705
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a064c45f03so1713890f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 02:51:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746438705; x=1747043505;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ewS6Vik8l5cRJ8KrBPd45Zc0hKMID54cVJfZTT1QyCc=;
+        b=K4iMTEndTi5ZDW4yRP26Nx+U5zu/aZTvoiybWp1BKqAnZdJp9yQhCeRW5MkDtepegH
+         eRfJIcN/14khaNFlREaByQZxxRey5NCIS0Z19wiNTBPWiG820janR7TvAsw9NU+L3SXv
+         LAOR2m+VFkeTqvVKDm2ywSBkJmybIeAfh9OHRfQMyLu+98WEjuSUne0o8Hpt7KIABOI9
+         9t3XatlYOzEKajrurXa6MyPkr1HTZH+/pB5N+6VUz/meHXrbHEvvzTx7dK5zcEVkyF/4
+         ab4L466OzAUaB/RlyBqkU7mfetgqsoxNbWCdOvk3UThVT99WPj0NsnC82izTQ15k+3It
+         FRqg==
+X-Forwarded-Encrypted: i=1; AJvYcCVcR635ER1955xUdq1U6S1fFGhExbSzBwsmIxTI8b84Tg/0L6vEjdhbmamcX9zWynj8QzEuBV9DVFWGZ0g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YybYSdelmlE3pd2Xd+SbS6GU2F3InIZw2nw5jQ+5uiuJxm3NHeL
+	lvvKU5/BdkL/lvWN8Z5oXPnsSD/mYOm7wE0HNuBth2ZWVTIjx7SPB532OVi83CNj8OvrFaJidHU
+	nNihPTHznCrMUCF2kFfactd4qgM36vRzShGw8EUS+jf81wH9cN/SUdSfQzo8EpQ==
+X-Gm-Gg: ASbGnctpTKYAAu9LkX+xcT20A/miIaaWZXAxmdbNQwtiPgNKNhHji1ClVy33aSLYO5y
+	1lTKrcGCxuYnnEOZ9gQEagRXD5SxPmjuI3I4RbDy/tDVDbWSWJp+m46pxrDGb6zRf6o4tqI++8g
+	6WbzUxLn8pC1rCD4z686wn9dAOjspmke7pp9a8plA6NxiQs0oVmfh0K5k8JQ1R0VaDK/WQf2len
+	/RsB0Rkk/Lgl26ulZCIUDo7O5tIydcg5C0zzitRhUls1o5Nm5d/VA60JIDzemxAMDWq0Go/nGb4
+	XyXSNh1BVvx033uJISf0ePTRh+tAlwudbI2ImS7FQIhzSi5uo1MHkqO1YNPp9PETeDp7HrBU7ox
+	p64y2PWdKsf1e+ATXBDQGCOt9TktcEjRWm5NKyI8=
+X-Received: by 2002:a5d:64ef:0:b0:3a0:6a86:9477 with SMTP id ffacd0b85a97d-3a097a3e8a9mr8921386f8f.0.1746438705512;
+        Mon, 05 May 2025 02:51:45 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGQIr0akqqVpSfJA+WqHy/RkGIsb/kMplUD1UgGlE7QwSA+HczFWZoFmADtXqSrBLR7+KQVbw==
+X-Received: by 2002:a5d:64ef:0:b0:3a0:6a86:9477 with SMTP id ffacd0b85a97d-3a097a3e8a9mr8921367f8f.0.1746438705146;
+        Mon, 05 May 2025 02:51:45 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c73d:2400:3be1:a856:724c:fd29? (p200300cbc73d24003be1a856724cfd29.dip0.t-ipconnect.de. [2003:cb:c73d:2400:3be1:a856:724c:fd29])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099b1702dsm9703021f8f.88.2025.05.05.02.51.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 05 May 2025 02:51:44 -0700 (PDT)
+Message-ID: <48b4aa79-943b-46bc-ac24-604fdf998566@redhat.com>
+Date: Mon, 5 May 2025 11:51:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250503191515.24041-1-ricardo.neri-calderon@linux.intel.com> <20250503191515.24041-2-ricardo.neri-calderon@linux.intel.com>
-In-Reply-To: <20250503191515.24041-2-ricardo.neri-calderon@linux.intel.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 5 May 2025 11:50:08 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0grwGDrwFSbtXzia6ijd4DTOpU3b6RWR4JPfJmXqz78xQ@mail.gmail.com>
-X-Gm-Features: ATxdqUEBtlssjD1hWqURJ8uHShyMtKDEe5MJtTBEVToiuOdPd7lxfnsRPlG8Ons
-Message-ID: <CAJZ5v0grwGDrwFSbtXzia6ijd4DTOpU3b6RWR4JPfJmXqz78xQ@mail.gmail.com>
-Subject: Re: [PATCH v3 01/13] x86/acpi: Add a helper function to setup the
- wakeup mailbox
-To: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Cc: x86@kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Rob Herring <robh@kernel.org>, "K. Y. Srinivasan" <kys@microsoft.com>, 
-	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
-	Dexuan Cui <decui@microsoft.com>, Michael Kelley <mhklinux@outlook.com>, devicetree@vger.kernel.org, 
-	Saurabh Sengar <ssengar@linux.microsoft.com>, Chris Oo <cho@microsoft.com>, 
-	linux-hyperv@vger.kernel.org, 
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, "Ravi V. Shankar" <ravi.v.shankar@intel.com>, 
-	Ricardo Neri <ricardo.neri@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v4 1/5] mm/readahead: Honour new_order in
+ page_cache_ra_order()
+To: Ryan Roberts <ryan.roberts@arm.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ Dave Chinner <david@fromorbit.com>, Catalin Marinas
+ <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Kalesh Singh <kaleshsingh@google.com>, Zi Yan <ziy@nvidia.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
+References: <20250430145920.3748738-1-ryan.roberts@arm.com>
+ <20250430145920.3748738-2-ryan.roberts@arm.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250430145920.3748738-2-ryan.roberts@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sat, May 3, 2025 at 9:10=E2=80=AFPM Ricardo Neri
-<ricardo.neri-calderon@linux.intel.com> wrote:
->
-> In preparation to move the functionality to wake secondary CPUs up out of
-> the ACPI code, add a helper function that stores the physical address of
-> the mailbox and updates the wakeup_secondary_cpu_64() APIC callback.
->
-> There is a slight change in behavior: now the APIC callback is updated
-> before configuring CPU hotplug offline behavior. This is fine as the APIC
-> callback continues to be updated unconditionally, regardless of the
-> restriction on CPU offlining.
->
-> The wakeup mailbox is only supported for CONFIG_X86_64 and needed only wi=
-th
-> CONFIG_SMP=3Dy.
->
-> Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+On 30.04.25 16:59, Ryan Roberts wrote:
+> page_cache_ra_order() takes a parameter called new_order, which is
+> intended to express the preferred order of the folios that will be
+> allocated for the readahead operation. Most callers indeed call this
+> with their preferred new order. But page_cache_async_ra() calls it with
+> the preferred order of the previous readahead request (actually the
+> order of the folio that had the readahead marker, which may be smaller
+> when alignment comes into play).
+> 
+> And despite the parameter name, page_cache_ra_order() always treats it
+> at the old order, adding 2 to it on entry. As a result, a cold readahead
+> always starts with order-2 folios.
+> 
+> Let's fix this behaviour by always passing in the *new* order.
+> 
+> Worked example:
+> 
+> Prior to the change, mmaping an 8MB file and touching each page
+> sequentially, resulted in the following, where we start with order-2
+> folios for the first 128K then ramp up to order-4 for the next 128K,
+> then get clamped to order-5 for the rest of the file because pa_pages is
+> limited to 128K:
+> 
+> TYPE    STARTOFFS     ENDOFFS       SIZE  STARTPG    ENDPG   NRPG  ORDER
+> -----  ----------  ----------  ---------  -------  -------  -----  -----
+> FOLIO  0x00000000  0x00004000      16384        0        4      4      2
+> FOLIO  0x00004000  0x00008000      16384        4        8      4      2
+> FOLIO  0x00008000  0x0000c000      16384        8       12      4      2
+> FOLIO  0x0000c000  0x00010000      16384       12       16      4      2
+> FOLIO  0x00010000  0x00014000      16384       16       20      4      2
+> FOLIO  0x00014000  0x00018000      16384       20       24      4      2
+> FOLIO  0x00018000  0x0001c000      16384       24       28      4      2
+> FOLIO  0x0001c000  0x00020000      16384       28       32      4      2
+> FOLIO  0x00020000  0x00030000      65536       32       48     16      4
+> FOLIO  0x00030000  0x00040000      65536       48       64     16      4
+> FOLIO  0x00040000  0x00060000     131072       64       96     32      5
+> FOLIO  0x00060000  0x00080000     131072       96      128     32      5
+> FOLIO  0x00080000  0x000a0000     131072      128      160     32      5
+> FOLIO  0x000a0000  0x000c0000     131072      160      192     32      5
+
+Interesting, I would have thought we'd ramp up earlier.
+
+> ...
+> 
+> After the change, the same operation results in the first 128K being
+> order-0, then we start ramping up to order-2, -4, and finally get
+> clamped at order-5:
+> 
+> TYPE    STARTOFFS     ENDOFFS       SIZE  STARTPG    ENDPG   NRPG  ORDER
+> -----  ----------  ----------  ---------  -------  -------  -----  -----
+> FOLIO  0x00000000  0x00001000       4096        0        1      1      0
+> FOLIO  0x00001000  0x00002000       4096        1        2      1      0
+> FOLIO  0x00002000  0x00003000       4096        2        3      1      0
+> FOLIO  0x00003000  0x00004000       4096        3        4      1      0
+> FOLIO  0x00004000  0x00005000       4096        4        5      1      0
+> FOLIO  0x00005000  0x00006000       4096        5        6      1      0
+> FOLIO  0x00006000  0x00007000       4096        6        7      1      0
+> FOLIO  0x00007000  0x00008000       4096        7        8      1      0
+> FOLIO  0x00008000  0x00009000       4096        8        9      1      0
+> FOLIO  0x00009000  0x0000a000       4096        9       10      1      0
+> FOLIO  0x0000a000  0x0000b000       4096       10       11      1      0
+> FOLIO  0x0000b000  0x0000c000       4096       11       12      1      0
+> FOLIO  0x0000c000  0x0000d000       4096       12       13      1      0
+> FOLIO  0x0000d000  0x0000e000       4096       13       14      1      0
+> FOLIO  0x0000e000  0x0000f000       4096       14       15      1      0
+> FOLIO  0x0000f000  0x00010000       4096       15       16      1      0
+> FOLIO  0x00010000  0x00011000       4096       16       17      1      0
+> FOLIO  0x00011000  0x00012000       4096       17       18      1      0
+> FOLIO  0x00012000  0x00013000       4096       18       19      1      0
+> FOLIO  0x00013000  0x00014000       4096       19       20      1      0
+> FOLIO  0x00014000  0x00015000       4096       20       21      1      0
+> FOLIO  0x00015000  0x00016000       4096       21       22      1      0
+> FOLIO  0x00016000  0x00017000       4096       22       23      1      0
+> FOLIO  0x00017000  0x00018000       4096       23       24      1      0
+> FOLIO  0x00018000  0x00019000       4096       24       25      1      0
+> FOLIO  0x00019000  0x0001a000       4096       25       26      1      0
+> FOLIO  0x0001a000  0x0001b000       4096       26       27      1      0
+> FOLIO  0x0001b000  0x0001c000       4096       27       28      1      0
+> FOLIO  0x0001c000  0x0001d000       4096       28       29      1      0
+> FOLIO  0x0001d000  0x0001e000       4096       29       30      1      0
+> FOLIO  0x0001e000  0x0001f000       4096       30       31      1      0
+> FOLIO  0x0001f000  0x00020000       4096       31       32      1      0
+> FOLIO  0x00020000  0x00024000      16384       32       36      4      2
+> FOLIO  0x00024000  0x00028000      16384       36       40      4      2
+> FOLIO  0x00028000  0x0002c000      16384       40       44      4      2
+> FOLIO  0x0002c000  0x00030000      16384       44       48      4      2
+> FOLIO  0x00030000  0x00034000      16384       48       52      4      2
+> FOLIO  0x00034000  0x00038000      16384       52       56      4      2
+> FOLIO  0x00038000  0x0003c000      16384       56       60      4      2
+> FOLIO  0x0003c000  0x00040000      16384       60       64      4      2
+> FOLIO  0x00040000  0x00050000      65536       64       80     16      4
+> FOLIO  0x00050000  0x00060000      65536       80       96     16      4
+> FOLIO  0x00060000  0x00080000     131072       96      128     32      5
+> FOLIO  0x00080000  0x000a0000     131072      128      160     32      5
+> FOLIO  0x000a0000  0x000c0000     131072      160      192     32      5
+> FOLIO  0x000c0000  0x000e0000     131072      192      224     32      5
+
+Similar here, do you know why we don't ramp up earlier. Allocating that 
+many order-0 + order-2 pages looks a bit suboptimal to me for a 
+sequential read.
+
+I wonder if you're change will have a measurable downside on sequential 
+read. Anyhow, I think it was already not behaving how I would have 
+expected it ... :)
+
+Acked-by: David Hildenbrand <david@redhat.com>
+
+> ...
+> 
+> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
 > ---
-> Changes since v2:
->  - Introduced this patch.
->
-> Changes since v1:
->  - N/A
-> ---
->  arch/x86/include/asm/smp.h         |  4 ++++
->  arch/x86/kernel/acpi/madt_wakeup.c | 10 +++++++---
->  2 files changed, 11 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/x86/include/asm/smp.h b/arch/x86/include/asm/smp.h
-> index 0c1c68039d6f..3622951d2ee0 100644
-> --- a/arch/x86/include/asm/smp.h
-> +++ b/arch/x86/include/asm/smp.h
-> @@ -146,6 +146,10 @@ static inline struct cpumask *cpu_l2c_shared_mask(in=
-t cpu)
->         return per_cpu(cpu_l2c_shared_map, cpu);
->  }
->
-> +#ifdef CONFIG_X86_64
-> +void setup_mp_wakeup_mailbox(u64 addr);
-> +#endif
-
-The #ifdef is only necessary if you are going to provide an
-alternative for builds in which the symbol is unset.
-
-> +
->  #else /* !CONFIG_SMP */
->  #define wbinvd_on_cpu(cpu)     wbinvd()
->  static inline int wbinvd_on_all_cpus(void)
-> diff --git a/arch/x86/kernel/acpi/madt_wakeup.c b/arch/x86/kernel/acpi/ma=
-dt_wakeup.c
-> index f36f28405dcc..04de3db307de 100644
-> --- a/arch/x86/kernel/acpi/madt_wakeup.c
-> +++ b/arch/x86/kernel/acpi/madt_wakeup.c
-> @@ -227,7 +227,7 @@ int __init acpi_parse_mp_wake(union acpi_subtable_hea=
-ders *header,
->
->         acpi_table_print_madt_entry(&header->common);
->
-> -       acpi_mp_wake_mailbox_paddr =3D mp_wake->mailbox_address;
-> +       setup_mp_wakeup_mailbox(mp_wake->mailbox_address);
-
-I'd prefer acpi_setup_mp_wakeup_mailbox().
-
->
->         if (mp_wake->version >=3D ACPI_MADT_MP_WAKEUP_VERSION_V1 &&
->             mp_wake->header.length >=3D ACPI_MADT_MP_WAKEUP_SIZE_V1) {
-> @@ -243,7 +243,11 @@ int __init acpi_parse_mp_wake(union acpi_subtable_he=
-aders *header,
->                 acpi_mp_disable_offlining(mp_wake);
->         }
->
-> -       apic_update_callback(wakeup_secondary_cpu_64, acpi_wakeup_cpu);
+>   mm/readahead.c | 4 +---
+>   1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/mm/readahead.c b/mm/readahead.c
+> index 6a4e96b69702..8bb316f5a842 100644
+> --- a/mm/readahead.c
+> +++ b/mm/readahead.c
+> @@ -479,9 +479,6 @@ void page_cache_ra_order(struct readahead_control *ractl,
+>   
+>   	limit = min(limit, index + ra->size - 1);
+>   
+> -	if (new_order < mapping_max_folio_order(mapping))
+> -		new_order += 2;
 > -
->         return 0;
->  }
-> +
-> +void __init setup_mp_wakeup_mailbox(u64 mailbox_paddr)
-> +{
-> +       acpi_mp_wake_mailbox_paddr =3D mailbox_paddr;
-> +       apic_update_callback(wakeup_secondary_cpu_64, acpi_wakeup_cpu);
-> +}
-> --
-> 2.43.0
->
->
+>   	new_order = min(mapping_max_folio_order(mapping), new_order);
+>   	new_order = min_t(unsigned int, new_order, ilog2(ra->size));
+>   	new_order = max(new_order, min_order);
+> @@ -683,6 +680,7 @@ void page_cache_async_ra(struct readahead_control *ractl,
+>   	ra->size = get_next_ra_size(ra, max_pages);
+>   	ra->async_size = ra->size;
+>   readit:
+> +	order += 2;
+>   	ractl->_index = ra->start;
+>   	page_cache_ra_order(ractl, ra, order);
+>   }
+
+
+-- 
+Cheers,
+
+David / dhildenb
+
