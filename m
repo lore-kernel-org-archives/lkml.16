@@ -1,48 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7962264A63;
-	Mon,  5 May 2025 18:19:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EFFA25EF97;
+	Mon,  5 May 2025 18:23:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746469163; cv=none; b=FsnD6tWOnj8mVJ1LorwPFzISGACgchb75QoLEj1PHEHwu7K+c2K09ZbWF1PezxTWOEEMFnQW/jNvA+UbZV7UCsHG2prSp2Lb4CsxqmBAni29C9tCOtkGH9vlzu0NdYpP/Ki/2aKeKWv6Q1VDNp4z0eBExZcQB41JVuSztpRZURE=
+	t=1746469414; cv=none; b=L1io2BUDWwevxLtYlqdloj28nung/BNPKhgxBq/cCx5naswtkBP8s1CRui5p3oOqGbp/Dq9nbH1X8huERj0H1vgsYv4ym91cF01yKga7pH80O69776IJCPyXa+ozkLlJroC97VwYacHtqilukYlOxb+SYBMOoRGzfnXs+df+z1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746469163; c=relaxed/simple;
-	bh=1lm36BmT2ciIHxgq9Faa5xgZTZ2tCFnxS4PPU4+4ko0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PnpCBitJ5ltl7DsvyMT8znm+Tr85JFK1D7Py2z4pzQNfWb4Btsqwf3BKOlLateTMuWLY7zgYCDee/m/d5k89lqoQI0j91vYnrE2/KSjzv0XlTMajgPwz2x5O9v72qn/TN7uRwIm0fxgVvaGtfPWzKjutiIaVrD7nZlXMezBC8N0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UnbGymxH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746469414; c=relaxed/simple;
+	bh=fUDuxMDvBRbnis329OXQrQBYRUoajKWHaTqaVVVXLk4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iRqm/XoCaWf68y1YsxvIiCCpMwht62r3e3zlKp7j9t6Z44Jp4ZTgfnnccnGKNojLu45lQToFYIr5x0SKVkzgeB1u/nYWiLdZbo/m+ZkNtRKBV+aloMUAZUKakmtTAjMLFTTpJJP+yHu42mzKfVWW5wQR2OhSSXJeaybByFLnTHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OvigTnul; arc=none smtp.client-ip=209.85.219.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UnbGymxH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AE50C4CEEF;
-	Mon,  5 May 2025 18:19:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746469163;
-	bh=1lm36BmT2ciIHxgq9Faa5xgZTZ2tCFnxS4PPU4+4ko0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=UnbGymxHsW930DMEikNtN5ahidUeA7yTnvxSPUZ4bYSzsz3g+G34jfavUajcUbAcS
-	 xZUaXn65OsM1R8p3jAnEoaQV/FxMyzNnDjybfExtz3SrcfsKRBmZ+gNgs0GU0zCyvs
-	 JiMMI53pDNvsZRqCkn8K0T2Z/lZUIEqG6JP3hQ1e2L1IA306aMumL7Vog2W/EA/5As
-	 +d/ng2CyGIWu1SiqIWKx8jTTG9+W6bRWANyG/CJxorvLxYHgDS1WRfkXPhbRiqykm5
-	 lHT+O0xD7Ihj1GVqF5OHDES1yb9kRPhnuNbirtSn8GNCyX5zp0YlijiMoVWelN4Ht/
-	 4XPeyygeRLgbg==
-From: Eric Biggers <ebiggers@kernel.org>
-To: linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mips@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	linux-bcachefs@vger.kernel.org,
-	"Jason A . Donenfeld " <Jason@zx2c4.com>,
-	Theodore Ts'o <tytso@mit.edu>
-Subject: [PATCH 1/4] crypto: lib/chacha - strongly type the ChaCha state
-Date: Mon,  5 May 2025 11:18:21 -0700
-Message-ID: <20250505181824.647138-2-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250505181824.647138-1-ebiggers@kernel.org>
-References: <20250505181824.647138-1-ebiggers@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OvigTnul"
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-e637edaa652so3633141276.1;
+        Mon, 05 May 2025 11:23:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746469410; x=1747074210; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mJrh1fpJUM3CnP5u/kryoFi30LRmFNk3LukIvMTEexM=;
+        b=OvigTnulhv4xVs6BZT6Z5TgGCAcMYf/ODPamOVzublYq6F8IewT2VAj9uJTS+egyBg
+         3TokVKCvtlA8BfqtVkmSU2dsxmRBmp18ppxaJapj5tH/OUc+Ark7taMVkakMJqzfpBf7
+         l8vlbWOLNT5oj/SDyuVu+oDh13bsybegzws5/FL2WWmcO6e868hulZmwg0ztGq42uc5x
+         aMQYm23qAoEqaOuQHEhgfEUvmgnnWHEIwiLr9J7kataTSqINSvP+mRZPKmUoanjTmgGB
+         +fVdFzQTU8UG+LBWhXwnr/UuID9kPWYfmsafsLIhnMU+b0RenIHCYCJu1fYpKGG0e9v8
+         qZGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746469410; x=1747074210;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mJrh1fpJUM3CnP5u/kryoFi30LRmFNk3LukIvMTEexM=;
+        b=vNmD10i91eRGRZaxugBLmy6hHS7kTDYfNEKJZy0LQMa8frv7e2uAErcCIBtgjkyYul
+         1rrdN2hHZzD4ZX6gB9scoKX+FPGKMw4a//XnTaiIyvYH58hVFIfMDntuGhlqS22UzQkF
+         kEt23KusZ2XezNT6JagMiEdgk7JRZnk2mwfFlDVaQ2BIWySPSAvjlHJalA7na/sELdyp
+         t3LUxl6sM7YJX7EOkbO7uTCu/xuue1HrBzFe6hkRjNQnTFaxhUIiNCRpLiuNqNNidFTt
+         gWGZb4ftvq3WxHJJZFCA00Sneq03Z0E0gS2xgSiBzsySlygl1I6r+4m2GTUT7XqYpDR+
+         v6mA==
+X-Forwarded-Encrypted: i=1; AJvYcCXk21hBvI6ymkEUV86SNdT8g/uEZmeJZvlA/ZRC9v3uRb6zst/2BFqYwz3NALjwJBLmNzq+Blqm8ZUf@vger.kernel.org, AJvYcCXrx4lF+ziiMolqBwkX1mPtP5M66dgY+pizfWc/Lc5eQiwu84ucAMYIhYXglFiS9cRSM/ZdFOYfS7Hlhoe4@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNhm38MoIrN98/edoIP+KYBBZ5IRAZ+cG46A8jLb/AYHcteBks
+	r0WMmrO+ZnVqk/bYZFIaZvKMiOGVtc0dsSx/NBk0RszorAjr/XMm
+X-Gm-Gg: ASbGnctYpvN01+YBI2f97ctZZrM80d3cIsczShTycAZP6ChJuPligjBDwataRQbAoMB
+	EPImxyLIrSjYMzu0oxH72BPk3/boH2ohDGBo4FqsyIhcjy2EtN6SqJJ41gW986dATmaKX+blF9J
+	FZC+RPQsW85KubqEFGDHDTBP5tKYCTWEk0tPLc3AwhhedE/ZUErdPE5Fg5TiObGB2XfUGicnAH3
+	0UGVyRoGG6ktJMc79R7q3uVoApf8O70YMjNFTmGoMRe0yer+iC3ihXui/pJrG+DNzL57kQXgxdb
+	W60cwhz7lWaAtFB0EJI8+kn/VyWS/Px4H7G4ML1h
+X-Google-Smtp-Source: AGHT+IE6s3qswJE8SErBzlimmGslVyunD60C+MR+Gh9O8dkDNf8U2qql+vS27WxmuoWbADP0T04+0A==
+X-Received: by 2002:a05:690c:314:b0:6fe:abff:cb17 with SMTP id 00721157ae682-708eaf6437emr105696127b3.26.1746469409911;
+        Mon, 05 May 2025 11:23:29 -0700 (PDT)
+Received: from localhost ([2a03:2880:25ff:72::])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-70918578b1fsm740127b3.19.2025.05.05.11.23.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 May 2025 11:23:29 -0700 (PDT)
+From: Joshua Hahn <joshua.hahnjy@gmail.com>
+To: gourry@gourry.net,
+	ying.huang@linux.alibaba.com
+Cc: honggyu.kim@sk.com,
+	yunjeong.mun@sk.com,
+	gregkh@linuxfoundation.org,
+	rafael@kernel.org,
+	lenb@kernel.org,
+	dan.j.williams@intel.com,
+	Jonathan.Cameron@huawei.com,
+	dave.jiang@intel.com,
+	horen.chuang@linux.dev,
+	hannes@cmpxchg.org,
+	osalvador@suse.de,
+	linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-mm@kvack.org,
+	kernel-team@meta.com
+Subject: [PATCH v8] mm/mempolicy: Weighted Interleave Auto-tuning
+Date: Mon,  5 May 2025 11:23:28 -0700
+Message-ID: <20250505182328.4148265-1-joshua.hahnjy@gmail.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,1429 +85,703 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Eric Biggers <ebiggers@google.com>
+On machines with multiple memory nodes, interleaving page allocations
+across nodes allows for better utilization of each node's bandwidth.
+Previous work by Gregory Price [1] introduced weighted interleave, which
+allowed for pages to be allocated across nodes according to user-set ratios.
 
-The ChaCha state matrix is 16 32-bit words.  Currently it is represented
-in the code as a raw u32 array, or even just a pointer to u32.  This
-weak typing is error-prone.  Instead, introduce struct chacha_state:
+Ideally, these weights should be proportional to their bandwidth, so
+that under bandwidth pressure, each node uses its maximal efficient
+bandwidth and prevents latency from increasing exponentially.
 
-    struct chacha_state {
-            u32 x[16];
-    };
+Previously, weighted interleave's default weights were just 1s -- which
+would be equivalent to the (unweighted) interleave mempolicy, which goes
+through the nodes in a round-robin fashion, ignoring bandwidth information.
 
-Convert all ChaCha and HChaCha functions to use struct chacha_state.
-No functional changes.
+This patch has two main goals:
+First, it makes weighted interleave easier to use for users who wish to
+relieve bandwidth pressure when using nodes with varying bandwidth (CXL).
+By providing a set of "real" default weights that just work out of the
+box, users who might not have the capability (or wish to) perform
+experimentation to find the most optimal weights for their system can
+still take advantage of bandwidth-informed weighted interleave.
 
-Signed-off-by: Eric Biggers <ebiggers@google.com>
+Second, it allows for weighted interleave to dynamically adjust to
+hotplugged memory with new bandwidth information. Instead of manually
+updating node weights every time new bandwidth information is reported
+or taken off, weighted interleave adjusts and provides a new set of
+default weights for weighted interleave to use when there is a change
+in bandwidth information.
+
+To meet these goals, this patch introduces an auto-configuration mode
+for the interleave weights that provides a reasonable set of default
+weights, calculated using bandwidth data reported by the system. In auto
+mode, weights are dynamically adjusted based on whatever the current
+bandwidth information reports (and responds to hotplug events).
+
+This patch still supports users manually writing weights into the nodeN
+sysfs interface by entering into manual mode. When a user enters manual
+mode, the system stops dynamically updating any of the node weights,
+even during hotplug events that shift the optimal weight distribution.
+
+A new sysfs interface "auto" is introduced, which allows users to switch
+between the auto (writing 1 or Y) and manual (writing 0 or N) modes. The
+system also automatically enters manual mode when a nodeN interface is
+manually written to.
+
+There is one functional change that this patch makes to the existing
+weighted_interleave ABI: previously, writing 0 directly to a nodeN
+interface was said to reset the weight to the system default. Before
+this patch, the default for all weights were 1, which meant that writing
+0 and 1 were functionally equivalent. With this patch, writing 0 is invalid.
+
+[1] https://lore.kernel.org/linux-mm/20240202170238.90004-1-gregory.price@memverge.com/
+
+Suggested-by: Yunjeong Mun <yunjeong.mun@sk.com>
+Suggested-by: Oscar Salvador <osalvador@suse.de>
+Suggested-by: Ying Huang <ying.huang@linux.alibaba.com>
+Suggested-by: Harry Yoo <harry.yoo@oracle.com>
+Reviewed-by: Harry Yoo <harry.yoo@oracle.com>
+Co-developed-by: Gregory Price <gourry@gourry.net>
+Signed-off-by: Gregory Price <gourry@gourry.net>
+Signed-off-by: Joshua Hahn <joshua.hahnjy@gmail.com>
 ---
- arch/arm/lib/crypto/chacha-glue.c             | 30 +++++----
- arch/arm/lib/crypto/chacha-scalar-core.S      |  5 +-
- arch/arm64/lib/crypto/chacha-neon-glue.c      | 23 ++++---
- arch/mips/lib/crypto/chacha-glue.c            |  6 +-
- arch/powerpc/lib/crypto/chacha-p10-glue.c     | 15 +++--
- arch/powerpc/lib/crypto/chacha-p10le-8x.S     |  6 +-
- arch/riscv/lib/crypto/chacha-riscv64-glue.c   |  8 +--
- arch/riscv/lib/crypto/chacha-riscv64-zvkb.S   | 10 +--
- arch/s390/lib/crypto/chacha-glue.c            | 11 ++--
- arch/x86/lib/crypto/chacha_glue.c             | 58 ++++++++++-------
- crypto/chacha.c                               | 16 ++---
- drivers/char/random.c                         | 41 ++++++------
- fs/bcachefs/checksum.c                        | 18 ++---
- include/crypto/chacha.h                       | 65 +++++++++++--------
- lib/crypto/chacha.c                           | 35 +++++-----
- lib/crypto/chacha20poly1305-selftest.c        |  8 +--
- lib/crypto/chacha20poly1305.c                 | 51 ++++++++-------
- lib/crypto/libchacha.c                        |  2 +-
- .../crypto/chacha20-s390/test-cipher.c        | 10 +--
- 19 files changed, 228 insertions(+), 190 deletions(-)
+Changelog
+v8:
+- Rebased on top of mm-new (93129fd5a3a9c87fe0e53ff8b0bfa30ee43a873a)
+  - Specifically, to include Rakie Kim's patchset mm/mempolicy:
+    Enhance sysfs handling for memory hotplug in weighted interleave
+    (1f553871c3925bd1fc474b5fad53a0e8609cd5b0)
+  - Rebasing also included cleaning up this patch's sysfs creation.
+- Fixes to prevent racing between rcu_access_pointer and rcu_dereference
+- Wordsmithing
 
-diff --git a/arch/arm/lib/crypto/chacha-glue.c b/arch/arm/lib/crypto/chacha-glue.c
-index 1e28736834a0..0c2b4c62d484 100644
---- a/arch/arm/lib/crypto/chacha-glue.c
-+++ b/arch/arm/lib/crypto/chacha-glue.c
-@@ -15,28 +15,31 @@
- #include <asm/cputype.h>
- #include <asm/hwcap.h>
- #include <asm/neon.h>
- #include <asm/simd.h>
+v7:
+- Wordsmithing
+- Rename iw_table_lock to wi_state_lock
+- Clean up reduce_interleave_weights, as suggested by Yunjeong Mun.
+  - Combine iw_table allocation & initialization to be outside the function.
+  - Skip scaling to [1,100] before scaling to [1,weightiness].
+- Removed the second part of this patch, which prevented creating weight
+  sysfs interfaces for memoryless nodes.
+- Added Suggested-by tags; I should have done this much, much earlier.
+
+v6:
+- iw_weights and mode_auto are combined into one rcu-protected struct.
+- Protection against memoryless nodes, as suggested by Oscar Salvador
+- Wordsmithing (documentation, commit message and comments), as suggested
+  by Andrew Morton.
+- Removed unnecessary #include statement in hmat.c, as pointed out by
+  Harry (Hyeonggon) Yoo and Ying Huang.
+- Bandwidth values changed from u64_t to unsigned int, as pointed out by
+  Ying Huang and Dan Carpenter.
+- RCU optimizations, as suggested by Ying Huang.
+- A second patch is included to fix unintended behavior that creates a
+  weight knob for memoryless nodes as well.
+- Sysfs show/store functions use str_true_false & kstrtobool.
+- Fix a build error in 32-bit systems, which are unable to perform
+  64-bit division by casting 64-bit values to 32-bit, if under the range.
+
+v5:
+- I accidentally forgot to add the mm/mempolicy: subject tag since v1 of
+  this patch. Added to the subject now!
+- Wordsmithing, correcting typos, and re-naming variables for clarity.
+- No functional changes.
+
+v4:
+- Renamed the mode interface to the "auto" interface, which now only
+  emits either 'Y' or 'N'. Users can now interact with it by
+  writing 'Y', '1', 'N', or '0' to it.
+- Added additional documentation to the nodeN sysfs interface.
+- Makes sure iw_table locks are properly held.
+- Removed unlikely() call in reduce_interleave_weights.
+- Wordsmithing
+
+v3:
+- Weightiness (max_node_weight) is now fixed to 32.
+- Instead, the sysfs interface now exposes a "mode" parameter, which
+  can either be "auto" or "manual".
+  - Thank you Hyeonggon and Honggyu for the feedback.
+- Documentation updated to reflect new sysfs interface, explicitly
+  specifies that 0 is invalid.
+  - Thank you Gregory and Ying for the discussion on how best to
+    handle the 0 case.
+- Re-worked nodeN sysfs store to handle auto --> manual shifts
+- mempolicy_set_node_perf internally handles the auto / manual
+  case differently now. bw is always updated, iw updates depend on
+  what mode the user is in.
+- Wordsmithing comments for clarity.
+- Removed RFC tag.
+
+v2:
+- Name of the interface is changed: "max_node_weight" --> "weightiness"
+- Default interleave weight table no longer exists. Rather, the
+  interleave weight table is initialized with the defaults, if bandwidth
+  information is available.
+  - In addition, all sections that handle iw_table have been changed
+    to reference iw_table if it exists, otherwise defaulting to 1.
+- All instances of unsigned long are converted to uint64_t to guarantee
+  support for both 32-bit and 64-bit machines
+- sysfs initialization cleanup
+- Documentation has been rewritten to explicitly outline expected
+  behavior and expand on the interpretation of "weightiness".
+- kzalloc replaced with kcalloc for readability
+- Thank you Gregory and Hyeonggon for your review & feedback!
+
+ ...fs-kernel-mm-mempolicy-weighted-interleave |  35 +-
+ drivers/base/node.c                           |   9 +
+ include/linux/mempolicy.h                     |  13 +
+ mm/mempolicy.c                                | 311 ++++++++++++++----
+ 4 files changed, 307 insertions(+), 61 deletions(-)
+
+diff --git a/Documentation/ABI/testing/sysfs-kernel-mm-mempolicy-weighted-interleave b/Documentation/ABI/testing/sysfs-kernel-mm-mempolicy-weighted-interleave
+index 0b7972de04e9..ec13382c606f 100644
+--- a/Documentation/ABI/testing/sysfs-kernel-mm-mempolicy-weighted-interleave
++++ b/Documentation/ABI/testing/sysfs-kernel-mm-mempolicy-weighted-interleave
+@@ -20,6 +20,35 @@ Description:	Weight configuration interface for nodeN
+ 		Minimum weight: 1
+ 		Maximum weight: 255
  
--asmlinkage void chacha_block_xor_neon(const u32 *state, u8 *dst, const u8 *src,
--				      int nrounds);
--asmlinkage void chacha_4block_xor_neon(const u32 *state, u8 *dst, const u8 *src,
-+asmlinkage void chacha_block_xor_neon(const struct chacha_state *state,
-+				      u8 *dst, const u8 *src, int nrounds);
-+asmlinkage void chacha_4block_xor_neon(const struct chacha_state *state,
-+				       u8 *dst, const u8 *src,
- 				       int nrounds, unsigned int nbytes);
--asmlinkage void hchacha_block_arm(const u32 *state, u32 *out, int nrounds);
--asmlinkage void hchacha_block_neon(const u32 *state, u32 *out, int nrounds);
-+asmlinkage void hchacha_block_arm(const struct chacha_state *state,
-+				  u32 *out, int nrounds);
-+asmlinkage void hchacha_block_neon(const struct chacha_state *state,
-+				   u32 *out, int nrounds);
- 
- asmlinkage void chacha_doarm(u8 *dst, const u8 *src, unsigned int bytes,
--			     const u32 *state, int nrounds);
-+			     const struct chacha_state *state, int nrounds);
- 
- static __ro_after_init DEFINE_STATIC_KEY_FALSE(use_neon);
- 
- static inline bool neon_usable(void)
- {
- 	return static_branch_likely(&use_neon) && crypto_simd_usable();
- }
- 
--static void chacha_doneon(u32 *state, u8 *dst, const u8 *src,
-+static void chacha_doneon(struct chacha_state *state, u8 *dst, const u8 *src,
- 			  unsigned int bytes, int nrounds)
- {
- 	u8 buf[CHACHA_BLOCK_SIZE];
- 
- 	while (bytes > CHACHA_BLOCK_SIZE) {
-@@ -44,26 +47,27 @@ static void chacha_doneon(u32 *state, u8 *dst, const u8 *src,
- 
- 		chacha_4block_xor_neon(state, dst, src, nrounds, l);
- 		bytes -= l;
- 		src += l;
- 		dst += l;
--		state[12] += DIV_ROUND_UP(l, CHACHA_BLOCK_SIZE);
-+		state->x[12] += DIV_ROUND_UP(l, CHACHA_BLOCK_SIZE);
- 	}
- 	if (bytes) {
- 		const u8 *s = src;
- 		u8 *d = dst;
- 
- 		if (bytes != CHACHA_BLOCK_SIZE)
- 			s = d = memcpy(buf, src, bytes);
- 		chacha_block_xor_neon(state, d, s, nrounds);
- 		if (d != dst)
- 			memcpy(dst, buf, bytes);
--		state[12]++;
-+		state->x[12]++;
- 	}
- }
- 
--void hchacha_block_arch(const u32 *state, u32 *stream, int nrounds)
-+void hchacha_block_arch(const struct chacha_state *state, u32 *stream,
-+			int nrounds)
- {
- 	if (!IS_ENABLED(CONFIG_KERNEL_MODE_NEON) || !neon_usable()) {
- 		hchacha_block_arm(state, stream, nrounds);
- 	} else {
- 		kernel_neon_begin();
-@@ -71,17 +75,17 @@ void hchacha_block_arch(const u32 *state, u32 *stream, int nrounds)
- 		kernel_neon_end();
- 	}
- }
- EXPORT_SYMBOL(hchacha_block_arch);
- 
--void chacha_crypt_arch(u32 *state, u8 *dst, const u8 *src, unsigned int bytes,
--		       int nrounds)
-+void chacha_crypt_arch(struct chacha_state *state, u8 *dst, const u8 *src,
-+		       unsigned int bytes, int nrounds)
- {
- 	if (!IS_ENABLED(CONFIG_KERNEL_MODE_NEON) || !neon_usable() ||
- 	    bytes <= CHACHA_BLOCK_SIZE) {
- 		chacha_doarm(dst, src, bytes, state, nrounds);
--		state[12] += DIV_ROUND_UP(bytes, CHACHA_BLOCK_SIZE);
-+		state->x[12] += DIV_ROUND_UP(bytes, CHACHA_BLOCK_SIZE);
- 		return;
- 	}
- 
- 	do {
- 		unsigned int todo = min_t(unsigned int, bytes, SZ_4K);
-diff --git a/arch/arm/lib/crypto/chacha-scalar-core.S b/arch/arm/lib/crypto/chacha-scalar-core.S
-index 083fe1ab96d0..d20b5de755cc 100644
---- a/arch/arm/lib/crypto/chacha-scalar-core.S
-+++ b/arch/arm/lib/crypto/chacha-scalar-core.S
-@@ -365,11 +365,11 @@
- .Ldone\@:
- .endm	// _chacha
- 
- /*
-  * void chacha_doarm(u8 *dst, const u8 *src, unsigned int bytes,
-- *		     const u32 *state, int nrounds);
-+ *		     const struct chacha_state *state, int nrounds);
-  */
- ENTRY(chacha_doarm)
- 	cmp		r2, #0			// len == 0?
- 	reteq		lr
- 
-@@ -405,11 +405,12 @@ ENTRY(chacha_doarm)
- 1:	_chacha		12
- 	b		0b
- ENDPROC(chacha_doarm)
- 
- /*
-- * void hchacha_block_arm(const u32 state[16], u32 out[8], int nrounds);
-+ * void hchacha_block_arm(const struct chacha_state *state,
-+ *			  u32 out[8], int nrounds);
-  */
- ENTRY(hchacha_block_arm)
- 	push		{r1,r4-r11,lr}
- 
- 	cmp		r2, #12			// ChaCha12 ?
-diff --git a/arch/arm64/lib/crypto/chacha-neon-glue.c b/arch/arm64/lib/crypto/chacha-neon-glue.c
-index 2b0de97a6daf..7b451b3c7240 100644
---- a/arch/arm64/lib/crypto/chacha-neon-glue.c
-+++ b/arch/arm64/lib/crypto/chacha-neon-glue.c
-@@ -26,19 +26,21 @@
- 
- #include <asm/hwcap.h>
- #include <asm/neon.h>
- #include <asm/simd.h>
- 
--asmlinkage void chacha_block_xor_neon(u32 *state, u8 *dst, const u8 *src,
--				      int nrounds);
--asmlinkage void chacha_4block_xor_neon(u32 *state, u8 *dst, const u8 *src,
-+asmlinkage void chacha_block_xor_neon(const struct chacha_state *state,
-+				      u8 *dst, const u8 *src, int nrounds);
-+asmlinkage void chacha_4block_xor_neon(const struct chacha_state *state,
-+				       u8 *dst, const u8 *src,
- 				       int nrounds, int bytes);
--asmlinkage void hchacha_block_neon(const u32 *state, u32 *out, int nrounds);
-+asmlinkage void hchacha_block_neon(const struct chacha_state *state,
-+				   u32 *out, int nrounds);
- 
- static __ro_after_init DEFINE_STATIC_KEY_FALSE(have_neon);
- 
--static void chacha_doneon(u32 *state, u8 *dst, const u8 *src,
-+static void chacha_doneon(struct chacha_state *state, u8 *dst, const u8 *src,
- 			  int bytes, int nrounds)
- {
- 	while (bytes > 0) {
- 		int l = min(bytes, CHACHA_BLOCK_SIZE * 5);
- 
-@@ -46,22 +48,23 @@ static void chacha_doneon(u32 *state, u8 *dst, const u8 *src,
- 			u8 buf[CHACHA_BLOCK_SIZE];
- 
- 			memcpy(buf, src, l);
- 			chacha_block_xor_neon(state, buf, buf, nrounds);
- 			memcpy(dst, buf, l);
--			state[12] += 1;
-+			state->x[12] += 1;
+-		Writing an empty string or `0` will reset the weight to the
+-		system default. The system default may be set by the kernel
+-		or drivers at boot or during hotplug events.
++		Writing invalid values (i.e. any values not in [1,255],
++		empty string, ...) will return -EINVAL.
++
++		Changing the weight to a valid value will automatically
++		update the system to manual mode as well.
++
++What:		/sys/kernel/mm/mempolicy/weighted_interleave/auto
++Date:		May 2025
++Contact:	Linux memory management mailing list <linux-mm@kvack.org>
++Description:	Auto-weighting configuration interface
++
++		Configuration mode for weighted interleave. 'true' indicates
++		that the system is in auto mode, and a 'false' indicates that
++		the system is in manual mode.
++
++		In auto mode, all node weights are re-calculated and overwritten
++		(visible via the nodeN interfaces) whenever new bandwidth data
++		is made available during either boot or hotplug events.
++
++		In manual mode, node weights can only be updated by the user.
++		Note that nodes that are onlined with previously set weights
++		will reuse those weights. If they were not previously set or
++		are onlined with missing bandwidth data, the weights will use
++		a default weight of 1.
++
++		Writing any true value string (e.g. Y or 1) will enable auto
++		mode, while writing any false value string (e.g. N or 0) will
++		enable manual mode. All other strings are ignored and will
++		return -EINVAL.
++
++		Writing a new weight to a node directly via the nodeN interface
++		will also automatically switch the system to manual mode.
+diff --git a/drivers/base/node.c b/drivers/base/node.c
+index cd13ef287011..25ab9ec14eb8 100644
+--- a/drivers/base/node.c
++++ b/drivers/base/node.c
+@@ -7,6 +7,7 @@
+ #include <linux/init.h>
+ #include <linux/mm.h>
+ #include <linux/memory.h>
++#include <linux/mempolicy.h>
+ #include <linux/vmstat.h>
+ #include <linux/notifier.h>
+ #include <linux/node.h>
+@@ -214,6 +215,14 @@ void node_set_perf_attrs(unsigned int nid, struct access_coordinate *coord,
  			break;
  		}
- 		chacha_4block_xor_neon(state, dst, src, nrounds, l);
- 		bytes -= l;
- 		src += l;
- 		dst += l;
--		state[12] += DIV_ROUND_UP(l, CHACHA_BLOCK_SIZE);
-+		state->x[12] += DIV_ROUND_UP(l, CHACHA_BLOCK_SIZE);
  	}
++
++	/* When setting CPU access coordinates, update mempolicy */
++	if (access == ACCESS_COORDINATE_CPU) {
++		if (mempolicy_set_node_perf(nid, coord)) {
++			pr_info("failed to set mempolicy attrs for node %d\n",
++				nid);
++		}
++	}
  }
- 
--void hchacha_block_arch(const u32 *state, u32 *stream, int nrounds)
-+void hchacha_block_arch(const struct chacha_state *state, u32 *stream,
-+			int nrounds)
- {
- 	if (!static_branch_likely(&have_neon) || !crypto_simd_usable()) {
- 		hchacha_block_generic(state, stream, nrounds);
- 	} else {
- 		kernel_neon_begin();
-@@ -69,12 +72,12 @@ void hchacha_block_arch(const u32 *state, u32 *stream, int nrounds)
- 		kernel_neon_end();
- 	}
- }
- EXPORT_SYMBOL(hchacha_block_arch);
- 
--void chacha_crypt_arch(u32 *state, u8 *dst, const u8 *src, unsigned int bytes,
--		       int nrounds)
-+void chacha_crypt_arch(struct chacha_state *state, u8 *dst, const u8 *src,
-+		       unsigned int bytes, int nrounds)
- {
- 	if (!static_branch_likely(&have_neon) || bytes <= CHACHA_BLOCK_SIZE ||
- 	    !crypto_simd_usable())
- 		return chacha_crypt_generic(state, dst, src, bytes, nrounds);
- 
-diff --git a/arch/mips/lib/crypto/chacha-glue.c b/arch/mips/lib/crypto/chacha-glue.c
-index 334ecb29fb8f..75df4040cded 100644
---- a/arch/mips/lib/crypto/chacha-glue.c
-+++ b/arch/mips/lib/crypto/chacha-glue.c
-@@ -7,15 +7,17 @@
- 
- #include <crypto/chacha.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- 
--asmlinkage void chacha_crypt_arch(u32 *state, u8 *dst, const u8 *src,
-+asmlinkage void chacha_crypt_arch(struct chacha_state *state,
-+				  u8 *dst, const u8 *src,
- 				  unsigned int bytes, int nrounds);
- EXPORT_SYMBOL(chacha_crypt_arch);
- 
--asmlinkage void hchacha_block_arch(const u32 *state, u32 *stream, int nrounds);
-+asmlinkage void hchacha_block_arch(const struct chacha_state *state,
-+				   u32 *stream, int nrounds);
- EXPORT_SYMBOL(hchacha_block_arch);
- 
- bool chacha_is_arch_optimized(void)
- {
- 	return true;
-diff --git a/arch/powerpc/lib/crypto/chacha-p10-glue.c b/arch/powerpc/lib/crypto/chacha-p10-glue.c
-index 51daeaf5d26e..a6e6a8da1b8b 100644
---- a/arch/powerpc/lib/crypto/chacha-p10-glue.c
-+++ b/arch/powerpc/lib/crypto/chacha-p10-glue.c
-@@ -12,12 +12,12 @@
- #include <linux/cpufeature.h>
- #include <linux/sizes.h>
- #include <asm/simd.h>
- #include <asm/switch_to.h>
- 
--asmlinkage void chacha_p10le_8x(u32 *state, u8 *dst, const u8 *src,
--				unsigned int len, int nrounds);
-+asmlinkage void chacha_p10le_8x(const struct chacha_state *state, u8 *dst,
-+				const u8 *src, unsigned int len, int nrounds);
- 
- static __ro_after_init DEFINE_STATIC_KEY_FALSE(have_p10);
- 
- static void vsx_begin(void)
- {
-@@ -29,35 +29,36 @@ static void vsx_end(void)
- {
- 	disable_kernel_vsx();
- 	preempt_enable();
- }
- 
--static void chacha_p10_do_8x(u32 *state, u8 *dst, const u8 *src,
-+static void chacha_p10_do_8x(struct chacha_state *state, u8 *dst, const u8 *src,
- 			     unsigned int bytes, int nrounds)
- {
- 	unsigned int l = bytes & ~0x0FF;
- 
- 	if (l > 0) {
- 		chacha_p10le_8x(state, dst, src, l, nrounds);
- 		bytes -= l;
- 		src += l;
- 		dst += l;
--		state[12] += l / CHACHA_BLOCK_SIZE;
-+		state->x[12] += l / CHACHA_BLOCK_SIZE;
- 	}
- 
- 	if (bytes > 0)
- 		chacha_crypt_generic(state, dst, src, bytes, nrounds);
- }
- 
--void hchacha_block_arch(const u32 *state, u32 *stream, int nrounds)
-+void hchacha_block_arch(const struct chacha_state *state,
-+			u32 *stream, int nrounds)
- {
- 	hchacha_block_generic(state, stream, nrounds);
- }
- EXPORT_SYMBOL(hchacha_block_arch);
- 
--void chacha_crypt_arch(u32 *state, u8 *dst, const u8 *src, unsigned int bytes,
--		       int nrounds)
-+void chacha_crypt_arch(struct chacha_state *state, u8 *dst, const u8 *src,
-+		       unsigned int bytes, int nrounds)
- {
- 	if (!static_branch_likely(&have_p10) || bytes <= CHACHA_BLOCK_SIZE ||
- 	    !crypto_simd_usable())
- 		return chacha_crypt_generic(state, dst, src, bytes, nrounds);
- 
-diff --git a/arch/powerpc/lib/crypto/chacha-p10le-8x.S b/arch/powerpc/lib/crypto/chacha-p10le-8x.S
-index 17bedb66b822..b29562bd5d40 100644
---- a/arch/powerpc/lib/crypto/chacha-p10le-8x.S
-+++ b/arch/powerpc/lib/crypto/chacha-p10le-8x.S
-@@ -5,13 +5,10 @@
- # Copyright 2023- IBM Corp. All rights reserved
- #
- #===================================================================================
- # Written by Danny Tsen <dtsen@us.ibm.com>
- #
--# chacha_p10le_8x(u32 *state, byte *dst, const byte *src,
--#				 size_t len, int nrounds);
--#
- # do rounds,  8 quarter rounds
- # 1.  a += b; d ^= a; d <<<= 16;
- # 2.  c += d; b ^= c; b <<<= 12;
- # 3.  a += b; d ^= a; d <<<= 8;
- # 4.  c += d; b ^= c; b <<<= 7
-@@ -573,11 +570,12 @@
- 	stxvw4x \S+47, 31, 16
- 
- .endm
- 
- #
--# chacha20_p10le_8x(u32 *state, byte *dst, const byte *src, size_t len, int nrounds);
-+# void chacha_p10le_8x(const struct chacha_state *state, u8 *dst, const u8 *src,
-+#		       unsigned int len, int nrounds);
- #
- SYM_FUNC_START(chacha_p10le_8x)
- .align 5
- 	cmpdi	6, 0
- 	ble	Out_no_chacha
-diff --git a/arch/riscv/lib/crypto/chacha-riscv64-glue.c b/arch/riscv/lib/crypto/chacha-riscv64-glue.c
-index 1740e1ca3a94..57541621981e 100644
---- a/arch/riscv/lib/crypto/chacha-riscv64-glue.c
-+++ b/arch/riscv/lib/crypto/chacha-riscv64-glue.c
-@@ -13,21 +13,21 @@
- #include <linux/linkage.h>
- #include <linux/module.h>
- 
- static __ro_after_init DEFINE_STATIC_KEY_FALSE(use_zvkb);
- 
--asmlinkage void chacha_zvkb(u32 state[16], const u8 *in, u8 *out,
-+asmlinkage void chacha_zvkb(struct chacha_state *state, const u8 *in, u8 *out,
- 			    size_t nblocks, int nrounds);
- 
--void hchacha_block_arch(const u32 *state, u32 *out, int nrounds)
-+void hchacha_block_arch(const struct chacha_state *state, u32 *out, int nrounds)
- {
- 	hchacha_block_generic(state, out, nrounds);
- }
- EXPORT_SYMBOL(hchacha_block_arch);
- 
--void chacha_crypt_arch(u32 *state, u8 *dst, const u8 *src, unsigned int bytes,
--		       int nrounds)
-+void chacha_crypt_arch(struct chacha_state *state, u8 *dst, const u8 *src,
-+		       unsigned int bytes, int nrounds)
- {
- 	u8 block_buffer[CHACHA_BLOCK_SIZE];
- 	unsigned int full_blocks = bytes / CHACHA_BLOCK_SIZE;
- 	unsigned int tail_bytes = bytes % CHACHA_BLOCK_SIZE;
- 
-diff --git a/arch/riscv/lib/crypto/chacha-riscv64-zvkb.S b/arch/riscv/lib/crypto/chacha-riscv64-zvkb.S
-index ab4423b3880e..b777d0b4e379 100644
---- a/arch/riscv/lib/crypto/chacha-riscv64-zvkb.S
-+++ b/arch/riscv/lib/crypto/chacha-riscv64-zvkb.S
-@@ -130,19 +130,19 @@
- 	vror.vi		\b1, \b1, 32 - 7
- 	vror.vi		\b2, \b2, 32 - 7
- 	vror.vi		\b3, \b3, 32 - 7
- .endm
- 
--// void chacha_zvkb(u32 state[16], const u8 *in, u8 *out, size_t nblocks,
--//		    int nrounds);
-+// void chacha_zvkb(struct chacha_state *state, const u8 *in, u8 *out,
-+//		    size_t nblocks, int nrounds);
- //
- // |nblocks| is the number of 64-byte blocks to process, and must be nonzero.
- //
- // |state| gives the ChaCha state matrix, including the 32-bit counter in
--// state[12] following the RFC7539 convention; note that this differs from the
--// original Salsa20 paper which uses a 64-bit counter in state[12..13].  The
--// updated 32-bit counter is written back to state[12] before returning.
-+// state->x[12] following the RFC7539 convention; note that this differs from
-+// the original Salsa20 paper which uses a 64-bit counter in state->x[12..13].
-+// The updated 32-bit counter is written back to state->x[12] before returning.
- SYM_FUNC_START(chacha_zvkb)
- 	addi		sp, sp, -96
- 	sd		s0, 0(sp)
- 	sd		s1, 8(sp)
- 	sd		s2, 16(sp)
-diff --git a/arch/s390/lib/crypto/chacha-glue.c b/arch/s390/lib/crypto/chacha-glue.c
-index b3ffaa555385..0a9fd50c1bd8 100644
---- a/arch/s390/lib/crypto/chacha-glue.c
-+++ b/arch/s390/lib/crypto/chacha-glue.c
-@@ -14,18 +14,19 @@
- #include <linux/module.h>
- #include <linux/sizes.h>
- #include <asm/fpu.h>
- #include "chacha-s390.h"
- 
--void hchacha_block_arch(const u32 *state, u32 *stream, int nrounds)
-+void hchacha_block_arch(const struct chacha_state *state,
-+			u32 *stream, int nrounds)
- {
- 	/* TODO: implement hchacha_block_arch() in assembly */
- 	hchacha_block_generic(state, stream, nrounds);
- }
- EXPORT_SYMBOL(hchacha_block_arch);
- 
--void chacha_crypt_arch(u32 *state, u8 *dst, const u8 *src,
-+void chacha_crypt_arch(struct chacha_state *state, u8 *dst, const u8 *src,
- 		       unsigned int bytes, int nrounds)
- {
- 	/* s390 chacha20 implementation has 20 rounds hard-coded,
- 	 * it cannot handle a block of data or less, but otherwise
- 	 * it can handle data of arbitrary size
-@@ -34,15 +35,15 @@ void chacha_crypt_arch(u32 *state, u8 *dst, const u8 *src,
- 		chacha_crypt_generic(state, dst, src, bytes, nrounds);
- 	} else {
- 		DECLARE_KERNEL_FPU_ONSTACK32(vxstate);
- 
- 		kernel_fpu_begin(&vxstate, KERNEL_VXR);
--		chacha20_vx(dst, src, bytes, &state[4], &state[12]);
-+		chacha20_vx(dst, src, bytes, &state->x[4], &state->x[12]);
- 		kernel_fpu_end(&vxstate, KERNEL_VXR);
- 
--		state[12] += round_up(bytes, CHACHA_BLOCK_SIZE) /
--			     CHACHA_BLOCK_SIZE;
-+		state->x[12] += round_up(bytes, CHACHA_BLOCK_SIZE) /
-+				CHACHA_BLOCK_SIZE;
- 	}
- }
- EXPORT_SYMBOL(chacha_crypt_arch);
- 
- bool chacha_is_arch_optimized(void)
-diff --git a/arch/x86/lib/crypto/chacha_glue.c b/arch/x86/lib/crypto/chacha_glue.c
-index 94fcefbc8827..6f00a56e3e9a 100644
---- a/arch/x86/lib/crypto/chacha_glue.c
-+++ b/arch/x86/lib/crypto/chacha_glue.c
-@@ -10,28 +10,37 @@
- #include <linux/jump_label.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/sizes.h>
- 
--asmlinkage void chacha_block_xor_ssse3(u32 *state, u8 *dst, const u8 *src,
-+asmlinkage void chacha_block_xor_ssse3(const struct chacha_state *state,
-+				       u8 *dst, const u8 *src,
- 				       unsigned int len, int nrounds);
--asmlinkage void chacha_4block_xor_ssse3(u32 *state, u8 *dst, const u8 *src,
-+asmlinkage void chacha_4block_xor_ssse3(const struct chacha_state *state,
-+					u8 *dst, const u8 *src,
- 					unsigned int len, int nrounds);
--asmlinkage void hchacha_block_ssse3(const u32 *state, u32 *out, int nrounds);
-+asmlinkage void hchacha_block_ssse3(const struct chacha_state *state,
-+				    u32 *out, int nrounds);
- 
--asmlinkage void chacha_2block_xor_avx2(u32 *state, u8 *dst, const u8 *src,
-+asmlinkage void chacha_2block_xor_avx2(const struct chacha_state *state,
-+				       u8 *dst, const u8 *src,
- 				       unsigned int len, int nrounds);
--asmlinkage void chacha_4block_xor_avx2(u32 *state, u8 *dst, const u8 *src,
-+asmlinkage void chacha_4block_xor_avx2(const struct chacha_state *state,
-+				       u8 *dst, const u8 *src,
- 				       unsigned int len, int nrounds);
--asmlinkage void chacha_8block_xor_avx2(u32 *state, u8 *dst, const u8 *src,
-+asmlinkage void chacha_8block_xor_avx2(const struct chacha_state *state,
-+				       u8 *dst, const u8 *src,
- 				       unsigned int len, int nrounds);
- 
--asmlinkage void chacha_2block_xor_avx512vl(u32 *state, u8 *dst, const u8 *src,
-+asmlinkage void chacha_2block_xor_avx512vl(const struct chacha_state *state,
-+					   u8 *dst, const u8 *src,
- 					   unsigned int len, int nrounds);
--asmlinkage void chacha_4block_xor_avx512vl(u32 *state, u8 *dst, const u8 *src,
-+asmlinkage void chacha_4block_xor_avx512vl(const struct chacha_state *state,
-+					   u8 *dst, const u8 *src,
- 					   unsigned int len, int nrounds);
--asmlinkage void chacha_8block_xor_avx512vl(u32 *state, u8 *dst, const u8 *src,
-+asmlinkage void chacha_8block_xor_avx512vl(const struct chacha_state *state,
-+					   u8 *dst, const u8 *src,
- 					   unsigned int len, int nrounds);
- 
- static __ro_after_init DEFINE_STATIC_KEY_FALSE(chacha_use_simd);
- static __ro_after_init DEFINE_STATIC_KEY_FALSE(chacha_use_avx2);
- static __ro_after_init DEFINE_STATIC_KEY_FALSE(chacha_use_avx512vl);
-@@ -40,86 +49,87 @@ static unsigned int chacha_advance(unsigned int len, unsigned int maxblocks)
- {
- 	len = min(len, maxblocks * CHACHA_BLOCK_SIZE);
- 	return round_up(len, CHACHA_BLOCK_SIZE) / CHACHA_BLOCK_SIZE;
- }
- 
--static void chacha_dosimd(u32 *state, u8 *dst, const u8 *src,
-+static void chacha_dosimd(struct chacha_state *state, u8 *dst, const u8 *src,
- 			  unsigned int bytes, int nrounds)
- {
- 	if (static_branch_likely(&chacha_use_avx512vl)) {
- 		while (bytes >= CHACHA_BLOCK_SIZE * 8) {
- 			chacha_8block_xor_avx512vl(state, dst, src, bytes,
- 						   nrounds);
- 			bytes -= CHACHA_BLOCK_SIZE * 8;
- 			src += CHACHA_BLOCK_SIZE * 8;
- 			dst += CHACHA_BLOCK_SIZE * 8;
--			state[12] += 8;
-+			state->x[12] += 8;
- 		}
- 		if (bytes > CHACHA_BLOCK_SIZE * 4) {
- 			chacha_8block_xor_avx512vl(state, dst, src, bytes,
- 						   nrounds);
--			state[12] += chacha_advance(bytes, 8);
-+			state->x[12] += chacha_advance(bytes, 8);
- 			return;
- 		}
- 		if (bytes > CHACHA_BLOCK_SIZE * 2) {
- 			chacha_4block_xor_avx512vl(state, dst, src, bytes,
- 						   nrounds);
--			state[12] += chacha_advance(bytes, 4);
-+			state->x[12] += chacha_advance(bytes, 4);
- 			return;
- 		}
- 		if (bytes) {
- 			chacha_2block_xor_avx512vl(state, dst, src, bytes,
- 						   nrounds);
--			state[12] += chacha_advance(bytes, 2);
-+			state->x[12] += chacha_advance(bytes, 2);
- 			return;
- 		}
- 	}
- 
- 	if (static_branch_likely(&chacha_use_avx2)) {
- 		while (bytes >= CHACHA_BLOCK_SIZE * 8) {
- 			chacha_8block_xor_avx2(state, dst, src, bytes, nrounds);
- 			bytes -= CHACHA_BLOCK_SIZE * 8;
- 			src += CHACHA_BLOCK_SIZE * 8;
- 			dst += CHACHA_BLOCK_SIZE * 8;
--			state[12] += 8;
-+			state->x[12] += 8;
- 		}
- 		if (bytes > CHACHA_BLOCK_SIZE * 4) {
- 			chacha_8block_xor_avx2(state, dst, src, bytes, nrounds);
--			state[12] += chacha_advance(bytes, 8);
-+			state->x[12] += chacha_advance(bytes, 8);
- 			return;
- 		}
- 		if (bytes > CHACHA_BLOCK_SIZE * 2) {
- 			chacha_4block_xor_avx2(state, dst, src, bytes, nrounds);
--			state[12] += chacha_advance(bytes, 4);
-+			state->x[12] += chacha_advance(bytes, 4);
- 			return;
- 		}
- 		if (bytes > CHACHA_BLOCK_SIZE) {
- 			chacha_2block_xor_avx2(state, dst, src, bytes, nrounds);
--			state[12] += chacha_advance(bytes, 2);
-+			state->x[12] += chacha_advance(bytes, 2);
- 			return;
- 		}
- 	}
- 
- 	while (bytes >= CHACHA_BLOCK_SIZE * 4) {
- 		chacha_4block_xor_ssse3(state, dst, src, bytes, nrounds);
- 		bytes -= CHACHA_BLOCK_SIZE * 4;
- 		src += CHACHA_BLOCK_SIZE * 4;
- 		dst += CHACHA_BLOCK_SIZE * 4;
--		state[12] += 4;
-+		state->x[12] += 4;
- 	}
- 	if (bytes > CHACHA_BLOCK_SIZE) {
- 		chacha_4block_xor_ssse3(state, dst, src, bytes, nrounds);
--		state[12] += chacha_advance(bytes, 4);
-+		state->x[12] += chacha_advance(bytes, 4);
- 		return;
- 	}
- 	if (bytes) {
- 		chacha_block_xor_ssse3(state, dst, src, bytes, nrounds);
--		state[12]++;
-+		state->x[12]++;
- 	}
- }
- 
--void hchacha_block_arch(const u32 *state, u32 *stream, int nrounds)
-+void hchacha_block_arch(const struct chacha_state *state,
-+			u32 *stream, int nrounds)
- {
- 	if (!static_branch_likely(&chacha_use_simd)) {
- 		hchacha_block_generic(state, stream, nrounds);
- 	} else {
- 		kernel_fpu_begin();
-@@ -127,12 +137,12 @@ void hchacha_block_arch(const u32 *state, u32 *stream, int nrounds)
- 		kernel_fpu_end();
- 	}
- }
- EXPORT_SYMBOL(hchacha_block_arch);
- 
--void chacha_crypt_arch(u32 *state, u8 *dst, const u8 *src, unsigned int bytes,
--		       int nrounds)
-+void chacha_crypt_arch(struct chacha_state *state, u8 *dst, const u8 *src,
-+		       unsigned int bytes, int nrounds)
- {
- 	if (!static_branch_likely(&chacha_use_simd) ||
- 	    bytes <= CHACHA_BLOCK_SIZE)
- 		return chacha_crypt_generic(state, dst, src, bytes, nrounds);
- 
-diff --git a/crypto/chacha.c b/crypto/chacha.c
-index 28a8ad6197ab..73ce62a9ac22 100644
---- a/crypto/chacha.c
-+++ b/crypto/chacha.c
-@@ -48,28 +48,28 @@ static int chacha12_setkey(struct crypto_skcipher *tfm,
- static int chacha_stream_xor(struct skcipher_request *req,
- 			     const struct chacha_ctx *ctx, const u8 *iv,
- 			     bool arch)
- {
- 	struct skcipher_walk walk;
--	u32 state[16];
-+	struct chacha_state state;
- 	int err;
- 
- 	err = skcipher_walk_virt(&walk, req, false);
- 
--	chacha_init(state, ctx->key, iv);
-+	chacha_init(&state, ctx->key, iv);
- 
- 	while (walk.nbytes > 0) {
- 		unsigned int nbytes = walk.nbytes;
- 
- 		if (nbytes < walk.total)
- 			nbytes = round_down(nbytes, CHACHA_BLOCK_SIZE);
- 
- 		if (arch)
--			chacha_crypt(state, walk.dst.virt.addr,
-+			chacha_crypt(&state, walk.dst.virt.addr,
- 				     walk.src.virt.addr, nbytes, ctx->nrounds);
- 		else
--			chacha_crypt_generic(state, walk.dst.virt.addr,
-+			chacha_crypt_generic(&state, walk.dst.virt.addr,
- 					     walk.src.virt.addr, nbytes,
- 					     ctx->nrounds);
- 		err = skcipher_walk_done(&walk, walk.nbytes - nbytes);
- 	}
- 
-@@ -95,19 +95,19 @@ static int crypto_chacha_crypt_arch(struct skcipher_request *req)
- static int crypto_xchacha_crypt(struct skcipher_request *req, bool arch)
- {
- 	struct crypto_skcipher *tfm = crypto_skcipher_reqtfm(req);
- 	const struct chacha_ctx *ctx = crypto_skcipher_ctx(tfm);
- 	struct chacha_ctx subctx;
--	u32 state[16];
-+	struct chacha_state state;
- 	u8 real_iv[16];
- 
- 	/* Compute the subkey given the original key and first 128 nonce bits */
--	chacha_init(state, ctx->key, req->iv);
-+	chacha_init(&state, ctx->key, req->iv);
- 	if (arch)
--		hchacha_block(state, subctx.key, ctx->nrounds);
-+		hchacha_block(&state, subctx.key, ctx->nrounds);
- 	else
--		hchacha_block_generic(state, subctx.key, ctx->nrounds);
-+		hchacha_block_generic(&state, subctx.key, ctx->nrounds);
- 	subctx.nrounds = ctx->nrounds;
- 
- 	/* Build the real IV */
- 	memcpy(&real_iv[0], req->iv + 24, 8); /* stream position */
- 	memcpy(&real_iv[8], req->iv + 16, 8); /* remaining 64 nonce bits */
-diff --git a/drivers/char/random.c b/drivers/char/random.c
-index 38f2fab29c56..9f876ed2655b 100644
---- a/drivers/char/random.c
-+++ b/drivers/char/random.c
-@@ -307,24 +307,24 @@ static void crng_reseed(struct work_struct *work)
-  *
-  * The returned ChaCha state contains within it a copy of the old
-  * key value, at index 4, so the state should always be zeroed out
-  * immediately after using in order to maintain forward secrecy.
-  * If the state cannot be erased in a timely manner, then it is
-- * safer to set the random_data parameter to &chacha_state[4] so
-- * that this function overwrites it before returning.
-+ * safer to set the random_data parameter to &chacha_state->x[4]
-+ * so that this function overwrites it before returning.
-  */
- static void crng_fast_key_erasure(u8 key[CHACHA_KEY_SIZE],
--				  u32 chacha_state[CHACHA_STATE_WORDS],
-+				  struct chacha_state *chacha_state,
- 				  u8 *random_data, size_t random_data_len)
- {
- 	u8 first_block[CHACHA_BLOCK_SIZE];
- 
- 	BUG_ON(random_data_len > 32);
- 
- 	chacha_init_consts(chacha_state);
--	memcpy(&chacha_state[4], key, CHACHA_KEY_SIZE);
--	memset(&chacha_state[12], 0, sizeof(u32) * 4);
-+	memcpy(&chacha_state->x[4], key, CHACHA_KEY_SIZE);
-+	memset(&chacha_state->x[12], 0, sizeof(u32) * 4);
- 	chacha20_block(chacha_state, first_block);
- 
- 	memcpy(key, first_block, CHACHA_KEY_SIZE);
- 	memcpy(random_data, first_block + CHACHA_KEY_SIZE, random_data_len);
- 	memzero_explicit(first_block, sizeof(first_block));
-@@ -333,11 +333,11 @@ static void crng_fast_key_erasure(u8 key[CHACHA_KEY_SIZE],
- /*
-  * This function returns a ChaCha state that you may use for generating
-  * random data. It also returns up to 32 bytes on its own of random data
-  * that may be used; random_data_len may not be greater than 32.
-  */
--static void crng_make_state(u32 chacha_state[CHACHA_STATE_WORDS],
-+static void crng_make_state(struct chacha_state *chacha_state,
- 			    u8 *random_data, size_t random_data_len)
- {
- 	unsigned long flags;
- 	struct crng *crng;
- 
-@@ -393,38 +393,38 @@ static void crng_make_state(u32 chacha_state[CHACHA_STATE_WORDS],
- 	local_unlock_irqrestore(&crngs.lock, flags);
- }
- 
- static void _get_random_bytes(void *buf, size_t len)
- {
--	u32 chacha_state[CHACHA_STATE_WORDS];
-+	struct chacha_state chacha_state;
- 	u8 tmp[CHACHA_BLOCK_SIZE];
- 	size_t first_block_len;
- 
- 	if (!len)
- 		return;
- 
- 	first_block_len = min_t(size_t, 32, len);
--	crng_make_state(chacha_state, buf, first_block_len);
-+	crng_make_state(&chacha_state, buf, first_block_len);
- 	len -= first_block_len;
- 	buf += first_block_len;
- 
- 	while (len) {
- 		if (len < CHACHA_BLOCK_SIZE) {
--			chacha20_block(chacha_state, tmp);
-+			chacha20_block(&chacha_state, tmp);
- 			memcpy(buf, tmp, len);
- 			memzero_explicit(tmp, sizeof(tmp));
- 			break;
- 		}
- 
--		chacha20_block(chacha_state, buf);
--		if (unlikely(chacha_state[12] == 0))
--			++chacha_state[13];
-+		chacha20_block(&chacha_state, buf);
-+		if (unlikely(chacha_state.x[12] == 0))
-+			++chacha_state.x[13];
- 		len -= CHACHA_BLOCK_SIZE;
- 		buf += CHACHA_BLOCK_SIZE;
- 	}
- 
--	memzero_explicit(chacha_state, sizeof(chacha_state));
-+	memzero_explicit(&chacha_state, sizeof(chacha_state));
- }
- 
- /*
-  * This returns random bytes in arbitrary quantities. The quality of the
-  * random bytes is good as /dev/urandom. In order to ensure that the
-@@ -439,11 +439,11 @@ void get_random_bytes(void *buf, size_t len)
- }
- EXPORT_SYMBOL(get_random_bytes);
- 
- static ssize_t get_random_bytes_user(struct iov_iter *iter)
- {
--	u32 chacha_state[CHACHA_STATE_WORDS];
-+	struct chacha_state chacha_state;
- 	u8 block[CHACHA_BLOCK_SIZE];
- 	size_t ret = 0, copied;
- 
- 	if (unlikely(!iov_iter_count(iter)))
- 		return 0;
-@@ -451,25 +451,26 @@ static ssize_t get_random_bytes_user(struct iov_iter *iter)
- 	/*
- 	 * Immediately overwrite the ChaCha key at index 4 with random
- 	 * bytes, in case userspace causes copy_to_iter() below to sleep
- 	 * forever, so that we still retain forward secrecy in that case.
- 	 */
--	crng_make_state(chacha_state, (u8 *)&chacha_state[4], CHACHA_KEY_SIZE);
-+	crng_make_state(&chacha_state, (u8 *)&chacha_state.x[4],
-+			CHACHA_KEY_SIZE);
- 	/*
- 	 * However, if we're doing a read of len <= 32, we don't need to
- 	 * use chacha_state after, so we can simply return those bytes to
- 	 * the user directly.
- 	 */
- 	if (iov_iter_count(iter) <= CHACHA_KEY_SIZE) {
--		ret = copy_to_iter(&chacha_state[4], CHACHA_KEY_SIZE, iter);
-+		ret = copy_to_iter(&chacha_state.x[4], CHACHA_KEY_SIZE, iter);
- 		goto out_zero_chacha;
- 	}
- 
- 	for (;;) {
--		chacha20_block(chacha_state, block);
--		if (unlikely(chacha_state[12] == 0))
--			++chacha_state[13];
-+		chacha20_block(&chacha_state, block);
-+		if (unlikely(chacha_state.x[12] == 0))
-+			++chacha_state.x[13];
- 
- 		copied = copy_to_iter(block, sizeof(block), iter);
- 		ret += copied;
- 		if (!iov_iter_count(iter) || copied != sizeof(block))
- 			break;
-@@ -482,11 +483,11 @@ static ssize_t get_random_bytes_user(struct iov_iter *iter)
- 		}
- 	}
- 
- 	memzero_explicit(block, sizeof(block));
- out_zero_chacha:
--	memzero_explicit(chacha_state, sizeof(chacha_state));
-+	memzero_explicit(&chacha_state, sizeof(chacha_state));
- 	return ret ? ret : -EFAULT;
- }
- 
- /*
-  * Batched entropy returns random integers. The quality of the random
-diff --git a/fs/bcachefs/checksum.c b/fs/bcachefs/checksum.c
-index d0a34a097b80..312fda4bb1b5 100644
---- a/fs/bcachefs/checksum.c
-+++ b/fs/bcachefs/checksum.c
-@@ -89,11 +89,11 @@ static void bch2_checksum_update(struct bch2_checksum_state *state, const void *
- 	default:
- 		BUG();
- 	}
- }
- 
--static void bch2_chacha20_init(u32 state[CHACHA_STATE_WORDS],
-+static void bch2_chacha20_init(struct chacha_state *state,
- 			       const struct bch_key *key, struct nonce nonce)
- {
- 	u32 key_words[CHACHA_KEY_SIZE / sizeof(u32)];
- 
- 	BUILD_BUG_ON(sizeof(key_words) != sizeof(*key));
-@@ -107,15 +107,15 @@ static void bch2_chacha20_init(u32 state[CHACHA_STATE_WORDS],
- }
- 
- static void bch2_chacha20(const struct bch_key *key, struct nonce nonce,
- 			  void *data, size_t len)
- {
--	u32 state[CHACHA_STATE_WORDS];
-+	struct chacha_state state;
- 
--	bch2_chacha20_init(state, key, nonce);
--	chacha20_crypt(state, data, data, len);
--	memzero_explicit(state, sizeof(state));
-+	bch2_chacha20_init(&state, key, nonce);
-+	chacha20_crypt(&state, data, data, len);
-+	memzero_explicit(&state, sizeof(state));
- }
- 
- static void bch2_poly1305_init(struct poly1305_desc_ctx *desc,
- 			       struct bch_fs *c, struct nonce nonce)
- {
-@@ -255,18 +255,18 @@ struct bch_csum bch2_checksum_bio(struct bch_fs *c, unsigned type,
- int __bch2_encrypt_bio(struct bch_fs *c, unsigned type,
- 		     struct nonce nonce, struct bio *bio)
- {
- 	struct bio_vec bv;
- 	struct bvec_iter iter;
--	u32 chacha_state[CHACHA_STATE_WORDS];
-+	struct chacha_state chacha_state;
- 	int ret = 0;
- 
- 	if (bch2_fs_inconsistent_on(!c->chacha20_key_set,
- 				    c, "attempting to encrypt without encryption key"))
- 		return -BCH_ERR_no_encryption_key;
- 
--	bch2_chacha20_init(chacha_state, &c->chacha20_key, nonce);
-+	bch2_chacha20_init(&chacha_state, &c->chacha20_key, nonce);
- 
- 	bio_for_each_segment(bv, bio, iter) {
- 		void *p;
- 
- 		/*
-@@ -278,14 +278,14 @@ int __bch2_encrypt_bio(struct bch_fs *c, unsigned type,
- 			ret = -EIO;
- 			break;
- 		}
- 
- 		p = bvec_kmap_local(&bv);
--		chacha20_crypt(chacha_state, p, p, bv.bv_len);
-+		chacha20_crypt(&chacha_state, p, p, bv.bv_len);
- 		kunmap_local(p);
- 	}
--	memzero_explicit(chacha_state, sizeof(chacha_state));
-+	memzero_explicit(&chacha_state, sizeof(chacha_state));
- 	return ret;
- }
- 
- struct bch_csum bch2_checksum_merge(unsigned type, struct bch_csum a,
- 				    struct bch_csum b, size_t b_len)
-diff --git a/include/crypto/chacha.h b/include/crypto/chacha.h
-index 58129e18cc31..64fb270f2bfc 100644
---- a/include/crypto/chacha.h
-+++ b/include/crypto/chacha.h
-@@ -28,20 +28,27 @@
- #define CHACHA_STATE_WORDS	(CHACHA_BLOCK_SIZE / sizeof(u32))
- 
- /* 192-bit nonce, then 64-bit stream position */
- #define XCHACHA_IV_SIZE		32
- 
--void chacha_block_generic(u32 *state, u8 *stream, int nrounds);
--static inline void chacha20_block(u32 *state, u8 *stream)
-+struct chacha_state {
-+	u32 x[CHACHA_STATE_WORDS];
+ EXPORT_SYMBOL_GPL(node_set_perf_attrs);
+ 
+diff --git a/include/linux/mempolicy.h b/include/linux/mempolicy.h
+index ce9885e0178a..3e8da8ba1146 100644
+--- a/include/linux/mempolicy.h
++++ b/include/linux/mempolicy.h
+@@ -11,6 +11,7 @@
+ #include <linux/slab.h>
+ #include <linux/rbtree.h>
+ #include <linux/spinlock.h>
++#include <linux/node.h>
+ #include <linux/nodemask.h>
+ #include <linux/pagemap.h>
+ #include <uapi/linux/mempolicy.h>
+@@ -56,6 +57,15 @@ struct mempolicy {
+ 	} w;
+ };
+ 
++/*
++ * A null weighted_interleave_state is interpted as having .mode = "auto",
++ * and .iw_table is interpreted as an array of 1s with length nr_node_ids.
++ */
++struct weighted_interleave_state {
++	bool mode_auto;
++	u8 iw_table[];
 +};
 +
-+void chacha_block_generic(struct chacha_state *state, u8 *stream, int nrounds);
-+static inline void chacha20_block(struct chacha_state *state, u8 *stream)
+ /*
+  * Support for managing mempolicy data objects (clone, copy, destroy)
+  * The default fast path of a NULL MPOL_DEFAULT policy is always inlined.
+@@ -178,6 +188,9 @@ static inline bool mpol_is_preferred_many(struct mempolicy *pol)
+ 
+ extern bool apply_policy_zone(struct mempolicy *policy, enum zone_type zone);
+ 
++extern int mempolicy_set_node_perf(unsigned int node,
++				   struct access_coordinate *coords);
++
+ #else
+ 
+ struct mempolicy {};
+diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+index f43951668c41..f542691b7123 100644
+--- a/mm/mempolicy.c
++++ b/mm/mempolicy.c
+@@ -109,6 +109,7 @@
+ #include <linux/mmu_notifier.h>
+ #include <linux/printk.h>
+ #include <linux/swapops.h>
++#include <linux/gcd.h>
+ 
+ #include <asm/tlbflush.h>
+ #include <asm/tlb.h>
+@@ -140,31 +141,130 @@ static struct mempolicy default_policy = {
+ static struct mempolicy preferred_node_policy[MAX_NUMNODES];
+ 
+ /*
+- * iw_table is the sysfs-set interleave weight table, a value of 0 denotes
+- * system-default value should be used. A NULL iw_table also denotes that
+- * system-default values should be used. Until the system-default table
+- * is implemented, the system-default is always 1.
+- *
+- * iw_table is RCU protected
++ * weightiness balances the tradeoff between small weights (cycles through nodes
++ * faster, more fair/even distribution) and large weights (smaller errors
++ * between actual bandwidth ratios and weight ratios). 32 is a number that has
++ * been found to perform at a reasonable compromise between the two goals.
++ */
++static const int weightiness = 32;
++
++static struct weighted_interleave_state __rcu *wi_state;
++static unsigned int *node_bw_table;
++
++/*
++ * wi_state_lock protects both wi_state and node_bw_table.
++ * node_bw_table is only used by writers to update wi_state.
+  */
+-static u8 __rcu *iw_table;
+-static DEFINE_MUTEX(iw_table_lock);
++static DEFINE_MUTEX(wi_state_lock);
+ 
+ static u8 get_il_weight(int node)
  {
- 	chacha_block_generic(state, stream, 20);
+-	u8 *table;
+-	u8 weight;
++	struct weighted_interleave_state *state;
++	u8 weight = 1;
+ 
+ 	rcu_read_lock();
+-	table = rcu_dereference(iw_table);
+-	/* if no iw_table, use system default */
+-	weight = table ? table[node] : 1;
+-	/* if value in iw_table is 0, use system default */
+-	weight = weight ? weight : 1;
++	state = rcu_dereference(wi_state);
++	if (state)
++		weight = state->iw_table[node];
+ 	rcu_read_unlock();
+ 	return weight;
  }
  
--void hchacha_block_arch(const u32 *state, u32 *out, int nrounds);
--void hchacha_block_generic(const u32 *state, u32 *out, int nrounds);
-+void hchacha_block_arch(const struct chacha_state *state, u32 *out,
-+			int nrounds);
-+void hchacha_block_generic(const struct chacha_state *state, u32 *out,
-+			   int nrounds);
++/*
++ * Convert bandwidth values into weighted interleave weights.
++ * Call with wi_state_lock.
++ */
++static void reduce_interleave_weights(unsigned int *bw, u8 *new_iw)
++{
++	u64 sum_bw = 0;
++	unsigned int cast_sum_bw, scaling_factor = 1, iw_gcd = 0;
++	int nid;
++
++	for_each_node_state(nid, N_MEMORY)
++		sum_bw += bw[nid];
++
++	/* Scale bandwidths to whole numbers in the range [1, weightiness] */
++	for_each_node_state(nid, N_MEMORY) {
++		/*
++		 * Try not to perform 64-bit division.
++		 * If sum_bw < scaling_factor, then sum_bw < U32_MAX.
++		 * If sum_bw > scaling_factor, then round the weight up to 1.
++		 */
++		scaling_factor = weightiness * bw[nid];
++		if (bw[nid] && sum_bw < scaling_factor) {
++			cast_sum_bw = (unsigned int)sum_bw;
++			new_iw[nid] = scaling_factor / cast_sum_bw;
++		} else {
++			new_iw[nid] = 1;
++		}
++		if (!iw_gcd)
++			iw_gcd = new_iw[nid];
++		iw_gcd = gcd(iw_gcd, new_iw[nid]);
++	}
++
++	/* 1:2 is strictly better than 16:32. Reduce by the weights' GCD. */
++	for_each_node_state(nid, N_MEMORY)
++		new_iw[nid] /= iw_gcd;
++}
++
++int mempolicy_set_node_perf(unsigned int node, struct access_coordinate *coords)
++{
++	struct weighted_interleave_state *new_wi_state, *old_wi_state = NULL;
++	unsigned int *old_bw, *new_bw;
++	unsigned int bw_val;
++	int i;
++
++	bw_val = min(coords->read_bandwidth, coords->write_bandwidth);
++	new_bw = kcalloc(nr_node_ids, sizeof(unsigned int), GFP_KERNEL);
++	if (!new_bw)
++		return -ENOMEM;
++
++	new_wi_state = kmalloc(struct_size(new_wi_state, iw_table, nr_node_ids),
++			       GFP_KERNEL);
++	if (!new_wi_state) {
++		kfree(new_bw);
++		return -ENOMEM;
++	}
++	new_wi_state->mode_auto = true;
++	for (i = 0; i < nr_node_ids; i++)
++		new_wi_state->iw_table[i] = 1;
++
++	/*
++	 * Update bandwidth info, even in manual mode. That way, when switching
++	 * to auto mode in the future, iw_table can be overwritten using
++	 * accurate bw data.
++	 */
++	mutex_lock(&wi_state_lock);
++
++	old_bw = node_bw_table;
++	if (old_bw)
++		memcpy(new_bw, old_bw, nr_node_ids * sizeof(*old_bw));
++	new_bw[node] = bw_val;
++	node_bw_table = new_bw;
++
++	old_wi_state = rcu_dereference_protected(wi_state,
++					lockdep_is_held(&wi_state_lock));
++	if (old_wi_state && !old_wi_state->mode_auto) {
++		/* Manual mode; skip reducing weights and updating wi_state */
++		mutex_unlock(&wi_state_lock);
++		kfree(new_wi_state);
++		goto out;
++	}
++
++	/* NULL wi_state assumes auto=true; reduce weights and update wi_state*/
++	reduce_interleave_weights(new_bw, new_wi_state->iw_table);
++	rcu_assign_pointer(wi_state, new_wi_state);
++
++	mutex_unlock(&wi_state_lock);
++	if (old_wi_state) {
++		synchronize_rcu();
++		kfree(old_wi_state);
++	}
++out:
++	kfree(old_bw);
++	return 0;
++}
++
+ /**
+  * numa_nearest_node - Find nearest node by state
+  * @node: Node id to start the search
+@@ -2023,26 +2123,28 @@ static unsigned int read_once_policy_nodemask(struct mempolicy *pol,
  
--static inline void hchacha_block(const u32 *state, u32 *out, int nrounds)
-+static inline void hchacha_block(const struct chacha_state *state, u32 *out,
-+				 int nrounds)
+ static unsigned int weighted_interleave_nid(struct mempolicy *pol, pgoff_t ilx)
  {
- 	if (IS_ENABLED(CONFIG_CRYPTO_ARCH_HAVE_LIB_CHACHA))
- 		hchacha_block_arch(state, out, nrounds);
- 	else
- 		hchacha_block_generic(state, out, nrounds);
-@@ -52,51 +59,53 @@ enum chacha_constants { /* expand 32-byte k */
- 	CHACHA_CONSTANT_ND_3 = 0x3320646eU,
- 	CHACHA_CONSTANT_2_BY = 0x79622d32U,
- 	CHACHA_CONSTANT_TE_K = 0x6b206574U
++	struct weighted_interleave_state *state;
+ 	nodemask_t nodemask;
+ 	unsigned int target, nr_nodes;
+-	u8 *table;
++	u8 *table = NULL;
+ 	unsigned int weight_total = 0;
+ 	u8 weight;
+-	int nid;
++	int nid = 0;
+ 
+ 	nr_nodes = read_once_policy_nodemask(pol, &nodemask);
+ 	if (!nr_nodes)
+ 		return numa_node_id();
+ 
+ 	rcu_read_lock();
+-	table = rcu_dereference(iw_table);
++
++	state = rcu_dereference(wi_state);
++	/* Uninitialized wi_state means we should assume all weights are 1 */
++	if (state)
++		table = state->iw_table;
++
+ 	/* calculate the total weight */
+-	for_each_node_mask(nid, nodemask) {
+-		/* detect system default usage */
+-		weight = table ? table[nid] : 1;
+-		weight = weight ? weight : 1;
+-		weight_total += weight;
+-	}
++	for_each_node_mask(nid, nodemask)
++		weight_total += table ? table[nid] : 1;
+ 
+ 	/* Calculate the node offset based on totals */
+ 	target = ilx % weight_total;
+@@ -2050,7 +2152,6 @@ static unsigned int weighted_interleave_nid(struct mempolicy *pol, pgoff_t ilx)
+ 	while (target) {
+ 		/* detect system default usage */
+ 		weight = table ? table[nid] : 1;
+-		weight = weight ? weight : 1;
+ 		if (target < weight)
+ 			break;
+ 		target -= weight;
+@@ -2451,13 +2552,14 @@ static unsigned long alloc_pages_bulk_weighted_interleave(gfp_t gfp,
+ 		struct mempolicy *pol, unsigned long nr_pages,
+ 		struct page **page_array)
+ {
++	struct weighted_interleave_state *state;
+ 	struct task_struct *me = current;
+ 	unsigned int cpuset_mems_cookie;
+ 	unsigned long total_allocated = 0;
+ 	unsigned long nr_allocated = 0;
+ 	unsigned long rounds;
+ 	unsigned long node_pages, delta;
+-	u8 *table, *weights, weight;
++	u8 *weights, weight;
+ 	unsigned int weight_total = 0;
+ 	unsigned long rem_pages = nr_pages;
+ 	nodemask_t nodes;
+@@ -2507,17 +2609,19 @@ static unsigned long alloc_pages_bulk_weighted_interleave(gfp_t gfp,
+ 		return total_allocated;
+ 
+ 	rcu_read_lock();
+-	table = rcu_dereference(iw_table);
+-	if (table)
+-		memcpy(weights, table, nr_node_ids);
+-	rcu_read_unlock();
++	state = rcu_dereference(wi_state);
++	if (state) {
++		memcpy(weights, state->iw_table, nr_node_ids * sizeof(u8));
++		rcu_read_unlock();
++	} else {
++		rcu_read_unlock();
++		for (i = 0; i < nr_node_ids; i++)
++			weights[i] = 1;
++	}
+ 
+ 	/* calculate total, detect system default usage */
+-	for_each_node_mask(node, nodes) {
+-		if (!weights[node])
+-			weights[node] = 1;
++	for_each_node_mask(node, nodes)
+ 		weight_total += weights[node];
+-	}
+ 
+ 	/*
+ 	 * Calculate rounds/partial rounds to minimize __alloc_pages_bulk calls.
+@@ -3431,6 +3535,7 @@ struct iw_node_attr {
+ struct sysfs_wi_group {
+ 	struct kobject wi_kobj;
+ 	struct mutex kobj_lock;
++	struct kobj_attribute auto_kobj_attr;
+ 	struct iw_node_attr *nattrs[];
  };
  
--static inline void chacha_init_consts(u32 *state)
-+static inline void chacha_init_consts(struct chacha_state *state)
+@@ -3450,31 +3555,104 @@ static ssize_t node_show(struct kobject *kobj, struct kobj_attribute *attr,
+ static ssize_t node_store(struct kobject *kobj, struct kobj_attribute *attr,
+ 			  const char *buf, size_t count)
  {
--	state[0]  = CHACHA_CONSTANT_EXPA;
--	state[1]  = CHACHA_CONSTANT_ND_3;
--	state[2]  = CHACHA_CONSTANT_2_BY;
--	state[3]  = CHACHA_CONSTANT_TE_K;
-+	state->x[0]  = CHACHA_CONSTANT_EXPA;
-+	state->x[1]  = CHACHA_CONSTANT_ND_3;
-+	state->x[2]  = CHACHA_CONSTANT_2_BY;
-+	state->x[3]  = CHACHA_CONSTANT_TE_K;
++	struct weighted_interleave_state *new_wi_state, *old_wi_state = NULL;
+ 	struct iw_node_attr *node_attr;
+-	u8 *new;
+-	u8 *old;
+ 	u8 weight = 0;
++	int i;
+ 
+ 	node_attr = container_of(attr, struct iw_node_attr, kobj_attr);
+ 	if (count == 0 || sysfs_streq(buf, ""))
+ 		weight = 0;
+-	else if (kstrtou8(buf, 0, &weight))
++	else if (kstrtou8(buf, 0, &weight) || weight == 0)
+ 		return -EINVAL;
+ 
+-	new = kzalloc(nr_node_ids, GFP_KERNEL);
+-	if (!new)
++	new_wi_state = kzalloc(struct_size(new_wi_state, iw_table, nr_node_ids),
++			       GFP_KERNEL);
++	if (!new_wi_state)
+ 		return -ENOMEM;
+ 
+-	mutex_lock(&iw_table_lock);
+-	old = rcu_dereference_protected(iw_table,
+-					lockdep_is_held(&iw_table_lock));
+-	if (old)
+-		memcpy(new, old, nr_node_ids);
+-	new[node_attr->nid] = weight;
+-	rcu_assign_pointer(iw_table, new);
+-	mutex_unlock(&iw_table_lock);
+-	synchronize_rcu();
+-	kfree(old);
++	mutex_lock(&wi_state_lock);
++	old_wi_state = rcu_dereference_protected(wi_state,
++					lockdep_is_held(&wi_state_lock));
++	if (old_wi_state) {
++		memcpy(new_wi_state->iw_table, old_wi_state->iw_table,
++					nr_node_ids * sizeof(u8));
++	} else {
++		for (i = 0; i < nr_node_ids; i++)
++			new_wi_state->iw_table[i] = 1;
++	}
++	new_wi_state->iw_table[node_attr->nid] = weight;
++	new_wi_state->mode_auto = false;
++
++	rcu_assign_pointer(wi_state, new_wi_state);
++	mutex_unlock(&wi_state_lock);
++	if (old_wi_state) {
++		synchronize_rcu();
++		kfree(old_wi_state);
++	}
++	return count;
++}
++
++static ssize_t weighted_interleave_auto_show(struct kobject *kobj,
++		struct kobj_attribute *attr, char *buf)
++{
++	struct weighted_interleave_state *state;
++	bool wi_auto = true;
++
++	rcu_read_lock();
++	state = rcu_dereference(wi_state);
++	if (state)
++		wi_auto = state->mode_auto;
++	rcu_read_unlock();
++
++	return sysfs_emit(buf, "%s\n", str_true_false(wi_auto));
++}
++
++static ssize_t weighted_interleave_auto_store(struct kobject *kobj,
++		struct kobj_attribute *attr, const char *buf, size_t count)
++{
++	struct weighted_interleave_state *new_wi_state, *old_wi_state = NULL;
++	unsigned int *bw;
++	bool input;
++	int i;
++
++	if (kstrtobool(buf, &input))
++		return -EINVAL;
++
++	new_wi_state = kzalloc(struct_size(new_wi_state, iw_table, nr_node_ids),
++			       GFP_KERNEL);
++	if (!new_wi_state)
++		return -ENOMEM;
++	for (i = 0; i < nr_node_ids; i++)
++		new_wi_state->iw_table[i] = 1;
++
++	mutex_lock(&wi_state_lock);
++	if (!input) {
++		old_wi_state = rcu_dereference_protected(wi_state,
++					lockdep_is_held(&wi_state_lock));
++		if (old_wi_state)
++			memcpy(new_wi_state->iw_table, old_wi_state->iw_table,
++					nr_node_ids * sizeof(u8));
++		goto update_wi_state;
++	}
++
++	bw = node_bw_table;
++	if (!bw) {
++		mutex_unlock(&wi_state_lock);
++		kfree(new_wi_state);
++		return -ENODEV;
++	}
++
++	new_wi_state->mode_auto = true;
++	reduce_interleave_weights(bw, new_wi_state->iw_table);
++
++update_wi_state:
++	rcu_assign_pointer(wi_state, new_wi_state);
++	mutex_unlock(&wi_state_lock);
++	if (old_wi_state) {
++		synchronize_rcu();
++		kfree(old_wi_state);
++	}
+ 	return count;
  }
  
--static inline void chacha_init(u32 *state, const u32 *key, const u8 *iv)
-+static inline void chacha_init(struct chacha_state *state,
-+			       const u32 *key, const u8 *iv)
- {
- 	chacha_init_consts(state);
--	state[4]  = key[0];
--	state[5]  = key[1];
--	state[6]  = key[2];
--	state[7]  = key[3];
--	state[8]  = key[4];
--	state[9]  = key[5];
--	state[10] = key[6];
--	state[11] = key[7];
--	state[12] = get_unaligned_le32(iv +  0);
--	state[13] = get_unaligned_le32(iv +  4);
--	state[14] = get_unaligned_le32(iv +  8);
--	state[15] = get_unaligned_le32(iv + 12);
-+	state->x[4]  = key[0];
-+	state->x[5]  = key[1];
-+	state->x[6]  = key[2];
-+	state->x[7]  = key[3];
-+	state->x[8]  = key[4];
-+	state->x[9]  = key[5];
-+	state->x[10] = key[6];
-+	state->x[11] = key[7];
-+	state->x[12] = get_unaligned_le32(iv +  0);
-+	state->x[13] = get_unaligned_le32(iv +  4);
-+	state->x[14] = get_unaligned_le32(iv +  8);
-+	state->x[15] = get_unaligned_le32(iv + 12);
+@@ -3508,23 +3686,31 @@ static void sysfs_wi_node_delete_all(void)
+ 		sysfs_wi_node_delete(nid);
  }
  
--void chacha_crypt_arch(u32 *state, u8 *dst, const u8 *src,
-+void chacha_crypt_arch(struct chacha_state *state, u8 *dst, const u8 *src,
- 		       unsigned int bytes, int nrounds);
--void chacha_crypt_generic(u32 *state, u8 *dst, const u8 *src,
-+void chacha_crypt_generic(struct chacha_state *state, u8 *dst, const u8 *src,
- 			  unsigned int bytes, int nrounds);
- 
--static inline void chacha_crypt(u32 *state, u8 *dst, const u8 *src,
-+static inline void chacha_crypt(struct chacha_state *state,
-+				u8 *dst, const u8 *src,
- 				unsigned int bytes, int nrounds)
+-static void iw_table_free(void)
++static void wi_state_free(void)
  {
- 	if (IS_ENABLED(CONFIG_CRYPTO_ARCH_HAVE_LIB_CHACHA))
- 		chacha_crypt_arch(state, dst, src, bytes, nrounds);
- 	else
- 		chacha_crypt_generic(state, dst, src, bytes, nrounds);
+-	u8 *old;
++	struct weighted_interleave_state *old_wi_state;
+ 
+-	mutex_lock(&iw_table_lock);
+-	old = rcu_dereference_protected(iw_table,
+-					lockdep_is_held(&iw_table_lock));
+-	rcu_assign_pointer(iw_table, NULL);
+-	mutex_unlock(&iw_table_lock);
++	mutex_lock(&wi_state_lock);
++
++	old_wi_state = rcu_dereference_protected(wi_state,
++			lockdep_is_held(&wi_state_lock));
++	if (!old_wi_state) {
++		mutex_unlock(&wi_state_lock);
++		goto out;
++	}
+ 
++	rcu_assign_pointer(wi_state, NULL);
++	mutex_unlock(&wi_state_lock);
+ 	synchronize_rcu();
+-	kfree(old);
++	kfree(old_wi_state);
++out:
++	kfree(&wi_group->wi_kobj);
  }
  
--static inline void chacha20_crypt(u32 *state, u8 *dst, const u8 *src,
--				  unsigned int bytes)
-+static inline void chacha20_crypt(struct chacha_state *state,
-+				  u8 *dst, const u8 *src, unsigned int bytes)
- {
- 	chacha_crypt(state, dst, src, bytes, 20);
+ static void wi_cleanup(void) {
++	sysfs_remove_file(&wi_group->wi_kobj, &wi_group->auto_kobj_attr.attr);
+ 	sysfs_wi_node_delete_all();
+-	iw_table_free();
++	wi_state_free();
  }
  
- #if IS_ENABLED(CONFIG_CRYPTO_ARCH_HAVE_LIB_CHACHA)
-diff --git a/lib/crypto/chacha.c b/lib/crypto/chacha.c
-index 3cdda3b5ee06..a7f5eb091839 100644
---- a/lib/crypto/chacha.c
-+++ b/lib/crypto/chacha.c
-@@ -11,12 +11,13 @@
- #include <linux/bitops.h>
- #include <linux/string.h>
- #include <linux/unaligned.h>
- #include <crypto/chacha.h>
- 
--static void chacha_permute(u32 *x, int nrounds)
-+static void chacha_permute(struct chacha_state *state, int nrounds)
- {
-+	u32 *x = state->x;
- 	int i;
- 
- 	/* whitelist the allowed round counts */
- 	WARN_ON_ONCE(nrounds != 20 && nrounds != 12);
- 
-@@ -63,52 +64,54 @@ static void chacha_permute(u32 *x, int nrounds)
- 	}
+ static void wi_kobj_release(struct kobject *wi_kobj)
+@@ -3612,6 +3798,10 @@ static int wi_node_notifier(struct notifier_block *nb,
+ 	return NOTIFY_OK;
  }
  
- /**
-  * chacha_block_generic - generate one keystream block and increment block counter
-- * @state: input state matrix (16 32-bit words)
-+ * @state: input state matrix
-  * @stream: output keystream block (64 bytes)
-  * @nrounds: number of rounds (20 or 12; 20 is recommended)
-  *
-  * This is the ChaCha core, a function from 64-byte strings to 64-byte strings.
-  * The caller has already converted the endianness of the input.  This function
-  * also handles incrementing the block counter in the input matrix.
-  */
--void chacha_block_generic(u32 *state, u8 *stream, int nrounds)
-+void chacha_block_generic(struct chacha_state *state, u8 *stream, int nrounds)
++static struct kobj_attribute wi_auto_attr =
++	__ATTR(auto, 0664, weighted_interleave_auto_show,
++			   weighted_interleave_auto_store);
++
+ static int __init add_weighted_interleave_group(struct kobject *mempolicy_kobj)
  {
--	u32 x[16];
-+	struct chacha_state permuted_state;
- 	int i;
+ 	int nid, err;
+@@ -3627,6 +3817,11 @@ static int __init add_weighted_interleave_group(struct kobject *mempolicy_kobj)
+ 	if (err)
+ 		goto err_put_kobj;
  
--	memcpy(x, state, 64);
-+	memcpy(permuted_state.x, state->x, 64);
- 
--	chacha_permute(x, nrounds);
-+	chacha_permute(&permuted_state, nrounds);
- 
--	for (i = 0; i < ARRAY_SIZE(x); i++)
--		put_unaligned_le32(x[i] + state[i], &stream[i * sizeof(u32)]);
-+	for (i = 0; i < ARRAY_SIZE(state->x); i++)
-+		put_unaligned_le32(permuted_state.x[i] + state->x[i],
-+				   &stream[i * sizeof(u32)]);
- 
--	state[12]++;
-+	state->x[12]++;
- }
- EXPORT_SYMBOL(chacha_block_generic);
- 
- /**
-  * hchacha_block_generic - abbreviated ChaCha core, for XChaCha
-- * @state: input state matrix (16 32-bit words)
-+ * @state: input state matrix
-  * @stream: output (8 32-bit words)
-  * @nrounds: number of rounds (20 or 12; 20 is recommended)
-  *
-  * HChaCha is the ChaCha equivalent of HSalsa and is an intermediate step
-  * towards XChaCha (see https://cr.yp.to/snuffle/xsalsa-20081128.pdf).  HChaCha
-  * skips the final addition of the initial state, and outputs only certain words
-  * of the state.  It should not be used for streaming directly.
-  */
--void hchacha_block_generic(const u32 *state, u32 *stream, int nrounds)
-+void hchacha_block_generic(const struct chacha_state *state,
-+			   u32 *stream, int nrounds)
- {
--	u32 x[16];
-+	struct chacha_state permuted_state;
- 
--	memcpy(x, state, 64);
-+	memcpy(permuted_state.x, state->x, 64);
- 
--	chacha_permute(x, nrounds);
-+	chacha_permute(&permuted_state, nrounds);
- 
--	memcpy(&stream[0], &x[0], 16);
--	memcpy(&stream[4], &x[12], 16);
-+	memcpy(&stream[0], &permuted_state.x[0], 16);
-+	memcpy(&stream[4], &permuted_state.x[12], 16);
- }
- EXPORT_SYMBOL(hchacha_block_generic);
-diff --git a/lib/crypto/chacha20poly1305-selftest.c b/lib/crypto/chacha20poly1305-selftest.c
-index 2ea61c28be4f..e4c85bc5a6d7 100644
---- a/lib/crypto/chacha20poly1305-selftest.c
-+++ b/lib/crypto/chacha20poly1305-selftest.c
-@@ -8830,11 +8830,11 @@ chacha20poly1305_encrypt_bignonce(u8 *dst, const u8 *src, const size_t src_len,
- 				  const u8 nonce[12],
- 				  const u8 key[CHACHA20POLY1305_KEY_SIZE])
- {
- 	const u8 *pad0 = page_address(ZERO_PAGE(0));
- 	struct poly1305_desc_ctx poly1305_state;
--	u32 chacha20_state[CHACHA_STATE_WORDS];
-+	struct chacha_state chacha20_state;
- 	union {
- 		u8 block0[POLY1305_KEY_SIZE];
- 		__le64 lens[2];
- 	} b = {{ 0 }};
- 	u8 bottom_row[16] = { 0 };
-@@ -8842,16 +8842,16 @@ chacha20poly1305_encrypt_bignonce(u8 *dst, const u8 *src, const size_t src_len,
- 	int i;
- 
- 	memcpy(&bottom_row[4], nonce, 12);
- 	for (i = 0; i < 8; ++i)
- 		le_key[i] = get_unaligned_le32(key + sizeof(le_key[i]) * i);
--	chacha_init(chacha20_state, le_key, bottom_row);
--	chacha20_crypt(chacha20_state, b.block0, b.block0, sizeof(b.block0));
-+	chacha_init(&chacha20_state, le_key, bottom_row);
-+	chacha20_crypt(&chacha20_state, b.block0, b.block0, sizeof(b.block0));
- 	poly1305_init(&poly1305_state, b.block0);
- 	poly1305_update(&poly1305_state, ad, ad_len);
- 	poly1305_update(&poly1305_state, pad0, (0x10 - ad_len) & 0xf);
--	chacha20_crypt(chacha20_state, dst, src, src_len);
-+	chacha20_crypt(&chacha20_state, dst, src, src_len);
- 	poly1305_update(&poly1305_state, dst, src_len);
- 	poly1305_update(&poly1305_state, pad0, (0x10 - src_len) & 0xf);
- 	b.lens[0] = cpu_to_le64(ad_len);
- 	b.lens[1] = cpu_to_le64(src_len);
- 	poly1305_update(&poly1305_state, (u8 *)b.lens, sizeof(b.lens));
-diff --git a/lib/crypto/chacha20poly1305.c b/lib/crypto/chacha20poly1305.c
-index 9cfa886f1f89..ed81f0658956 100644
---- a/lib/crypto/chacha20poly1305.c
-+++ b/lib/crypto/chacha20poly1305.c
-@@ -30,11 +30,12 @@ static void chacha_load_key(u32 *k, const u8 *in)
- 	k[5] = get_unaligned_le32(in + 20);
- 	k[6] = get_unaligned_le32(in + 24);
- 	k[7] = get_unaligned_le32(in + 28);
- }
- 
--static void xchacha_init(u32 *chacha_state, const u8 *key, const u8 *nonce)
-+static void xchacha_init(struct chacha_state *chacha_state,
-+			 const u8 *key, const u8 *nonce)
- {
- 	u32 k[CHACHA_KEY_WORDS];
- 	u8 iv[CHACHA_IV_SIZE];
- 
- 	memset(iv, 0, 8);
-@@ -52,11 +53,12 @@ static void xchacha_init(u32 *chacha_state, const u8 *key, const u8 *nonce)
- 	memzero_explicit(iv, sizeof(iv));
- }
- 
- static void
- __chacha20poly1305_encrypt(u8 *dst, const u8 *src, const size_t src_len,
--			   const u8 *ad, const size_t ad_len, u32 *chacha_state)
-+			   const u8 *ad, const size_t ad_len,
-+			   struct chacha_state *chacha_state)
- {
- 	const u8 *pad0 = page_address(ZERO_PAGE(0));
- 	struct poly1305_desc_ctx poly1305_state;
- 	union {
- 		u8 block0[POLY1305_KEY_SIZE];
-@@ -80,30 +82,31 @@ __chacha20poly1305_encrypt(u8 *dst, const u8 *src, const size_t src_len,
- 	b.lens[1] = cpu_to_le64(src_len);
- 	poly1305_update(&poly1305_state, (u8 *)b.lens, sizeof(b.lens));
- 
- 	poly1305_final(&poly1305_state, dst + src_len);
- 
--	memzero_explicit(chacha_state, CHACHA_STATE_WORDS * sizeof(u32));
-+	memzero_explicit(chacha_state, sizeof(*chacha_state));
- 	memzero_explicit(&b, sizeof(b));
- }
- 
- void chacha20poly1305_encrypt(u8 *dst, const u8 *src, const size_t src_len,
- 			      const u8 *ad, const size_t ad_len,
- 			      const u64 nonce,
- 			      const u8 key[CHACHA20POLY1305_KEY_SIZE])
- {
--	u32 chacha_state[CHACHA_STATE_WORDS];
-+	struct chacha_state chacha_state;
- 	u32 k[CHACHA_KEY_WORDS];
- 	__le64 iv[2];
- 
- 	chacha_load_key(k, key);
- 
- 	iv[0] = 0;
- 	iv[1] = cpu_to_le64(nonce);
- 
--	chacha_init(chacha_state, k, (u8 *)iv);
--	__chacha20poly1305_encrypt(dst, src, src_len, ad, ad_len, chacha_state);
-+	chacha_init(&chacha_state, k, (u8 *)iv);
-+	__chacha20poly1305_encrypt(dst, src, src_len, ad, ad_len,
-+				   &chacha_state);
- 
- 	memzero_explicit(iv, sizeof(iv));
- 	memzero_explicit(k, sizeof(k));
- }
- EXPORT_SYMBOL(chacha20poly1305_encrypt);
-@@ -111,20 +114,22 @@ EXPORT_SYMBOL(chacha20poly1305_encrypt);
- void xchacha20poly1305_encrypt(u8 *dst, const u8 *src, const size_t src_len,
- 			       const u8 *ad, const size_t ad_len,
- 			       const u8 nonce[XCHACHA20POLY1305_NONCE_SIZE],
- 			       const u8 key[CHACHA20POLY1305_KEY_SIZE])
- {
--	u32 chacha_state[CHACHA_STATE_WORDS];
-+	struct chacha_state chacha_state;
- 
--	xchacha_init(chacha_state, key, nonce);
--	__chacha20poly1305_encrypt(dst, src, src_len, ad, ad_len, chacha_state);
-+	xchacha_init(&chacha_state, key, nonce);
-+	__chacha20poly1305_encrypt(dst, src, src_len, ad, ad_len,
-+				   &chacha_state);
- }
- EXPORT_SYMBOL(xchacha20poly1305_encrypt);
- 
- static bool
- __chacha20poly1305_decrypt(u8 *dst, const u8 *src, const size_t src_len,
--			   const u8 *ad, const size_t ad_len, u32 *chacha_state)
-+			   const u8 *ad, const size_t ad_len,
-+			   struct chacha_state *chacha_state)
- {
- 	const u8 *pad0 = page_address(ZERO_PAGE(0));
- 	struct poly1305_desc_ctx poly1305_state;
- 	size_t dst_len;
- 	int ret;
-@@ -167,25 +172,25 @@ __chacha20poly1305_decrypt(u8 *dst, const u8 *src, const size_t src_len,
- bool chacha20poly1305_decrypt(u8 *dst, const u8 *src, const size_t src_len,
- 			      const u8 *ad, const size_t ad_len,
- 			      const u64 nonce,
- 			      const u8 key[CHACHA20POLY1305_KEY_SIZE])
- {
--	u32 chacha_state[CHACHA_STATE_WORDS];
-+	struct chacha_state chacha_state;
- 	u32 k[CHACHA_KEY_WORDS];
- 	__le64 iv[2];
- 	bool ret;
- 
- 	chacha_load_key(k, key);
- 
- 	iv[0] = 0;
- 	iv[1] = cpu_to_le64(nonce);
- 
--	chacha_init(chacha_state, k, (u8 *)iv);
-+	chacha_init(&chacha_state, k, (u8 *)iv);
- 	ret = __chacha20poly1305_decrypt(dst, src, src_len, ad, ad_len,
--					 chacha_state);
-+					 &chacha_state);
- 
--	memzero_explicit(chacha_state, sizeof(chacha_state));
-+	memzero_explicit(&chacha_state, sizeof(chacha_state));
- 	memzero_explicit(iv, sizeof(iv));
- 	memzero_explicit(k, sizeof(k));
- 	return ret;
- }
- EXPORT_SYMBOL(chacha20poly1305_decrypt);
-@@ -193,15 +198,15 @@ EXPORT_SYMBOL(chacha20poly1305_decrypt);
- bool xchacha20poly1305_decrypt(u8 *dst, const u8 *src, const size_t src_len,
- 			       const u8 *ad, const size_t ad_len,
- 			       const u8 nonce[XCHACHA20POLY1305_NONCE_SIZE],
- 			       const u8 key[CHACHA20POLY1305_KEY_SIZE])
- {
--	u32 chacha_state[CHACHA_STATE_WORDS];
-+	struct chacha_state chacha_state;
- 
--	xchacha_init(chacha_state, key, nonce);
-+	xchacha_init(&chacha_state, key, nonce);
- 	return __chacha20poly1305_decrypt(dst, src, src_len, ad, ad_len,
--					  chacha_state);
-+					  &chacha_state);
- }
- EXPORT_SYMBOL(xchacha20poly1305_decrypt);
- 
- static
- bool chacha20poly1305_crypt_sg_inplace(struct scatterlist *src,
-@@ -211,11 +216,11 @@ bool chacha20poly1305_crypt_sg_inplace(struct scatterlist *src,
- 				       const u8 key[CHACHA20POLY1305_KEY_SIZE],
- 				       int encrypt)
- {
- 	const u8 *pad0 = page_address(ZERO_PAGE(0));
- 	struct poly1305_desc_ctx poly1305_state;
--	u32 chacha_state[CHACHA_STATE_WORDS];
-+	struct chacha_state chacha_state;
- 	struct sg_mapping_iter miter;
- 	size_t partial = 0;
- 	unsigned int flags;
- 	bool ret = true;
- 	int sl;
-@@ -238,12 +243,12 @@ bool chacha20poly1305_crypt_sg_inplace(struct scatterlist *src,
- 	chacha_load_key(b.k, key);
- 
- 	b.iv[0] = 0;
- 	b.iv[1] = cpu_to_le64(nonce);
- 
--	chacha_init(chacha_state, b.k, (u8 *)b.iv);
--	chacha20_crypt(chacha_state, b.block0, pad0, sizeof(b.block0));
-+	chacha_init(&chacha_state, b.k, (u8 *)b.iv);
-+	chacha20_crypt(&chacha_state, b.block0, pad0, sizeof(b.block0));
- 	poly1305_init(&poly1305_state, b.block0);
- 
- 	if (unlikely(ad_len)) {
- 		poly1305_update(&poly1305_state, ad, ad_len);
- 		if (ad_len & 0xf)
-@@ -274,17 +279,17 @@ bool chacha20poly1305_crypt_sg_inplace(struct scatterlist *src,
- 		if (likely(length >= CHACHA_BLOCK_SIZE || length == sl)) {
- 			size_t l = length;
- 
- 			if (unlikely(length < sl))
- 				l &= ~(CHACHA_BLOCK_SIZE - 1);
--			chacha20_crypt(chacha_state, addr, addr, l);
-+			chacha20_crypt(&chacha_state, addr, addr, l);
- 			addr += l;
- 			length -= l;
- 		}
- 
- 		if (unlikely(length > 0)) {
--			chacha20_crypt(chacha_state, b.chacha_stream, pad0,
-+			chacha20_crypt(&chacha_state, b.chacha_stream, pad0,
- 				       CHACHA_BLOCK_SIZE);
- 			crypto_xor(addr, b.chacha_stream, length);
- 			partial = length;
- 		}
- 
-@@ -321,11 +326,11 @@ bool chacha20poly1305_crypt_sg_inplace(struct scatterlist *src,
- 			       sizeof(b.mac[1]), src_len, !encrypt);
- 		ret = encrypt ||
- 		      !crypto_memneq(b.mac[0], b.mac[1], POLY1305_DIGEST_SIZE);
- 	}
- 
--	memzero_explicit(chacha_state, sizeof(chacha_state));
-+	memzero_explicit(&chacha_state, sizeof(chacha_state));
- 	memzero_explicit(&b, sizeof(b));
- 
- 	return ret;
- }
- 
-diff --git a/lib/crypto/libchacha.c b/lib/crypto/libchacha.c
-index cc1be0496eb9..ebcca381e248 100644
---- a/lib/crypto/libchacha.c
-+++ b/lib/crypto/libchacha.c
-@@ -10,11 +10,11 @@
- #include <linux/module.h>
- 
- #include <crypto/algapi.h> // for crypto_xor_cpy
- #include <crypto/chacha.h>
- 
--void chacha_crypt_generic(u32 *state, u8 *dst, const u8 *src,
-+void chacha_crypt_generic(struct chacha_state *state, u8 *dst, const u8 *src,
- 			  unsigned int bytes, int nrounds)
- {
- 	/* aligned to potentially speed up crypto_xor() */
- 	u8 stream[CHACHA_BLOCK_SIZE] __aligned(sizeof(long));
- 
-diff --git a/tools/testing/crypto/chacha20-s390/test-cipher.c b/tools/testing/crypto/chacha20-s390/test-cipher.c
-index 35ea65c54ffa..827507844e8f 100644
---- a/tools/testing/crypto/chacha20-s390/test-cipher.c
-+++ b/tools/testing/crypto/chacha20-s390/test-cipher.c
-@@ -48,11 +48,11 @@ struct skcipher_def {
- };
- 
- /* Perform cipher operations with the chacha lib */
- static int test_lib_chacha(u8 *revert, u8 *cipher, u8 *plain)
- {
--	u32 chacha_state[CHACHA_STATE_WORDS];
-+	struct chacha_state chacha_state;
- 	u8 iv[16], key[32];
- 	u64 start, end;
- 
- 	memset(key, 'X', sizeof(key));
- 	memset(iv, 'I', sizeof(iv));
-@@ -64,14 +64,14 @@ static int test_lib_chacha(u8 *revert, u8 *cipher, u8 *plain)
- 		print_hex_dump(KERN_INFO, "iv:  ", DUMP_PREFIX_OFFSET,
- 			       16, 1, iv, 16, 1);
- 	}
- 
- 	/* Encrypt */
--	chacha_init(chacha_state, (u32 *)key, iv);
-+	chacha_init(&chacha_state, (u32 *)key, iv);
- 
- 	start = ktime_get_ns();
--	chacha_crypt_arch(chacha_state, cipher, plain, data_size, 20);
-+	chacha_crypt_arch(&chacha_state, cipher, plain, data_size, 20);
- 	end = ktime_get_ns();
- 
- 
- 	if (debug)
- 		print_hex_dump(KERN_INFO, "encr:", DUMP_PREFIX_OFFSET,
-@@ -79,14 +79,14 @@ static int test_lib_chacha(u8 *revert, u8 *cipher, u8 *plain)
- 			       (data_size > 64 ? 64 : data_size), 1);
- 
- 	pr_info("lib encryption took: %lld nsec", end - start);
- 
- 	/* Decrypt */
--	chacha_init(chacha_state, (u32 *)key, iv);
-+	chacha_init(&chacha_state, (u32 *)key, iv);
- 
- 	start = ktime_get_ns();
--	chacha_crypt_arch(chacha_state, revert, cipher, data_size, 20);
-+	chacha_crypt_arch(&chacha_state, revert, cipher, data_size, 20);
- 	end = ktime_get_ns();
- 
- 	if (debug)
- 		print_hex_dump(KERN_INFO, "decr:", DUMP_PREFIX_OFFSET,
- 			       16, 1, revert,
++	err = sysfs_create_file(&wi_group->wi_kobj, &wi_auto_attr.attr);
++	if (err)
++		goto err_put_kobj;
++	wi_group->auto_kobj_attr = wi_auto_attr;
++
+ 	for_each_online_node(nid) {
+ 		if (!node_state(nid, N_MEMORY))
+ 			continue;
 -- 
-2.49.0
+2.47.1
 
