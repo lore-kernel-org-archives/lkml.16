@@ -1,93 +1,87 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B61117736
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 10:09:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F29C81D79A0
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 10:15:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746439801; cv=none; b=p7cejTyEIgEljv+WX3yzy30jU+/PFrgQsPmUjotweJdwyGlt8C9cHDwhSPTGtXg4JRP5c2k0vAcpJfsXHyBD61gFnSrAnqYatEdR67W7hLOq8V9PEbqU53ielKfVzs/AeuEZgvjYJE61a56dcUevZ+KvswjQp47HKvem6pXxRx4=
+	t=1746440143; cv=none; b=LbOHmkv1/KpJyQyxpuKkdxGTIgb7/nLrZG8psdj9Ywfyn61yHlD1gZ6Cf+qykTP2cIzhOvcQ71UVB/wWL9WNqlLuy3NPitNSTbJMswGozDlONGGL0ir6GLhRFKd3MmSnOhdceBS7uA4Apxm1tz7/qzSQfL+5rKOiXNLBByR1Gjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746439801; c=relaxed/simple;
-	bh=IBBzU1mp0IiLvypUl3au/cUUhoobTPaqn0R29wPjtTM=;
+	s=arc-20240116; t=1746440143; c=relaxed/simple;
+	bh=snF7aYKt9AG7vZEbsjnjM619XOg20nFrINAofsqZ3EM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G2FRnk8C5kRYWCai/LMLip9JwVTUXS2AgmCQrrhqKZU3fv3H8aBU1Ii2hdYgczMt6HV5tUFAV+VykCkSbe/wRtWmMBYiccfvVyI+eRbjUgbFYFqqteGQIdoTtrSfMrZQB8VwOME0S6iNW1EnIn2xAIUWtzCctAzBGBzbdE+Agyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=hRpkzJ/D; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=aLcvaLsr; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=hRpkzJ/D; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=aLcvaLsr; arc=none smtp.client-ip=195.135.223.131
+	 Content-Type:Content-Disposition:In-Reply-To; b=i7TbR2X3TSBvHkB7r4q2XnAPFuknayC2t/bC+EepOZXUkRVHz5m0V2OtLhzyUgN+OPDLIyjogVIQBM5RcZCo5AcYrCZIzogBxKH1AA1VUoAM8szxh8LV7u+XUix87lYeNsSx9b/yK29ROe/1gn443nkYhmVWJ5QPxz9ioMGJwvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=O0ozi0Yy; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=eDLxeXUj; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=O0ozi0Yy; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=eDLxeXUj; arc=none smtp.client-ip=195.135.223.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="hRpkzJ/D";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="aLcvaLsr";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="hRpkzJ/D";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="aLcvaLsr"
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="O0ozi0Yy";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="eDLxeXUj";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="O0ozi0Yy";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="eDLxeXUj"
 Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 4E8FE1F453;
-	Mon,  5 May 2025 10:09:58 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 0B96F2123E;
+	Mon,  5 May 2025 10:15:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1746439798; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1746440140; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=g2/4qyUgWiq9hjZiz/h8FxoiBrCLfmuG/2ol1BJ7KKk=;
-	b=hRpkzJ/Dlcg4wIuP6tt0k5+5tz3/5TJgZYRXo3KhC9NA2wQvz6TVOuIDJGxZi7pA+Dg9sH
-	Shvy41Wj2QZaocBjQD9qYyJcgQ7OUVu0bSeucDxoAtI/z+yE2kcKGb6j9nyVwKlD7YsTy8
-	MJOqUQQLCNB7BRrHi1ijo1ojkVh5ldg=
+	bh=iAbhV4/tIIoCKneizhnsh4v1nbNLXfelEvALszEo3qE=;
+	b=O0ozi0YyzWYSTL0UO+7fxLULKwVHY6hkMpYmnJ9lQXlqajfflFZXVGUrQ72JkscFGb5Oi9
+	5bUt1SS680pAqOfdaH87LsjNaMazqH1mz3RfuzpTIGr0HUhJn9KFt4hNB2cj0ISC5hSMWP
+	jinslxMrb9FGkdemw4eLbvR7m9KKm74=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1746439798;
+	s=susede2_ed25519; t=1746440140;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=g2/4qyUgWiq9hjZiz/h8FxoiBrCLfmuG/2ol1BJ7KKk=;
-	b=aLcvaLsrlMjxIh04UCMqoFSKJPTbYtNwdYLL86isDMIFPfKaHijlivnRw4LXrjWcZlUMOI
-	HbYsa6I6dSmTMiDw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b="hRpkzJ/D";
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=aLcvaLsr
+	bh=iAbhV4/tIIoCKneizhnsh4v1nbNLXfelEvALszEo3qE=;
+	b=eDLxeXUjjaD/AUu9uRgIG/wA3Epgy07dGouxPaahhKorPQ09YfpJCRDAgUjk1rsxHQuVxz
+	tQ6g8Pi9dd595dAQ==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=O0ozi0Yy;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=eDLxeXUj
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1746439798; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1746440140; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=g2/4qyUgWiq9hjZiz/h8FxoiBrCLfmuG/2ol1BJ7KKk=;
-	b=hRpkzJ/Dlcg4wIuP6tt0k5+5tz3/5TJgZYRXo3KhC9NA2wQvz6TVOuIDJGxZi7pA+Dg9sH
-	Shvy41Wj2QZaocBjQD9qYyJcgQ7OUVu0bSeucDxoAtI/z+yE2kcKGb6j9nyVwKlD7YsTy8
-	MJOqUQQLCNB7BRrHi1ijo1ojkVh5ldg=
+	bh=iAbhV4/tIIoCKneizhnsh4v1nbNLXfelEvALszEo3qE=;
+	b=O0ozi0YyzWYSTL0UO+7fxLULKwVHY6hkMpYmnJ9lQXlqajfflFZXVGUrQ72JkscFGb5Oi9
+	5bUt1SS680pAqOfdaH87LsjNaMazqH1mz3RfuzpTIGr0HUhJn9KFt4hNB2cj0ISC5hSMWP
+	jinslxMrb9FGkdemw4eLbvR7m9KKm74=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1746439798;
+	s=susede2_ed25519; t=1746440140;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=g2/4qyUgWiq9hjZiz/h8FxoiBrCLfmuG/2ol1BJ7KKk=;
-	b=aLcvaLsrlMjxIh04UCMqoFSKJPTbYtNwdYLL86isDMIFPfKaHijlivnRw4LXrjWcZlUMOI
-	HbYsa6I6dSmTMiDw==
+	bh=iAbhV4/tIIoCKneizhnsh4v1nbNLXfelEvALszEo3qE=;
+	b=eDLxeXUjjaD/AUu9uRgIG/wA3Epgy07dGouxPaahhKorPQ09YfpJCRDAgUjk1rsxHQuVxz
+	tQ6g8Pi9dd595dAQ==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3624713883;
-	Mon,  5 May 2025 10:09:58 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E7A6D13883;
+	Mon,  5 May 2025 10:15:39 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id +gbmDHaOGGiLeAAAD6G6ig
-	(envelope-from <jack@suse.cz>); Mon, 05 May 2025 10:09:58 +0000
+	id cLiDOMuPGGhCegAAD6G6ig
+	(envelope-from <jack@suse.cz>); Mon, 05 May 2025 10:15:39 +0000
 Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id D0B8EA0670; Mon,  5 May 2025 12:09:57 +0200 (CEST)
-Date: Mon, 5 May 2025 12:09:57 +0200
+	id E484EA0670; Mon,  5 May 2025 12:15:38 +0200 (CEST)
+Date: Mon, 5 May 2025 12:15:38 +0200
 From: Jan Kara <jack@suse.cz>
-To: David Hildenbrand <david@redhat.com>
-Cc: Ryan Roberts <ryan.roberts@arm.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Dave Chinner <david@fromorbit.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Kalesh Singh <kaleshsingh@google.com>, Zi Yan <ziy@nvidia.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-mm@kvack.org
-Subject: Re: [RFC PATCH v4 1/5] mm/readahead: Honour new_order in
- page_cache_ra_order()
-Message-ID: <mhayjykmkxhvnivthdrc2bb3cvqbdesa42puzimx75xfagcnqn@osy4qeiyfxvn>
-References: <20250430145920.3748738-1-ryan.roberts@arm.com>
- <20250430145920.3748738-2-ryan.roberts@arm.com>
- <48b4aa79-943b-46bc-ac24-604fdf998566@redhat.com>
+To: Andrey Kriulin <kitotavrik.s@gmail.com>
+Cc: Christian Brauner <brauner@kernel.org>, 
+	Andrey Kriulin <kitotavrik.media@gmail.com>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
+	Josef Bacik <josef@toxicpanda.com>, NeilBrown <neilb@suse.de>, Jan Kara <jack@suse.cz>, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] fs: minix: Fix handling of corrupted directories
+Message-ID: <a6log74bqsrkzlrckh3gbzpi4mxuj45mr7tddtghck76oum4io@pmks35zdahqn>
+References: <20250502164337.62895-1-kitotavrik.media@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -96,142 +90,82 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <48b4aa79-943b-46bc-ac24-604fdf998566@redhat.com>
-X-Rspamd-Queue-Id: 4E8FE1F453
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.01 / 50.00];
+In-Reply-To: <20250502164337.62895-1-kitotavrik.media@gmail.com>
+X-Rspamd-Queue-Id: 0B96F2123E
+X-Spam-Score: -2.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-2.51 / 50.00];
 	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
 	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
 	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
 	MIME_GOOD(-0.10)[text/plain];
 	MX_GOOD(-0.01)[];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,suse.cz:dkim];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[3];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_TO(0.00)[gmail.com];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
 	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
 	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -4.01
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,gmail.com,infradead.org,toxicpanda.com,suse.de,suse.cz,vger.kernel.org];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
 X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Mon 05-05-25 11:51:43, David Hildenbrand wrote:
-> On 30.04.25 16:59, Ryan Roberts wrote:
-> > page_cache_ra_order() takes a parameter called new_order, which is
-> > intended to express the preferred order of the folios that will be
-> > allocated for the readahead operation. Most callers indeed call this
-> > with their preferred new order. But page_cache_async_ra() calls it with
-> > the preferred order of the previous readahead request (actually the
-> > order of the folio that had the readahead marker, which may be smaller
-> > when alignment comes into play).
-> > 
-> > And despite the parameter name, page_cache_ra_order() always treats it
-> > at the old order, adding 2 to it on entry. As a result, a cold readahead
-> > always starts with order-2 folios.
-> > 
-> > Let's fix this behaviour by always passing in the *new* order.
-> > 
-> > Worked example:
-> > 
-> > Prior to the change, mmaping an 8MB file and touching each page
-> > sequentially, resulted in the following, where we start with order-2
-> > folios for the first 128K then ramp up to order-4 for the next 128K,
-> > then get clamped to order-5 for the rest of the file because pa_pages is
-> > limited to 128K:
-> > 
-> > TYPE    STARTOFFS     ENDOFFS       SIZE  STARTPG    ENDPG   NRPG  ORDER
-> > -----  ----------  ----------  ---------  -------  -------  -----  -----
-> > FOLIO  0x00000000  0x00004000      16384        0        4      4      2
-> > FOLIO  0x00004000  0x00008000      16384        4        8      4      2
-> > FOLIO  0x00008000  0x0000c000      16384        8       12      4      2
-> > FOLIO  0x0000c000  0x00010000      16384       12       16      4      2
-> > FOLIO  0x00010000  0x00014000      16384       16       20      4      2
-> > FOLIO  0x00014000  0x00018000      16384       20       24      4      2
-> > FOLIO  0x00018000  0x0001c000      16384       24       28      4      2
-> > FOLIO  0x0001c000  0x00020000      16384       28       32      4      2
-> > FOLIO  0x00020000  0x00030000      65536       32       48     16      4
-> > FOLIO  0x00030000  0x00040000      65536       48       64     16      4
-> > FOLIO  0x00040000  0x00060000     131072       64       96     32      5
-> > FOLIO  0x00060000  0x00080000     131072       96      128     32      5
-> > FOLIO  0x00080000  0x000a0000     131072      128      160     32      5
-> > FOLIO  0x000a0000  0x000c0000     131072      160      192     32      5
+On Fri 02-05-25 19:43:36, Andrey Kriulin wrote:
+> If the directory is corrupted and the number of nlinks is less than 2 
+> (valid nlinks have at least 2), then when the directory is deleted, the
+> minix_rmdir will try to reduce the nlinks(unsigned int) to a negative
+> value.
 > 
-> Interesting, I would have thought we'd ramp up earlier.
+> Make nlinks validity check for directory in minix_lookup.
 > 
-> > ...
-> > 
-> > After the change, the same operation results in the first 128K being
-> > order-0, then we start ramping up to order-2, -4, and finally get
-> > clamped at order-5:
-> > 
-> > TYPE    STARTOFFS     ENDOFFS       SIZE  STARTPG    ENDPG   NRPG  ORDER
-> > -----  ----------  ----------  ---------  -------  -------  -----  -----
-> > FOLIO  0x00000000  0x00001000       4096        0        1      1      0
-> > FOLIO  0x00001000  0x00002000       4096        1        2      1      0
-> > FOLIO  0x00002000  0x00003000       4096        2        3      1      0
-> > FOLIO  0x00003000  0x00004000       4096        3        4      1      0
-> > FOLIO  0x00004000  0x00005000       4096        4        5      1      0
-> > FOLIO  0x00005000  0x00006000       4096        5        6      1      0
-> > FOLIO  0x00006000  0x00007000       4096        6        7      1      0
-> > FOLIO  0x00007000  0x00008000       4096        7        8      1      0
-> > FOLIO  0x00008000  0x00009000       4096        8        9      1      0
-> > FOLIO  0x00009000  0x0000a000       4096        9       10      1      0
-> > FOLIO  0x0000a000  0x0000b000       4096       10       11      1      0
-> > FOLIO  0x0000b000  0x0000c000       4096       11       12      1      0
-> > FOLIO  0x0000c000  0x0000d000       4096       12       13      1      0
-> > FOLIO  0x0000d000  0x0000e000       4096       13       14      1      0
-> > FOLIO  0x0000e000  0x0000f000       4096       14       15      1      0
-> > FOLIO  0x0000f000  0x00010000       4096       15       16      1      0
-> > FOLIO  0x00010000  0x00011000       4096       16       17      1      0
-> > FOLIO  0x00011000  0x00012000       4096       17       18      1      0
-> > FOLIO  0x00012000  0x00013000       4096       18       19      1      0
-> > FOLIO  0x00013000  0x00014000       4096       19       20      1      0
-> > FOLIO  0x00014000  0x00015000       4096       20       21      1      0
-> > FOLIO  0x00015000  0x00016000       4096       21       22      1      0
-> > FOLIO  0x00016000  0x00017000       4096       22       23      1      0
-> > FOLIO  0x00017000  0x00018000       4096       23       24      1      0
-> > FOLIO  0x00018000  0x00019000       4096       24       25      1      0
-> > FOLIO  0x00019000  0x0001a000       4096       25       26      1      0
-> > FOLIO  0x0001a000  0x0001b000       4096       26       27      1      0
-> > FOLIO  0x0001b000  0x0001c000       4096       27       28      1      0
-> > FOLIO  0x0001c000  0x0001d000       4096       28       29      1      0
-> > FOLIO  0x0001d000  0x0001e000       4096       29       30      1      0
-> > FOLIO  0x0001e000  0x0001f000       4096       30       31      1      0
-> > FOLIO  0x0001f000  0x00020000       4096       31       32      1      0
-> > FOLIO  0x00020000  0x00024000      16384       32       36      4      2
-> > FOLIO  0x00024000  0x00028000      16384       36       40      4      2
-> > FOLIO  0x00028000  0x0002c000      16384       40       44      4      2
-> > FOLIO  0x0002c000  0x00030000      16384       44       48      4      2
-> > FOLIO  0x00030000  0x00034000      16384       48       52      4      2
-> > FOLIO  0x00034000  0x00038000      16384       52       56      4      2
-> > FOLIO  0x00038000  0x0003c000      16384       56       60      4      2
-> > FOLIO  0x0003c000  0x00040000      16384       60       64      4      2
-> > FOLIO  0x00040000  0x00050000      65536       64       80     16      4
-> > FOLIO  0x00050000  0x00060000      65536       80       96     16      4
-> > FOLIO  0x00060000  0x00080000     131072       96      128     32      5
-> > FOLIO  0x00080000  0x000a0000     131072      128      160     32      5
-> > FOLIO  0x000a0000  0x000c0000     131072      160      192     32      5
-> > FOLIO  0x000c0000  0x000e0000     131072      192      224     32      5
+> Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
 > 
-> Similar here, do you know why we don't ramp up earlier. Allocating that many
-> order-0 + order-2 pages looks a bit suboptimal to me for a sequential read.
+> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Andrey Kriulin <kitotavrik.media@gmail.com>
 
-Note that this is reading through mmap using the mmap readahead code. If
-you use standard read(2), the readahead window starts small as well and
-ramps us along with the desired order so we don't allocate that many small
-order pages in that case.
+Thanks for the patch. One comment below.
+
+> diff --git a/fs/minix/namei.c b/fs/minix/namei.c
+> index 8938536d8..5717a56fa 100644
+> --- a/fs/minix/namei.c
+> +++ b/fs/minix/namei.c
+> @@ -28,8 +28,13 @@ static struct dentry *minix_lookup(struct inode * dir, struct dentry *dentry, un
+>  		return ERR_PTR(-ENAMETOOLONG);
+>  
+>  	ino = minix_inode_by_name(dentry);
+> -	if (ino)
+> +	if (ino) {
+>  		inode = minix_iget(dir->i_sb, ino);
+> +		if (S_ISDIR(inode->i_mode) && inode->i_nlink < 2) {
+> +			iput(inode);
+> +			return ERR_PTR(-EIO);
+> +		}
+> +	}
+>  	return d_splice_alias(inode, dentry);
+>  }
+
+I don't think this is the best place to handle such check. IMO it would be
+more logical to do it in minix_iget() - V[12]_minix_iget() to be more
+precise - to properly catch all the paths where the inode is loaded into
+memory. This way your check will not happen for the root directory inode
+for example.
 
 								Honza
 -- 
