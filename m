@@ -1,46 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46AAE7261B;
-	Mon,  5 May 2025 22:31:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D78B7261B;
+	Mon,  5 May 2025 22:31:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746484297; cv=none; b=WFUkHoDvIjvLD67y3JDTrInRNhNLIqNXWHbc44bfA99FCrJYpftyhT/eBWh4EDY+x3IWX8Fv3YyiEns+3Wxhi2oKsa/DnLqFulFvrzHvG48ygWkUX7dtptkHY7DakN7Bzq2PeBknJr2Sf+U2oa1ME6c5pkJH0n+ESvShWGkTsY4=
+	t=1746484301; cv=none; b=VtdOjDh1WNLr7hNga3S7j2qhaaA8o7+YVxFw/cjdmeQ/s2MwfxwPw76i69liokro6fr/Gv88qhi8BoXE7MZtiSlHk8a9Wu9fmljrwzBucNUn2f+p5FyTOMz4ByVtyh/x55O+TI3eQ/H9JfyuR3hy6XYf6ILMLS9dhUNyZmIzJio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746484297; c=relaxed/simple;
-	bh=t6TI3iTTL62UNxvk9YqXnix3T6orGKEhqzk2cWclT6Q=;
+	s=arc-20240116; t=1746484301; c=relaxed/simple;
+	bh=ygDMfQgwAraTz1hHELlmttpnRaqAKSDNkeZwI9GwHCA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WHe7IZwkDYyIq2LKG5Rk9yPPFbltEtttBXQsGWuMd8aihLyAoP7oV2fVvP3vt8M/FgCov8fU6GFxmj3deVCZ1tasJzuc8gUl1/nUvrQuXOSuCD+Wa2bGfRl9+A+/PYUqVICyQon7qnPd0jMOYNymoWcr+x42H6AGKJq/zmxkEmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PrQ2to7P; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=RcLd9Dzmg1tLH2hkRE14TKbBAyesGMNcZaUX3DAESVDeI+eT+ac8uUtvmnd0RSr3gsOnnwJF0MZyzrO7Fcc11LHs9hCybxGN9zWa6ApXBy9Hg5RDNKe/M0jnBDwf2/XkqYRyNLJkFxEBI7qy9go9RHTS+PWPwNgTab3U/q+kJcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CrWU7Sfw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PrQ2to7P"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0309EC4CEEF;
-	Mon,  5 May 2025 22:31:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CrWU7Sfw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F9AEC4CEE4;
+	Mon,  5 May 2025 22:31:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746484297;
-	bh=t6TI3iTTL62UNxvk9YqXnix3T6orGKEhqzk2cWclT6Q=;
+	s=k20201202; t=1746484301;
+	bh=ygDMfQgwAraTz1hHELlmttpnRaqAKSDNkeZwI9GwHCA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PrQ2to7PMohRHB3p1L4lzgzZcIjc10GZDjD3cDz6Oqox7hcsFUE1ecFjw/mTWRlTd
-	 jPEVthJMi/ARMoLXVJq931UtKE5+40DjXZiNjGwPplw7XgDxtdAhd7cTzRgp2ZhUwS
-	 x3IJ7syeHE33o9T3Z3QSgnbyBP5+FbrTSiI6ngzls8Ad0tVnuLwXtq3bqI/1TH5IA2
-	 yMXXCOEwzElIlGngbg0m1SfbchZlbohyoHDkW1klTKBqcxIDRZw/wU4fHKOylw2Jwr
-	 A1X0RgDUHePoY+eGEsmHwmEVOUel1+gqtgJ/X2P5rNuonSVmIESdvHhIQ8/zpxwXSV
-	 I1RIAGkP2zOOg==
+	b=CrWU7Sfw1WJT7pT5ZSdtGeskdvdP9nbVFIGRQ5yifjpW4300bgaL7l6mAR+lYudan
+	 4uStHErqRBXJ+BZx2Z74e0aSproMhNI1wZbhFToSw+2Wc45/zwmfpTI/O/0dd4wFQX
+	 QreWq1J0jRydT2KUbgvFiGdaDUqGdNpB/TYnZvra5oMNK2D0kuezCZXGEOU//axUz7
+	 6Qcy5Z/edpSd8Zf3OPxSnWSZL09YFDjvChp9wXe1bWGC9CAUHgTZA8PnuQrX5RJbmb
+	 udfJY/GvwQjYJWBXUDzMnmsqHv6gS2b0LO5MpZVJAQoPHpU12Jj/qBn2iIa9fD6w4K
+	 Nw2SUukxDQkGQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Shuicheng Lin <shuicheng.lin@intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
 	Sasha Levin <sashal@kernel.org>,
-	lucas.demarchi@intel.com,
-	thomas.hellstrom@linux.intel.com,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	intel-xe@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 6.14 442/642] drm/xe/debugfs: Add missing xe_pm_runtime_put in wedge_mode_set
-Date: Mon,  5 May 2025 18:10:58 -0400
-Message-Id: <20250505221419.2672473-442-sashal@kernel.org>
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	kees@kernel.org,
+	nathan@kernel.org,
+	rppt@kernel.org,
+	riel@surriel.com
+Subject: [PATCH AUTOSEL 6.14 443/642] x86/ibt: Handle FineIBT in handle_cfi_failure()
+Date: Mon,  5 May 2025 18:10:59 -0400
+Message-Id: <20250505221419.2672473-443-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505221419.2672473-1-sashal@kernel.org>
 References: <20250505221419.2672473-1-sashal@kernel.org>
@@ -55,34 +58,138 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.14.5
 Content-Transfer-Encoding: 8bit
 
-From: Shuicheng Lin <shuicheng.lin@intel.com>
+From: Peter Zijlstra <peterz@infradead.org>
 
-[ Upstream commit b31e668d3111b100d16fd7db8db335328ce8c6d5 ]
+[ Upstream commit 882b86fd4e0d49bf91148dbadcdbece19ded40e6 ]
 
-xe_pm_runtime_put is missed in the failure path.
+Sami reminded me that FineIBT failure does not hook into the regular
+CFI failure case, and as such CFI_PERMISSIVE does not work.
 
-Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Signed-off-by: Shuicheng Lin <shuicheng.lin@intel.com>
-Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20250213230322.1180621-1-shuicheng.lin@intel.com
-Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Reported-by: Sami Tolvanen <samitolvanen@google.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Sami Tolvanen <samitolvanen@google.com>
+Link: https://lkml.kernel.org/r/20250214092619.GB21726@noisy.programming.kicks-ass.net
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/xe/xe_debugfs.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/include/asm/cfi.h    | 11 +++++++++++
+ arch/x86/kernel/alternative.c | 30 ++++++++++++++++++++++++++++++
+ arch/x86/kernel/cfi.c         | 22 ++++++++++++++++++----
+ 3 files changed, 59 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/xe/xe_debugfs.c b/drivers/gpu/drm/xe/xe_debugfs.c
-index 6bfdd3a9913fd..92e6fa8fe3a17 100644
---- a/drivers/gpu/drm/xe/xe_debugfs.c
-+++ b/drivers/gpu/drm/xe/xe_debugfs.c
-@@ -175,6 +175,7 @@ static ssize_t wedged_mode_set(struct file *f, const char __user *ubuf,
- 		ret = xe_guc_ads_scheduler_policy_toggle_reset(&gt->uc.guc.ads);
- 		if (ret) {
- 			xe_gt_err(gt, "Failed to update GuC ADS scheduler policy. GuC may still cause engine reset even with wedged_mode=2\n");
-+			xe_pm_runtime_put(xe);
- 			return -EIO;
- 		}
+diff --git a/arch/x86/include/asm/cfi.h b/arch/x86/include/asm/cfi.h
+index 31d19c815f992..7dd5ab239c87b 100644
+--- a/arch/x86/include/asm/cfi.h
++++ b/arch/x86/include/asm/cfi.h
+@@ -126,6 +126,17 @@ static inline int cfi_get_offset(void)
+ 
+ extern u32 cfi_get_func_hash(void *func);
+ 
++#ifdef CONFIG_FINEIBT
++extern bool decode_fineibt_insn(struct pt_regs *regs, unsigned long *target, u32 *type);
++#else
++static inline bool
++decode_fineibt_insn(struct pt_regs *regs, unsigned long *target, u32 *type)
++{
++	return false;
++}
++
++#endif
++
+ #else
+ static inline enum bug_trap_type handle_cfi_failure(struct pt_regs *regs)
+ {
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index c71b575bf2292..f9ada11c910e1 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -1080,6 +1080,7 @@ asm(	".pushsection .rodata			\n"
+ 	"	endbr64				\n"
+ 	"	subl	$0x12345678, %r10d	\n"
+ 	"	je	fineibt_preamble_end	\n"
++	"fineibt_preamble_ud2:			\n"
+ 	"	ud2				\n"
+ 	"	nop				\n"
+ 	"fineibt_preamble_end:			\n"
+@@ -1087,9 +1088,11 @@ asm(	".pushsection .rodata			\n"
+ );
+ 
+ extern u8 fineibt_preamble_start[];
++extern u8 fineibt_preamble_ud2[];
+ extern u8 fineibt_preamble_end[];
+ 
+ #define fineibt_preamble_size (fineibt_preamble_end - fineibt_preamble_start)
++#define fineibt_preamble_ud2  (fineibt_preamble_ud2 - fineibt_preamble_start)
+ #define fineibt_preamble_hash 7
+ 
+ asm(	".pushsection .rodata			\n"
+@@ -1407,6 +1410,33 @@ static void poison_cfi(void *addr, void *wr_addr)
  	}
+ }
+ 
++/*
++ * regs->ip points to a UD2 instruction, return true and fill out target and
++ * type when this UD2 is from a FineIBT preamble.
++ *
++ * We check the preamble by checking for the ENDBR instruction relative to the
++ * UD2 instruction.
++ */
++bool decode_fineibt_insn(struct pt_regs *regs, unsigned long *target, u32 *type)
++{
++	unsigned long addr = regs->ip - fineibt_preamble_ud2;
++	u32 endbr, hash;
++
++	__get_kernel_nofault(&endbr, addr, u32, Efault);
++	if (endbr != gen_endbr())
++		return false;
++
++	*target = addr + fineibt_preamble_size;
++
++	__get_kernel_nofault(&hash, addr + fineibt_preamble_hash, u32, Efault);
++	*type = (u32)regs->r10 + hash;
++
++	return true;
++
++Efault:
++	return false;
++}
++
+ #else
+ 
+ static void __apply_fineibt(s32 *start_retpoline, s32 *end_retpoline,
+diff --git a/arch/x86/kernel/cfi.c b/arch/x86/kernel/cfi.c
+index e6bf78fac1462..f6905bef0af84 100644
+--- a/arch/x86/kernel/cfi.c
++++ b/arch/x86/kernel/cfi.c
+@@ -70,11 +70,25 @@ enum bug_trap_type handle_cfi_failure(struct pt_regs *regs)
+ 	unsigned long target;
+ 	u32 type;
+ 
+-	if (!is_cfi_trap(regs->ip))
+-		return BUG_TRAP_TYPE_NONE;
++	switch (cfi_mode) {
++	case CFI_KCFI:
++		if (!is_cfi_trap(regs->ip))
++			return BUG_TRAP_TYPE_NONE;
++
++		if (!decode_cfi_insn(regs, &target, &type))
++			return report_cfi_failure_noaddr(regs, regs->ip);
++
++		break;
+ 
+-	if (!decode_cfi_insn(regs, &target, &type))
+-		return report_cfi_failure_noaddr(regs, regs->ip);
++	case CFI_FINEIBT:
++		if (!decode_fineibt_insn(regs, &target, &type))
++			return BUG_TRAP_TYPE_NONE;
++
++		break;
++
++	default:
++		return BUG_TRAP_TYPE_NONE;
++	}
+ 
+ 	return report_cfi_failure(regs, regs->ip, &target, type);
+ }
 -- 
 2.39.5
 
