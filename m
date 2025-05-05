@@ -1,45 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACA493579F2;
-	Mon,  5 May 2025 22:44:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE5A029B22B;
+	Mon,  5 May 2025 22:44:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485072; cv=none; b=sYKfgGH6nSlvhLPWqJZTKaXP0eaCktLqavQRbWFmQfr2zKarlGlq9xrZyVcfF2FsYS3FpkrZvFlxf+zbBCpZCd+Ed4uKmxQn7GaHBiNKL8aY2+7ULUvCRvqbwzu/E2BrJlPrpX+B27GwuU4zLDpg0k9Qp5sQiljc/GaelDuKIEg=
+	t=1746485078; cv=none; b=nLHJ9oFQ4NcvyFOq860xCOA26BCYYAMUdrATBFi4xjpXc0CEvJrdFt+dKVkaDXWpRHHibOrt/JjJP6lXm0Y36rhtOzhqxEIbh6ozZw1h8t4/XnCKikYKdmC5WQLZ8XpgWT68lCCgxPIpHrmcOQ7khjf7yjupdQiWQbUO+UZIg3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485072; c=relaxed/simple;
-	bh=s8nuyD/LC8gZe7btAmMt72atSEIBM7IMwQfwJ8vRoFI=;
+	s=arc-20240116; t=1746485078; c=relaxed/simple;
+	bh=pG9jfuldlO2800hDmNAh2x2uJRK3w7OEvUGwAG1O76k=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PXMVhX+3KamqORcChegLG3xREIckVOqfAygQkEVdKd/h4yzmGSH2YNLvYT4hoq3/mRYlDLdYlkYkNIvE6m+xokUIaYOUip0wk2TRibsej39tX/3YmiNI/VpaYOPeZa/fN0LWoHc/puJ+qxs0951Rx4Ffqg9ME3MMW0su/xs5gQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V26JGwWC; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=pzoq715h5ejH5pwJnvmUab1uGV2yyOH0wCNjsd7CM7QuirBGimFkjC/+GWJNSW0/bboaCPuYwMI0rLqhnwQPSErYdAH8pioTPU+IE3C+Z1G0rDXKllmZ2oLZZLhjvz0OyesMRXaiTBrSK483NgdFmaEQduua5VIgBrvvpqG8yUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gwV3ah0g; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V26JGwWC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72F43C4CEE4;
-	Mon,  5 May 2025 22:44:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gwV3ah0g"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99064C4CEED;
+	Mon,  5 May 2025 22:44:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485071;
-	bh=s8nuyD/LC8gZe7btAmMt72atSEIBM7IMwQfwJ8vRoFI=;
+	s=k20201202; t=1746485077;
+	bh=pG9jfuldlO2800hDmNAh2x2uJRK3w7OEvUGwAG1O76k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=V26JGwWC2eMqkZw4v97LZw2SYrZ+P4sazUJ3Pzkr6Jsiel3NXwiteu0sR+BIz7Kpc
-	 xxwgcxPArzFIq/X2fwhSzEvEbd9i188CGciwGXPuYk3U3L2OHsQaurCHIwBfpgNv/4
-	 ebFjJ504wvWcEjx5Dej3z+NpgUYm2Mw6oOB+P2IoxnTm/w5OQavB/jH/dPt+mFFICX
-	 CTTLhtx3Fci+F78NaYO57PCTURoEEJmjlsD0QKvaz9ZNV/XWiOJ+O+crmsoZwlXZCc
-	 Y6fEiJffNpkPTd9Vhofwvulg3Z2F7w2W9R5P00c3F12W1YX6Qx21JWC5+fQUJrWNEg
-	 AAZkbVqqPeeOQ==
+	b=gwV3ah0gm8yL4fRrYi9b8YjZALjLF4ec29m5ehs7ejuVGbJfiwZu/X8TZkcU+hIZs
+	 Rl7/GyZPs8M7kZ1vzUVTEBMijiERoRPVUcO81zwB4xxWPnZGW4iyoUzEkRHbHeUntT
+	 a1T1WEHjoM5t5i1caSqMCfUfvBTELgQOGPLKsYUxjBXDdrLglRqSJNsshwRrU/0yZL
+	 MRNb8SLAeJOQ0PQvCLHoaY5tF8SA0PXL96+xkCl1UKWO/2whLsQwgAwBEfRwZSwz7L
+	 R4vaKarxlzFw7MnmhrYF4STPWkZrR4FmjaLGWiuD7ialfhQk+fxOmdCpafrnFkeC/N
+	 zVKIRjN8CyXDA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-	Miri Korenblit <miriam.rachel.korenblit@intel.com>,
-	Johannes Berg <johannes.berg@intel.com>,
+Cc: Willem de Bruijn <willemb@google.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	pagadala.yesu.anjaneyulu@intel.com,
-	daniel.gabay@intel.com,
-	somashekhar.puttagangaiah@intel.com,
-	linux-wireless@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 151/486] wifi: iwlwifi: fix the ECKV UEFI variable name
-Date: Mon,  5 May 2025 18:33:47 -0400
-Message-Id: <20250505223922.2682012-151-sashal@kernel.org>
+	davem@davemloft.net,
+	dsahern@kernel.org,
+	pabeni@redhat.com,
+	netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 155/486] ipv6: save dontfrag in cork
+Date: Mon,  5 May 2025 18:33:51 -0400
+Message-Id: <20250505223922.2682012-155-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -54,69 +54,101 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
+From: Willem de Bruijn <willemb@google.com>
 
-[ Upstream commit 3ea2970b0578011ab8402ad0cff39712255f63df ]
+[ Upstream commit a18dfa9925b9ef6107ea3aa5814ca3c704d34a8a ]
 
-This UEFI variable name was badly named. Fix its name and also use the
-right GUID to find it: we need to use the BT_WIFI (a.k.a. Common) GUID.
+When spanning datagram construction over multiple send calls using
+MSG_MORE, per datagram settings are configured on the first send.
 
-Signed-off-by: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
-Signed-off-by: Miri Korenblit <miriam.rachel.korenblit@intel.com>
-Link: https://patch.msgid.link/20250308231426.78c998d0fa71.I2bc9d72c1dc2c4d7028f0265634a940c2fadbbb5@changeid
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+That is when ip(6)_setup_cork stores these settings for subsequent use
+in __ip(6)_append_data and others.
+
+The only flag that escaped this was dontfrag. As a result, a datagram
+could be constructed with df=0 on the first sendmsg, but df=1 on a
+next. Which is what cmsg_ip.sh does in an upcoming MSG_MORE test in
+the "diff" scenario.
+
+Changing datagram conditions in the middle of constructing an skb
+makes this already complex code path even more convoluted. It is here
+unintentional. Bring this flag in line with expected sockopt/cmsg
+behavior.
+
+And stop passing ipc6 to __ip6_append_data, to avoid such issues
+in the future. This is already the case for __ip_append_data.
+
+inet6_cork had a 6 byte hole, so the 1B flag has no impact.
+
+Signed-off-by: Willem de Bruijn <willemb@google.com>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
+Link: https://patch.msgid.link/20250307033620.411611-3-willemdebruijn.kernel@gmail.com
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/fw/uefi.c | 8 +++++---
- drivers/net/wireless/intel/iwlwifi/fw/uefi.h | 4 ++--
- 2 files changed, 7 insertions(+), 5 deletions(-)
+ include/linux/ipv6.h  | 1 +
+ net/ipv6/ip6_output.c | 9 +++++----
+ 2 files changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/fw/uefi.c b/drivers/net/wireless/intel/iwlwifi/fw/uefi.c
-index 834f7c9bb9e92..86d6286a15378 100644
---- a/drivers/net/wireless/intel/iwlwifi/fw/uefi.c
-+++ b/drivers/net/wireless/intel/iwlwifi/fw/uefi.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
- /*
-- * Copyright(c) 2021-2024 Intel Corporation
-+ * Copyright(c) 2021-2025 Intel Corporation
-  */
+diff --git a/include/linux/ipv6.h b/include/linux/ipv6.h
+index a6e2aadbb91bd..5aeeed22f35bf 100644
+--- a/include/linux/ipv6.h
++++ b/include/linux/ipv6.h
+@@ -207,6 +207,7 @@ struct inet6_cork {
+ 	struct ipv6_txoptions *opt;
+ 	u8 hop_limit;
+ 	u8 tclass;
++	u8 dontfrag:1;
+ };
  
- #include "iwl-drv.h"
-@@ -673,8 +673,10 @@ int iwl_uefi_get_eckv(struct iwl_fw_runtime *fwrt, u32 *extl_clk)
- 	struct uefi_cnv_var_eckv *data;
- 	int ret = 0;
+ /* struct ipv6_pinfo - ipv6 private area */
+diff --git a/net/ipv6/ip6_output.c b/net/ipv6/ip6_output.c
+index 434ddf263b88a..89a61e040e6a1 100644
+--- a/net/ipv6/ip6_output.c
++++ b/net/ipv6/ip6_output.c
+@@ -1386,6 +1386,7 @@ static int ip6_setup_cork(struct sock *sk, struct inet_cork_full *cork,
+ 	}
+ 	v6_cork->hop_limit = ipc6->hlimit;
+ 	v6_cork->tclass = ipc6->tclass;
++	v6_cork->dontfrag = ipc6->dontfrag;
+ 	if (rt->dst.flags & DST_XFRM_TUNNEL)
+ 		mtu = READ_ONCE(np->pmtudisc) >= IPV6_PMTUDISC_PROBE ?
+ 		      READ_ONCE(rt->dst.dev->mtu) : dst_mtu(&rt->dst);
+@@ -1417,7 +1418,7 @@ static int __ip6_append_data(struct sock *sk,
+ 			     int getfrag(void *from, char *to, int offset,
+ 					 int len, int odd, struct sk_buff *skb),
+ 			     void *from, size_t length, int transhdrlen,
+-			     unsigned int flags, struct ipcm6_cookie *ipc6)
++			     unsigned int flags)
+ {
+ 	struct sk_buff *skb, *skb_prev = NULL;
+ 	struct inet_cork *cork = &cork_full->base;
+@@ -1471,7 +1472,7 @@ static int __ip6_append_data(struct sock *sk,
+ 	if (headersize + transhdrlen > mtu)
+ 		goto emsgsize;
  
--	data = iwl_uefi_get_verified_variable(fwrt->trans, IWL_UEFI_ECKV_NAME,
--					      "ECKV", sizeof(*data), NULL);
-+	data = iwl_uefi_get_verified_variable_guid(fwrt->trans,
-+						   &IWL_EFI_WIFI_BT_GUID,
-+						   IWL_UEFI_ECKV_NAME,
-+						   "ECKV", sizeof(*data), NULL);
- 	if (IS_ERR(data))
- 		return -EINVAL;
+-	if (cork->length + length > mtu - headersize && ipc6->dontfrag &&
++	if (cork->length + length > mtu - headersize && v6_cork->dontfrag &&
+ 	    (sk->sk_protocol == IPPROTO_UDP ||
+ 	     sk->sk_protocol == IPPROTO_ICMPV6 ||
+ 	     sk->sk_protocol == IPPROTO_RAW)) {
+@@ -1843,7 +1844,7 @@ int ip6_append_data(struct sock *sk,
  
-diff --git a/drivers/net/wireless/intel/iwlwifi/fw/uefi.h b/drivers/net/wireless/intel/iwlwifi/fw/uefi.h
-index e525d449e656e..c931f5cedb0b9 100644
---- a/drivers/net/wireless/intel/iwlwifi/fw/uefi.h
-+++ b/drivers/net/wireless/intel/iwlwifi/fw/uefi.h
-@@ -1,6 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause */
- /*
-- * Copyright(c) 2021-2024 Intel Corporation
-+ * Copyright(c) 2021-2025 Intel Corporation
-  */
- #ifndef __iwl_fw_uefi__
- #define __iwl_fw_uefi__
-@@ -19,7 +19,7 @@
- #define IWL_UEFI_WTAS_NAME		L"UefiCnvWlanWTAS"
- #define IWL_UEFI_SPLC_NAME		L"UefiCnvWlanSPLC"
- #define IWL_UEFI_WRDD_NAME		L"UefiCnvWlanWRDD"
--#define IWL_UEFI_ECKV_NAME		L"UefiCnvWlanECKV"
-+#define IWL_UEFI_ECKV_NAME		L"UefiCnvCommonECKV"
- #define IWL_UEFI_DSM_NAME		L"UefiCnvWlanGeneralCfg"
- #define IWL_UEFI_WBEM_NAME		L"UefiCnvWlanWBEM"
- #define IWL_UEFI_PUNCTURING_NAME	L"UefiCnvWlanPuncturing"
+ 	return __ip6_append_data(sk, &sk->sk_write_queue, &inet->cork,
+ 				 &np->cork, sk_page_frag(sk), getfrag,
+-				 from, length, transhdrlen, flags, ipc6);
++				 from, length, transhdrlen, flags);
+ }
+ EXPORT_SYMBOL_GPL(ip6_append_data);
+ 
+@@ -2048,7 +2049,7 @@ struct sk_buff *ip6_make_skb(struct sock *sk,
+ 	err = __ip6_append_data(sk, &queue, cork, &v6_cork,
+ 				&current->task_frag, getfrag, from,
+ 				length + exthdrlen, transhdrlen + exthdrlen,
+-				flags, ipc6);
++				flags);
+ 	if (err) {
+ 		__ip6_flush_pending_frames(sk, &queue, cork, &v6_cork);
+ 		return ERR_PTR(err);
 -- 
 2.39.5
 
