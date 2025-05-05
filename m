@@ -1,50 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AF1C3703D6;
-	Mon,  5 May 2025 22:58:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0E7B3703A4;
+	Mon,  5 May 2025 22:58:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485901; cv=none; b=lhpbyCw3EAUZ6C3ZlOtRqTl6pwnfy/RSVicPKiKffixQPJdy6Cqleo/DYOIhuCRNERLFOrrNX0yVKtWjLxs62cBydEpke0uFsVKZ+E3KhsONo2jXG+9PfcPOzg4SIkFntt09gH6+5LEXkM6GcL7VrdDPeVr5ntlRXwdg1VlOaoU=
+	t=1746485894; cv=none; b=WR32ufEA42vhEPOwIJJTQocmBn1ETMK+JAPJmYuFUNyDcQL8Sg0KrjEXvLKkXD6OKjTtEyqdJrFL2q8CYwRWwWtviDx8Im/JqLoTtIlofbtw60wDyls30VXjVYfrmZkJMm8v8S/SlHSsZckRQez9bPsKtRk5yTHe9PIz/0KbhYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485901; c=relaxed/simple;
-	bh=rK8UgpSEnGG6WpUj0pfBe+FyfH9qHFqoFjKvOIgzK70=;
+	s=arc-20240116; t=1746485894; c=relaxed/simple;
+	bh=LVkJi8mchCIWcADcYyvzANclyip1P0il3Yw/lKBvEI4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gg4E6/qefx+SK/wOy2BBm4XmYXnns0wKfNG8oq8eaYvIEWsnB+jnKV94xfkKWxcMW5eaizH1a/VGJzO1pz45ATdVdqEytVpo7UhvMetmIuBGja2v6xbxNEf4mQTYVdrcygq+4H8Th6Kli8Jq/j3DRRG+btH44Rj6bzsfM1auaGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B2rvLQQz; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=iUB3ow8WDnlbTx1uSo8gxqbHrOASGUMEYsxl7jdLN7Gg0tPFxMN548euHJvpzFlL4+Aato+Dc+/3xjkwZGpS2maBypmOvJ9YkKxboNINrwr+assZQ8V63D1anAWfnJ6M9ruQ6gnzAtJr6ehQA7+FujH7lY50AGvMSRG8KGRp//I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bXkmY7az; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B2rvLQQz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CA8BC4CEE4;
-	Mon,  5 May 2025 22:58:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bXkmY7az"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87DC0C4CEEF;
+	Mon,  5 May 2025 22:58:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485901;
-	bh=rK8UgpSEnGG6WpUj0pfBe+FyfH9qHFqoFjKvOIgzK70=;
+	s=k20201202; t=1746485894;
+	bh=LVkJi8mchCIWcADcYyvzANclyip1P0il3Yw/lKBvEI4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=B2rvLQQzRDJ3JsLrKEzd/ot0nZ2Gf34/MzzJ6uWzRWjD+ncZ1w6ZkC/dUwKlb/kfC
-	 oyEycdzXDsm8XfTKGTPM+Cf0cSjWGFT1hT8eq5Mr6meSUjmOWpO5MR/iHsqCGkKfpO
-	 SoGnRvCYjJRVZ5GB6n+WiryMbQVzyVa4aWWd5dXueTj18Ruq3UTZPHI+UGzG9H9jDZ
-	 wFDMSPxCKjakJTuTCHN0Htes/Hg6eormlulUbV7MtMZ6rnCsp2IyHuyreAnbuTM9s9
-	 T+S3mjgOL2uGdfLMbcddSk+iETMpKKKH98aq46xwrTib9Ko5dlS81Cy5ELY6yo1zB7
-	 xppwSbHuPiSYw==
+	b=bXkmY7az9lnR6fPwK9u0nyCTXfY59o2XGVwUWqz5LsjE9ues34hfQ/Bq89TayZWNd
+	 ZyKirQ3ICvdNGG1wktI+hjVkeemUVlW3gC3BmRiwx8J7MfMVQZYxjo6tw1K3Vjjm/Q
+	 YYHkcmtT+3RyJehSovC8dkUvX3HDzu6nCXdejYkFGwTme7AGCyuWc4OiOrioX4H4W5
+	 PhFm5HtjvvjpSGCO368avmqs4pM/1rWxpsxbRBBwoNoT0eif5f9mTFJ7ABnLQcdkMd
+	 a6tM3ArNoR09au+S+EVYwkQdCEglt9tfTj/rpBmWQqLMeYxuTeNm7c7pzOFbDvyU1n
+	 GRtAlLJzupqcQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Tiwei Bie <tiwei.btw@antgroup.com>,
-	Johannes Berg <johannes.berg@intel.com>,
+Cc: Stanley Chu <yschu@nuvoton.com>,
+	Frank Li <Frank.Li@nxp.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
 	Sasha Levin <sashal@kernel.org>,
-	richard@nod.at,
-	anton.ivanov@cambridgegreys.com,
-	johannes@sipsolutions.net,
-	rppt@kernel.org,
-	dave.hansen@linux.intel.com,
-	akpm@linux-foundation.org,
-	richard.weiyang@gmail.com,
-	kevin.brodsky@arm.com,
-	benjamin.berg@intel.com,
-	linux-um@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.6 055/294] um: Update min_low_pfn to match changes in uml_reserved
-Date: Mon,  5 May 2025 18:52:35 -0400
-Message-Id: <20250505225634.2688578-55-sashal@kernel.org>
+	miquel.raynal@bootlin.com,
+	linux-i3c@lists.infradead.org,
+	imx@lists.linux.dev
+Subject: [PATCH AUTOSEL 6.6 052/294] i3c: master: svc: Fix missing STOP for master request
+Date: Mon,  5 May 2025 18:52:32 -0400
+Message-Id: <20250505225634.2688578-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -59,34 +53,35 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Tiwei Bie <tiwei.btw@antgroup.com>
+From: Stanley Chu <yschu@nuvoton.com>
 
-[ Upstream commit e82cf3051e6193f61e03898f8dba035199064d36 ]
+[ Upstream commit 0430bf9bc1ac068c8b8c540eb93e5751872efc51 ]
 
-When uml_reserved is updated, min_low_pfn must also be updated
-accordingly. Otherwise, min_low_pfn will not accurately reflect
-the lowest available PFN.
+The controller driver nacked the master request but didn't emit a
+STOP to end the transaction. The driver shall refuse the unsupported
+requests and return the controller state to IDLE by emitting a STOP.
 
-Signed-off-by: Tiwei Bie <tiwei.btw@antgroup.com>
-Link: https://patch.msgid.link/20250221041855.1156109-1-tiwei.btw@antgroup.com
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Stanley Chu <yschu@nuvoton.com>
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
+Link: https://lore.kernel.org/r/20250318053606.3087121-4-yschu@nuvoton.com
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/um/kernel/mem.c | 1 +
+ drivers/i3c/master/svc-i3c-master.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/um/kernel/mem.c b/arch/um/kernel/mem.c
-index 38d5a71a579bc..f6c766b2bdf5e 100644
---- a/arch/um/kernel/mem.c
-+++ b/arch/um/kernel/mem.c
-@@ -68,6 +68,7 @@ void __init mem_init(void)
- 	map_memory(brk_end, __pa(brk_end), uml_reserved - brk_end, 1, 1, 0);
- 	memblock_free((void *)brk_end, uml_reserved - brk_end);
- 	uml_reserved = brk_end;
-+	min_low_pfn = PFN_UP(__pa(uml_reserved));
- 
- 	/* this will put all low memory onto the freelists */
- 	memblock_free_all();
+diff --git a/drivers/i3c/master/svc-i3c-master.c b/drivers/i3c/master/svc-i3c-master.c
+index fa1f12a89158c..3cef3794f10d3 100644
+--- a/drivers/i3c/master/svc-i3c-master.c
++++ b/drivers/i3c/master/svc-i3c-master.c
+@@ -503,6 +503,7 @@ static void svc_i3c_master_ibi_work(struct work_struct *work)
+ 			queue_work(master->base.wq, &master->hj_work);
+ 		break;
+ 	case SVC_I3C_MSTATUS_IBITYPE_MASTER_REQUEST:
++		svc_i3c_master_emit_stop(master);
+ 	default:
+ 		break;
+ 	}
 -- 
 2.39.5
 
