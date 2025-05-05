@@ -1,127 +1,140 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA97525B67E;
-	Mon,  5 May 2025 14:59:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02E5725C6E8;
+	Mon,  5 May 2025 14:59:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746457142; cv=none; b=PPg8PUm9rPl6fsNNc1kiqyLb5woXtxi+jFNy+wGobTPVEr7NJtpx0qRtHDMv33IuUv+gLJFr5a7hYqryApP1rio/c4JavhAR4JmutQmLqCJNKY7ldlAMCjuxwkdSAonZ2ifr0RF7ZruP/QuygSm6x2PSDF8irc/EhUMzW+/PlQ8=
+	t=1746457163; cv=none; b=FhxrOojyo36aScsP/V05y51RIyVl9ghBUj839HPXCboJlIHd1QN48pA2FfAr1nuh4fU6ybkPNOebk5kdtJr43Yy3IbVBNUoPnlM+tOkAeT8qNOOzpUvTzaNaQOV4jgWzQdVp131rt9Y+t1uPtFrjF6jV560970kCNz/yJGGxcHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746457142; c=relaxed/simple;
-	bh=LRTzkroHpUqBBS66F+/5iJ/bP7dLfCm5QyQ+g9hrpLk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ITzYTM3BXK658KO3A+z8R1SF/h4J0t9nG8V3NLS1jCCeZkioWiNArDx7EmL0aigNDdaNjk5OBwhiq/3i/RpWpVkRwAMYyHPFizznfz+Yi+OSH4t1o5LP9+AaVY8nt8MIJCLacBP/B1J0f8+2btHYXWUidbfBsILcWoDnMB2DJ9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aSyErdpy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746457163; c=relaxed/simple;
+	bh=VEbBIXsH7MUvDCOAgVc1q8IYt1rAt9JLlwuSclW3l2A=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KL+XhtKrNqJWx1Eh76G8rbJD6aSEoZgWQya6xUwtFMhISv7U8aiMEoce2b0il5RMvPd5+xXRu6Fylsmq3Q660nGJ5hrT7amJj7IkKKKiu+BlRlomLfDD2P+vQaVpvZnfUexbj+S3VfosdWjjTJmP4kB+yaRJO2BJ8gmsPmX0piM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kGGQgkRs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aSyErdpy"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6963FC4CEF4;
-	Mon,  5 May 2025 14:59:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kGGQgkRs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CE7DC4CEEE;
+	Mon,  5 May 2025 14:59:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746457142;
-	bh=LRTzkroHpUqBBS66F+/5iJ/bP7dLfCm5QyQ+g9hrpLk=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=aSyErdpyIssxCH0cyBCBG4XRW0vCWkp/D/YYrWNkhF2ZRgKruYWKAfV8yAAM/uZNw
-	 Qpa9sBhUQRMgkzh15IiVSW3UKlHBrYudeIQyyGk5X7ApOgB1vqlKKsCcC+4xNVpkzA
-	 SZ0u/4CFFUuAxmgWYPb3rFC3GmBX9YFu6Kr327TY4ZWZfLJUVfSxwps2+gZem8xhgC
-	 /6NY0ox+vBU4cw9cf+R0RV2X7pgmQG56pKns054Fw2vxB1LlINtBeyy3fjWsoLec08
-	 oZ6scWjXpNkDcmDwccmXMfgg7pvb7X0VLhC7QoGJoKjl7Nb6OhGyqvJvg98gkqmVot
-	 xGGIqJrpPGmoA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6131EC3ABBC;
-	Mon,  5 May 2025 14:59:02 +0000 (UTC)
-From: Aaron Kling via B4 Relay <devnull+webgeek1234.gmail.com@kernel.org>
-Date: Mon, 05 May 2025 09:59:01 -0500
-Subject: [PATCH v4 4/4] PCI: tegra: Drop unused remove callback
+	s=k20201202; t=1746457162;
+	bh=VEbBIXsH7MUvDCOAgVc1q8IYt1rAt9JLlwuSclW3l2A=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=kGGQgkRshNVHr212uas8eJKzVUU61A4BscFMeLplKLWhUMOx75BEjoYLmq5ng73d0
+	 aXgzT11o8Otm3aonbN8TvpjHf3jPWoYGW8GI5p+0iV/5kcvlQwvw7DWT8fjsUPacZ8
+	 nTkftVZBnWrzxmcMDyW+h2B0rC8V6tbmFHS6Ibxp7UsGBTKjYLJC5Rm2aIcH5I5eOW
+	 qodLFjLvWHx9aEkqA2HNQO0gcpFotJTQJndnY79MbKEq8OeuDHJ8SSm+0NXWNEwqHG
+	 ANcdrDcvpX1hGjuYnLY+YPurRrBqDha0/pIUZeJfZpgCv8GDaT7wwQYfey76IGfXrh
+	 1gAlPNrcMkaNQ==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uBxHr-00Bkz8-AA;
+	Mon, 05 May 2025 15:59:19 +0100
+Date: Mon, 05 May 2025 15:59:18 +0100
+Message-ID: <86ldrbgl2x.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Sebastian Ott <sebott@redhat.com>
+Cc: Oliver Upton <oliver.upton@linux.dev>,
+	Quentin Perret <qperret@google.com>,
+	Fuad Tabba <tabba@google.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Mark Brown <broonie@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: LM regression: fce886a60207 KVM: arm64: Plumb the pKVM MMU in KVM
+In-Reply-To: <e1117e68-ef05-9de2-d018-685bb7d86bb5@redhat.com>
+References: <3f5db4c7-ccce-fb95-595c-692fa7aad227@redhat.com>
+	<86msbrguka.wl-maz@kernel.org>
+	<e1117e68-ef05-9de2-d018-685bb7d86bb5@redhat.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250505-pci-tegra-module-v4-4-088b552c4b1a@gmail.com>
-References: <20250505-pci-tegra-module-v4-0-088b552c4b1a@gmail.com>
-In-Reply-To: <20250505-pci-tegra-module-v4-0-088b552c4b1a@gmail.com>
-To: Thomas Gleixner <tglx@linutronix.de>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
- Thierry Reding <thierry.reding@gmail.com>, 
- Jonathan Hunter <jonathanh@nvidia.com>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, 
- Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
- linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, 
- Aaron Kling <webgeek1234@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746457141; l=1781;
- i=webgeek1234@gmail.com; s=20250217; h=from:subject:message-id;
- bh=miAFNHWEF9RJxGC8gWXehC/2+WRlc/Ou80W+mmEfiFc=;
- b=VxWydBojj4iW1Ijuwovo5IQ9vqX/in+EsYY0WDnypg5xmW4Q2g9vI9d6lUykgCKAtRdZU7OCn
- +owjcHXA2DgCy/zWR1931CqjgR748RFtWhmGo3BmB4Rs668bnJne/OA
-X-Developer-Key: i=webgeek1234@gmail.com; a=ed25519;
- pk=TQwd6q26txw7bkK7B8qtI/kcAohZc7bHHGSD7domdrU=
-X-Endpoint-Received: by B4 Relay for webgeek1234@gmail.com/20250217 with
- auth_id=342
-X-Original-From: Aaron Kling <webgeek1234@gmail.com>
-Reply-To: webgeek1234@gmail.com
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: sebott@redhat.com, oliver.upton@linux.dev, qperret@google.com, tabba@google.com, catalin.marinas@arm.com, will@kernel.org, broonie@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-From: Aaron Kling <webgeek1234@gmail.com>
+On Mon, 05 May 2025 15:01:24 +0100,
+Sebastian Ott <sebott@redhat.com> wrote:
+> 
+> On Mon, 5 May 2025, Marc Zyngier wrote:
+> > On Mon, 05 May 2025 11:52:00 +0100,
+> > Sebastian Ott <sebott@redhat.com> wrote:
+> >> Doing back and forth migrations currently fails on arm after a couple iterations.
+> >> During the failing migration KVM_RUN exits via guest_abort and returns -ENOMEM.
+> >> I can reliably reproduce this by migrating between 2 qemu instances on an ampere
+> >> altra machine. This fails after < 5 iterations. In this case qemu would spit out
+> >> smth like this (other than that - nothing in the logs):
+> >> 
+> >> error: kvm run failed Cannot allocate memory
+> >>  PC=0000aaaae7d48590 X00=0000aaaae80a2e00 X01=0000aaaae7ea2fc0
+> >> X02=0000000001d3a5d0 X03=0000aaaae7eace8c X04=000000003b9aca00
+> >> X05=000000000000004a X06=000000000000004a X07=0000000028000000
+> >> X08=0000000000001d70 X09=0000000000000018 X10=000144b7d0000000
+> >> X11=00ffffffffffffff X12=000000008378f367 X13=0000aaab1a202d70
+> >> X14=0000000000000000 X15=0000000000000000 X16=0000ffffa2e2f7a8
+> >> X17=0000ffffa2541f20 X18=000000000000a000 X19=84bfda6288cf2dd6
+> >> X20=0000aaab1a1f1ce0 X21=000000007fffffff X22=0000ffffc5431788
+> >> X23=0000aaab1a17db60 X24=0000ffffc5431770 X25=0000000100000000
+> >> X26=0000004100000000 X27=0000000000000001 X28=0000aaab1a1f1c20
+> >> X29=0000ffffc54316d0 X30=0000aaaae7f8cd24  SP=0000ffffc5431650
+> >> PSTATE=20001000 --C- EL0t
+> >> 
+> >> Guest and host are otherwise idle, kvm is in normal VHE mode.
+> >> 
+> >> Git bisect points to (fce886a60207 "KVM: arm64: Plumb the pKVM MMU in KVM")
+> >> I also double checked that by reverting this commit on top of 6.14.
+> > 
+> > Thanks for find the triggering commit. Can you further identify *what*
+> > causes the -ENOMEM? The only new -ENOMEM in that patch is the one
+> > added to topup_hyp_memcache(), which shouldn't be called.
+> 
+> The kvm_pgtable_stage2_map() call in user_mem_abort() returns -ENOMEM
+> because the memcache pointer was not initialized!
+> 
+> It looks like smth like this without other conditions could do the trick:
+> 
+> if (!is_protected_kvm_enabled())
+> 	memcache = &vcpu->arch.mmu_page_cache;
+> else
+> 	memcache = &vcpu->arch.pkvm_memcache;
+> 
+> (I'll try this now)
 
-Debugfs cleanup is moved to a new shutdown callback to ensure the
-debugfs nodes are properly cleaned up on shutdown and reboot.
+Right, we end-up with an uninitialised memcache variable. Why isn't
+the compiler screaming?
 
-Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
----
- drivers/pci/controller/pci-tegra.c | 19 ++-----------------
- 1 file changed, 2 insertions(+), 17 deletions(-)
+I think you can indeed simply hoist the init of memcache very early
+on, which should solve hopefully solve the issue.
 
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 1539d172d708c11c3d085721ab9416be3dea6b12..cc9ca4305ea2072b7395ee1f1e979c24fdea3433 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -2674,27 +2674,12 @@ static int tegra_pcie_probe(struct platform_device *pdev)
- 	return err;
- }
- 
--static void tegra_pcie_remove(struct platform_device *pdev)
-+static void tegra_pcie_shutdown(struct platform_device *pdev)
- {
- 	struct tegra_pcie *pcie = platform_get_drvdata(pdev);
--	struct pci_host_bridge *host = pci_host_bridge_from_priv(pcie);
--	struct tegra_pcie_port *port, *tmp;
- 
- 	if (IS_ENABLED(CONFIG_DEBUG_FS))
- 		tegra_pcie_debugfs_exit(pcie);
--
--	pci_stop_root_bus(host->bus);
--	pci_remove_root_bus(host->bus);
--	pm_runtime_put_sync(pcie->dev);
--	pm_runtime_disable(pcie->dev);
--
--	if (IS_ENABLED(CONFIG_PCI_MSI))
--		tegra_pcie_msi_teardown(pcie);
--
--	tegra_pcie_put_resources(pcie);
--
--	list_for_each_entry_safe(port, tmp, &pcie->ports, list)
--		tegra_pcie_port_free(port);
- }
- 
- static int tegra_pcie_pm_suspend(struct device *dev)
-@@ -2800,7 +2785,7 @@ static struct platform_driver tegra_pcie_driver = {
- 		.pm = &tegra_pcie_pm_ops,
- 	},
- 	.probe = tegra_pcie_probe,
--	.remove = tegra_pcie_remove,
-+	.shutdown = tegra_pcie_shutdown,
- };
- builtin_platform_driver(tegra_pcie_driver);
- MODULE_AUTHOR("Thierry Reding <treding@nvidia.com>");
+> 
+> > Also, a failure to allocate would leave some nastygram in the kernel
+> > log, so it is unlikely to be an actual failure to allocate.
+> > 
+> > Is it the first KVM_RUN that fails after migration?
+> 
+> Nope, it happens on the side that triggers the migration.
+
+Probably because splitting pages requires allocating some memory, and
+all of a sudden you trigger the allocation from the memcache. Boo.
+
+Thanks for spotting this, I'm looking forward to the fix!
+
+Thanks,
+
+	M.
 
 -- 
-2.48.1
-
-
+Without deviation from the norm, progress is not possible.
