@@ -1,77 +1,78 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27B271E9B3B
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 12:36:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D09F1E9B3B
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 12:36:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746448588; cv=none; b=Nc6lt2tHBsLdLnx/RLc3BGXcbjtmcI85ogKZirVqoObIq7QbXhNYrNfpKesibCvushAvUdMhpFoTN3kGnqOGMkNeE7Rf17Vgc80V0WeMnJ15y7VyNqlClXzRWRd53+6BddtMcaf/Kq3x5/vOvPAC/DFycxZ/kVMWzaM+UWnqtZo=
+	t=1746448598; cv=none; b=pryLYiHeNLG9RtY4rH1S4dhWm8cP/U9SQVmeDx7VAV9JcDAqArsi+5zHj4C7dSAKzkFrtqhpOoJ3bZ/NYcWfWvKKAYov7NmzTT4qzJVTgNXTPVUku3jvrOPamcrYxzKrGUT8E/8azgSSv9W+gXJe6PZhg9Y0OhjyJeMjllzuBAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746448588; c=relaxed/simple;
-	bh=LC3z7RCWc/JvyjQUbetuKHaUmEJ8vDFK9bVb7iQVdFM=;
+	s=arc-20240116; t=1746448598; c=relaxed/simple;
+	bh=ciVXKndoB8DFlJSdxdKzPqCGdMU2iaoazWqC8viFvTg=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=GZBPVqT6X7GWRbyYCCdy+rDBwDQAHknxGpTnheXgj/QrcTO7i1LwTBuB7YIDbZSx6G9vEcMAD3Lha13wphDd3PczyxoZdqxncjG+cNRkRXORvp34IQoFjawAOiTfq8fleYqimbnw1ITtxGBwKiv2aoDJonRm4XlLvgNnd1ZnKH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ebwuewjD; arc=none smtp.client-ip=209.85.221.47
+	 MIME-Version:Content-Type; b=DMwI8Evl3Leh7uQUzmiflgOrBYPismCV1NtsKZbNkgjF+GfweaD2vaA4hX6FMgfL/nlgbu9oHZZ60iqd3dx8/WxUf0bD7Te2vMfDRADvYsYzg4XxGaG/ShBE3BK8kN16m4SpH7yt4uYT9xscrijk/z1vrOfvUCGY/L/bj5pCaFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=slb9qL5I; arc=none smtp.client-ip=209.85.128.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ebwuewjD"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-39ee623fe64so4424870f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 05:36:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="slb9qL5I"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43ce70f9afbso37228785e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 05:36:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746448585; x=1747053385; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1746448595; x=1747053395; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:date:message-id:subject
          :references:in-reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Pms5fvQ0dnJoBWv+1H4MBoKeVfIfZlhVgzVaTxFBOSc=;
-        b=ebwuewjDjIQjexRgfqtFdaihjgh3tNgeiISAARecivYOz2Quacw0B67MEOFyoFAL1v
-         jD5hoJIhEOt9zJb8shSBj1PE9+ouHRL0+HwtUtMDobUpXZ0xKChJKtfGLvATosVp2cXn
-         /uvIJcfW2XHKJBC+5/VmS3BpgL2EmRJ7v289LP+z8xicwGmB/juYlezyuVgXXVFpi+bT
-         mI2lnwZKw3KHXPw2gl6WxIxejXOEBiSEBCzfagLE5N8aMFHjA1JAjnJIF3Xy8APM8L7b
-         ksU6UawgeAA2lOPZygd7r9O2qDINzS3GkzG58z33dnbRF0YqYhzl/P2yqVKoEuCg1/Uu
-         hk3w==
+        bh=pkzP+m0O8sqA7PP0YLwDfiJp+rK3Zs28ikPtrX0VKU8=;
+        b=slb9qL5ImUt68TmhMe074o1FUbu6qff30Vqt4eu3EEgyI1GxV2PKgMm1KwA/3G9RGz
+         fpwXB5ADlE0OysXyloRYtWRkL17QMAWwNWGtSuKAZC6i1V2qg7WJk2Qc0sb+Z8SHVMJm
+         TkFFzwwREdlnwZNdTL1g5eOY5XYit/lARM59VC+fPEsLqpgmwvJ9+Eh/IepkoP1WCYo6
+         EPo8Elj7zVD/JzH1UuA/JNh8jZiliNPwX4K5wqwLatU1URmT/FkrXaJFFxvFyMvLuacu
+         j2oZbOUEnGJkqksNKuhDMsQFnC//J6MQUEWEUiHhVu/c2OwHhOm7v/q0jgh5HXMqXKLg
+         ZBjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746448585; x=1747053385;
+        d=1e100.net; s=20230601; t=1746448595; x=1747053395;
         h=content-transfer-encoding:mime-version:date:message-id:subject
          :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Pms5fvQ0dnJoBWv+1H4MBoKeVfIfZlhVgzVaTxFBOSc=;
-        b=dCwUWViUiz/FJtseImSgFocYBwnj8QXg48bNBurZrXmEXGgOdIrpeLlUtXUuo9Cjez
-         uImI3jL/kPixBeCbzzGUyJw3AaivDB+omyJfo3oTwsZxSdoLGsM56fSn2kU1/VRd1fPD
-         nC+hlbdICxede0PpKNsi/hS65CvRNcZQUiXWPk5JWzBogTMHQbhCOI5Pp8kM9LWXLGhU
-         ZMX/xxMHVWYkf+SqQpF2bV+eCXHhGr8JihJ92AedMkTPwOBPPsXETfksJbyh3wdhOFZR
-         HwZBfj7FkSylEa/E6Tl5mQiwsdm8hxym2/69hlGBG3hpjEy2Q+Ai1SBn1SWzU0CW6a6A
-         H8wQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWpYcBJnQU/COb3MZ1/kQOzwNV1eMO2S+in+/ttW3Bz/IMQFqKO+jQnLcBYPhS2xdVRm/PJwH1nT+D0Z9k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzpDz09UbZ9/X1z3GickdC0hIv8V3IIOX779JhqgAYEczS3d9Su
-	sI/cjd6IColgQ8YJ5/b1y24413Wp9Y6uH5l7Nyml9XG11+DYiRgKF2LX5Tp7kIw=
-X-Gm-Gg: ASbGncv4ZtZrZ9WA2u/6Fx6rns7Wm4M/QLIfmSsUG9nFvXLLnuBKcj4i3v8kWSy5pf8
-	OgxHXtO2mgHdLUtRVFpp8g0181DSsrls2EWTyC1UEcz0XFgYylAR/OthCdAa1j/iocOJkhJjfY5
-	9QA6c327qrt/1nx4lOJC4STCEeE9/BNqBqAAZS+iUb+gDCZ/qG+SgyNs2zTmNyCBq+XbBnNiaPO
-	hGd12hQFhnNAqZtGAAm2U1wno455V7Y6XZy6KSo9bMV7YA49BA8xrOnywNixUKUxtF1LN4RsPJA
-	+cZIU52sBMP7BdpW7xYesbCTBZQKUUiqy53mm+NRN2liO258bUXXO687OM5aeMf9y6SxjOJs
-X-Google-Smtp-Source: AGHT+IGsEliGJnwJASNNzDOIlUfeubpmj2r4ysjGNDPlKRJUSM2MTHWLJu/fnMkKxMkulAhjanR1Kg==
-X-Received: by 2002:a05:6000:1a8a:b0:39c:d05:3779 with SMTP id ffacd0b85a97d-3a09cf4d5admr5929318f8f.49.1746448585435;
-        Mon, 05 May 2025 05:36:25 -0700 (PDT)
+        bh=pkzP+m0O8sqA7PP0YLwDfiJp+rK3Zs28ikPtrX0VKU8=;
+        b=Nm8uwwHNMnW0ahaPOGzuAZnPOw+fpSrtqHArhdpHiYE/o4s4OAWuva465Plh76hlK/
+         MoZFjJlsxHNXMHWuoi6jZmk1iO9krLwHFag2TPrPXpChoOPVM5J1P2R720jP4TR15ADh
+         vYLBA+p63sNFszXe+hzBoY0g5SYrhC0ZETTc8M17BVrn66bkMv14rf7vHZdOUnVokS8Y
+         9leMqgfdLnRjucyGAY//Zh+zDpUYAafWO74vZbIUrN0rGdE1puTPH8GTcTtCxWMxYNZT
+         n65PUv6BThInLgHuhDfDX//tcC9AbG5cbOoj14dSg9ldbPz+XjFmfo4WW0yI6nhO+SMX
+         rXJw==
+X-Forwarded-Encrypted: i=1; AJvYcCV7iWrAF0iLJr1OiIM4zl5dYQVcyufXO1DfM23FJnzXekapit35aCTatnrbkJjXCpyEX5GXi0AxCsug0SQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3DKMiSlGwPURYlgR/7K27aIEFvgV2Ttzi8E5CsDoBVcZ1IZLZ
+	DUxAGHr2oxXYUBfavDzw97Rt3ekGBk7HbFe1BlDkuDeAFgAm4HOaPbNUUIncVpI=
+X-Gm-Gg: ASbGnctVX46byhYkgSUr8DlP3GpiPS9yqu9P4RjlL8XLi/d0LPZZGTKLeZ3+4Fk6e4d
+	8YGNMl16XHroZsLawuJlSSEewr/G14eED2aRloTdb21/rtmSeHDnuNR452hW49PkaDzOrAOsJvc
+	JX1tLTbGgOjQR/30URDjDS+5wysXdTl/Z3M9uH6LRDRs8NPnzOYDZG/1jWdqzu5OuhJ01vAxVTr
+	YJYqq8PrMFqrVjRWe9hppwd+GOxuSVmSshlXVgfgmc49SRsppr/wpOFYgDF5MeQIL/NxiflI5wP
+	6lskyG6WuykeO7oIFslZSPfrMTfpVuYI3IZ5F1Tdn2eKDgTR6zTk/exZBxNRrA==
+X-Google-Smtp-Source: AGHT+IG2COW4gRylaTrNX3Gp5wWIIrkuAhTbqRncgXIIyfrr3eqB1u8KpMIP1+ZUs/fDXY7fXIMnZg==
+X-Received: by 2002:a05:600c:5111:b0:43c:fb95:c76f with SMTP id 5b1f17b1804b1-441c96a2795mr42420605e9.9.1746448595319;
+        Mon, 05 May 2025 05:36:35 -0700 (PDT)
 Received: from arrakeen.starnux.net ([2a01:e0a:3d9:2080:8261:5fff:fe11:bdda])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099ae0cefsm10434442f8f.15.2025.05.05.05.36.24
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b8a286c4sm131072725e9.25.2025.05.05.05.36.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 05:36:24 -0700 (PDT)
+        Mon, 05 May 2025 05:36:34 -0700 (PDT)
 From: Neil Armstrong <neil.armstrong@linaro.org>
 To: Kevin Hilman <khilman@baylibre.com>, 
  Jerome Brunet <jbrunet@baylibre.com>, 
  Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
- linux-kernel@vger.kernel.org, Christian Hewitt <christianshewitt@gmail.com>
-Cc: stable@vger.kernel.org, Emanuel Strobel <emanuel.strobel@yahoo.com>
-In-Reply-To: <20250503084443.3704866-1-christianshewitt@gmail.com>
-References: <20250503084443.3704866-1-christianshewitt@gmail.com>
-Subject: Re: [PATCH] arm64: dts: amlogic: dreambox: fix missing clkc_audio
- node
-Message-Id: <174644858455.1377517.9885445879892405270.b4-ty@linaro.org>
-Date: Mon, 05 May 2025 14:36:24 +0200
+ Conor Dooley <conor+dt@kernel.org>, linux-amlogic@lists.infradead.org, 
+ Ferass El Hafidi <funderscore@postmarketos.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, 
+ Artur Weber <aweber.kernel@gmail.com>, Karl Chan <exxxxkc@getgoogleoff.me>, 
+ Christian Hewitt <christianshewitt@gmail.com>
+In-Reply-To: <20250319190150.31529-2-funderscore@postmarketos.org>
+References: <20250319190150.31529-2-funderscore@postmarketos.org>
+Subject: Re: [PATCH v5 0/2] Add support for Xiaomi Mi TV Stick
+Message-Id: <174644859409.1377721.14494389382281683903.b4-ty@linaro.org>
+Date: Mon, 05 May 2025 14:36:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -84,19 +85,33 @@ X-Mailer: b4 0.14.2
 
 Hi,
 
-On Sat, 03 May 2025 08:44:43 +0000, Christian Hewitt wrote:
-> Add the clkc_audio node to fix audio support on Dreambox One/Two.
+On Wed, 19 Mar 2025 19:01:48 +0000, Ferass El Hafidi wrote:
+> This patch series aims to add initial support for the Xiaomi Mi TV
+> Stick.
 > 
+> Xiaomi Mi TV Stick is a small Amlogic-based Android TV stick released in
+> 2020, and known as `xiaomi-aquaman` internally (in the downstream kernel,
+> u-boot, ...)
+> Its specifications are as follows:
+>  * Amlogic S805Y SoC (believed to be mostly identical to S805X)
+>  * 8 GB eMMC
+>  * 1 GB of RAM
+>  * Wi-Fi + Bluetooth
+>  * Android TV 9, upgradable to Android TV 10
+>  * Google-certified
 > 
+> [...]
 
-Thanks, Applied to https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git (v6.15/fixes)
+Thanks, Applied to https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git (v6.16/arm64-dt)
 
-[1/1] arm64: dts: amlogic: dreambox: fix missing clkc_audio node
-      https://git.kernel.org/amlogic/c/0f67578587bb9e5a8eecfcdf6b8a501b5bd90526
+[1/2] dt-bindings: arm: amlogic: add S805Y and Mi TV Stick
+      https://git.kernel.org/amlogic/c/4954ec9300cfe7ab6f1de1c93c56c236ac0a07e5
+[2/2] arm64: dts: amlogic: add support for xiaomi-aquaman/Mi TV Stick
+      https://git.kernel.org/amlogic/c/f5d4227c6dcab047579cca7b8e31a476ecdebf7b
 
 These changes has been applied on the intermediate git tree [1].
 
-The v6.15/fixes branch will then be sent via a formal Pull Request to the Linux SoC maintainers
+The v6.16/arm64-dt branch will then be sent via a formal Pull Request to the Linux SoC maintainers
 for inclusion in their intermediate git branches in order to be sent to Linus during
 the next merge window, or sooner if it's a set of fixes.
 
