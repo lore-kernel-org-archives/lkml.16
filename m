@@ -1,111 +1,108 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7055E1A5B92
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 05:35:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68AB5140E30;
+	Mon,  5 May 2025 05:37:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746423349; cv=none; b=GMighkHHWMOTYOvrMO4VD8+jb0++CGdpYnZQ1m3w+kXGLmcyxQwSBF6J8nvRZsouOXkAqY1qELJ5N1gFHotF+MSzXefcRNKH3LVh4KgDLMY4MUwETlc4efToqVXHT0v3zhuQeYoB+3bBZdqktY8sYeD1LFx29kEQ/Teu1FAZstQ=
+	t=1746423457; cv=none; b=FUn7iR7+Q3HUPLlE398qunw0wHycImy7iifwr+St+tQ/l7GaJAsEBEsT66Aqz9Ig05V1aJ7uVugHx4XtDl7yIQIn957Eg9LTiAYgYqgfKzPmXa/etHZPV+OqCPNZ+lLyAhLmLz181AdysmcXJEaM1eEY2jxZ8fmbWBJkwLQNIG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746423349; c=relaxed/simple;
-	bh=TrFyW56Y2m5djMks9z2jgPyhCwUwerbPC9JwCgkCr38=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Kyuatw4eLOzJ+Fke1acz3Qylxr2wQ4FjW1ICCVo4HmqLdvDjRiXP/g9BbaHzKhmzDFvEiSeWId+b9TfegUI0eQwxxtwTXeBHuhK1mQd0oOfxp48LfGf6dD1Tjz/ZUKBR/Pmtc/G3v1lNzkn3B4u7eAqmxxYZUdF8WAdxm22X52w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=usXHinRh; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746423457; c=relaxed/simple;
+	bh=Al4K5e1+agXGNWYOJPi3g9w45mWzI7ikU+sRe9IiBmI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k0UN7xFfSDGqXvA5BhZGoDWE9fFTrwj0iaEM6dIPB5EVFS6Ct6R7R+YdqXJiqBqWwPYn/il3c3O+9ZjbfPJeD84WQklCzFBGOc0tw5QAco1sYuu/GS6roCKZLdb/t6glbA52cFXFNiR3/iKkllZtCYgSvqlJUCCh23o0zpwqDUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kkmxk/VM; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="usXHinRh"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43cf06eabdaso31094455e9.2
-        for <linux-kernel@vger.kernel.org>; Sun, 04 May 2025 22:35:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746423346; x=1747028146; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vtiRpeVXxR9eCvOOBV922sOn/8w2n9LL1EWjuBecP8U=;
-        b=usXHinRh1rfgRaTqRd44up2xKkM3JgSi2Q0T03gm8Td5N2pq+Y/zFfVUUGLqW7Eu7L
-         xPEpvgVOzd0L8v8a4e0AHPOm0jLS7uW+UWt57GNZaREnq6dubmvlCG4CUTl8+XoR80my
-         DUeY+5lBYbe1WCj3fOZm0OcMmowo+J4iASiR30Au9gG25pAeC8N1S89nO99ecicHFrZp
-         YMEs12BeULXs6igIWyhUsFWHJv11g08Emcn+F3Z1E2lwsWWqrrSb0jUghu9Eb6PODxSk
-         rtxap9Vfg+rATJenhchqBoUvSUMcFY3Rl9I2eIOUsFSegXg/kOFswJqhiRbKCXCQpQzi
-         XG2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746423346; x=1747028146;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vtiRpeVXxR9eCvOOBV922sOn/8w2n9LL1EWjuBecP8U=;
-        b=v5YInSUwARzxWNuR6u0XIBcgwgkCl7HbktYAggtlVxT+3XwRMCJw8vEUGvtFWO1gwt
-         CKGiZBr/eTN79/TnM8rfzLR0hTs71uyaXkurnJiJ6XE8C2f5HepD6hRqnEC5faVq8Jxc
-         B2DEZY0sCkCqz+kOMCUDV9F9BTEaeFdgdz9+F720QUQCIpOQ2rs9lQb2GggerU5q6K+s
-         rtnsPfq7jRmpQK0ezbyTvXBk/m7LPA9CUH0yihWxx0plhwWHgFDmackOnBJiKip+CpLj
-         cW0GFSCcn8EF4pdhL+0OBr8pWOfdzbcmQ++xQ1Y4DO5uMTQgw6NOqLn2hfbtT8EkJvE5
-         KoJw==
-X-Forwarded-Encrypted: i=1; AJvYcCWy2AFpgfGucQ5vUYxqhEBt1gvELfH+ucdWU0VJ3e1Lseke1pFcMDdm6AMgY++EEi1QfogKcNZmZSufBCg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzcbmJPDtSRVBELq1K1UowZfD6kHCetoqYkAMvq8qJWTupJZWQa
-	FeE4SKJMa8Ljb9GH6pFh4io50Qop3K/tDAS+7XVb/eCzR6P9S44tKAm/cLObZgs=
-X-Gm-Gg: ASbGncsUjV9a9AqEnQKMpKarz7col8BrcfC78gYIrY31ZfyRxQg2jSXxupF/OfT/kiz
-	80MGeoF7RzhA7+npIJpKftl/ppcVlin+1nW4CgHJd67Cj+BlCTHcxB5Jo47KF7WHW0dWuhsiT7t
-	DlMFhUWkYywIJcgFvn3uDNgylHb7tP4bjqkdoU9kZYri7oBQs7ooUEd33AfSfryzOVJRLNHZtjE
-	JZyhxqr9WH7FKBGcXkOYTfRGHz3l0ugJ2ZF71zkikfJByhZg0qyJdCdEvxWG64FEzXg+EnyKBf4
-	jcFZG3Wd3iO0VdT3jreMFBwRTyw3gvQuFDZksCkIE5nc22H1Cj1f1oK6C4fxWu5kQT/KYlYUluO
-	+7Mx4
-X-Google-Smtp-Source: AGHT+IF9Cgs7u7g3N65e59enpUAXh9IV5tRS5n72PCqZAt3FK4OAibdOBXfsQEdn8nqmP06W58BwVw==
-X-Received: by 2002:a05:6000:4285:b0:39c:16a0:fef4 with SMTP id ffacd0b85a97d-3a09fd770a6mr3798232f8f.24.1746423345714;
-        Sun, 04 May 2025 22:35:45 -0700 (PDT)
-Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a099b172a8sm9361125f8f.91.2025.05.04.22.35.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 04 May 2025 22:35:45 -0700 (PDT)
-Message-ID: <c3a3ab95-0129-4cae-9494-817d7e2b49be@linaro.org>
-Date: Mon, 5 May 2025 07:35:44 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kkmxk/VM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746423455; x=1777959455;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Al4K5e1+agXGNWYOJPi3g9w45mWzI7ikU+sRe9IiBmI=;
+  b=kkmxk/VMHJtpf38dk4pJNxQ/I+2XHK5GRLCt4gIR5mzFK1PLzYgaG/i3
+   gI9Iug+E2jlr3hVeB7/d/aNYJPdMRaEzyn/GhAN4c/tU10q5cQEkFTH3b
+   6ktklJL7FQc8hQw7gV6xByHXCQIKdlgzL9GQOs4QElG9n2zLS0gHNJxZ3
+   DCZNowinm6Xlolf8USuvA9voHOBR4GkdKdoi2swn/vpu42ERo4RiBXAWo
+   ep8C2aPfZKt7HyybmilQ/5QhVS3bksLpvs55iUTqOPsyDC5BewVQezxJu
+   IVq6QM9rDW2UDfcUhfegbnMa+3VCq6GIGF+ZZIIm40YYCh+Sa2ZiVuSCe
+   Q==;
+X-CSE-ConnectionGUID: KzM7ahHJSyWLsSKRZ2v1eg==
+X-CSE-MsgGUID: b8U67wK6T9aHi3mnO5+63g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11423"; a="65421745"
+X-IronPort-AV: E=Sophos;i="6.15,262,1739865600"; 
+   d="scan'208";a="65421745"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2025 22:37:34 -0700
+X-CSE-ConnectionGUID: M37Hi0EtQcqLAmvDhbW58Q==
+X-CSE-MsgGUID: 0mJ2wQ00TH+IUvpkpQ58eg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,262,1739865600"; 
+   d="scan'208";a="140306062"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 04 May 2025 22:37:30 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uBoW7-0005bd-2S;
+	Mon, 05 May 2025 05:37:27 +0000
+Date: Mon, 5 May 2025 13:36:28 +0800
+From: kernel test robot <lkp@intel.com>
+To: Magnus Lindholm <linmag7@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-alpha@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, richard.henderson@linaro.org,
+	mattst88@gmail.com, arnd@arndb.de, paulmck@kernel.org,
+	glaubitz@physik.fu-berlin.de, macro@redhat.com, mcree@orcon.net.nz,
+	ink@unseen.parts, Magnus Lindholm <linmag7@gmail.com>
+Subject: Re: [PATCH v2] alpha: machine check handler for tsunami
+Message-ID: <202505051339.kc4bhqlt-lkp@intel.com>
+References: <20250423194958.30715-1-linmag7@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] thermal/drivers/mediatek/lvts: remove unused
- lvts_debugfs_exit
-To: Arnd Bergmann <arnd@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Chen-Yu Tsai <wenst@chromium.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Zhang Rui <rui.zhang@intel.com>,
- Lukasz Luba <lukasz.luba@arm.com>, Julien Panis <jpanis@baylibre.com>,
- =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>,
- Nicolas Pitre <npitre@baylibre.com>, Colin Ian King
- <colin.i.king@gmail.com>, linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-References: <20250505052502.1812867-1-arnd@kernel.org>
-Content-Language: en-US
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <20250505052502.1812867-1-arnd@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250423194958.30715-1-linmag7@gmail.com>
 
-On 05/05/2025 07:24, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> When debugfs is disabled, the function has no reference any more:
-> 
-> drivers/thermal/mediatek/lvts_thermal.c:266:13: error: 'lvts_debugfs_exit' defined but not used [-Werror=unused-function]
->    266 | static void lvts_debugfs_exit(struct lvts_domain *lvts_td) { }
->        |             ^~~~~~~~~~~~~~~~~
-> 
-> Fixes: ef280c17a840 ("thermal/drivers/mediatek/lvts: Fix debugfs unregister on failure")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
+Hi Magnus,
 
-Applied, thanks
+kernel test robot noticed the following build errors:
 
+[auto build test ERROR on mattst88-alpha/for-linus]
+[also build test ERROR on linus/master v6.15-rc4 next-20250502]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Magnus-Lindholm/alpha-machine-check-handler-for-tsunami/20250424-035141
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/mattst88/alpha.git for-linus
+patch link:    https://lore.kernel.org/r/20250423194958.30715-1-linmag7%40gmail.com
+patch subject: [PATCH v2] alpha: machine check handler for tsunami
+config: alpha-allnoconfig (https://download.01.org/0day-ci/archive/20250505/202505051339.kc4bhqlt-lkp@intel.com/config)
+compiler: alpha-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250505/202505051339.kc4bhqlt-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505051339.kc4bhqlt-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> alpha-linux-ld: arch/alpha/kernel/sys_eiger.o:(.init.data+0x118): undefined reference to `tsunami_machine_check'
+   alpha-linux-ld: arch/alpha/kernel/sys_dp264.o: in function `clipper_init_pci':
+>> (.init.text+0x394): undefined reference to `tsunami_register_error_handlers'
+>> alpha-linux-ld: (.init.text+0x3a0): undefined reference to `tsunami_register_error_handlers'
+>> alpha-linux-ld: arch/alpha/kernel/sys_dp264.o:(.init.data+0x118): undefined reference to `tsunami_machine_check'
+   alpha-linux-ld: arch/alpha/kernel/sys_dp264.o:(.init.data+0x298): undefined reference to `tsunami_machine_check'
+   alpha-linux-ld: arch/alpha/kernel/sys_dp264.o:(.init.data+0x418): undefined reference to `tsunami_machine_check'
+   alpha-linux-ld: arch/alpha/kernel/sys_dp264.o:(.init.data+0x598): undefined reference to `tsunami_machine_check'
+   alpha-linux-ld: arch/alpha/kernel/sys_dp264.o:(.init.data+0x718): undefined reference to `tsunami_machine_check'
 
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
