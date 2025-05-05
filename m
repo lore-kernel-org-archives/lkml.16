@@ -1,270 +1,949 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F44026F452;
-	Mon,  5 May 2025 18:43:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BCA12701D8;
+	Mon,  5 May 2025 18:43:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746470634; cv=none; b=mwbLEK5ly8TSWcRiUEa7JPvHOD+XuctJKftTzA0yeR0oph9HzvLnWEn/x+hIogEDH/XlF2e6GITnmVox227Va3AWJ8QLU+KZrNfWak2kqd8KyLuQZDMy6PzEKC5LTHFOYGF+AiQ4u1CR8jnGGw4P4ddjFDsS9/sOUpic+UqgWqk=
+	t=1746470637; cv=none; b=hERkmeu1cYFUIWBkyecuGermvMifQjKAxjVnXvY3k1bCgQJtmxFcmt4lngnQkTHlYJ6+nfkEwJqz8zAI8j9Urd4PHfe75SsgPVHpgs3wE3pIVFr4DLbZBj2iCgQ52oYRssPGEwYFRvVCFKVlFLMqFEfGKd15Hj5yh4DSHTFt1ac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746470634; c=relaxed/simple;
-	bh=CuRxJAOhQzgohcnuM+vUajXfQDkofrkBv5Cgo+Zuu2k=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Zj672kq8pKKXYQl5cuZMV3xWmU/hQMzJ4QSgNZIjhZTIFWpbSrEe0XVfwGjnnZTqPnsAVaxx7EPHHrtYLIHa6B1t9Ok5L6I6wTyYyS0hbfVL5XDROTVMC7/49KSOxY9/6Pjgok6N2tV+abj5fG8aKz6Dw12+xvF7sF0QFiNFY+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HJYqhdlH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746470637; c=relaxed/simple;
+	bh=tF04Fns79sH1yaJ5H8T/Hh5MDrmddyRBb/f3XQX4pgQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hwS4lP2agYoi/gFrZ1LxlgjZIPpOfulnkvKK2uOa8Bg3oRHgXmKdUD0shy6+PewuwV902DCEyYEjxIMS8HCaXqaxGf1tLFVOv4vaUeBl0q5LkUZoSsBlT/jkg+QqXtHQxNvQuXjSPTIjRO24OtB/w2VaXC3+GDH5kEtW0c52We0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uM5uAJcP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HJYqhdlH"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 15EF1C4CEEE;
-	Mon,  5 May 2025 18:43:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uM5uAJcP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83C6BC4CEFD;
+	Mon,  5 May 2025 18:43:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746470634;
-	bh=CuRxJAOhQzgohcnuM+vUajXfQDkofrkBv5Cgo+Zuu2k=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=HJYqhdlHYsZhlOHYpbO1jTCCtYZIKQSxAoR3eg3q+dVeve3wg318royNg5M6WdCGl
-	 rOQPb/Do5/2CAe9IGy5c2SzeBJbBYtmqomBPL5bRvrC0WBCSIwoUeLqrei6frR6vEk
-	 /FHFAYc86M4OiO3GPZ7nVNVKUA63sKzb4Yv2xCherfydalqWjN1Gesz9f4ZqHiGNaS
-	 zCgQafzCchd0u+gCxqoXIkIuMbKjuHuhIweZUDCAGbp3+8pty7brzkdiOKcFSUKpc6
-	 STug1w3tQ8JZ8wy/MwSwbCqWG99F7iWs3fad1/SHOKti/yL1XDn7TFsQI4pcrtkZBh
-	 d6CbYaYCMO6zg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08160C3ABAA;
-	Mon,  5 May 2025 18:43:54 +0000 (UTC)
-From: Kurt Borja via B4 Relay <devnull+kuurtb.gmail.com@kernel.org>
-Date: Mon, 05 May 2025 15:43:31 -0300
-Subject: [PATCH v4 1/2] platform/x86: alienware-wmi-wmax: Expose GPIO debug
- methods
+	s=k20201202; t=1746470636;
+	bh=tF04Fns79sH1yaJ5H8T/Hh5MDrmddyRBb/f3XQX4pgQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=uM5uAJcP15BVWhuXYww/5TrKz+DfcC4Wt8xaxG7HsFpPtzKQfbc6udt6k+YnHlgKN
+	 5SN9QZm8uO3QVhWg9/l5fZtVkO1yL9OkEe8D12NEM6fEMA5lzBFAyQ0h/81PJ0S0hX
+	 ihSnE9ZT/VhKnO1I0dLPoOtlu/z7Zg2HBZO2zymhVW2q/BTYfZFH/mlguYwIKWF6WY
+	 FacKgX9MVq1Z5yaEvjXqujbOxlsyBEESK0LYZqNJFrbyKdb9/YWanCoAf9U2W6HEMO
+	 xqGSvNKKruYaDI75hjoTYS5pbyG9jxSrx9nL/YGCQ1/tuzUYEI24eDhOMhmPBHzXxO
+	 hP/CRbTUM54RQ==
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-acb615228a4so1115071566b.0;
+        Mon, 05 May 2025 11:43:56 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUHN+PTcqhd47NtZtbly8iL/Kxch5n2+kovY6i3tTmzv8eUbjbFnVHzK2aZPsTF0D8JVC4sRIzLGCKBfj9mNJdcgyM=@vger.kernel.org, AJvYcCUh/3E2KeHLxwPI2rup6SLCEwt0dfwvnGKiBi+lCtRrYm8T1LSBKHU5Bgk+yRlQn3Na3VEvjGvBR+CEzKW+@vger.kernel.org, AJvYcCUzxShDmwaDtLZgFL3QKFxx1fD22fbKMLVyS39QbQMV17m/c08qKNWbWDjDN/HymwFAzEpFbfxbQ8n8/A==@vger.kernel.org, AJvYcCVsWmQi9WtZ1ZSFIdnipI6JyHdj4iznDvg0Q7bWQsY5IWcm7Jxv6Bxnj36zexPNmov1MRA1z7kjwzg=@vger.kernel.org, AJvYcCW5tjlg/05IQij+AdcS0kTmckWXXs9F2aXdJqNFMVnU6Za6QaXRgBbWZcnHx5e1dHDlkQUaloDniDQU5SEz@vger.kernel.org
+X-Gm-Message-State: AOJu0YxcJgIxyWJVTDQdYwlbZjToTp4D/LOXD2p37Mk3rNMBJ4lPQuZJ
+	Jl+XTvZ3dIiIYusrU1h6W1OaJmXZ20unVwJJmXAKd/goCMDYBowYlSZbed/EYRwEJf4HCLx9XSn
+	VyXI+bB+w2CyZM8UprqbEyJaICA==
+X-Google-Smtp-Source: AGHT+IE07Ly6dyu8Y+aF9BlZdIf7+P37J2qLB07/RiqfMFZ0ipjDBLk74RTbDrbdYckFkuO0cf7wPwVCCZB9ROIhhI4=
+X-Received: by 2002:a17:906:c144:b0:acb:2050:c105 with SMTP id
+ a640c23a62f3a-ad1d2f5cadbmr46457866b.21.1746470634738; Mon, 05 May 2025
+ 11:43:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250505-awcc-gpio-v4-1-edda44c3a0dc@gmail.com>
-References: <20250505-awcc-gpio-v4-0-edda44c3a0dc@gmail.com>
-In-Reply-To: <20250505-awcc-gpio-v4-0-edda44c3a0dc@gmail.com>
-To: Hans de Goede <hdegoede@redhat.com>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Armin Wolf <W_Armin@gmx.de>
-Cc: Gabriel Marcano <gabemarcano@yahoo.com>, 
- platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com, 
- linux-kernel@vger.kernel.org, Kurt Borja <kuurtb@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6088; i=kuurtb@gmail.com;
- h=from:subject:message-id;
- bh=VhjdIaye3R/a9OKG1gJhjtj9h7gjZ1ZcB47ONQBNzIg=;
- b=owGbwMvMwCUmluBs8WX+lTTG02pJDBmSbC9S2+9uPXe29UrO75VfZ6or8vtsND3z7GfwKs4r6
- lwtNhdfdJSyMIhxMciKKbK0Jyz69igq763fgdD7MHNYmUCGMHBxCsBEDiUy/A/aqK1kWPHkZ2LV
- qp3vXtxS2/kxwPH/x/x5M9vqzu8RceVm+B8j8Pz5l4kPl8kyHHqRP0t/a3TmT5+frZNmFqmXWyo
- xKvABAA==
-X-Developer-Key: i=kuurtb@gmail.com; a=openpgp;
- fpr=54D3BE170AEF777983C3C63B57E3B6585920A69A
-X-Endpoint-Received: by B4 Relay for kuurtb@gmail.com/default with
- auth_id=387
-X-Original-From: Kurt Borja <kuurtb@gmail.com>
-Reply-To: kuurtb@gmail.com
+References: <20250410-dt-cpu-schema-v2-0-63d7dc9ddd0a@kernel.org> <20250410-dt-cpu-schema-v2-11-63d7dc9ddd0a@kernel.org>
+In-Reply-To: <20250410-dt-cpu-schema-v2-11-63d7dc9ddd0a@kernel.org>
+From: Rob Herring <robh@kernel.org>
+Date: Mon, 5 May 2025 13:43:43 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLGHQ4YBqGGEdyirtgaBnJKRxOxOKTaQLv2jm-g8TNndA@mail.gmail.com>
+X-Gm-Features: ATxdqUH6daJs7nOd8Y48rS3eP2-1poIs0MGdxfDe75Fd100QvIPr8Ytk27ZE1_w
+Message-ID: <CAL_JsqLGHQ4YBqGGEdyirtgaBnJKRxOxOKTaQLv2jm-g8TNndA@mail.gmail.com>
+Subject: Re: [PATCH v2 11/17] arm64: dts: amlogic: Drop redundant CPU "clock-latency"
+To: Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Samuel Holland <samuel@sholland.org>, Conor Dooley <conor@kernel.org>, 
+	Nicolas Ferre <nicolas.ferre@microchip.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+	Steen Hegelund <Steen.Hegelund@microchip.com>, Daniel Machon <daniel.machon@microchip.com>, 
+	UNGLinuxDriver@microchip.com, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Heiko Stuebner <heiko@sntech.de>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>, 
+	Jerome Brunet <jbrunet@baylibre.com>, 
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Andy Gross <agross@kernel.org>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Viresh Kumar <vireshk@kernel.org>, 
+	Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, zhouyanjie@wanyeetech.com, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
+	Stephan Gerhold <stephan.gerhold@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, imx@lists.linux.dev, 
+	linux-rockchip@lists.infradead.org, linux-amlogic@lists.infradead.org, 
+	linux-renesas-soc@vger.kernel.org, linux-mips@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Kurt Borja <kuurtb@gmail.com>
+On Thu, Apr 10, 2025 at 10:50=E2=80=AFAM Rob Herring (Arm) <robh@kernel.org=
+> wrote:
+>
+> The "clock-latency" property is part of the deprecated opp-v1 binding
+> and is redundant if the opp-v2 table has equal or larger values in any
+> "clock-latency-ns". Add any missing "clock-latency-ns" properties and
+> remove "clock-latency".
+>
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+> ---
 
-Expose GPIO control methods present on the AWCC interface through
-DebugFS.
+Ping!
 
-These models come with an RGB lighting STM32 MCU, which usually has two
-GPIO pins with debug capabilities:
-
- - Pin 0: Device Firmware Update mode (DFU)
- - Pin 1: Negative Reset (NRST)
-
-Suggested-by: Gabriel Marcano <gabemarcano@yahoo.com>
-Reviewed-by: Armin Wolf <W_Armin@gmx.de>
-Signed-off-by: Kurt Borja <kuurtb@gmail.com>
----
- Documentation/ABI/testing/debugfs-alienware-wmi |  20 +++++
- drivers/platform/x86/dell/alienware-wmi-wmax.c  | 104 +++++++++++++++++++++++-
- 2 files changed, 123 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/ABI/testing/debugfs-alienware-wmi b/Documentation/ABI/testing/debugfs-alienware-wmi
-index 48cfd4d0b002efd7b68d9c1d3aa91a3a05f49db5..c7f525d6baac962be82780608f8da5c0368600cc 100644
---- a/Documentation/ABI/testing/debugfs-alienware-wmi
-+++ b/Documentation/ABI/testing/debugfs-alienware-wmi
-@@ -42,3 +42,23 @@ Description:
- 		details.
- 
- 		RO
-+
-+What:		/sys/kernel/debug/alienware-wmi-<wmi_device_name>/gpio_ctl/total_gpios
-+Date:		May 2025
-+KernelVersion:	6.16
-+Contact:	Kurt Borja <kuurtb@gmail.com>
-+Description:
-+		Total number of GPIO pins reported by the device.
-+
-+		RO
-+
-+What:		/sys/kernel/debug/alienware-wmi-<wmi_device_name>/gpio_ctl/pinX
-+Date:		May 2025
-+KernelVersion:	6.16
-+Contact:	Kurt Borja <kuurtb@gmail.com>
-+Description:
-+		This file controls GPIO pin X status.
-+
-+		See Documentation/wmi/devices/alienware-wmi.rst for details.
-+
-+		RW
-diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c b/drivers/platform/x86/dell/alienware-wmi-wmax.c
-index f3ad47c9edfac47fae181046acae2190e388306c..f0e6a36abc278d95059dfc007414894dee79b587 100644
---- a/drivers/platform/x86/dell/alienware-wmi-wmax.c
-+++ b/drivers/platform/x86/dell/alienware-wmi-wmax.c
-@@ -38,6 +38,9 @@
- #define AWCC_METHOD_GET_FAN_SENSORS		0x13
- #define AWCC_METHOD_THERMAL_INFORMATION		0x14
- #define AWCC_METHOD_THERMAL_CONTROL		0x15
-+#define AWCC_METHOD_FWUP_GPIO_CONTROL		0x20
-+#define AWCC_METHOD_READ_TOTAL_GPIOS		0x21
-+#define AWCC_METHOD_READ_GPIO_STATUS		0x22
- #define AWCC_METHOD_GAME_SHIFT_STATUS		0x25
- 
- #define AWCC_FAILURE_CODE			0xFFFFFFFF
-@@ -281,6 +284,8 @@ struct awcc_priv {
- 	struct device *hwdev;
- 	struct awcc_fan_data **fan_data;
- 	unsigned long temp_sensors[AWCC_ID_BITMAP_LONGS];
-+
-+	u32 gpio_count;
- };
- 
- static const enum platform_profile_option awcc_mode_to_platform_profile[AWCC_PROFILE_LAST] = {
-@@ -571,6 +576,38 @@ static int awcc_thermal_information(struct wmi_device *wdev, u8 operation, u8 ar
- 	return awcc_wmi_command(wdev, AWCC_METHOD_THERMAL_INFORMATION, &args, out);
- }
- 
-+static int awcc_fwup_gpio_control(struct wmi_device *wdev, u8 pin, u8 status)
-+{
-+	struct wmax_u32_args args = {
-+		.operation = pin,
-+		.arg1 = status,
-+		.arg2 = 0,
-+		.arg3 = 0,
-+	};
-+	u32 out;
-+
-+	return awcc_wmi_command(wdev, AWCC_METHOD_FWUP_GPIO_CONTROL, &args, &out);
-+}
-+
-+static int awcc_read_total_gpios(struct wmi_device *wdev, u32 *count)
-+{
-+	struct wmax_u32_args args = {};
-+
-+	return awcc_wmi_command(wdev, AWCC_METHOD_READ_TOTAL_GPIOS, &args, count);
-+}
-+
-+static int awcc_read_gpio_status(struct wmi_device *wdev, u8 pin, u32 *status)
-+{
-+	struct wmax_u32_args args = {
-+		.operation = pin,
-+		.arg1 = 0,
-+		.arg2 = 0,
-+		.arg3 = 0,
-+	};
-+
-+	return awcc_wmi_command(wdev, AWCC_METHOD_READ_GPIO_STATUS, &args, status);
-+}
-+
- static int awcc_game_shift_status(struct wmi_device *wdev, u8 operation,
- 				  u32 *out)
- {
-@@ -1317,6 +1354,47 @@ static int awcc_debugfs_pprof_data_read(struct seq_file *seq, void *data)
- 	return 0;
- }
- 
-+static int awcc_gpio_pin_show(struct seq_file *seq, void *data)
-+{
-+	unsigned long pin = debugfs_get_aux_num(seq->file);
-+	struct wmi_device *wdev = seq->private;
-+	u32 status;
-+	int ret;
-+
-+	ret = awcc_read_gpio_status(wdev, pin, &status);
-+	if (ret)
-+		return ret;
-+
-+	seq_printf(seq, "%u\n", status);
-+
-+	return 0;
-+}
-+
-+static ssize_t awcc_gpio_pin_write(struct file *file, const char __user *buf,
-+				   size_t count, loff_t *ppos)
-+{
-+	unsigned long pin = debugfs_get_aux_num(file);
-+	struct seq_file *seq = file->private_data;
-+	struct wmi_device *wdev = seq->private;
-+	bool status;
-+	int ret;
-+
-+	if (!ppos || *ppos)
-+		return -EINVAL;
-+
-+	ret = kstrtobool_from_user(buf, count, &status);
-+	if (ret)
-+		return ret;
-+
-+	ret = awcc_fwup_gpio_control(wdev, pin, status);
-+	if (ret)
-+		return ret;
-+
-+	return count;
-+}
-+
-+DEFINE_SHOW_STORE_ATTRIBUTE(awcc_gpio_pin);
-+
- static void awcc_debugfs_remove(void *data)
- {
- 	struct dentry *root = data;
-@@ -1326,8 +1404,11 @@ static void awcc_debugfs_remove(void *data)
- 
- static void awcc_debugfs_init(struct wmi_device *wdev)
- {
--	struct dentry *root;
-+	struct awcc_priv *priv = dev_get_drvdata(&wdev->dev);
-+	struct dentry *root, *gpio_ctl;
-+	u32 gpio_count;
- 	char name[64];
-+	int ret;
- 
- 	scnprintf(name, sizeof(name), "%s-%s", "alienware-wmi", dev_name(&wdev->dev));
- 	root = debugfs_create_dir(name, NULL);
-@@ -1343,6 +1424,27 @@ static void awcc_debugfs_init(struct wmi_device *wdev)
- 		debugfs_create_devm_seqfile(&wdev->dev, "pprof_data", root,
- 					    awcc_debugfs_pprof_data_read);
- 
-+	ret = awcc_read_total_gpios(wdev, &gpio_count);
-+	if (ret) {
-+		dev_dbg(&wdev->dev, "Failed to get total GPIO Pin count\n");
-+		goto out_add_action;
-+	} else if (gpio_count > AWCC_MAX_RES_COUNT) {
-+		dev_dbg(&wdev->dev, "Reported GPIO Pin count may be incorrect: %u\n", gpio_count);
-+		goto out_add_action;
-+	}
-+
-+	gpio_ctl = debugfs_create_dir("gpio_ctl", root);
-+
-+	priv->gpio_count = gpio_count;
-+	debugfs_create_u32("total_gpios", 0444, gpio_ctl, &priv->gpio_count);
-+
-+	for (unsigned int i = 0; i < gpio_count; i++) {
-+		scnprintf(name, sizeof(name), "pin%u", i);
-+		debugfs_create_file_aux_num(name, 0644, gpio_ctl, wdev, i,
-+					    &awcc_gpio_pin_fops);
-+	}
-+
-+out_add_action:
- 	devm_add_action_or_reset(&wdev->dev, awcc_debugfs_remove, root);
- }
- 
-
--- 
-2.49.0
-
-
+>  arch/arm64/boot/dts/amlogic/meson-g12a-fbx8am.dts             | 4 ----
+>  arch/arm64/boot/dts/amlogic/meson-g12a-radxa-zero.dts         | 4 ----
+>  arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts             | 4 ----
+>  arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts               | 4 ----
+>  arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts            | 4 ----
+>  arch/arm64/boot/dts/amlogic/meson-g12a.dtsi                   | 1 +
+>  arch/arm64/boot/dts/amlogic/meson-g12b-a311d-libretech-cc.dts | 6 ------
+>  arch/arm64/boot/dts/amlogic/meson-g12b-a311d.dtsi             | 2 ++
+>  arch/arm64/boot/dts/amlogic/meson-g12b-bananapi-cm4.dtsi      | 6 ------
+>  arch/arm64/boot/dts/amlogic/meson-g12b-bananapi.dtsi          | 6 ------
+>  arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi       | 6 ------
+>  arch/arm64/boot/dts/amlogic/meson-g12b-odroid-go-ultra.dts    | 6 ------
+>  arch/arm64/boot/dts/amlogic/meson-g12b-odroid.dtsi            | 6 ------
+>  arch/arm64/boot/dts/amlogic/meson-g12b-radxa-zero2.dts        | 6 ------
+>  arch/arm64/boot/dts/amlogic/meson-g12b-s922x.dtsi             | 2 ++
+>  arch/arm64/boot/dts/amlogic/meson-g12b-w400.dtsi              | 6 ------
+>  arch/arm64/boot/dts/amlogic/meson-sm1-ac2xx.dtsi              | 4 ----
+>  arch/arm64/boot/dts/amlogic/meson-sm1-bananapi.dtsi           | 4 ----
+>  arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts        | 4 ----
+>  arch/arm64/boot/dts/amlogic/meson-sm1-odroid.dtsi             | 4 ----
+>  arch/arm64/boot/dts/amlogic/meson-sm1-s905d3-libretech-cc.dts | 4 ----
+>  arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts              | 4 ----
+>  arch/arm64/boot/dts/amlogic/meson-sm1.dtsi                    | 1 +
+>  23 files changed, 6 insertions(+), 92 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-fbx8am.dts b/arch/arm=
+64/boot/dts/amlogic/meson-g12a-fbx8am.dts
+> index 9aa36f17ffa2..d0a3b4b9229c 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12a-fbx8am.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12a-fbx8am.dts
+> @@ -267,28 +267,24 @@ &cpu0 {
+>         cpu-supply =3D <&vddcpu>;
+>         operating-points-v2 =3D <&cpu_opp_table>;
+>         clocks =3D <&clkc CLKID_CPU_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu1 {
+>         cpu-supply =3D <&vddcpu>;
+>         operating-points-v2 =3D <&cpu_opp_table>;
+>         clocks =3D <&clkc CLKID_CPU_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu2 {
+>         cpu-supply =3D <&vddcpu>;
+>         operating-points-v2 =3D <&cpu_opp_table>;
+>         clocks =3D <&clkc CLKID_CPU_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu3 {
+>         cpu-supply =3D <&vddcpu>;
+>         operating-points-v2 =3D <&cpu_opp_table>;
+>         clocks =3D <&clkc CLKID_CPU_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &ethmac {
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-radxa-zero.dts b/arch=
+/arm64/boot/dts/amlogic/meson-g12a-radxa-zero.dts
+> index 952b8d02e5c2..4353485c6f26 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12a-radxa-zero.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12a-radxa-zero.dts
+> @@ -220,28 +220,24 @@ &cpu0 {
+>         cpu-supply =3D <&vddcpu>;
+>         operating-points-v2 =3D <&cpu_opp_table>;
+>         clocks =3D <&clkc CLKID_CPU_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu1 {
+>         cpu-supply =3D <&vddcpu>;
+>         operating-points-v2 =3D <&cpu_opp_table>;
+>         clocks =3D <&clkc CLKID_CPU_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu2 {
+>         cpu-supply =3D <&vddcpu>;
+>         operating-points-v2 =3D <&cpu_opp_table>;
+>         clocks =3D <&clkc CLKID_CPU_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu3 {
+>         cpu-supply =3D <&vddcpu>;
+>         operating-points-v2 =3D <&cpu_opp_table>;
+>         clocks =3D <&clkc CLKID_CPU_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cvbs_vdac_port {
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts b/arch/arm=
+64/boot/dts/amlogic/meson-g12a-sei510.dts
+> index 52fbc5103e45..f39fcabc763f 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
+> @@ -314,28 +314,24 @@ &cpu0 {
+>         cpu-supply =3D <&vddcpu>;
+>         operating-points-v2 =3D <&cpu_opp_table>;
+>         clocks =3D <&clkc CLKID_CPU_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu1 {
+>         cpu-supply =3D <&vddcpu>;
+>         operating-points-v2 =3D <&cpu_opp_table>;
+>         clocks =3D <&clkc CLKID_CPU_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu2 {
+>         cpu-supply =3D <&vddcpu>;
+>         operating-points-v2 =3D <&cpu_opp_table>;
+>         clocks =3D <&clkc CLKID_CPU_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu3 {
+>         cpu-supply =3D <&vddcpu>;
+>         operating-points-v2 =3D <&cpu_opp_table>;
+>         clocks =3D <&clkc CLKID_CPU_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cvbs_vdac_port {
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts b/arch/arm64=
+/boot/dts/amlogic/meson-g12a-u200.dts
+> index 5407049d2647..b5bf8ecc91e6 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
+> @@ -407,28 +407,24 @@ &cpu0 {
+>         cpu-supply =3D <&vddcpu>;
+>         operating-points-v2 =3D <&cpu_opp_table>;
+>         clocks =3D <&clkc CLKID_CPU_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu1 {
+>         cpu-supply =3D <&vddcpu>;
+>         operating-points-v2 =3D <&cpu_opp_table>;
+>         clocks =3D <&clkc CLKID_CPU_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu2 {
+>         cpu-supply =3D <&vddcpu>;
+>         operating-points-v2 =3D <&cpu_opp_table>;
+>         clocks =3D <&clkc CLKID_CPU_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu3 {
+>         cpu-supply =3D <&vddcpu>;
+>         operating-points-v2 =3D <&cpu_opp_table>;
+>         clocks =3D <&clkc CLKID_CPU_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &clkc_audio {
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts b/arch/ar=
+m64/boot/dts/amlogic/meson-g12a-x96-max.dts
+> index 01da83658ae3..5ab460a3e637 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
+> @@ -263,28 +263,24 @@ &cpu0 {
+>         cpu-supply =3D <&vddcpu>;
+>         operating-points-v2 =3D <&cpu_opp_table>;
+>         clocks =3D <&clkc CLKID_CPU_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu1 {
+>         cpu-supply =3D <&vddcpu>;
+>         operating-points-v2 =3D <&cpu_opp_table>;
+>         clocks =3D <&clkc CLKID_CPU_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu2 {
+>         cpu-supply =3D <&vddcpu>;
+>         operating-points-v2 =3D <&cpu_opp_table>;
+>         clocks =3D <&clkc CLKID_CPU_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu3 {
+>         cpu-supply =3D <&vddcpu>;
+>         operating-points-v2 =3D <&cpu_opp_table>;
+>         clocks =3D <&clkc CLKID_CPU_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cvbs_vdac_port {
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boo=
+t/dts/amlogic/meson-g12a.dtsi
+> index 543e70669df5..deee61dbe074 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+> @@ -62,6 +62,7 @@ cpu_opp_table: opp-table {
+>                 opp-1000000000 {
+>                         opp-hz =3D /bits/ 64 <1000000000>;
+>                         opp-microvolt =3D <731000>;
+> +                       clock-latency-ns =3D <50000>;
+>                 };
+>
+>                 opp-1200000000 {
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-a311d-libretech-cc.dt=
+s b/arch/arm64/boot/dts/amlogic/meson-g12b-a311d-libretech-cc.dts
+> index adedc1340c78..415248931ab1 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-a311d-libretech-cc.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-a311d-libretech-cc.dts
+> @@ -76,42 +76,36 @@ &cpu0 {
+>         cpu-supply =3D <&vddcpu_b>;
+>         operating-points-v2 =3D <&cpu_opp_table_0>;
+>         clocks =3D <&clkc CLKID_CPU_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu1 {
+>         cpu-supply =3D <&vddcpu_b>;
+>         operating-points-v2 =3D <&cpu_opp_table_0>;
+>         clocks =3D <&clkc CLKID_CPU_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu100 {
+>         cpu-supply =3D <&vddcpu_a>;
+>         operating-points-v2 =3D <&cpub_opp_table_1>;
+>         clocks =3D <&clkc CLKID_CPUB_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu101 {
+>         cpu-supply =3D <&vddcpu_a>;
+>         operating-points-v2 =3D <&cpub_opp_table_1>;
+>         clocks =3D <&clkc CLKID_CPUB_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu102 {
+>         cpu-supply =3D <&vddcpu_a>;
+>         operating-points-v2 =3D <&cpub_opp_table_1>;
+>         clocks =3D <&clkc CLKID_CPUB_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu103 {
+>         cpu-supply =3D <&vddcpu_a>;
+>         operating-points-v2 =3D <&cpub_opp_table_1>;
+>         clocks =3D <&clkc CLKID_CPUB_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &pwm_ab {
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-a311d.dtsi b/arch/arm=
+64/boot/dts/amlogic/meson-g12b-a311d.dtsi
+> index 8e9ad1e51d66..8ecb5bd125c1 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-a311d.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-a311d.dtsi
+> @@ -14,6 +14,7 @@ cpu_opp_table_0: opp-table-0 {
+>                 opp-1000000000 {
+>                         opp-hz =3D /bits/ 64 <1000000000>;
+>                         opp-microvolt =3D <761000>;
+> +                       clock-latency-ns =3D <50000>;
+>                 };
+>
+>                 opp-1200000000 {
+> @@ -54,6 +55,7 @@ cpub_opp_table_1: opp-table-1 {
+>                 opp-1000000000 {
+>                         opp-hz =3D /bits/ 64 <1000000000>;
+>                         opp-microvolt =3D <731000>;
+> +                       clock-latency-ns =3D <50000>;
+>                 };
+>
+>                 opp-1200000000 {
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-bananapi-cm4.dtsi b/a=
+rch/arm64/boot/dts/amlogic/meson-g12b-bananapi-cm4.dtsi
+> index 92e8b26ecccc..39011b645128 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-bananapi-cm4.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-bananapi-cm4.dtsi
+> @@ -155,42 +155,36 @@ &cpu0 {
+>         cpu-supply =3D <&vddcpu_b>;
+>         operating-points-v2 =3D <&cpu_opp_table_0>;
+>         clocks =3D <&clkc CLKID_CPU_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu1 {
+>         cpu-supply =3D <&vddcpu_b>;
+>         operating-points-v2 =3D <&cpu_opp_table_0>;
+>         clocks =3D <&clkc CLKID_CPU_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu100 {
+>         cpu-supply =3D <&vddcpu_a>;
+>         operating-points-v2 =3D <&cpub_opp_table_1>;
+>         clocks =3D <&clkc CLKID_CPUB_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu101 {
+>         cpu-supply =3D <&vddcpu_a>;
+>         operating-points-v2 =3D <&cpub_opp_table_1>;
+>         clocks =3D <&clkc CLKID_CPUB_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu102 {
+>         cpu-supply =3D <&vddcpu_a>;
+>         operating-points-v2 =3D <&cpub_opp_table_1>;
+>         clocks =3D <&clkc CLKID_CPUB_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu103 {
+>         cpu-supply =3D <&vddcpu_a>;
+>         operating-points-v2 =3D <&cpub_opp_table_1>;
+>         clocks =3D <&clkc CLKID_CPUB_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &ext_mdio {
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-bananapi.dtsi b/arch/=
+arm64/boot/dts/amlogic/meson-g12b-bananapi.dtsi
+> index 54663c55a20e..1b08303c4282 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-bananapi.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-bananapi.dtsi
+> @@ -263,42 +263,36 @@ &cpu0 {
+>         cpu-supply =3D <&vddcpu_b>;
+>         operating-points-v2 =3D <&cpu_opp_table_0>;
+>         clocks =3D <&clkc CLKID_CPU_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu1 {
+>         cpu-supply =3D <&vddcpu_b>;
+>         operating-points-v2 =3D <&cpu_opp_table_0>;
+>         clocks =3D <&clkc CLKID_CPU_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu100 {
+>         cpu-supply =3D <&vddcpu_a>;
+>         operating-points-v2 =3D <&cpub_opp_table_1>;
+>         clocks =3D <&clkc CLKID_CPUB_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu101 {
+>         cpu-supply =3D <&vddcpu_a>;
+>         operating-points-v2 =3D <&cpub_opp_table_1>;
+>         clocks =3D <&clkc CLKID_CPUB_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu102 {
+>         cpu-supply =3D <&vddcpu_a>;
+>         operating-points-v2 =3D <&cpub_opp_table_1>;
+>         clocks =3D <&clkc CLKID_CPUB_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu103 {
+>         cpu-supply =3D <&vddcpu_a>;
+>         operating-points-v2 =3D <&cpub_opp_table_1>;
+>         clocks =3D <&clkc CLKID_CPUB_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &ethmac {
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi b/ar=
+ch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
+> index 48650bad230d..fc737499f207 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
+> @@ -51,42 +51,36 @@ &cpu0 {
+>         cpu-supply =3D <&vddcpu_b>;
+>         operating-points-v2 =3D <&cpu_opp_table_0>;
+>         clocks =3D <&clkc CLKID_CPU_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu1 {
+>         cpu-supply =3D <&vddcpu_b>;
+>         operating-points-v2 =3D <&cpu_opp_table_0>;
+>         clocks =3D <&clkc CLKID_CPU_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu100 {
+>         cpu-supply =3D <&vddcpu_a>;
+>         operating-points-v2 =3D <&cpub_opp_table_1>;
+>         clocks =3D <&clkc CLKID_CPUB_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu101 {
+>         cpu-supply =3D <&vddcpu_a>;
+>         operating-points-v2 =3D <&cpub_opp_table_1>;
+>         clocks =3D <&clkc CLKID_CPUB_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu102 {
+>         cpu-supply =3D <&vddcpu_a>;
+>         operating-points-v2 =3D <&cpub_opp_table_1>;
+>         clocks =3D <&clkc CLKID_CPUB_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu103 {
+>         cpu-supply =3D <&vddcpu_a>;
+>         operating-points-v2 =3D <&cpub_opp_table_1>;
+>         clocks =3D <&clkc CLKID_CPUB_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &pwm_ab {
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-go-ultra.dts b=
+/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-go-ultra.dts
+> index e21831dfceee..d5938a4a6da3 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-go-ultra.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-go-ultra.dts
+> @@ -281,42 +281,36 @@ &cpu0 {
+>         cpu-supply =3D <&vddcpu_b>;
+>         operating-points-v2 =3D <&cpu_opp_table_0>;
+>         clocks =3D <&clkc CLKID_CPU_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu1 {
+>         cpu-supply =3D <&vddcpu_b>;
+>         operating-points-v2 =3D <&cpu_opp_table_0>;
+>         clocks =3D <&clkc CLKID_CPU_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu100 {
+>         cpu-supply =3D <&vddcpu_a>;
+>         operating-points-v2 =3D <&cpub_opp_table_1>;
+>         clocks =3D <&clkc CLKID_CPUB_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu101 {
+>         cpu-supply =3D <&vddcpu_a>;
+>         operating-points-v2 =3D <&cpub_opp_table_1>;
+>         clocks =3D <&clkc CLKID_CPUB_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu102 {
+>         cpu-supply =3D <&vddcpu_a>;
+>         operating-points-v2 =3D <&cpub_opp_table_1>;
+>         clocks =3D <&clkc CLKID_CPUB_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu103 {
+>         cpu-supply =3D <&vddcpu_a>;
+>         operating-points-v2 =3D <&cpub_opp_table_1>;
+>         clocks =3D <&clkc CLKID_CPUB_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  /* RK817 only supports 12.5mV steps, round up the values */
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid.dtsi b/arch/ar=
+m64/boot/dts/amlogic/meson-g12b-odroid.dtsi
+> index 7e8964bacfce..3298d59833b6 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid.dtsi
+> @@ -227,42 +227,36 @@ &cpu0 {
+>         cpu-supply =3D <&vddcpu_b>;
+>         operating-points-v2 =3D <&cpu_opp_table_0>;
+>         clocks =3D <&clkc CLKID_CPU_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu1 {
+>         cpu-supply =3D <&vddcpu_b>;
+>         operating-points-v2 =3D <&cpu_opp_table_0>;
+>         clocks =3D <&clkc CLKID_CPU_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu100 {
+>         cpu-supply =3D <&vddcpu_a>;
+>         operating-points-v2 =3D <&cpub_opp_table_1>;
+>         clocks =3D <&clkc CLKID_CPUB_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu101 {
+>         cpu-supply =3D <&vddcpu_a>;
+>         operating-points-v2 =3D <&cpub_opp_table_1>;
+>         clocks =3D <&clkc CLKID_CPUB_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu102 {
+>         cpu-supply =3D <&vddcpu_a>;
+>         operating-points-v2 =3D <&cpub_opp_table_1>;
+>         clocks =3D <&clkc CLKID_CPUB_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu103 {
+>         cpu-supply =3D <&vddcpu_a>;
+>         operating-points-v2 =3D <&cpub_opp_table_1>;
+>         clocks =3D <&clkc CLKID_CPUB_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu_thermal {
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-radxa-zero2.dts b/arc=
+h/arm64/boot/dts/amlogic/meson-g12b-radxa-zero2.dts
+> index fc05ecf90714..1e5c6f984945 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-radxa-zero2.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-radxa-zero2.dts
+> @@ -259,42 +259,36 @@ &cpu0 {
+>         cpu-supply =3D <&vddcpu_b>;
+>         operating-points-v2 =3D <&cpu_opp_table_0>;
+>         clocks =3D <&clkc CLKID_CPU_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu1 {
+>         cpu-supply =3D <&vddcpu_b>;
+>         operating-points-v2 =3D <&cpu_opp_table_0>;
+>         clocks =3D <&clkc CLKID_CPU_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu100 {
+>         cpu-supply =3D <&vddcpu_a>;
+>         operating-points-v2 =3D <&cpub_opp_table_1>;
+>         clocks =3D <&clkc CLKID_CPUB_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu101 {
+>         cpu-supply =3D <&vddcpu_a>;
+>         operating-points-v2 =3D <&cpub_opp_table_1>;
+>         clocks =3D <&clkc CLKID_CPUB_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu102 {
+>         cpu-supply =3D <&vddcpu_a>;
+>         operating-points-v2 =3D <&cpub_opp_table_1>;
+>         clocks =3D <&clkc CLKID_CPUB_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu103 {
+>         cpu-supply =3D <&vddcpu_a>;
+>         operating-points-v2 =3D <&cpub_opp_table_1>;
+>         clocks =3D <&clkc CLKID_CPUB_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu_thermal {
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-s922x.dtsi b/arch/arm=
+64/boot/dts/amlogic/meson-g12b-s922x.dtsi
+> index 44c23c984034..19cad93a6889 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-s922x.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-s922x.dtsi
+> @@ -14,6 +14,7 @@ cpu_opp_table_0: opp-table-0 {
+>                 opp-1000000000 {
+>                         opp-hz =3D /bits/ 64 <1000000000>;
+>                         opp-microvolt =3D <731000>;
+> +                       clock-latency-ns =3D <50000>;
+>                 };
+>
+>                 opp-1200000000 {
+> @@ -59,6 +60,7 @@ cpub_opp_table_1: opp-table-1 {
+>                 opp-1000000000 {
+>                         opp-hz =3D /bits/ 64 <1000000000>;
+>                         opp-microvolt =3D <771000>;
+> +                       clock-latency-ns =3D <50000>;
+>                 };
+>
+>                 opp-1200000000 {
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-w400.dtsi b/arch/arm6=
+4/boot/dts/amlogic/meson-g12b-w400.dtsi
+> index a7a0fc264cdc..9b6d780eada7 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-w400.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-w400.dtsi
+> @@ -213,42 +213,36 @@ &cpu0 {
+>         cpu-supply =3D <&vddcpu_b>;
+>         operating-points-v2 =3D <&cpu_opp_table_0>;
+>         clocks =3D <&clkc CLKID_CPU_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu1 {
+>         cpu-supply =3D <&vddcpu_b>;
+>         operating-points-v2 =3D <&cpu_opp_table_0>;
+>         clocks =3D <&clkc CLKID_CPU_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu100 {
+>         cpu-supply =3D <&vddcpu_a>;
+>         operating-points-v2 =3D <&cpub_opp_table_1>;
+>         clocks =3D <&clkc CLKID_CPUB_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu101 {
+>         cpu-supply =3D <&vddcpu_a>;
+>         operating-points-v2 =3D <&cpub_opp_table_1>;
+>         clocks =3D <&clkc CLKID_CPUB_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu102 {
+>         cpu-supply =3D <&vddcpu_a>;
+>         operating-points-v2 =3D <&cpub_opp_table_1>;
+>         clocks =3D <&clkc CLKID_CPUB_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu103 {
+>         cpu-supply =3D <&vddcpu_a>;
+>         operating-points-v2 =3D <&cpub_opp_table_1>;
+>         clocks =3D <&clkc CLKID_CPUB_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cvbs_vdac_port {
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-ac2xx.dtsi b/arch/arm6=
+4/boot/dts/amlogic/meson-sm1-ac2xx.dtsi
+> index a3463149db3d..9be3084b090d 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-sm1-ac2xx.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-sm1-ac2xx.dtsi
+> @@ -147,28 +147,24 @@ &cpu0 {
+>         cpu-supply =3D <&vddcpu>;
+>         operating-points-v2 =3D <&cpu_opp_table>;
+>         clocks =3D <&clkc CLKID_CPU_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu1 {
+>         cpu-supply =3D <&vddcpu>;
+>         operating-points-v2 =3D <&cpu_opp_table>;
+>         clocks =3D <&clkc CLKID_CPU1_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu2 {
+>         cpu-supply =3D <&vddcpu>;
+>         operating-points-v2 =3D <&cpu_opp_table>;
+>         clocks =3D <&clkc CLKID_CPU2_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu3 {
+>         cpu-supply =3D <&vddcpu>;
+>         operating-points-v2 =3D <&cpu_opp_table>;
+>         clocks =3D <&clkc CLKID_CPU3_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cvbs_vdac_port {
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-bananapi.dtsi b/arch/a=
+rm64/boot/dts/amlogic/meson-sm1-bananapi.dtsi
+> index 40db95f64636..538b35036954 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-sm1-bananapi.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-sm1-bananapi.dtsi
+> @@ -185,28 +185,24 @@ &cpu0 {
+>         cpu-supply =3D <&vddcpu>;
+>         operating-points-v2 =3D <&cpu_opp_table>;
+>         clocks =3D <&clkc CLKID_CPU_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu1 {
+>         cpu-supply =3D <&vddcpu>;
+>         operating-points-v2 =3D <&cpu_opp_table>;
+>         clocks =3D <&clkc CLKID_CPU1_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu2 {
+>         cpu-supply =3D <&vddcpu>;
+>         operating-points-v2 =3D <&cpu_opp_table>;
+>         clocks =3D <&clkc CLKID_CPU2_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu3 {
+>         cpu-supply =3D <&vddcpu>;
+>         operating-points-v2 =3D <&cpu_opp_table>;
+>         clocks =3D <&clkc CLKID_CPU3_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &ext_mdio {
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts b/arc=
+h/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
+> index 5d75ad3f3e46..a3d9b66b6878 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
+> @@ -51,28 +51,24 @@ &cpu0 {
+>         cpu-supply =3D <&vddcpu>;
+>         operating-points-v2 =3D <&cpu_opp_table>;
+>         clocks =3D <&clkc CLKID_CPU_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu1 {
+>         cpu-supply =3D <&vddcpu>;
+>         operating-points-v2 =3D <&cpu_opp_table>;
+>         clocks =3D <&clkc CLKID_CPU1_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu2 {
+>         cpu-supply =3D <&vddcpu>;
+>         operating-points-v2 =3D <&cpu_opp_table>;
+>         clocks =3D <&clkc CLKID_CPU2_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu3 {
+>         cpu-supply =3D <&vddcpu>;
+>         operating-points-v2 =3D <&cpu_opp_table>;
+>         clocks =3D <&clkc CLKID_CPU3_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &pwm_AO_cd {
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-odroid.dtsi b/arch/arm=
+64/boot/dts/amlogic/meson-sm1-odroid.dtsi
+> index ad8d07883760..c4524eb4f099 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-sm1-odroid.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-sm1-odroid.dtsi
+> @@ -250,28 +250,24 @@ &cpu0 {
+>         cpu-supply =3D <&vddcpu>;
+>         operating-points-v2 =3D <&cpu_opp_table>;
+>         clocks =3D <&clkc CLKID_CPU_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu1 {
+>         cpu-supply =3D <&vddcpu>;
+>         operating-points-v2 =3D <&cpu_opp_table>;
+>         clocks =3D <&clkc CLKID_CPU1_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu2 {
+>         cpu-supply =3D <&vddcpu>;
+>         operating-points-v2 =3D <&cpu_opp_table>;
+>         clocks =3D <&clkc CLKID_CPU2_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu3 {
+>         cpu-supply =3D <&vddcpu>;
+>         operating-points-v2 =3D <&cpu_opp_table>;
+>         clocks =3D <&clkc CLKID_CPU3_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &ext_mdio {
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-s905d3-libretech-cc.dt=
+s b/arch/arm64/boot/dts/amlogic/meson-sm1-s905d3-libretech-cc.dts
+> index 537370db360f..5daadfb170b4 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-sm1-s905d3-libretech-cc.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-sm1-s905d3-libretech-cc.dts
+> @@ -64,26 +64,22 @@ &cpu0 {
+>         cpu-supply =3D <&vddcpu_b>;
+>         operating-points-v2 =3D <&cpu_opp_table>;
+>         clocks =3D <&clkc CLKID_CPU_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu1 {
+>         cpu-supply =3D <&vddcpu_b>;
+>         operating-points-v2 =3D <&cpu_opp_table>;
+>         clocks =3D <&clkc CLKID_CPU1_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu2 {
+>         cpu-supply =3D <&vddcpu_b>;
+>         operating-points-v2 =3D <&cpu_opp_table>;
+>         clocks =3D <&clkc CLKID_CPU2_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu3 {
+>         cpu-supply =3D <&vddcpu_b>;
+>         operating-points-v2 =3D <&cpu_opp_table>;
+>         clocks =3D <&clkc CLKID_CPU3_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts b/arch/arm6=
+4/boot/dts/amlogic/meson-sm1-sei610.dts
+> index 37d7f64b6d5d..024d2eb8e6ee 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts
+> @@ -359,28 +359,24 @@ &cpu0 {
+>         cpu-supply =3D <&vddcpu>;
+>         operating-points-v2 =3D <&cpu_opp_table>;
+>         clocks =3D <&clkc CLKID_CPU_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu1 {
+>         cpu-supply =3D <&vddcpu>;
+>         operating-points-v2 =3D <&cpu_opp_table>;
+>         clocks =3D <&clkc CLKID_CPU1_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu2 {
+>         cpu-supply =3D <&vddcpu>;
+>         operating-points-v2 =3D <&cpu_opp_table>;
+>         clocks =3D <&clkc CLKID_CPU2_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &cpu3 {
+>         cpu-supply =3D <&vddcpu>;
+>         operating-points-v2 =3D <&cpu_opp_table>;
+>         clocks =3D <&clkc CLKID_CPU3_CLK>;
+> -       clock-latency =3D <50000>;
+>  };
+>
+>  &ethmac {
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi b/arch/arm64/boot=
+/dts/amlogic/meson-sm1.dtsi
+> index 97e4b52066dc..966ebb19cc55 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi
+> @@ -100,6 +100,7 @@ cpu_opp_table: opp-table {
+>                 opp-1000000000 {
+>                         opp-hz =3D /bits/ 64 <1000000000>;
+>                         opp-microvolt =3D <770000>;
+> +                       clock-latency-ns =3D <50000>;
+>                 };
+>
+>                 opp-1200000000 {
+>
+> --
+> 2.47.2
+>
+>
