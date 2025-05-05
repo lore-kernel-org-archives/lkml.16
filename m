@@ -1,50 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A749E2D269C;
-	Mon,  5 May 2025 22:52:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 731542D7AFB;
+	Mon,  5 May 2025 22:56:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485527; cv=none; b=goUPobQFQjWOWf3KEX/1yb0OcpmWY8b+B0Mvy9i3NzrdiGxuHFERAoecyGzjntKqoblv0UO9re6oSrY1Ex3P5gtPapcV+F7Ly0mf2Fjow96DMpk+zMz+VxiPDj4mg3TXewndwvpdLnv5wrAx5vpr03fEMd8VxLp/+hbw7dAo9ms=
+	t=1746485762; cv=none; b=s8CNNjczsQP5gQnpq/9vDqUgvBLhb+olOCpWlfmYcoMMk1TjeZ8Ll/tGN5bJ9OE+xJf0fjcNGJKIHIBhjEs01J60Wfbe2L1ospoCgj/8he6kl9rnzUHvf+ereany/1J8Z5yF38/+sK9528lD5rUXKgH3K867lvwbwEKP2yv/80k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485527; c=relaxed/simple;
-	bh=jYdGDVam+OJmLiRGsR9CWE9SnmZCxqmKRO8I+z9Lg8E=;
+	s=arc-20240116; t=1746485762; c=relaxed/simple;
+	bh=qH60v/UBuRVGvBvmQR7xuc+vbvwcpz4hRQkRfR3oOfI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RxZTbaSiBHq+7rFuh3J6A0fZGTONHwxkYdeZKrJ07JNrvrhIEZuuRJTbN8Cd1ffs51NBJUpkeRxwzWW+EvvBsGoU8Nk0TIEMQCuKjdOR7j9u6oVRi1/2phLat2TrV92WHYnu29637Dbh/lIH2vaKDTIxJjzIqHRtnhY5M3/6kbA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hhTAXk/A; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=DIxxg2wX1asrZhifHBk5wLMHVXDg7lgGi/kFav62mmUlFJu1K8CNocWT2cscAzPGlM6pYr8y1sd9mTBfxc/G+8gy+4FOBMNJrRKQdZI/Y2RQtxG3kvHdEOKEbzPB37F6lZmRk5G4x7qQxrUAuCAH3qiHJaVYB9vpUbeo0EdXpYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UeiaXbwl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hhTAXk/A"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6685BC4CEEE;
-	Mon,  5 May 2025 22:52:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UeiaXbwl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E73EC4CEEE;
+	Mon,  5 May 2025 22:56:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485526;
-	bh=jYdGDVam+OJmLiRGsR9CWE9SnmZCxqmKRO8I+z9Lg8E=;
+	s=k20201202; t=1746485762;
+	bh=qH60v/UBuRVGvBvmQR7xuc+vbvwcpz4hRQkRfR3oOfI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hhTAXk/AlZ+u9z+5/BufavFXIb2nK7JkJjHVq/ucQJpAS7HuKkXCL9+JmANU5aXlp
-	 uugNLcSnGO7TTMQkYUeGEIzphjc5fPyi+G8aG6OiqzNck0xcO17uZ0OZZb3HKXMy2g
-	 RIQQcsKTEDT+wyK1oDTTxnffRAMjalgNHSg9KdU5fvZ5ldqu6txuaKQ3ETS4PW5b/d
-	 5cVcbOoAP1GTK/T/jjpugWZzJGTo35SPrZSXjkTKm54xs1J58UzCUf6hC2VFkwGEkS
-	 FgYgJnVRCf5HFXgO+herO72IjOik3ZJm5TFB1RabV7C/FZ50Y438TPFLzV4iujsYrJ
-	 uOGcqw8rxxYcQ==
+	b=UeiaXbwlnBTmRADGCWbbpiPKJOiRpioQIh1VNQh06GShrgR8WOM9OWz4jwf1/0+sm
+	 DcZ7tOo/lpjJwWxH1BnZHZo5Q8+khFo4G11zbiaEl1dae3IDxBnaXwL+PYf+tgnoFg
+	 ToEHZvdjDPHlm0e5wmsHkup8dliyaNLA1ABrZivBxFpbAG3010+uINK6QPlR0SKE1S
+	 tFXoBNur+CNTrZcKRHVTp5dXnwSF0wDkYqCTzNiO6Uo9AlcqZJHR0U47hpn9Llti4e
+	 MeniYnp0f/pocjs72XucNxHgP28I7puNONOdU4jlRhunvJEuOvM1bOmcmOENHcIS8T
+	 9SeMPQwseTH+Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Alex Deucher <alexander.deucher@amd.com>,
-	Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+Cc: Aaradhana Sahu <quic_aarasahu@quicinc.com>,
+	Aditya Kumar Singh <quic_adisi@quicinc.com>,
+	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
 	Sasha Levin <sashal@kernel.org>,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	Jack.Xiao@amd.com,
-	sunil.khatri@amd.com,
-	Hawking.Zhang@amd.com,
-	shaoyun.liu@amd.com,
-	Jiadong.Zhu@amd.com,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 6.12 360/486] drm/amdgpu/mes11: fix set_hw_resources_1 calculation
-Date: Mon,  5 May 2025 18:37:16 -0400
-Message-Id: <20250505223922.2682012-360-sashal@kernel.org>
+	jjohnson@kernel.org,
+	linux-wireless@vger.kernel.org,
+	ath12k@lists.infradead.org
+Subject: [PATCH AUTOSEL 6.12 471/486] wifi: ath12k: Fetch regdb.bin file from board-2.bin
+Date: Mon,  5 May 2025 18:39:07 -0400
+Message-Id: <20250505223922.2682012-471-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -54,42 +48,80 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Alex Deucher <alexander.deucher@amd.com>
+From: Aaradhana Sahu <quic_aarasahu@quicinc.com>
 
-[ Upstream commit 1350dd3691b5f757a948e5b9895d62c422baeb90 ]
+[ Upstream commit 24f587572acf7509127dbdfcbf1b681ef84eeba0 ]
 
-It's GPU page size not CPU page size.  In most cases they
-are the same, but not always.  This can lead to overallocation
-on systems with larger pages.
+Currently, ath12k_core_fetch_regdb() finds regdb.bin file through
+board id's but in board-2.bin file regdb.bin file is present with
+default board id because of which regdb.bin is not fetched.
 
-Cc: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
-Cc: Christian König <christian.koenig@amd.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Add support to fetch regdb.bin file from board-2.bin through
+default board id.
+
+Tested-on: QCN9274 hw2.0 PCI WLAN.WBE.1.3.1-00173-QCAHKSWPL_SILICONZ-1
+
+Signed-off-by: Aaradhana Sahu <quic_aarasahu@quicinc.com>
+Reviewed-by: Aditya Kumar Singh <quic_adisi@quicinc.com>
+Link: https://patch.msgid.link/20250116032835.118397-1-quic_aarasahu@quicinc.com
+Signed-off-by: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/mes_v11_0.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath12k/core.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/mes_v11_0.c b/drivers/gpu/drm/amd/amdgpu/mes_v11_0.c
-index 7a773fcd7752c..49113df8baefd 100644
---- a/drivers/gpu/drm/amd/amdgpu/mes_v11_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/mes_v11_0.c
-@@ -690,7 +690,7 @@ static int mes_v11_0_set_hw_resources(struct amdgpu_mes *mes)
+diff --git a/drivers/net/wireless/ath/ath12k/core.c b/drivers/net/wireless/ath/ath12k/core.c
+index 51252e8bc1ae9..8bb8ee98188bf 100644
+--- a/drivers/net/wireless/ath/ath12k/core.c
++++ b/drivers/net/wireless/ath/ath12k/core.c
+@@ -161,7 +161,7 @@ EXPORT_SYMBOL(ath12k_core_resume);
  
- static int mes_v11_0_set_hw_resources_1(struct amdgpu_mes *mes)
+ static int __ath12k_core_create_board_name(struct ath12k_base *ab, char *name,
+ 					   size_t name_len, bool with_variant,
+-					   bool bus_type_mode)
++					   bool bus_type_mode, bool with_default)
  {
--	int size = 128 * PAGE_SIZE;
-+	int size = 128 * AMDGPU_GPU_PAGE_SIZE;
- 	int ret = 0;
- 	struct amdgpu_device *adev = mes->adev;
- 	union MESAPI_SET_HW_RESOURCES_1 mes_set_hw_res_pkt;
+ 	/* strlen(',variant=') + strlen(ab->qmi.target.bdf_ext) */
+ 	char variant[9 + ATH12K_QMI_BDF_EXT_STR_LENGTH] = { 0 };
+@@ -192,7 +192,9 @@ static int __ath12k_core_create_board_name(struct ath12k_base *ab, char *name,
+ 			  "bus=%s,qmi-chip-id=%d,qmi-board-id=%d%s",
+ 			  ath12k_bus_str(ab->hif.bus),
+ 			  ab->qmi.target.chip_id,
+-			  ab->qmi.target.board_id, variant);
++			  with_default ?
++			  ATH12K_BOARD_ID_DEFAULT : ab->qmi.target.board_id,
++			  variant);
+ 		break;
+ 	}
+ 
+@@ -204,19 +206,19 @@ static int __ath12k_core_create_board_name(struct ath12k_base *ab, char *name,
+ static int ath12k_core_create_board_name(struct ath12k_base *ab, char *name,
+ 					 size_t name_len)
+ {
+-	return __ath12k_core_create_board_name(ab, name, name_len, true, false);
++	return __ath12k_core_create_board_name(ab, name, name_len, true, false, false);
+ }
+ 
+ static int ath12k_core_create_fallback_board_name(struct ath12k_base *ab, char *name,
+ 						  size_t name_len)
+ {
+-	return __ath12k_core_create_board_name(ab, name, name_len, false, false);
++	return __ath12k_core_create_board_name(ab, name, name_len, false, false, true);
+ }
+ 
+ static int ath12k_core_create_bus_type_board_name(struct ath12k_base *ab, char *name,
+ 						  size_t name_len)
+ {
+-	return __ath12k_core_create_board_name(ab, name, name_len, false, true);
++	return __ath12k_core_create_board_name(ab, name, name_len, false, true, true);
+ }
+ 
+ const struct firmware *ath12k_core_firmware_request(struct ath12k_base *ab,
 -- 
 2.39.5
 
