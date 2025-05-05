@@ -1,44 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E8B72DAF9C;
-	Mon,  5 May 2025 22:59:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5A7F27FD5C;
+	Mon,  5 May 2025 22:59:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485961; cv=none; b=YqnDDwtuMl39JHWh29LN1owvi8xq8qVaudas9BKvOtZq1cgXVn2w1t31gDMMr1zrE3NIX7yyYQiF/Z3QbcG7bB3GHmhetIVZxNPFK1A9FtVegHTvgKcJrgRZDXZiR+CproF+CQBZlCU/IjdusNhsbrRwisURtkPbHA8WJss8qAg=
+	t=1746485955; cv=none; b=jmnqAf6brvhHnA4WZ6EFRBi3Lo4tKwTnk4cflkLFCy+yfLvfR8dC5XMtDg+qTo+kpLBK5k0MkYTGVtVc7xYLRjI8+U0rWT+Q3N4rqa6b91X3vRn6GX02ABf0ICX+SdoUi/jsZhzbl8oY8V3tJX58ksFsj85qzryFCQnw2kEnGjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485961; c=relaxed/simple;
-	bh=I4mmtZS7oQaOkP9zUMPZmkH9iP7ipojAwNds0yRWv34=;
+	s=arc-20240116; t=1746485955; c=relaxed/simple;
+	bh=5DgwbfDE6r7BMf4An3ZJ7JUYII7xsZ0Zmz9zc4GFmCU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tPKYIIjuQYlbjqH+NdvFR4ZQaGXiR7Ey0m67TYmDzAnY6jL7Nkep/tsqzV6p9CjyQYAdXICzdQEmeaWTzr50s/lf/jkVOQvhogL8wLl/1rSUrXfIZvpr9/z4HqU8ToHStL6fnTCTeeRjEOmrq/ahbPcCCQqwAJIaWe1dmQ76AZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hweJKF+K; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=pdqOnlp9beyj8IKrty8n0k2V74C2i9styHd5urnDc4A8xP2M3XTAKI/93qro+3OmvEwlHXGxcKEOlEBqxPXuo6lWIrPcQj81FxorgZYg4RwqkwZsyzG9zUSLdDB5dTxOB8cHOVJyFPUjljpG6r14uQ4PipiF/3oe3BBUlhOCEsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ptLiZzDa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hweJKF+K"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06AA9C4CEED;
-	Mon,  5 May 2025 22:59:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ptLiZzDa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BB24C4CEE4;
+	Mon,  5 May 2025 22:59:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485961;
-	bh=I4mmtZS7oQaOkP9zUMPZmkH9iP7ipojAwNds0yRWv34=;
+	s=k20201202; t=1746485955;
+	bh=5DgwbfDE6r7BMf4An3ZJ7JUYII7xsZ0Zmz9zc4GFmCU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hweJKF+KZXeF+OMZyhIVv+ZpAcBDYTnneVt2d+OX12RIBty5mZz5f044gBtrfgrg1
-	 RDYTaHOwm9HznDxf7JadJjB1DVEfKAzGzmZvKQuP+ZnnkAdHMxKCXDUcTZLs+tWxEh
-	 nGt0wDF7eo2kCK6YhIrB/p4fc27JLvgWnnaUvt1gCcVV6xUtBk7d+KoWz/5evz4yyM
-	 nD1rpVWdNv3uqtfz1pHtxCo8ge1ABfqdUtjucGDMIIEfn+RUoIHjBcCN3qrhLWFuZs
-	 /5R3l5idPFYKcZUP8LFVnC4gTHanBEnlGqpmRz77y3y9ELY25Zn1H2RVGphnr3BGDW
-	 Uibykhx2dogqw==
+	b=ptLiZzDa4mRzkoM/ZGLJonWs2douKxSAnzcjnnuHSXu3atTY64L5wwj89qn444YVQ
+	 B+itgt1D54mo4IAvZLW0U9yFU+DragPVnFslc0jDdaWTmgcmsvXClgdPeLdY77Ofqp
+	 aBzCJ9Xow9IRX+jj4Ns7TgZ6lrE8rQHVX9ydQIU1mCBeXsWtuqmz6gY+b0jLytlrpR
+	 C550wdKNRyfV2X5Saw9Y+dzw6ZKpuljWmlDUy42zEeJAFUZBwmTNbAPV40Tq2yNoAx
+	 F99XzAD8QH5Oi0p08MSWA/SL8gWmgugQ5Wx6jMQcVBeXcK6ewApYxzgJnW16n/MkyQ
+	 NiuCM8Qz862rw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Erick Shepherd <erick.shepherd@ni.com>,
-	Kyle Roeschley <kyle.roeschley@ni.com>,
-	Brad Mouring <brad.mouring@ni.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
+Cc: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>,
+	Pablo Neira Ayuso <pablo@netfilter.org>,
 	Sasha Levin <sashal@kernel.org>,
-	linux-mmc@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 087/294] mmc: sdhci: Disable SD card clock before changing parameters
-Date: Mon,  5 May 2025 18:53:07 -0400
-Message-Id: <20250505225634.2688578-87-sashal@kernel.org>
+	kadlec@netfilter.org,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	netfilter-devel@vger.kernel.org,
+	coreteam@netfilter.org,
+	netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 084/294] netfilter: conntrack: Bound nf_conntrack sysctl writes
+Date: Mon,  5 May 2025 18:53:04 -0400
+Message-Id: <20250505225634.2688578-84-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -48,55 +52,88 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Erick Shepherd <erick.shepherd@ni.com>
+From: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
 
-[ Upstream commit fb3bbc46c94f261b6156ee863c1b06c84cf157dc ]
+[ Upstream commit 8b6861390ffee6b8ed78b9395e3776c16fec6579 ]
 
-Per the SD Host Controller Simplified Specification v4.20 §3.2.3, change
-the SD card clock parameters only after first disabling the external card
-clock. Doing this fixes a spurious clock pulse on Baytrail and Apollo Lake
-SD controllers which otherwise breaks voltage switching with a specific
-Swissbit SD card.
+nf_conntrack_max and nf_conntrack_expect_max sysctls were authorized to
+be written any negative value, which would then be stored in the
+unsigned int variables nf_conntrack_max and nf_ct_expect_max variables.
 
-Signed-off-by: Kyle Roeschley <kyle.roeschley@ni.com>
-Signed-off-by: Brad Mouring <brad.mouring@ni.com>
-Signed-off-by: Erick Shepherd <erick.shepherd@ni.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Link: https://lore.kernel.org/r/20250211214645.469279-1-erick.shepherd@ni.com
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+While the do_proc_dointvec_conv function is supposed to limit writing
+handled by proc_dointvec proc_handler to INT_MAX. Such a negative value
+being written in an unsigned int leads to a very high value, exceeding
+this limit.
+
+Moreover, the nf_conntrack_expect_max sysctl documentation specifies the
+minimum value is 1.
+
+The proc_handlers have thus been updated to proc_dointvec_minmax in
+order to specify the following write bounds :
+
+* Bound nf_conntrack_max sysctl writings between SYSCTL_ZERO
+  and SYSCTL_INT_MAX.
+
+* Bound nf_conntrack_expect_max sysctl writings between SYSCTL_ONE
+  and SYSCTL_INT_MAX as defined in the sysctl documentation.
+
+With this patch applied, sysctl writes outside the defined in the bound
+will thus lead to a write error :
+
+```
+sysctl -w net.netfilter.nf_conntrack_expect_max=-1
+sysctl: setting key "net.netfilter.nf_conntrack_expect_max": Invalid argument
+```
+
+Signed-off-by: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ net/netfilter/nf_conntrack_standalone.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-index 9796a3cb3ca62..f32429ff905ff 100644
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -2035,10 +2035,15 @@ void sdhci_set_clock(struct sdhci_host *host, unsigned int clock)
- 
- 	host->mmc->actual_clock = 0;
- 
--	sdhci_writew(host, 0, SDHCI_CLOCK_CONTROL);
-+	clk = sdhci_readw(host, SDHCI_CLOCK_CONTROL);
-+	if (clk & SDHCI_CLOCK_CARD_EN)
-+		sdhci_writew(host, clk & ~SDHCI_CLOCK_CARD_EN,
-+			SDHCI_CLOCK_CONTROL);
- 
--	if (clock == 0)
-+	if (clock == 0) {
-+		sdhci_writew(host, 0, SDHCI_CLOCK_CONTROL);
- 		return;
-+	}
- 
- 	clk = sdhci_calc_clk(host, clock, &host->mmc->actual_clock);
- 	sdhci_enable_clk(host, clk);
+diff --git a/net/netfilter/nf_conntrack_standalone.c b/net/netfilter/nf_conntrack_standalone.c
+index 559665467b04d..1d5de1d9f008d 100644
+--- a/net/netfilter/nf_conntrack_standalone.c
++++ b/net/netfilter/nf_conntrack_standalone.c
+@@ -621,7 +621,9 @@ static struct ctl_table nf_ct_sysctl_table[] = {
+ 		.data		= &nf_conntrack_max,
+ 		.maxlen		= sizeof(int),
+ 		.mode		= 0644,
+-		.proc_handler	= proc_dointvec,
++		.proc_handler	= proc_dointvec_minmax,
++		.extra1		= SYSCTL_ZERO,
++		.extra2		= SYSCTL_INT_MAX,
+ 	},
+ 	[NF_SYSCTL_CT_COUNT] = {
+ 		.procname	= "nf_conntrack_count",
+@@ -657,7 +659,9 @@ static struct ctl_table nf_ct_sysctl_table[] = {
+ 		.data		= &nf_ct_expect_max,
+ 		.maxlen		= sizeof(int),
+ 		.mode		= 0644,
+-		.proc_handler	= proc_dointvec,
++		.proc_handler	= proc_dointvec_minmax,
++		.extra1		= SYSCTL_ONE,
++		.extra2		= SYSCTL_INT_MAX,
+ 	},
+ 	[NF_SYSCTL_CT_ACCT] = {
+ 		.procname	= "nf_conntrack_acct",
+@@ -951,7 +955,9 @@ static struct ctl_table nf_ct_netfilter_table[] = {
+ 		.data		= &nf_conntrack_max,
+ 		.maxlen		= sizeof(int),
+ 		.mode		= 0644,
+-		.proc_handler	= proc_dointvec,
++		.proc_handler	= proc_dointvec_minmax,
++		.extra1		= SYSCTL_ZERO,
++		.extra2		= SYSCTL_INT_MAX,
+ 	},
+ 	{ }
+ };
 -- 
 2.39.5
 
