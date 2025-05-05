@@ -1,42 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5ACE3ACFF4;
-	Mon,  5 May 2025 23:19:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1D07393E8D;
+	Mon,  5 May 2025 23:19:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487158; cv=none; b=RelvxelOuc/+CRVUH/U3eH6iJhAzDFRZ42F/EBC3GhQVF2A20/xW2b4RhCGYcXYCrZBzfjNC1HwjUyTlrw76NgkA9hjh3sE+h2xsmpaQv1Ak0WKa/fAO4pmuVUsSK5H06dUOh/Lx/IojVXBOOiNzNqTBcVSpavoYjy5f8ozwNlE=
+	t=1746487194; cv=none; b=WrIGO4l1SsnANQpu+qsc4E8UsJomt/dWPLErjGBeaHyPu12WX3/NInE+PVU0vuEbWFNYX/yzYpfewd2kTmKXad5qbw8arhyNOHNJFyaYQMaDeMsvjcRpf2BFGlnJiu2jY/dkZXpEwpvNAfSK+cxs+/gcEoH+bwrObNaYc5NuBeM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487158; c=relaxed/simple;
-	bh=oV15o+gNwdtz8+mIe9nEr8gBfkSeqc4DoeCrsBC+qg4=;
+	s=arc-20240116; t=1746487194; c=relaxed/simple;
+	bh=ndMWoE6q7fLIy7AS4H7lryARQIYRXZJWzFV6c0gNmC0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=AKOl3mcjiHhgGGrZ638Q+/jyFRci68M/X9pFfPz/5n+hHk22VORSWeSy9K1a8vbqVjrMJb/wmHWIlVZC/gx/D6XcbgjLJ0e7Jcdhu/tmH+po+hnqn0bCaICNCiLb61EBzQr3NK3FRDL1cdl0RTSbLXtuU2MwqS6Gw8mBhV9iC78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BH3CH+7N; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=KabhTJhjhl9iv6TcCAxnGHITOGmbnEZQRWIYqfnca001Ao9ER8Kbg34ORh8Z74SxX8V2rJNEjL2MSgjBUX/C7+3aFIMhpmNXix9+Bnjfbcuba9qOWmXgOcEvdXZhtzzBoukakChAN9TtlBW6Xz2wKsUl4rYdxylOdAOSQB765cw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bCWr69KP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BH3CH+7N"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6D96C4CEEF;
-	Mon,  5 May 2025 23:19:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bCWr69KP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78CECC4CEE4;
+	Mon,  5 May 2025 23:19:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487157;
-	bh=oV15o+gNwdtz8+mIe9nEr8gBfkSeqc4DoeCrsBC+qg4=;
+	s=k20201202; t=1746487193;
+	bh=ndMWoE6q7fLIy7AS4H7lryARQIYRXZJWzFV6c0gNmC0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BH3CH+7NZbtYh6QKlUHWNIva31ALhsqQThUAYqvrnMdbj8NgWHDAFwDWGkl6B9ynG
-	 3hqp4wbE4FbeKguVD/wfMAKKMVkyHltBek56oSHDH9bM4ts3X/6oRMdc9mSXr1S2RZ
-	 Q7y1piXFZNSEkZCRw52cFJXhKGcAVQP2D5DMXhUVMLW3pBAEcEA6MYelwCKT3a9HcW
-	 DoMPjmMLuOIjyEUEVK0v6a/1pt+63ICoje33AfgHZzUYF/Qqx6U5iW2dkjBm6qfEFT
-	 iQvZX9+l2ltuyQC/9LQ//cF7+/D/Z2k0eN+TYR1A8ak/iCevIWKQ5dZZEi50qrg65a
-	 5vQ3tQWHeUVwg==
+	b=bCWr69KP+zanXGfXYIq4MyM6yWDVuDuhRu8gyMwN0Bh+HbdzL6rxmpuUMIyPao2L8
+	 vADCfF31zzg7MkXdrgkX99d2xyLIU7M9P90qyAF9y0dPF8oihqDKPYCofnjZRxDYPD
+	 Gbv5NET/Q3VksCwUMOvXNqR/ho+h/X3BgcihrwIcWalyggShALl3cMoFdWgmhWimq/
+	 +5uGVPNfiG6hdi7KmSSYHaadWkqatfhHl1u/ir2gK2xTu6PoXDcJpT4kerTqyLlxiS
+	 ArPMU/1VHCXxeopzgvqu6Pl4vGGf8NY60v3zC+oXJJ6pcD62vWRlVIAXgc9P1k2fHH
+	 gnfE8nJ1o81PA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Eric Dumazet <edumazet@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
+Cc: Peter Seiderer <ps.report@gmx.net>,
+	Simon Horman <horms@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
 	Sasha Levin <sashal@kernel.org>,
-	anna-maria@linutronix.de
-Subject: [PATCH AUTOSEL 5.10 032/114] posix-timers: Add cond_resched() to posix_timer_add() search loop
-Date: Mon,  5 May 2025 19:16:55 -0400
-Message-Id: <20250505231817.2697367-32-sashal@kernel.org>
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.10 050/114] net: pktgen: fix mpls maximum labels list parsing
+Date: Mon,  5 May 2025 19:17:13 -0400
+Message-Id: <20250505231817.2697367-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505231817.2697367-1-sashal@kernel.org>
 References: <20250505231817.2697367-1-sashal@kernel.org>
@@ -51,39 +54,50 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.10.237
 Content-Transfer-Encoding: 8bit
 
-From: Eric Dumazet <edumazet@google.com>
+From: Peter Seiderer <ps.report@gmx.net>
 
-[ Upstream commit 5f2909c6cd13564a07ae692a95457f52295c4f22 ]
+[ Upstream commit 2b15a0693f70d1e8119743ee89edbfb1271b3ea8 ]
 
-With a large number of POSIX timers the search for a valid ID might cause a
-soft lockup on PREEMPT_NONE/VOLUNTARY kernels.
+Fix mpls maximum labels list parsing up to MAX_MPLS_LABELS entries (instead
+of up to MAX_MPLS_LABELS - 1).
 
-Add cond_resched() to the loop to prevent that.
+Addresses the following:
 
-[ tglx: Split out from Eric's series ]
+	$ echo "mpls 00000f00,00000f01,00000f02,00000f03,00000f04,00000f05,00000f06,00000f07,00000f08,00000f09,00000f0a,00000f0b,00000f0c,00000f0d,00000f0e,00000f0f" > /proc/net/pktgen/lo\@0
+	-bash: echo: write error: Argument list too long
 
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
-Link: https://lore.kernel.org/all/20250214135911.2037402-2-edumazet@google.com
-Link: https://lore.kernel.org/all/20250308155623.635612865@linutronix.de
+Signed-off-by: Peter Seiderer <ps.report@gmx.net>
+Reviewed-by: Simon Horman <horms@kernel.org>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/time/posix-timers.c | 1 +
- 1 file changed, 1 insertion(+)
+ net/core/pktgen.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/time/posix-timers.c b/kernel/time/posix-timers.c
-index 29569b1c3d8c8..3a68c650ff2a3 100644
---- a/kernel/time/posix-timers.c
-+++ b/kernel/time/posix-timers.c
-@@ -161,6 +161,7 @@ static int posix_timer_add(struct k_itimer *timer)
- 			return id;
- 		}
- 		spin_unlock(&hash_lock);
-+		cond_resched();
- 	}
- 	/* POSIX return code when no timer ID could be allocated */
- 	return -EAGAIN;
+diff --git a/net/core/pktgen.c b/net/core/pktgen.c
+index c1e3d3bea1286..c2b3c454eddd9 100644
+--- a/net/core/pktgen.c
++++ b/net/core/pktgen.c
+@@ -805,6 +805,10 @@ static ssize_t get_labels(const char __user *buffer, struct pktgen_dev *pkt_dev)
+ 	pkt_dev->nr_labels = 0;
+ 	do {
+ 		__u32 tmp;
++
++		if (n >= MAX_MPLS_LABELS)
++			return -E2BIG;
++
+ 		len = hex32_arg(&buffer[i], 8, &tmp);
+ 		if (len <= 0)
+ 			return len;
+@@ -816,8 +820,6 @@ static ssize_t get_labels(const char __user *buffer, struct pktgen_dev *pkt_dev)
+ 			return -EFAULT;
+ 		i++;
+ 		n++;
+-		if (n >= MAX_MPLS_LABELS)
+-			return -E2BIG;
+ 	} while (c == ',');
+ 
+ 	pkt_dev->nr_labels = n;
 -- 
 2.39.5
 
