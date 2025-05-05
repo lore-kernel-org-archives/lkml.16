@@ -1,116 +1,120 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0008128EA4E;
-	Mon,  5 May 2025 22:32:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56E9631F05A;
+	Mon,  5 May 2025 22:32:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746484329; cv=none; b=fhQIclxnFrynTVASSAs1EUo07XQwjGnILll8ZuqcgHSbWUXgq6Dn/oFCPyDs0PCiXtXUqrVMQZmIC5RjWPq867X6Mqhp/AhiNcWcPw4UpSB4AIIVfDFMYWzPuGGpeBDm89tBLi9VSja8mMd2Vs9RFCa5qd2Xd2ncWSgXQ64VXmc=
+	t=1746484338; cv=none; b=roZkQZKDfE8malsxzmAmRdomkSms5a/77WKWEf5HFguEvIZrhZb13phbx0VMj5AzVUar/I8z2xUOmQs0OKtXqEl8zsf2cKh99w81ksJCjPJx7php8IJjqu7mZDD77nUzv018B1fZ0AXXnT9ceN6SSHjyelruo8qYp4OXEICjt+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746484329; c=relaxed/simple;
-	bh=mma8tzwZ/NqwWnsXqPq43wQ4tvCGsiw9PyvHomQ17l4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=n48lV6OVnoZAwfACKw7DgP9ursm+18wf9edCDefzzfanwDMHAPD0Pq5+xogkP2iJQL5rlJ6sugJp0uKbjDSUCsdT9DoJt07FRJBP5r+zybqP8NEcGi4fgCfRfoeZORfHChnTZti/mx46POftxXSvqwH/rf7lnc9aEitQuoFalnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JYG4CV8y; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746484338; c=relaxed/simple;
+	bh=aWwkPj6JIZPJ12ijNcUYfCCvAOBlK+qnpbAZ0dtBuSw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PwjZuQpIhAq6WxehGHjh0IdjEZl3kN6wnS2Nol5u6/0g4XgaIoPJWfkWCEStAklWRy1WqMk+ZVA0TW7Ek3vH85Ai9foKSjxGquGLJr83g99ThdmK4gzNiUqs4Jz8tGfWe6o6C5v6VxpEebqG6jU3q54NqLOXXwsx8sEP7jewhr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sAu1JNXo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JYG4CV8y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8971DC4CEEE;
-	Mon,  5 May 2025 22:32:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sAu1JNXo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30D33C4CEED;
+	Mon,  5 May 2025 22:32:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746484328;
-	bh=mma8tzwZ/NqwWnsXqPq43wQ4tvCGsiw9PyvHomQ17l4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JYG4CV8yg2byv9RZHH6b9s4ar4Ogju745AHK4JvJHnvNFOwOCSJxmagvkPL0BeKJd
-	 IphkUa/J1A+Jjrj6blAZCghi8d1BPhHBLdXh7jU5j5PbPn0PsSjmbMjPdF9BtU1bi7
-	 89pSU+V3JSszCQwQOSGFGo3pBJjKpvX4kpaYIC+UX6UXbdOlvEvMYK/hinNcXKztrI
-	 V/NhgexE7xL4sYGGNzp2ap/Uo2xF2Wt6lFaDPJHVt10GwqL43lbAxCsuzq56nfG+tq
-	 h/XZH9FA7PrVGNcK+R7fMCcep+w07PA5+RqpsbsOnFFGCmVxyjyDDzq1NEZIjgKbdE
-	 F4lv0J+Fn0olA==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Huacai Chen <chenhuacai@loongson.cn>,
-	Yanteng Si <si.yanteng@linux.dev>,
-	Simon Horman <horms@kernel.org>,
-	Chong Qiao <qiaochong@loongson.cn>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	mcoquelin.stm32@gmail.com,
-	alexandre.torgue@foss.st.com,
-	chenhuacai@kernel.org,
-	chenfeiyang@loongson.cn,
-	fancer.lancer@gmail.com,
-	phasta@kernel.org,
-	zhaoqunqin@loongson.cn,
-	rmk+kernel@armlinux.org.uk,
-	netdev@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.14 456/642] net: stmmac: dwmac-loongson: Set correct {tx,rx}_fifo_size
-Date: Mon,  5 May 2025 18:11:12 -0400
-Message-Id: <20250505221419.2672473-456-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250505221419.2672473-1-sashal@kernel.org>
-References: <20250505221419.2672473-1-sashal@kernel.org>
+	s=k20201202; t=1746484338;
+	bh=aWwkPj6JIZPJ12ijNcUYfCCvAOBlK+qnpbAZ0dtBuSw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=sAu1JNXotXEwuUsnuvyW/nQiQPS1sZoMx40TpDfz1gpQhfeAiQI+m9754c73hLPdT
+	 OJULor3n7eP1ZSxrvgEK3vftHGEH+IF7Aa733yKEN/Z8cG3zruy6PBV7Beng73M3dF
+	 GHXIodjdDANRZVw2PgCGeR5LzswqTLwMF9Wd0eNTYoYX4P4i693EE7YXsKBaeW8LxX
+	 Yqez9sxZdwoiJz4I4+Gh6aUk187OIKyUpWOuEL9CwM/BFTkovbGdNptSedqV5Qjtrg
+	 TKIqhDXMuMADQ03EP4zYV9MG+GUjLRByTo47EAzSM1jCP7yNDb4aDVRJSQxI02uOML
+	 89SC4u5WM/+PQ==
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-3105ef2a06cso47748971fa.2;
+        Mon, 05 May 2025 15:32:18 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUuarNdq8TRW+e+DVU/Rxzbt3Jugwrk0W3+8AMhj4X0r5vkQt25y5NkVAXi+Zr30iUF7mkseLI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzhioywc/xoiy926pIsiaPfvUF6xm5kGmbQEBQJQznLFosMnOjI
+	/tAjiphH8YVlblVIpF03GQuQ0uHMuu9c9pGBFUJcBpGmSU/X6Qsa1/2TOrPEDQMRN/p86T+9gxK
+	9DU7a4P6SBQ8e1kF9/Ru3v9sGc+E=
+X-Google-Smtp-Source: AGHT+IGZPEdy4d5fs2vkYk9CSAe2Oj8skd9Oz00HKf8ZahGb+jEF8RkEAovv9ahgTsLBUwVJyNy2paElHXC6LQymzcg=
+X-Received: by 2002:a05:6512:234f:b0:54d:6aa1:8f5a with SMTP id
+ 2adb3069b0e04-54fb4a5d314mr217077e87.13.1746484336579; Mon, 05 May 2025
+ 15:32:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.14.5
-Content-Transfer-Encoding: 8bit
+References: <20250505221419.2672473-1-sashal@kernel.org> <20250505221419.2672473-400-sashal@kernel.org>
+In-Reply-To: <20250505221419.2672473-400-sashal@kernel.org>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Tue, 6 May 2025 00:32:05 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXF6=t9NoH5Lsh4=RwhUTHtpBt9VmZr3bEVm6=1zGiOf2w@mail.gmail.com>
+X-Gm-Features: ATxdqUErh1T2txHfXNjzmhH5BJ_P7lEmzSx0aae_jJOJZrFCc7iYj59jh6IImPo
+Message-ID: <CAMj1kXF6=t9NoH5Lsh4=RwhUTHtpBt9VmZr3bEVm6=1zGiOf2w@mail.gmail.com>
+Subject: Re: [PATCH AUTOSEL 6.14 400/642] x86/relocs: Handle
+ R_X86_64_REX_GOTPCRELX relocations
+To: Sasha Levin <sashal@kernel.org>
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
+	Brian Gerst <brgerst@gmail.com>, Ingo Molnar <mingo@kernel.org>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, tglx@linutronix.de, mingo@redhat.com, 
+	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, nathan@kernel.org, 
+	ubizjak@gmail.com, thomas.weissschuh@linutronix.de, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-From: Huacai Chen <chenhuacai@loongson.cn>
+On Tue, 6 May 2025 at 00:30, Sasha Levin <sashal@kernel.org> wrote:
+>
+> From: Brian Gerst <brgerst@gmail.com>
+>
+> [ Upstream commit cb7927fda002ca49ae62e2782c1692acc7b80c67 ]
+>
+> Clang may produce R_X86_64_REX_GOTPCRELX relocations when redefining the
+> stack protector location.  Treat them as another type of PC-relative
+> relocation.
+>
+> Signed-off-by: Brian Gerst <brgerst@gmail.com>
+> Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Link: https://lore.kernel.org/r/20250123190747.745588-6-brgerst@gmail.com
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-[ Upstream commit 8dbf0c7556454b52af91bae305ca71500c31495c ]
+This patch was one of a series of about 20 patches. Did you pick all of them?
 
-Now for dwmac-loongson {tx,rx}_fifo_size are uninitialised, which means
-zero. This means dwmac-loongson doesn't support changing MTU because in
-stmmac_change_mtu() it requires the fifo size be no less than MTU. Thus,
-set the correct tx_fifo_size and rx_fifo_size for it (16KB multiplied by
-queue counts).
 
-Here {tx,rx}_fifo_size is initialised with the initial value (also the
-maximum value) of {tx,rx}_queues_to_use. So it will keep as 16KB if we
-don't change the queue count, and will be larger than 16KB if we change
-(decrease) the queue count. However stmmac_change_mtu() still work well
-with current logic (MTU cannot be larger than 16KB for stmmac).
-
-Note: the Fixes tag picked here is the oldest commit and key commit of
-the dwmac-loongson series "stmmac: Add Loongson platform support".
-
-Acked-by: Yanteng Si <si.yanteng@linux.dev>
-Reviewed-by: Simon Horman <horms@kernel.org>
-Signed-off-by: Chong Qiao <qiaochong@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-Link: https://patch.msgid.link/20250210134328.2755328-1-chenhuacai@loongson.cn
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-index ab7c2750c1042..702ea5a00b56d 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-@@ -590,6 +590,9 @@ static int loongson_dwmac_probe(struct pci_dev *pdev, const struct pci_device_id
- 	if (ret)
- 		goto err_disable_device;
- 
-+	plat->tx_fifo_size = SZ_16K * plat->tx_queues_to_use;
-+	plat->rx_fifo_size = SZ_16K * plat->rx_queues_to_use;
-+
- 	if (dev_of_node(&pdev->dev))
- 		ret = loongson_dwmac_dt_config(pdev, plat, &res);
- 	else
--- 
-2.39.5
-
+> ---
+>  arch/x86/tools/relocs.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/arch/x86/tools/relocs.c b/arch/x86/tools/relocs.c
+> index e937be979ec86..92a1e503305ef 100644
+> --- a/arch/x86/tools/relocs.c
+> +++ b/arch/x86/tools/relocs.c
+> @@ -32,6 +32,11 @@ static struct relocs         relocs32;
+>  static struct relocs           relocs32neg;
+>  static struct relocs           relocs64;
+>  # define FMT PRIu64
+> +
+> +#ifndef R_X86_64_REX_GOTPCRELX
+> +# define R_X86_64_REX_GOTPCRELX 42
+> +#endif
+> +
+>  #else
+>  # define FMT PRIu32
+>  #endif
+> @@ -227,6 +232,7 @@ static const char *rel_type(unsigned type)
+>                 REL_TYPE(R_X86_64_PC16),
+>                 REL_TYPE(R_X86_64_8),
+>                 REL_TYPE(R_X86_64_PC8),
+> +               REL_TYPE(R_X86_64_REX_GOTPCRELX),
+>  #else
+>                 REL_TYPE(R_386_NONE),
+>                 REL_TYPE(R_386_32),
+> @@ -861,6 +867,7 @@ static int do_reloc64(struct section *sec, Elf_Rel *rel, ElfW(Sym) *sym,
+>
+>         case R_X86_64_PC32:
+>         case R_X86_64_PLT32:
+> +       case R_X86_64_REX_GOTPCRELX:
+>                 /*
+>                  * PC relative relocations don't need to be adjusted unless
+>                  * referencing a percpu symbol.
+> --
+> 2.39.5
+>
