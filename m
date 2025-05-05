@@ -1,80 +1,120 @@
-Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37C7318BC0C;
-	Mon,  5 May 2025 01:08:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C28DD35964;
+	Mon,  5 May 2025 01:09:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746407289; cv=none; b=eX9ocGX1IxjNj/WEFeCwYRQYeCV2rqFi1GuaGpp1WOv/soyKp2FC/Wp68EmH63F1dTdQtNK/9fYCSPyM9nmKL+bPwZefj/X+ehHbfUU0HO5r+EPg5MbEWGzgCeteJzVrzkwxS9c2wDDp1lc6TDlTrqj+CZfgbaiLViJ3vd+w/rw=
+	t=1746407369; cv=none; b=LNw46yV1414cbEqVx/KawwxZRvZIro6+MHUpNpAUilHjUZ19smPYLBXBjQty8k6hIlPVHOKJhyOmE72+V5qlc9rARKHz+/6xejNE3nCwuXJo2k3VFvmtXMexLmkO+e5S+ziVmjbrCmScI8/w6G8UudnfDeEC9hjKDIu3CJyrg8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746407289; c=relaxed/simple;
-	bh=75zWhaHAfd/PZq0supYaQZWq1w+BXA7M2wpBQeb1kh4=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jn9di+5NGHln9+gc3fEDPBsjs1BXscaEBvDtf7n4Cm3TyLd9fnCiHXBPa09fSKLdUQ3yAT+LCemlg3YYDdEWlLme3PMWE42qPfAB4cETZxg6ZOA4aTMZC8/seBc3NuMiSAC9U2fdEIbaDj9jlrz4xbvTRlfWDE+0GJ86jrMRbgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
-Received: from local
-	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
-	 (Exim 4.98.2)
-	(envelope-from <daniel@makrotopia.org>)
-	id 1uBkDd-000000004Zc-3m28;
-	Mon, 05 May 2025 01:08:01 +0000
-Date: Mon, 5 May 2025 02:07:58 +0100
-From: Daniel Golle <daniel@makrotopia.org>
-To: Felix Fietkau <nbd@nbd.name>, Sean Wang <sean.wang@mediatek.com>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Elad Yifee <eladwf@gmail.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH net v2 2/2] net: ethernet: mtk_eth_soc: do not reset PSE when
- setting FE
-Message-ID: <18f0ac7d83f82defa3342c11ef0d1362f6b81e88.1746406763.git.daniel@makrotopia.org>
-References: <c9ff9adceac4f152239a0f65c397f13547639175.1746406763.git.daniel@makrotopia.org>
+	s=arc-20240116; t=1746407369; c=relaxed/simple;
+	bh=8hc3F+jD5dTdwviO46VHg79TvslfrTUtAWg8MFGeAY0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=X7Rn9c4JnoQ+muQ4dd6bhGYNHCGQvAqDKs2u5S7kaqOPtG7YH9LXETY0EI8gPuXSUeFQB6scH5UW3dqfmFYg8/5+IzlefnDTz0blcxhzLHaLYBPWRrwhrU08aEzyFhXblFubi46nDb4WeYX19CyRPu5qFlYUMNrl6rgl7oF3Lbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=OeNEKf4G; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="OeNEKf4G"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
+	:Subject; bh=5NcuI6cPYdj/N7shJLQtUlrygSH0sD1RJd008f4HKH4=; b=OeNEKf4Gkj7+Y+jN
+	Jx8Nh2YB3DE6ggdkQ1ZEy59iEgSSp6l5QjZ8qnuMQ5oYNANHs6tRcfVfw61HoQMMbAcdKJegrHYO1
+	RjY0DWFKPCG8R8jU4yBG7zCIj+uHOlegAp41O084VOTn6c8hOA/BsKbBZy7oJpsVM3NLdga0Q4XkJ
+	UK6ek2Y30zUnjn8nLOklYGCNSV4bzkjcOBi+PLAM/QI7kTuHqRJs6r+P99nknM4kJt2uT8tQInmmF
+	lpg4DE+WbUUawrhLCAKbEnxv48I/hJq5OMEgnNYcGYeT8VqlS3vlU9+qTPABVpUdkA+UYV/d/gAsC
+	ZcwTEy3J2jLZtBSU2w==;
+Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
+	by mx.treblig.org with esmtp (Exim 4.96)
+	(envelope-from <linux@treblig.org>)
+	id 1uBkKh-001M2I-1T;
+	Mon, 05 May 2025 01:09:23 +0000
+From: linux@treblig.org
+To: perex@perex.cz,
+	tiwai@suse.com
+Cc: linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Dr. David Alan Gilbert" <linux@treblig.org>
+Subject: [PATCH] ALSA: hda: Remove unused snd_hda_add_nid
+Date: Mon,  5 May 2025 02:09:22 +0100
+Message-ID: <20250505010922.340534-1-linux@treblig.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c9ff9adceac4f152239a0f65c397f13547639175.1746406763.git.daniel@makrotopia.org>
+Content-Transfer-Encoding: 8bit
 
-From: Frank Wunderlich <frank-w@public-files.de>
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
 
-Remove redundant PSE reset.
-When setting FE register there is no need to reset PSE,
-doing so may cause FE to work abnormal.
+snd_hda_add_nid() last use was removed in 2014 by
+commit db8e8a9dc972 ("ALSA: hda - Remove the obsoleted static quirk codes
+from patch_cmedia.c")
 
-Link: https://git01.mediatek.com/plugins/gitiles/openwrt/feeds/mtk-openwrt-feeds/+/3a5223473e086a4b54a2b9a44df7d9ddcc2bc75a
-Fixes: dee4dd10c79aa ("net: ethernet: mtk_eth_soc: ppe: add support for multiple PPEs")
-Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+Remove it.
+
+Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
 ---
-v2: fix commit title
+ sound/pci/hda/hda_codec.c | 31 -------------------------------
+ sound/pci/hda/hda_local.h |  2 --
+ 2 files changed, 33 deletions(-)
 
- drivers/net/ethernet/mediatek/mtk_eth_soc.c | 3 ---
- 1 file changed, 3 deletions(-)
-
-diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-index 53c39561b6d9a..22a532695fb0d 100644
---- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-+++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-@@ -3473,9 +3473,6 @@ static int mtk_open(struct net_device *dev)
- 			}
- 			mtk_gdm_config(eth, target_mac->id, gdm_config);
- 		}
--		/* Reset and enable PSE */
--		mtk_w32(eth, RST_GL_PSE, MTK_RST_GL);
--		mtk_w32(eth, 0, MTK_RST_GL);
+diff --git a/sound/pci/hda/hda_codec.c b/sound/pci/hda/hda_codec.c
+index b436d436831b..c018beeecd3d 100644
+--- a/sound/pci/hda/hda_codec.c
++++ b/sound/pci/hda/hda_codec.c
+@@ -1731,37 +1731,6 @@ int snd_hda_ctl_add(struct hda_codec *codec, hda_nid_t nid,
+ }
+ EXPORT_SYMBOL_GPL(snd_hda_ctl_add);
  
- 		napi_enable(&eth->tx_napi);
- 		napi_enable(&eth->rx_napi);
+-/**
+- * snd_hda_add_nid - Assign a NID to a control element
+- * @codec: HD-audio codec
+- * @kctl: the control element to assign
+- * @index: index to kctl
+- * @nid: corresponding NID (optional)
+- *
+- * Add the given control element to an array inside the codec instance.
+- * This function is used when #snd_hda_ctl_add cannot be used for 1:1
+- * NID:KCTL mapping - for example "Capture Source" selector.
+- */
+-int snd_hda_add_nid(struct hda_codec *codec, struct snd_kcontrol *kctl,
+-		    unsigned int index, hda_nid_t nid)
+-{
+-	struct hda_nid_item *item;
+-
+-	if (nid > 0) {
+-		item = snd_array_new(&codec->nids);
+-		if (!item)
+-			return -ENOMEM;
+-		item->kctl = kctl;
+-		item->index = index;
+-		item->nid = nid;
+-		return 0;
+-	}
+-	codec_err(codec, "no NID for mapping control %s:%d:%d\n",
+-		  kctl->id.name, kctl->id.index, index);
+-	return -EINVAL;
+-}
+-EXPORT_SYMBOL_GPL(snd_hda_add_nid);
+-
+ /**
+  * snd_hda_ctls_clear - Clear all controls assigned to the given codec
+  * @codec: HD-audio codec
+diff --git a/sound/pci/hda/hda_local.h b/sound/pci/hda/hda_local.h
+index 4714057dba85..68c31f5354b7 100644
+--- a/sound/pci/hda/hda_local.h
++++ b/sound/pci/hda/hda_local.h
+@@ -571,8 +571,6 @@ struct hda_nid_item {
+ 
+ int snd_hda_ctl_add(struct hda_codec *codec, hda_nid_t nid,
+ 		    struct snd_kcontrol *kctl);
+-int snd_hda_add_nid(struct hda_codec *codec, struct snd_kcontrol *kctl,
+-		    unsigned int index, hda_nid_t nid);
+ void snd_hda_ctls_clear(struct hda_codec *codec);
+ 
+ /*
 -- 
 2.49.0
+
