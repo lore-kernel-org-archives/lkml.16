@@ -1,42 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE2212EC010;
-	Mon,  5 May 2025 23:07:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47F5E2EC028;
+	Mon,  5 May 2025 23:07:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486432; cv=none; b=GeryAtM6xuPtDeU7zhSRSaUCKKcwFY/X0QkMXVsdm024vT++fWo6G3Fj7XfV1Bt5ZEjQDGS2aOg2ybGCR8reRxMILEi+sYpgBcXg2qx/0ZoXS7hhU84TKO/wrGgGdEgVLvtAvDlaCbkbEwpWw35B2LmeqRdMMn2SYKpGpo8U0bs=
+	t=1746486438; cv=none; b=WXF8i/9xbk8gwoSlsz0OCBDCUdSgAEB4uSfu7jPHgH58Uufaf3wbsVBJyv2rYhSERXksAGbz1ucYowrf1s5a6OPRl3BxhguRbrDi3R7Qdfkwcua8fx9dibX4DK2GQlPk+4MJzP7oHtmBCv3kbYc+yU7dZOBEDc8t2Wz/YN7JPh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486432; c=relaxed/simple;
-	bh=kzSyyvd3/yElOODaEHwKXg+4Hm01WJRVqSMsusW2GH0=;
+	s=arc-20240116; t=1746486438; c=relaxed/simple;
+	bh=BER7pLxMC+HVOJMzmT6E2tobwzQBzVLGf6Mm2BrfNYs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ZxQKuHjdyJVS+2Y0yUQe7DteTV9oWp/1WEXk9D2Nvt35+gp/b1ahSwbsoIXBQdI1PE9JEgZTYiXB0e0riMrVTO+kd+8EBx0OFLK2+0tNnEv+URq2nc9h6pmjsIvi27e84O3ulO/FSVvzyAn2ZDBIBlcKg3fbTyy28rem1YYR9OI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I6SW6gmx; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=LGBTpag3qqvZt3AgVJSAIb1TjM0vaTuQ8ERwMtWjWxbCHD3nwraytQY3OeXeSXzsAPgnj+RQeyzZSwpHRecHiPlIroM/cr+2YTRj1WnwYwi7fWeaiTCIdgzJ2KVeonDBQ9R6SCgD5sd8/7388fvB72Z77LHbwZDh3KoKEc26rTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JcLhrLKN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I6SW6gmx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C005EC4CEED;
-	Mon,  5 May 2025 23:07:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JcLhrLKN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8979C4CEED;
+	Mon,  5 May 2025 23:07:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486432;
-	bh=kzSyyvd3/yElOODaEHwKXg+4Hm01WJRVqSMsusW2GH0=;
+	s=k20201202; t=1746486438;
+	bh=BER7pLxMC+HVOJMzmT6E2tobwzQBzVLGf6Mm2BrfNYs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=I6SW6gmxCvBxybgRylM71JQa40hM3Zyp5XJNbx1FgktrcAfArYwOZtjtlNkTVkSkh
-	 m+nmpom8/QJ2wDUD8AqtUMyV6iXf9H9pSTGZV7eQSaDjEviGf2wn7ahk8pMpxx5MFf
-	 6cadFuk2TgNIE4klDLEo+k6C1OaF5oomnpoX5b6YUyQ7hrL8OPkHm297WSA3qrFnL7
-	 Dw55XJ2gbbRjF5axDM3b/7IDgT0Kmh0i3wL0v0I0wof918kghdjUMeZAfN9Jvcr5Pc
-	 rceSDEPl91hnV6ksuqGm3FU3IOwvuN+yVkJXhB4mAR6MaJimG0Hitpi4FPqKwnWAjo
-	 T/FuEH4+Cf/Lg==
+	b=JcLhrLKNp/jhf13E9O0tJJ/0PTKxjb/Uxq4FQTP6cfJESpsRuXXgiINDjA5YdCnYc
+	 y0i+m7PQTHiSzkBlIpnC3Nyuq02shv636OpSzKCUy4EDtActl+cHMcY/LZ4mxNOXB5
+	 O34LeRKa20rCyYQG8d36ghwrDnEdw0p0oJYh80CX3ZlbJq1FzbolxEg+fUKuszf1xL
+	 9WR99b6NWAX8IvQKJlzoP0KNaGXHSOlYGVXGW+bbgqWRCU2XxZqOHWJD+xOHZo69VU
+	 kH0Z0FOTryAhPiS3KqyY0dGQHAfXRcKtBdzYawOAq5LppAXg4GtNZo3kIOaxUjk1Tr
+	 /AKIIIIlA4oQQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
+Cc: Trond Myklebust <trond.myklebust@hammerspace.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
 	Sasha Levin <sashal@kernel.org>,
-	peterz@infradead.org
-Subject: [PATCH AUTOSEL 6.1 024/212] objtool: Properly disable uaccess validation
-Date: Mon,  5 May 2025 19:03:16 -0400
-Message-Id: <20250505230624.2692522-24-sashal@kernel.org>
+	trondmy@kernel.org,
+	anna@kernel.org,
+	snitzer@kernel.org,
+	neilb@suse.de,
+	kolga@netapp.com,
+	linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.1 027/212] pNFS/flexfiles: Report ENETDOWN as a connection error
+Date: Mon,  5 May 2025 19:03:19 -0400
+Message-Id: <20250505230624.2692522-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505230624.2692522-1-sashal@kernel.org>
 References: <20250505230624.2692522-1-sashal@kernel.org>
@@ -51,66 +56,35 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.1.136
 Content-Transfer-Encoding: 8bit
 
-From: Josh Poimboeuf <jpoimboe@kernel.org>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit e1a9dda74dbffbc3fa2069ff418a1876dc99fb14 ]
+[ Upstream commit aa42add73ce9b9e3714723d385c254b75814e335 ]
 
-If opts.uaccess isn't set, the uaccess validation is disabled, but only
-partially: it doesn't read the uaccess_safe_builtin list but still tries
-to do the validation.  Disable it completely to prevent false warnings.
+If the client should see an ENETDOWN when trying to connect to the data
+server, it might still be able to talk to the metadata server through
+another NIC. If so, report the error.
 
-Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Link: https://lore.kernel.org/r/0e95581c1d2107fb5f59418edf2b26bba38b0cbb.1742852846.git.jpoimboe@kernel.org
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Tested-by: Jeff Layton <jlayton@kernel.org>
+Acked-by: Chuck Lever <chuck.lever@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/objtool/check.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ fs/nfs/flexfilelayout/flexfilelayout.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 828c91aaf55bd..bf75628c5389a 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -3083,7 +3083,7 @@ static int handle_insn_ops(struct instruction *insn,
- 		if (update_cfi_state(insn, next_insn, &state->cfi, op))
- 			return 1;
- 
--		if (!insn->alt_group)
-+		if (!opts.uaccess || !insn->alt_group)
- 			continue;
- 
- 		if (op->dest.type == OP_DEST_PUSHF) {
-@@ -3535,6 +3535,9 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
- 			return 0;
- 
- 		case INSN_STAC:
-+			if (!opts.uaccess)
-+				break;
-+
- 			if (state.uaccess) {
- 				WARN_FUNC("recursive UACCESS enable", sec, insn->offset);
- 				return 1;
-@@ -3544,6 +3547,9 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
- 			break;
- 
- 		case INSN_CLAC:
-+			if (!opts.uaccess)
-+				break;
-+
- 			if (!state.uaccess && func) {
- 				WARN_FUNC("redundant UACCESS disable", sec, insn->offset);
- 				return 1;
-@@ -3956,7 +3962,8 @@ static int validate_symbol(struct objtool_file *file, struct section *sec,
- 	if (!insn || insn->ignore || insn->visited)
- 		return 0;
- 
--	state->uaccess = sym->uaccess_safe;
-+	if (opts.uaccess)
-+		state->uaccess = sym->uaccess_safe;
- 
- 	ret = validate_branch(file, insn->func, insn, *state);
- 	if (ret && opts.backtrace)
+diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
+index 8056b05bd8dca..07e5ea64dcd68 100644
+--- a/fs/nfs/flexfilelayout/flexfilelayout.c
++++ b/fs/nfs/flexfilelayout/flexfilelayout.c
+@@ -1255,6 +1255,7 @@ static void ff_layout_io_track_ds_error(struct pnfs_layout_segment *lseg,
+ 		case -ECONNRESET:
+ 		case -EHOSTDOWN:
+ 		case -EHOSTUNREACH:
++		case -ENETDOWN:
+ 		case -ENETUNREACH:
+ 		case -EADDRINUSE:
+ 		case -ENOBUFS:
 -- 
 2.39.5
 
