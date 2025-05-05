@@ -1,92 +1,177 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2EC041C63;
-	Mon,  5 May 2025 13:10:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36AB041C63;
+	Mon,  5 May 2025 13:11:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746450620; cv=none; b=ESOo//cUSCzXYJTk8S514cdCPMUxz3TKOt4o/Xm9afiY1IC3WxeIMBrtwFMu1YifEOZv0mLb9d7NkZ2uS/S7P4yTE0lfLk2KSF1OtnD/YsVMja5bK1XQp7uspunzU8LaCguP4BOfFycVumx5hzrHC60Lo0hIb1+/nI6O6mfBmXY=
+	t=1746450689; cv=none; b=WruEC0HlPCx/Yt/vnpFtDtSkOOntGegrCEJWiUJJRHa1838GqRIggxtkIr05qNK0lCA6++YbdxNMLrS4yPWIZ0SqrAD3wZCSBRoM47XIwyOhiJjm0Ahnesdyp4467O2bQ1JkDQDgulsIeXk/LXxLKiJJfoiC6k4vk5WnbIuryzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746450620; c=relaxed/simple;
-	bh=216poSu3wmUkiI+pzqUf4BUNYCE+V6WYcMsoZAk2i2Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oOrfwRR0ZMSHEcNd2VCWew5rSASNDd0iT7ztN9gkMp/+yXtS+HvxPYcCE3gNn6LKS3qgtvvCV6isbmzqnylWsXJDXwLQVXKV4/R+LmpS1w0GchjrxkW2d1/QFM127m029FU4GyV5ticmdq2870Rd67ocELYqNxm5/c6YJ/5pCPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fIYux7f2; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746450689; c=relaxed/simple;
+	bh=AiE4ZD17aPOaZAPivHMdsvTvdLsANzKVsMl0h1CzKxE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WQt4KSYXMjcTdUa8lUl6XvI8qXqywLGFcKu6g24caJqYzd+xOPIv6h9q2xhGxBb7654/zAWxEWXW6c6GdmY/DJYcIx/MsA+W6hkpw//J+p1nrgEoA9zK17HdHBMdFfMuyfx6LjMQ1iQaedDk+gT1UotF12y047tkG93rpa7ww8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l16GkV3L; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fIYux7f2"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-54d65cb6e8aso5647612e87.1;
-        Mon, 05 May 2025 06:10:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746450616; x=1747055416; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Bk2Fdh/LRuqCw+jHA02dwhIjxA4SW793iNQ+swnOfo0=;
-        b=fIYux7f2RS82w2QQVydeIE2SlmrQZZgHAtQE1/OkFfyRJ6IRJ5V8iRCKKpaZCGPqdi
-         oyot3LJuVvlCiAHaibjAI5LRBjm5Q6S9aEi3/5B6nZ/CgQ88wd0Doe4ZNxlTtRMQEe89
-         7QHRp0s8Y9nnFiKWCI/jjbF1oBg/rb42WvvI9c3MMx75tOvReq/dgc5vZUnM1bIYK+v7
-         OGXne8ysFHcuSCjXTlkvn806STGRibXCGFQ3nmfKnIU7hHV31WVo1M/XEgi9FwjE4vcv
-         Y2/8i+K5LFzny/pmLKlLiH0Bp2oCaT8sUV1EkcRTcEJ1h/fWsutkIcC8CnJAFts2sYBa
-         sKmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746450616; x=1747055416;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Bk2Fdh/LRuqCw+jHA02dwhIjxA4SW793iNQ+swnOfo0=;
-        b=Ip59acxEZ62mYeJjXEhsKTbYtiC0Xm21KlCe4cpGVVuoHNFCd5y9UqHT6h2DYLIa/h
-         I8ChBVx7Kk4XUT4lyGS8N5JYLTbZUlQ4H4X1Y4ts3jZueZH1olcQ8DL/voyRXX1d1S0l
-         LPiYUtQ6Y6cyshSoIUnSXfeVDDWs9VLsWF7dA3xipVEToxK18VboHokKYypWyAtnYwLO
-         5oDz9aDxhnqonP/cb14xR/W3RmCttnSWvIMQv4ATOt+7njc4R51WYvXgV0tdST4UT900
-         wIBs9FpRNu9/+R7fyudBxVBWkUbvOouYUKLo+zr+PhvbXOdRRycXYzO2fXz0NfYyliet
-         TVgg==
-X-Forwarded-Encrypted: i=1; AJvYcCUTUz+/RtqPgYBsB3wsdIynHrXuDg8oWbLZPksEBK2he79iJ4kko87xXI/1e9jI97//vF7Aj8aoFlR+RxUG@vger.kernel.org, AJvYcCWqVItdrOgpold22IJHKiJZUGleaIo1476eu5z4A6m6D7ITQNgIISi3MtMkEVCBOsKKvQQ0Bf36Lic=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyU7pRtjdSjcOGiu7ewt/nv2ILF1jhQ8oYBgo9mtpu9D/E5Fy7f
-	54dl2nwOs41chrer8SEKiyqTlSNZzb7L7MXHRZ2NA/Pbv7zVP9I0Z7YeXQ==
-X-Gm-Gg: ASbGncuZReGusiNrHqVVKd2b0+5/6DjAPpWP0Wbd7tMFY9Er3+BS1ar6sShCIcIDzph
-	xG9vAqI8ff3NyoQhSJztuA1zS053KlYwfT4xz2WxuB29Y+H0eD46cIloXeXyyEzbDWnlMCRBRSa
-	dwqWJ6bTbB7fJbVU9blV5b7047LumWR1liMzw2bRz6en4q5AofO/YgUkbLxVSP44STzEA3+Sfvy
-	wlHtrX3Ha9OQMo5PmuS/QWW691yUccqItnmpkasd4MDuLeT4+zGTkHMkvwrttaVzxbEcyeipgdH
-	vikvOjtnUmqi6QUWzIPNg7ps4caG8IJ1jdevYhmlDjdDnFb4r/Dp7t86Blh+/Ku6O66fWe/CkDs
-	TPw==
-X-Google-Smtp-Source: AGHT+IHr1P+DfBvNYTE1IUuk4mUjXsCsLwslNxXJENXtYrYYMvnH/fcJseObHYrApDHjE4l45mPtNg==
-X-Received: by 2002:a05:6512:1596:b0:545:3dd:aa69 with SMTP id 2adb3069b0e04-54eb2466eb8mr1961754e87.36.1746450615513;
-        Mon, 05 May 2025 06:10:15 -0700 (PDT)
-Received: from gmail.com (83-233-6-197.cust.bredband2.com. [83.233.6.197])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ea94f6e0bsm1703046e87.252.2025.05.05.06.10.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 06:10:13 -0700 (PDT)
-Date: Mon, 5 May 2025 15:10:12 +0200
-From: Marcus Folkesson <marcus.folkesson@gmail.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Andi Shyti <andi.shyti@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] i2c: davinci: add I2C_FUNC_PROTOCOL_MANGLING to feature
- list
-Message-ID: <aBi4tE4IQxoh7jYL@gmail.com>
-References: <20250326-i2c-v1-1-82409ebe9f2b@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l16GkV3L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5058C4CEF0;
+	Mon,  5 May 2025 13:11:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746450688;
+	bh=AiE4ZD17aPOaZAPivHMdsvTvdLsANzKVsMl0h1CzKxE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=l16GkV3Ld2+BattRDIXJbk3w/r9clpWMvG402x5q7RD8nn7x0kXSZPgyprKVxrpN4
+	 +7P7dAWCd9ART3bSmImZk6wpBngHX7qic+ioV4bm3XqnKgzh1pbJMuMUDA1DVRXvZm
+	 WZxuhZCFt3+cpYv2p8ZxtWHUZ5ozU2WunK/plugnlKyRctp9dMOANTkfdy3/cP9b7e
+	 VEUmW9fJxyOkOebv4J6I0tkm5B+qT8rxI77R9862v/OodWbx0qB2gVKNSM7D/MpOcS
+	 vHqFNb7YTkWIWmIevDspXquSQBEeKhu5RIKzR3sr/w6pgC7dImq9/Kzh/30q8b0bhP
+	 QSeHnIHN5+bYw==
+Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-2d060c62b61so3798079fac.0;
+        Mon, 05 May 2025 06:11:28 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUDjOMJ1UcRyT5pFhQ2pOdGLZE8UWrxqIwr3qEXgBu/jkWmDvqttfjofMIxyHCZWF4lqU8IwKpcfIPL1oL5@vger.kernel.org, AJvYcCWr/8Kh8vG4s4MftKAPJ5LvI1VWeAYHA6DgSgMfojsh3tbqx3hC9gRnVt5BFyDqgDPB244MJCwrBpyA@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzn4DA+e3T3TQzK13F70qwk55iytkJbF0M92PVFDdnp9MeAAFxC
+	zNFkj++XQhdtMWz9rXjwFM2wD5CMW5D9uiwa3yYaG1FEh/DfLTpFG+dxMwcWJetG/ZD4BQ42YOE
+	lKEPc/DoQZ7UaTwSCK4nyhqhDn4o=
+X-Google-Smtp-Source: AGHT+IEtiEpKVa7HVZWvCw/510Dj6uB2h0Kb40e+MiUAYElqu3q1Q8n0n/uqo9E+TBcQ1QRXY5z5k4nxmZ0sPnnYg1Q=
+X-Received: by 2002:a05:6870:30b:b0:2d4:e29d:529a with SMTP id
+ 586e51a60fabf-2dae82e08b1mr4199691fac.5.1746450688029; Mon, 05 May 2025
+ 06:11:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250326-i2c-v1-1-82409ebe9f2b@gmail.com>
+References: <20250429202412.380637-1-tony.luck@intel.com> <20250429202412.380637-2-tony.luck@intel.com>
+In-Reply-To: <20250429202412.380637-2-tony.luck@intel.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 5 May 2025 15:11:15 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0ju_Xirnft+5C=-GtG3hmT9xGjVqNFPRugXR7o1RzfHrg@mail.gmail.com>
+X-Gm-Features: ATxdqUFw2uXAVVggnwPyHmHSrJuw6ui02s3ht9p5pPI5ZvNwsrVhW-wXCwzpT0U
+Message-ID: <CAJZ5v0ju_Xirnft+5C=-GtG3hmT9xGjVqNFPRugXR7o1RzfHrg@mail.gmail.com>
+Subject: Re: [PATCH v4 1/4] ACPICA: Define MRRM ACPI table
+To: Tony Luck <tony.luck@intel.com>
+Cc: rafael@kernel.org, lenb@kernel.org, 
+	Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
-
-On Wed, Mar 26, 2025 at 03:39:47PM +0100, Marcus Folkesson wrote:
-> The driver do support I2C_M_IGNORE_NAK, so add
-> I2C_FUNC_PROTOCOL_MANGLING to the feature list.
-> 
-> Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
+On Tue, Apr 29, 2025 at 10:24=E2=80=AFPM Tony Luck <tony.luck@intel.com> wr=
+ote:
+>
+> Patch for reference, this has already been applied to
+> https://github.com/acpica/acpica and will in due course make its way
+> into Linux when the next ACPICA release is ported over.
+>
+> Signed-off-by: Tony Luck <tony.luck@intel.com>
 > ---
+>  include/acpi/actbl1.h |  7 +++++++
+>  include/acpi/actbl2.h | 42 ++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 49 insertions(+)
+>
+> diff --git a/include/acpi/actbl1.h b/include/acpi/actbl1.h
+> index 387fc821703a..4cb36392e9e9 100644
+> --- a/include/acpi/actbl1.h
+> +++ b/include/acpi/actbl1.h
+> @@ -110,6 +110,13 @@ struct acpi_whea_header {
+>         u64 mask;               /* Bitmask required for this register ins=
+truction */
+>  };
+>
+> +/* Larger subtable header (when Length can exceed 255) */
+> +
+> +struct acpi_subtbl_hdr_16 {
+> +       u16 type;
+> +       u16 length;
+> +};
+> +
+>  /* https://docs.microsoft.com/en-us/windows-hardware/drivers/ddi/acpitab=
+l/ns-acpitabl-aspt_table */
+>  #define ASPT_REVISION_ID 0x01
+>  struct acpi_table_aspt {
+> diff --git a/include/acpi/actbl2.h b/include/acpi/actbl2.h
+> index 2e917a8f8bca..e7423db6e24b 100644
+> --- a/include/acpi/actbl2.h
+> +++ b/include/acpi/actbl2.h
+> @@ -37,6 +37,7 @@
+>  #define ACPI_SIG_MCHI           "MCHI" /* Management Controller Host Int=
+erface table */
+>  #define ACPI_SIG_MPAM           "MPAM" /* Memory System Resource Partiti=
+oning and Monitoring Table */
+>  #define ACPI_SIG_MPST           "MPST" /* Memory Power State Table */
+> +#define ACPI_SIG_MRRM           "MRRM"      /* Memory Range and Region M=
+apping table */
+>  #define ACPI_SIG_MSDM           "MSDM" /* Microsoft Data Management Tabl=
+e */
+>  #define ACPI_SIG_NFIT           "NFIT" /* NVDIMM Firmware Interface Tabl=
+e */
+>  #define ACPI_SIG_NHLT           "NHLT" /* Non HD Audio Link Table */
+> @@ -1736,6 +1737,47 @@ struct acpi_msct_proximity {
+>         u64 memory_capacity;    /* In bytes */
+>  };
+>
+> +/***********************************************************************=
+********
+> + *
+> + * MRRM - Memory Range and Region Mapping (MRRM) table
+> + * Conforms to "Intel Resource Director Technology Architecture Specific=
+ation"
+> + * Version 1.1, January 2025
+> + *
+> + ***********************************************************************=
+*******/
+> +
+> +struct acpi_table_mrrm {
+> +       struct acpi_table_header header;        /* Common ACPI table head=
+er */
+> +       u8 max_mem_region;                      /* Max Memory Regions sup=
+ported */
+> +       u8 flags;                               /* Region assignment type=
+ */
+> +       u8 reserved[26];
+> +       u8 memory_range_entry[];
+> +};
+> +
+> +/* Flags */
+> +#define ACPI_MRRM_FLAGS_REGION_ASSIGNMENT_OS (1<<0)
+> +
+> +/***********************************************************************=
+********
+> +       *
+> +       * Memory Range entry - Memory Range entry in MRRM table
+> +       *
+> +       *****************************************************************=
+*************/
+> +
+> +struct acpi_mrrm_mem_range_entry {
+> +       struct acpi_subtbl_hdr_16 header;
+> +       u32 reserved0;          /* Reserved */
+> +       u64 addr_base;          /* Base addr of the mem range */
+> +       u64 addr_len;           /* Length of the mem range */
+> +       u16 region_id_flags;    /* Valid local or remote Region-ID */
+> +       u8 local_region_id;     /* Platform-assigned static local Region-=
+ID */
+> +       u8 remote_region_id;    /* Platform-assigned static remote Region=
+-ID */
+> +       u32 reserved1;          /* Reserved */
+> +       /* Region-ID Programming Registers[] */
+> +};
+> +
+> +/* Values for region_id_flags above */
+> +#define ACPI_MRRM_VALID_REGION_ID_FLAGS_LOCAL   (1<<0)
+> +#define ACPI_MRRM_VALID_REGION_ID_FLAGS_REMOTE  (1<<1)
+> +
+>  /***********************************************************************=
+********
+>   *
+>   * MSDM - Microsoft Data Management table
+> --
 
-Is this patch picked up by any tree?
-No confirmation nor showing up in -next makes me wonder.
+All of the above definitions should be there in linux-next now.
 
-Thanks,
-Marcus Folkesson
+Can you please check if they are there and they are correct?
+Alternatively, please check
+
+https://web.git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/log=
+/?h=3Dtesting
