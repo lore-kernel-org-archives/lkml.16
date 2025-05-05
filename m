@@ -1,65 +1,52 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A4B1189B8B
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 14:05:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D71B825A2AA
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 14:05:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746453950; cv=none; b=fyXGM+io7Ir8S/k7qhGV/jFFChZmmy9JjjEVcCBCpKbYZzkH7DN3qqhYy/rRwgRYzJCBX8XF/X2++hGc2q14KIWYH2Ol2CvkW8c+m1ZdLDq6TTdwdZOO9PVj6OCzax3aw7VD+6BPAN77+a/zBKssJj3JIpT+TlmnVntZJrIGMzo=
+	t=1746453952; cv=none; b=tXKVMuYB11L7Nl1dkHBgoTzk15J4w0ez4oSwEaThrHoT5Z1paefhWM6+kcrXiBchnJ+ndwsPsL1W2Mtm7bzvn1GzBuouXnZgGwz/5sSJLrQ0TFw0oZhkEHMZWIHs8P0PKgTB35Gmlr1iQg99BvzlPQwuB+K+TtZdxzqY2ClDi6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746453950; c=relaxed/simple;
-	bh=8O0HN8MQbjFtNR3vanRyfxAGqZCXg0X5Hy16bhnnMUc=;
+	s=arc-20240116; t=1746453952; c=relaxed/simple;
+	bh=WPDPjoeDcUl2bxyE8QhhUjV5JBaZAPddAUa0HV8mTes=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BJyj8yHRpNz+voOjhJbj0YydgLxmjs5KLpZVbQD3X9ngg9K7hVFYvkA5poz36m8XEfghnq4j6zaaujSPTHNAjx+YdTbeAxvr6RwiN8RC2PYvMm+GDFIhubldLeOwLuPUYSgAppBzpyrDPNUmTzKE8eFSKvonoV7jnquWSI872vM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aYAOGbFy; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=kqE48KiqzI9ZZiVO3Cl6p6RMwZBRYKyEK+dfemCWy8U///6A7Fef89lQkIkSt0dxSPyjUIdtoR9PcW83k0wVsGEobTz6gbpr2SVGuJl8NOvM+oCOtCBEsL/pNyzNLBrx2p1Wk+52MOo6pD/MkkeFRBzvoTV7M0ZnvmPvmVo7qgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KLKeALSH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aYAOGbFy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746453949; x=1777989949;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=8O0HN8MQbjFtNR3vanRyfxAGqZCXg0X5Hy16bhnnMUc=;
-  b=aYAOGbFy4JyPoO+QjogzWTyVQsffAXmA9ffViHqs0e0OSmsEFPUSK+Ki
-   BWoCo+0l+Hv3qPGi6ATkx452BHwZYpBK0y4VR7inPE+VSQk3l/fOTYJKr
-   fKM27mLpIipEBl1cxH9ynWG3qsvTDCb/2odJm1wgTKizERxjljshr9AJy
-   pNaGB92ZUm1RqkZSfARFjuNhsdSIiiRuMRC252yuWVoB1/0WCPuWawSAK
-   SMt2+w/3yjjguyQh+mTovO2gE5vL20KwNkbGabpfwxUZjBM8meSrSHVcv
-   F+FK4PwUPgfNSenSQB3Keqwv+EubKlNhJNCSjujJIQ6RhYdVmMxy1SarF
-   A==;
-X-CSE-ConnectionGUID: 3ghMv7w9TYaVA9nlwjJJxA==
-X-CSE-MsgGUID: IiUN8SIaSxy91RvukPmdJg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11423"; a="51871172"
-X-IronPort-AV: E=Sophos;i="6.15,262,1739865600"; 
-   d="scan'208";a="51871172"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 07:05:48 -0700
-X-CSE-ConnectionGUID: MjL7m7kSSEWP9XXFBfUuFg==
-X-CSE-MsgGUID: ZrAbJhxZSMuwxS1giQjBXQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,262,1739865600"; 
-   d="scan'208";a="140050751"
-Received: from smile.fi.intel.com ([10.237.72.55])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 07:05:45 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uBwRx-000000034bt-49MH;
-	Mon, 05 May 2025 17:05:41 +0300
-Date: Mon, 5 May 2025 17:05:41 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: Ashish Kalra <ashish.kalra@amd.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Denis Mukhin <dmukhin@ford.com>
-Subject: Re: [PATCH v1 0/6] x86/boot: Enable earlyprintk on MMIO (8-bit)
-Message-ID: <aBjFtWDSuXVq9kW-@smile.fi.intel.com>
-References: <20250502123145.4066635-1-andriy.shevchenko@linux.intel.com>
- <db19e81405d17e9eb9a3c1d4798220178e4f9373.camel@infradead.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KLKeALSH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B30D4C4CEE4;
+	Mon,  5 May 2025 14:05:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746453952;
+	bh=WPDPjoeDcUl2bxyE8QhhUjV5JBaZAPddAUa0HV8mTes=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KLKeALSH21CRBLs/XtDCbYD0o1yWFIAXj5rpmY8DzUC8KQ5gknqzvSDz1YvjDMEWU
+	 fP9IHzwpquS9y8z4MnaQfmQIVglacZHxKr/qjnCKw3OWUR7O5CgnhQ/x9c82NXk/XJ
+	 qnBNsn89mNBYeGbjoW4GhSk+Ai5d7MtYtmMOpoA65Ea42qTUOOaSBu1U6SM5ke2mRS
+	 wEb0RtZC3a2Gw80dskk76ZUlvILBEmBx8IdiFxBtE9ek3mXPqYMInuLAkTvo/l/xZp
+	 R64L2PHN2BTpxaWq/RSSFvgzEZBu73r9eILUJMwO/Ksw5vxOm3iHw4ofrs2Jadf7p2
+	 YgZFpn4cH/GGQ==
+Date: Mon, 5 May 2025 17:05:43 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Donet Tom <donettom@linux.ibm.com>,
+	David Hildenbrand <david@redhat.com>,
+	Oscar Salvador <osalvador@suse.de>, Zi Yan <ziy@nvidia.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, rafael@kernel.org,
+	Danilo Krummrich <dakr@kernel.org>,
+	Ritesh Harjani <ritesh.list@gmail.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Yury Norov <yury.norov@gmail.com>,
+	Dave Jiang <dave.jiang@intel.com>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/3] driver/base: Optimize memory block registration
+ to reduce boot time
+Message-ID: <aBjFtxwAYO69h2L6@kernel.org>
+References: <b49ed289096643ff5b5fbedcf1d1c1be42845a74.1746250339.git.donettom@linux.ibm.com>
+ <aBdK2EIMYYRmmEwA@kernel.org>
+ <a1e0cddc-ed38-4f48-b028-f3ab5025c157@linux.ibm.com>
+ <20250504130343.d1e7f73040daf053a171a99f@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,39 +55,22 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <db19e81405d17e9eb9a3c1d4798220178e4f9373.camel@infradead.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20250504130343.d1e7f73040daf053a171a99f@linux-foundation.org>
 
-On Fri, May 02, 2025 at 10:33:49AM -0700, David Woodhouse wrote:
-> On Fri, 2025-05-02 at 15:29 +0300, Andy Shevchenko wrote:
-> > Some of the platforms may have no legacy COM ports and only provide
-> > an MMIO accessible UART. Add support for such to earlyprintk for the
-> > boot phase of the kernel.
+On Sun, May 04, 2025 at 01:03:43PM -0700, Andrew Morton wrote:
+> On Sun, 4 May 2025 22:04:08 +0530 Donet Tom <donettom@linux.ibm.com> wrote:
 > 
-> Shiny. I had to hack QEMU's PCI serial port to do unnatural things, in
-> order to test the mmio32 variant which was the only thing the
-> earlyprintk code used to support. But I *did* so, and it works with the
-> kexec debugging.
+> > If this configuration is disabled, the current patchset would not function
+> > correctly, and node device initialization could fail during the hotplug path.
 > 
-> Can you add support for this mode to the kexec debugging too, please?
+> I'll remove the mm.git copy of this patchset.
+> 
+> Probably Mike will be taking the series anyway - I grabbed it because
+> this was unclear to me.
 
-Do you mean to add MMIO 8-bit to kexec assembly code and other parts like you
-did in the below mentioned change?
-
-I can try it at some point, but have no time right now for this.
-I would appreciate if you can give a try for this patch series
-functionality to see if it helps for the initial messages (as
-far as I understand you also want to have this in the second
-kernel, right?).
-
-> I believe it's currently in tip/asm. This should be a simple example to
-> work from:
-> https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?h=x86/asm&id=7516e7216bdfb9e2fab0a0ca3bd23cb2e61e46ed
-
-
+I usually only take patches that are local to memblock/mm_init, but I can
+grab those if you prefer.
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Sincerely yours,
+Mike.
