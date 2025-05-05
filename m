@@ -1,50 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F37A2BE7CC;
-	Mon,  5 May 2025 22:47:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C72182BD93C;
+	Mon,  5 May 2025 22:47:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485279; cv=none; b=WNuicQ6EGFhq7oy0KojTR9uaJt5HFxnGrnSFVtxmV7iNbdeu1kE5DhUNLZpiHOqHFXsjNZnFG4EsSya4fYhZJwH7UALjmD3DK+3Uok1HoO16TOliCjA7F8H+RmnZbVvle9rqgyJNUn/p5eLGOqRFLZfoNFq+gm8vrmtlJafEB2o=
+	t=1746485276; cv=none; b=EEaIXN1dkBmPOgPvOXEiP0xLnI9bAc17wLKo+fePpaeDwbqRQxocKe2tn/Jh7KPn+y5feoM1FCoT6ptQ0OY0OcK+RjaLsXTT3Ix0uYOTeJogWw7bkv/sJr2VbQ2lxHyKhQLA3u5UKyfubl0E0pr42Avg2Ff3XT6gDnE+KMNstBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485279; c=relaxed/simple;
-	bh=W/fmnVm28UABsUxm8BpRqAlkePFFxH/1wCASUfw3Z+k=;
+	s=arc-20240116; t=1746485276; c=relaxed/simple;
+	bh=AnJiToNCPr/S/WOOBUm3yVZqa2oZ2oRMSRSFdaJ7JeM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Be/vcQ9H5MiKqKjbZiCoEXUf0uScK6twXC9HhF30+Jt8w0gy8eh/7soHd1FTCqReUuqdTLgzQmQp/J4+8Jf8RS9RVQC+wCnv4oBBNDJbwOnYKCdi8LE33qIBcxWQjWXmiQ1tW9J8XlMdWZ3K1mQTWoorM4ybqodu1LvQho9T7Yg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zfet+8yc; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=f6urNId3Cw5JYA+Xju3q7XB8R5XnxDSc5Ye8SCVtxzAxG1TltRKkcjHINgq0LXlMPNAs7TC6aIQAPsHgyzQsUwGWhH2/ryhe2lsJzvX9b0/56Sm4T7sHZZ1iIF/+dSJNW2s8Ji4PdHIsobgdsYB3xaMeY49DRya9D/nEhW7BIUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G/2eIm1d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zfet+8yc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2031DC4CEE4;
-	Mon,  5 May 2025 22:47:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G/2eIm1d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96A3BC4CEF1;
+	Mon,  5 May 2025 22:47:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485279;
-	bh=W/fmnVm28UABsUxm8BpRqAlkePFFxH/1wCASUfw3Z+k=;
+	s=k20201202; t=1746485276;
+	bh=AnJiToNCPr/S/WOOBUm3yVZqa2oZ2oRMSRSFdaJ7JeM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Zfet+8yc7R62CN8UfwbqMUAterl85qBQpagXJaeO6l+pc3G4cqlCWVb+meMAlTO5p
-	 3G44aWjmfXCRGpVjvjrLPPOmSKFbW2ObQcsu84rVVMrDRSkanRZzXpivPBXgn0ukGX
-	 pI4y9K0a2DSPtTjPk5ZCCT3RbSdCxITcNaZcu/ZAeJUOzbohYahYK/ihhXChg/LsuT
-	 46g3vzAAAJ7Z3c8oB11YNuafKr6hVPXhdVozTvEvE5XAz03g49wMhWgyiZg+R+SCbX
-	 xfPcy8dWqInvEUm/qJP/pASjG0VlI/LDW+oTPC9VU77wJ1olsCAyqAFRRowO8Pt/ms
-	 6MKb0gq1ju5KQ==
+	b=G/2eIm1dJD2x0BaHTrz5wur0sgDJzyJWisoFLU/T3+OKjuh4/qEWtttstaxGtOH7X
+	 q84By2xbLB/QkgdoWaYfB9kQoK7rQSe+/U3KN+x8ARv16k2/rlfAqu3+HQ8HGg1QmR
+	 kZ0fS5ruu0M2iIi3/7OLALuECZTyIhsdF1RiERDlCT8rRzE+kPHxy5gG5/ic3/Jh19
+	 x9gVaUwi1z3WflTy95bfvEla/m3knLjfjSvJRFzJnv55dsTU9sC40ZC+5vTgOq4j6z
+	 4lE9XRhpbSXsamuLPJXWN3yfCte0kRgpRzhchCK49mCVky3S6c6OqpVX6rkOgh9cHd
+	 I32obbP32M2tQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Hariprasad Kelam <hkelam@marvell.com>,
-	Jakub Kicinski <kuba@kernel.org>,
+Cc: Amery Hung <amery.hung@bytedance.com>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Martin KaFai Lau <martin.lau@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	sgoutham@marvell.com,
-	lcherian@marvell.com,
-	gakula@marvell.com,
-	jerinj@marvell.com,
-	sbhatta@marvell.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 250/486] Octeontx2-af: RPM: Register driver with PCI subsys IDs
-Date: Mon,  5 May 2025 18:35:26 -0400
-Message-Id: <20250505223922.2682012-250-sashal@kernel.org>
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 249/486] bpf: Search and add kfuncs in struct_ops prologue and epilogue
+Date: Mon,  5 May 2025 18:35:25 -0400
+Message-Id: <20250505223922.2682012-249-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -59,65 +54,84 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Hariprasad Kelam <hkelam@marvell.com>
+From: Amery Hung <amery.hung@bytedance.com>
 
-[ Upstream commit fc9167192f29485be5621e2e9c8208b717b65753 ]
+[ Upstream commit d519594ee2445d7cd1ad51f4db4cee58f8213400 ]
 
-Although the PCI device ID and Vendor ID for the RPM (MAC) block
-have remained the same across Octeon CN10K and the next-generation
-CN20K silicon, Hardware architecture has changed (NIX mapped RPMs
-and RFOE Mapped RPMs).
+Currently, add_kfunc_call() is only invoked once before the main
+verification loop. Therefore, the verifier could not find the
+bpf_kfunc_btf_tab of a new kfunc call which is not seen in user defined
+struct_ops operators but introduced in gen_prologue or gen_epilogue
+during do_misc_fixup(). Fix this by searching kfuncs in the patching
+instruction buffer and add them to prog->aux->kfunc_tab.
 
-Add PCI Subsystem IDs to the device table to ensure that this driver
-can be probed from NIX mapped RPM devices only.
-
-Signed-off-by: Hariprasad Kelam <hkelam@marvell.com>
-Link: https://patch.msgid.link/20250224035603.1220913-1-hkelam@marvell.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Amery Hung <amery.hung@bytedance.com>
+Acked-by: Eduard Zingerman <eddyz87@gmail.com>
+Acked-by: Martin KaFai Lau <martin.lau@kernel.org>
+Link: https://lore.kernel.org/r/20250225233545.285481-1-ameryhung@gmail.com
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/marvell/octeontx2/af/cgx.c | 14 ++++++++++++--
- drivers/net/ethernet/marvell/octeontx2/af/rvu.h |  2 ++
- 2 files changed, 14 insertions(+), 2 deletions(-)
+ kernel/bpf/verifier.c | 25 ++++++++++++++++++++++++-
+ 1 file changed, 24 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/marvell/octeontx2/af/cgx.c b/drivers/net/ethernet/marvell/octeontx2/af/cgx.c
-index 8216f843a7cd5..0b27a695008bd 100644
---- a/drivers/net/ethernet/marvell/octeontx2/af/cgx.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/af/cgx.c
-@@ -66,8 +66,18 @@ static int cgx_fwi_link_change(struct cgx *cgx, int lmac_id, bool en);
- /* Supported devices */
- static const struct pci_device_id cgx_id_table[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_CAVIUM, PCI_DEVID_OCTEONTX2_CGX) },
--	{ PCI_DEVICE(PCI_VENDOR_ID_CAVIUM, PCI_DEVID_CN10K_RPM) },
--	{ PCI_DEVICE(PCI_VENDOR_ID_CAVIUM, PCI_DEVID_CN10KB_RPM) },
-+	{ PCI_DEVICE_SUB(PCI_VENDOR_ID_CAVIUM, PCI_DEVID_CN10K_RPM,
-+	  PCI_ANY_ID, PCI_SUBSYS_DEVID_CN10K_A) },
-+	{ PCI_DEVICE_SUB(PCI_VENDOR_ID_CAVIUM, PCI_DEVID_CN10K_RPM,
-+	  PCI_ANY_ID, PCI_SUBSYS_DEVID_CNF10K_A) },
-+	{ PCI_DEVICE_SUB(PCI_VENDOR_ID_CAVIUM, PCI_DEVID_CN10K_RPM,
-+	  PCI_ANY_ID, PCI_SUBSYS_DEVID_CNF10K_B) },
-+	{ PCI_DEVICE_SUB(PCI_VENDOR_ID_CAVIUM, PCI_DEVID_CN10KB_RPM,
-+	  PCI_ANY_ID, PCI_SUBSYS_DEVID_CN10K_B) },
-+	{ PCI_DEVICE_SUB(PCI_VENDOR_ID_CAVIUM, PCI_DEVID_CN10KB_RPM,
-+	  PCI_ANY_ID, PCI_SUBSYS_DEVID_CN20KA) },
-+	{ PCI_DEVICE_SUB(PCI_VENDOR_ID_CAVIUM, PCI_DEVID_CN10KB_RPM,
-+	  PCI_ANY_ID, PCI_SUBSYS_DEVID_CNF20KA) },
- 	{ 0, }  /* end of table */
- };
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index 8656208aa4bbb..294fbafbeba75 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -2987,6 +2987,21 @@ bpf_jit_find_kfunc_model(const struct bpf_prog *prog,
+ 	return res ? &res->func_model : NULL;
+ }
  
-diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu.h b/drivers/net/ethernet/marvell/octeontx2/af/rvu.h
-index 8555edbb1c8f9..f94bf04788e98 100644
---- a/drivers/net/ethernet/marvell/octeontx2/af/rvu.h
-+++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu.h
-@@ -30,6 +30,8 @@
- #define PCI_SUBSYS_DEVID_CNF10K_A	       0xBA00
- #define PCI_SUBSYS_DEVID_CNF10K_B              0xBC00
- #define PCI_SUBSYS_DEVID_CN10K_B               0xBD00
-+#define PCI_SUBSYS_DEVID_CN20KA                0xC220
-+#define PCI_SUBSYS_DEVID_CNF20KA               0xC320
++static int add_kfunc_in_insns(struct bpf_verifier_env *env,
++			      struct bpf_insn *insn, int cnt)
++{
++	int i, ret;
++
++	for (i = 0; i < cnt; i++, insn++) {
++		if (bpf_pseudo_kfunc_call(insn)) {
++			ret = add_kfunc_call(env, insn->imm, insn->off);
++			if (ret < 0)
++				return ret;
++		}
++	}
++	return 0;
++}
++
+ static int add_subprog_and_kfunc(struct bpf_verifier_env *env)
+ {
+ 	struct bpf_subprog_info *subprog = env->subprog_info;
+@@ -19768,7 +19783,7 @@ static int convert_ctx_accesses(struct bpf_verifier_env *env)
+ {
+ 	struct bpf_subprog_info *subprogs = env->subprog_info;
+ 	const struct bpf_verifier_ops *ops = env->ops;
+-	int i, cnt, size, ctx_field_size, delta = 0, epilogue_cnt = 0;
++	int i, cnt, size, ctx_field_size, ret, delta = 0, epilogue_cnt = 0;
+ 	const int insn_cnt = env->prog->len;
+ 	struct bpf_insn *epilogue_buf = env->epilogue_buf;
+ 	struct bpf_insn *insn_buf = env->insn_buf;
+@@ -19797,6 +19812,10 @@ static int convert_ctx_accesses(struct bpf_verifier_env *env)
+ 				return -ENOMEM;
+ 			env->prog = new_prog;
+ 			delta += cnt - 1;
++
++			ret = add_kfunc_in_insns(env, epilogue_buf, epilogue_cnt - 1);
++			if (ret < 0)
++				return ret;
+ 		}
+ 	}
  
- /* PCI BAR nos */
- #define	PCI_AF_REG_BAR_NUM			0
+@@ -19817,6 +19836,10 @@ static int convert_ctx_accesses(struct bpf_verifier_env *env)
+ 
+ 			env->prog = new_prog;
+ 			delta += cnt - 1;
++
++			ret = add_kfunc_in_insns(env, insn_buf, cnt - 1);
++			if (ret < 0)
++				return ret;
+ 		}
+ 	}
+ 
 -- 
 2.39.5
 
