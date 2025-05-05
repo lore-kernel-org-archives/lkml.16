@@ -1,223 +1,195 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2134.outbound.protection.outlook.com [40.107.247.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C17C21DC993
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 08:18:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746433136; cv=none; b=j5scOTMYm3cZTsYQNNvKfDzGv0tkM0KKaF+uVUTt9t9x21i6TJX2HiOTBrtzXHJdF4AbF3mUfL90ado4xl1dUPhv0RlzolBAfoKddkl0Nmh0uXs/CH9gQDJAFQ4lKeNTveRvqmLvo/aYCZHSIa0INL5F7R6r6buTo31C4qQ8raY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746433136; c=relaxed/simple;
-	bh=8TvYNqWidSI+hUMShHa3ic7P/0TjSbRzbbW/BVDaREU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oHYuzCiXtWy3cJDGc1vd/pM7yERbiyx2Q/2bbAvqAvouE8Hm8BpPFcFAt3KD3fER+xbiUunuSDjIcvP0dyfgBGkfasd6kQY4lPgX/SLFYobsEeKNrfTdsPDsffePmstc8ZmwzQKwZI1RSe6603MdMn5DDx9wF/HDDiRGR3iRRSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ecV9pc6J; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6EE61EB1AE
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 08:18:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.247.134
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746433142; cv=fail; b=d/lmfMcmgRzb8nMYq04CWacC+7vbdVZEHHjyaL+CAWbDK9sOVZWdlm305dY7yGJHPYGlTlcNY7o/CDHBr0qJj15XtijklWFCOkz0QaqT2FiaDyFFUXrWlRbtk7pAS56SC0VvSWzv508g9E0vQLnZpUP7sPaINLG6vy2hb+9t1gY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746433142; c=relaxed/simple;
+	bh=FVcflraQjJLk6JBa9L7MwOkY6iQRlqZATvRbuIqPVKA=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Vp9NsldBtIic52sXbwUXc5aw1jmxSTBNkvC+Abc/OpugUgwVxtLtsV+v63ZAGN23RaJPaIkcDs0dYbRJYs0HQGMjVpymeZi1AMRqK3Zi8Dmt6slKfMHk2cQEnXJJx4a7edOAASsnzTliQhsFDb2zYQqvqKyjj0wSSW1cQPXNj1Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=phytec.de; spf=pass smtp.mailfrom=phytec.de; dkim=pass (2048-bit key) header.d=phytec.de header.i=@phytec.de header.b=e8Nvk66j; arc=fail smtp.client-ip=40.107.247.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=phytec.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytec.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ecV9pc6J"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746433132;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=KjLT3G0xBlvcpU8ScQJQ+pvLS7Ggl7vYC3787HjJ+VQ=;
-	b=ecV9pc6J5/CD0+do18ow1wOg/fOom0UlEyIGIN9sJYzh1nZ+8MPNBzEoBYlyYNrreJc4Gh
-	hCMkHmUT8XUtvHofS0pgUJfz5m4G7li+j9Z3SNw2/OIFsVnbToSOYRAOodMsPcEReIQTsG
-	OMwSt6JnkiTf/t0iVAvlGbpEQRKXg78=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-300-Ffwso3OzM6efRF8dlEB2SA-1; Mon, 05 May 2025 04:18:47 -0400
-X-MC-Unique: Ffwso3OzM6efRF8dlEB2SA-1
-X-Mimecast-MFC-AGG-ID: Ffwso3OzM6efRF8dlEB2SA_1746433126
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43ceb011ea5so23905965e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 01:18:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746433126; x=1747037926;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=KjLT3G0xBlvcpU8ScQJQ+pvLS7Ggl7vYC3787HjJ+VQ=;
-        b=oJ3Zu7tFPTxXNjEA1nLLkSdKqNu/kCfymGSoncTEtF7xoYd/pqxMYgvald8oBko1Px
-         EJjheM3KtVyVTMGlrJebXGLQRmbzDn507kgBRImLhg0EF2pxA+g0qss3Jd4hQdreXIqK
-         VbFTmOfI8xEbcg7Hn+0KtMQAfWnw0GXDd1KUGvSwLd1uMA4dC39eLe/Bzlq+PbwG9oBH
-         ZaQhQljus5CrxvCPU7WYaeqX4AGA4iaBO+HR5mkUBPCzdCvrFC+/S9rvJRxmaZ5d5JBE
-         Vk21cdPqCy4mVtIEJBQQMNxC/NZRn9riOyIg7w4E7X/9M7TZdpKIyLltU7ydM170X8EV
-         4C6A==
-X-Forwarded-Encrypted: i=1; AJvYcCXXOticBYt8vtzatd70ffChu9qi0gzbNLC8zt4OejOeZ0QwF17yO/bro/s/NTQ7+DperO82/B4zH7Ze3Ow=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyD3gPDigtSUU23TxaHug5EBh2bJa5CRO/XXgVWrh6zM5fa8GV8
-	8G3F9hus2aqleDNcCUyiSl/T4LLXSKo574HjnQAA1CrrcQVLeNRX0vewRXY9cXipLpQBFj7G+p2
-	WEfUNr3EsFH2Idx2Q/gmf1b0jbEHYj+k505lsjcsbSq+i0jz09GyNB70xT/cIWw==
-X-Gm-Gg: ASbGncuzenUOE7cGBiQJ5fI1dWJksTV/Kb+ahRJzxijFHzkbpFoAf8USN5hzJ+uHIBT
-	LigPtct9j4Up3hrWgLuYemmMv4pfX96RmDIayt2CxRddap9Uo4d/kmL+uFpdfSk9TcWSNwWCzNk
-	Fq+XQWHqlMlUBYuJSTlnecypXkK9W97uBMEoUqBfdROaQl+KPJFQdA5UCaCUfSz3d2gtf5iK7mg
-	fWQLZvo8C+L+H44CtQxOYfSO6DI1CMXDki0WNcZPWwRiju//edXxPSNNZAEuzrS7d0F6rRSPiw5
-	3PalXMH8LlCU8z5nYL1wDYM6Z1IIFwFcw1ulkC40piE8Q0M8kTkSFm/lc8AWsBsFr/eEwacWw0o
-	d2sN1tMY41urq9LiSH5wM6mF+y3FWAUyukcUyTkw=
-X-Received: by 2002:a05:600c:8288:b0:43c:f689:dd with SMTP id 5b1f17b1804b1-441c48dbf43mr49568405e9.19.1746433126146;
-        Mon, 05 May 2025 01:18:46 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG903rCMBt0cxNVeaT2GK6YdeAMsrUHFLedAdt65uiIqOWq7Smarm25HhAmNZlJcpkJTINu0Q==
-X-Received: by 2002:a05:600c:8288:b0:43c:f689:dd with SMTP id 5b1f17b1804b1-441c48dbf43mr49568075e9.19.1746433125728;
-        Mon, 05 May 2025 01:18:45 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c73d:2400:3be1:a856:724c:fd29? (p200300cbc73d24003be1a856724cfd29.dip0.t-ipconnect.de. [2003:cb:c73d:2400:3be1:a856:724c:fd29])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441c8631256sm40116925e9.20.2025.05.05.01.18.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 05 May 2025 01:18:45 -0700 (PDT)
-Message-ID: <8180a50d-eebe-4f9b-9ce8-d886654a992d@redhat.com>
-Date: Mon, 5 May 2025 10:18:43 +0200
+	dkim=pass (2048-bit key) header.d=phytec.de header.i=@phytec.de header.b="e8Nvk66j"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=sIr3ORFlhEHzA41bh/ACX46La2ksKisobsLrbajrySmGA1Ktwr+wI9vWeZaKqKGizIdrMBq+7DRv47YrvhGbZ0nTo8Edx/5k1MkcWXqGEv/WAbZSIC/YjdMpei3lAGjMzEZpzpIlpnA166WcS2Gop1S+kpuUoGxz8+aC/iDrgEbQMaG+6+salXFuer7mjk8c7oBjqnqdrkKmlMk0OXEjWI3Zh82gPLaZNLhSb7RissidvYwAVC+lJWkCMkwVpvApDQyFc6NQvjHoQyGZSLBltCeAw/hOS8ocUzpEK/XRiynaKPqp3GAjm5eeJlUKyhmzZG5/Dg5pNkjMX8JOCwRzTQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=KqA5t5rYp/r/ZJwSGHOVkzCLqSwezjn3z6RQslketsQ=;
+ b=WC9+WSLS+CIhqmyAc183+mvZf067T8HjRJkiMINWn+cB9EwK9R3LTxZrJwqaVgF8oUo3qq2AGUPm6YXqmRZgOaPjZgNZgvRR1RR9gleAuwqZogv+XP/jgHFzUGgMpfOKUz2G/5+CGfQsf8wJb7HtffEbIsqDfmPmXL+Gb6hduX/owWJxCTIRZQBGvkBGP1nBJjwndJgJx+5DRpoFUjJQzxhAAn+uUILruXsuhgDfICKAZT7Mcqu0h8RgPcXp1+s0F6CyHTwWp9IknJq+6K2I+qQP9OAwwcIhFR9Hq8X8KHEryWFA9D/QTRVM5QPoPe/DUaOvrnExGd99Enx7xbR7og==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=phytec.de; dmarc=pass action=none header.from=phytec.de;
+ dkim=pass header.d=phytec.de; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=phytec.de;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KqA5t5rYp/r/ZJwSGHOVkzCLqSwezjn3z6RQslketsQ=;
+ b=e8Nvk66j87hi6axJdyUq/UuxyCWXrhCkjgDDXaaaJo0882EGF8cge3qly0DRjiU/FhpI82YOW7/a7EWDGSkRvj8eRXLkd5mUTW1uT3p+iMAxrYjV8D+JjHUjf5O+1sPQDf7uxW5OPHzcpEJvMJwPwoA3kIi0JJ571cFHiIDKB3y/99dLp1v2AXt0tj4A/qxSVxSvcxQArTeAviE5XIAmK9a7nKLKMLguw8GXX2DTyTHhnfCAQC6NontiPI+XawpCT3oF2m421gbH01XOFu2JqyWITorrVBa54w/sXs3OUpDJx95srK9TFXajAfey5EK/ltW4NCUXCtTFC7y6a6sWZw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=phytec.de;
+Received: from VI0P195MB2484.EURP195.PROD.OUTLOOK.COM (2603:10a6:800:248::6)
+ by AS2P195MB2248.EURP195.PROD.OUTLOOK.COM (2603:10a6:20b:59f::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.26; Mon, 5 May
+ 2025 08:18:56 +0000
+Received: from VI0P195MB2484.EURP195.PROD.OUTLOOK.COM
+ ([fe80::24f:8371:2871:5981]) by VI0P195MB2484.EURP195.PROD.OUTLOOK.COM
+ ([fe80::24f:8371:2871:5981%4]) with mapi id 15.20.8699.019; Mon, 5 May 2025
+ 08:18:56 +0000
+Message-ID: <f40e97a2-41f4-430b-b3f4-815587201191@phytec.de>
+Date: Mon, 5 May 2025 10:18:44 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Upstream] [PATCH] arm64: defconfig: Enable BANG BANG Thermal
+ Governor
+To: Garrett Giordano <ggiordano@phytec.com>, catalin.marinas@arm.com,
+ will@kernel.org, quic_bjorande@quicinc.com, geert+renesas@glider.be,
+ dmitry.baryshkov@linaro.org, krzysztof.kozlowski@linaro.org,
+ shawnguo@kernel.org, neil.armstrong@linaro.org,
+ alexander.stein@ew.tq-group.com, biju.das.jz@bp.renesas.com,
+ javier.carrasco@wolfvision.net, elinor.montmasson@savoirfairelinux.com,
+ linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, upstream@lists.phytec.de
+References: <20250113185607.2210352-1-ggiordano@phytec.com>
+Content-Language: en-US
+From: Daniel Schultz <d.schultz@phytec.de>
+In-Reply-To: <20250113185607.2210352-1-ggiordano@phytec.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MW4P223CA0018.NAMP223.PROD.OUTLOOK.COM
+ (2603:10b6:303:80::23) To VI0P195MB2484.EURP195.PROD.OUTLOOK.COM
+ (2603:10a6:800:248::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/3] driver/base: Optimize memory block registration to
- reduce boot time
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Oscar Salvador <osalvador@suse.de>, Donet Tom <donettom@linux.ibm.com>,
- Zi Yan <ziy@nvidia.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Andrew Morton <akpm@linux-foundation.org>, rafael@kernel.org,
- Danilo Krummrich <dakr@kernel.org>, Ritesh Harjani <ritesh.list@gmail.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Yury Norov <yury.norov@gmail.com>, Dave Jiang <dave.jiang@intel.com>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <b49ed289096643ff5b5fbedcf1d1c1be42845a74.1746250339.git.donettom@linux.ibm.com>
- <aBdK2EIMYYRmmEwA@kernel.org>
- <a1e0cddc-ed38-4f48-b028-f3ab5025c157@linux.ibm.com>
- <188fbfba-afb4-4db7-bbba-7689a96be931@redhat.com>
- <aBhoqpC4Jy-c-74p@localhost.localdomain>
- <74c500dd-8d1c-4177-96c7-ddd51ca77306@redhat.com>
- <aBhuZWpZ7ltMuOe0@kernel.org>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <aBhuZWpZ7ltMuOe0@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: VI0P195MB2484:EE_|AS2P195MB2248:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1603a1e9-02fe-4884-7cdd-08dd8bad7ac1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|366016|1800799024|10070799003|921020|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?WkZTQndKZnc3aDZUN0wxbWhZOTZaS2xhL0hNUUJBWmRncFRieU1LMXRTaXJR?=
+ =?utf-8?B?M2s2TE03Q3RRMUVGejdidWw4WjJ6YXpGVUh4cWdFalB0ZThoVUpac29wUGQz?=
+ =?utf-8?B?VDBkSXUxdnoybk1mTHdRSFNvNTJTMExZS0JYTkxVaS9Za3F1MTROSnJoQVB4?=
+ =?utf-8?B?UWhKRUxPSXNzZm9QdCtjbmMvVWhnV1liTG1oL2hjdStuMVRveHd5UkovRHVk?=
+ =?utf-8?B?ZFRVU0lKeTlsYzY3U3N6OUlUb0pldzA3YVJ1WEtWcTVCbzkrVk82cGU5OUZX?=
+ =?utf-8?B?VllDWUhTN1RHbXJ0WTlQbDMxNDZZb1c2MW9vMFU1clNKb2taTHErem5PMnRw?=
+ =?utf-8?B?MndtbXlkVzZZZnhZa2N2M0JBZVBraHgxbjYzeTZxSjdiYVhwVWVEay9RRHl3?=
+ =?utf-8?B?NXFjZmhLWVFKOUw1THBIYWVOL3VmcytrOVlsbm9BOVh5MmduZmZ5WFg5eHU5?=
+ =?utf-8?B?ejVINjhkRTc0NVJBci9MdXhtcmpJc3EyYW9TNVVkNGhReEZmR0U3YTBTdmxk?=
+ =?utf-8?B?VWpTN0pwVXRUZ0dDa01NTjhVZlVCd25GdkxkM2NubVNSa2NlSWlBYVFIVDla?=
+ =?utf-8?B?N0VXdGtLUEJGNWtLaVlpK2Zrbys4OHp3TzJrV3NmMFgxaDNIeFIyajlmWUI1?=
+ =?utf-8?B?M0RnR25HSnBJVWxEZ0JLYjJLNHZiU2ZubnozUHBXcWRqZDBVeGpEYUViZWpH?=
+ =?utf-8?B?SC9GUXJ3amdKNDIvQjhWWGNBMkt6YTNYZFFEclpLMkFmRm1panQ1b0habmtK?=
+ =?utf-8?B?VkhDSkdOQ2J4MjBpU05MSW0xeVJCWTZsTHdLWC93cUt2bDBML1RaRHh2MVdj?=
+ =?utf-8?B?eURpSVVvdXJBUFdOY2xsM0lNWkNYeUZBZ2V2ZkhoMXl2MG1iSGJqOE0yWjNj?=
+ =?utf-8?B?VGsvM0NiclhOdlNmVXozaU9RVFF5ci9YR2tPWEFVaU1icG5mbmdrOGlhZXJZ?=
+ =?utf-8?B?Y3hLbE42Zlorb1FSL3M4bmVkenJ2S25tL3BVMkhoaTIyUFNBYTVWWWV2d2xN?=
+ =?utf-8?B?YWpUMG1lTkRyeWtoWU96YW5MTkRBS1MrMTBqTGhrVURKWGpGYkVhTEQwVVkz?=
+ =?utf-8?B?OFVFY3BLUTJZK1ZoOEVyaVdDNURFakZDelhhU1h2ZURxSHVHVUhWVGRlWVkr?=
+ =?utf-8?B?dExuc0xMbTBVNEd5MU5MRG9EeHcrNE10NFRXZTgrK0hud2NXZ2psZFJHN2gw?=
+ =?utf-8?B?KzJJR2tUdGJISzBQckFnMmdCSENsYnVzYXZwVC84WVJKVi9iVmtiTHpSc1NB?=
+ =?utf-8?B?RU1rd3hGbUFtSGpTMWl3S251WHhWY3k1WksyeDFtS3NwRlgyWGd1YmVyTHJL?=
+ =?utf-8?B?UGdCV1JoaFJBUkJaejFKYjBGcWtFekt1WnFaRkMxdnZubzhvY0FPNzVQMEhI?=
+ =?utf-8?B?OVlhNEhIWk9nc3l0WHNjNE4xWHd4a2Z6eGZlQ1ZrcXNZYlJYYWIxSUhTOXF3?=
+ =?utf-8?B?TmtjQ0Yva0ZRdkdGOCt2RTA1cWt2U1l1OWZyZUNuVG1aK2pIRlR6MWNtZDJl?=
+ =?utf-8?B?VUlxZy9XWWpUOStGRENHUTZzZVRpdjVjL3hMR0RHQXJRM3NiZllhNS96QzB5?=
+ =?utf-8?B?aXpXNFlSVHVQN1djL1FCWDY2QyttV2JYMDA0YVorVTdnY2tCblpjYmV3WW91?=
+ =?utf-8?B?bWNpWHFhTS9TbE5jeXZBWFB0aklmQlJCN0NpcjdSZlRCSlJIUWlLY1YrdlMv?=
+ =?utf-8?B?eUJzSnovQWc5emNoTmI2cDZtMnQ5MmJXYW1acU5OaGVYMFEyUTY2S3dnbTNu?=
+ =?utf-8?B?RUpyWDRBR1ZSbE4yVGxHbFFBM1RuWDZ6Sisvb2ptcGozaW10TW5uRWJZRFN1?=
+ =?utf-8?B?dFVFb0U1SkRZdjVUbmNZMnZuMHFKVXVDcFBVTGpLK2F5QlNpQ2dGckpNRDUy?=
+ =?utf-8?B?NnU5aDgwc3BPTkxuSTVrNWRua3ZDaWwvNUZiY3lQYzQ1eUFJVDVHaXFYZDlZ?=
+ =?utf-8?B?VmNwTFRLRVJXTjEzZDlNL0FOTS8zWGplVGVrdHUyMXpPTnFnQUdnRnpsa0ox?=
+ =?utf-8?B?cHZKb1NFeU5BPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI0P195MB2484.EURP195.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(10070799003)(921020)(7053199007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?L3BPbjFuWXRzVWNFUHJvZkNqQTVFdFNkNU5ZQnhWQUFXTzhvNXF0L3hlcW0w?=
+ =?utf-8?B?V0l5YjhiQjZmMWFNRnIvbTJLS2ZWREFQVjc1OHArVlB0N0J6Q2taUUJ2M1Qv?=
+ =?utf-8?B?Uk9qVU5xWFhNY3RSay9RK1lrWDhDeEVQdWRwQmFEY0dWV2lMQ0I1Zko5bkxE?=
+ =?utf-8?B?eVVXRURZbDJBaWhxMzFvUGFYN2tjRS9rN1I4Vjl2NHArQkZpbm5lT3k0TFVp?=
+ =?utf-8?B?Z2p3SUU2dFdUbnJldVlad2srVk0yMzZmQ25Takxmc2R5eElQUjBTSmhIS0Vl?=
+ =?utf-8?B?c3lVZ0hONk0zSG0zeHBGYVp2ZHRkRThJd2RWUW5wU2NmdnBDd2szTzE2aEJR?=
+ =?utf-8?B?Y0xrUGxkY3ZsWHJPZUNrbEd4YzQzUDlLcWpGaGdWczhNejRPWm9ZZ0xUTndN?=
+ =?utf-8?B?NEdneUtQSHlxMHN0eWcxaWhlSDFQMjJwTWhkQi90d2xOSHRvSWNnQkw4ZTAv?=
+ =?utf-8?B?eHlHUGRWL0wzN0xoUnBOU0NwU2hZUGpvTXFabnUzQU45bTc3aDd2WlZLc3JO?=
+ =?utf-8?B?NkU1Yi9oczdzYTNhN3R1YUdQSU5POHVwbE9OY1FaMGZzWjBYcjRxUE1DdFU5?=
+ =?utf-8?B?Q0h4ek5sYTlZRnBoT3NRRGlCRjZHUDVDcWxVZy9VeGorUjd6NWp4eG9LYnls?=
+ =?utf-8?B?VWkzZ3MzUFNCVU5vbHNubUwzdm9MZ0pmSGtHQUVaVDcxenJrNnZLNUVlRnBH?=
+ =?utf-8?B?YUo4T2JtWERsRU04U1pReWJRaVhEeFRCOE9Xcjc3V2tzRkdRbi9ZMjVxSmJJ?=
+ =?utf-8?B?cUtuVWNUWDFVSEwxSlBqL2hGNUhJZ25MZ1pWYVkvWVZkMi82TStpTUhhZXBJ?=
+ =?utf-8?B?WDl0d0R1QVpoVkpFZ01UbzZjRXpaeVFLT2FSYk5KdGN5UUQ4WkVmQ2Uydmt4?=
+ =?utf-8?B?bVI3Q05VOG92c01MYjdJbVozb25HTk00YWFEN3Z0OXVDMVRkdUFIUVJnSFh5?=
+ =?utf-8?B?MUVobUltdHBLRGlxVFNHODBvcGdld0MwMCtzcU8rZ0ZzM1FWK0g2K1RwL0VB?=
+ =?utf-8?B?M0ZUL1c4SHVJc1J0em1ubjRQNFBjZldlNzFQMmZjQzBUSUJ5NncyQmlJQUZL?=
+ =?utf-8?B?eWtjSm0waUV4V2VnemIydGlQRlpPZGJWK2JBSUlJajdHM2dWaUZnSk11cGtL?=
+ =?utf-8?B?Q1NDUHFyYzIxd2p5U0tucWxnVTBQN2pqcHVVNjFjTlRkUFJGKzArNUEwUUpB?=
+ =?utf-8?B?ZXlxWnRucEVmWlY3OHFyL0thY1VhNmxoSzdUY3F2TDN2RFVPZlBXZXNrUEJl?=
+ =?utf-8?B?Rys4c2lPQm50ZS9KR294UEJaamVUclZhZjhJQ1lteEo3MlFXUW4vU3FPSk1K?=
+ =?utf-8?B?NWtrTDZ0dmtFeGhJbnA3WEF0aXhmYklKOXNKM3dmYzFHeHhUVDY4MnZEL0xa?=
+ =?utf-8?B?clFHRXd6ZkxLcUNMRFZmc1d5QWFlWW1kMW5QTWRxYjZGTk53MEc2c0hCTjhO?=
+ =?utf-8?B?SFNRdHUyVERMWW9FR2ZhTzBqSmRyamhMU2ZmdGora1ZsbFlmR3NhYWhLWlFx?=
+ =?utf-8?B?QUN5M1c2cktjdGdGTWdTa050ODhYUU9nV1FZcHlROERzQ2VtM3ZhcUNIempz?=
+ =?utf-8?B?MDlqYjc3OHJLQkhwQ2VIaHpGenlCM3dOUWM2SW9jaG5tL3I0WTVNUEt0cGdQ?=
+ =?utf-8?B?anE4dHFwVUFOZlNKME1NNDRQek5BRjFCWlZtdkNUU0lqRDc4ZUJ2akkzTnhO?=
+ =?utf-8?B?UmhZTjE5ajBJU25qMk5NU0t6UWtqUWhxOXJMRGExTng4R2lDNHYwOEF5NFZI?=
+ =?utf-8?B?K3hmc1YvNWFMcHJTUTJNUmlQaTJ2TDlXK04weHhjd0NMWFUzV0sybHgreksx?=
+ =?utf-8?B?WVZMYml1VkNGTzdjMEllQ1pMVlFQRkV5S283QlBNbHcvZWxQT2U2MUJGZ1dF?=
+ =?utf-8?B?Tk5heFJ0WUJLQnhxZnFFSVpPSXl1cHdqQWJqVnVicTE1Wm5SaEwzRWJNaDR4?=
+ =?utf-8?B?b1BDYWdpdzZTU3BsTGYyd2hLbHNSK25IODRSZCs3dnRFaWFCdkdRK08yMkt0?=
+ =?utf-8?B?SlNNSGZKUnJaSERoRDJ5SUpFUXhxV2ZHYWVqTm1ReENUNDVDSnkwZ1VSVWkx?=
+ =?utf-8?B?Q3VyMldZSDVNY0hwWjFkY1J3RTczR2FTb1dwQnZkQjBTRGlzRnJSNnRsd240?=
+ =?utf-8?B?SzVJK2Z0M05CNGppdnNHdzdWS1VZak9HWCtHVUhqTS9FMlArSkdVd2EvY0hK?=
+ =?utf-8?Q?OTWIw2XmgCmezuu76dWTtHummeGhGfRFbxWe/3DZ16jD?=
+X-OriginatorOrg: phytec.de
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1603a1e9-02fe-4884-7cdd-08dd8bad7ac1
+X-MS-Exchange-CrossTenant-AuthSource: VI0P195MB2484.EURP195.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 May 2025 08:18:56.5181
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: e609157c-80e2-446d-9be3-9c99c2399d29
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: n/A/xaeNbbf/GcE6INIfri76aTG0hqu+jJsaBNBqI6wyB0Rjptgn7WpajyjqyUv1NjdEhGiZ3XftSts3shmdEw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS2P195MB2248
 
-On 05.05.25 09:53, Mike Rapoport wrote:
-> On Mon, May 05, 2025 at 09:38:43AM +0200, David Hildenbrand wrote:
->> On 05.05.25 09:28, Oscar Salvador wrote:
->>> On Mon, May 05, 2025 at 09:16:48AM +0200, David Hildenbrand wrote:
->>>> memory hotplug code never calls register_one_node(), unless I am missing
->>>> something.
->>>>
->>>> During add_memory_resource(), we call __try_online_node(nid, false), meaning
->>>> we skip register_one_node().
->>>>
->>>> The only caller of __try_online_node(nid, true) is try_online_node(), called
->>>> from CPU hotplug code, and I *guess* that is not required.
->>>
->>> Well, I guess this is because we need to link the cpus to the node.
->>> register_one_node() has two jobs: 1) register cpus belonging to the node
->>> and 2) register memory-blocks belonging to the node (if any).
->>
->> Ah, via __register_one_node() ...
->>
->> I would assume that an offline node
->>
->> (1) has no memory
->> (2) has no CPUs
->>
->> When we *hotplug* either memory or CPUs, and we first online the node, there
->> is nothing to register. Because if there would be something, the node would
->> already be online.
->>
->> In particular, try_offline_node() will only offline a node if
->>
->> (A) No present pages: No pages are spanned anymore. This includes
->>      offline memory blocks.
->> (B) No present CPUs.
->>
->> But maybe there is some case that I am missing ...
-> 
-> I actually hoped you and Oscar know how that stuff works :)
+Hey,
 
-Well, I know how the memory side works, but the CPU side is giving me a 
-hard time :)
+can someone please take a look at this patch? I can also re-send in case 
+it doesn't apply anymore. Thanks!
 
-> 
-> I tried to figure what is going on there and it all looks really convoluted.
+- Daniel
 
-Jap ...
-
-> 
-> So, on boot we have
-> 	cpu_up() ->
-> 		try_online_node() ->
->   			bails out because all nodes are online (at least on
-> 			x86 AFAIU, see 1ca75fa7f19d ("arch/x86/mm/numa: Do
->                          not initialize nodes twice"))
-> 	node_dev_init()i ->
-> 		register_one_node() ->
-> 			this one can use __register_one_node() and loop
-> 			over memblock regions.
-> 
-> And for the hotplug/unplug path, it seems that
-> register_memory_blocks_under_node(MEMINIT_EARLY) is superfluous, because if
-> a node had memory it wouldn't get offlined, and if we are hotplugging an
-> node with memory and cpus, memory hotplug anyway calls
-> register_memory_blocks_under_node_hotplug().
-> 
-> So, IMHO, register_one_node() should not call
-> register_memory_blocks_under_node() at all, but again, I might have missed
-> something :)
-
-Hm, but someone has to create these links for the memory blocks.
-
-It's all very messy :(
-
--- 
-Cheers,
-
-David / dhildenb
-
+On 1/13/25 19:56, Garrett Giordano wrote:
+> Enable the BANG BANG Thermal Governor to manage the GPIO Fan using
+> hysteresis on the PHYTEC phyBOARD-Lyra AM625.
+>
+> Signed-off-by: Garrett Giordano <ggiordano@phytec.com>
+> ---
+>   arch/arm64/configs/defconfig | 1 +
+>   1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index c62831e61586..3fd04c689269 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -690,6 +690,7 @@ CONFIG_SENSORS_RASPBERRYPI_HWMON=m
+>   CONFIG_SENSORS_SL28CPLD=m
+>   CONFIG_SENSORS_INA2XX=m
+>   CONFIG_SENSORS_INA3221=m
+> +CONFIG_THERMAL_GOV_BANG_BANG=y
+>   CONFIG_THERMAL_GOV_POWER_ALLOCATOR=y
+>   CONFIG_CPU_THERMAL=y
+>   CONFIG_DEVFREQ_THERMAL=y
