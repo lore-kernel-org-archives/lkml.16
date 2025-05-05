@@ -1,47 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AC772D5D1E;
-	Mon,  5 May 2025 22:54:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B86622D6427;
+	Mon,  5 May 2025 22:54:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485696; cv=none; b=gf6MVBeaAhSiM87QCK2Nbf962Z84zEzmo3Krvn+4DP0LzuSroo7USPWiZr6vxTL6hIC+caivQLKkKom9esNaX0Lr15nbmsrvBivdz0jVMjnyFuDCqZJmeS4TuvQsfLTBuMwPGZO+MoCUf5AdVP3L98doDdqxxsnOZW34XAVRn4k=
+	t=1746485692; cv=none; b=Uirj7OIjgt3pHFhUQiJwBl51+TSHaWEY7tVherwOi1CQNpTRIuM/4QjMgGtCtLO8r3NegDBMdK3740LB/sAXoSi+x/1W/ankS7TcmAvs/coJbQHu2rqRwrizRRGiq3VDP7Ek7NdTYP+NKgdKxbq5qqZOiTDa0DFLnjjf+2T0v+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485696; c=relaxed/simple;
-	bh=PToc3oAucTTxUmNd2oG82d8nn7vf2GxBtLFvdRfeVBQ=;
+	s=arc-20240116; t=1746485692; c=relaxed/simple;
+	bh=zmpFkEnZZLrrF49HUhfJohjoZOt4osMV05kEKXJ/pvM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=CrwUnaf1u5bIFLvjzzCAnB1i9iX2tc3rogkIWOW8CXOro8A8KX2wqNuT+q35u+jy0TlL5BUJcPrOnEunTaO4N5omvN6D6ZW0OwVJOJnQhtH6DNklfGuGM1iuiQAtJTSAxoPQGiOrYmZhYjsOkPDC6+eApZiX3Nr9txqcil1AdTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JCK05MEa; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Wnnt+sQImmywfArMa/phspBAan7g6YcwKuH9lji1KoBCdb1KstR0Zu2x8p7aDGNBO7q1KdoWhgD9af7dTpJnuBSbf0dKFp9CsGhibffJ/3U4hXQ55H9RuNy1xj1M7q+B2fHYUm9FyhAlEhAgewZGiUEPmFXZarld/K3TyzctbCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BrCrJtgf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JCK05MEa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F406EC4CEE4;
-	Mon,  5 May 2025 22:54:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BrCrJtgf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A848C4CEED;
+	Mon,  5 May 2025 22:54:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485696;
-	bh=PToc3oAucTTxUmNd2oG82d8nn7vf2GxBtLFvdRfeVBQ=;
+	s=k20201202; t=1746485691;
+	bh=zmpFkEnZZLrrF49HUhfJohjoZOt4osMV05kEKXJ/pvM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JCK05MEaw03ri7xDluWDUKGpm9AM/ZTjhwGHI7VGN++vspHmzKjysV9XkaRntoiKn
-	 vH9NW6p1tV/EPv5bFMZqUhOq9vsoVyAuthSmtn7iMbhWtFGKMr/wKwjpVZ4ellvmTl
-	 QAwOoI3DH2BT9jsnrt2wCDnxr2OeeXbo4xQTJ9tjTkBfHSOU2Nw2OlDlx2bOhQhJ4D
-	 m8vVfSau240OLgFtGC4rIivlhIS2cqIxK0E37MEVSbjY10B8OTSs1xf6GnxtGo2z8e
-	 TPdx7U/eOXHSHu/eLQqvA37c0dzg/KEqLsYFWDvWdLhRwSwHHYLUireANRyRkbWw9A
-	 aqEzi2ai9dsFg==
+	b=BrCrJtgf9W/bbv9b2G+e87jzFrNoEmY6i0ASZuqToYZ8eTxvGctPQh7Pu69qJUOfy
+	 +MjClG6qYrMEHyFwQHYboSCVpIxSjKo0Xq0f1q9JPdGRBJzx/eAP4dkZoMxs+A5pGU
+	 3lig44Rs86xFrnXeVeYDZRgSe5bWOcBYy/UOTCwysWf9B79yxXouHyzgDmdqgTfyxZ
+	 jPxA7FIi8x+ErlB6UWsco62XvI8maxnqgyggHiGEgcvLebZd60QxxhhZtsxesvxU4X
+	 VAkGZp6+5DCpH/o2nBO4AoUWE6nMkMw5jeIBO/oM5YwnTwvDKA7wFfUXr00FBmDJPe
+	 BF43nvhQmJd/w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Antoine Tenart <atenart@kernel.org>,
+Cc: Petr Machata <petrm@nvidia.com>,
+	Ido Schimmel <idosch@nvidia.com>,
+	Nikolay Aleksandrov <razor@blackwall.org>,
 	Jakub Kicinski <kuba@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
 	davem@davemloft.net,
 	edumazet@google.com,
 	pabeni@redhat.com,
-	sdf@fomichev.me,
-	jdamato@fastly.com,
-	aleksander.lobakin@intel.com,
-	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 430/486] net-sysfs: prevent uncleared queues from being re-added
-Date: Mon,  5 May 2025 18:38:26 -0400
-Message-Id: <20250505223922.2682012-430-sashal@kernel.org>
+	shuah@kernel.org,
+	bridge@lists.linux.dev,
+	netdev@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 428/486] bridge: mdb: Allow replace of a host-joined group
+Date: Mon,  5 May 2025 18:38:24 -0400
+Message-Id: <20250505223922.2682012-428-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -56,74 +58,65 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Antoine Tenart <atenart@kernel.org>
+From: Petr Machata <petrm@nvidia.com>
 
-[ Upstream commit 7e54f85c60828842be27e0149f3533357225090e ]
+[ Upstream commit d9e9f6d7b7d0c520bb87f19d2cbc57aeeb2091d5 ]
 
-With the (upcoming) removal of the rtnl_trylock/restart_syscall logic
-and because of how Tx/Rx queues are implemented (and their
-requirements), it might happen that a queue is re-added before having
-the chance to be cleared. In such rare case, do not complete the queue
-addition operation.
+Attempts to replace an MDB group membership of the host itself are
+currently bounced:
 
-Signed-off-by: Antoine Tenart <atenart@kernel.org>
-Link: https://patch.msgid.link/20250204170314.146022-4-atenart@kernel.org
+ # ip link add name br up type bridge vlan_filtering 1
+ # bridge mdb replace dev br port br grp 239.0.0.1 vid 2
+ # bridge mdb replace dev br port br grp 239.0.0.1 vid 2
+ Error: bridge: Group is already joined by host.
+
+A similar operation done on a member port would succeed. Ignore the check
+for replacement of host group memberships as well.
+
+The bit of code that this enables is br_multicast_host_join(), which, for
+already-joined groups only refreshes the MC group expiration timer, which
+is desirable; and a userspace notification, also desirable.
+
+Change a selftest that exercises this code path from expecting a rejection
+to expecting a pass. The rest of MDB selftests pass without modification.
+
+Signed-off-by: Petr Machata <petrm@nvidia.com>
+Reviewed-by: Ido Schimmel <idosch@nvidia.com>
+Acked-by: Nikolay Aleksandrov <razor@blackwall.org>
+Link: https://patch.msgid.link/e5c5188b9787ae806609e7ca3aa2a0a501b9b5c4.1738685648.git.petrm@nvidia.com
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/net-sysfs.c | 32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+ net/bridge/br_mdb.c                                  | 2 +-
+ tools/testing/selftests/net/forwarding/bridge_mdb.sh | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/core/net-sysfs.c b/net/core/net-sysfs.c
-index b398a2e0c243d..d6d0c3082b82b 100644
---- a/net/core/net-sysfs.c
-+++ b/net/core/net-sysfs.c
-@@ -1100,6 +1100,22 @@ static int rx_queue_add_kobject(struct net_device *dev, int index)
- 	struct kobject *kobj = &queue->kobj;
- 	int error = 0;
+diff --git a/net/bridge/br_mdb.c b/net/bridge/br_mdb.c
+index 1a52a0bca086d..7e1ad229e1330 100644
+--- a/net/bridge/br_mdb.c
++++ b/net/bridge/br_mdb.c
+@@ -1040,7 +1040,7 @@ static int br_mdb_add_group(const struct br_mdb_config *cfg,
  
-+	/* Rx queues are cleared in rx_queue_release to allow later
-+	 * re-registration. This is triggered when their kobj refcount is
-+	 * dropped.
-+	 *
-+	 * If a queue is removed while both a read (or write) operation and a
-+	 * the re-addition of the same queue are pending (waiting on rntl_lock)
-+	 * it might happen that the re-addition will execute before the read,
-+	 * making the initial removal to never happen (queue's kobj refcount
-+	 * won't drop enough because of the pending read). In such rare case,
-+	 * return to allow the removal operation to complete.
-+	 */
-+	if (unlikely(kobj->state_initialized)) {
-+		netdev_warn_once(dev, "Cannot re-add rx queues before their removal completed");
-+		return -EAGAIN;
-+	}
-+
- 	/* Kobject_put later will trigger rx_queue_release call which
- 	 * decreases dev refcount: Take that reference here
- 	 */
-@@ -1811,6 +1827,22 @@ static int netdev_queue_add_kobject(struct net_device *dev, int index)
- 	struct kobject *kobj = &queue->kobj;
- 	int error = 0;
+ 	/* host join */
+ 	if (!port) {
+-		if (mp->host_joined) {
++		if (mp->host_joined && !(cfg->nlflags & NLM_F_REPLACE)) {
+ 			NL_SET_ERR_MSG_MOD(extack, "Group is already joined by host");
+ 			return -EEXIST;
+ 		}
+diff --git a/tools/testing/selftests/net/forwarding/bridge_mdb.sh b/tools/testing/selftests/net/forwarding/bridge_mdb.sh
+index d9d587454d207..8c1597ebc2d38 100755
+--- a/tools/testing/selftests/net/forwarding/bridge_mdb.sh
++++ b/tools/testing/selftests/net/forwarding/bridge_mdb.sh
+@@ -149,7 +149,7 @@ cfg_test_host_common()
+ 	check_err $? "Failed to add $name host entry"
  
-+	/* Tx queues are cleared in netdev_queue_release to allow later
-+	 * re-registration. This is triggered when their kobj refcount is
-+	 * dropped.
-+	 *
-+	 * If a queue is removed while both a read (or write) operation and a
-+	 * the re-addition of the same queue are pending (waiting on rntl_lock)
-+	 * it might happen that the re-addition will execute before the read,
-+	 * making the initial removal to never happen (queue's kobj refcount
-+	 * won't drop enough because of the pending read). In such rare case,
-+	 * return to allow the removal operation to complete.
-+	 */
-+	if (unlikely(kobj->state_initialized)) {
-+		netdev_warn_once(dev, "Cannot re-add tx queues before their removal completed");
-+		return -EAGAIN;
-+	}
-+
- 	/* Kobject_put later will trigger netdev_queue_release call
- 	 * which decreases dev refcount: Take that reference here
- 	 */
+ 	bridge mdb replace dev br0 port br0 grp $grp $state vid 10 &> /dev/null
+-	check_fail $? "Managed to replace $name host entry"
++	check_err $? "Failed to replace $name host entry"
+ 
+ 	bridge mdb del dev br0 port br0 grp $grp $state vid 10
+ 	bridge mdb get dev br0 grp $grp vid 10 &> /dev/null
 -- 
 2.39.5
 
