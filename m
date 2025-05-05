@@ -1,42 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D1282F3A6C;
-	Mon,  5 May 2025 23:14:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD21A39B08A;
+	Mon,  5 May 2025 23:13:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486884; cv=none; b=uXlM/rfmzt5tesRRWOJKrCC2bnI532T9cAcPAP0zX7nhE68DevFrhN6rMVE5KuM83T0rDbagI9NLeGMWBuA3ZNct4ORTPVzpdmdkdf9xYIiFwlhJY6Gr6X2UN7D2wcwi5wij2NiH0aOAI7swQV+GWFceiYOhwLM+37F4WYiIQuk=
+	t=1746486839; cv=none; b=irZFMVqY/uKdrsC4EPzkmux2OwMhUmIn1RsTjs/nneTMeiLSafYsRrUSU6iEUEEt0B0troV93Ut3yjSK8HWm4WFsuP+lu8ZGA/LvRPOpyC9niUcwsFdMS+5eXcA3pIzNSOkqs2+2XQFBrLK85Shw16h8yABDFWSDxdsmYT1fpR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486884; c=relaxed/simple;
-	bh=uzRngQ09N+cYqFREnf8hrA6RbO131KtnUMMDuxB7Wfw=;
+	s=arc-20240116; t=1746486839; c=relaxed/simple;
+	bh=mMsRvzBORKHjD8vtd6K28orEvJbjyOhbzMYjD40a0DY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=RZwOq7/9ho0O5aHPeYaGzKqu+YGOmA3mUFoSaiZxpJDcl5HKUIj7B30BoOdUOXydHUgNSAIa2U7uUUZ5InqoKbu4P6QbZacvhTaboGq47+TdaM7brFprlFQHBMa2WybgKlZ37DRd3g7JCufMwMnLF2iIlfe1o39DnHDlgPYy0bY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bg4/GM9r; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=h2yoca/PukMK/FpEhCUjduwns1ua1+srXuM39SaUL6kFo+GHN1idHAVX2o7NZqjn5YgIXjRlIRoTdCwyuPdJTbGPfYABwhnMmA3VXiorYQOzGP1QP68QH4gNX3okcICZnauW5ojvpCTE74OSHyJrITHpcQK52wSUWYllNhmIXyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GzEpKQfV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bg4/GM9r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52AA1C4CEEE;
-	Mon,  5 May 2025 23:14:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GzEpKQfV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 518C3C4CEE4;
+	Mon,  5 May 2025 23:13:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486884;
-	bh=uzRngQ09N+cYqFREnf8hrA6RbO131KtnUMMDuxB7Wfw=;
+	s=k20201202; t=1746486838;
+	bh=mMsRvzBORKHjD8vtd6K28orEvJbjyOhbzMYjD40a0DY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bg4/GM9rSNV/t82Ngw2uhDY3hw2R7VnItQ1dz5atD4ogC2t+3R/Z1I2P2vBN+c155
-	 FbeHtDg634IltX8OOhusVx/QzneGpl0PPdPbcCOmFIbQMpKbWGfozECrUQ2pbaT0Iy
-	 WRYFo5FpIx/B8fVD4JrVlLWBik6IvtRgC/Pnof4aQXBgtnLyif3fIJaia84uLiq71U
-	 MtZpL3YiWKjDWga3aQm+CUxIbooYbfLqN7ZKDxAftDLKHr9nI5IZoIEmr7L1YzWTTI
-	 prUXTxxtP3I7z8mFuLVCMT4FRnNTtRJPXBuOhexren2y8ru+CMJPU5YTn9+BdDwcAA
-	 qHnu0JgnkxZTw==
+	b=GzEpKQfVxuO1Tnhr9c/8zdpP3Cz+bBRHXR5Dyb+/Dg+/QYMhxV1lq3Awl2gPFO132
+	 mnl1pxBCNk/FVcXdxIkduG2gqJ5sWMsTjnyhn+8Qx1udwHytweIZ3HBdp2iJkGkY29
+	 limvm/SuwkQE96zQXBeFGCFQzjdXjuQMmK7INmpa6/BwmrP1aBYm5Xka9EY20K3sYx
+	 V/krn85ANK3fZC07Tm/lGnTWvjCVt9GYZLGwtCkPcqcrXdG0bYD6rXecf8pfKPX6Lx
+	 IgYLpcvq22DGtZOEYJvvTLi9tgKHOjFR4ZblBGwx0qhH6wrGqUGO2eiRHN1P7kZo9E
+	 GRpU/MZVtlS+w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Mikulas Patocka <mpatocka@redhat.com>,
+Cc: Trond Myklebust <trond.myklebust@hammerspace.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
 	Sasha Levin <sashal@kernel.org>,
-	agk@redhat.com,
+	trondmy@kernel.org,
+	anna@kernel.org,
 	snitzer@kernel.org,
-	dm-devel@lists.linux.dev
-Subject: [PATCH AUTOSEL 5.15 042/153] dm: restrict dm device size to 2^63-512 bytes
-Date: Mon,  5 May 2025 19:11:29 -0400
-Message-Id: <20250505231320.2695319-42-sashal@kernel.org>
+	neilb@suse.de,
+	kolga@netapp.com,
+	linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.15 017/153] pNFS/flexfiles: Report ENETDOWN as a connection error
+Date: Mon,  5 May 2025 19:11:04 -0400
+Message-Id: <20250505231320.2695319-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505231320.2695319-1-sashal@kernel.org>
 References: <20250505231320.2695319-1-sashal@kernel.org>
@@ -51,37 +56,35 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.15.181
 Content-Transfer-Encoding: 8bit
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit 45fc728515c14f53f6205789de5bfd72a95af3b8 ]
+[ Upstream commit aa42add73ce9b9e3714723d385c254b75814e335 ]
 
-The devices with size >= 2^63 bytes can't be used reliably by userspace
-because the type off_t is a signed 64-bit integer.
+If the client should see an ENETDOWN when trying to connect to the data
+server, it might still be able to talk to the metadata server through
+another NIC. If so, report the error.
 
-Therefore, we limit the maximum size of a device mapper device to
-2^63-512 bytes.
-
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Tested-by: Jeff Layton <jlayton@kernel.org>
+Acked-by: Chuck Lever <chuck.lever@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/dm-table.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ fs/nfs/flexfilelayout/flexfilelayout.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/md/dm-table.c b/drivers/md/dm-table.c
-index 52083d397fc4b..f14177c7657c0 100644
---- a/drivers/md/dm-table.c
-+++ b/drivers/md/dm-table.c
-@@ -660,6 +660,10 @@ int dm_table_add_target(struct dm_table *t, const char *type,
- 		DMERR("%s: zero-length target", dm_device_name(t->md));
- 		return -EINVAL;
- 	}
-+	if (start + len < start || start + len > LLONG_MAX >> SECTOR_SHIFT) {
-+		DMERR("%s: too large device", dm_device_name(t->md));
-+		return -EINVAL;
-+	}
- 
- 	tgt->type = dm_get_target_type(type);
- 	if (!tgt->type) {
+diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
+index 4fed292de029f..a55eec241657d 100644
+--- a/fs/nfs/flexfilelayout/flexfilelayout.c
++++ b/fs/nfs/flexfilelayout/flexfilelayout.c
+@@ -1258,6 +1258,7 @@ static void ff_layout_io_track_ds_error(struct pnfs_layout_segment *lseg,
+ 		case -ECONNRESET:
+ 		case -EHOSTDOWN:
+ 		case -EHOSTUNREACH:
++		case -ENETDOWN:
+ 		case -ENETUNREACH:
+ 		case -EADDRINUSE:
+ 		case -ENOBUFS:
 -- 
 2.39.5
 
