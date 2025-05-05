@@ -1,40 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D14982ED094;
-	Mon,  5 May 2025 23:08:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5508F2EDB36;
+	Mon,  5 May 2025 23:09:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486522; cv=none; b=Q86PzJyLX51qaHsdlLLcOxe4rL8C8StaAzBmTOgsW07IMpZGLvrtS/ZauEzcQYjF/n47+vky25KA7YCEsYgDK2x2MLpG3urKRr9q0FeGj0myhoDA9zJ5Hp7IM0RYdWDckGp+dJ96JoIxyzAGmN41ffWzcgLxvpkNHu0FvW/GT20=
+	t=1746486554; cv=none; b=FgQdjxZRYZPxfVtOr+d/yJYqAPb11rT+2QqmjPSqZYYhUEsTEG9D9Z2Qg8YR6yKNjv+2a2KSWVpxyyE6ZD9gGKPwANL6hm6+wZRQ1srB7EOw8dO4ppGH9ZtSknnJXRyaEyxQyRp7xK0d+ep2bG6lPLenqKcuZNYK0j9x7Ilhg/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486522; c=relaxed/simple;
-	bh=Qc8kUZMXipZTXxf3pFyZhAv0logpsqy6IX7EpbaAqNM=;
+	s=arc-20240116; t=1746486554; c=relaxed/simple;
+	bh=jsoHvHLDzA/XTT30/MF/phkHAm8+PsqfqsZss3bnfOo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=oNGo3Qqq5Ft5NZckv8ValKWwAZIK26KmOZTbArsz53lzPZvVXKI5PK33lFnZgZ/nD8RludB0j7O5UwibFGGhzaLQp2AtoAAvNvBv/swVq0nAb6psMhCcYvRAwESX3gi/+ZEz8njvSz4TdGFTAtmc+YJgeItmjHIFoCw6DhWMErc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IqFL5das; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=pqLN7LdqXOK9eUrVpJBYWxEDDw+oUJn/2BjqfjvONoEHI6Gf7Joz7XlZ98fJiyjAdUOJAshQXtS3qVZKrT3uPTLBuifkNLNp9BJfZmPhCZaYOoNMn4Xsm2mb7nhY74PAZEXY4JV4WmSnbIECt6oXiuoYM9bzAVIke1xkdYHjDMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oaUpI+aS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IqFL5das"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FB30C4CEEF;
-	Mon,  5 May 2025 23:08:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oaUpI+aS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A421C4CEEE;
+	Mon,  5 May 2025 23:09:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486521;
-	bh=Qc8kUZMXipZTXxf3pFyZhAv0logpsqy6IX7EpbaAqNM=;
+	s=k20201202; t=1746486553;
+	bh=jsoHvHLDzA/XTT30/MF/phkHAm8+PsqfqsZss3bnfOo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IqFL5dasOb7UH8fvITR+0e58eiwP1CR+gXvMczXy6xOpj6e6Xnq5H8Zw3iWgsEzoj
-	 vpwRZuJMQwVZ34sSyUj0Tx7aHbsD3nUCm5fI+8+sBgBN871K3Q9wOnW9yIF7cCkUtu
-	 ck7JRmi368NzKeL/NkXHV9TzK4nx7nIsiKT4yLBg9koqVAVAk7x5iny2Dinr7tMMDO
-	 RjdBQM8fWpqPSjN+wYG8IDT3acemc+kvtOtsaC4AIISyyvsT/tHkN53N6/wNqK/5wj
-	 ZiCuWabGDnhTClm4N0EC714YV+VyFDO5VDDaPZz/98ArKIpLZ7jxa/+nj1Y3BjkjN7
-	 PW/H5BTPqvCTg==
+	b=oaUpI+aS0ZlRP1r+uvpPVTeNEDKcfYvvVD91kqCn+pRDGLDQJP6jgIcYwnFzjlFTV
+	 4c6VP4sriPhuZDVOpbxFVyVLkWOzvwnEfvZ6mSCmSb4uOfnzSZqQ8eDuw4g4/tUwKK
+	 gQiSS5xYr+YcZ2x9kr9heYEfwWv5EZm58Yuz4OQFZ46QIEa4VMc51IfZ7TJJwrYicc
+	 M7EW/2Izc76qR5+8HWhJQRqBB2ebOXWUWaHjKLdnXGAw5yDnhgG9JfV7ydY4D1cJWp
+	 P/BRDOWDO+JOuj2fbVW09c9Gqqh6oC4CuFfd+z51StMkHgJq+HGVxmEVTAdbd8NMeG
+	 VdWy2pBREhi8A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Andreas Gruenbacher <agruenba@redhat.com>,
+Cc: Markus Elfring <elfring@users.sourceforge.net>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
 	Sasha Levin <sashal@kernel.org>,
-	gfs2@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.1 074/212] gfs2: Check for empty queue in run_queue
-Date: Mon,  5 May 2025 19:04:06 -0400
-Message-Id: <20250505230624.2692522-74-sashal@kernel.org>
+	patrice.chotard@foss.st.com,
+	mchehab@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.1 087/212] media: c8sectpfe: Call of_node_put(i2c_bus) only once in c8sectpfe_probe()
+Date: Mon,  5 May 2025 19:04:19 -0400
+Message-Id: <20250505230624.2692522-87-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505230624.2692522-1-sashal@kernel.org>
 References: <20250505230624.2692522-1-sashal@kernel.org>
@@ -49,62 +53,42 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.1.136
 Content-Transfer-Encoding: 8bit
 
-From: Andreas Gruenbacher <agruenba@redhat.com>
+From: Markus Elfring <elfring@users.sourceforge.net>
 
-[ Upstream commit d838605fea6eabae3746a276fd448f6719eb3926 ]
+[ Upstream commit b773530a34df0687020520015057075f8b7b4ac4 ]
 
-In run_queue(), check if the queue of pending requests is empty instead
-of blindly assuming that it won't be.
+An of_node_put(i2c_bus) call was immediately used after a pointer check
+for an of_find_i2c_adapter_by_node() call in this function implementation.
+Thus call such a function only once instead directly before the check.
 
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+This issue was transformed by using the Coccinelle software.
+
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+Signed-off-by: Hans Verkuil <hverkuil@xs4all.nl>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/glock.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/media/platform/st/sti/c8sectpfe/c8sectpfe-core.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/fs/gfs2/glock.c b/fs/gfs2/glock.c
-index 6ba8460f53318..428c1db295fa1 100644
---- a/fs/gfs2/glock.c
-+++ b/fs/gfs2/glock.c
-@@ -885,11 +885,12 @@ static void run_queue(struct gfs2_glock *gl, const int nonblock)
- __releases(&gl->gl_lockref.lock)
- __acquires(&gl->gl_lockref.lock)
- {
--	struct gfs2_holder *gh = NULL;
-+	struct gfs2_holder *gh;
+diff --git a/drivers/media/platform/st/sti/c8sectpfe/c8sectpfe-core.c b/drivers/media/platform/st/sti/c8sectpfe/c8sectpfe-core.c
+index 1dbb89f0ddb8c..b2a977f1ec18a 100644
+--- a/drivers/media/platform/st/sti/c8sectpfe/c8sectpfe-core.c
++++ b/drivers/media/platform/st/sti/c8sectpfe/c8sectpfe-core.c
+@@ -802,13 +802,12 @@ static int c8sectpfe_probe(struct platform_device *pdev)
+ 		}
+ 		tsin->i2c_adapter =
+ 			of_find_i2c_adapter_by_node(i2c_bus);
++		of_node_put(i2c_bus);
+ 		if (!tsin->i2c_adapter) {
+ 			dev_err(&pdev->dev, "No i2c adapter found\n");
+-			of_node_put(i2c_bus);
+ 			ret = -ENODEV;
+ 			goto err_node_put;
+ 		}
+-		of_node_put(i2c_bus);
  
- 	if (test_and_set_bit(GLF_LOCK, &gl->gl_flags))
- 		return;
+ 		tsin->rst_gpio = of_get_named_gpio(child, "reset-gpios", 0);
  
-+	/* While a demote is in progress, the GLF_LOCK flag must be set. */
- 	GLOCK_BUG_ON(gl, test_bit(GLF_DEMOTE_IN_PROGRESS, &gl->gl_flags));
- 
- 	if (test_bit(GLF_DEMOTE, &gl->gl_flags) &&
-@@ -901,18 +902,22 @@ __acquires(&gl->gl_lockref.lock)
- 		set_bit(GLF_DEMOTE_IN_PROGRESS, &gl->gl_flags);
- 		GLOCK_BUG_ON(gl, gl->gl_demote_state == LM_ST_EXCLUSIVE);
- 		gl->gl_target = gl->gl_demote_state;
-+		do_xmote(gl, NULL, gl->gl_target);
-+		return;
- 	} else {
- 		if (test_bit(GLF_DEMOTE, &gl->gl_flags))
- 			gfs2_demote_wake(gl);
- 		if (do_promote(gl) == 0)
- 			goto out_unlock;
- 		gh = find_first_waiter(gl);
-+		if (!gh)
-+			goto out_unlock;
- 		gl->gl_target = gh->gh_state;
- 		if (!(gh->gh_flags & (LM_FLAG_TRY | LM_FLAG_TRY_1CB)))
- 			do_error(gl, 0); /* Fail queued try locks */
-+		do_xmote(gl, gh, gl->gl_target);
-+		return;
- 	}
--	do_xmote(gl, gh, gl->gl_target);
--	return;
- 
- out_sched:
- 	clear_bit(GLF_LOCK, &gl->gl_flags);
 -- 
 2.39.5
 
