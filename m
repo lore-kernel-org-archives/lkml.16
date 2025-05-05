@@ -1,63 +1,61 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAAD01D54EE;
-	Mon,  5 May 2025 13:52:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD53E1D54EE;
+	Mon,  5 May 2025 13:52:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746453126; cv=none; b=kx1lmZVXuI6l2lvpASS8F5wv/m1fJlmCAL7g/4zlyjskdJbML53s9vDQhbp6WC/XvjFMBw/xr2S8NAwQzzAQWap927fd0biIseRjs1kM/YuDRpfjAeWhTTRQbZsKsOvEzfhjTCbDCCNi7U+cdDcAF2PgEINFeFRvRdr+4RDKqzc=
+	t=1746453141; cv=none; b=jHPgvvBaIvsZDbSp6JAjR/4MnHirJE2v3Xi5w+VgLKZxufPbEaAD1VOdcgTwS3NDTQkWwy1Z/d37YVk9rEPANArzNhMY6TGgdqaHclvOPT5AeXwfRXyx0rIKHXmSADNvaPlk9QpiJo7JS3OjqWBXICrzpbFdzH7jUYoTj826oOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746453126; c=relaxed/simple;
-	bh=mb/ZzQf87Hmkvnvv9v9dPUSGx/B52gYFvCwDkSRat3M=;
+	s=arc-20240116; t=1746453141; c=relaxed/simple;
+	bh=OqvAZIZ0hBBm8cCRD0Vz3cuo1pZmgtrL67uvLA9aScY=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=gPHy6SBhJCgeL6yoSOjl3itucGw4e8wqZi2Dzi7wvn628gFogTOWsGMrylSZBCOODlZeUlhsa2GBWIJRRUmI6ahHkIIhFb3+WOkUWAFtqf0agx3TRYXTmXonHboGPHlVZ/nMJb6dVBePXfHkM9/u2XG/F02sP2GPtx9tBU48in8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hCEATgL/; arc=none smtp.client-ip=198.175.65.17
+	 MIME-Version:Content-Type; b=WOBMrIv8+tmWzdxVS3N/U8XEHYJ4UmWxNCH5d5WHk36OZVUyTIzmaldzAX2rp/vp7taFZjuyejZBxGETwNtTMhWIS0A0gzKW3zUMI8Bi9xWnj71SgJyTSQZlLsR9kLvqmX6kRc9CeG8RHWv1QlSk7wHuyMndbVFrb1i3e2XiiGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WTvZtEaM; arc=none smtp.client-ip=192.198.163.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hCEATgL/"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WTvZtEaM"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746453125; x=1777989125;
+  t=1746453140; x=1777989140;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=mb/ZzQf87Hmkvnvv9v9dPUSGx/B52gYFvCwDkSRat3M=;
-  b=hCEATgL/Lwvsi8v8u1JN/74KkiWu7aNulrkBUXYcAGVvADPHMfQbL1BB
-   9KnNQ7Fw2blC/mI9xU4AEeA6evXJertFCbx4qWNw63ceHoN29eCGL0GXh
-   GYsOUnN6BlB0pCO1cPZCwKPlyCDDevLqEdv1Ts6mknsMvNuY/o1MVsA/G
-   UuEmCfyWHv2cZhH+jZHBXLHHaEEY+CC8vqYhjUk11q/DBAUZQkAZokjl5
-   LU9/4bMH65zdW5LKTKDUO4awCRT9599lhwGypsLk023O/7S4QU8VggeFX
-   3hf2GzZQ/gpNFZ3rSDRC9U+EoQEu4lzkCdwvt049FvMN2j3mRyWfN2FHD
-   g==;
-X-CSE-ConnectionGUID: /ccn6U9zTyS6XEQghK8cdg==
-X-CSE-MsgGUID: IfGAggCxQs2nLah7SxxlnA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11423"; a="48072993"
+  bh=OqvAZIZ0hBBm8cCRD0Vz3cuo1pZmgtrL67uvLA9aScY=;
+  b=WTvZtEaM2o2AK/fk7Md+3gDTEr4HK6oEWKY7qrJy1DQwCqPUWqb5hxyQ
+   2eVW5CmgCtUK2kNsSDikOCavpk/I/MMyD+LNKw0iuI3nHEzZFboGnom5k
+   uansGbL2O6BwtM4e86JBkP7+n3Z/6aX6C/rqp9JfgeXqHh/Lwg8o+k/Q2
+   0jdhB/LGGrfzSiT0yNZ9w79RhD36qA3SxNYaJ6b4FVgnx0XlRk8+nf3AR
+   u54MQ2x7e08qonY5WJ9PvI3jPrQ2QrTrzFXEQ5hm79SFXdH9JulJ0Nb2Y
+   PFFyhSio9ZJdzpgYzFKMy98mXQFlFU2Adx6v6JN7ApCadjXRwZVmcOrAN
+   Q==;
+X-CSE-ConnectionGUID: RTMhHpqoSKaJ0gZm5kS0lQ==
+X-CSE-MsgGUID: waTd01oBSm+GJds9Nuc24Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11423"; a="51868458"
 X-IronPort-AV: E=Sophos;i="6.15,262,1739865600"; 
-   d="scan'208";a="48072993"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 06:52:05 -0700
-X-CSE-ConnectionGUID: vQGifHJcSoiEVbIeQ9K4tA==
-X-CSE-MsgGUID: 9yjBbPIGRsGI1FEc9zDhTQ==
+   d="scan'208";a="51868458"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 06:52:19 -0700
+X-CSE-ConnectionGUID: XPjipUoCTN6Shp8LxJyffA==
+X-CSE-MsgGUID: wfbHTAunRFywKjfvJuiOJw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,262,1739865600"; 
-   d="scan'208";a="134994343"
+   d="scan'208";a="140046204"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.68])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 06:52:01 -0700
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 06:52:16 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Antheas Kapenekakis <lkml@antheas.dev>, 
- Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Derek John Clark <derekjohn.clark@gmail.com>, 
+To: platform-driver-x86@vger.kernel.org, 
+ Antheas Kapenekakis <lkml@antheas.dev>
+Cc: linux-kernel@vger.kernel.org, 
+ Derek John Clark <derekjohn.clark@gmail.com>, 
  =?utf-8?q?Joaqu=C3=ADn_Ignacio_Aramend=C3=ADa?= <samsagax@gmail.com>, 
- Hans de Goede <hdegoede@redhat.com>, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- kernel-janitors@vger.kernel.org
-In-Reply-To: <aBSE71VKfBlQg_fZ@stanley.mountain>
-References: <aBSE71VKfBlQg_fZ@stanley.mountain>
-Subject: Re: [PATCH next] platform/x86: oxpec: Add a lower bounds check in
- oxp_psy_ext_set_prop()
-Message-Id: <174645311458.23202.1330515283470994332.b4-ty@linux.intel.com>
-Date: Mon, 05 May 2025 16:51:54 +0300
+ Hans de Goede <hdegoede@redhat.com>, Eileen <eileen@one-netbook.com>
+In-Reply-To: <20250426172955.13957-1-lkml@antheas.dev>
+References: <20250426172955.13957-1-lkml@antheas.dev>
+Subject: Re: [PATCH v1 0/2] platform/x86: oxpec: Add support for OneXPlayer
+ G1 Intel/AMD
+Message-Id: <174645313180.23202.8023391383676730384.b4-ty@linux.intel.com>
+Date: Mon, 05 May 2025 16:52:11 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,15 +66,16 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
-On Fri, 02 May 2025 11:40:15 +0300, Dan Carpenter wrote:
+On Sat, 26 Apr 2025 19:29:53 +0200, Antheas Kapenekakis wrote:
 
-> The "val->intval" variable is an integer which comes from the user.  This
-> code has an upper bounds check but the lower bounds check was
-> accidentally omitted.  The write_to_ec() take a u8 value as a parameter
-> so negative values would be truncated to positive values in the 0-255
-> range.
+> The OneXPlayer G1 is a new clamshell factor model by OneXPlayer. The
+> special quirk on this one is that there is an additional bit on the turbo
+> button register we should not touch, so the first patch converts the turbo
+> function to apply a mask instead.
 > 
-> Return -EINVAL if the user passes a negative value.
+> Antheas Kapenekakis (2):
+>   platform/x86: oxpec: Make turbo val apply a bitmask
+>   platform/x86: oxpec: Add support for the OneXPlayer G1
 > 
 > [...]
 
@@ -87,8 +86,10 @@ platform-drivers-x86/review-ilpo-next branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/1] platform/x86: oxpec: Add a lower bounds check in oxp_psy_ext_set_prop()
-      commit: 55cd5e760618b3bca5b8ab63fe65ab78a753adf8
+[1/2] platform/x86: oxpec: Make turbo val apply a bitmask
+      commit: 7b81040f02d59156ba440ac837535901b89fc254
+[2/2] platform/x86: oxpec: Add support for the OneXPlayer G1
+      commit: e0fede5ff489be3ae30df7f0e0fda5395e364b34
 
 --
  i.
