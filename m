@@ -1,122 +1,108 @@
-Received: from smtp-fw-52004.amazon.com (smtp-fw-52004.amazon.com [52.119.213.154])
+Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EDF4DDC3;
-	Mon,  5 May 2025 18:49:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44D751D54EE;
+	Mon,  5 May 2025 18:49:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746470948; cv=none; b=ZYusRfFXLSZzdYZdRXawQujPSD3zf3xVvpSF8R4+TU9JFfodiqxoTcv2TUllhDTURm7mSoJh2OXZYjnC6JxYRUDLXoMdCcn5MECYZhpPh7I1+4DW14FoFmJWn4xJplhVTTCxM746p5QYayhzSdlLEdF7qoaRtG7xnqyDFJ95VGg=
+	t=1746470985; cv=none; b=PBSTRIP5MTrwLbxj1acPyN3vokv4LSFPk8Ewt2cC0RVHxpFrlWYaJgyXMMy3Un9tD80abtRSefBwQFlu0dOlhZ42JDCP4MbXBNKhY6YwlfTwXbRu4cNXB2MNd7ION77XI0CmiNJooKSvGJdQXC5yhDFOXv7qzyTEsTlc3aOqQto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746470948; c=relaxed/simple;
-	bh=0khgXCASiHK6JYlqgsdUdNJz4kXf5NEs+mufVRGpI3c=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rgz9OCUcsjqYugVqGCVgq7jRzKdGlIT/TIF+dqiKGujFTh7BT43IVkuE7RLGf8Mw+WHFdlA/axCrVDugcJCYWCCXJBgNhcLShTGozqKjb2oby0/VKPCg7G9RS4JEtkPQuqTdZUUiGXylccKmfopNtW8S+J7s8D/o0VZD1n90pb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=l8K2CcGm; arc=none smtp.client-ip=52.119.213.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1746470985; c=relaxed/simple;
+	bh=T6Ncts6N/Z58qzqhIEes9iZ3oovStagca0bRASPa1Kk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YInFQ87yR5qMcrX7qNis1q/JGbrXC+Th5DCHx1z44PR8s0WNSCkUYG0mDB9Ida9PcMme5cCDbfC/M1NRacqYjXdEOUvrmeOyT+9DyIlorcZwRt6G/Taalwbm7oJL4R5HiMKj9gu4ILCALn3mDOUw1kYCzV96NWz6vUDUi7niO78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=BObpQanz; arc=none smtp.client-ip=193.68.50.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="l8K2CcGm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1746470946; x=1778006946;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Vx0lieCdiisZ+VzesD1JWNDpyrV2ThBTOINQevgKwOE=;
-  b=l8K2CcGmawHi51/Rq05j5OfYWNqatpBmub3atQSrby86TULpgS6NwaaJ
-   r/ql63G+57P9snl4+1/D35pqY0L0YFJn6IA9XPRS2c1+zPI64DzCspB0I
-   vUwPWZPKAyMerazuyP2/xXrfzhg2ogQu1EET0SUYtk24KkPZAQRs4XODk
-   Q=;
-X-IronPort-AV: E=Sophos;i="6.15,264,1739836800"; 
-   d="scan'208";a="294767473"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.2])
-  by smtp-border-fw-52004.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 18:49:00 +0000
-Received: from EX19MTAUWA001.ant.amazon.com [10.0.38.20:55221]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.10.32:2525] with esmtp (Farcaster)
- id fe65f5b7-16b4-42d9-a0df-dc3694f4ff37; Mon, 5 May 2025 18:48:59 +0000 (UTC)
-X-Farcaster-Flow-ID: fe65f5b7-16b4-42d9-a0df-dc3694f4ff37
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWA001.ant.amazon.com (10.250.64.218) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Mon, 5 May 2025 18:48:59 +0000
-Received: from 6c7e67bfbae3.amazon.com (10.187.170.18) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Mon, 5 May 2025 18:48:55 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <brauner@kernel.org>
-CC: <alexander@mihalicyn.com>, <bluca@debian.org>, <daan.j.demeyer@gmail.com>,
-	<davem@davemloft.net>, <david@readahead.eu>, <edumazet@google.com>,
-	<horms@kernel.org>, <jack@suse.cz>, <jannh@google.com>, <kuba@kernel.org>,
-	<kuniyu@amazon.com>, <lennart@poettering.net>,
-	<linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<me@yhndnzj.com>, <netdev@vger.kernel.org>, <oleg@redhat.com>,
-	<pabeni@redhat.com>, <viro@zeniv.linux.org.uk>, <zbyszek@in.waw.pl>
-Subject: Re: [PATCH RFC v3 04/10] coredump: add coredump socket
-Date: Mon, 5 May 2025 11:48:43 -0700
-Message-ID: <20250505184847.15534-1-kuniyu@amazon.com>
+	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="BObpQanz"
+Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
+	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 8C8FFA075A;
+	Mon,  5 May 2025 20:49:39 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:from:from:message-id:mime-version:reply-to:subject:subject:to
+	:to; s=mail; bh=R/6cNWBETRGF/BzVYwj3W2JbTh79XOgcLvtKJ6KLVXg=; b=
+	BObpQanzbwc2zx5Bu3udvjAbucVfX4D/BXajPDzK3MyuHoeKcV1xgftTvPwlcMRB
+	MPndqU2RX12hVVuCKclMxGeYzm5kKS0c42zJ/SBUrkMGAvEwegqPeR6Q2QX5PRL/
+	Z02zXsysnmiSuTQxkBlvVpWjK2/oOUf8vRteUH9cyF2F+4hqcA+aLc1/+dnYbVRm
+	Sx2D6zaiitgFZyuGJ5uaQ65MyAXVK/NnPmS0FY9+TzB1UMqoeOPrttxAh2P6fvJB
+	anFMv3xqWp87WgS2hD98LaEOpfh7t/BrqrE1rogd4qjgsY/WMRXPhryHLA3Cy8+F
+	Qe9Wayzh1bLCqFDgaX0VTa0uUno1zZ/yhV0WJ6zrLMjqYgkyv19uI1W8v+fOPAmU
+	5o/Ev1QDu5Rilik81hRxL6bBsWrlXU7mLNqIXNTXqB0EaawFTkXOT4kWzbANZ98W
+	5TJ/jS0B4xHZKrwZG35fa+g8IExUYOuSZ7DFpKnZxbducb00D3HGUKMQ7q3FanKn
+	+rONFBMoGRBERKlOt50zFn9g5/weDnon5z+mXUkBlHHPvWytXmqzJ+se4C38uowL
+	75t9mQguYsVxtdSEgr+EGqdxjKWfEwqebXlcGpewkUiedyCQlHgLQ4C0f/YKDFjT
+	KqeuZaPCZFgHujwRxQfaO2XRP/M2pwUFOymTbTYAKiM=
+From: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>
+To: <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-spi@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
+CC: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>, Vinod Koul
+	<vkoul@kernel.org>, Mark Brown <broonie@kernel.org>, Nicolas Ferre
+	<nicolas.ferre@microchip.com>, Alexandre Belloni
+	<alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	"Rafael J . Wysocki" <rafael@kernel.org>, Tudor Ambarus
+	<tudor.ambarus@linaro.org>
+Subject: [PATCH v5 0/2] Add `devm_dma_request_chan()` to simplify probe path in atmel-quadspi.c
+Date: Mon, 5 May 2025 20:49:32 +0200
+Message-ID: <20250505184936.312274-1-csokas.bence@prolan.hu>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250505-work-coredump-socket-v3-4-e1832f0e1eae@kernel.org>
-References: <20250505-work-coredump-socket-v3-4-e1832f0e1eae@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D036UWC001.ant.amazon.com (10.13.139.233) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
+X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1746470978;VERSION=7990;MC=3789806188;ID=217951;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
+X-ESET-Antispam: OK
+X-EsetResult: clean, is OK
+X-EsetId: 37303A2980D94853667166
 
-From: Christian Brauner <brauner@kernel.org>
-Date: Mon, 05 May 2025 13:13:42 +0200
-> @@ -801,6 +846,40 @@ void do_coredump(const kernel_siginfo_t *siginfo)
->  		}
->  		break;
->  	}
-> +	case COREDUMP_SOCK: {
-> +		struct file *file __free(fput) = NULL;
-> +#ifdef CONFIG_UNIX
-> +		struct socket *socket;
-> +
-> +		/*
-> +		 * It is possible that the userspace process which is
-> +		 * supposed to handle the coredump and is listening on
-> +		 * the AF_UNIX socket coredumps. Userspace should just
-> +		 * mark itself non dumpable.
-> +		 */
-> +
-> +		retval = sock_create_kern(&init_net, AF_UNIX, SOCK_STREAM, 0, &socket);
-> +		if (retval < 0)
-> +			goto close_fail;
-> +
-> +		file = sock_alloc_file(socket, 0, NULL);
-> +		if (IS_ERR(file)) {
-> +			sock_release(socket);
-> +			retval = PTR_ERR(file);
-> +			goto close_fail;
-> +		}
-> +
-> +		retval = kernel_connect(socket,
-> +					(struct sockaddr *)(&coredump_unix_socket),
-> +					COREDUMP_UNIX_SOCKET_ADDR_SIZE, 0);
+The probe function of the atmel-quadspi driver got quite convoluted,
+especially since the addition of SAMA7G5 support, that was forward-ported
+from an older vendor kernel. To alleivate this - and similar problems in
+the future - an effort was made to migrate as many functions as possible,
+to their devm_ managed counterparts. Patch 1/2 adds the new
+`devm_dma_request_chan()` function. Patch 2/2 then uses this APIs to
+simplify the probe() function.
 
-This blocks forever if the listener's accept() queue is full.
+Change in v4:
+* split PM imbalance fix [1] and DMA cleanup [this series]
 
-I think we don't want that and should pass O_NONBLOCK.
+Patch 2/2 is to be applied after the PM imbalance fix [1]. Patch 1/2 can
+(and should) be applied immediately, to a for-6.16 branch.
 
-To keep the queue clean is userspace responsibility, and we don't
-need to care about a weird user.
+[1]
+https://lore.kernel.org/lkml/20250327195928.680771-2-csokas.bence@prolan.hu/
+
+Links to previous versions:
+pre-series:
+https://lore.kernel.org/linux-kernel/20241222141427.819222-1-csokas.bence@prolan.hu/
+https://lore.kernel.org/linux-kernel/20250114222851.1023194-1-csokas.bence@prolan.hu/
+v1:
+https://lore.kernel.org/linux-kernel/20250115160244.1102881-1-csokas.bence@prolan.hu/
+v2:
+https://lore.kernel.org/linux-kernel/20250124085221.766303-8-csokas.bence@prolan.hu/
+v3:
+https://lore.kernel.org/linux-kernel/20250207124802.165408-1-csokas.bence@prolan.hu/
+v4:
+https://lore.kernel.org/lkml/20250317135340.382532-1-csokas.bence@prolan.hu/
+
+Bence Csókás (2):
+  dma: Add devm_dma_request_chan()
+  spi: atmel-quadspi: Use `devm_dma_request_chan()`
+
+ drivers/dma/dmaengine.c     | 30 +++++++++++++++++++++++++
+ drivers/spi/atmel-quadspi.c | 44 ++++++++++---------------------------
+ include/linux/dmaengine.h   |  7 ++++++
+ 3 files changed, 48 insertions(+), 33 deletions(-)
 
 
-> +		if (retval)
-> +			goto close_fail;
-> +
-> +		cprm.limit = RLIM_INFINITY;
-> +#endif
-> +		cprm.file = no_free_ptr(file);
-> +		break;
-> +	}
->  	default:
->  		WARN_ON_ONCE(true);
->  		retval = -EINVAL;
+base-commit: 70cb3b9a371fe9ff4f50cd7889763abd4ab621dc
+base-tree: https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
+prerequisite-patch-id: e698614397eaaf4da550babe05eea26b7ebbfe39
+-- 
+2.49.0
+
+
