@@ -1,86 +1,132 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FBEA35A765;
-	Mon,  5 May 2025 22:46:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 734543679D9;
+	Mon,  5 May 2025 22:46:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485170; cv=none; b=lml1zYoyr2+MfbEJMer/MEZ6g+7qBj2pHLqt+sm4EkEbsskRWLAgq7pChkh0YFgYYXiTDmGF9XMgiKMzX53OymFe3AOXY0Vfqh8tT/sOvW2rt6HLM+6/85h5N2dAknIM6ESVQzrCyyagN4g4Cq07+LSJZOW7skacrnvV9Sn28CU=
+	t=1746485176; cv=none; b=thRqNZ9Q7/e5nbH30oTlog3foWuIZHQL/t+BVcSlf32QI5iPSWYtlSj+kBSr/jbIHvHRx3eyDrrH+UANYdtqyuU5oJewKDdfXvxcTp97upMBxrI8qb1mKUK+ebOoJ0+FhBfyCdBqGuqvTGYnJIK/3qrU/jjJIeWT+dWQXnfzYYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485170; c=relaxed/simple;
-	bh=AS2TsFu8Kc7csbiJYii5SkgQrzo5hXNx2c6AtZWQVfg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u1HRuAQHQ3BbWFVu9eZi2ocs8hwsU+EpMTAvk44RdyeEy+FAaWdd4J/ETsPUvAmgrF2LG5c4DebNHm2Ulkm3w9InW49CmPUEucu2s1TVrkPkF6veczZtLJuNc0TJNPKPJp0DYunljWOALfjsDbFBBF90WibyjyN/j3lz4Q19sp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s3QBcI6/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746485176; c=relaxed/simple;
+	bh=IM+quJAHAyIiqqydPfve0lj9WWv+tWG5QphYLrWXjIE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ZKUQ6xtY6PcVCkOBE+OsXwif9EROQpOVqHNlplqigtLO3RxhopKKz31l6YLHFpsajrGfNSYVavVWnQgDxD0R3NxFpxdh9lfqkNBnKQhKCdxHHseRQuuLPN1hQlhyXiwz5WfoBxrK7pAnGJVT/XgIk0Typ83gZlrfjoWmUxMtfz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lfSZi23A; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s3QBcI6/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3EE4C4CEE4;
-	Mon,  5 May 2025 22:46:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lfSZi23A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70548C4CEE4;
+	Mon,  5 May 2025 22:46:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485169;
-	bh=AS2TsFu8Kc7csbiJYii5SkgQrzo5hXNx2c6AtZWQVfg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=s3QBcI6/oA0tA/PINZMYq4M38D3tbRwKAXJDV6Hr+ga8m/gVZZ95oar+vdrAk5Yhd
-	 SGd6VqgCRRpKTqJCkcn5HzEFAfu+R+eGBjc6WSDDlqQ6kg/MBANCXMVscaVBxH4iyF
-	 MCyVB6QIn1ExoO6/X+Ctpw/GnBfzOiewFztOcJl2T2lXkc75NLPHMSW5kSUNMBDglS
-	 0b9Qln+5S9vuIv0nBjPeMFc6zwX3tNo+FCOoCvt5VUz7hh8ljH270qq2IJeI0adTjc
-	 Lc3IO/Hsc0RuHl788v3v3ExF8rxDnbk/O50eDOfYe15liNSmz6xPgITNzLoAtip5kS
-	 URYXhj3D+7o2w==
-Date: Tue, 6 May 2025 07:46:04 +0900
-From: Mark Brown <broonie@kernel.org>
-To: Sasha Levin <sashal@kernel.org>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, lgirdwood@gmail.com,
-	perex@perex.cz, tiwai@suse.com, javier.carrasco.cruz@gmail.com,
-	linux-sound@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 6.14 591/642] ASoC: cpcap: Implement
- .set_bias_level
-Message-ID: <aBk_rHbbzvR_vD64@finisterre.sirena.org.uk>
-References: <20250505221419.2672473-1-sashal@kernel.org>
- <20250505221419.2672473-591-sashal@kernel.org>
+	s=k20201202; t=1746485174;
+	bh=IM+quJAHAyIiqqydPfve0lj9WWv+tWG5QphYLrWXjIE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=lfSZi23Akh1MtCPOeXv3yPUueE3YnRlJvvaYk7VHyzFTQoKW9tzqgAtQKSXG19Yoa
+	 YzaFTv/deVheEltH9b61rXJoTsTvHTPOSeVY1jj9Qfh8lD2QNj6Oa20EMePoS0MhMm
+	 0ar0IN+R47geJsIPLNsePhNJur2kjItvgMrb/5kAcTMyN9v/NxWngrVMIDEHgyg4qr
+	 rcFbOdudzorSGtAOzQm13R48vO1TLFk3/2wcZHShM+NmjptHcAh+BxBGCYQ5yWwh3r
+	 4KSUAQ0GIgQWKolJz6KFqMrBpz08Iculw0KJU9oKG8JV1BjCPPD8j6pQbIupt/CUJJ
+	 5HaChF5lwWNbg==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: George Shen <george.shen@amd.com>,
+	Wenjing Liu <wenjing.liu@amd.com>,
+	Wayne Lin <wayne.lin@amd.com>,
+	Daniel Wheeler <daniel.wheeler@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Sasha Levin <sashal@kernel.org>,
+	harry.wentland@amd.com,
+	sunpeng.li@amd.com,
+	christian.koenig@amd.com,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	alex.hung@amd.com,
+	roman.li@amd.com,
+	michael.strauss@amd.com,
+	PeiChen.Huang@amd.com,
+	Ausef.Yousof@amd.com,
+	Cruise.Hung@amd.com,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 6.12 198/486] drm/amd/display: Skip checking FRL_MODE bit for PCON BW determination
+Date: Mon,  5 May 2025 18:34:34 -0400
+Message-Id: <20250505223922.2682012-198-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
+References: <20250505223922.2682012-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="BmqjSXNMkh0e0Yd9"
-Content-Disposition: inline
-In-Reply-To: <20250505221419.2672473-591-sashal@kernel.org>
-X-Cookie: Well begun is half done.
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.12.26
+Content-Transfer-Encoding: 8bit
 
+From: George Shen <george.shen@amd.com>
 
---BmqjSXNMkh0e0Yd9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[ Upstream commit 0584bbcf0c53c133081100e4f4c9fe41e598d045 ]
 
-On Mon, May 05, 2025 at 06:13:27PM -0400, Sasha Levin wrote:
-> From: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
->=20
-> [ Upstream commit 5b4288792ff246cf2bda0c81cebcc02d1f631ca3 ]
->=20
-> With VAUDIO regulator being always on, we have to put it in low-power mode
-> when codec is not in use to decrease power usage.
->=20
-> Do so by implementing driver .set_bias_level callback.
+[Why/How]
+Certain PCON will clear the FRL_MODE bit despite supporting the link BW
+indicated in the other bits.
 
-This is clearly a performance improvement not a bug fix.
+Thus, skip checking the FRL_MODE bit when interpreting the
+hdmi_encoded_link_bw struct.
 
---BmqjSXNMkh0e0Yd9
-Content-Type: application/pgp-signature; name="signature.asc"
+Reviewed-by: Wenjing Liu <wenjing.liu@amd.com>
+Signed-off-by: George Shen <george.shen@amd.com>
+Signed-off-by: Wayne Lin <wayne.lin@amd.com>
+Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ .../dc/link/protocols/link_dp_capability.c    | 30 +++++++++----------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
 
------BEGIN PGP SIGNATURE-----
+diff --git a/drivers/gpu/drm/amd/display/dc/link/protocols/link_dp_capability.c b/drivers/gpu/drm/amd/display/dc/link/protocols/link_dp_capability.c
+index 885e749cdc6e9..23e650e39910e 100644
+--- a/drivers/gpu/drm/amd/display/dc/link/protocols/link_dp_capability.c
++++ b/drivers/gpu/drm/amd/display/dc/link/protocols/link_dp_capability.c
+@@ -250,21 +250,21 @@ static uint32_t intersect_frl_link_bw_support(
+ {
+ 	uint32_t supported_bw_in_kbps = max_supported_frl_bw_in_kbps;
+ 
+-	// HDMI_ENCODED_LINK_BW bits are only valid if HDMI Link Configuration bit is 1 (FRL mode)
+-	if (hdmi_encoded_link_bw.bits.FRL_MODE) {
+-		if (hdmi_encoded_link_bw.bits.BW_48Gbps)
+-			supported_bw_in_kbps = 48000000;
+-		else if (hdmi_encoded_link_bw.bits.BW_40Gbps)
+-			supported_bw_in_kbps = 40000000;
+-		else if (hdmi_encoded_link_bw.bits.BW_32Gbps)
+-			supported_bw_in_kbps = 32000000;
+-		else if (hdmi_encoded_link_bw.bits.BW_24Gbps)
+-			supported_bw_in_kbps = 24000000;
+-		else if (hdmi_encoded_link_bw.bits.BW_18Gbps)
+-			supported_bw_in_kbps = 18000000;
+-		else if (hdmi_encoded_link_bw.bits.BW_9Gbps)
+-			supported_bw_in_kbps = 9000000;
+-	}
++	/* Skip checking FRL_MODE bit, as certain PCON will clear
++	 * it despite supporting the link BW indicated in the other bits.
++	 */
++	if (hdmi_encoded_link_bw.bits.BW_48Gbps)
++		supported_bw_in_kbps = 48000000;
++	else if (hdmi_encoded_link_bw.bits.BW_40Gbps)
++		supported_bw_in_kbps = 40000000;
++	else if (hdmi_encoded_link_bw.bits.BW_32Gbps)
++		supported_bw_in_kbps = 32000000;
++	else if (hdmi_encoded_link_bw.bits.BW_24Gbps)
++		supported_bw_in_kbps = 24000000;
++	else if (hdmi_encoded_link_bw.bits.BW_18Gbps)
++		supported_bw_in_kbps = 18000000;
++	else if (hdmi_encoded_link_bw.bits.BW_9Gbps)
++		supported_bw_in_kbps = 9000000;
+ 
+ 	return supported_bw_in_kbps;
+ }
+-- 
+2.39.5
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgZP6sACgkQJNaLcl1U
-h9AzuQf/TsuJY2vN7IY0edGyLFwWnvp3oaCEwl470g0akuayphANG/PQhswy/1aF
-mNXr7LOguHFmhEVZeH20D7ByqnzGffdB511QUKgJXIX4B6zyhpzn51hqJc8BYTXL
-tcOBAnJfTmjdyHW4WdbEd7zln7BcX2gmDbPs9jYzERHtbqvuTpPeIrXN/qrwlBrd
-z7S88euH09affGKk1ypNJ9+NCbi0vhljp6cOI4BB2AN+UnC8pi3EG4j5rPk9HN4a
-o134B+T8brNoSzEExEj1B8eB2yrxD/aQ70/rwu0XCMfGwuw8bIFF2uNR40JhhUSv
-sW/Qtbq6cvzmIyrlCJmIM73woreV5Q==
-=GcKz
------END PGP SIGNATURE-----
-
---BmqjSXNMkh0e0Yd9--
