@@ -1,45 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6271C36EF20;
-	Mon,  5 May 2025 23:16:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1A5F28A71D;
+	Mon,  5 May 2025 23:17:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486995; cv=none; b=F87O28VpB7ToThDZynqFvu/5b0dl/ls9lDNQ7/CyKbtWof7kDY2m/w/CyjkP8y7B5+bY6rqLI7jjiP11wFIjNqyskFwWrnny2Vvv2noFAFuKokGJKZ6DsM+V1jhFN7Xe5W0g2Mifd+scLQi9oS3aC0u80AS7wHNL9iYv9amyGBo=
+	t=1746487023; cv=none; b=mqLeTbyQUpqmPc90+oZcF/jBgSECKyeP7eTyIhAL4EmrwP+m4Ll0En/MQF4PEMUweFb1Q219Cu5M0rBysNpT49Ek3MEHCkjW39P0XW15l3iY6fCRLugui0VJjESPxkMJsdjQAyH0jHEQ7IwGSCguzagjCnQqSSRRytkqKADdSc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486995; c=relaxed/simple;
-	bh=9UGdHSS8asS9PAcd3QKXZyEnq18ZNSJR23cUPFhNCoQ=;
+	s=arc-20240116; t=1746487023; c=relaxed/simple;
+	bh=LLQuEcCjyB9jS5CBbndYwbv8jLZmUyx7IeQqD3sRRgo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=FN1u0p6o33xKNZ2i2/8r3PM9lZBny50qOgbPRC1YGRui7kCt5aeyRkDypWHbGoeQz1sf6i8kAroNk1nkWQLxQD3P37ufrv5VlrSKvE2LLDPCgZPeF0rtrCAQRbXBNCojtqb1rqysw9/3fGL8uTzfWgEWX6cUSXRXX+bBKLMGEuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UajxFALu; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=azgI7XU3CLOWZ1QHOIfvzlW9mvjcqo6WdCevI5lMsemfY0OCCQZAFTJyYSCLD5vQ53zbtmLSEvY6zp/uf83bGQAhFqQcl62+QD7NUdDERxUqMDjYt23lHu9kSh6QkLrRwBtl+LvvbjmWsMQnD3WmmtHvwcxdNm9sJyZ/ZJyk+Fc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QY1bxjWu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UajxFALu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4638C4CEE4;
-	Mon,  5 May 2025 23:16:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QY1bxjWu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E40EC4CEEF;
+	Mon,  5 May 2025 23:17:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486993;
-	bh=9UGdHSS8asS9PAcd3QKXZyEnq18ZNSJR23cUPFhNCoQ=;
+	s=k20201202; t=1746487022;
+	bh=LLQuEcCjyB9jS5CBbndYwbv8jLZmUyx7IeQqD3sRRgo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=UajxFALumYBllGgbGL7J8wc3iMUdNDGwcvtXqwHASwUuS43VGZH+Accyk9MWm/LH8
-	 ZmGAUIs6K7lFhM2GwIMXeLpra4dpiP6hw9SZwlACMXm9ln8zkKWjbmUu5xSckrMT9I
-	 bCJwR5UsYCCzQyRZ0uPuw5dw8ggMa0+tB1yDGSaNvL8tm9SbJipZrRnMzF8Pm2xjFS
-	 Y2LAvvjhGzHrjoCNKbHpq2vr+q9EE0H4fLyw+GpxerPPlRskqXMKuOTRaY7u4N353D
-	 8XH/P4XDIf7ntwBNsIv5xoq7S2tDhs04+azflkSJcbHGEugvoM2CCrnNUcYj50fhd6
-	 ZPCVp6RcDUU9Q==
+	b=QY1bxjWuJPQ4Q74fhUN3ufejN0ERXu4VChmhv/A4QK5nRlj5fLcxNMS+VwErhD1AG
+	 9rNyoPkHcdJ97NFjVGNgrE4D9/NeFSK2k5fPP93v4Dilane1JxLjWTS11qdC/fbsdu
+	 emgFASDCXsGO1fRkqYaCsgzsUiIaofzsRe/ejKKg2GRCQShDQKfZxbFHjNmeuN4bvu
+	 KZpwmVoKZh1pkeNyyiHUhBArs0UzIpnoKsR242BYs+Yb149q7uA5TwTV69cg0EpSRX
+	 1nqR1d//JZ546dBpNwGEbJDeoHFnxt65+KwX+NoH+9bR4lcfhKMt8aeUyGPT8KIDOa
+	 hBcg2hHaD/7Gw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Paul Burton <paulburton@kernel.org>,
-	Dragan Mladjenovic <dragan.mladjenovic@syrmia.com>,
-	Aleksandar Rikalo <arikalo@gmail.com>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	Gregory CLEMENT <gregory.clement@bootlin.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+Cc: Hector Martin <marcan@marcan.st>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	linux-mips@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 096/153] MIPS: pm-cps: Use per-CPU variables as per-CPU, not per-core
-Date: Mon,  5 May 2025 19:12:23 -0400
-Message-Id: <20250505231320.2695319-96-sashal@kernel.org>
+	shenghao-ding@ti.com,
+	kevin-lu@ti.com,
+	baojun.xu@ti.com,
+	lgirdwood@gmail.com,
+	perex@perex.cz,
+	tiwai@suse.com,
+	linux-sound@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.15 113/153] ASoC: tas2764: Power up/down amp on mute ops
+Date: Mon,  5 May 2025 19:12:40 -0400
+Message-Id: <20250505231320.2695319-113-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505231320.2695319-1-sashal@kernel.org>
 References: <20250505231320.2695319-1-sashal@kernel.org>
@@ -54,126 +56,106 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.15.181
 Content-Transfer-Encoding: 8bit
 
-From: Paul Burton <paulburton@kernel.org>
+From: Hector Martin <marcan@marcan.st>
 
-[ Upstream commit 00a134fc2bb4a5f8fada58cf7ff4259149691d64 ]
+[ Upstream commit 1c3b5f37409682184669457a5bdf761268eafbe5 ]
 
-The pm-cps code has up until now used per-CPU variables indexed by core,
-rather than CPU number, in order to share data amongst sibling CPUs (ie.
-VPs/threads in a core). This works fine for single cluster systems, but
-with multi-cluster systems a core number is no longer unique in the
-system, leading to sharing between CPUs that are not actually siblings.
+The ASoC convention is that clocks are removed after codec mute, and
+power up/down is more about top level power management. For these chips,
+the "mute" state still expects a TDM clock, and yanking the clock in
+this state will trigger clock errors. So, do the full
+shutdown<->mute<->active transition on the mute operation, so the amp is
+in software shutdown by the time the clocks are removed.
 
-Avoid this issue by using per-CPU variables as they are more generally
-used - ie. access them using CPU numbers rather than core numbers.
-Sharing between siblings is then accomplished by:
- - Assigning the same pointer to entries for each sibling CPU for the
-   nc_asm_enter & ready_count variables, which allow this by virtue of
-   being per-CPU pointers.
+This fixes TDM clock errors when streams are stopped.
 
- - Indexing by the first CPU set in a CPUs cpu_sibling_map in the case
-   of pm_barrier, for which we can't use the previous approach because
-   the per-CPU variable is not a pointer.
-
-Signed-off-by: Paul Burton <paulburton@kernel.org>
-Signed-off-by: Dragan Mladjenovic <dragan.mladjenovic@syrmia.com>
-Signed-off-by: Aleksandar Rikalo <arikalo@gmail.com>
-Tested-by: Serge Semin <fancer.lancer@gmail.com>
-Tested-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Signed-off-by: Hector Martin <marcan@marcan.st>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Link: https://patch.msgid.link/20250208-asoc-tas2764-v1-1-dbab892a69b5@kernel.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/kernel/pm-cps.c | 30 +++++++++++++++++-------------
- 1 file changed, 17 insertions(+), 13 deletions(-)
+ sound/soc/codecs/tas2764.c | 51 ++++++++++++++++----------------------
+ 1 file changed, 21 insertions(+), 30 deletions(-)
 
-diff --git a/arch/mips/kernel/pm-cps.c b/arch/mips/kernel/pm-cps.c
-index 9bf60d7d44d36..a7bcf2b814c86 100644
---- a/arch/mips/kernel/pm-cps.c
-+++ b/arch/mips/kernel/pm-cps.c
-@@ -56,10 +56,7 @@ static DEFINE_PER_CPU_ALIGNED(u32*, ready_count);
- /* Indicates online CPUs coupled with the current CPU */
- static DEFINE_PER_CPU_ALIGNED(cpumask_t, online_coupled);
+diff --git a/sound/soc/codecs/tas2764.c b/sound/soc/codecs/tas2764.c
+index 273bf4027a6e5..559a160e1f4d9 100644
+--- a/sound/soc/codecs/tas2764.c
++++ b/sound/soc/codecs/tas2764.c
+@@ -130,33 +130,6 @@ static SOC_ENUM_SINGLE_DECL(
+ static const struct snd_kcontrol_new tas2764_asi1_mux =
+ 	SOC_DAPM_ENUM("ASI1 Source", tas2764_ASI1_src_enum);
  
--/*
-- * Used to synchronize entry to deep idle states. Actually per-core rather
-- * than per-CPU.
-- */
-+/* Used to synchronize entry to deep idle states */
- static DEFINE_PER_CPU_ALIGNED(atomic_t, pm_barrier);
- 
- /* Saved CPU state across the CPS_PM_POWER_GATED state */
-@@ -118,9 +115,10 @@ int cps_pm_enter_state(enum cps_pm_state state)
- 	cps_nc_entry_fn entry;
- 	struct core_boot_config *core_cfg;
- 	struct vpe_boot_config *vpe_cfg;
-+	atomic_t *barrier;
- 
- 	/* Check that there is an entry function for this state */
--	entry = per_cpu(nc_asm_enter, core)[state];
-+	entry = per_cpu(nc_asm_enter, cpu)[state];
- 	if (!entry)
- 		return -EINVAL;
- 
-@@ -156,7 +154,7 @@ int cps_pm_enter_state(enum cps_pm_state state)
- 	smp_mb__after_atomic();
- 
- 	/* Create a non-coherent mapping of the core ready_count */
--	core_ready_count = per_cpu(ready_count, core);
-+	core_ready_count = per_cpu(ready_count, cpu);
- 	nc_addr = kmap_noncoherent(virt_to_page(core_ready_count),
- 				   (unsigned long)core_ready_count);
- 	nc_addr += ((unsigned long)core_ready_count & ~PAGE_MASK);
-@@ -164,7 +162,8 @@ int cps_pm_enter_state(enum cps_pm_state state)
- 
- 	/* Ensure ready_count is zero-initialised before the assembly runs */
- 	WRITE_ONCE(*nc_core_ready_count, 0);
--	coupled_barrier(&per_cpu(pm_barrier, core), online);
-+	barrier = &per_cpu(pm_barrier, cpumask_first(&cpu_sibling_map[cpu]));
-+	coupled_barrier(barrier, online);
- 
- 	/* Run the generated entry code */
- 	left = entry(online, nc_core_ready_count);
-@@ -635,12 +634,14 @@ static void *cps_gen_entry_code(unsigned cpu, enum cps_pm_state state)
- 
- static int cps_pm_online_cpu(unsigned int cpu)
+-static int tas2764_dac_event(struct snd_soc_dapm_widget *w,
+-			     struct snd_kcontrol *kcontrol, int event)
+-{
+-	struct snd_soc_component *component = snd_soc_dapm_to_component(w->dapm);
+-	struct tas2764_priv *tas2764 = snd_soc_component_get_drvdata(component);
+-	int ret;
+-
+-	switch (event) {
+-	case SND_SOC_DAPM_POST_PMU:
+-		tas2764->dac_powered = true;
+-		ret = tas2764_update_pwr_ctrl(tas2764);
+-		break;
+-	case SND_SOC_DAPM_PRE_PMD:
+-		tas2764->dac_powered = false;
+-		ret = tas2764_update_pwr_ctrl(tas2764);
+-		break;
+-	default:
+-		dev_err(tas2764->dev, "Unsupported event\n");
+-		return -EINVAL;
+-	}
+-
+-	if (ret < 0)
+-		return ret;
+-
+-	return 0;
+-}
+-
+ static const struct snd_kcontrol_new isense_switch =
+ 	SOC_DAPM_SINGLE("Switch", TAS2764_PWR_CTRL, TAS2764_ISENSE_POWER_EN, 1, 1);
+ static const struct snd_kcontrol_new vsense_switch =
+@@ -169,8 +142,7 @@ static const struct snd_soc_dapm_widget tas2764_dapm_widgets[] = {
+ 			    1, &isense_switch),
+ 	SND_SOC_DAPM_SWITCH("VSENSE", TAS2764_PWR_CTRL, TAS2764_VSENSE_POWER_EN,
+ 			    1, &vsense_switch),
+-	SND_SOC_DAPM_DAC_E("DAC", NULL, SND_SOC_NOPM, 0, 0, tas2764_dac_event,
+-			   SND_SOC_DAPM_POST_PMU | SND_SOC_DAPM_PRE_PMD),
++	SND_SOC_DAPM_DAC("DAC", NULL, SND_SOC_NOPM, 0, 0),
+ 	SND_SOC_DAPM_OUTPUT("OUT"),
+ 	SND_SOC_DAPM_SIGGEN("VMON"),
+ 	SND_SOC_DAPM_SIGGEN("IMON")
+@@ -191,9 +163,28 @@ static int tas2764_mute(struct snd_soc_dai *dai, int mute, int direction)
  {
--	enum cps_pm_state state;
--	unsigned core = cpu_core(&cpu_data[cpu]);
-+	unsigned int sibling, core;
- 	void *entry_fn, *core_rc;
-+	enum cps_pm_state state;
+ 	struct tas2764_priv *tas2764 =
+ 			snd_soc_component_get_drvdata(dai->component);
++	int ret;
 +
-+	core = cpu_core(&cpu_data[cpu]);
++	if (!mute) {
++		tas2764->dac_powered = true;
++		ret = tas2764_update_pwr_ctrl(tas2764);
++		if (ret)
++			return ret;
++	}
  
- 	for (state = CPS_PM_NC_WAIT; state < CPS_PM_STATE_COUNT; state++) {
--		if (per_cpu(nc_asm_enter, core)[state])
-+		if (per_cpu(nc_asm_enter, cpu)[state])
- 			continue;
- 		if (!test_bit(state, state_support))
- 			continue;
-@@ -652,16 +653,19 @@ static int cps_pm_online_cpu(unsigned int cpu)
- 			clear_bit(state, state_support);
- 		}
- 
--		per_cpu(nc_asm_enter, core)[state] = entry_fn;
-+		for_each_cpu(sibling, &cpu_sibling_map[cpu])
-+			per_cpu(nc_asm_enter, sibling)[state] = entry_fn;
- 	}
- 
--	if (!per_cpu(ready_count, core)) {
-+	if (!per_cpu(ready_count, cpu)) {
- 		core_rc = kmalloc(sizeof(u32), GFP_KERNEL);
- 		if (!core_rc) {
- 			pr_err("Failed allocate core %u ready_count\n", core);
- 			return -ENOMEM;
- 		}
--		per_cpu(ready_count, core) = core_rc;
+ 	tas2764->unmuted = !mute;
+-	return tas2764_update_pwr_ctrl(tas2764);
++	ret = tas2764_update_pwr_ctrl(tas2764);
++	if (ret)
++		return ret;
 +
-+		for_each_cpu(sibling, &cpu_sibling_map[cpu])
-+			per_cpu(ready_count, sibling) = core_rc;
- 	}
++	if (mute) {
++		tas2764->dac_powered = false;
++		ret = tas2764_update_pwr_ctrl(tas2764);
++		if (ret)
++			return ret;
++	}
++
++	return 0;
+ }
  
- 	return 0;
+ static int tas2764_set_bitwidth(struct tas2764_priv *tas2764, int bitwidth)
 -- 
 2.39.5
 
