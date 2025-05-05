@@ -1,148 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6644025A646;
-	Mon,  5 May 2025 14:26:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AA6E22F01
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 14:26:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746455167; cv=none; b=oGJgUYP7ubWItEnQYbDdj8d0Ed8x+Xdvg/9uXs0T7lkUT1+Y6iq/Y6ONgON84PTQbtwBk9yYwlPciIL0cQqQzGmT+GIcDXzTeZBpAy1N+g+sdqG51b8uTuceiluUo+kfMPudvjAYX05MzTyiXgH438699ewCXmQM39bxho7pwkE=
+	t=1746455188; cv=none; b=Zyvbjo4weeGBm1tyrC5nLAFUqu/kf/Fu+fSQSM4CxWu7yhK0vuB1s+jIeo2ZOyDCxA0Y7y/lxwd3ZbFU4Hv+zqGLc7+w/2Q01CtUzli5u4HAjerv/EXJScBAiSmSck8Dfgrot/muIxfTSkiZKpYfRzRyZzqJ6Jlj1F+w9qu/lOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746455167; c=relaxed/simple;
-	bh=ORf5T6DyIpU2ggmib2GrVIAMXQW+GcCXEhexCw0dD7M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Uw9mHwRzoJdHZrfmchoNIPB/VPKkM6qTW7s1X9k48V+n3gQ7lAfEVOXyHztl2bhVwcKsHF2ZydhoLjChpQAccP80q7B3WUiuJwO5iCYDE3UaPmhVvhiP9gGbAsy1SipeTxfAI1Coz3WpapfjNriQcCs5O1jt5rzETaPBRziZ7I4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E5xL6MAG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746455188; c=relaxed/simple;
+	bh=QJs5+k/qrBs5cgN7eO/MR/BelasA36UFUZz1dEKH+bU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Q4oFEFo9ULYnnakyGZci2PoCHauQ8neZx8LBE9QlPmy2Vjgvh5hKOp2o9k5L8HHQPF7kwIxmgbH+fSdwfAD7LFOaSJsqxFTIK0XL1lwnsReySG4jcriWbNFYNOWmvwTWt85+Usi3DCilhasf0Z7tmU1kyM3M2OZ/03tPko3qML0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=UR96SL6e; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E5xL6MAG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF975C4CEE4;
-	Mon,  5 May 2025 14:26:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746455165;
-	bh=ORf5T6DyIpU2ggmib2GrVIAMXQW+GcCXEhexCw0dD7M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=E5xL6MAGJA7Om9o5vIMnY5S4yM6ykW0pNMlqCtzCgD9wjwMH2YZmz8/mFqBXQScHc
-	 h8SVSjlVAv66C4AEpNIO3WMK/aArHq0A64BEnHPIkCZy5o5bCdTUUepzIeahZ4NOug
-	 w6u7PMwI5Pi+zuataeTVcktGi/CqfrrB3KLkJyo3epOIJY39tC8XEtFm3iqdRaRj+u
-	 HhWItV2pqPj5nNulhJMwkh2Ce8jacCz8tPE6CPghbM4vXTD+7zgew9de2Qe9GfbIQ3
-	 Ze/QmVx4yYpfUAVYHTcDw1GsjBDqQkA86bnhtFmK6uGwb7jJGnJ9PCdiimLcP60+eQ
-	 PLTVJ8kj6aK/w==
-Date: Mon, 5 May 2025 07:26:05 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: John Garry <john.g.garry@oracle.com>
-Cc: brauner@kernel.org, hch@lst.de, viro@zeniv.linux.org.uk, jack@suse.cz,
-	cem@kernel.org, linux-fsdevel@vger.kernel.org, dchinner@redhat.com,
-	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ojaswin@linux.ibm.com, ritesh.list@gmail.com,
-	martin.petersen@oracle.com, linux-ext4@vger.kernel.org,
-	linux-block@vger.kernel.org, catherine.hoang@oracle.com,
-	linux-api@vger.kernel.org
-Subject: Re: [PATCH v11 14/16] xfs: add xfs_calc_atomic_write_unit_max()
-Message-ID: <20250505142605.GI1035866@frogsfrogsfrogs>
-References: <20250504085923.1895402-1-john.g.garry@oracle.com>
- <20250504085923.1895402-15-john.g.garry@oracle.com>
- <20250505052534.GX25675@frogsfrogsfrogs>
- <2a5688e8-88ef-4224-b757-af5adfca1be1@oracle.com>
- <9d5d7037-6ed7-4c61-afec-8422d656de37@oracle.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="UR96SL6e"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 545CTl8v006487
+	for <linux-kernel@vger.kernel.org>; Mon, 5 May 2025 14:26:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	hUuUX8bIcyPlPuoPDbT04z3jokr92aiRh0rQ0I5EFxU=; b=UR96SL6e5gPFzkXA
+	odKlmcPqeKK41JVxUf82jk//dsmtkYSa5HknVSNgzHAOjwsMkfXcZLC87mqYYI7b
+	fKFwJhpAWdHtpEWLgBXi+6uSOYndtTRgIvYSR/MNzvDmUYhC6EZkhWjchi4GXnul
+	azXI2GoGYe8SpUEE3e1T8tuCeZahsR/vzglHnO+TcoJxQpax8BPjaQUkCO07zZsQ
+	OQ3cdGKI1orl3EqwA+Mw9+a4nR+ZQhZ0vpspTeWdR5+CGl444OKWsaZQQS7LVpNS
+	FRGFUJft8cqpRT2YQrGA1iDA9E2hGvBVjhPxJ3yJ4F+wp9kICXpUQJ1tsKyT3OuX
+	0XSOIw==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46da55vavd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 14:26:25 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c53e316734so783645485a.2
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 07:26:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746455185; x=1747059985;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hUuUX8bIcyPlPuoPDbT04z3jokr92aiRh0rQ0I5EFxU=;
+        b=SG8TsSy/40/m8VKxGwcHRVQzUbCetCGfTxkNiEuIUQopxlqe0Pzb3KFHHksRwWume+
+         0xtebKG/UaL7jsxTaeIWF4Ie6Ugi/y1sXac5S5asQ8k9jiDvHe+3RNwTg+9gpldxiExb
+         Zr/pMnAC/arIdLYgdocrSmoJ8irw3jepfJz2UK7G80PmEQlxRTBl32rqWMCnhzlJmM8X
+         idc+01Sa+bCaHFJfEqinf26ERCByFEXARM/9EwyOQlSyOFezZBoq4h3gvPSuAutUgPH8
+         plLUo/oqUxRSCFXZSvx4PLcuhDm1TuKcrq4ncUouz7/sk/yRL9Pg3T7TXoQRf0BtoxGq
+         IYLA==
+X-Forwarded-Encrypted: i=1; AJvYcCX6/NIkHlQfBDiXxGt/i7hWxQY5Zoh411B0VglgO+1nHlFdfsPwD9OKy85YU8lSGpoi+rZM5Ax7BuGlqPM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzgjnnxwWk0eMfFPsDPwFRNJgvnmwea2JWXVV3+PssXRsQC1y7E
+	BJgWWtS4K5bHzyPp7reaR3Vw0TO+1OXJMIq0LwIFYEJSF7KvHdBF1rmlCpxnKg/Hod/92CFC8jM
+	yRJK3p7WoYS9O96Vy41xxTmOSy1iv+vJWvqzLtdpIlEhUJbnUJtqUQZvlrd8f9so=
+X-Gm-Gg: ASbGnctg05E2sln3MTOqoUmWLff0v/9qmbFsxoKk7PAN+Ur9+VgKjttmoUE0CibZXiC
+	8iOcWnwnmsOxaZjgt/Bis/6+s8O9s9EFPEs0a7QyygLhc7fg0dLWofu72TwjRqLGjq7n0najavT
+	B+UyW8tvBVFTN5ys2a/MrpMDhnjt5pQ9mqx/MNydM6Tvc+NGAgpFXE8pkR4iNr+BVXkmg41Vz+3
+	kW/4YjJhHth206qmwchwjQ3C9SdaMRlwiBjyuhpj77jW309B2V4bz3s/hX3ibrpa7QNzhSZn91/
+	ldF4uui9O5Ji0jrrwfY58x05sCCH4iMwdW05tKWaXAX5puwfA2Qi8VbcEfv02CanwDnqctX+bHH
+	Nwylaqg5o0rBHsAhX4FQaEwvd
+X-Received: by 2002:a05:620a:4711:b0:7c5:5768:40b9 with SMTP id af79cd13be357-7cae3af02b7mr1068083985a.43.1746455185104;
+        Mon, 05 May 2025 07:26:25 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH96RuYp8rf3yGAy4C3TKAyGKugvGUg3+4xADJwkHYt/kyUMmED6s/qSvsMF10QY2xjxR0J+g==
+X-Received: by 2002:a05:620a:4711:b0:7c5:5768:40b9 with SMTP id af79cd13be357-7cae3af02b7mr1068079385a.43.1746455184728;
+        Mon, 05 May 2025 07:26:24 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ea94f17fbsm1726765e87.170.2025.05.05.07.26.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 May 2025 07:26:24 -0700 (PDT)
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Ayushi Makhija <quic_amakhija@quicinc.com>
+Cc: robdclark@gmail.com, sean@poorly.run, marijn.suijten@somainline.org,
+        andersson@kernel.org, robh@kernel.org, robh+dt@kernel.org,
+        krzk+dt@kernel.org, konradybcio@kernel.org, conor+dt@kernel.org,
+        andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org,
+        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+        jernej.skrabec@gmail.com, quic_abhinavk@quicinc.com,
+        quic_rajeevny@quicinc.com, quic_vproddut@quicinc.com,
+        quic_jesszhan@quicinc.com
+Subject: Re: (subset) [PATCH v6 00/11] Add DSI display support for SA8775P target
+Date: Mon,  5 May 2025 17:26:23 +0300
+Message-Id: <174645517266.1455227.14417676448478997955.b4-ty@oss.qualcomm.com>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250505094245.2660750-1-quic_amakhija@quicinc.com>
+References: <20250505094245.2660750-1-quic_amakhija@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <9d5d7037-6ed7-4c61-afec-8422d656de37@oracle.com>
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA1MDEzOCBTYWx0ZWRfX++eDjxlR0nru
+ nKmqNWAIf0jeBOEsFw7SXNZd+882pvp1C8mjSuAWRjXrpbLhbcmb83PCGox6wPV8tKH+lyJ1vEX
+ 02WVHhqmgYBH/hGRhDTEDRWBEPIx/21wMaZrquYRI++EupLh6f64r0qzfkuEsZTky5TUTQaew5k
+ sy8UoVtt2GeL5bT+z+5OLZtAlcDXo5/QNawdMrR4gnI+nVEGl1FHU+3KqKv1ao59lDTsW7UtUTY
+ PBPRN6B5x1m/N54OvYEBIxsYURulHLZoy8dA/iYDn0jGOEfrRoagkrxLg6QZi8l7OZj4i+293b3
+ gvuDxf7szDB7ioqTJhDL9XHiWmzRQVfGclYwpgHH+rvB6/pVfX7gqybGmpGnuFQ8xsir7f0jtaY
+ BOdTtfEf2daJU1PF3gHqy8YjwieNqabVb/Pdnkm/rJAMawRFW8HWQSiXT1ej9i4zV5RftF6G
+X-Authority-Analysis: v=2.4 cv=M9RNKzws c=1 sm=1 tr=0 ts=6818ca91 cx=c_pps
+ a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=-3-qUcdfqlWSZcId2SUA:9 a=QEXdDO2ut3YA:10
+ a=bTQJ7kPSJx9SKPbeHEYW:22
+X-Proofpoint-GUID: zPxbz3sHMrXildmeP9yOJtRJaH7Hm8hH
+X-Proofpoint-ORIG-GUID: zPxbz3sHMrXildmeP9yOJtRJaH7Hm8hH
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-05_06,2025-05-05_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 spamscore=0 mlxlogscore=999 priorityscore=1501 malwarescore=0
+ mlxscore=0 bulkscore=0 adultscore=0 suspectscore=0 clxscore=1015
+ lowpriorityscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2504070000 definitions=main-2505050138
 
-On Mon, May 05, 2025 at 09:02:31AM +0100, John Garry wrote:
-> On 05/05/2025 07:08, John Garry wrote:
-> > On 05/05/2025 06:25, Darrick J. Wong wrote:
-> > > Ok so I even attached the reply to the WRONG VERSION.  Something in
-> > > these changes cause xfs/289 to barf up this UBSAN warning, even on a
-> > > realtime + rtgroups volume:
-> 
-> Could this just be from another mount (of not a realtime + rtgroups xfs
-> instance)?
 
-Quite possibly.
+On Mon, 05 May 2025 15:12:39 +0530, Ayushi Makhija wrote:
+> This series enables the support for DSI to DP bridge ports
+> (labled as DSI0 and DSI1) of the Qualcomm's SA8775P Ride platform.
+> 
+> SA8775P SoC has DSI controller v2.5.1 and DSI PHY v4.2.
+> The Ride platform is having ANX7625 DSI to DP bridge chip from Analogix.
+> 
 
-> > > 
-> > > [ 1160.539004] ------------[ cut here ]------------
-> > > [ 1160.540701] UBSAN: shift-out-of-bounds in /storage/home/djwong/
-> > > cdev/work/linux-djw/include/linux/log2.h:67:13
-> > > [ 1160.544597] shift exponent 4294967295 is too large for 64-bit
-> > > type 'long unsigned int'
-> > > [ 1160.547038] CPU: 3 UID: 0 PID: 288421 Comm: mount Not tainted
-> > > 6.15.0-rc5-djwx #rc5 PREEMPT(lazy)
-> > > 6f606c17703b80ffff7378e7041918eca24b3e68
-> > > [ 1160.547045] Hardware name: QEMU Standard PC (i440FX + PIIX,
-> > > 1996), BIOS 1.16.0-4.module+el8.8.0+21164+ed375313 04/01/2014
-> > > [ 1160.547047] Call Trace:
-> > > [ 1160.547049]  <TASK>
-> > > [ 1160.547051]  dump_stack_lvl+0x4f/0x60
-> > > [ 1160.547060]  __ubsan_handle_shift_out_of_bounds+0x1bc/0x380
-> > > [ 1160.547066]  xfs_set_max_atomic_write_opt.cold+0x22d/0x252 [xfs
-> > > 1f657532c3dee9b1d567597a31645929273d3283]
-> > > [ 1160.547249]  xfs_mountfs+0xa5c/0xb50 [xfs
-> > > 1f657532c3dee9b1d567597a31645929273d3283]
-> > > [ 1160.547434]  xfs_fs_fill_super+0x7eb/0xb30 [xfs
-> > > 1f657532c3dee9b1d567597a31645929273d3283]
-> > > [ 1160.547616]  ? xfs_open_devices+0x240/0x240 [xfs
-> > > 1f657532c3dee9b1d567597a31645929273d3283]
-> > > [ 1160.547797]  get_tree_bdev_flags+0x132/0x1d0
-> > > [ 1160.547801]  vfs_get_tree+0x17/0xa0
-> > > [ 1160.547803]  path_mount+0x720/0xa80
-> > > [ 1160.547807]  __x64_sys_mount+0x10c/0x140
-> > > [ 1160.547810]  do_syscall_64+0x47/0x100
-> > > [ 1160.547814]  entry_SYSCALL_64_after_hwframe+0x4b/0x53
-> > > [ 1160.547817] RIP: 0033:0x7fde55d62e0a
-> > > [ 1160.547820] Code: 48 8b 0d f9 7f 0c 00 f7 d8 64 89 01 48 83 c8 ff
-> > > c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 49 89 ca b8 a5 00 00
-> > > 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d c6 7f 0c 00 f7 d8 64
-> > > 89 01 48
-> > > [ 1160.547823] RSP: 002b:00007fff11920ce8 EFLAGS: 00000246 ORIG_RAX:
-> > > 00000000000000a5
-> > > [ 1160.547826] RAX: ffffffffffffffda RBX: 0000556a10cd1de0 RCX:
-> > > 00007fde55d62e0a
-> > > [ 1160.547828] RDX: 0000556a10cd2010 RSI: 0000556a10cd2090 RDI:
-> > > 0000556a10ce2590
-> > > [ 1160.547829] RBP: 0000000000000000 R08: 0000000000000000 R09:
-> > > 00007fff11920d50
-> > > [ 1160.547830] R10: 0000000000000000 R11: 0000000000000246 R12:
-> > > 0000556a10ce2590
-> > > [ 1160.547832] R13: 0000556a10cd2010 R14: 00007fde55eca264 R15:
-> > > 0000556a10cd1ef8
-> > > [ 1160.547834]  </TASK>
-> > > [ 1160.547835] ---[ end trace ]---
-> > > 
-> > > John, can you please figure this one out, seeing as it's 10:30pm on
-> > > Sunday night here?
-> 
-> 
-> I could recreate this.
-> 
-> > 
-> 
-> I think that we need this change:
-> 
-> @@ -715,6 +716,9 @@ static inline xfs_extlen_t
-> xfs_calc_rtgroup_awu_max(struct xfs_mount *mp)
->  {
->         struct xfs_groups       *rgs = &mp->m_groups[XG_TYPE_RTG];
-> 
-> +       if (rgs->blocks == 0)
-> +               return 0;
->         if (mp->m_rtdev_targp && mp->m_rtdev_targp->bt_bdev_awu_min > 0)
->                 return max_pow_of_two_factor(rgs->blocks);
->         return rounddown_pow_of_two(rgs->blocks);
-> 
-> My xfs/289 problem goes away with this change.
+Applied, thanks!
 
-Ok good.
+[08/11] drm/bridge: anx7625: enable HPD interrupts
+        commit: ca8a78cdceb48ad3b753f836068611265840ef22
+[09/11] drm/bridge: anx7625: fix drm_bridge ops flags to support hot-plugging
+        commit: 71867e8d88fc7f94c2e47b3cfd676710c120cbe3
+[10/11] drm/bridge: anx7625: fix anx7625_sink_detect() to return correct hpd status
+        commit: 366ca0bcc953a4a8a9c9ce2133e6843730210049
+[11/11] drm/bridge: anx7625: change the gpiod_set_value API
+        commit: 50935044e58e563cdcfd556d62f27bc8744dd64e
 
---D
-
-> 
-> > 
-> 
-> 
+Best regards,
+-- 
+Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
