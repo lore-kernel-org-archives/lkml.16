@@ -1,66 +1,118 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80603189916;
-	Mon,  5 May 2025 16:31:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66E6586342;
+	Mon,  5 May 2025 16:32:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746462707; cv=none; b=hcE0B4n0U+Lh4C5k1eDMpSlDIF02g9nPvoE8+n/xVz5H0/hDtTIcwLrW1EXSPXm9tMwQbfCiM0VNjitTIyJCHN/ACIWl9Loap5iy83jdzTXCCd0JZtJXZxwWdUU0or697pxV6Bbh4ud4gpsekROUxFx+BmU9w7x6bccUFtI6wOk=
+	t=1746462725; cv=none; b=qTJbU4Y0VEFNb1tbDZDa66r7R6Wdb5jly7/ts3y5gn04RFiJlKNHhzwvO5K8petKBTaz8BgCDeGfQLXUUNH3ZP60r27tTqnIauOqSlUALGsM4+Ve/Y07Ixf2TFJBrTaFW6rtNQNesXuPrZefUO1VJCF1uU9/HLNrzZ2KzwHqyu0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746462707; c=relaxed/simple;
-	bh=y1SP3R1X7Aw6BzogdM/E5QkLak2XRIYXi7HqJK2dPmw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tvOTKUYb3Hu814loaqcDvSSpDJcMZKw8qAXcZoMWIzgxkmr48z7e9QOp4IVUePgOKAoQ8hnEB1Tb+qT6Y6v56CqJnlbdjWl7jRtvb2DFsMXD1xgnjUg+OFsL5sFZXouUSeCEi028hoY9SSlGTlq1d02LyUG5sRPyjFYRj79jEow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o7kvudd0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746462725; c=relaxed/simple;
+	bh=tiVRsmLJNLwUBFGcvVWRYCFsajScnZZQYzwaxhc6GeM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=U8ro0MKTVHx4O0tbNKYJfHd6TirVjkuLKQt+Knj3zOXmE3oms0txDE7psSw2tHZzi53xv+bKP8PYjly+PMInCjQndi2JWbcYm+goSyGRHwsUyUdbNr51Z3xB4PkW0Cto67Y4YvcZtJmEurxBClAE6xP2AMDonq7bjMHuccvUP+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UW064QiB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o7kvudd0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CED90C4CEE4;
-	Mon,  5 May 2025 16:31:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UW064QiB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AC05C4CEE4;
+	Mon,  5 May 2025 16:32:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746462707;
-	bh=y1SP3R1X7Aw6BzogdM/E5QkLak2XRIYXi7HqJK2dPmw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=o7kvudd0Ab1cGm3SdDLXmpjictZCSHAUfxyjUfEE82NWM0QrHATpJ5D3kG0HuAqvd
-	 We0YDsouieVsRIfj59m0DcfhqwvW0uhuFWU368FbA0HWddcaVUxd6O8+oulQiJ17sq
-	 fIJDOqQLykFtmA0D2k0Sb6mt1sNqExCHYlxZi1QXwykhy+11NaiwEqS+RuAN3JbXMh
-	 /2c/rWFXLQp8TG8FzPWc0JwvNTPpiY207dHbBcEaKR+LQn+0E4zijuLz0WPgPdTUXC
-	 rcoLvUzb5c7LM7Rv8dmmcD2ju+pLJclzYIcFTqx798+Ey+hwh6B5tTRBz6hDIL0Fnf
-	 /5YVDzqP+Cwrg==
-Date: Mon, 5 May 2025 06:31:45 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Max Kellermann <max.kellermann@ionos.com>
-Cc: Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>, hannes@cmpxchg.org,
-	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org
-Subject: Re: [PATCH] kernel/cgroup/pids: add "pids.forks" counter
-Message-ID: <aBjn8epxUXDOomiu@slm.duckdns.org>
-References: <20250502121930.4008251-1-max.kellermann@ionos.com>
- <bbublxzpnqrzjq5rmmbp772w2darjoahlewqky7caanaknglbx@6wuy5nidsnu3>
- <CAKPOu+_8cbUk=8d41GQGOvUrmG9OuaNVuSQrksDcUQMyFc4tiA@mail.gmail.com>
- <aBUQ7EzmeWYCyLwB@slm.duckdns.org>
- <CAKPOu+_Dk7rLgc+5YbMd4xpcjz74XKnR1jkgaTxu81EvE-q1-g@mail.gmail.com>
+	s=k20201202; t=1746462724;
+	bh=tiVRsmLJNLwUBFGcvVWRYCFsajScnZZQYzwaxhc6GeM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=UW064QiBvtoRNqQEFWYsghFhlwiRlSBbuEAjI5INi4UD4golpc1ZzglUQu3cT8FJd
+	 IR8+l0IhoKhUdkXizBvCbZ0K2CGGOxyO/jQpebhFsnn6faIxDWKA2wZDi0eESc8zGG
+	 a18Uw9AAMvSGn6kpsu9PC4zI7RbMvGYUH0nE78gQHfLB6oxe3AlttfthCIkkB9AeZM
+	 bSNoCPWna6Kcn+ZBIY/gcoP8sJ8IQJFqVhZ/tD2GjuVGmt3f6+I5osT+uKKr2dCRbc
+	 EVNDxFwnYEA8CzEjYthdTf14l1aXdyx9sMScPUM/Jea4VFNWJCJwjwKkbgxM0jXSiL
+	 +3pilCLj0s2rQ==
+Date: Mon, 5 May 2025 17:31:57 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Matti Vaittinen
+ <matti.vaittinen@fi.rohmeurope.com>, David Lechner <dlechner@baylibre.com>,
+ Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko
+ <andy@kernel.org>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iio: ti-adc128s052: Drop variable vref
+Message-ID: <20250505173157.57aa16f9@jic23-huawei>
+In-Reply-To: <4085fd58-c92c-406b-842b-ecda2fb3c895@gmail.com>
+References: <59106e24332743a7f9eb0b13ad6a2f5595ab485a.1745823530.git.mazziesaccount@gmail.com>
+	<CAHp75VcUcrj-BLp9QDsYMDY_SeQS76LDGge5vVqrx-MVwukP0w@mail.gmail.com>
+	<4085fd58-c92c-406b-842b-ecda2fb3c895@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAKPOu+_Dk7rLgc+5YbMd4xpcjz74XKnR1jkgaTxu81EvE-q1-g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 05, 2025 at 02:49:09PM +0200, Max Kellermann wrote:
-> On Fri, May 2, 2025 at 8:37 PM Tejun Heo <tj@kernel.org> wrote:
-> > +1 on pids.stat, and use rstat and avoid the atomic ops?
-> 
-> rstat right now is specific to the "cpu" controller. There is "struct
-> cgroup_rstat_cpu". And there is "struct cgroup_base_stat", but that is
-> also specific to the "cpu" controller.
+On Mon, 28 Apr 2025 12:45:13 +0300
+Matti Vaittinen <mazziesaccount@gmail.com> wrote:
 
-Oh, it's not specific to the cpu controller. The cpu part is just special.
-Please see e.g. how blkcg or memcg uses rstat.
+> On 28/04/2025 10:08, Andy Shevchenko wrote:
+> > On Mon, Apr 28, 2025 at 10:02=E2=80=AFAM Matti Vaittinen
+> > <mazziesaccount@gmail.com> wrote: =20
+> >>
+> >> According to Jonathan, variable reference voltages are very rare. It is
+> >> unlikely it is needed, and supporting it makes the code a bit more
+> >> complex.
+> >>
+> >> Simplify the driver and drop the variable vref support. =20
+> >=20
+> > ...
+> >  =20
+> >> +       int vref_mv; =20
+> >=20
+> > vref_mV please. And yes, I know historical and other reasons for them
+> > all being small, but let's try to be more scientific in these crazy
+> > days. =20
+>=20
+> Sorry Andy but I see zero reason to use capital letters here. In my=20
+> opinion, this is perfectly clear as it is. Capital letters in variables=20
+> are ugly (to me) and absolutely not needed to explain the meaning.
+>=20
+> > ...
+> >  =20
+> >> +       adc->vref_mv =3D ret / 1000; =20
+> >=20
+> > MILLI ? =20
+>=20
+> I suppose using MILLI is Ok. (Although 1000 seems still clear enough to=20
+> me. Seeing the amount of zeroes at a glance gets troublesome for me at=20
+> 10000).
+>=20
+> > Or actually a time to introduce MILLIVOLT_PER_VOLT in units.h ? =20
 
-Thanks.
+It's logically neither. If we did go that way it's MICROVOLT_PER_MILLIVOLT.
+So we move to constants it should be
+	adc->vref_mv =3D ret / (MICRO / MILLI);
 
--- 
-tejun
+I'm not seeing that as worthwhile though when people have been particularly
+keen on these units.h defines I have argued in favour of similar constructs.
+
+Anyhow on basis of moving forwards and parking this discussion
+for the future, I'll apply the patch with just the alignment tweak
+David pointed out. =20
+
+Jonathan
+
+
+
+>=20
+> I really fail to see the benefit. Do you think we should add=20
+> MILLIx_PER_x for each unit we can imagine/use?
+>=20
+> That doesn't really scale or make sense to me. We have MILLI. It does=20
+> not really matter if it is volts, amps, ohms or horse heads - it's still=
+=20
+> 1000. It just gets cumbersome to search the headers to see if we have=20
+> some fancy define for unit we have at our hands.
+>=20
+> And, to repeat myself - for me even the 1000 is still clear as it is.
+>=20
+> Yours,
+> 	-- Matti
+
