@@ -1,329 +1,372 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 091C72C17A3;
-	Mon,  5 May 2025 22:50:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6C8F2C1E14;
+	Mon,  5 May 2025 22:50:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485406; cv=none; b=ZEzwLZ+b2rTDbNOPCX4P9xA+/7fOyy9+m6ZLx7j40hATsSDxAKGoER6yvE3hMJoqKftZR78yPaczhrSznQ3vo5WGf1gvIbqSHVleBWXVgXr6uQYrAynPwnU4O/iEYr/x851xCLgVZlNDez2GwymJg78fc8S8QiQjMZheVAXXUso=
+	t=1746485403; cv=none; b=YZDOiAgIhtxNywT4VI6RCIHvQlbHyPFgJbCAE3W1+tl3gxN5sMm08bjSYAxcb8mQ5M87vTcvT5K3qw7HxyuTYVAAhToNPq6T4lWpOUNFzQmLamOEVwERZpyaTIHxMyG9ipQnsjHCY3GjChS+srimzv65rSyBhrPEGof1Zbqv7ww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485406; c=relaxed/simple;
-	bh=zr1SzuRb6t3Y1HRDJr3JFdWagSS0mQnrrrPXxi/vt/Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=nXY85yjVw9o8A/mPKnMkL8eyIx3/64AKLR8aqnUFpOZtfWl5c/BsvRAtq8lJchHbyRwI4pszpU7We7KxSi+CjWP9jfwuXWKYPC6mUC/NI9I8o3JhB5VcmWnPtKKEDdzpEq2pft/k5AVejdoBKRwYzDUKBWvYb6x339vzwAWkGbg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AYcasjta; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746485403; c=relaxed/simple;
+	bh=8SkChgjml+C5Zs0exWuTkkscnvyM/uWVZbm6XtSx5SE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=bjS11NDTTaKNR4lo8qsCxVsfbuFb4gPc30ql4ex793wHPRPcfgZUtv+lFMGSeoXxgMY+cjPSzeWyQeLUd9s0qDntqHDiP5nG1YtBTXP6S+cUETcsRWCODWDsmBR7rZgD8ggBpLSx4F9yIh5kro1LnZx9rCdsVyA17hcPmiJiGH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UFkrQQhA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AYcasjta"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-22d95f0dda4so72006875ad.2;
-        Mon, 05 May 2025 15:50:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746485403; x=1747090203; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-disposition:mime-version
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=f/F9jX5nQ9TWkl/xk9jA0llENX+QnGcCOPEAFkdMk0w=;
-        b=AYcasjtaz5C7COP5tjHYa8cury0KUvWXdAKnDraGnG9fnhlXI5PmF41eTtGMousL+R
-         BPLn34XSIw3mivHyLhfXfp45hV2pR7ZAriwzYCdG5dR31jL5P3Si0CDAtBFc17C/ri6p
-         Wa1Zh7sr7mJv6o61yf6LhIjTjFxYFMDh1nwVxD8sOLUm+id1JJVdMuX9CEOeyvFIL4z/
-         0mvDpC3KSldusfwlY8AMp9zLxlR7ULeYQ89URy2yUe5CTrKUv3BF3xdeTLbpDW8yKdNh
-         bdNTc81yjS7O3oZkBQ8c21IXapd+1ZYTLVl5pRi4B8K9/4wHQseTzp9On0Jmq6aDpt2l
-         1cIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746485403; x=1747090203;
-        h=content-transfer-encoding:content-disposition:mime-version
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=f/F9jX5nQ9TWkl/xk9jA0llENX+QnGcCOPEAFkdMk0w=;
-        b=nhiAJpbYZCepVN0jc1BClM4gfESCNaMm8+4z9BIejQVkUGPqYZ6hucakT0+k3kWmpM
-         Fscv9epviWf8Xw3tlwJesriyj4BV4jHEbvx1V+LS3lU1u02345rzq1i6f023QBpYQKaQ
-         44oKVY/b0F4OQTeewkE7cWRO0pEbnpGDCAKqOYYiZQrLFqoJ/LogHigT6xHZqJQ3+NkG
-         GDt3hEEAR4RVd5ZcUYgTuzZEKqgmsui/ixh3V8cHsAxWpBU2z+COqX+sNeMYd1Yfg0pn
-         ItYA+Lvso0ftwRxYygDLFErCAXxflWZEg9gVrjdDFwbgDEOe0Kk/FM3toKGPJNPEAV4O
-         TA/g==
-X-Forwarded-Encrypted: i=1; AJvYcCVtI80UXFYNjCTHsNqpXQm9XmHAsBaMohK1qDi1H9WUE3d30AOht4kyhepbUZQdXjOagfh6PmMyyW+iEAc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz0+1sNk7fe+rvfF4bZ/bVEJVQmcZMg70o0mkaTWDckEUUqH0tz
-	OjKSG5ei6hRqSmTfcFICG7VJFRHkVV78w5b2dMUZzrOSlDPiPlzOKrC0yA==
-X-Gm-Gg: ASbGnctNCYl6Z6g6DFJvwvEVFU3rcGUgIRMeCY97XI1hJEAoRqF2MGrf05DmRpykxdK
-	vXlLhKsuNF6dlLleqFR6r5K+gwG2qNG7nZlwtMTVTtQRH/9gD78fr1NHLr7/zcMILqMmib/doWC
-	Lx6B+O+AGX7UbRqPqrDqkglIIQb3WLEgb3rjo6RfJUBfVxg/5qXRQFjHMroSsAQWZ4nV33XJldj
-	z0uissc6LrDyQFXHHG++QMZfBus7Qqku5ldAbK8wq73Tn7W6ZSkI7f7tmO5GnIUFUJWGlLkBkeb
-	x+2514DHoy97kmBbZpvvvZlGj5R9b0/4qWUsd9bG0A==
-X-Google-Smtp-Source: AGHT+IHHHTjuyLsz08Yk36i3/6vZfyqjCAh87ew21d5TLJXoB8Biah29BPicOWizZy77b8ONZIYH4A==
-X-Received: by 2002:a17:903:faf:b0:224:10a2:cad5 with SMTP id d9443c01a7336-22e35fa9dfbmr11432095ad.10.1746485402960;
-        Mon, 05 May 2025 15:50:02 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:6c50:1878:74d0:c0be])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e151e98desm61037795ad.55.2025.05.05.15.50.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 15:50:02 -0700 (PDT)
-Date: Mon, 5 May 2025 15:49:59 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: linux-input@vger.kernel.org,
-	Hanno =?iso-8859-1?Q?B=F6ck?= <hanno@hboeck.de>
-Cc: Lyude Paul <lyude@redhat.com>, Al Viro <viro@zeniv.linux.org.uk>,
-	Nick Dyer <nick@shmanahar.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH] Input: synaptics-rmi - fix crash with unsupported versions
- of F34
-Message-ID: <aBlAl6sGulam-Qcx@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UFkrQQhA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6F33C4CEEF;
+	Mon,  5 May 2025 22:49:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746485402;
+	bh=8SkChgjml+C5Zs0exWuTkkscnvyM/uWVZbm6XtSx5SE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=UFkrQQhA6H2n4LOT9ZgexbTbyzmj1W/27IEEpk1aU5AgqpRX8cTlc8oYPKd8jp+UR
+	 3EsSNGZoaa2SnzPK4sa4hNoHyuSTyeggqsR1qpf/Rg483CTSyAj/912XtgrN/v7O5C
+	 8Kcezw87fetYW7V3+mwoY8byRLLlUcmQv4b3EiQeyA9iDd+yjYCee/JwsN1hUuwKTm
+	 zhnwdHKjoTTM84DORkUsTDvNXG2WAXfG8H98DquHCJI82RmPhSz4H9pLtSmkiNHHTs
+	 zqynfe7prbkUozd6Lkim4imJvM5pJCu/LN+//v7WaG2KfiDuEegdPEBzV4hksyBAt/
+	 ARlIoEZwl9+hQ==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Ilya Bakoulin <Ilya.Bakoulin@amd.com>,
+	Krunoslav Kovac <krunoslav.kovac@amd.com>,
+	Roman Li <roman.li@amd.com>,
+	Robert Mader <robert.mader@collabora.com>,
+	Daniel Wheeler <daniel.wheeler@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Sasha Levin <sashal@kernel.org>,
+	harry.wentland@amd.com,
+	sunpeng.li@amd.com,
+	christian.koenig@amd.com,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	mario.limonciello@amd.com,
+	alex.hung@amd.com,
+	chiahsuan.chung@amd.com,
+	sunil.khatri@amd.com,
+	aurabindo.pillai@amd.com,
+	Yilin.Chen@amd.com,
+	mwen@igalia.com,
+	Roman.Li@amd.com,
+	siqueira@igalia.com,
+	jack.chang@amd.com,
+	Kun.Liu2@amd.com,
+	Wayne.Lin@amd.com,
+	Dillon.Varone@amd.com,
+	alvin.lee2@amd.com,
+	Leo.Zeng@amd.com,
+	Iswara.Nagulendran@amd.com,
+	zaeem.mohamed@amd.com,
+	wenjing.liu@amd.com,
+	Samson.Tam@amd.com,
+	chris.park@amd.com,
+	PeiChen.Huang@amd.com,
+	peterson.guo@amd.com,
+	Yihan.Zhu@amd.com,
+	karthi.kandasamy@amd.com,
+	Jerry.Zuo@amd.com,
+	george.shen@amd.com,
+	bpinnint@amd.com,
+	Charlene.Liu@amd.com,
+	swapnil.patel@amd.com,
+	dmytro.laktyushkin@amd.com,
+	moadhuri@amd.com,
+	martin.leung@amd.com,
+	harikrishna.revalla@amd.com,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 6.12 302/486] drm/amd/display: Fix BT2020 YCbCr limited/full range input
+Date: Mon,  5 May 2025 18:36:18 -0400
+Message-Id: <20250505223922.2682012-302-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
+References: <20250505223922.2682012-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-Sysfs interface for updating firmware for RMI devices is available
-even when F34 probe failed. The code checks presence of F34 "container"
-pointer and then tries to use the function data attached to the
-sub-device. F34 assigns the function data early, before it knows if
-probe succeeds, leaving behind a stale pointer.
+From: Ilya Bakoulin <Ilya.Bakoulin@amd.com>
 
-Fix this by expanding checks to not only test for presence of F34
-"container" but also check if there is driver data assigned to the
-sub-device, and call dev_set_drvdata() only after we are certain that
-probe is successful.
+[ Upstream commit 07bc2dcbcf403d47d6f305ef7f0d3d489491c5fb ]
 
-This is not a complete fix, since F34 will be freed during firmware
-update, so there is still a race when fetching and accessing this
-pointer. This race will be addressed in follow-up changes.
+[Why]
+BT2020 YCbCr input is not handled properly when full range
+quantization is used and limited range is not supported at all.
 
-Reported-by: Hanno Böck <hanno@hboeck.de>
-Fixes: 29fd0ec2bdbe ("Input: synaptics-rmi4 - add support for F34 device reflash")
-Cc: stable@vger.kernel.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+[How]
+- Add enums for BT2020 YCbCr limited/full range
+- Add limited range CSC matrix
+
+Reviewed-by: Krunoslav Kovac <krunoslav.kovac@amd.com>
+Signed-off-by: Ilya Bakoulin <Ilya.Bakoulin@amd.com>
+Signed-off-by: Roman Li <roman.li@amd.com>
+Tested-by: Robert Mader <robert.mader@collabora.com>
+Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/rmi4/rmi_f34.c | 135 ++++++++++++++++++++---------------
- 1 file changed, 76 insertions(+), 59 deletions(-)
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c           | 6 +++---
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c   | 2 +-
+ drivers/gpu/drm/amd/display/dc/basics/dc_common.c           | 3 ++-
+ drivers/gpu/drm/amd/display/dc/core/dc_hw_sequencer.c       | 5 +++--
+ drivers/gpu/drm/amd/display/dc/core/dc_resource.c           | 4 ++--
+ drivers/gpu/drm/amd/display/dc/dc_hw_types.h                | 4 +++-
+ drivers/gpu/drm/amd/display/dc/dce/dce_stream_encoder.c     | 3 ++-
+ .../gpu/drm/amd/display/dc/dio/dcn10/dcn10_stream_encoder.c | 3 ++-
+ .../amd/display/dc/dio/dcn401/dcn401_dio_stream_encoder.c   | 3 ++-
+ .../amd/display/dc/hpo/dcn31/dcn31_hpo_dp_stream_encoder.c  | 3 ++-
+ drivers/gpu/drm/amd/display/dc/inc/hw/dpp.h                 | 6 +++++-
+ .../gpu/drm/amd/display/modules/info_packet/info_packet.c   | 4 ++--
+ 12 files changed, 29 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/input/rmi4/rmi_f34.c b/drivers/input/rmi4/rmi_f34.c
-index d760af4cc12e..f1947f03b06a 100644
---- a/drivers/input/rmi4/rmi_f34.c
-+++ b/drivers/input/rmi4/rmi_f34.c
-@@ -4,6 +4,7 @@
-  * Copyright (C) 2016 Zodiac Inflight Innovations
-  */
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+index f3cbff8615570..44ea320e4372c 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -5564,9 +5564,9 @@ fill_plane_color_attributes(const struct drm_plane_state *plane_state,
  
-+#include "linux/device.h"
- #include <linux/kernel.h>
- #include <linux/rmi.h>
- #include <linux/firmware.h>
-@@ -289,39 +290,30 @@ static int rmi_f34_update_firmware(struct f34_data *f34,
- 	return rmi_f34_flash_firmware(f34, syn_fw);
- }
+ 	case DRM_COLOR_YCBCR_BT2020:
+ 		if (full_range)
+-			*color_space = COLOR_SPACE_2020_YCBCR;
++			*color_space = COLOR_SPACE_2020_YCBCR_FULL;
+ 		else
+-			return -EINVAL;
++			*color_space = COLOR_SPACE_2020_YCBCR_LIMITED;
+ 		break;
  
--static int rmi_f34_status(struct rmi_function *fn)
--{
--	struct f34_data *f34 = dev_get_drvdata(&fn->dev);
--
--	/*
--	 * The status is the percentage complete, or once complete,
--	 * zero for success or a negative return code.
--	 */
--	return f34->update_status;
--}
--
- static ssize_t rmi_driver_bootloader_id_show(struct device *dev,
- 					     struct device_attribute *dattr,
- 					     char *buf)
+ 	default:
+@@ -6062,7 +6062,7 @@ get_output_color_space(const struct dc_crtc_timing *dc_crtc_timing,
+ 		if (dc_crtc_timing->pixel_encoding == PIXEL_ENCODING_RGB)
+ 			color_space = COLOR_SPACE_2020_RGB_FULLRANGE;
+ 		else
+-			color_space = COLOR_SPACE_2020_YCBCR;
++			color_space = COLOR_SPACE_2020_YCBCR_LIMITED;
+ 		break;
+ 	case DRM_MODE_COLORIMETRY_DEFAULT: // ITU601
+ 	default:
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c
+index 98e88903d07d5..15d94d2a0e2fb 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c
+@@ -1145,7 +1145,7 @@ static int amdgpu_current_colorspace_show(struct seq_file *m, void *data)
+ 	case COLOR_SPACE_2020_RGB_FULLRANGE:
+ 		seq_puts(m, "BT2020_RGB");
+ 		break;
+-	case COLOR_SPACE_2020_YCBCR:
++	case COLOR_SPACE_2020_YCBCR_LIMITED:
+ 		seq_puts(m, "BT2020_YCC");
+ 		break;
+ 	default:
+diff --git a/drivers/gpu/drm/amd/display/dc/basics/dc_common.c b/drivers/gpu/drm/amd/display/dc/basics/dc_common.c
+index b2fc4f8e64825..a51c2701da247 100644
+--- a/drivers/gpu/drm/amd/display/dc/basics/dc_common.c
++++ b/drivers/gpu/drm/amd/display/dc/basics/dc_common.c
+@@ -40,7 +40,8 @@ bool is_rgb_cspace(enum dc_color_space output_color_space)
+ 	case COLOR_SPACE_YCBCR709:
+ 	case COLOR_SPACE_YCBCR601_LIMITED:
+ 	case COLOR_SPACE_YCBCR709_LIMITED:
+-	case COLOR_SPACE_2020_YCBCR:
++	case COLOR_SPACE_2020_YCBCR_LIMITED:
++	case COLOR_SPACE_2020_YCBCR_FULL:
+ 		return false;
+ 	default:
+ 		/* Add a case to switch */
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_hw_sequencer.c b/drivers/gpu/drm/amd/display/dc/core/dc_hw_sequencer.c
+index ab6ed9dc5f4db..25d125036e8d4 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_hw_sequencer.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_hw_sequencer.c
+@@ -176,7 +176,7 @@ static bool is_ycbcr2020_type(
  {
- 	struct rmi_driver_data *data = dev_get_drvdata(dev);
--	struct rmi_function *fn = data->f34_container;
-+	struct rmi_function *fn;
- 	struct f34_data *f34;
+ 	bool ret = false;
  
--	if (fn) {
--		f34 = dev_get_drvdata(&fn->dev);
--
--		if (f34->bl_version == 5)
--			return sysfs_emit(buf, "%c%c\n",
--					  f34->bootloader_id[0],
--					  f34->bootloader_id[1]);
--		else
--			return sysfs_emit(buf, "V%d.%d\n",
--					  f34->bootloader_id[1],
--					  f34->bootloader_id[0]);
--	}
-+	fn = data->f34_container;
-+	if (!fn)
-+		return -ENODEV;
- 
--	return 0;
-+	f34 = dev_get_drvdata(&fn->dev);
-+	if (!f34)
-+		return -ENODEV;
-+
-+	if (f34->bl_version == 5)
-+		return sysfs_emit(buf, "%c%c\n",
-+				  f34->bootloader_id[0],
-+				  f34->bootloader_id[1]);
-+	else
-+		return sysfs_emit(buf, "V%d.%d\n",
-+				  f34->bootloader_id[1],
-+				  f34->bootloader_id[0]);
+-	if (color_space == COLOR_SPACE_2020_YCBCR)
++	if (color_space == COLOR_SPACE_2020_YCBCR_LIMITED || color_space == COLOR_SPACE_2020_YCBCR_FULL)
+ 		ret = true;
+ 	return ret;
  }
+@@ -247,7 +247,8 @@ void color_space_to_black_color(
+ 	case COLOR_SPACE_YCBCR709_BLACK:
+ 	case COLOR_SPACE_YCBCR601_LIMITED:
+ 	case COLOR_SPACE_YCBCR709_LIMITED:
+-	case COLOR_SPACE_2020_YCBCR:
++	case COLOR_SPACE_2020_YCBCR_LIMITED:
++	case COLOR_SPACE_2020_YCBCR_FULL:
+ 		*black_color = black_color_format[BLACK_COLOR_FORMAT_YUV_CV];
+ 		break;
  
- static DEVICE_ATTR(bootloader_id, 0444, rmi_driver_bootloader_id_show, NULL);
-@@ -334,13 +326,16 @@ static ssize_t rmi_driver_configuration_id_show(struct device *dev,
- 	struct rmi_function *fn = data->f34_container;
- 	struct f34_data *f34;
- 
--	if (fn) {
--		f34 = dev_get_drvdata(&fn->dev);
-+	fn = data->f34_container;
-+	if (!fn)
-+		return -ENODEV;
-+
-+	f34 = dev_get_drvdata(&fn->dev);
-+	if (!f34)
-+		return -ENODEV;
- 
--		return sysfs_emit(buf, "%s\n", f34->configuration_id);
--	}
- 
--	return 0;
-+	return sysfs_emit(buf, "%s\n", f34->configuration_id);
- }
- 
- static DEVICE_ATTR(configuration_id, 0444,
-@@ -356,10 +351,14 @@ static int rmi_firmware_update(struct rmi_driver_data *data,
- 
- 	if (!data->f34_container) {
- 		dev_warn(dev, "%s: No F34 present!\n", __func__);
--		return -EINVAL;
-+		return -ENODEV;
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_resource.c b/drivers/gpu/drm/amd/display/dc/core/dc_resource.c
+index bfcbbea377298..6dbf139c51f72 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_resource.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_resource.c
+@@ -4215,7 +4215,7 @@ static void set_avi_info_frame(
+ 		break;
+ 	case COLOR_SPACE_2020_RGB_FULLRANGE:
+ 	case COLOR_SPACE_2020_RGB_LIMITEDRANGE:
+-	case COLOR_SPACE_2020_YCBCR:
++	case COLOR_SPACE_2020_YCBCR_LIMITED:
+ 		hdmi_info.bits.EC0_EC2 = COLORIMETRYEX_BT2020RGBYCBCR;
+ 		hdmi_info.bits.C0_C1   = COLORIMETRY_EXTENDED;
+ 		break;
+@@ -4229,7 +4229,7 @@ static void set_avi_info_frame(
+ 		break;
  	}
  
- 	f34 = dev_get_drvdata(&data->f34_container->dev);
-+	if (!f34) {
-+		dev_warn(dev, "%s: No valid F34 present!\n", __func__);
-+		return -ENODEV;
-+	}
- 
- 	if (f34->bl_version >= 7) {
- 		if (data->pdt_props & HAS_BSR) {
-@@ -485,10 +484,18 @@ static ssize_t rmi_driver_update_fw_status_show(struct device *dev,
- 						char *buf)
- {
- 	struct rmi_driver_data *data = dev_get_drvdata(dev);
--	int update_status = 0;
-+	struct f34_data *f34;
-+	int update_status = -ENODEV;
- 
--	if (data->f34_container)
--		update_status = rmi_f34_status(data->f34_container);
-+	/*
-+	 * The status is the percentage complete, or once complete,
-+	 * zero for success or a negative return code.
-+	 */
-+	if (data->f34_container) {
-+		f34 = dev_get_drvdata(&data->f34_container->dev);
-+		if (f34)
-+			update_status = f34->update_status;
-+	}
- 
- 	return sysfs_emit(buf, "%d\n", update_status);
- }
-@@ -508,33 +515,21 @@ static const struct attribute_group rmi_firmware_attr_group = {
- 	.attrs = rmi_firmware_attrs,
+-	if (pixel_encoding && color_space == COLOR_SPACE_2020_YCBCR &&
++	if (pixel_encoding && color_space == COLOR_SPACE_2020_YCBCR_LIMITED &&
+ 			stream->out_transfer_func.tf == TRANSFER_FUNCTION_GAMMA22) {
+ 		hdmi_info.bits.EC0_EC2 = 0;
+ 		hdmi_info.bits.C0_C1 = COLORIMETRY_ITU709;
+diff --git a/drivers/gpu/drm/amd/display/dc/dc_hw_types.h b/drivers/gpu/drm/amd/display/dc/dc_hw_types.h
+index c10567ec1c819..715af635ca31f 100644
+--- a/drivers/gpu/drm/amd/display/dc/dc_hw_types.h
++++ b/drivers/gpu/drm/amd/display/dc/dc_hw_types.h
+@@ -641,7 +641,8 @@ enum dc_color_space {
+ 	COLOR_SPACE_YCBCR709_LIMITED,
+ 	COLOR_SPACE_2020_RGB_FULLRANGE,
+ 	COLOR_SPACE_2020_RGB_LIMITEDRANGE,
+-	COLOR_SPACE_2020_YCBCR,
++	COLOR_SPACE_2020_YCBCR_LIMITED,
++	COLOR_SPACE_2020_YCBCR_FULL,
+ 	COLOR_SPACE_ADOBERGB,
+ 	COLOR_SPACE_DCIP3,
+ 	COLOR_SPACE_DISPLAYNATIVE,
+@@ -649,6 +650,7 @@ enum dc_color_space {
+ 	COLOR_SPACE_APPCTRL,
+ 	COLOR_SPACE_CUSTOMPOINTS,
+ 	COLOR_SPACE_YCBCR709_BLACK,
++	COLOR_SPACE_2020_YCBCR = COLOR_SPACE_2020_YCBCR_LIMITED,
  };
  
--static int rmi_f34_probe(struct rmi_function *fn)
-+static int rmi_f34v5_probe(struct f34_data *f34)
- {
--	struct f34_data *f34;
--	unsigned char f34_queries[9];
-+	struct rmi_function *fn = f34->fn;
-+	u8 f34_queries[9];
- 	bool has_config_id;
--	u8 version = fn->fd.function_version;
--	int ret;
--
--	f34 = devm_kzalloc(&fn->dev, sizeof(struct f34_data), GFP_KERNEL);
--	if (!f34)
--		return -ENOMEM;
--
--	f34->fn = fn;
--	dev_set_drvdata(&fn->dev, f34);
--
--	/* v5 code only supported version 0, try V7 probe */
--	if (version > 0)
--		return rmi_f34v7_probe(f34);
-+	int error;
- 
- 	f34->bl_version = 5;
- 
--	ret = rmi_read_block(fn->rmi_dev, fn->fd.query_base_addr,
--			     f34_queries, sizeof(f34_queries));
--	if (ret) {
-+	error = rmi_read_block(fn->rmi_dev, fn->fd.query_base_addr,
-+			       f34_queries, sizeof(f34_queries));
-+	if (error) {
- 		dev_err(&fn->dev, "%s: Failed to query properties\n",
- 			__func__);
--		return ret;
-+		return error;
- 	}
- 
- 	snprintf(f34->bootloader_id, sizeof(f34->bootloader_id),
-@@ -560,11 +555,11 @@ static int rmi_f34_probe(struct rmi_function *fn)
- 		f34->v5.config_blocks);
- 
- 	if (has_config_id) {
--		ret = rmi_read_block(fn->rmi_dev, fn->fd.control_base_addr,
--				     f34_queries, sizeof(f34_queries));
--		if (ret) {
-+		error = rmi_read_block(fn->rmi_dev, fn->fd.control_base_addr,
-+				       f34_queries, sizeof(f34_queries));
-+		if (error) {
- 			dev_err(&fn->dev, "Failed to read F34 config ID\n");
--			return ret;
-+			return error;
+ enum dc_dither_option {
+diff --git a/drivers/gpu/drm/amd/display/dc/dce/dce_stream_encoder.c b/drivers/gpu/drm/amd/display/dc/dce/dce_stream_encoder.c
+index 5c2825bc9a876..654b919465f08 100644
+--- a/drivers/gpu/drm/amd/display/dc/dce/dce_stream_encoder.c
++++ b/drivers/gpu/drm/amd/display/dc/dce/dce_stream_encoder.c
+@@ -420,7 +420,7 @@ static void dce110_stream_encoder_dp_set_stream_attribute(
+ 			dynamic_range_rgb = 1; /*limited range*/
+ 			break;
+ 		case COLOR_SPACE_2020_RGB_FULLRANGE:
+-		case COLOR_SPACE_2020_YCBCR:
++		case COLOR_SPACE_2020_YCBCR_LIMITED:
+ 		case COLOR_SPACE_XR_RGB:
+ 		case COLOR_SPACE_MSREF_SCRGB:
+ 		case COLOR_SPACE_ADOBERGB:
+@@ -432,6 +432,7 @@ static void dce110_stream_encoder_dp_set_stream_attribute(
+ 		case COLOR_SPACE_APPCTRL:
+ 		case COLOR_SPACE_CUSTOMPOINTS:
+ 		case COLOR_SPACE_UNKNOWN:
++		default:
+ 			/* do nothing */
+ 			break;
  		}
- 
- 		snprintf(f34->configuration_id, sizeof(f34->configuration_id),
-@@ -573,12 +568,34 @@ static int rmi_f34_probe(struct rmi_function *fn)
- 			 f34_queries[2], f34_queries[3]);
- 
- 		rmi_dbg(RMI_DEBUG_FN, &fn->dev, "Configuration ID: %s\n",
--			 f34->configuration_id);
-+			f34->configuration_id);
+diff --git a/drivers/gpu/drm/amd/display/dc/dio/dcn10/dcn10_stream_encoder.c b/drivers/gpu/drm/amd/display/dc/dio/dcn10/dcn10_stream_encoder.c
+index f496e952ceecb..f8f1e98f646e6 100644
+--- a/drivers/gpu/drm/amd/display/dc/dio/dcn10/dcn10_stream_encoder.c
++++ b/drivers/gpu/drm/amd/display/dc/dio/dcn10/dcn10_stream_encoder.c
+@@ -393,7 +393,7 @@ void enc1_stream_encoder_dp_set_stream_attribute(
+ 		break;
+ 	case COLOR_SPACE_2020_RGB_LIMITEDRANGE:
+ 	case COLOR_SPACE_2020_RGB_FULLRANGE:
+-	case COLOR_SPACE_2020_YCBCR:
++	case COLOR_SPACE_2020_YCBCR_LIMITED:
+ 	case COLOR_SPACE_XR_RGB:
+ 	case COLOR_SPACE_MSREF_SCRGB:
+ 	case COLOR_SPACE_ADOBERGB:
+@@ -406,6 +406,7 @@ void enc1_stream_encoder_dp_set_stream_attribute(
+ 	case COLOR_SPACE_CUSTOMPOINTS:
+ 	case COLOR_SPACE_UNKNOWN:
+ 	case COLOR_SPACE_YCBCR709_BLACK:
++	default:
+ 		/* do nothing */
+ 		break;
  	}
+diff --git a/drivers/gpu/drm/amd/display/dc/dio/dcn401/dcn401_dio_stream_encoder.c b/drivers/gpu/drm/amd/display/dc/dio/dcn401/dcn401_dio_stream_encoder.c
+index 0a27e0942a123..0008816cf1553 100644
+--- a/drivers/gpu/drm/amd/display/dc/dio/dcn401/dcn401_dio_stream_encoder.c
++++ b/drivers/gpu/drm/amd/display/dc/dio/dcn401/dcn401_dio_stream_encoder.c
+@@ -634,7 +634,7 @@ void enc401_stream_encoder_dp_set_stream_attribute(
+ 		break;
+ 	case COLOR_SPACE_2020_RGB_LIMITEDRANGE:
+ 	case COLOR_SPACE_2020_RGB_FULLRANGE:
+-	case COLOR_SPACE_2020_YCBCR:
++	case COLOR_SPACE_2020_YCBCR_LIMITED:
+ 	case COLOR_SPACE_XR_RGB:
+ 	case COLOR_SPACE_MSREF_SCRGB:
+ 	case COLOR_SPACE_ADOBERGB:
+@@ -647,6 +647,7 @@ void enc401_stream_encoder_dp_set_stream_attribute(
+ 	case COLOR_SPACE_CUSTOMPOINTS:
+ 	case COLOR_SPACE_UNKNOWN:
+ 	case COLOR_SPACE_YCBCR709_BLACK:
++	default:
+ 		/* do nothing */
+ 		break;
+ 	}
+diff --git a/drivers/gpu/drm/amd/display/dc/hpo/dcn31/dcn31_hpo_dp_stream_encoder.c b/drivers/gpu/drm/amd/display/dc/hpo/dcn31/dcn31_hpo_dp_stream_encoder.c
+index 678db949cfe3c..759b453385c46 100644
+--- a/drivers/gpu/drm/amd/display/dc/hpo/dcn31/dcn31_hpo_dp_stream_encoder.c
++++ b/drivers/gpu/drm/amd/display/dc/hpo/dcn31/dcn31_hpo_dp_stream_encoder.c
+@@ -323,7 +323,7 @@ static void dcn31_hpo_dp_stream_enc_set_stream_attribute(
+ 		break;
+ 	case COLOR_SPACE_2020_RGB_LIMITEDRANGE:
+ 	case COLOR_SPACE_2020_RGB_FULLRANGE:
+-	case COLOR_SPACE_2020_YCBCR:
++	case COLOR_SPACE_2020_YCBCR_LIMITED:
+ 	case COLOR_SPACE_XR_RGB:
+ 	case COLOR_SPACE_MSREF_SCRGB:
+ 	case COLOR_SPACE_ADOBERGB:
+@@ -336,6 +336,7 @@ static void dcn31_hpo_dp_stream_enc_set_stream_attribute(
+ 	case COLOR_SPACE_CUSTOMPOINTS:
+ 	case COLOR_SPACE_UNKNOWN:
+ 	case COLOR_SPACE_YCBCR709_BLACK:
++	default:
+ 		/* do nothing */
+ 		break;
+ 	}
+diff --git a/drivers/gpu/drm/amd/display/dc/inc/hw/dpp.h b/drivers/gpu/drm/amd/display/dc/inc/hw/dpp.h
+index 0150f2581ee4c..0c5675d1c5936 100644
+--- a/drivers/gpu/drm/amd/display/dc/inc/hw/dpp.h
++++ b/drivers/gpu/drm/amd/display/dc/inc/hw/dpp.h
+@@ -119,10 +119,14 @@ static const struct dpp_input_csc_matrix __maybe_unused dpp_input_csc_matrix[] =
+ 		{ 0x39a6, 0x2568, 0,      0xe0d6,
+ 		  0xeedd, 0x2568, 0xf925, 0x9a8,
+ 		  0,      0x2568, 0x43ee, 0xdbb2 } },
+-	{ COLOR_SPACE_2020_YCBCR,
++	{ COLOR_SPACE_2020_YCBCR_FULL,
+ 		{ 0x2F30, 0x2000, 0,      0xE869,
+ 		  0xEDB7, 0x2000, 0xFABC, 0xBC6,
+ 		  0,      0x2000, 0x3C34, 0xE1E6 } },
++	{ COLOR_SPACE_2020_YCBCR_LIMITED,
++		{ 0x35B9, 0x2543, 0,      0xE2B2,
++		  0xEB2F, 0x2543, 0xFA01, 0x0B1F,
++		  0,      0x2543, 0x4489, 0xDB42 } },
+ 	{ COLOR_SPACE_2020_RGB_LIMITEDRANGE,
+ 		{ 0x35E0, 0x255F, 0,      0xE2B3,
+ 		  0xEB20, 0x255F, 0xF9FD, 0xB1E,
+diff --git a/drivers/gpu/drm/amd/display/modules/info_packet/info_packet.c b/drivers/gpu/drm/amd/display/modules/info_packet/info_packet.c
+index a344e2e49b0ea..b3d55cac35694 100644
+--- a/drivers/gpu/drm/amd/display/modules/info_packet/info_packet.c
++++ b/drivers/gpu/drm/amd/display/modules/info_packet/info_packet.c
+@@ -383,10 +383,10 @@ void mod_build_vsc_infopacket(const struct dc_stream_state *stream,
+ 				colorimetryFormat = ColorimetryYCC_DP_ITU709;
+ 			else if (cs == COLOR_SPACE_ADOBERGB)
+ 				colorimetryFormat = ColorimetryYCC_DP_AdobeYCC;
+-			else if (cs == COLOR_SPACE_2020_YCBCR)
++			else if (cs == COLOR_SPACE_2020_YCBCR_LIMITED)
+ 				colorimetryFormat = ColorimetryYCC_DP_ITU2020YCbCr;
  
- 	return 0;
- }
+-			if (cs == COLOR_SPACE_2020_YCBCR && tf == TRANSFER_FUNC_GAMMA_22)
++			if (cs == COLOR_SPACE_2020_YCBCR_LIMITED && tf == TRANSFER_FUNC_GAMMA_22)
+ 				colorimetryFormat = ColorimetryYCC_DP_ITU709;
+ 			break;
  
-+static int rmi_f34_probe(struct rmi_function *fn)
-+{
-+	struct f34_data *f34;
-+	u8 version = fn->fd.function_version;
-+	int error;
-+
-+	f34 = devm_kzalloc(&fn->dev, sizeof(struct f34_data), GFP_KERNEL);
-+	if (!f34)
-+		return -ENOMEM;
-+
-+	f34->fn = fn;
-+
-+	/* v5 code only supported version 0 */
-+	error = version == 0 ? rmi_f34v5_probe(f34) : rmi_f34v7_probe(f34);
-+	if (error)
-+		return error;
-+
-+	dev_set_drvdata(&fn->dev, f34);
-+
-+	return 0;
-+}
-+
- int rmi_f34_create_sysfs(struct rmi_device *rmi_dev)
- {
- 	return sysfs_create_group(&rmi_dev->dev.kobj, &rmi_firmware_attr_group);
 -- 
-2.49.0.967.g6a0df3ecc3-goog
+2.39.5
 
-
--- 
-Dmitry
