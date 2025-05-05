@@ -1,163 +1,413 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3471119D8BC;
-	Mon,  5 May 2025 12:32:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 100582745E;
+	Mon,  5 May 2025 12:35:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746448336; cv=none; b=jgji4T2UtqOZBUWHa8j8XEz1XqXRIqV1GW96ZVlqs0EQ59A0nTXdpbZ5jb6dF6Fc/8JIKHzavAF6qbysUmQiXJV2jkX3SZkptxmxP3Wc03HhReOYhYHu6JESF1+T27I5A7e5rIFVj9rXBFkV25bc18o/TMAmuP5U6wj2jIx88k4=
+	t=1746448542; cv=none; b=IM5083y3pFcEOn8yxXArjiseojoNBqB0jieWCYq3lhDuJ6kbOFS3ODLgLd+PXZwBZrrxp8aNjkM3RPccBHXZIn8zLh06PnBUO4MoLPGX/1X9mMxBQgiXTcR+GKaubeJz5sfkWUAGqVqhlOhpGEuHIpxgV3WSMK6dhvABumF/2Us=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746448336; c=relaxed/simple;
-	bh=rOFXNGK/YYhTjToGtlEYHoOHEbfgPKtZr83pi5WLFVk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=exwv6th1GvqurmKBdltWUX+4QRh07vAr6eE6J93ihNraVmmYlr3YJ+dkDyUlxTGa9LaGobZJlVPgbijWmsQVw5NDBNRD+dmCmJD6cVbL2nK4O2SDuINYFkPHyLimaAx2VxMHCILiLvLvsb6hPVaGfQ18BfqwTZ8cFToHSV0TcHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=hjAbYQVe; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1746448542; c=relaxed/simple;
+	bh=/KwnWpU/4RDtBSw1306OO977KMGMgFoX0c+z/c6GyTc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=E1JT3Verma/bV0FF3OJbADC983jUQvX1Ca2l7HF0VfppPWPXBxqRN8xj4P2P8Qw6CFAa+Iwd+kck7rpbnqf4Q8DkApeuN59Vjjo5454Dyk6ewMnnYD//7jCyfRFElYaYSfyLvKfKBP5PyXovL40YWPu2lvopECwSQe5ix9Nsf+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=r9L+tAUg; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="hjAbYQVe"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id B6D95439CF;
-	Mon,  5 May 2025 12:32:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1746448330;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=t8GmbzWzwjKBF6Grm3MhKIQ4eVv3NPu5Y9A5XIPvDcA=;
-	b=hjAbYQVeSBenLJHyzNnH+29VE8aQu5NdvGcBu901d4KAVGGIH73+xJRtOkMBvPMxod408f
-	46cJ1FSSVEaihm6e4YRyxwK6H9vqKbZsH6FeNdjG6qHuFuPEj6MXQaHOvyeCuws3FaQ4ZJ
-	tyEO3Rm3oNF8VG/6gKRuTcpBY8uLXdkn1k8zdS9iBbYepUeyI1mPnliHP5HbYAMf8SxYgc
-	gh87HvhVyGIZKypBQt9lGmUGqhDD0V6ogc/9QAW1FprShOP2PTeLVdqhZJSU2GFelqS2IN
-	VCutWhQebpQ3qtFA8QsGOMpeGLhJbitY4xZjYFl5bgwg7lvllwMgOkM9Yioomg==
-Date: Mon, 5 May 2025 14:31:58 +0200
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Inki Dae <inki.dae@samsung.com>, Kyungmin Park
- <kyungmin.park@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Alim
- Akhtar <alim.akhtar@samsung.com>, Maxime Ripard <mripard@kernel.org>, Louis
- Chauvet <louis.chauvet@bootlin.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
- <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter
- <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong
- <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Laurent
- Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
- <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, Jagan Teki
- <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
- <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Douglas Anderson
- <dianders@chromium.org>, Chun-Kuang Hu <chunkuang.hu@kernel.org>, Krzysztof
- Kozlowski <krzk@kernel.org>, Anusha Srivatsa <asrivats@redhat.com>, Paul
- Kocialkowski <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>, Hui
- Pu <Hui.Pu@gehealthcare.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, dri-devel@lists.freedesktop.org,
- asahi@lists.linux.dev, linux-kernel@vger.kernel.org,
- chrome-platform@lists.linux.dev, imx@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
- linux-stm32@st-md-mailman.stormreply.com, Adam Ford <aford173@gmail.com>,
- Adrien Grassein <adrien.grassein@gmail.com>, Aleksandr Mishin
- <amishin@t-argos.ru>, Andy Yan <andy.yan@rock-chips.com>, AngeloGioacchino
- Del Regno <angelogioacchino.delregno@collabora.com>, Benson Leung
- <bleung@chromium.org>, Biju Das <biju.das.jz@bp.renesas.com>, Christoph
- Fritz <chf.fritz@googlemail.com>, Cristian Ciocaltea
- <cristian.ciocaltea@collabora.com>, Detlev Casanova
- <detlev.casanova@collabora.com>, Dharma Balasubiramani
- <dharma.b@microchip.com>, Guenter Roeck <groeck@chromium.org>, Heiko
- Stuebner <heiko@sntech.de>, Jani Nikula <jani.nikula@intel.com>, Janne
- Grunau <j@jannau.net>, Jerome Brunet <jbrunet@baylibre.com>, Jesse Van
- Gavere <jesseevg@gmail.com>, Kevin Hilman <khilman@baylibre.com>, Kieran
- Bingham <kieran.bingham+renesas@ideasonboard.com>, Liu Ying
- <victor.liu@nxp.com>, Manikandan Muralidharan <manikandan.m@microchip.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Matthias Brugger
- <matthias.bgg@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Phong LE
- <ple@baylibre.com>, Sasha Finkelstein <fnkl.kernel@gmail.com>, Sugar Zhang
- <sugar.zhang@rock-chips.com>, Sui Jingfeng <sui.jingfeng@linux.dev>, Tomi
- Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>, Vitalii Mordan
- <mordan@ispras.ru>, Ilpo =?UTF-8?B?SsOkcnZpbmVu?=
- <ilpo.jarvinen@linux.intel.com>, Bryan O'Donoghue
- <bryan.odonoghue@linaro.org>, Hans de Goede <hdegoede@redhat.com>, Uwe
- =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <u.kleine-koenig@baylibre.com>, "Rob
- Herring (Arm)" <robh@kernel.org>, Hsin-Te Yuan <yuanhsinte@chromium.org>,
- Pin-yen Lin <treapking@chromium.org>, Xin Ji <xji@analogixsemi.com>,
- Aradhya Bhatia <a-bhatia1@ti.com>, Tomi Valkeinen
- <tomi.valkeinen@ideasonboard.com>, Ian Ray <ian.ray@ge.com>, Martyn Welch
- <martyn.welch@collabora.co.uk>, Peter Senna Tschudin
- <peter.senna@gmail.com>, Russell King <linux@armlinux.org.uk>, Herve Codina
- <herve.codina@bootlin.com>, Linus Walleij <linus.walleij@linaro.org>,
- Abhinav Kumar <quic_abhinavk@quicinc.com>, Bjorn Andersson
- <quic_bjorande@quicinc.com>, Marijn Suijten
- <marijn.suijten@somainline.org>, Rob Clark <robdclark@gmail.com>
-Subject: Re: (subset) [PATCH v2 00/34] drm: convert all bridges to
- devm_drm_bridge_alloc()
-Message-ID: <20250505143158.75541d7c@booty>
-In-Reply-To: <9afd098c-edd3-44fa-8efe-99f2e9c9a525@oss.qualcomm.com>
-References: <20250424-drm-bridge-convert-to-alloc-api-v2-0-8f91a404d86b@bootlin.com>
-	<174591887152.961603.7706063017853945511.b4-ty@bootlin.com>
-	<832a9db0-cf8a-4d35-8a98-08053fbd6723@bootlin.com>
-	<20250430-arrogant-marmoset-of-justice-92ced3@houat>
-	<20250505130648.22ec8716@booty>
-	<9afd098c-edd3-44fa-8efe-99f2e9c9a525@oss.qualcomm.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="r9L+tAUg"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:
+	Date:References:In-Reply-To:Subject:Cc:To:From:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=XOqoxdgsJ6dPnpxOWTKIvWJudfR4d/f3HgyOg86KqqQ=; b=r9L+tAUg/qkmyVzsyM+UasMEly
+	ZoIwT1eFQq4+UDJGdPAshitlSG7HprN2r2RUgF5Ujxkc5+rjGuXl0CWF1bxaRR7IoAxt5ve7aJ+9O
+	5uWLBkmraUsAiSChS0qWSmdLcu1CviXx/YbXWWMQcz8IYxMC6SB815B6THmbRB8YXggOdNHpm8BP3
+	oqk95OHgdlmGPk9SgeKo84WTOW5fHQORplfaVkccQEXcUdZtnOVnlxercfwOuRtGWwEj/urlnXQ1I
+	Ws5wFB7jR3LZ7CQpCYGIm2NDvWC55VBqqsezfcb6SQkYnw1gLf+Wuihyjve6yWd4bCH15vkFfWQMe
+	La7qzvKg==;
+Received: from bl23-10-177.dsl.telepac.pt ([144.64.10.177] helo=localhost)
+	by fanzine2.igalia.com with utf8esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1uBuzb-003jFf-Et; Mon, 05 May 2025 14:35:29 +0200
+From: Luis Henriques <luis@igalia.com>
+To: Miklos Szeredi <miklos@szeredi.hu>
+Cc: Bernd Schubert <bernd@bsbernd.com>,  Laura Promberger
+ <laura.promberger@cern.ch>,  Dave Chinner <david@fromorbit.com>,  Matt
+ Harvey <mharvey@jumptrading.com>,  linux-fsdevel@vger.kernel.org,
+  linux-kernel@vger.kernel.org,  kernel-dev@igalia.com
+Subject: Re: [RFC PATCH v2] fuse: add optional workqueue to periodically
+ invalidate expired dentries
+In-Reply-To: <20250415133801.28923-1-luis@igalia.com> (Luis Henriques's
+	message of "Tue, 15 Apr 2025 14:38:01 +0100")
+References: <20250415133801.28923-1-luis@igalia.com>
+Date: Mon, 05 May 2025 13:35:28 +0100
+Message-ID: <874ixzfd67.fsf@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeduuddtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnheptdeljeejuddvudetffdtudelfedugfduledtueffuedufefgudegkeegtdeihedunecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvpdhhvghlohepsghoohhthidpmhgrihhlfhhrohhmpehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeelgedprhgtphhtthhopegumhhithhrhidrsggrrhihshhhkhhovhesohhsshdrqhhurghltghomhhmrdgtohhmpdhrtghpthhtohepihhnkhhirdgurggvsehsrghmshhunhhgrdgtohhmpdhrtghpt
- hhtohepkhihuhhnghhmihhnrdhprghrkhesshgrmhhsuhhnghdrtghomhdprhgtphhtthhopehsfidtfeduvddrkhhimhesshgrmhhsuhhnghdrtghomhdprhgtphhtthhopegrlhhimhdrrghkhhhtrghrsehsrghmshhunhhgrdgtohhmpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomhdprhgtphhtthhopehmrggrrhhtvghnrdhlrghnkhhhohhrshhtsehlihhnuhigrdhinhhtvghlrdgtohhm
-X-GND-Sasl: luca.ceresoli@bootlin.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Dmitry,
+Hi Miklos,
 
-On Mon, 5 May 2025 14:58:58 +0300
-Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com> wrote:
+On Tue, Apr 15 2025, Luis Henriques wrote:
 
-> On 05/05/2025 14:06, Luca Ceresoli wrote:
-> > Inki, Kyungmin, Seung-Woo, Alim,
-> > 
-> > On Wed, 30 Apr 2025 10:08:14 +0200
-> > Maxime Ripard <mripard@kernel.org> wrote:
-> >   
-> >> Inki, Kyungmin, Seung-Woo, sorry for the mishap. Do you agree with the
-> >> following patch, and it going through drm-misc?
-> >>
-> >> https://lore.kernel.org/dri-devel/20250424-drm-bridge-convert-to-alloc-api-v2-14-8f91a404d86b@bootlin.com/
-> >>
-> >> If not, we'll revert.  
-> > 
-> > Did you have a chance to have a look at the patch mentioned by Maxime?
-> > 
-> > It was applied to drm-misc-next by mistake. Not your mistake of course,
-> > but now it's there so if you don't reply anything it will have to be
-> > reverted, and then sent again to go through all the review process to
-> > be hopefully re-applied in the future.
-> > 
-> > If you agree with keeping it in drm-misc-next, that would be less noise
-> > for everybody.
-> > 
-> > I'm going to send v3 very soon, so it would be good to decide what to
-> > do before that.  
-> 
-> For the record: even though I'm not happy with msm-related patches going 
-> through drm-misc without additional ack from our side, I think reverting 
-> those and reapplying them later will create a bigger mess. So, I'm fine 
-> with keeping drm/msm/* bridged patches in.
+> This patch adds a new mount option that will allow to set a workqueue to
+> periodically invalidate expired dentries.  When this parameter is set,
+> every new (or revalidated) dentry will be added to a tree, sorted by
+> expiry time.  The workqueue period is set when a filesystem is mounted
+> using this new parameter, and can not be less than 5 seconds.
+>
 
-That was my understanding of your previous e-mail, but thanks for
-having made it explicit.
+I wondering if you had the chance to have a look at this patch already.
+Or maybe I misinterpreted your suggestion.
 
-Luca
+Cheers,
+--=20
+Lu=C3=ADs
 
--- 
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+> Signed-off-by: Luis Henriques <luis@igalia.com>
+> ---
+> * Changes since v1:
+>
+> - Add mount option to enable the workqueue and set it's period
+> - 'parent' initialisation missing in fuse_dentry_tree_add_node()
+>
+>  Documentation/filesystems/fuse.rst |   5 +
+>  fs/fuse/dir.c                      | 147 +++++++++++++++++++++++++++++
+>  fs/fuse/fuse_i.h                   |  13 +++
+>  fs/fuse/inode.c                    |  18 ++++
+>  4 files changed, 183 insertions(+)
+>
+> diff --git a/Documentation/filesystems/fuse.rst b/Documentation/filesyste=
+ms/fuse.rst
+> index 1e31e87aee68..b0a7be54e611 100644
+> --- a/Documentation/filesystems/fuse.rst
+> +++ b/Documentation/filesystems/fuse.rst
+> @@ -103,6 +103,11 @@ blksize=3DN
+>    Set the block size for the filesystem.  The default is 512.  This
+>    option is only valid for 'fuseblk' type mounts.
+>=20=20
+> +inval_wq=3DN
+> +  Enable a workqueue that will periodically invalidate dentries that
+> +  have expired.  'N' is a value in seconds and has to be bigger than
+> +  5 seconds.
+> +
+>  Control filesystem
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>=20=20
+> diff --git a/fs/fuse/dir.c b/fs/fuse/dir.c
+> index 1fb0b15a6088..e16aafc522ef 100644
+> --- a/fs/fuse/dir.c
+> +++ b/fs/fuse/dir.c
+> @@ -62,6 +62,151 @@ static inline u64 fuse_dentry_time(const struct dentr=
+y *entry)
+>  }
+>  #endif
+>=20=20
+> +struct dentry_node {
+> +	struct rb_node node;
+> +	struct dentry *dentry;
+> +};
+> +
+> +static void fuse_dentry_tree_add_node(struct dentry *dentry)
+> +{
+> +	struct fuse_conn *fc =3D get_fuse_conn_super(dentry->d_sb);
+> +	struct dentry_node *dn, *cur;
+> +	struct rb_node **p, *parent =3D NULL;
+> +	bool start_work =3D false;
+> +
+> +	if (!fc->inval_wq)
+> +		return;
+> +
+> +	dn =3D kmalloc(sizeof(*dn), GFP_KERNEL);
+> +	if (!dn)
+> +		return;
+> +	dn->dentry =3D dget(dentry);
+> +	spin_lock(&fc->dentry_tree_lock);
+> +	start_work =3D RB_EMPTY_ROOT(&fc->dentry_tree);
+> +	p =3D &fc->dentry_tree.rb_node;
+> +	while (*p) {
+> +		parent =3D *p;
+> +		cur =3D rb_entry(*p, struct dentry_node, node);
+> +		if (fuse_dentry_time(dn->dentry) >
+> +		    fuse_dentry_time(cur->dentry))
+> +			p =3D &(*p)->rb_left;
+> +		else
+> +			p =3D &(*p)->rb_right;
+> +	}
+> +	rb_link_node(&dn->node, parent, p);
+> +	rb_insert_color(&dn->node, &fc->dentry_tree);
+> +	spin_unlock(&fc->dentry_tree_lock);
+> +	if (start_work)
+> +		schedule_delayed_work(&fc->dentry_tree_work,
+> +				      secs_to_jiffies(fc->inval_wq));
+> +}
+> +
+> +static void fuse_dentry_tree_del_node(struct dentry *dentry)
+> +{
+> +	struct fuse_conn *fc =3D get_fuse_conn_super(dentry->d_sb);
+> +	struct dentry_node *cur;
+> +	struct rb_node **p;
+> +
+> +	if (!fc->inval_wq)
+> +		return;
+> +
+> +	spin_lock(&fc->dentry_tree_lock);
+> +	p =3D &fc->dentry_tree.rb_node;
+> +	while (*p) {
+> +		cur =3D rb_entry(*p, struct dentry_node, node);
+> +		if (fuse_dentry_time(dentry) > fuse_dentry_time(cur->dentry))
+> +			p =3D &(*p)->rb_left;
+> +		else if (fuse_dentry_time(dentry) <
+> +			 fuse_dentry_time(cur->dentry))
+> +			p =3D &(*p)->rb_right;
+> +		else {
+> +			rb_erase(*p, &fc->dentry_tree);
+> +			dput(cur->dentry);
+> +			kfree(cur);
+> +			break;
+> +		}
+> +	}
+> +	spin_unlock(&fc->dentry_tree_lock);
+> +}
+> +
+> +void fuse_dentry_tree_prune(struct fuse_conn *fc)
+> +{
+> +	struct rb_node *n;
+> +	struct dentry_node *dn;
+> +
+> +	if (!fc->inval_wq)
+> +		return;
+> +
+> +	fc->inval_wq =3D 0;
+> +	cancel_delayed_work_sync(&fc->dentry_tree_work);
+> +
+> +	spin_lock(&fc->dentry_tree_lock);
+> +	while (!RB_EMPTY_ROOT(&fc->dentry_tree)) {
+> +		n =3D rb_first(&fc->dentry_tree);
+> +		dn =3D rb_entry(n, struct dentry_node, node);
+> +		rb_erase(n, &fc->dentry_tree);
+> +		dput(dn->dentry);
+> +		kfree(dn);
+> +	}
+> +	spin_unlock(&fc->dentry_tree_lock);
+> +}
+> +
+> +/*
+> + * Global workqueue task that will periodically check for expired dentri=
+es in
+> + * the dentries tree.
+> + *
+> + * A dentry has expired if:
+> + *   1) it has been around for too long or
+> + *   2) the connection epoch has been incremented
+> + * For this second case, all dentries will be expired.
+> + *
+> + * The task will be rescheduled as long as the dentries tree is not empt=
+y.
+> + */
+> +void fuse_dentry_tree_work(struct work_struct *work)
+> +{
+> +	struct fuse_conn *fc =3D container_of(work, struct fuse_conn,
+> +					    dentry_tree_work.work);
+> +	struct dentry_node *dn;
+> +	struct rb_node *node;
+> +	struct dentry *entry;
+> +	u64 now;
+> +	int epoch;
+> +	bool expire_all =3D false;
+> +	bool is_first =3D true;
+> +	bool reschedule;
+> +
+> +	spin_lock(&fc->dentry_tree_lock);
+> +	now =3D get_jiffies_64();
+> +	epoch =3D atomic_read(&fc->epoch);
+> +
+> +	node =3D rb_first(&fc->dentry_tree);
+> +
+> +	while (node) {
+> +		dn =3D rb_entry(node, struct dentry_node, node);
+> +		node =3D rb_next(node);
+> +		entry =3D dn->dentry;
+> +		if (is_first) {
+> +			/* expire all entries if epoch was incremented */
+> +			if (entry->d_time < epoch)
+> +				expire_all =3D true;
+> +			is_first =3D false;
+> +		}
+> +		if (expire_all || (fuse_dentry_time(entry) < now)) {
+> +			rb_erase(&dn->node, &fc->dentry_tree);
+> +			d_invalidate(entry);
+> +			dput(entry);
+> +			kfree(dn);
+> +		} else
+> +			break;
+> +	}
+> +	reschedule =3D !RB_EMPTY_ROOT(&fc->dentry_tree);
+> +	spin_unlock(&fc->dentry_tree_lock);
+> +
+> +	if (reschedule)
+> +		schedule_delayed_work(&fc->dentry_tree_work,
+> +				      secs_to_jiffies(fc->inval_wq));
+> +}
+> +
+>  static void fuse_dentry_settime(struct dentry *dentry, u64 time)
+>  {
+>  	struct fuse_conn *fc =3D get_fuse_conn_super(dentry->d_sb);
+> @@ -81,6 +226,7 @@ static void fuse_dentry_settime(struct dentry *dentry,=
+ u64 time)
+>  	}
+>=20=20
+>  	__fuse_dentry_settime(dentry, time);
+> +	fuse_dentry_tree_add_node(dentry);
+>  }
+>=20=20
+>  /*
+> @@ -280,6 +426,7 @@ static int fuse_dentry_revalidate(struct inode *dir, =
+const struct qstr *name,
+>=20=20
+>  invalid:
+>  	ret =3D 0;
+> +	fuse_dentry_tree_del_node(entry);
+>  	goto out;
+>  }
+>=20=20
+> diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
+> index f870d53a1bcf..60be9d982490 100644
+> --- a/fs/fuse/fuse_i.h
+> +++ b/fs/fuse/fuse_i.h
+> @@ -603,6 +603,7 @@ struct fuse_fs_context {
+>  	enum fuse_dax_mode dax_mode;
+>  	unsigned int max_read;
+>  	unsigned int blksize;
+> +	unsigned int inval_wq;
+>  	const char *subtype;
+>=20=20
+>  	/* DAX device, may be NULL */
+> @@ -978,6 +979,15 @@ struct fuse_conn {
+>  		/* Request timeout (in jiffies). 0 =3D no timeout */
+>  		unsigned int req_timeout;
+>  	} timeout;
+> +
+> +	/** Cache dentries tree */
+> +	struct rb_root dentry_tree;
+> +	/** Look to protect dentry_tree access */
+> +	spinlock_t dentry_tree_lock;
+> +	/** Periodic delayed work to invalidate expired dentries */
+> +	struct delayed_work dentry_tree_work;
+> +	/** Period for the invalidation workqueue */
+> +	unsigned int inval_wq;
+>  };
+>=20=20
+>  /*
+> @@ -1262,6 +1272,9 @@ void fuse_wait_aborted(struct fuse_conn *fc);
+>  /* Check if any requests timed out */
+>  void fuse_check_timeout(struct work_struct *work);
+>=20=20
+> +void fuse_dentry_tree_prune(struct fuse_conn *fc);
+> +void fuse_dentry_tree_work(struct work_struct *work);
+> +
+>  /**
+>   * Invalidate inode attributes
+>   */
+> diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
+> index b399784cca5f..4e9c10e34b2e 100644
+> --- a/fs/fuse/inode.c
+> +++ b/fs/fuse/inode.c
+> @@ -769,6 +769,7 @@ enum {
+>  	OPT_ALLOW_OTHER,
+>  	OPT_MAX_READ,
+>  	OPT_BLKSIZE,
+> +	OPT_INVAL_WQ,
+>  	OPT_ERR
+>  };
+>=20=20
+> @@ -783,6 +784,7 @@ static const struct fs_parameter_spec fuse_fs_paramet=
+ers[] =3D {
+>  	fsparam_u32	("max_read",		OPT_MAX_READ),
+>  	fsparam_u32	("blksize",		OPT_BLKSIZE),
+>  	fsparam_string	("subtype",		OPT_SUBTYPE),
+> +	fsparam_u32	("inval_wq",		OPT_INVAL_WQ),
+>  	{}
+>  };
+>=20=20
+> @@ -878,6 +880,12 @@ static int fuse_parse_param(struct fs_context *fsc, =
+struct fs_parameter *param)
+>  		ctx->blksize =3D result.uint_32;
+>  		break;
+>=20=20
+> +	case OPT_INVAL_WQ:
+> +		if (result.uint_32 < 5)
+> +			return invalfc(fsc, "Workqueue period is < 5s");
+> +		ctx->inval_wq =3D result.uint_32;
+> +		break;
+> +
+>  	default:
+>  		return -EINVAL;
+>  	}
+> @@ -911,6 +919,8 @@ static int fuse_show_options(struct seq_file *m, stru=
+ct dentry *root)
+>  			seq_puts(m, ",allow_other");
+>  		if (fc->max_read !=3D ~0)
+>  			seq_printf(m, ",max_read=3D%u", fc->max_read);
+> +		if (fc->inval_wq !=3D 0)
+> +			seq_printf(m, ",inval_wq=3D%u", fc->inval_wq);
+>  		if (sb->s_bdev && sb->s_blocksize !=3D FUSE_DEFAULT_BLKSIZE)
+>  			seq_printf(m, ",blksize=3D%lu", sb->s_blocksize);
+>  	}
+> @@ -959,6 +969,7 @@ void fuse_conn_init(struct fuse_conn *fc, struct fuse=
+_mount *fm,
+>  	memset(fc, 0, sizeof(*fc));
+>  	spin_lock_init(&fc->lock);
+>  	spin_lock_init(&fc->bg_lock);
+> +	spin_lock_init(&fc->dentry_tree_lock);
+>  	init_rwsem(&fc->killsb);
+>  	refcount_set(&fc->count, 1);
+>  	atomic_set(&fc->dev_count, 1);
+> @@ -968,6 +979,8 @@ void fuse_conn_init(struct fuse_conn *fc, struct fuse=
+_mount *fm,
+>  	INIT_LIST_HEAD(&fc->bg_queue);
+>  	INIT_LIST_HEAD(&fc->entry);
+>  	INIT_LIST_HEAD(&fc->devices);
+> +	fc->dentry_tree =3D RB_ROOT;
+> +	fc->inval_wq =3D 0;
+>  	atomic_set(&fc->num_waiting, 0);
+>  	fc->max_background =3D FUSE_DEFAULT_MAX_BACKGROUND;
+>  	fc->congestion_threshold =3D FUSE_DEFAULT_CONGESTION_THRESHOLD;
+> @@ -1844,6 +1857,9 @@ int fuse_fill_super_common(struct super_block *sb, =
+struct fuse_fs_context *ctx)
+>  	fc->group_id =3D ctx->group_id;
+>  	fc->legacy_opts_show =3D ctx->legacy_opts_show;
+>  	fc->max_read =3D max_t(unsigned int, 4096, ctx->max_read);
+> +	fc->inval_wq =3D ctx->inval_wq;
+> +	if (fc->inval_wq > 0)
+> +		INIT_DELAYED_WORK(&fc->dentry_tree_work, fuse_dentry_tree_work);
+>  	fc->destroy =3D ctx->destroy;
+>  	fc->no_control =3D ctx->no_control;
+>  	fc->no_force_umount =3D ctx->no_force_umount;
+> @@ -2009,6 +2025,7 @@ static int fuse_init_fs_context(struct fs_context *=
+fsc)
+>  		return -ENOMEM;
+>=20=20
+>  	ctx->max_read =3D ~0;
+> +	ctx->inval_wq =3D 0;
+>  	ctx->blksize =3D FUSE_DEFAULT_BLKSIZE;
+>  	ctx->legacy_opts_show =3D true;
+>=20=20
+> @@ -2048,6 +2065,7 @@ void fuse_conn_destroy(struct fuse_mount *fm)
+>=20=20
+>  	fuse_abort_conn(fc);
+>  	fuse_wait_aborted(fc);
+> +	fuse_dentry_tree_prune(fc);
+>=20=20
+>  	if (!list_empty(&fc->entry)) {
+>  		mutex_lock(&fuse_mutex);
+>
+
