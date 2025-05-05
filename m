@@ -1,44 +1,56 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E51552C17A9;
-	Mon,  5 May 2025 22:49:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A783A37778E;
+	Mon,  5 May 2025 22:49:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485375; cv=none; b=Rr4/MIpUFHgb8kKoTI6W9m7JgHBXUzB/rtGdXDotj/P5mCVOmrFc2N4hyFOaFaKlAFLL4oLkkakU34uK73GpHzwjU75XyS1GtrIxencAzttkLPX7Od0GOlVHISmj8lIUClQt1HKLuDXkje2JAvxDQlITGtejP5AADJbUMVUtg28=
+	t=1746485383; cv=none; b=Z3Sn5uBvhGxL7BVnV81aY0F6sRb+3UkzD+0MW9MNpcGwBGjQmONp5gKluITeWT3F8keeU7aMBkD0OvTdQgBkHSwHWKlu8ZNkqCui/w+IgfkWy5ZluqfmsZC7B7EcAmHLQxSf4Cd+TKJxBLDRF0dVafXGqZK9q59ifjEpq2Mlgz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485375; c=relaxed/simple;
-	bh=ya6bTDMEoKFuM8nw+msw5m2ONCtsb+u6tThQg0e0PIg=;
+	s=arc-20240116; t=1746485383; c=relaxed/simple;
+	bh=nJtv7p0rucIQvy2LKomc4PsnCh5XM7YlZVAREd7jaEM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tPMEUtdTMWPW8IsbeFWXGpgZGwyl7CKSWDzn0zDKEF+sToXd6pfS5rVl9YpSQfsd2AomCB3azX8p3P1sl1xJN4Q7yBc4EWr+OGRuIn3IqO5OryXIvqZ9QRdWRwwAaBbXakybc5JQ2daVSRNdJttpkY5nplCQH055AKeEirDpLTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MGy3ZaX8; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=WJpsjJreBRYXE3B3NHbf4S7qBNG7U4MdvckqwlKGgmvlBayhRMErjsVfa05IyoaiEwwKPlzG+M7udF/yiFI5PxZ0/lp6K9ymoQogrHwlkju2yY7mFE14srd4TS9/MKSwkjGMlop4+r4dII7HyKwQw0jHubTQiKK2N8dksVlUZ3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jf95r6Km; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MGy3ZaX8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C905FC4CEEF;
-	Mon,  5 May 2025 22:49:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jf95r6Km"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BE3CC4CEE4;
+	Mon,  5 May 2025 22:49:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485374;
-	bh=ya6bTDMEoKFuM8nw+msw5m2ONCtsb+u6tThQg0e0PIg=;
+	s=k20201202; t=1746485382;
+	bh=nJtv7p0rucIQvy2LKomc4PsnCh5XM7YlZVAREd7jaEM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MGy3ZaX8mi7FayECjksrHygh/GTA6BS9K371B2QvwKFJC95txDHfNk6xcBAiEnemW
-	 EvX7iZoPQubN4OjYop/jrmCzGoeqSmWfPl6OUP6XAeeIqu/UcfyE5FmlzO08UssTL9
-	 uef4ZwJPMd7G6ebQ1gtaA37mv28qAHoiL1uP2AkG26F7IG2trnHpJUPv0pSUOmdPiO
-	 H11wFdWQSHj+e0Vz0YZAwrg7GX2uFwfyEWNK04gx5MaiuBhMR9Jfx6W3M4QfadnGld
-	 rgZ3EYsW7k46XjfcV2weooX9Ym7zACF2ohWEeHT59A98F9bBm9z/CxE6U5WFau59ta
-	 L4DMDs4+0F4iQ==
+	b=jf95r6KmOEFysX6RevRfDKtSi8VCkEuEXe8kL/DolrJeG0j4r2v28bWl2dO00SQRT
+	 8tnY+dkf3MN8EM6e26nH7bSCE+xQzQfmorLmiao22Qpw8MsCMkpy+tFr87/yXQVRsz
+	 4xnHq2eLJi0VqFGYttZzW7rA/ku9vhJ7DnetSmHA/D6ouRnahRvxUyBwSxhJbHriJn
+	 l2r/NKuZXv0+mj8ZXnEAihoHQNLyvZXWW0AyxbvbMRuJqyyMbxI3ShdNoeDDlVlUpO
+	 WnQj9HoyErnKclKzIxVw5lvsfRRL7QzK19sl4P4ZsScSifbwLAPI3Vi8pdZaAFJ33D
+	 oBK8OOdw0nMGg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Eddie James <eajames@linux.ibm.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+Cc: Harry VanZyllDeJong <hvanzyll@amd.com>,
+	Wenjing Liu <wenjing.liu@amd.com>,
+	Roman Li <roman.li@amd.com>,
+	Daniel Wheeler <daniel.wheeler@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
 	Sasha Levin <sashal@kernel.org>,
-	W_Armin@gmx.de,
-	linux@roeck-us.net,
-	dan.carpenter@linaro.org,
-	u.kleine-koenig@pengutronix.de
-Subject: [PATCH AUTOSEL 6.12 297/486] eeprom: ee1004: Check chip before probing
-Date: Mon,  5 May 2025 18:36:13 -0400
-Message-Id: <20250505223922.2682012-297-sashal@kernel.org>
+	harry.wentland@amd.com,
+	sunpeng.li@amd.com,
+	christian.koenig@amd.com,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	alex.hung@amd.com,
+	michael.strauss@amd.com,
+	george.shen@amd.com,
+	PeiChen.Huang@amd.com,
+	Ausef.Yousof@amd.com,
+	Cruise.Hung@amd.com,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 6.12 300/486] drm/amd/display: Add support for disconnected eDP streams
+Date: Mon,  5 May 2025 18:36:16 -0400
+Message-Id: <20250505223922.2682012-300-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -53,36 +65,52 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Eddie James <eajames@linux.ibm.com>
+From: Harry VanZyllDeJong <hvanzyll@amd.com>
 
-[ Upstream commit d9406677428e9234ea62bb2d2f5e996d1b777760 ]
+[ Upstream commit 6571bef25fe48c642f7a69ccf7c3198b317c136a ]
 
-Like other eeprom drivers, check if the device is really there and
-functional before probing.
+[Why]
+eDP may not be connected to the GPU on driver start causing
+fail enumeration.
 
-Signed-off-by: Eddie James <eajames@linux.ibm.com>
-Link: https://lore.kernel.org/r/20250218220959.721698-1-eajames@linux.ibm.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[How]
+Move the virtual signal type check before the eDP connector
+signal check.
+
+Reviewed-by: Wenjing Liu <wenjing.liu@amd.com>
+Signed-off-by: Harry VanZyllDeJong <hvanzyll@amd.com>
+Signed-off-by: Roman Li <roman.li@amd.com>
+Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/eeprom/ee1004.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ .../drm/amd/display/dc/link/protocols/link_dp_capability.c  | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/misc/eeprom/ee1004.c b/drivers/misc/eeprom/ee1004.c
-index 89224d4af4a20..e13f9fdd9d7b1 100644
---- a/drivers/misc/eeprom/ee1004.c
-+++ b/drivers/misc/eeprom/ee1004.c
-@@ -304,6 +304,10 @@ static int ee1004_probe(struct i2c_client *client)
- 				     I2C_FUNC_SMBUS_BYTE | I2C_FUNC_SMBUS_READ_BYTE_DATA))
- 		return -EPFNOSUPPORT;
- 
-+	err = i2c_smbus_read_byte(client);
-+	if (err < 0)
-+		return -ENODEV;
-+
- 	mutex_lock(&ee1004_bus_lock);
- 
- 	err = ee1004_init_bus_data(client);
+diff --git a/drivers/gpu/drm/amd/display/dc/link/protocols/link_dp_capability.c b/drivers/gpu/drm/amd/display/dc/link/protocols/link_dp_capability.c
+index 23e650e39910e..d9a1e1a599674 100644
+--- a/drivers/gpu/drm/amd/display/dc/link/protocols/link_dp_capability.c
++++ b/drivers/gpu/drm/amd/display/dc/link/protocols/link_dp_capability.c
+@@ -945,6 +945,9 @@ bool link_decide_link_settings(struct dc_stream_state *stream,
+ 		 * TODO: add MST specific link training routine
+ 		 */
+ 		decide_mst_link_settings(link, link_setting);
++	} else if (stream->signal == SIGNAL_TYPE_VIRTUAL) {
++		link_setting->lane_count = LANE_COUNT_FOUR;
++		link_setting->link_rate = LINK_RATE_HIGH3;
+ 	} else if (link->connector_signal == SIGNAL_TYPE_EDP) {
+ 		/* enable edp link optimization for DSC eDP case */
+ 		if (stream->timing.flags.DSC) {
+@@ -967,9 +970,6 @@ bool link_decide_link_settings(struct dc_stream_state *stream,
+ 		} else {
+ 			edp_decide_link_settings(link, link_setting, req_bw);
+ 		}
+-	} else if (stream->signal == SIGNAL_TYPE_VIRTUAL) {
+-		link_setting->lane_count = LANE_COUNT_FOUR;
+-		link_setting->link_rate = LINK_RATE_HIGH3;
+ 	} else {
+ 		decide_dp_link_settings(link, link_setting, req_bw);
+ 	}
 -- 
 2.39.5
 
