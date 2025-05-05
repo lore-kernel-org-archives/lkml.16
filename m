@@ -1,41 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56FAC341BC7;
-	Mon,  5 May 2025 22:38:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9482342239;
+	Mon,  5 May 2025 22:38:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746484689; cv=none; b=NPMRp3tExIH1zubpksqDM+BB967SL415T7UWWnuNzkbwu5UHdenOLMc9VSqs4IxylTXLdqCLGANIqmcQ5lbwiXcXOHRjD3Y/pBqB/HeEU4Nq+EfJvFTSp0qrSf3ngzWDYBmPrfBoyIc5GeOJ4S9FsMeHEZqjSgJ3Oa9F2o7MakM=
+	t=1746484692; cv=none; b=i8aFzq9GG0bnOq9J1XVQggNPjP/oUQgmUOElySqrkju04IqE4GJgmqramoJuQDkdNnjMzJdLn4OOXT52de/lwENMmLePijHiUQJSxcVfQRJNoDFUpO9fadiFk8ts/B+Fd3uKxOhIKZx0BUzQVRAJu4ZZ8vrg3Rj1VRSeMuEEnKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746484689; c=relaxed/simple;
-	bh=hlIGf+2rdPCTu+3jo+ddcne+4qkLwkFJbokjq/9pN4w=;
+	s=arc-20240116; t=1746484692; c=relaxed/simple;
+	bh=iBWhV5CuJOIPXHIt9qKCHprpvJOEyFDNns6Oue+GIqA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=iq5XwwHMxtIcOaBdhKIvtK98Dz++uNbubsrLhMVoW7O+azd/MV6RsKWigqWwd40yM7rKVLHnu6/02CF9W5ya9Nn16avsNrIhz+O3z3zldA4GORsopiayoWrSGfAVX9VsqCE2QCjrXoVxSxSglMB4InYUReA9iV8Lc0uVxPFc+/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TpXoRm95; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ewNxemid2Fl0imV9DJk7eint/VuP57C1pwIvvUWtrVfs6DDevlP4fsBvbJKwihKHtfyVj3y+AeJ2ET4Ugd7QIQcWUnkZPxquNBl0dq6CfW7v6g6s1vDg7sLIIsUQ9guSA6qbNn4BRJmCuc3a5hBNqaLF2OVPq7RruJV1ZgpvnnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AmTj0zgv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TpXoRm95"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78EA6C4CEF1;
-	Mon,  5 May 2025 22:38:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AmTj0zgv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00E2DC4CEF1;
+	Mon,  5 May 2025 22:38:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746484689;
-	bh=hlIGf+2rdPCTu+3jo+ddcne+4qkLwkFJbokjq/9pN4w=;
+	s=k20201202; t=1746484692;
+	bh=iBWhV5CuJOIPXHIt9qKCHprpvJOEyFDNns6Oue+GIqA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TpXoRm954cH+dle9yjKli0F++nA5PWkELH2GQzs/wZQs6cLnE3RuzYyZzMqZFp6ro
-	 eHUs+aiFDONuu01BKD/u4W6dE8nVTRXNnuSDAqCHEC4dqZ0IxeECrFnFxv2uSlok38
-	 /xkB5WT4cm18t3sxPjpbggyH7w8ZxzLBcXGg+foJSimNKz875GnviEI5cvZrBGqiMl
-	 re/P71asSfBwap9diqqvykBZnT+sZCVC7bNxeCs4/h0t0biYGsamGJeIiZxDCBkyXf
-	 9pvFjdQDquZoNtyqGsbZv2JXtnSMvW5IAwwkETtXm0zXvCZ7gQEXdHBUMifEe3DxXE
-	 ihYvZeZfkp5Gw==
+	b=AmTj0zgvao64tIZyAPu6uOzwalQeyAqpDBBUmjWnnQYsW3tFsgx0Q/DVici6eNm7T
+	 AQyzF8ZeEvohpylmfmsMWc+vp+jBeoEPrCtctiTk4NwoXQB4NxAgZ3Q2XqjwD0CrFY
+	 lrmWD0nzt8qb2y95modXQqD+2Muk7y4W2tMdO8qRh4c3Ael3preKhZJ7wE4o5MgTbm
+	 o118Waf7J+WVkMyMqjljrcd6zbonKRZhkMarzuHTT2JRz+TWjz5l5ZG8QXxQyVCf/c
+	 n2Yu+UmCyCs9FYN6dXZAkXlK/uH/0D+2IRIRaLPqDgKAXWe5ybBK6E4bhDyeIeshCl
+	 RKfc0mNkXXzdQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ching-Te Ku <ku920601@realtek.com>,
-	Ping-Ke Shih <pkshih@realtek.com>,
+Cc: Michal Wajdeczko <michal.wajdeczko@intel.com>,
+	Matthew Brost <matthew.brost@intel.com>,
 	Sasha Levin <sashal@kernel.org>,
-	linux-wireless@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.14 608/642] wifi: rtw89: coex: Separated Wi-Fi connecting event from Wi-Fi scan event
-Date: Mon,  5 May 2025 18:13:44 -0400
-Message-Id: <20250505221419.2672473-608-sashal@kernel.org>
+	lucas.demarchi@intel.com,
+	thomas.hellstrom@linux.intel.com,
+	rodrigo.vivi@intel.com,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	intel-xe@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 6.14 610/642] drm/xe/sa: Always call drm_suballoc_manager_fini()
+Date: Mon,  5 May 2025 18:13:46 -0400
+Message-Id: <20250505221419.2672473-610-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505221419.2672473-1-sashal@kernel.org>
 References: <20250505221419.2672473-1-sashal@kernel.org>
@@ -50,56 +56,49 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.14.5
 Content-Transfer-Encoding: 8bit
 
-From: Ching-Te Ku <ku920601@realtek.com>
+From: Michal Wajdeczko <michal.wajdeczko@intel.com>
 
-[ Upstream commit 4a57346652154bb339c48b41166df9154cff33f5 ]
+[ Upstream commit 9cd3f4efc870463f17f6c29114c61fb6bfcaa291 ]
 
-Wi-Fi connecting process don't need to assign to firmware slot control,
-if assign firmware slot control for Wi-Fi connecting event, firmware will
-not toggle slots because driver don't tell the slot schedule to firmware.
-Wi-Fi connecting event end should also cancel the 4way handshake status.
+After successful call to drm_suballoc_manager_init() we should
+make sure to call drm_suballoc_manager_fini() as it may include
+some cleanup code even if we didn't start using it for real.
 
-Signed-off-by: Ching-Te Ku <ku920601@realtek.com>
-Signed-off-by: Ping-Ke Shih <pkshih@realtek.com>
-Link: https://patch.msgid.link/20250110015416.10704-3-pkshih@realtek.com
+As we can abort init() early due to kvzalloc() failure, we should
+either explicitly call drm_suballoc_manager_fini() or, even better,
+postpone drm_suballoc_manager_init() once we finish all other
+preparation steps, so we can rely on fini() that will do cleanup.
+
+Signed-off-by: Michal Wajdeczko <michal.wajdeczko@intel.com>
+Cc: Matthew Brost <matthew.brost@intel.com>
+Reviewed-by: Matthew Brost <matthew.brost@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20241220194205.995-2-michal.wajdeczko@intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtw89/coex.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/xe/xe_sa.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/realtek/rtw89/coex.c b/drivers/net/wireless/realtek/rtw89/coex.c
-index d94a028555e20..7b10ee97c6277 100644
---- a/drivers/net/wireless/realtek/rtw89/coex.c
-+++ b/drivers/net/wireless/realtek/rtw89/coex.c
-@@ -5406,7 +5406,8 @@ static void _action_wl_scan(struct rtw89_dev *rtwdev)
- 	struct rtw89_btc_wl_info *wl = &btc->cx.wl;
- 	struct rtw89_btc_wl_dbcc_info *wl_dinfo = &wl->dbcc_info;
+diff --git a/drivers/gpu/drm/xe/xe_sa.c b/drivers/gpu/drm/xe/xe_sa.c
+index e055bed7ae555..4e7aba445ebc8 100644
+--- a/drivers/gpu/drm/xe/xe_sa.c
++++ b/drivers/gpu/drm/xe/xe_sa.c
+@@ -57,8 +57,6 @@ struct xe_sa_manager *xe_sa_bo_manager_init(struct xe_tile *tile, u32 size, u32
+ 	}
+ 	sa_manager->bo = bo;
+ 	sa_manager->is_iomem = bo->vmap.is_iomem;
+-
+-	drm_suballoc_manager_init(&sa_manager->base, managed_size, align);
+ 	sa_manager->gpu_addr = xe_bo_ggtt_addr(bo);
  
--	if (RTW89_CHK_FW_FEATURE(SCAN_OFFLOAD, &rtwdev->fw)) {
-+	if (btc->cx.state_map != BTC_WLINKING &&
-+	    RTW89_CHK_FW_FEATURE(SCAN_OFFLOAD, &rtwdev->fw)) {
- 		_action_wl_25g_mcc(rtwdev);
- 		rtw89_debug(rtwdev, RTW89_DBG_BTC, "[BTC], Scan offload!\n");
- 	} else if (rtwdev->dbcc_en) {
-@@ -7221,6 +7222,8 @@ void rtw89_btc_ntfy_scan_finish(struct rtw89_dev *rtwdev, u8 phy_idx)
- 		_fw_set_drv_info(rtwdev, CXDRVINFO_DBCC);
+ 	if (bo->vmap.is_iomem) {
+@@ -72,6 +70,7 @@ struct xe_sa_manager *xe_sa_bo_manager_init(struct xe_tile *tile, u32 size, u32
+ 		memset(sa_manager->cpu_ptr, 0, bo->ttm.base.size);
  	}
  
-+	btc->dm.tdma_instant_excute = 1;
-+
- 	_run_coex(rtwdev, BTC_RSN_NTFY_SCAN_FINISH);
- }
- 
-@@ -7669,7 +7672,8 @@ void rtw89_btc_ntfy_role_info(struct rtw89_dev *rtwdev,
- 	else
- 		wl->status.map.connecting = 0;
- 
--	if (state == BTC_ROLE_MSTS_STA_DIS_CONN)
-+	if (state == BTC_ROLE_MSTS_STA_DIS_CONN ||
-+	    state == BTC_ROLE_MSTS_STA_CONN_END)
- 		wl->status.map._4way = false;
- 
- 	_run_coex(rtwdev, BTC_RSN_NTFY_ROLE_INFO);
++	drm_suballoc_manager_init(&sa_manager->base, managed_size, align);
+ 	ret = drmm_add_action_or_reset(&xe->drm, xe_sa_bo_manager_fini,
+ 				       sa_manager);
+ 	if (ret)
 -- 
 2.39.5
 
