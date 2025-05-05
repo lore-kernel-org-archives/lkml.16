@@ -1,109 +1,101 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45CF65BAF0
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 07:49:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D78D1C3BE2;
+	Mon,  5 May 2025 07:49:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746431373; cv=none; b=REN3vSnAkKJPCE4XGk+9om1veAy8qzc+ADuoLDrJcS6J0J4QLga8PNk+TMb6ysCWapM8GrYcII9zOzOQSPDO0lMCM24qBgNq/VNEKrI2TWw+1CaFalihlfVrpmKg9mKbCYPe3fVli89LmMNiho89mkxtjJn6bGNGdeXRdv4UN0c=
+	t=1746431391; cv=none; b=Yi2PLi8WiObjPLKHvPsIUEdyFnnr8lpeD8CSr78e2XdXuy5+6qkRqy029zYEs7lUiLhxNglyvQCH51zniGWPF77o/4/FNsnkLQgcUpR20qe9tmST3teyUH8oqFQumnnL58MKnntuKAysJNsN7hSfg7xV4JXKlF4MmnGSC9OXGvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746431373; c=relaxed/simple;
-	bh=0iBwICTaMoIdQPJte0yeJHdCETBj+Uzs8MZ96/ahkFc=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References; b=nWBs1zkaTGn6jAW69uu2j+8iZ2Xf70iqdjuvht1pzJgV5ERO9qZvM3+Av9IkDpdxcqOpGNI/Cl7n9HG64PO72Ve0PwCUflF4o5gtTppePUZThPU9NjEWk4kWM5GrxR3GPuBAvRKxwJ/6Ft3enhL7nei6NWDV8zfe43fr+CCHGBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GoDCzraY; arc=none smtp.client-ip=209.85.215.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746431391; c=relaxed/simple;
+	bh=V3I2N452zoAxRjRuyGOUZILKBEKeiRMPPSSgMieldXA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tkK9NXG+Cj1hiz/SpKCj0kTl2L1DAyLYD5qNxNING8b1z0O06d1NwPoBrYM03ndG5WTP/cSIYVj5YmajbyZAWVt0mYv94+MAGtR+O6VEksNzGiCgLBkeWZhCqtzfgexSTU9LnD0j/x1/MNvi32pDZ1fMJbdzJs4U5uddZWu+6LU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=z+11W6G6; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GoDCzraY"
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-af548cb1f83so4001407a12.3
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 00:49:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746431371; x=1747036171; darn=vger.kernel.org;
-        h=references:message-id:date:in-reply-to:subject:cc:to:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=9n62oCxRgeeTCTbh9dONu/vhmceSSlNkgyqeLcA3kK4=;
-        b=GoDCzraYtswmF2S515s0u6zf73pUSsJyZQQSCUF+q9cODb7ci9idUKmrrZ269vL3KW
-         T+yJpEOxWJPrjJ4+ZzA1nIe/C54psJwj6cV7ehelcLy+U0Q+G+yfqfAMEg7L2mcaErC6
-         Yv8q8sy9aUD9V3RQkcHv5fZ7tt5UGrN3MAAJVRMWHuWdM1PNO26nWgnxIzU6Z5mFefpJ
-         8SJxN9f8TLkfTSIH0Pjtlls+Pzf2Q547sZIGbXzdk94o5WHDFoNWws1akk+vezKo2D0M
-         F6aIyB/WA3IekeJtTDWkxTNWkYdqneP5bE31j3MT0oQE54SWcybmzCVL7FNO5eiIz87j
-         x9qA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746431371; x=1747036171;
-        h=references:message-id:date:in-reply-to:subject:cc:to:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9n62oCxRgeeTCTbh9dONu/vhmceSSlNkgyqeLcA3kK4=;
-        b=viG5Ps8NIyQVfwKe9KOJNSR2MEfexPga8UQBbK58OLiADCA0eunIM7agFGVxFf7O/M
-         e7aoWWpWPnvx2wd5ghR0QJjxJKpGcABjrS06uSr8y7AVbzmr04P9XOdG28CxUZJqIIoI
-         qZEl30drX5BNV464wOnq+cu6r1lVQ4XOBJdGd+V4OGBS3Ju+vAzdJjoJWy/ZTYa+c5Ko
-         veXCfM0AO7YYTstbK1dpW+0yE/S4F6fvj4HNAMaf2d0f5SITnK4IgxfawxD/VKAor5Eg
-         f+ydHfaH1NZNVfdhY6d7BlqmcwMfyyDr8usVXGWWzU0Av7mqh7p1FGwj06nvTjD9f5kG
-         KC1g==
-X-Forwarded-Encrypted: i=1; AJvYcCW50UFsksok9z+wOLIdZHMnsu+uvYxnSp6BVh/ESyDg8Zws3duwnQkVJvH6UQZ4Ee9u0HJhiD+Ag+kwVM0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/nJRqFSMToA8BkrkFGyKXfdNcwiS3lej64mVjJd+16g0yg0kd
-	4D5XrToZlrnwCCV10NJZWfXoYuwn9/9L4/Ar2SYHULB+ZRQJNOiq3nOGIvjU
-X-Gm-Gg: ASbGncvLfdl1PPEi70PBQ8lKSUPebMqzMfk05TxNJ+bMQAntaBhO1xcW0vyvbj5vG71
-	yhUWBXZC/touAO/t7YIp4sR0Sq6MhTTtGy98M7tEQK3I769SFxWG1AxQRLpj//Y8E/oi/JqiqZr
-	ZJNtTeLgPoj/pa1cOrPKroAGQ2CrzHgYKNMhQosVLd8xxGtXLl6btNrJx+hVbZ7pryWMCzA0O2u
-	BZjDaCeqt80TDZ6S0DY8yq4Fj7t0mjdsJT+6KcfTuErL2ggM1xxzjdtk/G8ZjmQAZF3seYFiLp/
-	T6B0Z9+FaGLpbERQwpVfjG8lfT/AAiM=
-X-Google-Smtp-Source: AGHT+IEYuFVDnIjzV9K0AMi7hDserIpOlUBVkVj9T9bwXFqSmujqxRySnLvmGH8T8VDjHoioU6VPfg==
-X-Received: by 2002:a05:6a21:3388:b0:1fe:61a4:71d8 with SMTP id adf61e73a8af0-20e96ae4c9amr8488842637.22.1746431371369;
-        Mon, 05 May 2025 00:49:31 -0700 (PDT)
-Received: from dw-tp ([129.41.58.7])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b1fb3b5b6d2sm4923970a12.25.2025.05.05.00.49.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 00:49:30 -0700 (PDT)
-From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
-To: Donet Tom <donettom@linux.ibm.com>, Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Hari Bathini <hbathini@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org, open list <linux-kernel@vger.kernel.org>, Donet Tom <donettom@linux.ibm.com>
-Subject: Re: [PATCH for-next 1/2] book3s64/radix : Handle error conditions properly in radix_vmemmap_populate
-In-Reply-To: <e876a700a4caa5610e994b946b84f71d0fe6f919.1746255312.git.donettom@linux.ibm.com>
-Date: Mon, 05 May 2025 13:06:21 +0530
-Message-ID: <87zffrpkzu.fsf@gmail.com>
-References: <e876a700a4caa5610e994b946b84f71d0fe6f919.1746255312.git.donettom@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="z+11W6G6"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=g6E3Fmt7cfqXOAXJWZj3GI0CXUJV8EUTYEDTm9gMTDg=; b=z+11W6G6rm+LkV+kCDHjVKwpO+
+	tKOxP1CyIwwUl0Qse5Upck55bH9iZOyMOxFQvw8LXXyXbFgCqbWcWFo+KfmeXdURYL5i+mlDlDCwk
+	zKDEErGrPdWb3dQb6qp+PvKDgipiboBueGPJUEGM0xVmN99v7LlepjRC5SngXtKh93x58SvcLORLS
+	XL5FKwYxRkybBQdVcGszmKFiKnKL3PZibkEXs4PloDGXyg5blkXW0/l1Zw/66Odasjj3aQ1L4BRLG
+	ENqn1dvE69j3Q5mL1sqJqQYaSouY76WFBF+AtXae4eTEtRYLvfzKuo6CH4P+0rutUZk3hHzGWYWOy
+	WgEGsypQ==;
+Received: from i53875a1d.versanet.de ([83.135.90.29] helo=diego.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1uBqa1-0000dB-Ff; Mon, 05 May 2025 09:49:37 +0200
+From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
+To: Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Jonas Karlman <jonas@kwiboo.se>, Yao Zi <ziyao@disroot.org>,
+ Chukun Pan <amadeus@jmu.edu.cn>, Yao Zi <ziyao@disroot.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Conor Dooley <conor.dooley@microchip.com>
+Subject:
+ Re: [PATCH v2 1/3] dt-bindings: i2c: i2c-rk3x: Add compatible string for
+ RK3528
+Date: Mon, 05 May 2025 09:49:36 +0200
+Message-ID: <4864135.rnE6jSC6OK@diego>
+In-Reply-To: <20250417120118.17610-4-ziyao@disroot.org>
+References:
+ <20250417120118.17610-3-ziyao@disroot.org>
+ <20250417120118.17610-4-ziyao@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-Donet Tom <donettom@linux.ibm.com> writes:
+Hi Andi,
 
-> Error conditions are not handled properly if altmap is not present
-> and PMD_SIZE vmemmap_alloc_block_buf fails.
->
-> In this patch, if vmemmap_alloc_block_buf fails in the non-altmap
-> case, we will fall back to the base mapping.
->
+Am Donnerstag, 17. April 2025, 14:01:17 Mitteleurop=C3=A4ische Sommerzeit s=
+chrieb Yao Zi:
+> Document I2C controllers integrated in RK3528, which are compatible with
+> the RK3399 variant.
+>=20
+> Signed-off-by: Yao Zi <ziyao@disroot.org>
+> Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> Reviewed-by: Andi Shyti <andi.shyti@kernel.org>
 
-We are trying to create mappings for vmemmap area. In this, we first try
-to allocate pmd entry using vmemmap_alloc_block_buf() of PMD_SIZE. If we
-couldn't allocate, we should definitely fallback to base page mapping. 
-
-Looks good to me. Feel free to add:
-Reviewed-by: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+do you expect to apply this patch to the i2c tree individually,
+or have it go together with the devicetree patch?
 
 
--ritesh
+Thanks a lot
+Heiko
 
-> Signed-off-by: Donet Tom <donettom@linux.ibm.com>
 > ---
->  arch/powerpc/mm/book3s64/radix_pgtable.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/powerpc/mm/book3s64/radix_pgtable.c b/arch/powerpc/mm/book3s64/radix_pgtable.c
-> index 9f764bc42b8c..3d67aee8c8ca 100644
-> --- a/arch/powerpc/mm/book3s64/radix_pgtable.c
-> +++ b/arch/powerpc/mm/book3s64/radix_pgtable.c
-> @@ -1173,7 +1173,7 @@ int __meminit radix__vmemmap_populate(unsigned long start, unsigned long end, in
->  				vmemmap_set_pmd(pmd, p, node, addr, next);
->  				pr_debug("PMD_SIZE vmemmap mapping\n");
->  				continue;
-> -			} else if (altmap) {
-> +			} else {
->  				/*
->  				 * A vmemmap block allocation can fail due to
->  				 * alignment requirements and we trying to align
-> -- 
-> 2.48.1
+>  Documentation/devicetree/bindings/i2c/i2c-rk3x.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-rk3x.yaml b/Docume=
+ntation/devicetree/bindings/i2c/i2c-rk3x.yaml
+> index 8101afa6f146..2f1e97969c3f 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c-rk3x.yaml
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-rk3x.yaml
+> @@ -37,6 +37,7 @@ properties:
+>                - rockchip,px30-i2c
+>                - rockchip,rk3308-i2c
+>                - rockchip,rk3328-i2c
+> +              - rockchip,rk3528-i2c
+>                - rockchip,rk3562-i2c
+>                - rockchip,rk3568-i2c
+>                - rockchip,rk3576-i2c
+>=20
+
+
+
+
