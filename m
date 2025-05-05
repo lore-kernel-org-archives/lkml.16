@@ -1,43 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 766442D996E;
-	Mon,  5 May 2025 22:57:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9313136E0B8;
+	Mon,  5 May 2025 22:57:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485837; cv=none; b=QjueEHNP38muy8uV0gypzBGszE4sGd4HrlIlKs0evz0RVthv43V6FY8+veIFZYpbHIXqUtf+u+upAclwd9hOrZXvAUGIXWIXfYKnirFoM0fn7pc2y9yMgBOjG4L4PsnkvqBVXixKvMyvU26p/eGleS2PrWALczFAbNC8jsWnP94=
+	t=1746485852; cv=none; b=aGhDA79TqJOV5OY87Sq6vQSnw9iPNmD+8DYU6Wlh4cEK9HQVqzeEFgISFSbPgGyXTOg8PGnWlxnurEx9Ep5lHoR1v3fqAhz4YneWid5daDqiSmYDXAcOnTgb1B0jIU7Ev/FDYP+t2OM3ZYW5dJHcQfy5S+3g7opM2xRlwjUWyAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485837; c=relaxed/simple;
-	bh=qGBraCnsV9M9vOL/SuUmu81wvyQ3isDl/GqO2uTQAXc=;
+	s=arc-20240116; t=1746485852; c=relaxed/simple;
+	bh=EdwILdVaire8vhmb2WBvXctMUcG6K6R7Qmm0MOIB+/s=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jCZL2cUOxyaQyGU701hbm7viumXzEbyHWr0A7LWhr2JNjttpCczLIZyRdeDSu+/9/LkocRsC1tKW4mYZWtM0dTpbd7JpXK3mvsWAHlpX4wKmdkGaMiFgfO8EdUhIEG7Potuy/wNfX5A5OqFtVELGU/NbJvteHCekBTVY9nYJAQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fd/DQLl4; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=cN5T5kklbLGAOszfRNmzUHNgnE/cX0jcWWzNSXJ64J/AgRcekVG4zR5lwZ4YVuIyXXm/uqlBUO/O3c3stqcS86dNYHq5S1DLKFvun5lxY/vqTUFe7MUFrsTSfJv7SmSQLvplH8aOA7po9pqZsLj5QVx9TQjjqRTtsa6KPs/leRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OXda2Gjb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fd/DQLl4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9F0AC4CEF2;
-	Mon,  5 May 2025 22:57:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OXda2Gjb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0FC8C4CEED;
+	Mon,  5 May 2025 22:57:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485835;
-	bh=qGBraCnsV9M9vOL/SuUmu81wvyQ3isDl/GqO2uTQAXc=;
+	s=k20201202; t=1746485852;
+	bh=EdwILdVaire8vhmb2WBvXctMUcG6K6R7Qmm0MOIB+/s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Fd/DQLl4XmIY1MBsPbxZ05WjmGfq+lw7qaJBpKffEGMhRunp2RgLYAJnrPUQkeUJU
-	 6oAPJKfXM+dhEN3INwZ7+0p12AKqIn/mC6fy3NllQ0AcBmWCUl3K7Jjq3pFPDxOG+e
-	 cAFMRZzykXncsZCLk9emCU9Elcb2pq04DSgHNUgcmdRee5ziAPNI6Xv4V4P0aDfLxM
-	 EhFhYkpeSBP+3wedkmddNp0K3dYd2O+Q/1SDBsFy+Be4d3PxWROma48mazPTD6ASqU
-	 1VLMo50i3Xo8+GIEEfsbxSJpxYp413HB1ga8HJc/NCTJcW2kTi2yc6TWyiZKhw+Wie
-	 VIv7TVqQE1y4A==
+	b=OXda2GjbqRspMtQ7aEL3rXtiSL9D1gtLHCbDT9ikM/x6V0/ZKXRTWVVLOzV+Obbbn
+	 DMGd/IMoaZStFpYy3LjoknZ5AlikRtPnh8Ebr0ct6HkKCi+1xnv0ACDF4Kz4mOTth/
+	 gA2ig25Z1wJirs80g2BuUlO+wyjvwQ0roHIwg2vVT6rMTRSr6myZu80PIdWEP3xn0N
+	 48mkvlvKhotKhyIbBOf9pEs9SzbrL/q77c71TW590+6xO/UDfggP8x5CzG5voE5LH0
+	 2STLtgX7RZdz7LsN/oDKAhIkALfEB1Se920oqhrkf4XoZdlv74l6LVcwmuLgopzQiP
+	 Qb1plv0rmhzRA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Zsolt Kajtar <soci@c64.rulez.org>,
-	Helge Deller <deller@gmx.de>,
+Cc: Ryo Takakura <ryotkkr98@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Ingo Molnar <mingo@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	simona@ffwll.ch,
-	linux-fbdev@vger.kernel.org,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 6.6 019/294] fbdev: core: tileblit: Implement missing margin clearing for tileblit
-Date: Mon,  5 May 2025 18:51:59 -0400
-Message-Id: <20250505225634.2688578-19-sashal@kernel.org>
+	bigeasy@linutronix.de,
+	clrkwllms@kernel.org,
+	rostedt@goodmis.org,
+	tglx@linutronix.de,
+	peterz@infradead.org,
+	frederic@kernel.org,
+	kprateek.nayak@amd.com,
+	neilb@suse.de,
+	csander@purestorage.com,
+	linux-rt-devel@lists.linux.dev
+Subject: [PATCH AUTOSEL 6.6 029/294] lockdep: Fix wait context check on softirq for PREEMPT_RT
+Date: Mon,  5 May 2025 18:52:09 -0400
+Message-Id: <20250505225634.2688578-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -52,93 +60,97 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Zsolt Kajtar <soci@c64.rulez.org>
+From: Ryo Takakura <ryotkkr98@gmail.com>
 
-[ Upstream commit 76d3ca89981354e1f85a3e0ad9ac4217d351cc72 ]
+[ Upstream commit 61c39d8c83e2077f33e0a2c8980a76a7f323f0ce ]
 
-I was wondering why there's garbage at the bottom of the screen when
-tile blitting is used with an odd mode like 1080, 600 or 200. Sure there's
-only space for half a tile but the same area is clean when the buffer
-is bitmap.
+Since:
 
-Then later I found that it's supposed to be cleaned but that's not
-implemented. So I took what's in bitblit and adapted it for tileblit.
+  0c1d7a2c2d32 ("lockdep: Remove softirq accounting on PREEMPT_RT.")
 
-This implementation was tested for both the horizontal and vertical case,
-and now does the same as what's done for bitmap buffers.
+the wait context test for mutex usage within "in softirq context" fails
+as it references @softirq_context:
 
-If anyone is interested to reproduce the problem then I could bet that'd
-be on a S3 or Ark. Just set up a mode with an odd line count and make
-sure that the virtual size covers the complete tile at the bottom. E.g.
-for 600 lines that's 608 virtual lines for a 16 tall tile. Then the
-bottom area should be cleaned.
+    | wait context tests |
+    --------------------------------------------------------------------------
+                                   | rcu  | raw  | spin |mutex |
+    --------------------------------------------------------------------------
+                 in hardirq context:  ok  |  ok  |  ok  |  ok  |
+  in hardirq context (not threaded):  ok  |  ok  |  ok  |  ok  |
+                 in softirq context:  ok  |  ok  |  ok  |FAILED|
 
-For the right side it's more difficult as there the drivers won't let an
-odd size happen, unless the code is modified. But once it reports back a
-few pixel columns short then fbcon won't use the last column. With the
-patch that column is now clean.
+As a fix, add lockdep map for BH disabled section. This fixes the
+issue by letting us catch cases when local_bh_disable() gets called
+with preemption disabled where local_lock doesn't get acquired.
+In the case of "in softirq context" selftest, local_bh_disable() was
+being called with preemption disable as it's early in the boot.
 
-Btw. the virtual size should be rounded up by the driver for both axes
-(not only the horizontal) so that it's dividable by the tile size.
-That's a driver bug but correcting it is not in scope for this patch.
+[ boqun: Move the lockdep annotations into __local_bh_*() to avoid false
+         positives because of unpaired local_bh_disable() reported by
+	 Borislav Petkov and Peter Zijlstra, and make bh_lock_map
+	 only exist for PREEMPT_RT. ]
 
-Implement missing margin clearing for tileblit
+[ mingo: Restored authorship and improved the bh_lock_map definition. ]
 
-Signed-off-by: Zsolt Kajtar <soci@c64.rulez.org>
-Signed-off-by: Helge Deller <deller@gmx.de>
+Signed-off-by: Ryo Takakura <ryotkkr98@gmail.com>
+Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/20250321143322.79651-1-boqun.feng@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/core/tileblit.c | 37 ++++++++++++++++++++++++++++-
- 1 file changed, 36 insertions(+), 1 deletion(-)
+ kernel/softirq.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/drivers/video/fbdev/core/tileblit.c b/drivers/video/fbdev/core/tileblit.c
-index 674ca6a410ec8..b3aa0c6620c7d 100644
---- a/drivers/video/fbdev/core/tileblit.c
-+++ b/drivers/video/fbdev/core/tileblit.c
-@@ -74,7 +74,42 @@ static void tile_putcs(struct vc_data *vc, struct fb_info *info,
- static void tile_clear_margins(struct vc_data *vc, struct fb_info *info,
- 			       int color, int bottom_only)
- {
--	return;
-+	unsigned int cw = vc->vc_font.width;
-+	unsigned int ch = vc->vc_font.height;
-+	unsigned int rw = info->var.xres - (vc->vc_cols*cw);
-+	unsigned int bh = info->var.yres - (vc->vc_rows*ch);
-+	unsigned int rs = info->var.xres - rw;
-+	unsigned int bs = info->var.yres - bh;
-+	unsigned int vwt = info->var.xres_virtual / cw;
-+	unsigned int vht = info->var.yres_virtual / ch;
-+	struct fb_tilerect rect;
-+
-+	rect.index = vc->vc_video_erase_char &
-+		((vc->vc_hi_font_mask) ? 0x1ff : 0xff);
-+	rect.fg = color;
-+	rect.bg = color;
-+
-+	if ((int) rw > 0 && !bottom_only) {
-+		rect.sx = (info->var.xoffset + rs + cw - 1) / cw;
-+		rect.sy = 0;
-+		rect.width = (rw + cw - 1) / cw;
-+		rect.height = vht;
-+		if (rect.width + rect.sx > vwt)
-+			rect.width = vwt - rect.sx;
-+		if (rect.sx < vwt)
-+			info->tileops->fb_tilefill(info, &rect);
-+	}
-+
-+	if ((int) bh > 0) {
-+		rect.sx = info->var.xoffset / cw;
-+		rect.sy = (info->var.yoffset + bs) / ch;
-+		rect.width = rs / cw;
-+		rect.height = (bh + ch - 1) / ch;
-+		if (rect.height + rect.sy > vht)
-+			rect.height = vht - rect.sy;
-+		if (rect.sy < vht)
-+			info->tileops->fb_tilefill(info, &rect);
-+	}
- }
+diff --git a/kernel/softirq.c b/kernel/softirq.c
+index f24d80cf20bd3..d9e37f3fa1303 100644
+--- a/kernel/softirq.c
++++ b/kernel/softirq.c
+@@ -125,6 +125,18 @@ static DEFINE_PER_CPU(struct softirq_ctrl, softirq_ctrl) = {
+ 	.lock	= INIT_LOCAL_LOCK(softirq_ctrl.lock),
+ };
  
- static void tile_cursor(struct vc_data *vc, struct fb_info *info, int mode,
++#ifdef CONFIG_DEBUG_LOCK_ALLOC
++static struct lock_class_key bh_lock_key;
++struct lockdep_map bh_lock_map = {
++	.name			= "local_bh",
++	.key			= &bh_lock_key,
++	.wait_type_outer	= LD_WAIT_FREE,
++	.wait_type_inner	= LD_WAIT_CONFIG, /* PREEMPT_RT makes BH preemptible. */
++	.lock_type		= LD_LOCK_PERCPU,
++};
++EXPORT_SYMBOL_GPL(bh_lock_map);
++#endif
++
+ /**
+  * local_bh_blocked() - Check for idle whether BH processing is blocked
+  *
+@@ -147,6 +159,8 @@ void __local_bh_disable_ip(unsigned long ip, unsigned int cnt)
+ 
+ 	WARN_ON_ONCE(in_hardirq());
+ 
++	lock_map_acquire_read(&bh_lock_map);
++
+ 	/* First entry of a task into a BH disabled section? */
+ 	if (!current->softirq_disable_cnt) {
+ 		if (preemptible()) {
+@@ -210,6 +224,8 @@ void __local_bh_enable_ip(unsigned long ip, unsigned int cnt)
+ 	WARN_ON_ONCE(in_hardirq());
+ 	lockdep_assert_irqs_enabled();
+ 
++	lock_map_release(&bh_lock_map);
++
+ 	local_irq_save(flags);
+ 	curcnt = __this_cpu_read(softirq_ctrl.cnt);
+ 
+@@ -260,6 +276,8 @@ static inline void ksoftirqd_run_begin(void)
+ /* Counterpart to ksoftirqd_run_begin() */
+ static inline void ksoftirqd_run_end(void)
+ {
++	/* pairs with the lock_map_acquire_read() in ksoftirqd_run_begin() */
++	lock_map_release(&bh_lock_map);
+ 	__local_bh_enable(SOFTIRQ_OFFSET, true);
+ 	WARN_ON_ONCE(in_interrupt());
+ 	local_irq_enable();
 -- 
 2.39.5
 
