@@ -1,41 +1,53 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C54DC2F10DB;
-	Mon,  5 May 2025 23:11:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E318F2F1527;
+	Mon,  5 May 2025 23:11:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486707; cv=none; b=LwEwFy3jXgA94Hx27B72BKjnai2YwHVrnn50ynEyc9Bzk00XKzj+CBkN+XsokqV2EIXAfF7KpCgIkPt3U6a2GQpf66pMMt0bzqKbEnvBs2yTwwJsChKbaA1HPWiwYq/I+Z2BELrDSlGzFQu4gtdAg9YFLsEEJ0D0xP/o4+QXpoU=
+	t=1746486720; cv=none; b=SnRQFjLk8gKL8L7MUW1QqHFvf8Okof+IYs6Roqqg5LXGe6M8A4aRTVtEuEPRDvXvVAumb/DNzH155swin81jvJEYaFNXXQv7Zltlmyh1lqVdL97/+hkbB/CMmkZ7WglEFnjuP+oSAiKoZv/k/QXFV08L8/j8HhfuLcIVKO2OBBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486707; c=relaxed/simple;
-	bh=a6613h/Uw1nhotCwcomUHMU3wWD/6zR8K5kZvjxCPDc=;
+	s=arc-20240116; t=1746486720; c=relaxed/simple;
+	bh=TbJ6vTwCvQR/FzOhw+PeOhkfU5Pj1/ek0z5v8QzODss=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=b1EL5zznp0ZExC96MF+nz2X+Mh7pCYHKOGmwCEQnIpeKJLW71r+aSvE+Lfr9s1gPWykyWZeY5udhHO1EJAuq8AEL1FGQ2FhwF4qRsEOOI8j5gLH4BG8P0QSHQZdldYdKuOboqFVqO709x9jEdJ8MMK6ES3vXVMkpc1s1asRyCew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EmVOZK1S; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=f+4MUXox4qIuP8uv8uoDu9uNsFmcLyXXcirleFh1qtUnBm5T6mgs3uJt6eQWKjmDxYbrBoTsCq3k+4Pdsdd3H3x2+aT83C03wj254Imi1y0BhnO0uWWHTN7LkVTCKMaf+YHXDIMtl54EDCCH9ILqoaQI7EkB0FD435QQYfF313Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ulz3lqEd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EmVOZK1S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8872FC4CEEF;
-	Mon,  5 May 2025 23:11:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ulz3lqEd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E9E6C4CEED;
+	Mon,  5 May 2025 23:11:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486706;
-	bh=a6613h/Uw1nhotCwcomUHMU3wWD/6zR8K5kZvjxCPDc=;
+	s=k20201202; t=1746486719;
+	bh=TbJ6vTwCvQR/FzOhw+PeOhkfU5Pj1/ek0z5v8QzODss=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EmVOZK1Si9oiEhrU1T0jWrAxTQdBEg79QYc2YomdqYkTMR6AFgixFrjYGaPUdZmVm
-	 fO+JlxDqJyG0H3IiGYcYtpAU6zI8cXjYBc7U/KqGzTAu7dzyu/4AugjIbWo72cGMWO
-	 ldyXuqCiNTbcPGwIZgq61+B8JJ4pFI5wwwgg5y40JeqNoqo535fBL95Goh6n3EFIRv
-	 NjCC9+foX5+cxKl73zBTiK3bbisTy3k3i0WcGP7Bj93HPxg/iNKbxXyinW6ktl3OSo
-	 z8M1zKPfsTt1/ad3F13gZMLkFX7wpxnT2defdEkD+WxlFoWz/rgR/HtHbstqqLvKXH
-	 hFUb/M3gUegGA==
+	b=ulz3lqEdrEhB2NSyb/5i2Fnt0dSe7jEvtv/zI0fYX8DJjnflbZTnLwTeyYEuclIW7
+	 BQnccJ2LySKcU9d883FM6ubiYIj6O9OD5vZHkfVsrGFBKk4eVs/UNf0f92Ot68KC+L
+	 WL1cQ2HwsZFZtwn2QktgrKqgRa/pM0hUYHQk3KyVQ1A5+GudZ9Tq1qMSdyrl0TgIKA
+	 6kvAog2rG94tHef22nvKUBJfi1aaXJfby4kI/enn6u519C2hFsCksS7OwlssXj2xGF
+	 P5z9pYFIWeiAhmEIxhwB8Z4WQY/ebYK/CwHgYMPhooBnqHqK05/gUkFIemGapU97lC
+	 SKfhLEv2IWpSg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Tejun Heo <tj@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 6.1 163/212] kernfs: Don't re-lock kernfs_root::kernfs_rwsem in kernfs_fop_readdir().
-Date: Mon,  5 May 2025 19:05:35 -0400
-Message-Id: <20250505230624.2692522-163-sashal@kernel.org>
+Cc: Jiang Liu <gerry@linux.alibaba.com>,
+	Lijo Lazar <lijo.lazar@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Sasha Levin <sashal@kernel.org>,
+	christian.koenig@amd.com,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	Hawking.Zhang@amd.com,
+	sunil.khatri@amd.com,
+	le.ma@amd.com,
+	candice.li@amd.com,
+	YiPeng.Chai@amd.com,
+	Feifei.Xu@amd.com,
+	kevinyang.wang@amd.com,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 6.1 170/212] drm/amdgpu: reset psp->cmd to NULL after releasing the buffer
+Date: Mon,  5 May 2025 19:05:42 -0400
+Message-Id: <20250505230624.2692522-170-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505230624.2692522-1-sashal@kernel.org>
 References: <20250505230624.2692522-1-sashal@kernel.org>
@@ -50,53 +62,43 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.1.136
 Content-Transfer-Encoding: 8bit
 
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+From: Jiang Liu <gerry@linux.alibaba.com>
 
-[ Upstream commit 9aab10a0249eab4ec77c6a5e4f66442610c12a09 ]
+[ Upstream commit e92f3f94cad24154fd3baae30c6dfb918492278d ]
 
-The readdir operation iterates over all entries and invokes dir_emit()
-for every entry passing kernfs_node::name as argument.
-Since the name argument can change, and become invalid, the
-kernfs_root::kernfs_rwsem lock should not be dropped to prevent renames
-during the operation.
+Reset psp->cmd to NULL after releasing the buffer in function psp_sw_fini().
 
-The lock drop around dir_emit() has been initially introduced in commit
-   1e5289c97bba2 ("sysfs: Cache the last sysfs_dirent to improve readdir scalability v2")
-
-to avoid holding a global lock during a page fault. The lock drop is
-wrong since the support of renames and not a big burden since the lock
-is no longer global.
-
-Don't re-acquire kernfs_root::kernfs_rwsem while copying the name to the
-userpace buffer.
-
-Acked-by: Tejun Heo <tj@kernel.org>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Link: https://lore.kernel.org/r/20250213145023.2820193-5-bigeasy@linutronix.de
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reviewed-by: Lijo Lazar <lijo.lazar@amd.com>
+Signed-off-by: Jiang Liu <gerry@linux.alibaba.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/kernfs/dir.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/fs/kernfs/dir.c b/fs/kernfs/dir.c
-index 2c74b24fc22aa..6ddab75a68dd2 100644
---- a/fs/kernfs/dir.c
-+++ b/fs/kernfs/dir.c
-@@ -1846,10 +1846,10 @@ static int kernfs_fop_readdir(struct file *file, struct dir_context *ctx)
- 		file->private_data = pos;
- 		kernfs_get(pos);
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c
+index f8740ad08af41..a176b1da03bd3 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c
+@@ -484,7 +484,6 @@ static int psp_sw_fini(void *handle)
+ {
+ 	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
+ 	struct psp_context *psp = &adev->psp;
+-	struct psp_gfx_cmd_resp *cmd = psp->cmd;
  
--		up_read(&root->kernfs_rwsem);
--		if (!dir_emit(ctx, name, len, ino, type))
-+		if (!dir_emit(ctx, name, len, ino, type)) {
-+			up_read(&root->kernfs_rwsem);
- 			return 0;
--		down_read(&root->kernfs_rwsem);
-+		}
- 	}
- 	up_read(&root->kernfs_rwsem);
- 	file->private_data = NULL;
+ 	psp_memory_training_fini(psp);
+ 	if (psp->sos_fw) {
+@@ -511,8 +510,8 @@ static int psp_sw_fini(void *handle)
+ 	    adev->ip_versions[MP0_HWIP][0] == IP_VERSION(11, 0, 7))
+ 		psp_sysfs_fini(adev);
+ 
+-	kfree(cmd);
+-	cmd = NULL;
++	kfree(psp->cmd);
++	psp->cmd = NULL;
+ 
+ 	psp_free_shared_bufs(psp);
+ 
 -- 
 2.39.5
 
