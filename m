@@ -1,78 +1,101 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 463B88F66;
-	Mon,  5 May 2025 21:45:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37FEF1C6FF5;
+	Mon,  5 May 2025 21:48:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746481524; cv=none; b=W+SJCnc/geEbw/JY/o34lcvAJkHDJgdRMv67fOxdb4oGgrDTJQPokR8YHZ71cotfj/cNmXTaetmxHLXozpb+7oNWJ5JmpVLCo9DOJ1pslDGib9cI3JgwcbY0Rb++sV5seNkdFcNtNtqDVMtSkGK8dhutnqoTW0CCqlOOlpkiYIE=
+	t=1746481719; cv=none; b=XSv850sVd1wKiZ7NXQZE/W6Pkq+Wy1Z/eLeW0tTyiokN0lg+dVSEkSuvZmwlFvsGoJ28I1KjIgh5cKVwozPmHqfrMNcBKL0Y4k5o2Iyyv8HFA6ISPArsUGwWrwQnbarlXGv/7sp93/QgkD1pxIDabBXNCOScG0XmjNY2E8egvj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746481524; c=relaxed/simple;
-	bh=CahsuzGP8dclaXFz+knFgcQXHHqAzaQBNmxGDlAkIL8=;
+	s=arc-20240116; t=1746481719; c=relaxed/simple;
+	bh=SROOiakuclIYPxvkMWA0nKr4EXNUpsU6f6JjzTlZu2Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e+bYcdk4o1cGmjbN9VreKXxQNiDLfPmyQsce3Q/KwOQTJiAqb7Pgpgy+QOD4r0/9KuYaxx6B+zIiFpqs1A0VZETl/n1FaQ9KQ3QWvQfIMMVTuKzysut9SBjLSjnM3v5GkkGibCXCO6vCBTbK/wiBMFq5iB+Iz2ii9f/Fi0wXq8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XtwYcLYX; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=NO2CJDU5Q0mkkBY5jx/Aoso/Bh0PmOWv8u2f9XqFdBEqhw59yqhBJhRyQ1pUB5wEf/etWGPAmnr4NW/SK6dn6CjxsYuivJhf1BD9OsXW1N45sGbY6Ckhj4cp9f/py8po67DUNU2QZX7Ci2lVM1WZv+9BhrTCtipLvx6jN9U0wlw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M9klhOfj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XtwYcLYX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43FB1C4CEE4;
-	Mon,  5 May 2025 21:45:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M9klhOfj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 552D6C4CEE4;
+	Mon,  5 May 2025 21:48:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746481523;
-	bh=CahsuzGP8dclaXFz+knFgcQXHHqAzaQBNmxGDlAkIL8=;
+	s=k20201202; t=1746481718;
+	bh=SROOiakuclIYPxvkMWA0nKr4EXNUpsU6f6JjzTlZu2Q=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XtwYcLYXjRqNIOVkspHeOA5jcmAG+AI8w7iuDC5UjI4oGeiCVtujq4P3SWD55vpR9
-	 AiMkCnNN+cKeI62Wy8C7Jf7QTwl1IZVTFlwWxnGc0PNr7OMwMoV+smjMRdwBC4YTXF
-	 WeK84DGTx47JfYOXV5NeRl4sZ+IdYLDgoH55pdCKaRWvOjNVmLJH3WsiTaAFm9PHCQ
-	 w37PNHSwKHv1kiS1o6LCBJZ7NiwwjZ3TimmbQKzLB08nIOUO/gRbLDBfIVY+Xtqde2
-	 i6ZbrRB8j0yj+7tpAMiWEX0LEZp6c9lYWNuxNbaMSGx9ws+mOtS0ehv543wm220phy
-	 frWnZlgAMAVIg==
-Date: Mon, 5 May 2025 23:45:20 +0200
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Joel Fernandes <joelagnelf@nvidia.com>
-Cc: Z qiang <qiang.zhang1211@gmail.com>, paulmck@kernel.org,
-	neeraj.upadhyay@kernel.org, joel@joelfernandes.org,
-	urezki@gmail.com, boqun.feng@gmail.com, rcu@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rcu/nocb: Add Safe checks for access offloaded rdp
-Message-ID: <aBkxcKPYOPCvfN7J@pavilion.home>
-References: <20250428095403.22889-1-qiang.zhang1211@gmail.com>
- <aA9U9QvB2t2MLuU2@pavilion.home>
- <CALm+0cW2tXM-HvzoMsNBk4DNyZ-LuUkGj5M4wVLJixSvUDP+Dw@mail.gmail.com>
- <b1d6d155-de0a-4715-9de6-45d3d9e5c9a6@nvidia.com>
- <CALm+0cUx2siBvaRYwWGsN21PC=UUUy1EqLTRe5HmRW2ECWtUWA@mail.gmail.com>
- <2c8098f0-2010-4714-97ca-7f46629d67f8@nvidia.com>
- <6dc114e4-83d3-40ff-9642-114552f40a75@nvidia.com>
+	b=M9klhOfj09VJhXC+4pfeLg05amT1S0SHkgEC+Kc07HmQ5o3Hxayyk7A3p3ASiDMle
+	 HP/pPnxebSd8/VsrJqo1Z9RcOsidG9PYEWsgpMkdQ9F5d8L91DrZ6J/mWBkXq03wg1
+	 7rLDmAkeLNyi87BCqyMoLKRq+LlY9f726zw7G1l1XwUoFA51D3O9aE0nQHrIlMQ/rZ
+	 7onQDqs0vV1X4m9vpxEaVjNtb1R9DB3djCQo3x1w7aeNrdR54eGM8sVjeLxPSlGyAG
+	 XTn5+fXhsOhNm7rmb25C/BAhgMNA51c8MrASKuOmPICHSmi73NULAGT6bX8Hdt8uV3
+	 btkRaQFj2D2zA==
+Date: Mon, 5 May 2025 23:48:35 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Cc: EnDe Tan <ende.tan@starfivetech.com>, 
+	"linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, 
+	"andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>, 
+	"mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, "jsd@semihalf.com" <jsd@semihalf.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leyfoon Tan <leyfoon.tan@starfivetech.com>, 
+	"endeneer@gmail.com" <endeneer@gmail.com>
+Subject: Re: [1/1] i2c: designware: Ensure runtime suspend is invoked during
+ rapid slave unregistration and registration
+Message-ID: <2l2tpeictfp3o2kcq5fquqkm3nyjijq65ejanafrshh7icc5c4@guynosug2ve7>
+References: <20250412023303.378600-1-ende.tan@starfivetech.com>
+ <6e155241-3403-49df-8f0d-5aa63e2e74ab@linux.intel.com>
+ <NTZPR01MB10182E9F6E50D679A6EAC3B4F8B92@NTZPR01MB1018.CHNPR01.prod.partner.outlook.cn>
+ <6a3b756f-6fbd-4ee5-b511-c5a32e4a6a34@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6dc114e4-83d3-40ff-9642-114552f40a75@nvidia.com>
+In-Reply-To: <6a3b756f-6fbd-4ee5-b511-c5a32e4a6a34@linux.intel.com>
 
-Le Mon, May 05, 2025 at 09:38:02AM -0400, Joel Fernandes a écrit :
-> Frederic, there are a couple of ways we can move forward hear. Does the
-> softirq_count() approach sound good to you? If yes, I can fixup the patch
-> myself.
+Hi EnDe,
 
-That approach looks good yes.
+On Fri, May 02, 2025 at 02:03:25PM +0300, Jarkko Nikula wrote:
+> On 4/20/25 6:31 AM, EnDe Tan wrote:
+> > It appears that when performing a rapid sequence of `delete_device -> new_device -> delete_device -> new_device`, the `dw_i2c_plat_runtime_suspend` is not invoked for the second `delete_device`.
+> > 
+> > This seems to happen because when `i2c_dw_unreg_slave` is about to trigger suspend during the second `delete_device`, the second `new_device` operation cancels the suspend. As a result, `dw_i2c_plat_runtime_resume` is not called (since there was no suspend), which means `i_dev->init` (i.e., `i2c_dw_init_slave`) is skipped.
+> > 
+> > Because `i2c_dw_init_slave` is skipped, `i2c_dw_configure_fifo_slave` is not invoked, which leaves `DW_IC_INTR_MASK` unconfigured.
+> > If we inspect the interrupt mask register using devmem, it will show as zero.
+> > 
+> > Here's an example shell script to reproduce the issue:
+> > ```
+> > #!/bin/sh
+> > 
+> > SLAVE_LADDR=0x1010
+> > SLAVE_BUS=13
+> > NEW_DEVICE=/sys/bus/i2c/devices/i2c-$SLAVE_BUS/new_device
+> > DELETE_DEVICE=/sys/bus/i2c/devices/i2c-$SLAVE_BUS/delete_device
+> > 
+> > # Create initial device
+> > echo slave-24c02 $SLAVE_LADDR > $NEW_DEVICE
+> > sleep 2
+> > 
+> > # Rapid sequence of delete_device -> new_device -> delete_device -> new_device
+> > echo $SLAVE_LADDR > $DELETE_DEVICE
+> > echo slave-24c02 $SLAVE_LADDR > $NEW_DEVICE
+> > echo $SLAVE_LADDR > $DELETE_DEVICE
+> > echo slave-24c02 $SLAVE_LADDR > $NEW_DEVICE
+> > 
+> > # If we use devmem to inspect IC_INTR_MASK, it will show as zero
+> > ```
 
-> 
-> I am also Ok at this point to take it in for 6.16, though I've also stored it in
-> my rcu/dev branch for Neeraj's 6.17 PR, just in case :)
+Please, don't remove the interesting parts of the original email
+from your reply, otherwise it wouldn't be easy to follow the
+discussion. Please refer to the email netiquette[*].
 
-I'm fine either way. To me it's neither too late nor too early :-)
+> Good explanation and could you add it the commit log together with the
+> example?
 
-Thanks.
+If you want you can paste the new commit log as reply to this
+e-mail.
 
-> 
->  - Joel
-> 
-> 
+Thanks,
+Andi
 
--- 
-Frederic Weisbecker
-SUSE Labs
+[*] https://www.ietf.org/rfc/rfc1855.txt
