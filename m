@@ -1,56 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A783A37778E;
-	Mon,  5 May 2025 22:49:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A87F377790;
+	Mon,  5 May 2025 22:49:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485383; cv=none; b=Z3Sn5uBvhGxL7BVnV81aY0F6sRb+3UkzD+0MW9MNpcGwBGjQmONp5gKluITeWT3F8keeU7aMBkD0OvTdQgBkHSwHWKlu8ZNkqCui/w+IgfkWy5ZluqfmsZC7B7EcAmHLQxSf4Cd+TKJxBLDRF0dVafXGqZK9q59ifjEpq2Mlgz4=
+	t=1746485380; cv=none; b=Cl9rqtSHWV0kA9deNaeBNuuuE0FXIFcyfgsVkBUrPKWHF7DaMsAB1jSPUbvclNC2Db07UA0w5g3prmfz4vDh9Z8mLmOrMQnahg3MamsSOVioRfm6l0GIjIA41Z0sc/5vi1iqLY25oe1C17c1ghA9XoFM8FKkk/xTT/jwiFleG+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485383; c=relaxed/simple;
-	bh=nJtv7p0rucIQvy2LKomc4PsnCh5XM7YlZVAREd7jaEM=;
+	s=arc-20240116; t=1746485380; c=relaxed/simple;
+	bh=9OI6dHYLc8ecmfWf4k9XnmNSY3qVfYkQeVldy1ZXJ2E=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WJpsjJreBRYXE3B3NHbf4S7qBNG7U4MdvckqwlKGgmvlBayhRMErjsVfa05IyoaiEwwKPlzG+M7udF/yiFI5PxZ0/lp6K9ymoQogrHwlkju2yY7mFE14srd4TS9/MKSwkjGMlop4+r4dII7HyKwQw0jHubTQiKK2N8dksVlUZ3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jf95r6Km; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=kQnl2fdwNhbNee8oofSaW/5hBv7jiQpKi6iUF+FsXh5lsnhYlsh8Vj/yguhLEoWHiS6FPfkIIOWQon9w2ptutPvRPqfqQMMNW1o1tXPhyEzcwF5/A+bxLEBRhR0UOjqFbGut/9r98TloLOM9UmEZU34rBcYHQ5wAiLIJeOyNGgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G68lYuCk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jf95r6Km"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BE3CC4CEE4;
-	Mon,  5 May 2025 22:49:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G68lYuCk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADAD6C4CEED;
+	Mon,  5 May 2025 22:49:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485382;
-	bh=nJtv7p0rucIQvy2LKomc4PsnCh5XM7YlZVAREd7jaEM=;
+	s=k20201202; t=1746485379;
+	bh=9OI6dHYLc8ecmfWf4k9XnmNSY3qVfYkQeVldy1ZXJ2E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jf95r6KmOEFysX6RevRfDKtSi8VCkEuEXe8kL/DolrJeG0j4r2v28bWl2dO00SQRT
-	 8tnY+dkf3MN8EM6e26nH7bSCE+xQzQfmorLmiao22Qpw8MsCMkpy+tFr87/yXQVRsz
-	 4xnHq2eLJi0VqFGYttZzW7rA/ku9vhJ7DnetSmHA/D6ouRnahRvxUyBwSxhJbHriJn
-	 l2r/NKuZXv0+mj8ZXnEAihoHQNLyvZXWW0AyxbvbMRuJqyyMbxI3ShdNoeDDlVlUpO
-	 WnQj9HoyErnKclKzIxVw5lvsfRRL7QzK19sl4P4ZsScSifbwLAPI3Vi8pdZaAFJ33D
-	 oBK8OOdw0nMGg==
+	b=G68lYuCkX2zBeusSMzMDeozjIekCzUMYF8y9mkeFUmhWpIQXC5Sh31yOP+TKLjHPG
+	 27Qi3IzXhBwh430frIYcC2a/JSo1wiK+czE6LH7LkcqW3CW1zB1BkfpvTvPKtHY1Ag
+	 AExVYRFiTstOnCr8xZAbpGLux/Vgc/FeuydWoK6RZmK0HcbEfYfKd5vIEr7BROW2D0
+	 I4WlURCd18+hQpXjq801W3LNovcA1jaP6FFhNh5yif2BYFBuJEyT9yPJMPMDNoePji
+	 SFx0Kqt6SyeoCLbWNifDlb98NFnSAswR3jxNCP2NvrwXRBA8MA2Eg8VLhFwcimSfQf
+	 VY0aAN5Fv0Apg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Harry VanZyllDeJong <hvanzyll@amd.com>,
-	Wenjing Liu <wenjing.liu@amd.com>,
-	Roman Li <roman.li@amd.com>,
-	Daniel Wheeler <daniel.wheeler@amd.com>,
+Cc: Lijo Lazar <lijo.lazar@amd.com>,
+	Asad Kamal <asad.kamal@amd.com>,
 	Alex Deucher <alexander.deucher@amd.com>,
 	Sasha Levin <sashal@kernel.org>,
-	harry.wentland@amd.com,
-	sunpeng.li@amd.com,
+	kenneth.feng@amd.com,
 	christian.koenig@amd.com,
 	airlied@gmail.com,
 	simona@ffwll.ch,
-	alex.hung@amd.com,
-	michael.strauss@amd.com,
-	george.shen@amd.com,
-	PeiChen.Huang@amd.com,
-	Ausef.Yousof@amd.com,
-	Cruise.Hung@amd.com,
+	sunil.khatri@amd.com,
+	boyuan.zhang@amd.com,
 	amd-gfx@lists.freedesktop.org,
 	dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 6.12 300/486] drm/amd/display: Add support for disconnected eDP streams
-Date: Mon,  5 May 2025 18:36:16 -0400
-Message-Id: <20250505223922.2682012-300-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.12 299/486] drm/amd/pm: Fetch current power limit from PMFW
+Date: Mon,  5 May 2025 18:36:15 -0400
+Message-Id: <20250505223922.2682012-299-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -65,52 +58,33 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Harry VanZyllDeJong <hvanzyll@amd.com>
+From: Lijo Lazar <lijo.lazar@amd.com>
 
-[ Upstream commit 6571bef25fe48c642f7a69ccf7c3198b317c136a ]
+[ Upstream commit b2a9e562dfa156bd53e62ce571f3f8f65d243f14 ]
 
-[Why]
-eDP may not be connected to the GPU on driver start causing
-fail enumeration.
+On SMU v13.0.12, always query the firmware to get the current power
+limit as it could be updated through other means also.
 
-[How]
-Move the virtual signal type check before the eDP connector
-signal check.
-
-Reviewed-by: Wenjing Liu <wenjing.liu@amd.com>
-Signed-off-by: Harry VanZyllDeJong <hvanzyll@amd.com>
-Signed-off-by: Roman Li <roman.li@amd.com>
-Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
+Signed-off-by: Lijo Lazar <lijo.lazar@amd.com>
+Reviewed-by: Asad Kamal <asad.kamal@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../drm/amd/display/dc/link/protocols/link_dp_capability.c  | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/amd/pm/swsmu/amdgpu_smu.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/link/protocols/link_dp_capability.c b/drivers/gpu/drm/amd/display/dc/link/protocols/link_dp_capability.c
-index 23e650e39910e..d9a1e1a599674 100644
---- a/drivers/gpu/drm/amd/display/dc/link/protocols/link_dp_capability.c
-+++ b/drivers/gpu/drm/amd/display/dc/link/protocols/link_dp_capability.c
-@@ -945,6 +945,9 @@ bool link_decide_link_settings(struct dc_stream_state *stream,
- 		 * TODO: add MST specific link training routine
- 		 */
- 		decide_mst_link_settings(link, link_setting);
-+	} else if (stream->signal == SIGNAL_TYPE_VIRTUAL) {
-+		link_setting->lane_count = LANE_COUNT_FOUR;
-+		link_setting->link_rate = LINK_RATE_HIGH3;
- 	} else if (link->connector_signal == SIGNAL_TYPE_EDP) {
- 		/* enable edp link optimization for DSC eDP case */
- 		if (stream->timing.flags.DSC) {
-@@ -967,9 +970,6 @@ bool link_decide_link_settings(struct dc_stream_state *stream,
- 		} else {
- 			edp_decide_link_settings(link, link_setting, req_bw);
- 		}
--	} else if (stream->signal == SIGNAL_TYPE_VIRTUAL) {
--		link_setting->lane_count = LANE_COUNT_FOUR;
--		link_setting->link_rate = LINK_RATE_HIGH3;
- 	} else {
- 		decide_dp_link_settings(link, link_setting, req_bw);
- 	}
+diff --git a/drivers/gpu/drm/amd/pm/swsmu/amdgpu_smu.c b/drivers/gpu/drm/amd/pm/swsmu/amdgpu_smu.c
+index 99d2d3092ea54..3fd8da5dc761e 100644
+--- a/drivers/gpu/drm/amd/pm/swsmu/amdgpu_smu.c
++++ b/drivers/gpu/drm/amd/pm/swsmu/amdgpu_smu.c
+@@ -2772,6 +2772,7 @@ int smu_get_power_limit(void *handle,
+ 			switch (amdgpu_ip_version(adev, MP1_HWIP, 0)) {
+ 			case IP_VERSION(13, 0, 2):
+ 			case IP_VERSION(13, 0, 6):
++			case IP_VERSION(13, 0, 12):
+ 			case IP_VERSION(13, 0, 14):
+ 			case IP_VERSION(11, 0, 7):
+ 			case IP_VERSION(11, 0, 11):
 -- 
 2.39.5
 
