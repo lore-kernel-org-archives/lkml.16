@@ -1,44 +1,82 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2CF217A31E;
-	Mon,  5 May 2025 00:55:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36D5315C0;
+	Mon,  5 May 2025 01:07:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746406561; cv=none; b=fyIGvIuu2x/xPFHfbacPhXL/7Fe4Wk6P49QwtF+/EGcpLpcMSIsJbixOePRuSsQyVC++hyT2LNg3BGLYGNpPZ9UbjeIfb5i2PbkvTI5mJ6GRJlGxQGypqOHZllhG8ocykAP6xJMvoNJD4jkNmzh0wQFuqx3RALUHF60J+QdcRJ4=
+	t=1746407225; cv=none; b=EfejXXoQN9FY/ZnOadKJBKT1PTaZM7wSulHL4RGYg95SOOJEGE8nAhONcgKU/GyDP0v2hc4mXmkVSZvm0c21XPa6EP3T6Z31Yx8HxD6mySp1jXB+5bQ1ppSavK/x+9Z9cxCvxH8eLzp9x9NY+aTZjywhJSQo+GGwZliBAndRru0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746406561; c=relaxed/simple;
-	bh=ImwZpAyK9a06VG5KtpooQqA66DFsHMPgTKcK9ntc8B8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hB44TnTgRC4J0VNCyvlwHA5sgFCJEHrwSYbEjnvRPIC5mtH8IRCBUOTOwO4Fg/tCD2GZqsrCumAFTE8GDNBSGqdWjKJmzM6TvFN9kfm3ae5iXbJTbzOqwhABlusbVud5+u9UsK/O9VKEtKimUQlpX42xePAc3yQSZfHb71jjS3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=rT1wPwvo; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1746407225; c=relaxed/simple;
+	bh=MzfVY3rOlputwHTZMMD89EQq/isETYUiisaWaiRx9dg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=r486dNFmU/KR3Efnjns2QvaSFT9RWpbJcK/TOXBRYEsdL8IH5fzz0cI6GOkYydodmhKt3fo5ZTeTxFzy6ei6GZ+ZQfxhaWHP13QId/V8YMVLtkFQmAlX4V8RvQ3a/WZXQx9BubXtN/PnvNcVQgkRgkxxJVlcQHKzpXKjGHbDOXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HiCUA9Tk; arc=none smtp.client-ip=209.85.215.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="rT1wPwvo"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
-	:Subject; bh=8tvb66wwireoDnKEYmAITJ2Fw0oT3tpDZumoZ1GwT2k=; b=rT1wPwvoI+7LCnzp
-	rpsR7vIPeZPp5LUGkxTqjP/z8GN4Sp+9XrIuEZ9Q1QhrHc4ZmrYLNJL0yOfpOBOeeKG8P+RoKPIxR
-	9C1unYf7fz+KpX/034cO8UPZZPGUgSJvyMJsJcALqdxGZI/C/foVD4PhNIJyBIYBAg94/h6V+TrNX
-	aSDuZArjp8MtGmOvhrw/BEjbWUp2foPl5EIiN1rMBRrB5kkG/rnVpz4X0n/Pbw9sS6Trt+iT9Etcp
-	Niykg8MYXar8mJoKiYgtFwWYMn8YfiW4JYsKCPUnWH71cDB8+GNTgdHU9sD/EJF8QH0hyaoVc+PUK
-	64T+wlEqWWiikwlb/A==;
-Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
-	by mx.treblig.org with esmtp (Exim 4.96)
-	(envelope-from <linux@treblig.org>)
-	id 1uBk7Q-001Lvo-0z;
-	Mon, 05 May 2025 00:55:40 +0000
-From: linux@treblig.org
-To: malattia@linux.it,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com
-Cc: hverkuil@xs4all.nl,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HiCUA9Tk"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-b1f7f239b31so4060371a12.0;
+        Sun, 04 May 2025 18:07:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746407223; x=1747012023; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pzHjsFjJwKIZOWyqGrXWV5zhCcowRRmarZGQK7BMMyQ=;
+        b=HiCUA9Tkxjce513lCgPCaRTwMHQPCsjT6MB0PvPj1vg0cayS921Nh2EhGLzcYbm27c
+         2DksZm5jma9taIvRyE5uKzumJd6Og0MM031JgO1BXPZ4FqJj3aD4tPhbi+nVt5f53Ice
+         9fSq75RZLO3L+FV1dK4vAIGMVkUO1jMUuQ/GLM3avXIgxDtkL7CkYelVaMEj5R1DoyX/
+         1zY75vT2m1DQghYM0IpIWydRz6PwuCfuaLSRO/SCiGatGCoUqupUR6Z2vY7pEXXOMQDz
+         7ORkj71bCZbD5TAyTQcFjOycvRucQsY/5Bj6fELXsu/k3xtecZlh8B7Q86y3fiDCPfr0
+         BRxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746407223; x=1747012023;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pzHjsFjJwKIZOWyqGrXWV5zhCcowRRmarZGQK7BMMyQ=;
+        b=BB1zDxDaOHvWzyZjfQbvDojTbOMEdOhIQDdA6iNHgvx5oQSWeBtMbegjNGuJHGGpWF
+         uLpx/oelxids0tTmL07XVRI3DO/B3EPwxM4gZca6vC+6VOOVqOsJw3ZvKYh0b1UfmAgL
+         aOEPdTUEyAcWuxZAfqlzQ+LBo+45Vs/JKP8DqQrUEtka7n06cRVo5aUSFW4HyNifEYjL
+         DTLYEiWFZWfsbMi0Fh2n6W+LMoQn5Xm4bsNbqb8CdGu2dtFlbDJ/ckd+Z8xuKdICf/5X
+         UL4YUxnfpIm2egcbrf1WUTG64SEh3NFqS5VdH4uVD2zxlmFfLdIaCLh32gRbGF5otRJ5
+         /Yew==
+X-Forwarded-Encrypted: i=1; AJvYcCV7F0c4cAmww3xJQ8Mr4fcS/QUkKAWtt67cIobRCoy5Uj1aBYRd/4EVXQvFN9IgSy0s+VjZZzAW/D3p5Be6lGhIfkmDeg==@vger.kernel.org, AJvYcCW4TlFk3O2/ZtgZ1jAz3nzMIL5XhIGUDdEaiqpuRVATDstQjMvxjPwW9XgGvoY/J23ckeQsCBcz0+JcFB3Y@vger.kernel.org, AJvYcCXeXdxHVXlb+DWu+7JE7xbRtctvajB0qA4L/Bn1+ZkgKy0GemMTcVRe+DeD3OsUg9DfPuhKltYZZb8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwcQ0unfUoaVuHiEgk9oS8DO2NN9dIEjIdjO8/0Zr2dR61i42C0
+	KNxGgW6oNWv2JXTF+E1bIvYKMJGDwR3vCtluB9VoIqj7rgqV2EsX
+X-Gm-Gg: ASbGncufKIKSUTQXRwy6jVl5n/FyYFDxv8xjByPaImPa+jO/S4YUkLH8Mo3IE7inym0
+	6UMLqIOTL8oQThP+k+kl2uDGP0xrP8XCzR4SKXS7HME3bDxkTy50Us9HgXcmTrWILuGoEQKwKRA
+	cbOTpKOwju5wZkH3BmDb1J94dctulz+fKaz4z9lqC58RUWzHKZfS7Ooz03yauvNJuNoEOZrKDoG
+	dH/7/NSrO4ieWjgl3hLdCDRcl6Yw9ahJiPdR90Haj8v/FVAVyJNJU96lAj2EYbsvHM2v06WHsmK
+	egm9pOwArSanKCtqkr6oUm/tYpXYqNdKgIk8C3ggXpnELhcXkcMwRJZ2pQvkwao0fxkqAb1M/PJ
+	EG6GVkGp29dXs5Se/iYXCIyAD4BD8NP48hc+6PJg=
+X-Google-Smtp-Source: AGHT+IGls01ky9cR3incextDsxQUNC8GCwAEzTUUUZL7lQhdl0aYo3P8fyP2+/Cm5K4c+uF7Hwt56w==
+X-Received: by 2002:a17:90b:2752:b0:2fa:1e56:5d82 with SMTP id 98e67ed59e1d1-30a4e2387f3mr16550644a91.17.1746407223322;
+        Sun, 04 May 2025 18:07:03 -0700 (PDT)
+Received: from localhost.localdomain (108-228-232-20.lightspeed.sndgca.sbcglobal.net. [108.228.232.20])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30a34721015sm10194650a91.6.2025.05.04.18.07.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 04 May 2025 18:07:02 -0700 (PDT)
+From: "Derek J. Clark" <derekjohn.clark@gmail.com>
+To: Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Armin Wolf <W_Armin@gmx.de>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Mario Limonciello <superm1@kernel.org>,
+	Luke Jones <luke@ljones.dev>,
+	Xino Ni <nijs1@lenovo.com>,
+	Zhixin Zhang <zhangzx36@lenovo.com>,
+	Mia Shao <shaohz1@lenovo.com>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	"Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+	"Cody T . -H . Chiu" <codyit@gmail.com>,
+	John Martens <johnfanv2@gmail.com>,
+	"Derek J . Clark" <derekjohn.clark@gmail.com>,
 	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Dr. David Alan Gilbert" <linux@treblig.org>
-Subject: [PATCH] platform/x86/sony-laptop: Remove unused sony laptop camera code
-Date: Mon,  5 May 2025 01:55:39 +0100
-Message-ID: <20250505005539.336183-1-linux@treblig.org>
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v8 0/6] platform/x86: Add Lenovo WMI Gaming Series Drivers
+Date: Sun,  4 May 2025 18:06:53 -0700
+Message-ID: <20250505010659.1450984-1-derekjohn.clark@gmail.com>
 X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -48,241 +86,78 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
+Adds support for the Lenovo "Gaming Series" of laptop hardware that use
+WMI interfaces that control various power settings. There are multiple WMI
+interfaces that work in concert to provide getting and setting values as
+well as validation of input. Currently only the "Gamezone", "Other
+Mode", and "LENOVO_CAPABILITY_DATA_01" interfaces are implemented, but
+I attempted to structure the driver so that adding the "Custom Mode",
+"Lighting", and other data block interfaces would be trivial in later
+patches.
 
-commit ba47652ba655 ("media: meye: remove this deprecated driver")
-removed the meye driver but left behind the code in sony-laptop.c
-which that driver used to call.
+This driver attempts to standardize the exposed sysfs by mirroring the
+asus-armoury driver currently under review. As such, a lot of
+inspiration has been drawn from that driver.
+https://lore.kernel.org/platform-driver-x86/20250319065827.53478-1-luke@ljones.dev/#t
 
-Remove the sony_pic_camera_command() function, and the set of
-defines (SONY_PIC_COMMAND_*) in a header used for the interface
-and the static helpers it called.
+The drivers have been tested by me on the Lenovo Legion Go and Legion Go
+S.
 
-Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+Suggested-by: Mario Limonciello <superm1@kernel.org>
+Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
 ---
- MAINTAINERS                        |   1 -
- drivers/platform/x86/sony-laptop.c | 135 -----------------------------
- include/linux/sony-laptop.h        |  39 ---------
- 3 files changed, 175 deletions(-)
- delete mode 100644 include/linux/sony-laptop.h
+v7:
+https://lore.kernel.org/platform-driver-x86/20250503000142.1190354-1-derekjohn.clark@gmail.com/
+v6:
+https://lore.kernel.org/platform-driver-x86/20250428012029.970017-1-derekjohn.clark@gmail.com/
+v5:
+https://lore.kernel.org/platform-driver-x86/20250408012815.1032357-1-derekjohn.clark@gmail.com/
+v4:
+https://lore.kernel.org/platform-driver-x86/20250317144326.5850-1-derekjohn.clark@gmail.com/
+v3:
+https://lore.kernel.org/platform-driver-x86/20250225220037.16073-1-derekjohn.clark@gmail.com/
+v2:
+https://lore.kernel.org/platform-driver-x86/20250102004854.14874-1-derekjohn.clark@gmail.com/
+v1:
+https://lore.kernel.org/platform-driver-x86/20241217230645.15027-1-derekjohn.clark@gmail.com/
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2aed76827090..6c865b5d8fae 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -22671,7 +22671,6 @@ W:	http://www.linux.it/~malattia/wiki/index.php/Sony_drivers
- F:	Documentation/admin-guide/laptops/sony-laptop.rst
- F:	drivers/char/sonypi.c
- F:	drivers/platform/x86/sony-laptop.c
--F:	include/linux/sony-laptop.h
- 
- SOPHGO DEVICETREES and DRIVERS
- M:	Chen Wang <unicorn_wang@outlook.com>
-diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
-index b52390fbd743..4efd0d7031a5 100644
---- a/drivers/platform/x86/sony-laptop.c
-+++ b/drivers/platform/x86/sony-laptop.c
-@@ -48,7 +48,6 @@
- #include <linux/acpi.h>
- #include <linux/slab.h>
- #include <linux/sonypi.h>
--#include <linux/sony-laptop.h>
- #include <linux/rfkill.h>
- #ifdef CONFIG_SONYPI_COMPAT
- #include <linux/poll.h>
-@@ -3619,22 +3618,6 @@ static u8 sony_pic_call2(u8 dev, u8 fn)
- 	return v1;
- }
- 
--static u8 sony_pic_call3(u8 dev, u8 fn, u8 v)
--{
--	u8 v1;
--
--	wait_on_command(inb_p(spic_dev.cur_ioport->io1.minimum + 4) & 2, ITERATIONS_LONG);
--	outb(dev, spic_dev.cur_ioport->io1.minimum + 4);
--	wait_on_command(inb_p(spic_dev.cur_ioport->io1.minimum + 4) & 2, ITERATIONS_LONG);
--	outb(fn, spic_dev.cur_ioport->io1.minimum);
--	wait_on_command(inb_p(spic_dev.cur_ioport->io1.minimum + 4) & 2, ITERATIONS_LONG);
--	outb(v, spic_dev.cur_ioport->io1.minimum);
--	v1 = inb_p(spic_dev.cur_ioport->io1.minimum);
--	dprintk("sony_pic_call3(0x%.2x - 0x%.2x - 0x%.2x): 0x%.4x\n",
--			dev, fn, v, v1);
--	return v1;
--}
--
- /*
-  * minidrivers for SPIC models
-  */
-@@ -3754,124 +3737,6 @@ static void sony_pic_detect_device_type(struct sony_pic_dev *dev)
- #define SONYPI_CAMERA_REVISION 			8
- #define SONYPI_CAMERA_ROMVERSION 		9
- 
--static int __sony_pic_camera_ready(void)
--{
--	u8 v;
--
--	v = sony_pic_call2(0x8f, SONYPI_CAMERA_STATUS);
--	return (v != 0xff && (v & SONYPI_CAMERA_STATUS_READY));
--}
--
--static int __sony_pic_camera_off(void)
--{
--	if (!camera) {
--		pr_warn("camera control not enabled\n");
--		return -ENODEV;
--	}
--
--	wait_on_command(sony_pic_call3(0x90, SONYPI_CAMERA_PICTURE,
--				SONYPI_CAMERA_MUTE_MASK),
--			ITERATIONS_SHORT);
--
--	if (spic_dev.camera_power) {
--		sony_pic_call2(0x91, 0);
--		spic_dev.camera_power = 0;
--	}
--	return 0;
--}
--
--static int __sony_pic_camera_on(void)
--{
--	int i, j, x;
--
--	if (!camera) {
--		pr_warn("camera control not enabled\n");
--		return -ENODEV;
--	}
--
--	if (spic_dev.camera_power)
--		return 0;
--
--	for (j = 5; j > 0; j--) {
--
--		for (x = 0; x < 100 && sony_pic_call2(0x91, 0x1); x++)
--			msleep(10);
--		sony_pic_call1(0x93);
--
--		for (i = 400; i > 0; i--) {
--			if (__sony_pic_camera_ready())
--				break;
--			msleep(10);
--		}
--		if (i)
--			break;
--	}
--
--	if (j == 0) {
--		pr_warn("failed to power on camera\n");
--		return -ENODEV;
--	}
--
--	wait_on_command(sony_pic_call3(0x90, SONYPI_CAMERA_CONTROL,
--				0x5a),
--			ITERATIONS_SHORT);
--
--	spic_dev.camera_power = 1;
--	return 0;
--}
--
--/* External camera command (exported to the motion eye v4l driver) */
--int sony_pic_camera_command(int command, u8 value)
--{
--	if (!camera)
--		return -EIO;
--
--	mutex_lock(&spic_dev.lock);
--
--	switch (command) {
--	case SONY_PIC_COMMAND_SETCAMERA:
--		if (value)
--			__sony_pic_camera_on();
--		else
--			__sony_pic_camera_off();
--		break;
--	case SONY_PIC_COMMAND_SETCAMERABRIGHTNESS:
--		wait_on_command(sony_pic_call3(0x90, SONYPI_CAMERA_BRIGHTNESS, value),
--				ITERATIONS_SHORT);
--		break;
--	case SONY_PIC_COMMAND_SETCAMERACONTRAST:
--		wait_on_command(sony_pic_call3(0x90, SONYPI_CAMERA_CONTRAST, value),
--				ITERATIONS_SHORT);
--		break;
--	case SONY_PIC_COMMAND_SETCAMERAHUE:
--		wait_on_command(sony_pic_call3(0x90, SONYPI_CAMERA_HUE, value),
--				ITERATIONS_SHORT);
--		break;
--	case SONY_PIC_COMMAND_SETCAMERACOLOR:
--		wait_on_command(sony_pic_call3(0x90, SONYPI_CAMERA_COLOR, value),
--				ITERATIONS_SHORT);
--		break;
--	case SONY_PIC_COMMAND_SETCAMERASHARPNESS:
--		wait_on_command(sony_pic_call3(0x90, SONYPI_CAMERA_SHARPNESS, value),
--				ITERATIONS_SHORT);
--		break;
--	case SONY_PIC_COMMAND_SETCAMERAPICTURE:
--		wait_on_command(sony_pic_call3(0x90, SONYPI_CAMERA_PICTURE, value),
--				ITERATIONS_SHORT);
--		break;
--	case SONY_PIC_COMMAND_SETCAMERAAGC:
--		wait_on_command(sony_pic_call3(0x90, SONYPI_CAMERA_AGC, value),
--				ITERATIONS_SHORT);
--		break;
--	default:
--		pr_err("sony_pic_camera_command invalid: %d\n", command);
--		break;
--	}
--	mutex_unlock(&spic_dev.lock);
--	return 0;
--}
--EXPORT_SYMBOL(sony_pic_camera_command);
--
- /* gprs/edge modem (SZ460N and SZ210P), thanks to Joshua Wise */
- static void __sony_pic_set_wwanpower(u8 state)
- {
-diff --git a/include/linux/sony-laptop.h b/include/linux/sony-laptop.h
-deleted file mode 100644
-index 1e3c92feea6e..000000000000
---- a/include/linux/sony-laptop.h
-+++ /dev/null
-@@ -1,39 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--#ifndef _SONYLAPTOP_H_
--#define _SONYLAPTOP_H_
--
--#include <linux/types.h>
--
--#ifdef __KERNEL__
--
--/* used only for communication between v4l and sony-laptop */
--
--#define SONY_PIC_COMMAND_GETCAMERA		 1	/* obsolete */
--#define SONY_PIC_COMMAND_SETCAMERA		 2
--#define SONY_PIC_COMMAND_GETCAMERABRIGHTNESS	 3	/* obsolete */
--#define SONY_PIC_COMMAND_SETCAMERABRIGHTNESS	 4
--#define SONY_PIC_COMMAND_GETCAMERACONTRAST	 5	/* obsolete */
--#define SONY_PIC_COMMAND_SETCAMERACONTRAST	 6
--#define SONY_PIC_COMMAND_GETCAMERAHUE		 7	/* obsolete */
--#define SONY_PIC_COMMAND_SETCAMERAHUE		 8
--#define SONY_PIC_COMMAND_GETCAMERACOLOR		 9	/* obsolete */
--#define SONY_PIC_COMMAND_SETCAMERACOLOR		10
--#define SONY_PIC_COMMAND_GETCAMERASHARPNESS	11	/* obsolete */
--#define SONY_PIC_COMMAND_SETCAMERASHARPNESS	12
--#define SONY_PIC_COMMAND_GETCAMERAPICTURE	13	/* obsolete */
--#define SONY_PIC_COMMAND_SETCAMERAPICTURE	14
--#define SONY_PIC_COMMAND_GETCAMERAAGC		15	/* obsolete */
--#define SONY_PIC_COMMAND_SETCAMERAAGC		16
--#define SONY_PIC_COMMAND_GETCAMERADIRECTION	17	/* obsolete */
--#define SONY_PIC_COMMAND_GETCAMERAROMVERSION	18	/* obsolete */
--#define SONY_PIC_COMMAND_GETCAMERAREVISION	19	/* obsolete */
--
--#if IS_ENABLED(CONFIG_SONY_LAPTOP)
--int sony_pic_camera_command(int command, u8 value);
--#else
--static inline int sony_pic_camera_command(int command, u8 value) { return 0; }
--#endif
--
--#endif	/* __KERNEL__ */
--
--#endif /* _SONYLAPTOP_H_ */
+Derek J. Clark (6):
+  platform/x86: Add lenovo-wmi-* driver Documentation
+  platform/x86: Add lenovo-wmi-helpers
+  platform/x86: Add Lenovo WMI Events Driver
+  platform/x86: Add Lenovo Capability Data 01 WMI Driver
+  platform/x86: Add Lenovo Gamezone WMI Driver
+  platform/x86: Add Lenovo Other Mode WMI Driver
+
+ .../wmi/devices/lenovo-wmi-gamezone.rst       | 203 ++++++
+ .../wmi/devices/lenovo-wmi-other.rst          | 108 +++
+ MAINTAINERS                                   |  12 +
+ drivers/platform/x86/Kconfig                  |  41 ++
+ drivers/platform/x86/Makefile                 |   5 +
+ drivers/platform/x86/lenovo-wmi-capdata01.c   | 300 ++++++++
+ drivers/platform/x86/lenovo-wmi-capdata01.h   |  25 +
+ drivers/platform/x86/lenovo-wmi-events.c      | 196 ++++++
+ drivers/platform/x86/lenovo-wmi-events.h      |  20 +
+ drivers/platform/x86/lenovo-wmi-gamezone.c    | 408 +++++++++++
+ drivers/platform/x86/lenovo-wmi-gamezone.h    |  20 +
+ drivers/platform/x86/lenovo-wmi-helpers.c     |  74 ++
+ drivers/platform/x86/lenovo-wmi-helpers.h     |  20 +
+ drivers/platform/x86/lenovo-wmi-other.c       | 652 ++++++++++++++++++
+ drivers/platform/x86/lenovo-wmi-other.h       |  16 +
+ 15 files changed, 2100 insertions(+)
+ create mode 100644 Documentation/wmi/devices/lenovo-wmi-gamezone.rst
+ create mode 100644 Documentation/wmi/devices/lenovo-wmi-other.rst
+ create mode 100644 drivers/platform/x86/lenovo-wmi-capdata01.c
+ create mode 100644 drivers/platform/x86/lenovo-wmi-capdata01.h
+ create mode 100644 drivers/platform/x86/lenovo-wmi-events.c
+ create mode 100644 drivers/platform/x86/lenovo-wmi-events.h
+ create mode 100644 drivers/platform/x86/lenovo-wmi-gamezone.c
+ create mode 100644 drivers/platform/x86/lenovo-wmi-gamezone.h
+ create mode 100644 drivers/platform/x86/lenovo-wmi-helpers.c
+ create mode 100644 drivers/platform/x86/lenovo-wmi-helpers.h
+ create mode 100644 drivers/platform/x86/lenovo-wmi-other.c
+ create mode 100644 drivers/platform/x86/lenovo-wmi-other.h
+
 -- 
 2.49.0
 
