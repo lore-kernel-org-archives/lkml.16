@@ -1,45 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FDAB2D9DA4;
-	Mon,  5 May 2025 22:57:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BDA636EF2E;
+	Mon,  5 May 2025 22:57:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485855; cv=none; b=kXl+Kc3KCZ4RU2GJgSB15yS52leL9DhO2/5qg5GK3wXdVAJv7wjh4iMOdFIvqRwBS8PGfEpZIVkuNW6/vhIRLSol6PmDoY222n7Eh8dmiIDQ6CAoMEtIfVEZI2GkPie37lOfKKmjFmGpZflp8o4gkIjPIaNBnjIJ4ssw21nrcjg=
+	t=1746485863; cv=none; b=biZB9GhJ16FOGhXj7rlyY6J0O+Mu9vU1vb9D8Krqu47VDLJYp6ClMnZ3Cvzqh/72PDwirgv/6jwKt8KNsvtLGLfK417w0jblei1H9fIR/udr57HFudNQm2HobvwV/avJ4wvoiFTuFy4ZJW8ADc2yHwnxxVtWE0glNli1+0PTxw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485855; c=relaxed/simple;
-	bh=3VTvkgWlhG6cml0I+iMJ5YstdI9lUTyy+ZFjdKg1mLk=;
+	s=arc-20240116; t=1746485863; c=relaxed/simple;
+	bh=u9jwbzTddMvDD1UzyjrxvTqlENFVGks2J67kdf+mvbQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YqMzw6VU4nQQfMXwBgKItwFDgeEBhCGHT6uirPie2pSIeddezBbgx5Z/6xGepJQYOl17B/dbbahwpdmGjN1cmvCtCWVX55C8He4mqKmWWJbgfxHdjAohTfqnjmkVMKakSpyziLaMl+oIE2Fw1E51plqL+EoI2p+HJpR50XqO2p0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jlaStX4p; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=n7kjupDdZVBRH9aFeJ7cMv+9vEN/54JzNIjWJ9OPvWY1ei9spWu4keEtWSg5osMmEnyo6p+x2T2E94MuquHgNsV7DXX6J+3NFYEukn2NBEEL7qXcODu/aZB/oYFodOfj8riXeLlDGEOvju8Zt5WLmyjezALDdqKXV2JVp9Z5BkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hv/VyZr2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jlaStX4p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 186FCC4CEEE;
-	Mon,  5 May 2025 22:57:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hv/VyZr2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53376C4CEED;
+	Mon,  5 May 2025 22:57:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485855;
-	bh=3VTvkgWlhG6cml0I+iMJ5YstdI9lUTyy+ZFjdKg1mLk=;
+	s=k20201202; t=1746485862;
+	bh=u9jwbzTddMvDD1UzyjrxvTqlENFVGks2J67kdf+mvbQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jlaStX4pzLwK20c4jdajXDiGCl7tBMBSxvU0gtZPTwyvnWRA2HWTCLp2uD5UmLOq+
-	 IlCLDETIbf44tCuOuQ4vuZl6C1eBj5LJRU9ckMQmpfQe55tNLR/Bd3KKzqto/RtgTW
-	 ZLm1XPj8fGgCXlZQKFuNZXux0xJ/qKvsqW0uKFtT61ZBNnM61g52/Ag9+0QaDhHZDN
-	 sLEeHjTHs6mnNuGB7yY6jbUsjXe2pHw2yiusKnSefw8OEtotqXSrnhKw0Vh9eq8gFF
-	 Y6gUIPKSDLMwh4sED50KrtIDaxuvhCUrprBh0LdyrNJIjKm/uDhAG81cQqga5tU3GH
-	 K7a1Rmn1VdS+A==
+	b=Hv/VyZr2ivHM84oUKwo0P4IKJZCDlSFdKHoZPoYkzgzV0llkCFqBynmvLXtPKPD9A
+	 g7QsPWWvPjAsYGVLdkxzIpcaOa6JHT0AfYB9HeZ5Fxk6AO1quDoHJfI6K289ORvFDC
+	 CeoLjgMSi/8p2+kVMiG0ppKWkkaLeBwhKNK4CCnUyN4rIqttpKoQvFgP7hXqzCe1pz
+	 qVwDdcxA0Y96S5pzcHRodfxvo8MgF7Q6ORZV5N3sQ12wXY6SsvUwque+6g/IIhbxAB
+	 DCUzfbRu93eRsUemD3+m0bNVwpLgp93s2Vkzmtk+aGiJkNN0TkIEGKs6I8rY55kkXM
+	 44U5FR5u7YYcQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Frank Li <Frank.Li@nxp.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
+Cc: Nicolas Bretz <bretznic@gmail.com>,
+	Theodore Ts'o <tytso@mit.edu>,
 	Sasha Levin <sashal@kernel.org>,
-	jingoohan1@gmail.com,
-	manivannan.sadhasivam@linaro.org,
-	lpieralisi@kernel.org,
-	kw@linux.com,
-	linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 031/294] PCI: dwc: ep: Ensure proper iteration over outbound map windows
-Date: Mon,  5 May 2025 18:52:11 -0400
-Message-Id: <20250505225634.2688578-31-sashal@kernel.org>
+	adilger.kernel@dilger.ca,
+	linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 035/294] ext4: on a remount, only log the ro or r/w state when it has changed
+Date: Mon,  5 May 2025 18:52:15 -0400
+Message-Id: <20250505225634.2688578-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -54,43 +51,54 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Frank Li <Frank.Li@nxp.com>
+From: Nicolas Bretz <bretznic@gmail.com>
 
-[ Upstream commit f3e1dccba0a0833fc9a05fb838ebeb6ea4ca0e1a ]
+[ Upstream commit d7b0befd09320e3356a75cb96541c030515e7f5f ]
 
-Most systems' PCIe outbound map windows have non-zero physical addresses,
-but the possibility of encountering zero increased after following commit
-("PCI: dwc: Use parent_bus_offset").
+A user complained that a message such as:
 
-'ep->outbound_addr[n]', representing 'parent_bus_address', might be 0 on
-some hardware, which trims high address bits through bus fabric before
-sending to the PCIe controller.
+EXT4-fs (nvme0n1p3): re-mounted UUID ro. Quota mode: none.
 
-Replace the iteration logic with 'for_each_set_bit()' to ensure only
-allocated map windows are iterated when determining the ATU index from a
-given address.
+implied that the file system was previously mounted read/write and was
+now remounted read-only, when it could have been some other mount
+state that had changed by the "mount -o remount" operation.  Fix this
+by only logging "ro"or "r/w" when it has changed.
 
-Link: https://lore.kernel.org/r/20250315201548.858189-12-helgaas@kernel.org
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+https://bugzilla.kernel.org/show_bug.cgi?id=219132
+
+Signed-off-by: Nicolas Bretz <bretznic@gmail.com>
+Link: https://patch.msgid.link/20250319171011.8372-1-bretznic@gmail.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/dwc/pcie-designware-ep.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ext4/super.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index f2e5feba55267..26ad643fb4248 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -281,7 +281,7 @@ static int dw_pcie_find_index(struct dw_pcie_ep *ep, phys_addr_t addr,
- 	u32 index;
- 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+index 751c879271e05..3dcaf06ada364 100644
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -6771,6 +6771,7 @@ static int ext4_reconfigure(struct fs_context *fc)
+ {
+ 	struct super_block *sb = fc->root->d_sb;
+ 	int ret;
++	bool old_ro = sb_rdonly(sb);
  
--	for (index = 0; index < pci->num_ob_windows; index++) {
-+	for_each_set_bit(index, ep->ob_window_map, pci->num_ob_windows) {
- 		if (ep->outbound_addr[index] != addr)
- 			continue;
- 		*atu_index = index;
+ 	fc->s_fs_info = EXT4_SB(sb);
+ 
+@@ -6782,9 +6783,9 @@ static int ext4_reconfigure(struct fs_context *fc)
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	ext4_msg(sb, KERN_INFO, "re-mounted %pU %s. Quota mode: %s.",
+-		 &sb->s_uuid, sb_rdonly(sb) ? "ro" : "r/w",
+-		 ext4_quota_mode(sb));
++	ext4_msg(sb, KERN_INFO, "re-mounted %pU%s.",
++		 &sb->s_uuid,
++		 (old_ro != sb_rdonly(sb)) ? (sb_rdonly(sb) ? " ro" : " r/w") : "");
+ 
+ 	return 0;
+ }
 -- 
 2.39.5
 
