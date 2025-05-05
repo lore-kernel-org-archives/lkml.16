@@ -1,111 +1,89 @@
 Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD3F329A5;
-	Mon,  5 May 2025 01:35:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4206014B950;
+	Mon,  5 May 2025 01:39:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746408951; cv=none; b=rdqoPuH13D31XALr30a0tpqSl73AgOzumxCuhA2851DHshP9mTl0+jZqJu9j1mp4yOeDaGDgdGz5azMeeRFDLCX2Rd/orlXta2E9C5iSR7AurrOg1Scrwl2Ajf3Ic+rudOFHiZ6OZG+wNsGm2BaWJJjkDiO0nuDipuOLuhF0Jwc=
+	t=1746409173; cv=none; b=EK/3iyzVMs03v/DSOTozCRXr5GYy/+8YEJMThbxZLST5MVS7flKvxXdVDQfSjIlcvr4NkqkLyt7tj6rejVFPTXNJ3Me9oW0Atlqnb7xLuYnEyO/IPoOBZ61ohpHLa7VF4OtbRB6ypbAh5dhLoQs3TTr8TSayKiKyzvCxEYFFC34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746408951; c=relaxed/simple;
-	bh=rVlov5MiAeeifq0xC9nEvILniSr3HH1Z9+3WYyYzqmo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=l0HeKSam2H3tYj27r2ulvW3zjX8WNmRFTlBM6ZterMUbVjZAQSPmKP29NwN8MEvZRrzmJ6+7GQ2PzRhRfaCvdR6DICQJJsFcslbdUw98ck9HmxH1MtS2V9R3OXs6bqkGKH1Shel20nzlLkogjPJCKuLa1OJ0nUQBcQ1B85VZB48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=Y96/W1nk; arc=none smtp.client-ip=46.235.229.95
+	s=arc-20240116; t=1746409173; c=relaxed/simple;
+	bh=q77f7B5wiZvw9Dz+CYUdQx/N+1/Qk9NORtkzzhluIuU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dReKUJ/FkqNrI+8VgAtC1TefKhlgmcU+h9rrlhSwggEUvYWNxpkiL5URQzgpVAuJCWTmsmAUIhDNEJMkHmOu/P1Yp35TrtJc+r1eyylmkgsMawKuWJP0S1o2CnPNM2YffmxTL+rRKI0mxDEQ3umbZ16l1Pf7EdF5olfk57bxZgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=W2151x2v; arc=none smtp.client-ip=46.235.229.95
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="Y96/W1nk"
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="W2151x2v"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
-	:Subject; bh=xE3NZTQkEdEVV6ngcG8aEKyvPiYBzkHan35NZ82mHcc=; b=Y96/W1nkkOgzE4YG
-	k6X6zdl03ibTb2a7ccH5oIyVSQbsc3koRsgqAaODPM0f7zs1F33SPHAar7w8fktzV7cOXul6iPFUM
-	cZiUazV0LYqLF6PWDKS5Q62OppYUOZPwawksXypXD29A6C6Cr/CUwAIdd46z12Qzb6800Qqhn+dp2
-	JYKa4oYM32Cggn/615/MTo4zHCO9ksKX1/i/R35/Jz1xuFOmTbpoA9LxVfZl3fPL2oL/It65Hdofj
-	7itYcE4RcLRRf9iQzSquoxpu0sRtywxjRsuIQs6rYyEnU4HzYiQ1yz0JJ7FRoOmglX8j2pDnHX1rf
-	2NWDnfz8i0reW3J/+Q==;
-Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
-	by mx.treblig.org with esmtp (Exim 4.96)
-	(envelope-from <linux@treblig.org>)
-	id 1uBkkD-001M9R-2b;
-	Mon, 05 May 2025 01:35:45 +0000
-From: linux@treblig.org
-To: florian.fainelli@broadcom.com,
-	rjui@broadcom.com,
-	sbranden@broadcom.com,
-	mturquette@baylibre.com,
-	sboyd@kernel.org
-Cc: bcm-kernel-feedback-list@broadcom.com,
-	linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Dr. David Alan Gilbert" <linux@treblig.org>
-Subject: [PATCH] clk: bcm: kona: Remove unused scaled_div_build
-Date: Mon,  5 May 2025 02:35:45 +0100
-Message-ID: <20250505013545.359745-1-linux@treblig.org>
-X-Mailer: git-send-email 2.49.0
+	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
+	:Subject; bh=YNp13OGSu5oPbjO5Hd769k73sfu68cuaSBLtC2WdS5k=; b=W2151x2vaMZHC+7L
+	DJ/Sg1D2FO6/OIU3lEoXdp5XNdgdKyOTkgvIKwLqU8cW7xEshh8EQuw4XIHmXsuicAl3S1DvabM/W
+	hPHbg7RNyTPxphtfZ16rw2Cpw6fdDTuNKpDVw5uyhb3zDKl475GlgcYS8FxDu/P/7vu9sZwaleEgr
+	h5rnm0ETOFhAb9a9I+2/xKrP0lSK6oU/W2NVzt/PrvEAzAt7HaklQZvQaNdCFAxhcRW3HQMqRsk1d
+	JfePgiEKdLGHgW7XxMAV/YWks81nha56sawjnV4ljLqoU3CKX4KIG847cLE4ejAJdTeaURy8zbS/w
+	X3g6OGXxWwIvSUiWkw==;
+Received: from dg by mx.treblig.org with local (Exim 4.96)
+	(envelope-from <dg@treblig.org>)
+	id 1uBknp-001MAh-0N;
+	Mon, 05 May 2025 01:39:29 +0000
+Date: Mon, 5 May 2025 01:39:29 +0000
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
+To: Ping-Ke Shih <pkshih@realtek.com>
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] wifi: rtlwifi: Remove unused rtl_usb_{resume|suspend}
+Message-ID: <aBgW0UXKC7ZUo49S@gallifrey>
+References: <20250425235340.288340-1-linux@treblig.org>
+ <20250425235340.288340-2-linux@treblig.org>
+ <c92a8101-e8fe-4727-9f85-e1e96ef5392c@RTEXMBS04.realtek.com.tw>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+In-Reply-To: <c92a8101-e8fe-4727-9f85-e1e96ef5392c@RTEXMBS04.realtek.com.tw>
+X-Chocolate: 70 percent or better cocoa solids preferably
+X-Operating-System: Linux/6.1.0-34-amd64 (x86_64)
+X-Uptime: 01:38:51 up 7 days,  9:52,  1 user,  load average: 0.00, 0.01, 0.00
+User-Agent: Mutt/2.2.12 (2023-09-09)
 
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
+* Ping-Ke Shih (pkshih@realtek.com) wrote:
+> linux@treblig.org wrote:
+> 
+> > From: "Dr. David Alan Gilbert" <linux@treblig.org>
+> > 
+> > rtl_usb_resume() and rtl_usb_suspend() are trivial stubs that were
+> > added in 2011's
+> > commit 2ca20f79e0d8 ("rtlwifi: Add usb driver")
+> > but aren't wired up anywhere (though commit 442888c706e9 ("rtlwifi:
+> > rtl8192cu: Add routines dm, fw, led and sw")  added commented
+> > out assignments).
+> > 
+> > Remove them.
+> > 
+> > Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+> 
+> 3 patch(es) applied to rtw-next branch of rtw.git, thanks.
+> 
+> d559636e382a wifi: rtlwifi: Remove unused rtl_usb_{resume|suspend}
+> 2d867b18eb93 wifi: rtlwifi: Remove uncalled stub rtl*_phy_ap_calibrate
+> 406dac790c25 wifi: rtlwifi: Remove unused rtl_bb_delay()
 
-scaled_div_build() was added in 2014 by
-commit 1f27f15258bf ("clk: bcm281xx: add initial clock framework support")
-but hasn't been used.
+Thanks!
+Did you see the question in the 0/3 cover letter asking why
+rtl8188ee_bt_hw_init() isn't called?
 
-Remove it.
+Dave
 
-Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
----
- drivers/clk/bcm/clk-kona.c | 18 ------------------
- drivers/clk/bcm/clk-kona.h |  2 --
- 2 files changed, 20 deletions(-)
-
-diff --git a/drivers/clk/bcm/clk-kona.c b/drivers/clk/bcm/clk-kona.c
-index 2b0ea882f1e4..0171e6b2bfca 100644
---- a/drivers/clk/bcm/clk-kona.c
-+++ b/drivers/clk/bcm/clk-kona.c
-@@ -53,24 +53,6 @@ static inline u64 scaled_div_value(struct bcm_clk_div *div, u32 reg_div)
- 	return (u64)reg_div + ((u64)1 << div->u.s.frac_width);
- }
- 
--/*
-- * Build a scaled divider value as close as possible to the
-- * given whole part (div_value) and fractional part (expressed
-- * in billionths).
-- */
--u64 scaled_div_build(struct bcm_clk_div *div, u32 div_value, u32 billionths)
--{
--	u64 combined;
--
--	BUG_ON(!div_value);
--	BUG_ON(billionths >= BILLION);
--
--	combined = (u64)div_value * BILLION + billionths;
--	combined <<= div->u.s.frac_width;
--
--	return DIV_ROUND_CLOSEST_ULL(combined, BILLION);
--}
--
- /* The scaled minimum divisor representable by a divider */
- static inline u64
- scaled_div_min(struct bcm_clk_div *div)
-diff --git a/drivers/clk/bcm/clk-kona.h b/drivers/clk/bcm/clk-kona.h
-index e09655024ac2..348a3454ce40 100644
---- a/drivers/clk/bcm/clk-kona.h
-+++ b/drivers/clk/bcm/clk-kona.h
-@@ -492,8 +492,6 @@ extern struct clk_ops kona_peri_clk_ops;
- /* Externally visible functions */
- 
- extern u64 scaled_div_max(struct bcm_clk_div *div);
--extern u64 scaled_div_build(struct bcm_clk_div *div, u32 div_value,
--				u32 billionths);
- 
- extern void __init kona_dt_ccu_setup(struct ccu_data *ccu,
- 				struct device_node *node);
+> ---
+> https://github.com/pkshih/rtw.git
+> 
 -- 
-2.49.0
-
+ -----Open up your eyes, open up your mind, open up your code -------   
+/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
+\        dave @ treblig.org |                               | In Hex /
+ \ _________________________|_____ http://www.treblig.org   |_______/
