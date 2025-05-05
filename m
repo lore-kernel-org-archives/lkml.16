@@ -1,141 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from dispatch1-us1.ppe-hosted.com (dispatch1-us1.ppe-hosted.com [67.231.154.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECA551957FC
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 17:04:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.154.183
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746464686; cv=none; b=L0TnAfNz55823/DhmaMGpScKZatV0S4Ugw6hQ+suCcAllpNUdvCuJt557zG5VKhFS0Qz77G36PLeajy3llAy/y39gXNXTBLJBkPQiYK5eVgsr0PEPHFSguL3g9XSzRDPBYEV88B3L6HX9t/dlAFaRaRbOAatiZo+IKPf0BDlTgg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746464686; c=relaxed/simple;
+	bh=f1unv9uKWkpLkfv0FcoXEn2Mw9gnEODhyfQHPGruINo=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qxS1liyRKXdtmYakl+zPxSUh+OLAEJjNNp7H5MgU2/2wtQxBVxGn30VIYR0LzVILUAb+0WoNxS3KZPjfA0UzMZ4j6k7bymslSd2axC9GUhLD1V7t7jT9B089TDEUlbQ6uOpRFhdUbeeCGJj4O8sd3hTxYeTRO9br4nTqLUUW9xA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ventureresearch.com; spf=pass smtp.mailfrom=ventureresearch.com; dkim=pass (2048-bit key) header.d=ventureresearch.com header.i=@ventureresearch.com header.b=dAzBLF60; arc=none smtp.client-ip=67.231.154.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ventureresearch.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventureresearch.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ventureresearch.com header.i=@ventureresearch.com header.b="dAzBLF60"
+Received: from engine.ppe-hosted.com (unknown [10.110.50.102])
+	by dispatch1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTPS id E524D602A2;
+	Mon,  5 May 2025 17:04:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ventureresearch.com;
+ h=cc:cc:content-transfer-encoding:content-transfer-encoding:content-type:content-type:date:date:from:from:in-reply-to:in-reply-to:message-id:message-id:mime-version:mime-version:references:references:subject:subject:to:to;
+ s=selector-1717781956; bh=sruw//HjQB6XJQIxHMRHC9dIAmbSQWjtCq2IsgN/sbI=;
+ b=dAzBLF60Qkk7ahCJWVoinInWp4RsLt0SZWRoUG30RNueTNbgC7Y92Z0AJ+GMmv4suDnqZS9Y0PmhJ33JSxoQEVAZm7LBD+Vte0F9lMlBgvfE29kQXssJS3kxFrARC5PrqkJh4O55mulESP86/VEOOVVHqZnUGuQokmUkxBglT2v1cgvfj2nvXig1WHRnD+nKLZmobq29q4hv1/o91nBXokGmGkA+F5wgXr+xzyhtc2IN/upsmN7pEXPngbfzcPT8JvSztC4IC7OiqsqNSu4zSuPWE3aQwEl7a9+JpFiXE+8oODs+TbxMqqYFh3pNzfnJa8UXF1afUypwC6WiqZs4bQ==
+X-Virus-Scanned: Proofpoint Essentials engine
+Received: from Mail2019.crm.ventureresearch.com (unknown [67.210.242.164])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5F4826B2B0;
-	Mon,  5 May 2025 17:03:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746464623; cv=none; b=XQtH34oV7gEN5LHh5tL//2eXY91NSXFeLiFBk2sh83m+iudNiXRt17psOKOMNaF3932T2OQSB2XFnWyfCbFAG+y6xLoS4KkCoixrd01OOhaqfYaLSKHf2+nzmz05fP2Ic+0YbA16j88a97lLtAdQgyxC0n/mrA19eAeVxtDkHP0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746464623; c=relaxed/simple;
-	bh=HrusCc9SBsT/pb7NKHxA3xrw80w8tMv119nD1CjzK+I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EP1pD/ZUHeIv4cRsPd+D3SAieVGZNF5LzlYeAQ7Kg2tOdb74U7E2xIpp6x1DxTCCRqL6gIqxIlQkBljIK27n0OE6BYeJRvqB6Syh+VoNs0pmnYQ6gNA281jyEyfTvF4ACtsfz59vYT3DiTWIaOjKt02DnvdoYJ3XmzZ4Gyl+PYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hvubux5p; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hvubux5p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24BFDC4CEE4;
-	Mon,  5 May 2025 17:03:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746464620;
-	bh=HrusCc9SBsT/pb7NKHxA3xrw80w8tMv119nD1CjzK+I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hvubux5pL2EOx+kHP1U90MusMRROW6uMVmzZrOMwGL1OkdOm+EGwA3NRRo/u96oqI
-	 lPW4AOB0NjOAv1hMaEV3MVkiW9fjyLqhnRpPClxqdYm3GSL/afBpH4faP7tHqN9+p4
-	 Kn6OafJCkdT0njX3PkrTQ+MGgX7NB/XjdoH91FqGxcvHkq9fd3FkxaGhESnpeEyIko
-	 NrgqUWZy9dB1bPvhpT/0+HbD4x3kYpsPj130Fid8tq/KZITK7l8nppMDqLeS3hptgV
-	 hUl0tZ8TPp2TXKsMr/Ljib2TsW9INPsmX4HTZV5jkrWqozhnAJvrfnxBJjw4mUR0iu
-	 VdNZ7So4f39VQ==
-Date: Mon, 5 May 2025 10:03:36 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: Mikulas Patocka <mpatocka@redhat.com>
-Cc: dm-devel@lists.linux.dev, Alasdair Kergon <agk@redhat.com>,
-	Mike Snitzer <snitzer@kernel.org>, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-fscrypt@vger.kernel.org,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Gaurav Kashyap <quic_gaurkash@quicinc.com>
-Subject: Re: [PATCH v2 2/2] dm: pass through operations on wrapped inline
- crypto keys
-Message-ID: <20250505170336.GA197153@sol>
-References: <20250501212320.8281-1-ebiggers@kernel.org>
- <20250501212320.8281-3-ebiggers@kernel.org>
- <af9771ce-5e88-02d1-3595-fd18a6f2eb28@redhat.com>
+	by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTPS id DB60B340085;
+	Mon,  5 May 2025 17:04:33 +0000 (UTC)
+Received: from build01-deb.crm.ventureresearch.com (2605:ed00:15b3:1::5:1) by
+ mail.ventureresearch.com (2605:ae00:1849:1::1:19) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Mon, 5 May 2025 12:04:33 -0500
+From: Kevin Baker <kevinb@ventureresearch.com>
+To: Neil Armstrong <neil.armstrong@linaro.org>, Sam Ravnborg
+	<sam@ravnborg.org>
+CC: Jessica Zhang <quic_jesszhan@quicinc.com>, Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>, Alex Gonzalez <alex.gonzalez@digi.com>,
+	Thierry Reding <treding@nvidia.com>, Rob Herring <robh@kernel.org>,
+	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>, Kevin
+ Baker <kevinb@ventureresearch.com>
+Subject: [PATCH v2] drm/panel: simple: Update timings for AUO G101EVN010
+Date: Mon, 5 May 2025 12:02:56 -0500
+Message-ID: <20250505170256.1385113-1-kevinb@ventureresearch.com>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <dbd8e1bc-bc23-4240-b6b1-321ac6f5ed68@linaro.org>
+References: <dbd8e1bc-bc23-4240-b6b1-321ac6f5ed68@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <af9771ce-5e88-02d1-3595-fd18a6f2eb28@redhat.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MDID: 1746464675-oNH0tDlgHK0m
+X-PPE-STACK: {"stack":"us1"}
+X-MDID-O:
+ us1;at1;1746464675;oNH0tDlgHK0m;<kevinb@ventureresearch.com>;58e32da1f0e7946bb9643c97f392fd2c
+X-PPE-TRUSTED: V=1;DIR=OUT;
 
-On Mon, May 05, 2025 at 06:15:01PM +0200, Mikulas Patocka wrote:
-> 
-> 
-> On Thu, 1 May 2025, Eric Biggers wrote:
-> 
-> > From: Eric Biggers <ebiggers@google.com>
-> > 
-> > Make the device-mapper layer pass through the derive_sw_secret,
-> > import_key, generate_key, and prepare_key blk-crypto operations when all
-> > underlying devices support hardware-wrapped inline crypto keys and are
-> > passing through inline crypto support.
-> > 
-> > Commit ebc4176551cd ("blk-crypto: add basic hardware-wrapped key
-> > support") already made BLK_CRYPTO_KEY_TYPE_HW_WRAPPED be passed through
-> > in the same way that the other crypto capabilities are.  But the wrapped
-> > key support also includes additional operations in blk_crypto_ll_ops,
-> > and the dm layer needs to implement those to pass them through.
-> > derive_sw_secret is needed by fscrypt, while the other operations are
-> > needed for the new blk-crypto ioctls to work on device-mapper devices
-> > and not just the raw partitions.
-> > 
-> > Signed-off-by: Eric Biggers <ebiggers@google.com>
-> > ---
-> >  drivers/md/dm-table.c | 177 ++++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 177 insertions(+)
-> > 
-> > diff --git a/drivers/md/dm-table.c b/drivers/md/dm-table.c
-> > index a937e1e12482e..0a71bedff81c5 100644
-> > --- a/drivers/md/dm-table.c
-> > +++ b/drivers/md/dm-table.c
-> > +
-> > +static int dm_exec_wrappedkey_op(struct blk_crypto_profile *profile,
-> > +				 struct dm_wrappedkey_op_args *args)
-> > +{
-> > +	struct mapped_device *md =
-> > +		container_of(profile, struct dm_crypto_profile, profile)->md;
-> > +	struct dm_target *ti;
-> > +	struct dm_table *t;
-> > +	int srcu_idx;
-> > +	int i;
-> > +
-> > +	args->err = -EOPNOTSUPP;
-> > +
-> > +	t = dm_get_live_table(md, &srcu_idx);
-> > +	if (!t)
-> > +		goto out;
-> > +
-> > +	/*
-> > +	 * blk-crypto currently has no support for multiple incompatible
-> > +	 * implementations of wrapped inline crypto keys on a single system.
-> > +	 * It was already checked earlier that support for wrapped keys was
-> > +	 * declared on all underlying devices.  Thus, all the underlying devices
-> > +	 * should support all wrapped key operations and they should behave
-> > +	 * identically, i.e. work with the same keys.  So, just executing the
-> > +	 * operation on the first device on which it works suffices for now.
-> > +	 */
-> > +	for (i = 0; i < t->num_targets; i++) {
-> > +		ti = dm_table_get_target(t, i);
-> > +		if (!ti->type->iterate_devices)
-> > +			continue;
-> > +		ti->type->iterate_devices(ti, dm_wrappedkey_op_callback, args);
-> > +		if (!args->err)
-> > +			break;
-> > +	}
-> 
-> I have a dumb question - if it doesn't matter through which block device 
-> do you set up the keys, why do you set them up through a block device at 
-> all?
-> 
-> What about making functions that set up the keys without taking block 
-> device as an argument, calling these functions directly and bypassing 
-> device mapper entirely?
+Switch to panel timings based on datasheet for the AUO G101EVN01.0
+LVDS panel. Default timings were tested on the panel.
 
-Userspace needs to direct the key setup operations, so we'd need a UAPI for it
-to do so.  We could add a custom syscall, or some hacked-up extension of
-add_key(), and add a custom registration mechanism to allow a single
-implementation of wrapped keys (e.g. from ufs-qcom) to register itself as the
-system's wrapped key provider which the syscall would then use.
+Previous mode-based timings resulted in horizontal display shift.
 
-But it seemed cleaner to instead use block device ioctls and take advantage of
-the existing blk-crypto-profile.  That already handles registering and
-unregistering the implementation, and it also already handles things like
-locking, and resuming the UFS controller if it's in suspend.
+Signed-off-by: Kevin Baker <kevinb@ventureresearch.com>
+Fixes: 4fb86404a977 ("drm/panel: simple: Add AUO G101EVN010 panel support")
+---
+ drivers/gpu/drm/panel/panel-simple.c | 25 +++++++++++++------------
+ 1 file changed, 13 insertions(+), 12 deletions(-)
 
-It also keeps the door open to supporting the case where different
-wrapped-key-capable block devices don't necessarily accept the same keys, even
-if that isn't the case currently.
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index df718c4a86cb..c79dc8581054 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -1026,27 +1026,28 @@ static const struct panel_desc auo_g070vvn01 = {
+ 	},
+ };
+ 
+-static const struct drm_display_mode auo_g101evn010_mode = {
+-	.clock = 68930,
+-	.hdisplay = 1280,
+-	.hsync_start = 1280 + 82,
+-	.hsync_end = 1280 + 82 + 2,
+-	.htotal = 1280 + 82 + 2 + 84,
+-	.vdisplay = 800,
+-	.vsync_start = 800 + 8,
+-	.vsync_end = 800 + 8 + 2,
+-	.vtotal = 800 + 8 + 2 + 6,
++static const struct display_timing auo_g101evn010_timing = {
++	.pixelclock = { 64000000, 68930000, 85000000 },
++	.hactive = { 1280, 1280, 1280 },
++	.hfront_porch = { 8, 64, 256 },
++	.hback_porch = { 8, 64, 256 },
++	.hsync_len = { 40, 168, 767 },
++	.vactive = { 800, 800, 800 },
++	.vfront_porch = { 4, 8, 100 },
++	.vback_porch = { 4, 8, 100 },
++	.vsync_len = { 8, 16, 223 },
+ };
+ 
+ static const struct panel_desc auo_g101evn010 = {
+-	.modes = &auo_g101evn010_mode,
+-	.num_modes = 1,
++	.timings = &auo_g101evn010_timing,
++	.num_timings = 1,
+ 	.bpc = 6,
+ 	.size = {
+ 		.width = 216,
+ 		.height = 135,
+ 	},
+ 	.bus_format = MEDIA_BUS_FMT_RGB666_1X7X3_SPWG,
++	.bus_flags = DRM_BUS_FLAG_DE_HIGH,
+ 	.connector_type = DRM_MODE_CONNECTOR_LVDS,
+ };
+ 
+-- 
+2.39.5
 
-- Eric
