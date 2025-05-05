@@ -1,127 +1,135 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F21726A08A;
-	Mon,  5 May 2025 16:45:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B5FE61FF2;
+	Mon,  5 May 2025 16:47:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746463536; cv=none; b=bE0Da3EOS+BV8YsYmA7YQF6cySSdaZgoOKZ7jTFRc38C6Q0AZohGIGRSHAGEtHThrEGorUvcCATEIACbQJj38Y9Ez9yiTFQNqnnNM/y5BDnsgY00/V/mA9yLDanWCUGSFPn552UtUYnjGQqpP7QPIZloG2CU3rUjsk1dq2JgXq4=
+	t=1746463655; cv=none; b=pbWHLw8CQkF01t5T+sZqPyvoNprpJX1bI4kzBpuVawtj0rJAGXm2C8Lt6ehTO9JanU0Xbq3vFvLzGmuLaGMy/xyDlwrWt5yz2Uqce6EiyJIgxAs9Gz1FLTKIWeph+v1vk0fE1sM8MRO5jY82KsC418zFwJhhjoNqX0C6s1/gPVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746463536; c=relaxed/simple;
-	bh=Gv4eXUFcTvYjiREWJuTpviSsOck/71/pfvOrAJ08xBA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pD6B8IsYsVCxkwamTWph13B2GCJhbUKvbmSp53zih/Qr9GgOWbw/40BuREoYPDrjIDnh/VLi5FAuSSEVPsNfJlhU6yMXUqvmh4U5JquSZnIBa6bkch9bsEqlGxh/sf6XB5e+4iTs7FYqGaU+PgjI9dX+sT/D8kfjJqfGjbvIuaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=finMZF8p; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1746463655; c=relaxed/simple;
+	bh=I3lVk2Q64JSR7tBffHJPKcwgPr9JNnLARrE2qnLrjzM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mV2NdDiHd/2PDiuyDqt624kkHadaD3AgvuitllnIqHk5lYtkgScUMi2NxvUhUaTNYBcGU60FuY52cOMx/TZfl2zbBIOlYh6/AMm7NV/G7gFqCIhhwLQjHutQzHMjqdMbhc0XCY/9GOcAxFhSlOBi2Phkm/wxFjs//b1hoGoTPLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S0K23mVL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="finMZF8p"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746463535; x=1777999535;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Gv4eXUFcTvYjiREWJuTpviSsOck/71/pfvOrAJ08xBA=;
-  b=finMZF8p3oBaM7DGRWxODMgl6uIZascLxtoEV9gvcNmkMW0gJLd+RlIw
-   Fe8LfnLpO1adbkhEnhNkSMOxCbK5nUwEKtW9IBt2AS5rGPbxWVZcJJZ8z
-   MDAviA5bFd9ay/ckS7g+gXktZZ9iPVye3iHEwD92Z7b6wrfoarO9mgjXt
-   XPP41UhqyI0q3rEP4Vir8TGAxXXkxkSPYTitxwiblkHguc2MyUZhBTKrY
-   EA1ZQAahfLecDcZDYc1W164vltLcKu9InrawN/0tEWUscxzijk8pMxVqT
-   26VEQW6VctcNxOQrTGNkRHqhO4AGTZw6vA8FNS7xVh5NBBCBgiuCGBhfj
-   w==;
-X-CSE-ConnectionGUID: CEhEnXlJTqCxTyWcVXTAew==
-X-CSE-MsgGUID: 79UlazR+Rk+Elowy/Sa1Lw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11424"; a="73476309"
-X-IronPort-AV: E=Sophos;i="6.15,264,1739865600"; 
-   d="scan'208";a="73476309"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 09:45:34 -0700
-X-CSE-ConnectionGUID: D8zJdc8VQa+ox6D5OxLR9g==
-X-CSE-MsgGUID: WeV00H7URdqTAJ00dVst6Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,264,1739865600"; 
-   d="scan'208";a="135236023"
-Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.222.70])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 09:45:34 -0700
-Date: Mon, 5 May 2025 09:45:26 -0700
-From: "Luck, Tony" <tony.luck@intel.com>
-To: Fenghua Yu <fenghuay@nvidia.com>
-Cc: rafael@kernel.org, lenb@kernel.org,
-	Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	patches@lists.linux.dev
-Subject: Re: [PATCH v4 4/4] ACPI: Add documentation for exposing MRRM data
-Message-ID: <aBjrJvs-wuViTOSI@agluck-desk3>
-References: <20250429202412.380637-1-tony.luck@intel.com>
- <20250429202412.380637-5-tony.luck@intel.com>
- <a5a6e279-82ec-4282-9cf2-6ec4a77a38f1@nvidia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S0K23mVL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E64C4C4CEE4;
+	Mon,  5 May 2025 16:47:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746463655;
+	bh=I3lVk2Q64JSR7tBffHJPKcwgPr9JNnLARrE2qnLrjzM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=S0K23mVLk8Bcnd/xrbdh38kr6sIFLw5v1Q0hf6MHZr24qlTV8MqXdHlzqj+XreFg/
+	 yAOlLKB7g4inNaxoYEf05tQAkpsa9O5vnLNrMkQDl0An02hzB1a/6+/UNURHVMA+1S
+	 js8JS+50+VYLeKuKPahFUuFt/BMCrbiGtoOlvki77Zd0AW/e3HDC43mZNV5QQEQwFE
+	 3DD7maxQWQZohnxZeAJQUOkuqpT3kV31v8MAZAq8IV3jb599aSupsSXWk8xSs97sgs
+	 FVeNDBVCe18yxTvf+EIWFV5CYdKVn6JM3IgXtjL+UyeFxrB1ZpR/0xhEJxpIPW/V0e
+	 /jw5z0ZnM0SHw==
+Date: Mon, 5 May 2025 17:47:24 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko
+ <andy@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
+ <Michael.Hennerich@analog.com>, Eugen Hristev <eugen.hristev@linaro.org>,
+ Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni
+ <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Trevor Gamblin
+ <tgamblin@baylibre.com>
+Subject: Re: [PATCH v5 0/7] iio: introduce IIO_DECLARE_BUFFER_WITH_TS
+Message-ID: <20250505174724.686d61b5@jic23-huawei>
+In-Reply-To: <20250505-iio-introduce-iio_declare_buffer_with_ts-v5-0-814b72b1cae3@baylibre.com>
+References: <20250505-iio-introduce-iio_declare_buffer_with_ts-v5-0-814b72b1cae3@baylibre.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a5a6e279-82ec-4282-9cf2-6ec4a77a38f1@nvidia.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sun, May 04, 2025 at 11:34:51PM -0700, Fenghua Yu wrote:
-> Hi, Tony,
-> 
-> On 4/29/25 13:24, Tony Luck wrote:
-> > Initial implementation provides enumeration of the address ranges
-> > NUMA node numbers, and BIOS assigned region IDs for each range.
-> > 
-> > Signed-off-by: Tony Luck <tony.luck@intel.com>
-> > ---
-> >   Documentation/ABI/testing/sysfs-firmware-acpi | 21 +++++++++++++++++++
-> >   1 file changed, 21 insertions(+)
-> > 
-> > diff --git a/Documentation/ABI/testing/sysfs-firmware-acpi b/Documentation/ABI/testing/sysfs-firmware-acpi
-> > index 5249ad5a96d9..fffba38f9ce1 100644
-> > --- a/Documentation/ABI/testing/sysfs-firmware-acpi
-> > +++ b/Documentation/ABI/testing/sysfs-firmware-acpi
-> > @@ -248,3 +248,24 @@ Description:
-> >   		  # cat ff_pwr_btn
-> >   		  7	enabled
-> > +What:		/sys/firmware/acpi/memory_ranges/rangeX
-> > +Date:		February 2025
-> > +Contact:	Tony Luck <tony.luck@intel.com>
-> > +Description:
-> > +		On systems with the ACPI MRRM table reports the
-> > +		parameters for each range.
-> 
-> Is there a need to explain what's "X" here? The "X" is not a number directly
-> reported by MRRM, right?
-> 
-> Maybe something like "range ID is enumerated from MRRM starting from 0."?
+On Mon, 05 May 2025 11:31:41 -0500
+David Lechner <dlechner@baylibre.com> wrote:
 
-I'm not sure about this one. "X" in the ABI documentation files is a
-standard notation for "there are several of these with a number for
-each". When the number does refer to some physical object, then there
-may be a need to describe it. But if it is simply a counter to give a
-separate name for each one of some repeating thing ... then I don't
-think it helps to add additional explanation.
+> Creating a buffer of the proper size and correct alignment for use with
+> iio_push_to_buffers_with_ts() is commonly used and not easy to get
+> right (as seen by a number of recent fixes on the mailing list).
+> 
+> In general, we prefer to use this pattern for creating such buffers:
+> 
+> struct {
+>     u16 data[2];
+>     aligned_s64 timestamp;
+> } buffer;
+> 
+> However, there are many cases where a driver may have a large number of
+> channels that can be optionally enabled or disabled in a scan or the
+> driver might support a range of chips that have different numbers of
+> channels or different storage sizes for the data. In these cases, the
+> timestamp may not always be at the same place relative to the data. To
+> handle these, we allocate a buffer large enough for the largest possible
+> case and don't care exactly where the timestamp ends up in the buffer.
+> 
+> For these cases, we propose to introduce new macros to make it easier
+> it easier for both the authors to get it right and for readers of the
+> code to not have to do all of the math to verify that it is correct.
+> 
+> I have just included a few examples of drivers that can make use of this
+> new macro, but there are dozens more.
 
+Looks good to me.  I'll leave it on list for a day or two though for
+everyone else to take a final look!
 > 
-> > +
-> > +		base: Starting system physical address.
-> > +
-> > +		length: Length of this range in bytes.
-> > +
-> > +		node: NUMA node that this range belongs to. Negative numbers
-> > +		indicate that the node number could not be determined (e.g
-> > +		for an address range that is reserved for future hot add of
-> > +		memory).
-> > +
-> > +		local_region_id: ID associated with access by agents
-> > +		local to this range of addresses.
-> > +
-> > +		remote_region_id: ID associated with access by agents
-> > +		non-local to this range of addresses.
+> ---
+> Changes in v5:
+> - Add new patch to set minimum alignment to 8 for IIO_DMA_MINALIGN.
+> - Adjust IIO_DECLARE_DMA_BUFFER_WITH_TS() macro for above change.
+> - Drop one ad4695 patch that was already applied.
+> - Link to v4: https://lore.kernel.org/r/20250428-iio-introduce-iio_declare_buffer_with_ts-v4-0-6f7f6126f1cb@baylibre.com
 > 
-> Thanks.
+> Changes in v4:
+> - Dropped static_assert()s from the first patch.
+> - Handle case when IIO_DMA_MINALIGN < sizeof(timestamp).
+> - Added one more patch for ad4695 to rename a confusing macro.
+> - Link to v3: https://lore.kernel.org/r/20250425-iio-introduce-iio_declare_buffer_with_ts-v3-0-f12df1bff248@baylibre.com
 > 
-> -Fenghua
+> Changes in v3:
+> - Fixed a few mistakes, style issues and incorporate other feedback (see
+>   individual commit message changelogs for details).
+> - Link to v2: https://lore.kernel.org/r/20250422-iio-introduce-iio_declare_buffer_with_ts-v2-0-3fd36475c706@baylibre.com
+> 
+> Changes in v2:
+> - Add 2nd macro for case where we need DMA alignment.
+> - Add new patch for ad4695 to convert buffer from u8 to u16 before
+>   making use of the new macro.
+> - Drop the bmp280 patch since it was determined to have a better
+>   alternative not using these macros.
+> - Add a few more examples to show the non-DMA case, both in a struct and
+>   stack allocated.
+> - Link to v1: https://lore.kernel.org/r/20250418-iio-introduce-iio_declare_buffer_with_ts-v1-0-ee0c62a33a0f@baylibre.com
+> 
+> ---
+> David Lechner (7):
+>       iio: make IIO_DMA_MINALIGN minimum of 8 bytes
+>       iio: introduce IIO_DECLARE_BUFFER_WITH_TS macros
+>       iio: adc: ad4695: use IIO_DECLARE_DMA_BUFFER_WITH_TS
+>       iio: adc: ad4695: rename AD4695_MAX_VIN_CHANNELS
+>       iio: adc: ad7380: use IIO_DECLARE_DMA_BUFFER_WITH_TS
+>       iio: accel: sca3300: use IIO_DECLARE_BUFFER_WITH_TS
+>       iio: adc: at91-sama5d2: use IIO_DECLARE_BUFFER_WITH_TS
+> 
+>  drivers/iio/accel/sca3300.c        | 18 ++--------------
+>  drivers/iio/adc/ad4695.c           | 11 +++++-----
+>  drivers/iio/adc/ad7380.c           |  3 +--
+>  drivers/iio/adc/at91-sama5d2_adc.c | 13 ++----------
+>  include/linux/iio/iio.h            | 42 ++++++++++++++++++++++++++++++++++++++
+>  5 files changed, 52 insertions(+), 35 deletions(-)
+> ---
+> base-commit: 7e9a82ab5b861d3c33c99a22c1245a5b262ee502
+> change-id: 20250418-iio-introduce-iio_declare_buffer_with_ts-2f8773f7dad6
+> 
+> Best regards,
 
--Tony
