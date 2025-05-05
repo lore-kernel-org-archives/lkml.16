@@ -1,131 +1,105 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1DBB2DC789;
-	Mon,  5 May 2025 09:17:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A66BB1F470E;
+	Mon,  5 May 2025 09:19:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746436681; cv=none; b=BupmeF1FlmeOZHB0UX2oo01yM3QMVC5AIzki/HYWdRFpn8ryqrD/NFbxSRWrbqYVfzU6cOGJaKg0+0xfifYfT0zW8y7E/xSgfXGArKmqNQ2OYLFVYihfjevUJ9dtXSVqe6BfkegvuOeAraI+M6hFYBTf1wHte3iYwzy8P7YTv2U=
+	t=1746436792; cv=none; b=rtd4T8tjwcA2MhVxLsVPtFUhOc8fi2ivykHU05+fWm6WDfVP/+l/aYEgtwKROqG5E3wPUO5FYxF2f7MCFplyQwZksd4m+A4HpcUiuMRqBdXzdEa+0+wl/pQYbMar6PYY9PgMYTrGgnxImlsum/RV4NXW6QFZFI6dvsIEkZnBtvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746436681; c=relaxed/simple;
-	bh=n9DSrRhvj6S5JgtzQkpkDqezZ/xHBdRJ5jQgPsYXCLg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DA3br3cTP/c/pusdyv3TupupLN1FjVRgJk/IMX3UTF5oQx382OBjlWMW3MgrkKKwZ+zVhItiAryGbsho49iiTVWqxi0Jf9Q6+N0H9VZGKwlS7pudndIxbvI7vu6zEKWa45yewGRpzoh5DVFsEhE5IpnZN8dTNDblnWS5aAXw2Jw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H+zp0Cve; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746436792; c=relaxed/simple;
+	bh=H0gdIlnmVpbmDjxj6FH9kQsdpTNlGrLsacYC1fdYZdc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=BMYXiXJQIm0B+2G2tblpfrFOkLM7da6tf34J0Mea/EdpkVOFWjoYc+ftsfTyArnYdzZobs/31+7TfrrUd1IHqtaSiaAide942S3Ao+8o5NEYn6h7WBi3d273RahBphMK0fB+co7OYUP02kaS39fefoet9+ii9RdCeWPizRooWOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=y3gyk0bn; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=K0nn7vf3; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H+zp0Cve"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43d07ca6a80so14989715e9.1;
-        Mon, 05 May 2025 02:17:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746436678; x=1747041478; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=PF2CyQx2MPaV+rJ68g+o7uLVAoJbG7ga5+6WFdjiP3A=;
-        b=H+zp0CvexGqSz+Q1ujaj960/UDH/tSzSj+BEhj8BZ7zKK6HM1To1N5cOTncNGrX2Td
-         WlP2gJWfCv7j5xO33cVKNLuF2E3i4+h4vaNp9k4atPn96gKXMwHTrsKnrkdwST+43jyh
-         RQcawGvkSMgxaamve6f92fksEjURFNC5eptI78aNFPze7G052P4VgsUqhzSGsJzg7EFf
-         MlShdAZ3F2/yz1N1FQYbEm0qn6MxXit7uyv5+SnFK6mzyclZsNFk1aBYXMg2WBhCGI6C
-         akA65Do1knZSAYxp9CENUrfaXPhe8ur2MfMpdJqRkDe66BZT59ofPMex2jsliEuBvtwK
-         8Iwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746436678; x=1747041478;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PF2CyQx2MPaV+rJ68g+o7uLVAoJbG7ga5+6WFdjiP3A=;
-        b=M3g1+GOgO7Gv0vm245Vmd0XU/lOvpfXwv0mxqYv3vU09Pv+FGNEFHvBaPLBnlxmmPR
-         gysTVY6K0isAMF1ji0PnofhF6Oyhm84gQU11GU4kYZ9lb69/cFPm8U8whAgzn73xmu45
-         g5LNwT+NgVB4D6Vo52ej9qL8ZxnLnAO24+cfuHpnWT+GEPWJUISM+8hLSDCQx9tzyYQv
-         LDvXfDFiHBz8ncCeHS18W5L7CgB8lGY7KsFkKSD6Qf1pUVak7DQVCI7agyUEv7EWZuJ8
-         FzBZeZjd0amhsxIr4fanzDve0wwC4Vv+cLZcI0un0k4YCUiPjdYwjFq+RAgT3/hcskHU
-         3/ww==
-X-Forwarded-Encrypted: i=1; AJvYcCVb1vflr6dEqvWc/om3x/6XNWJU2+/1RDAU6hRVjrORP5ql/za+CfJS2oR+AwhNRfA/2zIGu1PR5BMU5JU=@vger.kernel.org, AJvYcCXcZzvzBrB5axU9Lg22KMadSpG5F9OvyHOvV1NXVN5aQKDBN8/18+nuMqjtq0vRio8Q8jPYWDkb@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOMqyO4tS8sOzskZm9W6mSMAGppi9GG2RZw/HyG8aa0J1/zb8U
-	4HBCf6RIlMIhEmzBVAVif/glwA4L9x3bpZAOzIHor3bbgd8mtr62
-X-Gm-Gg: ASbGnctcojsXOfldn4f7pTgqdaI4Nazor6gVEPM1OJrwHqRtuPpomaZ3hHXXCyECb3+
-	pbOsyKFwrFsYlU7eWUaykJivf5/6XeYxuJ6JxhQSzJgPu2r3oaPgt04VDDu01RL0VWf2YIbDepE
-	o7MMuqrrWkJlfnGlB9X4Fk+zd8gOMhZwO9Vgl9qE3AyHG62OoT+2tHTN4VjjFLIoMQYXNwkuQOE
-	RQsev4GivzJ0HPjmLkmKCZ/HL3AR5X85JyIG/0ZCmeVk425O/hMSxXj2v2RCNOJlxweaOooWUAz
-	xSLq+BuqqIPRWgNgbiTojxyACkn9GjdaNuT6rg==
-X-Google-Smtp-Source: AGHT+IFIqdr/tc0ob8HjmKsgvnPZEZu7wfgqrfLNWKbQpPSOjxgUG71cRtZVlqchJSK9RCEg2GbJXw==
-X-Received: by 2002:a05:600c:8012:b0:43d:26e3:f2f6 with SMTP id 5b1f17b1804b1-441c48b069emr54300605e9.5.1746436678067;
-        Mon, 05 May 2025 02:17:58 -0700 (PDT)
-Received: from debian ([2a00:79c0:608:9e00:45fb:7d1a:5e4d:9727])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b89cc469sm128392865e9.6.2025.05.05.02.17.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 02:17:57 -0700 (PDT)
-Date: Mon, 5 May 2025 11:17:56 +0200
-From: Dimitri Fedrau <dima.fedrau@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Gregor Herburger <gregor.herburger@ew.tq-group.com>,
-	Stefan Eichenberger <eichest@gmail.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Kory Maincent <kory.maincent@bootlin.com>
-Subject: Re: [PATCH net-next v3] net: phy: marvell-88q2xxx: Enable
- temperature measurement in probe again
-Message-ID: <20250505091756.GA9785@debian>
-References: <20250429-marvell-88q2xxx-hwmon-enable-at-probe-v3-1-0351ccd9127e@gmail.com>
- <20250429200306.GE1969140@ragnatech.se>
- <4e68ca40-85b8-4766-9040-edf677afd0f7@redhat.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="y3gyk0bn";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="K0nn7vf3"
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1746436788;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=YCd/2xWZ2L5+sqDVJsylRC+os0cxUIA02VRNftTL/os=;
+	b=y3gyk0bn/PfoPO7uG73tPTRXrfFzXr1MLzmmVYG8TPKGnHlEyq/h6uc5STI0HRBTzilTZi
+	ahWafrmSYVjhwYr2H3QWwnug2kVff4CabvzIFrRoIdv3h7dgPC6TdDfc7ma7e3CngF0/2z
+	K1yAA3h9y0X5n2tNr4UbWcIqwDjUPrJUMSVRNSwuQnCMl/8Pc8CnqPjraBGpH3tdo02XAK
+	Ochm/2277QePARfuYIrpXkhzm5D8viyfIEH4mRUOM8hmitNNgwiE8gEqYMoauBWxMs3HTK
+	Gt0yfOkYpoSvCGlIwkfFwfLJ8zDKQfe0WVnfLsh9sXAcag0yYFJVNQroGALh0A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1746436788;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=YCd/2xWZ2L5+sqDVJsylRC+os0cxUIA02VRNftTL/os=;
+	b=K0nn7vf3WFlXD6r95tvfpeFrJbYH/OMNC4pBERebj+Zr0Gw0zJByd2T6nX4bLsyjIWoT+v
+	w/FnzzRMI+DauLAg==
+Subject: [PATCH v2 0/8] selftests: vDSO: Some cleanups and (warning) fixes
+Date: Mon, 05 May 2025 11:19:34 +0200
+Message-Id: <20250505-selftests-vdso-fixes-v2-0-3bc86e42f242@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <4e68ca40-85b8-4766-9040-edf677afd0f7@redhat.com>
+X-B4-Tracking: v=1; b=H4sIAKaCGGgC/22NwQ7CIBBEf6XZsxhAsOrJ/zA91LLYTRowLJKap
+ v8u1qvHN5M3swBjImS4NAskLMQUQwW9a2AY+/BAQa4yaKmtNPogGCefkTOL4jgKTzOycHrA1qj
+ a2zNU9ZlwK6p56yqPxDmm9/ZS1Df9DVqp/w8WJaTwd+uORvbGt6frROGVUww07x1Ct67rB72Oo
+ 2+8AAAA
+X-Change-ID: 20250423-selftests-vdso-fixes-d2ce74142359
+To: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+ Vincenzo Frascino <vincenzo.frascino@arm.com>, 
+ Shuah Khan <shuah@kernel.org>, "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: Shuah Khan <skhan@linuxfoundation.org>, linux-kernel@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, 
+ Muhammad Usama Anjum <usama.anjum@collabora.com>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1746436782; l=1566;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=H0gdIlnmVpbmDjxj6FH9kQsdpTNlGrLsacYC1fdYZdc=;
+ b=0PtOp+HxkdGcOGqFA8cIASGwGNXqWx5NYwTZfXhv9KOlM0o4nW/3QQ0GdSBQ3YLa2zVgUWD9Y
+ T2eDtbG+42LCueR+r2fGDqkOAKTAXJFBsauAj+HCIhNkuMPK1vA94Ye
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-Hi Paolo,
+Fixes and cleanups for various issues in the vDSO selftests.
 
-On Fri, May 02, 2025 at 12:51:47PM +0200, Paolo Abeni wrote:
-> On 4/29/25 10:03 PM, Niklas Söderlund wrote:
-> >> @@ -765,6 +768,13 @@ static int mv88q2xxx_hwmon_probe(struct phy_device *phydev)
-> >>  	struct mv88q2xxx_priv *priv = phydev->priv;
-> >>  	struct device *dev = &phydev->mdio.dev;
-> >>  	struct device *hwmon;
-> >> +	int ret;
-> >> +
-> >> +	/* Enable temperature sense */
-> >> +	ret = phy_modify_mmd(phydev, MDIO_MMD_PCS, MDIO_MMD_PCS_MV_TEMP_SENSOR2,
-> >> +			     MDIO_MMD_PCS_MV_TEMP_SENSOR2_DIS_MASK, 0);
-> >> +	if (ret < 0)
-> >> +		return ret;
-> > 
-> > nit: I wonder if it make sens to create a helper function to enable the 
-> > sensor? My worry being this procedure growing in the future and only 
-> > being fixed in one location and not the other. It would also reduce code 
-> > duplication and could be stubbed to be compiled out with the existing 
-> > IS_ENABLED(CONFIG_HWMON) guard for other hwmon functions.
-> > 
-> > That being said I tested this with mv88q211x and the temp sensor and PHY 
-> > keeps working as expected.
-> > 
-> > Tested-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-> 
-> Since this is net-next material +1 for the helper.
->
-Agreed.
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+---
+Changes in v2:
+- Refer to -Wstrict-prototypes over -Wold-style-prototypes
+- Pick up Acks
+- Enable fixed warnings in Makefile
+- Link to v1: https://lore.kernel.org/r/20250502-selftests-vdso-fixes-v1-0-fb5d640a4f78@linutronix.de
 
-> Also AFAICS this is fixing a net-next regression, so it needs a fixes
-> tag, too.
-> 
-We discussed it here:
-https://lore.kernel.org/netdev/48c4cd14-be56-438e-9561-c85b0245178c@lunn.ch/
+---
+Thomas Weißschuh (8):
+      selftests: vDSO: chacha: Correctly skip test if necessary
+      selftests: vDSO: clock_getres: Drop unused include of err.h
+      selftests: vDSO: vdso_test_getrandom: Drop unused include of linux/compiler.h
+      selftests: vDSO: vdso_test_getrandom: Drop some dead code
+      selftests: vDSO: vdso_config: Avoid -Wunused-variables
+      selftests: vDSO: enable -Wall
+      selftests: vDSO: vdso_test_correctness: Fix -Wstrict-prototypes
+      selftests: vDSO: vdso_test_getrandom: Always print TAP header
 
-Andrews opinion was the change is rather archtitecture then a fix.
+ tools/testing/selftests/vDSO/Makefile                 |  2 +-
+ tools/testing/selftests/vDSO/vdso_config.h            |  2 ++
+ tools/testing/selftests/vDSO/vdso_test_chacha.c       |  3 ++-
+ tools/testing/selftests/vDSO/vdso_test_clock_getres.c |  1 -
+ tools/testing/selftests/vDSO/vdso_test_correctness.c  |  2 +-
+ tools/testing/selftests/vDSO/vdso_test_getrandom.c    | 18 +++++-------------
+ 6 files changed, 11 insertions(+), 17 deletions(-)
+---
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+change-id: 20250423-selftests-vdso-fixes-d2ce74142359
 
 Best regards,
-Dimitri Fedrau
+-- 
+Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+
