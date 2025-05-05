@@ -1,44 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 103B4239E60;
-	Mon,  5 May 2025 23:05:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 102B4239E84;
+	Mon,  5 May 2025 23:05:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486341; cv=none; b=XTXuJUAod0hiG7NATPrz07pI6QRTlN0bb7ho0cRrmvEb+BTLJouX5qj2CaF1wUgIWyUwvbD5Fx7SPWzgjU4nICzx2WmOQpABoqD8NoXEng6dmiXNzdi1zNW+GUDI2jxGjzwiSJfgGzHDxPeJb+ioNwgMhAAyeCZqwkXhI6z3N8c=
+	t=1746486355; cv=none; b=Mgjd2+W1ZxHDJbziB/lRlgj2IeXxFVRyd1EKN+Kc92+HxBMCXLDWLZ3Eez/wI36qqjTDtZOYk1UKHdz1qFVZhca7lMG8Mh+4Y+ZvKrM4k+gLyfQOmPgMo7HUwF0DPBOvQwmj9EO6ZigTgv1kvmKX6y1n8tWRuElYMlA1vjlSN+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486341; c=relaxed/simple;
-	bh=cRm/7xqnXlTo9yV/yrrFyHl5kBpcMoc2hVoWCjJaUbE=;
+	s=arc-20240116; t=1746486355; c=relaxed/simple;
+	bh=dNhTQdQsmVJdOJI8hk4/K23ZH1cUxcHoeRd+WsN65vM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fPZb+EKTBD370oi7WdrBI85OVz7i/f1A8j4wsI73/zXhRxN3xIk+mnJ/EQs1lvcDN9YhIWEyhHy86c390O5pyXTCv8EUb5N88Id1eI2flW0XZZyLj/PZiOksZlQIYAjj8NiHjdH4kg+94GoEu4KPULNNIt7MPZyUuWFshL3SN64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qlTK/+cL; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=sZW9dd5WjvEmBGnMWqiF28sO2nNnhi6Fpvvijb/DM/Fi0BX9kInidjxj7LnsCYQBeGn/n3pGTeZqozhNJMVxrMnMbpe7nox4z3Z1fjQA5OPEJChigfzEQD7WbiujO6ZfsFoRmOr6LgYIBkd4LHqZLKV9WwfBNK+Cw6V9NUhQtsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rXT1vTq8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qlTK/+cL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2D32C4CEEE;
-	Mon,  5 May 2025 23:05:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rXT1vTq8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFFA5C4CEE4;
+	Mon,  5 May 2025 23:05:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486340;
-	bh=cRm/7xqnXlTo9yV/yrrFyHl5kBpcMoc2hVoWCjJaUbE=;
+	s=k20201202; t=1746486353;
+	bh=dNhTQdQsmVJdOJI8hk4/K23ZH1cUxcHoeRd+WsN65vM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qlTK/+cLDV+mAW/sNLMRFz+/Llzalb1daQ9h2Ro49A+mhKCNe+zAJ8TNPW6JyPibk
-	 59d58OPNJzoWwZ/1bffqjnoKyO9IEFvstWi5+XZ54pjlZt0VR4rzm57I6LzSXMf1kT
-	 zJeAwRaJWDNuacPotZWz2uKp2qjiayEVTdjfDzztEvHfMfJU9pwepoMCUEGOlKkKzp
-	 t6r0a4yoYdaA2nDNBfH1eY8IwtXobK9XSeB48xbXbfunBkUSqK/osRNQg475PV/18l
-	 q1MJKaf3osjw6GybMWWhrcZeWY0ueTvusijq+rq+ZjBPWbQvks3aQX0Pg/UkTY49jC
-	 F0H6g3cPr7qLQ==
+	b=rXT1vTq88aqsZzKOl2Ux1J5PVLJFf6rIMVcbkq0T5Zf8ztp6gDoVU/8qd20xv5BEQ
+	 ZXF0ZD3mo96xdCIQYqbWF1z/wDmy1/qN4bi2+9o+/XtgZuLx8KaQcPqEz1g2BLekML
+	 I9S5/jAP/1JAvrSiOtwlWRZSofe78j4vCNWmBLqlhtOonyoBMl1hMnOIduPNs/OTVN
+	 TdIDQ2QUkw1SFmi79mMNV5S0IxCafGjSiEbq1iRSjRG0UoaJxPjMTFuBac/N4xEWlP
+	 74tbYU3RTV3WwK77OKJWGe2E16eYmd63WBLq22iPSgAckdNfMGcy0m0uOYF0D+VcL2
+	 omdF6F90Es4Zg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Justin Tee <justin.tee@broadcom.com>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>,
+Cc: Thomas Zimmermann <tzimmermann@suse.de>,
+	Jocelyn Falempe <jfalempe@redhat.com>,
 	Sasha Levin <sashal@kernel.org>,
-	james.smart@broadcom.com,
-	dick.kennedy@broadcom.com,
-	James.Bottomley@HansenPartnership.com,
-	linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 268/294] scsi: lpfc: Handle duplicate D_IDs in ndlp search-by D_ID routine
-Date: Mon,  5 May 2025 18:56:08 -0400
-Message-Id: <20250505225634.2688578-268-sashal@kernel.org>
+	airlied@redhat.com,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 6.6 276/294] drm/ast: Find VBIOS mode from regular display size
+Date: Mon,  5 May 2025 18:56:16 -0400
+Message-Id: <20250505225634.2688578-276-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -53,64 +55,87 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Justin Tee <justin.tee@broadcom.com>
+From: Thomas Zimmermann <tzimmermann@suse.de>
 
-[ Upstream commit 56c3d809b7b450379162d0b8a70bbe71ab8db706 ]
+[ Upstream commit c81202906b5cd56db403e95db3d29c9dfc8c74c1 ]
 
-After a port swap between separate fabrics, there may be multiple nodes in
-the vport's fc_nodes list with the same fabric well known address.
-Duplication is temporary and eventually resolves itself after dev_loss_tmo
-expires, but nameserver queries may still occur before dev_loss_tmo.  This
-possibly results in returning stale fabric ndlp objects.  Fix by adding an
-nlp_state check to ensure the ndlp search routine returns the correct newer
-allocated ndlp fabric object.
+The ast driver looks up supplied display modes from an internal list of
+display modes supported by the VBIOS.
 
-Signed-off-by: Justin Tee <justin.tee@broadcom.com>
-Link: https://lore.kernel.org/r/20250131000524.163662-5-justintee8345@gmail.com
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Do not use the crtc_-prefixed display values from struct drm_display_mode
+for looking up the VBIOS mode. The fields contain raw values that the
+driver programs to hardware. They are affected by display settings like
+double-scan or interlace.
+
+Instead use the regular vdisplay and hdisplay fields for lookup. As the
+programmed values can now differ from the values used for lookup, set
+struct drm_display_mode.crtc_vdisplay and .crtc_hdisplay from the VBIOS
+mode.
+
+Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+Reviewed-by: Jocelyn Falempe <jfalempe@redhat.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20250131092257.115596-9-tzimmermann@suse.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_hbadisc.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/ast/ast_mode.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_hbadisc.c b/drivers/scsi/lpfc/lpfc_hbadisc.c
-index 0ad8a10002ce3..5c9bc8af3c2df 100644
---- a/drivers/scsi/lpfc/lpfc_hbadisc.c
-+++ b/drivers/scsi/lpfc/lpfc_hbadisc.c
-@@ -5646,6 +5646,7 @@ static struct lpfc_nodelist *
- __lpfc_findnode_did(struct lpfc_vport *vport, uint32_t did)
- {
- 	struct lpfc_nodelist *ndlp;
-+	struct lpfc_nodelist *np = NULL;
- 	uint32_t data1;
- 
- 	list_for_each_entry(ndlp, &vport->fc_nodes, nlp_listp) {
-@@ -5660,14 +5661,20 @@ __lpfc_findnode_did(struct lpfc_vport *vport, uint32_t did)
- 					 ndlp, ndlp->nlp_DID,
- 					 ndlp->nlp_flag, data1, ndlp->nlp_rpi,
- 					 ndlp->active_rrqs_xri_bitmap);
--			return ndlp;
-+
-+			/* Check for new or potentially stale node */
-+			if (ndlp->nlp_state != NLP_STE_UNUSED_NODE)
-+				return ndlp;
-+			np = ndlp;
- 		}
+diff --git a/drivers/gpu/drm/ast/ast_mode.c b/drivers/gpu/drm/ast/ast_mode.c
+index 3de0f457fff6a..5f58da6ebaadb 100644
+--- a/drivers/gpu/drm/ast/ast_mode.c
++++ b/drivers/gpu/drm/ast/ast_mode.c
+@@ -132,7 +132,7 @@ static bool ast_get_vbios_mode_info(const struct drm_format_info *format,
+ 		return false;
  	}
  
--	/* FIND node did <did> NOT FOUND */
--	lpfc_printf_vlog(vport, KERN_INFO, LOG_NODE,
--			 "0932 FIND node did x%x NOT FOUND.\n", did);
--	return NULL;
-+	if (!np)
-+		/* FIND node did <did> NOT FOUND */
-+		lpfc_printf_vlog(vport, KERN_INFO, LOG_NODE,
-+				 "0932 FIND node did x%x NOT FOUND.\n", did);
-+
-+	return np;
- }
+-	switch (mode->crtc_hdisplay) {
++	switch (mode->hdisplay) {
+ 	case 640:
+ 		vbios_mode->enh_table = &res_640x480[refresh_rate_index];
+ 		break;
+@@ -146,7 +146,7 @@ static bool ast_get_vbios_mode_info(const struct drm_format_info *format,
+ 		vbios_mode->enh_table = &res_1152x864[refresh_rate_index];
+ 		break;
+ 	case 1280:
+-		if (mode->crtc_vdisplay == 800)
++		if (mode->vdisplay == 800)
+ 			vbios_mode->enh_table = &res_1280x800[refresh_rate_index];
+ 		else
+ 			vbios_mode->enh_table = &res_1280x1024[refresh_rate_index];
+@@ -158,7 +158,7 @@ static bool ast_get_vbios_mode_info(const struct drm_format_info *format,
+ 		vbios_mode->enh_table = &res_1440x900[refresh_rate_index];
+ 		break;
+ 	case 1600:
+-		if (mode->crtc_vdisplay == 900)
++		if (mode->vdisplay == 900)
+ 			vbios_mode->enh_table = &res_1600x900[refresh_rate_index];
+ 		else
+ 			vbios_mode->enh_table = &res_1600x1200[refresh_rate_index];
+@@ -167,7 +167,7 @@ static bool ast_get_vbios_mode_info(const struct drm_format_info *format,
+ 		vbios_mode->enh_table = &res_1680x1050[refresh_rate_index];
+ 		break;
+ 	case 1920:
+-		if (mode->crtc_vdisplay == 1080)
++		if (mode->vdisplay == 1080)
+ 			vbios_mode->enh_table = &res_1920x1080[refresh_rate_index];
+ 		else
+ 			vbios_mode->enh_table = &res_1920x1200[refresh_rate_index];
+@@ -211,6 +211,7 @@ static bool ast_get_vbios_mode_info(const struct drm_format_info *format,
+ 	hborder = (vbios_mode->enh_table->flags & HBorder) ? 8 : 0;
+ 	vborder = (vbios_mode->enh_table->flags & VBorder) ? 8 : 0;
  
- struct lpfc_nodelist *
++	adjusted_mode->crtc_hdisplay = vbios_mode->enh_table->hde;
+ 	adjusted_mode->crtc_htotal = vbios_mode->enh_table->ht;
+ 	adjusted_mode->crtc_hblank_start = vbios_mode->enh_table->hde + hborder;
+ 	adjusted_mode->crtc_hblank_end = vbios_mode->enh_table->ht - hborder;
+@@ -220,6 +221,7 @@ static bool ast_get_vbios_mode_info(const struct drm_format_info *format,
+ 					 vbios_mode->enh_table->hfp +
+ 					 vbios_mode->enh_table->hsync);
+ 
++	adjusted_mode->crtc_vdisplay = vbios_mode->enh_table->vde;
+ 	adjusted_mode->crtc_vtotal = vbios_mode->enh_table->vt;
+ 	adjusted_mode->crtc_vblank_start = vbios_mode->enh_table->vde + vborder;
+ 	adjusted_mode->crtc_vblank_end = vbios_mode->enh_table->vt - vborder;
 -- 
 2.39.5
 
