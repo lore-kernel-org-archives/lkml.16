@@ -1,279 +1,134 @@
-Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D0CD8C1F;
-	Mon,  5 May 2025 14:15:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A54E7625;
+	Mon,  5 May 2025 14:17:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746454546; cv=none; b=t8L/Yvm4VM641+EqrJlDV20nQ8c/BVwI7sdUWvUUBW5AUCksTkGwD3Z238clR8s1dGkk64hj8X5CKh2bPET3gnYhlu7uvdy92Rw8CzNZwYaNlU2Qfs3ooOw3j3OwWbDV1n21TGyHEhcS3f6VKWEQp0en7cedhPUVYk5GGjYD7pE=
+	t=1746454678; cv=none; b=GuVVZ5YBNbs1Q3hekmKmca/TWH7vSw4AV/yGfmmR+esG2FbXhdsekbGiR3gOxpLgLGpwSungahpUCwU1UTsdPWnXkMG0HJnDpX7fRjl5iw5rJ/48pNZAa4b4ZbvWLEp4If1dhx69b8CRcPhTp+Z/PIkye1kTMKmrnssW2T19Am4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746454546; c=relaxed/simple;
-	bh=LI6RW5bmSOFSpxmPsHXcfPxSuirVMxkS1mzCy8G8RWc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IgfmFv63PfxMtFFp/UAYK4fK44+XgtOS+/mgNG4qAIvWF5+TlzBM7+94cb1YxdiCZN5WuIQniMvTVpuCYRZhCpqHcRJ4OjxLDk7KYAzUU3+qRhP+WMZ98z3lW1A4ak2aWv9Az6q23/wVCdixcRwYDFSfunQQZC7V/FQ8+bTu5iw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H5BEKhSV; arc=none smtp.client-ip=209.85.166.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746454678; c=relaxed/simple;
+	bh=gsc3JlKON4CygcCk73kQax7z0OnlE/CBQE7MvPAsB9c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=knTCvLzubuQ/PFExDKX2BU1J/zgLO8x7wX3nzcuGpZ9B/Jo+5G2z9MKN6wiq/eAhbX44NnJhiYSLN234vvMCkcZdiyvVSaWgxRDKklinH97dHp7ZC/qQxnqN1XF1LNGUaZ5QtAct6+VZRyt309Q1r5iuGQ2fmN9ejNJFMOwcKxY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c4VgYPng; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H5BEKhSV"
-Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-85ea482e3adso177099639f.0;
-        Mon, 05 May 2025 07:15:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746454543; x=1747059343; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DmFv/eGqP8BUD+cO2vw/j1sQpK2CcTzLRBctQj23AcA=;
-        b=H5BEKhSV+tSPZo+xYk9wTEwp8HCFntfDrac90v01nI/zCllL6KwyP99fVWbt77rbmg
-         sbyJKCUf4YAAplwuyCMO/+f0xPZhU82BnKR44PE2tPuAkZYmYfyUybsdYnETj/jadXtc
-         bxM58mfzKjMWDIolLGJkHMBoRnfnyTBX3o5ZWG/femYibCjVnWFj732EXnUJTyipLAxs
-         j1+cMTPHm1dM2gJcvhrVTVPkLd13r8brIXNdr1xvrFVDkSiPYB8XcTzkK4HQ8cmQUIHc
-         7TzfTcgF9tPuHpCtUWxLlxzwuYwxYalNxj84isBblIXJrELHZt8ah8EHE5lWcAA07lvE
-         SbjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746454543; x=1747059343;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DmFv/eGqP8BUD+cO2vw/j1sQpK2CcTzLRBctQj23AcA=;
-        b=Ut65wPKx8HzQaVpWKLTy6h8DQL7uVi1vUgaXTJoMlymi0xE9Pcz8c/9ouBEBLTAIac
-         j+uv1G6+kGbaWBHJ39FS6GC8K+FZ+7aL1fA74UJ8BoWV47EKUH3q2dHHPMIm/tiglX9U
-         5tY20lHMjIPPcR3NBh5lFMR0cIs7gzFMIHFri/t6iwUOse5xAmBNVi6WMjgo63/Q1UEZ
-         sUeu+wFMsw7tpJT9ESaUlKzTGTlhmVKTssRM7DDDw7Lvrnc+P+JiudbddoXwAQUuKFLT
-         ekjV54qlrft18AvLMkb9KjKC43DIaANlAbFQEwtK4KHe69732t7fdIP98AWC1sBJ61c4
-         XazQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUFutD2laDeOwLWeD7EcwPL1n/NEPP9JMKBy9aFiV5DM3dR4g8WMpPRwUdvUnzAd6lLy+tYmQcv9J+1E+2c@vger.kernel.org, AJvYcCUxSei7oV6E4tVpdXj9LyrScFu4FcYz+AJxjwtuxW0HfrvxJmrX7M7hEXttLNVv1V6vdBKXd872M6tWLs0=@vger.kernel.org, AJvYcCWFiQdoB5+pPZFrD+St6aZPn9senUmExt3bFpLhXVSr2Eunw6P+4i76knt7SRsU1TfjRfJEJU1EsmLVSMCw@vger.kernel.org
-X-Gm-Message-State: AOJu0YxRv1CcaoPrss1CvKIMYtH3JTIDwVoUxqndT79nfeIBvYVkPgdh
-	jwFZ8om/GxlqbjuHsrH930x34+zpw9mbVkMO+xy1VUx2e7BqtGV5gC129CxuNJdTiz71fLSTBIH
-	w0AgDicyLXaKEdJr90QeY8fibL0E=
-X-Gm-Gg: ASbGncuKmrFOfhmWKPEuzzrr1iew6xDU/V1UiSDB6MyiXTCHwG40UDykJAKGo4a2huX
-	oSYLwFhTAz2+ekx9ZAv94TzFaYH46oc43ZAXFcyzRfGvvJacMHHUgrmPG3nvU+0exnM3tfj7p11
-	BqmNsgE1RkJeR7nGZ1ITmqwIwO3QDn3NEkKiHUlGXJY3Kt8EURtK/y
-X-Google-Smtp-Source: AGHT+IFqHcvzGD+XM74JPejK+dbntF5020jCymJ7lyVu5UGKNSp+Ot20Fw3HKkPY3VchZDwZUCgEVCgtr4nWezOVrRA=
-X-Received: by 2002:a05:6e02:156c:b0:3d9:43fe:8e34 with SMTP id
- e9e14a558f8ab-3d97ad891bamr126880165ab.1.1746454543182; Mon, 05 May 2025
- 07:15:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c4VgYPng"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F5E4C4CEE4;
+	Mon,  5 May 2025 14:17:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746454678;
+	bh=gsc3JlKON4CygcCk73kQax7z0OnlE/CBQE7MvPAsB9c=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=c4VgYPngdyhq82fvAO+lJufmpZ8INcFqCV16xwu2s//YPjQ9mt0o+xRgTQYKXqSfp
+	 j8HAYG0mH8y7BXWVeIEknxPAGGKXcR6lQIeD8DX6tdLvmaTsXWL9VbMPnrWOaLswX7
+	 Urp+GzXyUw4q8EC8BmO7d8r5NARU88ayXOD+K05334ZGhELIeU1DfaL050JMxNofgN
+	 31XPfKdvknJ3DEkXj3MfoCCSpIy4MamWNFHV6lQ1z0dlNtItZM/NY0Wn2xEolztFzZ
+	 u2VNl4tsOeltpcW00ZIyjBqiTqi3wI0fgsoBmeSwojjbT2fEj49c+9YWBhx4KqdB5o
+	 +klrTLlNkxw9Q==
+Message-ID: <32d9f0c5-5648-4cc2-9db6-f5165d20d20c@kernel.org>
+Date: Mon, 5 May 2025 16:17:53 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250502165831.44850-1-robdclark@gmail.com> <20250502165831.44850-22-robdclark@gmail.com>
- <3a4297fd-4554-4727-ab05-feaddaf63ea5@amd.com>
-In-Reply-To: <3a4297fd-4554-4727-ab05-feaddaf63ea5@amd.com>
-From: Rob Clark <robdclark@gmail.com>
-Date: Mon, 5 May 2025 07:15:31 -0700
-X-Gm-Features: ATxdqUEENrcJUZ0hEKbuQkuJkiW3wko3qimL5agF-KRqx4_9Igop8VKUWG8b1zM
-Message-ID: <CAF6AEGtmjLM-tK9Y=gT5XupW62X_eY2fiBJCYUnKqO9A9C4xFg@mail.gmail.com>
-Subject: Re: [PATCH v4 21/33] drm/msm: Add _NO_SHARE flag
-To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Cc: dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
-	linux-arm-msm@vger.kernel.org, Connor Abbott <cwabbott0@gmail.com>, 
-	Rob Clark <robdclark@chromium.org>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
-	Dmitry Baryshkov <lumag@kernel.org>, Sean Paul <sean@poorly.run>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Konrad Dybcio <konradybcio@kernel.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Sumit Semwal <sumit.semwal@linaro.org>, 
-	open list <linux-kernel@vger.kernel.org>, 
-	"open list:DMA BUFFER SHARING FRAMEWORK:Keyword:bdma_(?:buf|fence|resv)b" <linux-media@vger.kernel.org>, 
-	"moderated list:DMA BUFFER SHARING FRAMEWORK:Keyword:bdma_(?:buf|fence|resv)b" <linaro-mm-sig@lists.linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: arm64: dts: blaize-blzp1600: Enable GPIO support
+To: Nikolaos Pasaloukos <nikolaos.pasaloukos@blaize.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, James Cowgill
+ <james.cowgill@blaize.com>, Matt Redfearn <matthew.redfearn@blaize.com>,
+ Neil Jones <neil.jones@blaize.com>, "soc@lists.linux.dev"
+ <soc@lists.linux.dev>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+References: <20250327-kernel-upstreaming-add_gpio_support-v2-0-2c45a1acdc0c@blaize.com>
+ <20250327-kernel-upstreaming-add_gpio_support-v2-3-2c45a1acdc0c@blaize.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250327-kernel-upstreaming-add_gpio_support-v2-3-2c45a1acdc0c@blaize.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, May 5, 2025 at 12:54=E2=80=AFAM Christian K=C3=B6nig
-<christian.koenig@amd.com> wrote:
->
-> On 5/2/25 18:56, Rob Clark wrote:
-> > From: Rob Clark <robdclark@chromium.org>
-> >
-> > Buffers that are not shared between contexts can share a single resv
-> > object.  This way drm_gpuvm will not track them as external objects, an=
-d
-> > submit-time validating overhead will be O(1) for all N non-shared BOs,
-> > instead of O(n).
-> >
-> > Signed-off-by: Rob Clark <robdclark@chromium.org>
-> > ---
-> >  drivers/gpu/drm/msm/msm_drv.h       |  1 +
-> >  drivers/gpu/drm/msm/msm_gem.c       | 23 +++++++++++++++++++++++
-> >  drivers/gpu/drm/msm/msm_gem_prime.c | 15 +++++++++++++++
-> >  include/uapi/drm/msm_drm.h          | 14 ++++++++++++++
-> >  4 files changed, 53 insertions(+)
-> >
-> > diff --git a/drivers/gpu/drm/msm/msm_drv.h b/drivers/gpu/drm/msm/msm_dr=
-v.h
-> > index b77fd2c531c3..b0add236cbb3 100644
-> > --- a/drivers/gpu/drm/msm/msm_drv.h
-> > +++ b/drivers/gpu/drm/msm/msm_drv.h
-> > @@ -246,6 +246,7 @@ int msm_gem_prime_vmap(struct drm_gem_object *obj, =
-struct iosys_map *map);
-> >  void msm_gem_prime_vunmap(struct drm_gem_object *obj, struct iosys_map=
- *map);
-> >  struct drm_gem_object *msm_gem_prime_import_sg_table(struct drm_device=
- *dev,
-> >               struct dma_buf_attachment *attach, struct sg_table *sg);
-> > +struct dma_buf *msm_gem_prime_export(struct drm_gem_object *obj, int f=
-lags);
-> >  int msm_gem_prime_pin(struct drm_gem_object *obj);
-> >  void msm_gem_prime_unpin(struct drm_gem_object *obj);
-> >
-> > diff --git a/drivers/gpu/drm/msm/msm_gem.c b/drivers/gpu/drm/msm/msm_ge=
-m.c
-> > index 3708d4579203..d0f44c981351 100644
-> > --- a/drivers/gpu/drm/msm/msm_gem.c
-> > +++ b/drivers/gpu/drm/msm/msm_gem.c
-> > @@ -532,6 +532,9 @@ static int get_and_pin_iova_range_locked(struct drm=
-_gem_object *obj,
-> >
-> >       msm_gem_assert_locked(obj);
-> >
-> > +     if (to_msm_bo(obj)->flags & MSM_BO_NO_SHARE)
-> > +             return -EINVAL;
-> > +
-> >       vma =3D get_vma_locked(obj, vm, range_start, range_end);
-> >       if (IS_ERR(vma))
-> >               return PTR_ERR(vma);
-> > @@ -1060,6 +1063,16 @@ static void msm_gem_free_object(struct drm_gem_o=
-bject *obj)
-> >               put_pages(obj);
-> >       }
-> >
-> > +     if (msm_obj->flags & MSM_BO_NO_SHARE) {
-> > +             struct drm_gem_object *r_obj =3D
-> > +                     container_of(obj->resv, struct drm_gem_object, _r=
-esv);
-> > +
-> > +             BUG_ON(obj->resv =3D=3D &obj->_resv);
-> > +
-> > +             /* Drop reference we hold to shared resv obj: */
-> > +             drm_gem_object_put(r_obj);
-> > +     }
-> > +
-> >       drm_gem_object_release(obj);
-> >
-> >       kfree(msm_obj->metadata);
-> > @@ -1092,6 +1105,15 @@ int msm_gem_new_handle(struct drm_device *dev, s=
-truct drm_file *file,
-> >       if (name)
-> >               msm_gem_object_set_name(obj, "%s", name);
-> >
-> > +     if (flags & MSM_BO_NO_SHARE) {
-> > +             struct msm_context *ctx =3D file->driver_priv;
-> > +             struct drm_gem_object *r_obj =3D drm_gpuvm_resv_obj(ctx->=
-vm);
-> > +
-> > +             drm_gem_object_get(r_obj);
-> > +
-> > +             obj->resv =3D r_obj->resv;
-> > +     }
-> > +
-> >       ret =3D drm_gem_handle_create(file, obj, handle);
-> >
-> >       /* drop reference from allocate - handle holds it now */
-> > @@ -1124,6 +1146,7 @@ static const struct drm_gem_object_funcs msm_gem_=
-object_funcs =3D {
-> >       .free =3D msm_gem_free_object,
-> >       .open =3D msm_gem_open,
-> >       .close =3D msm_gem_close,
-> > +     .export =3D msm_gem_prime_export,
-> >       .pin =3D msm_gem_prime_pin,
-> >       .unpin =3D msm_gem_prime_unpin,
-> >       .get_sg_table =3D msm_gem_prime_get_sg_table,
-> > diff --git a/drivers/gpu/drm/msm/msm_gem_prime.c b/drivers/gpu/drm/msm/=
-msm_gem_prime.c
-> > index ee267490c935..1a6d8099196a 100644
-> > --- a/drivers/gpu/drm/msm/msm_gem_prime.c
-> > +++ b/drivers/gpu/drm/msm/msm_gem_prime.c
-> > @@ -16,6 +16,9 @@ struct sg_table *msm_gem_prime_get_sg_table(struct dr=
-m_gem_object *obj)
-> >       struct msm_gem_object *msm_obj =3D to_msm_bo(obj);
-> >       int npages =3D obj->size >> PAGE_SHIFT;
-> >
-> > +     if (msm_obj->flags & MSM_BO_NO_SHARE)
-> > +             return ERR_PTR(-EINVAL);
-> > +
-> >       if (WARN_ON(!msm_obj->pages))  /* should have already pinned! */
-> >               return ERR_PTR(-ENOMEM);
-> >
-> > @@ -45,6 +48,15 @@ struct drm_gem_object *msm_gem_prime_import_sg_table=
-(struct drm_device *dev,
-> >       return msm_gem_import(dev, attach->dmabuf, sg);
-> >  }
-> >
-> > +
-> > +struct dma_buf *msm_gem_prime_export(struct drm_gem_object *obj, int f=
-lags)
-> > +{
-> > +     if (to_msm_bo(obj)->flags & MSM_BO_NO_SHARE)
-> > +             return ERR_PTR(-EPERM);
-> > +
-> > +     return drm_gem_prime_export(obj, flags);
-> > +}
-> > +
-> >  int msm_gem_prime_pin(struct drm_gem_object *obj)
-> >  {
-> >       struct page **pages;
-> > @@ -53,6 +65,9 @@ int msm_gem_prime_pin(struct drm_gem_object *obj)
-> >       if (obj->import_attach)
-> >               return 0;
-> >
-> > +     if (to_msm_bo(obj)->flags & MSM_BO_NO_SHARE)
-> > +             return -EINVAL;
-> > +
-> >       pages =3D msm_gem_pin_pages_locked(obj);
-> >       if (IS_ERR(pages))
-> >               ret =3D PTR_ERR(pages);
-> > diff --git a/include/uapi/drm/msm_drm.h b/include/uapi/drm/msm_drm.h
-> > index b974f5a24dbc..1bccc347945c 100644
-> > --- a/include/uapi/drm/msm_drm.h
-> > +++ b/include/uapi/drm/msm_drm.h
-> > @@ -140,6 +140,19 @@ struct drm_msm_param {
-> >
-> >  #define MSM_BO_SCANOUT       0x00000001     /* scanout capable */
-> >  #define MSM_BO_GPU_READONLY  0x00000002
-> > +/* Private buffers do not need to be explicitly listed in the SUBMIT
-> > + * ioctl, unless referenced by a drm_msm_gem_submit_cmd.  Private
-> > + * buffers may NOT be imported/exported or used for scanout (or any
-> > + * other situation where buffers can be indefinitely pinned, but
-> > + * cases other than scanout are all kernel owned BOs which are not
-> > + * visible to userspace).
->
-> Why is pinning for scanout a problem with those?
->
-> Maybe I missed something but for other drivers that doesn't seem to be a =
-problem.
+On 05/05/2025 16:14, Nikolaos Pasaloukos wrote:
+> Blaize BLZP1600 uses the custom silicon provided from
+> 
+> VeriSilicon to add GPIO support.
+> 
+> This interface is used to control signals on many other
+> 
+> peripherals, such as Ethernet, USB, SD and eMMC.
+> 
+> 
+> Signed-off-by: Nikolaos Pasaloukos <nikolaos.pasaloukos@blaize.com>
 
-I guess _technically_ it could be ok because we track pin-count
-separately from dma_resv.  But the motivation for that statement was
-simply that _NO_SHARE buffers share a resv obj with the VM, so they
-should not be used in a different VM (in this case, the display, which
-has it's own VM).
+Entire patch is corrupted by your mail server. Please switch to b4 relay
+if your mail server is not capable of sending emails (like Microsoft
+Outlook).
 
-BR,
--R
+Please use standard email subjects, so with the PATCH keyword in the
+title. `git format-patch -vX` helps here to create proper versioned
+patches. Another useful tool is b4. Skipping the PATCH keyword makes
+filtering of emails more difficult thus making the review process less
+convenient.
 
-> Regards,
-> Christian.
->
->
-> > + *
-> > + * In exchange for those constraints, all private BOs associated with
-> > + * a single context (drm_file) share a single dma_resv, and if there
-> > + * has been no eviction since the last submit, there are no per-BO
-> > + * bookeeping to do, significantly cutting the SUBMIT overhead.
-> > + */
-> > +#define MSM_BO_NO_SHARE      0x00000004
-> >  #define MSM_BO_CACHE_MASK    0x000f0000
-> >  /* cache modes */
-> >  #define MSM_BO_CACHED        0x00010000
-> > @@ -149,6 +162,7 @@ struct drm_msm_param {
-> >
-> >  #define MSM_BO_FLAGS         (MSM_BO_SCANOUT | \
-> >                                MSM_BO_GPU_READONLY | \
-> > +                              MSM_BO_NO_SHARE | \
-> >                                MSM_BO_CACHE_MASK)
-> >
-> >  struct drm_msm_gem_new {
->
+> 
+> ---
+> 
+> I am re-sending the patch to include the soc list. The original patchset
+> 
+> has already been applied but not this patch.
+> 
+> Arnd, could you please apply or do I need someone to review?
+
+Platform maintainers are responsible for the patches for their platform.
+Any reason why this is not working for blaize?
+
+Best regards,
+Krzysztof
