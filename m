@@ -1,129 +1,257 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EEE93280A2;
-	Mon,  5 May 2025 22:34:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAF3A3278E2
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 22:34:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746484487; cv=none; b=qCeVU7yF57BohQfBkFcdxEZLFLmxbXZehDxC/6LA/6A7uFqojN4RMYwMmyIaES1QyiO6pPpggsZjBpWPFwSGz42Fu8LuXcS53GzTYiiDeyZKmS9gA0TOetXDYN/JVX9/xO7C2icmDy8MA5iElTKriLIx/a3joE+QYOWXJmJU7+8=
+	t=1746484487; cv=none; b=P1WjI9uI8HTS0ipERhAZuuBm8NSZNNymS6Yx2Iitv6blsFSjZTBsl7IMXZYzaB/vmbJAOrgD+0UOaTu2qrkwBfzHuTjtuCVeGkr3MIE05DOf+dU7gyMYSr98GAV1WNJEnHrFYuMg/sRr7ssMhe7s1Ht6IXF5fn8BQDOoptJE3lg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746484487; c=relaxed/simple;
-	bh=HHPlxbkjj8uKoAUKROxb6hyWNeK7YJF8UJPFP1hVd98=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=UhraimxO7jbyGTicBFsLoqVz864lCzoAeCqUZEE0HYHc4nY799YuDYBkmWxrU0e88u51EtIffl0zNN0ziPENCvD0BKdV+kjj02RxP7rEDniD2brhM00lYEydTlgNdVr3HyDrVA/rzganLE3F3cv+6EhULUAVCvMPFqh2px6HrPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fknkrSOe; arc=none smtp.client-ip=10.30.226.201
+	bh=XrFF3q8OIdWbIbgL5KEcKR7w3M0aeaM2dGRoWCTQ0Bo=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=EQyveE4P1IKWz1zkQgP9HfK16947omzmlPdF7HneKtEMxlYEGfutlvgMMiHkU5wvHblxBzLK+vVT5hSVevt7IYTeNHEmBZqTEvuhfMojjc0GF/40kv2GzF5TiEBXv84xYQj8RhpfgVdhJHG2q7aglrc9gSpFAUzUVXrZtn4fQis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--samitolvanen.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BOEDVx7a; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--samitolvanen.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fknkrSOe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC3BFC4CEED;
-	Mon,  5 May 2025 22:34:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746484487;
-	bh=HHPlxbkjj8uKoAUKROxb6hyWNeK7YJF8UJPFP1hVd98=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fknkrSOeisnTxuJQsVVmml84GP4EyxhgRbwc/pNXM9dGIe3sQc90PSEN7ftmTaAE6
-	 b52gRXeltP/8KQhcrHdlBCO92TwwdTsDFwbNAuFPIyqFo585l77e18/DKBvvXJSmQz
-	 gxL6ARpbHbChasRXWzRDMLaFmTFkfQ//ATZNRCf8l1LU3yuqBTLrUvm5sHv0YWO5g/
-	 pmh4A0NGqug20SQwofrYmg5p0rH8T9MNb6Y6AihBh3Wmjp0aU+52Ind6QlAEHRhx+n
-	 7KXBIi/IKaYbQ1ZlsihxIF8+aKuephrcdBVLE/ma/IFBPdCVJWJN8ECUnBpGQ4VoWD
-	 ccuOmv86KprtA==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>,
-	Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>,
-	Nicolas Escande <nico.escande@gmail.com>,
-	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
-	Sasha Levin <sashal@kernel.org>,
-	jjohnson@kernel.org,
-	linux-wireless@vger.kernel.org,
-	ath12k@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.14 495/642] wifi: ath12k: use arvif instead of link_conf in ath12k_mac_set_key()
-Date: Mon,  5 May 2025 18:11:51 -0400
-Message-Id: <20250505221419.2672473-495-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250505221419.2672473-1-sashal@kernel.org>
-References: <20250505221419.2672473-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BOEDVx7a"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-afd1e7f52f7so2602240a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 15:34:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746484485; x=1747089285; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7UG6GYoDYUvSTCJXNbhcTCy+rTclDma5rPa6bv6GcMw=;
+        b=BOEDVx7afTopZwemKnnNK77BZmTnv4adxC7u0Bwj3DRFVvziBcuuywB/DTryIUWQMe
+         5nS6r9wcCL1aD61rrj5N8nkbDje/zpR2NOYoq0fYbErxuRgxZ4Ck6Dh998PaqyC8DHUh
+         1Z2akJ0yj1cGXwdm4LHjzss2dQ15xKis50tiTmfmszSbr05QsEQ+CFaO+j3IR0Wpzvil
+         5HBaKcAD9RVgc0+EDkWs7Bf65ezknRiTbhEJAuVXFHLI6mHalCwj93w7rdGtdZfXyjS6
+         b3JdeYSnceZxul9Xy0hKAvTR3zBDoM4YJhztKaq3xS3INsYxSKzxdtw5WaaSCsNJb1Yr
+         JdzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746484485; x=1747089285;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7UG6GYoDYUvSTCJXNbhcTCy+rTclDma5rPa6bv6GcMw=;
+        b=My8YNbibEZz7/eAfTOQdP8RA7wSQmsUHlU1IHwwWknqAZC9CkZ3AfFkLTz3LQM4XBt
+         qLTyiu9aY43rmDc9XWFTnccbQzXVtMRJx5FBEdncmLScFUof8XnX1ao9GQcR941DlQ9N
+         E+4mxU2UtHNQEvUYm9kUviV7j2MLmjONv7TEnmlA4IxxoIbBytrfM1HfVGi/0YR+hHGp
+         zoHoE3r7ga2pqWoZHaAvqlKubqu5l22Sh+Cq4vDd46xRqLGx+qbMO43Emky/CQSIPVDk
+         QKRjl5SAP2IyNmhQcm5ey7F1n+B2cO1HX5Y1LXD0RO3dVYcCUq69FNN//WYp5IXkWjm/
+         m/Ag==
+X-Forwarded-Encrypted: i=1; AJvYcCXA4/VuxSVnCevKDuxFEDOmUtvSUgw3068ruD0PoPii/LzpzQamOLzwc/svbB4YTK4qWt0aIaaRlGXHjgw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1ZqDCEvh3PUinAQsmUFiHfri5AcPXB6Kyg6md1B4p+oCS/6zJ
+	yrybnurWYwbVilTc8R0I4noWXd1FTH64S5WFQKNY/4Gi/5bghLgGANNm0STSFfGx0r19F5EK4So
+	zPgKRXnLEtt97yvIuoo0h41pTlw==
+X-Google-Smtp-Source: AGHT+IG9/bqquqZo0+5ekAmT9vTMi2AWIW4fPAq3lK8wl6/RiTTEb6BBW0o8BycH8+xREXoGfTl4Z8+v6d38vWKGCxA=
+X-Received: from pgar26.prod.google.com ([2002:a05:6a02:2e9a:b0:af0:e359:c50a])
+ (user=samitolvanen job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a20:43a3:b0:1f5:6c7b:8920 with SMTP id adf61e73a8af0-2118076ae4dmr1028201637.9.1746484484997;
+ Mon, 05 May 2025 15:34:44 -0700 (PDT)
+Date: Mon,  5 May 2025 22:34:40 +0000
+In-Reply-To: <20250505223437.3722164-4-samitolvanen@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.14.5
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250505223437.3722164-4-samitolvanen@google.com>
+X-Developer-Key: i=samitolvanen@google.com; a=openpgp; fpr=35CCFB63B283D6D3AEB783944CB5F6848BBC56EE
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5846; i=samitolvanen@google.com;
+ h=from:subject; bh=7DbjnHH5VAkImXf9y6kWO2Cpd7OKLAKDbR8A6OUcpSo=;
+ b=owGbwMvMwCEWxa662nLh8irG02pJDBmSNv+n70wW3Td999qDnluU1h/qaZRrv6XgbvBB9fe9j
+ n2HrxUxdJSyMIhxMMiKKbK0fF29dfd3p9RXn4skYOawMoEMYeDiFICJ3PVg+Kcseq1CSHzW1a6c
+ rZ4n9e4dPmdvfbpob7XIB/7NkjLOEkcZGdbeDuLtcTvWJBP+IZHFKOjdccWdfaFpL+7dCbLplng aygEA
+X-Mailer: git-send-email 2.49.0.967.g6a0df3ecc3-goog
+Message-ID: <20250505223437.3722164-6-samitolvanen@google.com>
+Subject: [PATCH bpf-next v9 2/2] arm64/cfi,bpf: Support kCFI + BPF on arm64
+From: Sami Tolvanen <samitolvanen@google.com>
+To: bpf@vger.kernel.org, Puranjay Mohan <puranjay@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Andrii Nakryiko <andrii@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	Maxwell Bland <mbland@motorola.com>, Puranjay Mohan <puranjay12@gmail.com>, 
+	Sami Tolvanen <samitolvanen@google.com>, Dao Huang <huangdao1@oppo.com>
+Content-Type: text/plain; charset="UTF-8"
 
-From: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
+From: Puranjay Mohan <puranjay12@gmail.com>
 
-[ Upstream commit 00e4dc11695d48322780812b503314682659e98b ]
+Currently, bpf_dispatcher_*_func() is marked with `__nocfi` therefore
+calling BPF programs from this interface doesn't cause CFI warnings.
 
-Currently, in ath12k_mac_set_key(), if sta is not present, the address is
-retrieved from link_conf's bssid or addr member, depending on the interface
-type.
+When BPF programs are called directly from C: from BPF helpers or
+struct_ops, CFI warnings are generated.
 
-When operating as an ML station and during shutdown, link_conf will not be
-available. This can result in the following error:
+Implement proper CFI prologues for the BPF programs and callbacks and
+drop __nocfi for arm64. Fix the trampoline generation code to emit kCFI
+prologue when a struct_ops trampoline is being prepared.
 
-ath12k_pci 0004:01:00.0: unable to access bss link conf in set key for vif AA:BB:CC:DD:EE:FF link 1
-
-The primary purpose of accessing link_conf is to obtain the address for
-finding the peer. However, since arvif is always valid in this call, it can
-be used instead.
-
-Add change to use arvif instead of link_conf.
-
-A subsequent change will expose this issue but since tear down will give
-error, this is included first.
-
-Tested-on: QCN9274 hw2.0 PCI WLAN.WBE.1.3.1-00173-QCAHKSWPL_SILICONZ-1
-Tested-on: QCN9274 hw2.0 PCI WLAN.WBE.1.3.1-00130-QCAHKSWPL_SILICONZ-1.97421.5 # Nicolas Escande
-
-Reviewed-by: Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>
-Signed-off-by: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
-Tested-by: Nicolas Escande <nico.escande@gmail.com>
-Link: https://patch.msgid.link/20250204-unlink_link_arvif_from_chanctx-v2-5-764fb5973c1a@oss.qualcomm.com
-Signed-off-by: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
+Co-developed-by: Maxwell Bland <mbland@motorola.com>
+Signed-off-by: Maxwell Bland <mbland@motorola.com>
+Co-developed-by: Sami Tolvanen <samitolvanen@google.com>
+Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+Tested-by: Dao Huang <huangdao1@oppo.com>
 ---
- drivers/net/wireless/ath/ath12k/mac.c | 14 +-------------
- 1 file changed, 1 insertion(+), 13 deletions(-)
+ arch/arm64/include/asm/cfi.h    | 23 +++++++++++++++++++++++
+ arch/arm64/kernel/alternative.c | 25 +++++++++++++++++++++++++
+ arch/arm64/net/bpf_jit_comp.c   | 22 +++++++++++++++++++---
+ 3 files changed, 67 insertions(+), 3 deletions(-)
+ create mode 100644 arch/arm64/include/asm/cfi.h
 
-diff --git a/drivers/net/wireless/ath/ath12k/mac.c b/drivers/net/wireless/ath/ath12k/mac.c
-index 9123ffab55b52..95ad9fefbdfcd 100644
---- a/drivers/net/wireless/ath/ath12k/mac.c
-+++ b/drivers/net/wireless/ath/ath12k/mac.c
-@@ -4534,9 +4534,6 @@ static int ath12k_mac_set_key(struct ath12k *ar, enum set_key_cmd cmd,
- 			      struct ath12k_link_sta *arsta,
- 			      struct ieee80211_key_conf *key)
- {
--	struct ath12k_vif *ahvif = arvif->ahvif;
--	struct ieee80211_vif *vif = ath12k_ahvif_to_vif(ahvif);
--	struct ieee80211_bss_conf *link_conf;
- 	struct ieee80211_sta *sta = NULL;
- 	struct ath12k_base *ab = ar->ab;
- 	struct ath12k_peer *peer;
-@@ -4553,19 +4550,10 @@ static int ath12k_mac_set_key(struct ath12k *ar, enum set_key_cmd cmd,
- 	if (test_bit(ATH12K_FLAG_HW_CRYPTO_DISABLED, &ab->dev_flags))
- 		return 1;
+diff --git a/arch/arm64/include/asm/cfi.h b/arch/arm64/include/asm/cfi.h
+new file mode 100644
+index 000000000000..670e191f8628
+--- /dev/null
++++ b/arch/arm64/include/asm/cfi.h
+@@ -0,0 +1,23 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ASM_ARM64_CFI_H
++#define _ASM_ARM64_CFI_H
++
++#ifdef CONFIG_CFI_CLANG
++#define __bpfcall
++static inline int cfi_get_offset(void)
++{
++	return 4;
++}
++#define cfi_get_offset cfi_get_offset
++extern u32 cfi_bpf_hash;
++extern u32 cfi_bpf_subprog_hash;
++extern u32 cfi_get_func_hash(void *func);
++#else
++#define cfi_bpf_hash 0U
++#define cfi_bpf_subprog_hash 0U
++static inline u32 cfi_get_func_hash(void *func)
++{
++	return 0;
++}
++#endif /* CONFIG_CFI_CLANG */
++#endif /* _ASM_ARM64_CFI_H */
+diff --git a/arch/arm64/kernel/alternative.c b/arch/arm64/kernel/alternative.c
+index 8ff6610af496..71c153488dad 100644
+--- a/arch/arm64/kernel/alternative.c
++++ b/arch/arm64/kernel/alternative.c
+@@ -8,11 +8,13 @@
  
--	link_conf = ath12k_mac_get_link_bss_conf(arvif);
--	if (!link_conf) {
--		ath12k_warn(ab, "unable to access bss link conf in set key for vif %pM link %u\n",
--			    vif->addr, arvif->link_id);
--		return -ENOLINK;
--	}
--
- 	if (sta)
- 		peer_addr = arsta->addr;
--	else if (ahvif->vdev_type == WMI_VDEV_TYPE_STA)
--		peer_addr = link_conf->bssid;
- 	else
--		peer_addr = link_conf->addr;
-+		peer_addr = arvif->bssid;
+ #define pr_fmt(fmt) "alternatives: " fmt
  
- 	key->hw_key_idx = key->keyidx;
++#include <linux/cfi_types.h>
+ #include <linux/init.h>
+ #include <linux/cpu.h>
+ #include <linux/elf.h>
+ #include <asm/cacheflush.h>
+ #include <asm/alternative.h>
++#include <asm/cfi.h>
+ #include <asm/cpufeature.h>
+ #include <asm/insn.h>
+ #include <asm/module.h>
+@@ -298,3 +300,26 @@ noinstr void alt_cb_patch_nops(struct alt_instr *alt, __le32 *origptr,
+ 		updptr[i] = cpu_to_le32(aarch64_insn_gen_nop());
+ }
+ EXPORT_SYMBOL(alt_cb_patch_nops);
++
++#ifdef CONFIG_CFI_CLANG
++struct bpf_insn;
++
++/* Must match bpf_func_t / DEFINE_BPF_PROG_RUN() */
++extern unsigned int __bpf_prog_runX(const void *ctx,
++				    const struct bpf_insn *insn);
++DEFINE_CFI_TYPE(cfi_bpf_hash, __bpf_prog_runX);
++
++/* Must match bpf_callback_t */
++extern u64 __bpf_callback_fn(u64, u64, u64, u64, u64);
++DEFINE_CFI_TYPE(cfi_bpf_subprog_hash, __bpf_callback_fn);
++
++u32 cfi_get_func_hash(void *func)
++{
++	u32 hash;
++
++	if (get_kernel_nofault(hash, func - cfi_get_offset()))
++		return 0;
++
++	return hash;
++}
++#endif /* CONFIG_CFI_CLANG */
+diff --git a/arch/arm64/net/bpf_jit_comp.c b/arch/arm64/net/bpf_jit_comp.c
+index 70d7c89d3ac9..3b3691e88dd5 100644
+--- a/arch/arm64/net/bpf_jit_comp.c
++++ b/arch/arm64/net/bpf_jit_comp.c
+@@ -9,6 +9,7 @@
  
+ #include <linux/bitfield.h>
+ #include <linux/bpf.h>
++#include <linux/cfi.h>
+ #include <linux/filter.h>
+ #include <linux/memory.h>
+ #include <linux/printk.h>
+@@ -164,6 +165,12 @@ static inline void emit_bti(u32 insn, struct jit_ctx *ctx)
+ 		emit(insn, ctx);
+ }
+ 
++static inline void emit_kcfi(u32 hash, struct jit_ctx *ctx)
++{
++	if (IS_ENABLED(CONFIG_CFI_CLANG))
++		emit(hash, ctx);
++}
++
+ /*
+  * Kernel addresses in the vmalloc space use at most 48 bits, and the
+  * remaining bits are guaranteed to be 0x1. So we can compose the address
+@@ -474,7 +481,6 @@ static int build_prologue(struct jit_ctx *ctx, bool ebpf_from_cbpf)
+ 	const bool is_main_prog = !bpf_is_subprog(prog);
+ 	const u8 fp = bpf2a64[BPF_REG_FP];
+ 	const u8 arena_vm_base = bpf2a64[ARENA_VM_START];
+-	const int idx0 = ctx->idx;
+ 	int cur_offset;
+ 
+ 	/*
+@@ -500,6 +506,9 @@ static int build_prologue(struct jit_ctx *ctx, bool ebpf_from_cbpf)
+ 	 *
+ 	 */
+ 
++	emit_kcfi(is_main_prog ? cfi_bpf_hash : cfi_bpf_subprog_hash, ctx);
++	const int idx0 = ctx->idx;
++
+ 	/* bpf function may be invoked by 3 instruction types:
+ 	 * 1. bl, attached via freplace to bpf prog via short jump
+ 	 * 2. br, attached via freplace to bpf prog via long jump
+@@ -2009,9 +2018,9 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
+ 		jit_data->ro_header = ro_header;
+ 	}
+ 
+-	prog->bpf_func = (void *)ctx.ro_image;
++	prog->bpf_func = (void *)ctx.ro_image + cfi_get_offset();
+ 	prog->jited = 1;
+-	prog->jited_len = prog_size;
++	prog->jited_len = prog_size - cfi_get_offset();
+ 
+ 	if (!prog->is_func || extra_pass) {
+ 		int i;
+@@ -2271,6 +2280,12 @@ static int prepare_trampoline(struct jit_ctx *ctx, struct bpf_tramp_image *im,
+ 	/* return address locates above FP */
+ 	retaddr_off = stack_size + 8;
+ 
++	if (flags & BPF_TRAMP_F_INDIRECT) {
++		/*
++		 * Indirect call for bpf_struct_ops
++		 */
++		emit_kcfi(cfi_get_func_hash(func_addr), ctx);
++	}
+ 	/* bpf trampoline may be invoked by 3 instruction types:
+ 	 * 1. bl, attached to bpf prog or kernel function via short jump
+ 	 * 2. br, attached to bpf prog or kernel function via long jump
+@@ -2790,6 +2805,7 @@ void bpf_jit_free(struct bpf_prog *prog)
+ 					   sizeof(jit_data->header->size));
+ 			kfree(jit_data);
+ 		}
++		prog->bpf_func -= cfi_get_offset();
+ 		hdr = bpf_jit_binary_pack_hdr(prog);
+ 		bpf_jit_binary_pack_free(hdr, NULL);
+ 		WARN_ON_ONCE(!bpf_prog_kallsyms_verify_off(prog));
 -- 
-2.39.5
+2.49.0.967.g6a0df3ecc3-goog
 
