@@ -1,47 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E70432EDB2E;
-	Mon,  5 May 2025 23:09:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 699392EE16D;
+	Mon,  5 May 2025 23:09:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486553; cv=none; b=R1a8EJ6YMrNDO1IvWwUeMXe+/jVHR7FQgshQFWuis+dydUox5+QQNER81gru9fWnF4G7944d3OUt3o9h6mDluOns7SL0AE9ViPUzocQc2njIxOqBmQ6Mro4hE2KsqJCzIVot8qkzktx0YU7mFFj4NnEuJd5+SuJJ++x6VdzQc1E=
+	t=1746486545; cv=none; b=niDhWJiQV9H4+wu98IOzGe52rSZk9bDEDiQZHljblPD3hHX3AQ1hbe5UFjnSuAmQV1HVMbYPERFVxTy4FeAroKc6NplNRZFdrCzi2EAS8zcllcNwprVJ+ESEryz21MMSfM0WD/fOsefxJiO4IxrNbQLo9SccHfot/M58mCstD2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486553; c=relaxed/simple;
-	bh=LqICacTpYrgy8/P9TnRYiuhhvCauqldwelZA0i1iQ7Q=;
+	s=arc-20240116; t=1746486545; c=relaxed/simple;
+	bh=SRnRJO6g1B7jvzWhfxhh5YTRN7XIca6siImFMw6aC7c=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YLm+u9Dsq3CuftbLzi8SPw2R8V0vZA+exi6XF/A39WAb1LxN/iK0Ex3ZoWWAcPn0BX3LVUVZCE2Dw+WzyGSMUJkDgDf2WIOjnGVA7EhWJrqX43VabKKZoc3jBbH+cDqw+k3WtLQNFg8CCDuoXw+1QW9gQWZK/PNuyEge6HHkVL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r4fQlO10; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Z19XXIO6QvSqojVe77R77LeQQEzON0ry7UgwmWv2H/dJLy2ajpKi2f0Hfj+mlYIjSoS0MzJN/kCpzHZlQJtN4wOdfcmFnimyVA2VGLGclkWnIkSe8/xi/z3RlW//JHH2EWzGg2K0PgfCd74ydiHVru7r0eBxKj/I+tUOqzeDy4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RAK9SlgA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r4fQlO10"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A759C4CEEF;
-	Mon,  5 May 2025 23:09:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RAK9SlgA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4843DC4CEE4;
+	Mon,  5 May 2025 23:09:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486551;
-	bh=LqICacTpYrgy8/P9TnRYiuhhvCauqldwelZA0i1iQ7Q=;
+	s=k20201202; t=1746486545;
+	bh=SRnRJO6g1B7jvzWhfxhh5YTRN7XIca6siImFMw6aC7c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=r4fQlO10BPbXzUejeT5tNPYrHmb9QpduHKb8u2TorT0AKh+jWJUzbFJF7f4Ay59TD
-	 rrGDPNnotFy/aHumJl9oO5Y05xRT2nlhB0rpcUaL6/YDxlYMHavzLw8QIxlOMCzlA9
-	 MPyJV5fRUKCLP9dUhx5dEYY8U4ilrXWxtPSDN1fmqFNTV6IY1cRNzVKeYKYDHNPWd2
-	 HJudCq+qZ83DF2xsqeJhGQ94o+FAEvDfshwvuXYQVptIFM2fN/cncbXmLDEC00Vnqc
-	 Z5llhlP08LQXSVOIvLd62HUZEiukbsDHQuQGFOqOMQZKQ4SvoyDRYsJ28F1H9taclz
-	 ICfIJff+d1L0w==
+	b=RAK9SlgAyY63JbqUCLnAH7K3yy5WmOAbkhSwB4Q3PQZdb5NcZGqHz7qkU0kPlo0jQ
+	 19I6BSVBNcr8uoi/3geh7VZYWIQM4gdo2VvGBW4Nc0b8VOclUmYiqZjpYoVkxSMKVt
+	 gZ5/BkgYGUkfcsubVtoyRFwoJMYUFBVf+cbCGbXVq/AC+gBy4Og5rCERzRg2FR5bpj
+	 K6hlSErCkjIHe+bak5JwelRqTSH+ABtE9rkdaQ0O3vJR+XkesAX5wYnCNXgKciMhE6
+	 scdC8RqixEzCoIABN5zE2gAEaCDLPQ92IkBzVn3Xh6wMOTjlCIMwsvPYbgJ3QbDKy6
+	 b68fX+BcBUhFg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Svyatoslav Ryhel <clamor95@gmail.com>,
-	Thierry Reding <treding@nvidia.com>,
+Cc: Takashi Iwai <tiwai@suse.de>,
+	syzbot+2d373c9936c00d7e120c@syzkaller.appspotmail.com,
 	Sasha Levin <sashal@kernel.org>,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	thierry.reding@gmail.com,
-	jonathanh@nvidia.com,
-	devicetree@vger.kernel.org,
-	linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 086/212] ARM: tegra: Switch DSI-B clock parent to PLLD on Tegra114
-Date: Mon,  5 May 2025 19:04:18 -0400
-Message-Id: <20250505230624.2692522-86-sashal@kernel.org>
+	perex@perex.cz,
+	tiwai@suse.com,
+	viro@zeniv.linux.org.uk,
+	linux-sound@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.1 082/212] ALSA: seq: Improve data consistency at polling
+Date: Mon,  5 May 2025 19:04:14 -0400
+Message-Id: <20250505230624.2692522-82-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505230624.2692522-1-sashal@kernel.org>
 References: <20250505230624.2692522-1-sashal@kernel.org>
@@ -56,34 +53,68 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.1.136
 Content-Transfer-Encoding: 8bit
 
-From: Svyatoslav Ryhel <clamor95@gmail.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 2b3db788f2f614b875b257cdb079adadedc060f3 ]
+[ Upstream commit e3cd33ab17c33bd8f1a9df66ec83a15dd8f7afbb ]
 
-PLLD is usually used as parent clock for internal video devices, like
-DSI for example, while PLLD2 is used as parent for HDMI.
+snd_seq_poll() calls snd_seq_write_pool_allocated() that reads out a
+field in client->pool object, while it can be updated concurrently via
+ioctls, as reported by syzbot.  The data race itself is harmless, as
+it's merely a poll() call, and the state is volatile.  OTOH, the read
+out of poll object info from the caller side is fragile, and we can
+leave it better in snd_seq_pool_poll_wait() alone.
 
-Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
-Link: https://lore.kernel.org/r/20250226105615.61087-3-clamor95@gmail.com
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+A similar pattern is seen in snd_seq_kernel_client_write_poll(), too,
+which is called from the OSS sequencer.
+
+This patch drops the pool checks from the caller side and add the
+pool->lock in snd_seq_pool_poll_wait() for better data consistency.
+
+Reported-by: syzbot+2d373c9936c00d7e120c@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/67c88903.050a0220.15b4b9.0028.GAE@google.com
+Link: https://patch.msgid.link/20250307084246.29271-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/tegra114.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/core/seq/seq_clientmgr.c | 5 +----
+ sound/core/seq/seq_memory.c    | 1 +
+ 2 files changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/tegra114.dtsi b/arch/arm/boot/dts/tegra114.dtsi
-index 09996acad6399..bb23bb39dd5b1 100644
---- a/arch/arm/boot/dts/tegra114.dtsi
-+++ b/arch/arm/boot/dts/tegra114.dtsi
-@@ -139,7 +139,7 @@ dsib: dsi@54400000 {
- 			reg = <0x54400000 0x00040000>;
- 			clocks = <&tegra_car TEGRA114_CLK_DSIB>,
- 				 <&tegra_car TEGRA114_CLK_DSIBLP>,
--				 <&tegra_car TEGRA114_CLK_PLL_D2_OUT0>;
-+				 <&tegra_car TEGRA114_CLK_PLL_D_OUT0>;
- 			clock-names = "dsi", "lp", "parent";
- 			resets = <&tegra_car 82>;
- 			reset-names = "dsi";
+diff --git a/sound/core/seq/seq_clientmgr.c b/sound/core/seq/seq_clientmgr.c
+index 2d707afa1ef1c..1252ea7ad55ea 100644
+--- a/sound/core/seq/seq_clientmgr.c
++++ b/sound/core/seq/seq_clientmgr.c
+@@ -1140,8 +1140,7 @@ static __poll_t snd_seq_poll(struct file *file, poll_table * wait)
+ 	if (snd_seq_file_flags(file) & SNDRV_SEQ_LFLG_OUTPUT) {
+ 
+ 		/* check if data is available in the pool */
+-		if (!snd_seq_write_pool_allocated(client) ||
+-		    snd_seq_pool_poll_wait(client->pool, file, wait))
++		if (snd_seq_pool_poll_wait(client->pool, file, wait))
+ 			mask |= EPOLLOUT | EPOLLWRNORM;
+ 	}
+ 
+@@ -2382,8 +2381,6 @@ int snd_seq_kernel_client_write_poll(int clientid, struct file *file, poll_table
+ 	if (client == NULL)
+ 		return -ENXIO;
+ 
+-	if (! snd_seq_write_pool_allocated(client))
+-		return 1;
+ 	if (snd_seq_pool_poll_wait(client->pool, file, wait))
+ 		return 1;
+ 	return 0;
+diff --git a/sound/core/seq/seq_memory.c b/sound/core/seq/seq_memory.c
+index 47ef6bc30c0ee..e30b92d85079b 100644
+--- a/sound/core/seq/seq_memory.c
++++ b/sound/core/seq/seq_memory.c
+@@ -366,6 +366,7 @@ int snd_seq_pool_poll_wait(struct snd_seq_pool *pool, struct file *file,
+ 			   poll_table *wait)
+ {
+ 	poll_wait(file, &pool->output_sleep, wait);
++	guard(spinlock_irq)(&pool->lock);
+ 	return snd_seq_output_ok(pool);
+ }
+ 
 -- 
 2.39.5
 
