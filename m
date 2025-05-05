@@ -1,41 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9739376455;
-	Mon,  5 May 2025 22:48:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC23F2D60F9;
+	Mon,  5 May 2025 22:49:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485334; cv=none; b=eKDQaS0xO8xQT1O5AgRIkyTK0Z+MlNcbniIR0To7THVn7FS62qPrvaBP3vKR7VvUuHtv7j3s6NwHqb0TvZ6w2ViAru4tvG6wrEXnnsTrGrduLZLnA9psZpbQhKNhQMqxIxf9iuKkjB5TsVMsBl/r9mYUsK/Io1Eu6f7Nc8Uv7VM=
+	t=1746485354; cv=none; b=LHoUsNQI6QF7B/XFu7JOhHF0xMY06NQbWgcBZ/xkXheagdLFAXcVQuVDNFzV+guS+NzQBlZGG7t1UDFzBIN9RiMD7huJbFhCxxPXtJtuAPcWby359bH4kYc7VRbzMLuSrNciSfyTTUgHQo58m1EWRm7OFYWq8+KSu2JkP/L5d7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485334; c=relaxed/simple;
-	bh=Cj9pz82UZuBAlcuouMBtIXCTLWVIoxB9T79RQmp21IU=;
+	s=arc-20240116; t=1746485354; c=relaxed/simple;
+	bh=LJNC1WGx3PsFqhoiIj4US5ok4Nl0wwbQHNr9rljz7+s=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MK6uxk3zzp+mmKaqf8F6LS4Lja5S1U+LPJkC2p7YA8dcGNfxVla486WHl9w2xpcDG3J1tuXjw5ynX3nRt9PWprFgprT5d/xDnuRBX1ijuYgBt8Y28wU80tuv5BH9i09cV9cZe6nHyISiPFshEfrP57ZFeRWhZEj8zvMqgNJ5SAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YVInQ4E1; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=goSNcYCuSHLwLg8Jad4hCAyH0UGh46JH8utR4Q6iZiPB7KR909WfMEKpNpGujjR9QDAULrsgtEZH8lr4OtD/zT+UvTa0kFdFduDWcHT7zoqKJ88rFQ33Tr/qSBLrBNh31yeuY0rw2TH9ECChWbT2SJy4OpWyv6j+lgH8Fc13gBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZY90ImYk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YVInQ4E1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0250C4CEEE;
-	Mon,  5 May 2025 22:48:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZY90ImYk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 822D9C4CEEE;
+	Mon,  5 May 2025 22:49:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485333;
-	bh=Cj9pz82UZuBAlcuouMBtIXCTLWVIoxB9T79RQmp21IU=;
+	s=k20201202; t=1746485353;
+	bh=LJNC1WGx3PsFqhoiIj4US5ok4Nl0wwbQHNr9rljz7+s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YVInQ4E1jUjIjDkbNLQaKB79+JBXnKapoGDrQntK7DQMjb/gklCb7DezrqW7X/aL0
-	 akzwEztXgCSW++JLzamG1AqoPCYSCoeNHzB+2dqwA+Jw5jgZtIqrHWTccGGjb+kqhy
-	 a0WlW3ILG5Zm2njrBQ4+f6j1jjFZL065+AF20TM0HE8Ky6ifb8JmbUS6+aLcvF0De7
-	 iPfcrRdd/ROkj452mK7ZbylyqSRvnvt3CnwvVdKtp4ALzA9MJ3/wYNzNxxc9eyyF0g
-	 D37CkhsVEeqZltFERXrujYNSEwqG7s7sFOjfZTCVXM92J4Or8ngCe1F8mJPXAsewg4
-	 huwS0T5eSyb+A==
+	b=ZY90ImYk6nTsMSNl3osw9xWnuWTuprcNBCIcAeriYif2UkV+KJDx2FrB7Z40NHqXO
+	 qtDcZlJCpItuzNQ9Vpf+69NREjwlPZN2pyR8x0kW5i7YcKjyz8A/vNw+3zfr2/kONt
+	 +zwY7QBfsIFOlVW2G6607UxxeaehUt5zrH4Dj1r4n1FeBa+6C87Axsm6yUivYWbJF2
+	 qOUOoKO7yL2zfp6mLuqf2cOWl3/ndvMxHnYEiRv7qz81v82F3P9ZxFrf99YKJX3cpa
+	 8QqZePWUOt4j4tlhjKdNh9u2TVNavwP+tqMZpmjh7+gO40f5jLpLdR0x4W078quAcp
+	 nyJqm4Rlc2v+g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Herbert Xu <herbert@gondor.apana.org.au>,
+Cc: Mrinmay Sarkar <quic_msarkar@quicinc.com>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	davem@davemloft.net,
-	linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 272/486] crypto: ahash - Set default reqsize from ahash_alg
-Date: Mon,  5 May 2025 18:35:48 -0400
-Message-Id: <20250505223922.2682012-272-sashal@kernel.org>
+	manivannan.sadhasivam@linaro.org,
+	kw@linux.com,
+	bhelgaas@google.com,
+	mhi@lists.linux.dev,
+	linux-arm-msm@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 282/486] PCI: epf-mhi: Update device ID for SA8775P
+Date: Mon,  5 May 2025 18:35:58 -0400
+Message-Id: <20250505223922.2682012-282-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -45,69 +50,40 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Herbert Xu <herbert@gondor.apana.org.au>
+From: Mrinmay Sarkar <quic_msarkar@quicinc.com>
 
-[ Upstream commit 9e01aaa1033d6e40f8d7cf4f20931a61ce9e3f04 ]
+[ Upstream commit 4f13dd9e2b1d2b317bb36704f8a7bd1d3017f7a2 ]
 
-Add a reqsize field to struct ahash_alg and use it to set the
-default reqsize so that algorithms with a static reqsize are
-not forced to create an init_tfm function.
+Update device ID for the Qcom SA8775P SoC.
 
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
+Link: https://lore.kernel.org/r/20241205065422.2515086-3-quic_msarkar@quicinc.com
+[kwilczynski: commit log]
+Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- crypto/ahash.c        | 4 ++++
- include/crypto/hash.h | 3 +++
- 2 files changed, 7 insertions(+)
+ drivers/pci/endpoint/functions/pci-epf-mhi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/crypto/ahash.c b/crypto/ahash.c
-index bcd9de009a91b..fe19bf7f15eb9 100644
---- a/crypto/ahash.c
-+++ b/crypto/ahash.c
-@@ -473,6 +473,7 @@ static int crypto_ahash_init_tfm(struct crypto_tfm *tfm)
- 	struct ahash_alg *alg = crypto_ahash_alg(hash);
+diff --git a/drivers/pci/endpoint/functions/pci-epf-mhi.c b/drivers/pci/endpoint/functions/pci-epf-mhi.c
+index 54286a40bdfbf..6643a88c7a0ce 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-mhi.c
++++ b/drivers/pci/endpoint/functions/pci-epf-mhi.c
+@@ -125,7 +125,7 @@ static const struct pci_epf_mhi_ep_info sm8450_info = {
  
- 	crypto_ahash_set_statesize(hash, alg->halg.statesize);
-+	crypto_ahash_set_reqsize(hash, alg->reqsize);
- 
- 	if (tfm->__crt_alg->cra_type == &crypto_shash_type)
- 		return crypto_init_ahash_using_shash(tfm);
-@@ -638,6 +639,9 @@ static int ahash_prepare_alg(struct ahash_alg *alg)
- 	if (alg->halg.statesize == 0)
- 		return -EINVAL;
- 
-+	if (alg->reqsize && alg->reqsize < alg->halg.statesize)
-+		return -EINVAL;
-+
- 	err = hash_prepare_alg(&alg->halg);
- 	if (err)
- 		return err;
-diff --git a/include/crypto/hash.h b/include/crypto/hash.h
-index 2d5ea9f9ff43e..6692253f0b5be 100644
---- a/include/crypto/hash.h
-+++ b/include/crypto/hash.h
-@@ -132,6 +132,7 @@ struct ahash_request {
-  *	      This is a counterpart to @init_tfm, used to remove
-  *	      various changes set in @init_tfm.
-  * @clone_tfm: Copy transform into new object, may allocate memory.
-+ * @reqsize: Size of the request context.
-  * @halg: see struct hash_alg_common
-  */
- struct ahash_alg {
-@@ -148,6 +149,8 @@ struct ahash_alg {
- 	void (*exit_tfm)(struct crypto_ahash *tfm);
- 	int (*clone_tfm)(struct crypto_ahash *dst, struct crypto_ahash *src);
- 
-+	unsigned int reqsize;
-+
- 	struct hash_alg_common halg;
+ static struct pci_epf_header sa8775p_header = {
+ 	.vendorid = PCI_VENDOR_ID_QCOM,
+-	.deviceid = 0x0306,               /* FIXME: Update deviceid for sa8775p EP */
++	.deviceid = 0x0116,
+ 	.baseclass_code = PCI_CLASS_OTHERS,
+ 	.interrupt_pin = PCI_INTERRUPT_INTA,
  };
- 
 -- 
 2.39.5
 
