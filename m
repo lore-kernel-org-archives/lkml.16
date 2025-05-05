@@ -1,194 +1,137 @@
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C1F71F4C9B;
-	Mon,  5 May 2025 11:43:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 367221EA73
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 11:50:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746445420; cv=none; b=kgKFL6GVKXSO8XXtwf6VX+SYZ47mZlMUH7DJB/erupL78kVXmkXinEGntvIm93Ef1Dq6viphl3oFjjK2Z5eMvf612/bjlV04ZIWaw0r+xdr0Th/TEdn+xGz77RJlJvFSn6AlEaQd3kyHs4g6SzUeZXcSJTebOBwu5QOTw8pP+ek=
+	t=1746445808; cv=none; b=SqjtRVZvvPw8zoQ7lProf1w9r97HqGPbLMqc6Z2TuRlugcMygAWN6pE3nLsDDHFnVjLhMFZuOgzBFNg12zvKcN5O5C4qhlNflhoPWJcItLqv1znkFNU4UTPnomMOUxCEoADTUxDdcp7FREnMhOKUDyy+w3Lqtd1Yd2A6g/JGEzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746445420; c=relaxed/simple;
-	bh=LroyPHP++7p+Vgslel/c4KZw8fDFrIhu9uNkaYu9lRM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KgiR4dy3T1Dqg3GodFkqu8xD4ayl3yd1QpLcN4usvhgD9lF6QtRvKjVg2KN9DEnPmsfpL1WjVHi8LDhc4ssDuzd9+/vJwjWCrJ7FubO15PRWS/Wvh4LCrg8LEGGUzHcrogbnfarS0tMqi03BkmDIhTl0B/sDKWraqjtzZS0OG2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-877c46ab075so778921241.3;
-        Mon, 05 May 2025 04:43:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746445415; x=1747050215;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TAF5arAbrcK4xPOLwu1J3gN7QYwL2MYYXKtYUP5/0f0=;
-        b=RPrB9n7I3s5XlngBfob6hI4Zl4I2I7Cv/5ES6Wdc6QAAMgf2sJymAHA6Z+HNTOIdGq
-         /JljKt0xI3o0fgfj2X7IE8N8B4V6qpYrYAziACgzTfkmbcUC+jBgAj1ZrGd1CGFSdv5M
-         S7HTm60hvCOcmRQkMjr4n6S4If1w7hiFZzarU5EfCNrrQTBr+rk0RrFiUk4ZNUGfu8Pc
-         Kic5kBZSY6FxYF+XSjgGpYjZnNUA3xb+SpNd0ToLgVK+HGqBUDnRP9LOYVHnhzT4NyYR
-         MBMoIPMYpQp5h7xsqn7pmix/AZE6W3Qy7UBZn7z37YaI+ww78CC9cnGVJAJLWGMqKKpf
-         zUFA==
-X-Forwarded-Encrypted: i=1; AJvYcCUI5+X3WugQgb5CJvc14As0MR30/rwOPfbPksfvTU4OKS+OJn96SkOGu0YiFzPAXGfHJgrGXaTHFi2bZQ==@vger.kernel.org, AJvYcCW+XSmmfIQ/v33GfgyOfhrKgH29WxP82o8yCelb7a22W6IsxmuShzUeKebfS81bX9W2CkxvtHNia0xZDh8=@vger.kernel.org, AJvYcCWEDubAwjbXIA+h+tWjMlFzJ9BojBkThvJ1vM73vuQxrFBv6QYdvKGEVksZwj7t2WELVtN5WntzXyfiuFBb@vger.kernel.org
-X-Gm-Message-State: AOJu0YzpuTYrr0WkuNwtNPcbZYuOPHwAJ3f+dQ2kpqZ05T2rH1ALajFf
-	KIrr5WvBpW9PnwgBis4/h+gNEOdXUqFSOxVr6QzhfpZktnP2Po79T18TE+GA
-X-Gm-Gg: ASbGncs8EgHQSSPg4BxEiwvECIYjhZ6GjaJcIIzWUEBJgSJQ7zLdrutJbTB78qi07gG
-	DUdRnmStKkUvH0dIHAJe3Kt7eG2z5kY9elqbvXQUiTp0RWGOlkezrJZjqpSUq352L3VGz17vwbD
-	cyZlnSThRyJpVoSXPBU6Q6YR0Rv1ML5OrZQXwBDmYlN44iFHTTSBPzo2XJAq6TojC7q/YM4j/3n
-	W9PuQO/QUmwxT+TLy7GBEk4OFxGvUDdIKxPJ3BqS6a4Rd/NcVGmnCh6nTVRU7GKMxQ7LxNc8FT2
-	OrUD+nKGAd8Q2Iv1FXGL6WnjQZzFT1irTBwZGO/LfO50lzqquPgauxJhFfQ3MuA1ybXwTdhB8G+
-	0EKI=
-X-Google-Smtp-Source: AGHT+IE7IJ7bv2yj/LcpTrbexPVvKOMqsxHuGF52MSdoIwREL0t7RWCf15deqDhebcghDqBukIaFQg==
-X-Received: by 2002:a05:6102:4a95:b0:4da:e629:58c5 with SMTP id ada2fe7eead31-4db0c42b114mr4244571137.23.1746445415332;
-        Mon, 05 May 2025 04:43:35 -0700 (PDT)
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com. [209.85.222.51])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-8780b09bc00sm1246606241.27.2025.05.05.04.43.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 05 May 2025 04:43:34 -0700 (PDT)
-Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-877c46ab075so778907241.3;
-        Mon, 05 May 2025 04:43:34 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVROFjN4iybKFHDyGE/K15obyL/cPfyvLhk/YT14CiqVHRC5gyiXmtB/X5+xWqC5qvM7DGaoFGVsNJLNl8u@vger.kernel.org, AJvYcCVfy8lPJ8tnMBa9rH4gXGunRU9Y4/t69cGM4XcoqWI1wnkC/nAUdyniy/EXWVwMMWJjkrFpo4bzssqcPRk=@vger.kernel.org, AJvYcCXen6Yrt3Zq2x1an98TtcAaWmLRdDAIQ8G6H45dVNxvz3/gJR1Qd18XKXte/E6v9Y0qQ7oFV+9N2w1tbA==@vger.kernel.org
-X-Received: by 2002:a05:6102:2c85:b0:4c5:1bea:1c29 with SMTP id
- ada2fe7eead31-4db0c3de40cmr4336025137.19.1746445414091; Mon, 05 May 2025
- 04:43:34 -0700 (PDT)
+	s=arc-20240116; t=1746445808; c=relaxed/simple;
+	bh=rhCbX5uuvYAaZMIyV4VH9BaTqUl8pgKKKmIEEp2IjbU=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=dlvzCwWpn13NJ7T7lY6/6ySBiKIv0U2SLkesfIYfmF0+TG2on1OVCXZP2b4YUZ8CMzbY1f6qBVPtneEMhlPEK2ILD3Ec7wy1mt79da0OsL/sRp2AWGzFnAr8PyhS6ihW5J35SJVbTxWq+e3yO8Cj9IVhVBrF+K6t72uEJqyHXBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=eWDx4cTE; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="eWDx4cTE"
+Received: from [127.0.0.1] ([76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 545BnaiZ252302
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Mon, 5 May 2025 04:49:36 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 545BnaiZ252302
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025042001; t=1746445777;
+	bh=uEb9M5Lmbc5dIus9R8qV3BhjTNuZuZsXNlEwYoEZtzE=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=eWDx4cTEYnYCvQwlWqZeWuUMOJrcsTic6DH1Cn4LITwxbjHIxg1QQLOJRRnyxgdAA
+	 fX3J0LGI5esRrTWS9uRWutzA29zGmN0HJhNs+zgit6iz13q0b+SGp3oG8I2n1OIt3C
+	 +aln0Q/KQi/oUO5xHfZPW7n+MBpd8RcJtwsroRB+fdTsCvoVV8xt5hM+FXehmHMiAu
+	 L1JaXmngVKRJW0J5cyTD1ZxPmAC7rW0qroGGM/zSoUd0Pz7ZqvdZ1tNPjzt2QVC0ow
+	 bJ86cCXAmXkzZyOako+CCH5IfKfJ7wDiJ/yTEnsdlldivQCdY716U4jpz8nKzSybI1
+	 AY/+ewMg2mpvg==
+Date: Mon, 05 May 2025 04:49:35 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Ard Biesheuvel <ardb@kernel.org>
+CC: Uros Bizjak <ubizjak@gmail.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_-tip=5D_x86/asm=3A_Use_=25a_in?=
+ =?US-ASCII?Q?stead_of_=25c=28=25=25rip=29_in_rip=5Frel=5Fptr=28=29?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <CAMj1kXHG8JPLR5BjhSh+nJLhFoC-cT+-me4nc5kHXSxFUaw1aQ@mail.gmail.com>
+References: <20250504184342.125253-1-ubizjak@gmail.com> <dd4c1795-ee0f-4589-9430-d759e59d5b96@zytor.com> <CAMj1kXHLfa2OzT+mo8qFxp5NtLHxaxnO3+skt_we=QOTtPFUqw@mail.gmail.com> <79AB4DAE-18EE-4F3C-980F-46304C021EC1@zytor.com> <CAMj1kXHG8JPLR5BjhSh+nJLhFoC-cT+-me4nc5kHXSxFUaw1aQ@mail.gmail.com>
+Message-ID: <D503B59D-AE83-4B2A-BC26-13F01A18C14B@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250430163709.15850-1-mans@mansr.com>
-In-Reply-To: <20250430163709.15850-1-mans@mansr.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 5 May 2025 13:43:22 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUrQjcb7mqTo0EOEDWFSaK3j-_3sumLTjoDEnP8qTvakg@mail.gmail.com>
-X-Gm-Features: ATxdqUHBwbolkuQR-MXBj2JzT0P9vufOLogqeqtvnB3CPASb942XHDr6Mh4LOhU
-Message-ID: <CAMuHMdUrQjcb7mqTo0EOEDWFSaK3j-_3sumLTjoDEnP8qTvakg@mail.gmail.com>
-Subject: Re: [PATCH] tty: serial: 8250_omap: fix tx with dma
-To: Mans Rullgard <mans@mansr.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, 
-	Kevin Hilman <khilman@baylibre.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, 
-	Andreas Kemnade <andreas@kemnade.info>, Roger Quadros <rogerq@kernel.org>, 
-	Tony Lindgren <tony@atomide.com>, 
-	"open list:TI ETHERNET SWITCH DRIVER (CPSW)" <linux-omap@vger.kernel.org>, Matti Vaittinen <mazziesaccount@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-CC omap
+On May 5, 2025 3:42:46 AM PDT, Ard Biesheuvel <ardb@kernel=2Eorg> wrote:
+>On Mon, 5 May 2025 at 08:09, H=2E Peter Anvin <hpa@zytor=2Ecom> wrote:
+>>
+>> On May 4, 2025 10:48:19 PM PDT, Ard Biesheuvel <ardb@kernel=2Eorg> wrot=
+e:
+>> >On Mon, 5 May 2025 at 04:59, H=2E Peter Anvin <hpa@zytor=2Ecom> wrote:
+>> >>
+>> >> On 5/4/25 11:43, Uros Bizjak wrote:
+>> >> > The "a" asm operand modifier substitutes a memory reference, with =
+the
+>> >> > actual operand treated as address=2E  For x86_64, when a symbol is
+>> >> > provided, the "a" modifier emits "sym(%rip)" instead of "sym"=2E
+>> >> >
+>> >
+>> >Clang does not
+>> >
+>> >https://godbolt=2Eorg/z/5Y58T45f5
+>> >
+>> >> > No functional changes intended=2E
+>> >> >
+>> >
+>> >NAK=2E There is a functional change with Clang, which does not emit
+>> >%(rip), and this is the whole point of this thing=2E
+>> >
+>> >> > Signed-off-by: Uros Bizjak <ubizjak@gmail=2Ecom>
+>> >> > Cc: Thomas Gleixner <tglx@linutronix=2Ede>
+>> >> > Cc: Ingo Molnar <mingo@kernel=2Eorg>
+>> >> > Cc: Borislav Petkov <bp@alien8=2Ede>
+>> >> > Cc: Dave Hansen <dave=2Ehansen@linux=2Eintel=2Ecom>
+>> >> > Cc: "H=2E Peter Anvin" <hpa@zytor=2Ecom>
+>> >> > Cc: Ard Biesheuvel <ardb@kernel=2Eorg>
+>> >> > ---
+>> >> >   arch/x86/include/asm/asm=2Eh | 2 +-
+>> >> >   1 file changed, 1 insertion(+), 1 deletion(-)
+>> >> >
+>> >> > diff --git a/arch/x86/include/asm/asm=2Eh b/arch/x86/include/asm/a=
+sm=2Eh
+>> >> > index f963848024a5=2E=2Ed7610b99b8d8 100644
+>> >> > --- a/arch/x86/include/asm/asm=2Eh
+>> >> > +++ b/arch/x86/include/asm/asm=2Eh
+>> >> > @@ -116,7 +116,7 @@
+>> >> >   #ifndef __ASSEMBLER__
+>> >> >   static __always_inline __pure void *rip_rel_ptr(void *p)
+>> >> >   {
+>> >> > -     asm("leaq %c1(%%rip), %0" : "=3Dr"(p) : "i"(p));
+>> >> > +     asm("leaq %a1, %0" : "=3Dr"(p) : "i"(p));
+>> >> >
+>> >> >       return p;
+>> >> >   }
+>> >>
+>> >> Also, this function really should be __attribute_const__ rather than=
+ __pure=2E
+>> >>
+>> >
+>> >No it should really not=2E
+>> >
+>> >rip_rel_ptr() will yield different results depending on whether it is
+>> >called [by the same code] from the 1:1 mapping or the ordinary kernel
+>> >virtual mapping of memory, and this is basically the entire reason we
+>> >need it in the first place=2E
+>> >
+>> >Lying to the compiler about this is not a good idea imo=2E
+>>
+>> Goddamnit, another clang bug=2E Someone fix the damned thing, please=2E=
+=2E=2E
+>
+>How is this a bug? The %a modifier is documented as producing a memory
+>reference - the fact that GCC on x86_64 always emits a RIP-relative
+>reference regardless of whether we are generating PIC code or not is
+>an implementation detail, and not fundamental to yield correct code=2E
+>
+>Clang produces something that matches the constraints that we gave it
+>- we cannot blame the tools for the mess of our own making where we
+>call C code from alternative mappings of memory, while we lie to the
+>compiler that the code is position dependent and non-relocatable=2E
 
-On Wed, 30 Apr 2025 at 18:45, Mans Rullgard <mans@mansr.com> wrote:
-> Commit 1788cf6a91d9 ("tty: serial: switch from circ_buf to kfifo")
-> introduced two errors in the TX DMA handling for 8250_omap.
->
-> Firstly, kfifo_dma_out_prepare_mapped() needs a scatterlist with two
-> entries whereas only one is provided.  The same error was fixed for
-> 8250_dma in 59449c9dbdaa ("tty: serial: 8250_dma: use sgl with 2 nents
-> to take care of buffer wrap").
->
-> Secondly, when the OMAP_DMA_TX_KICK flag is set, one byte is pulled from
-> the kfifo and emitted directly in order to start the DMA.  This is done
-> without updating DMA tx_size which leads to uart_xmit_advance() called
-> in the DMA complete callback advancing the kfifo by one too much.
->
-> In practice, transmitting N bytes has been seen to result in the last
-> N-1 bytes being sent repeatedly.
->
-> This change fixes both problems.
->
-> Fixes: 1788cf6a91d9 ("tty: serial: switch from circ_buf to kfifo")
-> Signed-off-by: Mans Rullgard <mans@mansr.com>
-> ---
->  drivers/tty/serial/8250/8250_omap.c | 35 +++++++++++++++--------------
->  1 file changed, 18 insertions(+), 17 deletions(-)
->
-> diff --git a/drivers/tty/serial/8250/8250_omap.c b/drivers/tty/serial/8250/8250_omap.c
-> index f1aee915bc02..84a2f013015e 100644
-> --- a/drivers/tty/serial/8250/8250_omap.c
-> +++ b/drivers/tty/serial/8250/8250_omap.c
-> @@ -1152,9 +1152,11 @@ static int omap_8250_tx_dma(struct uart_8250_port *p)
->         struct omap8250_priv            *priv = p->port.private_data;
->         struct tty_port                 *tport = &p->port.state->port;
->         struct dma_async_tx_descriptor  *desc;
-> -       struct scatterlist sg;
-> +       struct scatterlist *sg;
-> +       struct scatterlist sgl[2];
->         int skip_byte = -1;
->         int ret;
-> +       int i;
->
->         if (dma->tx_running)
->                 return 0;
-> @@ -1173,16 +1175,6 @@ static int omap_8250_tx_dma(struct uart_8250_port *p)
->                 return 0;
->         }
->
-> -       sg_init_table(&sg, 1);
-> -       ret = kfifo_dma_out_prepare_mapped(&tport->xmit_fifo, &sg, 1,
-> -                                          UART_XMIT_SIZE, dma->tx_addr);
-> -       if (ret != 1) {
-> -               serial8250_clear_THRI(p);
-> -               return 0;
-> -       }
-> -
-> -       dma->tx_size = sg_dma_len(&sg);
-> -
->         if (priv->habit & OMAP_DMA_TX_KICK) {
->                 unsigned char c;
->                 u8 tx_lvl;
-> @@ -1207,7 +1199,7 @@ static int omap_8250_tx_dma(struct uart_8250_port *p)
->                         ret = -EBUSY;
->                         goto err;
->                 }
-> -               if (dma->tx_size < 4) {
-> +               if (kfifo_len(&tport->xmit_fifo) < 4) {
->                         ret = -EINVAL;
->                         goto err;
->                 }
-> @@ -1216,12 +1208,19 @@ static int omap_8250_tx_dma(struct uart_8250_port *p)
->                         goto err;
->                 }
->                 skip_byte = c;
-> -               /* now we need to recompute due to kfifo_get */
-> -               kfifo_dma_out_prepare_mapped(&tport->xmit_fifo, &sg, 1,
-> -                               UART_XMIT_SIZE, dma->tx_addr);
->         }
->
-> -       desc = dmaengine_prep_slave_sg(dma->txchan, &sg, 1, DMA_MEM_TO_DEV,
-> +       sg_init_table(sgl, ARRAY_SIZE(sgl));
-> +
-> +       ret = kfifo_dma_out_prepare_mapped(&tport->xmit_fifo, sgl, ARRAY_SIZE(sgl),
-> +                                          UART_XMIT_SIZE, dma->tx_addr);
-> +
-> +       dma->tx_size = 0;
-> +
-> +       for_each_sg(sgl, sg, ret, i)
-> +               dma->tx_size += sg_dma_len(sg);
-> +
-> +       desc = dmaengine_prep_slave_sg(dma->txchan, sgl, ret, DMA_MEM_TO_DEV,
->                         DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
->         if (!desc) {
->                 ret = -EBUSY;
-> @@ -1248,8 +1247,10 @@ static int omap_8250_tx_dma(struct uart_8250_port *p)
->  err:
->         dma->tx_err = 1;
->  out_skip:
-> -       if (skip_byte >= 0)
-> +       if (skip_byte >= 0) {
->                 serial_out(p, UART_TX, skip_byte);
-> +               p->port.icount.tx++;
-> +       }
->         return ret;
->  }
->
-> --
-> 2.49.0
+It is documented to produce an (%rip) reference in the gcc documentation, =
+and gcc is the reference for inline assembly=2E
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Furthermore, documentation is not reality=2E Code is=2E
