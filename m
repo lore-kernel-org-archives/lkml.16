@@ -1,44 +1,52 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E29D52D1F44;
-	Mon,  5 May 2025 22:51:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 197B42D902A;
+	Mon,  5 May 2025 22:51:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485488; cv=none; b=bzm+l0q22r+I+NNj/Bg/XhD7UMmSAABUcGSD6WnMQoAfWTn04iKp05mbCykdQj6zPpscS3bqMBHVXpNy7+jLJ0P0NxT9RoDWLaAiRteVjQTrOHySgLSGZ6trI/9ICvJ4n+XwzM28HR6//ptQIBkAnfyz+L5Wh8d6t45hkDrcwXs=
+	t=1746485506; cv=none; b=ditAP7jvUBwnp7Ulvtmg9yo5/z8a4BN8ImnxglhnlHenBHLiUCiSe6X6g0GSUwGgvsiAP93L765nNcbOgk6vp8GC2tHkD2S7auMERcouctMOhQr6gP/9g9tiX7NyAiyPVeoqvTBPO1YvzQNbxAFxyXVyqlYY2ynp4S4rw6S7xKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485488; c=relaxed/simple;
-	bh=nGvdlCDrWtO7xRo/70W+vOcOv8cOxCWboXoNzYTDJTI=;
+	s=arc-20240116; t=1746485506; c=relaxed/simple;
+	bh=cWiIRfEdaI4i2CZt9NBD+/XCLwd/z7tDk9zNEFK3ZT4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=sdh93xZ300NH5LdktZvKw10GWNyvgDre7+727bQnMhcKr3rkfI9Swe+r0jozBCNzspDgGd30M1Vx6ULrdnv4hjl3jJ3QeAs/CFncts/c3Y5ZmqsjhT3T5L3Md1S6vzI4pyp28z+uQf4oz07HzRYslPeyOlWGHTJhVIdbAWaRSK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T15R05P5; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=fqpfNKhJ8CVYniCTaaK1ecN8QLxN9XRgt94ADLKo2K3dNAXVqvYgTG/ORHdp65hg2IVQ5b9CeLME1RGSTl4H4UvecJj37mvoUBk4F22Xi1ewyLU3CiaonaniSfQ83iD6yV30EmaynMBXbnR2Gc1Q9eJjNhzh+73ye1zqfEhHKsI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kr7UY+2z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T15R05P5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA155C4CEE4;
-	Mon,  5 May 2025 22:51:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kr7UY+2z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C2B5C4CEE4;
+	Mon,  5 May 2025 22:51:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485486;
-	bh=nGvdlCDrWtO7xRo/70W+vOcOv8cOxCWboXoNzYTDJTI=;
+	s=k20201202; t=1746485506;
+	bh=cWiIRfEdaI4i2CZt9NBD+/XCLwd/z7tDk9zNEFK3ZT4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=T15R05P5h+jbsXQGHaedQtzOqZOgF7mTdMgDjWhvdx+1n8tqssOQ67d3QjRJWft5W
-	 SUpPz26t1Qbl8iakDqTVh7EdVEmehZXPfHQ1ADk2VpNeI7xXD/3/q8aUJSeFA4Yhi6
-	 rNNRlCxX0ejHpMa/n7TUQ1TyLyYVTrdC82JCTja5jz2keDwkduFb7KDXF61di+y467
-	 gVv9mdSG6oWB15JyDc2XYGrZRmjjgqbTarwvo/uNC5YNmlRV1eEwkNdDxSlYcIxXgA
-	 zMzEzLbswpO3gBBv+zhX7NYYprlVbjQhkJTDea9qnuhYifQblsX1QyY4bzH6I1koy4
-	 6UpqEfSfy9obw==
+	b=kr7UY+2zUwDh02/cAb/X69KEgYoSzLmhBgmKm+1UrEkrpR9ZuzYnODk8H7Lafkc75
+	 +/j2iTXhj0uj+zIcwnGixtPBWdEagfLnu2npdlcc3O5VPN9eja+sU/I58EeMwdHsYy
+	 1aPt5WwIq3QRQIz6nZWL6hwzV096ohgmchXvst5e5pBsNjzQLsQydaNIuDHiUwwbUX
+	 H5Yp1StFWYU4xaIUnahZpffmAErchZA22QQfE4RKPEGiFjXnONerVwkMTNqQBZfhsg
+	 nkV1nr9/cAraM65wqeAXBMa7DOcRF87XnhHovp3oem8/Af2Pa+WXXDFIZdyL2b6Rgn
+	 VLdrXY1OCc5nw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Andrii Nakryiko <andrii@kernel.org>,
-	Emil Tsalapatis <emil@etsalapatis.com>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Alexei Starovoitov <ast@kernel.org>,
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
 	Sasha Levin <sashal@kernel.org>,
-	daniel@iogearbox.net,
-	bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 341/486] libbpf: fix LDX/STX/ST CO-RE relocation size adjustment logic
-Date: Mon,  5 May 2025 18:36:57 -0400
-Message-Id: <20250505223922.2682012-341-sashal@kernel.org>
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	jpoimboe@kernel.org,
+	kees@kernel.org,
+	gatlin.newhouse@gmail.com,
+	mhiramat@kernel.org,
+	thuth@redhat.com,
+	xin@zytor.com,
+	snovitoll@gmail.com
+Subject: [PATCH AUTOSEL 6.12 350/486] x86/traps: Cleanup and robustify decode_bug()
+Date: Mon,  5 May 2025 18:37:06 -0400
+Message-Id: <20250505223922.2682012-350-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -53,90 +61,190 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Andrii Nakryiko <andrii@kernel.org>
+From: Peter Zijlstra <peterz@infradead.org>
 
-[ Upstream commit 06096d19ee3897a7e70922580159607fe315da7a ]
+[ Upstream commit c20ad96c9a8f0aeaf4e4057730a22de2657ad0c2 ]
 
-Libbpf has a somewhat obscure feature of automatically adjusting the
-"size" of LDX/STX/ST instruction (memory store and load instructions),
-based on originally recorded access size (u8, u16, u32, or u64) and the
-actual size of the field on target kernel. This is meant to facilitate
-using BPF CO-RE on 32-bit architectures (pointers are always 64-bit in
-BPF, but host kernel's BTF will have it as 32-bit type), as well as
-generally supporting safe type changes (unsigned integer type changes
-can be transparently "relocated").
+Notably, don't attempt to decode an immediate when MOD == 3.
 
-One issue that surfaced only now, 5 years after this logic was
-implemented, is how this all works when dealing with fields that are
-arrays. This isn't all that easy and straightforward to hit (see
-selftests that reproduce this condition), but one of sched_ext BPF
-programs did hit it with innocent looking loop.
+Additionally have it return the instruction length, such that WARN
+like bugs can more reliably skip to the correct instruction.
 
-Long story short, libbpf used to calculate entire array size, instead of
-making sure to only calculate array's element size. But it's the element
-that is loaded by LDX/STX/ST instructions (1, 2, 4, or 8 bytes), so
-that's what libbpf should check. This patch adjusts the logic for
-arrays and fixed the issue.
-
-Reported-by: Emil Tsalapatis <emil@etsalapatis.com>
-Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-Acked-by: Eduard Zingerman <eddyz87@gmail.com>
-Link: https://lore.kernel.org/r/20250207014809.1573841-1-andrii@kernel.org
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Sami Tolvanen <samitolvanen@google.com>
+Link: https://lore.kernel.org/r/20250207122546.721120726@infradead.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/bpf/relo_core.c | 24 ++++++++++++++++++++----
- 1 file changed, 20 insertions(+), 4 deletions(-)
+ arch/x86/include/asm/bug.h |  5 ++-
+ arch/x86/include/asm/ibt.h |  4 +-
+ arch/x86/kernel/traps.c    | 82 ++++++++++++++++++++++++++++----------
+ 3 files changed, 65 insertions(+), 26 deletions(-)
 
-diff --git a/tools/lib/bpf/relo_core.c b/tools/lib/bpf/relo_core.c
-index 63a4d5ad12d1a..26cde1b27174b 100644
---- a/tools/lib/bpf/relo_core.c
-+++ b/tools/lib/bpf/relo_core.c
-@@ -683,7 +683,7 @@ static int bpf_core_calc_field_relo(const char *prog_name,
+diff --git a/arch/x86/include/asm/bug.h b/arch/x86/include/asm/bug.h
+index 806649c7f23dc..9a0f29be1a9ea 100644
+--- a/arch/x86/include/asm/bug.h
++++ b/arch/x86/include/asm/bug.h
+@@ -22,8 +22,9 @@
+ #define SECOND_BYTE_OPCODE_UD2	0x0b
+ 
+ #define BUG_NONE		0xffff
+-#define BUG_UD1			0xfffe
+-#define BUG_UD2			0xfffd
++#define BUG_UD2			0xfffe
++#define BUG_UD1			0xfffd
++#define BUG_UD1_UBSAN		0xfffc
+ 
+ #ifdef CONFIG_GENERIC_BUG
+ 
+diff --git a/arch/x86/include/asm/ibt.h b/arch/x86/include/asm/ibt.h
+index 1e59581d500ca..b778ae6e67ee8 100644
+--- a/arch/x86/include/asm/ibt.h
++++ b/arch/x86/include/asm/ibt.h
+@@ -41,7 +41,7 @@
+ 	_ASM_PTR fname "\n\t"				\
+ 	".popsection\n\t"
+ 
+-static inline __attribute_const__ u32 gen_endbr(void)
++static __always_inline __attribute_const__ u32 gen_endbr(void)
  {
- 	const struct bpf_core_accessor *acc;
- 	const struct btf_type *t;
--	__u32 byte_off, byte_sz, bit_off, bit_sz, field_type_id;
-+	__u32 byte_off, byte_sz, bit_off, bit_sz, field_type_id, elem_id;
- 	const struct btf_member *m;
- 	const struct btf_type *mt;
- 	bool bitfield;
-@@ -706,8 +706,14 @@ static int bpf_core_calc_field_relo(const char *prog_name,
- 	if (!acc->name) {
- 		if (relo->kind == BPF_CORE_FIELD_BYTE_OFFSET) {
- 			*val = spec->bit_offset / 8;
--			/* remember field size for load/store mem size */
--			sz = btf__resolve_size(spec->btf, acc->type_id);
-+			/* remember field size for load/store mem size;
-+			 * note, for arrays we care about individual element
-+			 * sizes, not the overall array size
-+			 */
-+			t = skip_mods_and_typedefs(spec->btf, acc->type_id, &elem_id);
-+			while (btf_is_array(t))
-+				t = skip_mods_and_typedefs(spec->btf, btf_array(t)->type, &elem_id);
-+			sz = btf__resolve_size(spec->btf, elem_id);
- 			if (sz < 0)
- 				return -EINVAL;
- 			*field_sz = sz;
-@@ -767,7 +773,17 @@ static int bpf_core_calc_field_relo(const char *prog_name,
- 	case BPF_CORE_FIELD_BYTE_OFFSET:
- 		*val = byte_off;
- 		if (!bitfield) {
--			*field_sz = byte_sz;
-+			/* remember field size for load/store mem size;
-+			 * note, for arrays we care about individual element
-+			 * sizes, not the overall array size
-+			 */
-+			t = skip_mods_and_typedefs(spec->btf, field_type_id, &elem_id);
-+			while (btf_is_array(t))
-+				t = skip_mods_and_typedefs(spec->btf, btf_array(t)->type, &elem_id);
-+			sz = btf__resolve_size(spec->btf, elem_id);
-+			if (sz < 0)
-+				return -EINVAL;
-+			*field_sz = sz;
- 			*type_id = field_type_id;
+ 	u32 endbr;
+ 
+@@ -56,7 +56,7 @@ static inline __attribute_const__ u32 gen_endbr(void)
+ 	return endbr;
+ }
+ 
+-static inline __attribute_const__ u32 gen_endbr_poison(void)
++static __always_inline __attribute_const__ u32 gen_endbr_poison(void)
+ {
+ 	/*
+ 	 * 4 byte NOP that isn't NOP4 (in fact it is OSP NOP3), such that it
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index 5e3e036e6e537..b18fc7539b8d7 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -94,10 +94,17 @@ __always_inline int is_valid_bugaddr(unsigned long addr)
+ 
+ /*
+  * Check for UD1 or UD2, accounting for Address Size Override Prefixes.
+- * If it's a UD1, get the ModRM byte to pass along to UBSan.
++ * If it's a UD1, further decode to determine its use:
++ *
++ * UBSan{0}:     67 0f b9 00             ud1    (%eax),%eax
++ * UBSan{10}:    67 0f b9 40 10          ud1    0x10(%eax),%eax
++ * static_call:  0f b9 cc                ud1    %esp,%ecx
++ *
++ * Notably UBSAN uses EAX, static_call uses ECX.
+  */
+-__always_inline int decode_bug(unsigned long addr, u32 *imm)
++__always_inline int decode_bug(unsigned long addr, s32 *imm, int *len)
+ {
++	unsigned long start = addr;
+ 	u8 v;
+ 
+ 	if (addr < TASK_SIZE_MAX)
+@@ -110,24 +117,42 @@ __always_inline int decode_bug(unsigned long addr, u32 *imm)
+ 		return BUG_NONE;
+ 
+ 	v = *(u8 *)(addr++);
+-	if (v == SECOND_BYTE_OPCODE_UD2)
++	if (v == SECOND_BYTE_OPCODE_UD2) {
++		*len = addr - start;
+ 		return BUG_UD2;
++	}
+ 
+-	if (!IS_ENABLED(CONFIG_UBSAN_TRAP) || v != SECOND_BYTE_OPCODE_UD1)
++	if (v != SECOND_BYTE_OPCODE_UD1)
+ 		return BUG_NONE;
+ 
+-	/* Retrieve the immediate (type value) for the UBSAN UD1 */
+-	v = *(u8 *)(addr++);
+-	if (X86_MODRM_RM(v) == 4)
+-		addr++;
+-
+ 	*imm = 0;
+-	if (X86_MODRM_MOD(v) == 1)
+-		*imm = *(u8 *)addr;
+-	else if (X86_MODRM_MOD(v) == 2)
+-		*imm = *(u32 *)addr;
+-	else
+-		WARN_ONCE(1, "Unexpected MODRM_MOD: %u\n", X86_MODRM_MOD(v));
++	v = *(u8 *)(addr++);		/* ModRM */
++
++	if (X86_MODRM_MOD(v) != 3 && X86_MODRM_RM(v) == 4)
++		addr++;			/* SIB */
++
++	/* Decode immediate, if present */
++	switch (X86_MODRM_MOD(v)) {
++	case 0: if (X86_MODRM_RM(v) == 5)
++			addr += 4; /* RIP + disp32 */
++		break;
++
++	case 1: *imm = *(s8 *)addr;
++		addr += 1;
++		break;
++
++	case 2: *imm = *(s32 *)addr;
++		addr += 4;
++		break;
++
++	case 3: break;
++	}
++
++	/* record instruction length */
++	*len = addr - start;
++
++	if (X86_MODRM_REG(v) == 0)	/* EAX */
++		return BUG_UD1_UBSAN;
+ 
+ 	return BUG_UD1;
+ }
+@@ -258,10 +283,10 @@ static inline void handle_invalid_op(struct pt_regs *regs)
+ static noinstr bool handle_bug(struct pt_regs *regs)
+ {
+ 	bool handled = false;
+-	int ud_type;
+-	u32 imm;
++	int ud_type, ud_len;
++	s32 ud_imm;
+ 
+-	ud_type = decode_bug(regs->ip, &imm);
++	ud_type = decode_bug(regs->ip, &ud_imm, &ud_len);
+ 	if (ud_type == BUG_NONE)
+ 		return handled;
+ 
+@@ -281,15 +306,28 @@ static noinstr bool handle_bug(struct pt_regs *regs)
+ 	 */
+ 	if (regs->flags & X86_EFLAGS_IF)
+ 		raw_local_irq_enable();
+-	if (ud_type == BUG_UD2) {
++
++	switch (ud_type) {
++	case BUG_UD2:
+ 		if (report_bug(regs->ip, regs) == BUG_TRAP_TYPE_WARN ||
+ 		    handle_cfi_failure(regs) == BUG_TRAP_TYPE_WARN) {
+-			regs->ip += LEN_UD2;
++			regs->ip += ud_len;
+ 			handled = true;
  		}
- 		break;
+-	} else if (IS_ENABLED(CONFIG_UBSAN_TRAP)) {
+-		pr_crit("%s at %pS\n", report_ubsan_failure(regs, imm), (void *)regs->ip);
++		break;
++
++	case BUG_UD1_UBSAN:
++		if (IS_ENABLED(CONFIG_UBSAN_TRAP)) {
++			pr_crit("%s at %pS\n",
++				report_ubsan_failure(regs, ud_imm),
++				(void *)regs->ip);
++		}
++		break;
++
++	default:
++		break;
+ 	}
++
+ 	if (regs->flags & X86_EFLAGS_IF)
+ 		raw_local_irq_disable();
+ 	instrumentation_end();
 -- 
 2.39.5
 
