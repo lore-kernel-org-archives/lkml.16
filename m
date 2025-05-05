@@ -1,152 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64606F4F1;
-	Mon,  5 May 2025 09:55:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7036F4F1;
+	Mon,  5 May 2025 09:55:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746438920; cv=none; b=KCjCCk0odR+v7R7wLlS2HDFjpEV6GJDWLdYKMpH+S9OYNgugzaEVdgCTFHuH/yD1VL8tTB5nzLEVV3qCCAB1+xkBqXgWrNE1S+WAJZatjEUbqhlXKLD3w2O58Q/L+XVBLTVZexhUPMIR5O6iVOBHy5ZUDAURADhwLeq1hsNWWNg=
+	t=1746438936; cv=none; b=SFu82SgzJVdXIXWG1K/D8FM5SIHFIk5y0Ykex3lxc5xg0DtyiweaBGllqG6quUtNhbXsR4BQF7uTNMq4PEWTQxdJuVXBPd9giXH4EZHyqu2/J40cxCtIS7eUuRw5f2WROwCb119BVd9sGs8xOpg4uBDt7jlcrKLivBuauHTnk00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746438920; c=relaxed/simple;
-	bh=sDWpdGUOIqHGhZZ57m37Wf3Ww1ODJ1UW8uvuonF+KQ0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RszwpzxDo9fYaat8M9srEkhcG+khKemFpBFOTzc0JMfWq4RSWDUd/O37XDht8LAmpputB6l4jtUPmbPdzfXPIs9Vm2No+0Utl/sTX/Y59DaquJ6shKAdWbZedsGCeTXJgYlpq97l3eLMFDv2Sc9ro2EM34Fp2NvEFaQf73Ub4fw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PuNxvaWs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746438936; c=relaxed/simple;
+	bh=YCu1DVWXV15rZ391SGqEaLIhxhTxoTFgzak6kJEYabs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=k5+x4LzEaXK2EX2PZzsKWDDUzdOySX9FGoUSHOqqIDJnq/XmYakXI0Of75YJQxicd5SbOL7cQUrBu8/8H6X4JzUJKOGJ13yOM6h9/NhrJjc7TnBDVQQ1wdrGZUTMiJLeyU5DwAOVc9PeIu/ThGPvo1634LUMnymrEHU2jpK9MGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=WQem0V/z; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PuNxvaWs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB495C4CEEF;
-	Mon,  5 May 2025 09:55:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746438918;
-	bh=sDWpdGUOIqHGhZZ57m37Wf3Ww1ODJ1UW8uvuonF+KQ0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=PuNxvaWsyXrSBVhUFDOkGC5ujU4dsXor1OzIOFx9N3hw+RgmsbS3sMGrFSmJlCXNs
-	 KdfXIUod2RuC8lvK+U76HXbERlDJod9tAou3lQ7TqFscR3FV+T0bFF1FI0TBH/XMiK
-	 s3C9m/ABUTk++/c4LUxszPbHTIN6X5RdmSb2mlcqHpnCZO/qSFk3eI8SEzXpiqBgxU
-	 aGDSi37rBe2rxskAM263qXwRfLYT9qMrPz6d+3yrfk4fqY5gjGHECjGJ9yks1Fhfc8
-	 EruBQBP8jA7nx5MSvgYmdehAbNVwdk9mpJNFrildgM6ljG5/UI3Hi4LIcXUrZH17Dq
-	 2vEKEHOyN0jEA==
-Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-2cc57330163so2613365fac.2;
-        Mon, 05 May 2025 02:55:18 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUehEN0iHaD6O1oPWxoh6AhBvhHsEnPKWC07Sq6LJX9QIDPT0nQCjuPUGhHfbCsYompNXsLgJjws3XaBw==@vger.kernel.org, AJvYcCUgWo7XdqzWLycG7yeNjsSGX2eYlJmx9Abvgyu/i9Ch2SZnGorTiB6JYzDwDAGISI3EEmaGaaq2XdmzH7U3@vger.kernel.org, AJvYcCUxKSsb17dWIwCfVucT57hM62MYih0QlPdujqN7RnyHPpyHNZ9BEn8VyroqE3mB3D/0kuHFuvDnBMId@vger.kernel.org, AJvYcCWtQGQV11PNY8+WKx1fph6CliaBDQdntrfU9nZ3UFu5Lu5zNuJ38sMBueS+fS5dTKiwZDafIKmnA9H5DAB7@vger.kernel.org
-X-Gm-Message-State: AOJu0YweljHA5Q5K5v5dvGWrn+w6ZmsIPm37fT0zPcJkMwnW+us+vdER
-	ZsWPREnFAv94KD1Qwjz6sRoJK6KrUh8VxhZ+vq0PgFIts42n9YWWTlstI3iqO8XvTShVzZpKEj5
-	cZzqlxYAcVld3PifRMJQD109yILs=
-X-Google-Smtp-Source: AGHT+IFwti6fb5Gvf5aETPz2aJ9us2m9jSTWO4Ndwxu2x4Ze/sFyZyZByR9p1BU9f8PFfnycQ1QGJf/m/FjjlgAn87Y=
-X-Received: by 2002:a05:6870:a691:b0:2d4:dc79:b8b with SMTP id
- 586e51a60fabf-2dab2fd124bmr6933312fac.10.1746438918050; Mon, 05 May 2025
- 02:55:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="WQem0V/z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1746438928;
+	bh=wClUWaY3Wl0XfzWjXcyW4fUNHnVCAUDtmE1qViFHSeo=;
+	h=Date:From:To:Cc:Subject:From;
+	b=WQem0V/zVd5kkKxFULGNe80jSGVBnX7hk1/y1cqy3s0RQoOY+Yg+EUPSwr1yvwiZa
+	 vpxYc/RIaY+F0sX3Ct+kVSGyAqL4D7ERvmo/r9w9r9XihC2WcvfAHzD5VBZxvJPF7t
+	 Sd77i+3QpZRHxkQtYpbpYHULE4px4n2MKZ9l5KfJDYomPasMnLeNrLsg6UA09yn63u
+	 cGpz0JZFFh/ZDPbBXhpb3x0poIPKPgzIEHqhzuZ2CN1xIBSb43lpZie3n6e8P3NApV
+	 X8atK5x90RQ1pJgjvNwM8/h6SeZ1Rp0n/wzYNjQLgbpHyb3om/42I0iwWz/UBtTx5L
+	 vnWaUu7/KZhIA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZrcN05cqsz4wyR;
+	Mon,  5 May 2025 19:55:28 +1000 (AEST)
+Date: Mon, 5 May 2025 19:55:27 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Herbert Xu <herbert@gondor.apana.org.au>, Linux Crypto List
+ <linux-crypto@vger.kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: Signed-off-by missing for commit in the crypto tree
+Message-ID: <20250505195527.4c4237c4@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250503191515.24041-1-ricardo.neri-calderon@linux.intel.com> <20250503191515.24041-3-ricardo.neri-calderon@linux.intel.com>
-In-Reply-To: <20250503191515.24041-3-ricardo.neri-calderon@linux.intel.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 5 May 2025 11:55:03 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0g563qdyEdd6v1voyyZM5tpZab72LXTZcO9C0jE6mnRzw@mail.gmail.com>
-X-Gm-Features: ATxdqUFWwVhrd7oEM4uYLLng70_k-jXEr1fQ87L1TOt47nAlsGV6FMO7TJja4pc
-Message-ID: <CAJZ5v0g563qdyEdd6v1voyyZM5tpZab72LXTZcO9C0jE6mnRzw@mail.gmail.com>
-Subject: Re: [PATCH v3 02/13] x86/acpi: Add a helper function to get a pointer
- to the wakeup mailbox
-To: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Cc: x86@kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Rob Herring <robh@kernel.org>, "K. Y. Srinivasan" <kys@microsoft.com>, 
-	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
-	Dexuan Cui <decui@microsoft.com>, Michael Kelley <mhklinux@outlook.com>, devicetree@vger.kernel.org, 
-	Saurabh Sengar <ssengar@linux.microsoft.com>, Chris Oo <cho@microsoft.com>, 
-	linux-hyperv@vger.kernel.org, 
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, "Ravi V. Shankar" <ravi.v.shankar@intel.com>, 
-	Ricardo Neri <ricardo.neri@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/h9FYyv=y73CibUN15Xmcai=";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+
+--Sig_/h9FYyv=y73CibUN15Xmcai=
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, May 3, 2025 at 9:10=E2=80=AFPM Ricardo Neri
-<ricardo.neri-calderon@linux.intel.com> wrote:
->
-> In preparation to move the functionality to wake secondary CPUs up out
-> of the ACPI code, add a helper function to get a pointer to the mailbox.
->
-> Use this helper function only in the portions of the code for which the
-> variable acpi_mp_wake_mailbox will be out of scope once it is relocated
-> out of the ACPI directory.
->
-> The wakeup mailbox is only supported for CONFIG_X86_64 and needed only
-> with CONFIG_SMP.
->
-> Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-> ---
-> Changes since v2:
->  - Introduced this patch.
+Hi all,
 
-Have you considered merging it with the previous patch?  They both do
-analogous things.
+Commits
 
-> Changes since v1:
->  - N/A
-> ---
->  arch/x86/include/asm/smp.h         |  1 +
->  arch/x86/kernel/acpi/madt_wakeup.c | 12 +++++++++---
->  2 files changed, 10 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/x86/include/asm/smp.h b/arch/x86/include/asm/smp.h
-> index 3622951d2ee0..97bfbd0d24d4 100644
-> --- a/arch/x86/include/asm/smp.h
-> +++ b/arch/x86/include/asm/smp.h
-> @@ -148,6 +148,7 @@ static inline struct cpumask *cpu_l2c_shared_mask(int=
- cpu)
->
->  #ifdef CONFIG_X86_64
->  void setup_mp_wakeup_mailbox(u64 addr);
-> +struct acpi_madt_multiproc_wakeup_mailbox *get_mp_wakeup_mailbox(void);
->  #endif
->
->  #else /* !CONFIG_SMP */
-> diff --git a/arch/x86/kernel/acpi/madt_wakeup.c b/arch/x86/kernel/acpi/ma=
-dt_wakeup.c
-> index 04de3db307de..6b9e41a24574 100644
-> --- a/arch/x86/kernel/acpi/madt_wakeup.c
-> +++ b/arch/x86/kernel/acpi/madt_wakeup.c
-> @@ -37,6 +37,7 @@ static void acpi_mp_play_dead(void)
->
->  static void acpi_mp_cpu_die(unsigned int cpu)
->  {
-> +       struct acpi_madt_multiproc_wakeup_mailbox *mailbox =3D get_mp_wak=
-eup_mailbox();
+  e4274cd4f727 ("crypto: hisilicon/qm - replace devm_kzalloc with devm_kcal=
+loc")
+  3f9ea3a5618e ("crypto: hisilicon/qm - remove sizeof(char)")
+  7da3b0ff2af8 ("crypto: sun8i-ce-hash - use pm_runtime_resume_and_get()")
+  2c870574fb94 ("crypto: sun8i-ce - undo runtime PM changes during driver r=
+emoval")
+  24418b58792a ("hwrng: rockchip - add support for RK3576's RNG")
+  e511999438e1 ("dt-bindings: rng: rockchip,rk3588-rng: add rk3576-rng comp=
+atible")
+  13917ce458c7 ("crypto: rng - fix documentation for crypto_rng_alg()")
+  c6527b8ca148 ("crypto: qat - add qat_6xxx driver")
+  bed3233d9e4f ("crypto: qat - add firmware headers for GEN6 devices")
+  4903f74450d1 ("crypto: qat - update firmware api")
+  e9833be85348 ("crypto: qat - export adf_init_admin_pm()")
+  a260a62349b0 ("crypto: qat - expose configuration functions")
+  8e84a854176a ("crypto: qat - export adf_get_service_mask()")
+  ff193f6c14e9 ("crypto: qat - add GEN6 firmware loader")
+  c1e216382091 ("crypto: qat - refactor FW signing algorithm")
+  25177bb3f705 ("crypto: qat - use pr_fmt() in qat uclo.c")
+  5fc9923d1554 ("crypto: qat - refactor compression template logic")
+  424b3c3cfbae ("crypto: qat - rename and relocate timer logic")
+  9b6fc5b6e9c0 ("crypto: qat - include qat_common in top Makefile")
+  f230dcfe428b ("crypto: lib/sha256 - improve function prototypes")
+  e42b6c1e17cc ("crypto: sha256 - remove sha256_base.h")
+  91c5c4bf145d ("crypto: x86/sha256 - implement library instead of shash")
+  42802c7f8eff ("crypto: sparc/sha256 - implement library instead of shash")
+  1a92dd688525 ("crypto: sparc - move opcodes.h into asm directory")
+  d31058b2589f ("crypto: s390/sha256 - implement library instead of shash")
+  fe11c8974fdc ("crypto: riscv/sha256 - implement library instead of shash")
+  9d2b1924c137 ("crypto: powerpc/sha256 - implement library instead of shas=
+h")
+  19c9460ea05b ("crypto: mips/sha256 - implement library instead of shash")
+  6df537365d25 ("crypto: arm64/sha256 - implement library instead of shash")
+  4fcab0fbfd54 ("crypto: arm64/sha256 - remove obsolete chunking logic")
+  7f4bd270972c ("crypto: arm/sha256 - implement library instead of shash")
 
-I'd prefer acpi_get_mp_wakeup_mailbox().
+are missing a Signed-off-by from their committer.
 
->         u32 apicid =3D per_cpu(x86_cpu_to_apicid, cpu);
->         unsigned long timeout;
->
-> @@ -46,13 +47,13 @@ static void acpi_mp_cpu_die(unsigned int cpu)
->          *
->          * BIOS has to clear 'command' field of the mailbox.
->          */
-> -       acpi_mp_wake_mailbox->apic_id =3D apicid;
-> -       smp_store_release(&acpi_mp_wake_mailbox->command,
-> +       mailbox->apic_id =3D apicid;
-> +       smp_store_release(&mailbox->command,
->                           ACPI_MP_WAKE_COMMAND_TEST);
->
->         /* Don't wait longer than a second. */
->         timeout =3D USEC_PER_SEC;
-> -       while (READ_ONCE(acpi_mp_wake_mailbox->command) && --timeout)
-> +       while (READ_ONCE(mailbox->command) && --timeout)
->                 udelay(1);
->
->         if (!timeout)
-> @@ -251,3 +252,8 @@ void __init setup_mp_wakeup_mailbox(u64 mailbox_paddr=
-)
->         acpi_mp_wake_mailbox_paddr =3D mailbox_paddr;
->         apic_update_callback(wakeup_secondary_cpu_64, acpi_wakeup_cpu);
->  }
-> +
-> +struct acpi_madt_multiproc_wakeup_mailbox *get_mp_wakeup_mailbox(void)
-> +{
-> +       return acpi_mp_wake_mailbox;
-> +}
-> --
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/h9FYyv=y73CibUN15Xmcai=
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgYiw8ACgkQAVBC80lX
+0GxhAgf+KZPb3I3J+rquhpAlzHSkWwKvisIVeuvXDrrz8jU+tjXiliqSZwdMgKka
+mQdvXnvhrtfrTQY6VZ7B6IZvFTaXwjQKXQeoE5f6L2thkAnXXrTCPVYWy2hEdGUl
+/vFHKrVNPzqxRFALK51pW4SNMafvfQj/fn9OdgdUetd4CCAD1kOg2OtyNYgj0ezU
+IVIgTjAnkLDdRA5s7XvkPA+lMRGu9EJdQr3Cxe+oV0iMoozznY6ZZAFMVO/mS5op
+Z4wnMdgZ1H7Keb2/YMgJre+0MM/QcRB28SylnIqOtwLfOoZanWIzVHSQFBL0dCpJ
+9wvpH8mm8c/b37T0JdP6P/uGRwgPjA==
+=x2t4
+-----END PGP SIGNATURE-----
+
+--Sig_/h9FYyv=y73CibUN15Xmcai=--
