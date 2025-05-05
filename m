@@ -1,173 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f98.google.com (mail-ua1-f98.google.com [209.85.222.98])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 055DC2D47A8;
-	Mon,  5 May 2025 22:53:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B207B2D47B4
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 22:53:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485624; cv=none; b=uiv79i48AlUvmmpzCL7OgF3M+BiWF5so4uL//5QpUwbHPCIYRYAVY1wdjeKHWtMHlIwojaEpGsWfonAdnkhSk6JDKoJWb/CFQ8CmJmujANMnmpqSaWBljwhKe0lqCSFQQ7HL2J5BKcYF1FuQjyur6xFhzmoawooz8JExQCMi7cA=
+	t=1746485625; cv=none; b=BH3eqA5ZshA6YW+WCLQuoY3iuERa8cd7BUkTk4FZBg7VOyZq3r0BX0UXCFV5R3HAQK6u6W4T7gvRnjAnWU6b7fJP2A7J+K2gFhV+PzTwW03zec3oE2dI/+Kdj85z/CmR49oJ1hVRVFl/9aTAnkyKgFRtv4ndel9M6fWXrU42k8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485624; c=relaxed/simple;
-	bh=MPWOb5LraKueQnnAnlULSdnrD6PJvq9UKXTduXDsMAQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gkraY5E3RtqXGMjee3IW0b17+XHnBRMqUOSV+cO2AuOyd0fcvggsoEKex8uR218KONRpXolu9W+odF5WKRA/II5EHk/N/lFIrmpLyOREKB0BmAA4EnFDVReNYsN9Ob/rVhUbrIWlh2HFSWqVRkMHrVOQ/FpUERl0XBUQ4SImZ98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hyYtTrV4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746485625; c=relaxed/simple;
+	bh=oWRWu4J3rOlzeZEZE09NG8G8JVW/wVAOK1aQt+vNBTk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rbP/hf0jCI/5X9P4P+9v82w74PY5yqEv3gXdpGpZGvCzCjyL6jxVZv5OXq02zVB7Ph6nLtM38iN0XRszQQGGLZgZpQ9eylHibKPJPPPwhLAXDIzswlciVl8ARsdZCbJyu5WZEXePJQ0PgTr4jIeSN3qM03/QmLEn1A/Y1Hq4YJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=bGsJ3rqe; arc=none smtp.client-ip=209.85.222.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hyYtTrV4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 252F7C4CEEF;
-	Mon,  5 May 2025 22:53:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485623;
-	bh=MPWOb5LraKueQnnAnlULSdnrD6PJvq9UKXTduXDsMAQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hyYtTrV4Pb4lzoh1KVjbRXd4fe+QztUbi63myXnxcyGA0sCwYfC2C1cVd5eZNI0pP
-	 hdT2el7vL0IwOyhZ+yE+ZAZeHAGKJLVrhA3NvPxyxIMtZvmhwpDMs29HKvb8Wwwzxk
-	 zUmtmv/N4a8mD3GwpAlLGuVsAVmxyfthFobqphrXOAvinvNRwO6eoZUOCITFVBnUd0
-	 xHAJeizW4aYegopePYl8au37C8/9EATxuQ9tLK6+PtXF9vmF4IpUg14ffBTbBkGrFZ
-	 X/I6sBG0o3S0Kv7OwykBdU9touYg3weayBj/7BiO6tDVgffkjWKws/htQWLupVHhs/
-	 3K4ev78UFL//w==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: =?UTF-8?q?Cs=C3=B3k=C3=A1s=2C=20Bence?= <csokas.bence@prolan.hu>,
-	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
-	Jacob Keller <jacob.e.keller@intel.com>,
-	Simon Horman <horms@kernel.org>,
-	Csókás,
-	Paolo Abeni <pabeni@redhat.com>,
-	Sasha Levin <sashal@kernel.org>,
-	wei.fang@nxp.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	imx@lists.linux.dev,
-	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 393/486] net: fec: Refactor MAC reset to function
-Date: Mon,  5 May 2025 18:37:49 -0400
-Message-Id: <20250505223922.2682012-393-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
-References: <20250505223922.2682012-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="bGsJ3rqe"
+Received: by mail-ua1-f98.google.com with SMTP id a1e0cc1a2514c-86c29c0acdfso1289417241.3
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 15:53:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1746485621; x=1747090421; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=eiXzmkb8vltyH6u1BZ9L/v+dxL0ZMqO2O1cKAYZNXPs=;
+        b=bGsJ3rqe20V11uU6uC/iGYzpZKh3HRfig0sea/5RoX8n5OVPtHegjGPFD4xu6w4ph8
+         CNqcZh5i/ZG6nnbU74h0d86JJJAmEGTgCmuANFaZEU64iDNBUp7Gi8C84KgQUR9AHgY3
+         vp96z2XM4EPNNvQEGC2Mj6wXlWeNlEFvp9OM5TWArIJL/zhen0wOwN2S6VDlEy/XZHRS
+         S6FmSFPdFJbPxZVBSH96YZY7z3SJx/dd2BC1lLSVXhXKRBNlXorGLuWxJuo6D1J3C3a9
+         F4lYi/djUnNL72zS0b17PZh6RG/2Xj0X3UoG7228wFpagW8Q8kLQW4hAC+p2QB2R4lRP
+         XCZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746485621; x=1747090421;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eiXzmkb8vltyH6u1BZ9L/v+dxL0ZMqO2O1cKAYZNXPs=;
+        b=Ej1SUbmKBAnrRYGY5Pk3fJRnha/0wliZXeBq6dtTF+LQZ9nQJBVyoc6gmb0mo3WPir
+         TCw/qW9BMdZCxIRLgLZfnyPjMMkeQZKZUU3uuTOeGBI8atPiUsqP9p8EW1WxnjUsPkRC
+         T/Ob6DU/meZLd2hqlIJC3a+dx5OD1SuqLVc/yc0i1YN76rNuRCTyKBGDjirKaD05RaZl
+         gOBO7Yu8YlvcgfR8l72gYLpLRivGpOjCPCHhPWTLuC7KEI8Bc/4BsfsKcfy09FrrIbp7
+         h+QnpKI6fE8e4E+6yaCOUslcG/XoJhG2MwUmYncleDxG6ER8qt17IcbIjRj4Aa0Qo5ui
+         2CPg==
+X-Forwarded-Encrypted: i=1; AJvYcCUreJ9SE1IAw+LqU0ACeT6ZzePR9YWbkAq+Koelk68KadLO+8QYcnAnODRAi8+qLvV4CaAUKYFFMk6Tkcw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwmqX3bsCo7+6bF8yhpaienjbevNxgyeFTsJQ4KohQGk76yP95D
+	S0UHOJ4FFpHqMxYClGqc5jF0GDXZITGsAhYMMkwOQbeSw55uPBjknxOEsggkb7rL6tb4MX56eSa
+	yJPQ3HYWzB/LGXB87zquFqPppJntpY+1U6SuHjPX21bz5Ckam
+X-Gm-Gg: ASbGncsIYq8rOuyCG0XMwobh18XX+SMMl3bwqFX0iMsfiMKsKC0gNpOAqR5wyEBCOV3
+	RTWD6KUTxKKV+XPuXrOj8NZpXMz39HbmiJvnQEKECbZhjq4I8OuKDbfxu+BcC2Q4Xc+jEI4mFuG
+	dJ7t1hu4kf7HGF1owyyS6hantsIHdr8JN+BhmrV480uJZMwq5tuKT7ammrDyy/mZhVdobxYmOnM
+	KhXhdsvwobcpJCTSiRopMekP6bfUPUxgAujNpWR8xj4RNkoZMxb64rcbbkKC96upBUm1TJtff2u
+	FUm/2brz6XXBxPT0i3/6HPuLjRyF8Uo=
+X-Google-Smtp-Source: AGHT+IGuGPu+zNWnKMENBRH1cGq6mvAP2tt0vUVDuY0s1KGIy/+MxU+EJ2xkScan9kLdomgicesqCN/5M43b
+X-Received: by 2002:a05:6102:5681:b0:4da:e631:a472 with SMTP id ada2fe7eead31-4dafb690042mr8174826137.20.1746485621498;
+        Mon, 05 May 2025 15:53:41 -0700 (PDT)
+Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
+        by smtp-relay.gmail.com with ESMTPS id a1e0cc1a2514c-8780afe9e7esm785191241.3.2025.05.05.15.53.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 May 2025 15:53:41 -0700 (PDT)
+X-Relaying-Domain: purestorage.com
+Received: from dev-ushankar.dev.purestorage.com (dev-ushankar.dev.purestorage.com [10.7.70.36])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id BCD78340278;
+	Mon,  5 May 2025 16:53:40 -0600 (MDT)
+Received: by dev-ushankar.dev.purestorage.com (Postfix, from userid 1557716368)
+	id B0A55E40643; Mon,  5 May 2025 16:53:40 -0600 (MDT)
+Date: Mon, 5 May 2025 16:53:40 -0600
+From: Uday Shankar <ushankar@purestorage.com>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Ming Lei <ming.lei@redhat.com>, Shuah Khan <shuah@kernel.org>,
+	linux-block@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] selftests: ublk: more misc fixes
+Message-ID: <aBlBdBl8uKCIVOPG@dev-ushankar.dev.purestorage.com>
+References: <20250428-ublk_selftests-v1-0-5795f7b00cda@purestorage.com>
+ <aBkgLOxWLp74TShe@dev-ushankar.dev.purestorage.com>
+ <aBkg0LW5YO6Osdnw@dev-ushankar.dev.purestorage.com>
+ <3a6050b3-03f6-4c22-a2c3-33ab6a453376@kernel.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.12.26
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3a6050b3-03f6-4c22-a2c3-33ab6a453376@kernel.dk>
 
-From: Csókás, Bence <csokas.bence@prolan.hu>
+On Mon, May 05, 2025 at 04:44:19PM -0600, Jens Axboe wrote:
+> On 5/5/25 2:34 PM, Uday Shankar wrote:
+> > On Mon, May 05, 2025 at 02:31:40PM -0600, Uday Shankar wrote:
+> >> Hi Jens,
+> >>
+> >> Can you take a look at Ming's comment on the first patch and merge the
+> >> set if things look good? I can rebase/repost it as needed.
+> > 
+> > Bleh, sorry, I meant to send this as a reply to v2:
+> > 
+> > https://lore.kernel.org/linux-block/20250429-ublk_selftests-v2-0-e970b6d9e4f4@purestorage.com/
+> 
+> Let's give Ming a chance to review v2, then I can get it queued up.
 
-[ Upstream commit 67800d296191d0a9bde0a7776f99ca1ddfa0fc26 ]
-
-The core is reset both in `fec_restart()` (called on link-up) and
-`fec_stop()` (going to sleep, driver remove etc.). These two functions
-had their separate implementations, which was at first only a register
-write and a `udelay()` (and the accompanying block comment). However,
-since then we got soft-reset (MAC disable) and Wake-on-LAN support, which
-meant that these implementations diverged, often causing bugs.
-
-For instance, as of now, `fec_stop()` does not check for
-`FEC_QUIRK_NO_HARD_RESET`, meaning the MII/RMII mode is cleared on eg.
-a PM power-down event; and `fec_restart()` missed the refactor renaming
-the "magic" constant `1` to `FEC_ECR_RESET`.
-
-To harmonize current implementations, and eliminate this source of
-potential future bugs, refactor implementation to a common function.
-
-Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
-Reviewed-by: Simon Horman <horms@kernel.org>
-Signed-off-by: Csókás, Bence <csokas.bence@prolan.hu>
-Link: https://patch.msgid.link/20250207121255.161146-2-csokas.bence@prolan.hu
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/freescale/fec_main.c | 52 +++++++++++------------
- 1 file changed, 25 insertions(+), 27 deletions(-)
-
-diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
-index 2b05d9c6c21a4..00f31d5ea4fca 100644
---- a/drivers/net/ethernet/freescale/fec_main.c
-+++ b/drivers/net/ethernet/freescale/fec_main.c
-@@ -1093,6 +1093,29 @@ static void fec_enet_enable_ring(struct net_device *ndev)
- 	}
- }
- 
-+/* Whack a reset.  We should wait for this.
-+ * For i.MX6SX SOC, enet use AXI bus, we use disable MAC
-+ * instead of reset MAC itself.
-+ */
-+static void fec_ctrl_reset(struct fec_enet_private *fep, bool allow_wol)
-+{
-+	u32 val;
-+
-+	if (!allow_wol || !(fep->wol_flag & FEC_WOL_FLAG_SLEEP_ON)) {
-+		if (fep->quirks & FEC_QUIRK_HAS_MULTI_QUEUES ||
-+		    ((fep->quirks & FEC_QUIRK_NO_HARD_RESET) && fep->link)) {
-+			writel(0, fep->hwp + FEC_ECNTRL);
-+		} else {
-+			writel(FEC_ECR_RESET, fep->hwp + FEC_ECNTRL);
-+			udelay(10);
-+		}
-+	} else {
-+		val = readl(fep->hwp + FEC_ECNTRL);
-+		val |= (FEC_ECR_MAGICEN | FEC_ECR_SLEEP);
-+		writel(val, fep->hwp + FEC_ECNTRL);
-+	}
-+}
-+
- /*
-  * This function is called to start or restart the FEC during a link
-  * change, transmit timeout, or to reconfigure the FEC.  The network
-@@ -1109,17 +1132,7 @@ fec_restart(struct net_device *ndev)
- 	if (fep->bufdesc_ex)
- 		fec_ptp_save_state(fep);
- 
--	/* Whack a reset.  We should wait for this.
--	 * For i.MX6SX SOC, enet use AXI bus, we use disable MAC
--	 * instead of reset MAC itself.
--	 */
--	if (fep->quirks & FEC_QUIRK_HAS_MULTI_QUEUES ||
--	    ((fep->quirks & FEC_QUIRK_NO_HARD_RESET) && fep->link)) {
--		writel(0, fep->hwp + FEC_ECNTRL);
--	} else {
--		writel(1, fep->hwp + FEC_ECNTRL);
--		udelay(10);
--	}
-+	fec_ctrl_reset(fep, false);
- 
- 	/*
- 	 * enet-mac reset will reset mac address registers too,
-@@ -1373,22 +1386,7 @@ fec_stop(struct net_device *ndev)
- 	if (fep->bufdesc_ex)
- 		fec_ptp_save_state(fep);
- 
--	/* Whack a reset.  We should wait for this.
--	 * For i.MX6SX SOC, enet use AXI bus, we use disable MAC
--	 * instead of reset MAC itself.
--	 */
--	if (!(fep->wol_flag & FEC_WOL_FLAG_SLEEP_ON)) {
--		if (fep->quirks & FEC_QUIRK_HAS_MULTI_QUEUES) {
--			writel(0, fep->hwp + FEC_ECNTRL);
--		} else {
--			writel(FEC_ECR_RESET, fep->hwp + FEC_ECNTRL);
--			udelay(10);
--		}
--	} else {
--		val = readl(fep->hwp + FEC_ECNTRL);
--		val |= (FEC_ECR_MAGICEN | FEC_ECR_SLEEP);
--		writel(val, fep->hwp + FEC_ECNTRL);
--	}
-+	fec_ctrl_reset(fep, true);
- 	writel(fep->phy_speed, fep->hwp + FEC_MII_SPEED);
- 	writel(FEC_DEFAULT_IMASK, fep->hwp + FEC_IMASK);
- 
--- 
-2.39.5
+It looks like he has already reviewed all the patches in the set.
 
