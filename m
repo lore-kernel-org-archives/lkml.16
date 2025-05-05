@@ -1,158 +1,90 @@
-Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A499D1F5413;
-	Mon,  5 May 2025 09:23:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.133.104.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2EDB1F582E
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 09:23:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746436999; cv=none; b=kqGRtBQm3Tn22ApiEuAnZYyOiZ66oVa8G0YFH95mhmbiCpvAxpMZ1Eos58VD/pPASKbYwbDxO19OlCBjVYQP14XGCvTdw9BGMOGlzQLLJ6H6WsPVoRQVKIbNP3WG5jrTPItQ/um4t4dhA3GS78r5P6aw9lmT5yat2dsVwIOuAUo=
+	t=1746437038; cv=none; b=HVR8QfmNycSKwOeT3f8RWG8iUkodF3v8j+JCFlN1tqTVqcYDAI6kvsrZeUbrKkafGPceBal8cuFooN+nHKg6pQntOCSp3H+uyYASWWXUBBLXc5+zuFRRgMQwnH22kYpUJ378ZzRTGhpWEcZc0uWk9cv/XiNk+P0e1U9MlXVrkJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746436999; c=relaxed/simple;
-	bh=vZVzH8G42DQbwrgI28bPyvXwEgyT2x3kpEopLCUdVVY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d425GNyvatjkO8L4haVreAJdE1PRKQHhmE6gfj/UYBmhvqEZINuoKdnA5hEvbqwqVX78fczZD2vrK3B7mdBFC915dJR/jTQIiwdRUKMT3UHmVxL6Y+2QRvRO09s+/l53QjTdGH0s8LtNos6k2ouGzsEbf2loHg75XRoUYStJeh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net; spf=pass smtp.mailfrom=iogearbox.net; dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b=IV0dlq6a; arc=none smtp.client-ip=213.133.104.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iogearbox.net
+	s=arc-20240116; t=1746437038; c=relaxed/simple;
+	bh=2xxpj+2ReE48KbP5KJ11PgdY9Ly28L5Z4eGb6xFarec=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=ac6cuu6qswRAA/6U5B+JDuMnjjPGVYBERov0k/KW8ajolzZh2jkM+tBtzZzAlpu/nn7kSRItvilACpQ2jz2bobLIprTbdCcoScqDas2nZ91qHcbve2Dap9VX3X2KhdqlvcUpyu06IZa07Fq6ctr1TnJH1ZfgKTZ6MMh7dxcDHKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4FFtXfNH; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b="IV0dlq6a"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=iW4CW4d4XumMRURh9YquH3q5TrxPfyHgHt8LotFCrM4=; b=IV0dlq6aSyJKCBOUMDtmCvZzdj
-	Y21rxQ7blv8W9CdEGp7pPqOVCrFyQDgbnyM0Vp2qhfRZjwcDtFn4EeZXAIOF8NggSR/ENxCTNywZU
-	pP1Ceoni69JiHhK+67DMiNZMFz6FGfxRlDO4tRW/j8sd8U+M0JRAVVtjwaQYLhTRWkthXd+sga8RJ
-	LIXR7kRMffpdYis5SPTDrwn8CvVkOnnhFho+WjoG7kAJOyNhcxCOsspOO5dDzAooZSp6b2WW7U0SM
-	SSy4NA2EJYj/FKh6WI0b/mEgyIhDUwPc9lryS4yrurhXK7dnpcLWMsBwb/6wx6pVi0it7rwgmM0oz
-	2V3PEYKA==;
-Received: from sslproxy08.your-server.de ([78.47.166.52])
-	by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96.2)
-	(envelope-from <daniel@iogearbox.net>)
-	id 1uBs1z-000G4i-1V;
-	Mon, 05 May 2025 11:22:35 +0200
-Received: from [85.195.247.12] (helo=[192.168.1.114])
-	by sslproxy08.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <daniel@iogearbox.net>)
-	id 1uBs1x-000Hhr-1M;
-	Mon, 05 May 2025 11:22:34 +0200
-Message-ID: <798dba24-b5a7-4584-a1f6-793883fe9b5e@iogearbox.net>
-Date: Mon, 5 May 2025 11:22:33 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4FFtXfNH"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43d209dc2d3so18833515e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 02:23:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746437035; x=1747041835; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=UNKpSETC3aRoWs26slbmPYaRhZWnx/HOj+OMKwfNopA=;
+        b=4FFtXfNHVOpQM7Jr4isrJSe+z+VDiBnIBysQtpsEP13Bs+QuNDDQ3nITnhu1f/p8NJ
+         l/SE6uudP+jxg1nXQnETYPZdCnQ7ewTIqU4jbu0rm0jn6RMdy5oXSUb/Aw7r4L0rmP70
+         kOv7A7mTXGxSLlkQTC2FUO4e8lswCGjgJ7iaddAe746FTRkKatN0oqi4yW5lx6dTEioE
+         TO1cBJybvx9NNOtTAJPmp8ulcDNMtXcU2fobHRcnWc78BXpvcWvZM9z/KdpnzUUNfiGE
+         HnrTEJ6qR7ADZvtPyVFpwj9Nk/0WdRQ0f0NfYNawWcKeAUmuZ4MqCU4bFv85+WEczNfc
+         J4Nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746437035; x=1747041835;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UNKpSETC3aRoWs26slbmPYaRhZWnx/HOj+OMKwfNopA=;
+        b=aUcNeMAk7qDn1Jme4o52zMKYimKSME+N+8xwZdyJYjxF4lYk5gfld6+qX/avWFF+++
+         /3b+1n7gulOoVxf0JH23KUdjOgPEL0XLcSDek8R2037sPwsRP3lNOcCxoORW+IP+RuDc
+         LDjuiroCa6wEriBUgkRVRb78pDeGLyvGFQg3CQRvPZbtgwiuSzbvSHMR1uxnRAPOpYmB
+         a7K25SsgZ55Xe2fQUd/dVe91xgqhg+Gy2Di0KKA2em0Kmmw7FXqzYYW9d0fbo25aJ9fI
+         g2kM3KTIZ0KnwZVAsayNNZCJh2GWixy4p4ogW/UMCNuTIjdTsMpu8ehtGn1sdMKvh5MM
+         NFZg==
+X-Forwarded-Encrypted: i=1; AJvYcCXY2j115cdXJ92QUL7V1zp+hr6C2glvbQciPoEv6/rqU0DS3MLkpRPsI4anDXmlTqO5PJphWh4emVM/T64=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIAJC7h6tF3RIeb1PjYGn/MHd9YutGxhY3TZgcZv5VSEUDLp02
+	UnNsQsPgB17UH0wllaApBgPg3C1bTDMg3Bkjalp4sZWWZl8IAFz1FWnxPyk4d2hoyaNnSWYSpM8
+	K7f83RW1sBaJeoQ==
+X-Google-Smtp-Source: AGHT+IHD25Gl0hnIcuOchqaJj6jrQJy3Tcy1tSunT6kxPFMJLsXGIsx+DEdSlsV661NRNl3V8hAe7ZryPPG14R4=
+X-Received: from wmbhh12.prod.google.com ([2002:a05:600c:530c:b0:441:b3fe:b95a])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:3548:b0:43c:e7ae:4bcf with SMTP id 5b1f17b1804b1-441c1c70782mr68477705e9.0.1746437035142;
+ Mon, 05 May 2025 02:23:55 -0700 (PDT)
+Date: Mon, 5 May 2025 09:23:53 +0000
+In-Reply-To: <20250502140237.1659624-1-ojeda@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/4] Introducing Hornet LSM
-To: Paul Moore <paul@paul-moore.com>, KP Singh <kpsingh@kernel.org>
-Cc: bboscaccy@linux.microsoft.com, James.Bottomley@hansenpartnership.com,
- bpf@vger.kernel.org, code@tyhicks.com, corbet@lwn.net, davem@davemloft.net,
- dhowells@redhat.com, gnoack@google.com, herbert@gondor.apana.org.au,
- jarkko@kernel.org, jmorris@namei.org, jstancek@redhat.com,
- justinstitt@google.com, keyrings@vger.kernel.org,
- linux-crypto@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-security-module@vger.kernel.org,
- llvm@lists.linux.dev, masahiroy@kernel.org, mic@digikod.net,
- morbo@google.com, nathan@kernel.org, neal@gompa.dev,
- nick.desaulniers+lkml@gmail.com, nicolas@fjasle.eu, nkapron@google.com,
- roberto.sassu@huawei.com, serge@hallyn.com, shuah@kernel.org,
- teknoraver@meta.com, xiyou.wangcong@gmail.com
-References: <20250502184421.1424368-1-bboscaccy@linux.microsoft.com>
- <20250502210034.284051-1-kpsingh@kernel.org>
- <CAHC9VhS5Vevcq90OxTmAp2=XtR1qOiDDe5sSXReX5oXzf+siVQ@mail.gmail.com>
-Content-Language: en-US
-From: Daniel Borkmann <daniel@iogearbox.net>
-Autocrypt: addr=daniel@iogearbox.net; keydata=
- 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
-In-Reply-To: <CAHC9VhS5Vevcq90OxTmAp2=XtR1qOiDDe5sSXReX5oXzf+siVQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 1.0.7/27628/Sun May  4 10:34:32 2025)
+Mime-Version: 1.0
+References: <20250502140237.1659624-1-ojeda@kernel.org>
+Message-ID: <aBiDqQxAzTC4N-n-@google.com>
+Subject: Re: [PATCH 0/5] Rust beta (1.87) and nightly (1.88) lint cleanups
+From: Alice Ryhl <aliceryhl@google.com>
+To: Miguel Ojeda <ojeda@kernel.org>
+Cc: Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev
+Content-Type: text/plain; charset="utf-8"
 
-On 5/4/25 7:36 PM, Paul Moore wrote:
-> On Fri, May 2, 2025 at 5:00 PM KP Singh <kpsingh@kernel.org> wrote:
-[...]
->  From what I've seen in Blaise's efforts to implement BPF signature
-> validation in the upstream kernel he has been working in good faith
-> and has been trying to work with the greater BPF community at each
-> step along the way.  He attempted to learn from previously rejected
-> attempts with his first patchset, however, that too was rejected, but
-> with feedback on how he might proceed.  Blaise took that feedback and
-> implemented Hornet, traveling to LSFMMBPF to present his idea to the
-> BPF community, as well as the usual mailing list postings.  When there
-> was feedback that certain APIs would not be permitted, despite being
-> EXPORT_SYMBOL'd, Blaise made some adjustments and came back to the
-> lists with an updated version.  You are obviously free to object to
-> portions of Hornet, but I don't believe you can claim Blaise isn't
-> trying to work with the BPF community on this effort.
-
-We also discussed at LSFMMBPF that the current approach taken addresses
-only a tiny fraction of BPF programs out there, meaning it will not be
-applicable to 99% of projects utilizing BPF (e.g. for a OSS listing see
-https://ebpf.io/applications/). What guidance would you provide to these
-projects once this is set in place? "Please do a full rewrite (iff even
-feasible) or accept user space breakage if some distro sets this generally
-in place (wrongly assuming this provides a generic solution for all BPF)?"
-
-In the presentation it was mentioned that you need something like Hornet
-for your Azure Smart NICs in order to utilize BPF for livesite investigation
-which is fine ofc, but given this only addresses a *tiny niche* of use cases,
-the guidance given at the LSFMMBPF conference was to go via BPF LSM route
-and implement it this way instead which Blaise agreed to look into. Given
-this is a niche use case it is exactly the fit for BPF LSM.
-
->> So for this approach, it's a:
->>
->> Nacked-by: KP Singh <kpsingh@kernel.org>
+On Fri, May 02, 2025 at 04:02:32PM +0200, Miguel Ojeda wrote:
+> Now that Rust 1.87.0 is close to release, clean up the new lints that appeared.
 > 
-> Noted.
+> It may be that one of the patches is not needed by the time it releases, but
+> I prefer to not wait much longer since I would like to land this for -rc6 so
+> that it is clean for release.
+> 
+> In addition, clean some nightly (1.88.0) ones too.
+> 
+> Miguel Ojeda (5):
+>   objtool/rust: add one more `noreturn` Rust function for Rust 1.87.0
+>   rust: clean Rust 1.87.0's `clippy::ptr_eq` lints
+>   rust: clean Rust 1.88.0's `unnecessary_transmutes` lint
+>   rust: clean Rust 1.88.0's warning about `clippy::disallowed_macros`
+>     configuration
+>   rust: clean Rust 1.88.0's `clippy::uninlined_format_args` lint
 
-Nacked-by: Daniel Borkmann <daniel@iogearbox.net>
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
