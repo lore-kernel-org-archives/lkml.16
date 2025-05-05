@@ -1,108 +1,103 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 829BC4683
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 12:48:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 285334683
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 12:49:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746449339; cv=none; b=SiK7k66N+uUW4RS+pv3Ns384iuw8/WT+VmM1fgJ3fv3bikKz+2Pn70+2VFIxEN3vs7DE9vcF0OBEYyd83Ao1jj1dIJGiTSVGkfO2SfJnNIxbRzvK6Elm4bbETmtQME9FE0muvqDg5UjtuvNy4s+dP9eA93foOKoJvvKt+gvJkK0=
+	t=1746449355; cv=none; b=fEcClmVLN1DWiksQzMeUoZ56usDL6SB/H+Gqw8A9CGeuCl8zxnfsMMpK3r3cJx7UxiToAD8g6nE4mdQt85ql/i4bWZsOYlmLzY1NB0vX5dTvarxLh/lrxV56rPtSMNMGt8OVhF9cvklfUVWRLunwLzzAXVPNiUDfZplNKmiediI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746449339; c=relaxed/simple;
-	bh=qOiDsPGyW52iz27gqPAj4k3cSNTm4gcs8TGRaSPcHeg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G1zCxG+i1wkPWpQm1pQQlcCcEZgIaizPD63J8oQemXw7q+PsrEPOK3kDQuUZPeGYaR2Oi0GOhT+ygcoR9PLFwoU0Gm+w7Fw/0PgpQJbHYRDq7ndfYXxna5jWkOd7m3IKR967fMr5210R1BS26c2DhGoeipClfZp4rIlZ4wlI8Tw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1uBvFe-0000yT-BA; Mon, 05 May 2025 14:48:54 +0200
-Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1uBvFd-001ESa-0i;
-	Mon, 05 May 2025 14:48:53 +0200
-Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1uBvFd-004cTk-0D;
-	Mon, 05 May 2025 14:48:53 +0200
-Date: Mon, 5 May 2025 14:48:53 +0200
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: kernel@pengutronix.de, linux-kernel@vger.kernel.org,
-	linux-mmc@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Mark Brown <broonie@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	=?utf-8?B?U8O4cmVu?= Andersen <san@skov.dk>,
-	Christian Loehle <christian.loehle@arm.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Avri Altman <Avri.Altman@sandisk.com>
-Subject: Re: [PATCH v4 0/4] mmc: handle undervoltage events and prevent eMMC
- corruption
-Message-ID: <aBiztawScUfcLELt@pengutronix.de>
-References: <20250310102229.381887-1-o.rempel@pengutronix.de>
- <CAPDyKFrC56BBJk=YAPWCCNYNqFAoY74_yH0ZXfNQEiDhaA2xJg@mail.gmail.com>
+	s=arc-20240116; t=1746449355; c=relaxed/simple;
+	bh=ymSG9IqEEy4egmcsyUGThJdUOkfEDmimGTb5ZTuNFZQ=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=mtDWmuHsQG1aVDt32AgSCCt7q9Gk+uUbmTNrfX2ISEAEA0MQsK1DhRMmEfY5fOo/T7XhjPwGXIkOdJ2VcDwt/kfOoW8OrBqW4kfPGRUhVP8d0BHvFdgxVJ99LVQwSOgB8C91727qMCVxtg5GXcgU/7qTlyYTn/PlafPc/WtRKY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=RXyO3rbI; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="RXyO3rbI"
+Received: from [127.0.0.1] ([76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 545CmbAS275820
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Mon, 5 May 2025 05:48:38 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 545CmbAS275820
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025042001; t=1746449319;
+	bh=9xfULg7P/qknoG0MeM2KOWzAXH9jr4Glh04sw3FjIuY=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=RXyO3rbIuNBurZ+B2JvjxVn4LzO7AWXc6wOOrU2jKvgQY3bp2/Va/rV7q28ucmTMH
+	 5pn4RMD4U1TF9qA9bc31gDfHCpcRmh7S6WsfqMZJPUgTAPO//HvXDptz9Llv9B0Tu5
+	 d8lLF3tNZgKYAQ8X1Nd+iDKN6MdWAi9iyjCnDGCys027eGIphMNc3hKikvgZmHSLc1
+	 A52yjDbY5Gbjdgcbm/aylj/NxBKu69dHnj+y2PKCmauLYgriydoAvw+oGoHiUVRIet
+	 JWpi9K9gEsXVZbE0MWmeMHIFE2QeX8Y24oWpl83DLFUdvV/lzRKWXBzIOESda5TUHR
+	 5J1ENJbCeWvwQ==
+Date: Mon, 05 May 2025 05:48:37 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: "Maciej W. Rozycki" <macro@orcam.me.uk>, Ingo Molnar <mingo@kernel.org>
+CC: linux-kernel@vger.kernel.org, "Ahmed S . Darwish" <darwi@linutronix.de>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        John Ogness <john.ogness@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Subject: =?US-ASCII?Q?Re=3A_=5BRFC_PATCH_0/15=5D_x86=3A_Remove_su?=
+ =?US-ASCII?Q?pport_for_TSC-less_and_CX8-less_CPUs?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <alpine.DEB.2.21.2505050944230.31828@angie.orcam.me.uk>
+References: <20250425084216.3913608-1-mingo@kernel.org> <alpine.DEB.2.21.2505050944230.31828@angie.orcam.me.uk>
+Message-ID: <98C88CE8-C3D5-4B75-8545-71DD47C67614@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAPDyKFrC56BBJk=YAPWCCNYNqFAoY74_yH0ZXfNQEiDhaA2xJg@mail.gmail.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Ulf,
+On May 5, 2025 1:53:04 AM PDT, "Maciej W=2E Rozycki" <macro@orcam=2Eme=2Euk=
+> wrote:
+>On Fri, 25 Apr 2025, Ingo Molnar wrote:
+>
+>>  > I really get the feeling that it's time to leave i486 support behind=
+=2E
+>>  > There's zero real reason for anybody to waste one second of
+>>  > development effort on this kind of issue=2E
+>>=20
+>> This series increases minimum kernel support features to include TSC an=
+d
+>> CX8 (CMPXCHG8B) hardware support, which removes 486 (and derivatives) s=
+upport
+>> and early-586 (and derivatives) support=2E
+>
+> FWIW I'm not happy about that at the very least because this will preven=
+t=20
+>me from using my 486 box for EISA defxx driver maintenance=2E  What exact=
+ly=20
+>is the problem with 486?
+>
+> I know the lack of TSC has security implications, but don't use the=20
+>machine in a way for which it would be an issue and I don't expect anyone=
+=20
+>doing otherwise=2E  We have non-x86 platforms that lack a high-resolution=
+=20
+>timer and nobody's going to drop them=2E
+>
+> We also have platforms that lack atomics, let alone double-precision one=
+s=20
+>and they're fine too, so why is x86 different?
+>
+>  Maciej
 
-Sorry for very late replay,
+Why is x86 different? Because it is a tightly integrated platform with cod=
+e shared across a very large number of generations, without "silly embedded=
+ nonsense hacks=2E"
 
-On Thu, Mar 20, 2025 at 03:36:32PM +0100, Ulf Hansson wrote:
-> Hi Oleksij,
-> 
-> On Mon, 10 Mar 2025 at 11:22, Oleksij Rempel <o.rempel@pengutronix.de> wrote:
-> >
-> > changes v4:
-> > - drop HPI and SDHCI related patches
-> >
-> > This patch set introduces a framework for handling undervoltage events
-> > in the MMC subsystem. The goal is to improve system reliability by
-> > ensuring graceful handling of power fluctuations that could otherwise
-> > lead to metadata corruption, potentially rendering the eMMC chip
-> > unusable or causing significant data loss.
-> 
-> Thanks for posting this! I will spend some time reviewing this next
-> week and let you know my comments then.
-> 
-> However, I just wanted to let you know that I just posted a series [1]
-> (forgot to cc you, sorry), which also reworks the way _mmc_suspend()
-> understands what scenario it should be running. I am guessing that
-> re-work is simplifying for your $subject series too. Maybe you would
-> like to have a look?
-
-Ah, very nice. The integration of undervoltage support is easier now.
-
-I rebased by match on top of mmc/next branch and do some testing
-tomorrow. If you have no other comments I'll send updated patches after
-testing.
-
-By the way, are you on embedded recipes this year?
-
-Best Regards,
-Oleksij
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+I think if you have a use case, you need to speak up about it, rather than=
+ for people to guess=2E
