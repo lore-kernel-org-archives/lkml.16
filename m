@@ -1,47 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D8302F0BA3;
-	Mon,  5 May 2025 23:11:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 511BE2F0B95;
+	Mon,  5 May 2025 23:11:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486699; cv=none; b=NRmaLI4U//mJYKtM1xkZWJjXJsnLNvL++0K+w+c3RDcsBZ7yhrFSRSupuoz1qXS/8SMTGW/b/3Kh9/SjOPbU7sOfuIPCn3ibjyAj4v6hNEDfk8qUj3BVIzbFCWycq+i1+2BWMMiRBBG0/24RV3O3/9ikgSCGHOmv5FQAjHVclpM=
+	t=1746486694; cv=none; b=pQ5Ivdk7W6AQLawgRIEMU6kBmrqix9hoS67LrUPvl0wyVryPakn/AM65TT31c8L5tjvBKIbKnpa+ngDDTG4jORcQPEz2xwnQ7y2ByJINC1wkslOC1aBGWN+YqinqAnuTA5tN5av/YgDkcfvhMZoik1mKu7lPXWORZ9sKbPPQzHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486699; c=relaxed/simple;
-	bh=NtEPKg9Gy2v5g9hYHXwDJuhRazhIeYrdErvsUc1qh/4=;
+	s=arc-20240116; t=1746486694; c=relaxed/simple;
+	bh=pRU+ZlluUtiVBahzR3qY/4fwlWskxPfojj3aByJYiUU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QNgHQ1ArjNLBK8yA7NnKwHCS5OFOtL9NGRdY88l2vb+baa84xC16gtp2eB03m7RVBib5hVEVYpdmvdv4A+WsFmDbgtYCYYk46qTlRIXKySEv87l8LvyF1b4IN0H3SzJWJL/Sg780jfEVf+ecm4A339gzZZUul7GN9qYGJ3zKZM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CWGTNz1U; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=jCan4MP8YmGqfGHELKb2jo+27/vAKnFoSoEE+Gf1GiNq2FJZVP4lqRt+tnOrdNjhe/g+GqUeh0GgO7Px93mVf84+fhvEsFQnr8Rz2xA/5jdVvBSLeuEtPELB+imBXbSGcUoSIyfeOaqdZsWG8n9ksfjzdB0y2HXsFMb8srsYHRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=auQMDRXG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CWGTNz1U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4F18C4CEEE;
-	Mon,  5 May 2025 23:11:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="auQMDRXG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 308F9C4CEF1;
+	Mon,  5 May 2025 23:11:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486699;
-	bh=NtEPKg9Gy2v5g9hYHXwDJuhRazhIeYrdErvsUc1qh/4=;
+	s=k20201202; t=1746486694;
+	bh=pRU+ZlluUtiVBahzR3qY/4fwlWskxPfojj3aByJYiUU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CWGTNz1UIkTLJ4H1MTUBS0BITxnYwTgd5Zf+H0rmcfA1iZgavw3EaJptMhZla4t6o
-	 AFuVB1hnyh2M/urtUZkBIPbEzRH27sslPyzTX927saOIBSMiP4YGPrgl/pHGXl4nJV
-	 T+BboK7iMXBlf5P4EY6mG78nSfgrsV8pD6Sb/mPD3e0OoNp1dw/aN5nC7Dw1fhKLuh
-	 5CcvkfQ6w7UQLE+wHs5ColGdpbEp0wKcBlrZRdrG8W3H3fd30zJk2gPAYWw/SRvBZ/
-	 ZrssgoH7asI77fHonB/+VuPF4SA/zbz2W4KWcmag0E71cYTcSBdrpCD9CaMjCGYlHs
-	 q6teaa/oVTCDA==
+	b=auQMDRXGu/WZDzSxt1+KHmYMJjZORhZwAu8XQtw3gzMDEXXukBSeXaj0TcgBgqyCJ
+	 uIXh8QKh1ivay+lzauAKfwVnqUPeqqMROjUQC8u0XfBtObhe8G7C8F/KAJdoTqnmTd
+	 cw0Xj9FKCjvd2tl+SsB+8hoqeWsyw6ATU3xqyXvEb4KB24MzzjSZmYCPUq9QwAF1eP
+	 2Tdgduft+8D+ZIxSUlQCnewygcz82Pu1+THx1R8Qf0aEgBYjGES9jRMJWMcwYJXHa7
+	 9NTYB3mg7PlZ+a19btFrRGdKzGFGr0W0hwJeYKh/4m0kDL+fYBe4/AxJvmYekrIfRL
+	 q8FPAfCitrAqg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Hector Martin <marcan@marcan.st>,
+Cc: =?UTF-8?q?Martin=20Povi=C5=A1er?= <povik+lin@cutebit.org>,
 	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	shenghao-ding@ti.com,
-	kevin-lu@ti.com,
-	baojun.xu@ti.com,
 	lgirdwood@gmail.com,
 	perex@perex.cz,
 	tiwai@suse.com,
 	linux-sound@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 158/212] ASoC: tas2764: Power up/down amp on mute ops
-Date: Mon,  5 May 2025 19:05:30 -0400
-Message-Id: <20250505230624.2692522-158-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 155/212] ASoC: ops: Enforce platform maximum on initial value
+Date: Mon,  5 May 2025 19:05:27 -0400
+Message-Id: <20250505230624.2692522-155-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505230624.2692522-1-sashal@kernel.org>
 References: <20250505230624.2692522-1-sashal@kernel.org>
@@ -51,111 +48,76 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.1.136
 Content-Transfer-Encoding: 8bit
 
-From: Hector Martin <marcan@marcan.st>
+From: Martin Povišer <povik+lin@cutebit.org>
 
-[ Upstream commit 1c3b5f37409682184669457a5bdf761268eafbe5 ]
+[ Upstream commit 783db6851c1821d8b983ffb12b99c279ff64f2ee ]
 
-The ASoC convention is that clocks are removed after codec mute, and
-power up/down is more about top level power management. For these chips,
-the "mute" state still expects a TDM clock, and yanking the clock in
-this state will trigger clock errors. So, do the full
-shutdown<->mute<->active transition on the mute operation, so the amp is
-in software shutdown by the time the clocks are removed.
+Lower the volume if it is violating the platform maximum at its initial
+value (i.e. at the time of the 'snd_soc_limit_volume' call).
 
-This fixes TDM clock errors when streams are stopped.
-
-Signed-off-by: Hector Martin <marcan@marcan.st>
+Signed-off-by: Martin Povišer <povik+lin@cutebit.org>
+[Cherry picked from the Asahi kernel with fixups -- broonie]
 Signed-off-by: Mark Brown <broonie@kernel.org>
-Link: https://patch.msgid.link/20250208-asoc-tas2764-v1-1-dbab892a69b5@kernel.org
+Link: https://patch.msgid.link/20250208-asoc-volume-limit-v1-1-b98fcf4cdbad@kernel.org
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/tas2764.c | 51 ++++++++++++++++----------------------
- 1 file changed, 21 insertions(+), 30 deletions(-)
+ sound/soc/soc-ops.c | 29 ++++++++++++++++++++++++++++-
+ 1 file changed, 28 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/tas2764.c b/sound/soc/codecs/tas2764.c
-index 94428487a8855..10f0f07b90ff2 100644
---- a/sound/soc/codecs/tas2764.c
-+++ b/sound/soc/codecs/tas2764.c
-@@ -182,33 +182,6 @@ static SOC_ENUM_SINGLE_DECL(
- static const struct snd_kcontrol_new tas2764_asi1_mux =
- 	SOC_DAPM_ENUM("ASI1 Source", tas2764_ASI1_src_enum);
+diff --git a/sound/soc/soc-ops.c b/sound/soc/soc-ops.c
+index b4cfc34d00ee6..eff1355cc3df0 100644
+--- a/sound/soc/soc-ops.c
++++ b/sound/soc/soc-ops.c
+@@ -638,6 +638,33 @@ int snd_soc_get_volsw_range(struct snd_kcontrol *kcontrol,
+ }
+ EXPORT_SYMBOL_GPL(snd_soc_get_volsw_range);
  
--static int tas2764_dac_event(struct snd_soc_dapm_widget *w,
--			     struct snd_kcontrol *kcontrol, int event)
--{
--	struct snd_soc_component *component = snd_soc_dapm_to_component(w->dapm);
--	struct tas2764_priv *tas2764 = snd_soc_component_get_drvdata(component);
--	int ret;
--
--	switch (event) {
--	case SND_SOC_DAPM_POST_PMU:
--		tas2764->dac_powered = true;
--		ret = tas2764_update_pwr_ctrl(tas2764);
--		break;
--	case SND_SOC_DAPM_PRE_PMD:
--		tas2764->dac_powered = false;
--		ret = tas2764_update_pwr_ctrl(tas2764);
--		break;
--	default:
--		dev_err(tas2764->dev, "Unsupported event\n");
--		return -EINVAL;
--	}
--
--	if (ret < 0)
--		return ret;
--
--	return 0;
--}
--
- static const struct snd_kcontrol_new isense_switch =
- 	SOC_DAPM_SINGLE("Switch", TAS2764_PWR_CTRL, TAS2764_ISENSE_POWER_EN, 1, 1);
- static const struct snd_kcontrol_new vsense_switch =
-@@ -221,8 +194,7 @@ static const struct snd_soc_dapm_widget tas2764_dapm_widgets[] = {
- 			    1, &isense_switch),
- 	SND_SOC_DAPM_SWITCH("VSENSE", TAS2764_PWR_CTRL, TAS2764_VSENSE_POWER_EN,
- 			    1, &vsense_switch),
--	SND_SOC_DAPM_DAC_E("DAC", NULL, SND_SOC_NOPM, 0, 0, tas2764_dac_event,
--			   SND_SOC_DAPM_POST_PMU | SND_SOC_DAPM_PRE_PMD),
-+	SND_SOC_DAPM_DAC("DAC", NULL, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_OUTPUT("OUT"),
- 	SND_SOC_DAPM_SIGGEN("VMON"),
- 	SND_SOC_DAPM_SIGGEN("IMON")
-@@ -243,9 +215,28 @@ static int tas2764_mute(struct snd_soc_dai *dai, int mute, int direction)
- {
- 	struct tas2764_priv *tas2764 =
- 			snd_soc_component_get_drvdata(dai->component);
++static int snd_soc_clip_to_platform_max(struct snd_kcontrol *kctl)
++{
++	struct soc_mixer_control *mc = (struct soc_mixer_control *)kctl->private_value;
++	struct snd_ctl_elem_value uctl;
 +	int ret;
 +
-+	if (!mute) {
-+		tas2764->dac_powered = true;
-+		ret = tas2764_update_pwr_ctrl(tas2764);
-+		if (ret)
-+			return ret;
-+	}
- 
- 	tas2764->unmuted = !mute;
--	return tas2764_update_pwr_ctrl(tas2764);
-+	ret = tas2764_update_pwr_ctrl(tas2764);
-+	if (ret)
++	if (!mc->platform_max)
++		return 0;
++
++	ret = kctl->get(kctl, &uctl);
++	if (ret < 0)
 +		return ret;
 +
-+	if (mute) {
-+		tas2764->dac_powered = false;
-+		ret = tas2764_update_pwr_ctrl(tas2764);
-+		if (ret)
-+			return ret;
-+	}
++	if (uctl.value.integer.value[0] > mc->platform_max)
++		uctl.value.integer.value[0] = mc->platform_max;
++
++	if (snd_soc_volsw_is_stereo(mc) &&
++	    uctl.value.integer.value[1] > mc->platform_max)
++		uctl.value.integer.value[1] = mc->platform_max;
++
++	ret = kctl->put(kctl, &uctl);
++	if (ret < 0)
++		return ret;
 +
 +	return 0;
- }
- 
- static int tas2764_set_bitwidth(struct tas2764_priv *tas2764, int bitwidth)
++}
++
+ /**
+  * snd_soc_limit_volume - Set new limit to an existing volume control.
+  *
+@@ -662,7 +689,7 @@ int snd_soc_limit_volume(struct snd_soc_card *card,
+ 		struct soc_mixer_control *mc = (struct soc_mixer_control *)kctl->private_value;
+ 		if (max <= mc->max - mc->min) {
+ 			mc->platform_max = max;
+-			ret = 0;
++			ret = snd_soc_clip_to_platform_max(kctl);
+ 		}
+ 	}
+ 	return ret;
 -- 
 2.39.5
 
