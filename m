@@ -1,117 +1,145 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 732861C84B3;
-	Mon,  5 May 2025 07:41:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CE781DBB2E
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 07:43:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746430910; cv=none; b=clkPcK7IGPbnZrVd2WzSfE02lBQ09VutdprKEA/CaMrjDfvIVc3P6iA9yH+ewJnwl7HIgh3GvZyEywWzaZGUTIsnG9+pvVW1+RiFL7UW7i8/mdSfklbPcN1vJ5qVAdjg03fvSC1VoMDe9Y/oodKDRvbksMsLLb5T2tUxNZtQpjA=
+	t=1746431020; cv=none; b=slI2PriDWQSKJN64slbX0I4pL0n8/Npih8UdVsdve6FYKI3DATMbUc5zOcxDhj8V7jFunwBzAGHV0x3Iqry4iOZXDghxn0ecdHtN9pyjv2SazVbmyNyfaKCJQVAnLbVlHhbwY9risFaQ5XrKMG4yTovPdrg0bE+gImhmMG1Pr0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746430910; c=relaxed/simple;
-	bh=JC/jgU3UR5/9534jhBIn+HQTy0KPk/toGTRlvD+/9tE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XCqaCc70eWQV0/FkGqx1wsypbfIMGl9k/vz/D3DBDhw62YY8DKbUltDV5znTCmGgAEGELIhgghAxEk2To8Epv82WPWYvn1vUywfMTjpFLQHW8Lqei+GeFuxbixo5wHzRcpMNgiV5jbbp4WmX3qwPnV6HRKCV6fP5h5PHjlLcaxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T8ctucPY; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746431020; c=relaxed/simple;
+	bh=/1L4VXQZnM4TVg9Q0XEcQOC1Z7dwzdgPChSwdWfL7fE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=onr5+zjFQwAsUsngZYMeXW7pm9qf7ftMIXBwA3JpXkb0Lp2AOPS8ymjbYQjAv5Bt7qU5/w7BuE3fjeOH03WvVchJuQPEducRoO584muz+pib/34Sh8PJPRRZrNAmRVm4v6by63VWoKKLe/C9zVRaKK9XuxlvZGGiq8azzainOE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Rn4LMp9s; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T8ctucPY"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2260c91576aso35398105ad.3;
-        Mon, 05 May 2025 00:41:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746430909; x=1747035709; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=oC+vJ+HSAMSlR0731A5m2XXqOUV43UDZ3yJDtyU2qCE=;
-        b=T8ctucPYDJS+DOGDrIsOOr9TSz+a1OxhttrxfVcyuudWz93DiSLgpACHK5fJXJ21Vu
-         CvGFuFhs3P7/LwQi1b+7PgmEzwyrs5zvp2XPgYec+DkDiC+M60qClYzkRICzy+nB9ofi
-         yj+r0eGG3mq+51jISQDHPWkrkVHICsroyi3BGYmyw3EQaCfycR1ErjRSXgxcYrocaCzc
-         wnz0Klq1ohButOkRgpJMea7r4W/4+ouwW4hKGXsDfcFDqvjjE1k2ZFQn22YonqV4HQ/q
-         uZGF9I89ANVdQpgGtSGyTVan8BDKSmdiYF+XSzE2BEXVfPpgeYMOyiWI+1NMjmEPNbtO
-         LqMw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Rn4LMp9s"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746431017;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NYutuEk9tS5pMcj+KQxarlK855jenHaF07JshpvJP/c=;
+	b=Rn4LMp9s+uznmaMAOVagYdFa2TzX7VxnzkqJ/lpx9BzzCjv3MpEfZ8tMyQEDk25aBMDpUE
+	Nckhmx2ylr7gTX0ks4Nh1+c2BrMpYFjXotVSO0xs5QC1SZiRxfdJN1S+eDDWOym9yw3SR9
+	JxMNRYEpD5TuXFyi8kpddXU0J78GizQ=
+Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
+ [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-352-67P9yYwTOKSulrtDfG10IA-1; Mon, 05 May 2025 03:43:36 -0400
+X-MC-Unique: 67P9yYwTOKSulrtDfG10IA-1
+X-Mimecast-MFC-AGG-ID: 67P9yYwTOKSulrtDfG10IA_1746431015
+Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-54e8141b4adso3178989e87.1
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 00:43:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746430909; x=1747035709;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=oC+vJ+HSAMSlR0731A5m2XXqOUV43UDZ3yJDtyU2qCE=;
-        b=BDdMjvTdAm7WK46F+FydTneZw3k6znqmv64WXi8VbdiGJXzlphTgopy0p/MrRaXH/e
-         EUDnT6jnZFeeaao/ym2kDOV8S+LpkL+aSNReGD1JQ06v6iZhgj9u3qc9SKjnHvFx22u5
-         89LXsHUCCbS0JAQbDBsNWBpfQtqfJIPI4atvwOWdGcIJGogxL4BlSWt3YG9AL/AmyMAb
-         rLeYXZbwmlPUYVz9XoUpFTgq9Iji7m8OiYn4bbspcePUcPJiZIOjx/M7IUB6hWTT7vdo
-         korETSH/OTkQS4foL+bo+ZMORfNXQxZDQspbgEsW57beqOb5cFs2EG7+FJ+FDCg32S21
-         cvPA==
-X-Forwarded-Encrypted: i=1; AJvYcCUGX05OzW5DGe8AzT1V8AARdJ1hYRg3Dd8ocZv7wNizHXd0NQJxKmlZTC772r0xL8tTEl8xtSv084aZHD8=@vger.kernel.org, AJvYcCUiq55X4J/+oKY2hVqLI3zmF0H2dkXCH9C3XR3bFn6a7e/OXKCkuPgaJjD9FIE01qLEa83mnARF0z8fLOw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YynRoL23ooZdr9JcIlWtV8svTf9VpINVCd2ZtmWPo4sRCSvVE/I
-	tTNa3g08TPAhhz+VPvI7Gi4G973DD3imka68YVDsDToKU+rFC+dT
-X-Gm-Gg: ASbGncsakJp2E8SFhBR2dUd/gLj2pO3cKRuFUu8CH5QjBle5lLw2aV0mY3HwQYt63zi
-	3DVraKl0ws7IWEnB/uWcWbJPC6QLdmFjY5tgw6YRkhIu7n1tbR/lXulcXawwV9oBFg2XOcbdUzt
-	nVTPYW9PUvhGv9jUj/5PIjFB7SnWVJePnwQ0eGGANqJW4LGJeuC/Jb7nENFgolb8nUtjXRFUQxj
-	SLYPZiq51+P5M6BVUcjADU9vypP0HpF3gYwOi9e5LhoZGz7+DtPElHjtndXXGU53Faf6kiujJHo
-	GcMwFCnWa8a9PCZlb3mC1jne8Fefi/FvyCSlMzw2qANWGWWKosZLBWbnxad+Rm58zLbi/8vpbrd
-	+lgmORg==
-X-Google-Smtp-Source: AGHT+IHSmGeVChQLM11qyGqhTzHbQsAmzuk7FMyhEFMHFQ76pdZoPfZwg0VbusiuWCKtBO5VmEngLQ==
-X-Received: by 2002:a17:902:db02:b0:223:60ce:2451 with SMTP id d9443c01a7336-22e1ea5aa04mr90724095ad.15.1746430908504;
-        Mon, 05 May 2025 00:41:48 -0700 (PDT)
-Received: from vaxr-ASUSPRO-D840MB-M840MB.. ([2001:288:7001:2703:9aa5:83db:32d2:9858])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e22c73e92sm24061725ad.15.2025.05.05.00.41.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 00:41:47 -0700 (PDT)
-From: I Hsin Cheng <richard120310@gmail.com>
-To: lgirdwood@gmail.com
-Cc: broonie@kernel.org,
-	perex@perex.cz,
-	tiwai@suse.com,
-	pierre-louis.bossart@linux.dev,
-	yung-chuan.liao@linux.intel.com,
-	Vijendar.Mukunda@amd.com,
-	peter.ujfalusi@linux.intel.com,
-	peterz@infradead.org,
-	christophe.jaillet@wanadoo.fr,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	skhan@linuxfoundation.org,
-	I Hsin Cheng <richard120310@gmail.com>
-Subject: [RFC PATCH] ASoC: intel/sdw_utils: Assign initial value in asoc_sdw_rt_amp_spk_rtd_init()
-Date: Mon,  5 May 2025 15:41:42 +0800
-Message-ID: <20250505074142.615408-1-richard120310@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1746431015; x=1747035815;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NYutuEk9tS5pMcj+KQxarlK855jenHaF07JshpvJP/c=;
+        b=CyK/OFcAefPlBqUQLM0M43lCs8YYErvYgYaq30IEr/O3/nkwx70JjWxQ1IvDfDhomW
+         72FUCjGGYZ/YU+eqVaPtdER5Zr/XRnEVeixiK7KMxr5mIhtlxr9mtp3KWkM+Ql2zKs+h
+         UKzpMpxUgZUSZ+anrd/G3gwo+cfSG82s/VmSv4nEOpj0yfniX0x/1N6SCiXhIBdfKWZu
+         h0CqHnmmLUFJMXOxN6DK+sHB9dgHsrF73OoJ0c94pif84IRyrGEFgvYTSPKcEMnLMyEs
+         wWCykjCr3qTPgB9vspM4rsUyVo5+ekoKjb77qZw8+sPYOqKfV3C+fl/txppZKYn87Bg9
+         7fSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWAZV9tZ2ICeJMh5rTCmZRObOZFkr3d1XQqDHczmoScUM8WMkeIvbftShXmaLLlqfYQxDcf9BdIkK4c87c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYvGw8YZdSdFF6004k2iPNSqZDbkoVwNy+/7bXfjqFoRwCBUS0
+	OQdvtcsqwwFFwaeA8h+V4aPZgDXBYTrrjTTV/zJsfkQx6y/46mWLiuvdVgk0isqoZV5TKFGxn2t
+	+0+hheQZHtWyWMtCoJtDY1cLn1+BVRlVhOk0tsmDDymhKoy1Hmtkp4u7gFGzC6ReCMWfchPq68Q
+	s=
+X-Gm-Gg: ASbGncuD+c6oe/cGlHhlR4SzKjXXXbN6sdHd36BxAPDrQfdT2GSC3KYURgFJ9XBzN2F
+	heLSWa2nxvlavEal3bX8zHc5JJV8AKF/rxjH+sIIIelWosF+qTsIl9GFaGQNYSyx9Zwz2+JXtUx
+	sbqz/Egf4QM3rf58cl5cJkA4Oo5wt4BVhz9q6wVEmHMaS5f+SuMNif0vNS3J7oNqqaKu+OYX52p
+	IRkD7EA8HprdK7BjVM1vlPvSQO30iC8GE0egums5vmZ1YRdyfRiZJDGL43TQ6augMrNng8y8QY/
+	rNZdXiHWAycmNTOr9goVbRHoWtiKiCyuo4myAdQPI/QT1mST9BWKHoRIL6U=
+X-Received: by 2002:a05:6512:3c94:b0:54e:85c8:ab88 with SMTP id 2adb3069b0e04-54fa4f9bd0amr1970496e87.41.1746431014779;
+        Mon, 05 May 2025 00:43:34 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHsEsHgZOcmzKyEYKe53zgGMeSaMF3WinuQkv4wSGTWsyP+GpxlPUt85uINmh0HuIcOZYrSLQ==
+X-Received: by 2002:a05:600c:1e09:b0:43c:f895:cb4e with SMTP id 5b1f17b1804b1-441cb49494cmr15680615e9.17.1746430567130;
+        Mon, 05 May 2025 00:36:07 -0700 (PDT)
+Received: from ?IPV6:2a0d:3344:2706:e010:b099:aac6:4e70:6198? ([2a0d:3344:2706:e010:b099:aac6:4e70:6198])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b391c42bsm162401715e9.39.2025.05.05.00.36.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 05 May 2025 00:36:06 -0700 (PDT)
+Message-ID: <8cdf120d-a0f0-4dcc-a8f9-cea967ce6e7b@redhat.com>
+Date: Mon, 5 May 2025 09:36:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v13 4/9] net: devmem: Implement TX path
+To: Mina Almasry <almasrymina@google.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, io-uring@vger.kernel.org,
+ virtualization@lists.linux.dev, kvm@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Simon Horman <horms@kernel.org>, Donald Hunter <donald.hunter@gmail.com>,
+ Jonathan Corbet <corbet@lwn.net>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ Jeroen de Borst <jeroendb@google.com>,
+ Harshitha Ramamurthy <hramamurthy@google.com>,
+ Kuniyuki Iwashima <kuniyu@amazon.com>, Willem de Bruijn
+ <willemb@google.com>, Jens Axboe <axboe@kernel.dk>,
+ Pavel Begunkov <asml.silence@gmail.com>, David Ahern <dsahern@kernel.org>,
+ Neal Cardwell <ncardwell@google.com>, "Michael S. Tsirkin" <mst@redhat.com>,
+ Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+ =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
+ Stefan Hajnoczi <stefanha@redhat.com>,
+ Stefano Garzarella <sgarzare@redhat.com>, Shuah Khan <shuah@kernel.org>,
+ sdf@fomichev.me, dw@davidwei.uk, Jamal Hadi Salim <jhs@mojatatu.com>,
+ Victor Nogueira <victor@mojatatu.com>, Pedro Tammela
+ <pctammela@mojatatu.com>, Samiullah Khawaja <skhawaja@google.com>,
+ Kaiyuan Zhang <kaiyuanz@google.com>
+References: <20250429032645.363766-1-almasrymina@google.com>
+ <20250429032645.363766-5-almasrymina@google.com>
+ <53433089-7beb-46cf-ae8a-6c58cd909e31@redhat.com>
+ <CAHS8izMefrkHf9WXerrOY4Wo8U2KmxSVkgY+4JB+6iDuoCZ3WQ@mail.gmail.com>
+Content-Language: en-US
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <CAHS8izMefrkHf9WXerrOY4Wo8U2KmxSVkgY+4JB+6iDuoCZ3WQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-If strstr() for codec_dai->component->name_prefix doesn't find "-1" nor
-"-2", the value of ret will remain uninitialized. Initialized it with
-"-EINVAL" representing the component name prefix inside "rtd" is
-invalid.
+On 5/2/25 9:20 PM, Mina Almasry wrote:
+> On Fri, May 2, 2025 at 4:47 AM Paolo Abeni <pabeni@redhat.com> wrote:
+>>> @@ -1078,7 +1092,8 @@ int tcp_sendmsg_locked(struct sock *sk, struct msghdr *msg, size_t size)
+>>>                               zc = MSG_ZEROCOPY;
+>>>               } else if (sock_flag(sk, SOCK_ZEROCOPY)) {
+>>>                       skb = tcp_write_queue_tail(sk);
+>>> -                     uarg = msg_zerocopy_realloc(sk, size, skb_zcopy(skb));
+>>> +                     uarg = msg_zerocopy_realloc(sk, size, skb_zcopy(skb),
+>>> +                                                 sockc_valid && !!sockc.dmabuf_id);
+>>
+>> If sock_cmsg_send() failed and the user did not provide a dmabuf_id,
+>> memory accounting will be incorrect.
+> 
+> Forgive me but I don't see it. sockc_valid will be false, so
+> msg_zerocopy_realloc will do the normal MSG_ZEROCOPY accounting. Then
+> below whech check sockc_valid in place of where we did the
+> sock_cmsg_send before, and goto err. I assume the goto err should undo
+> the memory accounting in the new code as in the old code. Can you
+> elaborate on the bug you see?
 
-If "->name_prefix" is guaranteed to have either "-1" or "-2", we can
-remove the second strstr() because we know if "-1" is not in
-"->name_prefix", then "-2" is in there. It'll be a waste to do one more
-strstr() in that case.
+Uhm, I think I misread the condition used for msg_zerocopy_realloc()
+last argument.
 
-Link: https://scan5.scan.coverity.com/#/project-view/36179/10063?selectedIssue=1627120
-Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
----
- sound/soc/sdw_utils/soc_sdw_rt_amp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Re-reading it now it the problem I see is that if sock_cmsg_send() fails
+after correctly setting 'dmabuf_id', msg_zerocopy_realloc() will account
+the dmabuf memory, which looks unexpected.
 
-diff --git a/sound/soc/sdw_utils/soc_sdw_rt_amp.c b/sound/soc/sdw_utils/soc_sdw_rt_amp.c
-index 0538c252ba69..83c2368170cb 100644
---- a/sound/soc/sdw_utils/soc_sdw_rt_amp.c
-+++ b/sound/soc/sdw_utils/soc_sdw_rt_amp.c
-@@ -190,7 +190,7 @@ int asoc_sdw_rt_amp_spk_rtd_init(struct snd_soc_pcm_runtime *rtd, struct snd_soc
- 	const struct snd_soc_dapm_route *rt_amp_map;
- 	char codec_name[CODEC_NAME_SIZE];
- 	struct snd_soc_dai *codec_dai;
--	int ret;
-+	int ret = -EINVAL;
- 	int i;
- 
- 	rt_amp_map = get_codec_name_and_route(dai, codec_name);
--- 
-2.43.0
+Somewhat related, I don't see any change to the msg_zerocopy/ubuf
+complete/cleanup path(s): what will happen to the devmem ubuf memory at
+uarg->complete() time? It looks like it will go unexpectedly through
+mm_unaccount_pinned_pages()???
+
+Thanks,
+
+Paolo
 
