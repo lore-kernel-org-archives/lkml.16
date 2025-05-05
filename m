@@ -1,50 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C2C22EEBDC;
-	Mon,  5 May 2025 23:10:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D46E2EC288;
+	Mon,  5 May 2025 23:10:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486605; cv=none; b=JUxD/Bp1ZNe7YkDPOmXCHesj4KkhnWoUIfeCOwJ+o84RTac9hEKYLca9kg49NSAAuYoTlZSzj0ubfM5xbzSKoF42lN8Ne7b1gc1+mG55/2z/Pc82M56mXwO91fXZoBHWQnWpcrVr45VjieS0sATMOf3PwBQS0873JuE5i9OJ+/c=
+	t=1746486616; cv=none; b=LHUt0DCEWp2QZrvG4m0A7+TxraAmlSrU0fnQSX0bevy3oNFWHxef6E67hS8hpl/I0VpZ5ht/B4pDI/uHb4P5jo6a1DpR+Ov0XyCHxoa5gTviKHnfCfWdjFhouA5QnQKx1TZngF4Qttln1Eu4tXqSb7S2B+jAlOZG9YnsxIAvHng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486605; c=relaxed/simple;
-	bh=ZPRxVU0lKezTbs3m/k602XrKhy1fTRhX9BEl3kW1GfE=;
+	s=arc-20240116; t=1746486616; c=relaxed/simple;
+	bh=JFhIQAL0dJT7ZGzwUod4Y5ApAOyYZQd5iKFN0uqTNBw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=pwhoZoQ/CmN0kh+XegbZXAA84aiSaOYo8S/fPIeVecrnRH1YsVS28tN/rLRrnfhCFRg6V+M+wCfd7r6w12rFUkMj/CyqZGoHFgphYDNaj+Km9FLbNYUAKZ5dMIVlge3k9Lxakb8S8k9uPGtgT/kkj583x2bVUb1SGe/yJEMx43o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WnEbR1i1; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=Nv+0qFD4IaPbSRd02AWRBAlBlJ+2ZB7ioh+KUOwhjRpCjpzdrgzosxW5knGiPaSmvc4mcS6ui0rHxFjOUyAONqwlecL5oRo6E1UjScwwp4wuvofjrAWlhKeQqxQhcgaFizvZIz6MmXbI7GjAgAarPIqxXCofxtpc/0yatX4VlXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J3gnGefx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WnEbR1i1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7599C4CEEF;
-	Mon,  5 May 2025 23:10:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J3gnGefx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A371C4CEE4;
+	Mon,  5 May 2025 23:10:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486605;
-	bh=ZPRxVU0lKezTbs3m/k602XrKhy1fTRhX9BEl3kW1GfE=;
+	s=k20201202; t=1746486616;
+	bh=JFhIQAL0dJT7ZGzwUod4Y5ApAOyYZQd5iKFN0uqTNBw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WnEbR1i1UbKG8IQ/TRwoUZNuHZ4gmY48q/YCK29IQ5/wV6AB2PGBIuDG9gxPh8uSb
-	 nEYg9gMNT8BZvy/fdZr48MeGvLDN2kjn8tiZaw4B7x/xTnTfst/QH3HX/38ycO33ou
-	 12rZKaDGr6LBVAYYCQ+m4J4uqmzHz8UN8KGFwkbEBjGtkQ/uUiPzFuV95tMAMimotc
-	 j6ZIPLgrpvvN9TwXRJ+hhM8Ez48rOG4PaRp1a63GRVpfxXmYor4BKRbXI+Jgra830Q
-	 YDJ3DZWq3sp/uZuig1MiB5peOQNmV3h3mX58ksjtp9JdwQCAkKWf/8crkvRSYlp4uQ
-	 KtKhoFX3DtyMQ==
+	b=J3gnGefxrOVL7b6rkM8bGT4LRkRN9WFY6BWvSmNVZuwJSLYYYZZNqafJK/WmkoGkJ
+	 JNR7+mDlaCUQzW9WQZ8kWzuJxRrgIeXz0IAQ1nbEXjPvi4JGWzleOVNxRiWfsv7BLf
+	 IbDqdqO14ttoAC5va7T1ytWUeEMCIrTnrYipPQ5pI+HBTPtkbNS3l4v/myC8Yaj6OB
+	 wJtDiKkW17MbvAHoo9jrIU+Vu7LkIzb1KjEFeUslbBNnYyHmiCk4xTG/XJqSnFmnXY
+	 8lgop9sz/R1PvQC0pkQSgpaXqiqcvXihn7a0Zc8E8nPaygGufKoJdHSuycPuKEIS50
+	 y6kaDbcok6f9w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Moshe Shemesh <moshe@nvidia.com>,
-	Shahar Shitrit <shshitrit@nvidia.com>,
-	Tariq Toukan <tariqt@nvidia.com>,
-	Kalesh AP <kalesh-anakkur.purayil@broadcom.com>,
-	"David S . Miller" <davem@davemloft.net>,
+Cc: Hangbin Liu <liuhangbin@gmail.com>,
+	Nikolay Aleksandrov <razor@blackwall.org>,
+	Jakub Kicinski <kuba@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	saeedm@nvidia.com,
+	jv@jvosburgh.net,
 	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
 	edumazet@google.com,
-	kuba@kernel.org,
 	pabeni@redhat.com,
-	netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 114/212] net/mlx5: Avoid report two health errors on same syndrome
-Date: Mon,  5 May 2025 19:04:46 -0400
-Message-Id: <20250505230624.2692522-114-sashal@kernel.org>
+	netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.1 120/212] bonding: report duplicate MAC address in all situations
+Date: Mon,  5 May 2025 19:04:52 -0400
+Message-Id: <20250505230624.2692522-120-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505230624.2692522-1-sashal@kernel.org>
 References: <20250505230624.2692522-1-sashal@kernel.org>
@@ -54,45 +51,48 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.1.136
 Content-Transfer-Encoding: 8bit
 
-From: Moshe Shemesh <moshe@nvidia.com>
+From: Hangbin Liu <liuhangbin@gmail.com>
 
-[ Upstream commit b5d7b2f04ebcff740f44ef4d295b3401aeb029f4 ]
+[ Upstream commit 28d68d396a1cd21591e8c6d74afbde33a7ea107e ]
 
-In case health counter has not increased for few polling intervals, miss
-counter will reach max misses threshold and health report will be
-triggered for FW health reporter. In case syndrome found on same health
-poll another health report will be triggered.
+Normally, a bond uses the MAC address of the first added slave as the bond’s
+MAC address. And the bond will set active slave’s MAC address to bond’s
+address if fail_over_mac is set to none (0) or follow (2).
 
-Avoid two health reports on same syndrome by marking this syndrome as
-already known.
+When the first slave is removed, the bond will still use the removed slave’s
+MAC address, which can lead to a duplicate MAC address and potentially cause
+issues with the switch. To avoid confusion, let's warn the user in all
+situations, including when fail_over_mac is set to 2 or not in active-backup
+mode.
 
-Signed-off-by: Moshe Shemesh <moshe@nvidia.com>
-Reviewed-by: Shahar Shitrit <shshitrit@nvidia.com>
-Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
-Reviewed-by: Kalesh AP <kalesh-anakkur.purayil@broadcom.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Reviewed-by: Nikolay Aleksandrov <razor@blackwall.org>
+Link: https://patch.msgid.link/20250225033914.18617-1-liuhangbin@gmail.com
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/health.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/bonding/bond_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/health.c b/drivers/net/ethernet/mellanox/mlx5/core/health.c
-index 65483dab90573..b4faac12789d9 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/health.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/health.c
-@@ -850,6 +850,7 @@ static void poll_health(struct timer_list *t)
- 	health->prev = count;
- 	if (health->miss_counter == MAX_MISSES) {
- 		mlx5_core_err(dev, "device's health compromised - reached miss count\n");
-+		health->synd = ioread8(&h->synd);
- 		print_health_info(dev);
- 		queue_work(health->wq, &health->report_work);
- 	}
+diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+index ded9e369e4038..3cedadef9c8ab 100644
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -2431,7 +2431,7 @@ static int __bond_release_one(struct net_device *bond_dev,
+ 
+ 	RCU_INIT_POINTER(bond->current_arp_slave, NULL);
+ 
+-	if (!all && (!bond->params.fail_over_mac ||
++	if (!all && (bond->params.fail_over_mac != BOND_FOM_ACTIVE ||
+ 		     BOND_MODE(bond) != BOND_MODE_ACTIVEBACKUP)) {
+ 		if (ether_addr_equal_64bits(bond_dev->dev_addr, slave->perm_hwaddr) &&
+ 		    bond_has_slaves(bond))
 -- 
 2.39.5
 
