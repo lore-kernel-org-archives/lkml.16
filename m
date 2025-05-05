@@ -1,57 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F9A235B941;
-	Mon,  5 May 2025 22:44:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEDA029C324;
+	Mon,  5 May 2025 22:45:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485090; cv=none; b=V8sIt2S6GNYi+YPmSk3BfA/FqnS4hcqVq8lbPFydHeM/afOYWpL6LJEE4D1NkwAbpVFIlqmGlscJiVDZjaGHTcX10cg8O4C85ilAhDMkWtBNXcQKtUF1xViBt+O8cr1b1eyRhSmkEei5SD0KAxy7PfSOElCXTFBDYD8hE09uDI4=
+	t=1746485109; cv=none; b=HQ5qq8oeq4nnaAs293nEHuaW3KsoJKHsMplufsurmgOhnJ9WCWnAaR1j40Lh/8N5iXg+tCenXjO2juRzDFNjsQBZxnve2o5QT5knyEc7CdgtzAjm2AeNRnWLRaBGIKRlbZCVPaJBtRb99U9zJWeIBuL5Ssn7EnBsgksdfxfPnMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485090; c=relaxed/simple;
-	bh=LCnnPAWWj9dD4v3jedrgPS8PzuwhW6mTI4/VpNY/qZk=;
+	s=arc-20240116; t=1746485109; c=relaxed/simple;
+	bh=cBQTAsnfnToP87TSZImPQRuj5zjPXF1wUmXlEY6L/5g=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Qe6KPziVj+Owm62hU+Ar5bAwhhhs8tnMaD8381Tu0VEN2UhpV1xUEwyClqcS7mfxAApXagxVvqJClen/M59zuNWxyb6P6EGu+xLeMjapnBti/VRh1OjRmln1xGSEGTCxbYCG0lBum3GvBKzBdYCpmVQYptXJZBq/+mLraSV/Qw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FMIxcF+o; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Dq5fbuZMw1Cni9f1w/6Igc6mo5gkCMlePGgAPbH0gmrI/mZV1QMPDQwQWjK9Y4nK1RvdyAiiQQU0HO35j+xVDQDrpKyY+EbgOb/TczDVm8ol1PAF4Cl/3r5hclfRp6HwSEkdICjR25VHN76eyhVIiZU/9tXLY/uDqnjKBWAQHyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ufwQ5oSl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FMIxcF+o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3656DC4CEE4;
-	Mon,  5 May 2025 22:44:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ufwQ5oSl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9492DC4CEED;
+	Mon,  5 May 2025 22:45:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485090;
-	bh=LCnnPAWWj9dD4v3jedrgPS8PzuwhW6mTI4/VpNY/qZk=;
+	s=k20201202; t=1746485107;
+	bh=cBQTAsnfnToP87TSZImPQRuj5zjPXF1wUmXlEY6L/5g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FMIxcF+oIvruhNxU/yj2+dfsIgdH9OIVguARj99/Ceeeucwp2WitamSJX0GSYN9d3
-	 lOiZy2DKvod7kDYWn9ndL4zzXT0XTtIh/AmE8M8oiSHgg18I/nKRSdICHIvKv5/zji
-	 +oFPVGUWwmAhMlLJkld4zRcHdoTUTu6Xc/Cs661y7PVj2Ry6Zn+XcKR9aT2KpezY08
-	 csoJzZf2OzGCHCcuGyTSQcoTTLbELSDiLOS9GJ4RhGzqw3Sg8wgLTjarDaPM8DHNNZ
-	 gjIllpAiRqzPNNnykmsvH3GkWHrokrLwX3rz8HiSlXW0GaHNXI4eGeTIx1yBXKUJHR
-	 4JK7JEBRTFWlg==
+	b=ufwQ5oSlNQOSnhxZBowvH8QU/m+BZKMLjYaCXF5oPyTN8F4oyFX2UtNwf8351mJLv
+	 9G7MOO+xlgpYYr44tp2B2qiEzo/MW/QRJrq+rxiETcdIqi4GaG2eI9JRKnUnsS3zzg
+	 2CXulhPzAN5VAb4yumRO5S47OtyRfO8c1/SojcIWLRDp4D6FWASdQeSbJ5JGAkLMec
+	 cEiNJXJKlbzms1xhetHvf70c2XFzJ+fXDklARatOzAcfj1iC4O6pKzo4bWDrdxyOhj
+	 BIT1f40Jh9QbKxOLcA45Wk+X+Env1q/OjFJDJmOa/JH2KMzgvtSteNuMmARY9woNrG
+	 abBQ4iTY62hWA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Peichen Huang <PeiChen.Huang@amd.com>,
-	Cruise Hung <cruise.hung@amd.com>,
-	Meenakshikumar Somasundaram <meenakshikumar.somasundaram@amd.com>,
-	Tom Chung <chiahsuan.chung@amd.com>,
-	Daniel Wheeler <daniel.wheeler@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
+Cc: Lu Baolu <baolu.lu@linux.intel.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Zhangfei Gao <zhangfei.gao@linaro.org>,
+	Joerg Roedel <jroedel@suse.de>,
 	Sasha Levin <sashal@kernel.org>,
-	harry.wentland@amd.com,
-	sunpeng.li@amd.com,
-	christian.koenig@amd.com,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	wenjing.liu@amd.com,
-	alex.hung@amd.com,
-	Jerry.Zuo@amd.com,
-	michael.strauss@amd.com,
-	Brendan.Tam@amd.com,
-	ivlipski@amd.com,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 6.12 158/486] drm/amd/display: not abort link train when bw is low
-Date: Mon,  5 May 2025 18:33:54 -0400
-Message-Id: <20250505223922.2682012-158-sashal@kernel.org>
+	dwmw2@infradead.org,
+	joro@8bytes.org,
+	will@kernel.org,
+	iommu@lists.linux.dev
+Subject: [PATCH AUTOSEL 6.12 165/486] iommu/vt-d: Move scalable mode ATS enablement to probe path
+Date: Mon,  5 May 2025 18:34:01 -0400
+Message-Id: <20250505223922.2682012-165-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -66,47 +55,163 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Peichen Huang <PeiChen.Huang@amd.com>
+From: Lu Baolu <baolu.lu@linux.intel.com>
 
-[ Upstream commit 8a21da2842bb22b2b80e5902d0438030d729bfd3 ]
+[ Upstream commit 5518f239aff1baf772c5748da3add7243c5fb5df ]
 
-[WHY]
-DP tunneling should not abort link train even bandwidth become
-too low after downgrade. Otherwise, it would fail compliance test.
+Device ATS is currently enabled when a domain is attached to the device
+and disabled when the domain is detached. This creates a limitation:
+when the IOMMU is operating in scalable mode and IOPF is enabled, the
+device's domain cannot be changed.
 
-[HOW}
-Do link train with downgrade settings even bandwidth is not enough
+The previous code enables ATS when a domain is set to a device's RID and
+disables it during RID domain switch. So, if a PASID is set with a
+domain requiring PRI, ATS should remain enabled until the domain is
+removed. During the PASID domain's lifecycle, if the RID's domain
+changes, PRI will be disrupted because it depends on ATS, which is
+disabled when the blocking domain is set for the device's RID.
 
-Reviewed-by: Cruise Hung <cruise.hung@amd.com>
-Reviewed-by: Meenakshikumar Somasundaram <meenakshikumar.somasundaram@amd.com>
-Signed-off-by: Peichen Huang <PeiChen.Huang@amd.com>
-Signed-off-by: Tom Chung <chiahsuan.chung@amd.com>
-Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Remove this limitation by moving ATS enablement to the device probe path.
+
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Reviewed-by: Kevin Tian <kevin.tian@intel.com>
+Tested-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+Link: https://lore.kernel.org/r/20250228092631.3425464-5-baolu.lu@linux.intel.com
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../gpu/drm/amd/display/dc/link/protocols/link_dp_training.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ drivers/iommu/intel/iommu.c | 51 ++++++++++++++++++++-----------------
+ 1 file changed, 27 insertions(+), 24 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/link/protocols/link_dp_training.c b/drivers/gpu/drm/amd/display/dc/link/protocols/link_dp_training.c
-index 27b881f947e8b..9385a32a471b8 100644
---- a/drivers/gpu/drm/amd/display/dc/link/protocols/link_dp_training.c
-+++ b/drivers/gpu/drm/amd/display/dc/link/protocols/link_dp_training.c
-@@ -1769,13 +1769,10 @@ bool perform_link_training_with_retries(
- 			is_link_bw_min = ((cur_link_settings.link_rate <= LINK_RATE_LOW) &&
- 				(cur_link_settings.lane_count <= LANE_COUNT_ONE));
+diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+index 038a66388564a..5069a628deea1 100644
+--- a/drivers/iommu/intel/iommu.c
++++ b/drivers/iommu/intel/iommu.c
+@@ -1284,32 +1284,28 @@ static bool dev_needs_extra_dtlb_flush(struct pci_dev *pdev)
+ 	return true;
+ }
  
--			if (is_link_bw_low) {
-+			if (is_link_bw_low)
- 				DC_LOG_WARNING(
- 					"%s: Link(%d) bandwidth too low after fallback req_bw(%d) > link_bw(%d)\n",
- 					__func__, link->link_index, req_bw, link_bw);
+-static void iommu_enable_pci_caps(struct device_domain_info *info)
++static void iommu_enable_pci_ats(struct device_domain_info *info)
+ {
+ 	struct pci_dev *pdev;
+ 
+-	if (!dev_is_pci(info->dev))
++	if (!info->ats_supported)
+ 		return;
+ 
+ 	pdev = to_pci_dev(info->dev);
+-	if (info->ats_supported && pci_ats_page_aligned(pdev) &&
+-	    !pci_enable_ats(pdev, VTD_PAGE_SHIFT))
++	if (!pci_ats_page_aligned(pdev))
++		return;
++
++	if (!pci_enable_ats(pdev, VTD_PAGE_SHIFT))
+ 		info->ats_enabled = 1;
+ }
+ 
+-static void iommu_disable_pci_caps(struct device_domain_info *info)
++static void iommu_disable_pci_ats(struct device_domain_info *info)
+ {
+-	struct pci_dev *pdev;
 -
--				return false;
--			}
- 		}
+-	if (!dev_is_pci(info->dev))
++	if (!info->ats_enabled)
+ 		return;
  
- 		msleep(delay_between_attempts);
+-	pdev = to_pci_dev(info->dev);
+-
+-	if (info->ats_enabled) {
+-		pci_disable_ats(pdev);
+-		info->ats_enabled = 0;
+-	}
++	pci_disable_ats(to_pci_dev(info->dev));
++	info->ats_enabled = 0;
+ }
+ 
+ static void intel_flush_iotlb_all(struct iommu_domain *domain)
+@@ -1722,12 +1718,19 @@ domain_context_mapping(struct dmar_domain *domain, struct device *dev)
+ 	struct device_domain_info *info = dev_iommu_priv_get(dev);
+ 	struct intel_iommu *iommu = info->iommu;
+ 	u8 bus = info->bus, devfn = info->devfn;
++	int ret;
+ 
+ 	if (!dev_is_pci(dev))
+ 		return domain_context_mapping_one(domain, iommu, bus, devfn);
+ 
+-	return pci_for_each_dma_alias(to_pci_dev(dev),
+-				      domain_context_mapping_cb, domain);
++	ret = pci_for_each_dma_alias(to_pci_dev(dev),
++				     domain_context_mapping_cb, domain);
++	if (ret)
++		return ret;
++
++	iommu_enable_pci_ats(info);
++
++	return 0;
+ }
+ 
+ /* Return largest possible superpage level for a given mapping */
+@@ -1987,8 +1990,6 @@ static int dmar_domain_attach_device(struct dmar_domain *domain,
+ 	if (ret)
+ 		goto out_block_translation;
+ 
+-	iommu_enable_pci_caps(info);
+-
+ 	ret = cache_tag_assign_domain(domain, dev, IOMMU_NO_PASID);
+ 	if (ret)
+ 		goto out_block_translation;
+@@ -3368,6 +3369,7 @@ static void domain_context_clear(struct device_domain_info *info)
+ 
+ 	pci_for_each_dma_alias(to_pci_dev(info->dev),
+ 			       &domain_context_clear_one_cb, info);
++	iommu_disable_pci_ats(info);
+ }
+ 
+ /*
+@@ -3384,7 +3386,6 @@ void device_block_translation(struct device *dev)
+ 	if (info->domain)
+ 		cache_tag_unassign_domain(info->domain, dev, IOMMU_NO_PASID);
+ 
+-	iommu_disable_pci_caps(info);
+ 	if (!dev_is_real_dma_subdevice(dev)) {
+ 		if (sm_supported(iommu))
+ 			intel_pasid_tear_down_entry(iommu, dev,
+@@ -3964,6 +3965,9 @@ static struct iommu_device *intel_iommu_probe_device(struct device *dev)
+ 	    !pci_enable_pasid(pdev, info->pasid_supported & ~1))
+ 		info->pasid_enabled = 1;
+ 
++	if (sm_supported(iommu))
++		iommu_enable_pci_ats(info);
++
+ 	return &iommu->iommu;
+ free_table:
+ 	intel_pasid_free_table(dev);
+@@ -3980,6 +3984,8 @@ static void intel_iommu_release_device(struct device *dev)
+ 	struct device_domain_info *info = dev_iommu_priv_get(dev);
+ 	struct intel_iommu *iommu = info->iommu;
+ 
++	iommu_disable_pci_ats(info);
++
+ 	if (info->pasid_enabled) {
+ 		pci_disable_pasid(to_pci_dev(dev));
+ 		info->pasid_enabled = 0;
+@@ -4581,13 +4587,10 @@ static int identity_domain_attach_dev(struct iommu_domain *domain, struct device
+ 	if (dev_is_real_dma_subdevice(dev))
+ 		return 0;
+ 
+-	if (sm_supported(iommu)) {
++	if (sm_supported(iommu))
+ 		ret = intel_pasid_setup_pass_through(iommu, dev, IOMMU_NO_PASID);
+-		if (!ret)
+-			iommu_enable_pci_caps(info);
+-	} else {
++	else
+ 		ret = device_setup_pass_through(dev);
+-	}
+ 
+ 	return ret;
+ }
 -- 
 2.39.5
 
