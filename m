@@ -1,48 +1,62 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 610503A80C9;
-	Mon,  5 May 2025 23:17:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FE653A80ED;
+	Mon,  5 May 2025 23:17:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487032; cv=none; b=nZf4Y+9ztuOLgA1/zl/7vPi4PIkicoW/hlj7g3QCV17LX0xIc5Flx+yCPIDMMnLIY2GNPr3QdN9IW0hkEWK1kXPMvhEJa8shvkgvNV3/O5U4nSSUYPZxHJbXx5wBpGXVYq8LhXlx+v7F+mqv+LPGs/BCC7gt+ZEEWYyGcAfi4vw=
+	t=1746487041; cv=none; b=VFGOKgkXNRm140cq6KdnUvyGcAVyiJVjjnddyCeYUozpVTESdk4/8NeOhtbQ2FnIIaPVzFvyqydSXh/ktzL8mtxm4+2xfcvP0CudlZSp+Va50vUe6vWuwNNB6HYFhSjuid7mqnbKeuj/Lw0KHo1LICLnBT2Qgnj/rHYUU/bT8gE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487032; c=relaxed/simple;
-	bh=aevmSXdNC4LsFWpeszHDUYtW5KdMtvpgExLfkw10oE0=;
+	s=arc-20240116; t=1746487041; c=relaxed/simple;
+	bh=WZsnm9PeLQNJxCXIlGSjWAfqs1HLaPoeb3QbXwGqCyw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gYNLY2+6XiIKXBQPCIK3Uo/eZAiO3E0bKjiXyXXZicTxTIjlN6MEa90kL+quVLVSShdZs2raggVNhwgpbYRgZiG4r7dMbHeqfQizuO9NYOucZdCZfxfkgWkOM+y0uYA33KCz8BmyHon5nG2YWaFgAVBVZs7v4Qd2U9ytlk/9bEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C4cGfqxj; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=dRemV/VB54q6Ji5BuW0LAiLNoGUr0tgzBhgc0LNsRG7Bdc89kSz3+vc2dS9lMlnYmZnfUoSXRnrZLwmMN1CRJNrs+6MZgKYk9mOW72d1iCfyo/9KBNDSuLAUe/kzs96HODor3MNnxRCvy81fyc/zZQEfVnktUMXvDk1C1aN4nWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R2JPepde; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C4cGfqxj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C09DCC4CEEF;
-	Mon,  5 May 2025 23:17:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R2JPepde"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B52EC4CEE4;
+	Mon,  5 May 2025 23:17:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487032;
-	bh=aevmSXdNC4LsFWpeszHDUYtW5KdMtvpgExLfkw10oE0=;
+	s=k20201202; t=1746487041;
+	bh=WZsnm9PeLQNJxCXIlGSjWAfqs1HLaPoeb3QbXwGqCyw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=C4cGfqxjb8GzmpeVg6ld6lvuP/dEYgpsSqTtBw7M7cVy2ukn7nxohSq7uqApDh0Kp
-	 TNThxaqB/NNImWL4mnIZksXgCG3J5hTiJEr8ZIfO+RpgzQKQ0EEvcor/3+RtURkSf6
-	 YeS1fFFERrq2D2/Q/ThTwsRA/LHubGdLWEOts6S5gObwfQgzCwA8h+RtfyLhN2aI9l
-	 5qw/cy3HfUvZavYA5DkGf5gYZu3El3ed1Kehs7Xv+VllHMxrpngJ4NsoS29u01mxVK
-	 vE2G3thgZO8u89wTZnoLQ9dmWxSNxW+/i1ITGFcBHIWGvN7XW5ONHOhQ8VQDnz1nRV
-	 sKfDRtUM+960A==
+	b=R2JPepdeS8jQafUJRjb/3/5AwttBVwGleLN0nY70CE78Lglti54EPfGXzP5xIaj47
+	 +/8wUqhxATDKABr6nSvlXvgORi8pX0FwRsDlwbE1aXKJ2q3ZOHkFYUkj7Um5gX/toH
+	 qpjA8q003ANCVRL0w53NB1N/cAnNBB/QKK9oFTAFgfsrnMug22/brwYl2U9JbLHkOa
+	 AVfOyBkJoYC0KEQF87f758HwQp06WDsiRgmnX7OwEegfvXM+/4DbAetulgo3TT/GqH
+	 5OPkxeyjL/Y4HRS2ZTIpbi90Onscl/BYOfXBOPSEE7awbtLY1AHgHGS/YitMHQhsmR
+	 fAUCN1sd4Lr2Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Kees Cook <kees@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>,
+Cc: Tom Chung <chiahsuan.chung@amd.com>,
+	Roman Li <roman.li@amd.com>,
+	Zaeem Mohamed <zaeem.mohamed@amd.com>,
+	Daniel Wheeler <daniel.wheeler@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
 	Sasha Levin <sashal@kernel.org>,
-	tariqt@nvidia.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	yishaih@nvidia.com,
-	netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 119/153] net/mlx4_core: Avoid impossible mlx4_db_alloc() order value
-Date: Mon,  5 May 2025 19:12:46 -0400
-Message-Id: <20250505231320.2695319-119-sashal@kernel.org>
+	harry.wentland@amd.com,
+	sunpeng.li@amd.com,
+	christian.koenig@amd.com,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	siqueira@igalia.com,
+	alex.hung@amd.com,
+	alvin.lee2@amd.com,
+	aurabindo.pillai@amd.com,
+	Austin.Zheng@amd.com,
+	Ilya.Bakoulin@amd.com,
+	mario.limonciello@amd.com,
+	Wayne.Lin@amd.com,
+	Josip.Pavic@amd.com,
+	dillon.varone@amd.com,
+	wenjing.liu@amd.com,
+	linux@treblig.org,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.15 122/153] drm/amd/display: Initial psr_version with correct setting
+Date: Mon,  5 May 2025 19:12:49 -0400
+Message-Id: <20250505231320.2695319-122-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505231320.2695319-1-sashal@kernel.org>
 References: <20250505231320.2695319-1-sashal@kernel.org>
@@ -57,76 +71,38 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.15.181
 Content-Transfer-Encoding: 8bit
 
-From: Kees Cook <kees@kernel.org>
+From: Tom Chung <chiahsuan.chung@amd.com>
 
-[ Upstream commit 4a6f18f28627e121bd1f74b5fcc9f945d6dbeb1e ]
+[ Upstream commit d8c782cac5007e68e7484d420168f12d3490def6 ]
 
-GCC can see that the value range for "order" is capped, but this leads
-it to consider that it might be negative, leading to a false positive
-warning (with GCC 15 with -Warray-bounds -fdiagnostics-details):
+[Why & How]
+The initial setting for psr_version is not correct while
+create a virtual link.
 
-../drivers/net/ethernet/mellanox/mlx4/alloc.c:691:47: error: array subscript -1 is below array bounds of 'long unsigned int *[2]' [-Werror=array-bounds=]
-  691 |                 i = find_first_bit(pgdir->bits[o], MLX4_DB_PER_PAGE >> o);
-      |                                    ~~~~~~~~~~~^~~
-  'mlx4_alloc_db_from_pgdir': events 1-2
-  691 |                 i = find_first_bit(pgdir->bits[o], MLX4_DB_PER_PAGE >> o);                        |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      |                     |                         |                                                   |                     |                         (2) out of array bounds here
-      |                     (1) when the condition is evaluated to true                             In file included from ../drivers/net/ethernet/mellanox/mlx4/mlx4.h:53,
-                 from ../drivers/net/ethernet/mellanox/mlx4/alloc.c:42:
-../include/linux/mlx4/device.h:664:33: note: while referencing 'bits'
-  664 |         unsigned long          *bits[2];
-      |                                 ^~~~
+The default psr_version should be DC_PSR_VERSION_UNSUPPORTED.
 
-Switch the argument to unsigned int, which removes the compiler needing
-to consider negative values.
-
-Signed-off-by: Kees Cook <kees@kernel.org>
-Link: https://patch.msgid.link/20250210174504.work.075-kees@kernel.org
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Reviewed-by: Roman Li <roman.li@amd.com>
+Signed-off-by: Tom Chung <chiahsuan.chung@amd.com>
+Signed-off-by: Zaeem Mohamed <zaeem.mohamed@amd.com>
+Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx4/alloc.c | 6 +++---
- include/linux/mlx4/device.h                | 2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/amd/display/dc/core/dc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx4/alloc.c b/drivers/net/ethernet/mellanox/mlx4/alloc.c
-index b330020dc0d67..f2bded847e61d 100644
---- a/drivers/net/ethernet/mellanox/mlx4/alloc.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/alloc.c
-@@ -682,9 +682,9 @@ static struct mlx4_db_pgdir *mlx4_alloc_db_pgdir(struct device *dma_device)
- }
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
+index d3d638252e2b9..e1085c316b78e 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
+@@ -248,6 +248,7 @@ static bool create_links(
+ 		link->link_id.type = OBJECT_TYPE_CONNECTOR;
+ 		link->link_id.id = CONNECTOR_ID_VIRTUAL;
+ 		link->link_id.enum_id = ENUM_ID_1;
++		link->psr_settings.psr_version = DC_PSR_VERSION_UNSUPPORTED;
+ 		link->link_enc = kzalloc(sizeof(*link->link_enc), GFP_KERNEL);
  
- static int mlx4_alloc_db_from_pgdir(struct mlx4_db_pgdir *pgdir,
--				    struct mlx4_db *db, int order)
-+				    struct mlx4_db *db, unsigned int order)
- {
--	int o;
-+	unsigned int o;
- 	int i;
- 
- 	for (o = order; o <= 1; ++o) {
-@@ -712,7 +712,7 @@ static int mlx4_alloc_db_from_pgdir(struct mlx4_db_pgdir *pgdir,
- 	return 0;
- }
- 
--int mlx4_db_alloc(struct mlx4_dev *dev, struct mlx4_db *db, int order)
-+int mlx4_db_alloc(struct mlx4_dev *dev, struct mlx4_db *db, unsigned int order)
- {
- 	struct mlx4_priv *priv = mlx4_priv(dev);
- 	struct mlx4_db_pgdir *pgdir;
-diff --git a/include/linux/mlx4/device.h b/include/linux/mlx4/device.h
-index 30bb59fe970cb..40ebf0502f427 100644
---- a/include/linux/mlx4/device.h
-+++ b/include/linux/mlx4/device.h
-@@ -1115,7 +1115,7 @@ int mlx4_write_mtt(struct mlx4_dev *dev, struct mlx4_mtt *mtt,
- int mlx4_buf_write_mtt(struct mlx4_dev *dev, struct mlx4_mtt *mtt,
- 		       struct mlx4_buf *buf);
- 
--int mlx4_db_alloc(struct mlx4_dev *dev, struct mlx4_db *db, int order);
-+int mlx4_db_alloc(struct mlx4_dev *dev, struct mlx4_db *db, unsigned int order);
- void mlx4_db_free(struct mlx4_dev *dev, struct mlx4_db *db);
- 
- int mlx4_alloc_hwq_res(struct mlx4_dev *dev, struct mlx4_hwq_resources *wqres,
+ 		if (!link->link_enc) {
 -- 
 2.39.5
 
