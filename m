@@ -1,51 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9313136E0B8;
-	Mon,  5 May 2025 22:57:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D4D62D9978;
+	Mon,  5 May 2025 22:57:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485852; cv=none; b=aGhDA79TqJOV5OY87Sq6vQSnw9iPNmD+8DYU6Wlh4cEK9HQVqzeEFgISFSbPgGyXTOg8PGnWlxnurEx9Ep5lHoR1v3fqAhz4YneWid5daDqiSmYDXAcOnTgb1B0jIU7Ev/FDYP+t2OM3ZYW5dJHcQfy5S+3g7opM2xRlwjUWyAA=
+	t=1746485838; cv=none; b=Am8asgD/Lo8iws1v/yfCuXyykAcxz+mcyU9mjJTcusUQOjHQCR0gH5qAnZ78eaccDwoZY2lZ6aFJrwk0IA/o2RRy1IRuxcVzZKeQ+tcMB9j7H6YflAkUhisO6nAs7cSr/5/lEzroHDTgTXFydVrSICX8j3J3QrgxeQz7wqd48xQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485852; c=relaxed/simple;
-	bh=EdwILdVaire8vhmb2WBvXctMUcG6K6R7Qmm0MOIB+/s=;
+	s=arc-20240116; t=1746485838; c=relaxed/simple;
+	bh=47cNgj5f7IpnBuq6fIy/wt1cKil7927pkCKCthHrqpM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=cN5T5kklbLGAOszfRNmzUHNgnE/cX0jcWWzNSXJ64J/AgRcekVG4zR5lwZ4YVuIyXXm/uqlBUO/O3c3stqcS86dNYHq5S1DLKFvun5lxY/vqTUFe7MUFrsTSfJv7SmSQLvplH8aOA7po9pqZsLj5QVx9TQjjqRTtsa6KPs/leRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OXda2Gjb; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=rlEEdrjH13XfcOpF56hlgu/1NEk1wCRQ0Y1mJ4CToqf4I4jKlrOhaVCjvqcozBUB+Djmu8NcpCyf0CRQuy2EAs4/bOzpq6pAyCKEOKitpzlAK72b64XjcrpowywzMdkgTZtsakMHz10C4Kzaj+Xulj3abMd2iY0Dhvhp357ol3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uKSWOcAC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OXda2Gjb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0FC8C4CEED;
-	Mon,  5 May 2025 22:57:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uKSWOcAC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98D9EC4CEE4;
+	Mon,  5 May 2025 22:57:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485852;
-	bh=EdwILdVaire8vhmb2WBvXctMUcG6K6R7Qmm0MOIB+/s=;
+	s=k20201202; t=1746485838;
+	bh=47cNgj5f7IpnBuq6fIy/wt1cKil7927pkCKCthHrqpM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=OXda2GjbqRspMtQ7aEL3rXtiSL9D1gtLHCbDT9ikM/x6V0/ZKXRTWVVLOzV+Obbbn
-	 DMGd/IMoaZStFpYy3LjoknZ5AlikRtPnh8Ebr0ct6HkKCi+1xnv0ACDF4Kz4mOTth/
-	 gA2ig25Z1wJirs80g2BuUlO+wyjvwQ0roHIwg2vVT6rMTRSr6myZu80PIdWEP3xn0N
-	 48mkvlvKhotKhyIbBOf9pEs9SzbrL/q77c71TW590+6xO/UDfggP8x5CzG5voE5LH0
-	 2STLtgX7RZdz7LsN/oDKAhIkALfEB1Se920oqhrkf4XoZdlv74l6LVcwmuLgopzQiP
-	 Qb1plv0rmhzRA==
+	b=uKSWOcACSZv9UYeeDN61wv5jb2DPVHxHmexIq6UucbJC0WldY6Xtc+0h0JRTBz1O1
+	 JREH/a1TFV/VDccytK9uOIxie/fhG/g8qG9Hm3vb2lKvamK8jPj2vkirqPzaHW3ekr
+	 VrWv7wLS+0SoPXHcxId2EoNZz6MyywFYa1RhcZu3CspyznA+zcHpJ4xRet3P00FduA
+	 ZLHFnV2BJnE42RXShL2toq0VmObyrW+1isSp4PcRwD3/Gy1m7nZnyRCM3WIF+7yKbm
+	 x0MhrTAOFA8yNHdv6g14VWsE9NobFKB3xxOieYtlYQqYZpxAsFT+9CRmqLF6x1krLE
+	 +aj/hQS6jTHZw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ryo Takakura <ryotkkr98@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Ingo Molnar <mingo@kernel.org>,
+Cc: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+	Steve French <stfrench@microsoft.com>,
 	Sasha Levin <sashal@kernel.org>,
-	bigeasy@linutronix.de,
-	clrkwllms@kernel.org,
-	rostedt@goodmis.org,
-	tglx@linutronix.de,
-	peterz@infradead.org,
-	frederic@kernel.org,
-	kprateek.nayak@amd.com,
-	neilb@suse.de,
-	csander@purestorage.com,
-	linux-rt-devel@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.6 029/294] lockdep: Fix wait context check on softirq for PREEMPT_RT
-Date: Mon,  5 May 2025 18:52:09 -0400
-Message-Id: <20250505225634.2688578-29-sashal@kernel.org>
+	sfrench@samba.org,
+	linux-cifs@vger.kernel.org,
+	samba-technical@lists.samba.org
+Subject: [PATCH AUTOSEL 6.6 021/294] cifs: Fix establishing NetBIOS session for SMB2+ connection
+Date: Mon,  5 May 2025 18:52:01 -0400
+Message-Id: <20250505225634.2688578-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -55,102 +47,121 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Ryo Takakura <ryotkkr98@gmail.com>
+From: Pali Rohár <pali@kernel.org>
 
-[ Upstream commit 61c39d8c83e2077f33e0a2c8980a76a7f323f0ce ]
+[ Upstream commit 781802aa5a5950f99899f13ff9d760f5db81d36d ]
 
-Since:
+Function ip_rfc1001_connect() which establish NetBIOS session for SMB
+connections, currently uses smb_send() function for sending NetBIOS Session
+Request packet. This function expects that the passed buffer is SMB packet
+and for SMB2+ connections it mangles packet header, which breaks prepared
+NetBIOS Session Request packet. Result is that this function send garbage
+packet for SMB2+ connection, which SMB2+ server cannot parse. That function
+is not mangling packets for SMB1 connections, so it somehow works for SMB1.
 
-  0c1d7a2c2d32 ("lockdep: Remove softirq accounting on PREEMPT_RT.")
+Fix this problem and instead of smb_send(), use smb_send_kvec() function
+which does not mangle prepared packet, this function send them as is. Just
+API of this function takes struct msghdr (kvec) instead of packet buffer.
 
-the wait context test for mutex usage within "in softirq context" fails
-as it references @softirq_context:
+[MS-SMB2] specification allows SMB2 protocol to use NetBIOS as a transport
+protocol. NetBIOS can be used over TCP via port 139. So this is a valid
+configuration, just not so common. And even recent Windows versions (e.g.
+Windows Server 2022) still supports this configuration: SMB over TCP port
+139, including for modern SMB2 and SMB3 dialects.
 
-    | wait context tests |
-    --------------------------------------------------------------------------
-                                   | rcu  | raw  | spin |mutex |
-    --------------------------------------------------------------------------
-                 in hardirq context:  ok  |  ok  |  ok  |  ok  |
-  in hardirq context (not threaded):  ok  |  ok  |  ok  |  ok  |
-                 in softirq context:  ok  |  ok  |  ok  |FAILED|
+This change fixes SMB2 and SMB3 connections over TCP port 139 which
+requires establishing of NetBIOS session. Tested that this change fixes
+establishing of SMB2 and SMB3 connections with Windows Server 2022.
 
-As a fix, add lockdep map for BH disabled section. This fixes the
-issue by letting us catch cases when local_bh_disable() gets called
-with preemption disabled where local_lock doesn't get acquired.
-In the case of "in softirq context" selftest, local_bh_disable() was
-being called with preemption disable as it's early in the boot.
-
-[ boqun: Move the lockdep annotations into __local_bh_*() to avoid false
-         positives because of unpaired local_bh_disable() reported by
-	 Borislav Petkov and Peter Zijlstra, and make bh_lock_map
-	 only exist for PREEMPT_RT. ]
-
-[ mingo: Restored authorship and improved the bh_lock_map definition. ]
-
-Signed-off-by: Ryo Takakura <ryotkkr98@gmail.com>
-Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20250321143322.79651-1-boqun.feng@gmail.com
+Signed-off-by: Pali Rohár <pali@kernel.org>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/softirq.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ fs/smb/client/cifsproto.h |  3 +++
+ fs/smb/client/connect.c   | 20 +++++++++++++++-----
+ fs/smb/client/transport.c |  2 +-
+ 3 files changed, 19 insertions(+), 6 deletions(-)
 
-diff --git a/kernel/softirq.c b/kernel/softirq.c
-index f24d80cf20bd3..d9e37f3fa1303 100644
---- a/kernel/softirq.c
-+++ b/kernel/softirq.c
-@@ -125,6 +125,18 @@ static DEFINE_PER_CPU(struct softirq_ctrl, softirq_ctrl) = {
- 	.lock	= INIT_LOCAL_LOCK(softirq_ctrl.lock),
- };
+diff --git a/fs/smb/client/cifsproto.h b/fs/smb/client/cifsproto.h
+index 7f97e54686524..8584922204374 100644
+--- a/fs/smb/client/cifsproto.h
++++ b/fs/smb/client/cifsproto.h
+@@ -31,6 +31,9 @@ extern void cifs_small_buf_release(void *);
+ extern void free_rsp_buf(int, void *);
+ extern int smb_send(struct TCP_Server_Info *, struct smb_hdr *,
+ 			unsigned int /* length */);
++extern int smb_send_kvec(struct TCP_Server_Info *server,
++			 struct msghdr *msg,
++			 size_t *sent);
+ extern unsigned int _get_xid(void);
+ extern void _free_xid(unsigned int);
+ #define get_xid()							\
+diff --git a/fs/smb/client/connect.c b/fs/smb/client/connect.c
+index 267fba234c12d..3faaee33ad455 100644
+--- a/fs/smb/client/connect.c
++++ b/fs/smb/client/connect.c
+@@ -3051,8 +3051,10 @@ ip_rfc1001_connect(struct TCP_Server_Info *server)
+ 	 * sessinit is sent but no second negprot
+ 	 */
+ 	struct rfc1002_session_packet req = {};
+-	struct smb_hdr *smb_buf = (struct smb_hdr *)&req;
++	struct msghdr msg = {};
++	struct kvec iov = {};
+ 	unsigned int len;
++	size_t sent;
  
-+#ifdef CONFIG_DEBUG_LOCK_ALLOC
-+static struct lock_class_key bh_lock_key;
-+struct lockdep_map bh_lock_map = {
-+	.name			= "local_bh",
-+	.key			= &bh_lock_key,
-+	.wait_type_outer	= LD_WAIT_FREE,
-+	.wait_type_inner	= LD_WAIT_CONFIG, /* PREEMPT_RT makes BH preemptible. */
-+	.lock_type		= LD_LOCK_PERCPU,
-+};
-+EXPORT_SYMBOL_GPL(bh_lock_map);
-+#endif
-+
- /**
-  * local_bh_blocked() - Check for idle whether BH processing is blocked
-  *
-@@ -147,6 +159,8 @@ void __local_bh_disable_ip(unsigned long ip, unsigned int cnt)
+ 	req.trailer.session_req.called_len = sizeof(req.trailer.session_req.called_name);
  
- 	WARN_ON_ONCE(in_hardirq());
+@@ -3081,10 +3083,18 @@ ip_rfc1001_connect(struct TCP_Server_Info *server)
+ 	 * As per rfc1002, @len must be the number of bytes that follows the
+ 	 * length field of a rfc1002 session request payload.
+ 	 */
+-	len = sizeof(req) - offsetof(struct rfc1002_session_packet, trailer.session_req);
++	len = sizeof(req.trailer.session_req);
++	req.type = RFC1002_SESSION_REQUEST;
++	req.flags = 0;
++	req.length = cpu_to_be16(len);
++	len += offsetof(typeof(req), trailer.session_req);
++	iov.iov_base = &req;
++	iov.iov_len = len;
++	iov_iter_kvec(&msg.msg_iter, ITER_SOURCE, &iov, 1, len);
++	rc = smb_send_kvec(server, &msg, &sent);
++	if (rc < 0 || len != sent)
++		return (rc == -EINTR || rc == -EAGAIN) ? rc : -ECONNABORTED;
  
-+	lock_map_acquire_read(&bh_lock_map);
-+
- 	/* First entry of a task into a BH disabled section? */
- 	if (!current->softirq_disable_cnt) {
- 		if (preemptible()) {
-@@ -210,6 +224,8 @@ void __local_bh_enable_ip(unsigned long ip, unsigned int cnt)
- 	WARN_ON_ONCE(in_hardirq());
- 	lockdep_assert_irqs_enabled();
+-	smb_buf->smb_buf_length = cpu_to_be32((RFC1002_SESSION_REQUEST << 24) | len);
+-	rc = smb_send(server, smb_buf, len);
+ 	/*
+ 	 * RFC1001 layer in at least one server requires very short break before
+ 	 * negprot presumably because not expecting negprot to follow so fast.
+@@ -3093,7 +3103,7 @@ ip_rfc1001_connect(struct TCP_Server_Info *server)
+ 	 */
+ 	usleep_range(1000, 2000);
  
-+	lock_map_release(&bh_lock_map);
-+
- 	local_irq_save(flags);
- 	curcnt = __this_cpu_read(softirq_ctrl.cnt);
+-	return rc;
++	return 0;
+ }
  
-@@ -260,6 +276,8 @@ static inline void ksoftirqd_run_begin(void)
- /* Counterpart to ksoftirqd_run_begin() */
- static inline void ksoftirqd_run_end(void)
+ static int
+diff --git a/fs/smb/client/transport.c b/fs/smb/client/transport.c
+index ddf1a3aafee5c..2269963e50081 100644
+--- a/fs/smb/client/transport.c
++++ b/fs/smb/client/transport.c
+@@ -178,7 +178,7 @@ delete_mid(struct mid_q_entry *mid)
+  * Our basic "send data to server" function. Should be called with srv_mutex
+  * held. The caller is responsible for handling the results.
+  */
+-static int
++int
+ smb_send_kvec(struct TCP_Server_Info *server, struct msghdr *smb_msg,
+ 	      size_t *sent)
  {
-+	/* pairs with the lock_map_acquire_read() in ksoftirqd_run_begin() */
-+	lock_map_release(&bh_lock_map);
- 	__local_bh_enable(SOFTIRQ_OFFSET, true);
- 	WARN_ON_ONCE(in_interrupt());
- 	local_irq_enable();
 -- 
 2.39.5
 
