@@ -1,25 +1,65 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B689A6D17
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 08:36:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76C9A17A314
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 08:37:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746434173; cv=none; b=bhBMFOmB91E2Rq+SR4YTAV+Q30vocZ3eXst9R3S/Q4O5LW28oMTAHZDIBLHKveMnbjFK+JpkrLOTKnHOPkQuXuPQygXbB++5TK9/e9b1/a5+uHx2zF0ATORXwMAuR9/4XUDkVKrZNMS1ETbW5t64bKpCr0rVkYqEYyDj2jFgMyg=
+	t=1746434227; cv=none; b=ekurBksEk1KmEc4mQyRUvsndy1ehaRwcZy9/mn7gjoRhQz5pg6PEnR3U2CBIG7GppZOTGxeG6y+85wwd+klgY4OJW004brmWsMwHtUZ1qC0c7SIeKhTVEi5AKyE9H9gpYqI+nsachgfzGH0k+K6aU7Tt3eJIud8wcd9zrR/eAAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746434173; c=relaxed/simple;
-	bh=32KfSBu88ZwZh6BYtGND0biM6qFLWiEmGCKKLPkO7gk=;
+	s=arc-20240116; t=1746434227; c=relaxed/simple;
+	bh=baMJAkG27VqkKqYHwlOmJyskaqcTMSM4nApt/kG2w+c=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZHdxHI3MTH0JuC+U/wnQ+2H8tZILSvyOPfPBAgOKmaabbMFkzsvXuLweXfm9clhtijysoqAqNcbIJkhjjTlUCv+KUwH9Y04xG49JutgJvV5qunGrium34DEk/i/H8y8RGnBNgVf0Y7hAo02XvU+LU+88rgEcWhL7TvYesIiFH5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C36431007;
-	Mon,  5 May 2025 01:36:00 -0700 (PDT)
-Received: from [10.163.53.144] (unknown [10.163.53.144])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 040D93F5A1;
-	Mon,  5 May 2025 01:36:06 -0700 (PDT)
-Message-ID: <1c285bc1-e345-4757-9803-b62624b3ed27@arm.com>
-Date: Mon, 5 May 2025 14:06:03 +0530
+	 In-Reply-To:Content-Type; b=CDvR6PLLjsV9zski4XXoK6t3BN+syDT6+kSjtlRIDkn33UozIMBdU97gtFvAy3Jf/dKqzmmveAD5jd2um6NGcW1Ay5ZeKe4WwCNdyB5+75MQqsMZ8sD3qq/ABQ1X6eJSZBqbeIJGsUjncWkKQa+AmthpQYtQ8i8Y41LIGumr9XE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FWkvI79y; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FWkvI79y"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-39149bccb69so3156281f8f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 01:37:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746434224; x=1747039024; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=sN+l0bbqOaNHyCMlUBuryfQsJX8dUCuFeTIyy+iGYGk=;
+        b=FWkvI79yGA3IvrKzZbSAClqfgYy364yDHti6bPs40vVJPeNO6yp9E4Q8ExLLtSD7La
+         pxNY+EJM0Xqr7jC2Vx1i2pP8Dquhwu+PyZThhMgEUv81i7CRzxXQcwoil1jtQBTHdSB4
+         0OVdSkdSstHeZRbVyphBQXrarBHtdcS51f9iGjUTROm63K0hWhWZsKyfUPtTxo5NJMHg
+         e5FncJdGGWkZSJI9cDzI2zrs2bYP1t1n+/F+9RZwhG8n8IIxDHrgi1evcogBKknz4ODq
+         2xydI02Jlf0NvL5tyg/RAKj+YScCi2pwmZO2Q0kmCU6CHV3GIqWAvychO6pZAn1qaLTl
+         7cYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746434224; x=1747039024;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=sN+l0bbqOaNHyCMlUBuryfQsJX8dUCuFeTIyy+iGYGk=;
+        b=GPczTqXY6rT86Laz0H4IxF+9zVQbXLH81Cg0fgw4xnt/RGeGC9ev9F4FhL8AlBCi45
+         xZrKWqvA2DQMxfePRSOTfXfo1ERO3rUgGAGaoxHHmEFhLAhG1YMb0C/ZlpRwL0OT/5He
+         EEA7vGAoUZpXWGePZRmVILl38aurHA2qPvznUGk9dyMv00eaJL7Qtka/B4DhVVGRSrex
+         f9coP3Mh05mZVrA9An5UK+XVbMhDKFHqTshQ8DD1McVL6tFhl8tV1kAp+AFdB6f7oFwt
+         nopVVwg0woAfs8Tnd2LRyB3V2QkJ7knJP/P1yqs+7fSUdhItk47quwx6/6LQUUs18Q+Z
+         Z6BA==
+X-Forwarded-Encrypted: i=1; AJvYcCWWfK0j9ivAlkpsbFk0j5W2xxCYGnkubx5uCclOcsXsIHZYxUwsGnKoghiNglbBnBElhRCqjk277WV3Czw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3ztq5RJoUidR8+8ty8wMDqYTG4bnk2vaSWdQqwm6tyAADy40p
+	Nop0DogJ05y1/Unvp58CcKQ3k0VL4EPEaB8dG5Nw6d5I8eWqHOfCugYdZmM0708=
+X-Gm-Gg: ASbGncv60107pXccYKY29hhDCdu98OCySVhqzhnVFRCg2GFD0SXiptcxn3aC8KQfxXj
+	e784fl6qJtJA19r7+sFbuZrZqYFjRaiRIXllxOIznzHg4F/lVxrro18DweqmBwg0FRfqE0JLKHQ
+	aJ2AuYgI27caf/ir6eL0ueH+fbnIi5XpRxQMqwARG3g13rpYwsYXFn/5ptMJjQQRbs5Z6bjtVe7
+	YcyIb8GqvN2Ug4uoxtPanntySz2cii7owbQIyVCxdSdjS08nwLlwlpImlrfSFiKI4hZfXobRwjz
+	h7970IWYZjNOcZP2Gfwjk8iOJ5zHECLs6VfV9n+4Qzu+gYcnhofPksJ0sicQf/qf0ppcWxO/fg2
+	z4l1p
+X-Google-Smtp-Source: AGHT+IHx5gQaW6NrJpXzB2ZmMAA8JB51I+tVwTpFwtk86FyblrmU5GquHCP1zT3M4G1bf+Egj+xPsA==
+X-Received: by 2002:a05:6000:2910:b0:39f:175b:a68d with SMTP id ffacd0b85a97d-3a09cea687cmr5975453f8f.11.1746434223826;
+        Mon, 05 May 2025 01:37:03 -0700 (PDT)
+Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a099ae3356sm9511430f8f.29.2025.05.05.01.37.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 05 May 2025 01:37:03 -0700 (PDT)
+Message-ID: <12201db3-7c94-4430-964d-0fe349ad6390@linaro.org>
+Date: Mon, 5 May 2025 10:37:02 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,109 +67,60 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3] arm64/mm: Re-organise setting up FEAT_S1PIE registers
- PIRE0_EL1 and PIR_EL1
-To: linux-arm-kernel@lists.infradead.org
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ardb@kernel.org>,
- Ryan Roberts <ryan.roberts@arm.com>, linux-kernel@vger.kernel.org
-References: <20250429050511.1663235-1-anshuman.khandual@arm.com>
+Subject: Re: [PATCH v7 1/3] clocksource/drivers/timer-tegra186: add
+ WDIOC_GETTIMELEFT support
+To: Robert Lin <robelin@nvidia.com>, Jon Hunter <jonathanh@nvidia.com>
+Cc: "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+ "tglx@linutronix.de" <tglx@linutronix.de>, Pohsun Su <pohsuns@nvidia.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+ Sumit Gupta <sumitg@nvidia.com>
+References: <20250502043727.396896-1-robelin@nvidia.com>
+ <20250502043727.396896-2-robelin@nvidia.com>
+ <aBSOJTlQUUnFIEVr@mai.linaro.org>
+ <af0e0ab4-89d5-4f77-86c7-90d2bc3e13dd@nvidia.com>
+ <aBSjyZJ0__ctBa-4@mai.linaro.org>
+ <5824d505-0a42-40cc-84ec-814f0bbfb79f@nvidia.com>
+ <93f063fa-0012-4018-8c37-a2bfa623d2bf@linaro.org>
+ <a6a45384-18b4-4500-8b8e-8cdd8df5ac1f@nvidia.com>
+ <DS0PR12MB6416E7BF479EF8C67BAC6147D98E2@DS0PR12MB6416.namprd12.prod.outlook.com>
 Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20250429050511.1663235-1-anshuman.khandual@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <DS0PR12MB6416E7BF479EF8C67BAC6147D98E2@DS0PR12MB6416.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 4/29/25 10:35, Anshuman Khandual wrote:
-> mov_q cannot really move PIE_E[0|1] macros into a general purpose register
-> as expected if those macro constants contain some 128 bit layout elements,
-> that are required for D128 page tables. The primary issue is that for D128,
-> PIE_E[0|1] are defined in terms of 128-bit types with shifting and masking,
-> which the assembler can't accommodate.
-> 
-> Instead pre-calculate these PIRE0_EL1/PIR_EL1 constants into asm-offsets.h
-> based PIE_E0_ASM/PIE_E1_ASM which can then be used in arch/arm64/mm/proc.S.
-> 
-> While here also drop PTE_MAYBE_NG/PTE_MAYBE_SHARED assembly overrides which
-> are not required any longer, as the compiler toolchains are smart enough to
-> compute both the PIE_[E0|E1]_ASM constants in all scenarios.
-> 
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Ard Biesheuvel <ardb@kernel.org>
-> Cc: Ryan Roberts <ryan.roberts@arm.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
-> This patch applies on v6.15-rc4
+On 05/05/2025 07:34, Robert Lin wrote:
 
-Gentle ping, any updates on this.
+[ ... ]
 
+>>>> Yes so WARN sounds appropriate. It should never happen. I
+>>>> don't see the issue.
+>>> 
+>>> The issue is if there is an userspace application reading the
+>>> ioctl and or the sysfs, then the warning will be emitted each
+>>> time if the never- happen condition exists. Preferably replace
+>>> the WARN_ON by pr_warn_once() as suggested if the bug must be
+>>> reported.
+>> 
+>> Sounds a bit funny 'if the never-happen condition exists' :-)
+>> 
+>> However, I will be fine with WARN_ON_ONCE(). I think that this
+>> warrants more of a large WARN splat than pr_warn() because it
+>> should never happen.
+>> 
 > 
-> Changes in V3:
-> 
-> - Dropped off macros PTE_MAYBE_NG and PTE_MAYBE_SHARED as per Ryan
-> 
-> Changes in V2:
-> 
-> https://lore.kernel.org/all/20250416035604.2717188-1-anshuman.khandual@arm.com/
-> 
-> - Added asm-offsets.c based PIE_E0_ASM and PIE_E1_ASM symbols as per Ard
-> - Moved PTE_MAYBE_NG and PTE_MAYBE_SHARED overrides inside asm-offsets.c
->   along with the corresponding comment as per Ard
-> 
-> Changes in V1:
-> 
-> https://lore.kernel.org/linux-arm-kernel/20250410074024.1545768-1-anshuman.khandual@arm.com/
-> 
->  arch/arm64/kernel/asm-offsets.c |  2 ++
->  arch/arm64/mm/proc.S            | 19 ++-----------------
->  2 files changed, 4 insertions(+), 17 deletions(-)
-> 
-> diff --git a/arch/arm64/kernel/asm-offsets.c b/arch/arm64/kernel/asm-offsets.c
-> index eb1a840e4110..30d4bbe68661 100644
-> --- a/arch/arm64/kernel/asm-offsets.c
-> +++ b/arch/arm64/kernel/asm-offsets.c
-> @@ -182,5 +182,7 @@ int main(void)
->  #ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
->    DEFINE(FTRACE_OPS_DIRECT_CALL,	offsetof(struct ftrace_ops, direct_call));
->  #endif
-> +  DEFINE(PIE_E0_ASM, PIE_E0);
-> +  DEFINE(PIE_E1_ASM, PIE_E1);
->    return 0;
->  }
-> diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
-> index fb30c8804f87..80d470aa469d 100644
-> --- a/arch/arm64/mm/proc.S
-> +++ b/arch/arm64/mm/proc.S
-> @@ -512,26 +512,11 @@ alternative_else_nop_endif
->  	ubfx	x1, x1, #ID_AA64MMFR3_EL1_S1PIE_SHIFT, #4
->  	cbz	x1, .Lskip_indirection
->  
-> -	/*
-> -	 * The PROT_* macros describing the various memory types may resolve to
-> -	 * C expressions if they include the PTE_MAYBE_* macros, and so they
-> -	 * can only be used from C code. The PIE_E* constants below are also
-> -	 * defined in terms of those macros, but will mask out those
-> -	 * PTE_MAYBE_* constants, whether they are set or not. So #define them
-> -	 * as 0x0 here so we can evaluate the PIE_E* constants in asm context.
-> -	 */
-> -
-> -#define PTE_MAYBE_NG		0
-> -#define PTE_MAYBE_SHARED	0
-> -
-> -	mov_q	x0, PIE_E0
-> +	mov_q	x0, PIE_E0_ASM
->  	msr	REG_PIRE0_EL1, x0
-> -	mov_q	x0, PIE_E1
-> +	mov_q	x0, PIE_E1_ASM
->  	msr	REG_PIR_EL1, x0
->  
-> -#undef PTE_MAYBE_NG
-> -#undef PTE_MAYBE_SHARED
-> -
->  	orr	tcr2, tcr2, TCR2_EL1_PIE
->  	msr	REG_TCR2_EL1, x0
->  
+> I believe the two WARN_ON I used here are the "this-should-never-
+> happen" situations. In my opinion, we are good to keep. But I am
+> also good with WARN_ON_ONCE for compromise. I wonder if Daniel is
+> good with this then I can fix them.
+
+I'm fine with this
+
+
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
