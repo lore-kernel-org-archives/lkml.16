@@ -1,103 +1,230 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-24417.protonmail.ch (mail-24417.protonmail.ch [109.224.244.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14B342F3676;
-	Mon,  5 May 2025 23:15:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA30228466C
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 23:15:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486942; cv=none; b=pK5SVtutyd9pErXt9GnaR0gJ5weWGIjauRLKQM2zTmFjs6tzzSYfABmSxtrjvLFdOJYXmwcUfEw+hM3q5e6QL/tHk/OM0aAs8deNe1Eo6pIV2FWMNMm3oqYh4t4aadtixtG/W+2ta6yN5pU9SBwDzN1baYrWKvHDKWc2nU1XApo=
+	t=1746486941; cv=none; b=teCeH+PXvRhnYuqpf19oyWW5LyNGTOMDMGFW2nlktHl0hkNS7snksyxBPPqgDyBHwndqNMI0fR5yC+Fk+4JqS31jCa/s02xpdmtvzW4VCPYJLKOVMGapdQRtyJGQrXJPo5yporq6/mQ9WJ2Gs3SF9PRxBNeEuTHuu4vTohwR9ps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486942; c=relaxed/simple;
-	bh=naximBUSjgAyJt61O8PSusdEFY9hAobTJ9zOocSMYUw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bA77VHpgeJBKzyoU1ZxJup5HYnEvZUWzmLhSmRlq1HbcrLeMmDZcxaWpABCvpL2Db5z8Z176UvIs+BoU6gMDV6hbWZIeM6R8mZDfyRr14ss+xZBkF6G7nLRPzBWJkISw4E47Y92VReAvAKZd/CchN/1wEiFVRhN5mqdUJkda98U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XSfbiVJr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746486941; c=relaxed/simple;
+	bh=EOUaIX463tgjPBxv4B9OqDGSjGGy6EDc+mdrrzeqcVk=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OM8WaCiGhckJ1DL2C6r6T8RzuQAX66P2ik8RM+RJTb9ZSHDDowghR8BPz2OTOgefgfE0pZ0K4GfdEdShTcPtZPmN0FmcDIgYpvEba/yJdn5lp8Z7+Kjc4ggc6Z2Ak1geTF5YbWW7/VSKXeMJ7sB5RP7R21RxzVrwo8MNxKA8uak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=inP2q5/I; arc=none smtp.client-ip=109.224.244.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XSfbiVJr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCC94C4CEE4;
-	Mon,  5 May 2025 23:15:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486942;
-	bh=naximBUSjgAyJt61O8PSusdEFY9hAobTJ9zOocSMYUw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XSfbiVJrD+8WJ0UD/gmYgcqqULsJTpVrmXnxAx5F6acHO6Bf4GSMWVpzThoGS5cNB
-	 0e5DnHgBWdvRGX2XiOo/SqoyzfiVu8KZrn4Nqa6wTIsRk6+dx521Jw+nF+ixKWD4zn
-	 ilNhYnGOoznkhDrdbe6226LeFAnfaDWm0NnoWoS9VxxnbzBSdjEDQicA5JDVMfViE4
-	 TSViYUmil+2YGtfG7YhshZL8pXYeL4vn8ytGkNyZ3S8Pcquw0OnUIjSlXwSslFxQcF
-	 nybcc3HEVNa7VA5FlgYco4hciBHkDg0dUkV1aytBo1eqF1YMORw3avtcgLcE7TFDg2
-	 iclxQQ61Xik1Q==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Peter Seiderer <ps.report@gmx.net>,
-	Simon Horman <horms@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Sasha Levin <sashal@kernel.org>,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 070/153] net: pktgen: fix mpls maximum labels list parsing
-Date: Mon,  5 May 2025 19:11:57 -0400
-Message-Id: <20250505231320.2695319-70-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250505231320.2695319-1-sashal@kernel.org>
-References: <20250505231320.2695319-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="inP2q5/I"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
+	s=protonmail3; t=1746486934; x=1746746134;
+	bh=EOUaIX463tgjPBxv4B9OqDGSjGGy6EDc+mdrrzeqcVk=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=inP2q5/IZbdge4dZR8JCN+QfmmGc5MaNsKgD/VvCUljmMVskrK+Tr3Xg81IwlRF4I
+	 +RRrm8w3TJ9o7lEGSP8dEiW4Hpnwefyjf0ZgKO+YCzHPfygsk6FlkY9OhWSbNER8ME
+	 buXd4nHx9GgfIYOAuA4GIjhnZiJ4UT/fHklvcvCPrfO2FEX3P8NmwAkKsR3cTYDRLC
+	 c+RcoaXRQIfupLhsVwqXVxQcM6Nnl+S0fRHAduMLuVCQ5PWrtEsx0+tIdEcxDhg3aV
+	 Kc6PZ5WFHnOYL/1eAOn7zWheea0PKge3u+hgHvxWmzrLAfSGZv//uB+mX0EAwXXLf1
+	 nppR1fH9HcH0g==
+Date: Mon, 05 May 2025 23:15:27 +0000
+To: Mingyen Hsieh <Mingyen.Hsieh@mediatek.com>
+From: fossben@pm.me
+Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>, "niks@kernel.org" <niks@kernel.org>, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, Allan Wang <Allan.Wang@mediatek.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: Re: [REGRESSION][BISECTED][STABLE] MT7925: mDNS and IPv6 broken in kernel 6.14.3 and above
+Message-ID: <vCzHyPICbb61hk8jzrTcmvU7H9PJGenEtIAZaKQH9ofNUZPD4aOeD1i-oDl2G2CtieHoTnUWBWYy-uQhNwRo7sT5gj_uyFQs-zIkbCY-qZU=@pm.me>
+In-Reply-To: <Q8fBN4506NOX9rrFspv9q0xuQRlE1YcHDbwfRUlXy7if-Lv-kGyIXPrNN2kOMoWENMYCfTmOhAhnSCs4gtUvpzEf0O_JZ_BV__V3B_A7iU8=@pm.me>
+References: <EmWnO5b-acRH1TXbGnkx41eJw654vmCR-8_xMBaPMwexCnfkvKCdlU5u19CGbaapJ3KRu-l3B-tSUhf8CCQwL0odjo6Cd5YG5lvNeB-vfdg=@pm.me> <f73dec60b60dd7bb3be40c1feefbe223c7afe19b.camel@mediatek.com> <5ae1ef34c9844d6d0f5fb167dd596a4c43321367.camel@kernel.org> <28ef2cc608d071d1530902d7b5df045555ab5651.camel@mediatek.com> <Q8fBN4506NOX9rrFspv9q0xuQRlE1YcHDbwfRUlXy7if-Lv-kGyIXPrNN2kOMoWENMYCfTmOhAhnSCs4gtUvpzEf0O_JZ_BV__V3B_A7iU8=@pm.me>
+Feedback-ID: 134317997:user:proton
+X-Pm-Message-ID: 7194e1c1e36fd01c0ca03f07e9b7cdcc2ff7c191
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.15.181
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Peter Seiderer <ps.report@gmx.net>
 
-[ Upstream commit 2b15a0693f70d1e8119743ee89edbfb1271b3ea8 ]
 
-Fix mpls maximum labels list parsing up to MAX_MPLS_LABELS entries (instead
-of up to MAX_MPLS_LABELS - 1).
 
-Addresses the following:
 
-	$ echo "mpls 00000f00,00000f01,00000f02,00000f03,00000f04,00000f05,00000f06,00000f07,00000f08,00000f09,00000f0a,00000f0b,00000f0c,00000f0d,00000f0e,00000f0f" > /proc/net/pktgen/lo\@0
-	-bash: echo: write error: Argument list too long
 
-Signed-off-by: Peter Seiderer <ps.report@gmx.net>
-Reviewed-by: Simon Horman <horms@kernel.org>
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/core/pktgen.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+On Monday, May 5th, 2025 at 3:20 AM, fossben@pm.me <fossben@pm.me> wrote:
 
-diff --git a/net/core/pktgen.c b/net/core/pktgen.c
-index 5d5f03471eb0c..28417fe2a7a2a 100644
---- a/net/core/pktgen.c
-+++ b/net/core/pktgen.c
-@@ -896,6 +896,10 @@ static ssize_t get_labels(const char __user *buffer, struct pktgen_dev *pkt_dev)
- 	pkt_dev->nr_labels = 0;
- 	do {
- 		__u32 tmp;
-+
-+		if (n >= MAX_MPLS_LABELS)
-+			return -E2BIG;
-+
- 		len = hex32_arg(&buffer[i], 8, &tmp);
- 		if (len <= 0)
- 			return len;
-@@ -907,8 +911,6 @@ static ssize_t get_labels(const char __user *buffer, struct pktgen_dev *pkt_dev)
- 			return -EFAULT;
- 		i++;
- 		n++;
--		if (n >= MAX_MPLS_LABELS)
--			return -E2BIG;
- 	} while (c == ',');
- 
- 	pkt_dev->nr_labels = n;
--- 
-2.39.5
+>=20
+>=20
+> On Monday, May 5th, 2025 at 12:48 AM, Mingyen Hsieh Mingyen.Hsieh@mediate=
+k.com wrote:
+>=20
+> > On Sun, 2025-05-04 at 00:39 +0200, Niklas Schnelle wrote:
+> >=20
+> > > External email : Please do not click links or open attachments until
+> > > you have verified the sender or the content.
+> > >=20
+> > > On Wed, 2025-04-30 at 06:47 +0000, Mingyen Hsieh (=E8=AC=9D=E6=98=
+=8E=E8=AB=BA) wrote:
+> > >=20
+> > > > On Wed, 2025-04-30 at 01:14 +0000, fossben@pm.me wrote:
+> > > >=20
+> > > > > External email : Please do not click links or open attachments
+> > > > > until
+> > > > > you have verified the sender or the content.
+> > > > >=20
+> > > > > Hello all,
+> > > > >=20
+> > > > > After upgrading to 6.14.3 on my PC with a MT7925 chip, I noticed
+> > > > > that
+> > > > > I could no longer ping *.local addresses provided by Avahi. In
+> > > > > addition, I also noticed that I was not able to get a DHCP IPv6
+> > > > > address from my router, no matter how many times I rebooted the
+> > > > > router or reconnected with NetworkManager.
+> > > > >=20
+> > > > > Reverting to 6.14.2 fixes both mDNS and IPv6 addresses
+> > > > > immediately.
+> > > > > Going back to 6.14.3 immediately breaks mDNS again, but the IPv6
+> > > > > address will stay there for a while before disappearing later,
+> > > > > possibly because the DHCP lease expired? I am not sure exactly
+> > > > > when
+> > > > > it stops working.
+> > > > >=20
+> > > > > I've done a kernel bisect between 6.14.2 and 6.14.3 and found the
+> > > > > offending commit that causes mDNS to fail:
+> > > > >=20
+> > > > > commit 80007d3f92fd018d0a052a706400e976b36e3c87
+> > > > > Author: Ming Yen Hsieh mingyen.hsieh@mediatek.com
+> > > > > Date: Tue Mar 4 16:08:50 2025 -0800
+> > > > >=20
+> > > > > wifi: mt76: mt7925: integrate *mlo_sta_cmd and *sta_cmd
+> > > > >=20
+> > > > > commit cb1353ef34735ec1e5d9efa1fe966f05ff1dc1e1 upstream.
+> > > > >=20
+> > > > > Integrate *mlo_sta_cmd and *sta_cmd for the MLO firmware.
+> > > > >=20
+> > > > > Fixes: 86c051f2c418 ("wifi: mt76: mt7925: enabling MLO when
+> > > > > the
+> > > > > firmware supports it")
+> > > > >=20
+> > > > > drivers/net/wireless/mediatek/mt76/mt7925/mcu.c | 59 ++++-------
+> > > > > ----
+> > > > > --------------------------------------------
+> > > > > 1 file changed, 4 insertions(+), 55 deletions(-)
+> > > > >=20
+> > > > > I do not know if this same commit is also causing the IPv6 issues
+> > > > > as
+> > > > > testing that requires quite a bit of time to reproduce. What I do
+> > > > > know with certainty as of this moment is that it definitely
+> > > > > breaks in
+> > > > > kernel 6.14.3.
+> > > > >=20
+> > > > > I've attached my hardware info as well as dmesg logs from the
+> > > > > last
+> > > > > working kernel from the bisect and 6.14.4 which exhibits the
+> > > > > issue.
+> > > > > Please let me know if there's any other info you need.
+> > > > >=20
+> > > > > Thanks!
+> > > > > Benjamin Xiao
+> > > >=20
+> > > > Hi,
+> > > >=20
+> > > > Thanks for reporting this issue, we will aim into this.
+> > > >=20
+> > > > Can you provide me with your testing steps?
+> > > >=20
+> > > > Best Regards,
+> > > > Yen.
+> > >=20
+> > > Hi Yan,
+> > >=20
+> > > I see the same IPv6 issue on my Framework 13 (Ryzen 5 AI 340) with an
+> > > mt7925e WiFI module. My setup is just a home router with native IPv6
+> > > both for my uplink and in the LAN. The problems with IPv6 can already
+> > > be seen just in the LAN for example by checking which IP was used for
+> > > SSH, in my setup it should always be IPv6 but falls back to IPv4 in
+> > > the
+> > > broken state.
+> > >=20
+> > > As another data point, I tried reverting cb1353ef3473 ("wifi: mt76:
+> > > mt7925: integrate *mlo_sta_cmd and *sta_cmd") on top of 6.15.-rc4.
+> > > This
+> > > fully restores IPv6 for me. Also note I'm running this with the
+> > > mt7925
+> > > firmware version 20250425073330 from linux-firmware's master branch
+> > > as
+> > > I had some dropped connections with earlier firmware.
+> > >=20
+> > > So it definitely looks like that commit also broke IPv6 and not just
+> > > mDNS. Note that if if I use DHCPv6 instead of router advertisements,
+> > > on
+> > > the latest firmware, but without the revert, I get a global IPv6
+> > > address added to the interface but then native IPv6 addresses are
+> > > still
+> > > uncreachable. With the offending patch reverted my SSH session to an
+> > > IPv6 only host works fine and is stable. Also I'd be willing to test
+> > > a
+> > > proper fix as I rely on IPv6 heavily due to having to use CGNAT for
+> > > IPv4 but not for IPv6.
+> > >=20
+> > > Thanks,
+> > > Niklas
+> >=20
+> > Hi Benjamin & Niklas,
+> >=20
+> > Can you help to try this patch? I can get IPv6 address through this
+> > patch.
+> >=20
+> > If it can work at your environment as well, i will upstream it and add
+> > test tag with you.
+> >=20
+> > diff --git a/drivers/net/wireless/mediatek/mt76/mt7925/mcu.c
+> > b/drivers/net/wireless/mediatek/mt76/mt7925/mcu.c
+> > index a42b584634ab..fd756f0d18f8 100644
+> > --- a/drivers/net/wireless/mediatek/mt76/mt7925/mcu.c
+> > +++ b/drivers/net/wireless/mediatek/mt76/mt7925/mcu.c
+> > @@ -2183,14 +2183,14 @@ mt7925_mcu_sta_cmd(struct mt76_phy *phy,
+> > mt7925_mcu_sta_mld_tlv(skb, info->vif, info-
+> >=20
+> > > link_sta->sta);
+> > > mt7925_mcu_sta_eht_mld_tlv(skb, info->vif,
+> > > info->link_sta->sta);
+> > > }
+> > > -
+> > > - mt7925_mcu_sta_hdr_trans_tlv(skb, info->vif, info-
+> > > link_sta);
+> > > }
+> >=20
+> > if (!info->enable) {
+> > mt7925_mcu_sta_remove_tlv(skb);
+> > mt76_connac_mcu_add_tlv(skb, STA_REC_MLD_OFF,
+> > sizeof(struct tlv));
+> > + } else {
+> > + mt7925_mcu_sta_hdr_trans_tlv(skb, info->vif, info-
+> >=20
+> > > link_sta);
+> > > }
+> >=20
+> > return mt76_mcu_skb_send_msg(dev, skb, info->cmd, true);
+> >=20
+> > Thanks~
+> > Yen.
+>=20
+>=20
+> Hi Yen,
+>=20
+> I manually applied the changes on top of 6.14.5 and mDNS seems to work al=
+ong with IPv6! I will do more testing for the rest of the day to see if the=
+ issue is completely fixed but so far looks good at least for the 5 minutes=
+ I've been testing it.
+>=20
+> Thanks for the fix,
+> Ben
 
+I've now used 6.14.5 with the patch applied for most of the day and it's be=
+en working great! mDNS has been rock solid and so has IPv6.
+
+Would appreciate it if this fix got backported to the 6.14 series!
+
+Ben
