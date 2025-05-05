@@ -1,287 +1,379 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8711F202F87
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 11:10:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F279202978
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 11:12:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746443439; cv=none; b=E0hy/4my/rdqXJZ3g3BH1ZLHUB7QqJeZK+6vwDSbPYIsQ7QLtMapftlOHcbARLT84YmDziX14meXUsesjzOr2eMJaMfJ62fcEMC65nvw3MBhKGyx19Md8UNh/n/IXPFrCf3tlPDFtCuRxRIO2ipkwEFB3sYUqSFP2cxlDDzIsgE=
+	t=1746443537; cv=none; b=bfA3gwCY+x5ZR/VW/qoVs7ndAmtFeOMic7W+atmB9N6Od/anB9U3DK9yRdGOpg8wDD5niMcOmsceOWqXFYUvWdKmBy7REpMk1gYAUoJ0sLWcDDvyN+nqMq4X7C4sfg1IFCGIhqAS51VTNwaDAWTTOx65/aS0cdX1ybfNjZNolFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746443439; c=relaxed/simple;
-	bh=P2LKh1TBvBgopa3Rf/LqikiGAwnI6+PEIU/z7zZdUTU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kto0ZEIeoHmSYx8bsthXFaGn2mkhbKnsJBobok1yUC3bD0nf63CT6Tir5sRhD/U1+UiN9YNiLb00jhvSXIFF3Q7IJ1kK/GElx6GPi/8rXHXGb3VY6s3W/GG4tWwr5zOGfJMX16wPmvQb5NPyvHG9Pv3pj3ri6xOimutOmzt2mBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W5iAPNWE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746443537; c=relaxed/simple;
+	bh=h903bZroUuvIiX5suYCMaRT1es5A4RQYvk+joA1Fcj8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bCBlLkM86hBD6EXt2k9CwE1sPulPSxG9QqNBoJKXfudzZlAyzZYkuOc5YhxmxK7i8ZIJ0Hq6HMYm0s2U33DAM3feHpZmAsv5SPiXZmlPucXPYEMym/FdCphcR07L9N1sh+Zg1ECVgsmHVXM9cqG9PITFVi88npXS5TbHCePGGzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=je42+OU8; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=a/l6WizN; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=je42+OU8; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=a/l6WizN; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W5iAPNWE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2185C4CEE4;
-	Mon,  5 May 2025 11:10:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746443439;
-	bh=P2LKh1TBvBgopa3Rf/LqikiGAwnI6+PEIU/z7zZdUTU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=W5iAPNWEYMstFBEqcL/f3qOXTdokuksBp+6kIpLdNv5HKqOfBOjR1TldfHtjYOVrd
-	 Z5mDYd4J2UsgHZYcn3NVy0iLwUKizpcAaVtXTfrG5OH7xfIecxydUXAyZKbr7aAy7F
-	 bK3wjun5yWdZVqA/N2hl95j6FB8LaM59sPma7cxNGvaLFrN1VFHZCdkZyFdbzpVWt7
-	 7A/JI2zifKItZTdky3cH692GoHF740ASGnYrDpoWRGoTHwGiScs/H1zaRLqYezErHt
-	 ZiwMdct5eeXLcHrpX9D1gEwDnNA4b+RY05L97AFGJPuTT4lAScSNISR+l4HL7lcVu+
-	 hOWX0ixBxqw5A==
-From: Ingo Molnar <mingo@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: "H . Peter Anvin" <hpa@zytor.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@kernel.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	Masahiro Yamada <yamada.masahiro@socionext.com>,
-	Michal Marek <michal.lkml@markovi.net>
-Subject: [PATCH 15/15] x86/kconfig/32: Synchronize the x86-32 defconfig to the x86-64 defconfig
-Date: Mon,  5 May 2025 13:09:46 +0200
-Message-ID: <20250505110946.1095363-16-mingo@kernel.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250505110946.1095363-1-mingo@kernel.org>
-References: <20250505110946.1095363-1-mingo@kernel.org>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="je42+OU8";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="a/l6WizN";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="je42+OU8";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="a/l6WizN"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 4FB611F453;
+	Mon,  5 May 2025 11:12:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1746443532; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=yjfAhdvAL/bWFAcgK1lxIMz6VfIkLilDu95pB5RJ/gA=;
+	b=je42+OU8yCQvcI4b+kIVLxnQlDw3g2BQnc+3E0c/1Ex6s+S8EV3pP50uaQLIwIvKCgTcM8
+	B3XLRrsj71yjhbFfXdFq5D2NU2hzRWuNs1ggVg61UBNDv3BMSYul+P1kRyJdwpMwH7M8Yo
+	vc4861XMNv6SQntMj3R8H4KF1q5DwIY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1746443532;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=yjfAhdvAL/bWFAcgK1lxIMz6VfIkLilDu95pB5RJ/gA=;
+	b=a/l6WizNd7mNbpQarfisFgwBu74VelCPXlaHxubohCWCQVCLI1fOA6bgltTwRAsK0XzgXe
+	AtqpbLdIRYqYKACg==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=je42+OU8;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="a/l6WizN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1746443532; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=yjfAhdvAL/bWFAcgK1lxIMz6VfIkLilDu95pB5RJ/gA=;
+	b=je42+OU8yCQvcI4b+kIVLxnQlDw3g2BQnc+3E0c/1Ex6s+S8EV3pP50uaQLIwIvKCgTcM8
+	B3XLRrsj71yjhbFfXdFq5D2NU2hzRWuNs1ggVg61UBNDv3BMSYul+P1kRyJdwpMwH7M8Yo
+	vc4861XMNv6SQntMj3R8H4KF1q5DwIY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1746443532;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=yjfAhdvAL/bWFAcgK1lxIMz6VfIkLilDu95pB5RJ/gA=;
+	b=a/l6WizNd7mNbpQarfisFgwBu74VelCPXlaHxubohCWCQVCLI1fOA6bgltTwRAsK0XzgXe
+	AtqpbLdIRYqYKACg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 023761372E;
+	Mon,  5 May 2025 11:12:11 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id oULHOgudGGgoCwAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Mon, 05 May 2025 11:12:11 +0000
+Message-ID: <71ec7bd1-be90-462e-8a07-e56fccae4096@suse.de>
+Date: Mon, 5 May 2025 13:12:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] drm/shmem-helper: Import dmabuf without mapping its
+ sg_table
+To: oushixiong1025@163.com,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Sean Paul <sean@poorly.run>,
+ Jocelyn Falempe <jfalempe@redhat.com>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, Shixiong Ou <oushixiong@kylinos.cn>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+References: <20250501064324.398650-1-oushixiong1025@163.com>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <20250501064324.398650-1-oushixiong1025@163.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 4FB611F453
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FREEMAIL_TO(0.00)[163.com,linux.intel.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[163.com,gmail.com];
+	RCVD_TLS_ALL(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_COUNT_TWO(0.00)[2];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,gmail.com,ffwll.ch,poorly.run,redhat.com,lists.freedesktop.org,vger.kernel.org,kylinos.cn,amd.com];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DKIM_TRACE(0.00)[suse.de:+];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.51
+X-Spam-Flag: NO
 
-Just a mechanic synchronization of kernel options enabled: nobody
-really develops kernel features on x86-32 anymore, so make sure the
-defconfig is roughly equivalent to the 64-bit one, so that testing
-doesn't cover some combination that nobody cares about.
+(cc'ing Christian)
 
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: David Woodhouse <dwmw@amazon.co.uk>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Michal Marek <michal.lkml@markovi.net>
----
- arch/x86/configs/defconfig.x86_32 | 116 ++++++++++++++++++++++++++++++++++++--
- 1 file changed, 110 insertions(+), 6 deletions(-)
+Hi,
 
-diff --git a/arch/x86/configs/defconfig.x86_32 b/arch/x86/configs/defconfig.x86_32
-index e983f1db22dd..26a0fc03d642 100644
---- a/arch/x86/configs/defconfig.x86_32
-+++ b/arch/x86/configs/defconfig.x86_32
-@@ -1,37 +1,63 @@
- CONFIG_WERROR=y
-+CONFIG_UAPI_HEADER_TEST=y
- CONFIG_SYSVIPC=y
- CONFIG_POSIX_MQUEUE=y
-+CONFIG_WATCH_QUEUE=y
- CONFIG_USELIB=y
- CONFIG_AUDIT=y
- CONFIG_NO_HZ=y
- CONFIG_HIGH_RES_TIMERS=y
-+CONFIG_BPF_SYSCALL=y
-+CONFIG_BPF_JIT=y
-+CONFIG_BPF_JIT_ALWAYS_ON=y
-+CONFIG_BPF_PRELOAD=y
-+CONFIG_BPF_PRELOAD_UMD=y
-+CONFIG_BPF_LSM=y
- CONFIG_PREEMPT_VOLUNTARY=y
-+CONFIG_SCHED_CORE=y
-+CONFIG_IRQ_TIME_ACCOUNTING=y
- CONFIG_BSD_PROCESS_ACCT=y
-+CONFIG_BSD_PROCESS_ACCT_V3=y
- CONFIG_TASKSTATS=y
- CONFIG_TASK_DELAY_ACCT=y
- CONFIG_TASK_XACCT=y
- CONFIG_TASK_IO_ACCOUNTING=y
-+CONFIG_PSI=y
-+CONFIG_PSI_DEFAULT_DISABLED=y
- CONFIG_LOG_BUF_SHIFT=18
--CONFIG_CGROUPS=y
-+CONFIG_PRINTK_INDEX=y
-+CONFIG_UCLAMP_TASK=y
-+CONFIG_MEMCG=y
-+CONFIG_MEMCG_V1=y
- CONFIG_BLK_CGROUP=y
--CONFIG_CGROUP_SCHED=y
-+CONFIG_CFS_BANDWIDTH=y
-+CONFIG_UCLAMP_TASK_GROUP=y
- CONFIG_CGROUP_PIDS=y
- CONFIG_CGROUP_RDMA=y
-+CONFIG_CGROUP_DMEM=y
- CONFIG_CGROUP_FREEZER=y
- CONFIG_CGROUP_HUGETLB=y
- CONFIG_CPUSETS=y
-+CONFIG_CPUSETS_V1=y
- CONFIG_CGROUP_DEVICE=y
- CONFIG_CGROUP_CPUACCT=y
- CONFIG_CGROUP_PERF=y
-+CONFIG_CGROUP_BPF=y
- CONFIG_CGROUP_MISC=y
- CONFIG_CGROUP_DEBUG=y
--CONFIG_BLK_DEV_INITRD=y
-+CONFIG_NAMESPACES=y
-+CONFIG_USER_NS=y
-+CONFIG_CHECKPOINT_RESTORE=y
-+CONFIG_SCHED_AUTOGROUP=y
-+CONFIG_SYSFS_SYSCALL=y
-+CONFIG_EXPERT=y
- CONFIG_KALLSYMS_ALL=y
- CONFIG_PROFILING=y
- CONFIG_KEXEC=y
- CONFIG_SMP=y
- CONFIG_HYPERVISOR_GUEST=y
- CONFIG_PARAVIRT=y
-+CONFIG_PARAVIRT_SPINLOCKS=y
- CONFIG_NR_CPUS=8
- CONFIG_X86_REROUTE_FOR_BROKEN_BOOT_IRQS=y
- CONFIG_X86_MSR=y
-@@ -50,7 +76,11 @@ CONFIG_ACPI_BGRT=y
- CONFIG_CPU_FREQ_DEFAULT_GOV_USERSPACE=y
- CONFIG_CPU_FREQ_GOV_ONDEMAND=y
- CONFIG_X86_ACPI_CPUFREQ=y
--CONFIG_KPROBES=y
-+CONFIG_KVM=y
-+CONFIG_KVM_INTEL=y
-+CONFIG_KVM_AMD=y
-+CONFIG_KVM_XEN=y
-+CONFIG_KVM_MAX_NR_VCPUS=4096
- CONFIG_JUMP_LABEL=y
- CONFIG_COMPAT_32BIT_TIME=y
- CONFIG_MODULES=y
-@@ -60,7 +90,23 @@ CONFIG_BLK_CGROUP_IOLATENCY=y
- CONFIG_BLK_CGROUP_IOCOST=y
- CONFIG_BLK_CGROUP_IOPRIO=y
- CONFIG_BINFMT_MISC=y
-+CONFIG_ZSWAP=y
-+CONFIG_SLAB_FREELIST_RANDOM=y
-+CONFIG_SLAB_FREELIST_HARDENED=y
-+# CONFIG_SLAB_BUCKETS is not set
- # CONFIG_COMPAT_BRK is not set
-+CONFIG_PAGE_REPORTING=y
-+CONFIG_KSM=y
-+CONFIG_DEFAULT_MMAP_MIN_ADDR=65536
-+CONFIG_MEMORY_FAILURE=y
-+CONFIG_HWPOISON_INJECT=y
-+CONFIG_TRANSPARENT_HUGEPAGE=y
-+CONFIG_TRANSPARENT_HUGEPAGE_MADVISE=y
-+CONFIG_IDLE_PAGE_TRACKING=y
-+CONFIG_ANON_VMA_NAME=y
-+CONFIG_USERFAULTFD=y
-+CONFIG_LRU_GEN=y
-+CONFIG_LRU_GEN_ENABLED=y
- CONFIG_NET=y
- CONFIG_PACKET=y
- CONFIG_XFRM_USER=y
-@@ -120,6 +166,7 @@ CONFIG_CFG80211=y
- CONFIG_MAC80211=y
- CONFIG_MAC80211_LEDS=y
- CONFIG_RFKILL=y
-+CONFIG_RFKILL_INPUT=y
- CONFIG_NET_9P=y
- CONFIG_NET_9P_VIRTIO=y
- CONFIG_PCI=y
-@@ -189,6 +236,8 @@ CONFIG_SERIAL_8250_RSA=y
- CONFIG_SERIAL_NONSTANDARD=y
- CONFIG_VIRTIO_CONSOLE=y
- CONFIG_HW_RANDOM=y
-+# CONFIG_HW_RANDOM_INTEL is not set
-+# CONFIG_HW_RANDOM_AMD is not set
- CONFIG_NVRAM=y
- CONFIG_HPET=y
- # CONFIG_HPET_MMAP is not set
-@@ -208,7 +257,19 @@ CONFIG_SND_SEQ_DUMMY=y
- CONFIG_SND_HDA_INTEL=y
- CONFIG_SND_HDA_HWDEP=y
- CONFIG_HIDRAW=y
-+CONFIG_HID_A4TECH=y
-+CONFIG_HID_APPLE=y
-+CONFIG_HID_BELKIN=y
-+CONFIG_HID_CHERRY=y
-+CONFIG_HID_CHICONY=y
-+CONFIG_HID_CYPRESS=y
-+CONFIG_HID_EZKEY=y
- CONFIG_HID_GYRATION=y
-+CONFIG_HID_ITE=y
-+CONFIG_HID_KENSINGTON=y
-+CONFIG_HID_REDRAGON=y
-+CONFIG_HID_MICROSOFT=y
-+CONFIG_HID_MONTEREY=y
- CONFIG_HID_NTRIG=y
- CONFIG_HID_PANTHERLORD=y
- CONFIG_PANTHERLORD_FF=y
-@@ -234,6 +295,8 @@ CONFIG_DMADEVICES=y
- CONFIG_VIRTIO_PCI=y
- CONFIG_VIRTIO_INPUT=y
- CONFIG_EEEPC_LAPTOP=y
-+CONFIG_INTEL_IOMMU=y
-+# CONFIG_INTEL_IOMMU_DEFAULT_ON is not set
- CONFIG_EXT4_FS=y
- CONFIG_EXT4_FS_POSIX_ACL=y
- CONFIG_EXT4_FS_SECURITY=y
-@@ -264,14 +327,55 @@ CONFIG_SECURITY_NETWORK=y
- CONFIG_SECURITY_SELINUX=y
- CONFIG_SECURITY_SELINUX_BOOTPARAM=y
- CONFIG_PRINTK_TIME=y
--CONFIG_DEBUG_KERNEL=y
-+CONFIG_BOOT_PRINTK_DELAY=y
-+CONFIG_DYNAMIC_DEBUG=y
- CONFIG_FRAME_WARN=1024
--CONFIG_MAGIC_SYSRQ=y
-+CONFIG_STRIP_ASM_SYMS=y
-+CONFIG_HEADERS_INSTALL=y
-+CONFIG_DEBUG_SECTION_MISMATCH=y
-+CONFIG_KGDB=y
-+CONFIG_KGDB_TESTS=y
-+CONFIG_KGDB_LOW_LEVEL_TRAP=y
-+CONFIG_KGDB_KDB=y
-+CONFIG_KDB_KEYBOARD=y
-+CONFIG_UBSAN=y
-+CONFIG_UBSAN_SHIFT=y
-+CONFIG_PAGE_OWNER=y
-+CONFIG_PAGE_POISONING=y
- CONFIG_DEBUG_STACK_USAGE=y
-+CONFIG_SCHED_STACK_END_CHECK=y
-+CONFIG_DEBUG_MEMORY_INIT=y
-+CONFIG_KFENCE=y
-+CONFIG_DEBUG_SHIRQ=y
-+CONFIG_PANIC_ON_OOPS=y
-+CONFIG_HARDLOCKUP_DETECTOR=y
-+CONFIG_BOOTPARAM_HARDLOCKUP_PANIC=y
-+# CONFIG_DETECT_HUNG_TASK is not set
-+CONFIG_WQ_CPU_INTENSIVE_REPORT=y
- CONFIG_SCHEDSTATS=y
-+CONFIG_NMI_CHECK_CPU=y
-+CONFIG_DEBUG_LIST=y
-+CONFIG_RCU_CPU_STALL_CPUTIME=y
-+CONFIG_BOOTTIME_TRACING=y
-+CONFIG_FUNCTION_GRAPH_RETVAL=y
-+CONFIG_FUNCTION_PROFILER=y
-+CONFIG_STACK_TRACER=y
-+CONFIG_SCHED_TRACER=y
-+CONFIG_HWLAT_TRACER=y
-+CONFIG_TIMERLAT_TRACER=y
-+CONFIG_MMIOTRACE=y
-+CONFIG_FTRACE_SYSCALLS=y
- CONFIG_BLK_DEV_IO_TRACE=y
-+CONFIG_USER_EVENTS=y
-+CONFIG_HIST_TRIGGERS=y
-+CONFIG_TRACE_EVENT_INJECT=y
-+CONFIG_RV=y
-+CONFIG_RV_MON_WWNR=y
- CONFIG_PROVIDE_OHCI1394_DMA_INIT=y
- CONFIG_EARLY_PRINTK_DBGP=y
-+CONFIG_EARLY_PRINTK_USB_XDBC=y
- CONFIG_DEBUG_BOOT_PARAMS=y
- CONFIG_DEBUG_ENTRY=y
- CONFIG_UNWINDER_FRAME_POINTER=y
-+CONFIG_FUNCTION_ERROR_INJECTION=y
-+CONFIG_MEMTEST=y
+I don't feel qualified to fully review this patch.
+
+It would be good to have the issue with sg-tables solved, but I dislike 
+the dedicated initializer macros. So my question is if this has any 
+drawbacks. Or could we make this available and the default for all 
+shmem-based drivers?
+
+Best regards
+Thomas
+
+Am 01.05.25 um 08:43 schrieb oushixiong1025@163.com:
+> From: Shixiong Ou <oushixiong@kylinos.cn>
+>
+> [WHY]
+> 1. Drivers using DRM_GEM_SHADOW_PLANE_HELPER_FUNCS and
+>     DRM_GEM_SHMEM_DRIVER_OPS (e.g., udl, ast) do not require
+>     sg_table import.
+>     They only need dma_buf_vmap() to access the shared buffer's
+>     kernel virtual address.
+>
+> 2. On certain Aspeed-based boards, a dma_mask of 0xffff_ffff may
+>     trigger SWIOTLB during dmabuf import. However, IO_TLB_SEGSIZE
+>     restricts the maximum DMA streaming mapping memory, resulting in
+>     errors like:
+>
+>     ast 0000:07:00.0: swiotlb buffer is full (sz: 3145728 bytes), total 32768 (slots), used 0 (slots)
+>
+> [HOW]
+> Provide a gem_prime_import implementation without sg_table mapping
+> to avoid issues (e.g., "swiotlb buffer is full"). Drivers that do not
+> require sg_table can adopt this.
+>
+> Signed-off-by: Shixiong Ou <oushixiong@kylinos.cn>
+> ---
+>   drivers/gpu/drm/drm_gem_shmem_helper.c | 95 ++++++++++++++++++++++++++
+>   include/drm/drm_gem_shmem_helper.h     | 24 +++++++
+>   2 files changed, 119 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/drm_gem_shmem_helper.c b/drivers/gpu/drm/drm_gem_shmem_helper.c
+> index d99dee67353a..9e41e350ff6f 100644
+> --- a/drivers/gpu/drm/drm_gem_shmem_helper.c
+> +++ b/drivers/gpu/drm/drm_gem_shmem_helper.c
+> @@ -39,6 +39,7 @@ MODULE_IMPORT_NS("DMA_BUF");
+>   static const struct drm_gem_object_funcs drm_gem_shmem_funcs = {
+>   	.free = drm_gem_shmem_object_free,
+>   	.print_info = drm_gem_shmem_object_print_info,
+> +	.export = drm_gem_shmem_object_prime_export,
+>   	.pin = drm_gem_shmem_object_pin,
+>   	.unpin = drm_gem_shmem_object_unpin,
+>   	.get_sg_table = drm_gem_shmem_object_get_sg_table,
+> @@ -799,6 +800,100 @@ drm_gem_shmem_prime_import_sg_table(struct drm_device *dev,
+>   }
+>   EXPORT_SYMBOL_GPL(drm_gem_shmem_prime_import_sg_table);
+>   
+> +const struct dma_buf_ops drm_gem_shmem_prime_dmabuf_ops =  {
+> +	.cache_sgt_mapping = true,
+> +	.attach = drm_gem_map_attach,
+> +	.detach = drm_gem_map_detach,
+> +	.map_dma_buf = drm_gem_map_dma_buf,
+> +	.unmap_dma_buf = drm_gem_unmap_dma_buf,
+> +	.release = drm_gem_dmabuf_release,
+> +	.mmap = drm_gem_dmabuf_mmap,
+> +	.vmap = drm_gem_dmabuf_vmap,
+> +	.vunmap = drm_gem_dmabuf_vunmap,
+> +};
+> +
+> +/**
+> + * drm_gem_shmem_prime_export - implementation of the export callback
+> + * @shmem: shmem GEM object
+> + */
+> +struct dma_buf *drm_gem_shmem_prime_export(struct drm_gem_shmem_object *shmem,
+> +					   int flags)
+> +{
+> +	struct drm_gem_object *obj = &shmem->base;
+> +	struct drm_device *dev = obj->dev;
+> +	struct dma_buf_export_info exp_info = {
+> +		.exp_name = KBUILD_MODNAME, /* white lie for debug */
+> +		.owner = dev->driver->fops->owner,
+> +		.ops = &drm_gem_shmem_prime_dmabuf_ops,
+> +		.size = obj->size,
+> +		.flags = flags,
+> +		.priv = obj,
+> +		.resv = obj->resv,
+> +	};
+> +
+> +	return drm_gem_dmabuf_export(dev, &exp_info);
+> +}
+> +
+> +/**
+> + * drm_gem_shmem_prime_import - Import dmabuf without mapping its sg_table
+> + * @dev: Device to import into
+> + * @dma_buf: dma-buf object to import
+> + *
+> + * Drivers that use the shmem helpers but also wants to import dmabuf without
+> + * mapping its sg_table can use this as their &drm_driver.gem_prime_import
+> + * implementation.
+> + */
+> +struct drm_gem_object *drm_gem_shmem_prime_import(struct drm_device *dev,
+> +						  struct dma_buf *dma_buf)
+> +{
+> +	struct dma_buf_attachment *attach;
+> +	struct drm_gem_shmem_object *shmem;
+> +	size_t size;
+> +	int ret;
+> +
+> +	if (dma_buf->ops == &drm_gem_shmem_prime_dmabuf_ops) {
+> +		struct drm_gem_object *obj;
+> +
+> +		obj = dma_buf->priv;
+> +		if (obj->dev == dev) {
+> +			/*
+> +			 * Importing dmabuf exported from our own gem increases
+> +			 * refcount on gem itself instead of f_count of dmabuf.
+> +			 */
+> +			drm_gem_object_get(obj);
+> +			return obj;
+> +		}
+> +	}
+> +
+> +	attach = dma_buf_attach(dma_buf, dev->dev);
+> +	if (IS_ERR(attach))
+> +		return ERR_CAST(attach);
+> +
+> +	get_dma_buf(dma_buf);
+> +
+> +	size = PAGE_ALIGN(attach->dmabuf->size);
+> +
+> +	shmem = __drm_gem_shmem_create(dev, size, true, NULL);
+> +	if (IS_ERR(shmem)) {
+> +		ret = PTR_ERR(shmem);
+> +		goto fail_detach;
+> +	}
+> +
+> +	drm_dbg_prime(dev, "size = %zu\n", size);
+> +
+> +	shmem->base.import_attach = attach;
+> +	shmem->base.resv = dma_buf->resv;
+> +
+> +	return &shmem->base;
+> +
+> +fail_detach:
+> +	dma_buf_detach(dma_buf, attach);
+> +	dma_buf_put(dma_buf);
+> +
+> +	return ERR_PTR(ret);
+> +}
+> +EXPORT_SYMBOL_GPL(drm_gem_shmem_prime_import);
+> +
+>   MODULE_DESCRIPTION("DRM SHMEM memory-management helpers");
+>   MODULE_IMPORT_NS("DMA_BUF");
+>   MODULE_LICENSE("GPL v2");
+> diff --git a/include/drm/drm_gem_shmem_helper.h b/include/drm/drm_gem_shmem_helper.h
+> index cef5a6b5a4d6..78ef91593a8e 100644
+> --- a/include/drm/drm_gem_shmem_helper.h
+> +++ b/include/drm/drm_gem_shmem_helper.h
+> @@ -110,6 +110,8 @@ int drm_gem_shmem_vmap(struct drm_gem_shmem_object *shmem,
+>   void drm_gem_shmem_vunmap(struct drm_gem_shmem_object *shmem,
+>   			  struct iosys_map *map);
+>   int drm_gem_shmem_mmap(struct drm_gem_shmem_object *shmem, struct vm_area_struct *vma);
+> +struct dma_buf *drm_gem_shmem_prime_export(struct drm_gem_shmem_object *shmem,
+> +						  int flags);
+>   
+>   int drm_gem_shmem_pin_locked(struct drm_gem_shmem_object *shmem);
+>   void drm_gem_shmem_unpin_locked(struct drm_gem_shmem_object *shmem);
+> @@ -168,6 +170,18 @@ static inline void drm_gem_shmem_object_print_info(struct drm_printer *p, unsign
+>   	drm_gem_shmem_print_info(shmem, p, indent);
+>   }
+>   
+> +/**
+> + * drm_gem_shmem_object_prime_export - GEM object function for export()
+> + * @obj: GEM object
+> + *
+> + */
+> +static inline struct dma_buf *drm_gem_shmem_object_prime_export(struct drm_gem_object *obj,
+> +								int flags)
+> +{
+> +	struct drm_gem_shmem_object *shmem = to_drm_gem_shmem_obj(obj);
+> +
+> +	return drm_gem_shmem_prime_export(shmem, flags);
+> +}
+>   /**
+>    * drm_gem_shmem_object_pin - GEM object function for drm_gem_shmem_pin()
+>    * @obj: GEM object
+> @@ -276,6 +290,8 @@ drm_gem_shmem_prime_import_sg_table(struct drm_device *dev,
+>   				    struct sg_table *sgt);
+>   int drm_gem_shmem_dumb_create(struct drm_file *file, struct drm_device *dev,
+>   			      struct drm_mode_create_dumb *args);
+> +struct drm_gem_object *drm_gem_shmem_prime_import(struct drm_device *dev,
+> +						  struct dma_buf *buf);
+>   
+>   /**
+>    * DRM_GEM_SHMEM_DRIVER_OPS - Default shmem GEM operations
+> @@ -287,4 +303,12 @@ int drm_gem_shmem_dumb_create(struct drm_file *file, struct drm_device *dev,
+>   	.gem_prime_import_sg_table = drm_gem_shmem_prime_import_sg_table, \
+>   	.dumb_create		   = drm_gem_shmem_dumb_create
+>   
+> +/**
+> + * This macro provides a shmem GEM operations that implementate a simple
+> + * gem_prime_import.
+> + */
+> +#define DRM_GEM_SHMEM_SIMPLE_DRIVER_OPS \
+> +	.gem_prime_import	= drm_gem_shmem_prime_import, \
+> +	.dumb_create		= drm_gem_shmem_dumb_create
+> +
+>   #endif /* __DRM_GEM_SHMEM_HELPER_H__ */
+
 -- 
-2.45.2
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
