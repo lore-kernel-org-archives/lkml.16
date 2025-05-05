@@ -1,220 +1,429 @@
-Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3D28335214
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 22:36:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3475C27FB1C;
+	Mon,  5 May 2025 22:36:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746484592; cv=none; b=mX9xOzZQ/8U8PfuPpEvQKzI4XL6U1pnZV8eDdCVPHCWfyIXEP6EWUb+BOxC2xNauwq67pm6dVbebp+AD9f9mrEhmZtcMSOQG+F8nZMXo49TJqalI2f0FpM428Fa/jKgli7HS/fOThVTT7/zS0rA9GnrtCluuH2b3CnFuJqsriFA=
+	t=1746484593; cv=none; b=VLIDgKqmrQPi/URihS9rmpUGmdTQ99VVaQo+ex77eQ2jUb5qD3x5Hu4MR239pRr4bzWK5MdjpS12EcNwWBLZtu7gBCs5Q+8XU8K4FIuOKs8DQFieIIb9uBGEP6wsohSZscYSv1kR92VuTcrLAYpey7lYDWn/+ls3FgDI8momMrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746484592; c=relaxed/simple;
-	bh=9+S4sH3Oi7fBWWndhFeCVL+3b9Cj5GUO9GCYPbX1bMU=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=cRwu4Rk13gBF+w02yDqAGFH3NtqTPDqcRJ19VV6V2Q28HKjLb/dcvky88wFCJlLkQzgnqBGXs2hWr3TtCOoMs6ltBW2w1Dsikh7eO8esYCYGH5V3PPHn07So2yXovSji3vgZk+ul3kZPvsS1Qli9PYPyKwrNcKqHmB8t0xDI1RY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-85e4f920dacso407448939f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 15:36:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746484590; x=1747089390;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2z9Pd/Vk5Bhcd1MqY2txaj588GzMwMC6vNeVs624vsI=;
-        b=KIb1LJqrpZNEqDG/0XBGTqNR+8PecV773yGvlch1Dt28w2v0fQf90Y/FIzZwysTHQC
-         PakHDProDMBNG8yLQhXllPH+TOZZ7rvY6WVBWDfzwZSQT7Vg9ljbsdFbaouO34MD1HT+
-         gWwzHz8v0T6gIvKcuEO5YVyDb2eA/TBvhtXT43GHWivSgiTX496Frpga1+nXORzYO+Iy
-         Tovj3kviWm+okFRlpoeb7weTDSza86zuA8G23IU+ujhbCBPtjFZh1+nQ1keBNg85HPMq
-         IuWy1juW+LOl0zHuDpqFVZ/P1NI3oH3OwD0VAf8L/yIGcQOUx0I2zaPJo2VSUQz5YCbD
-         wn4A==
-X-Forwarded-Encrypted: i=1; AJvYcCXAjTrGOAMVQlRRTMw30rePhYxDSBalsWnnnNYolvTwM9eXiLwubKh9JUA0sJpmfF9MRGHrddqiGpmDUVw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxcYKBfYP5Et9slJkTyEFchrgHYYGjTZF4pcITtPMUcCawp4biU
-	rDRL4nQ65zyVWS5pyNF+p71XD/H/4eo+kcZRyPSlXzU7TBqtkFfdbSHPOK1CMl85B0sxyTKWt/r
-	OCiN203Arq//I3DCZt5Uyuyx9yqmKylHU1wTy1F4dT6NVgcMy2snX3ZE=
-X-Google-Smtp-Source: AGHT+IGdEh5Jeiw094ug/FrtdtXCU3SFK1IW7B/rMculblwE0oOjcDc7jEkhquqc+Mg6clUlieWgn78DefAh5chDC/J1OROpKeEv
+	s=arc-20240116; t=1746484593; c=relaxed/simple;
+	bh=gBL44RYb/J6w7hGEKdPGMz8aL1hsFJmrypsznpqFECE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=VqrWklbOVhuIURzpxEM9SIOFLPWo94V60yJ1tLwLQ4WIumiVA9sqLRj9AQBPtF+aGfY5jLPtoEiOB/R2QX3m07fDBuQSVbvFIIdyOr0BPrmYXixgLP8CM1PPK8PBL4XqjFSg2rurUOZ2Tf3fNURDmNySmeikazJjTI10fK+dgdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t6dF6FDh; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t6dF6FDh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB6F8C4CEE4;
+	Mon,  5 May 2025 22:36:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746484593;
+	bh=gBL44RYb/J6w7hGEKdPGMz8aL1hsFJmrypsznpqFECE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=t6dF6FDh4a9vwxRa/oUpZZerCO+i+6NRC3dwzmf7Cc87A9xQoYcr/mavsKP+NsSDf
+	 ludZLb5P2/hpF1Yh7ja3ZTqa6R31g4naowwjlGyZgTrg0E8AOXZ0Ob8HXbBYeFpKlq
+	 WvmAvKgj/HgNf8rB0NCJZLBEZYzsGHLSxFGzU5cO2gbFx0CHz7FTDiVjFex+v5mCVK
+	 r6XAiNogy8nYBFcmfF5hX9kYJ8hTNsS2lPa0TmTiGVgD4btS70kE+6qV+ehuRyYKXY
+	 o6ajyu6vWZYA3/3IAwpdhQVKLXJvW1ky3Etm4Bxrev9drEr8JmZwL+MVh09ryAs+vl
+	 nPnk6YS2MiGag==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Antoine Tenart <atenart@kernel.org>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	davem@davemloft.net,
+	edumazet@google.com,
+	pabeni@redhat.com,
+	sdf@fomichev.me,
+	jdamato@fastly.com,
+	netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.14 552/642] net-sysfs: remove rtnl_trylock from queue attributes
+Date: Mon,  5 May 2025 18:12:48 -0400
+Message-Id: <20250505221419.2672473-552-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250505221419.2672473-1-sashal@kernel.org>
+References: <20250505221419.2672473-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:ca4a:0:b0:3d5:81aa:4d0a with SMTP id
- e9e14a558f8ab-3da5b26eab9mr85526325ab.6.1746484589927; Mon, 05 May 2025
- 15:36:29 -0700 (PDT)
-Date: Mon, 05 May 2025 15:36:29 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68193d6d.050a0220.37980e.0029.GAE@google.com>
-Subject: [syzbot] [ocfs2?] possible deadlock in ocfs2_move_extent
-From: syzbot <syzbot+68c788938ba0326046a9@syzkaller.appspotmail.com>
-To: jlbec@evilplan.org, joseph.qi@linux.alibaba.com, 
-	linux-kernel@vger.kernel.org, mark@fasheh.com, ocfs2-devel@lists.linux.dev, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.14.5
+Content-Transfer-Encoding: 8bit
 
-Hello,
+From: Antoine Tenart <atenart@kernel.org>
 
-syzbot found the following issue on:
+[ Upstream commit b0b6fcfa6ad8433e22b050c72cfbeec2548744b9 ]
 
-HEAD commit:    4f79eaa2ceac kbuild: Properly disable -Wunterminated-strin..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=172041cc580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=991cf8e2ade034c6
-dashboard link: https://syzkaller.appspot.com/bug?extid=68c788938ba0326046a9
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+Similar to the commit removing remove rtnl_trylock from device
+attributes we here apply the same technique to networking queues.
 
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/16be56ff3915/disk-4f79eaa2.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/ba7f9a1ecd57/vmlinux-4f79eaa2.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/834807e42877/bzImage-4f79eaa2.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+68c788938ba0326046a9@syzkaller.appspotmail.com
-
-loop0: detected capacity change from 0 to 32768
-ocfs2: Mounting device (7,0) on (node local, slot 0) with ordered data mode.
-======================================================
-WARNING: possible circular locking dependency detected
-6.15.0-rc4-syzkaller-00052-g4f79eaa2ceac #0 Not tainted
-------------------------------------------------------
-syz.0.30/6040 is trying to acquire lock:
-ffff888076dd5100 (&ocfs2_sysfile_lock_key[args->fi_sysfile_type]#5){+.+.}-{4:4}, at: inode_lock include/linux/fs.h:867 [inline]
-ffff888076dd5100 (&ocfs2_sysfile_lock_key[args->fi_sysfile_type]#5){+.+.}-{4:4}, at: ocfs2_move_extent+0x6ea/0x17f0 fs/ocfs2/move_extents.c:640
-
-but task is already holding lock:
-ffff88805a106d80 (&ocfs2_sysfile_lock_key[args->fi_sysfile_type]#6){+.+.}-{4:4}, at: inode_lock include/linux/fs.h:867 [inline]
-ffff88805a106d80 (&ocfs2_sysfile_lock_key[args->fi_sysfile_type]#6){+.+.}-{4:4}, at: ocfs2_move_extent+0x429/0x17f0 fs/ocfs2/move_extents.c:632
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #1 (&ocfs2_sysfile_lock_key[args->fi_sysfile_type]#6){+.+.}-{4:4}:
-       down_write+0x92/0x200 kernel/locking/rwsem.c:1577
-       inode_lock include/linux/fs.h:867 [inline]
-       __ocfs2_flush_truncate_log+0x31e/0x1160 fs/ocfs2/alloc.c:6054
-       ocfs2_flush_truncate_log+0x4a/0x70 fs/ocfs2/alloc.c:6084
-       ocfs2_sync_fs+0x1c6/0x3d0 fs/ocfs2/super.c:406
-       sync_filesystem+0x1d0/0x290 fs/sync.c:66
-       generic_shutdown_super+0x74/0x390 fs/super.c:621
-       kill_block_super+0x3b/0x90 fs/super.c:1710
-       deactivate_locked_super+0xc1/0x1a0 fs/super.c:473
-       deactivate_super fs/super.c:506 [inline]
-       deactivate_super+0xde/0x100 fs/super.c:502
-       cleanup_mnt+0x225/0x450 fs/namespace.c:1435
-       task_work_run+0x150/0x240 kernel/task_work.c:227
-       resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
-       exit_to_user_mode_loop kernel/entry/common.c:114 [inline]
-       exit_to_user_mode_prepare include/linux/entry-common.h:329 [inline]
-       __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
-       syscall_exit_to_user_mode+0x27b/0x2a0 kernel/entry/common.c:218
-       do_syscall_64+0xda/0x260 arch/x86/entry/syscall_64.c:100
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #0 (&ocfs2_sysfile_lock_key[args->fi_sysfile_type]#5){+.+.}-{4:4}:
-       check_prev_add kernel/locking/lockdep.c:3166 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3285 [inline]
-       validate_chain kernel/locking/lockdep.c:3909 [inline]
-       __lock_acquire+0x1173/0x1ba0 kernel/locking/lockdep.c:5235
-       lock_acquire kernel/locking/lockdep.c:5866 [inline]
-       lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5823
-       down_write+0x92/0x200 kernel/locking/rwsem.c:1577
-       inode_lock include/linux/fs.h:867 [inline]
-       ocfs2_move_extent+0x6ea/0x17f0 fs/ocfs2/move_extents.c:640
-       __ocfs2_move_extents_range fs/ocfs2/move_extents.c:860 [inline]
-       ocfs2_move_extents+0xd69/0x1980 fs/ocfs2/move_extents.c:927
-       ocfs2_ioctl_move_extents+0x54d/0xb20 fs/ocfs2/move_extents.c:1053
-       ocfs2_ioctl+0x3c6/0x6f0 fs/ocfs2/ioctl.c:946
-       vfs_ioctl fs/ioctl.c:51 [inline]
-       __do_sys_ioctl fs/ioctl.c:906 [inline]
-       __se_sys_ioctl fs/ioctl.c:892 [inline]
-       __x64_sys_ioctl+0x193/0x200 fs/ioctl.c:892
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-other info that might help us debug this:
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&ocfs2_sysfile_lock_key[args->fi_sysfile_type]#6);
-                               lock(&ocfs2_sysfile_lock_key[args->fi_sysfile_type]#5);
-                               lock(&ocfs2_sysfile_lock_key[args->fi_sysfile_type]#6);
-  lock(&ocfs2_sysfile_lock_key[args->fi_sysfile_type]#5);
-
- *** DEADLOCK ***
-
-5 locks held by syz.0.30/6040:
- #0: ffff88807ac9a420 (sb_writers#12){.+.+}-{0:0}, at: ocfs2_ioctl_move_extents+0xc4/0xb20 fs/ocfs2/move_extents.c:985
- #1: ffff888076dd5f40 (&sb->s_type->i_mutex_key#20){++++}-{4:4}, at: inode_lock include/linux/fs.h:867 [inline]
- #1: ffff888076dd5f40 (&sb->s_type->i_mutex_key#20){++++}-{4:4}, at: ocfs2_move_extents+0x1c3/0x1980 fs/ocfs2/move_extents.c:905
- #2: ffff888076dd5be0 (&oi->ip_alloc_sem){+.+.}-{4:4}, at: ocfs2_move_extents+0x429/0x1980 fs/ocfs2/move_extents.c:925
- #3: ffff888076dd1800 (&ocfs2_sysfile_lock_key[args->fi_sysfile_type]#3){+.+.}-{4:4}, at: inode_lock include/linux/fs.h:867 [inline]
- #3: ffff888076dd1800 (&ocfs2_sysfile_lock_key[args->fi_sysfile_type]#3){+.+.}-{4:4}, at: ocfs2_reserve_suballoc_bits+0x11c/0x48d0 fs/ocfs2/suballoc.c:786
- #4: ffff88805a106d80 (&ocfs2_sysfile_lock_key[args->fi_sysfile_type]#6){+.+.}-{4:4}, at: inode_lock include/linux/fs.h:867 [inline]
- #4: ffff88805a106d80 (&ocfs2_sysfile_lock_key[args->fi_sysfile_type]#6){+.+.}-{4:4}, at: ocfs2_move_extent+0x429/0x17f0 fs/ocfs2/move_extents.c:632
-
-stack backtrace:
-CPU: 1 UID: 0 PID: 6040 Comm: syz.0.30 Not tainted 6.15.0-rc4-syzkaller-00052-g4f79eaa2ceac #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/19/2025
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
- print_circular_bug+0x275/0x350 kernel/locking/lockdep.c:2079
- check_noncircular+0x14c/0x170 kernel/locking/lockdep.c:2211
- check_prev_add kernel/locking/lockdep.c:3166 [inline]
- check_prevs_add kernel/locking/lockdep.c:3285 [inline]
- validate_chain kernel/locking/lockdep.c:3909 [inline]
- __lock_acquire+0x1173/0x1ba0 kernel/locking/lockdep.c:5235
- lock_acquire kernel/locking/lockdep.c:5866 [inline]
- lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5823
- down_write+0x92/0x200 kernel/locking/rwsem.c:1577
- inode_lock include/linux/fs.h:867 [inline]
- ocfs2_move_extent+0x6ea/0x17f0 fs/ocfs2/move_extents.c:640
- __ocfs2_move_extents_range fs/ocfs2/move_extents.c:860 [inline]
- ocfs2_move_extents+0xd69/0x1980 fs/ocfs2/move_extents.c:927
- ocfs2_ioctl_move_extents+0x54d/0xb20 fs/ocfs2/move_extents.c:1053
- ocfs2_ioctl+0x3c6/0x6f0 fs/ocfs2/ioctl.c:946
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:906 [inline]
- __se_sys_ioctl fs/ioctl.c:892 [inline]
- __x64_sys_ioctl+0x193/0x200 fs/ioctl.c:892
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fd0fd78e969
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fd0fe5d9038 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007fd0fd9b5fa0 RCX: 00007fd0fd78e969
-RDX: 00002000000000c0 RSI: 0000000040406f06 RDI: 0000000000000004
-RBP: 00007fd0fd810ab1 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007fd0fd9b5fa0 R15: 00007ffe87be5778
- </TASK>
-
-
+Signed-off-by: Antoine Tenart <atenart@kernel.org>
+Link: https://patch.msgid.link/20250204170314.146022-5-atenart@kernel.org
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ net/core/net-sysfs.c | 147 ++++++++++++++++++++++++++-----------------
+ 1 file changed, 89 insertions(+), 58 deletions(-)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/net/core/net-sysfs.c b/net/core/net-sysfs.c
+index 07cb99b114bdd..77465dc3cd648 100644
+--- a/net/core/net-sysfs.c
++++ b/net/core/net-sysfs.c
+@@ -1244,9 +1244,11 @@ static int net_rx_queue_change_owner(struct net_device *dev, int num,
+  */
+ struct netdev_queue_attribute {
+ 	struct attribute attr;
+-	ssize_t (*show)(struct netdev_queue *queue, char *buf);
+-	ssize_t (*store)(struct netdev_queue *queue,
+-			 const char *buf, size_t len);
++	ssize_t (*show)(struct kobject *kobj, struct attribute *attr,
++			struct netdev_queue *queue, char *buf);
++	ssize_t (*store)(struct kobject *kobj, struct attribute *attr,
++			 struct netdev_queue *queue, const char *buf,
++			 size_t len);
+ };
+ #define to_netdev_queue_attr(_attr) \
+ 	container_of(_attr, struct netdev_queue_attribute, attr)
+@@ -1263,7 +1265,7 @@ static ssize_t netdev_queue_attr_show(struct kobject *kobj,
+ 	if (!attribute->show)
+ 		return -EIO;
+ 
+-	return attribute->show(queue, buf);
++	return attribute->show(kobj, attr, queue, buf);
+ }
+ 
+ static ssize_t netdev_queue_attr_store(struct kobject *kobj,
+@@ -1277,7 +1279,7 @@ static ssize_t netdev_queue_attr_store(struct kobject *kobj,
+ 	if (!attribute->store)
+ 		return -EIO;
+ 
+-	return attribute->store(queue, buf, count);
++	return attribute->store(kobj, attr, queue, buf, count);
+ }
+ 
+ static const struct sysfs_ops netdev_queue_sysfs_ops = {
+@@ -1285,7 +1287,8 @@ static const struct sysfs_ops netdev_queue_sysfs_ops = {
+ 	.store = netdev_queue_attr_store,
+ };
+ 
+-static ssize_t tx_timeout_show(struct netdev_queue *queue, char *buf)
++static ssize_t tx_timeout_show(struct kobject *kobj, struct attribute *attr,
++			       struct netdev_queue *queue, char *buf)
+ {
+ 	unsigned long trans_timeout = atomic_long_read(&queue->trans_timeout);
+ 
+@@ -1303,18 +1306,18 @@ static unsigned int get_netdev_queue_index(struct netdev_queue *queue)
+ 	return i;
+ }
+ 
+-static ssize_t traffic_class_show(struct netdev_queue *queue,
+-				  char *buf)
++static ssize_t traffic_class_show(struct kobject *kobj, struct attribute *attr,
++				  struct netdev_queue *queue, char *buf)
+ {
+ 	struct net_device *dev = queue->dev;
+-	int num_tc, tc;
+-	int index;
++	int num_tc, tc, index, ret;
+ 
+ 	if (!netif_is_multiqueue(dev))
+ 		return -ENOENT;
+ 
+-	if (!rtnl_trylock())
+-		return restart_syscall();
++	ret = sysfs_rtnl_lock(kobj, attr, queue->dev);
++	if (ret)
++		return ret;
+ 
+ 	index = get_netdev_queue_index(queue);
+ 
+@@ -1341,24 +1344,25 @@ static ssize_t traffic_class_show(struct netdev_queue *queue,
+ }
+ 
+ #ifdef CONFIG_XPS
+-static ssize_t tx_maxrate_show(struct netdev_queue *queue,
+-			       char *buf)
++static ssize_t tx_maxrate_show(struct kobject *kobj, struct attribute *attr,
++			       struct netdev_queue *queue, char *buf)
+ {
+ 	return sysfs_emit(buf, "%lu\n", queue->tx_maxrate);
+ }
+ 
+-static ssize_t tx_maxrate_store(struct netdev_queue *queue,
+-				const char *buf, size_t len)
++static ssize_t tx_maxrate_store(struct kobject *kobj, struct attribute *attr,
++				struct netdev_queue *queue, const char *buf,
++				size_t len)
+ {
+-	struct net_device *dev = queue->dev;
+ 	int err, index = get_netdev_queue_index(queue);
++	struct net_device *dev = queue->dev;
+ 	u32 rate = 0;
+ 
+ 	if (!capable(CAP_NET_ADMIN))
+ 		return -EPERM;
+ 
+ 	/* The check is also done later; this helps returning early without
+-	 * hitting the trylock/restart below.
++	 * hitting the locking section below.
+ 	 */
+ 	if (!dev->netdev_ops->ndo_set_tx_maxrate)
+ 		return -EOPNOTSUPP;
+@@ -1367,18 +1371,21 @@ static ssize_t tx_maxrate_store(struct netdev_queue *queue,
+ 	if (err < 0)
+ 		return err;
+ 
+-	if (!rtnl_trylock())
+-		return restart_syscall();
++	err = sysfs_rtnl_lock(kobj, attr, dev);
++	if (err)
++		return err;
+ 
+ 	err = -EOPNOTSUPP;
+ 	if (dev->netdev_ops->ndo_set_tx_maxrate)
+ 		err = dev->netdev_ops->ndo_set_tx_maxrate(dev, index, rate);
+ 
+-	rtnl_unlock();
+ 	if (!err) {
+ 		queue->tx_maxrate = rate;
++		rtnl_unlock();
+ 		return len;
+ 	}
++
++	rtnl_unlock();
+ 	return err;
+ }
+ 
+@@ -1422,16 +1429,17 @@ static ssize_t bql_set(const char *buf, const size_t count,
+ 	return count;
+ }
+ 
+-static ssize_t bql_show_hold_time(struct netdev_queue *queue,
+-				  char *buf)
++static ssize_t bql_show_hold_time(struct kobject *kobj, struct attribute *attr,
++				  struct netdev_queue *queue, char *buf)
+ {
+ 	struct dql *dql = &queue->dql;
+ 
+ 	return sysfs_emit(buf, "%u\n", jiffies_to_msecs(dql->slack_hold_time));
+ }
+ 
+-static ssize_t bql_set_hold_time(struct netdev_queue *queue,
+-				 const char *buf, size_t len)
++static ssize_t bql_set_hold_time(struct kobject *kobj, struct attribute *attr,
++				 struct netdev_queue *queue, const char *buf,
++				 size_t len)
+ {
+ 	struct dql *dql = &queue->dql;
+ 	unsigned int value;
+@@ -1450,15 +1458,17 @@ static struct netdev_queue_attribute bql_hold_time_attribute __ro_after_init
+ 	= __ATTR(hold_time, 0644,
+ 		 bql_show_hold_time, bql_set_hold_time);
+ 
+-static ssize_t bql_show_stall_thrs(struct netdev_queue *queue, char *buf)
++static ssize_t bql_show_stall_thrs(struct kobject *kobj, struct attribute *attr,
++				   struct netdev_queue *queue, char *buf)
+ {
+ 	struct dql *dql = &queue->dql;
+ 
+ 	return sysfs_emit(buf, "%u\n", jiffies_to_msecs(dql->stall_thrs));
+ }
+ 
+-static ssize_t bql_set_stall_thrs(struct netdev_queue *queue,
+-				  const char *buf, size_t len)
++static ssize_t bql_set_stall_thrs(struct kobject *kobj, struct attribute *attr,
++				  struct netdev_queue *queue, const char *buf,
++				  size_t len)
+ {
+ 	struct dql *dql = &queue->dql;
+ 	unsigned int value;
+@@ -1484,13 +1494,15 @@ static ssize_t bql_set_stall_thrs(struct netdev_queue *queue,
+ static struct netdev_queue_attribute bql_stall_thrs_attribute __ro_after_init =
+ 	__ATTR(stall_thrs, 0644, bql_show_stall_thrs, bql_set_stall_thrs);
+ 
+-static ssize_t bql_show_stall_max(struct netdev_queue *queue, char *buf)
++static ssize_t bql_show_stall_max(struct kobject *kobj, struct attribute *attr,
++				  struct netdev_queue *queue, char *buf)
+ {
+ 	return sysfs_emit(buf, "%u\n", READ_ONCE(queue->dql.stall_max));
+ }
+ 
+-static ssize_t bql_set_stall_max(struct netdev_queue *queue,
+-				 const char *buf, size_t len)
++static ssize_t bql_set_stall_max(struct kobject *kobj, struct attribute *attr,
++				 struct netdev_queue *queue, const char *buf,
++				 size_t len)
+ {
+ 	WRITE_ONCE(queue->dql.stall_max, 0);
+ 	return len;
+@@ -1499,7 +1511,8 @@ static ssize_t bql_set_stall_max(struct netdev_queue *queue,
+ static struct netdev_queue_attribute bql_stall_max_attribute __ro_after_init =
+ 	__ATTR(stall_max, 0644, bql_show_stall_max, bql_set_stall_max);
+ 
+-static ssize_t bql_show_stall_cnt(struct netdev_queue *queue, char *buf)
++static ssize_t bql_show_stall_cnt(struct kobject *kobj, struct attribute *attr,
++				  struct netdev_queue *queue, char *buf)
+ {
+ 	struct dql *dql = &queue->dql;
+ 
+@@ -1509,8 +1522,8 @@ static ssize_t bql_show_stall_cnt(struct netdev_queue *queue, char *buf)
+ static struct netdev_queue_attribute bql_stall_cnt_attribute __ro_after_init =
+ 	__ATTR(stall_cnt, 0444, bql_show_stall_cnt, NULL);
+ 
+-static ssize_t bql_show_inflight(struct netdev_queue *queue,
+-				 char *buf)
++static ssize_t bql_show_inflight(struct kobject *kobj, struct attribute *attr,
++				 struct netdev_queue *queue, char *buf)
+ {
+ 	struct dql *dql = &queue->dql;
+ 
+@@ -1521,13 +1534,16 @@ static struct netdev_queue_attribute bql_inflight_attribute __ro_after_init =
+ 	__ATTR(inflight, 0444, bql_show_inflight, NULL);
+ 
+ #define BQL_ATTR(NAME, FIELD)						\
+-static ssize_t bql_show_ ## NAME(struct netdev_queue *queue,		\
+-				 char *buf)				\
++static ssize_t bql_show_ ## NAME(struct kobject *kobj,			\
++				 struct attribute *attr,		\
++				 struct netdev_queue *queue, char *buf)	\
+ {									\
+ 	return bql_show(buf, queue->dql.FIELD);				\
+ }									\
+ 									\
+-static ssize_t bql_set_ ## NAME(struct netdev_queue *queue,		\
++static ssize_t bql_set_ ## NAME(struct kobject *kobj,			\
++				struct attribute *attr,			\
++				struct netdev_queue *queue,		\
+ 				const char *buf, size_t len)		\
+ {									\
+ 	return bql_set(buf, len, &queue->dql.FIELD);			\
+@@ -1613,19 +1629,21 @@ static ssize_t xps_queue_show(struct net_device *dev, unsigned int index,
+ 	return len < PAGE_SIZE ? len : -EINVAL;
+ }
+ 
+-static ssize_t xps_cpus_show(struct netdev_queue *queue, char *buf)
++static ssize_t xps_cpus_show(struct kobject *kobj, struct attribute *attr,
++			     struct netdev_queue *queue, char *buf)
+ {
+ 	struct net_device *dev = queue->dev;
+ 	unsigned int index;
+-	int len, tc;
++	int len, tc, ret;
+ 
+ 	if (!netif_is_multiqueue(dev))
+ 		return -ENOENT;
+ 
+ 	index = get_netdev_queue_index(queue);
+ 
+-	if (!rtnl_trylock())
+-		return restart_syscall();
++	ret = sysfs_rtnl_lock(kobj, attr, queue->dev);
++	if (ret)
++		return ret;
+ 
+ 	/* If queue belongs to subordinate dev use its map */
+ 	dev = netdev_get_tx_queue(dev, index)->sb_dev ? : dev;
+@@ -1636,18 +1654,21 @@ static ssize_t xps_cpus_show(struct netdev_queue *queue, char *buf)
+ 		return -EINVAL;
+ 	}
+ 
+-	/* Make sure the subordinate device can't be freed */
+-	get_device(&dev->dev);
++	/* Increase the net device refcnt to make sure it won't be freed while
++	 * xps_queue_show is running.
++	 */
++	dev_hold(dev);
+ 	rtnl_unlock();
+ 
+ 	len = xps_queue_show(dev, index, tc, buf, XPS_CPUS);
+ 
+-	put_device(&dev->dev);
++	dev_put(dev);
+ 	return len;
+ }
+ 
+-static ssize_t xps_cpus_store(struct netdev_queue *queue,
+-			      const char *buf, size_t len)
++static ssize_t xps_cpus_store(struct kobject *kobj, struct attribute *attr,
++			      struct netdev_queue *queue, const char *buf,
++			      size_t len)
+ {
+ 	struct net_device *dev = queue->dev;
+ 	unsigned int index;
+@@ -1671,9 +1692,10 @@ static ssize_t xps_cpus_store(struct netdev_queue *queue,
+ 		return err;
+ 	}
+ 
+-	if (!rtnl_trylock()) {
++	err = sysfs_rtnl_lock(kobj, attr, dev);
++	if (err) {
+ 		free_cpumask_var(mask);
+-		return restart_syscall();
++		return err;
+ 	}
+ 
+ 	err = netif_set_xps_queue(dev, mask, index);
+@@ -1687,26 +1709,34 @@ static ssize_t xps_cpus_store(struct netdev_queue *queue,
+ static struct netdev_queue_attribute xps_cpus_attribute __ro_after_init
+ 	= __ATTR_RW(xps_cpus);
+ 
+-static ssize_t xps_rxqs_show(struct netdev_queue *queue, char *buf)
++static ssize_t xps_rxqs_show(struct kobject *kobj, struct attribute *attr,
++			     struct netdev_queue *queue, char *buf)
+ {
+ 	struct net_device *dev = queue->dev;
+ 	unsigned int index;
+-	int tc;
++	int tc, ret;
+ 
+ 	index = get_netdev_queue_index(queue);
+ 
+-	if (!rtnl_trylock())
+-		return restart_syscall();
++	ret = sysfs_rtnl_lock(kobj, attr, dev);
++	if (ret)
++		return ret;
+ 
+ 	tc = netdev_txq_to_tc(dev, index);
++
++	/* Increase the net device refcnt to make sure it won't be freed while
++	 * xps_queue_show is running.
++	 */
++	dev_hold(dev);
+ 	rtnl_unlock();
+-	if (tc < 0)
+-		return -EINVAL;
+ 
+-	return xps_queue_show(dev, index, tc, buf, XPS_RXQS);
++	ret = tc >= 0 ? xps_queue_show(dev, index, tc, buf, XPS_RXQS) : -EINVAL;
++	dev_put(dev);
++	return ret;
+ }
+ 
+-static ssize_t xps_rxqs_store(struct netdev_queue *queue, const char *buf,
++static ssize_t xps_rxqs_store(struct kobject *kobj, struct attribute *attr,
++			      struct netdev_queue *queue, const char *buf,
+ 			      size_t len)
+ {
+ 	struct net_device *dev = queue->dev;
+@@ -1730,9 +1760,10 @@ static ssize_t xps_rxqs_store(struct netdev_queue *queue, const char *buf,
+ 		return err;
+ 	}
+ 
+-	if (!rtnl_trylock()) {
++	err = sysfs_rtnl_lock(kobj, attr, dev);
++	if (err) {
+ 		bitmap_free(mask);
+-		return restart_syscall();
++		return err;
+ 	}
+ 
+ 	cpus_read_lock();
+-- 
+2.39.5
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
