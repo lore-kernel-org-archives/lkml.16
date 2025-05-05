@@ -1,155 +1,214 @@
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA3DC192D6B
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 14:08:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DE22192D6B
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 14:10:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746454103; cv=none; b=ErJwGptTWw4qngiD9h9IAgUKwFj6Yugxdonc/bshkdwwNXiIECjevGFlEQkst3Ptmyu12EoxQKn1Mzgbsgv8sCjcJDmeIdglQlO8P4cfy4ciR2gv7DN19FSIy1JYVY9YAlbTZ/D2PQMWNmd4IdC/8JncrReDtBZHK96KVuj4I4k=
+	t=1746454228; cv=none; b=mmMHBRTK1PY1BI5dXakzh9B1Z3URpnIbxQF0J6wZd1qTLgA5mrCZjTxmM6Y1oXNP+n2koLju+qM24hMvWgTjoqSTajz50i5vV3mvsQy8XmzCtpZQW0oSIwSYgSmTloDvdvqGFY9iOKa1C2g8JtiBUhi+1yJj11fZ6/XnaORRyrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746454103; c=relaxed/simple;
-	bh=WVLUBgPTA4tf6st+3TFtwtbv1XdaJq07Pu6I4twsmL8=;
+	s=arc-20240116; t=1746454228; c=relaxed/simple;
+	bh=3HBf2jrppsiE/9x244bSAB4/UOZ6ZEuQu5Cl26acWx8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=swdSoul9SLKGJMtnqD15uqMljCylFahnlcb6nQvzCko0lurCYAAyQuz0/D3C6/znvAYRqcuKSXY2P+TeZ7weaiA7XfxXfAJkVwg20afNU8M7E9AfFItdQZN4bpVgeho/IgviSReqdNB6O6PD3ggWiXTPLPQXRfRCwfdnxFyLjoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=elcP5Ahh; arc=none smtp.client-ip=209.85.222.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=H1UXYzeDDUE6+ELC586UtUv+1LNjCwCLGBJMXXzFZqWey3TkRZEUmd1DSh5uh4/PJSGEk6Hu0SvBJCmBnpnOPYn2t3g66gw0GaPXj8rgUUU+xzwjDPdePmLeKVQt0F0cIhlVnWMW2lUT3aMai0fsNJsOQkVrPsC+dwdDLdaiVB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=HT/BlYy+; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=oY2/DR1C; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=HT/BlYy+; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=oY2/DR1C; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="elcP5Ahh"
-Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7c597760323so470014685a.3
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 07:08:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1746454099; x=1747058899; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=bnGazODhLi7rd2UydKCGPq4ZtmoQ/tiR6adwupAH7Gc=;
-        b=elcP5AhhNzFizaAatihbXrbsxuu+YuVMjzA2G90uzICHujyN/amIpQvff4vikufAaW
-         Vy0bn75cHBRWRmE08x+45yBPgOhbfgomUlTOsnOffxG+D9NKouVYxkzRMLfGc7iSUkTu
-         /PXFxcGhNXjP3psTvdMocTQscVkpGjZoNov6i0EdApA9+DfAeCcJo8jJ2IKiweGraDSC
-         1bAyTnN1rrc+otKORuLjKKCz1ZAHrx35BBIEEtGL5rCc1M9U03kKmYi4maP8rvgTXEVp
-         z/NImy/I5SvKVp4f3a/5iCTIW7ysJrqiReMT5fj0pHjZLMsdz7BkFmC3mAqgyjDSd7cJ
-         P+iA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746454099; x=1747058899;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bnGazODhLi7rd2UydKCGPq4ZtmoQ/tiR6adwupAH7Gc=;
-        b=J1pe3N5eVfqHiu0YJuF1lHw22cYfZahsiGg6BwT2a1gckbtbosC+lPbADT+124rXyV
-         iW4rrcwT2D8vFv6PRBtE/G5QZM7sAXRW3naIaxWozAmmkXIu5Wl2e7xP/Bzf96pBvgvd
-         ZE1AwOiq6t/dyvpgs9S/JZNBvYJ0f75JsMwVaOV+EZSw6FVnkf6e9yOhkdhKFnt/zQTr
-         jpYM2ApLlS2jD3JdGkONMDJF2Ieq/w1AZ/hBHXEFSU5KITnX1yAFzqdNgBQibfBsus9B
-         6706C5juH9r5a0b856ZpjCt4Vv7ThvpXDITIXeGw4QZcKbmsKfRoao3Rys+I/sEMW9B4
-         9cbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW0/cr7ML21CBFQy2+pw6XFkVjwst3sRi4OQUptKSOAbjg9intfRlI1PAMtuYeKG+UAs6C1vagD0Ypqa+g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzir7h2GZ3/RpwuhBB4wEgfFtM2CjtgV/Or/b9dCL2Y7E5w23gw
-	3oFuZC9aqyRhrkOljRZApsEcEsprq4G0bsZkSwWpGRmPhindLNk5ILHJYMRhfqc=
-X-Gm-Gg: ASbGncvx1cTszUqWh/bsq7XDae2ZS0IwdNIdiZOccaVtWYlK7lK+TpSBjkJhjso+Z+K
-	EdL/lqRZHjp0/d/qKdC0kY9qst4gQP6TiCMWXSFkmKJSsc5C8rOEnuOK3u1SirbcEVADhN1W9WM
-	t08gLk9AXvLPSIDb4aA3005AqDifmSLELxxI2tMBH/keq/8N5+l9sDDJUXH1IBOhta0sgh3xdYy
-	mzyiYmY6u6NmIeI0GNeIhgUFBkifwAb5wB641nspJo4Tvag7j2CLKhgzlt4a6rWQVU0bx0i9zUV
-	lgNq87CenIq4mCP7hRRsRmrfbt3uVByuhCD+A3w=
-X-Google-Smtp-Source: AGHT+IHeGZrdp1BmAYeZy/2G2GcLxeZitgpMyMEE5I2+I6lyL3IzjrQUsSibdVhgFaIpP4YAkxLcgQ==
-X-Received: by 2002:a05:620a:2550:b0:7c5:4c6d:7f95 with SMTP id af79cd13be357-7cadfed81ffmr1174704785a.48.1746454094270;
-        Mon, 05 May 2025 07:08:14 -0700 (PDT)
-Received: from localhost ([2603:7000:c01:2716:365a:60ff:fe62:ff29])
-        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7cad23c3ebdsm567930685a.40.2025.05.05.07.08.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 07:08:13 -0700 (PDT)
-Date: Mon, 5 May 2025 10:08:12 -0400
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Vitaly Wool <vitaly.wool@konsulko.se>
-Cc: Igor Belousov <igor.b@beldev.am>, linux-mm@kvack.org,
-	akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-	Nhat Pham <nphamcs@gmail.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Yosry Ahmed <yosry.ahmed@linux.dev>,
-	Minchan Kim <minchan@kernel.org>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: Re: [PATCH] mm/zblock: use vmalloc for page allocations
-Message-ID: <20250505140812.GA30814@cmpxchg.org>
-References: <20250502080156.1672957-1-vitaly.wool@konsulko.se>
- <fddf0457275576c890d16921465cf473@beldev.am>
- <83CB359A-955E-48B6-B0D9-DD4F2E1146D4@konsulko.se>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="HT/BlYy+";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="oY2/DR1C";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="HT/BlYy+";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="oY2/DR1C"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 349111F791;
+	Mon,  5 May 2025 14:10:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1746454225;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PxGiBMfGE1n3U6ZFFzbGA2FlVTFs5KhNkmP10Jdjq10=;
+	b=HT/BlYy+uTi7gIyKuPwnnqLYqfwBRsfd4+FQlanqf1DB+v6dhjkGzDShUlWV/NImr07Jpu
+	GWaOGUvj47WsMbPR6KZJBXRI+ruCBZUwaVyMmx0VSr8Y5HTmt1/ss98mgwOcNshNgA/9Du
+	04TziF5Y+jlii3CHXhqneozEdTBELEc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1746454225;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PxGiBMfGE1n3U6ZFFzbGA2FlVTFs5KhNkmP10Jdjq10=;
+	b=oY2/DR1CvBgQYgLLAP5Tg3gx91cfGFNoWwLF9zSGeIW8xLBoQoL9Ip6MzEm/Fnr+NssKCg
+	IqBTLLSWEsG90iBg==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b="HT/BlYy+";
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b="oY2/DR1C"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1746454225;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PxGiBMfGE1n3U6ZFFzbGA2FlVTFs5KhNkmP10Jdjq10=;
+	b=HT/BlYy+uTi7gIyKuPwnnqLYqfwBRsfd4+FQlanqf1DB+v6dhjkGzDShUlWV/NImr07Jpu
+	GWaOGUvj47WsMbPR6KZJBXRI+ruCBZUwaVyMmx0VSr8Y5HTmt1/ss98mgwOcNshNgA/9Du
+	04TziF5Y+jlii3CHXhqneozEdTBELEc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1746454225;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PxGiBMfGE1n3U6ZFFzbGA2FlVTFs5KhNkmP10Jdjq10=;
+	b=oY2/DR1CvBgQYgLLAP5Tg3gx91cfGFNoWwLF9zSGeIW8xLBoQoL9Ip6MzEm/Fnr+NssKCg
+	IqBTLLSWEsG90iBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0B2B313883;
+	Mon,  5 May 2025 14:10:25 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id +kF6AtHGGGjDQAAAD6G6ig
+	(envelope-from <dsterba@suse.cz>); Mon, 05 May 2025 14:10:25 +0000
+Date: Mon, 5 May 2025 16:10:19 +0200
+From: David Sterba <dsterba@suse.cz>
+To: Daniel Vacek <neelx@suse.com>
+Cc: dsterba@suse.cz, Chris Mason <clm@fb.com>,
+	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] btrfs: remove extent buffer's redundant `len` member
+ field
+Message-ID: <20250505141019.GW9140@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+References: <20250429151800.649010-1-neelx@suse.com>
+ <20250430080317.GF9140@twin.jikos.cz>
+ <CAPjX3FfBoU9-wYP-JC63K6y8Pzocu0z8cKvXEbjD_NjdxWO+Og@mail.gmail.com>
+ <20250430133026.GH9140@suse.cz>
+ <CAPjX3FdexSywSbJQfrj5pazrBRyVns3SdRCsw1VmvhrJv20bvw@mail.gmail.com>
+ <20250502105630.GO9140@suse.cz>
+ <CAPjX3Ffy2=CQP2mx9Wa3BBR54fEAcuo8ADqeTVdcAmCO7g+gmg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <83CB359A-955E-48B6-B0D9-DD4F2E1146D4@konsulko.se>
+In-Reply-To: <CAPjX3Ffy2=CQP2mx9Wa3BBR54fEAcuo8ADqeTVdcAmCO7g+gmg@mail.gmail.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Rspamd-Queue-Id: 349111F791
+X-Spam-Score: -4.21
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.21 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_DN_SOME(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	REPLYTO_ADDR_EQ_FROM(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Sat, May 03, 2025 at 08:46:07PM +0200, Vitaly Wool wrote:
+On Fri, May 02, 2025 at 02:03:55PM +0200, Daniel Vacek wrote:
+> > Yeah, 256 is a nice number because it aligns with cachelines on multiple
+> > architectures, this is useful for splitting the structure to the "data
+> > accessed together" and locking/refcounting. It's a tentative goal, we
+> > used to have larger eb size due to own locking implementation but with
+> > rwsems it got close/under 256.
+> >
+> > The current size 240 is 1/4 of cacheline shifted so it's not all clean
+> > but whe have some wiggle room for adding new members or cached values,
+> > like folio_size/folio_shift/addr.
 > 
-> 
-> > On May 2, 2025, at 10:07 AM, Igor Belousov <igor.b@beldev.am> wrote:
-> > 
-> > On 2025-05-02 12:01, Vitaly Wool wrote:
-> >> From: Igor Belousov <igor.b@beldev.am>
-> >> Use vmalloc for page allocations for zblock blocks to avoid extra
-> >> pressure on the memmory subsystem with multiple higher order
-> >> allocations.
-> >> While at it, introduce a module parameter to opportunistically
-> >> allocate pages of lower orders via try_page_alloc() for faster
-> >> allocations whenever possible.
-> >> Since vmalloc works fine with non-power of 2 numbers of pages,
-> >> rewrite the block size tables to use that opportunity.
-> >> Signed-off-by: Igor Belousov <igor.b@beldev.am>
-> >> Signed-off-by: Vitaly Wool <vitaly.wool@konsulko.se>
-> >> ---
-> >> Tests run on qemu-arm64 (8 CPUs, 1.5G RAM, 4K pages):
-> >> 1. zblock
-> >> 43205.38user
-> >> 7320.53system
-> >> 2:12:04elapsed
-> >> zswpin 346127
-> >> zswpout 1642438
-> >> 2. zsmalloc
-> >> 47194.61user
-> >> 7978.48system
-> >> 2:25:03elapsed
-> >> zswpin 448031
-> >> zswpout 1810485
-> >> So zblock gives a nearly 10% advantage.
-> >> Please note that zsmalloc *crashes* on 16K page tests so I couldn't
-> >> compare performance in that case.
-> > 
-> > Right, and it looks like this:
-> > 
-> > [  762.499278]  bug_handler+0x0/0xa8
-> > [  762.499433]  die_kernel_fault+0x1c4/0x36c
-> > [  762.499616]  fault_from_pkey+0x0/0x98
-> > [  762.499784]  do_translation_fault+0x3c/0x94
-> > [  762.499969]  do_mem_abort+0x44/0x94
-> > [  762.500140]  el1_abort+0x40/0x64
-> > [  762.500306]  el1h_64_sync_handler+0xa4/0x120
-> > [  762.500502]  el1h_64_sync+0x6c/0x70
-> > [  762.500718]  __pi_memcpy_generic+0x1e4/0x22c (P)
-> > [  762.500931]  zs_zpool_obj_write+0x10/0x1c
-> > [  762.501117]  zpool_obj_write+0x18/0x24
-> > [  762.501305]  zswap_store+0x490/0x7c4
-> > [  762.501474]  swap_writepage+0x260/0x448
-> > [  762.501654]  pageout+0x148/0x340
-> > [  762.501816]  shrink_folio_list+0xa7c/0xf34
-> > [  762.502008]  shrink_lruvec+0x6fc/0xbd0
-> > [  762.502189]  shrink_node+0x52c/0x960
-> > [  762.502359]  balance_pgdat+0x344/0x738
-> > [  762.502537]  kswapd+0x210/0x37c
-> > [  762.502691]  kthread+0x12c/0x204
-> > [  762.502920]  ret_from_fork+0x10/0x20
-> 
-> In fact we don’t know if zsmalloc is actually supposed to work with
-> 16K pages. That’s the question to Sergey and Minchan. If it is
-> indeed supposed to handle 16K pages, I would suggest that you
-> submitted a full report with reproduction steps and/or provided a
-> fix if possible.
+> Sounds like we could force align to cacheline or explicitly pad to
+> 256B? The later could be a bit tricky though.
 
-I've been using zsmalloc with 16k pages just fine for ~a year,
-currently running it on 6.14.2-asahi. This machine sees a lot of
-memory pressure, too.
+We could and we also have conflicting goals:
 
-Could this be a more recent regression, maybe in the new obj_write()?
+- alignment (with some waste)
+
+- more objects packed into the slab which is 8K
+
+More objects mean better chance to satisfy allocations, that are right
+now NOFAIL, so blocking metadata operations with worse consequences.
+
+> > >         struct btrfs_fs_info *fs_info;
+> > >
+> > >         /*
+> > > @@ -94,9 +97,6 @@ struct extent_buffer {
+> > >         spinlock_t refs_lock;
+> > >         atomic_t refs;
+> > >         int read_mirror;
+> > > -       /* >= 0 if eb belongs to a log tree, -1 otherwise */
+> > > -       s8 log_index;
+> > > -       u8 folio_shift;
+> > >         struct rcu_head rcu_head;
+> > >
+> > >         struct rw_semaphore lock;
+> > >
+> > > you're down to 256 even on -rt. And the great part is I don't see any
+> > > sacrifices (other than accessing a cacheline in fs_info). We're only
+> > > using 8 flags now, so there is still some room left for another 8 if
+> > > needed in the future.
+> >
+> > Which means that the size on non-rt would be something like 228, roughly
+> > calculating the savings and the increase due to spinloct_t going from
+> > 4 -> 32 bytes. Also I'd like to see the generated assembly after the
+> > suggested reordering.
+> 
+> If I see correctly the non-rt will not change when I keep ulong
+> bflags. The -rt build goes down to 264 bytes. That's a bit better for
+> free but still not ideal from alignment POV.
+> 
+> > The eb may not be perfect, I think there could be false sharing of
+> > refs_lock and refs but this is a wild guess and based only on code
+> 
+> refs_lock and refs look like they share the same cacheline in every
+> case. At least on x86.
+> But still, the slab object is not aligned in the first place. Luckily
+> the two fields roam together.
+> 
+> Out of curiosity, is there any past experience where this kind of
+> optimizations make a difference within a filesystem code?
+> I can imagine perhaps for fast devices like NVDIMM or DAX the CPU may
+> become the bottleneck? Or are nowadays NVMe devices already fast
+> enough to saturate the CPU?
+
+I don't have a specific example. This is tricky to measure and
+historically the devices were slow so any IO and waiting made the cache
+effects irrelevant. With NVMe, modern CPUs we might start seeing that.
+Instrumentation or profiling of the structures can do that, there are
+tools for that but the variability of the hardware combinations and
+runtime conditions makes it hard so I'm resorting to more "static"
+approach and go after known good patterns like alignment or placement
+related to cachelines (manually or with ____cacheline_aligned_in_smp).
+
+> I faintly recall one issue where I debugged a CPU which could not keep
+> up with handling the interrupts of finished IO on NVMe submitted by
+> other CPUs. Though that was on xfs (or maybe ext4) not on btrfs. But
+> that was a power-play of one against the rest as the interrupt was not
+> balanced or spread to more CPUs.
