@@ -1,98 +1,161 @@
-Received: from meesny.iki.fi (meesny.iki.fi [195.140.195.201])
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C49E154F8C;
-	Mon,  5 May 2025 08:17:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=195.140.195.201
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746433074; cv=pass; b=iGj6c7x8we/Fe3HCkT9ERqW9xZcjT6DT4s49AfaaOi234yBWII0kl1qnxk4K8wKewkTXt4EGfxERiiWZZlxk6SJbP8CcR5xBlM60ZsBVHFsrSR43oK0lEA+yEuhi5I9LFLlcI+tl8BvqJuGNfW6dWWCdxVfMgYdbNIhlgCX+uJw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746433074; c=relaxed/simple;
-	bh=aU6q/hLEJlDYddLVp0qB4Sh64oToLbHo/SeZqiBvYGA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NnNflITdBipOffMRx92djdY4EC4DaH723nN3uMQ2YEAD1h9a95fPf8uPvtJ3yvL8qXpNU9SJLs9Xa/51JBmqXbKIj+8oIHWb3D4SV9thjswDNeicoURaqKQ+4HJCP1IPabcZBHOK5+qpdi/c/842Bqm4xlRDRWnLsCf/tG41xPY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi; spf=pass smtp.mailfrom=iki.fi; dkim=pass (1024-bit key) header.d=iki.fi header.i=@iki.fi header.b=PZ/cZx6C; arc=pass smtp.client-ip=195.140.195.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iki.fi
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5DC454F8C;
+	Mon,  5 May 2025 08:18:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746433083; cv=none; b=uLanLL/4xuLdmYJLMxstCZBuPS5q3r9xnb0n+RQqsRFdAZ1kVRvkGGiJRmAp6zmoy6NKri+3Yux/FFNTXESHUEcy6DZbdebRIORxHNNrXvOtJCgWwrSKDd6e0aPJA2zoEP7WX9ufqA0bDJMN2v96zEA+EZuHBfGiFSo5cw4boF8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746433083; c=relaxed/simple;
+	bh=FQyrGJnLZ/Q9fHLW7A2NpkWtl8+bT+Q4CeJaUiIZzN4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QIsHyb8e9dSKXfV+yKAcjsgnLUeZCoMS25F7jOcgc/OLBYgUIsWSWOmfutHPyHMFPXy+HsneQfN0U8Jv4jzhonhXvHzBXPulgrKYNlZtWc8d1j6v2N4YpGEu2o9R/IEEEfSQxT0CUgx1dtss3IEu4Y89zjGs5Nmv5IpLcdGjSTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=eigLgicF; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=iki.fi header.i=@iki.fi header.b="PZ/cZx6C"
-Received: from hillosipuli.retiisi.eu (2a00-1190-d1dd-0-127c-61ff-fee2-b97e.v6.cust.suomicom.net [IPv6:2a00:1190:d1dd:0:127c:61ff:fee2:b97e])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: sailus)
-	by meesny.iki.fi (Postfix) with ESMTPSA id 4ZrZCJ2GRBzyVF;
-	Mon,  5 May 2025 11:17:48 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi; s=meesny;
-	t=1746433069;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="eigLgicF"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 3156A1FCED;
+	Mon,  5 May 2025 08:17:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1746433078;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=gBIZnh1OkGTxH+f6ILMZeaWXA00dbZcm92xt+MSF/Hg=;
-	b=PZ/cZx6CNVwgJqzLEV/bvfwhFnS5bdsAAok/UyfDRMa8z4DkuON0BfzndK2145AxYL9q8b
-	mCgj928UqdAWlhA9xs9MvIFyi0w8aXc35PnHGhSVZ43JXiw1rGzzZvnax+Ozzv5fjI5Iyi
-	vsG7F+Ca/f60iyckUMFWbc7TomyMBos=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi;
-	s=meesny; t=1746433069;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gBIZnh1OkGTxH+f6ILMZeaWXA00dbZcm92xt+MSF/Hg=;
-	b=pTPU53Tnq3UK9pG+wTqXxIiTOaRJYNI2G2/WhlGt2jrCOmTcmQAzXkcMaw5Vw0Ln1/UsQE
-	IDqZty8J1WU8bCdhJMb+vmQPqd0l4GTsF+fTHYpvzo1UBSmcjn9VauGrroTsAHBflTl4O6
-	1zinpdFXgpPeGX5k5aqfgIKoOcQ4g4Y=
-ARC-Seal: i=1; s=meesny; d=iki.fi; t=1746433069; a=rsa-sha256; cv=none;
-	b=bBQYIIb7onkNxkXyOHsj7kPAx+ETAwu2UdZq/lQU05169oNU7aevFQANrt6c6oupyJYyau
-	WPmLtUccmWmsSIxgBvEV7gdhrKteX6fg29qw0xIrUvNdo/0Pxel+7v/yfLXxt1LTuAKetQ
-	rzxNZ4FG6lkCDnvL/d7fTiyJTpC4z/k=
-ARC-Authentication-Results: i=1;
-	ORIGINATING;
-	auth=pass smtp.auth=sailus smtp.mailfrom=sakari.ailus@iki.fi
-Received: from valkosipuli.retiisi.eu (valkosipuli.local [192.168.4.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by hillosipuli.retiisi.eu (Postfix) with ESMTPS id 7ADA4634C93;
-	Mon,  5 May 2025 11:17:47 +0300 (EEST)
-Date: Mon, 5 May 2025 08:17:47 +0000
-From: Sakari Ailus <sakari.ailus@iki.fi>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: Re: [PATCH v1 1/1] media: i2c: ds90ub9x3: Remove unneeded
- of_gpio_n_cells assignment
-Message-ID: <aBh0K2YGhgxk6ipv@valkosipuli.retiisi.eu>
-References: <20250331070200.3985562-1-andriy.shevchenko@linux.intel.com>
- <c7fd0bd4-4fc8-43f0-b980-b49472e76445@ideasonboard.com>
- <Z-5pwpoYEKKmtmPA@smile.fi.intel.com>
+	bh=Ene3pBCls87d2ZFff3sMFaohdKR0s7zqvoRcpx4YgKI=;
+	b=eigLgicFgWm6NvYLXhwU5OW2VzgTRcVAMKri8KAtivencPpK/T/V5KoOeUPJsUfw/jLOk0
+	ryMm2H3ITxEnvhDmP8whs6/bZuWJTawsNAZDSHTSJEdSw/dlj+KDFvE2VzwZf636MIbQRO
+	3xhJz15NjGU3zeCozQQ43qY6H6ihQI+7NWWJ1z3U4yCcKydd2DK+qraNhcUCwl3Ra5Sf3H
+	6E9t3PHeqKaXyN1f4nV2wpPenI51EYxkdWnBuWnRX5VypyKSqDsyW68PqRQtaKA90234Uu
+	I0Fe+cWumI40RrDESqLfNnqCf9kxJM/PUFdpWGQ9xjxr1f9A6IC8RUm7BzR8RQ==
+Date: Mon, 5 May 2025 10:17:57 +0200
+From: Herve Codina <herve.codina@bootlin.com>
+To: Ayush Singh <ayush@beagleboard.org>
+Cc: David Gibson <david@gibson.dropbear.id.au>, Andrew Davis <afd@ti.com>,
+ Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, Saravana Kannan <saravanak@google.com>,
+ devicetree@vger.kernel.org, devicetree-compiler@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v2 5/7] of: overlay: Add export_symbols_name in
+ of_overlay_fdt_apply() parameters
+Message-ID: <20250505101757.0b294b63@bootlin.com>
+In-Reply-To: <dba95e76-3d60-41ef-b98c-5aedee808dd9@beagleboard.org>
+References: <20250430125154.195498-1-herve.codina@bootlin.com>
+	<20250430125154.195498-6-herve.codina@bootlin.com>
+	<dba95e76-3d60-41ef-b98c-5aedee808dd9@beagleboard.org>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-5pwpoYEKKmtmPA@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkedtheelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtkeertdertdejnecuhfhrohhmpefjvghrvhgvucevohguihhnrgcuoehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepveeiffefgeeitdelleeigefhjeelueeuveekveetgeffheeltdekgeduiefggfdvnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduhedprhgtphhtthhopegrhihushhhsegsvggrghhlvggsohgrrhgurdhorhhgpdhrtghpthhtohepuggrvhhiugesghhisghsohhnrdgurhhophgsvggrrhdrihgurdgruhdprhgtphhtthhopegrfhgusehtihdrtghomhdprhgtphhtthhopehgvggvrhhtsehlihhnuhigqdhmieekkhdrohhrghdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvr
+ hhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrrhhnugesrghrnhgusgdruggv
+X-GND-Sasl: herve.codina@bootlin.com
 
-Hi Andy, Tomi,
+Hi Ayush,
 
-On Thu, Apr 03, 2025 at 01:58:10PM +0300, Andy Shevchenko wrote:
-> On Thu, Apr 03, 2025 at 11:07:40AM +0300, Tomi Valkeinen wrote:
-> > On 31/03/2025 10:02, Andy Shevchenko wrote:
-> > > The default for of_gpio_n_cells is 2, no need to assign the same
-> > > in the user.
-> > 
-> > Where is this documented? I'm also having trouble finding the
-> > implementation.
+On Fri, 2 May 2025 20:10:41 +0530
+Ayush Singh <ayush@beagleboard.org> wrote:
+
+> On 4/30/25 18:21, Herve Codina wrote:
 > 
-> The idea was introduced back in 391c970c0dd1 ("of/gpio: add default of_xlate
-> function if device has a node pointer"). But now I realised that it was never
-> assumed that default is 2 for the cases when the ->of_xlate() explicitly
-> provided. So, this is wrong patch, thanks for the review!
+> > In order to prepare the introduction of the export symbols node
+> > handling, add a export_symbols_name parameter in of_overlay_fdt_apply().
+> >
+> > The export_symbols_name is the name of the export symbols subnode
+> > available in the base node that will be used by the resolver to handle
+> > export symbols resolution.
+> >
+> > Having the name of the subnode in parameters instead of the subnode
+> > itself avoids the use of an export symbol node that is not directly
+> > related to the base node.
+> >
+> > Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> > Tested-by: Ayush Singh <ayush@beagleboard.org>
+> > ---
+> >   drivers/misc/lan966x_pci.c    | 3 ++-
+> >   drivers/of/of_kunit_helpers.c | 2 +-
+> >   drivers/of/overlay.c          | 7 ++++++-
+> >   drivers/of/unittest.c         | 4 ++--
+> >   include/linux/of.h            | 6 ++++--
+> >   5 files changed, 15 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/drivers/misc/lan966x_pci.c b/drivers/misc/lan966x_pci.c
+> > index 9c79b58137e5..f05cb040ec69 100644
+> > --- a/drivers/misc/lan966x_pci.c
+> > +++ b/drivers/misc/lan966x_pci.c
+> > @@ -128,7 +128,8 @@ static int lan966x_pci_load_overlay(struct lan966x_pci *data)
+> >   	u32 dtbo_size = __dtbo_lan966x_pci_end - __dtbo_lan966x_pci_begin;
+> >   	void *dtbo_start = __dtbo_lan966x_pci_begin;
+> >   
+> > -	return of_overlay_fdt_apply(dtbo_start, dtbo_size, &data->ovcs_id, dev_of_node(data->dev));
+> > +	return of_overlay_fdt_apply(dtbo_start, dtbo_size, &data->ovcs_id,
+> > +				    dev_of_node(data->dev), NULL);
+> >   }
+> >   
+> >   static void lan966x_pci_unload_overlay(struct lan966x_pci *data)
+> > diff --git a/drivers/of/of_kunit_helpers.c b/drivers/of/of_kunit_helpers.c
+> > index 7b3ed5a382aa..476b43474168 100644
+> > --- a/drivers/of/of_kunit_helpers.c
+> > +++ b/drivers/of/of_kunit_helpers.c
+> > @@ -56,7 +56,7 @@ int of_overlay_fdt_apply_kunit(struct kunit *test, void *overlay_fdt,
+> >   		return -ENOMEM;
+> >   
+> >   	ret = of_overlay_fdt_apply(overlay_fdt, overlay_fdt_size,
+> > -				   ovcs_id, NULL);
+> > +				   ovcs_id, NULL, NULL);
+> >   	if (ret)
+> >   		return ret;
+> >   
+> > diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+> > index aa1b97e634aa..73ff38c41de2 100644
+> > --- a/drivers/of/overlay.c
+> > +++ b/drivers/of/overlay.c
+> > @@ -968,6 +968,10 @@ static int of_overlay_apply(struct overlay_changeset *ovcs,
+> >    * @overlay_fdt_size:	number of bytes in @overlay_fdt
+> >    * @ret_ovcs_id:	pointer for returning created changeset id
+> >    * @base:		pointer for the target node to apply overlay
+> > + * @export_symbols_name:
+> > + *			Name of the export symbol subnode of the @base node to
+> > + *			provide extra symbols. Those extra symbols are used in
+> > + *			the overlay symbols resolution.
+> >    *
+> >    * Creates and applies an overlay changeset.
+> >    *
+> > @@ -983,7 +987,8 @@ static int of_overlay_apply(struct overlay_changeset *ovcs,
+> >    */
+> >   
+> >   int of_overlay_fdt_apply(const void *overlay_fdt, u32 overlay_fdt_size,
+> > -			 int *ret_ovcs_id, const struct device_node *base)
+> > +			 int *ret_ovcs_id, const struct device_node *base,
+> > +			 const char *export_symbols_name)  
+> 
+> Do we really need the export-symbols node name to be configurable?
 
-Does the same conclusion apply to the similar max96717 patch as well?
+Well, it depends on the export-symbols acceptance in device-tree spec or some
+other global device-tree bindings.
 
--- 
-Sakari Ailus
+If this export-symbols node is accepted globally, the name is not needed and
+shouldn't be configurable.
+
+If this node name can be changed from one node binding to an other, having it
+configurable is interesting.
+
+That said, according to your work done at higher level (device-tree spec), this
+name tends to be global. If confirmed, I will remove the export_symbols_name
+parameter in the next iteration and use 'export-symbols' for all cases.
+
+Best regards,
+Hervé
