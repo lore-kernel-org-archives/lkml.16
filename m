@@ -1,49 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49D7A392601;
-	Mon,  5 May 2025 23:03:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88C11371117;
+	Mon,  5 May 2025 23:03:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486189; cv=none; b=MaGAnMAP39zEKixwsF5ooVaQRFtrP3EmXqm8VhLBGKOrQIpjbWiBJ2XqBs4Mhj4VkVhpjGtgLaKdF6XebVK3yXyVKYD3QX25T6OxSUN4qV7/E+x+tXzwKaIu0gscDL73Sw9fY0oa95lEwv4YwmwC/6OsqrZaTLVnuF6WO4Bb5RQ=
+	t=1746486204; cv=none; b=nefKFzVZ9+wwMT/asprYUpEljDzsB6PifRHCrVkb26yl4242b305kCJMbUQ3Ejv3uJ3mzM+7lcrmMVJegfCBc54zdV/QeNiV5lZUnUALcu3zoWSTUwX4vP3xAa5JB1q2M2peGiU2XwzVf1E7JVk3UD7C0K7lL7zVYbUEL2RRe64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486189; c=relaxed/simple;
-	bh=Q4X4RMQLPMf/g1HsGnmghAs5fbLu0Gn6jjGsgWRUALs=;
+	s=arc-20240116; t=1746486204; c=relaxed/simple;
+	bh=vR7COF5Sb+r7AxaXEQDXavVKdJW3LbCqBm0qMQUJNlo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=UDCBR/T11JP8acp6dZsaDoaerYPnbzIPHQf6e9lQzKSiod6uKZIknpBImwqmmMA62K0MPwtS/6VAyEnCvszlRQgmP9JLUp9ZMYK6KnW3i4vRBWJzH4yp0Plp/tmEOD4RNPCUoto1Bvhu44kpEofxvrMdxQxLxUkF3ayDYluubYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oBUKLEM0; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=R13vNZ+4neYjnwj6jJI8THZb6i9M64QaXM7ID0vTilOC5bNYTac+QVOm1Jy/23dJNYpDQ2gprEkgJSxTk64XsE0czc+OhpNoVbV8bRJOPzJwRVrnCTmlk3Opc+k+3Z8CD0ZNmCzSGmJBnjB0VvJMXNt4kh8ynEta/gscvqhQ1/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JoMp8sc6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oBUKLEM0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3DD2C4CEE4;
-	Mon,  5 May 2025 23:03:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JoMp8sc6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69A22C4CEF1;
+	Mon,  5 May 2025 23:03:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486189;
-	bh=Q4X4RMQLPMf/g1HsGnmghAs5fbLu0Gn6jjGsgWRUALs=;
+	s=k20201202; t=1746486203;
+	bh=vR7COF5Sb+r7AxaXEQDXavVKdJW3LbCqBm0qMQUJNlo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oBUKLEM09px+gg6olBWzjCC2xQ86FWo++Rj/AA/70wCeAk0xZaTuSKWgptjxmyjtb
-	 Wf7rTKzRT5NG6e8pd66Dd0jwdaQxZNoveZB03QIL30+iWbLB3nxDpHHQkKtLG/U9FQ
-	 xDZydQS1aU6YbqcJsTpjGB0AptvS8Wcvyg78yiVMQMci+4Tx7vYRw6WEnLKEzdHSdt
-	 xRurlycoN2Ixr5sau4cQCiSlzqwv32f0qwlpr7rp4qzHbaIvvR+WuKRGqXaZEK050H
-	 ah6DSM8nty1kSkQA+A0G7LscaN0LRS87PJYIptjqV3nPcC+l2n4GoPF9MGdgkWsONy
-	 ugGopFNcF5sUQ==
+	b=JoMp8sc6ZHNhCNtgGT+PKB49g86fLT4kweuWJ/TXxiLqyFSdijOiD1iQXjIV5/TJl
+	 xM8pKgC+0sIjTIqYwlUfwl9k3zk0lXiKVimOZg2jVPxWLTs8UQohQZXKteWUZiHZSi
+	 uACUjX3Uiz3n7K8DRMyiVUE1wtJ2pWXGVnq7vjkXBQm62jMKQcbO5agITf2mBpFian
+	 HP3mjw1JK7wsh2O0Gh3XulP/vSFhrurXxEQ8ORHCPZ7MH/VFYymsBidy0OfTlf7dpF
+	 agLtzkKW8lHT3sObpxnsW/G/g2FdTfLUtqE8rEkpUR7rRPluippk74bd101X+DsadZ
+	 Qm7fyCKeQBqrg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Petr Machata <petrm@nvidia.com>,
-	Ido Schimmel <idosch@nvidia.com>,
-	Nikolay Aleksandrov <razor@blackwall.org>,
-	Paolo Abeni <pabeni@redhat.com>,
+Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	menglong8.dong@gmail.com,
-	gnault@redhat.com,
-	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 194/294] vxlan: Join / leave MC group after remote changes
-Date: Mon,  5 May 2025 18:54:54 -0400
-Message-Id: <20250505225634.2688578-194-sashal@kernel.org>
+	lgirdwood@gmail.com,
+	perex@perex.cz,
+	tiwai@suse.com,
+	linux-sound@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 203/294] ASoC: soc-dai: check return value at snd_soc_dai_set_tdm_slot()
+Date: Mon,  5 May 2025 18:55:03 -0400
+Message-Id: <20250505225634.2688578-203-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -58,111 +53,52 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Petr Machata <petrm@nvidia.com>
+From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 
-[ Upstream commit d42d543368343c0449a4e433b5f02e063a86209c ]
+[ Upstream commit 7f1186a8d738661b941b298fd6d1d5725ed71428 ]
 
-When a vxlan netdevice is brought up, if its default remote is a multicast
-address, the device joins the indicated group.
+snd_soc_dai_set_tdm_slot() calls .xlate_tdm_slot_mask() or
+snd_soc_xlate_tdm_slot_mask(), but didn't check its return value.
+Let's check it.
 
-Therefore when the multicast remote address changes, the device should
-leave the current group and subscribe to the new one. Similarly when the
-interface used for endpoint communication is changed in a situation when
-multicast remote is configured. This is currently not done.
+This patch might break existing driver. In such case, let's makes
+each func to void instead of int.
 
-Both vxlan_igmp_join() and vxlan_igmp_leave() can however fail. So it is
-possible that with such fix, the netdevice will end up in an inconsistent
-situation where the old group is not joined anymore, but joining the new
-group fails. Should we join the new group first, and leave the old one
-second, we might end up in the opposite situation, where both groups are
-joined. Undoing any of this during rollback is going to be similarly
-problematic.
-
-One solution would be to just forbid the change when the netdevice is up.
-However in vnifilter mode, changing the group address is allowed, and these
-problems are simply ignored (see vxlan_vni_update_group()):
-
- # ip link add name br up type bridge vlan_filtering 1
- # ip link add vx1 up master br type vxlan external vnifilter local 192.0.2.1 dev lo dstport 4789
- # bridge vni add dev vx1 vni 200 group 224.0.0.1
- # tcpdump -i lo &
- # bridge vni add dev vx1 vni 200 group 224.0.0.2
- 18:55:46.523438 IP 0.0.0.0 > 224.0.0.22: igmp v3 report, 1 group record(s)
- 18:55:46.943447 IP 0.0.0.0 > 224.0.0.22: igmp v3 report, 1 group record(s)
- # bridge vni
- dev               vni                group/remote
- vx1               200                224.0.0.2
-
-Having two different modes of operation for conceptually the same interface
-is silly, so in this patch, just do what the vnifilter code does and deal
-with the errors by crossing fingers real hard.
-
-The vnifilter code leaves old before joining new, and in case of join /
-leave failures does not roll back the configuration changes that have
-already been applied, but bails out of joining if it could not leave. Do
-the same here: leave before join, apply changes unconditionally and do not
-attempt to join if we couldn't leave.
-
-Signed-off-by: Petr Machata <petrm@nvidia.com>
-Reviewed-by: Ido Schimmel <idosch@nvidia.com>
-Reviewed-by: Nikolay Aleksandrov <razor@blackwall.org>
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Link: https://patch.msgid.link/87o6z7yk61.wl-kuninori.morimoto.gx@renesas.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/vxlan/vxlan_core.c | 18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
+ sound/soc/soc-dai.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/vxlan/vxlan_core.c b/drivers/net/vxlan/vxlan_core.c
-index 64db3e98a1b66..822cf49d82676 100644
---- a/drivers/net/vxlan/vxlan_core.c
-+++ b/drivers/net/vxlan/vxlan_core.c
-@@ -4240,6 +4240,7 @@ static int vxlan_changelink(struct net_device *dev, struct nlattr *tb[],
- 			    struct netlink_ext_ack *extack)
- {
- 	struct vxlan_dev *vxlan = netdev_priv(dev);
-+	bool rem_ip_changed, change_igmp;
- 	struct net_device *lowerdev;
- 	struct vxlan_config conf;
- 	struct vxlan_rdst *dst;
-@@ -4263,8 +4264,13 @@ static int vxlan_changelink(struct net_device *dev, struct nlattr *tb[],
- 	if (err)
- 		return err;
+diff --git a/sound/soc/soc-dai.c b/sound/soc/soc-dai.c
+index 9a828e55c4f9e..507743c87e402 100644
+--- a/sound/soc/soc-dai.c
++++ b/sound/soc/soc-dai.c
+@@ -275,10 +275,11 @@ int snd_soc_dai_set_tdm_slot(struct snd_soc_dai *dai,
  
-+	rem_ip_changed = !vxlan_addr_equal(&conf.remote_ip, &dst->remote_ip);
-+	change_igmp = vxlan->dev->flags & IFF_UP &&
-+		      (rem_ip_changed ||
-+		       dst->remote_ifindex != conf.remote_ifindex);
-+
- 	/* handle default dst entry */
--	if (!vxlan_addr_equal(&conf.remote_ip, &dst->remote_ip)) {
-+	if (rem_ip_changed) {
- 		u32 hash_index = fdb_head_index(vxlan, all_zeros_mac, conf.vni);
+ 	if (dai->driver->ops &&
+ 	    dai->driver->ops->xlate_tdm_slot_mask)
+-		dai->driver->ops->xlate_tdm_slot_mask(slots,
+-						      &tx_mask, &rx_mask);
++		ret = dai->driver->ops->xlate_tdm_slot_mask(slots, &tx_mask, &rx_mask);
+ 	else
+-		snd_soc_xlate_tdm_slot_mask(slots, &tx_mask, &rx_mask);
++		ret = snd_soc_xlate_tdm_slot_mask(slots, &tx_mask, &rx_mask);
++	if (ret)
++		goto err;
  
- 		spin_lock_bh(&vxlan->hash_lock[hash_index]);
-@@ -4308,6 +4314,9 @@ static int vxlan_changelink(struct net_device *dev, struct nlattr *tb[],
- 		}
- 	}
- 
-+	if (change_igmp && vxlan_addr_multicast(&dst->remote_ip))
-+		err = vxlan_multicast_leave(vxlan);
-+
- 	if (conf.age_interval != vxlan->cfg.age_interval)
- 		mod_timer(&vxlan->age_timer, jiffies);
- 
-@@ -4315,7 +4324,12 @@ static int vxlan_changelink(struct net_device *dev, struct nlattr *tb[],
- 	if (lowerdev && lowerdev != dst->remote_dev)
- 		dst->remote_dev = lowerdev;
- 	vxlan_config_apply(dev, &conf, lowerdev, vxlan->net, true);
--	return 0;
-+
-+	if (!err && change_igmp &&
-+	    vxlan_addr_multicast(&dst->remote_ip))
-+		err = vxlan_multicast_join(vxlan);
-+
-+	return err;
+ 	for_each_pcm_streams(stream)
+ 		snd_soc_dai_tdm_mask_set(dai, stream, *tdm_mask[stream]);
+@@ -287,6 +288,7 @@ int snd_soc_dai_set_tdm_slot(struct snd_soc_dai *dai,
+ 	    dai->driver->ops->set_tdm_slot)
+ 		ret = dai->driver->ops->set_tdm_slot(dai, tx_mask, rx_mask,
+ 						      slots, slot_width);
++err:
+ 	return soc_dai_ret(dai, ret);
  }
- 
- static void vxlan_dellink(struct net_device *dev, struct list_head *head)
+ EXPORT_SYMBOL_GPL(snd_soc_dai_set_tdm_slot);
 -- 
 2.39.5
 
