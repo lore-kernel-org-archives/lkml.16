@@ -1,52 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44BA9388C2C;
-	Mon,  5 May 2025 23:10:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 428052EC28D;
+	Mon,  5 May 2025 23:10:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486613; cv=none; b=J+CgCetuXQOApP26rg0RXjVg/mKkvNOA5Nymu4c6g3WfYh2Z4qyD6EvXIBQFG3wXPuYhOfJ3rbql00pa0fe3/s7OKD5lrZer3dEP4GAZtxxE4Ldn7b0FlDNYSkGf/xsHeUgJsg3VhaZpDkzUc3fx2dDhk0p0Wb/djrf76B3wuBo=
+	t=1746486620; cv=none; b=bWkdPKNuxoOcTccwYdV/SQuTyzN4WPVN3q8fFPpgxnh0mndqSN/8YZ53kc/WX8G2fOg4zYkKhZaT2TDBFkrKEAfjCBvgsvFSaACltFRb1lEEbw9ppb/BaXAtDqTY/XdcBTAj/yFwZ/c7M3G4FS1kbiXeiAFDTWNcdBpDF4czgbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486613; c=relaxed/simple;
-	bh=aWAaNwhV/x0DOI5AMVG//fIxQeAHIm2Mo3OcOCuYYfU=;
+	s=arc-20240116; t=1746486620; c=relaxed/simple;
+	bh=Svz4wnp7COiUCkLASvgsNelQAE+ZagYIac/R1LzByOo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YOCnnrfdN0qC4XPSJFd2d81J6WKsh2vCi8ohyh5aVcokkQRNacKbMw3rY+OHomIlKc4WYKNsl0mEcNVsLeODVorJgZsgBGMRm4lJTbtkdK8uD9lIpMe2DNklnCDGBc32XYm9Dy0MFm4xooHoFovi1sggKur+0b5QcO7GQfMY10c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ElR7jyKI; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=YKoA3dYXv0ZIoid3AoAQ/AU5QPIL3tBEJxxkqTsycwFkUEv259NROd3zWvm0FkzKpWOAhg4SzIcbpUSFLi9eDF+qTbOIbC+IrQxPqHftjS1BTYZfEZbEdf0J5BMbDFKl3ueRjZGHk49ipRB5e4rqwJdInapJBVaidlil9h2JehA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WDgZZ6ss; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ElR7jyKI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62FA5C4CEF1;
-	Mon,  5 May 2025 23:10:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WDgZZ6ss"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F93FC4CEE4;
+	Mon,  5 May 2025 23:10:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486613;
-	bh=aWAaNwhV/x0DOI5AMVG//fIxQeAHIm2Mo3OcOCuYYfU=;
+	s=k20201202; t=1746486620;
+	bh=Svz4wnp7COiUCkLASvgsNelQAE+ZagYIac/R1LzByOo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ElR7jyKIL8u/HSDGnAGKW6B5a6hK4dXCOU528IhH7XXokOfx8fLaI74ywOPouMt3C
-	 wL4BXAphZjl5lDnM3MY0d/ygStNZskyqWs9Z/mA9ES2QmNbZRc17JfYkTcVaGZAohS
-	 prnaBBajVcZpPJu6zN2EnU8Nhf7eXSeAFvUzr6OMjbwNV0AX4zmPvlIKQ3iXCcuiTS
-	 sCoJLPtNxih98xmucUY23l0y7XUSsBp7jKalsRY0uroUrNc+tWqGL/GkoZCYGu76oc
-	 dlzsLQJc4NytKqxmOsAiSLEBqTKp+ThdrAjSWRaCvdk/gqe8tlJ9fEfDQud7urmGp9
-	 15zg6ogMn1ACA==
+	b=WDgZZ6sssf6EQAFMUgdyZRhfeVdR6klxHhkRV9GMBhr+tJciygoLqTtB68mHV4F8r
+	 XkWYO4FI9tNU46LyRHi5PnKjrQoTenD7bODkk5N04y7iMp1i6hMZi6SwkGpKWOgiKO
+	 HjVnS3vEXE+44QBxSJkiF/g103FLcq8VaZarzdd7ys/msR6rby6LjaRONi3AMkrDri
+	 UQekHNmgJyweB0M84P3KuHMkAwZVpONNW+aJh4BT/hrXjSAahp7UhkticWB5vSCSZL
+	 vmnd+9V+ngK/4uru63ocb8eySmA+XOG46+iysi7ZKsdF1wm/BxT0yJm4BsprJb2eFt
+	 Q/Ywo8DKfEDdA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Eric Woudstra <ericwouds@gmail.com>,
-	Paolo Abeni <pabeni@redhat.com>,
+Cc: Nir Lichtman <nir@lichtman.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Masahiro Yamada <yamada.masahiro@socionext.com>,
+	Michal Marek <michal.lkml@markovi.net>,
 	Sasha Levin <sashal@kernel.org>,
-	nbd@nbd.name,
-	sean.wang@mediatek.com,
-	lorenzo@kernel.org,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com,
-	netdev@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.1 118/212] net: ethernet: mtk_ppe_offload: Allow QinQ, double ETH_P_8021Q only
-Date: Mon,  5 May 2025 19:04:50 -0400
-Message-Id: <20250505230624.2692522-118-sashal@kernel.org>
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org
+Subject: [PATCH AUTOSEL 6.1 122/212] x86/build: Fix broken copy command in genimage.sh when making isoimage
+Date: Mon,  5 May 2025 19:04:54 -0400
+Message-Id: <20250505230624.2692522-122-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505230624.2692522-1-sashal@kernel.org>
 References: <20250505230624.2692522-1-sashal@kernel.org>
@@ -61,86 +58,55 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.1.136
 Content-Transfer-Encoding: 8bit
 
-From: Eric Woudstra <ericwouds@gmail.com>
+From: Nir Lichtman <nir@lichtman.org>
 
-[ Upstream commit 7fe0353606d77a32c4c7f2814833dd1c043ebdd2 ]
+[ Upstream commit e451630226bd09dc730eedb4e32cab1cc7155ae8 ]
 
-mtk_foe_entry_set_vlan() in mtk_ppe.c already supports double vlan
-tagging, but mtk_flow_offload_replace() in mtk_ppe_offload.c only allows
-for 1 vlan tag, optionally in combination with pppoe and dsa tags.
+Problem: Currently when running the "make isoimage" command there is an
+error related to wrong parameters passed to the cp command:
 
-However, mtk_foe_entry_set_vlan() only allows for setting the vlan id.
-The protocol cannot be set, it is always ETH_P_8021Q, for inner and outer
-tag. This patch adds QinQ support to mtk_flow_offload_replace(), only in
-the case that both inner and outer tags are ETH_P_8021Q.
+  "cp: missing destination file operand after 'arch/x86/boot/isoimage/'"
 
-Only PPPoE-in-Q (as before) and Q-in-Q are allowed. A combination
-of PPPoE and Q-in-Q is not allowed.
+This is caused because FDINITRDS is an empty array.
 
-Signed-off-by: Eric Woudstra <ericwouds@gmail.com>
-Link: https://patch.msgid.link/20250225201509.20843-1-ericwouds@gmail.com
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Solution: Check if FDINITRDS is empty before executing the "cp" command,
+similar to how it is done in the case of hdimage.
+
+Signed-off-by: Nir Lichtman <nir@lichtman.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Michal Marek <michal.lkml@markovi.net>
+Link: https://lore.kernel.org/r/20250110120500.GA923218@lichtman.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/mediatek/mtk_ppe_offload.c   | 22 +++++++++----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ arch/x86/boot/genimage.sh | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/mediatek/mtk_ppe_offload.c b/drivers/net/ethernet/mediatek/mtk_ppe_offload.c
-index 6a72687d5b83f..8cb8d47227f51 100644
---- a/drivers/net/ethernet/mediatek/mtk_ppe_offload.c
-+++ b/drivers/net/ethernet/mediatek/mtk_ppe_offload.c
-@@ -34,8 +34,10 @@ struct mtk_flow_data {
- 	u16 vlan_in;
- 
- 	struct {
--		u16 id;
--		__be16 proto;
-+		struct {
-+			u16 id;
-+			__be16 proto;
-+		} vlans[2];
- 		u8 num;
- 	} vlan;
- 	struct {
-@@ -321,18 +323,19 @@ mtk_flow_offload_replace(struct mtk_eth *eth, struct flow_cls_offload *f)
- 		case FLOW_ACTION_CSUM:
- 			break;
- 		case FLOW_ACTION_VLAN_PUSH:
--			if (data.vlan.num == 1 ||
-+			if (data.vlan.num + data.pppoe.num == 2 ||
- 			    act->vlan.proto != htons(ETH_P_8021Q))
- 				return -EOPNOTSUPP;
- 
--			data.vlan.id = act->vlan.vid;
--			data.vlan.proto = act->vlan.proto;
-+			data.vlan.vlans[data.vlan.num].id = act->vlan.vid;
-+			data.vlan.vlans[data.vlan.num].proto = act->vlan.proto;
- 			data.vlan.num++;
- 			break;
- 		case FLOW_ACTION_VLAN_POP:
- 			break;
- 		case FLOW_ACTION_PPPOE_PUSH:
--			if (data.pppoe.num == 1)
-+			if (data.pppoe.num == 1 ||
-+			    data.vlan.num == 2)
- 				return -EOPNOTSUPP;
- 
- 			data.pppoe.sid = act->pppoe.sid;
-@@ -422,12 +425,9 @@ mtk_flow_offload_replace(struct mtk_eth *eth, struct flow_cls_offload *f)
- 	if (offload_type == MTK_PPE_PKT_TYPE_BRIDGE)
- 		foe.bridge.vlan = data.vlan_in;
- 
--	if (data.vlan.num == 1) {
--		if (data.vlan.proto != htons(ETH_P_8021Q))
--			return -EOPNOTSUPP;
-+	for (i = 0; i < data.vlan.num; i++)
-+		mtk_foe_entry_set_vlan(eth, &foe, data.vlan.vlans[i].id);
- 
--		mtk_foe_entry_set_vlan(eth, &foe, data.vlan.id);
--	}
- 	if (data.pppoe.num == 1)
- 		mtk_foe_entry_set_pppoe(eth, &foe, data.pppoe.sid);
- 
+diff --git a/arch/x86/boot/genimage.sh b/arch/x86/boot/genimage.sh
+index c9299aeb7333e..3882ead513f74 100644
+--- a/arch/x86/boot/genimage.sh
++++ b/arch/x86/boot/genimage.sh
+@@ -22,6 +22,7 @@
+ # This script requires:
+ #   bash
+ #   syslinux
++#   genisoimage
+ #   mtools (for fdimage* and hdimage)
+ #   edk2/OVMF (for hdimage)
+ #
+@@ -251,7 +252,9 @@ geniso() {
+ 	cp "$isolinux" "$ldlinux" "$tmp_dir"
+ 	cp "$FBZIMAGE" "$tmp_dir"/linux
+ 	echo default linux "$KCMDLINE" > "$tmp_dir"/isolinux.cfg
+-	cp "${FDINITRDS[@]}" "$tmp_dir"/
++	if [ ${#FDINITRDS[@]} -gt 0 ]; then
++		cp "${FDINITRDS[@]}" "$tmp_dir"/
++	fi
+ 	genisoimage -J -r -appid 'LINUX_BOOT' -input-charset=utf-8 \
+ 		    -quiet -o "$FIMAGE" -b isolinux.bin \
+ 		    -c boot.cat -no-emul-boot -boot-load-size 4 \
 -- 
 2.39.5
 
