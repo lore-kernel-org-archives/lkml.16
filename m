@@ -1,47 +1,57 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF15238C411;
-	Mon,  5 May 2025 23:01:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2BA637A145;
+	Mon,  5 May 2025 23:01:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486091; cv=none; b=JyajLG99dwSQgbBkDo8MHUvLa13hZ8Qh8dgPEPKcS8UYjWTOmhzClf9vCMIStFT0g4FSu4x8HRbMUOm+xGaZ0vTUqP/o3Vkr0+QCOUN08HkzZhEiphII3t67cfzZLlYw4ALypIGvBj95kyPmP0L0VT+LA7eXl1em0weTX82CHZ4=
+	t=1746486105; cv=none; b=CiPcSUg55dJ6/UCEB/H57aJ87UVZvfFoW46cOiaRkeXu/grdyDwjBMTkH98o3vErUih780/sgJHiYYEt7TN0sljoyywUurfQCgqE0AXB6Zg0nHQIvhSHf31V+N8X5v860Dykg0uY8y61P42zENJvevLH/JNYTtKaJl+IN4FmOZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486091; c=relaxed/simple;
-	bh=7vZJ/qgoHpmHGdqWagURVrg/UArHS/UJRLHVDnt/V3I=;
+	s=arc-20240116; t=1746486105; c=relaxed/simple;
+	bh=pD5kfYiJdtuvkaUD/3HrDrFCvRj1sBU4MPXQsYiRKlo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aEhGkaJV9YiwpO5kMS8fpQb1WZWRerCTVDfaY3Neb42AIAFeSCnCF1c/P3k1XpWAaHae0aaUCpu20VkH00qaYE8nYfJM71P0imkUjUQdbo06/ReKbIp01JP12Y9NusANIIaVQ4+CA180p8Jjy44FftelJ3gQUP8OOS+uVffQhks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U4zIygeo; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ZB56zA0bc2T21yqIAkLjB3OUrOUTaUfG2chz18Eg5EyCJec5AIs4rkzFr/MlUPXaXR58wWoMTXWpY5rmx+hdnKWwtgHtWIJdXeALjGt1b9u8YaL8EZ09mKRsHsd5/pMoajPlhTs7HURmcX7uYxRbyckqTxX9jThnK+Ai6HAGKsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=adHDJEVT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U4zIygeo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AEBDC4CEF1;
-	Mon,  5 May 2025 23:01:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="adHDJEVT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79A7CC4CEE4;
+	Mon,  5 May 2025 23:01:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486090;
-	bh=7vZJ/qgoHpmHGdqWagURVrg/UArHS/UJRLHVDnt/V3I=;
+	s=k20201202; t=1746486104;
+	bh=pD5kfYiJdtuvkaUD/3HrDrFCvRj1sBU4MPXQsYiRKlo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=U4zIygeoytiXMsrrGgg5YnqMZg99sApFMjBd3jFAx+/d2Gl+2wmiVmsA6udz29fn9
-	 mNcxrhG/y+PvySSGtrvV33Dx6geLS+sUX0RbBFhT02jS+G7C2Wn/FT9MCJEEfI74KU
-	 3ekuED9nm8DKa+yMR5tKgcQ1jWtqN8YP2LbVTNv7m2gZv7SAy30dsR+rnAs/qnmC5K
-	 6HmtDY4+75w+/q4PWJlm21lWdz7IbckebY+2qrpvSZ2XkKsm5G8I88JmG7Lmajw+Wi
-	 s8LucJQiwgKRzRkXV+BOTrSlt+9fc4O/BOEPYVsa4yiemjeZpv84tbKs4ZSF7SIF3s
-	 ctAO1YGGJxjwA==
+	b=adHDJEVTcLv8Viw74x0KzbiMwiwjIdRBUkC2iSYqziyLP8BeGUgdE83xQS/y69OAm
+	 GlIWF+RDjrXDsgZJ99BhvdnmtunOBOkLGKU6DDSASkKxROe4iwtC6ypakqsedDMyg1
+	 m4eXmO6/XtPlYn7mQnA8BkxTrUamsAp5911XcuaRZOLcNl1Ydo+FkCCP9WHfYyDdWq
+	 5a2X/i80Axzd5j9Yxtefg2UBH8PIBrggKrgG+S8yDiUK2fFqt56CFFMDojCB9lXCIU
+	 wMUyufG/4+y/Robz/FeX6BtM2IZZpsWfJnOU2I0+dVWl0ZvMWiZ8rDnKY29/mXaCZ2
+	 F51pzgYENusKg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Hangbin Liu <liuhangbin@gmail.com>,
-	Nikolay Aleksandrov <razor@blackwall.org>,
-	Jakub Kicinski <kuba@kernel.org>,
+Cc: Charlene Liu <Charlene.Liu@amd.com>,
+	Alvin Lee <alvin.lee2@amd.com>,
+	Zaeem Mohamed <zaeem.mohamed@amd.com>,
+	Daniel Wheeler <daniel.wheeler@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
 	Sasha Levin <sashal@kernel.org>,
-	jv@jvosburgh.net,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 150/294] bonding: report duplicate MAC address in all situations
-Date: Mon,  5 May 2025 18:54:10 -0400
-Message-Id: <20250505225634.2688578-150-sashal@kernel.org>
+	harry.wentland@amd.com,
+	sunpeng.li@amd.com,
+	christian.koenig@amd.com,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	jun.lei@amd.com,
+	rostrows@amd.com,
+	Daniel.Sa@amd.com,
+	alex.hung@amd.com,
+	Syed.Hassan@amd.com,
+	martin.leung@amd.com,
+	Wayne.Lin@amd.com,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 6.6 156/294] drm/amd/display: fix dcn4x init failed
+Date: Mon,  5 May 2025 18:54:16 -0400
+Message-Id: <20250505225634.2688578-156-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -51,48 +61,99 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Hangbin Liu <liuhangbin@gmail.com>
+From: Charlene Liu <Charlene.Liu@amd.com>
 
-[ Upstream commit 28d68d396a1cd21591e8c6d74afbde33a7ea107e ]
+[ Upstream commit 23ef388a84c72b0614a6c10f866ffeac7e807719 ]
 
-Normally, a bond uses the MAC address of the first added slave as the bond’s
-MAC address. And the bond will set active slave’s MAC address to bond’s
-address if fail_over_mac is set to none (0) or follow (2).
+[why]
+failed due to cmdtable not created.
+switch atombios cmdtable as default.
 
-When the first slave is removed, the bond will still use the removed slave’s
-MAC address, which can lead to a duplicate MAC address and potentially cause
-issues with the switch. To avoid confusion, let's warn the user in all
-situations, including when fail_over_mac is set to 2 or not in active-backup
-mode.
-
-Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
-Reviewed-by: Nikolay Aleksandrov <razor@blackwall.org>
-Link: https://patch.msgid.link/20250225033914.18617-1-liuhangbin@gmail.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Reviewed-by: Alvin Lee <alvin.lee2@amd.com>
+Signed-off-by: Charlene Liu <Charlene.Liu@amd.com>
+Signed-off-by: Zaeem Mohamed <zaeem.mohamed@amd.com>
+Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/bonding/bond_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/amd/display/dc/bios/command_table2.c     | 9 ---------
+ .../gpu/drm/amd/display/dc/bios/command_table_helper2.c  | 3 +--
+ 2 files changed, 1 insertion(+), 11 deletions(-)
 
-diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
-index 7eb62fe55947f..56c241246d1af 100644
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -2469,7 +2469,7 @@ static int __bond_release_one(struct net_device *bond_dev,
+diff --git a/drivers/gpu/drm/amd/display/dc/bios/command_table2.c b/drivers/gpu/drm/amd/display/dc/bios/command_table2.c
+index ab0adabf9dd4c..7dc84b62eb0ac 100644
+--- a/drivers/gpu/drm/amd/display/dc/bios/command_table2.c
++++ b/drivers/gpu/drm/amd/display/dc/bios/command_table2.c
+@@ -101,7 +101,6 @@ static void init_dig_encoder_control(struct bios_parser *bp)
+ 		bp->cmd_tbl.dig_encoder_control = encoder_control_digx_v1_5;
+ 		break;
+ 	default:
+-		dm_output_to_console("Don't have dig_encoder_control for v%d\n", version);
+ 		bp->cmd_tbl.dig_encoder_control = encoder_control_fallback;
+ 		break;
+ 	}
+@@ -237,7 +236,6 @@ static void init_transmitter_control(struct bios_parser *bp)
+ 		bp->cmd_tbl.transmitter_control = transmitter_control_v1_7;
+ 		break;
+ 	default:
+-		dm_output_to_console("Don't have transmitter_control for v%d\n", crev);
+ 		bp->cmd_tbl.transmitter_control = transmitter_control_fallback;
+ 		break;
+ 	}
+@@ -407,8 +405,6 @@ static void init_set_pixel_clock(struct bios_parser *bp)
+ 		bp->cmd_tbl.set_pixel_clock = set_pixel_clock_v7;
+ 		break;
+ 	default:
+-		dm_output_to_console("Don't have set_pixel_clock for v%d\n",
+-			 BIOS_CMD_TABLE_PARA_REVISION(setpixelclock));
+ 		bp->cmd_tbl.set_pixel_clock = set_pixel_clock_fallback;
+ 		break;
+ 	}
+@@ -553,7 +549,6 @@ static void init_set_crtc_timing(struct bios_parser *bp)
+ 			set_crtc_using_dtd_timing_v3;
+ 		break;
+ 	default:
+-		dm_output_to_console("Don't have set_crtc_timing for v%d\n", dtd_version);
+ 		bp->cmd_tbl.set_crtc_timing = NULL;
+ 		break;
+ 	}
+@@ -670,8 +665,6 @@ static void init_enable_crtc(struct bios_parser *bp)
+ 		bp->cmd_tbl.enable_crtc = enable_crtc_v1;
+ 		break;
+ 	default:
+-		dm_output_to_console("Don't have enable_crtc for v%d\n",
+-			 BIOS_CMD_TABLE_PARA_REVISION(enablecrtc));
+ 		bp->cmd_tbl.enable_crtc = NULL;
+ 		break;
+ 	}
+@@ -863,8 +856,6 @@ static void init_set_dce_clock(struct bios_parser *bp)
+ 		bp->cmd_tbl.set_dce_clock = set_dce_clock_v2_1;
+ 		break;
+ 	default:
+-		dm_output_to_console("Don't have set_dce_clock for v%d\n",
+-			 BIOS_CMD_TABLE_PARA_REVISION(setdceclock));
+ 		bp->cmd_tbl.set_dce_clock = NULL;
+ 		break;
+ 	}
+diff --git a/drivers/gpu/drm/amd/display/dc/bios/command_table_helper2.c b/drivers/gpu/drm/amd/display/dc/bios/command_table_helper2.c
+index 8538f13e01bfb..8ff139a6b85db 100644
+--- a/drivers/gpu/drm/amd/display/dc/bios/command_table_helper2.c
++++ b/drivers/gpu/drm/amd/display/dc/bios/command_table_helper2.c
+@@ -84,8 +84,7 @@ bool dal_bios_parser_init_cmd_tbl_helper2(
+ 		return true;
  
- 	RCU_INIT_POINTER(bond->current_arp_slave, NULL);
- 
--	if (!all && (!bond->params.fail_over_mac ||
-+	if (!all && (bond->params.fail_over_mac != BOND_FOM_ACTIVE ||
- 		     BOND_MODE(bond) != BOND_MODE_ACTIVEBACKUP)) {
- 		if (ether_addr_equal_64bits(bond_dev->dev_addr, slave->perm_hwaddr) &&
- 		    bond_has_slaves(bond))
+ 	default:
+-		/* Unsupported DCE */
+-		BREAK_TO_DEBUGGER();
++		*h = dal_cmd_tbl_helper_dce112_get_table2();
+ 		return false;
+ 	}
+ }
 -- 
 2.39.5
 
