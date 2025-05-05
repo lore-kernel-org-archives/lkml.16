@@ -1,263 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D222B2777E3;
-	Mon,  5 May 2025 17:33:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED222EEC3;
+	Mon,  5 May 2025 17:38:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746466429; cv=none; b=B5/rKJHuzox1ArfJm0WEHwHYBSiirvyrkwK0SLbl0E9PCf3ulzy/Jv2nYi0+3XypFgAi+yc5TtF3b6n0P6GCycJ+3iUIpIvmtNZWhR1sPS+gz8pFSEjjlcsTRuZvYZ7rIXTTSJrfZcni0PxSYL3ZXuPJtqd+D9eRVM+7HwvE60w=
+	t=1746466709; cv=none; b=Y2olbO0nJB/ZbEzJonvm76gT63oGJ+BzJyNYI0oGeXCtPKphpUb8ChfTDOWV5yTfcXIuXZ+0JwEvx+cwfsgSQu8Rk+AZUFOql9p190rhhjKDq63n1VI2d4edEkBtln+G4e37UDLTm02FG2tQ0abHj5K4M8KwhJMnNN6gleAjTlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746466429; c=relaxed/simple;
-	bh=LbJzH/ZXREcqrMj1xNLrLa7ysPRTy7FBaPjFY5GdzAY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Jkvq8PFVtQ6ZEGifTydkGJMUQaW4NEDcs5WAYQ6nMMXm9JEQPQFWIUBs+jodKquJobhqPsA3DxXXUrgFfVsQN6pTtxO9Za8IW1SrkXf1AQGtN7hV/SHFKuqw2PJCujFTxadsni/Wo0vlrWtYqDz6aSj/naGjm7u6UaFdJrxZrUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X04cpW+8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746466709; c=relaxed/simple;
+	bh=CyE8nIQK/SrdNbmMMzGos4oYdpNaa/3NLdNJmLW/RlI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JLBl/zp7DvlpGxNvpWxnzCVlE/ICO2hebRTlx/kucbXSmWmhaBH1uYVQQLaUDHmHxawLauSSPAvElI+fFH+UxBxOW1vTpi2ku6rQdj8Z3+m9gC6jj6IEZb7Mm4XjcUNAhWuJHyG0mTynIVPnD/Lp27ULHw8BqhJSJ95prVJ2YuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eh66KuTV; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X04cpW+8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8830EC4CEF1;
-	Mon,  5 May 2025 17:33:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746466429;
-	bh=LbJzH/ZXREcqrMj1xNLrLa7ysPRTy7FBaPjFY5GdzAY=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=X04cpW+8A1xqLRDZj4zRc28ndREXxakLXbYXQj9FN83K+IdUXHfFr4ES6RAuLUABT
-	 ygMxUpeFE1wl/mabA8kfkQsID/94C6WuNGty5YqUlmQndSYlrNOan9XDulUq3yEkhY
-	 TLNZ/6D2c4kBtKTw3ZkvKlW9MaS8zl1Z79Ot+6QsltccSYXApBEF6vRYIH805i0ZFS
-	 9tLhVVwX293qy/XeNNm9i80tSWyvdE7V/+cUsJTEAq6U9f4cmwyGo9xM5xxl46DOTB
-	 xa4dFcMz9M6imfIbMIcIh89Qxe8vyTpjU3/Fpky7nlwFi5ExtjspXqPGcekt8nuoUE
-	 4FAyOCbcxKY8Q==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Mon, 05 May 2025 13:33:24 -0400
-Subject: [PATCH v7 10/10] ref_tracker: eliminate the ref_tracker_dir name
- field
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eh66KuTV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746466708; x=1778002708;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=CyE8nIQK/SrdNbmMMzGos4oYdpNaa/3NLdNJmLW/RlI=;
+  b=eh66KuTVmwGa9tdWUAK5YAAh59fAQCqbuVuSnwvfOtb7Cnid3ywGH2gK
+   7yQ87lvAwUbi6P24xoWPi+O+4+kwjLdBuRB7qsGeMZYQy8AbwGB2K3ih2
+   7VO+e3uCo+UO2EFD/AUBQrKCGv6VC+muLbvGtHGmPMnrn6HY+6w1yt6iu
+   I+MX43AEzadU3Ez2rMni2o3UielYFYV61ZvPQ3IiGqEcoAfwh1M3xlNQM
+   GiJT5DZxc3kIKNt55ZUWfX89O9TDSmPgr/PQjeza7EJuOeDNh8T2q+AGo
+   n0prx5fgbLsQL7cDCCc0QumdZYaooZzrg7aedHtADIHony0o/OJ1azdiG
+   A==;
+X-CSE-ConnectionGUID: B+lX8F/CSmyY87j/w5d5gQ==
+X-CSE-MsgGUID: F4NQUFWbTUy3YaDtufxjJQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11424"; a="47991513"
+X-IronPort-AV: E=Sophos;i="6.15,264,1739865600"; 
+   d="scan'208";a="47991513"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 10:38:27 -0700
+X-CSE-ConnectionGUID: cj9lDzCITPmR/x5nUFeUjA==
+X-CSE-MsgGUID: sYArKipUT52QpRlPIVhbYA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,264,1739865600"; 
+   d="scan'208";a="140092223"
+Received: from agluck-desk3.sc.intel.com ([172.25.222.70])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 10:38:27 -0700
+From: Tony Luck <tony.luck@intel.com>
+To: rafael@kernel.org
+Cc: lenb@kernel.org,
+	Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	patches@lists.linux.dev,
+	Tony Luck <tony.luck@intel.com>
+Subject: [PATCH v5 0/3] Add interfaces for ACPI MRRM table
+Date: Mon,  5 May 2025 10:38:16 -0700
+Message-ID: <20250505173819.419271-1-tony.luck@intel.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250505-reftrack-dbgfs-v7-10-f78c5d97bcca@kernel.org>
-References: <20250505-reftrack-dbgfs-v7-0-f78c5d97bcca@kernel.org>
-In-Reply-To: <20250505-reftrack-dbgfs-v7-0-f78c5d97bcca@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Jani Nikula <jani.nikula@linux.intel.com>, 
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, 
- Rodrigo Vivi <rodrigo.vivi@intel.com>, 
- Tvrtko Ursulin <tursulin@ursulin.net>
-Cc: Kuniyuki Iwashima <kuniyu@amazon.com>, Qasim Ijaz <qasdev00@gmail.com>, 
- Nathan Chancellor <nathan@kernel.org>, Andrew Lunn <andrew@lunn.ch>, 
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
- dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, 
- Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7677; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=LbJzH/ZXREcqrMj1xNLrLa7ysPRTy7FBaPjFY5GdzAY=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBoGPZn16CUdrMPZWaDqVbQwJ7VB4Y0gfIRoF8V+
- 1hoC0cuheKJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaBj2ZwAKCRAADmhBGVaC
- FYPwEADBcX34d1r4npiz0Mah9npC0sTBla9rxOfxo6+aK9dAH1z+4+8DXTcRNE221SILUHaqUVj
- W7neY0K0r38PCyVPGldnsN1pmJb8Puu8Pcg/mD1IUGUBuhi1NBz6swIxGC/0Rq/v2x+IRbdA3r6
- uIefqMBqZN8k/D4K7R4x/U9A/ZM5OdjJBDD6rbbGGOO5xTdPOSj5Fh1QdZTyxeZ5lnQRvFvkLLV
- j6gKPEZJ6X+jTvUn+ZUl4qztFtDnsP3G/RQh6Y5W3iqoBFrs7NtsE1WiJZ6e4WJFmE8LzWH624C
- HZkzb72aRyPsRH3cnm9LVRCs/6aqtwD5zpuu66SZmnmDip7Az+6845Jkx9EJRfDTLP4iJn3ITZe
- lnTk+57C3ySVWbNG3GgDei6wLCs2AxzCUkvFBQYsT84TlR5W/51jSUx2GBKGfwfziY6SE6Pdezo
- X9qPeSxr1DfbzQcyWfCKLFl0tpCtmVxg1H9eTnbnx02IEAgt+54UAqOq6q/Okr6L5LQAmKqubQc
- SXQAEPKJvhPJZ1WOD1RPWAp0HpDSKg+d+U+QVJR8hQmiyE3Ohzz8W6psT1Fs3F7maIhBR0qyzMb
- vjGJrhFbz2PPpAYuvyCRx9hRp+NpfUuXyErBkXRw2jmrk8e5qU2DDeAKxUs+T+Qq903WZqsPgMY
- mKl/aFOMe9P61Xw==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+Content-Transfer-Encoding: 8bit
 
-Now that we have dentries and the ability to create meaningful symlinks
-to them, don't keep a name string in each tracker. Switch the output
-format to print "class@address", and drop the name field.
+This series based on:
+	https://web.git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/log/?h=testing
 
-Also, add a kerneldoc header for ref_tracker_dir_init().
+Memory used to be homogeneous. Then NUMA came along. Later different
+types of memory (persistent memory, on-package high bandwidth memory,
+CXL attached memory).
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- drivers/gpu/drm/display/drm_dp_tunnel.c |  2 +-
- drivers/gpu/drm/i915/intel_runtime_pm.c |  2 +-
- drivers/gpu/drm/i915/intel_wakeref.c    |  2 +-
- include/linux/ref_tracker.h             | 20 ++++++++++++++------
- lib/ref_tracker.c                       |  6 +++---
- lib/test_ref_tracker.c                  |  2 +-
- net/core/dev.c                          |  2 +-
- net/core/net_namespace.c                |  4 ++--
- 8 files changed, 24 insertions(+), 16 deletions(-)
+Each type of memory has its own performance characteristics, and users
+will need to monitor and control access by type.
 
-diff --git a/drivers/gpu/drm/display/drm_dp_tunnel.c b/drivers/gpu/drm/display/drm_dp_tunnel.c
-index f2a8ef6abf34d89a642d7c7708c41e5b1dc9dece..f8d1f9c60e86c5a7b1866e1c9f6425e99d4ca9c6 100644
---- a/drivers/gpu/drm/display/drm_dp_tunnel.c
-+++ b/drivers/gpu/drm/display/drm_dp_tunnel.c
-@@ -1920,7 +1920,7 @@ drm_dp_tunnel_mgr_create(struct drm_device *dev, int max_group_count)
- 	}
- 
- #ifdef CONFIG_DRM_DISPLAY_DP_TUNNEL_STATE_DEBUG
--	ref_tracker_dir_init(&mgr->ref_tracker, 16, "drm_dptun", "dptun");
-+	ref_tracker_dir_init(&mgr->ref_tracker, 16, "drm_dptun");
- #endif
- 
- 	for (i = 0; i < max_group_count; i++) {
-diff --git a/drivers/gpu/drm/i915/intel_runtime_pm.c b/drivers/gpu/drm/i915/intel_runtime_pm.c
-index 94315e952ead9be276298fb2a0200d102005a0c1..d560f94af7a86f1fc139204a4e901eaea22c6ef1 100644
---- a/drivers/gpu/drm/i915/intel_runtime_pm.c
-+++ b/drivers/gpu/drm/i915/intel_runtime_pm.c
-@@ -60,7 +60,7 @@ static struct drm_i915_private *rpm_to_i915(struct intel_runtime_pm *rpm)
- static void init_intel_runtime_pm_wakeref(struct intel_runtime_pm *rpm)
- {
- 	ref_tracker_dir_init(&rpm->debug, INTEL_REFTRACK_DEAD_COUNT,
--			     "intel_runtime_pm", dev_name(rpm->kdev));
-+			     "intel_runtime_pm");
- 	ref_tracker_dir_symlink(&rpm->debug, "intel_runtime_pm-%s", dev_name(rpm->kdev));
- }
- 
-diff --git a/drivers/gpu/drm/i915/intel_wakeref.c b/drivers/gpu/drm/i915/intel_wakeref.c
-index 2e0498b3fa7947f994de1339d4d2bed93de1a795..bbd5171ce0a22435e540f10821f2a0dad59c1d2f 100644
---- a/drivers/gpu/drm/i915/intel_wakeref.c
-+++ b/drivers/gpu/drm/i915/intel_wakeref.c
-@@ -114,7 +114,7 @@ void __intel_wakeref_init(struct intel_wakeref *wf,
- 			 "wakeref.work", &key->work, 0);
- 
- #if IS_ENABLED(CONFIG_DRM_I915_DEBUG_WAKEREF)
--	ref_tracker_dir_init(&wf->debug, INTEL_REFTRACK_DEAD_COUNT, "intel_wakeref", name);
-+	ref_tracker_dir_init(&wf->debug, INTEL_REFTRACK_DEAD_COUNT, "intel_wakeref");
- 	ref_tracker_dir_symlink(&wf->debug, "intel_wakeref-%s", name);
- #endif
- }
-diff --git a/include/linux/ref_tracker.h b/include/linux/ref_tracker.h
-index b27cb7b3f1be5e16dedceeb0a88e9aa577be5dff..87c655ffdd77a0e5f080c32633853efea866aca3 100644
---- a/include/linux/ref_tracker.h
-+++ b/include/linux/ref_tracker.h
-@@ -24,7 +24,6 @@ struct ref_tracker_dir {
- 	struct dentry		*dentry;
- 	struct dentry		*symlink;
- #endif
--	char			name[32];
- #endif
- };
- 
-@@ -33,10 +32,21 @@ struct ref_tracker_dir {
- void ref_tracker_dir_debugfs(struct ref_tracker_dir *dir);
- void ref_tracker_dir_symlink(struct ref_tracker_dir *dir, const char *fmt, ...);
- 
-+/**
-+ * ref_tracker_dir_init - initialize a ref_tracker dir
-+ * @dir: ref_tracker_dir to be initialized
-+ * @quarantime_count: max number of entries to be tracked
-+ * @class: pointer to static string that describes object type
-+ *
-+ * Initialize a ref_tracker_dir. If debugfs is configured, then a file
-+ * will also be created for it under the top-level ref_tracker debugfs
-+ * directory.
-+ *
-+ * Note that @class must point to a static string.
-+ */
- static inline void ref_tracker_dir_init(struct ref_tracker_dir *dir,
- 					unsigned int quarantine_count,
--					const char *class,
--					const char *name)
-+					const char *class)
- {
- 	INIT_LIST_HEAD(&dir->list);
- 	INIT_LIST_HEAD(&dir->quarantine);
-@@ -50,7 +60,6 @@ static inline void ref_tracker_dir_init(struct ref_tracker_dir *dir,
- 	dir->dentry = NULL;
- 	dir->symlink = NULL;
- #endif
--	strscpy(dir->name, name, sizeof(dir->name));
- 	ref_tracker_dir_debugfs(dir);
- 	stack_depot_init();
- }
-@@ -75,8 +84,7 @@ int ref_tracker_free(struct ref_tracker_dir *dir,
- 
- static inline void ref_tracker_dir_init(struct ref_tracker_dir *dir,
- 					unsigned int quarantine_count,
--					const char *class,
--					const char *name)
-+					const char *class)
- {
- }
- 
-diff --git a/lib/ref_tracker.c b/lib/ref_tracker.c
-index d59ef7200dd4f97f247ddd989beb5757b8afd519..6c28d26c2e3e37a7ccd39893a29390149283d588 100644
---- a/lib/ref_tracker.c
-+++ b/lib/ref_tracker.c
-@@ -134,7 +134,7 @@ __ref_tracker_dir_pr_ostream(struct ref_tracker_dir *dir,
- 	stats = ref_tracker_get_stats(dir, display_limit);
- 	if (IS_ERR(stats)) {
- 		pr_ostream(s, "%s%s@%p: couldn't get stats, error %pe\n",
--			   s->prefix, dir->name, dir, stats);
-+			   s->prefix, dir->class, dir, stats);
- 		return;
- 	}
- 
-@@ -145,14 +145,14 @@ __ref_tracker_dir_pr_ostream(struct ref_tracker_dir *dir,
- 		if (sbuf && !stack_depot_snprint(stack, sbuf, STACK_BUF_SIZE, 4))
- 			sbuf[0] = 0;
- 		pr_ostream(s, "%s%s@%p has %d/%d users at\n%s\n", s->prefix,
--			   dir->name, dir, stats->stacks[i].count,
-+			   dir->class, dir, stats->stacks[i].count,
- 			   stats->total, sbuf);
- 		skipped -= stats->stacks[i].count;
- 	}
- 
- 	if (skipped)
- 		pr_ostream(s, "%s%s@%p skipped reports about %d/%d users.\n",
--			   s->prefix, dir->name, dir, skipped, stats->total);
-+			   s->prefix, dir->class, dir, skipped, stats->total);
- 
- 	kfree(sbuf);
- 
-diff --git a/lib/test_ref_tracker.c b/lib/test_ref_tracker.c
-index d263502a4c1db248f64a66a468e96c8e4cffab25..b983ceb12afcb84ad60360a1e6fec0072e78ef79 100644
---- a/lib/test_ref_tracker.c
-+++ b/lib/test_ref_tracker.c
-@@ -64,7 +64,7 @@ static int __init test_ref_tracker_init(void)
- {
- 	int i;
- 
--	ref_tracker_dir_init(&ref_dir, 100, "selftest", "selftest");
-+	ref_tracker_dir_init(&ref_dir, 100, "selftest");
- 
- 	timer_setup(&test_ref_tracker_timer, test_ref_tracker_timer_func, 0);
- 	mod_timer(&test_ref_tracker_timer, jiffies + 1);
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 380d07bec15a1f62ed27c31a6e211e74f3a5561d..00776cba0276554066c94a6fc86f5ed4df430cfa 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -11620,7 +11620,7 @@ struct net_device *alloc_netdev_mqs(int sizeof_priv, const char *name,
- 
- 	dev->priv_len = sizeof_priv;
- 
--	ref_tracker_dir_init(&dev->refcnt_tracker, 128, "netdev", name);
-+	ref_tracker_dir_init(&dev->refcnt_tracker, 128, "netdev");
- #ifdef CONFIG_PCPU_DEV_REFCNT
- 	dev->pcpu_refcnt = alloc_percpu(int);
- 	if (!dev->pcpu_refcnt)
-diff --git a/net/core/net_namespace.c b/net/core/net_namespace.c
-index 1c5e0289f0f0b37c61852d95d4e11a8c12a868f3..5b06a0bf88e62c19f6f610eca3a4c4750ff4a2ea 100644
---- a/net/core/net_namespace.c
-+++ b/net/core/net_namespace.c
-@@ -324,8 +324,8 @@ static __net_init void preinit_net(struct net *net, struct user_namespace *user_
- {
- 	refcount_set(&net->passive, 1);
- 	refcount_set(&net->ns.count, 1);
--	ref_tracker_dir_init(&net->refcnt_tracker, 128, "net_refcnt", "net_refcnt");
--	ref_tracker_dir_init(&net->notrefcnt_tracker, 128, "net_notrefcnt", "net_notrefcnt");
-+	ref_tracker_dir_init(&net->refcnt_tracker, 128, "net_refcnt");
-+	ref_tracker_dir_init(&net->notrefcnt_tracker, 128, "net_notrefcnt");
- 
- 	get_random_bytes(&net->hash_mix, sizeof(u32));
- 	net->dev_base_seq = 1;
+The MRRM solution is to tag physical address ranges with "region IDs"
+so that platform firmware[1] can indicate the type of memory for each
+range (with separate tags available for local vs. remote access to
+each range). Note that these ranges can include addresses reserved
+for future hotplugged memory.
 
+The region IDs will be used to provide separate event counts for each
+region for "perf" and for the "resctrl" file system to monitor and
+control memory bandwidth in each region.
+
+Users will need to know the address range(s) that are part of each
+region. This patch series adds
+	/sys/firmware/acpi/memory_ranges/rangeX
+directories to provide user space accessible enumeration.
+
+-Tony
+
+[1] MRRM definition allow for future expansion for the OS to assign
+these region IDs.
+
+Changes since version 4 here:
+https://lore.kernel.org/all/20250429202412.380637-1-tony.luck@intel.com/
+
+*) Dropped patch 1. ACPICA changes have been merged into the linux-pm
+   tree.
+*) Removed spurious blank file from mrrm_init() (Thanks, Fenghua).
+
+Tony Luck (3):
+  ACPI/MRRM: Minimal parse of ACPI MRRM table
+  ACPI/MRRM: Add /sys files to describe memory ranges
+  ACPI: Add documentation for exposing MRRM data
+
+ include/linux/acpi.h                          |   9 +
+ drivers/acpi/acpi_mrrm.c                      | 182 ++++++++++++++++++
+ Documentation/ABI/testing/sysfs-firmware-acpi |  21 ++
+ arch/x86/Kconfig                              |   1 +
+ drivers/acpi/Kconfig                          |   3 +
+ drivers/acpi/Makefile                         |   1 +
+ 6 files changed, 217 insertions(+)
+ create mode 100644 drivers/acpi/acpi_mrrm.c
+
+
+base-repo: git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git
+base-branch: testing
+base-commit: 70cb3b9a371fe9ff4f50cd7889763abd4ab621dc
 -- 
-2.49.0
+2.48.1
 
