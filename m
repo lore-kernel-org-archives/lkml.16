@@ -1,89 +1,115 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from out162-62-57-210.mail.qq.com (out162-62-57-210.mail.qq.com [162.62.57.210])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99E15A31
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 13:30:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AE67C8FE
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 13:30:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.210
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746451802; cv=none; b=Sd3+ugHYxPyhHxEBNf2ANvHjeS1IQnZ74l1Ym7GV5P7IJOXkuYOMR5YzkYTpTZoc80NjPaHnte5r7t00VEC3porHu4m5UtV1XtQJwa62+X7anJ61Q0hcbXDpA3e/Fq1cbDPDKB1gyRbSEd3tPAaDGpPgz9OYzW1GYmT4Za1AtYM=
+	t=1746451834; cv=none; b=ZXeJv0MzV77aC20ASDN5QjHSo/xHARW/pPJPeysYY810vpKn0aN/CYaxpVdi5MZiB2Q7feHimqpmMppqCgm2PE1QtwTmKjd7QqmCqHHKEQbaqUn2g1W7RFF+S3W76CJPd7RaRmEX/lK/AjRLKUnufiP8kgi0tsm7GJcgC/BIu2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746451802; c=relaxed/simple;
-	bh=nxv8omxoWylB/thmP6M3rQdOrACdO/QSPsp7iDIySd0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=jascwvniFvsIZknBys/VDw98wN+cAWV6Lj5/DUnfQJlzq4fGlxyYO9OQRo1o1xU3on6jvb6pARvxDhtpnefBlEkjWC0skTrXPhIK+J6+867scHIz/CLF0pe+k9rBkZFs0SXmoe9duvyY5gWxyRMcm0Z8KCnIV5hGhzT3MxZWkhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1uBvsv-0001kY-OL; Mon, 05 May 2025 15:29:29 +0200
-Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1uBvsr-001EmE-2j;
-	Mon, 05 May 2025 15:29:25 +0200
-Received: from pza by lupine with local (Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1uBvsr-000KtU-2N;
-	Mon, 05 May 2025 15:29:25 +0200
-Message-ID: <a21bc1518141c38b064360ff4c2b7953bfdfda41.camel@pengutronix.de>
-Subject: Re: [PATCH v2 05/10] dt-bindings: reset: sophgo: Add SG2044
- bindings.
-From: Philipp Zabel <p.zabel@pengutronix.de>
-To: Inochi Amaoto <inochiama@gmail.com>, Jean Delvare <jdelvare@suse.com>, 
- Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,  Conor Dooley
- <conor+dt@kernel.org>, Chen Wang <unicorn_wang@outlook.com>, Andi Shyti
- <andi.shyti@kernel.org>,  Thomas Gleixner <tglx@linutronix.de>, Paul
- Walmsley <paul.walmsley@sifive.com>, Samuel Holland
- <samuel.holland@sifive.com>, Ulf Hansson <ulf.hansson@linaro.org>, Palmer
- Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Alexandre
- Ghiti <alex@ghiti.fr>,  Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas
- Bonnefille <thomas.bonnefille@bootlin.com>, Jarkko Nikula
- <jarkko.nikula@linux.intel.com>, Jisheng Zhang <jszhang@kernel.org>, Chao
- Wei <chao.wei@sophgo.com>
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, 
- sophgo@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-i2c@vger.kernel.org,  linux-riscv@lists.infradead.org,
- linux-mmc@vger.kernel.org, Yixun Lan <dlan@gentoo.org>, Longbin Li
- <looong.bin@gmail.com>
-Date: Mon, 05 May 2025 15:29:25 +0200
-In-Reply-To: <20250413223507.46480-6-inochiama@gmail.com>
-References: <20250413223507.46480-1-inochiama@gmail.com>
-	 <20250413223507.46480-6-inochiama@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	s=arc-20240116; t=1746451834; c=relaxed/simple;
+	bh=UsRJmxSzX5ZOwpe7JqsYy/4OxjCEXYbODGaUrJyxL2k=;
+	h=Message-ID:From:Date:Subject:MIME-Version:Content-Type:To:Cc; b=aad7EFN5/uscEb1JupffwLMJue8OMSKLLOGnKICLY67O0hGHOyEIZ1w16MyLKgYqfBg5JnQX+fRnx+MxZO9mJX3v/zfa5UdIe90uMZGEuNRDyqqmEwsQ3nUF9T0fZR0Ai/6uPIv1OIZZJsqEECuniqDxUuzY/mypVnaJTFqLK5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=rrx/XmeU; arc=none smtp.client-ip=162.62.57.210
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="rrx/XmeU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1746451517; bh=2/FFJmk/+fGXLOIPIpdneqACysAwX5YZ9QhmVvofnu0=;
+	h=From:Date:Subject:To:Cc;
+	b=rrx/XmeUqF2EQf0gE3tLWLo6hE+Akf0Z+Xzla3z48cwALG31iOj4sG6FMDmm8spjc
+	 7fRPR53Xqg6ZU37JhNB+kIcj1FvVG8otqfwmvsgJm3Bf37zMAroY4E6w+holHkGBaH
+	 HWmGmm5cQix2adN2V3IgVwslbMEOBQq7rE3AGWLY=
+Received: from [127.0.1.1] ([112.48.12.6])
+	by newxmesmtplogicsvrszc11-0.qq.com (NewEsmtp) with SMTP
+	id AA8426D; Mon, 05 May 2025 21:02:42 +0800
+X-QQ-mid: xmsmtpt1746450162t93d9i15s
+Message-ID: <tencent_593580D8307F26937D7A7AAA0721D8CA8309@qq.com>
+X-QQ-XMAILINFO: OGr48utWQcJErgkr0OisvbP+BNPLpEilUs/bh8G4dbo50M4coI+EkxVcWacsaE
+	 HLrS5+d3BUWV4jrR5k4no9vwv+HRdxh7DsTqkjmSk0/1HZ/bjqEZJISZVvDEUzVldgURLgwSxq+5
+	 aQFrflS+fZWUvZXem0mUfOBhd0U/t5tb2L/6CoN+vQ46NpOtpq96exc1zNJqRn0pi22pv43h8mEG
+	 U6E+3XpygaES3Br5djlUze/DPemnGBgNonmQ48axQuMnDYgQr3YLpzmD/hVYlz1uqtGF7GwcSDgU
+	 HWluplzGCxx65OkcLRgC4B1MvaHFOjpdpIK1LAIGQZqjSV6h1KRbar87faVLPJLrGspikRms9nE9
+	 yCWwdyjJ5bR4MJ/RxDV3p8ZtW7TMXknY9csrCvuDVcWb1CFa5AT8XvdV/x9Mtgo71wudAsle9tjU
+	 aFdgKA9aucGQtukK2qdq/Uhd6pgOuMZADBnvcUxkxb1uFeMueapW3t0RVrf3E4HlB2vf5m8k3QWh
+	 B2x/STGGLEDFbnJVXdaNcecWp6OfS76UY3nPVEs11t/tVqYZVV+5/BXOUzvd/4uJ04KjCQyKfbeN
+	 vjr2RuGfYANUqNtUAMeUEuFyOR57dZ/fYcj+toDBIfHTH2DvXJlOohS20I4WOeHI/KTiqESWF9kK
+	 WZIdyjpr/rLlE/CxT5aBtlbpTQLbC91FGwzrafF3nepa2uSc3iuF/JDzB3WMf2KIpocI7/5/VO3Z
+	 p/3pQU6nYkNQK1PYBllu4T8Z7HjcgKKVXReDb+WrqBTcvwsvEmHAu9YG1l/JQjtC1lZuPJs3mtLi
+	 bnLX7T5fJnPah3WafrWUSOIdg8ifS3NOJPYqWN1uUq2vSFNSAKiAIgVotXxxv/z7ZAQDmF30V4a4
+	 JpCuuZBRFuFw4hZsdtuGzF+us5cccKTjpZ85QWt64dBxOvoQ7+5duLD65lRWaHb6ZMGiTOSb2YG9
+	 dYUH5Zo9cHgaULGqG+CfN4L7JtN9R2B1KsE82doalu/7uef+TmYbyN/NPH2yPd7xkcmJqENXzoev
+	 7sSYxpq7Je8pRtS5u5BEJdEkplfI4eiDm0q6h6wtswGJ32SFgY/CpTyrqEHsc=
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+From: Liya Huang <1425075683@qq.com>
+Date: Mon, 05 May 2025 21:02:36 +0800
+Subject: [PATCH] sched/core: Fix missing semicolon in init_task.se.slice
+ initialization
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-OQ-MSGID: <20250505-sched_core-v1-1-248eb27f0d12@qq.com>
+X-B4-Tracking: v=1; b=H4sIAOu2GGgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDINQtTs5ITYlPzi9K1U1ONjc2TzVKMks2NlQCaigoSk3LrAAbFh1bWws
+ Asxqar1wAAAA=
+X-Change-ID: 20250505-sched_core-cc737e2b6c31
+To: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+ Juri Lelli <juri.lelli@redhat.com>, 
+ Vincent Guittot <vincent.guittot@linaro.org>, 
+ Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, 
+ Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Liya Huang <1425075683@qq.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1746450163; l=1237;
+ i=1425075683@qq.com; s=20250415; h=from:subject:message-id;
+ bh=UsRJmxSzX5ZOwpe7JqsYy/4OxjCEXYbODGaUrJyxL2k=;
+ b=LfG1oThBX1XHxxECNoSiE/XT9fDmo+AsGJJ4uNPGI/E1zB2/sSfy8jR4zuiO7sOuIHLjVZODd
+ YGGw2wZvX/rAunsnztZzpCsvb8jHZlewUNMWFcf/eYVWWfqTJJSX/og
+X-Developer-Key: i=1425075683@qq.com; a=ed25519;
+ pk=nSnzeGGcMXBimuyIWYIZpZRN8DboZqwr67IqWALwrGs=
 
-On Mo, 2025-04-14 at 06:34 +0800, Inochi Amaoto wrote:
-> The SG2044 shares the same reset controller as SG2042, so it
-> is just enough to use the compatible string of SG2042 as a
-> basis.
->=20
-> Add compatible string for the reset controller of SG2044.
->=20
-> Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
-> Acked-by: Rob Herring (Arm) <robh@kernel.org>
-> Reviewed-by: Chen Wang <unicorn_wang@outlook.com>
+The initialization of init_task.se.slice incorrectly ends with a comma
+(`,`), which may lead to unexpected behavior.
+This patch fixes the issue by replacing the comma with a semicolon (`;`).
 
-Applied patch 5 to reset/next, thanks!
+---
+sched/core: Fix missing semicolon in init_task.se.slice initialization
 
-[05/10] dt-bindings: reset: sophgo: Add SG2044 bindings.
-        https://git.pengutronix.de/cgit/pza/linux/commit/?id=3D1c64de886b88
+The initialization of init_task.se.slice incorrectly ends with a comma 
+(`,`), which may lead to unexpected behavior.
+This patch fixes the issue by replacing the comma with a semicolon (`;`).
 
-regards
-Philipp
+Signed-off-by: Liya Huang <1425075683@qq.com>
+---
+ kernel/sched/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index c81cf642dba055544704faf4492bd0e053f5ae42..e393aa82399b1f7ef3b4b6a3b3fb3e624bcd031e 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -8685,7 +8685,7 @@ void __init sched_init(void)
+ 	}
+ 
+ 	set_load_weight(&init_task, false);
+-	init_task.se.slice = sysctl_sched_base_slice,
++	init_task.se.slice = sysctl_sched_base_slice;
+ 
+ 	/*
+ 	 * The boot idle thread does lazy MMU switching as well:
+
+---
+base-commit: b4432656b36e5cc1d50a1f2dc15357543add530e
+change-id: 20250505-sched_core-cc737e2b6c31
+
+Best regards,
+-- 
+Liya Huang <1425075683@qq.com>
 
