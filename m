@@ -1,41 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD4092F4973;
-	Mon,  5 May 2025 23:16:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16BD828A70F;
+	Mon,  5 May 2025 23:16:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486971; cv=none; b=Vi8jaFo1gZaq+50PeWeD3f7nd0PkjZ5ioqYajjQK/Vb7wIrRSI/7+H6oa57uwF7OXzLDFdiLzp9Kh88L7u9jjzaGL9jsawZAHEQKe9FCgKec4s8NeQlapPuQZ81ZaouKil04QRdM0CCWs53LEVFtzJsDTrp27A2vnEutAsCGgt8=
+	t=1746487021; cv=none; b=mFvvj+OThNo3/epUWtcfpPHkDv9reGUh5slOpTJMmHKZ4+y3KIeGo2nY7L8AtKKpiFMHLv7Hd8TIxVeopSOYzQb10rEkNNlj8UxAgbp4F6/Nj4PPxBZBeRcHC2xPnRs/7jp1EP9FPdNGszQsy28YOpi4Fbf1JqT71qbLDf/gQwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486971; c=relaxed/simple;
-	bh=pmbQVqxqI4yMufVZhpjQMPIHb8g9Euc5udta/x9FAew=;
+	s=arc-20240116; t=1746487021; c=relaxed/simple;
+	bh=ib1Vrhx+ahc+Vj+0Ro997g+1+fNzOjfu6r3NEqs8MS8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=eOFyeHJD1w6YhHazwDjDpDczA6n800Y6umIaIMI0n0Tk5fjFPCelu99yUuDH05MRUYhODKFmktYBiBuFKkiXACnzmgBhTGVk158ulq61OSqnm/7EGPV8SyivIHO3sjqqsMOKZa9btiOzBOy999kzCjJSRKvUUr7g2cjYDi44yDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f8W7eTMR; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ozm2NAbmzz51SvCYXxMEj8kZSXGPD7XL7Nv55M+Gtxyd6wVSu80pCtVeyeGYf912kO2JZ2hXXzwmk6WjgiIP0LpmlDdibbOFjUohzkcL7tSA1gI964JZCVaeyIzhRsuAXDUcdXpHu5TD3qeM/THL7+wcDFi6FRERmXL7b+l6mYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eDOpt8zo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f8W7eTMR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 900F4C4CEEE;
-	Mon,  5 May 2025 23:16:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eDOpt8zo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2269BC4CEEF;
+	Mon,  5 May 2025 23:16:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486971;
-	bh=pmbQVqxqI4yMufVZhpjQMPIHb8g9Euc5udta/x9FAew=;
+	s=k20201202; t=1746487019;
+	bh=ib1Vrhx+ahc+Vj+0Ro997g+1+fNzOjfu6r3NEqs8MS8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=f8W7eTMRfJ5A/pCkTvZhOBw9n1abJLHg/UeYo80JgFnZcazYpKViNQ3NVA+3s97GZ
-	 gKylV6ixUIe0fmmZZOwqUumWSSFNq6oW8fMppyLILCAjHbbKRYeH24r3heOIaSHmR7
-	 SSa9YVIRKMO6f2rQ4JloIWwXgNvtwKde8qYWSGZWfjGCS4yrCG5qgYZusb96NOMn4f
-	 HDag+7XzrKT2GLftZWE191bCeKv11D32HpUYqOV8ApwOr9ePbqsWOrMzM6rNX4NxS9
-	 r7KjxmtgAcV2gYCilDjtyeQ3ap4PtKcsiPOLoYy627flaekk4HuXa6WyAwJCEuQXlK
-	 ybnijSWcBpQMQ==
+	b=eDOpt8zoJA7nYIpA1Bu17Pr41oxLD+KDp9X7yVEELPd+h9aiBB/odBHZdjx9tkLPY
+	 fgyXcUGO7wQVptLG4t5WitZE3yqfOy5e/6E8mflM008nuFfEd9FBME2AhTKjPK7Sp1
+	 56Ve0bcyY+WtcIiQuKpKQsU1caL00EwvXNPfk5moeuGis6rSy0DyDvAH4feFixVpL6
+	 LEfDQUnwG4nk7pf0cpteIopcX5q/CXYhNcWwKSomIT44LKpS982CNntX7TrN6JSxhm
+	 /W9Lpv7OeBunuwnlTSRh4bEfct7Incwvu6YkOdTeztiqyyCIOGcn3uS1eR1gVwR2tV
+	 1q8OsmTzFqwgA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Andrew Davis <afd@ti.com>,
-	Nishanth Menon <nm@ti.com>,
+Cc: Shahar Shitrit <shshitrit@nvidia.com>,
+	Tariq Toukan <tariqt@nvidia.com>,
+	Mateusz Polchlopek <mateusz.polchlopek@intel.com>,
+	Jakub Kicinski <kuba@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.15 087/153] soc: ti: k3-socinfo: Do not use syscon helper to build regmap
-Date: Mon,  5 May 2025 19:12:14 -0400
-Message-Id: <20250505231320.2695319-87-sashal@kernel.org>
+	saeedm@nvidia.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	pabeni@redhat.com,
+	netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.15 111/153] net/mlx5: Apply rate-limiting to high temperature warning
+Date: Mon,  5 May 2025 19:12:38 -0400
+Message-Id: <20250505231320.2695319-111-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505231320.2695319-1-sashal@kernel.org>
 References: <20250505231320.2695319-1-sashal@kernel.org>
@@ -50,66 +58,43 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.15.181
 Content-Transfer-Encoding: 8bit
 
-From: Andrew Davis <afd@ti.com>
+From: Shahar Shitrit <shshitrit@nvidia.com>
 
-[ Upstream commit a5caf03188e44388e8c618dcbe5fffad1a249385 ]
+[ Upstream commit 9dd3d5d258aceb37bdf09c8b91fa448f58ea81f0 ]
 
-The syscon helper device_node_to_regmap() is used to fetch a regmap
-registered to a device node. It also currently creates this regmap
-if the node did not already have a regmap associated with it. This
-should only be used on "syscon" nodes. This driver is not such a
-device and instead uses device_node_to_regmap() on its own node as
-a hacky way to create a regmap for itself.
+Wrap the high temperature warning in a temperature event with
+a call to net_ratelimit() to prevent flooding the kernel log
+with repeated warning messages when temperature exceeds the
+threshold multiple times within a short duration.
 
-This will not work going forward and so we should create our regmap
-the normal way by defining our regmap_config, fetching our memory
-resource, then using the normal regmap_init_mmio() function.
-
-Signed-off-by: Andrew Davis <afd@ti.com>
-Link: https://lore.kernel.org/r/20250123181726.597144-1-afd@ti.com
-Signed-off-by: Nishanth Menon <nm@ti.com>
+Signed-off-by: Shahar Shitrit <shshitrit@nvidia.com>
+Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
+Reviewed-by: Mateusz Polchlopek <mateusz.polchlopek@intel.com>
+Link: https://patch.msgid.link/20250213094641.226501-2-tariqt@nvidia.com
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/ti/k3-socinfo.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlx5/core/events.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/soc/ti/k3-socinfo.c b/drivers/soc/ti/k3-socinfo.c
-index fd91129de6e5b..76a4e6eac8b53 100644
---- a/drivers/soc/ti/k3-socinfo.c
-+++ b/drivers/soc/ti/k3-socinfo.c
-@@ -58,6 +58,12 @@ k3_chipinfo_partno_to_names(unsigned int partno,
- 	return -EINVAL;
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/events.c b/drivers/net/ethernet/mellanox/mlx5/core/events.c
+index 080aee3e3f9bb..15d90d68b1ffd 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/events.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/events.c
+@@ -166,9 +166,10 @@ static int temp_warn(struct notifier_block *nb, unsigned long type, void *data)
+ 	value_lsb &= 0x1;
+ 	value_msb = be64_to_cpu(eqe->data.temp_warning.sensor_warning_msb);
+ 
+-	mlx5_core_warn(events->dev,
+-		       "High temperature on sensors with bit set %llx %llx",
+-		       value_msb, value_lsb);
++	if (net_ratelimit())
++		mlx5_core_warn(events->dev,
++			       "High temperature on sensors with bit set %llx %llx",
++			       value_msb, value_lsb);
+ 
+ 	return NOTIFY_OK;
  }
- 
-+static const struct regmap_config k3_chipinfo_regmap_cfg = {
-+	.reg_bits = 32,
-+	.val_bits = 32,
-+	.reg_stride = 4,
-+};
-+
- static int k3_chipinfo_probe(struct platform_device *pdev)
- {
- 	struct device_node *node = pdev->dev.of_node;
-@@ -65,13 +71,18 @@ static int k3_chipinfo_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct soc_device *soc_dev;
- 	struct regmap *regmap;
-+	void __iomem *base;
- 	u32 partno_id;
- 	u32 variant;
- 	u32 jtag_id;
- 	u32 mfg;
- 	int ret;
- 
--	regmap = device_node_to_regmap(node);
-+	base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
-+
-+	regmap = regmap_init_mmio(dev, base, &k3_chipinfo_regmap_cfg);
- 	if (IS_ERR(regmap))
- 		return PTR_ERR(regmap);
- 
 -- 
 2.39.5
 
