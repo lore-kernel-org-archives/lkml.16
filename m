@@ -1,116 +1,189 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from smtp-fw-52003.amazon.com (smtp-fw-52003.amazon.com [52.119.213.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1F2C1B07AE;
-	Mon,  5 May 2025 20:27:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DC1C26AEC;
+	Mon,  5 May 2025 20:31:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746476861; cv=none; b=BOTInNqBfP8lf4AVD3cB5A1Amlbj+IPGDjvaUDKzpsJsoOWGAREeurU7bJnSlLS2p8IG9PqKXEeY/VXKJsWnhiah+2oVCKiRCuYc+AClM7X77d0gwKyAgnY/pVZcSvAp8/2v9P1spP5JmdbSIQKTdZN2YHYAB+OfEETHTFLccT8=
+	t=1746477063; cv=none; b=EK4oBTiQ7F0ss57VdLiO1/Ueo1PDtf7Uxgz23Mp8ljx8T25yK9q/slXWpwoSN3t5AKK7lNV/sret7BnuFoUN/NgzdtN9yoXbPqf2AHuRqvXEvHrfb46dnlF7bR+tnenEIlqkFEBDbtt8WpmOyJp9gvItZ2vtHCuN8Xqy4TnoVbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746476861; c=relaxed/simple;
-	bh=GZI/2kXleNIKAhFS6SRpG5Ac7biLKJWtwxngru8qIYg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=e/5hxFlioBHIjtFMQWhvcibIZGjAMZjIQmq1bONgA0B60NQy4XkBt9RIYPB1BcnJUZihS9GmhNO1uhFDbZpsqf5TbR+tVn8XSwVmLIxGJnZq3MbtkYTYoJr4JfeXKWKyVaWWTWRvzCYZyptw7bB1CHguAeKPDb8M3Rt2ezqgovo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kmn94N9G; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1746477063; c=relaxed/simple;
+	bh=hpXawiMCbFNMtLwupeoUmf2Xm0mnA5xTmSvR13MfLeM=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tbq5WC3fIuguT72K86m7qp6gmGAbsQOPWxEOd7V7FgWwQC4JJ9Qp5DKHxrUiWaJ3yWC4Ayj5khKPCOYdJUsyni/gZz/xCV4etQJhWj8qo2tdiGei9tmx7YnVlgH3O8Z0cCTEuxPg7nlPPAYLtSpWMWfGVqd6lcd2As6y8abpaQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=K1QYsB5h; arc=none smtp.client-ip=52.119.213.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kmn94N9G"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746476860; x=1778012860;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=GZI/2kXleNIKAhFS6SRpG5Ac7biLKJWtwxngru8qIYg=;
-  b=kmn94N9GHfdRaMYP1LOoellP7lNAsMVMyHKcZxxFS7dXVt2QcfHwwJrt
-   zfvdwQrOZx04604drG+U/SQIO/RwdrdM0r8pgA/eAl0Ji3kt3piCnJlFG
-   c7PawjvUEJ5Iot0N/s8pHF4Xpmi0vqUIenkD7gu1gXqMOMJhVGrslVI9h
-   iZjPMxxGNsHp2SlC+wGQ58QYw8kc+WMx7AZpx2A/ayiIxi3aFYZ+ctPSf
-   C72gaucnazE3bKubVUm/G++8+B2y3FYq0wcHK3LPFg9Zutr6knV+KzEkj
-   nJdOPRyWzDQOWFKIZCFFGHxYRValfoq3LxKZsoueTx2Hdgh9d7RFmBr3M
-   A==;
-X-CSE-ConnectionGUID: z1+8rSfSSAGQ68+OuiMZXQ==
-X-CSE-MsgGUID: ZJ+bcq2kTBiTGabBiwAZwA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11424"; a="48244513"
-X-IronPort-AV: E=Sophos;i="6.15,264,1739865600"; 
-   d="scan'208";a="48244513"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 13:27:26 -0700
-X-CSE-ConnectionGUID: hhvept1FQmqpbiyFFDwP5g==
-X-CSE-MsgGUID: AfXkKI65RxyAUMgMUcnJyQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,264,1739865600"; 
-   d="scan'208";a="166429633"
-Received: from spandruv-desk.jf.intel.com ([10.54.75.16])
-  by fmviesa001.fm.intel.com with ESMTP; 05 May 2025 13:27:24 -0700
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH] platform/x86: ISST: Do Not Restore SST MSRs on CPU Online Operation
-Date: Mon,  5 May 2025 13:27:22 -0700
-Message-ID: <20250505202722.1048675-1-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="K1QYsB5h"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1746477061; x=1778013061;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=y2iuPuGSDdUuGQ1kMEtvZ4TsfeO77AdopcHWmkz8TV0=;
+  b=K1QYsB5hJIQJlv1+NPyDADW6TwBvnvirYXuxCTHPla7/6sQ+fjM/MQY2
+   XNv9U0/vn9PsyGcXd2fiKxaohaaaZJ/aW7lNWnTQ8fRuvwjA4ySoh2BOn
+   HD2OLLUUkN1WoZ0IzFtHdRwqqDXNFz7T1JxJlTcQVWnfyEMd3GnM7qPCs
+   c=;
+X-IronPort-AV: E=Sophos;i="6.15,264,1739836800"; 
+   d="scan'208";a="90207148"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-52003.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 20:30:57 +0000
+Received: from EX19MTAUWC001.ant.amazon.com [10.0.21.151:21986]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.38.92:2525] with esmtp (Farcaster)
+ id cc2fda14-57a4-4f3b-8957-2c51c2f77658; Mon, 5 May 2025 20:30:56 +0000 (UTC)
+X-Farcaster-Flow-ID: cc2fda14-57a4-4f3b-8957-2c51c2f77658
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Mon, 5 May 2025 20:30:56 +0000
+Received: from 6c7e67bfbae3.amazon.com (10.187.170.18) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Mon, 5 May 2025 20:30:52 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <jannh@google.com>
+CC: <alexander@mihalicyn.com>, <bluca@debian.org>, <brauner@kernel.org>,
+	<daan.j.demeyer@gmail.com>, <davem@davemloft.net>, <david@readahead.eu>,
+	<edumazet@google.com>, <horms@kernel.org>, <jack@suse.cz>, <kuba@kernel.org>,
+	<kuniyu@amazon.com>, <lennart@poettering.net>,
+	<linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<me@yhndnzj.com>, <netdev@vger.kernel.org>, <oleg@redhat.com>,
+	<pabeni@redhat.com>, <viro@zeniv.linux.org.uk>, <zbyszek@in.waw.pl>
+Subject: Re: [PATCH RFC v3 08/10] net, pidfs, coredump: only allow coredumping tasks to connect to coredump socket
+Date: Mon, 5 May 2025 13:30:42 -0700
+Message-ID: <20250505203044.27771-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <CAG48ez1TePJ87PKNt_xFTSKs=N4z06d1mG9iUA7M9pgvbXPPMw@mail.gmail.com>
+References: <CAG48ez1TePJ87PKNt_xFTSKs=N4z06d1mG9iUA7M9pgvbXPPMw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: EX19D039UWA003.ant.amazon.com (10.13.139.49) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-During CPU offline/online operations, the hardware retains MSR settings.
-Even if all CPUs are offlined, the package does not lose its MSR
-settings.
+From: Jann Horn <jannh@google.com>
+Date: Mon, 5 May 2025 21:55:04 +0200
+> On Mon, May 5, 2025 at 9:38 PM Kuniyuki Iwashima <kuniyu@amazon.com> wrote:
+> > From: Jann Horn <jannh@google.com>
+> > Date: Mon, 5 May 2025 21:10:28 +0200
+> > > On Mon, May 5, 2025 at 8:41 PM Kuniyuki Iwashima <kuniyu@amazon.com> wrote:
+> > > > From: Christian Brauner <brauner@kernel.org>
+> > > > Date: Mon, 5 May 2025 16:06:40 +0200
+> > > > > On Mon, May 05, 2025 at 03:08:07PM +0200, Jann Horn wrote:
+> > > > > > On Mon, May 5, 2025 at 1:14 PM Christian Brauner <brauner@kernel.org> wrote:
+> > > > > > > Make sure that only tasks that actually coredumped may connect to the
+> > > > > > > coredump socket. This restriction may be loosened later in case
+> > > > > > > userspace processes would like to use it to generate their own
+> > > > > > > coredumps. Though it'd be wiser if userspace just exposed a separate
+> > > > > > > socket for that.
+> > > > > >
+> > > > > > This implementation kinda feels a bit fragile to me... I wonder if we
+> > > > > > could instead have a flag inside the af_unix client socket that says
+> > > > > > "this is a special client socket for coredumping".
+> > > > >
+> > > > > Should be easily doable with a sock_flag().
+> > > >
+> > > > This restriction should be applied by BPF LSM.
+> > >
+> > > I think we shouldn't allow random userspace processes to connect to
+> > > the core dump handling service and provide bogus inputs; that
+> > > unnecessarily increases the risk that a crafted coredump can be used
+> > > to exploit a bug in the service. So I think it makes sense to enforce
+> > > this restriction in the kernel.
+> >
+> > It's already restricted by /proc/sys/kernel/core_pattern.
+> > We don't need a duplicated logic.
+> 
+> The core_pattern does not restrict which processes can call connect()
+> on the unix domain socket address.
 
-Therefore, it is unnecessary to restore MSRs which are modified during
-the online operation, and this extra step can be removed.
+I misread it so added LSM can filter the source as well.
 
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
----
- .../intel/speed_select_if/isst_if_common.c    | 21 -------------------
- 1 file changed, 21 deletions(-)
 
-diff --git a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-index 31239a93dd71..3c4198ce17f2 100644
---- a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-+++ b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-@@ -198,25 +198,6 @@ void isst_resume_common(void)
- }
- EXPORT_SYMBOL_GPL(isst_resume_common);
- 
--static void isst_restore_msr_local(int cpu)
--{
--	struct isst_cmd *sst_cmd;
--	int i;
--
--	mutex_lock(&isst_hash_lock);
--	for (i = 0; i < ARRAY_SIZE(punit_msr_white_list); ++i) {
--		if (!punit_msr_white_list[i])
--			break;
--
--		hash_for_each_possible(isst_hash, sst_cmd, hnode,
--				       punit_msr_white_list[i]) {
--			if (!sst_cmd->mbox_cmd_type && sst_cmd->cpu == cpu)
--				wrmsrl_safe(sst_cmd->cmd, sst_cmd->data);
--		}
--	}
--	mutex_unlock(&isst_hash_lock);
--}
--
- /**
-  * isst_if_mbox_cmd_invalid() - Check invalid mailbox commands
-  * @cmd: Pointer to the command structure to verify.
-@@ -434,8 +415,6 @@ static int isst_if_cpu_online(unsigned int cpu)
- set_punit_id:
- 	isst_cpu_info[cpu].punit_cpu_id = data;
- 
--	isst_restore_msr_local(cpu);
--
- 	return 0;
- }
- 
--- 
-2.49.0
+> 
+> > Even when the process holding the listener dies, you can
+> > still avoid such a leak.
+> >
+> > e.g.
+> >
+> > 1. Set up a listener
+> > 2. Put the socket into a bpf map
+> > 3. Attach LSM at connect()
+> >
+> > Then, the LSM checks if the destination socket is
+> 
+> Where does the LSM get the destination socket pointer from? The
+> socket_connect LSM hook happens before the point where the destination
+> socket is looked up. What you have in that hook is the unix socket
+> address structure.
 
+The hook is invoked after the lookup.
+"sk" is the source and "other" is the destination.
+
+        err = security_unix_stream_connect(sk, other, newsk);
+        if (err) {
+                unix_state_unlock(sk);
+                goto out_unlock;
+        }
+
+
+> 
+> >   * listening on the name specified in /proc/sys/kernel/core_pattern
+> >   * exists in the associated BPF map
+> >
+> > So, if the socket is dies and a malicious user tries to hijack
+> > the core_pattern name, LSM still rejects such connect().
+> 
+> This patch is not about a malicious user binding to the core dumping
+> service's unix domain socket address, that is blocked in "[PATCH RFC
+> v3 03/10] net: reserve prefix". This patch is about preventing
+> userspace from connect()ing to the legitimate listening socket.
+
+I mean both can be better handled by BPF.
+
+
+> 
+> > Later, the admin can restart the program with different core_pattern.
+> >
+> >
+> > >
+> > > My understanding is that BPF LSM creates fairly tight coupling between
+> > > userspace and the kernel implementation, and it is kind of unwieldy
+> > > for userspace. (I imagine the "man 5 core" manpage would get a bit
+> > > longer and describe more kernel implementation detail if you tried to
+> > > show how to write a BPF LSM that is capable of detecting unix domain
+> > > socket connections to a specific address that are not initiated by
+> > > core dumping.) I would like to keep it possible to implement core
+> > > userspace functionality in a best-practice way without needing eBPF.
+> >
+> > I think the untrusted user scenario is paranoia in most cases,
+> > and the man page just says "if you really care, use BPF LSM".
+> 
+> Are you saying that you expect crash dumping services to be written
+> with the expectation that the system will not have multiple users or
+> multiple security contexts?
+
+Do you mean other program could use different LSM ?
+
+I think different LSMs can co-exist, see call_int_hook().
+
+I remember BPF LSM was not stackable at some point, but not sure
+if it's still true.
+
+I expect the service to use necessary functionality if it's
+needed for the specific use case.
+
+Not everyone need such restriction, and it's optional.  Why not
+allowing those who really need it to implement it.
+
+
+> 
+> > If someone can listen on a name AND set it to core_pattern, most
+> > likely something worse already happened.
