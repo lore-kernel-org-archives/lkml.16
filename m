@@ -1,107 +1,119 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8737327467D;
-	Mon,  5 May 2025 21:43:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31FAC1C1F05;
+	Mon,  5 May 2025 21:44:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746481434; cv=none; b=AG8k5/558CTaeMhSHZeHZTifCFeMwFoIsp69ugrkBYsIixqTCuGBfCVfE8Ljn63n7hyNKLEynHvri259o7BWhHjFKFuDhSf8wYtkeO9A3AgZ2FZf3eoaWdtXJfUhP31AqM+ztdWZSsFFXLVoSQPsCc7gHFm1EkpRXTyDWEfEOzU=
+	t=1746481499; cv=none; b=bqtGul7ohclkO6UWl96EMj4vupvkjrnqfXV+LW+fQz9QT2p6WpQ4qwbd+Uh1sKGU96nUZIus8Gkh6PYIJUWnxamao40nS1fikWgWKW1CdOyxH1QwPkY+Ppit9Rj2MM4Yu/i8zz5Uo6CxyG8f5fZoAF4rbUIZFv3cFBD3NBEaH/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746481434; c=relaxed/simple;
-	bh=KGoHMvJXNrLt/JsqqoIqwpdT9g6Nv2QdDE3wTmLc9bE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SDoiLJ0Qmny3CjZMCwUASzssbZVgIsX2kMKmKuhkF79QaVDkdzMMmgaiw5emS8433tFy7oOHaYDpLPD5PwiPULiL99N1/Ww4yUEWkJh3W86+WDVYRnPsOTw2pPlSZj3yVEiOc6nnQ+qL+HSJDLJojLvRo1KpkrLYkT6LRLLCjtE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=kSUUApq2; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1746481499; c=relaxed/simple;
+	bh=QlQXqiJRcUcsqLT4BtgsUCAWJ+bsHCvuv98JrHBbUus=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nAP6GUSPuNBhJ/zXPDCNuTpgj3/u6CiBooq8NrPeIniwb/L8XyVv7MB31ZW4dj1R42W3PgbBshSscOZVtCeMt3aZOQtGvjG/rHK55DGkbdKP9yd9tAmxC+m0eS5g+bprZITt9bbhaPaJifF4sGXex9tEsfZTWnCImTbCm3pdJoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=GHuMv1rt; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="kSUUApq2"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=KGoHMvJXNrLt/JsqqoIqwpdT9g6Nv2QdDE3wTmLc9bE=; b=kSUUApq2S4eNRL51I1LuJ6Pe8t
-	eNc4wgeEMwVSJCCJEyO3cH0gVI4kAR6O8AK0gbnQgS8L2CF2rstRWLwBpClZ7Aa17YQAwgqkOhje7
-	Ort+DuY3t/6gjVNpfu6XWjqI1EycDlm5bqqiTc08w2AMJgffh+ywAjDKPEMALs7eE1D9YJuJykWsS
-	EGeZWgKsYLugvRv3jHGNkbEiWZMSATsz9fCKyahntq0eKPQVtx+m1ld1Z7VRkHO6sAzN4RSFBv2DO
-	wz1ZxpHGm/94FZsS8BaDRfeiTOFriNE5JBz37Uveoko2KzOWySP4kuPirh+ZxxSvDLT2W2fpQQsUD
-	OPCGLDWw==;
-Received: from i53875a1d.versanet.de ([83.135.90.29] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1uC3bE-0000B0-Ug; Mon, 05 May 2025 23:43:44 +0200
-From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
-To: Andi Shyti <andi.shyti@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Jonas Karlman <jonas@kwiboo.se>,
- Yao Zi <ziyao@disroot.org>, Chukun Pan <amadeus@jmu.edu.cn>,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, Conor Dooley <conor.dooley@microchip.com>
-Subject:
- Re: [PATCH v2 1/3] dt-bindings: i2c: i2c-rk3x: Add compatible string for
- RK3528
-Date: Mon, 05 May 2025 23:43:43 +0200
-Message-ID: <2918896.Y6S9NjorxK@diego>
-In-Reply-To: <h4hpaadpeu2pnsbcfbg4iye7w5sn26wflth4uztdghafuegqi5@2xbtygdwe2hu>
-References:
- <20250417120118.17610-3-ziyao@disroot.org> <4864135.rnE6jSC6OK@diego>
- <h4hpaadpeu2pnsbcfbg4iye7w5sn26wflth4uztdghafuegqi5@2xbtygdwe2hu>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="GHuMv1rt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1746481493;
+	bh=/+s1iPc26YCmSpvShRrXdax3x1rFHs/iyPOXRBhDmYY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=GHuMv1rtBvksDbCJuFZxN5ToompGNH0vaiIaGpadcwgN6ZEuSgLUQMt27bEYyjhvj
+	 UK0++hvoB4xoJY1MgF1X1yNOnHYR7ymEUf/V0wWeBCKgdviWoY9eQp1H3Vfgx9VrsA
+	 OKychBZJDNQTmkE8FFOmEfCJofxzy8Bhifj8uMrFmGWSN9gy6fV0g20Jw65ECZS+RJ
+	 EM3YOkZpFEhQOyJ3wjl7usRRvY6Y8vasnFQOCfaEtm1/2DkEy49kohqyLkTbEMwIal
+	 Sp8u0XUZ6QvCBDeTKeetIHnlVS7/mC0raQHDlPPq9evDsflIyHE3tYd2TDbG36j+Q+
+	 /RjGa5XBRkOng==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Zrw6Y16cmz4wbr;
+	Tue,  6 May 2025 07:44:53 +1000 (AEST)
+Date: Tue, 6 May 2025 07:44:52 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, ARM
+ <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: Re: linux-next: duplicate patches in the stm32 tree
+Message-ID: <20250506074452.65f4e0af@canb.auug.org.au>
+In-Reply-To: <20250501113753.53f6fc88@canb.auug.org.au>
+References: <20250501113753.53f6fc88@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/zMy.MsZf4ijzjRR=.y.Gt/_";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+
+--Sig_/zMy.MsZf4ijzjRR=.y.Gt/_
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
 
-Hi Andi,
+Hi all,
 
-Am Montag, 5. Mai 2025, 22:47:04 Mitteleurop=C3=A4ische Sommerzeit schrieb =
-Andi Shyti:
-> Hi Heiko,
+On Thu, 1 May 2025 11:37:53 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
+rote:
+>
+> The following commits are also in the arm-soc-fixes tree as different
+> commits (but the same patches):
 >=20
-> On Mon, May 05, 2025 at 09:49:36AM +0200, Heiko St=C3=BCbner wrote:
-> > Am Donnerstag, 17. April 2025, 14:01:17 Mitteleurop=C3=A4ische Sommerze=
-it schrieb Yao Zi:
-> > > Document I2C controllers integrated in RK3528, which are compatible w=
-ith
-> > > the RK3399 variant.
-> > >=20
-> > > Signed-off-by: Yao Zi <ziyao@disroot.org>
-> > > Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-> > > Acked-by: Conor Dooley <conor.dooley@microchip.com>
-> > > Reviewed-by: Andi Shyti <andi.shyti@kernel.org>
-> >=20
-> > do you expect to apply this patch to the i2c tree individually,
-> > or have it go together with the devicetree patch?
+>   0530a74f3f43 ("arm64: dts: st: Use 128kB size for aliased GIC400 regist=
+er access on stm32mp23 SoCs")
+>   6485975d7832 ("arm64: dts: st: Adjust interrupt-controller for stm32mp2=
+3 SoCs")
+>   635ff238ff7b ("arm64: dts: st: Use 128kB size for aliased GIC400 regist=
+er access on stm32mp21 SoCs")
+>   2ae67a2e7e4f ("arm64: dts: st: Adjust interrupt-controller for stm32mp2=
+1 SoCs")
+>   97d0a619e248 ("arm64: dts: st: Use 128kB size for aliased GIC400 regist=
+er access on stm32mp25 SoCs")
+>   e5694384b07d ("arm64: dts: st: Adjust interrupt-controller for stm32mp2=
+5 SoCs")
 >=20
-> with these patches, I normally wait a bit to see how the others
-> in the same series go before merging.
+> These are commits
 >=20
-> I now merged this patch into i2c/i2c-host.
+>   2ef5c66cba61 ("arm64: dts: st: Use 128kB size for aliased GIC400 regist=
+er access on stm32mp23 SoCs")
+>   3a1e1082097b ("arm64: dts: st: Adjust interrupt-controller for stm32mp2=
+3 SoCs")
+>   1bc229e9bb9c ("arm64: dts: st: Use 128kB size for aliased GIC400 regist=
+er access on stm32mp21 SoCs")
+>   02dc83f09c72 ("arm64: dts: st: Adjust interrupt-controller for stm32mp2=
+1 SoCs")
+>   06c231fe953a ("arm64: dts: st: Use 128kB size for aliased GIC400 regist=
+er access on stm32mp25 SoCs")
+>   de2b2107d5a4 ("arm64: dts: st: Adjust interrupt-controller for stm32mp2=
+5 SoCs")
 >=20
-> If there is any particular need to merge everything together in
-> the devicetree, then I can take it out.
+> in the arm-soc-fixes tree.
 
-on the contrary ... I was hoping for exactly this :-) .
+These letter commits are now in Linus' tree.
 
-I.e. there is no need to merge everything together and the common pattern
-is "binding goes through the driver-tree", dts goes through some soc-tree
-(mine it this case).
+--=20
+Cheers,
+Stephen Rothwell
 
-But I can only merge the dts patches, _after_ the binding was merged,
-so that was more of an elborate "ping" and _sometimes_ maintainers
-might expect the binding just going with the dts patches.
+--Sig_/zMy.MsZf4ijzjRR=.y.Gt/_
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
+-----BEGIN PGP SIGNATURE-----
 
-So, thanks for merging the binding and I'll merge the dts patches now.
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgZMVQACgkQAVBC80lX
+0GzyJwf/dlMQPP5xQckkJraDiIWaxvaUG5t0WidE1Zo8gsr4U+0BtV5HWeycgSe7
+tKbO4AwXoLf+ACJ83EbpuLOah4oF+Gbn9Dp5DIMvS7ilx2+s5VsMnggdGP5dZtxr
+h7KeByL73xlaZZQdcUZvxe0aDE+Yra9Dq+LfDKryzMkt7y0SCQtEghIx6hA4DLm7
+E15Rrai23FvmHhQxx4ftWk3razwkR5IG0IFBg83Nh2aa6SnGn7rvGAif9Lcny6en
+gYhZPEvcXbgfDxTHqYNNNnVSf9X4uQ0Oa9LOdJ7UDdOojmNaE85QIH8NjU43ixCs
+Fwhlybs/VCx+x7u4R7RIibBZwlBvfw==
+=4q8H
+-----END PGP SIGNATURE-----
 
-
-Thanks a lot
-Heiko
-
-
+--Sig_/zMy.MsZf4ijzjRR=.y.Gt/_--
