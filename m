@@ -1,129 +1,234 @@
-Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC13315C15F
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 16:09:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17D9F15C15F;
+	Mon,  5 May 2025 16:09:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746461357; cv=none; b=fBEjHD5T3FU6JpEbv6MOFamVr6roOY9/A/dt6/fiibRmY9pws2EKrioNVyEdUlM2KvuYWkvkWDz1E6sGfJJA1L6Grr5eOLe9kN4brrAwHUbvuGAQ7qdH2c6aQvCgtCSdWJl60jjYXtoGBoZAZnHlK+k5tkqOWUcWimXOZ5erb4E=
+	t=1746461400; cv=none; b=Pc3WhOLVDbBlOys68UvQkYjowTsWpegE3chZfFH/KQhkPO6wtCPrxuDufktxDD3JSGySc9iJcGSwtZ/QtvD5QX7kpI0FEyszO1vAFkGm5IrVbiLVu4Pj0p/wCYv5fk/viz8BiCvewJiLcXSkOWtNzHvCB3EQ1k3I4n8nGxqlZY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746461357; c=relaxed/simple;
-	bh=iJ5SpkhBGvECSaWeBIwDeP6OMBAoZ/IKXxgtjOCQoC8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H7KSx+O8q2Pf8z6fcKzO65jY2HHseymNXopBBr5a/8zq7a4c7NYIx9F6I9NZi+IjWAqOyP+8ALaLwV6OurPkQfjJKhFk4Q6GnAciSXSukRQMGiS1peVsuuhqvZ4H7WInoqXuQVl37dB71KqqyOKrL8UNv/YlmlHCWsIqJun8cTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=minyard.net; spf=none smtp.mailfrom=minyard.net; dkim=pass (2048-bit key) header.d=minyard-net.20230601.gappssmtp.com header.i=@minyard-net.20230601.gappssmtp.com header.b=EoAWB5EY; arc=none smtp.client-ip=209.85.160.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=minyard.net
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=minyard.net
+	s=arc-20240116; t=1746461400; c=relaxed/simple;
+	bh=K7pvnUNgm6DOpU+mu+K0mW5Kn0q/QRO+Sw/uMu12T7w=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DJMArP3/mySh9sjiDSD12fwhs8X3JjSqOhBg5Zqpzsnie8LKGcYdNJxllB0ttQWLIcuwdqAq4SZe9UPSsa6c7+heWKRMYWZ9/5wIbMZFJYZReEqu2/h3D8Ixd0NLXm5MafMYuyp/tuCmgm/LQSQB+KmZEVUZlotm6PApNHIAB4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R3Sh146R; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=minyard-net.20230601.gappssmtp.com header.i=@minyard-net.20230601.gappssmtp.com header.b="EoAWB5EY"
-Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-2d4f832069bso2086915fac.3
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 09:09:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=minyard-net.20230601.gappssmtp.com; s=20230601; t=1746461353; x=1747066153; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IqEKM/OjnSYzN6ZOnaif2KiyQ/v82RpALfNylkwGH+w=;
-        b=EoAWB5EYvT30S76DZArRG6e7DrGJ0pKQuJL3m6zCN4mwuUR4zbS/uvG2r0+SVHcSYt
-         ZqgQkM0rabsNyzZTvndEbugVkPFWL6qeOyy+XXMg0vQgUzdEUCjhc5USRKlQb+ojbaHZ
-         mjCF3UgQNwq8QIUfFixT8/fMGAKI2JNqKOR/IbFKoz9jhcXCFPdBKHrYi9jjjVmXwJ+7
-         5D6fjTxZeKCoQ5g3p0hyXJCFJJXWaXN4sOuTaEbYC+3FkBoXIEe7lkBoLNjuHijjrrHN
-         tf0Smay/AFd5vk8Hz6QxlgCzKkoKKVJg9EySebhn6RRytHSLPakIjB7T7czZ4axC2kLC
-         ahLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746461353; x=1747066153;
-        h=in-reply-to:content-disposition:mime-version:references:reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IqEKM/OjnSYzN6ZOnaif2KiyQ/v82RpALfNylkwGH+w=;
-        b=rMNue+JZVqqtuVW1l5u20MnlCORl/LCDfjtcgRbNb4dYMXYkPV60lXb6MAYRs/OPrF
-         1yAu9uXlmLUbrm39+5qf3hWhlBshBSiRXCx19yqesTzxJ0QwBUitfY9EUL79vdcX8Tvr
-         8ao3KULV5n27eA7grQTqlpLiiEiKfb3dFaXP+s1Idfk2zaPq7y8MgDCqshety9mJcdQH
-         S40rAI0RLoU2gexwb1ZhHoxMhOdTiqanYa3N2ZH3GpBg67y6Gfduwe3aHvdELniAM66/
-         G6yJxzpR6xTaPmT2m0sa1y5D5j3r49l41U1Xd6LbidBqqtSGlihiKm8iUVHfTCwiBNVb
-         9KRA==
-X-Forwarded-Encrypted: i=1; AJvYcCV1juks0REAAMXXfyCQJ727fdth6C1nwRpQOFqYR15wlNpqM3GNcCkYHR7BJmDocRl0f3RgdNyLru43N9c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYiTbo+tcJlfNAe+HOK4dyhh0hF828tFN6LGMhFGg90f34hu/A
-	sOMDGZDDn9c+uo1ozlQ0jwxUVV7ed7OHQqcsbb/+FYTsw+Ft19AU6aJS7n88NRY=
-X-Gm-Gg: ASbGncvDOMiUBzvBZQ0HGxss2XXY0xWjBKvaRCpdTGzH0LrAN9+KEdxA9I2sHAL2200
-	XDbzBRG+/PAym8CzQK3kEUL80B0CbVPrmuNFP1Zg9+SG/RHT/tS22SbZt3X/UFuS3N2TwuYqLMU
-	AGBhhGjv0yXmlQ3b29eVaFugSROkmVMgtaEPcGArN7SvGV3evl+Vh6q7K38ZIzKd4xKvFDUN1gS
-	sATAv0mfO+nm6pERH3Mgtjnviycte69wFjnpib1UVjTO9wyleAKY7YJaF8+b8jaeFmcnFK4yMUA
-	2U0/o7cWBBvQLKt8GuL+kVCB8iFvrVoeFActy/PxoggA
-X-Google-Smtp-Source: AGHT+IGJHBe1tE73+gCUVJrtdihmneKyQqRpzUdV8C0iHKB/EZurcAQuVHRzs5jeBKVkgUEGi5SiuA==
-X-Received: by 2002:a05:6870:8990:b0:2d5:246d:4b67 with SMTP id 586e51a60fabf-2dab331fea1mr7891413fac.24.1746461353628;
-        Mon, 05 May 2025 09:09:13 -0700 (PDT)
-Received: from mail.minyard.net ([2001:470:b8f6:1b:ec53:8290:86a1:aa7c])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2daa0e59e30sm2058124fac.3.2025.05.05.09.09.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 09:09:12 -0700 (PDT)
-Date: Mon, 5 May 2025 11:09:07 -0500
-From: Corey Minyard <corey@minyard.net>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Corey Minyard <cminyard@mvista.com>,
-	openipmi-developer@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] ipmi:msghandler: Fix potential memory corruption in
- ipmi_create_user()
-Message-ID: <aBjioyOkty40OVd5@mail.minyard.net>
-Reply-To: corey@minyard.net
-References: <aBjMZ8RYrOt6NOgi@stanley.mountain>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R3Sh146R"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9397BC4CEE4;
+	Mon,  5 May 2025 16:09:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746461399;
+	bh=K7pvnUNgm6DOpU+mu+K0mW5Kn0q/QRO+Sw/uMu12T7w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=R3Sh146RsRf0sycpd0cQf8qCnrvGfuQSYUpdpS6X5S1kIrLmHqTH4WmW8+J/jlaf4
+	 DXb7HUaIUNCEQj3SNFpeL8qh2bzfMjq3OPX7raBT2pO1WqQ011vOiB8uIuBr3AV264
+	 Y4Tf3fzjaMxulAo4nUgID8dRED5JZO1x0lDpeISp6RlWcfQ5nOCNa9iCzQxTGVLQH5
+	 bpbgUwCb5kLnVZ3BAOc6ju+VyQuiGCmQIkHflSu7fjWNGKMkuOC2ddy965OmewedSz
+	 4NLmnHx43/UuUqsbV+iGvhNQQqiEfkly6+O0rnxR2e2iZabV1DGt0cnRQ0FpWGBBiX
+	 Xu9XGxpKdllvw==
+Date: Mon, 5 May 2025 17:09:50 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Jonathan Santos <Jonathan.Santos@analog.com>
+Cc: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+ <andy@kernel.org>, <nuno.sa@analog.com>, <Michael.Hennerich@analog.com>,
+ <marcelo.schmitt@analog.com>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+ <conor+dt@kernel.org>, <marcelo.schmitt1@gmail.com>,
+ <linus.walleij@linaro.org>, <brgl@bgdev.pl>, <lgirdwood@gmail.com>,
+ <broonie@kernel.org>, <jonath4nns@gmail.com>, <dlechner@baylibre.com>, "Pop
+ Paul" <paul.pop@analog.com>
+Subject: Re: [PATCH v6 10/11] iio: adc: ad7768-1: add filter type and
+ oversampling ratio attributes
+Message-ID: <20250505170950.1d7941d0@jic23-huawei>
+In-Reply-To: <4493dc2e3e0fb61ba3e8a0e54571998aaaaf46c8.1745605382.git.Jonathan.Santos@analog.com>
+References: <cover.1745605382.git.Jonathan.Santos@analog.com>
+	<4493dc2e3e0fb61ba3e8a0e54571998aaaaf46c8.1745605382.git.Jonathan.Santos@analog.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aBjMZ8RYrOt6NOgi@stanley.mountain>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, May 05, 2025 at 05:34:15PM +0300, Dan Carpenter wrote:
-> The "intf" list iterator is an invalid pointer if the correct
-> "intf->intf_num" is not found.  Calling atomic_dec(&intf->nr_users) on
-> and invalid pointer will lead to memory corruption.
+On Sun, 27 Apr 2025 21:14:17 -0300
+Jonathan Santos <Jonathan.Santos@analog.com> wrote:
+
+> Separate filter type and decimation rate from the sampling frequency
+> attribute. The new filter type attribute enables sinc3, sinc3+rej60
+> and wideband filters, which were previously unavailable.
 > 
-> We don't really need to call atomic_dec() if we haven't called
-> atomic_add_return() so update the if (intf->in_shutdown) path as well.
-
-Thanks, this is in my tree now.
-
--corey
-
+> Previously, combining decimation and MCLK divider in the sampling
+> frequency obscured performance trade-offs. Lower MCLK divider
+> settings increase power usage, while lower decimation rates reduce
+> precision by decreasing averaging. By creating an oversampling
+> attribute, which controls the decimation, users gain finer control
+> over performance.
 > 
-> Fixes: 8e76741c3d8b ("ipmi: Add a limit on the number of users that may use IPMI")
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> The addition of those attributes allows a wider range of sampling
+> frequencies and more access to the device features. Sampling frequency
+> table is updated after every digital filter parameter change.
+> 
+> Reviewed-by: David Lechner <dlechner@baylibre.com>
+> Co-developed-by: Pop Paul <paul.pop@analog.com>
+> Signed-off-by: Pop Paul <paul.pop@analog.com>
+> Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
+A few trivial additions from me.
+
 > ---
->  drivers/char/ipmi/ipmi_msghandler.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+> v6 Changes:
+> * Made sinc3 decimation rate calculation clearer as requested.
+> * Renamed some filter functions to clarify the purpose.
+> * Other nits.
 > 
-> diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
-> index 8b2c3fca9c4c..064944ae9fdc 100644
-> --- a/drivers/char/ipmi/ipmi_msghandler.c
-> +++ b/drivers/char/ipmi/ipmi_msghandler.c
-> @@ -1240,12 +1240,12 @@ int ipmi_create_user(unsigned int          if_num,
->  	}
->  	/* Not found, return an error */
->  	rv = -EINVAL;
-> -	goto out_kfree;
-> +	goto out_unlock;
+> v5 Changes:
+> * Addressed some nits.
+> * Use the new new iio_device_claim/release_direct() functions.
+> 
+> v4 Changes:
+> * Sampling frequency table is dynamically updated after every
+>   filter configuration.
+> 
+> v3 Changes:
+> * removed unused variables.
+> * included sinc3+rej60 filter type.
+> * oversampling_ratio moved to info_mask_shared_by_type.
+> * reordered functions to avoid forward declaration.
+> * simplified regmap writes.
+> * Removed locking.
+> * replaced some helper functions for direct regmap_update_bits
+>   calls.
+> * Addressed other nits.
+> 
+> v2 Changes:
+> * Decimation_rate attribute replaced for oversampling_ratio.
+> ---
+>  drivers/iio/adc/ad7768-1.c | 363 ++++++++++++++++++++++++++++++-------
+>  1 file changed, 293 insertions(+), 70 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/ad7768-1.c b/drivers/iio/adc/ad7768-1.c
+> index 10791a85d2c5..e2b8f12260a5 100644
+> --- a/drivers/iio/adc/ad7768-1.c
+> +++ b/drivers/iio/adc/ad7768-1.c
+> @@ -20,6 +20,8 @@
+>  #include <linux/regulator/driver.h>
+>  #include <linux/sysfs.h>
+>  #include <linux/spi/spi.h>
+> +#include <linux/unaligned.h>
+> +#include <linux/util_macros.h>
 >  
->   found:
->  	if (intf->in_shutdown) {
->  		rv = -ENODEV;
-> -		goto out_kfree;
-> +		goto out_unlock;
->  	}
+>  #include <linux/iio/buffer.h>
+>  #include <linux/iio/iio.h>
+> @@ -77,7 +79,7 @@
+>  #define AD7768_PWR_PWRMODE(x)		FIELD_PREP(AD7768_PWR_PWRMODE_MSK, x)
 >  
->  	if (atomic_add_return(1, &intf->nr_users) > max_users) {
-> @@ -1293,6 +1293,7 @@ int ipmi_create_user(unsigned int          if_num,
->  	} else {
->  		*user = new_user;
->  	}
-> +out_unlock:
->  	mutex_unlock(&ipmi_interfaces_mutex);
->  	return rv;
+>  /* AD7768_REG_DIGITAL_FILTER */
+> -#define AD7768_DIG_FIL_FIL_MSK		GENMASK(6, 4)
+> +#define AD7768_DIG_FIL_FIL_MSK		GENMASK(7, 4)
+
+Bug?  If so does this belong in a precursor patch?
+
+>  #define AD7768_DIG_FIL_FIL(x)		FIELD_PREP(AD7768_DIG_FIL_FIL_MSK, x)
+
+> @@ -404,22 +473,110 @@ static int ad7768_reg_access(struct iio_dev *indio_dev,
+>  	return ret;
 >  }
-> -- 
-> 2.47.2
-> 
+>  
+> -static int ad7768_set_dig_fil(struct ad7768_state *st,
+> -			      enum ad7768_dec_rate dec_rate)
+> +static int ad7768_set_sinc3_dec_rate(struct ad7768_state *st,
+> +				     unsigned int dec_rate)
+>  {
+> -	unsigned int mode;
+> +	unsigned int max_dec_rate;
+> +	u8 dec_rate_reg[2];
+> +	u16 regval;
+>  	int ret;
+>  
+> -	if (dec_rate == AD7768_DEC_RATE_8 || dec_rate == AD7768_DEC_RATE_16)
+> -		mode = AD7768_DIG_FIL_FIL(dec_rate);
+> -	else
+> -		mode = AD7768_DIG_FIL_DEC_RATE(dec_rate);
+> +	/*
+> +	 * Maximum dec_rate is limited by the MCLK_DIV value
+
+Oddly short wrap. Go nearer 80 chars.
+
+> +	 * and by the ODR. The edge case is for MCLK_DIV = 2
+> +	 * ODR = 50 SPS.
+> +	 * max_dec_rate <= MCLK / (2 * 50)
+> +	 */
+
+> +static int ad7768_get_filter_type_attr(struct iio_dev *dev,
+> +				       const struct iio_chan_spec *chan)
+> +{
+> +	struct ad7768_state *st = iio_priv(dev);
+> +	int ret;
+> +	unsigned int mode;
+> +
+> +	ret = regmap_read(st->regmap, AD7768_REG_DIGITAL_FILTER, &mode);
+> +	if (ret)
+> +		return ret;
+> +
+> +	mode = FIELD_GET(AD7768_DIG_FIL_FIL_MSK, mode);
+> +
+> +	/* From the register value, get the corresponding filter type */
+> +	return ad7768_filter_regval_to_type[mode];
+	return ad7768_filter_regval_to_type[FIELD_GET(AD7768_DIG_FIL_FIL_MSK, mode)];
+
+Is fine (only just over 80 chars and I'm getting more relaxed as time moves forwards).
+
+Also avoids the dual meaning of mode which I never like to see.
+
+>  }
+
+>  
+> -static int ad7768_write_raw(struct iio_dev *indio_dev,
+> -			    struct iio_chan_spec const *chan,
+> -			    int val, int val2, long info)
+> +static int __ad7768_write_raw(struct iio_dev *indio_dev,
+> +			      struct iio_chan_spec const *chan,
+> +			      int val, int val2, long info)
+>  {
+>  	struct ad7768_state *st = iio_priv(indio_dev);
+> +	int ret;
+>  
+>  	switch (info) {
+>  	case IIO_CHAN_INFO_SAMP_FREQ:
+>  		return ad7768_set_freq(st, val);
+
+Whilst I doubt anyone will notice this looks like a functional change
+that should be called out in the patch description.
+Previously we allowed frequency changes in buffered mode, now we don't.
+
+> +
+> +	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
+> +		ret = ad7768_configure_dig_fil(indio_dev, st->filter_type, val);
+> +		if (ret)
+> +			return ret;
+> +
+> +		/* Update sampling frequency */
+> +		return ad7768_set_freq(st, st->samp_freq);
+>  	default:
+>  		return -EINVAL;
+>  	}
+>  }
+>  
+> +static int ad7768_write_raw(struct iio_dev *indio_dev,
+> +			    struct iio_chan_spec const *chan,
+> +			    int val, int val2, long info)
+> +{
+> +	int ret;
+> +
+> +	if (!iio_device_claim_direct(indio_dev))
+> +		return -EBUSY;
+> +
+> +	ret = __ad7768_write_raw(indio_dev, chan, val, val2, info);
+> +	iio_device_release_direct(indio_dev);
+> +
+> +	return ret;
+> +}
+;
+
