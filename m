@@ -1,129 +1,153 @@
-Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDD7825D204
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 18:28:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3716E224D7
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 18:29:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746469733; cv=none; b=b+8YL9ZIPGd4UE0FkfsFaiy5oFqAnrcEih5yqgzKbvuJ4pwb3YyW871UVcAtRRjECw9CrVt2xUM90rqsuRO/5+qto08okmbKheic2D5295LVME8AHsKxIFlO1hFR79MsCRp+4flgaT40B3GyEQZQw+cNrPoyyC1ay+AvMN9CrZU=
+	t=1746469773; cv=none; b=aZRmbdiAN/VbnMs+lOng4rJOaJzU89iH3WiFeUnU2LK3qGVPi9KQkektt0eAYVGmfX1vUgq0CN3r3tnSKYxSENuACFjYutjzx4FxxPVhCD03ZSa08WZJZswbuOaUzQgSTuODvlQ9S1GprMcny480tLnmcctRQRZt0r9kIXKZqzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746469733; c=relaxed/simple;
-	bh=QDVwmpo9ktX2KMymt0KJritJpgsaBmg5HTydROKeb/E=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=LHCiaRaBkEf1tTIzoQKZ5A2wB6DdgTSmTLyZ+gYHJ8MfoeRobdn3z0DNH9joV+OhdohQ5V9vwed3KkH2Y5v/a/APyo6l6vaotisFMFYZPeKUyWau+y9FlhnV69qM/bDfIQmpbzGX4n/2iONRurRUsj1uffAhlcmsXHqHu8U+IOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=noM2h7P0; arc=none smtp.client-ip=209.85.167.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1746469773; c=relaxed/simple;
+	bh=lPCYSBZtLDj85i4BVegSGg0sp3VhVAkWTVDJeS+W7fs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tSB+R/X2H8YZ/2opjbjH4ivH3Trwm35SvDVLZ4lWiurFN+vtekE5eZ9blKpEtltlw3XnVGroz1coQonaHBG2E1YShhbwIdm1EqKwTPAcPr13Y/8czw3o4nuhsYjuu8LYkFc2vLNMlKxiLXU8pvh+7e6vQLMVKdfIjGXuCz+IpRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=YmF0b+ix; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="noM2h7P0"
-Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-3f9832f798aso3448603b6e.2
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 11:28:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="YmF0b+ix"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5f62d3ed994so3284877a12.2
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 11:29:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746469729; x=1747074529; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=jvnUSg83TE3jOG9sJI46HHnpfCdZ+Y8pGrpMisK7bfM=;
-        b=noM2h7P0LQthhhvlDbqWYgJsWiHvksN6I2GDMC0bxCgfEd5EeR88iilVLsYn+/F9pn
-         9q0Bq2CwaMS0pb2UiLRyuiCSyjRtqYT8EZW6roPN3UV5kY32cjqf08P7PzC5ZYdGFOvd
-         g2Y9FBVtKBZA6gHKq9Llu/1NF9RMHZCqhGI3xXEhrSzl3QsGKDEAkemcwhx/zMkLmKCC
-         8/lWOoUwoNVgjRoaTkd+E6H6+QpQSHjj5KB/hRRclk1c0pqoWW3XZ02ogdtFl9z445sU
-         VETzSFSzEv5YqRmZHcJvFT9gBv8FMuj4rvrI8x3gqvrlvbME3sHDd/Jp2OpKU9L0ZwEO
-         UEAw==
+        d=suse.com; s=google; t=1746469769; x=1747074569; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=lPCYSBZtLDj85i4BVegSGg0sp3VhVAkWTVDJeS+W7fs=;
+        b=YmF0b+ixWcArheH2zt88I/CO0bvTFsd/l3bdhIpvBLoeFo26E237dUguCZr9pJeDYl
+         hBDDzYt5sypfbENj5lVFpXeOpPw4fjrV+FW6ATt8tJdyq62Fex3MyATTGGmViintcWYa
+         u4YgmLanTWKo8E1C1hkvsKlYHjFibQA+jXLcZ20JaaRVhD1z2FfZPfxSr1+h3g52lPlx
+         WmvNcjtwf0/9AJzRbfIPtEyeXfeUphFxVSzmcNdsgkQ1ooyiRBj9MY1mhnW8IOGI/2k/
+         LclsNKAMuEx8yB0Nf/47YTalW66+cf+cGlp8Z6i9KbqFOv0Z7/cFA1qWD7tqAPxT9pXe
+         sp2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746469729; x=1747074529;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jvnUSg83TE3jOG9sJI46HHnpfCdZ+Y8pGrpMisK7bfM=;
-        b=jWHErQ9cZs8y36tytONtqesTfSpmBcr9+iXeTidIXJNNjMgkrLTcI82nnhCuYKCMl3
-         RcOVWkBRMLUAWGfNWgOIb+LYuPdUVhKYqHJB54Emzyj0PCnrCH3dUEb9lAkbdx+IIGAi
-         1al3oHijPmkBs6h/1WmXceEpzMxNCaLYH7RWjUr8/eHYIAn0Z4KaCB3DYgBuUJYl5v7m
-         xhjEtvlwLOFSj3l3pIsnPfsWMv4DSblLykutZomwHPPYDJst0AhDSswNpE0Pmp2xgQZB
-         a5CglHl2zFe+vV+Ic//+Wv/OFVF+106x7JG8cEMg7XaOw4QBkQtQUi9pTnMgbAH0KBAJ
-         IufA==
-X-Forwarded-Encrypted: i=1; AJvYcCWrbkhhqewl0ljTTfrtNPGyThkMX9EK8pZd0hBm+3A3cdW4QGgeCzGZV946vsrxoJqYfPCsDnsYhLlVgjE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YywpqNHt0YYMoWfoSmQEVihgq+Zhm/cL5cPJm1QYtapLZHgoZ9g
-	6dIZXuZrbEjWx/c+ezEEwMa4xmxX3m6dTVhC0oDu6JSid3FZN1TlZI1lCRlhIlM=
-X-Gm-Gg: ASbGnct3siOChW8PUwU0NOPf4jJKAdQ/FXgRWtNSNsOTIGVz1Sr2vy9mN43PSMbPdco
-	rQCxUqjfGthBgsaZ47133zZnt6/zYC0LCNdD70yvMOQJBuW5+6NCH5+3KG2icDL8+ZN/R1Rsmu4
-	3jKqkVPJLMVU34TIUADuolm8Ue5/fj0Q54DCRLjPEaZ4xf2KgUKPYHSwp1Rmwo+dNw/Sa0OQWFc
-	7eKB3zc42W84kTQ8nBzV6BtpNv0/0douba7qtOohQjIWtLCCyP4KerXIG4oLh3Q6F2t2iKXYzfY
-	ta7KBN4r76beLibV6Hx+HIFLDDExcLePcjC3PSAgW7yXlg==
-X-Google-Smtp-Source: AGHT+IEX21eYhQjrrdyKu2y/FFUXmYeQXwqbJB/KdSUZRflFNpvmVDNc6veX6nZcdvi0YJLdfLxgPg==
-X-Received: by 2002:a05:6808:2007:b0:403:5277:9424 with SMTP id 5614622812f47-403527794b8mr6511893b6e.32.1746469728780;
-        Mon, 05 May 2025 11:28:48 -0700 (PDT)
-Received: from [127.0.1.1] ([2600:8803:e7e4:1d00:2151:6806:9b7:545d])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-4033dc828a3sm2050781b6e.41.2025.05.05.11.28.48
+        d=1e100.net; s=20230601; t=1746469769; x=1747074569;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lPCYSBZtLDj85i4BVegSGg0sp3VhVAkWTVDJeS+W7fs=;
+        b=QzzQk+Kc8kO4WvHrtslbGPxsuhVn14magaZW6x8vuQ0NrS5x3uDq+D7yoy5o8sL35Z
+         aysy7G3BBh/PHYCxzrPDvT0eUWAnFd6iLFvjCakqqefRTBRltCw31attV5/C+x/LnfEI
+         rMIFovUf73tnGxsSzho223DV5Jv4opMwwolM83WmtK6UOOOnfs7YK+zVsPBenaI/0n9p
+         a0iSWK6zGcBL/nRfp9fT4/lTJDmI1n08nfbu+Ql3bDnVfMVubE8BWZiY9DowvmXah4HF
+         8sSnpdeZ1L73Tezel9LcH7eC8kiaSxEFCe6OU0LODpqWlG+b8eSLldkaUAe1LSePBX0J
+         6FyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXX/QkgD70xSTIwDMRaVGy8I2ZdNc26L9FJJmZUTQcEV8CCIoAuaIjswzvfI+e2YSgzQyzNktREjFF19po=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy0+2AKGdDwp9WelmRJlBmUSYiEyH3Zrsek0OtKyWf/UXss8YIc
+	mNwBieFyrzrDUid2UulOrDt22zM35iM6K4IJw5Dk7rZMJmip7GC0s2WDRT69d5w=
+X-Gm-Gg: ASbGncvr0xWdBrKOAs/v9aKWIUUCB2UXJMgxLTKwuigRuZ14aYszve/e0WZlGQ8tLFK
+	/PO3Tx3HcoAzY35/dUKsPUEQ64WArqM3Jp+PuFBfQNlYV2SJIRihOwitC5RX2oLkpk0QcQ27WYQ
+	XhDMi8Us/NV+pbdb9Ldrd7YNueU++zJjO4BVhPz0uLCIQL9XWTh+j91VdGDH5CDsx6FHKFKUEdD
+	wRUX+XIAbsAFh6+8VbKB78dYh81VX3MMkws2OiBXkF7XxTnaOzk0QjEkj9f3LeDx/GNZFlqfgnp
+	SzMLxYu9OFaDwK4vvNvjlHcLp6mjPjz9GpKG6EJC+Uw=
+X-Google-Smtp-Source: AGHT+IH1DMGrjvMR0iZ2kuzL6k++Y5DftjWP+Z5kCnC6eOxBBJC6ew/wnz0RL27A2XSzdtPcIRI89Q==
+X-Received: by 2002:a05:6402:84d:b0:5fb:2041:6bd2 with SMTP id 4fb4d7f45d1cf-5fb700a2dd3mr57272a12.16.1746469769372;
+        Mon, 05 May 2025 11:29:29 -0700 (PDT)
+Received: from blackdock.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fa777561d3sm5960382a12.16.2025.05.05.11.29.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 11:28:48 -0700 (PDT)
-From: David Lechner <dlechner@baylibre.com>
-Date: Mon, 05 May 2025 13:28:40 -0500
-Subject: [PATCH] iio: adc: ad7944: max high bits on direct read
+        Mon, 05 May 2025 11:29:28 -0700 (PDT)
+Date: Mon, 5 May 2025 20:29:27 +0200
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: jingxiang zeng <jingxiangzeng.cas@gmail.com>
+Cc: Zhongkun He <hezhongkun.hzk@bytedance.com>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Jingxiang Zeng <linuszeng@tencent.com>, 
+	akpm@linux-foundation.org, linux-mm@kvack.org, cgroups@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, mhocko@kernel.org, muchun.song@linux.dev, kasong@tencent.com
+Subject: Re: [External] Re: [RFC 2/5] memcontrol: add boot option to enable
+ memsw account on dfl
+Message-ID: <qdqgmkj6tq7er7seav4oeb76m2fgydmn3k5pdybfkdoo4gjgsd@wce6kn6opn35>
+References: <20250319064148.774406-3-jingxiangzeng.cas@gmail.com>
+ <m35wwnetfubjrgcikiia7aurhd4hkcguwqywjamxm4xnaximt7@cnscqcgwh4da>
+ <7ia4tt7ovekj.fsf@castle.c.googlers.com>
+ <20250320142846.GG1876369@cmpxchg.org>
+ <ipskzxjtm656f5srrp42uxemh5e4jdwzsyj2isqlldfaokiyoo@ly4gfvldjc2p>
+ <4lygax4lgpkkmtmpxif6psl7broial2h74lel37faelc3dlsx3@s56hfvqiazgc>
+ <CACSyD1NisD-ZggRz0BaxUdJ9so4j-sKPZi361HJAum3+bHO+tQ@mail.gmail.com>
+ <CAJqJ8ihLfcDROuCjMfoNzOtRRZhVDWEx04ik6cS9NO6hVua0xA@mail.gmail.com>
+ <qfxzzbcfnojz3oz2ackzorwokhmr2dbkxfgbmewd74vtzrzxkh@rlqide3wg2v7>
+ <CAJqJ8iiyVQxf1Kg_UKuRM_Zg6u4Hqb=DwpbOH_7CrAscAonD-g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250505-iio-adc-ad7944-max-high-bits-on-direct-read-v1-1-b173facceefe@baylibre.com>
-X-B4-Tracking: v=1; b=H4sIAFcDGWgC/x2NQQqDMBBFryKz7kCaKGqvUrqImamZRZMyERHEu
- 3coj794m/9OaKzCDR7dCcq7NKnF5H7rIOVYVkYhc/DOD85AkYqRkm2c+x4/8cAsa8ZFtoa1IIl
- y2lA5Ei5hmPw0kwthBHv8Kr/l+Neer+v6AeJlOe19AAAA
-X-Change-ID: 20250505-iio-adc-ad7944-max-high-bits-on-direct-read-b358289d0337
-To: Michael Hennerich <Michael.Hennerich@analog.com>, 
- =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
- Jonathan Cameron <jic23@kernel.org>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- David Lechner <dlechner@baylibre.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1404; i=dlechner@baylibre.com;
- h=from:subject:message-id; bh=QDVwmpo9ktX2KMymt0KJritJpgsaBmg5HTydROKeb/E=;
- b=owEBbQGS/pANAwAKAcLMIAH/AY/AAcsmYgBoGQNZzpqaeOKzms9+hlqWPEByob1PPVfP1g5Z/
- 38U5o3mCtCJATMEAAEKAB0WIQTsGNmeYg6D1pzYaJjCzCAB/wGPwAUCaBkDWQAKCRDCzCAB/wGP
- wLuAB/9ES6esxBezGlbH1E1DLvl2QMYuAeLjVWGuA4g74MV6UXoxgjk3mO56r/I0xXQj6ohC0EW
- rCFEsMKkBNR16ocPAUQgK+PuMxG7tpTOjiHag3TT+X6fKdob5tQiTmOrYcr06LOeaZgqYZOJmAV
- 0UvxIGv7iiteMIw9Rps6ve5/O4/qbV8siUVd1Sxx+789BVqVUZoZWUY+ijTRYkzCc5VwI6ytBCK
- G8VRK+W+R4o+RfaEFdCAYKphVvHV7d1if2ZEzQGbF+zsUIY+Ybzxbb8vIb5lBkNOo2ZhnBrsJNp
- pxgNmbxGb5CohCGXQOr1yLwgBun9EtaAeurniWiAV0IvXBwD
-X-Developer-Key: i=dlechner@baylibre.com; a=openpgp;
- fpr=8A73D82A6A1F509907F373881F8AF88C82F77C03
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="znhqjsuofvi4yhsq"
+Content-Disposition: inline
+In-Reply-To: <CAJqJ8iiyVQxf1Kg_UKuRM_Zg6u4Hqb=DwpbOH_7CrAscAonD-g@mail.gmail.com>
 
-Apply a mask to the raw value received over the SPI bus for unsigned
-direct reads. As we found recently, SPI controllers may not set unused
-bits to 0 when reading with bits_per_word != {8,16,32}. The ad7944 uses
-bits_per_word of 14 and 18, so we need to mask the value to be sure we
-returning the correct value to userspace during a direct read.
 
-Fixes: d1efcf8871db ("iio: adc: ad7944: add driver for AD7944/AD7985/AD7986")
-Signed-off-by: David Lechner <dlechner@baylibre.com>
----
-The sign_extend32() already takes care of signed reads in case that
-isn't obvious - it overwrites the unknown bits with the sign bit.
----
- drivers/iio/adc/ad7944.c | 2 ++
- 1 file changed, 2 insertions(+)
+--znhqjsuofvi4yhsq
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [External] Re: [RFC 2/5] memcontrol: add boot option to enable
+ memsw account on dfl
+MIME-Version: 1.0
 
-diff --git a/drivers/iio/adc/ad7944.c b/drivers/iio/adc/ad7944.c
-index 2f949fe5587318957f2e423029294ced0a6f803d..37a137bd83571b055e970a8cd483d8726972d637 100644
---- a/drivers/iio/adc/ad7944.c
-+++ b/drivers/iio/adc/ad7944.c
-@@ -377,6 +377,8 @@ static int ad7944_single_conversion(struct ad7944_adc *adc,
- 
- 	if (chan->scan_type.sign == 's')
- 		*val = sign_extend32(*val, chan->scan_type.realbits - 1);
-+	else
-+		*val &= GENMASK(chan->scan_type.realbits - 1, 0);
- 
- 	return IIO_VAL_INT;
- }
+(Excuse my long turnarounds, I assume this needs time.)
 
----
-base-commit: b72f1157bfb9b92b0439e11469f7f94e47363460
-change-id: 20250505-iio-adc-ad7944-max-high-bits-on-direct-read-b358289d0337
+On Wed, Apr 16, 2025 at 04:29:13PM +0800, jingxiang zeng <jingxiangzeng.cas=
+@gmail.com> wrote:
+> ...
+> In fact, the memsw counter is mainly effective in proactive memory offload
+> scenarios.
 
-Best regards,
--- 
-David Lechner <dlechner@baylibre.com>
+Is that some downstream experience or aspiration? Because there's
+no kernel where memsw and proactive reclaim coexist.
 
+> It is difficult to set an accurate memory.swap.max value.
+> memory.swap.current =3D [0GB, 9GB]
+> memory.swap.max =3D ?
+
+I likely don't understand, I'd consider the value of 10GB in this
+case...
+
+> The memory space saved by swapping out to swap can continue to load
+> the operation of system components or more workloads.
+> memory.limit_in_bytes =3D 10GB
+> memory.usage_in_bytes =3D 9GB - [0GB, 9GB]
+> memory.swap.current =3D [0GB, 9GB]
+>=20
+> The memory usage of memory.usage_in_bytes is reduced due to proactive
+> offload to swap, which will cause additional problems, such as:
+> 1. There may be some memory leaks or abnormal imported network traffic
+> in the container, which may cause OOM to fail to trigger or be triggered =
+late;
+> 2. In the oversold scenario, if the container's memory requirement is 10G=
+B,
+> the container's memory+swap should only use 10GB.
+
+=2E..which would mean per-container usage doesn't exceed 20GB (leaks
+remain bound).
+Apparently, you could fit less containers but would they be actually
+running (memsw doesn't guarantee that). Or what is problematic with
+different treatment of overcommit between memsw vs .max and .swap.max?
+
+Regards,
+Michal
+
+--znhqjsuofvi4yhsq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCaBkDhAAKCRAt3Wney77B
+SWVfAQDEYCGUpihkrs6lrJZQ2l11z6zLSe1X6gTzGNkq07GeigEAoJvkjzmWE5cF
+s7J0Vu9+y6QYMKBE9olMU3eHCOmQgQ8=
+=hxPO
+-----END PGP SIGNATURE-----
+
+--znhqjsuofvi4yhsq--
