@@ -1,45 +1,52 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1D07393E8D;
-	Mon,  5 May 2025 23:19:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FC6939529B;
+	Mon,  5 May 2025 23:20:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487194; cv=none; b=WrIGO4l1SsnANQpu+qsc4E8UsJomt/dWPLErjGBeaHyPu12WX3/NInE+PVU0vuEbWFNYX/yzYpfewd2kTmKXad5qbw8arhyNOHNJFyaYQMaDeMsvjcRpf2BFGlnJiu2jY/dkZXpEwpvNAfSK+cxs+/gcEoH+bwrObNaYc5NuBeM=
+	t=1746487208; cv=none; b=Yd7flgUCGJ8SoaJLXbzDASLANvR3ZAUVbVsEYEZMmbMCQWOzV0k4eit2iZH5sJ9UGTqnNXy/xXA1dAEZLL8r3QS68cEN/NLqKPQXfDbR5lh0f/Rac67OXE9itDZzB1gA95uvVIgOlxrjXfC80gUCo4Qs2yjWV1LjKgdJwZLjCWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487194; c=relaxed/simple;
-	bh=ndMWoE6q7fLIy7AS4H7lryARQIYRXZJWzFV6c0gNmC0=;
+	s=arc-20240116; t=1746487208; c=relaxed/simple;
+	bh=1NJuURk20N19YanJ3ys0grsx/9HvfDf3mkE0IAqV9jQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=KabhTJhjhl9iv6TcCAxnGHITOGmbnEZQRWIYqfnca001Ao9ER8Kbg34ORh8Z74SxX8V2rJNEjL2MSgjBUX/C7+3aFIMhpmNXix9+Bnjfbcuba9qOWmXgOcEvdXZhtzzBoukakChAN9TtlBW6Xz2wKsUl4rYdxylOdAOSQB765cw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bCWr69KP; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=qOr1RPOBML5nJpJ0dF0riSEtC4dWTuZy5+tJIZ9bMOpY2nYYFUMkzj4kpEx1zOjcjaq4d4ryCVyspeMt89qX9Z7ooprA8kXYpykTyY2SGLnwSWJ/oFIyipY3QxxhfOV0JO4WwhI1xfotzoXHFA/zMfivvZHgRXCb3Pzcma12HTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ltlZyuFa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bCWr69KP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78CECC4CEE4;
-	Mon,  5 May 2025 23:19:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ltlZyuFa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F273C4CEE4;
+	Mon,  5 May 2025 23:20:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487193;
-	bh=ndMWoE6q7fLIy7AS4H7lryARQIYRXZJWzFV6c0gNmC0=;
+	s=k20201202; t=1746487207;
+	bh=1NJuURk20N19YanJ3ys0grsx/9HvfDf3mkE0IAqV9jQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bCWr69KP+zanXGfXYIq4MyM6yWDVuDuhRu8gyMwN0Bh+HbdzL6rxmpuUMIyPao2L8
-	 vADCfF31zzg7MkXdrgkX99d2xyLIU7M9P90qyAF9y0dPF8oihqDKPYCofnjZRxDYPD
-	 Gbv5NET/Q3VksCwUMOvXNqR/ho+h/X3BgcihrwIcWalyggShALl3cMoFdWgmhWimq/
-	 +5uGVPNfiG6hdi7KmSSYHaadWkqatfhHl1u/ir2gK2xTu6PoXDcJpT4kerTqyLlxiS
-	 ArPMU/1VHCXxeopzgvqu6Pl4vGGf8NY60v3zC+oXJJ6pcD62vWRlVIAXgc9P1k2fHH
-	 gnfE8nJ1o81PA==
+	b=ltlZyuFac6FVMIp9jCRfXQJfyn11G7iTdjJYKrJq5CcZwZtJX/3nn+S/pMBO5qp9C
+	 eQHyRlpkQBlZk6/UPbLm3mSV5abDJpKF0zy5giUrVJhCqR5bqmAcWviEYiJEjJSODv
+	 Fl4UybRR8gZzhQNfczT4ZWbv4GSggl5S9uY3IicV6FaSDWIHNZYzR7/XRc1uYcKXh7
+	 2BT/NwcyouOIfwVnM2rQMteVhaE8/LzNMZwo0sJ0Yl4I+OINkbI/BZqMLGvPhhEMAq
+	 E5wQ0ELh64vBOLx9F2AXuC/nBFeciYzXCiwIajuvcX5URdRJmGyZQiN4fWs2YL1p0c
+	 fRD24snkYSfgA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Peter Seiderer <ps.report@gmx.net>,
-	Simon Horman <horms@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
+Cc: Stanimir Varbanov <svarbanov@suse.de>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Jim Quinlan <james.quinlan@broadcom.com>,
+	"Ivan T . Ivanov" <iivanov@suse.de>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 050/114] net: pktgen: fix mpls maximum labels list parsing
-Date: Mon,  5 May 2025 19:17:13 -0400
-Message-Id: <20250505231817.2697367-50-sashal@kernel.org>
+	jim2101024@gmail.com,
+	nsaenz@kernel.org,
+	lpieralisi@kernel.org,
+	kw@linux.com,
+	manivannan.sadhasivam@linaro.org,
+	bhelgaas@google.com,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.10 057/114] PCI: brcmstb: Expand inbound window size up to 64GB
+Date: Mon,  5 May 2025 19:17:20 -0400
+Message-Id: <20250505231817.2697367-57-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505231817.2697367-1-sashal@kernel.org>
 References: <20250505231817.2697367-1-sashal@kernel.org>
@@ -49,55 +56,49 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.10.237
 Content-Transfer-Encoding: 8bit
 
-From: Peter Seiderer <ps.report@gmx.net>
+From: Stanimir Varbanov <svarbanov@suse.de>
 
-[ Upstream commit 2b15a0693f70d1e8119743ee89edbfb1271b3ea8 ]
+[ Upstream commit 25a98c727015638baffcfa236e3f37b70cedcf87 ]
 
-Fix mpls maximum labels list parsing up to MAX_MPLS_LABELS entries (instead
-of up to MAX_MPLS_LABELS - 1).
+The BCM2712 memory map can support up to 64GB of system memory, thus
+expand the inbound window size in calculation helper function.
 
-Addresses the following:
+The change is safe for the currently supported SoCs that have smaller
+inbound window sizes.
 
-	$ echo "mpls 00000f00,00000f01,00000f02,00000f03,00000f04,00000f05,00000f06,00000f07,00000f08,00000f09,00000f0a,00000f0b,00000f0c,00000f0d,00000f0e,00000f0f" > /proc/net/pktgen/lo\@0
-	-bash: echo: write error: Argument list too long
-
-Signed-off-by: Peter Seiderer <ps.report@gmx.net>
-Reviewed-by: Simon Horman <horms@kernel.org>
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Stanimir Varbanov <svarbanov@suse.de>
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+Reviewed-by: Jim Quinlan <james.quinlan@broadcom.com>
+Tested-by: Ivan T. Ivanov <iivanov@suse.de>
+Link: https://lore.kernel.org/r/20250224083559.47645-7-svarbanov@suse.de
+[kwilczynski: commit log]
+Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/pktgen.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/pci/controller/pcie-brcmstb.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/core/pktgen.c b/net/core/pktgen.c
-index c1e3d3bea1286..c2b3c454eddd9 100644
---- a/net/core/pktgen.c
-+++ b/net/core/pktgen.c
-@@ -805,6 +805,10 @@ static ssize_t get_labels(const char __user *buffer, struct pktgen_dev *pkt_dev)
- 	pkt_dev->nr_labels = 0;
- 	do {
- 		__u32 tmp;
-+
-+		if (n >= MAX_MPLS_LABELS)
-+			return -E2BIG;
-+
- 		len = hex32_arg(&buffer[i], 8, &tmp);
- 		if (len <= 0)
- 			return len;
-@@ -816,8 +820,6 @@ static ssize_t get_labels(const char __user *buffer, struct pktgen_dev *pkt_dev)
- 			return -EFAULT;
- 		i++;
- 		n++;
--		if (n >= MAX_MPLS_LABELS)
--			return -E2BIG;
- 	} while (c == ',');
- 
- 	pkt_dev->nr_labels = n;
+diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+index bbc9786bc36cf..2fc4fe23e6bbf 100644
+--- a/drivers/pci/controller/pcie-brcmstb.c
++++ b/drivers/pci/controller/pcie-brcmstb.c
+@@ -300,8 +300,8 @@ static int brcm_pcie_encode_ibar_size(u64 size)
+ 	if (log2_in >= 12 && log2_in <= 15)
+ 		/* Covers 4KB to 32KB (inclusive) */
+ 		return (log2_in - 12) + 0x1c;
+-	else if (log2_in >= 16 && log2_in <= 35)
+-		/* Covers 64KB to 32GB, (inclusive) */
++	else if (log2_in >= 16 && log2_in <= 36)
++		/* Covers 64KB to 64GB, (inclusive) */
+ 		return log2_in - 15;
+ 	/* Something is awry so disable */
+ 	return 0;
 -- 
 2.39.5
 
