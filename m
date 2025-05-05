@@ -1,40 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4C8D392F94;
-	Mon,  5 May 2025 23:18:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE1B53AC584;
+	Mon,  5 May 2025 23:19:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487126; cv=none; b=k+MqW3xPnKflg9VO+ThUrQEMIW2EV8NjNaCqa+PUybop0fCm8YbMAlc0a8FajeRl1Ls2U7ZyzTcgu9vBuyEoAyO9wii4GiTa9a/KITzuY6mnYfQgb/AoLhNDX7yH4Tim3U/90FLVoOIdJNsIeep0tsXt6T2FeWDTva6sFtteuI4=
+	t=1746487141; cv=none; b=symlnPCR/zZc8/w7bFS0IU3LkUaNg7KvrU0yrxzfWhJSSmfsrOi22H2zwg0medIBoXNIVmi/6S6ojtDQBUKO9a0HA/lXkseWOSvWRpqcIKl00wHF8QhYcSQtNM7IG/5qVd9C4sbubPOIkHhHnQyJCwK5a8Nd0YqntpF8TlA3DQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487126; c=relaxed/simple;
-	bh=c/ZRcjt/5odMSgBwPe3ZiTpzNSyYGXxRkVdPpWZtesY=;
+	s=arc-20240116; t=1746487141; c=relaxed/simple;
+	bh=B4/AFmH4EzCm+/gzXspUOA/ZQOae4G4h8zpgvZNFaUI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=sRaDjbIDYu+4kDEw9fzfjsmN5MH7KOq6qCtkxOAG+7OHd5f7cRC2wmfVSV24rGg1QhchGHjHREMpxuEVAnElFeY9AmYwBzxwso7o8k9KuhNm/bww93amXAfPmM10ADRSWZ9FZe+CtDLpPKUDhONIv11WuI5k/Dj+0UdZu+QPzLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TOGD61Yq; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=KuuK9QKShiQlJZyPgzEnE9xI7ufRcagRHON5xIbA8JhWoS5J0R2+wLLk51r4Wh5FeBQeWTn1L/hZl+8hfMmjPzDVE/QA5ZPd+dmlL63FsHDCHJs55Dusu+QPn1f1DSvwT4CGdPG7VLfQiW/ps8NXZP1chPLQ/FvFig9xkpZ6sYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VKDb4bVN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TOGD61Yq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F35C4C4CEEF;
-	Mon,  5 May 2025 23:18:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VKDb4bVN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47F8FC4CEE4;
+	Mon,  5 May 2025 23:18:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487126;
-	bh=c/ZRcjt/5odMSgBwPe3ZiTpzNSyYGXxRkVdPpWZtesY=;
+	s=k20201202; t=1746487140;
+	bh=B4/AFmH4EzCm+/gzXspUOA/ZQOae4G4h8zpgvZNFaUI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TOGD61YqTLrMNflX7cPlUaWBLdrTGNrXRiBfy5vpJZ9Yyde+2wOIQCdPAARKaWMDD
-	 GF4+DmTPcv8oP+UkCQp+qCSoMgnO/TT37jtdSnvYQjYkqEKg8dJJxTw5VlY+y1W1RO
-	 A7m0mJNzqzwBs19HMeNiLW3c6Iqy3r5+Y0zmwXIWbbv0blPRs1TBF9dBFdYG1X7tS4
-	 UifkhA15BDfZmsTBs490myf0mEF8ApsbTdVSOKinLpYg57YSTGRExz10sSJeKUd54W
-	 RFUlENzNGFHH80patBRkn0pnRsL5+UyPxDLDmb2ZARPLMi5c6qSBtdlBx6t9kqxL5A
-	 my25a1PNHz3zA==
+	b=VKDb4bVNN79c0miYr+Zo1oQkCjTrVqi7m17qNVzpm0HuYrYtb9RRc8vnB3bet7r6E
+	 IO3g8l2nOqXdSU7fnD7Eu9AcdBGcA6KAkKVt1z4ZvaZjFciwmsfwlxhtAEtFQTWHpC
+	 iT2MDvJ/zV8lIIwJEtLc87LZw3CdoyOnr/HV1ch45O1r8KaCtTewMcNW98+V8oIlNt
+	 hr+bzUV6bxhAyHnFhf+IcI5TU60NPnvUftUZxy30OgYkw1jllXBViMy9YO2RIV+EuS
+	 cQNBeMugC/ZjcU6FDidiRG3xTHkHYLF8FPFnqQqePcU0FbJzQ3kMv3ja4NihWCyVxQ
+	 sd7dWhdD5dRiQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jing Su <jingsusu@didiglobal.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.10 012/114] dql: Fix dql->limit value when reset.
-Date: Mon,  5 May 2025 19:16:35 -0400
-Message-Id: <20250505231817.2697367-12-sashal@kernel.org>
+Cc: Nick Hu <nick.hu@sifive.com>,
+	Anup Patel <anup@brainfault.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Sasha Levin <sashal@kernel.org>,
+	tglx@linutronix.de,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	linux-riscv@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.10 021/114] clocksource/drivers/timer-riscv: Stop stimecmp when cpu hotplug
+Date: Mon,  5 May 2025 19:16:44 -0400
+Message-Id: <20250505231817.2697367-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505231817.2697367-1-sashal@kernel.org>
 References: <20250505231817.2697367-1-sashal@kernel.org>
@@ -49,44 +56,43 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.10.237
 Content-Transfer-Encoding: 8bit
 
-From: Jing Su <jingsusu@didiglobal.com>
+From: Nick Hu <nick.hu@sifive.com>
 
-[ Upstream commit 3a17f23f7c36bac3a3584aaf97d3e3e0b2790396 ]
+[ Upstream commit 70c93b026ed07078e933583591aa9ca6701cd9da ]
 
-Executing dql_reset after setting a non-zero value for limit_min can
-lead to an unreasonable situation where dql->limit is less than
-dql->limit_min.
+Stop the timer when the cpu is going to be offline otherwise the
+timer interrupt may be pending while performing power-down.
 
-For instance, after setting
-/sys/class/net/eth*/queues/tx-0/byte_queue_limits/limit_min,
-an ifconfig down/up operation might cause the ethernet driver to call
-netdev_tx_reset_queue, which in turn invokes dql_reset.
-
-In this case, dql->limit is reset to 0 while dql->limit_min remains
-non-zero value, which is unexpected. The limit should always be
-greater than or equal to limit_min.
-
-Signed-off-by: Jing Su <jingsusu@didiglobal.com>
-Link: https://patch.msgid.link/Z9qHD1s/NEuQBdgH@pilot-ThinkCentre-M930t-N000
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Suggested-by: Anup Patel <anup@brainfault.org>
+Link: https://lore.kernel.org/lkml/20240829033904.477200-3-nick.hu@sifive.com/T/#u
+Signed-off-by: Nick Hu <nick.hu@sifive.com>
+Reviewed-by: Anup Patel <anup@brainfault.org>
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Link: https://lore.kernel.org/r/20250219114135.27764-3-nick.hu@sifive.com
+Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/dynamic_queue_limits.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clocksource/timer-riscv.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/lib/dynamic_queue_limits.c b/lib/dynamic_queue_limits.c
-index fde0aa2441480..a75a9ca46b594 100644
---- a/lib/dynamic_queue_limits.c
-+++ b/lib/dynamic_queue_limits.c
-@@ -116,7 +116,7 @@ EXPORT_SYMBOL(dql_completed);
- void dql_reset(struct dql *dql)
+diff --git a/drivers/clocksource/timer-riscv.c b/drivers/clocksource/timer-riscv.c
+index c51c5ed15aa75..427c92dd048c4 100644
+--- a/drivers/clocksource/timer-riscv.c
++++ b/drivers/clocksource/timer-riscv.c
+@@ -75,7 +75,13 @@ static int riscv_timer_starting_cpu(unsigned int cpu)
+ 
+ static int riscv_timer_dying_cpu(unsigned int cpu)
  {
- 	/* Reset all dynamic values */
--	dql->limit = 0;
-+	dql->limit = dql->min_limit;
- 	dql->num_queued = 0;
- 	dql->num_completed = 0;
- 	dql->last_obj_cnt = 0;
++	/*
++	 * Stop the timer when the cpu is going to be offline otherwise
++	 * the timer interrupt may be pending while performing power-down.
++	 */
++	riscv_clock_event_stop();
+ 	disable_percpu_irq(riscv_clock_event_irq);
++
+ 	return 0;
+ }
+ 
 -- 
 2.39.5
 
