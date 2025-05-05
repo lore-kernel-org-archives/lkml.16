@@ -1,213 +1,184 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1D2425CC62;
-	Mon,  5 May 2025 15:50:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07FF125CC62
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 15:51:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746460225; cv=none; b=JFt578GEKCJgT6/RsxGnP0wWy11pBbcCt7dZhWNZUlAjAI4UP+ZeevS2rZe2rh7iuX1ZUv8orOxCQaFmG+aop9RIFpTwlcQzoI94yLhfFWmOqQpfN9ZhSjH4wBDwQMQY+QDM+HWq71rRjlT+sWMlINSF5PWBHtcZGeHa7RsOnK4=
+	t=1746460285; cv=none; b=mLo87bnhf5sK9bkTWRAUv1vqGTbdJU2yiflwWyrBmOmPchg/otyXDgFjknpxTvl8cIgTh4csXmbUmRdKYnOMihizXyEwJaQjPqsgvTdgXbHr0+SBS07NeJj/gUAE6LevWi9j1gt6DQkxLVxamOrSuuAPJdo7qfQ+VjfGY+uyxLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746460225; c=relaxed/simple;
-	bh=Cbsoh4Uw0hD0/tALTmVoaHPEZyTMbw7GsjqgHc7xcpQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ae3LtHG1uSZ0ABz8yBxApKQNVAQNrbqSFAKUJery84DYBP1okq1+foQMUwmMEPFOn2PqYo/qfqQ+e+rctu3s0y/aST9/XQZVyvyTec37Wjivcq/Uhot0YjF2jnydtOpGyM68pJ7PK4DPbqEzp+ykdRFRFklne7HZjUBdbwB5YAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ZaLBubJ1; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1746460285; c=relaxed/simple;
+	bh=ajZZgUulqRNQnYH/U78ZrIlZ6v46eCd19mKY/YFXRGI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gheKll8RXVwNDZipbFw3aYRbkrMrk1gamo2WzH52c4THVy0hX+9N0jS3fUQHbJfBJbNr18UysE/4Jvddgk1QHKfURhujb5L4qG2KlbgleLKPqMbu6EBzaHeRyxNnb/yUApx/8YmxBvYa+Wkotj0btbZ4y4fRJR+ZI+nmWPKrwNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Xm40HrPN; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ZaLBubJ1"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 9BB0543B7B;
-	Mon,  5 May 2025 15:50:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1746460215;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9qBWcU+IHamVJ+m1U9T21TS2ncbZeyp+fhHcbvFdxgs=;
-	b=ZaLBubJ1FtJ8ys2W21kEco2AjDCz9ymC2RIpBRL1XbhwsK7FOnMKuv1tyU8OntXiTPNoci
-	gWyTLc36nug1NGexsZ5XogiIcPkOkQ5+q0ZNrz2xZhNW2lErKuBnd+JJJz4oe44c3wxfBO
-	TQlLrMYU1Ml7fT9zJMvL+O5OtTYlXygL+svsefRY1eQnHvUN1HexnMZIlaK/+vPgRwoKPD
-	ANIOFBFT52YGuibFYfhiB6diL2gmtwY6CEZw0MNCBw/XX67bKl7jMnQnOhFe8AHEtUV9tw
-	G2WaZcurXfMVbvratiKXYtXIe8tCqg5PVarluuuYynjRgx63gKP24wAGCmInqg==
-From: Romain Gantois <romain.gantois@bootlin.com>
-To: Cosmin Tanislav <demonsingur@gmail.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
- Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Wolfram Sang <wsa+renesas@sang-engineering.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-i2c@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- Cosmin Tanislav <demonsingur@gmail.com>
-Subject: Re: [PATCH v4 7/9] i2c: atr: add flags parameter to i2c_atr_new()
-Date: Mon, 05 May 2025 17:50:14 +0200
-Message-ID: <6198924.lOV4Wx5bFT@fw-rgant>
-In-Reply-To: <20250428102516.933571-8-demonsingur@gmail.com>
-References:
- <20250428102516.933571-1-demonsingur@gmail.com>
- <20250428102516.933571-8-demonsingur@gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Xm40HrPN"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ac6ed4ab410so754996866b.1
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 08:51:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746460281; x=1747065081; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2+3PIdJC3Ht+VlEO5rW2bxgqfN/WfvLUVhrpIT2zCns=;
+        b=Xm40HrPNoWR2GYOF4NuEWym4dNOWB2TjM/D8AT6ASyOI44YTSarEl8olVT6o5QrZVd
+         AnCsg+K6dlG3QZSpA/E2BRWwd9aBF0UHXhpZKissscaSxTFJuzZPebABmyadpPzOFTkM
+         sAGoW2dda6EejF5lCs5TzpKn5AOVc2zHHtCOAO6uXYvmIhwp4+gWSCbrQJheyLK8mpR0
+         6FCGb+cV1LrKOkvdFKemuxXeGF40gXzh0IsgfwRRxPf/N849qR8q4Ndfg7suT8nATI3s
+         bqXvF4OEdQPx0Z4ytinrX/6Wp+baxYswhMEsf0GVhPkByN4gp0gQHr++5sqNnQENULvh
+         +MmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746460281; x=1747065081;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2+3PIdJC3Ht+VlEO5rW2bxgqfN/WfvLUVhrpIT2zCns=;
+        b=XdRZJ/YZFBXn4lgVKo9fMqyQ0ZJTg3wjkhdzrK9RNhz+OXDTaqxRAN01T8ECrrtt/G
+         Y9g5FhE4ycWV/VQsu+xHFJMVkSu2sJN7axVZUK0FihSSx9TtCLrQNGyI5fq0V5YBz69X
+         dO4O6e9x09A3WrYJHHjZGsnZZwjftOI0KKHNKr8diG7QNxmrfl/xMEVFTRYatXpTfqo/
+         LE2uZ7V6ChjbIcHOPHdTW7L6rZxFUHh56RFpU9voNXze8oUxLr4P4Gca4jdPMknWEphE
+         BSncF5v3GggzRFhtu7IgOCJ5N01Z1ZYBe3mT/aKTllUZoW4cMdNMwjQeXhd3KeNi2+Yf
+         26Dg==
+X-Gm-Message-State: AOJu0YzDBhJ0cByO6GUp92g0Zp2H/gMCX8nsVG66qDtTDlTfdYgUjetj
+	9g7D4C1mxJaOEOaiMa0xxy8m8BzOCDZaD8NSkwJrd/oXpU7i0lN7kXMshG35fok=
+X-Gm-Gg: ASbGncu5MiNkT5tDkPlIbkwcvE6AC5Wu87U2irDqLcGzE0jPzMWnTz7WlDOsY+OhuhG
+	XQBRbg2ZuY0G3FYp/BIvCZaET6kYZ/DppJpdrcVU3xY4vhWrP3aYhcXXFgzaR6lUBKRlG6ADsh4
+	E50EJJC69va4nbn1acCJrp0sHOO9bu2MApEaOzfTia45bXBDosYfgu9/h4K4LupPHvzyoIWEajL
+	ewkuTEN25S5QX1TDXMi6NuFrmANwG0Jc08XZYwE9w/JAzg50nTyDjekLcANYjxfN05z4K35q0Qv
+	tFRvdgrDZ2NfPMZK9TcKEvjC4XsOTO3TKIfEOlaU00GvLCTe
+X-Google-Smtp-Source: AGHT+IFeHXSBcW5a6cMPyYFCWSmdfc0Kw0YJs6QfCUivNSYazQwUq3W3k9Emuwo7XD2iieH/6V66Yw==
+X-Received: by 2002:a17:907:8dcb:b0:ac1:f5a4:6da5 with SMTP id a640c23a62f3a-ad1a4a8d95cmr752485666b.37.1746460281158;
+        Mon, 05 May 2025 08:51:21 -0700 (PDT)
+Received: from [192.168.0.32] ([82.76.24.202])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1894c01c9sm516621766b.105.2025.05.05.08.51.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 05 May 2025 08:51:20 -0700 (PDT)
+Message-ID: <6ce50077-2c64-40b2-82b3-c63c16fa1898@linaro.org>
+Date: Mon, 5 May 2025 18:51:19 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart5053600.31r3eYUQgx";
- micalg="pgp-sha256"; protocol="application/pgp-signature"
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeduhedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgjfhggtgesghdtreertddtjeenucfhrhhomheptfhomhgrihhnucfirghnthhoihhsuceorhhomhgrihhnrdhgrghnthhoihhssegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeikeekffdvuefgkeejgeefhfdvteeuhfdtleeiudehieeludelvdetleeggfffffenucfkphepvdgrtddvmeekgedvgeemkedtkedvmeehrgdtudemrgdtgegvmehfjeeiheemleehrgemughfkeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeekgedvgeemkedtkedvmeehrgdtudemrgdtgegvmehfjeeiheemleehrgemughfkeeipdhhvghlohepfhifqdhrghgrnhhtrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpehrohhmrghinhdrghgrnhhtohhishessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtohepuggvmhhonhhsihhnghhurhesghhmrghilhdrtghomhdprhgtphhtthhopehtohhmihdrvhgrlhhkvghinhgvnhesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtoheplhhutggrrdgtvghrvghsohhlihess
- ghoohhtlhhinhdrtghomhdprhgtphhtthhopeifshgrodhrvghnvghsrghssehsrghnghdqvghnghhinhgvvghrihhnghdrtghomhdprhgtphhtthhopehmtghhvghhrggssehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrrhhnugesrghrnhgusgdruggvpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheplhhinhhugidqihdvtgesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-GND-Sasl: romain.gantois@bootlin.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC][PATCH 07/14] printk: add kmsg_kmemdump_register
+To: Petr Mladek <pmladek@suse.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ andersson@kernel.org, linux-doc@vger.kernel.org, corbet@lwn.net,
+ tglx@linutronix.de, mingo@redhat.com, rostedt@goodmis.org,
+ john.ogness@linutronix.de, senozhatsky@chromium.org, peterz@infradead.org,
+ mojha@qti.qualcomm.com, linux-arm-kernel@lists.infradead.org,
+ vincent.guittot@linaro.org, konradybcio@kernel.org,
+ dietmar.eggemann@arm.com, juri.lelli@redhat.com
+References: <20250422113156.575971-1-eugen.hristev@linaro.org>
+ <20250422113156.575971-8-eugen.hristev@linaro.org>
+ <aBjYbXJL-GJe4Mh8@localhost.localdomain>
+From: Eugen Hristev <eugen.hristev@linaro.org>
+Content-Language: en-US
+In-Reply-To: <aBjYbXJL-GJe4Mh8@localhost.localdomain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
---nextPart5053600.31r3eYUQgx
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
-From: Romain Gantois <romain.gantois@bootlin.com>
-To: Cosmin Tanislav <demonsingur@gmail.com>
-Date: Mon, 05 May 2025 17:50:14 +0200
-Message-ID: <6198924.lOV4Wx5bFT@fw-rgant>
-In-Reply-To: <20250428102516.933571-8-demonsingur@gmail.com>
-MIME-Version: 1.0
+Hello Petr,
 
-On Monday, 28 April 2025 12:25:12 CEST Cosmin Tanislav wrote:
-> In preparation for adding multiple flags that change the behavior,
-> add a flags parameter to i2c_atr_new() and an i2c_atr_flags enum.
-> 
-> Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
-> ---
->  drivers/i2c/i2c-atr.c         |  6 +++++-
->  drivers/media/i2c/ds90ub960.c |  2 +-
->  drivers/misc/ti_fpc202.c      |  2 +-
->  include/linux/i2c-atr.h       | 10 +++++++++-
->  4 files changed, 16 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/i2c/i2c-atr.c b/drivers/i2c/i2c-atr.c
-> index 7214a59ddf15..e2350fcf3d68 100644
-> --- a/drivers/i2c/i2c-atr.c
-> +++ b/drivers/i2c/i2c-atr.c
-> @@ -106,6 +106,7 @@ struct i2c_atr_chan {
->   * @lock:      Lock for the I2C bus segment (see &struct
-> i2c_lock_operations) * @lock_key:  Lock key for @lock
->   * @max_adapters: Maximum number of adapters this I2C ATR can have
-> + * @flags:     Flags for ATR
->   * @alias_pool: Optional common pool of available client aliases
->   * @i2c_nb:    Notifier for remote client add & del events
->   * @adapter:   Array of adapters
-> @@ -122,6 +123,7 @@ struct i2c_atr {
->  	struct mutex lock;
->  	struct lock_class_key lock_key;
->  	int max_adapters;
-> +	u32 flags;
-> 
->  	struct i2c_atr_alias_pool *alias_pool;
-> 
-> @@ -703,7 +705,8 @@ static int i2c_atr_parse_alias_pool(struct i2c_atr *atr)
-> }
-> 
->  struct i2c_atr *i2c_atr_new(struct i2c_adapter *parent, struct device *dev,
-> -			    const struct i2c_atr_ops *ops, int max_adapters)
-> +			    const struct i2c_atr_ops *ops, int max_adapters,
-> +			    u32 flags)
->  {
->  	struct i2c_atr *atr;
->  	int ret;
-> @@ -725,6 +728,7 @@ struct i2c_atr *i2c_atr_new(struct i2c_adapter *parent,
-> struct device *dev, atr->dev = dev;
->  	atr->ops = ops;
->  	atr->max_adapters = max_adapters;
-> +	atr->flags = flags;
-> 
->  	if (parent->algo->master_xfer)
->  		atr->algo.master_xfer = i2c_atr_master_xfer;
-> diff --git a/drivers/media/i2c/ds90ub960.c b/drivers/media/i2c/ds90ub960.c
-> index 869e32bd07e8..6f475bae94b3 100644
-> --- a/drivers/media/i2c/ds90ub960.c
-> +++ b/drivers/media/i2c/ds90ub960.c
-> @@ -1122,7 +1122,7 @@ static int ub960_init_atr(struct ub960_data *priv)
->  	struct i2c_adapter *parent_adap = priv->client->adapter;
-> 
->  	priv->atr = i2c_atr_new(parent_adap, dev, &ub960_atr_ops,
-> -				priv->hw_data->num_rxports);
-> +				priv->hw_data->num_rxports, 0);
->  	if (IS_ERR(priv->atr))
->  		return PTR_ERR(priv->atr);
-> 
-> diff --git a/drivers/misc/ti_fpc202.c b/drivers/misc/ti_fpc202.c
-> index b9c9ee4bfc4e..f7cde245ac95 100644
-> --- a/drivers/misc/ti_fpc202.c
-> +++ b/drivers/misc/ti_fpc202.c
-> @@ -349,7 +349,7 @@ static int fpc202_probe(struct i2c_client *client)
->  		goto disable_gpio;
->  	}
-> 
-> -	priv->atr = i2c_atr_new(client->adapter, dev, &fpc202_atr_ops, 2);
-> +	priv->atr = i2c_atr_new(client->adapter, dev, &fpc202_atr_ops, 2, 0);
->  	if (IS_ERR(priv->atr)) {
->  		ret = PTR_ERR(priv->atr);
->  		dev_err(dev, "failed to create i2c atr err %d\n", ret);
-> diff --git a/include/linux/i2c-atr.h b/include/linux/i2c-atr.h
-> index 1c3a5bcd939f..5082f4dd0e23 100644
-> --- a/include/linux/i2c-atr.h
-> +++ b/include/linux/i2c-atr.h
-> @@ -18,6 +18,12 @@ struct device;
->  struct fwnode_handle;
->  struct i2c_atr;
-> 
-> +/**
-> + * enum i2c_atr_flags - Flags for an I2C ATR driver
-> + */
-> +enum i2c_atr_flags {
-> +};
-> +
->  /**
->   * struct i2c_atr_ops - Callbacks from ATR to the device driver.
->   * @attach_addr: Notify the driver of a new device connected on a child
-> @@ -65,6 +71,7 @@ struct i2c_atr_adap_desc {
->   * @dev:          The device acting as an ATR
->   * @ops:          Driver-specific callbacks
->   * @max_adapters: Maximum number of child adapters
-> + * @flags:        Flags for ATR
->   *
->   * The new ATR helper is connected to the parent adapter but has no child
->   * adapters. Call i2c_atr_add_adapter() to add some.
-> @@ -74,7 +81,8 @@ struct i2c_atr_adap_desc {
->   * Return: pointer to the new ATR helper object, or ERR_PTR
->   */
->  struct i2c_atr *i2c_atr_new(struct i2c_adapter *parent, struct device *dev,
-> -			    const struct i2c_atr_ops *ops, int max_adapters);
-> +			    const struct i2c_atr_ops *ops, int max_adapters,
-> +			    u32 flags);
-> 
->  /**
->   * i2c_atr_delete - Delete an I2C ATR helper.
+Thank you for your review.
 
-Thanks!
+On 5/5/25 18:25, Petr Mladek wrote:
+> On Tue 2025-04-22 14:31:49, Eugen Hristev wrote:
+>> Add kmsg_kmemdump_register, which registers prb, log_buf and infos/descs
+>> to kmemdump.
+>> This will allow kmemdump to be able to dump specific log buffer areas on
+>> demand.
+>>
+>> --- a/kernel/printk/printk.c
+>> +++ b/kernel/printk/printk.c
+>> @@ -4650,6 +4651,18 @@ int kmsg_dump_register(struct kmsg_dumper *dumper)
+>>  }
+>>  EXPORT_SYMBOL_GPL(kmsg_dump_register);
+>>  
+>> +void kmsg_kmemdump_register(void)
+>> +{
+>> +	kmemdump_register("log_buf", (void *)log_buf_addr_get(), log_buf_len_get());
+>> +	kmemdump_register("prb", (void *)&prb, sizeof(prb));
+>> +	kmemdump_register("prb", (void *)prb, sizeof(*prb));
+> 
+> This looks strange. "prb" is a pointer to "struct printk_ringbuffer".
+> It should be enough to register the memory with the structure.
 
-Reviewed-by: Romain Gantois <romain.gantois@bootlin.com>
+Yes, from my perspective this should be also enough. However, when
+loading the generated core dump into crash tool , the tool first looks
+for the prb pointer itself, and then stops if the pointer is not readable.
+After the prb pointer is being found, the crash tool dereferences it ,
+and looks at the indicated address for the actual memory.
+That is why the pointer is also saved as a kmemdump region in my proof
+of concept.
 
---nextPart5053600.31r3eYUQgx
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
+> 
+>> +	kmemdump_register("prb_descs", (void *)_printk_rb_static_descs,
+>> +			  sizeof(_printk_rb_static_descs));
+>> +	kmemdump_register("prb_infos", (void *)_printk_rb_static_infos,
+>> +			  sizeof(_printk_rb_static_infos));
+> 
+> Also this looks wrong. These are static buffers which are used during
+> early boot. They might later be replaced by dynamically allocated
+> buffers when a bigger buffer is requested by "log_buf_len" command
+> line parameter.
+> 
 
------BEGIN PGP SIGNATURE-----
+I will double check whether the crash tool looks for these symbols or
+only the memory, and come back with an answer
 
-iQIzBAABCAAdFiEEYFZBShRwOvLlRRy+3R9U/FLj284FAmgY3jYACgkQ3R9U/FLj
-2850Fw/8DOoiXYk742wC63pKljPFQiSFMRxSCr0gaBapcFju4emr9qoc9FJSntG4
-b8NLMpGVMaO8nOm27+C97lx+iAcBVWhAQoJLSOFWgPOsBVP1qP1UfOePqt3LWr4r
-qC4QmKF3U5BGuxiVN9W9FO1lJaUnmyIf+g5YOm/NwW5FtwOiQPrS5mXFg/GOVn2/
-cMeyd4tiB1DWXNFpkZv0sg2asilTciWsAMi2j9ZoPIpr0bniHFzvfbl/kyV2eXsB
-fTP9SrrihPiAM1tG8aRGss4bSjsvRWwS6SDsccVwmpmClsJiPXTkfgFa2CeMJmBT
-OaeQHTYqRcO/o6gbyRbvinNuJxJ4YMGI1dysCQyNi8Ym3Xx+brZaNOzVorPUbELp
-CYdwt6jmhishwV3h7h71xhPv9uOs24wXN6pb1QYs4Pq4qKzdHEBS+WF3MZs3IK6h
-s2zdeJrZAzbOVcqjsuCsK/JYS10znYQ6cxQ5EeixKdnSTzGuQQYCO/d8TOeytha3
-e+HJL1jUTpBKYxss0V/hvg/tYB3vXRZLi72VtKZilFxVECniV13NgH/B3ea5/hCt
-idpq3gS8utfYFvVNqEc491+yz4xajvLNOO+bJpj+qJHY74n4r7vlS3TFCcu8DJ/D
-rgxT00f8F1DV2t6owgUFUnEJFRUMznqEOxCg6nKxDImh8zxhe3k=
-=5V8h
------END PGP SIGNATURE-----
+> I think that we need to register the memory of the structure
+> and 3 more buffers. See how the bigger buffer is allocated in
+> setup_log_buf().
+> 
+> I would expect something like:
+> 
+> 	unsigned int descs_count;
+> 	unsigned long data_size;
+> 
+> 	descs_count = 2 << prb->desc_ring.count_bits;
+> 	data_size = 2 << prb->data_ring.size_bits;
+> 
+> 	kmemdump_register("prb", (void *)prb, sizeof(*prb));
+> 	kmemdump_register("prb_descs", (void *)prb->desc_ring->descs,
+> 			  descs_count * sizeof(struct prb_desc));
+> 	kmemdump_register("prb_infos", (void *)prb->desc_ring->infos,
+> 			  descs_count * sizeof(struct printk_info));
+> 	kmemdump_register("prb_data", (void *)prb->data_ring->data, data_size);
+> 
+> 
+Thank you. It may be that in my test case, the buffer was not
+extended/reallocated with a bigger one.
 
---nextPart5053600.31r3eYUQgx--
+> But I wonder if this is enough. The current crash dump code also needs
+> to export the format of the used structures, see
+> log_buf_vmcoreinfo_setup().
+
+It appears that crash tool looks for the structures into vmlinux
+symbols. It can be that this information is not available to some tools,
+or vmlinux not available, in which case all the used structures format
+and sizes need to be exported. But right now, the crash tool does not
+work without vmlinux.
+
+> 
+> Is the CONFIG_VMCORE_INFO code shared with the kmemdump, please?
+
+I believe CONFIG_KMEMDUMP_COREIMAGE should select CONFIG_VMCORE_INFO
+indeed, which is not done in my patches. Or I have not fully understood
+your question ?
 
 
+Eugen
+> 
+>> +}
+>> +EXPORT_SYMBOL_GPL(kmsg_kmemdump_register);
+>> +
+> 
+> Best Regards,
+> Petr
 
