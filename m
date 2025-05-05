@@ -1,40 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3391E2EC00C;
-	Mon,  5 May 2025 23:07:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82F972EC016;
+	Mon,  5 May 2025 23:07:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486430; cv=none; b=jXU+1bRipXG2TAhIsG0vthuFlpO2tJSjTp07cezuJ4VcdWSAWvDNS4iRBgUjOIPf4HOQLsC6w+0GdfKfhaJTBcFBMsIMt97fJ78/MsMpaLyx8m8XJTfUllE3SYAAqsUVvUeVtMLlkMPuk4d+XtsbCiNi4dIZh0d+N5UayNm2lys=
+	t=1746486431; cv=none; b=hSIlg+SOA+Lb+1Nl2keH7NGezyp9ZfJ1DrW/N1yn+/jQ8B/9QWhiY9vcw9rZMLypl1fx7J83N8dIEFC7vIYTl/hY0ljSbvjTinLpU2MsX9nnLSCNlEUG2uimPSQSAyZJpwJYkHKDRewd3XufysP1GM6ymaM2CfJMIHbrpynJTSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486430; c=relaxed/simple;
-	bh=c/ZRcjt/5odMSgBwPe3ZiTpzNSyYGXxRkVdPpWZtesY=;
+	s=arc-20240116; t=1746486431; c=relaxed/simple;
+	bh=+iCTQXefiv7beKZtI1OTYnA/ZeUG5ws+vcTC6+XJFpo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YY5vYDQMOwxdVx61aS321rRU2oV1yHZ9LkxkucDe6TYxfUsFU9BvStksV+fsw5fUq5ai4f1fmt1i0tKK3Iy7+hnKk1I50gCYJlX/G5TBP8ds6Q1zvb1NL1IFCMMk1Q8y54cAmOOtGF8IEWCXzZrv/hyr08FrwQSWBuSyhaebhnc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uHCjWNvo; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=XPdDj+Vr4a4sTL65dRk85VLFC0YSQnXQif2Mo+OPD26ECvNpbYBAYrc+FH/cnnl2w5rs60rgJGf7Mgvh38sdPRzWvXQusrbHj6Wi2tu8PiFGdas0SY0MzYFmDXTNH8EVRbqLh6qPKBJYD73J/L8qtUFtwmzupEKwuh8RJozFmwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k5MvtnoD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uHCjWNvo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F5BCC4CEEE;
-	Mon,  5 May 2025 23:07:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k5MvtnoD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD81CC4CEE4;
+	Mon,  5 May 2025 23:07:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486428;
-	bh=c/ZRcjt/5odMSgBwPe3ZiTpzNSyYGXxRkVdPpWZtesY=;
+	s=k20201202; t=1746486431;
+	bh=+iCTQXefiv7beKZtI1OTYnA/ZeUG5ws+vcTC6+XJFpo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=uHCjWNvoBZxyW3E+0meqhob9I7NxyOWVe63j8wEzqsJcmLwNQWsoTvrS7PwOiWm+1
-	 J0AIrWsw6SBzmYeXl1YWioGJU6ldKj30SZfsEJeFHd1zpvWlHT26ESrRZmcACE61c5
-	 xzwOlVy9tn5eohTkGuxMbYM4g4D8uXq4CgtqDYCiCMhhegLrqtwKJWpSdnMhJhsbZ7
-	 oPP0jgnLMsaGuB4V7gMP84b5kLC7G6/TdSmFwS0uzDbg3NwJk5FHf3ayheogrCkTFJ
-	 rQxcXqBUg5TRk4NBLyhqkNYL2bvMbFBGWCROjOhIQRcP5/uqbTOl9QAizmUHxxOx/h
-	 PC1ib0XG0vnWw==
+	b=k5MvtnoDrGzkou72QmwLAbxvzT3SlDlzb0BcYZHbf7WZy9PdTDOOvxkFIA0qx44ut
+	 TQnqsFnlj3pPc5TPjTDW7Y7ObjQ8zYh1tYo7maS75fE91eaii4V/nEueO0/jTYpkHK
+	 RiUU0L249Ixi22VB/MfhCRtJes0gGuSsTdL8vZSvjxondh5lTjLhQ0O0Lk1/XtGpjL
+	 V8M4HVKgzDK1ZlTGQSZVH+8nf6NthLvFJPQv7h3ZGLoH66hfv7Lh9K0968acKi8c2E
+	 9xilqERCvGCn+wrp0+dTqYpMJhbKwfFOeXeyUqsGDza3iiRTpJB4/1zKScEcH2kVdQ
+	 IQQhoqUa8dblA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jing Su <jingsusu@didiglobal.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 6.1 022/212] dql: Fix dql->limit value when reset.
-Date: Mon,  5 May 2025 19:03:14 -0400
-Message-Id: <20250505230624.2692522-22-sashal@kernel.org>
+Cc: Ryo Takakura <ryotkkr98@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	bigeasy@linutronix.de,
+	clrkwllms@kernel.org,
+	rostedt@goodmis.org,
+	peterz@infradead.org,
+	tglx@linutronix.de,
+	frederic@kernel.org,
+	csander@purestorage.com,
+	neilb@suse.de,
+	kprateek.nayak@amd.com,
+	linux-rt-devel@lists.linux.dev
+Subject: [PATCH AUTOSEL 6.1 023/212] lockdep: Fix wait context check on softirq for PREEMPT_RT
+Date: Mon,  5 May 2025 19:03:15 -0400
+Message-Id: <20250505230624.2692522-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505230624.2692522-1-sashal@kernel.org>
 References: <20250505230624.2692522-1-sashal@kernel.org>
@@ -49,44 +60,97 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.1.136
 Content-Transfer-Encoding: 8bit
 
-From: Jing Su <jingsusu@didiglobal.com>
+From: Ryo Takakura <ryotkkr98@gmail.com>
 
-[ Upstream commit 3a17f23f7c36bac3a3584aaf97d3e3e0b2790396 ]
+[ Upstream commit 61c39d8c83e2077f33e0a2c8980a76a7f323f0ce ]
 
-Executing dql_reset after setting a non-zero value for limit_min can
-lead to an unreasonable situation where dql->limit is less than
-dql->limit_min.
+Since:
 
-For instance, after setting
-/sys/class/net/eth*/queues/tx-0/byte_queue_limits/limit_min,
-an ifconfig down/up operation might cause the ethernet driver to call
-netdev_tx_reset_queue, which in turn invokes dql_reset.
+  0c1d7a2c2d32 ("lockdep: Remove softirq accounting on PREEMPT_RT.")
 
-In this case, dql->limit is reset to 0 while dql->limit_min remains
-non-zero value, which is unexpected. The limit should always be
-greater than or equal to limit_min.
+the wait context test for mutex usage within "in softirq context" fails
+as it references @softirq_context:
 
-Signed-off-by: Jing Su <jingsusu@didiglobal.com>
-Link: https://patch.msgid.link/Z9qHD1s/NEuQBdgH@pilot-ThinkCentre-M930t-N000
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+    | wait context tests |
+    --------------------------------------------------------------------------
+                                   | rcu  | raw  | spin |mutex |
+    --------------------------------------------------------------------------
+                 in hardirq context:  ok  |  ok  |  ok  |  ok  |
+  in hardirq context (not threaded):  ok  |  ok  |  ok  |  ok  |
+                 in softirq context:  ok  |  ok  |  ok  |FAILED|
+
+As a fix, add lockdep map for BH disabled section. This fixes the
+issue by letting us catch cases when local_bh_disable() gets called
+with preemption disabled where local_lock doesn't get acquired.
+In the case of "in softirq context" selftest, local_bh_disable() was
+being called with preemption disable as it's early in the boot.
+
+[ boqun: Move the lockdep annotations into __local_bh_*() to avoid false
+         positives because of unpaired local_bh_disable() reported by
+	 Borislav Petkov and Peter Zijlstra, and make bh_lock_map
+	 only exist for PREEMPT_RT. ]
+
+[ mingo: Restored authorship and improved the bh_lock_map definition. ]
+
+Signed-off-by: Ryo Takakura <ryotkkr98@gmail.com>
+Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/20250321143322.79651-1-boqun.feng@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/dynamic_queue_limits.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/softirq.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/lib/dynamic_queue_limits.c b/lib/dynamic_queue_limits.c
-index fde0aa2441480..a75a9ca46b594 100644
---- a/lib/dynamic_queue_limits.c
-+++ b/lib/dynamic_queue_limits.c
-@@ -116,7 +116,7 @@ EXPORT_SYMBOL(dql_completed);
- void dql_reset(struct dql *dql)
+diff --git a/kernel/softirq.c b/kernel/softirq.c
+index 6665f5cd60cb0..9ab5ca399a990 100644
+--- a/kernel/softirq.c
++++ b/kernel/softirq.c
+@@ -140,6 +140,18 @@ static DEFINE_PER_CPU(struct softirq_ctrl, softirq_ctrl) = {
+ 	.lock	= INIT_LOCAL_LOCK(softirq_ctrl.lock),
+ };
+ 
++#ifdef CONFIG_DEBUG_LOCK_ALLOC
++static struct lock_class_key bh_lock_key;
++struct lockdep_map bh_lock_map = {
++	.name			= "local_bh",
++	.key			= &bh_lock_key,
++	.wait_type_outer	= LD_WAIT_FREE,
++	.wait_type_inner	= LD_WAIT_CONFIG, /* PREEMPT_RT makes BH preemptible. */
++	.lock_type		= LD_LOCK_PERCPU,
++};
++EXPORT_SYMBOL_GPL(bh_lock_map);
++#endif
++
+ /**
+  * local_bh_blocked() - Check for idle whether BH processing is blocked
+  *
+@@ -162,6 +174,8 @@ void __local_bh_disable_ip(unsigned long ip, unsigned int cnt)
+ 
+ 	WARN_ON_ONCE(in_hardirq());
+ 
++	lock_map_acquire_read(&bh_lock_map);
++
+ 	/* First entry of a task into a BH disabled section? */
+ 	if (!current->softirq_disable_cnt) {
+ 		if (preemptible()) {
+@@ -225,6 +239,8 @@ void __local_bh_enable_ip(unsigned long ip, unsigned int cnt)
+ 	WARN_ON_ONCE(in_hardirq());
+ 	lockdep_assert_irqs_enabled();
+ 
++	lock_map_release(&bh_lock_map);
++
+ 	local_irq_save(flags);
+ 	curcnt = __this_cpu_read(softirq_ctrl.cnt);
+ 
+@@ -275,6 +291,8 @@ static inline void ksoftirqd_run_begin(void)
+ /* Counterpart to ksoftirqd_run_begin() */
+ static inline void ksoftirqd_run_end(void)
  {
- 	/* Reset all dynamic values */
--	dql->limit = 0;
-+	dql->limit = dql->min_limit;
- 	dql->num_queued = 0;
- 	dql->num_completed = 0;
- 	dql->last_obj_cnt = 0;
++	/* pairs with the lock_map_acquire_read() in ksoftirqd_run_begin() */
++	lock_map_release(&bh_lock_map);
+ 	__local_bh_enable(SOFTIRQ_OFFSET, true);
+ 	WARN_ON_ONCE(in_interrupt());
+ 	local_irq_enable();
 -- 
 2.39.5
 
