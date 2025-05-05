@@ -1,46 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11F2A36EF26;
-	Mon,  5 May 2025 22:57:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7E2636F8B9;
+	Mon,  5 May 2025 22:58:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485861; cv=none; b=oalPIUCPM8eBVLp0ugl3oLIdZf4tvbcMhs9Li2uDZvc2CTj9JKGosUf+kd2aa5N7WmPK1UHFWBdd5sxWEkEQHZ2sj5gNgfZU+PUzVStAf/tEjJhrU2IfF3+Tv3BymKB0nJWLr0yIQUKkSoXZvFShU2w7upOFeWNWlAGszOSg5jI=
+	t=1746485884; cv=none; b=JhJbQi4Cf53Rk4i4pF8jdtvhQ8eEXiBaCtzqf7bXWFVSqdtfkC6sbm5HEmSi6FEo1jquIzGc15tHarTlJPwRJMhbYM0u+UJLXqDRd1RZ4GQTq2kfAdHb+JokobyCCnTDA2D32Xzx73y13OELLFaPbvK+bKf0hiU/aZbk4Wxsiq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485861; c=relaxed/simple;
-	bh=n/xcGtcActF4OHLhnY34V8NfaTeXOL8f7VrAboRer90=;
+	s=arc-20240116; t=1746485884; c=relaxed/simple;
+	bh=5C+RutIEGwromjBGuGpBY6kRTqE9lJOlXHPnU0bID00=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=p1hcuIooUjeHy7b9AXaA/u6uP7qhbMofRKlmzgC637Jz5MEJ6PmzgTQ+1HJS4Te5WNHB/qUNLVnwl6wHdnV957g14THYPVnzKP10dSAEgTBxQQYnXofJI+F3HSgNMCJQvHOINVX1P/dPtgP/hv2kxulFw+FZvC/Ke2zOqFjH3cg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J1kXA2W+; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=fT3oTUyxUkK2OrOyeZftkXELWfhYmLSfqBqOQboeZ40jDC3g/DR3iKmGh8sbK3zDoEWpqTOLAI93CL7HWpRCEUh8+sCCQt4Bl0acRHi8uDCrxwbWlXWS21AuuuszBln5qgGMaGW2E1LxisW7vxfa76bpi5f6C5hAv5uAXNUTLqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BSgq1s03; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J1kXA2W+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD80EC4CEF2;
-	Mon,  5 May 2025 22:57:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BSgq1s03"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 975FCC4CEE4;
+	Mon,  5 May 2025 22:58:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485860;
-	bh=n/xcGtcActF4OHLhnY34V8NfaTeXOL8f7VrAboRer90=;
+	s=k20201202; t=1746485883;
+	bh=5C+RutIEGwromjBGuGpBY6kRTqE9lJOlXHPnU0bID00=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=J1kXA2W+XsRQcPMlD/RON+IQUdniS/IUIDrOwIC3ppMEymYINaOYYqiXkQfw0koTL
-	 mprHNpXHfAtS5bNKuXANb7pVQYCgU4av9pPqtLLbE5uFPyJFb1/7L/uV2O+fpyor3e
-	 ZdTF+GnP4GIl9mXZUTkEyWmuAW9N+Luj2eFgVCuX7HCfWBbX1YqF+ogiIAd+m6THie
-	 xEym3dlZIM9A5eJiZbnbfQxc3lXH7izVr7t/Am8dhvnU1c4G+7jW5l+0bykQtQiEsb
-	 vO52FKOnggh4a/TXgdAbLtPVR+efcmF1WxAHjMS2HPweP0Kki51hhmf8f00n07hmlX
-	 m7SKz4yQFddBg==
+	b=BSgq1s03VW5fnSzwzhvuxH31kVlFHhHtTfWS2kSKHq6uFbHFipvtysUzeUKFyKeXM
+	 kqHLM+KWEhUMUUfZ/Y8mBdjoH4oQwaVnfDqE2SUm0Kk3lCkj6RKF+xKRaQm0kMZQpz
+	 uag1XmPZmRkizrh00AmRuKo6+8Mkg1K91DFV1Tb88ly1qD5xAOwZ3HxgOfXXYoRvK/
+	 8mNkDJaUzF725EXgD8cBOHpFpk83UzgohSjYzlhd7KfHNXg8N/GtPACvCBT//jUuql
+	 Ztv+vyxaqPXLuYTaWHiVGbMBi1JT+xFm3/bgvBdMyaS19uGOxF1qVW+iuRyiZntjIm
+	 /J2qMM3EAo9sw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Roger Pau Monne <roger.pau@citrix.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Juergen Gross <jgross@suse.com>,
+Cc: Qu Wenruo <wqu@suse.com>,
+	Filipe Manana <fdmanana@suse.com>,
+	David Sterba <dsterba@suse.com>,
 	Sasha Levin <sashal@kernel.org>,
-	nirmal.patel@linux.intel.com,
-	lpieralisi@kernel.org,
-	kw@linux.com,
-	manivannan.sadhasivam@linaro.org,
-	linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 034/294] PCI: vmd: Disable MSI remapping bypass under Xen
-Date: Mon,  5 May 2025 18:52:14 -0400
-Message-Id: <20250505225634.2688578-34-sashal@kernel.org>
+	clm@fb.com,
+	josef@toxicpanda.com,
+	linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 046/294] btrfs: run btrfs_error_commit_super() early
+Date: Mon,  5 May 2025 18:52:26 -0400
+Message-Id: <20250505225634.2688578-46-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -50,79 +48,101 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Roger Pau Monne <roger.pau@citrix.com>
+From: Qu Wenruo <wqu@suse.com>
 
-[ Upstream commit 6c4d5aadf5df31ea0ac025980670eee9beaf466b ]
+[ Upstream commit df94a342efb451deb0e32b495d1d6cd4bb3a1648 ]
 
-MSI remapping bypass (directly configuring MSI entries for devices on the
-VMD bus) won't work under Xen, as Xen is not aware of devices in such bus,
-and hence cannot configure the entries using the pIRQ interface in the PV
-case, and in the PVH case traps won't be setup for MSI entries for such
-devices.
+[BUG]
+Even after all the error fixes related the
+"ASSERT(list_empty(&fs_info->delayed_iputs));" in close_ctree(), I can
+still hit it reliably with my experimental 2K block size.
 
-Until Xen is aware of devices in the VMD bus prevent the
-VMD_FEAT_CAN_BYPASS_MSI_REMAP capability from being used when running as
-any kind of Xen guest.
+[CAUSE]
+In my case, all the error is triggered after the fs is already in error
+status.
 
-The MSI remapping bypass is an optional feature of VMD bridges, and hence
-when running under Xen it will be masked and devices will be forced to
-redirect its interrupts from the VMD bridge.  That mode of operation must
-always be supported by VMD bridges and works when Xen is not aware of
-devices behind the VMD bridge.
+I find the following call trace to be the cause of race:
 
-Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Message-ID: <20250219092059.90850-3-roger.pau@citrix.com>
-Signed-off-by: Juergen Gross <jgross@suse.com>
+           Main thread                       |     endio_write_workers
+---------------------------------------------+---------------------------
+close_ctree()                                |
+|- btrfs_error_commit_super()                |
+|  |- btrfs_cleanup_transaction()            |
+|  |  |- btrfs_destroy_all_ordered_extents() |
+|  |     |- btrfs_wait_ordered_roots()       |
+|  |- btrfs_run_delayed_iputs()              |
+|                                            | btrfs_finish_ordered_io()
+|                                            | |- btrfs_put_ordered_extent()
+|                                            |    |- btrfs_add_delayed_iput()
+|- ASSERT(list_empty(delayed_iputs))         |
+   !!! Triggered !!!
+
+The root cause is that, btrfs_wait_ordered_roots() only wait for
+ordered extents to finish their IOs, not to wait for them to finish and
+removed.
+
+[FIX]
+Since btrfs_error_commit_super() will flush and wait for all ordered
+extents, it should be executed early, before we start flushing the
+workqueues.
+
+And since btrfs_error_commit_super() now runs early, there is no need to
+run btrfs_run_delayed_iputs() inside it, so just remove the
+btrfs_run_delayed_iputs() call from btrfs_error_commit_super().
+
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/vmd.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ fs/btrfs/disk-io.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index dfa222e02c4da..ad82feff0405e 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -17,6 +17,8 @@
- #include <linux/rculist.h>
- #include <linux/rcupdate.h>
+diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
+index 2387210231f23..1e1650012606e 100644
+--- a/fs/btrfs/disk-io.c
++++ b/fs/btrfs/disk-io.c
+@@ -4313,6 +4313,14 @@ void __cold close_ctree(struct btrfs_fs_info *fs_info)
+ 	/* clear out the rbtree of defraggable inodes */
+ 	btrfs_cleanup_defrag_inodes(fs_info);
  
-+#include <xen/xen.h>
++	/*
++	 * Handle the error fs first, as it will flush and wait for all ordered
++	 * extents.  This will generate delayed iputs, thus we want to handle
++	 * it first.
++	 */
++	if (unlikely(BTRFS_FS_ERROR(fs_info)))
++		btrfs_error_commit_super(fs_info);
 +
- #include <asm/irqdomain.h>
+ 	/*
+ 	 * Wait for any fixup workers to complete.
+ 	 * If we don't wait for them here and they are still running by the time
+@@ -4402,9 +4410,6 @@ void __cold close_ctree(struct btrfs_fs_info *fs_info)
+ 			btrfs_err(fs_info, "commit super ret %d", ret);
+ 	}
  
- #define VMD_CFGBAR	0
-@@ -981,6 +983,24 @@ static int vmd_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 	struct vmd_dev *vmd;
- 	int err;
+-	if (BTRFS_FS_ERROR(fs_info))
+-		btrfs_error_commit_super(fs_info);
+-
+ 	kthread_stop(fs_info->transaction_kthread);
+ 	kthread_stop(fs_info->cleaner_kthread);
  
-+	if (xen_domain()) {
-+		/*
-+		 * Xen doesn't have knowledge about devices in the VMD bus
-+		 * because the config space of devices behind the VMD bridge is
-+		 * not known to Xen, and hence Xen cannot discover or configure
-+		 * them in any way.
-+		 *
-+		 * Bypass of MSI remapping won't work in that case as direct
-+		 * write by Linux to the MSI entries won't result in functional
-+		 * interrupts, as Xen is the entity that manages the host
-+		 * interrupt controller and must configure interrupts.  However
-+		 * multiplexing of interrupts by the VMD bridge will work under
-+		 * Xen, so force the usage of that mode which must always be
-+		 * supported by VMD bridges.
-+		 */
-+		features &= ~VMD_FEAT_CAN_BYPASS_MSI_REMAP;
-+	}
-+
- 	if (resource_size(&dev->resource[VMD_CFGBAR]) < (1 << 20))
- 		return -ENOMEM;
+@@ -4541,10 +4546,6 @@ static void btrfs_error_commit_super(struct btrfs_fs_info *fs_info)
+ 	/* cleanup FS via transaction */
+ 	btrfs_cleanup_transaction(fs_info);
  
+-	mutex_lock(&fs_info->cleaner_mutex);
+-	btrfs_run_delayed_iputs(fs_info);
+-	mutex_unlock(&fs_info->cleaner_mutex);
+-
+ 	down_write(&fs_info->cleanup_work_sem);
+ 	up_write(&fs_info->cleanup_work_sem);
+ }
 -- 
 2.39.5
 
