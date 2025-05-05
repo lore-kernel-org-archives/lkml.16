@@ -1,45 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1A0E2BD91F;
-	Mon,  5 May 2025 22:46:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B294035C90E;
+	Mon,  5 May 2025 22:47:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485217; cv=none; b=AR0QxwbvEsp5wrXK7NdUh9C5fycuXXO6zolI9sice3x1pg9dLiJ/BkT9Dc3I5PRzLDmZ10VhGZjC9enJB8CowxMNloTE4s1DC62L0Vf+SWfiQn8fHVGBnh86UfcAu1xNUTKgZmS1oRsvkzDCKTzSYo9VfGOk4hus3xHAHuG6RlI=
+	t=1746485232; cv=none; b=nGSJJyj+ssoU6o4+daVR0wvfvwkTe9HpQR0kix+cUlYa+YHqve70L+34zFgVWh46oGJBrq+tL5PIU1T8MEp5xRinjq9X6C9MbNGv+vYMpMcn2OTIhP6YXcYsRZh4L2AgMeAmYr3Yb82bfsRvNz6vceyyUhAXUWA3cf3TCIHQJvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485217; c=relaxed/simple;
-	bh=QabyW7IDfbdIpSIYKsp+1fCXpESt0TfXLUD4PM4j3rU=;
+	s=arc-20240116; t=1746485232; c=relaxed/simple;
+	bh=QB5BDmNQRFBOKORRB1IUyzjlT4+1l2j7PdDoCOiaFtk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tMRq5BngW0Xw4QnQjfxNpaMiswpg5cTcoo+eZfyxWwItw14VZ3IWzy69lJonYsdINW4I7gxc/wfGIx4qzAynpIgxX8RVlQWEqgdkE2GR0LBQVFnGr/3tjgCyg94FV0CQHm4qxlm6Sisag+PUvYqZ6vt2sqhgVJxvtWZruy0Ds0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=liaw8ixq; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=cBaICYQIuylnJleL2Il2jn6FWlXq/s+ee52bWhH2++VcpaV60myYJ7OufRToccQCYhatYoq4O250boNhDkUgWvFdo2jAvhRWrNk1wrKwexTeSAxwdQi89oVoA+GVP9oBMoflxD2/TC5yxCekobhc2Ma5S8wmercmi57LSoBE1yo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BK6GzS4g; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="liaw8ixq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2E93C4CEE4;
-	Mon,  5 May 2025 22:46:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BK6GzS4g"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 629C4C4CEED;
+	Mon,  5 May 2025 22:47:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485217;
-	bh=QabyW7IDfbdIpSIYKsp+1fCXpESt0TfXLUD4PM4j3rU=;
+	s=k20201202; t=1746485232;
+	bh=QB5BDmNQRFBOKORRB1IUyzjlT4+1l2j7PdDoCOiaFtk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=liaw8ixqgGnBmshQgaaxKBo+wAqu04YeIyQHIaMw5F2nqehbx6d2X/SHwGlToeBsr
-	 MOH14NhsSJF5mxIA2WWU/4lhMc/fZqbolRsfb1ZPwiI1YHMMSaAC1ju8xnx4Vq5kqW
-	 cenlIZOgjjH3MrY5CvbzrImyrAXiBTUF+s+hlv/uFNfAfKvPr1IiXnihcLuZrYx1KD
-	 j7U25O9DPXqaTEagxXeN4YClqRS8otQ6q6zT3RUbASVqzXDpy738PlL+Y8gLry3LfK
-	 8W5zFnrO10mIicPhtsLtjgDAMxZVrqzQ1HL7onTGERcOebAogu8b1rKeITLgUIV4Me
-	 fTRZhz1NkKCmg==
+	b=BK6GzS4gn3Eu4I4+aHTkNgZ4LWb/UcD9cV3M4acIGkSfr6do5KyTVEapYsrVDz30q
+	 0YjGtF8goeglcEwN60YIuARP8GJimsvlUP/JJhk2MU2YRLpEX9msXoIZzefekw3Q0A
+	 MbUNv6HcRxXMHjlX0/o6ITSnsGsm5Z7wm8xN83ePUEOy8DyMqucMNv5tvmejUg41St
+	 gKUPMMV+1s7TZa2326fxiHcKQe95FfuAfXPAU4JdwMi12rqJZnNH9zW4ARzpfVd20h
+	 QjtSyp8MImeZvBUJ2KR+HJHdNW/VtalP7MRQk/w4MJMsSry+WCsAdMMLFnnOnaWVPa
+	 E/lQNH3pzEFeA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Eric Dumazet <edumazet@google.com>,
-	David Ahern <dsahern@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>,
+Cc: Alexander Stein <alexander.stein@ew.tq-group.com>,
+	Guenter Roeck <linux@roeck-us.net>,
 	Sasha Levin <sashal@kernel.org>,
-	davem@davemloft.net,
-	pabeni@redhat.com,
-	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 216/486] ipv4: fib: Move fib_valid_key_len() to rtm_to_fib_config().
-Date: Mon,  5 May 2025 18:34:52 -0400
-Message-Id: <20250505223922.2682012-216-sashal@kernel.org>
+	jdelvare@suse.com,
+	linux-hwmon@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 224/486] hwmon: (gpio-fan) Add missing mutex locks
+Date: Mon,  5 May 2025 18:35:00 -0400
+Message-Id: <20250505223922.2682012-224-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -54,126 +51,73 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
+From: Alexander Stein <alexander.stein@ew.tq-group.com>
 
-[ Upstream commit 254ba7e6032d3fc738050d500b0c1d8197af90ca ]
+[ Upstream commit 9fee7d19bab635f89223cc40dfd2c8797fdc4988 ]
 
-fib_valid_key_len() is called in the beginning of fib_table_insert()
-or fib_table_delete() to check if the prefix length is valid.
+set_fan_speed() is expected to be called with fan_data->lock being locked.
+Add locking for proper synchronization.
 
-fib_table_insert() and fib_table_delete() are called from 3 paths
-
-  - ip_rt_ioctl()
-  - inet_rtm_newroute() / inet_rtm_delroute()
-  - fib_magic()
-
-In the first ioctl() path, rtentry_to_fib_config() checks the prefix
-length with bad_mask().  Also, fib_magic() always passes the correct
-prefix: 32 or ifa->ifa_prefixlen, which is already validated.
-
-Let's move fib_valid_key_len() to the rtnetlink path, rtm_to_fib_config().
-
-While at it, 2 direct returns in rtm_to_fib_config() are changed to
-goto to match other places in the same function
-
-Signed-off-by: Kuniyuki Iwashima <kuniyu@amazon.com>
-Reviewed-by: Eric Dumazet <edumazet@google.com>
-Reviewed-by: David Ahern <dsahern@kernel.org>
-Link: https://patch.msgid.link/20250228042328.96624-12-kuniyu@amazon.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+Link: https://lore.kernel.org/r/20250210145934.761280-3-alexander.stein@ew.tq-group.com
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/fib_frontend.c | 18 ++++++++++++++++--
- net/ipv4/fib_trie.c     | 22 ----------------------
- 2 files changed, 16 insertions(+), 24 deletions(-)
+ drivers/hwmon/gpio-fan.c | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/net/ipv4/fib_frontend.c b/net/ipv4/fib_frontend.c
-index 793e6781399a4..5b7c41333d6fc 100644
---- a/net/ipv4/fib_frontend.c
-+++ b/net/ipv4/fib_frontend.c
-@@ -829,19 +829,33 @@ static int rtm_to_fib_config(struct net *net, struct sk_buff *skb,
- 		}
- 	}
+diff --git a/drivers/hwmon/gpio-fan.c b/drivers/hwmon/gpio-fan.c
+index d92c536be9af7..b779240328d59 100644
+--- a/drivers/hwmon/gpio-fan.c
++++ b/drivers/hwmon/gpio-fan.c
+@@ -393,7 +393,12 @@ static int gpio_fan_set_cur_state(struct thermal_cooling_device *cdev,
+ 	if (state >= fan_data->num_speed)
+ 		return -EINVAL;
  
-+	if (cfg->fc_dst_len > 32) {
-+		NL_SET_ERR_MSG(extack, "Invalid prefix length");
-+		err = -EINVAL;
-+		goto errout;
-+	}
++	mutex_lock(&fan_data->lock);
 +
-+	if (cfg->fc_dst_len < 32 && (ntohl(cfg->fc_dst) << cfg->fc_dst_len)) {
-+		NL_SET_ERR_MSG(extack, "Invalid prefix for given prefix length");
-+		err = -EINVAL;
-+		goto errout;
-+	}
+ 	set_fan_speed(fan_data, state);
 +
- 	if (cfg->fc_nh_id) {
- 		if (cfg->fc_oif || cfg->fc_gw_family ||
- 		    cfg->fc_encap || cfg->fc_mp) {
- 			NL_SET_ERR_MSG(extack,
- 				       "Nexthop specification and nexthop id are mutually exclusive");
--			return -EINVAL;
-+			err = -EINVAL;
-+			goto errout;
- 		}
- 	}
- 
- 	if (has_gw && has_via) {
- 		NL_SET_ERR_MSG(extack,
- 			       "Nexthop configuration can not contain both GATEWAY and VIA");
--		return -EINVAL;
-+		err = -EINVAL;
-+		goto errout;
- 	}
- 
- 	if (!cfg->fc_table)
-diff --git a/net/ipv4/fib_trie.c b/net/ipv4/fib_trie.c
-index 09e31757e96c7..cc86031d2050f 100644
---- a/net/ipv4/fib_trie.c
-+++ b/net/ipv4/fib_trie.c
-@@ -1193,22 +1193,6 @@ static int fib_insert_alias(struct trie *t, struct key_vector *tp,
++	mutex_unlock(&fan_data->lock);
++
  	return 0;
  }
  
--static bool fib_valid_key_len(u32 key, u8 plen, struct netlink_ext_ack *extack)
--{
--	if (plen > KEYLENGTH) {
--		NL_SET_ERR_MSG(extack, "Invalid prefix length");
--		return false;
--	}
--
--	if ((plen < KEYLENGTH) && (key << plen)) {
--		NL_SET_ERR_MSG(extack,
--			       "Invalid prefix for given prefix length");
--		return false;
--	}
--
--	return true;
--}
--
- static void fib_remove_alias(struct trie *t, struct key_vector *tp,
- 			     struct key_vector *l, struct fib_alias *old);
+@@ -489,7 +494,11 @@ MODULE_DEVICE_TABLE(of, of_gpio_fan_match);
  
-@@ -1229,9 +1213,6 @@ int fib_table_insert(struct net *net, struct fib_table *tb,
+ static void gpio_fan_stop(void *data)
+ {
++	struct gpio_fan_data *fan_data = data;
++
++	mutex_lock(&fan_data->lock);
+ 	set_fan_speed(data, 0);
++	mutex_unlock(&fan_data->lock);
+ }
  
- 	key = ntohl(cfg->fc_dst);
+ static int gpio_fan_probe(struct platform_device *pdev)
+@@ -562,7 +571,9 @@ static int gpio_fan_suspend(struct device *dev)
  
--	if (!fib_valid_key_len(key, plen, extack))
--		return -EINVAL;
--
- 	pr_debug("Insert table=%u %08x/%d\n", tb->tb_id, key, plen);
+ 	if (fan_data->gpios) {
+ 		fan_data->resume_speed = fan_data->speed_index;
++		mutex_lock(&fan_data->lock);
+ 		set_fan_speed(fan_data, 0);
++		mutex_unlock(&fan_data->lock);
+ 	}
  
- 	fi = fib_create_info(cfg, extack);
-@@ -1723,9 +1704,6 @@ int fib_table_delete(struct net *net, struct fib_table *tb,
+ 	return 0;
+@@ -572,8 +583,11 @@ static int gpio_fan_resume(struct device *dev)
+ {
+ 	struct gpio_fan_data *fan_data = dev_get_drvdata(dev);
  
- 	key = ntohl(cfg->fc_dst);
+-	if (fan_data->gpios)
++	if (fan_data->gpios) {
++		mutex_lock(&fan_data->lock);
+ 		set_fan_speed(fan_data, fan_data->resume_speed);
++		mutex_unlock(&fan_data->lock);
++	}
  
--	if (!fib_valid_key_len(key, plen, extack))
--		return -EINVAL;
--
- 	l = fib_find_node(t, &tp, key);
- 	if (!l)
- 		return -ESRCH;
+ 	return 0;
+ }
 -- 
 2.39.5
 
