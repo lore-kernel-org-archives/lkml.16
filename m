@@ -1,211 +1,203 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2085.outbound.protection.outlook.com [40.107.92.85])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 921A34C85
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 16:05:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746461117; cv=none; b=GIFb3yJAxPg5iZ6LwQPFE98WBp9sVUWn4y74grU6DtnBWCdlwvmPZGg0DlAdADy6d/HPBblp+QhbJ0CaHQyUpQLUsTgIdJEysTBOSvVSuDMRhh8nlRlsfr/bHFX3dfRTJhOTYJ+1UAAmcc9HRSdEUxQVESLzPdszJKn+wVCW2Fs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746461117; c=relaxed/simple;
-	bh=iBc34nW32DsGbg1aE4Fh/HhP86gdrvKGrvUD3HhCb2Q=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=irAqe6tvvkufNvqrYF2tE8VpZosvC2yrVRYgeWt8jUAYI5r1OjKf8nEeim3B7vPpGZcM5iuiZ+RCuwJ8QWwf29B7iuvqrY9y6bRlC/Vd78dnHr/4PfvXy3YKfNl8QhYO35RyZjHL3M6iC9hcP8Yi5IHWlpfpZlIXZgmh+2bVktY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iZU5WpM1; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 265704C85;
+	Mon,  5 May 2025 16:05:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.85
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746461162; cv=fail; b=pk3S8UbcR26VIxljJboTlhrmjuleqgPvRkNNYfiQ5g2NywbgQnK2bMUsUHgwH6CNlCez7+XtkcNx52hezTxujHHn8x4R/B/U4K3xB1OcjqXpZvDroXyDDuATeysJfZXvHu4OucFsef4G1rDe5da52pTkxGCYPupXPGnC1ac1eEM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746461162; c=relaxed/simple;
+	bh=mOZAKbxJRBjDnamJFHAFliH11Lt7yu81jUgt+Tt+yJs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=j34e8kJ7eYwF9NyFRm+qNBZBzDAdU0m0vGZgB8jvBlc0Be1F0SlzaqiiI0fDEjZYJRGfPSJgQcXBSXyasjJf81Zz+Ks4r2SdVUWYicGbjYXIWdUhGWLJYD6huZ8e+jMVU1PnXUQ24mB+e3ng0aP+fakjEMdwk1fTBiIbXCxnSDg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=hYcBjuws; arc=fail smtp.client-ip=40.107.92.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iZU5WpM1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746461113;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xbmQKqHbaixk79j7TKKru6hbZh7kM54PuiKw9+W744U=;
-	b=iZU5WpM1W5aLLlh3+p3JYIirHe6HcZpXOToc0m5GYUU6FlWCl38U4IwcdiO70Dbkcm93NF
-	al6tz6nkL6jrndUCndxaJPERhuRdtuIsvGngUNwNl0ppMYXDUWFfLvu1lESBBPwMHYG920
-	NDD/toW2EP0QT2jgq9ipNbVJEJGGy/E=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-128-MewKNN-jOrS9kq7icS79LQ-1; Mon, 05 May 2025 12:05:12 -0400
-X-MC-Unique: MewKNN-jOrS9kq7icS79LQ-1
-X-Mimecast-MFC-AGG-ID: MewKNN-jOrS9kq7icS79LQ_1746461111
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-39ee4b91d1cso2139195f8f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 09:05:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746461111; x=1747065911;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xbmQKqHbaixk79j7TKKru6hbZh7kM54PuiKw9+W744U=;
-        b=vAbbejPBOclRjtybIMH+OmdXj9SxcTv0xx3vd4E9UmODNIuOgpSN4lblJ4oGVxVNS3
-         WefhDrwpSodZETz/ttKSbfunS+QoSyauWoX5jexmyQ2Bhjcvi5ubFM8HWeAHNOl2pDDG
-         coMZqXmJSj96OvCPm0hIOwAOfPjFGIGGzMDZBj8y4dQlzmxwU1VvnXCgbj1lPeHCxVxF
-         tB8hIsbmBhKc4FhftzggXGdVCngfDkNxwLFY6XTb45kYdH9qbL7MYv9JMCAgWyexCS1J
-         G20jr8+T1P79yuyYRjltq9WReIeYxZoF+Za99jccmMJx2KOWFnnGDk/uTo0irqv1nOPu
-         Xdqw==
-X-Forwarded-Encrypted: i=1; AJvYcCX0lXjarcS2+1aBmC6pL6+9CkvRwP5CrkuudTnXoz1/75yxkjSzMGrZPmCeu8YYtIAp7LDZQpVdZn5hF7w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzANS3MPBAgd9jR9d4jFPbXPv1Cn+PqnRQyIkvFrb+EaYKQtpMu
-	M62sLhMbtiJNtDOA4vP0eK5OhbdlZeY3ElAeZub/cvqa9Y2zE+WCYkvqcMdVr/aOsPky7p7hWqO
-	GFtp1OrhNOvq6J4FTATvx//aIOfNoEElNq09Q32pR44I3ox6b8W0dyi+OtIr/0g==
-X-Gm-Gg: ASbGncsTM+Tk4UXGeVW/bXeEtpy1BXCEVJdAfRvlon1jGvXAJMV1SIT4os87gcC3ip1
-	nYVht6noJPzBgRpPtbl8vhCq907alI4HoYzv2ZLID9UPWdFnfOhB/Eyq8umbsJ+zsSUHgbevK6g
-	0HUlR3pCtMS3zkg93qgDwqkQJVCzCmSL8HbfdmnCPSPZhlLXm1dBKrfREMcj+CzK0dyGoYA/ydR
-	/sdNVXDzVnzQYY/hwOHj3ktCfvcRWK+yD6jI+i09G4A4GT/0pqT5Pfv3iFS7/BLpuSTMzVLfXYs
-	/GIQITQl/J+cK3sVpj6zKgeKzG9rDWL4C3snYikrnh1x0VGMblRt4kFJkMLz
-X-Received: by 2002:a5d:5847:0:b0:3a0:92d9:da4 with SMTP id ffacd0b85a97d-3a0ab5570d7mr42058f8f.6.1746461111040;
-        Mon, 05 May 2025 09:05:11 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGrTCOZOA7pAPkGMgb4M/yK3jl2JFA1fizSH2/7N2z92v4GSBR5vAiFYanEje4sscTa08V1CA==
-X-Received: by 2002:a5d:5847:0:b0:3a0:92d9:da4 with SMTP id ffacd0b85a97d-3a0ab5570d7mr41959f8f.6.1746461110131;
-        Mon, 05 May 2025 09:05:10 -0700 (PDT)
-Received: from rh (p200300f6af1bce00e6fe5f11c0a7f4a1.dip0.t-ipconnect.de. [2003:f6:af1b:ce00:e6fe:5f11:c0a7:f4a1])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b89cc469sm139635145e9.6.2025.05.05.09.05.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 09:05:09 -0700 (PDT)
-Date: Mon, 5 May 2025 18:05:08 +0200 (CEST)
-From: Sebastian Ott <sebott@redhat.com>
-To: Marc Zyngier <maz@kernel.org>
-cc: Oliver Upton <oliver.upton@linux.dev>, Quentin Perret <qperret@google.com>, 
-    Fuad Tabba <tabba@google.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-    Will Deacon <will@kernel.org>, Mark Brown <broonie@kernel.org>, 
-    Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, 
-    kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: LM regression: fce886a60207 KVM: arm64: Plumb the pKVM MMU in
- KVM
-In-Reply-To: <86ldrbgl2x.wl-maz@kernel.org>
-Message-ID: <7863e387-0b91-fac5-9925-e461ae7b30cd@redhat.com>
-References: <3f5db4c7-ccce-fb95-595c-692fa7aad227@redhat.com> <86msbrguka.wl-maz@kernel.org> <e1117e68-ef05-9de2-d018-685bb7d86bb5@redhat.com> <86ldrbgl2x.wl-maz@kernel.org>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="hYcBjuws"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=d5T7FCIQ0SYMYQaKqFylAgj5YHEM2gqYnV7X9LUSTCtrJzC08Hqd5+uRl+3AoBDOtl51twizCuQ5ZIlTQ1W8qOij1vjnVqmk/AE8Bymvdd+El7YzSr61Fp3LRaSNO9wAFjgy1+1rVa5MMtfoNQbqDIwZ+Zh6hnvcoesDlyDF43he/gNeAN5XeUYnvtMU8BD0nKIBH0+A2dJuN9x8ii26U44okJnH2aqwAJg7gnUJSpA4RmfdhfTkWFMtJ2Ch5NMNb+lT/RIeuwINFfqG67TS2EUYYydQvquk5y3m9l3yzKeiwrhKLPI9mw2jq//wXLf2x/ILCxeRPupqcA8hVs9gng==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+RxfuUEyilpvA1aiw1AHmhDx9PRRCPN5wkKDnNFLQ8E=;
+ b=n1IshCtepKhg9vB8QeJfhkPQ4Dhj4v9VL9Vv9A+dpMsrBo9RqnEoMLb2p99B3WGNUi8fpqxvcXF7P70ltNu4IszzjB0F5vuqU9FWBuIu6B9JA9SOhsglOKtyG97bzi56ySV+P7u2MEgVupWgTg8Isjy+qI7fTRGfqISfApsAs3UHb7D2jGMH/yQZVc5d2HDeKHyaxwHtI1nt0Gafv9zPray2DQk+EPwii2vSqX4gUrLKrZ3hxJGxyX853lBBaHLNqgw80CszopFyxeDWK0ugr2BvYy/h9qSEzx5c4rVsF9vBkcJyaPQL653lKgB1IDp7eb0J/39UYwNbWcmjpdOhtg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+RxfuUEyilpvA1aiw1AHmhDx9PRRCPN5wkKDnNFLQ8E=;
+ b=hYcBjuwsMFuXWsn9A9EjAxvMeZ+cPKXTKzpDWe5XUm6bXC/8Q/2BWbohvcWtKCVO3/uIDzkwzJZRC/rkatWlUCT5U8qVPrrGO65NgDSXbIUvwufTKsSFqCtdcuvdG3+3pOrq+PHCnvCxr76maAO1YQKPlKO/YXUm86FRbfG0tgRU5KtMWsc/ptW+z65lcjqqLKNpPYGhTERcuG2sWpxuBlFIGpWDR76XG/VU9EkaVtNefFF6IKWnXKSqYjpv+H2a2T7Cc0niSi9+huFE9zqF2SrqYwO65/rk6eQ6RWxF7rDye4bfgttucGjXjGwD+aQLtulCHOhzDA2lGj0Vj6ShwA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
+ by IA0PR12MB8863.namprd12.prod.outlook.com (2603:10b6:208:488::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.26; Mon, 5 May
+ 2025 16:05:56 +0000
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732%6]) with mapi id 15.20.8699.026; Mon, 5 May 2025
+ 16:05:56 +0000
+Date: Mon, 5 May 2025 13:05:54 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Nicolin Chen <nicolinc@nvidia.com>
+Cc: Baolu Lu <baolu.lu@linux.intel.com>, kevin.tian@intel.com,
+	corbet@lwn.net, will@kernel.org, bagasdotme@gmail.com,
+	robin.murphy@arm.com, joro@8bytes.org, thierry.reding@gmail.com,
+	vdumpa@nvidia.com, jonathanh@nvidia.com, shuah@kernel.org,
+	jsnitsel@redhat.com, nathan@kernel.org, peterz@infradead.org,
+	yi.l.liu@intel.com, mshavit@google.com, praan@google.com,
+	zhangzekun11@huawei.com, iommu@lists.linux.dev,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, patches@lists.linux.dev,
+	mochs@nvidia.com, alok.a.tiwari@oracle.com, vasant.hegde@amd.com
+Subject: Re: [PATCH v2 08/22] iommufd: Abstract iopt_pin_pages and
+ iopt_unpin_pages helpers
+Message-ID: <20250505160554.GL2260709@nvidia.com>
+References: <cover.1745646960.git.nicolinc@nvidia.com>
+ <d44272c153e7596c3cef716044de3dc6c2a8254a.1745646960.git.nicolinc@nvidia.com>
+ <376566b4-6c13-45ad-b1e5-8cfe2de437bc@linux.intel.com>
+ <aA+92fNNbDI3Qowk@Asurada-Nvidia>
+ <20250505150109.GH2260709@nvidia.com>
+ <aBjc1ny0Zs7K7gDX@nvidia.com>
+ <20250505155505.GK2260709@nvidia.com>
+ <aBjhUL5/n79cJ17f@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aBjhUL5/n79cJ17f@nvidia.com>
+X-ClientProxiedBy: MN2PR20CA0053.namprd20.prod.outlook.com
+ (2603:10b6:208:235::22) To CH3PR12MB8659.namprd12.prod.outlook.com
+ (2603:10b6:610:17c::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|IA0PR12MB8863:EE_
+X-MS-Office365-Filtering-Correlation-Id: 37bd920f-9f7a-4da1-4dd9-08dd8beeb7ae
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?29ZperVogAOcK1l63Jhic+/KVVJhG0UYtYNIAftJfgt6nXVt2u8V28fVPSAa?=
+ =?us-ascii?Q?fD5XDfmFfTK9kbQKwl1CWRZseVX4ucu9ySxUaam6LDaxUiHktVOnQ+VwYzsm?=
+ =?us-ascii?Q?ykj0MtbtN6qYPcAMJj7m32vZkMqihGXW6VfOLi+IYcmSXOaFLhAfAznxseeE?=
+ =?us-ascii?Q?C2ASTz/21zU1jYVIhUpxgRKt/Lkid+BBFyIuz5xrKP5Dv4eKTPHP8lFDsWGW?=
+ =?us-ascii?Q?BwiTAkYGD4N/J0QaN9S2TDxnoP71ff5nS2aYUi92mTNPj3TOq4rNVtNgpQ20?=
+ =?us-ascii?Q?ed2YJoghwuETF0nxxUuhl96sAHjkOFOlTKCfFXYN0CFyWhLRgSPej9sa1CoU?=
+ =?us-ascii?Q?+GcxA+FgPawSwPzfd6HQXjRA43Yh/L89tPUPpA7/V8vlim8B2KzN8v9H0D7q?=
+ =?us-ascii?Q?Dzk+T7MqQSbpALxVUAz3eCFKJKa22a08g1XJG9PP9nGcpLFUMLWJjspikRJ6?=
+ =?us-ascii?Q?ICuyNqs1yJp4zDFcDqqhWO3I8dGG3igg+j2v1PpCQDw1sFPrpTuGCW2VlihO?=
+ =?us-ascii?Q?9A8TpYdcd+RtOzQQrMr4QhZnbGy+i/KYitWOpjHkHZnZhtVC20AiZqi3topG?=
+ =?us-ascii?Q?jnkkl3+WwngXWpJzyf1JbiFQBlygf1zH0AtP5zFnxmoyI4oTvPsHIgqzfoUx?=
+ =?us-ascii?Q?sUF1+YrvcZj5GFHh3ICAnyQvsLPk8Nkop+NN8eH3QSUqD7Y5mYW/En36rfgp?=
+ =?us-ascii?Q?C3XEA68Qb4BeEiQtVMJd5C98Xvj6o1D5bRlHvEldHbCnsf1NxcOuzLH/lx7L?=
+ =?us-ascii?Q?Np0BDeALXdtsO/aR/58xbBeD2HKZkDLU2i4wNJNwcWHcmOoJmyX6882Otdph?=
+ =?us-ascii?Q?FUNMfFTUqwN9ITj/jQcPY1ixu8vRfzOvS0fg7ixucR/15kNyL01JCRU5/g5W?=
+ =?us-ascii?Q?oCFb+K+ywwFbYqro/W4+9KV+P3H76/vwB69WbFQEq8BzRcK/Bk74QRlcK51r?=
+ =?us-ascii?Q?oxwKuFolnzict3/qkhvhct7pdo/VourD9qb7ZVnE5LYux9bX7gIawLvh/8wU?=
+ =?us-ascii?Q?keViCKtw82CDtBLNOt1UoSGMqEPNyCuuBqH0FkJ5gY+k5Sf/u8YuK3X5q1hv?=
+ =?us-ascii?Q?5fEGvn0EOKYajrtoA6m4vyH5y4ks6bgI0a0eHEXX/NtP/Gt/kqFfcTj4WYzG?=
+ =?us-ascii?Q?HeUfXdSa8acJJmGKV1JiqP0S7H5jZYcI6rfRjstkjHGytzUrbOhxZmGf+LNT?=
+ =?us-ascii?Q?JCC8GSHsit42faaFFjJLJj2OsTuLZ8GI9FOvQ3CM5ImkkOu53AJaFw09fD4x?=
+ =?us-ascii?Q?DBCQwoerTOVFbFlIxFCaS8hUlV9lOZcXIRYQ0cOFesBukalsgWlsvKOacMlh?=
+ =?us-ascii?Q?mkPu7f5Sz4AhmzCZ3GB/WP/rRxV14tcHYydyUlqLJnNdBd3qzfEkMP3OqGG5?=
+ =?us-ascii?Q?fJuwAspG02xrO2QoW2KNnaHq4MXxpWRVLHsvq7ama2rDZdftQz4CkUXXUlaf?=
+ =?us-ascii?Q?yy+7eQrdmus=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?W2Uph3dM+p+VOPdtl/9Wic6fS55WgsFVTdzQXYagaMYoLijYqJSy5WIogjgN?=
+ =?us-ascii?Q?R/bPPWbM53JhxssmPi4Gs1tFu/KlSb3j78W+hW8W8naVFB7iBPU/88ArXHiK?=
+ =?us-ascii?Q?bXw/zwMTEzOfbNfvx2MMqgXpaSzfmWx5WKWbT5bez1TYY7UxTUsJTXfdfDd/?=
+ =?us-ascii?Q?iKiEo1ewrjHj99VHrfAvD2fiFft7UtOa9BHsJ7hPJyW8xEj7PMy2bSsVEPL6?=
+ =?us-ascii?Q?g1IjR9rB9tod3VIDic1SfD6p15g3Y2kTK3vjLDv0WNnMcsGKJrArcaIONt+y?=
+ =?us-ascii?Q?IAdRsS+CFWE3IE95FdrqwNXprKe2z1mWvqib/WCSTxNorYkhKkxfzGrJgTpw?=
+ =?us-ascii?Q?2OftmdwpfXf6L7oc5/M04QLDziWNUC7dK9kBFqQV3WBDcNkXIu+g2Rf4kzD6?=
+ =?us-ascii?Q?8KsiyUxM2Ehk25yXDqS7H+1OgXJ439mT4Zradf72pMQ+eM2OtWzWL2s7Zjyh?=
+ =?us-ascii?Q?O5G9gJzvaIFEoEcX69ppvgsc9lHCySkr4NFUU0GSos/ATnjzRPc24qtnsR72?=
+ =?us-ascii?Q?EgMSPyU2lyKVtogjoIlDQ/5Iz0iylnuU97GpWktmAOBFKPr6/di6qx979XSu?=
+ =?us-ascii?Q?EReea+zv5tfWaojk5pBMF6adui/os+Tm5BuMGMl1o9WfA7xCiY0sWRXASevu?=
+ =?us-ascii?Q?gbDr1G8OtjgkttVnMoxpEOdy3aax1bZw4xdZHXgmGLMJkJs6xMbj0JFLmNE+?=
+ =?us-ascii?Q?5rSEkxTZIfc8OlRSC8zQWjW+ZFOXvTZv+ztk/DS42KiBoLGoinzuXdstbP3f?=
+ =?us-ascii?Q?IvLuCoeDByfS5qdVAiDvTcJZzTz/I6dbfS87MyIZ76CLOQT7FKT7FD/fnUT2?=
+ =?us-ascii?Q?IUQdwrIJtO7QNr22quDNd3+BiDhMcVAWZtRgJUx5RbKJcwSmhf/5l3XB8XFo?=
+ =?us-ascii?Q?2bzmxLd9Mi2xV3jJVrO7HF7HFYW2LJ3Ix5UBnxxJ22n9SZTNtd8iNJCultT1?=
+ =?us-ascii?Q?Ssk6NrmP5sIZJ5T1HqN33jIcIzRBwQ2P4SXv7CkHDXKKc+1x3+t2ZOycqaHg?=
+ =?us-ascii?Q?VEi5hs+o/2jwbDC7uvWy6Ad1WDo5dXbe0VEXyLzQPciZfORUzTFXTthvnRDs?=
+ =?us-ascii?Q?OMPp7wqNTmQXK9cG7WsIbQdjzC5BoxJdo7Xwf5/CzDQ7XLUnovJtfRN0bRG3?=
+ =?us-ascii?Q?9VuYlx1mmTKPlN/uTV0q++4DmJaMWZNM58wAu8xcqIJLySFhsJN9D9WmGz5Q?=
+ =?us-ascii?Q?59zPZ0nugpu17KZRJDTc9nIRD/Ifw94wz6UsX3M1cu5PiiSkNn4UjDJYnq0D?=
+ =?us-ascii?Q?pCeIAg5fuJU+6qz4gnFFXT5y8oRKli7WpV+EbbNZbjeCJ/2lhmz/askM/jai?=
+ =?us-ascii?Q?b0Gl5slqh7mzn3Z5K2RKwHJUhIE/kWaB+vSDJBBSOAqgRaEhkIq3PIJE29yK?=
+ =?us-ascii?Q?fLvURx4vM3+7TaCK+wgKbeB0mo5V0IMHA1fe3y/1PZXLU4w7RwiOZ5qYxU2P?=
+ =?us-ascii?Q?FhqFplzu1tD2CahJBFo8WJI8zCWirV3SbcwOFWAGe9ojuIwnJMxki44Ysnqd?=
+ =?us-ascii?Q?TcoBu6uKxnUXTE8JEvePnS0TXOZ8HO9kzAafiy6ex0GUE8m0tlZquKBEYzIR?=
+ =?us-ascii?Q?sKkFpzf3qE0IUTKcom1owrJgkOcwtVKC5lsCkK8Y?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 37bd920f-9f7a-4da1-4dd9-08dd8beeb7ae
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 May 2025 16:05:55.9521
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: WZloAT/4oMbMCj6QIcr10b+4AZNr//5IzArn0PPa1ZCzCdy+VjqWYD2CyyqYPl+o
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8863
 
-On Mon, 5 May 2025, Marc Zyngier wrote:
-> On Mon, 05 May 2025 15:01:24 +0100,
-> Sebastian Ott <sebott@redhat.com> wrote:
->>
->> On Mon, 5 May 2025, Marc Zyngier wrote:
->>> On Mon, 05 May 2025 11:52:00 +0100,
->>> Sebastian Ott <sebott@redhat.com> wrote:
->>>> Doing back and forth migrations currently fails on arm after a couple iterations.
->>>> During the failing migration KVM_RUN exits via guest_abort and returns -ENOMEM.
->>>> I can reliably reproduce this by migrating between 2 qemu instances on an ampere
->>>> altra machine. This fails after < 5 iterations. In this case qemu would spit out
->>>> smth like this (other than that - nothing in the logs):
->>>>
->>>> error: kvm run failed Cannot allocate memory
->>>>  PC=0000aaaae7d48590 X00=0000aaaae80a2e00 X01=0000aaaae7ea2fc0
->>>> X02=0000000001d3a5d0 X03=0000aaaae7eace8c X04=000000003b9aca00
->>>> X05=000000000000004a X06=000000000000004a X07=0000000028000000
->>>> X08=0000000000001d70 X09=0000000000000018 X10=000144b7d0000000
->>>> X11=00ffffffffffffff X12=000000008378f367 X13=0000aaab1a202d70
->>>> X14=0000000000000000 X15=0000000000000000 X16=0000ffffa2e2f7a8
->>>> X17=0000ffffa2541f20 X18=000000000000a000 X19=84bfda6288cf2dd6
->>>> X20=0000aaab1a1f1ce0 X21=000000007fffffff X22=0000ffffc5431788
->>>> X23=0000aaab1a17db60 X24=0000ffffc5431770 X25=0000000100000000
->>>> X26=0000004100000000 X27=0000000000000001 X28=0000aaab1a1f1c20
->>>> X29=0000ffffc54316d0 X30=0000aaaae7f8cd24  SP=0000ffffc5431650
->>>> PSTATE=20001000 --C- EL0t
->>>>
->>>> Guest and host are otherwise idle, kvm is in normal VHE mode.
->>>>
->>>> Git bisect points to (fce886a60207 "KVM: arm64: Plumb the pKVM MMU in KVM")
->>>> I also double checked that by reverting this commit on top of 6.14.
->>>
->>> Thanks for find the triggering commit. Can you further identify *what*
->>> causes the -ENOMEM? The only new -ENOMEM in that patch is the one
->>> added to topup_hyp_memcache(), which shouldn't be called.
->>
->> The kvm_pgtable_stage2_map() call in user_mem_abort() returns -ENOMEM
->> because the memcache pointer was not initialized!
->>
->> It looks like smth like this without other conditions could do the trick:
->>
->> if (!is_protected_kvm_enabled())
->> 	memcache = &vcpu->arch.mmu_page_cache;
->> else
->> 	memcache = &vcpu->arch.pkvm_memcache;
->>
->> (I'll try this now)
->
-> Right, we end-up with an uninitialised memcache variable. Why isn't
-> the compiler screaming?
+On Mon, May 05, 2025 at 09:03:28AM -0700, Nicolin Chen wrote:
+> On Mon, May 05, 2025 at 12:55:05PM -0300, Jason Gunthorpe wrote:
+> > On Mon, May 05, 2025 at 08:44:22AM -0700, Nicolin Chen wrote:
+> > > On Mon, May 05, 2025 at 12:01:09PM -0300, Jason Gunthorpe wrote:
+> > > > On Mon, Apr 28, 2025 at 10:41:45AM -0700, Nicolin Chen wrote:
+> > > > > > I'm uncertain, but perhaps pr_warn_ratelimited() would be a better
+> > > > > > alternative to WARN_ON() here? WARN_ON_ONCE() generates warning messages
+> > > > > > with kernel call traces in the kernel messages, which might lead users
+> > > > > > to believe that something serious has happened in the kernel.
+> > > > > 
+> > > > > We already have similar practice, e.g. iommufd_hwpt_nested_alloc.
+> > > > > 
+> > > > > In my review, a WARN_ON/WARN_ON_ONCE means there is a kernel bug,
+> > > > > which shouldn't occur in the first place and isn't something that
+> > > > 
+> > > > Right, so it should never happen from any ioctl path and syzkaller
+> > > > should never trigger it based on system call randomization
+> > > > 
+> > > > Is that what this achieves?
+> > > 
+> > > The functions would be still used in the kernel path. So, I think
+> > > we need to retain these warnings for that. But given that an ioctl
+> > > could trigger a series of WARN_ONs, WARN_ON_ONCE is something that
+> > > wouldn't bother user space a lot while it provides the kernel path
+> > > enough info to debug.
+> > 
+> > No, it does bother userspace, we must not have ioctl triggerable
+> > WARN_ON at all.
+> 
+> You mean we have to eliminate any WARN_ON in a call path of an
+> ioctl?
 
-Yea. Also I was under the impression that these kind of warnings tend to
-over indicate..
+Yes, not one that derives from user information. You can WARN_ON if
+internal kernel structures are corrupted but not if user ioctl
+arguments are bad.
 
-> I think you can indeed simply hoist the init of memcache very early
-> on, which should solve hopefully solve the issue.
+> We can drop them, just that would mute any kernel bug.
 
-It solves the issue for me. Please note that in this case topup cache is
-not called - I hope that this is not an issue (but it was also the case
-before commit fce886a60207).
+That maybe the right answer
 
->>
->>> Also, a failure to allocate would leave some nastygram in the kernel
->>> log, so it is unlikely to be an actual failure to allocate.
->>>
->>> Is it the first KVM_RUN that fails after migration?
->>
->> Nope, it happens on the side that triggers the migration.
->
-> Probably because splitting pages requires allocating some memory, and
-> all of a sudden you trigger the allocation from the memcache. Boo.
->
-> Thanks for spotting this, I'm looking forward to the fix!
+> Btw, IIRC, the destroy ioctl could trigger some WARN_ON in the
+> remove() when the object's refcount isn't correctly decreased.
+> Should that be a problem too?
 
-------->8
-From c594bbf9c3c4186594b798734ea9b1779be3b584 Mon Sep 17 00:00:00 2001
-From: Sebastian Ott <sebott@redhat.com>
-Date: Mon, 5 May 2025 11:09:58 -0400
-Subject: [PATCH] KVM: arm64: Fix uninitialized memcache pointer in user_mem_abort()
+That is kernel data structures being corrupted.
 
-Commit fce886a60207 ("KVM: arm64: Plumb the pKVM MMU in KVM") made the
-initialization of the local memcache variable in user_mem_abort()
-conditional, leaving a codepath where it is used uninitialized via
-kvm_pgtable_stage2_map().
-
-This can lead to migration failures where KVM_RUN exits with -ENOMEM.
-Fix this by making sure that memcache is always valid.
-
-Fixes: fce886a60207 ("KVM: arm64: Plumb the pKVM MMU in KVM")
-Signed-off-by: Sebastian Ott <sebott@redhat.com>
----
-  arch/arm64/kvm/mmu.c | 7 +++++--
-  1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
-index 754f2fe0cc67..6c3c658c5f29 100644
---- a/arch/arm64/kvm/mmu.c
-+++ b/arch/arm64/kvm/mmu.c
-@@ -1501,6 +1501,11 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
-  		return -EFAULT;
-  	}
-
-+	if (!is_protected_kvm_enabled())
-+		memcache = &vcpu->arch.mmu_page_cache;
-+	else
-+		memcache = &vcpu->arch.pkvm_memcache;
-+
-  	/*
-  	 * Permission faults just need to update the existing leaf entry,
-  	 * and so normally don't require allocations from the memcache. The
-@@ -1511,10 +1516,8 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
-  		int min_pages = kvm_mmu_cache_min_pages(vcpu->arch.hw_mmu);
-
-  		if (!is_protected_kvm_enabled()) {
--			memcache = &vcpu->arch.mmu_page_cache;
-  			ret = kvm_mmu_topup_memory_cache(memcache, min_pages);
-  		} else {
--			memcache = &vcpu->arch.pkvm_memcache;
-  			ret = topup_hyp_memcache(memcache, min_pages);
-  		}
-  		if (ret)
-
-base-commit: 92a09c47464d040866cf2b4cd052bc60555185fb
--- 
-2.49.0
-
+Jason
