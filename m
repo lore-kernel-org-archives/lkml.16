@@ -1,44 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A84029C32F;
-	Mon,  5 May 2025 22:45:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7A0135C845;
+	Mon,  5 May 2025 22:45:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485110; cv=none; b=S1d4k1N4Z5lkhm6kVzYSv3ZM6v0FgyjoV2e8omI5qeAktReTeUx/z/WKgfcjZ93Mm6m5S3lCXgCYNVuOxOExosKJ02Kq+rOgNwZfQeQZX6ZwKEW/K/Po5zwAeXYl+tyrsGRHpZIrGbpJne8EdiCFzZOGrwTgDC+5HCOBKJxzpfw=
+	t=1746485126; cv=none; b=KbOYsvgpzXAFqes/Ewe6qD4mdqE6uO3aPHMiw2uUz/7Kru8JaNrQWxYRTx045Ni+da4rKepBWmxmQ1gySYQxQnP5pbBR7VHx35mf0pKXx2fXeq/VR5yglfMyLsaJc5lyrZeeAXtxUu6blO1ARYPLqyANGbaa/dP6RzCKv/f7xyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485110; c=relaxed/simple;
-	bh=LolfELq7zw61kXjAJpYuRDxg3qaUFAexhigAbHnRMr8=;
+	s=arc-20240116; t=1746485126; c=relaxed/simple;
+	bh=Zr23LXzKAkDJhY/m3Nmdy7bsYe+I8SLFZgwi6J7cX7I=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=KyEjMtRgPgeQNniz3RxS1gfMWlUp5psSGZw4WHo3TKo0t7y0GtvFROQT7pjoXrs1rtfUELe1Blw756Q9nnKH0/6p4r+UZVOw9ZMrfXBrmFtY8e8yR/dgtitCTiBqTXdRYSsiCpHd5VXO4BWwUX67Pedbkhyfm1fFb+/kvu+w7LI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X9nJ/yvL; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=CHzhvbvelQirrW7keI/qelTGgGrvsKeBMh4NykJl8PsAopHNzut5emfGDK1vGb4gokDyobByzX6T92kVo67YbCqqZ9dd+Dl27omR0kCh83Gv1reRZGXpEz+FGzkvwTr34xT4tnZR9tpxTw29PSep1nB2wBq+NiOBg8Gc1t1x9GA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W+9dhAbO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X9nJ/yvL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29EDCC4CEE4;
-	Mon,  5 May 2025 22:45:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W+9dhAbO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7E25C4CEE4;
+	Mon,  5 May 2025 22:45:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485109;
-	bh=LolfELq7zw61kXjAJpYuRDxg3qaUFAexhigAbHnRMr8=;
+	s=k20201202; t=1746485125;
+	bh=Zr23LXzKAkDJhY/m3Nmdy7bsYe+I8SLFZgwi6J7cX7I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=X9nJ/yvLKadu+z8NWHVgrYTaN3SMWbgAyFL0suAPIDvjnRDy0BPJ2nrarNJsVwiEV
-	 vMFfb48vxw3n0nqBj3P5hlJuxO5MXMWjD8VLorRiGmO2sO1u5/QMC2QNeec4CWuSDZ
-	 mDrkeGKRk11fCxcerXvSF7LqQE7pbO5MoBwyaNC+WS/Kiq0FsiITJUlJdd25/zazIl
-	 q31AfmfAkSiY6cafCJxQVlUuUx7cDKIIn21x2CadwEog7PbGKe2m0ayjvdGm9wizbp
-	 bJCbQGmoSZmlK9S9RJPPcCbtEY0IGQ4tAAf+z3n1c21Xf9+THM5kYeacoFHWIHEI7L
-	 kQVaojfP+r73Q==
+	b=W+9dhAbOPgizSM9nCX0ND2V7cT7ForAcigWBCtBjAs93jdZS8TLxE2mLfyWcHXg+v
+	 Kui9iWphrwvHyi/0h89e4OAm2eDkLwfalAY3k9zvoJQt/gnx845XrWa2z9v9SSGQvK
+	 4NcbMq2X+JBZxB12EHA3mToAn2eOVUk4zOVfb5Fj/uTSbPmNHdiN4/r1HxmwOcAcJ+
+	 sn5wa8oye9kg0z+7etQOirw9k0kQMsxSzIoFFlUaxHFuY6C6Crb2tZ28/VgJPT0Ura
+	 ONBG3lWu2oIUFxciFsraoAUBDkXfLjpCLx0lhFIjAKerGPrHgKpyRQdpv/yTqt0K3z
+	 kieQFMxvzusfQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Vasant Hegde <vasant.hegde@amd.com>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	Joerg Roedel <jroedel@suse.de>,
+Cc: Harish Kasiviswanathan <Harish.Kasiviswanathan@amd.com>,
+	Amber Lin <Amber.Lin@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
 	Sasha Levin <sashal@kernel.org>,
-	joro@8bytes.org,
-	will@kernel.org,
-	iommu@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.12 166/486] iommu/amd/pgtbl_v2: Improve error handling
-Date: Mon,  5 May 2025 18:34:02 -0400
-Message-Id: <20250505223922.2682012-166-sashal@kernel.org>
+	Felix.Kuehling@amd.com,
+	christian.koenig@amd.com,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 6.12 173/486] drm/amdkfd: Set per-process flags only once for gfx9/10/11/12
+Date: Mon,  5 May 2025 18:34:09 -0400
+Message-Id: <20250505223922.2682012-173-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -53,33 +56,289 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Vasant Hegde <vasant.hegde@amd.com>
+From: Harish Kasiviswanathan <Harish.Kasiviswanathan@amd.com>
 
-[ Upstream commit 36a1cfd497435ba5e37572fe9463bb62a7b1b984 ]
+[ Upstream commit 61972cd93af70738a6ad7f93e17cc7f68a01e182 ]
 
-Return -ENOMEM if v2_alloc_pte() fails to allocate memory.
+Define set_cache_memory_policy() for these asics and move all static
+changes from update_qpd() which is called each time a queue is created
+to set_cache_memory_policy() which is called once during process
+initialization
 
-Signed-off-by: Vasant Hegde <vasant.hegde@amd.com>
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-Link: https://lore.kernel.org/r/20250227162320.5805-4-vasant.hegde@amd.com
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Harish Kasiviswanathan <Harish.Kasiviswanathan@amd.com>
+Reviewed-by: Amber Lin <Amber.Lin@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/amd/io_pgtable_v2.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../amd/amdkfd/kfd_device_queue_manager_v10.c | 41 +++++++++++--------
+ .../amd/amdkfd/kfd_device_queue_manager_v11.c | 41 +++++++++++--------
+ .../amd/amdkfd/kfd_device_queue_manager_v12.c | 41 +++++++++++--------
+ .../amd/amdkfd/kfd_device_queue_manager_v9.c  | 36 +++++++++++++++-
+ 4 files changed, 107 insertions(+), 52 deletions(-)
 
-diff --git a/drivers/iommu/amd/io_pgtable_v2.c b/drivers/iommu/amd/io_pgtable_v2.c
-index c616de2c5926e..a56a273963059 100644
---- a/drivers/iommu/amd/io_pgtable_v2.c
-+++ b/drivers/iommu/amd/io_pgtable_v2.c
-@@ -254,7 +254,7 @@ static int iommu_v2_map_pages(struct io_pgtable_ops *ops, unsigned long iova,
- 		pte = v2_alloc_pte(cfg->amd.nid, pgtable->pgd,
- 				   iova, map_size, gfp, &updated);
- 		if (!pte) {
--			ret = -EINVAL;
-+			ret = -ENOMEM;
- 			goto out;
- 		}
+diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager_v10.c b/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager_v10.c
+index 245a90dfc2f6b..b5f5f141353b5 100644
+--- a/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager_v10.c
++++ b/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager_v10.c
+@@ -31,10 +31,17 @@ static int update_qpd_v10(struct device_queue_manager *dqm,
+ 			 struct qcm_process_device *qpd);
+ static void init_sdma_vm_v10(struct device_queue_manager *dqm, struct queue *q,
+ 			    struct qcm_process_device *qpd);
++static bool set_cache_memory_policy_v10(struct device_queue_manager *dqm,
++				   struct qcm_process_device *qpd,
++				   enum cache_policy default_policy,
++				   enum cache_policy alternate_policy,
++				   void __user *alternate_aperture_base,
++				   uint64_t alternate_aperture_size);
+ 
+ void device_queue_manager_init_v10(
+ 	struct device_queue_manager_asic_ops *asic_ops)
+ {
++	asic_ops->set_cache_memory_policy = set_cache_memory_policy_v10;
+ 	asic_ops->update_qpd = update_qpd_v10;
+ 	asic_ops->init_sdma_vm = init_sdma_vm_v10;
+ 	asic_ops->mqd_manager_init = mqd_manager_init_v10;
+@@ -49,27 +56,27 @@ static uint32_t compute_sh_mem_bases_64bit(struct kfd_process_device *pdd)
+ 		private_base;
+ }
+ 
+-static int update_qpd_v10(struct device_queue_manager *dqm,
+-			 struct qcm_process_device *qpd)
++static bool set_cache_memory_policy_v10(struct device_queue_manager *dqm,
++				   struct qcm_process_device *qpd,
++				   enum cache_policy default_policy,
++				   enum cache_policy alternate_policy,
++				   void __user *alternate_aperture_base,
++				   uint64_t alternate_aperture_size)
+ {
+-	struct kfd_process_device *pdd;
+-
+-	pdd = qpd_to_pdd(qpd);
+-
+-	/* check if sh_mem_config register already configured */
+-	if (qpd->sh_mem_config == 0) {
+-		qpd->sh_mem_config =
+-			(SH_MEM_ALIGNMENT_MODE_UNALIGNED <<
+-				SH_MEM_CONFIG__ALIGNMENT_MODE__SHIFT) |
+-			(3 << SH_MEM_CONFIG__INITIAL_INST_PREFETCH__SHIFT);
+-		qpd->sh_mem_ape1_limit = 0;
+-		qpd->sh_mem_ape1_base = 0;
+-	}
+-
+-	qpd->sh_mem_bases = compute_sh_mem_bases_64bit(pdd);
++	qpd->sh_mem_config = (SH_MEM_ALIGNMENT_MODE_UNALIGNED <<
++			      SH_MEM_CONFIG__ALIGNMENT_MODE__SHIFT) |
++			      (3 << SH_MEM_CONFIG__INITIAL_INST_PREFETCH__SHIFT);
++	qpd->sh_mem_ape1_limit = 0;
++	qpd->sh_mem_ape1_base = 0;
++	qpd->sh_mem_bases = compute_sh_mem_bases_64bit(qpd_to_pdd(qpd));
+ 
+ 	pr_debug("sh_mem_bases 0x%X\n", qpd->sh_mem_bases);
++	return true;
++}
+ 
++static int update_qpd_v10(struct device_queue_manager *dqm,
++			 struct qcm_process_device *qpd)
++{
+ 	return 0;
+ }
+ 
+diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager_v11.c b/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager_v11.c
+index 2e129da7acb43..f436878d0d621 100644
+--- a/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager_v11.c
++++ b/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager_v11.c
+@@ -30,10 +30,17 @@ static int update_qpd_v11(struct device_queue_manager *dqm,
+ 			 struct qcm_process_device *qpd);
+ static void init_sdma_vm_v11(struct device_queue_manager *dqm, struct queue *q,
+ 			    struct qcm_process_device *qpd);
++static bool set_cache_memory_policy_v11(struct device_queue_manager *dqm,
++				   struct qcm_process_device *qpd,
++				   enum cache_policy default_policy,
++				   enum cache_policy alternate_policy,
++				   void __user *alternate_aperture_base,
++				   uint64_t alternate_aperture_size);
+ 
+ void device_queue_manager_init_v11(
+ 	struct device_queue_manager_asic_ops *asic_ops)
+ {
++	asic_ops->set_cache_memory_policy = set_cache_memory_policy_v11;
+ 	asic_ops->update_qpd = update_qpd_v11;
+ 	asic_ops->init_sdma_vm = init_sdma_vm_v11;
+ 	asic_ops->mqd_manager_init = mqd_manager_init_v11;
+@@ -48,28 +55,28 @@ static uint32_t compute_sh_mem_bases_64bit(struct kfd_process_device *pdd)
+ 		private_base;
+ }
+ 
+-static int update_qpd_v11(struct device_queue_manager *dqm,
+-			 struct qcm_process_device *qpd)
++static bool set_cache_memory_policy_v11(struct device_queue_manager *dqm,
++				   struct qcm_process_device *qpd,
++				   enum cache_policy default_policy,
++				   enum cache_policy alternate_policy,
++				   void __user *alternate_aperture_base,
++				   uint64_t alternate_aperture_size)
+ {
+-	struct kfd_process_device *pdd;
+-
+-	pdd = qpd_to_pdd(qpd);
+-
+-	/* check if sh_mem_config register already configured */
+-	if (qpd->sh_mem_config == 0) {
+-		qpd->sh_mem_config =
+-			(SH_MEM_ALIGNMENT_MODE_UNALIGNED <<
+-				SH_MEM_CONFIG__ALIGNMENT_MODE__SHIFT) |
+-			(3 << SH_MEM_CONFIG__INITIAL_INST_PREFETCH__SHIFT);
+-
+-		qpd->sh_mem_ape1_limit = 0;
+-		qpd->sh_mem_ape1_base = 0;
+-	}
++	qpd->sh_mem_config = (SH_MEM_ALIGNMENT_MODE_UNALIGNED <<
++			      SH_MEM_CONFIG__ALIGNMENT_MODE__SHIFT) |
++			      (3 << SH_MEM_CONFIG__INITIAL_INST_PREFETCH__SHIFT);
+ 
+-	qpd->sh_mem_bases = compute_sh_mem_bases_64bit(pdd);
++	qpd->sh_mem_ape1_limit = 0;
++	qpd->sh_mem_ape1_base = 0;
++	qpd->sh_mem_bases = compute_sh_mem_bases_64bit(qpd_to_pdd(qpd));
+ 
+ 	pr_debug("sh_mem_bases 0x%X\n", qpd->sh_mem_bases);
++	return true;
++}
+ 
++static int update_qpd_v11(struct device_queue_manager *dqm,
++			 struct qcm_process_device *qpd)
++{
+ 	return 0;
+ }
+ 
+diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager_v12.c b/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager_v12.c
+index 4f3295b29dfb1..62ca1c8fcbaf9 100644
+--- a/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager_v12.c
++++ b/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager_v12.c
+@@ -30,10 +30,17 @@ static int update_qpd_v12(struct device_queue_manager *dqm,
+ 			 struct qcm_process_device *qpd);
+ static void init_sdma_vm_v12(struct device_queue_manager *dqm, struct queue *q,
+ 			    struct qcm_process_device *qpd);
++static bool set_cache_memory_policy_v12(struct device_queue_manager *dqm,
++				   struct qcm_process_device *qpd,
++				   enum cache_policy default_policy,
++				   enum cache_policy alternate_policy,
++				   void __user *alternate_aperture_base,
++				   uint64_t alternate_aperture_size);
+ 
+ void device_queue_manager_init_v12(
+ 	struct device_queue_manager_asic_ops *asic_ops)
+ {
++	asic_ops->set_cache_memory_policy = set_cache_memory_policy_v12;
+ 	asic_ops->update_qpd = update_qpd_v12;
+ 	asic_ops->init_sdma_vm = init_sdma_vm_v12;
+ 	asic_ops->mqd_manager_init = mqd_manager_init_v12;
+@@ -48,28 +55,28 @@ static uint32_t compute_sh_mem_bases_64bit(struct kfd_process_device *pdd)
+ 		private_base;
+ }
+ 
+-static int update_qpd_v12(struct device_queue_manager *dqm,
+-			 struct qcm_process_device *qpd)
++static bool set_cache_memory_policy_v12(struct device_queue_manager *dqm,
++				   struct qcm_process_device *qpd,
++				   enum cache_policy default_policy,
++				   enum cache_policy alternate_policy,
++				   void __user *alternate_aperture_base,
++				   uint64_t alternate_aperture_size)
+ {
+-	struct kfd_process_device *pdd;
+-
+-	pdd = qpd_to_pdd(qpd);
+-
+-	/* check if sh_mem_config register already configured */
+-	if (qpd->sh_mem_config == 0) {
+-		qpd->sh_mem_config =
+-			(SH_MEM_ALIGNMENT_MODE_UNALIGNED <<
+-				SH_MEM_CONFIG__ALIGNMENT_MODE__SHIFT) |
+-			(3 << SH_MEM_CONFIG__INITIAL_INST_PREFETCH__SHIFT);
+-
+-		qpd->sh_mem_ape1_limit = 0;
+-		qpd->sh_mem_ape1_base = 0;
+-	}
++	qpd->sh_mem_config = (SH_MEM_ALIGNMENT_MODE_UNALIGNED <<
++			      SH_MEM_CONFIG__ALIGNMENT_MODE__SHIFT) |
++			      (3 << SH_MEM_CONFIG__INITIAL_INST_PREFETCH__SHIFT);
+ 
+-	qpd->sh_mem_bases = compute_sh_mem_bases_64bit(pdd);
++	qpd->sh_mem_ape1_limit = 0;
++	qpd->sh_mem_ape1_base = 0;
++	qpd->sh_mem_bases = compute_sh_mem_bases_64bit(qpd_to_pdd(qpd));
+ 
+ 	pr_debug("sh_mem_bases 0x%X\n", qpd->sh_mem_bases);
++	return true;
++}
+ 
++static int update_qpd_v12(struct device_queue_manager *dqm,
++			 struct qcm_process_device *qpd)
++{
+ 	return 0;
+ }
+ 
+diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager_v9.c b/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager_v9.c
+index 210bcc048f4c5..3264509408bc8 100644
+--- a/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager_v9.c
++++ b/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager_v9.c
+@@ -30,10 +30,17 @@ static int update_qpd_v9(struct device_queue_manager *dqm,
+ 			 struct qcm_process_device *qpd);
+ static void init_sdma_vm_v9(struct device_queue_manager *dqm, struct queue *q,
+ 			    struct qcm_process_device *qpd);
++static bool set_cache_memory_policy_v9(struct device_queue_manager *dqm,
++				   struct qcm_process_device *qpd,
++				   enum cache_policy default_policy,
++				   enum cache_policy alternate_policy,
++				   void __user *alternate_aperture_base,
++				   uint64_t alternate_aperture_size);
+ 
+ void device_queue_manager_init_v9(
+ 	struct device_queue_manager_asic_ops *asic_ops)
+ {
++	asic_ops->set_cache_memory_policy = set_cache_memory_policy_v9;
+ 	asic_ops->update_qpd = update_qpd_v9;
+ 	asic_ops->init_sdma_vm = init_sdma_vm_v9;
+ 	asic_ops->mqd_manager_init = mqd_manager_init_v9;
+@@ -48,10 +55,37 @@ static uint32_t compute_sh_mem_bases_64bit(struct kfd_process_device *pdd)
+ 		private_base;
+ }
+ 
++static bool set_cache_memory_policy_v9(struct device_queue_manager *dqm,
++				   struct qcm_process_device *qpd,
++				   enum cache_policy default_policy,
++				   enum cache_policy alternate_policy,
++				   void __user *alternate_aperture_base,
++				   uint64_t alternate_aperture_size)
++{
++	qpd->sh_mem_config = SH_MEM_ALIGNMENT_MODE_UNALIGNED <<
++				SH_MEM_CONFIG__ALIGNMENT_MODE__SHIFT;
++
++	if (dqm->dev->kfd->noretry)
++		qpd->sh_mem_config |= 1 << SH_MEM_CONFIG__RETRY_DISABLE__SHIFT;
++
++	if (KFD_GC_VERSION(dqm->dev->kfd) == IP_VERSION(9, 4, 3) ||
++		KFD_GC_VERSION(dqm->dev->kfd) == IP_VERSION(9, 4, 4) ||
++		KFD_GC_VERSION(dqm->dev->kfd) == IP_VERSION(9, 5, 0))
++		qpd->sh_mem_config |= (1 << SH_MEM_CONFIG__F8_MODE__SHIFT);
++
++	qpd->sh_mem_ape1_limit = 0;
++	qpd->sh_mem_ape1_base = 0;
++	qpd->sh_mem_bases = compute_sh_mem_bases_64bit(qpd_to_pdd(qpd));
++
++	pr_debug("sh_mem_bases 0x%X sh_mem_config 0x%X\n", qpd->sh_mem_bases,
++		 qpd->sh_mem_config);
++	return true;
++}
++
+ static int update_qpd_v9(struct device_queue_manager *dqm,
+ 			 struct qcm_process_device *qpd)
+ {
+-	struct kfd_process_device *pdd;
++	struct kfd_process_device *pdd = qpd_to_pdd(qpd);
+ 
+ 	pdd = qpd_to_pdd(qpd);
  
 -- 
 2.39.5
