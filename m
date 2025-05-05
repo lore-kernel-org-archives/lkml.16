@@ -1,62 +1,67 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2062.outbound.protection.outlook.com [40.107.220.62])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE05C24BBF0;
-	Mon,  5 May 2025 12:29:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.62
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746448164; cv=fail; b=D1VQJJ86gD9eJmnIaKp7MGu2ni3k5r02SfRrONMpvkXXtR+ZJ6eNOGbMN0RxdkfkTJ3RGoVZf0X13a2ku700jdBlGv+lvuma9yhzMa/nLqfExTUoaO2mvIpW4BrCc/ZA6nqKbprFdEmmGQLj6Ksbdy61aYN+4O7oM3TSokhfmYk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746448164; c=relaxed/simple;
-	bh=+0XOuofkXwKbb+DLVEwpQ6HLWAyliWrfL4IFQH0Ow/k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ni9T3qhImeM8oAUbqyEPVjQECNVFX2qKkJjmUP4Fqyf1hGYvwq1x/rrs8uQZMbuVOM9r6j560Xv9ZdYGLhJpwgh47CjWR5f9ULMrBaeDbF1qFcbTKbvVfzIhk99f5L2xInK30gOJFEbH6ukRjHNnlRjPNj1nl8sQbh8QtPLPrsc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=F85HpI1F; arc=fail smtp.client-ip=40.107.220.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D7D224C669
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 12:30:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746448209; cv=none; b=WBlroY5XFGW/03ilD5kUhqSBxxWWA6BDy+CAA1Y8fjnCv+CizBlPG+BX58PnQsjTZDO4pgumXTWivHqHsBPNgwQdnqRRtGlOOQUGSGHZoMhXMoigXpYpiDQaDpiyFdL4bnoWV0LmjaJ82zc+Un09iAOzBPxQ7Zb0a1emDqGEgjY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746448209; c=relaxed/simple;
+	bh=eC4rf7B14lDTCwZ8B+eqbwh8ui74TY7nf9x4H9JFM7k=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=XfSPBcjthzq801LGrwedwXpIvTpmOI349AcyZgPL9oijMG3Sd+X0+AGY1eygudWmCIzjWsmAJm7PAa0wqBS6Y0ckf0Q7CN2N5N9cby0jIm7MfooCd2YSQ9xaUkNOQ9zpumF9pRJ1uM8Vd4hZoHnSCSS+Zd8udpu7SQ/c2GJrFgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bAfu4hin; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="F85HpI1F"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=uZV3+mx6em+WaN6ugw1CODWDiKikpIDGsPnN0iEBgiIGLprQ9bEKr5gqpkVL+WMBsSfpbMW73L7tHlc7OCbjTRx7wvCojPfG8y7+b2bcm2Y/GAhsXfim4D5YmpAHgVohdw07xSNLGGZPL0NxaqrNsJCGCQpcvEhhDc8CPmirG/E2yUa9EdYkGD5KLqps9U/yPdQgJDeaZP4T19yWsK4WxC4MYoC23ESfF/26u9Ms2BsscW6Xd3VoSoLK8dzZl+mBx9MRO71RYek8J38PqfjmZTl5xE9tkxEtOETwOQbLC7sQhA9tQfwcqYTmJ6FEFtZvz2efsp+s6ojboLSYmj8awg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=U4dXeCZ9++pOr+rfjEA+/zxyNm1En2RtTKwzhFta2H4=;
- b=g549s+WBtG3QgFOIW4/NjE76/HrqwRvZpsBQnATp1QTi0a85+G2ufMx73AXaVo1E634eLg5MEADRX6JgoXlhIvLAHCUzYvUoukVbeIWq9o5X+32cKBmE8WjNQcNS3VAnNVSLwkuZnhRjRWCuMQ7bVC0x63Y1K2AEjWoteRh6x+pXdwqRBMAb704kkLjOsBZn1PhztMPR7D6fHpCIhmaHmmiPZJ4mQdC40UjLh4ito8DVs2OdqvgIjshbzPAW/o0FSSZT6PGvtJ0qtDj/Nhb1jPiVRVP9aXjSovFZvrw1bgoYC+1omOHvTptlGwiSR0acO5tPmn84uVVXGJg4ZJiZHQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linaro.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=U4dXeCZ9++pOr+rfjEA+/zxyNm1En2RtTKwzhFta2H4=;
- b=F85HpI1FmKz8Ssrn/HHpAvQlxNiMEWvCTzwCvxiu9PdwlT0Em2cKbObfUGtDVHCCO5fZfmCGF16SsqtOdT+yqQbXaTjkK9LEUtN/0USSm/2XTB2Qb4VCpAuNbUJawD/Ofc/NpQGXyTZE34fs293gETt/fOWuIyR0qVKe7imK2jc=
-Received: from CH2PR16CA0030.namprd16.prod.outlook.com (2603:10b6:610:50::40)
- by PH7PR12MB9223.namprd12.prod.outlook.com (2603:10b6:510:2f2::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.21; Mon, 5 May
- 2025 12:29:20 +0000
-Received: from CH3PEPF0000000F.namprd04.prod.outlook.com
- (2603:10b6:610:50:cafe::73) by CH2PR16CA0030.outlook.office365.com
- (2603:10b6:610:50::40) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8699.29 via Frontend Transport; Mon,
- 5 May 2025 12:29:19 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CH3PEPF0000000F.mail.protection.outlook.com (10.167.244.40) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8722.18 via Frontend Transport; Mon, 5 May 2025 12:29:19 +0000
-Received: from [10.143.196.137] (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 5 May
- 2025 07:29:14 -0500
-Message-ID: <de22462b-cda6-400f-b28c-4d1b9b244eec@amd.com>
-Date: Mon, 5 May 2025 17:59:13 +0530
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bAfu4hin"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-441c99459e9so7932715e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 05:30:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746448204; x=1747053004; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=t0GjryULo4v09EAImrhm7s0nrCH1vBTnHzkq05ckM1c=;
+        b=bAfu4hinbiGfwi6+7dL8teBEkKg63WlGuzzsHJGajG5YWCAJgwsvbfq1EzT48DYAjg
+         ASCAeIm7hk0PQyNcRZ+5XW4IVKjKeOSARnIiU6IaFWJuME8Bc1y32pRFxi+6oIKid166
+         sY1mZJwmRDwdLbqe2ABzsHdxwEboHDPrgDBpPuchJNVufuk0WySIw7S5yZbeOwuTMytV
+         aNOPzJq4cgh9uPciFqW/P7ZAkp7q+PmTJ7SkOJ81haWAJ2YQ1fOH4tMJCKg45Acgmd/1
+         R1guZbZ4IAa8KxKUtT90/PTvlvczKHZygNGmFAWAhYpgqKaOBquPcj3FGc+HecxlqMP4
+         bZdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746448204; x=1747053004;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=t0GjryULo4v09EAImrhm7s0nrCH1vBTnHzkq05ckM1c=;
+        b=kgS/Bx7zv0hqZn009lDQpcGjOCKQk4syH1Lc1XVEHu7wV5jfCHoNaWbqdWd0zXs32Z
+         VZ1RYqrw9T7lFMOz46BZ1PGgB5d36c5BgO6dFvF3Ep+SNMEBtXJL4EGQyvWLvGexMUhI
+         cSJnvu7WANL3J8CCahHsA1h+XUQy1MM9A+AqyZlKv/lyTg8GaD9V6VcAcPs/gjjrfgb+
+         hoXI5yq5c1OCndZeMYUduC9VPZrXuEEbb+gEV8N+46CU7z+8buxEUf4cxTKsgLRpio+x
+         sXVfYEp2IiJqhnv7mhSn47MsKLZy/jN1PqhLZtomXdVAz2i1Aoh4mvpD8vhhMSCmOufl
+         PTfg==
+X-Forwarded-Encrypted: i=1; AJvYcCV8TsiiO8jXDz4Ou/OHsS9B81IfnYOsOUA10esp8DENLQ/0wDeCaUKBeZ2zgc8gY3xol3UfW7ZsgLVYnQU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyyGHaWUq5KqSzxXrjQNXbf8B0dHgLFEdK8vN+MjcUyiY9TKLGa
+	KSq2Um//ujdBDSay2g7qZfUwqTK5ddSQBeygGK0s1HidaD0UGXM337q9lLjYi6Y=
+X-Gm-Gg: ASbGnctvOt+uIVLJGHukePAxueoC2l+ouRz9aR9eXBrx3noVtXV/iOqiwHv/2BW5+Hl
+	1iIoQo5o1FtVF50q7zN1Wx07/iC42HM0RSX6pG4nczfP6h/UgPKhPh0Ni8fiRfeIA25POq8dT+u
+	qnqoRRzYzSzzjlqINDPot+YWH15/gV7dJA9AuFI/SYKc/THdYHcYYlPYaof5UO7nLJsdiZ6nbcN
+	dGPuSUfeBC6+Dnjc9E0dNnPUo1E5VxVV+PJd7wbud188aG7hqlBLKtJFFNUyC09Db8tood7LS90
+	xHssIfKlMqWx1uCcYsPjoBkc6dAXq22np/lOG4Q+X0SAZ+EdZ2J4azCmsKC1nTfDSsYgakRnZZy
+	uNVkp0YvaHCngDEK2fQ==
+X-Google-Smtp-Source: AGHT+IEXaFpXxqRcmFqcdi7rW9veV7mUOW9LMRdHD1faNwTOAtntg/32GzuRuVivniydhFYII1GnXQ==
+X-Received: by 2002:a05:600c:19c6:b0:43c:e9f7:d6a3 with SMTP id 5b1f17b1804b1-441bbec2a80mr104674185e9.13.1746448204392;
+        Mon, 05 May 2025 05:30:04 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:88d3:1ad7:3ae1:56e3? ([2a01:e0a:3d9:2080:88d3:1ad7:3ae1:56e3])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441bc83d471sm108852165e9.26.2025.05.05.05.30.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 05 May 2025 05:30:03 -0700 (PDT)
+Message-ID: <5bb02494-e974-4d2f-a00f-417312b73bc1@linaro.org>
+Date: Mon, 5 May 2025 14:30:02 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,150 +69,110 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: IPC drop down on AMD epyc 7702P
-To: Vincent Guittot <vincent.guittot@linaro.org>
-CC: Jean-Baptiste Roquefere <jb.roquefere@ateme.com>, Peter Zijlstra
-	<peterz@infradead.org>, "mingo@kernel.org" <mingo@kernel.org>, Juri Lelli
-	<juri.lelli@redhat.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, Borislav Petkov <bp@alien8.de>, "Dietmar
- Eggemann" <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, "Gautham R.
- Shenoy" <gautham.shenoy@amd.com>, Swapnil Sapkal <swapnil.sapkal@amd.com>,
-	Valentin Schneider <vschneid@redhat.com>, "regressions@lists.linux.dev"
-	<regressions@lists.linux.dev>, "stable@vger.kernel.org"
-	<stable@vger.kernel.org>
-References: <AA29CA6A-EC92-4B45-85F5-A9DE760F0A92@ateme.com>
- <4c0f13ab-c9cd-42c4-84bd-244365b450e2@amd.com>
- <996ca8cb-3ac8-4f1b-93f1-415f43922d7a@ateme.com>
- <3daac950-3656-4ec4-bbee-7a3bbad6d631@amd.com>
- <CAKfTPtBovA700=_0BajnzkdDP6MkdgLU=E3M0GTq4zoLW=RGhA@mail.gmail.com>
-Content-Language: en-US
-From: K Prateek Nayak <kprateek.nayak@amd.com>
-In-Reply-To: <CAKfTPtBovA700=_0BajnzkdDP6MkdgLU=E3M0GTq4zoLW=RGhA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: Re: [PATCH v6 1/3] dt-bindings: reset: Add compatible for Amlogic
+ A4/A5 Reset Controller
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Zelong Dong <zelong.dong@amlogic.com>,
+ Conor Dooley <conor.dooley@microchip.com>,
+ Jerome Brunet <jbrunet@baylibre.com>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+ Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>,
+ Rob Herring <robh@kernel.org>, kelvin.zhang@amlogic.com
+References: <20250411-a4-a5-reset-v6-0-89963278c686@amlogic.com>
+ <20250411-a4-a5-reset-v6-1-89963278c686@amlogic.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20250411-a4-a5-reset-v6-1-89963278c686@amlogic.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PEPF0000000F:EE_|PH7PR12MB9223:EE_
-X-MS-Office365-Filtering-Correlation-Id: bfed2a28-5c6e-4d9a-464a-08dd8bd0758f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|7416014|376014|1800799024|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?TDRDVkhCNm40aERscWwvZmhySSsrUWVCRVNyWFp0b1NkUUJlT2J6NGRDbGJI?=
- =?utf-8?B?WktvSjN6bFZwRGt1Q3pmM2lvQ2cvYWxDcDJtNDBaZWFaSEhmUkl5Ty9Qem16?=
- =?utf-8?B?Ym9UdlhxbXlEbUVpenZLYmU4cFNkK25BWmFjNzJYdE5IMTkxcHhvcnZKWWpZ?=
- =?utf-8?B?UW5NaVlUeXB4UWJid0NLdTFqZ1NUbnV3QjFaaDVYbFVYUVdqcm5HTnJHZjNm?=
- =?utf-8?B?dGFxbXNEbEhZUjFtMTVkcnlTZ2xCMEZWbUNpU3c5SjZNUTEvOTIzakJBSWhU?=
- =?utf-8?B?ZTE0d2MvSzhaRUtoUVpNVlpsekJjQklVUHV4L3JPaEE4a2N4RGZNcG9KVjZS?=
- =?utf-8?B?K3N4VnI5cFQ0Zld1NzRYS3pSemh2OWJFc3crcTZ0d0w4NW44bGU1OXBLVGFJ?=
- =?utf-8?B?TmdCMVBKNGxXbmk5K2RhRjk3QWdwbkxoVWkvc2FLT09KSlJHM1pnTDdnS0Nj?=
- =?utf-8?B?UlNRdVp0Z3NGSzNFbFMyS2t2QmdSUjQ5a1NmeUVJampTUkhxSlFMZnBaWjlh?=
- =?utf-8?B?cWh1TkpCQ2h1QkRZN3ozVXEwMXZRQTBuak5ZUTYyQ0xJOURqYm94RzVjUmYr?=
- =?utf-8?B?M0lxYkN2SENKZmhib1JuMktxZGhEQ2VsS2lkNHMrYUE5Um1MaVkwSXRxNEEy?=
- =?utf-8?B?S1owSnJma0VrWTJlSXJuU3RJSzFNZUU2RmdBeWtOOFNxMDAwOWwxalRGN05O?=
- =?utf-8?B?V2RTaTh6MncyVVNvOS9ZNkRRaFFvTjhBZFRNeGxyODBTT0ZpMGdhYVhSZkZT?=
- =?utf-8?B?NUs0RTd0NUQyRUsrQkx0blgxUW42MnhvSWs3Q3E4M1h5dEh5SXZsWkxqdHhy?=
- =?utf-8?B?cVUwRHRkaDQrc0dCWmk1dDFHRWkrNlhrdjdNWFVBcStaM3NjOTNIYlhWUXBJ?=
- =?utf-8?B?T25Bd2N3MXVQZkdZb2NlL01BOGpRcys0ZkdySkhxSm5WdldvK3hPOVpUcDNv?=
- =?utf-8?B?QTY4bnZxUVZSVnBKeTI2bmsvNXdsdEdJb00zU0pOZjJaUkxFWSs5RnMyNFpK?=
- =?utf-8?B?ZTF0ZmVmcHROK3Y5RW9mVGY0c3Q3UktXOXpJcjViZ2FOdjBwQ2FzeHNPNnp2?=
- =?utf-8?B?VU5xSUxiTXNJUEVBeVZsRklzeUM5OEFFVy85ZzJTUE94QlNrQUYxdzhKVUZ5?=
- =?utf-8?B?eURHbFQrQnQxM2FrZys3eFlsODdJL0hPQkFSN2VoRWk4bVEwdmQva3FWblZq?=
- =?utf-8?B?cGlhUXVIVi9oNGt5Uk1BODM2V3FRamlxTnlyeUU2VElvT1czcTY2cFVZNDdM?=
- =?utf-8?B?aHBHdzdzZzFDdFF4aUxlSTRaSUdFK3ZyRGJjajJQUFdhL2NQS2tzblJxYVRx?=
- =?utf-8?B?a0VYR3ZYdjNQNHhqMDdUZnhva1QreVRBSjRudGFONDVXeDVOdmFSWWRraVZ0?=
- =?utf-8?B?VmRYOVNhbWtXVmZUWHAzbVRhV0VPdzdnaW1pWWczd3VLN2ZDbFZOZldpR0Vq?=
- =?utf-8?B?ZzNGWnQ2dXpXWmVpdlIvbnZiU01ERGlOYXE1dE1vTHhqYW5WN04rOUh6c2hi?=
- =?utf-8?B?a3hKTG1FN3VzNGRVRkFic3Q3UHdOb2g0MWNWNHB5aGJJOE93ekNxTXd0RUU2?=
- =?utf-8?B?THB4VEQvU3ExOTExeTg3NmZsblRUOXozMDNjMEJLUUFoZkQ5blR1dktlY28v?=
- =?utf-8?B?c3NyMmZIRHlpQXQxaGNDcFNHdDVmVk1meXdJOWpvZ1ZQTW9qc1dubVV0b0t5?=
- =?utf-8?B?cmdOYzZsc0xEL0hPaTdtYVBuQzhzNFd0VnV4RXg1bzlITlZ4TVFDZmxjUkto?=
- =?utf-8?B?Tm5uWEplRG1wQlUvTFRIcTFNYW5uVTV4VXZKRGthN0ZBUVUwbE1ueEl2dUtQ?=
- =?utf-8?B?M0NXVWVmb0Y0TnRRa3QzS1krK292US80MjZ5Mk9vTlRQWkUwTGdPN3NqUTVz?=
- =?utf-8?B?WTdwMnNPd1BDZ2NYdEhyMExRcWFwek5FZXJqVGRKU0dWQmFWNW1zdk4rOEh0?=
- =?utf-8?B?TlBnN1U3TnFmanZvVFVJRVYrOCtnbFFkMWlJNjBxTUMydG9KYk5pNUpzanFM?=
- =?utf-8?B?dTB4d0s4bWRsVHBsWTAxaEpFMTlwT1V0b0JVUFViM0E4QXRlTkhtODBBOENL?=
- =?utf-8?Q?3KWzuN?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(7416014)(376014)(1800799024)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 May 2025 12:29:19.7601
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: bfed2a28-5c6e-4d9a-464a-08dd8bd0758f
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CH3PEPF0000000F.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB9223
 
-Hello Vincent,
+Hi Philipp,
 
-On 5/5/2025 3:58 PM, Vincent Guittot wrote:
-> On Wed, 30 Apr 2025 at 11:13, K Prateek Nayak<kprateek.nayak@amd.com> wrote:
->> (+ more scheduler folks)
->>
->> tl;dr
->>
->> JB has a workload that hates aggressive migration on the 2nd Generation
->> EPYC platform that has a small LLC domain (4C/8T) and very noticeable
->> C2C latency.
->>
->> Based on JB's observation so far, reverting commit 16b0a7a1a0af
->> ("sched/fair: Ensure tasks spreading in LLC during LB") and commit
->> c5b0a7eefc70 ("sched/fair: Remove sysctl_sched_migration_cost
->> condition") helps the workload. Both those commits allow aggressive
->> migrations for work conservation except it also increased cache
->> misses which slows the workload quite a bit.
-> commit 16b0a7a1a0af  ("sched/fair: Ensure tasks spreading in LLC
-> during LB") eases the spread of task inside a LLC so It's not obvious
-> for me how it would increase "a lot of CPU migrations go out of CCX,
-> then L3 miss,". On the other hand, it will spread task in SMT and in
-> LLC which can prevent running at highest freq on some system but I
-> don't know if it's relevant for this SoC.
-
-I misspoke there. JB's workload seems to be sensitive even to core to
-core migrations - "relax_domain_level=2" actually disabled newidle
-balance above CLUSTER level which is a subset of MC on x86 and gets
-degenerated into the SMT domain.
-
+On 11/04/2025 13:38, Kelvin Zhang via B4 Relay wrote:
+> From: Zelong Dong <zelong.dong@amlogic.com>
 > 
-> commit c5b0a7eefc70 ("sched/fair: Remove sysctl_sched_migration_cost
-> condition") makes newly idle migration happen more often which can
-> then do migrate tasks across LLC. But then It's more about why
-> enabling newly idle load balance out of LLC if it is so costly.
-
-It seems to be very workload + possibly platform specific
-characteristic where re-priming the cache is actually very costly.
-I'm not sure if there are any other uarch factors at play here that
-require repriming (branch prediction, prefetcher, etc.) after a task
-migration to reach same IPC.
-
-Essentially "relax_domain_level" gets the desired characteristic
-where only the periodic balance will balance long-term imbalance
-but as Libo mentioned the short term imbalances can build up
-and using "relax_domain_level" might lead to other problems.
-
-Short of pinning / more analysis of which part of migrations make
-the workload unhappy, I couldn't think of a better way to
-communicate this requirement.
-
+> Add compatibles for Amlogic A4 and A5 reset controllers,
+> which fall back to 'amlogic,meson-s4-reset'.
 > 
->> "relax_domain_level" helps but cannot be set at runtime and I couldn't
->> think of any stable / debug interfaces that JB hasn't tried out
->> already that can help this workload.
->>
->> There is a patch towards the end to set "relax_domain_level" at
->> runtime but given cpusets got away with this when transitioning to
->> cgroup-v2, I don't know what the sentiments are around its usage.
->> Any input / feedback is greatly appreciated.
+> Signed-off-by: Zelong Dong <zelong.dong@amlogic.com>
+> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
+> Link: https://lore.kernel.org/r/20240918074211.8067-2-zelong.dong@amlogic.com
+> Signed-off-by: Kelvin Zhang <kelvin.zhang@amlogic.com>
+> ---
+>   .../bindings/reset/amlogic,meson-reset.yaml        | 22 ++++++++++++++--------
+>   1 file changed, 14 insertions(+), 8 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/reset/amlogic,meson-reset.yaml b/Documentation/devicetree/bindings/reset/amlogic,meson-reset.yaml
+> index 695ef38a7bb346c92b4cf428e7615d45682c940a..150e95c0d9bed74c7045942610a311114a257889 100644
+> --- a/Documentation/devicetree/bindings/reset/amlogic,meson-reset.yaml
+> +++ b/Documentation/devicetree/bindings/reset/amlogic,meson-reset.yaml
+> @@ -12,14 +12,20 @@ maintainers:
+>   
+>   properties:
+>     compatible:
+> -    enum:
+> -      - amlogic,meson8b-reset # Reset Controller on Meson8b and compatible SoCs
+> -      - amlogic,meson-gxbb-reset # Reset Controller on GXBB and compatible SoCs
+> -      - amlogic,meson-axg-reset # Reset Controller on AXG and compatible SoCs
+> -      - amlogic,meson-a1-reset # Reset Controller on A1 and compatible SoCs
+> -      - amlogic,meson-s4-reset # Reset Controller on S4 and compatible SoCs
+> -      - amlogic,c3-reset # Reset Controller on C3 and compatible SoCs
+> -      - amlogic,t7-reset
+> +    oneOf:
+> +      - enum:
+> +          - amlogic,meson8b-reset # Reset Controller on Meson8b and compatible SoCs
+> +          - amlogic,meson-gxbb-reset # Reset Controller on GXBB and compatible SoCs
+> +          - amlogic,meson-axg-reset # Reset Controller on AXG and compatible SoCs
+> +          - amlogic,meson-a1-reset # Reset Controller on A1 and compatible SoCs
+> +          - amlogic,meson-s4-reset # Reset Controller on S4 and compatible SoCs
+> +          - amlogic,c3-reset # Reset Controller on C3 and compatible SoCs
+> +          - amlogic,t7-reset
+> +      - items:
+> +          - enum:
+> +              - amlogic,a4-reset
+> +              - amlogic,a5-reset
+> +          - const: amlogic,meson-s4-reset
+>   
+>     reg:
+>       maxItems: 1
+> 
 
--- 
-Thanks and Regards,
-Prateek
+Do you plan to take this change ?
+
+It has been laying around on the list for a while now, I plan
+to apply it in my amlogic/drivers tree at the end of the week.
+
+Thanks,
+Neil
+
 
