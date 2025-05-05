@@ -1,121 +1,122 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C820D1487E1
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 19:17:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DEC619ABAB
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 19:18:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746472669; cv=none; b=q6DpiEnwkL0KE7mHcNN9AGMJIymV6cG7FQICYlGBpu+YhlYUXsMeiccVV2nRlQoKH6bC2/hQDSYldbYVYbJmOXq3bE7J94m21kVNcTR0qZwyhODtrPzJXNJY7rYhH1OH+ftrv6vxm1qDujpk7cAtqDniaSIfmzrJ1eoPVWS2ML4=
+	t=1746472724; cv=none; b=CzblBHaBvKm6zWQ8gJdYynRjb4dSLJTa/cXHEHudwDpLBRNrbHKEtsW6SzrICzmhBJyJf4eq7jW/JCwe9y2+U1BUTti9JK0iFpoq7of9Kc2AVBegZ0NyMaAb3q1Wi/bzkhp4GyJEGhyKCzAuD4Are8pYu7IDw4iVVv8gLZJ5jMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746472669; c=relaxed/simple;
-	bh=7mn2rrLB+XnCWDOZpcjuYtgBAhtXxoLufytebR8dLHs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rmVFzgKtXk+Z4ea8eElEXcHxra3lWvHEpdRaZT2py1w9eFjf1F4wxPBdj/VhpIS5PEGca0N/hZyVrY30J44cKfYqguF7ZEdBSReuGg4ltJOQVlx3BykVr2UPNTbyidCxQDOXNmX+uzEZcX8QVDrFt2+pKBMVdNa76sfwjG6Td1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=BBiTabJW; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1746472724; c=relaxed/simple;
+	bh=ZnMLoIwBY5W0VmYP3BtBid7BiKKI5FktyERR4l9YxoI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=iwc/kjWIhm4eY052Y9XPqCXwmKjg8+omw9fSUrwxYzDX3KCGJ3RIHy9Xbg72PBGuy58PsfDFOQHUdgZLzQFB9QmQCrQnjs1U+nHQN0yj+6p50KhZ2tSq7VtShSpuuRwNVJlRRuCH5Bcz0SxdPxKa7uaK2iAfxnPGxRcZH34DD+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=XSJJhgLn; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="BBiTabJW"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 545BoPDT016270
-	for <linux-kernel@vger.kernel.org>; Mon, 5 May 2025 19:17:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	7mn2rrLB+XnCWDOZpcjuYtgBAhtXxoLufytebR8dLHs=; b=BBiTabJW+n4KBvlh
-	R1w3pNpnz5dWa89tsPzuX98S8ZllEPCT8oKi0cdnxnXqm2sOjiJp+w8YJE8mtuTj
-	b9tZ96FtS8IUc6cAfAsnpRQ7XWABacow/r36VNmYkqqP/J3XYiW4xQtLO2mWNTyl
-	31Hyer/PnahgX6vdGkBlPgeaxzz+Gkyju8VDlKfu2ABwHw5uuPXWmGgJxZ92jF+p
-	7+USM2gSk+PeQs49HTI8jvc5H6pDWAgUuQqAKyaAhI3ExPM/g/33AhIwikkxVWxA
-	/gs6BAdV/vNpPmbN6NQOp5zKRChV4dAqPodRPKWm2OO3YSgYaH9/nonjgUq8PoBs
-	BnESbw==
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46dbwfmwth-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 19:17:46 +0000 (GMT)
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-2ff8119b436so3796483a91.0
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 12:17:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746472647; x=1747077447;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7mn2rrLB+XnCWDOZpcjuYtgBAhtXxoLufytebR8dLHs=;
-        b=LG4UOmory2kzvCHnJOEMzd0PKsHxqLUfpu4N+wbn1DquBMenll8pOGajiPlWfeml9l
-         HPpkKw0inju6Csd84z4X5NxZbJcs+SnF9KzpAzIzh37dTW2NHXLLAaRA6c1P1z3k0xTO
-         TD9AaW3soUaQA5Ilqjbu8ts+7lPbNe0KFOxvqGkOqQaE22hdO/7v/FlAKHJ0ly9TknIJ
-         pUC9sSwp/PG6Tlkxjas/0u5zq8xlXlVIrXcZ9rf389VpKk+xY0MJqheW0DVPseZkaIO3
-         Qt3Qf06+NN7HCCu6S0hKCkYNty4Qdr37Jb7cH6S6TzONJJtW6WKyxS7qRHAkZjST4KnA
-         Xdvg==
-X-Forwarded-Encrypted: i=1; AJvYcCXSaU2o2TH8y5pag2pJIu6hW7llrNB3dlS8WM3I9ZinfHcWn6Itkd+RfM3T9MsN9blPXPNDyso/yoIVcF0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyM9rBHhpn34p94vLxxq8vI2JjtsXfe3v9onUrB/GdDHyf2+g0T
-	FCi+7UXMq4Hk6JUp8aFcIoKZfd1yIv7jn8D0Di0xCpclcfs2Wn/pUC2DevMIrRmmKjN0kHLVFP0
-	Ekx2LK6WvCz6oB7UxuzpsB08lijlItFwAz1Hk9zXN0iyQw+W/8Jc/TwcmSxRPvHA=
-X-Gm-Gg: ASbGncsgFp+K7gmO6bGRZOJG1RPMm8DxHRxKmqs5DjUr8KZI6JqSqrMrnALTclcLKTY
-	Ijcn9Af38F3W06FBO1bVTB+rF2amlYgwrH0QD/7xgvfdgtTMb3L5xCSOwDpiTO5McGEGxrGoFDn
-	T4QfLP5gZaDnPl3HEsuwlIllNHY2BqZ8rdgPdW0lBTxoQeENbaahrVPrAVERfRkKJcIeWjWaXN5
-	FIPl7XcxMEcZB2s/o4jhwoWlrNlZTijxChEmXlbmtW2UlYHeR6vM33i0sd6kR89telUteO3zkqC
-	buls2aKKFu5IlC4/K7SoYCq3aVJzT07RWHTedZJicxNRWaQq6T7JFiykcM7T+nHZ2nPUznUMecS
-	wy1g6
-X-Received: by 2002:a17:90b:2545:b0:2ef:67c2:4030 with SMTP id 98e67ed59e1d1-30a61a2bf23mr11942150a91.27.1746472647418;
-        Mon, 05 May 2025 12:17:27 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHp19+cr+5w9t5t+d0bTheMNcdBYXAAQfq5l9a4/Cfanoha8qZ0UTuQPA1laccqJJm2/wtiWg==
-X-Received: by 2002:a17:90b:2545:b0:2ef:67c2:4030 with SMTP id 98e67ed59e1d1-30a61a2bf23mr11942122a91.27.1746472646944;
-        Mon, 05 May 2025 12:17:26 -0700 (PDT)
-Received: from [192.168.1.111] (c-73-202-227-126.hsd1.ca.comcast.net. [73.202.227.126])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30a4762672bsm9313052a91.32.2025.05.05.12.17.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 05 May 2025 12:17:26 -0700 (PDT)
-Message-ID: <f58075f7-f643-4e47-b774-dc529aaa01e5@oss.qualcomm.com>
-Date: Mon, 5 May 2025 12:17:25 -0700
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="XSJJhgLn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=ZnMLoIwBY5W0VmYP3BtBid7BiKKI5FktyERR4l9YxoI=; b=X
+	SJJhgLnCE6O9789Unbc1sjB5C+4Mh0Z67lcAzUY8RQzYlfuMWrkvoyUcCe+pcdGg
+	HPVxpTa4fZd1+zm0hlDuo2d4pvOwxLiqgsXoPb2EBBHcMGC3i6jIa48Z3I/F5dlE
+	1GVnR70qROgyTckuNh8sy+i0ksIA43HOiKdoWEV5Hc=
+Received: from 00107082$163.com ( [111.35.191.17] ) by
+ ajax-webmail-wmsvr-40-132 (Coremail) ; Tue, 6 May 2025 03:17:55 +0800 (CST)
+Date: Tue, 6 May 2025 03:17:55 +0800 (CST)
+From: "David Wang" <00107082@163.com>
+To: akpm@linux-foundation.org, vbabka@suse.cz, surenb@google.com,
+	mhocko@suse.com, jackmanb@google.com, hannes@cmpxchg.org,
+	ziy@nvidia.com
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re:[PATCH v2] mm/codetag: move tag retrieval back upfront in
+ __free_pages()
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
+ Copyright (c) 2002-2025 www.mailtech.cn 163com
+In-Reply-To: <20250505183423.33773-1-00107082@163.com>
+References: <CAJuCfpHKcDkce=no0Uu3UO2ua2GkgkKMZxnctMuDbOqQNKj_KA@mail.gmail.com>
+ <20250505183423.33773-1-00107082@163.com>
+X-NTES-SC: AL_Qu2fBPicvU4s4yidbOkXn0oTju85XMCzuv8j3YJeN500myXEwhAvZ25sE2TU0fmICiSmoQmUVSpe0+5WRa57fYk6gBy1S+/UxJDXG91QVryX
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=GBK
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5] wifi: ath11k: Fix memory reuse logic
-To: Muhammad Usama Anjum <usama.anjum@collabora.com>, quic_bqiang@quicinc.com,
-        Jeff Johnson <jjohnson@kernel.org>
-Cc: kernel@collabora.com, linux-wireless@vger.kernel.org,
-        ath11k@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250428080242.466901-1-usama.anjum@collabora.com>
-From: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-Content-Language: en-US
-In-Reply-To: <20250428080242.466901-1-usama.anjum@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: 22K3E5ccep7VhD7ZjIz26uGi24DXZlBJ
-X-Proofpoint-GUID: 22K3E5ccep7VhD7ZjIz26uGi24DXZlBJ
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA1MDE4MSBTYWx0ZWRfX9AwnrPxcIv+8
- ZTn1cIgN+ea8QzFmZ2+7nt20+1vo2AxXQipmhoWNwpKIluFGNbZp9dmEdlZkI0RQ6Lj/rlav/m/
- rTglsyh1Ep7rDQ+byHqbDR73eLnVbso2ndqgxG/tO7rcS0Yn4rOG5V771dyNfX9iOuzwfuaJcQb
- PWQGT04R3vFvIyOisBQTIHQyLt3Dn/sf3CoHjbXpUla0YWYugTqe3lRicsFI/ZizE0funYotDow
- SUIXXNCOPqdHq7fcoHYs83VuS0twlvc6BoMutYBZi11yAZx34xRuXmM0YmHnvVVqIkoxBprJfVd
- Ad6I1OfRfnvRwCSLtPBa0vVo7SXTIId5eH7UZCsiOAsC6hFTOrzK8KBKqTXMu8djvK3TfpYvWGH
- snIC5lwG3HTIWNoHIJdE8KnTa5tlGu27VaWhDmZ+MVvs8n99CJJzKVSmRJKxypx9YyIWM2O2
-X-Authority-Analysis: v=2.4 cv=AfqxH2XG c=1 sm=1 tr=0 ts=68190eda cx=c_pps
- a=vVfyC5vLCtgYJKYeQD43oA==:117 a=e70TP3dOR9hTogukJ0528Q==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=aP1bZ6Fae55lA2u8vz0A:9
- a=QEXdDO2ut3YA:10 a=rl5im9kqc5Lf4LNbBjHf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-05_08,2025-05-05_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 clxscore=1015 priorityscore=1501 phishscore=0 impostorscore=0
- mlxscore=0 adultscore=0 lowpriorityscore=0 suspectscore=0 mlxlogscore=934
- spamscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505050181
+Message-ID: <14556e7b.3c3e.196a1e22a1b.Coremail.00107082@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:hCgvCgD3v_zkDhloaN+nAA--.13938W
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/1tbiqBdEqmgZB8UtNwACs6
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-v2 feedback was not incorporated:
-For starters, can we make the subject a bit more specific, i.e.
-Fix MHI target memory reuse logic
+U29ycnksIEkgbWFkZSBhIG1pc3Rha2UsIHBnYWxsb2NfdGFnX2dldCBzaG91bGQgaGF2ZSBhIGR1
+bW15IGRlZmluaXRpb24gCndoZW4gQ09ORklHX01FTV9BTExPQ19QUk9GSUxJTkcgbm90IGRlZmlu
+ZWQsIHdpbGwgc2VuZCBhbm90aGVyIHBhdGNoLgoKCkF0IDIwMjUtMDUtMDYgMDI6MzQ6MjMsICJE
+YXZpZCBXYW5nIiA8MDAxMDcwODJAMTYzLmNvbT4gd3JvdGU6Cj5Db21taXQgNTFmZjRkNzQ4NmYw
+ICgibW06IGF2b2lkIGV4dHJhIG1lbV9hbGxvY19wcm9maWxpbmdfZW5hYmxlZCgpCj4gY2hlY2tz
+IikgaW50cm9kdWNlcyBhIHBvc3NpYmxlIHVzZS1hZnRlci1mcmVlIHNjZW5hcmlvLCB3aGVuIHBh
+Z2UKPmlzIG5vbi1jb21wb3VuZCwgcGFnZVswXSBjb3VsZCBiZSByZWxlYXNlZCBieSBvdGhlciB0
+aHJlYWQgcmlnaHQKPmFmdGVyIHB1dF9wYWdlX3Rlc3R6ZXJvIGZhaWxlZCBpbiBjdXJyZW50IHRo
+cmVhZCwgcGdhbGxvY190YWdfc3ViX3BhZ2VzCj5hZnRlcndhcmRzIHdvdWxkIG1hbmlwdWxhdGUg
+YW4gaW52YWxpZCBwYWdlIGZvciBhY2NvdW50aW5nIHJlbWFpbmluZwo+cGFnZXM6Cj4KPlt0aW1l
+bGluZV0gICBbdGhyZWFkMV0gICAgICAgICAgICAgICAgICAgICBbdGhyZWFkMl0KPiAgfCAgICAg
+ICAgICBhbGxvY19wYWdlIG5vbi1jb21wb3VuZAo+ICBWCj4gIHwgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgZ2V0X3BhZ2UsIHJmIGNvdW50ZXIgaW5jCj4gIFYKPiAgfCAg
+ICAgICAgICBpbiBfX19mcmVlX3BhZ2VzCj4gIHwgICAgICAgICAgcHV0X3BhZ2VfdGVzdHplcm8g
+ZmFpbHMKPiAgVgo+ICB8ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHB1
+dF9wYWdlLCBwYWdlIHJlbGVhc2VkCj4gIFYKPiAgfCAgICAgICAgICBpbiBfX19mcmVlX3BhZ2Vz
+LAo+ICB8ICAgICAgICAgIHBnYWxsb2NfdGFnX3N1Yl9wYWdlcwo+ICB8ICAgICAgICAgIG1hbmlw
+dWxhdGUgYW4gaW52YWxpZCBwYWdlCj4gIFYKPgo+UmVzdG9yZSBfX2ZyZWVfcGFnZXMoKSB0byBp
+dHMgc3RhdGUgYmVmb3JlLCByZXRyaWV2ZSBhbGxvYyB0YWcKPmJlZm9yZWhhbmQuCj4KPkZpeGVz
+OiA1MWZmNGQ3NDg2ZjAgKCJtbTogYXZvaWQgZXh0cmEgbWVtX2FsbG9jX3Byb2ZpbGluZ19lbmFi
+bGVkKCkgY2hlY2tzIikKPlNpZ25lZC1vZmYtYnk6IERhdmlkIFdhbmcgPDAwMTA3MDgyQDE2My5j
+b20+Cj4tLS0KPiBpbmNsdWRlL2xpbnV4L3BnYWxsb2NfdGFnLmggfCAgNyArKysrKysrCj4gbW0v
+cGFnZV9hbGxvYy5jICAgICAgICAgICAgIHwgMTUgKysrKysrLS0tLS0tLS0tCj4gMiBmaWxlcyBj
+aGFuZ2VkLCAxMyBpbnNlcnRpb25zKCspLCA5IGRlbGV0aW9ucygtKQo+Cj5kaWZmIC0tZ2l0IGEv
+aW5jbHVkZS9saW51eC9wZ2FsbG9jX3RhZy5oIGIvaW5jbHVkZS9saW51eC9wZ2FsbG9jX3RhZy5o
+Cj5pbmRleCBjNzQwNzc5Nzc4MzAuLjk3ZWI0ODM1NTY4ZSAxMDA2NDQKPi0tLSBhL2luY2x1ZGUv
+bGludXgvcGdhbGxvY190YWcuaAo+KysrIGIvaW5jbHVkZS9saW51eC9wZ2FsbG9jX3RhZy5oCj5A
+QCAtMTg4LDYgKzE4OCwxMyBAQCBzdGF0aWMgaW5saW5lIHN0cnVjdCBhbGxvY190YWcgKl9fcGdh
+bGxvY190YWdfZ2V0KHN0cnVjdCBwYWdlICpwYWdlKQo+IAlyZXR1cm4gdGFnOwo+IH0KPiAKPitz
+dGF0aWMgaW5saW5lIHN0cnVjdCBhbGxvY190YWcgKnBnYWxsb2NfdGFnX2dldChzdHJ1Y3QgcGFn
+ZSAqcGFnZSkKPit7Cj4rCWlmIChtZW1fYWxsb2NfcHJvZmlsaW5nX2VuYWJsZWQoKSkKPisJCXJl
+dHVybiBfX3BnYWxsb2NfdGFnX2dldChwYWdlKTsKPisJcmV0dXJuIE5VTEw7Cj4rfQo+Kwo+IHZv
+aWQgcGdhbGxvY190YWdfc3BsaXQoc3RydWN0IGZvbGlvICpmb2xpbywgaW50IG9sZF9vcmRlciwg
+aW50IG5ld19vcmRlcik7Cj4gdm9pZCBwZ2FsbG9jX3RhZ19zd2FwKHN0cnVjdCBmb2xpbyAqbmV3
+LCBzdHJ1Y3QgZm9saW8gKm9sZCk7Cj4gCj5kaWZmIC0tZ2l0IGEvbW0vcGFnZV9hbGxvYy5jIGIv
+bW0vcGFnZV9hbGxvYy5jCj5pbmRleCA1NjY5YmFmMmE2ZmUuLjFiMDBlMTRhOTc4MCAxMDA2NDQK
+Pi0tLSBhL21tL3BhZ2VfYWxsb2MuYwo+KysrIGIvbW0vcGFnZV9hbGxvYy5jCj5AQCAtMTE1MSwx
+NCArMTE1MSw5IEBAIHN0YXRpYyBpbmxpbmUgdm9pZCBwZ2FsbG9jX3RhZ19zdWIoc3RydWN0IHBh
+Z2UgKnBhZ2UsIHVuc2lnbmVkIGludCBucikKPiAJCV9fcGdhbGxvY190YWdfc3ViKHBhZ2UsIG5y
+KTsKPiB9Cj4gCj4tc3RhdGljIGlubGluZSB2b2lkIHBnYWxsb2NfdGFnX3N1Yl9wYWdlcyhzdHJ1
+Y3QgcGFnZSAqcGFnZSwgdW5zaWduZWQgaW50IG5yKQo+Ky8qIFdoZW4gdGFnIGlzIG5vdCBOVUxM
+LCBhc3N1bWluZyBtZW1fYWxsb2NfcHJvZmlsaW5nX2VuYWJsZWQgKi8KPitzdGF0aWMgaW5saW5l
+IHZvaWQgcGdhbGxvY190YWdfc3ViX3BhZ2VzKHN0cnVjdCBhbGxvY190YWcgKnRhZywgdW5zaWdu
+ZWQgaW50IG5yKQo+IHsKPi0Jc3RydWN0IGFsbG9jX3RhZyAqdGFnOwo+LQo+LQlpZiAoIW1lbV9h
+bGxvY19wcm9maWxpbmdfZW5hYmxlZCgpKQo+LQkJcmV0dXJuOwo+LQo+LQl0YWcgPSBfX3BnYWxs
+b2NfdGFnX2dldChwYWdlKTsKPiAJaWYgKHRhZykKPiAJCXRoaXNfY3B1X3N1Yih0YWctPmNvdW50
+ZXJzLT5ieXRlcywgUEFHRV9TSVpFICogbnIpOwo+IH0KPkBAIC0xMTY4LDcgKzExNjMsNyBAQCBz
+dGF0aWMgaW5saW5lIHZvaWQgcGdhbGxvY190YWdfc3ViX3BhZ2VzKHN0cnVjdCBwYWdlICpwYWdl
+LCB1bnNpZ25lZCBpbnQgbnIpCj4gc3RhdGljIGlubGluZSB2b2lkIHBnYWxsb2NfdGFnX2FkZChz
+dHJ1Y3QgcGFnZSAqcGFnZSwgc3RydWN0IHRhc2tfc3RydWN0ICp0YXNrLAo+IAkJCQkgICB1bnNp
+Z25lZCBpbnQgbnIpIHt9Cj4gc3RhdGljIGlubGluZSB2b2lkIHBnYWxsb2NfdGFnX3N1YihzdHJ1
+Y3QgcGFnZSAqcGFnZSwgdW5zaWduZWQgaW50IG5yKSB7fQo+LXN0YXRpYyBpbmxpbmUgdm9pZCBw
+Z2FsbG9jX3RhZ19zdWJfcGFnZXMoc3RydWN0IHBhZ2UgKnBhZ2UsIHVuc2lnbmVkIGludCBucikg
+e30KPitzdGF0aWMgaW5saW5lIHZvaWQgcGdhbGxvY190YWdfc3ViX3BhZ2VzKHN0cnVjdCBhbGxv
+Y190YWcgKnRhZywgdW5zaWduZWQgaW50IG5yKSB7fQo+IAo+ICNlbmRpZiAvKiBDT05GSUdfTUVN
+X0FMTE9DX1BST0ZJTElORyAqLwo+IAo+QEAgLTUwNjUsMTEgKzUwNjAsMTMgQEAgc3RhdGljIHZv
+aWQgX19fZnJlZV9wYWdlcyhzdHJ1Y3QgcGFnZSAqcGFnZSwgdW5zaWduZWQgaW50IG9yZGVyLAo+
+IHsKPiAJLyogZ2V0IFBhZ2VIZWFkIGJlZm9yZSB3ZSBkcm9wIHJlZmVyZW5jZSAqLwo+IAlpbnQg
+aGVhZCA9IFBhZ2VIZWFkKHBhZ2UpOwo+KwkvKiBnZXQgYWxsb2MgdGFnIGluIGNhc2UgdGhlIHBh
+Z2UgaXMgcmVsZWFzZWQgYnkgb3RoZXJzICovCj4rCXN0cnVjdCBhbGxvY190YWcgKnRhZyA9IHBn
+YWxsb2NfdGFnX2dldChwYWdlKTsKPiAKPiAJaWYgKHB1dF9wYWdlX3Rlc3R6ZXJvKHBhZ2UpKQo+
+IAkJX19mcmVlX2Zyb3plbl9wYWdlcyhwYWdlLCBvcmRlciwgZnBpX2ZsYWdzKTsKPiAJZWxzZSBp
+ZiAoIWhlYWQpIHsKPi0JCXBnYWxsb2NfdGFnX3N1Yl9wYWdlcyhwYWdlLCAoMSA8PCBvcmRlcikg
+LSAxKTsKPisJCXBnYWxsb2NfdGFnX3N1Yl9wYWdlcyh0YWcsICgxIDw8IG9yZGVyKSAtIDEpOwo+
+IAkJd2hpbGUgKG9yZGVyLS0gPiAwKQo+IAkJCV9fZnJlZV9mcm96ZW5fcGFnZXMocGFnZSArICgx
+IDw8IG9yZGVyKSwgb3JkZXIsCj4gCQkJCQkgICAgZnBpX2ZsYWdzKTsKPi0tIAo+Mi4zOS4yCg==
 
-But don't repost for this -- I'll make that change in ath/pending
-
-However, does ath12k need the same fix?
-If so, can you post a separate patch for that?
-
-/jeff
