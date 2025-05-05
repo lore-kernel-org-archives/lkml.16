@@ -1,98 +1,84 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A9772DA0EA;
-	Mon,  5 May 2025 23:17:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D4913A91AB;
+	Mon,  5 May 2025 23:18:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487042; cv=none; b=j+LMLDmCTY5nU95MdBbo5oKfGtbmK3yqPghx9NE7qdngzW30WNLOdjPHk+3jNt7X5/2MV2Q22aZv3gVWGmAMcR98TMoT02NdJdcrDg615MpdVDnK5GXSCWmghnkOkPe9jRxnMYJMi9//wJ+r5JeJmHrYHjgWVcHF3u9xhVU3LP4=
+	t=1746487083; cv=none; b=kVfKneNJ+fb1q77rWbFx4zFpXi5MGOT6ETcv8/a4LqoqfjfXatZQOr5r4UOSXeSegV+mTMRfYoJt+NGMQZoZTyG3uqH1X1PsJadessiRy3SWXp7JmsPptzGuQHjDnHrcOzTyL4gKEl48knwlmZWlKnpBkfTh9/F0PMkdHdk1AGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487042; c=relaxed/simple;
-	bh=BTogwoPQhqDb5Lb0ED+JhY3WyEMYPQZBPF+4Xj5VUFY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=I8hjj6J+taOKrlCPYkR5845rC82QBArdIimfYUJf0uoNw6xhNBqvrtzc7/GXf9XrL7xfW7u+wRPLpGexcn7i6yMXfQMQf6tG5myQFVrNA+M7kS5UWmTwkMDvd9X+4c3G1WXA2+MMGaHdL1T1ni23iciy2N7DIj4CMB3ESOSj6fw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YFpUdF6u; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746487083; c=relaxed/simple;
+	bh=Q5HBnP8a1kUf13Gm4zsvVjnT7DLr3v++THNIQz6dZRA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=XthSHMB5VEI17OH8QdiPZRPo+u4nnUVtE3oLOqB1BnR0kBIv6FvoKvPBDORnjA0RBkOVytMuTqr20gfugovkDI+1CQPUWEC//nJ1+q8vQ/JLwTnc52SkXWec1hWokfdBtxSKbgUlVaDyrueT/J3CTb/ueJf4E3lajaS/E1DeNYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OvQzOmV2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YFpUdF6u"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 71740C4CEE4;
-	Mon,  5 May 2025 23:17:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OvQzOmV2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57EE8C4CEF1;
+	Mon,  5 May 2025 23:18:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487041;
-	bh=BTogwoPQhqDb5Lb0ED+JhY3WyEMYPQZBPF+4Xj5VUFY=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=YFpUdF6uvuXHBNQroEBQGOXU42T9Ojja5dNWud17KGZGd70Hnp2+Kl+5j+jWzDkPP
-	 4G0wULQ2KcZ1DVzdk0oIYoihMgoQ/NUQC7OfqSBfVRZMm8eN7rm94aOY+jt74hGQH2
-	 3k4nt07VvGdfdNEIruU0y6hQQRu1HrSCdksbgbWzDcZ5F6G2MsGGZ+yYeXPbJmLeD0
-	 iSQbHYXJs3bqzH3pmcQfMC/+4uZUOCHiOadxEM8sOZ8if6JKYpDo0ES8Y8SzAoCwoZ
-	 L2ftLo8jxpmCDXHH5AL3Fhv2oAYdr6Kkzd2zV17r1uuvbHWTL6s9gjDhHEjQN7ZHXj
-	 qdj9V+OfND9xg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F86DC3ABC2;
-	Mon,  5 May 2025 23:17:21 +0000 (UTC)
-From: Aaron Kling via B4 Relay <devnull+webgeek1234.gmail.com@kernel.org>
-Date: Mon, 05 May 2025 18:17:21 -0500
-Subject: [PATCH v5 2/3] cpuidle: tegra: Export
- tegra_cpuidle_pcie_irqs_in_use
+	s=k20201202; t=1746487082;
+	bh=Q5HBnP8a1kUf13Gm4zsvVjnT7DLr3v++THNIQz6dZRA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=OvQzOmV2kafjMlIfmGOdCBEeA4SuHpBa8ZPnwb/ZS4DbdfVu4mrvaaX+4EiFeROmj
+	 AAE0HaMJrD4zrMWyZlAZvOyr6CB/kgRjUTyJ500/g0E3RuqwlKYTQ9JMpzq2I9IMdL
+	 JgfYz1me1EIb+WTTmNgipRoPKiN3QJ/Xyddlm0XnOw/aYHbqEjQKQeuE2WFn3t5Xi+
+	 /qbaBgt+ic+2xZUtyt1OXan8ySeCinPiPuxZi5ir79D0ZUa3wu9+LtGRIUCPRUkZHj
+	 NAMSUNuXdgWQDBcTGZGjznOPOG+wF1E8hat9q02U6GJdiWApd56bJyBHSLTZEaehoR
+	 FrFh4Oolq45GQ==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: junan <junan76@163.com>,
+	Jiri Kosina <jkosina@suse.com>,
+	Sasha Levin <sashal@kernel.org>,
+	jikos@kernel.org,
+	bentiss@kernel.org,
+	linux-usb@vger.kernel.org,
+	linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.15 144/153] HID: usbkbd: Fix the bit shift number for LED_KANA
+Date: Mon,  5 May 2025 19:13:11 -0400
+Message-Id: <20250505231320.2695319-144-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250505231320.2695319-1-sashal@kernel.org>
+References: <20250505231320.2695319-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250505-pci-tegra-module-v5-2-827aaac998ba@gmail.com>
-References: <20250505-pci-tegra-module-v5-0-827aaac998ba@gmail.com>
-In-Reply-To: <20250505-pci-tegra-module-v5-0-827aaac998ba@gmail.com>
-To: Thomas Gleixner <tglx@linutronix.de>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
- Thierry Reding <thierry.reding@gmail.com>, 
- Jonathan Hunter <jonathanh@nvidia.com>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, 
- Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
- linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, 
- Aaron Kling <webgeek1234@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746487040; l=805;
- i=webgeek1234@gmail.com; s=20250217; h=from:subject:message-id;
- bh=VxJ9HgkNV4IxH20jYpaAA9e5Ei6kk4ytu1PVu0wpNxM=;
- b=z0W8d1Q64bfmqnl3a4wP5TKAH7EjzkwLbmJxq1UHI5FFF3Kx7RAK2oAK5+8b1qLQQ4rTygQlv
- XNqsbCcZzfqDKnx2o3KR3tU5gQmKhc8Zoqq3x8faYHwniL8tcdYJ7O4
-X-Developer-Key: i=webgeek1234@gmail.com; a=ed25519;
- pk=TQwd6q26txw7bkK7B8qtI/kcAohZc7bHHGSD7domdrU=
-X-Endpoint-Received: by B4 Relay for webgeek1234@gmail.com/20250217 with
- auth_id=342
-X-Original-From: Aaron Kling <webgeek1234@gmail.com>
-Reply-To: webgeek1234@gmail.com
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 5.15.181
+Content-Transfer-Encoding: 8bit
 
-From: Aaron Kling <webgeek1234@gmail.com>
+From: junan <junan76@163.com>
 
-Add export for tegra_cpuidle_pcie_irqs_in_use() so that drivers like
-pci-tegra can be loaded as a module.
+[ Upstream commit d73a4bfa2881a6859b384b75a414c33d4898b055 ]
 
-Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
+Since "LED_KANA" was defined as "0x04", the shift number should be "4".
+
+Signed-off-by: junan <junan76@163.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cpuidle/cpuidle-tegra.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/hid/usbhid/usbkbd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/cpuidle/cpuidle-tegra.c b/drivers/cpuidle/cpuidle-tegra.c
-index b203a93deac5f378572be90e22c73e7417adb99e..aca907a62bb5de4ee4c71c1900eacedd4b90bc0a 100644
---- a/drivers/cpuidle/cpuidle-tegra.c
-+++ b/drivers/cpuidle/cpuidle-tegra.c
-@@ -336,6 +336,7 @@ void tegra_cpuidle_pcie_irqs_in_use(void)
- 	pr_info("disabling CC6 state, since PCIe IRQs are in use\n");
- 	tegra_cpuidle_disable_state(TEGRA_CC6);
- }
-+EXPORT_SYMBOL_GPL(tegra_cpuidle_pcie_irqs_in_use);
+diff --git a/drivers/hid/usbhid/usbkbd.c b/drivers/hid/usbhid/usbkbd.c
+index df02002066cef..1d94d246f8162 100644
+--- a/drivers/hid/usbhid/usbkbd.c
++++ b/drivers/hid/usbhid/usbkbd.c
+@@ -160,7 +160,7 @@ static int usb_kbd_event(struct input_dev *dev, unsigned int type,
+ 		return -1;
  
- static void tegra_cpuidle_setup_tegra114_c7_state(void)
- {
-
+ 	spin_lock_irqsave(&kbd->leds_lock, flags);
+-	kbd->newleds = (!!test_bit(LED_KANA,    dev->led) << 3) | (!!test_bit(LED_COMPOSE, dev->led) << 3) |
++	kbd->newleds = (!!test_bit(LED_KANA,    dev->led) << 4) | (!!test_bit(LED_COMPOSE, dev->led) << 3) |
+ 		       (!!test_bit(LED_SCROLLL, dev->led) << 2) | (!!test_bit(LED_CAPSL,   dev->led) << 1) |
+ 		       (!!test_bit(LED_NUML,    dev->led));
+ 
 -- 
-2.48.1
-
+2.39.5
 
