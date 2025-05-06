@@ -1,321 +1,220 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD09A1F55F8;
-	Tue,  6 May 2025 11:06:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746529609; cv=none; b=mR9gcOL+Vv0Qct5s4bg20qanyDR0bPa+R2HVaCktQvU2P+iLOpzJuYzjtVsz1NZvhGT629kcCnMOat4f0OLvR7FOhYYNeaCyFvpsS4XnflptXzzAXrmbT2DUG9SvEPpIRDNTaseotVYzhczCVR5enbIHwios870pUrTWiKES4KA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746529609; c=relaxed/simple;
-	bh=IsJ4knD6xjH5ocv5Yne+kV9PRiqyTgJ8O5upyfZ3XeI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=K/7U+OncLlRLCDxzw9RQ0qAa/s6QEvLyzx+w32ucaeQEsSok2bma6xmKZTfSLxr3M5q6fCgyYcsO8KDc4yvJspei8NOhhMVJgrqZK3FCxOAIPLnEgquqdYfyHZvjpkSGDy3yVVTB/91zFDOU/b8ehSC51earX9wdiN2LXGwQXU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VHspKYof; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFE02278750
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 11:07:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.18
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746529650; cv=fail; b=Q/O59OUcCyAqeGS9RQJ8WuFcmvTe/BtJn5t9UF3P/U3tIyo5a88v4FRSvskSnxuv3vcsEJufDtEBXjjA1AAQ0dHC/hLNaBBZD8EK4JZ0SoVSKCQ3EW9s8fdg9pSaHCs7kI7PP0pD14ViOaIJ8+M9v7EMjodNt3i7tqxtAMxWXso=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746529650; c=relaxed/simple;
+	bh=9M8XXWVf8yMcKOMQavHFsZ4TdjZwIbRweCIOhYOXcRg=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=pby7tX8X5dNxZDfyPa0c7luzN/HzKjFLOylpNfmxSMxmKiKAtonFfbyaSRPJDgAmsFm32QisAMsoQVMTZw/7LU+deibG40zBamQobwOlJxuIClbF1cKDfz+PbE/MjSSpsh3hLDQbwW3YxBDlaA/Y25gWUlc8APs4p0eP1GfgHwg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ou7yOHyO; arc=fail smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VHspKYof"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4103C4CEE4;
-	Tue,  6 May 2025 11:06:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746529609;
-	bh=IsJ4knD6xjH5ocv5Yne+kV9PRiqyTgJ8O5upyfZ3XeI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VHspKYofF/Nbn6SlNqc2bfQfo93MlLP2GC3foMiOYd3Eiklnd7rPNpcz52HrTTAxA
-	 RyOMCgF2bin4Y8P0OrTQIb5EQeEgkHW3+gQzPvDMY4AMlhLwZHRf3dzgiDVuKQtI9n
-	 Xbvo2y8+aEPxn7KaGqIDiWQHWVwgGaUi7DKj6ygp32Gq4/ERY+0i+etHbnoRVXX2gM
-	 t0LIY7mrqL7hfNKX7G7DVo6vTecO+n4f5Nr3XCkjDW29nYsmTunY0y+nhh9uvh1Dga
-	 fTUu5paF0JAum7VGi/TnSR2miv1EvODG+xg2kAAWzlMhfOdeoKOtfYwyjPuUHemdFe
-	 5TeIRD8PRCSRQ==
-Message-ID: <9015e10e-effb-4dc8-b100-1906db731f57@kernel.org>
-Date: Tue, 6 May 2025 13:06:42 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ou7yOHyO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746529649; x=1778065649;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=9M8XXWVf8yMcKOMQavHFsZ4TdjZwIbRweCIOhYOXcRg=;
+  b=Ou7yOHyOzSAchhBpdcWTT7qrHWFc0wOKmDBcZThHgtjOGe8xHAu6AmzT
+   s/Aju0094DkqUn5Bp66qDJQlrA9LTzzRwgK93zHWktDEIm2p7pBdEEqmP
+   B7KZnjWvFxCF4O99KVg5hCQC60A6O1ajDZkfne2u2csQ4UIzDLk3hxGBK
+   tgvRVCx1PMJ92XyXeNg4lhA7JZCSdaW79XGhkuqzuMBf7DKvAGFeMgr7f
+   OdnpaJkXT9zOvvoYLzqbVmwTxrmESMv3J79boT9A02d8aqp2D20pIQm8v
+   /FBLDyPbdaQmO02fsIMoaQdAGC1/V9kjyamMUQw/UVO+ldajpHCz/R0Gu
+   g==;
+X-CSE-ConnectionGUID: tlSGbUkAR9So+QO1CLZsEg==
+X-CSE-MsgGUID: urnBOvdVQxaXEkEVS0v++g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11424"; a="48339997"
+X-IronPort-AV: E=Sophos;i="6.15,266,1739865600"; 
+   d="scan'208";a="48339997"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 04:07:28 -0700
+X-CSE-ConnectionGUID: MVeu91jiQYmZjjJp+YNPDw==
+X-CSE-MsgGUID: /2+nHhMzSJaEZoAVaBiYSw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,266,1739865600"; 
+   d="scan'208";a="166513293"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 04:07:28 -0700
+Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Tue, 6 May 2025 04:07:27 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Tue, 6 May 2025 04:07:27 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.177)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Tue, 6 May 2025 04:07:27 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=B0WSJdpdDNeTNNmhRNkAiHH8e19aTSVW8fzML6xhVbmL/JjKSRB1hIUo6C6qzyglsTJVPasKpMakFyG+tkPhISW+KjqtEDzZFDDSBOr2GBO6FgiRB3rMZKy4EZuUKJQGlleHkhcV5X9rfoBI0mvLmGT4LyeuqWtXuwbaI5lzoF+7dvf8VsqUivbapEhbIVXaFeV/1D0n657BwPIqvV1KxL4hK6Qcg+Erq1khB6V6qT08dG1w0HoESl1L0BmkXby3yeegsFRSN0F5hSXo19A/XgM6jrpk1jVE6eMA8pHlNiGMXwtBW7TtTHy7/BgnJWzqcxjundFmNxjA37gzEe/clQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9M8XXWVf8yMcKOMQavHFsZ4TdjZwIbRweCIOhYOXcRg=;
+ b=Eb+pjm70JSyGNvOojk1n9lcTYEYuIJR30aBzn5AwoJ18UMMgaOHd4zdGHjrNUTGN3EYGxi7QxMNO/BtYgA24eiUaEAhrJU733WxX0R7A6PYyix8i6irHASkYIImZ903pQG5PlnnCQxk+Efly52OROmb7MR2cmzVqDV/3XTsQd5oki3ymzaqUwhf2Z4J5h8ZoJisJl2D2EVPmQurYubtVcTWZctVF3V/g86qZcHd1CH1IHQboQRVxkZtGb7YEW+5j3pTS+ocFxU9j8+p+BGkNQVz+MfI9bU3UG1kIrLR5MAtKIM7CPWx026ckPj5YvLrQbJ7KaGGaWbvdw9h51Yl4Kw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from CY5PR11MB6366.namprd11.prod.outlook.com (2603:10b6:930:3a::8)
+ by SA0PR11MB4653.namprd11.prod.outlook.com (2603:10b6:806:94::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.26; Tue, 6 May
+ 2025 11:07:21 +0000
+Received: from CY5PR11MB6366.namprd11.prod.outlook.com
+ ([fe80::6826:6928:9e6:d778]) by CY5PR11MB6366.namprd11.prod.outlook.com
+ ([fe80::6826:6928:9e6:d778%5]) with mapi id 15.20.8678.028; Tue, 6 May 2025
+ 11:07:21 +0000
+From: "Usyskin, Alexander" <alexander.usyskin@intel.com>
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+CC: Richard Weinberger <richard@nod.at>, Vignesh Raghavendra
+	<vigneshr@ti.com>, "De Marchi, Lucas" <lucas.demarchi@intel.com>,
+	=?utf-8?B?VGhvbWFzIEhlbGxzdHLDtm0=?= <thomas.hellstrom@linux.intel.com>,
+	"Vivi, Rodrigo" <rodrigo.vivi@intel.com>, Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>, Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Tvrtko Ursulin
+	<tursulin@ursulin.net>, "Poosa, Karthik" <karthik.poosa@intel.com>, "Abliyev,
+ Reuven" <reuven.abliyev@intel.com>, "Weil, Oren jer"
+	<oren.jer.weil@intel.com>, "linux-mtd@lists.infradead.org"
+	<linux-mtd@lists.infradead.org>, "dri-devel@lists.freedesktop.org"
+	<dri-devel@lists.freedesktop.org>, "intel-gfx@lists.freedesktop.org"
+	<intel-gfx@lists.freedesktop.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v7 01/12] mtd: core: always create master device
+Thread-Topic: [PATCH v7 01/12] mtd: core: always create master device
+Thread-Index: AQHbnmT6czHkKmL9wkq39BK9P9qwmbO6k/CqgAnBeeA=
+Date: Tue, 6 May 2025 11:07:21 +0000
+Message-ID: <CY5PR11MB6366C40CC20B3519476DD8E2ED892@CY5PR11MB6366.namprd11.prod.outlook.com>
+References: <20250326152623.3897204-1-alexander.usyskin@intel.com>
+	<20250326152623.3897204-2-alexander.usyskin@intel.com>
+ <87ldrjtj7n.fsf@bootlin.com>
+In-Reply-To: <87ldrjtj7n.fsf@bootlin.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: CY5PR11MB6366:EE_|SA0PR11MB4653:EE_
+x-ms-office365-filtering-correlation-id: bf1eac48-3ce1-4100-5009-08dd8c8e2c39
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|7416014|366016|376014|1800799024|38070700018;
+x-microsoft-antispam-message-info: =?utf-8?B?dHNvQnZEYnJVc0g4cll4YSszeDRacUJkNnoxQzMwOWp0aXZjMlhUWTNOOEph?=
+ =?utf-8?B?Q2RKcUFhVmdpVGlybzZ1WldLN2ZDUnFkQy9kM3JyREtSZHJnMXBlODlrNHFE?=
+ =?utf-8?B?N0FEWjJlZXZFem1FaXNlOUxFMlA2TmhidjVraGxOaGw3dlNoNUV4anIydjRq?=
+ =?utf-8?B?aUdtN1E4eElCWkpxM1ZZYVRreksvcFJPUzFESlJGQ0hZVmkrZkcvSmVHUUlm?=
+ =?utf-8?B?Z1VleEhYaFozRTN0RTJuZm95c2ZYVVBHNnE0ektraUVjZHNPUHVwWFlLK29H?=
+ =?utf-8?B?M1UzNXVEd1VBQzNjN2YvNEpTaWNWUnlRanB1dmE3R1MzODdUK2QvTkFZWGdT?=
+ =?utf-8?B?NnkwZkFnR0FQMUpDQ1dkZ2FzYUpLek13dk02MWpNcmZkUDJpbkRSdUpneUJG?=
+ =?utf-8?B?L2U5c2JMNjZwUWVWZ0dsY2ZsdTlzc28zajJjOFdDV3hEMUVZUjdZYnoxS0pi?=
+ =?utf-8?B?cXZyR1F3aHVmcTBsdWRCLzd0dW9xVmVtVmNuUHNVZWg0b0swQUNrTDFjdEs4?=
+ =?utf-8?B?Y3dob2JLN0Z1UUEvWEQzM1UzSW5jUktSNm9iSzkwSUFkTUNNYTVlQm5XaEdG?=
+ =?utf-8?B?WWhLMnZhcmlVeUhJRjFhaHVYZHQ0ZkN3NmZLZ0Jlekg4TmFvUU04K0lCZ042?=
+ =?utf-8?B?Wjc2bUdRekRpZTRmR0JVbnVFNmdtaGdxZG9qdUNRdDE3YzUrMDJPWVptSDlW?=
+ =?utf-8?B?TEEyYjdtdE5pZ3lZa3l1VkVmTVhKSXdSUkJBbDgyVk1mZk4yODNrK09Hby9J?=
+ =?utf-8?B?R1dEYlZnRXZpeTFER3kwTHArK2pOQjdlV3F2cUVzV1hoZWVKL0VJTUdBZTVU?=
+ =?utf-8?B?NHlTSThCSWRiVitJNEMrWG5PdHF3V3pCUU1nUW9ueWprdUQ4MC9KYi9uSk5I?=
+ =?utf-8?B?eUZFbzZWM0lHclIydXlxMFVGcEt2a00xVzh5NzluQmhWYVZzdGJmdEhNT0Y5?=
+ =?utf-8?B?WWRKWmg5UEVFYmQ1NE9zK2FHcFhRei9YNmkyR2tJOEtwVm5RM1I2dDdMN0tG?=
+ =?utf-8?B?bjcyMmZiMEF2dkowWUljUlQ0MWxPSW5UblkyQlBxMHFyTDg1OE9hMzZ2ekxX?=
+ =?utf-8?B?WHFUbXlFZGZOTmVJUkVwY1A2aDZYTXhiR0NKVU1uNmFvTmdhd1Vpc3BzK00r?=
+ =?utf-8?B?QVNWaG9BN011bExXdHJ1Z2VQUVZGbDl3Ung5ZGRoNFZuOXc5M24xaENydEhj?=
+ =?utf-8?B?K3YxNTdRVHRMc2pWdWRWYXNsSnl1ZUU2bTVFU3ZSVVppMDRUdTJBNmFXZjNn?=
+ =?utf-8?B?TmxEb3ZXZXNmL3JvdWM3QWhMdFFML0wvUUhyd3R1bitSY1cxRy9kM1NLemZQ?=
+ =?utf-8?B?NkgrYWMxSk5qUU1LdXFtb0Q0QXBqL2EwWEh5QWJ2dDNtdUVGMW9MREdmZ2pF?=
+ =?utf-8?B?THNZRVRMd1p1TXRFbE8wd1F1ZktxVFFnL25mV21kbGhQNDdLbyszam1pKzNs?=
+ =?utf-8?B?ZHVsL1M4REt4RGxhRlhHSUJZbnVVbGRMV1NUQ0dSYnBsbk5jTzROVERDY1NE?=
+ =?utf-8?B?SVcrM2NqcTlXTDZaZDA5MmNmRElEalNXTzdHeW5FNWtlUTlTcURhU0hCSE5o?=
+ =?utf-8?B?cUxaQy9zR2RZYkVaZ2V6V1B2SUlZQ2NDdzNFRGVuOU1CMDVyRTNFQW1iM1E1?=
+ =?utf-8?B?QVRWSWRpWERyKys4bXJjdWxZVnA5Uk1YNnFCUFhnQnc1VWVicFRKeGFPbysv?=
+ =?utf-8?B?S0RkejU0dzJaTlY2UnYraU55alFseUc5VE1acmY1WC9BWnUzUHdkRm5ndm4x?=
+ =?utf-8?B?R2g2YnRsQlRUZGZSOHJMaXZCOTIyUktqTHhodDNBa0EvNFhmRDR3angrR29T?=
+ =?utf-8?B?eWdwRzBpNTFlN3dSZVBQM1BFMmU5TVlvbjc5MUx3SHZqci9GZ2Fyd3FyVVFV?=
+ =?utf-8?B?M2Nnb094UmgyemVQb28rRktmZ2JKMjJtQ1ZPeHdLbkhTaFBxbXFxM2pzejl5?=
+ =?utf-8?B?aVhqWlRvVm43S1BUSm9WUWNKcUovU0FZaktYS1NsajQ3TmlEa202VDZkR1Fp?=
+ =?utf-8?Q?v4jCZ+Vd/5zCW6MyHXi2/Zhfa1vJyQ=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR11MB6366.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(376014)(1800799024)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?MlBNL1d5bEdsTWhXVFRZOHdmTTdPMkNQVENJSkxJM282aHFHK0tjQ3ZjRk83?=
+ =?utf-8?B?M1kxWEN3cSsxaHM4MkZmRHZTZ2VnY2hkMjZpM2QwQ3lRYm1DbTFlNUsydUV6?=
+ =?utf-8?B?ZlhLTTUyVkd2TzN6RG9qMlk3MmxDZG5nZmdnaW5ZajhZL3ZYYWdqSEd2bkU2?=
+ =?utf-8?B?VWtmMFM4OEI2ajVKOGlLTFY4OGluN3FSa3NaQmNXc3hkZTFiSGQ2R3ZRWll3?=
+ =?utf-8?B?dGFSK0twU0VLa0p5U29WMWVvZGdOT1R2bWcweXlHQzNyUlUybnV2VWxpYWNp?=
+ =?utf-8?B?b2NxUFdLWEZ2ZkpvdjVpdGswYmwxanU1VVJ5a1BMNE0rd3ZMZmV2c2lRcjk4?=
+ =?utf-8?B?a1FRa3FLZ3gxck5qU2l6QjhBU095WHNvU3BlZy9DTkViWkFTT2RzS2w2Z2dP?=
+ =?utf-8?B?azZYQjNvVEVqazlWeWZzZEh4enRvNVNXM1dCQkNPQ1hPeXhCdlQ5c01LSzFD?=
+ =?utf-8?B?aUF2SlNQQlNxTHpkUGRTMDRhZXhnclNRRHpTMlBrNDlqYmJ2b3FLaDl4ajhj?=
+ =?utf-8?B?K0JCRmd2ckdMMzVrUTYzMnJOTzJyM2FBaGRabjBRMEtmZXgyaVF6eXU1bnQr?=
+ =?utf-8?B?WjR5a0ZtS0labjRWZFIrVU5Da1pCZW93UW0yd1RRSFZBbVliVnlMY25JS2tO?=
+ =?utf-8?B?L3dQenphOXF2b2h3bEZwMCtUNWw1aytTbUZjWnVjTmRva1ptTmozYm1qY1Jx?=
+ =?utf-8?B?Vk5HblZrbE0yNlQwSHlWN1pGZGVDbkpDWUhraHJZRDR2amI5OGc3VW9jWCt5?=
+ =?utf-8?B?ekE0Y2EvVkJPVGxsb25xWUp2VkNycG1iUmtZcVF4QTJYVlJOV2UyVG9UeUNP?=
+ =?utf-8?B?ZHhBRmo0R0hzRDNNWmZkNlRIQklxRjdPbWpjd01hWVFZaGJ1V2NXbHFwV3c1?=
+ =?utf-8?B?WUNtQ2g0T29uaE93dXEyakppWDYzRkMxalNVazFEVllramVDSm10SHRUZlVK?=
+ =?utf-8?B?VGxITHFhNlIvTGY1ZFVJQ01qNmh1YUhoZ0VOcFl2YVNXeGY2MnRYWVVkUWs0?=
+ =?utf-8?B?b3pQZVJqMDFNY1ZPQm9udjFlcldObGc3c1JtR3o4dTM5b200SlM3ZDBIajRG?=
+ =?utf-8?B?bjNINlJta3gwUGwvYzc0dUpDOU1Icy82VTB3QnBxWjNUNVpUOExiYlg1ZnJT?=
+ =?utf-8?B?cE9qMXJ5STl1T0d0N2R2eklsdGxRNllCMGhzbHRBY2FUa3dzSFpBbXJyeS9p?=
+ =?utf-8?B?TkVjMjRDMGJkVUlCbUNFTkl2NHE1TU5vT0tyRjBuMnZTS2E5OXp6UmZRRUVW?=
+ =?utf-8?B?VmdWMkFpVit4cG9id0NNSnZqeGFlcGpMcnZXSTBNN2VSR2Z2U2wvS29ScHNL?=
+ =?utf-8?B?T0pYaWlLM0ZiR1VQc0VJNW9Gb2JERkp3V0E1cW5CRmZER0ZFUGQzWURIbngy?=
+ =?utf-8?B?Umk2b2tzMEo2Y3g1eGVKMmhvd1U1aDVBWk1KdFZXWUZ1WnEzNFl2bXQwWTZ4?=
+ =?utf-8?B?K3VHQmlvM2NpdFBFSVVhb1BUV3pidElwT1hnMVY5aEJWcC9ORHQ1WnRIK1VS?=
+ =?utf-8?B?aUxrOGpjejVXbWNrcTk3NWVCTmtjanNCZUVDakcwYjZjdnc4VUhTL2p2YmVK?=
+ =?utf-8?B?NTZrNER0VkdscTYrbWVBNUtsbmJrUTBGRjZZdGpONDFmRm0xVlpHUVNMTGlS?=
+ =?utf-8?B?dGljWWNZczFjQXVBUldObmNWWW96Z3ZKQlV1TUs2bDlnbmhuT2JCQVBLa0Fk?=
+ =?utf-8?B?eW8xNGI3N0hWVkRuYzlQcnlpUkxwUDg0MHlKb2MvMVZURlRnYVQrcllwVUN6?=
+ =?utf-8?B?V29xYkczdlNSb3J4MERBeUprTmczL0F0WXNsbDdnU2NYdUY4K2ZVaEFVZWZ1?=
+ =?utf-8?B?ZDRhaFVKaG9YSjNHTlZuSExEOFBKdHMrU2YyWXNaekVXNnJDZXZ5bHhHblF1?=
+ =?utf-8?B?SmVRZ2RpSWNxU0xGUlVRenErdmE5RURSUlJhbDVmOFRYS0t2ZzRZODBlazI5?=
+ =?utf-8?B?Mk9GS1NQSGErUmFoRTFFaU9wWHpTTEI5MnJTQTk1QUxkUWIxZzRJNGdYV0tv?=
+ =?utf-8?B?VGQySnFIOFQ5QXRmeVNyaml2allDdVM5aWtKd1hiMkljOEFPNFp2Z1plSkVP?=
+ =?utf-8?B?a05xY1JZRjQxVFM1RDhFazBtQXN0VUhhQlUxOGxEZ3c0Z1FQdHlvZ2hWRGM3?=
+ =?utf-8?B?RTBtR2ZRZjBSb3ZHV0lkY2R0QnlRQ1JXYmpvS0k2Wi9IZWJ0dkZCclNTZXpj?=
+ =?utf-8?B?dWc9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: eswin: Document for eic7700 SoC
-To: luyulin <luyulin@eswincomputing.com>, linus.walleij@linaro.org,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, kees@kernel.org, gustavoars@kernel.org,
- brgl@bgdev.pl, linux-hardening@vger.kernel.org
-Cc: zhengyu@eswincomputing.com, ningyu@eswincomputing.com,
- huangyifeng@eswincomputing.com, linmin@eswincomputing.com,
- fenglin@eswincomputing.com, lianghujun@eswincomputing.com,
- Samuel Holland <samuel.holland@sifive.com>
-References: <20250506090844.1516-1-luyulin@eswincomputing.com>
- <20250506091145.1953-1-luyulin@eswincomputing.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250506091145.1953-1-luyulin@eswincomputing.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CY5PR11MB6366.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bf1eac48-3ce1-4100-5009-08dd8c8e2c39
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 May 2025 11:07:21.1089
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: XD9/5lGCSbVHbs1oTAYHvR10ehVzS5aWToAIEli9crB6//igea4Ao7gGjz5XzuWD4WK+dduWSgMavz/zuezcrLnnqb9Eo7qPxtbP/uMlkK8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR11MB4653
+X-OriginatorOrg: intel.com
 
-On 06/05/2025 11:11, luyulin wrote:
-> This commit adds Device Tree binding documentation for the
-
-Please do not use "This commit/patch/change", but imperative mood. See
-longer explanation here:
-https://elixir.bootlin.com/linux/v5.17.1/source/Documentation/process/submitting-patches.rst#L95
-
-
-> ESWIN EIC7700 pinctrl controller module. The document describes
-> the required properties, compatible strings, and usage examples
-> in the device tree configuration when applying this module.
-
-Do not explain what DT binding is. We all know. Explain the hardware.
-See also other comits as examples.
-
-> 
-> Co-developed-by: Samuel Holland <samuel.holland@sifive.com>
-> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
-> Signed-off-by: luyulin <luyulin@eswincomputing.com>
-
-
-Looks like you used login name as full name. Use rather latin
-transcription or your name in your native language.
-
-> ---
->  .../pinctrl/eswin,eic7700-pinctrl.yaml        | 156 ++++++++++++++++++
-
-
-This was already send and reviewed. Implement previous feedback
-
-https://lore.kernel.org/all/20250326-owl-of-algebraic-wealth-61aeda@krzk-bin/
-
-Then please version your patches correctly, e.g. use b4 or git
-format-patch -vX, and add changelog in cover letter or under '---' of
-individual patches describing changes from previous version.
-
-
->  1 file changed, 156 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/eswin,eic7700-pinctrl.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/eswin,eic7700-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/eswin,eic7700-pinctrl.yaml
-> new file mode 100644
-> index 000000000000..d8811a8e0a51
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/eswin,eic7700-pinctrl.yaml
-> @@ -0,0 +1,156 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/eswin,eic7700-pinctrl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Eswin Eic7700 Pinctrl
-> +
-> +maintainers:
-> +  - LuYuLin <luyulin@eswincomputing.com>
-> +
-> +description: |
-> +  Please refer to pinctrl-bindings.txt in this directory for details of the
-> +  common pinctrl bindings used by client devices, including the meaning of the
-> +  phrase "pin configuration node".
-
-Drop this paragraph, redundant.
-
-> +
-> +  eic7700 pin configuration nodes act as a container for an arbitrary number of
-> +  subnodes. Each of these subnodes represents some desired configuration for one or
-> +  more pins. This configuration can include the mux function to select on those pin(s),
-> +  and various pin configuration parameters, such as input-enable, pull-up, etc.
-> +
-> +properties:
-> +  compatible:
-> +    const: eswin,eic7700-pinctrl
-> +
-> +  reg:
-> +    description: Specifies the base address and size of the SLCR space.
-
-Drop description, redundant.
-
-> +    maxItems: 1
-> +
-> +  "vrgmii-supply":
-
-Open existing bindings. Do you see any property written like that? No,
-therefore do not come with own syntax,
-
-Drop quotes,
-
-> +    description:
-> +      Regulator supply for the RGMII interface IO power domain.
-> +      This property should reference a regulator that provides either 1.8V or 3.3V,
-> +      depending on the board-level voltage configuration required by the RGMII interface.
-> +
-> +patternProperties:
-> +  '^(.*-)?(pins)$':
-
-Weirdly complicated pattern. Why not just "-pins$"? For which case do
-you need "pins" name?
-
-
-> +    type: object
-> +    description:
-> +      Pinctrl node's client devices use subnodes for pin muxes,
-> +      which in turn use below standard properties.
-> +
-> +    properties:
-> +      pins:
-> +        description:
-> +          For eic7700, specifies the name(s) of one or more pins to be configured by
-> +          this node.
-> +        items:
-> +          enum: [ chip_mode, mode_set0, mode_set1, mode_set2, mode_set3, xin,
-> +                  rst_out_n, key_reset_n, gpio0, por_sel, jtag0_tck, jtag0_tms,
-> +                  jtag0_tdi, jtag0_tdo, gpio5, spi2_cs0_n, jtag1_tck, jtag1_tms,
-> +                  jtag1_tdi, jtag1_tdo, gpio11, spi2_cs1_n, pcie_clkreq_n,
-> +                  pcie_wake_n, pcie_perst_n, hdmi_scl, hdmi_sda, hdmi_cec,
-> +                  jtag2_trst, rgmii0_clk_125, rgmii0_txen, rgmii0_txclk,
-> +                  rgmii0_txd0, rgmii0_txd1, rgmii0_txd2, rgmii0_txd3, i2s0_bclk,
-> +                  i2s0_wclk, i2s0_sdi, i2s0_sdo, i2s_mclk, rgmii0_rxclk,
-> +                  rgmii0_rxdv, rgmii0_rxd0, rgmii0_rxd1, rgmii0_rxd2, rgmii0_rxd3,
-> +                  i2s2_bclk, i2s2_wclk, i2s2_sdi, i2s2_sdo, gpio27, gpio28, gpio29,
-> +                  rgmii0_mdc, rgmii0_mdio, rgmii0_intb, rgmii1_clk_125, rgmii1_txen,
-> +                  rgmii1_txclk, rgmii1_txd0, rgmii1_txd1, rgmii1_txd2, rgmii1_txd3,
-> +                  i2s1_bclk, i2s1_wclk, i2s1_sdi, i2s1_sdo, gpio34, rgmii1_rxclk,
-> +                  rgmii1_rxdv, rgmii1_rxd0, rgmii1_rxd1, rgmii1_rxd2, rgmii1_rxd3,
-> +                  spi1_cs0_n, spi1_clk, spi1_d0, spi1_d1, spi1_d2, spi1_d3, spi1_cs1_n,
-> +                  rgmii1_mdc, rgmii1_mdio, rgmii1_intb, usb0_pwren, usb1_pwren,
-> +                  i2c0_scl, i2c0_sda, i2c1_scl, i2c1_sda, i2c2_scl, i2c2_sda,
-> +                  i2c3_scl, i2c3_sda, i2c4_scl, i2c4_sda, i2c5_scl, i2c5_sda,
-> +                  uart0_tx, uart0_rx, uart1_tx, uart1_rx, uart1_cts, uart1_rts,
-> +                  uart2_tx, uart2_rx, jtag2_tck, jtag2_tms, jtag2_tdi, jtag2_tdo,
-> +                  fan_pwm, fan_tach, mipi_csi0_xvs, mipi_csi0_xhs, mipi_csi0_mclk,
-> +                  mipi_csi1_xvs, mipi_csi1_xhs, mipi_csi1_mclk, mipi_csi2_xvs,
-> +                  mipi_csi2_xhs, mipi_csi2_mclk, mipi_csi3_xvs, mipi_csi3_xhs,
-> +                  mipi_csi3_mclk, mipi_csi4_xvs, mipi_csi4_xhs, mipi_csi4_mclk,
-> +                  mipi_csi5_xvs, mipi_csi5_xhs, mipi_csi5_mclk, spi3_cs_n, spi3_clk,
-> +                  spi3_di, spi3_do, gpio92, gpio93, s_mode, gpio95, spi0_cs_n,
-> +                  spi0_clk, spi0_d0, spi0_d1, spi0_d2, spi0_d3, i2c10_scl,
-> +                  i2c10_sda, i2c11_scl, i2c11_sda, gpio106, boot_sel0, boot_sel1,
-> +                  boot_sel2, boot_sel3, gpio111, lpddr_ref_clk ]
-> +
-> +      function:
-> +        description:
-> +          Specify the alternative function to be configured for the
-> +          given pins.
-> +        enum: [ disabled, boot_sel, chip_mode, emmc, fan_tach,
-> +                gpio, hdmi, i2c, i2s, jtag, ddr_ref_clk_sel,
-> +                lpddr_ref_clk, mipi_csi, osc, pcie, pwm,
-> +                rgmii, reset, sata, sdio, spi, s_mode, uart, usb ]
-> +
-> +      input-schmitt-enable: true
-> +
-> +      input-schmitt-disable: true
-> +
-> +      bias-disable: true
-> +
-> +      bias-pull-down: true
-> +
-> +      bias-pull-up: true
-> +
-> +      input-enable: true
-> +
-> +      input-disable: true
-> +
-> +      drive-strength-microamp: true
-> +
-> +    allOf:
-> +      - $ref: pincfg-node.yaml#
-> +      - $ref: pinmux-node.yaml#
-> +
-> +      - if:
-> +          properties:
-> +            pins:
-> +              anyOf:
-> +                - pattern: '^rgmii'
-> +                - const: lpddr_ref_clk
-> +        then:
-> +          properties:
-> +            drive-strength-microamp:
-> +              enum: [3000, 6000, 9000, 12000, 15000, 18000, 21000, 24000]
-> +        else:
-> +          properties:
-> +            drive-strength-microamp:
-> +              enum: [6000, 9000, 12000, 15000, 18000, 21000, 24000, 27000]
-> +
-> +    required:
-> +      - pins
-> +
-> +    additionalProperties: false
-> +
-> +allOf:
-> +  - $ref: pinctrl.yaml#
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    pinctrl@51600080 {
-> +      compatible = "eswin,eic7700-pinctrl";
-> +      reg = <0x51600080 0x1fff80>;
-> +      vrgmii-supply = <&vcc_1v8>;
-> +      gpio10_pins: gpio10-pins {
-
-Drop label.
-
-> +          pins = "jtag1_tdo";
-> +          function = "gpio";
-> +          input-enable;
-> +          bias-pull-up;
-> +      };
-> +    };
-> +
-> +    i2c2 {
-
-Drop this node, not relevant.
-
-
-Best regards,
-Krzysztof
+PiANCj4gT24gMjYvMDMvMjAyNSBhdCAxNzoyNjoxMiArMDIsIEFsZXhhbmRlciBVc3lza2luDQo+
+IDxhbGV4YW5kZXIudXN5c2tpbkBpbnRlbC5jb20+IHdyb3RlOg0KPiANCj4gPiBDcmVhdGUgbWFz
+dGVyIGRldmljZSB3aXRob3V0IHBhcnRpdGlvbiB3aGVuDQo+ID4gQ09ORklHX01URF9QQVJUSVRJ
+T05FRF9NQVNURVIgZmxhZyBpcyB1bnNldC4NCj4gPg0KPiA+IFRoaXMgc3RyZWFtbGluZXMgZGV2
+aWNlIHRyZWUgYW5kIGFsbG93cyB0byBhbmNob3INCj4gPiBydW50aW1lIHBvd2VyIG1hbmFnZW1l
+bnQgb24gbWFzdGVyIGRldmljZSBpbiBhbGwgY2FzZXMuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5
+OiBBbGV4YW5kZXIgVXN5c2tpbiA8YWxleGFuZGVyLnVzeXNraW5AaW50ZWwuY29tPg0KPiANCj4g
+QXBwbGllZCB0byBtdGQvbmV4dC4gVGhhbmtzIQ0KPiANCj4gTWlxdcOobA0KDQpUaGFua3MgYSBs
+b3QhDQoNCk1pcXVlbCwgd291bGQgeW91IHBpY2sgcGF0Y2hlcyBmcm9tIHRoaXMgc2VyaWVzIGZv
+ciBmaWxlcyB0aGF0IGFyZQ0KaW4gdGhlIG10ZCB0cmVlPw0KSSBjYW4gc2VuZCBzZXBhcmF0ZSBw
+YXRjaCBzZXJpZXMgZm9yIHRoaXMuDQpJbiB0aGlzIGNhc2UgdGhlIGk5MTUvWGUgcGF0Y2hlcyBj
+YW4gYmUgbWVyZ2VkIGluIHBhcmFsbGVsIHZpYSBYZSB0cmVlLg0KDQotIC0gDQpUaGFua3MsDQpT
+YXNoYQ0KDQoNCg==
