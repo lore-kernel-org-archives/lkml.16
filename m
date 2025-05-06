@@ -1,282 +1,239 @@
-Received: from EUR02-DB5-obe.outbound.protection.outlook.com (mail-db5eur02on2062.outbound.protection.outlook.com [40.107.249.62])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51B54278745;
-	Tue,  6 May 2025 13:57:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.249.62
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746539845; cv=fail; b=m+yvxXtfj5l9KqGkQFKcuaOdhodMTA32MGb408xgDb/NeF4+AkkRCticGm8J0Jm8efteWMSiPhmlLVrJJIseg9P+ohvR94WQ0PUb5bVfIpwa/pJbqkFpwOFuswyXtjWWL6MN25+3eDJprcV5qaIWFev92dAzhitYCC68d/RsCw8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746539845; c=relaxed/simple;
-	bh=X0RwumXIdmp8Uq/9g8OmbYxpzgFSqOlWv0ywLiVbb14=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=hQSgbjo89Zuiq4KFzs+54PVmCanszrYEMqpiYvgPe5lpP02bIffHyXgWtoUogk3ituOtUHEIOAdKVVzclh2q4ogpsOjhdTX2fdX4x3gEl3a0vQitjoqYAR4nDZpsXzm0pbCOnlDI3wspHAmNO/sS+LXfm2pvwdg8MZQT7mBZFdM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=JERs2XDY; arc=fail smtp.client-ip=40.107.249.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B7C4278745
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 13:58:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746539910; cv=none; b=MQFzL2nPxK9mPziQs6Hn2N90AOxClq+awqbzMy9BL3vOAwX6aT6UzKI152E9V40WiYQF7phEpPTDnce9hcmKAGACZmzVhWhN0WhzsJD/gcqp4KJqMq1uR+ywY8dqsGeydwvZsJZ0/is4UbwPv7/RQDGTUmtFXozjEgLDR4LoyK0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746539910; c=relaxed/simple;
+	bh=MMLqrEU8Ne2Uw7q6tTwQdp1zCuyDqRuNtGJ1tIIJcvU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=P/1k6rOeEddaIZX6ln8Eyim20kEds0ywhxUutnHB1uw3/nYnMaD1qVD+Nofwzx+dJ2947v9e3PEJRpTooaLhJ1Pg1tB/KCsdgpQafskDd84zbrwYw4GLtsN4ToweYPNB5JMV9mIBkfs1/hGCAWyygXVnPaV5URcfmP9BfO5pBA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=RLzfiBu3; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="JERs2XDY"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=oUbLCumfqtsEMbc4U5JNqUG420cESdmMpM8VwXNp8SbYPzzw5ppOuPDGbJpySSIFWnAXtguu4/2bEbfg999Ng4kx4ncYTluKH2zI38HPAZzah0U6nxZsNtElCYWPEfycXq3R5+OOy3btuyHEcqAy3s058MLQqGrNC55DGRxdrjSTHI8TMSy6bbFbXfhSpx6SRVjTuCLqrJp0x58ILvpBHoAKtNgLUBkIyKDGHOmzSwPT/3mmnxByKpAU5TUPK5tBzRC92VTLGiQVDHRqbuV0CQ1Y9RHKbdb2TY++XQoqMB0oguUiSQcDatbEprc4rsKZ/UEbIxpD4qHzqPFENwdOIA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lNk2j4frlOkisyljr+eWfKizItgn2exK1xVIGTy+rxk=;
- b=ekYnay4IApqwLkZhYpgG+z1P4ct6PtUO++xdvtot9oBJVdx0Aj3f/f6QKqVNXD3WiFE0cKXfAdLqCbNgVrWXWyd6Aes29phodXYAWW7vyDkpAY1ocNz+DpfkkspJImVaZSwuDeemeILC+WcjLaAllF/9UvFGxsIPPN19uHYtstFmw70epYDcsdhlzNLkR2VZUXNPXeKNCMaXMsGBA4h7tF70VJepGOVCUMgcb3w17zsbaAPdrPRJo2Y78kK5dxvbMqW0dykOtt4UFTtQ/MsvgOzz5wYeLZ0W4qg/nAsNKHDuO0qHD0uTJmOiOjwUejltU7qj6erVDjVg9bA+7GrO2w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lNk2j4frlOkisyljr+eWfKizItgn2exK1xVIGTy+rxk=;
- b=JERs2XDYXkpFMLxhwx65mHSeFVzB7Ve5UHJ3bAwPMjWf6xUMhT600sY3An0QacmD62OdvRQBZnyODkYUur/HXhciPcYN/Iw+LFnysLp8xAPM3H+SPB1MwP4gxtwV7vTSiYm27SYOKNetgMFy3jngkKVTwDLNGfAV8YuPLNHccMgs3q+syNb0CL+KWyrufy2W8Ev3QLCG0QrL/1T2d7cOjOGki+m+rzNMUzCn7qo/4dwHMWVVJZ/pbu0ykJdz1bGUTeAmJVO0MaofbYIElqEx07gjw69OGLHMDxnROuaJWPo3tXpS91Zq682BPiZCMlVNfH4P9n9AbxrMGeCwTz+7Dw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AS8PR04MB8868.eurprd04.prod.outlook.com (2603:10a6:20b:42f::6)
- by VI2PR04MB10860.eurprd04.prod.outlook.com (2603:10a6:800:27f::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.22; Tue, 6 May
- 2025 13:57:20 +0000
-Received: from AS8PR04MB8868.eurprd04.prod.outlook.com
- ([fe80::b317:9c26:147f:c06e]) by AS8PR04MB8868.eurprd04.prod.outlook.com
- ([fe80::b317:9c26:147f:c06e%3]) with mapi id 15.20.8699.026; Tue, 6 May 2025
- 13:57:20 +0000
-Date: Tue, 6 May 2025 16:57:17 +0300
-From: Ioana Ciornei <ioana.ciornei@nxp.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/6] dt-bindings: mfd: add bindings for QIXIS CPLD
-Message-ID: <wna3loahthqbn5hnw2pbt3yznmzzv3zppi7f2nblvq3t22jdc2@7cse4r4p6q5z>
-References: <20250430153634.2971736-1-ioana.ciornei@nxp.com>
- <20250430153634.2971736-2-ioana.ciornei@nxp.com>
- <20250502-meticulous-bulky-wildebeest-c1a8b6@kuoka>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250502-meticulous-bulky-wildebeest-c1a8b6@kuoka>
-X-ClientProxiedBy: FR2P281CA0090.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:9b::8) To AS8PR04MB8868.eurprd04.prod.outlook.com
- (2603:10a6:20b:42f::6)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="RLzfiBu3"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-acbb48bad09so1060768466b.0
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 06:58:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1746539906; x=1747144706; darn=vger.kernel.org;
+        h=in-reply-to:autocrypt:from:content-language:references:cc:to
+         :subject:user-agent:mime-version:date:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=MMLqrEU8Ne2Uw7q6tTwQdp1zCuyDqRuNtGJ1tIIJcvU=;
+        b=RLzfiBu3jwR18NwYBwiLkjCynwXBNXdcPqWTMoFyyNOw2V7kNCaAmXLgO7PdNn49Qi
+         hEpBuKlUnSsoGZCIy+Tom+cITuuJaLiGHNE1/YlF2K9r3vfLET1dWe3Xbingaw+fatrs
+         krLheT+HWlmgwyLqUVZlQAbl+zEYdECmM9kb0tWCIsusMSaGolTI1Z04w21QMO4RrpIb
+         ywOMdqc5oGC49lD14Xmfk7jOJs9qwpTwk4V6xlBgaJuyFB6XGZjmUKhtaND0z+BnDRvI
+         0zRGnySsaDCitdR+Swk/xEm0fxqf2xRIJWQ3MNr3HVEEhxfMPEjHavuKxVbmxZ4LSgjl
+         Os4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746539906; x=1747144706;
+        h=in-reply-to:autocrypt:from:content-language:references:cc:to
+         :subject:user-agent:mime-version:date:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=MMLqrEU8Ne2Uw7q6tTwQdp1zCuyDqRuNtGJ1tIIJcvU=;
+        b=pbm5qn6XJ9aJd1tfdjyk/7lZ4JJmGWzenQ0T4CCvxf5CqN7emBTpafUclly4S3EFCL
+         HtSTWsrnS7UxxK6ZuJS9b8P8ARn/q2SsdzJH9TwvqfQa4HcDocI7GlNMLIsg03+zbsRi
+         EnTAlfr7Bj5CUUBq9M0ZMR2ZzWrgM0nEsbZ07xlHbogiwrwxj7BZAw5gnDgUehpxImWf
+         QRcpX7NaZAjgcmRD0T44iGNNAXQvJMg/wPn0cxU3lr3cABv+t8OALCpJbGixLwzxnsfC
+         po5rv5tGdqEvmWPf39OR/SOnqH6uDHDkgMwUBF9ywGVgwV3Di4u6gCIbgRZiIGNDW9CY
+         HWhg==
+X-Gm-Message-State: AOJu0YwhKMmcY44DUHjtpgNPd6yPOdky75NyI/VflrnSZS3VniYfHJXx
+	AuuRACPaFraGYkcwCPG8YeqQO+yNA8jPvsmaHHB2DdLyGlezSijDZfS23RgzPRg=
+X-Gm-Gg: ASbGncvVRTPlcXtTRaIjxNoLe/z17pOe0TBTAojvwMUZT03DGtgd9rd5k5Mz2EzO9h3
+	b2bT5Nmi74R3ukNJu6HWLUCWbTziTQjbg+LfDXWyhIJfYFYIDIyBpU4FCqiYw1fpFaDC+fIZm/n
+	CS/BQ2sBt4kqXVtlFzS2ndDyIxz7BUzKyRlJFsU6o2Ar7DvyH+RSz2RYrGWzuq+y6Vj+yewJaAG
+	GSvncxj7qydLk9kdjt7kkMzq0OnRlYCrUt9280KZvDTVrRFekOXqE9mIRSxHpdoRk+X16dBUWMn
+	54RFUoyjoYeYwbr725d397lzHM+KIhyxF4WAEwGs7V3FNJ35ikDytBFiKFmxDnxM9WBF0SdhOif
+	3PaPioH94/qXQYhLL6E4DzWyz7WP2f3Ulg6YpoUy9RtQuUhceb8UCW5/iWcUcA0PiTw==
+X-Google-Smtp-Source: AGHT+IEEXi1l8e77hkj4YdY5UoaIDCBO0k4nLwQqcAgOROzSTBQd1d7lqXzBZR0soj0DLWJ6A9KwSA==
+X-Received: by 2002:a17:907:2d12:b0:ac1:dfab:d38e with SMTP id a640c23a62f3a-ad1d3499b80mr356265866b.15.1746539906232;
+        Tue, 06 May 2025 06:58:26 -0700 (PDT)
+Received: from ?IPV6:2003:e5:870f:e000:6c64:75fd:2c51:3fef? (p200300e5870fe0006c6475fd2c513fef.dip0.t-ipconnect.de. [2003:e5:870f:e000:6c64:75fd:2c51:3fef])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad189540478sm706876966b.169.2025.05.06.06.58.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 06 May 2025 06:58:25 -0700 (PDT)
+Message-ID: <9cf55cbe-68e0-423c-9d2b-dfae582ae175@suse.com>
+Date: Tue, 6 May 2025 15:58:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR04MB8868:EE_|VI2PR04MB10860:EE_
-X-MS-Office365-Filtering-Correlation-Id: f966aac2-66e0-4900-5353-08dd8ca5eb1f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?YaY9yavgdMJq/r3zs0JOBbdt+QBlt2VaN6xRuoiw6yiaSDCgEfIvLiT1Z90K?=
- =?us-ascii?Q?tNE2z26kSm2Y0dKZXx+uk2oa75OWzjn9SL2W3mlIgp7vEjSfH9xpJ196H+/b?=
- =?us-ascii?Q?qmcB0BFZHqyIwSOg5UP/8vJbFITRo5Zs8TDNqSPEt7SvUiIUYUU+C8jHBdkj?=
- =?us-ascii?Q?Y12vfU5orNycjb76auuVSqWjoPqA3l6uG3xFDkbVwHvDOLzf6HIBIplHX2Q0?=
- =?us-ascii?Q?sjjpz5XpfZFvUsJUytNuAtD2zaghkOym4x/6I4+XfRAyF994L12WBRTO/Eyh?=
- =?us-ascii?Q?dFnjJ+VX4zb03p29aHkS5Yx7WlzfN5pMOmpPfroN86jX3JHls5CcFBa8Dsxt?=
- =?us-ascii?Q?0NqVJd2QWfjNGpZg7eISgEk82xYNBdchPoTACfvPHLtrPZziL3WLdOPVwIEp?=
- =?us-ascii?Q?Uq+JSncV6kvbepEclbO9Vu3F5reu1X7yLk0aCWH3p5yhN2VdNViSel4rTPZv?=
- =?us-ascii?Q?804rSfsfLJG1IMUojQL1or1+X5iJJ1PDmG772+WH2KejkI/kkeD2rT0eqqym?=
- =?us-ascii?Q?Nx6Lx2wR2mRxKeuLozweQDWqmrPFVeH5baGEsyEUq1nNw1Y1a4tm7KbNifYB?=
- =?us-ascii?Q?LBgsbIFdgq0zhUvCM9DI92khmjPGAymY3ZjkE7e/ZiT4hqF6jR53cci8tdIk?=
- =?us-ascii?Q?bXRHENaw5k62UADz/wtwf5ImD/ifpdJJphmTcs7pxhKk5+fWXHSKxixSJq4h?=
- =?us-ascii?Q?VV557sIJJQhuWhylFTNTldOHBJ8rdF3YHgoTyx2nwyNdzyRIrCu6iWknOeyU?=
- =?us-ascii?Q?B3vAnpfVXcJ908oukIH3gHcrjio/89ZRfkpwxWn6GvJCU/LPQ1YTQFHLMaNy?=
- =?us-ascii?Q?A3Cfni+6XwKyoChdqx/HxqK9htlQHwqIwOUGJm5SkfxG7KvhnrrNJhX8wi0J?=
- =?us-ascii?Q?+9c8Z5olGY9R3uJOcnkCpOowJQDBIO5Z2SIv0tfqR/GcfFcOpEZsYbmiEI3T?=
- =?us-ascii?Q?pM6MbO56bjVx6hDNjzXsg/Qr3JyMK4Qs/tOPVtthWySgQ5CwHgh03gy82zZZ?=
- =?us-ascii?Q?DvT1/Yc8KNGcG1uzz8q1BM2aCzrUMnUlF4uFpIGePTfXXzNg/oLfYi8HdJdI?=
- =?us-ascii?Q?k97ITAQ8Uxzmpccn4eEA29PQmUuo1miKUKtiBJqne8BaNNGK62GKFXe1P6rL?=
- =?us-ascii?Q?GqcXIkdbZ4c3/vtdosVAIQFCAH6LSCR+ikI6fu/1k6dZfFmvA+fQyNP6hti9?=
- =?us-ascii?Q?gcS1Suk06VizCKsYka4Aznq7xPXcp8dT7PA80Jt2n5sbnapBlanMQsacVx2r?=
- =?us-ascii?Q?9MBvBeOuCEi1nagmMDGysZitOWbsTAXSgp9jGXbn+t/puyz6PZ+WFzY78ELR?=
- =?us-ascii?Q?IDCBZmRNnsK3Oor079qE3xNphGryHgrxPvR1pIIdb71HvnLzCSMhBjCotYtQ?=
- =?us-ascii?Q?JATGG2Q=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8868.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?KLnwsEWBOZ/+QLbP4x2eIEWiNbxbDWScoeLrI6wzwhG8HhJ7bztsvK9BFSAA?=
- =?us-ascii?Q?dcOMCLSBH/oUcWUC2d51A5oQGHHWX5nzoT9vmAMLhAR7Dsvv9saL9ZH9pTew?=
- =?us-ascii?Q?PF/mycw0qZ0c5PB5hANJSPBNic1sBKkAqNi91e+Xr/6CJ/uQquZ1NnjpK+Mt?=
- =?us-ascii?Q?FZuJwpXXPK9tYtGCtGVZ6K4NqO3D7IzmtW+2hRAXcOCN2mS4Q6vUTbc8paWT?=
- =?us-ascii?Q?NCYsZot8r9gID2faCoKTxLEGrRVPv6WHKGMEs9TdlCknwT/KwHSRZfkgW7vK?=
- =?us-ascii?Q?L0oYIvwnX/niRdg/eaitF/0AC4sWub5e855fxdnhbkZoboDs+zIhxw7HX8kP?=
- =?us-ascii?Q?GXJkbzP3zg5GDJ7ZtrRL66EhBot9yNWQsFb0+HWn7Mu2zHABgyrMt2idmtjD?=
- =?us-ascii?Q?kxgoWD7EketSHwLekPC5twVbuCHBtgdf1tHMtUaCzzTjvCjNgFFCk6EdZykz?=
- =?us-ascii?Q?NjGnTEuS4+PntmyViUkMfFoYkHdy8KTspn2jKVCcevs+PSBY8fg+Roa1BYYr?=
- =?us-ascii?Q?f/tmmd/fRXjkPpKBV3wY8yF/heXUnUfzbOaD5IBCac8EROyQaXBYgeG1BpPR?=
- =?us-ascii?Q?heTBowXTyuvaB1fIv6mRsriZK/QlajFKusEyMTicrZGzUUW7AoK26hgf0xxt?=
- =?us-ascii?Q?IEO4bQE7RtbWAUz5JfCLbbFsQg9mpGrpDX5WtsktIA1dT8GaKmt2q77SD8pu?=
- =?us-ascii?Q?8W26N4GAzAruGGax43Fp7SAoBPMqRdAbE8MwjtcbXD0wTjB7AV8G3g5i8gpH?=
- =?us-ascii?Q?hEDazG3X2lQqpBn8aL82rwqC+fkvyDAxfhhaRc7VzDsrlfE/BQvsnjiZLenF?=
- =?us-ascii?Q?VwkbWH2+lDA9yjXCej90TxocJ0b9HtlHof706fZApleeW+O6T5GInbbG8mHM?=
- =?us-ascii?Q?6EbWoiSRrKyNuVNnzpG8F3Z3VeemzYqgENXH7q3R8r9An0XfSTgRGGf5BylS?=
- =?us-ascii?Q?uS4N0LsPBm19b7QEiuTfP+RH2L2h71aT6ZxU5E1tzlQaPoljAcsjn8JB7sFS?=
- =?us-ascii?Q?bKsi8C1oTVWEccOydzCG9GdnRqpI3jrLFnZRBo5WOafSAezEMpmqhK85T0rt?=
- =?us-ascii?Q?+RtUD1PzR/XrQ22bfq9iswhSQQc5+4wRiJVQIvw5uEWuhkqN/t/vFKtAbI2k?=
- =?us-ascii?Q?cs/De2ujz573NtR2tvT0+li4i6hEKuCYZ9V3//t55vF9za6+vA1/PBP9PXff?=
- =?us-ascii?Q?ZNlpkccc6L31tXRCLGYhY6DZhI5YOZzAUMOAFIhR4TiU4NUowqJUjTDq5Ycm?=
- =?us-ascii?Q?pnX+o9ihLXksg4R1fTzqSZtbnTDY9nwywZ2kkgktTlaKDoSj/XmP/TRchdEG?=
- =?us-ascii?Q?YWhWnlDQ2s2aR1HvPjo2VdCxdehT0OnqhHFARATDmSJroAIbQHhzEGz9NFn0?=
- =?us-ascii?Q?W0KvZPXeRGkJeSxtrk03ZwZBJCe93jJWZdb+nLfm/rgyms/wrT3PaRLI+nfK?=
- =?us-ascii?Q?34mEEKx9fJcW3B64VpNKaG55Gzd+PzIjX+SaM6rlCsSgq3AJtmiqproHXp+p?=
- =?us-ascii?Q?nnbQDKMCYaWKsrhdwuFWPvAwniNlZNEHpyzxrCzFHxjhOO94We3N5n5RW+qD?=
- =?us-ascii?Q?rvgkhG+/80OZYQGnWiIlPHzs/Hhx/j7nnVFXNkyb?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f966aac2-66e0-4900-5353-08dd8ca5eb1f
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8868.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 13:57:20.1167
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Wffz+NNP7+jbm98zg5vcc9dwl8smiZefJqNYe899nhfkKeytOvn7Rm0nig6ZxniQfEuJjA/Gmk3u1O5j3hIguw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI2PR04MB10860
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/6] x86/kvm: Rename the KVM private read_msr() function
+To: Sean Christopherson <seanjc@google.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, kvm@vger.kernel.org,
+ xin@zytor.com, Paolo Bonzini <pbonzini@redhat.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>
+References: <20250506092015.1849-1-jgross@suse.com>
+ <20250506092015.1849-3-jgross@suse.com> <aBoUdApwSgnr3r9V@google.com>
+Content-Language: en-US
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Autocrypt: addr=jgross@suse.com; keydata=
+ xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
+ ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
+ dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
+ NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
+ XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
+ AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
+ CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
+ mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
+ G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
+ kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
+ Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
+ RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
+ vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
+ sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
+ aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
+ w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
+ auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
+ 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
+ fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
+ HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
+ QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
+ ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
+In-Reply-To: <aBoUdApwSgnr3r9V@google.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------u0Beh8xVW9F9s8Z9nV9leUTX"
 
-On Fri, May 02, 2025 at 09:01:59AM +0200, Krzysztof Kozlowski wrote:
-> On Wed, Apr 30, 2025 at 06:36:29PM GMT, Ioana Ciornei wrote:
-> > This adds device tree bindings for the board management controller -
-> > QIXIS CPLD - found on some Layerscape based boards such as LX2160A-RDB,
-> > LX2160AQDS, LS1028AQDS etc.
-> > 
-> > Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
-> > ---
-> >  .../bindings/mfd/fsl,qixis-i2c.yaml           | 65 +++++++++++++++++++
-> >  1 file changed, 65 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mfd/fsl,qixis-i2c.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mfd/fsl,qixis-i2c.yaml b/Documentation/devicetree/bindings/mfd/fsl,qixis-i2c.yaml
-> > new file mode 100644
-> > index 000000000000..562878050916
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mfd/fsl,qixis-i2c.yaml
-> 
-> Filename matching compatible.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------u0Beh8xVW9F9s8Z9nV9leUTX
+Content-Type: multipart/mixed; boundary="------------RJTDCcZDVUmLySfPw5Gz88U0";
+ protected-headers="v1"
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, kvm@vger.kernel.org,
+ xin@zytor.com, Paolo Bonzini <pbonzini@redhat.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>
+Message-ID: <9cf55cbe-68e0-423c-9d2b-dfae582ae175@suse.com>
+Subject: Re: [PATCH 2/6] x86/kvm: Rename the KVM private read_msr() function
+References: <20250506092015.1849-1-jgross@suse.com>
+ <20250506092015.1849-3-jgross@suse.com> <aBoUdApwSgnr3r9V@google.com>
+In-Reply-To: <aBoUdApwSgnr3r9V@google.com>
 
-How to choose one if there are multiple compatible strings?
+--------------RJTDCcZDVUmLySfPw5Gz88U0
+Content-Type: multipart/mixed; boundary="------------a3gQF394fltzNm6XIVotVOeV"
 
-> 
-> > @@ -0,0 +1,65 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/mfd/fsl,qixis-i2c.yaml
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml
-> > +
-> > +title: NXP's QIXIS CPLD board management controller
-> > +
-> > +maintainers:
-> > +  - Ioana Ciornei <ioana.ciornei@nxp.com>
-> > +
-> > +description: |
-> > +  The board management controller found on some Layerscape boards contains
-> > +  different IP blocks like GPIO controllers, interrupt controllers, reg-muxes
-> > +  etc.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - fsl,lx2160a-qds-qixis-i2c
-> > +      - fsl,lx2162a-qds-qixis-i2c
-> > +      - fsl,ls1028a-qds-qixis-i2c
-> 
-> Keep alphabetical order.
-> 
-> What is actual device name? I2C? Is this an I2C controller or device?
-> 
-> > +
-> > +  reg:
-> > +    description:
-> > +      I2C device address.
-> 
-> This says device, so i2c in compatible is wrong.
-> 
-> Anyway drop description, redundant.
+--------------a3gQF394fltzNm6XIVotVOeV
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-Ok, will drop.
+T24gMDYuMDUuMjUgMTU6NTMsIFNlYW4gQ2hyaXN0b3BoZXJzb24gd3JvdGU6DQo+IE9uIFR1
+ZSwgTWF5IDA2LCAyMDI1LCBKdWVyZ2VuIEdyb3NzIHdyb3RlOg0KPj4gQXZvaWQgYSBuYW1l
+IGNsYXNoIHdpdGggYSBuZXcgZ2VuZXJhbCBNU1IgYWNjZXNzIGhlbHBlciBhZnRlciBhIGZ1
+dHVyZQ0KPj4gTVNSIGluZnJhc3RydWN0dXJlIHJld29yayBieSByZW5hbWluZyB0aGUgS1ZN
+IHNwZWNpZmljIHJlYWRfbXNyKCkgdG8NCj4+IGt2bV9yZWFkX21zcigpLg0KPj4NCj4+IFNp
+Z25lZC1vZmYtYnk6IEp1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT4NCj4+IC0tLQ0K
+Pj4gICBhcmNoL3g4Ni9pbmNsdWRlL2FzbS9rdm1faG9zdC5oIHwgMiArLQ0KPj4gICBhcmNo
+L3g4Ni9rdm0vdm14L3ZteC5jICAgICAgICAgIHwgNCArKy0tDQo+PiAgIDIgZmlsZXMgY2hh
+bmdlZCwgMyBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0KPj4NCj4+IGRpZmYgLS1n
+aXQgYS9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9rdm1faG9zdC5oIGIvYXJjaC94ODYvaW5jbHVk
+ZS9hc20va3ZtX2hvc3QuaA0KPj4gaW5kZXggOWM5NzFmODQ2MTA4Li4zMDhmNzAyMGRjOWQg
+MTAwNjQ0DQo+PiAtLS0gYS9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9rdm1faG9zdC5oDQo+PiAr
+KysgYi9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9rdm1faG9zdC5oDQo+PiBAQCAtMjI3NSw3ICsy
+Mjc1LDcgQEAgc3RhdGljIGlubGluZSB2b2lkIGt2bV9sb2FkX2xkdCh1MTYgc2VsKQ0KPj4g
+ICB9DQo+PiAgIA0KPj4gICAjaWZkZWYgQ09ORklHX1g4Nl82NA0KPj4gLXN0YXRpYyBpbmxp
+bmUgdW5zaWduZWQgbG9uZyByZWFkX21zcih1bnNpZ25lZCBsb25nIG1zcikNCj4gDQo+IEV3
+d3d3LiAgRXd3LCBld3csIGV3dy4gIEkgZm9yZ290IHRoaXMgdGhpbmcgZXhpc3RlZC4NCj4g
+DQo+IFBsZWFzZSBqdXN0IGRlbGV0ZSB0aGlzIGFuZCB1c2UgcmRtc3JxKCkgZGlyZWN0bHkg
+KG9yIGlzIGl0IHN0aWxsIHJkbXNybCgpPyBhdA0KPiB0aGlzIHBvaW50PykuDQoNCnJkbXNy
+cSgpIGl0IGlzLg0KDQpGaW5lIHdpdGggbWUuDQoNCg0KSnVlcmdlbg0K
+--------------a3gQF394fltzNm6XIVotVOeV
+Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Description: OpenPGP public key
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> 
-> > +    maxItems: 1
-> > +
-> > +  "#address-cells":
-> > +    const: 1
-> 
-> Why?
-> 
-> > +
-> > +  "#size-cells":
-> > +    const: 0
-> 
-> Why? Drop cells.
-> 
+-----BEGIN PGP PUBLIC KEY BLOCK-----
 
-See below.
+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
+kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
+=3DeeAB
+-----END PGP PUBLIC KEY BLOCK-----
 
-> > +
-> > +  mux-controller:
-> > +    $ref: /schemas/mux/reg-mux.yaml#
-> > +
-> > +required:
-> > +  - "#address-cells"
-> > +  - "#size-cells"
-> > +  - compatible
-> > +  - reg
-> 
-> Keep same order as in properties
+--------------a3gQF394fltzNm6XIVotVOeV--
 
-Ok.
+--------------RJTDCcZDVUmLySfPw5Gz88U0--
 
-> 
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    i2c {
-> > +        #address-cells = <1>;
-> > +        #size-cells = <0>;
-> > +
-> > +        qixis@66 {
-> 
-> Node names should be generic. See also an explanation and list of
-> examples (not exhaustive) in DT specification:
-> https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
+--------------u0Beh8xVW9F9s8Z9nV9leUTX
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
 
-In this case, an accepted node name is 'cpld'?
+-----BEGIN PGP SIGNATURE-----
 
-> 
-> > +            compatible = "fsl,lx2160a-qds-qixis-i2c";
-> > +            reg = <0x66>;
-> > +            #address-cells = <1>;
-> > +            #size-cells = <0>;
-> 
-> So were do you use address/size cells?
-> 
+wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmgaFYEFAwAAAAAACgkQsN6d1ii/Ey+R
++AgAhJeqYMflbNuK2+s6+/XQfXtYdJgLapDt5pFlTMsuG1DGv5fMMbI9p2x+CdNemPKjW4ZlGDQ1
+snNHvUDimKLZf22GHqjTZb7NsUv/uqP3DS/3mx9Wq/2Jswdm+Ejk1A8Upnaqf9UU4yagvLz+C3co
+59+qB7IlxXChLqYZrhOlxKx3pkTCCczL02ESlMk2yrBP3h8wPezY5KVGxzCOCvoDC4rcUg5EWKke
+TKluwxxLtO4FBOhSTW8cfPQ+QxgcfJyzYS3nYO5QWAeNaSt9C65q71X6fOzaxFkgt9CsrIKqK1BW
+8bJF8EKeyuONjjgLMf29DUPhHVcl9YMF5eGaMcdi/g==
+=I4mo
+-----END PGP SIGNATURE-----
 
-For example, fsl-ls1028a-qds.dts looks like this:
-
-	fpga@66 {
-		compatible = "fsl,ls1028a-qds-qixis-i2c";
-		reg = <0x66>;
-		#address-cells = <1>;
-		#size-cells = <0>;
-
-		mux: mux-controller@54 {
-			compatible = "reg-mux";
-			reg = <0x54>;
-			#mux-control-cells = <1>;
-			mux-reg-masks = <0x54 0xf0>; /* 0: reg 0x54, bits 7:4 */
-		};
-	};
-
-Also, some boards have in their qixis CPLD gpio controllers and I am
-planning to add them as the next step.
-
-Ioana
+--------------u0Beh8xVW9F9s8Z9nV9leUTX--
