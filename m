@@ -1,493 +1,209 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2054.outbound.protection.outlook.com [40.107.100.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47BAD2BF3D0;
-	Tue,  6 May 2025 04:30:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746505846; cv=none; b=jRtZjY4Dk4mUKYw+ijhQguyyS//UlrGjPc6k000uEkUwY0UjbdHcgZrUi5tQKPmWzrQBPcYNuPZkL/aAg0VPKWtUjMNpa1vofNiYuZjV57NhBRXSq7I06r+YxIYx1m/lH5BkllCz7to+RKOBQ6ELLbVjfXiGJbyIxtFMzIEIpVU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746505846; c=relaxed/simple;
-	bh=H9w02tP4kTahxn299bsbU88ICz8T5t0p6lKQgX+2uwQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=t8lm8nqkMUamC1Nrsf4oW3iiPZbeP34db1/is/371jwGdGP8KomEXOmPF3mVCGyBW6c+wsCPNrQtol8Eg27z2VucxekxEvo6uOHGLmm5+OMoEfxOvV2qlbKEyVEWDrp1CRpLbdd0JW/zqx8LB6gAtLM4H+9LlbQ4nESp0em4diU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=eUV0zf+d; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5712620FA94;
+	Tue,  6 May 2025 04:35:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746506125; cv=fail; b=l9ns+gze7O7rOQqaEOWfVX9Pq63iMPMhwRH076cp4FxhN3qHHePNwd1ZA8kh1y+yQ0pEWt6vx7R3vEDuPi/EHZolvVr+/jH80iNKMFZQcbEF4yoXVT76lp7DI89soAGaKd5YvNcbLiGCHhk9Gfzhm3EX/odrPbORDb/cEcOwrZA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746506125; c=relaxed/simple;
+	bh=89Ie2/FRgLnDnJ76TbReRHj3wXpfsDq5lXN07QJ50Q4=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=ug6rLUTUkbpi+RYcs/F8rLWRcNBG53mVp1feuso7pKiz2Cqa4Tm63TkANy+O6FEhnicOrKC0U4DLeVpIGlSfHnKSgxvG80rP0L8S8cb0DPyPT2rICr+yu7dLCj+aJvqUUO/E5gwWrM1i0OqfPJjudaGY24HY6R47bmt+3dv+ei8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=NM1uCVYB; arc=fail smtp.client-ip=40.107.100.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="eUV0zf+d"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 545M6C9A013235;
-	Tue, 6 May 2025 04:30:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	iWQ4nF/xEliB+etY7TkbxF3L7ncofLpYh45LamAVez4=; b=eUV0zf+dV13t4EoN
-	rplvCfHhJkRX5dvYCiSqxtOZIvRpvfLENXPk5GeoziGOeFB+tugWrPad4Bq/fegS
-	lcmVdg3jCNSrpN7ocmph1e7XQLzA5hgc6XmZmUACQg/5PyVSEGjZ64ZL3uybvZ6c
-	sG2S7KxW4qVuMvlFsTpdAkQ9Q3SXuGXAkgyVTEV74lpKcaBTCTecEUyC0T5Rr/Al
-	n0UnuqYrBpyK5u/iqXG7X4j55TODmGWCf9atCw0q4Yl7fUmxZzDj7EHVWdmocYQe
-	sGUlNgUr/RKzR9a01gMKCbbsDel8Zb6vaAKDzDcRKHiZeedaEOkkJObjuQ6YYOda
-	tmCgcA==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46f5u40vgy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 06 May 2025 04:30:24 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5464UN3U011675
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 6 May 2025 04:30:23 GMT
-Received: from [10.218.37.122] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 5 May 2025
- 21:30:16 -0700
-Message-ID: <45deb1b9-748f-2342-1cf7-16b54ef6b95b@quicinc.com>
-Date: Tue, 6 May 2025 09:59:53 +0530
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="NM1uCVYB"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=HkTpN7J6FgNEYI1PDd+O1OQPCgKj5GcJXBjDc37Kjk2j63AHnSymF5uVQhAVILnj64NS5UDk7Q4LeIRwQ3dyqvxzVJSUy5IQieHPRoZzkumBfRBLuTWBhTMsPCgGunkiTDUaInY+pY5zFmk4Ahn/KY8KAvygUaL30w3UxHQbrN3RKqHn36ScnNYa78iJCytbdFw9A1nTHOXlGZbbyKYGrR/rSorvW5n5zw2R1Ic6Re64CMRrAiNNQ6MENPXVMfnhNqR3YpzvDCGB+GBc+fXDFeouR0Vr8GAqKPyRXjWphq1KepEBomv4bFFWDvo33WC9tqWkKlNzGcD/QFYq16rJdQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=cN5KvWUpB3A17ShSO0h0rLuAaDexnBhZx6mZhKdUYb0=;
+ b=l09P5xzV5HgD/Gs+bCib/+OF0L76nZxi4yCOl6w2yklXiYYh2Tct6Cxl4NtlOhOVrhYIduOTaRu+oS/YeLpLZh7kz0XRFaMpJtegtn8GBVlN/Rw4Lv2jKUGcbPF6HIT98qG/sNfwB8nnRoRx2iOcNST0ecxQGx+7pozhRuI1+hRibylTQdJ5+iOCEoXb7CybLE+4fx/7Z50agcy1IIoOsdF/5ilvwEc3MT78aH2MIM2GdeXlAhz6TTmVSwJbbYRUBSURPp3wMjbM5muymh5pe4Od7D6VnVTpK17+6ZPQ/Kdu6H1qZj5xT8HCqWFbWmLHAwYUUXDwaOIMb0w6A6iVzw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cN5KvWUpB3A17ShSO0h0rLuAaDexnBhZx6mZhKdUYb0=;
+ b=NM1uCVYBMz4eq/unsTmxu5b5IZ/5uqqwk67tlUQhuprKgM2r0qO3q6vv636oSPun0hmZDcpDO40M6AnbTnOlTlBkNylcDupkEMxo5jkIu9sCei67abYGRHfYvAqgpmh0upF3QkLqf3M6JBtQXIrm5W23M2KBRoIWK6CfHXeutb0=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CH3PR12MB9194.namprd12.prod.outlook.com (2603:10b6:610:19f::7)
+ by CH3PR12MB9121.namprd12.prod.outlook.com (2603:10b6:610:1a1::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.24; Tue, 6 May
+ 2025 04:35:16 +0000
+Received: from CH3PR12MB9194.namprd12.prod.outlook.com
+ ([fe80::53fb:bf76:727f:d00f]) by CH3PR12MB9194.namprd12.prod.outlook.com
+ ([fe80::53fb:bf76:727f:d00f%5]) with mapi id 15.20.8699.026; Tue, 6 May 2025
+ 04:35:16 +0000
+Message-ID: <c6a011c4-e3d7-4f6a-a3bc-2000e415db74@amd.com>
+Date: Tue, 6 May 2025 14:35:07 +1000
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH v2 06/19] iommufd/viommu: Add
+ IOMMU_VIOMMU_SET/UNSET_VDEV_ID ioctl
+To: Nicolin Chen <nicolinc@nvidia.com>, Jason Gunthorpe <jgg@nvidia.com>
+Cc: kevin.tian@intel.com, will@kernel.org, joro@8bytes.org,
+ suravee.suthikulpanit@amd.com, robin.murphy@arm.com, dwmw2@infradead.org,
+ baolu.lu@linux.intel.com, shuah@kernel.org, linux-kernel@vger.kernel.org,
+ iommu@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-kselftest@vger.kernel.org, eric.auger@redhat.com,
+ jean-philippe@linaro.org, mdf@kernel.org, mshavit@google.com,
+ shameerali.kolothum.thodi@huawei.com, smostafa@google.com, yi.l.liu@intel.com
+References: <cover.1724776335.git.nicolinc@nvidia.com>
+ <6348cc7a72ce9f2ac0e9caf9737e70177a01eb74.1724776335.git.nicolinc@nvidia.com>
+ <35701c5e-030a-4f52-b6f6-ed18368fb2cd@amd.com>
+ <20241004114147.GF1365916@nvidia.com>
+ <95ab62fa-bb1c-4e4a-a210-b0bdba0d4ad2@amd.com>
+ <aBHYN39FcH+NG5Ab@Asurada-Nvidia> <20250505170807.GP2260709@nvidia.com>
+ <aBl5uLOFCntuIYYz@nvidia.com>
+Content-Language: en-US
+From: Alexey Kardashevskiy <aik@amd.com>
+In-Reply-To: <aBl5uLOFCntuIYYz@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SYBPR01CA0111.ausprd01.prod.outlook.com
+ (2603:10c6:10:1::27) To CH3PR12MB9194.namprd12.prod.outlook.com
+ (2603:10b6:610:19f::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v2 07/10] bus: mhi: host: Add support for Bandwidth scale
-Content-Language: en-US
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        "Krishna
- Chaitanya Chundru" <krishna.chundru@oss.qualcomm.com>
-CC: Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?Q?Ilpo_J=c3=a4rvinen?=
-	<ilpo.jarvinen@linux.intel.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        "Lorenzo
- Pieralisi" <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?=
-	<kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Johannes Berg
-	<johannes@sipsolutions.net>,
-        Jeff Johnson <jjohnson@kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <mhi@lists.linux.dev>, <linux-wireless@vger.kernel.org>,
-        <ath11k@lists.infradead.org>, <quic_pyarlaga@quicinc.com>,
-        <quic_vbadigan@quicinc.com>, <quic_vpernami@quicinc.com>,
-        <quic_mrana@quicinc.com>,
-        Jeff Johnson
-	<jeff.johnson@oss.qualcomm.com>
-References: <20250313-mhi_bw_up-v2-0-869ca32170bf@oss.qualcomm.com>
- <20250313-mhi_bw_up-v2-7-869ca32170bf@oss.qualcomm.com>
- <fzin4uttqtf33moiew6bazgxea7w72at5quumjg646s43wnq2g@3eupbyomplgw>
-From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-In-Reply-To: <fzin4uttqtf33moiew6bazgxea7w72at5quumjg646s43wnq2g@3eupbyomplgw>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=KcfSsRYD c=1 sm=1 tr=0 ts=68199060 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8
- a=n_1mmymH6l7bHqmgIawA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: N1CJ9emTCHl_cKVi1A8ds-4Zvp8ZbOdX
-X-Proofpoint-ORIG-GUID: N1CJ9emTCHl_cKVi1A8ds-4Zvp8ZbOdX
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA2MDA0MCBTYWx0ZWRfX2YZ3yvN6PB3d
- 1MCevqc7sD5s0hK9MEjzAE458suP+nnR7bTwTpt5WWhruCeHLjr9CkRlbBa+jjb7M3DbkXsHYoA
- WhwGjGg2TU4dPT1I6oJu9gYdutFd4ldO6Rriz1TjM5xemcynowhXa3bqphI/2jFayGTHEAlMfGx
- op/JgOMa6JkYTDUy75Nzt67HDVVHXP18YoHfrfFWiTNb16AakM4mkAzWJEVJtJStyfOhSZnL08U
- YV/Tsd7PuU2Xncjf+vi+YSG4xh78uhty0K8JgwA2BvwjGDwyOjA480PhOxcaqQDBrkoef4BwGUA
- otdBKmnTu3jGrM1ktaFYg9O4LDeQiI5XZURs2Tv2V1I/jy24Z+lygCea5EUhsNSg8O9Aleohe7L
- wSwIOqauk01sL0NrFAY4k/jDUNaZuLcQUHq33gbkz6YcEzcD0fG6HaQvsoHOumJnfGTPkK6n
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-06_02,2025-05-05_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 spamscore=0 suspectscore=0 bulkscore=0 mlxlogscore=999
- phishscore=0 impostorscore=0 priorityscore=1501 malwarescore=0 adultscore=0
- clxscore=1015 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505060040
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB9194:EE_|CH3PR12MB9121:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3f33a095-df82-4a44-584b-08dd8c576640
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?SU50OGx4bFcraUUxNHh4ZXpjV09Uc216UFJTQlI1TG1zajFZRGxHNTlxR3lH?=
+ =?utf-8?B?THJNcHQvWFdYbmlrM1RJb3Exb0JQL2tPVXdKTVJaU1cwUWRFQ29Icm4vWkU0?=
+ =?utf-8?B?UThGWjNUZHlCR1hLelg0NU9HRENvZndEQzlDUnFCaTJTTHpEK2NqK3lCVnJk?=
+ =?utf-8?B?LytUeXgrR1FqQzVpY1J1YVg0NnVFcm9mZmtGSmNST1NPMXY5MDQyS2ZVZEFS?=
+ =?utf-8?B?emJkZE1rb0ViSnpqR3JLLzJDRmNmaHZDUjNBclk4S2NsZ0dMQm1OYkduZXJk?=
+ =?utf-8?B?cjhYRzg1Zm5YZkdaR2VaenJ4NVpPY1Y4ZXk2bkFDWmFzKysrZVZDSmdENGxs?=
+ =?utf-8?B?M0x4cXZySkkrMmF4OWdkTWVhcW81M0EzY0lYeWljTnZEZGxLMVVwQXhXb0Yv?=
+ =?utf-8?B?VEJRTW1KQk1QeXhlREh0dC9Pb21PNFJ0Q1AvVXBnaVpBV295M0F2NFp6eGR6?=
+ =?utf-8?B?M1ZwbXFVdFVHYUtFOFZFM2haajZEeG9uRW9zTXRhdHJiY2JJQ1dBVDBCMExV?=
+ =?utf-8?B?czdwMEtCcm9GQyt0YTdrOTJlcDNUcW5Hb0JKd0VFekxWaWU5MHc2Yk9VY0Fn?=
+ =?utf-8?B?RVExN1RjaU1wdmZjNzNVV09DUzhrWFI2QmI4TEV4Y2RGWWd5U2RZNHMyOU1h?=
+ =?utf-8?B?VldvRmViSVFSM29vVUorRTNoeS8rZE01UklFeWhwaG00RjJPN3poV3F3ZGhE?=
+ =?utf-8?B?QXNjZU0vMTgzK0ZlaWw2YWxkTzJYbC9GU1d4TmdJZ3FOUzUxZ01xRHVtSDRt?=
+ =?utf-8?B?N0Vja1NBQjlvT3UySFhDN1plbXFkZFdoUnpWTDc1bWVSUmI5NnEzazZsMVZp?=
+ =?utf-8?B?MEFRODhFNGh5WWY2eGlHQ25aZzk4ZjdwM2F3cE91SUdWb2dJSGcvV1BaekRH?=
+ =?utf-8?B?NER5cDNzR3BlbE1mcGdvMVNabU1HY091a3hYSi9ZVWNIWTNQUnR4N2F2WnVw?=
+ =?utf-8?B?elN1ckVabjUxRkJjRzRrQTRSTXJzek9hdWNYK0xTNWdjQktsOUpFODhieERr?=
+ =?utf-8?B?S2pRODh0MnNpcUR3SWNkbnV5SXVlZ3h4cElTQlZtZGlGdlgvYkQ4THg5SXB6?=
+ =?utf-8?B?aXZXd1BwZG5PbmxVeUlCaTFtUGlaQ21ZdHZPQjZkNDNZUUVVSmgrbmNVV2kx?=
+ =?utf-8?B?ZUt1KzBpRGtRM2FjMlZSaUhIR3VWVVplVWljM2JEMWtKeDNMa0lMSjFDZHpa?=
+ =?utf-8?B?cTZsbGFXTWhLVGN6Q0pVT3lBQmVWYnA4V243Rm9PbnVFOGp1aDFOSUVCZmtj?=
+ =?utf-8?B?TzNaUkhEd1BqZUdtcWQvSTZuZ0N6enJrazNGaUhQRHloV2dxRmFsNW01MXFT?=
+ =?utf-8?B?N0JPWkZVcGxaZXhmNzdkK1BzTUljTVlTUmRpSEF1dXZCTGl5Yjk1WTNycEhT?=
+ =?utf-8?B?T3N0NkRYd2dDMlc1TkVETTlnVXYzem9sTitrRlY0NWRWYmpBUjhIc3JFUFBk?=
+ =?utf-8?B?L1dYL2pJNWJzcWV0ZHNiZUluU2RsbTNqY2FQcmM2VFFWMW1tczUyZS9WbHZI?=
+ =?utf-8?B?WnJyc2NnOUN3S3FDMklHOERSbVBXSmswc3NpWjg1Vm1iczErNWMrZitsZjRq?=
+ =?utf-8?B?aTFhRDg3YTR2eGROdng1NlhQR3g2YnU1NnMvK1MvVDNRYnRJWUdjSW5FdStF?=
+ =?utf-8?B?OGh4MHI4Yi9oMTlXTGFLaFhoaW9odzJ6TVZ2d0htTjZxOTVGWmFBV3VmUVZi?=
+ =?utf-8?B?akJleG9Ld2pIa1ZMV1FYaUxub0JQd0ZxTU91ai9TMERsMUlZWjB2S1J3cmFa?=
+ =?utf-8?B?UTBCNmRGSzgwMVI2QkhIZlg2RmwxS29nTDVXZTlkQW44Smo4UTBjeTVJSWQ2?=
+ =?utf-8?B?VkYwNHQ2NXNzVk4yREt3TDhRLzRNZE52dXpuRmVkM0V3SHNmRERhYXIvYmZK?=
+ =?utf-8?B?d29OdmQ2NG92UTV3TmlLUU5rVFNUdExQV2RBSDJHbzRPRTd5K3FiOVVSN1pO?=
+ =?utf-8?Q?kdx14GLBrAM=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB9194.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?WGQ1YXM2R0lXelNWQi9XeS9ydVd0OXk5ZlRsYlU5alI5VG94dk9PRGQzNHFj?=
+ =?utf-8?B?SkdsZnBwcG1FdTVrQ0tVTGtpZmE5b1YyZXNidWU5bnJQak5BR3E0RGNKZFFt?=
+ =?utf-8?B?NWw4WmNHQVRjaXI3MlNHZU9wbjRJc0VuTkpJcVE2dENTeUp2VnBESW5XVUh5?=
+ =?utf-8?B?QnFuN0E5SnRNbVdKVEk4a2RsUXRxNVRrdWpwR3o0aDJjSUVsdnRoc0NPSUhC?=
+ =?utf-8?B?bnNIN1ZEQ3JhOXlUMkFPUC9NUENESHZzdDZnS3NJWXNiaTZ2bkJ4UFU1ZUNO?=
+ =?utf-8?B?QlhiT3VXTXp5SzJHZkNiVmhNUTlKS21hVS9RMk13alBIUDFpQlkrTC9abnN0?=
+ =?utf-8?B?MWt6R2NQMmxmMm9RZWpWVGE1bVhrQ2JpdFdxRm9DNWdwVHFpeEFvK1gwK1Vh?=
+ =?utf-8?B?VWFaaGlRNlNOM0FjQkpKWWRPa2Mxa1NkK1lEWUF1QjVxcFJ6aks0QlRkZ0ZM?=
+ =?utf-8?B?ZW1EaU1zSU95aklyb2crWlRoZVZtQmF3S0F3L2dTVzBxUkxVcVJRK016blV6?=
+ =?utf-8?B?Y0k5ZjRCbnkxbmNhZldtZmdZK095ODNpemdDdDNQQ0Nla1lKTnp3czA3R3FN?=
+ =?utf-8?B?RUM3SVM5NHdKNlAxQjFNU2g0RUU5VWdHMFMwZ1BQZ0swT3JSa25reUh4Z045?=
+ =?utf-8?B?VkNDaXBQQVBuanhuemIzbGd1bklURlZEb0tUaFhRNnpDWE5kd3BVL0dsajUz?=
+ =?utf-8?B?SjNEQWxQTmhOZlg4NTNMNElEOFVhY0Q5K0hBSmJtQzc4ekhHNk5vN3plem4r?=
+ =?utf-8?B?WGIwRk9oQS9zNkZzWWtEaTlNSmV0QnpDOHBHQlgxMDlnUjdRdnBGYVU5VGUr?=
+ =?utf-8?B?RnhTL3JsUThHYnNISnpxQzk2RmVzSGZwU0ovb0J1L2VKaHVJUTM4dmFrQjc4?=
+ =?utf-8?B?SGRlejN5cHZkVEtTOTdHRjM1Q1dZdFN6cmo3d1A1RnFHRWx6Y1VzUnd0K0p3?=
+ =?utf-8?B?MWdLNlRMN3FCYnN0VCtpSkxoQkY3RWtURkZTRko3VDBjeWJMUGlzVUJPMzgr?=
+ =?utf-8?B?MDVEdlBST1Nobk5lc1dlbENFcDNpK1pOK09VL21UYkVqd2dLejk0bDBqaURF?=
+ =?utf-8?B?UlFhQXBQbmlNSUp1OUlnVUw4TGpMZ0hTSkNCdGRSZkNwdTNQS3Z0VlJ4N2lZ?=
+ =?utf-8?B?NFd5Vk4rWDFJTEhjSVY3VlJzbzQvaUlLdGFOYVdhT2lpVUFUbmx0cTk2Z1NN?=
+ =?utf-8?B?SjFqS3pzdXQvNVpwK0ZuY2k5cVB4QnR4TzhNRHNad1hYSXQxNTFnUStVcWp6?=
+ =?utf-8?B?bVYwaVBrd2tONkI4eU9GM1U2c28vYnVwS0lta2JaTmR6VTJWUjYvN0hjQVI2?=
+ =?utf-8?B?KzZpL0Fla09raVhBbWxrbG04bzZsV3puL2NRUndnVmN1YWdrU2V2cUlLOWor?=
+ =?utf-8?B?Z0VOeVo5M0x2TVFpQzF5RzF4VU1wK3FXUndGZ04wU3ZOWjJQWlpvam56NUxM?=
+ =?utf-8?B?ZmEwbldHSGc5YUhkQWhtTzJUZVE1L0xZZmRKcW5Ia2orKzJGZ24zRHBhamQw?=
+ =?utf-8?B?VlpGdTBWNDZMbmR5WlhQcUZ1VzI1ZVpZZGlTZS9PWVFQWE1TQThpeTZvZytX?=
+ =?utf-8?B?VTZHZ1g3YjNkQVdndHUzUnVaNWNRU3JhdDhDaEljUThkL0lWb0ozZTN1ZGQx?=
+ =?utf-8?B?K1YxdDFTaDh4OENUV3ZsOEtwQUpiVklyWjhzazArb0V3d0hjNExMN2M1djlo?=
+ =?utf-8?B?b2UxV0hxZmJUSzY4L3ROWjFUM1ZKRDgxeEYzNC9MamhxQnhGVEQyREZBSW9J?=
+ =?utf-8?B?dEtmVlNrVDVUOWhvdk5mRnBPRDhxQTdSbzl0aXZEd2piaWZja2Jad3FqMlEz?=
+ =?utf-8?B?bTJGQTl3NXRTR2FqUTFpdWk1Y2p6Nkh3akdCUEhPYmNsalB4QTNRd2ljQTRK?=
+ =?utf-8?B?ZXVFUFljWVFRK3VMbDhBTmZRS01HdDNJdHE3M1Z1a1YvaGs2R0twOGNENnNn?=
+ =?utf-8?B?Q2JFOFU2Z1YvRDVOVzl0Y3lxdDdNRktxNytVdFJYT1dyV1pVNlRLeEpxNUhG?=
+ =?utf-8?B?RGpkS1NOaU02U0RtK3k2RXBQUGpObHFQaEtCYktSblA4M3F0UnVpTm9KT2ts?=
+ =?utf-8?B?SjRtY3hqcHdZVnBJSmQvSHVyc0hTQjJ5dks2N2ZoTUpqT2dLZG13SUZDN1dE?=
+ =?utf-8?Q?s1iRnVdAa7vUAlRXfhg2/HOz4?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3f33a095-df82-4a44-584b-08dd8c576640
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB9194.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 04:35:16.6088
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: BpCpxtsjr8vwW89D4FH8R6iYeuF00m7Wzd2FP7vKeC94C9NCx/Ivn0QF4fzbQNTo/M905Wmmspn33kguwYWkzw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB9121
 
 
 
-On 4/25/2025 10:13 PM, Manivannan Sadhasivam wrote:
-> On Thu, Mar 13, 2025 at 05:10:14PM +0530, Krishna Chaitanya Chundru wrote:
->> As per MHI spec sec 14, MHI supports bandwidth scaling to reduce power
-> 
-> Same here, add spec version.
-> 
->> consumption. MHI bandwidth scaling is advertised in devices that contain
-> 
-> 'advertised in devices or by devices'? Difference is subtle, but it changes the
-> context.
-> 
-its by device, I will correct it next patch.
->> the bandwidth scaling capability registers. If enabled, the device
->> aggregates bandwidth requirements and sends them to the host in the form
->> of an event. After the host performs the bandwidth switch, it sends an
->> acknowledgment by ringing a doorbell.
+On 6/5/25 12:53, Nicolin Chen wrote:
+> On Mon, May 05, 2025 at 02:08:07PM -0300, Jason Gunthorpe wrote:
+>> On Wed, Apr 30, 2025 at 12:58:47AM -0700, Nicolin Chen wrote:
 >>
->> if the host supports bandwidth scaling events, then it must set
-> 
-> So this means both host and device has to support bandwidth scaling events? What
-Yes both host and device has to support this.
-> does 'events' mean here?
-Device sends bw scale info through dedicated MHI event ring events.
-> 
->> BW_CFG.ENABLED bit, set BW_CFG.DB_CHAN_ID to the channel ID to the
->> doorbell that will be used by the host to communicate the bandwidth
->> scaling status and BW_CFG.ER_INDEX to the index for the event ring
->> to which the device should send bandwidth scaling request in the
->> bandwidth scaling capability register.
+>>>> ... and I just hit a problem with it - this is basically guest BDFn
+>>>> and it works as long as I'm hotplugging the TEE-IO VF into an SNP VM
+>>>> but does not when I pass through via the QEMU cmdline - bus numbers
+>>>> are not assigned yet. So I have to postpone the vdevice allocation
+>>>> till run time, did I miss something here? Thanks,
+>>>
+>>> I have a similar case with QEMU ARM64's VM: so vDEVICE on ARM is
+>>> allocated at runtime as well because the BDF number isn't ready
+>>> at the boot time.
 >>
->> As part of mmio init check if the bw scale capability is present or not,
->> if present advertise host supports bw scale by setting all the required
->> fields.
->>
+>> Oh that's ugly then.. So you'll need to add some kind of 'modify
+>> sid/bdf' operation I think.
 > 
-> Sounds like the host is depending on the device for bandwidth scaling.
+> But the initial vDEVICE would be still unusable. Its BDF number is
+> literally 0 in my case. It can't be used for SID-based invalidation
+> nor the reverse vSID lookup for fault injection..
 > 
-yes
->> MHI layer will only forward the bw scaling request to the controller
->> driver, it is responsibility of the controller driver to do actual bw
->> scaling and then pass status to the MHI. MHI will response back to the
->> device based up on the status of the bw scale received.
->>
+>> The bus numbers can be reassigned at any time on the fly by the guest
+>> by reprogramming the PCI hierarchy.
 > 
-> Why the controller driver needs to be involved for a spec defined feature?
-> This is not answered here.
-> 
-The controller driver here is mhi controller driver, the MHI layer
-doesn't have any info about PCI related stuff, only controller driver
-knows about it. I will update the commit text accordingly.
->> Add a new get_misc_doorbell() to get doorbell for misc capabilities to
->> use the doorbell with mhi events like MHI BW scale etc.
->>
-> 
-> So this is a spare doorbell? Why can't you call it as 'get_bw_scaling_db()'?
-> 
-Similar to MHI BW scale there are some other features which depends on
-getting spare doorbell like posted time synchronization MHI V1.2, 5.1.2
-To scale for future features I added like this.
->> Use workqueue & mutex for the bw scale events as the pci_set_target_speed()
->> which will called by the mhi controller driver can sleep.
->>
->> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
->> ---
->>   drivers/bus/mhi/common.h        |  16 +++++++
->>   drivers/bus/mhi/host/init.c     |  64 ++++++++++++++++++++++++-
->>   drivers/bus/mhi/host/internal.h |   7 ++-
->>   drivers/bus/mhi/host/main.c     | 101 +++++++++++++++++++++++++++++++++++++++-
->>   drivers/bus/mhi/host/pm.c       |  10 +++-
->>   include/linux/mhi.h             |  13 ++++++
->>   6 files changed, 205 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/bus/mhi/common.h b/drivers/bus/mhi/common.h
->> index eedac801b800..0a02acee709a 100644
->> --- a/drivers/bus/mhi/common.h
->> +++ b/drivers/bus/mhi/common.h
->> @@ -208,6 +208,22 @@
->>   #define MHI_RSCTRE_DATA_DWORD1		cpu_to_le32(FIELD_PREP(GENMASK(23, 16), \
->>   							       MHI_PKT_TYPE_COALESCING))
->>   
->> +/* MHI Bandwidth scaling offsets */
->> +#define MHI_BW_SCALE_CFG_OFFSET		0x4
->> +#define MHI_BW_SCALE_CAP_ID		(3)
->> +
->> +#define MHI_BW_SCALE_ENABLE(bw_scale_db, er_index)	cpu_to_le32(FIELD_PREP(GENMASK(31, 25), \
->> +							bw_scale_db) |				\
->> +							FIELD_PREP(GENMASK(23, 19), er_index) |	\
->> +							BIT(24))
->> +
->> +#define MHI_TRE_GET_EV_BW_REQ_SEQ(tre)	FIELD_GET(GENMASK(15, 8), (MHI_TRE_GET_DWORD(tre, 0)))
->> +#define MHI_BW_SCALE_DB_ID(er_index)	FIELD_PREP(GENMASK(31, 25), er_index)
->> +
->> +#define MHI_BW_SCALE_RESULT(status, seq)	cpu_to_le32(FIELD_PREP(GENMASK(11, 8), status) | \
->> +						FIELD_PREP(GENMASK(7, 0), seq))
->> +#define MHI_BW_SCALE_NACK			0xF
->> +
->>   enum mhi_pkt_type {
->>   	MHI_PKT_TYPE_INVALID = 0x0,
->>   	MHI_PKT_TYPE_NOOP_CMD = 0x1,
->> diff --git a/drivers/bus/mhi/host/init.c b/drivers/bus/mhi/host/init.c
->> index 0b14b665ed15..71abe02f5726 100644
->> --- a/drivers/bus/mhi/host/init.c
->> +++ b/drivers/bus/mhi/host/init.c
->> @@ -496,10 +496,56 @@ static int mhi_get_capability_offset(struct mhi_controller *mhi_cntrl, u32 capab
->>   	return -ENXIO;
->>   }
->>   
->> +/* to be used only if a single event ring with the type is present */
-> 
-> Then open code in the caller itself. I see no benefit in adding it as a separate
-> function.
-> 
-This added as seperate function for upcoming features which uses
-same logic.
->> +static int mhi_get_er_index(struct mhi_controller *mhi_cntrl,
->> +			    enum mhi_er_data_type type)
->> +{
->> +	struct mhi_event *mhi_event = mhi_cntrl->mhi_event;
->> +	int i;
->> +
->> +	/* find event ring for requested type */
->> +	for (i = 0; i < mhi_cntrl->total_ev_rings; i++, mhi_event++) {
->> +		if (mhi_event->data_type == type)
->> +			return mhi_event->er_index;
->> +	}
->> +
->> +	return -ENOENT;
->> +}
->> +
->> +static int mhi_init_bw_scale(struct mhi_controller *mhi_cntrl,
->> +			     int bw_scale_db)
->> +{
->> +	struct device *dev = &mhi_cntrl->mhi_dev->dev;
->> +	u32 bw_cfg_offset, val = 0;
->> +	int ret, er_index;
->> +
->> +	ret = mhi_get_capability_offset(mhi_cntrl, MHI_BW_SCALE_CAP_ID,
->> +					&bw_cfg_offset);
->> +	if (ret)
->> +		return ret;
->> +
->> +	/* No ER configured to support BW scale */
-> 
-> What does it mean?
-> 
-I will remove the comment this is not making any sense.
->> +	er_index = mhi_get_er_index(mhi_cntrl, MHI_ER_BW_SCALE);
->> +	if (er_index < 0)
->> +		return er_index;
->> +
->> +	bw_cfg_offset += MHI_BW_SCALE_CFG_OFFSET;
->> +
->> +	/* advertise host support */
->> +	val = MHI_BW_SCALE_ENABLE(bw_scale_db, er_index);
->> +
->> +	mhi_write_reg(mhi_cntrl, mhi_cntrl->regs, bw_cfg_offset, val);
->> +
->> +	dev_dbg(dev, "Bandwidth scaling setup complete. Event ring:%d\n",
->> +		er_index);
->> +
-> 
-> "Bandwidth scaling setup complete with event ring: %d\n"
-> 
-ack
->> +	return 0;
->> +}
->> +
->>   int mhi_init_mmio(struct mhi_controller *mhi_cntrl)
->>   {
->>   	u32 val;
->> -	int i, ret;
->> +	int i, ret, doorbell = 0;
->>   	struct mhi_chan *mhi_chan;
->>   	struct mhi_event *mhi_event;
->>   	void __iomem *base = mhi_cntrl->regs;
->> @@ -633,6 +679,16 @@ int mhi_init_mmio(struct mhi_controller *mhi_cntrl)
->>   		return ret;
->>   	}
->>   
->> +	if (mhi_cntrl->get_misc_doorbell)
->> +		doorbell = mhi_cntrl->get_misc_doorbell(mhi_cntrl, MHI_ER_BW_SCALE);
->> +
->> +	if (doorbell > 0) {
->> +		ret = mhi_init_bw_scale(mhi_cntrl, doorbell);
->> +		if (!ret)
->> +			mhi_cntrl->bw_scale_db = base + val + (8 * doorbell);
->> +		else
->> +			dev_warn(dev, "BW scale setup failure\n");
-> 
-> "Failed to setup bandwidth scaling: %d"
-> 
->> +	}
->>   	return 0;
->>   }
->>   
->> @@ -778,6 +834,9 @@ static int parse_ev_cfg(struct mhi_controller *mhi_cntrl,
->>   		case MHI_ER_CTRL:
->>   			mhi_event->process_event = mhi_process_ctrl_ev_ring;
->>   			break;
->> +		case MHI_ER_BW_SCALE:
->> +			mhi_event->process_event = mhi_process_bw_scale_ev_ring;
->> +			break;
->>   		default:
->>   			dev_err(dev, "Event Ring type not supported\n");
->>   			goto error_ev_cfg;
->> @@ -1012,9 +1071,12 @@ int mhi_register_controller(struct mhi_controller *mhi_cntrl,
->>   
->>   		mhi_event->mhi_cntrl = mhi_cntrl;
->>   		spin_lock_init(&mhi_event->lock);
->> +		mutex_init(&mhi_event->mutex);
->>   		if (mhi_event->data_type == MHI_ER_CTRL)
->>   			tasklet_init(&mhi_event->task, mhi_ctrl_ev_task,
->>   				     (ulong)mhi_event);
->> +		else if (mhi_event->data_type == MHI_ER_BW_SCALE)
->> +			INIT_WORK(&mhi_event->work, mhi_process_ev_work);
->>   		else
->>   			tasklet_init(&mhi_event->task, mhi_ev_task,
->>   				     (ulong)mhi_event);
->> diff --git a/drivers/bus/mhi/host/internal.h b/drivers/bus/mhi/host/internal.h
->> index 3134f111be35..bf7c6a7c9383 100644
->> --- a/drivers/bus/mhi/host/internal.h
->> +++ b/drivers/bus/mhi/host/internal.h
->> @@ -241,6 +241,8 @@ struct mhi_event {
->>   	struct mhi_ring ring;
->>   	struct db_cfg db_cfg;
->>   	struct tasklet_struct task;
->> +	struct work_struct work;
-> 
-> bw_scaling_work or bw_scale_work?
-> 
-ack
->> +	struct mutex mutex;
-> 
-> Add a comment on the purpose of the mutex.
-> 
->>   	spinlock_t lock;
->>   	int (*process_event)(struct mhi_controller *mhi_cntrl,
->>   			     struct mhi_event *mhi_event,
->> @@ -403,7 +405,8 @@ int mhi_process_data_event_ring(struct mhi_controller *mhi_cntrl,
->>   				struct mhi_event *mhi_event, u32 event_quota);
->>   int mhi_process_ctrl_ev_ring(struct mhi_controller *mhi_cntrl,
->>   			     struct mhi_event *mhi_event, u32 event_quota);
->> -
->> +int mhi_process_bw_scale_ev_ring(struct mhi_controller *mhi_cntrl,
->> +				 struct mhi_event *mhi_event, u32 event_quota);
->>   /* ISR handlers */
->>   irqreturn_t mhi_irq_handler(int irq_number, void *dev);
->>   irqreturn_t mhi_intvec_threaded_handler(int irq_number, void *dev);
->> @@ -419,5 +422,5 @@ void mhi_unmap_single_no_bb(struct mhi_controller *mhi_cntrl,
->>   			    struct mhi_buf_info *buf_info);
->>   void mhi_unmap_single_use_bb(struct mhi_controller *mhi_cntrl,
->>   			     struct mhi_buf_info *buf_info);
->> -
->> +void mhi_process_ev_work(struct work_struct *work);
->>   #endif /* _MHI_INT_H */
->> diff --git a/drivers/bus/mhi/host/main.c b/drivers/bus/mhi/host/main.c
->> index 4de75674f193..967563d86aec 100644
->> --- a/drivers/bus/mhi/host/main.c
->> +++ b/drivers/bus/mhi/host/main.c
->> @@ -472,7 +472,10 @@ irqreturn_t mhi_irq_handler(int irq_number, void *dev)
->>   		if (mhi_dev)
->>   			mhi_notify(mhi_dev, MHI_CB_PENDING_DATA);
->>   	} else {
->> -		tasklet_schedule(&mhi_event->task);
->> +		if (mhi_event->data_type == MHI_ER_BW_SCALE)
->> +			queue_work(mhi_cntrl->hiprio_wq, &mhi_event->work);
-> 
-> To avoid the hassle, I think it is worth changing the mutex in bwctrl to
-> spinlock. I don't think there would be issues in spinning inside
-> pcie_set_target_speed().
-> 
-I am not sure if it is good to change it to mutex or not in
-pcie_set_target_speed() because it is being called from
-pcie_failed_link_retrain() and this is being called when new pci
-device is added and many other places.
->> +		else
->> +			tasklet_schedule(&mhi_event->task);
->>   	}
->>   
->>   	return IRQ_HANDLED;
->> @@ -1049,6 +1052,102 @@ int mhi_process_data_event_ring(struct mhi_controller *mhi_cntrl,
->>   	return count;
->>   }
->>   
->> +/* dedicated bw scale event ring processing */
->> +int mhi_process_bw_scale_ev_ring(struct mhi_controller *mhi_cntrl,
->> +				 struct mhi_event *mhi_event, u32 event_quota)
->> +{
->> +	struct mhi_event_ctxt *er_ctxt = &mhi_cntrl->mhi_ctxt->er_ctxt[mhi_event->er_index];
->> +	struct device *dev = &mhi_cntrl->mhi_dev->dev;
->> +	struct mhi_ring *ev_ring = &mhi_event->ring;
->> +	dma_addr_t ptr = le64_to_cpu(er_ctxt->rp);
->> +	u32 response = MHI_BW_SCALE_NACK;
->> +	struct mhi_ring_element *dev_rp;
->> +	struct mhi_link_info link_info;
->> +	int ret = -EINVAL;
->> +
->> +	if (unlikely(MHI_EVENT_ACCESS_INVALID(mhi_cntrl->pm_state))) {
->> +		ret =  -EIO;
->> +		goto exit_bw_scale_process;
-> 
-> exit_bw_scale?
-> 
-ack
->> +	}
->> +
->> +	if (!MHI_IN_MISSION_MODE(mhi_cntrl->ee))
->> +		goto exit_bw_scale_process;
->> +
->> +	if (!is_valid_ring_ptr(ev_ring, ptr)) {
->> +		dev_err(dev,
->> +			"Event ring rp points outside of the event ring\n");
->> +		ret =  -EIO;
->> +		goto exit_bw_scale_process;
->> +	}
->> +
->> +	dev_rp = mhi_to_virtual(ev_ring, ptr);
->> +
->> +	/* if rp points to base, we need to wrap it around */
-> 
-> Nit: Use caps for starting letter and also for acronyms.
-> 
->> +	if (dev_rp == ev_ring->base)
->> +		dev_rp = ev_ring->base + ev_ring->len;
->> +	dev_rp--;
->> +
->> +	/* fast forward to currently processed element and recycle er */
->> +	ev_ring->rp = dev_rp;
->> +	ev_ring->wp = dev_rp - 1;
->> +	if (ev_ring->wp < ev_ring->base)
->> +		ev_ring->wp = ev_ring->base + ev_ring->len - ev_ring->el_size;
->> +	mhi_recycle_ev_ring_element(mhi_cntrl, ev_ring);
->> +
->> +	if (WARN_ON(MHI_TRE_GET_EV_TYPE(dev_rp) != MHI_PKT_TYPE_BW_REQ_EVENT)) {
->> +		dev_err(dev, "!BW SCALE REQ event\n");
->> +		goto exit_bw_scale_process;
->> +	}
->> +
->> +	link_info.target_link_speed = MHI_TRE_GET_EV_LINKSPEED(dev_rp);
->> +	link_info.target_link_width = MHI_TRE_GET_EV_LINKWIDTH(dev_rp);
->> +	link_info.sequence_num = MHI_TRE_GET_EV_BW_REQ_SEQ(dev_rp);
->> +
->> +	dev_info(dev, "Received BW_REQ with seq:%d link speed:0x%x width:0x%x\n",
->> +		 link_info.sequence_num,
->> +		 link_info.target_link_speed,
->> +		 link_info.target_link_width);
-> 
-> dev_dbg()
-> 
->> +
->> +	/* bring host and device out of suspended states */
->> +	ret = mhi_device_get_sync(mhi_cntrl->mhi_dev);
->> +	if (ret)
->> +		goto exit_bw_scale_process;
->> +
->> +	mhi_cntrl->runtime_get(mhi_cntrl);
->> +
->> +	ret = mhi_cntrl->bw_scale(mhi_cntrl, &link_info);
->> +	if (!ret)
->> +		response = 0;
->> +
->> +	response = MHI_BW_SCALE_RESULT(response, link_info.sequence_num);
->> +
->> +	write_lock_bh(&mhi_cntrl->pm_lock);
->> +	mhi_write_reg(mhi_cntrl, mhi_cntrl->bw_scale_db, 0, response);
->> +	write_unlock_bh(&mhi_cntrl->pm_lock);
->> +
->> +	mhi_cntrl->runtime_put(mhi_cntrl);
->> +	mhi_device_put(mhi_cntrl->mhi_dev);
->> +
->> +exit_bw_scale_process:
->> +	dev_dbg(dev, "exit er_index:%u ret:%d\n", mhi_event->er_index, ret);
-> 
-> Can these entry exit debug sequences be avoided?
->
-ack.
-- Krishna Chaitanya.
+> Yes. If we take some aggressive use case into account, where its
+> BDF number could change multiple times, I think it's natural for
+> VMM to simply destroy the previous vDEVICE and allocate a new one
+> with a new BDF number, right?
 
-> - Mani
+Yup, this sounds about right, recreate on the bus number change.
+
 > 
+> Thanks
+> Nicolin
+
+-- 
+Alexey
+
