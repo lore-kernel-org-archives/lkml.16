@@ -1,104 +1,101 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C06B141A04C
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 00:28:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4F2D44A62C;
+	Tue,  6 May 2025 00:31:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746491297; cv=none; b=br0PjERba5ipHgZ8pytw/hWM4KZLitkrHajhETDap4lYOPKpFVM/76Lq0qRnoxcyJWtbOm8JyD7D930ti+SplRbGDHCNUjEpA/PaHeG5yEouQo31A/5SWM2PA/uccW3mWqpqTB2645wDXO80hirxG95xrvxjncL7JzhWBX2B/wg=
+	t=1746491504; cv=none; b=olLnxjCWjDOLAfrxIKlkMobhJ/QeGth2unDmxpFyw6VhMA+n/6ZJ81iCEaUlEYYBOeCNr9jDOeMZUUEnTXHK/pV+cfUkvxz1LmVTTUDx5deF626RYIdP0ax6DFJMP7tG/PxQKstl7iTl4QMaMeccjBGz2vwpKNtU2VgNpgKMFWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746491297; c=relaxed/simple;
-	bh=mQjcSWXrYmkl7Twom4W/YYd1ZCn+aco0xVfANaVeuBY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qdJd6QnmHKZRXcTzUywOHA6DjJJ6vPCTVCX0gTgNYRU55Qy4tQG0vo4kAcaxx2dExsjgsFJbmhvewMABGHXuAL6UMLZvfjyzYoOweSkSTX0Y+Ic5f0PHbvMjN78ObKRdmVVllvgWiwjhTwLZ1GpV3zlmLW5Ryejj2tnVTJvzkj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TuiD+9YA; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746491504; c=relaxed/simple;
+	bh=J4W3QlDUEySP7cK+t9SrKwMzhMxe07fnSzbb4JHve/o=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=qEETe5zn3wgMdCVdSaEA8vPd4DyP0s2lECbwpOmRVpVHbHPHgv1eNKUid71f/C0pygSaTneq/ERpWIp1Qvvsc7mEdGyUt10ZxbtzQcgTogDHsrzSHvD2voKHLwimQHe04mV3uRqPG5I9gQPksQlvKdc7up1EeDc8/0d9evy7uXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=At87cP+O; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TuiD+9YA"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-48b7747f881so73741cf.1
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 17:28:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="At87cP+O"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-309d2e8c20cso6600146a91.0;
+        Mon, 05 May 2025 17:31:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746491293; x=1747096093; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gy72gz7BkdTupt7lwSehvFyBx0hxLF/ZczFwTE53HNQ=;
-        b=TuiD+9YAB6Ks9sDgv3XVmGVcYMKCYHx5XrBeSyNJqV6FNlEIMFzoY8XqkBa31gXm29
-         dkwFxoQSZvzw4fPDzYi0T/yVQGYKbT8C5zGKs9B+6mYrGVaCiFJxkDsjn+NsbqErcSC5
-         sbujXA/fpoNmRPvnWqNmDQLQSbWHjMLASFv0R0yaF+MD6jsdnVOaaq+HVwcR37F+xnrk
-         FPHYQoQlXnxW3eo1gm0F9su+FuOIy57st6YDORGPxUz0zx/ToLEPDDTFphpF1+NIaf4V
-         5tbpsgLI8tm+BuMkLSBHNP2uwbIMza5GwL+ZvOfWN2lgo3d3a/Bmb4JkFtofQsYPvAtx
-         T7og==
+        d=gmail.com; s=20230601; t=1746491501; x=1747096301; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qNHr0ZTyT4NKYzLBz84B7MhfveuNCJxLE4chWNqht24=;
+        b=At87cP+OdX7eBUCW6HYnMSiQrIvNEClea7P6PdOuRtxaMMOukfLnvVAsDdI/ZnDHPl
+         W34yJ+SX12rwk3FBxpH+h0Mb5OT8xt+otXwcmIvrK6AIkV7RToCZU9FFVQlUQwUBAQkh
+         xJdceDJckUZAC5MLwFH3ZMsjcjY77yuUoS956gW7FtVbcwstyy+o023ekSlu3LhYf15Q
+         zjqNVbb6+icOLU/dgKt2OvfG3Ip98GTI1ilwk//3kKNnC/+vDhlwfeIgdCICrD/NBasX
+         jlnsv+4A5XYr2rtSBTtnNv2KE2AJoTL2AUh1G2WWNx61xlWuj+PYMSN8FyQYL2Qlr/rC
+         T43w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746491293; x=1747096093;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gy72gz7BkdTupt7lwSehvFyBx0hxLF/ZczFwTE53HNQ=;
-        b=aYzdzza6NFL116xNhZnO1KYiKRJZV/UyytyuVBzDMid/arvTtgTvNxPfNUjsRunU2F
-         SohVeVE9bVKMtZfJqKZIp81G4rpMo5Hh8GTjHePmNFxK3+yxmRi2bbyEGFROw3J9UHAi
-         8g4FCEfdx9SMJEaNKbnXWbUirLTOF3zbYg/Ne+gls5L/4HOeELVvLRenW3NsuMih24yV
-         oeZbAcoLPLi60tlSD/IN6SmISCcPcy/gS2S62+YHL+4NjZJ3YaEg4vcwtC4zbvoNDRw6
-         wb20khL90gC2yUhHtJM8JN9xNaLDvFPNj28996bj8xK3/usUCB2/EbK5Rtp3DObOwE2F
-         Selg==
-X-Forwarded-Encrypted: i=1; AJvYcCUGJmHd0Lbcv1T4pcOzNlMB71vM4GmXV1wRKtSiL5m34vqc3+q7isQHC4MFwYAezTqsP/uqhFC93mZjFgI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxENpnM7ZUg+MqpMp6n+kcTMPWoaR7+xKeP2yko0D9MzQ4x+uhg
-	4s/CReGHFXAsRxbVZqnrtGpYIV1Z8c5ZiENCMsT9oJrgoNAWMc+TjqNSC5kspOUwDfT0bbjVAzB
-	lI2TKGGECBsgTMB5b9GtmaxPD4VZnGn8TGXbg
-X-Gm-Gg: ASbGncvOOVorV9S/T4tAGDJbP+2/jpEkEvHyb/b9Iqm07qV8KaygSi1HykPB9iRS6O8
-	jeWS7ss3mpdd2a98QONJPjtqeKw4AxgvldpdkXritRaRyqn7FDYB+Sam6Vys1oLIjcLV879FBlx
-	Xtn3ygBomz1QRjwEWvB377QCopwufAnXEcRs75wry86pQnhVbK4T2G+Sg=
-X-Google-Smtp-Source: AGHT+IEzNzwtMpw0ak4BnC5/aECrxVBAC8ctyO1ioeLdEWQkCTIKbPFUc7QuRFMJnrKW/g98BAgaRG1cX4q+SScFjR0=
-X-Received: by 2002:ac8:59c5:0:b0:477:2c12:9253 with SMTP id
- d75a77b69052e-490f4c1292cmr1619021cf.16.1746491293370; Mon, 05 May 2025
- 17:28:13 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746491501; x=1747096301;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qNHr0ZTyT4NKYzLBz84B7MhfveuNCJxLE4chWNqht24=;
+        b=dMQ1PQ4d3rb9jZfF2OolDwU1FAt4Dqp3ISZhxkOHYS75FBSdCBXFdxYnFydbpoBBiR
+         Ux3vgwc4ChZE67GGKTWIxsa2q9Xgw/hr0VERhgdVdf07fvzO3DLRA3aU051Arp7qrB2+
+         /7D4ZHNAwx3AeChNRzUYh5W6SvsDo5RwFjE52lqog+s6mCas8tpA1wwL1pzgvJGlbi27
+         XXMjxwoe6IdL9G33wfs+PIkDqgylQkorYp7zaFiJ4BsLKIxeWHr3CMN724DYVmPQuDwK
+         JpkgwgGxVfdODa6vw0Tww4NpxyL70RuQrkV8mdLjjS90TMZz92qtxW/+iz2VvKYN1AnA
+         KYSw==
+X-Forwarded-Encrypted: i=1; AJvYcCXVkfZ5fIZYBeUudUU8DckDik2PNRcvWSFgwHjmK1AQit8eio26dLZrJikCjg7rxDrP4J/QKDLHp9Mlz4Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyw3/tIUBScYdVQTJWCNOs5BlWc0MYlFgUxrPWvnI3aKX4z/jvU
+	8IaUdz+jpgxNsn+IYt7yCuXMsTv5EHzVvDHOoCmZG2FLlCw0Tw9FbAopiQ==
+X-Gm-Gg: ASbGncvUaooS5JLip1wrV4p3WENPAj4KTnPvF10R0Z/Hcjc+6+sMMRDY3TJ43Ux3S3E
+	+zpCliyrz8QrnOQlIT7oGeO5iaGCDGw7mG3bnDuDvfbk2tu3KoKTUTVt0Huw2w8VN0xRwp//ThM
+	Vkod8C7MvKQfYizc05na9g91u93nsLVrZcfzfhbU57QLIScTFrwDLK7y0ZOUrS+OcifRhnF6mgy
+	gwrLDVH/+lwrXpmQYXsIQi185FodxeSMLWqyTWFnfdrdnDyA/nc5ni1UZrpwKT64LmaOQF/Led2
+	Sgs597zVavJFW3D4zn8V85DTOHCRPHR+vyJ5elZgbg==
+X-Google-Smtp-Source: AGHT+IE69qUFAPVURFOW89Aa5yjzLl3Jvp+TiBQvi80s5DXqUlNolA7Vy6vs8n3rxNe3o+bVU1bmRg==
+X-Received: by 2002:a17:90b:1e4b:b0:309:e351:2e3d with SMTP id 98e67ed59e1d1-30a7dae582amr1464158a91.12.1746491500631;
+        Mon, 05 May 2025 17:31:40 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:17ab:9e47:29ba:57e6])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30a4748e83bsm9801128a91.22.2025.05.05.17.31.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 May 2025 17:31:40 -0700 (PDT)
+Date: Mon, 5 May 2025 17:31:37 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: linux-input@vger.kernel.org
+Cc: jt <enopatch@gmail.com>, linux-kernel@vger.kernel.org, 
+	Hans de Goede <hdegoede@redhat.com>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, 
+	Peter Hutterer <peter.hutterer@who-t.net>
+Subject: [PATCH] Input: synaptics - enable SMBus for HP Elitebook 850 G1
+Message-ID: <iys5dbv3ldddsgobfkxldazxyp54kay4bozzmagga6emy45jop@2ebvuxgaui4u>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250505185642.2377724-1-jyescas@google.com> <aBkXvB2jcxVf95uN@casper.infradead.org>
-In-Reply-To: <aBkXvB2jcxVf95uN@casper.infradead.org>
-From: Juan Yescas <jyescas@google.com>
-Date: Mon, 5 May 2025 17:28:02 -0700
-X-Gm-Features: ATxdqUFoGXZ_gkx3ceuSKYDuT6fwhmHmdBxGlaOENbPfzOY0jRlPH5_CbTHCLlc
-Message-ID: <CAJDx_rhi_-ovE8AyxeC317y9vCV2NGEs1ffAcN2rWP2P7qA-xA@mail.gmail.com>
-Subject: Re: [PATCH v2] mm: Add ARCH_FORCE_PAGE_BLOCK_ORDER to select page
- block order
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, tjmercier@google.com, isaacmanjarres@google.com, 
-	surenb@google.com, kaleshsingh@google.com, Vlastimil Babka <vbabka@suse.cz>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	David Hildenbrand <david@redhat.com>, Mike Rapoport <rppt@kernel.org>, Zi Yan <ziy@nvidia.com>, 
-	Minchan Kim <minchan@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Mon, May 5, 2025 at 12:55=E2=80=AFPM Matthew Wilcox <willy@infradead.org=
-> wrote:
->
-> On Mon, May 05, 2025 at 11:56:21AM -0700, Juan Yescas wrote:
-> > Solution: Add a new config ARCH_FORCE_PAGE_BLOCK_ORDER that
-> > allows to set the page block order in all the architectures.
->
-> ... but it's no longer per-ARCH, so this should not be in the ARCH_
-> namespace.
->
+The kernel reports that the touchpad for this device can support
+SMBus mode.
 
-Good point. The changes are in [PATCH v3] mm: Add
-CONFIG_PAGE_BLOCK_ORDER to select page block order
+Reported-by: jt <enopatch@gmail.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+---
+ drivers/input/mouse/synaptics.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> >  /* If huge pages are not used, group by MAX_ORDER_NR_PAGES */
-> > -#define pageblock_order              MAX_PAGE_ORDER
-> > +#define pageblock_order              PAGE_BLOCK_ORDER
->
-> You need to update the comment too.
->
+diff --git a/drivers/input/mouse/synaptics.c b/drivers/input/mouse/synaptics.c
+index 309c360aab55..fdb471060118 100644
+--- a/drivers/input/mouse/synaptics.c
++++ b/drivers/input/mouse/synaptics.c
+@@ -190,6 +190,7 @@ static const char * const smbus_pnp_ids[] = {
+ 	"LEN2054", /* E480 */
+ 	"LEN2055", /* E580 */
+ 	"LEN2068", /* T14 Gen 1 */
++	"SYN3003", /* HP EliteBook 850 G1 */
+ 	"SYN3015", /* HP EliteBook 840 G2 */
+ 	"SYN3052", /* HP EliteBook 840 G4 */
+ 	"SYN3221", /* HP 15-ay000 */
+-- 
+2.49.0.967.g6a0df3ecc3-goog
 
-Done.
 
-Thanks
-Juan
+-- 
+Dmitry
