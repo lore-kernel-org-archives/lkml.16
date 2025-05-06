@@ -1,114 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from tarta.nabijaczleweli.xyz (tarta.nabijaczleweli.xyz [139.28.40.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9125018D65F;
-	Tue,  6 May 2025 19:11:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F7AD4414;
+	Tue,  6 May 2025 19:12:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.28.40.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746558686; cv=none; b=qi5d8TSGJNQGJ+Vb/l/Ib2AOAB8fIbPiRb9buvxGNbSI/HsfwcJdEIX9zrRXp9z9PpiI6W+voVobNTUc9U7Z/WFUOHLNoaR+DPSr2C2qZUpwkEpz91HSX2ml54qyH+85qJLWt23HSpWM4bUNmBQn0rmAOii/EQo3lQliMEWQ7dY=
+	t=1746558756; cv=none; b=d4Jnvpqba6YKYIemLNMJ865G9mDlJGbhWBDEjP4oV91BwMdnH7LUWdFaqO7YBcvoQPGULzPKyIat9LT9wiK9RKKAN2j+cEuNOAbehhziuTINfsPln+t6jNvS6sI7Hrqkhv5RHgeaYUJbI2JJeVE4LHSuknnvSh1QdHm2+r2hb5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746558686; c=relaxed/simple;
-	bh=Gvo1dDxKWmorysKSoDu5MSo/13XHbpqcTdtuNSlfJd0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KbOh3TrFnHNIjGz2shyCRdyWiwf4cTxQFFYyemc+7XiJLgyc5r+JArtg/klFwsoiJLqI5Td1cygRERTm5QEZLc6A/bhQxCSQkgiqvvWGrwcj3cZkWjLfuhteOOdiNWrovy2RnNS+k94iRVsxaIwYayqlweQFC9XtICMqQfJbgl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hW1GKAB7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746558756; c=relaxed/simple;
+	bh=qxoVSBxApwQxjJlos0MEto/+Ak7aIzkLjzRqyzvgXEo=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C2qofwUFbHKqHXZXc8fVm3Sy6X5s+DBHKVHqyEAksGKDJrnNe0B3+v0xpnWtG0fHlpyNzZjeN6+aqy3JFJuIsiaqv2Rh5PQbdqLTmT4Dao4w6OV5wu5y1vX6JNMQV+2hpNMICY4HjxeZvdKS9shhxQPnr/hlvNKXWH/x4RJo5bU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nabijaczleweli.xyz; spf=pass smtp.mailfrom=nabijaczleweli.xyz; dkim=pass (2048-bit key) header.d=nabijaczleweli.xyz header.i=@nabijaczleweli.xyz header.b=IEEm+hjl; arc=none smtp.client-ip=139.28.40.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nabijaczleweli.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nabijaczleweli.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hW1GKAB7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3FD5C4AF0B;
-	Tue,  6 May 2025 19:11:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746558686;
-	bh=Gvo1dDxKWmorysKSoDu5MSo/13XHbpqcTdtuNSlfJd0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=hW1GKAB7sKqoDRqLzoOC6VwuJIln7BH3tyrEs0I3k42iHymNWIQaKI2BQvIuqzKv8
-	 hwb0wXwa3qlb/s+pfT0899iH1ZcGcbHwk/4LEO2Kmybcv+2YIO8Ziukh0YYSCG6rac
-	 Pc01m1ZMMoQdQ2fN0TOSv2oRwb9YV+sjQHzFmBV5ld3aqUHcAFNtRZ79wfFpwopEJR
-	 gehJ4OMPO8vSNHMzMbn5p6/VkPgwtdbSGFT4VfZOEIPyQWSrGWLxb+p3bwE96ZalPj
-	 0oqGAYFrrb4n7E5/hJ3M3UXrG5tla0Xp+W2wRqUOSt2DRwb2OXEL0Cxh5K4pGaqWZK
-	 /sxeUz1HNba4g==
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ace98258d4dso890612666b.2;
-        Tue, 06 May 2025 12:11:25 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVPlf/2eINRwpY6Y4MpetC0O5JMmkhcvFPEHNKrpX6+2gaIaZYJd2NdxM9FEgOJzaKnLrBe+bJprEWzdkKu@vger.kernel.org, AJvYcCWR1D3QlGnYtB/m/xo0lVtSXFsiog19DhNdaqehq7cAgyHG7X3xyFiqkgtPPkKWj6Fbs5YYlKFt7HUD@vger.kernel.org
-X-Gm-Message-State: AOJu0YwoVssgWxecUNPcUYOFmpi5Zm2Aog021fzo4JF05QWVsu7wxQHa
-	jJYcnAC9h9Gq9eVZMciNrHKEtRE2rnWObmubQOauCYfSgSJZ9i+6wnpBZwGrQn5MbZlJunHOqwT
-	y2sDxTmwL/x7W8EFKq2il0WYd4g==
-X-Google-Smtp-Source: AGHT+IH4AuBtQsPb0qWbwalc5ywdjeelGTCMgiJvAOr31Y1XA3guQBMVGvOepc7X6Qyba7bHxw3H9VwrROuDga9SFo4=
-X-Received: by 2002:a17:907:970d:b0:ac7:66fb:6a07 with SMTP id
- a640c23a62f3a-ad1e8bc2a81mr53377466b.6.1746558684507; Tue, 06 May 2025
- 12:11:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=nabijaczleweli.xyz header.i=@nabijaczleweli.xyz header.b="IEEm+hjl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nabijaczleweli.xyz;
+	s=202505; t=1746558602;
+	bh=qxoVSBxApwQxjJlos0MEto/+Ak7aIzkLjzRqyzvgXEo=;
+	h=Date:From:To:Subject:References:In-Reply-To:From;
+	b=IEEm+hjlK8eeP1ze36FEn5/gPKYfBReu24zkiVvLgrXcSuKhb5eqEgpsi6JTlOXF/
+	 tNYVIjtnr/3zhKpM5c2mAXJpDMZyzOyqnuev57lcpbUxnT6OIXRF+YdubuMT2Uu+Ae
+	 bPF3aFyJua8kijAdcdDrqU2WYyiVXUE0QW5Nb/GWWLUneRRJByK3nVpjDTZrdrA9MM
+	 UtMT3vI07hia9JWW8FZNbuCkAhpqeJdY12xwHX0/cPRXBlHaO8ZHD+rj0qCQ2wMmef
+	 ObHQAK2c/wEwbGyI2SzGDPzzomNG452Dlkwf6irHGSBV0RUxQjHRN6hhAYx3J2MvWQ
+	 g5i96NYCWtyHg==
+Received: from tarta.nabijaczleweli.xyz (unknown [192.168.1.250])
+	by tarta.nabijaczleweli.xyz (Postfix) with ESMTPSA id 8D97010736;
+	Tue,  6 May 2025 21:10:02 +0200 (CEST)
+Date: Tue, 6 May 2025 21:10:02 +0200
+From: 
+	Ahelenia =?utf-8?Q?Ziemia=C5=84ska?= <nabijaczleweli@nabijaczleweli.xyz>
+To: Jonathan Cameron <jic23@kernel.org>, 
+	Lars-Peter Clausen <lars@metafoo.de>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 2/2] iio: ssp_sensors: optimalize -> optimize
+Message-ID: <5a64aa3034c6127d7587de9b7045a12892c01ee5.1746558529.git.nabijaczleweli@nabijaczleweli.xyz>
+References: <f6e465fee5a824a67be1ae7c3bc1b72adcf9471f.1746558529.git.nabijaczleweli@nabijaczleweli.xyz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250505144813.1291810-1-robh@kernel.org> <aBo2A_SsUdeuH7UQ@antec>
-In-Reply-To: <aBo2A_SsUdeuH7UQ@antec>
-From: Rob Herring <robh@kernel.org>
-Date: Tue, 6 May 2025 14:11:13 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqL2NXtfo4kS4WQ4PaDuY8uF47vTVUQa730=yLVDUT0UeA@mail.gmail.com>
-X-Gm-Features: ATxdqUHPSFSyLiC4sNXut8Z5AFXll2tAzmv0_l5Q8i9mR73G5f3TxU7dLVAVU8k
-Message-ID: <CAL_JsqL2NXtfo4kS4WQ4PaDuY8uF47vTVUQa730=yLVDUT0UeA@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: interrupt-controller: Convert openrisc,ompic
- to DT schema
-To: Stafford Horne <shorne@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="mn5jzsztpgpqf7g5"
+Content-Disposition: inline
+In-Reply-To: <f6e465fee5a824a67be1ae7c3bc1b72adcf9471f.1746558529.git.nabijaczleweli@nabijaczleweli.xyz>
+User-Agent: NeoMutt/20231221-2-4202cf-dirty
+
+
+--mn5jzsztpgpqf7g5
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 6, 2025 at 11:17=E2=80=AFAM Stafford Horne <shorne@gmail.com> w=
-rote:
->
-> Hi Rob,
->
-> On Mon, May 05, 2025 at 09:48:12AM -0500, Rob Herring (Arm) wrote:
-> > Convert the OpenRISC OMPIC interrupt controller binding to schema
-> > format. It's a straight-forward conversion of the typical interrupt
-> > controller.
-> >
-> > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> > ---
-> >  .../interrupt-controller/openrisc,ompic.txt   | 22 ---------
-> >  .../interrupt-controller/openrisc,ompic.yaml  | 45 +++++++++++++++++++
-> >  2 files changed, 45 insertions(+), 22 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/interrupt-control=
-ler/openrisc,ompic.txt
-> >  create mode 100644 Documentation/devicetree/bindings/interrupt-control=
-ler/openrisc,ompic.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/ope=
-nrisc,ompic.txt b/Documentation/devicetree/bindings/interrupt-controller/op=
-enrisc,ompic.txt
-> > deleted file mode 100644
-> > index caec07cc7149..000000000000
-> > --- a/Documentation/devicetree/bindings/interrupt-controller/openrisc,o=
-mpic.txt
-> > +++ /dev/null
-> > @@ -1,22 +0,0 @@
-> > -Open Multi-Processor Interrupt Controller
-> > -
-> > -Required properties:
-> > -
-> > -- compatible : This should be "openrisc,ompic"
-> > -- reg : Specifies base physical address and size of the register space=
-. The
-> > -  size is based on the number of cores the controller has been configu=
-red
-> > -  to handle, this should be set to 8 bytes per cpu core.
-> > -- interrupt-controller : Identifies the node as an interrupt controlle=
-r.
-> > -- #interrupt-cells : This should be set to 0 as this will not be an ir=
-q
-> > -  parent.
-> > -- interrupts : Specifies the interrupt line to which the ompic is wire=
-d.
->
-> I guess this extra documentation is obsorbed by the fact that these are a=
-ll
-> standard fields?
+Signed-off-by: Ahelenia Ziemia=C5=84ska <nabijaczleweli@nabijaczleweli.xyz>
+---
+ drivers/iio/common/ssp_sensors/ssp_spi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Right, we only put details unique to this binding if any.
+diff --git a/drivers/iio/common/ssp_sensors/ssp_spi.c b/drivers/iio/common/=
+ssp_sensors/ssp_spi.c
+index f32b04b63ea1..b7f093d7345b 100644
+--- a/drivers/iio/common/ssp_sensors/ssp_spi.c
++++ b/drivers/iio/common/ssp_sensors/ssp_spi.c
+@@ -104,7 +104,7 @@ static struct ssp_msg *ssp_create_msg(u8 cmd, u16 len, =
+u16 opt, u32 data)
+ /*
+  * It is a bit heavy to do it this way but often the function is used to c=
+ompose
+  * the message from smaller chunks which are placed on the stack.  Often t=
+he
+- * chunks are small so memcpy should be optimalized.
++ * chunks are small so memcpy should be optimized.
+  */
+ static inline void ssp_fill_buffer(struct ssp_msg *m, unsigned int offset,
+ 				   const void *src, unsigned int len)
+--=20
+2.39.5
 
-Rob
+--mn5jzsztpgpqf7g5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEfWlHToQCjFzAxEFjvP0LAY0mWPEFAmgaXooACgkQvP0LAY0m
+WPGdww//TGdBAuGF4H5rxorbkBrhYyXIAsA3YL+Vc6GN2vWpE83drPbbyk2mkSwj
+8s4mHryP1Q73NfiJUPtbrtzTYKznMOFVx4hZ651erxtBpQIA160IRvz47e2+d9sH
+5XEJM+OlnqdCrAy/GuSm8XTSZa76CCRd2aZ/vn+LcXTqSDflx5lAmgjXvq+j+seS
+ZvdYSe4V+46Q/D4hgsTCdyKVfSyvWckxEJqU16xbWWlNfRTGF8S7c0KfJ41iXZuh
+QkZ2PI/083xhgExPVxbodX0X6cu/TQzA2xg23u9Mw/0+92pu+vJz0xnBoSw0a12C
+770zTbPfv04G9N+Owt+YlaHOJfSUUOr9448QY9JSbi6SmIRT9GAGhM18PGPC/4af
+7iihZazHfU5sBUDRN3TXIN6/DTpLCW0sESgtnqsR4FmD/H3525y4LpBGmijbVkst
+xC3ThwE8SNYIlKatutqPZSgUXR+e7btC6H2BOWx8wGBX2HlcrqrDsq8x1FYqeULd
+oXTM3FVu9ZEUb4wEZF9FpPFXLAqyRGgfyXsLfZcLgCro/VabGBGb196fDJ2WeDLr
+xyYvIoGod+XUNKGsVM/yCko55NclyNIckKoPgEzHi1o/HS9WoIpl2gMZyeZf22V7
+Eb/HwysYBXP063l4xO3dgFk4gQLjRHnwwPldoQJcp8HnoeZXt44=
+=6AuU
+-----END PGP SIGNATURE-----
+
+--mn5jzsztpgpqf7g5--
