@@ -1,104 +1,162 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C8EF23A9BD;
-	Tue,  6 May 2025 05:17:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00C52EAC7;
+	Tue,  6 May 2025 05:26:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746508679; cv=none; b=l2QJQ5ESfr84rE3gFZ6H/v52g0Pf7mIiLTjMsFVZMCtpu89+E4y2e9NK+J81fRm2A0peqG9YZxLQk6tnnkwSvkP64ErnKrCAtzDrnbq9aW3bk7ZFXPKmmfL7vONMA4fgG1WDC/q4cvaCC+ABRxkeRdGtnZbCyiAX9hCJysV2pNs=
+	t=1746509180; cv=none; b=ef7YgWyKeS8gb/Z5x0osGRlP4up43+MzuwoCPQhKL3R8S3fMp52AFkKno/vwoVFB9eioY67CdX7/9g32xbzmPLiQl3nNOjvn1l9Y4NL+XnnODZhPB9Tf64OHQzAmZM8BHFkd/RdiZMoYR44OrShl8xg8Sn/F2GN1B7IUrm9zD4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746508679; c=relaxed/simple;
-	bh=YupN7OpiadTlvUUHNYqjvAOJEtB1+VQb1H44FbQZ4cY=;
+	s=arc-20240116; t=1746509180; c=relaxed/simple;
+	bh=qNXIby4uYNWIaVuJaDjA+b6ycyAQSqRUDrXQ+jUPNbk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DfO6/iysCCuVRrwL5PQ5A2bhe5kZkc0cc5SK7+EKtx6810JBwfk4Ye0ekRq9IgfqERtDiFXk4d7KSWXb4FR/hUjryuJX9jlB1t5sk+1i2wVht6gApZUBPM2NFbKerlEtZjd5s6pu0LCtuGdYvbXfDne8zkLNBrcwLzaKTjHgPX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UNExQlPi; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=NSYbfJQWrTHBBslUSAQc0c28PVrq8dpuAVRAic6Iegl8u1KbxxB2wvI0Ch3L59PPVS39vWfoYAkIH4Xhikqc35QYqh/zNfdm87Urm+FkZUmCA+O+p0nEANoqq5oNZyca9sxWX1WoVBaoj/S3/1GzgbPCYAXImxds+26Vt1O1oG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LnbkU5nP; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UNExQlPi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746508678; x=1778044678;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=YupN7OpiadTlvUUHNYqjvAOJEtB1+VQb1H44FbQZ4cY=;
-  b=UNExQlPiBZiKBgL4ATJd0VU1yuZb13+MEjwygUTxtGGHJ/tfLphnFiQE
-   2gAIq/guZ6jat7cFtQWmltXyjUHvXiWtCMG4vcoPPq/v7JR74fJ9Mm8kW
-   BJKDVftMxbZWt2jnZD4/ANz6Tn7OqGinXMudHgAl2uoYKCn7NER6daOiE
-   Xdvcb01k7C80eg2rrGuyVlhMvzsVXvE+vsR7lrpQuJQM/WjINHgxo3hzn
-   QEG/W1tNYVoJZOvxpVC4zXaWMI/hbNykdtN4w4CRrA16sOO9Fk9/DNg2Q
-   ayoA9prIn0MvWZMEieZ113EuapQkGK1W5TAxCMbS2aA1xU+4Am7e9i2Ba
-   Q==;
-X-CSE-ConnectionGUID: l/pzZrPDTjuTNE730KtPFA==
-X-CSE-MsgGUID: hFLim6LGS32dk5BNX0IwOA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11424"; a="51801224"
-X-IronPort-AV: E=Sophos;i="6.15,265,1739865600"; 
-   d="scan'208";a="51801224"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 22:17:57 -0700
-X-CSE-ConnectionGUID: mocT4V6qQBm6tcQbt70gsg==
-X-CSE-MsgGUID: JImtxp0ZSCOBUGVUt4J8Ng==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,265,1739865600"; 
-   d="scan'208";a="172700057"
-Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
-  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 22:17:57 -0700
-Date: Mon, 5 May 2025 22:23:00 -0700
-From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: x86@kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Michael Kelley <mhklinux@outlook.com>, devicetree@vger.kernel.org,
-	Saurabh Sengar <ssengar@linux.microsoft.com>,
-	Chris Oo <cho@microsoft.com>, linux-hyperv@vger.kernel.org,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-	Ricardo Neri <ricardo.neri@intel.com>
-Subject: Re: [PATCH v3 02/13] x86/acpi: Add a helper function to get a
- pointer to the wakeup mailbox
-Message-ID: <20250506052300.GE25533@ranerica-svr.sc.intel.com>
-References: <20250503191515.24041-1-ricardo.neri-calderon@linux.intel.com>
- <20250503191515.24041-3-ricardo.neri-calderon@linux.intel.com>
- <CAJZ5v0g563qdyEdd6v1voyyZM5tpZab72LXTZcO9C0jE6mnRzw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LnbkU5nP"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-736a7e126c7so4672672b3a.3;
+        Mon, 05 May 2025 22:26:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746509178; x=1747113978; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=y15oNjv4Kk/N9ml+u4Bq1LF3INBs6geqVXqTsIBwJuk=;
+        b=LnbkU5nPfAcj/+y6ciLtYGVAZe/JQ8SpKbORU5QUXqoof1YtsHEucY02NFIK0IFcI8
+         Ause9vKL92DUrUQqr3Qu75Z3LlcDvD4X8i45l4Z8amqTFggOTufhFh34IZPE9M39Mekh
+         rPOEaM5bKZ3J1sLzCXD1awutT2OnoMFdDQcGQLT5Zl7YCie1yJUb8wLuhI45edxbm1xo
+         dUPqCwdfp46yI8MOymDZ3eX9tiQNdN8sBtWQIUcJdYaSYCrOLUgM83rDPw2ZHverNkR6
+         iAqvUUJRA5yyIIfX2fA/MOUvf56tbKRGA4YS8mAcBDl3HkmBWtHj0SuK291pPpXxhZXk
+         G62g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746509178; x=1747113978;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=y15oNjv4Kk/N9ml+u4Bq1LF3INBs6geqVXqTsIBwJuk=;
+        b=mkikT46jVz4vKKR/ET6kuoWghG7ndBhOyybi9wgEioJ6DPEKITD1qGZhZSmKIZ6S7W
+         kWcMg+KbfmDl+C+reMYeJOt68DNM88NxyP4r/w03lkf6cm9WtmNDj4ugSlllrrIZD/ut
+         cJUoBWYki7SSHkCs91R50b2pnGXklL1TVQR0OvfTJoU3J49dbUqexhhBgvoBWeZFfL6H
+         rd3xRvuoNJGm+vBYGRyo3hNTdrpNTHeHgVz6NfPma/VRWC0r2WZAXNVhgDVU3BXVktNa
+         Hh55o4Zvi3sTHGnZcuuQ5cx85dM97qBCR8FsxZuTnFm2h+z6mNqOL+g6s5dsLmnuybPy
+         n9bg==
+X-Forwarded-Encrypted: i=1; AJvYcCV+FxiT8KHtszRbkJZcZKgm4fByHmflhFsm4DvlLLShFfJqSUNsS0FHL+5YOe5lo0vHhYa8KQkM6TWHWQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8NIV8MZ/QaLS9PSyZoWK+pKXqlIQgLLWLwiSjFjEXoNxNvF43
+	GD9jpId+/FdVriLD66j94lqql3suOm5q3ZpTT5Am9enbCw3w0N2B85g0SQ==
+X-Gm-Gg: ASbGncu5IbhE8zq05zVDEIpWPIvomW4urhr2pMqwUUfmNoX+7cOhe5VHf03dRQDKCHE
+	aoVzXurNGzkZ8sHUD2+9jczvzsRWMw7ut7XQvEblZqxOuk3fMF1Gvl9I7Lf5cs45IsOM4VKWbrX
+	2T68ZfrsZBMEI47/aZQ/PKXtFaX7t4deRtEqQTSP05THwfs+TxnqRcyN+wdi/xrbZQRJxY3Hdhf
+	8lJtz9Fr1m88nwfEI8GQcEVJEucmvVeueIXJ20k1RU/5ghXrLHJqPTO8rQ8aLTPW811j5+2IAaD
+	a75gJZiFlyJoPuMTuLGSthMM4/pXZeZDpttIuJepQFakwX2D6QSO
+X-Google-Smtp-Source: AGHT+IH9Cn6u9F7xB+8RLrnkjpLhT3syigtxk8sAmWlySACFtl/jh+gI0GboLGnDW/HN6BSdYeHoIQ==
+X-Received: by 2002:a05:6a00:8085:b0:72d:3b2e:fef9 with SMTP id d2e1a72fcca58-74091a91773mr2180295b3a.20.1746509177769;
+        Mon, 05 May 2025 22:26:17 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:17ab:9e47:29ba:57e6])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74058d7a47esm7946975b3a.29.2025.05.05.22.26.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 May 2025 22:26:17 -0700 (PDT)
+Date: Mon, 5 May 2025 22:26:15 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: David Bauer <mail@david-bauer.net>
+Cc: linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Subject: Re: [PATCH 2/2] Input sx951x: add Semtech SX9512/SX9513 driver
+Message-ID: <siwaccc2rwbeggi7aq6rapm2rjqz6ceed3hp2zkwx5axmc56oi@jtkbjzdcraqy>
+References: <20250505203847.86714-1-mail@david-bauer.net>
+ <20250505203847.86714-2-mail@david-bauer.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0g563qdyEdd6v1voyyZM5tpZab72LXTZcO9C0jE6mnRzw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20250505203847.86714-2-mail@david-bauer.net>
 
-On Mon, May 05, 2025 at 11:55:03AM +0200, Rafael J. Wysocki wrote:
-> On Sat, May 3, 2025 at 9:10 PM Ricardo Neri
-> <ricardo.neri-calderon@linux.intel.com> wrote:
-> >
-> > In preparation to move the functionality to wake secondary CPUs up out
-> > of the ACPI code, add a helper function to get a pointer to the mailbox.
-> >
-> > Use this helper function only in the portions of the code for which the
-> > variable acpi_mp_wake_mailbox will be out of scope once it is relocated
-> > out of the ACPI directory.
-> >
-> > The wakeup mailbox is only supported for CONFIG_X86_64 and needed only
-> > with CONFIG_SMP.
-> >
-> > Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-> > ---
-> > Changes since v2:
-> >  - Introduced this patch.
+Hi David,
+
+On Mon, May 05, 2025 at 10:38:45PM +0200, David Bauer wrote:
+> The Semtech SX9512/SX9513 is a family of capacitive touch-keyboard
+> controllers.
 > 
-> Have you considered merging it with the previous patch?  They both do
-> analogous things.
+> All chips offer 8 channel touch sensitive inputs with one LED driver per
+> output channel.
+> 
+> The also SX9512 supports proximity detection which is currently not
+> supported with the driver.
+> 
+> This chip can be found on the Genexis Pulse EX400 repeater platform.
+> 
+> Link: https://www.mouser.com/datasheet/2/761/SEMTS05226_1-2575172.pdf
+> 
+> Signed-off-by: David Bauer <mail@david-bauer.net>
+> ---
+>  drivers/input/keyboard/Kconfig  |  11 +
+>  drivers/input/keyboard/Makefile |   1 +
+>  drivers/input/keyboard/sx951x.c | 490 ++++++++++++++++++++++++++++++++
+>  3 files changed, 502 insertions(+)
+>  create mode 100644 drivers/input/keyboard/sx951x.c
+> 
+> diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
+> index 1d0c5f4c0f99..6dc397389c64 100644
+> --- a/drivers/input/keyboard/Kconfig
+> +++ b/drivers/input/keyboard/Kconfig
+> @@ -616,6 +616,17 @@ config KEYBOARD_SUNKBD
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called sunkbd.
+>  
+> +config KEYBOARD_SX951X
+> +	tristate "Semtech SX951X capacitive touch controller"
+> +	depends on OF && I2C
 
-Indeed, I can merge these two patches.
+I do not believe it should depend on OF. Please have the driver use
+generic device properties instead (device_property_*()).
 
-Thanks and BR,
-Ricardo
+...
+
+> +
+> + #include <linux/kernel.h>
+> + #include <linux/module.h>
+> + #include <linux/input.h>
+> + #include <linux/leds.h>
+> + #include <linux/of.h>
+
+You will likely need mod_devicetable.h instead of of.h.
+
+> + #include <linux/regmap.h>
+> + #include <linux/i2c.h>
+> + #include <linux/gpio/consumer.h>
+> + #include <linux/bitfield.h>
+> +
+> + /* Generic properties */
+> +#define SX951X_I2C_ADDRESS		0x2b
+> +#define SX951XB_I2C_ADDRESS_		0x2d
+
+Why underscore at the end?
+
+...
+
+> +
+> +#ifdef CONFIG_LEDS_CLASS
+> +		error = sx951x_led_init(priv, child, reg);
+> +		if (error) {
+> +			dev_err(dev, "Failed to initialize LED %d: %d\n",
+> +				reg, error);
+> +			return error;
+> +		}
+> +#endif
+
+Please provide stub for sx951x_led_init() instead of using #ifdef here. 
+
+...
+> +
+> +	priv = devm_kzalloc(dev,
+> +			    sizeof(struct sx951x_priv),
+
+sizeof(*priv)
+
+Thanks.
+
+-- 
+Dmitry
