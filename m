@@ -1,319 +1,235 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A79B278156;
-	Tue,  6 May 2025 10:44:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746528278; cv=none; b=NjqPFhztZTr8Eqhavnba/kbd6qbrgmcmNByl8rgN1VrZ7Lw4jqCOwG1rHekGK10gpwq7T55oHVmVIHV1K2tXHxk/AIUOVD++zknyPuKw3zio/IO4UNxncE9ut596IpOEJh0EHC+Z2g+CUNmJgqYchJGPFqWD0SFI6PuRoescF1M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746528278; c=relaxed/simple;
-	bh=PM8nfntNyeJKBz7qhwyVbvj3dlee+llSko/PbC1Cyaw=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=WY8M4Vu2DFxG1iTQb3KT5vaWVzWjewLk0xcMZr0P8yPjTP23Rl7tWVrajiFdnVDa7JOcgI1hsRiaM9geKmSRpYTcdttzb6BiMr+biAsHyIyx/Frg1zXQWZU1rhpaN4jp7cdldgqC+Zw4a9FnDSJVUcikriGPN1wBTwfO7gv8zlw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=azqPc7Q5; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kWUa4gLB; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A5CC27605F
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 10:44:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746528298; cv=fail; b=VZkURXi5CPT6/p5bd/em0xsNTBCb1u3PtIF/BuHjGYitttr9IDHHbAIU0iCuXq8ItzU7JxRyA0U6KYhWO5JkCns6rXKxVFr2wNT0oiy2lvmRxS3z3xWt92AToALtJRZq3rLpaU8Tj3aKN1Ufh0Odr4dVL5fRzIdDqBA40IwKAAM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746528298; c=relaxed/simple;
+	bh=WPDmT5vVhbKn8k/+fAqMY8c5xUDYJmx8UR7OZq+Qino=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=fKw28vy3hZQn9/5+v2zzbNW7T/aH2oI7kxs/SIXeEQ+MAP9F3XK27iY0S3i1Bs0C9C6Ncccqfk1Rx7GOZBP6nlMnfO8kMnLYq+YxJW5XnkGey2f5XH1mWm2uBEateDYW1AWcrck9cFfUpmGBoRlyBJbUX+zIASf3tPCsAEV34lA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=px+LMyig; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=UJ/3qxse; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="azqPc7Q5";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kWUa4gLB"
-Date: Tue, 06 May 2025 10:44:33 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746528274;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SgIz1JwcXGF6FAbLSvx5tHnVQfGIW4vlInbGjBjY9GU=;
-	b=azqPc7Q52JqaJnurvuzFRoGc1ayXvBkllNf6CVnc5fXWwqbF9Z6jdzsQYiy/kVGELIc00W
-	Vsp5PlsFPEB4srrHApUOO3IIi1Hvf8bQ8Y7lw/gFl66q3nVlhSjM6xX+rAma79lWjfJrju
-	2yoixQt3WU3osk8W7jEjGxZ4s37E+/k8ua8DA66aW5I3UbgpwI0g7eaCVLXAG141ahZNyq
-	PwZ49af+eCquil8ByhbklU2zzD+wc32hJoFQiCIKuq9qQfQEB6A4PAzjAwO7aHMwAz188B
-	lhxmj9PqIVi/hnSv2iJLDE+Nk8p2Xes8KLimjZ/2zKgrtv6oatmGsagS6MOxJQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746528274;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SgIz1JwcXGF6FAbLSvx5tHnVQfGIW4vlInbGjBjY9GU=;
-	b=kWUa4gLBThn18SsrwHrD94VkVMDNC9DhK5ctsop4HmgyYnqPYAfuF8lnAPuCdiuJgOI6qz
-	GrlMokR4w4S6ORBA==
-From: "tip-bot2 for Borislav Petkov (AMD)" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: x86/urgent] x86/microcode: Consolidate the loader enablement checking
-Cc: "Borislav Petkov (AMD)" <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
-  <stable@kernel.org>, x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To:
- <CANpbe9Wm3z8fy9HbgS8cuhoj0TREYEEkBipDuhgkWFvqX0UoVQ@mail.gmail.com>
-References:
- <CANpbe9Wm3z8fy9HbgS8cuhoj0TREYEEkBipDuhgkWFvqX0UoVQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="px+LMyig";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="UJ/3qxse"
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 546AWMwj021944;
+	Tue, 6 May 2025 10:44:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2025-04-25; bh=w9vkZyVcCj0xX+Olzs
+	X6uOn0JPZ7h+1Fq4yq3uhW0ZE=; b=px+LMyig7xY/ADFDVXitD0Za2dYW/DTt9T
+	djXHEB7Ao/SNCfp9LQi8JFyi8mHxUjpM68sQdbVuVaI4QgSItka1oWq2kMiEAKcw
+	WC2as9oQI39ihVXfHv6EifPhCeuxi1BVxx+F/biox39l1Yx4sik3xpxYL7rWcW5Q
+	up9v1hiCybg1Jjbn2maofZutHy7/ajItie3UardNFdwKbIxJ8ujuoF8RO3iJDR7g
+	ulC2Ey790iygwiWPork9eNaa/JR+EVVMsUbGV9tG/MAX+EMUOffiAcE5rBXR0tAw
+	S47g1UKSTu0s3z//Jgkeb0wdOXDmGTemMO/M2qPj/tzrbwwBJ0mQ==
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46fgrmr0jj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 06 May 2025 10:44:08 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5469ua6g011253;
+	Tue, 6 May 2025 10:44:08 GMT
+Received: from ch5pr02cu005.outbound.protection.outlook.com (mail-northcentralusazlp17012053.outbound.protection.outlook.com [40.93.20.53])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 46d9kf365r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 06 May 2025 10:44:08 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=R6M5ciC0B+9oNLqxXXhNb3ekWWOEg85X5xRk8c2ph0lgopfnx+AVciGkpB/IVYPYUPn/EIyAhvLWrrpr4KfMi9Yx6mR3OPP4Lwzvpp8XnGfpd2pXhLuu3+cOCUKrR1BH//soRUdhwSdto8Zh54DOHm2Ei2uDVF9nriNvqzdBuGHs2I0LKyCPYCp6aoiJXOFOHGI5zWiDq76KWlFcdRGwctpYt/xPSi6SNNSO4aGXTO8ABrNDVnBJTRXv8cwyyt2SlLTvrWkI9Lod1GLcb92l3BclZCqDcY2jVBDOECKQWFQr8GhOyfu1HGREW1kmodrQuf8n7FhKRgz41l8dSBJIrw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=w9vkZyVcCj0xX+OlzsX6uOn0JPZ7h+1Fq4yq3uhW0ZE=;
+ b=y7ndez+IyrrVaKVs2J0V3vQ8YzQTfb2AnwSamt6p/4Ei0JYMoQ+Ydm/l5V+uV4X3u3zxIU2NhacMoYbBm0lZpL9FwgbSBR44c+A0xqkOX1abWRdwhCxvvKPr7S7GmPecaVEKo5e6RK57HnCOO/nm/20Mh2d+Rk9jtnkLzl5eFlRDMLzQ3DyYqvGRACIsTKdr+i6+sY15cyU5Dit0efvoMpGWQj0eu38X+Vek5f02wyJIxAq3V+0gExn6esbMK0Meq8DOiJqHOCJm0fofZOFMybxcx+gWrPx+aOVn5WdyvNEOdgLdriJ6OMOhXz+Mt5+S4TlxhR4cOzBJSf1CccfnEQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=w9vkZyVcCj0xX+OlzsX6uOn0JPZ7h+1Fq4yq3uhW0ZE=;
+ b=UJ/3qxse8y9Tf5CuW7VnuC1r6gawbyHgYaFjXtSvqk0BcxfDBfNS2lOSIJV+wwtH3JvexTMbiaAz7JVOd70fJ+9e8SB7MO6ikdDWKWkx055/Y+/Q/EI5ImSI87xPZcNxde/fbnIw2I6Keg8El2Lp/Wpq3mplPHXU3QtnL+FSwLE=
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
+ by SN7PR10MB6954.namprd10.prod.outlook.com (2603:10b6:806:34f::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.20; Tue, 6 May
+ 2025 10:44:05 +0000
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2%5]) with mapi id 15.20.8699.022; Tue, 6 May 2025
+ 10:44:05 +0000
+Date: Tue, 6 May 2025 11:44:02 +0100
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: Dev Jain <dev.jain@arm.com>
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>, akpm@linux-foundation.org,
+        Liam.Howlett@oracle.com, vbabka@suse.cz, jannh@google.com,
+        pfalcato@suse.de, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        david@redhat.com, peterx@redhat.com, ryan.roberts@arm.com,
+        mingo@kernel.org, libang.li@antgroup.com, maobibo@loongson.cn,
+        zhengqi.arch@bytedance.com, baohua@kernel.org, willy@infradead.org,
+        ioworker0@gmail.com, yang@os.amperecomputing.com
+Subject: Re: [PATCH 0/3] Optimize mremap() by PTE-batching
+Message-ID: <4210a878-7dce-40c2-bd0b-0c2e39cdd80e@lucifer.local>
+References: <20250506050056.59250-1-dev.jain@arm.com>
+ <b26480a7-ea81-408a-b287-7cd52571a1d0@arm.com>
+ <c7c75d9d-4d5b-4bfe-b69e-dedb4b0d73fb@arm.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c7c75d9d-4d5b-4bfe-b69e-dedb4b0d73fb@arm.com>
+X-ClientProxiedBy: LO4P123CA0513.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:272::23) To DM4PR10MB8218.namprd10.prod.outlook.com
+ (2603:10b6:8:1cc::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174652827365.406.14578389386584457710.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|SN7PR10MB6954:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8c225702-e3bf-4c01-46b8-08dd8c8aec0a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?llRRBwn7zJ5j/cYap4a6eWdjI2pyIA2d72uf8dabvJASz6aDLTV7utsi6NpL?=
+ =?us-ascii?Q?WKv3+XuPTGOnNTPjHD0MaITjSLATtZc/oJ+t31gb45F9u/dwN0K+Mm3Br8mO?=
+ =?us-ascii?Q?6wLTRYRfcSFWYlLwJUsSDtSW/XQI51T1SG6dfADfEkeKKiVS1oIOFvsQjbJz?=
+ =?us-ascii?Q?8hZBJ5EhiCFTUgd1gUB5bZT/TFMfAecPYcpfnzohbtV2h20piSKms4nYu1YM?=
+ =?us-ascii?Q?Yerx4gTWDVbqhxJrGxrLGmMypA2n2YFYd1IDY3fptEeJNA/iGuf3rOQ83MA7?=
+ =?us-ascii?Q?wn4KOdP+jlG7tK/ZYP/YJEsthVo0PQ0zI4zPnsj2P/nvIWEfJTNG5TOc5/UM?=
+ =?us-ascii?Q?X/csJLXMRJ3WG6IeZygIF40yPAVXU0IDV3fv6vrBZRHaHBv2Q4jb7PTygaOU?=
+ =?us-ascii?Q?bKr2b9qpadML5n7boLKuGAc1MraXCgwGSgVzyz/ovqbgvXRAhcOb7yP01VgL?=
+ =?us-ascii?Q?OvZsJ+vL1PWFn9Flve6Gcx9ipm6zZ+ZBB6j0dNviN/CfNf5Pad7gAFKlc56B?=
+ =?us-ascii?Q?yrt1g5KIOMGY+/SdCCLhM20vVFcgPL8Mq5qF6L9dsSa6cucZViQH4xpvsK6z?=
+ =?us-ascii?Q?ZYuLqSA4ZEBwqWDPjMB6bvoVcBmS4ZbstQbd7gAU7Wj/QX7mz94u6R3baJrR?=
+ =?us-ascii?Q?C9U7xaPZmfAhlHgVD04pzSX5+ePAuGn16gojbasYVnAAxC6KVmeCqt1XmrlI?=
+ =?us-ascii?Q?44A+bmwIGgL2BJiCMYGGG9Ul/+7xBlJmj6J5ALWD4ipzRvan82w5v3WgyobZ?=
+ =?us-ascii?Q?PiedzII+ODXhypA+EsbYfN6t8EVU4YoUi6cOd4kJHw6qmKLISI3KaGAmmdVo?=
+ =?us-ascii?Q?KMcD3joblw1qNSj52N7QSGGyqw30l/23VaEQU2X9G+d4QLyX/nKUXL+sa9zh?=
+ =?us-ascii?Q?m9FFNTaowJgBegxhW3z+f7ar9N3YHUKhg2wkOKyDm5E8ZGzTMk4zD5BMvTtZ?=
+ =?us-ascii?Q?vYl/3O1Ma63qEl0jKULjvZnmpp5HGDXspAd25z6KznasiKHK0KKTPFzfvjbV?=
+ =?us-ascii?Q?6mDXzRZbwnos02G8yGwZcK9qYgu4r6MtMQO/aLHAO/TlJCAPSQxW+qXsSw5Z?=
+ =?us-ascii?Q?xD5DAPtW7syiAkK93M6HVs2p12kia4q1W304Hk0WXzf3tAa0D1LX2dbFBmtJ?=
+ =?us-ascii?Q?np1tZvWktM4nphTDAgUegkMXWnbEk2ppV4X7pIKaBBza2tF5I2KtPaGE1Q2c?=
+ =?us-ascii?Q?ohAv+2qGFB3aVD3LTvh0OC0n7ylsgj0QezsgC/HVy5N9j4wtYh/36NBkJemo?=
+ =?us-ascii?Q?fO1PwTPlGtu27T3pvgUV4lk49rHFnj2jPisixPzMr69nbMx1kAB+Kriez+i1?=
+ =?us-ascii?Q?Tq76RrkurLTnoXtV2SCU5F7K5J5oVWnVNQo0wf42gsp7FoMj1/9Xr4Sd5nGZ?=
+ =?us-ascii?Q?ST2H9f7d4JgAxXAo8q3d2qHvHe11gb0kpi7Vb7lIQb21JRR6Sq2yEoefHIiz?=
+ =?us-ascii?Q?90cg/K7iroM=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?sBPylzLuJ3iHrZWqkAb+Ntk3u0saqQcNuF0vxJbPgteFOHueR++16kI5Iy4N?=
+ =?us-ascii?Q?mkMkO7RLT5HehpnmvMRSbt3r/+zpNCPvdapVLtncpLbKouB41Ma9sAC0/i9c?=
+ =?us-ascii?Q?wbbhDhMIKgaZI/Gy3m4fgZzk/8dnY8B2SgAS9zPoF5iIM7EE+DXFse3Y0Jsx?=
+ =?us-ascii?Q?TcQyiq91mDgOwMRzpFD/d4DQX1oEToLQjuTI5Ml0AjSN0z4UPsor9NFiFqlq?=
+ =?us-ascii?Q?WqigI7jdpX5pUTPR+wknBYE5NmAV1QUR9+h+1Ju8S7qHGlJbVKoO36O7z6ky?=
+ =?us-ascii?Q?cEM/qH0H1JmDOCnk1fTMTr7YEpnEOUS+Zg2AFPWsGgNg7ut2t9r2T+pJopgQ?=
+ =?us-ascii?Q?1ivz2uoGWWHCXgN1x5+LToPVgTdsGUKFZ/N3riJhaCvmMksTKvbyasALx9hx?=
+ =?us-ascii?Q?ocbyWAoEMf1BviaKJ0G+cpUSzPNe7+6ECf7fiRivA1GeIR/pholxkiAFy7eL?=
+ =?us-ascii?Q?RBaBjPFrCk8ltJSPWHmdVqb43vlEi0/jTVTqjYwWZhWT+3S17AmQaXKFgzCV?=
+ =?us-ascii?Q?FGp3TLLubKnTHxLPvNnQ4lxarHkwZOHioqYz1SD+9eXTaNj4bW4rf2Mw2rt4?=
+ =?us-ascii?Q?FN976BbsbLkb4B3EpONQUV3o3/Igk6Zi2Q1VoAr6ui+ji7uR6PT/0x0Wc1OC?=
+ =?us-ascii?Q?KwqHfLyBlMmwnsEsiA9y8J9Fb0BzNTRGTfAHsdTd3HjVDiBEDYi++adNSrPH?=
+ =?us-ascii?Q?vJvBy5HnW4h3oZcY45PBXblcdUEr3Nujh7tgumWHKdED4dLH/c4UTz2Egrc7?=
+ =?us-ascii?Q?sOb6IwrXp/5s5anPAbcVNkOFEp4Pr4nYpV6ON+2j8TMPJKiMqMaDpbRiq+pR?=
+ =?us-ascii?Q?3UyqZCL9qLKN/iILBp37NnGHpRq/l8wV0UGOJtiMOp/As/EYHTrE3rWEcOKu?=
+ =?us-ascii?Q?Aae14H6WeOckpPkm3uiA4MnEmJS1+viFlpan7MVZ+jYBu5fcEC+Km0VQOZCt?=
+ =?us-ascii?Q?WkV6OR0Odl7M328RmLFl0FeoqWSAiAWLJ2DyBhedEqLvXuZ+14nFQzT85uBj?=
+ =?us-ascii?Q?HmzW9MP1BUVua9RomDCo2EcdfVmaTOu6Pwmw6jnqw3SpH5SKUR1jceaMUULl?=
+ =?us-ascii?Q?w4RYx6g9h8uIQ9LqpW25FO6dJ45dUfy1vgx75ohqSb3GjSWpSo+ZOd4p/8p1?=
+ =?us-ascii?Q?YoJcOcaLivKr3Ve4DdTNd5V2PKhw48May6DYPV82BVkcHVKkz8+1OnV83tGe?=
+ =?us-ascii?Q?4hJuT+od1F0F5+IuWHxbMZ6Kj+bOibiEEYCuz0A/FAt2/S++eQgPpOCsHsxW?=
+ =?us-ascii?Q?q6U09qmIyMPFJCZFe9KHvwKaK6r4B5JVt6dx4vrDx9z4Fud+VtkQBE6jiZn3?=
+ =?us-ascii?Q?NQVDQpV6fcfUyCUHkPrm/Hgk/sPPIPdFMMBMtJ+FA4mTLu+pIhxtsdO4ViDc?=
+ =?us-ascii?Q?AwZ2rIst+qZgfe/G9aQkPUvPxZY3cOiDlDC7xlJbIgfj+YtXQndkGDKcLDbp?=
+ =?us-ascii?Q?aOb5nYWl7Q/q/yo+JZzF2JbUibPLL6wYkTfrYp0dGS1/5XpkThyzuAqHW9N7?=
+ =?us-ascii?Q?C6E0LNbAkcj4EAggFxKeN4U2f9zJSxzELVqX8uXRu/WJijeC5HdgeNOzdI+i?=
+ =?us-ascii?Q?2odmYebvriOt4NpfEExWn5vh80HIMijrO/dzp9LxF1XsV2LRnACU4rGQrI5P?=
+ =?us-ascii?Q?fw=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	8jZGXjF669VqEFJwvlX8v/lXO5yQGT1Sc1P8iM8YCfwJ6A+NqorUGzU6susexp551ZgGemuGnYvQvEtX/iGBlAMbr3vJ3TfD4rW5mJ+qdxa+7KfRIn+93QlpBQqd2+Dz1Xs1el6Nt6KYG6ZXWsCfuCkIh0IUCmOuW60QgMiJinMKoOkBKQaHrZtvCGx9pB81Z1hrbBvqmz4l5gNFe3PUHEVtBzbmNIZelcq7aZ2/91VGkoizVDg/bcMwrlUtNsBYGTWvwLncSHxH04jbClHHkQs/2DhRMXJIwR/Uy0nHY3um94+jmbxxxDidYEaP7GFB/LTp5e1MFvZmR4IvkAc2P3ERqV7jcOHnJQV2T8v3eE0GNcR2M9qviBeRUEd27qR/eDcumDDIlNCHS3C5bawK+QNKmff8Y0XKd5UX+RpzD8csQFsawLP5fhuDKCapJ//Gjv/RGfUUGN7wfJ6UzO6XiMVU1YP72A/dV3AioGcujhKv+z9yVOxFCN6P6v+uNNvWKNzGAf7DUN7tVa1HK7gphbA0cwzI75F30+JBSHcl/U+ZVeJSO8eMGcrPb9x/dXbIJHgNSH/Y62xp9HoGDdV97FBRfKyqWEsyBgaRvC3u5oI=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8c225702-e3bf-4c01-46b8-08dd8c8aec0a
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 10:44:05.1216
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2Acu6eFMI7PwigIGysd9OJ27JLg7db5RUUiGZcEmR8eCGXEZtqmN01HP6dMmSEjx90b0QDDBk2ZblsoVxonU4+3m2rB7tmdIEwRPMwDafu8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR10MB6954
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-06_05,2025-05-05_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0 adultscore=0
+ bulkscore=0 mlxlogscore=935 malwarescore=0 phishscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2504070000
+ definitions=main-2505060103
+X-Authority-Analysis: v=2.4 cv=XvP6OUF9 c=1 sm=1 tr=0 ts=6819e7f8 b=1 cx=c_pps a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19
+ a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=GoEa3M9JfhUA:10 a=QdgqI_opIRazmKcgweUA:9 a=CjuIK1q_8ugA:10 cc=ntf awl=host:14638
+X-Proofpoint-GUID: zXKMq_yLW4bWjstL1pLtL9dxdyJFku_D
+X-Proofpoint-ORIG-GUID: zXKMq_yLW4bWjstL1pLtL9dxdyJFku_D
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA2MDEwMiBTYWx0ZWRfXz4IdaktvXq84 q870mY3CdXBfZGF11kLGImA6DoEwhNSRwKH/2BTwgz1krid82oagtbC58QysKFHx683PjW0hxaW d7ii3SVkHullnOKIP7hbKGvTwOt1Dtw9wvftOlxlXgFlWFzvKLNp+ocXufld9kH0YBk2ODzEm6r
+ K0QCHBPmu+WBQ9wAdB+EU1fZCOo3vXJKkKOTy1eEI0b/WmSMhmWoVJGRAdLPOIO1a0J47VXMMok G1DkJ4yV5RO/EICk8adpl+2AkBy91zOAxZyTjpPvceOWSP+5jeHRTqv2h/qsfFmdSAD5iKX03g8 a5mUwfm2fr1QG6mXAA1WIZcvsU0M7H1obIp7XxtKeZ8F/PkZPeedujJAQeIvYqVbdSxVTAGJELq
+ NVjAKh9ggAXhGWgpeVejuZfMCRpp7t677z9OpDvVYwq+nPciCQ+tuRe6k45HbVn7eOxrPJHs
 
-The following commit has been merged into the x86/urgent branch of tip:
+On Tue, May 06, 2025 at 03:52:39PM +0530, Dev Jain wrote:
+>
+>
+> On 06/05/25 2:46 pm, Anshuman Khandual wrote:
+> > On 5/6/25 10:30, Dev Jain wrote:
+> > > Use PTE batching to optimize mremap().
+> > >
+> > > Mapping 512K of memory, memsetting it, remapping it to src + 512K, and
+> > > munmapping it 10,000 times, the average execution time reduces from 1.9 to
+> > > 1.2 seconds, giving a 37% performance optimization. (Apple M3)
+> >
+> > That's impressive improvement. But could you please re-organize the test
+> > description into a pseudo code format or better provide the test program
+> > itself (which should be compact anyways) just to be more clear about the
+> > scenario where this helps.
+>
+> Sure.
 
-Commit-ID:     5214a9f6c0f56644acb9d2cbb58facf1856d322b
-Gitweb:        https://git.kernel.org/tip/5214a9f6c0f56644acb9d2cbb58facf1856=
-d322b
-Author:        Borislav Petkov (AMD) <bp@alien8.de>
-AuthorDate:    Mon, 14 Apr 2025 11:59:33 +02:00
-Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Mon, 05 May 2025 10:51:00 +02:00
+I echo Ashuman's comment, definitely would like to see that.
 
-x86/microcode: Consolidate the loader enablement checking
+And wrt to perf improvement, whether it's a microbenchmark or not, that's a
+great result so well done :) I echo this also!
 
-Consolidate the whole logic which determines whether the microcode loader
-should be enabled or not into a single function and call it everywhere.
+However, it'd be good to see some more detail here also, you're kind of missing
+out - everything - about why this improvement happens - what the intent of the
+series is, anything about large folios, under what circumstances you'll see an
+improvement, etc. etc.
 
-Well, almost everywhere - not in mk_early_pgtbl_32() because there the kernel
-is running without paging enabled and checking dis_ucode_ldr et al would
-require physical addresses and uglification of the code.
+While this might duplicate comments you've made elsewhere, it's mandatory for a
+series, and Andrew is unlikely to take this without it.
 
-But since this is 32-bit, the easier thing to do is to simply map the initrd
-unconditionally especially since that mapping is getting removed later anyway
-by zap_early_initrd_mapping() and avoid the uglification.
+In mm we place the contents of the cover letter in the first commit in the
+series, so it gets stored for posterity also!
 
-In doing so, address the issue of old 486er machines without CPUID
-support, not booting current kernels.
+Cheers, Lorenzo
 
-  [ mingo: Fix no previous prototype for =E2=80=98microcode_loader_disabled=
-=E2=80=99 [-Wmissing-prototypes] ]
-
-Fixes: 4c585af7180c1 ("x86/boot/32: Temporarily map initrd for microcode load=
-ing")
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Cc: <stable@kernel.org>
-Link: https://lore.kernel.org/r/CANpbe9Wm3z8fy9HbgS8cuhoj0TREYEEkBipDuhgkWFvq=
-X0UoVQ@mail.gmail.com
----
- arch/x86/include/asm/microcode.h         |  2 +-
- arch/x86/kernel/cpu/microcode/amd.c      |  6 +-
- arch/x86/kernel/cpu/microcode/core.c     | 58 +++++++++++++----------
- arch/x86/kernel/cpu/microcode/intel.c    |  2 +-
- arch/x86/kernel/cpu/microcode/internal.h |  1 +-
- arch/x86/kernel/head32.c                 |  4 +--
- 6 files changed, 41 insertions(+), 32 deletions(-)
-
-diff --git a/arch/x86/include/asm/microcode.h b/arch/x86/include/asm/microcod=
-e.h
-index 695e569..be7cddc 100644
---- a/arch/x86/include/asm/microcode.h
-+++ b/arch/x86/include/asm/microcode.h
-@@ -17,10 +17,12 @@ struct ucode_cpu_info {
- void load_ucode_bsp(void);
- void load_ucode_ap(void);
- void microcode_bsp_resume(void);
-+bool __init microcode_loader_disabled(void);
- #else
- static inline void load_ucode_bsp(void)	{ }
- static inline void load_ucode_ap(void) { }
- static inline void microcode_bsp_resume(void) { }
-+static inline bool __init microcode_loader_disabled(void) { return false; }
- #endif
-=20
- extern unsigned long initrd_start_early;
-diff --git a/arch/x86/kernel/cpu/microcode/amd.c b/arch/x86/kernel/cpu/microc=
-ode/amd.c
-index 4a10d35..96cb992 100644
---- a/arch/x86/kernel/cpu/microcode/amd.c
-+++ b/arch/x86/kernel/cpu/microcode/amd.c
-@@ -1098,15 +1098,17 @@ static enum ucode_state load_microcode_amd(u8 family,=
- const u8 *data, size_t siz
-=20
- static int __init save_microcode_in_initrd(void)
- {
--	unsigned int cpuid_1_eax =3D native_cpuid_eax(1);
- 	struct cpuinfo_x86 *c =3D &boot_cpu_data;
- 	struct cont_desc desc =3D { 0 };
-+	unsigned int cpuid_1_eax;
- 	enum ucode_state ret;
- 	struct cpio_data cp;
-=20
--	if (dis_ucode_ldr || c->x86_vendor !=3D X86_VENDOR_AMD || c->x86 < 0x10)
-+	if (microcode_loader_disabled() || c->x86_vendor !=3D X86_VENDOR_AMD || c->=
-x86 < 0x10)
- 		return 0;
-=20
-+	cpuid_1_eax =3D native_cpuid_eax(1);
-+
- 	if (!find_blobs_in_containers(&cp))
- 		return -EINVAL;
-=20
-diff --git a/arch/x86/kernel/cpu/microcode/core.c b/arch/x86/kernel/cpu/micro=
-code/core.c
-index b3658d1..079f046 100644
---- a/arch/x86/kernel/cpu/microcode/core.c
-+++ b/arch/x86/kernel/cpu/microcode/core.c
-@@ -41,8 +41,8 @@
-=20
- #include "internal.h"
-=20
--static struct microcode_ops	*microcode_ops;
--bool dis_ucode_ldr =3D true;
-+static struct microcode_ops *microcode_ops;
-+static bool dis_ucode_ldr =3D false;
-=20
- bool force_minrev =3D IS_ENABLED(CONFIG_MICROCODE_LATE_FORCE_MINREV);
- module_param(force_minrev, bool, S_IRUSR | S_IWUSR);
-@@ -84,6 +84,9 @@ static bool amd_check_current_patch_level(void)
- 	u32 lvl, dummy, i;
- 	u32 *levels;
-=20
-+	if (x86_cpuid_vendor() !=3D X86_VENDOR_AMD)
-+		return false;
-+
- 	native_rdmsr(MSR_AMD64_PATCH_LEVEL, lvl, dummy);
-=20
- 	levels =3D final_levels;
-@@ -95,27 +98,29 @@ static bool amd_check_current_patch_level(void)
- 	return false;
- }
-=20
--static bool __init check_loader_disabled_bsp(void)
-+bool __init microcode_loader_disabled(void)
- {
--	static const char *__dis_opt_str =3D "dis_ucode_ldr";
--	const char *cmdline =3D boot_command_line;
--	const char *option  =3D __dis_opt_str;
-+	if (dis_ucode_ldr)
-+		return true;
-=20
- 	/*
--	 * CPUID(1).ECX[31]: reserved for hypervisor use. This is still not
--	 * completely accurate as xen pv guests don't see that CPUID bit set but
--	 * that's good enough as they don't land on the BSP path anyway.
-+	 * Disable when:
-+	 *
-+	 * 1) The CPU does not support CPUID.
-+	 *
-+	 * 2) Bit 31 in CPUID[1]:ECX is clear
-+	 *    The bit is reserved for hypervisor use. This is still not
-+	 *    completely accurate as XEN PV guests don't see that CPUID bit
-+	 *    set, but that's good enough as they don't land on the BSP
-+	 *    path anyway.
-+	 *
-+	 * 3) Certain AMD patch levels are not allowed to be
-+	 *    overwritten.
- 	 */
--	if (native_cpuid_ecx(1) & BIT(31))
--		return true;
--
--	if (x86_cpuid_vendor() =3D=3D X86_VENDOR_AMD) {
--		if (amd_check_current_patch_level())
--			return true;
--	}
--
--	if (cmdline_find_option_bool(cmdline, option) <=3D 0)
--		dis_ucode_ldr =3D false;
-+	if (!have_cpuid_p() ||
-+	    native_cpuid_ecx(1) & BIT(31) ||
-+	    amd_check_current_patch_level())
-+		dis_ucode_ldr =3D true;
-=20
- 	return dis_ucode_ldr;
- }
-@@ -125,7 +130,10 @@ void __init load_ucode_bsp(void)
- 	unsigned int cpuid_1_eax;
- 	bool intel =3D true;
-=20
--	if (!have_cpuid_p())
-+	if (cmdline_find_option_bool(boot_command_line, "dis_ucode_ldr") > 0)
-+		dis_ucode_ldr =3D true;
-+
-+	if (microcode_loader_disabled())
- 		return;
-=20
- 	cpuid_1_eax =3D native_cpuid_eax(1);
-@@ -146,9 +154,6 @@ void __init load_ucode_bsp(void)
- 		return;
- 	}
-=20
--	if (check_loader_disabled_bsp())
--		return;
--
- 	if (intel)
- 		load_ucode_intel_bsp(&early_data);
- 	else
-@@ -159,6 +164,11 @@ void load_ucode_ap(void)
- {
- 	unsigned int cpuid_1_eax;
-=20
-+	/*
-+	 * Can't use microcode_loader_disabled() here - .init section
-+	 * hell. It doesn't have to either - the BSP variant must've
-+	 * parsed cmdline already anyway.
-+	 */
- 	if (dis_ucode_ldr)
- 		return;
-=20
-@@ -810,7 +820,7 @@ static int __init microcode_init(void)
- 	struct cpuinfo_x86 *c =3D &boot_cpu_data;
- 	int error;
-=20
--	if (dis_ucode_ldr)
-+	if (microcode_loader_disabled())
- 		return -EINVAL;
-=20
- 	if (c->x86_vendor =3D=3D X86_VENDOR_INTEL)
-diff --git a/arch/x86/kernel/cpu/microcode/intel.c b/arch/x86/kernel/cpu/micr=
-ocode/intel.c
-index 819199b..2a397da 100644
---- a/arch/x86/kernel/cpu/microcode/intel.c
-+++ b/arch/x86/kernel/cpu/microcode/intel.c
-@@ -389,7 +389,7 @@ static int __init save_builtin_microcode(void)
- 	if (xchg(&ucode_patch_va, NULL) !=3D UCODE_BSP_LOADED)
- 		return 0;
-=20
--	if (dis_ucode_ldr || boot_cpu_data.x86_vendor !=3D X86_VENDOR_INTEL)
-+	if (microcode_loader_disabled() || boot_cpu_data.x86_vendor !=3D X86_VENDOR=
-_INTEL)
- 		return 0;
-=20
- 	uci.mc =3D get_microcode_blob(&uci, true);
-diff --git a/arch/x86/kernel/cpu/microcode/internal.h b/arch/x86/kernel/cpu/m=
-icrocode/internal.h
-index 5df6217..50a9702 100644
---- a/arch/x86/kernel/cpu/microcode/internal.h
-+++ b/arch/x86/kernel/cpu/microcode/internal.h
-@@ -94,7 +94,6 @@ static inline unsigned int x86_cpuid_family(void)
- 	return x86_family(eax);
- }
-=20
--extern bool dis_ucode_ldr;
- extern bool force_minrev;
-=20
- #ifdef CONFIG_CPU_SUP_AMD
-diff --git a/arch/x86/kernel/head32.c b/arch/x86/kernel/head32.c
-index de001b2..375f2d7 100644
---- a/arch/x86/kernel/head32.c
-+++ b/arch/x86/kernel/head32.c
-@@ -145,10 +145,6 @@ void __init __no_stack_protector mk_early_pgtbl_32(void)
- 	*ptr =3D (unsigned long)ptep + PAGE_OFFSET;
-=20
- #ifdef CONFIG_MICROCODE_INITRD32
--	/* Running on a hypervisor? */
--	if (native_cpuid_ecx(1) & BIT(31))
--		return;
--
- 	params =3D (struct boot_params *)__pa_nodebug(&boot_params);
- 	if (!params->hdr.ramdisk_size || !params->hdr.ramdisk_image)
- 		return;
+>
+> >
+> > >
+> > > Dev Jain (3):
+> > >    mm: Call pointers to ptes as ptep
+> > >    mm: Add generic helper to hint a large folio
+> > >    mm: Optimize mremap() by PTE batching
+> > >
+> > >   include/linux/pgtable.h | 16 +++++++++++++++
+> > >   mm/mremap.c             | 44 +++++++++++++++++++++++++++--------------
+> > >   2 files changed, 45 insertions(+), 15 deletions(-)
+> > >
+>
