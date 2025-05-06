@@ -1,154 +1,126 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 590271DE883
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 12:48:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DEA9266B46;
+	Tue,  6 May 2025 12:50:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746535703; cv=none; b=oioNpvK+UQcNM2yoVXK0pUyhv9+P2sveyvFAXBbeyq3VW4vdAdrvi7flTuNiRukDSdAEPRD/8cmTH/O/vabnk64TQNREf4ZJXn5s+MUarjxIlME4aounTfgTJKnh0VY6KLle374rD54Y9uLw7KL2XqGFEwWbwW2jBp3rL0VZcto=
+	t=1746535812; cv=none; b=Yq9fPED9p9Lu3tE/Bjz2D8u9WUO8tUmzvBdiawMJGqMmzkFUpiNVhVnzkonFIc4KePy9mVX+EdZVE4kUhvJv5KarQPibnke+zQ20rhDR3/3JhOkPtucweeSU4FDuKqZQbn6l4n24Ee0pQ5KVC1XbQ17vdemFIfpQIHl0Li4wCSY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746535703; c=relaxed/simple;
-	bh=8ubOWI8+2mUl2eaNqwg0k/WqOEL9YcUblXgwsyAtyo8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uw8d7VdlOyy0BLW/37LxvqNVpEiHSE7oTOGH+G48JSfUErC8ebdFqnOMpAHDXfOgodKZH3rCoZi8R+0tujUy+n9QZ1I/LaS1pU9ETrN3eXI7CAPxzUUQRbihL+xP0CZ7SBif0PXq0zN0rmKNZwSM1Xg22/dpKktxamyz011z+Pg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=QSfxMzlT; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=8TItqUap; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=dVX6yepa; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=1/PorQBd; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="QSfxMzlT";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="8TItqUap";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="dVX6yepa";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="1/PorQBd"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 7953C1F390;
-	Tue,  6 May 2025 12:48:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1746535700; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5K/N/0WLkbc+DdrII6oye3X6T8Ni1CdM9Ifo6jBFaF0=;
-	b=QSfxMzlTxlx/0DcSc0Q/Iw2mZ6eLIHjzK5HZqDXAjMHPDH8qJ9BD8v1nPZ12wn7icoXTL0
-	JTJAY6PjnZvJb8pzWBdrd6Ql6ZXJMP9BPe+np11Q5Ewjm4SgdRl42a5J+ibdsLFPxyiycq
-	uywjCKexqJhsp7FXRpJ8jd9lLYcAD1c=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1746535700;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5K/N/0WLkbc+DdrII6oye3X6T8Ni1CdM9Ifo6jBFaF0=;
-	b=8TItqUaplNDt0Wh9r9FOWtrzKNMcFn2ZHVEDyp+JNpx/P1LMdEaWRfHt/AtzMIE9Iw6p95
-	TNwAo+TboQbcxxDQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1746535699; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5K/N/0WLkbc+DdrII6oye3X6T8Ni1CdM9Ifo6jBFaF0=;
-	b=dVX6yepaOsEz2V8wDOPXqEFaw5e9i++/fW/bsz58A44B6rwiwXYQ50bo64MyOjbXDlr4nZ
-	mWR8Xq+v9dfvxlm7QbG0c983qrkuB3CFeHfhMYCPHue7x9uvY1ZCERsMQ9HkcSBMdqrYxh
-	D+wdwBsQyuyrVThUgiR3NLOW1ok9fKY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1746535699;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5K/N/0WLkbc+DdrII6oye3X6T8Ni1CdM9Ifo6jBFaF0=;
-	b=1/PorQBdQXDlzKYyY+e2WKbk7dhTiv5GobGnvxKOCVFUMy4d1niEK6oaJCyCrSke7MeqiH
-	mbzaEKCgaeR1ZaCg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5582313687;
-	Tue,  6 May 2025 12:48:19 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id qfWIFBMFGmizLwAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Tue, 06 May 2025 12:48:19 +0000
-Message-ID: <baeb1200-5293-4fe0-aa76-b1d41875af58@suse.cz>
-Date: Tue, 6 May 2025 14:48:19 +0200
+	s=arc-20240116; t=1746535812; c=relaxed/simple;
+	bh=gZPKHu3de39xnOaBWrciTA9P8WQ95TdpqCBYRonCb9Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Je0NhOJpo94cUyzSbvo8BxoAJRRv3OR0piu7wzCvT3OxLtR4BCvUO67DbLoKtI2GdV3poFDhOTnmMuGwbE9mvRfvfF7LG6zYAtWQYl/6cVf2k9gQv95W/zeRFqFARoNM9IE/yRM774g4LgUgYkOnHJ9u/ZIt96+5v+Np7noH5rE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-523dc190f95so1976192e0c.1;
+        Tue, 06 May 2025 05:50:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746535809; x=1747140609;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dR5SLyEuVXCgzfFmFtCWiF+tB6qj8RmfZjai3JkMnSo=;
+        b=NKymZdQF+X0MyTVh5BK9ADyi8/v0DItG/bMeA8RkbTcvjmumlKrQ7cz7kS35qUlDjO
+         1mfFb4btEECb1NyLk6RBMEUDE21gXREC8tWg7lDZhH8vMiuZ/QcbMO39XWnG4mCHhSJz
+         AlL2xV7OMxCIIGgcASOA3dW7X2pI/Bakpsuw1aXMkZEYvf1PuP1F/w+VZzGcc8T9troM
+         fYU38zQu9viMqo49VTvCykIuqETfFV/aOg4bNCcPNOLzBUccGLR0kfe48kdzqvI7FbBM
+         tZXEMCkhU2meYzTbiwXUNKTENSja4FgXUh7TAJh3nJDzETXGJhvCx3fPe1MjntI5MAc+
+         n44w==
+X-Forwarded-Encrypted: i=1; AJvYcCUHQdpzX8zkfGzyqK+NtO+vmNI4Naak/ggAo2EBstHTbvooSXHtjOSeNZ9MvtvtpVEIbvLMes1picz2vJ7SkxoLH6Y=@vger.kernel.org, AJvYcCXU9wp4kvgjiR9b6eNQ4YnIerny3e9cQvUHyGhdv0MqI7xP/qIdJr3y4UTb8ZuJAl9/d/sT8Gz+guJoBxlg@vger.kernel.org, AJvYcCXW/hHWk23xnvzC1f+5H50NrE8CEK14cBSlhcEEtLRWGpOGsM/aiPUV+C9PeH6ez99WIE8xLqM466cK@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxk+tqhIJLbEUriCz46HYHpm5Sc6fN1Pk7K2uJIa62nzjmrFlc+
+	hIKPsVt1OrGhlB5+7nxE0osr2PZCi60TiQJE8JJv0b1oCmPbJi0paQFjg9pN
+X-Gm-Gg: ASbGnctU83e9iMm4KlzgCRYif4/bq9N9b30Mmg/ICZKXpW/HVHpAhXJl2hltbaRysn7
+	d3p2K/ccoVbB1tTwY+DP3/Y5xUZri9T8mPigwKiMr3FknrzzBc0/pI0AK+b3QtAEIMnyM045Xlw
+	fIYQtewydTbTP1UlFpTFeDfZp+uzAypXZwMqJzle4dLQgB1/D2eGAETnM2aAO0jdihm8beHFdC5
+	kzAED05QZ3oPXqOrLX4iU5WCvNSFIe95GmMyd212F7eVb2p70x5NCOxdn8OTfJAy/iN0gUrMsJv
+	xdtzJzm+LmymjYgZssGpRIApxsTzL1BJ+8z64y9HjEDf0Ty3RsoYIWeMmP37qCCtUDXij6+s8EC
+	5Thg=
+X-Google-Smtp-Source: AGHT+IECORAsJK5HvLlJTaOdwp7I0foTM1+mbT8X2l+6rUCgGE5LQYJWmc0WnSYxP89YzvMtamuCRg==
+X-Received: by 2002:a05:6122:d99:b0:520:42d3:91b7 with SMTP id 71dfb90a1353d-52b2790458fmr1306031e0c.1.1746535809099;
+        Tue, 06 May 2025 05:50:09 -0700 (PDT)
+Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com. [209.85.217.52])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52ae41f3ed2sm1900053e0c.48.2025.05.06.05.50.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 06 May 2025 05:50:08 -0700 (PDT)
+Received: by mail-vs1-f52.google.com with SMTP id ada2fe7eead31-4c32d6ddd50so1603746137.0;
+        Tue, 06 May 2025 05:50:08 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUMStV/iZ3wIB3mqUvbeMF6ldoouNlwdy3boGRz/3RBD+B27KGHhkjC4IsfYv7n9Ha3GY70SQn3p6Jcj5xe@vger.kernel.org, AJvYcCW+28Pfy/9b+8yGD+a5sFyaRdANVT/6lOahTgBwi0out2hbPtdYGLK7Mbx+5J/4B3W1x4lJSVXb0e8o@vger.kernel.org, AJvYcCXeegIiCirwNaE8M1VgEbFrASZMylxZTFzo4QEaWPDASiuJfDVnhTdo3R1VvfiUtQpQQIml9BSV3WTAayOAx+7YxdM=@vger.kernel.org
+X-Received: by 2002:a05:6102:330c:b0:4bb:dba6:99cd with SMTP id
+ ada2fe7eead31-4dc64fe3d40mr1513226137.8.1746535808032; Tue, 06 May 2025
+ 05:50:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] mm: Add CONFIG_PAGE_BLOCK_ORDER to select page block
- order
-To: Andrew Morton <akpm@linux-foundation.org>,
- Juan Yescas <jyescas@google.com>
-Cc: Zi Yan <ziy@nvidia.com>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, tjmercier@google.com,
- isaacmanjarres@google.com, surenb@google.com, kaleshsingh@google.com,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- David Hildenbrand <david@redhat.com>, Mike Rapoport <rppt@kernel.org>,
- Minchan Kim <minchan@kernel.org>
-References: <20250506002319.513795-1-jyescas@google.com>
- <20250506000133.ba44539dd517e4f54515751b@linux-foundation.org>
-Content-Language: en-US
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <20250506000133.ba44539dd517e4f54515751b@linux-foundation.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.990];
-	MIME_GOOD(-0.10)[text/plain];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:mid,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Score: -4.30
-X-Spam-Flag: NO
+References: <20250506103152.109525-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250506103152.109525-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250506103152.109525-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 6 May 2025 14:49:55 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXbeZPCCxqqU2O3J5K38ygJb2zMbuNq7mD0CCjLEgtPxw@mail.gmail.com>
+X-Gm-Features: ATxdqUGlzOJWAzAM_swPtywTszF9Wt5U6k2_C5syW23x2Dms_5uimTdgJSqV7NE
+Message-ID: <CAMuHMdXbeZPCCxqqU2O3J5K38ygJb2zMbuNq7mD0CCjLEgtPxw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] clocksource/drivers/renesas-ostm: Unconditionally
+ enable reprobe support
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
+	Chris Brandt <chris.brandt@renesas.com>, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 5/6/25 09:01, Andrew Morton wrote:
-> On Mon,  5 May 2025 17:22:58 -0700 Juan Yescas <jyescas@google.com> wrote:
-> 
->> Problem: On large page size configurations (16KiB, 64KiB), the CMA
->> alignment requirement (CMA_MIN_ALIGNMENT_BYTES) increases considerably,
->> and this causes the CMA reservations to be larger than necessary.
->> This means that system will have less available MIGRATE_UNMOVABLE and
->> MIGRATE_RECLAIMABLE page blocks since MIGRATE_CMA can't fallback to them.
->> 
->> The CMA_MIN_ALIGNMENT_BYTES increases because it depends on
->> MAX_PAGE_ORDER which depends on ARCH_FORCE_MAX_ORDER. The value of
->> ARCH_FORCE_MAX_ORDER increases on 16k and 64k kernels.
->> 
->> ...
->>
->> +config PAGE_BLOCK_ORDER
->> +	int "Page Block Order"
->> +	range 1 10 if !ARCH_FORCE_MAX_ORDER
->> +	default 10 if !ARCH_FORCE_MAX_ORDER
->> +	range 1 ARCH_FORCE_MAX_ORDER if ARCH_FORCE_MAX_ORDER
->> +	default ARCH_FORCE_MAX_ORDER if ARCH_FORCE_MAX_ORDER
-> 
-> Do we really need to do this arithmetic within Kconfig?  Would it be
-> cleaner to do this at runtime, presumably when calculating
-> pageblock_order?
+On Tue, 6 May 2025 at 12:32, Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Previously, the OSTM driver's platform probe path was only enabled for
+> selected SoCs (e.g., RZ/G2L and RZ/V2H) due to issues on RZ/Ax (ARM32)
+> SoCs, which encountered IRQ conflicts like:
+>
+>     /soc/timer@e803b000: used for clock events
+>     genirq: Flags mismatch irq 16. 00215201 (timer@e803c000) vs. 00215201 (timer@e803c000)
+>     Failed to request irq 16 for /soc/timer@e803c000
+>     renesas_ostm e803c000.timer: probe with driver renesas_ostm failed with error -16
+>
+> These issues have since been resolved by commit 37385c0772a4
+> ("clocksource/drivers/renesas-ostm: Avoid reprobe after successful early
+> probe"), which prevents reprobe on successfully initialized early timers.
+>
+> With this fix in place, there is no longer a need to restrict platform
+> probing based on SoC-specific configs. This change unconditionally enables
+> reprobe support for all SoCs, simplifying the logic and avoiding the need
+> to update the configuration for every new Renesas SoC with OSTM.
+>
+> RZ/A1 and RZ/A2 remain unaffected with this change.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+> v2->v3:
+> - Dropped config check and unconditionally enabled reprobe support for all
+>   SoCs.
+> - Dropped Reviewed-by tag from Geert
 
-AFAIK pageblock_order is compile-time constant. Making this a boot parameter
-was proposed in v1 but explained as not useful. That explanation could be
-added in the changelog?
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Boots fine on RSK+RZA1 and RZA2MEVB.
+
+Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
