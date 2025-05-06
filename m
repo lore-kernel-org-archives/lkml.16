@@ -1,97 +1,87 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E54522DDD0F;
-	Tue,  6 May 2025 01:44:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C034C2DCB6B
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 01:43:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746495849; cv=none; b=Lk7Gp4/UkrnvVP2V8Qn3G/vSBS+ASA4YXST4sLE3YcalSrJ/AXW7U41t8SbrRORRuFSjaczuTXDGXn6ZlUDn+91dKeGEt1ooOPgtu1VWny9QibrJUTbjgSq1ma7u9cI0dipWqPTZHaeyLFuEvJKlp2F+23/jaS8QzpLRms0OXy4=
+	t=1746495824; cv=none; b=sgOI/xQdkk/ZPfnXAErhLRxxiMe6Sf9YIBrraW5pVAvBaoLHyZEv7JLV/Md9HfV+1MTvAozHGzE+1wabqS7/w7opWT6dby2tXWIMKHMm8aGbt138WsfeW+uPdasn71MWlyYQ0cbO5yQW4godvEoIbXvyUa1Ea7J0/3rhfKZZ6D0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746495849; c=relaxed/simple;
-	bh=19mZVmvZgZMCUKu150c5NZpMhyd/9wxKXQgCFRWNu6Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=RxFHIBdYYtr+LuCtCewkDrVKvDVA9Sl9VrNF/5akHrE/kl+vb1q0D8j0W7Dmb21xFWdnkGKiMWs7Rl0TskN2i5rg2l7jDdGExex2ThVSwl0p0yXtSAnIvHzMOwsnrHx22p69Q+q7HD2RzLM9Ida5ptKWhbF8jaXFEh6brFYz2N0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=FkEPTSGK; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1746495824; c=relaxed/simple;
+	bh=esZI72QeE7XzMg5/fT1QMH6H3Z0/g8/dtrTCeXWGUiE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=mmo1PL3Kr/PjkbjZELXM6RIJN3WB01PEK0CD27oxhxAyBx52KRTgRFAGgs104pdOUl4c4YkbY/I6AVNoFWvZk5hZVPy9MZPoMpYnEbD0b2qRqSXriTSfiqLJC0AJtyQnvsQZYqaka81a7dhdboh1Vh01AP35JFGyfId6duE9U8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Two/2VAr; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="FkEPTSGK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1746495843;
-	bh=CDn02VoIaa3g7/37mOMgvjVmAv8sbq9dp57lDEXRR+w=;
-	h=Date:From:To:Cc:Subject:From;
-	b=FkEPTSGKKujzbsGctR5pmGDIPh8IFI+/Oqh/P/fKkqacFT5boeMor+b8PcErdosaa
-	 p5m4Aqjn7qJgivsYNU8DdegmNdQfkkHxGvuQYBKSVgb3WT/ywFofIyjMko4UTUOp5T
-	 uq1tgwogG2qzjiCCcBDjAg3od76xSjZ6QNr3ofsfjIhYnh8MV2xz6dMyXiu4Suks/F
-	 sfFhBOXaK8QvHQ1OCyPr0tGNLF4KYkkBjTc+QuZt0BhZ0Sd6OmyjfoNkMH5bJOiNJr
-	 gR1EcJL4vS8q06//BjEF3uDFX93sxn3Of3llHxlfqdz+1Z8JSAR/gq/9yzzF8t7WHv
-	 k2gaVQ8S4fVgA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Zs1QV6LfBz4wbY;
-	Tue,  6 May 2025 11:44:02 +1000 (AEST)
-Date: Tue, 6 May 2025 11:44:02 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Miriam Rachel Korenblit <miriam.rachel.korenblit@intel.com>, Johannes
- Berg <johannes@sipsolutions.net>
-Cc: Johannes Berg <johannes.berg@intel.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: manual merge of the iwlwifi-next tree with Linus' tree
-Message-ID: <20250506114402.2f440664@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Two/2VAr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746495823; x=1778031823;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=esZI72QeE7XzMg5/fT1QMH6H3Z0/g8/dtrTCeXWGUiE=;
+  b=Two/2VArRbZ9tG9cklVnlfrRJbvUHKAfDdaurSZubUKJm5SczKXJ1E34
+   ChCFgcqBr4o2fsi1vEGYIqNVwlcvjJfRZmUNbc9zONwF5XOteYihJ9Rbp
+   Aeq5C9bCcHtwobVTyriwTR5f/bKdAvzE14UOXyUSKgiVCA6LbSwrZcv6T
+   mn/yMdZMEORh6jfFbtJuLbf90Sb0+S7SrJ+wH5iaA35ZLjQKiPfB6uHYV
+   YZ6IGHiZiwOVaYy14qnM5l347xYOKw2EC2xejg2Upz2XOGBbTr+LZgF1o
+   Z/r380DThmpRaHiW+LcgkPhs61bwpVM1exJ4K2OIjG0JiNP8afyvxgL9s
+   g==;
+X-CSE-ConnectionGUID: IeQDhhkVQ8OFHnEv/nvKbw==
+X-CSE-MsgGUID: zgqN5XVgQpW9mK41cyVrqA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11424"; a="48279003"
+X-IronPort-AV: E=Sophos;i="6.15,265,1739865600"; 
+   d="scan'208";a="48279003"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 18:43:41 -0700
+X-CSE-ConnectionGUID: +YYB/lsbQqSRAKz6IxvUqg==
+X-CSE-MsgGUID: 4iG7UOsXQWCJUDPc4g696A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,265,1739865600"; 
+   d="scan'208";a="135942542"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa007.jf.intel.com with ESMTP; 05 May 2025 18:43:40 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uC7LN-0006Bx-2R;
+	Tue, 06 May 2025 01:43:37 +0000
+Date: Tue, 6 May 2025 09:42:54 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linux Memory Management List <linux-mm@kvack.org>
+Subject: WARNING: modpost: vmlinux: section mismatch in reference:
+ set_high_memory+0x8c (section: .text.unlikely) -> zone_movable_pfn (section:
+ .init.data)
+Message-ID: <202505060901.Qcs06UoB-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/CpVNzigQ+dlP6JgH3+Y6GNi";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
---Sig_/CpVNzigQ+dlP6JgH3+Y6GNi
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   01f95500a162fca88cefab9ed64ceded5afabc12
+commit: e120d1bc12da5c1bb871c346f741296610fd6fcb arch, mm: set high_memory in free_area_init()
+date:   7 weeks ago
+config: arm-randconfig-r062-20250506 (https://download.01.org/0day-ci/archive/20250506/202505060901.Qcs06UoB-lkp@intel.com/config)
+compiler: arm-linux-gnueabi-gcc (GCC) 10.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250506/202505060901.Qcs06UoB-lkp@intel.com/reproduce)
 
-Hi all,
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505060901.Qcs06UoB-lkp@intel.com/
 
-Today's linux-next merge of the iwlwifi-next tree got conflicts in:
+All warnings (new ones prefixed by >>, old ones prefixed by <<):
 
-  drivers/net/wireless/intel/iwlwifi/cfg/sc.c
-  drivers/net/wireless/intel/iwlwifi/iwl-config.h
-  drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.c
-  drivers/net/wireless/intel/iwlwifi/iwl-trans.c
-  drivers/net/wireless/intel/iwlwifi/iwl-trans.h
-  drivers/net/wireless/intel/iwlwifi/pcie/drv.c
-  drivers/net/wireless/intel/iwlwifi/tests/devinfo.c
+>> WARNING: modpost: vmlinux: section mismatch in reference: set_high_memory+0x8c (section: .text.unlikely) -> zone_movable_pfn (section: .init.data)
 
-between various commits from Linus' tree and various commits from the
-iwlwifi-next tree.
-
-At least one of the commits in Linus' tree is duplicated in the
-iwlwifi-next tree.
-
-I couldn't figure out how to fix it up, so I dropped the iwlwifi tree
-for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/CpVNzigQ+dlP6JgH3+Y6GNi
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgZaWIACgkQAVBC80lX
-0GzTDwgAi/B1fZO3XzlOPl5bX9Hge71EbuNjjoDQCcFQFxUGCXTzB85I0MBWhTZU
-SoYML9ecb9ocgmfCxqqQWolV/NbzoyfUdyvBwjF6cq9AhX0NK/Qev6Grv+s+eymj
-CINTdM9JNhpx+PLD/D2Gr2b33d7Q5lj6pN40j4g5GSUDrdc96cOET7Qg0pYOA7C7
-D7I54LruVFQtnKoSJoD8oOQ/5tWgOdU/+b+Y0veC+N/LhT2yyDJ9NifJXFOw7ALV
-d4oh7s+W6v2ApH1GzReDITzt0WBYslBAUyWNNyp+YntFtgUt5hu0R8fsIQhxRNdr
-ClD8TNhKKgBRIBFkIKF5eHwzrMHd6g==
-=8N2k
------END PGP SIGNATURE-----
-
---Sig_/CpVNzigQ+dlP6JgH3+Y6GNi--
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
