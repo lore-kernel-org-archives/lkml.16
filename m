@@ -1,141 +1,83 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7E8722AE7B;
-	Tue,  6 May 2025 12:35:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 089E922AE7B
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 12:36:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746534903; cv=none; b=r01t5wWWstxDXQBfxxbK6EmNrmox2B7wURFeOqmxbQZViJa4+E+CpHN92KGn6OGDHmqNuNZYJ8Gw+tUGFFQecsY3U6rpOpKV2knVQlbh5lJq64l3EwHfkoWw4tgOhdj9cDop1ELnmEV1wBAM5oDAaJ1ypoIs+KATk6s8xWhQMSM=
+	t=1746534985; cv=none; b=HZ1M95kcF+9/vNqAtBBPjEni34L2FENFSM7NaMn8KYDRArlHTCYwoI7jKKd80Ow9vvwBCjW5KddOjQcNXedPtUyfbkj3mq+nUubOMYNlXZmF3bA6MUrI8Y26M7PcbWISrY8jAnVFeYCkcgjdUoi19j6amBeqcucoWzv6v/Tfl/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746534903; c=relaxed/simple;
-	bh=mB39W3vRM3HnzoT1xR2N2MH3bxpGaTQzDJFoGxaHik8=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=YyXRpK4Y/BQ5mI62N5ZBNRBTsSLlrKw5CsV4Id0PC0/mu8qNQbd7oZgLGFoFi33tkgBdbJrXiBcXnatz3CHuakTZEF7SVnkyKCoWPWsvuDySOKk+dByy4H+2XHZfjNwF/KGafcwIMA3hawA3I9+zUPPUIhd5HBviUu1wiUQrCEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=StTKcyE6; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1746534985; c=relaxed/simple;
+	bh=ZMI8odsUTWL7O2ibZVeVjRKsgP060noUpzvYiu/+D74=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W9KupmQHQTtRO7dH6DWcQMKZYrh001usZZFOl3DI460NBk63RtWOw+5ag4aJKJk4l5we1KjktpSB3CQTNaPSP2NmpQRGvfDvUPg7hNqK7WGjHN4FT80kQwSQYuTfVVBuQlNaSsUhMtfSDgog3Rdj/pdpJXHgrezA49MWI6MA55A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZE2o90fu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="StTKcyE6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746534902; x=1778070902;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=mB39W3vRM3HnzoT1xR2N2MH3bxpGaTQzDJFoGxaHik8=;
-  b=StTKcyE6X+ynRyi/3fOaYfseDmI0SmRv8pur3kfN6jYC2N1lyQISGV2A
-   RBuDGdujgAoTFjw2tnQ/6AbcCq66mLY6e+0mb3kNHxTlTcMhp+Vh9R6xO
-   qtpXHJ7fXnw8HP6NSi4iMErNTPyQPWzDCt6MBRXs56UMjGFOewqiR/tXU
-   bLZqi+KKZ4i0IM6zC2BjrPEQduHJWgyNaxvLA45V7i2OR5gWZC7dF8uR9
-   XwMnwsbD0r/ptR9O0+RQXSf0jXg/EPLOkiH0zGqfHzJmpBzqX7sokSAXQ
-   3TJ2a0ZD8PgHgjjup+heNn5B3z0txDlpRbrio+bcDYZ8P6feAhQ/xeisy
-   g==;
-X-CSE-ConnectionGUID: 2+ImJ3paQ2CwAIwMgrjNOg==
-X-CSE-MsgGUID: v5yIglPoSneXT0Rioe+bmg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="59590566"
-X-IronPort-AV: E=Sophos;i="6.15,266,1739865600"; 
-   d="scan'208";a="59590566"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 05:35:01 -0700
-X-CSE-ConnectionGUID: 3XSTn5n9SQafhLOGTh3YaQ==
-X-CSE-MsgGUID: nCkfWfkCRc6y/KceS7SlbQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,266,1739865600"; 
-   d="scan'208";a="139664592"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.207])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 05:34:55 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 6 May 2025 15:34:52 +0300 (EEST)
-To: Yunhui Cui <cuiyunhui@bytedance.com>
-cc: arnd@arndb.de, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-    benjamin.larsson@genexis.eu, 
-    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-    heikki.krogerus@linux.intel.com, Jiri Slaby <jirislaby@kernel.org>, 
-    jkeeping@inmusicbrands.com, john.ogness@linutronix.de, 
-    LKML <linux-kernel@vger.kernel.org>, 
-    linux-serial <linux-serial@vger.kernel.org>, markus.mayer@linaro.org, 
-    matt.porter@linaro.org, namcao@linutronix.de, paulmck@kernel.org, 
-    pmladek@suse.com, schnelle@linux.ibm.com, sunilvl@ventanamicro.com, 
-    tim.kryger@linaro.org
-Subject: Re: [PATCH v5 1/4] serial: 8250: fix panic due to PSLVERR
-In-Reply-To: <20250506112321.61710-1-cuiyunhui@bytedance.com>
-Message-ID: <49865b06-c7c5-220b-aa01-0f1898d189f2@linux.intel.com>
-References: <20250506112321.61710-1-cuiyunhui@bytedance.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZE2o90fu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07F39C4CEE4;
+	Tue,  6 May 2025 12:36:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746534984;
+	bh=ZMI8odsUTWL7O2ibZVeVjRKsgP060noUpzvYiu/+D74=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZE2o90fuA13mBTzROjnCThsXqzopTraOQIwDEe1Sxcls0bIyr1i0jMDpFl/HZfXB8
+	 ZuJVjt43dMib/y9VaYzRykwikFqvu07i7uRcbljna/hoYmvztkjPjMZDTeR6G8crqG
+	 gcmQ1v8tQEBNcPp37b7RqjL0TEJBdKV1rt386kXsg4TDYYa0PEJ2i28ldogAsDKaq7
+	 V+QIF7jX3PJdQi391hMkWADEXGaOxoTnUfnzdM7qf7TQg3H4c9UORg4voFD07y9+py
+	 o7ay2VbFX3D6DckBbW6/+Bk2r9l2vTmg5q/C1IJV5/4qOBhYOc09mK00GrwYm04eJN
+	 35NOeMJZTnKTA==
+Date: Tue, 6 May 2025 14:36:21 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Michal Hocko <mhocko@suse.com>
+Cc: Marco Crivellari <marco.crivellari@suse.com>,
+	linux-kernel@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: Re: [PATCH 4/4] Workqueue: add WQ_PERCPU to every alloc_workqueue
+ user
+Message-ID: <aBoCRTWyYkOCN6TE@localhost.localdomain>
+References: <20250503082834.49413-1-marco.crivellari@suse.com>
+ <20250503082834.49413-5-marco.crivellari@suse.com>
+ <aBiDSHee4TKs8HF-@tiehlicka>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aBiDSHee4TKs8HF-@tiehlicka>
 
-On Tue, 6 May 2025, Yunhui Cui wrote:
-
-> When the PSLVERR_RESP_EN parameter is set to 1, the device generates
-> an error response if an attempt is made to read an empty RBR (Receive
-> Buffer Register) while the FIFO is enabled.
+Le Mon, May 05, 2025 at 11:22:16AM +0200, Michal Hocko a écrit :
+> On Sat 03-05-25 10:28:34, Marco Crivellari wrote:
+> > By default, alloc_workqueue() creates bound workqueues
+> > (i.e., without WQ_UNBOUND).
+> > 
+> > With the introduction of the WQ_PERCPU flag (equivalent
+> > to !WQ_UNBOUND), any alloc_workqueue() caller that
+> > doesn’t explicitly specify WQ_UNBOUND must now use WQ_PERCPU.
+> > 
+> > All existing users have been updated accordingly.
 > 
-> In serial8250_do_startup(), calling serial_port_out(port, UART_LCR,
-> UART_LCR_WLEN8) triggers dw8250_check_lcr(), which invokes
-> dw8250_force_idle() and serial8250_clear_and_reinit_fifos(). The latter
-> function enables the FIFO via serial_out(p, UART_FCR, p->fcr).
-> Execution proceeds to the dont_test_tx_en label:
+> I assume that the next step is to drop WQ_PERCPU when it is not strictly
+> necessary, right?
 
-Where is dont_test_tx_en label?
+Indeed. And also convert the users of schedule_work() and queue_work(system_wq, ...)
 
-> ...
-> serial_port_in(port, UART_RX);
-> This satisfies the PSLVERR trigger condition.
 > 
-> Because another CPU(e.g., using printk()) is accessing the UART (UART
+> Looking at the huge list this will be a huge undergoing. Is there any
+> rule of thumb to tell whether WQ_PERCPU is required or not? Maybe
+> something as simple as - if the worker doesn't use any per cpu variables
+> then it is highly likely that it doesn't need WQ_PERCPU? Are there other
+> useful hints?
 
-Because -> When ? 
-
-missing space before (
-
-> is busy), the current CPU fails the check (value & ~UART_LCR_SPAR) ==
-> (lcr & ~UART_LCR_SPAR)
-
-Add:
-
-... in dw8250_check_lcr()
-
->, causing it to enter dw8250_force_idle().
-> 
-> Put serial_port_out(port, UART_LCR, UART_LCR_WLEN8) under the port->lock
-> to fix this issue.
-> 
-> Panic backtrace:
-> [    0.442336] Oops - unknown exception [#1]
-> [    0.442343] epc : dw8250_serial_in32+0x1e/0x4a
-> [    0.442351]  ra : serial8250_do_startup+0x2c8/0x88e
-> ...
-> [    0.442416] console_on_rootfs+0x26/0x70
-> 
-> Fixes: c49436b657d0 ("serial: 8250_dw: Improve unwritable LCR workaround")
-> Link: https://lore.kernel.org/all/84cydt5peu.fsf@jogness.linutronix.de/T/
-> Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
-> ---
->  drivers/tty/serial/8250/8250_port.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
-> index 3f256e96c722..a913135d5217 100644
-> --- a/drivers/tty/serial/8250/8250_port.c
-> +++ b/drivers/tty/serial/8250/8250_port.c
-> @@ -2380,9 +2380,10 @@ int serial8250_do_startup(struct uart_port *port)
->  	/*
->  	 * Now, initialize the UART
->  	 */
-> -	serial_port_out(port, UART_LCR, UART_LCR_WLEN8);
->  
->  	uart_port_lock_irqsave(port, &flags);
-> +	serial_port_out(port, UART_LCR, UART_LCR_WLEN8);
-> +
->  	if (up->port.flags & UPF_FOURPORT) {
->  		if (!up->port.irq)
->  			up->port.mctrl |= TIOCM_OUT1;
-> 
+None that I know of. But yes it is a very big work. Ideally we
+should focus on core users first. And then we can think about
+the drivers later...
 
 -- 
- i.
-
+Frederic Weisbecker
+SUSE Labs
