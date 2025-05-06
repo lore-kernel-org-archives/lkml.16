@@ -1,142 +1,125 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECE82179A7;
-	Tue,  6 May 2025 19:03:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 744CF19CC0A;
+	Tue,  6 May 2025 19:03:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746558200; cv=none; b=GCVS3I0/wZYRZNIUp734bCgpYYVkN3/YyfccwVfaZDHq3XuybcvCsgohLovbr1v/a9vNX2cmKz0xZhfd8K8c+CYIryJN7JNXqihJK1CZM12/9d9m6xRRBRt0GkfZqpq/zorotAR2ZVzkAbRlxiO3TEZ+RQa9S8dLGHRA+jL5gRw=
+	t=1746558229; cv=none; b=apJ3rspSKpLotfTasQpFgS4qhG7GeR964yo7Zqe97fskxOZ2YO5Uq/YqK2sq/hBvUWdB+UI0mxWTH6nQT0lkyrmE1q9X00B3NeUqCbU5XW6N+WnYP6jXWaiZom7SkoKLL9I8Cn6yQqVfoQ6I5lbRycW8DKnWkS4l3Dfgr3R+G3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746558200; c=relaxed/simple;
-	bh=o+bp12Z0FJ9fLuWY1TpSl72sJBupgVqpfkSZm49wCjQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Nuy4N2X/NFL1wLfiPEVz5Y9y4TM+yOn/tp2oS5KXL+K4OnNg9wSdCB4BiRRM9iXxxxgQiDxt7zlVBgBbvYKS5FPb2TubWbqrNhI7G/JIKPJatE/3KezNwNxARnvwytTdsjrKojErbjRxYZJZckuuWaWzMvnxaI5IX9zoGKa0cnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CEEAE/Ao; arc=none smtp.client-ip=209.85.208.41
+	s=arc-20240116; t=1746558229; c=relaxed/simple;
+	bh=Q1Byj7KAeeQlPXBdhhBqPGFqmoaplXzgBJJcsOaiPdA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nOb/rH/LY7884+b49kK6Q2zfudpJqqO6Op1Uth8iYAZFZKLDG979iUba1BAtvCW5YASXdPFLlvCXKZtY8/SFIrBvZDQk8idK4t4pVouyl18EhmYfEvG+YjXuhTRX6lV7eSBlvotvdR6KcQWluZXJS5TY39qadGkcmGfNze1kaz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AUz1XBpc; arc=none smtp.client-ip=209.85.222.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CEEAE/Ao"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5fbda5a8561so839113a12.2;
-        Tue, 06 May 2025 12:03:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AUz1XBpc"
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7c549d9ecc6so87040385a.1;
+        Tue, 06 May 2025 12:03:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746558197; x=1747162997; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7q2D+DX8gUEt0LGQO16zlU47C6emYh/iTsjzICyS8DQ=;
-        b=CEEAE/Ao0prV7Mw6HXGMWjNUebeg3/fF1fZn7Ycq9oTrEEXL1lZNMvk84eyxc0p28W
-         JJ7RUrYqAxGwvMT9G/oRagVQOp6uA7/M4M+VQn+Ir5EuHlZ4PivGGW1FB+zAJ07RtTW6
-         /ZkqKHF4sRCXyWBKqvoUTEuP/ugdKT62Vf5l69zcJSefSdQtbpJ0JM8oZR6xqraMDA27
-         6wWSBxiVFOawx66Hu4yyqrxnDS8tlutoYnT2+HbU95zKc2R/ZjT78jkKC5hZdSKbZYHb
-         j+pIBu30JGyMQyfHKWkrz1DCjj5Og8QnAUqp4QB1fTdqWojxJjxJYgGaEnHGC2tyrJpe
-         t17w==
+        d=gmail.com; s=20230601; t=1746558226; x=1747163026; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lbcd1rG8tob/mMuK+N9J6HXytcG7wJ/d0j7rgdtfF04=;
+        b=AUz1XBpchuVbR/jD3hUb73vGfeOLGiVFgruPQaoI+e576PRxEjy2bfz8gj0NJ7thVM
+         A8M7hlIrQFk2MTjySHY9lOEuxlyQIok+I+QvTbksforNP5g7Ev9Ho78Sya0BYUaqWiNj
+         ozDXTrUMbACKYEF7i2sGlIhgoR8IKUixQTy5NFRLkS8wN5xyP+nGLZ/fta1grUA6POs1
+         wCyXZDGdAmNnzgfWW1UcajFUTNvJ/maEX7QIDjUD6vVCY8o1JHrWd4f+N8Gyp1v/SE3N
+         yD5z4G5aHP1He1SiZK/ywe4OYpBUUlFA7zvDY3NiCeJ+K3QVBa9l7gZnEwQR6uNDr3Mg
+         35WQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746558197; x=1747162997;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7q2D+DX8gUEt0LGQO16zlU47C6emYh/iTsjzICyS8DQ=;
-        b=cf0JxFUzdEcERztgtjesPe2pR7nxiqgsB3CKsp9+r6PmapzlIxIw5JT4Tdq28kO+Oo
-         a5SZPqiYfXFC8+W55khkoL0H5weLrARHaO3OpNkey3qGa6P436vlQDrIVQ1IP6xQyJKi
-         VfIZZoPJzIsFKmJ8mxFPajTG11D481k1RLqEXMcO9Ulby5q6IBH+A/wGactSHSTy/Ew9
-         SOCgBRXsTxR3byxfe9ildwXqQaOq0QPPGLZU897jrhcHIUbsUwuK6FT/47xzzfGL724A
-         QIRZQqczEaHUBFLTNHKjR/vHUHW5xWFliyngRUtDOVomC/5ltNCQ3VUUAQWbgzmoKlcC
-         SwJA==
-X-Forwarded-Encrypted: i=1; AJvYcCW3I3rfna3nU4XJZZydOaSjBMn52TLcuGCsPIoXgoQLYsLC5s4FAjwfsYJzVoatISHfTC6I7L5AgV/b9Yrc@vger.kernel.org, AJvYcCXadlvLxci/JssBbr4jCn8LCZhEgdLpF1FcFFc+3a0yYD7wiZPt4KOtuv5a93Uqno/JoKH6oocab+Xo@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8Gd2wZ2pgxKhnK7sP6IRU89XT8TKwMlyrNzK/0oPSYs7al4Hk
-	dPeP/8e+U3pFzs048GZouTnZx0A30nwgQ4baBg9qg6iWsMJ6YvRB
-X-Gm-Gg: ASbGncto9T/aeu5VZIhV7OGqXb2LWAeqWIxiVg/nsLRYVwUWk23E2dqCr+zjkzBBM6B
-	6fz7zwedvGMoBG/dgmClpfVjv464S6+UKu3XxIxig47XyVb91g9dAXCtptG43l63ZTc7y6Vv6KZ
-	Ww0pkDWfOiUPiJi9Ts9t4dWe6fQuw1k55MtLNV99Y9HxRKjuM+3OKpL59nDCyBsGAEWke/y8wY9
-	/202KZvw815NDnP7igfvNKfHMf5qr7Wr1KflRHnWjYGsh0mo35ov7uMaUDy3CSxAcZNIYlIXhRX
-	5hvZnfiDjj+vJOYkxa8lvXtJ83N0AKgUkiqSNyIG9UNHlTJ3HZZZW41j54dB8wU5730fb+alpgq
-	eJtuMwe3JOlv8xS8=
-X-Google-Smtp-Source: AGHT+IGAIk6XhkOv4qY9hEVwQZjfW5uzWwoDsjl7pOXvlYuWalU+g9Aa0ZsyZk2gb/vxryl7lxtCng==
-X-Received: by 2002:a17:907:a70a:b0:aca:cc55:fd35 with SMTP id a640c23a62f3a-ad1e8d2cbf8mr54940966b.56.1746558196869;
-        Tue, 06 May 2025 12:03:16 -0700 (PDT)
-Received: from [192.168.50.244] (83.8.121.197.ipv4.supernova.orange.pl. [83.8.121.197])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1895090f6sm753734566b.136.2025.05.06.12.03.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 06 May 2025 12:03:16 -0700 (PDT)
-Message-ID: <7eeaa7b4-b76d-4658-ac78-705a5f8e54df@gmail.com>
-Date: Tue, 6 May 2025 21:03:15 +0200
+        d=1e100.net; s=20230601; t=1746558226; x=1747163026;
+        h=in-reply-to:content-disposition:mime-version:references:reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lbcd1rG8tob/mMuK+N9J6HXytcG7wJ/d0j7rgdtfF04=;
+        b=GgNUdGtLyBMdTQK8Mp0FW1wr+9a8yq56V3Ps1WxntxQPXY33uNyZYwIiX6Fs3Pf6Fi
+         DzoX5DtVei5Sx4bTnE0y/1m8xNEAiPheNSef9+iUvlm1YS1PpZQ2cOxAFvrCyxqnMfW7
+         Lf9Mv/vunzsdiseZsS03nCRa8uYjPBs+Um3A5lQXnfX1JGbmZ2+XZC+G1zQFOkoNi0Pv
+         L0vjQ0P3dkJN3gffNWLA/n+UR5OuHrJBlUxwCI0TQ1Gkev4UsAWKJcuEqCY80VfK0H/+
+         W9HC3hCS8e/bWRn9ny4h9aFXU1LF4C7GGUNKTI7dyU5MSpAVsRxHE+vSQ8WvTem7UKlW
+         hdzA==
+X-Forwarded-Encrypted: i=1; AJvYcCUHkn3KmSyDMKCOIa7glJHsQ1mXCwpKQqQA9rIzXGQqjPOnNQYxsIO3CfDdizd9OuU3lsl+qC3HxBno@vger.kernel.org, AJvYcCWb11AYjUIhQLWLjbGmRIfBJ6cAYWdK1+C6CGnZ08Xtm2rHBn1gU75Lj+LHos8IrOEJmoMDlLRj5JjB@vger.kernel.org, AJvYcCX8BBrVIt8IMzLEKaOmu3JNRroQjnBc9CJ2jkq8AaWg1/+aetEWUsi5xX7Qo1NW8m/f3VYHJb/IW7vzBw==@vger.kernel.org, AJvYcCXQk3lAH+KPwBpPDUtv8em66N1NgRkQyoEJI7989c8CL1k9LEBiguMmMBw5qTXjQEP+F4YVOBFr07ugU6L0@vger.kernel.org
+X-Gm-Message-State: AOJu0YxdNPLyapIXLiMsWWRVi7YfnFtWpBtFl/MtWTm7GCLVE7itMqr6
+	6Juu2EduHtloIAAeFyZwcbg0vEmPmUwit2MpHG8RZHypUpBwcTVd
+X-Gm-Gg: ASbGnct1mQf2EBq4hYj15XPEDYnJWSUjwNeLnGK8ExfZhFKka6DiVyZZpEBcZ3Eh6CG
+	LUck1XMjsNfWI+1Mfs02xOKm3X1h2NiyREXqWB+Foma1bR8gUgZMlB9Mh6O3K8ErYmvYaOCGBMc
+	rzqy73TJNpcqu6fEJKcBKoo0WiJ+WmAZ3kT/7sa3KY/xL+MYl++1rWDGkCnDRL9rVq8rUysyhLe
+	k1ygWvH+Ei/VEbfgpFaAqmQaE11SVZ498q+ZRrXfRjawC9dgx+BzpJLLjpezrPzhJRvpWMcJVv8
+	ostG6nRQz0yCkuMqVp5GnDRNvDDNATYOKTT+o9ZibENzNQW6LdYcoC7X18jTN/t6OlZlvmvE
+X-Google-Smtp-Source: AGHT+IHEIlJe8V/bfK8noaG+e9HbHfHlNzlivvhyYKQXTYuglrsYkBwOAV506BAus+ExuPoTrXBAXw==
+X-Received: by 2002:a05:620a:3194:b0:7c5:6fee:1634 with SMTP id af79cd13be357-7caf736d415mr31893785a.3.1746558226157;
+        Tue, 06 May 2025 12:03:46 -0700 (PDT)
+Received: from JSANTO12-L01.ad.analog.com ([191.255.131.70])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7caf75b87b7sm13533985a.71.2025.05.06.12.03.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 May 2025 12:03:45 -0700 (PDT)
+Date: Tue, 6 May 2025 16:03:40 -0300
+From: Jonathan Santos <jonath4nns@gmail.com>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Jonathan Santos <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, andy@kernel.org, nuno.sa@analog.com,
+	Michael.Hennerich@analog.com, marcelo.schmitt@analog.com,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	marcelo.schmitt1@gmail.com, linus.walleij@linaro.org, brgl@bgdev.pl,
+	lgirdwood@gmail.com, broonie@kernel.org, dlechner@baylibre.com,
+	Pop Paul <paul.pop@analog.com>
+Subject: Re: [PATCH v6 10/11] iio: adc: ad7768-1: add filter type and
+ oversampling ratio attributes
+Message-ID: <aBpdDN12wdV/gOBB@JSANTO12-L01.ad.analog.com>
+Reply-To: 20250505170950.1d7941d0@jic23-huawei
+References: <cover.1745605382.git.Jonathan.Santos@analog.com>
+ <4493dc2e3e0fb61ba3e8a0e54571998aaaaf46c8.1745605382.git.Jonathan.Santos@analog.com>
+ <20250505170950.1d7941d0@jic23-huawei>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 5/9] mfd: bcm590xx: Add PMU ID/revision parsing
- function
-To: Stanislav Jakubek <stano.jakubek@gmail.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>,
- Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui
- <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- ~postmarketos/upstreaming@lists.sr.ht
-References: <20250430-bcm59054-v8-0-e4cf638169a4@gmail.com>
- <20250430-bcm59054-v8-5-e4cf638169a4@gmail.com>
- <aBo0qzqHOkfFxaXs@standask-GA-A55M-S2HP>
-Content-Language: en-US
-From: Artur Weber <aweber.kernel@gmail.com>
-In-Reply-To: <aBo0qzqHOkfFxaXs@standask-GA-A55M-S2HP>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250505170950.1d7941d0@jic23-huawei>
 
-On 5/6/25 18:11, Stanislav Jakubek wrote:
-> Hi Artur,
-> one note below.
+On 05/05, Jonathan Cameron wrote:
+> On Sun, 27 Apr 2025 21:14:17 -0300
+> Jonathan Santos <Jonathan.Santos@analog.com> wrote:
 > 
-> On Wed, Apr 30, 2025 at 09:07:09AM +0200, Artur Weber wrote:
->> The BCM590xx PMUs have two I2C registers for reading the PMU ID
->> and revision. The revision is useful for subdevice drivers, since
->> different revisions may have slight differences in behavior (for
->> example - BCM59054 has different regulator configurations for
->> revision A0 and A1).
->>
->> Check the PMU ID register and make sure it matches the DT compatible.
->> Fetch the digital and analog revision from the PMUREV register
->> so that it can be used in subdevice drivers.
->>
->> Also add some known revision values to bcm590xx.h, for convenience
->> when writing subdevice drivers.
->>
->> Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
->> ---
+...
+>  drivers/iio/adc/ad7768-1.c | 363 ++++++++++++++++++++++++++++++-------
+> >  1 file changed, 293 insertions(+), 70 deletions(-)
+> > 
+> > diff --git a/drivers/iio/adc/ad7768-1.c b/drivers/iio/adc/ad7768-1.c
+> > index 10791a85d2c5..e2b8f12260a5 100644
+> > --- a/drivers/iio/adc/ad7768-1.c
+> > +++ b/drivers/iio/adc/ad7768-1.c
+> > @@ -20,6 +20,8 @@
+> >  #include <linux/regulator/driver.h>
+> >  #include <linux/sysfs.h>
+> >  #include <linux/spi/spi.h>
+> > +#include <linux/unaligned.h>
+> > +#include <linux/util_macros.h>
+> >  
+> >  #include <linux/iio/buffer.h>
+> >  #include <linux/iio/iio.h>
+> > @@ -77,7 +79,7 @@
+> >  #define AD7768_PWR_PWRMODE(x)		FIELD_PREP(AD7768_PWR_PWRMODE_MSK, x)
+> >  
+> >  /* AD7768_REG_DIGITAL_FILTER */
+> > -#define AD7768_DIG_FIL_FIL_MSK		GENMASK(6, 4)
+> > +#define AD7768_DIG_FIL_FIL_MSK		GENMASK(7, 4)
 > 
-> [snip]
+> Bug?  If so does this belong in a precursor patch?
 > 
->> diff --git a/include/linux/mfd/bcm590xx.h b/include/linux/mfd/bcm590xx.h
->> index 8d146e3b102a7dbce6f4dbab9f8ae5a9c4e68c0e..fbc458e94bef923ca1b69afe2cac944adf6fedf8 100644
->> --- a/include/linux/mfd/bcm590xx.h
->> +++ b/include/linux/mfd/bcm590xx.h
->> @@ -17,6 +17,16 @@
->>   #define BCM590XX_PMUID_BCM59054		0x54
->>   #define BCM590XX_PMUID_BCM59056		0x56
->>   
->> +/* Known chip revision IDs */
->> +#define BCM59054_REV_DIGITAL_A1		1
-> 
-> 1 seems to be the digital revision ID for A0 (couldn't find the analog
-> revision ID), see [1].
-> 
-> Other values seems to match downstream (as far as I can tell anyway).
-> 
-> [1] https://github.com/Samsung-KYLEPROXX/android_kernel_samsung_kyleproxx/blob/cm-13.0/include/linux/mfd/bcmpmu59xxx.h#L82
- From my testing on a device with the BCM59054A1 (BCM23550-based Samsung 
-Galaxy Grand Neo), the digital value is also 1 on this model:
 
-   bcm590xx 0-0008: PMU ID 0x54 (BCM59054), revision: dig 1 ana 2
+Actually not, this extra bit is to include the 60Hz rejection enable
+for sinc3 filter
 
-(This constant is not actually used anywhere in code yet - I just
-included it for the sake of completeness, since the BCM59056 headers
-in downstream listed both values...)
-
-Best regards
-Artur
+> >  #define AD7768_DIG_FIL_FIL(x)		FIELD_PREP(AD7768_DIG_FIL_FIL_MSK, x)
+> 
+...
+ 
