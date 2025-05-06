@@ -1,234 +1,127 @@
-Received: from AM0PR02CU008.outbound.protection.outlook.com (mail-westeuropeazon11013011.outbound.protection.outlook.com [52.101.72.11])
+Received: from smtpbgjp3.qq.com (smtpbgjp3.qq.com [54.92.39.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 685C329ACD8;
-	Tue,  6 May 2025 03:44:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.72.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746503072; cv=fail; b=DcJO40Rct9PF5vBSXDNHzq2DkiA6L7/6Yv3OcOHIt0wdAqUOwbBri+jw2M4ZXIuMZeOwmxw8Ym5gy/nuPLLOhmbKRbFKR/J5B9lF9p8OzRkAtMxojAGsl0SsUxBcqNSCQ6cdPdT3oXESZV+C1pE3BCyX35EDDhmsEUU14SZ9+48=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746503072; c=relaxed/simple;
-	bh=6bP/IF3FOj1AnpVe+rmWzUB6bYJL6UPkBpILWZhD2nM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=t/rvpsyKtR8AiPImYcuSlsSzO8CjU3oh0K48lyUx+Pz/xjpELF7zLk3DJutO7p7MYqv68zqhrwPggnPACzW4JFmNo05xtl6BN5DMpzhDjjnempjPnST9WL+PPLBgfGGeNbjZo27gbOI8SrEF0Atd8UPLuBvld/orCE+oMT2yNpc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=Dn/3MePB; arc=fail smtp.client-ip=52.101.72.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A04713790B;
+	Tue,  6 May 2025 03:45:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.92.39.34
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746503136; cv=none; b=Ndp9qM5uM6C9G4nSKjNx8OOGHN8ZDrpyMxBiUHg6ctmsE2QIgJ++hkUu6M2PNN17SjBpBhuKtmYvqcH+DgU9n0qJqOCw5ruHiMy45rDOyGi+x9358/TSURUyfwn15lOHTRbNA10eliCSZzeH+USjRgbQSSIat9VG3aGwpKeyxpA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746503136; c=relaxed/simple;
+	bh=5xu0R5wjOr05JzgWrL+0QHFaBquoW+foZZqkitjX8Rs=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=jBGEnJzetPOg24waoGc2iI8xQbD0dCgcRbKnv76bcgrj28vlMIf/1/+nb10h0iB+LVoFhYCrL4iSS6NKGtPjO8xf07utfEAKiMDm1/KtRGgSAIQQwMwaCd9Si3dS68cifKsvaFsEL0UCbJkfaskMj4Lb1RwNE1JDT/2ENYmHtlY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=airkyi.com; spf=pass smtp.mailfrom=airkyi.com; dkim=pass (1024-bit key) header.d=airkyi.com header.i=@airkyi.com header.b=EXLmGtfN; arc=none smtp.client-ip=54.92.39.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=airkyi.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=airkyi.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="Dn/3MePB"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=w4gjtnya9mf3cmFPId6BhZYADeZLxdxqZplOzRnD+SGAY1w+FsnkBZ3S4jp+OuOD9a2Fmo1vj1wb7Vh+5B7Y6BUfIxHxSvKUboUi0zEvWtjCygYxaO88ZEEa1N1z9cmDF5USVFyI68kD6OHoTuh+O++NcKMTr+TOcz7WIDjR/2HK0ZUgLeN9EaV8IhrOpsRW4FTgooLODVtjkr2YsAfhWWUP1t2thKafgCosvT+zUwaQ8BvijuGDE5xq78eDDrv17hUmjiLv1eBzYl1T66Hs5j1YxGEtVUdl6dTqdWd1XYtLjhWDJa9CI+wweTfb2lYw4TpFsVUn4KUKTyE524/UGg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fGC/uymXtaW606JLwHXz7CPMq3X1EYFH6kU1ca8j+6Q=;
- b=ZUotQOZ7YI8UfaNV5P/xMNJImEkfJni5Wyv+WeVjAiUVIGGvCIDMBJVDyoB0YIp3AlmAsR53rMPG7xqGUpvFm61WrVgwHzs88irotH5E1VzQzIK1NyP/KcuP2T5i5bc0orU/8QbSCrncFe2FGP8g5umy3cNUwQIbqBrV+AzNyByCoUDf7QM4rXt/GRXDEkhNs/BdLZ+be73kUWA3Rm4TMtBsPiciPTWS4xUobqJ/Vz59uv9jDXijW1bcJAmkeKTEr4GVDgldcuN3t4WieUIAcz+t4L0qBzdGkfQZzahlrN9guwTIHkOheB/6a97ywHLQ+HeOarsAhRr2MW2PwQja9g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fGC/uymXtaW606JLwHXz7CPMq3X1EYFH6kU1ca8j+6Q=;
- b=Dn/3MePBXJChxX/CVnCNMjnImuUb1G93lGCGYNxCq38GrJseeWCRiwgiuzMKNvuQVlguACZJ7aa/jq1vlZkEICFyLXxnRR/5L8seIlXl2XNZoTDKnMz+YJ/Vd3rjLL4DJzir+6GWqbPuUiJa+2C8AnkO+RQYRgu3vtNBTeykK838fcmQQwEJrjD582bC6zMjs5YPnGaM/RwTQMjEC1j0jmqP0sJyyBfB+WTQ5IapfQwSvN8sM/hjmQXA1p7MZycq78p9pK5MljK0WM3yTyneL9SQTX618xuGj3dYKpEhafwoA8wCJST774xq2CQMTm4MjgxrUjRCvBQTOp8O5UbnMQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from DB9PR04MB8461.eurprd04.prod.outlook.com (2603:10a6:10:2cf::20)
- by AM8PR04MB7473.eurprd04.prod.outlook.com (2603:10a6:20b:1d0::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.26; Tue, 6 May
- 2025 03:44:26 +0000
-Received: from DB9PR04MB8461.eurprd04.prod.outlook.com
- ([fe80::b1b9:faa9:901b:c197]) by DB9PR04MB8461.eurprd04.prod.outlook.com
- ([fe80::b1b9:faa9:901b:c197%4]) with mapi id 15.20.8699.022; Tue, 6 May 2025
- 03:44:26 +0000
-Date: Tue, 6 May 2025 12:53:35 +0800
-From: Peng Fan <peng.fan@oss.nxp.com>
-To: Hiago De Franco <hiagofranco@gmail.com>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>, linux-pm@vger.kernel.org,
-	linux-remoteproc@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Hiago De Franco <hiago.franco@toradex.com>, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	daniel.baluta@nxp.com, iuliana.prodan@oss.nxp.com,
-	Fabio Estevam <festevam@gmail.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>
-Subject: Re: [PATCH 3/3] remoteproc: imx_rproc: add power mode check for
- remote core attachment
-Message-ID: <20250506045335.GD24259@nxa18884-linux>
-References: <20250505154849.64889-1-hiagofranco@gmail.com>
- <20250505154849.64889-4-hiagofranco@gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250505154849.64889-4-hiagofranco@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-ClientProxiedBy: SG2PR02CA0118.apcprd02.prod.outlook.com
- (2603:1096:4:92::34) To DB9PR04MB8461.eurprd04.prod.outlook.com
- (2603:10a6:10:2cf::20)
+	dkim=pass (1024-bit key) header.d=airkyi.com header.i=@airkyi.com header.b="EXLmGtfN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=airkyi.com;
+	s=altu2504; t=1746503056;
+	bh=iSV9zPyI4IkPrEBlHh8/lsdjGfzW/kI3YQ0bFTr6LNk=;
+	h=From:To:Subject:Date:Message-Id;
+	b=EXLmGtfNhOrQ4/ebNCpXlF49e3nE2sMEC2dKgDNToEMI3/nW2HW6fcI/asVg6uWus
+	 9d2bkge0hi9Kwp3N0XBsr/3wtvV1gM74DUE+EDb5Gi/XGM8Bc969qKJYDUfCaLGsUK
+	 Pa2xv3j+N3wjlt0KPkOb5YA8BmgdDNhyLsH9OQPk=
+X-QQ-mid: esmtpgz12t1746503047t1a967a6c
+X-QQ-Originating-IP: JFOkyO3w+3+6x0M55PWmhESZ37RR/YYYMEb/KXeiPrQ=
+Received: from DESKTOP-8BT1A2O.localdomain ( [58.22.7.114])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Tue, 06 May 2025 11:44:05 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 5505055036827260230
+EX-QQ-RecipientCnt: 21
+From: Chaoyi Chen <kernel@airkyi.com>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Andrew Lunn <andrew@lunn.ch>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Kever Yang <kever.yang@rock-chips.com>,
+	Jianfeng Liu <liujianfeng1994@gmail.com>,
+	Dragan Simic <dsimic@manjaro.org>,
+	Jimmy Hon <honyuenkwun@gmail.com>,
+	Quentin Schulz <quentin.schulz@cherry.de>,
+	FUKAUMI Naoki <naoki@radxa.com>,
+	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+	Alexey Charkov <alchark@gmail.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	Chaoyi Chen <chaoyi.chen@rock-chips.com>,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/2] Add support for rk3399 industry evaluation board
+Date: Tue,  6 May 2025 11:43:45 +0800
+Message-Id: <20250506034347.57-1-kernel@airkyi.com>
+X-Mailer: git-send-email 2.17.1
+X-QQ-SENDSIZE: 520
+Feedback-ID: esmtpgz:airkyi.com:qybglogicsvrsz:qybglogicsvrsz4a-0
+X-QQ-XMAILINFO: NSEFX6u+4l+KtlGV1F31MMgTIaGm4RVavQGZLMVgjdA2EIvBeC5k1ycy
+	DkPNX6zs8ImkUXOUnlAHHl0+e0ErdQRgi9fBN8xcFUaNBNNMhTucxQWOXgycgLkAs4PXJ0V
+	fcs55EYqiKED3Sk5mwd7yXuQXG8wvwugG9MP1Ik0WHoNmI4LGA7DiBfive8aoVdHSaKJvDg
+	U8kSlFUJ8n424uXjAjLo0MedUz0RSsx3W2vWOQEJDXBWMx8J1jniLZJTAMT7OKeETSyxYjK
+	ww2h3m+AYfZE6OKN4/fYGjz2Jy8llXDqwb53aUqNSVZQEqqsWQEBHWZcKRDkiko9WFjPGTW
+	cZfOVTGVDKQttioB9AKZ3i9abuMIpe9lXpGKrU6G3EHiXFmgkwRC2vhQxHvWSnTZqLCW1ea
+	d7FohT6vNU09cl24cIRK5jukdYy7xWT0+weeye2u+awc9yjhGrwcbPZDqgyzu8q6JdDx175
+	hWvWJ4CTAyKSoZFiq1/kjboYbXVxmu3F2rkO2WOnVjdOfIvFzUiTl2kMVWPS1aBzd7JqkWE
+	cdcDKwdnDZi9lQvrc+Kd629zKXir4mxqWWKlpyursFIpy+YhjuPk+ttGu351SV1x6Q5ItYn
+	WLj4wRKalR83dh/FUtSj3hsvfxtHLzgoUfM7GxI5QmnGNK+PQYi1qKpfq2pMcuSS18m/5WG
+	+iYywRm7EZ3FFn2Yd83UN4KYBrtbyKLWNx8RAw1+LbxIJq4phLy21+GC4djooSEF5JpTf66
+	ju50A4muaAnFun4HpVJl/vpvmv//lB9GCE9wTA+WCqg0Dv/92X7arI0JsPcZuthhDh+uW3s
+	J1IovLkXT/KxBTBdGIgk46GYX3CxXMlpO3ePhisdu9F4qprCmpIon5rGqCElYi+GicPKK15
+	OmVIe9fUNwaNxTuxBN/HM8OgNEMuozzX0XOE1/aSoVNa9drroDVpWdp/i36FILyR0UAUYtZ
+	mVox8hfImqBx9vHYKtOnuOC8cA0ICatJ/oNWFxT9oY2QfaHc9t/Xyyzri2Tie9gfvu0Y=
+X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
+X-QQ-RECHKSPAM: 0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB9PR04MB8461:EE_|AM8PR04MB7473:EE_
-X-MS-Office365-Filtering-Correlation-Id: 74702f25-536e-4dcb-0add-08dd8c504bda
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|52116014|7416014|376014|366016|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Y//c12Q2I+/ydgzFKuR5+EvZJt8N9CDgqrdpRjWgQfAusJArVoMMLEebv6QJ?=
- =?us-ascii?Q?CcbxZrwrHL6XjZsF27qvcK6s/2uT8f1TsF49ScaG3Kt8+LM0NZuAk0SnmpxT?=
- =?us-ascii?Q?mDVONkInN1J44Vmk63abE0tPuUD6ly+X7aUAn+GDkFOAVUqxcyDOcxyT17Xf?=
- =?us-ascii?Q?DJ4yWktpzELEWnilEB5ygCsZMql/tPwfiXkb4/tjZXy7MqhGldK6OaYyD+O8?=
- =?us-ascii?Q?TKn4Tb1Oi16Noqi4rT9B3ZLG6umoH5phtznBEWjMUgvV2GmpklHWNwLfhmMr?=
- =?us-ascii?Q?XjXELCQY6Z5ZHphJ1KIXAlxPfY322oFxmEUt60/BLtRCvAI1Nkyfx06eWZgS?=
- =?us-ascii?Q?VXWC9Hx+zRwZ9IVOIc7tYgJW/kJ3+RdKaKHZxy1SlOgSoIdcKHYKhJwdG6NB?=
- =?us-ascii?Q?/xB3Y0UZe0SoWWyJ7DkWG64usMZMCGq78RrVfddwRuFbWlUrlJPtpQ/DbI5E?=
- =?us-ascii?Q?ur1CH64USjtO+WPFziHTiSx9y+Zt9/OFt96qeBwm+KNt3unhbT/v2eonjNam?=
- =?us-ascii?Q?x4wZyrQQbj5d6OhWkX7CoZHKBM70vZ3g/RsNkM4c71c3ABCToFuroKtO+IOo?=
- =?us-ascii?Q?VUbD0ugCbbBL7lh7GFYVw76Il58uuZa+qjRA0jUvQqMNTmgZ4uosoqscW1Im?=
- =?us-ascii?Q?swSvcXgw1TWY9nDNTA+NwiGEJTCyac0QxSlK53sZMOG5rjYq4eTX1otNrsYq?=
- =?us-ascii?Q?omOrP8XnIkgcuLUxZ/yW9WAUyJKHYaTiTUnyoHucy9nJ/1DtjW6iwwmG9CSy?=
- =?us-ascii?Q?BQXZYa0kFSMIyv6yM2jBwXxUGwdKM7M6Lu13mPf34XyNn+tLv/lYXSaQvl6a?=
- =?us-ascii?Q?xVm7qmNOLISyfryLDRMvxkqSmJRntUGawnz7RwWBnjQ8x1V6PgeGH24uhd4q?=
- =?us-ascii?Q?4rECUT5r1nGz/yAtrYsrbTEaMYafH5FRKHmwkwFspD1iltYxiuYQV/2g0Rfv?=
- =?us-ascii?Q?RqAfqc/o1Nx1fLvU1u4XvrCfsV2wby5BUepISB6ykt/ywU5d1YJf8gPF2+Q8?=
- =?us-ascii?Q?KE85YPHXu/K/lPuHBmY8Q+Rq5foVM+q2SIprJcOr6Eahx4s1keEo0dovFPmG?=
- =?us-ascii?Q?BTf/4yIWIigXWQ2jML65zAeIgsKd7Ws6H5zPlSjkAmV5FziF8aL3HoxF9ee3?=
- =?us-ascii?Q?dtF0RvIlzRkH+mWk+MroW1QaStDLmwEU1TG8Yzy0E9KLNIahM2Li+kw6RH1e?=
- =?us-ascii?Q?jWVO3VTW3izj4Xvc4UpPidNtbLxWR0F6Sd5Z5adoe3zhbJTeYvmM1VdOVD23?=
- =?us-ascii?Q?sD5osKKnDuu8hXChM8g+ysUrhQvdH+D2d6m4c3AY7UmNf2mIqgudJn20bBAK?=
- =?us-ascii?Q?cHpK0vUdBw+4O3pMVMYSuUd/ikJOT21I2LbOxprWTYXHqskFwPZ8UUzQnUVQ?=
- =?us-ascii?Q?k6d2O1o0HnP8hYtWwcsRWNxTCgWeF18DvHxv99QPLhBAyXRisG1rDmPKFqq8?=
- =?us-ascii?Q?9uThCztPwcPYzVlLFaa9mQum9r3Wkjc0cakvwf0yxUXck0SRVDva71IfiOuq?=
- =?us-ascii?Q?WOSUQS/Fbnlws60=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB8461.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(52116014)(7416014)(376014)(366016)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?oJopUrqK7feGqo6H/mMrDwhXmZIG58lJ7H1HQaXnjjD+JLa/vkheUDk26d+Q?=
- =?us-ascii?Q?c62JnaYLZNTPXEpSejQ5TEO9d3Nr1SN7vijbnG4fMai8eAwGXfx0BwCW4KIK?=
- =?us-ascii?Q?N4w2i91OUTXk2CklTm27ReGxlQguf29A+WdJb6sp41rJFCqyD+T4qAXBizAG?=
- =?us-ascii?Q?mbYO4TKLahJWV1XoQD1FjycL5freVlocWCdI+Mmvm/p7LVFNiwgyermAOlM9?=
- =?us-ascii?Q?s1Bd1Mzlbn6fip22cIPsFtEr7LbzVO2Hab8K1Noraxxhww73y8klK361rUrG?=
- =?us-ascii?Q?2OfDrxMSJNqwDH+u/4zGeAE2rk4k7tbHrhmDh64bYL2D1exA9LGNikU85pNB?=
- =?us-ascii?Q?2fNvhuk6VYYTUcWYqciCkJOYOZorQaLQybzaCzANF7HpXP/bXQ/Fyj8u49/6?=
- =?us-ascii?Q?VEfBLG4yZoJ+4E+4WzfCEhdnYmc/xu46vDWHAZozSksTWGzBiRe6TTeJvNmd?=
- =?us-ascii?Q?pm+LEXP89uqTl58liaEWJDRJJWlHnjKo96XwTiDf3Y4MroUFNWt4i4libsYq?=
- =?us-ascii?Q?Qo78sK1oVeZWLXhUZS0anO765xNyOhZwDwkhiSUW7MndnPISLjfspHwnI+lT?=
- =?us-ascii?Q?YNsEZiKPrtgLtdLJSgxhXO48fAk3KyD36pVqj1sYxSZsxXfLbNqYfTRvoogI?=
- =?us-ascii?Q?ygmBPl3PuZL2CbaaaBFRYMz7QVMKGHJkTKbVcjU7V4Q1lY8niwY1MC3XwSAe?=
- =?us-ascii?Q?aEfADSUBlBE7HSpb6EYzN3B1KCYLOJk5aP279R0wQv7x0m/XT8MKgPT5NVvI?=
- =?us-ascii?Q?LhXN4bld4lM4/PEdsTS/pXuinLMybGcUCPQr9Z3qXSiW6I6qjo5XSq9Xiu2Q?=
- =?us-ascii?Q?BnK3maHAxWC0JKFVatg7ops1TEUwzAudOkIpymINq65gXWu2M52qtS78ITLM?=
- =?us-ascii?Q?IEFEDZNHqlyE1pxrxbBR3NvPre4vjqG+a3sy4XWv6ovJnymLq48cPImM041d?=
- =?us-ascii?Q?uSKuu3vxrDB+VBAJOLMx48UJ/pjR5U0LCYjRTsbbb4nW4N6Pd/GHXmnpcSwZ?=
- =?us-ascii?Q?QUkjrVAM9Le7Cy81iNOywE3RHXYOnNITttE+OPcGydhO6fUEA6lzKRf7xP54?=
- =?us-ascii?Q?yxsYM0qQZHZtFPqLBHD4nLBOckBkYOxpdx3cLbLV+BQAxHantiwqSRGKbmqr?=
- =?us-ascii?Q?T32hJjsQU0YOj7T1cdRrZ9W3KixeiV/vMKzGs96leO1/bUhQZPBO4S7Wpswz?=
- =?us-ascii?Q?M87ZjoFYOiD5kuWwjuRbS5A8O/buXO7Lb8+2z/j7oK0YWAVqGlXtl5GfJVTK?=
- =?us-ascii?Q?eqCwdMfh0JyuwwcI7KdV45Rp7kH39AdZikaotNRYQGxQ9C1oiRNr/CyjpsC8?=
- =?us-ascii?Q?9W4w9AQCBzXrEuVorjoIE6+q5uMPXwvCzQSnOjXo1Le2n6278wap5c1hDSFb?=
- =?us-ascii?Q?7R0nlbIVUruJxjejE+W3QO9SEgOQpb0kZgNX3ohUXdRvFmYn6ZP5cXqC+0Go?=
- =?us-ascii?Q?UtM/WupwvkbBGleCogKe+Awt1phzgudOig2ERS4iE5eX29LfVV8LiOvUFpos?=
- =?us-ascii?Q?xSNBfLy8hoY2RFdMv30sa12pXxv1nuboLjofhy8LwIb38eaVIbDccV1bAng+?=
- =?us-ascii?Q?SDH5ScpG71AghngkKLI+zIXkiHxYWskaOVO5Kcdj?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 74702f25-536e-4dcb-0add-08dd8c504bda
-X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB8461.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 03:44:25.5848
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8lxVA9t6ewFmg4YOPA3nZ3WVuSaoBMVK4K/NEdCOi7pjP0k80Nh7Qb0jIFVS2fHCaYhwE7d6JXHsCHrJk5NR1Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB7473
 
-On Mon, May 05, 2025 at 12:48:49PM -0300, Hiago De Franco wrote:
->From: Hiago De Franco <hiago.franco@toradex.com>
->
->When the remote core is started before Linux boots (e.g., by the
->bootloader), the driver currently is not able to attach because it only
->checks for cores running in different partitions. If the core was kicked
->by the bootloader, it is in the same partition as Linux and it is
->already up and running.
->
->This adds power mode verification through the SCU interface, enabling
->the driver to detect when the remote core is already running and
->properly attach to it.
->
->Signed-off-by: Hiago De Franco <hiago.franco@toradex.com>
->Suggested-by: Peng Fan <peng.fan@oss.nxp.com>
->---
-> drivers/remoteproc/imx_rproc.c | 23 +++++++++++++++++++++++
-> 1 file changed, 23 insertions(+)
->
->diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
->index 627e57a88db2..86541d9d8640 100644
->--- a/drivers/remoteproc/imx_rproc.c
->+++ b/drivers/remoteproc/imx_rproc.c
->@@ -8,6 +8,7 @@
-> #include <linux/clk.h>
-> #include <linux/err.h>
-> #include <linux/firmware/imx/sci.h>
->+#include <linux/firmware/imx/svc/misc.h>
+From: Chaoyi Chen <chaoyi.chen@rock-chips.com>
 
-Drop this line.
+General feature for rk3399 industry evaluation board:
+- Rockchip RK3399
+- 4GB LPDDR4
+- emmc5.1
+- SDIO3.0 compatible TF card
+- 1x HDMI2.0a TX
+- 1x HDMI1.4b RX with TC358749XBG HDMI to MIPI CSI2 bridge chip
+- 1x type-c DisplayPort
+- 3x USB3.0 Host
+- 1x USB2.0 Host
+- 1x Ethernet / USB3.0 to Ethernet
 
-> #include <linux/interrupt.h>
-> #include <linux/kernel.h>
-> #include <linux/mailbox_client.h>
->@@ -906,6 +907,21 @@ static int imx_rproc_attach_pd(struct imx_rproc *priv)
-> 	return ret < 0 ? ret : 0;
-> }
-> 
->+static bool imx_rproc_is_on(struct device *dev, struct imx_sc_ipc *ipc,
->+			    u32 resource)
->+{
->+	int ret;
->+
->+	ret = imx_sc_pm_get_resource_power_mode(ipc, resource);
->+	if (ret < 0) {
->+		dev_err(dev, "failed to get power resource %d mode, ret %d\n",
->+			resource, ret);
->+		return false;
->+	}
->+
->+	return ret == IMX_SC_PM_PW_MODE_ON;
->+}
->+
-> static int imx_rproc_detect_mode(struct imx_rproc *priv)
-> {
-> 	struct regmap_config config = { .name = "imx-rproc" };
->@@ -949,6 +965,13 @@ static int imx_rproc_detect_mode(struct imx_rproc *priv)
-> 			if (of_property_read_u32(dev->of_node, "fsl,entry-address", &priv->entry))
-> 				return -EINVAL;
-> 
->+			/*
->+			 * If remote core is already running (e.g. kicked by
->+			 * the bootloader), attach to it.
->+			 */
->+			if (imx_rproc_is_on(dev, priv->ipc_handle, priv->rsrc_id))
+Tested with HDMI/GPU/USB2.0/USB3.0/TF card/emmc.
 
-I prefer "xyz == IMX_SC_PM_PW_MODE_ON"
-But anyway, up to you. I not have strong opinion on this.
+Changes in v3:
+- Link to V2: https://lore.kernel.org/all/20250430074848.539-1-kernel@airkyi.com/
+- Add i2s
+- Add tsadc
+- Fix devicetree coding style
 
-Regards,
-Peng
+Changes in v2:
+- Link to V1: https://lore.kernel.org/all/20250427094211.246-1-kernel@airkyi.com/
+- Remove gmac
+- Add rk809 PMIC
+- Add CPU supply
+- Fix io-domain for sdmmc
+- Enable vopl
 
->+				priv->rproc->state = RPROC_DETACHED;
->+
-> 			return imx_rproc_attach_pd(priv);
-> 		}
-> 
->-- 
->2.39.5
->
+Chaoyi Chen (2):
+  dt-bindings: arm: rockchip: Add rk3399 industry evaluation board
+  arm64: dts: rockchip: Add rk3399-evb-ind board
+
+ .../devicetree/bindings/arm/rockchip.yaml     |   5 +
+ arch/arm64/boot/dts/rockchip/Makefile         |   1 +
+ .../boot/dts/rockchip/rk3399-evb-ind.dts      | 496 ++++++++++++++++++
+ 3 files changed, 502 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-evb-ind.dts
+
+--
+2.49.0
+
