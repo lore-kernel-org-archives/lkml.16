@@ -1,126 +1,148 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2170F28DF47;
-	Tue,  6 May 2025 05:32:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAE5628D8D0;
+	Tue,  6 May 2025 05:35:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746509546; cv=none; b=XBlu6nlVSWbngX2bEJGquWwCWryoJo3Bmqk8sfUl5gQ27mg2LQQE0b37sl/dCALXda7oV/vfegRXXITgXyw6j0sc8igLxePMIhG62N6JeD5BiFLDdziOior4D9BU5Wne3mNmiZTnL3mGZb2tPQrtm9nEwEnmQ6tVHE8v9SXpA7M=
+	t=1746509702; cv=none; b=d/tbNfI7fGffJg8gwo0gU0tVC0ZUGi2CYTHK5b7R90xCNv9VPg2rp7gvpk5F9+0D/+NRETCNusGrZbbeQCBSgqeuENC83qTCUpn2RWyGSI/MOdeQlvN/JTZVMiPrcZncU1WX8dv6clN6Azowy85WFH6FGzCel62TZQl27BrbEfw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746509546; c=relaxed/simple;
-	bh=remPqthXLp54OhP3D7Lc9RtMDdogPoIvT5KHNV5kIjM=;
+	s=arc-20240116; t=1746509702; c=relaxed/simple;
+	bh=fBhz3TeLREOj6BNct6p9r3lF/myOJZ1HQxrA2rUt7Ds=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YrZRKuvoKEO0T3HNW4pSd+L3UVmG2HIseUxeMO4wC2xSxehzL4VmIOzWSTglk/FHoWjMdfUL1bh8euEo2ceufrq6RMFLuZsQSWlpsrk0eT3JYlcpATfpUoWSWPmYE//jp33RxWyqq6pHynV2iTt5d1AmF1BAEOqEgwZ+nIMYmEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mcI8Pe0A; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Betx0qOu0SBo7+sa8hgVXv1IJRIlhb3gfrXN3fpjXOxpHpX72B54qj7qd54buOUiJIZdFBDcJoTWtOH4tR0h4r7xiEy7+BHez4FRHGCsmsRtAnDDZ6jLbofBWWe2++cMGqpz9QtKlHzMgUKrC6DRXhHgAZt6rQ9jqtrRbwMTf/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PPTViO+L; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mcI8Pe0A"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746509544; x=1778045544;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=remPqthXLp54OhP3D7Lc9RtMDdogPoIvT5KHNV5kIjM=;
-  b=mcI8Pe0AnvS8rvzSFy7mdSSpuuT05Ke55DzTjk4Aj8v79dwvP23Q7Nga
-   X8Ogwr3KziOw9bYefTuT4O71wdtkdF1Fn997PoYzaop86vhcSfH07gD8I
-   LgmVs9ouBMNVyAy3dpSizJxhwaglvmBaVjJjpXHc86egr0DPJ14vmzYNj
-   A+tvmJ26bOp8E9xW+X533TliBFPBu2FHHfP4VD2ylY2Yjv+QxP5Tmfh2b
-   Lw09HE3UAjjcIoyGwLfv0KLJsFTAcCSDl19zT9fTfknslHQfZoof1Ieyq
-   yS8fHmZLP1Q7bVCRYjeazNinzajcSRVgkErQO38k6LxCmxyjQ8bKP2Kbw
-   g==;
-X-CSE-ConnectionGUID: EOG2YerGSh2Llr+1WNL3LQ==
-X-CSE-MsgGUID: AR7YbiIIRyOkw6bjv8slQQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11424"; a="59544505"
-X-IronPort-AV: E=Sophos;i="6.15,265,1739865600"; 
-   d="scan'208";a="59544505"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 22:32:24 -0700
-X-CSE-ConnectionGUID: FTuGaNbgRhiyzQpmGqK8LA==
-X-CSE-MsgGUID: Tdb3wdcaS5KMnHepMukgsg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,265,1739865600"; 
-   d="scan'208";a="135389730"
-Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
-  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 22:32:23 -0700
-Date: Mon, 5 May 2025 22:37:26 -0700
-From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: x86@kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Michael Kelley <mhklinux@outlook.com>, devicetree@vger.kernel.org,
-	Saurabh Sengar <ssengar@linux.microsoft.com>,
-	Chris Oo <cho@microsoft.com>, linux-hyperv@vger.kernel.org,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-	Ricardo Neri <ricardo.neri@intel.com>
-Subject: Re: [PATCH v3 03/13] x86/acpi: Move acpi_wakeup_cpu() and helpers to
- smpboot.c
-Message-ID: <20250506053726.GF25533@ranerica-svr.sc.intel.com>
-References: <20250503191515.24041-1-ricardo.neri-calderon@linux.intel.com>
- <20250503191515.24041-4-ricardo.neri-calderon@linux.intel.com>
- <CAJZ5v0h_QcH72COEU-cnHUMfXj2grHv1EoLuBJnxm7_AeRteWw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PPTViO+L"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-30a8fd40723so201377a91.2;
+        Mon, 05 May 2025 22:35:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746509700; x=1747114500; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=XoBYdJRqhWQWEJMIgGKn4nVohTAo0uQNQu0zxG+8hMU=;
+        b=PPTViO+L7dKPc4UgMgkFlcTafoJHQwN70KTakfTuZ4VAKJLIG27tprUo0GlwIRfdTi
+         RhQXaRHnGOPU7xnGbWh/d9Qd0uNfZIPQ3X+n5kKyr5nI+Gn18VLI/HapO16/lUVy8RU3
+         /dQUcboFYgT+l+krhZQP0uz7eQXxAdXsDsZpB0A7t3p3q6chENhEXJz2kxyO+9ikHIQb
+         8W8CLa2xtCQ5LyyVIRmz48YGDvtO9vB4QzlXgzapgtebbIAqe0GnKn5jngjtUkWurviy
+         CjEc97TbeASiKlVG5kzn4+XKPlj/09nyF41+6j55eyAFkShQGE7X6VT65ab/JeM2PusL
+         8pBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746509700; x=1747114500;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XoBYdJRqhWQWEJMIgGKn4nVohTAo0uQNQu0zxG+8hMU=;
+        b=PsLtJKrcM8OeMaw6yaeKLfTo6xGNhBnApRax6d0xxgk61CKbHEehLFh4Sj1pVXMgzz
+         Un6qbstRBFjna0Qek9cuIduMr/SuPTiTJpkQikV8U8uAaiONonwY54hKPfNp8bGY0Jdp
+         hapsWnHBQtp9rc+HPjyh2E8Rseq9CF9MXejewr6k1hmwXIGhvpSlCG2TTGQtxRP/K5mf
+         wDGbAHjHDpVBwbMqNowVxqoKlC19xHkJ+cJlN4r8CwsYAMVuL5DFC0fzbT+kA+vpZWtC
+         jl1IGyv3vLg5OWAlXUll2zKffjDEW3jdcYXtNHTT/gXa1fUNPZXX4DO1k7v9Sl9wgH3q
+         Fpvw==
+X-Forwarded-Encrypted: i=1; AJvYcCW3odoE/CWHiMeORWqCxOptyKa7aNDUPbCj7bj+0Kvtiqq8St4V17RZ55mCRXFYQI3HzOJCD0EGxvYiagU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz9SCsdo5QcEl2QJPQtEJS+/aFdIZxBTHfCeGjTJqoX+s+56JZK
+	YfJ/CbXR16p/syq298kIbRtvQT45NfnccimzfA9HdeC4S75p2ucGWOW4KQ==
+X-Gm-Gg: ASbGnctvpbiOTPrwA3ajqeAlS40BrvX5BucDha+lMvEGpM8BFD5HLwRkfFqv/fvPN6L
+	p3fjaVLSfONSzJ7WkznmxEaxliaMPKL0SwdB1H7nqxGxkQ4DFivACleh9sgbw8ch6iVx/gGKxx5
+	He5nv+WqAgk9puNLrLMSacSeQFN0zg4ofoIyV0q85e/PLosVwPbvaYSntEHABQse0yz80/yQKLB
+	uDm3vmypr1Vs7BIm5EEPDpTSEaNoDLo9e9xtPDpW6sqpTxFsX9o1xl504mnjVhbaxV69eP17CpU
+	LgAgUHuOI67YXfn1do7CwIBcfZDZq90qzznQ0r4rhg==
+X-Google-Smtp-Source: AGHT+IEnwh8oI67CzBg/8sE+2gZeXjP9pEIdgeF0f56sxvWXxcVOFEQnOsVR/j4KwRWJCZbhp2bMUQ==
+X-Received: by 2002:a17:90b:2786:b0:308:539d:7577 with SMTP id 98e67ed59e1d1-30a7bb0891fmr3362129a91.0.1746509699872;
+        Mon, 05 May 2025 22:34:59 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:17ab:9e47:29ba:57e6])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e1522a77dsm64788615ad.177.2025.05.05.22.34.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 May 2025 22:34:59 -0700 (PDT)
+Date: Mon, 5 May 2025 22:34:56 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+Subject: Re: [PATCH v1 1/1] Input: ALPS - bail out when device path can't fit
+ buffer
+Message-ID: <2blm4mirspwgcukwnybfgqhiozhtkcqjl2e7g2onxp6ms4ex4a@l4jayj4i6fti>
+References: <20250422185645.1949391-1-andriy.shevchenko@linux.intel.com>
+ <ybenmz2fmjxjpo3zhnrh2ptquikxrtb63664qbhhfv5d4ezx5n@c3p2tbosx2tz>
+ <aBBdFoBbdl8GI6da@surfacebook.localdomain>
+ <aBTOMzlitljoDAob@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0h_QcH72COEU-cnHUMfXj2grHv1EoLuBJnxm7_AeRteWw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <aBTOMzlitljoDAob@smile.fi.intel.com>
 
-On Mon, May 05, 2025 at 12:03:13PM +0200, Rafael J. Wysocki wrote:
-> On Sat, May 3, 2025 at 9:10 PM Ricardo Neri
-> <ricardo.neri-calderon@linux.intel.com> wrote:
-> >
-> > The bootstrap processor uses acpi_wakeup_cpu() to indicate to firmware that
-> > it wants to boot a secondary CPU using a mailbox as described in the
-> > Multiprocessor Wakeup Structure of the ACPI specification.
-> >
-> > The wakeup mailbox does not strictly require support from ACPI.
+On Fri, May 02, 2025 at 04:52:51PM +0300, Andy Shevchenko wrote:
+> On Tue, Apr 29, 2025 at 08:01:10AM +0300, Andy Shevchenko wrote:
+> > Mon, Apr 28, 2025 at 04:30:13PM -0700, Dmitry Torokhov kirjoitti:
+> > > On Tue, Apr 22, 2025 at 09:56:45PM +0300, Andy Shevchenko wrote:
 > 
-> Well, except that it is defined by the ACPI specification.
+> ...
+> 
+> > > > +		n = snprintf(priv->phys2, sizeof(priv->phys2), "%s/input1",
+> > > > +			     psmouse->ps2dev.serio->phys);
+> > > > +		if (n >= sizeof(priv->phys2)) {
+> > > > +			psmouse_err(psmouse,
+> > > > +				    "failed to prepare path to the trackstick device\n");
+> > > > +			error = -E2BIG;
+> > > > +			goto init_fail;
+> > > 
+> > > So you just broke touchpad of some poor guy who had it working just fine 
+> > > for many years. For maximum impact you should add BUG() or panic()
+> > > here.
+> > 
+> > Ha-ha. You know that your speculation most likely so far from the truth.
 
-That is true.
+If your code is not a noop that is precisely what happened.
 
 > 
-> > The platform firmware can implement a mailbox compatible in structure and
-> > operation and enumerate it using other mechanisms such a DeviceTree graph.
+> And actually what you are telling about is not true at all. If the device was
+> working it means that the file node name is not cut, and hence this patch won't
+> anyhow change this behaviour. Otherwise, provide an example which can fail this
+> and still be working in the user space.
+
+"phys" is not a name of a device node. It is a string available via
+/proc/bus/input/devices, sysfs /sys/class/input/input<N>/phys and also
+EVIOCGPHYS ioctl. A driver is free to not set it at all and everything
+will be working fine.
+
+Actually, input devices themselves to not have device nodes, it is evdev
+interface that provides /dev/input/event<N>.
+
 > 
-> So is there a specification defining this mechanism?
+> > > In all seriousness, it is OK to have truncated phys, rarely anyone looks
+> > > at it and if we get a report of it being truncated then we can consider
+> > > addressing the size (or we can decide to live with it truncated).
+> > 
+> > In all seriousness, while I agree on the statement, the 4 drivers in Input
+> > subsystem break the build. It's the biggest obstacle now to enable WERROR=y,
+> > which is default, builds on `make W=1`. So, I already gave you chance to fix,
+> > instead I hear nothing back for a months (to be precise 2 months and a day
+> > passed from my first attempt that you didn't like), the problem still exists.
+> > Please, address this the way you like.
 > 
-> It is generally not sufficient to put the code and DT bindings
-> unilaterally into the OS and expect the firmware to follow suit.
+> For the reference, the first approach:
+> https://lore.kernel.org/r/20250228121147.242115-1-andriy.shevchenko@linux.intel.com
+> where I also asked about this one, ano got no answer.
+
+Sorry I was busy with other projects.
+
 > 
+> I really don't want to try anything new as it seems a big pushback to whatever
+> I propose. So, please consider fixing the issues rather sooner. I will be more
+> than happy to test.
 
-This mechanism is described in the section 4.3.5 of the Intel TDX
-Virtual Firmware Design Guide [1], but it refeers to the ACPI
-specification for the interface.
+Have you considered that this warning is bogus and it should be disabled
+instead? Or maybe GCC should see if there are followup writes to the
+same buffer before emitting the warning? 
 
-> > Move the code used to setup and use the mailbox out of the ACPI
-> > directory to use it when support for ACPI is not available or needed.
-> 
-> I think that the code implementing interfaces defined by the ACPI
-> specification is not generic and so it should not be built when the
-> kernel is configured without ACPI support.
+Thanks.
 
-Support for ACPI would not be used on systems describing hardware using
-a DeviceTree graph. My goal is to have a common interface that both
-DT and ACPI can use. I think what is missing is that common interface.
-
-Would it be preferred to have a separate implementation that is
-functionally equivalent?
-
-Thanks and BR,
-Ricardo
-
-
-[1]. https://cdrdv2-public.intel.com/733585/tdx-virtual-firmware-design-guide-rev-004-20231206.pdf
-
+-- 
+Dmitry
