@@ -1,237 +1,119 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC0F428151F
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 14:20:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BF1A22D790;
+	Tue,  6 May 2025 14:20:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746541219; cv=none; b=cbdcleoPW/Nb2/xjoZkl0nQK8lF4AI+JMqoC9fmJyeEZOd8mJSb1/7+2Vxz1GBK9n4rwqYaJhpl5fJHqscvdoPoanT0MEgDfGPUhUREbYXYxBbt14r87sTq/VTyGbtELtTC4yYSvONCZVhg4grwFMLkWDODxL7QBSOae1PvV7NY=
+	t=1746541230; cv=none; b=dohAvdYY1/aUAB1IqmGZa8uiW9u7AA+7eVqZzjPAOl2oI8D7MvxW9dCMUdoXmngmL73D4BHYVbjdJrjESb5Lyul+oQdcNNXovJuBrfqlIoeBQD9IDxRP2wh0hDXfLvKumWgXqK8b9+Ix29ftLwTuJxQzS/8zpWRwbu8DTirl5kc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746541219; c=relaxed/simple;
-	bh=81aEPCcsJ/e6mOPbXDMh5xnnkudxyH/Lh/p+3c3/BZY=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=WfCAZ73llM7JuD4s8g36zX2oCvpgTNMZFNz7NogTevaOqYFU3HARVOCJRplRb/W+InH+cQZ+i5dDSd4Hc4Q8JIXN0oioTqbucMwnpOvPRF4YN9lgrZ0dydNzTR+XDf7TPYzgQzanyc7f0RKR3aQcPGV4YidDJV4W+SrWmjp6wYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3d5da4fb5e0so51244555ab.2
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 07:20:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746541216; x=1747146016;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=juvepVSO4FokjGYiIKhtY9Wro5+tj8hRv914JsGucko=;
-        b=ZA+mxo/ueZ4+/7XCe3UMmM7k+sEAIjiXEqeDq6tN+tHd0v71dpJTfZUa8BZKQ/yPha
-         rTr1tOPX471EY6RQsqjwsgb3dnPDnafvbgsLuYnoqT14GWxl3CuRUuP1C5okXBBVaec5
-         Mf3DqBKuMMODSCHdcSeRfjtl91IpvR6BqalRFkFCx1SfE3Nwf5GFNbkcmhJg1HNCGxoN
-         peFPpxA4wIGxOjT7v8c716Uh0GyUe7SS9Bh0jNJf800XZe3VLMlu3tXQHhMqxVTBWERT
-         MBe3n62P8W+Z6bvLhotxocYpgV/xzfhQcuCxAKpEKkDh5VvQdH/uoo/Gt1HjKEysm2Fi
-         tfEQ==
-X-Gm-Message-State: AOJu0YyQktxjn19WLn6ikcU8iS9dJRxVNTot/+J6Ldvkxk1W6vps9e1W
-	4tDnetfab1ivC3/GDC3JaClPq1j4Yi22NvoLVPMi+qpq4OOP6pQaukZ8JqxDOPmSJz3LgEgIlPh
-	iT+Jwyd+PbUilGF5//b4emSgoKSC5Y5ndD5lb2nBxIshBSd7Nac+8OOs=
-X-Google-Smtp-Source: AGHT+IFJWAXaGJKhNfjAoTFOLO6qMqdsosx81agp/WjhT16vW6QJIvtk7pQnGy0kYkIifQFX0+WIvR8iDxNlV+23pW/ErEwyS3+E
+	s=arc-20240116; t=1746541230; c=relaxed/simple;
+	bh=3CsbtgEQnm7R5CDEADDL1z7xPHGtZynTnsO+5Kyw29Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=DColZhwLpRj/DTOCZxqyQtwVXyEW5D5lNMeeyLD5aWd7BklRXigu+ZipkOq2X2lek9qDZDYZVQoVxoSGR3z0hENXqtM9qSsPwLWHXYUO0kPJe/QvfnHcJ/W1OIPDe0PBsCRfVOKJ/Bm3ZTXRZA9cAH89ezMit2dBYn6GPKBeNAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Cdvbh9HZ; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Cdvbh9HZ"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 546EKLcb540463
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 6 May 2025 09:20:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1746541221;
+	bh=qw2kxcgeI74CiAtO0Wk3Ge8irH3lcasW30DQVrbYrdY=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=Cdvbh9HZGD0YdYS9IAFeVQZBEG3b5TzRxaPdKbiLe20RzCW/WWMZEmgBaUSEwv7B3
+	 0AEvpASl8CsgSOY1FFBHqesW1oVfYiHEeR6OL0P1d9oZJjuQnXZpRNGmVcr0c8X3xk
+	 2lWlky+ZKuHDDuzS6p3y2BiDYF3kKepegWghOOw0=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 546EKKIH021102
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 6 May 2025 09:20:20 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 6
+ May 2025 09:20:20 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 6 May 2025 09:20:20 -0500
+Received: from [10.249.32.133] ([10.249.32.133])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 546EKJ7e113864;
+	Tue, 6 May 2025 09:20:19 -0500
+Message-ID: <4492a19c-9544-4240-bca5-00d82c76774f@ti.com>
+Date: Tue, 6 May 2025 09:20:19 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:17c9:b0:3d3:fcff:edae with SMTP id
- e9e14a558f8ab-3da6cdc61bemr34217455ab.3.1746541216630; Tue, 06 May 2025
- 07:20:16 -0700 (PDT)
-Date: Tue, 06 May 2025 07:20:16 -0700
-In-Reply-To: <68197d2b.050a0220.23d401.2859.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <681a1aa0.050a0220.a19a9.000f.GAE@google.com>
-Subject: Re: [syzbot] Re: [syzbot] [jfs?] KMSAN: uninit-value in BT_STACK_DUMP
-From: syzbot <syzbot+ba5f49027aace342d24d@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/4] Add global CMA areas for few TI SoCs
+To: Jayesh Choudhary <j-choudhary@ti.com>, <nm@ti.com>, <vigneshr@ti.com>,
+        <linux-kernel@vger.kernel.org>
+CC: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <kristo@kernel.org>, <u-kumar1@ti.com>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <devarsht@ti.com>,
+        <afd@ti.com>
+References: <20250424084415.66457-1-j-choudhary@ti.com>
+Content-Language: en-US
+From: Brandon Brnich <b-brnich@ti.com>
+In-Reply-To: <20250424084415.66457-1-j-choudhary@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-For archival purposes, forwarding an incoming command email to
-linux-kernel@vger.kernel.org.
+Hi Jayesh
 
-***
+On 4/24/2025 3:44 AM, Jayesh Choudhary wrote:
+> Hello All,
+> 
+> Following AM62* platforms[0], this patches add global CMA reserve area for:
+> - J721S2-EVM (1056 MiB)
+> - J784S4-EVM (1920 MiB)
+> - AM68-SK (1008 MiB)
+> - AM69-SK (1904 MiB)
+> 
+> These SoCs does not have MMU and hence they require contiguous memory
+> pool to support various multimedia usecase.
 
-Subject: Re: [syzbot] [jfs?] KMSAN: uninit-value in BT_STACK_DUMP
-Author: richard120310@gmail.com
+This series will break multimedia support in our tree if accepted. I 
+gave a similar response to Devarsh when trying to get CMA carveout 
+accepted for AM62p[0]. Essentially, Wave5 still does not have support 
+for 48 bit addressing in upstream, so memory allocation still needs to 
+happen in 32-bit range. Can we force the memory carveout in this region 
+using the alloc-ranges? Devarsh did this with AM62A[1].
 
-#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 02ddfb981de8
+Best,
+Brandon
 
-Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
----
- fs/jfs/jfs_dtree.c |  6 +++---
- fs/jfs/jfs_xtree.c | 14 +++++++-------
- fs/jfs/namei.c     | 14 +++++++-------
- 3 files changed, 17 insertions(+), 17 deletions(-)
+[0]: 
+https://lore.kernel.org/all/20240614170409.zu4vaatdac4o6w2o@udba0500997/
+[1]: https://lore.kernel.org/all/20240613150902.2173582-3-devarsht@ti.com/
 
-diff --git a/fs/jfs/jfs_dtree.c b/fs/jfs/jfs_dtree.c
-index 93db6eec4465..87025d832758 100644
---- a/fs/jfs/jfs_dtree.c
-+++ b/fs/jfs/jfs_dtree.c
-@@ -2083,7 +2083,7 @@ int dtDelete(tid_t tid,
- 	struct metapage *mp, *imp;
- 	dtpage_t *p;
- 	int index;
--	struct btstack btstack;
-+	struct btstack btstack = {0};
- 	struct dt_lock *dtlck;
- 	struct tlock *tlck;
- 	struct lv *lv;
-@@ -2716,7 +2716,7 @@ int jfs_readdir(struct file *file, struct dir_context *ctx)
- 	dtpage_t *p;
- 	int index;
- 	s8 *stbl;
--	struct btstack btstack;
-+	struct btstack btstack = {0};
- 	int i, next;
- 	struct ldtentry *d;
- 	struct dtslot *t;
-@@ -4237,7 +4237,7 @@ int dtModify(tid_t tid, struct inode *ip,
- 	struct metapage *mp;
- 	dtpage_t *p;
- 	int index;
--	struct btstack btstack;
-+	struct btstack btstack = {0};
- 	struct tlock *tlck;
- 	struct dt_lock *dtlck;
- 	struct lv *lv;
-diff --git a/fs/jfs/jfs_xtree.c b/fs/jfs/jfs_xtree.c
-index 5ee618d17e77..dd0e542a4978 100644
---- a/fs/jfs/jfs_xtree.c
-+++ b/fs/jfs/jfs_xtree.c
-@@ -123,7 +123,7 @@ int xtLookup(struct inode *ip, s64 lstart,
- 	     s64 llen, int *pflag, s64 * paddr, s32 * plen, int no_check)
- {
- 	int rc = 0;
--	struct btstack btstack;
-+	struct btstack btstack = {0};
- 	int cmp;
- 	s64 bn;
- 	struct metapage *mp;
-@@ -520,7 +520,7 @@ int xtInsert(tid_t tid,		/* transaction id */
- 	xtpage_t *p;		/* base B+-tree index page */
- 	s64 bn;
- 	int index, nextindex;
--	struct btstack btstack;	/* traverse stack */
-+	struct btstack btstack = {0};	/* traverse stack */
- 	struct xtsplit split;	/* split information */
- 	xad_t *xad;
- 	int cmp;
-@@ -1344,7 +1344,7 @@ int xtExtend(tid_t tid,		/* transaction id */
- 	xtpage_t *p;		/* base B+-tree index page */
- 	s64 bn;
- 	int index, nextindex, len;
--	struct btstack btstack;	/* traverse stack */
-+	struct btstack btstack = {0};	/* traverse stack */
- 	struct xtsplit split;	/* split information */
- 	xad_t *xad;
- 	s64 xaddr;
-@@ -1503,7 +1503,7 @@ int xtUpdate(tid_t tid, struct inode *ip, xad_t * nxad)
- 	xtpage_t *p;		/* base B+-tree index page */
- 	s64 bn;
- 	int index0, index, newindex, nextindex;
--	struct btstack btstack;	/* traverse stack */
-+	struct btstack btstack = {0};	/* traverse stack */
- 	struct xtsplit split;	/* split information */
- 	xad_t *xad, *lxad, *rxad;
- 	int xflag;
-@@ -1949,7 +1949,7 @@ int xtAppend(tid_t tid,		/* transaction id */
- 	xtpage_t *p;		/* base B+-tree index page */
- 	s64 bn, xaddr;
- 	int index, nextindex;
--	struct btstack btstack;	/* traverse stack */
-+	struct btstack btstack = {0};	/* traverse stack */
- 	struct xtsplit split;	/* split information */
- 	xad_t *xad;
- 	int cmp;
-@@ -2196,7 +2196,7 @@ s64 xtTruncate(tid_t tid, struct inode *ip, s64 newsize, int flag)
- 	xad_t *xad;
- 	s64 xoff, xaddr;
- 	int xlen, len, freexlen;
--	struct btstack btstack;
-+	struct btstack btstack = {0};
- 	struct btframe *parent;
- 	struct tblock *tblk = NULL;
- 	struct tlock *tlck = NULL;
-@@ -2744,7 +2744,7 @@ s64 xtTruncate(tid_t tid, struct inode *ip, s64 newsize, int flag)
- s64 xtTruncate_pmap(tid_t tid, struct inode *ip, s64 committed_size)
- {
- 	s64 bn;
--	struct btstack btstack;
-+	struct btstack btstack = {0};
- 	int cmp;
- 	int index;
- 	int locked_leaves = 0;
-diff --git a/fs/jfs/namei.c b/fs/jfs/namei.c
-index 65a218eba8fa..d04c752823ea 100644
---- a/fs/jfs/namei.c
-+++ b/fs/jfs/namei.c
-@@ -67,7 +67,7 @@ static int jfs_create(struct mnt_idmap *idmap, struct inode *dip,
- 	struct inode *ip = NULL;	/* child directory inode */
- 	ino_t ino;
- 	struct component_name dname;	/* child directory name */
--	struct btstack btstack;
-+	struct btstack btstack = {0};
- 	struct inode *iplist[2];
- 	struct tblock *tblk;
- 
-@@ -200,7 +200,7 @@ static struct dentry *jfs_mkdir(struct mnt_idmap *idmap, struct inode *dip,
- 	struct inode *ip = NULL;	/* child directory inode */
- 	ino_t ino;
- 	struct component_name dname;	/* child directory name */
--	struct btstack btstack;
-+	struct btstack btstack = {0};
- 	struct inode *iplist[2];
- 	struct tblock *tblk;
- 
-@@ -791,7 +791,7 @@ static int jfs_link(struct dentry *old_dentry,
- 	struct inode *ip = d_inode(old_dentry);
- 	ino_t ino;
- 	struct component_name dname;
--	struct btstack btstack;
-+	struct btstack btstack = {0};
- 	struct inode *iplist[2];
- 
- 	jfs_info("jfs_link: %pd %pd", old_dentry, dentry);
-@@ -883,7 +883,7 @@ static int jfs_symlink(struct mnt_idmap *idmap, struct inode *dip,
- 	ino_t ino = 0;
- 	struct component_name dname;
- 	u32 ssize;		/* source pathname size */
--	struct btstack btstack;
-+	struct btstack btstack = {0};
- 	struct inode *ip;
- 	s64 xlen = 0;
- 	int bmask = 0, xsize;
-@@ -1069,7 +1069,7 @@ static int jfs_rename(struct mnt_idmap *idmap, struct inode *old_dir,
- 		      struct dentry *old_dentry, struct inode *new_dir,
- 		      struct dentry *new_dentry, unsigned int flags)
- {
--	struct btstack btstack;
-+	struct btstack btstack = {0};
- 	ino_t ino;
- 	struct component_name new_dname;
- 	struct inode *new_ip;
-@@ -1356,7 +1356,7 @@ static int jfs_mknod(struct mnt_idmap *idmap, struct inode *dir,
- 		     struct dentry *dentry, umode_t mode, dev_t rdev)
- {
- 	struct jfs_inode_info *jfs_ip;
--	struct btstack btstack;
-+	struct btstack btstack = {0};
- 	struct component_name dname;
- 	ino_t ino;
- 	struct inode *ip;
-@@ -1448,7 +1448,7 @@ static int jfs_mknod(struct mnt_idmap *idmap, struct inode *dir,
- 
- static struct dentry *jfs_lookup(struct inode *dip, struct dentry *dentry, unsigned int flags)
- {
--	struct btstack btstack;
-+	struct btstack btstack = {0};
- 	ino_t inum;
- 	struct inode *ip;
- 	struct component_name key;
--- 
-2.43.0
+> 
+> The calculation was done considering H264 codec requirements, dual-display
+> supported in each platforms and multicamera use-cases.
+> Additional buffer was kept for other peripheral s and to account for
+> fragmentation.
+> The breakdown is mentioned in each commit message.
+> 
+> [0]: https://lore.kernel.org/all/20240613150902.2173582-1-devarsht@ti.com/
+> 
+> Jayesh Choudhary (4):
+>    arm64: dts: ti: k3-j721s2-som-p0: Reserve 1056MiB of global CMA
+>    arm64: dts: ti: k3-j784s4-j742s2-evm-common: Reserve 1920MiB of global
+>      CMA
+>    arm64: dts: ti: k3-am68-sk-som: Reserve 1008MiB of global CMA
+>    arm64: dts: ti: k3-am69-sk: Reserve 1904MiB of global CMA
+> 
+>   arch/arm64/boot/dts/ti/k3-am68-sk-som.dtsi              | 8 ++++++++
+>   arch/arm64/boot/dts/ti/k3-am69-sk.dts                   | 8 ++++++++
+>   arch/arm64/boot/dts/ti/k3-j721s2-som-p0.dtsi            | 8 ++++++++
+>   arch/arm64/boot/dts/ti/k3-j784s4-j742s2-evm-common.dtsi | 8 ++++++++
+>   4 files changed, 32 insertions(+)
+> 
 
