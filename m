@@ -1,59 +1,61 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E20A3280003
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 13:07:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3611F15E5DC;
+	Tue,  6 May 2025 13:08:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746536877; cv=none; b=mIEzf3Sat2/KQcVvcu4r5Y6QYbYMOiBIs2/9S0EVT0bW3InoyuxY0/UdDElMV462j3ilMISRTFetGY/aE+ibeM9O8zpdYCMAZ5WGFSw6UC9Wk90KmjkFLJWDffnO96a0Prit7e3jP+LLWm4FLp/uPzc3tv/qTeg+tIm7BoUjQzA=
+	t=1746536930; cv=none; b=ZsTXrNM7P4loJ1zsLO4fnIJqjALPXIWNSYGRiwQG5QPB9bu8Ci0E0wq4FSYZ8g4rapVbUac8pCJVJwXf6frkSyJ1FRpWOe6Yxfvulgk8yA+nTvWJI6Qm9AyBLAs365t5/ZXfKRQZQPeMZlwEzJDvDoql1Xbn7zej/lr8Kk1AlCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746536877; c=relaxed/simple;
-	bh=ocRdYkZa/AEaB8l+44CaI3rppCL62EkJBYznCdzgJVc=;
+	s=arc-20240116; t=1746536930; c=relaxed/simple;
+	bh=Bke2oJVWJgJQ0cXtYQ7p92LP01wN15WaterqQZLbQb4=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=R4Nrhy1j8VKzYHPLIN8cS+F7jfYIjDsSVLDZH4EvJ1JvIaCrUS2ngJYB7LIO7HfAGUsUaBkdxsF6zZfEheiMauhlV+3b8LFbvn+kql2mPTL91E0ZcEhgv1hBGHyr4YpLgqr+uNcad00bBwAvTdgWVYczhF8m4aGkWgFmhqMcpC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=KRcGYiQ0; arc=none smtp.client-ip=198.47.19.245
+	 MIME-Version:Content-Type; b=S6XNjybpiJM5OoG1G6IqXEpXvyqI2oT5jjpxWgcsBq8mSAMIjUUDYkwpOmACYjiiRLvCVTXhgM6yFNUg2W975dSrmdV3fTmt6QylLKRkPMJJqvqkVlAGxgBOxYAY36hTOScHm/0lgaCt1b9Qd7cql50dvplyxTRlbOXBgLClS/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=KlfoDDqi; arc=none smtp.client-ip=198.47.19.246
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KRcGYiQ0"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KlfoDDqi"
 Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 546D7Yj3508643
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 546D8UTE1067731
 	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 6 May 2025 08:07:34 -0500
+	Tue, 6 May 2025 08:08:30 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1746536854;
-	bh=3XNUZZEX+n4bAI/bF/pNMWXFZAZ9u0fFl4dFgytGVws=;
+	s=ti-com-17Q1; t=1746536910;
+	bh=QrTBUEMOym3jK4zrXFsi3KRht5oC7aG3ts/QqJWOXiY=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=KRcGYiQ0D1G6wH505V6emFZIs99cO2D8mfQbhnc8p79Ax2o60c+4R11qZB/hzaTXQ
-	 qxpW0ZpEacMLhkUThZKvsg6xDrtg2kumEd4I1aYhYItxjsgjLb2hqNQIqFV1OrYc/a
-	 iGSMwP3nluPgkmML/Bt4MAq6v7MxXzQlohAwLWRw=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 546D7Y8S101942
+	b=KlfoDDqi32hA0uDSkHEWy9dZCXUJwn/xbrEPfF90Vy9Q5ARfAdkE5O7loVw9JfwE/
+	 7QJxNyOajnuZ6ojWkVw+guAfFcIUJSbZ38Q2HeWcTSQk56eE8YtVQQSzOUIubAlmsH
+	 XzTyGi/z6r2P8ZAoNjNU6UxeGHMZI1Rk/bRy6xS8=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 546D8USO102385
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 6 May 2025 08:07:34 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+	Tue, 6 May 2025 08:08:30 -0500
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 6
- May 2025 08:07:33 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ May 2025 08:08:29 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 6 May 2025 08:07:33 -0500
+ Frontend Transport; Tue, 6 May 2025 08:08:29 -0500
 Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 546D7XOu012170;
-	Tue, 6 May 2025 08:07:33 -0500
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 546D8TEu013595;
+	Tue, 6 May 2025 08:08:29 -0500
 From: Nishanth Menon <nm@ti.com>
-To: <kristo@kernel.org>, <ssantosh@kernel.org>, <d-gole@ti.com>,
-        Kendall
- Willis <k-willis@ti.com>
-CC: Nishanth Menon <nm@ti.com>, <khilman@baylibre.com>, <msp@baylibre.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] firmware: ti_sci: Convert CPU latency constraint from us to ms
-Date: Tue, 6 May 2025 08:07:31 -0500
-Message-ID: <174653683694.692511.6512121885048153662.b4-ty@ti.com>
+To: <vigneshr@ti.com>, Rishikesh Donadkar <r-donadkar@ti.com>
+CC: Nishanth Menon <nm@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <vaishnav.a@ti.com>,
+        <devarsht@ti.com>, <y-abhilashchandra@ti.com>, <s-jain1@ti.com>,
+        <jai.luthra@linux.dev>, <jai.luthra@ideasonboard.com>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <imx@lists.linux.dev>
+Subject: Re: [PATCH v2 0/4] Fix dtbs_check warnings in sensor overlays
+Date: Tue, 6 May 2025 08:08:27 -0500
+Message-ID: <174653687807.699760.18005096784426539033.b4-ty@ti.com>
 X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20250428205336.2947118-1-k-willis@ti.com>
-References: <20250428205336.2947118-1-k-willis@ti.com>
+In-Reply-To: <20250502162539.322091-1-r-donadkar@ti.com>
+References: <20250502162539.322091-1-r-donadkar@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,24 +66,30 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Hi Kendall Willis,
+Hi Rishikesh Donadkar,
 
-On Mon, 28 Apr 2025 15:53:36 -0500, Kendall Willis wrote:
-> Fix CPU resume latency constraint units sent to device manager through the
-> TI SCI API. The device manager expects CPU resume latency to be in msecs
-> which is passed in with the TI SCI API [1]. CPU latency constraints are
-> set in userspace using the PM QoS framework which uses usecs as the unit.
-> Since PM QoS uses usecs for units and the device manager expects msecs as
-> the unit, TI SCI needs to convert from usecs to msecs before passing to
-> device manager.
+On Fri, 02 May 2025 21:55:35 +0530, Rishikesh Donadkar wrote:
+> Fix the follwoing dtbs_check warnings
+> https://gist.github.com/Rishikesh-D/ba0876a26e35c3b9662c75563b8b77ce
+> 
+> Test Logs:
+> am62a7 + imx219 : https://gist.github.com/Rishikesh-D/f32d6a0ec3cbb0f9f4f29254239d3cd2
+> am62a7 + tevi-ov5640 : https://gist.github.com/Rishikesh-D/21aad1db1487b884c22527d6e1432ae7
+> am62a7 + ov5640 : https://gist.github.com/Rishikesh-D/da4489f1813e90d840fa5ca91df5923e
 > 
 > [...]
 
-I have applied the following to branch ti-drivers-soc-next on [1].
+I have applied the following to branch ti-k3-dts-next on [1].
 Thank you!
 
-[1/1] firmware: ti_sci: Convert CPU latency constraint from us to ms
-      commit: 9b808f7f395ae375a26e32046b680cf898dacc21
+[1/4] arm64: dts: ti: k3-am62p5-sk: Add regulator nodes for AM62P
+      commit: 90770c243c384ddde070099e37a3ef2f3b71ff8a
+[2/4] arm64: dts: ti: k3-am62x: Add required voltage supplies for IMX219
+      commit: d44915df7592b27e3e8c8b3e87c03603e3b0103a
+[3/4] arm64: dts: ti: k3-am62x: Add required voltage supplies for OV5640
+      commit: 23a5409369b11e9174ba95ba8ddedcffacdf9529
+[4/4] arm64: dts: ti: k3-am62x: Add required voltage supplies for TEVI-OV5640
+      commit: 30ce5f163e4fb81d1467b15ecc508889be7eabca
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent up the chain during
