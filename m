@@ -1,110 +1,112 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE05E28C842;
-	Tue,  6 May 2025 05:28:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90C0D28D8C5;
+	Tue,  6 May 2025 05:30:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746509328; cv=none; b=Z04vZBU4KXN600cwVRLMGHO1rSexte4veFqDRLfKjblExOmeTwKjbvaYU1tf6dOcbzIajWS3MDjHVnlPsD8yn0Z/vMKED2aNHzVhNARsm+XifkbZwnaBFjnLoT7fAezrIh9SwxOCZ7keqP00O7A+Im4Xa6Uf/X06KuCoV0T7l0w=
+	t=1746509454; cv=none; b=DmmLWl1zlukSa2/nQKDEV0pTRrUiK9z1LWQEbfIUtetVwocMGAvSMaiEkIirxQz1Zz1cgH/pXAfbUQSdpRIuDZXHUbEm0rdiLIAXst1Fo1gJCKUGDpXwWF3J5R4OAMT1mlIS3tmwQhGQy5tf5ZXuZzl53+Hz93vfO+kSnTlAE+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746509328; c=relaxed/simple;
-	bh=gQp6Ny1UV/nufpAO8MF2mNS1/7lehGRjSJTqjPYT+tI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IezdGvkledmqaQScEJsgizAg1ta+FYZh5CEiFdR/Pvluok9JISH9e1Tj5L3VqZcwH0gxAjKIwvDZHXGyauXkOGCrM247rGHbioe2pQER9zqpfvn1UVZgT0Bmv8fS0ORVZd+odgcgJ/xvoaE4Thrqz1906ws8bI+d+NkUM3GhGao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F7+AMYKr; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746509454; c=relaxed/simple;
+	bh=cLFooBXgRn8ODZsXU+Y9p4al/umeSaxBwRdxCv426Po=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BR5D9JzFg4ADM7oBkiXBhSnHNWw57RozOkEFu16NLk7vRspCdBcpoUmihoOiniiPALBJI0i90r4HnZoCPVGHLyEGHziG8X3/H4GoBNoZALIfU2LJYgoTOrU0GBR5GI2QY6CC9uSiBuBcxEl/ft2nsYJMBgrfGw6gpjQgpd0lx5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=huH0rdMd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F7+AMYKr"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-22c3407a87aso77693665ad.3;
-        Mon, 05 May 2025 22:28:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746509326; x=1747114126; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=zY64DOh4SaFpvvACLrzCGnh69WAMNHQAZsNHFyi2xL0=;
-        b=F7+AMYKrqWMBs+4b4OdgAvYOesAw9L74coUIL04h70s1QgHMsuysVmWEbd1is1La2H
-         zyg8Q2WoMvalll1BfuEpu0DSb2OFJYmJFg+gkw1bZO8Od9zlOYV6PHnINoYG0hrlKI3K
-         2/u2DrdSw5SXqBjwL5vzG/AwHA+q7gAp+tM7syP3OaL3nGhJJM+NPMaGKcXaOgE7ONGc
-         lmV+YJr4C0wn2chRFp3FeBH4H5zRT1zZa+JtwNn0dda9//OwDWEUVehc5gGDwPQbGkLW
-         X+LQ2LnycJ2Pbdn+G9p9PatrAuZ+N8z9f+/33yaxSTSbFGzJYkr/rXavFgEdKf8/BvN1
-         GOxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746509326; x=1747114126;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zY64DOh4SaFpvvACLrzCGnh69WAMNHQAZsNHFyi2xL0=;
-        b=cyyOBiVmVOIAT0hoNlFyJv9Vh/ZXy5/188lR0oNm8jET2rNJKZ0Nj7ccdDQZKuXHgL
-         mJ1ZtrjSlgYDbr6eoj2wwWPHGyd6wMDUBpiZUvb5U7oZlzs102ODxoTkF6s66xMP/ego
-         YIes7FNnSJNQ70moRwNx56TQY48HSEPVlOjTvvnP/8HMmDDQ6MzG4LZFUVRtoNQRzWSM
-         T5I4j7kEKSoGFcnPeUAn2L7rtTmePEZXqeH95GBXwMtKNZK7HUJGazem3SmOTnnqlLbW
-         b6DKLMiTpvDxezpux1A85gBV9Ai2T7Gqb73hIL+3zusxm98BsAtQU87ghERWCXUqBtur
-         0pcw==
-X-Forwarded-Encrypted: i=1; AJvYcCUx203lI/A6+1pg/mOoi1Rb9cVTa7EgRtweoC6vXDxwsSVl7/UoTHbga29haxMAG3h1/I946j0FNs+Z@vger.kernel.org, AJvYcCXsDdKyKJ8jmNCbWMEVSo0mu4F1j4b/BJ4hDXuQjo6HZ83SZYeZ9dMw+933oa8SpnpP4COQJ37X+i54+e8l@vger.kernel.org
-X-Gm-Message-State: AOJu0YxsTW8mt+wyaBUTBrZhEyEo4Au5I/dja7KbReTYWKE7p0keZ6qD
-	7guNXA/xo01ApqMepCcysSRTx/CtKmfa2x4yzcs8OODwyDCRKviZ/N7Oj256SSEzlsVmDWw84OY
-	F93Og6uZiLEloJuu8WicQnwkJ/UM=
-X-Gm-Gg: ASbGncuBhglE/LriwtcfWw0a1flrV7rKILoPsyul9dovD+Q7IyKACCRZTDzF1GMGnTt
-	IjsOIclZd7tVaYiTiD5qf50TSm6h7Nr16Z2XE5I9UQ9X/Y9SEN+YSGNhDrcAIyomN+gRKo71eff
-	kfwOvQopnN/al86clg0Xmpkmnft61C2/7JL9htHc4T6mcIqPm0UCUXOGRf
-X-Google-Smtp-Source: AGHT+IFbJpLRXSHxF3fSLL1KL2sqdc0f46WjNL+UBT+jETt6hQGktbkUm2SINYV0PlaaSfTi2JtBW+w1nNCUsf/TMdc=
-X-Received: by 2002:a17:903:3c4f:b0:220:f449:7419 with SMTP id
- d9443c01a7336-22e1e8ea150mr137149705ad.7.1746509326137; Mon, 05 May 2025
- 22:28:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="huH0rdMd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C57CC4CEE4;
+	Tue,  6 May 2025 05:30:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746509454;
+	bh=cLFooBXgRn8ODZsXU+Y9p4al/umeSaxBwRdxCv426Po=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=huH0rdMdNZOSluLe1qXY5AKcLV0+6nkXsUQACvWiP9Y8x8VoHFtD21Ln9ldSogG2Z
+	 ZxnzMSTXa7DQmHhP18YcCNFn4XyJQxEQJB4RIovD4msDYGEpuiOfUAK4zpD95sDRFx
+	 KtS1PQrXGbpghm+3f/OKk4TSoS3ro4LxrpZQfFCyawbtVYmx1ZUJ/ar6WHKl6x7KTv
+	 oY/DoentdsfMGWhEXFXdHk6uDTWcCGnU868091K54e7mLQoVww3aWlx+dWr+O7C5dX
+	 4ZxKRW6c4rxLFm0ygfYubVHu4MSAUogz3/ifAS1z1Se0s8nkfQ9g3Y096dgGpDonm3
+	 iEtQ8i5sj93cA==
+Date: Mon, 5 May 2025 22:30:51 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Dmitry Vyukov <dvyukov@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
+Subject: Re: [RFC/PATCH] perf report: Support latency profiling in
+ system-wide mode
+Message-ID: <aBmei7cMf-MzzX5W@google.com>
+References: <20250503003620.45072-1-namhyung@kernel.org>
+ <CACT4Y+Yr7vffLYG+YmyB=9Vn_oxdQqR_6U4d-_WeQoOtPXZ6iw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1744090658.git.mazziesaccount@gmail.com>
- <20250502074743.GC3865826@google.com> <aBVUTvVnfuLFxzh4@finisterre.sirena.org.uk>
-In-Reply-To: <aBVUTvVnfuLFxzh4@finisterre.sirena.org.uk>
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-Date: Tue, 6 May 2025 08:28:33 +0300
-X-Gm-Features: ATxdqUHCc7cfCqJDo08T9ZVB_47GBrflRMP_AN4R69nBeeX2bEalAJ3t8txgJeY
-Message-ID: <CANhJrGPMhRy4TW_JMZ8dkgdctgF3f+bAsoWLkrNvqbcbc412WA@mail.gmail.com>
-Subject: Re: [GIT PULL] Immutable branch between MFD and Regulator due for the
- v6.16 merge window
-To: Mark Brown <broonie@kernel.org>
-Cc: Lee Jones <lee@kernel.org>, Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CACT4Y+Yr7vffLYG+YmyB=9Vn_oxdQqR_6U4d-_WeQoOtPXZ6iw@mail.gmail.com>
 
-Hi dee Ho!
+Hello,
 
-la 3.5.2025 klo 2.25 Mark Brown (broonie@kernel.org) kirjoitti:
->
-> On Fri, May 02, 2025 at 08:47:43AM +0100, Lee Jones wrote:
-> > Enjoy!
+On Mon, May 05, 2025 at 10:08:17AM +0200, Dmitry Vyukov wrote:
+> On Sat, 3 May 2025 at 02:36, Namhyung Kim <namhyung@kernel.org> wrote:
 > >
-> > The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
+> > When it profile a target process (and its children), it's
+> > straight-forward to track parallelism using sched-switch info.  The
+> > parallelism is kept in machine-level in this case.
 > >
-> >   Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
+> > But when it profile multiple processes like in the system-wide mode,
+> > it might not be clear how to apply the (machine-level) parallelism to
+> > different tasks.  That's why it disabled the latency profiling for
+> > system-wide mode.
 > >
-> > are available in the Git repository at:
+> > But it should be able to track parallelism in each process and it'd
+> > useful to profile latency issues in multi-threaded programs.  So this
+> > patch tries to enable it.
 > >
-> >   ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/ib-mfd-regulator-v6.16
->
-> You need to specify a separate url and pushurl for the git remote so git
-> generates PRs with a public URL people can use.
+> > However using sched-switch info can be a problem since it may emit a lot
+> > more data and more chances for losing data when perf cannot keep up with
+> > it.
+> >
+> > Instead, it can maintain the current process for each CPU when it sees
+> > samples.
+> 
+> Interesting.
+> 
+> Few questions:
+> 1. Do we always see a CPU sample when a CPU becomes idle? Otherwise we
+> will think that the last thread runs on that CPU for arbitrary long,
+> when it's actually not.
 
-I didn't spot this in regulator/for-next. Is the URL sorted? I'd love
-to see this merged...
+No, it's not guaranteed to have a sample for idle tasks.  So right, it
+can mis-calculate the parallelism for the last task.  If we can emit
+sched-switches only when it goes to the idle task, it'd be accurate.
 
-Yours,
-    -- Matti
 
--- 
+> 2. If yes, can we also lose that "terminating" even when a CPU becomes
+> idle? If yes, then it looks equivalent to missing a context switch
+> event.
 
-Matti Vaittinen
-Linux kernel developer at ROHM Semiconductors
-Oulu Finland
+I'm not sure what you are asking.  When it lose some records because the
+buffer is full, it'll see the task of the last sample on each CPU.
+Maybe we want to reset the current task after PERF_RECORD_LOST.
 
-~~ When things go utterly wrong vim users can always type :help! ~~
 
-Discuss - Estimate - Plan - Report and finally accomplish this:
-void do_work(int time) __attribute__ ((const));
+> 3. Does this mode kick in even for non system-wide profiles (collected
+> w/o context switch events)? If yes, do we properly understand when a
+> thread stops running for such profiles? How do we do that? There won't
+> be samples for idle/other tasks.
+
+For non system-wide profiles, the problem is that it cannot know when
+the current task is scheduled out so that it can decrease the count of
+parallelism.  So this approach cannot work and sched-switch info is
+required.
+
+Thanks,
+Namhyung
+
