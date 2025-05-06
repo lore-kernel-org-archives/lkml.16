@@ -1,55 +1,55 @@
 Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E435286416
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 15:49:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A20DD286417
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 15:49:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746546549; cv=none; b=dO9mwA+wPPimtcOAMabNStcztCS+IBhXGEht9ZzmV1m4bxuxgXgMaxh9nmeDcwa1OxJ5v5PyWdeKcFogGRbxQfm7ebGSW0SBJqGw2UEAXJRps0kqmbChhtV4/uqMjVvlcgZ8uplhLcjz94TVqrrvGHLMLuQE2phspfEPcnD3a40=
+	t=1746546551; cv=none; b=eYZuaEwbtWjM5wXbYcC9F5mRQanfEGvv8whrLSCZAxdPlfQkSvAxXG20WF4vPYxYCOrOh5/QvFKuFqbIYpzGbqWi7IcALYDZXZYmDliWsJFDu32OLlvcsDgadq8og/lV1CbDHa4OnayuPpWQg+b9T1ZJwIMsNSKiQ/mcG3LmDDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746546549; c=relaxed/simple;
-	bh=6czLOBAF5wJ+ZDZdtvidU8tWBaLpDs7uVQeeloyfnP4=;
+	s=arc-20240116; t=1746546551; c=relaxed/simple;
+	bh=ytOsO0/Eygb1v1VAyO7loK/5ETk9vkr9e1iEY9+MnjQ=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ioMXIHaDwkUWaHCSCAmbPXD7Z1t7+5DHOuQXpAw+y2qO0CEC78ca0ZPMCKvqi/aVnI4iDSPwctIdj6YMFhpvcu02NAAw9v1yMA/BQ1UpMpzqEXSb2jrLwio0HuqUeTOfw/yBJWYR9Ej6gSG2uQwxq1imIQiqG36aLHwqDJxL6qo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mS/psCip; arc=none smtp.client-ip=209.85.128.74
+	 To:Cc:Content-Type; b=Q/nfMJ2OKRn35+o2AaPafHhsKdbJKVJx/1uPohTZa9Rq1HllN6R6PGB1ZShMdBq/7pk62Jtl4JFt5+Ijeao0Z2JRWkHEfcww7pyppBZVLGlq8ZgQ6rKEHLVCj3yHX0S5+ZL1Xc558IeART0iNudtOI2OFhFfJP/j73isioynZt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lVY8lNo3; arc=none smtp.client-ip=209.85.128.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mS/psCip"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43d007b2c79so36060095e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 08:49:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lVY8lNo3"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-441c96c1977so18037255e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 08:49:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746546546; x=1747151346; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1746546548; x=1747151348; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ypb7HL1OYOs6Rh7AaBImRSIYJgxMCsnqw8t5GRzXF38=;
-        b=mS/psCipHamC4qn15iZ5PmegCv/V8cGcG7MihKvyMVOJClgltVerWDsTLvpmUp///X
-         ToPEsDyu5Ru3XKMSK5SmnRyh9MQp7vLcFClvJIDI1CfOzY7ul9xTZ9HHqnFoFuLSeu66
-         aW7XX2KefDDba8fOJ8td3GEqwJL/CUL94DdO2+0Kwv1jywH3GXWbQb/6tSXV+/I6fvf4
-         WZtwUCSfjN78nrh5HHtVjNraYZnF63bRQhe3Rz8gGM/DydAPwCEg1IZb8hgpcJiWwlCI
-         f17x2UNQb2vfO0FgIGPkOkA/4dK4THbY3vsV/KhDk1pgGyxdowHCA/k/I1A6jwjuzcpu
-         QXBg==
+        bh=FzX1NlgT/KBOGdnClxyp8776oeF/qisXFeRu7/C2O0E=;
+        b=lVY8lNo3nLNcKIh9hq1QqRdM3pFP3W2o7LpkMLGm6ng/6e7RQPORKdJYh5TZPn1/7P
+         8rfMunN59JjJzmzyq0wkHTEymA8lwKTho3eM3XX2X7szBoPZHX92k76VI6jHWzxUtUjk
+         Fh9emsSICPCTyd4fzLli+i/UC+anSoP1t0fTttcWx5Ef0ilaBqMxSy68SW/BN5Op6SwF
+         YYBwbN6I8ErOtelNXRD+taCsKF1PiDLoe+OA3Nh9pCSRnGTmHeazjVo1RWqJZelDQVJd
+         1tlhgATHwFLzvCxFLGdU18f+Zlt6ODK2Vx52eGOH1MWFYIFi0QrmvDcpGa/SqnB2kORg
+         m8pg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746546546; x=1747151346;
+        d=1e100.net; s=20230601; t=1746546548; x=1747151348;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ypb7HL1OYOs6Rh7AaBImRSIYJgxMCsnqw8t5GRzXF38=;
-        b=JiYScOYLHueHCF8COxe7rGrPXf5FGXZ0hneKGccqups4EdgUiqyh0zny7d6DmTZ3Dy
-         emo+oD+fL7FcWkmliH2PNUSfLgpfxtsfGjd4EFzZ/CavCS4gNpwchFrVWxIG3jX4nkKx
-         +/i8UMZGzj8S3CrNLA8qFByCLTWr1rdrn8mSlOpcmSpCYbC1TAVTsqUJQ5syZv50f5tN
-         YIPffhe3j8wZbSnR7xzKWJJX8iqXNdCQ9gvh7PsqTeeaa+Y0k/lyccQmn368tNxxXKos
-         Nbm9kSQ6NNsStlIAX/f7eFxhYdOa5oHtSThXZOuCdqNlzRxwRi07KrAvNKJwqLGAJK2z
-         CT+Q==
-X-Gm-Message-State: AOJu0Ywz9b+ZUlL/ZS1Va9zXfn3E9hBbmUQvdUxs/MJkzYLwi59i862K
-	cv0N4AG8yw+te4SXyl47gRyu1l+sBWnVcaEDL93l2wfxorfhcVJ2C5kTZK2U2R1WYQLP7YBIYZQ
-	I7TySkaV+pRhaJSGkugTNiEJj7GccEjYEAt9mwkNpMyLxUBr1xgE51uDTAYSA0Op7tLCK0xYKoS
-	PICAQy/wl5V5XgAE/PXdBKdI8biaLTlw==
-X-Google-Smtp-Source: AGHT+IFcTpJiI837EzupEDowqsrxdzpaFyHm34euiPejDbsie/HSTKo/0v/izifg2YcfxCjDpRG+0f+3
-X-Received: from wmbhh5.prod.google.com ([2002:a05:600c:5305:b0:43b:b74b:9350])
- (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:358b:b0:441:b5cb:4f94
- with SMTP id 5b1f17b1804b1-441d0fbd5cfmr28772025e9.5.1746546546001; Tue, 06
- May 2025 08:49:06 -0700 (PDT)
-Date: Tue,  6 May 2025 17:45:35 +0200
+        bh=FzX1NlgT/KBOGdnClxyp8776oeF/qisXFeRu7/C2O0E=;
+        b=Gsem7V1pxtUZVjP0C2+2gvUAjL8WNJQC7HjhBPWD4DY8IdSdI2qN9X9vy/S6YboZfW
+         ennsiOhff6wyUzGxEULasAK4R3eJHChlxUxoBaUXWGdggDFlVwyE2v6z0hp6rlwqhVRP
+         +UN8lb8htWTcjXjWTHoqvErNbyFJzLM85MzSrHIKyiwSA5JLkrDBrLMSSCVgvofTHHl9
+         VpNqgkzMYMl4r8k13tUwBaMA1ntPDBI328oLtoAF5GWMjYxWqgs2XhYzDan0JEMElkLu
+         1Id8c0gnW3UNDZqjV1zgNs1nL+3GgAGTq0BltpYMrsHWY4JNCcXOiZxq84E9yPFo7HjF
+         iT5Q==
+X-Gm-Message-State: AOJu0YyxDfkvf/Gy4o3r0CI39IqdLeIsIZW8ONXYO2+nSckGFAUttthh
+	PwjKE84Sd0KI/n/913xQbTllD3YyRT029MhuA1bDVmGgiJt61ibe3UmhWpcyHyOum5g4Ti1O+IJ
+	y0ISDhVCm5O8SMfNVYJKG84Id/JZ+ibKC+yYKdlbXfknNv6zoMAVstuKTqwCmX5M/6v/q+q9bFd
+	CXxe2cJ2m4R7fqfCK1DB/s70bNwa3jHg==
+X-Google-Smtp-Source: AGHT+IGa3DqBc2MZCI3aGVCA0v7htY4afpO5suddzCoEhewsCtknTgpT9xgTF+2YioMuleycQU4E+8BQ
+X-Received: from wmsd13.prod.google.com ([2002:a05:600c:3acd:b0:43c:eba5:f9b3])
+ (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:4ed0:b0:43c:ea36:9840
+ with SMTP id 5b1f17b1804b1-441d05430d7mr29435325e9.22.1746546547971; Tue, 06
+ May 2025 08:49:07 -0700 (PDT)
+Date: Tue,  6 May 2025 17:45:36 +0200
 In-Reply-To: <20250506154532.1281909-5-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,15 +59,15 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250506154532.1281909-5-ardb+git@google.com>
 X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4565; i=ardb@kernel.org;
- h=from:subject; bh=leJ0g34U6so2+LXXMrZ+3vnSiVdVNQLb/dH0njK6Az8=;
- b=owGbwMvMwCFmkMcZplerG8N4Wi2JIUNKb4HGn0N6oYEr9t66/KLhdrswDxPjQ3aGxtIny9ene
- e3z71/fUcrCIMbBICumyCIw+++7nacnStU6z5KFmcPKBDKEgYtTACby7ijD/1IhXZ+/Fg8ap62w
- W+Y3o8hJ+vTf58lOIc+vPt/YViEcZcbwv+q0l66ARV/T6km1jFWKTC++maUEf2Pt+OVg/m9e7dd d7AA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3372; i=ardb@kernel.org;
+ h=from:subject; bh=U4da3pe3bayT4rcjjKJgvtQ0xfj6r7owSlhpuJafX3c=;
+ b=owGbwMvMwCFmkMcZplerG8N4Wi2JIUNKb2HD/ZvhzAv3vPySeXGuVVOLg9tElXsBb/u+GiopP
+ 7z17IxERykLgxgHg6yYIovA7L/vdp6eKFXrPEsWZg4rE8gQBi5OAZhIzXyGf4qTzh+/p2r0Y82X
+ 8P2rVsy4WKd0pXReyxHt/463bKynNagzMvx/tlGkOnn7m217Uxb4xTv9E131NNpYIFTiX1yPsBU nGycA
 X-Mailer: git-send-email 2.49.0.987.g0cc8ee98dc-goog
-Message-ID: <20250506154532.1281909-7-ardb+git@google.com>
-Subject: [RFC PATCH 2/3] x86/boot: Set __pgtable_l5_enabled correctly before
- calling into C code
+Message-ID: <20250506154532.1281909-8-ardb+git@google.com>
+Subject: [RFC PATCH 3/3] x86/boot: Use alternatives based selector for 5-level
+ paging constants
 From: Ard Biesheuvel <ardb+git@google.com>
 To: linux-kernel@vger.kernel.org
 Cc: x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
@@ -76,121 +76,98 @@ Content-Type: text/plain; charset="UTF-8"
 
 From: Ard Biesheuvel <ardb@kernel.org>
 
-Ensure that __pgtable_l5_enabled() is set to its permanent value before
-calling into any C code that may manipulate page tables or reference any
-global variable or object that may be dimensioned differently based on
-whether 5-level paging is in use.
+There are a couple of cases where pgtable_l5_enabled() is not used for
+control flow, but for selecting the value of a global constant. There
+are some other occurrences of such constants where the value is stored
+in a global variable that needs to be assigned sufficiently early.
 
-This avoids inconsistencies that are difficult to detect, and allows
-pgtable_l5_enabled() to be emitted with the 'const' function attribute.
+To make this more robust, base all of these on a new helper that uses
+alternatives based code patching to select one of two immediate values,
+based on whether 5 level paging is in use.
+
+Base this on __pgtable_l5_enabled, which is guaranteed to be set to the
+right value before C code ever observes it. This allows the helper to
+have the 'const' attribute.
 
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- arch/x86/boot/compressed/head_64.S      | 6 ++++++
- arch/x86/boot/compressed/pgtable_64.c   | 6 +++---
- arch/x86/boot/startup/map_kernel.c      | 1 -
- arch/x86/include/asm/pgtable_64_types.h | 2 +-
- arch/x86/kernel/head64.c                | 2 +-
- arch/x86/kernel/head_64.S               | 7 +++++++
- 6 files changed, 18 insertions(+), 6 deletions(-)
+ arch/x86/include/asm/page_64_types.h    |  2 +-
+ arch/x86/include/asm/pgtable_64_types.h | 28 +++++++++++++++++---
+ 2 files changed, 26 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
-index d9dab940ff62..e6b254a12ca9 100644
---- a/arch/x86/boot/compressed/head_64.S
-+++ b/arch/x86/boot/compressed/head_64.S
-@@ -454,6 +454,12 @@ SYM_FUNC_START_LOCAL_NOALIGN(.Lrelocated)
- 	shrq	$3, %rcx
- 	rep	stosq
- 
-+#ifdef CONFIG_X86_5LEVEL
-+	movq	%cr4, %rax
-+	shrl	$X86_CR4_LA57_BIT, %eax
-+	andl	%eax, __pgtable_l5_enabled(%rip)
-+#endif
-+
- 	call	load_stage2_idt
- 
- 	/* Pass boot_params to initialize_identity_maps() */
-diff --git a/arch/x86/boot/compressed/pgtable_64.c b/arch/x86/boot/compressed/pgtable_64.c
-index 5a6c7a190e5b..0aff7a637f54 100644
---- a/arch/x86/boot/compressed/pgtable_64.c
-+++ b/arch/x86/boot/compressed/pgtable_64.c
-@@ -11,8 +11,9 @@
- #define BIOS_START_MAX		0x9f000U	/* 640K, absolute maximum */
+diff --git a/arch/x86/include/asm/page_64_types.h b/arch/x86/include/asm/page_64_types.h
+index 1faa8f88850a..c5631dc4ab16 100644
+--- a/arch/x86/include/asm/page_64_types.h
++++ b/arch/x86/include/asm/page_64_types.h
+@@ -54,7 +54,7 @@
+ #define __PHYSICAL_MASK_SHIFT	52
  
  #ifdef CONFIG_X86_5LEVEL
--/* __pgtable_l5_enabled needs to be in .data to avoid being cleared along with .bss */
--unsigned int __section(".data") __pgtable_l5_enabled;
-+unsigned int __pgtable_l5_enabled = 1;
-+
-+/* These need to be in .data to avoid being cleared along with .bss */
- unsigned int __section(".data") pgdir_shift = 39;
- unsigned int __section(".data") ptrs_per_p4d = 1;
- #endif
-@@ -129,7 +130,6 @@ asmlinkage void configure_5level_paging(struct boot_params *bp, void *pgtable)
- 		l5_required = true;
- 
- 		/* Initialize variables for 5-level paging */
--		__pgtable_l5_enabled = 1;
- 		pgdir_shift = 48;
- 		ptrs_per_p4d = 512;
- 	}
-diff --git a/arch/x86/boot/startup/map_kernel.c b/arch/x86/boot/startup/map_kernel.c
-index 099ae2559336..f3d09e61575b 100644
---- a/arch/x86/boot/startup/map_kernel.c
-+++ b/arch/x86/boot/startup/map_kernel.c
-@@ -26,7 +26,6 @@ static inline bool check_la57_support(void)
- 	if (!(native_read_cr4() & X86_CR4_LA57))
- 		return false;
- 
--	__pgtable_l5_enabled	= 1;
- 	pgdir_shift		= 48;
- 	ptrs_per_p4d		= 512;
- 	page_offset_base	= __PAGE_OFFSET_BASE_L5;
+-#define __VIRTUAL_MASK_SHIFT	(pgtable_l5_enabled() ? 56 : 47)
++#define __VIRTUAL_MASK_SHIFT	(choose_l5_enabled(56, 47))
+ /* See task_size_max() in <asm/page_64.h> */
+ #else
+ #define __VIRTUAL_MASK_SHIFT	47
 diff --git a/arch/x86/include/asm/pgtable_64_types.h b/arch/x86/include/asm/pgtable_64_types.h
-index 2ca568f56660..2c498d16609c 100644
+index 2c498d16609c..bb4f54ac2e62 100644
 --- a/arch/x86/include/asm/pgtable_64_types.h
 +++ b/arch/x86/include/asm/pgtable_64_types.h
-@@ -27,7 +27,7 @@ extern unsigned int __pgtable_l5_enabled;
- #include <asm/alternative.h>
- #include <asm/cpufeatures.h>
- 
--static inline bool pgtable_l5_enabled(void)
-+static inline bool __attribute_const__ pgtable_l5_enabled(void)
- {
- 	asm goto(ALTERNATIVE_TERNARY("jmp 6f", %c[feat], "", "jmp %l[t_no]")
- 		"	.pushsection .altinstr_aux,\"ax\"	\n"
-diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
-index 498b9d6bdf2f..d3d1136ad802 100644
---- a/arch/x86/kernel/head64.c
-+++ b/arch/x86/kernel/head64.c
-@@ -49,7 +49,7 @@ SYM_PIC_ALIAS(next_early_pgt);
- pmdval_t early_pmd_flags = __PAGE_KERNEL_LARGE & ~(_PAGE_GLOBAL | _PAGE_NX);
- 
- #ifdef CONFIG_X86_5LEVEL
--unsigned int __pgtable_l5_enabled __initdata;
-+unsigned int __pgtable_l5_enabled __initdata = 1;
- unsigned int pgdir_shift __ro_after_init = 39;
- EXPORT_SYMBOL(pgdir_shift);
- unsigned int ptrs_per_p4d __ro_after_init = 1;
-diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-index 069420853304..1fe74bf828da 100644
---- a/arch/x86/kernel/head_64.S
-+++ b/arch/x86/kernel/head_64.S
-@@ -61,6 +61,13 @@ SYM_CODE_START_NOALIGN(startup_64)
- 	/* Set up the stack for verify_cpu() */
- 	leaq	__top_init_kernel_stack(%rip), %rsp
- 
-+#ifdef CONFIG_X86_5LEVEL
-+	/* __pgtable_l5_enabled needs to be correct before calling C code */
-+	movq	%cr4, %rax
-+	shrl	$X86_CR4_LA57_BIT, %eax
-+	andl	%eax, __pgtable_l5_enabled(%rip)
-+#endif
+@@ -43,6 +43,28 @@ static inline bool __attribute_const__ pgtable_l5_enabled(void)
+ t_no:
+ 	return false;
+ }
 +
- 	/*
- 	 * Set up GSBASE.
- 	 * Note that on SMP the boot CPU uses the init data section until
++static inline int __attribute_const__ choose_l5_enabled(int yes, int no)
++{
++	int ret = no;
++
++	asm_inline(ALTERNATIVE_TERNARY("jmp 6f; 8:", %c[feat], "movl %[yes], %[ret]", "")
++		"	.pushsection .altinstr_aux,\"ax\"	\n"
++		"6:	pushfq					\n"
++		"	testb	$1, %a[l5en]			\n"
++		"	jz	7f				\n"
++		"	movl	%[yes], %[ret]			\n"
++		"7:	popfq					\n"
++		"	jmp	8b				\n"
++		"	.popsection				\n"
++		: [ret]  "+rm" (ret)
++		: [feat] "i" (X86_FEATURE_LA57),
++		  [yes]	 "i" (yes),
++		  [l5en] "i" (&__pgtable_l5_enabled));
++
++	return ret;
++}
++
+ #else
+ #define pgtable_l5_enabled() 0
+ #endif /* CONFIG_X86_5LEVEL */
+@@ -59,7 +81,7 @@ extern unsigned int ptrs_per_p4d;
+ /*
+  * PGDIR_SHIFT determines what a top-level page table entry can map
+  */
+-#define PGDIR_SHIFT	pgdir_shift
++#define PGDIR_SHIFT	choose_l5_enabled(48, 39)
+ #define PTRS_PER_PGD	512
+ 
+ /*
+@@ -67,7 +89,7 @@ extern unsigned int ptrs_per_p4d;
+  */
+ #define P4D_SHIFT		39
+ #define MAX_PTRS_PER_P4D	512
+-#define PTRS_PER_P4D		ptrs_per_p4d
++#define PTRS_PER_P4D		choose_l5_enabled(MAX_PTRS_PER_P4D, 1)
+ #define P4D_SIZE		(_AC(1, UL) << P4D_SHIFT)
+ #define P4D_MASK		(~(P4D_SIZE - 1))
+ 
+@@ -138,7 +160,7 @@ extern unsigned int ptrs_per_p4d;
+ 
+ #ifdef CONFIG_DYNAMIC_MEMORY_LAYOUT
+ # define VMALLOC_START		vmalloc_base
+-# define VMALLOC_SIZE_TB	(pgtable_l5_enabled() ? VMALLOC_SIZE_TB_L5 : VMALLOC_SIZE_TB_L4)
++# define VMALLOC_SIZE_TB	((unsigned long)choose_l5_enabled(VMALLOC_SIZE_TB_L5, VMALLOC_SIZE_TB_L4))
+ # define VMEMMAP_START		vmemmap_base
+ #else
+ # define VMALLOC_START		__VMALLOC_BASE_L4
 -- 
 2.49.0.987.g0cc8ee98dc-goog
 
