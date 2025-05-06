@@ -1,110 +1,84 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E200A15E5DC;
-	Tue,  6 May 2025 14:22:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F413728137C;
+	Tue,  6 May 2025 14:22:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746541366; cv=none; b=RVFWkHMCs+bQEi1OCxM18agzhFXGbXW9iNtodsQp1uRoSS9fBzXn83AC05XA8iGgiu0Veydk7rYui4P4g4ApuYQy5MbHlZphocDYdsKXJZyrAPPmban7zwRFjy+Qeg4ja3h+Spg2w3sryEv375KFy1zRoOUNW9+96boDQI+ms6g=
+	t=1746541374; cv=none; b=n7I5u/P77gMBmRpj+eFdpQ6TvyqWL8wuV99VFx0uRfRpo+kKPlHWAtCsXXVbwheezdujYDfOZzu3L3/A0MBIkKnBZWTzeZH22xMrhECVD2fgOE3kB3GXgflitD2mGnzw7MNQqO1KIfQun2SrrrQyiTpeKIixsCoAXPndDrVg/8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746541366; c=relaxed/simple;
-	bh=ZAqSEbsXGwAJha8vmzmKJrQMEo1vB2z12gMphbknyXU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rAxsi8HzmUVMu3EKlskCaiOgK+lDCJd+kQDzllpMxIhSQKCGJgGevmxSOzaDL2k/QuPQW3H1qEp6bgyXfc0MY8EAONBP3m+GpE/cMu1G70v2TwOubI7QraxQgvlWyouJLa7tRkrYCN9XT7dXBi47N/gefVCQY2iYolFQQUX5OAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=jgy4Ccfq; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="jgy4Ccfq"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id A843E40E01FA;
-	Tue,  6 May 2025 14:22:41 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id TiIS_12gnCY9; Tue,  6 May 2025 14:22:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1746541356; bh=5uG7iiLE/nm+bAeu3HWka2R0/ZZ5zJHcClr8b2IHgEk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jgy4Ccfq++xcOxmjJLbUEZ4rJHlPPJ3lk+Gg+us2KYdtTVsHpWovEsbtbd6k6FJVL
-	 L2YLUvFnqGSljRsgqAbdLZMJ/gwy1v7zHyAKhpne5arDBdqvr1d98vNmSrgH+F8dXK
-	 PTwBhWFO50eZXk19+yybwuS/mStjQ1i8bIVCe3o/Sw0t10ryFaa8SDR1AdMFiCzqfz
-	 /OZDK4Nyz9bX5qAUDPXCxO3vL4otM2JI400kFdZaqPAjN0qAENOCkWcG7NDbdFELZW
-	 FImdVZWxn7tH20Kjdg7z7AY4n2ZyrQhlcCgui8dpt0rs3vAtI/9b5MECEVHGhGkv2w
-	 4wWDbV3Lp5bvCuvMvC1LXxgr74X5m7KUNhrBD0injdQphPC/xoF36mdtZqEDyW9Jv4
-	 c0163OmAR/71QhQsT4DPuR7yVRSdwKIszLns49IhQLoqwgE9ZXbmsytYj+eL01iF4d
-	 c9faQlBiUVFVIp7/rwBFW9MUmVaLHiCdRKYgM3t2k2kk+uDUdolihFI+uEb1eyDAMb
-	 PMKu8EsEt49gPDOeEUMkEnIiEosaMAChnTpUnP12kXciQDos6GBgxMAlYiX+LEw8Vw
-	 Elz17G8uUtqX2FeJAvy1F/85Y0i/0P2DLpuueohINd1mxlZGb3zTHBvpcQOxdg5eSv
-	 IjnHgxFXnOj9zRZ19FxI3U48=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3BBC040E0196;
-	Tue,  6 May 2025 14:22:31 +0000 (UTC)
-Date: Tue, 6 May 2025 16:22:30 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Michael Larabel <Michael@michaellarabel.com>
-Subject: Re: [PATCH v2] KVM: SVM: Set/clear SRSO's BP_SPEC_REDUCE on 0 <=> 1
- VM count transitions
-Message-ID: <20250506142230.GFaBobJucboX7ZWnxi@fat_crate.local>
-References: <20250505180300.973137-1-seanjc@google.com>
+	s=arc-20240116; t=1746541374; c=relaxed/simple;
+	bh=XTWQPPP1CqAWGI/Fw2ZeFClLz5hjmv6Fdz70OB9eQdg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=oV+DfMw2SnqIGPhrZltugCp5frm/tgsZDWk5a//TobtBz8nriFtv3L3EP2zpd+qLZU30SFEY4WnHXBsFiAXfXfWTCuJziFEzg9iu3w1I0CFWmOPelj7DkTbMVPRgqwAQ0XZjDkvTR07vu1qs+vk2QEr1GDPtFKJhICN4Jfd3k3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8831C4CEE4;
+	Tue,  6 May 2025 14:22:52 +0000 (UTC)
+Date: Tue, 6 May 2025 10:23:00 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>
+Subject: [PATCH v3] tracing: Only return an adjusted address if it matches
+ the kernel address
+Message-ID: <20250506102300.0ba2f9e0@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250505180300.973137-1-seanjc@google.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, May 05, 2025 at 11:03:00AM -0700, Sean Christopherson wrote:
-> Set the magic BP_SPEC_REDUCE bit to mitigate SRSO when running VMs if and
-> only if KVM has at least one active VM.  Leaving the bit set at all times
-> unfortunately degrades performance by a wee bit more than expected.
-> 
-> Use a dedicated spinlock and counter instead of hooking virtualization
-> enablement, as changing the behavior of kvm.enable_virt_at_load based on
-> SRSO_BP_SPEC_REDUCE is painful, and has its own drawbacks, e.g. could
-> result in performance issues for flows that are sensitive to VM creation
-> latency.
-> 
-> Defer setting BP_SPEC_REDUCE until VMRUN is imminent to avoid impacting
-> performance on CPUs that aren't running VMs, e.g. if a setup is using
-> housekeeping CPUs.  Setting BP_SPEC_REDUCE in task context, i.e. without
-> blasting IPIs to all CPUs, also helps avoid serializing 1<=>N transitions
-> without incurring a gross amount of complexity (see the Link for details
-> on how ugly coordinating via IPIs gets).
-> 
-> Link: https://lore.kernel.org/all/aBOnzNCngyS_pQIW@google.com
-> Fixes: 8442df2b49ed ("x86/bugs: KVM: Add support for SRSO_MSR_FIX")
+From: Steven Rostedt <rostedt@goodmis.org>
 
-I guess
+The trace_adjust_address() will take a given address and examine the
+persistent ring buffer to see if the address matches a module that is
+listed there. If it does not, it will just adjust the value to the core
+kernel delta. But if the address was for something that was not part of
+the core kernel text or data it should not be adjusted.
 
-Cc: <stable@kernel.org>
+Check the result of the adjustment and only return the adjustment if it
+lands in the current kernel text or data. If not, return the original
+address.
 
-as the above is in 6.14.
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+Changes since v2: https://lore.kernel.org/20250325213919.790882670@goodmis.org
 
-> Reported-by: Michael Larabel <Michael@michaellarabel.com>
-> Closes: https://www.phoronix.com/review/linux-615-amd-regression
-> Cc: Borislav Petkov <bp@alien8.de>
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
+- Rebased on top of v6.15-rc5
 
-LGTM, seems to work too on my machine.
+- Check __is_kernel() first over data, as pointers to functions are more
+  common via "%pS".
 
-Tested-by: Borislav Petkov (AMD) <bp@alien8.de>
+ kernel/trace/trace.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-Thx for sticking with this and improving it!
-
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 5b8db27fb6ef..01572ef79802 100644	
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -6032,6 +6032,7 @@ unsigned long trace_adjust_address(struct trace_array *tr, unsigned long addr)
+ 	struct trace_module_delta *module_delta;
+ 	struct trace_scratch *tscratch;
+ 	struct trace_mod_entry *entry;
++	unsigned long raddr;
+ 	int idx = 0, nr_entries;
+ 
+ 	/* If we don't have last boot delta, return the address */
+@@ -6045,7 +6046,9 @@ unsigned long trace_adjust_address(struct trace_array *tr, unsigned long addr)
+ 	module_delta = READ_ONCE(tr->module_delta);
+ 	if (!module_delta || !tscratch->nr_entries ||
+ 	    tscratch->entries[0].mod_addr > addr) {
+-		return addr + tr->text_delta;
++		raddr = addr + tr->text_delta;
++		return __is_kernel(raddr) || is_kernel_core_data(raddr) ||
++			is_kernel_rodata(raddr) ? raddr : addr;
+ 	}
+ 
+ 	/* Note that entries must be sorted. */
 -- 
-Regards/Gruss,
-    Boris.
+2.47.2
 
-https://people.kernel.org/tglx/notes-about-netiquette
