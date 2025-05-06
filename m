@@ -1,241 +1,165 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE95F280327;
-	Tue,  6 May 2025 13:34:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A49C7A32
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 13:34:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746538452; cv=none; b=ghejN/Eh/+1wTADzio5PuYLgg8Vg7D6WNB9+CVojkbtChCBM3hepIPf/YLRW03X5yjsvGXNKtXHJReFUPCxVw7cmwnoga9TiNSXTGuYzSqI8mWtCdlRiZJijeGFpXgxeuLME74Cfsx8wG6TNAjxRTbwTo+C09DvmbzkgbTaaOQA=
+	t=1746538473; cv=none; b=heUop9yUR1ipehfFyKMgF+O0A3wo565HcsLnV8XmF7gr6Bfn/MDx7neORf3kxOTfYo1x6rJAPX8rPKK9xYvEFAMIxEb5/1NozDcmmooYAa8QeW+55Fki7xP3xfwcV8BlwydlvbNuV2XgMzc5FELGnyvvr3pG3mo5h0Cs4Qf7gJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746538452; c=relaxed/simple;
-	bh=8UyH5kKUBxEMOm4LPDEmDz6QR/KnRy9FLct88j76kTM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dxsaiMMQyGbs/JhNspoa6udMLw1kUX5eZISe1FQySXLdJZYThB9DunZR5fuQwqHGT64IXs1TT8J0oQFSf75qGL2W7rGuK8fO9M5Rat8iEaeDz71RMc0o4JjHdQOOAYXql1+4QNUOR2NFFdgu70fgIv6xI/VT0xx//H4741qOE7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HcB3EycQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746538473; c=relaxed/simple;
+	bh=jgkvDAiCh8sZ4E07avQI1bfj2TBCOO6ehDku2E89fYQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=FAYpJ0qKAa5NvQAGCiNuUyoDdQjDrJlFmbD18jGnRcc7ynTxcdtjrZC++Jbn+6ulpVTJPk+kTSvpFwGFrureB2ZiFJaPmgzZwN4JonFR5OscE3+hNLlHuLILQ9RjbNOFL6KKD8OHMUDuEK9CyVgx1a9iYTbM0jfCyyNV5fN5VAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=e0TuywAX; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HcB3EycQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 024B4C4CEE4;
-	Tue,  6 May 2025 13:34:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746538452;
-	bh=8UyH5kKUBxEMOm4LPDEmDz6QR/KnRy9FLct88j76kTM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=HcB3EycQiKMmNSpEZm8qX4wOZ5UPyNbFk93mGEGb5EbSs3TOHufV77AphIFwu4Nku
-	 Og6uTbIW2gAihFZptBDqH8hY51O/VLpC3n3idSzEyUuUeg7OmMTfgEoPPESjKGYWuQ
-	 VFsXJstuqNQmZswUdqhE0/Cj5t6bFkBYMyTYLZGnd07S4Vujza9pDe0gKwHezwZLpt
-	 stUZpOcBxfE4Px4f34aSjqHnAuYoLu2+JfTlDDYdol0fE1Jl7SYvWU4nb0ffPq48/U
-	 k/yLkLcIzVbC52A+xBbMmLGJd6H7tWZjUSSITn+hHzunJazbHxCWZEbeBDMTeczPqz
-	 lBg13qbofSA4g==
-Message-ID: <4146d497-9440-4a3e-9348-1394a610a93e@kernel.org>
-Date: Tue, 6 May 2025 15:34:07 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e0TuywAX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746538470;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pDIyqhiHmIK98omQcXk13FyrxFyNXWqbJOdo4DpbxVs=;
+	b=e0TuywAXhVh75Gx3BYtMcyTV6wfrID8bvbymV0V8tI62qn14086PtOlV8nZHq+7HUyOBj1
+	D6z0HD2x266P+81VAxLsPBtNLFKvwyvmzn2KTGLqtRdA3yI8PIWlIy7iH8TBa4VUZTAB1D
+	f4asJIbMN/9KzzgDlmavdYHCBIpmlhk=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-581-cmurS6hdMvWAXKrA0BADJA-1; Tue, 06 May 2025 09:34:28 -0400
+X-MC-Unique: cmurS6hdMvWAXKrA0BADJA-1
+X-Mimecast-MFC-AGG-ID: cmurS6hdMvWAXKrA0BADJA_1746538468
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43ceb011ea5so31956445e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 06:34:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746538468; x=1747143268;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pDIyqhiHmIK98omQcXk13FyrxFyNXWqbJOdo4DpbxVs=;
+        b=fk4X8XXoeLMsIXHiacihbm9y1uviOlcsH6vAtZfthoTHr8njCIdNgOGjQY+kOeXLN1
+         YhJmk8idOX7hHt/iz/SlSrF63tY3ttRhodCU4OEs3k8Ve5TRrfDfZoRkJP8yazcyutEB
+         Xx56pF+3y8emwCVRuaMgvCLRD0OeecMPhfWomnHgJmBYORMHS2ZqTbWA+1Cj/42GApx2
+         wogWAsSAOaCHI3yCzVOMG+kIsBvGv/d43J0MqD70ZbqzKvemcB9UEk1V2Nw0pQxTOlQo
+         41E8gYJLA7IDhgRwqGDZB+KVwHTxvddq4Y58Ab1gtUF7zTHrMQwXVZVbgy0BBHFveuYF
+         a3cg==
+X-Forwarded-Encrypted: i=1; AJvYcCU4eGEFOwhy1DLTE5p54aN0Z4xOo5l7KpTBBFkCHMw/z79Y4gsEn9ryUM2ovR2NRUZiy7AcT/eD/mkB4Dg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwUiBfbyPtPj+068+Hr4zErhDZDLyGQjt0PwLQ45NvGa04E3csU
+	qYrnPJP+atj0DbQlGBdfveAeFrmq49IkYPspkxspd9mopFM+e7SId8e1kqNIb802Vp7z9Q4QpNN
+	Vr8AQkMcdAgMKs6z2dOFX4PGAQd+5Y6xbk2OEIDUhWataZvaZtz2ezj1Fgo6E4A==
+X-Gm-Gg: ASbGncs1j9rfQoBldOizlLou1ftZrOPqikrnVgypLciSPRwXN2tiJZJjTCv8JauG7mS
+	Q1xNaasgnbp9hA+3NUKvuz7n73d3+Lp32fE9lnOUH4XoYiHMC0h9RPJbZLE3U91yo7HYY+w4g0C
+	A15lv0WBvioHEj2+2se21riTynFKHREeIhkBk5EGNeUituhckHZGmY6pu1bSoRuVfb1z7EU/GfB
+	jBDzmzv8T9Lez8tOQmaAKNZR+rz/hGY2+Vn07o3lbkjUYqgHcE830a5isOJaBRClLbPLCoe8gfP
+	cDE8v9U=
+X-Received: by 2002:a05:600c:34c7:b0:43c:eeee:b70a with SMTP id 5b1f17b1804b1-441c491fcb6mr87016935e9.22.1746538467845;
+        Tue, 06 May 2025 06:34:27 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFdTZ01rB3K+KDb9dyjz8aIQ1HdnjPeS9RfHZCrNcZCcO52ut9BuipgIdWg2ntXZpGuEyANSw==
+X-Received: by 2002:a05:600c:34c7:b0:43c:eeee:b70a with SMTP id 5b1f17b1804b1-441c491fcb6mr87016635e9.22.1746538467424;
+        Tue, 06 May 2025 06:34:27 -0700 (PDT)
+Received: from fedora (g3.ign.cz. [91.219.240.17])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b89d1636sm169563715e9.13.2025.05.06.06.34.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 May 2025 06:34:26 -0700 (PDT)
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
+To: Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
+Cc: "H . Peter Anvin" <hpa@zytor.com>, Linus Torvalds
+ <torvalds@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>,
+ Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, Ingo
+ Molnar <mingo@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann
+ <arnd@arndb.de>, Carlos Bilbao <carlos.bilbao@kernel.org>, David Woodhouse
+ <dwmw@amazon.co.uk>, Elena Reshetova <elena.reshetova@intel.com>, Fei Li
+ <fei1.li@intel.com>, Jan Kiszka <jan.kiszka@siemens.com>, Juergen Gross
+ <jgross@suse.com>, "Kirill A . Shutemov"
+ <kirill.shutemov@linux.intel.com>, Masahiro Yamada
+ <yamada.masahiro@socionext.com>, Michal Marek <michal.lkml@markovi.net>,
+ Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson
+ <seanjc@google.com>, Stefano Stabellini <sstabellini@kernel.org>
+Subject: Re: [PATCH 09/15] x86/kconfig/64: Enable more virtualization guest
+ options in the defconfig: enable Xen, Xen_PVH, Jailhouse, ACRN and Intel
+ TDX
+In-Reply-To: <20250505110946.1095363-10-mingo@kernel.org>
+References: <20250505110946.1095363-1-mingo@kernel.org>
+ <20250505110946.1095363-10-mingo@kernel.org>
+Date: Tue, 06 May 2025 15:34:25 +0200
+Message-ID: <87msbp278e.fsf@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 2/3] memory: Add STM32 Octo Memory Manager driver
-To: Patrice CHOTARD <patrice.chotard@foss.st.com>,
- Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Cc: christophe.kerello@foss.st.com, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org
-References: <20250506-upstream_ospi_v6-v12-0-e3bb5a0d78fb@foss.st.com>
- <20250506-upstream_ospi_v6-v12-2-e3bb5a0d78fb@foss.st.com>
- <88b463b2-6cd3-4b92-acc5-447bbfadabde@kernel.org>
- <ad80e3b8-4f62-4c58-8dbd-762f0b268713@foss.st.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <ad80e3b8-4f62-4c58-8dbd-762f0b268713@foss.st.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On 06/05/2025 13:16, Patrice CHOTARD wrote:
-> 
-> 
-> On 5/6/25 10:02, Krzysztof Kozlowski wrote:
->> On 06/05/2025 09:52, Patrice Chotard wrote:
->>> Octo Memory Manager driver (OMM) manages:
->>>   - the muxing between 2 OSPI busses and 2 output ports.
->>>     There are 4 possible muxing configurations:
->>>       - direct mode (no multiplexing): OSPI1 output is on port 1 and OSPI2
->>>         output is on port 2
->>>       - OSPI1 and OSPI2 are multiplexed over the same output port 1
->>>       - swapped mode (no multiplexing), OSPI1 output is on port 2,
->>>         OSPI2 output is on port 1
->>>       - OSPI1 and OSPI2 are multiplexed over the same output port 2
->>>   - the split of the memory area shared between the 2 OSPI instances.
->>>   - chip select selection override.
->>>   - the time between 2 transactions in multiplexed mode.
->>>   - check firewall access.
->>>
->>> Signed-off-by: Christophe Kerello <christophe.kerello@foss.st.com>
->>> Signed-off-by: Patrice Chotard <patrice.chotard@foss.st.com>
->>> ---
->>>  drivers/memory/Kconfig     |  18 ++
->>>  drivers/memory/Makefile    |   1 +
->>>  drivers/memory/stm32_omm.c | 476 +++++++++++++++++++++++++++++++++++++++++++++
->>>  3 files changed, 495 insertions(+)
->>>
->>> diff --git a/drivers/memory/Kconfig b/drivers/memory/Kconfig
->>> index c82d8d8a16eaf154c247c0dbb9aff428b7c81402..bc7ab46bd8b98a89f0d9173e884a99b778cdc9c4 100644
->>> --- a/drivers/memory/Kconfig
->>> +++ b/drivers/memory/Kconfig
->>> @@ -225,6 +225,24 @@ config STM32_FMC2_EBI
->>>  	  devices (like SRAM, ethernet adapters, FPGAs, LCD displays, ...) on
->>>  	  SOCs containing the FMC2 External Bus Interface.
->>>  
->>> +config STM32_OMM
->>> +	tristate "STM32 Octo Memory Manager"
->>> +	depends on ARCH_STM32 || COMPILE_TEST
->>> +	depends on SPI_STM32_OSPI
->>
->> I don't think you tested for the reported issue. I reported that
->> firewall symbols are missing and you add dependency on ospi. How is that
->> related? How does this solve any problem?
-> 
-> Hi Krzysztof
-> 
-> The dependency with SPI_STM32_OSPI was already present since the beginning.
-> I just added dependency on ARCH_STM32 on this current version to avoid issue on x86_64 arch.
+Ingo Molnar <mingo@kernel.org> writes:
 
-Ah, I missed that in the diff.
+> Since the x86 defconfig aims to be a distro kernel work-alike with
+> fewer drivers and a shorter build time, refresh all the virtualization
+> guest Kconfig features, enabling paravirt spinlocks, and
+> enabling the guest support code for the following guests:
+>
+>  - Xen
+>  - Xen_PVH
+>  - Jailhouse
+>  - ACRN
+>  - Intel TDX
 
-Anyway this does not solve the case - you still won't get your
-bus/firewall code.
+Out of curiosity and to get the idea what's good for defconfig and
+what's not: do we want to enable Hyper-V and its drivers as well? I
+think all popular distros enable it nowdays because of Azure. E.g.
 
-> 
-> On my side i tested compilation on arm, arm64 and x86_64 without any issue.
+CONFIG_PCI_HYPERV=m
+CONFIG_HYPERV_STORAGE=m
+CONFIG_HYPERV_NET=m
+CONFIG_HYPERV_KEYBOARD=m
+CONFIG_DRM_HYPERV=m
+CONFIG_HID_HYPERV_MOUSE=m
+CONFIG_HYPERV=m
+CONFIG_HYPERV_UTILS=m
+CONFIG_HYPERV_BALLOON=m
 
-Oh man... do you understand that this is compile test? Enable STM32_OMM
-on x86_64 and immediately you will see the error.
+>
+> Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> Cc: Ard Biesheuvel <ardb@kernel.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Carlos Bilbao <carlos.bilbao@kernel.org>
+> Cc: David Woodhouse <dwmw@amazon.co.uk>
+> Cc: Elena Reshetova <elena.reshetova@intel.com>
+> Cc: Fei Li <fei1.li@intel.com>
+> Cc: H. Peter Anvin <hpa@zytor.com>
+> Cc: Jan Kiszka <jan.kiszka@siemens.com>
+> Cc: Juergen Gross <jgross@suse.com>
+> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Cc: Michal Marek <michal.lkml@markovi.net>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: Sean Christopherson <seanjc@google.com>
+> Cc: Stefano Stabellini <sstabellini@kernel.org>
+> Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+> ---
+>  arch/x86/configs/defconfig.x86_64 | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/arch/x86/configs/defconfig.x86_64 b/arch/x86/configs/defconfig.x86_64
+> index 156e9490e29b..514f8fdc2102 100644
+> --- a/arch/x86/configs/defconfig.x86_64
+> +++ b/arch/x86/configs/defconfig.x86_64
+> @@ -31,6 +31,12 @@ CONFIG_KEXEC=y
+>  CONFIG_SMP=y
+>  CONFIG_HYPERVISOR_GUEST=y
+>  CONFIG_PARAVIRT=y
+> +CONFIG_PARAVIRT_SPINLOCKS=y
+> +CONFIG_XEN=y
+> +CONFIG_XEN_PVH=y
+> +CONFIG_JAILHOUSE_GUEST=y
+> +CONFIG_ACRN_GUEST=y
+> +CONFIG_INTEL_TDX_GUEST=y
+>  CONFIG_X86_REROUTE_FOR_BROKEN_BOOT_IRQS=y
+>  CONFIG_X86_MSR=y
+>  CONFIG_X86_CPUID=y
 
+-- 
+Vitaly
 
-> 
-> I tried to reproduce your build process:
-> 
-> 
-> 
-> make -j16 defconfig
->   HOSTCC  scripts/basic/fixdep
->   HOSTCC  scripts/kconfig/conf.o
->   HOSTCC  scripts/kconfig/confdata.o
->   HOSTCC  scripts/kconfig/expr.o
->   LEX     scripts/kconfig/lexer.lex.c
->   YACC    scripts/kconfig/parser.tab.[ch]
->   HOSTCC  scripts/kconfig/menu.o
->   HOSTCC  scripts/kconfig/preprocess.o
->   HOSTCC  scripts/kconfig/symbol.o
->   HOSTCC  scripts/kconfig/util.o
->   HOSTCC  scripts/kconfig/lexer.lex.o
->   HOSTCC  scripts/kconfig/parser.tab.o
->   HOSTLD  scripts/kconfig/conf
-> *** Default configuration is based on 'x86_64_defconfig'
-> #
-> # configuration written to .config
-> #
-> 
-> scripts/config --file .config -e COMPILE_TEST -e OF -e SRAM -e MEMORY -e PM_DEVFREQ -e FPGA -e FPGA_DFL
-> 
-> scripts/config --file .config -e SAMSUNG_MC
-> scripts/config --file .config -e EXYNOS5422_DMC
-> scripts/config --file .config -e EXYNOS_SROM
-> scripts/config --file .config -e TEGRA_MC
-> scripts/config --file .config -e TEGRA20_EMC
-> scripts/config --file .config -e TEGRA30_EMC
-> scripts/config --file .config -e TEGRA124_EMC
-> scripts/config --file .config -e TEGRA210_EMC_TABLE
-> scripts/config --file .config -e TEGRA210_EMC
-> scripts/config --file .config -e MEMORY
-> scripts/config --file .config -e DDR
-> scripts/config --file .config -e ARM_PL172_MPMC
-> scripts/config --file .config -e ATMEL_EBI
-> scripts/config --file .config -e BRCMSTB_DPFE
-> scripts/config --file .config -e BRCMSTB_MEMC
-> scripts/config --file .config -e BT1_L2_CTL
-> scripts/config --file .config -e TI_AEMIF
-> scripts/config --file .config -e TI_EMIF
-> scripts/config --file .config -e OMAP_GPMC
-> scripts/config --file .config -e OMAP_GPMC_DEBUG
-> scripts/config --file .config -e TI_EMIF_SRAM
-> scripts/config --file .config -e FPGA_DFL_EMIF
-> scripts/config --file .config -e MVEBU_DEVBUS
-> scripts/config --file .config -e FSL_CORENET_CF
-> scripts/config --file .config -e FSL_IFC
-> scripts/config --file .config -e JZ4780_NEMC
-> scripts/config --file .config -e MTK_SMI
-> scripts/config --file .config -e DA8XX_DDRCTL
-> scripts/config --file .config -e PL353_SMC
-> scripts/config --file .config -e RENESAS_RPCIF
-> scripts/config --file .config -e STM32_FMC2_EBI
-> scripts/config --file .config -e STM32_OMM
-
-That's the code from previous version, which would lead you to the bug.
-Once you understand the bug, you should understand that SPI_STM32_OSPI
-is not selected here, thus STM32_OMM is not there.
-
-You did not fix the bug, you just masked it for one given configuration,
-but still having the bug for other.
-
-Answer to yourself: where are firewall functions? Then, answer: is this
-thing with firewall selected (or expressed as dependency) when you
-select this driver?
-
-If not, do you have stubs for the firewall?
-If yes, do you have stubs for module case (one is a module, other is not)?
-
-This all will lead you to missing dependency for the firewall kconfig.
-Now the dependency must be also tested for module & non-module cases
-(see longer explanation in docs kconfig syntax).
-
-Best regards,
-Krzysztof
