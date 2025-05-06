@@ -1,117 +1,96 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD6521F4C9D;
-	Tue,  6 May 2025 10:26:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5726A26FD81
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 10:26:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746527198; cv=none; b=UsJ6W28yI5ff66ucPgSu+qr7j47ZmzlGWqr0PtLkOnDNn5jSZVowQBLyqf7IKf+Bp4TPOqla/xldr2OfK70wuI16tyPfk4kJX/sEEm5mg35bBvW9uYXV87ivrWFb3cGW+5c8AsOmw0E1eQdGguMlD6oQCPI16r/DxeRoWcCzFLI=
+	t=1746527210; cv=none; b=KDw0zfayM9qNvQeBWq30FW6Weo/W8lUIhSNB+Gjt7rg/BJ2dl8bJGmvPWUY4BIuqrAwb1V+80VlbHOU3jGVIuE3UNlL0nk6cFsDwdCo65qbsU1Kl8dz4P6w4sjifLlH9lZRvzRuif2+BnZZX6vM5/b78zufajbdZ09pmtrvgHaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746527198; c=relaxed/simple;
-	bh=9mRHDYKby7wkLKdArVGiiiGYXjx7MwW/PwXAzRu0mw4=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cb1ya7iXUiETK0UIM94QpdD+EN5YqEbtRYQW3ZlCgx+cW7QR0zJNngtW97SDLwb3DnwP8sZ9i89dfOzmCvcGNdDgKEy8HRmHymJt335ps+CIaZz0usxAx5YEPeku3bH1Bom4q5Td5meswrFzInq4aOGdS6aRBaU1LZNcLOagDXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZsDwD2g0Vz6M4YD;
-	Tue,  6 May 2025 18:22:04 +0800 (CST)
-Received: from frapeml500003.china.huawei.com (unknown [7.182.85.28])
-	by mail.maildlp.com (Postfix) with ESMTPS id C2B741402FC;
-	Tue,  6 May 2025 18:26:33 +0800 (CST)
-Received: from localhost (10.47.68.20) by frapeml500003.china.huawei.com
- (7.182.85.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 6 May
- 2025 12:26:33 +0200
-Date: Tue, 6 May 2025 11:26:27 +0100
-From: Alireza Sanaee <alireza.sanaee@huawei.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-CC: <devicetree@vger.kernel.org>, <robh@kernel.org>,
-	<jonathan.cameron@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
-	<mark.rutland@arm.com>, <shameerali.kolothum.thodi@huawei.com>
-Subject: Re: [PATCH v2 1/6] of: add infra for finding CPU id from phandle
-Message-ID: <20250506112627.00004a7f.alireza.sanaee@huawei.com>
-In-Reply-To: <20250504-eminent-sepia-cuscus-fc7f7e@kuoka>
-References: <20250502161300.1411-1-alireza.sanaee@huawei.com>
-	<20250502161300.1411-2-alireza.sanaee@huawei.com>
-	<20250504-eminent-sepia-cuscus-fc7f7e@kuoka>
-Organization: Huawei
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1746527210; c=relaxed/simple;
+	bh=1Ivtt5aDW1FFmaK6JlMxYyI8tpl1f+b9vgZYtmbilvE=;
+	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
+	 Content-Type:Date:Message-ID; b=BSX5LrpehckmQDXobnOfFi561FuZca+FNTGplnlwdnlTJ/9vZsLGfnxxgBsK6NJK5JNoX9FgcpaH4chR8EnE6dNTPlpr14ZDx96OiDPhAkmxZXNdhq58nOZykisQhZOvs62xypvUibUlMTl5Uek3T/VXMhpEUrHdfnWYpMOI8gM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Q4IahJjG; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q4IahJjG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746527207;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ldh2ZjQIYGdGGzK49enEKH+FzA5Hf8dgiRrydZ2YEkY=;
+	b=Q4IahJjGpQ7aVNpC3p2vdx7NBsw5bZ01ri2yl5Y3I0phL30hOAWQjnaDLfgyj6YDbiYXUA
+	0yOuI1J3RuxCuvdVANha0+DVRoFA5J0fE7VL47jGpKf51vizcayBbHSTOsoKZABys8dTT5
+	EsRUTZjW2rdHfWlfyOY5mW/eZQJS9gE=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-402-Owsc9BgwOOK2xVtAbikYmA-1; Tue,
+ 06 May 2025 06:26:44 -0400
+X-MC-Unique: Owsc9BgwOOK2xVtAbikYmA-1
+X-Mimecast-MFC-AGG-ID: Owsc9BgwOOK2xVtAbikYmA_1746527202
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AF1EB1955D52;
+	Tue,  6 May 2025 10:26:41 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.188])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 15C0519560AF;
+	Tue,  6 May 2025 10:26:36 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <20250505-erproben-zeltlager-4c16f07b96ae@brauner>
+References: <20250505-erproben-zeltlager-4c16f07b96ae@brauner> <433928.1745944651@warthog.procyon.org.uk>
+To: Christian Brauner <brauner@kernel.org>
+Cc: dhowells@redhat.com, Alexander Viro <viro@zeniv.linux.org.uk>,
+    Etienne Champetier <champetier.etienne@gmail.com>,
+    Marc Dionne <marc.dionne@auristor.com>,
+    Jeffrey Altman <jaltman@auristor.com>,
+    Chet Ramey <chet.ramey@case.edu>, Steve French <sfrench@samba.org>,
+    linux-afs@lists.infradead.org, openafs-devel@openafs.org,
+    linux-cifs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+    linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] afs, bash: Fix open(O_CREAT) on an extant AFS file in a sticky dir
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500012.china.huawei.com (7.191.174.4) To
- frapeml500003.china.huawei.com (7.182.85.28)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1209710.1746527190.1@warthog.procyon.org.uk>
+Date: Tue, 06 May 2025 11:26:30 +0100
+Message-ID: <1209711.1746527190@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-On Sun, 4 May 2025 19:48:11 +0200
-Krzysztof Kozlowski <krzk@kernel.org> wrote:
+Christian Brauner <brauner@kernel.org> wrote:
 
-> On Fri, May 02, 2025 at 05:12:55PM GMT, Alireza Sanaee wrote:
-> > Get CPU id from phandle. Many drivers get do this by getting hold
-> > of CPU node first through a phandle and then find the CPU ID using
-> > the relevant function. This commit encapsulates cpu node finding
-> > and improves readability.
-> > 
-> > The API interface requires two parameters, 1) node, 2) pointer to
-> > CPU node. API sets the pointer to the CPU node and allows the
-> > driver to play with the CPU itself, for logging purposes for
-> > instance.  
+> > However, the bash work around is going to be removed:
 > 
-> Run checkpatch - missing SoB.
-Shoot! I guess I know what happened! Will use the script.
-> 
-> > ---
-> >  drivers/of/cpu.c   | 24 ++++++++++++++++++++++++
-> >  include/linux/of.h |  8 ++++++++
-> >  2 files changed, 32 insertions(+)
-> > 
-> > diff --git a/drivers/of/cpu.c b/drivers/of/cpu.c
-> > index 5214dc3d05ae..1e8d1fa04d3c 100644
-> > --- a/drivers/of/cpu.c
-> > +++ b/drivers/of/cpu.c
-> > @@ -173,6 +173,30 @@ int of_cpu_node_to_id(struct device_node
-> > *cpu_node) }
-> >  EXPORT_SYMBOL(of_cpu_node_to_id);
-> >  
-> > +/**
-> > + * of_cpu_phandle_to_id: Get the logical CPU number for a given
-> > device_node
-> > + *
-> > + * @node: Pointer to the device_node containing CPU phandle.
-> > + * @cpu_np: Pointer to the device_node for CPU.
-> > + *
-> > + * Return: The logical CPU number of the given CPU device_node or
-> > -ENODEV if
-> > + * the CPU is not found. If the property is not found, it returns
-> > -1. On
-> > + * success, cpu_np will always point to the retrieved CPU
-> > device_node.
-> > + */
-> > +int of_cpu_phandle_to_id(const struct device_node *node,
-> > +			 struct device_node **cpu_np)
-> > +{
-> > +	if (!node)
-> > +		return -1;
-> > +
-> > +	*cpu_np = of_parse_phandle(node, "cpu", 0);
-> > +	if (!cpu_np)
-> > +		return -ENODEV;
-> > +
-> > +	return of_cpu_node_to_id(*cpu_np);  
-> 
-> You leak the node... or intention was to return it to the caller, but
-> then you need to document that caller must drop the ref.
-That's fair, I include documentation for that.
-> 
-> Best regards,
-> Krzysztof
-> 
-> 
+> Why is it removed? That's a very strange comment:
+
+Because it makes bash output redirection work differently to other programs, I
+would guess.  It's actually a simple security check to work around (just retry
+the open() with O_CREAT dropped) - however, it does expose an... error, I
+suppose, in the Linux kernel: namely that the VFS itself is treating foreign
+files as if they had local system ownership.
+
+We have the ->permission() inode op for this reason (I presume) - but that
+only applies to certain checks.  The VFS must not assume that it can interpret
+i_uid and i_gid on an inode and must not assume that it can compare them to
+current->fsuid and current->fs_gid.
+
+Now, in my patch, I added two inode ops because they VFS code involved makes
+two distinct evaluations and so I made an op for each and, as such, those
+evaluations may be applicable elsewhere, but I could make a combined op that
+handles that specific situation instead.
+
+David
 
