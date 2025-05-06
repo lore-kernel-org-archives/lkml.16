@@ -1,137 +1,129 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8547627AC43
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 04:07:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4B8327AC44;
+	Tue,  6 May 2025 04:07:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746504453; cv=none; b=K3jaTVIilF8MYEdNQXETdVu+9WXCfv9xyKL/bsbaN9z3kdRdnXlHRpwaxFyhRm4j7YdQ+RqUR9tbez8h39egg4wO/w/VNjW0URJuu6ze3CMIohWA2BrS12yGQ9cL684E6YP87zmtzC5PrijRDCXCkkOam8B/TvqEfHGARu1G6l4=
+	t=1746504456; cv=none; b=m4Jzr5YVvRIywATsL+rTWdcxj9JAXOkm8ReIhQpoQtvNE6/C5iqK+pcJSpDZ+VwFwfK2c3VhE0deK/ylQ6hNEPYneArvM2bsrsUS512ZXPASLIXtK0Uno/naPxvTVJ5YcfG2vCeVcRovH6YSU+H6no0TB94Y9cZe+9TVNCpU0gs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746504453; c=relaxed/simple;
-	bh=XMH1sf/jQ7NhxwT03gZssmLPL9FfAGmAKafJvU5dz8E=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=HxBbgneGpm7wmFMCPrbU/6MHInH8qkFITGMaSXZKhm6Ppb1YM/kakWX9cTly/IM0FLGa8ZbTlo2Z7tfmxhZUYQ8Kcfayo8wAGYpnU654E5JIoT4uQUH0V2Mlkar39rhTzqH0c8MJMZnS+NOZ7VwHJmzU9OGDloxXSSnFO5/Sv0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZiyjaarC; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1746504456; c=relaxed/simple;
+	bh=xKEaLg0xeLxv/foHFiczwztCwAn6AMmjzHxBpNaINag=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=lO+miZbRb2Y8eqRQ0+l/4WyZM9wg67+RX8pFbgqZkhb2GPsNNWI90GSZz589kQenRJaNWiVR4r5/P/aRiQBBtcDlLtzau4N/aPD4WF3vL42uzLUzFES7iWHHxh1Bs4uDB4vyV/Cy6hV28JC3/JlvWRghjHWh5k505KV32UOgd8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=MpcvTscH; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZiyjaarC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746504451; x=1778040451;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=XMH1sf/jQ7NhxwT03gZssmLPL9FfAGmAKafJvU5dz8E=;
-  b=ZiyjaarCfkUlsGRTa+4RnbnFpU3zAMUxGw1HN6/7VXHyrP5WlfsOkUlI
-   E3CJhsmtW50gMG6j0DHAGP5oM1Asrkocnm9FHfARNwpt/dG15iR0202md
-   FuTMrucdjfSYngrYWxgMurJYDaWuYB3FEI95ja/zkoWNW9w1QdknyV2+2
-   3ogiprNYAD6UcUbRPlLhS7lkzxSn5H8eMmQhmLFkUBfC+uVYmRJiZhx3C
-   QKv6Uu2LSsB6mGZinqrMHWtcGOdznd0wD/Dge6HK5M8uULl+K4DZ4krGc
-   jN+n/9dq9geRNu7Ybbe/cT6CtMD4K7//A2KacRD1Elpc1aN4xv9Eu4PXP
-   g==;
-X-CSE-ConnectionGUID: +y9z/tOVR/G6hNJuG9rg0Q==
-X-CSE-MsgGUID: OvJ+k4CCQ9+sm8Obp6w8gQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11424"; a="48289908"
-X-IronPort-AV: E=Sophos;i="6.15,265,1739865600"; 
-   d="scan'208";a="48289908"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 21:07:31 -0700
-X-CSE-ConnectionGUID: YEjB97ylRiCG5FKuLm5BqQ==
-X-CSE-MsgGUID: SkIHUOKHR9+DhRa7GZS22A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,265,1739865600"; 
-   d="scan'208";a="140611156"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 05 May 2025 21:07:29 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uC9aY-0006FB-2w;
-	Tue, 06 May 2025 04:07:26 +0000
-Date: Tue, 6 May 2025 12:06:26 +0800
-From: kernel test robot <lkp@intel.com>
-To: Jinjie Ruan <ruanjinjie@huawei.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	Linus Walleij <linus.walleij@linaro.org>
-Subject: arch/arm/include/asm/stacktrace.h:48:21: error: implicit declaration
- of function 'in_entry_text'
-Message-ID: <202505061113.kBQwKkqd-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="MpcvTscH"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 545M6YUq014186;
+	Tue, 6 May 2025 04:07:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	dBrQueunD29pwtZ7nyPlnH4tPT+aRDKtGtA0hlttyd0=; b=MpcvTscHxD2Qcx5N
+	KYwJ80/u2SB16OaOtUxnh4XyVHAK5xiX47WQvG71qh3Oj1jFsOVZd7C5mm3UEvPq
+	ynU4tH5zjb8w4QEgBpmzdt2xTmQm/mwSfDn/TbY2z96ANpfQpT7N1qEHVufk6IJ2
+	r4gS3zq1ixapSx9q95uZGwe9fjTh1kKpxhM0CYzkaQAgOK7pwWKHXRvwwRTtykwE
+	CZ5gXuq6805gALUEDdmYAPPBj4Fjxjo9ZNaB4hfYqiwgakteyXr7bpxHbeSiZDqt
+	2dU9N3GoVmqIQ/C4NdeJtsBlejEymA2EUEwEFCAzVWR1IW4CbFjs8NiKkVyuEpbi
+	DP3Ciw==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46f5u40tuq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 06 May 2025 04:07:09 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 546478fC002368
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 6 May 2025 04:07:08 GMT
+Received: from [10.239.155.136] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 5 May 2025
+ 21:07:03 -0700
+Message-ID: <42beadc3-4c90-4012-a019-dca2083d4c89@quicinc.com>
+Date: Tue, 6 May 2025 12:07:01 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] scsi: ufs: qcom: Map devfreq OPP freq to UniPro Core
+ Clock freq
+To: Avri Altman <Avri.Altman@sandisk.com>,
+        "quic_cang@quicinc.com"
+	<quic_cang@quicinc.com>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "mani@kernel.org" <mani@kernel.org>,
+        "beanhuo@micron.com"
+	<beanhuo@micron.com>,
+        "avri.altman@wdc.com" <avri.altman@wdc.com>,
+        "junwoo80.lee@samsung.com" <junwoo80.lee@samsung.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "quic_nguyenb@quicinc.com" <quic_nguyenb@quicinc.com>,
+        "quic_nitirawa@quicinc.com" <quic_nitirawa@quicinc.com>,
+        "quic_rampraka@quicinc.com" <quic_rampraka@quicinc.com>,
+        "neil.armstrong@linaro.org" <neil.armstrong@linaro.org>,
+        "luca.weiss@fairphone.com" <luca.weiss@fairphone.com>,
+        "konrad.dybcio@oss.qualcomm.com" <konrad.dybcio@oss.qualcomm.com>
+CC: "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "Manivannan
+ Sadhasivam" <manivannan.sadhasivam@linaro.org>,
+        "James E.J. Bottomley"
+	<James.Bottomley@HansenPartnership.com>,
+        open list
+	<linux-kernel@vger.kernel.org>
+References: <20250502042432.88434-1-quic_ziqichen@quicinc.com>
+ <20250502042432.88434-3-quic_ziqichen@quicinc.com>
+ <PH7PR16MB619617AE20ECBC06E548EC24E58D2@PH7PR16MB6196.namprd16.prod.outlook.com>
+Content-Language: en-US
+From: Ziqi Chen <quic_ziqichen@quicinc.com>
+In-Reply-To: <PH7PR16MB619617AE20ECBC06E548EC24E58D2@PH7PR16MB6196.namprd16.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=KcfSsRYD c=1 sm=1 tr=0 ts=68198aed cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10
+ a=v_nTldZyZx9e_q5U3aIA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: gjSWctVIkbPZxKujJFNy9qQrBVu4ugol
+X-Proofpoint-ORIG-GUID: gjSWctVIkbPZxKujJFNy9qQrBVu4ugol
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA2MDAzNiBTYWx0ZWRfX2aONhp2WPVi8
+ 7RZO/KoSbwwYg4v9XtEfSplGZm1xHT6IYLUd04wN5oi2d8jWLRVrjbm5l7QFBaxaCYkwEvzeA63
+ 6CAGUoI0XUlawWiZ0ABGn9KNTeDkWxaI9tFnMbts+69h0k7kct1wE3B+pfz2JMxOJ1aU06PuO8J
+ TEBWg1P/qgrrbG8L5+lCnA/P1t4oQCcWwY9ELifsI0Abb5rFebAjTnLcrK13v4Tral9sf3SkhKV
+ boFebGQCESxL17EBrwFyvlQA+ws3GCvlnZdSbxIlD8zDpgdNRpqSUMbZFeU5fy0LFgdbWhVwDJ/
+ 22kdyrqi6T7TFzLzpk1L8BLSDOzpNSPFuaCzEg94AzhWNopILnYfby3QhYhrpgwn6VzRO1W+Un5
+ qh2wd9jGFNhPS1Me56cP47nLVCiT5t0Olj6sB8FIyamBS3j0BQQ1e3PCkaz9UdNtsGgST/o+
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-06_02,2025-05-05_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 spamscore=0 suspectscore=0 bulkscore=0 mlxlogscore=905
+ phishscore=0 impostorscore=0 priorityscore=1501 malwarescore=0 adultscore=0
+ clxscore=1011 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505060036
 
-Hi Jinjie,
 
-FYI, the error/warning still remains.
+Hi Avri,
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   95d3481af6dc90fd7175a7643fd108cdcb808ce5
-commit: 2335c9cb831faba1a4efcc612886073b6f175fe4 ARM: 9407/1: Add support for STACKLEAK gcc plugin
-date:   10 months ago
-config: arm-randconfig-r071-20250506 (https://download.01.org/0day-ci/archive/20250506/202505061113.kBQwKkqd-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 8.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250506/202505061113.kBQwKkqd-lkp@intel.com/reproduce)
+On 5/2/2025 1:13 PM, Avri Altman wrote:
+>> +			cycles_in_1us = ceil(clk_freq, HZ_PER_MHZ);
+> Does ceil() is in fact DIV_ROUND_UP?
+>
+Yes , Both of these macro definitions, ceil(freq, div) and
+DIV_ROUND_UP(n, d), are used to implement the function of rounding up
+upwards by different implementation methods.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505061113.kBQwKkqd-lkp@intel.com/
+Ziqi,
 
-All errors (new ones prefixed by >>):
+> Thanks,
+> Avri
 
-   In file included from include/linux/stackleak.h:16,
-                    from kernel/stackleak.c:13:
-   arch/arm/include/asm/stacktrace.h: In function 'arm_get_current_stackframe':
->> arch/arm/include/asm/stacktrace.h:48:21: error: implicit declaration of function 'in_entry_text' [-Werror=implicit-function-declaration]
-      frame->ex_frame = in_entry_text(frame->pc);
-                        ^~~~~~~~~~~~~
-   In file included from include/linux/interrupt.h:21,
-                    from include/linux/trace_recursion.h:5,
-                    from include/linux/ftrace.h:10,
-                    from include/linux/kprobes.h:28,
-                    from kernel/stackleak.c:14:
-   arch/arm/include/asm/sections.h: At top level:
->> arch/arm/include/asm/sections.h:14:20: error: conflicting types for 'in_entry_text'
-    static inline bool in_entry_text(unsigned long addr)
-                       ^~~~~~~~~~~~~
-   In file included from include/linux/stackleak.h:16,
-                    from kernel/stackleak.c:13:
-   arch/arm/include/asm/stacktrace.h:48:21: note: previous implicit declaration of 'in_entry_text' was here
-      frame->ex_frame = in_entry_text(frame->pc);
-                        ^~~~~~~~~~~~~
-   cc1: some warnings being treated as errors
-
-
-vim +/in_entry_text +48 arch/arm/include/asm/stacktrace.h
-
-2335c9cb831fab Jinjie Ruan      2024-06-27  35  
-9865f1d46a68a5 Nikolay Borisov  2014-06-03  36  static __always_inline
-9865f1d46a68a5 Nikolay Borisov  2014-06-03  37  void arm_get_current_stackframe(struct pt_regs *regs, struct stackframe *frame)
-9865f1d46a68a5 Nikolay Borisov  2014-06-03  38  {
-9865f1d46a68a5 Nikolay Borisov  2014-06-03  39  		frame->fp = frame_pointer(regs);
-9865f1d46a68a5 Nikolay Borisov  2014-06-03  40  		frame->sp = regs->ARM_sp;
-9865f1d46a68a5 Nikolay Borisov  2014-06-03  41  		frame->lr = regs->ARM_lr;
-9865f1d46a68a5 Nikolay Borisov  2014-06-03  42  		frame->pc = regs->ARM_pc;
-fed240d9c97438 Masami Hiramatsu 2021-10-21  43  #ifdef CONFIG_KRETPROBES
-fed240d9c97438 Masami Hiramatsu 2021-10-21  44  		frame->kr_cur = NULL;
-fed240d9c97438 Masami Hiramatsu 2021-10-21  45  		frame->tsk = current;
-fed240d9c97438 Masami Hiramatsu 2021-10-21  46  #endif
-752ec621ef5c30 Li Huafei        2022-08-26  47  #ifdef CONFIG_UNWINDER_FRAME_POINTER
-752ec621ef5c30 Li Huafei        2022-08-26 @48  		frame->ex_frame = in_entry_text(frame->pc);
-752ec621ef5c30 Li Huafei        2022-08-26  49  #endif
-9865f1d46a68a5 Nikolay Borisov  2014-06-03  50  }
-9865f1d46a68a5 Nikolay Borisov  2014-06-03  51  
-
-:::::: The code at line 48 was first introduced by commit
-:::::: 752ec621ef5c30777958cc5eb5f1cf394f7733f4 ARM: 9234/1: stacktrace: Avoid duplicate saving of exception PC value
-
-:::::: TO: Li Huafei <lihuafei1@huawei.com>
-:::::: CC: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
