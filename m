@@ -1,121 +1,107 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8512016E863
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 18:30:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0184B25B69F;
+	Tue,  6 May 2025 18:32:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746556242; cv=none; b=SltAo7a6P9oIVnlcjnI7Eo6uNN6dtFEdzvw9e6p87eKPVqOvi7rIWgry1Rtb3zOczJjjuSdT0GQLNzSRcwNDZ+OSyvjpGoK7yroJsWWLtH9hgHkO/WOKla3tgfy2m4SM2n23GjSQO/4wLrImjK+4nS/V633A6Uh78EHGOwIFEIc=
+	t=1746556365; cv=none; b=tStak1JViE9WijLeZ0jBegLp276tXj4DttnAQNUStRehKF+Wnho8ycfCinVoSBV9D0nmpJdj8veupSNfP+u8HUCBgWhcexqdHOH2gm+Wo9tTkmFNfEDKEbkhr55YKfsygFzX16KVHTCnC0AY36TGKACfDgj69/wO/SKWpDxGSWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746556242; c=relaxed/simple;
-	bh=+CdqUnqpPsBT8Ikuvk2DGQ2ns+/CRvwQrNdVPzzfcVg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qoo9lLH3+CFxNxFF/QRJFFryUixqZCm2icr5oooKaE8Lk/D3szHYeI57ZeSoJiMzy8yCwemGwMUQsaAS4amsAi08UjXb+gDvNQ1kIle4tVM0I+KxfaCWjdUcCdkOlW84PUlSWaoiRomyPtlRgN3chFLr/KTuiPaDoJZ+sygodso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=Bt8VNeLV; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ionos.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
+	s=arc-20240116; t=1746556365; c=relaxed/simple;
+	bh=7Lz99HJQmL5ge/V85UbT5qmtj6szgrjLvNLhcChVRBM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=F4iN5PHpGB9gqxMahJxjs946cySBTOVJGzLae7nvDcJj0LJcUN88NxPpbRjJVmRveOgW8fiQcMrY0BMiuDsVMtZ+6YgCPI7alKU1gws7GOqjBEIGyDrFsgKgMbrQsLXJ5FjYboWBlW2bdEgK6qfWEmALaBTqc2dp0KyN16tnIcM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=skdiQNGX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="Bt8VNeLV"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-acb5ec407b1so1070873866b.1
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 11:30:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1746556238; x=1747161038; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=z/EPECJ8zPRZ8QavbMmpEG45MjwM0JB0cVDbmkrf1s8=;
-        b=Bt8VNeLV0NzvVBCjX2Sr3TI+II6n5dl9fkJ17LH6fXrJxxR7xjR9vglfHJsXW3qXwo
-         Q4Jk0CYD/rWpJBQ8RG7c5RsMeVCV48qHXskYA6zlHXsmKneWOk0T0zPSPP0HEurZoQV1
-         XlGktJcArEU9MJ6cRtniPCvlvHltpINsq/5vJaXPjifYf3Lo96KbsebX6gR3LjSB75OQ
-         G5+CYuF/WmCXhEq6UFL50qnUBpRIitg4IWmRZ5jHv0IsBaaH2hPHNzSXMNcWbDXOUp87
-         08USDPULgJFbjlnhUXF9naeXAuO5K7aiKF8rjmv5B2cnMcutxUPVI3oWTS3M5++rLMCl
-         mscA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746556238; x=1747161038;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=z/EPECJ8zPRZ8QavbMmpEG45MjwM0JB0cVDbmkrf1s8=;
-        b=GVGN/ZwstmW7uA6kWqZG5gglGlyPN5p69ZSzk1/99Z53TbSU2c5xDkfUV3KAafP+V3
-         adGZbLAQ7huPpmg3d82DotNNHsBJdG4r4Gvs++k1PpjxdwxTtlbXsbctKCMmG6p5e9Vg
-         WAp2FEPoc6FpZlCeoJGjpNDqEI9KkhkFbewQjvkcRInppB8CjlXDTMrROsK1DvD//AN/
-         TMib29KOASd4eYNAbFdCqR6mup1SEqJvGloEiUMZRxoG7W3P6iiINA7Ru/+B/zTQkP/4
-         SWGkx6u63uGu+ocZH2S+4NLYn3YRqn+Uou+xT/5duvbzU4UoRLBLEjcOkCuVzT+NAGMV
-         gwWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVTY1hi+ktSpQmP1WZgi9TpNuE0upyW4W6YOuAhGz+W9h4PSCq5k9CshMFZg4OnU6oMxlAKwpsGNPqg5nY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2iEo38LWhWmNEDfn6c8/SF/V0LiCwfbrqccF+6GcnyaCI5EjG
-	glFtctYg6nwACb1fhKCTf17VjYJdBujyIJvVvRwhtkDsQlENNRVWY06a/Zcq3MtjrAim9/IClUi
-	9vi3wG6vEeByEPg/jLgdN00JTs9VCzXRur0J/1Ladk8EaIUqlOrwwwA==
-X-Gm-Gg: ASbGnctEB3b9hcVQTY7ynZ2DGlO75ubl7o9Z2LxNbvdYuYMpQ0wChYUKnlnftEM7zRj
-	XiZo/rkUqdf4+MItZGg0oEDnpO9hfMl9qHMkZY0Apx8WQUoqjYJCaBO/GRhRVE/fRp85B6HBVrs
-	UYwjTnz/K55X5eQla9vKQNlDnDq+tCDeLzTiHtoMXIbo3nx4NNLHs=
-X-Google-Smtp-Source: AGHT+IHfpF8X85L8l37c8wqm972832g7AzBMTXZ0/O2DLMgWY8M7Tg4kQ38PIs5PLwaaxC6lpc4jChwuU/VtKyzOWhU=
-X-Received: by 2002:a17:907:3f9b:b0:aca:d5e9:9ce with SMTP id
- a640c23a62f3a-ad1e8befedbmr44412866b.9.1746556237717; Tue, 06 May 2025
- 11:30:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="skdiQNGX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB5D6C4CEE4;
+	Tue,  6 May 2025 18:32:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746556364;
+	bh=7Lz99HJQmL5ge/V85UbT5qmtj6szgrjLvNLhcChVRBM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=skdiQNGX5sMlAeiLXmaXYDLn4lFoA3vaNTxUnSZOShMaomDRSiL/E6X/USldt+pbX
+	 uIYVWvwog9OI24OTc+lTM5VpgSGf+FLCFAGOGgjPcp5awA424ReYBr2iNXQKtvRs5h
+	 FKA58kPfLYqDsyF8ls8p772P5QgmNbimNYCemMJdM05bgRcDKAPBBrPcYqG1MW7Rua
+	 beY//w4yfAPeDsjgxQ6BFIt5Lwh5bihzCIfQJXBPi4MxFdvIf7194HQ0578oa1zvXR
+	 WXnT+r7dDZIg23E6cPBOAlzF8gOhpxlboeQ94iVfKKmlexJjaD3daMioz6A6xZoEUm
+	 7HJw8Gj9QCquA==
+Message-ID: <fe324018-542a-47c8-85cf-5ef6c66d1b65@kernel.org>
+Date: Tue, 6 May 2025 20:32:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250506164017.249149-1-max.kellermann@ionos.com> <2025050600-economist-display-2d25@gregkh>
-In-Reply-To: <2025050600-economist-display-2d25@gregkh>
-From: Max Kellermann <max.kellermann@ionos.com>
-Date: Tue, 6 May 2025 20:30:26 +0200
-X-Gm-Features: ATxdqUEdIBJPrcapfIha2IuGQw-8Qf4QDzQ_2wFzEFJgImtWYfq65b-RgqZfE4g
-Message-ID: <CAKPOu+8c4Z_Biie3R6LP3pz6u-bpzBZjfoWv4XAQ5AreziDccg@mail.gmail.com>
-Subject: Re: [PATCH] fs/kernfs: implement STATX_BTIME
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: tj@kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 6/9] arm64: defconfig: Enable CIX SoC
+To: Peter Chen <peter.chen@cixtech.com>, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, cix-kernel-upstream@cixtech.com,
+ maz@kernel.org, kajetan.puchalski@arm.com, sudeep.holla@arm.com,
+ eballetb@redhat.com
+References: <20250506090752.3695666-1-peter.chen@cixtech.com>
+ <20250506090752.3695666-7-peter.chen@cixtech.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250506090752.3695666-7-peter.chen@cixtech.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 6, 2025 at 7:44=E2=80=AFPM Greg KH <gregkh@linuxfoundation.org>=
- wrote:
-> You did just make this structure bigger, which has a real effect on many
-> systems (think 32bit s390 systems with 30k disks.)  Are you sure this is
-> really needed?
+On 06/05/2025 11:07, Peter Chen wrote:
+> - Enable CIX SoC support at ARM64 defconfig
+> - Enable CIX mailbox
+> At CIX SoC platforms, the clock handling uses Arm SCMI protocol,
+> the physical clock access is at sub processor, so it needs to enable
+> mailbox by default.
+> 
 
-No, it's not "needed", and I understand that you question any increase
-in struct sizes.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-If you really worry about memory usage, kernfs has a lot of potential
-for optimizations. One simple example: embed struct kernfs_node into
-struct kobject/cgroup_file instead of having a pointer. That would
-save 8 bytes plus the overhead for a memory allocation (i.e. that
-alone would save more than my patch adds). Would you accept such an
-optimization, if I were to submit a patch?
-
-> What userspace tools want this in such that they can not determine this
-> any other way?  What do they want this information for?  What is going
-> to depend and require this to warrent it being added like this?
-
-We have a process that reaps empty cgroups and reads resource usage
-statistics (https://github.com/CM4all/spawn and
-https://cm4all-spawn.readthedocs.io/en/latest/#resource-accounting),
-and this process would like to know when that cgroup was created. That
-means we can measure the lifetime duration of the cgroup, and for
-example we can estimate the average CPU usage over the whole lifetime.
-Using the cgroup's btime is the natural canonical way to determine
-that time stamp, but cgroupfs doesn't implement it.
-
-Sure, our container manager could store the birth time in an xattr ...
-but that feels like a lousy kludge. If we have a concept of btime, I
-should use that.
-
-(It's okay if you don't like the patch and it doesn't get merged - as
-always, I can happily keep it in our private kernel fork. I'm only
-offering my work to everybody, because I'm a strong believer in open
-source.)
-
-> And knowing when a device shows up in the system isn't that, sorry, the
-> kernel log shows that for you already, right?
-
-That was a theoretical example that's of no interest for me currently
-(just a side effect of my patch), but it might be interesting for
-others.
-But are you suggesting that programs should read and parse the kernel
-log for that? I don't think any program should ever do that.
-
-Max
+Best regards,
+Krzysztof
