@@ -1,93 +1,112 @@
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2CEB28136B
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 13:51:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D58E1280A58;
+	Tue,  6 May 2025 13:52:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746539515; cv=none; b=juUlNNCvnKR5EB4/2Du3c2hw/Ywhwg1x5WtKG9WeIFfSh0bTVfNTrVG4o5Nt1PZDOhqqdTLQM9RrhmobgJfpvgHDXDbvEbAEmx3U31OspKmoFifrnsTNiTca11Pb6w5nGET01FrubYqR+qUk3RUVQ2VjHcccsFA0esyCDGzkp+I=
+	t=1746539533; cv=none; b=jBaJMdPmk21IEVwYCDrF8IuRQhuiqiyHB7165bRIaYbWun/CmbVkBndXpLzRAX15B0XLtrRDIRNA4gTZjtuNyC6NOSmyKfuSAnTjUXO5Dv5LJ/HGy4CjkS+S5xzyXqqimk/MOso6Osd1Vyo06PGeRgKOTCiz0enVGbOguVG8PbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746539515; c=relaxed/simple;
-	bh=VN8kNRaE7xqcUHXaKiKW+pGLcT2hFYDK2BhLpgUv/4k=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=sQ7E+V3VseOzf50uvBnZo4AUL/51peILHctCrrn+ZcW/g/4u37faCDY6K6zxBjepmcg8AIw35FW2kY/mvvdwX2R3g4rhTeC8iWFdE20MYYZmHj2H+G24sHK7xWOFlmCzzurc/xBgsz3vVvR33fdalcxzHgUVooBP1th8srqN3nE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-	id 0192092009C; Tue,  6 May 2025 15:51:51 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by angie.orcam.me.uk (Postfix) with ESMTP id EF14F92009B;
-	Tue,  6 May 2025 14:51:51 +0100 (BST)
-Date: Tue, 6 May 2025 14:51:51 +0100 (BST)
-From: "Maciej W. Rozycki" <macro@orcam.me.uk>
-To: Borislav Petkov <bp@alien8.de>
-cc: "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>, 
-    linux-kernel@vger.kernel.org, "Ahmed S . Darwish" <darwi@linutronix.de>, 
-    Andrew Cooper <andrew.cooper3@citrix.com>, 
-    Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@kernel.org>, 
-    Dave Hansen <dave.hansen@linux.intel.com>, 
-    John Ogness <john.ogness@linutronix.de>, 
-    Linus Torvalds <torvalds@linux-foundation.org>, 
-    Peter Zijlstra <peterz@infradead.org>, 
-    Thomas Gleixner <tglx@linutronix.de>, 
-    John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Subject: Re: [RFC PATCH 0/15] x86: Remove support for TSC-less and CX8-less
- CPUs
-In-Reply-To: <20250505205405.GNaBklbdKLbadRATbr@fat_crate.local>
-Message-ID: <alpine.DEB.2.21.2505060059010.31828@angie.orcam.me.uk>
-References: <20250425084216.3913608-1-mingo@kernel.org> <alpine.DEB.2.21.2505050944230.31828@angie.orcam.me.uk> <98C88CE8-C3D5-4B75-8545-71DD47C67614@zytor.com> <alpine.DEB.2.21.2505051356340.31828@angie.orcam.me.uk> <1E50C160-EB89-4C5C-B9F0-6441026EE380@zytor.com>
- <20250505205405.GNaBklbdKLbadRATbr@fat_crate.local>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+	s=arc-20240116; t=1746539533; c=relaxed/simple;
+	bh=1VOwQsJ3k5PogOdf1PKk0ppF8swsX//rwEr+ZjgTbKw=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mvtwVupqJuUmeAemriQKOOJ0YtK/7BXmbN0n4y88Z7ZzGiyXI5Dn50eiJ6IKXmXY33G7Z8FYjYOfNPpIYSvWQXnjDfrB8cZJIYcbVPE0HRD+S64vC20+nzP8TtR9aq2nY9sv75EHBL3RojKknqDHF86/pX/+KyiU6rLZp7sUpJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZsKZP1X96z6K8xh;
+	Tue,  6 May 2025 21:51:57 +0800 (CST)
+Received: from frapeml500003.china.huawei.com (unknown [7.182.85.28])
+	by mail.maildlp.com (Postfix) with ESMTPS id 100B31402F3;
+	Tue,  6 May 2025 21:52:08 +0800 (CST)
+Received: from localhost (10.47.68.20) by frapeml500003.china.huawei.com
+ (7.182.85.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 6 May
+ 2025 15:52:07 +0200
+Date: Tue, 6 May 2025 14:52:01 +0100
+From: Alireza Sanaee <alireza.sanaee@huawei.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+CC: <devicetree@vger.kernel.org>, <robh@kernel.org>,
+	<jonathan.cameron@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
+	<mark.rutland@arm.com>, <shameerali.kolothum.thodi@huawei.com>
+Subject: Re: [PATCH v2 6/6] of: of_cpu_phandle_to_id to support SMT threads
+Message-ID: <20250506145201.00000f50.alireza.sanaee@huawei.com>
+In-Reply-To: <48fd85e7-4940-4bfd-943d-3c9674828a6c@kernel.org>
+References: <20250502161300.1411-1-alireza.sanaee@huawei.com>
+	<20250502161300.1411-7-alireza.sanaee@huawei.com>
+	<20250504-acoustic-skink-of-greatness-1e90ac@kuoka>
+	<c2ace0e9-6565-44c3-84eb-555707f84509@kernel.org>
+	<20250506112337.00006918.alireza.sanaee@huawei.com>
+	<78797f80-bdd6-49ef-b1cf-ffe4dc1dc5f6@kernel.org>
+	<20250506143125.00002cae.alireza.sanaee@huawei.com>
+	<48fd85e7-4940-4bfd-943d-3c9674828a6c@kernel.org>
+Organization: Huawei
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
+ frapeml500003.china.huawei.com (7.182.85.28)
 
-On Mon, 5 May 2025, Borislav Petkov wrote:
+On Tue, 6 May 2025 15:36:05 +0200
+Krzysztof Kozlowski <krzk@kernel.org> wrote:
 
-> > One thing that happened with i386 was that we found out that the only
-> > remaining "users" were people dragging out an old machine to test if the
-> > kernel still booted.
+> On 06/05/2025 15:31, Alireza Sanaee wrote:
+> >>>>    
+> >>>
+> >>> Hi Krzysztof,
+> >>>
+> >>> There are some existing bindings in which this pattern has been
+> >>> used, so I don't think I am changing binding really.
+> >>>
+> >>> https://www.kernel.org/doc/Documentation/devicetree/bindings/thermal/thermal-zones.yaml#:~:text=cooling%2Ddevice%20%3D%20%3C%26CPU0%203%203%3E%2C%20%3C%26CPU1%203%203%3E%2C    
+> >> I do not understand this - it is not cpus phandle. Please respond
+> >> to specific comment: how many arguments are allowed by dtschema
+> >> for cpus?  
+> > 
+> > Hi Krzysztof,
+> > 
+> > If you mean checking
+> > here? https://github.com/devicetree-org/dt-schema/blob/e6ea659d2baa30df1ec0fcc4f8354208692489eb/dtschema/schemas/cpu-map.yaml#L110
+> > 
+> > There is no parameters allowed at this point for cpu phandles in the
+> > cpu-map tree. Of course, this is different than what's been
+> > implemented in the patchset.  
+> Hm, ok, I thought you are adding this for cpu-map, but if not, then
+> where are the bindings for this ABI?
 > 
-> Follow this thread:
+> BTW, share your DTS so we can be sure that it is properly validated
+> against bindings.
+
+No wait, I am adding this to cpu-map indeed, I meant the code is
+different from what's available in the dt-schema, meaning that there is
+a mismatch like what you pointed.
+
+Based on your comments, my conjecture is that I will need to include dt
+binding anyways.
+
+SMT threads should be represented in the reg array of CPU nodes, and
+will need to be addressed via an extra parameter specifying an index in
+the reg array. 
+
+There are various places in the kernel where we point to
+CPU node using those phandles. Now the first place that we are trying to change is cpu-map for
+enabling SMT resource sharing, and that probably means I should update
+the binding related to that.
+
+Hope that clarifies.
+
+Thanks,
+Alireza
+
 > 
-> https://lore.kernel.org/r/CANpbe9Wm3z8fy9HbgS8cuhoj0TREYEEkBipDuhgkWFvqX0UoVQ@mail.gmail.com
-> 
-> People booting latest kernel on 486 without CPUID support. 
+> Best regards,
+> Krzysztof
 
- No such hardware here:
-
-processor	: 0
-vendor_id	: GenuineIntel
-cpu family	: 4
-model		: 3
-model name	: 486 DX/2
-stepping	: 5
-fdiv_bug	: no
-f00f_bug	: no
-coma_bug	: no
-fpu		: yes
-fpu_exception	: yes
-cpuid level	: 1
-wp		: yes
-flags		: fpu vme cpuid
-bugs		: itlb_multihit
-bogomips	: 32.56
-clflush size	: 32
-cache_alignment	: 32
-address sizes	: 32 bits physical, 32 bits virtual
-power management:
-
-Sadly it's not one with 4MiB page support (that would be stepping 6).
-
-> There's stable and older kernels, those folks can use those and that's it.
-
- Doesn't work for ongoing driver maintenance (and yes, distractions such 
-as this only keep me from taking care of outstanding stuff, like figuring 
-out why the defxx driver reproducibly crashes with my POWER9 box running 
-glibc verification remotely for my RISC-V box; it's all intertwined and an 
-issue in one place affects other ones, sigh).
-
-  Maciej
