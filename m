@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 761BA285418
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 17:09:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 487F2286D61
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 17:09:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746551392; cv=none; b=bSuyUvA16S8RLmhM/Be2UgLHL/lqfULoUa3F0FUnDt0tc9757knupLmPZWLE96HvBj9S7FKZZuDzXJCEUuaJV9OYt5T/pB7AEx6clWjOErYPDeSdcPELa6Ge0WLUV04m+GNLSf5jipogh/K7K2PEvHuRDExZpbfkn2uSbY+WG34=
+	t=1746551395; cv=none; b=NMstzAlL9VOHrrWybhuz41BVfIVs7IJrD1xeSvH6PU+CD3SoxgSwyW3UYBjYhsLhKmOeCaa6cqwHboxeyThSar9VK0fgQumHK1b3IZUNKOvPNgfE0EJo98pNUvX83Jr/UqEGb9vCBMesMWs6DKgYXvFyPgh21062LC8xSuAGMsQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746551392; c=relaxed/simple;
-	bh=MA5YI8z/iGWOl3p8sOB/lvDqAGhCyqXI6W1Vls0V+d8=;
+	s=arc-20240116; t=1746551395; c=relaxed/simple;
+	bh=wAoDI1YaN5dxg6WT9WRKd3hmOWwjwJ7b0sdWyMGaRTo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DlG/ZcSkKnX9uoRDOJrflQ21Y8FrFIlmBClKzIApBSXFwXTUqmTzXfCrPcOTSi1kJox/UBEFLiViWRaQCXa97YI4bM9O8v11YqK+cbU3IHmlMG8GDmmmMIlWQ0GZc7sqD4s1FaGOTBL1zjMhuWvP9lad9IYI+PLaZRxSOUFQibw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XfOUMI7d; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=WjnMjCl/dW3rfF80Po3y5NXp6sPkE4oRWpvzTMEECTTp4TFNB9n+xsbI8ZbrZLg9RCHtpl/4oeuXWOnGiZWXyR5nbqH/fHitBbzraYUzIX3OpkkbJ9fRshGJu8PR+H6Ul3xZ6fjYQsNLnuUxl/8JBbb/nLexarQsJf2dJpVlbFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g8NQGt8A; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XfOUMI7d"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17805C4CEE4;
-	Tue,  6 May 2025 17:09:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g8NQGt8A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56656C4CEEB;
+	Tue,  6 May 2025 17:09:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746551391;
-	bh=MA5YI8z/iGWOl3p8sOB/lvDqAGhCyqXI6W1Vls0V+d8=;
+	s=k20201202; t=1746551395;
+	bh=wAoDI1YaN5dxg6WT9WRKd3hmOWwjwJ7b0sdWyMGaRTo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XfOUMI7dwzeL8d2vC5bpEJF+80UZWAUbqRYIOdrUeW9BGpHFDChoYmis4ZBEsVi+G
-	 pwQCwQN+vX9YLjlpD1o5Ik7Btrud5XQNmmi1JBECm1nMqhsWk7N8DXNOUE0za6gEXp
-	 EMBKL6UYX1msLnwT5xuuwa3PHuRaVEsqRKFplbj/+XCdn/apFqo40/HoURQWTqQ41R
-	 2ks2qzRtZd8+mLs7ajWIKcDRH49xV2Rvkw7Mp4qKluGWpHG9KcBUbm1k4MktjxjR/+
-	 4sR9PTi0TtPvZZ2vZNogifkTMboq1GcZbf7ufRKqRy0uj7a3KPN/z6uN8vvZipvEK4
-	 WNTYNI0lbz+ag==
+	b=g8NQGt8AhQZNFVjxif33zGhL2+xyjke+lv0S5p0EHJhVu4ydEQq+cQcjszoN0pq3w
+	 G3ll0Odg1IcZHYmcvWQvr2KPcdhwwBCTAnF4/+EOaYGrm9Jj0UynFJ0nuN+BLOr2jB
+	 cxfoJ00BQR5MRl91seVgKPzLj0qtJxkzYp4ZpXJhm2Wm7n4psfLMnydFQl2jgq5XKe
+	 zLyL+6D5FGnxDUkvAS4zuCualKmduUAK5ArD5WAS0PD55ztud5c38a1qLE7s009W3P
+	 MafrOO8F4D01Q0rlw5TczX6IJwgMgx97PayyMcxoO/xKwBJBbZ9yxc8igPcYmuMtsx
+	 qjcEPKaNntEaQ==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: "H . Peter Anvin" <hpa@zytor.com>,
@@ -40,9 +40,9 @@ Cc: "H . Peter Anvin" <hpa@zytor.com>,
 	David Woodhouse <dwmw@amazon.co.uk>,
 	Masahiro Yamada <yamada.masahiro@socionext.com>,
 	Michal Marek <michal.lkml@markovi.net>
-Subject: [PATCH 07/15] x86/tools: insn_sanity.c: Emit standard build success messages
-Date: Tue,  6 May 2025 19:09:16 +0200
-Message-ID: <20250506170924.3513161-8-mingo@kernel.org>
+Subject: [PATCH 08/15] x86/kconfig/64: Enable the KVM host in the defconfig
+Date: Tue,  6 May 2025 19:09:17 +0200
+Message-ID: <20250506170924.3513161-9-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250506170924.3513161-1-mingo@kernel.org>
 References: <20250506170924.3513161-1-mingo@kernel.org>
@@ -54,13 +54,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The standard 'success' output of insn_decoder_test spams build logs with:
-
-  arch/x86/tools/insn_sanity: Success: decoded and checked 1000000 random instructions with 0 errors (seed:0x2e263877)
-
-Prefix the message with the standard '  ' (two spaces) used by kbuild
-to denote regular build messages, making it easier for tools to
-filter out warnings and errors.
+These days all distros enable KVM, and since the x86 defconfig
+aims to be a distro kernel work-alike with fewer drivers and
+a shorter build time, enable the KVM host in the defconfig too.
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Cc: Ard Biesheuvel <ardb@kernel.org>
@@ -71,25 +67,25 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
 Cc: Michal Marek <michal.lkml@markovi.net>
 ---
- arch/x86/tools/insn_sanity.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/configs/defconfig.x86_64 | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/x86/tools/insn_sanity.c b/arch/x86/tools/insn_sanity.c
-index 213f35f94feb..e743f0ea01ee 100644
---- a/arch/x86/tools/insn_sanity.c
-+++ b/arch/x86/tools/insn_sanity.c
-@@ -253,9 +253,9 @@ int main(int argc, char **argv)
- 	}
- 
- 	fprintf((errors) ? stderr : stdout,
--		"%s: %s: decoded and checked %d %s instructions with %d errors (seed:0x%x)\n",
-+		"  %s: %s: Decoded and checked %d %s instructions with %d errors (seed:0x%x)\n",
- 		prog,
--		(errors) ? "Failure" : "Success",
-+		(errors) ? "failure" : "success",
- 		insns,
- 		(input_file) ? "given" : "random",
- 		errors,
+diff --git a/arch/x86/configs/defconfig.x86_64 b/arch/x86/configs/defconfig.x86_64
+index 7d7310cdf8b0..156e9490e29b 100644
+--- a/arch/x86/configs/defconfig.x86_64
++++ b/arch/x86/configs/defconfig.x86_64
+@@ -50,6 +50,11 @@ CONFIG_CPU_FREQ_DEFAULT_GOV_USERSPACE=y
+ CONFIG_CPU_FREQ_GOV_ONDEMAND=y
+ CONFIG_X86_ACPI_CPUFREQ=y
+ CONFIG_IA32_EMULATION=y
++CONFIG_KVM=y
++CONFIG_KVM_INTEL=y
++CONFIG_KVM_AMD=y
++CONFIG_KVM_XEN=y
++CONFIG_KVM_MAX_NR_VCPUS=4096
+ CONFIG_KPROBES=y
+ CONFIG_JUMP_LABEL=y
+ CONFIG_MODULES=y
 -- 
 2.45.2
 
