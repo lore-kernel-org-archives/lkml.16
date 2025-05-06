@@ -1,143 +1,143 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFB5D283FF6;
-	Tue,  6 May 2025 16:00:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFB3A283FF5
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 16:00:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746547207; cv=none; b=VSmZAQQU82fVS+Dv9y7WKZ7syBvFmrmj9KKBlmDYf+ydf7Kf3wVwCP8d9OpmLuZ6CMHNdI2Rwl95+ZbLY8zz0koXwxm9ZQ9RVOi1qs4HRDVGK3Y3tek7C1BKS2ONc6UAH+MgIfVGEtdzwx4oBaRYCwDvS2GllCbVSUXqipx48GQ=
+	t=1746547209; cv=none; b=ZcneadBt1P0B+T3WmiHMp4Izf/CBXB3sMBd3PNPZjSGKITgU/3PefSH5DuQLWnaH1qu5n614q/LyXnIHSngnyFvKarEkI2/UIzcHLZO5IApWdh4zeUuCalDJVQz1AT76UyYrpC1hKs0LN1Xph8/9XuG3ZrN9Qx/pZZDR291jQ8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746547207; c=relaxed/simple;
-	bh=szbW/T48e07o7nsdAtspJ3TqCa91gXQ5dwM1QNp7ZX4=;
+	s=arc-20240116; t=1746547209; c=relaxed/simple;
+	bh=O27YcR0gbPT+9EysSOV0xfoQF1dzy4G2vSwjKofllSw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g0d4Hh5r+g9mkyMeI2NaWOuisu9tMNsPi6ioQp1/JosDRvDw9cqVD+iNz8/dzFXnPobnxAQoWthRd74L2vDQsRMcp+ohqnWvTzxP+3KC4SWuJFK1rZLKG4XLA1VUnGi/kZwok15HHBoNlUrQMuxbmAz+4lrQf066OlYTLqMBmVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MGt6rFDo; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=EWzYu/wazMHIEnkZtKVX6/6DeZXUi4XTYX5ER/1eBaPPAs4iWiWuE9Cw0xkLivuuiyI/C8y402H8UoRiUF7fWQ2zjf9sIdtcIKVZHuc41pZVcQq75R9vr9O3roqDRdulLsZ+OPBq+2EjwTcxHoFGWv37yrzy5ohkwpTmytUBWqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QkfnVYbN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MGt6rFDo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8E42C4CEE4;
-	Tue,  6 May 2025 16:00:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QkfnVYbN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F1D1C4CEEB;
+	Tue,  6 May 2025 16:00:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746547206;
-	bh=szbW/T48e07o7nsdAtspJ3TqCa91gXQ5dwM1QNp7ZX4=;
+	s=k20201202; t=1746547208;
+	bh=O27YcR0gbPT+9EysSOV0xfoQF1dzy4G2vSwjKofllSw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MGt6rFDota1d2WLpw7YKaQYlev1YgRkYOc97GjSpPzuQaqANHfObtJFxL0NbA9jpV
-	 fqrNNUZV6D7tKBJK6R5rWmTPS9NmzWrBJuGVo32+kLhVmLb41NkVmC1cWPEmfC4y3Q
-	 DcDYZDkvzEftF40AffVwywKhmBK5CyHg3Ka1heSiEfTi6SGf+mgEe63VThumLnTS0d
-	 NMiksZH4+DB/niW4uVrKhq+W5sayApdu9lNAXx8fPSdFSBLf1s+e9ErWFxTYPlJ9uS
-	 R54vHMJTjmcSfkDO3TsLYJazLU29CDW04BydjOh/w93ZxqsULPkQZsCJ9OPvz+FxZd
-	 1JOwKPeANPx8g==
-Date: Tue, 6 May 2025 16:59:58 +0100
-From: Simon Horman <horms@kernel.org>
-To: Larysa Zaremba <larysa.zaremba@intel.com>
-Cc: Jacob Keller <jacob.e.keller@intel.com>,
-	intel-wired-lan@lists.osuosl.org,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	Tatyana Nikolova <tatyana.e.nikolova@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-	Lee Trager <lee@trager.us>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Sridhar Samudrala <sridhar.samudrala@intel.com>,
-	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
-	Mateusz Polchlopek <mateusz.polchlopek@intel.com>,
-	Ahmed Zaki <ahmed.zaki@intel.com>, netdev@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Karlsson, Magnus" <magnus.karlsson@intel.com>,
-	Emil Tantilov <emil.s.tantilov@intel.com>,
-	Madhu Chittim <madhu.chittim@intel.com>,
-	Josh Hay <joshua.a.hay@intel.com>,
-	Milena Olech <milena.olech@intel.com>, pavan.kumar.linga@intel.com,
-	"Singhai, Anjali" <anjali.singhai@intel.com>
-Subject: Re: [Intel-wired-lan] [PATCH iwl-next v2 01/14] virtchnl: create
- 'include/linux/intel' and move necessary header files
-Message-ID: <20250506155958.GT3339421@horms.kernel.org>
-References: <20250424113241.10061-1-larysa.zaremba@intel.com>
- <20250424113241.10061-2-larysa.zaremba@intel.com>
- <20250428161542.GD3339421@horms.kernel.org>
- <10fd9a4b-f071-47eb-bdde-13438218aee9@intel.com>
- <20250430085545.GT3339421@horms.kernel.org>
- <aBhvNfWP-Rmec3Ci@soc-5CG4396X81.clients.intel.com>
+	b=QkfnVYbNeaNC58aQpS2nv9XBCx/wAVF20aFZmHSi1++J/3Txpco/E+td7mjVFx6XP
+	 m7NXivaTwMkh6R/gRgR2HnRmWbAYG7SnXVzb1mfcgR27YeD5AMEV9w4DBr4q9tJzbE
+	 fA2KgRDglVSy2peZJ+eC1pXPqXOrM2CXQUexdTLeO/lbV/4shR1kZhk9Q4KBYCEpY6
+	 1xGGSYd/Ei4hOoHNtj2ZIdJbiiyd9By4Uuw//nlHmE/qamR1bP5mRMDaBjp5MaSDTT
+	 xFfo2eNO9RlXjZ3U31T+g4lsmHr2DJZhX3F/wAUvv/9Ohb7/xUDlTWJQQtXn7KXV54
+	 orqDRT1Pj8p8A==
+Date: Tue, 6 May 2025 18:00:05 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+	Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH v4 5/5] timers: Exclude isolated cpus from timer migation
+Message-ID: <aBoyBbDDslnly60w@localhost.localdomain>
+References: <20250506091534.42117-7-gmonaco@redhat.com>
+ <20250506091534.42117-12-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <aBhvNfWP-Rmec3Ci@soc-5CG4396X81.clients.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250506091534.42117-12-gmonaco@redhat.com>
 
-On Mon, May 05, 2025 at 09:56:37AM +0200, Larysa Zaremba wrote:
-> On Wed, Apr 30, 2025 at 09:55:45AM +0100, Simon Horman wrote:
-> > On Tue, Apr 29, 2025 at 11:47:58AM -0700, Jacob Keller wrote:
-> > > On 4/28/2025 9:15 AM, Simon Horman wrote:
-> > > > On Thu, Apr 24, 2025 at 01:32:24PM +0200, Larysa Zaremba wrote:
-
-...
-
-> > > >> diff --git a/MAINTAINERS b/MAINTAINERS
-> > > >> index 657a67f9031e..2e2a57dfea8f 100644
-> > > >> --- a/MAINTAINERS
-> > > >> +++ b/MAINTAINERS
-> > > >> @@ -11884,8 +11884,8 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tnguy/next-queue.git
-> > > >>  F:	Documentation/networking/device_drivers/ethernet/intel/
-> > > >>  F:	drivers/net/ethernet/intel/
-> > > >>  F:	drivers/net/ethernet/intel/*/
-> > > >> -F:	include/linux/avf/virtchnl.h
-> > > >> -F:	include/linux/net/intel/iidc.h
-> > > >> +F:	include/linux/intel/iidc.h
-> > > >> +F:	include/linux/intel/virtchnl.h
-> > > > 
-> > > > I'm not sure that I understand the motivation for moving files out of
-> > > > include/linux/net, but I guess the answer is that my suggestion, which
-> > > > would be to move files into include/linux/net, is somehow less good.
-> > > > 
-> > > > But if file are moving out of include/linux/net then I think it would
-> > > > make sense to make a corresponding update to NETWORKING DRIVERS.
-> > > > 
-> > > > Also, include/linux/intel, does feel a bit too general. These files
-> > > > seem to relate to NICs (of some sort of flavour or another). But Intel
-> > > > does a lot more than make NICs.
-> > > > 
-> > > 
-> > > 'include/linux/net/intel' seems fine to me. I agree with moving
-> > > virtchnl.h there since it is quite clear that any historical ambitions
-> > > about AVF being vendor agnostic are long dead, so having it in its own
-> > > 'non-intel' folder is silly.
-> > > 
-> > > Strictly speaking, I think the goal of moving the files is due to the
-> > > fact that a lot of the core ixd code is not really network layer but
-> > > instead PCI layer.
-> > 
-> > Sure. I was more thinking out loud in my previous email than requesting any
-> > action. Thanks for filling in my understanding of the situation.
-> >
-> 
-> Olek suggested this because intel was the only resident in include/linux/net and 
-> include/linux/intel was vacant.
+Le Tue, May 06, 2025 at 11:15:40AM +0200, Gabriele Monaco a écrit :
+> @@ -1472,15 +1473,24 @@ static int tmigr_cpu_unavailable(unsigned int cpu)
 >  
-> > But could we please consider updating NETWORKING DRIVERS so
-> > that get_maintainers.pl can help people to CC netdev and it's maintainers
-> > as appropriate?
+>  static int tmigr_cpu_available(unsigned int cpu)
+>  {
+> -	struct tmigr_cpu *tmc = this_cpu_ptr(&tmigr_cpu);
+> +	struct tmigr_cpu *tmc = per_cpu_ptr(&tmigr_cpu, cpu);
+>  
+>  	/* Check whether CPU data was successfully initialized */
+>  	if (WARN_ON_ONCE(!tmc->tmgroup))
+>  		return -EINVAL;
+>  
+> +	/*
+> +	 * Isolated CPUs don't participate in timer migration.
+> +	 * Checking here guarantees that CPUs isolated at boot (e.g. isolcpus)
+> +	 * are not marked as available when they first become online.
+> +	 * During runtime, any offline isolated CPU is also not incorrectly
+> +	 * marked as available once it gets back online.
+> +	 */
+> +	if (cpu_is_isolated(cpu))
+
+I would like nohz_full to remain an exception here. It already handles
+well (even better than domain isolated CPUs) global timers by behaving like idle
+CPUs. Because when the tick is stopped on nohz_full, the global timers are
+then handled by housekeeping. We are doing something different with domain
+isolated CPUs because those must still handle their own global timers.
+
+So please keep nohz_full CPUs inside the tree (that includes CPUs that are
+_both_ nohz_full and domain isolated).
+
+
+> +		return 0;
+>  	raw_spin_lock_irq(&tmc->lock);
+>  	trace_tmigr_cpu_available(tmc);
+> -	tmc->idle = timer_base_is_idle();
+> +	tmc->idle = timer_base_remote_is_idle(cpu);
+
+This is racy:
+
+      CPU 0                                 CPU 1
+      -----                                 -----
+
+tick_nohz_stop_tick()
+    timer_base_try_to_set_idle()
+        __get_next_timer_interrupt()
+            tmigr_cpu_deactivate()
+                                          tmigr_isolated_exclude_cpumask()
+                                              tmigr_cpu_available()
+                                                  tmc->idle = timer_base_remote_is_idle(cpu);
+                                                  if (!tmc->idle)
+                                                      __tmigr_cpu_activate(tmc);
+            base_global->is_idle = true;
+            
+
+CPU 0 can now become the migrator even when it's idle sleeping forever.
+
+My suggestion is to not rely remotely on is_idle. This can only
+be racy. You can trigger tmigr_cpu_available() through smp_call_function_many()
+instead.
+
+Thanks.
+
+
+>  	if (!tmc->idle)
+>  		__tmigr_cpu_activate(tmc);
+>  	tmc->available = true;
+> @@ -1489,6 +1499,21 @@ static int tmigr_cpu_available(unsigned int cpu)
+>  	return 0;
+>  }
+>  
+> +void tmigr_isolated_exclude_cpumask(cpumask_var_t exclude_cpumask)
+> +{
+> +	int cpu;
+> +
+> +	lockdep_assert_cpus_held();
+> +
+> +	for_each_cpu_and(cpu, exclude_cpumask, tmigr_available_cpumask)
+> +		tmigr_cpu_unavailable(cpu);
+> +
+> +	for_each_cpu_andnot(cpu, cpu_online_mask, exclude_cpumask) {
+> +		if (!cpumask_test_cpu(cpu, tmigr_available_cpumask))
+> +			tmigr_cpu_available(cpu);
+> +	}
+> +}
+> +
+>  static void tmigr_init_group(struct tmigr_group *group, unsigned int lvl,
+>  			     int node)
+>  {
+> -- 
+> 2.49.0
 > 
-> I am not sure what kind of update do you mean, include/linux/net directory was 
 
-Thanks I missed that.
-
-> not under any maintainer. include/linux/mlx5 and include/linux/mlx4 are only 
-> under vendor maintainers.
-> 
-> For sure I should add include/linux/intel/* under Tony.
-> Do you think it also should be added to general networking maintainers?
-
-I think it would make sense to add it to general networking, or at least
-those files that would tend to be updated via netdev. But at least let's
-put the directory under Tony so it's maintained by somebody.
+-- 
+Frederic Weisbecker
+SUSE Labs
