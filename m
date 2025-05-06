@@ -1,108 +1,118 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2767275869;
-	Tue,  6 May 2025 10:25:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9422B2777FC;
+	Tue,  6 May 2025 10:25:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746527120; cv=none; b=tcDY8M69WKE8AN06gYpAx59dbjKMwUh9E9WmlJAb+VesJy28bI5uV+zbLRzXBW4qTjKN7ZSswwDbow2FD8UgQxJgkqfHiDsyFiJoyYwGCFy5GHd86XSW8cXUtuKAq28LKlSg4uxgwsT8KlC65I1bPvgqUVon6CZG9QZ00aNQcLw=
+	t=1746527122; cv=none; b=JgF4imwGsg0ACC81itnXG079o3dvKFOyrkoXl1WUNk36V3lM+K1Q+JbeAV7HeB6JB+5j8Bx2TfNSQ9wvydn9OHguh+AeNdKcCm0jt1ICRnCV3HEaJHro2RZ5Hw9my6cPWWPI3Fi5Bt9009iWokHd2L9LX1gOMudbG47FuRpF6WI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746527120; c=relaxed/simple;
-	bh=HNvpa2Eo7tSdFILDlxkSiMCU0KdDUbo+UdR+rUM8044=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YvwKVt9IeUvAEhdqwyhnlBYTSdSD9PH/ng7jNoU7YtwV1tsinVlXCf9sCS0LV6mt/t+9yGQPRrAb4ddslPaT9sTCDH0oVSljjuguZs5BidsDGQlPVftrO3wy/sdW2pKv9PtNbB7cf+7/bKDr2qnXlsHTRTFaoare7pRYZFO/AL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iDA0NV/b; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746527122; c=relaxed/simple;
+	bh=ER3+WX6Fn7TizF7Fs+zanDiEtNNqVrG5KKHsKgWbPvo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=MWLPPL4kUX//BXZTRWF2ax9+gXljjlLx8Rhc2y3Qflp6tXfdAzKPVfDBxWdA6Sz67k6cOW26sacraudo4h/74cyPJTHf+2Kv/y+A97q6AcROl7Jdg/Gh0mITiKT4gK5sXdwC0Wy1nlOrrX1viFPog22P8Mwk3mTb9uckViNAc2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z8Mt6uQS; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iDA0NV/b"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-22e163543ceso7085365ad.2;
-        Tue, 06 May 2025 03:25:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746527116; x=1747131916; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jyLB1z+Ve3MGzRF3v4MVgA5J4WLWRyi2thiBODDNnGI=;
-        b=iDA0NV/b4ro1k7hrotlHG5Mzj3DMdNUw/DLb49o2/ts/xgD8zwLin6YTA9Ma2clmfP
-         kfWSKsz0PJZ5OHOsQGj7XnSweSP5f/iGqMNUanA3SHWtVYM5nenf9Bi9N/HHMIiVBmet
-         hduErkTSWxMGFCEeVfRjYQgw9jEbwg59nHcul5HIgat+yP+5n8q1QQCM/z9nQu+TbZ7V
-         WF2aCmJgvx8k5N17kQV4ERzD77gRmAQX+oVqdTYBO/iCgKvq0ix6PN+wOY4Iv6ORRERX
-         YLmEk7ZsltuAvPY+wwS9iPLDR7kX5RtgOM+/Dq32Chj5GLRt3vdT3JNzrQkhkDHShBa6
-         U2dw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746527116; x=1747131916;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jyLB1z+Ve3MGzRF3v4MVgA5J4WLWRyi2thiBODDNnGI=;
-        b=O331przK0fDUnYdAuMiBroAED/HzNgdJ6PqD7YWAvuexYT4eJCt8SUlzjO7pKWQxw8
-         Zo/kJjHVK3RvdA1X1nOO2P57GurZPFoUfB4B97R0ZiWoUaNWHAfYTEcCP5VvRIuFgh1i
-         MnnzUhFV3LhY84D9Z7K3oMf0f9kVCkE584pcchPkD3soErzLadtuisvoj5n8eCmE4QnU
-         MYF2zBK8p5RikbOA10JF9EPi+Z7dvPiC0Bd9gJJFNUvLYGzcicDXDJbp3cd/fC6A0y3H
-         IX5iH0GDLK48C8a84iOmbM5tyEBaFNT2dp/yDlav05OAFZA29XyI88nBN2vs3IfvvwKY
-         X1wA==
-X-Forwarded-Encrypted: i=1; AJvYcCURt9/NEG5nN3vuivc3/LBG6i9FOAiMTz9z/BvaNfJpSY2rosS4AHgDkW/D/MeUmbdn1O6vKqGDMOo=@vger.kernel.org, AJvYcCUbVd0jORib3Y2LHcwEvNZnvgb3VIEcXuIjcEtWFdCvnkWCsSun2WcsIWke5oA1v215wrtAJS7A3H4=@vger.kernel.org, AJvYcCWhH6+D6JoAUUMj7f9jH0szL9DUIDUkGY0eouniujtLH/oZecgjsjWfG7/wuTqCH8OLEsSKC8HGubcXQrHk@vger.kernel.org, AJvYcCXHF/Yntajpi8Qfd5m3Th64+OVRqUfDXbE5yN01xd+BFWfD7vcsZIke8ic+C4iyZlxSK4BRLyxpuslVXdTATl4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxWD0IxwcGNB06DWARReYtZNbw3uaTP128bDTHakNM9zqgoKlg
-	fZF8c29Wmg6fbQ184MFEklXZUIpguVMMsYM5X+kSmUrn+grAD9meIfHxtVTbfRHoKD9OwnOJiDx
-	AJD1HzJo6mhTtUnkWcNGV68F06cc=
-X-Gm-Gg: ASbGncvfZseA5d5opOOpGks3BBvAIKMZyBBMN4dZMWGybs6OF7nu1k1Ngj66XrWFOD2
-	TLkTp1deAV1wiCyW7ywLTk9gJ8ioXT6/O0dR+JrLpTGlJInm7PMkNt162s/1SXHML33a/gUE1bJ
-	UskxfEj63ZY3rKA0yTPnf/GA==
-X-Google-Smtp-Source: AGHT+IH3m7O/vizvz4Yjf3dvbJP0kjxJWIh7mJkDG9BEGHYUFYbe+8VcCoCLLDrkr4DxhpzlPe0JKXuS7u5vwajwLBg=
-X-Received: by 2002:a17:902:d4c4:b0:224:e0e:e08b with SMTP id
- d9443c01a7336-22e1022be16mr98720805ad.0.1746527116173; Tue, 06 May 2025
- 03:25:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z8Mt6uQS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746527120; x=1778063120;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=ER3+WX6Fn7TizF7Fs+zanDiEtNNqVrG5KKHsKgWbPvo=;
+  b=Z8Mt6uQSKt64D28NpQRdjCWX5TQuFzFXT52a4Ngm4hxr8VdKAjgNmmly
+   XqOXgxXGZbbO4uAo+CQzzzEtabOXV/yiMsPskNwTBDo5Z2RKlxortUUop
+   INbCIzTu8/jqb+KhF3/qTZynnoBKF5wlJPAuPyKrprq6g+vhzTHpWrWsL
+   hTvcFaUDISCyEg+x1UklmmMU8W6ThTZxGAOsc6PVCVDgOmT9U5ClltOfx
+   ufD/ai4AhpLO/Y83ekCjtyteZhlYfY/9EX/x+XIosDZfnImCcDkvCWfat
+   sWX3dBnxDK7QQI0bLRQCyaWZ6ZAi2/xwjCRwg0fKLp6EjqWD6R0EAwnGG
+   A==;
+X-CSE-ConnectionGUID: ShK7N9VmS7+rQaa4u+puZA==
+X-CSE-MsgGUID: JrsFAsy7R3qa5a9Y0JlutQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11424"; a="51993564"
+X-IronPort-AV: E=Sophos;i="6.15,266,1739865600"; 
+   d="scan'208";a="51993564"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 03:25:18 -0700
+X-CSE-ConnectionGUID: Ck10n3cyRsacHwt1VjnfGw==
+X-CSE-MsgGUID: 3lF5rXSWRaSZ0eaBD3MM2g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,266,1739865600"; 
+   d="scan'208";a="158825654"
+Received: from smoticic-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.221])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 03:25:13 -0700
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: Jeff Layton <jlayton@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
+ Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Maarten
+ Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David
+ Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Joonas
+ Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi
+ <rodrigo.vivi@intel.com>, Tvrtko Ursulin <tursulin@ursulin.net>
+Cc: Kuniyuki Iwashima <kuniyu@amazon.com>, Qasim Ijaz <qasdev00@gmail.com>,
+ Nathan Chancellor <nathan@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, Jeff
+ Layton <jlayton@kernel.org>
+Subject: Re: [PATCH v7 09/10] i915: add ref_tracker_dir symlinks for each
+ tracker
+In-Reply-To: <20250505-reftrack-dbgfs-v7-9-f78c5d97bcca@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20250505-reftrack-dbgfs-v7-0-f78c5d97bcca@kernel.org>
+ <20250505-reftrack-dbgfs-v7-9-f78c5d97bcca@kernel.org>
+Date: Tue, 06 May 2025 13:25:10 +0300
+Message-ID: <87zffqujcp.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250502070109.inpes2ou3rxx2fxp@vireshk-i7> <20250506101311.142475-1-andrewjballance@gmail.com>
-In-Reply-To: <20250506101311.142475-1-andrewjballance@gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 6 May 2025 12:25:03 +0200
-X-Gm-Features: ATxdqUFhj6qDR92HHk-3C4iXl6O_UDQOpyfYBJ4TQjYOBDXAz_1ZQp_UBtw0_e0
-Message-ID: <CANiq72k3ozKkLMinTLQwvkyg9K=BeRxs1oYZSKhJHY-veEyZdg@mail.gmail.com>
-Subject: Re: [PATCH V11 00/15] Rust abstractions for clk, cpumask, cpufreq, OPP
-To: Andrew Ballance <andrewjballance@gmail.com>
-Cc: viresh.kumar@linaro.org, a.hindborg@kernel.org, alex.bennee@linaro.org, 
-	alex.gaynor@gmail.com, aliceryhl@google.com, anisse@astier.eu, 
-	benno.lossin@proton.me, bjorn3_gh@protonmail.com, boqun.feng@gmail.com, 
-	bqe@google.com, dakr@kernel.org, dakr@redhat.com, 
-	daniel.almeida@collabora.com, gary@garyguo.net, joakim.bech@linaro.org, 
-	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linux@armlinux.org.uk, linux@rasmusvillemoes.dk, 
-	manos.pitsidianakis@linaro.org, mturquette@baylibre.com, nm@ti.com, 
-	ojeda@kernel.org, peterz@infradead.org, rafael@kernel.org, robh@kernel.org, 
-	rust-for-linux@vger.kernel.org, sboyd@kernel.org, tglx@linutronix.de, 
-	tmgross@umich.edu, vincent.guittot@linaro.org, vireshk@kernel.org, 
-	yury.norov@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Tue, May 6, 2025 at 12:15=E2=80=AFPM Andrew Ballance
-<andrewjballance@gmail.com> wrote:
+On Mon, 05 May 2025, Jeff Layton <jlayton@kernel.org> wrote:
+> Now that there is the ability to create a symlink for each tracker, do
+> so for the i915 entries.
+
+I haven't tried this, but
+
+Acked-by: Jani Nikula <jani.nikula@intel.com>
+
+
 >
-> I have tried building the latest linux-next and I think that this
-> patch series causes a build error with the defconfig for x86_64.
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+>  drivers/gpu/drm/i915/intel_runtime_pm.c | 1 +
+>  drivers/gpu/drm/i915/intel_wakeref.c    | 1 +
+>  2 files changed, 2 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/i915/intel_runtime_pm.c b/drivers/gpu/drm/i915/intel_runtime_pm.c
+> index 3fdab3b44c08cea16ac2f73aafc2bea2ffbb19e7..94315e952ead9be276298fb2a0200d102005a0c1 100644
+> --- a/drivers/gpu/drm/i915/intel_runtime_pm.c
+> +++ b/drivers/gpu/drm/i915/intel_runtime_pm.c
+> @@ -61,6 +61,7 @@ static void init_intel_runtime_pm_wakeref(struct intel_runtime_pm *rpm)
+>  {
+>  	ref_tracker_dir_init(&rpm->debug, INTEL_REFTRACK_DEAD_COUNT,
+>  			     "intel_runtime_pm", dev_name(rpm->kdev));
+> +	ref_tracker_dir_symlink(&rpm->debug, "intel_runtime_pm-%s", dev_name(rpm->kdev));
+>  }
+>  
+>  static intel_wakeref_t
+> diff --git a/drivers/gpu/drm/i915/intel_wakeref.c b/drivers/gpu/drm/i915/intel_wakeref.c
+> index 5269e64c58a49884f5d712557546272bfdeb8417..2e0498b3fa7947f994de1339d4d2bed93de1a795 100644
+> --- a/drivers/gpu/drm/i915/intel_wakeref.c
+> +++ b/drivers/gpu/drm/i915/intel_wakeref.c
+> @@ -115,6 +115,7 @@ void __intel_wakeref_init(struct intel_wakeref *wf,
+>  
+>  #if IS_ENABLED(CONFIG_DRM_I915_DEBUG_WAKEREF)
+>  	ref_tracker_dir_init(&wf->debug, INTEL_REFTRACK_DEAD_COUNT, "intel_wakeref", name);
+> +	ref_tracker_dir_symlink(&wf->debug, "intel_wakeref-%s", name);
+>  #endif
+>  }
 
-Yeah, I also see it in the latest `linux-next` runs.
-
-And in arm64, it builds, but I see a doctest failure too:
-
-[    1.014106]     # rust_doctest_kernel_cpumask_rs_0.location:
-rust/kernel/cpumask.rs:180
-[    1.015226]     # rust_doctest_kernel_cpumask_rs_0: ASSERTION
-FAILED at rust/kernel/cpumask.rs:190
-[    1.015226]     Expected mask.weight() =3D=3D 2 to be true, but is false
-[    1.017326]     not ok 40 rust_doctest_kernel_cpumask_rs_0
-
-Viresh: could you please make sure `defconfig`s (and `allmodconfig`s)
-are clean? (including with debug assertions and doctests enabled) We
-will very soon be putting more things into next for the merge window.
-Thanks!
-
-Cheers,
-Miguel
+-- 
+Jani Nikula, Intel
