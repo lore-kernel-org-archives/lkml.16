@@ -1,198 +1,184 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2051.outbound.protection.outlook.com [40.107.94.51])
+Received: from smtp-fw-80009.amazon.com (smtp-fw-80009.amazon.com [99.78.197.220])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4585E35971;
-	Tue,  6 May 2025 19:18:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746559092; cv=fail; b=nokMElr7/grJRD9HgjmrDhZiGKK8f+vF8JmY4h/tZ1PI1X66K/bPnk2zFVwZZJwgrfWNSJ2CnryGSyymlRqGYPtlIs0FgexAXE7zB5PoMXJsmEaKoK0MFr1uPo3b/qIvr6klT2sPh7gqPAIx50+49eUeY2Ec1ooRQIz/sV68WME=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746559092; c=relaxed/simple;
-	bh=qVJNjDxG4lW0jUnoxYUSpnba1sLsm5Rs/BxNAnL01Uc=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pyY/isoJT6D//0yeZZ8AXex27JaStg6RsQSQRWozFfzBnFFoS3cdrEQpA3RZtNQP7cVlatqu5JoUY4+SI71DKJNcO7QbLuuphmJmddhlS93skOClJCPPQ9hxwM4SoH3k3D4PuE7wiPeUtj9odXK2UInftDZK3/K5NeUav4+K/qE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=QrKTfV6l; arc=fail smtp.client-ip=40.107.94.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DE471C3C14;
+	Tue,  6 May 2025 19:18:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.220
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746559116; cv=none; b=T/+iMHBy82pBwYMxbs6VXjFeGrYf61+UqGHlgFmfyuq8l/SGGHwkokV3YA7NhQrM88M6AsXyJcJMYaNPfmhT2KcUzuxvuijmOY6noGgBhhhpj6zhknWKc3Lq+0Tsm9ZEItIjQWIQ3fGUPb5ALyVQ+XL8Gxr+1QfH8Z6ibpc7ShY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746559116; c=relaxed/simple;
+	bh=KmQUTFKNw48BeM/Yl9YgetYIh2v0+91c2dmV0lrA1CY=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=eHm9b19qQJ991ysYc+Pm7FC7a2PukZdWjA/ODJkPZyzl/J8iuoqh7l5im0MdpmZvIM5VDGTfaNdjrO973JSQQ1JVT9zmkHCIGNJtipQmSblE6RsVxFc1Tv7l4uxaR+xfiDJczJ0U9pj6xmnFLKoGSat+N3Jw3XbV/zhtuOlB8VU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=iOJMpOmx; arc=none smtp.client-ip=99.78.197.220
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="QrKTfV6l"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=h2cROMUIRTALtAr/6XdSK5c2HqKeajYMBQNLsCfBxFEVnAh/FGZCM9/ePesNW/ZWhnmNTSNjNMjb8HyhwsThcdgEQzZ38HFBo7iwusZ2n/2/dZSUuJbJpL9anVPp6Zxb8urDZUx4ULAS/AQDo7gMpxfkZheK3vEKCgC/1iHhOQ3o7c4NBJOaO76KdFTuryr0xZ3g5jI0yo1KmMIs6kWYeJK0DlqFN7oqHY3D9RLNYLP3lqHnTZIA9d7g3xvfoUC96sTRv+yzy/9JCiSGB5ZsBSx59QyLSG0urteTX7oEIx1PiLmun9BsoyvfnNAOQr6juqX4og2kyCSbD3FyeVrIIA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=cY/K5+FoK+Mfk4GXFhnHQwdewYfg96+/eD0ihF2U13M=;
- b=gEmGPaVN4JukG3AUJJRfDOwFu/WkNiCiiw+xhd1kK8PxTqRnMb4XlwFhk27HCD1Oyr6ljqbzAHiIysq/azdrjOufok0dOdzRHKp+/onc4lWjgVXb6U8OZih9ZDSPplAbATMV3iMfu5uvqeK+tyyYBzaQkCprwHzdXa+FbWp2SO/Nnx6griWzMefufyMuWx7oUWbA7E+c//QBM/QS1XLH3Etbd8Cz4KqH9r54uxPg8ISvqfPp/nYUNR1wsa7bFbACsxajJ0NQLfbwxjlV/nYh9Kd42RmZYR0Im1MvGvEX8C+5KvJ/aefuHg0mwUPjHWjj+z0lXQoiVRV/dKJooKxuMg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.118.233) smtp.rcpttodomain=intel.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cY/K5+FoK+Mfk4GXFhnHQwdewYfg96+/eD0ihF2U13M=;
- b=QrKTfV6lHJKiH0wwyk+RNbt4kAqvfMGYWP0i7v0k7aYFTc6QKEIBvV76+N+hxVTXY2Rcrz8CHJn5hVhp5wJIUht7RU8AR9JgEzjvKHCk7es0AOXR9SwclA2qSMONKafjIRQ0PeP2khihSx/KOfomW+FdH8tKqLShRVqy9zYQ5uaZONtlEszLMFWnoB6a0XXRUktjNRb8VkNd1Z25pvop5Ni+N2BeQr+CkKYCe/9khRBsRLStUzpxIO+ZHkYcwMNyMVmoaZZxYeCpESA1FCRxaaIZfPUmJyLdn3+kg/+opnuh6TeQHxkKLcuy5UVFsu2CUytVcyPqhWr2JkDuynumwQ==
-Received: from SA9PR13CA0135.namprd13.prod.outlook.com (2603:10b6:806:27::20)
- by CY5PR12MB6381.namprd12.prod.outlook.com (2603:10b6:930:3f::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.26; Tue, 6 May
- 2025 19:18:01 +0000
-Received: from SN1PEPF000397B5.namprd05.prod.outlook.com
- (2603:10b6:806:27:cafe::c8) by SA9PR13CA0135.outlook.office365.com
- (2603:10b6:806:27::20) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.16 via Frontend Transport; Tue,
- 6 May 2025 19:18:01 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.118.233) by
- SN1PEPF000397B5.mail.protection.outlook.com (10.167.248.59) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8722.18 via Frontend Transport; Tue, 6 May 2025 19:18:00 +0000
-Received: from drhqmail202.nvidia.com (10.126.190.181) by mail.nvidia.com
- (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 6 May 2025
- 12:17:49 -0700
-Received: from drhqmail203.nvidia.com (10.126.190.182) by
- drhqmail202.nvidia.com (10.126.190.181) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Tue, 6 May 2025 12:17:51 -0700
-Received: from nvidia.com (10.127.8.14) by mail.nvidia.com (10.126.190.182)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
- Transport; Tue, 6 May 2025 12:17:47 -0700
-Date: Tue, 6 May 2025 12:17:44 -0700
-From: Nicolin Chen <nicolinc@nvidia.com>
-To: "Tian, Kevin" <kevin.tian@intel.com>
-CC: "jgg@nvidia.com" <jgg@nvidia.com>, "corbet@lwn.net" <corbet@lwn.net>,
-	"will@kernel.org" <will@kernel.org>, "bagasdotme@gmail.com"
-	<bagasdotme@gmail.com>, "robin.murphy@arm.com" <robin.murphy@arm.com>,
-	"joro@8bytes.org" <joro@8bytes.org>, "thierry.reding@gmail.com"
-	<thierry.reding@gmail.com>, "vdumpa@nvidia.com" <vdumpa@nvidia.com>,
-	"jonathanh@nvidia.com" <jonathanh@nvidia.com>, "shuah@kernel.org"
-	<shuah@kernel.org>, "jsnitsel@redhat.com" <jsnitsel@redhat.com>,
-	"nathan@kernel.org" <nathan@kernel.org>, "peterz@infradead.org"
-	<peterz@infradead.org>, "Liu, Yi L" <yi.l.liu@intel.com>,
-	"mshavit@google.com" <mshavit@google.com>, "praan@google.com"
-	<praan@google.com>, "zhangzekun11@huawei.com" <zhangzekun11@huawei.com>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>, "linux-doc@vger.kernel.org"
-	<linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org"
-	<linux-tegra@vger.kernel.org>, "linux-kselftest@vger.kernel.org"
-	<linux-kselftest@vger.kernel.org>, "patches@lists.linux.dev"
-	<patches@lists.linux.dev>, "mochs@nvidia.com" <mochs@nvidia.com>,
-	"alok.a.tiwari@oracle.com" <alok.a.tiwari@oracle.com>, "vasant.hegde@amd.com"
-	<vasant.hegde@amd.com>
-Subject: Re: [PATCH v2 08/22] iommufd: Abstract iopt_pin_pages and
- iopt_unpin_pages helpers
-Message-ID: <aBpgWNitAgNenOPY@nvidia.com>
-References: <cover.1745646960.git.nicolinc@nvidia.com>
- <d44272c153e7596c3cef716044de3dc6c2a8254a.1745646960.git.nicolinc@nvidia.com>
- <BN9PR11MB52762F5A464ACC68D78465578C892@BN9PR11MB5276.namprd11.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="iOJMpOmx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
+  t=1746559112; x=1778095112;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=MGS6WcCdgR40DRTItgS2fPnyq9VSeBn6e33rAdkaNuI=;
+  b=iOJMpOmxOhpUNaG48bYoCKPWuKhlUQZO/faHertLFOksi5e66ZUKRJhy
+   UMJ93V6a5YlXm0f/XJSB8DMAA19ODaE5y3MIUGUprY2rI66XdtD4kqRZx
+   hkxDSxNI9Yk+aVHbOEILUdLZRR7R/nFnAGGfavcvrhfhwKrb/M31Y0MND
+   sKZdVLiLCQPSxn6BOFCJyLcrNmWtfryKSFRWSf1ztlin6PNRuAyu0Odt7
+   3X7TrAmXooLIB1UVGrwhkRy0fslJi3rTgi+dqVxmKUugn1qahNYVdgOyO
+   jARXlcGZyr0Seh3/ipYuPh0U8Om1dQqcHvFm6/8ufQ7sp0/ZPdyj7Hqf0
+   Q==;
+X-IronPort-AV: E=Sophos;i="6.15,267,1739836800"; 
+   d="scan'208";a="197906031"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
+  by smtp-border-fw-80009.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 19:18:30 +0000
+Received: from EX19MTAUWC002.ant.amazon.com [10.0.21.151:23045]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.21.68:2525] with esmtp (Farcaster)
+ id 32993a23-baf2-4749-8fc3-a15c25f65271; Tue, 6 May 2025 19:18:30 +0000 (UTC)
+X-Farcaster-Flow-ID: 32993a23-baf2-4749-8fc3-a15c25f65271
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Tue, 6 May 2025 19:18:29 +0000
+Received: from 6c7e67bfbae3.amazon.com (10.187.170.44) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Tue, 6 May 2025 19:18:25 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <brauner@kernel.org>
+CC: <alexander@mihalicyn.com>, <bluca@debian.org>, <daan.j.demeyer@gmail.com>,
+	<davem@davemloft.net>, <david@readahead.eu>, <edumazet@google.com>,
+	<horms@kernel.org>, <jack@suse.cz>, <jannh@google.com>, <kuba@kernel.org>,
+	<kuniyu@amazon.com>, <lennart@poettering.net>,
+	<linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<me@yhndnzj.com>, <netdev@vger.kernel.org>, <oleg@redhat.com>,
+	<pabeni@redhat.com>, <viro@zeniv.linux.org.uk>, <zbyszek@in.waw.pl>
+Subject: Re: [PATCH RFC v3 08/10] net, pidfs, coredump: only allow coredumping tasks to connect to coredump socket
+Date: Tue, 6 May 2025 12:18:12 -0700
+Message-ID: <20250506191817.14620-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250506-zugabe-bezog-f688fbec72d3@brauner>
+References: <20250506-zugabe-bezog-f688fbec72d3@brauner>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <BN9PR11MB52762F5A464ACC68D78465578C892@BN9PR11MB5276.namprd11.prod.outlook.com>
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF000397B5:EE_|CY5PR12MB6381:EE_
-X-MS-Office365-Filtering-Correlation-Id: ff6b5a81-9fb8-41a4-5515-08dd8cd2b7af
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|36860700013|376014|7416014|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?0EVZvUx26scwIWvQqjcVvpB/aaKp7RocTh0pbM9PzbU4rpProl4ZNB5+dSnG?=
- =?us-ascii?Q?M6Qe3e2nApJJFpl6xVaIFnmNVjzietBtGFrm/X37XXw9KisM2IIuJq0JwTeP?=
- =?us-ascii?Q?Jl9UEzRNBlpyHjUAJfIQH0MMNpB51IVEd0Dhh6RK/9Iz8w7tQQJD06Hjy5hR?=
- =?us-ascii?Q?JcCj/BYB3DRpo+9rMHMFgEiFkaUQCw8CP1KAn9BzsWSZeswROgbZVhvOCxPx?=
- =?us-ascii?Q?dMSHcAXHaBBEuYKO0SIqf3NCwTIGGOtNmOVOGIYwku6TOhacLT2Hy55ArqV+?=
- =?us-ascii?Q?hUyhx/QHflCYKVvrN0EiFmT6DWm5rIQPpP8IVECKSH0Zh4xnvdQkIdB5m2F5?=
- =?us-ascii?Q?usZ//oZTWPFGSzfBh6f/P4FFtqcMPubb806lXbEdW9cszAtoyrGTMzWUf5CS?=
- =?us-ascii?Q?AXy64W6pSnHm6CNHF1ENZ1BQzIECz5M40sHRJWL/NbU2yP38iEEO0nsSfT7i?=
- =?us-ascii?Q?W8HKPd6MWLVvcvNwiWVawqQU8uMPHvbX0DdeZZerpbovxWPDXcxmMT0KsB2y?=
- =?us-ascii?Q?IvYw8iSfAOaClprazN3c2lCJ4xMWUlNU7TM/EIdXSkMUsZirP6hW8S5ENXuV?=
- =?us-ascii?Q?zDn7qBriuWArnvHoaGMrYRVnDKDsYbt0asw2gDf7MvDhxb+IvypZcFQSqnOW?=
- =?us-ascii?Q?1aF6b7RuVLkQ5OnKdXQgd602f7KiaDdRzp05lUYOo8Sqp3KsM6YJ/FCi3FvF?=
- =?us-ascii?Q?DnJ3JRuIKa3yqUhZ2TsmiDrohuOoG+seb9cHU++ClByQbd+8QX1zfEy4SMWw?=
- =?us-ascii?Q?IzEA3bnzEv4lgpO00TvVFr4MBq4U/nPx1lHVPxn2r2al38og+4AF+zK6QYbJ?=
- =?us-ascii?Q?86bHxzDUhGnLI5cNw5lhhF6XuWhll/gXLlcaQCvwBMrgMHrtAjwvWjhPX95z?=
- =?us-ascii?Q?orzuWmo4Tscn2cWQs7pS8CljXgzXfF1r5d+LqtnLQ1yb6r1FTf/zKS38RrrE?=
- =?us-ascii?Q?VA69KheHrnWC7PHJwrrrWPTVvTVnw7SWSBR4vCjRnEcPizPNcLfB01Vsdr6G?=
- =?us-ascii?Q?Wd7tyQQMIlFLDDTtLk4Fr0bJOxK4WHJFytt4whs0qZKBYXC+E9ArAJ3HmPMQ?=
- =?us-ascii?Q?WpQPR8K8ujsRhZx/+s/Yruu8XqY7sIhHLtI+YDtR/cqXCt49DthBhQRshszU?=
- =?us-ascii?Q?gyqxn6nQst01RvJD+yOhNAZgJc45b2P2uwOgloXnImIMrJb/w8TxBBBBEvAY?=
- =?us-ascii?Q?UXe+pgyHrMScg8Gf32s7CvUPNrtx4sBc1PJpQV+bnNVODNsoFCzK6MC1JvYn?=
- =?us-ascii?Q?iY0NMMBvqdCdRk2emoJn6dJTnMNOICFVKRelcHx3QeRvEDh5kjmQaBS5tmlj?=
- =?us-ascii?Q?N+OOqJv2+YgOn/XykPsDOBMOrPItXYjCHcuo6oosqVIOhsHWQJ0gdba32XnO?=
- =?us-ascii?Q?6gtEDr4RNlijbDrN08+C3VqRireW7WX2E7jvQyJ4FuuqstuRUcIpO2yXKoAy?=
- =?us-ascii?Q?ePCbK1KfTNelzDu9Jhlr/vv6jx5QAJdDouN2W/dxdUao9p7UhkGSv41GRq8i?=
- =?us-ascii?Q?2mADEv4H3OUidHMYAVGeVa034A098slr93qvgRgqrFW8/MAvaOeETsuUAg?=
- =?us-ascii?Q?=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700013)(376014)(7416014)(13003099007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 19:18:00.7981
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ff6b5a81-9fb8-41a4-5515-08dd8cd2b7af
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF000397B5.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6381
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: EX19D031UWC004.ant.amazon.com (10.13.139.246) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-On Tue, May 06, 2025 at 09:36:38AM +0000, Tian, Kevin wrote:
-> > From: Nicolin Chen <nicolinc@nvidia.com>
-> > Sent: Saturday, April 26, 2025 1:58 PM
+From: Christian Brauner <brauner@kernel.org>
+Date: Tue, 6 May 2025 10:06:27 +0200
+> On Mon, May 05, 2025 at 09:10:28PM +0200, Jann Horn wrote:
+> > On Mon, May 5, 2025 at 8:41 PM Kuniyuki Iwashima <kuniyu@amazon.com> wrote:
+> > > From: Christian Brauner <brauner@kernel.org>
+> > > Date: Mon, 5 May 2025 16:06:40 +0200
+> > > > On Mon, May 05, 2025 at 03:08:07PM +0200, Jann Horn wrote:
+> > > > > On Mon, May 5, 2025 at 1:14 PM Christian Brauner <brauner@kernel.org> wrote:
+> > > > > > Make sure that only tasks that actually coredumped may connect to the
+> > > > > > coredump socket. This restriction may be loosened later in case
+> > > > > > userspace processes would like to use it to generate their own
+> > > > > > coredumps. Though it'd be wiser if userspace just exposed a separate
+> > > > > > socket for that.
+> > > > >
+> > > > > This implementation kinda feels a bit fragile to me... I wonder if we
+> > > > > could instead have a flag inside the af_unix client socket that says
+> > > > > "this is a special client socket for coredumping".
+> > > >
+> > > > Should be easily doable with a sock_flag().
+> > >
+> > > This restriction should be applied by BPF LSM.
 > > 
-> > The new vCMDQ object will be added for HW to access the guest memory for
-> > a
-> > HW-accelerated virtualization feature. It needs to ensure the guest memory
-> > pages are pinned when HW accesses them and they are contiguous in
-> > physical
-> > address space.
+> > I think we shouldn't allow random userspace processes to connect to
+> > the core dump handling service and provide bogus inputs; that
+> > unnecessarily increases the risk that a crafted coredump can be used
+> > to exploit a bug in the service. So I think it makes sense to enforce
+> > this restriction in the kernel.
 > > 
-> > This is very like the existing iommufd_access_pin_pages() that outputs the
-> > pinned page list for the caller to test its contiguity.
+> > My understanding is that BPF LSM creates fairly tight coupling between
+> > userspace and the kernel implementation, and it is kind of unwieldy
+> > for userspace. (I imagine the "man 5 core" manpage would get a bit
+> > longer and describe more kernel implementation detail if you tried to
+> > show how to write a BPF LSM that is capable of detecting unix domain
+> > socket connections to a specific address that are not initiated by
+> > core dumping.) I would like to keep it possible to implement core
+> > userspace functionality in a best-practice way without needing eBPF.
 > > 
-> > Move those code from iommufd_access_pin/unpin_pages() and related
-> > function
-> > for a pair of iopt helpers that can be shared with the vCMDQ allocator. As
-> > the vCMDQ allocator will be a user-space triggered ioctl function, WARN_ON
-> > would not be a good fit in the new iopt_unpin_pages(), thus change them to
-> > use WARN_ON_ONCE instead.
+> > > It's hard to loosen such a default restriction as someone might
+> > > argue that's unexpected and regression.
 > > 
-> > Rename check_area_prot() to align with the existing iopt_area helpers, and
-> > inline it to the header since iommufd_access_rw() still uses it.
-> > 
-> > Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
+> > If userspace wants to allow other processes to connect to the core
+> > dumping service, that's easy to implement - userspace can listen on a
+> > separate address that is not subject to these restrictions.
 > 
-> any reason why this cannot be done by the core? all types of vcmd
-> queues need to pin the guest buffer pages, no matter the IOMMU
-> accesses GPA or HPA.
+> I think Kuniyuki's point is defensible. And I did discuss this with
+> Lennart when I wrote the patch and he didn't see a point in preventing
+> other processes from connecting to the core dump socket. He actually
+> would like this to be possible because there's some userspace programs
+> out there that generate their own coredumps (Python?) and he wanted them
+> to use the general coredump socket to send them to.
 > 
-> Jason made a similar comment earlier [1]. 
+> I just found it more elegant to simply guarantee that only connections
+> are made to that socket come from coredumping tasks.
 > 
-> check of continuity is still done by the driver, if HPA is being accessed.
+> But I should note there are two ways to cleanly handle this in
+> userspace. I had already mentioned the bpf LSM in the contect of
+> rate-limiting in an earlier posting:
 > 
-> [1] https://lore.kernel.org/all/20250424134049.GP1648741@nvidia.com/
+> (1) complex:
+> 
+>     Use a bpf LSM to intercept the connection request via
+>     security_unix_stream_connect() in unix_stream_connect().
+> 
+>     The bpf program can simply check:
+> 
+>     current->signal->core_state
+> 
+>     and reject any connection if it isn't set to NULL.
+> 
+>     The big downside is that bpf (and security) need to be enabled.
+>     Neither is guaranteed and there's quite a few users out there that
+>     don't enable bpf.
+> 
+> (2) simple (and supported in this series):
+> 
+>     Userspace accepts a connection. It has to get SO_PEERPIDFD anyway.
+>     It then needs to verify:
+> 
+>     struct pidfd_info info = {
+>             info.mask = PIDFD_INFO_EXIT | PIDFD_INFO_COREDUMP,
+>     };
+> 
+>     ioctl(pidfd, PIDFD_GET_INFO, &info);
+>     if (!(info.mask & PIDFD_INFO_COREDUMP)) {
+>             // Can't be from a coredumping task so we can close the
+> 	    // connection without reading.
+> 	    close(coredump_client_fd);
+> 	    return;
+>     }
+> 
+>     /* This has to be set and is only settable by do_coredump(). */
+>     if (!(info.coredump_mask & PIDFD_COREDUMPED)) {
+>             // Can't be from a coredumping task so we can close the
+> 	    // connection without reading.
+> 	    close(coredump_client_fd);
+> 	    return;
+>     }
+> 
+>     // Ok, this is a connection from a task that has coredumped, let's
+>     // handle it.
+> 
+>     The crux is that the series guarantees that by the time the
+>     connection is made the info whether the task/thread-group did
+>     coredump is guaranteed to be available via the pidfd.
+>  
+> I think if we document that most coredump servers have to do (2) then
+> this is fine. But I wouldn't mind a nod from Jann on this.
 
-But I am doing in the core. I have iopt_pin_pages() called in the
-core ioctl handler iommufd_vqueue_alloc_ioctl():
-
-https://lore.kernel.org/linux-iommu/1ef2e242ee1d844f823581a5365823d78c67ec6a.1746139811.git.nicolinc@nvidia.com/
-
-Thanks
-Nicolin
+I like this approach (2) allowing users to filter the right client.
+This way we can extend the application flexibly for another coredump
+service.
