@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D9C227FB3E;
-	Tue,  6 May 2025 12:24:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2FD4281343;
+	Tue,  6 May 2025 12:24:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746534271; cv=none; b=W15/2InKROkgtx3dq4GGxUKsvBt1IK9lD7KOAw82UHMEc/Nl5zQgwlapLq7IU5CqJFqNgAZvgaKdShOE2I9EpHHTarI/N7K4x14+izVx+HJDC4jovo2a0zeUuRMGpD4HAt3WR1QVIGAWiGIRcUM+vB1hVuC1MBmXIuBZarATt3g=
+	t=1746534276; cv=none; b=o3NFwIgqg9t6SvdhLn9a/c0+S/hh4u5pyVIC5K/+Gi86FnKL/JW4fYlgF8FXxMR3mEeYXTIGdAVGalfIMLmeop5uo8IJCudK+IrZA29BOgPzsEsyD2oOvo4KOmoNIdV0awAw+MQhEmwVCW/fT19OHW8zcPPcZdl3F3OEkpkS5Mc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746534271; c=relaxed/simple;
-	bh=kr4FIsYzSG8vhPEwCV+efvFDb0h/Nmo/+nvgPyW4hHA=;
+	s=arc-20240116; t=1746534276; c=relaxed/simple;
+	bh=sQqjxedBfR/x/zpD52PYNFW1off5a3wsTQ0MTvz8038=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=BUs3Kp3Fk6uiiNkKcjJTHvjQ8pOe7sjuCGcVT+jDtmAj7/ysNAIvTUo3dv9nTBj89JYMXqtewrlhlsVdBdYnMhTT2lByQ+ABUH6aMqlBqohuYAVbjqINp6N0iFNzDoZeY1M23DfydO9X52+hs6GppD7v5vDp3e2oG4DFB7vmHmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zav5G45T; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=DptnIBbM3r7je8llaE3KHk4gzpuPufV/Z2kO+RKnsUpMhvqgYbcZE3ocECsrFgFU2On+Z7RUrIp9z2ADxdCNF+QRt4LXqJnFGG2zjvsvYkFycmjKQJ0N00fiiEErctZ5utVr3ieN3fsNQNzgrw4er6TSH//OKOV43+iDZphzZAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JH2FSbRh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zav5G45T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0ADBBC4CEEE;
-	Tue,  6 May 2025 12:24:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JH2FSbRh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AF9FC4CEED;
+	Tue,  6 May 2025 12:24:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746534271;
-	bh=kr4FIsYzSG8vhPEwCV+efvFDb0h/Nmo/+nvgPyW4hHA=;
+	s=k20201202; t=1746534275;
+	bh=sQqjxedBfR/x/zpD52PYNFW1off5a3wsTQ0MTvz8038=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Zav5G45TFKlLtijxj+eILVDB9zg3Vx/HrZ8PnSOCThanGPRSNwB8cfPZ580jxkBxi
-	 9g3YCUrq7DNRe7DPuAC83nRZYAbhkij363xeZ4i3nE6JrmmUYiA3zFCLc60LzcEX4v
-	 0+X7d8aFL6Scs/zWjC7Krp0JsO7142PubiWFN9aYIt5WcXcwawxSHtKysnUYRLj/WA
-	 dLideFmkLqX7MQ0F8inP7W3AlwY4E5uDd16YMaC9Em6u8N9kb+auG/lxtT4PDDUhri
-	 GoPtLMmyNkbv2+7JNzJVN/nw17XKPcoT3JRy+VzEhpxuvO876f/aQaHosu6cwLDV73
-	 uUsyRFHqA90RQ==
+	b=JH2FSbRhY49r/xBD0KCVu1vulpBsgkXAcRvCQwJ9rOfS0je6ogfP30fm29/ylIz0I
+	 vixas9Q2kwz4vBjvDJlNdt/TLrgA07aeHBsBuSS/wnjxj/1fGDXN2Es3P0REntBId8
+	 eNNxxFWWgrWVKxm67gsXNWDh8bxvycaTT7JUjrLmbHGFpTDc0ALp0fYTK6YRbvO9lR
+	 IIxe+PbWnhGm2s/Tqhza2uBriSYSLVcI8sEXxtun3fC/BpjPhEw43PDt9azthzQETS
+	 8/gKgIoDRkaAa8+PpDRPRmisO9sofRd+bTl4rizi0MPwCGEH+6ERJTnC/NXNj8aDk9
+	 FEGRnKpHHGz7g==
 From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Date: Tue, 06 May 2025 14:23:36 +0200
-Subject: [PATCH v3 07/25] arm64/sysreg: Add ICC_PPI_{C/S}ACTIVER<n>_EL1
+Date: Tue, 06 May 2025 14:23:37 +0200
+Subject: [PATCH v3 08/25] arm64/sysreg: Add ICC_PPI_{C/S}PENDR<n>_EL1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,7 +37,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250506-gicv5-host-v3-7-6edd5a92fd09@kernel.org>
+Message-Id: <20250506-gicv5-host-v3-8-6edd5a92fd09@kernel.org>
 References: <20250506-gicv5-host-v3-0-6edd5a92fd09@kernel.org>
 In-Reply-To: <20250506-gicv5-host-v3-0-6edd5a92fd09@kernel.org>
 To: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
@@ -53,7 +53,7 @@ Cc: Arnd Bergmann <arnd@arndb.de>,
  devicetree@vger.kernel.org, Lorenzo Pieralisi <lpieralisi@kernel.org>
 X-Mailer: b4 0.14.2
 
-Add ICC_PPI_{C/S}ACTIVER<n>_EL1 registers description.
+Add ICC_PPI_{C/S}PENDR<n>_EL1 registers description.
 
 Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
 Cc: Will Deacon <will@kernel.org>
@@ -64,94 +64,94 @@ Cc: Marc Zyngier <maz@kernel.org>
  1 file changed, 83 insertions(+)
 
 diff --git a/arch/arm64/tools/sysreg b/arch/arm64/tools/sysreg
-index 6c5552707ad88c145adc8b7ceb3f63da401191ea..0485721e1575c9ed158210c6f02fb9af2828f2d5 100644
+index 0485721e1575c9ed158210c6f02fb9af2828f2d5..7acad93718c56729ce2a333ed007243ec554dbc9 100644
 --- a/arch/arm64/tools/sysreg
 +++ b/arch/arm64/tools/sysreg
-@@ -2474,6 +2474,89 @@ Sysreg	ICC_PPI_ENABLER1_EL1	3	0	12	10	7
- Fields ICC_PPI_ENABLERx_EL1
+@@ -2557,6 +2557,89 @@ Sysreg	ICC_PPI_SACTIVER1_EL1	3	0	12	13	3
+ Fields ICC_PPI_ACTIVERx_EL1
  EndSysreg
  
-+SysregFields	ICC_PPI_ACTIVERx_EL1
-+Field	63	Active63
-+Field	62	Active62
-+Field	61	Active61
-+Field	60	Active60
-+Field	59	Active59
-+Field	58	Active58
-+Field	57	Active57
-+Field	56	Active56
-+Field	55	Active55
-+Field	54	Active54
-+Field	53	Active53
-+Field	52	Active52
-+Field	51	Active51
-+Field	50	Active50
-+Field	49	Active49
-+Field	48	Active48
-+Field	47	Active47
-+Field	46	Active46
-+Field	45	Active45
-+Field	44	Active44
-+Field	43	Active43
-+Field	42	Active42
-+Field	41	Active41
-+Field	40	Active40
-+Field	39	Active39
-+Field	38	Active38
-+Field	37	Active37
-+Field	36	Active36
-+Field	35	Active35
-+Field	34	Active34
-+Field	33	Active33
-+Field	32	Active32
-+Field	31	Active31
-+Field	30	Active30
-+Field	29	Active29
-+Field	28	Active28
-+Field	27	Active27
-+Field	26	Active26
-+Field	25	Active25
-+Field	24	Active24
-+Field	23	Active23
-+Field	22	Active22
-+Field	21	Active21
-+Field	20	Active20
-+Field	19	Active19
-+Field	18	Active18
-+Field	17	Active17
-+Field	16	Active16
-+Field	15	Active15
-+Field	14	Active14
-+Field	13	Active13
-+Field	12	Active12
-+Field	11	Active11
-+Field	10	Active10
-+Field	9	Active9
-+Field	8	Active8
-+Field	7	Active7
-+Field	6	Active6
-+Field	5	Active5
-+Field	4	Active4
-+Field	3	Active3
-+Field	2	Active2
-+Field	1	Active1
-+Field	0	Active0
++SysregFields	ICC_PPI_PENDRx_EL1
++Field	63	Pend63
++Field	62	Pend62
++Field	61	Pend61
++Field	60	Pend60
++Field	59	Pend59
++Field	58	Pend58
++Field	57	Pend57
++Field	56	Pend56
++Field	55	Pend55
++Field	54	Pend54
++Field	53	Pend53
++Field	52	Pend52
++Field	51	Pend51
++Field	50	Pend50
++Field	49	Pend49
++Field	48	Pend48
++Field	47	Pend47
++Field	46	Pend46
++Field	45	Pend45
++Field	44	Pend44
++Field	43	Pend43
++Field	42	Pend42
++Field	41	Pend41
++Field	40	Pend40
++Field	39	Pend39
++Field	38	Pend38
++Field	37	Pend37
++Field	36	Pend36
++Field	35	Pend35
++Field	34	Pend34
++Field	33	Pend33
++Field	32	Pend32
++Field	31	Pend31
++Field	30	Pend30
++Field	29	Pend29
++Field	28	Pend28
++Field	27	Pend27
++Field	26	Pend26
++Field	25	Pend25
++Field	24	Pend24
++Field	23	Pend23
++Field	22	Pend22
++Field	21	Pend21
++Field	20	Pend20
++Field	19	Pend19
++Field	18	Pend18
++Field	17	Pend17
++Field	16	Pend16
++Field	15	Pend15
++Field	14	Pend14
++Field	13	Pend13
++Field	12	Pend12
++Field	11	Pend11
++Field	10	Pend10
++Field	9	Pend9
++Field	8	Pend8
++Field	7	Pend7
++Field	6	Pend6
++Field	5	Pend5
++Field	4	Pend4
++Field	3	Pend3
++Field	2	Pend2
++Field	1	Pend1
++Field	0	Pend0
 +EndSysregFields
 +
-+Sysreg	ICC_PPI_CACTIVER0_EL1	3	0	12	13	0
-+Fields ICC_PPI_ACTIVERx_EL1
++Sysreg	ICC_PPI_CPENDR0_EL1	3	0	12	13	4
++Fields ICC_PPI_PENDRx_EL1
 +EndSysreg
 +
-+Sysreg	ICC_PPI_CACTIVER1_EL1	3	0	12	13	1
-+Fields ICC_PPI_ACTIVERx_EL1
++Sysreg	ICC_PPI_CPENDR1_EL1	3	0	12	13	5
++Fields ICC_PPI_PENDRx_EL1
 +EndSysreg
 +
-+Sysreg	ICC_PPI_SACTIVER0_EL1	3	0	12	13	2
-+Fields ICC_PPI_ACTIVERx_EL1
++Sysreg	ICC_PPI_SPENDR0_EL1	3	0	12	13	6
++Fields ICC_PPI_PENDRx_EL1
 +EndSysreg
 +
-+Sysreg	ICC_PPI_SACTIVER1_EL1	3	0	12	13	3
-+Fields ICC_PPI_ACTIVERx_EL1
++Sysreg	ICC_PPI_SPENDR1_EL1	3	0	12	13	7
++Fields ICC_PPI_PENDRx_EL1
 +EndSysreg
 +
  SysregFields	ICC_PPI_PRIORITYRx_EL1
