@@ -1,155 +1,165 @@
-Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FA071A8F98
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 21:18:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAC6418EB0;
+	Tue,  6 May 2025 21:21:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746566292; cv=none; b=ZV6KENNV0N+/X8+9dNI/e/SglVYyLI03QoHFFG34HiGSzjx9OmzFWyJ3ZXfcghOReUbx/TBM5REmkXaEepYJysW1lJPgtgM/2cqnTnuaKCBV2wbptiZWNTh7+VTTaPpdwVr0oitOXAvqFlQ12AQZz1VSZEXpuLE0SJ50TElWXcU=
+	t=1746566467; cv=none; b=aiY+MEGdyxVKsYN2/K8LIKAClvnNWw3no1m8n8brnTcOdud4QjdCaVK+YTR8BPrYbBGa/lLqI18h391JbVXpLvm6Rc3V7AMMd2Cv/ex3sw7kXVUzNOkJMET55XlG338V4TpclVVEFpVpMGuaJYXHTAZh2wQBiWOXlupVIPlQbSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746566292; c=relaxed/simple;
-	bh=ZbUVsEPh6tdbg1Nr8t8A3+DYza+dfr7oWIBRauQ+wn0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fsSibNohKX0l5nyq3zc7pkHWBBYGx9mOIEcDllmszoLXt0TcTHyRLQEl3qyjQqzzEI8Nt7//Wa1VtL+C8YcT6eUsqc5/GeL1yqVrTo9hkG7zMGe4k4aDr29XvPvrbRBtwjx0DXzagAQGK6Zx20bEP5MxwIeI/6mGnpa1z0DGHzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=MDzsGYuX; arc=none smtp.client-ip=209.85.166.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1746566467; c=relaxed/simple;
+	bh=nRmEletgct8wCAY0yyDfqxigpW3/eAknwmWs08z/9vY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Cw8fdsNF04BHmb9mbra2BJFsd42aLuPB5LV5pq4pV6tqzBwLnvIhqvTDTRk1xJEHwvvJP9mdFLsywvwG7bfL7fZF312UGCk/pJg+rNpPGWXrWwx4GbSddWJ3c9qt3e7RfQhj/Dzcp/FQ2yCxMz0etQxFBXMCldXDAVG8CttlfCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=esWHlVLH; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="MDzsGYuX"
-Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-3d7f4cb7636so21087595ab.3
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 14:18:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1746566288; x=1747171088; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Vhk1HBI/4LMXTfhNfYxi9xZ9PhHpTPrJe65ilxoqp+Y=;
-        b=MDzsGYuX/TEG/ZFEhjWcGRvGLlKwySKWFNkxfBfe9VLqC1hAF9tZQbHP6x8/4TDn8t
-         8pLwVxGXT6oMj3cRUkyGlZPe/fkcZFaCQ0jQLd4GrcR+MHRb9brDdrgnpgx0iFlPz5Ka
-         GrOA77VdUHOKx/4VYKhZKjvudtRONZzXi3MGk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746566288; x=1747171088;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Vhk1HBI/4LMXTfhNfYxi9xZ9PhHpTPrJe65ilxoqp+Y=;
-        b=HNcaZ+/4o61mQBxt/Al2948o9nvAhLmt0SJbvLiVrgOJ8vHGnTLR8jNEWKJtxS4mTr
-         S3ourKCikc+zDS6gtzdriC8+lTMrpLuGK8BgpKwC/FFeCrfqMZ7a8+tvM0yNObxWuvUt
-         bCiSBr2LslhHlIngvvLjDA/KB2ScMvBHRiWJ62f8TJPIGZjNyDM3SS/eWrdAhjM81hIb
-         WP88rF825GWe39GmShY94x+SqzNsfojSn2+k+1evpctoeqIzAFGjG3pfl04s+zVmR4FZ
-         62T+6KY3wQzlZD0pDHYKVXyPseElrkvBpzv46/uup6pVKnPtYjKy/Zg36Se2hoyR6MXj
-         QfXw==
-X-Forwarded-Encrypted: i=1; AJvYcCUs6QIux/Gvggn1ZVgfjCPljjNEOhdUN0xQeXWk2xezURM1I2+rtoL6yTCofgk4QssHJjQTVe8GZmVyhyg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSSu743XviWjdmQwrvoLu2Ovbo9eSRhq4iy5wkYxuQ3VHOGDWA
-	cm0nTqhZLImyrN8YGkgWuebeO3gJqTWpmMV7C1PUKQ2wMIAUwaGhI5S8KgLvQ8R1HxDYOrkKsJ7
-	S
-X-Gm-Gg: ASbGncvih0ZR2auS1c7Z65rZuBkdRIxg/9o23eMcw197CFpCVHgRBpu2o42E7a2TxzI
-	IcrVR9teiXuIR86wmQx9kqay+6dvGCap3rhk2r9OX/9dkFHRCn8EtLFhG5aCvSbpihzc3cA85Rc
-	eIC00iGhO8IfKit3ciq3EbOUXbk2wntJM5/6IlP/DDMd0zvnzlTzFDUUtIfw2ImhquoGCuPIlnQ
-	0n4LuPfrdHKCqKMBpvs4BIvbTO3ggwLi2KnsxItX/t+j42RSupMn+tDXv3JczlbmjFUIDsRD+Wp
-	V6qYq7kVqYeI8mRhAr/bzCOXFuRVu6Mz+MU7PUEQVmdt/Do8TG8=
-X-Google-Smtp-Source: AGHT+IHUA+sn2FCbduj4eCJZBOdW4tseCQ5oMi7Bx4Yf5oLI8Rys2VzAzxELUSzWphfH7ztNR5z4iA==
-X-Received: by 2002:a92:b0f:0:b0:3da:7237:525a with SMTP id e9e14a558f8ab-3da738e5fb2mr7278445ab.8.1746566288378;
-        Tue, 06 May 2025 14:18:08 -0700 (PDT)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f88a916042sm2419259173.40.2025.05.06.14.18.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 06 May 2025 14:18:07 -0700 (PDT)
-Message-ID: <17464a97-e7be-49d4-9422-96ff824dba7c@linuxfoundation.org>
-Date: Tue, 6 May 2025 15:18:06 -0600
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="esWHlVLH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1746566462;
+	bh=nRmEletgct8wCAY0yyDfqxigpW3/eAknwmWs08z/9vY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=esWHlVLHL9leIpq2KcTz8MaRK6525bDP08Y42Zh6PCU/0D/boTaD/x1Kb4DHKwY4s
+	 b2rYavwLaS2DWbXNHew6/grbZLIcxqlW5+qtPk+zMYzBcIP3VEvANap1pIZ3cvTCYQ
+	 j7/kghbAmwFR/oh/pARzjS97PxSCxYzxb06LhpW3NHz4vEMO7VmLMutaisftBNHv+j
+	 2VLa0+qxyeRbM2hs/lGfZX8C0jeuvgfxgg4fFt0EH6Y1Gc/gu6MBCRorQDGuD6/D/T
+	 9dSnubimRDvBAPdh7x5SiXyLn7OrMHlzsM0rYaSho7gJE7dIOUu+mC4Cuhow2k9U2B
+	 H/Jb4J/ebLL7g==
+Received: from notapiano (unknown [70.107.117.78])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nfraprado)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id BFAAD17E0FBA;
+	Tue,  6 May 2025 23:21:00 +0200 (CEST)
+Date: Tue, 6 May 2025 17:20:58 -0400
+From: =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <nfraprado@collabora.com>
+To: Alexandre Mergnat <amergnat@baylibre.com>
+Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	kernel@collabora.com, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	Fabien Parent <fparent@baylibre.com>,
+	Conor Dooley <conor+dt@kernel.org>
+Subject: Re: [PATCH] arm64: dts: mediatek: mt6357: Drop regulator-fixed
+ compatibles
+Message-ID: <1e8b80c9-d491-4b71-b424-e2322c711fd3@notapiano>
+References: <20250502-mt6357-regulator-fixed-compatibles-removal-v1-1-a582c16743fe@collabora.com>
+ <174652097090.119919.16240846809714782858.b4-ty@collabora.com>
+ <99febf26-2ada-4fed-b4b3-596ac4abf581@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/3] selftests: pidfd: add tests for PIDFD_SELF_*
-To: Peter Zijlstra <peterz@infradead.org>, John Hubbard <jhubbard@nvidia.com>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Christian Brauner <christian@brauner.io>, Shuah Khan <shuah@kernel.org>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>,
- Suren Baghdasaryan <surenb@google.com>, Vlastimil Babka <vbabka@suse.cz>,
- pedro.falcato@gmail.com, linux-kselftest@vger.kernel.org,
- linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
- linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
- Oliver Sang <oliver.sang@intel.com>, seanjc@google.com,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <cover.1729073310.git.lorenzo.stoakes@oracle.com>
- <c083817403f98ae45a70e01f3f1873ec1ba6c215.1729073310.git.lorenzo.stoakes@oracle.com>
- <a3778bea-0a1e-41b7-b41c-15b116bcbb32@linuxfoundation.org>
- <a6133831-3fc3-49aa-83c6-f9aeef3713c9@lucifer.local>
- <5b0b8e1e-6f50-4e18-bf46-39b00376c26e@nvidia.com>
- <20250501114235.GP4198@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20250501114235.GP4198@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <99febf26-2ada-4fed-b4b3-596ac4abf581@baylibre.com>
 
-On 5/1/25 05:42, Peter Zijlstra wrote:
-> On Wed, Oct 16, 2024 at 07:14:34PM -0700, John Hubbard wrote:
->> On 10/16/24 3:06 PM, Lorenzo Stoakes wrote:
->>> On Wed, Oct 16, 2024 at 02:00:27PM -0600, Shuah Khan wrote:
->>>> On 10/16/24 04:20, Lorenzo Stoakes wrote:
->> ...
->>>>> diff --git a/tools/testing/selftests/pidfd/pidfd.h b/tools/testing/selftests/pidfd/pidfd.h
->>>>> index 88d6830ee004..1640b711889b 100644
->>>>> --- a/tools/testing/selftests/pidfd/pidfd.h
->>>>> +++ b/tools/testing/selftests/pidfd/pidfd.h
->>>>> @@ -50,6 +50,14 @@
->>>>>     #define PIDFD_NONBLOCK O_NONBLOCK
->>>>>     #endif
->>>>> +/* System header file may not have this available. */
->>>>> +#ifndef PIDFD_SELF_THREAD
->>>>> +#define PIDFD_SELF_THREAD -100
->>>>> +#endif
->>>>> +#ifndef PIDFD_SELF_THREAD_GROUP
->>>>> +#define PIDFD_SELF_THREAD_GROUP -200
->>>>> +#endif
->>>>> +
->>>>
->>>> As mentioned in my response to v1 patch:
->>>>
->>>> kselftest has dependency on "make headers" and tests include
->>>> headers from linux/ directory
->>>
->>> Right but that assumes you install the kernel headers on the build system,
->>> which is quite a painful thing to have to do when you are quickly iterating
->>> on a qemu setup.
->>>
->>> This is a use case I use all the time so not at all theoretical.
->>>
->>
->> This is turning out to be a fairly typical reaction from kernel
->> developers, when presented with the "you must first run make headers"
->> requirement for kselftests.
->>
->> Peter Zijlstra's "NAK NAK NAK" response [1] last year was the most
->> colorful, so I'll helpfully cite it here. :)
+On Tue, May 06, 2025 at 11:30:08AM +0200, Alexandre Mergnat wrote:
+> Hello Nícolas and Angelo,
 > 
-> Let me re-try this.
+> On 06/05/2025 10:42, AngeloGioacchino Del Regno wrote:
+> > On Fri, 02 May 2025 11:32:10 -0400, Nícolas F. R. A. Prado wrote:
+> > > Some of the regulators in the MT6357 PMIC dtsi have compatible set to
+> > > regulator-fixed, even though they don't serve any purpose: all those
+> > > regulators are handled as a whole by the mt6357-regulator driver. In
+> > > fact this is the only dtsi in this family of chips where this is the
+> > > case: mt6359 and mt6358 don't have any such compatibles.
+> > > 
+> > > A side-effect caused by this is that the DT kselftest, which is supposed
+> > > to identify nodes with compatibles that can be probed, but haven't,
+> > > shows these nodes as failures.
+> > > 
+> > > [...]
+> > 
+> > Applied to v6.15-next/dts64, thanks!
+> > 
+> > [1/1] arm64: dts: mediatek: mt6357: Drop regulator-fixed compatibles
+> >        commit: d77e89b7b03fb945b4353f2dcc4a70b34baa7bcb
 > 
-> This is driving me insane. I've spend the past _TWO_ days trying to
-> build KVM selftests and I'm still failing.
+> I'm surprised that patch is applied after the Rob's bot reply.
+> Also, I've some concern:
 > 
-> This is absolute atrocious crap and is costing me valuable time.
+> On 02/05/2025 17:32, Nícolas F. R. A. Prado wrote:
+> > Some of the regulators in the MT6357 PMIC dtsi have compatible set to
+> > regulator-fixed, even though they don't serve any purpose: all those
+> > regulators are handled as a whole by the mt6357-regulator driver. In
+> > fact this is the only dtsi in this family of chips where this is the
+> > case: mt6359 and mt6358 don't have any such compatibles.
+> This is the only dtsi in this family to do this, yes. But according to
+> all other vendor DTSI, which use regulator-fixed when a regulator can't
+> support a range of voltage, IMHO, it make sense to use it, isn't it ?
+> If other DTSI from the family of chips doesn't, why don't fix them to be
+> aligned with the other families?
+
+Well, but this isn't just like any other regulator-fixed in a DTSI. In this case
+it is part of a multi-function device (MFD) and so it gets probed by a parent
+node. That's the source of the issue, because then no driver gets assigned to
+the node itself.
+
 > 
-> Please fix this fucking selftests shit to just build. This is unusable
-> garbage.
+> >
+> > A side-effect caused by this is that the DT kselftest, which is supposed
+> > to identify nodes with compatibles that can be probed, but haven't,
+> > shows these nodes as failures.
+> >
+> I lack of data about kselftest, but according to what is reported here, it
+> appear to me this is something which could be fixed in the test itself. It make
+> sense for a DTS, but not for a DTSI because it expose HW capability of a
+> device, not the board, so it isn't mandatory to probe all DTSI node.
+> Again, I'm not an expert, the test shouldn't show the DTSI node as failure,
+> but maybe more a warning.
 
-I don't recall all the reasons why kselftests needed "make headers"
-One reason I could think of was that when a new test depends on a
-header change, the test won't build unless headers are installed.
+The DT kselftest is a run-time test, so it wouldn't be able to distinguish
+between DTSI and DTS. But in any case, we do want to check that devices from
+DTSIs have probed, a lot of the devices come from them. When a particular board
+doesn't actually have a node from a DTSI present then the node should be
+disabled, and in that case the kselftest ignores the node.
 
-If this requirement is causing problems for tests that don't fall
-into the category and we probably have more of them mow, we can
-clean that up.
+It would be possible to ignore this particular compatible, "regulator-fixed", in
+the kselftest, if it is a compatible that can't be expected to be probed. Of
+course that would mean that all the other regulator nodes that aren't MFD
+children and do get probed by that driver would no longer be checked by the
+test.
 
-John, you mentioned you got mm tests working without headers?
-Can you share the commit here.
+> 
+> > Remove the useless compatibles to move the dtsi in line with the others
+> > in its family and fix the DT kselftest failures.
+> If you remove compatible from these regulators, I think mediatek,mt6357-regulator.yaml
+> documentation file should be modified to be consistent and avoid dt-check error.
 
-thanks,
--- Shuah
+Ah, yes, totally agreed, I seem to have missed running dtbs_check on this patch,
+sorry. Indeed now either the binding needs to be fixed or the patch reverted.
 
+I believe the most reasonable option would be to update those regulators in the
+binding to reference the generic regulator binding, ie:
 
+diff --git a/Documentation/devicetree/bindings/regulator/mediatek,mt6357-regulator.yaml b/Documentation/devicetree/bindings/regulator/mediatek,mt6357-regulator.yaml
+index 6327bb2f6ee0..9308008f420e 100644
+--- a/Documentation/devicetree/bindings/regulator/mediatek,mt6357-regulator.yaml
++++ b/Documentation/devicetree/bindings/regulator/mediatek,mt6357-regulator.yaml
+@@ -33,7 +33,7 @@ patternProperties:
+
+   "^ldo-v(camio18|aud28|aux18|io18|io28|rf12|rf18|cn18|cn28|fe28)$":
+     type: object
+-    $ref: fixed-regulator.yaml#
++    $ref: regulator.yaml#
+     unevaluatedProperties: false
+     description:
+       Properties for single fixed LDO regulator.
+
+as well as updating the examples in the YAML. The fixed-regulator.yaml binding
+doesn't seem to provide any additional checks compared to regulator.yaml,
+besides enforcing the regulator-fixed compatible, which in this case doesn't
+serve any purpose.
+
+Thoughts?
+
+Thanks,
+Nícolas
