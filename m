@@ -1,224 +1,181 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6FFA27703D;
-	Tue,  6 May 2025 09:42:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21FF326C389
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 09:43:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746524554; cv=none; b=HwZtIqraZ2ikYcpDazE8PZvZJFNhuRvWM1JKYX5XAcAkOd3YhBMtbEE4prHr+mWXGS9QCzI6iHYVDa7uDxh2Oq3CN98wsYDBk5Tblvl+SSPOm4FAuMrA8AQFb2UkNSkegZWQH+jOQnaX/OOUYCJZqcmEQXz648fP/LYkhk29GpQ=
+	t=1746524602; cv=none; b=K4ZhDj0jTiWHlyU3yAMqFG1BcfhvNCgn/7lQjhkaHtpNDgnZ2shXMiGevysqmb/2SwmnjVHShH9QQCBqbU2JdKvoGOoxFJP5nqNOLYUfczsCCwUro315TdBCSeKEF32auVFdyng1u+T8Hn7/zXmW47zme1j8Nsso8nCMC723YwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746524554; c=relaxed/simple;
-	bh=P9a2pNHPAdAkPwbRHauhlTEXGppXguI6212ViJ55eaI=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=q1rD6BRXMFKhbf/1Alir+eUibFz1VQHT1rh9/M/f5oahf181ltUXzlSoZiOxcvCrIspjH/Rz7K4YllWBtIRKbOuTdKboY+CeiQvSFzXNya0aIuJibfcBhJXlyYI3sczugABIyKT3tEQgcEMVGAf5UWHqE1dQ1QsZ+cV/4DpzCkM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DxuIHvrg; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bUXF1F5u; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1746524602; c=relaxed/simple;
+	bh=OdYxdf2NS9wIbAV3ovwDZCL2iMe9F3X5Sqi4us7Hjcw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AImNcVqNeLlM1/f3fAGDWqX+S7XXqjrh/mpMbURozV9xucUbf213OYVBTuYC+OCqA2mlYNZLLV3YRdCAG8jpw4K1YVMTr52h2MLYrMWf5X4sJVnEc9mDH+Wmu1bdi9pKFeX9AHUahQx8qBpXALsqRXtewyHExG9nDvH7sFD9mnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Wj23g8UW; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DxuIHvrg";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bUXF1F5u"
-Date: Tue, 06 May 2025 09:42:28 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746524549;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Wj23g8UW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746524599;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=F8YI95wP4mSj9oc4W3VJlQVPMAGQ0JQ9GE5xAfT/SlM=;
-	b=DxuIHvrgj938Q3AuS7EfnA0L5BXcCCthiLlmcGtKBhgaXyxz2bKH49Qq8RS33xgNv24WrA
-	DczTuhYza5Dk/ATXT3kEuFQNHC+gxqe192dpuyiK8AjTzS3earT2eLsJy7ULdYrBgZQw2X
-	9NfCsyfLEX6PnGdXbgZFvPIx86gj7a2FyYo58WCAbTupTRSj+UYPk+/ZRaSvxydNA7U/ye
-	rJxxs+oXCDQe4qbn36QMTVe7hzn9sTwOaHM1UG/FicbVcR8kH9j7Qlci8KrCW/NnNJcWtC
-	oG88IPv2CpzvjJwRlOVO57RsdlKi2qpr/wNZGVHzuTC/HPjEfDIEPq7ACZlZfA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746524549;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=F8YI95wP4mSj9oc4W3VJlQVPMAGQ0JQ9GE5xAfT/SlM=;
-	b=bUXF1F5utZK3vaUBPTdjqZvAGlTgkNTYyyf2ri7bNnknzvtHu1EHvfB0RqYd/ky4ndSrsM
-	5GPRwJ6KPLaPU4CA==
-From: "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/alternatives] x86/mm: Fix false positive warning in
- switch_mm_irqs_off()
-Cc: Chaitanya Kumar Borah <chaitanya.kumar.borah@intel.com>,
- Jani Nikula <jani.nikula@linux.intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
- Andrew Cooper <andrew.cooper3@citrix.com>, Andy Lutomirski <luto@kernel.org>,
- Brian Gerst <brgerst@gmail.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Juergen Gross <jgross@suse.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Rik van Riel <riel@surriel.com>, x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250430081154.GH4439@noisy.programming.kicks-ass.net>
-References: <20250430081154.GH4439@noisy.programming.kicks-ass.net>
+	bh=DXoAgnolhnIWon+GSP4Yh+No5sQktwbAsoZby2qJ9Oc=;
+	b=Wj23g8UWerKGFt/Klh4jxybrIGdIQgYalp64TlKG9UZEtEPF5zmhfHTDHJAnEECDHoPkjK
+	AjEnKRZJ28xh44YOQY36c21Hx04wNAsaxd73/Fsit7UBFHicKSEiZYEXjDzXuhRDBSqj14
+	4SIWCMlGzM8xwp9ST7eLD3E2od/TBFs=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-264-Ju9gPbeRPSS_462iCtrNNA-1; Tue, 06 May 2025 05:43:16 -0400
+X-MC-Unique: Ju9gPbeRPSS_462iCtrNNA-1
+X-Mimecast-MFC-AGG-ID: Ju9gPbeRPSS_462iCtrNNA_1746524595
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-ace99fe4282so594993966b.1
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 02:43:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746524595; x=1747129395;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DXoAgnolhnIWon+GSP4Yh+No5sQktwbAsoZby2qJ9Oc=;
+        b=TqjkXpFNHPRSjMeC3ozgixbyPCXUmgHMRj2pWImf92v66Wp/y/+3Uf4Ueq0v1CDMKv
+         F+ALrbjroA2il+eGrQvLqvyJm90t22Z0Oaq74QIJ7zdiRKIl3UfZEwgRzCcpsgImiPk+
+         PQnmanTGSb9oT5EC5IE4WERElMhHiAd+FbYgM9tHZju5YaJ+rksFYLxPDF3/mCQTCJdW
+         MLPVXPaN2MYj99BgUTEiyShT/g+iHFUqkPipU1p5Tge65MFuok7nbuC2UCpBLJF7pZKm
+         9CYFVRnnvc4qX42iW6dVvpuVd2tE4Eb8xfAllB8fHCSiiL/CwJGFhsW6Yv3pvPV8iy/d
+         r2NQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWSvYDBSfyIq0g5rH8vVD5o5JuHmvqyKLFzkPorcWq3UFDgamD1PvpMKNiWq5r1ZVpCSa9XGoAjxx0ST+0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJEhgdDK1BG5gTTTLvOR2Z9N/LOv84q1mh6K7rne4z/a9FF1f8
+	02rbsWDLSYiVyeDY6n8DFiOtuRqkk4X6YQSTyifnw6kOEAnaG8I+IrH+bNSC3V+galGLHeZpOoa
+	Yxas/67shUM7Iw5YDfwhnxu/Ucu/X1GoPkCW+8eQSl0PE6k/BGQB69D72OmMOpQ==
+X-Gm-Gg: ASbGncvyD7BnqqTu9izwNpMZo0ZI+Q9P/vYfq22gMEggqV+izR7D0rHw+uUa1gDiQ2p
+	7wFxA9ZZh5nqGqG3kAkHEboSS33tGzj8M2N76F5uU/1jerJNTmvyYUyHhz5TrYAQwLoQjbyshP6
+	dUQI1Jlbr/xhi1HpJzS+i7HOAnQp9B+bnIgV9JM/py7mzLjOQVvFMXhMvu2S/eOvQyvz0jG2hku
+	MXzZhRW8Zj3bTIpB1xmrXIYU3A60y1UisccmwRXyxXuqbu2Q0sghMdjZRLD+nzKEx1a8KX58A7q
+	ZoBazQ5oQTymjGG0rg==
+X-Received: by 2002:a17:907:6eac:b0:ac7:b213:b7e5 with SMTP id a640c23a62f3a-ad1d2ecb11emr249438866b.18.1746524595036;
+        Tue, 06 May 2025 02:43:15 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGr2idRnebYQGCDDQ8BywfWXGWGiLs9tHDNaPLdjiBxzUREqjzvsHE6e+fFczVT0Qkx8Sxwyg==
+X-Received: by 2002:a17:907:6eac:b0:ac7:b213:b7e5 with SMTP id a640c23a62f3a-ad1d2ecb11emr249435966b.18.1746524594435;
+        Tue, 06 May 2025 02:43:14 -0700 (PDT)
+Received: from sgarzare-redhat ([193.207.219.197])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad189540dabsm671051666b.171.2025.05.06.02.43.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 May 2025 02:43:13 -0700 (PDT)
+Date: Tue, 6 May 2025 11:43:10 +0200
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Michal Luczaj <mhal@rbox.co>
+Cc: "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	"Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, 
+	Stefan Hajnoczi <stefanha@redhat.com>, virtualization@lists.linux.dev, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH net-next v4 3/3] vsock/test: Expand linger test to ensure
+ close() does not misbehave
+Message-ID: <g5wemyogxthe43rkigufv7p5wrkegbdxbleujlsrk45dmbmm4l@qdynsbqfjwbk>
+References: <20250501-vsock-linger-v4-0-beabbd8a0847@rbox.co>
+ <20250501-vsock-linger-v4-3-beabbd8a0847@rbox.co>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174652454811.406.13340350863311949872.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20250501-vsock-linger-v4-3-beabbd8a0847@rbox.co>
 
-The following commit has been merged into the x86/alternatives branch of tip:
+On Thu, May 01, 2025 at 10:05:24AM +0200, Michal Luczaj wrote:
+>There was an issue with SO_LINGER: instead of blocking until all queued
+>messages for the socket have been successfully sent (or the linger timeout
+>has been reached), close() would block until packets were handled by the
+>peer.
 
-Commit-ID:     7f9958230d8a79d474829bee25ec9426397335ce
-Gitweb:        https://git.kernel.org/tip/7f9958230d8a79d474829bee25ec9426397335ce
-Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Wed, 30 Apr 2025 10:11:54 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 06 May 2025 11:28:57 +02:00
+This is a new behaviour that only new kernels will follow, so I think
+it is better to add a new test instead of extending a pre-existing test
+that we described as "SOCK_STREAM SO_LINGER null-ptr-deref".
 
-x86/mm: Fix false positive warning in switch_mm_irqs_off()
+The old test should continue to check the null-ptr-deref also for old
+kernels, while the new test will check the new behaviour, so we can skip
+the new test while testing an old kernel.
 
-Multiple testers reported the following new warning:
+Thanks,
+Stefano
 
-	WARNING: CPU: 0 PID: 0 at arch/x86/mm/tlb.c:795
+>
+>Add a check to alert on close() lingering when it should not.
+>
+>Signed-off-by: Michal Luczaj <mhal@rbox.co>
+>---
+> tools/testing/vsock/vsock_test.c | 30 +++++++++++++++++++++++++++---
+> 1 file changed, 27 insertions(+), 3 deletions(-)
+>
+>diff --git a/tools/testing/vsock/vsock_test.c b/tools/testing/vsock/vsock_test.c
+>index d0f6d253ac72d08a957cb81a3c38fcc72bec5a53..82d0bc20dfa75041f04eada1b4310be2f7c3a0c1 100644
+>--- a/tools/testing/vsock/vsock_test.c
+>+++ b/tools/testing/vsock/vsock_test.c
+>@@ -1788,13 +1788,16 @@ static void test_stream_connect_retry_server(const struct test_opts *opts)
+> 	close(fd);
+> }
+>
+>+#define	LINGER_TIMEOUT	1	/* seconds */
+>+
+> static void test_stream_linger_client(const struct test_opts *opts)
+> {
+> 	struct linger optval = {
+> 		.l_onoff = 1,
+>-		.l_linger = 1
+>+		.l_linger = LINGER_TIMEOUT
+> 	};
+>-	int fd;
+>+	int bytes_unsent, fd;
+>+	time_t ts;
+>
+> 	fd = vsock_stream_connect(opts->peer_cid, opts->peer_port);
+> 	if (fd < 0) {
+>@@ -1807,7 +1810,28 @@ static void test_stream_linger_client(const struct test_opts *opts)
+> 		exit(EXIT_FAILURE);
+> 	}
+>
+>+	/* Byte left unread to expose any incorrect behaviour. */
+>+	send_byte(fd, 1, 0);
+>+
+>+	/* Reuse LINGER_TIMEOUT to wait for bytes_unsent == 0. */
+>+	timeout_begin(LINGER_TIMEOUT);
+>+	do {
+>+		if (ioctl(fd, SIOCOUTQ, &bytes_unsent) < 0) {
+>+			perror("ioctl(SIOCOUTQ)");
+>+			exit(EXIT_FAILURE);
+>+		}
+>+		timeout_check("ioctl(SIOCOUTQ) == 0");
+>+	} while (bytes_unsent != 0);
+>+	timeout_end();
+>+
+>+	ts = current_nsec();
+> 	close(fd);
+>+	if ((current_nsec() - ts) / NSEC_PER_SEC > 0) {
+>+		fprintf(stderr, "Unexpected lingering on close()\n");
+>+		exit(EXIT_FAILURE);
+>+	}
+>+
+>+	control_writeln("DONE");
+> }
+>
+> static void test_stream_linger_server(const struct test_opts *opts)
+>@@ -1820,7 +1844,7 @@ static void test_stream_linger_server(const struct test_opts *opts)
+> 		exit(EXIT_FAILURE);
+> 	}
+>
+>-	vsock_wait_remote_close(fd);
+>+	control_expectln("DONE");
+> 	close(fd);
+> }
+>
+>
+>-- 
+>2.49.0
+>
 
-Which corresponds to:
-
-	if (IS_ENABLED(CONFIG_DEBUG_VM) && WARN_ON_ONCE(prev != &init_mm &&
-	    !cpumask_test_cpu(cpu, mm_cpumask(next))))
-		cpumask_set_cpu(cpu, mm_cpumask(next));
-
-So the problem is that unuse_temporary_mm() explicitly clears
-that bit; and it has to, because otherwise the flush_tlb_mm_range() in
-__text_poke() will try sending IPIs, which are not at all needed.
-
-See also:
-
-   https://lore.kernel.org/all/20241113095550.GBZzR3pg-RhJKPDazS@fat_crate.local/
-
-Notably, the whole {,un}use_temporary_mm() thing requires preemption to
-be disabled across it with the express purpose of keeping all TLB
-nonsense CPU local, such that invalidations can also stay local etc.
-
-However, as a side-effect, we violate this above WARN(), which sorta
-makes sense for the normal case, but very much doesn't make sense here.
-
-Change unuse_temporary_mm() to mark the mm_struct such that a further
-exception (beyond init_mm) can be grafted, to keep the warning for all
-the other cases.
-
-Reported-by: Chaitanya Kumar Borah <chaitanya.kumar.borah@intel.com>
-Reported-by: Jani Nikula <jani.nikula@linux.intel.com>
-Signed-off-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Andrew Cooper <andrew.cooper3@citrix.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Brian Gerst <brgerst@gmail.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Rik van Riel <riel@surriel.com>
-Link: https://lore.kernel.org/r/20250430081154.GH4439@noisy.programming.kicks-ass.net
----
- arch/x86/include/asm/mmu.h         |  4 ++--
- arch/x86/include/asm/mmu_context.h | 10 ++++++++++
- arch/x86/mm/init.c                 |  3 +++
- arch/x86/mm/tlb.c                  |  3 ++-
- arch/x86/platform/efi/efi_64.c     |  1 +
- 5 files changed, 18 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/include/asm/mmu.h b/arch/x86/include/asm/mmu.h
-index 8b8055a..0fe9c56 100644
---- a/arch/x86/include/asm/mmu.h
-+++ b/arch/x86/include/asm/mmu.h
-@@ -16,6 +16,8 @@
- #define MM_CONTEXT_LOCK_LAM		2
- /* Allow LAM and SVA coexisting */
- #define MM_CONTEXT_FORCE_TAGGED_SVA	3
-+/* Tracks mm_cpumask */
-+#define MM_CONTEXT_NOTRACK		4
- 
- /*
-  * x86 has arch-specific MMU state beyond what lives in mm_struct.
-@@ -44,9 +46,7 @@ typedef struct {
- 	struct ldt_struct	*ldt;
- #endif
- 
--#ifdef CONFIG_X86_64
- 	unsigned long flags;
--#endif
- 
- #ifdef CONFIG_ADDRESS_MASKING
- 	/* Active LAM mode:  X86_CR3_LAM_U48 or X86_CR3_LAM_U57 or 0 (disabled) */
-diff --git a/arch/x86/include/asm/mmu_context.h b/arch/x86/include/asm/mmu_context.h
-index c511f85..73bf3b1 100644
---- a/arch/x86/include/asm/mmu_context.h
-+++ b/arch/x86/include/asm/mmu_context.h
-@@ -247,6 +247,16 @@ static inline bool is_64bit_mm(struct mm_struct *mm)
- }
- #endif
- 
-+static inline bool is_notrack_mm(struct mm_struct *mm)
-+{
-+	return test_bit(MM_CONTEXT_NOTRACK, &mm->context.flags);
-+}
-+
-+static inline void set_notrack_mm(struct mm_struct *mm)
-+{
-+	set_bit(MM_CONTEXT_NOTRACK, &mm->context.flags);
-+}
-+
- /*
-  * We only want to enforce protection keys on the current process
-  * because we effectively have no access to PKRU for other
-diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
-index f8c74d1..aa56d9a 100644
---- a/arch/x86/mm/init.c
-+++ b/arch/x86/mm/init.c
-@@ -28,6 +28,7 @@
- #include <asm/text-patching.h>
- #include <asm/memtype.h>
- #include <asm/paravirt.h>
-+#include <asm/mmu_context.h>
- 
- /*
-  * We need to define the tracepoints somewhere, and tlb.c
-@@ -830,6 +831,8 @@ void __init poking_init(void)
- 	/* Xen PV guests need the PGD to be pinned. */
- 	paravirt_enter_mmap(text_poke_mm);
- 
-+	set_notrack_mm(text_poke_mm);
-+
- 	/*
- 	 * Randomize the poking address, but make sure that the following page
- 	 * will be mapped at the same PMD. We need 2 pages, so find space for 3,
-diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-index 39761c7..f5b990e 100644
---- a/arch/x86/mm/tlb.c
-+++ b/arch/x86/mm/tlb.c
-@@ -847,7 +847,8 @@ void switch_mm_irqs_off(struct mm_struct *unused, struct mm_struct *next,
- 		 * mm_cpumask. The TLB shootdown code can figure out from
- 		 * cpu_tlbstate_shared.is_lazy whether or not to send an IPI.
- 		 */
--		if (IS_ENABLED(CONFIG_DEBUG_VM) && WARN_ON_ONCE(prev != &init_mm &&
-+		if (IS_ENABLED(CONFIG_DEBUG_VM) &&
-+		    WARN_ON_ONCE(prev != &init_mm && !is_notrack_mm(prev) &&
- 				 !cpumask_test_cpu(cpu, mm_cpumask(next))))
- 			cpumask_set_cpu(cpu, mm_cpumask(next));
- 
-diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
-index a5d3496..ce4c08a 100644
---- a/arch/x86/platform/efi/efi_64.c
-+++ b/arch/x86/platform/efi/efi_64.c
-@@ -89,6 +89,7 @@ int __init efi_alloc_page_tables(void)
- 	efi_mm.pgd = efi_pgd;
- 	mm_init_cpumask(&efi_mm);
- 	init_new_context(NULL, &efi_mm);
-+	set_notrack_mm(&efi_mm);
- 
- 	return 0;
- 
