@@ -1,82 +1,119 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9213284B2F;
-	Tue,  6 May 2025 16:27:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03AD7284B26;
+	Tue,  6 May 2025 16:28:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746548864; cv=none; b=Xl34nglt9h4uaiQtX9rp5RMrbqd55DvpKdIHJMDUgvOlMM17kSWY5fc5SwEuSTY5JZOeXN/O76biySJCYvL0A2LJO9hrrQoGfqS0Usy/3SabkLirSg7X0bTguPq3RYM1JfaP5rHdJxaW2Z/CzVo7bPPugW87kszDx+7KUeh92/U=
+	t=1746548905; cv=none; b=D8gdVdkjMeJwSycPsB6Vt9jSHJg8ivg6alVr2igGg/8RBEauR8hvcQxkxUfCtP6IK1Qvn94HpWDCs710in2X+In3ndz2PBoa09TjoK1XT7XXfHplnN13YOSjW/8n0U+c32lLUJZXWfcE1JgmUWUI3EQHP9L7Jpr2s32xtgiTpi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746548864; c=relaxed/simple;
-	bh=wJl9fXyLBlj/alvhQ5nvzBTo2DX+kfoN+jfRteXdm2I=;
+	s=arc-20240116; t=1746548905; c=relaxed/simple;
+	bh=Jw6PhVIaG/rP64FTIP6ykuYxpI06mAJ2bnrjXXquetM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iAcgnT1Bf3hpcxe2VDlgUELkt7iNENHYHlNPSC/prUFAt6JgCkigWFa7Lyv6g4U8ktXzl5FHazU29T65v3IjvYQ001Zn52HI8xuLkqDU1wzYUS10soLvhU/huy8ByJD3VpNkh5r7SZADxoU/iF1oYeYCFtmiAIA721hM3lSlb34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rhuo3y9T; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZFQ2OsnLjF/4N/Dx5bWCETjSt6JGsWKWtbr/cyoK2dCJjq6Cq8Qvb3E3Flqg+ZQ0gT4lGbyBjHp03IVQ1GlH+3KK4F4t8+Htwtg90vkeZBdfSo8LF/ANMKi/X7iaVFMNq0Tf5r2iPtXVa2R5Pfm5+9rdNYFx/bx9DL5z9HBYNFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tOh09UDx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rhuo3y9T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D61D5C4CEE4;
-	Tue,  6 May 2025 16:27:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tOh09UDx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE9A0C4CEE4;
+	Tue,  6 May 2025 16:28:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746548864;
-	bh=wJl9fXyLBlj/alvhQ5nvzBTo2DX+kfoN+jfRteXdm2I=;
+	s=k20201202; t=1746548904;
+	bh=Jw6PhVIaG/rP64FTIP6ykuYxpI06mAJ2bnrjXXquetM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Rhuo3y9TxDpq5ldZKL2HKkbwDu2AeBTHP5+/g7FPz5CgzrP4Ax9Es9tm6+hELS3AF
-	 rH2Y6Ri9dyMKWLknUeYV5tzJZTv1zEjS5Dec1xZGAV7YPKFymJ04FcZYbZif7mRtZ1
-	 5CVnTtkMyZa3b3yYtQc/339Uif3VQlInWZ/cktPdrwwWGo9jSYn5iIFCJ4QDNNQPQ8
-	 c+5kNG2AmUWIk1LIpU9X23aswuxg8V6RkMRPcNCeZgO2ehWHHsIcDE9jAvC+L1xnS7
-	 KVtf6jzmfVrP4LyO2/mKsI6gFJic2hF9X4zg/yhXFXprzsnXnhGK9QEzpUOU1b2nkG
-	 RTs+bx3Ltd9Ew==
-Date: Tue, 6 May 2025 17:27:39 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Ben Zong-You Xie <ben717@andestech.com>
-Cc: devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org, paul.walmsley@sifive.com,
-	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	tglx@linutronix.de, daniel.lezcano@linaro.org,
-	prabhakar.mahadev-lad.rj@bp.renesas.com, tim609@andestech.com
-Subject: Re: [PATCH v2 5/9] dt-bindings: timer: add Andes machine timer
-Message-ID: <20250506-bonehead-security-fdd71309a721@spud>
-References: <20250503151829.605006-1-ben717@andestech.com>
- <20250503151829.605006-6-ben717@andestech.com>
+	b=tOh09UDxVTUUSmXUxXrfH5xqWHtPf5Y2tVIFmDfxIiMVX3/eZNzpaFViif2T1QEbf
+	 8loQEUMRmBkkPrL1mCuFr6MHNPzARMZfIZ3CjiI9cabrvm/kXb/1IPtpomd8uqHSaW
+	 wksCtzVl22V7bjoThvMV2F2YvIxlrtNxnWHlzJTH2TwgPUuz6Y9O1VyOQwjVHRXcNs
+	 85xq13eaLW8mzIDznkLdLoUa9H5jMso3rM8Ic3BLVME9CADmkwpmceIYhH0AfEuYXV
+	 PaFni1Ef9Xw/KiXGkxY0sGE226iTbf+6DaOcdVs/l3nCkLAuP+R+aJF7R90Xjm3aNL
+	 c097lJS14x6ow==
+Date: Tue, 6 May 2025 17:28:20 +0100
+From: Simon Horman <horms@kernel.org>
+To: Siddarth G <siddarthsgml@gmail.com>
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, skhan@linuxfoundation.org
+Subject: Re: [PATCH] fddi/skfp: fix null pointer dereference in smt.c
+Message-ID: <20250506162820.GV3339421@horms.kernel.org>
+References: <20250505091025.27368-1-siddarthsgml@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="cHkgK4xVUxJ740D6"
-Content-Disposition: inline
-In-Reply-To: <20250503151829.605006-6-ben717@andestech.com>
-
-
---cHkgK4xVUxJ740D6
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250505091025.27368-1-siddarthsgml@gmail.com>
 
-On Sat, May 03, 2025 at 11:18:25PM +0800, Ben Zong-You Xie wrote:
-> Add the DT binding documentation for Andes machine timer.
->=20
-> The RISC-V architecture defines a machine timer that provides a real-time
-> counter and generates timer interrupts. Andes machiner timer (PLMT0) is
-> the implementation of the machine timer, and it contains memory-mapped
-> registers (mtime and mtimecmp). This device supports up to 32 cores.
->=20
-> Signed-off-by: Ben Zong-You Xie <ben717@andestech.com>
+On Mon, May 05, 2025 at 02:40:25PM +0530, Siddarth G wrote:
+> In smt_string_swap(), when a closing bracket ']' is encountered
+> before any opening bracket '[' open_paren would be NULL,
+> and assigning it to format would lead to a null pointer being
+> dereferenced in the format++ statement.
+> 
+> Add a check to verify open_paren is non-NULL before assigning
+> it to format
+> 
+> Fixes: CID 100271 (Coverity Scan)
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+* If there is a public link for the issue, then I think
+  it would be appropriate to include it in a "closes: "
+  tag.
 
---cHkgK4xVUxJ740D6
-Content-Type: application/pgp-signature; name="signature.asc"
+  Else, I think it would be best to simply state something like
+  "This issue was reported by Coverity Scan."
 
------BEGIN PGP SIGNATURE-----
+* The Fixes: tag should (only) refer to the commit that
+  introduced the bug. In this case it looks like the bug goes
+  all the way back to the beginning of git history.
+  If so the tag should cite the very first commit.
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaBo4ewAKCRB4tDGHoIJi
-0hwNAQDM2atqbPzuEVmNCgCayxvl4ixzEpqJu6dqfw41f5RJ5AD/fTboHXFJsmwG
-tNcawZ/ktKYZjQUmN3Q2fvk7oKf8DQo=
-=YvVt
------END PGP SIGNATURE-----
+  Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
 
---cHkgK4xVUxJ740D6--
+* Please don't leave a space between the Fixes tag and Signed-off-by tag.
+  (Or between any other tags.)
+
+* Assuming this is a but, please target it at the net tree like this:
+
+  Subject: [PATCH net v2] ...
+
+  Patches for net should have a Fixes tag.
+
+  Otherwise the patch should be targeted at the net-next tree.
+  And there should not be a Fixes tag.
+
+* If you post a v2, please observe the 24 hour rule
+
+  https://docs.kernel.org/process/maintainer-netdev.html
+
+> 
+> Signed-off-by: Siddarth G <siddarthsgml@gmail.com>
+
+Please consider expanding G out to the name it is short for
+(assuming that is the case) both in the Signed-off-by line and From address.
+
+Thanks.
+
+> ---
+>  drivers/net/fddi/skfp/smt.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/fddi/skfp/smt.c b/drivers/net/fddi/skfp/smt.c
+> index dd15af4e98c2..174f279b89ac 100644
+> --- a/drivers/net/fddi/skfp/smt.c
+> +++ b/drivers/net/fddi/skfp/smt.c
+> @@ -1857,7 +1857,8 @@ static void smt_string_swap(char *data, const char *format, int len)
+>  			open_paren = format ;
+>  			break ;
+>  		case ']' :
+> -			format = open_paren ;
+> +			if (open_paren)
+> +				format = open_paren ;
+>  			break ;
+>  		case '1' :
+>  		case '2' :
+> -- 
+> 2.43.0
+
+-- 
+pw-bot: changes-requested
