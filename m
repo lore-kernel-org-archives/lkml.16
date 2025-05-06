@@ -1,108 +1,114 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB26F4B1E49;
-	Tue,  6 May 2025 07:26:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0800422425B;
+	Tue,  6 May 2025 07:27:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746516399; cv=none; b=sketqRT8PF7i2mviUdYXEH+4eDnJXaC+ruCbiinv0C+V2R3U0aZeQ62z1cTejzX2nhH5lQFi9PZLAuLcEuWAABKpja+p9OQ6MLR3bfEQ0srIm9Ab4dIICtEYo0xLfGqVAAcic7uck0Q69eAg4ql+ZeEmegwUOTLGM+FtWwOAfGg=
+	t=1746516478; cv=none; b=fATrUsFMMqyfndq66s26BEhxHlZjHv4475sZoPf4yXi3r9jmFWdYYH7+0UWw+wM6b4dDlkVcQo44Ncfe4yxoSrqKGD5g7A5dWMdDeV7Wkr2a7pelBZbuwd9FtgmxM8NEW2HsbxnhbMTLz2ragaNsqKumjWCUmKjalemYAbs9MSc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746516399; c=relaxed/simple;
-	bh=P+ODETYfSJY5RU6yx56Vzmrv/7GEf7V/UkIZ7TGEHFw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=s26xsyjkft1kmPlomjEK8Ev1b23q83rjQcraDLAwVH0bwoYovABTXl2PVxVcH1e4lANNUQt4tpb7ytYPSLQhnEIJe+f1+kwZpRqmk8Kis1CjojFNU18p8hqE9JzX868bnol2XfdWsxSayBikIrrJjxztDvMKuAyXURc1Tjudvgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=PrO87tr2; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1746516478; c=relaxed/simple;
+	bh=4o12yW4sJboPsOe6JWe4yHRkHNsA37x/g8VZvI68pSk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ji/wuoJFNk7hlCGjnPd1UQlowV4lDr4wuasvi+a3Qbr+1Lq03b8TKteinTp4V1Pt7vdMg2nck5ACMH1ErdaA9Ozf41g8uRS8/5SG7HmuuHuZPMR7FLTEot1iBFtmyTtOSazWzezj77p464OwqB/klu5dPXhdDhN9V+uysHO5Zgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LfW0d/Jh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="PrO87tr2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1746516392;
-	bh=WcD/OoHUf9FLM3eE3m8oKDk3lhO2pUPO6pXyGxxxAw4=;
-	h=Date:From:To:Cc:Subject:From;
-	b=PrO87tr2lE/oDbbw6Cjr7jeUz7SXodKnAzOJDh8LVkRZUZUNHqaFpkHd4MmeDVjnW
-	 xfNFsjWEAAAp4YG3nZTwIqQYYYkhiLUu+U9IhTaH00paK3FkgB8h+jbbpHM/+LKQIN
-	 aRPfbkzmzyO+toZogzcYiJk+BT6tzg8wVM6V07y0oYgR7+X9kcQIUfVz4jSXEZMA4C
-	 c72qViX4EI08ezqVaSpe02FURdtrG+S2OW4j/DkfUxjBcdAacmk5OnpdN+XvIA8SeY
-	 VaX4tS8i0vuHUL4bm6gbroifd8umFYFcRUT1T7GbK0j1jdrptUgRT5pl2DVWOF/e+2
-	 inuC6x0d3atpA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Zs91h4fs1z4wnp;
-	Tue,  6 May 2025 17:26:31 +1000 (AEST)
-Date: Tue, 6 May 2025 17:26:30 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Wei Liu <wei.liu@kernel.org>
-Cc: Roman Kisel <romank@linux.microsoft.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: build failure after merge of the hyperv tree
-Message-ID: <20250506172630.4385352a@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LfW0d/Jh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F24B3C4CEED;
+	Tue,  6 May 2025 07:27:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746516477;
+	bh=4o12yW4sJboPsOe6JWe4yHRkHNsA37x/g8VZvI68pSk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=LfW0d/JhCp0gTgOGMZlQDMHHfzALRKLGdNoOpITiIeeLyd6Ws61/p/QKZjzwExEDk
+	 gQu4jmumogSCAU41kyAJKWtzno14M89a3qDuRqCl5HpzUBQQxsF2J833GqMuIZyKnL
+	 bg+Ufxxcpse0ezT/13a1J0DFpG3fsl6+DdnfCN0T7rnDNAJGsIAgR/dd81DeOMt/4E
+	 JGh1Ay4bPWYrZ9R48lv6m4q5LATrUuAf0XWq6yHQEuwu/lcA/ftYggPkccDS1XLzVt
+	 ito+GxdmxOUEWvWFhY2nZHRqPYgslJLbL5AznMBUFiaHyQn8J1Ldm7GHHbqk83NfrG
+	 wFZNlIigLzaiA==
+Message-ID: <a9ed7728-6600-4efe-afed-f058357eabe4@kernel.org>
+Date: Tue, 6 May 2025 09:27:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/BIvIskUXxV5zphOHTy92Hcp";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] arch: arm: dts: nvidia: tegra20,30: Rename the
+ apbdma nodename to match with common dma-controller binding
+To: Charan Pedumuru <charan.pedumuru@gmail.com>, Vinod Koul
+ <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>,
+ Jonathan Hunter <jonathanh@nvidia.com>
+Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250506-nvidea-dma-v2-0-2427159c4c4b@gmail.com>
+ <20250506-nvidea-dma-v2-1-2427159c4c4b@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250506-nvidea-dma-v2-1-2427159c4c4b@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
---Sig_/BIvIskUXxV5zphOHTy92Hcp
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 06/05/2025 09:07, Charan Pedumuru wrote:
+> Rename the apbdma nodename from "dma@" to "dma-controller@" to align with
+> linux common dma-controller binding.
+> 
+> Signed-off-by: Charan Pedumuru <charan.pedumuru@gmail.com>
+if there is going to be resend, then subject: drop arch
 
-Hi all,
+Please use subject prefixes matching the subsystem. You can get them for
+example with `git log --oneline -- DIRECTORY_OR_FILE` on the directory
+your patch is touching. For bindings, the preferred subjects are
+explained here:
+https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html#i-for-patch-submitters
 
-After merging the hyperv tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-arch/x86/kernel/apic/apic_numachip.c:228:43: error: initialization of 'int =
-(*)(u32,  long unsigned int,  unsigned int)' {aka 'int (*)(unsigned int,  l=
-ong unsigned int,  unsigned int)'} from incompatible pointer type 'int (*)(=
-u32,  long unsigned int)' {aka 'int (*)(unsigned int,  long unsigned int)'}=
- [-Wincompatible-pointer-types]
-  228 |         .wakeup_secondary_cpu           =3D numachip_wakeup_seconda=
-ry,
-      |                                           ^~~~~~~~~~~~~~~~~~~~~~~~~
-arch/x86/kernel/apic/apic_numachip.c:228:43: note: (near initialization for=
- 'apic_numachip1.wakeup_secondary_cpu')
-arch/x86/kernel/apic/apic_numachip.c:262:43: error: initialization of 'int =
-(*)(u32,  long unsigned int,  unsigned int)' {aka 'int (*)(unsigned int,  l=
-ong unsigned int,  unsigned int)'} from incompatible pointer type 'int (*)(=
-u32,  long unsigned int)' {aka 'int (*)(unsigned int,  long unsigned int)'}=
- [-Wincompatible-pointer-types]
-  262 |         .wakeup_secondary_cpu           =3D numachip_wakeup_seconda=
-ry,
-      |                                           ^~~~~~~~~~~~~~~~~~~~~~~~~
-arch/x86/kernel/apic/apic_numachip.c:262:43: note: (near initialization for=
- 'apic_numachip2.wakeup_secondary_cpu')
-
-Caused by commit
-
-  2d2d4d8bb009 ("arch/x86: Provide the CPU number in the wakeup AP callback=
-")
-
-I have used the hyperv tree from next-20250505 for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/BIvIskUXxV5zphOHTy92Hcp
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgZuaYACgkQAVBC80lX
-0GzNSAf/VBy47Wmx+OYgYr1cbxgANwO+xs66XN4zbx+uluy+Pxa2JEKAr5J3XsaN
-RRbBUhKRx1TOvL9lfGmHWwZsPKBZs+9TXdr6iXO3FokotDOc80mmVp8VS4ksxpse
-HkplPih7waBuf1FF71V7/hdINwZTCWYFof7KyJzvc+saTk5rPmJkUqqc69ewfrqk
-dPvKqmaQGIKl2XgmdvAuyieAnaSU0XAiPpK1WvlS2XK1hvDvfaV7R5YLy/7wGka6
-AovI43XMV3jeZtBKhfZz9qZqny6ZYR1A+/CXk00/ZijbhcQCyqVCoYlvSq2Gn11O
-+GmoDOP09daA6/1gvBv76woY/c7sjg==
-=Pwxt
------END PGP SIGNATURE-----
-
---Sig_/BIvIskUXxV5zphOHTy92Hcp--
+Best regards,
+Krzysztof
