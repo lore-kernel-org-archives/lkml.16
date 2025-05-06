@@ -1,79 +1,77 @@
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E5BCA32;
-	Tue,  6 May 2025 19:16:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 992F57262E;
+	Tue,  6 May 2025 19:16:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746559005; cv=none; b=eBMbXcTOCYEC4QIUyHs6fJ6xrqrCDtG4SJuPkNsWtgLmJegcZeISTcaJickUqjHc2b+TPkh0iqws2v/PMCAZAW7Exa8sOATWXBsSHvc5JCeuK1foCvI2i6E7UNLB2TGE9z1M0pOxqZm+xtE0ETpuPbZdqR9MjsZzt8cgrcCiCJo=
+	t=1746559019; cv=none; b=csukqwZ0WIA/G+3R6uYSFObu7VVwtiCgzHMDYhvEw9T6lpubz8hTd0qZj+Mq+d0PZcqQQQeBUFX9+bTWhaDaXxy020w9OEOuG0Pu+QtyKYSOvijus2kY9aG4rE8C4axJIzCXXwjih5SnFcNVmnyYoyMROM6fEciMRe1J02hDZsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746559005; c=relaxed/simple;
-	bh=p4VVPvMuMmJD9uwcO8O9XNWrcNfyDjWpU+tUu+Qeu2c=;
+	s=arc-20240116; t=1746559019; c=relaxed/simple;
+	bh=cTGn3W13b1idqhLyLVhZGrB/2jdhPxdlZZSJp5a8S9E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M6XI68jZbLE1DfacSODFbLT8xtIuXFNdCe3O7CdDdR3X8hcKnbqYM3dUwRPM4i72J2P66EAGFISERJqj827sDsBxjV/IBcCKtZDkqTEryo4pi/euKa9PC61SZLqN7/ONqJtSE2CXxQqOKIWNXti8pK8IlXlz2JYx+IQbzo+/s8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hiq8mh3H; arc=none smtp.client-ip=209.85.222.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=W/oWQNTqNHipckQwhRpeQ2lA/AM7Wexl/TGAbpM2jZvbqlNuiO7Lxnk/u37gpLVx5WEmu9YI5kSnkuYVdt2q8EbWbO1Ig4Qr/WAaR7AAQDU5XyeOqHxbAJLBOCTKz2i3SbTtze2vqYBYAT/JMNe+QPAyrCAKLap9RRkzhagbImg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TwUBxjHx; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hiq8mh3H"
-Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7c5c8a4a986so74184185a.3;
-        Tue, 06 May 2025 12:16:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TwUBxjHx"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-acec5b99052so1208816466b.1;
+        Tue, 06 May 2025 12:16:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746559003; x=1747163803; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1WVxJmmYslssgL5Tj/KNiDG2Tsl8A6lQ7ZL/QRrbFUo=;
-        b=Hiq8mh3HPc6aXolS8Tay7xoBz59Mb8v+TRQKD1Zz0pPmbmBpNaqXrzn1HiIkm6iPiQ
-         LVbntrpkIs0y9TdIRu09CSRhcO7rW5EkO1sSMuJVTie3TkApabA33iKsF0zUNtqCdfh/
-         wMTRh3ODjGEyZaFYfk7LGSniEtb0jZSkRxX6Th9n516aGOF3krpGI4CaY32bl4GELjk7
-         x3mKtuZh2uKdAQpWdVKhUtZ98z4OGwz5m7tfpePsxBt1WcwDVjdRLc4GwEyXYVv/T/1w
-         1w+N2HOnMnaqXCZ+yvZuf4i9lxBq3c9jo2C+9FZOU0GmfKM+RZPjqzbdtmDhRKloV2ei
-         89XA==
+        d=gmail.com; s=20230601; t=1746559016; x=1747163816; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ubuq//ZeHtaxcD//b9pKvYn5y/1Jx/tBXIw5jB8LuWA=;
+        b=TwUBxjHxkJ2hLMjBbjtjsAb/+duW95hvp01nFRybc8VfATXR6K1+h5IJRCMPAoh+cT
+         dYdV5L+zFO85+7ECmGB3L/d27hBq7wD1gEJY1sIkB4dSO7ZlOb1d2XjQthoTmW4gISzf
+         4RhcHuInrPs1sZc2rYLRE5a8OTYY69yU8i3WLduxFLLTPVIpZM7Q/XimdAfh3WPBCjr/
+         gN/bU7vmx9Rgu3RQb7svNaNOtz80iKut0himS2t4P0aAL4m7lixY+EqeEWzcF6jB8ePX
+         gPSYNLwS0cmKD4bEYcjuf7NVP7VZ9n2k+xKmFDKk2RwCkLbIshRrNp2mO4moMNN0nCux
+         6Bqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746559003; x=1747163803;
-        h=in-reply-to:content-disposition:mime-version:references:reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1746559016; x=1747163816;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1WVxJmmYslssgL5Tj/KNiDG2Tsl8A6lQ7ZL/QRrbFUo=;
-        b=rlJntgT0diYB+lQqyzJnylimg4y6GXkCslDM5M9cRgnpWXBDhkwW/tTstecYEBvEUz
-         MZpZ5578vf9B/8fzx5+z5EIF0vGuwVU4FmfzTLr/fhtfJVPk/oCL8TEaIQVKYjaMkL96
-         4CDN7jnenlpRGQZkYlZupqmSGsQO7ZknskHgonYga2rBAaCjcDZghL7BTBfjYv3xOI54
-         X+c5VSmdKE3i3NFCgLKjqLzktoCbTnrFNqR7b48Ltsvm0XzOzyiCixd528JQHVCeKMML
-         0+vOINbb6ytVprE4SyV943XYt1mTIGWWYmJVvWHToo7zq1IZS90Vs8/uGdNLtWXAkUUR
-         UQPg==
-X-Forwarded-Encrypted: i=1; AJvYcCV0lCls6U0GONzjKFANMH1vCLYKEpJz8xFxvNIDvsrK4ylbdHmF8HG1dsYutBk8KM/kHtAPtq6ikVcuRg==@vger.kernel.org, AJvYcCWKe+mJrv4vMRCgZ6LgtwCB2l6Y+v1zwkRxJN09E+HW06E3T5tZW9Hb4acy2af646ytmKvVFglVesZMiiUW@vger.kernel.org, AJvYcCXMzeW6jbVDZvBWUfp6kdhb/XRmUF/rSYn659ZxnzRvhUGw8244Nt2larGSu26qtmBoeQYj2XWfHNQq@vger.kernel.org, AJvYcCXpnA19ANSwI0ivFA2kIEfcml0Zc9gvE0/i/P9Jojzq6a3vHTZKrfYhKc6IH2ppk7BWa3AtbP2G3wt7@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLWSuJs64CSePc6k+q9/QkWL7f7W8YcHqP5I0tI+tOCNnfDj7G
-	PKb7ty0+MkbCXCLgMCgLaLqZ0+w91O+sIK+OYL/fZrPKO1PsWXdY
-X-Gm-Gg: ASbGncssF2k5hvhPnwvW2iwF3LFqn7Y3s4YB/FNiu9WyFJnbMqbXv4rtc9Z2K23fPVb
-	es0LDyTc//MK8Cvxn4cOYJVdq7EQId9CL9b/SOM8Lq5Ahj/+FpdjE2jpoS/A9ElRvVrubdRcScW
-	eVT0E/G/p5Js7dgrQ9FGNmivpl0hvNWvPXKW1uqekaJgC5XPutIjwPc8dayHCKFhjCuujqwNk5u
-	BV4FOuz9z2+bRBvtmBPjEnHva/opA/U5Z2qW53jDiSN6NAm40DGzg6FSaHlJi9QQEU49IohdUb/
-	UNiIq3S/YnhOoV5xmvpOuUV4wDSK/7I6R1CtJskP4IsVbcw1+ZujMEF1gJoAYg==
-X-Google-Smtp-Source: AGHT+IHb6zORCpCsDe+H9kUbH6FM1JLyxTUSo3SGjUn1jiW3YFAKGcORBuxjIUKCNdDBUlGrRk0hkQ==
-X-Received: by 2002:a05:620a:bc2:b0:7c5:9ab7:3012 with SMTP id af79cd13be357-7caf73fa534mr23968485a.11.1746559002851;
-        Tue, 06 May 2025 12:16:42 -0700 (PDT)
-Received: from JSANTO12-L01.ad.analog.com ([191.255.131.70])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7caf75b87d5sm14986685a.83.2025.05.06.12.16.39
+        bh=ubuq//ZeHtaxcD//b9pKvYn5y/1Jx/tBXIw5jB8LuWA=;
+        b=EzwnDe0VTR6xvp+HnEJXUNYWiLI/7ysZmGIcVYFQA4jjFfsnuvjpnNTcWCz3h6zz/W
+         m1sIZUPRmsfn9pkMelWN7rmzbQkequvi+SlSIePpO6QmYvweqqpcAukS474P33yrBjBT
+         U1Dtdj56ZjH2iGhayct3tlv9/LFOdbVbuHSABkwSg94ac7yuzid/yDMk2AK7IVYcJvG3
+         VvLfm5vEasHQEaBfQHtEzKi1PHh6o7zDyH7bYyQxDLMiG3LcHRtVupZZoKp6oAAFU6vL
+         SEbG/p0lUv1Sa1jgYOOC+yPiWiX8KwcXZ6NxSdZWWtAfFpsLdi0Og2BDYjEYgdphP02O
+         Za0A==
+X-Forwarded-Encrypted: i=1; AJvYcCW+SBKFHrM7Hcs2tROQ1jJg8j/pwP8a3KJMQqZbL0UShM61CThz6Jwq/CimKPkKU730jJL+9BdzbjL1bpk=@vger.kernel.org, AJvYcCW/eOl2+IpiBYe1r0n7xW2JDQckykLRhL7HMDzGeiEN5I7ZPCpbTy2MXLbTpRIdjSyhtL2VOX+mwVyjXg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyM8VyNi21ghbBTi5PLc2uskIzOjKQbtb52L6OAVJBLtFmC1ZwW
+	m5cwQw2x86ndXReL0nSUWsj31G4GZFHS5OylZm3P6A6n1G8JyzSR
+X-Gm-Gg: ASbGncsGCM6BYYaL2TfUJCDpHG0nDLRhoOEsmP6wvON/zVCimE9+k7CS/gihSTN896J
+	L/aMOU2bf8KuLCcGxp0QcjV6JF8WZZWkli4I4xvYGicNbUUzHEoj3+XtjHjanEdT0VzGaddZ1XZ
+	eFx3KaivnNilWDJI/aaRWbfBZ1r1c+RVUj2zUhpm6zVrjvkBSennS5qLFiIk6xP4kqFNOuoHmxT
+	s9EEk/9kwhTGlmiK6MuoB/b3KMg9nDF2pmzT+CE4HCZRm953qEFUA2ja33fSx5PWiCizg4Jloub
+	prtFxIWkBKQulmPGn/4qYCyPR/lteyjG+1rn2F7R5qEZBV1o2CeC2p1Ul5CZGM4N9h1/euJsVA=
+	=
+X-Google-Smtp-Source: AGHT+IEEpeE4FWLIAArnF7WRSOU+aUwT2NdirIpUEuE0HcczvKtqRDe+dH2QFZm7rjPa10s+faFRKA==
+X-Received: by 2002:a17:907:7b8e:b0:ac7:3912:5ea5 with SMTP id a640c23a62f3a-ad1e8d89ce1mr67520266b.58.1746559015613;
+        Tue, 06 May 2025 12:16:55 -0700 (PDT)
+Received: from eldamar.lan (c-82-192-244-13.customer.ggaweb.ch. [82.192.244.13])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1891f04absm753665166b.78.2025.05.06.12.16.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 12:16:42 -0700 (PDT)
-Date: Tue, 6 May 2025 16:16:37 -0300
-From: Jonathan Santos <jonath4nns@gmail.com>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Jonathan Santos <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, andy@kernel.org, nuno.sa@analog.com,
-	Michael.Hennerich@analog.com, marcelo.schmitt@analog.com,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	marcelo.schmitt1@gmail.com, linus.walleij@linaro.org, brgl@bgdev.pl,
-	lgirdwood@gmail.com, broonie@kernel.org, dlechner@baylibre.com
-Subject: Re: [PATCH v6 02/11] dt-bindings: iio: adc: ad7768-1: add
- trigger-sources property
-Message-ID: <aBpgFQ+/KBXdvyWx@JSANTO12-L01.ad.analog.com>
-Reply-To: 20250505163919.6d805db2@jic23-huawei
-References: <cover.1745605382.git.Jonathan.Santos@analog.com>
- <128de2793d6d5424ad152c394faf1d51f0d56e0b.1745605382.git.Jonathan.Santos@analog.com>
- <20250505163919.6d805db2@jic23-huawei>
+        Tue, 06 May 2025 12:16:54 -0700 (PDT)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id 2B986BE2DE0; Tue, 06 May 2025 21:16:54 +0200 (CEST)
+Date: Tue, 6 May 2025 21:16:54 +0200
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: Yu Kuai <yukuai1@huaweicloud.com>
+Cc: stable@vger.kernel.org, gregkh@linuxfoundation.org, song@kernel.org,
+	linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
+	yukuai3@huawei.com, yi.zhang@huawei.com, yangerkun@huawei.com,
+	johnny.chenyi@huawei.com
+Subject: Re: [PATCH v6.1] md: move initialization and destruction of
+ 'io_acct_set' to md.c
+Message-ID: <aBpgJiIRCvTLNgTV@eldamar.lan>
+References: <20250506012417.312790-1-yukuai1@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,46 +80,279 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250505163919.6d805db2@jic23-huawei>
+In-Reply-To: <20250506012417.312790-1-yukuai1@huaweicloud.com>
 
-On 05/05, Jonathan Cameron wrote:
-> On Sun, 27 Apr 2025 21:12:16 -0300
-> Jonathan Santos <Jonathan.Santos@analog.com> wrote:
-> 
-...
-> >  required:
-> >    - compatible
-> >    - reg
-> > @@ -65,7 +95,6 @@ required:
-> >    - vref-supply
-> >    - spi-cpol
-> >    - spi-cpha
-> > -  - adi,sync-in-gpios
-> 
-> Maybe worth requiring oneOf adi,sync-in-gpios or trigger-sources? 
-> 
+Hi,
 
-We cannot do that because we defined that self triggering is enabled
-when trigger-sources is omitted (is this case adi,sync-in-gpios is not
-present as well).
-
-> >  
-> >  patternProperties:
-> >    "^channel@([0-9]|1[0-5])$":
-> > diff --git a/include/dt-bindings/iio/adc/adi,ad7768-1.h b/include/dt-bindings/iio/adc/adi,ad7768-1.h
-> > new file mode 100644
-> > index 000000000000..34d92856a50b
-> > --- /dev/null
-> > +++ b/include/dt-bindings/iio/adc/adi,ad7768-1.h
-> > @@ -0,0 +1,10 @@
-> > +/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
-> > +
-> > +#ifndef _DT_BINDINGS_ADI_AD7768_1_H
-> > +#define _DT_BINDINGS_ADI_AD7768_1_H
-> > +
-> > +#define AD7768_TRIGGER_SOURCE_SYNC_OUT  0
-> > +#define AD7768_TRIGGER_SOURCE_GPIO3     1
-> > +#define AD7768_TRIGGER_SOURCE_DRDY      2
-> > +
-> > +#endif /* _DT_BINDINGS_ADI_AD7768_1_H */
+On Tue, May 06, 2025 at 09:24:17AM +0800, Yu Kuai wrote:
+> From: Yu Kuai <yukuai3@huawei.com>
 > 
+> commit c567c86b90d4715081adfe5eb812141a5b6b4883 upstream.
+> 
+> 'io_acct_set' is only used for raid0 and raid456, prepare to use it for
+> raid1 and raid10, so that io accounting from different levels can be
+> consistent.
+> 
+> By the way, follow up patches will also use this io clone mechanism to
+> make sure 'active_io' represents in flight io, not io that is dispatching,
+> so that mddev_suspend will wait for io to be done as designed.
+> 
+> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+> Reviewed-by: Xiao Ni <xni@redhat.com>
+> Signed-off-by: Song Liu <song@kernel.org>
+> Link: https://lore.kernel.org/r/20230621165110.1498313-2-yukuai1@huaweicloud.com
+> [Yu Kuai: This is the relied patch for commit 4a05f7ae3371 ("md/raid10:
+> fix missing discard IO accounting"), kernel will panic while issuing
+> discard to raid10 without this patch]
+> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+> ---
+>  drivers/md/md.c    | 27 ++++++++++-----------------
+>  drivers/md/md.h    |  2 --
+>  drivers/md/raid0.c | 16 ++--------------
+>  drivers/md/raid5.c | 41 +++++++++++------------------------------
+>  4 files changed, 23 insertions(+), 63 deletions(-)
+> 
+> diff --git a/drivers/md/md.c b/drivers/md/md.c
+> index d5fbccc72810..a9fcfcbc2d11 100644
+> --- a/drivers/md/md.c
+> +++ b/drivers/md/md.c
+> @@ -5965,6 +5965,13 @@ int md_run(struct mddev *mddev)
+>  			goto exit_bio_set;
+>  	}
+>  
+> +	if (!bioset_initialized(&mddev->io_acct_set)) {
+> +		err = bioset_init(&mddev->io_acct_set, BIO_POOL_SIZE,
+> +				  offsetof(struct md_io_acct, bio_clone), 0);
+> +		if (err)
+> +			goto exit_sync_set;
+> +	}
+> +
+>  	spin_lock(&pers_lock);
+>  	pers = find_pers(mddev->level, mddev->clevel);
+>  	if (!pers || !try_module_get(pers->owner)) {
+> @@ -6142,6 +6149,8 @@ int md_run(struct mddev *mddev)
+>  	module_put(pers->owner);
+>  	md_bitmap_destroy(mddev);
+>  abort:
+> +	bioset_exit(&mddev->io_acct_set);
+> +exit_sync_set:
+>  	bioset_exit(&mddev->sync_set);
+>  exit_bio_set:
+>  	bioset_exit(&mddev->bio_set);
+> @@ -6374,6 +6383,7 @@ static void __md_stop(struct mddev *mddev)
+>  	percpu_ref_exit(&mddev->active_io);
+>  	bioset_exit(&mddev->bio_set);
+>  	bioset_exit(&mddev->sync_set);
+> +	bioset_exit(&mddev->io_acct_set);
+>  }
+>  
+>  void md_stop(struct mddev *mddev)
+> @@ -8744,23 +8754,6 @@ void md_submit_discard_bio(struct mddev *mddev, struct md_rdev *rdev,
+>  }
+>  EXPORT_SYMBOL_GPL(md_submit_discard_bio);
+>  
+> -int acct_bioset_init(struct mddev *mddev)
+> -{
+> -	int err = 0;
+> -
+> -	if (!bioset_initialized(&mddev->io_acct_set))
+> -		err = bioset_init(&mddev->io_acct_set, BIO_POOL_SIZE,
+> -			offsetof(struct md_io_acct, bio_clone), 0);
+> -	return err;
+> -}
+> -EXPORT_SYMBOL_GPL(acct_bioset_init);
+> -
+> -void acct_bioset_exit(struct mddev *mddev)
+> -{
+> -	bioset_exit(&mddev->io_acct_set);
+> -}
+> -EXPORT_SYMBOL_GPL(acct_bioset_exit);
+> -
+>  static void md_end_io_acct(struct bio *bio)
+>  {
+>  	struct md_io_acct *md_io_acct = bio->bi_private;
+> diff --git a/drivers/md/md.h b/drivers/md/md.h
+> index 4f0b48097455..1fda5e139beb 100644
+> --- a/drivers/md/md.h
+> +++ b/drivers/md/md.h
+> @@ -746,8 +746,6 @@ extern void md_error(struct mddev *mddev, struct md_rdev *rdev);
+>  extern void md_finish_reshape(struct mddev *mddev);
+>  void md_submit_discard_bio(struct mddev *mddev, struct md_rdev *rdev,
+>  			struct bio *bio, sector_t start, sector_t size);
+> -int acct_bioset_init(struct mddev *mddev);
+> -void acct_bioset_exit(struct mddev *mddev);
+>  void md_account_bio(struct mddev *mddev, struct bio **bio);
+>  
+>  extern bool __must_check md_flush_request(struct mddev *mddev, struct bio *bio);
+> diff --git a/drivers/md/raid0.c b/drivers/md/raid0.c
+> index 7c6a0b4437d8..c50a7abda744 100644
+> --- a/drivers/md/raid0.c
+> +++ b/drivers/md/raid0.c
+> @@ -377,7 +377,6 @@ static void raid0_free(struct mddev *mddev, void *priv)
+>  	struct r0conf *conf = priv;
+>  
+>  	free_conf(mddev, conf);
+> -	acct_bioset_exit(mddev);
+>  }
+>  
+>  static int raid0_run(struct mddev *mddev)
+> @@ -392,16 +391,11 @@ static int raid0_run(struct mddev *mddev)
+>  	if (md_check_no_bitmap(mddev))
+>  		return -EINVAL;
+>  
+> -	if (acct_bioset_init(mddev)) {
+> -		pr_err("md/raid0:%s: alloc acct bioset failed.\n", mdname(mddev));
+> -		return -ENOMEM;
+> -	}
+> -
+>  	/* if private is not null, we are here after takeover */
+>  	if (mddev->private == NULL) {
+>  		ret = create_strip_zones(mddev, &conf);
+>  		if (ret < 0)
+> -			goto exit_acct_set;
+> +			return ret;
+>  		mddev->private = conf;
+>  	}
+>  	conf = mddev->private;
+> @@ -432,15 +426,9 @@ static int raid0_run(struct mddev *mddev)
+>  
+>  	ret = md_integrity_register(mddev);
+>  	if (ret)
+> -		goto free;
+> +		free_conf(mddev, conf);
+>  
+>  	return ret;
+> -
+> -free:
+> -	free_conf(mddev, conf);
+> -exit_acct_set:
+> -	acct_bioset_exit(mddev);
+> -	return ret;
+>  }
+>  
+>  /*
+> diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
+> index 4315dabd3202..6e80a439ec45 100644
+> --- a/drivers/md/raid5.c
+> +++ b/drivers/md/raid5.c
+> @@ -7770,19 +7770,12 @@ static int raid5_run(struct mddev *mddev)
+>  	struct md_rdev *rdev;
+>  	struct md_rdev *journal_dev = NULL;
+>  	sector_t reshape_offset = 0;
+> -	int i, ret = 0;
+> +	int i;
+>  	long long min_offset_diff = 0;
+>  	int first = 1;
+>  
+> -	if (acct_bioset_init(mddev)) {
+> -		pr_err("md/raid456:%s: alloc acct bioset failed.\n", mdname(mddev));
+> +	if (mddev_init_writes_pending(mddev) < 0)
+>  		return -ENOMEM;
+> -	}
+> -
+> -	if (mddev_init_writes_pending(mddev) < 0) {
+> -		ret = -ENOMEM;
+> -		goto exit_acct_set;
+> -	}
+>  
+>  	if (mddev->recovery_cp != MaxSector)
+>  		pr_notice("md/raid:%s: not clean -- starting background reconstruction\n",
+> @@ -7813,8 +7806,7 @@ static int raid5_run(struct mddev *mddev)
+>  	    (mddev->bitmap_info.offset || mddev->bitmap_info.file)) {
+>  		pr_notice("md/raid:%s: array cannot have both journal and bitmap\n",
+>  			  mdname(mddev));
+> -		ret = -EINVAL;
+> -		goto exit_acct_set;
+> +		return -EINVAL;
+>  	}
+>  
+>  	if (mddev->reshape_position != MaxSector) {
+> @@ -7839,15 +7831,13 @@ static int raid5_run(struct mddev *mddev)
+>  		if (journal_dev) {
+>  			pr_warn("md/raid:%s: don't support reshape with journal - aborting.\n",
+>  				mdname(mddev));
+> -			ret = -EINVAL;
+> -			goto exit_acct_set;
+> +			return -EINVAL;
+>  		}
+>  
+>  		if (mddev->new_level != mddev->level) {
+>  			pr_warn("md/raid:%s: unsupported reshape required - aborting.\n",
+>  				mdname(mddev));
+> -			ret = -EINVAL;
+> -			goto exit_acct_set;
+> +			return -EINVAL;
+>  		}
+>  		old_disks = mddev->raid_disks - mddev->delta_disks;
+>  		/* reshape_position must be on a new-stripe boundary, and one
+> @@ -7863,8 +7853,7 @@ static int raid5_run(struct mddev *mddev)
+>  		if (sector_div(here_new, chunk_sectors * new_data_disks)) {
+>  			pr_warn("md/raid:%s: reshape_position not on a stripe boundary\n",
+>  				mdname(mddev));
+> -			ret = -EINVAL;
+> -			goto exit_acct_set;
+> +			return -EINVAL;
+>  		}
+>  		reshape_offset = here_new * chunk_sectors;
+>  		/* here_new is the stripe we will write to */
+> @@ -7886,8 +7875,7 @@ static int raid5_run(struct mddev *mddev)
+>  			else if (mddev->ro == 0) {
+>  				pr_warn("md/raid:%s: in-place reshape must be started in read-only mode - aborting\n",
+>  					mdname(mddev));
+> -				ret = -EINVAL;
+> -				goto exit_acct_set;
+> +				return -EINVAL;
+>  			}
+>  		} else if (mddev->reshape_backwards
+>  		    ? (here_new * chunk_sectors + min_offset_diff <=
+> @@ -7897,8 +7885,7 @@ static int raid5_run(struct mddev *mddev)
+>  			/* Reading from the same stripe as writing to - bad */
+>  			pr_warn("md/raid:%s: reshape_position too early for auto-recovery - aborting.\n",
+>  				mdname(mddev));
+> -			ret = -EINVAL;
+> -			goto exit_acct_set;
+> +			return -EINVAL;
+>  		}
+>  		pr_debug("md/raid:%s: reshape will continue\n", mdname(mddev));
+>  		/* OK, we should be able to continue; */
+> @@ -7922,10 +7909,8 @@ static int raid5_run(struct mddev *mddev)
+>  	else
+>  		conf = mddev->private;
+>  
+> -	if (IS_ERR(conf)) {
+> -		ret = PTR_ERR(conf);
+> -		goto exit_acct_set;
+> -	}
+> +	if (IS_ERR(conf))
+> +		return PTR_ERR(conf);
+>  
+>  	if (test_bit(MD_HAS_JOURNAL, &mddev->flags)) {
+>  		if (!journal_dev) {
+> @@ -8125,10 +8110,7 @@ static int raid5_run(struct mddev *mddev)
+>  	free_conf(conf);
+>  	mddev->private = NULL;
+>  	pr_warn("md/raid:%s: failed to run raid set.\n", mdname(mddev));
+> -	ret = -EIO;
+> -exit_acct_set:
+> -	acct_bioset_exit(mddev);
+> -	return ret;
+> +	return -EIO;
+>  }
+>  
+>  static void raid5_free(struct mddev *mddev, void *priv)
+> @@ -8136,7 +8118,6 @@ static void raid5_free(struct mddev *mddev, void *priv)
+>  	struct r5conf *conf = priv;
+>  
+>  	free_conf(conf);
+> -	acct_bioset_exit(mddev);
+>  	mddev->to_remove = &raid5_attrs_group;
+>  }
+>  
+> -- 
+> 2.39.2
+
+FWIW, this was tested for people in Debian affected by
+https://bugs.debian.org/1104460 .
+
+Regards,
+Salvatore
