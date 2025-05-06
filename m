@@ -1,353 +1,229 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED26C218ADD;
-	Tue,  6 May 2025 09:25:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746523522; cv=none; b=G89UuEHYEthqveg2SNA4JehLP1uzrpc3k3iHfGa16OOZMQkfrAgybNjfwXMmSmebkh6GKDsv3a6+bQV1PyhvnAannl/JI60JmkzxnNb46KjrThX0Jh1D+paNgZoW3R3X7hcuAXNawFX9y1xV7e/vqvQjFypK1Jo826284n4mK54=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746523522; c=relaxed/simple;
-	bh=HGlsEjNvNx96nLSJWxi185X1lP+El2NHmoMGECrTJrA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=KBqjJDI9Lky57uLSy7Dt2+dU19Ic8ESzzJGLTTkGC7YMgGlOO0m6xB38H7bVFvaaUztPT5PTtByyVK/trw7qUa/iC8o5JhVnvtb9MMXGs5lSD1MPk2bmcoUf4CYSdBWEaYjdQ1FXIbxMgG4n8efQQjClY3yubkDGOPrSNvkYYsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=ZL3/HZ/u; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEB51262804;
+	Tue,  6 May 2025 09:26:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.16
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746523583; cv=fail; b=G4LvwE1DkXa0jrVfyFpkVC3LpH3+2LjoX6fr5SaDyV3VfruiH//dlorALnJ5F+AgZ2TVQe5xQFzSHMQ8uYdyqIGRvJXgX3ZbtGSR2+OdjF1ujqRIcBrexF9EhMDv0j8U412OkoFP526PzFCXxNNuH2LLGLVbGQN6wjF8p1GEOVM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746523583; c=relaxed/simple;
+	bh=G2PKwI6jJp9M2RwBcVBqVtdKSy7ZKQicFF5sZIxr4Wk=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=i2KKN9b9RkIGYUIjddFB4tMu8IDutFyTpkOixNTJnfW8IhjwPNwBhGn2Fos9qVyRtUZY+1r7jyVd/9vU31GynA20WkQcoWpnksq+16R5j/Abykd8JuyqQYVDwYjt06NLavpG3ALMMbWPOXcxH5qtlKBOFpLLl5QcgYc1xDOXpkc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D18fYOmb; arc=fail smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="ZL3/HZ/u"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 7FC0540E023E;
-	Tue,  6 May 2025 09:25:15 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id B2iVo4jYKFKq; Tue,  6 May 2025 09:25:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1746523510; bh=D3fGVlVgH0xkdZKa6VajFiIuLJ0/AqK9f80Lw0fWGBo=;
-	h=Date:From:To:Cc:Subject:From;
-	b=ZL3/HZ/uL28Iq3qoqE5Hi4fZNoFzkJGL6DgVZVMllb3JPSZGaQPXLdHTFEHIGcw3+
-	 yEEy92QrLU6B1Db2j0XCuxKhAQo/K+vm1xBQhey/c5Yr4N2igFNNZvwFbJbpZMW0Cm
-	 uwMOdojFfZ/GJ/EwsQKWO5x+2UAB6rK5U3wof1lPhWD1Zr6lbp2c4nEpiiDOEWoQIP
-	 GW2ET4vmOhG6Z55nwIWJkmWZqnqSNSHxfhbEvOzYZ9350BT9k290OK2oSUVxRVNeQ7
-	 +I2dWMwGTNngQShw6Kd3W7HfTD3e2FeZUkn8NOjH23ma7HypGC5ouoP6Pkc/GCryUY
-	 hXeu4UZ0DLXnU4R4SgXMdPCiTe6nP8whjlCPz3Wf2RnoiPMTWJliow6e/SAcZqP2io
-	 5Jvg7mkHJhELH8J0aaJfC/Kj7W2HVBv8A8E7kL9IMCH9XoxW/BgQBCmkD8ZYD9VM97
-	 PREqildUTLTgbIRBCRoLY/8wHBvQz7tglM1DdJhsUqS5cksc31CdKYMWtEPytQiayv
-	 2Vdlooah9BeGfY6kS6rngPadrd1c+7h47+A2UIQynrGq1FF3rHYzE1hK1xobK27QVq
-	 t6XUsyaLA9haZ/woj7fjOsuATmDV6KrIBAMKayHvrDW1tYxP6Wuef1XkwtGHPygT46
-	 oVaB76hdoUYC5MQRaQBEQODo=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A459340E0173;
-	Tue,  6 May 2025 09:24:52 +0000 (UTC)
-Date: Tue, 6 May 2025 11:24:45 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: "Kirill A. Shutemov" <kirill@shutemov.name>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
-	Ingo Molnar <mingo@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	Dionna Amalie Glaze <dionnaglaze@google.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Kees Cook <keescook@chromium.org>,
-	Kevin Loughlin <kevinloughlin@google.com>,
-	Len Brown <len.brown@intel.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>, linux-efi@vger.kernel.org,
-	x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>
-Subject: 4067196a5227 ("mm/page_alloc: fix deadlock on cpu_hotplug_lock in
- __accept_page()") (was: Re: [tip: x86/boot] x86/boot: Provide
- __pti_set_user_pgtbl() to startup code)
-Message-ID: <20250506092445.GBaBnVXXyvnazly6iF@fat_crate.local>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D18fYOmb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746523582; x=1778059582;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=G2PKwI6jJp9M2RwBcVBqVtdKSy7ZKQicFF5sZIxr4Wk=;
+  b=D18fYOmbJtUwWPuEMeFM2K/+MLPfo0P4vgGMt1LhMg75I2Yp7T35GrkR
+   5GvNfFoxF+lcM82varVpOCklQEZPkeuEFt2R6Pthnaqv8ElUToSH3hHs5
+   LO9WWQeGcyh76w2jbXQr5BDrOQ2Yg21U/GXvPLcvlqmnTDesPStOkNKxF
+   HI4eIzoED8fd3af3EcNL7xCIZYsDMAjkiQJ6cxOZF2gbqfuVJyy/5i+qK
+   OhCa46+w0wJlyPpPg0ktYH5auPiLCg+gcQWMClptxdVz0pP9wo1O9Ts8R
+   MpPiErWjNrVfczPfHwbIqM0s5BejOizjYyH8O5aS53XUzLhMITDMfq+iC
+   g==;
+X-CSE-ConnectionGUID: 7xWInw82Qnu3vRzz4yZzsw==
+X-CSE-MsgGUID: Xns+U2T7QYqXzM2zMDxZsQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11424"; a="48262949"
+X-IronPort-AV: E=Sophos;i="6.15,266,1739865600"; 
+   d="scan'208";a="48262949"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 02:26:09 -0700
+X-CSE-ConnectionGUID: IZB6buFjQ6+f2oAnUvOA4g==
+X-CSE-MsgGUID: MxS3uv6mT8SUSy8y/4RdOA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,266,1739865600"; 
+   d="scan'208";a="140741626"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 02:26:08 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Tue, 6 May 2025 02:26:07 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Tue, 6 May 2025 02:26:07 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.176)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Tue, 6 May 2025 02:26:05 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=hmlFm2b5rqRqU5v08QufSRTF5kiho41kUZnxajyBu/xifxnApB7y1r5+C71ubWCU8QKvD/njDI/pUtYVROItdTuyObkmBC6ldIea40qAZ+KHbe31lbspAMFLDcNBh7FcjIX3Evm6GVGsIH051/xU8JSgsWRy6FbLpGWEx7/ULqCBWua8yk/NAP4NTE30TnSRon2kUY8M9xkE1o0DvUVAFF/CYhRM2ujf28b+G7cHFIuaNVZzaBvR27OQO+gebWo8905YKafz5rc+gNJ2PaEHt3kVr5tJDI05ucDqBM4LFzt8OcUASVol5N3J4U4YKGsiHfs4s9S8gAIGNwRS7Iq22w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Q1GQ51dF+sL24hfe+KZmNVaw/lUx2ELX3cHrt3FOPfg=;
+ b=cW4QtPE7GasekqjeksigHDCLQoOe53QUp+T9SdyfQhSrwLL1JtcqyHJjHU79jNajJRqwrUAEl+b42KvHK4N6bQAyYCBNO4adBt5eoHbd0e1qK0DqoRB4WlgCH/NqD9DMpLKsR/e8/oDoz4lBp3TQhsT3sAojJ+OTW+hdWkbwc+PEyorCbY4tUZdmYWT/Mbt34aVf81hIWTJ4B4MKVpVacvyQdjfYc8FsgqBZVXVoRqwY9Nu6xWtnS+GSI1J500/hJLMXq7bgwgdAxD2m0h6/fTbtZvBs5rcqOkDPwgT/WXgOMoMZ5IMsFTmRir061g1/TJLXqupnjkp4/naBsDLMgg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from BN9PR11MB5276.namprd11.prod.outlook.com (2603:10b6:408:135::18)
+ by PH3PPF740777B0C.namprd11.prod.outlook.com (2603:10b6:518:1::d2f) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.23; Tue, 6 May
+ 2025 09:25:59 +0000
+Received: from BN9PR11MB5276.namprd11.prod.outlook.com
+ ([fe80::b576:d3bd:c8e0:4bc1]) by BN9PR11MB5276.namprd11.prod.outlook.com
+ ([fe80::b576:d3bd:c8e0:4bc1%5]) with mapi id 15.20.8699.026; Tue, 6 May 2025
+ 09:25:59 +0000
+From: "Tian, Kevin" <kevin.tian@intel.com>
+To: Nicolin Chen <nicolinc@nvidia.com>, "jgg@nvidia.com" <jgg@nvidia.com>,
+	Vasant Hegde <vasant.hegde@amd.com>
+CC: "corbet@lwn.net" <corbet@lwn.net>, "will@kernel.org" <will@kernel.org>,
+	"bagasdotme@gmail.com" <bagasdotme@gmail.com>, "robin.murphy@arm.com"
+	<robin.murphy@arm.com>, "joro@8bytes.org" <joro@8bytes.org>,
+	"thierry.reding@gmail.com" <thierry.reding@gmail.com>, "vdumpa@nvidia.com"
+	<vdumpa@nvidia.com>, "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
+	"shuah@kernel.org" <shuah@kernel.org>, "jsnitsel@redhat.com"
+	<jsnitsel@redhat.com>, "nathan@kernel.org" <nathan@kernel.org>,
+	"peterz@infradead.org" <peterz@infradead.org>, "Liu, Yi L"
+	<yi.l.liu@intel.com>, "mshavit@google.com" <mshavit@google.com>,
+	"praan@google.com" <praan@google.com>, "zhangzekun11@huawei.com"
+	<zhangzekun11@huawei.com>, "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org"
+	<linux-tegra@vger.kernel.org>, "linux-kselftest@vger.kernel.org"
+	<linux-kselftest@vger.kernel.org>, "patches@lists.linux.dev"
+	<patches@lists.linux.dev>, "mochs@nvidia.com" <mochs@nvidia.com>,
+	"alok.a.tiwari@oracle.com" <alok.a.tiwari@oracle.com>, Suravee Suthikulpanit
+	<suravee.suthikulpanit@amd.com>
+Subject: RE: [PATCH v2 10/22] iommufd/viommmu: Add IOMMUFD_CMD_VCMDQ_ALLOC
+ ioctl
+Thread-Topic: [PATCH v2 10/22] iommufd/viommmu: Add IOMMUFD_CMD_VCMDQ_ALLOC
+ ioctl
+Thread-Index: AQHbtnBgWiXEiZpdnkyUfZOQGgZNUrO5ALyAgACDQoCAAJ/GAIAAE+cAgAA8wwCAAHMKgIAKfNsg
+Date: Tue, 6 May 2025 09:25:59 +0000
+Message-ID: <BN9PR11MB5276A00FDB2685B394FB9D4D8C892@BN9PR11MB5276.namprd11.prod.outlook.com>
+References: <cover.1745646960.git.nicolinc@nvidia.com>
+ <094992b874190ffdcf6012104b419c8649b5e4b4.1745646960.git.nicolinc@nvidia.com>
+ <b0d01609-bdda-49a3-af0c-ca828a9c4cea@amd.com>
+ <aA/exylmYJhIhEVL@Asurada-Nvidia>
+ <b8338b47-6fbf-44ac-9b99-3555997c9f36@amd.com>
+ <aBB1gLfahnLmn0N1@Asurada-Nvidia>
+ <a3860aed-5b6b-4e68-a8fd-1a6ee28ba022@amd.com>
+ <aBEI+T7P+hV8Y6tU@Asurada-Nvidia>
+In-Reply-To: <aBEI+T7P+hV8Y6tU@Asurada-Nvidia>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BN9PR11MB5276:EE_|PH3PPF740777B0C:EE_
+x-ms-office365-filtering-correlation-id: 91678bd2-f11e-4db8-ef7f-08dd8c80035b
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014|38070700018;
+x-microsoft-antispam-message-info: =?us-ascii?Q?S2ALM/agTlKccCwiLiBgU1kEyl3bGFxU1VrYtUW4U9+SgiKpSe4aIxrWkvu4?=
+ =?us-ascii?Q?r3E/lVc2Ti3qX+MutgZKkAevMLMFoO5hoYVnpfwp5VeBa+eSLOTHxiWcZuNk?=
+ =?us-ascii?Q?PuWA1iSp6DwbN1vYj4y2xO0sRVEMi1nvJaxdGFGAuwlTHmf+qOnsrJ0ae8xO?=
+ =?us-ascii?Q?ZLYiNp3PpcQ2nY+MUu2vR7xY3jBRinEUPuoE+EBzJwg7c3bmSF/iGDIofZ0I?=
+ =?us-ascii?Q?jYSvI2jerQWu3VpLmmJ/hMG7e396lBR+wUZAH6HikfUHfYLpPxqxDXNCqd8i?=
+ =?us-ascii?Q?eyOvV/vKejcdjuKQ9coWN89Iww5cTsgnUACoHcBT4tIetnFWBQ3LoOpU9XPX?=
+ =?us-ascii?Q?0AsDw0vyshNbTYAXMU7XqgrtVxYH1qn5FV3Nc6ZUO5nj2/Kr4lLC3262T28H?=
+ =?us-ascii?Q?1cNJMLZBq/ic8EdasT7nBJLs8rfmLBvIDIuzqfzXTEM8HtFCCWnGyiKg+DvM?=
+ =?us-ascii?Q?P3vxb00TUccdzpsvoNvg9KUgi0dK38Bt6J/u9zXFRgNI7IyQ4xfzq7wq8XAi?=
+ =?us-ascii?Q?e3tQdnSWBb8pvI7XYBrVvvXpxy0CSyCemVb/aLuat4hfC1SGs9SQFQBcFj/F?=
+ =?us-ascii?Q?xTCkYjaY4bbUQ/aLcQqgq3keIhR0/BLR4Rv32hi3v2wDZ/umtbtz6teEhVEL?=
+ =?us-ascii?Q?0fdOUjSwYSGq85ubxMXgb1JrTrtVkrC9+16KSW5mQZUwdCQHIuGSw3lRlCEe?=
+ =?us-ascii?Q?e1g9s79VhincQQ+0Bfr/fjApo+0G22YpfRfHg/2oFJ2BSLQ0onkqbR6hK0KC?=
+ =?us-ascii?Q?dSywinJ+S/xiJ62669LLOsM+9lyRrk7m8nMUjJqtwFBNqNCMSMKJMegfhmOg?=
+ =?us-ascii?Q?z9vCMsWnRdnp1RU558Dbe/2XVVfdZKkRb2hPmsa34XGpRTHAuzx6Dy9xwxuj?=
+ =?us-ascii?Q?pLhb0yC1Iud+ZiDocnNbnLHZ85JWTa336IaoeX3X2KkvJbKMl4gbPLdVmu8+?=
+ =?us-ascii?Q?woP3MyDYFKXsyIduUxrdD+LrOW691nui4B1DI0gIBEpC+WEhZ+zlAW8arwVt?=
+ =?us-ascii?Q?uvEoNgK721TxI5utsY3zZnZ5K0PBrq7+oFj/HHnsXjCSGwAt90LdGodlM6fI?=
+ =?us-ascii?Q?Saz3ki2dqJd1GoqClFlRwki0wiE2rEpTBgK5sfG8mvoDE390gLx7Odh8KM6L?=
+ =?us-ascii?Q?FzRmJL07iUMSqDfCMzbewat9FC7fw+y8nw/3PWpSG45VfTGIzeChW0mH6mvM?=
+ =?us-ascii?Q?AuLircg+R1XdG34jTuMn9WSWxNLe7dDATxKAA/PQMmWyaWViCBuWoGoVHeFV?=
+ =?us-ascii?Q?GKy9ADZUrx+Jce0pOUBW2T0+g1l7HB7UZdbjDGPfw+srtUfiXvkZwk/PrU3/?=
+ =?us-ascii?Q?4c/Xc9WYG0DWrHUEgtw1rf2+82zM0hqzf+o6poyQmZdDEAQgHn0eZLN+t+VT?=
+ =?us-ascii?Q?XdgYkpjxtSHl4JD2MD/C81YHcOLdMTVUjcEG+JO0XXhfXjKI6MZ105YeB+7Y?=
+ =?us-ascii?Q?6JywS+7w6THhj9euJvRZCIDEFLCnWIy3ZXU12vxmRsUv8aG6Ka8x4Q=3D=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR11MB5276.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?wXO+IdG7I7rm4dUeemvymLCaQ4Z3E7WgA9CQFhsN8f3eiV9zWQtFhb3fvMfH?=
+ =?us-ascii?Q?E0/qXLk0HY1bsAOI/k6AwMd7S04MhmUidqR7IlJex/Un0V4w7YR1V04WGMd3?=
+ =?us-ascii?Q?PlVNpEpyOzde78st5V0vGAHzDE724Riuvi6wt9QKfCHFjZ1yTI33LaKTLERI?=
+ =?us-ascii?Q?b6EaSTTR6LdJOUsJpMrgP0kXJAp1YHEa5de/Opw7mP28SggKJJgGzh0pwfDW?=
+ =?us-ascii?Q?Vw4v2XXeT9NVGWjBNVGVJVdI6mg16cbOm0RvyONem5ccfWRnKGkCzM3tV/ts?=
+ =?us-ascii?Q?il03+3Qa99mL8f5wf3Hv/LhP3ReEZvjONx7tPIrnB5nHTPQwfIhwTZjjl+lF?=
+ =?us-ascii?Q?Sm1RNRcZo7Svv9lDSoXuB8PyInWQbrlfi7pUdjU+mRhMJQSQQHgY+MhrG83F?=
+ =?us-ascii?Q?ueERncawZGEE9dtBfj9U+KTMQWabqA4jv6Qtu8/CgQVfvCQXgx4JyZtm/FgU?=
+ =?us-ascii?Q?jJzgW2caSzGAyMEXg8v+egGguzZqHA/3lnF6ontF5kHccwEXp6uCTfAS6bt1?=
+ =?us-ascii?Q?96/+8YCfHFNUNTmafDaD3t8J83nlKaF2NfREfENGek/gsTmcZg6W9G29624Z?=
+ =?us-ascii?Q?pGXSdVf1lXg4bxuLS5YLJj7q4F7W+jj/n7JjfT0UXg2TXhfexWltOTiIEAjx?=
+ =?us-ascii?Q?rE/iS/5QPxtV2oqnIqtsdmhFNzNy6cgvJPrkd2PIB9GZcK5bJPWvWIajbo7U?=
+ =?us-ascii?Q?AV8Sz7Cilus32KGAlOf8fm8T8roOVIPXckTeYba63cUQJINJhSS686uWHaOD?=
+ =?us-ascii?Q?H775iYvDC5XuV3d912W9r1QTYCfz8a8ETk6rFYule5BKv8+76plH9KqotdOn?=
+ =?us-ascii?Q?N3vNZI8B6PhabUc/XgaSYbV7N6Z/6Bux6IiFuKyByV9mJGd4UBfU3V1xNx+3?=
+ =?us-ascii?Q?kRwWVpksFOfmIl4juvuv4nlMHSDdZ8oYVQaR2aIrjvUcV8Yq3+S+H2Pae9dL?=
+ =?us-ascii?Q?LmTNIQA2OAj/5u2NmPnzFgJGRHk1wr2W1DogrfhcCVPx9u/7p31a5EqEo5IU?=
+ =?us-ascii?Q?mJviy57BnlczpsewWqR04K/3YYrM4Z4Ek2eqZ60VnLJ19FZ8nM2IZjt2Xenu?=
+ =?us-ascii?Q?YpHDEIl1CSN6MDyhbSE8j1OcHyYVFqInzB9RPN2Msdyi5UiCO37mI+AEjNQv?=
+ =?us-ascii?Q?C4jMHZdeyjwLovT8DEtT8XhlMT/doQlFAWCIQee5VMHI5YeWoTp5T5xYebh8?=
+ =?us-ascii?Q?NhGdvq7QZsxHzvL9bw8k2HyNSAVi37gslpPB0Bs/T5ZN8Y3coi66Kkzp6uL9?=
+ =?us-ascii?Q?IITLyo7NbbP+pPPru744mmwBlH1dbAkxAvDiGzVYwPBpEqtxEoe0AgWPBW65?=
+ =?us-ascii?Q?HDoDEDVJToF9TKHeSUkTcNyFt2yhWslsPPHNrh+dW4UnYjq9eU9G7129m8Og?=
+ =?us-ascii?Q?q1Nmua0P7VGwalKQ8YAgov+oHHS3QZk5YfN9kip0Z5klEiIlsbaSkLbx1XVO?=
+ =?us-ascii?Q?dLQAdNj0wZ8XRKkJ2NBQCLJPK+8e80Xq/82lShw9IsMdQkSjFniBsoQSO5B3?=
+ =?us-ascii?Q?KVfuAYTONbdawTCQhZZoxMwRBQz1uq62VpzfwKfUY+Eb61jtH+fiw6RvwExI?=
+ =?us-ascii?Q?SGbbvMVDKtuGh3b3UYmwKWU2tD+SAQD9eqvy63No?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN9PR11MB5276.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 91678bd2-f11e-4db8-ef7f-08dd8c80035b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 May 2025 09:25:59.6086
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: aCpJWYOy3H8v73PAtQXP69EgPn8AS0kmoglBlY1M0/iQZsIjiKz9WTkUleuHnUb7Y/5ic8WeERvm+d/p1T3qGw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH3PPF740777B0C
+X-OriginatorOrg: intel.com
 
-Yah,
+> From: Nicolin Chen <nicolinc@nvidia.com>
+> Sent: Wednesday, April 30, 2025 1:15 AM
+>=20
+> On Tue, Apr 29, 2025 at 03:52:48PM +0530, Vasant Hegde wrote:
+> > On 4/29/2025 12:15 PM, Nicolin Chen wrote:
+> > > On Tue, Apr 29, 2025 at 11:04:06AM +0530, Vasant Hegde wrote:
+> > >
+> > > Will the hardware replace the physical device ID in the event with
+> > > the virtual device ID when injecting the event to a guest event/PPR
+> > > queue?
+> > > If so, yea, I think you can define them separately using the> vCMDQ
+> > infrastructures:
+> > >  - IOMMU_VCMDQ_TYPE_AMD_VIOMMU_CMDBUF
+> > >  - IOMMU_VCMDQ_TYPE_AMD_VIOMMU_EVENTLOG
+> > >  - IOMMU_VCMDQ_TYPE_AMD_VIOMMU_PPRLOG
+> > > (@Kevin @Jason Hmm, in this case we might want to revert the naming
+> > >  "vCMDQ" back to "vQEUEUE", once Vasant confirms.)
+>=20
+> I think I should rename IOMMUFD_OBJ_VCMDQ back to
+> IOMMUFD_OBJ_VQUEUE
+> since the same object fits three types of queue now in the AMD case.
+>=20
+> Or any better naming suggestion?
+>=20
 
-leaving the rest below untouched for background info how we ended up here.
-
-So tglx and I did some tracing just now:
-
-...
-[    1.156432] smpboot: x86: Booting SMP configuration:
-[    1.157267] .... node  #0, CPUs:        #1  #2  #3  #4  #5  #6  #7  #8  #9 #10 #11 #12 #13 #14 #15 #16 #17 #18 #19 #20 #21 #22 #23 #24 #25 #26 #27 #28 #29 #30 #31
-[    1.274198] smp: Brought up 1 node, 32 CPUs
-[    1.277842] smpboot: Total of 32 processors activated (191999.87 BogoMIPS)
-[    1.289879] ------------[ cut here ]------------
-[    1.290682] v: -1
-
-The key is -1 and the code *actually* already says what happens:
-
-                /*
-                 * Warn about the '-1' case though; since that means a
-                 * decrement is concurrent with a first (0->1) increment. IOW
-                 * people are trying to disable something that wasn't yet fully
-                 * enabled. This suggests an ordering problem on the user side.
-                 */
-
-Keep on reading...
-
-[    1.290688] WARNING: CPU: 0 PID: 10 at kernel/jump_label.c:276 __static_key_slow_dec_cpuslocked+0x8e/0xa0
-[    1.293850] Modules linked in:
-[    1.294428] CPU: 0 UID: 0 PID: 10 Comm: kworker/0:1 Not tainted 6.15.0-rc5+ #8 PREEMPT(voluntary) 
-[    1.296050] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS unknown 02/02/2022
-[    1.297841] Workqueue: events unaccepted_cleanup_work
-[    1.298766] RIP: 0010:__static_key_slow_dec_cpuslocked+0x8e/0xa0
-[    1.299866] Code: 48 c7 c7 a0 52 54 82 5b e9 8f 42 8c 00 0f 0b 5b e9 f7 ba 8c 00 89 c6 48 c7 c7 19 63 2e 82 c6 05 8c 19 19 01 01 e8 22 54 e5 ff <0f> 0b eb a1 0f 0b eb b9 0f 0b eb b5 66 0f 1f 44 00 00 90 90 90 90
-[    1.301840] RSP: 0018:ffffc90000067e30 EFLAGS: 00010282
-[    1.302787] RAX: 0000000000000000 RBX: ffffffff82f12d00 RCX: 0000000000000000
-[    1.305838] RDX: 0000000000000002 RSI: ffffc90000067cc8 RDI: 00000000ffffffff
-[    1.307144] RBP: ffff88827b7d4d98 R08: 00000000fff7ffff R09: ffff88827e3fdfa8
-[    1.308449] R10: ffff88827b8035f0 R11: 0000000000000001 R12: ffff888272e2e740
-[    1.309838] R13: ffff8881008e1940 R14: ffff888100308a05 R15: ffff888100308a00
-[    1.311144] FS:  0000000000000000(0000) GS:ffff8882effbe000(0000) knlGS:0000000000000000
-[    1.312613] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    1.313838] CR2: ffff88827fe00000 CR3: 0008000002c22000 CR4: 00000000003506f0
-[    1.315146] Call Trace:
-[    1.315608]  <TASK>
-[    1.316012]  static_key_slow_dec+0x1f/0x40
-[    1.316792]  ? unaccepted_cleanup_work+0x1a/0x50
-[    1.317691]  unaccepted_cleanup_work+0x2e/0x50
-[    1.317839]  process_one_work+0x171/0x330
-[    1.318587]  worker_thread+0x247/0x390
-[    1.319282]  ? _raw_spin_lock_irqsave+0x23/0x50
-[    1.320136]  ? srso_return_thunk+0x5/0x5f
-[    1.320924]  ? __pfx_worker_thread+0x10/0x10
-[    1.321838]  kthread+0x107/0x240
-[    1.322514]  ? __pfx_kthread+0x10/0x10
-[    1.323212]  ? __pfx_kthread+0x10/0x10
-[    1.322040] node 0 deferred pages initialised in 40ms
-[    1.323867]  ret_from_fork+0x87/0xf0
-[    1.323872]  ? __pfx_kthread+0x10/0x10
-[    1.326505]  ret_from_fork_asm+0x1a/0x30
-[    1.327211]  </TASK>
-[    1.327613] Kernel panic - not syncing: kernel: panic_on_warn set ...
-[    1.328772] CPU: 0 UID: 0 PID: 10 Comm: kworker/0:1 Not tainted 6.15.0-rc5+ #8 PREEMPT(voluntary) 
-[    1.329836] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS unknown 02/02/2022
-[    1.329836] Workqueue: events unaccepted_cleanup_work
-[    1.329836] Call Trace:
-[    1.329836]  <TASK>
-[    1.329836]  dump_stack_lvl+0x56/0x80
-[    1.329836]  panic+0x106/0x2c9
-[    1.329836]  ? __static_key_slow_dec_cpuslocked+0x8e/0xa0
-[    1.329836]  check_panic_on_warn.cold+0xf/0x1e
-[    1.329836]  __warn.cold+0x9f/0xf8
-[    1.329836]  ? __static_key_slow_dec_cpuslocked+0x8e/0xa0
-[    1.329836]  report_bug+0xe6/0x170
-[    1.329836]  ? prb_read_valid+0x17/0x20
-[    1.329836]  ? __static_key_slow_dec_cpuslocked+0x8e/0xa0
-[    1.329836]  handle_bug+0x199/0x260
-[    1.329836]  exc_invalid_op+0x13/0x60
-[    1.329836]  asm_exc_invalid_op+0x16/0x20
-[    1.329836] RIP: 0010:__static_key_slow_dec_cpuslocked+0x8e/0xa0
-[    1.329836] Code: 48 c7 c7 a0 52 54 82 5b e9 8f 42 8c 00 0f 0b 5b e9 f7 ba 8c 00 89 c6 48 c7 c7 19 63 2e 82 c6 05 8c 19 19 01 01 e8 22 54 e5 ff <0f> 0b eb a1 0f 0b eb b9 0f 0b eb b5 66 0f 1f 44 00 00 90 90 90 90
-[    1.329836] RSP: 0018:ffffc90000067e30 EFLAGS: 00010282
-[    1.329836] RAX: 0000000000000000 RBX: ffffffff82f12d00 RCX: 0000000000000000
-[    1.329836] RDX: 0000000000000002 RSI: ffffc90000067cc8 RDI: 00000000ffffffff
-[    1.329836] RBP: ffff88827b7d4d98 R08: 00000000fff7ffff R09: ffff88827e3fdfa8
-[    1.329836] R10: ffff88827b8035f0 R11: 0000000000000001 R12: ffff888272e2e740
-[    1.329836] R13: ffff8881008e1940 R14: ffff888100308a05 R15: ffff888100308a00
-[    1.329836]  static_key_slow_dec+0x1f/0x40
-[    1.329836]  ? unaccepted_cleanup_work+0x1a/0x50
-[    1.329836]  unaccepted_cleanup_work+0x2e/0x50
-[    1.329836]  process_one_work+0x171/0x330
-[    1.329836]  worker_thread+0x247/0x390
-[    1.329836]  ? _raw_spin_lock_irqsave+0x23/0x50
-[    1.329836]  ? srso_return_thunk+0x5/0x5f
-[    1.329836]  ? __pfx_worker_thread+0x10/0x10
-[    1.329836]  kthread+0x107/0x240
-[    1.329836]  ? __pfx_kthread+0x10/0x10
-[    1.329836]  ? __pfx_kthread+0x10/0x10
-[    1.329836]  ret_from_fork+0x87/0xf0
-[    1.329836]  ? __pfx_kthread+0x10/0x10
-[    1.329836]  ret_from_fork_asm+0x1a/0x30
-[    1.329836]  </TASK>
-[    1.329836] Dumping ftrace buffer:
-[    1.329836] ---------------------------------
-[    1.329836] pgdatini-180      29..... 1546876us : __free_pages_core: will INC: increment branch key, key: 0
-
-CPU29 comes in and decides to INC the key.
-
-[    1.329836] pgdatini-180      29..... 1546896us : <stack trace>
-[    1.329836]  => padata_mt_helper
-[    1.329836]  => padata_do_multithreaded
-[    1.329836]  => deferred_init_memmap
-[    1.329836]  => kthread
-[    1.329836]  => ret_from_fork
-[    1.329836]  => ret_from_fork_asm
-[    1.329836] kthreadd-2         0.N... 1552367us : __accept_page: schedule unaccepted_cleanup_work()
-[    1.329836] kthreadd-2         0.N... 1552385us : <stack trace>
-
-CPU0 gets in-between and schedules work...
-
-[    1.329836]  => alloc_pages_bulk_noprof
-[    1.329836]  => __vmalloc_node_range_noprof
-[    1.329836]  => __vmalloc_node_noprof
-[    1.329836]  => copy_process
-[    1.329836]  => kernel_clone
-[    1.329836]  => kernel_thread
-[    1.329836]  => kthreadd
-[    1.329836]  => ret_from_fork
-[    1.329836]  => ret_from_fork_asm
-[    1.329836] kworker/-10        0..... 1552395us : unaccepted_cleanup_work: will DEC: unaccepted_cleanup_work(), key: -1
-
-... and wants to decrement *while* the increment is in progress. Without
-holding the jump label mutex.
-
-Pooof.
-
-[    1.329836] kworker/-10        0..... 1552398us : <stack trace>
-[    1.329836]  => kthread
-[    1.329836]  => ret_from_fork
-[    1.329836]  => ret_from_fork_asm
-[    1.329836] pgdatini-180      29.N... 1553206us : __free_pages_core: done INC: increment branch key, key: 1
-
-CPU29 gets to increment the key finally.
-
-[    1.329836] pgdatini-180      29.N... 1553213us : <stack trace>
-[    1.329836]  => padata_do_multithreaded
-[    1.329836]  => deferred_init_memmap
-[    1.329836]  => kthread
-[    1.329836]  => ret_from_fork
-[    1.329836]  => ret_from_fork_asm
-[    1.329836] pgdatini-180      29..... 1553227us : __free_pages_core: will INC: increment branch key, key: 1
-[    1.329836] pgdatini-180      29..... 1553232us : <stack trace>
-[    1.329836]  => padata_mt_helper
-[    1.329836]  => padata_do_multithreaded
-[    1.329836]  => deferred_init_memmap
-[    1.329836]  => kthread
-[    1.329836]  => ret_from_fork
-[    1.329836]  => ret_from_fork_asm
-[    1.329836] pgdatini-180      29..... 1553234us : __free_pages_core: done INC: increment branch key, key: 2
-[    1.329836] pgdatini-180      29..... 1553238us : <stack trace>
-[    1.329836]  => padata_do_multithreaded
-[    1.329836]  => deferred_init_memmap
-[    1.329836]  => kthread
-[    1.329836]  => ret_from_fork
-[    1.329836]  => ret_from_fork_asm
-[    1.329836] ---------------------------------
-[    1.329836] ---[ end Kernel panic - not syncing: kernel: panic_on_warn set ... ]---
-
-Fun stuff.
-
-On Tue, May 06, 2025 at 09:18:00AM +0200, Borislav Petkov wrote:
-> + Kirill.
-> 
-> This looks like this unaccepted_cleanup_work() thing being unsynchronized...
-> 
-> On Mon, May 05, 2025 at 06:47:59PM +0200, Borislav Petkov wrote:
-> > On Mon, May 05, 2025 at 06:19:49PM +0200, Ard Biesheuvel wrote:
-> > > This patch by itself does nothing. The symbol is __weak for the time
-> > > being, and given that this code does not have its __pi_ prefixes yet,
-> > > this function will be superseded by the existing one. (If you remove
-> > > the __weak you will get a linker error)
-> > > 
-> > > Are you sure this patch is causing the issue?
-> > 
-> > My by-foot bisection of x86/boot is below.
-> > 
-> > I don't know if this patch uncovers something or maybe changes placement...
-> > 
-> > Tom also pointed to
-> > 
-> > 4067196a5227 ("mm/page_alloc: fix deadlock on cpu_hotplug_lock in __accept_page()")
-> > 
-> > as potentially related.
-> > 
-> > And now I went and tried to reproduce the warning and it fired ontop of:
-> > 
-> > 419cbaf6a56a ("x86/boot: Add a bunch of PIC aliases")
-> > 
-> > which is the previous patch.
-> > 
-> > Ufff, this is one of those which don't reproduce reliably because it was fine
-> > on that commit in the previous run. Nasty.
-> > 
-> > Lemme go dig more.
-> > 
-> > ---
-> > 
-> > ed4d95d033e3 (HEAD, refs/remotes/tip/x86/boot) x86/sev: Disentangle #VC handling code from startup code
-> > 
-> > <--- NOT
-> > 
-> > [    1.227968] smp: Brought up 1 node, 32 CPUs
-> > [    1.231576] smpboot: Total of 32 processors activated (191999.61 BogoMIPS)
-> > [    1.247644] ------------[ cut here ]------------
-> > [    1.248697] WARNING: CPU: 17 PID: 104 at kernel/jump_label.c:276 __static_key_slow_dec_cpuslocked+0x2a/0x80
-> > [    1.251592] Modules linked in:
-> > [    1.252370] CPU: 17 UID: 0 PID: 104 Comm: kworker/17:0 Not tainted 6.15.0-rc4+ #2 PREEMPT(voluntary) 
-> > [    1.253173] node 0 deferred pages initialised in 12ms
-> > [    1.254539] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS unknown 02/02/2022
-> > [    1.257490] Workqueue: events unaccepted_cleanup_work
-> > [    1.258698] RIP: 0010:__static_key_slow_dec_cpuslocked+0x2a/0x80
-> > [    1.259574] Code: 0f 1f 44 00 00 53 48 89 fb e8 82 66 e5 ff 8b 03 85 c0 78 16 74 54 83 f8 01 74 11 8d 50 ff f0 0f b1 13 75 ec 5b e9 66 bf 8c 00 <0f> 0b 48 c7 c7 00 44 54 82 e8 a8 5f 8c 00 8b 03 83 f8 ff 74 33 85
-> > [    1.266446] Memory: 7574396K/8381588K available (13737K kernel code, 2487K rwdata, 6056K rodata, 3916K init, 3592K bss, 791248K reserved, 0K cma-reserved)
-> > [    1.263574] RSP: 0018:ffffc9000048fe40 EFLAGS: 00010286
-> > [    1.267573] RAX: 00000000ffffffff RBX: ffffffff82f10d00 RCX: 0000000000000000
-> > [    1.269388] RDX: 0000000000000001 RSI: 0000000000000000 RDI: ffffffff82f10d00
-> > [    1.275578] RBP: ffff88827b7d4d98 R08: 8080808080808080 R09: ffff888100b59100
-> > [    1.277441] R10: ffff888100050cc0 R11: fefefefefefefeff R12: ffff88827326e300
-> > [    1.279574] R13: ffff888100bc1940 R14: ffff8881000e2405 R15: ffff8881000e2400
-> > [    1.281460] FS:  0000000000000000(0000) GS:ffff8882f0400000(0000) knlGS:0000000000000000
-> > [    1.281460] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > [    1.281460] CR2: 0000000000000000 CR3: 0008000002c22000 CR4: 00000000003506f0
-> > [    1.287576] Call Trace:
-> > [    1.288381]  <TASK>
-> > [    1.289015]  static_key_slow_dec+0x1f/0x40
-> > [    1.289980]  process_one_work+0x171/0x330
-> > [    1.290988]  worker_thread+0x247/0x390
-> > [    1.291576]  ? __pfx_worker_thread+0x10/0x10
-> > [    1.292773]  kthread+0x107/0x240
-> > [    1.293536]  ? __pfx_kthread+0x10/0x10
-> > [    1.295573]  ret_from_fork+0x30/0x50
-> > [    1.295575]  ? __pfx_kthread+0x10/0x10
-> > [    1.296580]  ret_from_fork_asm+0x1a/0x30
-> > [    1.297507]  </TASK>
-> > [    1.298085] ---[ end trace 0000000000000000 ]---
-> > 
-> > 5297886f0cc4 x86/boot: Provide __pti_set_user_pgtbl() to startup code
-> > 
-> > <--- OK
-> > 
-> > 419cbaf6a56a x86/boot: Add a bunch of PIC aliases
-> > f932adcc8650 x86/linkage: Add SYM_PIC_ALIAS() macro helper to emit symbol aliases
-> > 
-> > <--- OK
-> > 
-> > ae862964cbc5 x86/sev: Move instruction decoder into separate source file
-> > fae89bbfdd9d x86/sev: Make sev_snp_enabled() a static function
-> > b3464a36f7f2 x86/boot: Disregard __supported_pte_mask in __startup_64()
-> > bd4a58beaaf1 x86/boot: Move early_setup_gdt() back into head64.c
-> > 
-> > <--- OK
-> > 
-> > 
-> > -- 
-> > Regards/Gruss,
-> >     Boris.
-> > 
-> > https://people.kernel.org/tglx/notes-about-netiquette
-> 
-> -- 
-> Regards/Gruss,
->     Boris.
-> 
-> https://people.kernel.org/tglx/notes-about-netiquette
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+What about IOMMUFD_OBJ_HQUEUE to differentiate from other
+pure software queue structs? 'H" stands for direct hw access to
+the queue object.
