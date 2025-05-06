@@ -1,89 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC9A728001E;
-	Tue,  6 May 2025 16:30:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB98E25CC41;
+	Tue,  6 May 2025 16:30:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746549028; cv=none; b=MZthvFwF8uQLY6j60tHoG0ljF7yhDnh5jVUU5iCgL4vNjc5zokhjjFNi4Y8DyqdvUBcl/TY8TO+WOhrNWtoREzxrt4QhS86t01Ss0Rpnm3Lt8Vo/F4dgWe+PJjkb7BPrhN8NT5qVY0crcEaXU7bAUVJ734+T0pFFkXe1GJe1OJQ=
+	t=1746549040; cv=none; b=YSiyU9G1TeHxwbQRPcMF7/ELzBFqo+f0hgGzqf/EnRcVhn+e9VeGn/hY/7mYTiRYvx/Va7lsz4k/Q3ZfKNz5AHb1EbeB9eknNp4oCTCcYYjH3fkFI/6hgOc/P3A6MiCv47FIYKU30hz/2Kk2quu1ZmuCx7gO7m7j5Zd5jEH4Wv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746549028; c=relaxed/simple;
-	bh=yk89LHTXO3jss8gNOPcfJRUOju19BFvggSyJM9Digqk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BDCJJieYeCdL1KYNeJ6mIpm9Dnu2si6sfLp8EbkPjfLEJFx+0jC4Lg2VXaMWVjH909GePP0eCc0N2FtODZYe5JdIMqyrBAWUclL4oMj9WASLN1GOKi0bOTG/+kBVz7+JkaHQGQlbXnc9Io35GphjxIGMkdeLVzDcOxnJwlDMArs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i3FdGlF9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746549040; c=relaxed/simple;
+	bh=sy5+FLBt8V254FwUykIHfEDCfE4L9U2Cpnole7yVjV8=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=NFTrV2ct9HZFjrA9ZJ2NupWi0f44t+QLN+tdLoaeF6+YQHUo13X2TZd++NPXlJQ31qS6QKLTM5yLXSjGB5Ki2iPf8OlOq41iOSPaW+HfttA+w+eERTY1oAOc13l45LgknDV6CMUkWRv9jgfEx37IFBux8ux2VMoJiZwabZBjP9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=MIzuHMAp; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i3FdGlF9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0129C4CEE4;
-	Tue,  6 May 2025 16:30:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746549027;
-	bh=yk89LHTXO3jss8gNOPcfJRUOju19BFvggSyJM9Digqk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=i3FdGlF9r/zuuI40wyqxOzGvxDbf+SqGdyaiMBUoxowwEunFPrve3bRz6pb6552t/
-	 8FjCXrOBQ74tQ+RoKpFLwzTUyrMAVFx6Bvw/iQMYUltrNV9dY4T8/MMvkp42Mk5rXF
-	 ZxQuIWb1pxu7GYi4ObbFdg8EqUhg8c0rMLM1VzWR+WLqdwUaxfz+wnWhFXDVxvylgt
-	 WyY0dVl8Th4ieB14eCz59E/yzC1DzZlE4Tag+Hob7lUG2AKCv3PSkIWJcaG7xUVGAf
-	 OO7tUayKKhf4yr5NL8ZObm3CfyeOaZjVVYk3XoJJDhIWamkHUUohSiJYi9q3+WOkyq
-	 suD7hzhxBnK6A==
-Date: Tue, 6 May 2025 17:30:22 +0100
-From: Conor Dooley <conor@kernel.org>
-To: =?iso-8859-1?Q?N=EDcolas_F=2E_R=2E_A=2E?= Prado <nfraprado@collabora.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Alexandre Mergnat <amergnat@baylibre.com>,
-	Amjad Ouled-Ameur <aouledameur@baylibre.com>,
-	Bernhard =?iso-8859-1?Q?Rosenkr=E4nzer?= <bero@baylibre.com>,
-	Fabien Parent <fparent@baylibre.com>, kernel@collabora.com,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH 1/2] dt-bindings: mfd: syscon: Add
- mediatek,mt8365-infracfg-nao
-Message-ID: <20250506-safeguard-brisket-96da510a99d3@spud>
-References: <20250502-mt8365-infracfg-nao-compatible-v1-0-e40394573f98@collabora.com>
- <20250502-mt8365-infracfg-nao-compatible-v1-1-e40394573f98@collabora.com>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="MIzuHMAp"
+Received: from [127.0.0.1] ([76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 546GThAV971224
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Tue, 6 May 2025 09:29:43 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 546GThAV971224
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025042001; t=1746548984;
+	bh=v6XPEFSGKokl1nFOIN3pFv6ErpYGqIeLKYtQQ53aKkA=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=MIzuHMApNdjpQ5ZILL8ZOPep8vI7WxRjiUiWPmXLr7AzDzOJeAGF2Mg3Bs+LAbbwx
+	 607Qn0HNOUl8WsbZ4SrOxTt3IdOUq3CoaVSLbP4fgukVo/lHgJX/w60kJhrOIv+Eo3
+	 EtnpOGnOuJCfsrahyDVkm/2FpCQnFbwHzfvd5yf9xafnZ8uVrGGS9Q/Iu79cmfdGtZ
+	 Vz83BgaoYBBM4TWQhw4lZtxPxUN5TrlgmjN4OPVBEOoz3Qn0dlROG0rcLV017k47bh
+	 Gp+ab6aHjmc5mWQcCMrcJK6tZAPb5n/0ZJvsLL+Sxd7HRUAbVbByKg3hbRG9U84j1x
+	 uAAqsuKmpoD0A==
+Date: Tue, 06 May 2025 09:29:40 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Ingo Molnar <mingo@kernel.org>, Sean Christopherson <seanjc@google.com>
+CC: Juergen Gross <jgross@suse.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, kvm@vger.kernel.org, xin@zytor.com,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Subject: Re: [PATCH 2/6] x86/kvm: Rename the KVM private read_msr() function
+User-Agent: K-9 Mail for Android
+In-Reply-To: <aBo1w0tRoM2JUtW_@gmail.com>
+References: <20250506092015.1849-1-jgross@suse.com> <20250506092015.1849-3-jgross@suse.com> <aBoUdApwSgnr3r9V@google.com> <aBo1w0tRoM2JUtW_@gmail.com>
+Message-ID: <55944DEC-0129-4052-BBA4-7298B16326BD@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="PZUhCmeqes3xNKnX"
-Content-Disposition: inline
-In-Reply-To: <20250502-mt8365-infracfg-nao-compatible-v1-1-e40394573f98@collabora.com>
-
-
---PZUhCmeqes3xNKnX
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 02, 2025 at 12:43:21PM -0400, N=EDcolas F. R. A. Prado wrote:
-> The register space described by DT node of compatible
-> mediatek,mt8365-infracfg-nao exposes a variety of unrelated registers,
-> including registers for controlling bus protection on the MT8365 SoC,
-> which is used by the power domain controller through a syscon.
->=20
-> Add this compatible to the syscon binding.
->=20
-> Signed-off-by: N=EDcolas F. R. A. Prado <nfraprado@collabora.com>
+On May 6, 2025 9:16:03 AM PDT, Ingo Molnar <mingo@kernel=2Eorg> wrote:
+>
+>* Sean Christopherson <seanjc@google=2Ecom> wrote:
+>
+>> On Tue, May 06, 2025, Juergen Gross wrote:
+>> > Avoid a name clash with a new general MSR access helper after a futur=
+e
+>> > MSR infrastructure rework by renaming the KVM specific read_msr() to
+>> > kvm_read_msr()=2E
+>> >=20
+>> > Signed-off-by: Juergen Gross <jgross@suse=2Ecom>
+>> > ---
+>> >  arch/x86/include/asm/kvm_host=2Eh | 2 +-
+>> >  arch/x86/kvm/vmx/vmx=2Ec          | 4 ++--
+>> >  2 files changed, 3 insertions(+), 3 deletions(-)
+>> >=20
+>> > diff --git a/arch/x86/include/asm/kvm_host=2Eh b/arch/x86/include/asm=
+/kvm_host=2Eh
+>> > index 9c971f846108=2E=2E308f7020dc9d 100644
+>> > --- a/arch/x86/include/asm/kvm_host=2Eh
+>> > +++ b/arch/x86/include/asm/kvm_host=2Eh
+>> > @@ -2275,7 +2275,7 @@ static inline void kvm_load_ldt(u16 sel)
+>> >  }
+>> > =20
+>> >  #ifdef CONFIG_X86_64
+>> > -static inline unsigned long read_msr(unsigned long msr)
+>>=20
+>> Ewwww=2E  Eww, eww, eww=2E  I forgot this thing existed=2E
+>>=20
+>> Please just delete this and use rdmsrq() directly (or is it still rdmsr=
+l()? at
+>> this point?)=2E
+>
+>Both will work, so code-in-transition isn't build-broken unnecessarily:
+>
+>  arch/x86/include/asm/msr=2Eh:#define rdmsrl(msr, val) rdmsrq(msr, val)
+>
+>:-)
+>
+>Thanks,
+>
+>	Ingo
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-
---PZUhCmeqes3xNKnX
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaBo5HgAKCRB4tDGHoIJi
-0o6IAQDuQXjMuejZZPZgecYQRVBoKrB/iTH2vnh1+sSpGOzoXwEA159pOsyZy5CJ
-3GifqtsxDfIlIV5zxXmOb+gRCw9eOg0=
-=ziAH
------END PGP SIGNATURE-----
-
---PZUhCmeqes3xNKnX--
+But for forward-looking code, rdmsrq()=2E
