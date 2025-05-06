@@ -1,60 +1,62 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19424282EE
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 16:52:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21F807261B
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 16:52:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746550359; cv=none; b=KzekFjP2ZcBgrVnle55p2iW8p1/9dydePG70CIKZmR3tvBfByeBi1CJ6tBSy5MDb1tSmVjWNrwfjzOuwNpdEhaRo3hyL70lUPPsVv8J0aRtmy7zkt5I1Yl4NfK2RTt9JexCAhcJ6/E0M3D/H0MXiQot/W4H8EO+zQjumT6GwnmE=
+	t=1746550360; cv=none; b=URBXCi8PFX5r29TRSr43iesOg7TWGyZiztG+7fqGsR+gqOoDne21rHMmzfZJq5ZhUOlld96sRDUhxbQvJyi0yjP2TQFLLdcB2Lz2mm8P38O5mNvMZDpOn9jEtsPAmhB1U0RWCz4wNp5mroZjtArkwC6XYklV4+F8gQAWiyCmyjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746550359; c=relaxed/simple;
-	bh=TLEf2Pzcvp0C8v/GEDQxgC7/p8qcL5R5Kdv15oXjTR0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fsaRkRtnC1mnetp2OXnJyxLOKgW/tc8E4LzrC7heU9JJ3BWqg2npP3IBWnRtplBojl+AnN+6/b0BANeR6hHZMvdEtvDHCdk8K7HHd6aIWy9pgs2cmu3Pxb7BHSJzArrtFNE6F1teYvxPLOeXpD7BrTQSyL2uesR0ytzfg2ZKpdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KApbM2jT; arc=none smtp.client-ip=209.85.128.43
+	s=arc-20240116; t=1746550360; c=relaxed/simple;
+	bh=ReWttmpdpXfcE7Da7Umqh+YPRY60YzmgxQvETNXEOfg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=CjX8j9sFjH3QTYfUoAM+lj3im84dgPeoAhGlhzuUwP77Wfq7r8nM2FqSexJRMCaNxTZXpg6N5eKW1vxb0RY+lUErcQ+Dvlv9ezpA8tLc4vNYu3BzIg4G63JupQAbJccKRqYtzg3iFthqPuCpzRjtYeHMzji9C1ou2CPpMRBUWPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EjLeGVGC; arc=none smtp.client-ip=209.85.221.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KApbM2jT"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43ce70f9afbso52043955e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 09:52:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EjLeGVGC"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-39c0dfad22aso3854843f8f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 09:52:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746550356; x=1747155156; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7n9zohVwGZ6g3FLCLUAons4AXAhGRHvbJSlu2S9PxXA=;
-        b=KApbM2jTuTWOo7gjmUTkncy1049oIuzkxPmNXFUEcekY03LYjPih61ZkyctjoPWRjT
-         lMWQ8cBWDJfsKu5ZR8m5IByGfZO3sc5TWvxUx7NVeVjmWNbPrD26AT/5uDFuRIFyGc/a
-         JhwhxZCKXsEcD/1CHyZ+WhLnFJDFfnBSHXU1GViV+WyiMPCQp+B56mXjEoqJ0B14yFpf
-         3ykKaO59pAeoEc9j2NB5AL7emqOl9DqxLiMpPt0gVbQszmNHU7IDuLQslLWpXimDAWmz
-         eUVyPF4Fqvi6znOW2VlQ5ZEiTeiyOADypa0RG7Dht6qQScjb8CsJzSBdyaSIwl4VojDz
-         YBqA==
+        d=gmail.com; s=20230601; t=1746550357; x=1747155157; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1wlpVfKgV+u5QM/e/Iqvkj6aHp862bAjgPE/Jg1ETXY=;
+        b=EjLeGVGCrm2ubDHNl5rcpwrBA7OTqseySHrEaahmAQe3yN6TgWA5hrERE372xVD0WR
+         Yn+nb3Q4+7y2u2peMJVghvd38WTQ76p9pkhY6ZOUpJZgflE3TnpO/O4Iv98+HcYPctCI
+         9leP3IZm5k7U+M7ToaQ5GRb3AAlYv0thJGzUBAPy0VqDRFbxzcSlAC9iLM9DNPwEpHcs
+         8/E8uKyYQYHZfD1eUoP66DYU85p2g9/UdaQQQgAPGdWDk/4ZJGA1gKLUbXn63Kfcns7F
+         igwmdIa0vEXCtjTV11wfJZafJ2ILPiaPYQOUan9fatD/rnsNV5eFSh8PDpd4BRJlUvfA
+         b+7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746550356; x=1747155156;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7n9zohVwGZ6g3FLCLUAons4AXAhGRHvbJSlu2S9PxXA=;
-        b=VqhHzpLy87Ge5Y5PHeSIoVE7NgtDMs0Y4Lr9TJ4rnQXbpXK53LFMVeinQyjfbJLfIU
-         VmadqO9fPhWSOi/qNVjBpn4x5LCtJEZwTOvQf0xLQ1jNtanK2voUj2V0MHunEvuu+2LF
-         6DBPj+TgWQjqvaFS+p2uDeVTDlt16v5QtTAYVBjD4BnFt0n1RqRmWjjuimndO/LOLZOC
-         GQQmmP7hKycgKYwYyJ5qA6z0OjW5pdh1zBwIiYmLZxaZqDUQb9CPSWJgSw0qB1id8cgC
-         dsdgQZbKxcI9yrD0wvTcO/jHXmIK9ZbAY2GAblTe4ebmoZLKLA6UBmy8pDlrF1zRbdhS
-         eRwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUqfuYwOcVEypDMrQIqWPHDuuk9EbxHh9/fRSti4Z6x//b4NG/fUalZWAX1TYAf8/zCDO+2ezg9wD4rPZE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzoyxlht3S7Aqt6xZJ6xNJzesIuwdevxMbzc04HJ3OI7CO0UX8G
-	jrOTj8HhAn8FNdpBmk0gy0HgnfTxWxCVllBig2J2CN+P6A05Z0gD/Vedcg==
-X-Gm-Gg: ASbGncvuj9LYLZUVLtBvN1LGJPYamis+jjLogz7KbY1keBk6edBVEncxyvC3W8mAaLK
-	CrB3PqKlgdhdSIdd9qHiIna6TIxfx19gyxZj2NHNYGIW84fjTfUfphhY0xQxc0j1oboTUruoOeY
-	QN/pguWfrPKqKm80SJtIGAY6fU2cjGNL0GYBcTbxooL/Npme6qddYu+HVf4PlIiZBLPp+Z40iDZ
-	vGV5byHVQqgHG2lkf87lAdKwB7As60OITPvSafYws91XrHWTRzXB6euScBL6cYsH1Eg5Tb8Jx2l
-	BV0wkHJ/oIPg73c7QtgW3+9CIGX5tPbMwky8c10BwspWS1e02Q==
-X-Google-Smtp-Source: AGHT+IF2WDnfBZt8ylTuRDVXx3D+CUYnnpJmUhoDxfrx7sjqsyfRWk+kkhRqZJWdlBFajGYafhqZxA==
-X-Received: by 2002:a05:600c:a4d:b0:43b:ce3c:19d0 with SMTP id 5b1f17b1804b1-441c4933cf9mr105065525e9.29.1746550355906;
-        Tue, 06 May 2025 09:52:35 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746550357; x=1747155157;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1wlpVfKgV+u5QM/e/Iqvkj6aHp862bAjgPE/Jg1ETXY=;
+        b=hnxdGPu2PAoM9HfIpt6U9sHAB5K9rNmogyw6wShhjND1qtXTzT4elWf+zdVhangU2a
+         WwQkmYZqV3I4t8Kzo7lJD+vcLuh4+h1eh2FhyPdNufMrk9BmKqm5P9HSAvn3svrosV/Q
+         54LFAz4yc2pdSuZafGXuiR1DZJqXhdnIb0bsEW/GULVJMrlPHg+/wLsvC4x69wX4kqRs
+         3Ki9KgYzU5zMwWvV/fCfbCZ0hTw3Wa5NDPIsbIDFQ/r7VQciwjWB0VSoWYn3Ch9IKhbK
+         tz3lYZsqYwIU70MUx0ek8dhE/iaTF84JHeCS8STT1GC9ttDdg3wxizscXn6UriLBp+Bd
+         R7HQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV4OaoXFmwy1BFdoRIzJo4M52KQL8jwnTuKKXIdQ+76eYn5l3rbNclEVePO6+a1PFHXT2ssj06WqDC/rSo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxeDV3xbFRMUI3HdszcxQ92vF04La9GaUrUt/zklKblo1tWIUKs
+	6bYeZjWVb2GAeGaTbOZ5nCxPiB/qJSQMdifFvR8LJk62KsVcPLJI
+X-Gm-Gg: ASbGncsPDG06MIVmObelC94cy5m2bQWUsnb/9RiXKNJ+GbyA5f/63wqJG9xXuqCYgBq
+	fXPK8e63ohweP3iuTcEVRnW0P4IrDWbsAgSkHrWbH+NEHDS1GwpONtWELN6LHOyaczqSai/Sg1j
+	lrSSU3oZ84kLfGOwkTYdV0tuLFSjHHyM8qM11o4WHbex5Lk9YZA+Kt1z8Y1bW5Bpj9mTPpBGjD7
+	2JZBBvqLUrB6f4iI3uHx2ViBDxSj/3QMQv5KkQ4kZPlQUsJf9YW0NRwEI4wOLgEgDfzXC9h3Hqr
+	LVaifBKsNJ4ef0/KIVfnXkaaBLsJ0d3JcqtKMOGwhPZ/Sno2ww==
+X-Google-Smtp-Source: AGHT+IHH4L41TxWabr3fJFybEAbr+busrES7vk0ML2vTuSRdqla1qbi+i+mk+EX7T9jUY8eTa+yhgg==
+X-Received: by 2002:a5d:64ac:0:b0:3a0:880a:144f with SMTP id ffacd0b85a97d-3a0b4a0280cmr121120f8f.6.1746550357246;
+        Tue, 06 May 2025 09:52:37 -0700 (PDT)
 Received: from localhost.localdomain ([46.248.82.114])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b89d1636sm175192025e9.13.2025.05.06.09.52.34
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b89d1636sm175192025e9.13.2025.05.06.09.52.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 09:52:35 -0700 (PDT)
+        Tue, 06 May 2025 09:52:36 -0700 (PDT)
 From: Uros Bizjak <ubizjak@gmail.com>
 To: x86@kernel.org,
 	linux-kernel@vger.kernel.org
@@ -64,10 +66,12 @@ Cc: Uros Bizjak <ubizjak@gmail.com>,
 	Borislav Petkov <bp@alien8.de>,
 	Dave Hansen <dave.hansen@linux.intel.com>,
 	"H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH -tip 1/3] x86/asm/32: Modernize memset() functions
-Date: Tue,  6 May 2025 18:52:06 +0200
-Message-ID: <20250506165227.158932-1-ubizjak@gmail.com>
+Subject: [PATCH -tip 2/3] x86/asm/32: Modernize __constant_memcpy()
+Date: Tue,  6 May 2025 18:52:07 +0200
+Message-ID: <20250506165227.158932-2-ubizjak@gmail.com>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250506165227.158932-1-ubizjak@gmail.com>
+References: <20250506165227.158932-1-ubizjak@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,7 +81,7 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
 Use inout "+" constraint modifier where appropriate and declare
-temporary variable using __auto_type, similar to what x86_64 does.
+temporary variables as unsigned long.
 
 No functional changes intended.
 
@@ -88,62 +92,103 @@ Cc: Borislav Petkov <bp@alien8.de>
 Cc: Dave Hansen <dave.hansen@linux.intel.com>
 Cc: "H. Peter Anvin" <hpa@zytor.com>
 ---
- arch/x86/include/asm/string_32.h | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ arch/x86/include/asm/string_32.h | 51 +++++++++++++-------------------
+ 1 file changed, 21 insertions(+), 30 deletions(-)
 
 diff --git a/arch/x86/include/asm/string_32.h b/arch/x86/include/asm/string_32.h
-index e9cce169bb4c..9152d2c0f60e 100644
+index 9152d2c0f60e..00d497837571 100644
 --- a/arch/x86/include/asm/string_32.h
 +++ b/arch/x86/include/asm/string_32.h
-@@ -164,12 +164,12 @@ extern void *memchr(const void *cs, int c, size_t count);
- 
- static inline void *__memset_generic(void *s, char c, size_t count)
+@@ -52,7 +52,7 @@ static __always_inline void *__memcpy(void *to, const void *from, size_t n)
+ static __always_inline void *__constant_memcpy(void *to, const void *from,
+ 					       size_t n)
  {
--	int d0, d1;
-+	const __auto_type s0 = s;
- 	asm volatile("rep stosb"
--		     : "=&c" (d0), "=&D" (d1)
--		     : "a" (c), "1" (s), "0" (count)
-+		     : "+D" (s), "+c" (count)
-+		     : "a" (c)
- 		     : "memory");
--	return s;
-+	return s0;
- }
+-	long esi, edi;
++	unsigned long esi, edi;
+ 	if (!n)
+ 		return to;
  
- /* we might want to write optimized versions of these later */
-@@ -197,23 +197,23 @@ extern void *memset(void *, int, size_t);
- #define __HAVE_ARCH_MEMSET16
- static inline void *memset16(uint16_t *s, uint16_t v, size_t n)
- {
--	int d0, d1;
-+	const __auto_type s0 = s;
- 	asm volatile("rep stosw"
--		     : "=&c" (d0), "=&D" (d1)
--		     : "a" (v), "1" (s), "0" (n)
-+		     : "+D" (s), "+c" (n)
-+		     : "a" (v)
- 		     : "memory");
--	return s;
-+	return s0;
- }
+@@ -84,60 +84,51 @@ static __always_inline void *__constant_memcpy(void *to, const void *from,
+ 		return to;
+ 	}
  
- #define __HAVE_ARCH_MEMSET32
- static inline void *memset32(uint32_t *s, uint32_t v, size_t n)
- {
--	int d0, d1;
-+	const __auto_type s0 = s;
- 	asm volatile("rep stosl"
--		     : "=&c" (d0), "=&D" (d1)
--		     : "a" (v), "1" (s), "0" (n)
-+		     : "+D" (s), "+c" (n)
-+		     : "a" (v)
- 		     : "memory");
--	return s;
-+	return s0;
+-	esi = (long)from;
+-	edi = (long)to;
++	esi = (unsigned long)from;
++	edi = (unsigned long)to;
+ 	if (n >= 5 * 4) {
+ 		/* large block: use rep prefix */
+-		int ecx;
++		unsigned long ecx = n >> 2;
+ 		asm volatile("rep movsl"
+-			     : "=&c" (ecx), "=&D" (edi), "=&S" (esi)
+-			     : "0" (n / 4), "1" (edi), "2" (esi)
+-			     : "memory"
+-		);
++			     : "+D" (edi), "+S" (esi), "+c" (ecx)
++			     : : "memory");
+ 	} else {
+ 		/* small block: don't clobber ecx + smaller code */
+ 		if (n >= 4 * 4)
+ 			asm volatile("movsl"
+-				     : "=&D"(edi), "=&S"(esi)
+-				     : "0"(edi), "1"(esi)
+-				     : "memory");
++				     : "+D" (edi), "+S" (esi)
++				     : : "memory");
+ 		if (n >= 3 * 4)
+ 			asm volatile("movsl"
+-				     : "=&D"(edi), "=&S"(esi)
+-				     : "0"(edi), "1"(esi)
+-				     : "memory");
++				     : "+D" (edi), "+S" (esi)
++				     : : "memory");
+ 		if (n >= 2 * 4)
+ 			asm volatile("movsl"
+-				     : "=&D"(edi), "=&S"(esi)
+-				     : "0"(edi), "1"(esi)
+-				     : "memory");
++				     : "+D" (edi), "+S" (esi)
++				     : : "memory");
+ 		if (n >= 1 * 4)
+ 			asm volatile("movsl"
+-				     : "=&D"(edi), "=&S"(esi)
+-				     : "0"(edi), "1"(esi)
+-				     : "memory");
++				     : "+D" (edi), "+S" (esi)
++				     : : "memory");
+ 	}
+-	switch (n % 4) {
++	switch (n & 3) {
+ 		/* tail */
+ 	case 0:
+ 		return to;
+ 	case 1:
+ 		asm volatile("movsb"
+-			     : "=&D"(edi), "=&S"(esi)
+-			     : "0"(edi), "1"(esi)
+-			     : "memory");
++			     : "+D" (edi), "+S" (esi)
++			     : : "memory");
+ 		return to;
+ 	case 2:
+ 		asm volatile("movsw"
+-			     : "=&D"(edi), "=&S"(esi)
+-			     : "0"(edi), "1"(esi)
+-			     : "memory");
++			     : "+D" (edi), "+S" (esi)
++			     : : "memory");
+ 		return to;
+ 	default:
+ 		asm volatile("movsw\n\tmovsb"
+-			     : "=&D"(edi), "=&S"(esi)
+-			     : "0"(edi), "1"(esi)
+-			     : "memory");
++			     : "+D" (edi), "+S" (esi)
++			     : : "memory");
+ 		return to;
+ 	}
  }
- 
- /*
 -- 
 2.49.0
 
