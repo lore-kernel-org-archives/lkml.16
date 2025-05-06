@@ -1,359 +1,229 @@
-Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE49734AA71
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 00:49:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746492565; cv=none; b=rS93WZRSC1lMbC9YYuTusV/3SxN02f5CuOyVU2o8ZEcaxIxDD4oGKebSqeMXIG/TegmUCSo8tn3aUYY7p3P2I98EhC6Qe42wW2gJravO0kMjuEld3aXpMGQ/P9Zdh2K7pWfO/3bC9NX8SW2olEMByE7ocy8abCUyoIsLg01tpW8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746492565; c=relaxed/simple;
-	bh=EV8op9KpgnmZmV/JxT0ECHLeduQDSWJev2uNMIO9cZo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dAF142/BIPFnL9rhO0flLbbZ8NydtWujzP7ea0AauoHv8KNSfoFScKWRDjNZKDK06AVTeILTMVArOLljSdrVUo89r/DnKN6d72snAzcwOyz7pH2xlec2N5P5bfrVuv6+NOKtuwMv6doQhYSxJ/WY6lVWYb/OE8ziPFBvGk1+J0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
-Received: from fangorn.home.surriel.com ([10.0.13.7])
-	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.97.1)
-	(envelope-from <riel@shelob.surriel.com>)
-	id 1uC6K6-000000000IF-40O7;
-	Mon, 05 May 2025 20:38:14 -0400
-From: Rik van Riel <riel@surriel.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org,
-	x86@kernel.org,
-	kernel-team@meta.com,
-	dave.hansen@linux.intel.com,
-	luto@kernel.org,
-	peterz@infradead.org,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	hpa@zytor.com,
-	Rik van Riel <riel@fb.com>,
-	Rik van Riel <riel@surriel.com>
-Subject: [RFC PATCH 9/9] x86/mm: userspace & pageout flushing using Intel RAR
-Date: Mon,  5 May 2025 20:37:47 -0400
-Message-ID: <20250506003811.92405-10-riel@surriel.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250506003811.92405-1-riel@surriel.com>
-References: <20250506003811.92405-1-riel@surriel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C23C634FAF9;
+	Tue,  6 May 2025 00:56:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.9
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746492969; cv=fail; b=DWGZa6RpnRwyFqiBdcIlvHwYWMRXPNNB/I9Rgpwx3LLJfvbLJOUpn419YgHhEH8Rxz42MzRdupWhLmdSZUupdaeE0/Ek8BYuPNJf1ffnozIO/Wv/AK7u8QN+UJ75HH5NukSSddikRsGiqYhB3X/cVhK3ZKeWUylNMBZ9Xg6jBnE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746492969; c=relaxed/simple;
+	bh=F4lh1V/V5d2qRgDWrdM6Deu3bL0waEiMC6wchGMnsjw=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=m1vD9DgE1rg3UfXdPp438nSMxr4LNRNObYFYpMjDYnZ1yPC/wG8HkRUPP3XobNnfuIdsFMOTcNg0wL6nXVGVh65NvoC4O0EwGwFVBsKX50MdyTiKeN3OgA2P2oCbMYSAaJiyEMoVzfCHxn7+pxESRfbU9LxLvR9xroOH5V3MU3A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TLclY1HE; arc=fail smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TLclY1HE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746492967; x=1778028967;
+  h=date:from:to:cc:subject:message-id:reply-to:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=F4lh1V/V5d2qRgDWrdM6Deu3bL0waEiMC6wchGMnsjw=;
+  b=TLclY1HE7iy6g5HQTGDH1oE46w8QiHHR75KNtgKE77z3ZHjNxHzr2ZoQ
+   gkBghO4JpD0IxUCc5TkMCw7Q+HL9Vqmz2QKyoqbRKIheviaxxGlFsPFAQ
+   AY/7MQhRg4J+wE2Nz35s9tU+687xJaZNs3l+i/azTiD//P6aexl3H1bif
+   ihxlUWTPPagGgWckKp9jj1J/w3qosww8fqfrinTL3J3GiSfmU3VJqAZJI
+   XiiGyI6dPiAC5DWOnZPCFmape1mpVCNKn1woTm3HjL42GhEOt0W8hmcfA
+   YSIU9ZkxP6/Yc5jqo+ZF0hbqiMJ78QLnoSDciSr/1236/uyi0QSePWEy1
+   w==;
+X-CSE-ConnectionGUID: iKOnc1O3SZ2oDmcflxmn3A==
+X-CSE-MsgGUID: Txolb+eeQ9Sx8mtoIUzoDA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11424"; a="70634631"
+X-IronPort-AV: E=Sophos;i="6.15,265,1739865600"; 
+   d="scan'208";a="70634631"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 17:56:05 -0700
+X-CSE-ConnectionGUID: FdhSwTJERbOK7LManzvR/g==
+X-CSE-MsgGUID: 7Gi0+tErShWH1jPIBgMRHg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,265,1739865600"; 
+   d="scan'208";a="140572616"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 17:56:04 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Mon, 5 May 2025 17:56:04 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Mon, 5 May 2025 17:56:04 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.174)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Mon, 5 May 2025 17:56:01 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=WqjPnmiMzwHL1ChHo0TCo71R2Xua5S/8ptWkoNowtEkqFm3XPk5UgmRJiK7Bc0RAq7ctc+q5LnHvN2kYFT7ZsC0UeBB6NZETbMATCX4ltonEZBKNXIhePpnHMDnOQtOcvambW/Ot9+13AzecfqS8Iho7RxCOORVpJTkBM2LIwW1X2PCWshrTnRsjOM3BocuTsIwUPouBomBUKw3HZnm9yCo+jQ6qYHhFsRIg4i1CyRIWm1bvOzWaAW/GYc2tKX7FPs4KNBIOMW9GWqDbH6d7YZcPqyFLQAFD3BO778tVU2Bv9gcOcbo3D3AAsvT8beOCwJDSECOz/DXgSxKAUz4xLQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=PL/mLh1wYn20dP457bAMZS/lqRNbR9lFyFk1WeOj/aM=;
+ b=GNmXjjjqTs3OJyLs80KPrSmbQTPCJwIYxpST3rE112shFrepZRKCzOi886aFXErP0NjUiSmBRyMVtjIF5lvHp9F2StUmrOIOSRrODQkiM7iwQsUIi2gvLP6A7NinLZbpDIqO36PEE5e9wA9FK58cEyt/Ro0imOokW8pJHnr68H8lKyEwe4eCp3WbpLJnoOnbBkNUK+Se8kiL/YjqCEninPnNieU3E5xIarJcAQmk/9fmdEFM3+2PnyRE6yybh0evAFGQLJ7fuLaclr/rspYnrHobbJOqnijEqeIGYCYOvjxdychVLi40Tb0cOE/Zy1oQQjByg/i/FMjECUPUx3oeJg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS7PR11MB5966.namprd11.prod.outlook.com (2603:10b6:8:71::6) by
+ PH0PR11MB4790.namprd11.prod.outlook.com (2603:10b6:510:40::17) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8699.26; Tue, 6 May 2025 00:55:28 +0000
+Received: from DS7PR11MB5966.namprd11.prod.outlook.com
+ ([fe80::e971:d8f4:66c4:12ca]) by DS7PR11MB5966.namprd11.prod.outlook.com
+ ([fe80::e971:d8f4:66c4:12ca%6]) with mapi id 15.20.8699.024; Tue, 6 May 2025
+ 00:55:27 +0000
+Date: Tue, 6 May 2025 08:53:26 +0800
+From: Yan Zhao <yan.y.zhao@intel.com>
+To: Vishal Annapurve <vannapurve@google.com>
+CC: <pbonzini@redhat.com>, <seanjc@google.com>,
+	<linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>, <x86@kernel.org>,
+	<rick.p.edgecombe@intel.com>, <dave.hansen@intel.com>,
+	<kirill.shutemov@intel.com>, <tabba@google.com>, <ackerleytng@google.com>,
+	<quic_eberman@quicinc.com>, <michael.roth@amd.com>, <david@redhat.com>,
+	<vbabka@suse.cz>, <jroedel@suse.de>, <thomas.lendacky@amd.com>,
+	<pgonda@google.com>, <zhiquan1.li@intel.com>, <fan.du@intel.com>,
+	<jun.miao@intel.com>, <ira.weiny@intel.com>, <isaku.yamahata@intel.com>,
+	<xiaoyao.li@intel.com>, <binbin.wu@linux.intel.com>, <chao.p.peng@intel.com>
+Subject: Re: [RFC PATCH 08/21] KVM: TDX: Increase/decrease folio ref for huge
+ pages
+Message-ID: <aBldhnTK93+eKcMq@yzhao56-desk.sh.intel.com>
+Reply-To: Yan Zhao <yan.y.zhao@intel.com>
+References: <20250424030033.32635-1-yan.y.zhao@intel.com>
+ <20250424030603.329-1-yan.y.zhao@intel.com>
+ <CAGtprH9_McMDepbuvWMLRvHooPdtE4RHog=Dgr_zFXT5s49nXA@mail.gmail.com>
+ <aBAiCBmON0g0Qro1@yzhao56-desk.sh.intel.com>
+ <CAGtprH_ggm8N-R9QbV1f8mo8-cQkqyEta3W=h2jry-NRD7_6OA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGtprH_ggm8N-R9QbV1f8mo8-cQkqyEta3W=h2jry-NRD7_6OA@mail.gmail.com>
+X-ClientProxiedBy: OSAPR01CA0312.jpnprd01.prod.outlook.com
+ (2603:1096:604:2c::36) To DS7PR11MB5966.namprd11.prod.outlook.com
+ (2603:10b6:8:71::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: riel@surriel.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR11MB5966:EE_|PH0PR11MB4790:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7d35056e-e12b-46f6-889e-08dd8c38b140
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?cktCd3J0Y2VJVytqY0VDMkxvZlltTmtBMG42NmhPWXY1djFhN0FpaWlYbmRN?=
+ =?utf-8?B?Vi9TbEp3ek0yUjVJMVZDWE42YVR0SWRBaU5GMEpYMHRCVTBXUnErUmh0ZU1N?=
+ =?utf-8?B?ZW9mZmI5djJ3SjhSaTNxbEYrWVB6d2pTT25pdW1MclBXTnZoNVQ5TkZ0QWdU?=
+ =?utf-8?B?bk5XUEp4M1NvTnJaYnNoNjRxWEdRSTFvU0NwQnJzNGgwYzhEZlNrUy9qZE5P?=
+ =?utf-8?B?M0FxcFNpOWlXM2UyY1Z5MUVqdjYxUXpvN1M4clI4QlQwaldiRk11Q3RxdmpN?=
+ =?utf-8?B?THJ0RDhVKzhBWHVINS82azIrL2Nlcld2RDk0TnNWK1o4NHkwb3I5NldtR25s?=
+ =?utf-8?B?UEVHcjc3dVNWbjgrOGJjSE1aMHc4ekJGZDlEcWpUeUZBTEczaHlOaXY0amt3?=
+ =?utf-8?B?N01oaTg5cWlJbVNRYXN4TDZZQ1VBSHgzaDFxTnRMbEQ5UHYyOFErNnEvSDBj?=
+ =?utf-8?B?cjFTVE10N28waUkwMm9qSFZBNk4yeFVRdTFEcTVlSFFQUHJyTnU2TnEyL2Fp?=
+ =?utf-8?B?QU5EdHYwWHR3NEJoQWt0YzB2eE9TckxyTC8yelJ3Sm5IaTRjQ0owb09uUGhr?=
+ =?utf-8?B?RVE4b0RSeEw3eitSVFczeEZRakRDTjYyRWZUMFAzZ3ZINFZxNkR3TUVUUjJr?=
+ =?utf-8?B?S2VQeTNRTy9xQVpMaFJidkZiS0lFMUx1cXBBSEdkY3R1a2w5MkdCQmdKY2Zx?=
+ =?utf-8?B?RHRxeFRkRHRBeGRNMmNwOU5uWFpXQXdhMHB5WDFtaERLL0hWK2dGelVNL1dT?=
+ =?utf-8?B?VmRWcXRFZGxWRFN0Q1RqcjQzRlBnbXJBT0hqVUEvLzUxTXNrRFZLbkNYMWlq?=
+ =?utf-8?B?YXk5Vi9rZHpRZU1nVHphTU94TkhuQXpyQjlBWFZFdXhIVzNMTlg1R09Lbktt?=
+ =?utf-8?B?OElVRDNDZWFmWVdvRHJqSm5jZEhqKzhUQnJRNGNjcXpoY0ZJTkJVQW56OFg2?=
+ =?utf-8?B?elBpUm5mbU5wK1JJc2t4QkFpQ0IwWkhnY0Z6U0pwNko3WUw3MWV0UkdpYllR?=
+ =?utf-8?B?VWtwb1gxM2lKWmc5Z01tSGRnMW0yS1pQdzdScWdIcVN1czZmdzFLVEVIc1hm?=
+ =?utf-8?B?VFBaMHo3MzFNeCs5OTNoaFFkUldXc2wvVXRld3VRTDJPODZoWnZ3amYvUTF3?=
+ =?utf-8?B?R01zM2xvNVBwZ05yZExIbXIvaFMzR3BXSkg1M0hLUTk5UjNUOWpwampUaVR5?=
+ =?utf-8?B?dGxBYWxMSU42ZmlTREJyK1BxU01SWEM0V2dRTjBaRDNRUEZYMkFXZ1Bpenlm?=
+ =?utf-8?B?ejdjN0NjZ2pBSkZML0dmaWNiRG10TUF1QjloeG1iQVFkcXBOZjdpUWxxVzZo?=
+ =?utf-8?B?S2dHQlF4WlYwRG90L2FJa1hxUC9kNkFjZlQrN1RCZFZNcTVJdEpBTHRheUU0?=
+ =?utf-8?B?czRONmV3aWc0dUJSMTBGNmltcnJETWkwN1R4NFJUcEJOcTFFU0c4VFM1K0Zx?=
+ =?utf-8?B?Q082eFRFTGYwNncxMG9XenlybHRWMC9JQ21iOW5GRmFFOXkzeDl3d2E3c3lW?=
+ =?utf-8?B?UExXcytCcitHdjRqUThCWHpybStQM1dzbFQ2a0U1MzcwMHRQbTJyajlBVDNY?=
+ =?utf-8?B?UWoxd1V1TEF1YXgzaHBGanVQWUpITGd1V0dTNWRKVWdDQ0hUTVNxUGlBK0di?=
+ =?utf-8?B?TDRtSS9nakEvalJrNVB5WlAvOXRRNVdHZnkxL3MzczFhck1FWnBYQWoraGFL?=
+ =?utf-8?B?Rm1FQVBwS3RzWmxIWXV3cnBrV2dQQWxIZVowWVZOcmdyWHdIdnUzaSt3VkNn?=
+ =?utf-8?B?ZVRiSk9ZTGJISTIyUTJvRUd5UFR6a0laMTNrYVA5L2RQTmVzS2crOC8rYjNu?=
+ =?utf-8?B?bzZ6Y1l5dnUwcmhYd0VMWlQ1aDFzYTJod1hTOTlIbllBODcrZk9Gcm1SNUpw?=
+ =?utf-8?B?aHovT2g0cC8xMTl2UmxIcnY2bFU3UDU0ajc5cE0xdzRyekNOUXhHVWhpK25D?=
+ =?utf-8?Q?HsLkZ9dcXHc=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR11MB5966.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?dTBVYkx1MUR0c2JmRGc5bkFlZytBU1F0NW1BbHVWbE5GVmgrSm9xV2NqS2Jp?=
+ =?utf-8?B?Z2g3WUN5aUR5d29Jb29Pb0NRM0FrQk1HYXNna0gxSlNwcEcybkM1aXRJTUpM?=
+ =?utf-8?B?QTAxNXBRc296bVA4aHJubFRBSmZzSXFyK3hBcTBPN3FaQ0pxbVR4dVNZNFlx?=
+ =?utf-8?B?VGxnOFpJdDZLVlZvRmFWQ3ZPVDRURFkxWGxGVFVlMzJOdy9VRkJXc1NQK0RS?=
+ =?utf-8?B?QmpYcGF5QmNsbmFEeFRIR2xuUHZTMFhFNzRCTGNoMmNyd2t3OHpYam9UOXJR?=
+ =?utf-8?B?VmFodTA1MUluSDNNRGllWWFoSS9KbTI2UC9FWHdmZUVzKzNOVjRnaVJSWFR1?=
+ =?utf-8?B?MTFTY0YxSkJSWmlQa0dZc0U2VlViUVJyT0hQcDJ1SEE3RzBGOG5ucnFCYi8w?=
+ =?utf-8?B?bStyZE83cHZBcU0zdTFqeUMrbGlqWWkvTUczNWhaRk9Xb01ZNEF4YzJHa1Rn?=
+ =?utf-8?B?MVFLL2puSEF6clc4SURUUEFhSjJUeEpuVnl4eGNhQ0J1UzZZZjBoZkVaeW1p?=
+ =?utf-8?B?YVpxR01xelRJZ3dNWVlxZlFpZW0wVlRVYVlYK1ZkZGlwY0pJQWV3WlBhQTNO?=
+ =?utf-8?B?S3ZIOVorU01TYnZQbFg4UG1mZW1HYWhOT01URHRDb1RGNFpVNTF5VkhhWnZV?=
+ =?utf-8?B?MHhNbFdXYUNtdU1YTFdsZ2kzaG1tcDhSTkZqNHJEV01zYUF3cCswWitva0py?=
+ =?utf-8?B?L1VGRHRRVHN6Yk1mQkpFaCs0clZYVkZUNUhUcHpvV0dra2t4WEVpWi9jT1Na?=
+ =?utf-8?B?UUxRdzczeXZ1T01HUHdBNkg0eVRKUjhTeHZ1M1VEQlVrQ3NiY0REZ0VKUkRE?=
+ =?utf-8?B?MTg2UklGS3hIMVEwc3BPbTNSa3BHMkc3Um5NcTlVSmw2bVREY0lldnJuQjNI?=
+ =?utf-8?B?UjhjT1ZIUlM3RDVmQVFpVldlY3NXS1hmL2NyTW04NitKMVY3dmdzRGdZcnZU?=
+ =?utf-8?B?VU13Z1Q2Nk53cWhYVXlaUHRjMHNSTG1uWnRPTWQzV0FucWtBbVZsb2dJWTQv?=
+ =?utf-8?B?Q3lWdk1ySXU0K2hXdEhpdmtWd293NVB2NUJGdEVwZzVlSU9Zb0tpNStWdUFZ?=
+ =?utf-8?B?QnFuN1pxL3lzUUhSYVk1dWJiM1dwTTA4clE1blMwcm10WmloemJpeFZRS3Y4?=
+ =?utf-8?B?WjJEdGRJRncyNmRzaHlKY05lVzNkYTZpWk5JT1hwcWM5NlZReDloamx3OHJi?=
+ =?utf-8?B?Zy93U1VRUllEYU92QjczSkRUY1IyaHRPYkdrMXROKy9VM2YyazZRSlltZHNh?=
+ =?utf-8?B?a0JnY1F1VW5EUjlFOGIxb2EvN2tIQ1VyanFvWUpaY3FlK1hoUWtUaEI0Rmpm?=
+ =?utf-8?B?T1FiZmpEdDdFZVFPN1pMeDNFeDFVVjJZZXlhQ1pIVVI4UWpUeDBMcURlNHRl?=
+ =?utf-8?B?emNpRmV5c0JwcXRPOXVkT0EyQk15Y01RU3F2aG9KR0dwTkI5SXJwSzRWNnA0?=
+ =?utf-8?B?NzV4d05oZlZWVE1LTThlMGNtbjBWdkpBeXQ4aTJhd01wRVVBWmI2dWk0ZWRp?=
+ =?utf-8?B?K3MrSVU0c09aa293YjJZQ1pqbUxpbmVnS2QyZ0Z3WnFFeWJLUWZPV2VxVG5y?=
+ =?utf-8?B?Y21mUFdLUmtZTnlsbHc2aG1KSVdjRElIVGk5V21wK29FTmhBeGF4eUJhdWhn?=
+ =?utf-8?B?Z1JwNzcwVnUrQVdaRVlvT1FVVHdaa0NndDkzeldmTExiU1ZhSVpLM1NjWmlF?=
+ =?utf-8?B?TWdaVGJMRStRUWppbWl5bEpJVkxPU3J1andZNFhGVDhINlBZRFRyRmlHVVor?=
+ =?utf-8?B?N0ZSNmg2Wjc1bzNzN0NpT3NVc3pINDRvRTMzdTQyUVJpRXU3aFBhLzFCNUw2?=
+ =?utf-8?B?OU41QlhXaFdraDdvVTMvT3EvYTk1RTBNMVk1ZDdoN3I3S0s0blpGTFFzdjJs?=
+ =?utf-8?B?U3U4UFN4eUovM082cnQySi9ZV2lYRVFyNlJrVHRhQmdoRldiZG15dy9vaU1x?=
+ =?utf-8?B?S1F6MFYrYkRaRityc3hOWGIvbHFXL2Z2akk0YTNMWWY5VmdVY2VxMnlSMzN0?=
+ =?utf-8?B?L0RPSkpoNk1oRzBKZU5rZUx6VDd0cWNLbXplSndlZFBLQVBVWGxuamptaFBu?=
+ =?utf-8?B?ZjFKeFV3QnpSQzlKUCt1MmdVdnNTYkM1RHI2NHJ2T3VtallIQmNpc1d4VmMx?=
+ =?utf-8?Q?xkAm80ADWo/Nh104p/mbNc8+O?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7d35056e-e12b-46f6-889e-08dd8c38b140
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR11MB5966.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 00:55:27.8446
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: in4zEwRtd5lHokspYPm2C0Z2WY/d6UufiTDPMyNfiQTTzXHGRn6yg0Me35zTkWTRLum93SZmhCvMdkVkwubrOQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB4790
+X-OriginatorOrg: intel.com
 
-From: Rik van Riel <riel@fb.com>
+Sorry for the late reply, I was on leave last week.
 
-Use Intel RAR to flush userspace mappings.
+On Tue, Apr 29, 2025 at 06:46:59AM -0700, Vishal Annapurve wrote:
+> On Mon, Apr 28, 2025 at 5:52 PM Yan Zhao <yan.y.zhao@intel.com> wrote:
+> > So, we plan to remove folio_ref_add()/folio_put_refs() in future, only invoking
+> > folio_ref_add() in the event of a removal failure.
+> 
+> In my opinion, the above scheme can be deployed with this series
+> itself. guest_memfd will not take away memory from TDX VMs without an
+I initially intended to add a separate patch at the end of this series to
+implement invoking folio_ref_add() only upon a removal failure. However, I
+decided against it since it's not a must before guest_memfd supports in-place
+conversion.
 
-Because RAR flushes are targeted using a cpu bitmap, the rules are
-a little bit different than for true broadcast TLB invalidation.
+We can include it in the next version If you think it's better.
 
-For true broadcast TLB invalidation, like done with AMD INVLPGB,
-a global ASID always has up to date TLB entries on every CPU.
-The context switch code never has to flush the TLB when switching
-to a global ASID on any CPU with INVLPGB.
+> invalidation. folio_ref_add() will not work for memory not backed by
+> page structs, but that problem can be solved in future possibly by
+With current TDX code, all memory must be backed by a page struct.
+Both tdh_mem_page_add() and tdh_mem_page_aug() require a "struct page *" rather
+than a pfn.
 
-For RAR, the TLB mappings for a global ASID are kept up to date
-only on CPUs within the mm_cpumask, which lazily follows the
-threads around the system. The context switch code does not
-need to flush the TLB if the CPU is in the mm_cpumask, and
-the PCID used stays the same.
-
-However, a CPU that falls outside of the mm_cpumask can have
-out of date TLB mappings for this task. When switching to
-that task on a CPU not in the mm_cpumask, the TLB does need
-to be flushed.
-
-Signed-off-by: Rik van Riel <riel@surriel.com>
----
- arch/x86/include/asm/tlbflush.h |   9 ++-
- arch/x86/mm/tlb.c               | 119 +++++++++++++++++++++++++-------
- 2 files changed, 99 insertions(+), 29 deletions(-)
-
-diff --git a/arch/x86/include/asm/tlbflush.h b/arch/x86/include/asm/tlbflush.h
-index e9b81876ebe4..1940d51f95a9 100644
---- a/arch/x86/include/asm/tlbflush.h
-+++ b/arch/x86/include/asm/tlbflush.h
-@@ -250,7 +250,8 @@ static inline u16 mm_global_asid(struct mm_struct *mm)
- {
- 	u16 asid;
- 
--	if (!cpu_feature_enabled(X86_FEATURE_INVLPGB))
-+	if (!cpu_feature_enabled(X86_FEATURE_INVLPGB) &&
-+	    !cpu_feature_enabled(X86_FEATURE_RAR))
- 		return 0;
- 
- 	asid = smp_load_acquire(&mm->context.global_asid);
-@@ -263,7 +264,8 @@ static inline u16 mm_global_asid(struct mm_struct *mm)
- 
- static inline void mm_init_global_asid(struct mm_struct *mm)
- {
--	if (cpu_feature_enabled(X86_FEATURE_INVLPGB)) {
-+	if (!cpu_feature_enabled(X86_FEATURE_INVLPGB) &&
-+	    !cpu_feature_enabled(X86_FEATURE_RAR)) {
- 		mm->context.global_asid = 0;
- 		mm->context.asid_transition = false;
- 	}
-@@ -287,7 +289,8 @@ static inline void mm_clear_asid_transition(struct mm_struct *mm)
- 
- static inline bool mm_in_asid_transition(struct mm_struct *mm)
- {
--	if (!cpu_feature_enabled(X86_FEATURE_INVLPGB))
-+	if (!cpu_feature_enabled(X86_FEATURE_INVLPGB) &&
-+	    !cpu_feature_enabled(X86_FEATURE_RAR))
- 		return false;
- 
- 	return mm && READ_ONCE(mm->context.asid_transition);
-diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-index a4f3941281b6..724359be3f97 100644
---- a/arch/x86/mm/tlb.c
-+++ b/arch/x86/mm/tlb.c
-@@ -235,9 +235,11 @@ static struct new_asid choose_new_asid(struct mm_struct *next, u64 next_tlb_gen)
- 
- 	/*
- 	 * TLB consistency for global ASIDs is maintained with hardware assisted
--	 * remote TLB flushing. Global ASIDs are always up to date.
-+	 * remote TLB flushing. Global ASIDs are always up to date with INVLPGB,
-+	 * and up to date for CPUs in the mm_cpumask with RAR..
- 	 */
--	if (cpu_feature_enabled(X86_FEATURE_INVLPGB)) {
-+	if (cpu_feature_enabled(X86_FEATURE_INVLPGB) ||
-+	    cpu_feature_enabled(X86_FEATURE_RAR)) {
- 		u16 global_asid = mm_global_asid(next);
- 
- 		if (global_asid) {
-@@ -300,7 +302,14 @@ static void reset_global_asid_space(void)
- {
- 	lockdep_assert_held(&global_asid_lock);
- 
--	invlpgb_flush_all_nonglobals();
-+	/*
-+	 * The global flush ensures that a freshly allocated global ASID
-+	 * has no entries in any TLB, and can be used immediately.
-+	 * With Intel RAR, the TLB may still need to be flushed at context
-+	 * switch time when dealing with a CPU that was not in the mm_cpumask
-+	 * for the process, and may have missed flushes along the way.
-+	 */
-+	flush_tlb_all();
- 
- 	/*
- 	 * The TLB flush above makes it safe to re-use the previously
-@@ -377,7 +386,7 @@ static void use_global_asid(struct mm_struct *mm)
- {
- 	u16 asid;
- 
--	guard(raw_spinlock_irqsave)(&global_asid_lock);
-+	guard(raw_spinlock)(&global_asid_lock);
- 
- 	/* This process is already using broadcast TLB invalidation. */
- 	if (mm_global_asid(mm))
-@@ -403,13 +412,14 @@ static void use_global_asid(struct mm_struct *mm)
- 
- void mm_free_global_asid(struct mm_struct *mm)
- {
--	if (!cpu_feature_enabled(X86_FEATURE_INVLPGB))
-+	if (!cpu_feature_enabled(X86_FEATURE_INVLPGB) &&
-+	    !cpu_feature_enabled(X86_FEATURE_RAR))
- 		return;
- 
- 	if (!mm_global_asid(mm))
- 		return;
- 
--	guard(raw_spinlock_irqsave)(&global_asid_lock);
-+	guard(raw_spinlock)(&global_asid_lock);
- 
- 	/* The global ASID can be re-used only after flush at wrap-around. */
- #ifdef CONFIG_BROADCAST_TLB_FLUSH
-@@ -427,7 +437,8 @@ static bool mm_needs_global_asid(struct mm_struct *mm, u16 asid)
- {
- 	u16 global_asid = mm_global_asid(mm);
- 
--	if (!cpu_feature_enabled(X86_FEATURE_INVLPGB))
-+	if (!cpu_feature_enabled(X86_FEATURE_INVLPGB) &&
-+	    !cpu_feature_enabled(X86_FEATURE_RAR))
- 		return false;
- 
- 	/* Process is transitioning to a global ASID */
-@@ -445,7 +456,8 @@ static bool mm_needs_global_asid(struct mm_struct *mm, u16 asid)
-  */
- static void consider_global_asid(struct mm_struct *mm)
- {
--	if (!cpu_feature_enabled(X86_FEATURE_INVLPGB))
-+	if (!cpu_feature_enabled(X86_FEATURE_INVLPGB) &&
-+	    !cpu_feature_enabled(X86_FEATURE_RAR))
- 		return;
- 
- 	/* Check every once in a while. */
-@@ -499,7 +511,7 @@ static void finish_asid_transition(struct flush_tlb_info *info)
- 	mm_clear_asid_transition(mm);
- }
- 
--static void broadcast_tlb_flush(struct flush_tlb_info *info)
-+static void invlpgb_tlb_flush(struct flush_tlb_info *info)
- {
- 	bool pmd = info->stride_shift == PMD_SHIFT;
- 	unsigned long asid = mm_global_asid(info->mm);
-@@ -865,13 +877,6 @@ void switch_mm_irqs_off(struct mm_struct *unused, struct mm_struct *next,
- 			goto reload_tlb;
- 		}
- 
--		/*
--		 * Broadcast TLB invalidation keeps this ASID up to date
--		 * all the time.
--		 */
--		if (is_global_asid(prev_asid))
--			return;
--
- 		/*
- 		 * If the CPU is not in lazy TLB mode, we are just switching
- 		 * from one thread in a process to another thread in the same
-@@ -880,6 +885,15 @@ void switch_mm_irqs_off(struct mm_struct *unused, struct mm_struct *next,
- 		if (!was_lazy)
- 			return;
- 
-+		/*
-+		 * Broadcast TLB invalidation keeps this ASID up to date
-+		 * all the time with AMD INVLPGB. Intel RAR may need a TLB
-+		 * flush if the CPU was in lazy TLB mode..
-+		 */
-+		if (cpu_feature_enabled(X86_FEATURE_INVLPGB) &&
-+		    is_global_asid(prev_asid))
-+			return;
-+
- 		/*
- 		 * Read the tlb_gen to check whether a flush is needed.
- 		 * If the TLB is up to date, just use it.
-@@ -912,20 +926,27 @@ void switch_mm_irqs_off(struct mm_struct *unused, struct mm_struct *next,
- 		this_cpu_write(cpu_tlbstate.loaded_mm, LOADED_MM_SWITCHING);
- 		barrier();
- 
--		/* Start receiving IPIs and then read tlb_gen (and LAM below) */
--		if (next != &init_mm && !cpumask_test_cpu(cpu, mm_cpumask(next)))
--			cpumask_set_cpu(cpu, mm_cpumask(next));
-+		/* A TLB flush started during a context switch is harmless. */
- 		next_tlb_gen = atomic64_read(&next->context.tlb_gen);
- 
- 		ns = choose_new_asid(next, next_tlb_gen);
-+
-+		/* Start receiving IPIs and RAR invalidations */
-+		if (next != &init_mm && !cpumask_test_cpu(cpu, mm_cpumask(next))) {
-+			cpumask_set_cpu(cpu, mm_cpumask(next));
-+			/* CPUs outside mm_cpumask may be out of date. */
-+			if (cpu_feature_enabled(X86_FEATURE_RAR))
-+				ns.need_flush = true;
-+		}
- 	}
- 
- reload_tlb:
- 	new_lam = mm_lam_cr3_mask(next);
- 	if (ns.need_flush) {
--		VM_WARN_ON_ONCE(is_global_asid(ns.asid));
--		this_cpu_write(cpu_tlbstate.ctxs[ns.asid].ctx_id, next->context.ctx_id);
--		this_cpu_write(cpu_tlbstate.ctxs[ns.asid].tlb_gen, next_tlb_gen);
-+		if (is_dyn_asid(ns.asid)) {
-+			this_cpu_write(cpu_tlbstate.ctxs[ns.asid].ctx_id, next->context.ctx_id);
-+			this_cpu_write(cpu_tlbstate.ctxs[ns.asid].tlb_gen, next_tlb_gen);
-+		}
- 		load_new_mm_cr3(next->pgd, ns.asid, new_lam, true);
- 
- 		trace_tlb_flush(TLB_FLUSH_ON_TASK_SWITCH, TLB_FLUSH_ALL);
-@@ -1142,8 +1163,12 @@ static void flush_tlb_func(void *info)
- 		loaded_mm_asid = this_cpu_read(cpu_tlbstate.loaded_mm_asid);
- 	}
- 
--	/* Broadcast ASIDs are always kept up to date with INVLPGB. */
--	if (is_global_asid(loaded_mm_asid))
-+	/*
-+	 * Broadcast ASIDs are always kept up to date with INVLPGB; with
-+	 * Intel RAR IPI based flushes are used periodically to trim the
-+	 * mm_cpumask. Make sure those flushes are processed here.
-+	 */
-+	if (cpu_feature_enabled(X86_FEATURE_INVLPGB) && is_global_asid(loaded_mm_asid))
- 		return;
- 
- 	VM_WARN_ON(this_cpu_read(cpu_tlbstate.ctxs[loaded_mm_asid].ctx_id) !=
-@@ -1363,6 +1388,33 @@ static DEFINE_PER_CPU_SHARED_ALIGNED(struct flush_tlb_info, flush_tlb_info);
- static DEFINE_PER_CPU(unsigned int, flush_tlb_info_idx);
- #endif
- 
-+static void rar_tlb_flush(struct flush_tlb_info *info)
-+{
-+	unsigned long asid = mm_global_asid(info->mm);
-+	u16 pcid = kern_pcid(asid);
-+
-+	/* Flush the remote CPUs. */
-+	smp_call_rar_many(mm_cpumask(info->mm), pcid, info->start, info->end);
-+	if (cpu_feature_enabled(X86_FEATURE_PTI))
-+		smp_call_rar_many(mm_cpumask(info->mm), user_pcid(asid), info->start, info->end);
-+
-+	/* Flush the local TLB, if needed. */
-+	if (cpumask_test_cpu(smp_processor_id(), mm_cpumask(info->mm))) {
-+		lockdep_assert_irqs_enabled();
-+		local_irq_disable();
-+		flush_tlb_func(info);
-+		local_irq_enable();
-+	}
-+}
-+
-+static void broadcast_tlb_flush(struct flush_tlb_info *info)
-+{
-+	if (cpu_feature_enabled(X86_FEATURE_INVLPGB))
-+		invlpgb_tlb_flush(info);
-+	else /* Intel RAR */
-+		rar_tlb_flush(info);
-+}
-+
- static struct flush_tlb_info *get_flush_tlb_info(struct mm_struct *mm,
- 			unsigned long start, unsigned long end,
- 			unsigned int stride_shift, bool freed_tables,
-@@ -1423,15 +1475,22 @@ void flush_tlb_mm_range(struct mm_struct *mm, unsigned long start,
- 	info = get_flush_tlb_info(mm, start, end, stride_shift, freed_tables,
- 				  new_tlb_gen);
- 
-+	/*
-+	 * IPIs and RAR can be targeted to a cpumask. Periodically trim that
-+	 * mm_cpumask by sending TLB flush IPIs, even when most TLB flushes
-+	 * are done with RAR.
-+	 */
-+	if (!cpu_feature_enabled(X86_FEATURE_INVLPGB) || !mm_global_asid(mm))
-+		info->trim_cpumask = should_trim_cpumask(mm);
-+
- 	/*
- 	 * flush_tlb_multi() is not optimized for the common case in which only
- 	 * a local TLB flush is needed. Optimize this use-case by calling
- 	 * flush_tlb_func_local() directly in this case.
- 	 */
--	if (mm_global_asid(mm)) {
-+	if (mm_global_asid(mm) && !info->trim_cpumask) {
- 		broadcast_tlb_flush(info);
- 	} else if (cpumask_any_but(mm_cpumask(mm), cpu) < nr_cpu_ids) {
--		info->trim_cpumask = should_trim_cpumask(mm);
- 		flush_tlb_multi(mm_cpumask(mm), info);
- 		consider_global_asid(mm);
- 	} else if (mm == this_cpu_read(cpu_tlbstate.loaded_mm)) {
-@@ -1742,6 +1801,14 @@ void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch)
- 	if (cpu_feature_enabled(X86_FEATURE_INVLPGB) && batch->unmapped_pages) {
- 		invlpgb_flush_all_nonglobals();
- 		batch->unmapped_pages = false;
-+	} else if (cpu_feature_enabled(X86_FEATURE_RAR) && cpumask_any(&batch->cpumask) < nr_cpu_ids) {
-+		rar_full_flush(&batch->cpumask);
-+		if (cpumask_test_cpu(cpu, &batch->cpumask)) {
-+			lockdep_assert_irqs_enabled();
-+			local_irq_disable();
-+			invpcid_flush_all_nonglobals();
-+			local_irq_enable();
-+		}
- 	} else if (cpumask_any_but(&batch->cpumask, cpu) < nr_cpu_ids) {
- 		flush_tlb_multi(&batch->cpumask, info);
- 	} else if (cpumask_test_cpu(cpu, &batch->cpumask)) {
--- 
-2.49.0
+> notifying guest_memfd of certain ranges being in use even after
+> invalidation completes.
+A curious question:
+To support memory not backed by page structs in future, is there any counterpart
+to the page struct to hold ref count and map count?
 
