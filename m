@@ -1,190 +1,106 @@
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 768704B1E60
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 22:07:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F21B64B1E60;
+	Tue,  6 May 2025 22:11:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746569262; cv=none; b=cxJtWMUO0SpTHa+NT9dT2n7b0wMpQ/fN7jWhRdGbBPtHCfut3zp8/Su5SJrxbiXZrApqcYX9SUiBnfeckEJyjL3xqj1le563nXzEVcFlnR4MYpsKcaII0g9Bovda9I9kMfoVDLnjb3wq5VFr4/qevxru1jPSM9xqD2bwFLQmYgA=
+	t=1746569475; cv=none; b=JNBR8PWN2AQx+NSQy5Gk7/Qy6V80iAoMQm2n3nH53iq5+etqrZy5eDluk9lYKtJOcTfXyJWL4hH5UD0YxfIejA/ljvSiaMzcgOJGuE9wgv/Ow3GhUN9vATRikEoFgYahEysAtGfu5AA5yW27M5gEp5ha98PotXUdFPAaai1rVHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746569262; c=relaxed/simple;
-	bh=QjE1nlrSZya14I8EJupdzC/BpPZW2TwLrhAF+5ao5JE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XDBVPTQKAHwVOysn39koC+LqdIiH7rHZEgxtH00lw6qZuoa6YIhFt+c+dPRBlOB4CwBRS0BE11VbPpvOjZGrYErvHp0SrEiNPOsgBwd7lPAvuYtHBqwxnGZqRTLzllGQ0NIe9oxhqSSxbf1k8Dhjj5m1fTrNvspfh40VAXoMB8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=SiJPQmub; arc=none smtp.client-ip=209.85.166.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1746569475; c=relaxed/simple;
+	bh=ppABvYjSHr1u3RAd5WDk5Ck3j+vSUbQA3E3wAPBq27U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UGZkBo5ayo+wp44jTnnfmm0KtUHZTIrEoAxAWlMR9Bt4oZjW1jXxI37giBMfPaGe2ufyQxfK130xFyw6u+ZOuryLztlAiWud6oU55u6B/+jFi9z4Wcy6KkN9vX1g3/Ca3e5JWSivy95w55us6DJA8QaZygfb0c17pKl71kAC0x0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bVj88w+7; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="SiJPQmub"
-Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-867347b8de9so13205039f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 15:07:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bVj88w+7"
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-afc857702d1so5986276a12.3;
+        Tue, 06 May 2025 15:11:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1746569258; x=1747174058; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=KblXo4CIEIn6gd3GGRAaOBy56G3y46NU1/f1UBl2plY=;
-        b=SiJPQmubE4+VnCI0oHshxd9zl9kMVL1rucKYnk44P3PKxL6NBaz7IfC+bNO7NOP7Mm
-         rvOzzwsIvhQ8ej8Cf9ve/O+J3kaD9JSxYvZsfzoQMszZj6QrV07a8n2+VfmaOIDeg1cx
-         l2EAh+Pvd3u5WNuj5+DLKZXnZLwUp2OSEmUXg=
+        d=gmail.com; s=20230601; t=1746569473; x=1747174273; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=jiSvSLX5ynbADc4+bICsh2gisZmTrKBlbGfFrdRzhQ0=;
+        b=bVj88w+7kXK0Bke67SgjXHSo0+p+CRserfz2b01yjyAxd5FEhZ5R0TjDXmUFlmewdr
+         4UF3HoZPxWkFSdJiSeNZpgV3vb2kZnh4frKogyZYY0Pu7PtbQ2OlyAw5TCUHYemoDptd
+         RCDJiaISh4JTtvSpP/REU8Mfx79f0SDZyfk+zft18+n9+JuDz0zPAjJSGJtILj7gGGRo
+         TE16aI3GixeCvXURZMlKWmIynTQo+WY9CIUE8Yb1pgjXd4IEqpLaWp1KoZYuCQuIa7Jv
+         buquCl5LUv3hgs1g2us+nuGaiflU/vr4g8HBv3GuAlPCTvpJ3bCUhLLY3YoaL8Ghv0x7
+         22pA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746569258; x=1747174058;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KblXo4CIEIn6gd3GGRAaOBy56G3y46NU1/f1UBl2plY=;
-        b=TETbaZrnAWP6sBnOfujpKNyXDXjwsomcXitimJsJpXGtqpizy/3wFcObkdLSlscBwY
-         AlVo4P4auAf1+bZYc/QSczdL/GSrN1s0BftqfNFEH+hNCjzuWqZV9zQzLi3Lt10tUHi2
-         gtRJ3ybN0AJCCKapQECiTwokJqvO9VJ7IBIKOb/ze5wyVtLV3BkCx03NyP2gt7yXH6i+
-         jKTeXC3fdcn33PkMyMfi95yx1XzKcezWmVfFH15aMpC5r6MIbvXnq12Qh3Fq3y1uwSfD
-         yPu5RdNgSlc/Js6oY8qpgiYf5Cq5cZAkryuEvKwPavveCjdyClqdkuohK3y08WIZBpyL
-         HhHA==
-X-Forwarded-Encrypted: i=1; AJvYcCU4NzDWYiPYI498VILs/tgPxuuLnsuWp/YSGPeOpyxJXEHGf82TsXxTCya2aQ90QWYXH6B9sCzuXgx99TE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzqYoOvHw5TbM/JI5CqxiV5YxgicblrjZbWi8nWsh2SKmtsqLBY
-	fXJnKB9CVotjBkSgPRMMeckGA+t92kZWaQS794Zai6P0bzbEWNqnJ2WjOLLWy+3fISQlM0Uz7IZ
-	D
-X-Gm-Gg: ASbGncsXRiPQeanw5MS/YIj/uHR7h0BQXIvvjDoWjvShfQ1RLhmyVnq84AzEFC1xldo
-	ZkL4xhKqYPCVgMUHWpjM+cZwEQTYiU1Et1w4UJCdOOmpgXDDOm4K1SC+YD/U4FBNvqIi+WhFtpv
-	CPA8KEUAMj4Q4ScnIPO6Vs7JjVGLwOAwkUNi5weZzVdmZ7MKqtKjLcmMkCJmoCstAdDbneC+dH1
-	WTm/WtRy1AMW+IRU5FWv540qeqJUUkDmJoFspU+HHPgZeycXiZs+NiWH+Okv9aEYHiQT3xH8f99
-	e4l2dG36ozjgr/3TGP5G5tMz0T79uIwnuIEs+hUdlswy0TSiTUM=
-X-Google-Smtp-Source: AGHT+IGefz039PqNhxopulHgibNakcS2hQwx2wuEu+yzw8CisJq34UbImELUvr3RlJI24jHT18c8yw==
-X-Received: by 2002:a05:6e02:180b:b0:3d9:6e2d:c7fd with SMTP id e9e14a558f8ab-3da738b974dmr10086125ab.2.1746569258415;
-        Tue, 06 May 2025 15:07:38 -0700 (PDT)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d975f58866sm26961125ab.50.2025.05.06.15.07.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 06 May 2025 15:07:37 -0700 (PDT)
-Message-ID: <0d27886e-5a3c-4073-a044-f6684de8333d@linuxfoundation.org>
-Date: Tue, 6 May 2025 16:07:36 -0600
+        d=1e100.net; s=20230601; t=1746569473; x=1747174273;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jiSvSLX5ynbADc4+bICsh2gisZmTrKBlbGfFrdRzhQ0=;
+        b=QX7vRzebJsqwc9uTRKi7ol4L1eGTpLN+CoisCkpij+dc3LxJjtWqaL/tYievEshBxw
+         JKrCtFX3z+6Dyei0LkHjh7IBvk5dzNhlkQ4p32q6473zeXW16jAuaYqAu267Y6HAWIrL
+         I6teqok//frOjA7hxocH0ecyaCXCy6b+HJaFSKLVQFDEnKSSz62L4R6rXAJzj/2sXWbD
+         227TGTr/mOUEDMXHwKKM3dxg5eGlzvhrcmPcuGgZLHc9+pf26eKLeOBbqbLPxRwD1lFn
+         qBAJ9twu9hmWxTo6YmknsI/Yhdj/faDMvmea8zTfKlhtN84fldbdRLh8GMP2/6/KIxPY
+         /idg==
+X-Forwarded-Encrypted: i=1; AJvYcCV7dxj6/a6SEp74eV8cmWA1zyghJbY3Andx3x1Ws2QtDK4L2/Y2uMxk0OCHIn+6e5ATGjkn/dEFhWe/WaCP@vger.kernel.org, AJvYcCVWS2aokx54DCY9Ov8UbNaC29m8RwWdtQvDS8OHE4qZEd4GNER/562aUQ6Bk1FdMFzSDn1p3fw9fu/uTDYK@vger.kernel.org
+X-Gm-Message-State: AOJu0YxeF/Bsel0fQ2lsRVjm66636BzjkBRHyFSh+9VlNIkNMevKWVRT
+	qO2XUG35UGBoxV/OqdD5K3yZjwLLGfWKPaEiWQipF+CWbKpskcdE464jSFcweaRpsFSAJZh5ds4
+	azxtfBCrSz8Y6glcuBiZDvhMh4mzKbw==
+X-Gm-Gg: ASbGncs/kdrtkNuCPAa7a4lL8EG50UK+76gkaX7rSC6UiBWEEhYlfj5o0zo06+HmZRJ
+	AboBQoTUeNXHbeTLQ+TE1ihDLJ+Ht4ffe0MhCKF9kate6VJzTbg7vAThqV2PvCXa2kwzcghsnyB
+	JL6m7YsJfnnmABdsdn/YIcj1xhjMqs+03EQ4Bw90D9hCV82AiK6Ibu1CYS9vtQnI/Y0g==
+X-Google-Smtp-Source: AGHT+IGeqsTTkiGAn1oeKcFKrRs71LkDCoLaCE01JpenyN0p/QfIT5UajvlNK/QC/WepzvGC6dhbtI4G3rw4KXubyYU=
+X-Received: by 2002:a17:90b:384f:b0:309:e351:2e3d with SMTP id
+ 98e67ed59e1d1-30aac19ca51mr1929083a91.12.1746569473068; Tue, 06 May 2025
+ 15:11:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] kbuild: use ARCH from compile.h in unclean source tree
- msg
-To: Nicolas Schier <nicolas.schier@linux.dev>
-Cc: masahiroy@kernel.org, nathan@kernel.org, brendan.higgins@linux.dev,
- davidgow@google.com, rmoar@google.com, linux-kbuild@vger.kernel.org,
- linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com,
- linux-kselftest@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
-References: <20250502172459.14175-1-skhan@linuxfoundation.org>
- <20250506-accomplished-earthworm-from-valhalla-dbcbcc@l-nschier-aarch64>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20250506-accomplished-earthworm-from-valhalla-dbcbcc@l-nschier-aarch64>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250506-dpu-sar2130p-no-split-display-v1-1-b619c0fddea5@oss.qualcomm.com>
+ <k4npgl5v3qqdzqytiwesqgs3v362mr27mtvzfbvp6ugm3mn4qr@dxquxscqjqme>
+In-Reply-To: <k4npgl5v3qqdzqytiwesqgs3v362mr27mtvzfbvp6ugm3mn4qr@dxquxscqjqme>
+From: Dmitry Baryshkov <dbaryshkov@gmail.com>
+Date: Wed, 7 May 2025 01:11:02 +0300
+X-Gm-Features: ATxdqUFQr1aPwld24RZIIP4EOvP7dGz-MtbCTD8ExU9Lsw9E0oP0KebNjeXg098
+Message-ID: <CALT56yMSnnwjETD6zXV3xk=YDHd1H4kuHCkzL8xi7c0w5nDcYw@mail.gmail.com>
+Subject: Re: [PATCH] drm/msm/dpu: remove DPU_CTL_SPLIT_DISPLAY from SAR2130P
+ CTL blocks
+To: Marijn Suijten <marijn.suijten@somainline.org>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, Rob Clark <robdclark@gmail.com>, 
+	Abhinav Kumar <quic_abhinavk@quicinc.com>, Dmitry Baryshkov <lumag@kernel.org>, 
+	Sean Paul <sean@poorly.run>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Jessica Zhang <quic_jesszhan@quicinc.com>, linux-arm-msm@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 5/6/25 05:12, Nicolas Schier wrote:
-> On Fri, 02 May 2025, Shuah Khan wrote:
-> 
->> When make finds the source tree unclean, it prints a message to run
->> "make ARCH=x86_64 mrproper" message using the ARCH from the command
->> line. The ARCH specified in the command line could be different from
->> the ARCH of the existing build in the source tree.
->>
->> This could cause problems in regular kernel build and kunit workflows.
->>
->> Regular workflow:
->>
->> - Build x86_64 kernel
->> 	$ make ARCH=x86_64
->> - Try building another arch kernel out of tree with O=
->> 	$ make ARCH=um O=/linux/build
->> - kbuild detects source tree is unclean
->>
->>    ***
->>    *** The source tree is not clean, please run 'make ARCH=um mrproper'
->>    *** in /linux/linux_srcdir
->>    ***
->>
->> - Clean source tree as suggested by kbuild
->> 	$ make ARCH=um mrproper
->> - Source clean appears to be clean, but it leaves behind generated header
->>    files under arch/x86
->>   	arch/x86/realmode/rm/pasyms.h
->>
->> A subsequent x86_64e build fails with
->>    "undefined symbol sev_es_trampoline_start referenced ..."
->>
->> kunit workflow runs into this issue:
->>
->> - Build x86_64 kernel
->> - Run kunit tests:  it tries to build for user specified ARCH or uml
->>    as default:
->> 	$ ./tools/testing/kunit/kunit.py run
->>
->> - kbuild detects unclean source tree
->>
->>    ***
->>    *** The source tree is not clean, please run 'make ARCH=um mrproper'
->>    *** in /linux/linux_6.15
->>    ***
->>
->> - Clean source tree as suggested by kbuild
->> 	$ make ARCH=um mrproper
->> - Source clean appears to be clean, but it leaves behind generated header
->>    files under arch/x86
->>
->> The problem shows when user tries to run tests on ARCH=x86_64:
->>
->> 	$ ./tools/testing/kunit/kunit.py run ARCH=x86_64
->>
->> 	"undefined symbol sev_es_trampoline_start referenced ..."
->>
->> Build trips on arch/x86/realmode/rm/pasyms.h left behind by a prior
->> x86_64 build.
->>
->> Problems related to partially cleaned source tree are hard to debug.
->> Change Makefile to unclean source logic to use ARCH from compile.h
->> UTS_MACHINE string. With this change kbuild prints:
->>
->> 	$ ./tools/testing/kunit/kunit.py run
->>
->>    ***
->>    *** The source tree is not clean, please run 'make ARCH=x86_64 mrproper'
->>    *** in /linux/linux_6.15
->>    ***
->>
->> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
->> ---
->>   Makefile | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/Makefile b/Makefile
->> index 5aa9ee52a765..7ee29136b4da 100644
->> --- a/Makefile
->> +++ b/Makefile
->> @@ -674,7 +674,7 @@ ifeq ($(KBUILD_EXTMOD),)
->>   		 -d $(srctree)/include/config -o \
->>   		 -d $(srctree)/arch/$(SRCARCH)/include/generated ]; then \
+On Tue, 6 May 2025 at 17:36, Marijn Suijten
+<marijn.suijten@somainline.org> wrote:
+>
+> On 2025-05-06 15:53:48, Dmitry Baryshkov wrote:
+> > From: Dmitry Baryshkov <lumag@kernel.org>
+> >
+> > Follow the changes in the commit a2649952f66e ("drm/msm/dpu: remove
+> > DPU_CTL_SPLIT_DISPLAY from CTL blocks on DPU >= 5.0") and remove
+> > DPU_CTL_SPLIT_DISPLAY from the CTL blocks on the SAR2130P platform.
+> > Single CTL is used for all interfaces used by a single path
+> >
+> > Fixes: 178575173472 ("drm/msm/dpu: add catalog entry for SAR2130P")
+>
+> This was probably more of a "developed and merged in parallel" problem than a
+> faulty patch, because a2649952f66e was merged first. Regardless:
 
-Would it make sense to check for include/generated as a catch all?
+And I unfortunately completely forgot about this chunk when merging
+the SAR2130P support.
 
->>   		echo >&2 "***"; \
->> -		echo >&2 "*** The source tree is not clean, please run 'make$(if $(findstring command line, $(origin ARCH)), ARCH=$(ARCH)) mrproper'"; \
->> +		echo >&2 "*** The source tree is not clean, please run 'make ARCH=$(shell grep UTS_MACHINE $(srctree)/include/generated/compile.h | cut -d '"' -f 2) mrproper'"; \
-> 
-> Please 'grep' option '-s'.
-> 
-> There are some (rare) occassions, when there is no include/generated/compile.h
-> but still the source tree will be considered to be dirty:
+>
+> Reviewed-by: Marijn Suijten <marijn.suijten@somainline.org>
+>
+> > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
-I considered adding a check for not finding include/generated/compile.h
-and figured if include/config is found we are probably safe.
 
-I will fix that.
-
-> 
->      grep: ../include/generated/compile.h: No such file or directory
->      ***
->      *** The source tree is not clean, please run 'make ARCH= mrproper'
->      ...
-> 
-
-thanks,
--- Shuah
+-- 
+With best wishes
+Dmitry
