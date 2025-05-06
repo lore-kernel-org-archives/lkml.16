@@ -1,66 +1,71 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 803EE283FC9;
-	Tue,  6 May 2025 16:37:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07F80283FE2
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 16:40:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746549470; cv=none; b=A20w4s5H43BUI+5Lv2xzIsRXmrjXaqSHyrIF17u4OE7LDIhePrEZQRjez0TWKr/OJosAQWbMjGU0VGniO2ehiAUrQiiviMmXNXXS792S/E6JVOiw2gTMM+19cD8UmYNWV3czmF72YhP7SRrBkxuUE1YRWB2VdzCQG5XG6LLg4jM=
+	t=1746549623; cv=none; b=BrIJZKyMxF/wnVcb+D61aSK4F4HJLKHYGDG+DwECCoVcFo+TzUS1OYIGNZePylM/qbun0r0uvjSQ8SNSY9lLRmlzsjSnXvu1wYjr+jZxRvDkh4mtJKic+T4btQ+MfBBdWNI31+9VS938Lsjboqcj5sRfATu+1bgQqbOohkEX19E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746549470; c=relaxed/simple;
-	bh=GqlNI9rwCDk5o+gWHh1kMkqw1K20G34MrlFAv+NqNI4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UKgSOsE13JDEe4R0BCTmT09iiOMBqdUCWsfm5sTb5xMjCuBfH4WxunJorkm70Yb1qreXRoOnsE4qx8lmn9JPLIS05xHi5kcFuGqannZRr8orUl7ZoCI6Tmtg/ilXQ4dPo4qzUCyEbBfYySSROPyIpROlLHMMwL+qjNIlyC1v7wE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=nANSPQur; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	s=arc-20240116; t=1746549623; c=relaxed/simple;
+	bh=sKS+oajAdKrkXbW05N59mQE2XpopEuyeq8HD25s1BU4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OU5Bt9ASPOezivqcCWTnShmsr1TrH0bLcO/pVSr5qlG1F1BZhU3GV2FTJHcSlN6hdCIEgMSK10KQhmvJxXcTRCGrwK2gCw14GFPogzMgGo1EXR0/52j0VsUE1W4sCAvu5oEtIwD/eZTiTLJjXs4/APPwXABn/OSBebit5SQEPQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=UQhR01uv; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ionos.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="nANSPQur"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 546964SL002574;
-	Tue, 6 May 2025 16:37:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=QW71RSDpipu
-	RjnJxG36tgJata/JVHYLv8EUUyd3ynTc=; b=nANSPQurMmFUb8aNAqHyhAbXEws
-	hBihVEQN3EgBbW+fkEP1vXpAHYnw7JdGGZTEad7GbfLzfD03n65ULdSahfICVNJJ
-	F9D6El4jSnkppuK5b/6Pzpcn0DeRlX4Uab8swd12hgSyQ3st+sn8ipOAT6CzNlY4
-	q0Xp0OotHsJjT4k2O2Alb2wRSOj/46Veonqod1UDJRA1dlcvbDjK1y8t12NBs4oI
-	u8EfCfJY3nL/T9yYJ+uOP0Maja4PkKW26E8SjRa18ENpOE3Ru5Vb4L+Wm7oxVGsZ
-	2Hk6f8UOtooOWHpp4V88QJuv9vut2fE+4TJKfTi2feBbOO4jDurn4sviM9Q==
-Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46f5w3aw8f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 06 May 2025 16:37:12 +0000 (GMT)
-Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 546Gb9gl003118;
-	Tue, 6 May 2025 16:37:09 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 46dc7kx4m6-1;
-	Tue, 06 May 2025 16:37:09 +0000
-Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 546Gb9bE003112;
-	Tue, 6 May 2025 16:37:09 GMT
-Received: from hu-maiyas-hyd.qualcomm.com (hu-nitirawa-hyd.qualcomm.com [10.213.109.152])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 546Gb9rS003111;
-	Tue, 06 May 2025 16:37:09 +0000
-Received: by hu-maiyas-hyd.qualcomm.com (Postfix, from userid 2342877)
-	id 8FB4A5015AC; Tue,  6 May 2025 22:07:08 +0530 (+0530)
-From: Nitin Rawat <quic_nitirawa@quicinc.com>
-To: alim.akhtar@samsung.com, avri.altman@wdc.com, bvanassche@acm.org,
-        krzk+dt@kernel.org, robh@kernel.org, mani@kernel.org,
-        conor+dt@kernel.org, James.Bottomley@HansenPartnership.com,
-        martin.petersen@oracle.com, beanhuo@micron.com,
-        peter.wang@mediatek.com
-Cc: linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Nitin Rawat <quic_nitirawa@quicinc.com>
-Subject: [PATCH V2 1/3] scsi: ufs: dt-bindings: Document UFS Disable LPM property
-Date: Tue,  6 May 2025 22:07:03 +0530
-Message-ID: <20250506163705.31518-2-quic_nitirawa@quicinc.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250506163705.31518-1-quic_nitirawa@quicinc.com>
-References: <20250506163705.31518-1-quic_nitirawa@quicinc.com>
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="UQhR01uv"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43d0782d787so37487235e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 09:40:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ionos.com; s=google; t=1746549619; x=1747154419; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YDxac0WTKpNYAqKy6qqh/ldgoTgxO9yAZvAySkLr8eQ=;
+        b=UQhR01uvJwThy6Nb8BCxBoNpbYsV0uJEhIo0WoHo7Shgrvl7oDnDpmp27mVxmuwGdp
+         gxscuitKteaTUpR7AwhULI9ZTqWXYrgzz41QbCU5c2h45pR7FY1WqeL2I+7kQ3OesOQt
+         GrW2NuiiFzlpMDUwpw/AkY3waUhkFoHHLsFjB4ZKbttXYbT3WoNqVsiyoE4D6H8S/A/H
+         QsVGxe2CNP4hUIZEzuTNQ6+giT4p609hEEqRPIFB+rFrXJDm+/Rq5f6l4cugFBts81Ui
+         T1RpLyazsmQvC+8uEUAre978NytXH8ts+g/yu87FsX50Rrx8UuMi5QgOy77rtpbqj2oD
+         Oj3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746549619; x=1747154419;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YDxac0WTKpNYAqKy6qqh/ldgoTgxO9yAZvAySkLr8eQ=;
+        b=rICWqj0n6rcyNs/xe1fcqKzZo8tuFBkouI4LeLQaHu4zNG2duA3i6ikSxNA+yY1Xt2
+         50OsuY5nPrFH5VkI3iamxJbeaBSymZf1kaOLSExAdJv88weKKjeFHj4jtdCl0YRi63R+
+         rKKKqqEnBwUQZ92092hXlF3cSrTionn+6SLZ7dRuNxs4fHuY2XrdNtoYCf8Csqt0pUqK
+         KAdmiBwbkrCgLa2xkr//pzj3qCmdL7TEsu9VmSDstJkI/AWHddrbdh9AKrIE7IB9SmBz
+         hXN30JKXGcgonKZoTJ6z51XoVyi6MOirs2CJxyCvI6aAMuqGT38KhFOVO20NJZrYao46
+         2+SA==
+X-Forwarded-Encrypted: i=1; AJvYcCW7OD8SIH8CfhPRqx8PlfSSNmT2sEFONtal+vtkCaUzay0duMFz7qKMl2I/tgHpxMeGnkT5DKTrn+Gib/o=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxp24o4lijBWeqrZYzbjqlpkMKeOHVNTAEIEKW0ix3BD3t2XRjB
+	fjQiFSPtFin1xkF8Xi7l0skV34Qo5MV7+mTle6cVbiQzs/g/WwJI/CZQKhEHwYmtg7WO86eu+9S
+	6Uug=
+X-Gm-Gg: ASbGnctfrYWUsKoplJMwQvT7xg9KpVqsBWoldYtBIXmNANp64VMdZHOfIVopD89RE7B
+	maKOgPN8aJgB99onOJAc+eWLotFKHHG6N19DGlpxJFWJlUXxqVb8wO+5sCE0RifPn6bIPF4A9ZQ
+	YG8FtAEdByncbZ+Q0rCf715mI4EwlB2GcBAfc7nTEh3ieBeuwlRTmylY1YrXU2KRW5/LIyFo9uo
+	hmT6dKbe36p5NQvqC9n1CCtx0mzwElipqa923yokcDz1reqJ3gcZyJ8RTutylvn327Pr14yG5bt
+	P12gJBIdU4Z5B8gkTJNiowusenEhU1zwooM6bDBihPHqUOs+8XdNoqJk0WzP1v9bK4MSzdwu9yQ
+	LT+IroZyM7dHS0UmQ9Q0Ol8Zdss9BCZyZJTHWAAId
+X-Google-Smtp-Source: AGHT+IE6JlF6LcWEHOve+lS51YR1l5bhOAPO1WVtAJ57rwt/OA8Oq/W9Y5e0xEcHuMEp8U1hdl0uDg==
+X-Received: by 2002:a05:600c:1e09:b0:43c:f895:cb4e with SMTP id 5b1f17b1804b1-441cb49494cmr81944285e9.17.1746549619147;
+        Tue, 06 May 2025 09:40:19 -0700 (PDT)
+Received: from raven.intern.cm-ag (p200300dc6f46c100023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f46:c100:230:64ff:fe74:809])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b8a285c2sm174555925e9.32.2025.05.06.09.40.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 May 2025 09:40:18 -0700 (PDT)
+From: Max Kellermann <max.kellermann@ionos.com>
+To: gregkh@linuxfoundation.org,
+	tj@kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Max Kellermann <max.kellermann@ionos.com>
+Subject: [PATCH] fs/kernfs: implement STATX_BTIME
+Date: Tue,  6 May 2025 18:40:17 +0200
+Message-ID: <20250506164017.249149-1-max.kellermann@ionos.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,60 +73,73 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA2MDE1NyBTYWx0ZWRfX15SXF8kDf2DP
- YR3X2OXPCTnl3h6NuTNPS/zizkOeDf/VMtRYK5QQdlxcHsYVCdvGkGiKXGUpExzavJ/jF4BZJa6
- a1qCQsw3wm2ASuj9G5tP3oLngfOodyO97DLCbGnulQ0NHKUeBnGnnjQkfFoQJN/Fzk98XGV9GDr
- F30FXHqfi68zHX0JZfCDudzar1A7r4FY0Kf3LljK1DEFnrpFRjKFS4/pMiClPCn8kCBqvxPuwyj
- XSU8LiWOoBjomu1NuIRwcMC4dtsT2jkDGWdYQoSPrm1FTPkljJ27oYSMFMl1zpF6InLLSEL1LL6
- 0EKoeaP5Dhmlct3eVXeM/4g2oYKpvoARmoNwYGvF9/pxjixt930vRkQzSkOr6OZKKt7J+GzNEGa
- DO+esOOctYvbVNEOGv3W2Kgx0crag9mVZ8BPjre2xST5KdnF4u0uwZFCRFxE4eVsquRErqbz
-X-Proofpoint-GUID: MFxACo-HEU_6sW2CPlVhfIm5cMRDjDZX
-X-Proofpoint-ORIG-GUID: MFxACo-HEU_6sW2CPlVhfIm5cMRDjDZX
-X-Authority-Analysis: v=2.4 cv=W+s4VQWk c=1 sm=1 tr=0 ts=681a3ab8 cx=c_pps
- a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
- a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=bmo5lHaIWG-R3PfxNqQA:9
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-06_07,2025-05-05_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 impostorscore=0 clxscore=1015 adultscore=0 phishscore=0
- mlxlogscore=999 spamscore=0 bulkscore=0 mlxscore=0 malwarescore=0
- lowpriorityscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2504070000 definitions=main-2505060157
 
-Disable UFS low power mode on emulation FPGA platforms or other platforms
-where it is either unsupported or power efficiency is not a critical
-requirement.
+This allows finding out when an inode was initially created, for
+example:
 
-Document the UFS Disable LPM property for such platforms.
+- when was a device plugged in (and its node in sysfs was created)?
+- when was a cgroup created?
 
-Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
+kernfs currently only implements `atime`, `mtime` and `ctime`.  All of
+these are volatile (`mtime` and `ctime` get updated automatically, and
+`atime` can be mainpulated using utime()).  Therefore, I suggest
+implementing STATX_BTIME to have a reliable birth time in userspace.
+
+Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
 ---
- Documentation/devicetree/bindings/ufs/ufs-common.yaml | 5 +++++
- 1 file changed, 5 insertions(+)
+ fs/kernfs/dir.c        | 2 ++
+ fs/kernfs/inode.c      | 6 ++++++
+ include/linux/kernfs.h | 7 +++++++
+ 3 files changed, 15 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/ufs/ufs-common.yaml b/Documentation/devicetree/bindings/ufs/ufs-common.yaml
-index 31fe7f30ff5b..eab28beb0e76 100644
---- a/Documentation/devicetree/bindings/ufs/ufs-common.yaml
-+++ b/Documentation/devicetree/bindings/ufs/ufs-common.yaml
-@@ -89,6 +89,11 @@ properties:
+diff --git a/fs/kernfs/dir.c b/fs/kernfs/dir.c
+index fc70d72c3fe8..9a6857f2f3d7 100644
+--- a/fs/kernfs/dir.c
++++ b/fs/kernfs/dir.c
+@@ -678,6 +678,8 @@ static struct kernfs_node *__kernfs_new_node(struct kernfs_root *root,
+ 			goto err_out3;
+ 	}
  
-   msi-parent: true
- 
-+  disable-lpm:
-+    type: boolean
-+    description:
-+      Disable UFS LPM features.
++	ktime_get_real_ts64(&kn->btime);
 +
- dependencies:
-   freq-table-hz: [ clocks ]
-   operating-points-v2: [ clocks, clock-names ]
+ 	return kn;
+ 
+  err_out3:
+diff --git a/fs/kernfs/inode.c b/fs/kernfs/inode.c
+index b83054da68b3..1ff2ee62bfe6 100644
+--- a/fs/kernfs/inode.c
++++ b/fs/kernfs/inode.c
+@@ -189,6 +189,12 @@ int kernfs_iop_getattr(struct mnt_idmap *idmap,
+ 	struct kernfs_root *root = kernfs_root(kn);
+ 
+ 	down_read(&root->kernfs_iattr_rwsem);
++
++	if (request_mask & STATX_BTIME) {
++		stat->result_mask |= STATX_BTIME;
++		stat->btime = kn->btime;
++	}
++
+ 	kernfs_refresh_inode(kn, inode);
+ 	generic_fillattr(&nop_mnt_idmap, request_mask, inode, stat);
+ 	up_read(&root->kernfs_iattr_rwsem);
+diff --git a/include/linux/kernfs.h b/include/linux/kernfs.h
+index b5a5f32fdfd1..9332aadf4b48 100644
+--- a/include/linux/kernfs.h
++++ b/include/linux/kernfs.h
+@@ -229,6 +229,13 @@ struct kernfs_node {
+ 	void			*priv;
+ 	struct kernfs_iattrs	*iattr;
+ 
++	/*
++	 * The birth time (for STATX_BTIME).  It lives here and not in
++	 * struct kernfs_iattrs because the latter is only created on
++	 * demand, not at actual node birth time.
++	 */
++	struct timespec64	btime;
++
+ 	struct rcu_head		rcu;
+ };
+ 
 -- 
-2.48.1
+2.47.2
 
