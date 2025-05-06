@@ -1,162 +1,108 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mail-m82174.xmail.ntesmail.com (mail-m82174.xmail.ntesmail.com [156.224.82.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8414328E583;
-	Tue,  6 May 2025 04:10:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D934C29ACF5;
+	Tue,  6 May 2025 04:13:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.224.82.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746504640; cv=none; b=HAbDydoh8v8/tJAAHQX3js7pqNTHnqfcg8uAS+H9DoGszQDpnOiR+zStp9rbi8PVFtmx6thvEFTkHLJ17YXXeOrSSDJdjm7Yiqi3tcQElmtoQPSq65uHpoSOF6P7AI+IDCy23VnXegmaHs48gd90ZNy3WcqZlCFuYEI2zZQ+ooQ=
+	t=1746504787; cv=none; b=nxKiBIG7+qwBjIwnmQ0eIbH4rGlrk8fjvPAzMUQ3nlJ1EpbsXPvlVdJbXz/t8NVkyuIZh9ShS17uVlYANxsSU+nURU0mfsQaCj98Lp/NYeh9AgoZRlsJ93UuYgRCakLsn2UANptBkcDdMFhDX7c+daViozydO0HAWqXl/b9M4Rk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746504640; c=relaxed/simple;
-	bh=OZEdENzm3HVqmxa8TSXNyAQmCE+p6t1zKOgMOUVpG2Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=eITz7CaGUxUy9wrSdBbxvf5EeT4mS/IE2x9TetaVJqyB9g2vmB0zgZWbwJXjMqrevx88lqtsSHVJzhBbhP/nCNPl1u/mkRU6eDcLq2AQjT5XzgsJIEuNHtPutR1m1Jy2hcAYdWLXIlPTPOaYT1Ts3iRovYmv8N58u4Do9okId6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=a6GzREXA; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1746504787; c=relaxed/simple;
+	bh=uDVf/saMy4+Z9R9ojM5P/eQj0EB4phsLM7i+B38h2iE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=cSQL6vrO/xuEZTzLFXeVZieg+jdeEt9QkmYnIlsN7IRwkpw6Dp8BcWNFylx77QMUiT4YpGRmCOK/jfO6nW2dpCDCKowFqWSH4mHF+QOMXjYb6Rcl/QenbMNva9d4kreEy3DqF4nU+yOJQeNdrZyP/BXhABdtgQe2XakJB2Lv+1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=EwQtZEg/; arc=none smtp.client-ip=156.224.82.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="a6GzREXA"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 545KU2lh030054;
-	Tue, 6 May 2025 04:10:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	+bSi5YQTgnJtJtrFJLwdwRGtDeu8w7V4jX9NyihzOo4=; b=a6GzREXA4ZfxF2Gw
-	aiB0ibWtQe+yttOMzq2ikQVhVTtwh1r/nteGG8LaruNT9YWAkqcthPF59+GuuhYb
-	Ib/WLYz4Im64V/oHNCht40txUDzqQ+N0vCVx3pTnL8OWjtmHsUIpqrqZQzsMtPgc
-	DbmcMYVJ3A7+rSyZjxnTzuPlRhK1nS7pPVPUvYwWUOI0fxhhyTEN4fDWz0Mcf5pS
-	lRIFfZDXAMREf3Mxx1W3SfZ7LYkTNdHOwJxrja3r2FKGa3TDcLL/ynYldtsRfj0c
-	Ro9cL+FMMqHnukaO09CNMtywszm1YwSvwmvA4+Fm14wOlgwsmT6ZO61Y3jcuEe+z
-	qC0AkA==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46da3rx815-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 06 May 2025 04:10:13 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5464ADhH007667
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 6 May 2025 04:10:13 GMT
-Received: from [10.239.155.136] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 5 May 2025
- 21:10:08 -0700
-Message-ID: <2e692dbf-4a2d-47e0-bf56-af794bf8068c@quicinc.com>
-Date: Tue, 6 May 2025 12:10:05 +0800
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="EwQtZEg/"
+Received: from localhost.localdomain (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 140c6eaf9;
+	Tue, 6 May 2025 10:57:25 +0800 (GMT+08:00)
+From: Kever Yang <kever.yang@rock-chips.com>
+To: heiko@sntech.de
+Cc: linux-rockchip@lists.infradead.org,
+	Kever Yang <kever.yang@rock-chips.com>,
+	Rob Herring <robh@kernel.org>,
+	devicetree@vger.kernel.org,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Frank Wang <frank.wang@rock-chips.com>,
+	linux-kernel@vger.kernel.org,
+	Detlev Casanova <detlev.casanova@collabora.com>,
+	Yao Zi <ziyao@disroot.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shresth Prasad <shresthprasad7@gmail.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+Subject: [PATCH v5 3/6] dt-bindings: soc: rockchip: Add rk3562 syscon compatibles
+Date: Tue,  6 May 2025 10:57:12 +0800
+Message-Id: <20250506025715.33595-4-kever.yang@rock-chips.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250506025715.33595-1-kever.yang@rock-chips.com>
+References: <20250506025715.33595-1-kever.yang@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] scsi: ufs: qcom: Check gear against max gear in vop
- freq_to_gear()
-To: Avri Altman <Avri.Altman@sandisk.com>,
-        "quic_cang@quicinc.com"
-	<quic_cang@quicinc.com>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "mani@kernel.org" <mani@kernel.org>,
-        "beanhuo@micron.com"
-	<beanhuo@micron.com>,
-        "avri.altman@wdc.com" <avri.altman@wdc.com>,
-        "junwoo80.lee@samsung.com" <junwoo80.lee@samsung.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "quic_nguyenb@quicinc.com" <quic_nguyenb@quicinc.com>,
-        "quic_nitirawa@quicinc.com" <quic_nitirawa@quicinc.com>,
-        "quic_rampraka@quicinc.com" <quic_rampraka@quicinc.com>,
-        "neil.armstrong@linaro.org" <neil.armstrong@linaro.org>,
-        "luca.weiss@fairphone.com" <luca.weiss@fairphone.com>,
-        "konrad.dybcio@oss.qualcomm.com" <konrad.dybcio@oss.qualcomm.com>
-CC: "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "Manivannan
- Sadhasivam" <manivannan.sadhasivam@linaro.org>,
-        "James E.J. Bottomley"
-	<James.Bottomley@HansenPartnership.com>,
-        open list
-	<linux-kernel@vger.kernel.org>
-References: <20250502042432.88434-1-quic_ziqichen@quicinc.com>
- <20250502042432.88434-2-quic_ziqichen@quicinc.com>
- <PH7PR16MB6196FCFC818B623C946BD5DAE58D2@PH7PR16MB6196.namprd16.prod.outlook.com>
-Content-Language: en-US
-From: Ziqi Chen <quic_ziqichen@quicinc.com>
-In-Reply-To: <PH7PR16MB6196FCFC818B623C946BD5DAE58D2@PH7PR16MB6196.namprd16.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: miW3gQrGILjrO6H3PBnXX50gKvw67GyS
-X-Authority-Analysis: v=2.4 cv=cpWbk04i c=1 sm=1 tr=0 ts=68198ba5 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=KKAkSRfTAAAA:8
- a=COk6AnOGAAAA:8 a=ufAJUjbdAAAA:8 a=FN3lEX5YA6Kur31ofxgA:9 a=QEXdDO2ut3YA:10
- a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22 a=rB1ygNaI0PWiOa_UD5GD:22
-X-Proofpoint-GUID: miW3gQrGILjrO6H3PBnXX50gKvw67GyS
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA2MDAzNiBTYWx0ZWRfX/F0HVKo75Riq
- IZKtEN9TywCYnM+eXCaW7Uj2tBK54f5Iy/VFOeHBZdR0XZ4BL3E1QJ3YjaRsQwRhSMqvamXsKCT
- R0LUqyLz6khDNlumtwxOAq8W3IqaaL3UXbf0VobvzW2aesSyu4LXkApNgyOsdaMlKHj/guneJrL
- 8ZPE/48XifHxIF4ZS5USlGrFQFxpixh66tm7Efp9uVAOlDGGZbw8vd7cMpd7KVqkDF4TqvrGT/k
- LFNHSgfk2D8vXjIbILCYuMQBOayc7k4SJTC+s7lH+bEbqlOX7eoJwkM1jFfzhfuDyh+RKtorLAJ
- ptlRuTZTnJoiH93O1/XDMGBmL5CeWdxHCi+MCuCVzh8bzu1XWkTF8Ihlb0j58E/1g7Tc7emch91
- Vjr+spAR0LQKUjeggdJdfPC21DeK1UgDg0PYHHJDkPNdy7RtnUd+FGoOKKl8wyuncGgffgM2
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-06_02,2025-05-05_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxscore=0 spamscore=0 lowpriorityscore=0 phishscore=0 adultscore=0
- malwarescore=0 suspectscore=0 bulkscore=0 priorityscore=1501 mlxlogscore=999
- clxscore=1011 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505060036
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQk5NHVYYHU1MQ0hKQkkfGUNWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSEpKQk
+	1VSktLVUpCWQY+
+X-HM-Tid: 0a96a386d66c03afkunm140c6eaf9
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Pwg6FCo4VjJRNxEtIjMJMD8d
+	HC4aCTVVSlVKTE9NTktLSU9NTUtPVTMWGhIXVRAeDR4JVQIaFRw7CRQYEFYYExILCFUYFBZFWVdZ
+	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFJTkNPNwY+
+DKIM-Signature:a=rsa-sha256;
+	b=EwQtZEg/JcR9X1aI3qN+lcZB8BLJGZzmogevqtBCXYTMSJ0LbLAJFcjnWqQPESUH3kmNkI/EZAUbcKEte4FPiuE3Uah8VQA0K+JXK1YYyEVymbNOlBJXzC3uVUT3d0nhvqtFSGkPKwp/C6M/TbKL86Pux1ebE1NWBWMr2fCR+ks=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=z6yuuAP3upQvCqHVAexjgMB4cGshHYyvgpiH/jTzsjM=;
+	h=date:mime-version:subject:message-id:from;
 
-Hi Avri,
+Add all syscon compatibles for rk3562.
 
-On 5/2/2025 1:10 PM, Avri Altman wrote:
->> The vop freq_to_gear() may return a gear greater than the negotiated max
->> gear, return the negotiated max gear if the mapped gear is greater than it.
->>
->> Tested-by: Neil Armstrong <neil.armstrong@linaro.org>
->> Signed-off-by: Ziqi Chen <quic_ziqichen@quicinc.com>
->> ---
->>   drivers/ufs/host/ufs-qcom.c | 4 +++-
->>   1 file changed, 3 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c index
->> 46cca52aa6f1..f5ea703d8ef5 100644
->> --- a/drivers/ufs/host/ufs-qcom.c
->> +++ b/drivers/ufs/host/ufs-qcom.c
->> @@ -1938,9 +1938,11 @@ static u32 ufs_qcom_freq_to_gear_speed(struct
->> ufs_hba *hba, unsigned long freq)
->>   		break;
->>   	default:
->>   		dev_err(hba->dev, "%s: Unsupported clock freq : %lu\n",
->> __func__, freq);
->> -		break;
->> +		return gear;
-> Mayby return 0 so it is clear that you are not returning a gear
-> 
->>   	}
->>
->> +	gear = min_t(u32, gear, hba->max_pwr_info.info.gear_rx);
-> return min_t(u32, gear, hba->max_pwr_info.info.gear_rx);
-> 
+Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
+---
 
-Thanks, the way you suggested is more concise. I will update and use 
-this way.
+Changes in v5: None
+Changes in v4:
+- Collect ack tag
 
-Ziqi
+Changes in v3: None
+Changes in v2: None
 
-> Thanks,
-> Avri
->> +
->>   	return gear;
->>   }
->>
->> --
->> 2.34.1
->>
-> 
+ Documentation/devicetree/bindings/soc/rockchip/grf.yaml | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/soc/rockchip/grf.yaml b/Documentation/devicetree/bindings/soc/rockchip/grf.yaml
+index 2f61c1b95fea..8cbf5b6772dd 100644
+--- a/Documentation/devicetree/bindings/soc/rockchip/grf.yaml
++++ b/Documentation/devicetree/bindings/soc/rockchip/grf.yaml
+@@ -18,6 +18,12 @@ properties:
+               - rockchip,rk3528-ioc-grf
+               - rockchip,rk3528-vo-grf
+               - rockchip,rk3528-vpu-grf
++              - rockchip,rk3562-ioc-grf
++              - rockchip,rk3562-peri-grf
++              - rockchip,rk3562-pipephy-grf
++              - rockchip,rk3562-pmu-grf
++              - rockchip,rk3562-sys-grf
++              - rockchip,rk3562-usbphy-grf
+               - rockchip,rk3566-pipe-grf
+               - rockchip,rk3568-pcie3-phy-grf
+               - rockchip,rk3568-pipe-grf
+@@ -82,6 +88,7 @@ properties:
+               - rockchip,rk3368-pmugrf
+               - rockchip,rk3399-grf
+               - rockchip,rk3399-pmugrf
++              - rockchip,rk3562-pmu-grf
+               - rockchip,rk3568-grf
+               - rockchip,rk3568-pmugrf
+               - rockchip,rk3576-ioc-grf
+-- 
+2.25.1
 
