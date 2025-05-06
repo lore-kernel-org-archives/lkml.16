@@ -1,247 +1,162 @@
-Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [52.229.168.213])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 016E2264A7A;
-	Tue,  6 May 2025 09:12:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.229.168.213
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF2A4264A6D;
+	Tue,  6 May 2025 09:12:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746522744; cv=none; b=qnC5rWFRJXBsPNewv71hQ8zb/47+swiBngpRMH0tDnNYSTVrKySmGtPN70NTLqg5lSZrC0aVYSuRcFdkpTzsdQ1O3A50vGvX8TJ+R9UXjYyCrlraQB2epBZo53W3nnRw8M2mx6sd9giZuP1jYZazfSRDXXtQhNxd7OLcDtb2/fo=
+	t=1746522759; cv=none; b=lsSmwpVwYj0uRFYCGvkRRx3U7lwZBJLnVpWKJoabHkToHPx/1HKYR9K+mCd6ibvWb6LN7MOLSIluA139oD9D8pbEXHbEoUvVNL+SaEHwWsSlEz9HpI1M/EYbjxHKvwRLw8x532Mcd3wwiHBtIqplyuroiM2dOWmFY6+IAP3Pjdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746522744; c=relaxed/simple;
-	bh=C/7pcSjSNQqOcujEiqYkXqXli82ajAO071G6czanZF0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dyxrMAnc/zmgZIfAzFLngLRNQp44d/6MAGpAhuOmYWctQfjfuYGHzMi6ZZoAUg5C5Bo3ZCYsjNzDzJFeBv4IfA7iezZGEitpmZIRtpcadJcAEU9xe84GcJeueUd6LkXgkGNM3XXGnX6NUSuPV/E0UyThYJSyvUSZltPh6PAhNAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=52.229.168.213
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
-Received: from E0006800LT.eswin.cn (unknown [10.12.96.77])
-	by app1 (Coremail) with SMTP id TAJkCgBXexFV0hlozyZiAA--.24610S2;
-	Tue, 06 May 2025 17:11:52 +0800 (CST)
-From: luyulin <luyulin@eswincomputing.com>
-To: linus.walleij@linaro.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kees@kernel.org,
-	gustavoars@kernel.org,
-	brgl@bgdev.pl,
-	linux-hardening@vger.kernel.org
-Cc: zhengyu@eswincomputing.com,
-	ningyu@eswincomputing.com,
-	huangyifeng@eswincomputing.com,
-	linmin@eswincomputing.com,
-	fenglin@eswincomputing.com,
-	lianghujun@eswincomputing.com,
-	luyulin <luyulin@eswincomputing.com>,
-	Samuel Holland <samuel.holland@sifive.com>
-Subject: [PATCH 1/2] dt-bindings: pinctrl: eswin: Document for eic7700 SoC
-Date: Tue,  6 May 2025 17:11:45 +0800
-Message-Id: <20250506091145.1953-1-luyulin@eswincomputing.com>
-X-Mailer: git-send-email 2.31.1.windows.1
-In-Reply-To: <20250506090844.1516-1-luyulin@eswincomputing.com>
-References: <20250506090844.1516-1-luyulin@eswincomputing.com>
+	s=arc-20240116; t=1746522759; c=relaxed/simple;
+	bh=MFyvTZiB5IiYHFdjR1e+he6kmSbNDWDGhar7CH/s4rw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lfJ5doblzAqKVFG4NPVt1ANrtyIv6gb3y2zZwkPrhToecR4yVGeGM2sBvttvPW3PxpNkMoUCgrPm8ctnwLvIsNJFn6OndqlXQfULCXl+Hp7ZUybZaRcOuMpOHKIxH+1NUGrP6R56N9ccwBQCEB+98CT4NNQX5qQ8JmcIGfCD/T0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eJME86Yo; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eJME86Yo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2EC2C4CEE4;
+	Tue,  6 May 2025 09:12:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746522759;
+	bh=MFyvTZiB5IiYHFdjR1e+he6kmSbNDWDGhar7CH/s4rw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eJME86YoX5APk74j+p+0KNyT2AAz0eKb7egbN8XvPhq9tqvhUPW6QZbGpwc1fr2/y
+	 FYmOcsR/hlex6SJJmcBM1jeSc0roTxUsd3EJOdTdjhgIexo64ZBxJv1DRBSAdI9Rnl
+	 4ZkdrCLkqAr9F2wJj9OO0EASd0k6GviAIA8GlxdNQRc600+o60TUm6tLbNtdYGGpxO
+	 j56CHekwL4T8wh/f0cBESmiBPB4T409D3jF45XmZajIg9U8NSG3ZbjSRKIUuYQJibb
+	 LgOpHRfphH/UhCLVrz2qYQAY+wjfH3doi4ePK0Wje0IzdJiNgQRwPOlXYeaaP0N8W1
+	 Dt4mvt/XHCxzA==
+Date: Tue, 6 May 2025 11:12:34 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: "Ahmed S. Darwish" <darwi@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	John Ogness <john.ogness@linutronix.de>, x86@kernel.org,
+	x86-cpuid@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 00/26] x86: Introduce centralized CPUID model
+Message-ID: <aBnSgu_JyEi8fvog@gmail.com>
+References: <20250506050437.10264-1-darwi@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:TAJkCgBXexFV0hlozyZiAA--.24610S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxKr43Ary7JFWUtw47WF43Awb_yoWxJr43pF
-	43W34fJFnIqF1xGa9Ivw18ur1fJan7AFsxAF1jyry3Xwn0q3WSyr4ayr15WFWDWr4kJ3sx
-	Xayqqa40qF1DCrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9G14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_GFv_Wrylc2xSY4AK6svPMxAIw28IcxkI7VAKI48JMx
-	C20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAF
-	wI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20x
-	vE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v2
-	0xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxV
-	W8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7sRRKZX5UUUUU==
-X-CM-SenderInfo: pox13z1lq6v25zlqu0xpsx3x1qjou0bp/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250506050437.10264-1-darwi@linutronix.de>
 
-This commit adds Device Tree binding documentation for the
-ESWIN EIC7700 pinctrl controller module. The document describes
-the required properties, compatible strings, and usage examples
-in the device tree configuration when applying this module.
 
-Co-developed-by: Samuel Holland <samuel.holland@sifive.com>
-Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
-Signed-off-by: luyulin <luyulin@eswincomputing.com>
----
- .../pinctrl/eswin,eic7700-pinctrl.yaml        | 156 ++++++++++++++++++
- 1 file changed, 156 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/eswin,eic7700-pinctrl.yaml
+* Ahmed S. Darwish <darwi@linutronix.de> wrote:
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/eswin,eic7700-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/eswin,eic7700-pinctrl.yaml
-new file mode 100644
-index 000000000000..d8811a8e0a51
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/eswin,eic7700-pinctrl.yaml
-@@ -0,0 +1,156 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pinctrl/eswin,eic7700-pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Eswin Eic7700 Pinctrl
-+
-+maintainers:
-+  - LuYuLin <luyulin@eswincomputing.com>
-+
-+description: |
-+  Please refer to pinctrl-bindings.txt in this directory for details of the
-+  common pinctrl bindings used by client devices, including the meaning of the
-+  phrase "pin configuration node".
-+
-+  eic7700 pin configuration nodes act as a container for an arbitrary number of
-+  subnodes. Each of these subnodes represents some desired configuration for one or
-+  more pins. This configuration can include the mux function to select on those pin(s),
-+  and various pin configuration parameters, such as input-enable, pull-up, etc.
-+
-+properties:
-+  compatible:
-+    const: eswin,eic7700-pinctrl
-+
-+  reg:
-+    description: Specifies the base address and size of the SLCR space.
-+    maxItems: 1
-+
-+  "vrgmii-supply":
-+    description:
-+      Regulator supply for the RGMII interface IO power domain.
-+      This property should reference a regulator that provides either 1.8V or 3.3V,
-+      depending on the board-level voltage configuration required by the RGMII interface.
-+
-+patternProperties:
-+  '^(.*-)?(pins)$':
-+    type: object
-+    description:
-+      Pinctrl node's client devices use subnodes for pin muxes,
-+      which in turn use below standard properties.
-+
-+    properties:
-+      pins:
-+        description:
-+          For eic7700, specifies the name(s) of one or more pins to be configured by
-+          this node.
-+        items:
-+          enum: [ chip_mode, mode_set0, mode_set1, mode_set2, mode_set3, xin,
-+                  rst_out_n, key_reset_n, gpio0, por_sel, jtag0_tck, jtag0_tms,
-+                  jtag0_tdi, jtag0_tdo, gpio5, spi2_cs0_n, jtag1_tck, jtag1_tms,
-+                  jtag1_tdi, jtag1_tdo, gpio11, spi2_cs1_n, pcie_clkreq_n,
-+                  pcie_wake_n, pcie_perst_n, hdmi_scl, hdmi_sda, hdmi_cec,
-+                  jtag2_trst, rgmii0_clk_125, rgmii0_txen, rgmii0_txclk,
-+                  rgmii0_txd0, rgmii0_txd1, rgmii0_txd2, rgmii0_txd3, i2s0_bclk,
-+                  i2s0_wclk, i2s0_sdi, i2s0_sdo, i2s_mclk, rgmii0_rxclk,
-+                  rgmii0_rxdv, rgmii0_rxd0, rgmii0_rxd1, rgmii0_rxd2, rgmii0_rxd3,
-+                  i2s2_bclk, i2s2_wclk, i2s2_sdi, i2s2_sdo, gpio27, gpio28, gpio29,
-+                  rgmii0_mdc, rgmii0_mdio, rgmii0_intb, rgmii1_clk_125, rgmii1_txen,
-+                  rgmii1_txclk, rgmii1_txd0, rgmii1_txd1, rgmii1_txd2, rgmii1_txd3,
-+                  i2s1_bclk, i2s1_wclk, i2s1_sdi, i2s1_sdo, gpio34, rgmii1_rxclk,
-+                  rgmii1_rxdv, rgmii1_rxd0, rgmii1_rxd1, rgmii1_rxd2, rgmii1_rxd3,
-+                  spi1_cs0_n, spi1_clk, spi1_d0, spi1_d1, spi1_d2, spi1_d3, spi1_cs1_n,
-+                  rgmii1_mdc, rgmii1_mdio, rgmii1_intb, usb0_pwren, usb1_pwren,
-+                  i2c0_scl, i2c0_sda, i2c1_scl, i2c1_sda, i2c2_scl, i2c2_sda,
-+                  i2c3_scl, i2c3_sda, i2c4_scl, i2c4_sda, i2c5_scl, i2c5_sda,
-+                  uart0_tx, uart0_rx, uart1_tx, uart1_rx, uart1_cts, uart1_rts,
-+                  uart2_tx, uart2_rx, jtag2_tck, jtag2_tms, jtag2_tdi, jtag2_tdo,
-+                  fan_pwm, fan_tach, mipi_csi0_xvs, mipi_csi0_xhs, mipi_csi0_mclk,
-+                  mipi_csi1_xvs, mipi_csi1_xhs, mipi_csi1_mclk, mipi_csi2_xvs,
-+                  mipi_csi2_xhs, mipi_csi2_mclk, mipi_csi3_xvs, mipi_csi3_xhs,
-+                  mipi_csi3_mclk, mipi_csi4_xvs, mipi_csi4_xhs, mipi_csi4_mclk,
-+                  mipi_csi5_xvs, mipi_csi5_xhs, mipi_csi5_mclk, spi3_cs_n, spi3_clk,
-+                  spi3_di, spi3_do, gpio92, gpio93, s_mode, gpio95, spi0_cs_n,
-+                  spi0_clk, spi0_d0, spi0_d1, spi0_d2, spi0_d3, i2c10_scl,
-+                  i2c10_sda, i2c11_scl, i2c11_sda, gpio106, boot_sel0, boot_sel1,
-+                  boot_sel2, boot_sel3, gpio111, lpddr_ref_clk ]
-+
-+      function:
-+        description:
-+          Specify the alternative function to be configured for the
-+          given pins.
-+        enum: [ disabled, boot_sel, chip_mode, emmc, fan_tach,
-+                gpio, hdmi, i2c, i2s, jtag, ddr_ref_clk_sel,
-+                lpddr_ref_clk, mipi_csi, osc, pcie, pwm,
-+                rgmii, reset, sata, sdio, spi, s_mode, uart, usb ]
-+
-+      input-schmitt-enable: true
-+
-+      input-schmitt-disable: true
-+
-+      bias-disable: true
-+
-+      bias-pull-down: true
-+
-+      bias-pull-up: true
-+
-+      input-enable: true
-+
-+      input-disable: true
-+
-+      drive-strength-microamp: true
-+
-+    allOf:
-+      - $ref: pincfg-node.yaml#
-+      - $ref: pinmux-node.yaml#
-+
-+      - if:
-+          properties:
-+            pins:
-+              anyOf:
-+                - pattern: '^rgmii'
-+                - const: lpddr_ref_clk
-+        then:
-+          properties:
-+            drive-strength-microamp:
-+              enum: [3000, 6000, 9000, 12000, 15000, 18000, 21000, 24000]
-+        else:
-+          properties:
-+            drive-strength-microamp:
-+              enum: [6000, 9000, 12000, 15000, 18000, 21000, 24000, 27000]
-+
-+    required:
-+      - pins
-+
-+    additionalProperties: false
-+
-+allOf:
-+  - $ref: pinctrl.yaml#
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    pinctrl@51600080 {
-+      compatible = "eswin,eic7700-pinctrl";
-+      reg = <0x51600080 0x1fff80>;
-+      vrgmii-supply = <&vcc_1v8>;
-+      gpio10_pins: gpio10-pins {
-+          pins = "jtag1_tdo";
-+          function = "gpio";
-+          input-enable;
-+          bias-pull-up;
-+      };
-+    };
-+
-+    i2c2 {
-+      pinctrl-names = "default";
-+      pinctrl-0 = <&gpio10_pins>;
-+    };
-+
-+...
--- 
-2.25.1
+>  MAINTAINERS                               |    1 +
+>  arch/x86/include/asm/cpu.h                |    6 +
+>  arch/x86/include/asm/cpuid.h              |    1 +
+>  arch/x86/include/asm/cpuid/internal_api.h |   62 +
+>  arch/x86/include/asm/cpuid/leaf_0x2_api.h |   57 +-
+>  arch/x86/include/asm/cpuid/leaves.h       | 2055 +++++++++++++++++++++
+>  arch/x86/include/asm/cpuid/table_api.h    |  120 ++
+>  arch/x86/include/asm/cpuid/types.h        |   74 +
+>  arch/x86/include/asm/processor.h          |    1 +
+>  arch/x86/kernel/cpu/Makefile              |    2 +
+>  arch/x86/kernel/cpu/cacheinfo.c           |  280 +--
+>  arch/x86/kernel/cpu/common.c              |   65 +-
+>  arch/x86/kernel/cpu/cpuid_debugfs.c       |   98 +
+>  arch/x86/kernel/cpu/cpuid_scanner.c       |  209 +++
+>  arch/x86/kernel/cpu/cpuid_scanner.h       |  117 ++
+>  arch/x86/kernel/cpu/intel.c               |   17 +-
+>  arch/x86/lib/cpu.c                        |   41 +-
+>  tools/arch/x86/kcpuid/cpuid.csv           |    4 +-
+>  18 files changed, 2926 insertions(+), 284 deletions(-)
+>  create mode 100644 arch/x86/include/asm/cpuid/internal_api.h
+>  create mode 100644 arch/x86/include/asm/cpuid/leaves.h
+>  create mode 100644 arch/x86/include/asm/cpuid/table_api.h
+>  create mode 100644 arch/x86/kernel/cpu/cpuid_debugfs.c
+>  create mode 100644 arch/x86/kernel/cpu/cpuid_scanner.c
+>  create mode 100644 arch/x86/kernel/cpu/cpuid_scanner.h
 
+Regarding CPUID header organization:
+
+ - Please move <asm/cpuid/internal_api.h> into <asm/cpuid/table_api.h>. 
+
+   There's not really much point to making it 'internal' AFAICS, as the 
+   main <asm/cpuid.h> header already includes <asm/cpuid/table_api.h> 
+   and <asm/cpuid/internal_api.h> respectively, so it's not all so much 
+   internal anymore.
+
+ - Please just use a single central API header: <asm/cpuid/api.h>, and 
+   remove <asm/cpuid.h>. It's confusing to have both <asm/cpuid.h> and 
+   a proper <asm/cpuid/> header hierarchy.
+
+   ( I wanted to point to <asm/fpu/api.h> as the shining example to 
+     follow, but then I noticed that somehow we grew a <asm/fpu.h> wart 
+     last year via b0b8a15bb89e. Will fix that ... )
+
+ - Is there a strong reason to keep <asm/cpuid/leaf_0x2_api.h>? I think 
+   for_each_leaf_0x2_entry() could just be moved into 
+   <asm/cpuid/api.h>, it's one of the accessors.
+
+ - In a similar vein, I don't see much point of keeping 
+   <asm/cpuid/table_api.h> header separate either. <asm/cpuid/api.h> 
+   won't be overly large I think.
+
+ - Could we rename <asm/cpuid/leaves.h> to <asm/cpuid/leaf_types.h> or 
+   so? It's really a sub-header of <asm/cpuid/types.h> and should thus 
+   share the nomenclature.
+
+ - After all this we'll only have 3 headers left:
+
+	<asm/cpuid/types.h>
+	<asm/cpuid/leaf_types.h>
+
+	<asm/cpuid/api.h>
+
+   And <asm/cpuid/leaf_types.h> is only a separate header because it's 
+   autogenerated by an external project.
+
+ - Wrt. <asm/cpuid/api.h>, we'll need a few followup cleanups there too 
+   I think, such as migrating to the cpuid_*() namespace:
+
+     - Rename have_cpuid_p() to cpuid_feature() or so.
+
+     - I find the cpudata_cpuid_ namespace a bit confusing:
+
+		__cpudata_cpuid_subleaf_idx(__table, __leaf, __subleaf, __idx)
+		__cpudata_cpuid_subleaf(__table, __leaf, __subleaf)
+		cpudata_cpuid_subleaf(_cpuinfo, _leaf, _subleaf)
+		cpudata_cpuid(_cpuinfo, _leaf)
+		cpudata_cpuid_nr_entries(_cpuinfo, _leaf)
+		cpudata_cpuid_index(_cpuinfo, _leaf, _idx)
+		cpudata_cpuid_regs(_cpuinfo, _leaf)
+		cpudata_cpuid_index_regs(_cpuinfo, _leaf, _idx)
+
+       All of CPUID processing is related to 'data', and we don't 
+       really have any 'cpudata' primitives, so the cpudata_ prefix is 
+       confusing to me.
+
+       It's particularly confusing for methods like cpudata_cpuid(), 
+       which sounds like a generic method, while in reality it accesses 
+       subleaf 0, right? Why not name it cpuid_subleaf_0() or so?
+
+       My suggestion would be to use a structure like this:
+
+		__cpuid_subleaf_idx(__table, __leaf, __subleaf, __idx)
+		__cpuid_subleaf(__table, __leaf, __subleaf)
+		cpuid_subleaf(_cpuinfo, _leaf, _subleaf)
+		cpuid_subleaf_0(_cpuinfo, _leaf)
+		cpuid_leaf_nr_entries(_cpuinfo, _leaf)
+		cpuid_leaf_index(_cpuinfo, _leaf, _idx)
+		cpuid_leaf_regs(_cpuinfo, _leaf)
+		cpuid_leaf_index_regs(_cpuinfo, _leaf, _idx)
+
+        Or so? In my book it's a nice bonus that they thus become part 
+        of the overall cpuid_*() API family. Note how these accessors 
+        still are all still either cpuid_leaf_ or cpuid_subleaf_ 
+        prefixed.
+
+Thanks,
+
+	Ingo
