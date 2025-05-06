@@ -1,217 +1,137 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A97C92206A6
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 22:57:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 102E7139E
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 23:03:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746572271; cv=none; b=l/bJQd2VYLfRnzlNwGZ0WFjIKr1e15yUQ0bet8DQ5CiCfpwXIZeaS5XyIrja33QhIo7IwQADcTjg8MM4iXmeVSx4WEt28W0egJyMC/kFyx2cl5xrw9roFZAgngHJBz5sTDVzav1M5AfMQ7UWiDcj0jcFatGUX/8RuIpNhAfTp84=
+	t=1746572582; cv=none; b=B0x3K28hT86Bd1tonj31nHQqNQTeONM9j2IuozUqOBh+h7IF6FPxAK8Nk5SeTZd3KJjyTHS71qUivjENLpd9el+Y3toc9nGQ/IC8lC2Kv1bgh1qViCZlTb0AEmCIGqRuOFdkD9fUX+VO8sV4yTve//lGz1GK8sZF6D16Z+HABLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746572271; c=relaxed/simple;
-	bh=8jcNpIGPrZDoqsvc1YJaJ9UcWqfSIDomQu2xeMdtmMc=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=HuVUwmcsp9ukB06B7z+Q/1O1NEskqeCX1O/UNb9uJGjOjCfUx+UKXRR7TgDIDGz1WXZV/avpA5fUuaHAGoGPcS05GZQyiiO1jBt79xqGGPnSt8JWtP+cFwLT1+ZY7wgFDTGzuRw1EC5hPuDERbWRPtd6SEFJHCSui5ZSZGqu6tk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dhavale.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=O+PAWPsT; arc=none smtp.client-ip=209.85.214.202
+	s=arc-20240116; t=1746572582; c=relaxed/simple;
+	bh=FGbQDwSMdwehg0vo+WziIzs6qAb86oKHc9AoOEeCwRY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XnrS3cAed75/AOWeYWCtpWUB75l08IOgc6n3daAAlvoChNkYop9SON2FICQASHqLq7FlWGV8VI9IJ0/moKCCRkfLeYO8Yo790OOAxqQ33NOCCgsM+/xVOePq6pCAga+TJyv9F8JAo3t/EsdCe1k5DH8W+cIo71X0trBL1fYdSj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=m6DrCi0V; arc=none smtp.client-ip=209.85.218.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dhavale.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="O+PAWPsT"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2254e0b4b85so3225095ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 15:57:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m6DrCi0V"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ac2a81e41e3so1163912766b.1
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 16:03:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746572269; x=1747177069; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=6eDff5j1BSe64nzccDcAn4Qo86/NWyx+D0Je4IAcyac=;
-        b=O+PAWPsTQlygU0D14D7OmpLa/6JbjSuKu+Tprmwwyuz7p+9Un1ZLg7kj8EWSGLcmN9
-         bry4cMXT8SyVdX+zlwUEqhVQljdbSK3VW/dnB6eim1gFezcJgdy1TtW/VraLaCUot2z6
-         X8BwViY8SD6tm8j6XdRNqBKXsXPzgWoOunF4JSsZVWIQvun7jyyiMq3oZg8GUdNt/38G
-         kSkzU+w+I1E452OGCBQS1G0qjJYJgOR4GtvT4YpX+4z+e1r4okeXwBuzmqBStuNfo7Nc
-         8OAbLVxfDdx+DJB+PpM0iW/dxuTiLDGwnt+0lqt01+RrVjjYkEN46pU+e4B/KusDEisp
-         7gzg==
+        d=google.com; s=20230601; t=1746572579; x=1747177379; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=sPF1HHimx0iwlaJma09DLD4bF+ZsfFO0Z26KdaLYRwk=;
+        b=m6DrCi0VARD44d93ldBn6MsoottA66ph+eyrkVgnHSeCHlo9wMhGYpqy2ms2/j3HyX
+         UHtrIR/iQWV+mQQHBalQSKwZ1LRVJ40V5cafEwMggCiPTFmHAeAKsMq3JFfGXUTBOR31
+         A/Fy5kZtzcnToQB2oHh47GZ9uOmNie3kTIgmjbzglhPoR4yuR/l3XGbsW8y76FDwOMkt
+         GF/Czkl0G4Xj7BSj7OA7Loeu0RyybXFAShacYUnxZOxh/i1o0EpOBrG44RS3i5IxQGvb
+         PwDDC54+ngKqhT4d9YGlcBIYE5C7xryggd1DzaNjc2n9kVbC6J+q9Ss+UIQS28xwtJ/l
+         nXwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746572269; x=1747177069;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=6eDff5j1BSe64nzccDcAn4Qo86/NWyx+D0Je4IAcyac=;
-        b=RizRPE1QCiXJT7F+9hd5R3SIO4dnZlRGrK44xrMU/x4KZ4yMJRswD2+si53pwwDDe4
-         XAvzbZImF8gBD0KWDAubFqNH8jivEOVsx90GXs+wcp20GZnewxd736ZHREAecn4nQ4v6
-         kxIF9lxuTzTfm4q86IHfszsEOlSDT+gf8kQXGSlxuDNGttzKj5O0ahPRPrKJmG2mIVXJ
-         LhAEm89UxmF0ZUz5p7N1XL6bmLGnBBFUgV574xEm4F+sP5/UF8XUqdOet8ijvRNPwoSk
-         ATy2ovWZKaijUz0f1w5jp9m5M3FeQyIzcxEGee1I20dR15K35L6YFxkaobiDM/t3YRHE
-         1uWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVSjesBOqzdn+JO0OrjPtKGmM1jfjyozNcXYbZnrhcCoc8xAe7UFcGeGhNL/GJNVy4bddAMXENx2oczcuQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVQnTZY5WQFUxLMiMUQCsYv6FEqJq+euDHRozKRdz5hPTlWoEG
-	QTrw2zWgtALTsx3Pjwfwj9SYqbQM86xOcqHbidQrht31dWSs553yDxbtjKJrZdvDuI5fAmpmGi+
-	l0PROMg==
-X-Google-Smtp-Source: AGHT+IE1PDhDMNYoRtAJX1/3t5lH5zhttLLAu5JIa3TnRr7p4kKvsPCcHCn5sIfILdSU9kfOSkh2gGL3Frja
-X-Received: from pgvt21.prod.google.com ([2002:a65:64d5:0:b0:b0d:bc6d:106])
- (user=dhavale job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:e78c:b0:223:3eed:f680
- with SMTP id d9443c01a7336-22e5d9d6114mr22067365ad.18.1746572268748; Tue, 06
- May 2025 15:57:48 -0700 (PDT)
-Date: Tue,  6 May 2025 15:57:41 -0700
+        d=1e100.net; s=20230601; t=1746572579; x=1747177379;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sPF1HHimx0iwlaJma09DLD4bF+ZsfFO0Z26KdaLYRwk=;
+        b=MAPDyR4/2PZtLXCxAHZFyFEo+6s0oIHLMi/rgqt/SGr9Fz0WCnlJkykmCsH6gtMdAh
+         FmGJEkwp/3ZHJG0+ZA74TGHgQZDNAL6TB1l7cvbdP+ZtqwXDC1IF0XfLpMBKmdnnf84W
+         uwLqLVfQcxNgUtUPhqyNgTag3IHujNzg4XcdwxrVh63mwWp0HpZFycXgALn6m4PSvwKD
+         xOFZJMOyFcUbimBH9NEEnOlCRX4zRZsMYCVaFaG8c0Cz40dVWyCjGoX0dtubWZ2FS/wM
+         N4nVGDL5hfX5KdteK5l+yJjRhCLAtmntgDKKq3hqVfftO3kTs3Fs3FEq/DCZtMglSXqe
+         HyyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWaGdDE7+QhgYA2DTM6vExiwI5kEGNcHbZmjo4QllexV85gIe6LKUtvjz3/l+xucK5ySmPljnLRIH6XWm8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YycfER65Xxgx/0PnY90aKP5JARPhh7Hv64f8VWSm6tB4ERAhLG/
+	3Nxt8BJ3NaE7GzypUpyWChHzPOvE5+PM/c6lJuxjg11S3WAyKrxGq6VKSBpfBo0oRvHLb1XLnku
+	dhmVWLBIONlzUYrpyBzyf1ZBvui9vrRL1Xyhf
+X-Gm-Gg: ASbGncu+Eh/n4IYQmOu3tCTz98Pgit7VjHvVXo1xJVdjR15oVub1TUy/GU+rQ8/37Xr
+	rGefGiNgiOO+k2BplQyLfRAJRNBx8huy8sXYsXVCS7RiWchtfBc/8B6FLKMyYLwCOz073wVEGDj
+	h5aX/YnVHuos57zoFqb2hUJDXiieFekRUpdr++TuKGNqulzMwXbfPNf5BYhMQtEcM=
+X-Google-Smtp-Source: AGHT+IGlfnGNn8hDgkOu8o/NgFGH1pqyHUQqxoxq5+kiAqPyoRN9Wb6Hw8UoV84uLHR6ovC7vq8IKwPsB/ICeiIrMVY=
+X-Received: by 2002:a17:907:868c:b0:abf:4ca9:55ff with SMTP id
+ a640c23a62f3a-ad1e8c4bf54mr115077466b.32.1746572579146; Tue, 06 May 2025
+ 16:02:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.987.g0cc8ee98dc-goog
-Message-ID: <20250506225743.308517-1-dhavale@google.com>
-Subject: [PATCH v6] erofs: lazily initialize per-CPU workers and CPU hotplug hooks
+MIME-Version: 1.0
+References: <20250501183003.1125531-1-dhavale@google.com> <8de6a220-45a3-4885-890f-0538522e620c@linux.alibaba.com>
+In-Reply-To: <8de6a220-45a3-4885-890f-0538522e620c@linux.alibaba.com>
 From: Sandeep Dhavale <dhavale@google.com>
-To: linux-erofs@lists.ozlabs.org, Gao Xiang <xiang@kernel.org>, 
+Date: Tue, 6 May 2025 16:02:47 -0700
+X-Gm-Features: ATxdqUEDJEVgJ1EMBd53IsNa00CsNwfMNSebym8JlkwrHb3JPWhns_xk2akXl5s
+Message-ID: <CAB=BE-S6S4m-uk9r=eQdM1foi+3HpZrEh0WYD5S9Q-aaP19G9g@mail.gmail.com>
+Subject: Re: [PATCH v5] erofs: lazily initialize per-CPU workers and CPU
+ hotplug hooks
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Cc: linux-erofs@lists.ozlabs.org, Gao Xiang <xiang@kernel.org>, 
 	Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>, 
-	Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep Dhavale <dhavale@google.com>
-Cc: hsiangkao@linux.alibaba.com, kernel-team@android.com, 
+	Jeffle Xu <jefflexu@linux.alibaba.com>, kernel-team@android.com, 
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Currently, when EROFS is built with per-CPU workers, the workers are
-started and CPU hotplug hooks are registered during module initialization.
-This leads to unnecessary worker start/stop cycles during CPU hotplug
-events, particularly on Android devices that frequently suspend and resume.
+Hi Gao,
+> >   #ifdef CONFIG_EROFS_FS_PCPU_KTHREAD
+> >   static struct kthread_worker __rcu **z_erofs_pcpu_workers;
+> > +static atomic_t erofs_percpu_workers_initialized = ATOMIC_INIT(0);
+> > +static int erofs_cpu_hotplug_init(void);
+> > +static void erofs_cpu_hotplug_destroy(void);
+>
+> We could move downwards to avoid those forward declarations;
+>
+Sure, I ended up moving the CONFIG_HOTPLUG_CPU block inside
+CONFIG_EROFS_FS_PCPU_KTHREAD. That gets rid of forward declaration and
+also much readable.
+> >
+> >   static void erofs_destroy_percpu_workers(void)
+> >   {
+> > @@ -336,9 +339,45 @@ static int erofs_init_percpu_workers(void)
+> >       }
+> >       return 0;
+> >   }
+> > +
+> > +static int z_erofs_init_pcpu_workers(void)
+>
+> How about passing in `struct super_block *` here?
+> Since print messages are introduced, it's much better to
+> know which instance caused the error/info.
+>
+Sounds good. Log message now looks like this
 
-This change defers the initialization of per-CPU workers and the
-registration of CPU hotplug hooks until the first EROFS mount. This
-ensures that these resources are only allocated and managed when EROFS is
-actually in use.
+[    8.724634] erofs (device loop0): initialized per-cpu workers successfully.
+[    8.726133] erofs (device loop0): mounted with root inode @ nid 40.
 
-The tear down of per-CPU workers and unregistration of CPU hotplug hooks
-still occurs during z_erofs_exit_subsystem(), but only if they were
-initialized.
+Thanks for the review.
+v6 addressing this is available at:
+https://lore.kernel.org/linux-erofs/20250506225743.308517-1-dhavale@google.com/
 
-Signed-off-by: Sandeep Dhavale <dhavale@google.com>
----
-v5: https://lore.kernel.org/linux-erofs/20250501183003.1125531-1-dhavale@google.com/
-Changes since v5:
-- Pass sb to z_erofs_init_pcpu_workers so we can log success/failure
-  messages, so we know the context in which the event happened as
-  suggested by Gao.
-- Move the CONFIG_CPU_HOTPLUG code inside CONFIG_EROFS_FS_PCPU_KTHREAD
-  so it is much more readable and also avoids forward declaration for
-  some functions.
- fs/erofs/zdata.c | 70 ++++++++++++++++++++++++++++++++++--------------
- 1 file changed, 50 insertions(+), 20 deletions(-)
+Thanks,
+Sandeep.
 
-diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index 0671184d9cf1..0afbdabe8d3e 100644
---- a/fs/erofs/zdata.c
-+++ b/fs/erofs/zdata.c
-@@ -291,6 +291,7 @@ static struct workqueue_struct *z_erofs_workqueue __read_mostly;
- 
- #ifdef CONFIG_EROFS_FS_PCPU_KTHREAD
- static struct kthread_worker __rcu **z_erofs_pcpu_workers;
-+static atomic_t erofs_percpu_workers_initialized = ATOMIC_INIT(0);
- 
- static void erofs_destroy_percpu_workers(void)
- {
-@@ -336,12 +337,8 @@ static int erofs_init_percpu_workers(void)
- 	}
- 	return 0;
- }
--#else
--static inline void erofs_destroy_percpu_workers(void) {}
--static inline int erofs_init_percpu_workers(void) { return 0; }
--#endif
- 
--#if defined(CONFIG_HOTPLUG_CPU) && defined(CONFIG_EROFS_FS_PCPU_KTHREAD)
-+#ifdef CONFIG_HOTPLUG_CPU
- static DEFINE_SPINLOCK(z_erofs_pcpu_worker_lock);
- static enum cpuhp_state erofs_cpuhp_state;
- 
-@@ -398,15 +395,53 @@ static void erofs_cpu_hotplug_destroy(void)
- 	if (erofs_cpuhp_state)
- 		cpuhp_remove_state_nocalls(erofs_cpuhp_state);
- }
--#else /* !CONFIG_HOTPLUG_CPU || !CONFIG_EROFS_FS_PCPU_KTHREAD */
-+#else /* !CONFIG_HOTPLUG_CPU  */
- static inline int erofs_cpu_hotplug_init(void) { return 0; }
- static inline void erofs_cpu_hotplug_destroy(void) {}
--#endif
-+#endif/* CONFIG_HOTPLUG_CPU */
-+static int z_erofs_init_pcpu_workers(struct super_block *sb)
-+{
-+	int err;
- 
--void z_erofs_exit_subsystem(void)
-+	if (atomic_xchg(&erofs_percpu_workers_initialized, 1))
-+		return 0;
-+
-+	err = erofs_init_percpu_workers();
-+	if (err) {
-+		erofs_err(sb, "per-cpu workers: failed to allocate.");
-+		goto err_init_percpu_workers;
-+	}
-+
-+	err = erofs_cpu_hotplug_init();
-+	if (err < 0) {
-+		erofs_err(sb, "per-cpu workers: failed CPU hotplug init.");
-+		goto err_cpuhp_init;
-+	}
-+	erofs_info(sb, "initialized per-cpu workers successfully.");
-+	return err;
-+
-+err_cpuhp_init:
-+	erofs_destroy_percpu_workers();
-+err_init_percpu_workers:
-+	atomic_set(&erofs_percpu_workers_initialized, 0);
-+	return err;
-+}
-+
-+static void z_erofs_destroy_pcpu_workers(void)
- {
-+	if (!atomic_xchg(&erofs_percpu_workers_initialized, 0))
-+		return;
- 	erofs_cpu_hotplug_destroy();
- 	erofs_destroy_percpu_workers();
-+}
-+#else /* !CONFIG_EROFS_FS_PCPU_KTHREAD */
-+static inline int z_erofs_init_pcpu_workers(struct super_block *sb) { return 0; }
-+static inline void z_erofs_destroy_pcpu_workers(void) {}
-+#endif/* CONFIG_EROFS_FS_PCPU_KTHREAD */
-+
-+void z_erofs_exit_subsystem(void)
-+{
-+	z_erofs_destroy_pcpu_workers();
- 	destroy_workqueue(z_erofs_workqueue);
- 	z_erofs_destroy_pcluster_pool();
- 	z_erofs_exit_decompressor();
-@@ -430,19 +465,8 @@ int __init z_erofs_init_subsystem(void)
- 		goto err_workqueue_init;
- 	}
- 
--	err = erofs_init_percpu_workers();
--	if (err)
--		goto err_pcpu_worker;
--
--	err = erofs_cpu_hotplug_init();
--	if (err < 0)
--		goto err_cpuhp_init;
- 	return err;
- 
--err_cpuhp_init:
--	erofs_destroy_percpu_workers();
--err_pcpu_worker:
--	destroy_workqueue(z_erofs_workqueue);
- err_workqueue_init:
- 	z_erofs_destroy_pcluster_pool();
- err_pcluster_pool:
-@@ -644,8 +668,14 @@ static const struct address_space_operations z_erofs_cache_aops = {
- 
- int z_erofs_init_super(struct super_block *sb)
- {
--	struct inode *const inode = new_inode(sb);
-+	struct inode *inode;
-+	int err;
-+
-+	err = z_erofs_init_pcpu_workers(sb);
-+	if (err)
-+		return err;
- 
-+	inode = new_inode(sb);
- 	if (!inode)
- 		return -ENOMEM;
- 	set_nlink(inode, 1);
--- 
-2.49.0.987.g0cc8ee98dc-goog
-
+> > +{
+> > +     int err;
+> > +
+> > +     if (atomic_xchg(&erofs_percpu_workers_initialized, 1))
+> > +             return 0;
+> > +
+> > +     err = erofs_init_percpu_workers();
+> > +     if (err) {
+> > +             erofs_err(NULL, "per-cpu workers: failed to allocate.");
+> > +             goto err_init_percpu_workers;
+> > +     }
+> > +
+> > +     err = erofs_cpu_hotplug_init();
+> > +     if (err < 0) {
+> > +             erofs_err(NULL, "per-cpu workers: failed CPU hotplug init.");
+> > +             goto err_cpuhp_init;
+> > +     }
+> > +     erofs_info(NULL, "initialized per-cpu workers successfully.");
+>
+>
+> Otherwise it looks good to me know.
+>
+> Thanks,
+> Gao Xiang
