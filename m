@@ -1,103 +1,350 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from AM0PR02CU008.outbound.protection.outlook.com (mail-westeuropeazon11013057.outbound.protection.outlook.com [52.101.72.57])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7FB3C8FE;
-	Tue,  6 May 2025 15:44:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746546262; cv=none; b=hg1DEpEiL6yeZzHRZr4vES+zpwkb5/t4Zc/8CQWTQyFp4nNj4egoEi6Pfh26Ezcm7NOk+wfVTrn4I59ahvQ7sm1+GYctDM++3x5k+UbRtYVKqIRLycq6Or1kfPOof8G0tUeD75+OMBsWywQih2F0auApQT0ivqYZj7jJu8g/E6Y=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746546262; c=relaxed/simple;
-	bh=tPzB4Cr5GgKl89ad8RCRlDRGcX8EwjgQuP1Ms+e8B4w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hmb2YoCtk+/ge/r4U1fqyONGEktWPqg/aAW6pKuk5z5PXgWNiSOElTLX9nOSFRKvmLEaLhllLQiSc2Tro+i9bVgyGljamWjyaOq5V4aHnWrStW/SenymRs2BTphHh3OvuxZ/Af2D4AgbRH5hS2YJm9KFY2qe92x2/9VSkrZ4j+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N+GyyHUV; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6267725B69F;
+	Tue,  6 May 2025 15:46:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.72.57
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746546400; cv=fail; b=aHNgjS/bhmYy7K/EglKrkJwgq3HteNsgSbixX7Da/bc6hcfKX+SKo4rJ9dt1LSwOkWGgqYPNKplXEagGQRx8iNB9aLTQmTAURiFweaC/v8GJwkmENWxV0MjdoeYN0+GajbuXxg03PXCf4UFNnKYg5fRA1/W1O5GtxOKyUZG6Ar0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746546400; c=relaxed/simple;
+	bh=+gSwcoRCeIeqy2hlEsBXR+p8xCSZp4CrQ9V1Oq9loGQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=gtBxOgh4l1bCac/qzAHmrJrac76CX5ggNnn4A++cw5DPWKQ6wDa6HoFQ+s44TY1S2dGBVbh7RcfsM0RxgMJy8mcQjXrsJCXJEBuLcrXkiWca0aErhLDoKsR7O8inOCJP8g76WZQe4c4rNyH4ir3U86v30anTI9QumTICzzfF4wU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=NqD+LPfy; arc=fail smtp.client-ip=52.101.72.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N+GyyHUV"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-73c17c770a7so8267426b3a.2;
-        Tue, 06 May 2025 08:44:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746546260; x=1747151060; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=W92479e3GDwcVekSJ+6iNPM/4aDW6S7waFt19f/PGiQ=;
-        b=N+GyyHUVO2560hGgcmNz5VHdkYMhvtfa06NhlpqqdQ9eywilBDPmcyquIIcQI5fQy6
-         kXiFq6q7hdrgSRFBvYwUhYAL+jbe/jaJNvi/d+Yg3j6zOZEOMz4VchNFsgWcfzqtzRyI
-         N9C9QgWo8T+3NdwhKIJRisx8DznvJSWsjG6adQc2zHQcV0ddL8cOWBrhlaRJ9RmEXeO3
-         1BX8zqk0p6mkd4ieBQm/8aF1T8redf5lalHzywf7dhVI/rCGgamBLeQB9ldi9Ac6i+y2
-         9b2Nh7GyI7VsjOc57kt+CBg0Y2AfvY5B2+yevUpVX25a9dVy8AVZQj0PYmrL1Q5GJOri
-         btjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746546260; x=1747151060;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=W92479e3GDwcVekSJ+6iNPM/4aDW6S7waFt19f/PGiQ=;
-        b=Wb7kMitTHcmhyDiuf8Lvv/DhDMltIY/zNwWnZ8Us0yGeCJCWT224BwFfEkhZKQLT8W
-         +N4ZSOgdEkAw5OK3JH7SumcKhDITDqn0u1zz9vF8M67fe+w3k7BWtxPnQsnwwuChJLwd
-         Vj+hCdM2zqzPQyYx+QE3EXrQISUOqEKlxpWnzMx1g1KD2vc7nyIXbDAN1tQ2NgANEqSN
-         nNRb0fw69/RoxrQ93sFfJL4B9f8/0R9TzVkHW13zIeulZu/gzP7HcqNrN21MzAoQatWW
-         8MdQ4tCjFWHpamUFTyd0YDPFWc6yg3Lu1n8Xmn2KsUKF4P9UmflFQtLtQc7ZDDVOFoZn
-         cC1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCX4QFir/LuWOflxV9rqcBVz2ZTuSaMO4TfW6M+FqRDQHSWGNgS6OT5n8EYrggzd9HHH5VCF9WguLJfbwjtn564=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGLqN2Jq6/VS8YrH7p3eWHoFDGHGd51BkxQirAbBVpUTLfiudb
-	IAx0p6FAYnS8M2ryWDXyh28AHAyho5MY4leDBZGmydhPzp24M+KFytMmkAMq
-X-Gm-Gg: ASbGncszd8CJK5d/syC30aIAvHjyXtykmxYcecDZUiN7W3/24Th4PWuGWr3vh1S3Lx9
-	QsDd/bajtEcM1u8qqSwtgts5K2SgbcrrFQpN8gzlU5PnIIfBNsaL4we1c5M8j/yyJo25EMsB6I3
-	EGfBs/1AaeyPRQyH73VZ6wxqXkmIa86QqyDWwWQaXO55mgYuGVJiUd2dlj/46Vf7khbjex0kHR2
-	/+nNU4mq+uJmM2PlraWUsrs5UdFdsGoQ7UaBgsoA4jduSLjGRbCTx045po+raNs+AXarXEeRjUu
-	KMy2RFkM8paPyokSVw0kN9aG7lvDTiD4cuqJW8Z4hPjnvOtqI0TgLftRkcKcRbdxtaZEiyX8VEv
-	FslO/wwHUUvp1HxocRqn/Czj6idMCFGP1ipg=
-X-Google-Smtp-Source: AGHT+IHVsHgCGhiIOVqITpHBM3uC93n8OV65My3h+37NXsLGcvJQsk08vps7/EQokyGbCmT/2HP9dA==
-X-Received: by 2002:a05:6a21:9102:b0:1f5:931d:ca6d with SMTP id adf61e73a8af0-20e962058fdmr17563250637.1.1746546259972;
-        Tue, 06 May 2025 08:44:19 -0700 (PDT)
-Received: from server-kernel.moonheelee.internal (d173-180-147-14.bchsia.telus.net. [173.180.147.14])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b1fb391fff6sm7715747a12.6.2025.05.06.08.44.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 08:44:19 -0700 (PDT)
-From: Moon Hee Lee <moonhee.lee.ca@gmail.com>
-To: brauner@kernel.org,
-	shuah@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	skhan@linuxfoundation.org,
-	linux-kernel-mentees@lists.linux.dev,
-	Moon Hee Lee <moonhee.lee.ca@gmail.com>
-Subject: [PATCH] selftests: pid_namespace: Fix missing mount headers in pid_max.c
-Date: Tue,  6 May 2025 08:44:16 -0700
-Message-ID: <20250506154416.3102-1-moonhee.lee.ca@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="NqD+LPfy"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=mueLXWL+mfWLOAHkORUaMv61rQebqtf49QKOCGnim48e+DI2dUk4QCBj869gwUiyw6Q9kVfow70og9kFA2Fa5aWgMd7UDO0WqEF9YKeylX4fOXUNI2i+XvsUzkMNwEK7GIUySnos7gNjj8h+e/SOdGIsCLQ1tdVxeSVF/Lcb9s5f31gGhpNAptqcX+L1mStK/AOxizv01OAdRxzJm/vwu43QrvGw+ViglXPFr0oGbtmEGqjYUU3rkqXApfduhKEhZza3zgK9455ESNUOoWk/8dHRoj5E5+XJzEB1IxK98T+6mXc8cxuBIWVx8HW/5ZWwWLOhENo/+XSeEUvyyu4yhw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=GqW/zm8O1cZ94t3/d/nkkPXPOwbOPmcfD2HxjaVJJIk=;
+ b=Q0maXNft21ZO+SwLJQSLFPofarEO4krEhDZigq7gf1/nFiz4Od3XtsbpNAug+e15dkozXrPBp07XRPTo0Y9qY41Qpf26Du8+wk1X8aRCDWlm3P8DX7c7i+DlZaZ7gZUv027VxaFDJG17pknkU2RpwUxnhQId+A5kNwQPlXNdZhv5+2NZI3mCygngi6Mb0lkBSUc8rEvNeRr9PN2fecM5Aqq6G+0F5HBPONmCRqwPKTZHF1Ur+Aopj1PeSYmRDuUB+oqau3Z61r9P7/qI7+cstxLtBrkD0qJqf6984ceZQNgPOdvKF3jtFGifloE0z/9jW9/dXxmq0df8SrxXbtKRLw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GqW/zm8O1cZ94t3/d/nkkPXPOwbOPmcfD2HxjaVJJIk=;
+ b=NqD+LPfyFa83Y8JGGygjRKefyK37FH915a2i05xB36Y4SjQgUiWwpRXOb65w4jJT+i3tmvTBqJHtX+kqrO6HMnGRv+4nPIAPxvnk0Nti/4RAlAEE0tkcFFouVJVYdLYWeXXvarQCBjzLZD18wDxtQEQLwGogibUSJ6HyrgRqIRozdOEq3FAdzYBRnxr3tW5X2JFkV3c8/X4Yn9K22ZRoVsJBaXAR6d9QCCQDoCcDNgAEHDhTk39gZjpKXqUIkeR+NnHrzhhPPZPoprtVkBbFpzyGPP2n3GhwfHAaPgma+0d2bUkHXEwK3yiYuCTx9KmcTpF144coX4E4u3KLP/5KRQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM8PR04MB7779.eurprd04.prod.outlook.com (2603:10a6:20b:24b::14)
+ by VI2PR04MB10191.eurprd04.prod.outlook.com (2603:10a6:800:22c::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.22; Tue, 6 May
+ 2025 15:46:34 +0000
+Received: from AM8PR04MB7779.eurprd04.prod.outlook.com
+ ([fe80::7417:d17f:8d97:44d2]) by AM8PR04MB7779.eurprd04.prod.outlook.com
+ ([fe80::7417:d17f:8d97:44d2%4]) with mapi id 15.20.8699.022; Tue, 6 May 2025
+ 15:46:34 +0000
+Date: Tue, 6 May 2025 18:46:31 +0300
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
+To: MD Danish Anwar <danishanwar@ti.com>
+Cc: Meghana Malladi <m-malladi@ti.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Simon Horman <horms@kernel.org>,
+	Guillaume La Roque <glaroque@baylibre.com>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Roger Quadros <rogerq@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, srk@ti.com,
+	Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH net-next v10] net: ti: icssg-prueth: add TAPRIO offload
+ support
+Message-ID: <20250506154631.gvzt75gl2saqdpqj@skbuf>
+References: <20250502104235.492896-1-danishanwar@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250502104235.492896-1-danishanwar@ti.com>
+X-ClientProxiedBy: VE1PR03CA0037.eurprd03.prod.outlook.com
+ (2603:10a6:803:118::26) To AM8PR04MB7779.eurprd04.prod.outlook.com
+ (2603:10a6:20b:24b::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM8PR04MB7779:EE_|VI2PR04MB10191:EE_
+X-MS-Office365-Filtering-Correlation-Id: f65633ee-8973-4789-4cfe-08dd8cb52dc7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?HaO/wSGbBBIPksv6nKDN8NKjTnCLFw+FkQVdNrNKVsl2QwX9wkLPhnW01obV?=
+ =?us-ascii?Q?KrZxlaETWFXKdhBAwkNC8wYkH+vhBmkYA4bfe77+9dsSQLyB2SZjze+cSTxI?=
+ =?us-ascii?Q?uPPkOnFdnA1z3OZJBB0KLCL/sxrKsfmq0kcdQ3cO4ssr/QMs4oDvSb8jWQl0?=
+ =?us-ascii?Q?IutsIhrwSI6UE4kgTZI44jeaspB5Nt1o8kX57h5NVhtrzmEEcgPGJEtOm4qo?=
+ =?us-ascii?Q?5mlNRPfu9ywtx7Akg++3SxSixf5EjBwpqLbEZtN14LMyWmTaDvJ2aHWzfSNu?=
+ =?us-ascii?Q?AIslL6UZBpGrAPScHnUXWwrR0cVH2hhQEd/LHStYkeiyxtWSc1HgA3Fj08aG?=
+ =?us-ascii?Q?TmxqhZD9PoRHAGoQc/p5eCu8aPDbXykMYRPDl2dM7bDOoWZG6z/rT47HiE9W?=
+ =?us-ascii?Q?nBM69+Vb7wnPZLnHqMnZQbZAg8xZnb7ys5E598XruUB0Ho+WFL/cUYKP34aP?=
+ =?us-ascii?Q?/AtSBPoXnc1ekiRf1rXWppTeww07fRSSbmmXoPzmYq22RVWqXYcb+6mpNKb/?=
+ =?us-ascii?Q?yK2AKtYytRGYSvOAbB8UxfpLBpcy8LsnLfj+pTz+V2dZsrCwgASE+z4YPc//?=
+ =?us-ascii?Q?o7tktwQDgYzHYLRHACkG1a9AiUqyvPFwdw57sAay8yYgsUoprIk1VjDcNSwj?=
+ =?us-ascii?Q?jxNbyhB6f1EOkDC/ZORIVRpfgtspoJnbMNQTnxa8tcXVMpFSQl3BjyWFjTto?=
+ =?us-ascii?Q?Q7HsSraIps1i3LSTC+feZ5YEhHm70oCPePo8fcuzW3FJpDiiC5tyvOzf5kvt?=
+ =?us-ascii?Q?/hxSCxxUvLXsanFPkf5hJxHAVc/zqZFPPMKqerOzJLzgFwSAfEFN5WSNG6ie?=
+ =?us-ascii?Q?Vxhd7O+eZ/4OVn4qQNZwEIBeN1qs6OYXiowsQq+A4zYxhGBwkqokHwT8NdMw?=
+ =?us-ascii?Q?I5I7N74q9KO50G4gC+O90AbltdZIZV8SHGEk6aEATw8/KUnZLgWHYh25XbKm?=
+ =?us-ascii?Q?jj/GUbVfW2Vx+5ufaAwPkOeuuige8EgfR5G4hetkAPAaG6XjMIxBZo08bEuy?=
+ =?us-ascii?Q?0WPQjxizkujNu+diqeY0FE8pbltKV5FB75XnMPbyhcuwpabEa0G/1Yj6jqFH?=
+ =?us-ascii?Q?MNg2cRpDR9G0g8bl5eHyLmDlZ6IqwNJOycWeAU9J52ZTJzREXUDaP9SoAE03?=
+ =?us-ascii?Q?OTVAy5N760xAsabALBv0bQjHAab+And+9eFbiCKmP4pPUOWzkmYwzivdnARy?=
+ =?us-ascii?Q?dG7iEzi9LOIP1r+2WX9qWbaNz9D5R48vv6Q0HWMq+cmDQHvTW9BdtPwxaoiY?=
+ =?us-ascii?Q?cvVPdR2RzMl6+2sjytN7iVBvCObHD/y0H8wiTVRjazpZvul5NX9CyheIYMA9?=
+ =?us-ascii?Q?+CXjYRoPO8G5UztYx+iUbIuWYAmMsJXajVTg/rpPxMnrHGcGefG/B//mO1KF?=
+ =?us-ascii?Q?JPAyZPX9XRydsSYf83mkBufSsoFciSeZpncNdjgz95VYg1RO5eGUm6Woal0Z?=
+ =?us-ascii?Q?OBjsRAjATMU=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM8PR04MB7779.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?wn3jOfmSx+0vvI735bGOg5uivD6dzPD2DvqCLKxassW7uE4knhVvGAOtfrC+?=
+ =?us-ascii?Q?lC3p9xg8wIge01G1NHy6Z7APrpGo468Q/bJ7sxcP8ImNwAtdgxJLPBxNZuh0?=
+ =?us-ascii?Q?tnrPqNfnkYD9lqTv8wTDKldINwmbblTDr6wQdg3GnOgP1HhR84p0bjgoADYL?=
+ =?us-ascii?Q?jxKqisqubgY5dnjHGORoLBxLGeO+u/dEzwZrDcQtrI2gX8X4veZyLUjagJ2V?=
+ =?us-ascii?Q?oDvog7SA7nWu+N9m8Ut/rdNMNcP9AL/yfj/e/PspT9eNDbActPtDvKrP0Wrb?=
+ =?us-ascii?Q?uDM/Gh3ti11JZQOfuoz/Yl+CXWrm2T9vH1bxMQ6i7f6WV6eeQ4MYHjvIAl+M?=
+ =?us-ascii?Q?rhxxubcoTAt5nA/5FCJdwVq5iT/AWplNMinVtR+KkaxBmour495Br/cA6vle?=
+ =?us-ascii?Q?Of7Om6EI4aGO/hTa7wkhkNdOzEsctdTWdRT6ZpYLMjQD9xdHcSussuoZSHDx?=
+ =?us-ascii?Q?sSkPyOh4EFZUYWk9IKldvHOadYaXEf4gEt+LPXWIh9ZWxm5SvWpYjDhF20lc?=
+ =?us-ascii?Q?j2Zut6+KPTr0Z/fTBArPl08OFhhGexdF0oP21dHwoiefZBYocHdWlBf5lKqJ?=
+ =?us-ascii?Q?pqbB6KuDumUgHJXptxnhG6IyQgWmYdBdAPEUUuZ87swB1F4bmta0y1w0U29m?=
+ =?us-ascii?Q?wRWyDXKG6u2zGzbKUiBNeXM9NREh5zfSV9LxNyC5wAd6qlr0oA7tOYyN6Q4g?=
+ =?us-ascii?Q?ekQywaCMcopajAY827rQR8WGhSLmNkDNnnQMUlWmMehcyjgYMhgIcHFV+P85?=
+ =?us-ascii?Q?UkqDrHTgow5QD2FhqK/a8g9uAXTrV8Xj67/5L63Eb5lW3cmEAKFCUoUpJ+pq?=
+ =?us-ascii?Q?xomgjyYLQLvPWdGukSlwBpafTa/rau8+NJXapt+zDdEXj6yCindQVYDiq2o1?=
+ =?us-ascii?Q?E022NHxwM7zn2pEItsPXh9Om5G6oJQ14PFwa2yVtN8M24woA8Ilz9072nhpp?=
+ =?us-ascii?Q?nzZeHQ3nsMz4nkA9vA3SGSKBQq6K0+kAFRhEnaDiwAOAZsSDugl+69U9rKtl?=
+ =?us-ascii?Q?itBIJ9nGLnzOh1j5aRHKHqnY8+4anUdPSWct5LG4IcxY526knx51oY1FVL2Y?=
+ =?us-ascii?Q?NOD+7njUEOJZ2KkE7liQ3Z815YWR6nQTHPWOLwNp4VCDHdAwbG7+OaPh28xk?=
+ =?us-ascii?Q?zk4e4ocy6kuFRhTctML1kummi/6Ol7rCB/BNyWl3eDZU5fyIAw+MuOmpSvs4?=
+ =?us-ascii?Q?hGdm3xB1OU30mX6X1Ft5c6DnUFfwXsIO8HBGWfZL+RGJk+W4crMuCaR1VYYR?=
+ =?us-ascii?Q?redvJ3obT8nn41v4gaoEbXRzyJxe+96bmNrbBDSB1PH13+1/dTuE7LZX99Nn?=
+ =?us-ascii?Q?OixtChYsEASaCCh76PYpJ+WqzSaVtzc7F66Od9m0uWDNQfVR+vhZGXpWBZyk?=
+ =?us-ascii?Q?b/6nBngULXkX886pNmA2i73uOpZqchm4Glz2Pj6xW+qGTRwejngRrLu9FXLC?=
+ =?us-ascii?Q?VOnXunvTSiTiL2AaMj69QRi1hd3E0BpnDoogpCDSNvcfnK86Hv7s6aFX/mtH?=
+ =?us-ascii?Q?fUn04jFWFQrmq3rduRBIci/mbU11LPWm7C2QJbhtgLVhvcgCuPR5OqCUo2V3?=
+ =?us-ascii?Q?REr6muqNyiSxch8IVkYaAygO+MTTb6e7mFQbFGxLFvrcTKxX8tGpmmH5qLJL?=
+ =?us-ascii?Q?BQ=3D=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f65633ee-8973-4789-4cfe-08dd8cb52dc7
+X-MS-Exchange-CrossTenant-AuthSource: AM8PR04MB7779.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 15:46:34.3628
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: wXqyGqm2wL+pv0Tl3s3JiCI5XOsJWGRh45iA7gKXnhb2K6rrSrjIW1acSHts3P7Kx7MRcRP7nnqoKYSsPxe5ag==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI2PR04MB10191
 
-Fix compilation error in pid_max.c by including <sys/mount.h> to define
-mount(), umount2(), MS_PRIVATE, MS_REC, and MNT_DETACH.
+It has been a long time since the last posting, everything has been
+swapped out from my memory. Sorry if some comments are repeated.
 
-The test now builds successfully.
+On Fri, May 02, 2025 at 04:12:35PM +0530, MD Danish Anwar wrote:
+> From: Roger Quadros <rogerq@ti.com>
+> 
+> The Time-Aware Shaper (TAS) is a key feature of the Enhanced Scheduled
+> Traffic (EST) mechanism defined in IEEE 802.1Q-2018. This patch adds TAS
+> support for the ICSSG driver by interacting with the ICSSG firmware to
+> manage gate control lists, cycle times, and other TAS parameters.
+> 
+> The firmware maintains active and shadow lists. The driver updates the
+> operating list using API `tas_update_oper_list()` which,
+> - Updates firmware list pointers via `tas_update_fw_list_pointers`.
+> - Writes gate masks, window end times, and clears unused entries in the
+>   shadow list.
+> - Updates gate close times and Max SDU values for each queue.
+> - Triggers list changes using `tas_set_trigger_list_change`, which
+>   - Computes cycle count (base-time % cycle-time) and extend (base-time %
+>     cycle-time)
 
-Signed-off-by: Moon Hee Lee <moonhee.lee.ca@gmail.com>
----
- tools/testing/selftests/pid_namespace/pid_max.c | 1 +
- 1 file changed, 1 insertion(+)
+Please define the "cycle count" concept (local invention, not IEEE
+standard). Also, cross-checking with the code, base-time % cycle-time is
+incorrect here, that's not how you calculate it.
 
-diff --git a/tools/testing/selftests/pid_namespace/pid_max.c b/tools/testing/selftests/pid_namespace/pid_max.c
-index 51c414faabb0..972bedc475f1 100644
---- a/tools/testing/selftests/pid_namespace/pid_max.c
-+++ b/tools/testing/selftests/pid_namespace/pid_max.c
-@@ -11,6 +11,7 @@
- #include <string.h>
- #include <syscall.h>
- #include <sys/wait.h>
-+#include <sys/mount.h>
- 
- #include "../kselftest_harness.h"
- #include "../pidfd/pidfd.h"
--- 
-2.43.0
+I'm afraid you also need to define the "extend" concept. It is not at
+all clear what it does and how it does it. Does it have any relationship
+with the CycleTimeExtension variables as documented by IEEE 802.1Q annex
+Q.5 definitions?
 
+A very compressed summary of the standard variable is this:
+the CycleTimeExtension applies when:
+- an Open schedule exists
+- an Admin schedule is pending
+- the AdminBaseTime is not an integer multiple of OperBaseTime + (N *
+  OperCycleTime) - i.o.w. the admin schedule does not "line up" with the
+  end of the oper schedule
+
+The misalignment of the oper vs admin schedules might cause the very
+last oper cycle to be truncated to an undesirably short value. The
+OperCycleTimeExtension variable exists to prevent this, as such:
+
+- If the length of the last oper cycle is < OperCycleTimeExtension,
+  then this cycle does not execute at all. The gate states from the end
+  of the next-to-last oper cycle remain in place (that cycle is extended)
+  until the activation of the admin schedule at AdminBaseTime.
+
+- If the length of the last oper cycle is >= OperCycleTimeExtension,
+  this last cycle is left to execute until AdminBaseTime, and is
+  potentially truncated during the switchover event (unless it perfectly
+  lines up). Extension of the next-to-last oper cycle does not take
+  place.
+
+Is this the same functionality as the "extend" feature of the PRU
+firmware - should I be reading the code and the commit message in this
+key, in order to understand what it achieves?
+
+>   - Writes cycle time, cycle count, and extend values to firmware memory.
+>   - base-time being in past or base-time not being a multiple of
+>     cycle-time is taken care by the firmware. Driver just writes these
+>     variable for firmware and firmware takes care of the scheduling.
+
+"base-time not being a multiple of cycle-time is taken care by the firmware":
+To what extent is this true? You don't actually pass the base-time to
+the firmware, so how would it know that it's not a multiple of cycle-time?
+
+>   - If base-time is not a multiple of cycle-time, the value of extend
+>     (base-time % cycle-time) is used by the firmware to extend the last
+>     cycle.
+
+I'm surprised to read this. Why does the firmware expect the base time
+to be a multiple of the cycle time?
+
+Also, I don't understand what the workaround achieves. If the "extend"
+feature is similar to CycleTimeExtension, then it applies at the _end_
+of the cycle. I.o.w. if you never change the cycle, it never applies.
+How does that help address a problem which exists since the very first
+cycle of the schedule (that it may be shifted relative to integer
+multiples of the cycle time)?
+
+And even assuming that a schedule change will take place - what's the
+math that would suggest the "extend" feature does anything at all to
+address the request to apply a phase-shifted schedule? The last cycle of
+the oper schedule passes, the admin schedule becomes the new oper, and
+then what? It still runs phase-aligned with its own cycle-time, but
+misaligned with the user-provided base time, no?
+
+The expectation is for all cycles to be shifted relative to N *
+base-time, not just the first or last one. It doesn't "sound" like you
+can achieve that using CycleTimeExtension (assuming that's what this
+is), so better refuse those schedules which don't have the base-time you
+need.
+
+>   - Sets `config_change` and `config_pending` flags to notify firmware of
+>     the new shadow list and its readiness for activation.
+>   - Sends the `ICSSG_EMAC_PORT_TAS_TRIGGER` r30 command to ask firmware to
+>     swap active and shadow lists.
+> - Waits for the firmware to clear the `config_change` flag before
+>   completing the update and returning successfully.
+> 
+> This implementation ensures seamless TAS functionality by offloading
+> scheduling complexities to the firmware.
+> 
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+> Reviewed-by: Simon Horman <horms@kernel.org>
+> Signed-off-by: MD Danish Anwar <danishanwar@ti.com>
+> ---
+> Cc: Vladimir Oltean <vladimir.oltean@nxp.com>
+> v9 - v10:
+> There has been significant changes since v9. I have tried to address all
+> the comments given by Vladimir Oltean <vladimir.oltean@nxp.com> on v9
+> *) Made the driver depend on NET_SCH_TAPRIO || NET_SCH_TAPRIO=n for TAS
+> *) Used MACRO for max sdu size instead of magic number
+> *) Kept `tas->state = state` outside of the switch case in `tas_set_state`
+> *) Implemented TC_QUERY_CAPS case in `icssg_qos_ndo_setup_tc`
+> *) Calling `tas_update_fw_list_pointers` only once in
+>    `tas_update_oper_list` as the second call as unnecessary.
+> *) Moved the check for TAS_MAX_CYCLE_TIME to beginning of
+>    `emac_taprio_replace`
+> *) Added `__packed` to structures in `icssg_qos.h`
+> *) Modified implementation of `tas_set_trigger_list_change` to handle
+>    cases where base-time isn't a multiple of cycle-time. For this a new
+>    variable extend has to be calculated as base-time % cycle-time. This
+>    variable is used by firmware to extend the last cycle.
+> *) The API prueth_iep_gettime() and prueth_iep_settime() also needs to be
+>    adjusted according to the cycle time extension. These changes are also
+>    taken care in this patch.
+
+Why? Given the explanation of CycleTimeExtension above, it makes no
+sense to me why you would alter the gettime() and settime() values.
+
+> 
+> v9 https://lore.kernel.org/all/20240531044512.981587-3-danishanwar@ti.com/
+> 
+>  drivers/net/ethernet/ti/Kconfig               |   1 +
+>  drivers/net/ethernet/ti/Makefile              |   2 +-
+>  drivers/net/ethernet/ti/icssg/icssg_prueth.c  |   7 +
+>  drivers/net/ethernet/ti/icssg/icssg_prueth.h  |   2 +
+>  drivers/net/ethernet/ti/icssg/icssg_qos.c     | 310 ++++++++++++++++++
+>  drivers/net/ethernet/ti/icssg/icssg_qos.h     | 112 +++++++
+>  .../net/ethernet/ti/icssg/icssg_switch_map.h  |   6 +
+>  7 files changed, 439 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/net/ethernet/ti/icssg/icssg_qos.c
+>  create mode 100644 drivers/net/ethernet/ti/icssg/icssg_qos.h
+> 
+> +static int emac_taprio_replace(struct net_device *ndev,
+> +			       struct tc_taprio_qopt_offload *taprio)
+> +{
+> +	struct prueth_emac *emac = netdev_priv(ndev);
+> +	int ret;
+> +
+> +	if (taprio->cycle_time_extension) {
+> +		NL_SET_ERR_MSG_MOD(taprio->extack, "Cycle time extension not supported");
+> +		return -EOPNOTSUPP;
+> +	}
+> +
+> +	if (taprio->cycle_time > TAS_MAX_CYCLE_TIME) {
+> +		NL_SET_ERR_MSG_FMT_MOD(taprio->extack, "cycle_time %llu is more than max supported cycle_time",
+> +				       taprio->cycle_time);
+
+It would be better to also print here TAS_MAX_CYCLE_TIME, like TAS_MIN_CYCLE_TIME below.
+Also, looping back a user-supplied value (taprio->cycle_time) is IMO not needed.
+
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (taprio->cycle_time < TAS_MIN_CYCLE_TIME) {
+> +		NL_SET_ERR_MSG_FMT_MOD(taprio->extack, "cycle_time %llu is less than min supported cycle_time %d",
+> +				       taprio->cycle_time, TAS_MIN_CYCLE_TIME);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (taprio->num_entries > TAS_MAX_CMD_LISTS) {
+> +		NL_SET_ERR_MSG_FMT_MOD(taprio->extack, "num_entries %lu is more than max supported entries %d",
+> +				       taprio->num_entries, TAS_MAX_CMD_LISTS);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (emac->qos.tas.taprio_admin)
+> +		taprio_offload_free(emac->qos.tas.taprio_admin);
+> +
+> +	emac->qos.tas.taprio_admin = taprio_offload_get(taprio);
+> +	ret = tas_update_oper_list(emac);
+> +	if (ret)
+> +		goto clear_taprio;
+> +
+> +	ret = tas_set_state(emac, TAS_STATE_ENABLE);
+> +	if (ret)
+> +		goto clear_taprio;
+> +
+> +	return 0;
+> +
+> +clear_taprio:
+> +	emac->qos.tas.taprio_admin = NULL;
+> +	taprio_offload_free(taprio);
+> +
+> +	return ret;
+> +}
