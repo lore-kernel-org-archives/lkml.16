@@ -1,192 +1,260 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B607A1F5841
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 07:24:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DE134B1E51;
+	Tue,  6 May 2025 07:26:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746516295; cv=none; b=ezMM7gS0AZVvz+37cnCcMQIXWYk0eERcjFZdxDTBwh8c5Ve0Mk2TtyfUsWAQoKYaSYSaQ3iKNMKMkxu04MSX35bGkFUS6DQtfLlcoL34sWoAhfkVAltcYmJ0apeURfsBTpUCu4sC2oraDOSlRm5LnOoT13XirWqnQ++wpEGYurk=
+	t=1746516362; cv=none; b=rJaIwi2K/k+LIPd7BzlUJ0I0alrDFPnctWaGGUUVTSzQu/tRMo/GI+tn0mS6aanKbUsyvRaED/9hZA3vYkzT1jhPGJs9xucxDZqkOcdXGV9wQg1AoRzDA4ZhMK1gH0zjvx/FeJ8vSS6N8oqjG2CcY+bsq0VddSCMoZKdk67+F1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746516295; c=relaxed/simple;
-	bh=3cUhB1F+n4VKTB36vmd3FJ61u8+HpFZ6ImTCvjnr/F4=;
+	s=arc-20240116; t=1746516362; c=relaxed/simple;
+	bh=8Oc0xkyq6v9wmSnKpRvRRCYkyApCq0GyR4eU9o97d10=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XMgaSmFP2sz8hJ561M7IJQ8F1dFgvLOfxi5yJigSW3fprKalp9NaSdsryzi++RzvGkv8J5MYTHxvprZbt/g1MEB2UHxoFU9ZGqWqKlUIt4OmeePDB/l9dSEFsrO+/qmQTOUtmDcg2Tb6rVIc6F8fZZOAtxzrcxnMGTFz5egO+Fk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=CqcIWhZG; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=g8j2Hue3fKcehvohxZm/GWykTDm2Xa79GsRMPtpIRtgh4Cgj6AgasnMKSe+5O2tgWjJsJ42I/a2UbytH4u8t4c0IpaHYrf3t/s+EhdsCtqIC2O1hf27LVFX3z9dIe9J1yOA+AwenQYTmkLf76TlLwoxYS45ShHvdEIH682an1O4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n/AxhGZr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="CqcIWhZG"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-acae7e7587dso857285466b.2
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 00:24:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1746516291; x=1747121091; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XbL28/Q5fCjpT3qjIse0voCquluax0ysjbv1wgZ9OdE=;
-        b=CqcIWhZGki8pArT5ZKDiAL7vrsk4j8yrd8yYle8MgvJvSTutokaP/Sp93/duR0raIu
-         MiplNBzH7fBdP7KGrYCrYx7s8b5gMO6yaN18shbzjh65NNsLsYaUyNX82QYZwrUE1q5j
-         B7LQZKnL+SOaPyinQJ9yx6KVUccCSzCz2GWnWJovbNj+RV6ongderoW5f+Ft/DW6Qs4J
-         mXFyXHZb7ZVp5z5s+dvkgUPiOgyDamHkSHexgE5u3wBJ58cRzvMtItCL3IHK8wPehECP
-         BhhRh6fcWr9HPV+AFQ19GlryzYVoLA41YFTOMmFcDKWsrtsCS+PkmH8IzZnC8yRTCR6T
-         VcTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746516291; x=1747121091;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XbL28/Q5fCjpT3qjIse0voCquluax0ysjbv1wgZ9OdE=;
-        b=MrESLvM9redudH7HcBkJ+ANv/h8r0A+5+9YF9dJI/ncb3EzC6uGMvnWqtfM6Axg9dx
-         P4paur8I39+BFbbuzbm9r957YQdku2ffBs1SEANjvGj/0KMIu0SlGHXHJCKx8+dwql9E
-         LpLEo19UFSeQtMmpVHGHN1BGlOkdrS8AJvNCp4ytc7HG+ZhbgjCzev0cqSQEIYF0XS/W
-         +zxdHIXGEbqQU/4O3y8xfEXDhjymp7Ki15c9XmXdkuafQggKXqNs4XNQzvlvNVHb9INp
-         aCkK8LMHQhoIf2MOFMT1Hn5ziq3zqerHakof5jAMxW6J8Ay/Kznbzss1D8rxLaS2ZJOz
-         YfFw==
-X-Gm-Message-State: AOJu0Yw3UufagjmMbhqypvOhyz9U9DqvXi2odMJGXrxtYFU++E/TZX98
-	+uAlcVVXZobpUjm+gJ2tJvOcwMH49EAeu+68Hp47Zs1Jnts8zMLxeVeHfUeSpHU=
-X-Gm-Gg: ASbGnctc3UbcPSioX65SaApvGHFU+RKLJrBy/EN7QdFqYAQlk4tGyCfRA0kHhxDhrTi
-	vhbasPvCCZMda16pY/K3OqnPSRFL4M347CPynwdIhSqASpumJpZVL2pzO3Tld7gKdBPcKYECl20
-	ASsC95yuNsTVGmUcac/yBVPmxFxWOkZwsK12e+f9Bo3MPk6sj464w3t5E+gbN3S3mTZ6mwqwuy+
-	mG7ikPD+u7bcbp99i33t62RPJsgrMina47H5GUDeR/VcXf48wBjx0n/vYPVL7F8i4989Wlvgqrd
-	j4BmRu94DObAiceCcmJ95uP05FllgBR11xwScJoK8AVTc/sPEQA=
-X-Google-Smtp-Source: AGHT+IHCFEnbJ0GDLTWa83tTmfCGMhh5WwORYTYmcU3ggC2S+IScDWzxdZRGqMZ8tE3BuqiylW508g==
-X-Received: by 2002:a17:907:2cc4:b0:ac1:ea29:4e63 with SMTP id a640c23a62f3a-ad1a495ad79mr1006272766b.26.1746516290877;
-        Tue, 06 May 2025 00:24:50 -0700 (PDT)
-Received: from localhost.localdomain ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1894c01e5sm644433166b.87.2025.05.06.00.24.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 00:24:50 -0700 (PDT)
-Date: Tue, 6 May 2025 09:24:48 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: Eugen Hristev <eugen.hristev@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	andersson@kernel.org, linux-doc@vger.kernel.org, corbet@lwn.net,
-	tglx@linutronix.de, mingo@redhat.com, rostedt@goodmis.org,
-	john.ogness@linutronix.de, senozhatsky@chromium.org,
-	peterz@infradead.org, mojha@qti.qualcomm.com,
-	linux-arm-kernel@lists.infradead.org, vincent.guittot@linaro.org,
-	konradybcio@kernel.org, dietmar.eggemann@arm.com,
-	juri.lelli@redhat.com
-Subject: Re: [RFC][PATCH 07/14] printk: add kmsg_kmemdump_register
-Message-ID: <aBm5QH2p6p9Wxe_M@localhost.localdomain>
-References: <20250422113156.575971-1-eugen.hristev@linaro.org>
- <20250422113156.575971-8-eugen.hristev@linaro.org>
- <aBjYbXJL-GJe4Mh8@localhost.localdomain>
- <6ce50077-2c64-40b2-82b3-c63c16fa1898@linaro.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n/AxhGZr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18D75C4CEE4;
+	Tue,  6 May 2025 07:26:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746516361;
+	bh=8Oc0xkyq6v9wmSnKpRvRRCYkyApCq0GyR4eU9o97d10=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=n/AxhGZrOHtwo6+F1w7BzO0PPWzgrskAu4Ole1I7TUFlEmjQhooCVGCw5v5XWU4EH
+	 NLxsf0XTfRLPP09itezWit/lyooHaeTgYUosKH+jRwjNW2FkvH8Y18UDp54u3g9Daa
+	 8KebqO6mBuIJjOY04DFXzVCSYhurYkadfxe/f3eh+Rpx0FQiHEuAbHEIceYguo7Le3
+	 Un2reHfZNb1xSXzYgA3/DXnIBYNUyt0H40xjT/vvQMt9qX2icNmQLkb37VJbzKq38l
+	 YKSQzRFyB6fBDKgM6Cp/HM3UFf28alfBpk+m92URSacW14zjFeqza4RRXgwX56mJLv
+	 7JsHQFDlzsi/w==
+Date: Tue, 6 May 2025 09:25:59 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Cc: x86@kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>, 
+	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, 
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, 
+	Michael Kelley <mhklinux@outlook.com>, devicetree@vger.kernel.org, 
+	Saurabh Sengar <ssengar@linux.microsoft.com>, Chris Oo <cho@microsoft.com>, linux-hyperv@vger.kernel.org, 
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	"Ravi V. Shankar" <ravi.v.shankar@intel.com>, Ricardo Neri <ricardo.neri@intel.com>
+Subject: Re: [PATCH v3 04/13] dt-bindings: x86: Add CPU bindings for x86
+Message-ID: <20250506-alluring-beaver-of-modernism-65ff8a@kuoka>
+References: <20250503191515.24041-1-ricardo.neri-calderon@linux.intel.com>
+ <20250503191515.24041-5-ricardo.neri-calderon@linux.intel.com>
+ <20250504-happy-spoonbill-of-radiance-3b9fec@kuoka>
+ <20250506045235.GB25533@ranerica-svr.sc.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <6ce50077-2c64-40b2-82b3-c63c16fa1898@linaro.org>
+In-Reply-To: <20250506045235.GB25533@ranerica-svr.sc.intel.com>
 
-On Mon 2025-05-05 18:51:19, Eugen Hristev wrote:
-> Hello Petr,
+On Mon, May 05, 2025 at 09:52:35PM GMT, Ricardo Neri wrote:
+> On Sun, May 04, 2025 at 06:45:59PM +0200, Krzysztof Kozlowski wrote:
+> > On Sat, May 03, 2025 at 12:15:06PM GMT, Ricardo Neri wrote:
+> > > Add bindings for CPUs in x86 architecture. Start by defining the `reg` and
+> > 
+> > What for?
 > 
-> Thank you for your review.
+> Thank you for your quick feedback, Krzysztof!
 > 
-> On 5/5/25 18:25, Petr Mladek wrote:
-> > On Tue 2025-04-22 14:31:49, Eugen Hristev wrote:
-> >> Add kmsg_kmemdump_register, which registers prb, log_buf and infos/descs
-> >> to kmemdump.
-> >> This will allow kmemdump to be able to dump specific log buffer areas on
-> >> demand.
-> >>
-> >> --- a/kernel/printk/printk.c
-> >> +++ b/kernel/printk/printk.c
-> >> @@ -4650,6 +4651,18 @@ int kmsg_dump_register(struct kmsg_dumper *dumper)
-> >>  }
-> >>  EXPORT_SYMBOL_GPL(kmsg_dump_register);
-> >>  
-> >> +void kmsg_kmemdump_register(void)
-> >> +{
-> >> +	kmemdump_register("log_buf", (void *)log_buf_addr_get(), log_buf_len_get());
-> >> +	kmemdump_register("prb", (void *)&prb, sizeof(prb));
-> >> +	kmemdump_register("prb", (void *)prb, sizeof(*prb));
-> > 
-> > This looks strange. "prb" is a pointer to "struct printk_ringbuffer".
-> > It should be enough to register the memory with the structure.
->
-> Yes, from my perspective this should be also enough. However, when
-> loading the generated core dump into crash tool , the tool first looks
-> for the prb pointer itself, and then stops if the pointer is not readable.
-> After the prb pointer is being found, the crash tool dereferences it ,
-> and looks at the indicated address for the actual memory.
-> That is why the pointer is also saved as a kmemdump region in my proof
-> of concept.
+> Do you mean for what reason I want to start bindings for x86 CPUs? Or only
 
-I see. It makes perfect sense to store the pointer as well after all.
+Yes. For which devices, what purpose.
 
-> >> +	kmemdump_register("prb_descs", (void *)_printk_rb_static_descs,
-> >> +			  sizeof(_printk_rb_static_descs));
-> >> +	kmemdump_register("prb_infos", (void *)_printk_rb_static_infos,
-> >> +			  sizeof(_printk_rb_static_infos));
-> > 
-> > Also this looks wrong. These are static buffers which are used during
-> > early boot. They might later be replaced by dynamically allocated
-> > buffers when a bigger buffer is requested by "log_buf_len" command
-> > line parameter.
-> > 
+> the `reg` property? If the former, it is to add an enable-method property to
+> x86 CPUs. If the latter, is to show the relationship between APIC and `reg`.
 > 
-> I will double check whether the crash tool looks for these symbols or
-> only the memory, and come back with an answer
+> > 
+> > > `enable-method` properties and their relationship to x86 APIC ID and the
+> > > available mechanisms to boot secondary CPUs.
+> > > 
+> > > Start defining bindings for Intel processors. Bindings for other vendors
+> > > can be added later as needed.
+> > > 
+> > > Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+> > > ---
+> > 
+> > Not really tested so only limited review follows.
 > 
-> > I think that we need to register the memory of the structure
-> > and 3 more buffers. See how the bigger buffer is allocated in
-> > setup_log_buf().
-> > 
-> > I would expect something like:
-> > 
-> > 	unsigned int descs_count;
-> > 	unsigned long data_size;
-> > 
-> > 	descs_count = 2 << prb->desc_ring.count_bits;
-> > 	data_size = 2 << prb->data_ring.size_bits;
-> > 
-> > 	kmemdump_register("prb", (void *)prb, sizeof(*prb));
-> > 	kmemdump_register("prb_descs", (void *)prb->desc_ring->descs,
-> > 			  descs_count * sizeof(struct prb_desc));
-> > 	kmemdump_register("prb_infos", (void *)prb->desc_ring->infos,
-> > 			  descs_count * sizeof(struct printk_info));
-> > 	kmemdump_register("prb_data", (void *)prb->data_ring->data, data_size);
-> > 
-> > 
-> Thank you. It may be that in my test case, the buffer was not
-> extended/reallocated with a bigger one.
-
-I guess so. A bigger buffer is allocated either when explicitly
-requested by "log_buf_len=" command line option. Or when the kernel
-is running on a huge system with many CPUs and log_buf_add_cpu()
-decides that the default buffer is not big enough for backtraces from
-all CPUs.
-
-> > But I wonder if this is enough. The current crash dump code also needs
-> > to export the format of the used structures, see
-> > log_buf_vmcoreinfo_setup().
+> Sorry, I ran make dt_binding_check but only on this schema. I missed the
+> reported error.
 > 
-> It appears that crash tool looks for the structures into vmlinux
-> symbols. It can be that this information is not available to some tools,
-> or vmlinux not available, in which case all the used structures format
-> and sizes need to be exported. But right now, the crash tool does not
-> work without vmlinux.
 > > 
-> > Is the CONFIG_VMCORE_INFO code shared with the kmemdump, please?
+> > >  .../devicetree/bindings/x86/cpus.yaml         | 80 +++++++++++++++++++
+> > >  1 file changed, 80 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/x86/cpus.yaml
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/x86/cpus.yaml b/Documentation/devicetree/bindings/x86/cpus.yaml
+> > > new file mode 100644
+> > > index 000000000000..108b3ad64aea
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/x86/cpus.yaml
+> > > @@ -0,0 +1,80 @@
+> > > +# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/x86/cpus.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: x86 CPUs
+> > > +
+> > > +maintainers:
+> > > +  - Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+> > > +
+> > > +description: |
+> > > +  Description of x86 CPUs in a system through the "cpus" node.
+> > > +
+> > > +  Detailed information about the CPU architecture can be found in the Intel
+> > > +  Software Developer's Manual:
+> > > +    https://intel.com/sdm
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    enum:
+> > > +      - intel,x86
+> > 
+> > That's architecture, not a CPU. CPUs are like 80286, 80386, so that's
+> > not even specific instruction set. I don't get what you need it for.
 > 
-> I believe CONFIG_KMEMDUMP_COREIMAGE should select CONFIG_VMCORE_INFO
-> indeed, which is not done in my patches. Or I have not fully understood
-> your question ?
+> Am I to understand the the `compatible` property is not needed if the
+> bindings apply to any x86 CPU?
 
-I do not see CONFIG_VMCORE_INFO selected in drivers/debug/Kconfig.
-But maybe the dependency is defined another way.
+Every device needs compatible. Its meaning is explained:
+https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#compatible
 
-Honestly, I did not study all these details. I focused primary on
-the printk-related interface and commented what came to my mind.
+If you add here a device representing CPU, then look at existing
+bindings for CPUs how they do it.
 
-Also I was not sure how the dumped memory can be analyzed. I expected
-that it should be readable by the "crash" tool. But I did not see it explained
-in Documentation/debug/kmemdump.rst.
+It again feels like you add DT for platform which is not a real thing.
+If you use DT, you do not get different rules, therefore read all
+standard guides and tutorials (there were many, quite comprehensive).
 
-Best Regards,
-Petr
+
+> 
+> > 
+> > > +
+> > > +  reg:
+> > 
+> > Missing constraints.
+> 
+> I could add minItems. For maxItems, there is no limit to the number of
+> threads.
+
+I am pretty sure that any given CPU, e.g. 80486 has a fixed number of
+threads...
+
+> 
+> > 
+> > > +    description: |
+> > 
+> > Do not need '|' unless you need to preserve formatting.
+> 
+> OK.
+> 
+> > 
+> > > +      Local APIC ID of the CPU. If the CPU has more than one execution thread,
+> > > +      then the property is an array with one element per thread.
+> > > +
+> > > +  enable-method:
+> > > +    $ref: /schemas/types.yaml#/definitions/string
+> > > +    description: |
+> > > +      The method used to wake up secondary CPUs. This property is not needed if
+> > > +      the secondary processors are booted using INIT assert, de-assert followed
+> > > +      by Start-Up IPI messages as described in the Volume 3, Section 11.4 of
+> > > +      Intel Software Developer's Manual.
+> > > +
+> > > +      It is also optional for the bootstrap CPU.
+> > > +
+> > > +    oneOf:
+> > 
+> > I see only one entry, so didn't you want an enum?
+> 
+> Indeed, enum would be more appropriate.
+> 
+> > 
+> > > +      - items:
+> > 
+> > Not a list
+> > 
+> > > +          - const: intel,wakeup-mailbox
+> > 
+> > So every vendor is supposed to come with different name for the same
+> > feature? Or is wakeup-mailnox really intel specific, but then specific
+> > to which processors?
+> 
+> It would not be necessary for every vendor to provide a different name for
+> the same feature. I saw, however that the Devicetree specification requires
+> a [vendor],[method] stringlist.
+
+Indeed, it's fine then.
+
+> 
+> Also, platform firmware for any processor could implement the wakeup
+> mailbox.
+> 
+> > 
+> > 
+> > > +            description: |
+> > > +              CPUs are woken up using the mailbox mechanism. The platform
+> > > +              firmware boots the secondary CPUs and puts them in a state
+> > > +              to check the mailbox for a wakeup command from the operating
+> > > +              system.
+> > > +
+> > > +required:
+> > > +  - reg
+> > > +  - compatible
+> > > +
+> > > +unevaluatedProperties: false
+> > 
+> > Missing ref in top-level or this is supposed to be additionalProps. See
+> > example-schema.
+> 
+> I will check.
+> 
+> > 
+> > > +
+> > > +examples:
+> > > +  - |
+> > > +    /*
+> > > +     * A system with two CPUs. cpu@0 is the bootstrap CPU and its status is
+> > > +     * "okay". It does not have the enable-method property. cpu@1 is a
+> > > +     * secondary CPU. Its status is "disabled" and defines the enable-method
+> > > +     * property.
+> > > +     */
+> > > +
+> > > +    cpus {
+> > > +      #address-cells = <1>;
+> > > +      #size-cells = <0>;
+> > > +
+> > > +      cpu@0 {
+> > > +        reg = <0x0 0x1>;
+> > > +        compatible = "intel,x86";
+> > > +        status = "okay";
+> > 
+> > Drop
+> 
+> I will drop status = "okay"
+> 
+> > 
+> > > +      };
+> > > +
+> > > +      cpu@1 {
+> > > +        reg = <0x0 0x1>;
+> > > +        compatible = "intel,x86";
+> > > +        status = "disabled";
+> > 
+> > Why?
+> 
+> Because this is a secondary CPU that the operating system will enable using
+> the method specified in the `enable-method` property.
+
+OK, so this was intentional to express it is in quiescent state.
+
+Best regards,
+Krzysztof
+
