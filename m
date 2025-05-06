@@ -1,191 +1,139 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C0B226560B
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 10:10:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D457277036
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 10:10:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746526233; cv=none; b=dBMhzhqOys6BQFQBhFBWQTbc0zGrPO+VGUN5Q5uthyn98X7T7s3T7JccCWs9eo9Cu2T22ZKuk2TYCQ/64DG4jQ06vKYdlh4UxoXOCYBxvo8rK6v/Dyoqj1tws/Eis+qsxQcaz+h3YM6NZf1vBtzDdGHgHR7YRLx9nrOMczPR4d4=
+	t=1746526239; cv=none; b=U3XBZWc5zgdd79sLPAC+etUHqy2hF8JQFP5BOdv+1QC5HlAtrdA/aBvg1mHwC/4g2U1TJTLQusBzw+jGer6Xpl313XzelWninpXWED/zxLTzddGsgcVRtLo+2cCMzsJZ9osyfqsiUwG85j3ZGOI+5ZuJI6xFqZR9zVH9ilF4l2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746526233; c=relaxed/simple;
-	bh=gGGmxUbk8vrtJ1Mmr4cCd7hWM2vCgRBh42AoFwpNydQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=piX0RF2H/ns6+FsXqwJrT5ccywoT8S/C8REynWpnCj9kUxNDEdHqvQZWv/vqls6nftsjxiROUyGaNQYCKlmG45o/H3/DMtf18sjRnv4ixRy5Om0zUr3yFpfHVIAxrXTMZq31PaIOlNw2tRHDacxl6QrJb6qL61gUknV4hqMeIGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Ieg6V+jx; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1746526239; c=relaxed/simple;
+	bh=/HBE0X80tekKwVpe/I6rSG6afei1xLRG1IopLTv4b90=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
+	 References:In-Reply-To; b=ZSXmBJiRqLw6Hc2HMNX58oNn5pLFQj17Ets/ndKwKRuYyGyVZfuKx0EX5uQdfJWBsDozqdt+i+Zx1oOr4AY6I1GV91dOZHJx3GhuaBLQdjprTftuyX4HFjjt9fTPi/7s098oZKj8chQhC6eKN9y2ectZg1xLTBKYXcQj6hO/Fjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=k3yezd4p; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Ieg6V+jx"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30c2d427194so48030451fa.0
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 03:10:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="k3yezd4p"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3912a28e629so138511f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 03:10:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1746526229; x=1747131029; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=ventanamicro.com; s=google; t=1746526235; x=1747131035; darn=vger.kernel.org;
+        h=in-reply-to:references:from:to:cc:subject:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Vx8i6SIIlfpmbQpS4R1+ncEn9UEtN+IsuQ5slgbwHa4=;
-        b=Ieg6V+jx4qkmEBhBkCeuiVPfg88plHKv8N7rUnWJ9nwMEc2+GeQF/6OhbWw2DJ5D23
-         KuY93gwXcwpfSkoadD668Jc9nBkw4PKKH2udAkgbH2ro8igDuK+BYEhubdkOcQaLsP95
-         2UYNUkeHLORFP9jql0ZGjeVKjBt7xyBngCid2+qcNcLKp8Vsl/gRjiXgvybHScmMN3Wt
-         rniz2UHSi0piXZ5gm7jlPRjckx0DPfOJHjKgHBeSDf3UU39v2g3HYxx2/rFzCNiEpk2V
-         YvlVOeVQDK/3ydvm6etlmdg+VJ+kNvonh49z51hl71fd5zIj5F15O16No6HlqgFPy7Cx
-         81sg==
+        bh=MDlCPukG676ZkXDqA7+irYPpUi8ypltoa/WLU7iYTZw=;
+        b=k3yezd4pHOP993DCvnJYvnnrLQ1mQCRimlX6KF3OwLBGIjRxOc3HI5AcNZB8pZhuWj
+         pzuW1eppoxocBCntG/gAypFjNT0c2K33klUSjcfO5TClCnm76dz3JLIX/z5ESFhaprPT
+         nRwfLtrtLlpz8HVBl5tXVu+qSANl+Vudwd5La9yJ9av/tFmsKPxcvsVmai85Yg9S0G2j
+         gBYB/Q3FrSGMB3QfoQs0HpjGJymi73TUlgOsy1VraKjWGcyD6teiRQxVunD8dpEx3FX4
+         iAKFmr0MeOH735cMF502s277NyhW/SvQIBLSEPUkrR6JYMN+955NaiHnc5d/DcCc8Z9d
+         C91w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746526229; x=1747131029;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Vx8i6SIIlfpmbQpS4R1+ncEn9UEtN+IsuQ5slgbwHa4=;
-        b=evlYWti74BhNIYIkkDMGbWSntOeKGkgz3Ef/cr+Baxs0Uc7r1O/THGgLMdtp8ri/9W
-         8mEoJ8U9zGVnruxwZRBN6Pxz2+3eoXW7KMGVyTBSV+l01l33SxSwkuv+AeOvpO8eCOXF
-         fAywoBy3TLh8eJnZFxlRCrmccldu/+FY3rrYOxpfSjbMwg4rh89ofX9XfN6Sa2yYnXZu
-         XOZkdz5+GOZujYsgxK7Qcx73iewg6IjMZR9yRkiSdLYVyZdfAXIYVCb1Ag1QtkkS/jFR
-         DUCo+Te4K5qcrtL+gDtAz90+ybk2+E/pO1Vpe5xL0UG35jHkq8qZZ8RXanr6nhnFQyqf
-         06MQ==
-X-Gm-Message-State: AOJu0YxUTU4+efaboM7TI9KRXRoyTi8stzqPrYbJMgNJ5P/6VNcB2jLo
-	uvVfVeF5gi5HXwWLB4OzMwVULtF3esCNnxrSBY1OrUBNWlKmQ1YEvIJ8NjRkN+xM4oyMY+JDA8k
-	cN7cxSgJ/Od1YwRFSo6KiRFq9RPe+00WGjPqWOw==
-X-Gm-Gg: ASbGncubpCH6dclr45qEh8qqvhxYaww2PwBVAfJrLbb4QYqHHo+PcvWafTc5V+lCMxq
-	PfiTIqrPRJ40SoF71gzx65nzZjj78rDY2WpqeXMXXKqzF3YjqRKyPHpkX4Ffhs+z+EuY702S3io
-	k8fYk2x5+M+PKhC+rJltnd0O3lMT9xWn4II2JU6DA3C665qRiSpdBSTtewJ1Tv8DGhjg==
-X-Google-Smtp-Source: AGHT+IFDAP9Lw/1+lUDPydOLzcnkxY2RUFDk8XdLLkCRbTD/DPDm1yFAPqG4/nwE/cuM/8hV2OnR0x24rkbUQomMHqw=
-X-Received: by 2002:a2e:b887:0:b0:30b:f274:d1e2 with SMTP id
- 38308e7fff4ca-320c3af0581mr50762521fa.1.1746526228731; Tue, 06 May 2025
- 03:10:28 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746526235; x=1747131035;
+        h=in-reply-to:references:from:to:cc:subject:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=MDlCPukG676ZkXDqA7+irYPpUi8ypltoa/WLU7iYTZw=;
+        b=W891BaD5GKpFk3ZPYgl8B81a5CRcg6YHTS6SD6LPZyaljBgnTS0QYhLeganLrFMmod
+         9UzRDr/roshX/vwnBviv6/ODbrGMCilhGZgqScQz1OkJ7u3s0PhH89QXM3CCZJGRz+m1
+         DAcFLgWl7fPwFKvJ7Rz2luWF1jo05GbhX0P2v4e5INLDL00B0xVTb1OI+EA+MeXLdlg/
+         w0gWoNOQG1n4WALgiMFb5m8unQMeppEbQxe9hkUiQbZasKAEw9n21pgRL2hl9oYy5Y/N
+         66pDyGgZia+biWXmutgaOhpHbK2kB72NnIVkPWOm/TrteFS0u5P9xQu72jAjFiLq4vIS
+         KwWA==
+X-Gm-Message-State: AOJu0Yx6KxcMrQZpHZjQHnWUCNJF8TgOMBMHdeznBenOryhyPlW+mjsr
+	yMu4/cae9XjBl+eR99NWDbYz/0IvD60ZxZkLhqyjEUXMPL5FyfmMwzQ2OcY5dQw=
+X-Gm-Gg: ASbGncveDsO1WVYvtkXfeHNU5nLUTsCD4EcvRE77TUhQ/ZV5Zuo//WPBkTmxiI6oor2
+	PJJ9WskKhKto9NveyGof86Jj4rqO5QDaWnXJRh73mPhumSkJITTAOx2nrPQjlKbLoL+ebK1mLiJ
+	YF7Z+hCwqatdO2dAaD9bDoNwYPhsyE7JchvnseA1k5MJtnQshzqJ1fvg4lau26QdVjZ3oVYqHUL
+	42if5dabBAfkIrrihOub88QcZbmTh84ypKu3qUOOfoIWFKcfx3msV/Dvg1T0/QIwopeVXSfSj3U
+	5urThBAhCePr0m69sm1dGxIsxVJVbkHnzpkuVs01Jci9skDg
+X-Google-Smtp-Source: AGHT+IEUjKjGwlmMCjrKZvF7YuhMUsrs5D+dPoN1CPSaPd4oD3QBATAQzTQqUOqU1bgynoQlRYwsyA==
+X-Received: by 2002:a05:6000:144a:b0:3a0:9f28:2e53 with SMTP id ffacd0b85a97d-3a09f282ec4mr3244079f8f.0.1746526235363;
+        Tue, 06 May 2025 03:10:35 -0700 (PDT)
+Received: from localhost ([2a02:8308:a00c:e200:d5f0:7802:c94b:10f6])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b89cc441sm166448565e9.3.2025.05.06.03.10.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 May 2025 03:10:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250503082834.49413-1-marco.crivellari@suse.com> <aBlMLQl504ThYbnf@slm.duckdns.org>
-In-Reply-To: <aBlMLQl504ThYbnf@slm.duckdns.org>
-From: Marco Crivellari <marco.crivellari@suse.com>
-Date: Tue, 6 May 2025 12:10:18 +0200
-X-Gm-Features: ATxdqUHovGAhlVBNhE5_utEiR3kJaiFKcCVPTtgunFIAQUNvOfwgQ4cahsSLjFk
-Message-ID: <CAAofZF60A82utmB2LiVw910cdFDiHd+fPaozUKpQwfXUqv7R_g@mail.gmail.com>
-Subject: Re: [PATCH 0/4] Workqueue: rename system workqueue and add WQ_PERCPU
-To: Tejun Heo <tj@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Lai Jiangshan <jiangshanlai@gmail.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>, 
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 06 May 2025 12:10:34 +0200
+Message-Id: <D9OZVNOGLU4T.2XOUPX27HN0W8@ventanamicro.com>
+Subject: Re: [PATCH v15 05/27] riscv: usercfi state for task and
+ save/restore of CSR_SSP on trap entry/exit
+Cc: <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+ <linux-mm@kvack.org>, <linux-riscv@lists.infradead.org>,
+ <devicetree@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+ <linux-doc@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+ <alistair.francis@wdc.com>, <richard.henderson@linaro.org>,
+ <jim.shu@sifive.com>, <andybnac@gmail.com>, <kito.cheng@sifive.com>,
+ <charlie@rivosinc.com>, <atishp@rivosinc.com>, <evan@rivosinc.com>,
+ <cleger@rivosinc.com>, <alexghiti@rivosinc.com>, <samitolvanen@google.com>,
+ <broonie@kernel.org>, <rick.p.edgecombe@intel.com>,
+ <rust-for-linux@vger.kernel.org>, "Zong Li" <zong.li@sifive.com>,
+ "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
+To: "Deepak Gupta" <debug@rivosinc.com>, "Thomas Gleixner"
+ <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov"
+ <bp@alien8.de>, "Dave Hansen" <dave.hansen@linux.intel.com>,
+ <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, "Andrew Morton"
+ <akpm@linux-foundation.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ "Vlastimil Babka" <vbabka@suse.cz>, "Lorenzo Stoakes"
+ <lorenzo.stoakes@oracle.com>, "Paul Walmsley" <paul.walmsley@sifive.com>,
+ "Palmer Dabbelt" <palmer@dabbelt.com>, "Albert Ou" <aou@eecs.berkeley.edu>,
+ "Conor Dooley" <conor@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Arnd Bergmann"
+ <arnd@arndb.de>, "Christian Brauner" <brauner@kernel.org>, "Peter Zijlstra"
+ <peterz@infradead.org>, "Oleg Nesterov" <oleg@redhat.com>, "Eric Biederman"
+ <ebiederm@xmission.com>, "Kees Cook" <kees@kernel.org>, "Jonathan Corbet"
+ <corbet@lwn.net>, "Shuah Khan" <shuah@kernel.org>, "Jann Horn"
+ <jannh@google.com>, "Conor Dooley" <conor+dt@kernel.org>, "Miguel Ojeda"
+ <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
+ <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
+ <benno.lossin@proton.me>, "Andreas Hindborg" <a.hindborg@kernel.org>,
+ "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>
+From: =?utf-8?q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
+References: <20250502-v5_user_cfi_series-v15-0-914966471885@rivosinc.com>
+ <20250502-v5_user_cfi_series-v15-5-914966471885@rivosinc.com>
+In-Reply-To: <20250502-v5_user_cfi_series-v15-5-914966471885@rivosinc.com>
 
-Hi,
+[Ah, I missed v13 and v14, feel free to Cc me on next versions.]
 
-> Can you please make a summary of the discussion here? Referring to old
-> thread is useful but it'd be nice to have the rationales laid out in the
-> patchset - why this is desirable, what is the transition plan and what ar=
-e
-> the rationales for it? Also, please include a short summary in the patche=
-s.
+2025-05-02T16:30:36-07:00, Deepak Gupta <debug@rivosinc.com>:
+> diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
+> @@ -91,6 +91,32 @@
+> +.macro save_userssp tmp, status
+> +	ALTERNATIVE("nops(4)",
+> +		__stringify(				\
+> +		andi \tmp, \status, SR_SPP;		\
+> +		bnez \tmp, skip_ssp_save;		\
+> +		csrrw \tmp, CSR_SSP, x0;		\
+> +		REG_S \tmp, TASK_TI_USER_SSP(tp);	\
+> +		skip_ssp_save:),
+> +		0,
+> +		RISCV_ISA_EXT_ZICFISS,
+> +		CONFIG_RISCV_USER_CFI)
+> +.endm
+> +
+> +.macro restore_userssp tmp
+> +	ALTERNATIVE("nops(2)",
+> +		__stringify(				\
+> +		REG_L \tmp, TASK_TI_USER_SSP(tp);	\
+> +		csrw CSR_SSP, \tmp),
+> +		0,
+> +		RISCV_ISA_EXT_ZICFISS,
+> +		CONFIG_RISCV_USER_CFI)
+> +.endm
 
-Sure, thanks for the advice.
+Do we need to emit the nops when CONFIG_RISCV_USER_CFI isn't selected?
 
-> Let's keep the old names for a release or two and trigger printk_once()
-> warnings about the renames. These are pretty widely used, so I think it
-> warrants a bit of extra effort.
+(Why not put #ifdef CONFIG_RISCV_USER_CFI around the ALTERNATIVES?)
 
-Good, sounds fine.
-But I don't understand where printk_once() should be placed.
-Can you give me some further guidance?
-
-> Similarly, let's warn about violations and assume the old behavior at fir=
-st.
-
-Ok, so warn (printk_once()) if both flags are present but if none among
-WQ_UNBOUND nor WQ_PERCPU are present, assume WQ_PERCPU.
-
-Did I understand correctly?
-
-> Do you mean caller?
-
-Yes, sorry. I meant "every alloc_workqueue() caller".
-
-> How is 3) different from 2)?
-
-I get your point, I will use a single patch.
-
-Many thanks in advance, about my questions.
-
-
-On Tue, May 6, 2025 at 1:39=E2=80=AFAM Tejun Heo <tj@kernel.org> wrote:
->
-> Hello,
->
-> On Sat, May 03, 2025 at 10:28:30AM +0200, Marco Crivellari wrote:
-> > Hi!
-> >
-> > This series is the follow up of the discussion from:
-> >       "workqueue: Always use wq_select_unbound_cpu() for WORK_CPU_UNBOU=
-ND."
-> >       https://lore.kernel.org/all/20250221112003.1dSuoGyc@linutronix.de=
-/
->
-> Can you please make a summary of the discussion here? Referring to old
-> thread is useful but it'd be nice to have the rationales laid out in the
-> patchset - why this is desirable, what is the transition plan and what ar=
-e
-> the rationales for it? Also, please include a short summary in the patche=
-s.
->
-> > 1)  [P 1-2] system workqueue rename:
-> >
-> >       system_wq is a per-CPU workqueue, but his name is not clear.
-> >       system_unbound_wq is to be used when locality is not required.
-> >
-> >       system_wq renamed in system_percpu_wq, while system_unbound_wq
-> >       became system_dfl_wq.
->
-> Let's keep the old names for a release or two and trigger printk_once()
-> warnings about the renames. These are pretty widely used, so I think it
-> warrants a bit of extra effort.
->
-> > 2)  [P 3] Introduction of WQ_PERCPU.
-> >
-> >       This patch adds a new WQ_PERCPU flag to explicitly request the le=
-gacy
-> >       per-CPU behavior. WQ_UNBOUND will be removed once the migration i=
-s
-> >       complete.
->
-> I wouldn't call per-cpu behavior legacy. There are plenty of cases that n=
-eed
-> per-cpu behavior for correctness and/or performance.
->
-> >       Every alloc_workqueue() caller should use one among WQ_PERCPU or
-> >       WQ_UNBOUND. This is actually enforced warning if both or none of =
-them
-> >       are present at the same time.
->
-> Similarly, let's warn about violations and assume the old behavior at fir=
-st.
->
-> > 3)  [P 4] alloc_workqueue() callee should pass explicitly WQ_PERCPU.
->
-> Do you mean caller?
->
-> >
-> >       This patch ensures that every caller that needs per-cpu workqueue
-> >       will explicitly require it, using the WQ_PERCPU flag.
->
-> How is 3) different from 2)?
->
-> Thanks.
->
-> --
-> tejun
-
-
-
---
-
-Marco Crivellari
-
-L3 Support Engineer, Technology & Product
-
-
-
-
-marco.crivellari@suse.com
+Thanks.
