@@ -1,101 +1,125 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4F2D44A62C;
-	Tue,  6 May 2025 00:31:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14C9E49FA33
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 00:47:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746491504; cv=none; b=olLnxjCWjDOLAfrxIKlkMobhJ/QeGth2unDmxpFyw6VhMA+n/6ZJ81iCEaUlEYYBOeCNr9jDOeMZUUEnTXHK/pV+cfUkvxz1LmVTTUDx5deF626RYIdP0ax6DFJMP7tG/PxQKstl7iTl4QMaMeccjBGz2vwpKNtU2VgNpgKMFWs=
+	t=1746492458; cv=none; b=s+Clr+Cx7UL5PCq8ab89NKoSjX3rbTVA48fqesuGM31F+SQg+h+jEYi3DFjOL3MULZJyZtn6YVmsXmWzTk5lUDEh3oOLGrbxwjlkbbirwK9r157tYnDzOKGyxbhbxVaPkaS23Kud4LSNKIut8gQKmDwNRNuW+ZtfaJjbb72pLGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746491504; c=relaxed/simple;
-	bh=J4W3QlDUEySP7cK+t9SrKwMzhMxe07fnSzbb4JHve/o=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=qEETe5zn3wgMdCVdSaEA8vPd4DyP0s2lECbwpOmRVpVHbHPHgv1eNKUid71f/C0pygSaTneq/ERpWIp1Qvvsc7mEdGyUt10ZxbtzQcgTogDHsrzSHvD2voKHLwimQHe04mV3uRqPG5I9gQPksQlvKdc7up1EeDc8/0d9evy7uXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=At87cP+O; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="At87cP+O"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-309d2e8c20cso6600146a91.0;
-        Mon, 05 May 2025 17:31:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746491501; x=1747096301; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qNHr0ZTyT4NKYzLBz84B7MhfveuNCJxLE4chWNqht24=;
-        b=At87cP+OdX7eBUCW6HYnMSiQrIvNEClea7P6PdOuRtxaMMOukfLnvVAsDdI/ZnDHPl
-         W34yJ+SX12rwk3FBxpH+h0Mb5OT8xt+otXwcmIvrK6AIkV7RToCZU9FFVQlUQwUBAQkh
-         xJdceDJckUZAC5MLwFH3ZMsjcjY77yuUoS956gW7FtVbcwstyy+o023ekSlu3LhYf15Q
-         zjqNVbb6+icOLU/dgKt2OvfG3Ip98GTI1ilwk//3kKNnC/+vDhlwfeIgdCICrD/NBasX
-         jlnsv+4A5XYr2rtSBTtnNv2KE2AJoTL2AUh1G2WWNx61xlWuj+PYMSN8FyQYL2Qlr/rC
-         T43w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746491501; x=1747096301;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qNHr0ZTyT4NKYzLBz84B7MhfveuNCJxLE4chWNqht24=;
-        b=dMQ1PQ4d3rb9jZfF2OolDwU1FAt4Dqp3ISZhxkOHYS75FBSdCBXFdxYnFydbpoBBiR
-         Ux3vgwc4ChZE67GGKTWIxsa2q9Xgw/hr0VERhgdVdf07fvzO3DLRA3aU051Arp7qrB2+
-         /7D4ZHNAwx3AeChNRzUYh5W6SvsDo5RwFjE52lqog+s6mCas8tpA1wwL1pzgvJGlbi27
-         XXMjxwoe6IdL9G33wfs+PIkDqgylQkorYp7zaFiJ4BsLKIxeWHr3CMN724DYVmPQuDwK
-         JpkgwgGxVfdODa6vw0Tww4NpxyL70RuQrkV8mdLjjS90TMZz92qtxW/+iz2VvKYN1AnA
-         KYSw==
-X-Forwarded-Encrypted: i=1; AJvYcCXVkfZ5fIZYBeUudUU8DckDik2PNRcvWSFgwHjmK1AQit8eio26dLZrJikCjg7rxDrP4J/QKDLHp9Mlz4Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyw3/tIUBScYdVQTJWCNOs5BlWc0MYlFgUxrPWvnI3aKX4z/jvU
-	8IaUdz+jpgxNsn+IYt7yCuXMsTv5EHzVvDHOoCmZG2FLlCw0Tw9FbAopiQ==
-X-Gm-Gg: ASbGncvUaooS5JLip1wrV4p3WENPAj4KTnPvF10R0Z/Hcjc+6+sMMRDY3TJ43Ux3S3E
-	+zpCliyrz8QrnOQlIT7oGeO5iaGCDGw7mG3bnDuDvfbk2tu3KoKTUTVt0Huw2w8VN0xRwp//ThM
-	Vkod8C7MvKQfYizc05na9g91u93nsLVrZcfzfhbU57QLIScTFrwDLK7y0ZOUrS+OcifRhnF6mgy
-	gwrLDVH/+lwrXpmQYXsIQi185FodxeSMLWqyTWFnfdrdnDyA/nc5ni1UZrpwKT64LmaOQF/Led2
-	Sgs597zVavJFW3D4zn8V85DTOHCRPHR+vyJ5elZgbg==
-X-Google-Smtp-Source: AGHT+IE69qUFAPVURFOW89Aa5yjzLl3Jvp+TiBQvi80s5DXqUlNolA7Vy6vs8n3rxNe3o+bVU1bmRg==
-X-Received: by 2002:a17:90b:1e4b:b0:309:e351:2e3d with SMTP id 98e67ed59e1d1-30a7dae582amr1464158a91.12.1746491500631;
-        Mon, 05 May 2025 17:31:40 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:17ab:9e47:29ba:57e6])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30a4748e83bsm9801128a91.22.2025.05.05.17.31.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 17:31:40 -0700 (PDT)
-Date: Mon, 5 May 2025 17:31:37 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: linux-input@vger.kernel.org
-Cc: jt <enopatch@gmail.com>, linux-kernel@vger.kernel.org, 
-	Hans de Goede <hdegoede@redhat.com>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, 
-	Peter Hutterer <peter.hutterer@who-t.net>
-Subject: [PATCH] Input: synaptics - enable SMBus for HP Elitebook 850 G1
-Message-ID: <iys5dbv3ldddsgobfkxldazxyp54kay4bozzmagga6emy45jop@2ebvuxgaui4u>
+	s=arc-20240116; t=1746492458; c=relaxed/simple;
+	bh=+pC0MyfYnCdcvbMCgpYsaCP5hIslJP7GASUOkIvSzuw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=NMuoydgiHxFNnpvo5g6M8fsS2KHgZpMffHNFiuJdYuPGwg3JZmV59sfoazXHECy0YKWEJBNq1W2/ttosWYuVcL9HWnOBrFeynx9qLzIhVIN7IBrDyTQZziJBXupmHHn29NYFvJAyN5doPAwc/geWDlV6HkJhhPf1o8DhiNT5+FQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
+Received: from fangorn.home.surriel.com ([10.0.13.7])
+	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <riel@shelob.surriel.com>)
+	id 1uC6K6-000000000IF-3UXR;
+	Mon, 05 May 2025 20:38:14 -0400
+From: Rik van Riel <riel@surriel.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org,
+	x86@kernel.org,
+	kernel-team@meta.com,
+	dave.hansen@linux.intel.com,
+	luto@kernel.org,
+	peterz@infradead.org,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	hpa@zytor.com,
+	Rik van Riel <riel@fb.com>,
+	Yu-cheng Yu <yu-cheng.yu@intel.com>,
+	Rik van Riel <riel@surriel.com>
+Subject: [RFC PATCH 4/9] x86/mm: Introduce X86_FEATURE_RAR
+Date: Mon,  5 May 2025 20:37:42 -0400
+Message-ID: <20250506003811.92405-5-riel@surriel.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250506003811.92405-1-riel@surriel.com>
+References: <20250506003811.92405-1-riel@surriel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Sender: riel@surriel.com
 
-The kernel reports that the touchpad for this device can support
-SMBus mode.
+From: Rik van Riel <riel@fb.com>
 
-Reported-by: jt <enopatch@gmail.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Introduce X86_FEATURE_RAR and enumeration of the feature.
+
+[riel: move disabling to Kconfig.cpufeatures]
+
+Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+Signed-off-by: Rik van Riel <riel@surriel.com>
 ---
- drivers/input/mouse/synaptics.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/Kconfig.cpufeatures       |  4 ++++
+ arch/x86/include/asm/cpufeatures.h |  2 +-
+ arch/x86/kernel/cpu/common.c       | 13 +++++++++++++
+ 3 files changed, 18 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/input/mouse/synaptics.c b/drivers/input/mouse/synaptics.c
-index 309c360aab55..fdb471060118 100644
---- a/drivers/input/mouse/synaptics.c
-+++ b/drivers/input/mouse/synaptics.c
-@@ -190,6 +190,7 @@ static const char * const smbus_pnp_ids[] = {
- 	"LEN2054", /* E480 */
- 	"LEN2055", /* E580 */
- 	"LEN2068", /* T14 Gen 1 */
-+	"SYN3003", /* HP EliteBook 850 G1 */
- 	"SYN3015", /* HP EliteBook 840 G2 */
- 	"SYN3052", /* HP EliteBook 840 G4 */
- 	"SYN3221", /* HP 15-ay000 */
+diff --git a/arch/x86/Kconfig.cpufeatures b/arch/x86/Kconfig.cpufeatures
+index e12d5b7e39a2..60042f8c2837 100644
+--- a/arch/x86/Kconfig.cpufeatures
++++ b/arch/x86/Kconfig.cpufeatures
+@@ -199,3 +199,7 @@ config X86_DISABLED_FEATURE_SEV_SNP
+ config X86_DISABLED_FEATURE_INVLPGB
+ 	def_bool y
+ 	depends on !BROADCAST_TLB_FLUSH
++
++config X86_DISABLED_FEATURE_RAR
++	def_bool y
++	depends on !BROADCAST_TLB_FLUSH
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index 7642310276a8..06732c872998 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -75,7 +75,7 @@
+ #define X86_FEATURE_CENTAUR_MCR		( 3*32+ 3) /* "centaur_mcr" Centaur MCRs (= MTRRs) */
+ #define X86_FEATURE_K8			( 3*32+ 4) /* Opteron, Athlon64 */
+ #define X86_FEATURE_ZEN5		( 3*32+ 5) /* CPU based on Zen5 microarchitecture */
+-/* Free                                 ( 3*32+ 6) */
++#define X86_FEATURE_RAR			( 3*32+ 6) /* Intel Remote Action Request */
+ /* Free                                 ( 3*32+ 7) */
+ #define X86_FEATURE_CONSTANT_TSC	( 3*32+ 8) /* "constant_tsc" TSC ticks at a constant rate */
+ #define X86_FEATURE_UP			( 3*32+ 9) /* "up" SMP kernel running on UP */
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index b73e09315413..5666620e7153 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -1502,6 +1502,18 @@ static void __init cpu_set_bug_bits(struct cpuinfo_x86 *c)
+ 	setup_force_cpu_bug(X86_BUG_L1TF);
+ }
+ 
++static void __init detect_rar(struct cpuinfo_x86 *c)
++{
++	u64 msr;
++
++	if (cpu_has(c, X86_FEATURE_CORE_CAPABILITIES)) {
++		rdmsrl(MSR_IA32_CORE_CAPABILITIES, msr);
++
++		if (msr & CORE_CAP_RAR)
++			setup_force_cpu_cap(X86_FEATURE_RAR);
++	}
++}
++
+ /*
+  * The NOPL instruction is supposed to exist on all CPUs of family >= 6;
+  * unfortunately, that's not true in practice because of early VIA
+@@ -1728,6 +1740,7 @@ static void __init early_identify_cpu(struct cpuinfo_x86 *c)
+ 		setup_clear_cpu_cap(X86_FEATURE_LA57);
+ 
+ 	detect_nopl();
++	detect_rar(c);
+ }
+ 
+ void __init init_cpu_devs(void)
 -- 
-2.49.0.967.g6a0df3ecc3-goog
+2.49.0
 
-
--- 
-Dmitry
