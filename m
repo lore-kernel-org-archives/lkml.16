@@ -1,133 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B19972600;
-	Tue,  6 May 2025 11:31:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9809C27AC52
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 11:31:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746531115; cv=none; b=lI8rS5V0U3GZCV4pGxOfyU3C1+Ar7ckJAb11fid4fLDLWn0WQwISvf8JdELi7V/Qn+uV3sLdiklaTSJwwdIcx83vz5hOrPqay+IqDEByNdK8UzQBX36CdETOvZUw030aNbEWBBqy4kYhPHDKMESVzWWf8M3GNAI5BP6IrgLAe3o=
+	t=1746531119; cv=none; b=vCtGkrLaKgAdItJLVolU1hat4Od/3Hg8C06Si9pUZsPs29W3sMxRDOBtsGLdMbHnRsR9kROKfAuOwSVa+HWI/fo1yLR5yBYYMFz89gCgW795vIcu9EHkKLZvVseJ60skPm0JKbMDIeQBPLvjNpF4pIx2diiN4c0B+PYLV0BTus4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746531115; c=relaxed/simple;
-	bh=v3dINSmCM2x91RxKHVUEZP/jX1+3KXGHVTyDueApqyY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=lJcV9a42vnnPZJDFCvhGsaAIDQj2frt8fSRJ+2ZBBbQV82Ci7Kl7fjnFcgqXeGfzo/WiQ4Hfr+XsucqAGGP5+mrWuWHspH5L712EJn3qR9iFCxZpExnZVfrp3FQGRS2SSlF2ojOnCcStXHbSEXCFAPvc0WBK3RwSzlXguNsHLNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nHkEDFq5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746531119; c=relaxed/simple;
+	bh=dZOxThEKY/19fDb1atsCAd4vX2SSIiVfbJuNFdfhc6g=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=k3M3StzKz1PrFOKWCfymLz/Stz2qqZXa1lCw0OS0VkRkJz+Is7yRVilds6O+dUjgFrI0dRtdTbPbhLKf1j2/Tg7sr6zjoPfrCbF65LEDVGUjm1MhMX+bL4zRqdqomwtw9fYFns/ArOzCYiR0ry9up2YxBChXz+yVBWnXKSrktDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=btJjgamw; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nHkEDFq5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74249C4CEE4;
-	Tue,  6 May 2025 11:31:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746531115;
-	bh=v3dINSmCM2x91RxKHVUEZP/jX1+3KXGHVTyDueApqyY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=nHkEDFq5Z6yBfNsvOU8s3hTCoUmbymLLqL1I0DrgvNcjokn8M8veNcDnFOCc2oOz1
-	 Xnt1tYndHKOBQkVp/Y1A/S8RlC+dQNNxDAd+sLYa+I+Pwhq/4U4s/X9vym64aF20cl
-	 AyfHDws+pdUPsQ4foTBAZt3vKTNtNWjQwBgWXlcF4epOKXPHxTo6qd9PyNA2LrAFDd
-	 U+j+hI3upHhNDW1OfwFXjeuQiYUph4DB5qpnefgUYRF3BZSDRAj8Z/8wXhWWnK/wVj
-	 5So8mD8FCbt3/bz9PHiIp/Bl0zaE23PXaglu6R8F9d6lImwAzlwfmL3irgajLESxWx
-	 ab2ZwFScE+irA==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com>
-Cc: "Danilo Krummrich" <dakr@kernel.org>,  "Miguel Ojeda"
- <ojeda@kernel.org>,  "Alex Gaynor" <alex.gaynor@gmail.com>,  "Boqun Feng"
- <boqun.feng@gmail.com>,  "Gary Guo" <gary@garyguo.net>,  =?utf-8?Q?Bj?=
- =?utf-8?Q?=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,  "Benno Lossin" <benno.lossin@proton.me>,
-  "Alice Ryhl" <aliceryhl@google.com>,  "Trevor Gross" <tmgross@umich.edu>,
-  "Joel Becker" <jlbec@evilplan.org>,  "Peter Zijlstra"
- <peterz@infradead.org>,  "Ingo Molnar" <mingo@redhat.com>,  "Will Deacon"
- <will@kernel.org>,  "Waiman Long" <longman@redhat.com>,  "Fiona Behrens"
- <me@kloenk.dev>,  "Charalampos Mitrodimas" <charmitro@posteo.net>,
-  "Daniel Almeida" <daniel.almeida@collabora.com>,  "Breno Leitao"
- <leitao@debian.org>,  <rust-for-linux@vger.kernel.org>,
-  <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 1/3] rust: configfs: introduce rust support for configfs
-In-Reply-To: <CANiq72nPMH06HURgZJN-o0GMmGdQQpFetm=S5SDEB+B+f0wefA@mail.gmail.com>
- (Miguel
-	Ojeda's message of "Tue, 06 May 2025 13:18:31 +0200")
-References: <20250501-configfs-v6-0-66c61eb76368@kernel.org>
-	<20250501-configfs-v6-1-66c61eb76368@kernel.org>
-	<ELsEgktE6XbGxDyusumtuVzyX-eotyYuQdviHTZaIxN7KZaGFr0fNqrv5tac_gYWfbDZYNTC-wQyQuxnmufA2g==@protonmail.internalid>
-	<CANiq72mS_HV5rDjP+t+k0jX9QeAgF2SB9_xX54iEBTH-GoPuEg@mail.gmail.com>
-	<87msbw1s9e.fsf@kernel.org>
-	<86-cT9dBPpEIyQXWVCeEmj3TRvBm6Ta0p1B20sSngRGOqOuC96i6hG3Q9Hg3bN8AQTCPXlsxg_C5Ok0G4JJzpQ==@protonmail.internalid>
-	<CANiq72nd0Pfv4TrpULGQ_fZkyBpHyVVZ1H45_RJBgBxkJuzCJQ@mail.gmail.com>
-	<87h62419r5.fsf@kernel.org>
-	<FLMJjrvUlrMEWy7KzihcYUt-V1IFyP8nt9KYysmVPsWdxUR9dRVXsRoSBw4Z0oFX8tzfWieBDkP7YPAHOXtFcg==@protonmail.internalid>
-	<CANiq72miL3eZ40ujmA-pXCqMS8y2AzJQ1UKpL1_hX03AJ0fteQ@mail.gmail.com>
-	<87bjsc154u.fsf@kernel.org>
-	<CANiq72=SD9ogr+RpPK7E+cFmn2qAVu+MBCoChdp8-hw7JFu6zA@mail.gmail.com>
-	<TbTextfZAMlWFS5cWlUE-Wtnp1bv8P783IQQbWUcnHvEgBjpIxukMngLdPkqNR9jWT9O_OtOY1ejin9JoOnsww==@protonmail.internalid>
-	<CANiq72m8VWKRyFai0Xg8AZUTjG0eUVG8nY-ZCQOqOnvwsW0ZaA@mail.gmail.com>
-	<875xij1ouy.fsf@kernel.org>
-	<m9-XLEt04AwLCzToZZoXspXzPC6RJkp8ht7DnkVuEEPHQ02CjS0SNIKyKM1gsH-QfZruoYixHlsAHzfYyNEykw==@protonmail.internalid>
-	<CANiq72m0cuf5YKfOY8oNg83dzWEqqyddGKKh_6fwQQ4hoCp+yQ@mail.gmail.com>
-	<87ecx3xzqd.fsf@kernel.org>
-	<SwuN4IgGwXbwy3_67Br6ePRhtgh9XOahiVZwowTgUCacTz4Eos44f86aFUJS7rqZfrb2FKhBkKanUDERKBMSmw==@protonmail.internalid>
-	<CANiq72nPMH06HURgZJN-o0GMmGdQQpFetm=S5SDEB+B+f0wefA@mail.gmail.com>
-User-Agent: mu4e 1.12.7; emacs 30.1
-Date: Tue, 06 May 2025 13:31:45 +0200
-Message-ID: <878qnaq8ke.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="btJjgamw"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43ce71582e9so36498225e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 04:31:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746531115; x=1747135915; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=xVYMaT82isRrkpK15HHVNBbc3e0novaLvbWmbpyFIOE=;
+        b=btJjgamwaPMIkqoGeqCUwJxMbsrXe+ax6aHgMu1gvdxjoxNrTHRXu1FnVN+FJi9ey5
+         E8Z2aufoTkRU4xRYBPSuOKve/r+gimZ23CbWOANicn6eSfFSw4xzNxTlDvtil0bVSwIM
+         tkhwVOnry/pEjBbZQkfRoNosxJVcIy6tClo9OnVm9rWWOKDOT/zDe2psEs0TRc8N5zFJ
+         wUKU/lJ+owD72z/r0DDhK3rTtn7iIQwA9zKrdRcqtQ1EINLJjqYyPSUqnW3fzUwULrsk
+         z0s+UsqDSkOojUN2bZvvuV7eVWAIigIiKmodnSmpiXuFCCPNZLENAacoEsI5THfcPytZ
+         PZYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746531115; x=1747135915;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xVYMaT82isRrkpK15HHVNBbc3e0novaLvbWmbpyFIOE=;
+        b=Y9FhZwrywu0QqDTT3o06urfELmfB/dkuUh+EL+J5uJ05WQ6ALwYIOUxpjFsQ9uuIGX
+         eRwX4CNjpUCERi5eh6KYsK0z5tmFBa9cb+GDW2Ex/+vXILTz0TpwggG75EA0rWVGqCTd
+         Yh7bKC+ZRvrMGmdYp0Ou5j85964EeD6BHVcQAQFVOj5EKIIHh0im9c0knffMdIdv+QBf
+         Luqu/s1C7ilAKq+hOvH4COr/VhnbhN+woJf11yHCegiAg3JyF0AsLcfnF2aETXqGPqDa
+         7AqFVQFJU5AiPkq4sUK1esN+AgpYsVmTiMlvGrIa9O0z3IXvyVWyv9uSRFxhqDyFFlPk
+         oYrw==
+X-Forwarded-Encrypted: i=1; AJvYcCUY1Hvv/BbRCX/soBp8AdKUKfB3TWoqknMS8sJUMCFrKi1031QSknNdgEk4wZEXvGAmLQO9UlUczi0s0r0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyw4RE3KRSYTkqAB5pPTDGDUEs4LvfBxIz2VB7JbRDnPtoo3Pxc
+	LDkl6FmRsRwOF/HZjLs9G9c4izpFym6Gjf8k/tYLOxkqXbI0Xy0vcAj56uZmNQnkBsrr9YlJVy5
+	pWQtb6g==
+X-Gm-Gg: ASbGncsmR56kOmJDPTglTHCxGQgKPjbaSNWAD3M5Fk2ObTH8+5pZiEFvo/fdXA9/le8
+	bKnfckrCLoNyaOxAjLgXyRX1vw8JWAe6DsDGfoKRk2qr4nfCoeVZzvKEXEdYaMkUgn6+vN/M8Ei
+	cSnE2NeFffznk2eiUNCYadGxhdox8lD4rfop4yUTdYnB1gf1K4ZwH6AKutcafgWVyNDDUWWzTIa
+	UOHb60EV1n6uicUcbahZEsYbqvoZqt67PXGDiiBmiyEZYsb6JxzylXZrLqbjwXUgNGj5v+bmxZ9
+	q5ZChHbTEJu93SgUMVZFF64k/Lf5rG/qTw2zoj2uV0nZjn228GeJKN2q56g1vqbfxAfxDwtVnr8
+	r/3RwOw9yh/sBOpW9EoSE
+X-Google-Smtp-Source: AGHT+IFB+/2+pwJwZIBD0b2yLu++CXDbSzQgzqM1gVS70tv5Bksn6acNtQIMSaKWzYmIjz1xXAmFYA==
+X-Received: by 2002:a05:600c:8012:b0:434:fa55:eb56 with SMTP id 5b1f17b1804b1-441c48b05cdmr93122945e9.7.1746531115575;
+        Tue, 06 May 2025 04:31:55 -0700 (PDT)
+Received: from ta2.c.googlers.com (92.221.190.35.bc.googleusercontent.com. [35.190.221.92])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b2aecedcsm213723495e9.15.2025.05.06.04.31.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 May 2025 04:31:54 -0700 (PDT)
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+Date: Tue, 06 May 2025 11:31:50 +0000
+Subject: [PATCH] dm: fix copying after src array boundaries
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250506-dm-past-array-boundaries-v1-1-b5b1bb8b2b34@linaro.org>
+X-B4-Tracking: v=1; b=H4sIACXzGWgC/x3MMQ6DMAxA0asgz7XkpAoDV0Ed3MYBDwTkFARC3
+ L0p4xv+P6GIqRTomhNMNi065wr3aOAzch4ENVaDJx8oUItxwoXLF9mMD3zPa478P6BL4lNgR09
+ KUPPFJOl+r/vXdf0A3b3cymoAAAA=
+X-Change-ID: 20250506-dm-past-array-boundaries-1fe2f5a1030f
+To: Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>, 
+ Mikulas Patocka <mpatocka@redhat.com>, 
+ Benjamin Marzinski <bmarzins@redhat.com>
+Cc: dm-devel@lists.linux.dev, linux-kernel@vger.kernel.org, 
+ stable@vger.kernel.org, Tudor Ambarus <tudor.ambarus@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1746531114; l=2250;
+ i=tudor.ambarus@linaro.org; s=20241212; h=from:subject:message-id;
+ bh=dZOxThEKY/19fDb1atsCAd4vX2SSIiVfbJuNFdfhc6g=;
+ b=zmVLAtKGrgYT4MKv8fchYAAkjBVI+UyBexEDHXyQc+1hENewYZaxjQ/O7Yyxoc9/n9JVBYPEH
+ CQGMUpu2v34AhJlKIfbHG/UUXKSDuWiMsqKYs7NhYIRppYDE2xyBeFm
+X-Developer-Key: i=tudor.ambarus@linaro.org; a=ed25519;
+ pk=uQzE0NXo3dIjeowMTOPCpIiPHEz12IA/MbyzrZVh9WI=
 
-"Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com> writes:
+The blammed commit copied to argv the size of the reallocated argv,
+instead of the size of the old_argv, thus reading and copying from
+past the old_argv allocated memory.
 
-> On Mon, May 5, 2025 at 9:51=E2=80=AFAM Andreas Hindborg <a.hindborg@kerne=
-l.org> wrote:
->>
->> So I was thinking that because I am initializing a static with a let
->> statement, it would run in const context. But I see that it is not
->> actually guaranteed.
->
-> No, that is actually guaranteed, i.e. when initializing a static. But
-> you aren't initializing a static here, no? Which static are you
-> referring to? If you were, then the "normal" `assert!` would work,
-> because it would be a const context.
->
-> The `add` calls I see are just in the `let` statement, not
-> initializing any static:
->
->             {
->                 const N: usize =3D 0usize;
->                 unsafe { CONFIGURATION_ATTRS.add::<N, 0,
-> _>(&CONFIGURATION_MESSAGE_ATTR) };
->             }
->
-> So it also means this comment is wrong:
->
-> +        // SAFETY: This function is only called through the `configfs_at=
-trs`
-> +        // macro. This ensures that we are evaluating the function in co=
-nst
-> +        // context when initializing a static. As such, the reference cr=
-eated
-> +        // below will be exclusive.
->
-> Please double-check all this... :)
+Following BUG_ON was hit:
+[    3.038929][    T1] kernel BUG at lib/string_helpers.c:1040!
+[    3.039147][    T1] Internal error: Oops - BUG: 00000000f2000800 [#1]  SMP
+...
+[    3.056489][    T1] Call trace:
+[    3.056591][    T1]  __fortify_panic+0x10/0x18 (P)
+[    3.056773][    T1]  dm_split_args+0x20c/0x210
+[    3.056942][    T1]  dm_table_add_target+0x13c/0x360
+[    3.057132][    T1]  table_load+0x110/0x3ac
+[    3.057292][    T1]  dm_ctl_ioctl+0x424/0x56c
+[    3.057457][    T1]  __arm64_sys_ioctl+0xa8/0xec
+[    3.057634][    T1]  invoke_syscall+0x58/0x10c
+[    3.057804][    T1]  el0_svc_common+0xa8/0xdc
+[    3.057970][    T1]  do_el0_svc+0x1c/0x28
+[    3.058123][    T1]  el0_svc+0x50/0xac
+[    3.058266][    T1]  el0t_64_sync_handler+0x60/0xc4
+[    3.058452][    T1]  el0t_64_sync+0x1b0/0x1b4
+[    3.058620][    T1] Code: f800865e a9bf7bfd 910003fd 941f48aa (d4210000)
+[    3.058897][    T1] ---[ end trace 0000000000000000 ]---
+[    3.059083][    T1] Kernel panic - not syncing: Oops - BUG: Fatal exception
 
-Oops.
+Fix it by copying the size of src, and not the size of dst, as it was.
 
->
->> Right. Which is why I opted for `build_error`. But with the `const`
->> block solution you suggested is better.
->
-> I thought you opted for that because you thought the `assert!` would
-> only work if not refactored. What I tried to point out was that the
-> `assert!` wouldn't have worked even before the refactoring.
+Fixes: 5a2a6c428190 ("dm: always update the array size in realloc_argv on success")
+Cc: stable@vger.kernel.org
+Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+---
+ drivers/md/dm-table.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I made a mistake in thinking this was in const context. I'll see if I
-can fix that.
+diff --git a/drivers/md/dm-table.c b/drivers/md/dm-table.c
+index 9e175c5e0634b49b990436898f63c2b1e696febb..6dae73ee49dbb36d89341ff09556876d0973c4ff 100644
+--- a/drivers/md/dm-table.c
++++ b/drivers/md/dm-table.c
+@@ -524,9 +524,9 @@ static char **realloc_argv(unsigned int *size, char **old_argv)
+ 	}
+ 	argv = kmalloc_array(new_size, sizeof(*argv), gfp);
+ 	if (argv) {
+-		*size = new_size;
+ 		if (old_argv)
+ 			memcpy(argv, old_argv, *size * sizeof(*argv));
++		*size = new_size;
+ 	}
+ 
+ 	kfree(old_argv);
 
-
+---
+base-commit: 92a09c47464d040866cf2b4cd052bc60555185fb
+change-id: 20250506-dm-past-array-boundaries-1fe2f5a1030f
 
 Best regards,
-Andreas Hindborg
-
+-- 
+Tudor Ambarus <tudor.ambarus@linaro.org>
 
