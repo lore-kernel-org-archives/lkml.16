@@ -1,187 +1,78 @@
-Received: from mx.denx.de (mx.denx.de [89.58.32.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F68B278E49;
-	Tue,  6 May 2025 11:04:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DCA71474B8
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 11:05:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746529494; cv=none; b=bzk2rD0sPBVUhzHwwiRVDsYCQagt1PU9EhjQdmF9SqOy6KmvRiVS+o+GLq05fXnyqfFtymQioMczbSJylkvJlFi+R2uP6AYIadk69IXprnP0Z1/kGbuE9z9oGAmwF9a1TJ6vCB6+DqtXqb/QewW2g9j5kV5Bqsk35cMyKMRGwJg=
+	t=1746529543; cv=none; b=WENkPPry9v0LPkwIPj6UrInglq8+NoxYsHhpIchiEIFw6a1xYQddbvqdZj+/JYQ1ySy6lea7XiPaYFT6c1Gw2YqWJcvlowpmABIhS1siokyObaGBb0bC22E+M8cfF+p06wTAxWeGIiOD+CDCcc05X1gbryvQpo77xkpPxffMUAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746529494; c=relaxed/simple;
-	bh=pjPSBZN/Mfk5jqUTuqEyMQU0j98SWAtl2iKUPD9duZw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aGby3zc6+oXRBc84I6v5SFScXIwZYNs3vtZ1ptZ89M0zykPdaek0DmxLQyYnKnpUr02J2KeFEtgB8gjcPdlln1a6IExyJaCUBvlFH0d1cASxOduybZO0Z+xCGhLEtCsgaoJdIXScnsCcQfKU+dLV3VypdWxVXmTfi8JfLU1uMO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=EAAN14My; arc=none smtp.client-ip=89.58.32.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="EAAN14My"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id A24331048C2EF;
-	Tue,  6 May 2025 13:04:39 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1746529483; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 in-reply-to:references; bh=xoo6sbESeyMu4C1VAqN+/dYdjb4WLdeB4YQBhu0GSeE=;
-	b=EAAN14MyA20btevFZPvu6BMNnnlFaTyQAnW6z0GPRjzZk3Yi2rmN7FPCyS3PA2YvBQj3sl
-	FNhgRG9NVNpLKa+zBxYxtk+GbhVTaeScgVPKvzaRoM8/lYbWfq48kxtIijn92+jzPIPQiw
-	l8Ba8h9SsikRqx7ilXFTkrWNwrxmQkgXJJsTvkqt8iXiBEjUebFgo8lE6dqSf0EmESvUbF
-	cuOoIr0GteTs8hpT8shefM/KbYS8NHPRacoqlZW7Td93crdUK2o4dyjmO/6NJqB3PzqjYJ
-	3g0flqLo00vwJmk+yY/YB+O00BGgPi1JAIzGH04jBGJF+8NKlC7l/yjPPvkNCA==
-Date: Tue, 6 May 2025 13:04:38 +0200
-From: Lukasz Majewski <lukma@denx.de>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, davem@davemloft.net, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
- <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Richard Cochran
- <richardcochran@gmail.com>, netdev@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, Stefan Wahren
- <wahrenst@gmx.net>, Simon Horman <horms@kernel.org>, Andrew Lunn
- <andrew@lunn.ch>
-Subject: Re: [net-next v11 4/7] net: mtip: The L2 switch driver for imx287
-Message-ID: <20250506130438.149c137e@wsk>
-In-Reply-To: <61ebe754-d895-47cb-a4b2-bb2650b9ff7b@redhat.com>
-References: <20250504145538.3881294-1-lukma@denx.de>
-	<20250504145538.3881294-5-lukma@denx.de>
-	<61ebe754-d895-47cb-a4b2-bb2650b9ff7b@redhat.com>
-Organization: denx.de
-X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1746529543; c=relaxed/simple;
+	bh=C6D2Qs77TfFaEEkGAb3RmEHmCZ2E02PUE4L+fd6eAak=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QNnrIcRVZel842XYztDbYLQlOSL6roMuOZJUk90UVMffiGehGi7YyBdrg34hcBA0JjHdHTg/lVOUgM+d5fz371r66AbzxKXg2Ak4AvyJYinyeOQBQAzRyBCxfDGo71RIJ+1mMw/WuaFenF231VdSVcXxuJE7GGyAh3TVH5DV9wo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B0B7A113E;
+	Tue,  6 May 2025 04:05:31 -0700 (PDT)
+Received: from ewhatever.cambridge.arm.com (ewhatever.cambridge.arm.com [10.1.197.1])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 363B33F58B;
+	Tue,  6 May 2025 04:05:40 -0700 (PDT)
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+To: Mike Leach <mike.leach@linaro.org>,
+	James Clark <james.clark@linaro.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Yeoreum Yun <yeoreum.yun@arm.com>,
+	coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Leo Yan <leo.yan@arm.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: Re: [PATCH] coresight: replicator: Fix panic for clearing claim tag
+Date: Tue,  6 May 2025 12:05:26 +0100
+Message-ID: <174652950905.248615.15182322345223514612.b4-ty@arm.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250502111108.2726217-1-leo.yan@arm.com>
+References: <20250502111108.2726217-1-leo.yan@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/jzWygP56FGIH1XjAZKtG7zv";
- protocol="application/pgp-signature"; micalg=pgp-sha512
-X-Last-TLS-Session-Version: TLSv1.3
-
---Sig_/jzWygP56FGIH1XjAZKtG7zv
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi Paolo,
-
-> On 5/4/25 4:55 PM, Lukasz Majewski wrote:
-> > +		/* This does 16 byte alignment, exactly what we
-> > need.
-> > +		 * The packet length includes FCS, but we don't
-> > want to
-> > +		 * include that when passing upstream as it messes
-> > up
-> > +		 * bridging applications.
-> > +		 */
-> > +		skb =3D netdev_alloc_skb(pndev, pkt_len +
-> > NET_IP_ALIGN);
-> > +		if (unlikely(!skb)) {
-> > +			dev_dbg(&fep->pdev->dev,
-> > +				"%s: Memory squeeze, dropping
-> > packet.\n",
-> > +				pndev->name);
-> > +			pndev->stats.rx_dropped++;
-> > +			goto err_mem;
-> > +		} else {
-> > +			skb_reserve(skb, NET_IP_ALIGN);
-> > +			skb_put(skb, pkt_len);      /* Make room */
-> > +			skb_copy_to_linear_data(skb, data,
-> > pkt_len);
-> > +			skb->protocol =3D eth_type_trans(skb, pndev);
-> > +			napi_gro_receive(&fep->napi, skb);
-> > +		}
-> > +
-> > +		bdp->cbd_bufaddr =3D dma_map_single(&fep->pdev->dev,
-> > data,
-> > +						  bdp->cbd_datlen,
-> > +						  DMA_FROM_DEVICE);
-> > +		if (unlikely(dma_mapping_error(&fep->pdev->dev,
-> > +					       bdp->cbd_bufaddr)))
-> > {
-> > +			dev_err(&fep->pdev->dev,
-> > +				"Failed to map descriptor rx
-> > buffer\n");
-> > +			pndev->stats.rx_errors++;
-> > +			pndev->stats.rx_dropped++;
-> > +			dev_kfree_skb_any(skb);
-> > +			goto err_mem;
-> > +		} =20
->=20
-> This is doing the mapping and ev. dropping the skb _after_ pushing the
-> skb up the stack, you must attempt the mapping first.
->=20
-> > +static void mtip_free_buffers(struct net_device *dev)
-> > +{
-> > +	struct mtip_ndev_priv *priv =3D netdev_priv(dev);
-> > +	struct switch_enet_private *fep =3D priv->fep;
-> > +	struct sk_buff *skb;
-> > +	struct cbd_t *bdp;
-> > +	int i;
-> > +
-> > +	bdp =3D fep->rx_bd_base;
-> > +	for (i =3D 0; i < RX_RING_SIZE; i++) {
-> > +		skb =3D fep->rx_skbuff[i];
-> > +
-> > +		if (bdp->cbd_bufaddr)
-> > +			dma_unmap_single(&fep->pdev->dev,
-> > bdp->cbd_bufaddr,
-> > +					 MTIP_SWITCH_RX_FRSIZE,
-> > +					 DMA_FROM_DEVICE);
-> > +		if (skb)
-> > +			dev_kfree_skb(skb); =20
->=20
-> I suspect that on error paths mtip_free_buffers() can be invoked
-> multiple consecutive times with any successful allocation in between:
-> skb will be freed twice. Likely you need to clear fep->rx_skbuff[i]
-> here.
-
-I don't know what I shall say now.... really...=20
-
->=20
-> Side note: this patch is way too big for a proper review: you need to
-> break it in multiple smaller ones, introducing the basic features
-> separately.
->=20
-
-This code is a basic version of the driver as discussed on March with
-the community (Andrew).
-
-It provides the basic functionality - like separate ports support and
-then, if required, configures the IP block to perform L2 switching in
-HW.=20
-
-> Cheers,
->=20
-> Paolo
->=20
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
 
+On Fri, 02 May 2025 12:11:08 +0100, Leo Yan wrote:
+> On platforms with a static replicator, a kernel panic occurs during boot:
+> 
+>   [    4.999406]  replicator_probe+0x1f8/0x360
+>   [    5.003455]  replicator_platform_probe+0x64/0xd8
+>   [    5.008115]  platform_probe+0x70/0xf0
+>   [    5.011812]  really_probe+0xc4/0x2a8
+>   [    5.015417]  __driver_probe_device+0x80/0x140
+>   [    5.019813]  driver_probe_device+0xe4/0x170
+>   [    5.024032]  __driver_attach+0x9c/0x1b0
+>   [    5.027900]  bus_for_each_dev+0x7c/0xe8
+>   [    5.031769]  driver_attach+0x2c/0x40
+>   [    5.035373]  bus_add_driver+0xec/0x218
+>   [    5.039154]  driver_register+0x68/0x138
+>   [    5.043023]  __platform_driver_register+0x2c/0x40
+>   [    5.047771]  coresight_init_driver+0x4c/0xe0
+>   [    5.052079]  replicator_init+0x30/0x48
+>   [    5.055865]  do_one_initcall+0x4c/0x280
+>   [    5.059736]  kernel_init_freeable+0x1ec/0x3c8
+>   [    5.064134]  kernel_init+0x28/0x1f0
+>   [    5.067655]  ret_from_fork+0x10/0x20
+> 
+> [...]
 
+Applied, thanks!
+
+[1/1] coresight: replicator: Fix panic for clearing claim tag
+      https://git.kernel.org/coresight/c/f42df204
 
 Best regards,
-
-Lukasz Majewski
-
---
-
-DENX Software Engineering GmbH,      Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
-
---Sig_/jzWygP56FGIH1XjAZKtG7zv
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAmgZ7MYACgkQAR8vZIA0
-zr1SGgf/X4lTSbA5wV/GRygSxbZlIT0eA/yxbGzZMIHf7CmhmX20nnuSJN6B51s2
-pqBZzQ6lcB8krbIdDTFJ1/W4xeUTeW5SZSI2UCXt6IlimlLwN5NkV3R+QBKEYOuK
-bjHWjaafO8fSZtmvX67xuiSmBTtKDjLKGY95M0dIp+vahKvru1Fm/mwZL56xHQzR
-yBrMeVkjFTttMxkIHdbxXTL4LyCefczvGGIiEHMBb/o0UTZzk2bnPeUKVW23/zd+
-gUstiifHLosnY9DB/iIhR9kNCwHQGOwpp5VYWKSzG8fdU/ttDgmECQuAqMPncx0T
-KEKJrQEQUIUNYoZ/4C1nSAM0N6Oh3w==
-=NnK5
------END PGP SIGNATURE-----
-
---Sig_/jzWygP56FGIH1XjAZKtG7zv--
+-- 
+Suzuki K Poulose <suzuki.poulose@arm.com>
