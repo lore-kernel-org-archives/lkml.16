@@ -1,25 +1,64 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF6A2191F8F
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 09:17:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 599AC191F8F;
+	Tue,  6 May 2025 09:17:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746523032; cv=none; b=AfRmE04IGLbmcCNMtEA4yrA0KM12rRJEzNj8zTWQ37jAJRJAElNShf4VL2/WT9LxfklNpumoI2tkbF+oQmDOrU/YT2qvhNyeHv9t+JPYtmUAda0Yo6q7nLhocu5ImFiKF4nsB7YHWlboSCrYKSiSRXuOn7xm7DmUuxusLQxObAg=
+	t=1746523036; cv=none; b=rHMaMsqIFjT2d8ARbi6wZfGxzNx8On+yXMAuCiQhjbUvS5cjQ0EdOZKb79+/UzaVDbZ+5lW4Wpvj3Jgj9tgDvznyiyaKwLHQZgYEHatx9fRXk5QQYBVZB0DDRMnNQwcpyjmKXLfTksfbFEq66rpA2SQnguwhvLz2TIJ4a8aEImU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746523032; c=relaxed/simple;
-	bh=Y+nlUMn0voWnZlcEBa3YawHwYHEvsotUvnhK/dUzArA=;
+	s=arc-20240116; t=1746523036; c=relaxed/simple;
+	bh=ukJB50c9mMYqzCAtA+XXO+NPEMa+n2JUO6FB0u6yFpQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nwMB4jugNZbgpSqBbk+VEpA9MYNsJjkOCVABgTpC1+f1M4WtoF/9GKoktpuaiAkX95OWK6g1EbnCbtNksgUJ8YZDuHmWU/i/ZKPJm+CVA0uYlGZQuwuJ6qLdDUYLyPpfP+MMjXJC+zbXKb7Kvz1WOVegU8HFZd0dOQ0B0IGcC3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5216E113E;
-	Tue,  6 May 2025 02:17:00 -0700 (PDT)
-Received: from [10.162.43.13] (K4MQJ0H1H2.blr.arm.com [10.162.43.13])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CF7EB3F5A1;
-	Tue,  6 May 2025 02:17:02 -0700 (PDT)
-Message-ID: <0857761c-bb4c-4ea5-a96a-90d555673527@arm.com>
-Date: Tue, 6 May 2025 14:46:59 +0530
+	 In-Reply-To:Content-Type; b=C69aJvMhhtqrK4h8QzL3IsUWScL3xBw8C+zsIz+c4CKVKHuYIovYVzi95BbCY6yoPnaM+n27hHO1PxHyTwHWbNnSgHisrS/siSRxsfbzZzHbBV5z2fJ3gvtlMX+EF0TnbJRKnOy93pQ1a3CWl7vFL3Nc3gfrB2Rv//CS8mNxPM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MTILdd0J; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MTILdd0J"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-549b116321aso6646379e87.3;
+        Tue, 06 May 2025 02:17:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746523032; x=1747127832; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=brki9Lw3Xd52LJhWPJClU7ze3qNpBlrJZZan0H+h80M=;
+        b=MTILdd0JCYE1FzEF7PRDSoKlutvYCCV6eFk+xnt2zh1kcaCSbxStpU7qMk+ridTOTG
+         9ytc525aoY8GMBv6owxJ+mhbtBsm354H91iAZMj/Dt4fXuyr4BcdMza+fBragYxrsuh/
+         sVa+scjkpYeYMxolW7F3eNgS2KwE4ncO0ar2Ndx6lxnM/2XzkJn4aRs8Fx0rqB6zxifY
+         6Nt33BP9o9WhM62DZ2+NElgf2OoOi/2VytYlZtHXRNNImvahBZebEVrlniRqlmDBrkNZ
+         Pee+NeeyX/bsL+SsUDDRkoGsOpew3mdUB0kbjXoDVPag6H7jDKthr60HGatlJtKgDeSm
+         enHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746523032; x=1747127832;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=brki9Lw3Xd52LJhWPJClU7ze3qNpBlrJZZan0H+h80M=;
+        b=pZz9bFgSIqt6P/k0BDjY6L4UC70DHrdEYLEfF+Os79R8WZ1Z5XV7QFTW4RlT9hrgkg
+         keQFEkOkecwTXo+nnZTMXt0ZZWtqqDEXUWbKLjHMJM0zJpcqCMZxfhSrv7vkpt1g305r
+         0vWJcSMNs+kN3VsqENtDAaOR2HMsm8KGa4EnGW6RW2U8Xrg12S3gdl++lmz1CUkqA8b5
+         tvjgO2ObU+/LqHknUKltOAGI5hY2YF5LYX+WXn2P4b/JJxEBG8zkJk6onJ23V5YpIUMG
+         6d1JUUoExNDqJNCKkyoGPpR1GAgCuKkjLTCXM488pRNqL2B0MQ41DrcXqw7yCkwljRZg
+         W9NQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUYdrGS2DeS+jEQZahGxU4+2iVachNZsdyG3Tb6Mt0zzrDfqQjxtmgXa3/YODxlTjmQZMQ0oshIU3880fOr@vger.kernel.org, AJvYcCWKjpnu4C2EJVu8Fr0o3ZprK2y5JLjds9Ey3dXbuteX19qTVrpk6dowNr5ugGO0crqfNDmiJ29BrwsZ@vger.kernel.org, AJvYcCXonytdjF1Ie+y9NPwFpRRf4U9knd2yhTybqwWhAKWRKWiB57GaKTRnxca+vAnAFDuG9AkstawVAnW2@vger.kernel.org
+X-Gm-Message-State: AOJu0YziTAV45x3eiT+eAIXHruzoXRCpTyFP70k4/UFdkkDBM35fGNWl
+	qGb+uXACJJs6KE+R246APffxWw/xCeARxdxTuXKrEVjBsRS3t4fP
+X-Gm-Gg: ASbGnct3J/YP5nI0c7uS/R2iHjIH+3Wms/seiRD82xQMhUcSeSHxSlaY5j9p1vpAMO9
+	5takw9ueQn0nrQgKtEANmCCwkRU3jnu/vkrCAQNJlh/cFgCR13Ia1YdtlNmTnzaQ75Do3Kej/qU
+	IFO82QcnqcEDes43CDEzr9yQeaPmOxN79fo1KKccmVLbMNJ5lo1PF9mwgal//FRDAgdsxcSgF3p
+	/U6/EcFZeVL5jDlC9XyngfQFaJzkZaNWZHq1MGuRbWOoFCo6rB2CoVyMGRc1WStOXN287qVbjuV
+	MuJ8M5Tth2z07YOU8IDVknlmKXvTrDeg6dSwUxwOBFVvl5xB75I4LQ==
+X-Google-Smtp-Source: AGHT+IFjiK3Xjle40kxRVFcwAY/YmTxjadceqPBaXXNCvckC71+6i2aXaHoevB+uXRpjTwevpD+Lyg==
+X-Received: by 2002:a05:6512:31cb:b0:54e:819a:8345 with SMTP id 2adb3069b0e04-54fb4a62918mr823669e87.42.1746523032107;
+        Tue, 06 May 2025 02:17:12 -0700 (PDT)
+Received: from [172.16.183.207] ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ea94c55ddsm1978017e87.91.2025.05.06.02.17.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 06 May 2025 02:17:11 -0700 (PDT)
+Message-ID: <f3abfc37-50cc-4bdd-bb19-0f0ece4466eb@gmail.com>
+Date: Tue, 6 May 2025 12:17:10 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,85 +66,46 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 6/7] mm: Batch around can_change_pte_writable()
-To: David Hildenbrand <david@redhat.com>, akpm@linux-foundation.org
-Cc: ryan.roberts@arm.com, willy@infradead.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will@kernel.org,
- Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, vbabka@suse.cz,
- jannh@google.com, anshuman.khandual@arm.com, peterx@redhat.com,
- joey.gouly@arm.com, ioworker0@gmail.com, baohua@kernel.org,
- kevin.brodsky@arm.com, quic_zhenhuah@quicinc.com,
- christophe.leroy@csgroup.eu, yangyicong@hisilicon.com,
- linux-arm-kernel@lists.infradead.org, namit@vmware.com, hughd@google.com,
- yang@os.amperecomputing.com, ziy@nvidia.com
-References: <20250429052336.18912-1-dev.jain@arm.com>
- <20250429052336.18912-7-dev.jain@arm.com>
- <25dcf969-e479-4d4a-a95c-0e83706af99e@redhat.com>
- <9a770aec-a020-4199-a53e-eddda657999d@redhat.com>
-Content-Language: en-US
-From: Dev Jain <dev.jain@arm.com>
-In-Reply-To: <9a770aec-a020-4199-a53e-eddda657999d@redhat.com>
+Subject: Re: [PATCH 2/3] iio: light: add support for veml6046x00 RGBIR color
+ sensor
+To: Andreas Klinger <ak@it-klinger.de>
+Cc: Jonathan Cameron <jic23@kernel.org>, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, lars@metafoo.de, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ javier.carrasco.cruz@gmail.com, subhajit.ghosh@tweaklogic.com,
+ muditsharma.info@gmail.com, arthur.becker@sentec.com,
+ ivan.orlov0322@gmail.com
+References: <20250316113131.62884-1-ak@it-klinger.de>
+ <20250316113131.62884-3-ak@it-klinger.de>
+ <20250317115005.72a539a0@jic23-huawei> <Z_I-qwzUrTNz1DZp@mail.your-server.de>
+ <20250406120825.41b2575c@jic23-huawei>
+ <ecb2844c-feb5-47d4-b4db-12171380a9cb@gmail.com>
+ <aBkNHSxU4T8j4oMT@mail.your-server.de>
+ <181472f0-5c00-4e1d-8f00-1d84b5c54685@gmail.com>
+ <aBnINvJ0aS69kUI8@mail.your-server.de>
+Content-Language: en-US, en-AU, en-GB, en-BW
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+In-Reply-To: <aBnINvJ0aS69kUI8@mail.your-server.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
+On 06/05/2025 11:28, Andreas Klinger wrote:
+> Hi Matti,
+> 
+> Matti Vaittinen <mazziesaccount@gmail.com> schrieb am Di, 06. Mai 09:03:
+>> On 05/05/2025 22:10, Andreas Klinger wrote:
 
+>> Couldn't you still have used two different set of gain tables (one for each
+>> PD size) if you chose to use the GTS?
+> 
+> Of course there are solutions for it and i was about to finish one with GTS as i
+> saw that the driver will get simpler without. As i cannot use the nice features
+> of GTS it turns out to use only the data structures and functions on it. But the
+> data structures don't fit exactly to this sensor as we have gain and PD in two
+> different regfields. So another table to translate the scale to the regfields is
+> needed anyway.
 
-On 29/04/25 2:57 pm, David Hildenbrand wrote:
-> On 29.04.25 11:19, David Hildenbrand wrote:
->>
->>>    #include "internal.h"
->>> -bool can_change_pte_writable(struct vm_area_struct *vma, unsigned 
->>> long addr,
->>> -                 pte_t pte)
->>> +bool can_change_ptes_writable(struct vm_area_struct *vma, unsigned 
->>> long addr,
->>> +                  pte_t pte, struct folio *folio, unsigned int nr)
->>>    {
->>>        struct page *page;
->>> @@ -67,8 +67,9 @@ bool can_change_pte_writable(struct vm_area_struct 
->>> *vma, unsigned long addr,
->>>             * write-fault handler similarly would map them writable 
->>> without
->>>             * any additional checks while holding the PT lock.
->>>             */
->>> -        page = vm_normal_page(vma, addr, pte);
->>> -        return page && PageAnon(page) && PageAnonExclusive(page);
->>> +        if (!folio)
->>> +            folio = vm_normal_folio(vma, addr, pte);
->>> +        return folio_test_anon(folio) && ! 
->>> folio_maybe_mapped_shared(folio);
->>
->> Oh no, now I spot it. That is horribly wrong.
->>
->> Please understand first what you are doing.
-> 
-> Also, would expect that the cow.c selftest would catch that:
-> 
-> "vmsplice() + unmap in child with mprotect() optimization"
-> 
-> After fork() we have a R/O PTE in the parent. Our child then uses 
-> vmsplice() and unmaps the R/O PTE, meaning it is only left mapped by the 
-> parent.
-> 
-> ret = mprotect(mem, size, PROT_READ);
-> ret |= mprotect(mem, size, PROT_READ|PROT_WRITE);
-> 
-> should turn the PTE writable, although it shouldn't.
-> 
-> If that test case does not detect the issue you're introducing, we 
-> should look into adding a test case that detects it.
-> 
+Ah. Understood. Thanks for taking the time to explain :)
 
-Hi David, I am afraid I don't understand my mistake :( PageAnon(page) 
-boils down to folio_test_anon(folio). Next we want to determine whether 
-the page underlying a PTE is mapped exclusively or not. I approximate 
-this by folio_maybe_mapped_shared -> if the folio => all pages are 
-mapped exclusively, then I convert the entire batch to writable. If one 
-of the pages is mapped shared, then I do not convert the batch to 
-writable, thus missing out on the optimization. As far as I understand,
-the test failure points out exactly this right?
-
-Do you suggest an alternate way? My initial approach was to add a new 
-flag to folio_pte_batch: FPB_IGNORE_ANON_EXCLUSIVE, but from an API 
-design PoV Ryan pointed out that that looked bad.
-
+Yours,
+	-- Matti
