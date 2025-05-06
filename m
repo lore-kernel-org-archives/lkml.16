@@ -1,167 +1,81 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AB4622DFB1
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 11:52:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FC1027BF63;
+	Tue,  6 May 2025 11:53:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746532377; cv=none; b=ohopMDHumkvvqhipKLGjgMpomhM+GOhno5LaIDK/Zk4yHE9IiUsPP2ulVVCXFtGPRbidMSyE66zEEe7/ZHTWWSO8IA2B9N6rowqX3KF9c+r4dz/+v6iCRNu5ctxb3GJuZfep/sYqYUQxpVQBi2x2cfxi7fOIw5dtCUvRoQjohK0=
+	t=1746532391; cv=none; b=mS5SM7YMM9jm+f2dKP+3jHUEonu47fcxioZkIuZ3r09FBi5jkGR5CpF7xIeGRkMWV3/Cjf3rL1y0oNhLmCaddYS9UpA05TCOOsD1RhfC55w/vQLsyWvkxRkLwo7YsdmhyJTry8NTlF+Pi3SRxGFzwMDIdi2G5FOVRX2cmwHa8NE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746532377; c=relaxed/simple;
-	bh=4Dj8J1B6emEgedZ+BggE2aDkhwBb3aam1vzdhifBmI8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Y7t5MWRCgeerS6eXEfiPPoFecHEZc3LUt3EHPZ9czj7sCNu0jllOGFMQiS9jRZWweovCGr5lriIk6tB4BK1uslWr6li/mMHnlGbFSpclpun9A+hdfspbRkl51RMWZSadP2U46J70P4ML43Fzqz50j/+Fz0FDNtEiDO29Zj9Jrkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 512CF113E;
-	Tue,  6 May 2025 04:52:43 -0700 (PDT)
-Received: from [10.163.80.199] (unknown [10.163.80.199])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A5A223F58B;
-	Tue,  6 May 2025 04:52:42 -0700 (PDT)
-Message-ID: <060ce34c-6729-4128-9190-264f7684e299@arm.com>
-Date: Tue, 6 May 2025 17:22:39 +0530
+	s=arc-20240116; t=1746532391; c=relaxed/simple;
+	bh=a3ps9uCYt23Egn1BlGHFcrAxg4jOYy6virWRYklcfrc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KeTYsK7rMVap7pKbgNtl2gVLjXMv9gh/UHniWPynz/sBPkQTvAlKOaX8SaWGskxHTGdPuGd+p1IJzqAJDb7L7+TBe4SymEzV4vwYoqGEl00Hn8uGpilXKiVy4iQUUQGZZO/mbAE35CC571DeD91TbVRyB1v86ZJYJtI/07wk14c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RwqOAx3B; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RwqOAx3B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDC98C4CEED;
+	Tue,  6 May 2025 11:53:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746532391;
+	bh=a3ps9uCYt23Egn1BlGHFcrAxg4jOYy6virWRYklcfrc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RwqOAx3BBIETT8Ay7yDxoU1f+sNu6c8B0bt77zhBlIe1XRoB/u7qHnx98F15Sfn/N
+	 ri1zYfndAg3iBJzliOElNc56M3pzPeZ3c5m1I72NrzqVcFeuGp3EW8z04lrKwreyjH
+	 AOZkZMjOHZZ1TelnFyJ/ah+tH1PKcqKnVL5jVilkrJ0lqcFPCC0T6JHf/vS6zu/Dwf
+	 HZovT6yWhClYxXeL6BVMqmH6ae+Im2GEHKddriOpmXKYWIIawwllxKWdHp/IPGWFJG
+	 7Di+n7q2DHODzEz4rfP04xGKMFSIBO81hP7PQlWXfCsNcAYOztRzfYbTibE8LbUzy0
+	 Zjuekwu9D8h1Q==
+Date: Tue, 6 May 2025 13:53:07 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
+To: "Yo-Jung (Leo) Lin" <leo.lin@canonical.com>
+Cc: Jean Delvare <jdelvare@suse.com>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, Guenter Roeck <linux@roeck-us.net>, 
+	"Chia-Lin Kao (AceLan)" <acelan.kao@canonical.com>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] i2c: i801: don't instantiate spd5118 under SPD
+ Write Disable
+Message-ID: <nfxz37zk2nnqmjwaychfvpl5y5f2stkean2oyxxbk3gzduqvcz@ons6jtbtotuf>
+References: <20250430-for-upstream-i801-spd5118-no-instantiate-v2-0-2f54d91ae2c7@canonical.com>
+ <20250430-for-upstream-i801-spd5118-no-instantiate-v2-2-2f54d91ae2c7@canonical.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] mm: Call pointers to ptes as ptep
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: akpm@linux-foundation.org, Liam.Howlett@oracle.com, vbabka@suse.cz,
- jannh@google.com, pfalcato@suse.de, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, david@redhat.com, peterx@redhat.com,
- ryan.roberts@arm.com, mingo@kernel.org, libang.li@antgroup.com,
- maobibo@loongson.cn, zhengqi.arch@bytedance.com, baohua@kernel.org,
- anshuman.khandual@arm.com, willy@infradead.org, ioworker0@gmail.com,
- yang@os.amperecomputing.com
-References: <20250506050056.59250-1-dev.jain@arm.com>
- <20250506050056.59250-2-dev.jain@arm.com>
- <5c20ada8-4863-4a33-bb1d-3b5695d0bf66@lucifer.local>
-Content-Language: en-US
-From: Dev Jain <dev.jain@arm.com>
-In-Reply-To: <5c20ada8-4863-4a33-bb1d-3b5695d0bf66@lucifer.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250430-for-upstream-i801-spd5118-no-instantiate-v2-2-2f54d91ae2c7@canonical.com>
 
+Hi Yo-Jung,
 
+...
 
-On 06/05/25 4:22 pm, Lorenzo Stoakes wrote:
-> On Tue, May 06, 2025 at 10:30:54AM +0530, Dev Jain wrote:
->> Avoid confusion between pte_t* and pte_t data types by appending pointer
->> type variables by p. No functional change.
-> 
-> NIT: 'appending'->'suffixing' and 'by p' -> with p'.
+> diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
+> index a7f89946dad4..88474409e82d 100644
+> --- a/drivers/i2c/busses/i2c-i801.c
+> +++ b/drivers/i2c/busses/i2c-i801.c
+> @@ -1177,10 +1177,12 @@ static void i801_probe_optional_targets(struct i801_priv *priv)
+>  		dmi_walk(dmi_check_onboard_devices, &priv->adapter);
+>  
+>  	/* Instantiate SPD EEPROMs unless the SMBus is multiplexed */
+> -#ifdef CONFIG_I2C_I801_MUX
+> -	if (!priv->mux_pdev)
+> -#endif
+> -		i2c_register_spd_write_enable(&priv->adapter);
+> +	if (!IS_ENABLED(CONFIG_I2C_I801_MUX) || !priv->mux_pdev) {
 
-Thanks.
+this if is not really working and it has been reported the
+following compile error:
 
-> 
->>
->> Signed-off-by: Dev Jain <dev.jain@arm.com>
-> 
-> This looks generally fine, could you fix the nit below however... sorry to
-> be a pain!
-> 
-> Thanks!
-> 
->> ---
->>   mm/mremap.c | 28 ++++++++++++++--------------
->>   1 file changed, 14 insertions(+), 14 deletions(-)
->>
->> diff --git a/mm/mremap.c b/mm/mremap.c
->> index 7db9da609c84..1a08a7c3b92f 100644
->> --- a/mm/mremap.c
->> +++ b/mm/mremap.c
->> @@ -176,7 +176,7 @@ static int move_ptes(struct pagetable_move_control *pmc,
->>   	struct vm_area_struct *vma = pmc->old;
->>   	bool need_clear_uffd_wp = vma_has_uffd_without_event_remap(vma);
->>   	struct mm_struct *mm = vma->vm_mm;
->> -	pte_t *old_pte, *new_pte, pte;
->> +	pte_t *old_ptep, *new_ptep, pte;
-> 
-> While we're at it, can we please move the pte decl to a new line? Mixing
-> pointers and non-pointers is not great (I refactored it but mremap still
-> has a bunch of less-than-ideal stuff in it :)
+drivers/i2c/busses/i2c-i801.c: In function 'i801_probe_optional_targets':
+drivers/i2c/busses/i2c-i801.c:1180:54: error: 'struct i801_priv' has no member named 'mux_pdev'
+ 1180 |         if (!IS_ENABLED(CONFIG_I2C_I801_MUX) || !priv->mux_pdev) {
+      |
 
-Sure.
+Therefore I'm going to revert just this patch 2/2. Please do
+resubmit it and please test it properly with the
+CONFIG_I2C_I801_MUX enabled and disabled.
 
-> 
->>   	pmd_t dummy_pmdval;
->>   	spinlock_t *old_ptl, *new_ptl;
->>   	bool force_flush = false;
->> @@ -211,8 +211,8 @@ static int move_ptes(struct pagetable_move_control *pmc,
->>   	 * We don't have to worry about the ordering of src and dst
->>   	 * pte locks because exclusive mmap_lock prevents deadlock.
->>   	 */
->> -	old_pte = pte_offset_map_lock(mm, old_pmd, old_addr, &old_ptl);
->> -	if (!old_pte) {
->> +	old_ptep = pte_offset_map_lock(mm, old_pmd, old_addr, &old_ptl);
->> +	if (!old_ptep) {
->>   		err = -EAGAIN;
->>   		goto out;
->>   	}
->> @@ -223,10 +223,10 @@ static int move_ptes(struct pagetable_move_control *pmc,
->>   	 * mmap_lock, so this new_pte page is stable, so there is no need to get
->>   	 * pmdval and do pmd_same() check.
->>   	 */
->> -	new_pte = pte_offset_map_rw_nolock(mm, new_pmd, new_addr, &dummy_pmdval,
->> +	new_ptep = pte_offset_map_rw_nolock(mm, new_pmd, new_addr, &dummy_pmdval,
->>   					   &new_ptl);
->> -	if (!new_pte) {
->> -		pte_unmap_unlock(old_pte, old_ptl);
->> +	if (!new_ptep) {
->> +		pte_unmap_unlock(old_ptep, old_ptl);
->>   		err = -EAGAIN;
->>   		goto out;
->>   	}
->> @@ -235,12 +235,12 @@ static int move_ptes(struct pagetable_move_control *pmc,
->>   	flush_tlb_batched_pending(vma->vm_mm);
->>   	arch_enter_lazy_mmu_mode();
->>
->> -	for (; old_addr < old_end; old_pte++, old_addr += PAGE_SIZE,
->> -				   new_pte++, new_addr += PAGE_SIZE) {
->> -		if (pte_none(ptep_get(old_pte)))
->> +	for (; old_addr < old_end; old_ptep++, old_addr += PAGE_SIZE,
->> +				   new_ptep++, new_addr += PAGE_SIZE) {
->> +		if (pte_none(ptep_get(old_ptep)))
->>   			continue;
->>
->> -		pte = ptep_get_and_clear(mm, old_addr, old_pte);
->> +		pte = ptep_get_and_clear(mm, old_addr, old_ptep);
->>   		/*
->>   		 * If we are remapping a valid PTE, make sure
->>   		 * to flush TLB before we drop the PTL for the
->> @@ -258,7 +258,7 @@ static int move_ptes(struct pagetable_move_control *pmc,
->>   		pte = move_soft_dirty_pte(pte);
->>
->>   		if (need_clear_uffd_wp && pte_marker_uffd_wp(pte))
->> -			pte_clear(mm, new_addr, new_pte);
->> +			pte_clear(mm, new_addr, new_ptep);
->>   		else {
->>   			if (need_clear_uffd_wp) {
->>   				if (pte_present(pte))
->> @@ -266,7 +266,7 @@ static int move_ptes(struct pagetable_move_control *pmc,
->>   				else if (is_swap_pte(pte))
->>   					pte = pte_swp_clear_uffd_wp(pte);
->>   			}
->> -			set_pte_at(mm, new_addr, new_pte, pte);
->> +			set_pte_at(mm, new_addr, new_ptep, pte);
->>   		}
->>   	}
->>
->> @@ -275,8 +275,8 @@ static int move_ptes(struct pagetable_move_control *pmc,
->>   		flush_tlb_range(vma, old_end - len, old_end);
->>   	if (new_ptl != old_ptl)
->>   		spin_unlock(new_ptl);
->> -	pte_unmap(new_pte - 1);
->> -	pte_unmap_unlock(old_pte - 1, old_ptl);
->> +	pte_unmap(new_ptep - 1);
->> +	pte_unmap_unlock(old_ptep - 1, old_ptl);
->>   out:
->>   	if (pmc->need_rmap_locks)
->>   		drop_rmap_locks(vma);
->> --
->> 2.30.2
->>
-
+Thanks,
+Andi
