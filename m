@@ -1,124 +1,96 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B27021CA04;
-	Tue,  6 May 2025 23:39:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0E943D994
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 23:40:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746574748; cv=none; b=fmBs8AF3a/Wrh+pivPGxKeMuCUO4WD3HhWb4o/cU6FwAG5NkVKZjhevu0v3Z9356LNoFkFYBhFFQeuPrltYvBoA6gPTAPybw+ckEogIGAqI+7TyjIZmQpu2CPZT6v6xr3FrsXS4L7GhCCzTp/XuxxtXb4uAkIjyLDPRSuaJEdIA=
+	t=1746574807; cv=none; b=hNRoGHnnNgb5K6OvjI/IoiY4kRkkhSBw8FtfnL9lI6/+Fl/7+PgTaYZmjyZFwn26D9G9joFzKdoYol3QkcSAd4CrPB3qNAI91FzTXf0uVgE8le9GyyAdVXoEkpbRU0GirsDdvke0QXpTMNjhRCEyDYJedS9pSwclPXVEyNJhb0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746574748; c=relaxed/simple;
-	bh=RtTfCzdvA8kKTsBb680Ada7FdLAq/TjbjBFv8liv6f8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=E0E5ybDpEXpPLcx/srguQdSG9fgIapw6zCih5lJvXAN2ZSjDfvDKqfQb/lqUFpeLUQ6rStRAMYqxz7X8W1lLrZqNcP9J8tyrGAZJIu80QgWj3SR2pPcqvnvjXLEysWo5X9uvY9TZIARpKcJQxe4AmueVRgnQSBn+CyDt5ARUOZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MI6NKVCy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746574807; c=relaxed/simple;
+	bh=Xxric35oJErFAQpz6t4hQ96lWMVwwl/sYBcBTCyvxCM=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=u3GEj2p7/Mk8H/SXcDiYHZuZqQq+JIsTxIw9V1ZCQmiJ3/TAdFGKvshFBCYcxkfRJGCTDIpRo/JcdC/JnJbTQ5iRS80TPGQcHnX6cxIurKONKp9wjkmaUJf8NE3eG+ipA4iHjoiC+vA8ud9dau/cmri0xMgEBvHY8XMsM7EY4E0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=OuVJJGsN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MI6NKVCy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8697CC4CEE4;
-	Tue,  6 May 2025 23:39:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746574748;
-	bh=RtTfCzdvA8kKTsBb680Ada7FdLAq/TjbjBFv8liv6f8=;
-	h=Date:From:To:Cc:Subject:From;
-	b=MI6NKVCyDtlbvA8NgsKWl5eu7TYLpDcFBcApghEX+IZRhK91Px5/6E2pEijjQ/uaz
-	 HUUWXfYx4cnXW3hBANS9SNpeNrF7dKpXEQBPY1bCTDOqpHV5lb8IsDQJXunbkgiYiO
-	 tBEt2IXDSpvwyZTvFsEmecOQnWunwLo4u+fxy1fLhegwJvE4taXtnhlsdsgkvJN1U2
-	 bH6BwggDrNFWaPYZgy10aARIZ9CF4gQGAs4DIkaIrf5n03SvH2IC6fqEZJ3e2/Us+V
-	 4O5P1+BPSXOv8hEWR1mbi0Pp7y/cQXH+ylLs9bEZaXteL/pgWA7qWG500pqO0MO0o2
-	 l58zZ1dnQRrrQ==
-Date: Tue, 6 May 2025 17:39:03 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
-	Matthew Bobrowski <repnop@google.com>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] fanotify: Avoid a couple of
- -Wflex-array-member-not-at-end warnings
-Message-ID: <aBqdlxlBtb9s7ydc@kspp>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="OuVJJGsN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B11EC4CEEE;
+	Tue,  6 May 2025 23:40:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1746574805;
+	bh=Xxric35oJErFAQpz6t4hQ96lWMVwwl/sYBcBTCyvxCM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=OuVJJGsNMi0VR4SwQ7TQYjw484+8aNWMvb5FJXL3dCUEDsXgonyBQ0he2+lpFunn1
+	 aaXwy+LLraDq3IO0BoQwZaEsP8HfCmaDK2MSSszyIYP28+5SiOMPboxtM/k5aLq5Gj
+	 OxSIOr+//4xJpfUMPjuKlkrbmUsF9i0izUeOpWMA=
+Date: Tue, 6 May 2025 16:40:04 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Ignacio.MorenoGonzalez@kuka.com
+Cc: Ignacio Moreno Gonzalez via B4 Relay
+ <devnull+Ignacio.MorenoGonzalez.kuka.com@kernel.org>,
+ lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
+ yang@os.amperecomputing.com, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, Matthew Wilcox <willy@infradead.org>
+Subject: Re: [PATCH v2 2/2] mm: madvise: no-op for MADV_NOHUGEPAGE if THP is
+ disabled
+Message-Id: <20250506164004.e80e635a28dabb89b7257820@linux-foundation.org>
+In-Reply-To: <20250506-map-map_stack-to-vm_nohugepage-only-if-thp-is-enabled-v2-2-f11f0c794872@kuka.com>
+References: <20250506-map-map_stack-to-vm_nohugepage-only-if-thp-is-enabled-v2-0-f11f0c794872@kuka.com>
+	<20250506-map-map_stack-to-vm_nohugepage-only-if-thp-is-enabled-v2-2-f11f0c794872@kuka.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
+On Tue, 06 May 2025 15:44:33 +0200 Ignacio Moreno Gonzalez via B4 Relay <devnull+Ignacio.MorenoGonzalez.kuka.com@kernel.org> wrote:
 
-Modify FANOTIFY_INLINE_FH() macro, which defines a struct containing a
-flexible-array member in the middle (struct fanotify_fh::buf), to use
-struct_size_t() to pre-allocate space for both struct fanotify_fh and
-its flexible-array member. Replace the struct with a union and relocate
-the flexible structure (struct fanotify_fh) to the end.
+> From: Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>
+> 
+> VM_NOHUGEPAGE is a no-op in a kernel without THP. So it makes no sense
+> to return an error when calling madvise() with MADV_NOHUGEPAGE.
 
-See the memory layout of struct fanotify_fid_event before and after
-changes below.
+The patch looks rather odd.
 
-pahole -C fanotify_fid_event fs/notify/fanotify/fanotify.o
+> --- a/include/linux/huge_mm.h
+> +++ b/include/linux/huge_mm.h
+> @@ -7,6 +7,10 @@
+>  #include <linux/fs.h> /* only for vma_is_dax() */
+>  #include <linux/kobject.h>
+>  
+> +#ifndef CONFIG_TRANSPARENT_HUGEPAGE
+> +#include <uapi/asm-generic/mman-common.h>
+> +#endif
 
-BEFORE:
-struct fanotify_fid_event {
-        struct fanotify_event      fae;                  /*     0    48 */
-        __kernel_fsid_t            fsid;                 /*    48     8 */
-        struct {
-                struct fanotify_fh object_fh;            /*    56     4 */
-                unsigned char      _inline_fh_buf[12];   /*    60    12 */
-        };                                               /*    56    16 */
+Why is the #ifndef here?
 
-        /* size: 72, cachelines: 2, members: 3 */
-        /* last cacheline: 8 bytes */
-};
+This is the only file under include/linux which directly includes
+something from uapi/asm-generic.  Indicates that we're doing something
+wrong.
 
-AFTER:
-struct fanotify_fid_event {
-        struct fanotify_event      fae;                  /*     0    48 */
-        __kernel_fsid_t            fsid;                 /*    48     8 */
-        union {
-                unsigned char      _inline_fh_buf[16];   /*    56    16 */
-                struct fanotify_fh object_fh __attribute__((__aligned__(1))); /*    56     4 */
-        } __attribute__((__aligned__(1)));               /*    56    16 */
+If this hunk is truly the correct approach then I think we need a
+comment here fully explaining what is going on.   Because it looks odd!
 
-        /* size: 72, cachelines: 2, members: 3 */
-        /* forced alignments: 1 */
-        /* last cacheline: 8 bytes */
-} __attribute__((__aligned__(8)));
+>  vm_fault_t do_huge_pmd_anonymous_page(struct vm_fault *vmf);
+>  int copy_huge_pmd(struct mm_struct *dst_mm, struct mm_struct *src_mm,
+>  		  pmd_t *dst_pmd, pmd_t *src_pmd, unsigned long addr,
+> @@ -598,6 +602,8 @@ static inline bool unmap_huge_pmd_locked(struct vm_area_struct *vma,
+>  static inline int hugepage_madvise(struct vm_area_struct *vma,
+>  				   unsigned long *vm_flags, int advice)
+>  {
+> +	if (advice == MADV_NOHUGEPAGE)
+> +		return 0;
 
-So, with these changes, fix the following warnings:
+Also a comment here which explains why we're doing this?
 
-fs/notify/fanotify/fanotify.h:317:28: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-fs/notify/fanotify/fanotify.h:289:28: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- fs/notify/fanotify/fanotify.h | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/fs/notify/fanotify/fanotify.h b/fs/notify/fanotify/fanotify.h
-index b44e70e44be6..91c26b1c1d32 100644
---- a/fs/notify/fanotify/fanotify.h
-+++ b/fs/notify/fanotify/fanotify.h
-@@ -275,12 +275,12 @@ static inline void fanotify_init_event(struct fanotify_event *event,
- 	event->pid = NULL;
- }
- 
--#define FANOTIFY_INLINE_FH(name, size)					\
--struct {								\
--	struct fanotify_fh name;					\
--	/* Space for object_fh.buf[] - access with fanotify_fh_buf() */	\
--	unsigned char _inline_fh_buf[size];				\
--}
-+#define FANOTIFY_INLINE_FH(name, size)						      \
-+union {										      \
-+	/* Space for object_fh and object_fh.buf[] - access with fanotify_fh_buf() */ \
-+	unsigned char _inline_fh_buf[struct_size_t(struct fanotify_fh, buf, size)];   \
-+	struct fanotify_fh name;						      \
-+} __packed
- 
- struct fanotify_fid_event {
- 	struct fanotify_event fae;
--- 
-2.43.0
-
+>  	return -EINVAL;
+>  }
+>  
+> 
+> -- 
+> 2.39.5
+> 
