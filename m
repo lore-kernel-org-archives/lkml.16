@@ -1,69 +1,81 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A49A621C16A;
-	Tue,  6 May 2025 05:11:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91F682139D2;
+	Tue,  6 May 2025 05:11:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746508269; cv=none; b=n4Fs5GqAXi2+NLTFdwXF8BGzAyFZC82JC8IL747lPvy9fo6EEw9Cf6DCbW5VEi7SThcZTjbJAfGpY/fiUyDuzZMuOtjSaFCQb7mmOKlNhh96wgPqdLf1IB/E9/LCyMYjkUq9BQXs7d2PUOLy85YK81bEJh+2HA9/zOpHjX1f3O4=
+	t=1746508270; cv=none; b=tL1cfXN7rQntD8ofA9RlcQtlLx2kwrlc/oduZvtBEwEV9QPMxMz29uZ0mAvkbuph3ItX3/AO6m+CI4su2gYQZt/Uv8KhamDVVF+lczNv2tKWvROjgIM/4WjKLhKQbGJQhJivc5JIuZqnvzUD6wmDkhIqMXVrkCS344RyjJVD6mk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746508269; c=relaxed/simple;
-	bh=wY6W/N3sx+maLycnHg3jBX6Qe8xr+Z3P23n1cnZ3r3c=;
+	s=arc-20240116; t=1746508270; c=relaxed/simple;
+	bh=CI4i1B9euLP8x//+FHqQVWisGZ46riW7BOCrO4SVRX4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q9ULAPzpRyGdV9QhSxBnaMSK1Mbl3MCbPwnE+bdc4q+tp5gtsNS649ShwBa3yu2PSHelWm9mhWQ75QNYvDEa+85L++kLOniVI96Mb3UDVQiwF9cjQIpV25frqEFUYuSGKdtB0TTLUrjLuZ14Ig4o3HS1+QX9uv1PK4QctyYJ0+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JXrt8zwH; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=sSBT+6BM4mfqJoURJ7OXeuHO1S/qaW11hdtL12wRxbxISQ0zITh7nAuKcmGgBAldriejxgQVL5PwUIq1sYWx4vW/GqpjcqIfr28V7o1ghp7O6D5c+cVq3ezBFEJFeXKtEjKh0ENWIlAufXaYPeav+MG6Kk9EPZ/3WJDhpHqHoo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NQHIw5NZ; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JXrt8zwH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746508268; x=1778044268;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=wY6W/N3sx+maLycnHg3jBX6Qe8xr+Z3P23n1cnZ3r3c=;
-  b=JXrt8zwH0unjJTTqZJsWoKa5bwk2xpfIW9oVA+b8ThuhwU4dLaEC7XWZ
-   hO8CfVwW8dcNZmWII41GDvdjGVeGr80oZQVqfa1yC8/KiESwFpEAjemrd
-   yMZCV0wl7tp+l5GtEyxhw/c3Plquaa4Rn7Sgpfg/sGLxvU9pJNJmMPkVu
-   vrWi27GKaVgAZoNadGadiCY/AmWRTMXgCjEewB4CFO9BpNUx8P+cJ1l7s
-   6u1SJoTB8KytNorwCdvOX1syhsTmjtg/3yqQOefBjL0hs1L0wj4lmPhRo
-   ZrQxk4IhGWhwbA/yLQq9de2tD81UH/tRYyfm/11bdOVJx+EmD+kosUOxh
-   w==;
-X-CSE-ConnectionGUID: tZ8j3jNYQr+dgeic4G1h+w==
-X-CSE-MsgGUID: M1R5eT+TSRiOBDKYGQDT3A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11424"; a="47861286"
-X-IronPort-AV: E=Sophos;i="6.15,265,1739865600"; 
-   d="scan'208";a="47861286"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 22:11:07 -0700
-X-CSE-ConnectionGUID: hJ87dLmCQ324ofNrZq3bIA==
-X-CSE-MsgGUID: 5ybXgqoJQUK7rNzDiDnfqw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,265,1739865600"; 
-   d="scan'208";a="139529756"
-Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 22:11:06 -0700
-Date: Mon, 5 May 2025 22:16:10 -0700
-From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: x86@kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Michael Kelley <mhklinux@outlook.com>, devicetree@vger.kernel.org,
-	Saurabh Sengar <ssengar@linux.microsoft.com>,
-	Chris Oo <cho@microsoft.com>, linux-hyperv@vger.kernel.org,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-	Ricardo Neri <ricardo.neri@intel.com>
-Subject: Re: [PATCH v3 06/13] dt-bindings: reserved-memory: Wakeup Mailbox
- for Intel processors
-Message-ID: <20250506051610.GC25533@ranerica-svr.sc.intel.com>
-References: <20250503191515.24041-1-ricardo.neri-calderon@linux.intel.com>
- <20250503191515.24041-7-ricardo.neri-calderon@linux.intel.com>
- <20250504-original-leopard-of-vigor-5702ef@kuoka>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NQHIw5NZ"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-30a93117e1bso113758a91.1;
+        Mon, 05 May 2025 22:11:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746508268; x=1747113068; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=aLeas8Li48TySMUHWqANlPkw8T4tUY9B0p2mUn+Xfr0=;
+        b=NQHIw5NZ5GNsOrms1U430wvRKmyknBLF8C7qydH8AlMMUa3xd+YTlbA5BArLs3yMOA
+         rEgpXnzXd+/v2RoehM6Xxgp57XM0iuvUv6mKUVQ18PoDH8wEdL3TdalphX5TXk6KGlQw
+         D69ZogQ1kcGSdX1uTrhNDJzNdFN+gtG2ZrIHx4U7EbZugl7K2bTP6YN/maoYDLvU8cc8
+         y+qLN3k5G+ej86HOeJH3DRZ7RxItzDUpuFQPXrphcE1s/SMfmsG1oQhE1CGb241RQLQc
+         BC16u+71mOHaG1Zf9EAXPqNHNQETpiM0riYbvm1sA97GfrlAVi/mdZZnvZVNbBon2+Eb
+         Py0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746508268; x=1747113068;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aLeas8Li48TySMUHWqANlPkw8T4tUY9B0p2mUn+Xfr0=;
+        b=BtAftN3Njv05NNR0zQMOZ0BSZ6sdwTFqHt+V+TEeGcL2Lj/idWBNpxUiMwB3pYxMXM
+         fAEabEN4ldrYR9cC/KKzSMaAqsIK2vI/Ffb0oV5opYgesPFk2rL7lwMJxwEYIDJ/zJoz
+         R5zqy45JauQJKJrCuzN2VijdPDfEwVaAqCaIY73EalJNOCDxr04MOAU3iPqhMaaG2IZH
+         GJtUGtes3WZrnRATFu0Ym9M0GADuHFQdtOd7U/2TprPORZSMs3QqoM65fyJ+STVyAykG
+         ahQlCb2XnjVUOw6p2HhVfninRD7/Me7FL+UmDBLiQns6Y857FZk8JZrh7p/c/LEyrnX6
+         nHLw==
+X-Forwarded-Encrypted: i=1; AJvYcCU84lq5IuyLsXnfVZCwFrUSneyvVx2Lnmsff1WI+CafQNrYrz0LkkBomolxdjBiICCCEqBYW2nJ6VVB@vger.kernel.org, AJvYcCUL7UFA0G3wu8PJ3S6AVNCd8GAeSbKa6qcH2Nbw71WNFSxAiBadrluLvEHJe+DgU7m+koUwnMePTGRMrB4=@vger.kernel.org, AJvYcCVN7womjCSAKUgQ8AkdjWXJPgB6CtTbVJ81E0m7mh3gEzU0KbUFey2gQOsxlKRtukid3yQf835aTg1qXWYp@vger.kernel.org, AJvYcCWC2Y8Ps5g2QmCz5csKEJ8i+A0D/orwV+b+JRT47Y86a2X1HyyicPjEA3kx5d4EWp/172uMC6scd8Yupw==@vger.kernel.org, AJvYcCWj7/XQ/NqOk1lSIOqXlwzNUy3y1GXiUnXtb1OqfMjXgHfj97qNASMYWiIORf6MxS6fyxt9dArJxwcr@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjNDHHTBEQQFdeTsHfqMz0bURrMipT+lnGFaGzrOl46VaMHOzz
+	xWXjXLaLtNtcWGc3dFN9u0qXR5nlfZCYgQdnh8hEJTAUadfa2mrL
+X-Gm-Gg: ASbGncuNi4TOD4W9tIwJ36h8yBC/Hd5wmr7slu11Avz1ybdbsJJBZaRci3b71/p8U5t
+	voyz0Co3p3DRnBHlKIqxwn/zNzc8599oxd3T0qmIhCth7aTZDJU6QdkoJIGAJxW+LT3vCA5JQKl
+	CJyYWwOdlEkWpPzJs4+OI47IMDCvlQLNmKdWZ2Bhh2UeRdgZqkRh3Tvlyx8fECrmp4qCcYdKXXS
+	+O6urKteB3ZXgmC4RJZku6qSCzXIpsI1QdJC3ko07MUbPqHwDYiTHEw0LW6owQcKQdorbOUIEGK
+	om4QTdNbTgV4xaWg1u+JbVZNV5FxclgKoSndFFe5Cw==
+X-Google-Smtp-Source: AGHT+IHM3lDvnqLdoesUo+uJi4M/M2ZwTTwbmZ4orgbHaFGwITXJQOKxmg8xNyy9NcvHWdLssbXY7A==
+X-Received: by 2002:a17:90b:3c44:b0:305:5f33:980f with SMTP id 98e67ed59e1d1-30a7f7053d8mr2142527a91.27.1746508267597;
+        Mon, 05 May 2025 22:11:07 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:17ab:9e47:29ba:57e6])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30a347221a9sm12802505a91.1.2025.05.05.22.11.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 May 2025 22:11:07 -0700 (PDT)
+Date: Mon, 5 May 2025 22:11:04 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>, 
+	Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Kamel Bouhara <kamel.bouhara@bootlin.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	=?utf-8?Q?Gr=C3=A9gory?= Clement <gregory.clement@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v7 09/11] input: keyboard: Add support for MAX7360 keypad
+Message-ID: <7nuovfjsp7dqklz7khk4biabo22d7qpqqajpcte656vinoft6c@ot6epnbgzgp4>
+References: <20250428-mdb-max7360-support-v7-0-4e0608d0a7ff@bootlin.com>
+ <20250428-mdb-max7360-support-v7-9-4e0608d0a7ff@bootlin.com>
+ <aBSii0rHox72GM5Y@smile.fi.intel.com>
+ <D9LPB49CQJDW.3VMFI0TFGV7K2@bootlin.com>
+ <aBTJcQp-wBLJTh-6@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,188 +84,85 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250504-original-leopard-of-vigor-5702ef@kuoka>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <aBTJcQp-wBLJTh-6@smile.fi.intel.com>
 
-On Sun, May 04, 2025 at 06:51:17PM +0200, Krzysztof Kozlowski wrote:
-> On Sat, May 03, 2025 at 12:15:08PM GMT, Ricardo Neri wrote:
-> > Add DeviceTree bindings for the wakeup mailbox used on Intel processors.
+On Fri, May 02, 2025 at 04:32:33PM +0300, Andy Shevchenko wrote:
+> On Fri, May 02, 2025 at 03:15:34PM +0200, Mathieu Dubois-Briand wrote:
+> > On Fri May 2, 2025 at 12:46 PM CEST, Andy Shevchenko wrote:
+> > > On Mon, Apr 28, 2025 at 01:57:27PM +0200, Mathieu Dubois-Briand wrote:
+> 
+> ...
+> 
+> > >> +static irqreturn_t max7360_keypad_irq(int irq, void *data)
+> > >> +{
+> > >> +	struct max7360_keypad *max7360_keypad = data;
+> > >> +	struct device *dev = max7360_keypad->input->dev.parent;
+> > >> +	unsigned int val;
+> > >> +	unsigned int row, col;
+> > >> +	unsigned int release;
+> > >> +	unsigned int code;
+> > >> +	int error;
+> > >> +
+> > >> +	do {
+> > >> +		error = regmap_read(max7360_keypad->regmap, MAX7360_REG_KEYFIFO, &val);
+> > >> +		if (error) {
+> > >> +			dev_err(dev, "Failed to read max7360 FIFO");
+> > >> +			return IRQ_NONE;
+> > >> +		}
+> > >> +
+> > >> +		/* FIFO overflow: ignore it and get next event. */
+> > >> +		if (val == MAX7360_FIFO_OVERFLOW)
+> > >> +			dev_warn(dev, "max7360 FIFO overflow");
+> > >
+> > > If many events are missing this will flood the logs, perhaps _ratelimited() ?
+> > >
+> > >> +	} while (val == MAX7360_FIFO_OVERFLOW);
+> > >
+> > > regmap_read_poll_timeout() ?
 > > 
-> 
-> Start using b4, so your cover letter will have proper lore links to
-> previous versions.
-
-Sure. Thanks for this suggestion I will follow it.
-
-> 
-> > x86 platforms commonly boot secondary CPUs using an INIT assert, de-assert
-> > followed by Start-Up IPI messages. The wakeup mailbox can be used when this
-> > mechanism unavailable.
+> > OK, I can try something like:
 > > 
-> > The wakeup mailbox offers more control to the operating system to boot
-> > secondary CPUs than a spin-table. It allows the reuse of same wakeup vector
-> > for all CPUs while maintaining control over which CPUs to boot and when.
-> > While it is possible to achieve the same level of control using a spin-
-> > table, it would require to specify a separate cpu-release-addr for each
-> > secondary CPU.
-> > 
-> > Originally-by: Yunhong Jiang <yunhong.jiang@linux.intel.com>
+> > +       error = regmap_read(max7360_keypad->regmap, MAX7360_REG_KEYFIFO, &val);
+> > +
+> > +       /* FIFO overflow: ignore it and get next event. */
+> > +       if (!error && (val == MAX7360_FIFO_OVERFLOW)) {
+> > +               dev_warn(dev, "max7360 FIFO overflow");
+> > +               error = regmap_read_poll_timeout(max7360_keypad->regmap, MAX7360_REG_KEYFIFO,
+> > +                                                val, val != MAX7360_FIFO_OVERFLOW, 0, 0);
+> > +       }
+> > +
+> > +       if (error) {
+> > +               dev_err(dev, "Failed to read max7360 FIFO");
+> > +               return IRQ_NONE;
+> > +       }
 > 
-> What does this tag mean? Why you cannot use standard tags - SoB and
-> co-developed?
-
-Yunhong handed this work to me. We did not work in it concurrently. But
-yes, SoB and Co-developed-by also looks appropriate as two individuals
-worked on this.
-
+> Maybe something like this (see also below about timeouts)?
 > 
-> > Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-> > ---
-> > Changes since v2:
-> >  - Implemented the mailbox as a reserved-memory node. Add to it a
-> >    `compatible` property. (Krzysztof)
-> >  - Explained the relationship between the mailbox and the `enable-mehod`
-> >    property of the CPU nodes.
-> >  - Expanded the documentation of the binding.
-> > 
-> > Changes since v1:
-> >  - Added more details to the description of the binding.
-> >  - Added requirement a new requirement for cpu@N nodes to add an
-> >    `enable-method`.
-> > ---
-> >  .../reserved-memory/intel,wakeup-mailbox.yaml | 87 +++++++++++++++++++
-> >  1 file changed, 87 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/reserved-memory/intel,wakeup-mailbox.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/reserved-memory/intel,wakeup-mailbox.yaml b/Documentation/devicetree/bindings/reserved-memory/intel,wakeup-mailbox.yaml
-> > new file mode 100644
-> > index 000000000000..d97755b4673d
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/reserved-memory/intel,wakeup-mailbox.yaml
-> > @@ -0,0 +1,87 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/reserved-memory/intel,wakeup-mailbox.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Wakeup Mailbox for Intel processors
-> > +
-> > +description: |
-> > +  The Wakeup Mailbox provides a mechanism for the operating system to wake up
-> > +  secondary CPUs on Intel processors. It is an alternative to the INIT-!INIT-
-> > +  SIPI sequence used on most x86 systems.
-> > +
-> > +  Firmware must define the enable-method property in the CPU nodes as
-> > +  "intel,wakeup-mailbox" to use the mailbox.
-> > +
-> > +  Firmware implements the wakeup mailbox as a 4KB-aligned memory region of size
-> > +  of 4KB. It is memory that the firmware reserves so that each secondary CPU can
-> > +  have the operating system send a single message to them. The firmware is
-> > +  responsible for putting the secondary CPUs in a state to check the mailbox.
-> > +
-> > +  The structure of the mailbox is as follows:
-> > +
-> > +  Field           Byte   Byte  Description
-> > +                 Length Offset
-> > +  ------------------------------------------------------------------------------
-> > +  Command          2      0    Command to wake up the secondary CPU:
-> > +                                        0: Noop
-> > +                                        1: Wakeup: Jump to the wakeup_vector
-> > +                                        2-0xFFFF: Reserved:
-> > +  Reserved         2      2    Must be 0.
-> > +  APIC_ID          4      4    APIC ID of the secondary CPU to wake up.
-> > +  Wakeup_Vector    8      8    The wakeup address for the secondary CPU.
-> > +  ReservedForOs 2032     16    Reserved for OS use.
-> > +  ReservedForFW 2048   2048    Reserved for firmware use.
-> > +  ------------------------------------------------------------------------------
-> > +
-> > +  To wake up a secondary CPU, the operating system 1) prepares the wakeup
-> > +  routine; 2) populates the address of the wakeup routine address into the
-> > +  Wakeup_Vector field; 3) populates the APIC_ID field with the APIC ID of the
-> > +  secondary CPU; 4) writes Wakeup in the Command field. Upon receiving the
-> > +  Wakeup command, the secondary CPU acknowledges the command by writing Noop in
-> > +  the Command field and jumps to the Wakeup_Vector. The operating system can
-> > +  send the next command only after the Command field is changed to Noop.
-> > +
-> > +  The secondary CPU will no longer check the mailbox after waking up. The
-> > +  secondary CPU must ignore the command if its APIC_ID written in the mailbox
-> > +  does not match its own.
-> > +
-> > +  When entering the Wakeup_Vector, interrupts must be disabled and 64-bit
-> > +  addressing mode must be enabled. Paging mode must be enabled. The virtual
-> > +  address of the Wakeup_Vector page must be equal to its physical address.
-> > +  Segment selectors are not used.
-> > +
-> > +maintainers:
-> > +  - Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-> > +
-> > +allOf:
-> > +  - $ref: reserved-memory.yaml
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: intel,wakeup-mailbox
+>        error = regmap_read(max7360_keypad->regmap, MAX7360_REG_KEYFIFO, &val);
+>        if (error) {
+>                dev_err(dev, "Failed to read MAX7360 FIFO");
+>                return IRQ_NONE;
+>        }
 > 
-> If this is a device, then compatibles specific to devices. You do not
-> get different rules than all other bindings... or this does not have to
-> be binding at all. Why standard reserved-memory does not work for here?
+>        /* FIFO overflow: ignore it and get next event. */
+>        if (val == MAX7360_FIFO_OVERFLOW) {
+>                dev_warn(dev, "max7360 FIFO overflow");
+>                error = regmap_read_poll_timeout(max7360_keypad->regmap, MAX7360_REG_KEYFIFO,
+>                                                 val, val != MAX7360_FIFO_OVERFLOW, 0, 1000);
+>                if (error) {
+>                        dev_err(dev, "Failed to empty MAX7360 FIFO");
+>                        return IRQ_NONE;
+>                }
+>        }
 > 
-> Why do you need compatible in the first place?
-
-Are you suggesting something like this?
-
-reserved-memory {
-	# address-cells = <2>;
-	# size-cells = <1>;
-
-	wakeup_mailbox: wakeupmb@fff000 {
-		reg = < 0x0 0xfff000 0x1000>
-	}
-
-and then reference to the reserved memory using the wakeup_mailbox
-phandle?
-
-If this is the case, IIUC, this schema is not needed at all.
-
-}
+> > Sleep_us is 0 as we are in the IRQ handler,
 > 
-> 
-> > +
-> > +  alignment:
-> > +    description: The mailbox must be 4KB-aligned.
-> 
-> Then drop it because it is implied by compatible.
+> Isn't it under the mutex, so we are fine to have small delays? But in general
+> it seems not okay to sleep here. In any case 0 for sleep_us gives an atomic read.
 
-Sure I can drop it.
+This is in a threaded interrupt, you can sleep all you want.
 
-> 
-> > +    const: 0x1000
-> > +
-> > +required:
-> > +  - compatible
-> > +  - alignment
-> > +  - reg
-> > +
-> > +unevaluatedProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    reserved-memory {
-> > +        #address-cells = <2>;
-> > +        #size-cells = <1>;
-> > +
-> > +        wakeup-mailbox@12340000 {
-> 
-> Please use real addresses from real DT.
-> 
-> > +            compatible = "intel,wakeup-mailbox";
-> > +            alignment = <0x1000>;
-> > +            reg = <0x0 0x12340000 0x1000>;
-> 
-> reg is always the second property. See DTS coding style.
+Thanks.
 
-Sorry, I missed this convention.
-
-Thanks and BR,
-Ricardo 
+-- 
+Dmitry
