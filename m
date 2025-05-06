@@ -1,81 +1,120 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3C552472AE;
-	Tue,  6 May 2025 16:31:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AA7F284B3B;
+	Tue,  6 May 2025 16:31:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746549107; cv=none; b=qsn2mK0Yrer1bw2JJKboHX9XRNavuYLYgC+c29fnjrxFXX0dk6iW4Dts5moBbq2Qo9PMNCnkwdZHl0MobtUuYfwrt0RGyasqW1wzBb/jSFoOt3Q0KbFaPdLUf8sHyQ6qETAo1kraHjl6DFLx3KnL6uIBYyi2VwPayZLTdY1cxEU=
+	t=1746549112; cv=none; b=PIPOdoHJ1Sk43UZOYbRp6b2+MUUH03AhbnPqLCViKuNRKDunYBRUlCXN6yrk3/edSSZ6tqplNoNCSRGHetQ7zLJLVTh4NwAZKsICAn6u41Cjr0k8+ykksR2axbYBbb5EEjltn31+7LG8I9Qs17tNtofpOPBqUkyQp4ZvFSaBHzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746549107; c=relaxed/simple;
-	bh=UYD3grwpS5uPohpdxt9dxakZq+YTUq9nRPZydmvnE44=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nRi7vqhzwy2u3UVQ3+s8g4KKOUeAIXWjqCXmEaEw6z8EcPxx84wxDxS4nXWdXWt9u0EgSopgQCOpSeP71pb4//p66ZLvFj9DvMGZ3j83phJmVulTlx92Jj2ryQnTu0AoFo4qh9vwy6BAQrreinYZYH7DcxAXH/rKgf/K9Tt24jY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=o4H/tiub; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="o4H/tiub"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=IJPjh
-	/OuwLg/GQ59dE8XcmVS3DsJx6kJihk2+0gyrTA=; b=o4H/tiubGtsRPJnTdtLH3
-	YeujoUTTzCFmCdzJfzTG4dJEW++Gsz86pFsO1BTVX6YQZo65C3bhQ7YKCA9YEO5o
-	wLZHTc69125d+e6BJYN1HRUMrLkfGeM8fS0G8CMN6QlOYGVU6itW/I1wrJg9aICv
-	3dJFzk44SYvgA4VOaesmEg=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-0 (Coremail) with SMTP id _____wDn94JdORpomSVsEw--.1255S2;
-	Wed, 07 May 2025 00:31:26 +0800 (CST)
-From: Hans Zhang <18255117159@163.com>
-To: ardb@kernel.org
-Cc: linux-efi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	hans.zhang@cixtech.com,
-	Hans Zhang <18255117159@163.com>
-Subject: [PATCH] efi/libstub: Describe missing 'out' parameter in efi_load_initrd
-Date: Wed,  7 May 2025 00:31:11 +0800
-Message-Id: <20250506163111.272149-1-18255117159@163.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1746549112; c=relaxed/simple;
+	bh=PHoTVTfZ1ZEwEICE2WqavS02UFhuhVT/TKmdSzWLQiM=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=MsAgpv9+Tvv+tFy+ijxplfP/MRnIv4aCfS+ptoFg3nD8eQsSQYCd4eKi2lk9iCWkiOrTK7f+0L2rtAe+n8baVvsM9GMpmX/bHWVORsGsX6bXrIWTBWoG+jWUfxVZEEZjXCNd57MvBN+Pf7Ue5+ccWDKNFV1sD8uHD0d7xMiqWkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id CFBBB43B1A;
+	Tue,  6 May 2025 16:31:42 +0000 (UTC)
+Message-ID: <570ce61a-00ca-446f-ae89-7ab7c340828f@ghiti.fr>
+Date: Tue, 6 May 2025 18:31:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] riscv: Fix kernel crash due to PR_SET_TAGGED_ADDR_CTRL
+Content-Language: en-US
+From: Alexandre Ghiti <alex@ghiti.fr>
+To: Nam Cao <namcao@linutronix.de>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Samuel Holland <samuel.holland@sifive.com>, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20250504101920.3393053-1-namcao@linutronix.de>
+ <c59f2632-d96f-43c6-869d-5e5f743f2dbd@ghiti.fr>
+ <20250505160722.s_w3u1pd@linutronix.de>
+ <d7232e99-e899-4e50-b60f-2527be709d2c@ghiti.fr>
+In-Reply-To: <d7232e99-e899-4e50-b60f-2527be709d2c@ghiti.fr>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDn94JdORpomSVsEw--.1255S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7ArWUuFykXFyUWF4xtw48Xrb_yoW8Gry5pa
-	9FgrW3CFnrJa1rAa18Ja1S93W3JasxG3yjgas7JF1Fy3Wjya4v9rWagF1UuFs7Cr1Ut3WS
-	qF15tr17Wa48Zr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pRwNV-UUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOgtFo2gaMTHk5wAAsm
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeeggeejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuhffvvehfjggtgfesthekredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpeffudduledvfeehvdefueduveffkedugeetjeetveduvddtudehieduudehtdfhueenucffohhmrghinhepmhgrnhhgohhpihdrohhrghdpihhnfhhrrgguvggrugdrohhrghenucfkphepvddttddumeekiedumeeffeekvdemvghfledtmegstdgvieemhehfgehfmeefugejrgemrgdvfhdtnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumeeffeekvdemvghfledtmegstdgvieemhehfgehfmeefugejrgemrgdvfhdtpdhhvghloheplgfkrfggieemvddttddumeekiedumeeffeekvdemvghfledtmegstdgvieemhehfgehfmeefugejrgemrgdvfhdtngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopeekpdhrtghpthhtohepnhgrmhgtrghosehlihhnuhhtrhhonhhigidruggvpdhrtghpthhtohepphgruhhlrdifrghlmhhslhgvhiesshhif
+ hhivhgvrdgtohhmpdhrtghpthhtohepphgrlhhmvghrsegurggssggvlhhtrdgtohhmpdhrtghpthhtoheprghouhesvggvtghsrdgsvghrkhgvlhgvhidrvgguuhdprhgtphhtthhopehsrghmuhgvlhdrhhholhhlrghnugesshhifhhivhgvrdgtohhmpdhrtghpthhtoheplhhinhhugidqrhhishgtvheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehsthgrsghlvgesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-GND-Sasl: alex@ghiti.fr
 
-The function efi_load_initrd() had a documentation warning due to
-the missing description for the 'out' parameter. Add the parameter
-description to the kernel-doc comment to resolve the warning and
-improve API documentation.
+On 05/05/2025 21:27, Alexandre Ghiti wrote:
+> On 05/05/2025 18:07, Nam Cao wrote:
+>> Hi Alex,
+>>
+>> On Mon, May 05, 2025 at 06:02:26PM +0200, Alexandre Ghiti wrote:
+>>> On 04/05/2025 12:19, Nam Cao wrote:
+>>>> When userspace does PR_SET_TAGGED_ADDR_CTRL, but Supm extension is not
+>>>> available, the kernel crashes:
+>>>>
+>>>> Oops - illegal instruction [#1]
+>>>>       [snip]
+>>>> epc : set_tagged_addr_ctrl+0x112/0x15a
+>>>>    ra : set_tagged_addr_ctrl+0x74/0x15a
+>>>> epc : ffffffff80011ace ra : ffffffff80011a30 sp : ffffffc60039be10
+>>>>       [snip]
+>>>> status: 0000000200000120 badaddr: 0000000010a79073 cause: 
+>>>> 0000000000000002
+>>>>       set_tagged_addr_ctrl+0x112/0x15a
+>>>>       __riscv_sys_prctl+0x352/0x73c
+>>>>       do_trap_ecall_u+0x17c/0x20c
+>>>>       andle_exception+0x150/0x15c
+>>>
+>>> It seems like the csr write is triggering this illegal instruction, 
+>>> can you
+>>> confirm it is?
+>> Yes, it is the "csr_write(CSR_ENVCFG, envcfg);" in envcfg_update_bits().
+>>
+>>> If so, I can't find in the specification that an implementation 
+>>> should do
+>>> that when writing envcfg and I can't reproduce it on qemu. Where did 
+>>> you
+>>> see this oops?
+>> I can't find it in the spec either. I think it is up to the 
+>> implementation.
+>
+>
+> The reserved fields of senvcfg are WPRI and contrary to WLRL, it does 
+> not explicitly "permit" to raise an illegal instruction so I'd say it 
+> is not up to the implementation, I'll ask around.
 
-Fixes the following compiler warning:
-drivers/firmware/efi/libstub/efi-stub-helper.c:611: warning: Function parameter or struct member 'out' not described in 'efi_load_initrd'
 
-Fixes: f4dc7fffa987 ("efi: libstub: unify initrd loading between architectures")
-Signed-off-by: Hans Zhang <18255117159@163.com>
----
- drivers/firmware/efi/libstub/efi-stub-helper.c | 1 +
- 1 file changed, 1 insertion(+)
+So I had confirmation that WPRI should not raise an illegal instruction 
+so that's an issue with the platform. Your patch is not wrong but I'd 
+rather have an explicit errata, what do you think?
 
-diff --git a/drivers/firmware/efi/libstub/efi-stub-helper.c b/drivers/firmware/efi/libstub/efi-stub-helper.c
-index fd6dc790c5a8..7aa2f9ad2935 100644
---- a/drivers/firmware/efi/libstub/efi-stub-helper.c
-+++ b/drivers/firmware/efi/libstub/efi-stub-helper.c
-@@ -601,6 +601,7 @@ efi_status_t efi_load_initrd_cmdline(efi_loaded_image_t *image,
-  * @image:	EFI loaded image protocol
-  * @soft_limit:	preferred address for loading the initrd
-  * @hard_limit:	upper limit address for loading the initrd
-+ * @out:	pointer to store the address of the initrd table
-  *
-  * Return:	status code
-  */
+Thanks,
 
-base-commit: 01f95500a162fca88cefab9ed64ceded5afabc12
--- 
-2.25.1
+Alex
 
+
+>
+> Thanks,
+>
+> Alex
+>
+>
+>>
+>> I got this crash on the MangoPI board:
+>> https://mangopi.org/mqpro
+>>
+>> Best regards,
+>> Nam
+>>
+>> _______________________________________________
+>> linux-riscv mailing list
+>> linux-riscv@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-riscv
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
