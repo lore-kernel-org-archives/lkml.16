@@ -1,45 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E677822F757;
-	Tue,  6 May 2025 21:37:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8A7B22FE0C;
+	Tue,  6 May 2025 21:37:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746567428; cv=none; b=YsuTu93VRPRf9FLozhvReRZepsp2S9yVzswF3EmBQS363Xx7O5r1tlRL1QX/sjmLVW+MbZjjkxMWAim/u8XWD3yAiDPW17kJwpYDG7HpuEqWmwC/ZPdjHNg9nZtOsFrgnKv/nZzyxrD1Qm3HaGQYLJxeZPm6wHFKZhTh+4K3CZU=
+	t=1746567431; cv=none; b=cLL18+hGjrVfycu8a3FpS81d5+hoXLS3mT6ye05Q82VModzHuNzyyqX3kormhaU1We/Ux90QPVkjiw1GpxmDLRIZgku8qYikwUYGlnY+h3z5gn9RMidA1UCzm+S7tAhDiOY0/CJQiKmfQbGAyRzqFXUMHmBOkT5D90cV/HbUH7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746567428; c=relaxed/simple;
-	bh=xcjlLSgn1Tt/P9DMlCgwzZshykWA3CEBFvuoEeQscz4=;
+	s=arc-20240116; t=1746567431; c=relaxed/simple;
+	bh=H/10vPzZx7bbzGtn1cMttwk6Sw/HfJXo1GFSccFfT4Q=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=G6MG5XinjqlUBwsxrGktdygNQAIgqzt/tXptGglhpAhtwRHr2O0NsYu/+lScLy4Ffkq7BgZw0/b94EfLVYo8hr2/Bjggfc8b2fEDDWeIT3WPc8S7pu1n7HpNhz6kL29ErIdsvm2F155WxCe0yvjPs2rMDdLBe+8kcfPQZx+Dh5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r5Rxwrdd; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=VquCqKNKw7jduTeVXKLDX6veFFj9DzdZdq9vZbIbVfxwf07twGLQgnPIBEWolvpTSjxUKIdPh8AcsMhk+LBoCkQnFG5gBi2ulw5tBe9jjmH1G7oCjkwj4trAPszlOJWunPYOROkUSO2qxjPRcGSoNqzMyJeJQkpCx4KNZ9WpJAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q/anUP+b; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r5Rxwrdd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50D68C4CEEE;
-	Tue,  6 May 2025 21:37:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q/anUP+b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7AA7C4CEEE;
+	Tue,  6 May 2025 21:37:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746567426;
-	bh=xcjlLSgn1Tt/P9DMlCgwzZshykWA3CEBFvuoEeQscz4=;
+	s=k20201202; t=1746567430;
+	bh=H/10vPzZx7bbzGtn1cMttwk6Sw/HfJXo1GFSccFfT4Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=r5RxwrddDrS3vrU6vVChYh4xdeIAb/HLFFzau9osfjDKM6esIeC0nnB0oxW0GEVoM
-	 mkArZPhEMz1MsDqZYp6cz44q2hogOXHDMRk7UtNqyblZT7L5GuemzFfMF16+w3cqbc
-	 gEBZoQAOPUjkSpLPffvYkqCh0DIh+soad9N0L1MHyhqqgs9JxfMtaH7k9xxGes9aow
-	 DZNGFlBEjikzabor1xdVkEwLYnGbYkZzR609fky+/UuPOf4pkj5iIJsX1JtGRDmRUr
-	 ktsayt2zVVPI6tZykWVY7PmOKr/2W0L+83PQm/O12kjQDuaG2Sy7zzcxOUZzBxgS/k
-	 JYxlRhf8ul3pQ==
+	b=q/anUP+bO7XuC5N8ZY4o6X6qEHUdxN3myJoLjDN4ed/NRQ5sz8NWnlyctDVGdya4R
+	 sYg5Yzi82xnlDGMNRe0LdrWr8T2OaG9SOA+Dpvr1QRPxFs9+Y0kx0r3yWkaq52gMVZ
+	 ke7fTI9kpQJhgDRH9NmgXXpZfHcBUo2riP5jepqsfmiOqIv9NiXr0M9pvmwEsX8pk0
+	 f3hduJtgcEW+S+k1CAEaeRRSD25tPBiDRg916AeEEZfjmcvblmjhPnQxwSFKcG8F4j
+	 MN0S0grvdnVKNErKpdNbWrOiubLHfOIQt71ytF67//3eQQi8TxHDExGIIkxod+1gGp
+	 AlbSm3TuHTxUQ==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
-Cc: Wentao Guan <guanwentao@uniontech.com>,
-	WangYuli <wangyuli@uniontech.com>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Christoph Hellwig <hch@lst.de>,
+Cc: Jens Axboe <axboe@kernel.dk>,
+	syzbot+3e77fd302e99f5af9394@syzkaller.appspotmail.com,
 	Sasha Levin <sashal@kernel.org>,
-	kbusch@kernel.org,
-	linux-nvme@lists.infradead.org,
+	asml.silence@gmail.com,
+	io-uring@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 07/12] nvme-pci: add quirks for device 126f:1001
-Date: Tue,  6 May 2025 17:36:42 -0400
-Message-Id: <20250506213647.2983356-7-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.6 10/12] io_uring/fdinfo: annotate racy sq/cq head/tail reads
+Date: Tue,  6 May 2025 17:36:45 -0400
+Message-Id: <20250506213647.2983356-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250506213647.2983356-1-sashal@kernel.org>
 References: <20250506213647.2983356-1-sashal@kernel.org>
@@ -54,47 +52,45 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Wentao Guan <guanwentao@uniontech.com>
+From: Jens Axboe <axboe@kernel.dk>
 
-[ Upstream commit 5b960f92ac3e5b4d7f60a506a6b6735eead1da01 ]
+[ Upstream commit f024d3a8ded0d8d2129ae123d7a5305c29ca44ce ]
 
-This commit adds NVME_QUIRK_NO_DEEPEST_PS and NVME_QUIRK_BOGUS_NID for
-device [126f:1001].
+syzbot complains about the cached sq head read, and it's totally right.
+But we don't need to care, it's just reading fdinfo, and reading the
+CQ or SQ tail/head entries are known racy in that they are just a view
+into that very instant and may of course be outdated by the time they
+are reported.
 
-It is similar to commit e89086c43f05 ("drivers/nvme: Add quirks for
-device 126f:2262")
+Annotate both the SQ head and CQ tail read with data_race() to avoid
+this syzbot complaint.
 
-Diff is according the dmesg, use NVME_QUIRK_IGNORE_DEV_SUBNQN.
-
-dmesg | grep -i nvme0:
-  nvme nvme0: pci function 0000:01:00.0
-  nvme nvme0: missing or invalid SUBNQN field.
-  nvme nvme0: 12/0/0 default/read/poll queues
-
-Link:https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=e89086c43f0500bc7c4ce225495b73b8ce234c1f
-Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
-Signed-off-by: WangYuli <wangyuli@uniontech.com>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Link: https://lore.kernel.org/io-uring/6811f6dc.050a0220.39e3a1.0d0e.GAE@google.com/
+Reported-by: syzbot+3e77fd302e99f5af9394@syzkaller.appspotmail.com
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/pci.c | 3 +++
- 1 file changed, 3 insertions(+)
+ io_uring/fdinfo.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index a763df0200ab4..8eee28282b1e9 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -3427,6 +3427,9 @@ static const struct pci_device_id nvme_id_table[] = {
- 		.driver_data = NVME_QUIRK_BOGUS_NID, },
- 	{ PCI_DEVICE(0x1217, 0x8760), /* O2 Micro 64GB Steam Deck */
- 		.driver_data = NVME_QUIRK_DMAPOOL_ALIGN_512, },
-+	{ PCI_DEVICE(0x126f, 0x1001),	/* Silicon Motion generic */
-+		.driver_data = NVME_QUIRK_NO_DEEPEST_PS |
-+				NVME_QUIRK_IGNORE_DEV_SUBNQN, },
- 	{ PCI_DEVICE(0x126f, 0x2262),	/* Silicon Motion generic */
- 		.driver_data = NVME_QUIRK_NO_DEEPEST_PS |
- 				NVME_QUIRK_BOGUS_NID, },
+diff --git a/io_uring/fdinfo.c b/io_uring/fdinfo.c
+index 976e9500f6518..a26cf840e623d 100644
+--- a/io_uring/fdinfo.c
++++ b/io_uring/fdinfo.c
+@@ -81,11 +81,11 @@ __cold void io_uring_show_fdinfo(struct seq_file *m, struct file *f)
+ 	seq_printf(m, "SqMask:\t0x%x\n", sq_mask);
+ 	seq_printf(m, "SqHead:\t%u\n", sq_head);
+ 	seq_printf(m, "SqTail:\t%u\n", sq_tail);
+-	seq_printf(m, "CachedSqHead:\t%u\n", ctx->cached_sq_head);
++	seq_printf(m, "CachedSqHead:\t%u\n", data_race(ctx->cached_sq_head));
+ 	seq_printf(m, "CqMask:\t0x%x\n", cq_mask);
+ 	seq_printf(m, "CqHead:\t%u\n", cq_head);
+ 	seq_printf(m, "CqTail:\t%u\n", cq_tail);
+-	seq_printf(m, "CachedCqTail:\t%u\n", ctx->cached_cq_tail);
++	seq_printf(m, "CachedCqTail:\t%u\n", data_race(ctx->cached_cq_tail));
+ 	seq_printf(m, "SQEs:\t%u\n", sq_tail - sq_head);
+ 	sq_entries = min(sq_tail - sq_head, ctx->sq_entries);
+ 	for (i = 0; i < sq_entries; i++) {
 -- 
 2.39.5
 
