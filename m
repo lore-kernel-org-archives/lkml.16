@@ -1,46 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACF9272608
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 17:39:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DA081FF5E3;
+	Tue,  6 May 2025 17:41:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746553179; cv=none; b=Wi2+4P3HwR7y/yu1hL19Am1KLldotkYo8TU2NaPQq3CXgmMheJopYlV0Jt98Jn4DRMPtJvyFG9VTxVnj0uK02DAZFl0IBSiH3T8t5IPNy/EgedKG6eVbSSpL0bvIhWMcV43ZqnmVbyUtMXpmR2tamJjaOk8X4NT9H+Wh7/nbsAM=
+	t=1746553274; cv=none; b=unYh3VgCy9bGy3SW0ZU2VcRKu3OblMZWGS/dSznQdU5mHjN/kyBoDncsoFAtmPMeAxUx2td/o5tVpbFteFQXLXQGCKPTWCku8He2+8U4GKICR5P3paM8glIuzw4XFXlwMXvJCKrwRBqf8RUVS2J+sG+sUWXeK9HmG277jlUyEMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746553179; c=relaxed/simple;
-	bh=ygC4jeJ8dWSsHiXwImyCmJalRyiQe/eP76J9UZQgQsc=;
+	s=arc-20240116; t=1746553274; c=relaxed/simple;
+	bh=addtd2tD+DOVZOCpE3AbYsDQUYIQPT10US31SZtt2d8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q66o/tXt6PADxDa64yAfAj7sZBeFUwT3iQpHF33Gd82GNSab26wNOgOHpUgcnl+m1KacooVdQl7H2pCmTxyzzkEkCZd3f5tCHcVSBNCCoNThhCXOU8chMv9H8lJWHUdYuw37p1cmAPw8OWDaxII3JJ3/A8VlxDzNoHF/dnUqnVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jyVnlM1s; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=pWlGh8a6gLLempF5cgSpIFd8yj/BiRINxbIlkj3dzPj//rEztWDQQnfKxeFv8q4l9pnpW6EUodfhEyikXZegL/N9uslpWNMGhCr1SIxsmf0bN10Hq8OZ6eOaHoZ9sOMK61UhizoK+P86Sy0rw0Ku3y3vukONvHKAfP6Dz/suMWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qQ13y8A2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jyVnlM1s"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB19DC4CEE4;
-	Tue,  6 May 2025 17:39:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qQ13y8A2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D5E3C4CEEB;
+	Tue,  6 May 2025 17:41:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746553179;
-	bh=ygC4jeJ8dWSsHiXwImyCmJalRyiQe/eP76J9UZQgQsc=;
+	s=k20201202; t=1746553273;
+	bh=addtd2tD+DOVZOCpE3AbYsDQUYIQPT10US31SZtt2d8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jyVnlM1smlHuUOTVJUf5GLKZZ2XWFHsPe+XCaedvtmEzmJ6ns5eWhBOOzU53XEPdY
-	 VFDXx6/fBNFkEUBq0GLR8USN63L6zidBFF2RNwfD8v3gQ/Pnib0G7HlnsjQVLfcao5
-	 4ffyX49tf0Ho8QokxrYD8XZ+Qbgn7UeyocLOewbNZtRtj/REDC/F5tZm+3NDdLplUX
-	 fXnGEEWqQr+PwtZO2iOcw+f0j+aYFI4vzQNOHs/ugplls3kk3hwFJQM+PEzcCP9kJ8
-	 bcuyA/ovbPVrr8jDy2G31tlQgZLr+x8BQ/3YkCkVld+R/e70iXZu79BpVP5UMZr5ri
-	 Rg5awkXmLntpA==
-Date: Tue, 6 May 2025 19:39:35 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org,
-	x86@kernel.org
-Subject: Re: [RFC PATCH 3/3] x86/boot: Use alternatives based selector for
- 5-level paging constants
-Message-ID: <aBpJV7fJNyfb7tSx@gmail.com>
-References: <20250506154532.1281909-5-ardb+git@google.com>
- <20250506154532.1281909-8-ardb+git@google.com>
- <CAHk-=whrcutH0LcMmaeJxxMeYpw2R5T80yoQAXbrRHNSTCB0Pw@mail.gmail.com>
- <CAMj1kXFSae=stazUv8doka-zLOnDdXXR4ASxHKe5f97ikg3V2A@mail.gmail.com>
- <CAHk-=whxP5Ywpv-U=2NPFhk929VHB9_kdp10+HFJQ4VxEGdX9A@mail.gmail.com>
- <CAMj1kXGwYXXpjPgDwjKMEZJkuGJ8ZuCpMpc7fTvo58PNtu-czA@mail.gmail.com>
+	b=qQ13y8A2z2q3OM1MObsbWCM3zla4VJlDmuJTvyfkO9aLQ99ypDNhNEN5oIxX8/CF2
+	 L7PE7DWzOZPp8ZoJDpDZlpxNWTk5Ih4sWfsD84tNapMnA3Y2KOw5B9Y4QZvvndl1mh
+	 OaqinBL3jRrAXKDx1+2yyGAihpf5tY7CMaH3ajYjdYUoCrccekKFDzi+RY471N+O6g
+	 DLNKlwl5z4KVODs9zh9AM0Y9QIoVY2JiKb7Wvkg8siHRf9KFynN7ZtDScFTVNASztZ
+	 HHcK779OBDwABXOTxQ233HRRs0qXWSGtkHiFvT9ZytMwZVGnlGYVjBiQXW/Wq4izM5
+	 uuVjbbjUkI0dw==
+Received: by pali.im (Postfix)
+	id B53EE67E; Tue,  6 May 2025 19:41:10 +0200 (CEST)
+Date: Tue, 6 May 2025 19:41:10 +0200
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To: Hans Zhang <18255117159@163.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
+	heiko@sntech.de, manivannan.sadhasivam@linaro.org,
+	yue.wang@Amlogic.com, neil.armstrong@linaro.org, robh@kernel.org,
+	jingoohan1@gmail.com, khilman@baylibre.com, jbrunet@baylibre.com,
+	martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-amlogic@lists.infradead.org,
+	linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v3 3/3] PCI: aardvark: Remove redundant MPS configuration
+Message-ID: <20250506174110.63ayeqc4scmwjj6e@pali>
+References: <20250506173439.292460-1-18255117159@163.com>
+ <20250506173439.292460-4-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,41 +51,50 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMj1kXGwYXXpjPgDwjKMEZJkuGJ8ZuCpMpc7fTvo58PNtu-czA@mail.gmail.com>
+In-Reply-To: <20250506173439.292460-4-18255117159@163.com>
+User-Agent: NeoMutt/20180716
 
-
-* Ard Biesheuvel <ardb@kernel.org> wrote:
-
-> > All of those change depending on
-> > whether we do 5-level page tables or not, so the whole argument that
-> > "pgtable_l5_enabled() is special" is just wrong to begin with.
-> >
+On Wednesday 07 May 2025 01:34:39 Hans Zhang wrote:
+> The Aardvark PCIe controller enforces a fixed 512B payload size via
+> PCI_EXP_DEVCTL_PAYLOAD_512B, overriding hardware capabilities and PCIe
+> core negotiations.
 > 
-> In my original patch, which is the one Ingo objected to, 
-> pgtable_l5_enabled() is unambiguously based on whether CR4.LA57 is 
-> set.
-
-So I didn't really object to the simplification aspect - I was 
-criticizing the current state of LA57 handling, regardless of your 
-patch. In fact in that thread I supported the simplification aspect:
-
-  > > Anyway, I'm not against Ard's simplification patch as a first step, and
-  > > any optimizations can be layered on top of that.
-
-But in hindsight I can see how my first reply came away as 
-disagreement...
-
-> In the light of the above, care to comment on the previous approach?
+> Remove explicit MPS overrides (PCI_EXP_DEVCTL_PAYLOAD and
+> PCI_EXP_DEVCTL_PAYLOAD_512B). MPS is now determined by the PCI core
+> during device initialization, leveraging root port configurations and
+> device-specific capabilities.
 > 
-> https://lore.kernel.org/all/20250504095230.2932860-28-ardb+git@google.com/
+> Aligning Aardvark with the unified MPS framework ensures consistency,
+> avoids artificial constraints, and allows the hardware to operate at
+> its maximum supported payload size while adhering to PCIe specifications.
 > 
-> That also uses the ALTERNATIVE_TERNARY() so the CR4 access gets
-> patched away, and I'm happy to take suggestions how to improve that.
+> Signed-off-by: Hans Zhang <18255117159@163.com>
+> ---
+>  drivers/pci/controller/pci-aardvark.c | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> index a29796cce420..d8852892994a 100644
+> --- a/drivers/pci/controller/pci-aardvark.c
+> +++ b/drivers/pci/controller/pci-aardvark.c
+> @@ -549,9 +549,7 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+>  	reg = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + PCI_EXP_DEVCTL);
+>  	reg &= ~PCI_EXP_DEVCTL_RELAX_EN;
+>  	reg &= ~PCI_EXP_DEVCTL_NOSNOOP_EN;
+> -	reg &= ~PCI_EXP_DEVCTL_PAYLOAD;
+>  	reg &= ~PCI_EXP_DEVCTL_READRQ;
+> -	reg |= PCI_EXP_DEVCTL_PAYLOAD_512B;
+>  	reg |= PCI_EXP_DEVCTL_READRQ_512B;
+>  	advk_writel(pcie, reg, PCIE_CORE_PCIEXP_CAP + PCI_EXP_DEVCTL);
+>  
+> -- 
+> 2.25.1
+> 
 
-I still think we should introduce a LA57_ENABLED synthethic cpufeature 
-flag or so for the MM constants and all the late facilities, and go 
-from there.
+Please do not remove this code. It is required part of the
+initialization of the aardvark PCI controller at the specific phase,
+as defined in the Armada 3700 Functional Specification.
 
-Thanks,
-
-	Ingo
+There were reported more issues with those Armada PCIe controllers for
+which were already sent patches to mailing list in last 5 years. But
+unfortunately not all fixes were taken / applied yet.
