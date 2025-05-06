@@ -1,94 +1,127 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3176D28000E
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 13:10:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C59E21773D
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 13:10:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746537016; cv=none; b=NMdwcBxrRcppEQTItsHfdzfhel/Cm+WWKOtcWpa8P97Nr21zj9wM4MqY8+fJCYPTV7vvfNnebTU0Q3iGeOG3jWXhEpUHTle5PzeY3173trK0pVK/yX21F/4xNsIQ0znBbCPINXIKXemJVFw/z7a3Tk1rgKCGOTPr6pHgG6jpS7U=
+	t=1746537027; cv=none; b=YDWK4InNLYuQEytoWMJ513GpxLUyjfa8OJLlKPmF57d6iZQmNEaYaEzonFsofT6DgdxxJNAzV5PeeODQ0zKYwc3bjfTM9nvxDc0/p4qQfO4U3EV/pcAGp6lx7ZFc2e6B7A0kzmnvIKDuh0pgwh0BvOBB++uEB9bmJMuVLv9ngtc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746537016; c=relaxed/simple;
-	bh=oqnUxremHISOuVzgXJvUlTaqJdS7J1eS94fmp04NNlc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nk0rEDj6K54T/TuWueJvglwuiw5D3U15ci4Ecgm1Dqi4tCWcmrEsigB6o/mRG7jIZEwQzHFB9xMqoPnON1iIS8j4PtTCoFgohQ6Q6ZSiP4Dj5sjyGa68LTNcwFBKyTSocZFuxW2HvvMZsEV88Msf1egNX4QhD8t0z6BEE/CBDXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=a5lmD3tX; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=VtIs0gGs reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1746537027; c=relaxed/simple;
+	bh=6mA6iTRXWXZ1yOt7qM2S0V/T0zHayKp4IhqSJBG4MFE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ZjDBiqLcZshMsIhbV8dHJn6tB8PQfIHR0tTn6MeZtSuhYQ/xvhwUS2HD1BoxwrXnFjXR/Nu3B3b17xqtKX50EhpYqqIdAO8luDnx86iobcyN4CU+7qZx77lDsj/wC9uOH9OCtTi4C8Puss2h1rrWmCM22k7oer0ANr7whM6K7+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UzGa3alC; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="a5lmD3tX";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="VtIs0gGs"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UzGa3alC"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-39c1efbefc6so4197743f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 06:10:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1746537012; x=1778073012;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=7flR5DbV9pTvWMtb7j8Zpa3VQSCSW81rsjiKSP4Ot58=;
-  b=a5lmD3tXtbmwDQk0ow7Sb44qo3k6vji7C6hUJrWOmhL10H/cTmzrFoL3
-   LhRyEBigyP+hMMs7RnwHzcfp3DMXyHQHwgUvz3qPvDATQ57f9zEwyjeXU
-   CGGNU60r6xyQtWgYKEJKXdeeRlOO//ACd9iCqQouxmEiSS/9Us9XOYDCf
-   2nysfGAMwaESqLSWLpC26+g6k5bBK/V4GfQurQVpj9NJbh0kRWbXG2DjI
-   nq75yTH3z3hp7NF6dnecNAxKo2ii4nkWw7hQhvktrah32e+sPnAAJWf9Q
-   Brye7kDBEPpd+8MYpr54IpotHkeNlBzlfgimM1JEM4DATFU1AM+bIgzfq
-   Q==;
-X-CSE-ConnectionGUID: Q1eSLSEGSGyRrPEtnwsZ6Q==
-X-CSE-MsgGUID: 4ZaVbCIiRfWnTqXBDzDuJg==
-X-IronPort-AV: E=Sophos;i="6.15,266,1739833200"; 
-   d="scan'208";a="43909028"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 06 May 2025 15:10:03 +0200
-X-CheckPoint: {681A0A2B-A-68AAF6F9-E177A1A4}
-X-MAIL-CPID: 98129684B7364D902E833F2BF2B8F45D_2
-X-Control-Analysis: str=0001.0A006398.681A0A3B.005C,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id A04A51636AD;
-	Tue,  6 May 2025 15:09:53 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1746536994;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=7flR5DbV9pTvWMtb7j8Zpa3VQSCSW81rsjiKSP4Ot58=;
-	b=VtIs0gGsg/LpVTSw0QA4nX1HA9u92HuNFdEq/6irbAg0c84cqHiVnauSV4RZ6jRV5eVrc/
-	p3avYSnxmb0PFc9eyZ4AczU4DOWnsWy75/tjaI2b83wnx+f7yUo25cAWo+2lbU7iO3SxDf
-	K0RVnXnT7TScEzzZAU/eijrG4GVOrOcIR+2FBGFBoec7MoRpZKXAJQNbExKFtKBJjuMqFE
-	DkzBjW327IWkdI2l+CVi4RTe+5DV+eXurf4H4KsTLb+pyq2+PsvTk9OOcxynXC/NrNhppz
-	M8yFYLhwM9JGGUjTpFSXn4HlWHA1RyWwbyhKUXYIGuKib3v5nZneQ2vaTlf8aA==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>
-Cc: Alexander Stein <alexander.stein@ew.tq-group.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] arm64: defconfig: Enable Marvell WiFi-Ex USB driver
-Date: Tue,  6 May 2025 15:09:39 +0200
-Message-ID: <20250506130940.2621554-1-alexander.stein@ew.tq-group.com>
-X-Mailer: git-send-email 2.43.0
+        d=linaro.org; s=google; t=1746537023; x=1747141823; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=eVSozHIL1R1kO0geupLABCS2zCL42BF9GBcy5eQEopI=;
+        b=UzGa3alC5N4eAV39c7+SsmDiWDtNzRWGK6seEdZ2nwyq0MFnb+163Lxk2noxlXlyzK
+         yHvB9JopgUAK6Cmw5Jz7BErXkIshWMSwhPWs6DojM4dYMsZm4hNRoB04GkXwNEJ1efJS
+         0ipacx84IpVPLY5+QG7SdMtERjq5ZtM5AiMj2lYLzDkresYriAH+e2JQtwAriNSiKqQG
+         20Do67KbVOxXQEvlzUtFjZupt4HYnMtNbe+qfhPCw3kP4mlK3FqPXZtR+XRz/7SHM+K0
+         CK2Hg2DkzjXsewHA1m14zn49gVvlSw6+38fLWIts2R3OpPTGo1++MPMOXGMvRYVmEPrM
+         kNZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746537023; x=1747141823;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eVSozHIL1R1kO0geupLABCS2zCL42BF9GBcy5eQEopI=;
+        b=GCGkmxPq7aqtKzCso6spEC5GM9XzRzxRyOVG6wP1shKjPuj7ssfquzyfGxRLfjuTQ2
+         4Bp4rFxiNaY2f5doio2D6lTrm/Ni1MlIopT/WzSNXyfXv6Nsj/0w5IYdKrhFstme/+rj
+         NWdJ2MC+4n3D1PyoQCGvjpwDX0N/iEBjykbyxNZSGRCtYuQgYaV51frjVI66/e/VqQh3
+         ALOpezmJcduSFp1hdtAt3y73PVb4hf0fuCUeXNQlnSXpFPPQVLm/lnUTlNRTG8G/Pq/n
+         zsaDavAVYLFntW1Vx9nMxGEY6waFC49XLk2EavlXSEODmZjyFExg/TcEZxK9XakPql8m
+         OZlQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVIExpa4VxanS6e9V7NofaU0K7FK9mT9NhMj1cWMW8MhblmBwfF+5QxOKIHDlhAjqYvQC2x5bBP75YG5zU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4HmbmiO4Ca1JT+N7mlfJtFwe/80hZW0UtnOxNPryUOQS7l4Ll
+	vuG5zyItzp8ZwwIZSPFK9Dr36Ha+Sz9cgpOGO9zcpikPkN2/9memoLMtiqtlOh0=
+X-Gm-Gg: ASbGncszx6cquRnP6tLQiIPfo8CM7p0SG0lnWeU6QjK1XlpTx6g4yxpfXiYKK2nXZxJ
+	5+KeLLguG0GxUpNjJJJiPszV8mj9Pcw6XyMfPrsE1ODo8Immb2QEzU9kbI11gifaQOqhqy6t4q2
+	SpUIu9J3J7CLRAVpNtiaRpCyFw+0rBk0EId2a+5du47dZbAnW4RwD8Mo8gum3XQHdWNTQGtEwSf
+	FaTEVu26E1DTbbqEk+pKoFQqNeUh5ubNEWRP0YFOU/CD2DppH2OBkBcq0BY7ttqn9+6pw0FbXEM
+	0r2duvLGd5zT17ZTlUNRsFBv4mheWsQoXSFVO7TJzJXNpFvp3pLGCw4=
+X-Google-Smtp-Source: AGHT+IGvOKJR9bQjNfDvrDffZYoLtEjrjFfhbdpqa82uUo012ez5u5VvKrhfKfFZsatuBILBuKkHHg==
+X-Received: by 2002:a5d:5848:0:b0:391:952:c728 with SMTP id ffacd0b85a97d-3a0ac0cb3f3mr2514750f8f.4.1746537023357;
+        Tue, 06 May 2025 06:10:23 -0700 (PDT)
+Received: from [127.0.0.2] ([2a02:2454:ff21:ef41:3f93:4614:996d:f5f7])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a0af3255afsm1771268f8f.66.2025.05.06.06.10.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 May 2025 06:10:22 -0700 (PDT)
+From: Stephan Gerhold <stephan.gerhold@linaro.org>
+Subject: [PATCH 0/4] mailbox: qcom-apcs-ipc: Avoid circular dependency with
+ clock controller
+Date: Tue, 06 May 2025 15:10:07 +0200
+Message-Id: <20250506-qcom-apcs-mailbox-cc-v1-0-b54dddb150a5@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAC8KGmgC/x2MQQqAIBAAvxJ7bsGkgvpKdNBtq4XMUohA/HsSc
+ 5rDTILIQTjCWCUI/EgUfxZp6gpoN+fGKEtx0Ep3qoA3eYfmoojOyGH9i0TYsx60tf3SKoaSXoF
+ Xef/tNOf8Acc6CglmAAAA
+X-Change-ID: 20250505-qcom-apcs-mailbox-cc-6e292bb6d40e
+To: Jassi Brar <jassisinghbrar@gmail.com>, 
+ Bjorn Andersson <andersson@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-clk@vger.kernel.org, Georgi Djakov <djakov@kernel.org>, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+X-Mailer: b4 0.14.2
 
-This driver is used on imx93-tqma9352-mba91xxca.dts.
+The APCS "global" node in the device tree currently combines two distinct
+use cases in a single device tree node: a mailbox to communicate with other
+remoteprocs in the system, and a clock for controlling the CPU frequency.
 
-Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+These two use cases have unavoidable circular dependencies: the mailbox is
+needed as early as possible during boot to start controlling shared
+resources like clocks and power domains, while the clock controller needs
+one of these shared clocks as its parent. Currently, there is no way to
+distinguish these two use cases for generic mechanisms like fw_devlink.
+
+Break up the circular dependency chain in the device tree by separating the
+clock controller into a separate child node.
+
+The patches in this series should be merged together in one tree to avoid
+potential bisect problems. Given the majority of the changes is in the
+mailbox subsystem and the QC clock drivers only have trivial 1-line
+changes, I propose merging all of these through the mailbox subsystem.
+
+@Bjorn: If this sounds good to you, could you provide an Acked-by for the
+two "clk: qcom:" patches?
+
+Signed-off-by: Stephan Gerhold <stephan.gerhold@linaro.org>
 ---
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+Stephan Gerhold (4):
+      dt-bindings: mailbox: qcom,apcs: Add separate node for clock-controller
+      mailbox: qcom-apcs-ipc: Assign OF node to clock controller child device
+      clk: qcom: apcs-msm8916: Obtain clock from own OF node
+      clk: qcom: apcs-sdx55: Obtain clock from own OF node
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 8691f0ee44e66..550b2505b5658 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -437,6 +437,7 @@ CONFIG_IWLMVM=m
- CONFIG_MWIFIEX=m
- CONFIG_MWIFIEX_SDIO=m
- CONFIG_MWIFIEX_PCIE=m
-+CONFIG_MWIFIEX_USB=m
- CONFIG_MT7921E=m
- CONFIG_RSI_91X=m
- CONFIG_WL18XX=m
+ .../bindings/mailbox/qcom,apcs-kpss-global.yaml    | 169 ++++++++++++++-------
+ drivers/clk/qcom/apcs-msm8916.c                    |   2 +-
+ drivers/clk/qcom/apcs-sdx55.c                      |   2 +-
+ drivers/mailbox/qcom-apcs-ipc-mailbox.c            |  16 +-
+ 4 files changed, 132 insertions(+), 57 deletions(-)
+---
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+change-id: 20250505-qcom-apcs-mailbox-cc-6e292bb6d40e
+
+Best regards,
 -- 
-2.43.0
+Stephan Gerhold <stephan.gerhold@linaro.org>
 
