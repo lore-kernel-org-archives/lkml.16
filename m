@@ -1,112 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BAAD19D892;
-	Tue,  6 May 2025 08:36:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45476230D2B;
+	Tue,  6 May 2025 08:37:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746520608; cv=none; b=L+ZJha/DPauISbBv7FThQMncn/1pC4vgf8dzOJgM+89cZQ7/O8qm6V4BU5AkydaSkTmpceEPu56XK/ZHrgy3OplYu1u4ke9u2GRC+XkmuCYwNNR5ZOOl8/7OvBpFZD2mz7BkOU5zr4mGuW6caHMFJfv4YkI6NFDaGstsFB7YzMw=
+	t=1746520654; cv=none; b=Ih6BBx2h7z3m2iYEBn7F+YzYHY+15PIkQiFSya6jS/gRHgsYh4Iuuh5m9oMjBp9O6ZDq3/PJtYnpiwnyNA1Q0PxFaqN1fwV8oZEtkZ9Ewd08bu11YYgFrmeQpT0f/lotIjP03qWxdZ3WgivuVZTgWcSqC6I+f5pAQYt26Zz7Hjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746520608; c=relaxed/simple;
-	bh=9VOMYTlC6ALS5IdAgzBAWP1xvgjsjQLiqbJ2O0ZhVHc=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CNztpUsBHipjkw6DyCBfSg2tEsysDazJ01wSGYNsyShSU2ahL5YzRMROz/UG19xPdrq2ij3SFuukrksbboGWIDZlQMEBuzSS8LJFOruTL/sUdP2HVE3iBFCxaxkrgrx7gw0aIAI5G6ldT+ogPztxvSIeMwkQLfoijlVEcDNJ0P8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G2RqhqDT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746520654; c=relaxed/simple;
+	bh=zSJqGXHq0RQCjz4Rg6EG9hUt7MJczyIpvCaunrl+K8Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aThaBmBnYnzRvwiRtQBFEAg0STgtrYtdQ3uruvSgQ0lEoVNzvLbGTnl6FyikGi8ilVac7Lc2pmQZITg3XvNrZexk3AA/o3oevUCeIDaMGoolQWHpuMhinzIB04NChLLDJ3C/2kmURJe4N7EZY+8sNW/sjeBPx9dyRz+w04LkUJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=asLGSDaY; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G2RqhqDT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65BFFC4CEE4;
-	Tue,  6 May 2025 08:36:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746520607;
-	bh=9VOMYTlC6ALS5IdAgzBAWP1xvgjsjQLiqbJ2O0ZhVHc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=G2RqhqDT+gZcdaDr4WlZdP0vofL3oNiEIDADXbadpArkaiurY9O2NUT46rZO3n8HL
-	 jheqZY23TyYhxAdGoyvOBgunYrbJggEAmbLA6prLdruFjdxUVZK+Fdj4BLg+/be53X
-	 ljTpmaR8UBdsVD0pU8pxIlLg2i+N/VYk06hW7XmwZB8a7kC58GIBqOxd90gR3K15t4
-	 mZS8hULgWZ050J/nBHpd3DhBjt2ikA0BHa1pZbWQDcIkT/0j5oRrxDepWyb2lqQWk7
-	 wpKD8UXmWU7x5bd1cFOUj72v+j9pbH3QdzheDN1EVmX9M899aGKEM9buy6Yewu3pjJ
-	 UhkhI1czrIBAw==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uCDnA-00C97H-GY;
-	Tue, 06 May 2025 09:36:45 +0100
-Date: Tue, 06 May 2025 09:36:44 +0100
-Message-ID: <86h61ygmoz.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Mostafa Saleh <smostafa@google.com>,
-	kvmarm@lists.linux.dev,
-	kasan-dev@googlegroups.com,
-	linux-hardening@vger.kernel.org,
-	linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	will@kernel.org,
-	oliver.upton@linux.dev,
-	broonie@kernel.org,
-	catalin.marinas@arm.com,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	hpa@zytor.com,
-	elver@google.com,
-	andreyknvl@gmail.com,
-	ryabinin.a.a@gmail.com,
-	akpm@linux-foundation.org,
-	yuzenghui@huawei.com,
-	suzuki.poulose@arm.com,
-	joey.gouly@arm.com,
-	masahiroy@kernel.org,
-	nathan@kernel.org,
-	nicolas.schier@linux.dev
-Subject: Re: [PATCH v2 0/4] KVM: arm64: UBSAN at EL2
-In-Reply-To: <202504301131.3C1CBCA8@keescook>
-References: <20250430162713.1997569-1-smostafa@google.com>
-	<202504301131.3C1CBCA8@keescook>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="asLGSDaY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746520652; x=1778056652;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=zSJqGXHq0RQCjz4Rg6EG9hUt7MJczyIpvCaunrl+K8Y=;
+  b=asLGSDaYxJApFL6+rpYu8L5GlAzNTsqPxs0KbYCv84aknSRggbMjaFF1
+   1urPt+mpY4N4FbJkyoZ7vrNQ0dg8vS+j58nPmPQSSO9VrYmMGSbauRmcO
+   p1MLsGNgdiadMcgn3v9pMa4poL7Ast+PVfGwDkYgOYdghErsd1Dd5wo6s
+   tj3FQPphBz5zOrl3+NiO4wkdkLs7vQvp3ykKEf6w/73UfpV0aTEUFLAs9
+   uGjf29tFt46fhUG2ObQ+zY9LWIFt5yj0XgiPgEOLvHviIfg9BBbBwYfBJ
+   /WyfKjyHbt6PIWTsWkAVsYSqWzNpidHhG1+9HttFz7BFkx2/rYST3PnCV
+   A==;
+X-CSE-ConnectionGUID: qBHQk0C5RkOImSVawALjIA==
+X-CSE-MsgGUID: sh4kdTjNTQOI/3nluIdhDg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11424"; a="50824746"
+X-IronPort-AV: E=Sophos;i="6.15,265,1739865600"; 
+   d="scan'208";a="50824746"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 01:37:31 -0700
+X-CSE-ConnectionGUID: LLSeDVYTQfSVQFUsKN57MQ==
+X-CSE-MsgGUID: 4BAyx0CTQHyr7upWTQCYKg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,265,1739865600"; 
+   d="scan'208";a="135546274"
+Received: from unknown (HELO [10.238.1.183]) ([10.238.1.183])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 01:37:25 -0700
+Message-ID: <a3858c57-5de0-45ae-ab33-30e4c233337d@linux.intel.com>
+Date: Tue, 6 May 2025 16:37:22 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: kees@kernel.org, smostafa@google.com, kvmarm@lists.linux.dev, kasan-dev@googlegroups.com, linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, will@kernel.org, oliver.upton@linux.dev, broonie@kernel.org, catalin.marinas@arm.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, elver@google.com, andreyknvl@gmail.com, ryabinin.a.a@gmail.com, akpm@linux-foundation.org, yuzenghui@huawei.com, suzuki.poulose@arm.com, joey.gouly@arm.com, masahiroy@kernel.org, nathan@kernel.org, nicolas.schier@linux.dev
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 07/21] KVM: TDX: Add a helper for WBINVD on huge pages
+ with TD's keyID
+To: Yan Zhao <yan.y.zhao@intel.com>
+Cc: pbonzini@redhat.com, seanjc@google.com, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, x86@kernel.org, rick.p.edgecombe@intel.com,
+ dave.hansen@intel.com, kirill.shutemov@intel.com, tabba@google.com,
+ ackerleytng@google.com, quic_eberman@quicinc.com, michael.roth@amd.com,
+ david@redhat.com, vannapurve@google.com, vbabka@suse.cz, jroedel@suse.de,
+ thomas.lendacky@amd.com, pgonda@google.com, zhiquan1.li@intel.com,
+ fan.du@intel.com, jun.miao@intel.com, ira.weiny@intel.com,
+ isaku.yamahata@intel.com, xiaoyao.li@intel.com, chao.p.peng@intel.com
+References: <20250424030033.32635-1-yan.y.zhao@intel.com>
+ <20250424030549.305-1-yan.y.zhao@intel.com>
+Content-Language: en-US
+From: Binbin Wu <binbin.wu@linux.intel.com>
+In-Reply-To: <20250424030549.305-1-yan.y.zhao@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, 30 Apr 2025 19:32:23 +0100,
-Kees Cook <kees@kernel.org> wrote:
-> 
-> On Wed, Apr 30, 2025 at 04:27:07PM +0000, Mostafa Saleh wrote:
-> > Many of the sanitizers the kernel supports are disabled when running
-> > in EL2 with nvhe/hvhe/proctected modes, some of those are easier
-> > (and makes more sense) to integrate than others.
-> > Last year, kCFI support was added in [1]
-> > 
-> > This patchset adds support for UBSAN in EL2.
-> 
-> This touches both UBSAN and arm64 -- I'm happy to land this via the
-> hardening tree, but I expect the arm64 folks would rather take it via
-> their tree. What would people like to have happen?
 
-I don't mind either way, but in any case I'd like a stable branch with
-that code so that I can merge it if any conflict occurs in -next.
 
-Alternatively, I can take it via the kvmarm tree, and publish a stable
-branch for anyone to pick and resolve conflicts ahead of the merge
-window.
+On 4/24/2025 11:05 AM, Yan Zhao wrote:
+> From: Xiaoyao Li <xiaoyao.li@intel.com>
+>
+> After a guest page is removed from the S-EPT, KVM calls
+> tdh_phymem_page_wbinvd_hkid() to execute WBINVD on the page using the TD's
+> keyID.
+>
+> Add a helper function that takes level information to perform WBINVD on a
+> huge page.
+>
+> [Yan: split patch, added a helper, rebased to use struct page]
+> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+> Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
+> Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+> ---
+>   arch/x86/kvm/vmx/tdx.c | 24 +++++++++++++++++++-----
+>   1 file changed, 19 insertions(+), 5 deletions(-)
+>
+> diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
+> index 69f3140928b5..355b21fc169f 100644
+> --- a/arch/x86/kvm/vmx/tdx.c
+> +++ b/arch/x86/kvm/vmx/tdx.c
+> @@ -1586,6 +1586,23 @@ int tdx_sept_set_private_spte(struct kvm *kvm, gfn_t gfn,
+>   	return tdx_mem_page_record_premap_cnt(kvm, level);
+>   }
+>   
+> +static inline u64 tdx_wbinvd_page(struct kvm *kvm, u64 hkid, struct page *page, int level)
+> +{
+> +	unsigned long nr = KVM_PAGES_PER_HPAGE(level);
+> +	unsigned long idx = 0;
+> +	u64 err;
+> +
+> +	while (nr--) {
+> +		err = tdh_phymem_page_wbinvd_hkid(hkid, nth_page(page, idx++));
+> +
+> +		if (KVM_BUG_ON(err, kvm)) {
+> +			pr_tdx_error(TDH_PHYMEM_PAGE_WBINVD, err);
+> +			return err;
+> +		}
+> +	}
+> +	return err;
+> +}
+> +
+>   static int tdx_sept_drop_private_spte(struct kvm *kvm, gfn_t gfn,
+>   				      enum pg_level level, struct page *page)
+>   {
+> @@ -1625,12 +1642,9 @@ static int tdx_sept_drop_private_spte(struct kvm *kvm, gfn_t gfn,
+>   		return -EIO;
+>   	}
+>   
+> -	err = tdh_phymem_page_wbinvd_hkid((u16)kvm_tdx->hkid, page);
+> -
+> -	if (KVM_BUG_ON(err, kvm)) {
+> -		pr_tdx_error(TDH_PHYMEM_PAGE_WBINVD, err);
+> +	err = tdx_wbinvd_page(kvm, kvm_tdx->hkid, page, level);
+> +	if (err)
 
-Thanks,
+It can add unlikely() here.
+Also the err is not used after check, maybe it can be combined as:
 
-	M.
+if (unlikely(tdx_wbinvd_page(kvm, kvm_tdx->hkid, page, level)))
+         return -EIO;
 
--- 
-Without deviation from the norm, progress is not possible.
+
+>   		return -EIO;
+> -	}
+>   
+>   	tdx_clear_page(page, level);
+>   	tdx_unpin(kvm, page);
+
