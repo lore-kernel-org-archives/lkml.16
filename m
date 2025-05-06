@@ -1,91 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f226.google.com (mail-il1-f226.google.com [209.85.166.226])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D895024166D
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 17:52:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA9DA20B806
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 17:54:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.226
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746553978; cv=none; b=n+ZZtd2r/vvxjvBwwWZ+eXbpB9U8q6aBGBOAVuXnuie8frwaYYH8dvQqpCf/DsYAFFblEvWPRNnPyJoDdkW+QyTGxg/GWgM6o4dnGKG6pnYp1fWS4TI8gJ4tKtILl7+KfIN++F+c5NvWffxBDcDfWIRerp0vfPfWr7PjA6wUmJ8=
+	t=1746554064; cv=none; b=uAwIhvXiGJdD3ihzDDKEzxbsYhJDN9Akf7Z5tb/rzJdKKgmSOKg7dcEw693CLEIbipwrwDc3O3rkBFXhiMmsonV7+TiN/4oSPu5VFvDbXJtxS+uWX4IzxefVgw/nulJFN2MLBwM5D3wVXweHcavpC9eiJ9EkjbB0kWMacET7/Po=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746553978; c=relaxed/simple;
-	bh=ix4XPc6aZ0HI07a+pFORwukyAUHQXJv3KChLa9empAQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=d9QSOnr8ZGafpqtGjfun3ru2GgdVKyghVQ1WU6Tw9nDUhoYujNN49twGASXaZgB/sr/0s3/eNXIOy33J+Heodkhzvlq1nyEkwGOD4OX0fQp815gPMns+00WUJ0+MBGCczXh2yLC1/Tq/W9Xtdj7GceCKRVyQIz2mpRyWovVtuxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RUN6nH4H; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746554064; c=relaxed/simple;
+	bh=9mgkh+3nmmF07ECHRmFqC6uyy+zi/VIkBkd/wPvcMJw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ed8gF7LcXf6MHmOKD6piYsm2d1TAoZIj4vY2yRByF2Q4JSZ9LrBovzyzxO8WO0wkWeOxMhZkM93Grd9M37XO/TIkW0uMVnqVLQNii0wPPMxztdCrRX+GbPnM4jbU5uV2J80BxYzP6mm+oA0DJLiuShuDu/lfvu38VXtz29OqpWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=BEpB84IT; arc=none smtp.client-ip=209.85.166.226
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RUN6nH4H"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EE76C4CEEF
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 17:52:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746553978;
-	bh=ix4XPc6aZ0HI07a+pFORwukyAUHQXJv3KChLa9empAQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=RUN6nH4Hql8QDfZVIq0SkoQ2T7Qsk1JK6MbqsXhbR888bKg32vIMEEfU3QIycrEGL
-	 uXCoZZdhIQ5isYj4x+fP12+GT0yRbX70gS0Z7vzo18/Olq/KzKKgRqFMK8GBNe6qj8
-	 KJXjhSrpXCdlbQCExyp9Ef1a1QuFGEqcMXcGABi+Heaeh2FnMg6X4/X4th0sNVRWD2
-	 YDK1xkctarCYFt3X87UJmwQGogcUU0YoNtzzODM1qcCcgjZJz/xTfZ10aEn1uTpwdi
-	 Q/FXoOM5NF7bcN/jEkBPkFZp7Q/uY9zR+gyJBE28lbcJNmOFhIrwPtQbmTzO9THr0R
-	 TaBRLf7Vk9TYQ==
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-3104ddb8051so57644161fa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 10:52:58 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVi1kmOslxtyxNqwhutz2auZTh4cNesdeIpIAnTLy6/2dsgXsD5PVwNnJAUzuH2Nx1uWuhTHNaHblEdSlI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywye/aMaddfTVq5flxD60nGE0gn9+bq22mc63MMzCFscPCHg+pD
-	MIwcEV+NrAMls1DuunAGb4S2f7KQwXO/bd2W1ANOOfC4SKXa93NoGz6VziJmZF9Xq/uxGotCK7W
-	3K48+j2xWVKL9I7jI1FtBZ0+GXr0=
-X-Google-Smtp-Source: AGHT+IFOhXM0K5rp9YtHmb7moTaI4AP/pmsjx7uxN4nWFCGZg3JklwKO0Kgss646B2gTiQTl4NMPmcZANRcPUQcL+DU=
-X-Received: by 2002:a2e:bc21:0:b0:30d:7c12:5725 with SMTP id
- 38308e7fff4ca-32352504dbbmr52575971fa.33.1746553976679; Tue, 06 May 2025
- 10:52:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="BEpB84IT"
+Received: by mail-il1-f226.google.com with SMTP id e9e14a558f8ab-3d43bb8ac26so1694875ab.2
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 10:54:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1746554062; x=1747158862; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ovyunJMzY2BM/vnqYqDfx0z8WEcxzxmQSFfHAJD53dQ=;
+        b=BEpB84ITlSHvyHyScFGMmeBJl8SeD60NHgaltozn9Lb4/Eiz8opkpCVj6iF/Yln7CB
+         MVkZUFdYSkI9xpnqlZp74y6Cq1T/iCeAZfd+u2xfjn1wlUqpR1ntCrHryqyekcw/T+ER
+         P1pd5Pupj1RRJVfNQQC0/1Wu0wTsitv6IoLOjostAPdiywSZnccInMqW62hmupVjZZkw
+         V+gAfc/b0hh03gh/1yImSsiIIXDpPhLBHH0cs1g5D2m70AwRijwCERPk2JZfNn2Zhudu
+         lPIwqNQC10bqa3Z07GMnzNNVaQNQQLZdcRDplH4io8PacAQbTOrMa107DSFpemnTvtt1
+         UQdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746554062; x=1747158862;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ovyunJMzY2BM/vnqYqDfx0z8WEcxzxmQSFfHAJD53dQ=;
+        b=MRLvV0JQEONeVtGwC5J3AcOyG7IJsIDh0tnSirhjpEf6VhDfrA6OmSFNgWxJnyDilO
+         rK7wIVhP73FExebG4983tRlooRbcEGkHPiFySwdbP3LkH7luB0ELegMbsobUK42+A+fl
+         vEHFFsMWN6P0A/ON+0r25gMsgop2IL9wg/T5VwuI8XSLF6WiVmpU1ZFdlpCUUP0jVwIn
+         8A/E+nTOyrdQdbbs/4CPwj/Ww9T6x10ylvQAGIUCAViiEn0t4dbShsWO8XoSAiI84mrA
+         hMpYWcULqUoz5PLMKl9o0CWTKmQyyAc1jswhJa0M/T7uX84g1N5v/eCfPLk8MU9JaFDU
+         t0Zg==
+X-Forwarded-Encrypted: i=1; AJvYcCWHsRkVD2lFu3rz9MPeWp6EybxSvgrIODIz1E08f6dn/gMb/pSJnwpdaLILaP/d5EpTeMfSaQQiL5Zk6Ow=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwEftcmqlUZwRmfXTIjSOGNM282PmyBoq8jEMtNJCrljP9axhU+
+	sChQRN57husAt9pwN4Npp2z09agdZed3T35aA/jBT2HD7kA17dL0QhO68M/epznlqHQg0wtitml
+	9vgm/HFwtfkc9Ast+UvyrJHKm0Oin48UK8h1hXy778zplt2fh
+X-Gm-Gg: ASbGncvUFu3YQbCJJwuAxj8iTpk8BavdFmEdxLdNhpYARJbHHAkGucz9KCFzFwjmIl9
+	q2Jg4DyCSilPijv/MKdFezuWV0xwaopgIEiMfigrOdmewP+P/vUnguhPDBtlL9AMCwniz8RIBgX
+	8hLNQI3+72rWe+zxzzCh+XCH7nzEFtmao5go2NC01xUz4Om9gk6G42gq/s52sGDuOEgvfuSSc/c
+	FhQhXCiOiD5UbergRBAYLFWsOsa4OhgBkkmUORiEw6YgYJHre19RtxA9MfupAgH4awqCQwXdVZz
+	o8ndxXgxZ3dMU2I7kAKOmEk+4BTJBw==
+X-Google-Smtp-Source: AGHT+IGG5+67z8CZz9trHjpJ22gnk/1CqPuiaRkSCUUxhooa3Yd+geotR/Vte9dYVNo7S+ByK3+DgGrMmhi2
+X-Received: by 2002:a05:6e02:1b0e:b0:3d9:2961:fa01 with SMTP id e9e14a558f8ab-3da723e7850mr3279115ab.3.1746554061783;
+        Tue, 06 May 2025 10:54:21 -0700 (PDT)
+Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
+        by smtp-relay.gmail.com with ESMTPS id e9e14a558f8ab-3d975e34c17sm22713665ab.2.2025.05.06.10.54.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 May 2025 10:54:21 -0700 (PDT)
+X-Relaying-Domain: purestorage.com
+Received: from dev-csander.dev.purestorage.com (unknown [IPv6:2620:125:9007:640:ffff::418a])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 6E8953401CE;
+	Tue,  6 May 2025 11:54:21 -0600 (MDT)
+Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
+	id 67ED5E41E7B; Tue,  6 May 2025 11:54:21 -0600 (MDT)
+From: Caleb Sander Mateos <csander@purestorage.com>
+To: Kanchan Joshi <joshi.k@samsung.com>,
+	Keith Busch <kbusch@kernel.org>,
+	Jens Axboe <axboe@kernel.dk>,
+	Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>
+Cc: Caleb Sander Mateos <csander@purestorage.com>,
+	linux-nvme@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] nvme: fix write_stream_granularity initialization
+Date: Tue,  6 May 2025 11:54:12 -0600
+Message-ID: <20250506175413.1936110-1-csander@purestorage.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250506154532.1281909-5-ardb+git@google.com> <20250506154532.1281909-8-ardb+git@google.com>
- <CAHk-=whrcutH0LcMmaeJxxMeYpw2R5T80yoQAXbrRHNSTCB0Pw@mail.gmail.com>
- <CAMj1kXFSae=stazUv8doka-zLOnDdXXR4ASxHKe5f97ikg3V2A@mail.gmail.com>
- <CAHk-=whxP5Ywpv-U=2NPFhk929VHB9_kdp10+HFJQ4VxEGdX9A@mail.gmail.com>
- <CAMj1kXGwYXXpjPgDwjKMEZJkuGJ8ZuCpMpc7fTvo58PNtu-czA@mail.gmail.com> <CAHk-=wiz5oXq2f_87hHViN2TZQO9VHpaWb5fWWGJbUWQw1ChVw@mail.gmail.com>
-In-Reply-To: <CAHk-=wiz5oXq2f_87hHViN2TZQO9VHpaWb5fWWGJbUWQw1ChVw@mail.gmail.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Tue, 6 May 2025 19:52:45 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXEtW2bAQK4hN-S5C=Po5dk1q14+GJjzEJsjfz9OeOMoCg@mail.gmail.com>
-X-Gm-Features: ATxdqUGD-fR3MZE0e_dwQyE5OwAKsE7hwXmyAjKXs_EiNN-vYs70vxVKswEH3ts
-Message-ID: <CAMj1kXEtW2bAQK4hN-S5C=Po5dk1q14+GJjzEJsjfz9OeOMoCg@mail.gmail.com>
-Subject: Re: [RFC PATCH 3/3] x86/boot: Use alternatives based selector for
- 5-level paging constants
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
-	Ingo Molnar <mingo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, 6 May 2025 at 19:44, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Tue, 6 May 2025 at 10:26, Ard Biesheuvel <ardb@kernel.org> wrote:
-> >
-> > In the light of the above, care to comment on the previous approach?
-> >
-> > https://lore.kernel.org/all/20250504095230.2932860-28-ardb+git@google.com/
->
-> I have to say, I find that one much more palatable.
->
-> That said, I still think it would be better to get rid of the early
-> case *entirely*.
->
->  So it would be lovely to have a subsequent patch that just makes the
-> "before fixup" case result in an UD2 instead of "read cr4 and check
-> the LA57 bit" and then fix the fallout.
->
+write_stream_granularity is set to max(info->runs, U32_MAX), which means
+that any RUNS value less than 2 ** 32 becomes U32_MAX, and any larger
+value is silently truncated to an unsigned int.
 
-Pretending the early case does not exist is not going to get us very far.
+Use min() instead to provide the correct semantics, capping RUNS values
+at U32_MAX.
 
-The very first thing we do when entering the core kernel is populate
-the page tables, and this uses all the macros and #define's that are
-based on pgtable_l5_enabled(). Alternatives patching occurs *much*
-later.
+Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
+Fixes: 30b5f20bb2dd ("nvme: register fdp parameters with the block layer")
+---
+ drivers/nvme/host/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-cpu_feature_enabled() is currently built around that ternary logic,
-and so we could use it this early as long as we set the bit in
-boot_cpu_data. So that might be the best approach.
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 52331a14bce1..a9fb8cd54420 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -2390,11 +2390,11 @@ static int nvme_update_ns_info_block(struct nvme_ns *ns,
+ 	if (!nvme_init_integrity(ns->head, &lim, info))
+ 		capacity = 0;
+ 
+ 	lim.max_write_streams = ns->head->nr_plids;
+ 	if (lim.max_write_streams)
+-		lim.write_stream_granularity = max(info->runs, U32_MAX);
++		lim.write_stream_granularity = min(info->runs, U32_MAX);
+ 	else
+ 		lim.write_stream_granularity = 0;
+ 
+ 	ret = queue_limits_commit_update(ns->disk->queue, &lim);
+ 	if (ret) {
+-- 
+2.45.2
+
