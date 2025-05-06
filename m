@@ -1,99 +1,137 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65AB38F66;
-	Tue,  6 May 2025 11:17:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 019DB8F66;
+	Tue,  6 May 2025 11:18:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746530225; cv=none; b=RpJOvHfQk/T1Bk5FU2eqkSUUSRac4pSfovZ2PSZPlWAbLD2xLXwLgtPw3lLQYkrwvqX9hF887q9dg8nmPY0+lck79tXDvG0dlqo+lkJchYKMgOR2srh/Deacy0iERtwF4dhedRIgcOvO4q5rKl+fiA2XgSc5VNCWgz58SGAvZgU=
+	t=1746530327; cv=none; b=axXbC+J52WeUjn4NiS2Uc0a7lBWGtk2mjQnJakEH7aJBs2ZjLgYmp6igKD3zb+zuj4pf3yUpPBxHMhsFbJYXpGTj0FTDmQuEOzD1gE8x46ivCKxsBMe89xQHqpIVObH5RTAuvypbxmEtwe8I6FgWsUOTUziA9S0qC4+DqM+4qbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746530225; c=relaxed/simple;
-	bh=Z7jOwuEBTaEvhsLGSpRE/ZPVJ70iFQdIT9GmLOYv7TU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=l+SVea76V2dRL+7pwEbbxyuHY2+oUIIYHoB3drCikJrIjWCSe+2rfNOeyTqqpSQQW5BmHi4J3TIc2roXptO9lKtITaHFCH+ZP0HeogRj/Ew1e2ZiI1QG4R87fohGt7Q3yTWHygd5ZgZvz7wSjr09F7Tk5Tx+AAN4LNKCXEtM//A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZsG7449SCz4f3lCf;
-	Tue,  6 May 2025 19:16:32 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 83A261A1BAF;
-	Tue,  6 May 2025 19:16:58 +0800 (CST)
-Received: from [10.174.179.80] (unknown [10.174.179.80])
-	by APP4 (Coremail) with SMTP id gCh0CgDXOl+o7xlohYhoLg--.37289S3;
-	Tue, 06 May 2025 19:16:58 +0800 (CST)
-Message-ID: <64c8b62a-83ba-45be-a83e-62b6ad8d6f22@huaweicloud.com>
-Date: Tue, 6 May 2025 19:16:56 +0800
+	s=arc-20240116; t=1746530327; c=relaxed/simple;
+	bh=YvNBY0Ps4akcWEgCN/IAs0lFkOXnfxNdZvQc4xvgLMM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=S7Ruy7TfPXj2v8UUS6rsYuy3DFZGrx8NFpVlt3hM14XzkHfCY0xgl1Kt5JSkYcoH3bDs4ULSZ1u8KnrHC7PI+oz3po1pkGVq+NfGw5E5gOnhYBTswTtQCz1mvVh2QZbag4Ym9QsmIXZKUjFCT5Ax10jpOs+EB5KJjSAKliINVmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FuqASAEY; arc=none smtp.client-ip=209.85.215.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FuqASAEY"
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-af90510be2eso553131a12.3;
+        Tue, 06 May 2025 04:18:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746530325; x=1747135125; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HRpeckz8pShVDypGXyJGOnSLEbZFu2aGaUPEjsNeRyg=;
+        b=FuqASAEYKlYzLXD8KO0V9jdzuj+oLsOwE2mXhTVHq3nRY6nznBfMkmeu4Th5IX5v+K
+         mXT/GqLch4X1kERS7mQFHv+PWJw6ZIzNDCFxniTfw4sVzd54T34gbLajIzUea9cFrfy/
+         iVgNlip7E3Aw0l0JUaTndQvFx2ADfUgOYN0nsTS3LhvSacPMEUZ3SRc0/mSaF2Bq+8UA
+         osR9BXa+XajcCwnZZ9qobChVPGQ4rrnDiQ6QLyWXZqy2Po+zMmxB3RDAyCz+jtA/Xk6L
+         SdJi195zo7JG6tQkHqOgF2/sgL2q1InCuHAQER3t4PHrhTNc4Dc6l89i2JG0Z+S1WxuC
+         p1Qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746530325; x=1747135125;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HRpeckz8pShVDypGXyJGOnSLEbZFu2aGaUPEjsNeRyg=;
+        b=UyNtJczDgASTfz6pQExrni25fmqXgZFCj1joKyn2guc2D+TJSxQosMdKUeFViD0I1l
+         ETm10c3QDbcGNeavGyvZqgooQroGdHEWWj8PxsG5kHaCANFNGx+z6OalG5dtqOu7jka/
+         Q0cbEbSaP67u4SCIIA9WqlVKZ7Ks+mY5iH0W5N4nvYb2ixgmz0DhIL0UdKS3B6IdlGH6
+         4DB/uKqHoh93q61ozreekan95n/+JP8BqojZnfsJqRqhWKEeFv62NKEhmNX9yotUbC7W
+         VmA5Jn0kVcc5kDRo0ifS9bj5WZvQ5CL6h2MvpG1wC/5OhvsJnp2CYB5WlEDwBj37085H
+         mOFA==
+X-Forwarded-Encrypted: i=1; AJvYcCV7ak5gb7xNhx/tbOBr9w1Rx+NbLr+rDDHsP4L9CicgGCIcP6x7YGyHUqP6EjQ1+wkCWGVN7snJmAv48lQ=@vger.kernel.org, AJvYcCVG7dAdHP0pkIhu9HLcf0d1HYsNkoedSJhROr5jm1K9gLrhWJQxxlqrzUUq2IkcG6INDdkqqZz8p3/vB2UznR8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxOd56MHIstlDYop1F1Yd+mJh/a3WaqxAWEDCQaVPwyHehD4kBM
+	YvTIeC3VPx+J86ToJwkrt2EDjwFTG+ENBLR6NvDmXt895QKSodgOSjV8mQwSxcVLZyvs8WJltQO
+	c6jW7AA/lqI+qTdsWfJOo6ClrBN0=
+X-Gm-Gg: ASbGncsHzudH12Zq61+BdY1wJ3feJIRHzrJcWymqCl54HTLH2gB/zte1pW8Ef2suFIT
+	yY99S8oa/L734gf2dFkyh+apBT6M/NjUlWM1LQhWpTzZ3TSthUb0cfuxp6S/F8C7zVJseKbv854
+	sj05LgWUyk/k0jO1NOh/FiD5VJggzdVo4=
+X-Google-Smtp-Source: AGHT+IF0A8X7TKL/5b/MTu3H0JRvBU4yLKp10ldMQJuWkLJDB/QpF0Nj+hZHgQcmBCBaWpAZ6/ycuZG4dhGpTJR/184=
+X-Received: by 2002:a17:90b:1b4e:b0:2ff:7b41:c3cf with SMTP id
+ 98e67ed59e1d1-30a4e621c63mr9103953a91.4.1746530325095; Tue, 06 May 2025
+ 04:18:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v4 07/11] fs: statx add write zeroes unmap attribute
-To: Christoph Hellwig <hch@lst.de>, "Darrick J. Wong" <djwong@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
- linux-block@vger.kernel.org, dm-devel@lists.linux.dev,
- linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
- linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org, tytso@mit.edu,
- john.g.garry@oracle.com, bmarzins@redhat.com, chaitanyak@nvidia.com,
- shinichiro.kawasaki@wdc.com, brauner@kernel.org, yi.zhang@huawei.com,
- chengzhihao1@huawei.com, yukuai3@huawei.com, yangerkun@huawei.com
-References: <20250421021509.2366003-1-yi.zhang@huaweicloud.com>
- <20250421021509.2366003-8-yi.zhang@huaweicloud.com>
- <20250505132208.GA22182@lst.de> <20250505142945.GJ1035866@frogsfrogsfrogs>
- <c7d8d0c3-7efa-4ee6-b518-f8b09ec87b73@huaweicloud.com>
- <20250506043907.GA27061@lst.de>
-Content-Language: en-US
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-In-Reply-To: <20250506043907.GA27061@lst.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:gCh0CgDXOl+o7xlohYhoLg--.37289S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7Xr1rZFyDCrWUGw4rKFy3Jwb_yoW8JrWDpa
-	yUKFyqyw4DKr15Xwn7uw4vgrn5Zrs5JFn8Gw4rKr18Zws8X3WxKF9Yg3WDGF9xWr1fAa4U
-	ArsxK34DXayfC3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvYb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
-	14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWr
-	XwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
-	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
-	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x07
-	jIksgUUUUU=
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+References: <20250501-configfs-v6-0-66c61eb76368@kernel.org>
+ <20250501-configfs-v6-1-66c61eb76368@kernel.org> <ELsEgktE6XbGxDyusumtuVzyX-eotyYuQdviHTZaIxN7KZaGFr0fNqrv5tac_gYWfbDZYNTC-wQyQuxnmufA2g==@protonmail.internalid>
+ <CANiq72mS_HV5rDjP+t+k0jX9QeAgF2SB9_xX54iEBTH-GoPuEg@mail.gmail.com>
+ <87msbw1s9e.fsf@kernel.org> <86-cT9dBPpEIyQXWVCeEmj3TRvBm6Ta0p1B20sSngRGOqOuC96i6hG3Q9Hg3bN8AQTCPXlsxg_C5Ok0G4JJzpQ==@protonmail.internalid>
+ <CANiq72nd0Pfv4TrpULGQ_fZkyBpHyVVZ1H45_RJBgBxkJuzCJQ@mail.gmail.com>
+ <87h62419r5.fsf@kernel.org> <FLMJjrvUlrMEWy7KzihcYUt-V1IFyP8nt9KYysmVPsWdxUR9dRVXsRoSBw4Z0oFX8tzfWieBDkP7YPAHOXtFcg==@protonmail.internalid>
+ <CANiq72miL3eZ40ujmA-pXCqMS8y2AzJQ1UKpL1_hX03AJ0fteQ@mail.gmail.com>
+ <87bjsc154u.fsf@kernel.org> <CANiq72=SD9ogr+RpPK7E+cFmn2qAVu+MBCoChdp8-hw7JFu6zA@mail.gmail.com>
+ <TbTextfZAMlWFS5cWlUE-Wtnp1bv8P783IQQbWUcnHvEgBjpIxukMngLdPkqNR9jWT9O_OtOY1ejin9JoOnsww==@protonmail.internalid>
+ <CANiq72m8VWKRyFai0Xg8AZUTjG0eUVG8nY-ZCQOqOnvwsW0ZaA@mail.gmail.com>
+ <875xij1ouy.fsf@kernel.org> <m9-XLEt04AwLCzToZZoXspXzPC6RJkp8ht7DnkVuEEPHQ02CjS0SNIKyKM1gsH-QfZruoYixHlsAHzfYyNEykw==@protonmail.internalid>
+ <CANiq72m0cuf5YKfOY8oNg83dzWEqqyddGKKh_6fwQQ4hoCp+yQ@mail.gmail.com> <87ecx3xzqd.fsf@kernel.org>
+In-Reply-To: <87ecx3xzqd.fsf@kernel.org>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 6 May 2025 13:18:31 +0200
+X-Gm-Features: ATxdqUHdMDblEh-0NHJk5v64ga_hltalfD0ejiteX-MhcryQrsXXQBo8t4zMhec
+Message-ID: <CANiq72nPMH06HURgZJN-o0GMmGdQQpFetm=S5SDEB+B+f0wefA@mail.gmail.com>
+Subject: Re: [PATCH v6 1/3] rust: configfs: introduce rust support for configfs
+To: Andreas Hindborg <a.hindborg@kernel.org>
+Cc: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Joel Becker <jlbec@evilplan.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, 
+	Waiman Long <longman@redhat.com>, Fiona Behrens <me@kloenk.dev>, 
+	Charalampos Mitrodimas <charmitro@posteo.net>, Daniel Almeida <daniel.almeida@collabora.com>, 
+	Breno Leitao <leitao@debian.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2025/5/6 12:39, Christoph Hellwig wrote:
-> On Tue, May 06, 2025 at 12:28:54PM +0800, Zhang Yi wrote:
->> OK, since this statx reporting flag is not strongly tied to
->> FALLOC_FL_WRITE_ZEROES in vfs_fallocate(), I'll split this patch into
->> three separate patches.
-> 
-> I don't think that is the right thing to do do.  Keep the flag addition
-> here, and then report it in the ext4 and bdev patches adding
-> FALLOC_FL_WRITE_ZEROES as the reporting should be consistent with
-> the added support.
-> 
+On Mon, May 5, 2025 at 9:51=E2=80=AFAM Andreas Hindborg <a.hindborg@kernel.=
+org> wrote:
+>
+> So I was thinking that because I am initializing a static with a let
+> statement, it would run in const context. But I see that it is not
+> actually guaranteed.
 
-Sorry, but I don't understand your suggestion. The
-STATX_ATTR_WRITE_ZEROES_UNMAP attribute only indicate whether the bdev
-and the block device that under the specified file support unmap write
-zeroes commoand. It does not reflect whether the bdev and the
-filesystems support FALLOC_FL_WRITE_ZEROES. The implementation of
-FALLOC_FL_WRITE_ZEROES doesn't fully rely on the unmap write zeroes
-commoand now, users simply refer to this attribute flag to determine
-whether to use FALLOC_FL_WRITE_ZEROES when preallocating a file.
-So, STATX_ATTR_WRITE_ZEROES_UNMAP and FALLOC_FL_WRITE_ZEROES doesn't
-have strong relations, why do you suggested to put this into the ext4
-and bdev patches that adding FALLOC_FL_WRITE_ZEROES?
+No, that is actually guaranteed, i.e. when initializing a static. But
+you aren't initializing a static here, no? Which static are you
+referring to? If you were, then the "normal" `assert!` would work,
+because it would be a const context.
 
-Thanks,
-Yi.
+The `add` calls I see are just in the `let` statement, not
+initializing any static:
 
+            {
+                const N: usize =3D 0usize;
+                unsafe { CONFIGURATION_ATTRS.add::<N, 0,
+_>(&CONFIGURATION_MESSAGE_ATTR) };
+            }
+
+So it also means this comment is wrong:
+
++        // SAFETY: This function is only called through the `configfs_attr=
+s`
++        // macro. This ensures that we are evaluating the function in cons=
+t
++        // context when initializing a static. As such, the reference crea=
+ted
++        // below will be exclusive.
+
+Please double-check all this... :)
+
+> Right. Which is why I opted for `build_error`. But with the `const`
+> block solution you suggested is better.
+
+I thought you opted for that because you thought the `assert!` would
+only work if not refactored. What I tried to point out was that the
+`assert!` wouldn't have worked even before the refactoring.
+
+I hope that helps.
+
+Cheers,
+Miguel
