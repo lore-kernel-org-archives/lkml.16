@@ -1,270 +1,148 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A2A4278146;
-	Tue,  6 May 2025 10:35:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 478972673BF
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 10:36:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746527738; cv=none; b=nzTW+8+aflrfyji/KU54n4H3lwX5P3ZupAR4l+2a+ldOxc2WsWVYudsZiWmWlUHoXeOA2IKuCHf3uze0543a4F2LPxvffAl9KYiB+5QljQheYwuqRTVvc3WRNMUuTtSAXMwkzLpHg1qwsCNrrsUr5PlzbbhjjFJEwOtMOFxQ6H0=
+	t=1746527804; cv=none; b=JtsiDKDkgCJCOa4bJZCTDrwAUidV3xyZQdSmr4BPbBFMoli5moqthS6C3GYztKRwwIj67hJn9b1tMw14sUKTsCfg5tDE4bsedx7jPTCR+Z1DIfCYi4Pll9tGoR/8rBr8Vlfo6BDge7B7BdTfFOA9A06Vxzryz3jN7FCHQtGgE+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746527738; c=relaxed/simple;
-	bh=vU6k5cOcaW+QlQmmW8UKKSU8sXE1XKCOEEseg/2SJSo=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=Yr88IusaUz9YtPN64o3BBfaFq1VPEjEyktVRyOoL/LvmJJFmrDsuSLU8OWREL9cC7tFJe3iMextOOwcxOYVEt2/lmpc7kqp5YgpdgAb9hmojB5zm7UQ3L7HHkBFGSrPnt/tBw77LTfWJd6u2kQmkPsMZ8MFfIz/4iJT/sOQ+hhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nyfB08c4; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=8mHRzvNH; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1746527804; c=relaxed/simple;
+	bh=doINJDVKHGcrz+5RKbuuacCK4OinbdLgMhBEmYZ+Kz4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YyQY9ljxXg6k+fNVFjeCmPbB8gXAUIBj3tCbJk4pftSKhln7D2wy6HKVw5E75FhdzFzxrIC9t5abBteQ+rZ76ekfUrw2J/ql2HCkeHTDYvGHJon8ITWq+He3Z5jzTIxf/YVIqjZO0AUrtNpde0JJQnKrV5dBrLILerMjQ4N0Pyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Gl6+qqiC; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nyfB08c4";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="8mHRzvNH"
-Date: Tue, 06 May 2025 10:35:32 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746527733;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OzGZJUznRbqdMULqXMgRDTBZ7vyIUj2xBkKLT5FG0WQ=;
-	b=nyfB08c4QqDl9U41yc/9Jdica4jJ298CxDZRPERXst1T3bBRmmPvGgH7wGZZWQ6tgL4zky
-	nIu1U7o1MPxRaMz3e/kC23rwrZIgiwns8zCzD/rW94YcDLgJMG1aJhV7DTKQiwfcKJxTXe
-	WCSBMNxpZ9LAyJisEtFGMs3wS5v7AclCWc4qScXC9kENBCezK1i6abc2zI0PLVfxNjeXF6
-	8Mnbb+CUzx0qWzPX/sU6f9MNQJKu9L+Ntr01bvRmPerZA2p34wJkLe+WRhEwa01cA4IJP6
-	KlAh9NUh59ESKtmM5M1eGbfZMS5CQlY1274FjsmKSiXSPgYxwRYnp1G4vGKGrg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746527733;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OzGZJUznRbqdMULqXMgRDTBZ7vyIUj2xBkKLT5FG0WQ=;
-	b=8mHRzvNHgcq+sgHeC4lLBIr98kSR6dhgvSap5phukBuxQuYrYvQbC9yJFxlvJEQeHByz9A
-	Ssl10ZUdBoXNbfBQ==
-From: "tip-bot2 for Masami Hiramatsu (Google)" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/asm] x86/insn: Fix opcode map (!REX2) superscript tags
-Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
- Ingo Molnar <mingo@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <174580489027.388420.15539375184727726142.stgit@devnote2>
-References: <174580489027.388420.15539375184727726142.stgit@devnote2>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Gl6+qqiC"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a0b135d18eso189576f8f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 03:36:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746527800; x=1747132600; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=83BB7SmwDzPYUhpIg9noheded8S+cXeSPX7ePATlnPI=;
+        b=Gl6+qqiCQ8sSVDoDchhf/C/z0q6sF10y5cB7qU0qGL0f3N0PJvrrdj3bQi/K8HxcSO
+         Sgo0rsEpuUp73gn+aL1ln1dnOM/DuBVykHCgkQa2WapcFinXzP/DUTVWMUbrYSdTtNwe
+         WlrMb/Fms+nz2Rl5rnbs0DESp/DZIfZNe0Zw95sE5Eza3PxWIplcHGQmnGterKO4HkVo
+         1o67/IUGsKPz9ODjNv+pBYxbUTWytIsDTGK5Z3hmK4cn6KixbBeaya8RINemugqWfyHT
+         b3KLXtU042S+QEvSbXGTIjuPao19CbGQOEzBwTYljDzgzDjm0usxLlQiKNOfdH6ngiQf
+         Mb+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746527800; x=1747132600;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=83BB7SmwDzPYUhpIg9noheded8S+cXeSPX7ePATlnPI=;
+        b=gRNPE0k7OkLbN0eeQmt4v7+EFU1y0Wbh42fLbPxZCUxEiM0WYSd49ssDBxg5MTHHA/
+         vFoN4epBnq8aHJCYsdNsdQCcqr2ruQfBXgCcl+G9AcMb/LCswXV89mtynhqVPLnE6qW3
+         MbQ23dCzMlIUIaABHrhboVoVXPQ56+ZnkznzmxUAhf8a9DEK4QnwO6lK879Fy6aaArFJ
+         2ROGKTbaA/qRER8Y456umJ+K5ZCRsWE9suN/+SbuKrNZmwQFXAbdXcblfwE4vxSgyNcQ
+         Mm4tXxydIN9O3HrwNF8BM/mqPdLmWz6sG9KcTF97RLVshPGgUHGIq7+zpZb3NC6VEDUI
+         8tcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWUCAbZG6WIJdY3ID0X6Xb6/Hu6pxUJh0uv9eAw/a3u42xaRAWveN628fhlrsf67NulL84NbO2CVHLy+Fw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzR1Yell4KYnLCu67IJBhYPFbPAzhce0lz/6/bHVv4mlJoPOAUT
+	pH6r/L2mmJbsaKHOY4dK1/NOlbcDwlENSqfRMBch1SJC1TX7wUaAnY5Qtjd0ow==
+X-Gm-Gg: ASbGncsKl42zNSfAv6cl2EibloLz0wBJD7hABCAs1HarMt1+Bh3ITgLdaNB6lBaxcNb
+	EwhcI3mHNgn3+YI3wahG9TyY4m3PzusMEtPKwHlp7s0Jhl9UE+hiO4gLH+GqLvhSIrXyuGaW8nr
+	QESGQVnoFkmELRG054BBEsvghHPivJVO6Iu0yBC0WCc3MOQ/hMR5gotzPNNN5yrxO3OpPgB8AwD
+	k9fd7+Ohes36Dpkzi0naxFYmo6ze5V4aLL7EUmMDPTKXT88/6LupS9IeZMKrO8VfI5XzQ/D5d9M
+	HvLtGvEdUertH67Cx1FCmZwiaACI9V7M0bTXRDwvQ+92julk0tFjcp2JdbbZd8rZ/V11nZDQcle
+	KjSJyAQ==
+X-Google-Smtp-Source: AGHT+IG2CayH2yxmNUdwN95+efpUFPMFHxnxBFQj2axpQ8sGyin+5/PNn5XBefvcRCOTd+k50QaHVw==
+X-Received: by 2002:a5d:5f8a:0:b0:3a0:7a7c:2648 with SMTP id ffacd0b85a97d-3a0ac0eaa24mr2087956f8f.27.1746527800468;
+        Tue, 06 May 2025 03:36:40 -0700 (PDT)
+Received: from google.com (24.204.140.34.bc.googleusercontent.com. [34.140.204.24])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a0b0dffaa1sm1179414f8f.31.2025.05.06.03.36.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 May 2025 03:36:40 -0700 (PDT)
+Date: Tue, 6 May 2025 11:36:35 +0100
+From: Vincent Donnefort <vdonnefort@google.com>
+To: Sebastian Ott <sebott@redhat.com>
+Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
+	Quentin Perret <qperret@google.com>, Fuad Tabba <tabba@google.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Mark Brown <broonie@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] KVM: arm64: Fix uninitialized memcache pointer in
+ user_mem_abort()
+Message-ID: <aBnmM7DSonZr_VHC@google.com>
+References: <20250505173148.33900-1-sebott@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174652773261.406.11420976495556364687.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250505173148.33900-1-sebott@redhat.com>
 
-The following commit has been merged into the x86/asm branch of tip:
+On Mon, May 05, 2025 at 07:31:48PM +0200, Sebastian Ott wrote:
+> Commit fce886a60207 ("KVM: arm64: Plumb the pKVM MMU in KVM") made the
+> initialization of the local memcache variable in user_mem_abort()
+> conditional, leaving a codepath where it is used uninitialized via
+> kvm_pgtable_stage2_map().
+> 
+> This can fail on any path that requires a stage-2 allocation
+> without transition via a permission fault or dirty logging.
+> 
+> Fix this by making sure that memcache is always valid.
+> 
+> Fixes: fce886a60207 ("KVM: arm64: Plumb the pKVM MMU in KVM")
+> Signed-off-by: Sebastian Ott <sebott@redhat.com>
+> Reviewed-by: Marc Zyngier <maz@kernel.org>
+> Cc: stable@vger.kernel.org
+> Link: https://lore.kernel.org/kvmarm/3f5db4c7-ccce-fb95-595c-692fa7aad227@redhat.com/
+> ---
+>  arch/arm64/kvm/mmu.c | 13 ++++++++-----
+>  1 file changed, 8 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
+> index 754f2fe0cc67..eeda92330ade 100644
+> --- a/arch/arm64/kvm/mmu.c
+> +++ b/arch/arm64/kvm/mmu.c
+> @@ -1501,6 +1501,11 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
+>  		return -EFAULT;
+>  	}
+>  
+> +	if (!is_protected_kvm_enabled())
+> +		memcache = &vcpu->arch.mmu_page_cache;
+> +	else
+> +		memcache = &vcpu->arch.pkvm_memcache;
+> +
+>  	/*
+>  	 * Permission faults just need to update the existing leaf entry,
+>  	 * and so normally don't require allocations from the memcache. The
+> @@ -1510,13 +1515,11 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
+>  	if (!fault_is_perm || (logging_active && write_fault)) {
+>  		int min_pages = kvm_mmu_cache_min_pages(vcpu->arch.hw_mmu);
+>  
+> -		if (!is_protected_kvm_enabled()) {
+> -			memcache = &vcpu->arch.mmu_page_cache;
+> +		if (!is_protected_kvm_enabled())
+>  			ret = kvm_mmu_topup_memory_cache(memcache, min_pages);
+> -		} else {
+> -			memcache = &vcpu->arch.pkvm_memcache;
+> +		else
+>  			ret = topup_hyp_memcache(memcache, min_pages);
+> -		}
+> +
+>  		if (ret)
+>  			return ret;
+>  	}
+> 
+> base-commit: 92a09c47464d040866cf2b4cd052bc60555185fb
+> -- 
+> 2.49.0
+> 
+> 
 
-Commit-ID:     ca698ec2f07873a448d53c580795c4e023c75393
-Gitweb:        https://git.kernel.org/tip/ca698ec2f07873a448d53c580795c4e023c75393
-Author:        Masami Hiramatsu (Google) <mhiramat@kernel.org>
-AuthorDate:    Mon, 28 Apr 2025 10:48:10 +09:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 06 May 2025 12:03:15 +02:00
+For the pKVM part 
 
-x86/insn: Fix opcode map (!REX2) superscript tags
+Reviewed-by: Vincent Donnefort <vdonnefort@google.com>
 
-Commit:
-
-  159039af8c07 ("x86/insn: x86/insn: Add support for REX2 prefix to the instruction decoder opcode map")
-
-added (!REX2) superscript with a space, but the correct format requires ','
-for concatination with other superscript tags.
-
-Add ',' to generate correct insn attribute tables.
-
-I confirmed with following command:
-
-      arch/x86/lib/x86-opcode-map.txt | grep e8 | head -n 1
-  [0xe8] = INAT_MAKE_IMM(INAT_IMM_VWORD32) | INAT_FORCE64 | INAT_NO_REX2,
-
-Fixes: 159039af8c07 ("x86/insn: x86/insn: Add support for REX2 prefix to the instruction decoder opcode map")
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/r/174580489027.388420.15539375184727726142.stgit@devnote2
----
- arch/x86/lib/x86-opcode-map.txt       | 50 +++++++++++++-------------
- tools/arch/x86/lib/x86-opcode-map.txt | 50 +++++++++++++-------------
- 2 files changed, 50 insertions(+), 50 deletions(-)
-
-diff --git a/arch/x86/lib/x86-opcode-map.txt b/arch/x86/lib/x86-opcode-map.txt
-index f5dd84e..cd3fd51 100644
---- a/arch/x86/lib/x86-opcode-map.txt
-+++ b/arch/x86/lib/x86-opcode-map.txt
-@@ -35,7 +35,7 @@
- #  - (!F3) : the last prefix is not 0xF3 (including non-last prefix case)
- #  - (66&F2): Both 0x66 and 0xF2 prefixes are specified.
- #
--# REX2 Prefix
-+# REX2 Prefix Superscripts
- #  - (!REX2): REX2 is not allowed
- #  - (REX2): REX2 variant e.g. JMPABS
- 
-@@ -286,10 +286,10 @@ df: ESC
- # Note: "forced64" is Intel CPU behavior: they ignore 0x66 prefix
- # in 64-bit mode. AMD CPUs accept 0x66 prefix, it causes RIP truncation
- # to 16 bits. In 32-bit mode, 0x66 is accepted by both Intel and AMD.
--e0: LOOPNE/LOOPNZ Jb (f64) (!REX2)
--e1: LOOPE/LOOPZ Jb (f64) (!REX2)
--e2: LOOP Jb (f64) (!REX2)
--e3: JrCXZ Jb (f64) (!REX2)
-+e0: LOOPNE/LOOPNZ Jb (f64),(!REX2)
-+e1: LOOPE/LOOPZ Jb (f64),(!REX2)
-+e2: LOOP Jb (f64),(!REX2)
-+e3: JrCXZ Jb (f64),(!REX2)
- e4: IN AL,Ib (!REX2)
- e5: IN eAX,Ib (!REX2)
- e6: OUT Ib,AL (!REX2)
-@@ -298,10 +298,10 @@ e7: OUT Ib,eAX (!REX2)
- # in "near" jumps and calls is 16-bit. For CALL,
- # push of return address is 16-bit wide, RSP is decremented by 2
- # but is not truncated to 16 bits, unlike RIP.
--e8: CALL Jz (f64) (!REX2)
--e9: JMP-near Jz (f64) (!REX2)
--ea: JMP-far Ap (i64) (!REX2)
--eb: JMP-short Jb (f64) (!REX2)
-+e8: CALL Jz (f64),(!REX2)
-+e9: JMP-near Jz (f64),(!REX2)
-+ea: JMP-far Ap (i64),(!REX2)
-+eb: JMP-short Jb (f64),(!REX2)
- ec: IN AL,DX (!REX2)
- ed: IN eAX,DX (!REX2)
- ee: OUT DX,AL (!REX2)
-@@ -478,22 +478,22 @@ AVXcode: 1
- 7f: movq Qq,Pq | vmovdqa Wx,Vx (66) | vmovdqa32/64 Wx,Vx (66),(evo) | vmovdqu Wx,Vx (F3) | vmovdqu32/64 Wx,Vx (F3),(evo) | vmovdqu8/16 Wx,Vx (F2),(ev)
- # 0x0f 0x80-0x8f
- # Note: "forced64" is Intel CPU behavior (see comment about CALL insn).
--80: JO Jz (f64) (!REX2)
--81: JNO Jz (f64) (!REX2)
--82: JB/JC/JNAE Jz (f64) (!REX2)
--83: JAE/JNB/JNC Jz (f64) (!REX2)
--84: JE/JZ Jz (f64) (!REX2)
--85: JNE/JNZ Jz (f64) (!REX2)
--86: JBE/JNA Jz (f64) (!REX2)
--87: JA/JNBE Jz (f64) (!REX2)
--88: JS Jz (f64) (!REX2)
--89: JNS Jz (f64) (!REX2)
--8a: JP/JPE Jz (f64) (!REX2)
--8b: JNP/JPO Jz (f64) (!REX2)
--8c: JL/JNGE Jz (f64) (!REX2)
--8d: JNL/JGE Jz (f64) (!REX2)
--8e: JLE/JNG Jz (f64) (!REX2)
--8f: JNLE/JG Jz (f64) (!REX2)
-+80: JO Jz (f64),(!REX2)
-+81: JNO Jz (f64),(!REX2)
-+82: JB/JC/JNAE Jz (f64),(!REX2)
-+83: JAE/JNB/JNC Jz (f64),(!REX2)
-+84: JE/JZ Jz (f64),(!REX2)
-+85: JNE/JNZ Jz (f64),(!REX2)
-+86: JBE/JNA Jz (f64),(!REX2)
-+87: JA/JNBE Jz (f64),(!REX2)
-+88: JS Jz (f64),(!REX2)
-+89: JNS Jz (f64),(!REX2)
-+8a: JP/JPE Jz (f64),(!REX2)
-+8b: JNP/JPO Jz (f64),(!REX2)
-+8c: JL/JNGE Jz (f64),(!REX2)
-+8d: JNL/JGE Jz (f64),(!REX2)
-+8e: JLE/JNG Jz (f64),(!REX2)
-+8f: JNLE/JG Jz (f64),(!REX2)
- # 0x0f 0x90-0x9f
- 90: SETO Eb | kmovw/q Vk,Wk | kmovb/d Vk,Wk (66)
- 91: SETNO Eb | kmovw/q Mv,Vk | kmovb/d Mv,Vk (66)
-diff --git a/tools/arch/x86/lib/x86-opcode-map.txt b/tools/arch/x86/lib/x86-opcode-map.txt
-index f5dd84e..cd3fd51 100644
---- a/tools/arch/x86/lib/x86-opcode-map.txt
-+++ b/tools/arch/x86/lib/x86-opcode-map.txt
-@@ -35,7 +35,7 @@
- #  - (!F3) : the last prefix is not 0xF3 (including non-last prefix case)
- #  - (66&F2): Both 0x66 and 0xF2 prefixes are specified.
- #
--# REX2 Prefix
-+# REX2 Prefix Superscripts
- #  - (!REX2): REX2 is not allowed
- #  - (REX2): REX2 variant e.g. JMPABS
- 
-@@ -286,10 +286,10 @@ df: ESC
- # Note: "forced64" is Intel CPU behavior: they ignore 0x66 prefix
- # in 64-bit mode. AMD CPUs accept 0x66 prefix, it causes RIP truncation
- # to 16 bits. In 32-bit mode, 0x66 is accepted by both Intel and AMD.
--e0: LOOPNE/LOOPNZ Jb (f64) (!REX2)
--e1: LOOPE/LOOPZ Jb (f64) (!REX2)
--e2: LOOP Jb (f64) (!REX2)
--e3: JrCXZ Jb (f64) (!REX2)
-+e0: LOOPNE/LOOPNZ Jb (f64),(!REX2)
-+e1: LOOPE/LOOPZ Jb (f64),(!REX2)
-+e2: LOOP Jb (f64),(!REX2)
-+e3: JrCXZ Jb (f64),(!REX2)
- e4: IN AL,Ib (!REX2)
- e5: IN eAX,Ib (!REX2)
- e6: OUT Ib,AL (!REX2)
-@@ -298,10 +298,10 @@ e7: OUT Ib,eAX (!REX2)
- # in "near" jumps and calls is 16-bit. For CALL,
- # push of return address is 16-bit wide, RSP is decremented by 2
- # but is not truncated to 16 bits, unlike RIP.
--e8: CALL Jz (f64) (!REX2)
--e9: JMP-near Jz (f64) (!REX2)
--ea: JMP-far Ap (i64) (!REX2)
--eb: JMP-short Jb (f64) (!REX2)
-+e8: CALL Jz (f64),(!REX2)
-+e9: JMP-near Jz (f64),(!REX2)
-+ea: JMP-far Ap (i64),(!REX2)
-+eb: JMP-short Jb (f64),(!REX2)
- ec: IN AL,DX (!REX2)
- ed: IN eAX,DX (!REX2)
- ee: OUT DX,AL (!REX2)
-@@ -478,22 +478,22 @@ AVXcode: 1
- 7f: movq Qq,Pq | vmovdqa Wx,Vx (66) | vmovdqa32/64 Wx,Vx (66),(evo) | vmovdqu Wx,Vx (F3) | vmovdqu32/64 Wx,Vx (F3),(evo) | vmovdqu8/16 Wx,Vx (F2),(ev)
- # 0x0f 0x80-0x8f
- # Note: "forced64" is Intel CPU behavior (see comment about CALL insn).
--80: JO Jz (f64) (!REX2)
--81: JNO Jz (f64) (!REX2)
--82: JB/JC/JNAE Jz (f64) (!REX2)
--83: JAE/JNB/JNC Jz (f64) (!REX2)
--84: JE/JZ Jz (f64) (!REX2)
--85: JNE/JNZ Jz (f64) (!REX2)
--86: JBE/JNA Jz (f64) (!REX2)
--87: JA/JNBE Jz (f64) (!REX2)
--88: JS Jz (f64) (!REX2)
--89: JNS Jz (f64) (!REX2)
--8a: JP/JPE Jz (f64) (!REX2)
--8b: JNP/JPO Jz (f64) (!REX2)
--8c: JL/JNGE Jz (f64) (!REX2)
--8d: JNL/JGE Jz (f64) (!REX2)
--8e: JLE/JNG Jz (f64) (!REX2)
--8f: JNLE/JG Jz (f64) (!REX2)
-+80: JO Jz (f64),(!REX2)
-+81: JNO Jz (f64),(!REX2)
-+82: JB/JC/JNAE Jz (f64),(!REX2)
-+83: JAE/JNB/JNC Jz (f64),(!REX2)
-+84: JE/JZ Jz (f64),(!REX2)
-+85: JNE/JNZ Jz (f64),(!REX2)
-+86: JBE/JNA Jz (f64),(!REX2)
-+87: JA/JNBE Jz (f64),(!REX2)
-+88: JS Jz (f64),(!REX2)
-+89: JNS Jz (f64),(!REX2)
-+8a: JP/JPE Jz (f64),(!REX2)
-+8b: JNP/JPO Jz (f64),(!REX2)
-+8c: JL/JNGE Jz (f64),(!REX2)
-+8d: JNL/JGE Jz (f64),(!REX2)
-+8e: JLE/JNG Jz (f64),(!REX2)
-+8f: JNLE/JG Jz (f64),(!REX2)
- # 0x0f 0x90-0x9f
- 90: SETO Eb | kmovw/q Vk,Wk | kmovb/d Vk,Wk (66)
- 91: SETNO Eb | kmovw/q Mv,Vk | kmovb/d Mv,Vk (66)
+Thanks
