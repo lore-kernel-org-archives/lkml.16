@@ -1,192 +1,259 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2069.outbound.protection.outlook.com [40.107.92.69])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 159BB1388
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 20:44:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.69
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746564302; cv=fail; b=TAXELTPPmeYR5HLIXB8YNy/SoULdMuCGh6LjJrATJ0uXFXSmaGeNie+K4wWjXJdr/KCSVcnwwOWj8roD8O5f2lK0exF72+4kHf9NiY3Z7O5LsuJrcLmQ7UB+QtcZ95SKPbQ7x5cjeiH0zd0ehUSfNeJ7mnV8oDpj80sStT85BWY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746564302; c=relaxed/simple;
-	bh=J1t1liO7kP+15jMmg9yDvyVhy54zAdMoquULSicjm7c=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lrQ5UmiQiDFuPPAif49xJKizqj6cX5B2Fyqv1+ybgbqU5/9mC2fMW9pGe8NfiALGroi6qIgsspzOI04KRgxMd0BcO9gTh/rFMGR8MvZqddaoyq3my+KsOrMWrX5NbXcU3Sx6G2GGauKiwtNNRI9ytpqH4Y0frRRZkLj/a+7IkgM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=D56GcaL0; arc=fail smtp.client-ip=40.107.92.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 668264B1E7A;
+	Tue,  6 May 2025 20:47:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746564459; cv=none; b=LZHg5zGWdZ/GOKIgCIbiigxyOAmr8kw++U/UdVbzOWUOhHXtmhp2Wtz1Hu4FPW1ytxxYTjaVV8iasDp+5pfgC9a7Y0b8XonSbd90Lq9VVnb+2NiCwcx8uhAe7ABprMDHtDalnvrCe6LtyHB9tN3+V9mZCD8UHVh+7rfv2k0ifYE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746564459; c=relaxed/simple;
+	bh=a6MsCRIUCeUj744FbiHdP5+JJu9CUko6eqpiqgbQ4ds=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WTZBkZmEZh+K5ZMWPmjkIFFzMxIAChten6Wcd3und2BuVDG8efrmEX5+FlW+yOfGW06epVet1hYOyFtATod6mLM6GRpC5xbdyS3PK3mpcxn5dFwyR6zp4UvrOn3dyHfA+lQmYDe0xXxiRRK8MX6t4JHegRQNQE9Yre6Xm2siWWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=I68mv2SZ; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="D56GcaL0"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=aJrjXxWuuq2A59bZ72Tqu9LmeZ43/Z0oSpEvzYPa7rmKkThK3XP/epGQPR24U1XxLMw3rrsadA4lRA3L0xqd7p2LArdx7scK6Z7nN/qLoeGgZuqcIZMlipmw97X/HBK7YGkhysfYvk4acHC4KooVGzg+saKan21adhDQu4IwCGqO8qUuD4jnmONUyXT0K5XFi1ryewHgK+reNu3sD2WUolDETNHI1PDXjXabebVVhEqEnGUVmb5vEO0mIKSDFDr/lYWsbMsWHlOg3IXaevEiDjXgaxtGL4pq0feq6G1kqfSJKmT599hoAISOWQ4Q4hspeZFTRxIYrDkaReYJR1CFyw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5tH2aBzTLtGyOv5D7f7OeME/gvHNM1uvC6mzTtLdJQE=;
- b=CpyV7sroFdumwDXSmtPHzBSHmm7DwplpqEaBwWs54ed8ykyG3XCYy6U0TIn0ZFlsJPZ6DmZn9oZcl5nD0r8lgpJvDLVmhbhpMJpcEehOZHx5FmL9Kb9B6PCdka02GjKXJlE7+6tVZmf/ACkUm83SzL/nOMQn7+3wh8tzhWWqER4QWxn25l4hbKy/42/+UHagD0TqMt5tk8SbcV0Mfa6IFEYZlrxxjHZmNf26TgF04VWagKoY/IYOBGn262V9HaiRFewTto8HWTuh/llDHCSCC3efVdoq16mwrsEjD4D+jW6PFplDB4YHDV+HDtzFnhJOjt2tSp3KU4FIs1vevcXPVA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=suse.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5tH2aBzTLtGyOv5D7f7OeME/gvHNM1uvC6mzTtLdJQE=;
- b=D56GcaL05AACcrNACB521xL6fWRlmqSAfX7krICDSHO8grFn0hR3KSach5heMMriZdAI8F23OZrGkHnOIVj95U0gTzcN0e3+7fWuluSR3seP8aMmaLYSyiYlpGyAHsX0NBkUrbG5/jc3R8oefHMGTEUjPCCN+vjr25Lzz4R+uZA=
-Received: from BLAPR03CA0086.namprd03.prod.outlook.com (2603:10b6:208:329::31)
- by CY5PR12MB6036.namprd12.prod.outlook.com (2603:10b6:930:2c::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.24; Tue, 6 May
- 2025 20:44:52 +0000
-Received: from BN3PEPF0000B076.namprd04.prod.outlook.com
- (2603:10b6:208:329:cafe::41) by BLAPR03CA0086.outlook.office365.com
- (2603:10b6:208:329::31) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8699.30 via Frontend Transport; Tue,
- 6 May 2025 20:44:52 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- BN3PEPF0000B076.mail.protection.outlook.com (10.167.243.121) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8722.18 via Frontend Transport; Tue, 6 May 2025 20:44:51 +0000
-Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 6 May
- 2025 15:44:51 -0500
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB05.amd.com
- (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 6 May
- 2025 15:44:51 -0500
-Received: from amd-BIRMANPLUS.mshome.net (10.180.168.240) by
- SATLEXMB03.amd.com (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39
- via Frontend Transport; Tue, 6 May 2025 15:44:50 -0500
-From: Jason Andryuk <jason.andryuk@amd.com>
-To: Juergen Gross <jgross@suse.com>, Stefano Stabellini
-	<sstabellini@kernel.org>, Oleksandr Tyshchenko
-	<oleksandr_tyshchenko@epam.com>
-CC: Jason Andryuk <jason.andryuk@amd.com>, <xen-devel@lists.xenproject.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] xenbus: Allow PVH dom0 a non-local xenstore
-Date: Tue, 6 May 2025 16:44:56 -0400
-Message-ID: <20250506204456.5220-1-jason.andryuk@amd.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="I68mv2SZ"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id DA1D1439D4;
+	Tue,  6 May 2025 20:47:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1746564447;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RriJ3sQZL+/jAERO13sfWtP2FOfOc3okEQg5B7FnAeQ=;
+	b=I68mv2SZI/aGxHCIIcxXbjxxCbHWE9FzDtUtW4PEabsIrho1orzLQHyqR3AJklkXW4/0dS
+	sHotiUtnhB37DGcdh4NYEpar2pikiAW6HTYv6TIrN84SPWuBG8+xkiYWGDI06C2IrQ6ogR
+	QEZfsdyh/gBXzyxBU6I46Qn7ke+tHyGu4UC1rv5tEOBv61wdugOUnlQfQ6wAbRndu7RuwR
+	e6tObBPlpuwkypnH5/quJLTO/9FUmfvGMJGlxu/nMapt7Mz08+7BIwiLIchjrKyUveptAn
+	jJ7yDtYArwX8GIIYPRKbfbYPujq44+9hObwSCtfPOkZ15Ae8r3K9ETKKDMJTLA==
+Date: Tue, 6 May 2025 22:47:20 +0200
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: Liu Ying <victor.liu@nxp.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+ <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Andrzej Hajda
+ <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>,
+ Robert Foss <rfoss@kernel.org>, Laurent Pinchart
+ <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>, Jagan Teki
+ <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
+ <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Douglas Anderson
+ <dianders@chromium.org>, Chun-Kuang Hu <chunkuang.hu@kernel.org>, Krzysztof
+ Kozlowski <krzk@kernel.org>, Anusha Srivatsa <asrivats@redhat.com>, Paul
+ Kocialkowski <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>, Hui
+ Pu <Hui.Pu@gehealthcare.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, dri-devel@lists.freedesktop.org,
+ asahi@lists.linux.dev, linux-kernel@vger.kernel.org,
+ chrome-platform@lists.linux.dev, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
+ linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH v2 30/34] drm/bridge: imx8qxp-pixel-combiner: convert to
+ devm_drm_bridge_alloc() API
+Message-ID: <20250506224720.5cbcf3e1@booty>
+In-Reply-To: <f71d18d2-4271-4bb9-b54f-0e5a585778f3@nxp.com>
+References: <20250424-drm-bridge-convert-to-alloc-api-v2-0-8f91a404d86b@bootlin.com>
+	<20250424-drm-bridge-convert-to-alloc-api-v2-30-8f91a404d86b@bootlin.com>
+	<553d62ed-976a-4e17-9678-cdc3d40ce4a7@nxp.com>
+	<20250430112944.1b39caab@booty>
+	<f71d18d2-4271-4bb9-b54f-0e5a585778f3@nxp.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-Received-SPF: None (SATLEXMB05.amd.com: jason.andryuk@amd.com does not
- designate permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN3PEPF0000B076:EE_|CY5PR12MB6036:EE_
-X-MS-Office365-Filtering-Correlation-Id: 054fefcc-122c-473c-6933-08dd8cded9b0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|36860700013|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?kq7VJbIXgT0QVpxbz4uqZUDZPrzqKCRkf3HWW0vaFIlRkUNwhI00rKYNOAWZ?=
- =?us-ascii?Q?hCqTyf6mOiUn4uuQ0zkP5DziDGCjltqwjL54ZCnnvaTkHl/KEwnaV9VM8fHT?=
- =?us-ascii?Q?rwdXNCyY+7RI4z0CJXTeU3PsnNSt9gFwXm7llnBZF9esRsKO96pPyKOM4LNu?=
- =?us-ascii?Q?bv9zEX/Hw5/oMgnp4oPz8ys4D5ZrmQ/Azj4x4ep/FIgZrg2vAjwfZUGclJl5?=
- =?us-ascii?Q?H8MGlLOftrBNnoWfSPP48+NS7yci8SwWL/2+7mOoJa+fH7uQq+9YQavQ3RZ7?=
- =?us-ascii?Q?nnsaxjxhg/6tgO+EdXWPf9uKcEfNTDnMrerXuwmueLxLngYOgml2wp6RTu4q?=
- =?us-ascii?Q?TlJA5JMQ2ohH+y4GulHaVw7/VwYey/5o6UPty78zdf1ANzemYrDiC6v9nakV?=
- =?us-ascii?Q?n86Tq07kyYDMPMLOuGe7+lz0/SqpZxoaJoRbOlhLFC/qj+mjst97jJjrS/xl?=
- =?us-ascii?Q?CaEpR/TYOtK9R//cV9yyMYHxhBpRCRwESBL9xBqox/vtK9lfsOJk77ePsYwk?=
- =?us-ascii?Q?IULzCzXZk8uUhrQPuinLmcBXM6FxxNkVYQ5JhbASqPn7n04iabX+KPglaKpg?=
- =?us-ascii?Q?6SCaVJZNGe0qXO7w+mlAxdfssTWOsgt4QjzXRwBytmp+yOkcyclyGwJMncky?=
- =?us-ascii?Q?ZNsDFwMnhSGJNFDwCR47VJm+1BLsIf3aUlzSrOCxXtmgEfLP/LObx0qRkMGq?=
- =?us-ascii?Q?Po4TP2CHGfBr944HtEvkQEjNrOkA4aNRajorLvDCzjZcVlnBmRuIfKMGBsY0?=
- =?us-ascii?Q?uIL/J06m3vKA+K+JF+nq8MQQZ2mAx4RW090zSjAbkmdC2tk0GUCaf6FwyZ/i?=
- =?us-ascii?Q?zWeQRQVkh6Wu/Kmy0SFquTYsFdZAghuUabASxN76hbU6u/iRl+uESPf1sZsn?=
- =?us-ascii?Q?LHrTZdYc225RU3LieR2DxIpHFQ+W4jZ+W5WZO2iZyiSh3Ow9s0m70d8mt6YY?=
- =?us-ascii?Q?AxWLUeCHhskOPHenomR6Pxe5czH0Y7o9SMFri9WOkmSvr267Dzp58wrNrBnV?=
- =?us-ascii?Q?Jb4u1XhS2u0GeowFxdvSQ9oadazb9FAbCXAqO146n3IZqCYrDLD9mxVzsNFw?=
- =?us-ascii?Q?l5LgNiWPmHOSOdnYJZY+KJtf4gZUZq6Jwuw/VFrW5kM9wSLZ2TE3c8roRuZm?=
- =?us-ascii?Q?FmfMkMJEBY1a3vXfXqZIuMV5I/fuUuZZL9OS61pVoFjJQXVvYMmdXMRDVz91?=
- =?us-ascii?Q?2GEb5eKQYgfPHgCc7R3uKCVuonhXLa/FOqwcy930LXJxVGG/eIq5bFg/mvi9?=
- =?us-ascii?Q?Cm4kaDLlVAs+PmNp7U/JydPmaTdFSzsmYNFATZN+hKrYuNots7n0ZUTeef1w?=
- =?us-ascii?Q?l0WD4KuN8qtFIjBr8wmFBLfSjEpbMpD0S3o1SDY0sEIGDZer4dLjAEUb7vaX?=
- =?us-ascii?Q?MvE7yW4TYa/6dr7S8GnQMdC4F0dbXn510YLDl8lfMUDly/Xyh/LH57xJz06V?=
- =?us-ascii?Q?zP94PL/0SvA4RgNYL0Gvmlmy4znpt+DYoJS9ypWdzExwpn2QIgLfjE/FZYWD?=
- =?us-ascii?Q?5SLRz5zt1izzkGo/+XRxl2CJZux1NewJbAJK?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 20:44:51.8897
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 054fefcc-122c-473c-6933-08dd8cded9b0
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN3PEPF0000B076.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6036
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeegleejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeelffefgfehhfdtvdefueefieevkefggfelkeeiudetkeektedvhedukefgvddvnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegsohhothihpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepfeelpdhrtghpthhtohepvhhitghtohhrrdhlihhusehngihprdgtohhmpdhrtghpthhtohepmhgrrghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehmrhhiphgrrhgusehkv
+ ghrnhgvlhdrohhrghdprhgtphhtthhopehtiihimhhmvghrmhgrnhhnsehsuhhsvgdruggvpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomhdprhgtphhtthhopehsihhmohhnrgesfhhffihllhdrtghhpdhrtghpthhtoheprghnughriigvjhdrhhgrjhgurgesihhnthgvlhdrtghomhdprhgtphhtthhopehnvghilhdrrghrmhhsthhrohhngheslhhinhgrrhhordhorhhg
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-Make xenbus_init() allow a non-local xenstore for a PVH dom0 - it is
-currently forced to XS_LOCAL.  With Hyperlaunch booting dom0 and a
-xenstore stubdom, dom0 can be handled as a regular XS_HVM following the
-late init path.
+Hello Liu,
 
-Ideally we'd drop the use of xen_initial_domain() and just check for the
-event channel instead.  However, ARM has a xen,enhanced no-xenstore
-mode, where the event channel and PFN would both be 0.  Retain the
-xen_initial_domain() check, and use that for an additional check when
-the event channel is 0.
+thanks for your further feedback.
 
-Check the full 64bit HVM_PARAM_STORE_EVTCHN value to catch the off
-chance that high bits are set for the 32bit event channel.
+On Tue, 6 May 2025 10:24:18 +0800
+Liu Ying <victor.liu@nxp.com> wrote:
 
-Signed-off-by: Jason Andryuk <jason.andryuk@amd.com>
-Change-Id: I5506da42e4c6b8e85079fefb2f193c8de17c7437
----
-v2:
-Re-add xen_initial_domain() check to avoid breaking ARM's xen,enhanced
-no-xenstore mode where event channel and PFN are both 0.
+> On 04/30/2025, Luca Ceresoli wrote:
+> > Hello Liu,  
+> 
+> Hi Luca,
+> 
+> > 
+> > On Tue, 29 Apr 2025 10:10:55 +0800
+> > Liu Ying <victor.liu@nxp.com> wrote:
+> >   
+> >> Hi,
+> >>
+> >> On 04/25/2025, Luca Ceresoli wrote:  
+> >>> This is the new API for allocating DRM bridges.
+> >>>
+> >>> This driver embeds an array of channels in the main struct, and each
+> >>> channel embeds a drm_bridge. This prevents dynamic, refcount-based
+> >>> deallocation of the bridges.
+> >>>
+> >>> To make the new, dynamic bridge allocation possible:
+> >>>
+> >>>  * change the array of channels into an array of channel pointers
+> >>>  * allocate each channel using devm_drm_bridge_alloc()
+> >>>  * adapt the code wherever using the channels
+> >>>
+> >>> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>  
+> > 
+> > [...]
+> >   
+> >>> @@ -345,8 +351,8 @@ static int imx8qxp_pc_bridge_probe(struct platform_device *pdev)
+> >>>  free_child:
+> >>>  	of_node_put(child);
+> >>>  
+> >>> -	if (i == 1 && pc->ch[0].next_bridge)
+> >>> -		drm_bridge_remove(&pc->ch[0].bridge);
+> >>> +	if (i == 1 && pc->ch[0]->next_bridge)    
+> >>
+> >> Since this patch makes pc->ch[0] and pc->ch[1] be allocated separately,
+> >> pc->ch[0] could be NULL if channel0 is not available, hence a NULL pointer
+> >> dereference here...  
+> > 
+> > See below for this.
+> >   
+> >>> +		drm_bridge_remove(&pc->ch[0]->bridge);
+> >>>  
+> >>>  	pm_runtime_disable(dev);
+> >>>  	return ret;
+> >>> @@ -359,7 +365,7 @@ static void imx8qxp_pc_bridge_remove(struct platform_device *pdev)
+> >>>  	int i;
+> >>>  
+> >>>  	for (i = 0; i < 2; i++) {
+> >>> -		ch = &pc->ch[i];
+> >>> +		ch = pc->ch[i];
+> >>>  
+> >>>  		if (!ch->is_available)    
+> >>
+> >> ...and here too.  
+> > 
+> > This is indeed a bug, I should have checked the pointer for being
+> > non-NULL.
+> > 
+> > Looking at that more closely, I think the is_available flag can be
+> > entirely removed now. The allocation itself (ch != NULL) now is
+> > equivalent. Do you think my reasoning is correct?
+> > 
+> > Ouch! After writing the previous paragraph I realized you proposed this
+> > a few lines below! OK, removing is_available. :)
+> > 
+> > [...]
+> >   
+> >> On top of this patch series, this issue doesn't happen if I apply the below
+> >> change:  
+> > 
+> > [...]
+> >   
+> >> @@ -351,7 +349,7 @@ static int imx8qxp_pc_bridge_probe(struct platform_device *pdev)
+> >>  free_child:
+> >>         of_node_put(child);
+> >>  
+> >> -       if (i == 1 && pc->ch[0]->next_bridge)
+> >> +       if (i == 1 && pc->ch[0])
+> >>                 drm_bridge_remove(&pc->ch[0]->bridge);  
+> > 
+> > Unrelated to this patch, but as I looked at it more in depth now, I'm
+> > not sure this whole logic is robust, even in the original code.
+> > 
+> > The 'i == 1' check here seems to mean "if some error happened when
+> > handling channel@1, that means channel@0 was successfully initialized,
+> > so let's clean up channel 0".
+> > 
+> > However my understanding of the bindings is that device tree is allowed
+> > to have the channel@1 node before the channel@0 node (or even channel@1
+> > without channel@0, but that's less problematic here).
+> > 
+> > In such case (channel@1 before channel@0), this would happen:
+> > 
+> >  1. alloc and init ch[1], all OK
+> >  2. alloc and init ch[0], an error happens
+> >     (e.g. of_graph_get_remote_node() fails)
+> > 
+> > So we'd reach the free_child: label, and we should call
+> > drm_bridge_remove() for ch[1]->bridge, but there's no code to do that.
+> > 
+> > To be robust in such a case, I think both channels need to be checked
+> > independently, as the status of one does not imply the status of the
+> > other. E.g.:
+> > 
+> >   for (i = 0; i < 2; i++)
+> >       if (pc->ch[i] && pc->ch[i]->next_bridge)
+> >           drm_bridge_remove(&pc->ch[i]->bridge);
+> > 
+> > (which is similar to what .remove() does after the changes discussed in
+> > this thread, and which I have queued for v3)
+> > 
+> > What's your opinion? Do you think I missed anything?  
+> 
+> The pixel combiner DT node would be added in imx8-ss-dc{0,1}.dtsi, please
+> see the case for imx8-ss-dc0.dtsi introduced by an in-flight patch[1].  As
+> channel@{0,1} child nodes always exist(DT overlay cannot effectively delete
+> any of them) and channel@0 always comes first, there is no problematic case.
 
- drivers/xen/xenbus/xenbus_probe.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+I'm not questioning what existing and future dts files (will) contain,
+and surely I don't see a good reason someone would write channel@1
+before channel@0.
 
-diff --git a/drivers/xen/xenbus/xenbus_probe.c b/drivers/xen/xenbus/xenbus_probe.c
-index 22d3f90ee205..b12cbd9663e3 100644
---- a/drivers/xen/xenbus/xenbus_probe.c
-+++ b/drivers/xen/xenbus/xenbus_probe.c
-@@ -969,9 +969,15 @@ static int __init xenbus_init(void)
- 	if (xen_pv_domain())
- 		xen_store_domain_type = XS_PV;
- 	if (xen_hvm_domain())
-+	{
- 		xen_store_domain_type = XS_HVM;
--	if (xen_hvm_domain() && xen_initial_domain())
--		xen_store_domain_type = XS_LOCAL;
-+		err = hvm_get_parameter(HVM_PARAM_STORE_EVTCHN, &v);
-+		if (err)
-+			goto out_error;
-+		xen_store_evtchn = (int)v;
-+		if (!v && xen_initial_domain())
-+			xen_store_domain_type = XS_LOCAL;
-+	}
- 	if (xen_pv_domain() && !xen_start_info->store_evtchn)
- 		xen_store_domain_type = XS_LOCAL;
- 	if (xen_pv_domain() && xen_start_info->store_evtchn)
-@@ -990,10 +996,6 @@ static int __init xenbus_init(void)
- 		xen_store_interface = gfn_to_virt(xen_store_gfn);
- 		break;
- 	case XS_HVM:
--		err = hvm_get_parameter(HVM_PARAM_STORE_EVTCHN, &v);
--		if (err)
--			goto out_error;
--		xen_store_evtchn = (int)v;
- 		err = hvm_get_parameter(HVM_PARAM_STORE_PFN, &v);
- 		if (err)
- 			goto out_error;
+My point is:
+
+ - the bindings _allow_ channel1 before channel@0
+ - the error management code after the free_child label won't work
+   correctly if channel1 is before channel@0 in the device tree
+
+IOW the driver is not robust against all legal device tree descriptions,
+and it could be easily made robust using the example code in my
+previous e-mail (quoted a few lines above).
+
+If you agree about this I'll be happy to send a patch doing that change.
+If you think I'm wrong, I won't fight a battle. This topic is
+orthogonal to the change I'm introducing in this patch, and I can
+continue the conversion independently from this discussion.
+
+> > Thanks for taking the time to dig into this!  
+> 
+> After looking into this patch and patch 31(though I've already provided my A-b)
+> more closely, I think the imx8qxp_pc and imx8{qm,qxp}_ldb main structures
+> should have the same life time with the embedded DRM bridges, because for
+> example the clk_apb clock in struct imx8qxp_pc would be accessed by the
+> imx8qxp_pc_bridge_mode_set DRM bridge callback.  But, IIUC, your patches extend
+> the life time for the embedded channel/bridge structures only, but not for the
+> main structures.  What do you think ?
+
+I see you concern, but I'm sure the change I'm introducing is not
+creating the problem you are concerned about.
+
+The key aspect is that my patch is merely changing the lifetime of the
+_allocation_ of the drm_bridge, not its usage. On drm_bridge_remove()
+the bridge is removed from its encoder chain and it is completely not
+reachable, both before and after my patch. With my patch it is not
+freed immediately, but it's just a piece of "wasted" memory that is
+still allocated until elsewhere in the kernel there are pointers to it,
+to avoid use-after-free.
+
+With this explanation, do you think my patch is correct (after fixing
+the bug we already discussed of course)?
+
+Best regards,
+Luca
+
 -- 
-2.34.1
-
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
