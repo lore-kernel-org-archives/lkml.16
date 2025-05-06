@@ -1,246 +1,220 @@
-Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2114.outbound.protection.outlook.com [40.107.247.114])
+Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 632F327B4EE;
-	Tue,  6 May 2025 15:17:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.247.114
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746544656; cv=fail; b=IZU9ezYGY5Va8NhF8Gi4zoSdWnqmajtMF1FOj14dtbuMJPB8PyD2tEc2AH4YjHNyt7G+LwSOqsrMeO33ME9uG4aoK9Px7ku6RLPY8O3JME1XCfADL2LuWtWQ6SHkHc4FDiSDjmcx1DhjHDZ+dZprD7tSWk36m+7ZfDdFNHh5/tw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746544656; c=relaxed/simple;
-	bh=t9VClMVKxyhmAr9RgvIKHkri3qWPQmVO+nz3ALoA20A=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ka7MQ3Z0lNYbcYHi18bXli2PW4Ewieu5B+b3FIIF9b4octEZxT0TEvXbIxlj+rTCsMROcsiqjIN4yJpOjmSqMPgxReTNr70tMWrxIw/MiP2Z5J2LhB4DL8T+rVC7VuibFekAvCGGK+Hctkw3OK1c3lhZMBR4oedHY8FqSolnXGs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=phytec.de; spf=pass smtp.mailfrom=phytec.de; dkim=pass (2048-bit key) header.d=phytec.de header.i=@phytec.de header.b=Hw56btmJ; arc=fail smtp.client-ip=40.107.247.114
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=phytec.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytec.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=phytec.de header.i=@phytec.de header.b="Hw56btmJ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=KEE7n6N14/J9xLpFwXFl64h4nYmach/4VZJW0oNd41pXQgCGXEvtNQMAQbx6VImcZl+yai2g0iI+7pMLosB0URQXHg5AFHvaiNvAK7gsTUO9rHMT8g9uaJEEERaoiFyT0f/lvuBkk8FR1Z5/PTi/ewHq9Mo3IK5faU6DElaXEnvhNmcZqMM1JMh9zcVuJ4EXUrE+alrdtfWtKG6bT6P+0NgQC3cpdR/4Ttm7W8imCOCKF6QdUfwCQw2wTITcHvUVJULoV9Gx+/QLCHoKXgKfUrTqK108/7/3IdrWGe1opqDXY7vMzvLbnxzpKfpHvaMxbzGT7R6iufhAPH/qlrwESQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Pa18+lL6hd7n2hzp+rSu2D29gEv5bBuLrU8cXG4hBzc=;
- b=miwVHYnFNIwjWF9uqwsg9oQfqRByMBh2I1sWkLJlBGNXRXawggGG8iwXnNl9//Yk4/sqwWY4lsJsqJuT3qKCvDqNExf2con44MALoWZdjYSGart/tz7fKPymSdyIdlMvZU48MWs80X7iL91jKY2JH/u0ROFAjgpjzUo2G881PbXHW0wTC6sMfSR+EsTrbnPNAc2VL8nUbHc6Rq7iYrNZ2Qjeu2qlFW9TUWfY9ZuSmmITOqwqB4WTCZ8Dujqc+pytaME7BlDLkzR/4VSzFZpC3RPywAG29laGSgk7nvV0LrzXpEAu2KQ71BalEeaGRFvOo3MiuU2NkmcHKSSIfH4M9Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=phytec.de; dmarc=pass action=none header.from=phytec.de;
- dkim=pass header.d=phytec.de; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=phytec.de;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Pa18+lL6hd7n2hzp+rSu2D29gEv5bBuLrU8cXG4hBzc=;
- b=Hw56btmJqn2s5ugb4shR74KI9R35knImbolAXr18V5SxhXgm4OgEFXTWeio2j+TjM3EzFOWHUP3QdMKCLprkjvLUxtus8C950f8VeI2IjVJEMMLY1x0nopr2e51DNXSjRgWZwKpzdob6aniiJdRhp+fHbq0rLC7awAD98LnR1nGmdEx2tgCiMbxZuhVoadBrb6YFE0BGsmh9yzB6FGKzjOdB2jikK/k1yTsEYEbuVQtAJx4zqMARnOj7wJYSVx8Ptgi0AMAuNgC3d2a1GlSKtnk6dfS0GItmfrriL0RTDNs08kypyun3RtqGj/NWi4a+TOizsrYbyYADskCsPqPCpA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=phytec.de;
-Received: from AS4P195MB1456.EURP195.PROD.OUTLOOK.COM (2603:10a6:20b:4b3::21)
- by PR3P195MB0508.EURP195.PROD.OUTLOOK.COM (2603:10a6:102:24::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.24; Tue, 6 May
- 2025 15:17:29 +0000
-Received: from AS4P195MB1456.EURP195.PROD.OUTLOOK.COM
- ([fe80::369c:a760:5bf9:8d4a]) by AS4P195MB1456.EURP195.PROD.OUTLOOK.COM
- ([fe80::369c:a760:5bf9:8d4a%4]) with mapi id 15.20.8699.022; Tue, 6 May 2025
- 15:17:28 +0000
-Message-ID: <98726488-4b51-46c4-ad6c-e1365635ff87@phytec.de>
-Date: Tue, 6 May 2025 18:17:26 +0300
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/4] arm64: dts: ti: k3-am62-phycore-som: Enable
- Co-processors
-To: Daniel Schultz <d.schultz@phytec.de>, nm@ti.com, vigneshr@ti.com,
- kristo@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: upstream@lists.phytec.de
-References: <20250506133604.294920-1-d.schultz@phytec.de>
- <20250506133604.294920-2-d.schultz@phytec.de>
-Content-Language: en-US
-From: Wadim Egorov <w.egorov@phytec.de>
-In-Reply-To: <20250506133604.294920-2-d.schultz@phytec.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: VE1PR03CA0056.eurprd03.prod.outlook.com
- (2603:10a6:803:118::45) To AS4P195MB1456.EURP195.PROD.OUTLOOK.COM
- (2603:10a6:20b:4b3::21)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6932283137
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 15:17:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746544677; cv=none; b=Tb9J6LT+C/+L0bf1C8QRb3oKaThZ/BVvvPxmh/ieuQvjFOwGbS2C7ZYuC8gzhA+IZtFOFdoyP8MHDk45PrRm1y2DKH0waUXnq5PcU+IQbn2+li0lBuhnyzE9UQcoCcPu8UqrgCSZoanj4FVnQ6zvTS55UzDDZ1bsOvP81yDPIjI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746544677; c=relaxed/simple;
+	bh=TRLHS5DHdkXVLGYsZY/+Ck3dcrPceACBq41I7wF89gE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=eAuTIIWrJYoFlKBGhUwLu21rk7f0bMKbJqPCwg4YGmdsmdSYzB5/6h2XPkQrxvxwLa85t/k88jsEpAVa1RZv2Alxnpa2XAFLjbp5FuqNGdsRXuJJSVOMDgkOyHFk1l7sqbK/T3Iwk+TNkh7EMEG/3K6JSW2h4yfPnDfxPZhP9eM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
+Received: from fangorn.home.surriel.com ([10.0.13.7])
+	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <riel@shelob.surriel.com>)
+	id 1uCK1p-000000003cL-1EgT;
+	Tue, 06 May 2025 11:16:17 -0400
+Message-ID: <09b6eb12ede47b2e2be69bdd68a8732104b26eb0.camel@surriel.com>
+Subject: Re: [RFC PATCH 7/9] x86/mm: Introduce Remote Action Request
+From: Rik van Riel <riel@surriel.com>
+To: Nadav Amit <nadav.amit@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open
+ list:MEMORY MANAGEMENT"	 <linux-mm@kvack.org>, the arch/x86 maintainers
+ <x86@kernel.org>, 	kernel-team@meta.com, Dave Hansen
+ <dave.hansen@linux.intel.com>, luto@kernel.org, 	peterz@infradead.org,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar	 <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, "H. Peter Anvin"	 <hpa@zytor.com>, Yu-cheng
+ Yu <yu-cheng.yu@intel.com>
+Date: Tue, 06 May 2025 11:16:17 -0400
+In-Reply-To: <03E5F4D7-3E3F-4809-87FE-6BD0B792E90F@gmail.com>
+References: <20250506003811.92405-1-riel@surriel.com>
+	 <20250506003811.92405-8-riel@surriel.com>
+	 <03E5F4D7-3E3F-4809-87FE-6BD0B792E90F@gmail.com>
+Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
+ keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
+ eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
+ Z/nl6IA8MDhSqyqdnTY8z7LnQHqq16jAqwo7Ll9qALXz4yG1ZdSCmo80VPetBZZPw7WMjo+1hByv/
+ lvdFnLfiQ52tayuuC1r9x2qZ/SYWd2M4p/f5CLmvG9UcnkbYFsKWz8bwOBWKg1PQcaYHLx06sHGdY
+ dIDaeVvkIfMFwAprSo5EFU+aes2VB2ZjugOTbkkW2aPSWTRsBhPHhV6dABEBAAG0HlJpayB2YW4gU
+ mllbCA8cmllbEByZWRoYXQuY29tPokBHwQwAQIACQUCW5LcVgIdIAAKCRDOed6ShMTeg05SB/986o
+ gEgdq4byrtaBQKFg5LWfd8e+h+QzLOg/T8mSS3dJzFXe5JBOfvYg7Bj47xXi9I5sM+I9Lu9+1XVb/
+ r2rGJrU1DwA09TnmyFtK76bgMF0sBEh1ECILYNQTEIemzNFwOWLZZlEhZFRJsZyX+mtEp/WQIygHV
+ WjwuP69VJw+fPQvLOGn4j8W9QXuvhha7u1QJ7mYx4dLGHrZlHdwDsqpvWsW+3rsIqs1BBe5/Itz9o
+ 6y9gLNtQzwmSDioV8KhF85VmYInslhv5tUtMEppfdTLyX4SUKh8ftNIVmH9mXyRCZclSoa6IMd635
+ Jq1Pj2/Lp64tOzSvN5Y9zaiCc5FucXtB9SaWsgdmFuIFJpZWwgPHJpZWxAc3VycmllbC5jb20+iQE
+ +BBMBAgAoBQJSLd2lAhsjBQkSzAMABgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRDOed6ShMTe
+ g4PpB/0ZivKYFt0LaB22ssWUrBoeNWCP1NY/lkq2QbPhR3agLB7ZXI97PF2z/5QD9Fuy/FD/jddPx
+ KRTvFCtHcEzTOcFjBmf52uqgt3U40H9GM++0IM0yHusd9EzlaWsbp09vsAV2DwdqS69x9RPbvE/Ne
+ fO5subhocH76okcF/aQiQ+oj2j6LJZGBJBVigOHg+4zyzdDgKM+jp0bvDI51KQ4XfxV593OhvkS3z
+ 3FPx0CE7l62WhWrieHyBblqvkTYgJ6dq4bsYpqxxGJOkQ47WpEUx6onH+rImWmPJbSYGhwBzTo0Mm
+ G1Nb1qGPG+mTrSmJjDRxrwf1zjmYqQreWVSFEt26tBpSaWsgdmFuIFJpZWwgPHJpZWxAZmIuY29tP
+ okBPgQTAQIAKAUCW5LbiAIbIwUJEswDAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQznneko
+ TE3oOUEQgAsrGxjTC1bGtZyuvyQPcXclap11Ogib6rQywGYu6/Mnkbd6hbyY3wpdyQii/cas2S44N
+ cQj8HkGv91JLVE24/Wt0gITPCH3rLVJJDGQxprHTVDs1t1RAbsbp0XTksZPCNWDGYIBo2aHDwErhI
+ omYQ0Xluo1WBtH/UmHgirHvclsou1Ks9jyTxiPyUKRfae7GNOFiX99+ZlB27P3t8CjtSO831Ij0Ip
+ QrfooZ21YVlUKw0Wy6Ll8EyefyrEYSh8KTm8dQj4O7xxvdg865TLeLpho5PwDRF+/mR3qi8CdGbkE
+ c4pYZQO8UDXUN4S+pe0aTeTqlYw8rRHWF9TnvtpcNzZw==
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS4P195MB1456:EE_|PR3P195MB0508:EE_
-X-MS-Office365-Filtering-Correlation-Id: 76acf4ba-1185-463a-e7c2-08dd8cb11d73
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?VnNlWXBGYzZ5SytibWY0WlcxSHQ5Y3dDUWVvQ29zcGFiWGFwWVBaYXhKZDFw?=
- =?utf-8?B?eUtMZ0FEaVlVYy93ZG1XZy9lNm5ZMUZRdjJ3bGZJUWp0VmNFa3U3ZDYvY3JW?=
- =?utf-8?B?dUgxZXQvNGFWdlJlSUl2c0dtbGNzRG5QaXFyN2FnQ0JPZjcvSWkveWpzTlB4?=
- =?utf-8?B?ZjNvNjNuN3pLK3N3dWxDWlp0bzZ0ZnhBdy80SnNXM1ZUejAycVBLVmhRbmhw?=
- =?utf-8?B?ZG9lMmdHWGI4R3gxYzMzVzhSSjFvOFB3MEFtc0JBSU42TDgzV2lBUmpKWjJZ?=
- =?utf-8?B?Y3RyZG9RdjFGeC82NWVFS2Jad29HWW4yL2hWSk5wcGx1YzZVbW4zWFd1R3VH?=
- =?utf-8?B?WmRMV2w4WThKS2NjUll0QjJIVXZKYnAwbnZybHVJa204QlBSbUh1c2R6ZlV1?=
- =?utf-8?B?VW91dzM2WEFJbjJwS09NZEY2S0ZJVjg4Q0VOUUhYUEs0NTRTOEV4UVNnZi9l?=
- =?utf-8?B?eCtIRG9JdUdRejlreTJGbkhLZlVHNUwvZGtsMmQwUGFlakJLd2NxRS9KV0J3?=
- =?utf-8?B?RWY5dElRS0NzQVhnSHRVa0NoWlJqWEFxTjFacjVtc2Jzend5RFlyUmlaRHlT?=
- =?utf-8?B?WnFoRC8wREVFRU82TkJWVTIvd1RSejRxMkNxV3lha1g2Qm51cTFhb0dsU0Qy?=
- =?utf-8?B?dVc2VS9sTVc5RFpCLzRqTVdweWQyWXQ3emRxejF5bkkxVXVzYTZHelBaWTJD?=
- =?utf-8?B?Q1Y2R3JWR09uRGlhZC9NQzdNNHlTQ1JiK2Y1MzBOTHlPbmRHb2tOZTZoU2pt?=
- =?utf-8?B?UnVKaDAwZHpldUVkbGw2WDlEWUVyQUR2YzhsNi95bWVpLzNHWE9uQUFWL2hW?=
- =?utf-8?B?amNlSnZxNFpjYUlsc0FrMHZ6aVFtU2I5cSttU2xnV2VuZ0szeEVySE8reHg1?=
- =?utf-8?B?WnFFM3p0ZHU5R1F4cVBDWm4yaTBQeFQvdkUvVzNBdDVFM0VhQ1hWOGVtckhK?=
- =?utf-8?B?clpTRFVNNm5MSStoekkxMGtUZnAzdXhQY0JPejJRY2tHWU56LzcvbElteG9W?=
- =?utf-8?B?dWhmTjk0QzNIYlBHOUNhMVBpSm13dTZwK0E0VFA0ZkxrWFpLMTNKTXBxUWhs?=
- =?utf-8?B?T2IweHQvZGxDVlI4TzlOa3hMV1RkSTFpZitQSUdaeUhvc3ZXdjBWK2hhekZt?=
- =?utf-8?B?TkQzZ3ZhWHNsd0x4VXBkVWxKV0FrN1BZV09RWXdQeWRPTkpXRzJySWlLTzVG?=
- =?utf-8?B?cEl5SWJha0V3bEd4bXJicnBYWmZ1QXB6c0pvQ1lUYnZMRFBvM2MxYlp6b3Iv?=
- =?utf-8?B?bFc3Zm5ucCtpVjQybHpVN2lJMmdLakdIcUZzeVFGTkQyUnNya2plZ2QvNk5M?=
- =?utf-8?B?bHJ1aksyazRMTnZ0Mnk4bWdJeE9EL01CRHMrUE9hWnVvK2VUWHlPSE1OUnZR?=
- =?utf-8?B?SFI5U3FzVHRzNzRUOWtialY2NldjK1ZGUlM4RlNEMmswNXg4d1piTVVmSm5O?=
- =?utf-8?B?Tm00STV0NDcxNkFuYTN0QVA3bnRTUFdkY09aRk1jME5aaWc3L00wWjlENW9r?=
- =?utf-8?B?VDREeUYzeklnRnpWUE4yRk9wNXFyaGZMbkpBMmt0UHlzQTJOWEh0aHkwLzZL?=
- =?utf-8?B?ZEgybGczVnIyRDBncXhDQzQwL0NJOVNSM1ZIS1p5SFFaa0h2NWNIWGw2TThO?=
- =?utf-8?B?aFFxTmpvc00xc3plQitNbjRUUTBVUm9VOXhzTXJud1RRYlkzSGRsNnovVkdz?=
- =?utf-8?B?K1JpWVdIVlovdXYwNElkOXZ1VkVzZXFwcGhQVVI0Wm4zdGpXT1pjOURzV1pi?=
- =?utf-8?B?ckRPSkRIRDNyWmU5ekV1MjFQZWJMZ0FCNTVoaDBSNkNzS3BWVWh0NHAvaUxV?=
- =?utf-8?B?UzFTdVlFTlpnRmVOWWJzd1lveXcySERnaDhwSDJDQnZrMlAvcThVL282N2k5?=
- =?utf-8?B?Um1lSTd6enc0Wkc5aHB0c2VMK2FoOVF1MzMvMzZ4Wmpxall3V25vVXdCUHgv?=
- =?utf-8?B?R0JlUnRhTWp3SDFsVzYxMEN1YVcwOGxvYlpmKzVRRllLeHJNNTJWZlFKdzNH?=
- =?utf-8?B?dnhEcmZWS3pBPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS4P195MB1456.EURP195.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(921020);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?amVUQjIxNVJRTkNTVE9qMVRLUUoxai8xbW9kTk1OK2JXcVRzd0xmTHBNbzQy?=
- =?utf-8?B?ei83TTkxNW8vMXlyd1VGWW5BV0VwaWtOLzFtRm1jbFU4M09aRWFRVkwzNndO?=
- =?utf-8?B?WVNmZm13TVhqZDFsYXFQcTVJcGxMaWNkUkp6QUxsc2ttL1M4NzV1eUY4d0Rx?=
- =?utf-8?B?b1dJVERjZ1FsSitsSjJzRXdqYmg2SC81YUdsRkI5VSswMzFPYWVrZ2hzb2VE?=
- =?utf-8?B?aGZXY09yMG4zb0dXK0cyWFpXYkpFcmZ1Ym96ejZIKzZzbGs4Ty8zbWQvbmZ6?=
- =?utf-8?B?ck0xaldlM0hlU0gzczRjcHRxd1hucW5YMjJIMFJ0MENySG95UTg2YTBNNTV2?=
- =?utf-8?B?Ujk3ekFRT3lJKzNjaEVyUStTNXlmMlRKYXVKaE9tcGk3RDVWenBtWDBUempF?=
- =?utf-8?B?cTd1VnNHbVZNdVVOUFJlWVZkQ1YwZEk0RDFuQlJQWTBlVlFzT2RJT0xHcFVP?=
- =?utf-8?B?N1FZb2RLcmVjdGxodUtnM0ozWWUvb2xYQ2VCaUIwMkVUS2c1UWxIczhxQ3Bn?=
- =?utf-8?B?R2h0K1ViOXIrQkdqSDVLOUZ2QlFYVnNkRHlveWttVUtlaG9pNFJoRHJ0TSt5?=
- =?utf-8?B?YkJwY0tYWUFNME1DbU5PcERUcHpITnB5QW5MTnp3czE1c0lyczdvbmhpS0dG?=
- =?utf-8?B?R0FNMjJGSG55M0xORFgvbGRyT0F5bDdvRXowek5oc1ZERHdwVC9jenVLbVAz?=
- =?utf-8?B?bkhESGpMcmtheS9ZaGhQNHNSeHlhcks5QmF3dWhFMkJvYU9mdlFUWnRPSHBF?=
- =?utf-8?B?UEFuSmhkWlA0dVA3VHRYM2lpMWUxYUhtek9COUlQQW04ejYxdC9kQUJ0ZGdP?=
- =?utf-8?B?MFVNbUFBZkR6bGRVU1BhMUJ2cmt4ZUkyb3VuOWZERnFzanJWbGNnUkorT3RM?=
- =?utf-8?B?eC9GWEo3YlNuMEdpOHFWSWNZZk9WWFVLZTVsQ3VPRGlVZzRVWExNWndyOFVw?=
- =?utf-8?B?NFRhZUhUa0xxVkxVNDdrclNkOWJhMTdaK0I2RTdFUThjN1pVTzV3QlJkajRH?=
- =?utf-8?B?UkdSZS9CV0FhWERaMDd1VVZndlBhN081bGZ6TlN4N1lINjNkVFNzMFk5bjZS?=
- =?utf-8?B?R3NVUFlZTHdYUzBreGVINHJJTkxpbEI4eTdXY29yNjRCODlpNURicEFjZjF4?=
- =?utf-8?B?a3oxbXJXUWZCU1ZHT3NJdFFlUmlybFVnbEIwdFhRdm1tVXA4UysvSFdtMWJH?=
- =?utf-8?B?eVJGZTNZWGhDMzlNNzJjdVU0U0R5Z1puWWtocVR6aWN0aDFhUnV5UVNFMmtW?=
- =?utf-8?B?SHFYNGRLVzdpYWtNUFRpQkh1UFdhdEtsdDEwUDNKM0RnQmdWN3R2OGM3ckxH?=
- =?utf-8?B?aGdtS0tUR2x2ZGw3NDF6c0taTDZJOVlwTllHLzJzRGxpTzUwZFdTUjJXVUNz?=
- =?utf-8?B?dTMrRG81cEFscVErMDUwbUxUUkhXaTkwWGNCL3FrZUM1Q0pSeHBDVWtWZG5a?=
- =?utf-8?B?VG8wSlg2eDZ2WktzUnlGb244ZGRVcG5NT1BYNHRya2VMUnVnOHVBczhsTFdX?=
- =?utf-8?B?MVhHMjRmQUJsZGoyemdHU3RtclYxamJ1ZUJkc0ZFb1pvRVJwbkEvcXhXM09D?=
- =?utf-8?B?YzV4UHBJZk1wZUk0OVNvd1VLN3BSSE1NNG80cnNtb0pMdkxnS2FVQytjSXFT?=
- =?utf-8?B?bTN4Tlg5SjJ6NG9jSldmcWRuMW5NWG9XdHIyMHlEYXgvcHU2alV2bGNwQmUr?=
- =?utf-8?B?RHFZMjI3cTZSeE5EeXVGOG5jeTVLTncwaEwxbEtkbXdoTy9xY3JsMGJhTGNJ?=
- =?utf-8?B?S0Zjd25HS0hsUWFWZFBFUFl5UGQ2Nlo1eDZpZzlXSXVxV0s3ZWxCWVdXa21k?=
- =?utf-8?B?OVdJNHlIRjBLSGc0L0FUdGJ3SEkzWnRCYWRpMGREeFE3dHc1MXFKdlR2N3N0?=
- =?utf-8?B?Z3JHV0t3cFRiUTUrUGFTdWtkcmJLMGQxR1FVdmRpaGVsc0NTQ1ZoRWJXRU9K?=
- =?utf-8?B?SkxhdEhSRC9objZJM2xtQllBU0I1Z1pPY3lJOEFsZzV5VTZZdGp6SFNLMEFN?=
- =?utf-8?B?TnNRb010TzM4ZW43OHQzNFkvSnJ3V09weWJ5aFY4Ry82Wi9RRXZtV29DbTR1?=
- =?utf-8?B?dHE3Y09zbUNrV0FoUFVHMzd6Q3JGUHVOS1ZBL28yZ1FzbmI2UkRsZXFEMXNv?=
- =?utf-8?Q?FYVno5n/GQcXx8SHkn69a0/2n?=
-X-OriginatorOrg: phytec.de
-X-MS-Exchange-CrossTenant-Network-Message-Id: 76acf4ba-1185-463a-e7c2-08dd8cb11d73
-X-MS-Exchange-CrossTenant-AuthSource: AS4P195MB1456.EURP195.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 15:17:28.8885
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: e609157c-80e2-446d-9be3-9c99c2399d29
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: JBPrY50jJLoZb1UJAjIIWK+IthkPIWAj5891k7kGYNH5sswawlrz5cFphz+S2Iwxo7jkEZDh5s+IBKhmiY231w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR3P195MB0508
+Sender: riel@surriel.com
 
-Am 06.05.25 um 16:36 schrieb Daniel Schultz:
-> For every remote processor, set up dedicated memory regions and
-> associate the required mailbox channels. Allocate two memory areas
-> per remote core: one 1MB region for vring shared buffers, and
-> another for external memory used by the remote processor for its
-> resource table and trace buffer.
-> 
-> Signed-off-by: Daniel Schultz <d.schultz@phytec.de>
-Reviewed-by: Wadim Egorov <w.egorov@phytec.de>
+On Tue, 2025-05-06 at 09:59 +0300, Nadav Amit wrote:
+>=20
+>=20
+> > On 6 May 2025, at 3:37, Rik van Riel <riel@surriel.com> wrote:
+> >=20
+> > +void smp_call_rar_many(const struct cpumask *mask, u16 pcid,
+> > +		=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned long start, unsigned l=
+ong end)
+> > +{
+> > +	unsigned long pages =3D (end - start + PAGE_SIZE) /
+> > PAGE_SIZE;
+> > +	int cpu, next_cpu, this_cpu =3D smp_processor_id();
+> > +	cpumask_t *dest_mask;
+> > +	unsigned long idx;
+> > +
+> > +	if (pages > RAR_INVLPG_MAX_PAGES || end =3D=3D TLB_FLUSH_ALL)
+> > +		pages =3D RAR_INVLPG_MAX_PAGES;
+> > +
+> > +	/*
+> > +	 * Can deadlock when called with interrupts disabled.
+> > +	 * We allow cpu's that are not yet online though, as no
+> > one else can
+> > +	 * send smp call function interrupt to this cpu and as
+> > such deadlocks
+> > +	 * can't happen.
+> > +	 */
+> > +	WARN_ON_ONCE(cpu_online(this_cpu) && irqs_disabled()
+> > +		=C2=A0=C2=A0=C2=A0=C2=A0 && !oops_in_progress &&
+> > !early_boot_irqs_disabled);
+>=20
+> To ease it for the reader, consider using the updated version from
+> smp.c
+> (or - even better - refactor into common inline function):
+>=20
+> 	if (cpu_online(this_cpu) && !oops_in_progress &&
+> 	=C2=A0=C2=A0=C2=A0 !early_boot_irqs_disabled)
+> 		lockdep_assert_irqs_enabled();
 
-> ---
->   .../boot/dts/ti/k3-am62-phycore-som.dtsi      | 35 +++++++++++++++----
->   1 file changed, 29 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/ti/k3-am62-phycore-som.dtsi b/arch/arm64/boot/dts/ti/k3-am62-phycore-som.dtsi
-> index 55ed418c023b..3075979935d5 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am62-phycore-som.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-am62-phycore-som.dtsi
-> @@ -64,6 +64,18 @@ mcu_m4fss_memory_region: m4f-memory@9cc00000 {
->   			no-map;
->   		};
->   
-> +		wkup_r5fss0_core0_dma_memory_region: r5f-dma-memory@9da00000 {
-> +			compatible = "shared-dma-pool";
-> +			reg = <0x00 0x9da00000 0x00 0x100000>;
-> +			no-map;
-> +		};
-> +
-> +		wkup_r5fss0_core0_memory_region: r5f-memory@9db00000 {
-> +			compatible = "shared-dma-pool";
-> +			reg = <0x00 0x9db00000 0x00 0xc00000>;
-> +			no-map;
-> +		};
-> +
->   		secure_tfa_ddr: tfa@9e780000 {
->   			reg = <0x00 0x9e780000 0x00 0x80000>;
->   			alignment = <0x1000>;
-> @@ -75,12 +87,6 @@ secure_ddr: optee@9e800000 {
->   			alignment = <0x1000>;
->   			no-map;
->   		};
-> -
-> -		wkup_r5fss0_core0_dma_memory_region: r5f-dma-memory@9db00000 {
-> -			compatible = "shared-dma-pool";
-> -			reg = <0x00 0x9db00000 0x00 0x00c00000>;
-> -			no-map;
-> -		};
->   	};
->   
->   	vcc_5v0_som: regulator-vcc-5v0-som {
-> @@ -240,10 +246,17 @@ cpsw3g_phy1: ethernet-phy@1 {
->   };
->   
->   &mailbox0_cluster0 {
-> +	status = "okay";
-> +
->   	mbox_m4_0: mbox-m4-0 {
->   		ti,mbox-rx = <0 0 0>;
->   		ti,mbox-tx = <1 0 0>;
->   	};
-> +
-> +	mbox_r5_0: mbox-r5-0 {
-> +		ti,mbox-rx = <2 0 0>;
-> +		ti,mbox-tx = <3 0 0>;
-> +	};
->   };
->   
->   &main_pktdma {
-> @@ -386,3 +399,13 @@ &sdhci0 {
->   	bootph-all;
->   	status = "okay";
->   };
-> +
-> +&wkup_r5fss0 {
-> +	status = "okay";
-> +};
-> +
-> +&wkup_r5fss0_core0 {
-> +	mboxes = <&mailbox0_cluster0 &mbox_r5_0>;
-> +	memory-region = <&wkup_r5fss0_core0_dma_memory_region>,
-> +			<&wkup_r5fss0_core0_memory_region>;
-> +};
+Nice cleanup. I will change this. Thank you.
 
+>=20
+>=20
+> > +
+> > +	/* Try to fastpath.=C2=A0 So, what's a CPU they want?=C2=A0 Ignoring
+> > this one. */
+> > +	cpu =3D cpumask_first_and(mask, cpu_online_mask);
+> > +	if (cpu =3D=3D this_cpu)
+> > +		cpu =3D cpumask_next_and(cpu, mask,
+> > cpu_online_mask);
+> > +
+> > +	/* No online cpus?=C2=A0 We're done. */
+> > +	if (cpu >=3D nr_cpu_ids)
+> > +		return;
+> > +
+> > +	/* Do we have another CPU which isn't us? */
+> > +	next_cpu =3D cpumask_next_and(cpu, mask, cpu_online_mask);
+> > +	if (next_cpu =3D=3D this_cpu)
+> > +		next_cpu =3D cpumask_next_and(next_cpu, mask,
+> > cpu_online_mask);
+> > +
+> > +	/* Fastpath: do that cpu by itself. */
+>=20
+> If you follow my comment (suggestion) about the concurrent flushes,
+> then=20
+> this part should be moved to be in the same was as done in the
+> updated
+> smp_call_function_many_cond().
+>=20
+> IOW, the main difference between this path and the =E2=80=9Cslow path=E2=
+=80=9D is=20
+> arch_send_rar_ipi_mask() vs arch_send_rar_single_ipi() (and maybe
+> =E2=80=9Cand=E2=80=9D with cpu_online_mask).
+
+It gets better. Page 8 of the RAR whitepaper tells
+us that we can simply use RAR to have a CPU send
+itself TLB flush instructions, and the microcode
+will do the flush at the same time the other CPUs
+handle theirs.
+
+"At this point, the ILP may invalidate its own TLB by=C2=A0
+ signaling RAR to itself in order to invoke the RAR handler
+ locally as well"
+
+I tried this, but things blew up very early in
+boot, presumably due to the CPU trying to send
+itself a RAR before it was fully configured to
+handle them.
+
+The code may need a better decision point than
+cpu_feature_enabled(X86_FEATURE_RAR) to decide
+whether or not to use RAR.
+
+Probably something that indicates RAR is actually
+ready to use on all CPUs.
+
+>=20
+> Since 2019 we have move into =E2=80=9Cmulti=E2=80=9D TLB flush instead of=
+ =E2=80=9Cmany=E2=80=9D.
+>=20
+> This means that try to take advantage of the time between sending the
+> IPI
+> and the indication it was completed to do the local TLB flush.=20
+
+I think we have 3 cases here:
+
+1) Only the local TLB needs to be flushed.
+   In this case we can INVPCID locally, and skip any
+   potential contention on the RAR payload table.
+
+2) Only one remote CPU needs to be flushed (no local).
+   This can use the arch_rar_send_single_ipi() thing.
+
+3) Multiple CPUs need to be flushed. This could include
+   the local CPU, or be only multiple remote CPUs.
+   For this case we could just use arch_send_rar_ipi_mask(),
+   including sending a RAR request to the local CPU, which
+   should handle it concurrently with the other CPUs.
+
+Does that seem like a reasonable way to handle things?
+
+> > +
+> > +	for_each_cpu(cpu, dest_mask)
+> > +		wait_for_done(idx, cpu);
+> > +
+> > +	free_payload(idx);
+> > +	unlock(this_cpu_ptr(&rar_lock));
+>=20
+> We don=E2=80=99t do lock/unlock on kernel/smp.c . So I would expect at le=
+ast
+> a
+> comment as for why it is required.
+>=20
+That is a very good question!
+
+It is locking a per-cpu lock, which no other code
+path takes.
+
+It looks like it could protect against preemption,
+on a kernel with full preemption enabled, but that
+should not be needed since the code in arch/x86/mm/tlb.c
+disables preemption around every call to the RAR code.
+
+I suspect that lock is no longer needed, but maybe
+somebody at Intel has a reason why we still do?
+
+--=20
+All Rights Reversed.
