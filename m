@@ -1,91 +1,107 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 914802820AD;
-	Tue,  6 May 2025 15:16:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CAD427BF8D;
+	Tue,  6 May 2025 15:16:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746544580; cv=none; b=XZ1XSNl0vz2vUynkEj65fTpIl0DG2nVws8BUgsQCmCLS/C2KVFp067HfvVNyAkj2NSbdkOHvKwuUxiQeHlWCftgfkE3gT+xhzcpF0dkMw2hEYxkd7bltSbzhgmFHiM7vgUOJ9mPP9rUDadxZFU8CxUEirwVgDQvmnc9r5Z0TAkI=
+	t=1746544602; cv=none; b=rpEEPooAWVsFSKMvbCfuJ0yGj9oJdFOqp2LxOZza6fAgqi4KZTM6BSO55fU1w6NovEppFmHwAgj5jxoYr0js/QIwxdxyms6HkLtJHR19YzIUX+CXyxbn7C0iyz2twf7ADlF7lsePLCyDTtRzhIPlqqtvHt1nh7IP2b/Pa5Zutl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746544580; c=relaxed/simple;
-	bh=naRIGT9bNmnyTwCeYsDh26MXmT+E8I5q52WbiTq7jDk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qqxa2yaMTWaiHzNTVp2+0rlrWFdW18dYIuPK4BSVH1re8r6DII2wttwAemx8wMsCBgBaBcSf4jsbTbRDeR864+YzsxI29Gmcg02xnpX1EBuSwZXyu3RHBzj58DV7Bf17Vd9R0bXf1VsvcA7RTs2XxOPYh8l+HmjD7F9PcNab7R0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YZHWO0Xo; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YZHWO0Xo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C126AC4CEE4;
-	Tue,  6 May 2025 15:16:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746544580;
-	bh=naRIGT9bNmnyTwCeYsDh26MXmT+E8I5q52WbiTq7jDk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YZHWO0XozeoojF9UoUCYbQyQ2FQ4xWRYcrK044hkRHan4feYYOV6LyOER+Fqx/nl/
-	 ivRry4m80z+BRFZ5SGbzwx3YqhOhJWOLOU/wVMOZa+wmUTpDAPiodp8WaFB7H1iMoZ
-	 lLzChHbyRGgA+PyevcK02CTEZasoRQEMLqkOJHIirfeyvmJmBGDMgmROiDDjZDudPr
-	 +GSmvqmh9hdCPUJLVBQ6xODHKygrlI+TGIhOiP1QzsJW8+vrnFT9aL3lPOvBNfiT0u
-	 8qngz+axQ7vMWI63VtCQ/9k++i1mnsxI+DkLDaINiAY7OIaqfNF3fIY8/PqssVNHU/
-	 UphYrlGrHl/pQ==
-Date: Tue, 6 May 2025 17:16:13 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Jann Horn <jannh@google.com>
-Cc: Kuniyuki Iwashima <kuniyu@amazon.com>, alexander@mihalicyn.com, 
-	bluca@debian.org, daan.j.demeyer@gmail.com, davem@davemloft.net, 
-	david@readahead.eu, edumazet@google.com, horms@kernel.org, jack@suse.cz, 
-	kuba@kernel.org, lennart@poettering.net, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, me@yhndnzj.com, netdev@vger.kernel.org, oleg@redhat.com, 
-	pabeni@redhat.com, viro@zeniv.linux.org.uk, zbyszek@in.waw.pl
-Subject: Re: [PATCH RFC v3 08/10] net, pidfs, coredump: only allow
- coredumping tasks to connect to coredump socket
-Message-ID: <20250506-buchmacher-gratulant-9960af036671@brauner>
-References: <20250505193828.21759-1-kuniyu@amazon.com>
- <20250505194451.22723-1-kuniyu@amazon.com>
- <CAG48ez2YRJxDmAZEOSWVvCyz0fkHN2NaC=_mLzcLibVKVOWqHw@mail.gmail.com>
- <20250506-zertifikat-teint-d866c715291a@brauner>
- <CAG48ez25gm3kgrS_q3jPiN0k6+-AMbNG4p9MPAD4E1WByc=VBA@mail.gmail.com>
+	s=arc-20240116; t=1746544602; c=relaxed/simple;
+	bh=+rKFcJCqS8GQHxMRegbXmSXTuTfl6b3IIxVnX4FcEQA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=TPHeJC1xiTaf8Qtn+3JuaiDnt3zWgV4rNFIjOy1HtmHfxHIG5KujmshQCykuY3AiqBo/P3mstWYGiJY2sQ9zrdwMOGp+aqpUjsf+t/QlAVTrKsVDPPE7DJDNmPzhe1mneZ/sU4hePHu7W38+6NgGOiqMUeos/AKf5rV3IeNyGTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E30E5C4CEE4;
+	Tue,  6 May 2025 15:16:40 +0000 (UTC)
+Date: Tue, 6 May 2025 11:16:48 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH v3] tracing: Update function trace addresses with module
+ addresses
+Message-ID: <20250506111648.5df7f3ec@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAG48ez25gm3kgrS_q3jPiN0k6+-AMbNG4p9MPAD4E1WByc=VBA@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 06, 2025 at 04:51:25PM +0200, Jann Horn wrote:
-> On Tue, May 6, 2025 at 9:39 AM Christian Brauner <brauner@kernel.org> wrote:
-> > > ("a kernel socket" is not necessarily the same as "a kernel socket
-> > > intended for core dumping")
-> >
-> > Indeed. The usermodehelper is a kernel protocol. Here it's the task with
-> > its own credentials that's connecting to a userspace socket. Which makes
-> > this very elegant because it's just userspace IPC. No one is running
-> > around with kernel credentials anywhere.
-> 
-> To be clear: I think your current patch is using special kernel
-> privileges in one regard, because kernel_connect() bypasses the
-> security_socket_connect() security hook. I think it is a good thing
-> that it bypasses security hooks in this way; I think we wouldn't want
-> LSMs to get in the way of this special connect(), since the task in
-> whose context the connect() call happens is not in control of this
-> connection; the system administrator is the one who decided that this
-> connect() should happen on core dumps. It is kind of inconsistent
-> though that that separate security_unix_stream_connect() LSM hook will
-> still be invoked in this case, and we might have to watch out to make
-> sure that LSMs won't end up blocking such connections... which I think
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Right, it is the same as for the usermode helper. It calls
-kernel_execve() which invokes at least security_bprm_creds_for_exec()
-and security_bprm_check(). Both of which can be used to make the
-usermodehelper execve fail.
+Now that module addresses are saved in the persistent ring buffer, their
+addresses can be used to adjust the address in the persistent ring buffer
+to the address of the module that is currently loaded.
 
-Fwiw, it's even the case for dumping directly to a file as in that case
-it's subject to all kinds of lookup and open security hooks like
-security_file_open() and then another round in do_truncate().
+Instead of blindly using the text_delta that only works for core kernel
+code, call the trace_adjust_address() that will see if the address matches
+an address saved in the persistent ring buffer, and then uses that against
+the matching module if it is loaded.
 
-All of that happens fully in the task's context as well via
-file_open()/file_open_root() or do_truncate().
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+Changes from v2: https://lore.kernel.org/20250325213919.460188156@goodmis.org
 
-So there's nothing special here.
+- Rebased on v6.15-rc5
+
+- Removed unneeded "delta" parameter from print_fn_trace()
+
+ kernel/trace/trace_output.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
+
+diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
+index b9ab06c99543..aab6816f0249 100644
+--- a/kernel/trace/trace_output.c
++++ b/kernel/trace/trace_output.c
+@@ -1086,11 +1086,11 @@ enum print_line_t trace_nop_print(struct trace_iterator *iter, int flags,
+ }
+ 
+ static void print_fn_trace(struct trace_seq *s, unsigned long ip,
+-			   unsigned long parent_ip, long delta,
+-			   unsigned long *args, int flags)
++			   unsigned long parent_ip, unsigned long *args,
++			   struct trace_array *tr, int flags)
+ {
+-	ip += delta;
+-	parent_ip += delta;
++	ip = trace_adjust_address(tr, ip);
++	parent_ip = trace_adjust_address(tr, parent_ip);
+ 
+ 	seq_print_ip_sym(s, ip, flags);
+ 	if (args)
+@@ -1119,8 +1119,7 @@ static enum print_line_t trace_fn_trace(struct trace_iterator *iter, int flags,
+ 	else
+ 		args = NULL;
+ 
+-	print_fn_trace(s, field->ip, field->parent_ip, iter->tr->text_delta,
+-		       args, flags);
++	print_fn_trace(s, field->ip, field->parent_ip, args, iter->tr, flags);
+ 	trace_seq_putc(s, '\n');
+ 
+ 	return trace_handle_return(s);
+@@ -1706,7 +1705,7 @@ static enum print_line_t trace_print_print(struct trace_iterator *iter,
+ 
+ 	trace_assign_type(field, iter->ent);
+ 
+-	ip = field->ip + iter->tr->text_delta;
++	ip = trace_adjust_address(iter->tr, field->ip);
+ 
+ 	seq_print_ip_sym(s, ip, flags);
+ 	trace_seq_printf(s, ": %s", field->buf);
+@@ -1792,7 +1791,7 @@ trace_func_repeats_print(struct trace_iterator *iter, int flags,
+ 
+ 	trace_assign_type(field, iter->ent);
+ 
+-	print_fn_trace(s, field->ip, field->parent_ip, iter->tr->text_delta, NULL, flags);
++	print_fn_trace(s, field->ip, field->parent_ip, NULL, iter->tr, flags);
+ 	trace_seq_printf(s, " (repeats: %u, last_ts:", field->count);
+ 	trace_print_time(s, iter,
+ 			 iter->ts - FUNC_REPEATS_GET_DELTA_TS(field));
+-- 
+2.47.2
+
