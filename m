@@ -1,155 +1,69 @@
-Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3037522EF5;
-	Tue,  6 May 2025 08:10:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746519039; cv=pass; b=sDVAflGvmuMd153F90Xswy9o/Z8jDK9zPETD4a6w74gDBFJ4ioYVslQ0U2CbwdVj21drdyZjP+Kqep3o/ZijVBryys9nCCXNcHjGSQz9UG7gZvbaelPPbs0girlXzHDHdjCMG685MqgcUOwnYlUL+j1MSowB/Zv3Je3m1dCS2lM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746519039; c=relaxed/simple;
-	bh=2CPahIJNzmnSDc7BN4lNM7Y9AulxNIBWqGmoa2/d6Yk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=oi5i+MvRirZLul3WE5Yj70PmYr+ioRGe7Svj/Bjc7LfEXt42/ngA1p5wDWQ4URMybGDvNFYSuBAHfBzMXg1/utCEFR/zgraXqfneShMVegRl37EyDgOCKoOPglTu0jBSkfneGTNRGU9NI6jm3F7lEFRcYKo50U4ED2xJCBwAszw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me; spf=pass smtp.mailfrom=icenowy.me; dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b=BKclO5bl; arc=pass smtp.client-ip=136.143.188.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icenowy.me
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7215C227EA1;
+	Tue,  6 May 2025 08:10:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746519051; cv=none; b=cFra0PTF5egFWPS8zgZr/GlGgiAM2gtFUl9dF96rRH+pYzNP7mXEeUYSeqyej4Oe6PPR1evKhcrHgNuyVNn3kAXNcQWOYcnyvHQr4EtPVM1QWDMR6sGL2Vr34BCTmPqD/r/5VfPWPaxPNTXyvNgXxqtJeklINxj/gr8yalkhu04=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746519051; c=relaxed/simple;
+	bh=sE7co3/dVAvEaKILs88LONOZNr76UNHWgjyT3LLlIwA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CdUvshiU77naeeDd9BUC06iIth3uTtkIX5djMFPD9uLeYfTrcA2bkQm4Q7Dzmt1cIwBsdZ76cH4yOmbt7FYBsVWMsAYBvZvyy+HtnvAi998VjHxPPxAVZ5W9RT9VQkexWPiZQ0FmOwqVTo0tS46AeyY2tRDXeSXFAmmmCR8+UVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QMs6fh9+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b="BKclO5bl"
-ARC-Seal: i=1; a=rsa-sha256; t=1746519017; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=VWMqlzwxd65hBeq2sNRERKJp2v5qyjn7WtVbYRO9rzpP41X8kddgX0l9dEhyESc+sHIgE3gwVW+GxPxOvPnL1gvrStnmdWZVGLG6WMx5rq1PFlNa9YUqJgNGL6rSLaY1jtkCybvHd0aBHtU+PRtYlt4bAWGpXQaMXfUJLG0EDzU=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1746519017; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=2CPahIJNzmnSDc7BN4lNM7Y9AulxNIBWqGmoa2/d6Yk=; 
-	b=n5W3a7jNxhp/g44TpsXKkmJwKFzjHWuYQcO1A+iLQk+hCBmP9oCnwZIHVv6XXBy29v+/dyXa6l23AOrWcyjtmyLeDa3yWo95OfnQeuWEElu/gpy/IyyUJbGAeY5dj8zsasx3ZNfj6YaHQ1UkPnASSQK4vAJ5DoNVPOlEX7MuD1I=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=icenowy.me;
-	spf=pass  smtp.mailfrom=uwu@icenowy.me;
-	dmarc=pass header.from=<uwu@icenowy.me>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1746519017;
-	s=zmail2; d=icenowy.me; i=uwu@icenowy.me;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
-	bh=2CPahIJNzmnSDc7BN4lNM7Y9AulxNIBWqGmoa2/d6Yk=;
-	b=BKclO5blmRx2GCmPaGOanhYa16dcXIPaVtZjbvWdf16EuZT6cPLobR1ljZEW0siS
-	1+4v15/Li4P4d4OL2KcFcnNRrNgnMCC+iqQeHDUX1IKLnngo9p1y83BfMazD3Y7f/YM
-	Xg+q2haemciOkRt399bn8R0Iplc2lPpwZ7ZRHiNVr067MXyjgbSFtVGyca4IzgJ2wlg
-	NIx24n3lr7RF5UvUqvs5mM8U0n7j4w1eR6Mt9GMHR/gJBVPpIj5i0zUltywu6nyjnRh
-	ZB9WHOGEh6UWvgy+CQD3NxeHphmSwPseIHP8l1syvsVTMe2LMSvlXI2fmbI2ZypVRZx
-	wY2rvnCvXA==
-Received: by mx.zohomail.com with SMTPS id 1746519014161403.32583521591005;
-	Tue, 6 May 2025 01:10:14 -0700 (PDT)
-Message-ID: <d2f68cebc321ef659d507ef75d3a7fd625063591.camel@icenowy.me>
-Subject: Re: [PATCH v2 2/3] pinctrl: starfive: jh7110: add support for
- PAD_INTERNAL_* for GPI
-From: Icenowy Zheng <uwu@icenowy.me>
-To: Emil Renner Berthing <kernel@esmil.dk>, Jianlong Huang
- <jianlong.huang@starfivetech.com>, Hal Feng <hal.feng@starfivetech.com>, 
- Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Date: Tue, 06 May 2025 16:10:08 +0800
-In-Reply-To: <20250424062017.652969-3-uwu@icenowy.me>
-References: <20250424062017.652969-1-uwu@icenowy.me>
-	 <20250424062017.652969-3-uwu@icenowy.me>
-Organization: Anthon Open-Source Community
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.44.4 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QMs6fh9+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43A3CC4CEED;
+	Tue,  6 May 2025 08:10:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746519050;
+	bh=sE7co3/dVAvEaKILs88LONOZNr76UNHWgjyT3LLlIwA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QMs6fh9+MmfIMv6FK0J48BpgGbMprtaUL1hDaezBcmBOgTd8/TL9l3K/TVd/9A1NZ
+	 5qiI7RNPMBiSaRftCQcO2vTEmeF13wPJ/uUDop8qtnGbQUXg3ms9PlkjtJppvO4rXo
+	 kErREivFmfN+aZJtq+oCntl2K7spWwuaWh4rywqlYktOQlkbptocH8EsbkXm3jdo3E
+	 oc6CNae/taHr0iJLq1bJhB+sOhbw4GVaqqlP8b4SdJ68bN4yT/iSup67TfXY9fiZop
+	 0E91XsHZyaB8sa1yHdP2FkyQBAICvkNOKrFNL3jVtu19w/nHB08FM4n1/6eQYscuv5
+	 w8u92RQ71QR8g==
+Date: Tue, 6 May 2025 10:10:45 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: "Ahmed S. Darwish" <darwi@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	John Ogness <john.ogness@linutronix.de>, x86@kernel.org,
+	x86-cpuid@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 19/26] x86/cacheinfo: Use scanned CPUID(0x4)
+Message-ID: <aBnEBbDATdE2LTGU@gmail.com>
+References: <20250506050437.10264-1-darwi@linutronix.de>
+ <20250506050437.10264-20-darwi@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250506050437.10264-20-darwi@linutronix.de>
 
-5ZyoIDIwMjUtMDQtMjTmmJ/mnJ/lm5vnmoQgMTQ6MjAgKzA4MDDvvIxJY2Vub3d5IFpoZW5n5YaZ
-6YGT77yaCj4gVGhlIEpINzExMCBTb0MncyBib3RoIHBpbiBjb250cm9sbGVyIHN1cHBvcnQgcm91
-dGluZyBHUEkgc2lnbmFscyB0bwo+IGludGVybmFsIGZpeGVkIGxvdy9oaWdoIGxldmVsLgo+IAo+
-IEFzIHdlIGFsbG9jYXRlZCB0d28gc3BlY2lhbCAicGluIiBudW1iZXJzIGZvciB0aGVzZSBzaXR1
-YXRpb25zCj4gKFBBRF9JTlRFUk5BTF97TE9XLEhJR0h9KSwgYWRkIHNwZWNpYWwgaGFuZGxpbmcg
-Y29kZSBmb3IgdGhlc2UKPiAicGlucyIuCj4gVGhlIERPRW4vRE9VVC9GVU5DVElPTiBmaWVsZHMg
-YXJlIGlnbm9yZWQgYW5kIHRoZSBpbnRlcm5hbCBpbnB1dAo+IHNpZ25hbAo+IHNwZWNpZmllZCBi
-eSB0aGUgRElOIGZpZWxkIGlzIHJvdXRlZCB0byBmaXhlZCBsb3cvaGlnaCBsZXZlbC4KCk9vcHMg
-dG9kYXkgSSBmb3VuZCB0aGF0IHRoaXMgcGF0Y2hzZXQgaGFzIHNvbWUgcHJvYmxlbSAtLSB0aGUg
-R1BJT01VWAptYWNybyBtYXNrcyBiaXRzIDcgYW5kIDggaW4gR1BJTyBudW1iZXIsIGFuZCBpdCBt
-YXBzCkdQSV9TWVNfVVNCX09WRVJDVVJSRU5UIHRvIEdQSU82MyBpbnN0ZWFkIG9mIFBBRF9JTlRF
-Uk5BTF9ISUdIIGluc3RlYWQuCgpXaGVuIEkgZml4ZWQgdGhpcywgSSBnb3QKCmBgYApbICAgIDku
-ODY1ODQxXSBzdGFyZml2ZS1qaDcxMTAtc3lzLXBpbmN0cmwgMTMwNDAwMDAucGluY3RybDogcGlu
-IDI1NSBpcwpub3QgcmVnaXN0ZXJlZCBzbyBpdCBjYW5ub3QgYmUgcmVxdWVzdGVkClsgICAgOS44
-NzU4MTRdIHN0YXJmaXZlLWpoNzExMC1zeXMtcGluY3RybCAxMzA0MDAwMC5waW5jdHJsOiBlcnJv
-ciAtCkVJTlZBTDogcGluLTI1NSAoc29jOnVzYkAxMDEwMDAwMCkKWyAgICA5Ljg4NDg4Ml0gc3Rh
-cmZpdmUtamg3MTEwLXN5cy1waW5jdHJsIDEzMDQwMDAwLnBpbmN0cmw6IGVycm9yIC0KRUlOVkFM
-OiBjb3VsZCBub3QgcmVxdWVzdCBwaW4gMjU1IChub24tZXhpc3RpbmcpIGZyb20gZ3JvdXAgdXNi
-MC0KMC5vdmVyY3VycmVudC1waW5zIG9uIGRldmljZSAxMzA0MDAwMC5waW5jdHJsCmBgYAoKV2Vp
-cmQgcHJvYmxlbSwgaG93IGNvdWxkIEkgc29sdmUgdGhpcz8KCj4gCj4gU2lnbmVkLW9mZi1ieTog
-SWNlbm93eSBaaGVuZyA8dXd1QGljZW5vd3kubWU+Cj4gLS0tCj4gwqAuLi4vc3RhcmZpdmUvcGlu
-Y3RybC1zdGFyZml2ZS1qaDcxMTAuY8KgwqDCoMKgwqDCoMKgIHwgNDEgKysrKysrKysrKysrKysr
-LS0KPiAtLQo+IMKgMSBmaWxlIGNoYW5nZWQsIDM0IGluc2VydGlvbnMoKyksIDcgZGVsZXRpb25z
-KC0pCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGluY3RybC9zdGFyZml2ZS9waW5jdHJsLXN0
-YXJmaXZlLWpoNzExMC5jCj4gYi9kcml2ZXJzL3BpbmN0cmwvc3RhcmZpdmUvcGluY3RybC1zdGFy
-Zml2ZS1qaDcxMTAuYwo+IGluZGV4IDFkMGQ2YzIyNGMxMDQuLmZiMThjNzk3NGVjODYgMTAwNjQ0
-Cj4gLS0tIGEvZHJpdmVycy9waW5jdHJsL3N0YXJmaXZlL3BpbmN0cmwtc3RhcmZpdmUtamg3MTEw
-LmMKPiArKysgYi9kcml2ZXJzL3BpbmN0cmwvc3RhcmZpdmUvcGluY3RybC1zdGFyZml2ZS1qaDcx
-MTAuYwo+IEBAIC0yOTEsNiArMjkxLDI0IEBAIHZvaWQgamg3MTEwX3NldF9ncGlvbXV4KHN0cnVj
-dCBqaDcxMTBfcGluY3RybAo+ICpzZnAsIHVuc2lnbmVkIGludCBwaW4sCj4gwqB9Cj4gwqBFWFBP
-UlRfU1lNQk9MX0dQTChqaDcxMTBfc2V0X2dwaW9tdXgpOwo+IMKgCj4gK3N0YXRpYyB2b2lkIGpo
-NzExMF9zZXRfZ3BpKHN0cnVjdCBqaDcxMTBfcGluY3RybCAqc2ZwLCB1MzIgZ3BpLCB1MzIKPiB2
-YWwpCj4gK3sKPiArwqDCoMKgwqDCoMKgwqB1MzIgb2Zmc2V0LCBzaGlmdDsKPiArwqDCoMKgwqDC
-oMKgwqB1MzIgcmVnX3ZhbDsKPiArwqDCoMKgwqDCoMKgwqBjb25zdCBzdHJ1Y3Qgamg3MTEwX3Bp
-bmN0cmxfc29jX2luZm8gKmluZm8gPSBzZnAtPmluZm87Cj4gKwo+ICvCoMKgwqDCoMKgwqDCoG9m
-ZnNldCA9IDQgKiAoZ3BpIC8gNCk7Cj4gK8KgwqDCoMKgwqDCoMKgc2hpZnTCoCA9IDggKiAoZ3Bp
-ICUgNCk7Cj4gKwo+ICvCoMKgwqDCoMKgwqDCoHJlZ192YWwgPSByZWFkbF9yZWxheGVkKHNmcC0+
-YmFzZSArCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgaW5mby0+Z3BpX3JlZ19iYXNlICsgb2Zmc2V0KTsKPiArwqDCoMKgwqDC
-oMKgwqByZWdfdmFsICY9IGluZm8tPmdwaV9tYXNrIDw8IHNoaWZ0Owo+ICvCoMKgwqDCoMKgwqDC
-oHJlZ192YWwgfD0gKHZhbCAmIGluZm8tPmdwaV9tYXNrKSA8PCBzaGlmdDsKPiArCj4gK8KgwqDC
-oMKgwqDCoMKgd3JpdGVsX3JlbGF4ZWQocmVnX3ZhbCwgc2ZwLT5iYXNlICsKPiArwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBpbmZv
-LT5ncGlfcmVnX2Jhc2UgKyBvZmZzZXQpOwo+ICt9Cj4gKwo+IMKgc3RhdGljIGludCBqaDcxMTBf
-c2V0X211eChzdHJ1Y3QgcGluY3RybF9kZXYgKnBjdGxkZXYsCj4gwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgdW5zaWduZWQgaW50IGZzZWwsIHVuc2ln
-bmVkIGludCBnc2VsKQo+IMKgewo+IEBAIC0zMDcsMTQgKzMyNSwyMyBAQCBzdGF0aWMgaW50IGpo
-NzExMF9zZXRfbXV4KHN0cnVjdCBwaW5jdHJsX2Rldgo+ICpwY3RsZGV2LAo+IMKgwqDCoMKgwqDC
-oMKgwqBwaW5tdXggPSBncm91cC0+ZGF0YTsKPiDCoMKgwqDCoMKgwqDCoMKgZm9yIChpID0gMDsg
-aSA8IGdyb3VwLT5ncnAubnBpbnM7IGkrKykgewo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgdTMyIHYgPSBwaW5tdXhbaV07Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oHUzMiBwaW4gPSBqaDcxMTBfcGlubXV4X3Bpbih2KTsKPiDCoAo+IC3CoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqBpZiAoaW5mby0+amg3MTEwX3NldF9vbmVfcGluX211eCkKPiAtwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGluZm8tPmpoNzExMF9zZXRf
-b25lX3Bpbl9tdXgoc2ZwLAo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBqaDcxMTBfcGlubXV4X3Bp
-bih2KSwKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgamg3MTEwX3Bpbm11eF9kaW4odiksCj4gLcKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoGpoNzExMF9waW5tdXhfZG91dCh2KSwKPiAtwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgamg3MTEwX3Bpbm11eF9kb2VuKHYpLAo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBq
-aDcxMTBfcGlubXV4X2Z1bmN0aW9uKHYpKTsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgc3dpdGNoIChwaW4pIHsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgY2FzZSBQ
-QURfSU5URVJOQUxfTE9XOgo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBjYXNlIFBB
-RF9JTlRFUk5BTF9ISUdIOgo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgamg3MTEwX3NldF9ncGkoc2ZwLCBqaDcxMTBfcGlubXV4X2Rpbih2KSwKPiArwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqAgcGluID09IFBBRF9JTlRFUk5BTF9ISUdIKTsKPiArwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGJyZWFrOwo+ICvCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqBkZWZhdWx0Ogo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgaWYgKGluZm8tPmpoNzExMF9zZXRfb25lX3Bpbl9tdXgpCj4gK8Kg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgaW5mby0+amg3MTEwX3NldF9vbmVfcGluX211eChzZnAsCj4gK8KgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqBqaDcxMTBfcGlubXV4X3Bpbih2KSwKPiArwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGpoNzExMF9waW5tdXhfZGluKHYpLAo+ICvCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgamg3MTEwX3Bpbm11eF9kb3V0KHYpCj4gLAo+
-ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgamg3MTEwX3Bpbm11eF9kb2Vu
-KHYpCj4gLAo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgamg3MTEwX3Bp
-bm11eF9mdW5jdGlvCj4gbih2KSk7Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoH0K
-PiDCoMKgwqDCoMKgwqDCoMKgfQo+IMKgCj4gwqDCoMKgwqDCoMKgwqDCoHJldHVybiAwOwoK
 
+* Ahmed S. Darwish <darwi@linutronix.de> wrote:
+
+> Refactor the Intel CPUID(0x4) cacheinfo logic to use scanned CPUID access
+> instead of issuing direct CPUID queries.
+> 
+> Since scanned CPUID access requires a cpuinfo_x86 reference, propagate it
+> down from <linux/cacheinfo.h>'s populate_cache_leaves() to all the
+> relevant functions.
+
+Could you please split this patch into two parts, first one does the 
+mechanical propagation of the cpuinfo_x86 pointer down the function, 
+the second one does functional changes?
+
+Thanks,
+
+	Ingo
