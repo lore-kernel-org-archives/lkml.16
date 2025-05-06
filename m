@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEDCB21C184
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 23:21:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E2FD14B086
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 23:24:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746573675; cv=none; b=YihLpxpiofg4I5S9b0P7b1FLzYv/C+Rqqeb4Ewdb0qMP2PzFSpikNpp2uHprSreAzMvekjHIcuDF2gqIx0CKWl54ndK/0hWAd3luCAyVqzZW+8+EkDPwcVR3EQB+qiLE/G+GBHCSwQrxZJAweT0fzMkfmEdNpMtroPoD4H17Z8A=
+	t=1746573882; cv=none; b=ojaKDAE6QVrYCaNpytAWb+ASnhSxwqa/wLRuRmp+/gKVkNwai3Z9MUNTyW8geT2Dj59o3dfymvi35zyiLLXH3sciZwBXJbd/SS2uPxGvQp8TFQEjCTiD81tKPd2mEEtIpYqAEjNbqJOPVXTCaLURzJ2x7eEk43+ECc2/V46oqow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746573675; c=relaxed/simple;
-	bh=l3XgxCs+s8au1lzposI/T+kU1FVmSyNIo4zZ3hOpeZo=;
+	s=arc-20240116; t=1746573882; c=relaxed/simple;
+	bh=fTXalGwAI3Umzmf4OwP7C0YEGOkcPxF1NhpPFNf918s=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=KUBoF5493SoD8PNlnO/ss0pDaIK5FoZaFckv8V7n2JFowSAOZf3oWKcFwCDGPWhIiZdg2bLTQDM3SJKCj4482SAgJGAuGEr9MURzmgu/RROpCfcNhiJdxIkiX8QZ2MlfXkjDmdw541FdI9xkcNrxGbxKNf4CNSQNkBu2vKrjoXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=j/iqon6N; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=ZKzHJBjalgYZvi+1/CURjhsQSk2MI7ZhKMJ6albHSIi96vyRigP0Uhny3Gmzd6+anod5nKBKj8iyy2MMS9ytaeXjqy/GN656yhRZQTKOhktYKzqq/mMPt+gUMt4bsJUEp2iQjJswtc9b7v82RhIqdcxGWWn5Xp/bvQ/ncoIqNSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=hrdcBhdx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="j/iqon6N"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E122C4CEE4;
-	Tue,  6 May 2025 23:21:14 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="hrdcBhdx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E6EFC4CEE4;
+	Tue,  6 May 2025 23:24:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1746573674;
-	bh=l3XgxCs+s8au1lzposI/T+kU1FVmSyNIo4zZ3hOpeZo=;
+	s=korg; t=1746573879;
+	bh=fTXalGwAI3Umzmf4OwP7C0YEGOkcPxF1NhpPFNf918s=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=j/iqon6NCnpaTF8ODwev5GC6AwqTsPaNEeUC7bRxB2hCfpbvFxQ0zp/B4RIUGa8xv
-	 wz5ES23lzStiBYkuJHBYib5vFV2ZVLLhbY2OceWtHjCZBKy/C4maCpFzSi2AK6L+69
-	 M3kT60Jn5li7OIHOmlSozfPWSWPxJQtoRahypyQM=
-Date: Tue, 6 May 2025 16:21:13 -0700
+	b=hrdcBhdx0ZL/pg1xA5JGU4awQC0fMA9gDfcJZrDvQ8ur3mLy9QnOrkCNalDquG5wf
+	 D0Fjn/KWL7Yf8WEoEPFBlMTKu3lRJCFmRZrVNZvq73r/j6uLV5VAMQEFvYCOlf8099
+	 Xn+mstsKjvyA55T5IqLgUuYRAnPohKB2I0MUioVM=
+Date: Tue, 6 May 2025 16:24:38 -0700
 From: Andrew Morton <akpm@linux-foundation.org>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: David Hildenbrand <david@redhat.com>, Jason Gunthorpe <jgg@nvidia.com>,
- John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: add mm GUP section
-Message-Id: <20250506162113.f8fa0c00e76722a1789ec56a@linux-foundation.org>
-In-Reply-To: <20250506173601.97562-1-lorenzo.stoakes@oracle.com>
-References: <20250506173601.97562-1-lorenzo.stoakes@oracle.com>
+To: WangYuli <wangyuli@uniontech.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, yuzhao@google.com,
+ stevensd@chromium.org, kaleshsingh@google.com, zhanjun@uniontech.com,
+ niecheng1@uniontech.com, guanwentao@uniontech.com
+Subject: Re: [PATCH] mm: vmscan: Avoid signedness error for GCC 5.4
+Message-Id: <20250506162438.91fffc7ef924d9653ed0f503@linux-foundation.org>
+In-Reply-To: <85050791B887DC13+20250506160238.799984-1-wangyuli@uniontech.com>
+References: <85050791B887DC13+20250506160238.799984-1-wangyuli@uniontech.com>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -43,13 +43,9 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue,  6 May 2025 18:36:01 +0100 Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
+On Wed,  7 May 2025 00:02:38 +0800 WangYuli <wangyuli@uniontech.com> wrote:
 
-> As part of the ongoing efforts to sub-divide memory management
-> maintainership and reviewership, establish a section for GUP (Get User
-> Pages) support and add appropriate maintainers and reviewers.
-> 
-
-Thanks, I was wondering about that.
-
-(looks at vmscan.c)
+> -	for (i = tier % MAX_NR_TIERS; i <= min(tier, MAX_NR_TIERS - 1); i++) {
+> +	for (i = tier % MAX_NR_TIERS; i <= min(tier, (int)(MAX_NR_TIERS - 1)); i++) {
+	
+Make `tier' unsigned?  After all, negative tier numbers are nonsensical.
