@@ -1,84 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 763B5208CA;
-	Tue,  6 May 2025 13:51:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2CEB28136B
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 13:51:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746539511; cv=none; b=s5GUQDVvZxcRprGDkarSDSWiYB9yi8k1zLsp2wmHzfDe/l0Zy3YGl0aa96M5eQpeHd5KzBK1xTlEGEetSh8oJl9BjfO3YLrkUNDLleIlOBQZ9tTtnLxCHWQlxqxR6AKdABscDx2/uKjZ7MxzJ0AYrs0AIiG7iLxAu7J/8KO1dqk=
+	t=1746539515; cv=none; b=juUlNNCvnKR5EB4/2Du3c2hw/Ywhwg1x5WtKG9WeIFfSh0bTVfNTrVG4o5Nt1PZDOhqqdTLQM9RrhmobgJfpvgHDXDbvEbAEmx3U31OspKmoFifrnsTNiTca11Pb6w5nGET01FrubYqR+qUk3RUVQ2VjHcccsFA0esyCDGzkp+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746539511; c=relaxed/simple;
-	bh=kOu+LL3zjg0TPwi96MyHYxoid3IjGnXwNv+/5apGPu8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HOT6H5xVoHnEXYk1VfpO/mEk/ZAV4DDSIZJhTqhFM1RP44T6pzBOzVw8Mg/6r03dlRKvqZT5rvMWp1hIpEP5oImODvr1+cTNprrM2trLhCUzhJp+6Nnb98YY1e73/y4C3pW/yMZ00ABdg0nyDqraynOzZV5UuEP3QNKZICExGhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fJl28nR7; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fJl28nR7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BB72C4CEE4;
-	Tue,  6 May 2025 13:51:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746539511;
-	bh=kOu+LL3zjg0TPwi96MyHYxoid3IjGnXwNv+/5apGPu8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fJl28nR72rfmuk2s98JB1ZSX0+S6O28XoA3j92AfT7OtwbvpbF9LwWPtUcV6gBfdT
-	 aRANHjba9zvbGfkzGJgXxQ+wfU2+qHBCYqyoXDmQWKtqmKYvsHfawYMstuMH1kRsYU
-	 n4VDSXikvmAG0o5SGTcI8UPuabNre4pguxgfGvOz1OKRoc8tzRHnpcHSfUKt5vtUCj
-	 puQXh0ibnZ9Mh/sWUzzeIJLfVSxLITm2jfr/YwRxuPKrIHmbnW7PMRHy0UMgpqHbra
-	 E41dcjJ3w6Kok+XOL0FQMofTdUxXhYDi4SE5bjbVQdeF8To/vcgJI6ovtAfZZrls5T
-	 Av1htu2/EdoRw==
-Date: Tue, 6 May 2025 09:51:47 -0400
-From: Sasha Levin <sashal@kernel.org>
-To: Luis Chamberlain <mcgrof@kernel.org>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	Hannes Reinecke <hare@kernel.org>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Hannes Reinecke <hare@suse.de>,
-	Christian Brauner <brauner@kernel.org>, viro@zeniv.linux.org.uk,
-	linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 6.14 342/642] fs/mpage: avoid negative shift for
- large blocksize
-Message-ID: <aBoT89awjNjboEe8@lappy>
-References: <20250505221419.2672473-1-sashal@kernel.org>
- <20250505221419.2672473-342-sashal@kernel.org>
- <aBlfg8tuWY1_GVPJ@bombadil.infradead.org>
+	s=arc-20240116; t=1746539515; c=relaxed/simple;
+	bh=VN8kNRaE7xqcUHXaKiKW+pGLcT2hFYDK2BhLpgUv/4k=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=sQ7E+V3VseOzf50uvBnZo4AUL/51peILHctCrrn+ZcW/g/4u37faCDY6K6zxBjepmcg8AIw35FW2kY/mvvdwX2R3g4rhTeC8iWFdE20MYYZmHj2H+G24sHK7xWOFlmCzzurc/xBgsz3vVvR33fdalcxzHgUVooBP1th8srqN3nE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+	id 0192092009C; Tue,  6 May 2025 15:51:51 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by angie.orcam.me.uk (Postfix) with ESMTP id EF14F92009B;
+	Tue,  6 May 2025 14:51:51 +0100 (BST)
+Date: Tue, 6 May 2025 14:51:51 +0100 (BST)
+From: "Maciej W. Rozycki" <macro@orcam.me.uk>
+To: Borislav Petkov <bp@alien8.de>
+cc: "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>, 
+    linux-kernel@vger.kernel.org, "Ahmed S . Darwish" <darwi@linutronix.de>, 
+    Andrew Cooper <andrew.cooper3@citrix.com>, 
+    Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@kernel.org>, 
+    Dave Hansen <dave.hansen@linux.intel.com>, 
+    John Ogness <john.ogness@linutronix.de>, 
+    Linus Torvalds <torvalds@linux-foundation.org>, 
+    Peter Zijlstra <peterz@infradead.org>, 
+    Thomas Gleixner <tglx@linutronix.de>, 
+    John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Subject: Re: [RFC PATCH 0/15] x86: Remove support for TSC-less and CX8-less
+ CPUs
+In-Reply-To: <20250505205405.GNaBklbdKLbadRATbr@fat_crate.local>
+Message-ID: <alpine.DEB.2.21.2505060059010.31828@angie.orcam.me.uk>
+References: <20250425084216.3913608-1-mingo@kernel.org> <alpine.DEB.2.21.2505050944230.31828@angie.orcam.me.uk> <98C88CE8-C3D5-4B75-8545-71DD47C67614@zytor.com> <alpine.DEB.2.21.2505051356340.31828@angie.orcam.me.uk> <1E50C160-EB89-4C5C-B9F0-6441026EE380@zytor.com>
+ <20250505205405.GNaBklbdKLbadRATbr@fat_crate.local>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <aBlfg8tuWY1_GVPJ@bombadil.infradead.org>
+Content-Type: text/plain; charset=US-ASCII
 
-On Mon, May 05, 2025 at 06:01:55PM -0700, Luis Chamberlain wrote:
->On Mon, May 05, 2025 at 06:09:18PM -0400, Sasha Levin wrote:
->> From: Hannes Reinecke <hare@kernel.org>
->>
->> [ Upstream commit 86c60efd7c0ede43bd677f2eee1d84200528df1e ]
->>
->> For large blocksizes the number of block bits is larger than PAGE_SHIFT,
->> so calculate the sector number from the byte offset instead. This is
->> required to enable large folios with buffer-heads.
->>
->> Reviewed-by: "Matthew Wilcox (Oracle)" <willy@infradead.org>
->> Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
->> Signed-off-by: Hannes Reinecke <hare@kernel.org>
->> Link: https://lore.kernel.org/r/20250221223823.1680616-4-mcgrof@kernel.org
->> Reviewed-by: Hannes Reinecke <hare@suse.de>
->> Signed-off-by: Christian Brauner <brauner@kernel.org>
->> Signed-off-by: Sasha Levin <sashal@kernel.org>
->
->This is not relevant to older kernels as we had no buffer-head usage of
->large folios before v6.15. So this is just creating noise / drama for
->older kernels.
+On Mon, 5 May 2025, Borislav Petkov wrote:
 
-Sure, I'll drop it.
+> > One thing that happened with i386 was that we found out that the only
+> > remaining "users" were people dragging out an old machine to test if the
+> > kernel still booted.
+> 
+> Follow this thread:
+> 
+> https://lore.kernel.org/r/CANpbe9Wm3z8fy9HbgS8cuhoj0TREYEEkBipDuhgkWFvqX0UoVQ@mail.gmail.com
+> 
+> People booting latest kernel on 486 without CPUID support. 
 
->Where's that code for  auto-sel again?
+ No such hardware here:
 
-https://git.sr.ht/~sashal/autosel :)
+processor	: 0
+vendor_id	: GenuineIntel
+cpu family	: 4
+model		: 3
+model name	: 486 DX/2
+stepping	: 5
+fdiv_bug	: no
+f00f_bug	: no
+coma_bug	: no
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 1
+wp		: yes
+flags		: fpu vme cpuid
+bugs		: itlb_multihit
+bogomips	: 32.56
+clflush size	: 32
+cache_alignment	: 32
+address sizes	: 32 bits physical, 32 bits virtual
+power management:
 
--- 
-Thanks,
-Sasha
+Sadly it's not one with 4MiB page support (that would be stepping 6).
+
+> There's stable and older kernels, those folks can use those and that's it.
+
+ Doesn't work for ongoing driver maintenance (and yes, distractions such 
+as this only keep me from taking care of outstanding stuff, like figuring 
+out why the defxx driver reproducibly crashes with my POWER9 box running 
+glibc verification remotely for my RISC-V box; it's all intertwined and an 
+issue in one place affects other ones, sigh).
+
+  Maciej
