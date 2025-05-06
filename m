@@ -1,111 +1,246 @@
-Received: from smtpbguseast3.qq.com (smtpbguseast3.qq.com [54.243.244.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A5E3233739
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 16:04:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.243.244.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E398280A47
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 16:05:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746547457; cv=none; b=S/xEmLCuoVtyosS8/56b76bA2lumcM1JSXm+X9oRLzPwm4L/pcTjRWOqQZNSVk9jOnJ5++34juhwwxPj3p8r62TQ5sq9BayE/sr6uqPkMtmo7lw3JJ0ygovhEVMLxI6bhsPQKLFSYze3lzz4E7JVL+aGtt4x/EfYZgOONUbmPJQ=
+	t=1746547519; cv=none; b=UcthZf4v8+VVN5g7vylY22+taJINe/XOw8e0p1vSUS3Q4gh84/oxZdiTIHZ7eV/AA9ndMRbs/sG3zWzMapKc+Uubk1x5GquwlyDP28D5qriWwlbRPcnubqREA1Q5+oUQAdgwa16+xDEbkwDc5AYQYJ5Jca6jdaQab9TBSTi+R/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746547457; c=relaxed/simple;
-	bh=rYiNxCsTsLC8LdWhR4Tg0TUwjjM8dk+IfY8gIp3cjOM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ql7eZgV9jgGQRKxvQzK92jKZlKX16r+JjzLkZsAlIm4RpZNRC5KPVZ4vpNq+VTh3BJSLSB84mjMhsScsS2YYB0FRV07lFNdl+F9sdsRZr8ye7JGWfcWgOCKJPabggDXl+7t9f/OsL2LJn1uOidMNtLvPLYWLJz4rg/VM87n6PBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=IQVUre/C; arc=none smtp.client-ip=54.243.244.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1746547519; c=relaxed/simple;
+	bh=kRp4IxyzyS/awOzFbebOHY+i3kmMtE/y4muUCSNf6Qs=;
+	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
+	 Content-Type; b=qS6Ri/FXlXd1Yx+eX0RWfgTrqg5vgrFzY2sLh6nrGOLOJ0SCSRHIuLfKCEb4iQGosiYrPNmWCHgd7F6fWU++AujGLwCoozrKmmSnpgkeSoNq+MYAO0vacn73NsNXHvYNkDs9b0xMu2fciP0GQphNveoTPNnQqkZ7xGLDYw0hWOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nGmdfCnz; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="IQVUre/C"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1746547411;
-	bh=MIxVgUD/gcfzc+AvSnntXs5+xQ69OsezJ0OGOwzsfyo=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=IQVUre/C6Wwu2covPWBLq1pMU6EK0B5V/xfCqkDckBmAqAQl8AWhZbWD4pgdHwwvL
-	 ZANJ4YY/NJkgjIb+jc+4Sne6HelHtcw/o9A6cgMWJ/o+j4ej6uWrhqdjbZ+pewk31k
-	 w3J08/NOQITlHyaHldm1AUupurDG+hs1xzHK0abA=
-X-QQ-mid: zesmtpip3t1746547370tbb3ca5be
-X-QQ-Originating-IP: o8pgAATOo7e4w+pMFoumg25Llhz0GOUtirb0feOXr+Y=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 07 May 2025 00:02:48 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 15489425460272937920
-EX-QQ-RecipientCnt: 10
-From: WangYuli <wangyuli@uniontech.com>
-To: akpm@linux-foundation.org
-Cc: linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	yuzhao@google.com,
-	stevensd@chromium.org,
-	kaleshsingh@google.com,
-	zhanjun@uniontech.com,
-	niecheng1@uniontech.com,
-	guanwentao@uniontech.com,
-	WangYuli <wangyuli@uniontech.com>
-Subject: [PATCH] mm: vmscan: Avoid signedness error for GCC 5.4
-Date: Wed,  7 May 2025 00:02:38 +0800
-Message-ID: <85050791B887DC13+20250506160238.799984-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nGmdfCnz"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-225429696a9so79290535ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 09:05:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746547516; x=1747152316; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=i1mo/Wo+ejg//AUbVLPWXwjlsnYrBMoTR6luF4u3TZs=;
+        b=nGmdfCnz+COlgoDiCBZ4UxH91Q+YuEodJGv9wtVqdpiIvLNSlDfUTRAs8HuSuKPjhd
+         gw9Vm1n+EAihd951/Ry+258AVq7nZCBBZTSpb7IJZzWWLhKw9pQvq/pxYeCRKzkFutCT
+         p1aMwSmrxFo0koMwu3Sg7vHEVuqtFeCFZy4CWBYdmtKRG6apxCkwnlKOJJHM99diSmPP
+         IcGXSMr0gV1cjBy7RiPArUqKCMQR1DzBFOtMRKPzVzbQwLlToJPLDNGthiR0RPiJW57R
+         ga9N+SWSYc3O8h/Mqg5ZIi0MiGKlZuFY9whPeOAtCxLi+witiFBW4EFs0q90ea1L2Zud
+         S5Jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746547516; x=1747152316;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=i1mo/Wo+ejg//AUbVLPWXwjlsnYrBMoTR6luF4u3TZs=;
+        b=tUCtOXLg/bHYl3JwSz8ulfNHv+iNkIGd7igHdDHJzc597d6J1Uu6vIxnXvYm7vaWXi
+         OKlruLi/niRryW17GfS3arrLhckCQLFUlVifphe7OXVPc79l9QKFbi58r/wnWNwpKEpp
+         FqqjQB3iFjV2Dhx8vU3lOKcoLmuEUX3J5muqveGu8qeAHUnyiYK1glE4JvGcQJnnPw4W
+         ioESEr13HFle1qOYgh5J44YpcpQv5GSpFyM1/WsqEyfQWCPMN8wzRCd0697Td6urb3w8
+         04nIX/Rvic66K0Le+hrHrn8dORWUHCE6Tiy3BFKBIMHjHhmUmwzPvSZLNsJEdBMXPYUf
+         Bxbg==
+X-Forwarded-Encrypted: i=1; AJvYcCUpJuzK1TXDgvn2jhgsjLeDLi1s/cy4e1Sqyc+8TGcvAPsp2TC5hHVoE1F4/DPM7wTAcxZNjFP8XKM+rDc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHObgKTYkWzOhY+2PSBxZahPTNFjYq4laB8S7hoZZMf7zbkesJ
+	C4r6J52m8f3yQnWJvbxvx2l52Qw6FLAFcSGaWJpUU+bIoRvvTrK1rM6exUXqc+eeFdrVU5o5Os5
+	m1KRNUR2UJfNISQyV0F4isg==
+X-Google-Smtp-Source: AGHT+IH5eiqM+GukGy4eHAEU6Tq2FHVB00BdiyUDeaIE6OKI+9mYaTJy4CBBv+vaOD5LVB3g3ewfS67gEdx2/54B0w==
+X-Received: from pfbid12.prod.google.com ([2002:a05:6a00:8a8c:b0:73b:bbec:17e9])
+ (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:903:2408:b0:223:37ec:63d5 with SMTP id d9443c01a7336-22e32ba8292mr60504445ad.28.1746547516646;
+ Tue, 06 May 2025 09:05:16 -0700 (PDT)
+Date: Tue, 06 May 2025 09:05:15 -0700
+In-Reply-To: <ZN/81KNAWofRCaQK@google.com> (message from Sean Christopherson
+ on Fri, 18 Aug 2023 16:20:52 -0700)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: Nco2gOFShP5nyEqgTp7q0Srkca5PBUpgKh4NtRRMPOwxhhomJoREKFn3
-	wdg37EQt1XOAk2R/LolorTrAeC6okoZxFlSo8qLKtJIij7HwYCKdzlS9uplfQsxAZARdd5A
-	L/0djvX9E0jFfic0/ApW9C4cHv1c0xJWxwHLLNNzpT+pLeA2A48iz6BptOmq65mG8iGmv35
-	rB/IPVUPpp0nU/5w4kRJp2qmMyw95stNa3Nkb4Htubub43PoCAMUjGEg8aKuMinQ1sIPVe3
-	M6qFGvaWZpCommkjHmHhLnQYYRF6/Kg9tCHJpzXWMyChFf85Ipfwi0MveNmZkf9Ti4L4ZBu
-	XRqgEQWQfz4QIn0ZXrYJRAPbjAsYEhDMxGBU5uCtH0gHRSsop989yqTm2LLPg2a0aYTCsD2
-	62jxPqVwpbkkpseE/uEQg824n9WLi7+T/Zyj8evHL9kYs1myJRNljh5yEKfy/Isfsu/WNYQ
-	jTzdXC0Gqrcv5nADlbLagH+mliB66zHJhtkYFOUg301jW1gpOlRNB4ijKA/V6cCrf917jhm
-	zf57kumzlrCwy18lQpziMFgidsQD4EiP7CuictxHn6+pin3zp2qe4mREXJddXwGVX5ehNDK
-	nUX4zfyjHo98MADH6+BNWutS6pZOnEPAZAEQ6yLA7xaVYmGpUrCJqZ64xuTWS4lxOggz70f
-	2DWekJTbodD/bDGecRPnYg6Pi2/6JNEVH4njMEULsPIgR6DLjT/mTVlFm57VQUB/30oxOVi
-	wCF7At5JK4dadnIywLRbBt55Cerm6TkQL8hCMOzQolrR3pI6SxYsf71L5SCm/Wh7qVUVBPt
-	nzMM4p5gGnh5y04K/QySN4zR2JmH2j0N0msmKf3AkoA7yuaRKPePiR0M+QETCH6269w7Gh9
-	at8nRGuOxWqw6QrojO9K+GoP6214GF45x454aThf4IWqXMU8NaxHX3/hcspnBld3DioZji/
-	FEYSfzSW+RVLiYBdNJcqx+gyER3qDTw/ri7q6PwVL/o+ZYVZbfSxYaAcPnQ5A9xjmpwiltu
-	bpJX1mqgIvjwGtwR1O
-X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
-X-QQ-RECHKSPAM: 0
+Mime-Version: 1.0
+Message-ID: <diqzbjs5k9ms.fsf@ackerleytng-ctop.c.googlers.com>
+Subject: Re: [RFC PATCH 02/11] KVM: guest_mem: Add ioctl KVM_LINK_GUEST_MEMFD
+From: Ackerley Tng <ackerleytng@google.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: pbonzini@redhat.com, tglx@linutronix.de, x86@kernel.org, 
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, hpa@zytor.com, shuah@kernel.org, 
+	andrew.jones@linux.dev, ricarkol@google.com, chao.p.peng@linux.intel.com, 
+	tabba@google.com, jarkko@kernel.org, yu.c.zhang@linux.intel.com, 
+	vannapurve@google.com, erdemaktas@google.com, mail@maciej.szmigiero.name, 
+	vbabka@suse.cz, david@redhat.com, qperret@google.com, michael.roth@amd.com, 
+	wei.w.wang@intel.com, liam.merwick@oracle.com, isaku.yamahata@gmail.com, 
+	kirill.shutemov@linux.intel.com, Ryan Afranji <afranji@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-To the compiler, (MAX_NR_TIERS - 1) (i.e., (4U - 1)) is unsigned,
-whereas tier is a signed integer.
+Sean Christopherson <seanjc@google.com> writes:
 
-GCC 5.4 does not permit the minimum operation on such
-type-inconsistent operands.
+> On Mon, Aug 07, 2023, Ackerley Tng wrote:
+>> KVM_LINK_GUEST_MEMFD will link a gmem fd's underlying inode to a new
+>> file (and fd).
+>>
+>> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
+>> ---
+>>  include/uapi/linux/kvm.h |  8 +++++
+>>  virt/kvm/guest_mem.c     | 73 ++++++++++++++++++++++++++++++++++++++++
+>>  virt/kvm/kvm_main.c      | 10 ++++++
+>>  virt/kvm/kvm_mm.h        |  7 ++++
+>>  4 files changed, 98 insertions(+)
+>>
+>> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+>> index eb900344a054..d0e2a2ce0df2 100644
+>> --- a/include/uapi/linux/kvm.h
+>> +++ b/include/uapi/linux/kvm.h
+>> @@ -2299,4 +2299,12 @@ struct kvm_create_guest_memfd {
+>>  	__u64 reserved[6];
+>>  };
+>>
+>> +#define KVM_LINK_GUEST_MEMFD	_IOWR(KVMIO,  0xd5, struct kvm_link_guest_memfd)
+>> +
+>> +struct kvm_link_guest_memfd {
+>> +	__u64 fd;
+>> +	__u64 flags;
+>> +	__u64 reserved[6];
+>> +};
+>> +
+>>  #endif /* __LINUX_KVM_H */
+>> diff --git a/virt/kvm/guest_mem.c b/virt/kvm/guest_mem.c
+>> index 30d0ab8745ee..1b3df273f785 100644
+>> --- a/virt/kvm/guest_mem.c
+>> +++ b/virt/kvm/guest_mem.c
+>> @@ -477,6 +477,79 @@ int kvm_gmem_create(struct kvm *kvm, struct kvm_create_guest_memfd *args)
+>>  	return __kvm_gmem_create(kvm, size, flags, kvm_gmem_mnt);
+>>  }
+>>
+>> +static inline void __kvm_gmem_do_link(struct inode *inode)
+>> +{
+>> +	/* Refer to simple_link() */
+>> +
+>> +	inode->i_ctime = current_time(inode);
+>> +	inc_nlink(inode);
+>> +
+>> +	/*
+>> +	 * ihold() to add additional reference to inode for reference in dentry,
+>> +	 * created in kvm_gmem_alloc_file() -> alloc_file_pseudo(). This is not
+>> +	 * necessary when creating a new file because alloc_inode() creates
+>> +	 * inodes with i_count = 1, which is the refcount for the dentry in the
+>> +	 * file.
+>> +	 */
+>> +	ihold(inode);
+>> +
+>> +	/*
+>> +	 * dget() and d_instantiate() complete the setup of a dentry, but those
+>> +	 * have already been done in kvm_gmem_alloc_file() ->
+>> +	 * alloc_file_pseudo()
+>> +	 */
+>> +}
 
-Cast it to a signed integer to circumvent this compiler error.
+Thanks Sean, we're just circling back to this series, working on a next
+revision.
 
-Fix follow error with gcc 5.4:
-  mm/vmscan.c: In function ‘read_ctrl_pos’:
-  mm/vmscan.c:3166:728: error: call to ‘__compiletime_assert_887’ declared with attribute error: min(tier, 4U - 1) signedness error
+>
+> Does this have to be done before the fd is exposed to userspace, or can it be
+> done after?
 
-Fixes: 37a260870f2c ("mm/mglru: rework type selection")
-Signed-off-by: WangYuli <wangyuli@uniontech.com>
----
- mm/vmscan.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Does "exposed to userspace" mean the call to get_unused_fd_flags(),
+where an fd is reserved?
 
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 3783e45bfc92..29dce1aed962 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -3163,7 +3163,7 @@ static void read_ctrl_pos(struct lruvec *lruvec, int type, int tier, int gain,
- 	pos->gain = gain;
- 	pos->refaulted = pos->total = 0;
- 
--	for (i = tier % MAX_NR_TIERS; i <= min(tier, MAX_NR_TIERS - 1); i++) {
-+	for (i = tier % MAX_NR_TIERS; i <= min(tier, (int)(MAX_NR_TIERS - 1)); i++) {
- 		pos->refaulted += lrugen->avg_refaulted[type][i] +
- 				  atomic_long_read(&lrugen->refaulted[hist][type][i]);
- 		pos->total += lrugen->avg_total[type][i] +
--- 
-2.49.0
+Do you mean to make this reservation as late as possible?
 
+> If it can be done after, I'd prefer to have the allocation helper
+> also install the fd, and also rename it to something that better conveys that
+> it's allocating more than just the file, e.g. that it allocates and initialize
+> kvm_gmem too.
+>
+> Completely untested, but this is what I'm thinkin/hoping.
+>
+> static int kvm_gmem_alloc_view(struct kvm *kvm, struct inode *inode,
+> 			       struct vfsmount *mnt)
+
+Will rename this kvm_gmem_alloc_view(), that naming totally makes
+sense, and attaches a meaning to the struct file as a view into the
+memory.
+
+> {
+> 	struct file *file;
+> 	struct kvm_gmem *gmem;
+>
+> 	gmem = kzalloc(sizeof(*gmem), GFP_KERNEL);
+> 	if (!gmem)
+> 		return -ENOMEM;
+>
+> 	fd = get_unused_fd_flags(0);
+> 	if (fd < 0) {
+> 		r = fd;
+> 		goto err_fd;
+> 	}
+
+Do you see the fd as part of the view? I thought the fd is just a handle
+to the view (struct file).
+
+>
+> 	file = alloc_file_pseudo(inode, mnt, "kvm-gmem", O_RDWR, &kvm_gmem_fops);
+> 	if (IS_ERR(file)) {
+> 		r = PTR_ERR(file);
+> 		goto err_file;
+> 	}
+>
+> 	file->f_flags |= O_LARGEFILE;
+> 	file->f_mapping = inode->i_mapping;
+>
+> 	kvm_get_kvm(kvm);
+> 	gmem->kvm = kvm;
+> 	xa_init(&gmem->bindings);
+>
+> 	file->private_data = gmem;
+>
+> 	list_add(&gmem->entry, &inode->i_mapping->private_list);
+>
+> 	fd_install(fd, file);
+>
+> 	return 0;
+> err:
+> 	put_unused_fd(fd);
+> err_fd:
+> 	kfree(gmem);
+> 	return r;
+> }
+>
+> static int __kvm_gmem_create(struct kvm *kvm, loff_t size, u64 flags,
+> 			     struct vfsmount *mnt)
+> {
+> 	const char *anon_name = "[kvm-gmem]";
+> 	const struct qstr qname = QSTR_INIT(anon_name, strlen(anon_name));
+> 	struct inode *inode;
+> 	struct file *file;
+> 	int fd, err;
+>
+> 	inode = alloc_anon_inode(mnt->mnt_sb);
+> 	if (IS_ERR(inode))
+> 		return PTR_ERR(inode);
+>
+> 	err = security_inode_init_security_anon(inode, &qname, NULL);
+> 	if (err)
+> 		goto err;
+>
+> 	inode->i_private = (void *)(unsigned long)flags;
+> 	inode->i_op = &kvm_gmem_iops;
+> 	inode->i_mapping->a_ops = &kvm_gmem_aops;
+> 	inode->i_mode |= S_IFREG;
+> 	inode->i_size = size;
+> 	mapping_set_gfp_mask(inode->i_mapping, GFP_HIGHUSER);
+> 	mapping_set_large_folios(inode->i_mapping);
+> 	mapping_set_unevictable(inode->i_mapping);
+> 	mapping_set_unmovable(inode->i_mapping);
+>
+> 	fd = kvm_gmem_alloc_view(kvm, inode, mnt);
+> 	if (fd < 0) {
+> 		err = fd;
+> 		goto err;
+> 	}
+> 	return fd;
+> err:
+> 	iput(inode);
+> 	return err;
+> }
