@@ -1,63 +1,63 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0473288527;
-	Tue,  6 May 2025 13:20:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB4A92882DE;
+	Tue,  6 May 2025 13:20:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746537643; cv=none; b=iFRiuYIyHdNrMkU6IrU1lGmhkwfcAdY/Frxjr7sohvtpnLOvy1xVYdASPs68RoVxEd95CajLtH7zDs74p3pJTEArFwzYxzhZBk940ZXkFmQ+ovGEMKxzEDL6nmM1p3jgcY7NeO3xMGmF5X9jcTcLeTlwTrgiB/+H6L2slDLrGTc=
+	t=1746537643; cv=none; b=lC9lROMvO5hzP5U+bdmVjKIYBBFoYjO8+hI7R2dVbcUBiTVxx3I/PaO56cRISMyfqapmcKSR1Jhnt/rUQ6S48kbtQPEmNXA06TwoR8dDiqCmVjjAVv/41Taqk4ALdu7klMNNlYa9ZRfMzsj08wjBSB1TS8GoOGo8EtWqhsACvr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746537643; c=relaxed/simple;
-	bh=PdJOZNgqk4iDD30IpojstTB23pWkjEutR4g0cEP9sxU=;
+	bh=vz3dsiQRtVJxl/GkTrYGVnJO/J0GKJu7Fbbc/JDOvUA=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=KUdwupfXLgV0zkUOJmkCybjwjnhGWL8G1O9538bHrsy6pL5S+R4Vis30dj1d19eDVCeb/+cZYuemaM/6q7c329SzcEkulPDdu1x4LB8d6N8344Bo7/UT5KwGTvc7OnP2kSWHjFXPI9sVKy2Nh/Tt1Mih8qjcz8HlCk2yMQD1qzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yYit7/ik; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=whpx+w8Z; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=pU/l+T0p2oiJFkH+SWsyW4kRt9JFM7pyKpGnoK6sawcDy/fgsGcIh5TUeWlwfzjcp5VaW/LnQlBdVqYG5Mcmvb56ACcp6DcUmRsUT/OrblDc9VdWoiLrYGBYnpewgFFmwtXqSILp8qMdRaTRiWIC1ZxEroVYRM0BFIkj5k0YqDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1BAsAcRA; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ht/TA4dQ; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yYit7/ik";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="whpx+w8Z"
-Date: Tue, 06 May 2025 13:20:39 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1BAsAcRA";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ht/TA4dQ"
+Date: Tue, 06 May 2025 13:20:38 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746537640;
+	s=2020; t=1746537639;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=w6n6R3QS6vlzOxNVUjGGmJcGXVGL5fEjZpyuv0gckgo=;
-	b=yYit7/ik++QrqnXVfJYL6FWnfMZaqQjqkXZ8COdJpwTLkMJ2gFpovNWq63b4ZAMA0xBmm+
-	wdD8N9PqiRYMdGWH2d9QC7uXDVk97h3GtDwlxBhyco3ZJDApRc7Do4FmOX4vSegctmXU/A
-	MfqA/JmuP1t89vd7Fu81zq+uOxVsuIbBASN+C6a8DHe+k8GY+xCht4hsxWCBKLnPME7tVj
-	JQhoCQ+BHRoj9yC6KWd58MYBoO0n85FfLbG44CQaBit2TVXvDBuN3+uYZwvW+nXHTvpDht
-	Xs+8/5awSyVmCEjsjoATjaeKY3V1mOFlpB1GTqz/Fk2w5AEw6LqVJkPA6atKhA==
+	bh=dpo2UEqKWUBTtdMctUiF3+WcvvU18XIU2RCzbOrJNLk=;
+	b=1BAsAcRAz9c4lmsdsDB0tBHa9vQP3UvFsViBfJrJdvooGgiT8Uopwjx1T3SJpRpcD0RT5b
+	fkzsIuaBKrcZg0dfNRd7RjHPnpd74EQI+vcHz8BgUoKDdOUQgY7w9g1mDK0CTJZIFlGSOC
+	QkfMpbLUfvZwjzxQZwpirbgVYHlgGyikjPpK+27YsPlp3GKzDt89Y4fpLfwNohPTEfgqi1
+	2uYKsTdPP93W3w/NizgItfplcTOEF/ZhLVK45H12o+PxZYeMG51mlAUX5x5oHBN3HcGUPY
+	BvS4iuTg/eNQZZd8HccP3+4GswcVRhny8pOLAoMu/AVUtnEgJda5uYmH2Lw7ww==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746537640;
+	s=2020e; t=1746537639;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=w6n6R3QS6vlzOxNVUjGGmJcGXVGL5fEjZpyuv0gckgo=;
-	b=whpx+w8ZVOUdHekqY4NeJIvLCP4E5woYP+P/L6/v3zoJVK5/CEk76lyCCPYtAK8Vc2clDR
-	PCT6KqhffFwImeBg==
+	bh=dpo2UEqKWUBTtdMctUiF3+WcvvU18XIU2RCzbOrJNLk=;
+	b=Ht/TA4dQ5xk8b9B8L1eMLcm9UpP+Kpzh5/GGmG9/wW8UV5pXOXr+o80WXGC64q7gV5NTYR
+	dd4CWZU5oD99TMCw==
 From: "tip-bot2 for Jiri Slaby (SUSE)" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/cleanups] ARC: Switch to irq_domain_create_linear()
+Subject: [tip: irq/cleanups] ARM: Switch to irq_domain_create_*()
 Cc: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
  Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250319092951.37667-14-jirislaby@kernel.org>
-References: <20250319092951.37667-14-jirislaby@kernel.org>
+In-Reply-To: <20250319092951.37667-15-jirislaby@kernel.org>
+References: <20250319092951.37667-15-jirislaby@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174653763924.406.8268726967266899964.tip-bot2@tip-bot2>
+Message-ID: <174653763852.406.7522975748438317537.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -67,20 +67,20 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the irq/cleanups branch of tip:
 
-Commit-ID:     12fc10f71905ebdc3ca6620f173c517d5f059d8e
-Gitweb:        https://git.kernel.org/tip/12fc10f71905ebdc3ca6620f173c517d5f059d8e
+Commit-ID:     2b3ff354e88533de20f6c3e10c7e86da4f3b2620
+Gitweb:        https://git.kernel.org/tip/2b3ff354e88533de20f6c3e10c7e86da4f3b2620
 Author:        Jiri Slaby (SUSE) <jirislaby@kernel.org>
-AuthorDate:    Wed, 19 Mar 2025 10:29:06 +01:00
+AuthorDate:    Wed, 19 Mar 2025 10:29:07 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Tue, 06 May 2025 14:59:04 +02:00
 
-ARC: Switch to irq_domain_create_linear()
+ARM: Switch to irq_domain_create_*()
 
-irq_domain_add_linear() is going away as being obsolete now. Switch to
-the preferred irq_domain_create_linear(). That differs in the first
-parameter: It takes more generic struct fwnode_handle instead of struct
-device_node. Therefore, of_fwnode_handle() is added around the
-parameter.
+irq_domain_add_*() interfaces are going away as being obsolete now.
+Switch to the preferred irq_domain_create_*() ones. Those differ in the
+node parameter: They take more generic struct fwnode_handle instead of
+struct device_node. Therefore, of_fwnode_handle() is added around the
+original parameter.
 
 Note some of the users can likely use dev->fwnode directly instead of
 indirect of_fwnode_handle(dev->of_node). But dev->fwnode is not
@@ -91,54 +91,165 @@ case basis (by people who can actually test with the HW).
 
 Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/all/20250319092951.37667-14-jirislaby@kernel.org
+Link: https://lore.kernel.org/all/20250319092951.37667-15-jirislaby@kernel.org
 
 ---
- arch/arc/kernel/intc-arcv2.c   | 2 +-
- arch/arc/kernel/intc-compact.c | 5 +++--
- arch/arc/kernel/mcip.c         | 3 ++-
- 3 files changed, 6 insertions(+), 4 deletions(-)
+ arch/arm/common/sa1111.c             |  6 +++---
+ arch/arm/mach-exynos/suspend.c       |  5 ++---
+ arch/arm/mach-imx/avic.c             |  4 ++--
+ arch/arm/mach-imx/gpc.c              |  5 ++---
+ arch/arm/mach-imx/tzic.c             |  4 ++--
+ arch/arm/mach-omap1/irq.c            |  3 +--
+ arch/arm/mach-omap2/omap-wakeupgen.c |  5 ++---
+ arch/arm/mach-pxa/irq.c              |  5 ++---
+ arch/arm/plat-orion/gpio.c           | 12 ++++++------
+ 9 files changed, 22 insertions(+), 27 deletions(-)
 
-diff --git a/arch/arc/kernel/intc-arcv2.c b/arch/arc/kernel/intc-arcv2.c
-index fea29d9..809edc5 100644
---- a/arch/arc/kernel/intc-arcv2.c
-+++ b/arch/arc/kernel/intc-arcv2.c
-@@ -170,7 +170,7 @@ init_onchip_IRQ(struct device_node *intc, struct device_node *parent)
- 	if (parent)
- 		panic("DeviceTree incore intc not a root irq controller\n");
+diff --git a/arch/arm/common/sa1111.c b/arch/arm/common/sa1111.c
+index 9846f30..02eda44 100644
+--- a/arch/arm/common/sa1111.c
++++ b/arch/arm/common/sa1111.c
+@@ -416,9 +416,9 @@ static int sa1111_setup_irq(struct sa1111 *sachip, unsigned irq_base)
+ 	writel_relaxed(~0, irqbase + SA1111_INTSTATCLR0);
+ 	writel_relaxed(~0, irqbase + SA1111_INTSTATCLR1);
  
--	root_domain = irq_domain_add_linear(intc, nr_cpu_irqs, &arcv2_irq_ops, NULL);
-+	root_domain = irq_domain_create_linear(of_fwnode_handle(intc), nr_cpu_irqs, &arcv2_irq_ops, NULL);
- 	if (!root_domain)
- 		panic("root irq domain not avail\n");
+-	sachip->irqdomain = irq_domain_add_linear(NULL, SA1111_IRQ_NR,
+-						  &sa1111_irqdomain_ops,
+-						  sachip);
++	sachip->irqdomain = irq_domain_create_linear(NULL, SA1111_IRQ_NR,
++						     &sa1111_irqdomain_ops,
++						     sachip);
+ 	if (!sachip->irqdomain) {
+ 		irq_free_descs(sachip->irq_base, SA1111_IRQ_NR);
+ 		return -ENOMEM;
+diff --git a/arch/arm/mach-exynos/suspend.c b/arch/arm/mach-exynos/suspend.c
+index cac4e82..150a1e5 100644
+--- a/arch/arm/mach-exynos/suspend.c
++++ b/arch/arm/mach-exynos/suspend.c
+@@ -209,9 +209,8 @@ static int __init exynos_pmu_irq_init(struct device_node *node,
+ 		return -ENOMEM;
+ 	}
  
-diff --git a/arch/arc/kernel/intc-compact.c b/arch/arc/kernel/intc-compact.c
-index 1d2ff1c..1b159e9 100644
---- a/arch/arc/kernel/intc-compact.c
-+++ b/arch/arc/kernel/intc-compact.c
-@@ -112,8 +112,9 @@ init_onchip_IRQ(struct device_node *intc, struct device_node *parent)
- 	if (parent)
- 		panic("DeviceTree incore intc not a root irq controller\n");
+-	domain = irq_domain_add_hierarchy(parent_domain, 0, 0,
+-					  node, &exynos_pmu_domain_ops,
+-					  NULL);
++	domain = irq_domain_create_hierarchy(parent_domain, 0, 0, of_fwnode_handle(node),
++					     &exynos_pmu_domain_ops, NULL);
+ 	if (!domain) {
+ 		iounmap(pmu_base_addr);
+ 		pmu_base_addr = NULL;
+diff --git a/arch/arm/mach-imx/avic.c b/arch/arm/mach-imx/avic.c
+index cf6546d..3067c06 100644
+--- a/arch/arm/mach-imx/avic.c
++++ b/arch/arm/mach-imx/avic.c
+@@ -201,8 +201,8 @@ static void __init mxc_init_irq(void __iomem *irqbase)
+ 	WARN_ON(irq_base < 0);
  
--	root_domain = irq_domain_add_linear(intc, NR_CPU_IRQS,
--					    &arc_intc_domain_ops, NULL);
-+	root_domain = irq_domain_create_linear(of_fwnode_handle(intc),
-+					       NR_CPU_IRQS,
-+					       &arc_intc_domain_ops, NULL);
- 	if (!root_domain)
- 		panic("root irq domain not avail\n");
+ 	np = of_find_compatible_node(NULL, NULL, "fsl,avic");
+-	domain = irq_domain_add_legacy(np, AVIC_NUM_IRQS, irq_base, 0,
+-				       &irq_domain_simple_ops, NULL);
++	domain = irq_domain_create_legacy(of_fwnode_handle(np), AVIC_NUM_IRQS, irq_base, 0,
++					  &irq_domain_simple_ops, NULL);
+ 	WARN_ON(!domain);
  
-diff --git a/arch/arc/kernel/mcip.c b/arch/arc/kernel/mcip.c
-index cdd370e..02b28a9 100644
---- a/arch/arc/kernel/mcip.c
-+++ b/arch/arc/kernel/mcip.c
-@@ -391,7 +391,8 @@ idu_of_init(struct device_node *intc, struct device_node *parent)
+ 	for (i = 0; i < AVIC_NUM_IRQS / 32; i++, irq_base += 32)
+diff --git a/arch/arm/mach-imx/gpc.c b/arch/arm/mach-imx/gpc.c
+index 5909088..2e63356 100644
+--- a/arch/arm/mach-imx/gpc.c
++++ b/arch/arm/mach-imx/gpc.c
+@@ -245,9 +245,8 @@ static int __init imx_gpc_init(struct device_node *node,
+ 	if (WARN_ON(!gpc_base))
+ 	        return -ENOMEM;
  
- 	pr_info("MCIP: IDU supports %u common irqs\n", nr_irqs);
+-	domain = irq_domain_add_hierarchy(parent_domain, 0, GPC_MAX_IRQS,
+-					  node, &imx_gpc_domain_ops,
+-					  NULL);
++	domain = irq_domain_create_hierarchy(parent_domain, 0, GPC_MAX_IRQS, of_fwnode_handle(node),
++					     &imx_gpc_domain_ops, NULL);
+ 	if (!domain) {
+ 		iounmap(gpc_base);
+ 		return -ENOMEM;
+diff --git a/arch/arm/mach-imx/tzic.c b/arch/arm/mach-imx/tzic.c
+index 8b3d98d..50a5668 100644
+--- a/arch/arm/mach-imx/tzic.c
++++ b/arch/arm/mach-imx/tzic.c
+@@ -175,8 +175,8 @@ static int __init tzic_init_dt(struct device_node *np, struct device_node *p)
+ 	irq_base = irq_alloc_descs(-1, 0, TZIC_NUM_IRQS, numa_node_id());
+ 	WARN_ON(irq_base < 0);
  
--	domain = irq_domain_add_linear(intc, nr_irqs, &idu_irq_ops, NULL);
-+	domain = irq_domain_create_linear(of_fwnode_handle(intc), nr_irqs,
-+					  &idu_irq_ops, NULL);
+-	domain = irq_domain_add_legacy(np, TZIC_NUM_IRQS, irq_base, 0,
+-				       &irq_domain_simple_ops, NULL);
++	domain = irq_domain_create_legacy(of_fwnode_handle(np), TZIC_NUM_IRQS, irq_base, 0,
++					  &irq_domain_simple_ops, NULL);
+ 	WARN_ON(!domain);
  
- 	/* Parent interrupts (core-intc) are already mapped */
+ 	for (i = 0; i < 4; i++, irq_base += 32)
+diff --git a/arch/arm/mach-omap1/irq.c b/arch/arm/mach-omap1/irq.c
+index 9b587ec..bb1bc06 100644
+--- a/arch/arm/mach-omap1/irq.c
++++ b/arch/arm/mach-omap1/irq.c
+@@ -220,8 +220,7 @@ void __init omap1_init_irq(void)
+ 	omap_l2_irq = irq_base;
+ 	omap_l2_irq -= NR_IRQS_LEGACY;
  
+-	domain = irq_domain_add_legacy(NULL, nr_irqs, irq_base, 0,
+-				       &irq_domain_simple_ops, NULL);
++	domain = irq_domain_create_legacy(NULL, nr_irqs, irq_base, 0, &irq_domain_simple_ops, NULL);
+ 
+ 	pr_info("Total of %lu interrupts in %i interrupt banks\n",
+ 		nr_irqs, irq_bank_count);
+diff --git a/arch/arm/mach-omap2/omap-wakeupgen.c b/arch/arm/mach-omap2/omap-wakeupgen.c
+index 6f0d612..a66b1dc 100644
+--- a/arch/arm/mach-omap2/omap-wakeupgen.c
++++ b/arch/arm/mach-omap2/omap-wakeupgen.c
+@@ -585,9 +585,8 @@ static int __init wakeupgen_init(struct device_node *node,
+ 		wakeupgen_ops = &am43xx_wakeupgen_ops;
+ 	}
+ 
+-	domain = irq_domain_add_hierarchy(parent_domain, 0, max_irqs,
+-					  node, &wakeupgen_domain_ops,
+-					  NULL);
++	domain = irq_domain_create_hierarchy(parent_domain, 0, max_irqs, of_fwnode_handle(node),
++					     &wakeupgen_domain_ops, NULL);
+ 	if (!domain) {
+ 		iounmap(wakeupgen_base);
+ 		return -ENOMEM;
+diff --git a/arch/arm/mach-pxa/irq.c b/arch/arm/mach-pxa/irq.c
+index d9cadd9..5bfce8a 100644
+--- a/arch/arm/mach-pxa/irq.c
++++ b/arch/arm/mach-pxa/irq.c
+@@ -147,9 +147,8 @@ pxa_init_irq_common(struct device_node *node, int irq_nr,
+ 	int n;
+ 
+ 	pxa_internal_irq_nr = irq_nr;
+-	pxa_irq_domain = irq_domain_add_legacy(node, irq_nr,
+-					       PXA_IRQ(0), 0,
+-					       &pxa_irq_ops, NULL);
++	pxa_irq_domain = irq_domain_create_legacy(of_fwnode_handle(node), irq_nr, PXA_IRQ(0), 0,
++						  &pxa_irq_ops, NULL);
+ 	if (!pxa_irq_domain)
+ 		panic("Unable to add PXA IRQ domain\n");
+ 	irq_set_default_domain(pxa_irq_domain);
+diff --git a/arch/arm/plat-orion/gpio.c b/arch/arm/plat-orion/gpio.c
+index 595e9cb..a15f474 100644
+--- a/arch/arm/plat-orion/gpio.c
++++ b/arch/arm/plat-orion/gpio.c
+@@ -602,12 +602,12 @@ void __init orion_gpio_init(int gpio_base, int ngpio,
+ 			       IRQ_NOREQUEST, IRQ_LEVEL | IRQ_NOPROBE);
+ 
+ 	/* Setup irq domain on top of the generic chip. */
+-	ochip->domain = irq_domain_add_legacy(NULL,
+-					      ochip->chip.ngpio,
+-					      ochip->secondary_irq_base,
+-					      ochip->secondary_irq_base,
+-					      &irq_domain_simple_ops,
+-					      ochip);
++	ochip->domain = irq_domain_create_legacy(NULL,
++						 ochip->chip.ngpio,
++						 ochip->secondary_irq_base,
++						 ochip->secondary_irq_base,
++						 &irq_domain_simple_ops,
++						 ochip);
+ 	if (!ochip->domain)
+ 		panic("%s: couldn't allocate irq domain (DT).\n",
+ 		      ochip->chip.label);
