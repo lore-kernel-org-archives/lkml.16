@@ -1,116 +1,94 @@
-Received: from mail.cjdns.fr (mail.cjdns.fr [5.135.140.105])
+Received: from mail.flokli.de (mail.flokli.de [116.203.226.116])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC22427FD57;
-	Tue,  6 May 2025 14:25:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.135.140.105
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54BE3280319;
+	Tue,  6 May 2025 14:26:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.226.116
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746541550; cv=none; b=MkX+IlsEimnbhGWiY8j0cq6EFDOTWcObMaFj3AhOXev1oDLTm6R7GWwy9J7teXz3kolb/PWN6nvDZ0cfxsZ2oaANbKtZybbsVFPYnDq33qfRyjELB4zYZjt3omrIPODZSLr5Mgvsj08XjaI0D8W2TJXWzoklz1rMCLAoPzHIjZQ=
+	t=1746541613; cv=none; b=HaHtNzycRqw2/6s8Ne33HDZOLWeIyyLql5vzepxzVvxQAw5mXlrRqBzdW8kgsq2+Mw+YZmBzhV7hg5sIFZRsDrvAGdBOh5eAkU3pt19Uqeo+PFd02Qvvx1TvNCBaXGOZliROaFWQFbxE9hIVHghTBeDy4t00ZdlrRAk71JW85W0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746541550; c=relaxed/simple;
-	bh=bfhs5TMIO9WwVex3wgkVyM47F2j9OE9qbP0G/kaOvoU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NXSC6qzLNXxNWyUV63hjBO5fjhqdMP9RjRSFlUTLyKNXaYEnSUELJVrDtmCPKdKIwMB22hjUPn79OGudaqD+PznnoLKaMABUI1cRYwLtke+vfGDi7J2QSdB24fopWPMRYJJrSUyfqu+4RMbgdQCWkfiPlq70jIIxDJx+THMvm+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cjdns.fr; spf=none smtp.mailfrom=cjdns.fr; dkim=pass (2048-bit key) header.d=cjdns.fr header.i=@cjdns.fr header.b=irxMbsQt; arc=none smtp.client-ip=5.135.140.105
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cjdns.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cjdns.fr
+	s=arc-20240116; t=1746541613; c=relaxed/simple;
+	bh=mgwZZqqwoDQXrMbsv3xygPwhLjoMgLr4h2T1coCg16M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=m+ArShCGShrABJS19rfDa6reQWvVg3akoRX5tU35swQSzF44giXFkNjl27TIDaWGj4C+5mu6izHHxxNoptUVONRLA0oHxSEeA7jkhJk/cVXU+8WpAhJqNgaKRlmL+nWSIbxdv/9uj2zp8VLE9/TRLZ8BQr39XVGdFI8sBCAXcS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=flokli.de; spf=pass smtp.mailfrom=flokli.de; dkim=pass (1024-bit key) header.d=flokli.de header.i=@flokli.de header.b=SgZW+Bsa; arc=none smtp.client-ip=116.203.226.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=flokli.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flokli.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cjdns.fr header.i=@cjdns.fr header.b="irxMbsQt"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id EED13E9408;
-	Tue,  6 May 2025 16:25:42 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cjdns.fr; s=dkim;
-	t=1746541545; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:content-language:in-reply-to:references;
-	bh=BIis3C4CFWwe/Nb/WYKe4dImQBx542mXba7Be46nPPk=;
-	b=irxMbsQt3aIZkBTMYNb71ndZxm2HmV49EHtCrCq4sSmN4VC6qVpAuQcT8r6vSO/XEtW/CT
-	hJSyvmpYsZwcUDDclOCyzxEx9ZpBvkOpuovMINSWZlUhmZb7ES9nDS3ZF7VnUuQb1eJTLT
-	H+Jpv153lHJuk6CN8be32XLeoAfKtBAtM8vbYxZW+/jN2ZEyeJgW99NUbtylN4/OjNYyWc
-	/GiO6cAF+wPBAQkkKj6CByIhE9DgqkvJoFGIcEKY+uP+tY6GV7hROBKfsug/psWVwvLrUO
-	jLnCxRUI6sOzyeEYU9Z0d7v2fhlnt/HMtiHjMwokS4LsS6hazjaOthyjAxkU9w==
-Message-ID: <ea17e686-68c7-463c-bb9e-bcc9e59a929d@cjdns.fr>
-Date: Tue, 6 May 2025 16:25:41 +0200
+	dkim=pass (1024-bit key) header.d=flokli.de header.i=@flokli.de header.b="SgZW+Bsa"
+From: Florian Klink <flokli@flokli.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flokli.de; s=mail;
+	t=1746541606; bh=ktlsXiTJhVtBSggz7bxl/DGCv7GATcsYZYs5ILJUTc0=;
+	h=From:To:Cc:Subject:Date;
+	b=SgZW+BsaRRR0lW9vW0eib8Qfo1CzRTqEMsXkb9hIHYZpIiRzwVA9A31lN7Cp7/XYX
+	 iTrKt92aryMr/R7bfUQsHx085T3mIddCpXOKnkwRs76fWwBfhgibFdM7mcvGFS+TeH
+	 8x7vLV6JGywUhUYvako7kddNhikY2WkAZTZ63clM=
+To: Sven Peter <sven@svenpeter.dev>,
+	Janne Grunau <j@jannau.net>,
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	Neal Gompa <neal@gompa.dev>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>
+Cc: asahi@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-watchdog@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Florian Klink <flokli@flokli.de>
+Subject: [PATCH v2] watchdog: apple: set max_hw_heartbeat_ms instead of max_timeout
+Date: Tue,  6 May 2025 17:26:22 +0300
+Message-ID: <20250506142621.11428-2-flokli@flokli.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v4 2/7] clocksource/drivers: Add EcoNet Timer HPT driver
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: linux-mips@vger.kernel.org, tglx@linutronix.de, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, tsbogend@alpha.franken.de,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- benjamin.larsson@genexis.eu, linux-mediatek@lists.infradead.org
-References: <20250430133433.22222-1-cjd@cjdns.fr>
- <20250430133433.22222-3-cjd@cjdns.fr> <aBjpBpJAIP89oiit@mai.linaro.org>
- <92cd3689-3409-4d43-8db1-8633d35f779a@cjdns.fr>
- <7c08cc9e-f39f-490c-85fe-5738656380e5@linaro.org>
-Content-Language: en-US
-From: Caleb James DeLisle <cjd@cjdns.fr>
-In-Reply-To: <7c08cc9e-f39f-490c-85fe-5738656380e5@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
 
+The hardware only supports timeouts slightly below 3mins, but by using
+max_hw_heartbeat_ms we can let the kernel take care of supporting larger
+timeouts than that requested from userspace.
 
-On 06/05/2025 10:54, Daniel Lezcano wrote:
-> On 05/05/2025 20:09, Caleb James DeLisle wrote:
->>
->> On 05/05/2025 18:36, Daniel Lezcano wrote:
->>> On Wed, Apr 30, 2025 at 01:34:28PM +0000, Caleb James DeLisle wrote:
->>>> Introduce a clocksource driver for the so-called high-precision 
->>>> timer (HPT)
->>>> in the EcoNet EN751221 MIPS SoC.
->>> As a new driver, please document the timer (up - down ?, SPI/PPI, etc
->>> ...) that will help to understand the code more easily, especially the
->>> reg_* functions (purposes?).
->>
->>
->> Sure thing, I can elaborate the comment in the header of
->> timer-econet-en751221.c. Let me know if you'd like it described
->> somewhere else as well, such as the help of config 
->> ECONET_EN751221_TIMER.
->
-> It is ok in the changelog, so it is possible to get the description 
-> when looking for the patch introducing the new timer.
+Switching to max_hw_heartbeat_ms also means our set_timeout function now
+needs to configure the hardware to the minimum of either the requested
+timeout (in seconds) or the maximum supported by the user (in seconds).
 
+Signed-off-by: Florian Klink <flokli@flokli.de>
+---
+Changes in v2:
+- Use the minimum of wdd->max_hw_heartbeat_ms / 1000 and
+  userspace-requested timeout as documented in watchdog-kernel-api.rst
+- Link to v1: https://lore.kernel.org/asahi/20250506120111.5041-1-flokli@flokli.de/
+---
+ drivers/watchdog/apple_wdt.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-Sounds good.
+diff --git a/drivers/watchdog/apple_wdt.c b/drivers/watchdog/apple_wdt.c
+index 95d9e37df41c..66a158f67a71 100644
+--- a/drivers/watchdog/apple_wdt.c
++++ b/drivers/watchdog/apple_wdt.c
+@@ -95,9 +95,12 @@ static int apple_wdt_ping(struct watchdog_device *wdd)
+ static int apple_wdt_set_timeout(struct watchdog_device *wdd, unsigned int s)
+ {
+ 	struct apple_wdt *wdt = to_apple_wdt(wdd);
++	u32 actual;
+ 
+ 	writel_relaxed(0, wdt->regs + APPLE_WDT_WD1_CUR_TIME);
+-	writel_relaxed(wdt->clk_rate * s, wdt->regs + APPLE_WDT_WD1_BITE_TIME);
++
++	actual = min(s, wdd->max_hw_heartbeat_ms / 1000);
++	writel_relaxed(wdt->clk_rate * actual, wdt->regs + APPLE_WDT_WD1_BITE_TIME);
+ 
+ 	wdd->timeout = s;
+ 
+@@ -177,7 +180,7 @@ static int apple_wdt_probe(struct platform_device *pdev)
+ 
+ 	wdt->wdd.ops = &apple_wdt_ops;
+ 	wdt->wdd.info = &apple_wdt_info;
+-	wdt->wdd.max_timeout = U32_MAX / wdt->clk_rate;
++	wdt->wdd.max_hw_heartbeat_ms = U32_MAX / wdt->clk_rate * 1000;
+ 	wdt->wdd.timeout = APPLE_WDT_TIMEOUT_DEFAULT;
+ 
+ 	wdt_ctrl = readl_relaxed(wdt->regs + APPLE_WDT_WD1_CTRL);
+-- 
+2.49.0
 
-
->
-> [ ... ]
->
->>>> +
->>>> +    cpuhp_setup_state(CPUHP_AP_MIPS_GIC_TIMER_STARTING,
->>>> +              "clockevents/en75/timer:starting",
->>>> +              cevt_init_cpu, NULL);
->>> cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, ... ) ?
->>
->> I see that Ingenic does this. This is the only timer so until it's up,
->> sleeping causes a hang. If sleeping is prior to CPUHP_AP_ONLINE_DYN is
->> considered a bug then this should be okay, but I'm not informed enough
->> to say whether that is the case so I'll follow your guidance here.
->
-> Hmm, hard to say without the platform. May be just give a try with 
-> CPUHP_AP_ONLINE_DYN to check if it works otherwise stick on 
-> CPUHP_AP_MIPS_GIC_TIMER_STARTING as it is already defined ?
-
-
-I need a little time for this because I only got SMP on this processor
-
-some time ago in a PoC so I'll need to put that back together in order
-
-to validate the change.
-
-
-Thanks,
-
-Caleb
-
-
->
-> [ ... ]
->
->
