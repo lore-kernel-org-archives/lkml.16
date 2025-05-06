@@ -1,118 +1,151 @@
-Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D77B672604
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 20:24:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B66F94315A;
+	Tue,  6 May 2025 20:27:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746563082; cv=none; b=chLuHrPXH7aVdpcK6isu2scudDPNW7U7/4/94FnEgmd4TKs1pWmEbVUW1wNww+LxlMtgYMlKVPmf2arLygojwL/nHwdv2hBg9NbPD03+mHnz10aIhx2KUntfWrvZ1VFw2W+5y0DVYs2wCVY8hbal70yy0GjWQh0QzKArxVBO+sM=
+	t=1746563265; cv=none; b=bXoPzcI6wi1Asa8XimffC/+gPn2pHncCiuIatAROAP66MduAxAL9zlgSmSOBNZ77rkXy79tQX1aFBt6bbuRjY6vVo/AFbJqPmPG4WCKowOKjtM050xZ6y/mX5yC0DK6LfsIeOzrc18ThcqMm4bZ/4gbyJ9Tz6z7M3iPnwfM+DwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746563082; c=relaxed/simple;
-	bh=T6Wn0W3bK/1o7arEYvDyYgs/pRvSEyZXJEsHapHRN2Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QkvtpfrLpICnZ35tyGR0foocprS8jarEwEUM8rNl9XTTC1eYQ1d2f++j7jOBtMZYlfxVF2mnbYCjiLMF6Ymt9haYNPyEScObGPRPG8p8HR5XWQYVdbiE8TmgvxmTfJcNYIefEqEvwfJMHHcM2CaWhwa5M8Ld4AqeXwnoB3U/eik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=gxTfRViS; arc=none smtp.client-ip=95.215.58.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1746563265; c=relaxed/simple;
+	bh=Z4dfHFOdc8zbOCs+oia3qZiHTU10t25uC5QYhcTXUng=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XVgdcIYIMd+XK0wH2O/9msFAPAcnitPH2RlUz0aCk7PT++/5SbNAkEeAIi4jF0q1m9J7k/vNnd/T6HtxYOOJKy5PE62bOx/rrdJA8ob2EqnuMBwz2mJ0CYLh3iE1HvFhfC7QFHN7b2UZi8Ga5BLzJBjiMXiTNAw5uluaBP8Z17s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LnliKpHY; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="gxTfRViS"
-Message-ID: <b776fa07-de4b-44be-ae68-8bc8c362ea81@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1746563077;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7Hk5IHJL/i2F/azVD9h3zUcZRECd4/4rkqvBQlEnV/Y=;
-	b=gxTfRViStprrOmcu7JJz5WEsS2Dghtsju8+yo4jRYyZ+TQeG6SwHKeWl7jL22tksOIzZKw
-	3vOGN3bHFte2d6c6a5Yx70UJ7+FORIygOCEOX7ohwG8D5J8/PY8NjWTszBY7db4bz1AiJt
-	oaGx4pwDPvYQOw/RGr0UGotKfdGgdRM=
-Date: Tue, 6 May 2025 13:24:26 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LnliKpHY"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ac2902f7c2aso970600866b.1;
+        Tue, 06 May 2025 13:27:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746563262; x=1747168062; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=dSv1f72q2Br/HkTLRvnIUjJKIt36w5BUq7xaU114oLk=;
+        b=LnliKpHYCREHcWBBM98qDZEzVFYPS6ptwGapfr8ulnYyGS8wUnb4xyFByDIWeObIZB
+         R6jcH5lJXSf4FrivXgHPUV1/GXB9S+rbQt8mtsnCeIrpzSaIS5/rC0dLSe/N0pxAyGi/
+         Oc1l96oGw21EZNxm9tYCo31J6IlctuTJWigpbppKIVgf/OYBnPQ0Led21sVtJ162UDSs
+         xMo5y13OI//S04xRkyp5iolGcwj/c2lHaSROGMcfZUQ2Lroggb87jZ2FXV8w2fxo3Rca
+         1pERmWysN0O8R7RledkOgNBAMAxEUILLlC3epViXSjACRWjPXsYY7IJGsAeoAtYtxeyN
+         NZ5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746563262; x=1747168062;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dSv1f72q2Br/HkTLRvnIUjJKIt36w5BUq7xaU114oLk=;
+        b=pS6Ktzd0NCE81PaxAKM6Bzx2wwOrMrAJ+7nw8Ekshq529pDsv1m0KtZfIoRSE2mk1K
+         goicJY4YV7SaHfRckLVBzkJrUTkXVW8hHkIl3wZ0HMDwv6Qeakm0HzCKXFTjDnFBPSyK
+         RLXRU4gckv4hYw8io5QdZoSaV9zlsVNC4yRw6kkb0Vg4vpI2RBNs3WBuwNGLwOJbXdSZ
+         cwhzs+SHwIDXyH+Uf9cInxkyWuvEACmQF9wiK7knyVkIkjJ3pIvw3Cu/EVl/EwYrYfLK
+         mF6XCx5FgzvDZoFEY6gCBQI2EbK+dNzfzQfViTM44KJy5tSdCSCuY/9x9DmnsX4Eq+2B
+         1KiA==
+X-Forwarded-Encrypted: i=1; AJvYcCWnzmewzBqym5xKt4ch1576L1EyChgVONO4eCD59bRGrmQLEB0jKUL3dLEVljMqY9qdH7BrElqI+ZnErdCC@vger.kernel.org, AJvYcCWye5wXwCKXeUd3jb8aefLKoh0LTxgTMkxdusbFc9FaF66IQY1qxkWUuJ8BozBd8cm9utBGIxDlKYLI@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7mh2v5rVDyuyo5ZzUNYA8rm1vmitQItYIn2hnYeGKaleK0RKX
+	Pdos2uRTdIwPM+VkVohCmyuGX12OUVco2vd/3XgqcnO+VjmD7xQm
+X-Gm-Gg: ASbGnctSa57PhFZcDWv8CetwqLuIERnvdmd9BrnjC6qvHD4/285R5SzYv/D1Q7fYbcT
+	/0NOTZFo7ZgdwsyEcfc5PJjaQ8NF7KsfLBFVTNshSDxxfg/A6H6ntFuNW5RGOCh47Nexv26KlfS
+	vEqgWqWq/XQAcIwnFDf9xbthUMIhP+p1XDpvMKY6iFy2ziwA+ZOv+Xfn4NXo2nLXX17ao+wXcme
+	NTLzMoRzMDI4OTDWT+0UvcxNv/b4egnvQNoeMrehZRWYqGmn05Pt16wT3K9vTzJYPIOaUDB0Nmn
+	SneI7kJYbHGxHON4R93vUklrcQ9Oap+a01vz3WAMfq0QOnax7G5jXd1Cv95RHgbgGUFAj890Adw
+	gf8uv
+X-Google-Smtp-Source: AGHT+IF28dWY6dX03yamEtrxQ8IDoIkzwFAJdcmE10A1YLS8hxpcBSo7uXAa2s4AhgXsBNi1jsAeTw==
+X-Received: by 2002:a17:907:7e82:b0:ace:c225:c723 with SMTP id a640c23a62f3a-ad1e8b92275mr82948466b.12.1746563261544;
+        Tue, 06 May 2025 13:27:41 -0700 (PDT)
+Received: from standask-GA-A55M-S2HP (lu-nat-113-247.ehs.sk. [188.123.113.247])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1891a1e60sm764564166b.47.2025.05.06.13.27.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 May 2025 13:27:41 -0700 (PDT)
+Date: Tue, 6 May 2025 22:27:39 +0200
+From: Stanislav Jakubek <stano.jakubek@gmail.com>
+To: Artur Weber <aweber.kernel@gmail.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [PATCH v8 5/9] mfd: bcm590xx: Add PMU ID/revision parsing
+ function
+Message-ID: <aBpwu0rEK_K-9tcu@standask-GA-A55M-S2HP>
+References: <20250430-bcm59054-v8-0-e4cf638169a4@gmail.com>
+ <20250430-bcm59054-v8-5-e4cf638169a4@gmail.com>
+ <aBo0qzqHOkfFxaXs@standask-GA-A55M-S2HP>
+ <7eeaa7b4-b76d-4658-ac78-705a5f8e54df@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [RESEND PATCH bpf-next v4 1/2] bpf, sockmap: Introduce tracing
- capability for sockmap
-To: Jiayuan Chen <jiayuan.chen@linux.dev>,
- Jakub Sitnicki <jakub@cloudflare.com>,
- John Fastabend <john.fastabend@gmail.com>
-Cc: Cong Wang <xiyou.wangcong@gmail.com>, Steven Rostedt
- <rostedt@goodmis.org>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, Jesper Dangaard Brouer <hawk@kernel.org>,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org, netdev@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-References: <20250506025131.136929-1-jiayuan.chen@linux.dev>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Martin KaFai Lau <martin.lau@linux.dev>
-In-Reply-To: <20250506025131.136929-1-jiayuan.chen@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7eeaa7b4-b76d-4658-ac78-705a5f8e54df@gmail.com>
 
-On 5/5/25 7:51 PM, Jiayuan Chen wrote:
-> Sockmap has the same high-performance forwarding capability as XDP, but
-> operates at Layer 7.
+On Tue, May 06, 2025 at 09:03:15PM +0200, Artur Weber wrote:
+> On 5/6/25 18:11, Stanislav Jakubek wrote:
+> > Hi Artur,
+> > one note below.
+> > 
+> > On Wed, Apr 30, 2025 at 09:07:09AM +0200, Artur Weber wrote:
+> > > The BCM590xx PMUs have two I2C registers for reading the PMU ID
+> > > and revision. The revision is useful for subdevice drivers, since
+> > > different revisions may have slight differences in behavior (for
+> > > example - BCM59054 has different regulator configurations for
+> > > revision A0 and A1).
+> > > 
+> > > Check the PMU ID register and make sure it matches the DT compatible.
+> > > Fetch the digital and analog revision from the PMUREV register
+> > > so that it can be used in subdevice drivers.
+> > > 
+> > > Also add some known revision values to bcm590xx.h, for convenience
+> > > when writing subdevice drivers.
+> > > 
+> > > Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
+> > > ---
+> > 
+> > [snip]
+> > 
+> > > diff --git a/include/linux/mfd/bcm590xx.h b/include/linux/mfd/bcm590xx.h
+> > > index 8d146e3b102a7dbce6f4dbab9f8ae5a9c4e68c0e..fbc458e94bef923ca1b69afe2cac944adf6fedf8 100644
+> > > --- a/include/linux/mfd/bcm590xx.h
+> > > +++ b/include/linux/mfd/bcm590xx.h
+> > > @@ -17,6 +17,16 @@
+> > >   #define BCM590XX_PMUID_BCM59054		0x54
+> > >   #define BCM590XX_PMUID_BCM59056		0x56
+> > > +/* Known chip revision IDs */
+> > > +#define BCM59054_REV_DIGITAL_A1		1
+> > 
+> > 1 seems to be the digital revision ID for A0 (couldn't find the analog
+> > revision ID), see [1].
+> > 
+> > Other values seems to match downstream (as far as I can tell anyway).
+> > 
+> > [1] https://github.com/Samsung-KYLEPROXX/android_kernel_samsung_kyleproxx/blob/cm-13.0/include/linux/mfd/bcmpmu59xxx.h#L82
+> From my testing on a device with the BCM59054A1 (BCM23550-based Samsung
+> Galaxy Grand Neo), the digital value is also 1 on this model:
 > 
-> Introduce tracing capability for sockmap, to trace the execution results
-> of BPF programs without modifying the programs themselves, similar to
-> the existing trace_xdp_redirect{_map}.
+>   bcm590xx 0-0008: PMU ID 0x54 (BCM59054), revision: dig 1 ana 2
+> 
+> (This constant is not actually used anywhere in code yet - I just
+> included it for the sake of completeness, since the BCM59056 headers
+> in downstream listed both values...)
+> 
+> Best regards
+> Artur
 
-There were advancements in bpf tracing since the trace_xdp_xxx additions.
+Thanks for checking Artur!
 
-Have you considered the fexit bpf prog and why it is not sufficient ?
+I guess both BCM59054 A0 and A1 have the same digital revision?
+Well, to be sure we'd have to get the hardware, since downstream doesn't
+use this value either.
+So I guess the patch is good as-is, we can add known IDs when we... know them ;)
 
-> 
-> It is crucial for debugging sockmap programs, especially in production
-> environments.
-> 
-> Additionally, the new header file has to be added to bpf_trace.h to
-> automatically generate tracepoints.
-> 
-> Test results:
-> $ echo "1" > /sys/kernel/tracing/events/sockmap/enable
-> 
-> msg/skb:
-> '''
-> sockmap_redirect: sk=000000000ec02a93, netns=4026531840, inode=318, \
-> family=2, protocol=6, prog_id=59, len=8192, type=msg, action=REDIRECT, \
-> redirect_type=ingress
-> 
-> sockmap_redirect: sk=00000000d5d9c931, netns=4026531840, inode=64731, \
-> family=2, protocol=6, prog_id=91, len=8221, type=skb, action=REDIRECT, \
-> redirect_type=egress
-> 
-> sockmap_redirect: sk=00000000106fc281, netns=4026531840, inode=64729, \
-> family=2, protocol=6, prog_id=94, len=8192, type=msg, action=PASS, \
-> redirect_type=none
-> '''
-> 
-> strparser:
-> '''
-> sockmap_strparser: sk=00000000f15fc1c8, netns=4026531840, inode=52396, \
-> family=2, protocol=6, prog_id=143, in_len=1000, full_len=10
-> '''
-> 
-> Reviewed-by: Cong Wang <xiyou.wangcong@gmail.com>
-> Suggested-by: Jakub Sitnicki <jakub@cloudflare.com>
-> Suggested-by: Cong Wang <xiyou.wangcong@gmail.com>
-> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-> Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
-> 
-> ---
-> v3 -> v4: Resending this patch as v3 was incorrectly closed by Patchwork.
->            Additionally, carrying the Reviewed-by tag.
-
-John and JakubS, please take a look.
-
+Regards,
+Stanislav
