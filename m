@@ -1,78 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37B902C1E34;
-	Tue,  6 May 2025 01:39:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E54522DDD0F;
+	Tue,  6 May 2025 01:44:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746495597; cv=none; b=XVhCRupf92nvA5/5efuAnBoDWCECy/eIDPT2ybplHYY0zbChD9h0XiJ6PxB0a8YARv2xNdAFyYelpV2gi8HmV/+NMruUK5BiRn0U8mZ/+IHBNMtqoxMMChBjZ3RoB99yT3Z/0CyipIFubE2kR9pPUaY4ekzrEzWISnVy4Ns4540=
+	t=1746495849; cv=none; b=Lk7Gp4/UkrnvVP2V8Qn3G/vSBS+ASA4YXST4sLE3YcalSrJ/AXW7U41t8SbrRORRuFSjaczuTXDGXn6ZlUDn+91dKeGEt1ooOPgtu1VWny9QibrJUTbjgSq1ma7u9cI0dipWqPTZHaeyLFuEvJKlp2F+23/jaS8QzpLRms0OXy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746495597; c=relaxed/simple;
-	bh=RG7Fv4098vXZjKXhbYhSAmFoeYwghoNLjQ6woj5h+vQ=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=hVeIEH5hBR6F2rjvRV6Qd97wScYr6WTkEEh/cnzqESQuCAyY/lSdYTRn8oQSIbucVH4ICy9yCoEq0vwI4Vxsic8xTnbn46Fx2SUad5Ao1r22uLuJpJ8jE2q5lV+8yKkAMOH/USEDxlQKjALUNakq9Ga9kBoKusrttWtZuvs49qI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E58El8rg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746495849; c=relaxed/simple;
+	bh=19mZVmvZgZMCUKu150c5NZpMhyd/9wxKXQgCFRWNu6Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=RxFHIBdYYtr+LuCtCewkDrVKvDVA9Sl9VrNF/5akHrE/kl+vb1q0D8j0W7Dmb21xFWdnkGKiMWs7Rl0TskN2i5rg2l7jDdGExex2ThVSwl0p0yXtSAnIvHzMOwsnrHx22p69Q+q7HD2RzLM9Ida5ptKWhbF8jaXFEh6brFYz2N0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=FkEPTSGK; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E58El8rg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B260AC4CEE4;
-	Tue,  6 May 2025 01:39:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746495596;
-	bh=RG7Fv4098vXZjKXhbYhSAmFoeYwghoNLjQ6woj5h+vQ=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=E58El8rgXquEtN8ubo2Plj5XwQnib9vZEvNYqi6QSLlNzDg5KcL83KhQ4p7B0i7Yl
-	 jh9HAGlxggCzxmhYMXIPau2IiYx3GgqK9wo94OgoDTYX0PO9knEoZgyqC+/jIry9Bf
-	 c+rvzhuc8s0UEWn+I6M4gRgcnzFFUQuDKTQqFozNjmTD2gSgdLAu7bKpZQE/ubJHrh
-	 ofENS+3MdRO6vMCJ2S5IeNG/7waVGd5XaSWjF477YaCWSPNuOwtcR6ezklZXelsSml
-	 ms6oVQl8hK1GdOKqTIaAjafJioKAbQisvR7H59jnTiowVQs/eQLaEmjePVipqp5Wr0
-	 VT00OdZSerh+Q==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33AC7380664B;
-	Tue,  6 May 2025 01:40:37 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="FkEPTSGK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1746495843;
+	bh=CDn02VoIaa3g7/37mOMgvjVmAv8sbq9dp57lDEXRR+w=;
+	h=Date:From:To:Cc:Subject:From;
+	b=FkEPTSGKKujzbsGctR5pmGDIPh8IFI+/Oqh/P/fKkqacFT5boeMor+b8PcErdosaa
+	 p5m4Aqjn7qJgivsYNU8DdegmNdQfkkHxGvuQYBKSVgb3WT/ywFofIyjMko4UTUOp5T
+	 uq1tgwogG2qzjiCCcBDjAg3od76xSjZ6QNr3ofsfjIhYnh8MV2xz6dMyXiu4Suks/F
+	 sfFhBOXaK8QvHQ1OCyPr0tGNLF4KYkkBjTc+QuZt0BhZ0Sd6OmyjfoNkMH5bJOiNJr
+	 gR1EcJL4vS8q06//BjEF3uDFX93sxn3Of3llHxlfqdz+1Z8JSAR/gq/9yzzF8t7WHv
+	 k2gaVQ8S4fVgA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Zs1QV6LfBz4wbY;
+	Tue,  6 May 2025 11:44:02 +1000 (AEST)
+Date: Tue, 6 May 2025 11:44:02 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Miriam Rachel Korenblit <miriam.rachel.korenblit@intel.com>, Johannes
+ Berg <johannes@sipsolutions.net>
+Cc: Johannes Berg <johannes.berg@intel.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: manual merge of the iwlwifi-next tree with Linus' tree
+Message-ID: <20250506114402.2f440664@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v3] vhost/net: Defer TX queue re-enable until after
- sendmsg
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174649563599.1007977.10317536057166889809.git-patchwork-notify@kernel.org>
-Date: Tue, 06 May 2025 01:40:35 +0000
-References: <20250501020428.1889162-1-jon@nutanix.com>
-In-Reply-To: <20250501020428.1889162-1-jon@nutanix.com>
-To: Jon Kohler <jon@nutanix.com>
-Cc: mst@redhat.com, jasowang@redhat.com, eperezma@redhat.com,
- kvm@vger.kernel.org, virtualization@lists.linux.dev, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; boundary="Sig_/CpVNzigQ+dlP6JgH3+Y6GNi";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-Hello:
+--Sig_/CpVNzigQ+dlP6JgH3+Y6GNi
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+Hi all,
 
-On Wed, 30 Apr 2025 19:04:28 -0700 you wrote:
-> In handle_tx_copy, TX batching processes packets below ~PAGE_SIZE and
-> batches up to 64 messages before calling sock->sendmsg.
-> 
-> Currently, when there are no more messages on the ring to dequeue,
-> handle_tx_copy re-enables kicks on the ring *before* firing off the
-> batch sendmsg. However, sock->sendmsg incurs a non-zero delay,
-> especially if it needs to wake up a thread (e.g., another vhost worker).
-> 
-> [...]
+Today's linux-next merge of the iwlwifi-next tree got conflicts in:
 
-Here is the summary with links:
-  - [net-next,v3] vhost/net: Defer TX queue re-enable until after sendmsg
-    https://git.kernel.org/netdev/net-next/c/8c2e6b26ffe2
+  drivers/net/wireless/intel/iwlwifi/cfg/sc.c
+  drivers/net/wireless/intel/iwlwifi/iwl-config.h
+  drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.c
+  drivers/net/wireless/intel/iwlwifi/iwl-trans.c
+  drivers/net/wireless/intel/iwlwifi/iwl-trans.h
+  drivers/net/wireless/intel/iwlwifi/pcie/drv.c
+  drivers/net/wireless/intel/iwlwifi/tests/devinfo.c
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+between various commits from Linus' tree and various commits from the
+iwlwifi-next tree.
 
+At least one of the commits in Linus' tree is duplicated in the
+iwlwifi-next tree.
 
+I couldn't figure out how to fix it up, so I dropped the iwlwifi tree
+for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/CpVNzigQ+dlP6JgH3+Y6GNi
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgZaWIACgkQAVBC80lX
+0GzTDwgAi/B1fZO3XzlOPl5bX9Hge71EbuNjjoDQCcFQFxUGCXTzB85I0MBWhTZU
+SoYML9ecb9ocgmfCxqqQWolV/NbzoyfUdyvBwjF6cq9AhX0NK/Qev6Grv+s+eymj
+CINTdM9JNhpx+PLD/D2Gr2b33d7Q5lj6pN40j4g5GSUDrdc96cOET7Qg0pYOA7C7
+D7I54LruVFQtnKoSJoD8oOQ/5tWgOdU/+b+Y0veC+N/LhT2yyDJ9NifJXFOw7ALV
+d4oh7s+W6v2ApH1GzReDITzt0WBYslBAUyWNNyp+YntFtgUt5hu0R8fsIQhxRNdr
+ClD8TNhKKgBRIBFkIKF5eHwzrMHd6g==
+=8N2k
+-----END PGP SIGNATURE-----
+
+--Sig_/CpVNzigQ+dlP6JgH3+Y6GNi--
