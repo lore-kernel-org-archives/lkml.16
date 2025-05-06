@@ -1,70 +1,79 @@
-Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1C5A35AFFB
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 02:58:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD9ED2ED089
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 03:01:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746500295; cv=none; b=CtHJXvZqqu8gut0G/3rQurbBDCprgzn5fBDUipR/UtP+mPgiuR4nIdaXZxAROLQcPFj+m5rJ0ydAb8rXeM+kdgd8lERKQxFnbBgVRAOcs6iIXglwG8tgvzFzhnylKVYlvhj0YMC3r5shqSbN8It5REjDwf/Lz7lWCbJQ+y4QkcI=
+	t=1746500473; cv=none; b=X3HAVRwR7BMauJUXcABaoHLG0Vfm7fG/mHqg667otV/eTbekDtZtVbHYeYPq+mtYCOrIbBO5c9Af/eVkpj8O5xoXDpP+98YycpY61qYalLh/hpM0+fPsIrthZ5VcceKwhzMy/QMm0E47jeaf/5DbMbjxSv6b5YJycii3CWsEmBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746500295; c=relaxed/simple;
-	bh=LwbEy3wpNq3kSGayL5fDQ+4evJzz4QR3WrQDC86HT24=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:Cc:
-	 In-Reply-To:References; b=rL3gfmRm+C14z/XfJsmp68ubjj5+xs/ZDXQnAN1r9KalmNuXV5CawU1Hhlpiz7pE6of+OdTc14XDvd2zrKr80jpex09WeGVckpAJK2KQY6s4dXBofIH7z2Fcg7NoX1Mb6sAkBRnuSpDhT3kTuYogtxuZ31LJrtTQa6n1BB/w0OQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=u+G4jXGP; arc=none smtp.client-ip=95.215.58.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="u+G4jXGP"
+	s=arc-20240116; t=1746500473; c=relaxed/simple;
+	bh=U4LHRXobj6e9iwpT+E2cHmNPYDN/WF/ubBZn0+9xyf8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=NzSxbCla6ZqeQKfI6IJ+6F4UttJar+8yy3pYxlTlMeSPHkuJ2/zur0qmJFbYpYJsS6DHQ6T+AnRPwup6xqmtRgt+gOGPPnaod9r/mnNbatRg4MBm7joMiEU+CiFe+9lGoLXQNB8DU18HUglr1vsbH7Gb/GBcfFVn0RC6+0Jwp88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4Zs35v17w2z1d1Br;
+	Tue,  6 May 2025 10:59:47 +0800 (CST)
+Received: from kwepemj200003.china.huawei.com (unknown [7.202.194.15])
+	by mail.maildlp.com (Postfix) with ESMTPS id 7C2161800B1;
+	Tue,  6 May 2025 11:01:02 +0800 (CST)
+Received: from localhost.huawei.com (10.90.30.45) by
+ kwepemj200003.china.huawei.com (7.202.194.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 6 May 2025 11:01:01 +0800
+From: Qinxin Xia <xiaqinxin@huawei.com>
+To: <baohua@kernel.org>, <xiaqinxin@huawei.com>
+CC: <yangyicong@huawei.com>, <hch@lst.de>, <iommu@lists.linux.dev>,
+	<jonathan.cameron@huawei.com>, <prime.zeng@huawei.com>,
+	<fanghao11@huawei.com>, <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
+Subject: [PATCH v2 0/4] dma mapping benchmark: add support for dma_map_sg
+Date: Tue, 6 May 2025 11:00:56 +0800
+Message-ID: <20250506030100.394376-1-xiaqinxin@huawei.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1746500280;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LwbEy3wpNq3kSGayL5fDQ+4evJzz4QR3WrQDC86HT24=;
-	b=u+G4jXGPZQL5BsfNDyS+uaCXCL6j31zRZ1pCMqijsOaPOeq2hCIdAb8UsTKmWatQofotAK
-	dnli//rsDcLLqyTuAIilF5vfpmhsvtgn5qbAlJSaEBiQKm36HcPEGMBaPdGIgslMsFlGzm
-	AMXgIALDVBQ5+Qm2F5bN45duE5LEg18=
-Date: Tue, 06 May 2025 02:57:58 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Jiayuan Chen" <jiayuan.chen@linux.dev>
-Message-ID: <1c9aa8f91ef683dedbe71a59676ea159a64894d8@linux.dev>
-TLS-Required: No
-Subject: Re: [RESEND PATCH bpf-next v4 1/2] bpf, sockmap: Introduce tracing
- capability for sockmap
-Cc: "Cong Wang" <xiyou.wangcong@gmail.com>, "Jakub Sitnicki"
- <jakub@cloudflare.com>, "Steven Rostedt" <rostedt@goodmis.org>, "Alexei
- Starovoitov" <ast@kernel.org>, "Daniel Borkmann" <daniel@iogearbox.net>,
- "John Fastabend" <john.fastabend@gmail.com>, "Andrii Nakryiko"
- <andrii@kernel.org>, "Martin KaFai Lau" <martin.lau@linux.dev>, "Eduard
- Zingerman" <eddyz87@gmail.com>, "Song Liu" <song@kernel.org>, "Yonghong
- Song" <yonghong.song@linux.dev>, "KP Singh" <kpsingh@kernel.org>,
- "Stanislav Fomichev" <sdf@fomichev.me>, "Hao Luo" <haoluo@google.com>,
- "Jiri Olsa" <jolsa@kernel.org>, "Masami Hiramatsu" <mhiramat@kernel.org>,
- "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>, "David S. Miller"
- <davem@davemloft.net>, "Eric Dumazet" <edumazet@google.com>, "Jakub
- Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>, "Simon
- Horman" <horms@kernel.org>, "Jesper Dangaard Brouer" <hawk@kernel.org>,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
- netdev@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20250506025131.136929-1-jiayuan.chen@linux.dev>
-References: <20250506025131.136929-1-jiayuan.chen@linux.dev>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemj200003.china.huawei.com (7.202.194.15)
 
-I am resending this patch as I have discovered that the previous v3 patch=
- which has already
-been reviewed was incorrectly marked as 'v2 superseded':
-https://github.com/kernel-patches/bpf/pull/8763
-(It seems that Patchwork closed it incorrectly?)
+Modify the framework to adapt to more map modes, add benchmark
+support for dma_map_sg, and add support sg map mode in ioctl.
 
-The original v3 thread can be found here:
-https://lore.kernel.org/all/20250414161153.14990-1-jiayuan.chen@linux.dev
+The result:
+[root@localhost]# ./dma_map_benchmark -m 1 -g 8 -t 8 -s 30 -d 2
+dma mapping mode: DMA_MAP_SG_MODE
+dma mapping benchmark: threads:8 seconds:30 node:-1 dir:FROM_DEVICE granule/sg_nents: 8
+average map latency(us):1.4 standard deviation:0.3
+average unmap latency(us):1.3 standard deviation:0.3
+[root@localhost]# ./dma_map_benchmark -m 0 -g 8 -t 8 -s 30 -d 2
+dma mapping mode: DMA_MAP_SINGLE_MODE
+dma mapping benchmark: threads:8 seconds:30 node:-1 dir:FROM_DEVICE granule/sg_nents: 8
+average map latency(us):1.0 standard deviation:0.3
+average unmap latency(us):1.3 standard deviation:0.5
+
+---
+Changes since V1:
+- Address the comments from Masami, added some comments and changed the unmap type to void.
+- Link: https://lore.kernel.org/lkml/20250212022718.1995504-1-xiaqinxin@huawei.com/
+
+Qinxin Xia (4):
+  dma-mapping: benchmark: Add padding to ensure uABI remained consistent
+  dma mapping benchmark: modify the framework to adapt to more map modes
+  dma-mapping: benchmark: add support for dma_map_sg
+  dma mapping benchmark:add support for dma_map_sg
+
+ include/linux/map_benchmark.h                 |  46 +++-
+ kernel/dma/map_benchmark.c                    | 222 ++++++++++++++++--
+ .../testing/selftests/dma/dma_map_benchmark.c |  16 +-
+ 3 files changed, 249 insertions(+), 35 deletions(-)
+
+--
+2.33.0
+
