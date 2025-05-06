@@ -1,126 +1,182 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2105.outbound.protection.outlook.com [40.107.22.105])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71497280CEA
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 13:31:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746538268; cv=none; b=pXj69Wkl6SqxIGJSh9D0d24ZTgiW8/+kKI60RvFs+fLD+pfNeTZrehH6aeHcitCnb7z8VFUu2W83mKOJTZPDvQXOLfTqYJjLYBZ7RPSOmu+PT20GakrXVimS51RTFPONTMegevbocj7hcyeDHYPjIP+k7VkEUVV7Xh3tQP+7iGY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746538268; c=relaxed/simple;
-	bh=9ujoV9LZvJmWbxlMeXVeLJdMYwB4qtzv3S7swubAUgI=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=aWn62YyYK7hhDzCkVqOhGvKd0vpW5cCiTJ997wskZDBM0zIyTx3PmIASdkc1edZ1jRwwHNXHRfGEqTyFnak4NQq8yT8E2ur25RWCXV3kUL4eCmXNorWyjv5MOIetoC7V890pdHYO9lURg1AgXQKyLOkdeAK0AepLN1VdqJfkhD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3d6c613bd79so62846465ab.2
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 06:31:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746538265; x=1747143065;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uixjB5h2USy6fSSWuu6C8VPE/xfzt9YOqe3bWvDb1VY=;
-        b=Vkm7lulEfH4tygU2Bqzx2YSxFz90gI0d+64U2ZsMl81elGurseHxYhq0sDFbWTX5QW
-         3BQZlQWWvJ80NHQKhktcGqqxOVBeEg40M8GXJYUH/cu5mti7h4vGWTj5KvI0vw4500hG
-         oj5SaMjzIGw0LPLj5vrfS3Lwf4+mu9MeA04fMvCARR+iAaaQmarUofs/GkwWH1DaZjXG
-         0fzc14PApCN54iSyBG+2kIRPApcx06a53PcLUMRP3rSWWtn/cgkWy+rH6pvOgnSEParu
-         /XWckYqBt1ZDrQdqdUSm0DJXUcdeGAJgNbIsg8US1ODTAA8DgEzWY9hKgy7HFabyBV0R
-         R5cQ==
-X-Gm-Message-State: AOJu0YypjIeGhIBX2I0AdlnYQXmBVk9i1Ou6ax4JkntSG21S1luupAG5
-	SQBvkHvgm9DPOkvOjGRafWu/65SM8JMVPA/WhR4153mWYV9N99LgLgJNQxWJPmIZeQYT9JgIJkE
-	uxYbznkjAHeFdW4eLRHUExe97lEFNpt5BkSobiNBCpLRveUJ6eY1NxGI=
-X-Google-Smtp-Source: AGHT+IG6yvrngeQIHLARjmXjenAZTw8rp8izQbvYeBDxgfyv4K4DGJaQTz9u+7aQ5HePdlKvXc1jPZexhRzGIkLVL7FOExpYd0BI
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2B92280CF5;
+	Tue,  6 May 2025 13:31:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.105
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746538280; cv=fail; b=VRYE5SnaBEls7bXso/kTHtqaobIGorHKE60JtIroKgSQA0xnpSd740eHmkuoyDHwWc0KlxcZAQNKRJD05LtAlPtqwT3jrms7A0I8QmSuLyCjKZELkn8oD1x6S9Y9WdrGn9Ot8VFd+IgqqZCrb3gl+iWrnBzU2sJYw4W30+GKmww=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746538280; c=relaxed/simple;
+	bh=xLRhZduNmodc8ypShL78iRtBVS8jvTbr/VGC6tVik0w=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=eHO0NEo2AsjJ7u0dTJFuOGRQ7hOUQjv6juBy3KUjUI8K7QveTTTAz0GbspvCSxu3fRbR2tE7DRBS0MwfKwtLM4cRi9VAuMy/oHH1c5uD2BLo7UU/soXWVTuK7BI0KOfxMLp0GPj47NcR0H6VbYrh7un7zIkaZw1aenMh2VWTs0Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=phytec.de; spf=pass smtp.mailfrom=phytec.de; dkim=pass (2048-bit key) header.d=phytec.de header.i=@phytec.de header.b=Salg52sG; arc=fail smtp.client-ip=40.107.22.105
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=phytec.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytec.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=phytec.de header.i=@phytec.de header.b="Salg52sG"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=y3ccWWu9an/SfAVEvwVNWtoayQUZw0zyQcY9ZiQGpruMiDCPvhR20uZfiXzDob18SPCEJ8VkI4cLWrovWUIV6J49ddXp0//MzywKUpTsz9gRtprbXahqDl2wEH3aSlM5GytjF8lSevSx7BmEk3ODqwMftM/2CucphxP2fwbeInXyCL+rYjdIrR3A9MY0QLZQC3w/PM78Q7GfW8Nz0sAMGszb3L4m3MIqofFPJ8eNpxNtwjqC8DDUrRQT5+o0l+qEEIBVKTeCO7PqSETZH8kJSRb6YE/W36FcReP33pw0uF205KJ5A7reBI/EOzaFuoP4wzkxQFMx/XNasCmxzqCWmA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=OuAGsbt6+NVfxbQ5CRz9lGRSUTit3fxKrM9Np4vwmpo=;
+ b=T1yYjv+iR0rwpB4bejnyUmlA6+kBHF6jwPps2cAsFa+lNbpNnYysZmUmNUdyFWURyHq3KjhUpQDZpaxYJ03YRCpDD7alyC9+8wnXvoTQYKKltc6K+J0QoDxdpra6cnJGbheeV5HcMSVQ5QYcaMXM+SvGUEE0q/rDav7aRBam5tJQZjRyHAjwbuSNB90f2riFkmwC4wRobS+aOpwC0I7NJHd/oZAs9M/zWw8XO8hWri27yhz11vauG8FvjZpFu/Mm694UBVrFn0yMeSoM54WToIX/K6wkVkE6q9IpDFAvLz3iQEbH4jDu4wEC1qA2QijBMR2D1EUbfBDYjf91nJw1VQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=phytec.de; dmarc=pass action=none header.from=phytec.de;
+ dkim=pass header.d=phytec.de; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=phytec.de;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OuAGsbt6+NVfxbQ5CRz9lGRSUTit3fxKrM9Np4vwmpo=;
+ b=Salg52sGnietZmSLWQlqAWt5bHj1PlxBqtLD4dkfhelFYvO3pXrDmPHQe3jDX5IeRg5MKl1/JxRwc7lRp4Vi3DRqJbK1VJ0myf8lL1soejFDdF0IqiZdFPONkPjxzsPCioF02EK/jA9jPSgfusG/LDtxQvBW9m+qMp7ozislSLekxRa6saya/NtDyoQ7LpzEb3y7uRr16OGqiuYWgd8DjNIUQgRi/zzGCEHdTFppkS4hWmRLO+T37Ex1maaSRJPXCbMQjjCwf7r/bTNRmq9mzrKW3Ju2FQx39PhJB2z1WdoVB8WCldPvq+T3DVyFNCUeCuXZ9RRJnY4Ohe780pZJKg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=phytec.de;
+Received: from AS4P195MB1456.EURP195.PROD.OUTLOOK.COM (2603:10a6:20b:4b3::21)
+ by DB9P195MB1610.EURP195.PROD.OUTLOOK.COM (2603:10a6:10:37d::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.22; Tue, 6 May
+ 2025 13:31:10 +0000
+Received: from AS4P195MB1456.EURP195.PROD.OUTLOOK.COM
+ ([fe80::369c:a760:5bf9:8d4a]) by AS4P195MB1456.EURP195.PROD.OUTLOOK.COM
+ ([fe80::369c:a760:5bf9:8d4a%4]) with mapi id 15.20.8699.022; Tue, 6 May 2025
+ 13:31:10 +0000
+Message-ID: <d1b0111b-436f-4689-b59b-473bc87955e7@phytec.de>
+Date: Tue, 6 May 2025 16:31:08 +0300
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Upstream] [PATCH 0/4] {am62,am62a}-phycore-som: Add R5F and C7xv
+ device nodes
+To: Daniel Schultz <d.schultz@phytec.de>, nm@ti.com, vigneshr@ti.com,
+ kristo@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: upstream@lists.phytec.de
+References: <20250506115502.3515599-1-d.schultz@phytec.de>
+Content-Language: en-US
+From: Wadim Egorov <w.egorov@phytec.de>
+In-Reply-To: <20250506115502.3515599-1-d.schultz@phytec.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: VI1PR07CA0303.eurprd07.prod.outlook.com
+ (2603:10a6:800:130::31) To AS4P195MB1456.EURP195.PROD.OUTLOOK.COM
+ (2603:10a6:20b:4b3::21)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:12e9:b0:3d8:2178:5c79 with SMTP id
- e9e14a558f8ab-3da5b26f334mr126791475ab.7.1746538265448; Tue, 06 May 2025
- 06:31:05 -0700 (PDT)
-Date: Tue, 06 May 2025 06:31:05 -0700
-In-Reply-To: <20250506130020.798216-1-richard120310@gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <681a0f19.050a0220.a19a9.000b.GAE@google.com>
-Subject: Re: [syzbot] [jfs?] KMSAN: uninit-value in BT_STACK_DUMP
-From: syzbot <syzbot+ba5f49027aace342d24d@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, richard120310@gmail.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS4P195MB1456:EE_|DB9P195MB1610:EE_
+X-MS-Office365-Filtering-Correlation-Id: fde9a14f-dbe0-4c19-9c6d-08dd8ca2438e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Umoxak9qbmRPMnRaM2Jzb1MzT3ZDVzhWV3hTMnN5YzJZNDNMMGJzb2RhdWxT?=
+ =?utf-8?B?L0ZIbVZRbWVRV1ZwMFJYNmxVVDBwblZyR0hBYmFjb3RKY1ZIRVpFYTZnV3BD?=
+ =?utf-8?B?YjdwN3pUR2QyOVBiYncxRStXSjJZdmJib0V3M0hxQmJ3YXdtdjBpNkt5bEF6?=
+ =?utf-8?B?eW5EcmVMdmxIaXo1Q244UUpwWnh2cFVmS2hKOExuREhCR0NYVmJORG1reVRV?=
+ =?utf-8?B?bW1sQVpzMThoVjFJdnlzSG50MzM0N0FwRVZjcHFaWTJNeE5ZT2RmLzhFMEE5?=
+ =?utf-8?B?eFVGaGtlTjhYNlE2cjVZbDYyLzdqeVpwazExb0VFTVF4M1lnZmJpRUlRaVQv?=
+ =?utf-8?B?QlRtQlk4RUNIZW8va1VHeFNPQlRhaC95eEdZaUZWcnBGOXdsMTU1emFlSkRC?=
+ =?utf-8?B?Z21haWZvOU5Weng3OVBFTU03L3pZQmdaVU5CUis1U25IRzFDaitiaVZ5bkc2?=
+ =?utf-8?B?VTlyMG4vdkhqanpIQWlOUlp2TE9MTGZBa1NHUjhlT1NYK2tEUjRyZ3B2enFu?=
+ =?utf-8?B?Q2RtRzI3KzUwU3ZCbklnNmZ6alFBaGl5TVJucFpBcUMvLzRPbXJnSFJpWTRt?=
+ =?utf-8?B?YVpLbGRsdUFsRzhVc2ExNnB5Vld5WDhQVS9XeTRPb0IweVQwSW44OFBJeUJx?=
+ =?utf-8?B?dW1EdUE3YWV5NUxHU0d5eW1UQXN1OVN3dFI2R3Y1NDhObCszN1pnbEFZdTlm?=
+ =?utf-8?B?ZmhuOStJejNxTFdUSUo0TFhRbTNHbWQ5QS9XUVZuYTU2Rk9GMVNQQlNkeHg2?=
+ =?utf-8?B?WHpLQVVyVUJNVEViYmFtMDZLVG55VzBoajdSZERaOUwyS3VlemltajJReGYw?=
+ =?utf-8?B?VjFkU0wreGxKeFMyeXFONW9oUXZKVDR5Q1I1WnNjRDloVjR1QlZYTEltZytu?=
+ =?utf-8?B?OEM4Ykw1MCtTVGYyQXk2UHo1UWY5VzZaNTl4R0VKSTdqSVJzY3dVZjJVWWtN?=
+ =?utf-8?B?OVVUS29IdWxDOVp6NStmQS9aZVo3NzcyazZHY3U3YjRwb2RKaTBJVU5vdTlL?=
+ =?utf-8?B?RWZOcnRhNk4yNEgrUU8vL2JFNGRVc1hGZ0Y3MllpazdlT0lGbW82MG54VkdR?=
+ =?utf-8?B?TEEvb2R5Q2VSM0JvdWZXcXM3SmEyT0VyVk1rRUFZZ3ZSMGQxeUNhU2h1Ynhl?=
+ =?utf-8?B?a2RHVXNlZEVJcmV0VHI3dkxORVBFbGgxMnZJV09WTzkwWGpXcld1eXIzazlX?=
+ =?utf-8?B?WWtoSml6YVVsQnpOcDd6anlldEJqWlNhNnc3L1JROXpya2VTU0JKbHpVQUhI?=
+ =?utf-8?B?aUtYUEhINGlSZmFRTGcwNXZFT3NrRlNESzZvTjNvQXFtVFpOTnQ5eGlUS0JE?=
+ =?utf-8?B?clM2Y0xRYUdqTjFmeDROdjFpcHhvQmpScmhwbXAvcVpza0w4ZVhXdkpaMXpE?=
+ =?utf-8?B?Wkw2ZHRyeERzRUduK1AvYlMyMjkrb1FkRWdtQ3lQSE5Sd3FLb2JjUFk2QTZy?=
+ =?utf-8?B?em1Ud2NKMjRFazJVUXpzQXFKTW4yYnd2UUhVUkhSWmdUbTIveE1SMHY5WFlz?=
+ =?utf-8?B?R3lVTjBpVWYzQW5HYm1BMWF3dVhiNTlCUGlBZTF6OFZ0ZmVnWHFYUU9Tc01H?=
+ =?utf-8?B?cllIV21XMElqc2dVNWF3WHlrR201RVdPTDcwTk1vb3N3VkNZU1QybEFWQlBI?=
+ =?utf-8?B?Vm9oOWU1OWowYUF6MDJqaW5GQlVIRXM4K0FUb1FWUmUwMHpOejZlQ25zdDds?=
+ =?utf-8?B?S20xaFMvZFRaUXpDVHlUR1dVNCtLdzdlanpUa3gvUi84NFl1ZVdZeGZKYlN1?=
+ =?utf-8?B?TEtSTElzUmJ6SzNVSkd2bkxhQTFPTlhBVlo1NFZxbk5JcjJpU2FNTmpwcVo1?=
+ =?utf-8?B?bWxtb2ZzOXlWYzRKcmJHSjNIbFJZWTI5SG5nbHVjYnlrZ20xaHBZVHNiQlpp?=
+ =?utf-8?B?cmFwUkk3SngyblUxaDVreUNjQk9nczNBMUV0YmJsc0oxLzVRM1NHd3dFR3Fq?=
+ =?utf-8?Q?c91IKa1jwhY=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS4P195MB1456.EURP195.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(921020);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?a1RkWU80NjBNTFFCTUo0c0I0eU9HNnlncDdDNDNGaUtteEQ2enB6b3hjbWo1?=
+ =?utf-8?B?VzQzQmFCVmltY2diTzRZSVNvUFdoVVNzbjhpSXNIeGVkZkpER1Q3bUZ1SG5a?=
+ =?utf-8?B?YjR0K095MFZodGV4L1p3UkdNOGFuMFpmZ2NnQ2NnOU9XUS80Z3M0ZE8veC85?=
+ =?utf-8?B?L3NzaXYyQ2xQdEMwOU1kdzQ3eUw4cWRNSkJ5RGE3UkpmaUM1eUVYMXdvQXVi?=
+ =?utf-8?B?Q2M4N1F2QkVMaVAyMSt3MkhJc0xBOXo2YkRyZ3RYNjk4RlBjZ2hucHNHaHYv?=
+ =?utf-8?B?SHRCM1VVUGtDdmJzVlhPNGFoV0lmVENtT1BSc1ltQ054NHlZNjFWbHZIRVQv?=
+ =?utf-8?B?RE9DelRxQTRPeEkvTHZ5WXJacnBhYmwxTnZ4UkgyYVU1UTdPbWhNVWlmR21U?=
+ =?utf-8?B?ZWhDMEpnVmpQUGNXZjFRRlZQTXBRNkNCRVdvVXo0SXNYN0ZGODVQbCsrbUJs?=
+ =?utf-8?B?SjI0WncwYjlyOGtWV1dIWmZtd2trRFQydUNVT2FMZkw1ODlSQkxYcnVnbVF2?=
+ =?utf-8?B?VXhMTnpoY0w3RndIMzArQ1crc0hQQkVmeGNPVEZLckxkZWRQVTVIcFFqbzVX?=
+ =?utf-8?B?VUpMdFdvZElIc2V6S0xIU2g5dmpqY1dOdThScHgyeGdJTDNMUmFTQVhjTVRy?=
+ =?utf-8?B?WFFvQlJSdGh6NzJyOEUwTzA1RGpRZExwZjBINXN3S2xOYU1KQ3pwSEpDL09P?=
+ =?utf-8?B?VWVzQUdJbU1qMk92MHVKcmtmdkx3Y3o0VXBhcU5VdDFJb09rZUw1WExWSWpD?=
+ =?utf-8?B?ZEJsaDlFT2VtaE9aY3l5Z0tyZXRnL0dkL2tMek9uRExnVWdROFF1V05EUGRE?=
+ =?utf-8?B?eDhEd2hkMlNFUXBDMXNjcnFwU0RxNjZaVSt6cUNpOHBHbDBPNjF4NXRLU2FD?=
+ =?utf-8?B?Z1E2cytGWmhxbVphUkliYUxvL3hUeW9hbTRVT0hwdDl6MnBmV0dydENhTEU0?=
+ =?utf-8?B?MUZOenk1OXRkZ01lTmFTSXgwaURIRFlRa2hkMjkxbUJ3WFVGTG12STNSakFG?=
+ =?utf-8?B?N2ZwN2RITlpCaTA1ajVEZEhQZHB3YmliVlBvN1h5NTNZZ2R5ODFTMFJHNE1B?=
+ =?utf-8?B?N0lRYkgvcU9jWkVicU02SWpqcy9mU1VSWnFTeXNwVi9TaTRQc0F3UDdLbUZY?=
+ =?utf-8?B?TytORWRZZ0drQmhkNkF3ZDlEMGdWVFJwcXZEUTlIeko2SUdmVWtJL1FnOVNW?=
+ =?utf-8?B?SkxHc1hhMWxxbG1FNUhWODNoN0hPaVRwbkQrVmdtaFZ1ODdpSTFMcHczLzJh?=
+ =?utf-8?B?NHhNMVdBeEFrOVFNWGVwMTMrbGJRMnlvWitET0Y3Z3lXblcxNHByeWhWdlBY?=
+ =?utf-8?B?d21lQlgySXNkU2dCR044UWJiazRGTm9pWkRqLzlDT0xiWnl1ZStzYys5eGkw?=
+ =?utf-8?B?MWFxbUppVUJsMHc1eXdoVWpCVHJUS05jZkljSVcxbDBVZzN1OVlWbS93d0wr?=
+ =?utf-8?B?L25PMWE5ZjlvSmh4ZzRqM1A1Sk1LWUFRcFZwb1FSMFZjd3p3YVJQaW5qVlVQ?=
+ =?utf-8?B?cHFiaUVoZ3ZHdTdTc04wZ0hYcURtdWQrM1hib2ZRb1pHTU9TaHZqd2ZMVjd4?=
+ =?utf-8?B?NlJ6NHYwZG5OOHo3WWg5b1JPWGxRMFdyNHRnSHZBcFh0SGt4a2J1ZnVhcmow?=
+ =?utf-8?B?VWo0Q280YlNNUGIxT2hTVzBBODRrQkFPZ2pYOTUrckpSd3M1TmUwUXBRVURL?=
+ =?utf-8?B?ZzNzbTRnUm9SbE1tU0Frc3ZPOUZNVC9ndDhmL1dmS0ZIRTJDdkZzcis2QTRP?=
+ =?utf-8?B?Zm1JaG9EOFEwYWxmbWtMRm94eXZKeEtiZU94ZEtyelZYY0pkK1p3aklDNHM1?=
+ =?utf-8?B?RzhWM2xJUVRPY2tRcHVVNWZyNFQ3VDIyMy9oVWE1dU13RmliMDFZcHZwSDVQ?=
+ =?utf-8?B?ZlZjMGJLY2dsbWZ5bEFtRTZMVmRQRjlFOVJqdmVOZDF4NmRCWjhjbks5Wk1X?=
+ =?utf-8?B?eXFNVFI2TkVUUHR2TWZZcTBNSmZ1M2d0UFVaYVJBdUg3MzlaY21vOHZiYitl?=
+ =?utf-8?B?aUxPU215R2c0ZzNqQjJtTWEzanhtdS9XcEUvNGwxT1M5bzhqUkVEZzU1aE1Y?=
+ =?utf-8?B?ZmpHMmZwbUlaYitaWWNBOGNRWXdEdS9MRmhURU5UalJjaTZWUXc3YytwZGdY?=
+ =?utf-8?Q?ag7Pya3xQqH4t4WuPpTLvEmNy?=
+X-OriginatorOrg: phytec.de
+X-MS-Exchange-CrossTenant-Network-Message-Id: fde9a14f-dbe0-4c19-9c6d-08dd8ca2438e
+X-MS-Exchange-CrossTenant-AuthSource: AS4P195MB1456.EURP195.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 13:31:10.4628
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: e609157c-80e2-446d-9be3-9c99c2399d29
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Ka6EqT6YDfDQ32/1GRDlgf72FHx1nV3/KdVZ7F9ZB7VK85miFhUbu0MfYNwLYsYjsG98Tg4gLsfz3Aeb8YneiA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9P195MB1610
 
-Hello,
+Am 06.05.25 um 14:54 schrieb Daniel Schultz:
+> This patch series is based on [1] and adds these R5F and C7xv device nodes
+> to the am62- and am62a-phycore-som device-trees. It also reserves main_timer2
+> as well as main_rti4 for the C7 DSP firmware.
+> 
+> 1: https://lore.kernel.org/linux-arm-kernel/20250502220325.3230653-1-jm@ti.com/T/#t
+> 
+> Daniel Schultz (4):
+>    arm64: dts: ti: k3-am62-phycore-som: Enable Co-processors
+>    arm64: dts: ti: k3-am62a-phycore-som: Enable Co-processors
+>    arm64: dts: ti: k3-am62a-phycore-som: Reserve main_rti4 for C7x DSP
+>    arm64: dts: ti: k3-am62a-phycore-som: Reserve main_timer2 for C7x DSP
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-KMSAN: uninit-value in dtSearch
+Patches do not apply on master
 
-loop0: detected capacity change from 0 to 32768
-=====================================================
-BUG: KMSAN: uninit-value in UniStrncmp_le fs/jfs/jfs_unicode.h:55 [inline]
-BUG: KMSAN: uninit-value in dtCompare fs/jfs/jfs_dtree.c:3340 [inline]
-BUG: KMSAN: uninit-value in dtSearch+0x1261/0x3d30 fs/jfs/jfs_dtree.c:650
- UniStrncmp_le fs/jfs/jfs_unicode.h:55 [inline]
- dtCompare fs/jfs/jfs_dtree.c:3340 [inline]
- dtSearch+0x1261/0x3d30 fs/jfs/jfs_dtree.c:650
- jfs_lookup+0x18b/0x5a0 fs/jfs/namei.c:1461
- lookup_one_qstr_excl_raw+0x204/0x5b0 fs/namei.c:1689
- lookup_one_qstr_excl fs/namei.c:1711 [inline]
- do_unlinkat+0x2e3/0xe50 fs/namei.c:4631
- __do_sys_unlink fs/namei.c:4689 [inline]
- __se_sys_unlink fs/namei.c:4687 [inline]
- __x64_sys_unlink+0x71/0xb0 fs/namei.c:4687
- x64_sys_call+0x29de/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:88
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xd9/0x1b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Uninit was created at:
- __alloc_frozen_pages_noprof+0x689/0xf00 mm/page_alloc.c:4993
- alloc_pages_mpol+0x328/0x860 mm/mempolicy.c:2301
- alloc_frozen_pages_noprof+0xf7/0x200 mm/mempolicy.c:2372
- alloc_slab_page mm/slub.c:2468 [inline]
- allocate_slab+0x24d/0x1210 mm/slub.c:2632
- new_slab mm/slub.c:2686 [inline]
- ___slab_alloc+0xfec/0x3480 mm/slub.c:3872
- __slab_alloc mm/slub.c:3962 [inline]
- __slab_alloc_node mm/slub.c:4037 [inline]
- slab_alloc_node mm/slub.c:4198 [inline]
- kmem_cache_alloc_lru_noprof+0x922/0xed0 mm/slub.c:4229
- jfs_alloc_inode+0x60/0xf0 fs/jfs/super.c:105
- alloc_inode+0x87/0x4a0 fs/inode.c:346
- new_inode+0x39/0x460 fs/inode.c:1145
- diReadSpecial+0x62/0xb00 fs/jfs/jfs_imap.c:426
- jfs_mount+0x760/0x1310 fs/jfs/jfs_mount.c:138
- jfs_fill_super+0x8fa/0x1900 fs/jfs/super.c:523
- get_tree_bdev_flags+0x6e3/0x920 fs/super.c:1636
- get_tree_bdev+0x38/0x50 fs/super.c:1659
- jfs_get_tree+0x35/0x40 fs/jfs/super.c:635
- vfs_get_tree+0xb0/0x5c0 fs/super.c:1759
- do_new_mount+0x73c/0x1620 fs/namespace.c:3881
- path_mount+0x6db/0x1e90 fs/namespace.c:4208
- do_mount fs/namespace.c:4221 [inline]
- __do_sys_mount fs/namespace.c:4432 [inline]
- __se_sys_mount+0x6eb/0x7d0 fs/namespace.c:4409
- __x64_sys_mount+0xe4/0x150 fs/namespace.c:4409
- x64_sys_call+0xfa7/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:166
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xd9/0x1b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-CPU: 0 UID: 0 PID: 7043 Comm: syz.0.33 Not tainted 6.15.0-rc3-syzkaller-00094-g02ddfb981de8-dirty #0 PREEMPT(undef) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/29/2025
-=====================================================
-
-
-Tested on:
-
-commit:         02ddfb98 Merge tag 'scsi-fixes' of git://git.kernel.or..
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-console output: https://syzkaller.appspot.com/x/log.txt?x=1439c8f4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9dc42c34a3f5c357
-dashboard link: https://syzkaller.appspot.com/bug?extid=ba5f49027aace342d24d
-compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=100ae8f4580000
+> 
+>   .../boot/dts/ti/k3-am62-phycore-som.dtsi      |  35 +++++-
+>   .../boot/dts/ti/k3-am62a-phycore-som.dtsi     | 106 +++++++++++++++++-
+>   2 files changed, 129 insertions(+), 12 deletions(-)
+> 
 
