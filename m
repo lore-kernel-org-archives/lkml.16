@@ -1,57 +1,59 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D34226771B
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 09:52:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC923269B08
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 09:53:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746525181; cv=none; b=ixZ59YfOWXr+XHs0ngyWAapuqBVpGPqxJWI7gVW8J7Vrax3hEMhv+n2mXf/Uf1wWvlBsvI/saULequE1sG2JquGbxvir+/XuBuQYtlQA+zuzhd5sjlLrRtwM9oTqQctPwtYCI6Yau6Ch1dH6ZpknYdXmQcaEm/l7h2pfEXkMDEM=
+	t=1746525182; cv=none; b=SAMPlHGWlfzLaaEekaSsEOu6qs9Dcy7XoOFYpfz5QTzVDfY8R2DJ8vkwjfhrThImFQkyIW6ibzPcK3FUAhRAbB846CrrWWxish/is6DPc9RRSHB4Q0E4Jk00FhAOLlWtEKJcUE9c6wzYgH7zzfup3sY/LdY0ZAJ/o1YJPzfHw30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746525181; c=relaxed/simple;
-	bh=Mx3WioDKOqhoylgYVeKSxirpr55XKTvnVeV8E3UOgM8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AIDMTL6yHvvQGoOn2YQ1lCVxxTL3Aa2/q62iYpJwG4wuvnCF9dk7EHzBogG7pJXrU6dFHoaprbHTH0CnqUlQZJJZV60ws/733l5XZ7RFftEs7ssDe+VH6mTbOek5S5iREvyAnvKljrQ2lTRoM+jpyj3YgTY3HOa0uES0UIH2gfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=l5EZfOKt; arc=none smtp.client-ip=209.85.221.48
+	s=arc-20240116; t=1746525182; c=relaxed/simple;
+	bh=CbHRAffdNjucoHpZXlzmBTKwF5V0Do7COpLf3OhpD0Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=rZTL0IrDewlJcBJs6gaS4N0onjYgErWpcEv5bY/kOG4KjPLoLtpc7jav3rvf2x8351dGh1hxN9Etg+9469T2IWdD9RfcTSZA2jgCSH3I0aZy75eNVVbKJwjUYFx8+VI3jvt+kPGP/6acJfz7izuI2ZbQhSKyDTFbN2euLKOl3Go=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=RXqv3cK7; arc=none smtp.client-ip=209.85.128.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="l5EZfOKt"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a0b28d9251so17808f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 02:52:59 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RXqv3cK7"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43cf89f81c5so5421035e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 02:53:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1746525178; x=1747129978; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=tZnTKNq8EyXu3RPx00ra9THtbxrVu93k8UBSMKqYZT8=;
-        b=l5EZfOKtuOnmdQc3EB1tbiSYIfMNeJ4gQAj6Ap4DKAR3YaUCG8Bp0znCX9L4KCk5P6
-         v+i4eg+/1oRo4QqqsVFVOt5pmlsK8wDHyEbGxcqzuPmp6UTCyykDrLUGfpcnxuYVQTuY
-         vFw4e4Q5/nc9dDZYtZsbCAy3pitON0ryvJS+I=
+        d=chromium.org; s=google; t=1746525179; x=1747129979; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yhaFKze9VG1/eFCN9G58dM2RFBh4W36ZYcYCtz7qr9g=;
+        b=RXqv3cK7rRFChYbgFdR43xbzz/tnvAGl8gWurpyzVTyR0O1qtiEd1TfWIc3Pr6pjqV
+         6eHAfCEZ8d8vMMQEavhveavR6khIB7Kc0gKp0g7bOZZGrC8xjMOSRqaK9hRj1F/uMCkt
+         3I7S8hVGdg4orYl7PVIRl026+dO5TBeZ9qOwA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746525178; x=1747129978;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tZnTKNq8EyXu3RPx00ra9THtbxrVu93k8UBSMKqYZT8=;
-        b=iihkY2cr7gmWDz/wwzfNg+z2z0GFYecTpqIW2/yh1F3m1gv8Q5zKcR8zxEXIoKn4E2
-         jAC/AVndRmwJ1mLTbM4upXk382yf7Now7mZByDBE425UuVAMA84ov1q6ZlPLtF+rVSkB
-         dG2m404yz14MEp5A3S21ywbLshlCUW6unea5hw3mEsiPWwOrMNnz1GK5Y7EERw5BR3S0
-         +gBtJLaVgtZpx2tqnTTELRLUqtcG07UA3L14x1X4TwGa/aOs8kN+3WimPjeMI9BUe+w2
-         EigZlRtI2wxR2NeI14urHHenfbN3gv8rCDtGGcSpcrwOylYSzEd08+CW7Lg2TaVRiPvt
-         5FxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUTdg3cF43v/eF0QpdCSYYmuIRd9jA3xNPOryruilhhQS9B1E6a6HdjRP3bPsUtFf03esgnKPc50XNK8DU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLaXfd9EjEm5BprfObi3MsDdSqxaKsP65VmRoI94balTSgfgXo
-	Uvjar+cMNAKYJSB3aKclaZZlnqBNBZ42t6Ux+Luh8dYzoqGEeo5kNc3/E9nNDA==
-X-Gm-Gg: ASbGnctS0Eejswng8CIdFs9ZeH2jwBb3gd2hAC+LfFdfG5HD+krJrYl3y0iYhJ4n39t
-	g4QdDEDxJcHBC0WrwgsilgRpVW3GT0Kiq1Cx2TB7woZuB51KXoTZ+HyC9L4t51UghG2UeyR72rW
-	Z27p4CgrGxPcbzxjYHVMiMSrgHuxnwAh2zTzeQAWXFIA9vUAq4fKu02WfPc1P0en6kFuJmVG0fO
-	baSPUMx2EybOK0TfoIqM00TY48ZNNDQ+PswB7oL3g4SEvgGACTeeoVrHBWf3MVYb/M/gS8M9xCx
-	jDB6U9PyG07Q4uhQm42IFXi48OP2+FvljufTXF4wYZ5aNuuFfyK1tFqV
-X-Google-Smtp-Source: AGHT+IGAeOYlQsHeYetefU7QLQr05zvGoAryBVbR5H/R7ZH9OmOhzOm9zAiwuZL9RcZI1H/m5f/Vyg==
-X-Received: by 2002:a05:6000:188d:b0:39c:1ef4:b0d1 with SMTP id ffacd0b85a97d-3a099aefc65mr4520575f8f.10.1746525178108;
+        d=1e100.net; s=20230601; t=1746525179; x=1747129979;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yhaFKze9VG1/eFCN9G58dM2RFBh4W36ZYcYCtz7qr9g=;
+        b=JTxlGcZgspvUZcin7mtZ1tja3bvtPM3IDthgXnqWp+p1ZfF3LiChjURuW/KTCf8VLa
+         OJxFaun/RE9FgdB17ALAD7PAJlSbdnscoFa7W45QgKiCAWHSiVeRJz70fHDAkMnP4/3g
+         WVcmVWClDe5VbY34AqpQKRE7mmuQGAeQqtipkem8sPClJ3qK7lXcdTjrOk8vJQ/wNKDz
+         acmDr3haV1/PzHuPSQcGaBLmafFbI7MQrbjujvzc3yNu6bymQjpmaoO9sMNT9xlm0wy3
+         6nYZv+gZ+/yaIpQZH2kYQxR/PkVFNsABXZF2Flq+jyUFiRXxsrQH38Ts65enfryqM3Im
+         f8yw==
+X-Forwarded-Encrypted: i=1; AJvYcCWd6C+cCn29Dq56xl+/kWO4Txdo5RG/Q7aN7yIDH7dF0Te1iPJm5Kdrv8VW0KYVxLZSTAqFFK6NONnP3fQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy0Vy6Q82pMsoE3p2Ht3py2tHQpv2766qGxgcNWUzEprnIoCeQI
+	0wo0Qt89cWBlFFIaD+tgRGtabHepFbGiNS7RvWujuYv1n48kz9mO8ZCX90sa4g==
+X-Gm-Gg: ASbGncuBAclNW+oz19Vp6FnUOeuDVidxU/LhGlXHfO3NF8EsKe7Nq1bnlhlUbKixmBS
+	aqqVnWWT2phk0KrdGbrxTcFfeKUCAIyFhZ/5kpg6cIC3gh6zn/2uSEjI2Th4WmOCrzqwKPt0/5S
+	ge3qniz1BJ3LymXc/hPwEcXBbVfVfKnujNJ98KdkGw9pcySISbhjKpsTPrOFU7zMmTqLeaDbuj7
+	70FwsfCeJRCV3Y7dBHkvJOatk35QfpD9KCv9vybdf0XbuS+CcaAk4okSKGwOPzulZOAiVAAsi63
+	8YlEgrksMXFImNaK6XlmbvC7VoUz7xYmjxLkfUtFHLgOwWA4S5N0eJ45
+X-Google-Smtp-Source: AGHT+IHeK+dFXjh9OrxfzRPfPF/LOpOuNNkj7QNpkKx/cJ7vvnj2X+5i334G41Ez0rqAejsL1kXepA==
+X-Received: by 2002:a05:600c:1382:b0:439:9c0e:36e6 with SMTP id 5b1f17b1804b1-441bbec38b2mr52734125e9.3.1746525178968;
         Tue, 06 May 2025 02:52:58 -0700 (PDT)
 Received: from revest.zrh.corp.google.com ([2a00:79e0:9d:6:7196:3093:b0e3:1016])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099ae7a46sm12879860f8f.44.2025.05.06.02.52.57
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099ae7a46sm12879860f8f.44.2025.05.06.02.52.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 02:52:57 -0700 (PDT)
+        Tue, 06 May 2025 02:52:58 -0700 (PDT)
 From: Florent Revest <revest@chromium.org>
 To: linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
@@ -68,11 +70,14 @@ Cc: catalin.marinas@arm.com,
 	broonie@kernel.org,
 	thiago.bauermann@linaro.org,
 	jackmanb@google.com,
-	Florent Revest <revest@chromium.org>
-Subject: [PATCH 0/4] mm: Avoid sharing high VMA flag bits
-Date: Tue,  6 May 2025 11:52:20 +0200
-Message-ID: <20250506095224.176085-1-revest@chromium.org>
+	Florent Revest <revest@chromium.org>,
+	stable@vger.kernel.org
+Subject: [PATCH 1/4] mm: fix VM_UFFD_MINOR == VM_SHADOW_STACK on USERFAULTFD=y && ARM64_GCS=y
+Date: Tue,  6 May 2025 11:52:21 +0200
+Message-ID: <20250506095224.176085-2-revest@chromium.org>
 X-Mailer: git-send-email 2.49.0.967.g6a0df3ecc3-goog
+In-Reply-To: <20250506095224.176085-1-revest@chromium.org>
+References: <20250506095224.176085-1-revest@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,39 +86,38 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-While staring at include/linux/mm.h, I was wondering why VM_UFFD_MINOR and
-VM_SHADOW_STACK share the same bit on arm64. I think I gained enough confidence
-now to call it a bug.
+On configs with CONFIG_ARM64_GCS=y, VM_SHADOW_STACK is bit 38.
+On configs with CONFIG_HAVE_ARCH_USERFAULTFD_MINOR=y (selected by
+CONFIG_ARM64 when CONFIG_USERFAULTFD=y), VM_UFFD_MINOR is _also_ bit 38.
 
-The first patch of this series is a straightforward attempt at fixing this
-specific bug by changing the bit used by VM_UFFD_MINOR. I cc-ed stable on that
-one and I expect it to not be all too controversial.
+This bit being shared by two different VMA flags could lead to all sorts
+of unintended behaviors. Presumably, a process could maybe call into
+userfaultfd in a way that disables the shadow stack vma flag. I can't
+think of any attack where this would help (presumably, if an attacker
+tries to disable shadow stacks, they are trying to hijack control flow
+so can't arbitrarily call into userfaultfd yet anyway) but this still
+feels somewhat scary.
 
-The rest of the series however is a more zealous refactoring and likely to be
-more contentious... :) Since this bug looks like a near miss which could have
-been quite severe in terms of security, I think it's worth trying to simplify
-the high VMA flag bits code. I tried to consolidate around the current usage of
-VM_HIGH_ARCH_* macros but I'm not sure if this is the preferred approach here. I
-really don't feel strongly about those refactorings so this is more of a
-platform for discussion for people with more mm background, I'll be more than
-happy to respin a v2!
+Fixes: ae80e1629aea ("mm: Define VM_SHADOW_STACK for arm64 when we support GCS")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Florent Revest <revest@chromium.org>
+---
+ include/linux/mm.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This series applies on v6.15-rc5.
-
-Florent Revest (4):
-  mm: fix VM_UFFD_MINOR == VM_SHADOW_STACK on USERFAULTFD=y &&
-    ARM64_GCS=y
-  mm: remove CONFIG_ARCH_USES_HIGH_VMA_FLAGS
-  mm: use VM_HIGH_ARCH_* macros consistently
-  mm: consolidate VM_HIGH_ARCH_* macros into parametric macros
-
- arch/arm64/Kconfig   |  3 ---
- arch/powerpc/Kconfig |  1 -
- arch/x86/Kconfig     |  2 --
- include/linux/mm.h   | 49 +++++++++++++++-----------------------------
- mm/Kconfig           |  2 --
- 5 files changed, 17 insertions(+), 40 deletions(-)
-
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index bf55206935c46..fdda6b16263b3 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -385,7 +385,7 @@ extern unsigned int kobjsize(const void *objp);
+ #endif
+ 
+ #ifdef CONFIG_HAVE_ARCH_USERFAULTFD_MINOR
+-# define VM_UFFD_MINOR_BIT	38
++# define VM_UFFD_MINOR_BIT	41
+ # define VM_UFFD_MINOR		BIT(VM_UFFD_MINOR_BIT)	/* UFFD minor faults */
+ #else /* !CONFIG_HAVE_ARCH_USERFAULTFD_MINOR */
+ # define VM_UFFD_MINOR		VM_NONE
 -- 
 2.49.0.967.g6a0df3ecc3-goog
 
