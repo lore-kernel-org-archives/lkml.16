@@ -1,185 +1,183 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DC3928688E
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 16:52:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19961283FDB;
+	Tue,  6 May 2025 16:56:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746550362; cv=none; b=hkbFsZiaT2t7I/R0KPdryzNJyociBtCNrA/0uYwM3Ays6X7Br581b0oOj166kSbWpmG+YZWi7FFwDUeFGyc4/7ZzPJTrzqepCSwPf/ykuf7u5j24gjlHN6dV09c4hlV0tZ0JWlZIapstZYjTZQFHFLff81gug2oCppCCAcKetws=
+	t=1746550574; cv=none; b=ODK4vE+4Ei6ErbZVQQWOnCe/YcWcxbLeAE4C4VKqV9c2xNfwjGZh5lULNhbLGahlAgEK0AgfNGS9wFjFOa373N/IdOw4mZ26qQLu0evSkrEJMnU83zLZgf8WkZ1L5AWUhX8FQqnqZ0rtqAuwrNnWBXj81f+m5wz/a9wtoIuiSOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746550362; c=relaxed/simple;
-	bh=8MhThrImsBpRShZT//Ydj7ASXsdK6HD+Vk/w2VYdDEc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=INjbj/dOfDLcnUGvT+3wqojBPcZ3qzNU5OFTsfyCZdTIiSnLJVDvER2h5H6zuqKsv9rhT7lU461v8fNrcBnESsNstaqkKxCPWLfeUhiOFWi7W1wT3pGuSLCw15bgAXqKIWUqqkb/kqjmGv/k4gefoTYTqit/mIAvewz3fH1iv7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gA+lYcr1; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746550574; c=relaxed/simple;
+	bh=QDLiiAGPC2ixhvnRZpoOVhekmYXNYKxGNbWRiAZ788I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KsZEggRAoLv1twdsywNlj1PLuJNr9a3jBeuqSVapYqc5ThLJ3fYywtaEGIbR51mFynKRtptpB0DsF5wvJq+mCAfrvyLXsLX3DEdnMypOkteY+QSFMAYJwuS/QaDjuliMUDy/YKAIrK0H2ZoZmyOnnc1pxrL2jL8nalPQnFm2kGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HVZZFudr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gA+lYcr1"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-441d1ed82dbso7569105e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 09:52:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746550359; x=1747155159; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4Wd5cuv6rMjJ264Dib97eDoXt4tihklkYw+4xhGbYL0=;
-        b=gA+lYcr1bhgRLwd6NhC7uIkqmKrXuW7tJJrwDpmkCN7eb+Eyje+3cBb2wJ7tn8Imho
-         RHj1EWKHk58CmpcyG3U242aUpeRnvMq3a0BcJn8sE/I7rcWFrzmOXRv/E8AWn6TymV7K
-         Lp1z5bSMZcZyzjNXJHpw4uPzdVioB3IJV5ypFMwdFE+AOT+jHSXoh5P4d+mbPPWSbvzW
-         /abGx6ou4ZdbYu7KZUBCwQQYfFnpqOmt2xESbBxyp70bCmt5RnvBSmKJE68SyttRWXTJ
-         tTKlHRfw6AY215IYm1fHscbYOKyGTya58we7HdS+fDZYefpVsLztqj1gECBk+fESZ77L
-         BTDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746550359; x=1747155159;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4Wd5cuv6rMjJ264Dib97eDoXt4tihklkYw+4xhGbYL0=;
-        b=j8kINMXNC58ntEnv9vEQ1+xKTcGjzfcrSC5AsvmyRecyT5aIvbT19T+D0IpdMuhlgx
-         o1wJAzNb1qNsTfWgdF8EPEG5CrADQKOGG1DD8a/axSy939wPROljrXmy32eZiNp5n80a
-         tTPN4Ilm/omGwMYTxEzXLKKLjY80WrA4FTIPT+aKP2oHCEUogv2GrBW/zvDZgPi7I6n1
-         wH9BX28IiLpQR+aT1dQ/0DmZCN1Dc7jf5taDUm6iTORrZAZ5qLSKip4RpnNQEOWxbicd
-         n4a9UhszqfkuGmoGAG78gT3gyeweeUcSCyit7O5Rm0oZ44kmQ9b+d38ykBym7bdJLVyR
-         Q0sw==
-X-Forwarded-Encrypted: i=1; AJvYcCWj001SnPI8xwX+8KejQgFPIioy4gyalG5qrvT1fjJJ7rs/8LacANupzA0PDdYSg6tEeVo0JnAyIu5Nip8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMbzgsN+7YFj8GTbAOAKfI545F8X6J6+8UUYGGjqd7FQ5gp8tg
-	/lkydxNde5Na/MDfWUvRqv5Ktp8jt7lJ8QLxMdxp5UPICfEDltVD
-X-Gm-Gg: ASbGnct0hTS0s7Wbi6jrqbRB4hZUhCYNV8XvpkEdWHhVhyZi3FvXMkd2lMqDDYPulKT
-	S526b7jm0l+nDQJqvKLoiITIlDOjt4GiTa5J1/sXz4TLj91OBEcnm1zZxOzc3sPfDZ2axRICfit
-	kqU8AeRkJETB8SM97TlflpVDWw63UprtVSnFxzKL4SYQ7Il99RCHfCse8b+mAiIfQZLAYT6aiqi
-	ipcOTRVqef7ogU+OYpEt1aAkKDouCm/vJaNyoss6v2EKp6iktPul81BKCjrVt4aFh4Zws3w+CjK
-	Epzrc+ERQCExDcLoWo7brQM5nbIhh0ih81jJ4pDsnltl1WBlqQ==
-X-Google-Smtp-Source: AGHT+IFZZ7oDaC3EBdpttC+ggQBKOTrlmznngjGB16h5p4xdHIHrgG0HNmyREryYpIkm+AeeNjtq4Q==
-X-Received: by 2002:a05:600c:3552:b0:43c:fc04:6d35 with SMTP id 5b1f17b1804b1-441d0fbd626mr38803155e9.4.1746550358838;
-        Tue, 06 May 2025 09:52:38 -0700 (PDT)
-Received: from localhost.localdomain ([46.248.82.114])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b89d1636sm175192025e9.13.2025.05.06.09.52.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 09:52:37 -0700 (PDT)
-From: Uros Bizjak <ubizjak@gmail.com>
-To: x86@kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Uros Bizjak <ubizjak@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH -tip 3/3] x86/asm/32: Modernize _memcpy()
-Date: Tue,  6 May 2025 18:52:08 +0200
-Message-ID: <20250506165227.158932-3-ubizjak@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250506165227.158932-1-ubizjak@gmail.com>
-References: <20250506165227.158932-1-ubizjak@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HVZZFudr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32CA1C4CEE4;
+	Tue,  6 May 2025 16:56:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746550573;
+	bh=QDLiiAGPC2ixhvnRZpoOVhekmYXNYKxGNbWRiAZ788I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HVZZFudr19H4RudOXt/Mu0sb/cx3/ChaEMA52LX0wg89ZrLDxo7YI4KFU0e8Zpj0a
+	 Nam1OoG2eMVgVjGookV9sPswECMxbyFmNaumpFMz0fzpJJHStReYW42op2IRDKVyuk
+	 MGgZwKZx+/PADV8NOk1C9W6t4YQza/skbdhYjK5pWd9dTJSrUZ/QD3shBVW9y+qAhD
+	 ytO1v1vGhQRGOKMivW/xFWFQ+R9NIwLRNB/ewRPsmWQQG8nhJnKBHEK6t/RIBCIDMG
+	 ITb6vuYALfQQ82vXjFfLdxJS+15qgtSzwuqRNUZUVYswZ4dR6S8BqMQ8B/TPwlLTjQ
+	 H7e3QhaPPgoBw==
+Date: Tue, 6 May 2025 13:56:10 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: "Falcon, Thomas" <thomas.falcon@intel.com>
+Cc: "irogers@google.com" <irogers@google.com>,
+	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
+	"peterz@infradead.org" <peterz@infradead.org>,
+	"mingo@redhat.com" <mingo@redhat.com>,
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+	"Hunter, Adrian" <adrian.hunter@intel.com>,
+	"namhyung@kernel.org" <namhyung@kernel.org>,
+	"jolsa@kernel.org" <jolsa@kernel.org>,
+	"kan.liang@linux.intel.com" <kan.liang@linux.intel.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"mark.rutland@arm.com" <mark.rutland@arm.com>
+Subject: Re: [PATCH] perf top: populate PMU capabilities data in perf_env
+Message-ID: <aBo_KvXDmsequWng@x1>
+References: <20250501184143.873536-1-thomas.falcon@intel.com>
+ <CAP-5=fXorDgm-oJS9kC6cxCEvS9-Gz5Uh_5V4MtzCYV3pXAxCA@mail.gmail.com>
+ <6732ac7aad986d682c6a36db5d435b113c7527d9.camel@intel.com>
+ <4aa48d010cdaa91355f9f77b1c3a1eefc4b1becb.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <4aa48d010cdaa91355f9f77b1c3a1eefc4b1becb.camel@intel.com>
 
-Use inout "+" constraint modifier where appropriate, declare
-temporary variables as unsigned long and rewrite parts of assembly
-in plain C. The memcpy() function shrinks by 10 bytes, from:
+On Tue, May 06, 2025 at 04:09:37PM +0000, Falcon, Thomas wrote:
+> On Thu, 2025-05-01 at 20:46 +0000, Falcon, Thomas wrote:
+> > On Thu, 2025-05-01 at 13:00 -0700, Ian Rogers wrote:
+> > > On Thu, May 1, 2025 at 11:42 AM Thomas Falcon <thomas.falcon@intel.com> wrote:
+> > > > Calling perf top with brach filters enabled on Intel hybrid CPU's
+> > > > with branch counter event logging support results in a segfault.
 
-00e778d0 <memcpy>:
-  e778d0:	55                   	push   %ebp
-  e778d1:	89 e5                	mov    %esp,%ebp
-  e778d3:	83 ec 0c             	sub    $0xc,%esp
-  e778d6:	89 5d f4             	mov    %ebx,-0xc(%ebp)
-  e778d9:	89 c3                	mov    %eax,%ebx
-  e778db:	89 c8                	mov    %ecx,%eax
-  e778dd:	89 75 f8             	mov    %esi,-0x8(%ebp)
-  e778e0:	c1 e9 02             	shr    $0x2,%ecx
-  e778e3:	89 d6                	mov    %edx,%esi
-  e778e5:	89 7d fc             	mov    %edi,-0x4(%ebp)
-  e778e8:	89 df                	mov    %ebx,%edi
-  e778ea:	f3 a5                	rep movsl %ds:(%esi),%es:(%edi)
-  e778ec:	89 c1                	mov    %eax,%ecx
-  e778ee:	83 e1 03             	and    $0x3,%ecx
-  e778f1:	74 02                	je     e778f5 <memcpy+0x25>
-  e778f3:	f3 a4                	rep movsb %ds:(%esi),%es:(%edi)
-  e778f5:	8b 75 f8             	mov    -0x8(%ebp),%esi
-  e778f8:	89 d8                	mov    %ebx,%eax
-  e778fa:	8b 5d f4             	mov    -0xc(%ebp),%ebx
-  e778fd:	8b 7d fc             	mov    -0x4(%ebp),%edi
-  e77900:	89 ec                	mov    %ebp,%esp
-  e77902:	5d                   	pop    %ebp
-  e77903:	c3                   	ret
+> > > > $ ./perf top -e '{cpu_core/cpu-cycles/,cpu_core/event=0xc6,umask=0x3,\
+> > > >         frontend=0x11,name=frontend_retired_dsb_miss/}' -j any,counter
+> > > > perf: Segmentation fault
+> > > > -------- backtrace --------
+> > > > ./perf() [0x55f460]
+> > > > /lib64/libc.so.6(+0x1a050) [0x7fd8be227050]
+> > > > ./perf() [0x57b4a7]
+> > > > ./perf() [0x561e5a]
+> > > > ./perf() [0x604a81]
+> > > > ./perf() [0x4395b5]
+> > > > ./perf() [0x601732]
+> > > > ./perf() [0x439bc1]
+> > > > ./perf() [0x5d35b3]
+> > > > ./perf() [0x43936c]
+> > > > /lib64/libc.so.6(+0x70ba8) [0x7fd8be27dba8]
+> > > > /lib64/libc.so.6(+0xf4b8c) [0x7fd8be301b8c]
 
-to:
+> > Hi Ian, thanks for reviewing.
 
-00e778b0 <memcpy>:
-  e778b0:	55                   	push   %ebp
-  e778b1:	89 e5                	mov    %esp,%ebp
-  e778b3:	83 ec 08             	sub    $0x8,%esp
-  e778b6:	89 75 f8             	mov    %esi,-0x8(%ebp)
-  e778b9:	89 d6                	mov    %edx,%esi
-  e778bb:	89 ca                	mov    %ecx,%edx
-  e778bd:	89 7d fc             	mov    %edi,-0x4(%ebp)
-  e778c0:	c1 e9 02             	shr    $0x2,%ecx
-  e778c3:	89 c7                	mov    %eax,%edi
-  e778c5:	f3 a5                	rep movsl %ds:(%esi),%es:(%edi)
-  e778c7:	83 e2 03             	and    $0x3,%edx
-  e778ca:	74 04                	je     e778d0 <memcpy+0x20>
-  e778cc:	89 d1                	mov    %edx,%ecx
-  e778ce:	f3 a4                	rep movsb %ds:(%esi),%es:(%edi)
-  e778d0:	8b 75 f8             	mov    -0x8(%ebp),%esi
-  e778d3:	8b 7d fc             	mov    -0x4(%ebp),%edi
-  e778d6:	89 ec                	mov    %ebp,%esp
-  e778d8:	5d                   	pop    %ebp
-  e778d9:	c3                   	ret
+> > > Thanks Thomas. Could you generate this backtrace in GDB? I did write a
+> > > patch to symbolize backtraces like this:
+> > > https://lore.kernel.org/lkml/20250313052952.871958-2-irogers@google.com/
+> > > Sadly without any reviewed tags and unmerged - the code calls routines
+> > > that malloc so it isn't strictly sound if say the backtrace was needed
+> > > from a SEGV in the malloc implementation, it is nicely
+> > > self-referencing the perf APIs, ..
 
-due to a better register allocation, avoiding the call-saved
-%ebx register.
+> > Sorry about that, here is the backtrace I'm seeing when running the perf top command in gdb:
 
-No functional changes intended.
+> > Thread 27 "perf" received signal SIGSEGV, Segmentation fault.
 
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
----
- arch/x86/include/asm/string_32.h | 22 ++++++++++++----------
- 1 file changed, 12 insertions(+), 10 deletions(-)
-
-diff --git a/arch/x86/include/asm/string_32.h b/arch/x86/include/asm/string_32.h
-index 00d497837571..6a4062414495 100644
---- a/arch/x86/include/asm/string_32.h
-+++ b/arch/x86/include/asm/string_32.h
-@@ -32,16 +32,18 @@ extern size_t strlen(const char *s);
+> > [Switching to Thread 0x7fffcb7fe6c0 (LWP 812169)]
+> > 0x000000000057b4a7 in perf_env.find_br_cntr_info ()
+> > (gdb) backtrace
+> > #0  0x000000000057b4a7 in perf_env.find_br_cntr_info ()
+> > #1  0x0000000000561e5a in addr_map_symbol.account_cycles ()
+> > #2  0x0000000000604a81 in hist.account_cycles ()
+> > #3  0x00000000004395b5 in hist_iter.top_callback ()
+> > #4  0x0000000000601732 in hist_entry_iter.add ()
+> > #5  0x0000000000439bc1 in deliver_event ()
+> > #6  0x00000000005d35b3 in __ordered_events__flush ()
+> > #7  0x000000000043936c in process_thread ()
+> > #8  0x00007ffff6e7dba8 in start_thread (arg=<optimized out>) at pthread_create.c:448
+> > #9  0x00007ffff6f01b8c in __GI___clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
  
- static __always_inline void *__memcpy(void *to, const void *from, size_t n)
- {
--	int d0, d1, d2;
--	asm volatile("rep movsl\n\t"
--		     "movl %4,%%ecx\n\t"
--		     "andl $3,%%ecx\n\t"
--		     "jz 1f\n\t"
--		     "rep movsb\n\t"
--		     "1:"
--		     : "=&c" (d0), "=&D" (d1), "=&S" (d2)
--		     : "0" (n / 4), "g" (n), "1" ((long)to), "2" ((long)from)
--		     : "memory");
-+	unsigned long esi = (unsigned long)from;
-+	unsigned long edi = (unsigned long)to;
-+	unsigned long ecx = n >> 2;
-+
-+	asm volatile("rep movsl"
-+		     : "+D" (edi), "+S" (esi), "+c" (ecx)
-+		     : : "memory");
-+	ecx = n & 3;
-+	if (ecx)
-+		asm volatile("rep movsb"
-+			     : "+D" (edi), "+S" (esi), "+c" (ecx)
-+			     : : "memory");
- 	return to;
- }
+> Sorry, let me try this again...
  
--- 
-2.49.0
+> Thread 27 "perf" received signal SIGSEGV, Segmentation fault.
+> [Switching to Thread 0x7fffcf7fe6c0 (LWP 940046)]
+> perf_env__find_br_cntr_info (env=0xf328c0 <perf_env>, nr=0x0, width=0x7fffcf7fd2c0) at util/env.c:653
+> 653			*width = env->cpu_pmu_caps ? env->br_cntr_width :
+> (gdb) bt
+> #0  perf_env__find_br_cntr_info (env=0xf328c0 <perf_env>, nr=0x0, width=0x7fffcf7fd2c0) at util/env.c:653
+> #1  0x00000000005ad829 in symbol__account_br_cntr (branch=0x7fffd11f9c00, evsel=0xfae480, offset=20, br_cntr=4) at util/annotate.c:345
+> #2  0x00000000005ada8b in symbol__account_cycles (addr=5580436, start=5580433, sym=0x7fffd00d3010, cycles=1, evsel=0xfae480, br_cntr=4) at util/annotate.c:389
+> #3  0x00000000005adc06 in addr_map_symbol__account_cycles (ams=0x7fffd17b1e20, start=0x7fffd17b1f00, cycles=1, evsel=0xfae480, br_cntr=4) at util/annotate.c:422
+> #4  0x0000000000688ab4 in hist__account_cycles (bs=0x10cbaa8, al=0x7fffcf7fd540, sample=0x7fffcf7fd760, nonany_branch_mode=false, total_cycles=0x0, evsel=0xfae480) at util/hist.c:2774
+> #5  0x0000000000446004 in hist_iter__top_callback (iter=0x7fffcf7fd590, al=0x7fffcf7fd540, single=true, arg=0x7fffffff9de0) at builtin-top.c:737
+> #6  0x0000000000684d2a in hist_entry_iter__add (iter=0x7fffcf7fd590, al=0x7fffcf7fd540, max_stack_depth=127, arg=0x7fffffff9de0) at util/hist.c:1291
+> #7  0x00000000004464fe in perf_event__process_sample (tool=0x7fffffff9de0, event=0x10cba70, evsel=0xfae480, sample=0x7fffcf7fd760, machine=0x105ec68) at builtin-top.c:845
+> #8  0x0000000000447523 in deliver_event (qe=0x7fffffffa0f8, qevent=0x10cdd60) at builtin-top.c:1211
+> #9  0x0000000000648aff in do_flush (oe=0x7fffffffa0f8, show_progress=false) at util/ordered-events.c:245
+> #10 0x0000000000648e56 in __ordered_events__flush (oe=0x7fffffffa0f8, how=OE_FLUSH__TOP, timestamp=0) at util/ordered-events.c:324
+> #11 0x0000000000648f40 in ordered_events__flush (oe=0x7fffffffa0f8, how=OE_FLUSH__TOP) at util/ordered-events.c:342
+> #12 0x0000000000447097 in process_thread (arg=0x7fffffff9de0) at builtin-top.c:1120
+> #13 0x00007ffff6e7dba8 in start_thread (arg=<optimized out>) at pthread_create.c:448
+> #14 0x00007ffff6f01b8c in __GI___clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
 
+I'll test on a 14700 later today, but on this one it is working:
+
+root@x1:~# grep -m1 "model name" /proc/cpuinfo 
+model name	: 13th Gen Intel(R) Core(TM) i7-1365U
+root@x1:~# perf -vv
+perf version 6.15.rc2.g8feafba59c51
+                   aio: [ on  ]  # HAVE_AIO_SUPPORT
+                   bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
+         bpf_skeletons: [ on  ]  # HAVE_BPF_SKEL
+            debuginfod: [ on  ]  # HAVE_DEBUGINFOD_SUPPORT
+                 dwarf: [ on  ]  # HAVE_LIBDW_SUPPORT
+    dwarf_getlocations: [ on  ]  # HAVE_LIBDW_SUPPORT
+          dwarf-unwind: [ on  ]  # HAVE_DWARF_UNWIND_SUPPORT
+              auxtrace: [ on  ]  # HAVE_AUXTRACE_SUPPORT
+                libbfd: [ OFF ]  # HAVE_LIBBFD_SUPPORT ( tip: Deprecated, license incompatibility, use BUILD_NONDISTRO=1 and install binutils-dev[el] )
+           libcapstone: [ on  ]  # HAVE_LIBCAPSTONE_SUPPORT
+             libcrypto: [ on  ]  # HAVE_LIBCRYPTO_SUPPORT
+    libdw-dwarf-unwind: [ on  ]  # HAVE_LIBDW_SUPPORT
+                libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
+               libnuma: [ on  ]  # HAVE_LIBNUMA_SUPPORT
+            libopencsd: [ on  ]  # HAVE_CSTRACE_SUPPORT
+               libperl: [ on  ]  # HAVE_LIBPERL_SUPPORT
+               libpfm4: [ on  ]  # HAVE_LIBPFM
+             libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
+              libslang: [ on  ]  # HAVE_SLANG_SUPPORT
+         libtraceevent: [ on  ]  # HAVE_LIBTRACEEVENT
+             libunwind: [ OFF ]  # HAVE_LIBUNWIND_SUPPORT ( tip: Deprecated, use LIBUNWIND=1 and install libunwind-dev[el] to build with it )
+                  lzma: [ on  ]  # HAVE_LZMA_SUPPORT
+numa_num_possible_cpus: [ on  ]  # HAVE_LIBNUMA_SUPPORT
+                  zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
+                  zstd: [ on  ]  # HAVE_ZSTD_SUPPORT
+root@x1:~# perf top -e '{cpu_core/cpu-cycles/,cpu_core/event=0xc6,umask=0x3,frontend=0x11,name=frontend_retired_dsb_miss/}' -j any,counte
+
+With what is in perf-tools-next/perf-tools-next:
+
+⬢ [acme@toolbx perf-tools-next]$ git log --oneline -10
+8feafba59c510be3 (HEAD -> perf-tools-next, x1/perf-tools-next, x1/HEAD) perf test: Add direct off-cpu tests
+9557c000768741bb perf record --off-cpu: Add --off-cpu-thresh option
+74069a01609ef0f4 perf record --off-cpu: Dump the remaining PERF_SAMPLE_ in sample_type from BPF's stack trace map
+8ae7a5769b0a3ac2 perf script: Display off-cpu samples correctly
+7de1a87f1ee75743 perf record --off-cpu: Disable perf_event's callchain collection
+7f8f56475d585117 perf evsel: Assemble off-cpu samples
+d6948f2af24e04ea perf record --off-cpu: Dump off-cpu samples in BPF
+282c195906c76ddf perf record --off-cpu: Preparation of off-cpu BPF program
+0f72027bb9fb77a2 perf record --off-cpu: Parse off-cpu event
+671e943452b18001 perf evsel: Expose evsel__is_offcpu_event() for future use
+⬢ [acme@toolbx perf-tools-next]$ 
+
+- Arnaldo
