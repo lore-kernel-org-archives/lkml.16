@@ -1,44 +1,42 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDF5C2641F3;
-	Tue,  6 May 2025 01:31:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE0A928F53B;
+	Tue,  6 May 2025 01:32:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746495080; cv=none; b=SUcclx+NIFfgx1xPk+4CZhLjUk8V/KbyJx+hRYqex0HyhX6KmB7tXohhC2NxrZylEBc6tCuwLKUnyJa19zVBq+zwOMrcScw0s2HUmIeImiNDgP7gbP8vwhrXGi8lT2XNCJ38KOhjwE9GdMZMUGHAYfxHVc2wdKyJTLGTlvn0juM=
+	t=1746495154; cv=none; b=VHjXPG3xmflod6BdvmAicVxtZ9OQlCS6ocaF97gtihAcAKXPCKfbtkrSNcTGn7OxFchv+nOc6JdzoROHbWox6ayglyGTgwehZaM0/czOH5XGuJYP+U9Ytxw4W8ZdOuIrGcTLNTp7UPC6xpbCbw2TK2I/DRvxu+a7+SbVlx61eqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746495080; c=relaxed/simple;
-	bh=WrIvAnOyLAu8N4RMSX5hG/YhPArgaiAlWOYjFdbHS9g=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=W6gPQX68g2strzR0k9nIy4HbE/6Y0d/fQl2hb0POJuFposNnyIJXWD0SzftWheiN0nqvG7ILcn2dO/tCFjEYkigUJKk/c2KMdh5j0JVo0B9qXvvL2p/ia5yjoQBDUHSb9jriWoeseaUiWSrdDYh4bvwVetMFbRYCzBKGoPyzbXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+	s=arc-20240116; t=1746495154; c=relaxed/simple;
+	bh=JEVdDGwP/mUWnGIERoQTcQqBFyxqChOa3pFWAK5hTpQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ecAs2hSzJlAhmQqPwD+cudZtb7Qq7zQYjAPyYRY8y/GVq79+YpTNU99i1D0XYwqQzOw7LHLvvQo3tNSiEOJBw6RO3DR/w112p572G0Z7vi1JbnLvkenKdvjw3YPd5x7x3wvqlniXK88vVZ1hXzGGie9cR6kr4dC5odukVgSVkp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
 Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Zs17F74NCz4f3jdt;
-	Tue,  6 May 2025 09:30:49 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id 6D2571A16B7;
-	Tue,  6 May 2025 09:31:14 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.112.188])
-	by APP3 (Coremail) with SMTP id _Ch0CgAne8VbZhloHx2MLQ--.59787S4;
-	Tue, 06 May 2025 09:31:13 +0800 (CST)
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-To: linux-ext4@vger.kernel.org
-Cc: linux-fsdevel@vger.kernel.org,
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4Zs1992wNGzYQtwr;
+	Tue,  6 May 2025 09:32:29 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id C2E7B1A1432;
+	Tue,  6 May 2025 09:32:28 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP4 (Coremail) with SMTP id gCh0CgB32l6pZhlomhpALg--.25912S4;
+	Tue, 06 May 2025 09:32:27 +0800 (CST)
+From: Yu Kuai <yukuai1@huaweicloud.com>
+To: stable@vger.kernel.org,
+	gregkh@linuxfoundation.org,
+	song@kernel.org
+Cc: linux-raid@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	tytso@mit.edu,
-	adilger.kernel@dilger.ca,
-	jack@suse.cz,
-	wanghaichi0403@gmail.com,
-	yi.zhang@huawei.com,
-	yi.zhang@huaweicloud.com,
-	libaokun1@huawei.com,
 	yukuai3@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH v2 1/4] ext4: fix out of bounds punch offset
-Date: Tue,  6 May 2025 09:20:06 +0800
-Message-ID: <20250506012009.3896990-1-yi.zhang@huaweicloud.com>
-X-Mailer: git-send-email 2.46.1
+	yukuai1@huaweicloud.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com,
+	johnny.chenyi@huawei.com
+Subject: [PATCH v6.1] md: move initialization and destruction of 'io_acct_set' to md.c
+Date: Tue,  6 May 2025 09:24:17 +0800
+Message-Id: <20250506012417.312790-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,10 +44,10 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_Ch0CgAne8VbZhloHx2MLQ--.59787S4
-X-Coremail-Antispam: 1UD129KBjvJXoWxGw4fXryxAF4xXr4DWw1DAwb_yoW5uw1xpr
-	y7GrWUGr48Wr1DCF48Jr17Jr4Uta17CFW7XF1IgrWUAF1fZ3WjgF1UKr429F1UJr48Xr1S
-	qF1DXw10qw1YyaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:gCh0CgB32l6pZhlomhpALg--.25912S4
+X-Coremail-Antispam: 1UD129KBjvJXoW3JFW5JFWfZr1furWrtFy5Arb_yoW3tw17pa
+	1SgasYgr4FqrWSqa1DA3yv9a4Fqrn7Kr97trW7J348Ar4xAr4DG3W5WFyFvryDJ3yrCr13
+	Zw4rKFWUuF17K3JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
 	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
@@ -63,90 +61,271 @@ X-Coremail-Antispam: 1UD129KBjvJXoWxGw4fXryxAF4xXr4DWw1DAwb_yoW5uw1xpr
 	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
 	CwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
 	nIWIevJa73UjIFyTuYvjfUoWlkDUUUU
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-From: Zhang Yi <yi.zhang@huawei.com>
+From: Yu Kuai <yukuai3@huawei.com>
 
-Punching a hole with a start offset that exceeds max_end is not
-permitted and will result in a negative length in the
-truncate_inode_partial_folio() function while truncating the page cache,
-potentially leading to undesirable consequences.
+commit c567c86b90d4715081adfe5eb812141a5b6b4883 upstream.
 
-A simple reproducer:
+'io_acct_set' is only used for raid0 and raid456, prepare to use it for
+raid1 and raid10, so that io accounting from different levels can be
+consistent.
 
-  truncate -s 9895604649994 /mnt/foo
-  xfs_io -c "pwrite 8796093022208 4096" /mnt/foo
-  xfs_io -c "fpunch 8796093022213 25769803777" /mnt/foo
+By the way, follow up patches will also use this io clone mechanism to
+make sure 'active_io' represents in flight io, not io that is dispatching,
+so that mddev_suspend will wait for io to be done as designed.
 
-  kernel BUG at include/linux/highmem.h:275!
-  Oops: invalid opcode: 0000 [#1] SMP PTI
-  CPU: 3 UID: 0 PID: 710 Comm: xfs_io Not tainted 6.15.0-rc3
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-2.fc40 04/01/2014
-  RIP: 0010:zero_user_segments.constprop.0+0xd7/0x110
-  RSP: 0018:ffffc90001cf3b38 EFLAGS: 00010287
-  RAX: 0000000000000005 RBX: ffffea0001485e40 RCX: 0000000000001000
-  RDX: 000000000040b000 RSI: 0000000000000005 RDI: 000000000040b000
-  RBP: 000000000040affb R08: ffff888000000000 R09: ffffea0000000000
-  R10: 0000000000000003 R11: 00000000fffc7fc5 R12: 0000000000000005
-  R13: 000000000040affb R14: ffffea0001485e40 R15: ffff888031cd3000
-  FS:  00007f4f63d0b780(0000) GS:ffff8880d337d000(0000)
-  knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 000000001ae0b038 CR3: 00000000536aa000 CR4: 00000000000006f0
-  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-  Call Trace:
-   <TASK>
-   truncate_inode_partial_folio+0x3dd/0x620
-   truncate_inode_pages_range+0x226/0x720
-   ? bdev_getblk+0x52/0x3e0
-   ? ext4_get_group_desc+0x78/0x150
-   ? crc32c_arch+0xfd/0x180
-   ? __ext4_get_inode_loc+0x18c/0x840
-   ? ext4_inode_csum+0x117/0x160
-   ? jbd2_journal_dirty_metadata+0x61/0x390
-   ? __ext4_handle_dirty_metadata+0xa0/0x2b0
-   ? kmem_cache_free+0x90/0x5a0
-   ? jbd2_journal_stop+0x1d5/0x550
-   ? __ext4_journal_stop+0x49/0x100
-   truncate_pagecache_range+0x50/0x80
-   ext4_truncate_page_cache_block_range+0x57/0x3a0
-   ext4_punch_hole+0x1fe/0x670
-   ext4_fallocate+0x792/0x17d0
-   ? __count_memcg_events+0x175/0x2a0
-   vfs_fallocate+0x121/0x560
-   ksys_fallocate+0x51/0xc0
-   __x64_sys_fallocate+0x24/0x40
-   x64_sys_call+0x18d2/0x4170
-   do_syscall_64+0xa7/0x220
-   entry_SYSCALL_64_after_hwframe+0x76/0x7e
-
-Fix this by filtering out cases where the punching start offset exceeds
-max_end.
-
-Fixes: 982bf37da09d ("ext4: refactor ext4_punch_hole()")
-Reported-by: Liebes Wang <wanghaichi0403@gmail.com>
-Closes: https://lore.kernel.org/linux-ext4/ac3a58f6-e686-488b-a9ee-fc041024e43d@huawei.com/
-Tested-by: Liebes Wang <wanghaichi0403@gmail.com>
-Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+Reviewed-by: Xiao Ni <xni@redhat.com>
+Signed-off-by: Song Liu <song@kernel.org>
+Link: https://lore.kernel.org/r/20230621165110.1498313-2-yukuai1@huaweicloud.com
+[Yu Kuai: This is the relied patch for commit 4a05f7ae3371 ("md/raid10:
+fix missing discard IO accounting"), kernel will panic while issuing
+discard to raid10 without this patch]
+Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
- fs/ext4/inode.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/md/md.c    | 27 ++++++++++-----------------
+ drivers/md/md.h    |  2 --
+ drivers/md/raid0.c | 16 ++--------------
+ drivers/md/raid5.c | 41 +++++++++++------------------------------
+ 4 files changed, 23 insertions(+), 63 deletions(-)
 
-diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-index 94c7d2d828a6..4ec4a80b6879 100644
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -4016,7 +4016,7 @@ int ext4_punch_hole(struct file *file, loff_t offset, loff_t length)
- 	WARN_ON_ONCE(!inode_is_locked(inode));
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index d5fbccc72810..a9fcfcbc2d11 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -5965,6 +5965,13 @@ int md_run(struct mddev *mddev)
+ 			goto exit_bio_set;
+ 	}
  
- 	/* No need to punch hole beyond i_size */
--	if (offset >= inode->i_size)
-+	if (offset >= inode->i_size || offset >= max_end)
- 		return 0;
++	if (!bioset_initialized(&mddev->io_acct_set)) {
++		err = bioset_init(&mddev->io_acct_set, BIO_POOL_SIZE,
++				  offsetof(struct md_io_acct, bio_clone), 0);
++		if (err)
++			goto exit_sync_set;
++	}
++
+ 	spin_lock(&pers_lock);
+ 	pers = find_pers(mddev->level, mddev->clevel);
+ 	if (!pers || !try_module_get(pers->owner)) {
+@@ -6142,6 +6149,8 @@ int md_run(struct mddev *mddev)
+ 	module_put(pers->owner);
+ 	md_bitmap_destroy(mddev);
+ abort:
++	bioset_exit(&mddev->io_acct_set);
++exit_sync_set:
+ 	bioset_exit(&mddev->sync_set);
+ exit_bio_set:
+ 	bioset_exit(&mddev->bio_set);
+@@ -6374,6 +6383,7 @@ static void __md_stop(struct mddev *mddev)
+ 	percpu_ref_exit(&mddev->active_io);
+ 	bioset_exit(&mddev->bio_set);
+ 	bioset_exit(&mddev->sync_set);
++	bioset_exit(&mddev->io_acct_set);
+ }
  
- 	/*
+ void md_stop(struct mddev *mddev)
+@@ -8744,23 +8754,6 @@ void md_submit_discard_bio(struct mddev *mddev, struct md_rdev *rdev,
+ }
+ EXPORT_SYMBOL_GPL(md_submit_discard_bio);
+ 
+-int acct_bioset_init(struct mddev *mddev)
+-{
+-	int err = 0;
+-
+-	if (!bioset_initialized(&mddev->io_acct_set))
+-		err = bioset_init(&mddev->io_acct_set, BIO_POOL_SIZE,
+-			offsetof(struct md_io_acct, bio_clone), 0);
+-	return err;
+-}
+-EXPORT_SYMBOL_GPL(acct_bioset_init);
+-
+-void acct_bioset_exit(struct mddev *mddev)
+-{
+-	bioset_exit(&mddev->io_acct_set);
+-}
+-EXPORT_SYMBOL_GPL(acct_bioset_exit);
+-
+ static void md_end_io_acct(struct bio *bio)
+ {
+ 	struct md_io_acct *md_io_acct = bio->bi_private;
+diff --git a/drivers/md/md.h b/drivers/md/md.h
+index 4f0b48097455..1fda5e139beb 100644
+--- a/drivers/md/md.h
++++ b/drivers/md/md.h
+@@ -746,8 +746,6 @@ extern void md_error(struct mddev *mddev, struct md_rdev *rdev);
+ extern void md_finish_reshape(struct mddev *mddev);
+ void md_submit_discard_bio(struct mddev *mddev, struct md_rdev *rdev,
+ 			struct bio *bio, sector_t start, sector_t size);
+-int acct_bioset_init(struct mddev *mddev);
+-void acct_bioset_exit(struct mddev *mddev);
+ void md_account_bio(struct mddev *mddev, struct bio **bio);
+ 
+ extern bool __must_check md_flush_request(struct mddev *mddev, struct bio *bio);
+diff --git a/drivers/md/raid0.c b/drivers/md/raid0.c
+index 7c6a0b4437d8..c50a7abda744 100644
+--- a/drivers/md/raid0.c
++++ b/drivers/md/raid0.c
+@@ -377,7 +377,6 @@ static void raid0_free(struct mddev *mddev, void *priv)
+ 	struct r0conf *conf = priv;
+ 
+ 	free_conf(mddev, conf);
+-	acct_bioset_exit(mddev);
+ }
+ 
+ static int raid0_run(struct mddev *mddev)
+@@ -392,16 +391,11 @@ static int raid0_run(struct mddev *mddev)
+ 	if (md_check_no_bitmap(mddev))
+ 		return -EINVAL;
+ 
+-	if (acct_bioset_init(mddev)) {
+-		pr_err("md/raid0:%s: alloc acct bioset failed.\n", mdname(mddev));
+-		return -ENOMEM;
+-	}
+-
+ 	/* if private is not null, we are here after takeover */
+ 	if (mddev->private == NULL) {
+ 		ret = create_strip_zones(mddev, &conf);
+ 		if (ret < 0)
+-			goto exit_acct_set;
++			return ret;
+ 		mddev->private = conf;
+ 	}
+ 	conf = mddev->private;
+@@ -432,15 +426,9 @@ static int raid0_run(struct mddev *mddev)
+ 
+ 	ret = md_integrity_register(mddev);
+ 	if (ret)
+-		goto free;
++		free_conf(mddev, conf);
+ 
+ 	return ret;
+-
+-free:
+-	free_conf(mddev, conf);
+-exit_acct_set:
+-	acct_bioset_exit(mddev);
+-	return ret;
+ }
+ 
+ /*
+diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
+index 4315dabd3202..6e80a439ec45 100644
+--- a/drivers/md/raid5.c
++++ b/drivers/md/raid5.c
+@@ -7770,19 +7770,12 @@ static int raid5_run(struct mddev *mddev)
+ 	struct md_rdev *rdev;
+ 	struct md_rdev *journal_dev = NULL;
+ 	sector_t reshape_offset = 0;
+-	int i, ret = 0;
++	int i;
+ 	long long min_offset_diff = 0;
+ 	int first = 1;
+ 
+-	if (acct_bioset_init(mddev)) {
+-		pr_err("md/raid456:%s: alloc acct bioset failed.\n", mdname(mddev));
++	if (mddev_init_writes_pending(mddev) < 0)
+ 		return -ENOMEM;
+-	}
+-
+-	if (mddev_init_writes_pending(mddev) < 0) {
+-		ret = -ENOMEM;
+-		goto exit_acct_set;
+-	}
+ 
+ 	if (mddev->recovery_cp != MaxSector)
+ 		pr_notice("md/raid:%s: not clean -- starting background reconstruction\n",
+@@ -7813,8 +7806,7 @@ static int raid5_run(struct mddev *mddev)
+ 	    (mddev->bitmap_info.offset || mddev->bitmap_info.file)) {
+ 		pr_notice("md/raid:%s: array cannot have both journal and bitmap\n",
+ 			  mdname(mddev));
+-		ret = -EINVAL;
+-		goto exit_acct_set;
++		return -EINVAL;
+ 	}
+ 
+ 	if (mddev->reshape_position != MaxSector) {
+@@ -7839,15 +7831,13 @@ static int raid5_run(struct mddev *mddev)
+ 		if (journal_dev) {
+ 			pr_warn("md/raid:%s: don't support reshape with journal - aborting.\n",
+ 				mdname(mddev));
+-			ret = -EINVAL;
+-			goto exit_acct_set;
++			return -EINVAL;
+ 		}
+ 
+ 		if (mddev->new_level != mddev->level) {
+ 			pr_warn("md/raid:%s: unsupported reshape required - aborting.\n",
+ 				mdname(mddev));
+-			ret = -EINVAL;
+-			goto exit_acct_set;
++			return -EINVAL;
+ 		}
+ 		old_disks = mddev->raid_disks - mddev->delta_disks;
+ 		/* reshape_position must be on a new-stripe boundary, and one
+@@ -7863,8 +7853,7 @@ static int raid5_run(struct mddev *mddev)
+ 		if (sector_div(here_new, chunk_sectors * new_data_disks)) {
+ 			pr_warn("md/raid:%s: reshape_position not on a stripe boundary\n",
+ 				mdname(mddev));
+-			ret = -EINVAL;
+-			goto exit_acct_set;
++			return -EINVAL;
+ 		}
+ 		reshape_offset = here_new * chunk_sectors;
+ 		/* here_new is the stripe we will write to */
+@@ -7886,8 +7875,7 @@ static int raid5_run(struct mddev *mddev)
+ 			else if (mddev->ro == 0) {
+ 				pr_warn("md/raid:%s: in-place reshape must be started in read-only mode - aborting\n",
+ 					mdname(mddev));
+-				ret = -EINVAL;
+-				goto exit_acct_set;
++				return -EINVAL;
+ 			}
+ 		} else if (mddev->reshape_backwards
+ 		    ? (here_new * chunk_sectors + min_offset_diff <=
+@@ -7897,8 +7885,7 @@ static int raid5_run(struct mddev *mddev)
+ 			/* Reading from the same stripe as writing to - bad */
+ 			pr_warn("md/raid:%s: reshape_position too early for auto-recovery - aborting.\n",
+ 				mdname(mddev));
+-			ret = -EINVAL;
+-			goto exit_acct_set;
++			return -EINVAL;
+ 		}
+ 		pr_debug("md/raid:%s: reshape will continue\n", mdname(mddev));
+ 		/* OK, we should be able to continue; */
+@@ -7922,10 +7909,8 @@ static int raid5_run(struct mddev *mddev)
+ 	else
+ 		conf = mddev->private;
+ 
+-	if (IS_ERR(conf)) {
+-		ret = PTR_ERR(conf);
+-		goto exit_acct_set;
+-	}
++	if (IS_ERR(conf))
++		return PTR_ERR(conf);
+ 
+ 	if (test_bit(MD_HAS_JOURNAL, &mddev->flags)) {
+ 		if (!journal_dev) {
+@@ -8125,10 +8110,7 @@ static int raid5_run(struct mddev *mddev)
+ 	free_conf(conf);
+ 	mddev->private = NULL;
+ 	pr_warn("md/raid:%s: failed to run raid set.\n", mdname(mddev));
+-	ret = -EIO;
+-exit_acct_set:
+-	acct_bioset_exit(mddev);
+-	return ret;
++	return -EIO;
+ }
+ 
+ static void raid5_free(struct mddev *mddev, void *priv)
+@@ -8136,7 +8118,6 @@ static void raid5_free(struct mddev *mddev, void *priv)
+ 	struct r5conf *conf = priv;
+ 
+ 	free_conf(conf);
+-	acct_bioset_exit(mddev);
+ 	mddev->to_remove = &raid5_attrs_group;
+ }
+ 
 -- 
-2.46.1
+2.39.2
 
