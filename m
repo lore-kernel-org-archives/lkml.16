@@ -1,139 +1,305 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1B002367AD;
-	Tue,  6 May 2025 06:20:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0065C228CAD
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 06:21:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746512461; cv=none; b=jvEhcR/85q3grbEydxBY4pAAGlm+9I41iOaX/UAlinMimT7iX67rDQimUIQ66F6a1u57Ow+h7gwRlHzXqco7UCBWuqfMCFoXZj3NXbr6Z/zitMncUV6eyRlBHvUFFJBCibTewVrPen3VjzxkH6eOz9DrEv83XoMPj7Eu65KCjRc=
+	t=1746512518; cv=none; b=hcVC+C/pKys9r4vBaBIR7+ygEuA7dTDhAkC3nJ3TXemsnDxk85omM//Pej9ZQQHRoocb8TqrZqqLGPsgNsGnnrcXhTBG2UYGSWp8UTnE/vsKMNbsFQQH4VnfrtkP3G6TuTZqgvHpyNr26VnYtgHytiRldi7G2mJznUxn2M3PkWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746512461; c=relaxed/simple;
-	bh=TKUFE8wmFwAk4C2sZUbsAIKED74IQzd8LjOpb+Ey0S0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=TzQCu3mjE1x5961jM3gGYI/yRZe/awWP9osGvEn3htqCwQPd/BCDmwsi6vGprjVmR4C0oqKWN2YRlGm8TkVlQuWCq7XDh7RHxbRAXHc7hVefmsd2sauq/ng8O2As60/Ysa/+ESsHbzLDAYXuQYuM5DdUScUdDezc1Olw+dec/Bs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=OVKs2PAM; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1746512518; c=relaxed/simple;
+	bh=NzLq4I6O+lehBOTQsubbc/eaUZ1jS2F5u2fX4lbBbaM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pY2ozizwkqQFCIlQ+ISoS4vGZDgy88rlw1kNDo5Rf3mqYQ/f9mt3ZqrNDxAwl60aYvpGvHoWUYyTl13vnWOQR4u+GzNHCP98L+l8eI6Vq1jKhqTMoRsHDW3kaSvbT1c+loASrIO/1dnS+WY91+A3sDn9Eu4PVBjMAoHaZAgbyaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HS5LkH91; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="OVKs2PAM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=e79TK
-	fMpOR14QOUNlBYcpIeyddYsN4zu4B2wlXjR6r0=; b=OVKs2PAM0oF9HQVKnWTgh
-	9xZROsrNnp+WvHCu78C+prfvi+RT/up4SJC6Pw0yi/twV4vcDlcOxWGS0ib8HLiE
-	uQP9je9N3v85/ChleC+K3CdU6SxZFGxfcgBgW8+JsVc77Kn6N3UmcUVHl/miIehs
-	9YYicGF/gfDQfxVfcsUOZg=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-0 (Coremail) with SMTP id _____wD3L2DvqRloHPICEw--.39461S2;
-	Tue, 06 May 2025 14:19:28 +0800 (CST)
-From: Feng Yang <yangfeng59949@163.com>
-To: andrii.nakryiko@gmail.com
-Cc: andrii@kernel.org,
-	ast@kernel.org,
-	bpf@vger.kernel.org,
-	daniel@iogearbox.net,
-	davem@davemloft.net,
-	eddyz87@gmail.com,
-	haoluo@google.com,
-	htejun@fb.com,
-	john.fastabend@gmail.com,
-	jolsa@kernel.org,
-	kpsingh@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	martin.lau@linux.dev,
-	mathieu.desnoyers@efficios.com,
-	mattbobrowski@google.com,
-	mhiramat@kernel.org,
-	netdev@vger.kernel.org,
-	rostedt@goodmis.org,
-	sdf@fomichev.me,
-	song@kernel.org,
-	yangfeng59949@163.com,
-	yonghong.song@linux.dev
-Subject: Re: [PATCH v2 bpf-next] bpf: Allow some trace helpers for all prog types
-Date: Tue,  6 May 2025 14:19:27 +0800
-Message-Id: <20250506061927.95882-1-yangfeng59949@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <CAEf4BzbJ0eaiiaCukaJV0JmrzF6fsbwOxszQUV3pL+MAJT25rw@mail.gmail.com>
-References: <CAEf4BzbJ0eaiiaCukaJV0JmrzF6fsbwOxszQUV3pL+MAJT25rw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HS5LkH91"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43e9ccaa1ebso6948275e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 23:21:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746512514; x=1747117314; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=0Kjb/TttNiNzGyr/ytCmfb3o5zEJFDSy3BE5dgg1H5o=;
+        b=HS5LkH91QGJkZSZ3J/Sxs0W/33Qcc8bFLn4id4s0pCoLwuaozO2sjB/zTNP07w/n84
+         HeIS4QGZNMrXct0NwG1UPIDHXuXuNCe6+kH2SwuVXlZF4udrhD0boHMDFlD1EPOz3OXk
+         oaU6O9a31t2oXyfwCLfI+V+/ZXX+5AUO6kUA3KxXK2WGyNKb/+MvvuRHxYFh/PIPqJVy
+         8tF7sVhgUZMDeakldUH0WfoYJrYUVj36mmz05aGnVLTzFvbcsQh/Hb080nmgaCBLEVil
+         Wg98tEt524RanMVPZ9Ird0jTvYYU0r3836BHyGgFde55O4HfYVYm9Su1FQg17qLozgY0
+         8lag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746512514; x=1747117314;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0Kjb/TttNiNzGyr/ytCmfb3o5zEJFDSy3BE5dgg1H5o=;
+        b=MlIQ8ufuw05aJ+QYwIJSCwxsWWYCa5bjO8FJF8lhkOpjsXHjZ6zVvns/mXlOtwbeKA
+         zZznuSmB/+Nc6ofdQUqdgU3RroFHJl9scG+TRVJzpUCKmIiBP0GtMjyYpVQz/BvW04/Y
+         KqZvrUz2EZgAzATeWUAM+q6GsgF4uwLZzXVs76Caug+hMqbaX4W0+Z+u9/+yOMtLocXH
+         e1H9Nd1JwBjOk9eTcIXwyFQiXBlW+M7ue2bMZlNOnpzUWx6VWFKh66pJ0Btt2BI0kzI+
+         oQcpzBMK2BXtpfD/c2+tPooMlNey9IlMR8+DDX33ixsIrmcfUPHhYaUiXuRl6OLllS/N
+         D0pg==
+X-Forwarded-Encrypted: i=1; AJvYcCXjTvTwN7j4mMI4MUlI47ca8v0OsNAtFq+lemt7AlOI3WX657D3lBsbbxa1bT9TDTa67qBbeI2Bxl4/jTA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDRzFkwcTRnFYr+NmB/6fdynH2AR+sJ6+sg2potDpJG6u0DYqu
+	9vp6mP17XIMIsCSA8xGEAY5Igz3/HTaem7GfnduTnWMKbU/vjuYfbdRV6z01QKk=
+X-Gm-Gg: ASbGncuAg66yeqLhcjN7zIbo+g9DWh+fkkyvaXtc3UWDpWYpXXkUVnXNAfd1L5tfPmd
+	Ohp0f4dNLn6LF1TQNdOrnJCu1ehv2CmrFnr09jt0n6qXkzOtvUUTT1kTtXY4DJa207hi3hWW1UF
+	3X0h08q099F6q1j7kxcKmt5z4+xA+8Dv4u/uXyxhCuh/56tTuLaBzEkBTRh+Q6tb7Znt14gjUFk
+	yrd84FoXS3oFrS8J0/mgZVGuRY4ToQVVF8tihYdFTieD947q26hS8lVTMTJwdWYLl4VvsCSUMZm
+	xsg65SecmGKafyy5iifxL+VWx8yQ4MeRoSlIEfWB99o6TAec8ruHVENupzA=
+X-Google-Smtp-Source: AGHT+IELjI3Gn1yK+5u7Xo2xK8aKT/Zb1GXZglDIhR21m6t9XMRpSYBZAODpkDppqO5g++JHIBBAwA==
+X-Received: by 2002:a05:600c:1d8c:b0:439:8294:2115 with SMTP id 5b1f17b1804b1-441bbf4b11fmr50370655e9.8.1746512514205;
+        Mon, 05 May 2025 23:21:54 -0700 (PDT)
+Received: from [192.168.1.29] ([178.197.207.88])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b89ed4d4sm154426665e9.19.2025.05.05.23.21.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 05 May 2025 23:21:52 -0700 (PDT)
+Message-ID: <cbf42385-9803-4bea-bf99-a6f31f1454f6@linaro.org>
+Date: Tue, 6 May 2025 08:21:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3L2DvqRloHPICEw--.39461S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxuF43XF4ftw4fKF1fury7trb_yoW5XFW5pF
-	s3GFyakw4ktF47W343tw4IvFy5A3yxJr1UGasrKw1rZr42vr9rXr1UWr4fWFyvvFWxGr4I
-	v34q9FZ0k3W2qa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pRrgA5UUUUU=
-X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/1tbiwhJFeGgZovXSLAAAs1
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] dt-bindings: input: add Semtech SX951x binding
+To: David Bauer <mail@david-bauer.net>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring
+ <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250505203847.86714-1-mail@david-bauer.net>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzTRLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnp5c3p0b2Yua296bG93c2tpQGxpbmFyby5vcmc+wsGUBBMBCgA+AhsD
+ BQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAFiEEm9B+DgxR+NWWd7dUG5NDfTtBYpsFAmgXUEoF
+ CRaWdJoACgkQG5NDfTtBYpudig/+Inb3Kjx1B7w2IpPKmpCT20QQQstx14Wi+rh2FcnV6+/9
+ tyHtYwdirraBGGerrNY1c14MX0Tsmzqu9NyZ43heQB2uJuQb35rmI4dn1G+ZH0BD7cwR+M9m
+ lSV9YlF7z3Ycz2zHjxL1QXBVvwJRyE0sCIoe+0O9AW9Xj8L/dmvmRfDdtRhYVGyU7fze+lsH
+ 1pXaq9fdef8QsAETCg5q0zxD+VS+OoZFx4ZtFqvzmhCs0eFvM7gNqiyczeVGUciVlO3+1ZUn
+ eqQnxTXnqfJHptZTtK05uXGBwxjTHJrlSKnDslhZNkzv4JfTQhmERyx8BPHDkzpuPjfZ5Jp3
+ INcYsxgttyeDS4prv+XWlT7DUjIzcKih0tFDoW5/k6OZeFPba5PATHO78rcWFcduN8xB23B4
+ WFQAt5jpsP7/ngKQR9drMXfQGcEmqBq+aoVHobwOfEJTErdku05zjFmm1VnD55CzFJvG7Ll9
+ OsRfZD/1MKbl0k39NiRuf8IYFOxVCKrMSgnqED1eacLgj3AWnmfPlyB3Xka0FimVu5Q7r1H/
+ 9CCfHiOjjPsTAjE+Woh+/8Q0IyHzr+2sCe4g9w2tlsMQJhixykXC1KvzqMdUYKuE00CT+wdK
+ nXj0hlNnThRfcA9VPYzKlx3W6GLlyB6umd6WBGGKyiOmOcPqUK3GIvnLzfTXR5DOwU0EVUNc
+ NAEQAM2StBhJERQvgPcbCzjokShn0cRA4q2SvCOvOXD+0KapXMRFE+/PZeDyfv4dEKuCqeh0
+ hihSHlaxTzg3TcqUu54w2xYskG8Fq5tg3gm4kh1Gvh1LijIXX99ABA8eHxOGmLPRIBkXHqJY
+ oHtCvPc6sYKNM9xbp6I4yF56xVLmHGJ61KaWKf5KKWYgA9kfHufbja7qR0c6H79LIsiYqf92
+ H1HNq1WlQpu/fh4/XAAaV1axHFt/dY/2kU05tLMj8GjeQDz1fHas7augL4argt4e+jum3Nwt
+ yupodQBxncKAUbzwKcDrPqUFmfRbJ7ARw8491xQHZDsP82JRj4cOJX32sBg8nO2N5OsFJOcd
+ 5IE9v6qfllkZDAh1Rb1h6DFYq9dcdPAHl4zOj9EHq99/CpyccOh7SrtWDNFFknCmLpowhct9
+ 5ZnlavBrDbOV0W47gO33WkXMFI4il4y1+Bv89979rVYn8aBohEgET41SpyQz7fMkcaZU+ok/
+ +HYjC/qfDxT7tjKXqBQEscVODaFicsUkjheOD4BfWEcVUqa+XdUEciwG/SgNyxBZepj41oVq
+ FPSVE+Ni2tNrW/e16b8mgXNngHSnbsr6pAIXZH3qFW+4TKPMGZ2rZ6zITrMip+12jgw4mGjy
+ 5y06JZvA02rZT2k9aa7i9dUUFggaanI09jNGbRA/ABEBAAHCwXwEGAEKACYCGwwWIQSb0H4O
+ DFH41ZZ3t1Qbk0N9O0FimwUCaBdQXwUJFpZbKgAKCRAbk0N9O0Fim07TD/92Vcmzn/jaEBcq
+ yT48ODfDIQVvg2nIDW+qbHtJ8DOT0d/qVbBTU7oBuo0xuHo+MTBp0pSTWbThLsSN1AuyP8wF
+ KChC0JPcwOZZRS0dl3lFgg+c+rdZUHjsa247r+7fvm2zGG1/u+33lBJgnAIH5lSCjhP4VXiG
+ q5ngCxGRuBq+0jNCKyAOC/vq2cS/dgdXwmf2aL8G7QVREX7mSl0x+CjWyrpFc1D/9NV/zIWB
+ G1NR1fFb+oeOVhRGubYfiS62htUQjGLK7qbTmrd715kH9Noww1U5HH7WQzePt/SvC0RhQXNj
+ XKBB+lwwM+XulFigmMF1KybRm7MNoLBrGDa3yGpAkHMkJ7NM4iSMdSxYAr60RtThnhKc2kLI
+ zd8GqyBh0nGPIL+1ZVMBDXw1Eu0/Du0rWt1zAKXQYVAfBLCTmkOnPU0fjR7qVT41xdJ6KqQM
+ NGQeV+0o9X91X6VBeK6Na3zt5y4eWkve65DRlk1aoeBmhAteioLZlXkqu0pZv+PKIVf+zFKu
+ h0At/TN/618e/QVlZPbMeNSp3S3ieMP9Q6y4gw5CfgiDRJ2K9g99m6Rvlx1qwom6QbU06ltb
+ vJE2K9oKd9nPp1NrBfBdEhX8oOwdCLJXEq83vdtOEqE42RxfYta4P3by0BHpcwzYbmi/Et7T
+ 2+47PN9NZAOyb771QoVr8A==
+In-Reply-To: <20250505203847.86714-1-mail@david-bauer.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, 1 May 2025 11:11:52 -0700 Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
+On 05/05/2025 22:38, David Bauer wrote:
+> Add device-tree binding for the Semtech SX9512/SX9513 family of touch
+> controllers with integrated LED driver.
+> 
+> Signed-off-by: David Bauer <mail@david-bauer.net>
 
-> On Sat, Apr 26, 2025 at 11:39 PM Feng Yang <yangfeng59949@163.com> wrote:
-> >
-> > From: Feng Yang <yangfeng@kylinos.cn>
-> >
-> > if it works under NMI and doesn't use any context-dependent things,
-> > should be fine for any program type. The detailed discussion is in [1].
-> >
-> > [1] https://lore.kernel.org/all/CAEf4Bza6gK3dsrTosk6k3oZgtHesNDSrDd8sdeQ-GiS6oJixQg@mail.gmail.com/
-> >
-> > Suggested-by: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-> > Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
-> > ---
-> > Changes in v2:
-> > - not expose compat probe read APIs to more program types.
-> > - Remove the prog->sleepable check added for copy_from_user,
-> > - or the summarization_freplace/might_sleep_with_might_sleep test will fail with the error "program of this type cannot use helper bpf_copy_from_user"
-> > - Link to v1: https://lore.kernel.org/all/20250425080032.327477-1-yangfeng59949@163.com/
-> > ---
-> >  kernel/bpf/cgroup.c      |  6 ------
-> >  kernel/bpf/helpers.c     | 38 +++++++++++++++++++++++++++++++++++++
-> >  kernel/trace/bpf_trace.c | 41 ++++------------------------------------
-> >  net/core/filter.c        |  2 --
-> >  4 files changed, 42 insertions(+), 45 deletions(-)
-> >
-> > diff --git a/kernel/bpf/cgroup.c b/kernel/bpf/cgroup.c
-> > index 84f58f3d028a..dbdad5f42761 100644
-> > --- a/kernel/bpf/cgroup.c
-> > +++ b/kernel/bpf/cgroup.c
-> > @@ -2607,16 +2607,10 @@ const struct bpf_func_proto *
-> >  cgroup_current_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
-> >  {
-> >         switch (func_id) {
-> > -       case BPF_FUNC_get_current_uid_gid:
-> > -               return &bpf_get_current_uid_gid_proto;
-> > -       case BPF_FUNC_get_current_comm:
-> > -               return &bpf_get_current_comm_proto;
-> >  #ifdef CONFIG_CGROUP_NET_CLASSID
-> >         case BPF_FUNC_get_cgroup_classid:
-> >                 return &bpf_get_cgroup_classid_curr_proto;
-> >  #endif
-> 
-> this is the only one left, and again, it's just current-dependent, so
-> I'd just move this into base set and got rid of
-> cgroup_current_func_proto altogether (there are 5 callers, let's clean
-> them up)
-> 
-> > -       case BPF_FUNC_current_task_under_cgroup:
-> > -               return &bpf_current_task_under_cgroup_proto;
-> >         default:
-> >                 return NULL;
-> >         }
-> > diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
-> > index e3a2662f4e33..a01a2e55e17d 100644
-> > --- a/kernel/bpf/helpers.c
-> > +++ b/kernel/bpf/helpers.c
-> > @@ -23,6 +23,7 @@
-> >  #include <linux/btf_ids.h>
-> >  #include <linux/bpf_mem_alloc.h>
-> >  #include <linux/kasan.h>
-> > +#include <linux/bpf_verifier.h>
-> 
-> why do we need this include?
-> 
-> [...]
+You CC-ed an address, which suggests you do not work on mainline kernel
+or you do not use get_maintainers.pl/b4/patman. Please rebase and always
+work on mainline or start using mentioned tools, so correct addresses
+will be used.
 
-bpf_prog_check_recur in bpf_verifier.h.
+Please use scripts/get_maintainers.pl to get a list of necessary people
+and lists to CC (and consider --no-git-fallback argument, so you will
+not CC people just because they made one commit years ago). It might
+happen, that command when run on an older kernel, gives you outdated
+entries. Therefore please be sure you base your patches on recent Linux
+kernel.
 
+Tools like b4 or scripts/get_maintainer.pl provide you proper list of
+people, so fix your workflow. Tools might also fail if you work on some
+ancient tree (don't, instead use mainline) or work on fork of kernel
+(don't, instead use mainline). Just use b4 and everything should be
+fine, although remember about `b4 prep --auto-to-cc` if you added new
+patches to the patchset.
+
+
+> ---
+>  .../bindings/input/semtech,sx951x.yaml        | 180 ++++++++++++++++++
+>  1 file changed, 180 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/semtech,sx951x.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/input/semtech,sx951x.yaml b/Documentation/devicetree/bindings/input/semtech,sx951x.yaml
+> new file mode 100644
+> index 000000000000..e4f938decd86
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/semtech,sx951x.yaml
+> @@ -0,0 +1,180 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/input/semtech,sx951x.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Semtech SX9512/SX9513 based capacitive touch sensors
+> +
+> +description: |
+
+Do not need '|' unless you need to preserve formatting.
+
+> +  The Semtech SX9512/SX9513 Family of capacitive touch controllers
+> +  with integrated LED drivers. The device communication is using I2C only.
+> +
+> +maintainers:
+> +  - David Bauer <mail@david-bauer.net>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - semtech,sx9512
+> +      - semtech,sx9513
+
+Devices are not compatible? What are the differences?
+
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  '#address-cells':
+> +    const: 1
+> +
+> +  '#size-cells':
+> +    const: 0
+> +
+> +  poll-interval:
+> +    default: 100
+> +    description: |
+
+Do not need '|' unless you need to preserve formatting. Same comment
+everywhere.
+
+> +      The polling interval for touch events in milliseconds.
+
+Missing -ms property unit suffix... unless you are using existing
+property from common schema, but I do not see any reference (and thus
+unevaluatedProperties at the end).
+
+> +
+> +patternProperties:
+> +  "^channel@[0-7]$":
+> +    $ref: input.yaml#
+> +    type: object
+> +    description: |
+> +      Each node represents a channel of the touch controller.
+> +      Each channel provides a capacitive touch sensor input and
+> +      an LED driver output.
+> +
+> +    properties:
+> +      reg:
+> +        enum: [0, 1, 2, 3, 4, 5, 6, 7]
+> +
+> +      linux,keycodes:
+> +        maxItems: 1
+> +        description: |
+> +          Specifies an array of numeric keycode values to
+> +          be used for the channels. If this property is
+> +          omitted, the channel is not used as a key.
+> +
+> +      semtech,cin-delta:
+
+Use proper unit suffix and express it in pF.
+
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        minimum: 0
+> +        maximum: 3
+> +        default: 3
+> +        description: |
+> +          The capacitance delta which is used to detect a touch
+> +          or release event. The property value is mapped to a
+> +          farad range between 7pF and 2.3pF internally. The delta
+> +          becomes smaller the higher the value is.
+> +
+> +      semtech,sense-threshold:
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        minimum: 0
+> +        maximum: 255
+> +        default: 4
+> +        description: |
+> +          The threshold value after which the channel detects a touch.
+> +          Refer to the datasheet for the internal calculation of the
+> +          resulting touch sensitivity.
+> +
+> +      led:
+
+I think subnode is here not needed. This should be part of the channel,
+probably.
+
+> +        $ref: /schemas/leds/common.yaml#
+> +        type: object
+> +        unevaluatedProperties: false
+> +        description: |
+> +          Presence of this property indicates the channel
+> +          is used as an LED driver.
+> +
+> +    required:
+> +      - reg
+> +
+> +    additionalProperties: false
+
+unevaluatedProperties instead
+
+> +
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/input/input.h>
+> +    #include <dt-bindings/leds/common.h>
+> +    i2c {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      touch@2b {
+> +        compatible = "semtech,sx9512";
+> +
+
+Drop blank line
+
+> +        reg = <0x2b>;
+> +
+
+
+Best regards,
+Krzysztof
