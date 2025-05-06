@@ -1,95 +1,117 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CC0533842F
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 02:22:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE8E1300A46;
+	Tue,  6 May 2025 02:23:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746498178; cv=none; b=tESFqtWEUb2noUU+WTQ5067Pkairm7YYEs9Lx3aCXI8UxgTs0tptEqcjk1qwpNk9hpDrD2fj3is/A0ImKClK/xGR15vG2qZPgyb39xl6uXYO21/N6rwv6PmK0Ax5nURj06CFybSj+0lVrxdRNkdVPKQfZp8ctn/9lsAH6/6OJ4g=
+	t=1746498197; cv=none; b=H5TaowvhzaKCoNJVezZw5Aab8N/+GpN95ko/TvImWUDKgDQlyLdADAUXfNNMl9k5Ox73lqA6IK8B2PoI3ByTU9sKDwPxKybPmss8dDhTmhWqf2U6uhJ14nrZgt++e/DbP65S+FyjdRtlFA4phVVHSCw7kCin+PnPYY2bi2q1d3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746498178; c=relaxed/simple;
-	bh=CGwm+uClyM68lDdLpAKcYoogMH1nK0BFJ9x04hZGAXU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OLgTRijo7EJDzmfFiMFWC/NsfwZpdVIUCGE5XhrzV1rsGbXZGV2cgak/DN1c7/eghaKyNO0dLZIJfwkoPXMJCRCb7iQDbh9wESloPEyL1+yEnpYEILodAWcVZsixCOPi4ts9KGIVjhulcf4xBZDBTcL/qHDmm6hovzWiUqQdDT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Wyzwk1q/; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1746498197; c=relaxed/simple;
+	bh=TApq+MXWn/hLf6nDKWmi38HNuqTWN9RUCiR7P5farig=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ea+XOjCkvwq/z8Ed+21ml8mAArbvd+1LGcfikv8RTjmpAdLuNFMxYsOdAHuZ67lJBDncVjy580/9GrsuOSWNkDQXwGSXqmhhJdfa6hlR86/wHFhVtwZYF+cHfAFMLDAvx4MqjRtFbW+oxcmnfLViJgO7K09A3ZeHuWN8PiHXm+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=troK/Hnw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Wyzwk1q/"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7396f13b750so6190625b3a.1
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 19:22:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1746498175; x=1747102975; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wcToqMHkDpTdLEXjKroWxHP95+TmEN3Q5daky/KBWzI=;
-        b=Wyzwk1q/ckeyL4Lg+Vc9WZ6BEhaouRchAGmJ2B/E8N9RA7Oy04VPw9gLUcbTDV9lv6
-         wiYMzlQ412vCOgr67IyUIX4MHRVtZmsb7/N15J2bniJP9psvkTKKr5WY8uAJGDxB6NUs
-         l5/USR3LpsSlsfAU7RSETB3i2hv7ahOg+kr94=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746498175; x=1747102975;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wcToqMHkDpTdLEXjKroWxHP95+TmEN3Q5daky/KBWzI=;
-        b=LTMqPJZTNsUPukRu/F+lCXeNlg0Ll5AldfNUYf4+NwX6HWgkY+HKpT0NPCTooxp72e
-         paBseKkYBwlzlsy5Cw2sHozilaXQkOtATJ7VeNVNbMtD2tVZhTtsQWnvHj5zJejZJShg
-         ciVVfIP4HfLyOrDHqahYuvK8i3aBcIjpmv9P1Uq8W1p9kk10CNlEyUjRWDJ1ZQyyTRa8
-         Bvg9r7LYaUCMBzlt5v45Uek1iFUoFEoDOpqP2YEnqCYRM4Nr/Ml6vhJI9nbqNzD6zCt7
-         ABUhw5uoZf1lEWZSF+Swcuj0qpgSpDTcVxv+9aIPbS9+lh1foUZg1cC30/gdg7qrtxUo
-         RKqg==
-X-Forwarded-Encrypted: i=1; AJvYcCUZ7S6skReZLMaEwlAwgq7KxAStFiuROgJrkm9Rnd4xbBgIRymlZp1y9iNq6P0Idprcmuy619LjEerfT5M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyeoPTOrTI/7VdENwT2KtwBh5B8012UIEHbDXZEYYCajVxqXrbc
-	cOq+11yqb59H6hQaTQuXuQdBWho8VLfehd6T4NbveBEZCuuuD3gjHlpnnAGE6g==
-X-Gm-Gg: ASbGncvCaiC6aXvLLOabRUwxpUqFpHcjgoAOqywYV++zLCPr7AM1d5GjlERxKVWS9OQ
-	ls0WUzg+/gEi+41q/vlgF48YfQtztX6xcplAO2FWethKIQYMmtrFplusyMPbLvBKSDhzuMltmnT
-	UWxDNmJToD1MUB9tdvrepb14UxzPs464otskRdmHt0MSZ0kmYMSIHGLs7ksvy0goq4ybdJTqQ8C
-	CYY8KnnVDqLyaqS5Du/HSr0KU+pLAiuTRV5w5kzMXSIwwAfDeGlDdPjvRgjWEY57ipBHY93qBun
-	FwvZBHvGu3tonHynQnHC5KAQROhqrI6sRQlVyerNSmZhOhyeYFj0VHQ=
-X-Google-Smtp-Source: AGHT+IFc6wz2lLiTovWw/lmIDOLnGErdPqyw+m3UEoeaabqxUpsithWSUC6r2ammWN8skoKVjYaQ0w==
-X-Received: by 2002:a05:6a20:3953:b0:203:bb65:995a with SMTP id adf61e73a8af0-211834a9d45mr2119227637.30.1746498175296;
-        Mon, 05 May 2025 19:22:55 -0700 (PDT)
-Received: from google.com ([2401:fa00:8f:203:4dd5:88f9:86cd:18ef])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b1fb3b57e2asm5261813a12.26.2025.05.05.19.22.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 19:22:54 -0700 (PDT)
-Date: Tue, 6 May 2025 11:22:50 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Song Liu <song@kernel.org>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Matt Bobrowski <mattbobrowski@google.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] bpf: add bpf_msleep_interruptible()
-Message-ID: <bianejll3uuual7ffytpuraphcgr4xysmnuapk74x3owx4m45c@vwxgbzkwkt5x>
-References: <20250505063918.3320164-1-senozhatsky@chromium.org>
- <aBiJnR5MEL5hVXXC@google.com>
- <wzxhhoiczrhsosf5bkwqf2yypdrhgrm6wskiusfg7iumpgk7ew@rcegtieelqco>
- <CAPhsuW4Q7cHyMHemnLtoys6uNgd-tzKARx9gX177PimAEwpszg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="troK/Hnw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41CBAC4CEE4;
+	Tue,  6 May 2025 02:23:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746498196;
+	bh=TApq+MXWn/hLf6nDKWmi38HNuqTWN9RUCiR7P5farig=;
+	h=From:To:Cc:Subject:Date:From;
+	b=troK/Hnw5piMe/lPwsaCq9h61MLz4dTl5BPWWjgIwybfSf9noqu98uUCyPjFVlG0b
+	 Q/UcF/s8sf04e7FSbWb9Kum6enJ0K6rx8yKlpiYLzWJka3RP36cibFr6891IAoV5jt
+	 pL33uek2umi3BSQgSoj8L5X8nCGNRbAC9ZMmSAKDuLioFHp0LBcWgs2kK0/f6EaYcR
+	 ymqmCk2yx61SliZDnvcwVK5oS3zzHFJtE6OkN5wzrBIy3XvojYqiUrHNxj31DeWv4N
+	 wXlTLwkUxVwp8oKFehK0rFYKvaurodUV+ir62RY1jP1Z3VUtWrJqrGjhKNVG5ZzW2L
+	 PlsaeQjshmxBg==
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Vineet Gupta <vgupta@synopsys.com>
+Cc: linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: [PATCH] dt-bindings: timer: Convert snps,archs-rtc to DT schema
+Date: Mon,  5 May 2025 21:23:12 -0500
+Message-ID: <20250506022313.2588796-1-robh@kernel.org>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPhsuW4Q7cHyMHemnLtoys6uNgd-tzKARx9gX177PimAEwpszg@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On (25/05/05 12:01), Song Liu wrote:
-[..]
-> > + * unsigned long bpf_msleep_interruptible(unsigned int msecs)
-> > + *     Description
-> > + *             Make the current task sleep until *msecs* milliseconds have
-> > + *             elapsed or until a signal is received.
-> > + *
-> > + *     Return
-> > + *             The remaining time of the sleep duration in milliseconds.
-> >   */
-> >  #define ___BPF_FUNC_MAPPER(FN, ctx...)                 \
-> >         FN(unspec, 0, ##ctx)                            \
-> 
-> kfunc shouldn't have any changes in include/uapi/linux/bpf.h.
+Convert the Synopsys ARC HS RTC Timer binding to DT schema format.
+It's a straight-forward conversion.
 
-Ack.
+Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+---
+ .../bindings/timer/snps,archs-rtc.txt         | 14 ---------
+ .../bindings/timer/snps,archs-rtc.yaml        | 30 +++++++++++++++++++
+ 2 files changed, 30 insertions(+), 14 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/timer/snps,archs-rtc.txt
+ create mode 100644 Documentation/devicetree/bindings/timer/snps,archs-rtc.yaml
+
+diff --git a/Documentation/devicetree/bindings/timer/snps,archs-rtc.txt b/Documentation/devicetree/bindings/timer/snps,archs-rtc.txt
+deleted file mode 100644
+index 47bd7a702f3f..000000000000
+--- a/Documentation/devicetree/bindings/timer/snps,archs-rtc.txt
++++ /dev/null
+@@ -1,14 +0,0 @@
+-Synopsys ARC Free Running 64-bit Local Timer for ARC HS CPUs
+-- clocksource provider for UP SoC
+-
+-Required properties:
+-
+-- compatible : should be "snps,archs-rtc"
+-- clocks     : phandle to the source clock
+-
+-Example:
+-
+-	rtc {
+-		compatible = "snps,arc-rtc";
+-		clocks = <&core_clk>;
+-	};
+diff --git a/Documentation/devicetree/bindings/timer/snps,archs-rtc.yaml b/Documentation/devicetree/bindings/timer/snps,archs-rtc.yaml
+new file mode 100644
+index 000000000000..7478810eb24a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/snps,archs-rtc.yaml
+@@ -0,0 +1,30 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/snps,archs-rtc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Synopsys ARC Free Running 64-bit Local Timer for ARC HS CPUs
++
++maintainers:
++  - Vineet Gupta <vgupta@synopsys.com>
++
++properties:
++  compatible:
++    const: snps,archs-rtc
++
++  clocks:
++    maxItems: 1
++
++required:
++  - compatible
++  - clocks
++
++additionalProperties: false
++
++examples:
++  - |
++    rtc {
++      compatible = "snps,archs-rtc";
++      clocks = <&core_clk>;
++    };
+-- 
+2.47.2
+
