@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D371280A4D;
-	Tue,  6 May 2025 12:25:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDEC4280A29;
+	Tue,  6 May 2025 12:25:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746534342; cv=none; b=bAb/Or26Hc/C0ee2Whjz48b/v7p5RJ6CQtzU0Tn05nLu/OrSQbSterNwsPXNdcyQsAmlEYdh0DBqPoCNlLNbPycqgzob98VIr3xpmMg2kZmn4gqyusXq2V/FuNhelL5OzVLr8/iT3YnFE1mALdyDCHsDD3NX+ixDbUTICP6Z3QQ=
+	t=1746534337; cv=none; b=kOjs+GL7l/EeeACTFN64eyzJmSw0FgE15Qj8JsvRIPDBNl4kr9wIeMZkfJ0ip+r2Y7MqsezxdKX+rTzcvkBxNCH2moO1MFXb4Ob59P+IAo3jygOSJWopah4OU5hMqrKI+gWba8wwH1jKQ9E4S2Y6OhC0/TM9hJxrraMFcvZDMvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746534342; c=relaxed/simple;
-	bh=b8y2q8GE/lpW2dmJu8iJNqqJM/E6ZKtJ8GNGL4ORKrs=;
+	s=arc-20240116; t=1746534337; c=relaxed/simple;
+	bh=9sXg1ECPH9LlzMy/jHIAp7sDOC1cOpycVlELHsQYxts=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=SwY//pW370ASHtPZfXUlMhDzRV7pm6xeAPGdlDZ9rNrhh8Y+RyVmfQhXK+k04Oew+KoMe2ID7kLIMiwbT7rNPkZeeTADi+h0PCl/KwwprhFvg9jXcU3D9Qkpwxc0wkCNOXrBcg7Zmh8cX9b6BmEhCkTXCIpDllnc/WsaFAYPaQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GTotnHgz; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=bQB7HtqtIVHi5hJMo5s71ZyofR0TtLwxv2JzKqX75Bii/GsQfNh/Wqmys/e5i237k17N3EivnsvZbQ4Vurn4e+9srY0mkYzvfrHNhsvjWkBri6yFE7b61RFADlk2dpfH5OWa6dckMZKgxPev3zT3lLEc9rJ8DCY7EJTyzvLftBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SBQ0fh8Z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GTotnHgz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FB8DC4CEED;
-	Tue,  6 May 2025 12:25:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SBQ0fh8Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E62BC4CEEE;
+	Tue,  6 May 2025 12:25:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746534342;
-	bh=b8y2q8GE/lpW2dmJu8iJNqqJM/E6ZKtJ8GNGL4ORKrs=;
+	s=k20201202; t=1746534337;
+	bh=9sXg1ECPH9LlzMy/jHIAp7sDOC1cOpycVlELHsQYxts=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=GTotnHgz0xV0+fZFbBSLclZVcfl8kWyHkrVqMu97R65oT2ipe0dN3rHDZeffn0DMt
-	 6wWpOEz+VoEQI5rWjcPkA+jJd1DJYOUSesDb13IYDEM7B9Pc99GNQLQjxITAk10nNO
-	 L6WbykgH1CpFAYO3on+umZjvLWRYKctheMP7NF/oX9gn4KgLDXEw76uA6pBJa319c8
-	 UnRBy0ToAVgtwUE72y5ZqaJcsKVv/NgZ8aulLFHQH/pjmZttqDLVtt1mW+t4qZPR8Q
-	 pfUz/zplG4ADW4UxoqjBCFvW+imtpsezXnZHgkqWQbOFyqyu1wTfJhvREi0imJ/pdP
-	 iAl2SwnsrfB+Q==
+	b=SBQ0fh8ZE6b1tVHlXzLB5FXIxklo88tynE2/WVUtFguGREO6310CGQJ5lxTQk65AI
+	 Wl8qLSb4HNy25c+wE6rYLiWshq691wZyOBvsujqnlvPV5e45HIueWvtNTt9LKXYGT2
+	 SZevROQiuOAti6rBJaKMraWGIdqhlmgfZLTzLgJAHmDX1370uTvfOKNIUw/Zoyr3wY
+	 vHamZE0DEmfIi/MPRf/RB99UVq4byDkrZPDkK0SoDP2N6eDgEzyTAQAmiQF7Kfg1c+
+	 ouk5oRjVShzwzNDIqHOqriUzEAVF9DwnoAhedk/NMNoH8oxELN07Cu1I14oQafxbIV
+	 slSk8DC6hJuFQ==
 From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Date: Tue, 06 May 2025 14:23:52 +0200
-Subject: [PATCH v3 23/25] irqchip/gic-v5: Enable GICv5 SMP booting
+Date: Tue, 06 May 2025 14:23:51 +0200
+Subject: [PATCH v3 22/25] irqchip/gic-v5: Add GICv5 LPI/IPI support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,7 +37,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250506-gicv5-host-v3-23-6edd5a92fd09@kernel.org>
+Message-Id: <20250506-gicv5-host-v3-22-6edd5a92fd09@kernel.org>
 References: <20250506-gicv5-host-v3-0-6edd5a92fd09@kernel.org>
 In-Reply-To: <20250506-gicv5-host-v3-0-6edd5a92fd09@kernel.org>
 To: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
@@ -53,77 +53,1076 @@ Cc: Arnd Bergmann <arnd@arndb.de>,
  devicetree@vger.kernel.org, Lorenzo Pieralisi <lpieralisi@kernel.org>
 X-Mailer: b4 0.14.2
 
-Set up IPIs by allocating IPI IRQs for all cpus and call into
-arm64 core code to initialise IPIs IRQ descriptors and
-request the related IRQ.
+An IRS supports Logical Peripheral Interrupts (LPIs) and implement
+Linux IPIs on top of it.
 
-Implement hotplug callback to enable interrupts on a cpu
-and register the cpu with an IRS.
+LPIs are used for interrupt signals that are translated by a
+GICv5 ITS (Interrupt Translation Service) but also for software
+generated IRQs - namely interrupts that are not driven by a HW
+signal, ie IPIs.
+
+LPIs rely on memory storage for interrupt routing and state.
+
+LPIs state and routing information is kept in the Interrupt
+State Table (IST).
+
+IRSes provide support for 1- or 2-level IST tables configured
+to support a maximum number of interrupts that depend on the
+OS configuration and the HW capabilities.
+
+On systems that provide 2-level IST support, always allow
+the maximum number of LPIs; On systems with only 1-level
+support, limit the number of LPIs to 2^12 to prevent
+wasting memory (presumably a system that supports a 1-level
+only IST is not expecting a large number of interrupts).
+
+On a 2-level IST system, L2 entries are allocated on
+demand.
+
+The IST table memory is allocated using the kmalloc() interface;
+the allocation required may be smaller than a page and must be
+made up of contiguous physical pages if larger than a page.
+
+On systems where the IRS is not cache-coherent with the CPUs,
+cache mainteinance operations are executed to clean and
+invalidate the allocated memory to the point of coherency
+making it visible to the IRS components.
+
+On GICv5 systems, IPIs are implemented using LPIs.
+
+Add an LPI IRQ domain and implement an IPI-specific IRQ domain created
+as a child/subdomain of the LPI domain to allocate the required number
+of LPIs needed to implement the IPIs.
+
+IPIs are backed by LPIs, add LPIs allocation/de-allocation
+functions.
+
+The LPI INTID namespace is managed using an IDA to alloc/free LPI INTIDs.
+
+Associate an IPI irqchip with IPI IRQ descriptors to provide
+core code with the irqchip.ipi_send_single() method required
+to raise an IPI.
 
 Co-developed-by: Sascha Bischoff <sascha.bischoff@arm.com>
 Signed-off-by: Sascha Bischoff <sascha.bischoff@arm.com>
 Co-developed-by: Timothy Hayes <timothy.hayes@arm.com>
 Signed-off-by: Timothy Hayes <timothy.hayes@arm.com>
 Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: Will Deacon <will@kernel.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
 Cc: Marc Zyngier <maz@kernel.org>
 ---
- drivers/irqchip/irq-gic-v5.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ arch/arm64/include/asm/smp.h       |  17 ++
+ arch/arm64/kernel/smp.c            |  17 --
+ drivers/irqchip/irq-gic-v5-irs.c   | 361 +++++++++++++++++++++++++++++++++++++
+ drivers/irqchip/irq-gic-v5.c       | 284 ++++++++++++++++++++++++++++-
+ include/linux/irqchip/arm-gic-v5.h |  59 ++++++
+ 5 files changed, 719 insertions(+), 19 deletions(-)
 
+diff --git a/arch/arm64/include/asm/smp.h b/arch/arm64/include/asm/smp.h
+index d6fd6efb66a673ae33825971e4aa07e791c02ee5..d48ef6d5abcc77d1c06ad8e91e72006acf662078 100644
+--- a/arch/arm64/include/asm/smp.h
++++ b/arch/arm64/include/asm/smp.h
+@@ -50,6 +50,23 @@ struct seq_file;
+  */
+ extern void smp_init_cpus(void);
+ 
++enum ipi_msg_type {
++	IPI_RESCHEDULE,
++	IPI_CALL_FUNC,
++	IPI_CPU_STOP,
++	IPI_CPU_STOP_NMI,
++	IPI_TIMER,
++	IPI_IRQ_WORK,
++	NR_IPI,
++	/*
++	 * Any enum >= NR_IPI and < MAX_IPI is special and not tracable
++	 * with trace_ipi_*
++	 */
++	IPI_CPU_BACKTRACE = NR_IPI,
++	IPI_KGDB_ROUNDUP,
++	MAX_IPI
++};
++
+ /*
+  * Register IPI interrupts with the arch SMP code
+  */
+diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+index 3f3712e47c94c62836fb89cd4bfb3595fbb41557..148145979d83f67469075df1c8b5e366ffe9d907 100644
+--- a/arch/arm64/kernel/smp.c
++++ b/arch/arm64/kernel/smp.c
+@@ -64,23 +64,6 @@ struct secondary_data secondary_data;
+ /* Number of CPUs which aren't online, but looping in kernel text. */
+ static int cpus_stuck_in_kernel;
+ 
+-enum ipi_msg_type {
+-	IPI_RESCHEDULE,
+-	IPI_CALL_FUNC,
+-	IPI_CPU_STOP,
+-	IPI_CPU_STOP_NMI,
+-	IPI_TIMER,
+-	IPI_IRQ_WORK,
+-	NR_IPI,
+-	/*
+-	 * Any enum >= NR_IPI and < MAX_IPI is special and not tracable
+-	 * with trace_ipi_*
+-	 */
+-	IPI_CPU_BACKTRACE = NR_IPI,
+-	IPI_KGDB_ROUNDUP,
+-	MAX_IPI
+-};
+-
+ static int ipi_irq_base __ro_after_init;
+ static int nr_ipi __ro_after_init = NR_IPI;
+ 
+diff --git a/drivers/irqchip/irq-gic-v5-irs.c b/drivers/irqchip/irq-gic-v5-irs.c
+index e4e0e90993f4b3e901b14d379e219131e634aa75..a3de1c1b918c0ae123ae204f0dea6992db33ecd0 100644
+--- a/drivers/irqchip/irq-gic-v5-irs.c
++++ b/drivers/irqchip/irq-gic-v5-irs.c
+@@ -5,6 +5,7 @@
+ 
+ #define pr_fmt(fmt)	"GICv5 IRS: " fmt
+ 
++#include <linux/log2.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+ 
+@@ -30,6 +31,335 @@ static void irs_writel_relaxed(struct gicv5_irs_chip_data *irs_data,
+ 	writel_relaxed(val, irs_data->irs_base + reg_offset);
+ }
+ 
++static u64 irs_readq_relaxed(struct gicv5_irs_chip_data *irs_data,
++			     const u32 reg_offset)
++{
++	return readq_relaxed(irs_data->irs_base + reg_offset);
++}
++
++static void irs_writeq_relaxed(struct gicv5_irs_chip_data *irs_data,
++			       const u64 val, const u32 reg_offset)
++{
++	writeq_relaxed(val, irs_data->irs_base + reg_offset);
++}
++
++/*
++ * The polling wait (in gicv5_wait_for_op_s_atomic()) on a GIC register
++ * provides the memory barriers (through MMIO accessors)
++ * required to synchronize CPU and GIC access to IST memory.
++ */
++static int gicv5_irs_ist_synchronise(struct gicv5_irs_chip_data *irs_data)
++{
++	return gicv5_wait_for_op_atomic(irs_data->irs_base, GICV5_IRS_IST_STATUSR,
++					GICV5_IRS_IST_STATUSR_IDLE, NULL);
++}
++
++static int __init gicv5_irs_init_ist_linear(struct gicv5_irs_chip_data *irs_data,
++					    unsigned int lpi_id_bits,
++					    unsigned int istsz)
++{
++	size_t l2istsz;
++	u32 n, cfgr;
++	void *ist;
++	u64 baser;
++	int ret;
++
++	/* Taken from GICv5 specifications 10.2.1.13 IRS_IST_BASER */
++	n = max(5, lpi_id_bits + 1 + istsz);
++
++	l2istsz = BIT(n + 1);
++	/*
++	 * Check memory requirements. For a linear IST we cap the
++	 * number of ID bits to a value that should never exceed
++	 * kmalloc interface memory allocation limits, so this
++	 * check is really belt and braces.
++	 */
++	if (l2istsz > KMALLOC_MAX_SIZE) {
++		u8 lpi_id_cap = ilog2(KMALLOC_MAX_SIZE) - 2 + istsz;
++
++		pr_warn("Limiting LPI ID bits from %u to %u\n",
++			lpi_id_bits, lpi_id_cap);
++		lpi_id_bits = lpi_id_cap;
++		l2istsz = KMALLOC_MAX_SIZE;
++	}
++
++	ist = kzalloc(l2istsz, GFP_KERNEL);
++	if (!ist)
++		return -ENOMEM;
++
++	if (irs_data->flags & IRS_FLAGS_NON_COHERENT)
++		dcache_clean_inval_poc((unsigned long)ist,
++				       (unsigned long)ist + l2istsz);
++	else
++		dsb(ishst);
++
++	cfgr = FIELD_PREP(GICV5_IRS_IST_CFGR_STRUCTURE,
++			  GICV5_IRS_IST_CFGR_STRUCTURE_LINEAR)	|
++	       FIELD_PREP(GICV5_IRS_IST_CFGR_ISTSZ, istsz)	|
++	       FIELD_PREP(GICV5_IRS_IST_CFGR_L2SZ,
++			  GICV5_IRS_IST_CFGR_L2SZ_4K)		|
++	       FIELD_PREP(GICV5_IRS_IST_CFGR_LPI_ID_BITS, lpi_id_bits);
++	irs_writel_relaxed(irs_data, cfgr, GICV5_IRS_IST_CFGR);
++
++	gicv5_global_data.ist.l2 = false;
++
++	baser = (virt_to_phys(ist) & GICV5_IRS_IST_BASER_ADDR_MASK) |
++		FIELD_PREP(GICV5_IRS_IST_BASER_VALID, 0x1);
++	irs_writeq_relaxed(irs_data, baser, GICV5_IRS_IST_BASER);
++
++	ret = gicv5_irs_ist_synchronise(irs_data);
++	if (ret) {
++		kfree(ist);
++		return ret;
++	}
++
++	return 0;
++}
++
++static int __init gicv5_irs_init_ist_two_level(struct gicv5_irs_chip_data *irs_data,
++					       unsigned int lpi_id_bits,
++					       unsigned int istsz,
++					       unsigned int l2sz)
++{
++	__le64 *l1ist;
++	u32 cfgr, n;
++	size_t l1sz;
++	u64 baser;
++	int ret;
++
++	/* Taken from GICv5 specifications 10.2.1.13 IRS_IST_BASER */
++	n = max(5, lpi_id_bits - ((10 - istsz) + (2 * l2sz)) + 2);
++
++	l1sz = BIT(n + 1);
++
++	l1ist = kzalloc(l1sz, GFP_KERNEL);
++	if (!l1ist)
++		return -ENOMEM;
++
++	if (irs_data->flags & IRS_FLAGS_NON_COHERENT)
++		dcache_clean_inval_poc((unsigned long)l1ist,
++				       (unsigned long)l1ist + l1sz);
++	else
++		dsb(ishst);
++
++	cfgr = FIELD_PREP(GICV5_IRS_IST_CFGR_STRUCTURE,
++			  GICV5_IRS_IST_CFGR_STRUCTURE_TWO_LEVEL)	|
++	       FIELD_PREP(GICV5_IRS_IST_CFGR_ISTSZ, istsz)		|
++	       FIELD_PREP(GICV5_IRS_IST_CFGR_L2SZ, l2sz)		|
++	       FIELD_PREP(GICV5_IRS_IST_CFGR_LPI_ID_BITS, lpi_id_bits);
++	irs_writel_relaxed(irs_data, cfgr, GICV5_IRS_IST_CFGR);
++
++	/*
++	 * The L2SZ determine bits required at L2 level. Number of bytes
++	 * required by metadata is reported through istsz - the number of bits
++	 * covered by L2 entries scales accordingly.
++	 */
++	gicv5_global_data.ist.l2_size = BIT(11 + (2 * l2sz) + 1);
++	gicv5_global_data.ist.l2_bits = (10 - istsz) + (2 * l2sz);
++	gicv5_global_data.ist.l1ist_addr = l1ist;
++	gicv5_global_data.ist.l2 = true;
++
++	baser = (virt_to_phys(l1ist) & GICV5_IRS_IST_BASER_ADDR_MASK) |
++		FIELD_PREP(GICV5_IRS_IST_BASER_VALID, 0x1);
++	irs_writeq_relaxed(irs_data, baser, GICV5_IRS_IST_BASER);
++
++	ret = gicv5_irs_ist_synchronise(irs_data);
++	if (ret) {
++		kfree(l1ist);
++		return ret;
++	}
++
++	return 0;
++}
++
++/*
++ * Alloc L2 IST entries on demand.
++ *
++ * Locking/serialization is guaranteed by irqdomain core code by
++ * taking the hierarchical domain struct irq_domain.root->mutex.
++ */
++int gicv5_irs_iste_alloc(const u32 lpi)
++{
++	struct gicv5_irs_chip_data *irs_data;
++	unsigned int index;
++	u32 l2istr, l2bits;
++	__le64 *l1ist;
++	size_t l2size;
++	void *l2ist;
++	int ret;
++
++	if (!gicv5_global_data.ist.l2)
++		return 0;
++
++	irs_data = per_cpu(per_cpu_irs_data, smp_processor_id());
++	if (!irs_data)
++		return -ENOENT;
++
++	l2size = gicv5_global_data.ist.l2_size;
++	l2bits = gicv5_global_data.ist.l2_bits;
++
++	l1ist = gicv5_global_data.ist.l1ist_addr;
++
++	index = lpi >> l2bits;
++
++	if (FIELD_GET(GICV5_ISTL1E_VALID, le64_to_cpu(l1ist[index])))
++		return 0;
++
++	l2ist = kzalloc(l2size, GFP_KERNEL);
++	if (!l2ist)
++		return -ENOMEM;
++
++	l1ist[index] = cpu_to_le64(virt_to_phys(l2ist) & GICV5_ISTL1E_L2_ADDR_MASK);
++
++	if (irs_data->flags & IRS_FLAGS_NON_COHERENT) {
++		dcache_clean_inval_poc((unsigned long)l2ist,
++				       (unsigned long)l2ist + l2size);
++		dcache_clean_poc((unsigned long)(l1ist + index),
++				 (unsigned long)(l1ist + index) + sizeof(*l1ist));
++	} else {
++		dsb(ishst);
++	}
++
++	l2istr = FIELD_PREP(GICV5_IRS_MAP_L2_ISTR_ID, lpi);
++	irs_writel_relaxed(irs_data, l2istr, GICV5_IRS_MAP_L2_ISTR);
++
++	ret = gicv5_irs_ist_synchronise(irs_data);
++	if (ret) {
++		l1ist[index] = 0;
++		kfree(l2ist);
++		return ret;
++	}
++
++	/*
++	 * Make sure we invalidate the cache line pulled before the IRS
++	 * had a chance to update the L1 entry and mark it valid.
++	 */
++	if (irs_data->flags & IRS_FLAGS_NON_COHERENT) {
++		/*
++		 * gicv5_irs_ist_synchronise() includes memory
++		 * barriers (MMIO accessors) required to guarantee that the
++		 * following dcache invalidation is not executed before the
++		 * IST mapping operation has completed.
++		 */
++		dcache_inval_poc((unsigned long)(l1ist + index),
++				 (unsigned long)(l1ist + index) + sizeof(*l1ist));
++	}
++
++	return 0;
++}
++
++/*
++ * Try to match the L2 IST size to the pagesize, and if this is not possible
++ * pick the smallest supported L2 size in order to minimise the requirement for
++ * physically contiguous blocks of memory as page-sized allocations are
++ * guaranteed to be physically contiguous, and are by definition the easiest to
++ * find.
++ *
++ * Fall back to the smallest supported size (in the event that the pagesize
++ * itself is not supported) again serves to make it easier to find physically
++ * contiguous blocks of memory.
++ */
++static unsigned int gicv5_irs_l2_sz(u32 idr2)
++{
++	switch (PAGE_SIZE) {
++	case SZ_64K:
++		if (GICV5_IRS_IST_L2SZ_SUPPORT_64KB(idr2))
++			return GICV5_IRS_IST_CFGR_L2SZ_64K;
++		fallthrough;
++	case SZ_16K:
++		if (GICV5_IRS_IST_L2SZ_SUPPORT_16KB(idr2))
++			return GICV5_IRS_IST_CFGR_L2SZ_16K;
++		fallthrough;
++	case SZ_4K:
++		if (GICV5_IRS_IST_L2SZ_SUPPORT_4KB(idr2))
++			return GICV5_IRS_IST_CFGR_L2SZ_4K;
++		break;
++	}
++
++	if (GICV5_IRS_IST_L2SZ_SUPPORT_16KB(idr2))
++		return GICV5_IRS_IST_CFGR_L2SZ_16K;
++
++	return GICV5_IRS_IST_CFGR_L2SZ_64K;
++}
++
++static int __init gicv5_irs_init_ist(struct gicv5_irs_chip_data *irs_data)
++{
++	u32 lpi_id_bits, idr2_id_bits, idr2_min_lpi_id_bits,
++	    l2_iste_sz, l2sz, l2_iste_sz_split, idr2;
++	bool two_levels, istmd;
++	u64 baser;
++	int ret;
++
++	baser = irs_readq_relaxed(irs_data, GICV5_IRS_IST_BASER);
++	if (FIELD_GET(GICV5_IRS_IST_BASER_VALID, baser)) {
++		pr_err("IST is marked as valid already; cannot allocate\n");
++		return -EPERM;
++	}
++
++	idr2 = irs_readl_relaxed(irs_data, GICV5_IRS_IDR2);
++
++	two_levels = !!FIELD_GET(GICV5_IRS_IDR2_IST_LEVELS, idr2);
++
++	idr2_id_bits = FIELD_GET(GICV5_IRS_IDR2_ID_BITS, idr2);
++	idr2_min_lpi_id_bits = FIELD_GET(GICV5_IRS_IDR2_MIN_LPI_ID_BITS, idr2);
++
++	/*
++	 * For two level tables we are always supporting the maximum allowed
++	 * number of IDs.
++	 *
++	 * For 1-level tables, we should support a number of bits that
++	 * is >= min_lpi_id_bits but cap it to LPI_ID_BITS_LINEAR lest
++	 * the level 1-table gets too large and its memory allocation
++	 * may fail.
++	 */
++	if (two_levels) {
++		lpi_id_bits = idr2_id_bits;
++	} else {
++		lpi_id_bits = max(LPI_ID_BITS_LINEAR, idr2_min_lpi_id_bits);
++		lpi_id_bits = min(lpi_id_bits, idr2_id_bits);
++	}
++
++	/*
++	 * Cap the ID bits according to the CPUIF supported ID bits
++	 */
++	lpi_id_bits = min(lpi_id_bits, gicv5_global_data.cpuif_id_bits);
++
++	if (two_levels)
++		l2sz = gicv5_irs_l2_sz(idr2);
++
++	istmd = !!FIELD_GET(GICV5_IRS_IDR2_ISTMD, idr2);
++
++	l2_iste_sz = GICV5_IRS_IST_CFGR_ISTSZ_4;
++
++	// Only supported if IRS_IDR2.ISTMD is 1
++	if (istmd) {
++		l2_iste_sz_split = FIELD_GET(GICV5_IRS_IDR2_ISTMD_SZ, idr2);
++
++		if (lpi_id_bits < l2_iste_sz_split)
++			l2_iste_sz = GICV5_IRS_IST_CFGR_ISTSZ_8;
++		else
++			l2_iste_sz = GICV5_IRS_IST_CFGR_ISTSZ_16;
++	}
++
++	/*
++	 * Follow GICv5 specification recommendation to opt in for two
++	 * level tables (ref: 10.2.1.14 IRS_IST_CFGR).
++	 */
++	if (two_levels && (lpi_id_bits > ((10 - l2_iste_sz) + (2 * l2sz)))) {
++		ret = gicv5_irs_init_ist_two_level(irs_data, lpi_id_bits,
++						   l2_iste_sz, l2sz);
++	} else {
++		ret = gicv5_irs_init_ist_linear(irs_data, lpi_id_bits,
++						l2_iste_sz);
++	}
++	if (ret)
++		return ret;
++
++	gicv5_init_lpis(BIT(lpi_id_bits));
++
++	return 0;
++}
++
+ struct iaffid_entry {
+ 	u16	iaffid;
+ 	bool	valid;
+@@ -362,6 +692,13 @@ static int __init gicv5_irs_init(struct device_node *node)
+ 		goto out_iomem;
+ 	}
+ 
++	idr = irs_readl_relaxed(irs_data, GICV5_IRS_IDR2);
++	if (WARN(!FIELD_GET(GICV5_IRS_IDR2_LPI, idr),
++		 "LPI support not available - no IPIs, can't proceed\n")) {
++		ret = -ENODEV;
++		goto out_iomem;
++	}
++
+ 	idr = irs_readl_relaxed(irs_data, GICV5_IRS_IDR7);
+ 	irs_data->spi_min = FIELD_GET(GICV5_IRS_IDR7_SPI_BASE, idr);
+ 
+@@ -391,6 +728,8 @@ static int __init gicv5_irs_init(struct device_node *node)
+ 		spi_count = FIELD_GET(GICV5_IRS_IDR5_SPI_RANGE, idr);
+ 		gicv5_global_data.global_spi_count = spi_count;
+ 
++		gicv5_init_lpi_domain();
++
+ 		pr_debug("Detected %u SPIs globally\n", spi_count);
+ 	}
+ 
+@@ -408,6 +747,9 @@ void __init gicv5_irs_remove(void)
+ {
+ 	struct gicv5_irs_chip_data *irs_data, *tmp_data;
+ 
++	gicv5_free_lpi_domain();
++	gicv5_deinit_lpis();
++
+ 	list_for_each_entry_safe(irs_data, tmp_data, &irs_nodes, entry) {
+ 		iounmap(irs_data->irs_base);
+ 		list_del(&irs_data->entry);
+@@ -415,6 +757,25 @@ void __init gicv5_irs_remove(void)
+ 	}
+ }
+ 
++int __init gicv5_irs_enable(void)
++{
++	struct gicv5_irs_chip_data *irs_data;
++	int ret;
++
++	irs_data = list_first_entry_or_null(&irs_nodes,
++					    struct gicv5_irs_chip_data, entry);
++	if (!irs_data)
++		return -ENODEV;
++
++	ret = gicv5_irs_init_ist(irs_data);
++	if (ret) {
++		pr_err("Failed to init IST\n");
++		return ret;
++	}
++
++	return 0;
++}
++
+ int __init gicv5_irs_of_probe(struct device_node *parent)
+ {
+ 	struct device_node *np;
 diff --git a/drivers/irqchip/irq-gic-v5.c b/drivers/irqchip/irq-gic-v5.c
-index c2c05f4411197365079c7d997665c81e3a0f4b74..e4bb02a1988b01a23db61288ff1b1fe3db02e0e4 100644
+index e7ff82628ee67f368ea64e5e85e4474e6b82ef62..c2c05f4411197365079c7d997665c81e3a0f4b74 100644
 --- a/drivers/irqchip/irq-gic-v5.c
 +++ b/drivers/irqchip/irq-gic-v5.c
-@@ -5,6 +5,7 @@
+@@ -5,7 +5,9 @@
  
  #define pr_fmt(fmt)	"GICv5: " fmt
  
-+#include <linux/cpuhotplug.h>
- #include <linux/idr.h>
++#include <linux/idr.h>
  #include <linux/irqdomain.h>
- #include <linux/slab.h>
-@@ -875,6 +876,8 @@ static void gicv5_cpu_enable_interrupts(void)
- 	write_sysreg_s(cr0, SYS_ICC_CR0_EL1);
- }
++#include <linux/slab.h>
+ #include <linux/wordpart.h>
  
-+static int base_ipi_virq;
+ #include <linux/irqchip.h>
+@@ -28,6 +30,42 @@ static bool gicv5_cpuif_has_gcie(void)
+ 
+ struct gicv5_chip_data gicv5_global_data __read_mostly;
+ 
++static DEFINE_IDA(lpi_ida);
++static u32 num_lpis;
 +
- static int gicv5_starting_cpu(unsigned int cpu)
- {
- 	if (WARN(!gicv5_cpuif_has_gcie(),
-@@ -886,6 +889,22 @@ static int gicv5_starting_cpu(unsigned int cpu)
- 	return gicv5_irs_register_cpu(cpu);
- }
- 
-+static void __init gicv5_smp_init(void)
++void __init gicv5_init_lpis(u32 lpis)
 +{
-+	unsigned int num_ipis = GICV5_IPIS_PER_CPU * nr_cpu_ids;
-+
-+	cpuhp_setup_state_nocalls(CPUHP_AP_IRQ_GIC_STARTING,
-+				  "irqchip/arm/gicv5:starting",
-+				  gicv5_starting_cpu, NULL);
-+
-+	base_ipi_virq = irq_domain_alloc_irqs(gicv5_global_data.ipi_domain,
-+					      num_ipis, NUMA_NO_NODE, NULL);
-+	if (WARN(base_ipi_virq <= 0, "IPI IRQ allocation was not successful"))
-+		return;
-+
-+	set_smp_ipi_range_percpu(base_ipi_virq, GICV5_IPIS_PER_CPU, nr_cpu_ids);
++	num_lpis = lpis;
 +}
 +
- static void __init gicv5_free_domains(void)
++void __init gicv5_deinit_lpis(void)
++{
++	num_lpis = 0;
++}
++
++static int alloc_lpi(void)
++{
++	if (!num_lpis)
++		return -ENOSPC;
++
++	return ida_alloc_max(&lpi_ida, num_lpis - 1, GFP_KERNEL);
++}
++
++static void release_lpi(u32 lpi)
++{
++	ida_free(&lpi_ida, lpi);
++}
++
++static int gicv5_alloc_lpi(void)
++{
++	return alloc_lpi();
++}
++
++static void gicv5_free_lpi(u32 lpi)
++{
++	release_lpi(lpi);
++}
++
+ static void gicv5_ppi_priority_init(void)
  {
- 	if (gicv5_global_data.ppi_domain)
-@@ -1010,6 +1029,8 @@ static int __init gicv5_of_init(struct device_node *node, struct device_node *pa
+ 	write_sysreg_s(REPEAT_BYTE(GICV5_IRQ_PRI_MI), SYS_ICC_PPI_PRIORITYR0_EL1);
+@@ -60,7 +98,7 @@ static void gicv5_hwirq_init(irq_hw_number_t hwirq, u8 priority, u8 hwirq_type)
+ 	u16 iaffid;
+ 	int ret;
+ 
+-	if (hwirq_type == GICV5_HWIRQ_TYPE_SPI) {
++	if (hwirq_type == GICV5_HWIRQ_TYPE_LPI || hwirq_type == GICV5_HWIRQ_TYPE_SPI) {
+ 		cdpri = FIELD_PREP(GICV5_GIC_CDPRI_PRIORITY_MASK, priority)	|
+ 			FIELD_PREP(GICV5_GIC_CDPRI_TYPE_MASK, hwirq_type)	|
+ 			FIELD_PREP(GICV5_GIC_CDPRI_ID_MASK, hwirq);
+@@ -119,6 +157,11 @@ static void gicv5_spi_irq_mask(struct irq_data *d)
+ 	gicv5_iri_irq_mask(d, GICV5_HWIRQ_TYPE_SPI);
+ }
+ 
++static void gicv5_lpi_irq_mask(struct irq_data *d)
++{
++	gicv5_iri_irq_mask(d, GICV5_HWIRQ_TYPE_LPI);
++}
++
+ static void gicv5_ppi_irq_unmask(struct irq_data *d)
+ {
+ 	u64 hwirq_id_bit = BIT_ULL(d->hwirq % 64);
+@@ -143,7 +186,7 @@ static void gicv5_iri_irq_unmask(struct irq_data *d, u8 hwirq_type)
+ 	/*
+ 	 * Rule R_XCLJC states that the effects of a GIC system instruction
+ 	 * complete in finite time and that's the only requirement when
+-	 * unmasking an SPI IRQ.
++	 * unmasking an SPI/LPI IRQ.
+ 	 */
+ 	gic_insn(cden, CDEN);
+ }
+@@ -153,6 +196,11 @@ static void gicv5_spi_irq_unmask(struct irq_data *d)
+ 	gicv5_iri_irq_unmask(d, GICV5_HWIRQ_TYPE_SPI);
+ }
+ 
++static void gicv5_lpi_irq_unmask(struct irq_data *d)
++{
++	gicv5_iri_irq_unmask(d, GICV5_HWIRQ_TYPE_LPI);
++}
++
+ static void gicv5_hwirq_eoi(u32 hwirq_id, u8 hwirq_type)
+ {
+ 	u64 cddi = hwirq_id | FIELD_PREP(GICV5_GIC_CDDI_TYPE_MASK, hwirq_type);
+@@ -172,6 +220,11 @@ static void gicv5_spi_irq_eoi(struct irq_data *d)
+ 	gicv5_hwirq_eoi(d->hwirq, GICV5_HWIRQ_TYPE_SPI);
+ }
+ 
++static void gicv5_lpi_irq_eoi(struct irq_data *d)
++{
++	gicv5_hwirq_eoi(d->hwirq, GICV5_HWIRQ_TYPE_LPI);
++}
++
+ static int gicv5_iri_irq_set_affinity(struct irq_data *d,
+ 				      const struct cpumask *mask_val,
+ 				      bool force, u8 hwirq_type)
+@@ -207,6 +260,14 @@ static int gicv5_spi_irq_set_affinity(struct irq_data *d,
+ 					  GICV5_HWIRQ_TYPE_SPI);
+ }
+ 
++static int gicv5_lpi_irq_set_affinity(struct irq_data *d,
++				      const struct cpumask *mask_val,
++				      bool force)
++{
++	return gicv5_iri_irq_set_affinity(d, mask_val, force,
++					  GICV5_HWIRQ_TYPE_LPI);
++}
++
+ #define READ_PPI_REG(irq, reg)							\
+ 	({									\
+ 		u64 __ppi_val;							\
+@@ -328,6 +389,14 @@ static int gicv5_spi_irq_get_irqchip_state(struct irq_data *d,
+ 					       GICV5_HWIRQ_TYPE_SPI);
+ }
+ 
++static int gicv5_lpi_irq_get_irqchip_state(struct irq_data *d,
++					   enum irqchip_irq_state which,
++					   bool *val)
++{
++	return gicv5_iri_irq_get_irqchip_state(d, which, val,
++					       GICV5_HWIRQ_TYPE_LPI);
++}
++
+ static int gicv5_ppi_irq_set_irqchip_state(struct irq_data *d,
+ 					   enum irqchip_irq_state which,
+ 					   bool val)
+@@ -365,6 +434,11 @@ static void gicv5_spi_irq_write_pending_state(struct irq_data *d, bool val)
+ 	gicv5_iri_irq_write_pending_state(d, val, GICV5_HWIRQ_TYPE_SPI);
+ }
+ 
++static void gicv5_lpi_irq_write_pending_state(struct irq_data *d, bool val)
++{
++	gicv5_iri_irq_write_pending_state(d, val, GICV5_HWIRQ_TYPE_LPI);
++}
++
+ static int gicv5_spi_irq_set_irqchip_state(struct irq_data *d,
+ 					   enum irqchip_irq_state which,
+ 					   bool val)
+@@ -381,12 +455,41 @@ static int gicv5_spi_irq_set_irqchip_state(struct irq_data *d,
+ 	return 0;
+ }
+ 
++static int gicv5_lpi_irq_set_irqchip_state(struct irq_data *d,
++					   enum irqchip_irq_state which,
++					   bool val)
++{
++	switch (which) {
++	case IRQCHIP_STATE_PENDING:
++		gicv5_lpi_irq_write_pending_state(d, val);
++		break;
++
++	default:
++		pr_debug("Unexpected irqchip_irq_state\n");
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
+ static int gicv5_spi_irq_retrigger(struct irq_data *data)
+ {
+ 	return !gicv5_spi_irq_set_irqchip_state(data, IRQCHIP_STATE_PENDING,
+ 						true);
+ }
+ 
++static int gicv5_lpi_irq_retrigger(struct irq_data *data)
++{
++	return !gicv5_lpi_irq_set_irqchip_state(data, IRQCHIP_STATE_PENDING,
++						true);
++}
++
++static void gicv5_ipi_send_single(struct irq_data *d, unsigned int cpu)
++{
++	/* Mark the LPI pending */
++	irq_chip_retrigger_hierarchy(d);
++}
++
+ static const struct irq_chip gicv5_ppi_irq_chip = {
+ 	.name			= "GICv5-PPI",
+ 	.irq_mask		= gicv5_ppi_irq_mask,
+@@ -557,6 +660,141 @@ static const struct irq_domain_ops gicv5_irq_spi_domain_ops = {
+ 	.free		= gicv5_irq_domain_free,
+ 	.select		= gicv5_irq_spi_domain_select
+ };
++
++static const struct irq_chip gicv5_lpi_irq_chip = {
++	.name			= "GICv5-LPI",
++	.irq_mask		= gicv5_lpi_irq_mask,
++	.irq_unmask		= gicv5_lpi_irq_unmask,
++	.irq_eoi		= gicv5_lpi_irq_eoi,
++	.irq_set_affinity	= gicv5_lpi_irq_set_affinity,
++	.irq_retrigger		= gicv5_lpi_irq_retrigger,
++	.irq_get_irqchip_state	= gicv5_lpi_irq_get_irqchip_state,
++	.irq_set_irqchip_state	= gicv5_lpi_irq_set_irqchip_state,
++	.flags			= IRQCHIP_SET_TYPE_MASKED |
++				  IRQCHIP_SKIP_SET_WAKE	  |
++				  IRQCHIP_MASK_ON_SUSPEND
++};
++
++static const struct irq_chip gicv5_ipi_irq_chip = {
++	.name			= "GICv5-IPI",
++	.irq_mask		= irq_chip_mask_parent,
++	.irq_unmask		= irq_chip_unmask_parent,
++	.irq_eoi		= irq_chip_eoi_parent,
++	.irq_set_affinity	= irq_chip_set_affinity_parent,
++	.irq_get_irqchip_state	= irq_chip_get_parent_state,
++	.irq_set_irqchip_state	= irq_chip_set_parent_state,
++	// We only handle this one in the IPI domain - the rest go to parent
++	.ipi_send_single	= gicv5_ipi_send_single,
++	.flags			= IRQCHIP_SET_TYPE_MASKED |
++				  IRQCHIP_SKIP_SET_WAKE	  |
++				  IRQCHIP_MASK_ON_SUSPEND
++};
++
++static int gicv5_irq_lpi_domain_alloc(struct irq_domain *domain, unsigned int virq,
++				      unsigned int nr_irqs, void *arg)
++{
++	irq_hw_number_t hwirq;
++	struct irq_data *irqd;
++	u32 *lpi = arg;
++	int ret;
++
++	if (WARN_ON_ONCE(nr_irqs != 1))
++		return -EINVAL;
++
++	hwirq = *lpi;
++
++	irqd = irq_domain_get_irq_data(domain, virq);
++
++	irq_domain_set_info(domain, virq, hwirq, &gicv5_lpi_irq_chip, NULL,
++			    handle_fasteoi_irq, NULL, NULL);
++	irqd_set_single_target(irqd);
++
++	ret = gicv5_irs_iste_alloc(hwirq);
++	if (ret < 0)
++		return ret;
++
++	gicv5_hwirq_init(hwirq, GICV5_IRQ_PRI_MI, GICV5_HWIRQ_TYPE_LPI);
++
++	return 0;
++}
++
++static const struct irq_domain_ops gicv5_irq_lpi_domain_ops = {
++	.alloc	= gicv5_irq_lpi_domain_alloc,
++	.free	= gicv5_irq_domain_free,
++};
++
++void __init gicv5_init_lpi_domain(void)
++{
++	struct irq_domain *d;
++
++	d = irq_domain_create_tree(NULL, &gicv5_irq_lpi_domain_ops, NULL);
++	gicv5_global_data.lpi_domain = d;
++}
++
++void __init gicv5_free_lpi_domain(void)
++{
++	irq_domain_remove(gicv5_global_data.lpi_domain);
++	gicv5_global_data.lpi_domain = NULL;
++}
++
++static int gicv5_irq_ipi_domain_alloc(struct irq_domain *domain, unsigned int virq,
++				      unsigned int nr_irqs, void *arg)
++{
++	struct irq_data *irqd;
++	int ret, i;
++	u32 lpi;
++
++	for (i = 0; i < nr_irqs; i++) {
++		ret = gicv5_alloc_lpi();
++		if (ret < 0)
++			return ret;
++
++		lpi = ret;
++
++		ret = irq_domain_alloc_irqs_parent(domain, virq + i, 1, &lpi);
++		if (ret) {
++			gicv5_free_lpi(lpi);
++			return ret;
++		}
++
++		irqd = irq_domain_get_irq_data(domain, virq + i);
++
++		irq_domain_set_hwirq_and_chip(domain, virq + i, i,
++				&gicv5_ipi_irq_chip, NULL);
++
++		irqd_set_single_target(irqd);
++
++		irq_set_handler(virq + i, handle_percpu_irq);
++	}
++
++	return 0;
++}
++
++static void gicv5_irq_ipi_domain_free(struct irq_domain *domain, unsigned int virq,
++				      unsigned int nr_irqs)
++{
++	struct irq_data *d;
++	unsigned int i;
++
++	for (i = 0; i < nr_irqs; i++) {
++		d = irq_domain_get_irq_data(domain, virq + i);
++
++		if (!d)
++			return;
++
++		gicv5_free_lpi(d->parent_data->hwirq);
++
++		irq_set_handler(virq + i, NULL);
++		irq_domain_reset_irq_data(d);
++		irq_domain_free_irqs_parent(domain, virq + i, 1);
++	}
++}
++
++static const struct irq_domain_ops gicv5_irq_ipi_domain_ops = {
++	.alloc	= gicv5_irq_ipi_domain_alloc,
++	.free	= gicv5_irq_ipi_domain_free,
++};
++
+ static void handle_irq_per_domain(u32 hwirq)
+ {
+ 	u8 hwirq_type = FIELD_GET(GICV5_HWIRQ_TYPE, hwirq);
+@@ -570,6 +808,9 @@ static void handle_irq_per_domain(u32 hwirq)
+ 	case GICV5_HWIRQ_TYPE_SPI:
+ 		domain = gicv5_global_data.spi_domain;
+ 		break;
++	case GICV5_HWIRQ_TYPE_LPI:
++		domain = gicv5_global_data.lpi_domain;
++		break;
+ 	default:
+ 		pr_err_once("Unknown IRQ type, bail out\n");
+ 		return;
+@@ -651,9 +892,12 @@ static void __init gicv5_free_domains(void)
+ 		irq_domain_remove(gicv5_global_data.ppi_domain);
+ 	if (gicv5_global_data.spi_domain)
+ 		irq_domain_remove(gicv5_global_data.spi_domain);
++	if (gicv5_global_data.ipi_domain)
++		irq_domain_remove(gicv5_global_data.ipi_domain);
+ 
+ 	gicv5_global_data.ppi_domain = NULL;
+ 	gicv5_global_data.spi_domain = NULL;
++	gicv5_global_data.ipi_domain = NULL;
+ }
+ 
+ static int __init gicv5_init_domains(struct fwnode_handle *handle)
+@@ -682,6 +926,19 @@ static int __init gicv5_init_domains(struct fwnode_handle *handle)
+ 		irq_domain_update_bus_token(d, DOMAIN_BUS_WIRED);
+ 	}
+ 
++	if (!WARN(!gicv5_global_data.lpi_domain,
++		  "LPI domain uninitialized, can't set up IPIs")) {
++		d = irq_domain_create_hierarchy(gicv5_global_data.lpi_domain,
++						0, GICV5_IPIS_PER_CPU * nr_cpu_ids,
++						NULL, &gicv5_irq_ipi_domain_ops,
++						NULL);
++
++		if (!d) {
++			gicv5_free_domains();
++			return -ENOMEM;
++		}
++		gicv5_global_data.ipi_domain = d;
++	}
+ 	gicv5_global_data.fwnode = handle;
+ 
+ 	return 0;
+@@ -705,6 +962,24 @@ static void gicv5_set_cpuif_pribits(void)
+ 	}
+ }
+ 
++static void gicv5_set_cpuif_idbits(void)
++{
++	u32 icc_idr0 = read_sysreg_s(SYS_ICC_IDR0_EL1);
++
++	switch (FIELD_GET(ICC_IDR0_EL1_ID_BITS, icc_idr0)) {
++	case ICC_IDR0_EL1_ID_BITS_16BITS:
++		gicv5_global_data.cpuif_id_bits = 16;
++		break;
++	case ICC_IDR0_EL1_ID_BITS_24BITS:
++		gicv5_global_data.cpuif_id_bits = 24;
++		break;
++	default:
++		pr_err("Unexpected ICC_IDR0_EL1_ID_BITS value, default to 16");
++		gicv5_global_data.cpuif_id_bits = 16;
++		break;
++	}
++}
++
+ static int __init gicv5_of_init(struct device_node *node, struct device_node *parent)
+ {
+ 	int ret;
+@@ -718,6 +993,7 @@ static int __init gicv5_of_init(struct device_node *node, struct device_node *pa
+ 		goto out_irs;
+ 
+ 	gicv5_set_cpuif_pribits();
++	gicv5_set_cpuif_idbits();
+ 
+ 	pri_bits = min_not_zero(gicv5_global_data.cpuif_pri_bits,
+ 				gicv5_global_data.irs_pri_bits);
+@@ -730,6 +1006,10 @@ static int __init gicv5_of_init(struct device_node *node, struct device_node *pa
  	if (ret)
  		goto out_int;
  
-+	gicv5_smp_init();
++	ret = gicv5_irs_enable();
++	if (ret)
++		goto out_int;
 +
  	return 0;
  out_int:
  	gicv5_cpu_disable_interrupts();
+diff --git a/include/linux/irqchip/arm-gic-v5.h b/include/linux/irqchip/arm-gic-v5.h
+index 65d5cecf39101f95d4c93ade60939fe481d1e466..ff00c12cb9ec6758e135e6a7411873066d76763d 100644
+--- a/include/linux/irqchip/arm-gic-v5.h
++++ b/include/linux/irqchip/arm-gic-v5.h
+@@ -7,13 +7,18 @@
+ 
+ #include <linux/iopoll.h>
+ 
++#include <asm/cacheflush.h>
++#include <asm/smp.h>
+ #include <asm/sysreg.h>
+ 
++#define GICV5_IPIS_PER_CPU		MAX_IPI
++
+ #define GICV5_HWIRQ_ID			GENMASK(23, 0)
+ #define GICV5_HWIRQ_TYPE		GENMASK(31, 29)
+ #define GICV5_HWIRQ_INTID		GENMASK_ULL(31, 0)
+ 
+ #define GICV5_HWIRQ_TYPE_PPI		UL(0x1)
++#define GICV5_HWIRQ_TYPE_LPI		UL(0x2)
+ #define GICV5_HWIRQ_TYPE_SPI		UL(0x3)
+ 
+ #define GICV5_PPI_HM_EDGE		UL(0x0)
+@@ -45,6 +50,11 @@
+ #define GICV5_IRS_PE_SELR		0x0140
+ #define GICV5_IRS_PE_STATUSR		0x0144
+ #define GICV5_IRS_PE_CR0		0x0148
++#define GICV5_IRS_IST_BASER		0x0180
++#define GICV5_IRS_IST_CFGR		0x0190
++#define GICV5_IRS_IST_STATUSR		0x0194
++#define GICV5_IRS_MAP_L2_ISTR		0x01c0
++
+ #define GICV5_IRS_IDR1_PRIORITY_BITS	GENMASK(22, 20)
+ #define GICV5_IRS_IDR1_IAFFID_BITS	GENMASK(19, 16)
+ 
+@@ -65,6 +75,11 @@
+ #define GICV5_IRS_IDR5_SPI_RANGE	GENMASK(24, 0)
+ #define GICV5_IRS_IDR6_SPI_IRS_RANGE	GENMASK(24, 0)
+ #define GICV5_IRS_IDR7_SPI_BASE		GENMASK(23, 0)
++
++#define GICV5_IRS_IST_L2SZ_SUPPORT_4KB(r)	FIELD_GET(BIT(11), (r))
++#define GICV5_IRS_IST_L2SZ_SUPPORT_16KB(r)	FIELD_GET(BIT(12), (r))
++#define GICV5_IRS_IST_L2SZ_SUPPORT_64KB(r)	FIELD_GET(BIT(13), (r))
++
+ #define GICV5_IRS_CR0_IDLE		BIT(1)
+ #define GICV5_IRS_CR0_IRSEN		BIT(0)
+ 
+@@ -96,13 +111,49 @@
+ 
+ #define GICV5_IRS_PE_CR0_DPS		BIT(0)
+ 
++#define GICV5_IRS_IST_STATUSR_IDLE	BIT(0)
++
++#define GICV5_IRS_IST_CFGR_STRUCTURE	BIT(16)
++#define GICV5_IRS_IST_CFGR_ISTSZ	GENMASK(8, 7)
++#define GICV5_IRS_IST_CFGR_L2SZ		GENMASK(6, 5)
++#define GICV5_IRS_IST_CFGR_LPI_ID_BITS	GENMASK(4, 0)
++
++#define GICV5_IRS_IST_CFGR_STRUCTURE_LINEAR	0b0
++#define GICV5_IRS_IST_CFGR_STRUCTURE_TWO_LEVEL	0b1
++
++#define GICV5_IRS_IST_CFGR_ISTSZ_4	0b00
++#define GICV5_IRS_IST_CFGR_ISTSZ_8	0b01
++#define GICV5_IRS_IST_CFGR_ISTSZ_16	0b10
++
++#define GICV5_IRS_IST_CFGR_L2SZ_4K	0b00
++#define GICV5_IRS_IST_CFGR_L2SZ_16K	0b01
++#define GICV5_IRS_IST_CFGR_L2SZ_64K	0b10
++
++#define GICV5_IRS_IST_BASER_ADDR_MASK	GENMASK_ULL(55, 6)
++#define GICV5_IRS_IST_BASER_VALID	BIT_ULL(0)
++
++#define GICV5_IRS_MAP_L2_ISTR_ID	GENMASK(23, 0)
++
++#define GICV5_ISTL1E_VALID		BIT_ULL(0)
++
++#define GICV5_ISTL1E_L2_ADDR_MASK	GENMASK_ULL(55, 12)
++
+ struct gicv5_chip_data {
+ 	struct fwnode_handle	*fwnode;
+ 	struct irq_domain	*ppi_domain;
+ 	struct irq_domain	*spi_domain;
++	struct irq_domain	*lpi_domain;
++	struct irq_domain	*ipi_domain;
+ 	u32			global_spi_count;
+ 	u8			cpuif_pri_bits;
++	u8			cpuif_id_bits;
+ 	u8			irs_pri_bits;
++	struct {
++		__le64 *l1ist_addr;
++		u32 l2_size;
++		u8 l2_bits;
++		bool l2;
++	} ist;
+ };
+ 
+ extern struct gicv5_chip_data gicv5_global_data __read_mostly;
+@@ -140,10 +191,18 @@ static inline int gicv5_wait_for_op_s_atomic(void __iomem *addr, u32 offset,
+ #define gicv5_wait_for_op_atomic(base, reg, mask, val) \
+ 	gicv5_wait_for_op_s_atomic(base, reg, #reg, mask, val)
+ 
++void __init gicv5_init_lpi_domain(void);
++void __init gicv5_free_lpi_domain(void);
++
+ int gicv5_irs_of_probe(struct device_node *parent);
+ void gicv5_irs_remove(void);
++int gicv5_irs_enable(void);
+ int gicv5_irs_register_cpu(int cpuid);
+ int gicv5_irs_cpu_to_iaffid(int cpu_id, u16 *iaffid);
+ struct gicv5_irs_chip_data *gicv5_irs_lookup_by_spi_id(u32 spi_id);
+ int gicv5_spi_irq_set_type(struct irq_data *d, unsigned int type);
++int gicv5_irs_iste_alloc(u32 lpi);
++
++void gicv5_init_lpis(u32 max);
++void gicv5_deinit_lpis(void);
+ #endif
 
 -- 
 2.48.0
