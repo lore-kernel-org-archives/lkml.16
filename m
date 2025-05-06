@@ -1,104 +1,111 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbguseast3.qq.com (smtpbguseast3.qq.com [54.243.244.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 328C927FD6F;
-	Tue,  6 May 2025 16:02:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A5E3233739
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 16:04:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.243.244.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746547367; cv=none; b=qRD0KhG9901gFYQ6vdDZ7bnY19LI4WvVij/utrtZ3xs2ELO1wOU7k/QP58D8kweZ1cuUbCQwVET/0MPVK9Pvxv93p+roQ12CTRFv497O6Hba7wOoVqUTZolbvWzzxfccAm0YTU5URrlqw20pu7zrOg05zkJG5Xkp+XwVA/m18eM=
+	t=1746547457; cv=none; b=S/xEmLCuoVtyosS8/56b76bA2lumcM1JSXm+X9oRLzPwm4L/pcTjRWOqQZNSVk9jOnJ5++34juhwwxPj3p8r62TQ5sq9BayE/sr6uqPkMtmo7lw3JJ0ygovhEVMLxI6bhsPQKLFSYze3lzz4E7JVL+aGtt4x/EfYZgOONUbmPJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746547367; c=relaxed/simple;
-	bh=qv10xryQ+mAog3l4VvbVHJ0HbMIQA75QU5IkGTZPA3E=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HaDRH8D4G3J8aac8dvSgSvuoGSiVyJKCmerUScrYTUuTR3mFPCKSXJ/OJZacj1PzncDU0mDq7D94rmZWAqQ/NJEd+opUbBalNb4yZq3ioXBngBv/Qco1jntbafp1mRYV82Qewwn8EPgIifr4c2KKZlm3/IGXWtYJ9hBdDjW43og=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WCOMCUnS; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746547457; c=relaxed/simple;
+	bh=rYiNxCsTsLC8LdWhR4Tg0TUwjjM8dk+IfY8gIp3cjOM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ql7eZgV9jgGQRKxvQzK92jKZlKX16r+JjzLkZsAlIm4RpZNRC5KPVZ4vpNq+VTh3BJSLSB84mjMhsScsS2YYB0FRV07lFNdl+F9sdsRZr8ye7JGWfcWgOCKJPabggDXl+7t9f/OsL2LJn1uOidMNtLvPLYWLJz4rg/VM87n6PBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=IQVUre/C; arc=none smtp.client-ip=54.243.244.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WCOMCUnS"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-30a89c31ae7so1085964a91.2;
-        Tue, 06 May 2025 09:02:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746547365; x=1747152165; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=UxqQI7I56Bh3kt4m+ML+aSANba97iFsyz6IRsFIn500=;
-        b=WCOMCUnSglpj+1OMRc3c//01ybXU+np3fhMbod2RBBCxCxdn06b+7bsWKMVeQAgrny
-         IVsCICzw3bFmJbvwhAKrcv4SN4PhP1G5wr7NJkzRsfd7JaoM4Vb+6+ViAvRHyyHxjVEb
-         9sKiajRRL9wnYVvYsb6SW/YpMag022LYwtQ8AU8ROSpJfTqyMA4Ftkjkq+feUWmmc/uS
-         L5cPjyY7PXIPlZqVzi0Fhc0pSAfslSvZYRXWKYv2t2+wl2VJ6Iw+Z/P4My9h1wwFK0U7
-         MvWjCLE/46jTBWZo0y+qZNH2fqx6Ixj2vKDLVWYeS6zeqt4oinrrXpN+i8Wz8P4QMt3h
-         CM2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746547365; x=1747152165;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=UxqQI7I56Bh3kt4m+ML+aSANba97iFsyz6IRsFIn500=;
-        b=b/coxJkqNUOx/c+Hwhr6bl1eZIWDwkhjR1oeL8jx63XP+4e5jkaxPdao6HjgZnRVN6
-         v8wXG5cv0aBcvXxo38bOt9IZRQuHNgN0dBlKz7SGNyEUuZtvfZ5IqToPFPgKkd+8shuK
-         s5fpKEKVji4qLElIrnGBVXB5OLcxeiTygTx3OUfobTs4q9zx/3+lzGdGw2p6YLn/Cw7D
-         a9EtnXobOGlBhwN0+HqOojIdB69y/+Gi3MDkQhHMsdkugO+4sA3M/ueJpbKQ+6i2OSjT
-         ACOmDYmne3TLEWTYkoP8jjpweOf5wypJklnV2e2DBFQ89MpYVOa2GdpOvPFueohCH7ay
-         cWGg==
-X-Forwarded-Encrypted: i=1; AJvYcCULfVmXLqjm20zOYcymBOslP8zXHI0ov7l6OiwQHPN2thyrzRogktlLYKtQTtITAd+CU7iTulprTY0=@vger.kernel.org, AJvYcCUjdJuzmhthWDKwgYisqbEtU7nVV951Yd4/+ckCytRaWoP+iZRMLOvl0bV2NbDquQB/bUHp8mB8QAwDqPY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQPjIV2qoNyUyISJpVFu9lMer49dPCDh4S9Gi/3GAXwOy+Os1h
-	MPBykp4rVimDlMLFsdCjpCYecZGRop7YkuowqCHAqP3SsdkxrW6O
-X-Gm-Gg: ASbGncsYllLbT/6yDQ9PZ3lfQkAJDdZolaVoURkn3Bnugjp8X53yCJ4Ss2QPkH+u/lQ
-	L5ylMPrkgFbkwDVzRAySFvnj+CjRPIw8/CZZrHzQuuiT4xFZYZEu8r0iH43OLM+uVmi9a0MSf1G
-	GTxtNlLgRrhEeTqCFOeP6yx18WQWlquhjyJBVUqKhtGenmBDRgXoQ83IZcZWecTPsZc1rTelN4c
-	XxMQGbVupqa8nLFMjX+urMF5WbSqcGyZXko5Gu8qTE3WVC3G5DT4aHDp4OJ91gn6FC4E9AT3Wng
-	3W1RyYOk8AEDtq/GIqcY1HnwwBULyAvbSelkCLV6Fd3XcUZ5+DhUKS6bhTIiZr9/V0J0WE4fSYV
-	vHIX5SNekAn34yViM+sq0RUyQL2OoIfLocnI=
-X-Google-Smtp-Source: AGHT+IFevtUyWuSHvitYA7wFMvLwVik5JEG9Cmh0lTuhNVyWsmzQmvCZvPNXnXAFKtjlJybF/J+4yg==
-X-Received: by 2002:a17:90b:3c0b:b0:2ff:58e1:2bb1 with SMTP id 98e67ed59e1d1-30a61a6f700mr15118582a91.32.1746547363134;
-        Tue, 06 May 2025 09:02:43 -0700 (PDT)
-Received: from server-kernel.moonheelee.internal (d173-180-147-14.bchsia.telus.net. [173.180.147.14])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e3b56576fsm15996285ad.47.2025.05.06.09.02.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 09:02:42 -0700 (PDT)
-From: Moon Hee Lee <moonhee.lee.ca@gmail.com>
-To: lukasz.luba@arm.com,
-	rafael@kernel.org
-Cc: len.brown@intel.com,
-	pavel@kernel.org,
-	linux-pm@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="IQVUre/C"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1746547411;
+	bh=MIxVgUD/gcfzc+AvSnntXs5+xQ69OsezJ0OGOwzsfyo=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=IQVUre/C6Wwu2covPWBLq1pMU6EK0B5V/xfCqkDckBmAqAQl8AWhZbWD4pgdHwwvL
+	 ZANJ4YY/NJkgjIb+jc+4Sne6HelHtcw/o9A6cgMWJ/o+j4ej6uWrhqdjbZ+pewk31k
+	 w3J08/NOQITlHyaHldm1AUupurDG+hs1xzHK0abA=
+X-QQ-mid: zesmtpip3t1746547370tbb3ca5be
+X-QQ-Originating-IP: o8pgAATOo7e4w+pMFoumg25Llhz0GOUtirb0feOXr+Y=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Wed, 07 May 2025 00:02:48 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 15489425460272937920
+EX-QQ-RecipientCnt: 10
+From: WangYuli <wangyuli@uniontech.com>
+To: akpm@linux-foundation.org
+Cc: linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
-	skhan@linuxfoundation.org,
-	linux-kernel-mentees@lists.linux.dev,
-	Moon Hee Lee <moonhee.lee.ca@gmail.com>
-Subject: [PATCH] docs: fix typo in energy-model.rst
-Date: Tue,  6 May 2025 09:02:29 -0700
-Message-ID: <20250506160229.3720-1-moonhee.lee.ca@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	yuzhao@google.com,
+	stevensd@chromium.org,
+	kaleshsingh@google.com,
+	zhanjun@uniontech.com,
+	niecheng1@uniontech.com,
+	guanwentao@uniontech.com,
+	WangYuli <wangyuli@uniontech.com>
+Subject: [PATCH] mm: vmscan: Avoid signedness error for GCC 5.4
+Date: Wed,  7 May 2025 00:02:38 +0800
+Message-ID: <85050791B887DC13+20250506160238.799984-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: Nco2gOFShP5nyEqgTp7q0Srkca5PBUpgKh4NtRRMPOwxhhomJoREKFn3
+	wdg37EQt1XOAk2R/LolorTrAeC6okoZxFlSo8qLKtJIij7HwYCKdzlS9uplfQsxAZARdd5A
+	L/0djvX9E0jFfic0/ApW9C4cHv1c0xJWxwHLLNNzpT+pLeA2A48iz6BptOmq65mG8iGmv35
+	rB/IPVUPpp0nU/5w4kRJp2qmMyw95stNa3Nkb4Htubub43PoCAMUjGEg8aKuMinQ1sIPVe3
+	M6qFGvaWZpCommkjHmHhLnQYYRF6/Kg9tCHJpzXWMyChFf85Ipfwi0MveNmZkf9Ti4L4ZBu
+	XRqgEQWQfz4QIn0ZXrYJRAPbjAsYEhDMxGBU5uCtH0gHRSsop989yqTm2LLPg2a0aYTCsD2
+	62jxPqVwpbkkpseE/uEQg824n9WLi7+T/Zyj8evHL9kYs1myJRNljh5yEKfy/Isfsu/WNYQ
+	jTzdXC0Gqrcv5nADlbLagH+mliB66zHJhtkYFOUg301jW1gpOlRNB4ijKA/V6cCrf917jhm
+	zf57kumzlrCwy18lQpziMFgidsQD4EiP7CuictxHn6+pin3zp2qe4mREXJddXwGVX5ehNDK
+	nUX4zfyjHo98MADH6+BNWutS6pZOnEPAZAEQ6yLA7xaVYmGpUrCJqZ64xuTWS4lxOggz70f
+	2DWekJTbodD/bDGecRPnYg6Pi2/6JNEVH4njMEULsPIgR6DLjT/mTVlFm57VQUB/30oxOVi
+	wCF7At5JK4dadnIywLRbBt55Cerm6TkQL8hCMOzQolrR3pI6SxYsf71L5SCm/Wh7qVUVBPt
+	nzMM4p5gGnh5y04K/QySN4zR2JmH2j0N0msmKf3AkoA7yuaRKPePiR0M+QETCH6269w7Gh9
+	at8nRGuOxWqw6QrojO9K+GoP6214GF45x454aThf4IWqXMU8NaxHX3/hcspnBld3DioZji/
+	FEYSfzSW+RVLiYBdNJcqx+gyER3qDTw/ri7q6PwVL/o+ZYVZbfSxYaAcPnQ5A9xjmpwiltu
+	bpJX1mqgIvjwGtwR1O
+X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
+X-QQ-RECHKSPAM: 0
 
-Fixes a grammar issue ("than" -> "then") and changes "re-use" to
-"reuse" for consistency with modern spelling.
+To the compiler, (MAX_NR_TIERS - 1) (i.e., (4U - 1)) is unsigned,
+whereas tier is a signed integer.
 
-Signed-off-by: Moon Hee Lee <moonhee.lee.ca@gmail.com>
+GCC 5.4 does not permit the minimum operation on such
+type-inconsistent operands.
+
+Cast it to a signed integer to circumvent this compiler error.
+
+Fix follow error with gcc 5.4:
+  mm/vmscan.c: In function ‘read_ctrl_pos’:
+  mm/vmscan.c:3166:728: error: call to ‘__compiletime_assert_887’ declared with attribute error: min(tier, 4U - 1) signedness error
+
+Fixes: 37a260870f2c ("mm/mglru: rework type selection")
+Signed-off-by: WangYuli <wangyuli@uniontech.com>
 ---
- Documentation/power/energy-model.rst | 2 +-
+ mm/vmscan.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/power/energy-model.rst b/Documentation/power/energy-model.rst
-index ada4938c37e5..490ddd483f46 100644
---- a/Documentation/power/energy-model.rst
-+++ b/Documentation/power/energy-model.rst
-@@ -230,7 +230,7 @@ Drivers must provide a pointer to the allocated and initialized new EM
- and will be visible to other sub-systems in the kernel (thermal, powercap).
- The main design goal for this API is to be fast and avoid extra calculations
- or memory allocations at runtime. When pre-computed EMs are available in the
--device driver, than it should be possible to simply re-use them with low
-+device driver, then it should be possible to simply reuse them with low
- performance overhead.
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index 3783e45bfc92..29dce1aed962 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -3163,7 +3163,7 @@ static void read_ctrl_pos(struct lruvec *lruvec, int type, int tier, int gain,
+ 	pos->gain = gain;
+ 	pos->refaulted = pos->total = 0;
  
- In order to free the EM, provided earlier by the driver (e.g. when the module
+-	for (i = tier % MAX_NR_TIERS; i <= min(tier, MAX_NR_TIERS - 1); i++) {
++	for (i = tier % MAX_NR_TIERS; i <= min(tier, (int)(MAX_NR_TIERS - 1)); i++) {
+ 		pos->refaulted += lrugen->avg_refaulted[type][i] +
+ 				  atomic_long_read(&lrugen->refaulted[hist][type][i]);
+ 		pos->total += lrugen->avg_total[type][i] +
 -- 
-2.43.0
+2.49.0
 
