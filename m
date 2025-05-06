@@ -1,464 +1,237 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A8822820CB
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 14:28:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746541723; cv=none; b=J4rZN2n7us8UWiTQJJ7zcm5MELYrQniY742rK+D1WmuzASW1l7G5XRSojvgbFsuDa5zV4Ft1/oEItKEbvdsDMkxpTT9H+tp8DtkOm/bFSlnY9IdDlG4l6Sn19DPqeRPYoEHxHs7YcKoHpoSmQmr1VU1yGABWaUbWPDHeFiUh5TI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746541723; c=relaxed/simple;
-	bh=0mndwP0G65go8lxb/0V36l2Q8yvQcz46CH9SW0JKzMY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TWAN6YhvJg101xTo0R1QygJ1PXv2yQeWwMFukG5Ka747JX0z0KenBAAiBhbeyVk51ZjeWrmp9MYt87xw7hOFBzMAHlZ5MF4kDqXp9rUHU3SVIiakq3soqzh+DJA9jidQHUXLBQBDqfIxtfXyAUEvZ133X8F7jYuj1+/p3Ob+EO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gNmRBP5X; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C14327E7EF;
+	Tue,  6 May 2025 14:29:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746541742; cv=fail; b=S0y1bOeIHpJTzQrYoB7Z86bAWAYvT8dSAwdrXGuZS9OA/Tu1/GD2XvMnyNCXEwtLYqw7O6LDJvd4GRqogXHWe50SjVkMDJklQzK8y1pCPISeGaXspl+PYF+49ZVu8Hyu/6lXIaTGSH8nWrmL49Pts8QiqIF5nT+OuNA1ri+DOLo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746541742; c=relaxed/simple;
+	bh=2CGHR7b7bljilLl4eyD7C4KOLhHy5opA6KkScGcLHZE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=fQIHb4D70XIzIXmVE0CSMFUMMoemyiTBgl+enqOk5JKj/snpEH/qWD8JuBR6StNhz0RgA15LbVXyap2wwUqxaeSITxzupSkCUzYSlW5GooxUOewadjHrKmXsCbuM9DHTLeTBW090IgxAOxhcVAhglU3eyXZj0Z8DqkYNjo/REv0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=fyaloKTM; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=OQRTxTAR; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gNmRBP5X"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746541720;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=TqdmjlqautOjkjBVdcvWIi/c2nG7QJsMOWiwO0Bitw0=;
-	b=gNmRBP5XXw3Kbgr2PDHFpQlIKQjpEWN3ZxUnyjTl3/7AWt9aLoOYGfSzo0q+1+Lb2uWx9y
-	MzcenF3vq/9EgpJAdOc7Un81Y4MKNmPi7hFzbGCKjbISH0YfdDz6lrYkjnRRlckJbmyEB+
-	aifoEPOWGYP/Zg6w9IdDqsAY1mKFVFs=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-150-TingoAp5NHuEdnpi7Dw-UA-1; Tue, 06 May 2025 10:28:38 -0400
-X-MC-Unique: TingoAp5NHuEdnpi7Dw-UA-1
-X-Mimecast-MFC-AGG-ID: TingoAp5NHuEdnpi7Dw-UA_1746541718
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43e9b0fd00cso24636825e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 07:28:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746541717; x=1747146517;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=TqdmjlqautOjkjBVdcvWIi/c2nG7QJsMOWiwO0Bitw0=;
-        b=A9NBvigLA4SJE/A2HEKUsRL6oEslq1aRbr0OXTsdsWmaMVJPeWc6Z9c+VfPnOSFq5x
-         Zo57NbOkCoGVeLSYuxgeM3x7E3yBz3xS0qWapWwDM9jNvgyuzqKqGWR447mWTXeIuhrj
-         hFeYj12/yu1sfChj2QRZrVJ1Pxm3OUXYyvUbWNKbjZY7o4IYMn2L6cd5iuOD2LMyj9b1
-         0h2uVerwHOtZE3rZteMIzuPnQUcwEnjUolNUzSe02V8hI70rJazqF+RdBmsqDEO63zG8
-         PwgadLhxUlVNSPASrN7cAtDmL5MUX2aoW3EcPO9HnlK6blfCnF3ckMvNF0km13V1Ds68
-         uL/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU5PoaKZma/cAE801m7axse8Bub4x6jWlhjFzTiwrPr+Bl8R5TphbkKtsT9dgQe3xbJsa47KcKvWFKilxQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOk/zy4yvxr4JKZJr/QhMFQo7AOgq+kZUSf/L5kFQXuWdijvVq
-	ioM4Pof9UCzORT3eVHlqwg/JYqL+Gw9A6lN0hPDRD0x20FfyrCGbXoXURNzqmBJJDLX6/HjCKpm
-	ItLeyCDDJvmQOcleU91ndca8uIH2AytLcr/kEr9IrMK2b2/EKI+4uh1HMvW2dtw==
-X-Gm-Gg: ASbGncv+ee3Cm/c7WMMR9Clb/UyYcUnggHeNYI4NU4xSdvpzO0fJeTFEAsI+jfuhqX4
-	N4b4GbFuJHIWsU6u0o7FQSzyTM/nUGI6Lfh5rpV6N+SLu6WuYFMhG9Pi/7wvFjBvf11vRVoUKCR
-	ep9v5ZWLzx8mhNz8YF1j1zrJq8ApWeQ/j6AmCb5XN0XHyn2ZfPVDnWOgt+knr8BeG2Jo3QxStmc
-	9VcxuIA0oF3Gc3Ym2g5nJIl8sdJgOqp8RtvTf737kEKriKHJExxI7D3J8WYY/vNS2TKpFxiFQe3
-	Q0UMKyXlRSV1TLv5WpZB0xU2T4iSBi7hL6VaKJVcmGmcp+cOf+Q=
-X-Received: by 2002:a05:600c:1907:b0:439:4c1e:d810 with SMTP id 5b1f17b1804b1-441d00e221emr34519715e9.9.1746541717560;
-        Tue, 06 May 2025 07:28:37 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEhBK+Al8ZViSGMNvg4AlN2nu+Cwr+mS+PiDWz3grM9m3WE79JtzALkqjsCYpJJ6Q1/wVrc0A==
-X-Received: by 2002:a05:600c:1907:b0:439:4c1e:d810 with SMTP id 5b1f17b1804b1-441d00e221emr34519295e9.9.1746541717026;
-        Tue, 06 May 2025 07:28:37 -0700 (PDT)
-Received: from ?IPV6:2a01:599:915:8911:b13f:d972:e237:7fe2? ([2a01:599:915:8911:b13f:d972:e237:7fe2])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b2b28045sm215537325e9.35.2025.05.06.07.28.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 06 May 2025 07:28:36 -0700 (PDT)
-Message-ID: <d048366b-eb6a-4fea-9b60-af834182b1b9@redhat.com>
-Date: Tue, 6 May 2025 16:28:34 +0200
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fyaloKTM";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="OQRTxTAR"
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 546EH99S005642;
+	Tue, 6 May 2025 14:28:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2025-04-25; bh=KIoanPLB7mlbZcFQP9
+	kHB4F/GMv6u13HLAR5OwNyVVQ=; b=fyaloKTM5IRsKILCGRW1v6v0rfvoLpKIbE
+	GSHct2f9zy+rBdUGwsJ5FT2cwi1TNOir4q3cnulJA9sHqgKjg5hpvExHZAXWd0Ei
+	1P0BtKaF8R06W4OWIARnVpG6hv4nZe6EQm25yAzsoA2s5xDH0JDu+ZBh5roHRInK
+	8oOD4iD5PfQkOftZT5qTueeSc4Q2PwFM85rnr/u3gNz/KNsixEy4cprxrrhHuMs1
+	ri/4cM7lXij1Le6u6LX8f7y+wZVdD9l4w5aPbQ06KSzyE5LzDuYDkOx5ts+LkMSf
+	qCGFWF8TLC5a667Wyawgdwy+HbGVSO/t66T15bcWNiXx7bwbuVVg==
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46fm22r1jb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 06 May 2025 14:28:47 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 546DbsOp025022;
+	Tue, 6 May 2025 14:28:46 GMT
+Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2172.outbound.protection.outlook.com [104.47.59.172])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 46d9kfb47m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 06 May 2025 14:28:46 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=OPq1edsE9nXZaAOJu1eh/cQyOJjLm38A0v/fdStJrqMIPu6oykDD83Kh0cvRzJFUNNsPKVfabkoareXOAeJZ2X90R3mMzaMzgFTqGV+cUaWHdJ9ArFgKKRPFJgNzzT+SOtAznvWszW+8gbyLWs3GtJml/lz00NCZ1hYazwr8xk2DaiRHBno9kqU4psmxMOJVPWR3bDWU7QuWIwstqse37iEw3Si0YbreBv3ySrmVUGTHDyfQzlG1wx6Pz0btg44Tl/G3tfBAdEf3doFQOyBY7kfRhx13PaUoYiZrZ22FPXz4SDsaIWX1rPM4BgRKacEX8VWQXT9+VQ43A0fPzPdxBQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=KIoanPLB7mlbZcFQP9kHB4F/GMv6u13HLAR5OwNyVVQ=;
+ b=C5Qr4dNuFs8ViaN6gMBeu9fXl/Lpt17o5D1xgnTBUNoTIbTy5Y5Nywee2yVVAFltVqEOApXoOp+jq7rctY5Hfci+RsxVv8wHOWoLI1kzQZ4Dlk3cw5xtyyy4vZKBn9KWNZ6AQDqSMq43c5jBcbHc0v5jgJXV5swX3KXmI0WRoTZsChZGYOfQZegDy9ZacYQsK/pLu4B7+hCD45/JysfwrIFdCGqIiBFREi7qkqU1BtuN49TLhPv9g0i/NkiVSsr38PlnoFZwJ6xzqJt8e6JXfkdkwrt8KAZYhGOj2+8Onj9S9mZVhEwjxAF1oX3NYd8qb3aysopsHh51OJFduUH0xQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KIoanPLB7mlbZcFQP9kHB4F/GMv6u13HLAR5OwNyVVQ=;
+ b=OQRTxTAR8FwJSka7F7It1wAUzOhxwli3DcAFsxJenagQvK9EOEdfnh/275NgkHKJVcH6yIPtrXFXui3xTQpYDPfS02OGDfsuKtZKGHApQrmjzdoTqW8MkRvO5w77yj7BK4KW7xeEeTQj4r7En4ssyIVlkxtgidgafGeSOERP84w=
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
+ by CO1PR10MB4658.namprd10.prod.outlook.com (2603:10b6:303:91::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.27; Tue, 6 May
+ 2025 14:28:40 +0000
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2%5]) with mapi id 15.20.8699.022; Tue, 6 May 2025
+ 14:28:40 +0000
+Date: Tue, 6 May 2025 15:28:37 +0100
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: Ignacio.MorenoGonzalez@kuka.com
+Cc: Liam.Howlett@oracle.com, akpm@linux-foundation.org,
+        yang@os.amperecomputing.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Matthew Wilcox <willy@infradead.org>
+Subject: Re: [PATCH v2 0/2] Map MAP_STACK to VM_NOHUGEPAGE only if THP is
+ enabled
+Message-ID: <5ebcdd05-1c82-428c-a013-b7757998ed47@lucifer.local>
+References: <20250506-map-map_stack-to-vm_nohugepage-only-if-thp-is-enabled-v2-0-f11f0c794872@kuka.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250506-map-map_stack-to-vm_nohugepage-only-if-thp-is-enabled-v2-0-f11f0c794872@kuka.com>
+X-ClientProxiedBy: LO4P265CA0048.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:2ac::8) To DM4PR10MB8218.namprd10.prod.outlook.com
+ (2603:10b6:8:1cc::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/7] mm: Add batched versions of
- ptep_modify_prot_start/commit
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Ryan Roberts <ryan.roberts@arm.com>
-Cc: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org,
- willy@infradead.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- catalin.marinas@arm.com, will@kernel.org, Liam.Howlett@oracle.com,
- vbabka@suse.cz, jannh@google.com, anshuman.khandual@arm.com,
- peterx@redhat.com, joey.gouly@arm.com, ioworker0@gmail.com,
- baohua@kernel.org, kevin.brodsky@arm.com, quic_zhenhuah@quicinc.com,
- christophe.leroy@csgroup.eu, yangyicong@hisilicon.com,
- linux-arm-kernel@lists.infradead.org, namit@vmware.com, hughd@google.com,
- yang@os.amperecomputing.com, ziy@nvidia.com
-References: <20250429052336.18912-1-dev.jain@arm.com>
- <20250429052336.18912-4-dev.jain@arm.com>
- <8780e63d-22c1-4133-a800-dec50fd1b5fa@lucifer.local>
- <f561dab6-c70e-485c-a3f7-2c5198fcf8c6@arm.com>
- <9a2129ce-55b6-47e7-a879-00e7982c8ec4@lucifer.local>
- <76cac3c0-2a52-4ff6-b7df-7a316983d197@arm.com>
- <3b53d194-95fc-4067-97b4-59e9c1832f68@lucifer.local>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <3b53d194-95fc-4067-97b4-59e9c1832f68@lucifer.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|CO1PR10MB4658:EE_
+X-MS-Office365-Filtering-Correlation-Id: 029e3e65-9031-4d56-2acd-08dd8caa4c16
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?bHjrXwkvPXKJw4dS1tL09aSBFcA+AcwmGTy8f9lC2wDxx4zplEwYxS5uElLV?=
+ =?us-ascii?Q?GHy0VAutK6X+G9YsCusNbofQgH5PhG217+MvMtHipDkkpynEXQN4xDufE3Eb?=
+ =?us-ascii?Q?TRPe/Qc3xB8g0djZl+XgquwEVMtm5ItCoNJcDx/9kLL8cdiJMXAzWQffr/OK?=
+ =?us-ascii?Q?K0AG6HyjdEk24ZzfaLmUc4oR4cIYXhRfqi+lxesC+HwBqqvhDrWi8qtVPFOK?=
+ =?us-ascii?Q?ah4SlRu4KH+22f+4DepllKcZW0zy41E5LI9yYwDh/dkOT7F2ooLv6gd0Afg9?=
+ =?us-ascii?Q?UEJdOTaguVpCiK61gaXN/Y9LE6tZAoAtVkAOJr+5mhxcLkTduAYE6kKQ6CP5?=
+ =?us-ascii?Q?AWhgYTgHaMUVLJcx2DSVBTal/QIebuSfH7kx8ESiIZxjIOipUWfEmu0BqLLZ?=
+ =?us-ascii?Q?uTKBNZUUSbkGWSbH5PAtT8CwhG9Se3wH+KrMZYHLqFkizTgGWMFVhSJdqHK6?=
+ =?us-ascii?Q?CTp99URUkHBdhCXrK7nSeO326sr6UwxyjdahxJPqO9OGwV3sOaIzRWhdyhJY?=
+ =?us-ascii?Q?Y6GJ0eYZW42XeVsLNFkPOFd6LYd6o4mpPB/n7w4DbYoeLy1ASEaiowO6kPiZ?=
+ =?us-ascii?Q?Xj7DEt4WK309K8q36VwK+O2yMPD694BLQ7pxDjSKpn9RafvbnXPsGIVyZcNq?=
+ =?us-ascii?Q?YS35F6HdE07/EnxG9RTkW32E5toyIyNRXa7cOLFTXlYU1qUkdiQgz7ezu/Tw?=
+ =?us-ascii?Q?2HmMEzmaSAAoMJ+eIdkzK5F94fF1DBJD6CWzdvI5gGVcOdIag40mMSg2RXuQ?=
+ =?us-ascii?Q?Q5j1J+r4TLmB1f3TPUpcFH/nMtiSat9/x4qbhRJfS02CIFVFX3BwbADkZSTB?=
+ =?us-ascii?Q?lLnpeMs0jUnrDzgu/2En/vU9iMWze6yUBwLipfFDIAzZNZH2ApYKph0fqtY4?=
+ =?us-ascii?Q?woIZx8RY8k4TZlLZPI3+AApAa0tMCzNEFTHtRxqKt2FmY9QXSE0yEPlBFOLY?=
+ =?us-ascii?Q?CWxP1peK4MGhRWBoDCgcQ2aOJZyDuq7H8AUQVIKnLpTDcLGYf4ZZTM1an9G7?=
+ =?us-ascii?Q?yZy2y0iKTnktk2pLW4AaZ8M2u3e+oo3IcHsBAPonIakFEDS7ITUaXtTNAMTK?=
+ =?us-ascii?Q?Fkkr1dEugFxM1fYZlQzLVgiz/zUVCof61FAH6iX0vqIxvM/LWvRo3gwC0fn0?=
+ =?us-ascii?Q?AR8P4eqSGffz+b7ULpr6uh4GnY0YrYeZ113ceL6VtkJm3zraFlq0NrN97Sg4?=
+ =?us-ascii?Q?XYUeYoe0Cf9BRPU37X3Cq6X7fFBo7ljJKme+QvtF8EtlfWvYlj0hvPhROIqs?=
+ =?us-ascii?Q?/Av7Hl+tTnOkUYWuhU+gRHerdikn7NAcRA0cblMgabGRx+ArRxO6/65SlZZg?=
+ =?us-ascii?Q?nZnmDOi2kIJ+xHWMBBvKfsKja61+K0iLBNB2ewSTErB4EM3dwO1UOobmqkXC?=
+ =?us-ascii?Q?SZWpnbYFA/PBje/j7/+y1pS22MYVzxuIhapQtaB5ZhNU4HRIkIUTxZE4g1sq?=
+ =?us-ascii?Q?p5+M0djN5QQ=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?lb5AyTkkhoSy3r++BFImID9mbwl6qmdF0qSCX83LjmJNQQyS2MEhgfTXtOm6?=
+ =?us-ascii?Q?FIpxubySuWJ7MFnXxZoERjRQpUCu0wzhm/32sP2UaJgtXxsa7OXQLer+A3c1?=
+ =?us-ascii?Q?ArFMUE0umBj0uZDP6SashMDcqFy9C0v/j+6SreHY39kk6lN4vL0er9sjcRKS?=
+ =?us-ascii?Q?gQUgU9X2uNipe2BB6I02P6weIrv8ApFwqztJ3ZaTiRn9NCmaRBR6ajyrREt7?=
+ =?us-ascii?Q?zWuWpQeirz+GY18wj9r530IXnM3SGsHS7YfyBILv7Ry7DOsNiQEr6er6rmNb?=
+ =?us-ascii?Q?Jhw1I87a8BFEdbBFmEUrr0PvrwDGktRVs7ULK5A0zHQr1/4QjFvTr3PwoBap?=
+ =?us-ascii?Q?XfQtdL3oypwgEi6bQlvHQ/6izSfMMlj9fAYmbNo0tfPrdPHmspRr5afLdhJp?=
+ =?us-ascii?Q?j5br3flbX0BieyQqU3cw/vUJjuCgPuPfgLSnY5X0Vt+rfHtqqOeLUZctRzlo?=
+ =?us-ascii?Q?uBRnR2SxpmWSaQErIADcfJi/Xt3UCeiDQocvB6GhAuhyfhVTO6uUeCtRaSk/?=
+ =?us-ascii?Q?UgzsdfVPfJq0mSqp1en/H8HqVLA11NhrWONZe5ICDU/7zMuK2CWMi3e58RV1?=
+ =?us-ascii?Q?L0SwREXYrSR0iH0qLa1NIOuo96Wzv252S4tTqZi+YYOjwgOo6P3LZC7dHB5e?=
+ =?us-ascii?Q?WMkbZcc9sGjrXdHnVJpeUjlb6Cf7pV4uWgHaiSXINxmPe948qwjlrj96y3Tr?=
+ =?us-ascii?Q?Mtuc4R10O0kQpBj+aDFvUqGdHO0b75nRmj5J9DqkzRdbKDCej9xsYwZ2F6Nq?=
+ =?us-ascii?Q?4iJKg6GvXMrMmGH4SBLQJJNuWt8DxebEGxFzmBT16TcJ5MvbQiU6kfR9bj0w?=
+ =?us-ascii?Q?ObWTjHS6mmY9ig8LQgiPJUp0SvN2zTCbInzW+e0UPRQXPeRuVzcv9/KL9FRN?=
+ =?us-ascii?Q?I0uXM4qMuPGx7NuGWqHzxOkD0Sv9HFH+u6PdHQHhTdJmAC0GN98jr4LlQXFu?=
+ =?us-ascii?Q?EVXuhVGEdDRcHB+hI6FQphB+BnnZ6rYcMe5LSyqNqXcKqHQhahTulBaYulYs?=
+ =?us-ascii?Q?2RjTWuJycpKHFZj0C0axNtCnClUaquM7W9JfILI4z+tiM8YGcCXApI3/ZV4R?=
+ =?us-ascii?Q?m9Cq/xC7mnKpK1VuzXJI/ZkP20ZETV83hNwY8VeORlPz+QQMuj9AbvzWa6aO?=
+ =?us-ascii?Q?NAek9w14VEzpMm97iTKZLqG4+qpXMEBCR8QrKqnKibnU2lLv503hosY6Rd7K?=
+ =?us-ascii?Q?KYldYUP7EW7rwxHAaIlyIeBvOrkoVDKsQdnCGGEItb5LJe/SjmYRNWq7AgcD?=
+ =?us-ascii?Q?yryn0QshE02LCe5tyAOtzxFSgbtGElOTFotjmL324lUemdeJ/Pf6LaSBnJ+W?=
+ =?us-ascii?Q?FFJTNqhT6GyX2EYURC2/SnZYHMa99rJmLo50U0Lm8i+Vmr4jIAPyDIhNohhV?=
+ =?us-ascii?Q?efLc39C9HZ0Vy2v/zVW6cc0rrv1CKsOnWJWo6j0CZjaOspDYP2bLplc5/Igl?=
+ =?us-ascii?Q?pARcHhbSpzjcQAYEZc++y9/6pcaUlcBWGStIZrAPgo2ze4iWvkxtXwwvEC11?=
+ =?us-ascii?Q?wk1zOrbtdUii9CwG0xJynDK64qhnNgu8n5sEy6j3+kARRK1urhjega1HRH0w?=
+ =?us-ascii?Q?3qF4DjGsh3mNy0xmVIDaxfqkXrJHZuJt1QLpTV7EyXY2dJlW23kFL+npDjFw?=
+ =?us-ascii?Q?TQ=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	yvg6/MizoFQuXC/Fc7LiHEhLth8ijcXa8IwZjFV3LcSwPWLrCXJX36XSxXOfrSdxReYw1ULuPCUAgp+0BOdA/eTlF/6yt28KpBDb7bvIhHJuTXrHMCF9nZI+dGLJwaBKvu4C4M/MXUPqfiLroN/YTwWRHPndARuDP+I0R2Cp05chuJ7XMlZo8vk5800Bm7op+nqGsSPN94TMBwG1pdxCiObrB6Zvbh7urGSiYMlWJTH47uiX3fCKOE60p9wO7zPPFRP/GtFuZfDuWUfKF2JkR35JUsUo8eQg4b999tZ3peH1EvhnJ3Fjt6fWeHY2WWIyWt1PjKCzdG/Uqt1Og1CzXQmhvY3DIb1embUb1s6OqjaF+KM4JZCmUnYmhnWzJKC17cRDG+GEcH7pQH+70fIKaLa4hnMAhPMaKlT/ED3cMXhtg1S3p6hAytbDulttp20uBy2qfsOJQlSPk8gQF7+3gCs6EUUQ9BaUemgUTBFQcZoq5vJOxb9bKGjX1wHryMixtF9JY24sSKFxNr2jfyQmGpe5QMXA1PRqNQEC6bU16LmLPQQnZaSngksw+0D760nPOQWVsSVEm1q1ca0yBTPBPgwqHaC8Jn7FfimMqwgv+uI=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 029e3e65-9031-4d56-2acd-08dd8caa4c16
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 14:28:40.6334
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: oa2DH356xP60eCR3JCxU/fxkzH9I9GkUX11PJ8IOif7KPZi+ZfN00aDWW34KC4nSGh5Ef6BaAHgVOPKOchl2DQLQFkshsxFEMkgmd+yDwRQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR10MB4658
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-06_06,2025-05-05_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0 phishscore=0
+ malwarescore=0 mlxlogscore=999 mlxscore=0 spamscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2504070000
+ definitions=main-2505060140
+X-Proofpoint-ORIG-GUID: wuZq1a9eMG26SXfZfvlu_UD10UqMgAEf
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA2MDE0MCBTYWx0ZWRfX0kEyurjDxXBw 3y1/2bG5QtLj9jJcJ99gqE6ss2mPT/hWtvZtYjYf8yHWsZqnbSMV2Ve1DXzqs0w7/XXd6XOFJN0 SrZxwVsuQWZHhKNfYW+uXnIIqudjdm0X7HTc64WUxJWVsV7PITT5sOplswIuvIpKlgzyzDP4hUg
+ dP7O7YwEpy9JLjEBh1gS1tYR+6re3eL9YM9f7DxhcKmyBGsbdCmFDE/Qm8kiKnKsJ7fA53rvBiG vYJpp3K2IroUCX6PKOfE4ngNRwxfmw8F1cwPhQwREoh7WPSMJisYNtY8JIS2qwy+cXTAruWUXUT yXPX9Da3cK5E17HEEBcVsaG2rGVJ1Gmr6runCDsJnO8tSXrppN1keyk+Fw6azGKDjaZiigZBmyF
+ 13ntv8YcgqbMh+N1nOLn5j+0fOMQNnb0SPmQZ3BRbrTSwOGslUf2w2zb3me+Wj5qZ1Cr4qP0
+X-Authority-Analysis: v=2.4 cv=ILECChvG c=1 sm=1 tr=0 ts=681a1c9f b=1 cx=c_pps a=zPCbziy225d3KhSqZt3L1A==:117 a=zPCbziy225d3KhSqZt3L1A==:17 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19
+ a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=GoEa3M9JfhUA:10 a=VwQbUJbxAAAA:8 a=TAZUD9gdAAAA:8 a=0l0vT_WQSqFZnbCLHY0A:9 a=CjuIK1q_8ugA:10 a=f1lSKsbWiCfrRWj5-Iac:22 cc=ntf awl=host:13129
+X-Proofpoint-GUID: wuZq1a9eMG26SXfZfvlu_UD10UqMgAEf
 
-On 01.05.25 14:58, Lorenzo Stoakes wrote:
-> On Thu, May 01, 2025 at 12:33:30PM +0100, Ryan Roberts wrote:
->> On 30/04/2025 15:34, Lorenzo Stoakes wrote:
->>> On Wed, Apr 30, 2025 at 03:09:50PM +0100, Ryan Roberts wrote:
->>>> On 29/04/2025 14:52, Lorenzo Stoakes wrote:
->>>>> On Tue, Apr 29, 2025 at 10:53:32AM +0530, Dev Jain wrote:
->>>>>> Batch ptep_modify_prot_start/commit in preparation for optimizing mprotect.
->>>>>> Architecture can override these helpers.
->>>>>>
->>>>>> Signed-off-by: Dev Jain <dev.jain@arm.com>
->>>>>> ---
->>>>>>   include/linux/pgtable.h | 38 ++++++++++++++++++++++++++++++++++++++
->>>>>>   1 file changed, 38 insertions(+)
->>>>>>
->>>>>> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
->>>>>> index b50447ef1c92..ed287289335f 100644
->>>>>> --- a/include/linux/pgtable.h
->>>>>> +++ b/include/linux/pgtable.h
->>>>>> @@ -891,6 +891,44 @@ static inline void wrprotect_ptes(struct mm_struct *mm, unsigned long addr,
->>>>>>   }
->>>>>>   #endif
->>>>>>
->>>>>> +/* See the comment for ptep_modify_prot_start */
->>>>>
->>>>> I feel like you really should add a little more here, perhaps point out
->>>>> that it's batched etc.
->>>>>
->>>>>> +#ifndef modify_prot_start_ptes
->>>>>> +static inline pte_t modify_prot_start_ptes(struct vm_area_struct *vma,
->>>>>> +		unsigned long addr, pte_t *ptep, unsigned int nr)
->>>>>
->>>>> This name is a bit confusing,
->>>>
->>>> On naming, the existing (modern) convention for single-pte helpers is to start
->>>> the function name with ptep_. When we started adding batched versions, we took
->>>> the approach of adding _ptes as a suffix. For example:
->>>>
->>>> set_pte_at()
->>>> ptep_get_and_clear_full()
->>>> ptep_set_wrprotect()
->>>>
->>>> set_ptes()
->>>> get_and_clear_full_ptes()
->>>> wrprotect_ptes()
->>>>
->>>> In this case, we already have ptep_modify_prot_start() and
->>>> ptep_modify_prot_commit() for the existing single-pte helper versions. So
->>>> according to the convention (or at least how I interpret the convention), the
->>>> proposed names seem reasonable.
->>>>
->>>
->>> Right, I'm fine with following convention (we should), I just find 'ptes'
->>> really ambiguous. It's not just a -set of PTE entries- it's very explicitly
->>> for a large folio. I'd interpret some 'ptes' case to mean 'any number of
->>> pte entries', though I suppose it'd not in practice be any different if
->>> that were the intended use.
->>>
->>> However, the proposed use case is large folio 'sub' PTEs and it'd be useful
->>> in callers to know this is explicitly what you're doing.
->>>
->>> I feel like '_batched_ptes' makes it clear it's a _specific_ set of PTE
->>> entriess you're after (not just in effect multiple PTE entries).
->>
->> I don't mind _batched_ptes. _pte_batch would be shorter though - what do you think?
-> 
-> Sounds good!
-> 
->>
->> But if we go with one of these, then we should consistently apply it to all the
->> existing helpers IMHO - perhaps with a preparatory patch at the start of the series.
->>
->>>
->>> However, I'm less insistent on this with a comment that explains what's
->>> going on.
->>
->> That would still get my vote :)
-> 
-> Awesome :)
-> 
->>
->>>
->>> I don't want to hold this up with trivialities around naming...
->>
->> There are TWO hard things in computer science; cache invalidation, naming, and
->> off-by-one errors :)
-> 
-> Haha yes... I continue to be surprised at how bloody hard it is as my
-> career goes on...
-> 
->>
->>>
->>> ASIDE: I continue to absolutely HATE the ambiguity between 'PxD/PTE' and
->>> 'PxD/PTE entries' and the fact we use both as a short-hand for each
->>> other. But that's not related to this series, just a pet peeve... :)
->>
->> I assume you are referring to the ambiguity between the *table* and the *entry*
->> (which just goes to show how ambiguous it is I guess)... I also hate this and
->> still trip over it all the time...
-> 
-> Yes. As do I, as does everybody I think... Sadly I think unavoidable :(
-> 
->>
->>>
->>>>> it's not any ptes, it's those pte entries
->>>>> belonging to a large folio capped to the PTE table right that you are
->>>>> batching right?
->>>>
->>>> Yes, but again by convention, that is captured in the kerneldoc comment for the
->>>> functions. We are operating on a batch of *ptes* not on a folio or batch of
->>>> folios. But it is a requirement of the function that the batch of ptes all lie
->>>> within a single large folio (i.e. the pfns are sequential).
->>>
->>> Ack, yeah don't love this nr stuff but fine if it's convention...
->>>
->>>>   > Perhaps modify_prot_start_large_folio() ? Or something with 'batched' in
->>>>> the name?
->>>>>
->>>>> We definitely need to mention in comment or name or _somewhere_ the intent
->>>>> and motivation for this.
->>>>
->>>> Agreed!
->>>
->>> ...and luckily we are aligned on this :)
->>>
->>>>
->>>>>
->>>>>> +{
->>>>>> +	pte_t pte, tmp_pte;
->>>>>> +
->>>>>
->>>>> are we not validating what 'nr' is? Even with debug asserts? I'm not sure I
->>>>> love this interface, where you require the user to know the number of
->>>>> remaining PTE entries in a PTE table.
->>>>
->>>> For better or worse, that's the established convention. See part of comment for
->>>> set_ptes() for example:
->>>>
->>>> """
->>>>   * Context: The caller holds the page table lock.  The pages all belong
->>>>   * to the same folio.  The PTEs are all in the same PMD.
->>>> """
->>>>
->>>>>
->>>>>> +	pte = ptep_modify_prot_start(vma, addr, ptep);
->>>>>> +	while (--nr) {
->>>>>
->>>>> This loop is a bit horrible. It seems needlessly confusing and you're in
->>>>> _dire_ need of comments to explain what's going on.
->>>>>
->>>>> So my understanding is, you have the user figure out:
->>>>>
->>>>> nr = min(nr_pte_entries_in_pte, nr_pgs_in_folio)
->>>>>
->>>>> Then, you want to return the pte entry belonging to the start of the large
->>>>> folio batch, but you want to adjust that pte value to propagate dirty and
->>>>> young page table flags if any page table entries within the range contain
->>>>> those page table flags, having called ptep_modify_prot_start() on all of
->>>>> them?
->>>>>
->>>>> This is quite a bit to a. put in a header like this and b. not
->>>>> comment/explain.
->>>>
->>>> This style is copied from get_and_clear_full_ptes(), which has this comment,
->>>> which explains all this complexity. My vote would be to have a simple comment
->>
->> Oops; I meant "similar" when my fingers somehow typed "simple"... This is not
->> simple :)
-> 
-> Ha, yeah indeed :P that makes more sense!
-> 
->>
->>>> for this function:
->>>>
->>>> /**
->>>>   * get_and_clear_full_ptes - Clear present PTEs that map consecutive pages of
->>>>   *			     the same folio, collecting dirty/accessed bits.
->>>>   * @mm: Address space the pages are mapped into.
->>>>   * @addr: Address the first page is mapped at.
->>>>   * @ptep: Page table pointer for the first entry.
->>>>   * @nr: Number of entries to clear.
->>>>   * @full: Whether we are clearing a full mm.
->>>>   *
->>>>   * May be overridden by the architecture; otherwise, implemented as a simple
->>>>   * loop over ptep_get_and_clear_full(), merging dirty/accessed bits into the
->>>>   * returned PTE.
->>>>   *
->>>>   * Note that PTE bits in the PTE range besides the PFN can differ. For example,
->>>>   * some PTEs might be write-protected.
->>>>   *
->>>>   * Context: The caller holds the page table lock.  The PTEs map consecutive
->>>>   * pages that belong to the same folio.  The PTEs are all in the same PMD.
->>>>   */
->>>>
->>>
->>> OK I think the key bit here is 'consecutive pages of the same folio'.
->>>
->>> I'd like at least a paragraph about implementation, yes the original
->>> function doesn't have that (and should imo), something like:
->>>
->>> 	We perform the operation on the first PTE, then if any others
->>> 	follow, we invoke the ptep_modify_prot_start() for each and
->>> 	aggregate A/D bits.
->>>
->>> Something like this.
->>>
->>> Point taken on consistency though!
->>>
->>>>>
->>>>> So maybe something like:
->>>>>
->>>>> pte = ptep_modify_prot_start(vma, addr, ptep);
->>>>>
->>>>> /* Iterate through large folio tail PTEs. */
->>>>> for (pg = 1; pg < nr; pg++) {
->>>>> 	pte_t inner_pte;
->>>>>
->>>>> 	ptep++;
->>>>> 	addr += PAGE_SIZE;
->>>>>
->>>>> 	inner_pte = ptep_modify_prot_start(vma, addr, ptep);
->>>>>
->>>>> 	/* We must propagate A/D state from tail PTEs. */
->>>>> 	if (pte_dirty(inner_pte))
->>>>> 		pte = pte_mkdirty(pte);
->>>>> 	if (pte_young(inner_pte))
->>>>> 		pte = pte_mkyoung(pte);
->>>>> }
->>>>>
->>>>> Would work better?
->>>>>
->>>>>
->>>>>
->>>>>> +		ptep++;
->>>>>> +		addr += PAGE_SIZE;
->>>>>> +		tmp_pte = ptep_modify_prot_start(vma, addr, ptep);
->>>>>
->>>>>
->>>>>
->>>>>> +		if (pte_dirty(tmp_pte))
->>>>>> +			pte = pte_mkdirty(pte);
->>>>>> +		if (pte_young(tmp_pte))
->>>>>> +			pte = pte_mkyoung(pte);
->>>>>
->>>>> Why are you propagating these?
->>>>>
->>>>>> +	}
->>>>>> +	return pte;
->>>>>> +}
->>>>>> +#endif
->>>>>> +
->>>>>> +/* See the comment for ptep_modify_prot_commit */
->>>>>
->>>>> Same comments as above, needs more meat on the bones!
->>>>>
->>>>>> +#ifndef modify_prot_commit_ptes
->>>>>> +static inline void modify_prot_commit_ptes(struct vm_area_struct *vma, unsigned long addr,
->>>>>
->>>>> Again need to reference large folio, batched or something relevant here,
->>>>> 'ptes' is super vague.
->>>>>
->>>>>> +		pte_t *ptep, pte_t old_pte, pte_t pte, unsigned int nr)
->>>>>
->>>>> Nit, but you put 'p' suffix on ptep but not on 'old_pte'?
->>>>>
->>>>> I'm even more concerned about the 'nr' API here now.
->>>>>
->>>>> So this is now a user-calculated:
->>>>>
->>>>> min3(large_folio_pages, number of pte entries left in ptep,
->>>>> 	number of pte entries left in old_pte)
->>>>>
->>>>> It really feels like something that should be calculated here, or at least
->>>>> be broken out more clearly.
->>>>>
->>>>> You definitely _at the very least_ need to document it in a comment.
->>>>>
->>>>>> +{
->>>>>> +	for (;;) {
->>>>>> +		ptep_modify_prot_commit(vma, addr, ptep, old_pte, pte);
->>>>>> +		if (--nr == 0)
->>>>>> +			break;
->>>>>
->>>>> Why are you doing an infinite loop here with a break like this? Again feels
->>>>> needlessly confusing.
->>>>
->>>> I agree it's not pretty to look at. But apparently it's the most efficient. This
->>>> is Willy's commit that started it all: Commit bcc6cc832573 ("mm: add default
->>>> definition of set_ptes()").
->>>>
->>>> For the record, I think all your comments make good sense, Lorenzo. But there is
->>>> an established style, and personally I think at this point is it more confusing
->>>> to break from that style.
->>>
->>> This isn't _quite_ style, I'd say it's implementation, we're kind of
->>> crossing over into something a little more I'd say :) but I mean I get your
->>> point, sure.
->>>
->>> I mean, fine, if (I presume you're referring _only_ to the for (;;) case
->>> above) you are absolutely certain it is more performant in practice I
->>> wouldn't want to stand in the way of that.
->>
->> No I'm not certain at all... I'm just saying that's been the argument in the
->> past. I vaguely recall I even tried changing the loop style in batched helpers I
->> implemented in the past and David asked me to stick with the established style.
-> 
-> I definitely defer to David's expertise, but I feel there's some room here
-> for improving things.
+On Tue, May 06, 2025 at 03:44:31PM +0200, Ignacio Moreno Gonzalez via B4 Relay wrote:
+> ... and make setting MADV_NOHUGEPAGE with madvise() into a no-op if THP
+> is not enabled.
 
-Yeah, I recall Willy introducing that scheme, arguing that it is the 
-most efficient once. Can't argue with that :)
+This bit probably belongs after the rest without ellipses :P but it's not
+important.
 
+>
+> I discovered this issue when trying to use the tool CRIU to checkpoint
+> and restore a container. Our running kernel is compiled without
+> CONFIG_TRANSPARENT_HUGETABLES. CRIU parses the output of
+> /proc/<pid>/smaps and saves the "nh" flag. When trying to restore the
+> container, CRIU fails to restore the "nh" mappings, since madvise()
+> MADV_NOHUGEPAGE always returns an error because
+> CONFIG_TRANSPARENT_HUGETABLES is not defined.
+>
+> These patches:
+> - Avoid mapping MAP_STACK to VM_NOHUGEPAGE if !THP
+> - Avoid returning an error when calling madvise() with MADV_NOHUGEPAGE
+>   if !THP
+>
+> Signed-off-by: Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>
 
--- 
-Cheers,
+The series looks good to me, thanks!
 
-David / dhildenb
+Applies cleanly, builds fine, all selftests tests passing etc.
 
+> ---
+> Changes in v2:
+> - [Patch 1/2] Use '#ifdef' instead of '#if defined(...)'
+> - [Patch 1/2] Add 'Fixes: c4608d1bf7c6...'
+> - Create [Patch 2/2]
+>
+> - Link to v1: https://lore.kernel.org/r/20250502-map-map_stack-to-vm_nohugepage-only-if-thp-is-enabled-v1-1-113cc634cd51@kuka.com
+
+Thanks for the summary!
+
+>
+> ---
+> Ignacio Moreno Gonzalez (2):
+>       mm: mmap: map MAP_STACK to VM_NOHUGEPAGE only if THP is enabled
+>       mm: madvise: no-op for MADV_NOHUGEPAGE if THP is disabled
+>
+>  include/linux/huge_mm.h | 6 ++++++
+>  include/linux/mman.h    | 2 ++
+>  2 files changed, 8 insertions(+)
+> ---
+> base-commit: fc96b232f8e7c0a6c282f47726b2ff6a5fb341d2
+> change-id: 20250428-map-map_stack-to-vm_nohugepage-only-if-thp-is-enabled-ce40a1de095d
+>
+> Best regards,
+> --
+> Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>
+>
+>
