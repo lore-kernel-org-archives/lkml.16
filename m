@@ -1,59 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E6A62FDED5;
-	Tue,  6 May 2025 00:57:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48322297A76;
+	Tue,  6 May 2025 00:56:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746493080; cv=none; b=Fahx803gu3/BRIg3/QtUm0j7bqW+VnvXPrgUUZSzB7LbjmYNPSW1TzPqz3SyZFOsZjmrqD2F2OD5ylMsdtZwuFmjrA7e2GbUGad7IAP+bWxwVnBzxxwaCcl8vQK/8NzJWhCZFb//Y79ZuAMTsA4UrBM0Xlf9T6KHbWXoLnoi+b0=
+	t=1746493007; cv=none; b=a14qtlyuQILSCBJse1gfuBZp0Xyw0foZIIMUDpXZ2kbjhmUJDYqop5ONY242nrEkHM0UP2DtwQFJ13OJkSXPTp1skzxp4KUYx2Qo2h5ouo2+PEE1SbbqpFbZGCyNFnmXDwX80sYy+n5vOgeLGoLmqPAfn3bFoNDkmVqJk1TYq9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746493080; c=relaxed/simple;
-	bh=NKn6va4RrIYH/N6ivqU3SO3bMLdN5tCZagXJqpCl7bw=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=YK+tHyRY1oDIlYqTJRrQfnXKwklVbyuyDTeTHSQ4Gq0WPt3hjd0M6S+CeyiijcXSpfF9+1bWaKlBJ9eGVQcx1bYCb2iijlnfdIR2qXETAFFViJ6udxmfJTEXbZv7Rl8/7gHicTJ4b4wBu2po1kfRPcWffa7XChs3HpmpUwfc9Nk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=lCbzDop2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746493007; c=relaxed/simple;
+	bh=v/W1aM1MuNzXSODygweN18dljZ/ub2atw6+YAw+lTII=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=f7sTFFFMZ8PJOxCs/X8e7POPEuEi7f8szWiNKm4UENmBw3Zubdirl2Fh5IxIiSkuHbsXLaP8pdtyk1yEjY4c6liEYhOEsmuTpUWwSzhPakG0zXzF5GnAhW21gmhJk+foEZbqpYWqkT58A4rQr7WeeHGmok74kIsJXRVIZHZWpnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxonhyperv.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b=PmDKpH8e; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxonhyperv.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="lCbzDop2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FA55C4CEE4;
-	Tue,  6 May 2025 00:57:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1746493079;
-	bh=NKn6va4RrIYH/N6ivqU3SO3bMLdN5tCZagXJqpCl7bw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=lCbzDop2tuZRBHs7+HWg2DPEi+0xrZWB+39oDtiHhNAotLlgG+bAvExdX26jbYNXr
-	 ncH8qkcQ2et7VSbhfPjp3Pbg6ZpvOG6OM4shnlVY4UMoIS8UoaWqhA1fXwKtX7Oh1F
-	 pg6yUK3C5y6WJ2C5s5cxSMmgUljccviq7AmiEXlg=
-Date: Mon, 5 May 2025 17:57:58 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Ujwal Kundur <ujwal.kundur@gmail.com>
-Cc: shuah@kernel.org, peterx@redhat.com, jackmanb@google.com,
- linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/1] selftests/mm/uffd: Refactor non-composite global
- vars into struct
-Message-Id: <20250505175758.5d1671329270d4fea87e81d0@linux-foundation.org>
-In-Reply-To: <20250504094825.491-1-ujwal.kundur@gmail.com>
-References: <20250501163827.2598-1-ujwal.kundur@gmail.com>
-	<20250504094825.491-1-ujwal.kundur@gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b="PmDKpH8e"
+Received: by linux.microsoft.com (Postfix, from userid 1202)
+	id 10762204E7F7; Mon,  5 May 2025 17:56:40 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 10762204E7F7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
+	s=default; t=1746493000;
+	bh=5Og7Z75KyR6u/BxtputNeS+3yNPqnOlEkKfpVTbR/mc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=PmDKpH8eVXKUAEeRyNc7xPdDzuvV7U6mCN7Htdj7D84o9s3oRM39pkaIZPcSRR2Ud
+	 8g52Eqv4TTk46t5RIAWGzKcYfR8L9+TiytpIs0w9R03IyFSUE1BTxKaYYoa/I4Z2Hx
+	 jJKdA7ayBV7bomZAEF9ps8LpPGw45+zIPUj0tnxE=
+From: longli@linuxonhyperv.com
+To: "K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Long Li <longli@microsoft.com>
+Subject: [Patch v3 0/5] Fix uio_hv_generic on systems with >4k page sizes
+Date: Mon,  5 May 2025 17:56:32 -0700
+Message-Id: <1746492997-4599-1-git-send-email-longli@linuxonhyperv.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Sun,  4 May 2025 15:18:25 +0530 Ujwal Kundur <ujwal.kundur@gmail.com> wrote:
+From: Long Li <longli@microsoft.com>
 
-> This patch refactors macros and non-composite global variable
-> definitions into a struct that is defined at the start of a test and is
-> passed around instead of relying on global vars.
+UIO framework requires the device memory aligned to page boundary.
+Hyper-V may allocate some memory that is Hyper-V page aligned (4k)
+but not system page aligned.
 
-The uffd tests have changed somewhat in the MM development tree.  Can
-you please redo this again the mm-new branch at
-git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm?
+Fix this by having Hyper-V always allocate those pages on system page
+boundary and expose them to user-mode.
 
-Thanks.
+Change in v2:
+Added two more patches to the series:
+"uio_hv_generic: Adjust ring size according to system page alignment"
+"Drivers: hv: Remove hv_free/alloc_* helpers"
+
+Added more details in the commit message of
+"uio_hv_generic: Use correct size for interrupt and monitor pages"
+
+Change in v3:
+Rearranged the patch on removing hv_alloc/free* helpers
+Added "Drivers: hv: Use kzalloc for panic page allocation"
+Fixed typos.
+
+Long Li (5):
+  Drivers: hv: Allocate interrupt and monitor pages aligned to system
+    page boundary
+  uio_hv_generic: Use correct size for interrupt and monitor pages
+  uio_hv_generic: Align ring size to system page
+  Drivers: hv: Use kzalloc for panic page allocation
+  Drivers: hv: Remove hv_alloc/free_* helpers
+
+ drivers/hv/connection.c        | 23 ++++++++++++-----
+ drivers/hv/hv_common.c         | 45 +++-------------------------------
+ drivers/uio/uio_hv_generic.c   |  7 ++++--
+ include/asm-generic/mshyperv.h |  4 ---
+ 4 files changed, 25 insertions(+), 54 deletions(-)
+
+-- 
+2.34.1
 
