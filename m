@@ -1,121 +1,67 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B7D3280A47
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 13:15:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08327280CE8;
+	Tue,  6 May 2025 13:15:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746537317; cv=none; b=PH3/7gTD5K2ZJLb9Avlsjb6fs4pF/JKu/HQFI3sYCXPBRXAPx+vucSk3qA6OL4hG6U0PwMhcIwQGCcRTPhcClRht3qkoKhGjHI+6xBz/Bhbli05xVz8uxFQIsqAKQqoljdnvaKTJATMFv9jsbDnvTJfCaNmltKg0kPZyLiS3eDc=
+	t=1746537319; cv=none; b=JP+avRHltH15/L9cM+2ItW4Mc2pYCfTRMYzK7V0S7jDm9aHi9Lz+Kvh4J8f0GkpPlPWYBS5puRpYJP52v5vlA8Z7/JiUnaeMVIcdZnuvjPDHyXcJ2LOtTlfcsAXpMF35yJqMWWOjIkTD5Ne5jFmUofGWm0sz6FSQT637qA/4p4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746537317; c=relaxed/simple;
-	bh=UMo6RY8HNHw1pbMNydqNCVM/sSb3xqcPS2PR6p09QcM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fxfU8ptc60uqQmBMLcGwnRJa22+KA2sVfWyfoIlEnKlVwTZt82hnp8+BvFvz1vrFrkyg5NJ9QukGJgsJSMf2JJ4QyNr3umduIm587V4539RtzUM7FUZB1TBy6xrQ4MJqmBNDnYP2g7Ef1nNY0rJFG7z2EEXy+OVk4cSZnNti1u4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E31BE113E;
-	Tue,  6 May 2025 06:15:03 -0700 (PDT)
-Received: from [10.1.39.190] (e137867.arm.com [10.1.39.190])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 09FFF3F5A1;
-	Tue,  6 May 2025 06:15:11 -0700 (PDT)
-Message-ID: <566f9bba-6cc9-490c-aacc-9edd0ae441a0@arm.com>
-Date: Tue, 6 May 2025 14:15:10 +0100
+	s=arc-20240116; t=1746537319; c=relaxed/simple;
+	bh=iDpakBmy34CXU54CTiScl5jnXSHf29nCAHf2ZwVLYSw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=VJKIk5EfX7h4TX7UBCi7o7vbaV+6UYsqFYwxxwivGS89/HOo9aRc+wkaiE21FnjIOuRJ9rvuiqzoTZki/Mz2Q4PY7fsyYKOiYrlWtANkEsYWtBJocMTXRresBUEn3BSN6w1op2DaJZ6IE8HTxDEif5giO8/RFmNrYIFTc2A4Dc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=jxA69Nrt; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="jxA69Nrt"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 5752841080
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1746537317; bh=lftdM96Gj29LMNahG5Po8moIghx45Bchu8Qkov4iPNk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=jxA69NrtRcaVVq6qDMzpKLyGWUDju0A3gx0FnuOfQC5TFYkA9tM2O7cbQguElonSp
+	 Lhw8grInaodyMOq1L8poSwI1sMTxTUjXHiNLZRQCJwcppaq43/fh3oaRGghy6jc0B4
+	 JY25RfmV9yOYQf+7oFcfbr4W2bYh2kkOIs47ySO3yjUWM3rGeSMoP8s1W7f0cBOthP
+	 IKjFKuD9EgyEZ8YNX3ba2g35ZgQGjwod82fSJYzDJLYFdY8rpdrY4iolQSJbCT7/fe
+	 5f9RgcMn5TfhtEp0yw5PPHksFKbisRaSvu5l9OfZfCuu9i3uC2zSrbr9JSMKWKYCtq
+	 5sRaaHu8MfX8A==
+Received: from localhost (mdns.lwn.net [45.79.72.68])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 5752841080;
+	Tue,  6 May 2025 13:15:16 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>, Lee Jones
+ <lee@kernel.org>, Pavel Machek <pavel@kernel.org>
+Cc: linux-leds@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Jean-Michel Hautbois
+ <jeanmichel.hautbois@yoseli.org>
+Subject: Re: [PATCH] Documentation: leds: improve readibility of multicolor doc
+In-Reply-To: <20250421-leds-doc-v1-1-9a32df7fc6f4@yoseli.org>
+References: <20250421-leds-doc-v1-1-9a32df7fc6f4@yoseli.org>
+Date: Tue, 06 May 2025 07:15:12 -0600
+Message-ID: <875xidx4m7.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64/debug: Drop redundant DBG_MDSCR_* macros
-To: Anshuman Khandual <anshuman.khandual@arm.com>,
- linux-arm-kernel@lists.infradead.org
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Ada Couprie Diaz <ada.coupriediaz@arm.com>
-References: <20250417105253.3188976-1-anshuman.khandual@arm.com>
- <0be8e3be-a029-4eea-a79c-310b8e0a05c3@arm.com>
-From: Ada Couprie Diaz <ada.coupriediaz@arm.com>
-Content-Language: en-US
-Organization: Arm Ltd.
-In-Reply-To: <0be8e3be-a029-4eea-a79c-310b8e0a05c3@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-+ linux-arm-kernel@lists.infradead.org
+Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org> writes:
 
-I forgot to fix the typo for the linux-arm-kernel mailing list while 
-replying-all to the original patch, adding it back.
+> When reading the documentation of multicolor leds, the HTML output is
+> not easy to read. Improve it by adding a few markups, splitting the
+> console in a dedicated block.
+>
+> Signed-off-by: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
+> ---
+>  Documentation/leds/leds-class-multicolor.rst | 82 +++++++++++++++++-----------
+>  1 file changed, 51 insertions(+), 31 deletions(-)
 
-Apologies.
+Applied, thanks.
 
-On 06/05/2025 14:10, Ada Couprie Diaz wrote:
-> Hi Anshuman,
->
-> On 17/04/2025 11:52, Anshuman Khandual wrote:
->> MDSCR_EL1 has already been defined in tools sysreg format and hence 
->> can be
->> used in all debug monitor related call paths. Subsequently all 
->> DBG_MDSCR_*
->> macros become redundant and hence can be dropped off completely. 
->> While here
->> convert all variables handling MDSCR_EL1 register as u64 which 
->> reflects its
->> true width as well.
->>
->> Cc: Catalin Marinas <catalin.marinas@arm.com>
->> Cc: Will Deacon <will@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: linux-arm-kernel@lists.infradead.org
->> Cc: linux-kernel@vger.kernel.org
->> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
->> ---
->
-> I think the changes make sense, even more so given that `kvm/debug.c` 
-> already uses the sysreg format definition for MDSCR_EL1.
->
-> It looks good to me, but I think there is a missing conversion to 64 
-> bits below.
-> Would it make sense to convert the two instances of MDSCR_EL1 used in 
-> `tools/testing/selftests/kvm/arm64/debug-exceptions.c`, in 
-> `enable_monitor_debug_exceptions()` and `install_ss()` , to 64 bits as 
-> well ? (They don't rely on `DBG_MDSCR_*`, the test defines its own 
-> macros)
->
->> diff --git a/arch/arm64/kernel/entry-common.c 
->> b/arch/arm64/kernel/entry-common.c
->> index b260ddc4d3e9..6dbfc1008007 100644
->> --- a/arch/arm64/kernel/entry-common.c
->> +++ b/arch/arm64/kernel/entry-common.c
->> @@ -354,7 +354,7 @@ static void 
->> cortex_a76_erratum_1463225_svc_handler(void)
->>         __this_cpu_write(__in_cortex_a76_erratum_1463225_wa, 1);
->>       reg = read_sysreg(mdscr_el1);
->> -    val = reg | DBG_MDSCR_SS | DBG_MDSCR_KDE;
->> +    val = reg | MDSCR_EL1_SS | MDSCR_EL1_KDE;
->>       write_sysreg(val, mdscr_el1);
->>       asm volatile("msr daifclr, #8");
->>       isb();
->
-> Given the change of width to 64 bits elsewhere, shouldn't we change 
-> val and reg to u64 here as well ?
->
-> diff --git a/arch/arm64/kernel/entry-common.c 
-> b/arch/arm64/kernel/entry-common.c
-> index 73cf6a5f41d8..d61a5ddf53d6 100644
-> --- a/arch/arm64/kernel/entry-common.c
-> +++ b/arch/arm64/kernel/entry-common.c
-> @@ -344,7 +344,7 @@ static DEFINE_PER_CPU(int, 
-> __in_cortex_a76_erratum_1463225_wa);
->
->  static void cortex_a76_erratum_1463225_svc_handler(void)
->  {
-> -    u32 reg, val;
-> +    u64 reg, val;
->
->      if (!unlikely(test_thread_flag(TIF_SINGLESTEP)))
->          return;
->
-> Thanks,
-> Ada
->
+jon
