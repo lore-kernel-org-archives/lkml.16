@@ -1,99 +1,99 @@
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C0E0221FD5;
-	Tue,  6 May 2025 04:58:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0071D22C35E;
+	Tue,  6 May 2025 04:58:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746507537; cv=none; b=QZbJvqwXtIEQCqzZsUCOyAonbDtOd+GYz1uOFv6/ZaWx5rpvU2q/LvUYRjdXtVqC+5WPxjGjqGUgtNq8Vp8NbeZxfUxTyoaRJRAnyn83gc/9kaNuF0Bb33YILArQ0IhUVUmebn8007Tf+ESdf0YdM/YlRXuokUbpfxlzMZZNXTk=
+	t=1746507538; cv=none; b=WbyhBA6O4RqcsYDBavzPuLtu27SUAyKg1T/ku5wu4+bh9qcldRk7YST7eGBDofuTrmSnKYf/A9wRna/Gyz/nDjoIb2dbmxjzIDgB8j0xhtLTIJpONKv/uvkBa884VCP/9FqI2ZRIToNGQkziu3vFlSEAAuNHHxFK19hOwmZrPkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746507537; c=relaxed/simple;
-	bh=36Nh2klYydSaF1etucQ5T7fKCi92RTp8ELWrFJG81Ks=;
+	s=arc-20240116; t=1746507538; c=relaxed/simple;
+	bh=2rKTDohoIZTv364VBRei4ErD52RBTQMB1Pfa9/nE7Qk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=eD9Q3seDnw0nNxKOrOdMtXBsQ842tCYab7VAimLqIlM9sY8WBhGH/owC43DeONMBaJywVdpeLiR0gpwbfm8y/RRNhiEJhSqv8c2bA1o/ByIGBm5twQBNHkSAcWevhfbzJTY3X1K5vDHgOAo+cgtF+XQ4yLK9HmKFN0YWENDUfoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h9XdHaFE; arc=none smtp.client-ip=209.85.222.182
+	 MIME-Version; b=hbs5PXQFd5I5DXoUJRcdcyJGSYcXRy4HvMIF28/9bmvdPqUDegeysPStuzeL5F5gDjyMeroPeGNnym3x8bEFg8AKqzUy8VSxzExU4MBx4LTU0OCDQG3y+hvXRNIm70uH65G2gIIrKWr8+UlO9knHvusQJ/tZK4BnyoXwKXPlrH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cHL0p6R2; arc=none smtp.client-ip=209.85.219.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h9XdHaFE"
-Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7c559b3eb0bso317920085a.1;
-        Mon, 05 May 2025 21:58:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cHL0p6R2"
+Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6e900a7ce55so92792166d6.3;
+        Mon, 05 May 2025 21:58:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746507534; x=1747112334; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1746507536; x=1747112336; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:feedback-id:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=W1AOmIGSmcpEzj8NNVdx1CCoiyiTrBHzIt96cBaZ5Jw=;
-        b=h9XdHaFEWRvEdWwDQnNdy2b2JSrE7EdG+b/bglWxLNqQsC8fsDogNqthoubLdwbBU1
-         pbRk7jnTJZWBxcMq3WWB252tPZYpi/8QOwBlDqeDf+Q1O6NHDW05VoUCd8GF/pdWn8gO
-         osio/9w9t3R6MsuOSChQiSragjGiNT09fYScPY3AWQqEv2jBoxwO1b/lM/wmj47OHtik
-         jNLb8PltnbVqI0rbRPMXG6ObVHiFWxqxE/3PDtMTwaGwO8ksEnKUkVGWGGpZFeehnUap
-         6Ha2u2OOpXZ2CCDN7p+tggej/kG0QnC9E9Nc4rFktabYDk3o1OfceH5nr70VbFJsUdQE
-         be0Q==
+        bh=VOzgpOO8eORRFq8I92/Pf3cpq9kLRkLkWGI5a9WKGkQ=;
+        b=cHL0p6R2zQrFo3AU19ijnyifJ/t41l6wu3BlnWIN/OsTgEzmPd+Ndl7ZOxa+OfVitu
+         xPQts8XU9qX5HLBWpaXfu36FaqxHphQNydBvDprPdVZzoeQtAcGlnhN7BY6niRHbDWY7
+         Iwc+0KgLYNYy9OwHdcBPWU2Xc9GvoMifkWkHUczYkOiyFec7UdVSBEFaY5Sln09KJFTq
+         NFqk+lGo5dS5Eh36tWwmyjuygj5er9FZxDKjC1bo/vPDe2HIOMxJzP2Aw4miH+nY5DGO
+         DgoBzglUpcD7wfmeDbYWxiQnJeK5wi0T0C77M5e9tKk62h87iPQdTKeyKYYaRnYnkgLi
+         8Cyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746507534; x=1747112334;
+        d=1e100.net; s=20230601; t=1746507536; x=1747112336;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:feedback-id:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=W1AOmIGSmcpEzj8NNVdx1CCoiyiTrBHzIt96cBaZ5Jw=;
-        b=LM4Lw2YXOlkVhbjChwqhd1gY1VO6sof1hm2luFesmGWywHZ7L7XadKU0ydp0xVbLNc
-         oi7eukQz+/S9QpIIZAQXKLJxSkx4Mb1sErPlPtwQgneueHEdSkA9tavnU0mOTIoHly0S
-         oKkP7NBoLTplxjWuRnBok4/H6fpWi63kBCoHoillKYNY/4RJRCmja6uPCUcnRevtKvCN
-         wMk2IralA020BHCeqwiBVA1VUIBsMxEd2ICtkoK2Aj2T5FGVYJ4JsEiBmPzql07RjgnO
-         DhPhWFkNo4ISesLTtY81dX3PxufcLciaqh5AsI52hmmu23aMTLdpKE9QIrdUW26kueur
-         Y26Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV4kT+0dsUhREiguMvcE4QyG+e04cZdAIOHk/WiwC2+P7onYE5IZU2bkAHALX4YjscKECMc62he64nbXfw=@vger.kernel.org, AJvYcCWl2QazbH8zQsYaaCT1F//WKecHLNZczOtZBkvlRD2AZeKwglMaqSfLSlDLPOdbZn7Sl2pswQVA4xn1Oe2KL28=@vger.kernel.org
-X-Gm-Message-State: AOJu0YznVbdgcZeniDUEIBhfDzyH/1JGwbxXBp/Muw1mA0RRxWRZcqi9
-	1mA9uAs0BU3eqsCxZDxuqVm48tC0E2zxfw5CxHKQdBCFBzFsSNdC
-X-Gm-Gg: ASbGncthRR4eQx0FuS7FnAprOvdfaAe+ULG3n5TBqQS8ZhVtVXmIvbHLuN9+XKp/Wye
-	KX4lLiBO5Y2OvfxRvQ9mZlStwA4qh6gsv1KwBJdC3o8AzJwmbk5yTLTXe/xbUvk3Q5DkGskAS9O
-	XYH0oFh/aK5pd3GlqKxdWyFprrSH8XOHyMm4k1SHS4G2XwLU/2cMHWoCMynG3mFGMEfl8d5smhi
-	PhZM7rjnHfOoYoZMzGZQPVkDLiNxY61DLQNHibTc58XKUmjCreunD7rocfmmDV+dD1acCZWTOPs
-	rqstkXM2SSIM+f5OkEq89tNAPUNo7cHw9SLg4iJgqnQVw6JyTU5gSsjMsVjoy5ncZBgJMB/YZPz
-	OvuzarBJWTtsnlSIpozooYFbhQeh4hbU=
-X-Google-Smtp-Source: AGHT+IFiAI5riZ5rOB1hBWWRNaW43PgfIcr0N4slt18rdztpZEgQos+K1pQsIKNodZQQdE44hEQ30w==
-X-Received: by 2002:a05:620a:800b:b0:7ca:cd16:8f52 with SMTP id af79cd13be357-7cae3a88450mr1410067785a.12.1746507533966;
-        Mon, 05 May 2025 21:58:53 -0700 (PDT)
+        bh=VOzgpOO8eORRFq8I92/Pf3cpq9kLRkLkWGI5a9WKGkQ=;
+        b=QkRg27I6P/cadhoYdmxT2wq4I+vXL5Gm995+iIijTgzt809CvEL37VFISey4+bnrkp
+         Bkt6v96ZIvwPV7ndRm6q721VKwXDmqrroEJMn0BuGjPv16ttr/juD+ra0AmSgZq4lFdb
+         jiXh2gYrz99VDLzUv0h65NkjEIhDltKeLT4g2Tia3E6aVSlckDl/255lE0OG1aFlzEj4
+         SjCvoO5y3j3seS67pdJvuljH9Rj38KorQyItawdk6JgLw5oDT7dPMjATuU+Uvga5Ubu+
+         GcEPDVjV1LNEbrhjFK30olnJWB+LYes3IkaW5VGqeW7iI4+v0PWUddXFV0Ch0pLWI+Pe
+         1Hhw==
+X-Forwarded-Encrypted: i=1; AJvYcCWCVoBclFneqoRo1p8m0IE5NZYhpvLKSXQ+A9JTPdg1kku6uAn+hk/jIz+KpRsCbwZmH2jcXg3SZD1G/c5bfTg=@vger.kernel.org, AJvYcCWsV2cm1ybzMFNhEsx4+W/iwdzDvf3IAZPWovolTGBqIe2IxTZIarMdzxgGwah9NJd41iL7chRnbHadFU4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9yELVGeXrCSpT6Xuuz8622TOMMkP/oy0ljSGDmo6kSTUxB4Pm
+	Oj97v5goHMJv6O2xwDvXOHzZeuhbwYEcsoGlULJ7I29p0IEP/ske
+X-Gm-Gg: ASbGncsd8P6wSIXfIGWJ+7uioI6uyE8qkW78njj4xv8PLngXd+o06GcIFuuhZoSstwV
+	+Cq7hcNUIPSdBmLmKAPcqyyG7uFPSQ3dm/AjslebWNVDLFLdsODaq159Cyxfq8SzRjV7977Ou/4
+	tZMYY0lmJijwTRnF1yI/SaKHByS77FWNw96Ev3VOBVGZRCUpjgK2Wr/BFB5TDcUGAMzZ/6MKNQt
+	RyJP9pGflD+TK6YPcHrTUxfJp3eOBXkdqPATY+fSU8HhA+PgHuwSRrZvAUw17wZ5RBjyLgXQ+F7
+	8rAPYyo64v2XUCpHips+ADHpPMrtJkrpDfU57zW8PbjZMfNEo52T/9cv/hZ+ff7/G/Bvdc2Kwgl
+	53q/zW+G/PMYU9T17Af7zhYwQYXRSgdE=
+X-Google-Smtp-Source: AGHT+IFQN30BafUiqDdeBzYv8NLBc7OgLuq4IV6Uz/0rbVOFp3cLcOixfIhpiNw/jdY6LbD/sLR14w==
+X-Received: by 2002:a05:6214:3001:b0:6f5:d21:cf90 with SMTP id 6a1803df08f44-6f528cecc37mr141978996d6.29.1746507535854;
+        Mon, 05 May 2025 21:58:55 -0700 (PDT)
 Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cad23c48ffsm658912085a.45.2025.05.05.21.58.52
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f50f3c4492sm65288086d6.35.2025.05.05.21.58.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 21:58:53 -0700 (PDT)
-Received: from phl-compute-08.internal (phl-compute-08.phl.internal [10.202.2.48])
-	by mailfauth.phl.internal (Postfix) with ESMTP id BCE711200066;
-	Tue,  6 May 2025 00:58:52 -0400 (EDT)
+        Mon, 05 May 2025 21:58:55 -0700 (PDT)
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 89FBC1200066;
+	Tue,  6 May 2025 00:58:54 -0400 (EDT)
 Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-08.internal (MEProxy); Tue, 06 May 2025 00:58:52 -0400
-X-ME-Sender: <xms:DJcZaBTz2QIJA4pudix58YgHht3bXfnjpFxXzrf7yt1vgVKlR3Z7Qg>
-    <xme:DJcZaKyTlr0Hwpnk7vtu3UzYYz23upWDKAonxi__dZsbUyLAwPGdhDHynrTieUQUO
-    Z0ZQFFwYCyTWrxNvA>
-X-ME-Received: <xmr:DJcZaG3AuUM9pJkwLEYgKWG9_PTp__5DcqvXX2bFS9lEKpPlpvMcY6s8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeeftdekucetufdoteggodetrf
+  by phl-compute-05.internal (MEProxy); Tue, 06 May 2025 00:58:54 -0400
+X-ME-Sender: <xms:DpcZaC9W0dFvJHLPuybwzJk71bbhv-khnsoDrZqGoljyNIXsUVaz1g>
+    <xme:DpcZaCsI2uacXWbL8KBOq0zdSuibMlDCpndYc7YViJBcF9fUCmkIbPlGzKRfcLDpI
+    hK-umI-f5QSXTJ3Tw>
+X-ME-Received: <xmr:DpcZaIB0MPdvsNr3NblFoJ7mL4PFfZUBpS8nfQPCvqgA3_WmZUaUcDHC>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeeftdelucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
     pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
     gvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredt
     tdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
-    hlrdgtohhmqeenucggtffrrghtthgvrhhnpeetjeeuueegfeeihfeihfdtueekgedvkedv
-    ueefvdduheeugeehlefhvdduueegffenucffohhmrghinhepghhithhhuhgsrdgtohhmpd
-    hkvghrnhgvlhdrohhrghdptggrshhtrdgrshenucevlhhushhtvghrufhiiigvpedtnecu
-    rfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrsh
-    honhgrlhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghn
-    gheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepfe
-    ejpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehmihhnghhosehkvghrnhgvlhdr
-    ohhrghdprhgtphhtthhopehpvghtvghriiesihhnfhhrrgguvggrugdrohhrghdprhgtph
-    htthhopehmihhnghhosehrvgguhhgrthdrtghomhdprhgtphhtthhopehjuhhrihdrlhgv
-    lhhlihesrhgvughhrghtrdgtohhmpdhrtghpthhtohepvhhinhgtvghnthdrghhuihhtth
-    hotheslhhinhgrrhhordhorhhgpdhrtghpthhtohepughivghtmhgrrhdrvghgghgvmhgr
-    nhhnsegrrhhmrdgtohhmpdhrtghpthhtoheprhhoshhtvgguthesghhoohgumhhishdroh
-    hrghdprhgtphhtthhopegsshgvghgrlhhlsehgohhoghhlvgdrtghomhdprhgtphhtthho
-    pehmghhorhhmrghnsehsuhhsvgdruggv
-X-ME-Proxy: <xmx:DJcZaJBIWOgEhjKo3CKuCuAGgEt6lAMjVuCMW0DVz9Xe5GY1tsh6KQ>
-    <xmx:DJcZaKgJzD_oyx_cwlVJTKIG7hQF-5FTVPyHtjgRn7_YmsAJU-g8GQ>
-    <xmx:DJcZaNqoU5I4w9plrd3xOwqjWLPCUMArHb-8BkJeCGMh1jSX7QSbGw>
-    <xmx:DJcZaFhS6J5tmR2C_MnAChk2JdZZ3I2eB33aRVJlNlxKeYgfIs5n9A>
-    <xmx:DJcZaFTstqR0Ld12x1sqnLwQPwXUaZY6oEKqVLdUq_jBvr7I4w83NLYl>
+    hlrdgtohhmqeenucggtffrrghtthgvrhhnpeekteetjeegudeikedujeefvddvtdeigfei
+    ffffleejfeeiheeiffefvdeffffgteenucffohhmrghinhepghhithhhuhgsrdgtohhmpd
+    hkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgr
+    ihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqd
+    eiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhl
+    rdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepfeeipdhmohguvgepsh
+    hmthhpohhuthdprhgtphhtthhopehmihhnghhosehkvghrnhgvlhdrohhrghdprhgtphht
+    thhopehpvghtvghriiesihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehmihhngh
+    hosehrvgguhhgrthdrtghomhdprhgtphhtthhopehjuhhrihdrlhgvlhhlihesrhgvughh
+    rghtrdgtohhmpdhrtghpthhtohepvhhinhgtvghnthdrghhuihhtthhotheslhhinhgrrh
+    hordhorhhgpdhrtghpthhtohepughivghtmhgrrhdrvghgghgvmhgrnhhnsegrrhhmrdgt
+    ohhmpdhrtghpthhtoheprhhoshhtvgguthesghhoohgumhhishdrohhrghdprhgtphhtth
+    hopegsshgvghgrlhhlsehgohhoghhlvgdrtghomhdprhgtphhtthhopehmghhorhhmrghn
+    sehsuhhsvgdruggv
+X-ME-Proxy: <xmx:DpcZaKcGMHOKUZDLoEiVuAqP-CYB79w64Tylz42UzlYX1GUw3cQ4iA>
+    <xmx:DpcZaHOjpGG_h_HXdhXZz42oEVrg3qX7jJrDJPboLXP5Ki45mHxz5A>
+    <xmx:DpcZaEmG3WbpXjOFQm8FTCCKAboaHaUAEnXlszoonlu3oXNS_2G0fg>
+    <xmx:DpcZaJtU4V4IBBX3yFmaY5HdzzWLBjb0ZGw2SCCLjphUnyoSV08U7A>
+    <xmx:DpcZaNsUiUl_GAScjWuxJAEAoovHbbzEh17qypMV_J4JgHcw5gDn0qTf>
 Feedback-ID: iad51458e:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 6 May 2025 00:58:52 -0400 (EDT)
+ 6 May 2025 00:58:53 -0400 (EDT)
 From: Boqun Feng <boqun.feng@gmail.com>
 To: Ingo Molnar <mingo@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>
@@ -120,11 +120,10 @@ Cc: Ingo Molnar <mingo@redhat.com>,	Juri Lelli <juri.lelli@redhat.com>,
 	Christian Brauner <brauner@kernel.org>,
 	Panagiotis Foliadis <pfoliadis@posteo.net>,	linux-kernel@vger.kernel.org,
 	rust-for-linux@vger.kernel.org,	llvm@lists.linux.dev,
-	Christian Schrefl <chrisi.schrefl@gmail.com>,
-	Charalampos Mitrodimas <charmitro@posteo.net>
-Subject: [PATCH 3/5] rust: task: Mark Task methods inline
-Date: Mon,  5 May 2025 21:58:41 -0700
-Message-Id: <20250506045843.51258-4-boqun.feng@gmail.com>
+	Daniel Almeida <daniel.almeida@collabora.com>
+Subject: [PATCH 4/5] sched/core: Add __might_sleep_precision()
+Date: Mon,  5 May 2025 21:58:42 -0700
+Message-Id: <20250506045843.51258-5-boqun.feng@gmail.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 In-Reply-To: <20250506045843.51258-1-boqun.feng@gmail.com>
 References: <20250506045843.51258-1-boqun.feng@gmail.com>
@@ -136,122 +135,157 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Panagiotis Foliadis <pfoliadis@posteo.net>
+From: FUJITA Tomonori <fujita.tomonori@gmail.com>
 
-When building the kernel using the llvm-18.1.3-rust-1.85.0-x86_64
-toolchain provided by kernel.org, the following symbols are generated:
+Add __might_sleep_precision(), Rust friendly version of
+__might_sleep(), which takes a pointer to a string with the length
+instead of a null-terminated string.
 
-$ nm vmlinux | grep ' _R'.*Task | rustfilt
-... T <kernel::task::Task>::get_pid_ns
-... T <kernel::task::Task>::tgid_nr_ns
-... T <kernel::task::Task>::current_pid_ns
-... T <kernel::task::Task>::signal_pending
-... T <kernel::task::Task>::uid
-... T <kernel::task::Task>::euid
-... T <kernel::task::Task>::current
-... T <kernel::task::Task>::wake_up
-... T <kernel::task::Task as kernel::types::AlwaysRefCounted>::dec_ref
-... T <kernel::task::Task as kernel::types::AlwaysRefCounted>::inc_ref
+Rust's core::panic::Location::file(), which gives the file name of a
+caller, doesn't provide a null-terminated
+string. __might_sleep_precision() uses a precision specifier in the
+printk format, which specifies the length of a string; a string
+doesn't need to be a null-terminated.
 
-These Rust symbols are trivial wrappers around the C functions. It
-doesn't make sense to go through a trivial wrapper for these functions,
-so mark them inline.
+Modify __might_sleep() to call __might_sleep_precision() but the
+impact should be negligible. When printing the error (sleeping
+function called from invalid context), the precision string format is
+used instead of the simple string format; the precision specifies the
+the maximum length of the displayed string.
 
-[boqun: Capitalize the title, reword a bit to avoid listing all the C
-functions as the code already shows them and remove the addresses of the
-symbols in the commit log as they are different from build to build.]
+Note that Location::file() providing a null-terminated string for
+better C interoperability is under discussion [1].
 
-Link: https://github.com/Rust-for-Linux/linux/issues/1145
-Reviewed-by: Benno Lossin <benno.lossin@proton.me>
-Reviewed-by: Christian Schrefl <chrisi.schrefl@gmail.com>
-Reviewed-by: Charalampos Mitrodimas <charmitro@posteo.net>
+[1]: https://github.com/rust-lang/libs-team/issues/466
+
+Tested-by: Daniel Almeida <daniel.almeida@collabora.com>
 Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-Signed-off-by: Panagiotis Foliadis <pfoliadis@posteo.net>
+Co-developed-by: Boqun Feng <boqun.feng@gmail.com>
 Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-Link: https://lore.kernel.org/r/20250315-inline-c-wrappers-v3-1-048e43fcef7d@posteo.net
+Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+Link: https://lore.kernel.org/r/20250410225623.152616-2-fujita.tomonori@gmail.com
 ---
- rust/kernel/task.rs | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ include/linux/kernel.h |  2 ++
+ kernel/sched/core.c    | 62 ++++++++++++++++++++++++++++--------------
+ 2 files changed, 43 insertions(+), 21 deletions(-)
 
-diff --git a/rust/kernel/task.rs b/rust/kernel/task.rs
-index 9e6f6854948d..0bf5fdf75c37 100644
---- a/rust/kernel/task.rs
-+++ b/rust/kernel/task.rs
-@@ -134,6 +134,7 @@ pub fn current_raw() -> *mut bindings::task_struct {
-     /// # Safety
-     ///
-     /// Callers must ensure that the returned object doesn't outlive the current task/thread.
-+    #[inline]
-     pub unsafe fn current() -> impl Deref<Target = Task> {
-         struct TaskRef<'a> {
-             task: &'a Task,
-@@ -168,6 +169,7 @@ fn deref(&self) -> &Self::Target {
-     /// # Safety
-     ///
-     /// Callers must ensure that the returned object doesn't outlive the current task/thread.
-+    #[inline]
-     pub unsafe fn current_pid_ns() -> impl Deref<Target = PidNamespace> {
-         struct PidNamespaceRef<'a> {
-             task: &'a PidNamespace,
-@@ -275,24 +277,28 @@ pub fn pid(&self) -> Pid {
-     }
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index be2e8c0a187e..086ee1dc447e 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -87,6 +87,7 @@ extern int dynamic_might_resched(void);
+ #ifdef CONFIG_DEBUG_ATOMIC_SLEEP
+ extern void __might_resched(const char *file, int line, unsigned int offsets);
+ extern void __might_sleep(const char *file, int line);
++extern void __might_sleep_precision(const char *file, int len, int line);
+ extern void __cant_sleep(const char *file, int line, int preempt_offset);
+ extern void __cant_migrate(const char *file, int line);
  
-     /// Returns the UID of the given task.
-+    #[inline]
-     pub fn uid(&self) -> Kuid {
-         // SAFETY: It's always safe to call `task_uid` on a valid task.
-         Kuid::from_raw(unsafe { bindings::task_uid(self.as_ptr()) })
-     }
+@@ -145,6 +146,7 @@ extern void __cant_migrate(const char *file, int line);
+   static inline void __might_resched(const char *file, int line,
+ 				     unsigned int offsets) { }
+ static inline void __might_sleep(const char *file, int line) { }
++static inline void __might_sleep_precision(const char *file, int len, int line) { }
+ # define might_sleep() do { might_resched(); } while (0)
+ # define cant_sleep() do { } while (0)
+ # define cant_migrate()		do { } while (0)
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 79692f85643f..496bd462d29e 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -8732,24 +8732,6 @@ void __init sched_init(void)
  
-     /// Returns the effective UID of the given task.
-+    #[inline]
-     pub fn euid(&self) -> Kuid {
-         // SAFETY: It's always safe to call `task_euid` on a valid task.
-         Kuid::from_raw(unsafe { bindings::task_euid(self.as_ptr()) })
-     }
+ #ifdef CONFIG_DEBUG_ATOMIC_SLEEP
  
-     /// Determines whether the given task has pending signals.
-+    #[inline]
-     pub fn signal_pending(&self) -> bool {
-         // SAFETY: It's always safe to call `signal_pending` on a valid task.
-         unsafe { bindings::signal_pending(self.as_ptr()) != 0 }
-     }
+-void __might_sleep(const char *file, int line)
+-{
+-	unsigned int state = get_current_state();
+-	/*
+-	 * Blocking primitives will set (and therefore destroy) current->state,
+-	 * since we will exit with TASK_RUNNING make sure we enter with it,
+-	 * otherwise we will destroy state.
+-	 */
+-	WARN_ONCE(state != TASK_RUNNING && current->task_state_change,
+-			"do not call blocking ops when !TASK_RUNNING; "
+-			"state=%x set at [<%p>] %pS\n", state,
+-			(void *)current->task_state_change,
+-			(void *)current->task_state_change);
+-
+-	__might_resched(file, line, 0);
+-}
+-EXPORT_SYMBOL(__might_sleep);
+-
+ static void print_preempt_disable_ip(int preempt_offset, unsigned long ip)
+ {
+ 	if (!IS_ENABLED(CONFIG_DEBUG_PREEMPT))
+@@ -8771,7 +8753,8 @@ static inline bool resched_offsets_ok(unsigned int offsets)
+ 	return nested == offsets;
+ }
  
-     /// Returns task's pid namespace with elevated reference count
-+    #[inline]
-     pub fn get_pid_ns(&self) -> Option<ARef<PidNamespace>> {
-         // SAFETY: By the type invariant, we know that `self.0` is valid.
-         let ptr = unsafe { bindings::task_get_pid_ns(self.as_ptr()) };
-@@ -308,6 +314,7 @@ pub fn get_pid_ns(&self) -> Option<ARef<PidNamespace>> {
+-void __might_resched(const char *file, int line, unsigned int offsets)
++static void __might_resched_precision(const char *file, int file_len, int line,
++				      unsigned int offsets)
+ {
+ 	/* Ratelimiting timestamp: */
+ 	static unsigned long prev_jiffy;
+@@ -8794,8 +8777,8 @@ void __might_resched(const char *file, int line, unsigned int offsets)
+ 	/* Save this before calling printk(), since that will clobber it: */
+ 	preempt_disable_ip = get_preempt_disable_ip(current);
  
-     /// Returns the given task's pid in the provided pid namespace.
-     #[doc(alias = "task_tgid_nr_ns")]
-+    #[inline]
-     pub fn tgid_nr_ns(&self, pidns: Option<&PidNamespace>) -> Pid {
-         let pidns = match pidns {
-             Some(pidns) => pidns.as_ptr(),
-@@ -321,6 +328,7 @@ pub fn tgid_nr_ns(&self, pidns: Option<&PidNamespace>) -> Pid {
-     }
+-	pr_err("BUG: sleeping function called from invalid context at %s:%d\n",
+-	       file, line);
++	pr_err("BUG: sleeping function called from invalid context at %.*s:%d\n",
++	       file_len, file, line);
+ 	pr_err("in_atomic(): %d, irqs_disabled(): %d, non_block: %d, pid: %d, name: %s\n",
+ 	       in_atomic(), irqs_disabled(), current->non_block_count,
+ 	       current->pid, current->comm);
+@@ -8820,8 +8803,45 @@ void __might_resched(const char *file, int line, unsigned int offsets)
+ 	dump_stack();
+ 	add_taint(TAINT_WARN, LOCKDEP_STILL_OK);
+ }
++
++/*
++ * The precision in vsnprintf() specifies the maximum length of the
++ * displayed string. The precision needs to be larger than the actual
++ * length of the string, so a sufficiently large value should be used
++ * for the filename length.
++ */
++#define MAX_FILENAME_LEN (1<<14)
++
++void __might_resched(const char *file, int line, unsigned int offsets)
++{
++	__might_resched_precision(file, MAX_FILENAME_LEN, line, offsets);
++}
+ EXPORT_SYMBOL(__might_resched);
  
-     /// Wakes up the task.
-+    #[inline]
-     pub fn wake_up(&self) {
-         // SAFETY: It's always safe to call `wake_up_process` on a valid task, even if the task
-         // running.
-@@ -330,11 +338,13 @@ pub fn wake_up(&self) {
- 
- // SAFETY: The type invariants guarantee that `Task` is always refcounted.
- unsafe impl crate::types::AlwaysRefCounted for Task {
-+    #[inline]
-     fn inc_ref(&self) {
-         // SAFETY: The existence of a shared reference means that the refcount is nonzero.
-         unsafe { bindings::get_task_struct(self.as_ptr()) };
-     }
- 
-+    #[inline]
-     unsafe fn dec_ref(obj: ptr::NonNull<Self>) {
-         // SAFETY: The safety requirements guarantee that the refcount is nonzero.
-         unsafe { bindings::put_task_struct(obj.cast().as_ptr()) }
++void __might_sleep_precision(const char *file, int len, int line)
++{
++	unsigned int state = get_current_state();
++	/*
++	 * Blocking primitives will set (and therefore destroy) current->state,
++	 * since we will exit with TASK_RUNNING make sure we enter with it,
++	 * otherwise we will destroy state.
++	 */
++	WARN_ONCE(state != TASK_RUNNING && current->task_state_change,
++			"do not call blocking ops when !TASK_RUNNING; "
++			"state=%x set at [<%p>] %pS\n", state,
++			(void *)current->task_state_change,
++			(void *)current->task_state_change);
++
++	__might_resched_precision(file, len, line, 0);
++}
++EXPORT_SYMBOL_GPL(__might_sleep_precision);
++
++void __might_sleep(const char *file, int line)
++{
++	__might_sleep_precision(file, MAX_FILENAME_LEN, line);
++}
++EXPORT_SYMBOL(__might_sleep);
++
+ void __cant_sleep(const char *file, int line, int preempt_offset)
+ {
+ 	static unsigned long prev_jiffy;
 -- 
 2.39.5 (Apple Git-154)
 
