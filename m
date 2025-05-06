@@ -1,83 +1,131 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E55FC265CDF;
-	Tue,  6 May 2025 09:49:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AC132472A6;
+	Tue,  6 May 2025 09:50:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746524962; cv=none; b=GS0s9RO/7aQOJbn855gYwpUvZqEmhJz1mMsCSmMQ6zb3egpNorcrOYaYXzqqt/DCwBeOoHVIJjApgwZHoEGDT67uMNjoztpEYkkQFV0urg2GkR72oXCHFELI3u7+C9l24liJDHnsr57SKt76WB8oAwmpvdkFz9wFUPgLiiYyeU0=
+	t=1746525054; cv=none; b=byomDUSgClWVJ/XllBYkPqJYCs8VizUdXOnlDjwiwBrRe9fPyzEPVd8pYrB17JTDnegRkBXvoTMRAD26m7xWHXTFlCskW1Haj3ASd/SU7WSq5FnEO98phKkQ7xJg9S0Dlllw8xbMfBsu+PjJ4+lfcXzMbXblhkPK68HtzgXo9pY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746524962; c=relaxed/simple;
-	bh=wli3H1iA05utUdiTrcGE9JgEgoGq9bqSBJ+cNt4ftts=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WziQMdQNJjHyLBaIien1bq3jdFI9ePv7QYWcA2JLxYQwtKfa8hu3Azm3hdLOaiCGa5RxxKSPQ7+TsFKOHr1w6AmspIPfsULbxeh+tPoivMI4eX3Iacmktgr0dRAdw7q76+xot0VaitqG7UWVvtQzC1UjShkavHZLWgyheR1hlQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4ZsD673dVtz12LXP;
-	Tue,  6 May 2025 17:45:35 +0800 (CST)
-Received: from kwepemd100011.china.huawei.com (unknown [7.221.188.204])
-	by mail.maildlp.com (Postfix) with ESMTPS id E42C41800B3;
-	Tue,  6 May 2025 17:49:10 +0800 (CST)
-Received: from M910t.huawei.com (10.110.54.157) by
- kwepemd100011.china.huawei.com (7.221.188.204) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Tue, 6 May 2025 17:49:09 +0800
-From: Changbin Du <changbin.du@huawei.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
-	<namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov
-	<bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, <x86@kernel.org>
-CC: Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
- Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, "Liang,
- Kan" <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
-	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Changbin
- Du <changbin.du@huawei.com>
-Subject: [PATCH] x86: pebs: remove redundant assignments to sample.period
-Date: Tue, 6 May 2025 17:49:07 +0800
-Message-ID: <20250506094907.2724-1-changbin.du@huawei.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1746525054; c=relaxed/simple;
+	bh=JqbzKMxg4NH4McAzvsP0auX4j6YwzFxR8+jb5/OztjA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=O0m65u1K8MXT7QUPU089oAlDBXUdm1c1f21e2MDS/lImq4jm1Joh8cttJcp8pXjnmaDnATf8+Z6bdw1+uIPnxu2DrCqQhOt1Lhxs1oTAEWeb9E9yPwP5YfuuNoA9fbsPemwIX/VTe1e8zA62guwNMN2QRdmbtBJrq1xDwecbJj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PZDHisNN; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PZDHisNN"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-54d98aa5981so6447043e87.0;
+        Tue, 06 May 2025 02:50:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746525051; x=1747129851; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=z+fT522H6brz7o9tM8egtk3glujQpnthQ1tpum8wNy4=;
+        b=PZDHisNNY+McTeSXSNmbLYm8jqrQyISoDXa5L2o7itcQGvoCiarf3vgw/NAXs3NwN7
+         AP1PNeMEpe+0b57sLEvGdQd0N0ZQL0vAOd8LM9izbdPzomMYowA1R/Vjw5vgUOgOY4Kg
+         sQX4QC0F/+mhVIJPpRbtIafFs4dZ4f7GTtBPNf1DsTetaPVZfEHgy8ZbtQ78hDTTZY6a
+         LP4OhNNuicC00whneikfGNy5zvBtoY0o8ehKno6Q+AnhdGrZubYCCMO1xl5a80Ma8Vcg
+         aUG8/l9nYKk0RON4KuMYrMpbXu6TLXu22SkfU9al/Ajzyk/6nW8kKE5+p+avuy7hjS0O
+         G7+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746525051; x=1747129851;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=z+fT522H6brz7o9tM8egtk3glujQpnthQ1tpum8wNy4=;
+        b=d8HCLFwRr3lzhAKjidF0ZZxV36cRxtn3tUJlCRqTSn/otiSesLhY/6L6fpBM9in0Kw
+         eWPVYlMK0tx8+4UMCLVgR5KYOofvnll1ToG23hF1gJUBwJWxgA44awUOrUfUXnIBUHj3
+         50Y8D+EyrgYWezymv08x8Xs10hu+/tQqEJUF3AhmXRyIC2DqzMe0E+KkHRRIPTYAqSBk
+         Fnr73vJ5m8U6xDSnQ83qKR9uW6IcmQS69vAwIesMfu/4kY9sKJRSx3Vy3k+KGE5fe+Zl
+         lTnQRBjouDjSXd+aFfPop6KT8VB+xm4FIN/J3lRtWCjdqtdKoeD3WsrWxLuCTB7oIl/L
+         wcug==
+X-Forwarded-Encrypted: i=1; AJvYcCUmVlh6t/bOB5vcq4KLu/e5iglgBHzP6+H/5P3HP0Ouuyxlp8NYwSaPRan5pZuXrQ7PLmmyuyeEwFhn@vger.kernel.org, AJvYcCVuYZiNYcFYVQKJcij11VDEpugFfRBNBgAjOmTPmjyobMSePQbA+SdedpPAeL8LByI2s91cNyoWahWmhAc=@vger.kernel.org, AJvYcCVwfEDDPBa295g56JRIwYtFi3zg4XghE/CVXvrNFMhPqcBkbRZeYmZ2UFln0DEaS0wNvsHU9dV5z9enh4Q=@vger.kernel.org, AJvYcCWrHMOzF7gFK71+Cota4C3/paggNgV/6QhUzf7mUdyavLs2lfTiiaAQtXj9sDhtZ41KjnPnnleV@vger.kernel.org
+X-Gm-Message-State: AOJu0YwYSsZILXb6VuLxH/ls076jmvGwssoPhT5b1DHrstZBbSfmdg3V
+	ZX23vV+YrlhF/V1RdskZbuzEs8tfig9Ft7I5T+Ls3vJdyOpt2cFt2r4aXPDebtmGu30mqkkvQpe
+	pKbPXorIRycyaGx14KWVr5oLjHxo=
+X-Gm-Gg: ASbGncsRrSm9CqO1VTBZP26w7ndwKj6jJw5wP4DVlVVya5HmF3j7cao6mGp8hUP4WuE
+	Z195OhxLKhK00h1zA9jBGIanlQ6gIcHbwV/9zBjw0ObyMpC5OrFjEHpRbL6W2eoBiln02VDj1sC
+	+QOx/I6OAeqIIjISlVDcG+Tf0=
+X-Google-Smtp-Source: AGHT+IGCdnN++39MsbNDkcs9Nw2mbdDyjnL3MoWEOy3Rg3kK7lGviQiCG0YyI/SKhQjPzHkIdvnJ+8gnH9wkeF8oJHg=
+X-Received: by 2002:a05:6512:b83:b0:545:fad:a747 with SMTP id
+ 2adb3069b0e04-54f9efb4445mr3183952e87.5.1746525050343; Tue, 06 May 2025
+ 02:50:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemd100011.china.huawei.com (7.221.188.204)
+References: <20250423-spi-tegra114-v1-1-2d608bcc12f9@gmail.com> <00b119fb-1cbb-432d-a884-5b33696461e6@nvidia.com>
+In-Reply-To: <00b119fb-1cbb-432d-a884-5b33696461e6@nvidia.com>
+From: Aaron Kling <webgeek1234@gmail.com>
+Date: Tue, 6 May 2025 04:50:37 -0500
+X-Gm-Features: ATxdqUED6Yin9FVSQH1pz5OxO5Z_06zduEaLQoz8cbCxWez0G9eyBoIDDzQwQe8
+Message-ID: <CALHNRZ928KN6ZBDzdGWyabSQw4Hny6F5RdqZ4hBUZosPZtni1A@mail.gmail.com>
+Subject: Re: [PATCH] spi: tegra114: Don't fail set_cs_timing when delays are zero
+To: Jon Hunter <jonathanh@nvidia.com>
+Cc: Laxman Dewangan <ldewangan@nvidia.com>, Mark Brown <broonie@kernel.org>, 
+	Thierry Reding <thierry.reding@gmail.com>, Mason Zhang <Mason.Zhang@mediatek.com>, 
+	linux-spi@vger.kernel.org, linux-tegra@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The perf_sample_data_init() has already set the period of sample, so no
-need to do it again.
+On Tue, May 6, 2025 at 4:27=E2=80=AFAM Jon Hunter <jonathanh@nvidia.com> wr=
+ote:
+>
+>
+> On 24/04/2025 03:03, Aaron Kling via B4 Relay wrote:
+> > From: Aaron Kling <webgeek1234@gmail.com>
+> >
+> > The original code would skip null delay pointers, but when the pointers
+> > were converted to point within the spi_device struct, the check was not
+> > updated to skip delays of zero. Hence all spi devices that didn't set
+> > delays would fail to probe.
+> >
+> > Fixes: 04e6bb0d6bb1 ("spi: modify set_cs_timing parameter")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
+> > ---
+> >   drivers/spi/spi-tegra114.c | 6 +++---
+> >   1 file changed, 3 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/spi/spi-tegra114.c b/drivers/spi/spi-tegra114.c
+> > index 3822d7c8d8edb9730e937df50d1c75e095dd18ec..2a8bb798e95b954fe573f1c=
+50445ed2e7fcbfd78 100644
+> > --- a/drivers/spi/spi-tegra114.c
+> > +++ b/drivers/spi/spi-tegra114.c
+> > @@ -728,9 +728,9 @@ static int tegra_spi_set_hw_cs_timing(struct spi_de=
+vice *spi)
+> >       u32 inactive_cycles;
+> >       u8 cs_state;
+> >
+> > -     if (setup->unit !=3D SPI_DELAY_UNIT_SCK ||
+> > -         hold->unit !=3D SPI_DELAY_UNIT_SCK ||
+> > -         inactive->unit !=3D SPI_DELAY_UNIT_SCK) {
+> > +     if ((setup->unit && setup->unit !=3D SPI_DELAY_UNIT_SCK) ||
+> > +         (hold->unit && hold->unit !=3D SPI_DELAY_UNIT_SCK) ||
+> > +         (inactive->unit && inactive->unit !=3D SPI_DELAY_UNIT_SCK)) {
+>
+> The above does not look correct to me. For example, if 'setup->unit' is
+> 0, this means that the unit is 'SPI_DELAY_UNIT_USECS' and does not
+> indicate that the delay is 0.
+>
+> Shouldn't the above be ...
+>
+>   if ((setup && setup->unit !=3D SPI_DELAY_UNIT_SCK) ||
+>       (hold && hold->unit !=3D SPI_DELAY_UNIT_SCK) ||
+>       (inactive && inactive->unit !=3D SPI_DELAY_UNIT_SCK)) {
 
-Signed-off-by: Changbin Du <changbin.du@huawei.com>
----
- arch/x86/events/intel/ds.c | 3 ---
- 1 file changed, 3 deletions(-)
+This is what the code looked like before 373c36b [0], which dropped
+that check because the pointers can never be NULL. Should this check
+if ->value is not 0 instead?
 
-diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index 9b20acc0e932..292ef21cbfbd 100644
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -1828,8 +1828,6 @@ static void setup_pebs_fixed_sample_data(struct perf_event *event,
- 
- 	perf_sample_data_init(data, 0, event->hw.last_period);
- 
--	data->period = event->hw.last_period;
--
- 	/*
- 	 * Use latency for weight (only avail with PEBS-LL)
- 	 */
-@@ -2082,7 +2080,6 @@ static void setup_pebs_adaptive_sample_data(struct perf_event *event,
- 	sample_type = event->attr.sample_type;
- 	format_group = basic->format_group;
- 	perf_sample_data_init(data, 0, event->hw.last_period);
--	data->period = event->hw.last_period;
- 
- 	setup_pebs_time(event, data, basic->tsc);
- 
--- 
-2.43.0
+Sincerely,
+Aaron Kling
 
+[0] https://github.com/torvalds/linux/commit/373c36bf7914e3198ac2654dede499=
+f340c52950
