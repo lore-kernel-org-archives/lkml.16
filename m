@@ -1,148 +1,99 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E316E27875F
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 11:16:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65AB38F66;
+	Tue,  6 May 2025 11:17:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746530166; cv=none; b=TPEv82JVuoTl0rgXk0/+Lg8QFWWaqYEyDlcGapIPQprSDvlNo+cAYwGe1xySAg0CwgwvKixOXZBRiPdbx4i2SAn+dqDV3m6Ofnd3pW/7uwvb/op/zz7ArEYcU1ZAMmA/wWXMSX8vj/gSGxu0qwJ7ftyEgP84bv7maHyo2ucKAsg=
+	t=1746530225; cv=none; b=RpJOvHfQk/T1Bk5FU2eqkSUUSRac4pSfovZ2PSZPlWAbLD2xLXwLgtPw3lLQYkrwvqX9hF887q9dg8nmPY0+lck79tXDvG0dlqo+lkJchYKMgOR2srh/Deacy0iERtwF4dhedRIgcOvO4q5rKl+fiA2XgSc5VNCWgz58SGAvZgU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746530166; c=relaxed/simple;
-	bh=Ic6iSBqqOYzgqBs0HWZuf5LIeAmlU/Dk/nOP/28CaHg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DUEJ8STTk9PYUUr2ZcVxsXThNcL8qUIZHHMeriVLYVec2wWwYcz9esL7/tAHW9KF/EvKyyTLH/NYMGGl8Aa+NnlWrphRx8nOQK2vYz3C6XeVF7d84FpjibbPTZuEHZ95XnrS/DCIR6ZyCHk25mAuMXWISl/re/jBl7UIHspufwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=q8h74pHz; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q8h74pHz"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43cf0d787eeso50367625e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 04:16:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746530162; x=1747134962; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=AZCwgOWOOCWTlbTNg+Glm3yWO7Px7uzRJr4qQIo37HE=;
-        b=q8h74pHzgCsX2aFWHKuI7jWS0k5ifTSuGh+hdR6G4sVgVqHRmD1nLZVAyQUfUYq96e
-         IsNxObUHqkcVkzSJM+sg+NtKaa7b4SxyC1/i8voGv7GDeCApBd12VY+NUmdvNXn3EVcU
-         NercAKKrONxgUJetuGfmvQnIzbYgXWgawWRu2Pm9OOy5bw5aOeO/YrYppAXRS4okSHzg
-         /B00IqjDsFL7OSQqw6rWVuLyddk3duXdNt075YOQh9NYu6Wa/XhVKLfB+NOtpVjWO+Gg
-         d/wQjO298/WcGJmABbtOoU29QmhdXDjU1CET7U5dHIRKOXZrmr3k1jaTvdXRvL1aiRYl
-         k3oA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746530162; x=1747134962;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AZCwgOWOOCWTlbTNg+Glm3yWO7Px7uzRJr4qQIo37HE=;
-        b=emeWtkSZExPJ//Ak1swLK8GBF9dgasWPWd6USo2H6aKFhkyNJ6rA0v3eeCbVD9K3bg
-         uH685Q121zkA3jsLwPKa2TJyhbKCAH4bl5NHIkWK1kEb2tmowUCHa1Crqe3iQg38OhxJ
-         cxcPXJRMnp2fJ/r97A8Oz0g8kkGcC8HniY5lDDx2IkzanjRtnN3fvI6wmwzungH3htn0
-         2ieGpf+Sxfpu7fwA+gUNmtDHQRkA7IoG4afYRFPDHSBJzvsAHqNmekT8ymv4vYYVjtbX
-         X9btOrqgljqZAe9lts8OZjP255nX98aUUdwlVoSYgbuGycGGd+b3pa/YkJAwGb4etYLE
-         zfNg==
-X-Forwarded-Encrypted: i=1; AJvYcCX4f9Fl6e7bifW/uHUv3pVR7dDrgpZj9LiL4lrzB+j0jEXuURin8A3eXDYRxcsUtZqMAT9KsbNikKBWKvk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwylDRuc/HjUoFVAp2LrBV2GeeZlLV+Yuy2Acus+SPwr73Q4uKu
-	zTYEJXjY6IgedOJT/GQrlcjYUfN/bAEyw+UOEGCNDDzpFBxlJwElpUp4sXBCxGA=
-X-Gm-Gg: ASbGncvMtfgzy0tQ8E3ZxQ008bXz77XzW2IkJQsy8TE2jVE5u7bejoLO17S4Ngpnt5r
-	Dl+dbABH+7Yh6SRT3YeY7gDiIeYOzuSJAyiwH+wGMS9s7BEMcqVPLtMOEMyt0ltNdM5CI9KNItT
-	MRHmk7wrBcO8/VMeDcdk+MapPL14KdpdQF8/2ZidzGycNlvfvKFEs3UG06RBDxOsTqEI5FNzwxW
-	KUsM9hn9vq9h8fx2U8WB/5cVp1Cb2T0mbvB8FGccyk3/aYtlNtuO22VpR7ANKFYCxKeHAMq4mJg
-	cR5zEw544qiLK8MRMHodLpP1KB5VTch0F/e3mjbJ2L3hu8rxHke/4unz
-X-Google-Smtp-Source: AGHT+IEb/FzHjC2BdixzCZvpPpVp5jderqE1DM9mJQuUaUitas1wO3yPRwuVgog0ub9hO25i19Te4w==
-X-Received: by 2002:a05:600c:4ec6:b0:43c:e8a5:87a with SMTP id 5b1f17b1804b1-441c48dc0a1mr103108985e9.16.1746530162207;
-        Tue, 06 May 2025 04:16:02 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-441b8a286b9sm164637705e9.28.2025.05.06.04.16.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 04:16:01 -0700 (PDT)
-Date: Tue, 6 May 2025 14:15:57 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Keguang Zhang <keguang.zhang@gmail.com>
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>, linux-mips@vger.kernel.org,
-	linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH next] mtd: rawnand: loongson1: Fix error code in
- ls1x_nand_dma_transfer()
-Message-ID: <aBnvbYaE-tud_o0x@stanley.mountain>
-References: <aBSEwag_ducqOwy7@stanley.mountain>
- <CAJhJPsUZz2kwMyWPDrc_ktb5O6ECcAyO1OrXXVWh9yvkrKRidg@mail.gmail.com>
- <aBnXPYLSNJASR51f@stanley.mountain>
- <CAJhJPsX2-Q+Yq86_Vdyxe-_SVR0j1e5buE8Yw+RbJgp6Kadh8Q@mail.gmail.com>
+	s=arc-20240116; t=1746530225; c=relaxed/simple;
+	bh=Z7jOwuEBTaEvhsLGSpRE/ZPVJ70iFQdIT9GmLOYv7TU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=l+SVea76V2dRL+7pwEbbxyuHY2+oUIIYHoB3drCikJrIjWCSe+2rfNOeyTqqpSQQW5BmHi4J3TIc2roXptO9lKtITaHFCH+ZP0HeogRj/Ew1e2ZiI1QG4R87fohGt7Q3yTWHygd5ZgZvz7wSjr09F7Tk5Tx+AAN4LNKCXEtM//A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZsG7449SCz4f3lCf;
+	Tue,  6 May 2025 19:16:32 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 83A261A1BAF;
+	Tue,  6 May 2025 19:16:58 +0800 (CST)
+Received: from [10.174.179.80] (unknown [10.174.179.80])
+	by APP4 (Coremail) with SMTP id gCh0CgDXOl+o7xlohYhoLg--.37289S3;
+	Tue, 06 May 2025 19:16:58 +0800 (CST)
+Message-ID: <64c8b62a-83ba-45be-a83e-62b6ad8d6f22@huaweicloud.com>
+Date: Tue, 6 May 2025 19:16:56 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJhJPsX2-Q+Yq86_Vdyxe-_SVR0j1e5buE8Yw+RbJgp6Kadh8Q@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v4 07/11] fs: statx add write zeroes unmap attribute
+To: Christoph Hellwig <hch@lst.de>, "Darrick J. Wong" <djwong@kernel.org>
+Cc: linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+ linux-block@vger.kernel.org, dm-devel@lists.linux.dev,
+ linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
+ linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org, tytso@mit.edu,
+ john.g.garry@oracle.com, bmarzins@redhat.com, chaitanyak@nvidia.com,
+ shinichiro.kawasaki@wdc.com, brauner@kernel.org, yi.zhang@huawei.com,
+ chengzhihao1@huawei.com, yukuai3@huawei.com, yangerkun@huawei.com
+References: <20250421021509.2366003-1-yi.zhang@huaweicloud.com>
+ <20250421021509.2366003-8-yi.zhang@huaweicloud.com>
+ <20250505132208.GA22182@lst.de> <20250505142945.GJ1035866@frogsfrogsfrogs>
+ <c7d8d0c3-7efa-4ee6-b518-f8b09ec87b73@huaweicloud.com>
+ <20250506043907.GA27061@lst.de>
+Content-Language: en-US
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+In-Reply-To: <20250506043907.GA27061@lst.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:gCh0CgDXOl+o7xlohYhoLg--.37289S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7Xr1rZFyDCrWUGw4rKFy3Jwb_yoW8JrWDpa
+	yUKFyqyw4DKr15Xwn7uw4vgrn5Zrs5JFn8Gw4rKr18Zws8X3WxKF9Yg3WDGF9xWr1fAa4U
+	ArsxK34DXayfC3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvYb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
+	14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWr
+	XwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
+	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x07
+	jIksgUUUUU=
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-On Tue, May 06, 2025 at 06:01:15PM +0800, Keguang Zhang wrote:
-> On Tue, May 6, 2025 at 5:32 PM Dan Carpenter <dan.carpenter@linaro.org> wrote:
-> >
-> > On Tue, May 06, 2025 at 05:16:03PM +0800, Keguang Zhang wrote:
-> > > On Fri, May 2, 2025 at 4:39 PM Dan Carpenter <dan.carpenter@linaro.org> wrote:
-> > > >
-> > > > The "desc" variable is NULL and PTR_ERR(NULL) is zero/success.  Return
-> > > > a negative error code instead.
-> > > >
-> > > > Fixes: d2d10ede04b1 ("mtd: rawnand: Add Loongson-1 NAND Controller Driver")
-> > > > Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-> > > > ---
-> > > > It's hard to know what the patch prefix should be here.  Ideally when we
-> > > > add a new driver we would use the patch prefix for the driver.
-> > > >
-> > > > Tired: subsystem: Add driver XXX
-> > > > Wired: subsystem: XXX: Add driver for XXX
-> > > >
-> > > >  drivers/mtd/nand/raw/loongson1-nand-controller.c | 2 +-
-> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/drivers/mtd/nand/raw/loongson1-nand-controller.c b/drivers/mtd/nand/raw/loongson1-nand-controller.c
-> > > > index 6a369b1c7d86..8754bb4f8b56 100644
-> > > > --- a/drivers/mtd/nand/raw/loongson1-nand-controller.c
-> > > > +++ b/drivers/mtd/nand/raw/loongson1-nand-controller.c
-> > > > @@ -371,7 +371,7 @@ static int ls1x_nand_dma_transfer(struct ls1x_nand_host *host, struct ls1x_nand_
-> > > >         desc = dmaengine_prep_slave_single(chan, dma_addr, op->len, xfer_dir, DMA_PREP_INTERRUPT);
-> > > >         if (!desc) {
-> > > >                 dev_err(dev, "failed to prepare DMA descriptor\n");
-> > > > -               ret = PTR_ERR(desc);
-> > > > +               ret = -ENOMEM;
-> > >
-> > > Thank you for fixing this issue.
-> > > However, I believe -EIO is more appropriate than -ENOMEM, since
-> > > dmaengine_prep_slave_single() can return errors other than -ENOMEM.
-> > >
-> >
-> > It's not an I/O error so -EIO isn't correct.
-> >
-> > There are a bunch of reasons it could fail but most likely
-> > dma_pool_alloc() failed.  I think -ENOMEM is correct.
-> >
+On 2025/5/6 12:39, Christoph Hellwig wrote:
+> On Tue, May 06, 2025 at 12:28:54PM +0800, Zhang Yi wrote:
+>> OK, since this statx reporting flag is not strongly tied to
+>> FALLOC_FL_WRITE_ZEROES in vfs_fallocate(), I'll split this patch into
+>> three separate patches.
 > 
-> Have you reviewed the implementation of ls1x_dma_prep_slave_sg()?
+> I don't think that is the right thing to do do.  Keep the flag addition
+> here, and then report it in the ext4 and bdev patches adding
+> FALLOC_FL_WRITE_ZEROES as the reporting should be consistent with
+> the added support.
+> 
 
-The ls1x_dma_prep_slave_sg() has basically two error cases, buggy drivers
-and allocation errors.  Someone could argue that if people pass invalid
-data then the correct return is -EINVAL but in these cases it's a buggy
-driver and we fix bugs, we don't work around them.  So the correct
-return is -ENOMEM.
+Sorry, but I don't understand your suggestion. The
+STATX_ATTR_WRITE_ZEROES_UNMAP attribute only indicate whether the bdev
+and the block device that under the specified file support unmap write
+zeroes commoand. It does not reflect whether the bdev and the
+filesystems support FALLOC_FL_WRITE_ZEROES. The implementation of
+FALLOC_FL_WRITE_ZEROES doesn't fully rely on the unmap write zeroes
+commoand now, users simply refer to this attribute flag to determine
+whether to use FALLOC_FL_WRITE_ZEROES when preallocating a file.
+So, STATX_ATTR_WRITE_ZEROES_UNMAP and FALLOC_FL_WRITE_ZEROES doesn't
+have strong relations, why do you suggested to put this into the ext4
+and bdev patches that adding FALLOC_FL_WRITE_ZEROES?
 
-> Errors in this function can be caused not only by -ENOMEM, but also by -EINVAL.
-> Moreover, in most cases, the error handling logic for
-> dmaengine_prep_slave_single() returns -EIO when the function returns
-> NULL.
-
-There are some that return -EIO but hardly the majority.  Other places
-return -ENOMEM or -EINVAL.  It's not worth going back and fixing all of
-these but really -ENOMEM is the correct return.
-
-regards,
-dan carpenter
+Thanks,
+Yi.
 
