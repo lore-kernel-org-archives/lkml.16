@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3D332853F6;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAFF028151D;
 	Tue,  6 May 2025 17:09:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746551374; cv=none; b=TQEWSRw2NZ0W1qjPFwuHcUo260/ixzKP71IdzDSwzf+wUKC1Zi2cBUrHlC/cFoESUKF+etfrhItIgE2r6rP4fG5BJ66uPxvOX8O3Aq77cXjWEMVAgsZZu8g7WIs0eTMqsZDLhiRkQolTQKUbyB2MtutjuQuiFhz8CcAxJrYg0t4=
+	t=1746551375; cv=none; b=iE5AG3t+HKmbAd9Lw3HqhGYVzSpdZO6GJ8ejIt8OXuIAoRlVgGiq0TmWppgpNy2mo5c6xVQK5g7R/luqARf1zipoCR5ptU57ByZXDOikCiD4fOiVmJTEp4zqCkdpprC8xQUcGlGwsHeqETn/LAmv846SvTiz9jxOhBU9DRQB5Ew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746551374; c=relaxed/simple;
-	bh=FNA2gsRQTdJsloAcS3RRSgVH0l+51ZiDBDeK6njOiz8=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ZuAyxT+dbmUTMBx/NB9bSG4b8c+BGvZisOTIAylH8BdVou04A9JfuAVIArLskMzs9tmaI1sNyXbTwcA93/0DypanPvnz+4aMxOq/tV+LVp7aQN1P0PQpIanEsqse/HnsqQbTRy7Pura36DrSjBty682LsebFH8hB45sk9CVixIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bD8tec4A; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746551375; c=relaxed/simple;
+	bh=k+gZ1pxmpGXcLHj2TLw4nLia4cr2GC0EuPxS3YjpOCg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=EKHco1pGoZ87Ww7V5HrXRPMysq69Ef4g0JaMdIEFaynsRpizxeoaC+TSacIoZyAd2FsarL4K0IfoKLurDoxVyyNkRckIsQJhGza+XlJuZpVs6hcJ2HDbYB1JFKgBz8qJAgEP+UzhB4YLZWiDd3YSMXgLx+sZkIfZqZdNlnakJTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VcDx68d5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bD8tec4A"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 4066BC4CEF0;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VcDx68d5"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 58F7CC4CEF3;
 	Tue,  6 May 2025 17:09:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1746551374;
-	bh=FNA2gsRQTdJsloAcS3RRSgVH0l+51ZiDBDeK6njOiz8=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=bD8tec4A0etJw6u2v9BYQfdDu4z4+U8FKKfYI+sQQyoqCTwtGl5z91W4lkHQGojA5
-	 VQI4JZTQyamjMzZyeRGfje0BkyBnHdLhEsf9xxIqSBBeUwFhd42sZLI/cENmB71L3q
-	 zT7hBr7/SnEBJj8jcTU3BgOd/mzgBHI7JC3MrP0P0Sg5hWm9VrBH6AO9/l960amG2m
-	 e/iGktH5Cki9ZlUUgqFkYlT9Upuq44FsjrYxP/WQMiQaFRbb/pd3cOTQ6zsOSC5Zol
-	 SFrKnEDxjCKCs8oYAFHOWPOy/8m3VrdV5TYt4E92DHr8ymcbiwmLdoGIeroykSnuqr
-	 9OX5kXOBB4GDA==
+	bh=k+gZ1pxmpGXcLHj2TLw4nLia4cr2GC0EuPxS3YjpOCg=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=VcDx68d5Wc2yLUlRvccpd/myN1moA5pKE7H4f4f0ib88r7j1fENwvw70NQSonwxgT
+	 CoE7MGXOHwDCwuIbSm/A2O46wmnjfivqwDUitiIa0y+7kxPeWTaIManccTNRWz2/0f
+	 VtYWfG1NK1BQEZZ+omAqXCAyT2yy7lnwcYvf7T/lCurvR/bf5djhiHe9SZ4Po6ZlFR
+	 jOObMVTZ0NSuKZH0M4+qy09FQyLibIE2v6Jz0uZG0NkmJdg0JODLYztSIpljgwOKaf
+	 0yCl9OjzkYWmiNwj/2OyGxUfVsU5jkw1l/muai+Mju8ETfY06KbzZlijB4bu+YcNKy
+	 1RbOH1vM0675g==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C584C3ABBE;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4942DC3ABC5;
 	Tue,  6 May 2025 17:09:34 +0000 (UTC)
 From: Aaron Kling via B4 Relay <devnull+webgeek1234.gmail.com@kernel.org>
-Subject: [PATCH v2 0/2] phy: tegra: xusb: Default otg mode to peripheral
-Date: Tue, 06 May 2025 12:09:16 -0500
-Message-Id: <20250506-xusb-peripheral-v2-0-bfbe00671389@gmail.com>
+Date: Tue, 06 May 2025 12:09:18 -0500
+Subject: [PATCH v2 2/2] phy: tegra: xusb: Default otg mode to peripheral
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,10 +40,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIADxCGmgC/3WNyw7CIBBFf6WZtWMKpSpd+R+mC0Aok/RBQElN0
- 38Xu3d5bnLO3SDZSDZBV20QbaZEy1yAnyowXs2DRXoWBl7ztha1wPWdNIYiBW+jGtGIVrNLc3V
- No6FYIVpH61F89IU9pdcSP8dBZr/1fyszZCilYTehpXatuw+TovFslgn6fd+/RSnzeq4AAAA=
-X-Change-ID: 20250404-xusb-peripheral-c45b1637f33b
+Message-Id: <20250506-xusb-peripheral-v2-2-bfbe00671389@gmail.com>
+References: <20250506-xusb-peripheral-v2-0-bfbe00671389@gmail.com>
+In-Reply-To: <20250506-xusb-peripheral-v2-0-bfbe00671389@gmail.com>
 To: JC Kuo <jckuo@nvidia.com>, Vinod Koul <vkoul@kernel.org>, 
  Kishon Vijay Abraham I <kishon@kernel.org>, 
  Thierry Reding <thierry.reding@gmail.com>, 
@@ -54,11 +53,11 @@ Cc: linux-phy@lists.infradead.org, linux-tegra@vger.kernel.org,
  linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
  Aaron Kling <webgeek1234@gmail.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746551373; l=1076;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1746551373; l=1618;
  i=webgeek1234@gmail.com; s=20250217; h=from:subject:message-id;
- bh=FNA2gsRQTdJsloAcS3RRSgVH0l+51ZiDBDeK6njOiz8=;
- b=+Y2xZC3OosSjaAuY4rTFVw/J7gz3zpQ3FqXfBcXxUM2W6VcJmlJ40WuayQMLyyTmMC4TMJ8RA
- SWaNIMRmfzmDzYzt0EQkphgtJmhgwPVpVdguGVVDKbzt3j7q+lCQC2r
+ bh=WY090858pJtzoKww7YaC7Z9JTjET1bec4L1964gg6J4=;
+ b=NaDOg+nVQv05p86Ta/79J6j2EU3M3vcxowUBXmQydstuVgGIULGpaJycP9oGlAbZopQhyWfpF
+ OWzO8bM+nO6Cp/bxIk33uX0ce/QeUjBV6iUHqoiGfgtc3beuBTn+vi1
 X-Developer-Key: i=webgeek1234@gmail.com; a=ed25519;
  pk=TQwd6q26txw7bkK7B8qtI/kcAohZc7bHHGSD7domdrU=
 X-Endpoint-Received: by B4 Relay for webgeek1234@gmail.com/20250217 with
@@ -66,31 +65,48 @@ X-Endpoint-Received: by B4 Relay for webgeek1234@gmail.com/20250217 with
 X-Original-From: Aaron Kling <webgeek1234@gmail.com>
 Reply-To: webgeek1234@gmail.com
 
+From: Aaron Kling <webgeek1234@gmail.com>
+
+Currently, if usb-role-switch is set and role-switch-default-mode is
+not, a xusb port will be inoperable until that port is hotplugged,
+because the driver defaults to role none. Instead of requiring all
+devices to set the default mode, assume that the port is primarily
+intended for use in device mode.
+
 Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
 ---
-Changes in v2:
-- Add new patch to document role-switch-default-mode in xusb padctl
-- Simplify code change, per review
-- Comment in code why device mode is default
-- Link to v1: https://lore.kernel.org/r/20250404-xusb-peripheral-v1-1-99c184b9bf5f@gmail.com
+ drivers/phy/tegra/xusb.c | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
----
-Aaron Kling (2):
-      dt-bindings: phy: tegra-xusb: Document role-switch-default-mode
-      phy: tegra: xusb: Default otg mode to peripheral
+diff --git a/drivers/phy/tegra/xusb.c b/drivers/phy/tegra/xusb.c
+index 79d4814d758d5e1f0e8200d61e131606adbb0e2d..22338f3f24a0794c22544a0e16e0fc706c4fb6d7 100644
+--- a/drivers/phy/tegra/xusb.c
++++ b/drivers/phy/tegra/xusb.c
+@@ -726,18 +726,15 @@ static int tegra_xusb_setup_usb_role_switch(struct tegra_xusb_port *port)
+ 
+ static void tegra_xusb_parse_usb_role_default_mode(struct tegra_xusb_port *port)
+ {
+-	enum usb_role role = USB_ROLE_NONE;
++	/* Most switchable usb ports are normally used in device mode */
++	enum usb_role role = USB_ROLE_DEVICE;
+ 	enum usb_dr_mode mode = usb_get_role_switch_default_mode(&port->dev);
+ 
+ 	if (mode == USB_DR_MODE_HOST)
+ 		role = USB_ROLE_HOST;
+-	else if (mode == USB_DR_MODE_PERIPHERAL)
+-		role = USB_ROLE_DEVICE;
+ 
+-	if (role != USB_ROLE_NONE) {
+-		usb_role_switch_set_role(port->usb_role_sw, role);
+-		dev_dbg(&port->dev, "usb role default mode is %s", modes[mode]);
+-	}
++	usb_role_switch_set_role(port->usb_role_sw, role);
++	dev_dbg(&port->dev, "usb role default mode is %s", modes[mode]);
+ }
+ 
+ static int tegra_xusb_usb2_port_parse_dt(struct tegra_xusb_usb2_port *usb2)
 
- .../bindings/phy/nvidia,tegra124-xusb-padctl.yaml  | 33 ++++++++++++++++++++
- .../bindings/phy/nvidia,tegra186-xusb-padctl.yaml  | 27 ++++++++++++++++
- .../bindings/phy/nvidia,tegra194-xusb-padctl.yaml  | 36 ++++++++++++++++++++++
- .../bindings/phy/nvidia,tegra210-xusb-padctl.yaml  | 36 ++++++++++++++++++++++
- drivers/phy/tegra/xusb.c                           | 11 +++----
- 5 files changed, 136 insertions(+), 7 deletions(-)
----
-base-commit: 91e5bfe317d8f8471fbaa3e70cf66cae1314a516
-change-id: 20250404-xusb-peripheral-c45b1637f33b
-
-Best regards,
 -- 
-Aaron Kling <webgeek1234@gmail.com>
+2.48.1
 
 
