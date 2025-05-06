@@ -1,83 +1,43 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91C72226D1F;
-	Tue,  6 May 2025 06:26:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D179226D1F;
+	Tue,  6 May 2025 06:27:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746512798; cv=none; b=E+ZcjF/zjEfqg24rR9oGnzo8Dhagb9MG5KdtGc9Wl43iZYGCnz7NHGxW/ahwu7V961jFariHJa4sAl0lLDeZ227ZOSJF1VYV6wH2Agtr5XM/opsP0DUPFJDLf/Ejcjgo+pQ1EAv0a66/AbN7lZEcNK3/PsTLx4l1BrEtMI+mwi8=
+	t=1746512835; cv=none; b=AM53zwNumTtSKBD9lVrDxtg4DF6ccnDqRt4w05NB4GDGqCfiOsriotmkqPGa32Zs6QOqKgS8UZHIku5/O7wwIt+YApiyFg021JUJFRMPd/p+VfpYAxebT29yyrZcsNP70jGD6HdAbmYr04q8VYwSiv5X+feGZ1e+Kb9zgE/PTdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746512798; c=relaxed/simple;
-	bh=kyLA5XbzswnwsjBPBR5XEjCoNmGDNd0I0rJpF+YAPtY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=BgwydRMFw2A8SQgI/exgpNP2nH9p09dXsaNb0eBLdpaDxICzxuwD/+eJ0x8uf5abo7OWRJDiM+hJJn7dbE0h3TmgwbrykmGM8EQmJqjzmMp3MzDuWrEjZBH7N5AGin3vln+hjIJwJzloYNKB7FPkO6R7NvFxr0Vm1wLGHg5gbnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=XFajvfSL; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="XFajvfSL"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=ljWV7MOG4dgEkfCN8Ib7oNS8P+erCQXlR5KjhLSmVzQ=;
-	t=1746512796; x=1747722396; b=XFajvfSL6bJmjZ1hN1iOJBi5HXgPAePEOFy8nYrot/UreaA
-	tOQpU/sLgD8E1DvBkubyTOryMUz9wQYUi+NdyaazhFDU0SWuv3oh3TbASm4x78HqxgFjhZ9YZPZRN
-	lQ5UKZivXyJryxQLSjjLSwREy5k7kxSBvQZ/hyhKk/wiIrH9UIgQdJD3iNqoqyKdmgd6ofyRRLPDu
-	lbiBrRk5lBQJeK6krUoh9hmZZSHbAXVZtyWjO+IGttuYH6JWEoAzJoYkCyLzEhrKkFl7co/+m9xFF
-	ehyiqbn25CN+IqjpMA7ZzUnhYf25zhClr7CUOG3RrSRHPuRwhTj9D6kenC9kJqwQ==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98.1)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1uCBlA-00000005aSk-0Qpn;
-	Tue, 06 May 2025 08:26:32 +0200
-Message-ID: <f53576b21774ab6ba8294c5d1954f0528764f2fb.camel@sipsolutions.net>
-Subject: Re: linux-next: manual merge of the iwlwifi-next tree with Linus'
- tree
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Stephen Rothwell <sfr@canb.auug.org.au>, Miriam Rachel Korenblit
-	 <miriam.rachel.korenblit@intel.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Date: Tue, 06 May 2025 08:26:31 +0200
-In-Reply-To: <20250506114402.2f440664@canb.auug.org.au>
-References: <20250506114402.2f440664@canb.auug.org.au>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	s=arc-20240116; t=1746512835; c=relaxed/simple;
+	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bVW7js8ivMCSXrdiG66wRnVqaJQ72b9HhWSXljpib7/SwjwYUNf99msGeYXGjAxN8taOFb8bfIhC3Cf9Ts0x6tKLmskoq8GBj42TgnPVuJxVZtUvdgRJFcgqVsErQSIpgxVeqlCuf4tfHNTZ9uP0soTY29JJc1SZS+Ovrj7sR2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 2343F67373; Tue,  6 May 2025 08:27:08 +0200 (CEST)
+Date: Tue, 6 May 2025 08:27:07 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: Yu Kuai <yukuai1@huaweicloud.com>
+Cc: hch@lst.de, axboe@kernel.dk, kbusch@kernel.org,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+	yukuai3@huawei.com, yi.zhang@huawei.com, yangerkun@huawei.com,
+	johnny.chenyi@huawei.com
+Subject: Re: [PATCH v3 for-6.16/block 1/3] brd: protect page with rcu
+Message-ID: <20250506062707.GA29623@lst.de>
+References: <20250506061756.2970934-1-yukuai1@huaweicloud.com> <20250506061756.2970934-2-yukuai1@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250506061756.2970934-2-yukuai1@huaweicloud.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-Hi Stephen,
+Looks good:
 
-> Today's linux-next merge of the iwlwifi-next tree got conflicts in:
->=20
->   drivers/net/wireless/intel/iwlwifi/cfg/sc.c
->   drivers/net/wireless/intel/iwlwifi/iwl-config.h
->   drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.c
->   drivers/net/wireless/intel/iwlwifi/iwl-trans.c
->   drivers/net/wireless/intel/iwlwifi/iwl-trans.h
->   drivers/net/wireless/intel/iwlwifi/pcie/drv.c
->   drivers/net/wireless/intel/iwlwifi/tests/devinfo.c
->=20
-> between various commits from Linus' tree and various commits from the
-> iwlwifi-next tree.
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 
-Yeah, no surprise, there were some reverts in this area. The good thing
-is that we also already fixed the bugs that necessitated the reverts
-differently, so (eventually, need to check how much is in there now)
-this will just be "take next".
-
-> At least one of the commits in Linus' tree is duplicated in the
-> iwlwifi-next tree.
-
-Right, saw your other mail too, we'll see what happened and drop those.
-
-Thanks!
-
-johannes
