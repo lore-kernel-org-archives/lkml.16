@@ -1,99 +1,102 @@
-Received: from mail-m1973189.qiye.163.com (mail-m1973189.qiye.163.com [220.197.31.89])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FF292033A
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 07:33:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.89
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D48452033A;
+	Tue,  6 May 2025 07:34:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746516815; cv=none; b=RYSG7uxgUguOPLiZ4pGNY6zE0Ay+VFzS9Yjv6tXang9YrRzemns3j7nbkG+kN/ZABQpola3zdzZIIJv5nj6wYcikmzrVGu7JRCUpcWhBzL3HU0LlF1v5IM2Bx6NTQnvg6mOkq7k9rUtWNpsvY1g7yxSv9pXnPXai5amvPpAVMao=
+	t=1746516846; cv=none; b=BA4bzr1tma1k5AnQEaC3HGxy0MAkfkLIGdTy1ixFX7Yh6yC5/A9ptUWE6JlHr4mDcXfhj6Oz5m9JwSLCGEU7w2V7bV8wJvX0yV9cH7LG6+aHGhEAwpX9a0BROtseh7uQVfzxYRDNvFQF79w/fF7HT9hA+kCxWgNZbW2az7WNzIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746516815; c=relaxed/simple;
-	bh=nTnT41H56NFfzfwDP6sYaJgsbM+rIFepGMFg3dvWngE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=S9353fq9/iR+O18sxUvuBUasYYSf6b5l3/lvseKqxNRsNWWBpf8P2YMm5tMCypaT7GFcAmlf1GtocHb7Y4NwV33ebkCh8xod3mRpV9oUhMv4f9L+n5UzHY35H//Gw6SRxCZ3q1zuYUmaOTNzlAjNdXP3Kq1pr/mXrRWAG+bodGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=guFMkTP0; arc=none smtp.client-ip=220.197.31.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+	s=arc-20240116; t=1746516846; c=relaxed/simple;
+	bh=d9IiQ8Qjo0tqUnrKW/3eICy/RDOPsZnxBXE+q+64nqs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j9is5gWBMWFHKkF1I4Nn4KAMwaW8cR8VnWYEWW7U1Us6TPqkgEUO3VQIqQfHqTr92CLzATitV6LwiJW5DKEgOMqrQlyc7bMbTEHrZown5XLpcNCBhmvFwmoGKxR1NGiKYjMd0w23b/I3NBG+sZwTyjBE0B7bioKYwWJNRdjbhKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S2bvm077; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="guFMkTP0"
-Received: from localhost.localdomain (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 140c6eaf2;
-	Tue, 6 May 2025 10:57:23 +0800 (GMT+08:00)
-From: Kever Yang <kever.yang@rock-chips.com>
-To: heiko@sntech.de
-Cc: linux-rockchip@lists.infradead.org,
-	Kever Yang <kever.yang@rock-chips.com>,
-	Rob Herring <robh@kernel.org>,
-	devicetree@vger.kernel.org,
-	Conor Dooley <conor+dt@kernel.org>,
-	Detlev Casanova <detlev.casanova@collabora.com>,
-	linux-kernel@vger.kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Elaine Zhang <zhangqing@rock-chips.com>,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v5 2/6] dt-bindings: rockchip: pmu: Add rk3562 compatible
-Date: Tue,  6 May 2025 10:57:11 +0800
-Message-Id: <20250506025715.33595-3-kever.yang@rock-chips.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250506025715.33595-1-kever.yang@rock-chips.com>
-References: <20250506025715.33595-1-kever.yang@rock-chips.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S2bvm077"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BC0FC4CEE4;
+	Tue,  6 May 2025 07:34:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746516845;
+	bh=d9IiQ8Qjo0tqUnrKW/3eICy/RDOPsZnxBXE+q+64nqs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=S2bvm077AEBpwpjElh8A0pxs3b/rebZU0Otu3ammcbnYh1aGhsMpn8pXkv8cFEEY6
+	 BiCmEj0LFdj+u4xXX6bD6/PJVGnZkOe6xQj6iYbl5CGBbI1gLtKXGPhPuOoNj8Yqtw
+	 U5Qmd7k4R9mUduH+QjVRQ9mzq2Bafr/9pzFb69hKWX9J10CH1cspYq5KiJD+AcCAZ+
+	 drGJ3KKohO7iu+VHOgwv123iB1++jIWM37aqln9TD3dY48Vfgr+f3Qt9tQH9NLGhD5
+	 vIQoXGIuhqlCYI7jTaZi1bT58buoTH3Q7JRpkS/RLQYFMO/fRF7K/DkZYycp7Qg1XR
+	 blL+jv9RzpAbw==
+Date: Tue, 6 May 2025 09:33:58 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Kuniyuki Iwashima <kuniyu@amazon.com>
+Cc: alexander@mihalicyn.com, bluca@debian.org, daan.j.demeyer@gmail.com, 
+	davem@davemloft.net, david@readahead.eu, edumazet@google.com, horms@kernel.org, 
+	jack@suse.cz, jannh@google.com, kuba@kernel.org, lennart@poettering.net, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, me@yhndnzj.com, 
+	netdev@vger.kernel.org, oleg@redhat.com, pabeni@redhat.com, viro@zeniv.linux.org.uk, 
+	zbyszek@in.waw.pl
+Subject: Re: [PATCH RFC v3 00/10] coredump: add coredump socket
+Message-ID: <20250506-umtriebe-rhabarber-161f1fcffe56@brauner>
+References: <20250505-work-coredump-socket-v3-0-e1832f0e1eae@kernel.org>
+ <20250505183303.14126-1-kuniyu@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGh5DT1YYHh1DQx5LSEwaGUJWFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
-	hVSktLVUpCS0tZBg++
-X-HM-Tid: 0a96a386d0b703afkunm140c6eaf2
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NxQ6Ghw6FzJJDREpMjMNMDAv
-	PzcKFEpVSlVKTE9NTktLSU9PQkhLVTMWGhIXVRAeDR4JVQIaFRw7CRQYEFYYExILCFUYFBZFWVdZ
-	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFJS0NKNwY+
-DKIM-Signature:a=rsa-sha256;
-	b=guFMkTP0qNBxhrij+lmM2saCCfyqO7SwolRAgPKvg+uY3pdb45tYo65itycGNdj+h/8n+ruBSRZqhnQoxguoDRFV14rOEGUeujKyjGMVmOhWfrBfBqRnnzt5Wvbs6JghHnJQRcreCHD85kUdBWnqDVr/PPMo+Vbi8gNo3NlnfGU=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
-	bh=LJ5LDuPoTNaHftITtU0a6AsO3YQBapk7pI5GMnaJ3Io=;
-	h=date:mime-version:subject:message-id:from;
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250505183303.14126-1-kuniyu@amazon.com>
 
-Add the compatible for the pmu mfd on rk3562.
+> > The coredump socket is located in the initial network namespace.
+> 
+> I understand this is a reasonable decision to avoid complicated
+> path management in the mount ns but keep connectivity from any
+> namespace.
 
-Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
----
+Yes, path lookup would not just be horrid it would also require playing
+around with credentials and current->fs. The beauty in this
+implementation is that its the crash dumping process itself which does
+everything.
 
-Changes in v5: None
-Changes in v4:
-- Collect ack tag
+> > To bind
+> > the coredump socket userspace must hold CAP_SYS_ADMIN in the initial
+> > user namespace. Listening and reading can happen from whatever
+> > unprivileged context is necessary to safely process coredumps.
+> > 
+> > When a task coredumps it opens a client socket in the initial network
+> > namespace and connects to the coredump socket. For now only tasks that
+> > are acctually coredumping are allowed to connect to the initial coredump
+> > socket.
+> 
+> This can be controlled by BPF (cgroup sockops or LSM) if a user
+> really cares about spam clients.
+> 
+> I think how to set up coredump is userspace responsibility.
 
-Changes in v3: None
-Changes in v2: None
+I'll reply to that in the other thread so we don't have millions of
+branch points.
 
- Documentation/devicetree/bindings/arm/rockchip/pmu.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+> > - Since unix_stream_connect() runs bpf programs during connect it's
+> >   possible to even redirect or multiplex coredumps to other sockets.
+> 
+> If the socket is in a cgroup, yes, and even if not, BPF LSM can
+> reject some requests.
 
-diff --git a/Documentation/devicetree/bindings/arm/rockchip/pmu.yaml b/Documentation/devicetree/bindings/arm/rockchip/pmu.yaml
-index 52016a141227..46c1af851be7 100644
---- a/Documentation/devicetree/bindings/arm/rockchip/pmu.yaml
-+++ b/Documentation/devicetree/bindings/arm/rockchip/pmu.yaml
-@@ -25,6 +25,7 @@ select:
-           - rockchip,rk3288-pmu
-           - rockchip,rk3368-pmu
-           - rockchip,rk3399-pmu
-+          - rockchip,rk3562-pmu
-           - rockchip,rk3568-pmu
-           - rockchip,rk3576-pmu
-           - rockchip,rk3588-pmu
-@@ -43,6 +44,7 @@ properties:
-           - rockchip,rk3288-pmu
-           - rockchip,rk3368-pmu
-           - rockchip,rk3399-pmu
-+          - rockchip,rk3562-pmu
-           - rockchip,rk3568-pmu
-           - rockchip,rk3576-pmu
-           - rockchip,rk3588-pmu
--- 
-2.25.1
+Indeed. I've outlined that in an earlier version as well.
 
+> > - The coredump server should mark itself as non-dumpable.
+> >   To capture coredumps for the coredump server itself a bpf program
+> >   should be run at connect to redirect it to another socket in
+> >   userspace. This can be useful for debugging crashing coredump servers.
+> > 
+> > - A container coredump server in a separate network namespace can simply
+> >   bind to linuxafsk/coredump.socket and systemd-coredump fowards
+> >   coredumps to the container.
+> 
+> I think the name should be also configurable in non-initial netns.
+
+I don't see a good reason for this. We can always relax that later if we
+have to. The fixed address keeps the coredump setup very very dumb and
+simple.
