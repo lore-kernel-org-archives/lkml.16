@@ -1,151 +1,127 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B66F94315A;
-	Tue,  6 May 2025 20:27:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25963139E
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 20:32:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746563265; cv=none; b=bXoPzcI6wi1Asa8XimffC/+gPn2pHncCiuIatAROAP66MduAxAL9zlgSmSOBNZ77rkXy79tQX1aFBt6bbuRjY6vVo/AFbJqPmPG4WCKowOKjtM050xZ6y/mX5yC0DK6LfsIeOzrc18ThcqMm4bZ/4gbyJ9Tz6z7M3iPnwfM+DwU=
+	t=1746563539; cv=none; b=bNKm+FPfPmbXZGOWj24PQ+ysZ0QVSCpIfN8JLQ3ox9TSOeuMU1CjE9IVez6sQXijlDLAp/sjFiV2QPaIhgS11fRfoksAFIjeESCZyaSFzV25TZD1kN9cECWZ1oQ2POfziDJJwp3GcKy9qvaOSaawz9CQuTr7XMjSxakOWhIK2jY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746563265; c=relaxed/simple;
-	bh=Z4dfHFOdc8zbOCs+oia3qZiHTU10t25uC5QYhcTXUng=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XVgdcIYIMd+XK0wH2O/9msFAPAcnitPH2RlUz0aCk7PT++/5SbNAkEeAIi4jF0q1m9J7k/vNnd/T6HtxYOOJKy5PE62bOx/rrdJA8ob2EqnuMBwz2mJ0CYLh3iE1HvFhfC7QFHN7b2UZi8Ga5BLzJBjiMXiTNAw5uluaBP8Z17s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LnliKpHY; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746563539; c=relaxed/simple;
+	bh=tUwZYD4lRH6VdaApuK/2dwXWp/zrHR11uMrefDN0O3Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PEP3uw/8WeWHsBcJlFxIlcaQ22CKPCw13pXliVbLqOJctBe7hBapL1hFhpvJ7ih9Hiv5fhLF0cofuUV6QUo7Hx6VYg8MI5D/sPS3nTSRRyHIdR/BHOnxiXul2zlmvP0gAWSK1xBdanX+kZNf83zETjmVGmqArIuDTQTyjJLLNgQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SfBrWKc9; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LnliKpHY"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ac2902f7c2aso970600866b.1;
-        Tue, 06 May 2025 13:27:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SfBrWKc9"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43d5f10e1aaso17255e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 13:32:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746563262; x=1747168062; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=dSv1f72q2Br/HkTLRvnIUjJKIt36w5BUq7xaU114oLk=;
-        b=LnliKpHYCREHcWBBM98qDZEzVFYPS6ptwGapfr8ulnYyGS8wUnb4xyFByDIWeObIZB
-         R6jcH5lJXSf4FrivXgHPUV1/GXB9S+rbQt8mtsnCeIrpzSaIS5/rC0dLSe/N0pxAyGi/
-         Oc1l96oGw21EZNxm9tYCo31J6IlctuTJWigpbppKIVgf/OYBnPQ0Led21sVtJ162UDSs
-         xMo5y13OI//S04xRkyp5iolGcwj/c2lHaSROGMcfZUQ2Lroggb87jZ2FXV8w2fxo3Rca
-         1pERmWysN0O8R7RledkOgNBAMAxEUILLlC3epViXSjACRWjPXsYY7IJGsAeoAtYtxeyN
-         NZ5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746563262; x=1747168062;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1746563536; x=1747168336; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dSv1f72q2Br/HkTLRvnIUjJKIt36w5BUq7xaU114oLk=;
-        b=pS6Ktzd0NCE81PaxAKM6Bzx2wwOrMrAJ+7nw8Ekshq529pDsv1m0KtZfIoRSE2mk1K
-         goicJY4YV7SaHfRckLVBzkJrUTkXVW8hHkIl3wZ0HMDwv6Qeakm0HzCKXFTjDnFBPSyK
-         RLXRU4gckv4hYw8io5QdZoSaV9zlsVNC4yRw6kkb0Vg4vpI2RBNs3WBuwNGLwOJbXdSZ
-         cwhzs+SHwIDXyH+Uf9cInxkyWuvEACmQF9wiK7knyVkIkjJ3pIvw3Cu/EVl/EwYrYfLK
-         mF6XCx5FgzvDZoFEY6gCBQI2EbK+dNzfzQfViTM44KJy5tSdCSCuY/9x9DmnsX4Eq+2B
-         1KiA==
-X-Forwarded-Encrypted: i=1; AJvYcCWnzmewzBqym5xKt4ch1576L1EyChgVONO4eCD59bRGrmQLEB0jKUL3dLEVljMqY9qdH7BrElqI+ZnErdCC@vger.kernel.org, AJvYcCWye5wXwCKXeUd3jb8aefLKoh0LTxgTMkxdusbFc9FaF66IQY1qxkWUuJ8BozBd8cm9utBGIxDlKYLI@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7mh2v5rVDyuyo5ZzUNYA8rm1vmitQItYIn2hnYeGKaleK0RKX
-	Pdos2uRTdIwPM+VkVohCmyuGX12OUVco2vd/3XgqcnO+VjmD7xQm
-X-Gm-Gg: ASbGnctSa57PhFZcDWv8CetwqLuIERnvdmd9BrnjC6qvHD4/285R5SzYv/D1Q7fYbcT
-	/0NOTZFo7ZgdwsyEcfc5PJjaQ8NF7KsfLBFVTNshSDxxfg/A6H6ntFuNW5RGOCh47Nexv26KlfS
-	vEqgWqWq/XQAcIwnFDf9xbthUMIhP+p1XDpvMKY6iFy2ziwA+ZOv+Xfn4NXo2nLXX17ao+wXcme
-	NTLzMoRzMDI4OTDWT+0UvcxNv/b4egnvQNoeMrehZRWYqGmn05Pt16wT3K9vTzJYPIOaUDB0Nmn
-	SneI7kJYbHGxHON4R93vUklrcQ9Oap+a01vz3WAMfq0QOnax7G5jXd1Cv95RHgbgGUFAj890Adw
-	gf8uv
-X-Google-Smtp-Source: AGHT+IF28dWY6dX03yamEtrxQ8IDoIkzwFAJdcmE10A1YLS8hxpcBSo7uXAa2s4AhgXsBNi1jsAeTw==
-X-Received: by 2002:a17:907:7e82:b0:ace:c225:c723 with SMTP id a640c23a62f3a-ad1e8b92275mr82948466b.12.1746563261544;
-        Tue, 06 May 2025 13:27:41 -0700 (PDT)
-Received: from standask-GA-A55M-S2HP (lu-nat-113-247.ehs.sk. [188.123.113.247])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1891a1e60sm764564166b.47.2025.05.06.13.27.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 13:27:41 -0700 (PDT)
-Date: Tue, 6 May 2025 22:27:39 +0200
-From: Stanislav Jakubek <stano.jakubek@gmail.com>
-To: Artur Weber <aweber.kernel@gmail.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	~postmarketos/upstreaming@lists.sr.ht
-Subject: Re: [PATCH v8 5/9] mfd: bcm590xx: Add PMU ID/revision parsing
- function
-Message-ID: <aBpwu0rEK_K-9tcu@standask-GA-A55M-S2HP>
-References: <20250430-bcm59054-v8-0-e4cf638169a4@gmail.com>
- <20250430-bcm59054-v8-5-e4cf638169a4@gmail.com>
- <aBo0qzqHOkfFxaXs@standask-GA-A55M-S2HP>
- <7eeaa7b4-b76d-4658-ac78-705a5f8e54df@gmail.com>
+        bh=tUwZYD4lRH6VdaApuK/2dwXWp/zrHR11uMrefDN0O3Y=;
+        b=SfBrWKc9iPmKY6XP1L8ogUg33N64Koqp5Py1cxrP6bOlBSz/ZADRxnBtC51elFdc0W
+         0EX8si1V/sQtgawv8y36UxJTYSdMBJxqBqV7U0Jk+JpaFQs79iKU0fidSe/umS/dpSCd
+         On3szway9QXpiRR5nri+T6ilYxpwfDlM3TbRPMtqRK6RL0tSPkFKA/+gMrsYQ0eT+IrI
+         zf6Wgyd90BkaulD/ZQKEKnb06sS6VseyHOQh1M6iVC0r4m2MArlXLQeF/+jiqSgeOJTg
+         8olsa8UT2L9qUyKiYJqF1IjnBtaAR8fkgR+4iTTYlVHCmYroRdhh24YQ9OTgeN/zfcA+
+         2hfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746563536; x=1747168336;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tUwZYD4lRH6VdaApuK/2dwXWp/zrHR11uMrefDN0O3Y=;
+        b=M/fCw6u1rB+pMzXr2z+d38jI0APZ7W3aUPGgU0MnY/zzMWENxBzdW5EvivXle6qi69
+         6Vsw6sd1AsxYuo3fWuW40FgHxdHrG8yPg+wTrCVYDIcs7yGIjQM+gohBMJCbA9tMUJYQ
+         9jOwJQY4XjvFUtvshmGWyExV3xbQe/OHMtWrB4SPCUxiT+l0wN7WUZNFhdm5Ts1fWkUz
+         uQP+gr9+/GM4V+whZrA0hemXQERTm/4jW5FXmXmcCFV81C5dNPup6lZCm7qk/fg0NBHd
+         FWBYUKUmj3Tm8L/h8R2fdaCPIoRbGmcvbhpB8LQ90+NLwWG8npvFLRUt3QS8ZuPfwSv1
+         0U7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUKR2x4fsjZLVoCZpy/WuMcKUaFMF2uzaOOqEBMvGSSFi5IFAzm6GMbMfvLjlWk9/UAR5cKMc6S6cdq3bQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0jBUM3KNp5e7GZgo1dK1QNN5vjL4N/gFqy3oLm1LbUpsJeWfO
+	12cgd6ue17vaJ62ORffFhZH7zBsq/93GGQjkbboxK2IG1rjqEbzAXMy0/wWMQAeJk0ZFhY+quZv
+	yVNV48fiRmMR39xvk8i7AJsY/TJjOTsSOeIQL
+X-Gm-Gg: ASbGncuhcg39A90YbGi6TCwvD/ytlKVPYQWlBxgFbygajVrzACflx2h7lM4H9nADzoV
+	MQWcYobPxIelmn3hlbNvSdMALTp2+Kh8LgrtAo5yEYqFZcvHZiFrZaf9ZuLt7e1fWYzW9+fA/l/
+	wFXCcEql13qLa1aPYyfobXoMMkbz8fAQNS
+X-Google-Smtp-Source: AGHT+IEViL4DDYdA9BRkFbLcDJrhDyd8AMVyi7Ajmkopmwi+B3g8ozJx81yXwm52KwpCCBwGQVYxLaUMmnJgtUMdspA=
+X-Received: by 2002:a05:600c:5249:b0:43d:5b3a:18cc with SMTP id
+ 5b1f17b1804b1-441d446ece1mr211865e9.2.1746563536279; Tue, 06 May 2025
+ 13:32:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7eeaa7b4-b76d-4658-ac78-705a5f8e54df@gmail.com>
+References: <0d7d6b9a-e7bd-4225-8f08-05bd9473a894@intel.com>
+ <aAviqeAdGn-w1GpK@google.com> <fbd2acdb-35dc-4e8c-9bd9-e84264f88648@intel.com>
+ <aAv445Sr71NUJP1X@google.com> <db1fd062-5a66-4942-82e2-c889dd645a7b@intel.com>
+ <aAwFhaqQDLXoqbmv@google.com> <4b4ecaa1-2ace-43bf-b71b-0de78bcf113c@intel.com>
+ <DM8PR11MB5750B39557F5062038D0E551E7802@DM8PR11MB5750.namprd11.prod.outlook.com>
+ <8db47bc1-445b-49db-b932-96aff0eb58a9@intel.com> <DM8PR11MB5750200DFF8CF40E3539B688E7832@DM8PR11MB5750.namprd11.prod.outlook.com>
+ <aBI-xQzatja2Y9dh@kernel.org> <DM8PR11MB575014811E4007EA00F5B3E6E78D2@DM8PR11MB5750.namprd11.prod.outlook.com>
+ <d16ecae1c1b4b6f06565dfe9c47849dcaeb0782c.camel@kernel.org>
+In-Reply-To: <d16ecae1c1b4b6f06565dfe9c47849dcaeb0782c.camel@kernel.org>
+From: Nataliia Bondarevska <bondarn@google.com>
+Date: Tue, 6 May 2025 13:32:03 -0700
+X-Gm-Features: ATxdqUE61e7i1k-WDCodhkqZGzBoZRAAXfLn7Q4KHv08wJ97xsX3tgACyJjBU2g
+Message-ID: <CAFbLv2cEgABB3jmL7_6_ZyA8-q+8u7C5f-fcoQf8acYytiB3mA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] x86/sgx: Implement EUPDATESVN and
+ opportunistically call it during first EPC page alloc
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: "Reshetova, Elena" <elena.reshetova@intel.com>, "Hansen, Dave" <dave.hansen@intel.com>, 
+	Sean Christopherson <seanjc@google.com>, "Huang, Kai" <kai.huang@intel.com>, 
+	"linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>, 
+	"Scarlata, Vincent R" <vincent.r.scarlata@intel.com>, "x86@kernel.org" <x86@kernel.org>, 
+	"Annapurve, Vishal" <vannapurve@google.com>, "Cai, Chong" <chongc@google.com>, 
+	"Mallick, Asit K" <asit.k.mallick@intel.com>, "Aktas, Erdem" <erdemaktas@google.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"dionnaglaze@google.com" <dionnaglaze@google.com>, "Raynor, Scott" <scott.raynor@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 06, 2025 at 09:03:15PM +0200, Artur Weber wrote:
-> On 5/6/25 18:11, Stanislav Jakubek wrote:
-> > Hi Artur,
-> > one note below.
-> > 
-> > On Wed, Apr 30, 2025 at 09:07:09AM +0200, Artur Weber wrote:
-> > > The BCM590xx PMUs have two I2C registers for reading the PMU ID
-> > > and revision. The revision is useful for subdevice drivers, since
-> > > different revisions may have slight differences in behavior (for
-> > > example - BCM59054 has different regulator configurations for
-> > > revision A0 and A1).
-> > > 
-> > > Check the PMU ID register and make sure it matches the DT compatible.
-> > > Fetch the digital and analog revision from the PMUREV register
-> > > so that it can be used in subdevice drivers.
-> > > 
-> > > Also add some known revision values to bcm590xx.h, for convenience
-> > > when writing subdevice drivers.
-> > > 
-> > > Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
-> > > ---
-> > 
-> > [snip]
-> > 
-> > > diff --git a/include/linux/mfd/bcm590xx.h b/include/linux/mfd/bcm590xx.h
-> > > index 8d146e3b102a7dbce6f4dbab9f8ae5a9c4e68c0e..fbc458e94bef923ca1b69afe2cac944adf6fedf8 100644
-> > > --- a/include/linux/mfd/bcm590xx.h
-> > > +++ b/include/linux/mfd/bcm590xx.h
-> > > @@ -17,6 +17,16 @@
-> > >   #define BCM590XX_PMUID_BCM59054		0x54
-> > >   #define BCM590XX_PMUID_BCM59056		0x56
-> > > +/* Known chip revision IDs */
-> > > +#define BCM59054_REV_DIGITAL_A1		1
-> > 
-> > 1 seems to be the digital revision ID for A0 (couldn't find the analog
-> > revision ID), see [1].
-> > 
-> > Other values seems to match downstream (as far as I can tell anyway).
-> > 
-> > [1] https://github.com/Samsung-KYLEPROXX/android_kernel_samsung_kyleproxx/blob/cm-13.0/include/linux/mfd/bcmpmu59xxx.h#L82
-> From my testing on a device with the BCM59054A1 (BCM23550-based Samsung
-> Galaxy Grand Neo), the digital value is also 1 on this model:
-> 
->   bcm590xx 0-0008: PMU ID 0x54 (BCM59054), revision: dig 1 ana 2
-> 
-> (This constant is not actually used anywhere in code yet - I just
-> included it for the sake of completeness, since the BCM59056 headers
-> in downstream listed both values...)
-> 
-> Best regards
-> Artur
+Tested-by: Nataliia Bondarevska <bondarn@google.com>
 
-Thanks for checking Artur!
 
-I guess both BCM59054 A0 and A1 have the same digital revision?
-Well, to be sure we'd have to get the hardware, since downstream doesn't
-use this value either.
-So I guess the patch is good as-is, we can add known IDs when we... know them ;)
 
-Regards,
-Stanislav
+
+On Fri, May 2, 2025 at 1:56=E2=80=AFAM Jarkko Sakkinen <jarkko@kernel.org> =
+wrote:
+>
+> On Fri, 2025-05-02 at 07:22 +0000, Reshetova, Elena wrote:
+> >
+> > >
+> > > On Wed, Apr 30, 2025 at 06:53:32AM +0000, Reshetova, Elena wrote:
+> > > > 2. Switch to Sean's approach to execute EUPDATESVN during the
+> > > sgx_open().
+> > > > Btw, Sean do you agree that we don't gain much doing it second
+> > > > time during
+> > > > release() given the microcode flow?
+> > > > I would rather leave only one invocation of eupdatesvn during
+> > > sgx_inc_usage_count().
+> > > >
+> > > > Proc: No new uABI. More predictable on svn change compared to
+> > > > option 1.
+> > >
+> > > > Cons: Two explicit paths to hook: sgx_open() and sgx_vepc_open().
+> > >
+> > > Why this is a con?
+> >
+> > Well, just from the pov of not having a single path to enable.
+> > Are you ok with option 2?
+> >
+>
+> Yep, as SGX is anyway very much run-time managed feature and these
+> hooks fit better on how it is used.
+>
+> > Best Regards,
+> > Elena.
+>
+> BR, Jarkko
+>
