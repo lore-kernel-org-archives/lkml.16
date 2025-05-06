@@ -1,107 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88B241A76D0
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 13:44:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDAED208CA
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 13:46:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746539075; cv=none; b=K0JlZ9W8IrrX1TTuqw53egN8GN2Pn1fAZiMSirAy837no2C3MlqHydQwYPFDHt2JR0wz95NXsMtZ/MYjUCR41uh97RVcSJvW4neJOqI1+ty4X5UisKLyAnehX36cz1x9vlve627xQ2jOVJxICsOmKsR2WKF5wnvm3neYHZONYIs=
+	t=1746539212; cv=none; b=SMqQAO7g7iRUXEeIRyS/3TswA3iDbVT08ygG1WQA25ga0XobD7k5f623aZflkjOuKYq2VGL7jF8vgAYBx62pUj1hY1Jy0ujX0H2rFDNp5Gw6mgw8GiOSR8xlfalWyu0rLVChv+QshnEcQmqPhSmROVdMJjJU0/CmqV/J4NchKRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746539075; c=relaxed/simple;
-	bh=DRC3Zo87TXDBJOVIVAvor3EDAyxDRAGUFqYaexF9kzo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=JvtEohFBnCGrjaTQ4ZOsFLd2E2jNcEauVkwE4xzmmW5delbmE1cpQc962noJmwJI8bkymfErwU2mnZWLMzO02KW+wNmsejbMbVereWT0GNvlAVAmI0x0obCX4ra/2cT7XCpWt/lReEWTrRw2WIr8ideYIW5Qy4EGvfYycBnKsHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JUjCQXcu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746539212; c=relaxed/simple;
+	bh=ZLyUWVGxg9mrrO7r5vzX+fzEqwROgV3Odq3dd0jP07g=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=lS/TD1c6UR1HKoeTTy+uXCJWTd++YjDV1gWU40eZZWP29yBYN570q8f/R55zIHDdpSd4w9NTPV5eCGWFwZxNT9ynljDCDMw51A/VUJoiGUrEN0PGBhXvEuaRgYxQLz8ceBKupjNGLMqHSiyxQ8eYF6BktLk5/L3vmRb3Q3YzV34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=I5R7RpsL; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JUjCQXcu"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 26186C4CEEE;
-	Tue,  6 May 2025 13:44:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746539075;
-	bh=DRC3Zo87TXDBJOVIVAvor3EDAyxDRAGUFqYaexF9kzo=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=JUjCQXcu2ZaYFEyRY35cZ0MLRW13tZnuZgmIm40SrxJkygGdPaeWOYbLa/I6GFqp7
-	 li+7sIjFIYlxoB2HSYS9XW3HTbZ5LJQTuSIEEpa6F3xRf12CKzUbis1z5dgAI2CvXb
-	 N7Agff+VENIv6pu+K1EvgwIThevxkXXUoV/9t5vVKcXzgpwtkVD4m8jBCUCt2AaSFx
-	 R9g3Hs3zlHrr2taoOtQ+NTiZ93AatLOIZ6bQTSEGht/ZeAd0a5Jtvh+YzquL3JMCzs
-	 p+FJ3PSTWp9OT4rACqIzP30O3sddifFnIb88MvkrRORPgiPjA9ffO5DOzAHPSs6fYq
-	 rH/jDhqUXj+cw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17672C3ABC3;
-	Tue,  6 May 2025 13:44:35 +0000 (UTC)
-From: Ignacio Moreno Gonzalez via B4 Relay <devnull+Ignacio.MorenoGonzalez.kuka.com@kernel.org>
-Date: Tue, 06 May 2025 15:44:33 +0200
-Subject: [PATCH v2 2/2] mm: madvise: no-op for MADV_NOHUGEPAGE if THP is
- disabled
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I5R7RpsL"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2241e7e3addso50699325ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 06:46:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746539210; x=1747144010; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=LQUJg1xdsag4lcsUrEd4LaUAGtstgHq/VhuMBGkni7o=;
+        b=I5R7RpsLsgCyODVY7TJDKwLtrD6KpoDhmKsxc0q/3HVpcUqT9MQjueUFAvjE9lA8ks
+         oMiMe08x2Uw0YXa41wtx76eTlaIhBplhAlrpbQ0ig/lEp4teXHvqjlkSDkg1IKo8qDHQ
+         4x/JM12SyAAku1FBNvGowuyxXgjsiLjsoJPgaeXDqw6/2zKnH2lIyvfkeGbKMu2lm8ST
+         87NXeMXhPf2ObDnDchdTAl8BxU1x+dNYNhnL6zbHXVwfs+hJGfBgblykgnYu7wbijZj4
+         D9nCGBeL5zUyXgIdDH291ILIrLhnfb1gmrshTG+z/xNMQWrrcWjHCtwmERDbY9I4+g6a
+         OqPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746539210; x=1747144010;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LQUJg1xdsag4lcsUrEd4LaUAGtstgHq/VhuMBGkni7o=;
+        b=dKfxCMg04lRjXwf+AqkLQl+kGI8k/JR2923tbZv7pPdqfgL2onRcq+RWN8PuzjAvfp
+         nBITbJayH1NIVvD/SCXlEcl5+ckKaJYvF58ZdBfSpWN+Tz1pd6bkXx9TgIrELggF65jQ
+         PHuf0pBghmvTjC8DflccHCw2R3mTTxba0/QOvCVqguV6wuUPBseEXsEUOSaNCRxiYSJv
+         7WBwNUZOgsyEApSLzkgiUSv/UUpohxkfDL8W+h6rjacV6EIedMIbF/n/NFMLrIXSjiOa
+         Tnxhx+L8dI2IWHiZb/CLpRUmf4F7qexR/5nF5lUC0W1YjSzXHyWJc0fRSLtCxOrhsL20
+         b1aA==
+X-Gm-Message-State: AOJu0Yw4+977b9muclAd7dxnsEonSASmrITqLYPB4QcyoNbO0svjaKOq
+	uetxpvMihMr0zbXceAF4bRXOCDyy/gNpqpNPfDbWcz5WFtUHDLKA8qAMI8nQnI8GrFEFMqIRJyM
+	RpQ==
+X-Google-Smtp-Source: AGHT+IHsYV+dxxS1ThICcQGbnerUzrCgNQIzKxNK/VWU507udswWRGzpamo7g53Ivg5sJVmAE8gcPACNnXg=
+X-Received: from pljs14.prod.google.com ([2002:a17:903:3bae:b0:223:225b:3d83])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:240d:b0:223:66bb:8995
+ with SMTP id d9443c01a7336-22e102f3417mr229950135ad.20.1746539210171; Tue, 06
+ May 2025 06:46:50 -0700 (PDT)
+Date: Tue, 6 May 2025 06:46:47 -0700
+In-Reply-To: <09ee8a01-9938-4ae7-bdbc-4754b7314e73@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250506-map-map_stack-to-vm_nohugepage-only-if-thp-is-enabled-v2-2-f11f0c794872@kuka.com>
-References: <20250506-map-map_stack-to-vm_nohugepage-only-if-thp-is-enabled-v2-0-f11f0c794872@kuka.com>
-In-Reply-To: <20250506-map-map_stack-to-vm_nohugepage-only-if-thp-is-enabled-v2-0-f11f0c794872@kuka.com>
-To: lorenzo.stoakes@oracle.com
-Cc: Liam.Howlett@oracle.com, akpm@linux-foundation.org, 
- yang@os.amperecomputing.com, linux-mm@kvack.org, 
- linux-kernel@vger.kernel.org, 
- Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>, 
- Matthew Wilcox <willy@infradead.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746539072; l=1361;
- i=Ignacio.MorenoGonzalez@kuka.com; s=20220915; h=from:subject:message-id;
- bh=mZUe80SjjB0V+4EVN/Y+dsF/fiezXfRRXC2NP5J4EHM=;
- b=jxT00NHjKAHXYvlci1kq/Iwg3Nujh6KnKh0VA1tFn9F+W21DkyxkRefWe7O0qebY6rwyQ0h6L
- FbxTdmx1iQBC9pqJTsMVAUZvGQdsPZvrTI/h6+7B/GrzTFUVZwsbaWg
-X-Developer-Key: i=Ignacio.MorenoGonzalez@kuka.com; a=ed25519;
- pk=j7nClQnc5Q1IDuT4eS/rYkcLHXzxszu2jziMcJaFdBQ=
-X-Endpoint-Received: by B4 Relay for
- Ignacio.MorenoGonzalez@kuka.com/20220915 with auth_id=391
-X-Original-From: Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>
-Reply-To: Ignacio.MorenoGonzalez@kuka.com
+Mime-Version: 1.0
+References: <20250305230000.231025-1-prsampat@amd.com> <174622216534.881262.8086472919667553138.b4-ty@google.com>
+ <b1cc7366-bd30-46ee-ac6e-35c2b08ffdb5@amd.com> <aBlGp8i_zzGgKeIl@google.com> <09ee8a01-9938-4ae7-bdbc-4754b7314e73@amd.com>
+Message-ID: <aBoSx-rAmajPZq07@google.com>
+Subject: Re: [PATCH v8 00/10] Basic SEV-SNP Selftests
+From: Sean Christopherson <seanjc@google.com>
+To: "Pratik R. Sampat" <prsampat@amd.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, kvm@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, pbonzini@redhat.com, thomas.lendacky@amd.com, 
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, shuah@kernel.org, pgonda@google.com, 
+	ashish.kalra@amd.com, nikunj@amd.com, pankaj.gupta@amd.com, 
+	michael.roth@amd.com, sraithal@amd.com
+Content-Type: text/plain; charset="us-ascii"
 
-From: Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>
+On Mon, May 05, 2025, Pratik R. Sampat wrote:
+> On 5/5/2025 6:15 PM, Sean Christopherson wrote:
+> > On Mon, May 05, 2025, Pratik R. Sampat wrote:
+> > Argh, now I remember the issue.  But _sev_platform_init_locked() returns '0' if
+> > psp_init_on_probe is true, and I don't see how deferring __sev_snp_init_locked()
+> > will magically make it succeed the second time around.
+> > 
+> > So shouldn't the KVM code be this?
+> > 
+> > diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+> > index e0f446922a6e..dd04f979357d 100644
+> > --- a/arch/x86/kvm/svm/sev.c
+> > +++ b/arch/x86/kvm/svm/sev.c
+> > @@ -3038,6 +3038,14 @@ void __init sev_hardware_setup(void)
+> >         sev_snp_supported = sev_snp_enabled && cc_platform_has(CC_ATTR_HOST_SEV_SNP);
+> >  
+> >  out:
+> > +       if (sev_enabled) {
+> > +               init_args.probe = true;
+> > +               if (sev_platform_init(&init_args))
+> > +                       sev_supported = sev_es_supported = sev_snp_supported = false;
+> > +               else
+> > +                       sev_snp_supported &= sev_is_snp_initialized();
+> > +       }
+> > +
+> >         if (boot_cpu_has(X86_FEATURE_SEV))
+> >                 pr_info("SEV %s (ASIDs %u - %u)\n",
+> >                         sev_supported ? min_sev_asid <= max_sev_asid ? "enabled" :
+> > @@ -3067,12 +3075,6 @@ void __init sev_hardware_setup(void)
+> >  
+> >         if (!sev_enabled)
+> >                 return;
+> > -
+> > -       /*
+> > -        * Do both SNP and SEV initialization at KVM module load.
+> > -        */
+> > -       init_args.probe = true;
+> > -       sev_platform_init(&init_args);
+> >  }
+> >  
+> >  void sev_hardware_unsetup(void)
+> > --
+> > 
+> 
+> I agree with this approach. One thing maybe to consider further is to also call
+> into SEV_platform_status() to check for init so that SEV/SEV-ES is not
+> penalized and disabled for SNP's failures. Another approach could be to break
+> up the SEV and SNP init setup so that we can spare a couple of platform calls
+> in the process?
 
-VM_NOHUGEPAGE is a no-op in a kernel without THP. So it makes no sense
-to return an error when calling madvise() with MADV_NOHUGEPAGE.
-
-Suggested-by: Matthew Wilcox <willy@infradead.org>
-Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Reviewed-by: Yang Shi <yang@os.amperecomputing.com>
-Signed-off-by: Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>
----
- include/linux/huge_mm.h | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-index e893d546a49f464f7586db639fe216231f03651a..cdb991f9be918182f94003394cf793654a080224 100644
---- a/include/linux/huge_mm.h
-+++ b/include/linux/huge_mm.h
-@@ -7,6 +7,10 @@
- #include <linux/fs.h> /* only for vma_is_dax() */
- #include <linux/kobject.h>
- 
-+#ifndef CONFIG_TRANSPARENT_HUGEPAGE
-+#include <uapi/asm-generic/mman-common.h>
-+#endif
-+
- vm_fault_t do_huge_pmd_anonymous_page(struct vm_fault *vmf);
- int copy_huge_pmd(struct mm_struct *dst_mm, struct mm_struct *src_mm,
- 		  pmd_t *dst_pmd, pmd_t *src_pmd, unsigned long addr,
-@@ -598,6 +602,8 @@ static inline bool unmap_huge_pmd_locked(struct vm_area_struct *vma,
- static inline int hugepage_madvise(struct vm_area_struct *vma,
- 				   unsigned long *vm_flags, int advice)
- {
-+	if (advice == MADV_NOHUGEPAGE)
-+		return 0;
- 	return -EINVAL;
- }
- 
-
--- 
-2.39.5
-
-
+Nah, SNP initialization failure should be a rare occurence, I don't want to make
+the "normal" flow more complex just to handle something that should never happen
+in practice.
