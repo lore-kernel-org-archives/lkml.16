@@ -1,121 +1,150 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CB3F278743;
-	Tue,  6 May 2025 05:50:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B7D922A4D6;
+	Tue,  6 May 2025 05:51:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746510625; cv=none; b=gaves5sUQIfQvPOegFpgpTlecBpDZlzkt7C/PXysGOdQ/ic5mlN5O8GWxtir0RzUXN0HW7K4pJak3Jf4qy3GFsJTGKxn/uEy1TNbq8sUoARXpn54KY6LjqicBuMY3E4sOLwbkg8uWKMaOGrhbmUnZaCiv9sBdQsvGktQRABLHR4=
+	t=1746510697; cv=none; b=OY1SFTmbogiHEIA/4jL8iZF38Mbt86cRQiQRNwKHddCeKU/yYToQChSZblSIZsVJT9rBI7XWHHaH4j3KplU5LvxHXViOxjqVNR91+un4siSEJ8vW5aEEhrsYl3K2CilFQfoockU4Xo01CYdSRp4atNXjnLzi+MPkNY6fkXT2lBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746510625; c=relaxed/simple;
-	bh=V5AFJFc3Mt+ezqyhfUKPS9/A9RFkGtN8PAqSt1hwC7M=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=BAymfh8n4n+CUP2O9evhaFPxqiVX++uRU9eYVtO5ocjCjPeM48x7W0gRzIa3CUwmLGmWM4iTUvNoA0nxMWnnx5pkK85Gswi4eXMGOznBiCkW+KLPYOCJ95UQHgtPgBRp+Mx3zbiiub1jW2Fsq78O0fByXHzfywO3qtGyNdCB5Ek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CakdBRGm; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746510697; c=relaxed/simple;
+	bh=s6cBSkVGsEFxwDWF90N1a+nEVWSskSv7ojPB+C5dVbc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=m/PdVSUeEYXEv7ROXFIxvMgQle985VA0h0R5i77EMrAVbT1Fdq1vq/diNZzW3OJtY241cq+0Nc1RJUpq23JNV9V8IpwM6ak5yH9HKxZE0ZbQaDdNSMoD9eTn9hMHu5uxqh6FIlb5i8upek9686EOUrnWxasO0W5dlhJeeqEMNaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=OKtjI1mQ; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CakdBRGm"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-7369ce5d323so4740462b3a.1;
-        Mon, 05 May 2025 22:50:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746510622; x=1747115422; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=oJxdxFQqaCGcZlTsGLuSVzC1SVQDHdJUoQJ4hC/Wo1Y=;
-        b=CakdBRGmPf7Botv4eBXw/r2uz85QtDLv68/LpaB7EKW85OvEKf2kjP3NpMPjwlpdP7
-         NEwfLfq43a5TDr9cwFopx+xUQiCQdnzzzRXR0MoTDbVyQtXBw5vtBHX7IHZeSNsYWFxB
-         WT6HEMeyUKiv3odo1fT/GYdqVJvTVHIoZU15RMWrRIz5mBTxMa3pixe65QG0wJwZUZYn
-         ECOZZpPJToQ3pHcjCvo0vR4MbRWUkYZHDv8IASsCJTLifbbvPbd0CN+NbQT1bkwLy2/q
-         YzcLiMf9vqPGoeXC146c2/GjSC3JHXjnwFRysh+5kv2v5OfdxNjx8pN3T95h0cksxY9O
-         0J7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746510622; x=1747115422;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=oJxdxFQqaCGcZlTsGLuSVzC1SVQDHdJUoQJ4hC/Wo1Y=;
-        b=RdWpobvHpeAxWuIfD+qTUZWjU0SE+ZIeAD3QdtjEdXQegCzCq6TShUCN+D55SVbvaV
-         f6TKdbe6Z3TeFTvULsezG/h1R6nsd7IV8xudg7rV4au84sWjIkLWYc5odk6eBSybAA8s
-         WFRlIbgkslD2vFYIywFEB8tJvUVs8Y9WhBFBUh7wQmaFb3QIMyO0jwNvc9QjS78+grMn
-         U2WE9MQ0s3ZBACykZYNHVe5c5Xb/8YsdatKLGQctcOMPDoJ+9PQbDSix3o7qrpBnt45B
-         pfEjjN8mwBdUdX9/Y0h/EAyLuMV1W82PTnJ4pdybkJXO0ZNzN+WiSrPbUaT1Ew1NyClZ
-         YgqA==
-X-Forwarded-Encrypted: i=1; AJvYcCUtx/kt7hBy6QMFJT84HczoxWqYIUtCX4uUfmUZAeJC/9OJVuMNwbB9gynRp6RxK5FaZBxTsJaKiaGqf+/Q@vger.kernel.org, AJvYcCVK2O8UbASpJ7pZl5WSGjv6je75rsMoueV8JNAXzIawSXQ5XU66YHgfZ6p3JfaNEoX+O9rLVzNhm7J5KA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxaUfRnpHb712Tz+WOIFfmE9a+oj6mnstIK9B8A9AwpaNrwmrBy
-	6ElJGpB1bXu5gH+WCzR6nY3ZEdQ/eRiNyXnRSFceiQjxOyP6khHXbOu2jHAgxl4=
-X-Gm-Gg: ASbGncvbZt29ZvNY61e/hAqKWGzARkzBvT2fRHmuvMRc/KxF0iKzuJfR3rQXib9MpIL
-	Rwbl671FOV6qF5IVV9Q3KQmG4GLMkq89TzTLC+Cbas40i/8xKkDbgEFOzh7kH6xVDVytz6KUM7S
-	sH0mA8MOqveSecBvBUHZrViKqvXj0ptEKOFETkItg+Jiojl0ZLcgO7GxlT7MS1LlW4wzz3mhN2V
-	u3maE+w1lMiZ9/j1iFDNV3CpmI+GT2NRym/Xx8/i25Igp2o2YmZzQViTzYhJumVjKB2oVJ2U+/+
-	BPrz1Zn/7oCHbUeNN8ARqZw=
-X-Google-Smtp-Source: AGHT+IGrWYJ9sVBI0oVxpUMc3Ou3KDlg7s831IeFtPmi+epwDrRduE5iR2qXrSHiBdojD7UHB8Ns1g==
-X-Received: by 2002:a05:6a20:9f48:b0:1f5:6b36:f57a with SMTP id adf61e73a8af0-20e97ea6675mr14275288637.39.1746510622345;
-        Mon, 05 May 2025 22:50:22 -0700 (PDT)
-Received: from localhost ([2001:67c:1562:8007::aac:4468])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b1fb3b51570sm6604541a12.20.2025.05.05.22.50.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 22:50:21 -0700 (PDT)
-Sender: AceLan Kao <acelan@gmail.com>
-From: "Chia-Lin Kao (AceLan)" <acelan.kao@canonical.com>
-To: Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>,
-	linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] HID: quirks: Add quirk for 2 Chicony Electronics HP 5MP Cameras
-Date: Tue,  6 May 2025 13:50:15 +0800
-Message-ID: <20250506055015.774509-1-acelan.kao@canonical.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="OKtjI1mQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1746510688;
+	bh=YpZZTtpWmhtS6HWeWM6IrwvDGHJJlAXrxq0GquhCK0k=;
+	h=Date:From:To:Cc:Subject:From;
+	b=OKtjI1mQKaopMFJMTG824D3RkNTeXmC7MS0cTn3bsAndDgCVu2XJ11uZq86+VNlWU
+	 xiw8pTk3fy46ICSmQGXMZyxvOW1TRSbYlrhswV3GfaYGBPoLqQYESn1dnvLyVXZVHn
+	 SVv43ZPJcgXwknY5xsi99wH56QYeLz3hvDqxn912+FtOcfG0leivYusdVldrTcCu1u
+	 7m5IEQoNi3IsSiEuOcdaK9+cEcNmwulcblWL/0BvufAgfQNuoz0oPY1i4hMmJd7B/e
+	 +mnKfYM3pnbZePOcxgPVy+Va3zg/j4IFJu35HLhnkzTwryxHtYgEtmTwzsqjKYMdK6
+	 xqmz3hEjSoYrw==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Zs6w00Gngz4wyh;
+	Tue,  6 May 2025 15:51:27 +1000 (AEST)
+Date: Tue, 6 May 2025 15:51:26 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc: Arthur-Prince <r2.arthur.prince@gmail.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>, Mariana =?UTF-8?B?VmFsw6lyaW8=?=
+ <mariana.valerio2@hotmail.com>, Tobias Sperling
+ <tobias.sperling@softing.com>
+Subject: linux-next: manual merge of the iio tree with the iio-fixes tree
+Message-ID: <20250506155126.50ba1efb@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/Nsy2QQUnWclVhEC+H18FDAT";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-The Chicony Electronics HP 5MP Cameras (USB ID 04F2:B824 & 04F2:B82C)
-report a HID sensor interface that is not actually implemented.
-Attempting to access this non-functional sensor via iio_info causes
-system hangs as runtime PM tries to wake up an unresponsive sensor.
+--Sig_/Nsy2QQUnWclVhEC+H18FDAT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Add these 2 devices to the HID ignore list since the sensor interface is
-non-functional by design and should not be exposed to userspace.
+Hi all,
 
-Signed-off-by: Chia-Lin Kao (AceLan) <acelan.kao@canonical.com>
----
-v2. move the quirks to hid_ignore_list[], were misplaced in
-    hid_have_special_driver[]
----
- drivers/hid/hid-ids.h    | 2 ++
- drivers/hid/hid-quirks.c | 2 ++
- 2 files changed, 4 insertions(+)
+Today's linux-next merge of the iio tree got a conflict in:
 
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 288a2b864cc4..7a57994b937a 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -307,6 +307,8 @@
- #define USB_DEVICE_ID_ASUS_AK1D		0x1125
- #define USB_DEVICE_ID_CHICONY_TOSHIBA_WT10A	0x1408
- #define USB_DEVICE_ID_CHICONY_ACER_SWITCH12	0x1421
-+#define USB_DEVICE_ID_CHICONY_HP_5MP_CAMERA	0xb824
-+#define USB_DEVICE_ID_CHICONY_HP_5MP_CAMERA2	0xb82c
- 
- #define USB_VENDOR_ID_CHUNGHWAT		0x2247
- #define USB_DEVICE_ID_CHUNGHWAT_MULTITOUCH	0x0001
-diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
-index 646171598e41..ebf44575958a 100644
---- a/drivers/hid/hid-quirks.c
-+++ b/drivers/hid/hid-quirks.c
-@@ -755,6 +755,8 @@ static const struct hid_device_id hid_ignore_list[] = {
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_AVERMEDIA, USB_DEVICE_ID_AVER_FM_MR800) },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_AXENTIA, USB_DEVICE_ID_AXENTIA_FM_RADIO) },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_BERKSHIRE, USB_DEVICE_ID_BERKSHIRE_PCWD) },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_CHICONY, USB_DEVICE_ID_CHICONY_HP_5MP_CAMERA) },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_CHICONY, USB_DEVICE_ID_CHICONY_HP_5MP_CAMERA2) },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_CIDC, 0x0103) },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_CYGNAL, USB_DEVICE_ID_CYGNAL_RADIO_SI470X) },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_CYGNAL, USB_DEVICE_ID_CYGNAL_RADIO_SI4713) },
--- 
-2.43.0
+  drivers/iio/adc/Kconfig
 
+between commit:
+
+  169eaf9ccfb0 ("iio: adc: ti-ads1298: Kconfig: add kfifo dependency to fix=
+ module build")
+
+from the iio-fixes tree and commit:
+
+  0de3748d80f3 ("iio: adc: sort TI drivers alphanumerical")
+
+from the iio tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/iio/adc/Kconfig
+index b7aac84e5224,ad06cf556785..000000000000
+--- a/drivers/iio/adc/Kconfig
++++ b/drivers/iio/adc/Kconfig
+@@@ -1512,6 -1546,41 +1547,42 @@@ config TI_ADS111
+           This driver can also be built as a module. If so, the module wil=
+l be
+           called ti-ads1119.
+ =20
++ config TI_ADS124S08
++ 	tristate "Texas Instruments ADS124S08"
++ 	depends on SPI
++ 	select IIO_BUFFER
++ 	select IIO_TRIGGERED_BUFFER
++ 	help
++ 	  If you say yes here you get support for Texas Instruments ADS124S08
++ 	  and ADS124S06 ADC chips
++=20
++ 	  This driver can also be built as a module. If so, the module will be
++ 	  called ti-ads124s08.
++=20
++ config TI_ADS1298
++ 	tristate "Texas Instruments ADS1298"
++ 	depends on SPI
++ 	select IIO_BUFFER
+++	select IIO_KFIFO_BUF
++ 	help
++ 	  If you say yes here you get support for Texas Instruments ADS1298
++ 	  medical ADC chips
++=20
++ 	  This driver can also be built as a module. If so, the module will be
++ 	  called ti-ads1298.
++=20
++ config TI_ADS131E08
++ 	tristate "Texas Instruments ADS131E08"
++ 	depends on SPI
++ 	select IIO_BUFFER
++ 	select IIO_TRIGGERED_BUFFER
++ 	help
++ 	  Say yes here to get support for Texas Instruments ADS131E04, ADS131E06
++ 	  and ADS131E08 chips.
++=20
++ 	  This driver can also be built as a module. If so, the module will be
++ 	  called ti-ads131e08.
++=20
+  config TI_ADS7138
+  	tristate "Texas Instruments ADS7128 and ADS7138 ADC driver"
+  	depends on I2C
+
+--Sig_/Nsy2QQUnWclVhEC+H18FDAT
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgZo14ACgkQAVBC80lX
+0Gwp4gf/cVuCd2T9TwoQYAaS4D2BsGgbf5QCgTBfOTOqmds04e3XUmzrOpDwNabb
+gu8hYDM//1M0rQuTW975+4gxcIls3dhDoEncim741ZIPKN7CKl4IP8Zszoq2EImP
+012ULkukC7/J+ZShpZWI+yYubciKADYtolgX+sKZD2tgX7rg/wx/Q8OblYSHyP+Z
+Y86IvWZlSpfbv2kNCtj1nuIhs315rjXdi2+jyzcQ8dPWRXKr7WxS45v1rIKyIGD1
+u3c/VdBM0dANfZLiChp2gF9fUSmMh8d6xU147IvkqeNuNHzSLE8zHHm1UE0eQmng
+fdUfRzpkesQNX/Z/yHTkL4mM/hJ8fQ==
+=5wle
+-----END PGP SIGNATURE-----
+
+--Sig_/Nsy2QQUnWclVhEC+H18FDAT--
