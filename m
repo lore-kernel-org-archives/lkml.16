@@ -1,114 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18A002853FC;
-	Tue,  6 May 2025 15:48:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6D6B284B55;
+	Tue,  6 May 2025 15:48:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746546527; cv=none; b=bnF3A2BRotCl6lE49MhSEyzR1J2TP5h4HO5ohZ/MAjD3BRnIyv0MlNwcO0rhMGw7jNfwKyXHGE6IqMZoE5JmxpN+5kjIoE3+y5WhWwwXOWaZAWedPY+phoU7xOyrpDuAzdVdZwPvPmmT4ayYkHBTZo0PQDAWGQhOYKIrJxsg16M=
+	t=1746546534; cv=none; b=ncrOLrBsgMD/zywzIKgcMP0nysliDwcB6hIwlBV5ftpF2T+pzwAReRbAfZPsudnnx/kaMswHzXPxJMjJR3bggkJKghEz42piJNRP2nhYpI6ennh2T00cXO/HnuijS64jatmfaElXBb8eOdg7Dvjj1BZ35kBj9+qr5XxcAo+zJCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746546527; c=relaxed/simple;
-	bh=LL/6xDkSD1/0MDkC310YPOBF6wfTECaTbyABLCK9T+U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oZlPnexL/f1fXt6Cq0TUWmITVvrwEpEJGAkXzFdp14GmF2Uw1H2+R6//G+JBxm2HTa4IgJbl1did53P7KFmdngLfZWVNW8E4zT7gJ6X7f+gu1vZv5aBZ995wgkj0jX0qfL9qRMJWs3zqpQIunDRNrd1CU8ZDlSy2wOf1+hp7DbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kh8VxP8I; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746546534; c=relaxed/simple;
+	bh=b8K8VPEKo2vFno2FOkQSXnOl2aV8WRJi5ElUQaEXxrg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sbn94ewpGag3VvNIke4z2whm0pa72XGGLK0Wxu7/EU0ruI4NfeZbwu63rIuiB1x192Y8QkQspve+P5VMAEw9tB3eaBLFKGlqMNAXRy/pZf7OI+eJyFWgXirwwE4uDL0+qkCv/+w17+3n6ZpXlgUA0s+M+Sz8e6Hm/u1JjHRPojw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=BuQun0hu; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kh8VxP8I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41880C4CEEF;
-	Tue,  6 May 2025 15:48:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746546526;
-	bh=LL/6xDkSD1/0MDkC310YPOBF6wfTECaTbyABLCK9T+U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kh8VxP8IEXeGucQwn2yR/zw3AkNxZRKOrFTRPRIXqjf7B2gPuaj/sdmZb2kiGDAVv
-	 dDZS5lPSYmHhEj5c/Kj4R0D7I+ghafukSsC6jy2vo5IQPilVohdtmHpU8EU8CejiB+
-	 MA/UllmPy6jp6tTyFs9QHoeSrqIomgHofPIbsHRDlEQ2jC763VQKgEsFa5ZKoCzivF
-	 EfHWYPVLAx5w96tsLUcB63ClB2RQTTUZ9jwwja1XnJyTlA15rH8TA0abGC2HcfrBWt
-	 EcK4XD+tIOEQKwOIMBapt2eZkUMcwfO4PjuzyQQ0chgQDw4B7R6tB5R6S1IR5sKXSf
-	 fKcbIuFE+sKxg==
-Date: Tue, 6 May 2025 16:48:42 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Pankit Garg <pankit.garg@nxp.com>
-Cc: linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, conor+dt@kernel.org, robh@kernel.org,
-	alexandre.belloni@bootlin.com, vikash.bansal@nxp.com,
-	priyanka.jain@nxp.com, daniel.aguirre@nxp.com,
-	shashank.rebbapragada@nxp.com, aman.kumarpandey@nxp.com
-Subject: Re: [PATCH v2 1/2] dt-bindings: rtc: Add pcf85053a support
-Message-ID: <20250506-durable-cryptic-24119a6e7dbd@spud>
-References: <20250506094815.3765598-1-pankit.garg@nxp.com>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="BuQun0hu"
+Received: from [10.137.184.60] (unknown [131.107.1.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 2CBF62115DCE;
+	Tue,  6 May 2025 08:48:52 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2CBF62115DCE
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1746546532;
+	bh=XV5pxCSYJfDbAu7U85JaaVEZsdoplkYxyVj9/rXktcA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=BuQun0hu9dClUEbfjnUfDSAQolyrHQJvzJC05eWENJSqvrATHxp1lKr8jJRio46vB
+	 Y2v4wRTGIW1ann6Vn8v5wOom3gqwerlRUaApLy5k0MPeApLpJ5Jhj1fng/jjDihqUO
+	 SqklYJU/lXBH5qbE6PdhGnLJcOCAyVrDHdH5WIOg=
+Message-ID: <2d548dd4-ec29-4414-8450-5aa7a8ce98e0@linux.microsoft.com>
+Date: Tue, 6 May 2025 08:48:51 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="0wR+eHOwNpTPI9SZ"
-Content-Disposition: inline
-In-Reply-To: <20250506094815.3765598-1-pankit.garg@nxp.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Drivers: hv: Introduce mshv_vtl driver
+To: Naman Jain <namjain@linux.microsoft.com>,
+ "K . Y . Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>
+Cc: Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
+ Saurabh Sengar <ssengar@linux.microsoft.com>,
+ Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
+ Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+ linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
+References: <20250506084937.624680-1-namjain@linux.microsoft.com>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <20250506084937.624680-1-namjain@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
---0wR+eHOwNpTPI9SZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 06, 2025 at 03:18:14PM +0530, Pankit Garg wrote:
-> Add device tree bindings for NXP PCF85053a RTC chip.
->=20
-> Signed-off-by: Pankit Garg <pankit.garg@nxp.com>
+On 5/6/2025 1:49 AM, Naman Jain wrote:
+> Provide an interface for Virtual Machine Monitor like OpenVMM and its
+> use as OpenHCL paravisor to control VTL0 (Virtual trust Level).
+> Expose devices and support IOCTLs for features like VTL creation,
+> VTL0 memory management, context switch, making hypercalls,
+> mapping VTL0 address space to VTL2 userspace, getting new VMBus
+> messages and channel events in VTL2 etc.
+> 
+> Co-developed-by: Roman Kisel <romank@linux.microsoft.com>
+> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+> Co-developed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+> Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+> Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
 > ---
-> V1 -> V2: Handled dt-bindings by trivial-rtc.yaml
->=20
+> 
+> OpenVMM : https://openvmm.dev/guide/
+> 
 > ---
->  Documentation/devicetree/bindings/rtc/trivial-rtc.yaml | 2 ++
->  MAINTAINERS                                            | 5 +++++
->  2 files changed, 7 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/rtc/trivial-rtc.yaml b/Doc=
-umentation/devicetree/bindings/rtc/trivial-rtc.yaml
-> index 7330a7200831..47be7bbbfedd 100644
-> --- a/Documentation/devicetree/bindings/rtc/trivial-rtc.yaml
-> +++ b/Documentation/devicetree/bindings/rtc/trivial-rtc.yaml
-> @@ -65,6 +65,8 @@ properties:
->        - microcrystal,rv8523
->        # NXP LPC32xx SoC Real-time Clock
->        - nxp,lpc3220-rtc
-> +      # NXP PCF85053A Real Time Clock Module with I2C-Bus
-> +      - nxp,pcf85053a
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+[...]
 
->        # I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
->        - ricoh,r2025sd
->        # I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
+> 
+> base-commit: 407f60a151df3c44397e5afc0111eb9b026c38d3
 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 0737dcb2e411..d39fc05c6454 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -17782,6 +17782,11 @@ S:	Maintained
->  F:	Documentation/devicetree/bindings/sound/nxp,tfa989x.yaml
->  F:	sound/soc/codecs/tfa989x.c
-> =20
-> +NXP RTC PCF85053A DRIVER
-> +M:	Pankit Garg<pankit.garg@nxp.com>
-> +L:	linux-kernel@vger.kernel.org
-> +S:	Maintained
+LGTM.
+Reviewed-by: Roman Kisel <romank@linux.microsoft.com>
 
-This looks like a hang-over from your v1 and should really be moved
-to the patch adding the driver.
+-- 
+Thank you,
+Roman
 
---0wR+eHOwNpTPI9SZ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaBovWQAKCRB4tDGHoIJi
-0pdkAP4tBxS54yfsXjb3rDyc/HUOCio3MOBQ502NNNXZ2ICpywD/ab24a01++WLV
-TKm1JU5IlBvZuj88OsDFgFDjfPYxoQE=
-=IBZ6
------END PGP SIGNATURE-----
-
---0wR+eHOwNpTPI9SZ--
