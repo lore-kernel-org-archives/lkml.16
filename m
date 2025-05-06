@@ -1,159 +1,83 @@
-Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E16438DEC
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 09:48:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E55FC265CDF;
+	Tue,  6 May 2025 09:49:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746524941; cv=none; b=c1cirMKcCWVugEovBvF6oolrplk1Xw+84vlrp1niGrYDZA2DQqeQ4elF5XzBsGESZcf9XqyQgnIs0S9yUVsZegx1lGlMleOyGDgY8PUtB+NNUpT9LHT/azHZBQ2mQf9Dul5yDSRMti24f8D8FbODsLJe95Fcb34ySSNpr492krY=
+	t=1746524962; cv=none; b=GS0s9RO/7aQOJbn855gYwpUvZqEmhJz1mMsCSmMQ6zb3egpNorcrOYaYXzqqt/DCwBeOoHVIJjApgwZHoEGDT67uMNjoztpEYkkQFV0urg2GkR72oXCHFELI3u7+C9l24liJDHnsr57SKt76WB8oAwmpvdkFz9wFUPgLiiYyeU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746524941; c=relaxed/simple;
-	bh=wscBd0+K73Iu2KF17/+m0xbBKq1LwXoTntpULm27Yc4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uo+Ochxmud1Q8ctOUllUlyOzmxskgwRGhuvo4PXOVccqUbPmc1rC+1cKlP4lVCuESthM22TU2SaNS/D0PMtpUW14v5lr7deIzow3nhNDO+Cgq9Uq4Ce/FIf47VWjd53bnyTjIpCkFnVSmJ5oCMzLNo3/Pe4J7bwi1GGKTrpEnn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=bcPuPxt9; arc=none smtp.client-ip=91.218.175.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="bcPuPxt9"
-Date: Tue, 6 May 2025 09:48:52 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1746524937;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SGyzWRmJQQwN3Wi10eV4TGMzAWHWRlBB87uJefqwcVU=;
-	b=bcPuPxt9FAJuszqfy37ye6a4kxx+HpJaH0+wEJHo1W8Yf6vWg8Fk6YRlAgAhtiTJxGF7gG
-	M24jKSK0Xoyn3/QqOViDGVoz268x+O75YmWYcJvZTowai++uYcJ5ZqW1ppfQIQzY6hNToX
-	ztJoaMSNkxCmU0yBn1wh4Nn5flC7qQ8=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yosry Ahmed <yosry.ahmed@linux.dev>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Michael Larabel <Michael@michaellarabel.com>,
-	Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v2] KVM: SVM: Set/clear SRSO's BP_SPEC_REDUCE on 0 <=> 1
- VM count transitions
-Message-ID: <aBnbBL8Db0rHXxFX@google.com>
-References: <20250505180300.973137-1-seanjc@google.com>
+	s=arc-20240116; t=1746524962; c=relaxed/simple;
+	bh=wli3H1iA05utUdiTrcGE9JgEgoGq9bqSBJ+cNt4ftts=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WziQMdQNJjHyLBaIien1bq3jdFI9ePv7QYWcA2JLxYQwtKfa8hu3Azm3hdLOaiCGa5RxxKSPQ7+TsFKOHr1w6AmspIPfsULbxeh+tPoivMI4eX3Iacmktgr0dRAdw7q76+xot0VaitqG7UWVvtQzC1UjShkavHZLWgyheR1hlQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4ZsD673dVtz12LXP;
+	Tue,  6 May 2025 17:45:35 +0800 (CST)
+Received: from kwepemd100011.china.huawei.com (unknown [7.221.188.204])
+	by mail.maildlp.com (Postfix) with ESMTPS id E42C41800B3;
+	Tue,  6 May 2025 17:49:10 +0800 (CST)
+Received: from M910t.huawei.com (10.110.54.157) by
+ kwepemd100011.china.huawei.com (7.221.188.204) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.10; Tue, 6 May 2025 17:49:09 +0800
+From: Changbin Du <changbin.du@huawei.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+	<namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov
+	<bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, <x86@kernel.org>
+CC: Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
+ Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, "Liang,
+ Kan" <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Changbin
+ Du <changbin.du@huawei.com>
+Subject: [PATCH] x86: pebs: remove redundant assignments to sample.period
+Date: Tue, 6 May 2025 17:49:07 +0800
+Message-ID: <20250506094907.2724-1-changbin.du@huawei.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250505180300.973137-1-seanjc@google.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemd100011.china.huawei.com (7.221.188.204)
 
-On Mon, May 05, 2025 at 11:03:00AM -0700, Sean Christopherson wrote:
-> Set the magic BP_SPEC_REDUCE bit to mitigate SRSO when running VMs if and
-> only if KVM has at least one active VM.  Leaving the bit set at all times
-> unfortunately degrades performance by a wee bit more than expected.
-> 
-> Use a dedicated spinlock and counter instead of hooking virtualization
-> enablement, as changing the behavior of kvm.enable_virt_at_load based on
-> SRSO_BP_SPEC_REDUCE is painful, and has its own drawbacks, e.g. could
-> result in performance issues for flows that are sensitive to VM creation
-> latency.
-> 
-> Defer setting BP_SPEC_REDUCE until VMRUN is imminent to avoid impacting
-> performance on CPUs that aren't running VMs, e.g. if a setup is using
-> housekeeping CPUs.  Setting BP_SPEC_REDUCE in task context, i.e. without
-> blasting IPIs to all CPUs, also helps avoid serializing 1<=>N transitions
-> without incurring a gross amount of complexity (see the Link for details
-> on how ugly coordinating via IPIs gets).
-> 
-> Link: https://lore.kernel.org/all/aBOnzNCngyS_pQIW@google.com
-> Fixes: 8442df2b49ed ("x86/bugs: KVM: Add support for SRSO_MSR_FIX")
-> Reported-by: Michael Larabel <Michael@michaellarabel.com>
-> Closes: https://www.phoronix.com/review/linux-615-amd-regression
-> Cc: Borislav Petkov <bp@alien8.de>
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
-> 
-> v2: Defer setting BP_SPEC_REDUCE until VMRUN is imminent, which in turn
->     allows for eliding the lock on 0<=>1 transitions as there is no race
->     with CPUs doing VMRUN before receiving the IPI to set the bit, and
->     having multiple tasks take the lock during svm_srso_vm_init() is a-ok.
-> 
-> v1: https://lore.kernel.org/all/20250502223456.887618-1-seanjc@google.com
-> 
->  arch/x86/kvm/svm/svm.c | 71 ++++++++++++++++++++++++++++++++++++++----
->  arch/x86/kvm/svm/svm.h |  2 ++
->  2 files changed, 67 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> index cc1c721ba067..15f7a0703c16 100644
-> --- a/arch/x86/kvm/svm/svm.c
-> +++ b/arch/x86/kvm/svm/svm.c
-> @@ -607,9 +607,6 @@ static void svm_disable_virtualization_cpu(void)
->  	kvm_cpu_svm_disable();
->  
->  	amd_pmu_disable_virt();
-> -
-> -	if (cpu_feature_enabled(X86_FEATURE_SRSO_BP_SPEC_REDUCE))
-> -		msr_clear_bit(MSR_ZEN4_BP_CFG, MSR_ZEN4_BP_CFG_BP_SPEC_REDUCE_BIT);
->  }
->  
->  static int svm_enable_virtualization_cpu(void)
-> @@ -687,9 +684,6 @@ static int svm_enable_virtualization_cpu(void)
->  		rdmsr(MSR_TSC_AUX, sev_es_host_save_area(sd)->tsc_aux, msr_hi);
->  	}
->  
-> -	if (cpu_feature_enabled(X86_FEATURE_SRSO_BP_SPEC_REDUCE))
-> -		msr_set_bit(MSR_ZEN4_BP_CFG, MSR_ZEN4_BP_CFG_BP_SPEC_REDUCE_BIT);
-> -
->  	return 0;
->  }
->  
-> @@ -1518,6 +1512,63 @@ static void svm_vcpu_free(struct kvm_vcpu *vcpu)
->  	__free_pages(virt_to_page(svm->msrpm), get_order(MSRPM_SIZE));
->  }
->  
-> +#ifdef CONFIG_CPU_MITIGATIONS
-> +static DEFINE_SPINLOCK(srso_lock);
-> +static atomic_t srso_nr_vms;
-> +
-> +static void svm_srso_clear_bp_spec_reduce(void *ign)
-> +{
-> +	struct svm_cpu_data *sd = this_cpu_ptr(&svm_data);
-> +
-> +	if (!sd->bp_spec_reduce_set)
-> +		return;
-> +
-> +	msr_clear_bit(MSR_ZEN4_BP_CFG, MSR_ZEN4_BP_CFG_BP_SPEC_REDUCE_BIT);
-> +	sd->bp_spec_reduce_set = false;
-> +}
-> +
-> +static void svm_srso_vm_destroy(void)
-> +{
-> +	if (!cpu_feature_enabled(X86_FEATURE_SRSO_BP_SPEC_REDUCE))
-> +		return;
-> +
-> +	if (atomic_dec_return(&srso_nr_vms))
-> +		return;
-> +
-> +	guard(spinlock)(&srso_lock);
-> +
-> +	/*
-> +	 * Verify a new VM didn't come along, acquire the lock, and increment
-> +	 * the count before this task acquired the lock.
-> +	 */
-> +	if (atomic_read(&srso_nr_vms))
-> +		return;
-> +
-> +	on_each_cpu(svm_srso_clear_bp_spec_reduce, NULL, 1);
+The perf_sample_data_init() has already set the period of sample, so no
+need to do it again.
 
-Just a passing-by comment. I get worried about sending IPIs while
-holding a spinlock because if someone ever tries to hold that spinlock
-with IRQs disabled, it may cause a deadlock.
+Signed-off-by: Changbin Du <changbin.du@huawei.com>
+---
+ arch/x86/events/intel/ds.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-This is not the case for this lock, but it's not obvious (at least to
-me) that holding it in a different code path that doesn't send IPIs with
-IRQs disabled could cause a problem.
+diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+index 9b20acc0e932..292ef21cbfbd 100644
+--- a/arch/x86/events/intel/ds.c
++++ b/arch/x86/events/intel/ds.c
+@@ -1828,8 +1828,6 @@ static void setup_pebs_fixed_sample_data(struct perf_event *event,
+ 
+ 	perf_sample_data_init(data, 0, event->hw.last_period);
+ 
+-	data->period = event->hw.last_period;
+-
+ 	/*
+ 	 * Use latency for weight (only avail with PEBS-LL)
+ 	 */
+@@ -2082,7 +2080,6 @@ static void setup_pebs_adaptive_sample_data(struct perf_event *event,
+ 	sample_type = event->attr.sample_type;
+ 	format_group = basic->format_group;
+ 	perf_sample_data_init(data, 0, event->hw.last_period);
+-	data->period = event->hw.last_period;
+ 
+ 	setup_pebs_time(event, data, basic->tsc);
+ 
+-- 
+2.43.0
 
-You could add a comment, convert it to a mutex to make this scenario
-impossible, or dismiss my comment as being too paranoid/ridiculous :)
