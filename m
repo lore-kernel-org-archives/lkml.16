@@ -1,127 +1,242 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC2A4280A22;
-	Tue,  6 May 2025 13:32:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 619011A9B28;
+	Tue,  6 May 2025 13:33:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746538368; cv=none; b=uMG6Wz4SsXvlmS2gLMsapXVch+liqSfk+8XCFvkMmIa15zg3PthkwXDpAKTiOnECgs6RER+BMSQ/l4eAyO2gOGj3OgLNPO1zSCc+9H57PVMFBY7OYvB/7kR5rRK5wIptVSpBtcxr+Y7p6G25NbHYPOm4azAkfJm4AGo3CLnvXkw=
+	t=1746538439; cv=none; b=H0zOReVfkEBr7O3SkOMt7kgJJbsvhsyr+zTVbsczQ7PisXcIOh8OobUfTwKO9Jmt2JbJx+gFlQv58iYgcOFh9iPl/uYK12Kgl4tZYOn6Kc/M1q+EM9YY2/Tw5xxr3my8aPHHxY80urZcdUEUUJBJ5qJzUMBhh5J9OYUPQX3m0jA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746538368; c=relaxed/simple;
-	bh=kSvXr+b2Hy2f2NJD4lZL4d9PEdA5TH8rETVkdgx3URI=;
+	s=arc-20240116; t=1746538439; c=relaxed/simple;
+	bh=ytVei68A+haMDJ6ZilvkYH/flA7qc1bgrqpzA5apH+M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PBOLwVFWP50frwjvZVHE12G8TFc7vq2/RwInSSz4IgFqTUZ/863EK6LtueZrifghdY21l9PyU2gs0iv9PkvIHuLvkM3Ae2zWC5bCeuyNczD0WNBX8GoIQ3Q0ZSRCyKqtiw6pVNI9iYDwsk4esSmNlxjqZmjSYwEYcRO5IueBeFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=n7yeE+TB; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=mB+exq+I6zoCnt0iZ+az+CmS5XzsymdcQrrZCbkgs0M90Z4oV4PiFNh/LpMDnmyw1mJJR+ejzbu2XAGeVNPD5IIddhwRBDnVNFgDI/xl+3GstQqtLKdBBr50QmFc7F6mVzMZ9LELWBdMDPfA49VudCcrLteihyvE+bV7XuaHZDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mZxEkZLM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="n7yeE+TB"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=6cpI98hWfgFel/wjRnW+Dxp5TlwemkuKmbKCnMNw4jc=; b=n7yeE+TBrHIHKZGaVFCAVfDdd8
-	9yrCGjO0R1hS6oa3Owmd6CNGJXpS+KKssrLwI8chILGFybjyYgLR3+ibpbybCmTC3F5dhTMqu5RK/
-	LJRAiTsakNKkYNCTcht19eNNtRUst4+MUBY60lN/cPsf3AEpTCgRQxPpBM1OWUDD5rW+VJg62GqNw
-	X5E2fqslkkasXgjPpctQx//H+7WbEeAacaB2Wq4REG4EWuEWxfyAVR0ReiBYTwP2MKohSXt+M7ihj
-	nN1lL6geKsPbyDPTxVg4jhQKCgWYlUuagGEZIw3hC4CREIhjT0a/kPWMJuFJ9S1rjeX5+rE5xlAVQ
-	8eADS2cQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1uCIPS-0000000FeCx-3nP7;
-	Tue, 06 May 2025 13:32:35 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 4E72C300348; Tue,  6 May 2025 15:32:34 +0200 (CEST)
-Date: Tue, 6 May 2025 15:32:34 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Sean Christopherson <seanjc@google.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, kys@microsoft.com,
-	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, pbonzini@redhat.com, ardb@kernel.org,
-	kees@kernel.org, Arnd Bergmann <arnd@arndb.de>,
-	gregkh@linuxfoundation.org, linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-	linux-efi@vger.kernel.org, samitolvanen@google.com,
-	ojeda@kernel.org, xin@zytor.com
-Subject: Re: [PATCH v2 00/13] objtool: Detect and warn about indirect calls
- in __nocfi functions
-Message-ID: <20250506133234.GH4356@noisy.programming.kicks-ass.net>
-References: <8B86A3AE-A296-438C-A7A7-F844C66D0198@zytor.com>
- <20250430190600.GQ4439@noisy.programming.kicks-ass.net>
- <20250501103038.GB4356@noisy.programming.kicks-ass.net>
- <20250501153844.GD4356@noisy.programming.kicks-ass.net>
- <aBO9uoLnxCSD0UwT@google.com>
- <20250502084007.GS4198@noisy.programming.kicks-ass.net>
- <aBUiwLV4ZY2HdRbz@google.com>
- <20250503095023.GE4198@noisy.programming.kicks-ass.net>
- <p6mkebfvhxvtqyz6mtohm2ko3nqe2zdawkgbfi6h2rfv2gxbuz@ktixvjaj44en>
- <20250506073100.GG4198@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mZxEkZLM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70A75C4CEE4;
+	Tue,  6 May 2025 13:33:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746538438;
+	bh=ytVei68A+haMDJ6ZilvkYH/flA7qc1bgrqpzA5apH+M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mZxEkZLMI7yQGe81cWfdb4fbb/Xohz8LNH6LjDeiqld1fuKnt8aDE1jTuqBMBWir7
+	 bXCrubgmH6eOB4f9Gu1oJz/jUuBOTNfNZGJ+ycq2PXSZuVsySUfzWxjweTNnxpZiKA
+	 gdkWRwZIiBIp/axAEqtjGtbhUhUgi8mrlvUY7S4JSsRbSBmafjbtdLeq/bd2pdLo4h
+	 LRWHYx9vla4DWhL2c+EurtYNdwDSK8fdEB7jH0EqMgceAtMvI3OUFJxCuHyX8FhowC
+	 xWoiw3XQDVc1G/unOlxEpP+VY7gRFnpAKY8i5tWk36MeirbLxtnFw1p2jULapGfCak
+	 aFn9ZbrkyOuig==
+Date: Tue, 6 May 2025 15:33:55 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: John Stultz <jstultz@google.com>
+Cc: Jared Kangas <jkangas@redhat.com>, sumit.semwal@linaro.org, 
+	benjamin.gaignard@collabora.com, Brian.Starkey@arm.com, tjmercier@google.com, 
+	christian.koenig@amd.com, linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] dma-buf: heaps: Give default CMA heap a fixed name
+Message-ID: <20250506-gleaming-pillbug-of-love-4cb6ca@houat>
+References: <20250422191939.555963-1-jkangas@redhat.com>
+ <20250422191939.555963-3-jkangas@redhat.com>
+ <20250424-sassy-cunning-pillbug-ffde51@houat>
+ <CANDhNCqfsUbN3aavAH5hi4wdcKuUkjLX4jqhKzy-q+jCEqpoow@mail.gmail.com>
+ <20250425-savvy-chubby-alpaca-0196e3@houat>
+ <CANDhNCroe6ZBtN_o=c71kzFFaWK-fF5rCdnr9P5h1sgPOWSGSw@mail.gmail.com>
+ <20250428-greedy-vivid-goldfish-5abb35@houat>
+ <CANDhNCqdL7Oha+cGkk0XCZ8shO08ax1rd2k6f9SckuREUdQUjg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="u4b35s3vftslgagk"
 Content-Disposition: inline
-In-Reply-To: <20250506073100.GG4198@noisy.programming.kicks-ass.net>
-
-On Tue, May 06, 2025 at 09:31:00AM +0200, Peter Zijlstra wrote:
-> On Sat, May 03, 2025 at 11:28:37AM -0700, Josh Poimboeuf wrote:
-> > On Sat, May 03, 2025 at 11:50:23AM +0200, Peter Zijlstra wrote:
-> > > > +++ b/arch/x86/entry/entry_64_fred.S
-> > > > @@ -116,7 +116,8 @@ SYM_FUNC_START(asm_fred_entry_from_kvm)
-> > > >  	movq %rsp, %rdi				/* %rdi -> pt_regs */
-> > > >  	call __fred_entry_from_kvm		/* Call the C entry point */
-> > > >  	POP_REGS
-> > > > -	ERETS
-> > > > +
-> > > > +	ALTERNATIVE "", __stringify(ERETS), X86_FEATURE_FRED
-> > > >  1:
-> > > >  	/*
-> > > >  	 * Objtool doesn't understand what ERETS does, this hint tells it that
-> > > > @@ -124,7 +125,7 @@ SYM_FUNC_START(asm_fred_entry_from_kvm)
-> > > >  	 * isn't strictly needed, but it's the simplest form.
-> > > >  	 */
-> > > >  	UNWIND_HINT_RESTORE
-> > > > -	pop %rbp
-> > > > +	leave
-> > > >  	RET
-> > > 
-> > > So this, while clever, might be a problem with ORC unwinding. Because
-> > > now the stack is different depending on the alternative, and we can't
-> > > deal with that.
-> > > 
-> > > Anyway, I'll go have a poke on Monday (or Tuesday if Monday turns out to
-> > > be a bank holiday :-).
-> > 
-> > Can we just adjust the stack in the alternative?
-> > 
-> > 	ALTERNATIVE "add $64 %rsp", __stringify(ERETS), X86_FEATURE_FRED
-> 
-> Yes, that should work. 
-
-Nope, it needs to be "mov %rbp, %rsp". Because that is the actual rsp
-value after ERETS-to-self.
-
-> But I wanted to have a poke at objtool, so it
-> will properly complain about the mistake first.
-
-So a metric ton of fail here :/
-
-The biggest problem is the UNWIND_HINT_RESTORE right after the
-alternative. This ensures that objtool thinks all paths through the
-alternative end up with the same stack. And hence won't actually
-complain.
-
-Second being of course, that in order to get IRET and co correct, we'd
-need far more of an emulator.
-
-Also, it actually chokes on this variant, and I've not yet figured out
-why. Whatever state should be created by that mov, the restore hint
-should wipe it all. But still the ORC generation bails with unknown base
-reg -1.
+In-Reply-To: <CANDhNCqdL7Oha+cGkk0XCZ8shO08ax1rd2k6f9SckuREUdQUjg@mail.gmail.com>
 
 
+--u4b35s3vftslgagk
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 2/2] dma-buf: heaps: Give default CMA heap a fixed name
+MIME-Version: 1.0
+
+On Tue, Apr 29, 2025 at 09:25:00AM -0700, John Stultz wrote:
+> On Mon, Apr 28, 2025 at 7:52=E2=80=AFAM Maxime Ripard <mripard@kernel.org=
+> wrote:
+> > On Fri, Apr 25, 2025 at 12:39:40PM -0700, John Stultz wrote:
+> > > To your larger point about policy, I do get the tension that you want
+> > > to be able to programmatically derive or evaluate heap names, so that
+> > > applications can consistently derive a pathname to get what they want.
+> >
+> > We've discussed it in the past, I don't really want to. But it was clear
+> > from the last discussion that you (plural) wanted to infer heap
+> > semantics from the names. I'm ok with that, but then if we want to make
+> > it work we need to have well defined names.
+>=20
+> So my name keeps on getting attached to that, but I don't think I was
+> involved in the LPC conversation when that got decided.
+
+Sorry then :/
+
+That's what I recalled, but I guess the pastries got the best of me :)
+
+Does that mean that you disagree with this point though? or just that
+you agree but still wanted to point out you were not part of that
+discussion?
+
+> > And it's actually what I really want to discuss here: we've discussed at
+> > length how bad the heaps name are (and not only here), but I don't think
+> > we have any documented policy on what makes a good name?
+>=20
+> I very much think having a policy/guidance for better names is a good goa=
+l.
+>=20
+> I just want to make sure it doesn't become a strict policy that lead
+> folks to make mistaken assumptions about a static solution being
+> viable in userland (like folks nostalgicly using "eth0" or a fixed
+> network device name in scripts expecting it to work on a different
+> system)
+
+I think that's one of the point where the "derive the buffer attributes"
+=66rom the name interact badly though. In your example, eth0 wouldn't have
+had any non-discoverable guarantees. So it can have any name you want,
+it doesn't matter, you can always discover it through some other mean,
+and go from there.
+
+If we say the name is how you can associate a heap and the kind of
+buffers you get, then we can't just use another heap name just like
+that. We could get buffers with a totally different semantics.
+
+I mean, it would probably work with Android, but for any other
+distribution, even if we came up with a gralloc-like solution, as soon
+as you start updating the kernel and whatever is using the heaps
+separately, it's game over. And pretty much all non-Android distros do?
+
+> > For example, I'm not sure exposing the allocator name is a good idea:
+> > it's an implementation detail and for all userspace cares about, we
+> > could change it every release if it provided the same kind of buffers.
+>=20
+> That is a fair point.
+>=20
+> > Taking your camera buffers example before, then we could also expose a
+> > memory region id, and let the platform figure it out, or use the usecase
+> > as the name.
+> >
+> > But if we don't document that, how can we possibly expect everyone
+> > including downstream to come up with perfect names every time. And FTR,
+> > I'm willing to write that doc down once the discussion settles.
+>=20
+> So again, yeah, I very much support having better guidance on the names.
+>=20
+> I think the number of device constraints and device combinations makes
+> a raw enumeration of things difficult.
+>=20
+> This is why the per-device use->heap mapping "glue" seems necessary to me.
+>=20
+> And, I do get that this runs into a similar problem with enumerating
+> and defining "uses" (which boil down to a combination of
+> devices-in-a-pipeline and access use patterns), but for Andorid it has
+> so far been manageable.
+>=20
+> Personally, I think the best idea I've heard so far to resolve this
+> from userland was Christian's suggestion that devices expose links to
+> compatible heaps, and then userland without a use->heap mapping could
+> for the set of devices they plan to use in a pipeline, figure out the
+> common heap name and use that to allocate.
+
+I plan to work on that, but also, it covers only what the driver cares
+about, ie, buffer location, etc. It doesn't really cover what userspace
+might care about, like whether the buffer is cachable or not. Both would
+work for any driver, but userspace will have to prefer one over the
+other if it plans to do CPU accesses.
+
+So we'd still need some (arguably more limited) enumeration on the
+userspace side.
+
+> However, that pushes the problem down a bit, requiring drivers
+> (instead of userland) to know what heaps they can work with and what
+> the names might be (which again, your goal for standardizing the heap
+> names isn't a bad thing!). Though, this approach also runs into
+> trouble as it opens a question of: should it only encode strict
+> constraint satisfaction, or something more subtle, as while something
+> might work with multiple heaps, its possible it won't be performant
+> enough unless it picks a specific one on device A or a different one
+> on device B.  And getting that sort of device-specific details
+> embedded into a driver isn't great either.
+
+Yeah :/
+
+> > > But I also think that there is so much variety in both the devices and
+> > > uses that there is no way that all use cases and all devices can be
+> > > satisfied with such a static or even programmatic mapping. From my
+> > > perspective, there just is going to have to be some device specific
+> > > glue logic that maps use->heap name. Same reason we have fstab and the
+> > > passwd file.
+> >
+> > fstab and passwd can be generated at (first) boot time / install. fstab
+> > is also being somewhat less important with the auto-partition discovery.
+> > How would you generate that configuration file at boot?
+> >
+> > I'm not really asking this as a theoretical question. Being able to
+> > auto-discover which heap a driver/device would allocate from is central
+> > for the cgroup work I mentioned earlier.
+> >
+> > And I'm really not sure how distros or applications developpers are
+> > supposed to keep up with the raw volume of devices that go out every
+> > year, each and every one of them having different heap names, etc.
+> > Possibly different from one version of the firmware to another.
+>=20
+> For generic distros, I don't have a good answer here. Historically the
+> focus has always been on single device usage, so having the driver do
+> the allocation was fine, and if you were using multiple devices you
+> could just copy the memory between the driver allocated buffers.  But
+> as we've moved to disaggregated IP blocks and device pipelines, all
+> those potential copies wreck performance and power.   I'm not sure
+> generic distros have the concept of a device pipeline very well
+> abstracted (obviously mesa and the wayland/X have had to deal with it,
+> and the video and camera side is dealing with it more and more).
+> Maybe a more established notion of use -> pipeline/device collections,
+> is needed as a starting point? Then using Christian's suggestion, one
+> could at least enumerate  use -> heap that would be functional. And
+> maybe device makers could then supplement explicit optimized mapping
+> overrides for their device?
+>=20
+> I just think leaving individual applications (or even individual
+> frameworks like mesa) to embed assumptions about heap names ->
+> functionality is going to be a problematic approach.
+
+I totally agree on the conclusion, but I still don't see how having a
+central component in charge of that will make things better. It just
+won't scale to the thousands of devices out there.
+
+And that's great improvements for the future, but heaps have use-cases
+today: the CMA heap is the only way to get a physically contiguous
+cacheable buffer in userspace at the moment for example.
+
+libcamera uses it for its software ISP implementation for example.
+
+So, while working on improving things in the future is a reasonable
+goal, we also need to improve things for the current users right now.
+And there's definitely users for it outside of Android.
+
+Which brings us back to the question: What would be a good name? Do we
+want to expose a platform specific region name, possibly with a suffix
+or prefix to define whether it's cached or not?
+
+Maxime
+
+--u4b35s3vftslgagk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaBoPvwAKCRAnX84Zoj2+
+dqLKAXwN6RbIIm6e8RsvdgaSYZ4Q9EwZfTT5eFdxUHB6lT8Lux7+QWav3kRwU6ur
+7GIn+IEBgK9SEyVRAXfcvD3TxU5DFIJdax3+A2/TCq6DydwChzvX8/pzA14Rv80l
+fV6CJ8bmAQ==
+=Su3z
+-----END PGP SIGNATURE-----
+
+--u4b35s3vftslgagk--
