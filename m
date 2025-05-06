@@ -1,127 +1,85 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BD4D263F31
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 11:14:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03AD71DED51;
+	Tue,  6 May 2025 11:15:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746530099; cv=none; b=JxYbA/oG0xbAp3nza4kTjETwie9MUravryb9LeUmj0c/LYNKrOJ3adjX54uivK9RI29ve0LLIo03fLmv2hdeBapxV/2ro5H67OrNaQDGaA4xFSDTvdkDrqIDMz2SzLjhAePCLSYaWQzoojbbL+5IpIB3LtJRtWjeVzFCm3homAw=
+	t=1746530159; cv=none; b=Y9DQnRpQAYJ409m8Xfx/dTAnaZpsaJrgxL8jpfU01PK6I9e0IfgXRIlRl9+0Usp0NpEI5bTacccOsQ0b8VAgolk7Z3gIRpQLeqgMYlXJ2SqjwijYYotozx62Ex5c2YxJBUZUd1qr6Gi/aqGYVny44IBo1ZBB9L9EPL5qrx32o9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746530099; c=relaxed/simple;
-	bh=iNDXndNS0psG5zwgSqZ1ZEQgECK96DWsmfy1XbYV5TM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Eb5VGlMOqeptdMoY/eDKovD9M1ESXiVlzoeKBnVSAl2fR0VAAkvtP1HwTqSq6CqVtKMAuLylbAJnx8ixb3xpwVvgCjyZu+DPG2qiZTsFBBUSwW0R8FHQHKchCryMpVFUv4o3oq8GrFGVJDDMLKb2qRmGYfJvQrOELfxYOTiCuwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XYfu3Hm1; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1746530159; c=relaxed/simple;
+	bh=5H1YHmqg1BfIge4wOyPuppiouxLBRjewLVC2HmMG7k8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bsjoQB1wxdQ5jhe92Pa7nUR4OSh/clm3V+yhAX8EEdcPpFSSmTXM91e9Sp3xjFWuUn7HHNetlAr8liZ+sLwfL8mLJOPhxH9/BhHzbN8UOoagC4OuttZTISFaaAb/taSQVqD9vhPcSTm3hwskeTO5SdD1MrwOkU+Xuow7+u7FdG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=Q9cFFKzd; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XYfu3Hm1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746530095;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WPr0Ma55LXpDzIrYy137g/YiRzM88HOwoh8sYc6w+Gc=;
-	b=XYfu3Hm1VjCGQMtmOyzRHyftuD4O/aHP1kZyaWWsC00HO5sjsRMva1f0O75z1gkrBM+/dU
-	CloPrqK/InbZYJrm4DatIuStKvQ56dBBKkUmxjJvJiQ2WC5Y4AVostK/SmTM/Nyv5eSYIj
-	LwIlVSGUqBbQe5lfscVTuC+47lAQGd0=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-171-mH_4oftnOLenk3Um4rrXog-1; Tue,
- 06 May 2025 07:14:52 -0400
-X-MC-Unique: mH_4oftnOLenk3Um4rrXog-1
-X-Mimecast-MFC-AGG-ID: mH_4oftnOLenk3Um4rrXog_1746530091
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 817FB180034E;
-	Tue,  6 May 2025 11:14:50 +0000 (UTC)
-Received: from fedora (unknown [10.44.33.231])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id AE66018001DA;
-	Tue,  6 May 2025 11:14:46 +0000 (UTC)
-Received: by fedora (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Tue,  6 May 2025 13:14:50 +0200 (CEST)
-Date: Tue, 6 May 2025 13:14:45 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Sasha Levin <sashal@kernel.org>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	Christian Brauner <brauner@kernel.org>, akpm@linux-foundation.org,
-	mhocko@suse.com, mjguzik@gmail.com, pasha.tatashin@soleen.com,
-	alexjlzheng@tencent.com
-Subject: Re: [PATCH AUTOSEL 6.14 046/642] exit: fix the usage of
- delay_group_leader->exit_code in do_notify_parent() and pidfs_exit()
-Message-ID: <aBnvJYXqsfn0YG19@redhat.com>
-References: <20250505221419.2672473-1-sashal@kernel.org>
- <20250505221419.2672473-46-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="Q9cFFKzd"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=PjX4pdz/ggEMRHtgaXyYi2dUz9COuWm0CR9rLf0Od6Y=; b=Q9cFFKzdh5LtgPMqryJ59PeE6N
+	ZyMwlTsx+/VInOIa/Hj69E4lw8UYYnCAuMQGvtqBvKF27NBAEkvCArJ3kkKIQPFQmXGTwHZfk+Ogw
+	i95rf6acUDLueruRWXuwk+SQR4qguPXyBqsUUH8CLjYO1isDaUxxvctC3tQ1vE6WrD3Qa+4WlLfg8
+	x91vMpNPs9VLo6H8H1H5S3YTdy19z16SMW9vgNOqqWlwH9Xxy0I/pLVblkaHx9N7mTLFfjxJDrRFQ
+	8t9bzdUEERxN8ZGd4lNVK9fV5vtjVS6YW0vR7/6dzucLXtE8aXwNHRGlxr78yaoycIWlLkhTWWrih
+	473gwvJA==;
+Received: from i53875a1d.versanet.de ([83.135.90.29] helo=localhost.localdomain)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1uCGGv-0003Vx-Mq; Tue, 06 May 2025 13:15:37 +0200
+From: Heiko Stuebner <heiko@sntech.de>
+To: Chukun Pan <amadeus@jmu.edu.cn>
+Cc: Heiko Stuebner <heiko@sntech.de>,
+	Yao Zi <ziyao@disroot.org>,
+	Rob Herring <robh@kernel.org>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 0/2] arm64: dts: rockchip: Add pwm nodes for RK3528
+Date: Tue,  6 May 2025 13:15:28 +0200
+Message-ID: <174653011959.1371608.16023824654446843423.b4-ty@sntech.de>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250401120020.976343-1-amadeus@jmu.edu.cn>
+References: <20250401120020.976343-1-amadeus@jmu.edu.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250505221419.2672473-46-sashal@kernel.org>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-I'm on PTO until May 15, can't read the code.
 
-Does 6.14 have pidfs_exit() ? If no, then I don't think this patch should be
-backported.
+On Tue, 01 Apr 2025 20:00:18 +0800, Chukun Pan wrote:
+> Add pwm nodes for RK3528. Most rk3528 boards use pwm-regulator to
+> supply to CPU, add node to enable them. The PWM core on RK3528 is
+> the same as RK3328, but the driver doesn't support interrupts yet.
+> 
+> Note that pwm regulator needs to be initialized in U-Boot:
+> ```
+> &vdd_arm {
+> 	regulator-init-microvolt = <953000>;
+> };
+> 
+> [...]
 
-Yes, do_notify_parent() can use the "wrong" exit_code too, but this is minor
-and we need more changes to make it actually correct.
+Applied, thanks!
 
-Oleg.
+[1/2] arm64: dts: rockchip: Add pwm nodes for RK3528
+      commit: 9e701ad7c3551b3ab87ed5fa439569696ddf42e4
+[2/2] arm64: dts: rockchip: Enable regulators for Radxa E20C
+      commit: c6599944af5a09029259ff8c533d22754f2b1ba4
 
-On 05/05, Sasha Levin wrote:
->
-> From: Oleg Nesterov <oleg@redhat.com>
-> 
-> [ Upstream commit 9133607de37a4887c6f89ed937176a0a0c1ebb17 ]
-> 
-> Consider a process with a group leader L and a sub-thread T.
-> L does sys_exit(1), then T does sys_exit_group(2).
-> 
-> In this case wait_task_zombie(L) will notice SIGNAL_GROUP_EXIT and use
-> L->signal->group_exit_code, this is correct.
-> 
-> But, before that, do_notify_parent(L) called by release_task(T) will use
-> L->exit_code != L->signal->group_exit_code, and this is not consistent.
-> We don't really care, I think that nobody relies on the info which comes
-> with SIGCHLD, if nothing else SIGCHLD < SIGRTMIN can be queued only once.
-> 
-> But pidfs_exit() is more problematic, I think pidfs_exit_info->exit_code
-> should report ->group_exit_code in this case, just like wait_task_zombie().
-> 
-> TODO: with this change we can hopefully cleanup (or may be even kill) the
-> similar SIGNAL_GROUP_EXIT checks, at least in wait_task_zombie().
-> 
-> Signed-off-by: Oleg Nesterov <oleg@redhat.com>
-> Link: https://lore.kernel.org/r/20250324171941.GA13114@redhat.com
-> Signed-off-by: Christian Brauner <brauner@kernel.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  kernel/exit.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/kernel/exit.c b/kernel/exit.c
-> index 3485e5fc499e4..6bb59b16e33e1 100644
-> --- a/kernel/exit.c
-> +++ b/kernel/exit.c
-> @@ -265,6 +265,9 @@ void release_task(struct task_struct *p)
->  	leader = p->group_leader;
->  	if (leader != p && thread_group_empty(leader)
->  			&& leader->exit_state == EXIT_ZOMBIE) {
-> +		/* for pidfs_exit() and do_notify_parent() */
-> +		if (leader->signal->flags & SIGNAL_GROUP_EXIT)
-> +			leader->exit_code = leader->signal->group_exit_code;
->  		/*
->  		 * If we were the last child thread and the leader has
->  		 * exited already, and the leader's parent ignores SIGCHLD,
-> -- 
-> 2.39.5
-> 
-
+Best regards,
+-- 
+Heiko Stuebner <heiko@sntech.de>
