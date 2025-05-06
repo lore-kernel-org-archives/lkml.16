@@ -1,108 +1,127 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C966275842
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 13:42:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12EC928003B;
+	Tue,  6 May 2025 13:42:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746538949; cv=none; b=YQkXtPoawPYf+Ko7HQsxPYkO7AaoOfl4H9W2NrisVDq5j5hTT/MipHfEX78lNjPh8EKaUyhkKiFfcHNZTxXHlb53QTYGJV+EDFM9wI0cEKYStX/dFPnI4RYMju3QiKqSNNLbiOHnUjBHCHhzEPoWn33hp9OD1yZFwdRsfCCqwrI=
+	t=1746538980; cv=none; b=awGQz+okwTkBWTn/GgomrsqKm8ueUagU98M1fN4oWZ4/gU0yMVJ3hLmGY0U+CdgU0eTJeOao7mDzn1JHMznuIo8Qq1+CXqjk7fgZ7CX8NxfqglDGwZmeiZLZV7xqsFJOPxhieChmx3AXZIjUhfFDB/W8bpVtfVadyRTZ6+dq9Ok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746538949; c=relaxed/simple;
-	bh=JseNVTS5cyJQpI/Mfz9vsdQjjHZ+PMPgo17Lr4qAjrY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OGKej5cOuckmBk+rWP/0Xj/upfkCcnjDiQxBizsO0mir7OolbnW1bcD2AbmZHkbw6CmYBX2rSkrtXHIGa+8GyUZP5Up9/mERUsn3L1t6dhm8r1KnT9+UXD0Je5nP3vkHaac8Xq5XVKgkCWWG795b2kWFutVM4m7Ll/8YS8Dtcoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lessconfused.com; spf=pass smtp.mailfrom=lessconfused.com; dkim=pass (1024-bit key) header.d=lessconfused.com header.i=@lessconfused.com header.b=HeXbKkpt; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lessconfused.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lessconfused.com
+	s=arc-20240116; t=1746538980; c=relaxed/simple;
+	bh=P7MmDT0YiLN9IQpLfGcRluQMRY7SmCSqoyzu3pS5XKc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bx7Lcc0XXHfqxQ2ysN6OxY5jeT3qtc493JT9izSUdVMLm5icHKfoTRZ82KT/rx76FCAuIuVvpriRdV6Cyk/jqD7kh1NK1RyO5RhunxvX4F/h5ebJR5mVuAQlcsa1eHnTrVkiJz6ykIxAH8nAMbAG3/6nAFMXKyBVsDdJjmHErPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P17d+MQ7; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lessconfused.com header.i=@lessconfused.com header.b="HeXbKkpt"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-30a894cc07cso732325a91.2
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 06:42:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P17d+MQ7"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ac79fa6e1c2so107762466b.1;
+        Tue, 06 May 2025 06:42:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lessconfused.com; s=lessconfused; t=1746538946; x=1747143746; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JseNVTS5cyJQpI/Mfz9vsdQjjHZ+PMPgo17Lr4qAjrY=;
-        b=HeXbKkpt1qIQTa3tdXetfK5FROdbIsq37GIZRK1WNfszcfTsPnqtO5Fo0aM7q8zvU7
-         NUdOMVwgEM687AenZ7TCjIlYdnaxc/0reivxktQVTxSq3TF+pYq8YAklkd36bbe9tvoI
-         fxu1aJcaNnprAG36yprMmmg+cAOM0cIhNjAw8=
+        d=gmail.com; s=20230601; t=1746538976; x=1747143776; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=iiemZaTp19eI1v1+NuBxq7gBLDW9Xde37HRgy41BFFg=;
+        b=P17d+MQ7pjI3t6e5hJRqKALDrx/vaFVrcLlKOjUU8JPrXfTXAzCVytqSmqIy/cn7ck
+         3sybM9R0ltAByBegvuJTdQesLnX87hRjHO0oQqZLBcjB9Ghso5BH5GuTfao+x2R74ZpT
+         WqE/TlT7ELBZ2csWwWJP1pnlDa1VvWf/CWa62qdSKyU5svlOE21zwwEYklFSGcPALqil
+         DGXPZXJ1ajLSuZQ3MupnSplrDay6jfTZtPHvnnF+QBYV59NwoSaM4UsVj7ZgMtPVwxrh
+         W4Ys1JdCl1B2CfB6aGgi7pUcxrSTsF67QPhjajosZFKEP/OOsynCU9F5tfE8fV+1vhAm
+         KAiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746538946; x=1747143746;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JseNVTS5cyJQpI/Mfz9vsdQjjHZ+PMPgo17Lr4qAjrY=;
-        b=ohM/OjPHbhMQkxJMEbwVSWdVRtVBa3A6zYKm+pbfcrffnFLDPSb915ZlcKfOfuiFDr
-         4ohrmuSTE1zR1qLq1/MdsmghdgO9K2rLxritg2roUgC4zq07ZFyUfFe7pOtM557k2AFE
-         z1WyQS/IdJeW0mKiDoVlXQhdHXJfbW63K2ngJIE7SLOXeBAoh2AABqkLJWoWxkP3QWAo
-         c+dtjc0FD6pb98hKxS9pRk2vefykveQ0hU+oCVQ13p1Qt6AmmmZZcZ9QGnGzfky0Iw2a
-         76u9dAGP5ndMDWy7GgC4uqWwOASZ+gpBBRQ/hUnz8aUUDhJuCVGTTBZfjmYuHnj38Ygx
-         DysA==
-X-Forwarded-Encrypted: i=1; AJvYcCVBLNAgboKwqOzqJI44BCeMHaj9BiygsBA1v02htFitwk6K5z/2oQTd5KQ/bHBwXiYgXuHss+vNcpOmr4g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz94EPr1sprSNjCYf1ZMfZtJOwIQZ2G3B68aXjHAc9HQlDVI+Z9
-	v/RfYmH0SjTS6bntMgVDkqO2vg4WscEWqealZ+ymz/BavTTaqAhwbUAJLbtTHIUDVpaZWfsPBsh
-	JqUqqqKnSuLxR9okWOWixXn5CpcIXxX0SrH/0BQ==
-X-Gm-Gg: ASbGnctlG1PJi2yPFNVC8acZWtrCUIz8SDZsOxUvT/qz1zaS/lvtfKPuaMKfjNYl2WG
-	EdAThrz3gDbZNofCvdIOUBhXIZi4KDe/Ze9xfwabe3B/J04fNF7razRFJd0Ofmu4gNYSFjNW5Da
-	xoHgoDu+D5fPByX6QRtXBgXcJK3WQr9eAYk0fyhIYgDs5M5KwpK5eZODE=
-X-Google-Smtp-Source: AGHT+IFMb+lrclQ4OPHCAh1lzSkIMnskyJOofZ7Kk/Nmt7sTAKcOTEwR67sDgAeExPy9dKzAQGA9Dqsm1s06dVSJZYE=
-X-Received: by 2002:a17:90b:5446:b0:301:a0e9:66f with SMTP id
- 98e67ed59e1d1-30a6198e12emr19037686a91.14.1746538946445; Tue, 06 May 2025
- 06:42:26 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746538976; x=1747143776;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iiemZaTp19eI1v1+NuBxq7gBLDW9Xde37HRgy41BFFg=;
+        b=iJhclLOBEw0lJV3jofkKFgoLCMSHnDmxINRK+jQfTHxDG17o4TixbiywuaQKFCOFXP
+         zI7pybCaBQzAtslRdfJiwXxCF8N32rbb22oLYg/dKTMYE95kAuyclJvxaDNcKhf8pVDY
+         XVZcyTJbsPSOQJJW+y4gh+QxqSH66rddE2vbydBxxSMN3zHN1d3mhsLGwJVlO5vlMdk5
+         pqZHiOX4kiJARXEn6z19Odo9vaf8OrvYcMn2WQ5ZShpzJGrN0nrkxqbl/fI7AGRFZhqE
+         CwR0pVHijfl/Mngigm8MF7dNQz/sujmpi2yPQEkS1ycrFFpJmLYnWuao/hnbB5r1vlek
+         A1/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVXUrj6mUK8LkaKD7HbamTY2OUDSCq0GL31cctJjBM3CMI9TdvnNSgNWDKY6TGCN5monq+n5KxrDjfLOZA=@vger.kernel.org, AJvYcCWIoE4ROuRhPMljBFg5/wDq0QRkpo9PoFWRsfnSS8BECnzccZq/w6PeMlLA3MFzzPGhMY1iJVdK@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZQ5qmtSDJqzMsx4Z9wrTVJhncB8aNoGbp54gDP09UOeuKJsxA
+	sf6l5cy/mTwR1/bWZ6I4kDkPJJn3nMOPUGEjux/gUgmQhbzff7d9
+X-Gm-Gg: ASbGncuzMMFUyD/JEklyxsyfRdXIzx/FR47pvUDbfP4xQ/MHzDAuSYjImUCj15Ei5Ry
+	Ocd8kMnjDLvK9SuEcWkd5Q8E0WxPwzi6Tj9lgk7HihNFGzgIE2VNRZqkSJcqJOejfRCZkCrOTFe
+	a3scSChDqjAd+Xt/Eyy1OEiU9bPTwn0R9Pd8j3RCP62dGrzX3NgLeM6Rq/ioTBpZoPtCI6hH+EO
+	kHbPVzWKOdbdgTKsgDhyc4h62k0QBZm2SwKAL+i03Y9VqyNjS8NNYOojfsjUAkJ7lIABEXYCjoP
+	p8gf7qukz+7QWUB0KpUk6hOWMrYf
+X-Google-Smtp-Source: AGHT+IEx6UFb5TO/Fzb1ru+F2aQW/ZeYDNg8x1uGcC9VliQdtdvGz1X7rVtHdcrdZAJRaHIz8/NC7g==
+X-Received: by 2002:a17:907:7e8f:b0:abf:6c88:df53 with SMTP id a640c23a62f3a-ad17ad76092mr586855466b.4.1746538976118;
+        Tue, 06 May 2025 06:42:56 -0700 (PDT)
+Received: from skbuf ([188.25.50.178])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1895090a1sm710347866b.137.2025.05.06.06.42.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 May 2025 06:42:55 -0700 (PDT)
+Date: Tue, 6 May 2025 16:42:52 +0300
+From: Vladimir Oltean <olteanv@gmail.com>
+To: Jonas Gorski <jonas.gorski@gmail.com>
+Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Kurt Kanzenbach <kurt@linutronix.de>,
+	Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net 00/11] net: dsa: b53: accumulated fixes
+Message-ID: <20250506134252.y3y2rqjxp44u74m2@skbuf>
+References: <20250429201710.330937-1-jonas.gorski@gmail.com>
+ <52f4039a-0b7e-4486-ad99-0a65fac3ae70@broadcom.com>
+ <CAOiHx=n_f9CXZf_x1Rd36Fm5ELFd03a9vbLe+wUqWajfaSY5jg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250505143700.4029484-1-christianshewitt@gmail.com> <CAFBinCBmBotJL=wC2=oV-o7piGckoBvN3S6ofYh20fEP9sn4XA@mail.gmail.com>
-In-Reply-To: <CAFBinCBmBotJL=wC2=oV-o7piGckoBvN3S6ofYh20fEP9sn4XA@mail.gmail.com>
-From: Da Xue <da@lessconfused.com>
-Date: Tue, 6 May 2025 09:42:13 -0400
-X-Gm-Features: ATxdqUHU86InfKfq52zvNkEmca8096lqpeIdB0VVbLy3DnspBF4H2KEICm4USso
-Message-ID: <CACdvmAi3JbdLstkudF=Fb_O_P1GGADuubKVS6s22hvC93qz3tg@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: amlogic: sm1-bananapi: lower SD card speed
- for stability
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Christian Hewitt <christianshewitt@gmail.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOiHx=n_f9CXZf_x1Rd36Fm5ELFd03a9vbLe+wUqWajfaSY5jg@mail.gmail.com>
 
-On Tue, May 6, 2025 at 2:26=E2=80=AFAM Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
->
-> On Mon, May 5, 2025 at 4:37=E2=80=AFPM Christian Hewitt
-> <christianshewitt@gmail.com> wrote:
-> >
-> > Users report being able to boot (u-boot) from SD card but kernel
-> > init then fails to mount partitions on the card containing boot
-> > media resulting in first-boot failure. System logs show only the
-> > probe of the mmc devices: the SD card is seen, but no partitions
-> > are found so init fails to mount them and boot stalls.
-> >
-> > Reducing the speed of the SD card from 50MHz to 35MHz results in
-> > complete probing of the card and successful boot.
-> >
-> > Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
-> Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
->
-> > ---
-> > The same workaround of dropping to 35MHz is also done with the
-> > ac2xx dtsi; which has a comment about CRC errors being seen at
-> > 50MHz. It's probable this is the same although I forget now how
-> > that diagnosis was done (or who did it, Martin perhaps?).
-> Maybe Jerome helped investigate/debug? I can't recall and at the same
-> time: if it fixes the end user experience it's a win.
+/ unrelated to patches /
 
-We had an issue too and ended up disabling MMC_MODE_HS_52MHz | MMC_MODE_HS;
+On Wed, Apr 30, 2025 at 10:43:40AM +0200, Jonas Gorski wrote:
+> > > I have a fix/workaround for that, but as it is a bit more controversial
+> > > and makes use of an unrelated feature, I decided to hold off from that
+> > > and post it later.
+> >
+> > Can you expand on the fix/workaround you have?
+> 
+> It's setting EAP mode to simplified on standalone ports, where it
+> redirects all frames to the CPU port where there is no matching ARL
+> entry for that SA and port. That should work on everything semi recent
+> (including BCM63XX), and should work regardless of VLAN. It might
+> cause more traffic than expected to be sent to the switch, as I'm not
+> sure if multicast filtering would still work (not that I'm sure that
+> it currently works lol).
+> 
+> At first I moved standalone ports to VID 4095 for untagged traffic,
+> but that only fixed the issue for untagged traffic, and you would have
+> had the same issue again when using VLAN uppers. And VLAN uppers have
+> the same issue on vlan aware bridges, so the above would be a more
+> complete workaround.
 
->
-> _______________________________________________
-> linux-amlogic mailing list
-> linux-amlogic@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-amlogic
+I don't understand the logic, can you explain "you would have had the
+same issue again when using VLAN uppers"? The original issue, as you
+presented it, is with bridges with vlan_filtering=0, and does not exist
+with vlan_filtering=1 bridges. In the problematic mode, VLAN uppers are
+not committed to hardware RX filters. And bridges with mixed
+vlan_filtering values are not permitted by dsa_port_can_apply_vlan_filtering().
+So I don't see how making VID 4095 be the PVID of just standalone ports
+(leaving VLAN-unaware bridge ports with a different VID) would not be
+sufficient for the presented problem.
+
+That being said, trapping to CPU all packets on standalone ports is not
+uncontroversial, as long as it works correctly for the hardware
+controlled by this driver. You seem concerned about losing RX filtering,
+but if you look at dsa_switch_supports_uc_filtering() and
+dsa_switch_supports_mc_filtering() you'll see b53 never had it - it
+depends, among other things, on ds->fdb_isolation == true and
+ds->vlan_filtering_is_global == false. Here you're working on improving
+the fdb_isolation requirements, but there is still no support in the
+core for devices where VLAN filtering is a global setting.
