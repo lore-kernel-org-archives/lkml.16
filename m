@@ -1,110 +1,112 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06A34281343
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 15:38:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ADE6502BE
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 15:40:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746545885; cv=none; b=Qzvv04+O4bxTsirVIoZHidtFzl+9DoW0yEbhvazUnBkyhnfK/WDur4FJGeVqx1M9+5zwjVbLJJsbrO444IOKpWFqBbn6VsvqoxgyX9goUqxtAucZvo6UojneFk6MhfruWkKcBpBgeYttyUp0IXpR5iZaT5UbuUGuTztECPWczCo=
+	t=1746546018; cv=none; b=hBfSXOqvRyXSHXK3721Drahkrq4v5kb3QaAS/DEMD2Es+t6LKyeCV4GG1ZUXEDSt2gYxV48aFcUhXkHRj7jnLouJH82iSvOzLFMv+Yt+EZseiplCbvZOuLy6BhSpmaWqrs2wB1s1T/ATqAie9q2r0xkeQU/DFPmPf+r9Lh79so4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746545885; c=relaxed/simple;
-	bh=iZ0LSWRVTIwu/9wZFw4azv85LpaIlUxP4V6VI8Vp78w=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=n3PxlVmm7jEFfVcKhE6u1pSms/ybsxsWxk0SNwBd2sytvwkkmUHLQni6WkgWPTHNxI//1dXQtIiFtKwiwQ7cjC3LvNNYTWvC9PJUtvvOsw5zhY3zMlNg8LIYur2wXqhvLXwU+IB/wrENfWIkZxaN6JEd1Ii00UIL6UCOYebkXlQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d8a9b1c84eso74531635ab.2
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 08:38:03 -0700 (PDT)
+	s=arc-20240116; t=1746546018; c=relaxed/simple;
+	bh=bY6kWgoeHMO+pQ1hmESq/ka/7uYffdd8ryGj98Lx5C4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tgHs05i/scP2kQFYRQzLoubSvgxZoIW9VBT8dXDHcs75F/Yj6wM7GF9CmIOoMyO7C3QgJ7ar4/wmufJQKnZLoKrY0W9UmSODE7lx4Qx8GVAff0/OmEM1mTKgiByTilgQKEWqWHji8/3AXLyj1RyuPyjsF+2kLp6sE2n3XMWxDjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=Mr8y+sTv; arc=none smtp.client-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Mr8y+sTv"
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6f0ad744811so49131806d6.1
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 08:40:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1746546015; x=1747150815; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=rT47EbPl5rmGmBtm4poGbS4wq2tYGccwoLr0keQJKRg=;
+        b=Mr8y+sTvf/MHed5vx3q5CrD25GWfGDmRaTT1wjbnkMqDBwfGD0EbCsdcR2RkhMafy+
+         yvk10fEnCd5G6oZ0TRWirTq7RSiyupnWl4k3mswsOXn42LT1zxdglfanlcmyiE87KGMY
+         Y3TwInkJ/PX9gTWhjR3/1xwTuBrXoQjV31Gmex22LmSiZ37V6h7VdjpZnSWYxLgNNpNL
+         RVA5dL99+djyGlrOzZ+p9QLesl2LI4tmSDvuM9jVy05Zmo1c7DIm0Wx43afc7QKSI6A1
+         QG+OoEyPrzrSb4XyCENRK0aMgF1RVVaaXqAYsW42Yc/UemiqX3f5n5x/LzCvAPFerWF7
+         oAow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746545883; x=1747150683;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+SuKz/7sOY7LRHeHPW359MsxZJUDN+LcPS2aZ2/ZeGU=;
-        b=Whl1Z/livV/vWYA7625jAejDcQhm04p5ziM3gvQsN2ZPf0q83asoXucmklAJ3exKwG
-         6NDpJdqsjl8Kt43I3aUrkahtxTLlwFNazXWYJoluS+eC1wmVee8st3KEiyFDQodQDTcN
-         gfhWbLjvhQ0Ga2IIxuFlR3jwZHa85nCXts52ziMsHlEtEh86848rI+dkmadODxhIZrbF
-         7AHkxvQP/VZifu7a2l3QC/XyWq9FhbMWNpOqRNxUXojJxtvVnCp8RjeJBRCSx0R/diZv
-         V8NqSEQ+wJmO7JXtKhpbsNhSYJBejwU3/q6mNv0XpoF/6XVvFDCNTId1tNppIYsWQxoi
-         BO+Q==
-X-Gm-Message-State: AOJu0YwPCrDRfWXXqLcHkEx9b/JBwb+ONOk98NLVwwAA5Nvc5c6TImIV
-	KXX3JtBGLyFqb5gfFn56HnIc20GICMe+f6ooHPJvOTukMMjyCzrxycssiO3h4yCVC7SglkYY96t
-	YiqnBCtU+xDPF4QNkIJqfDoU8bTviX0JxWP3u+8hiF7vLHwDLK6zc5nY=
-X-Google-Smtp-Source: AGHT+IFWP8JH7O7F6P5X0f8/BxoHjr039jU2tmk4He+hG64uSO4s3HMbeuiEoE8sYw6seUoMpfIx+Mir166V6xAQvffQy7GD260c
+        d=1e100.net; s=20230601; t=1746546015; x=1747150815;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rT47EbPl5rmGmBtm4poGbS4wq2tYGccwoLr0keQJKRg=;
+        b=D3LbdCLjfbjbG3DSTFpsFhhbMw0yisN0yY0qyPkLrhGL97FsNtg12jnqKr6Mdznc5p
+         fejkSJpTGHEufN2rp9FPGStIII7GejYPVP6i0dej/1XbEHBK+zNI4kZ8vJ+33ln5SbW9
+         2ltuR85Ute6x1+jFH5FB9vGi191HIxa8dbkvFf4znZwZ/0cE3tATMBiXP40Jj+utABNk
+         K06gMvLFgiIl6GdQrXXcWFnLsVZWuZnbraLAUdXUhW55IU7hjsyuRp0kK4W6rRYapWkZ
+         nUviwXStuL7ti/8LjaJ3ng1yj9HvOSLTbNRrjFn6eBCt8/6ZujO9edHkNhOXZLZsFMQC
+         bQcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXNZQHT/XlI/6PmmQKy/GdN4UHO6SwpZbQ5+XFtmNrMkr27x2ZsFtxptC+L71jNeSqzdO4mFxOqs8GCfDw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxkegY9RxlzyX+29ldE26Ng58QB7VQUaLkXK+mQw0GVOz2+0S09
+	8oMRcaNdRCMrPN2L8hrwCBSHuovrY95xouJ+XHkEecx2IHAhKapxoZiZZr+pg8I=
+X-Gm-Gg: ASbGnct7w+knH8ttC+JDYdLyl76nNKWikigShtTns5SZTY7UAUWfM0n1Rplbs2sRrl+
+	pjJaiSx9P5pRCdN/NqL5387+cdSTJwYajeguKsz//Iy5Ana3DhNrtpEW4wPrU0PFoBtBofkK5mv
+	WCG5TPAEw8pBXhHry4pDmyTVOaBYbMPb6bbDNaOEf7tlfIcrB/1JLlHrZwAdP3P/iXdxbf/arMr
+	WeIcuqDNpVz6TCSUBsawsF+ifl2Jvg4SRCfL+/rLg1+yM6RlXFQaKM/svMpfzKEHXhhtqjVW71U
+	mxJ+R/6PO5HC8CTfNAXRq5Mqa4K39+xWmaAiwK80eip3vDaL9uG+CcjxSWCpn5fGwVX/DDjl200
+	tOar8qTrArGQTC0Yu6e4bQu7i5eSJpA==
+X-Google-Smtp-Source: AGHT+IEQ/a7j5Q9dt/+TXCErTmGmvU74xW7gWFXsaqhe3tHBRjnQSeuP9g4SIDonoyL/nuksjNTl4g==
+X-Received: by 2002:ad4:5aa7:0:b0:6e4:2f7f:d0bb with SMTP id 6a1803df08f44-6f528c3b587mr198664136d6.4.1746546015230;
+        Tue, 06 May 2025 08:40:15 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-167-219-86.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.219.86])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f50f3c4492sm71689566d6.35.2025.05.06.08.40.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 May 2025 08:40:14 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1uCKP0-000000008dJ-1HMo;
+	Tue, 06 May 2025 12:40:14 -0300
+Date: Tue, 6 May 2025 12:40:14 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Daniel Mentz <danielmentz@google.com>
+Cc: iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Will Deacon <will@kernel.org>, Mostafa Saleh <smostafa@google.com>,
+	Pranjal Shrivastava <praan@google.com>
+Subject: Re: [PATCH] iommu/io-pgtable-arm: Support contiguous bit in
+ translation tables
+Message-ID: <20250506154014.GM2260621@ziepe.ca>
+References: <20250430231924.1481493-1-danielmentz@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:c242:0:b0:3d8:3b31:5046 with SMTP id
- e9e14a558f8ab-3da5b31ec06mr114618355ab.17.1746545883066; Tue, 06 May 2025
- 08:38:03 -0700 (PDT)
-Date: Tue, 06 May 2025 08:38:03 -0700
-In-Reply-To: <20250506142010.802613-1-richard120310@gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <681a2cdb.050a0220.a19a9.0010.GAE@google.com>
-Subject: Re: [syzbot] [jfs?] KMSAN: uninit-value in BT_STACK_DUMP
-From: syzbot <syzbot+ba5f49027aace342d24d@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, richard120310@gmail.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250430231924.1481493-1-danielmentz@google.com>
 
-Hello,
+On Wed, Apr 30, 2025 at 11:19:24PM +0000, Daniel Mentz wrote:
+> The contiguous bit in translation table entries can be used as a hint to
+> SMMU that a group of adjacent translation table entries have consistent
+> attributes and point to a contiguous and properly aligned output address
+> range. This enables SMMU to predict the properties of the remaining
+> translation table entries in the same group without accessing them. It
+> also allows an SMMU implementation to make more efficient use of its TLB
+> by using a single TLB entry to cover all translation table entries in
+> the same group.
+> 
+> In the case of 4KB granule size, there are 16 translation table entries
+> in one group.
+> 
+> This change sets the contiguous bit for such groups of entries that are
+> completely covered by a single call to map_pages. As it stands, the code
+> wouldn't set the contiguous bit if a group of adjacent descriptors is
+> completed by separate calls to map_pages.
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-KMSAN: use-after-free in dtSearch
+Nor should it
 
-loop0: detected capacity change from 0 to 32768
-=====================================================
-BUG: KMSAN: use-after-free in UniStrncmp_le fs/jfs/jfs_unicode.h:55 [inline]
-BUG: KMSAN: use-after-free in dtCompare fs/jfs/jfs_dtree.c:3340 [inline]
-BUG: KMSAN: use-after-free in dtSearch+0x1261/0x3d30 fs/jfs/jfs_dtree.c:650
- UniStrncmp_le fs/jfs/jfs_unicode.h:55 [inline]
- dtCompare fs/jfs/jfs_dtree.c:3340 [inline]
- dtSearch+0x1261/0x3d30 fs/jfs/jfs_dtree.c:650
- jfs_lookup+0x18b/0x5a0 fs/jfs/namei.c:1461
- lookup_one_qstr_excl_raw+0x204/0x5b0 fs/namei.c:1689
- lookup_one_qstr_excl fs/namei.c:1711 [inline]
- do_unlinkat+0x2e3/0xe50 fs/namei.c:4631
- __do_sys_unlink fs/namei.c:4689 [inline]
- __se_sys_unlink fs/namei.c:4687 [inline]
- __x64_sys_unlink+0x71/0xb0 fs/namei.c:4687
- x64_sys_call+0x29de/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:88
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xd9/0x1b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
+This seems like a pretty hacky implementation, it doesn't set the
+pgsize bitmap to indicate support and it doesn't have a safety check
+on unmap to protect against partial unmap of a huge page.
 
-Uninit was created at:
- slab_free_hook mm/slub.c:2324 [inline]
- slab_free mm/slub.c:4656 [inline]
- kmem_cache_free+0x286/0xf00 mm/slub.c:4758
- __d_free+0x43/0x60 fs/dcache.c:336
- rcu_do_batch kernel/rcu/tree.c:2568 [inline]
- rcu_core+0xa5a/0x21e0 kernel/rcu/tree.c:2824
- rcu_core_si+0x12/0x20 kernel/rcu/tree.c:2841
- handle_softirqs+0x166/0x6e0 kernel/softirq.c:579
- __do_softirq kernel/softirq.c:613 [inline]
- invoke_softirq kernel/softirq.c:453 [inline]
- __irq_exit_rcu+0x66/0x180 kernel/softirq.c:680
- irq_exit_rcu+0x12/0x20 kernel/softirq.c:696
- instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1049 [inline]
- sysvec_apic_timer_interrupt+0x84/0x90 arch/x86/kernel/apic/apic.c:1049
- asm_sysvec_apic_timer_interrupt+0x1f/0x30 arch/x86/include/asm/idtentry.h:702
+Wouldn't it be better to use the pgsize bit map and rely on the core
+code to tell a contig page size is being used and then it can
+trivially set the PTE bit without having to do all this extra work?
 
-CPU: 0 UID: 0 PID: 6979 Comm: syz.0.35 Not tainted 6.15.0-rc3-syzkaller-00094-g02ddfb981de8-dirty #0 PREEMPT(undef) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/29/2025
-=====================================================
-
-
-Tested on:
-
-commit:         02ddfb98 Merge tag 'scsi-fixes' of git://git.kernel.or..
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-console output: https://syzkaller.appspot.com/x/log.txt?x=134ee8f4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9dc42c34a3f5c357
-dashboard link: https://syzkaller.appspot.com/bug?extid=ba5f49027aace342d24d
-compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=10efba70580000
-
+Jason
