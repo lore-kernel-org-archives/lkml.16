@@ -1,63 +1,64 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB4A92882DE;
-	Tue,  6 May 2025 13:20:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B93F288534;
+	Tue,  6 May 2025 13:20:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746537643; cv=none; b=lC9lROMvO5hzP5U+bdmVjKIYBBFoYjO8+hI7R2dVbcUBiTVxx3I/PaO56cRISMyfqapmcKSR1Jhnt/rUQ6S48kbtQPEmNXA06TwoR8dDiqCmVjjAVv/41Taqk4ALdu7klMNNlYa9ZRfMzsj08wjBSB1TS8GoOGo8EtWqhsACvr8=
+	t=1746537644; cv=none; b=bgdKcZLWPeC7FL8H2PRzBudthG/xjCPdFrPMzACy4XM4fQuL5lLCwTagyBmh4tV0dfAfNlywrd8ZLnW9NThvfIHy30ugPjEeu46qM9v3VG8B0IrxyiE4au/TY4Qjn+Yl8XsTvT6LAvmR6H72FkZOF+6lEB++a9Mhdir3fCnUZGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746537643; c=relaxed/simple;
-	bh=vz3dsiQRtVJxl/GkTrYGVnJO/J0GKJu7Fbbc/JDOvUA=;
+	s=arc-20240116; t=1746537644; c=relaxed/simple;
+	bh=OL9JHlLXkVmmKqYFOSJTU58ahXC9PEwzmTsgOH6D1rY=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=pU/l+T0p2oiJFkH+SWsyW4kRt9JFM7pyKpGnoK6sawcDy/fgsGcIh5TUeWlwfzjcp5VaW/LnQlBdVqYG5Mcmvb56ACcp6DcUmRsUT/OrblDc9VdWoiLrYGBYnpewgFFmwtXqSILp8qMdRaTRiWIC1ZxEroVYRM0BFIkj5k0YqDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1BAsAcRA; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ht/TA4dQ; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=r5sD/hrTjYGBwL4X0vmwjm3NSY5gV8dlwJaPcfRgdM2DCQ7kQLwcaW0jWutcYaEVhvThXxyTa6BhWi84yK9ycO1+nuyV+DsO+QrcYp51nK0FhdVYdmUX/q7iVFfpykzZX1hGkB6AB205QSowVlQYy8lUlVEndKaejUftBHtdgio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Xh5rVEFo; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+cr1T1op; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1BAsAcRA";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ht/TA4dQ"
-Date: Tue, 06 May 2025 13:20:38 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Xh5rVEFo";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+cr1T1op"
+Date: Tue, 06 May 2025 13:20:39 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746537639;
+	s=2020; t=1746537640;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=dpo2UEqKWUBTtdMctUiF3+WcvvU18XIU2RCzbOrJNLk=;
-	b=1BAsAcRAz9c4lmsdsDB0tBHa9vQP3UvFsViBfJrJdvooGgiT8Uopwjx1T3SJpRpcD0RT5b
-	fkzsIuaBKrcZg0dfNRd7RjHPnpd74EQI+vcHz8BgUoKDdOUQgY7w9g1mDK0CTJZIFlGSOC
-	QkfMpbLUfvZwjzxQZwpirbgVYHlgGyikjPpK+27YsPlp3GKzDt89Y4fpLfwNohPTEfgqi1
-	2uYKsTdPP93W3w/NizgItfplcTOEF/ZhLVK45H12o+PxZYeMG51mlAUX5x5oHBN3HcGUPY
-	BvS4iuTg/eNQZZd8HccP3+4GswcVRhny8pOLAoMu/AVUtnEgJda5uYmH2Lw7ww==
+	bh=H4574t3eHX8m+72hGMBnVrvD+x9Cd42MDSth1Fl18bE=;
+	b=Xh5rVEFogmaLu5xnrNx804l0Kcn9hwm6io+vX84Hmm4CZApiMwRqXNPBW6RvW4tzMIXmN6
+	0H3L2tNjaj0bu4VL2CjikdOnzlWFKwyTharuMVoJpJbedIogKi39Ca+CrPLFI2gr/HPeg/
+	vI2ABIWvJ5FVg1PhP8wH+NWmgo6iwZYHZmQt7gzmReZoAPovgw+bpemwFHRol9VK2OvywJ
+	mS/rWPaxeSDivf9zlns5WoZdRamQt0ua9/QwSSY6Cf712QeV8bqwYta5QrHT0j1l1h8VQC
+	GKuLctDSd3YKyemT7GPv6xYegnHWccc7CUqsSHUITnKCkcwYK9faCqSE5zKLpg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746537639;
+	s=2020e; t=1746537640;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=dpo2UEqKWUBTtdMctUiF3+WcvvU18XIU2RCzbOrJNLk=;
-	b=Ht/TA4dQ5xk8b9B8L1eMLcm9UpP+Kpzh5/GGmG9/wW8UV5pXOXr+o80WXGC64q7gV5NTYR
-	dd4CWZU5oD99TMCw==
+	bh=H4574t3eHX8m+72hGMBnVrvD+x9Cd42MDSth1Fl18bE=;
+	b=+cr1T1opm+MCl8iHYZSC37DYb1f6yhOOwwjkpbD2bN3CXE42Jw2ihSWqK1pcdyZo/P6B0x
+	TNSGCUpRK7GqXgAw==
 From: "tip-bot2 for Jiri Slaby (SUSE)" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/cleanups] ARM: Switch to irq_domain_create_*()
+Subject:
+ [tip: irq/cleanups] irqdomain: Make irq_domain_create_hierarchy() an inline
 Cc: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
  Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250319092951.37667-15-jirislaby@kernel.org>
-References: <20250319092951.37667-15-jirislaby@kernel.org>
+In-Reply-To: <20250319092951.37667-13-jirislaby@kernel.org>
+References: <20250319092951.37667-13-jirislaby@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174653763852.406.7522975748438317537.tip-bot2@tip-bot2>
+Message-ID: <174653763997.406.9485714517011367638.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -67,189 +68,134 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the irq/cleanups branch of tip:
 
-Commit-ID:     2b3ff354e88533de20f6c3e10c7e86da4f3b2620
-Gitweb:        https://git.kernel.org/tip/2b3ff354e88533de20f6c3e10c7e86da4f3b2620
+Commit-ID:     91453f6c42314c831c89c70ad20ebe68d886dc50
+Gitweb:        https://git.kernel.org/tip/91453f6c42314c831c89c70ad20ebe68d886dc50
 Author:        Jiri Slaby (SUSE) <jirislaby@kernel.org>
-AuthorDate:    Wed, 19 Mar 2025 10:29:07 +01:00
+AuthorDate:    Wed, 19 Mar 2025 10:29:05 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Tue, 06 May 2025 14:59:04 +02:00
 
-ARM: Switch to irq_domain_create_*()
+irqdomain: Make irq_domain_create_hierarchy() an inline
 
-irq_domain_add_*() interfaces are going away as being obsolete now.
-Switch to the preferred irq_domain_create_*() ones. Those differ in the
-node parameter: They take more generic struct fwnode_handle instead of
-struct device_node. Therefore, of_fwnode_handle() is added around the
-original parameter.
+There is no reason to export the function as an extra symbol. It is
+simple enough and is just a wrapper to already exported functions.
 
-Note some of the users can likely use dev->fwnode directly instead of
-indirect of_fwnode_handle(dev->of_node). But dev->fwnode is not
-guaranteed to be set for all, so this has to be investigated on case to
-case basis (by people who can actually test with the HW).
-
-[ tglx: Fix up subject prefix ]
+Therefore, switch the exported function to an inline.
 
 Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/all/20250319092951.37667-15-jirislaby@kernel.org
+Link: https://lore.kernel.org/all/20250319092951.37667-13-jirislaby@kernel.org
 
 ---
- arch/arm/common/sa1111.c             |  6 +++---
- arch/arm/mach-exynos/suspend.c       |  5 ++---
- arch/arm/mach-imx/avic.c             |  4 ++--
- arch/arm/mach-imx/gpc.c              |  5 ++---
- arch/arm/mach-imx/tzic.c             |  4 ++--
- arch/arm/mach-omap1/irq.c            |  3 +--
- arch/arm/mach-omap2/omap-wakeupgen.c |  5 ++---
- arch/arm/mach-pxa/irq.c              |  5 ++---
- arch/arm/plat-orion/gpio.c           | 12 ++++++------
- 9 files changed, 22 insertions(+), 27 deletions(-)
+ include/linux/irqdomain.h | 45 ++++++++++++++++++++++++++++++++------
+ kernel/irq/irqdomain.c    | 41 +-----------------------------------
+ 2 files changed, 39 insertions(+), 47 deletions(-)
 
-diff --git a/arch/arm/common/sa1111.c b/arch/arm/common/sa1111.c
-index 9846f30..02eda44 100644
---- a/arch/arm/common/sa1111.c
-+++ b/arch/arm/common/sa1111.c
-@@ -416,9 +416,9 @@ static int sa1111_setup_irq(struct sa1111 *sachip, unsigned irq_base)
- 	writel_relaxed(~0, irqbase + SA1111_INTSTATCLR0);
- 	writel_relaxed(~0, irqbase + SA1111_INTSTATCLR1);
+diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
+index 91ed86f..6e9a5ec 100644
+--- a/include/linux/irqdomain.h
++++ b/include/linux/irqdomain.h
+@@ -591,12 +591,45 @@ void irq_domain_set_info(struct irq_domain *domain, unsigned int virq,
+ 			 void *handler_data, const char *handler_name);
+ void irq_domain_reset_irq_data(struct irq_data *irq_data);
+ #ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
+-struct irq_domain *irq_domain_create_hierarchy(struct irq_domain *parent,
+-					       unsigned int flags,
+-					       unsigned int size,
+-					       struct fwnode_handle *fwnode,
+-					       const struct irq_domain_ops *ops,
+-					       void *host_data);
++/**
++ * irq_domain_create_hierarchy - Add a irqdomain into the hierarchy
++ * @parent:	Parent irq domain to associate with the new domain
++ * @flags:	Irq domain flags associated to the domain
++ * @size:	Size of the domain. See below
++ * @fwnode:	Optional fwnode of the interrupt controller
++ * @ops:	Pointer to the interrupt domain callbacks
++ * @host_data:	Controller private data pointer
++ *
++ * If @size is 0 a tree domain is created, otherwise a linear domain.
++ *
++ * If successful the parent is associated to the new domain and the
++ * domain flags are set.
++ * Returns pointer to IRQ domain, or NULL on failure.
++ */
++static inline struct irq_domain *irq_domain_create_hierarchy(struct irq_domain *parent,
++					    unsigned int flags,
++					    unsigned int size,
++					    struct fwnode_handle *fwnode,
++					    const struct irq_domain_ops *ops,
++					    void *host_data)
++{
++	struct irq_domain_info info = {
++		.fwnode		= fwnode,
++		.size		= size,
++		.hwirq_max	= size,
++		.ops		= ops,
++		.host_data	= host_data,
++		.domain_flags	= flags,
++		.parent		= parent,
++	};
++	struct irq_domain *d;
++
++	if (!info.size)
++		info.hwirq_max = ~0U;
++
++	d = irq_domain_instantiate(&info);
++	return IS_ERR(d) ? NULL : d;
++}
  
--	sachip->irqdomain = irq_domain_add_linear(NULL, SA1111_IRQ_NR,
--						  &sa1111_irqdomain_ops,
--						  sachip);
-+	sachip->irqdomain = irq_domain_create_linear(NULL, SA1111_IRQ_NR,
-+						     &sa1111_irqdomain_ops,
-+						     sachip);
- 	if (!sachip->irqdomain) {
- 		irq_free_descs(sachip->irq_base, SA1111_IRQ_NR);
- 		return -ENOMEM;
-diff --git a/arch/arm/mach-exynos/suspend.c b/arch/arm/mach-exynos/suspend.c
-index cac4e82..150a1e5 100644
---- a/arch/arm/mach-exynos/suspend.c
-+++ b/arch/arm/mach-exynos/suspend.c
-@@ -209,9 +209,8 @@ static int __init exynos_pmu_irq_init(struct device_node *node,
- 		return -ENOMEM;
- 	}
+ static inline struct irq_domain *irq_domain_add_hierarchy(struct irq_domain *parent,
+ 					    unsigned int flags,
+diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+index 0eb99d2..74ad4a8 100644
+--- a/kernel/irq/irqdomain.c
++++ b/kernel/irq/irqdomain.c
+@@ -1308,47 +1308,6 @@ void irq_domain_reset_irq_data(struct irq_data *irq_data)
+ EXPORT_SYMBOL_GPL(irq_domain_reset_irq_data);
  
--	domain = irq_domain_add_hierarchy(parent_domain, 0, 0,
--					  node, &exynos_pmu_domain_ops,
--					  NULL);
-+	domain = irq_domain_create_hierarchy(parent_domain, 0, 0, of_fwnode_handle(node),
-+					     &exynos_pmu_domain_ops, NULL);
- 	if (!domain) {
- 		iounmap(pmu_base_addr);
- 		pmu_base_addr = NULL;
-diff --git a/arch/arm/mach-imx/avic.c b/arch/arm/mach-imx/avic.c
-index cf6546d..3067c06 100644
---- a/arch/arm/mach-imx/avic.c
-+++ b/arch/arm/mach-imx/avic.c
-@@ -201,8 +201,8 @@ static void __init mxc_init_irq(void __iomem *irqbase)
- 	WARN_ON(irq_base < 0);
- 
- 	np = of_find_compatible_node(NULL, NULL, "fsl,avic");
--	domain = irq_domain_add_legacy(np, AVIC_NUM_IRQS, irq_base, 0,
--				       &irq_domain_simple_ops, NULL);
-+	domain = irq_domain_create_legacy(of_fwnode_handle(np), AVIC_NUM_IRQS, irq_base, 0,
-+					  &irq_domain_simple_ops, NULL);
- 	WARN_ON(!domain);
- 
- 	for (i = 0; i < AVIC_NUM_IRQS / 32; i++, irq_base += 32)
-diff --git a/arch/arm/mach-imx/gpc.c b/arch/arm/mach-imx/gpc.c
-index 5909088..2e63356 100644
---- a/arch/arm/mach-imx/gpc.c
-+++ b/arch/arm/mach-imx/gpc.c
-@@ -245,9 +245,8 @@ static int __init imx_gpc_init(struct device_node *node,
- 	if (WARN_ON(!gpc_base))
- 	        return -ENOMEM;
- 
--	domain = irq_domain_add_hierarchy(parent_domain, 0, GPC_MAX_IRQS,
--					  node, &imx_gpc_domain_ops,
--					  NULL);
-+	domain = irq_domain_create_hierarchy(parent_domain, 0, GPC_MAX_IRQS, of_fwnode_handle(node),
-+					     &imx_gpc_domain_ops, NULL);
- 	if (!domain) {
- 		iounmap(gpc_base);
- 		return -ENOMEM;
-diff --git a/arch/arm/mach-imx/tzic.c b/arch/arm/mach-imx/tzic.c
-index 8b3d98d..50a5668 100644
---- a/arch/arm/mach-imx/tzic.c
-+++ b/arch/arm/mach-imx/tzic.c
-@@ -175,8 +175,8 @@ static int __init tzic_init_dt(struct device_node *np, struct device_node *p)
- 	irq_base = irq_alloc_descs(-1, 0, TZIC_NUM_IRQS, numa_node_id());
- 	WARN_ON(irq_base < 0);
- 
--	domain = irq_domain_add_legacy(np, TZIC_NUM_IRQS, irq_base, 0,
--				       &irq_domain_simple_ops, NULL);
-+	domain = irq_domain_create_legacy(of_fwnode_handle(np), TZIC_NUM_IRQS, irq_base, 0,
-+					  &irq_domain_simple_ops, NULL);
- 	WARN_ON(!domain);
- 
- 	for (i = 0; i < 4; i++, irq_base += 32)
-diff --git a/arch/arm/mach-omap1/irq.c b/arch/arm/mach-omap1/irq.c
-index 9b587ec..bb1bc06 100644
---- a/arch/arm/mach-omap1/irq.c
-+++ b/arch/arm/mach-omap1/irq.c
-@@ -220,8 +220,7 @@ void __init omap1_init_irq(void)
- 	omap_l2_irq = irq_base;
- 	omap_l2_irq -= NR_IRQS_LEGACY;
- 
--	domain = irq_domain_add_legacy(NULL, nr_irqs, irq_base, 0,
--				       &irq_domain_simple_ops, NULL);
-+	domain = irq_domain_create_legacy(NULL, nr_irqs, irq_base, 0, &irq_domain_simple_ops, NULL);
- 
- 	pr_info("Total of %lu interrupts in %i interrupt banks\n",
- 		nr_irqs, irq_bank_count);
-diff --git a/arch/arm/mach-omap2/omap-wakeupgen.c b/arch/arm/mach-omap2/omap-wakeupgen.c
-index 6f0d612..a66b1dc 100644
---- a/arch/arm/mach-omap2/omap-wakeupgen.c
-+++ b/arch/arm/mach-omap2/omap-wakeupgen.c
-@@ -585,9 +585,8 @@ static int __init wakeupgen_init(struct device_node *node,
- 		wakeupgen_ops = &am43xx_wakeupgen_ops;
- 	}
- 
--	domain = irq_domain_add_hierarchy(parent_domain, 0, max_irqs,
--					  node, &wakeupgen_domain_ops,
--					  NULL);
-+	domain = irq_domain_create_hierarchy(parent_domain, 0, max_irqs, of_fwnode_handle(node),
-+					     &wakeupgen_domain_ops, NULL);
- 	if (!domain) {
- 		iounmap(wakeupgen_base);
- 		return -ENOMEM;
-diff --git a/arch/arm/mach-pxa/irq.c b/arch/arm/mach-pxa/irq.c
-index d9cadd9..5bfce8a 100644
---- a/arch/arm/mach-pxa/irq.c
-+++ b/arch/arm/mach-pxa/irq.c
-@@ -147,9 +147,8 @@ pxa_init_irq_common(struct device_node *node, int irq_nr,
- 	int n;
- 
- 	pxa_internal_irq_nr = irq_nr;
--	pxa_irq_domain = irq_domain_add_legacy(node, irq_nr,
--					       PXA_IRQ(0), 0,
--					       &pxa_irq_ops, NULL);
-+	pxa_irq_domain = irq_domain_create_legacy(of_fwnode_handle(node), irq_nr, PXA_IRQ(0), 0,
-+						  &pxa_irq_ops, NULL);
- 	if (!pxa_irq_domain)
- 		panic("Unable to add PXA IRQ domain\n");
- 	irq_set_default_domain(pxa_irq_domain);
-diff --git a/arch/arm/plat-orion/gpio.c b/arch/arm/plat-orion/gpio.c
-index 595e9cb..a15f474 100644
---- a/arch/arm/plat-orion/gpio.c
-+++ b/arch/arm/plat-orion/gpio.c
-@@ -602,12 +602,12 @@ void __init orion_gpio_init(int gpio_base, int ngpio,
- 			       IRQ_NOREQUEST, IRQ_LEVEL | IRQ_NOPROBE);
- 
- 	/* Setup irq domain on top of the generic chip. */
--	ochip->domain = irq_domain_add_legacy(NULL,
--					      ochip->chip.ngpio,
--					      ochip->secondary_irq_base,
--					      ochip->secondary_irq_base,
--					      &irq_domain_simple_ops,
--					      ochip);
-+	ochip->domain = irq_domain_create_legacy(NULL,
-+						 ochip->chip.ngpio,
-+						 ochip->secondary_irq_base,
-+						 ochip->secondary_irq_base,
-+						 &irq_domain_simple_ops,
-+						 ochip);
- 	if (!ochip->domain)
- 		panic("%s: couldn't allocate irq domain (DT).\n",
- 		      ochip->chip.label);
+ #ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
+-/**
+- * irq_domain_create_hierarchy - Add a irqdomain into the hierarchy
+- * @parent:	Parent irq domain to associate with the new domain
+- * @flags:	Irq domain flags associated to the domain
+- * @size:	Size of the domain. See below
+- * @fwnode:	Optional fwnode of the interrupt controller
+- * @ops:	Pointer to the interrupt domain callbacks
+- * @host_data:	Controller private data pointer
+- *
+- * If @size is 0 a tree domain is created, otherwise a linear domain.
+- *
+- * If successful the parent is associated to the new domain and the
+- * domain flags are set.
+- * Returns pointer to IRQ domain, or NULL on failure.
+- */
+-struct irq_domain *irq_domain_create_hierarchy(struct irq_domain *parent,
+-					    unsigned int flags,
+-					    unsigned int size,
+-					    struct fwnode_handle *fwnode,
+-					    const struct irq_domain_ops *ops,
+-					    void *host_data)
+-{
+-	struct irq_domain_info info = {
+-		.fwnode		= fwnode,
+-		.size		= size,
+-		.hwirq_max	= size,
+-		.ops		= ops,
+-		.host_data	= host_data,
+-		.domain_flags	= flags,
+-		.parent		= parent,
+-	};
+-	struct irq_domain *d;
+-
+-	if (!info.size)
+-		info.hwirq_max = ~0U;
+-
+-	d = irq_domain_instantiate(&info);
+-	return IS_ERR(d) ? NULL : d;
+-}
+-EXPORT_SYMBOL_GPL(irq_domain_create_hierarchy);
+-
+ static void irq_domain_insert_irq(int virq)
+ {
+ 	struct irq_data *data;
