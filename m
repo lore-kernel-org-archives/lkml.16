@@ -1,162 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98D3630035A;
-	Tue,  6 May 2025 02:23:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CC0533842F
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 02:22:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746498180; cv=none; b=Osd/80y1OF81U+8QGuX2/UMU7k/zaf6aAM9pqPGUOBSTNdNntMLlzDqCcwAfPi1WUeXwImwa0wyso/DBnLM2BzkYqNYxxrtorSkNjcNuq3uvlpv4ToNdwdII135s/8ENzg4VsmzqAMsdcApTdWRgU+29oIDGP/KHMry2W0A0BQY=
+	t=1746498178; cv=none; b=tESFqtWEUb2noUU+WTQ5067Pkairm7YYEs9Lx3aCXI8UxgTs0tptEqcjk1qwpNk9hpDrD2fj3is/A0ImKClK/xGR15vG2qZPgyb39xl6uXYO21/N6rwv6PmK0Ax5nURj06CFybSj+0lVrxdRNkdVPKQfZp8ctn/9lsAH6/6OJ4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746498180; c=relaxed/simple;
-	bh=XwiTbvDuJHg5Jgrcity3qbKdTBBkmo8hT+hmUxszMb8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=P0L0chuvxQ49kNeWTDs2A2TKmUsb+ELTvXsDRkVwsRkMsZu1eZ2QBKSx8FPupJUJufilN/alTw4zgQ/uhRP4iCzvqzTWE3IyJspaWjyXm+jCS1f+vI5DG4pEnDUQj5nQ1RsPlnzdIEGVDyE8kzy8rwNrjwsxLTsKzWNAnSPfL58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=btHqNNW+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746498178; c=relaxed/simple;
+	bh=CGwm+uClyM68lDdLpAKcYoogMH1nK0BFJ9x04hZGAXU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OLgTRijo7EJDzmfFiMFWC/NsfwZpdVIUCGE5XhrzV1rsGbXZGV2cgak/DN1c7/eghaKyNO0dLZIJfwkoPXMJCRCb7iQDbh9wESloPEyL1+yEnpYEILodAWcVZsixCOPi4ts9KGIVjhulcf4xBZDBTcL/qHDmm6hovzWiUqQdDT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Wyzwk1q/; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="btHqNNW+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2637C4CEE9;
-	Tue,  6 May 2025 02:22:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746498180;
-	bh=XwiTbvDuJHg5Jgrcity3qbKdTBBkmo8hT+hmUxszMb8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=btHqNNW+22KBQ+qbZLQ3VNeBMZxDFeftirgKMYYGUodHNQaibrfNRxTKgYRLzZ7u8
-	 8/idVbWUPk8S3St63L4VMYndKgQaAFuJL3ksvZeek+Q7lcwucrFUSjLCudqxzXJXUE
-	 T4IPM0vfQwGvtsybYUQGhX/edxLzQC4zN/AdTm98h9rm1KL2vQIvIMfAy6LmY/Utnj
-	 5Y9hfQo++C8vQPUi+J6S9MTMhaR4mzqGzPw2tWlC95VboAZ3IfUoA8fiD/fL1aKNEp
-	 59K9/S44Hlp3AcUHWyVNYYAlv7eF7URfUebFSAS2oll58Aww4kX4AZ1QQ6w69TKlvj
-	 gnRgVBnL2fVMA==
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Daniel Tang <dt.tangr@gmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: [PATCH] dt-bindings: timer: Convert lsi,zevio-timer to DT schema
-Date: Mon,  5 May 2025 21:22:56 -0500
-Message-ID: <20250506022257.2588136-1-robh@kernel.org>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Wyzwk1q/"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7396f13b750so6190625b3a.1
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 19:22:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1746498175; x=1747102975; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=wcToqMHkDpTdLEXjKroWxHP95+TmEN3Q5daky/KBWzI=;
+        b=Wyzwk1q/ckeyL4Lg+Vc9WZ6BEhaouRchAGmJ2B/E8N9RA7Oy04VPw9gLUcbTDV9lv6
+         wiYMzlQ412vCOgr67IyUIX4MHRVtZmsb7/N15J2bniJP9psvkTKKr5WY8uAJGDxB6NUs
+         l5/USR3LpsSlsfAU7RSETB3i2hv7ahOg+kr94=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746498175; x=1747102975;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wcToqMHkDpTdLEXjKroWxHP95+TmEN3Q5daky/KBWzI=;
+        b=LTMqPJZTNsUPukRu/F+lCXeNlg0Ll5AldfNUYf4+NwX6HWgkY+HKpT0NPCTooxp72e
+         paBseKkYBwlzlsy5Cw2sHozilaXQkOtATJ7VeNVNbMtD2tVZhTtsQWnvHj5zJejZJShg
+         ciVVfIP4HfLyOrDHqahYuvK8i3aBcIjpmv9P1Uq8W1p9kk10CNlEyUjRWDJ1ZQyyTRa8
+         Bvg9r7LYaUCMBzlt5v45Uek1iFUoFEoDOpqP2YEnqCYRM4Nr/Ml6vhJI9nbqNzD6zCt7
+         ABUhw5uoZf1lEWZSF+Swcuj0qpgSpDTcVxv+9aIPbS9+lh1foUZg1cC30/gdg7qrtxUo
+         RKqg==
+X-Forwarded-Encrypted: i=1; AJvYcCUZ7S6skReZLMaEwlAwgq7KxAStFiuROgJrkm9Rnd4xbBgIRymlZp1y9iNq6P0Idprcmuy619LjEerfT5M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyeoPTOrTI/7VdENwT2KtwBh5B8012UIEHbDXZEYYCajVxqXrbc
+	cOq+11yqb59H6hQaTQuXuQdBWho8VLfehd6T4NbveBEZCuuuD3gjHlpnnAGE6g==
+X-Gm-Gg: ASbGncvCaiC6aXvLLOabRUwxpUqFpHcjgoAOqywYV++zLCPr7AM1d5GjlERxKVWS9OQ
+	ls0WUzg+/gEi+41q/vlgF48YfQtztX6xcplAO2FWethKIQYMmtrFplusyMPbLvBKSDhzuMltmnT
+	UWxDNmJToD1MUB9tdvrepb14UxzPs464otskRdmHt0MSZ0kmYMSIHGLs7ksvy0goq4ybdJTqQ8C
+	CYY8KnnVDqLyaqS5Du/HSr0KU+pLAiuTRV5w5kzMXSIwwAfDeGlDdPjvRgjWEY57ipBHY93qBun
+	FwvZBHvGu3tonHynQnHC5KAQROhqrI6sRQlVyerNSmZhOhyeYFj0VHQ=
+X-Google-Smtp-Source: AGHT+IFc6wz2lLiTovWw/lmIDOLnGErdPqyw+m3UEoeaabqxUpsithWSUC6r2ammWN8skoKVjYaQ0w==
+X-Received: by 2002:a05:6a20:3953:b0:203:bb65:995a with SMTP id adf61e73a8af0-211834a9d45mr2119227637.30.1746498175296;
+        Mon, 05 May 2025 19:22:55 -0700 (PDT)
+Received: from google.com ([2401:fa00:8f:203:4dd5:88f9:86cd:18ef])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b1fb3b57e2asm5261813a12.26.2025.05.05.19.22.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 May 2025 19:22:54 -0700 (PDT)
+Date: Tue, 6 May 2025 11:22:50 +0900
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Song Liu <song@kernel.org>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, 
+	Matt Bobrowski <mattbobrowski@google.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] bpf: add bpf_msleep_interruptible()
+Message-ID: <bianejll3uuual7ffytpuraphcgr4xysmnuapk74x3owx4m45c@vwxgbzkwkt5x>
+References: <20250505063918.3320164-1-senozhatsky@chromium.org>
+ <aBiJnR5MEL5hVXXC@google.com>
+ <wzxhhoiczrhsosf5bkwqf2yypdrhgrm6wskiusfg7iumpgk7ew@rcegtieelqco>
+ <CAPhsuW4Q7cHyMHemnLtoys6uNgd-tzKARx9gX177PimAEwpszg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPhsuW4Q7cHyMHemnLtoys6uNgd-tzKARx9gX177PimAEwpszg@mail.gmail.com>
 
-Convert the TI NSPIRE Timer binding to DT schema format. It's a
-straight-forward conversion.
+On (25/05/05 12:01), Song Liu wrote:
+[..]
+> > + * unsigned long bpf_msleep_interruptible(unsigned int msecs)
+> > + *     Description
+> > + *             Make the current task sleep until *msecs* milliseconds have
+> > + *             elapsed or until a signal is received.
+> > + *
+> > + *     Return
+> > + *             The remaining time of the sleep duration in milliseconds.
+> >   */
+> >  #define ___BPF_FUNC_MAPPER(FN, ctx...)                 \
+> >         FN(unspec, 0, ##ctx)                            \
+> 
+> kfunc shouldn't have any changes in include/uapi/linux/bpf.h.
 
-Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
----
- .../bindings/timer/lsi,zevio-timer.txt        | 33 -----------
- .../bindings/timer/lsi,zevio-timer.yaml       | 56 +++++++++++++++++++
- 2 files changed, 56 insertions(+), 33 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/timer/lsi,zevio-timer.txt
- create mode 100644 Documentation/devicetree/bindings/timer/lsi,zevio-timer.yaml
-
-diff --git a/Documentation/devicetree/bindings/timer/lsi,zevio-timer.txt b/Documentation/devicetree/bindings/timer/lsi,zevio-timer.txt
-deleted file mode 100644
-index b2d07ad90e9a..000000000000
---- a/Documentation/devicetree/bindings/timer/lsi,zevio-timer.txt
-+++ /dev/null
-@@ -1,33 +0,0 @@
--TI-NSPIRE timer
--
--Required properties:
--
--- compatible : should be "lsi,zevio-timer".
--- reg : The physical base address and size of the timer (always first).
--- clocks: phandle to the source clock.
--
--Optional properties:
--
--- interrupts : The interrupt number of the first timer.
--- reg : The interrupt acknowledgement registers
--	(always after timer base address)
--
--If any of the optional properties are not given, the timer is added as a
--clock-source only.
--
--Example:
--
--timer {
--	compatible = "lsi,zevio-timer";
--	reg = <0x900D0000 0x1000>, <0x900A0020 0x8>;
--	interrupts = <19>;
--	clocks = <&timer_clk>;
--};
--
--Example (no clock-events):
--
--timer {
--	compatible = "lsi,zevio-timer";
--	reg = <0x900D0000 0x1000>;
--	clocks = <&timer_clk>;
--};
-diff --git a/Documentation/devicetree/bindings/timer/lsi,zevio-timer.yaml b/Documentation/devicetree/bindings/timer/lsi,zevio-timer.yaml
-new file mode 100644
-index 000000000000..358455d8e7a8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/lsi,zevio-timer.yaml
-@@ -0,0 +1,56 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/timer/lsi,zevio-timer.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: TI-NSPIRE timer
-+
-+maintainers:
-+  - Daniel Tang <dt.tangr@gmail.com>
-+
-+properties:
-+  compatible:
-+    const: lsi,zevio-timer
-+
-+  reg:
-+    minItems: 1
-+    items:
-+      - description: Timer registers
-+      - description: Interrupt acknowledgement registers (optional)
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+
-+allOf:
-+  - if:
-+      required: [ interrupts ]
-+    then:
-+      properties:
-+        reg:
-+          minItems: 2
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    timer@900d0000 {
-+        compatible = "lsi,zevio-timer";
-+        reg = <0x900D0000 0x1000>, <0x900A0020 0x8>;
-+        interrupts = <19>;
-+        clocks = <&timer_clk>;
-+    };
-+  - |
-+    timer@900d0000 {
-+        compatible = "lsi,zevio-timer";
-+        reg = <0x900D0000 0x1000>;
-+        clocks = <&timer_clk>;
-+    };
--- 
-2.47.2
-
+Ack.
