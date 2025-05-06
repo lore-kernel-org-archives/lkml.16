@@ -1,312 +1,128 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0249A266B44
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 10:05:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15490262FD3;
+	Tue,  6 May 2025 10:05:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746525931; cv=none; b=TN3xVgUQNKTQ1qkyHDhmKdkgIqAkVGAGJuvQoH5RYVCa4TgqMJRxaGAwq9bbpamhbXxvz5kxfoPN/mw7mv8GKTEbU3x6l8GsD8XFYQsO2xpLriOAtzJugNHHXKXrK0CflEN7v7fX6zG3G++1UpbHttCbebIGypR0XnpK9eApx1I=
+	t=1746525940; cv=none; b=ewuSQ0GrW7Lmfcpj/KFJ6nAM5Uyib9KiiXZjBPIbie35FRPAngzg7yNuNp10+5Zj1q/ZPOIvNpbL+6kJCYQtmWXM/EI1rg0LoNcMMpipFHKuqPG7YahnvV3Xpx0rLPbhsT+lksw68ptal8+9xnP2QoixZ2qnyjgWQbmNdLYtFcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746525931; c=relaxed/simple;
-	bh=mbaqMlGgn0O2m1V1FsJrdner0BCcF8u6WbMVG6mnqXo=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=o7u/VohjmKK9gQtSqG/PZyM1V1lcNC3B5g2SCYUs5mws3Lw5OK61v2aoBjuc5470WTN0rw5Bnj0v79KjUoBahZmpIKzqIUQVfVcPoWEdJYf16edZDp3XqUmLMyJv51wCbR3ipiN2X7Xt6jKhySS8vnr6qVx2Pef6ficCSjVq5DA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3d443811f04so53048425ab.1
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 03:05:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746525929; x=1747130729;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=zAnScUYl7mbKpNFlUShHyzhwIQ4t1swm+4ckWItM8S4=;
-        b=bfKs63Hn5pmseHWZLGnlwKdFU1LjIQSgBAdu1uuBzS6NTMjF6tdxWUZe1vl0aixtLK
-         HGJNbDJvkqBzXzPSKrw1IG4JtiN4kMflQK+H0eiJ9ngPBldF1Ov/7Nlz3wHyzeRQegDq
-         Fk/1aB4ZqL4cbzcasM7lQ+yGdkDeR+N30G9om7JGwQ59G/zsvCpfLgBScbzrheRcPUAl
-         XQNxQRRWETKHce18/N+K2Mt5SymQoJXOIKLtK4TtTQgfffSMoVBDQPs+whNxmoMl0frz
-         MHfgD4SK3ta+O6oEfSnzWacQA+nSvvYcOLLTJg+36it1Lx7TscxcJsIC8H1aeyoK6+2V
-         /Y5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUvpO2UxcOiCkesZDOgsBeUyCaGcCXl8P9R2Unzx5YsP7r1Ht8lk5jBGjhppNLwELTJrMUDY+D8kZROcyI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWemzlpqtM/c8sBu7FewE4VzG+Nd3ouvgHrosdZVsXBUG6SR3V
-	ggUT+Qq7d75lfOcWnQVmC2OSWLhmahehnQEoIXtCUF7UT8WGmIlCeBzpy/tLH90G0Xi7G1awHHG
-	E1Csjdh958ISqCc6J3l0TKICo0l6jVngrslzZESYm+Y+QNwLwLVTwaoY=
-X-Google-Smtp-Source: AGHT+IEukJL442XIymUOtyI4u9zTAa7kkoADVWnoWKwfqZHG7bU1VDsXZykx+E23/MtJeL3A3lEoU+DBQKM1XoPpyJSQC/PPKaYA
+	s=arc-20240116; t=1746525940; c=relaxed/simple;
+	bh=cO+ESA8xlpPTuXuVM1MtTA6UZ8uvRadu715Dnt4GB7o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dwDRZi4hXFskrvz06PZHgPud2yNtUwSQ9In820nIhOS+VlWVFCjbRFP/dkR412iaQihAAIyfL0jfVOLUfXWJeCEchB6USw/EMaGn9g36WDBrjbhV7MQdVW7VMaWWLxW2tHtgyMovpU1469NgkelkwVkL8zG8fr3+Re5t2DI3pgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B1D0B113E;
+	Tue,  6 May 2025 03:05:28 -0700 (PDT)
+Received: from [10.57.93.118] (unknown [10.57.93.118])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 158083F5A1;
+	Tue,  6 May 2025 03:05:35 -0700 (PDT)
+Message-ID: <2a90ec6c-1725-4c32-8819-c46e8c0e4630@arm.com>
+Date: Tue, 6 May 2025 11:05:34 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:152f:b0:3d0:4e57:bbda with SMTP id
- e9e14a558f8ab-3da6cdc61a6mr27910065ab.1.1746525929006; Tue, 06 May 2025
- 03:05:29 -0700 (PDT)
-Date: Tue, 06 May 2025 03:05:28 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6819dee8.050a0220.a19a9.0008.GAE@google.com>
-Subject: [syzbot] [block?] INFO: task hung in blkdev_read_iter
-From: syzbot <syzbot+afa7aef0c237038586e7@syzkaller.appspotmail.com>
-To: axboe@kernel.dk, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v4 0/5] Readahead tweaks for larger folios
+Content-Language: en-GB
+To: Andrew Morton <akpm@linux-foundation.org>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ David Hildenbrand <david@redhat.com>, Dave Chinner <david@fromorbit.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Kalesh Singh <kaleshsingh@google.com>, Zi Yan <ziy@nvidia.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
+References: <20250430145920.3748738-1-ryan.roberts@arm.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20250430145920.3748738-1-ryan.roberts@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On 30/04/2025 15:59, Ryan Roberts wrote:
+> Hi All,
+> 
+> This RFC series adds some tweaks to readahead so that it does a better job of
+> ramping up folio sizes as readahead extends further into the file. And it
+> additionally special-cases executable mappings to allow the arch to request a
+> preferred folio size for text.
+> 
+> Previous versions of the series focussed on the latter part only (large folios
+> for text). See [3]. But after discussion with Matthew Wilcox last week, we
+> decided that we should really be fixing some of the unintended behaviours in how
+> a folio size is selected in general before special-casing for text. As a result
+> patches 1-4 make folio size selection behave more sanely, then patch 5
+> introduces large folios for text. Patch 5 depends on patch 1, but does not
+> depend on patches 2-4.
+> 
+> ---
+> 
+> I'm leaving this marked as RFC for now as I intend to do more testing, and
+> haven't yet updated the benchmark results in patch 5 (although I expect them to
+> be similar).
 
-syzbot found the following issue on:
+Thanks Jan, David and Anshuman for the reviews! I'll do the suggested changes
+and complete my testing, then aim to post again against -rc1, to hopefully get
+it into linux-next.
 
-HEAD commit:    ebd297a2affa Merge tag 'net-6.15-rc5' of git://git.kernel...
-git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=137ab774580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a9a25b7a36123454
-dashboard link: https://syzkaller.appspot.com/bug?extid=afa7aef0c237038586e7
-compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=177ab774580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14ed0b68580000
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/f2a7906b8354/disk-ebd297a2.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/f84d6953ac72/vmlinux-ebd297a2.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/24673ab81bd7/bzImage-ebd297a2.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+afa7aef0c237038586e7@syzkaller.appspotmail.com
-
-INFO: task syz-executor467:5849 blocked for more than 143 seconds.
-      Not tainted 6.15.0-rc4-syzkaller-00147-gebd297a2affa #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:syz-executor467 state:D stack:26936 pid:5849  tgid:5849  ppid:5839   task_flags:0x400040 flags:0x00004006
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5382 [inline]
- __schedule+0x16e2/0x4cd0 kernel/sched/core.c:6767
- __schedule_loop kernel/sched/core.c:6845 [inline]
- schedule+0x165/0x360 kernel/sched/core.c:6860
- schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6917
- rwsem_down_read_slowpath+0x552/0x880 kernel/locking/rwsem.c:1084
- __down_read_common kernel/locking/rwsem.c:1248 [inline]
- __down_read kernel/locking/rwsem.c:1261 [inline]
- down_read+0x98/0x2e0 kernel/locking/rwsem.c:1526
- inode_lock_shared include/linux/fs.h:877 [inline]
- blkdev_read_iter+0x2f8/0x440 block/fops.c:808
- aio_read+0x30e/0x470 fs/aio.c:1602
- __io_submit_one fs/aio.c:-1 [inline]
- io_submit_one+0x6ec/0x1240 fs/aio.c:2052
- __do_sys_io_submit fs/aio.c:2111 [inline]
- __se_sys_io_submit+0x185/0x2f0 fs/aio.c:2081
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fbea1957ea9
-RSP: 002b:00007ffe0d65d0f8 EFLAGS: 00000246 ORIG_RAX: 00000000000000d1
-RAX: ffffffffffffffda RBX: 0000200000000080 RCX: 00007fbea1957ea9
-RDX: 00002000000000c0 RSI: 00000000000000ca RDI: 00007fbea1910000
-RBP: 00000000000f4240 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffe0d65d110
-R13: 00007ffe0d65d130 R14: 000000000001a993 R15: 00007ffe0d65d10c
- </TASK>
-INFO: task syz-executor467:5850 blocked for more than 143 seconds.
-      Not tainted 6.15.0-rc4-syzkaller-00147-gebd297a2affa #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:syz-executor467 state:D stack:26936 pid:5850  tgid:5850  ppid:5841   task_flags:0x400040 flags:0x00004006
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5382 [inline]
- __schedule+0x16e2/0x4cd0 kernel/sched/core.c:6767
- __schedule_loop kernel/sched/core.c:6845 [inline]
- schedule+0x165/0x360 kernel/sched/core.c:6860
- schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6917
- rwsem_down_read_slowpath+0x552/0x880 kernel/locking/rwsem.c:1084
- __down_read_common kernel/locking/rwsem.c:1248 [inline]
- __down_read kernel/locking/rwsem.c:1261 [inline]
- down_read+0x98/0x2e0 kernel/locking/rwsem.c:1526
- inode_lock_shared include/linux/fs.h:877 [inline]
- blkdev_read_iter+0x2f8/0x440 block/fops.c:808
- aio_read+0x30e/0x470 fs/aio.c:1602
- __io_submit_one fs/aio.c:-1 [inline]
- io_submit_one+0x6ec/0x1240 fs/aio.c:2052
- __do_sys_io_submit fs/aio.c:2111 [inline]
- __se_sys_io_submit+0x185/0x2f0 fs/aio.c:2081
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fbea1957ea9
-RSP: 002b:00007ffe0d65d0f8 EFLAGS: 00000246 ORIG_RAX: 00000000000000d1
-RAX: ffffffffffffffda RBX: 0000200000000080 RCX: 00007fbea1957ea9
-RDX: 00002000000000c0 RSI: 00000000000000ca RDI: 00007fbea1910000
-RBP: 00000000000f4240 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffe0d65d110
-R13: 00007ffe0d65d130 R14: 000000000001a9ab R15: 00007ffe0d65d10c
- </TASK>
-INFO: task syz-executor467:5851 blocked for more than 144 seconds.
-      Not tainted 6.15.0-rc4-syzkaller-00147-gebd297a2affa #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:syz-executor467 state:D stack:26936 pid:5851  tgid:5851  ppid:5842   task_flags:0x400040 flags:0x00004006
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5382 [inline]
- __schedule+0x16e2/0x4cd0 kernel/sched/core.c:6767
- __schedule_loop kernel/sched/core.c:6845 [inline]
- schedule+0x165/0x360 kernel/sched/core.c:6860
- schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6917
- rwsem_down_read_slowpath+0x552/0x880 kernel/locking/rwsem.c:1084
- __down_read_common kernel/locking/rwsem.c:1248 [inline]
- __down_read kernel/locking/rwsem.c:1261 [inline]
- down_read+0x98/0x2e0 kernel/locking/rwsem.c:1526
- inode_lock_shared include/linux/fs.h:877 [inline]
- blkdev_read_iter+0x2f8/0x440 block/fops.c:808
- aio_read+0x30e/0x470 fs/aio.c:1602
- __io_submit_one fs/aio.c:-1 [inline]
- io_submit_one+0x6ec/0x1240 fs/aio.c:2052
- __do_sys_io_submit fs/aio.c:2111 [inline]
- __se_sys_io_submit+0x185/0x2f0 fs/aio.c:2081
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fbea1957ea9
-RSP: 002b:00007ffe0d65d0f8 EFLAGS: 00000246 ORIG_RAX: 00000000000000d1
-RAX: ffffffffffffffda RBX: 0000200000000080 RCX: 00007fbea1957ea9
-RDX: 00002000000000c0 RSI: 00000000000000ca RDI: 00007fbea1910000
-RBP: 00000000000f4240 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffe0d65d110
-R13: 00007ffe0d65d130 R14: 000000000001a9b9 R15: 00007ffe0d65d10c
- </TASK>
-INFO: task syz-executor467:5852 blocked for more than 144 seconds.
-      Not tainted 6.15.0-rc4-syzkaller-00147-gebd297a2affa #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:syz-executor467 state:D stack:26936 pid:5852  tgid:5852  ppid:5844   task_flags:0x400040 flags:0x00004006
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5382 [inline]
- __schedule+0x16e2/0x4cd0 kernel/sched/core.c:6767
- __schedule_loop kernel/sched/core.c:6845 [inline]
- schedule+0x165/0x360 kernel/sched/core.c:6860
- schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6917
- rwsem_down_read_slowpath+0x552/0x880 kernel/locking/rwsem.c:1084
- __down_read_common kernel/locking/rwsem.c:1248 [inline]
- __down_read kernel/locking/rwsem.c:1261 [inline]
- down_read+0x98/0x2e0 kernel/locking/rwsem.c:1526
- inode_lock_shared include/linux/fs.h:877 [inline]
- blkdev_read_iter+0x2f8/0x440 block/fops.c:808
- aio_read+0x30e/0x470 fs/aio.c:1602
- __io_submit_one fs/aio.c:-1 [inline]
- io_submit_one+0x6ec/0x1240 fs/aio.c:2052
- __do_sys_io_submit fs/aio.c:2111 [inline]
- __se_sys_io_submit+0x185/0x2f0 fs/aio.c:2081
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fbea1957ea9
-RSP: 002b:00007ffe0d65d0f8 EFLAGS: 00000246 ORIG_RAX: 00000000000000d1
-RAX: ffffffffffffffda RBX: 0000200000000080 RCX: 00007fbea1957ea9
-RDX: 00002000000000c0 RSI: 00000000000000ca RDI: 00007fbea1910000
-RBP: 00000000000f4240 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffe0d65d110
-R13: 00007ffe0d65d130 R14: 000000000001a9bf R15: 00007ffe0d65d10c
- </TASK>
-
-Showing all locks held in the system:
-1 lock held by khungtaskd/31:
- #0: ffffffff8df3b860 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire include/linux/rcupdate.h:331 [inline]
- #0: ffffffff8df3b860 (rcu_read_lock){....}-{1:3}, at: rcu_read_lock include/linux/rcupdate.h:841 [inline]
- #0: ffffffff8df3b860 (rcu_read_lock){....}-{1:3}, at: debug_show_all_locks+0x2e/0x180 kernel/locking/lockdep.c:6764
-2 locks held by getty/5585:
- #0: ffff88802ffee0a0 (&tty->ldisc_sem){++++}-{0:0}, at: tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:243
- #1: ffffc9000333b2f0 (&ldata->atomic_read_lock){+.+.}-{4:4}, at: n_tty_read+0x43e/0x1400 drivers/tty/n_tty.c:2222
-2 locks held by syz-executor467/5848:
-1 lock held by syz-executor467/5849:
- #0: ffff8880228887a0 (&sb->s_type->i_mutex_key#8){++++}-{4:4}, at: inode_lock_shared include/linux/fs.h:877 [inline]
- #0: ffff8880228887a0 (&sb->s_type->i_mutex_key#8){++++}-{4:4}, at: blkdev_read_iter+0x2f8/0x440 block/fops.c:808
-1 lock held by syz-executor467/5850:
- #0: ffff8880228887a0 (&sb->s_type->i_mutex_key#8){++++}-{4:4}, at: inode_lock_shared include/linux/fs.h:877 [inline]
- #0: ffff8880228887a0 (&sb->s_type->i_mutex_key#8){++++}-{4:4}, at: blkdev_read_iter+0x2f8/0x440 block/fops.c:808
-1 lock held by syz-executor467/5851:
- #0: ffff8880228887a0 (&sb->s_type->i_mutex_key#8){++++}-{4:4}, at: inode_lock_shared include/linux/fs.h:877 [inline]
- #0: ffff8880228887a0 (&sb->s_type->i_mutex_key#8){++++}-{4:4}, at: blkdev_read_iter+0x2f8/0x440 block/fops.c:808
-1 lock held by syz-executor467/5852:
- #0: ffff8880228887a0 (&sb->s_type->i_mutex_key#8){++++}-{4:4}, at: inode_lock_shared include/linux/fs.h:877 [inline]
- #0: ffff8880228887a0 (&sb->s_type->i_mutex_key#8){++++}-{4:4}, at: blkdev_read_iter+0x2f8/0x440 block/fops.c:808
-
-=============================================
-
-NMI backtrace for cpu 0
-CPU: 0 UID: 0 PID: 31 Comm: khungtaskd Not tainted 6.15.0-rc4-syzkaller-00147-gebd297a2affa #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/19/2025
-Call Trace:
- <TASK>
- dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
- nmi_cpu_backtrace+0x39e/0x3d0 lib/nmi_backtrace.c:113
- nmi_trigger_cpumask_backtrace+0x17a/0x300 lib/nmi_backtrace.c:62
- trigger_all_cpu_backtrace include/linux/nmi.h:158 [inline]
- check_hung_uninterruptible_tasks kernel/hung_task.c:274 [inline]
- watchdog+0xfee/0x1030 kernel/hung_task.c:437
- kthread+0x70e/0x8a0 kernel/kthread.c:464
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-Sending NMI from CPU 0 to CPUs 1:
-NMI backtrace for cpu 1
-CPU: 1 UID: 0 PID: 13 Comm: kworker/u8:1 Not tainted 6.15.0-rc4-syzkaller-00147-gebd297a2affa #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/19/2025
-Workqueue: events_unbound toggle_allocation_gate
-RIP: 0010:mark_held_locks kernel/locking/lockdep.c:4323 [inline]
-RIP: 0010:__trace_hardirqs_on_caller kernel/locking/lockdep.c:4344 [inline]
-RIP: 0010:lockdep_hardirqs_on_prepare+0x107/0x2a0 kernel/locking/lockdep.c:4411
-Code: f0 0a 00 00 45 31 ff 4d 89 f4 eb 13 49 ff c7 48 63 83 e8 0a 00 00 49 83 c4 28 49 39 c7 7d 44 49 83 ff 31 73 2d 41 8b 44 24 20 <a9> 00 00 04 00 74 db 25 00 00 03 00 83 f8 01 ba 03 00 00 00 83 da
-RSP: 0018:ffffc900001276c0 EFLAGS: 00000087
-RAX: 0000000000050003 RBX: ffff88801c6e0000 RCX: ffffffff931e7578
-RDX: 0000000000000002 RSI: ffff88801c6e0b18 RDI: ffff88801c6e0000
-RBP: ffffc90000127860 R08: ffffffff8f7ed377 R09: 1ffffffff1efda6e
-R10: dffffc0000000000 R11: fffffbfff1efda6f R12: ffff88801c6e0b40
-R13: dffffc0000000000 R14: ffff88801c6e0af0 R15: 0000000000000002
-FS:  0000000000000000(0000) GS:ffff8881261cc000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000564f24f42600 CR3: 000000000dd36000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- trace_hardirqs_on+0x28/0x40 kernel/trace/trace_preemptirq.c:78
- smp_call_function_many_cond+0xac1/0x11c0 kernel/smp.c:877
- on_each_cpu_cond_mask+0x3f/0x80 kernel/smp.c:1052
- on_each_cpu include/linux/smp.h:71 [inline]
- text_poke_sync arch/x86/kernel/alternative.c:2455 [inline]
- text_poke_bp_batch+0x84d/0x940 arch/x86/kernel/alternative.c:-1
- text_poke_flush arch/x86/kernel/alternative.c:2856 [inline]
- text_poke_finish+0x30/0x50 arch/x86/kernel/alternative.c:2863
- arch_jump_label_transform_apply+0x1c/0x30 arch/x86/kernel/jump_label.c:146
- static_key_enable_cpuslocked+0x128/0x250 kernel/jump_label.c:210
- static_key_enable+0x1a/0x20 kernel/jump_label.c:223
- toggle_allocation_gate+0xad/0x240 mm/kfence/core.c:850
- process_one_work kernel/workqueue.c:3238 [inline]
- process_scheduled_works+0xadb/0x17a0 kernel/workqueue.c:3319
- worker_thread+0x8a0/0xda0 kernel/workqueue.c:3400
- kthread+0x70e/0x8a0 kernel/kthread.c:464
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
+Thanks,
+Ryan
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> Applies on top of Monday's mm-unstable (b18dec6a6ad3) and passes all mm
+> kselftests.
+> 
+> Changes since v3 [3]
+> ====================
+> 
+>  - Added patchs 1-4 to do better job of ramping up folio order
+>  - In patch 5:
+>    - Confine readahead blocks to vma boundaries (per Kalesh)
+>    - Rename arch_exec_folio_order() to exec_folio_order() (per Matthew)
+>    - exec_folio_order() now returns unsigned int and defaults to order-0
+>      (per Matthew)
+>    - readahead size is honoured (including when disabled)
+> 
+> Changes since v2 [2]
+> ====================
+> 
+>  - Rename arch_wants_exec_folio_order() to arch_exec_folio_order() (per Andrew)
+>  - Fixed some typos (per Andrew)
+> 
+> Changes since v1 [1]
+> ====================
+> 
+>  - Remove "void" from arch_wants_exec_folio_order() macro args list
+> 
+> [1] https://lore.kernel.org/linux-mm/20240111154106.3692206-1-ryan.roberts@arm.com/
+> [2] https://lore.kernel.org/all/20240215154059.2863126-1-ryan.roberts@arm.com/
+> [3] https://lore.kernel.org/linux-mm/20250327160700.1147155-1-ryan.roberts@arm.com/
+> 
+> Thanks,
+> Ryan
+> 
+> Ryan Roberts (5):
+>   mm/readahead: Honour new_order in page_cache_ra_order()
+>   mm/readahead: Terminate async readahead on natural boundary
+>   mm/readahead: Make space in struct file_ra_state
+>   mm/readahead: Store folio order in struct file_ra_state
+>   mm/filemap: Allow arch to request folio size for exec memory
+> 
+>  arch/arm64/include/asm/pgtable.h |  8 +++++
+>  include/linux/fs.h               |  4 ++-
+>  include/linux/pgtable.h          | 11 +++++++
+>  mm/filemap.c                     | 55 ++++++++++++++++++++++++--------
+>  mm/internal.h                    |  3 +-
+>  mm/readahead.c                   | 27 +++++++++-------
+>  6 files changed, 81 insertions(+), 27 deletions(-)
+> 
+> --
+> 2.43.0
+> 
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
