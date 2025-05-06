@@ -1,110 +1,150 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0052219EB6;
-	Tue,  6 May 2025 22:01:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D250E217642;
+	Tue,  6 May 2025 22:02:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746568862; cv=none; b=Lzdla03UFuSsQaO1NEYVXeIw9bc8vLRQ2iHHy/hyLLGXK0zGeFUInDCgUBIzqFoQGsFeo8wAiq+pWIoCv1WnR9OKMRfL0RSPFy0OC3u0jMfuvRFOOK7EI/MWHtW3nFChyya6sY1p9xxkdtxV8MFhBdIP2wXhMZ77oIrVNxTJh6o=
+	t=1746568957; cv=none; b=Pa0IkHlx62n3bT+InhtrTwnQAdiV8mQGC4qX+kGxgXkOdQIGoDJkiFyaJNYCVRTK3+HCkWto4YkXJm3DUvN2uO4+sUoPRPXFy6LZiFaTmRHt4VCwK1RLdK5rNCa2mPKXQ4HtgSTu/U3SBdlgUY5ZHY9PXSGR0U4uCwP/iByj3PM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746568862; c=relaxed/simple;
-	bh=LV0ruNcHRpMJi2vfvfpRfLtobecYu0JIoRgAf4DBbYU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eMZBiQnyPggh1FVPUbKFTM5sdmM4F1IjH3LnCFDVxfzN1dLb6kr8VScyRsD5UoNcXVc3P2QwXrB5CtjmjA4vO5a19zW6Lw+D05CP/AvA7crut45XoexdAZQcPonT5mFFmxDTIHSK/F6k143z35XDwUMiKnX6TejpMCV0iqCrQUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OkkVivCL; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746568957; c=relaxed/simple;
+	bh=6f2XaoEPQjuDD6adSGksKK7wmca+6Fxd/tpXeq5wd1I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=CrFQRATCcJSR3RBgTwq/uEAXNnx+IxVTq6GlY1Va9KoOiLCRQAgmTz8qf9FXbecC9luYPyU0sq/ImTajMyQ8+gJ68rzDhztDrZIH4BrMwWC9C4Hcf6z6BTaA2f9NU0IwG2oaougxSnjRj6GiwRJ5picSsj/Onm/57wlOBQe88Ro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=etknP7v8; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OkkVivCL"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-22e4db05fe8so11072595ad.0;
-        Tue, 06 May 2025 15:01:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746568860; x=1747173660; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+rDcZ92GkQmefn+4rDVGL9lHZUyx4g109kWVrq63bKg=;
-        b=OkkVivCLY0i5AqV+/Cg9TYSPg0MVC2BsseD5YsQ3CGgGNJ7vGKStuOlGW38CWA+Wyw
-         OKu9p2+Htb0YPuconR+hDzXobRmTmUBx+bw7yVbJkOOYV3zDMmOxG6X3wQlrT5DUEJ7A
-         ft1Sz2S5DyyVarAB8enXq8KKH0DW31UHq2uD0R54rBOHl+jXbj4t44v88vT7ZhwgPkS8
-         W4O3Hl4RN/1rgvUtirbozHwdf6VKaBq/lozs2zPSefcq+JGUVzPKazZi17h54vo0W00b
-         CDvQCsyeYn1GJwJwAI9ztcagvC6LAK/Q+tttwWg4pVd6gEGVm0kNMnmxZGysARmIOXwA
-         Yjug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746568860; x=1747173660;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+rDcZ92GkQmefn+4rDVGL9lHZUyx4g109kWVrq63bKg=;
-        b=frU+thAFOHGo8I52jlxUfmSxaPPH8nHibWSd3mdiIVqBkovooJpeqZX5ou+apKED4c
-         3JbicnM2FCyxNFBKbg3zxgPwj2GbBtB+yjBtZFZscNJSYbFyh7lVFy+66N8Mie3HwzwD
-         9+yntWzBzTBk5pDRqlMokaY8bZBg1XPojFJcalCGBLTehUt5HvX3cM2xzM6Le7V/Bdd0
-         3cBTAIUcqjS0k6MQZb07Hzx+Vn9ZLvCvKnj9wWDPy+IaBqIiuAT/C1sD7WZEp7j2W3zF
-         edsLd6pKwZ7O+YDfCtdEiXxyXyiK/DavW1mMhrD+d0jifprO0iwvimB7aBV3zujXU9IT
-         Tl2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVC2bhpn3waLTC1pWR6QOsbhcG/LZqKR9S4m/mmqmJJaNIFkNDPltLG8Gjoy0k8L9FuSicrEtrIGWqLje0=@vger.kernel.org, AJvYcCVmfomg1w2j4Lt7fkirhu8pXrW0ck+VF/xaSZO/OmCgEv9d6fpXz5B6k0LOMb1ieTovUmzg7q4/Jcc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCzZUC9q4pPHCOu54vtmmZBKkoNjzt2tyYly9kDO3xouC6r/BG
-	ee9tJyueEUVCbdyY5GILlVqqj6FZYQDFn2bvrqIqf62t97cXHrjU
-X-Gm-Gg: ASbGncu5bZ8cQLo2Rg6cHv0mzY0ANXbU3trzKuHidT7BcC1MeGmsPwoz09FEKwsqYhg
-	FZRSC11Ki07l8tSyr9EloDo2GQ1oNWAYZwhefM5mWa0bZV1Abz4vnl6oz/jb+u04bxL5E3JbeyG
-	Y9twMk+9uYMlLk4mNj883QpR6UH9wwKSYcAF1FD7M9FWqzL7jZamZ9DB48wW4xvZSIlxTwBqEUO
-	f3y4GcjLMTjhYEGWxsYk+ynTereh2E5ZC7A7ohywdQNovlAjDvC4LY26Jz1SnfJG0IoroUb1HR2
-	1A/Ua2Z2mgoFYgxQ3kAxBPiNcLT0H8AgJznjxDlK4jv4NB3sNXpZsFuXxdHUvyt3iy8BJ1RP5Mb
-	goNspzoCeGbkuPw3Abxwcnszi0vfNWv0/lxk=
-X-Google-Smtp-Source: AGHT+IENa9/kGarw9mxc/t5RKacJDRPAwdfKQlLEIUah+OKX/huZhyAfxQFY94dTpj+9W/i6cXNtxw==
-X-Received: by 2002:a17:902:e743:b0:21f:61a9:be7d with SMTP id d9443c01a7336-22e5edfa34bmr10893105ad.49.1746568859875;
-        Tue, 06 May 2025 15:00:59 -0700 (PDT)
-Received: from server-kernel.moonheelee.internal (d173-180-147-14.bchsia.telus.net. [173.180.147.14])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e1521fb3esm78746415ad.121.2025.05.06.15.00.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 15:00:59 -0700 (PDT)
-From: Moon Hee Lee <moonhee.lee.ca@gmail.com>
-To: lukasz.luba@arm.com,
-	rafael@kernel.org
-Cc: len.brown@intel.com,
-	pavel@kernel.org,
-	linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	skhan@linuxfoundation.org,
-	linux-kernel-mentees@lists.linux.dev,
-	Moon Hee Lee <moonhee.lee.ca@gmail.com>
-Subject: [PATCH v2] docs: fix typo in energy-model.rst
-Date: Tue,  6 May 2025 15:00:57 -0700
-Message-ID: <20250506220057.5589-1-moonhee.lee.ca@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="etknP7v8"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 546AdQMM015737;
+	Tue, 6 May 2025 22:02:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	S4OvY+jEnTpuGhaZupsI0euhEx/0eYlZ2z4uuDEHxpE=; b=etknP7v850ieAviU
+	1orsEWvTfzYqCkII4pGWAXlu9QvxMdUqvCxM8Pq0Sx0jeyoaXPnU8s7FlZcA258B
+	ktLInRGxqysfxfKbfgCPC6CB2BD0LbTqxOIQ3Zevz19ejhnCZXu7snANznHrFert
+	JMTYVloULg7BUkQJDuSnp+BpmLzY9EmLsPUbcATokTOSy3jDDNqD4FQEJkbY1Ca1
+	5tx5YU8F1Zr4n18Mufnnj+lh/NLylt6cQTpA5cKe8JbzUHGecJ+qT2eNt2vkuoJX
+	1E/+ZQcj/uam4Lgqy+oAz5MLAm7QQ3BZW6987LnibIqkKLt8r2VHKY0DPWtLv6Cl
+	w3yosw==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46fguuht8g-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 06 May 2025 22:02:25 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 546M2ORm018435
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 6 May 2025 22:02:24 GMT
+Received: from [10.134.71.99] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 6 May 2025
+ 15:02:24 -0700
+Message-ID: <3122e357-6d27-4b5e-97d3-365dccd91367@quicinc.com>
+Date: Tue, 6 May 2025 15:02:23 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/msm/dpu: remove DPU_CTL_SPLIT_DISPLAY from SAR2130P
+ CTL blocks
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+        Rob Clark
+	<robdclark@gmail.com>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        "Dmitry
+ Baryshkov" <lumag@kernel.org>, Sean Paul <sean@poorly.run>,
+        Marijn Suijten
+	<marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, "Simona
+ Vetter" <simona@ffwll.ch>
+CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+References: <20250506-dpu-sar2130p-no-split-display-v1-1-b619c0fddea5@oss.qualcomm.com>
+Content-Language: en-US
+From: Jessica Zhang <quic_jesszhan@quicinc.com>
+In-Reply-To: <20250506-dpu-sar2130p-no-split-display-v1-1-b619c0fddea5@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=UJPdHDfy c=1 sm=1 tr=0 ts=681a86f1 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8
+ a=EUspDBNiAAAA:8 a=COk6AnOGAAAA:8 a=3CHTtLT0FruqgAMyr9AA:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: l5Shj5WPXuseW8ES2pZ9aIEklZvZvgUZ
+X-Proofpoint-GUID: l5Shj5WPXuseW8ES2pZ9aIEklZvZvgUZ
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA2MDIwOCBTYWx0ZWRfXygGfxX4djkF2
+ QZ8zCIhwEugDmSOT5mMszhvaPahR+i7Fi6EQ1LRC+qYw0BH5Lr21N1tOLhE01MZlKSOBGU7m0g5
+ 3ED4CWMCbbKZODkcNL6A2X/JIRyWFumOzdrJBo2kSO5Zs8Y1ViO6vCvnti8sPy5neKAqfbc+onX
+ bioXyNmXqiK0/VKuUPhHlAEiKOV8JL/QdQFBuueaRk3DDicIo1Y1V43YgwZS+jli70BaseYRZ9u
+ z47aWp57Yf2jVzbNHkwYJUc57lqiwoS4UXBJeYdtSIA1mYYOxU4yaLor/bHGKw+s/MAwvJwUlJ3
+ zdH+/CtA2r7jD1uwvcy4hlTTQUS4z7IxlI1YTCaBF1JKk3b2947/Pqcby6OyKWsw2L86bPW+zF7
+ r0EYdxAcwo5NvrmBDUPaQjbqu0aSBa4/6Gf9eIAXTRqVDFAZcFrghJ1sXG6gBu73LT0AGHMq
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-06_08,2025-05-06_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 adultscore=0 clxscore=1015 phishscore=0 spamscore=0
+ impostorscore=0 mlxlogscore=999 mlxscore=0 lowpriorityscore=0 bulkscore=0
+ malwarescore=0 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2504070000 definitions=main-2505060208
 
-Fixes a grammar issue ("than" -> "then") and changes "re-use" to
-"reuse" for consistency with modern spelling.
 
-Changes since v1:
-- Limited scope to .rst files excluding translations, using:
-  find Documentation/ \
-    -path Documentation/translations -prune -o \
-    -name '*.rst' -print | xargs codespell
 
-Signed-off-by: Moon Hee Lee <moonhee.lee.ca@gmail.com>
----
- Documentation/power/energy-model.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 5/6/2025 5:53 AM, Dmitry Baryshkov wrote:
+> From: Dmitry Baryshkov <lumag@kernel.org>
+> 
+> Follow the changes in the commit a2649952f66e ("drm/msm/dpu: remove
+> DPU_CTL_SPLIT_DISPLAY from CTL blocks on DPU >= 5.0") and remove
+> DPU_CTL_SPLIT_DISPLAY from the CTL blocks on the SAR2130P platform.
+> Single CTL is used for all interfaces used by a single path
+> 
+> Fixes: 178575173472 ("drm/msm/dpu: add catalog entry for SAR2130P")
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
-diff --git a/Documentation/power/energy-model.rst b/Documentation/power/energy-model.rst
-index ada4938c37e5..490ddd483f46 100644
---- a/Documentation/power/energy-model.rst
-+++ b/Documentation/power/energy-model.rst
-@@ -230,7 +230,7 @@ Drivers must provide a pointer to the allocated and initialized new EM
- and will be visible to other sub-systems in the kernel (thermal, powercap).
- The main design goal for this API is to be fast and avoid extra calculations
- or memory allocations at runtime. When pre-computed EMs are available in the
--device driver, than it should be possible to simply re-use them with low
-+device driver, then it should be possible to simply reuse them with low
- performance overhead.
- 
- In order to free the EM, provided earlier by the driver (e.g. when the module
--- 
-2.43.0
+Reviewed-by: Jessica Zhang <quic_jesszhan@quicinc.com>
+
+> ---
+>   drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_9_1_sar2130p.h | 5 ++---
+>   1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_9_1_sar2130p.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_9_1_sar2130p.h
+> index 22dd16c6e210e9520ecb7a851bee402032fa1ee2..5667d055fbd1d8125c3231302daa3e05de5944c9 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_9_1_sar2130p.h
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_9_1_sar2130p.h
+> @@ -27,17 +27,16 @@ static const struct dpu_mdp_cfg sar2130p_mdp = {
+>   	},
+>   };
+>   
+> -/* FIXME: get rid of DPU_CTL_SPLIT_DISPLAY in favour of proper ACTIVE_CTL support */
+>   static const struct dpu_ctl_cfg sar2130p_ctl[] = {
+>   	{
+>   		.name = "ctl_0", .id = CTL_0,
+>   		.base = 0x15000, .len = 0x290,
+> -		.features = CTL_SM8550_MASK | BIT(DPU_CTL_SPLIT_DISPLAY),
+> +		.features = CTL_SM8550_MASK,
+>   		.intr_start = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR2, 9),
+>   	}, {
+>   		.name = "ctl_1", .id = CTL_1,
+>   		.base = 0x16000, .len = 0x290,
+> -		.features = CTL_SM8550_MASK | BIT(DPU_CTL_SPLIT_DISPLAY),
+> +		.features = CTL_SM8550_MASK,
+>   		.intr_start = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR2, 10),
+>   	}, {
+>   		.name = "ctl_2", .id = CTL_2,
+> 
+> ---
+> base-commit: 0a00723f4c2d0b273edd0737f236f103164a08eb
+> change-id: 20250506-dpu-sar2130p-no-split-display-442eb0b85165
+> 
+> Best regards,
 
