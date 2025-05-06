@@ -1,74 +1,85 @@
-Received: from mail-4317.protonmail.ch (mail-4317.protonmail.ch [185.70.43.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47BA71F4717;
-	Tue,  6 May 2025 19:44:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15F68DDC3
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 19:45:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746560674; cv=none; b=uhejL9g+Np9J0d8w8Nm82ce/aRmNjyJ5y0z53VjyUncjBxJy8wckyJsw3N+/kT0tqbg4GcUI+mcEl7cdssv35ywCBe9ibavr0UJrV52iCqeiCE8JoG8fksZ41PLWHPM2RGhDYTgECsxK4Gvux+VbHrNJ2shOV5nhBvGnx1WeWVQ=
+	t=1746560717; cv=none; b=U7W/nJiMob0ZrjeoipJ4Pm+0aR7kxkx1/utX3egxrdfQ+Wq5KeU1MEg5XwdsYM1c1CUhcC+eQDpDY5VkImDxu27BjRQc0/QNwxaGTeWLkQSlsOjXhziaMsnil+f3vi1Krjqfynp2aJH/jNeDZAV4PN37emBy0le+EmTyZzFaEHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746560674; c=relaxed/simple;
-	bh=1fY4vMNH/YfAWs2Fy6Clb6aZ7y/rTqWRxq+qk7V/hR8=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OA6z9a5tDSmT5y54T0Aeu4/PoObVHtW3qzhVLnaUGz0aPPsGePKLHTUruU6zEQgQ8Ez0jTnkyKDnkDsnpSBfOAwl3/QCq7TlgspY8JMF5l+9tYG4B5IEyaaOsXTDzCiRxWpNa+XChgmpUtxfQ7N4Qpioex47GQFyRuOpR86SahI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=joelselvaraj.com; spf=pass smtp.mailfrom=joelselvaraj.com; dkim=pass (2048-bit key) header.d=joelselvaraj.com header.i=@joelselvaraj.com header.b=Gn7PHoV2; arc=none smtp.client-ip=185.70.43.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=joelselvaraj.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=joelselvaraj.com
+	s=arc-20240116; t=1746560717; c=relaxed/simple;
+	bh=fA6baFrBMTZPoGqIiJ7GW9c6V8LDlSpjpVUs3FFWZkA=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=ilnqDgydUUx4fGzYYcpD2Wev7/yU815fO+dQ9or28Acu35sySdd42PMbgvD72CW07h7KMR2VoliZRQI1rnZUb8HOd54pSqwXVcN0oCM4QEvQIDWOcX8uEFrWvezrTggvCthxJCGfQT8NZXAfpNTsUpIlAG/orAkG5bnv2ZGmCoc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gHgw+6Tb; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=joelselvaraj.com header.i=@joelselvaraj.com header.b="Gn7PHoV2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=joelselvaraj.com;
-	s=protonmail2; t=1746560663; x=1746819863;
-	bh=1fY4vMNH/YfAWs2Fy6Clb6aZ7y/rTqWRxq+qk7V/hR8=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=Gn7PHoV24ojQcFFVKV6/3lEmdFz8dtVZRFo8yP+C/qZrp+a1Hdmq/99zrYgyMSUw1
-	 No/XsdUoVVKX2t4/fPZW8cIDUZS+h17eTVWrfEI3lGH3nsOARoajdFLfkJ3n0HTSxO
-	 KeW4xvBiAhjVS1t5AQGWToYqR6/wZxnLRJ8RiXTEoZOc6+AEQCXVgHyl9RNHs7dDTn
-	 pqChPGPsow81PVJjxnh/5WOqqN9W/zdd+sLH1tG8pdMNhkm76qDsrvSZeMUi/U1iGK
-	 qGYMhE85zr/f2Y3c8F5EOQVN8mbGEk0Nbw/ZUXMavb6zvCNQ0gXfo0m4wSofoVt8of
-	 Q6hicAGf7Xj0Q==
-Date: Tue, 06 May 2025 19:44:18 +0000
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-From: Joel Selvaraj <foss@joelselvaraj.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH RESEND v4 1/4] dt-bindings: input: touchscreen: edt-ft5x06: use unevaluatedProperties
-Message-ID: <b9da8309-d34a-4610-999d-509062aad31e@joelselvaraj.com>
-In-Reply-To: <p7pyyb6orbqpdk46rs55simotv44i563j6urvrlj4sb7yzqei6@6ezdhwcwpklx>
-References: <20250506-pocof1-touchscreen-support-v4-0-bfb53da52945@joelselvaraj.com> <20250506-pocof1-touchscreen-support-v4-1-bfb53da52945@joelselvaraj.com> <p7pyyb6orbqpdk46rs55simotv44i563j6urvrlj4sb7yzqei6@6ezdhwcwpklx>
-Feedback-ID: 113812696:user:proton
-X-Pm-Message-ID: 93aee6d45e7ca36d2b8859ea9c3b8b4d30a77d3d
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gHgw+6Tb"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-22e50d4f49bso9227485ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 12:45:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746560715; x=1747165515; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Nbit0ITm/pQP3NVf792bDV8mZNspv5mb/mti4+w+eCo=;
+        b=gHgw+6Tbi4onJw6RFC+exOn31VEOpTMUcGk7gYftiFiapBfNIF3snUKXgbhxJ0dE3P
+         WgF/kGpzdZVwXvnQutlYxv4OTLA7tmINS8p9mbbExpMN3jSfCmuoYJ6OUoGv6iDSFiNw
+         NFDOvuQIApm6EDOgjAMPhC8t7nXF2RRil8ynkHPrb4EUxCN1d7wC/xTjmObwI74gOJGe
+         ukitBNxY4eIZHD2vMS84Xc7/6EnQO3HvLHLY5z1XIlYDpStwor3sqFOxoe2DbtRa0676
+         oeh3TWeSY8XrjnvR1/aM9B2R0MX8C7kPL3E2q6HVr29eKYdppJSGEpLODkNn8tdm9R5/
+         7M8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746560715; x=1747165515;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Nbit0ITm/pQP3NVf792bDV8mZNspv5mb/mti4+w+eCo=;
+        b=T+9VfhskggPtRcsFRAMIP6aSi/qyDgHuAUPcnhlnlzisE+sSazxpjuQ2ee3/2Iyc7S
+         IegsJxpoCyGXswffH8P53DD3dWwORPYJ8GuKtY8mf/+vJGu+lt1teH/sMOvWBmDNfaU6
+         EVECP41a1sLiuEtWKF0EdDpfexpvpdTkdzhqTaHpZ2ABpFTM3MJ1L0bv0thisqmtp6Y9
+         v7yJPxltpK/MQ5c6OQBtMg0KXHewqp9TxeYj7aWyIxk+1u1e+qnPc1y5G+sApGOxk/4v
+         bN97oeEcSLYNb8iUrNo65XXd+PAWM4+fMSaYbKcI1yxqgVMRw9BfS6ZeEr+Gkv89T2Aj
+         Fspw==
+X-Forwarded-Encrypted: i=1; AJvYcCVPNHJ82O49ups0dnYleOTX1cMAR7UHDWR/mEtciEh1PBAT5ehsqWSNytqUM3/bWijMFrEaYCJut2PzJw0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGWjh04UhDkK9IEMARR+4L3kwfEZk2f64EIy/wTfh+tkmJvW2l
+	pnmMJPI/8RrnnfP7r5EsphpS/hDMbAufXqvI72P5ffTKlZ/qoOD/i0fNaI35CnRMKwv2ezFFPV4
+	qfQ==
+X-Google-Smtp-Source: AGHT+IFqRJC+/nE+KITlgWvBy1Ybx1q2CpPmR4WfkU+G+40vwLU3dW8GZ+n+QI5InJgQduz6JwxzACkmxAw=
+X-Received: from plbmq4.prod.google.com ([2002:a17:902:fd44:b0:22c:3374:e338])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:d54f:b0:223:635d:3e38
+ with SMTP id d9443c01a7336-22e5ea6ba5amr6666535ad.15.1746560715262; Tue, 06
+ May 2025 12:45:15 -0700 (PDT)
+Date: Tue, 6 May 2025 12:45:13 -0700
+In-Reply-To: <827cc30b-35e0-4a63-a993-484d4616091d@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+References: <20250324173121.1275209-1-mizhang@google.com> <827cc30b-35e0-4a63-a993-484d4616091d@linux.intel.com>
+Message-ID: <aBpmycjTn4Xo4Hc4@google.com>
+Subject: Re: [PATCH v4 00/38] Mediated vPMU 4.0 for x86
+From: Sean Christopherson <seanjc@google.com>
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Cc: Mingwei Zhang <mizhang@google.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com, 
+	Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	Yongwei Ma <yongwei.ma@intel.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
+	Jim Mattson <jmattson@google.com>, Sandipan Das <sandipan.das@amd.com>, 
+	Zide Chen <zide.chen@intel.com>, Eranian Stephane <eranian@google.com>, 
+	Shukla Manali <Manali.Shukla@amd.com>, Nikunj Dadhania <nikunj.dadhania@amd.com>
+Content-Type: text/plain; charset="us-ascii"
 
+On Tue, May 06, 2025, Dapeng Mi wrote:
+> Hi Sean,
+> 
+> Not sure if you have bandwidth to review this mediated vPMU v4 patchset?
 
-On 5/6/25 14:24, Dmitry Torokhov wrote:
-> On Tue, May 06, 2025 at 01:18:38PM -0500, Joel Selvaraj via B4 Relay wrot=
-e:
->> From: Joel Selvaraj <foss@joelselvaraj.com>
->>
->> In Xiaomi Poco F1 (qcom/sdm845-xiaomi-beryllium-ebbg.dts), the FocalTech
->> FT8719 touchscreen is integrally connected to the display panel
->> (EBBG FT8719) and thus should be power sequenced together with display
->> panel using the panel property. Since the edt-ft5x06 touchscreen binding
->> uses almost all the properties present in touchscreen.yaml, let's remove
->> additionalProperties: false and use unevaluatedProperties to include all
->> the properties, including the needed panel property.
->>
->> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->> Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
->> Signed-off-by: Joel Selvaraj <foss@joelselvaraj.com>
->> ---
->=20
-> Applied to the input tree now, sorry about the delay.
-
-Awesome. Thanks!
-
-Joel
-
+I'm getting there.  I wanted to get through all the stuff I thought would likely
+be ready for 6.16 as-is before moving onto the larger series.
