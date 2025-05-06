@@ -1,258 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0449027BF8D;
-	Tue,  6 May 2025 14:01:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B219248881
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 14:02:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746540089; cv=none; b=iRZ5Ro4fG3hRgAMN0nLIfkOeB0pkMWtAqQr5sMyxXLy/u2c4dZsmx2G2rorrJsFAzJZdxPWqWFCyp21cfHFSbq5OkgAtEEwzf/DR4EYlQMBnc0xYFFXQ1cCsW5Cr1KgFPr11Aj6BhUDGbnNVkNW11CZGFxcOtqphwlhJc+4qxU4=
+	t=1746540128; cv=none; b=GOVruZ+tcmrmQmWSqpqg8tE96rJLlmgZu/w2l2xyYI1ZbuVTi0OCtm99bal8Fi7D21dY5Wk0BQNI3ZSHyqivszrRt9CNSMa4iUaOOyl8G/xVHoVptJ8Cokd6sFNTSlbumfru+7EvVcgCdsFtcFSrNM14+zH+GtYjL9f9TJuLy6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746540089; c=relaxed/simple;
-	bh=Tyk81MBG5nXw08NMTkKPJq1sku3qX3311I7l2V8JHwo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=N9lwNZmYgtqbH9lcjTjuA3XYn1SZIRymc9DB++hP5opGKSSDx6j0G3g5ejV6D334iLGvzyetrvUiOWE5auDMCpFEGEg4o2g74vj0qhrdNdWVeuUI8W26kula9cA0O/OUmT1LwV/gO+Ymn5TdN43tGhPdfQ1pskcN++mvBLkkNvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N9jTlZin; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746540128; c=relaxed/simple;
+	bh=elWDGJ+LtHAh+h9iroKMz3JrCxWSflZYm2pNtHBZfMQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r0irxlVntbZTSdMFUGxuLjHfEfxykqIAHO86l8bfsnInU6w4Oi6tR3ssTN8wud5CTsmC+A9DHDHBJK8sNBBEb3QJ82XPHn9x05cTbNVlsAcVOFvuApagX4XkU8Rsbflx1UKkqtuYOM5Bi7qssmiXxu1C7/5hLIyDhcHd1C11/IM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=a7ulxzFZ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N9jTlZin"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FE2FC4CEEF;
-	Tue,  6 May 2025 14:01:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746540088;
-	bh=Tyk81MBG5nXw08NMTkKPJq1sku3qX3311I7l2V8JHwo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=N9jTlZinzABgI7zIeJtl2ZfRWqZQZKPGEd47Dt3wxLDyUIiBeimMQKi0tLQHTnd7f
-	 m7IfVyJFOn1Bod1jP2qb5wtRKTu8+B2SvEdauzd0ZM6AHkQkpf23b9/g0wyRyHckPp
-	 fJ//4cZaVWYaGhxAf8GrObXMZhKAjbKbk9Ji0WclmDTBQ3rjrT3/0H//hLSpTVqZr0
-	 EWWwBQnuNysJTs1rONnLvUeqcFXs/Ay0RaCVIoTnRyeUOqPm84nYf8/tNXROlzQ9CQ
-	 OiHq1KMQASjcudGRfwfmPDTBc1EaBm0wrd1uqnlRY6mHkRiwiWuAax3QLqdGVtp+ae
-	 YhxkB/Kfrb9Sg==
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-73bf1cef6ceso5698071b3a.0;
-        Tue, 06 May 2025 07:01:28 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUQEmU2LX4D8PHxZkh3ULpgeHecUvLSVzlmRGXs6noPLtSQNX22aixjONjNTyhE6scKc3LjGssObp2J@vger.kernel.org, AJvYcCUayqySb/eUiIqAe5uSiaknAdyPhLc3An0pJRo8ofdmfGuCh7pqJqmHIJUnei7aKnn65/oeBS7lmD66aTTm@vger.kernel.org, AJvYcCVuT+3O+5P/LGq0nHkv8LQLoHxAseLYDM/TwFK/2X2elzLntAq75wsWxb8D0jKVsTGkK0aaSYZSM6Q73Q==@vger.kernel.org, AJvYcCWu097E4HNEiOgntuGUfBgAUjX0wd0kfgPV0PZQ8qn4fGtOnggUUM0rPvfChEpzfGjE7hMBHXsyoZ4RaqF3@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5YX7fOYvTP5lnLsXTgPzhdBjN4Jvv3QrQtQDXFDkRJs1xAkhM
-	/fRIA69W/crjvtCLG7eMKsn1WnwTL2BZyf8X3JMyifHhQG+EpDPxtr9Ov9B3/3LwFWk9TlijJ0d
-	cajMOh7i3wtq1c7x87UPDBBluao0=
-X-Google-Smtp-Source: AGHT+IHBTswvMWMP3OzX/pedYkSRydC7Y4sOhxsrb2FM8KngPatI7fZ/EcSMYhZpCuYriB4OTCTrkwFrhu4eeY/jRjw=
-X-Received: by 2002:a05:6820:8c3:b0:607:a412:10a8 with SMTP id
- 006d021491bc7-6080032bd14mr7431951eaf.7.1746540068829; Tue, 06 May 2025
- 07:01:08 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a7ulxzFZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746540126;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+ye8i/UsqJKvQlKKIVYrfpekN4xF7RuPErJdU2N3amU=;
+	b=a7ulxzFZ5oL4lL/UJ9rLaShh/gWcemSe7BWOSoAOFrLpxtIDC1oVpPa9Lp3hkGVyjrtbft
+	qjanQRm74e0dA7U8Ejw/l5cnTW4jGuaRz559Ass7PfHcq/nN62EOuuqYMNeqSbAonp5tqE
+	gJEvGS16ecD2I4NMqbrJ8xBGrNdEEvo=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-341-gyyi02GDNNa0H7zDO120Cg-1; Tue,
+ 06 May 2025 10:01:57 -0400
+X-MC-Unique: gyyi02GDNNa0H7zDO120Cg-1
+X-Mimecast-MFC-AGG-ID: gyyi02GDNNa0H7zDO120Cg_1746540114
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1640A1801A3E;
+	Tue,  6 May 2025 14:01:54 +0000 (UTC)
+Received: from fedora (unknown [10.44.33.234])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 8BE141800360;
+	Tue,  6 May 2025 14:01:47 +0000 (UTC)
+Received: by fedora (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Tue,  6 May 2025 16:01:53 +0200 (CEST)
+Date: Tue, 6 May 2025 16:01:45 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org, Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	David Laight <David.Laight@aculab.com>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
+	Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH perf/core 03/22] uprobes: Move ref_ctr_offset update out
+ of uprobe_write_opcode
+Message-ID: <aBoWEydkftHO_q1N@redhat.com>
+References: <20250421214423.393661-1-jolsa@kernel.org>
+ <20250421214423.393661-4-jolsa@kernel.org>
+ <20250427141335.GA9350@redhat.com>
+ <aA9dzY-2V3dCpMDq@krava>
+ <aBoKnP4L-k8CweMy@krava>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250503191515.24041-1-ricardo.neri-calderon@linux.intel.com>
- <20250503191515.24041-7-ricardo.neri-calderon@linux.intel.com>
- <CAJZ5v0j262Jorbb5--WY6KedR7CWvdTTYP10ZRZTqXhTNJ1GiA@mail.gmail.com> <20250506055054.GG25533@ranerica-svr.sc.intel.com>
-In-Reply-To: <20250506055054.GG25533@ranerica-svr.sc.intel.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 6 May 2025 16:00:56 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0gC8p1kwVpd8vZkWKoyVaT7Udzj0X5ux03TdJ3=2b8gyg@mail.gmail.com>
-X-Gm-Features: ATxdqUFk154sgB8UHha-Nh4N8NYQp2big9nSiR7cqvhfYr3eqVkRovN_xU-pXZg
-Message-ID: <CAJZ5v0gC8p1kwVpd8vZkWKoyVaT7Udzj0X5ux03TdJ3=2b8gyg@mail.gmail.com>
-Subject: Re: [PATCH v3 06/13] dt-bindings: reserved-memory: Wakeup Mailbox for
- Intel processors
-To: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, x86@kernel.org, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>, 
-	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
-	Dexuan Cui <decui@microsoft.com>, Michael Kelley <mhklinux@outlook.com>, devicetree@vger.kernel.org, 
-	Saurabh Sengar <ssengar@linux.microsoft.com>, Chris Oo <cho@microsoft.com>, 
-	linux-hyperv@vger.kernel.org, 
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, "Ravi V. Shankar" <ravi.v.shankar@intel.com>, 
-	Ricardo Neri <ricardo.neri@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aBoKnP4L-k8CweMy@krava>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Tue, May 6, 2025 at 7:46=E2=80=AFAM Ricardo Neri
-<ricardo.neri-calderon@linux.intel.com> wrote:
+I'm on PTO and traveling until May 15 without my working laptop, can't read
+the code.
+
+Quite possibly I am wrong, but let me try to recall what this code does...
+
+- So. uprobe_register() succeeds and changes ref_ctr from 0 to 1.
+
+- uprobe_unregister() fails but decrements ref_ctr back to zero. Because the
+  "Revert back reference counter if instruction update failed" logic doesn't
+  apply if is_register is true.
+
+  Since uprobe_unregister() fails, this uprobe won't be removed. IIRC, we even
+  have the warning about that.
+
+- another uprobe_register() comes and re-uses the same uprobe. In this case
+  install_breakpoint() will do nothing, ref_ctr won't be updated (right ?)
+
+- uprobe_unregister() is called again and this time it succeeds. In this case
+  ref_ctr is changed from 0 to -1. IIRC, we even have some warning for this
+  case.
+
+No?
+
+Sorry, I can't check my thinking until I return.
+
+Oleg.
+
+On 05/06, Jiri Olsa wrote:
 >
-> On Mon, May 05, 2025 at 03:07:43PM +0200, Rafael J. Wysocki wrote:
-> > On Sat, May 3, 2025 at 9:10=E2=80=AFPM Ricardo Neri
-> > <ricardo.neri-calderon@linux.intel.com> wrote:
+> On Mon, Apr 28, 2025 at 12:51:57PM +0200, Jiri Olsa wrote:
+> > On Sun, Apr 27, 2025 at 04:13:35PM +0200, Oleg Nesterov wrote:
+>
+> SNIP
+>
 > > >
-> > > Add DeviceTree bindings for the wakeup mailbox used on Intel processo=
-rs.
+> > > -------------------------------------------------------------------------------
+> > > OTOH, I think that the current logic is not really correct too,
 > > >
-> > > x86 platforms commonly boot secondary CPUs using an INIT assert, de-a=
-ssert
-> > > followed by Start-Up IPI messages. The wakeup mailbox can be used whe=
-n this
-> > > mechanism unavailable.
+> > > 	/* Revert back reference counter if instruction update failed. */
+> > > 	if (ret < 0 && is_register && ref_ctr_updated)
+> > > 		update_ref_ctr(uprobe, mm, -1);
 > > >
-> > > The wakeup mailbox offers more control to the operating system to boo=
-t
-> > > secondary CPUs than a spin-table. It allows the reuse of same wakeup =
-vector
-> > > for all CPUs while maintaining control over which CPUs to boot and wh=
-en.
-> > > While it is possible to achieve the same level of control using a spi=
-n-
-> > > table, it would require to specify a separate cpu-release-addr for ea=
-ch
-> > > secondary CPU.
-> > >
-> > > Originally-by: Yunhong Jiang <yunhong.jiang@linux.intel.com>
-> > > Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-> > > ---
-> > > Changes since v2:
-> > >  - Implemented the mailbox as a reserved-memory node. Add to it a
-> > >    `compatible` property. (Krzysztof)
-> > >  - Explained the relationship between the mailbox and the `enable-meh=
-od`
-> > >    property of the CPU nodes.
-> > >  - Expanded the documentation of the binding.
-> > >
-> > > Changes since v1:
-> > >  - Added more details to the description of the binding.
-> > >  - Added requirement a new requirement for cpu@N nodes to add an
-> > >    `enable-method`.
-> > > ---
-> > >  .../reserved-memory/intel,wakeup-mailbox.yaml | 87 +++++++++++++++++=
-++
-> > >  1 file changed, 87 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/reserved-memory=
-/intel,wakeup-mailbox.yaml
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/reserved-memory/intel,=
-wakeup-mailbox.yaml b/Documentation/devicetree/bindings/reserved-memory/int=
-el,wakeup-mailbox.yaml
-> > > new file mode 100644
-> > > index 000000000000..d97755b4673d
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/reserved-memory/intel,wakeup-=
-mailbox.yaml
-> > > @@ -0,0 +1,87 @@
-> > > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/reserved-memory/intel,wakeup-mail=
-box.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Wakeup Mailbox for Intel processors
-> > > +
-> > > +description: |
-> > > +  The Wakeup Mailbox provides a mechanism for the operating system t=
-o wake up
-> > > +  secondary CPUs on Intel processors. It is an alternative to the IN=
-IT-!INIT-
-> > > +  SIPI sequence used on most x86 systems.
-> > > +
-> > > +  Firmware must define the enable-method property in the CPU nodes a=
-s
-> > > +  "intel,wakeup-mailbox" to use the mailbox.
-> > > +
-> > > +  Firmware implements the wakeup mailbox as a 4KB-aligned memory reg=
-ion of size
-> > > +  of 4KB. It is memory that the firmware reserves so that each secon=
-dary CPU can
-> > > +  have the operating system send a single message to them. The firmw=
-are is
-> > > +  responsible for putting the secondary CPUs in a state to check the=
- mailbox.
-> > > +
-> > > +  The structure of the mailbox is as follows:
-> > > +
-> > > +  Field           Byte   Byte  Description
-> > > +                 Length Offset
-> > > +  ------------------------------------------------------------------=
-------------
-> > > +  Command          2      0    Command to wake up the secondary CPU:
-> > > +                                        0: Noop
-> > > +                                        1: Wakeup: Jump to the wakeu=
-p_vector
-> > > +                                        2-0xFFFF: Reserved:
-> > > +  Reserved         2      2    Must be 0.
-> > > +  APIC_ID          4      4    APIC ID of the secondary CPU to wake =
-up.
-> > > +  Wakeup_Vector    8      8    The wakeup address for the secondary =
-CPU.
-> > > +  ReservedForOs 2032     16    Reserved for OS use.
-> > > +  ReservedForFW 2048   2048    Reserved for firmware use.
-> > > +  ------------------------------------------------------------------=
-------------
-> > > +
-> > > +  To wake up a secondary CPU, the operating system 1) prepares the w=
-akeup
-> > > +  routine; 2) populates the address of the wakeup routine address in=
-to the
-> > > +  Wakeup_Vector field; 3) populates the APIC_ID field with the APIC =
-ID of the
-> > > +  secondary CPU; 4) writes Wakeup in the Command field. Upon receivi=
-ng the
-> > > +  Wakeup command, the secondary CPU acknowledges the command by writ=
-ing Noop in
-> > > +  the Command field and jumps to the Wakeup_Vector. The operating sy=
-stem can
-> > > +  send the next command only after the Command field is changed to N=
-oop.
-> > > +
-> > > +  The secondary CPU will no longer check the mailbox after waking up=
-. The
-> > > +  secondary CPU must ignore the command if its APIC_ID written in th=
-e mailbox
-> > > +  does not match its own.
-> > > +
-> > > +  When entering the Wakeup_Vector, interrupts must be disabled and 6=
-4-bit
-> > > +  addressing mode must be enabled. Paging mode must be enabled. The =
-virtual
-> > > +  address of the Wakeup_Vector page must be equal to its physical ad=
-dress.
-> > > +  Segment selectors are not used.
+> > > I think that "Revert back reference counter" logic should not depend on
+> > > is_register. Otherwise we can have the unbalanced update_ref_ctr(-1) if
+> > > uprobe_unregister() fails, then another uprobe_register() comes at the
+> > > same address, and after that uprobe_unregister() succeeds.
 > >
-> > This interface is defined in the ACPI specification and all of the
-> > above information is present there.
-> >
-> > Why are you copying it without acknowledging the source of it instead
-> > of just saying where this interface is defined and pointing to its
-> > definition?
+> > sounds good to me
 >
-> There was a discussion in the past about preferring a full description of
-> the mailbox instead of references to ACPI [1]. I am happy to acknowledge
-> the source in the changeset description. I explicitly acknowledge the ACP=
-I
-> specification in the cover letter.
+> actualy after closer look, I don't see how this code could be triggered
+> in the first place.. any hint on how to hit such case? like:
 >
-> [1]. https://lore.kernel.org/all/20240809232928.GB25056@yjiang5-mobl.amr.=
-corp.intel.com/
-
-In which I clearly was not involved.
-
-Acknowledgement in the cover letter is fine, but insufficient.
-
-Also, there is the question regarding what happens when the ASWG
-decides to update this part of the ACPI specification.  Is the DT
-binding going to be updated too?
-
-> >
-> > > +
-> > > +maintainers:
-> > > +  - Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-> > > +
-> > > +allOf:
-> > > +  - $ref: reserved-memory.yaml
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    const: intel,wakeup-mailbox
-> > > +
-> > > +  alignment:
-> > > +    description: The mailbox must be 4KB-aligned.
-> > > +    const: 0x1000
-> > > +
-> > > +required:
-> > > +  - compatible
-> > > +  - alignment
-> >
-> > Why do you need the "alignment" property if the alignment is always the=
- same?
+>   - ref_ctr_offset is updated
 >
-> I want to enforce a 4KB alignment. It can also be inferred from the
-> address of the mailbox.
+>   - we fail somehow
 >
-> Thanks and BR,
-> Ricardo
+>   - "if (ret < 0 && ref_ctr_updated)" is true on the way out
+>
+> thanks,
+> jirka
+>
+
