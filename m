@@ -1,233 +1,199 @@
-Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2082.outbound.protection.outlook.com [40.107.92.82])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51FC2278771
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 10:00:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746525643; cv=none; b=fLJ2t+uj8crw8l4agpNF5gmuJ1gSz16CglgfQI82R0yJbfAi5OILmv/Hy7Hsf8OZVlOdhpPdxFCr94bCdevYKXLiagfSsBfrp//1k9smFtB7J5DmqJVpKpR/eK8MdCkW+oZSmYmRqKLy55z46VXIRn++SxVVHTrKf7EODriDBEI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746525643; c=relaxed/simple;
-	bh=Am0FhtgRvNS+ApiRAvTZvfpAd3o4zu618YZ5hkEZwlQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FRFgR+xf3jZ9G2D6ijNShRky1Ho2NSQ08fskF4ziDtqbpJNnOPSlJ91/r0J79XYOe9d8hZQ3e+tX73I0mTduABeNNQEVPl1CRQrbNSzkIuYQ7PEjVSkvhxIkOerSm0EesDWH51T/CWy1GzAiv2TfWkUY1w2Ppcr6PuOyrKe8UDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=kLzeMBIU; arc=none smtp.client-ip=209.85.161.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A91327817A;
+	Tue,  6 May 2025 10:00:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.82
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746525648; cv=fail; b=YIA4wH3OqjbvgoR+DMizM5aVDx6dEx2f4cpdROcxllO3WWkX0Yu4HvamNwPyzZNJ9m8MSYaxYzHMUQTHqOf7KIGQICtWcYihoc3VpfGmoen3i2r/TjifpSgP5YotwklLtWI3+y74t6R5BKv/kRg6Msl4B+LVCGvSZSDwiN/9IZo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746525648; c=relaxed/simple;
+	bh=sM4xSB97dt+f0bLqUaZtegCB/9t7j5F/Y5+8EgCjM5s=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qHWfnEj2pKZB4xnY+cyGo5qaIfmXGrRjFbLfsUetqvEm29nihsreKvaR7y4pXrGUv4s/Ofl8fNrbum1giv/0BAXokyY/TFHa3TReDZ3gfpfez2iyf/7j+5AKwhxqs9BxlcqskP9sbrirtbERmoMTUQIlXweuIvmoDk1Aw3Wn6wE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Urr4Sppn; arc=fail smtp.client-ip=40.107.92.82
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kLzeMBIU"
-Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-601a99977faso384639eaf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 03:00:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1746525640; x=1747130440; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PgnwHbz1AjhGioq038lpvG95tXZpXvS33HP9z+P5ExU=;
-        b=kLzeMBIUehcm6MCoBYnGaqn08Bu57IGPvpJ1z+WCrxcWoG84d9Yml/TLsNc4bTfjb/
-         aX15rvfCEpZXuUmwlkL2ggsOiH269C5PHGuRRXzA7xNuS5YESBEUcI5IPwveTUDx2f5P
-         FPakH+zzIUGLtjh0dFl878CMj3lUFsmD/DODY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746525640; x=1747130440;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PgnwHbz1AjhGioq038lpvG95tXZpXvS33HP9z+P5ExU=;
-        b=vD9+iWEeQI99ZZfLGMvYzEpoWJjISbnJJSzS7jhDDnd+55NACMScgU4yOudPPNQHV3
-         sbwRjDMQZvGUbFMQoYseD0D72o2g+0aBFaacROMUO9YfDPCcXpCBtDOYEDrIfQiZabPO
-         D+l3dlY+DYGd3NEgm8MBn7tS9tVBe8vue7OtE7vVCx/GzHBdmfVbRb4v0sApyIblfGfY
-         PTDRTRz3bO7373GQphL7EJj9IVnVjbOJNXvk8595p/mb7+xVDxefRGAVhd8qkU0Xpnu2
-         aNi5840NzjrZMfR0SMo8t7DJxJExgT/uPa31dmgV9A2tbqqK6tDEJs2+EB4F8tWz5MOp
-         FmqA==
-X-Forwarded-Encrypted: i=1; AJvYcCX8Eh9Z949BTqDUaN5BqsE2wnysVs36IDeE91lkKvoolpxe8N4QyhUB5Zc8z/GiyCYbmW6Wce3IP2dAtco=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFn9Lqkxj6gPniGO8l62pW4nTqgL2JXNefAosqm4OlrHkpNlfe
-	X4v97febAGpSKecagTRcaK7QuzWcuL0ZmPXDqtoFiBa5iZxbnq6wt0tie4QWJMY0RLc9Zu6NkP2
-	usTrYM/AypUGX25ze7NV6zcD5VDxKBM9T2rBZ
-X-Gm-Gg: ASbGncv8wyrQgX/3Wqj1jm8plPvXbRpd78KoQFjPNEe2dPTdgpO7i5y39znYgdFZZR+
-	3VvQtlnP3CC7TBPzJO2ft5k1DFHBIQkolN0AVFho2ybI4FFDv8ykvlymucb1BWJQfpFBsvtdaPk
-	+awIdwFaNRK0StQ4Gd2dwnnOVbCi30wu92LtSs7HJT7VQUFSXyWw==
-X-Google-Smtp-Source: AGHT+IHhiyIn/3nXmyB0TYKrtQeZw6wh97jFrO+F43EodTx1tAmH3sRUHkuhHaTX6F/Xwh2Vb3HsEaBkMH8rLIg5VLU=
-X-Received: by 2002:a4a:e0d9:0:b0:606:3a5d:c7ad with SMTP id
- 006d021491bc7-607ee513583mr2347984eaf.0.1746525640269; Tue, 06 May 2025
- 03:00:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Urr4Sppn"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=iVsM+pcsVprkGZ8zELfOe+lh2hA2273qdCn9LSNP4IGCZeaT9R+74QprA1QtPxokqxnNum3OcIb/28DpqcWmKkAv4l1EQyER+pvbx15ZZ5ObOXbjT4ziJMVU0hApMDdo/tBrVrPNghxYtCn0RHoJ2UbwLRizu2PSTGZnDOxA7sacEJlMyRRKeAN/iwyBfMs0LmHTlcYP6bO54Vw9vN8YpB1XnHkYbPPuJs7Pi/SW+4sf3gMB+hupADExK3yD8TjYBmowmvfHT+UR0p4ZddmvvI5kN4UExz7bs7hb5gV0E/8SpI12VfcEroVScPTdQuGxNA3F4R9w1h6XdWoO58TgXA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+VYHKvUNL8uRX22sMlZtOrCGeZrj1hZch/Q7DHshbmQ=;
+ b=m4CnRcMaaStO2Mwr4++R1+ANcbL+om0Mcnx+s9dVVo9IfJko5LVYsl/OE5HHDGAVC6KoGTrWNjL7JOCjnsROYdcCluaxsq04LblHNokPYEISUZPxZjUbKnF2hWCoVEIxGzPXDISjOXlL5qrrXdEjsXtCd4OshzkNcEp4FnMKrvENy+43RDIHZE/NIZWpHfsGfGraKKEVlHJxAqdlG4EwGSKqOS3WJB4OVgnKDQryttoUnvUohDcD+aPbFpRZa8KsomFHNj4MJMTL29gON74bMbv2VQUcJvXt0z3gQF6ZBi3U9bQVClX1xoGN+Gi52nYSxJLN9K69RAVGk/lLTiPMgg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+VYHKvUNL8uRX22sMlZtOrCGeZrj1hZch/Q7DHshbmQ=;
+ b=Urr4Sppn6f+92hcgcidqeAuDisnz0Oe0XVgjsQYKP5oNUF9hEmMVc9zqsAtWq5m6fLgqTvcyGxeonKOJsOseVq/uEhiFIybj9l744zStpe3yrjh0PjpwpFpCM6T9ctSsaLNMKfSN5jGNiDVPvujQ6pwP+wSNGjJpnd/a0YWmN7FIuZ0OcTISag/YkZ1g37yE5XwmyWHGufTWZ9KKSDhrrIx5D3DrIsh50B2njSW2vr5HxIkMj2gHMeR844o+YWDj21u3R7e56CvV3KPuX4BtayUeifhvZ53gdmHfTbHnq4Hm2gY368lzV0ZkdujLzKlJHkAEt/klSUK+CX31a9cHaQ==
+Received: from DS7P220CA0063.NAMP220.PROD.OUTLOOK.COM (2603:10b6:8:224::10) by
+ PH7PR12MB5902.namprd12.prod.outlook.com (2603:10b6:510:1d6::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8699.21; Tue, 6 May 2025 10:00:34 +0000
+Received: from DS2PEPF00003440.namprd02.prod.outlook.com
+ (2603:10b6:8:224:cafe::cc) by DS7P220CA0063.outlook.office365.com
+ (2603:10b6:8:224::10) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.20 via Frontend Transport; Tue,
+ 6 May 2025 10:00:33 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ DS2PEPF00003440.mail.protection.outlook.com (10.167.18.43) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8722.18 via Frontend Transport; Tue, 6 May 2025 10:00:33 +0000
+Received: from rnnvmail202.nvidia.com (10.129.68.7) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 6 May 2025
+ 03:00:23 -0700
+Received: from rnnvmail205.nvidia.com (10.129.68.10) by rnnvmail202.nvidia.com
+ (10.129.68.7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Tue, 6 May
+ 2025 03:00:15 -0700
+Received: from BUILDSERVER-IO-L4T.nvidia.com (10.127.8.9) by mail.nvidia.com
+ (10.129.68.10) with Microsoft SMTP Server id 15.2.1544.14 via Frontend
+ Transport; Tue, 6 May 2025 03:00:11 -0700
+From: Akhil R <akhilrajeev@nvidia.com>
+To: <andi.shyti@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+	<onor+dt@kernel.org>, <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+	<ldewangan@nvidia.com>, <digetx@gmail.com>, <p.zabel@pengutronix.de>,
+	<linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: Akhil R <akhilrajeev@nvidia.com>, Robin Murphy <robin.murphy@arm.com>
+Subject: [PATCH 3/4] i2c: tegra: Remove dma_sync_*() calls
+Date: Tue, 6 May 2025 15:29:35 +0530
+Message-ID: <20250506095936.10687-3-akhilrajeev@nvidia.com>
+X-Mailer: git-send-email 2.43.2
+In-Reply-To: <20250506095936.10687-1-akhilrajeev@nvidia.com>
+References: <20250506095936.10687-1-akhilrajeev@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250506095224.176085-1-revest@chromium.org> <20250506095224.176085-5-revest@chromium.org>
-In-Reply-To: <20250506095224.176085-5-revest@chromium.org>
-From: Florent Revest <revest@chromium.org>
-Date: Tue, 6 May 2025 12:00:29 +0200
-X-Gm-Features: ATxdqUEWe64mgnWNWtDc2kPZf5XuKvFECDO9Vew2NFN-uLRlx3rHuyFczgLc0LE
-Message-ID: <CABRcYm+vgD+BNYQ6H7=n6Bdhvq8QXriKx5Ksjhsx+DpYq6064g@mail.gmail.com>
-Subject: Re: [PATCH 4/4] mm: consolidate VM_HIGH_ARCH_* macros into parametric macros
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org
-Cc: catalin.marinas@arm.com, will@kernel.org, tglx@linutronix.de, 
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
-	hpa@zytor.com, akpm@linux-foundation.org, broonie@kernel.org, 
-	thiago.bauermann@linaro.org, jackmanb@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-NVConfidentiality: public
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS2PEPF00003440:EE_|PH7PR12MB5902:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5d0fafb4-6924-4963-c620-08dd8c84d792
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|36860700013|82310400026|376014|7416014|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?aZs+8dpPKXalqi/KLuQW6Crz8fxWBGbTr300HbuTA1BAPZOa9OyncgU8AAEZ?=
+ =?us-ascii?Q?/su0Tc6FrZ1COL+MUY3NHRr2nKaecmPtCWJdXd8zQiN5L99RxzBWRLsQko7V?=
+ =?us-ascii?Q?Zp33A//VKmdT3W3H2n46SYcMCX1mVpaGpI9YY+BZT/81lSC6coZanmwFbl3U?=
+ =?us-ascii?Q?zHMYIVyGWi1UbGTT5XEmMNdNCMdgQ0otc1UeeyoXJ1TwAu0qYSfzQUIDj5Sl?=
+ =?us-ascii?Q?Q6qvNg92hcKhbIbfLv6PXXSpdx2YJRBu1LutKyqGOvMYKfMyjFyeiJVg6YUD?=
+ =?us-ascii?Q?EA43M19MCckxOg/gL1qGw59ekhB6UrSol3rwiPz62/T5mYDMidac2fIbruDT?=
+ =?us-ascii?Q?le2lG8lG0U9XL2AB/7E+aJxekLsfEUqesJZxa7NR3WhrkA73ghYqCIRr6z9l?=
+ =?us-ascii?Q?Io4TZ2DKGudJi1viHbjaaaklrKGxQmmduOkODQ5ZReD4177101Q+fgrOAQso?=
+ =?us-ascii?Q?oJ873cOwqPUO1O+W4m8PtOeEOwGW7QL22s/X1mzuLqx8rKLlg6pwXFItWFuE?=
+ =?us-ascii?Q?37i44DL++ChGqqbwGla5OZl3NI4esiCmgvs3f5xe3HjcVp8FaY6k8ik1Uy/o?=
+ =?us-ascii?Q?ujBbkVSFN9OngDRyU0zzE8g2rWQ+eVsvdN75CdYko3r5HaB3jYCwbPpVXIx/?=
+ =?us-ascii?Q?3WYhDh1PhuJDWz8GF/lDUlSoc2UTjZBBdvarqTPKHNJAkJAdTSRvmT5OwqXp?=
+ =?us-ascii?Q?PrhxsIyzir7JFfxAStcGFFe0mctpJabr4zhlB9HSpaOVKG2dn+y1mE3kqcpd?=
+ =?us-ascii?Q?TwG7PZZhuZxzqWDmS8OmAAcN+PhlaQ8hMw2gRgFwr+LiNjVja3P//xafQQvx?=
+ =?us-ascii?Q?YXl8FTXhvvYWSvkWJoxnYGfyRrcKk33fvkCPWJdHv+mtWk9u0A13RixST8Lk?=
+ =?us-ascii?Q?dxO77O4T+72+LtTibHmcZsyY8EpHZiy4/EUDYBqliLePaZG/4dddEys0SPdL?=
+ =?us-ascii?Q?zxnYBoRwTTS64IdTDUHZYMiU6EkV53CTp4cSg07bxWG3h1QhkOxD1LvCvXIG?=
+ =?us-ascii?Q?L6eNGH/BOtQfiBJG5VIvw1mbhwh+eHeb2kbbp6i7U+2uOqEiMdW9jGT5qzlo?=
+ =?us-ascii?Q?FmHbacmyacwpLpSu3vKjbp9zaaJ8odlfRGBmLaJ2KuaJ/xdbqAFKaCCp9thV?=
+ =?us-ascii?Q?vXengU66l1GtRzaE/fvrM+pWqXiGHTfpMcr8bY7Rlw/PHQ88n8uKH4Dr6EXD?=
+ =?us-ascii?Q?DYU83om2qOQACmkfwuXiU8VbOQMAKSkTY8S9bZOW26q8hQfL2cxCmCcN250G?=
+ =?us-ascii?Q?nXrVeh44aXqLJT1x/290ZNqLdxJrHAByTTo045knbku5ARiTylzm/3hZIVMM?=
+ =?us-ascii?Q?p+pqcmM+RrP5GLOr3gvs/WevNaiw46WSSFvX2nGX7tu6wG6a5HhlnVuYlTEU?=
+ =?us-ascii?Q?mhsCh1VpWL7JbOPIC3PUbQ8s0OXQm1ASwubnzAxeP19t1GirvY5nCUIIM/7E?=
+ =?us-ascii?Q?fJRCd1GONbO6RHqkMEA0vh8598gmnKV4EGm73/I25B4Gxio5LynPo2ZvrtX1?=
+ =?us-ascii?Q?7AR9HlSUL2z6HLHUR7jULVBt7TpiFgPW5zD1tXEArIVCGhXZmMTb3bQV5w?=
+ =?us-ascii?Q?=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(82310400026)(376014)(7416014)(921020);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 10:00:33.5245
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5d0fafb4-6924-4963-c620-08dd8c84d792
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS2PEPF00003440.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5902
 
-On Tue, May 6, 2025 at 11:53=E2=80=AFAM Florent Revest <revest@chromium.org=
-> wrote:
->
-> This reduces code duplication and chances of mistakes.
->
-> Signed-off-by: Florent Revest <revest@chromium.org>
-> ---
->  include/linux/mm.h | 50 ++++++++++++++--------------------------------
->  1 file changed, 15 insertions(+), 35 deletions(-)
->
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index b12549f0a6dce..6750020d5ea37 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -298,42 +298,22 @@ extern unsigned int kobjsize(const void *objp);
->  #define VM_MERGEABLE   0x80000000      /* KSM may merge identical pages =
-*/
->
->  #ifdef CONFIG_64BIT
-> -#define VM_HIGH_ARCH_BIT_0     32      /* bit only usable on 64-bit arch=
-itectures */
-> -#define VM_HIGH_ARCH_BIT_1     33      /* bit only usable on 64-bit arch=
-itectures */
-> -#define VM_HIGH_ARCH_BIT_2     34      /* bit only usable on 64-bit arch=
-itectures */
-> -#define VM_HIGH_ARCH_BIT_3     35      /* bit only usable on 64-bit arch=
-itectures */
-> -#define VM_HIGH_ARCH_BIT_4     36      /* bit only usable on 64-bit arch=
-itectures */
-> -#define VM_HIGH_ARCH_BIT_5     37      /* bit only usable on 64-bit arch=
-itectures */
-> -#define VM_HIGH_ARCH_BIT_6     38      /* bit only usable on 64-bit arch=
-itectures */
-> -#define VM_HIGH_ARCH_BIT_7     39      /* bit only usable on 64-bit arch=
-itectures */
-> -#define VM_HIGH_ARCH_BIT_8     40      /* bit only usable on 64-bit arch=
-itectures */
-> -#define VM_HIGH_ARCH_BIT_9     41      /* bit only usable on 64-bit arch=
-itectures */
-> -#define VM_HIGH_ARCH_BIT_10    42      /* bit only usable on 64-bit arch=
-itectures */
-> -#define VM_HIGH_ARCH_0 BIT(VM_HIGH_ARCH_BIT_0)
-> -#define VM_HIGH_ARCH_1 BIT(VM_HIGH_ARCH_BIT_1)
-> -#define VM_HIGH_ARCH_2 BIT(VM_HIGH_ARCH_BIT_2)
-> -#define VM_HIGH_ARCH_3 BIT(VM_HIGH_ARCH_BIT_3)
-> -#define VM_HIGH_ARCH_4 BIT(VM_HIGH_ARCH_BIT_4)
-> -#define VM_HIGH_ARCH_5 BIT(VM_HIGH_ARCH_BIT_5)
-> -#define VM_HIGH_ARCH_6 BIT(VM_HIGH_ARCH_BIT_6)
-> -#define VM_HIGH_ARCH_7 BIT(VM_HIGH_ARCH_BIT_7)
-> -#define VM_HIGH_ARCH_8 BIT(VM_HIGH_ARCH_BIT_8)
-> -#define VM_HIGH_ARCH_9 BIT(VM_HIGH_ARCH_BIT_9)
-> -#define VM_HIGH_ARCH_10        BIT(VM_HIGH_ARCH_BIT_10)
-> +#define VM_HIGH_ARCH_BIT(i)    (32+i)  /* bit only usable on 64-bit arch=
-itectures */
-> +#define VM_HIGH_ARCH_(i)       BIT(VM_HIGH_ARCH_BIT(i))
+Calling dma_sync_*() on a buffer from dma_alloc_coherent() is pointless.
+The driver should not be doing its own bounce-buffering if the buffer is
+allocated through dma_alloc_coherent()
 
-Argh, and of course I forgot to squash two local fixes before sending
-the series out...
+Suggested-by: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
+---
+ drivers/i2c/busses/i2c-tegra.c | 20 +-------------------
+ 1 file changed, 1 insertion(+), 19 deletions(-)
 
-This should have been VM_HIGH_ARCH() here (the _ at the end is a typo)
+diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+index 49b77dcef184..35057e977688 100644
+--- a/drivers/i2c/busses/i2c-tegra.c
++++ b/drivers/i2c/busses/i2c-tegra.c
+@@ -1290,17 +1290,9 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
+ 
+ 	if (i2c_dev->dma_mode) {
+ 		if (i2c_dev->msg_read) {
+-			dma_sync_single_for_device(i2c_dev->dma_dev,
+-						   i2c_dev->dma_phys,
+-						   xfer_size, DMA_FROM_DEVICE);
+-
+ 			err = tegra_i2c_dma_submit(i2c_dev, xfer_size);
+ 			if (err)
+ 				return err;
+-		} else {
+-			dma_sync_single_for_cpu(i2c_dev->dma_dev,
+-						i2c_dev->dma_phys,
+-						xfer_size, DMA_TO_DEVICE);
+ 		}
+ 	}
+ 
+@@ -1310,11 +1302,6 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
+ 		if (i2c_dev->dma_mode) {
+ 			memcpy(i2c_dev->dma_buf + I2C_PACKET_HEADER_SIZE,
+ 			       msg->buf, i2c_dev->msg_len);
+-
+-			dma_sync_single_for_device(i2c_dev->dma_dev,
+-						   i2c_dev->dma_phys,
+-						   xfer_size, DMA_TO_DEVICE);
+-
+ 			err = tegra_i2c_dma_submit(i2c_dev, xfer_size);
+ 			if (err)
+ 				return err;
+@@ -1355,13 +1342,8 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
+ 			return -ETIMEDOUT;
+ 		}
+ 
+-		if (i2c_dev->msg_read && i2c_dev->msg_err == I2C_ERR_NONE) {
+-			dma_sync_single_for_cpu(i2c_dev->dma_dev,
+-						i2c_dev->dma_phys,
+-						xfer_size, DMA_FROM_DEVICE);
+-
++		if (i2c_dev->msg_read && i2c_dev->msg_err == I2C_ERR_NONE)
+ 			memcpy(i2c_dev->msg_buf, i2c_dev->dma_buf, i2c_dev->msg_len);
+-		}
+ 	}
+ 
+ 	time_left = tegra_i2c_wait_completion(i2c_dev, &i2c_dev->msg_complete,
+-- 
+2.43.2
 
->  #endif /* CONFIG_64BIT */
->
->  #ifdef CONFIG_ARCH_HAS_PKEYS
->  # define VM_PKEY_SHIFT VM_HIGH_ARCH_BIT_0
-
-And this should have been a VM_HIGH_ARCH_BIT(0)
-
-... Anyway, I think it still gets the point across that it could make
-some sense to change those VM_HIGH_ARCH macros.
-
-> -# define VM_PKEY_BIT0  VM_HIGH_ARCH_0
-> -# define VM_PKEY_BIT1  VM_HIGH_ARCH_1
-> -# define VM_PKEY_BIT2  VM_HIGH_ARCH_2
-> +# define VM_PKEY_BIT0  VM_HIGH_ARCH(0)
-> +# define VM_PKEY_BIT1  VM_HIGH_ARCH(1)
-> +# define VM_PKEY_BIT2  VM_HIGH_ARCH(2)
->  #if CONFIG_ARCH_PKEY_BITS > 3
-> -# define VM_PKEY_BIT3  VM_HIGH_ARCH_3
-> +# define VM_PKEY_BIT3  VM_HIGH_ARCH(3)
->  #else
->  # define VM_PKEY_BIT3  0
->  #endif
->  #if CONFIG_ARCH_PKEY_BITS > 4
-> -# define VM_PKEY_BIT4  VM_HIGH_ARCH_4
-> +# define VM_PKEY_BIT4  VM_HIGH_ARCH(4)
->  #else
->  # define VM_PKEY_BIT4  0
->  #endif
-> @@ -349,7 +329,7 @@ extern unsigned int kobjsize(const void *objp);
->   * (x86). See the comments near alloc_shstk() in arch/x86/kernel/shstk.c
->   * for more details on the guard size.
->   */
-> -# define VM_SHADOW_STACK       VM_HIGH_ARCH_5
-> +# define VM_SHADOW_STACK       VM_HIGH_ARCH(5)
->  #endif
->
->  #if defined(CONFIG_ARM64_GCS)
-> @@ -357,7 +337,7 @@ extern unsigned int kobjsize(const void *objp);
->   * arm64's Guarded Control Stack implements similar functionality and
->   * has similar constraints to shadow stacks.
->   */
-> -# define VM_SHADOW_STACK       VM_HIGH_ARCH_6
-> +# define VM_SHADOW_STACK       VM_HIGH_ARCH(6)
->  #endif
->
->  #ifndef VM_SHADOW_STACK
-> @@ -381,8 +361,8 @@ extern unsigned int kobjsize(const void *objp);
->  #endif
->
->  #if defined(CONFIG_ARM64_MTE)
-> -# define VM_MTE                VM_HIGH_ARCH_4  /* Use Tagged memory for =
-access control */
-> -# define VM_MTE_ALLOWED        VM_HIGH_ARCH_5  /* Tagged memory permitte=
-d */
-> +# define VM_MTE                VM_HIGH_ARCH(4) /* Use Tagged memory for =
-access control */
-> +# define VM_MTE_ALLOWED        VM_HIGH_ARCH(5) /* Tagged memory permitte=
-d */
->  #else
->  # define VM_MTE                VM_NONE
->  # define VM_MTE_ALLOWED        VM_NONE
-> @@ -393,7 +373,7 @@ extern unsigned int kobjsize(const void *objp);
->  #endif
->
->  #ifdef CONFIG_HAVE_ARCH_USERFAULTFD_MINOR
-> -# define VM_UFFD_MINOR         VM_HIGH_ARCH_9  /* UFFD minor faults */
-> +# define VM_UFFD_MINOR         VM_HIGH_ARCH(9) /* UFFD minor faults */
->  #else /* !CONFIG_HAVE_ARCH_USERFAULTFD_MINOR */
->  # define VM_UFFD_MINOR         VM_NONE
->  #endif /* CONFIG_HAVE_ARCH_USERFAULTFD_MINOR */
-> @@ -406,13 +386,13 @@ extern unsigned int kobjsize(const void *objp);
->   * if KVM does not lock down the memory type.
->   */
->  #ifdef CONFIG_64BIT
-> -#define VM_ALLOW_ANY_UNCACHED          VM_HIGH_ARCH_7
-> +#define VM_ALLOW_ANY_UNCACHED          VM_HIGH_ARCH(7)
->  #else
->  #define VM_ALLOW_ANY_UNCACHED          VM_NONE
->  #endif
->
->  #ifdef CONFIG_64BIT
-> -#define VM_DROPPABLE           VM_HIGH_ARCH_8
-> +#define VM_DROPPABLE           VM_HIGH_ARCH(8)
->  #elif defined(CONFIG_PPC32)
->  #define VM_DROPPABLE           VM_ARCH_1
->  #else
-> @@ -421,7 +401,7 @@ extern unsigned int kobjsize(const void *objp);
->
->  #ifdef CONFIG_64BIT
->  /* VM is sealed, in vm_flags */
-> -#define VM_SEALED      VM_HIGH_ARCH_10
-> +#define VM_SEALED      VM_HIGH_ARCH(10)
->  #endif
->
->  /* Bits set in the VMA until the stack is in its final location */
-> --
-> 2.49.0.967.g6a0df3ecc3-goog
->
