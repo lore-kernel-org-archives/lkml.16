@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACAE22F6B33;
-	Tue,  6 May 2025 02:22:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98D3630035A;
+	Tue,  6 May 2025 02:23:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746498173; cv=none; b=IPkxMWBprMRvMrH4xH4WEEIiPuCeYtXhpwfiow0D6fMP65K0uleM/9gBGx9JO2uG9j0K+9IvX8jlCHszWgAQbjKmx/wEXZwd1fJZf1lGrcxqi2WzI8y99kjaKPn8uDzfNfSyfGYfose8PKI2RDh4spPrGbsl+tpvxqB92Z8E87Q=
+	t=1746498180; cv=none; b=Osd/80y1OF81U+8QGuX2/UMU7k/zaf6aAM9pqPGUOBSTNdNntMLlzDqCcwAfPi1WUeXwImwa0wyso/DBnLM2BzkYqNYxxrtorSkNjcNuq3uvlpv4ToNdwdII135s/8ENzg4VsmzqAMsdcApTdWRgU+29oIDGP/KHMry2W0A0BQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746498173; c=relaxed/simple;
-	bh=OVS58OrZMlpnGd1U59nNCwXNQd1FABRJ80V4eflMctI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=s7AH9W6jFMh9xbhJtTMDIIoS9OTYkdvd70OLYFT7uxwpCa+mzzt7gJplRqy65mBJ0gtKxRI2oUJXLf8rN0EclWsVQgWK42TakmDQ6gA3GiNYhduFPDdnY0zAxSbQXCdFihoyX3jLNYmluPGvREHk3Jr3KZ5E9U20lNYQ7K6MpXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A6G1mz5x; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746498180; c=relaxed/simple;
+	bh=XwiTbvDuJHg5Jgrcity3qbKdTBBkmo8hT+hmUxszMb8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=P0L0chuvxQ49kNeWTDs2A2TKmUsb+ELTvXsDRkVwsRkMsZu1eZ2QBKSx8FPupJUJufilN/alTw4zgQ/uhRP4iCzvqzTWE3IyJspaWjyXm+jCS1f+vI5DG4pEnDUQj5nQ1RsPlnzdIEGVDyE8kzy8rwNrjwsxLTsKzWNAnSPfL58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=btHqNNW+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A6G1mz5x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECB00C4CEE4;
-	Tue,  6 May 2025 02:22:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="btHqNNW+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2637C4CEE9;
+	Tue,  6 May 2025 02:22:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746498172;
-	bh=OVS58OrZMlpnGd1U59nNCwXNQd1FABRJ80V4eflMctI=;
+	s=k20201202; t=1746498180;
+	bh=XwiTbvDuJHg5Jgrcity3qbKdTBBkmo8hT+hmUxszMb8=;
 	h=From:To:Cc:Subject:Date:From;
-	b=A6G1mz5xnknNExr1GswC1HdJWSkyYAXcnd9U4UGIlnD2RXJ6RKvBSbunoWGBL36TQ
-	 GCVY2qcok7w7fiVxFyI+lkfMDQOM82v5uRmm3Z3Z9oYgQLRq9Atx5H6ySiKhcMmjuK
-	 s28mH4MH1R1Jrd5dXMBIrf40ucMrru+SL1AdhqWnAzEg3P7zQ4Jsib4+KbOT43Safo
-	 hCV4CQX2sxI3mj2IW0PZKxEw/uf5SA7kQE7JOOdiWRoSUF2Eg0TOcXP2YjH8aZ5Me7
-	 RVIjmDJpBvygdbyhcBiv7ZkP+gsiWxqy85/E3FBCJxwbI4RP9iFvgod4ocHOCoyJx7
-	 Ot7wwq6ntKTyw==
+	b=btHqNNW+22KBQ+qbZLQ3VNeBMZxDFeftirgKMYYGUodHNQaibrfNRxTKgYRLzZ7u8
+	 8/idVbWUPk8S3St63L4VMYndKgQaAFuJL3ksvZeek+Q7lcwucrFUSjLCudqxzXJXUE
+	 T4IPM0vfQwGvtsybYUQGhX/edxLzQC4zN/AdTm98h9rm1KL2vQIvIMfAy6LmY/Utnj
+	 5Y9hfQo++C8vQPUi+J6S9MTMhaR4mzqGzPw2tWlC95VboAZ3IfUoA8fiD/fL1aKNEp
+	 59K9/S44Hlp3AcUHWyVNYYAlv7eF7URfUebFSAS2oll58Aww4kX4AZ1QQ6w69TKlvj
+	 gnRgVBnL2fVMA==
 From: "Rob Herring (Arm)" <robh@kernel.org>
 To: Daniel Lezcano <daniel.lezcano@linaro.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Ezequiel Garcia <ezequiel.garcia@imgtec.com>
+	Daniel Tang <dt.tangr@gmail.com>
 Cc: linux-kernel@vger.kernel.org,
 	devicetree@vger.kernel.org
-Subject: [PATCH] dt-bindings: timer: Convert img,pistachio-gptimer to DT schema
-Date: Mon,  5 May 2025 21:22:48 -0500
-Message-ID: <20250506022249.2587839-1-robh@kernel.org>
+Subject: [PATCH] dt-bindings: timer: Convert lsi,zevio-timer to DT schema
+Date: Mon,  5 May 2025 21:22:56 -0500
+Message-ID: <20250506022257.2588136-1-robh@kernel.org>
 X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -45,125 +45,117 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Convert the ImgTec Pistachio Timer binding to DT schema format. It's a
+Convert the TI NSPIRE Timer binding to DT schema format. It's a
 straight-forward conversion.
 
 Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- .../bindings/timer/img,pistachio-gptimer.txt  | 28 --------
- .../bindings/timer/img,pistachio-gptimer.yaml | 69 +++++++++++++++++++
- 2 files changed, 69 insertions(+), 28 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/timer/img,pistachio-gptimer.txt
- create mode 100644 Documentation/devicetree/bindings/timer/img,pistachio-gptimer.yaml
+ .../bindings/timer/lsi,zevio-timer.txt        | 33 -----------
+ .../bindings/timer/lsi,zevio-timer.yaml       | 56 +++++++++++++++++++
+ 2 files changed, 56 insertions(+), 33 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/timer/lsi,zevio-timer.txt
+ create mode 100644 Documentation/devicetree/bindings/timer/lsi,zevio-timer.yaml
 
-diff --git a/Documentation/devicetree/bindings/timer/img,pistachio-gptimer.txt b/Documentation/devicetree/bindings/timer/img,pistachio-gptimer.txt
+diff --git a/Documentation/devicetree/bindings/timer/lsi,zevio-timer.txt b/Documentation/devicetree/bindings/timer/lsi,zevio-timer.txt
 deleted file mode 100644
-index 7afce80bf6a0..000000000000
---- a/Documentation/devicetree/bindings/timer/img,pistachio-gptimer.txt
+index b2d07ad90e9a..000000000000
+--- a/Documentation/devicetree/bindings/timer/lsi,zevio-timer.txt
 +++ /dev/null
-@@ -1,28 +0,0 @@
--* Pistachio general-purpose timer based clocksource
+@@ -1,33 +0,0 @@
+-TI-NSPIRE timer
 -
 -Required properties:
-- - compatible: "img,pistachio-gptimer".
-- - reg: Address range of the timer registers.
-- - interrupts: An interrupt for each of the four timers
-- - clocks: Should contain a clock specifier for each entry in clock-names
-- - clock-names: Should contain the following entries:
--                "sys", interface clock
--                "slow", slow counter clock
--                "fast", fast counter clock
-- - img,cr-periph: Must contain a phandle to the peripheral control
--		  syscon node.
+-
+-- compatible : should be "lsi,zevio-timer".
+-- reg : The physical base address and size of the timer (always first).
+-- clocks: phandle to the source clock.
+-
+-Optional properties:
+-
+-- interrupts : The interrupt number of the first timer.
+-- reg : The interrupt acknowledgement registers
+-	(always after timer base address)
+-
+-If any of the optional properties are not given, the timer is added as a
+-clock-source only.
 -
 -Example:
--	timer: timer@18102000 {
--		compatible = "img,pistachio-gptimer";
--		reg = <0x18102000 0x100>;
--		interrupts = <GIC_SHARED 60 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SHARED 61 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SHARED 62 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SHARED 63 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&clk_periph PERIPH_CLK_COUNTER_FAST>,
--		         <&clk_periph PERIPH_CLK_COUNTER_SLOW>,
--			 <&cr_periph SYS_CLK_TIMER>;
--		clock-names = "fast", "slow", "sys";
--		img,cr-periph = <&cr_periph>;
--	};
-diff --git a/Documentation/devicetree/bindings/timer/img,pistachio-gptimer.yaml b/Documentation/devicetree/bindings/timer/img,pistachio-gptimer.yaml
+-
+-timer {
+-	compatible = "lsi,zevio-timer";
+-	reg = <0x900D0000 0x1000>, <0x900A0020 0x8>;
+-	interrupts = <19>;
+-	clocks = <&timer_clk>;
+-};
+-
+-Example (no clock-events):
+-
+-timer {
+-	compatible = "lsi,zevio-timer";
+-	reg = <0x900D0000 0x1000>;
+-	clocks = <&timer_clk>;
+-};
+diff --git a/Documentation/devicetree/bindings/timer/lsi,zevio-timer.yaml b/Documentation/devicetree/bindings/timer/lsi,zevio-timer.yaml
 new file mode 100644
-index 000000000000..a8654bcf68a9
+index 000000000000..358455d8e7a8
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/img,pistachio-gptimer.yaml
-@@ -0,0 +1,69 @@
++++ b/Documentation/devicetree/bindings/timer/lsi,zevio-timer.yaml
+@@ -0,0 +1,56 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/img,pistachio-gptimer.yaml#
++$id: http://devicetree.org/schemas/timer/lsi,zevio-timer.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Pistachio general-purpose timer
++title: TI-NSPIRE timer
 +
 +maintainers:
-+  - Ezequiel Garcia <ezequiel.garcia@imgtec.com>
++  - Daniel Tang <dt.tangr@gmail.com>
 +
 +properties:
 +  compatible:
-+    const: img,pistachio-gptimer
++    const: lsi,zevio-timer
 +
 +  reg:
-+    maxItems: 1
++    minItems: 1
++    items:
++      - description: Timer registers
++      - description: Interrupt acknowledgement registers (optional)
 +
 +  interrupts:
-+    items:
-+      - description: Timer0 interrupt
-+      - description: Timer1 interrupt
-+      - description: Timer2 interrupt
-+      - description: Timer3 interrupt
++    maxItems: 1
 +
 +  clocks:
-+    items:
-+      - description: Fast counter clock
-+      - description: Slow counter clock
-+      - description: Interface clock
-+
-+  clock-names:
-+    items:
-+      - const: fast
-+      - const: slow
-+      - const: sys
-+
-+  img,cr-periph:
-+    description: Peripheral control syscon phandle
-+    $ref: /schemas/types.yaml#/definitions/phandle
++    maxItems: 1
 +
 +required:
 +  - compatible
 +  - reg
-+  - interrupts
 +  - clocks
-+  - clock-names
-+  - img,cr-periph
++
++allOf:
++  - if:
++      required: [ interrupts ]
++    then:
++      properties:
++        reg:
++          minItems: 2
 +
 +additionalProperties: false
 +
 +examples:
 +  - |
-+    #include <dt-bindings/interrupt-controller/mips-gic.h>
-+    #include <dt-bindings/clock/pistachio-clk.h>
-+
-+    timer@18102000 {
-+        compatible = "img,pistachio-gptimer";
-+        reg = <0x18102000 0x100>;
-+        interrupts = <GIC_SHARED 60 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SHARED 61 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SHARED 62 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SHARED 63 IRQ_TYPE_LEVEL_HIGH>;
-+        clocks = <&clk_periph PERIPH_CLK_COUNTER_FAST>,
-+                 <&clk_periph PERIPH_CLK_COUNTER_SLOW>,
-+                 <&cr_periph SYS_CLK_TIMER>;
-+        clock-names = "fast", "slow", "sys";
-+        img,cr-periph = <&cr_periph>;
++    timer@900d0000 {
++        compatible = "lsi,zevio-timer";
++        reg = <0x900D0000 0x1000>, <0x900A0020 0x8>;
++        interrupts = <19>;
++        clocks = <&timer_clk>;
++    };
++  - |
++    timer@900d0000 {
++        compatible = "lsi,zevio-timer";
++        reg = <0x900D0000 0x1000>;
++        clocks = <&timer_clk>;
 +    };
 -- 
 2.47.2
