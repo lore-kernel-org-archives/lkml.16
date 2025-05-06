@@ -1,160 +1,157 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 261BF28314D
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 14:51:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ABFF283C94;
+	Tue,  6 May 2025 14:51:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746543115; cv=none; b=lmXvOkle3kHs4GYVlph9z62/WUBdws3FBf/ODH4kOCsMp3j2K0248RpdzX2+j7abFxf0iZREiHChwutD7zez6UdJh0T/f2I7mNeu7ECLMSwrYzfBejHLzecwBJohEnqMFSC4batE8xWRkoq3RYZNc/Y62S+2X13J5gGInnLvK6U=
+	t=1746543120; cv=none; b=Q5EPnU2txge/QWPSwRC3QeNcnGb4Dv74ttvRt8KPxToofaNIZc0ewDbDB3oPV1l491/rJdY0dr5b+IEwshLRLfTLW8tJK1U19xccA24pyBzW8pEe3ViOi+xiTfNDg3DXAP/Eweatbli0un84juElxs/Cg7IAy+cor3l8LaCRXrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746543115; c=relaxed/simple;
-	bh=WSoK7ecBDi4GOLHE37CoJwr2TpWXYYyrQG93Kd69dRY=;
+	s=arc-20240116; t=1746543120; c=relaxed/simple;
+	bh=Hb4Vesw8ac4tapJfkHAXpZUAAz58TBZuC75dUD0W7ZU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WrBHnLJLSRcCMwAjJQLYFXnvxCJtfoFtP45gf/cRG9he4CzUFHPeRqL6PKq2AyMXwelftizu0JpSGkBzyHX0X1sUz2hEm2IrLJywKRdgaepB/UWTwam9R3DIHm68E89PBSBWzjrucov48oxvXwEYTIzI/Lr8v4A1rP0SNOjeMvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=Q8My8LNN; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
+	 To:Cc:Content-Type; b=gEdB/CMZdavYQCm/TyOiowR6uPThw6fdnZZ6elIpgb6sethHfEfjXwYcobTS3YuntlbbHCRmO+MPWQsT6gYixV82yg0fqgqDE1slrmVKLr11HsaMdcqYt23JigCRfd8KBwLkrdGWjBkDtHuMF0FG91wB2DiLGFFRYarTGhEfZss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ps6v2G2y; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="Q8My8LNN"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ace333d5f7bso1088075966b.3
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 07:51:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ps6v2G2y"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-3054e2d13a7so414175a91.2;
+        Tue, 06 May 2025 07:51:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1746543111; x=1747147911; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1746543117; x=1747147917; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6pBK5ZlkT5DURixU1Q8MtA26nZyrigiatpI7SyK2Pdg=;
-        b=Q8My8LNNFxzG8e54CV7kgMIyXHWq+oUf1C/7nmEusoJMUH6WWOZ+NQBAZBPVta2nnz
-         +SINc1RiAPHbVD97KJ2ujYWfy9ChiTa3P29IdX792UPuS53pnnXpTY1n1u2DUCwY9/ZD
-         +w0YZ0PWjc6S3RghjuJz4wo6e4gWL2NZ4Y+rz82Z7zmhA1vGK8jQAihEd3AE2LrJPjUp
-         GYZX6Bj+JoQHBhvSmxUBgWtDuKevL2a/PFpaF6nM5tRN3mkhgyIztCdRIOBWJZp6gAec
-         6Y5DXiH4L9EQD2Olv7JPr0mokYKCpCGlteIiHYaMgPNE6nO5GXSMXrA4k+0wslVoVIIB
-         7+Ig==
+        bh=hrvQLl0wy1XN7F1KXa2GtXnCc3OPj79LA4bOD8IjDg4=;
+        b=Ps6v2G2yBtsq4OrlJ3Brw2haaiS0trd8PNe+/3JuFAuBI9gIF7Qq/YKuYLgiJk6dlX
+         6CCNj5dAZa28ltHXaP04wCDVhbCi8CK48LiDTvItsYE8wWyitx1vMsfhWY+VoUeWbK4R
+         TJ80/EHqDcjLdO9Sa5RS3XetL5EBFU0eCHpaM4PK92Uf9Rg6/QkOWR79zO1h0boEJt8H
+         SsD70XH42xCufP5uHX0XGp8J0jVt5B5KJ7vscyhT/LmKe57shELudfXxSIX2gMeYfjWe
+         C76o/NcbopKNEzJO2rY5l1cJPBSESSPaBBtKY6A5+EQSe9BFIGDRaFYqvpZkRVtSGyDw
+         DmCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746543111; x=1747147911;
+        d=1e100.net; s=20230601; t=1746543117; x=1747147917;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6pBK5ZlkT5DURixU1Q8MtA26nZyrigiatpI7SyK2Pdg=;
-        b=qcti4WVtZW9oq7s7mln4X2jNZD4lHLrrNqHGDag7eLNGIIssoks7nL76vy9cdvEXq+
-         kROi8CZPA3nVLQDoYEyC1Hn279iGGNcnH9JxwSDgDnLkgfli12CfxfErgcVH6dMDjv/I
-         5VeKdJUriWIGd/0cjS7lf8KAm277iduz24JIT/vOI7OUXBX+TO21H0K5SLDyrw9hET15
-         8aNhhkzPJ78y2X+GhSRXZNaWqrc9f7p8MsLNi8E1/IIDvLXAueeGVmkluKUDyxLHVHUM
-         PTENvAqDRBDE5YigAwjAYLqTaJ28S+q34K3uCPt18Z9gm1gTIEhoxcDGjMm/xN0wQ/YI
-         0a1g==
-X-Forwarded-Encrypted: i=1; AJvYcCVLxcNTVqOOG3UT487keS56jzMaWfyqn2WHiN64sqyRO5Be2eOP5oDrxUSwFpjxK2R2IJGq87sZ1ldYp1s=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzd4x8LWG1HfdFPvePhdZjzTihE4hB7b/g/y3pRkOIrI4cVrbCU
-	StRFnSZC7bE1EUoNWF8Gcy4AxViowx6bdOTzJrhCgLdElwEWSIGuK2/7XxQrTQJHoYUE01Qzz7y
-	kvnE4xp9JZsyxgFJ7smz8stbwaDEGsE15DIBCWQ==
-X-Gm-Gg: ASbGnct3ajNoFt/aZRvYgCyIDQuq6Me3JX9emP5x5m8a2SJeiG5RjUgeayh0spgVBB0
-	3dmyXd8pEARHZv5Mfbrrspkbp+knGJldDhs58BKySoKNH/mlebaPc8zGl0k+PtxKnq6Gs0Vczaf
-	OExcDHGSK3QQK4EXpu18itxKnOhlKDkMEumiKjkq6r2oNUB4yuup0=
-X-Google-Smtp-Source: AGHT+IEKhz3zPgou4fj/Oz9TLP3o5kqCDQPDF+vahGvR46vxs1Ch3GNqw52chR1OPGqhN1u6zfmZoq9O40DQGTsc9wI=
-X-Received: by 2002:a17:907:7f1f:b0:ace:6e8b:516c with SMTP id
- a640c23a62f3a-ad1a49540d5mr930268466b.20.1746543111280; Tue, 06 May 2025
- 07:51:51 -0700 (PDT)
+        bh=hrvQLl0wy1XN7F1KXa2GtXnCc3OPj79LA4bOD8IjDg4=;
+        b=IJfPKl7OfZkb3fc4mfc9etA+jBKUDK9PDbvbRQ5tyMco8pbKdyJOKA47KUOca1ZmE7
+         UTidOb/kMLJYS/wh5pAcuzkVxnU5QG5d7Uy5HlZw3GiRTnCdmhVfdh9y9HP80SVcWPKm
+         kHTVbICTYnfLHusvHzoi8mDmpEyuCTnWAKz7kkgQ/Myxpd81k6YdyEadAFHgdEAaQpRd
+         sNMZKRMUwpBIQOdoxT5LVZkpMhcEgT9nwptrxD0AAV0kfSQq7Vl8U2TWuJrUx3q0M33h
+         p0fTUGYtKAEfTBQI0b34DZfMeb/k/Bnb220sm15TLhwwEmyqxKdpDV18UPjeWprQOGGB
+         WUsw==
+X-Forwarded-Encrypted: i=1; AJvYcCVXe66hEnNT7BuIKsQ9M35LbCoUZA7t+8OSBKiPNOYIKDd7Sws265xeeVXDKfobmk77Uv4E1Jk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhnKy6b9qVpI+Yaka+DQzrX5xUrzvRuSLfnVLFvaQsAJadB6/K
+	is8UQqGZNifsXXlZ98jgo4kOBSi7wz6wEyp7jbboqgjVez9KQuI0ed04+S/W7kUVRSLsWghAUkc
+	xq78Asr8xyABUKUDIb4mQ+zn/NWo=
+X-Gm-Gg: ASbGncsjqw78wtw5vgIISdF53DfAB+FReDZ51xw6Kac3WE1dLNnA98pSJ+fe/8bYddN
+	zpbDTmzWZ78xWem03YYgIE9iwup6OpOjPpat2+dbtF6oD+CUeqBui9NHbZUzX9VovS7BLmPkIrG
+	ucHroYhhFx65fCmIKNra5NyQ==
+X-Google-Smtp-Source: AGHT+IEXSCTDToZhh1jFM95PCZ0I/E206Rg+MKBboqgunyBsE/pFYw40iBWN2ZEpR0s0+75jhOyYC81tR+CvcVK4+P8=
+X-Received: by 2002:a17:90b:1d8b:b0:2ff:7970:d2bd with SMTP id
+ 98e67ed59e1d1-30a4e6913e8mr9498552a91.5.1746543116650; Tue, 06 May 2025
+ 07:51:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250306082615.174777-1-max.kellermann@ionos.com>
- <20250309151907.GA178120@mail.hallyn.com> <CAKPOu+_vTuZqsBLfRH+kyphiWAtRfWq=nKAcAYu=Wn2JBAkkYg@mail.gmail.com>
- <20250506132158.GA682102@mail.hallyn.com>
-In-Reply-To: <20250506132158.GA682102@mail.hallyn.com>
-From: Max Kellermann <max.kellermann@ionos.com>
-Date: Tue, 6 May 2025 16:51:39 +0200
-X-Gm-Features: ATxdqUG9SxPBVj0h6gtWFf2B5cm0dbLegG2UIzxNlHNZe-zIqreHUL3rOZUOzrg
-Message-ID: <CAKPOu+9JCLVpJ-g_0WwLm5oy=9sq=c9rmoAJD6kNatpMZbbw9w@mail.gmail.com>
-Subject: Re: [PATCH] security/commoncap: don't assume "setid" if all ids are identical
-To: "Serge E. Hallyn" <serge@hallyn.com>
-Cc: Andy Lutomirski <luto@kernel.org>, paul@paul-moore.com, jmorris@namei.org, 
-	kees@kernel.org, morgan@kernel.org, linux-security-module@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+References: <20250505221419.2672473-1-sashal@kernel.org> <20250505221419.2672473-483-sashal@kernel.org>
+In-Reply-To: <20250505221419.2672473-483-sashal@kernel.org>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Tue, 6 May 2025 10:51:44 -0400
+X-Gm-Features: ATxdqUHNIz2XY7_fK65CkP4RU9ZYclbCYI52nxG7JH7RRQaFM7OP72dHJwqOZKo
+Message-ID: <CADnq5_MHZSO6aRTKuZ_NJUiDCDfxkUCGQzg9fRwEhcMo5goQww@mail.gmail.com>
+Subject: Re: [PATCH AUTOSEL 6.14 483/642] drm/amd/display/dc: enable oem i2c
+ support for DCE 12.x
+To: Sasha Levin <sashal@kernel.org>
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
+	Alex Deucher <alexander.deucher@amd.com>, Harry Wentland <harry.wentland@amd.com>, sunpeng.li@amd.com, 
+	christian.koenig@amd.com, airlied@gmail.com, simona@ffwll.ch, 
+	roman.li@amd.com, srinivasan.shanmugam@amd.com, amd-gfx@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 6, 2025 at 3:22=E2=80=AFPM Serge E. Hallyn <serge@hallyn.com> w=
-rote:
-> Just to quibble here: I don't use NO_NEW_PRIVS, but it seems to me quite
-> likely that your claim is wrong here.  The whole SECBIT_KEEP_CAPS etc
-> dance is based on the idea that you understand that once you exec, you
-> lose some of your existing privilege.  Similarly, it seems quite
-> likely to me that people using NO_NEW_PRIVS understand, expect, and
-> count on the fact that their effective ids will be cleared on exec.
+On Mon, May 5, 2025 at 6:34=E2=80=AFPM Sasha Levin <sashal@kernel.org> wrot=
+e:
+>
+> From: Alex Deucher <alexander.deucher@amd.com>
+>
+> [ Upstream commit 2ed83f2cc41e8f7ced1c0610ec2b0821c5522ed5 ]
+>
+> Use the value pulled from the vbios just like newer chips.
+>
+> Reviewed-by: Harry Wentland <harry.wentland@amd.com>
+> Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-One could define NO_NEW_PRIVS that way, but that's not how it is documented=
-.
-Of course, we can't rule out that somewhere, somebody exists who
-relies on the current behavior, and that we must preserve it for ABI
-stability (I think this was your point). If you desire ABI stability,
-then this behavior should really be documented.
+This isn't a bug fix.  This is a new feature and depends on other
+changes to actually utilize.
 
-To me, the current implementation looks weird and buggy (but that's
-just my opinion). The code figures that that it's a set-id exec when
-effective!=3Dreal, which is indeed how set-id execution looks like, but
-still that check is slightly off:
+Alex
 
-1. it's really only set-id when new!=3Dold; checking real!=3Deffective is
-conceptually the wrong angle
-2. there may be other reasons why real!=3Deffective
-
-My patch is an attempt to fix this in an unintrusive way, by not
-rewriting it but adding another check to rule out some special case.
-If I were to rewrite this from scratch, I'd do it differently (only
-compare new!=3Dold), but I don't want to mess too much with security
-code that I'm not very familiar with. I believe the guy who initially
-wrote it made wrong assumptions, but maybe I'm just wrong, I'm not the
-expert here.
-
-> Note also that so far I'm only asking about the intent of the patch.
-
-In a shared webhosting environment, we want to run an Apache (or
-nginx) in each website's container. If the website owner does "chmod
-600", the Apache should not be able to read the file; but PHP
-processes spawned by the Apache should have full access. Therefore, we
-run Apache with a different fsuid; when Apache executes PHP, the fsuid
-is reverted.
-
-But how to spawn Apache with a different fsuid? Not possible directly
-(fsuid is always reverted on exec), but by giving it a different euid
-(and ruid =3D website uid), granting it access to that secondary uid.
-After exec, Apache swaps uids, sets effective=3Dreal=3Dapache_uid, and
-fsuid=3Dwebsite_uid.
-That works fine, until we enable NO_NEW_PRIVS - which is surprising,
-because we indeed don't want any new privs - just keep the existing
-ones.
-The documentation doesn't explain this behavior, and we don't want to
-omit NO_NEW_PRIVS as a workaround.
-
-> Apart from that, I do think the implementation is wrong, because you
-> are impacting non-NO_NEW_PRIVS behavior as well, such as calculation
-> of cap_permitted and the clearing of ambient capabilities.
-
-You are right, it affects all three code blocks that are checking
-"is_setid", but why do you believe it's wrong?
-I can move the new check to the bottom, covering only the
-"secureexec=3D1" line, if that worries you.
-
-What sure is flawed is that my patch description fails to mention the
-other two changes. Sorry for that, I'll amend the description (if/when
-we agree that my patch is ok).
-
-Though I do believe that all 3 changes are correct. Why would you want
-to clear ambient capabilities just because real!=3Deffective? The
-manpage says: "Executing a program that changes UID or GID due to the
-set-user-ID or set-group-ID bits or executing a program that has  any
-file  capabilities set will clear the ambient set."
-
-Documentation and code disagree! Currently, the kernel does not check
-for "changes UID/GID", but whether effective!=3Dreal. These two are
-orthogonal, the kernel is buggy, and my patch makes it a little bit
-more correct (but does not remove the wrong real!=3Deffective check, see
-above).
-
-> And, I'm not sure the has_identical_uids_gids() is quite right, as I'm
-> not sure what the bprm->cred->fsuid and suid make sense, though the
-> process's fsuid and suid of course need to be checked.
-
-Sorry, I don't get that. What do you mean?
+> ---
+>  .../dc/resource/dce120/dce120_resource.c        | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/amd/display/dc/resource/dce120/dce120_resour=
+ce.c b/drivers/gpu/drm/amd/display/dc/resource/dce120/dce120_resource.c
+> index c63c596234333..eb1e158d34361 100644
+> --- a/drivers/gpu/drm/amd/display/dc/resource/dce120/dce120_resource.c
+> +++ b/drivers/gpu/drm/amd/display/dc/resource/dce120/dce120_resource.c
+> @@ -67,6 +67,7 @@
+>  #include "reg_helper.h"
+>
+>  #include "dce100/dce100_resource.h"
+> +#include "link.h"
+>
+>  #ifndef mmDP0_DP_DPHY_INTERNAL_CTRL
+>         #define mmDP0_DP_DPHY_INTERNAL_CTRL             0x210f
+> @@ -659,6 +660,12 @@ static void dce120_resource_destruct(struct dce110_r=
+esource_pool *pool)
+>
+>         if (pool->base.dmcu !=3D NULL)
+>                 dce_dmcu_destroy(&pool->base.dmcu);
+> +
+> +       if (pool->base.oem_device !=3D NULL) {
+> +               struct dc *dc =3D pool->base.oem_device->ctx->dc;
+> +
+> +               dc->link_srv->destroy_ddc_service(&pool->base.oem_device)=
+;
+> +       }
+>  }
+>
+>  static void read_dce_straps(
+> @@ -1054,6 +1061,7 @@ static bool dce120_resource_construct(
+>         struct dc *dc,
+>         struct dce110_resource_pool *pool)
+>  {
+> +       struct ddc_service_init_data ddc_init_data =3D {0};
+>         unsigned int i;
+>         int j;
+>         struct dc_context *ctx =3D dc->ctx;
+> @@ -1257,6 +1265,15 @@ static bool dce120_resource_construct(
+>
+>         bw_calcs_data_update_from_pplib(dc);
+>
+> +       if (dc->ctx->dc_bios->fw_info.oem_i2c_present) {
+> +               ddc_init_data.ctx =3D dc->ctx;
+> +               ddc_init_data.link =3D NULL;
+> +               ddc_init_data.id.id =3D dc->ctx->dc_bios->fw_info.oem_i2c=
+_obj_id;
+> +               ddc_init_data.id.enum_id =3D 0;
+> +               ddc_init_data.id.type =3D OBJECT_TYPE_GENERIC;
+> +               pool->base.oem_device =3D dc->link_srv->create_ddc_servic=
+e(&ddc_init_data);
+> +       }
+> +
+>         return true;
+>
+>  irqs_create_fail:
+> --
+> 2.39.5
+>
