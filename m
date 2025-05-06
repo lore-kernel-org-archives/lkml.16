@@ -1,147 +1,112 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 556D3214221
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 07:54:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1797E222594;
+	Tue,  6 May 2025 07:54:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746518042; cv=none; b=uVRbrEtz925UCBnk6CMFvaRkD8+Qzoei1oXIzQiWMkFrHCoFBC3lQ3/cN3ecu4zLdjCXhm1HN+qa/SslztPW9VUGwJEhIRAqyNs5kTNm+C/3LEYmiE7K9fhSuHLVae4BEkC6WkUKJumMyee6L85X2oGjoi1VGyeR/rzo/45j+lw=
+	t=1746518067; cv=none; b=WUxG1P3USI1DTTov9bo4wJQRMrhNIiJJ4bThaQlkNXvIWE7dVYn9Cx/5vKqVE0RTR/bMRoCPG5va4g5rtOhSfUG7hFuj6KclM/exQQh5ADlRzwXhmvkhRBJRNlJ/QoAHTvdmB+NfE95PPG7OjIJXWRlOlrOR56ch440ZRabFCM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746518042; c=relaxed/simple;
-	bh=2pceY21HXPtPw8/ljmmoL68c5jWxfiDJhxApfHam9Jk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rJFWX7vwiBkHDsvvnENvKd02IvedZo2keBrq7I38peq5h1oB0WpK1QXRFy8Fm7+Ow2v4iny8kOfevxiZhTcK95i5IWVN0/PC2QQ5UK86dwqrTjmaSRIdyKIfge3xrKc9Zh9rIwTt8G6AkK5ClGvWrowFiACk38AJgB9PU1txIdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=bsNCwFWH; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1746518067; c=relaxed/simple;
+	bh=quCNk1faeQKjRAEpgmno53rSVnZoYWSifrHmScTLPzM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=LDdUmO2oKhFGSgSXn3uhkBM+xBdfdgGjh9I+K1b2guBB3TNX/a+g1vd1n+srUbz4uKEDbgbMl33rXuSXW1wNPuPia7aNYvygg09IQhpCp9s58hChS68RNFyq/raLIAITlJF1vvjiO26pav+8M7NPIjfz6hO87EszYMFPUeUr9qU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=jrcdU3ZW; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="bsNCwFWH"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-3105ef2a06cso50792941fa.2
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 00:53:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1746518038; x=1747122838; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=01kJ9UREWk6Z8MO8rJuNtGQkQCdgEUCbi3nLRVMNP0k=;
-        b=bsNCwFWHW1Kjh8amSh7O3HlaJP+SIhe7lY7Tp7giGN55SYUAGxB+gl7IoDmOi02WMT
-         0cfOE2gbIZ4dIgfDaDq6Pg7FwbCndE1kazuwW37W4gWIcJ4Z+D+Mt9QLUWAhjUaCV3GZ
-         auHL452BqaVTR12TiPVqsuKfSqWff5W4G/5xvxitWaDhSZnLMqu62a9s9w1PNLb20kjg
-         /A5VHt/hI1hs14vbcc0L5mJXdwodMITD/7uqcFJFI8eeysDGp4Ins8Cjp4ehWJmeJUbO
-         +V8zeR3zptJIQfm214JhEH5P3OxpSI7sNjlu13uUA3UEXbUILgA2UYh+wwt1n7L0nXHt
-         w10A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746518038; x=1747122838;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=01kJ9UREWk6Z8MO8rJuNtGQkQCdgEUCbi3nLRVMNP0k=;
-        b=DeQI9nbMfPePQCF5M9rh3ernhNx68fmhUhMtGHt9yBtj7rVcjQh9lcIwOUvpwpwR8/
-         4fwv4XLr8vWpx3OalEhwdAX0ymAPwME8fFWrNM5gOU8P9FbqPEvQDQVFvE+x/mbFGFFb
-         uZebP3ZP3/Gt+fvwLqI+sMGRuJzRZycQPbS5CXAkf2wH+cOGlla6gRvSdk11v5FlSOFx
-         zHMLXxc+UFxDEMMwKNh+eoEhYTcmdQGAIGvzum3Vq/3yJBcY0xYf+PzQ6g9ECNWPq5bq
-         MCDcpkr9/VHMFfKK6nQ0BA0866ZQj41L1W17wLnHK2bu29wSew3wKZJDbMHs3v3GsJBv
-         4bgA==
-X-Forwarded-Encrypted: i=1; AJvYcCWKNw0itI9sEYEa1ouDUm746M1VoAizuPtiJDs3UilgyA1Yif+A8YDpPnAjl+hk2C3sl55Mtx0qqAThR5k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWOHjF5heu/ujN3pB+Ikufon94gqIphJcgZgXfU+P5CQBMksmt
-	kWwIdYl8JTOHiowHm2LWl7W2Iwye7G0pSy8Mo/q40K30BO6+QczEECH99t2Q2nI4EMjJWXR6nsZ
-	quNZDxPA6s25JcgCTnOjnsYSJfDFnaNY8mrWQ/1hSfaPZc1Wm
-X-Gm-Gg: ASbGncuYFbC/XJ66D2Hg+vYUF2TSgzuJ3zy9fSdDmMxRU9ubWvc/rH+8d+BuQwMoCa3
-	ppTCndfL6F1m36+WW3kd2IXYuUIcBukDD/iDIgZa8fuEyqUsnD2kbMRxltnr7GQHzgCwGo9VhkH
-	QZ5cQxDsc2DcHe+zd+jHD9LOro5DhDGMtnZ5E9KaxkLo8M9VWFLayN260=
-X-Google-Smtp-Source: AGHT+IHycczXOp0YLcooZNerTLlbSq9H7Wn2zHlB9IvVn/LG+26tFESGOVxKi2vt2XlyGdxVkr6VpNWi09X2wzGONjA=
-X-Received: by 2002:a2e:be25:0:b0:30d:e104:d64b with SMTP id
- 38308e7fff4ca-3266d0f0218mr5543611fa.39.1746518038436; Tue, 06 May 2025
- 00:53:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="jrcdU3ZW"
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5467Ubtt008940;
+	Tue, 6 May 2025 09:54:01 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	hJlHhbxitP8LDlQxS4M+ZJIc/lDJOqTIWiKvF63v4os=; b=jrcdU3ZW0WY601N/
+	HKQm4zkcPSpK/2HhYGNS6P+cZIAspikctNaK8Bupur9LdsWhHKhMT76kU3j7sqnx
+	hhifg05xPGg+Wct8vBY4rRTnrJU7synIS3KWa7HJdIxY5p+UaFfY+JFQrpvWOq5v
+	iwcaEHZ421ioRpLTaJUC5Urvesn7bHUjEFlw8svoorKyPsVr0sA6ozSizAmGkdAN
+	8kdv4vajIOvMvUJDmqSpuFbM8dQFiB4eCwrK7VHHixR/iN/uT/xS1CeotxI22HnH
+	lsv7LHaMIFmcUV984CTzpE9eS9ZEcjdZ9a1GjAZoyatfHzWWMiE48MDpPgyjpkRj
+	YqqhVg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46dbeksw9q-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 06 May 2025 09:54:01 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 36B0740056;
+	Tue,  6 May 2025 09:52:54 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C72BAA7A4B6;
+	Tue,  6 May 2025 09:52:04 +0200 (CEST)
+Received: from localhost (10.48.87.62) by SHFDAG1NODE1.st.com (10.75.129.69)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 6 May
+ 2025 09:52:04 +0200
+From: Patrice Chotard <patrice.chotard@foss.st.com>
+Date: Tue, 6 May 2025 09:52:02 +0200
+Subject: [PATCH v12 3/3] MAINTAINERS: add entry for STM32 OCTO MEMORY
+ MANAGER driver
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250503082834.49413-1-marco.crivellari@suse.com>
- <20250505065121.dlEw6_SC@linutronix.de> <aBiD9C727RSyNtme@tiehlicka>
-In-Reply-To: <aBiD9C727RSyNtme@tiehlicka>
-From: Marco Crivellari <marco.crivellari@suse.com>
-Date: Tue, 6 May 2025 09:53:47 +0200
-X-Gm-Features: ATxdqUFeODjIYzcZXHjLF9gfCe4oZRSuKJTl9U7qtkMsreCjJ2xo2V6T_YnUNXQ
-Message-ID: <CAAofZF5ZJ36vr_8exeMrnLXxD1u6aaTR3kp+oEztKQYe4f0__Q@mail.gmail.com>
-Subject: Re: [PATCH 0/4] Workqueue: rename system workqueue and add WQ_PERCPU
-To: Michal Hocko <mhocko@suse.com>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, linux-kernel@vger.kernel.org, 
-	Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20250506-upstream_ospi_v6-v12-3-e3bb5a0d78fb@foss.st.com>
+References: <20250506-upstream_ospi_v6-v12-0-e3bb5a0d78fb@foss.st.com>
+In-Reply-To: <20250506-upstream_ospi_v6-v12-0-e3bb5a0d78fb@foss.st.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon
+	<will@kernel.org>
+CC: <christophe.kerello@foss.st.com>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Patrice Chotard
+	<patrice.chotard@foss.st.com>
+X-Mailer: b4 0.14.2
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-06_03,2025-05-05_01,2025-02-21_01
 
-Hi Michal,
+Add myself as STM32 OCTO MEMORY MANAGER maintainer.
 
-I will integrate the cover letter with more information
-(also pointed out by Tejun, I noticed).
+Signed-off-by: Patrice Chotard <patrice.chotard@foss.st.com>
+---
+ MAINTAINERS | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Thanks!
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 96b82704950184bd71623ff41fc4df31e4c7fe87..32abd09c0e4309709998f91882c7983d1b53a80c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -22881,6 +22881,12 @@ L:	linux-i2c@vger.kernel.org
+ S:	Maintained
+ F:	drivers/i2c/busses/i2c-stm32*
+ 
++ST STM32 OCTO MEMORY MANAGER
++M:	Patrice Chotard <patrice.chotard@foss.st.com>
++S:	Maintained
++F:	Documentation/devicetree/bindings/memory-controllers/st,stm32mp25-omm.yaml
++F:	drivers/memory/stm32_omm.c
++
+ ST STM32 SPI DRIVER
+ M:	Alain Volmat <alain.volmat@foss.st.com>
+ L:	linux-spi@vger.kernel.org
 
+-- 
+2.25.1
 
-On Mon, May 5, 2025 at 11:25=E2=80=AFAM Michal Hocko <mhocko@suse.com> wrot=
-e:
->
-> On Mon 05-05-25 08:51:21, Sebastian Andrzej Siewior wrote:
-> > On 2025-05-03 10:28:30 [+0200], Marco Crivellari wrote:
-> > > Hi!
-> > Hi,
-> >
-> > > This series is the follow up of the discussion from:
-> > >     "workqueue: Always use wq_select_unbound_cpu() for WORK_CPU_UNBOU=
-ND."
-> > >     https://lore.kernel.org/all/20250221112003.1dSuoGyc@linutronix.de=
-/
-> > >
-> > > 1)  [P 1-2] system workqueue rename:
-> > >
-> > >     system_wq is a per-CPU workqueue, but his name is not clear.
-> > >     system_unbound_wq is to be used when locality is not required.
-> > >
-> > >     system_wq renamed in system_percpu_wq, while system_unbound_wq
-> > >     became system_dfl_wq.
-> > >
-> > > 2)  [P 3] Introduction of WQ_PERCPU.
-> > >
-> > >     This patch adds a new WQ_PERCPU flag to explicitly request the le=
-gacy
-> > >     per-CPU behavior. WQ_UNBOUND will be removed once the migration i=
-s
-> > >     complete.
-> > >
-> > >     Every alloc_workqueue() caller should use one among WQ_PERCPU or
-> > >     WQ_UNBOUND. This is actually enforced warning if both or none of =
-them
-> > >     are present at the same time.
-> > >
-> > > 3)  [P 4] alloc_workqueue() callee should pass explicitly WQ_PERCPU.
-> > >
-> > >     This patch ensures that every caller that needs per-cpu workqueue
-> > >     will explicitly require it, using the WQ_PERCPU flag.
-> >
-> > Sounds like a plan.
-> > I assume the huge patches were made with coccinelle?
->
-> Yes, this makes a lot of sense. I think it is worth mentioning why do we
-> want/need to go through this major refactoring. From my POV this will
-> help cpu isolation in a long term because it reduces unpredictable
-> interference from pcp workers.
-> --
-> Michal Hocko
-> SUSE Labs
-
-
-
---=20
-
-Marco Crivellari
-
-L3 Support Engineer, Technology & Product
-
-
-
-
-marco.crivellari@suse.com
