@@ -1,81 +1,137 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B14E8198A08
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 19:09:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D81BE1BC9F4
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 19:10:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746558599; cv=none; b=dsb6KDkHhhRAtHEyVkcyLXv4BKo15T9yXBktyJuDgOFbfnzIO+zc10450lmEOzvJkcl8eV3ygpAD7egZ0PKNdEUxDrAzfFvBJWelpL0tDF0ibMUHUHR03d5ayZfcBsm6IpjVukY1eWP6VTpvv+se3P3jb155bSG2Z4z63Lvd3+A=
+	t=1746558609; cv=none; b=nEdNSt5VFj6jISb1rQBBIuxrTGvBz+Q0Xb6cDO/RIAeRsn9KuGJ9b+Bwc2dKg9AO86C2D6ruJ1elMLJBITaIkPyQ2NanLy67hlW0QnxqCed9lBPshN64BRIcFoLPV1C3GbzvNM7AbKfz/HJzsdYk+ySgKm8kFIwRQPv/B8U0oIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746558599; c=relaxed/simple;
-	bh=zdG2D9Rb2C2ESNufQJCGm+Wf8FimRoEiC9vKGXqYzJk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LhrGKoRZrkNwJbSW/osi5LvmWAVhe57uyTBRl6QSoujtTLG/LgLU6kO6jn5vCbIuNHdGjjmpu1US4y/XTTqjNaKPNafKySx5QuF2AOn3ZWFwPAVUuhs06u98WznozggR71d863sAm0ZJmKVwy85yCDuz5RxjRcZAuXC2NfDEC8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=rb5LWJyy; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1746558609; c=relaxed/simple;
+	bh=W5LSkZiC6OONbIl3yFWmvcAKLA5RZHe07Z/De94PpK0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LdRhvL4KqlGJF/SPCKq6fazQO4m9PZPlPaMB9EKsMIh7BBlVUXmRtwAF3yW7uSQ1pxnxGV3rZRceI9HYDgC9UnC5xBCSNT4N3fKAQmeh5I3/s4RlolncVPn+F6Y/4jT0OG7qHqRQ2iePZejZ+ksFsP71J2fQoH1gqxryoU3dkoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=L9K2OaAI; arc=none smtp.client-ip=209.85.167.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rb5LWJyy"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Cv9t2nkiOZ/C9O6X5BLHLPxC2u6g2ujAp/9JLD+z1W8=; b=rb5LWJyy0B3NTyyMjI2TAecWxx
-	yU5LTtjU5LeixJbuXVwZfORNexR/eEFsILkG6WbuiJ79+WcaqxgeU9dIgFavrtKk2/9qlcBY1hmt6
-	4ZOjNiCjRutGizruYrNkvBWRnLEBQu0HY6INJEl9vZrSsBZRgQrDMUqSg4dZ1aQoBUZUHT7esdUGN
-	UfqvbLfrKiunxYpHF5fTj0es5ra3AbKc1DdabL2bCQAnd8aTdcC51saCpCOHIeOMdcPbniD0MgaKg
-	rpuRrURi3ZBxbYaOdnHfRXvuSOmqELrrOvmGnSyMs1a8OotHCwH5jsvVG3EZp9woXjw84n4viG+78
-	fh61sMng==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uCNey-00000009vG1-0hdC;
-	Tue, 06 May 2025 19:08:56 +0000
-Date: Tue, 6 May 2025 20:08:55 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: nifan.cxl@gmail.com
-Cc: muchun.song@linux.dev, osalvador@suse.de, mcgrof@kernel.org,
-	a.manzanares@samsung.com, dave@stgolabs.net,
-	akpm@linux-foundation.org, david@redhat.com, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, Fan Ni <fan.ni@samsung.com>
-Subject: Re: [RFC 0/1] Convert is_migrate_isolate_page() to
- is_migrate_isolate_folio()
-Message-ID: <aBpeR5E6XoneDcEj@casper.infradead.org>
-References: <20250506184155.587070-1-nifan.cxl@gmail.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="L9K2OaAI"
+Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-403407e998eso2942995b6e.0
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 12:10:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746558606; x=1747163406; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=b7M9Vh4cA/vAEJWog9BRDwxxCIas5FuWV5Bkti2ZaSc=;
+        b=L9K2OaAIKVJ8XEzNDHMNOWFDCeDWHbk7vxcjHe6TwHNTNXJiGkmBEAWJj7whlwiThs
+         Knujaf2rbDwwFsqsWQYkSG4fW1+JqRjRfkC0A6jYs4roOfbr45W2viX9p54DPX80rdME
+         qFQcZR97DU7ewyoIbxu64EPkkgOfzuJ2o1smoy63YmEY+0cnw5Jy5v7sDFpSZF5J/VqE
+         aFuugtq/S1QQZ73qk5me4LOf/rapVVoj2CYj9782GWiqT4+6mcJ7ZhgilICEifl+K63m
+         0UNrWMc/8aDGPAJ+QdxCG0AKtN5lu530l8pdjRfQuO9kc2PmxbRTXf3lJ0PNMjaQHmkr
+         vsOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746558606; x=1747163406;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=b7M9Vh4cA/vAEJWog9BRDwxxCIas5FuWV5Bkti2ZaSc=;
+        b=WXHDIHyAqdJUQ41/jviPsCBLoTUBvgDyfmAm3dc+iTXlyJroRXaWWYpMvPZsiwfHZ9
+         0D3kXIvwKb08DQ+jF9CSnSlIE8GRcDwey5uzzQGcpF5wJQMIO8coXoxMNM5hqXmiXKyu
+         WoXXYJwGLKjJiI4CCdtmOrtaRfrVqKfsgA0qf7oreU4MAXv8sOGDfRPajOG2thl7y1+U
+         1PfCjpglq/OTvCGWKvg55WveRQkJq/foNTbca+oMI67KqRZZtzjNk08xu8WuKBuc+iJ0
+         GOGpdIlBGwxisvJe7NGM3ct56eWCEfdbos6UeWbVEaeZr5KngjSH43hflm4E9u6/r0B6
+         UhdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVmQuA5GCjhNAxw+gHNT3GqRpqA2PVz9v5dr2E2rcizwNYF3b/iMF5Y0DOtcHUrzFRJl88xi9w/9Lg2ohg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw04acvakIUIOaZkpDUynU25yoRTrpV7gOHD3zWGV1Egp1fx6SX
+	epOhquGVWqIKv5CpqFf7hHfZopcQ6opHpC29c9VpK8IRFzxIR0ShYZk4FoyuFFE=
+X-Gm-Gg: ASbGncv2iEg7Ud98q564LCOwQbUZ6r89daQLFval5Wffy0Sgsh8nvwufmweKDA+aiF+
+	5S3NhqyP1e3+rfBZwROJP58KyJvatMs/sC+cZPa0LDQ781ZpVkvZKM1FuZTewAT276UPJ/+lHbM
+	PgoHwadBMfXsu/m9+r8eGHCG2m+8htHPXrTrmkTX0HAS+4++lENIiNkQKl0Tprckw3nTTqMr10/
+	1pRkl8K2CAtM/otYMHnl7h8rSRkXu3MsSyp6UHU8u7EO9qPWbM6ph+nYE0bauPOZfzaIYT+6pXs
+	RyT7Wd4NJOe8SkOKBfmp70iQ6DZiZ7ctxGb0Xr6S+LITh5+BY4fK6nKys5ueJufA0AIVBWh8LtV
+	ijlAN6xqzDdnug07TCg==
+X-Google-Smtp-Source: AGHT+IFJhJoNsdYwSL56KZvKfxZoVwS9PDEA9mN250fkyvogc1aJUfgOT11q5mMwvC2Qeq/RUXmjcg==
+X-Received: by 2002:a05:6808:11cd:b0:3fe:b0ad:f927 with SMTP id 5614622812f47-4036f085567mr471124b6e.16.1746558605880;
+        Tue, 06 May 2025 12:10:05 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:5172:9f6c:997a:41ea? ([2600:8803:e7e4:1d00:5172:9f6c:997a:41ea])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-4036f3b12c8sm42180b6e.49.2025.05.06.12.10.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 06 May 2025 12:10:05 -0700 (PDT)
+Message-ID: <64b41a31-6224-4ab7-b26d-ea3e60a60d3b@baylibre.com>
+Date: Tue, 6 May 2025 14:10:04 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250506184155.587070-1-nifan.cxl@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 10/11] iio: adc: ad7768-1: add filter type and
+ oversampling ratio attributes
+To: 20250505170950.1d7941d0@jic23-huawei, Jonathan Cameron <jic23@kernel.org>
+Cc: Jonathan Santos <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org, andy@kernel.org, nuno.sa@analog.com,
+ Michael.Hennerich@analog.com, marcelo.schmitt@analog.com, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
+ linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
+ broonie@kernel.org, Pop Paul <paul.pop@analog.com>
+References: <cover.1745605382.git.Jonathan.Santos@analog.com>
+ <4493dc2e3e0fb61ba3e8a0e54571998aaaaf46c8.1745605382.git.Jonathan.Santos@analog.com>
+ <20250505170950.1d7941d0@jic23-huawei>
+ <aBpdDN12wdV/gOBB@JSANTO12-L01.ad.analog.com>
+From: David Lechner <dlechner@baylibre.com>
+Content-Language: en-US
+In-Reply-To: <aBpdDN12wdV/gOBB@JSANTO12-L01.ad.analog.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 06, 2025 at 11:38:28AM -0700, nifan.cxl@gmail.com wrote:
-> From: Fan Ni <fan.ni@samsung.com>
+On 5/6/25 2:03 PM, Jonathan Santos wrote:
+> On 05/05, Jonathan Cameron wrote:
+>> On Sun, 27 Apr 2025 21:14:17 -0300
+>> Jonathan Santos <Jonathan.Santos@analog.com> wrote:
+>>
+> ...
+>>  drivers/iio/adc/ad7768-1.c | 363 ++++++++++++++++++++++++++++++-------
+>>>  1 file changed, 293 insertions(+), 70 deletions(-)
+>>>
+>>> diff --git a/drivers/iio/adc/ad7768-1.c b/drivers/iio/adc/ad7768-1.c
+>>> index 10791a85d2c5..e2b8f12260a5 100644
+>>> --- a/drivers/iio/adc/ad7768-1.c
+>>> +++ b/drivers/iio/adc/ad7768-1.c
+>>> @@ -20,6 +20,8 @@
+>>>  #include <linux/regulator/driver.h>
+>>>  #include <linux/sysfs.h>
+>>>  #include <linux/spi/spi.h>
+>>> +#include <linux/unaligned.h>
+>>> +#include <linux/util_macros.h>
+>>>  
+>>>  #include <linux/iio/buffer.h>
+>>>  #include <linux/iio/iio.h>
+>>> @@ -77,7 +79,7 @@
+>>>  #define AD7768_PWR_PWRMODE(x)		FIELD_PREP(AD7768_PWR_PWRMODE_MSK, x)
+>>>  
+>>>  /* AD7768_REG_DIGITAL_FILTER */
+>>> -#define AD7768_DIG_FIL_FIL_MSK		GENMASK(6, 4)
+>>> +#define AD7768_DIG_FIL_FIL_MSK		GENMASK(7, 4)
+>>
+>> Bug?  If so does this belong in a precursor patch?
+>>
 > 
-> Sending out this patch per Matthew Wilcox's suggestion 
-> that we need to convert is_migrate_isolate_page() to use folio
-> https://lore.kernel.org/linux-mm/Z_XmUrbxKtYmzmJ6@casper.infradead.org/
+> Actually not, this extra bit is to include the 60Hz rejection enable
+> for sinc3 filter
 
-That's not what I said!
+Seems odd to me to group those together since they are two separate fields in
+the register. It would make more sense to have a separate BIT(7) for the
+EN_60HZ_REJ bit.
 
-This is what I said:
-> >  
-> > -		if (is_migrate_isolate_page(&folio->page))
-> > +		if (is_migrate_isolate_page(folio_page(folio, 0)))
-> >  			continue;
->
-> I think we need an is_migrate_isolate_folio() instead of this.
+If we need to manipulate both at the same time in the driver, then we would
+use AD7768_DIG_FIL_EN_60HZ_REJ | AD7768_DIG_FIL_FIL_MSK.
 
-> However, when looking into the code, I have noticed that among the uers
-> of is_migrate_isolate_page(), in most cases the page passed in is from a 
-> a pageblock. 
-> I am not sure how we should proceed with these cases.
-> Should we deal with pageblock or just leave it as it is and only do the page
-> to folio conversion for the pages within?
+> 
+>>>  #define AD7768_DIG_FIL_FIL(x)		FIELD_PREP(AD7768_DIG_FIL_FIL_MSK, x)
+>>
+> ...
+>  
 
-Neither.  Add a folio_test_migrate_isolate() in addition to
-is_migrate_isolate_page().  Don't force a conversion as it's a
-legitimate question to ask of pages as well as of folios.
-And some of the pages you want to ask it of may well not be part of
-folios (they may be part of a slab or some other memdesc).
