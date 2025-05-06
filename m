@@ -1,147 +1,142 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A702C33FD;
-	Tue,  6 May 2025 07:52:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77B9B23D287
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 07:52:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746517931; cv=none; b=GG0bZRqhLQqQ+2He+mks1v1SJdhm5jj0NyZ4aClEJlK0bm63OujUeIDmGOA4+xL3T0jldIsIGNzTLmTaD6apR3hltsHod76aokupNHxnmfiuEEEVPvgCJ+/BKplRAPt+EdRQSXzYy4SyG1qO/mDYzuWHVqEFq9oUQnP2SnKUf3o=
+	t=1746517950; cv=none; b=INGM1aJfmxH6lrsTROmyTR18dpCpEgMwC+k+Uv9PfR3zBaD66ABYvyZjgUb8m87zWv+78TKmcGT7juzcUvU9sOxJ8q51t+wfTvrOzMzyK9CTQXPRhkAnA+VvhdBSt1oOqfNX87jkSB6UQXThZawup0b9YNh5tsCMm4Yb8SXv948=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746517931; c=relaxed/simple;
-	bh=0+uO/XoYIQCc8Dgm6gCzikikLCGOEjO0kaq/d1A05mg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dIHIQov5zZUmKhwZwFGcugk7+Ig6FFQF74w1qDM3n9N6cBGRimDfMKm7RaLBpyk1D8a0G8hC7OL4K1ti/x6CZM0LqwKRv4/fYPEzt/Dadq2ReYt7LHDOOOkB8k1/D20y3ww1A7rWlv514PkEVASMMMfsd0EgTsoQRE8NiZykDnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g0RxVZnT; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g0RxVZnT"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5f63ac6ef0fso7338517a12.1;
-        Tue, 06 May 2025 00:52:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746517928; x=1747122728; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ILaPhC29TjZEHYEs2jF6zz89xMd5BTo40WxWLbWUDSQ=;
-        b=g0RxVZnTZS0GMvtGQAMbfIQ/XYaXTs49/GaKXtVPjKR90ZyJt+oAL3jKCR/6FmVhYy
-         377Kt6cgnqLCJ/B2Kf2BcR8aw/t40O0+qYuzOa11dTxWB9LdWxZc0QP+YVpJ+5kgr6zD
-         Rby4r1FUotXCQAW4+Fp6Dm3BbWGYeNwHCdT4+aSIocYVvsgjeHOvx+rWBii0eYdzWD+9
-         Ku0ZQRdBGGg2mYWdhMsYf8P6CfMiYlW46KARRzSFIjHtfVGr4555IMcXWF7toTcTtm/8
-         O/g2eNrc4IfA+OcwLrywxMdXYqf5Wj247328Hw8L8zAh1kOEw0XwtjKs6iBzSr8hL/Bh
-         ShAQ==
+	s=arc-20240116; t=1746517950; c=relaxed/simple;
+	bh=BtDyt2UFrNOoKlgcbIIR/8uenCycdB5p2V4g7UTDhX0=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Oih6foWUGvECR2Kc6u5ENWo6Qgo+DfSehxRxPdJMnNJjaLdXxSxaJ4ByBr7xe5cjw7TVyUqJ29sVGZPDei7dpnwrK6KX2qxxUhGLlm2XXyk6V6Xz3IfMygZ2Gm2CaIV+2YfvaHFbaQbYCbDIrqUmK4Tu+mxpktTJ0HYvpMUkG7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3d817b17661so43885145ab.3
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 00:52:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746517928; x=1747122728;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ILaPhC29TjZEHYEs2jF6zz89xMd5BTo40WxWLbWUDSQ=;
-        b=IvXXc1egnKmOuldxPoc7MNm6iYqe+K3OeXceKnPrIITkJOuOxrvY/3nRBoTcT6jDBi
-         1mxKmzTge0NyBUroqepopRLE27EjerVJ+NfQcMnEVKlJ6lBw+N7VODGP/fhczboPu0V1
-         zKZdl6nEwjNqEQSAEJODSHsG7sPW7gm0UvORT8yRlq43ojWgex7VmizMo7EhMzA2Feet
-         nKgYVXSilbNJo7oME47f9WafBOFJmDAt+2AJN84H/Amsu6qEBSMvO1/v8uRT/xDjk5Kj
-         yzEocdxeVgfwYebKxfprp6fJ+TqCMzE1Js4WDnOWIFA2+cwvaTPn7xyPi3US4moBtBH5
-         1E7w==
-X-Forwarded-Encrypted: i=1; AJvYcCVJIHMXd7GXqn8P7IsyzZm4JMmhHb2OR9V6+AGFkAz492tX/vdsUJK6z0xCEMZglacSBQS6srjpXary@vger.kernel.org, AJvYcCXv+GA6Mr5ezp6N/DdNqoIEhPrUGkRBGCi/+DtOZMwN+r/wXJ/MlRnHvZ9CjMLFTYysU0bjs/mQcJM2UxkZ@vger.kernel.org, AJvYcCXyKZgHWXOrdoqNHCLCLRgRwghI21hob64zRbDTVWf5+jRv1Vr+2IbXy9zq47lW9Fxk9Tmi7ecFSzG0@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMPHBeJxjXRe/vgT1UIzNBOMzCNbLfX6RkbcZ9gsuodpUUbH60
-	RCIEVw6nuNmWfsz6IpjZAtkFT+XBO/sbd1iBKw4ySg9KmfAlPkch
-X-Gm-Gg: ASbGncu6XOy1uuMNMLnx4mybUR4eNy/yOjH4LSzV96Tf2R72MDULUcFP/RFBkJ72bex
-	vqcvCqcIIKHc2/9Vyci0AsGN2Y05FXxLjxwobvjToGmtOZtbA/SgbQNeY+TKbA6r0//9Eytw7h4
-	Jh3h3UKGZ/yfgVCtNHvbOULKBbJrBMSDp5F8D6EkFezY8pSCbe0YS+IMk/8eZxGWPumalCg9Dk/
-	5DqhmtsaX5b2ZsWSH5MgvxvTBcKyHL9jdN24jHeUWrsmWVJ1SPNwHlV09xgWpgUqWoV6NaGI1D9
-	OpZV/JYwVCNPs0+9RWY5TaNNv2+vQNpBpFDCZ3pb6INJWQDqHK0ehBepUuu4M0BEYjwSQ+7lJrs
-	=
-X-Google-Smtp-Source: AGHT+IEW+wTfs5Sgf1Cb3eF+wezALJj/S29kLlJJHN51zwzNZKOHty3jYcaOzqfnxwvzRxCaXnYlxw==
-X-Received: by 2002:a05:6402:5112:b0:5fb:8903:dc82 with SMTP id 4fb4d7f45d1cf-5fb8903e71bmr910254a12.10.1746517927636;
-        Tue, 06 May 2025 00:52:07 -0700 (PDT)
-Received: from ubuntu2204 (207-pool1.nat.godollo.uni-mate.hu. [192.188.242.207])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fb45a0c675sm1727131a12.14.2025.05.06.00.52.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 00:52:06 -0700 (PDT)
-Date: Tue, 6 May 2025 09:52:05 +0200
-From: =?utf-8?B?VMOzdGggSsOhbm9z?= <gomba007@gmail.com>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: 
-	=?utf-8?B?VMOzdGggSsOhbm9z?= via B4 Relay <devnull+gomba007.gmail.com@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] iio: chemical: Add driver for SEN0322
-Message-ID: <4bvmhlzbk3wxnjskfio3i7wyimaclnjt7mlk5bydmn4ycur7fi@pdkvjofbrurw>
-References: <20250505-iio-chemical-sen0322-v2-0-217473983b42@gmail.com>
- <20250505-iio-chemical-sen0322-v2-2-217473983b42@gmail.com>
- <20250505184705.6f00321a@jic23-huawei>
+        d=1e100.net; s=20230601; t=1746517947; x=1747122747;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=CKF1ErYQeMS2LAsXAlkKZC3QCEipg8mrCIYyD8W+Hdo=;
+        b=YdEF83ylMDUljyRaouvWIVvQN+s/oVLXGNWCsL2tXR9ZEytx8fY0A565Ssot+Bv28l
+         bSD/eH3lRHbCdIs21BdjK/7Ou6w3xfr9uw3jItKPg7V4l0d9rMybOwDt8u9Jx3R6Ccw6
+         m+B03bsMQYZcEJsUIDLdkw+Qsql5JoeEGBGPokSYqUkBdgdtZwmlvx0Mr2jImjJOIbSb
+         LbrJaB/F+2PG+cJsXm3Eki5wIjmEwP+7SjTPgoOfJ+3IrVQYsv9GBSXa4mzxHFPgMLIJ
+         bcwDHMMOzxo5JvP+R0n8B0rOFBHawBRtrcbF8NPdPGrQFWYbdgK6rV/IWBDTUut4OIWv
+         vM1g==
+X-Forwarded-Encrypted: i=1; AJvYcCUh9odta7i3Szdxwy2v2l3Y8SPAGxDMbge6U9D+PeEldixSkfWA5n3Z3oNBUCdTaYe9lzKdoonFvMGlzwg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPMhHCgG7JguWmwbC6TGc6ZBUM/bh0qZqsmcBTNUYG5YWbegII
+	hJUIePN0SlRkqaFANk+VmceNs74Z4fe5WLsNWcKAN4k2SrB0pNpsRKcB3y1o/281wMYgEOZVeYk
+	nec2pkFRxRCA86NeYQgMjAC1LXAg4pk1R4UXcfw8vLZes/8o8vH1QgEg=
+X-Google-Smtp-Source: AGHT+IEKLVR91TBPe4eYyoaPBkJZ4yi44af+i3Zdgo7jxVyxf1byGZoLu48pAoCPaxgkIaOevyJ5U2Ialqi6GP9177s4KEMNtzqM
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250505184705.6f00321a@jic23-huawei>
+X-Received: by 2002:a05:6e02:2588:b0:3d1:97dc:2f93 with SMTP id
+ e9e14a558f8ab-3da5b349058mr103163835ab.20.1746517947459; Tue, 06 May 2025
+ 00:52:27 -0700 (PDT)
+Date: Tue, 06 May 2025 00:52:27 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6819bfbb.050a0220.a19a9.0007.GAE@google.com>
+Subject: [syzbot] [mm?] KCSAN: data-race in copy_page_from_iter_atomic / pagecache_isize_extended
+From: syzbot <syzbot+189d4742d07e937d68ea@syzkaller.appspotmail.com>
+To: akpm@linux-foundation.org, baolin.wang@linux.alibaba.com, hughd@google.com, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi!
+Hello,
 
-Thank you for the review!
+syzbot found the following issue on:
 
-> Checkpatch is lagging behind the times, but it is fine to use this
-> as a formal tag in the tag block..
-> > 
-> Datasheet: https://wiki.dfrobot.com/Gravity_I2C_Oxygen_Sensor_SKU_SEN0322
-> 
-> > Signed-off-by: Tóth János <gomba007@gmail.com>
+HEAD commit:    01f95500a162 Merge tag 'uml-for-linux-6.15-rc6' of git://g..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=17abbb68580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6154604431d9aaf9
+dashboard link: https://syzkaller.appspot.com/bug?extid=189d4742d07e937d68ea
+compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
 
-Sure.
+Unfortunately, I don't have any reproducer for this issue yet.
 
-> > +	if (val) {
-> > +		*num = val;
-> > +		*den = 100000;
-> > +	} else {
-> > +		*num = 209;
-> > +		*den = 120000;
-> 
-> This is odd enough, that perhaps we could add a comment on why, or at least
-> a cross reference to where these numbers come from?
-> What is the special meaning of 0?
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/8d61c7d3421d/disk-01f95500.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/d86d0377eab0/vmlinux-01f95500.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/a6f455ac4fd5/bzImage-01f95500.xz
 
-Okay, I'll add some explanation.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+189d4742d07e937d68ea@syzkaller.appspotmail.com
 
-> > +	u8 data[4] = { 0 };
-> 
-> If you are only read 3 bytes, why is this 4 long?
+==================================================================
+BUG: KCSAN: data-race in copy_page_from_iter_atomic / pagecache_isize_extended
 
-It is the closest power of 2, to pacify my OCD, but you are right.
+read to 0xffff88811d47e000 of 2048 bytes by task 37 on cpu 0:
+ memcpy_from_iter lib/iov_iter.c:73 [inline]
+ iterate_bvec include/linux/iov_iter.h:123 [inline]
+ iterate_and_advance2 include/linux/iov_iter.h:304 [inline]
+ iterate_and_advance include/linux/iov_iter.h:328 [inline]
+ __copy_from_iter lib/iov_iter.c:249 [inline]
+ copy_page_from_iter_atomic+0x77f/0xff0 lib/iov_iter.c:483
+ copy_folio_from_iter_atomic include/linux/uio.h:210 [inline]
+ generic_perform_write+0x2c2/0x490 mm/filemap.c:4121
+ shmem_file_write_iter+0xc5/0xf0 mm/shmem.c:3464
+ lo_rw_aio+0x5f7/0x7c0 drivers/block/loop.c:-1
+ do_req_filebacked drivers/block/loop.c:-1 [inline]
+ loop_handle_cmd drivers/block/loop.c:1866 [inline]
+ loop_process_work+0x52d/0xa60 drivers/block/loop.c:1901
+ loop_workfn+0x31/0x40 drivers/block/loop.c:1925
+ process_one_work kernel/workqueue.c:3238 [inline]
+ process_scheduled_works+0x4cb/0x9d0 kernel/workqueue.c:3319
+ worker_thread+0x582/0x770 kernel/workqueue.c:3400
+ kthread+0x486/0x510 kernel/kthread.c:464
+ ret_from_fork+0x4b/0x60 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
 
-> > +	ret = regmap_bulk_read(sen0322->regmap, SEN0322_REG_DATA, data, 3);
-> 
-> Having shortened above, use sizeof(data) for that 3 to avoid
-> any potential future mismatch in sizes.
+write to 0xffff88811d47e018 of 4072 bytes by task 4432 on cpu 1:
+ zero_user_segments include/linux/highmem.h:278 [inline]
+ folio_zero_segment include/linux/highmem.h:635 [inline]
+ pagecache_isize_extended+0x26f/0x340 mm/truncate.c:850
+ ext4_alloc_file_blocks+0x4ad/0x720 fs/ext4/extents.c:4545
+ ext4_do_fallocate fs/ext4/extents.c:4694 [inline]
+ ext4_fallocate+0x2b8/0x660 fs/ext4/extents.c:4750
+ vfs_fallocate+0x410/0x450 fs/open.c:338
+ ksys_fallocate fs/open.c:362 [inline]
+ __do_sys_fallocate fs/open.c:367 [inline]
+ __se_sys_fallocate fs/open.c:365 [inline]
+ __x64_sys_fallocate+0x7a/0xd0 fs/open.c:365
+ x64_sys_call+0x2b88/0x2fb0 arch/x86/include/generated/asm/syscalls_64.h:286
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xd0/0x1a0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-Agreed.
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 1 UID: 0 PID: 4432 Comm: syz.8.11649 Not tainted 6.15.0-rc5-syzkaller-00022-g01f95500a162 #0 PREEMPT(voluntary) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/19/2025
+==================================================================
 
-> > +	dev_dbg(regmap_get_device(sen0322->regmap), "data: %d\n", ret);
-> 
-> Given you more or less directly provide this to userspace now I'd drop
-> the dev_dbg() as not adding any value for debugging.
->
 
-I just like to see if the function actually ran and not reading some buffered 
-value stuck somewhere, but okay.
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-> > +	switch (mask) {
-> > +	case IIO_CHAN_INFO_RAW:
-> > +		switch (chan->type) {
-> > +		case IIO_CONCENTRATION:
-> As the sensor only does concentration, you could either drop this
-> check on basis we can't get here without it or if you want 
-> a strong sanity check do it outside the switch statement as
-> 	if (chan->type != IIO_CONCENTRATION)
-> 		return -EINVAL;
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-I did not want to deviate from the pattern, but yes, it will make the code
-more readable.
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-Best regards,
-János
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
