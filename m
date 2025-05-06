@@ -1,16 +1,16 @@
 Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 747E14A6539
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 00:49:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44EA034AA88
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 00:49:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746492553; cv=none; b=aQfuqyyMmntHl/PB49YZOrebTL7VkwEZ+Cfi2btmir3GjVyV83DZ3mAk9VHuf4y6BoBQvw5nwYcxIwGhTSEt20UIpKO/8LegYwv5eYX73gh/LcTJrbW7yHZPLcK/7M826jEKypbM8GtAt5/Z5NT9WoMIngH8Vv7SrOnfZrHWPC0=
+	t=1746492569; cv=none; b=eTZa1kPymNvJZFoQA/grmGAk7RWiIT2xCb+lBd6+9wUgOyWw3BotGd6nqHCErcAhhEjqj32rw0SLwiaAL8/EbjukK0OvskvAGEx5LAOy1ScfIdZoflrxCm91IlPNLKGYkyEzoNOEZ+2PLOtajOmIaAzJklk1+J6S+aHO4/fpRDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746492553; c=relaxed/simple;
-	bh=6u/tJ3IaLwF0dUse1JpxumzgYcS9QpDg2Qj+cUBlQPw=;
+	s=arc-20240116; t=1746492569; c=relaxed/simple;
+	bh=NPJNsGlptd0n6PNy0NgeClvR6xPjLXuDITIWdR/228E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TkaoeMQH3ENKEiv2RlfO9APeseC6LtDglo8TUKMh3cV9S1yVr8yoY3BMCiCBX2CYdroGXxqsn68/DWoKrCq4KgMiAnRQuXfV7UVDeayUEckg/D0scT1DMgAtMwD4SeKv1AsUBWoP9xvST9EEJ5EuEYCchG0krZ4MxNdQvGkYjKQ=
+	 MIME-Version; b=qlUTWgwNATecdBafL++B631n5ocOb/FjbRO4ihxUDNuz+j3TLosqhDfAOW4V+oeJOQH+CAjG1/iI+T1L7vSbrZUAJSs7e9C+WF+hAOjoVr7ID0pHLfpfkhyDFSSn52VTuSRR79nHdZfhkveff9uKlEN619NEael/8xkLbZAinf8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
@@ -18,7 +18,7 @@ Received: from fangorn.home.surriel.com ([10.0.13.7])
 	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.97.1)
 	(envelope-from <riel@shelob.surriel.com>)
-	id 1uC6K6-000000000IF-3uS9;
+	id 1uC6K6-000000000IF-3aS7;
 	Mon, 05 May 2025 20:38:14 -0400
 From: Rik van Riel <riel@surriel.com>
 To: linux-kernel@vger.kernel.org
@@ -33,10 +33,11 @@ Cc: linux-mm@kvack.org,
 	bp@alien8.de,
 	hpa@zytor.com,
 	Rik van Riel <riel@fb.com>,
+	Yu-cheng Yu <yu-cheng.yu@intel.com>,
 	Rik van Riel <riel@surriel.com>
-Subject: [RFC PATCH 8/9] x86/mm: use RAR for kernel TLB flushes
-Date: Mon,  5 May 2025 20:37:46 -0400
-Message-ID: <20250506003811.92405-9-riel@surriel.com>
+Subject: [RFC PATCH 5/9] x86/mm: Change cpa_flush() to call flush_kernel_range() directly
+Date: Mon,  5 May 2025 20:37:43 -0400
+Message-ID: <20250506003811.92405-6-riel@surriel.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250506003811.92405-1-riel@surriel.com>
 References: <20250506003811.92405-1-riel@surriel.com>
@@ -51,104 +52,84 @@ Sender: riel@surriel.com
 
 From: Rik van Riel <riel@fb.com>
 
-Use Intel RAR for kernel TLB flushes, when enabled.
+The function cpa_flush() calls __flush_tlb_one_kernel() and
+flush_tlb_all().
 
-Pass in PCID 0 to smp_call_rar_many() to flush kernel memory.
+Replacing that with a call to flush_tlb_kernel_range() allows
+cpa_flush() to make use of INVLPGB or RAR without any additional
+changes.
 
-Unfortunately RAR_INVPCID_ADDR excludes global PTE mappings, so only
-full flushes with RAR_INVPCID_ALL will flush kernel mappings.
+Initialize invlpgb_count_max to 1, since flush_tlb_kernel_range()
+can now be called before invlpgb_count_max has been initialized
+to the value read from CPUID.
 
+[riel: remove now unused __cpa_flush_tlb]
+
+Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
 Signed-off-by: Rik van Riel <riel@surriel.com>
 ---
- arch/x86/mm/tlb.c | 38 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+ arch/x86/kernel/cpu/amd.c    |  2 +-
+ arch/x86/mm/pat/set_memory.c | 20 +++++++-------------
+ 2 files changed, 8 insertions(+), 14 deletions(-)
 
-diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-index 7c61bf11d472..a4f3941281b6 100644
---- a/arch/x86/mm/tlb.c
-+++ b/arch/x86/mm/tlb.c
-@@ -21,6 +21,7 @@
- #include <asm/apic.h>
- #include <asm/msr.h>
- #include <asm/perf_event.h>
-+#include <asm/rar.h>
- #include <asm/tlb.h>
+diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
+index 13a48ec28f32..c85ecde786f3 100644
+--- a/arch/x86/kernel/cpu/amd.c
++++ b/arch/x86/kernel/cpu/amd.c
+@@ -31,7 +31,7 @@
  
- #include "mm_internal.h"
-@@ -1451,6 +1452,18 @@ static void do_flush_tlb_all(void *info)
- 	__flush_tlb_all();
- }
+ #include "cpu.h"
  
-+static void rar_full_flush(const cpumask_t *cpumask)
-+{
-+	guard(preempt)();
-+	smp_call_rar_many(cpumask, 0, 0, TLB_FLUSH_ALL);
-+	invpcid_flush_all();
-+}
-+
-+static void rar_flush_all(void)
-+{
-+	rar_full_flush(cpu_online_mask);
-+}
-+
- void flush_tlb_all(void)
+-u16 invlpgb_count_max __ro_after_init;
++u16 invlpgb_count_max __ro_after_init = 1;
+ 
+ static inline int rdmsrq_amd_safe(unsigned msr, u64 *p)
  {
- 	count_vm_tlb_event(NR_TLB_REMOTE_FLUSH);
-@@ -1458,6 +1471,8 @@ void flush_tlb_all(void)
- 	/* First try (faster) hardware-assisted TLB invalidation. */
- 	if (cpu_feature_enabled(X86_FEATURE_INVLPGB))
- 		invlpgb_flush_all();
-+	else if (cpu_feature_enabled(X86_FEATURE_RAR))
-+		rar_flush_all();
- 	else
- 		/* Fall back to the IPI-based invalidation. */
- 		on_each_cpu(do_flush_tlb_all, NULL, 1);
-@@ -1487,15 +1502,36 @@ static void do_kernel_range_flush(void *info)
- 	struct flush_tlb_info *f = info;
- 	unsigned long addr;
- 
-+	/*
-+	 * With PTI kernel TLB entries in all PCIDs need to be flushed.
-+	 * With RAR the PCID space becomes so large, we might as well flush it all.
-+	 *
-+	 * Either of the two by itself works with targeted flushes.
-+	 */
-+	if (cpu_feature_enabled(X86_FEATURE_RAR) &&
-+	    cpu_feature_enabled(X86_FEATURE_PTI)) {
-+		invpcid_flush_all();
-+		return;
-+	}
-+
- 	/* flush range by one by one 'invlpg' */
- 	for (addr = f->start; addr < f->end; addr += PAGE_SIZE)
- 		flush_tlb_one_kernel(addr);
+diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
+index 30ab4aced761..2454f5249329 100644
+--- a/arch/x86/mm/pat/set_memory.c
++++ b/arch/x86/mm/pat/set_memory.c
+@@ -399,15 +399,6 @@ static void cpa_flush_all(unsigned long cache)
+ 	on_each_cpu(__cpa_flush_all, (void *) cache, 1);
  }
  
-+static void rar_kernel_range_flush(struct flush_tlb_info *info)
-+{
-+	guard(preempt)();
-+	smp_call_rar_many(cpu_online_mask, 0, info->start, info->end);
-+	do_kernel_range_flush(info);
-+}
+-static void __cpa_flush_tlb(void *data)
+-{
+-	struct cpa_data *cpa = data;
+-	unsigned int i;
+-
+-	for (i = 0; i < cpa->numpages; i++)
+-		flush_tlb_one_kernel(fix_addr(__cpa_addr(cpa, i)));
+-}
+-
+ static int collapse_large_pages(unsigned long addr, struct list_head *pgtables);
+ 
+ static void cpa_collapse_large_pages(struct cpa_data *cpa)
+@@ -444,6 +435,7 @@ static void cpa_collapse_large_pages(struct cpa_data *cpa)
+ 
+ static void cpa_flush(struct cpa_data *cpa, int cache)
+ {
++	unsigned long start, end;
+ 	unsigned int i;
+ 
+ 	BUG_ON(irqs_disabled() && !early_boot_irqs_disabled);
+@@ -453,10 +445,12 @@ static void cpa_flush(struct cpa_data *cpa, int cache)
+ 		goto collapse_large_pages;
+ 	}
+ 
+-	if (cpa->force_flush_all || cpa->numpages > tlb_single_page_flush_ceiling)
+-		flush_tlb_all();
+-	else
+-		on_each_cpu(__cpa_flush_tlb, cpa, 1);
++	start = fix_addr(__cpa_addr(cpa, 0));
++	end = fix_addr(__cpa_addr(cpa, cpa->numpages));
++	if (cpa->force_flush_all)
++		end = TLB_FLUSH_ALL;
 +
- static void kernel_tlb_flush_all(struct flush_tlb_info *info)
- {
- 	if (cpu_feature_enabled(X86_FEATURE_INVLPGB))
- 		invlpgb_flush_all();
-+	else if (cpu_feature_enabled(X86_FEATURE_RAR))
-+		rar_flush_all();
- 	else
- 		on_each_cpu(do_flush_tlb_all, NULL, 1);
- }
-@@ -1504,6 +1540,8 @@ static void kernel_tlb_flush_range(struct flush_tlb_info *info)
- {
- 	if (cpu_feature_enabled(X86_FEATURE_INVLPGB))
- 		invlpgb_kernel_range_flush(info);
-+	else if (cpu_feature_enabled(X86_FEATURE_RAR))
-+		rar_kernel_range_flush(info);
- 	else
- 		on_each_cpu(do_kernel_range_flush, info, 1);
- }
++	flush_tlb_kernel_range(start, end);
+ 
+ 	if (!cache)
+ 		goto collapse_large_pages;
 -- 
 2.49.0
 
