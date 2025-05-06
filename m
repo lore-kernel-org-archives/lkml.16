@@ -1,137 +1,70 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from vps.hillapex-13.site (vps.hillapex-13.site [198.252.107.92])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27CA52ED070
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 03:01:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E90B2284B57
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 03:07:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.252.107.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746500472; cv=none; b=MK+jh4k4ukmrY/u/dsnTRLdZd3dqSke3fQpgBe3xBbTBrgQHH3pf6cupwb4uE7oKqtn0C8VlNyhWi6xXrG0y+dRx+Yu9PgkiQwJZFhBg5EI0AfZDuu2p3ZE7CilAwHxnSXq+YOvh24SCBGrHmjHrG04dTx8yqrBTxUD7/OK5SQk=
+	t=1746500877; cv=none; b=mo2+ygTAtWwWQQMNNht12VwO2xR+bNd3wHRrfWxFCiROVuUGcOU3N1zbf6ufTDWne/PA4rEq5HH1xcLQm5/aUV/kTeR/wamo5B16+t7ofciP3K49e3JZhlF7X+IJBab6+0EL8VbHKPvO9znhbKjahjKDHAmQR1vd/rP1mvh45Uk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746500472; c=relaxed/simple;
-	bh=OvePDz61hU89iP6mjSJW/9XhetJ3HI8k3T4tIuDg20o=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DFvUUbUpyCrvkON/G4ZFVfCRfLp0s6hHOhABDKiwdeeMqBT6T+fevD9nKlc6s5fgSlkQg5NcTXVVsh0fCbVjx0DfOmjj3lfbt9hCznTZ/0PsavRSwus19/vPGPGVB54MfWK8Tqh2prTR+ixpXh9xw306K4x6vjgOI8a9dM12yls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Zs33H4mc4z2CdjW;
-	Tue,  6 May 2025 10:57:31 +0800 (CST)
-Received: from kwepemj200003.china.huawei.com (unknown [7.202.194.15])
-	by mail.maildlp.com (Postfix) with ESMTPS id B0D221800B3;
-	Tue,  6 May 2025 11:01:06 +0800 (CST)
-Received: from localhost.huawei.com (10.90.30.45) by
- kwepemj200003.china.huawei.com (7.202.194.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 6 May 2025 11:01:03 +0800
-From: Qinxin Xia <xiaqinxin@huawei.com>
-To: <baohua@kernel.org>, <xiaqinxin@huawei.com>
-CC: <yangyicong@huawei.com>, <hch@lst.de>, <iommu@lists.linux.dev>,
-	<jonathan.cameron@huawei.com>, <prime.zeng@huawei.com>,
-	<fanghao11@huawei.com>, <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
-Subject: [PATCH v2 4/4] dma mapping benchmark:add support for dma_map_sg
-Date: Tue, 6 May 2025 11:01:00 +0800
-Message-ID: <20250506030100.394376-5-xiaqinxin@huawei.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20250506030100.394376-1-xiaqinxin@huawei.com>
-References: <20250506030100.394376-1-xiaqinxin@huawei.com>
+	s=arc-20240116; t=1746500877; c=relaxed/simple;
+	bh=xUTLlm7EwfeB2h/83EPXSPHi88dI/4WpN4NTjh0UquI=;
+	h=Message-ID:From:To:Subject:Date:MIME-Version:Content-Type; b=ZPc5geyjzPrz3rn+WU2x+INmdqDaeKr/5CJTFv2A/5Cxi/wPXWm1PfgLbyK/xquSiQYFPd58tpNHiAmweBQKoq5kbRQFhq7309JURKRgwWNyTdoXP+Qo3IxzsojG8qDG8XUEaH9kYeetCb159AilZwiuQl9kxXj27x3NhJ7vcKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hillapex-13.site; spf=pass smtp.mailfrom=hillapex-13.site; dkim=pass (2048-bit key) header.d=hillapex-13.site header.i=@hillapex-13.site header.b=OgNIiFfy; arc=none smtp.client-ip=198.252.107.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hillapex-13.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hillapex-13.site
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=hillapex-13.site header.i=@hillapex-13.site header.b="OgNIiFfy"
+Received: from Ynktw (unknown [39.63.207.134])
+	by vps.hillapex-13.site (Postfix) with ESMTPSA id AFEC9CBCD0
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 08:02:04 +0500 (PKT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hillapex-13.site;
+	s=default; t=1746500525;
+	bh=xUTLlm7EwfeB2h/83EPXSPHi88dI/4WpN4NTjh0UquI=; h=From:To:Subject;
+	b=OgNIiFfyYUEDid35dx4LR1Wz94UA2ggVxmpLohx/q3xFl0niOmg60OIwaFKwk8zbd
+	 UeyNNPcsMOIEMTVlYatpbBTS4DbzjLlLY+zA08/8Dj+uwN282qRhlwep0gp/pq2uTK
+	 8hPrHYTsHtfOMYfTbQ6lXT0Mz9G5OX0crea/9jj2s8H+ZlCwxpnu/2IxvORjslOzcb
+	 LIjagp0uTw2ZAaMbM1n+sOurgb+PZh81/TXQeHoCRx9a4UsqujwA6xyD8o9cDazl1z
+	 9CzSGrAMj3nGnp+1JZRu7tJus3b1FTN5i2wQ9u5zA8F6ZQZFwDfBauag7C3UyyomzB
+	 MZPWzfA+b92CA==
+Authentication-Results: vps.hillapex-13.site;
+	spf=pass (sender IP is 39.63.207.134) smtp.mailfrom=saad@hillapex-13.site smtp.helo=Ynktw
+Received-SPF: pass (vps.hillapex-13.site: connection is authenticated)
+Message-ID: <4E92FF35E68E15C9BA8C4CF6EFE13F14@Ynktw>
+From: <saad@hillapex-13.site>
+To: <linux-kernel@vger.kernel.org>
+Reply-To: <saad@hillapex.com>
+Subject: =?UTF-8?Q?Custom_Sports_bag=2Cbackpack=2C_sportswear?=
+Date: Tue, 6 May 2025 08:02:04 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain;
+	format=flowed;
+	charset="utf-8";
+	reply-type=original
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemj200003.china.huawei.com (7.202.194.15)
+X-Priority: 3
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Outlook Express 6.00.2900.5843
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2900.5579
 
-Support for dma_map_sg, add option '-m' to distinguish mode.
+Hi linux-kernel@vger.kernel.org
 
-i) Users can set option '-m' to select mode:
-   DMA_MAP_SINGLE_MODE=0, DMA_MAP_SG_MODE:=1
-   (The mode is also show in the test result).
-ii) Users can set option '-g' to set sg_nents
-    (total count of entries in scatterlist)
-    the maximum number is 1024. Each of sg buf size is PAGE_SIZE.
-    e.g
-    [root@localhost]# ./dma_map_benchmark -m 1 -g 8 -t 8 -s 30 -d 2
-    dma mapping mode: DMA_MAP_SG_MODE
-    dma mapping benchmark: threads:8 seconds:30 node:-1
-    dir:FROM_DEVICE granule/sg_nents: 8
-    average map latency(us):1.4 standard deviation:0.3
-    average unmap latency(us):1.3 standard deviation:0.3
-    [root@localhost]# ./dma_map_benchmark -m 0 -g 8 -t 8 -s 30 -d 2
-    dma mapping mode: DMA_MAP_SINGLE_MODE
-    dma mapping benchmark: threads:8 seconds:30 node:-1
-    dir:FROM_DEVICE granule/sg_nents: 8
-    average map latency(us):1.0 standard deviation:0.3
-    average unmap latency(us):1.3 standard deviation:0.5
+We make sublimated sports bags, backpacks, and sportswear. To get delivery prices, please:
 
-Signed-off-by: Qinxin Xia <xiaqinxin@huawei.com>
----
- tools/testing/selftests/dma/dma_map_benchmark.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+1. Visit hillapex.com and pick an item.
+2. Let us know your order quantity.
+3. Provide your country name.
 
-diff --git a/tools/testing/selftests/dma/dma_map_benchmark.c b/tools/testing/selftests/dma/dma_map_benchmark.c
-index b12f1f9babf8..036ddb5ac862 100644
---- a/tools/testing/selftests/dma/dma_map_benchmark.c
-+++ b/tools/testing/selftests/dma/dma_map_benchmark.c
-@@ -27,6 +27,7 @@ int main(int argc, char **argv)
- 	int fd, opt;
- 	/* default single thread, run 20 seconds on NUMA_NO_NODE */
- 	int threads = 1, seconds = 20, node = -1;
-+	int map_mode = DMA_MAP_SINGLE_MODE;
- 	/* default dma mask 32bit, bidirectional DMA */
- 	int bits = 32, xdelay = 0, dir = DMA_MAP_BIDIRECTIONAL;
- 	/* default granule 1 PAGESIZE */
-@@ -34,7 +35,7 @@ int main(int argc, char **argv)
- 
- 	int cmd = DMA_MAP_BENCHMARK;
- 
--	while ((opt = getopt(argc, argv, "t:s:n:b:d:x:g:")) != -1) {
-+	while ((opt = getopt(argc, argv, "t:s:n:b:d:x:g:m:")) != -1) {
- 		switch (opt) {
- 		case 't':
- 			threads = atoi(optarg);
-@@ -57,11 +58,20 @@ int main(int argc, char **argv)
- 		case 'g':
- 			granule = atoi(optarg);
- 			break;
-+		case 'm':
-+			map_mode = atoi(optarg);
-+			break;
- 		default:
- 			return -1;
- 		}
- 	}
- 
-+	if (map_mode >= DMA_MAP_MODE_MAX) {
-+		fprintf(stderr, "invalid map mode, DMA_MAP_SINGLE_MODE:%d, DMA_MAP_SG_MODE:%d\n",
-+			DMA_MAP_SINGLE_MODE, DMA_MAP_SG_MODE);
-+		exit(1);
-+	}
-+
- 	if (threads <= 0 || threads > DMA_MAP_MAX_THREADS) {
- 		fprintf(stderr, "invalid number of threads, must be in 1-%d\n",
- 			DMA_MAP_MAX_THREADS);
-@@ -111,13 +121,15 @@ int main(int argc, char **argv)
- 	map.dma_dir = dir;
- 	map.dma_trans_ns = xdelay;
- 	map.granule = granule;
-+	map.map_mode = map_mode;
- 
- 	if (ioctl(fd, cmd, &map)) {
- 		perror("ioctl");
- 		exit(1);
- 	}
- 
--	printf("dma mapping benchmark: threads:%d seconds:%d node:%d dir:%s granule: %d\n",
-+	printf("dma mapping mode: %d\n", map_mode);
-+	printf("dma mapping benchmark: threads:%d seconds:%d node:%d dir:%s granule/sg_nents: %d\n",
- 			threads, seconds, node, dir[directions], granule);
- 	printf("average map latency(us):%.1f standard deviation:%.1f\n",
- 			map.avg_map_100ns/10.0, map.map_stddev/10.0);
--- 
-2.33.0
+Best regards
+Saad Afzal
+Founder | Hill Apex
+Email: saad@hillapex.com
+Website: hillapex.com
+Phone/WhatsApp: +92 300 7101027
+Address: Chenab Ranger’s Road, 51310 Sialkot, Pakistan
 
