@@ -1,40 +1,43 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 004BF2BF99A
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 03:17:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9F9833450C;
+	Tue,  6 May 2025 03:19:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746501441; cv=none; b=EV2EZnL9dbCh7uTTyWhBDMrzwUczmsz09UKW/AaK8v8plmiQ+Isskt9F2G4pRWkwTDGI6cn3m3R4yOlMpUWQ9B+okTt6nqmaUxggEggN3HmRc7bbFps53vhhQA8BdrZOamGFLhdJkQD0jUNnqFzpuBF/FdlpSq0+UfWEqgF7Bzc=
+	t=1746501549; cv=none; b=V9YzfckpwK8eI7P0mHsAonrlsdnJc8ZijmC72MQ6dphTTfpsMaeui4bTvpKDJqJbYLJjJN2nSLWZ8rLlCCJWypAmF4mGBMh940ouGk9hKYVoJhB1hreV6/Sq/kXvhWels+UkYs7Oxq6L1Am2Wnzfjr/CtyjE0XNqoQhnHh0wU3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746501441; c=relaxed/simple;
-	bh=BV88dmSy1qaxy2+m31onUn1M4H9b7Ce6DK3TPwajP18=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=egaCtIwbFVuoB/emOX4Pi2oMj9+7TcnKN6VECPId+ByYafRjAvBJoT9iVjT72pSXVn5+DFxzYdJdTt3ga4AOzBM7b8X8W7Kf7N1vroZzL/NXnmfVxITCkr25p4nyYBsFciHgd+4WtXBuw9Pe1bpPbX+fTsTQ+Lr17Kw0X6sxruU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.234])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4Zs36j6FSTzsTHh;
-	Tue,  6 May 2025 11:00:29 +0800 (CST)
-Received: from kwepemj200003.china.huawei.com (unknown [7.202.194.15])
-	by mail.maildlp.com (Postfix) with ESMTPS id 5165D14025A;
-	Tue,  6 May 2025 11:01:03 +0800 (CST)
-Received: from localhost.huawei.com (10.90.30.45) by
- kwepemj200003.china.huawei.com (7.202.194.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 6 May 2025 11:01:02 +0800
-From: Qinxin Xia <xiaqinxin@huawei.com>
-To: <baohua@kernel.org>, <xiaqinxin@huawei.com>
-CC: <yangyicong@huawei.com>, <hch@lst.de>, <iommu@lists.linux.dev>,
-	<jonathan.cameron@huawei.com>, <prime.zeng@huawei.com>,
-	<fanghao11@huawei.com>, <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
-Subject: [PATCH v2 2/4] dma mapping benchmark: modify the framework to adapt to more map modes
-Date: Tue, 6 May 2025 11:00:58 +0800
-Message-ID: <20250506030100.394376-3-xiaqinxin@huawei.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20250506030100.394376-1-xiaqinxin@huawei.com>
-References: <20250506030100.394376-1-xiaqinxin@huawei.com>
+	s=arc-20240116; t=1746501549; c=relaxed/simple;
+	bh=ryhKPoWUwe+Ng4U4DIgXodBgXBepgQ2tgOqcnAOfeD0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Aqh/MMnSo39iYepwFGTNbz1E0IQ09pZGrgZ+bPUXSGKWn73Hc7qCyp8A8iiTStwY5lbPAwe9/inS0aYKg7VdhPli4oHZecqRA2yQyZh7rxMvil45xVfv/lZpZmb/KHbV0UkFf14OPbW2vBRwidsHOe/yD9P8ncfFhtVzcroorjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.40.54.178])
+	by gateway (Coremail) with SMTP id _____8Ax3eKlfxlosErWAA--.50662S3;
+	Tue, 06 May 2025 11:19:01 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.40.54.178])
+	by front1 (Coremail) with SMTP id qMiowMCx7MSPfxloqre1AA--.770S5;
+	Tue, 06 May 2025 11:18:53 +0800 (CST)
+From: Qunqin Zhao <zhaoqunqin@loongson.cn>
+To: lee@kernel.org,
+	herbert@gondor.apana.org.au,
+	davem@davemloft.net,
+	peterhuewe@gmx.de,
+	jarkko@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-crypto@vger.kernel.org,
+	jgg@ziepe.ca,
+	linux-integrity@vger.kernel.org,
+	pmenzel@molgen.mpg.de,
+	Qunqin Zhao <zhaoqunqin@loongson.cn>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH v9 3/5] MAINTAINERS: Add entry for Loongson crypto driver
+Date: Tue,  6 May 2025 11:19:45 +0800
+Message-ID: <20250506031947.11130-4-zhaoqunqin@loongson.cn>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250506031947.11130-1-zhaoqunqin@loongson.cn>
+References: <20250506031947.11130-1-zhaoqunqin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,222 +45,61 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemj200003.china.huawei.com (7.202.194.15)
+X-CM-TRANSID:qMiowMCx7MSPfxloqre1AA--.770S5
+X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj9xXoW7XFy7urWfGryxCFyUurWUZFc_yoWDtFg_A3
+	42g3yxXr1kJFn2kay09FZ3JrWa93yfX3WxC3Z7tw1fZ3sFyF98AFyDAryxG3W3urWj9F43
+	uayxGrn7Cr17ZosvyTuYvTs0mTUanT9S1TB71UUUUjDqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbfkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	WxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5
+	McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
+	1lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_
+	Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
+	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
+	cVAFwI0_Xr0_Ar1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI
+	8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v2
+	6r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU4Xo7DUUUU
 
-In this patch map_benchmark abstract in four interface: prepare, unprepare,
-do_map, do_unmap. When there's a new mode to add, need four steps:
-1) Add the mode in map_benchmark.h
-2) Defines the mode param, like struct dma_xxx_map_param, and this object
-   will be return in prepare and as input parameter in other ops;
-3) Defines the ops functions:prepare, unprepare, do_map, do_unmap.
-4) Add the new mode in dma_map_benchmark_ops.
+This patch adds an entry for Loongson crypto driver in the list of
+maintainers.
 
-Signed-off-by: Qinxin Xia <xiaqinxin@huawei.com>
+Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- include/linux/map_benchmark.h |   8 ++-
- kernel/dma/map_benchmark.c    | 120 +++++++++++++++++++++++++++-------
- 2 files changed, 104 insertions(+), 24 deletions(-)
+v9: Added loongson-se.c/.h to the entry.
+v8: "RNG" --> "crypto"
+v7: Added Huacai's tag
+v5-v6: None
+v4: Changed tile to "Add entry for ...".
+    Lowcased "Maintainers" in commit message.
 
-diff --git a/include/linux/map_benchmark.h b/include/linux/map_benchmark.h
-index 2ac2fe52f248..5294dfd1870f 100644
---- a/include/linux/map_benchmark.h
-+++ b/include/linux/map_benchmark.h
-@@ -15,6 +15,11 @@
- #define DMA_MAP_TO_DEVICE       1
- #define DMA_MAP_FROM_DEVICE     2
+ MAINTAINERS | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 69511c3b2..2d696671e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -13931,6 +13931,14 @@ S:	Maintained
+ F:	Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml
+ F:	drivers/i2c/busses/i2c-ls2x.c
  
-+enum {
-+	DMA_MAP_SINGLE_MODE,
-+	DMA_MAP_MODE_MAX
-+};
++LOONGSON CRYPTO DRIVER
++M:	Qunqin Zhao <zhaoqunqin@loongson.cn>
++L:	linux-crypto@vger.kernel.org
++S:	Maintained
++F:	drivers/crypto/loongson/
++F:	drivers/mfd/loongson-se.c
++F:	include/linux/mfd/loongson-se.h
 +
- struct map_benchmark {
- 	__u64 avg_map_100ns; /* average map latency in 100ns */
- 	__u64 map_stddev; /* standard deviation of map latency */
-@@ -27,6 +32,7 @@ struct map_benchmark {
- 	__u32 dma_dir; /* DMA data direction */
- 	__u32 dma_trans_ns; /* time for DMA transmission in ns */
- 	__u32 granule;  /* how many PAGE_SIZE will do map/unmap once a time */
--	__u8 expansion[76];     /* For future use */
-+	__u8  map_mode; /* the mode of dma map */
-+	__u8 expansion[75];     /* For future use */
- };
- #endif /* _KERNEL_DMA_BENCHMARK_H */
-diff --git a/kernel/dma/map_benchmark.c b/kernel/dma/map_benchmark.c
-index cc19a3efea89..f04973eba1d8 100644
---- a/kernel/dma/map_benchmark.c
-+++ b/kernel/dma/map_benchmark.c
-@@ -5,6 +5,7 @@
- 
- #define pr_fmt(fmt)	KBUILD_MODNAME ": " fmt
- 
-+#include <linux/cleanup.h>
- #include <linux/debugfs.h>
- #include <linux/delay.h>
- #include <linux/device.h>
-@@ -31,17 +32,97 @@ struct map_benchmark_data {
- 	atomic64_t loops;
- };
- 
-+struct map_benchmark_ops {
-+	void *(*prepare)(struct map_benchmark_data *map);
-+	void (*unprepare)(void *arg);
-+	int (*do_map)(void *arg);
-+	void (*do_unmap)(void *arg);
-+};
-+
-+struct dma_single_map_param {
-+	struct device *dev;
-+	dma_addr_t addr;
-+	void *xbuf;
-+	u32 npages;
-+	u32 dma_dir;
-+};
-+
-+static void *dma_single_map_benchmark_prepare(struct map_benchmark_data *map)
-+{
-+	struct dma_single_map_param *mparam __free(kfree) = kzalloc(sizeof(*mparam),
-+								    GFP_KERNEL);
-+	if (!mparam)
-+		return NULL;
-+
-+	mparam->npages = map->bparam.granule;
-+	mparam->dma_dir = map->bparam.dma_dir;
-+	mparam->dev = map->dev;
-+	mparam->xbuf = alloc_pages_exact(mparam->npages * PAGE_SIZE, GFP_KERNEL);
-+	if (!mparam->xbuf)
-+		return NULL;
-+
-+	/*
-+	 * for a non-coherent device, if we don't stain them in the
-+	 * cache, this will give an underestimate of the real-world
-+	 * overhead of BIDIRECTIONAL or TO_DEVICE mappings;
-+	 * 66 means evertything goes well! 66 is lucky.
-+	 */
-+	if (mparam->dma_dir != DMA_FROM_DEVICE)
-+		memset(mparam->xbuf, 0x66, mparam->npages * PAGE_SIZE);
-+
-+	return_ptr(mparam);
-+}
-+
-+static void dma_single_map_benchmark_unprepare(void *arg)
-+{
-+	struct dma_single_map_param *mparam = arg;
-+
-+	free_pages_exact(mparam->xbuf, mparam->npages * PAGE_SIZE);
-+	kfree(mparam);
-+}
-+
-+static int dma_single_map_benchmark_do_map(void *arg)
-+{
-+	struct dma_single_map_param *mparam = arg;
-+
-+	mparam->addr = dma_map_single(mparam->dev, mparam->xbuf,
-+				      mparam->npages * PAGE_SIZE, mparam->dma_dir);
-+	if (unlikely(dma_mapping_error(mparam->dev, mparam->addr))) {
-+		pr_err("dma_map_single failed on %s\n", dev_name(mparam->dev));
-+		return -ENOMEM;
-+	}
-+
-+	return 0;
-+}
-+
-+static void dma_single_map_benchmark_do_unmap(void *arg)
-+{
-+	struct dma_single_map_param *mparam = arg;
-+
-+	dma_unmap_single(mparam->dev, mparam->addr,
-+			 mparam->npages * PAGE_SIZE, mparam->dma_dir);
-+}
-+
-+static struct map_benchmark_ops dma_single_map_benchmark_ops = {
-+	.prepare = dma_single_map_benchmark_prepare,
-+	.unprepare = dma_single_map_benchmark_unprepare,
-+	.do_map = dma_single_map_benchmark_do_map,
-+	.do_unmap = dma_single_map_benchmark_do_unmap,
-+};
-+
-+static struct map_benchmark_ops *dma_map_benchmark_ops[DMA_MAP_MODE_MAX] = {
-+	[DMA_MAP_SINGLE_MODE] = &dma_single_map_benchmark_ops,
-+};
-+
- static int map_benchmark_thread(void *data)
- {
--	void *buf;
--	dma_addr_t dma_addr;
- 	struct map_benchmark_data *map = data;
--	int npages = map->bparam.granule;
--	u64 size = npages * PAGE_SIZE;
-+	__u8 map_mode = map->bparam.map_mode;
- 	int ret = 0;
- 
--	buf = alloc_pages_exact(size, GFP_KERNEL);
--	if (!buf)
-+	void *arg = dma_map_benchmark_ops[map_mode]->prepare(map);
-+
-+	if (!arg)
- 		return -ENOMEM;
- 
- 	while (!kthread_should_stop())  {
-@@ -49,23 +130,10 @@ static int map_benchmark_thread(void *data)
- 		ktime_t map_stime, map_etime, unmap_stime, unmap_etime;
- 		ktime_t map_delta, unmap_delta;
- 
--		/*
--		 * for a non-coherent device, if we don't stain them in the
--		 * cache, this will give an underestimate of the real-world
--		 * overhead of BIDIRECTIONAL or TO_DEVICE mappings;
--		 * 66 means evertything goes well! 66 is lucky.
--		 */
--		if (map->dir != DMA_FROM_DEVICE)
--			memset(buf, 0x66, size);
--
- 		map_stime = ktime_get();
--		dma_addr = dma_map_single(map->dev, buf, size, map->dir);
--		if (unlikely(dma_mapping_error(map->dev, dma_addr))) {
--			pr_err("dma_map_single failed on %s\n",
--				dev_name(map->dev));
--			ret = -ENOMEM;
-+		ret = dma_map_benchmark_ops[map_mode]->do_map(arg);
-+		if (ret)
- 			goto out;
--		}
- 		map_etime = ktime_get();
- 		map_delta = ktime_sub(map_etime, map_stime);
- 
-@@ -73,7 +141,8 @@ static int map_benchmark_thread(void *data)
- 		ndelay(map->bparam.dma_trans_ns);
- 
- 		unmap_stime = ktime_get();
--		dma_unmap_single(map->dev, dma_addr, size, map->dir);
-+		dma_map_benchmark_ops[map_mode]->do_unmap(arg);
-+
- 		unmap_etime = ktime_get();
- 		unmap_delta = ktime_sub(unmap_etime, unmap_stime);
- 
-@@ -108,7 +177,7 @@ static int map_benchmark_thread(void *data)
- 	}
- 
- out:
--	free_pages_exact(buf, size);
-+	dma_map_benchmark_ops[map_mode]->unprepare(arg);
- 	return ret;
- }
- 
-@@ -209,6 +278,11 @@ static long map_benchmark_ioctl(struct file *file, unsigned int cmd,
- 
- 	switch (cmd) {
- 	case DMA_MAP_BENCHMARK:
-+		if (map->bparam.map_mode >= DMA_MAP_MODE_MAX) {
-+			pr_err("invalid map mode\n");
-+			return -EINVAL;
-+		}
-+
- 		if (map->bparam.threads == 0 ||
- 		    map->bparam.threads > DMA_MAP_MAX_THREADS) {
- 			pr_err("invalid thread number\n");
+ LOONGSON-2 SOC SERIES CLOCK DRIVER
+ M:	Yinbo Zhu <zhuyinbo@loongson.cn>
+ L:	linux-clk@vger.kernel.org
 -- 
-2.33.0
+2.45.2
 
