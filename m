@@ -1,135 +1,136 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6D7C26FA5F
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 17:32:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94A70252282
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 17:34:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746552779; cv=none; b=pUrqYhEkNJeZkO8Th/Og4SOULNIIAfo0hsTCdPxNBoHQPzCBY53IoSsz4FPjfmQGDuk4RCvXRQXWnJFSPTT6GS1RSeDIGbXWr1hR3dgZMHYwi5vYWbDFR/+KgXUg1Bc9kYJu0/tTtbvl4vf7HDk8c6Jpl98XZCS6mNTcLRpUgq8=
+	t=1746552900; cv=none; b=jGHvJOR1TjN9D91YqxAuZcJGJ3ZP7PiFhK8tm1tW/kx6Rk8jXYH5gUaA4HAFVIx2zhb4BiFitpX4TszAAh7MeZKME7CNE4EXBxPFRu4ru7S+0b/FlbVQRSRJMB5nyVp33Bskqevsyb3twXkPw00Gcdzz9rkTFdj4kwSClZGEDWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746552779; c=relaxed/simple;
-	bh=LalzK4CX9LfkUFa4w5FknR7IbwVA8GYrWliRe1t3UQg=;
+	s=arc-20240116; t=1746552900; c=relaxed/simple;
+	bh=cPOoBd0pByolj9VOBVqEdixwbpjtZCL/W9IxmU1eVOk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KpDn3Lfk9jIwhFrUacmYkHPO+IIYeicx2BWXHlkwkdBOUeYZTa6/QhVk0zs6bi5Nhms9fkXroytkQ7aqXECriPGtO5x//Xd0FSVpiAyOtnoT5r+6yDRtDLUbsG0zUBZgRl2tjUz9t3j+3O/SFzk2KZ1/3UzlzxN8WdVnfiH6WJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IMxLx5Ug; arc=none smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=LrBJPvR0RAQ5PxJldfv6UkKzbGMXgvZCxDZdldcEJVQM6glFLcimjuszHIxmWpHZ1vSRW4VvZ1phNQobCIsc/yGD2X6WKjLzki/VXqdIe2IKtCbwR1GDga1NaPKPjqNTqKlWUKVW0gR9eK/N9yVJ6wuNhpvrX22gCnh96duS1hg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bl0CJoab; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IMxLx5Ug"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-48b7747f881so8741cf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 10:32:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bl0CJoab"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-549967c72bcso7275745e87.3
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 10:34:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746552777; x=1747157577; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1746552886; x=1747157686; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=a3MSIo5Nl0iHVat7aILeomKDUxy2gPnZ7VSQWasqUek=;
-        b=IMxLx5UgXDlZXRRj8mKa0GIu3j8hcvfh4oDY2n8sXeebT2wcPQc5qcfxYWY6i8JPqC
-         sHYBsK5UdZAT92lRz65+MNQVZMp5Ml/t5yeF60ron/rskcxb6HfSLj6evwvOJo+6J+3q
-         tlDCR9aIspykVMEmRYsOaV16tMCWZKcH0yU4uqAMg3CbA/rW8zjd//9DtE/1MMrCL8zZ
-         Hip3kXRqClRhjWEXIAIGGtyddMt0Tgj/oaVIh/8G7aba0kk1TxCFK/YU7tZctzXLXUie
-         e1poTMW8Mr3Rbz9euHbhgRlhbiTgTm3u7fFdwmqibHcUvDB046quyff1G6Ndp57lAlPB
-         x1/A==
+        bh=hW/RFipIDDDA2IOVhwNsjzZgUtj+I9IKWcWxXFBsNF8=;
+        b=bl0CJoab88BZ4TtxAXP3ZC3kWydU1YegSCjyONo6g2Nhs4Ua2p0+py5MoIahekWuLs
+         /CBoCuTXW7zZAGj8SM0F0z5V83pJEpAVnrTwvwdnLSq8AxJ9u/aax+Ip8pj09sXbsPNV
+         huhPHQklDO5FlcLjbNnpxsRqMcG6dj0t2GHE7IfFNxKg8TNsqM2/ALxdH1HEoazQgKAA
+         m+xn9dFvNdTaaa8yBha7+XukC7U803X09JLplbWFFlvPUnhc7U1xhx92z4takhe53cwU
+         SeHNVPFdNbxfFPdoPgCfp0pvZR5PdhbPFZmSC+ChHrFIR9fWvR9/ddqYaAqhPCJ8pHT3
+         WVtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746552777; x=1747157577;
+        d=1e100.net; s=20230601; t=1746552887; x=1747157687;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=a3MSIo5Nl0iHVat7aILeomKDUxy2gPnZ7VSQWasqUek=;
-        b=kWFvN3LVxMqBpqVdZWuifwvAaD8x/mcuQRDmeVYpnMuN+OFmS9BGR+3y+dteRdLDPT
-         msldgezKon69i4qw8dIbwRWuEIpq1zou3az5LO0k5jxlMFAWoovfFGNgD5gpIWXc3Mu2
-         k2h5om9e7thH5F9bz/tP0BE7Bfd+9LpwzAtTTvTKDPyT/8uPdlS67yVdhpBOG9xA0tRo
-         mUO+9tqVHpuRqpkxkZRCRnSdaQA+ofswhL+zTUZc93Ujjsi2Z+1CeTdJnyJfwb8uoksS
-         uG00tAwmDaNv9EW0lyTMon3VqDC67wuRq9KgPxqJ1hT6+y4w8uMtYO6pgvcfit4a2iUG
-         8Scw==
-X-Forwarded-Encrypted: i=1; AJvYcCWHbrn23isouisrCxJMEm/bP/7+6lgnJGkvfAVNQqiCimg7v6fcgcOo4LFrRTijtxeszsHJeHhIvpvRqRM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8Yu2gayrlmaK1Cd/tMHc85kzZ06jYWiB7qLTUrdetF2dHsb7h
-	0NeKlO1/WRQA3hk33nj62arDc2JDPHu5zJVCsfHLjORz77E15B0O+/jQRjj5vczRs6T75HC70xd
-	tmI/welh+bDgRB9jVOkyJirhpuJdWc9+4EaDi
-X-Gm-Gg: ASbGncuo2NcJ1v9EHjOUt2WtQhNDhlXpLHk8BGuj6swXg0LBXCCIu1hLmpRmyeCxVNj
-	JPZQhXWUpnQT0dFHHgTg5KukyIGAXw0DmBjf9eDGK2Q5RBax/e3F+P1Yp+Q1sRqH0udTi9E8zag
-	0QsmsDD3tOAGg2tiWFZNBJSNd6wHAsLW98U1DrIBR4vFkNiPyOvo7Gq8k32wrksw==
-X-Google-Smtp-Source: AGHT+IG98g81WgMXXkuAILhcqwl2dPFyZHQOV/uqvjQbRfFtgeXEIDp4J9+Lt9m0P4v6pl5tN+tZqWKjP+Q0giH6IS4=
-X-Received: by 2002:a05:622a:316:b0:48d:8f6e:ece7 with SMTP id
- d75a77b69052e-491ff65fdeamr987151cf.3.1746552776442; Tue, 06 May 2025
- 10:32:56 -0700 (PDT)
+        bh=hW/RFipIDDDA2IOVhwNsjzZgUtj+I9IKWcWxXFBsNF8=;
+        b=KNG7f7joAi5y44bnMkj6+EOr276xgnFjIIBTHIwumkdS/gR34RCVaPymh5C+vCbwjd
+         n/UANWrg1gEHnyClNHM+lNdFEKJSI8eS0Bq93ZsFH47KyriwqSO4eAw+TovY7QEa8vPc
+         GiImNigLbXzAdEClGL/m+zapZfT8nffeLRHxvNshsDtObdb5yscNXQhPzsPQJ9EijvWF
+         GIEzrLTojAsOnVtT4Ngs9fFd03gpPVMHY6ViusM1XWR6K38PFlHa87UgvpkeLZJhRgHC
+         qMp1Rqr0Z14klfctpHfFvRmEzURd3FpvSnxAVhbqzU3h/LUCdfKFuxf945JOGUJTfzcI
+         CEQw==
+X-Forwarded-Encrypted: i=1; AJvYcCWUMgsZO0UElVNFOyXMH2VpYGXzGpKbVAvoTHQ9DoPRL19L3VA3SqFSFGW9GMdg3iSQgjveireRIYXLk1w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhTZadtHtgaFgO/y+bbqXfHSijoawrq0aOoTRWlPXqCQR73XA/
+	SgPhznUC5NTnWSV84hlaJMKVY7kHiCKr9GwrcAp/4pQql9T7xzWROcL2V4FlB5sMZcDYvCaLEEz
+	BEYQKdT+DAM1JYnq0ZwsBUNPgrU0=
+X-Gm-Gg: ASbGncuaWWOVdRjdKDgOQ6AWwmnny82kDVohZUVXHwJee1AYo28PBPDJhOo/vYysHU9
+	oRxDo5LUltAMabQNtB7/zOMzoW1OaAQjAsCiAmG6V7HI5pn11X6UKVn8E6lUHAZgS981JvTWhJ5
+	7cpUKO+Q4c4AxF3qUp0WDMaw==
+X-Google-Smtp-Source: AGHT+IF5jwWmr/G+KssqBDw5ITzh5J028FAK9zWOajJDXse3RrKxoo+Q3RE/m1ONSbRcbAyqWgTTaowMG48P53jh3/Q=
+X-Received: by 2002:a05:6512:39c1:b0:54a:cc25:d55d with SMTP id
+ 2adb3069b0e04-54fb93b0fe6mr154792e87.43.1746552886359; Tue, 06 May 2025
+ 10:34:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250425-slub-percpu-caches-v4-0-8a636982b4a4@suse.cz>
- <20250425-slub-percpu-caches-v4-1-8a636982b4a4@suse.cz> <142aeeb5-d6d8-84ca-e7a2-ba564185c565@gentwo.org>
- <4fa1f4fb-4148-45e8-930c-1175ce212cab@suse.cz>
-In-Reply-To: <4fa1f4fb-4148-45e8-930c-1175ce212cab@suse.cz>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Tue, 6 May 2025 10:32:43 -0700
-X-Gm-Features: ATxdqUH4PjzoYVBacL_EtNXCAZRGtR6y5A7WTiVQvBIg3V1k_Yt6rSRk1bOT3XE
-Message-ID: <CAJuCfpFe3SeY1EX=X4+wAm33Z3a0d_SoynK-86s5JWjsK80t_A@mail.gmail.com>
-Subject: Re: [PATCH v4 1/9] slab: add opt-in caching layer of percpu sheaves
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: "Christoph Lameter (Ampere)" <cl@gentwo.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	David Rientjes <rientjes@google.com>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Harry Yoo <harry.yoo@oracle.com>, Uladzislau Rezki <urezki@gmail.com>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, rcu@vger.kernel.org, 
-	maple-tree@lists.infradead.org
+References: <20250506165227.158932-1-ubizjak@gmail.com> <20250506165227.158932-3-ubizjak@gmail.com>
+In-Reply-To: <20250506165227.158932-3-ubizjak@gmail.com>
+From: Uros Bizjak <ubizjak@gmail.com>
+Date: Tue, 6 May 2025 19:34:34 +0200
+X-Gm-Features: ATxdqUHnTTSqzX-hOPjfzE4pFAXP-iZSa6VDpFSBHu7PJbjr7aGB19c5OWmuhHY
+Message-ID: <CAFULd4Z6Np=_zUUFH+Jys1VxyCAp6omgnMH9OL7iCKM1Si4q0A@mail.gmail.com>
+Subject: Re: [PATCH -tip 3/3] x86/asm/32: Modernize _memcpy()
+To: x86@kernel.org, linux-kernel@vger.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 28, 2025 at 12:01=E2=80=AFAM Vlastimil Babka <vbabka@suse.cz> w=
-rote:
+On Tue, May 6, 2025 at 6:52=E2=80=AFPM Uros Bizjak <ubizjak@gmail.com> wrot=
+e:
 >
-> On 4/25/25 19:31, Christoph Lameter (Ampere) wrote:
-> > On Fri, 25 Apr 2025, Vlastimil Babka wrote:
-> >
-> >> @@ -4195,7 +4793,11 @@ static __fastpath_inline void *slab_alloc_node(=
-struct kmem_cache *s, struct list
-> >>      if (unlikely(object))
-> >>              goto out;
-> >>
-> >> -    object =3D __slab_alloc_node(s, gfpflags, node, addr, orig_size);
-> >> +    if (s->cpu_sheaves && node =3D=3D NUMA_NO_NODE)
-> >> +            object =3D alloc_from_pcs(s, gfpflags);
-> >
-> > The node to use is determined in __slab_alloc_node() only based on the
-> > memory policy etc. NUMA_NO_NODE allocations can be redirected by memory
-> > policies and this check disables it.
+> Use inout "+" constraint modifier where appropriate, declare
+> temporary variables as unsigned long and rewrite parts of assembly
+> in plain C. The memcpy() function shrinks by 10 bytes, from:
 >
-> To handle that, alloc_from_pcs() contains this:
+> 00e778d0 <memcpy>:
+>   e778d0:       55                      push   %ebp
+>   e778d1:       89 e5                   mov    %esp,%ebp
+>   e778d3:       83 ec 0c                sub    $0xc,%esp
+>   e778d6:       89 5d f4                mov    %ebx,-0xc(%ebp)
+>   e778d9:       89 c3                   mov    %eax,%ebx
+>   e778db:       89 c8                   mov    %ecx,%eax
+>   e778dd:       89 75 f8                mov    %esi,-0x8(%ebp)
+>   e778e0:       c1 e9 02                shr    $0x2,%ecx
+>   e778e3:       89 d6                   mov    %edx,%esi
+>   e778e5:       89 7d fc                mov    %edi,-0x4(%ebp)
+>   e778e8:       89 df                   mov    %ebx,%edi
+>   e778ea:       f3 a5                   rep movsl %ds:(%esi),%es:(%edi)
+>   e778ec:       89 c1                   mov    %eax,%ecx
+>   e778ee:       83 e1 03                and    $0x3,%ecx
+>   e778f1:       74 02                   je     e778f5 <memcpy+0x25>
+>   e778f3:       f3 a4                   rep movsb %ds:(%esi),%es:(%edi)
+>   e778f5:       8b 75 f8                mov    -0x8(%ebp),%esi
+>   e778f8:       89 d8                   mov    %ebx,%eax
+>   e778fa:       8b 5d f4                mov    -0xc(%ebp),%ebx
+>   e778fd:       8b 7d fc                mov    -0x4(%ebp),%edi
+>   e77900:       89 ec                   mov    %ebp,%esp
+>   e77902:       5d                      pop    %ebp
+>   e77903:       c3                      ret
 >
-> #ifdef CONFIG_NUMA
->         if (static_branch_unlikely(&strict_numa)) {
->                 if (current->mempolicy)
->                         return NULL;
->         }
-> #endif
+> to:
 >
-> And so there will be a fallback. It doesn't (currently) try to evaluate i=
-f
-> the local node is compatible as this is before taking the local lock (and
-> thus preventing migration).
+> 00e778b0 <memcpy>:
+>   e778b0:       55                      push   %ebp
+>   e778b1:       89 e5                   mov    %esp,%ebp
+>   e778b3:       83 ec 08                sub    $0x8,%esp
+>   e778b6:       89 75 f8                mov    %esi,-0x8(%ebp)
+>   e778b9:       89 d6                   mov    %edx,%esi
+>   e778bb:       89 ca                   mov    %ecx,%edx
+>   e778bd:       89 7d fc                mov    %edi,-0x4(%ebp)
+>   e778c0:       c1 e9 02                shr    $0x2,%ecx
+>   e778c3:       89 c7                   mov    %eax,%edi
+>   e778c5:       f3 a5                   rep movsl %ds:(%esi),%es:(%edi)
+>   e778c7:       83 e2 03                and    $0x3,%edx
+>   e778ca:       74 04                   je     e778d0 <memcpy+0x20>
+>   e778cc:       89 d1                   mov    %edx,%ecx
+>   e778ce:       f3 a4                   rep movsb %ds:(%esi),%es:(%edi)
+>   e778d0:       8b 75 f8                mov    -0x8(%ebp),%esi
+>   e778d3:       8b 7d fc                mov    -0x4(%ebp),%edi
+>   e778d6:       89 ec                   mov    %ebp,%esp
+>   e778d8:       5d                      pop    %ebp
+>   e778d9:       c3                      ret
 >
->
-> >> @@ -4653,7 +5483,10 @@ void slab_free(struct kmem_cache *s, struct sla=
-b *slab, void *object,
-> >>      memcg_slab_free_hook(s, slab, &object, 1);
-> >>      alloc_tagging_slab_free_hook(s, slab, &object, 1);
-> >>
-> >> -    if (likely(slab_free_hook(s, object, slab_want_init_on_free(s), f=
-alse)))
-> >> +    if (unlikely(!slab_free_hook(s, object, slab_want_init_on_free(s)=
-, false)))
-> >> +            return;
-> >> +
-> >> +    if (!s->cpu_sheaves || !free_to_pcs(s, object))
-> >>              do_slab_free(s, slab, object, object, 1, addr);
-> >>  }
-> >
-> > We free to pcs even if the object is remote?
+> due to a better register allocation, avoiding the call-saved
 
-Overall the patch LGTM but I would like to hear the answer to this
-question too, please.
+Oops, this should have been written as "... avoiding the callee-saved ..."
 
-> >
->
+> %ebx register.
+
+Uros.
