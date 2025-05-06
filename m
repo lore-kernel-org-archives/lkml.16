@@ -1,115 +1,260 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E73A28152A;
-	Tue,  6 May 2025 14:05:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABF56281517;
+	Tue,  6 May 2025 14:05:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746540343; cv=none; b=V5gZSO96cZGoWVROpo9JP1thkmKbFsOZYkTKldjOh9AnJ2IhWNNDMPY0wKfrGYR/LlEKz7ChQxX+GAGSHgIaTxqEdhc8oc8j87pAnuX4XJ36iSCzyIrJNJ6ieIoX7CRJ0q29TtGIL8i/RE+0sjP+YCpqjfru5/ye8rDVEEcnSMw=
+	t=1746540350; cv=none; b=u+rqyzAy5GKKzE2qSi6Jf2lElh3KHYtyUS7QyjZtD670geQ9L8JQ3w5s0WC46LEHrjwmpNoSUXFi7B9SyQOpXLeDjHnre5VpmQMQtUvr4iAfbnUVaJmn7Nqc3GG+GScrvHrdF++9hTVwbQW+tY6AL2mCkNmLmENp5em/tXOiUY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746540343; c=relaxed/simple;
-	bh=lwRmuP2GMcWJ8L+R/b+kXBU7HZjwjH6hqn/r0N3fvZM=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hWVNIuIF3z/o0cjRrSU0YwbV7jO7cUGk9/MYSAEvp5p3VSuMidEBTin2UaE7tPAkKJyKJsqEu87Wwn1h1vQq8gv0OYbYAngziazEXru8Zr0in4jPQGSipIPAsu2k42iiCI/x31SxM/V+f2i42tis1HMb/Ze9cJVTAcChk/oRM1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EvKnN4Uc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746540350; c=relaxed/simple;
+	bh=rtGooarvZfFQ6BrtD0+1cwijdv62pjdrrNWljVpj0xE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sS8FN/ojCTnwj+nEBmyrsnIQGpSK7MdOmlGMCM1BHu5GMgasmsTv8SrcTRt0DSMTl3sMG2j53acXzfDsQEs4g+qBRMDm0OuM7BSzbFj1dIdtBkrDDEHbwEdDIcht+iMuGzdWMcSgFAcwRsMshOKuH2HzT9FAeUb6CciwWbnOglQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CavGFfBw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EvKnN4Uc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD6D5C4CEE4;
-	Tue,  6 May 2025 14:05:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CavGFfBw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D45F9C4CEE4;
+	Tue,  6 May 2025 14:05:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746540342;
-	bh=lwRmuP2GMcWJ8L+R/b+kXBU7HZjwjH6hqn/r0N3fvZM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=EvKnN4Ucmz+o7iRTO0Gy4X3NDy0tma/vf8EnkOdVJNlA7iglaUg3TUPnQei1OhhbP
-	 IbxjATWMkyzzU4c9/z1xRjR8gGDTT2qYC6IKzc5+/TbAkzLFkMngjvsCMsAn4ihQWe
-	 twvGJvWCL1NiSYBjT32Ip/Lbl9tJBFymL0mjTlxIDBwKbuBPz9VJQqLZGfkuNtpgGw
-	 BVZvxElF6fzJYdRN+gRXUkdCMYdCPoGtQ9fgZgkmaVFnuUnJcZj36y/lJoXxycqwCO
-	 9rO92UbnTDUbd5f58F6hnaNEHVQU0Y0DJXi5AAB33xvbHlWwwd2ip433GQKpEBvNQt
-	 kmL7ZtOzL8GXQ==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uCIvU-00CGRv-QZ;
-	Tue, 06 May 2025 15:05:40 +0100
-Date: Tue, 06 May 2025 15:05:39 +0100
-Message-ID: <86frhhhm18.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Sascha Bischoff <sascha.bischoff@arm.com>,
-	Timothy Hayes <timothy.hayes@arm.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 00/25] Arm GICv5: Host driver implementation
-In-Reply-To: <20250506-gicv5-host-v3-0-6edd5a92fd09@kernel.org>
-References: <20250506-gicv5-host-v3-0-6edd5a92fd09@kernel.org>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=k20201202; t=1746540350;
+	bh=rtGooarvZfFQ6BrtD0+1cwijdv62pjdrrNWljVpj0xE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=CavGFfBwe9eA/J6fTn0Tc/ljif6AN4LkaacNCnZkVSq3FCx6ez0zoz9ribQZvba8o
+	 sTLNzMNCwV6R3Op/hF1n1jrxZ6FW389LOKmY493/xvA1/WTja0I8V9cAvbnfWJfYd/
+	 9r6bmUe7lB2DppQDa75YmhaS039cyMhITVsRAgXw4I6d/YJab93M2PSaFxK25Bgy0p
+	 hnTQipJBobZ/g5oTm2MXUyDxplCbpRdEF3ShJh4IDv5qAob3BHS5IUCDN5RFue6Pm9
+	 0AHIccSZGSkMrtjE1djQbal3DwNW7zwzHbMZAx6twgSKK5AhwP+pE+nLfs8tEq70TE
+	 P6LzEBV07MilQ==
+Message-ID: <959b56f0-ff63-485b-86eb-96ae32bdeb88@kernel.org>
+Date: Tue, 6 May 2025 16:05:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: lpieralisi@kernel.org, tglx@linutronix.de, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de, sascha.bischoff@arm.com, timothy.hayes@arm.com, Liam.Howlett@oracle.com, mark.rutland@arm.com, jirislaby@kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/6] dt-bindings: mfd: add bindings for QIXIS CPLD
+To: Ioana Ciornei <ioana.ciornei@nxp.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+References: <20250430153634.2971736-1-ioana.ciornei@nxp.com>
+ <20250430153634.2971736-2-ioana.ciornei@nxp.com>
+ <20250502-meticulous-bulky-wildebeest-c1a8b6@kuoka>
+ <wna3loahthqbn5hnw2pbt3yznmzzv3zppi7f2nblvq3t22jdc2@7cse4r4p6q5z>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <wna3loahthqbn5hnw2pbt3yznmzzv3zppi7f2nblvq3t22jdc2@7cse4r4p6q5z>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, 06 May 2025 13:23:29 +0100,
-Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+On 06/05/2025 15:57, Ioana Ciornei wrote:
+> On Fri, May 02, 2025 at 09:01:59AM +0200, Krzysztof Kozlowski wrote:
+>> On Wed, Apr 30, 2025 at 06:36:29PM GMT, Ioana Ciornei wrote:
+>>> This adds device tree bindings for the board management controller -
+>>> QIXIS CPLD - found on some Layerscape based boards such as LX2160A-RDB,
+>>> LX2160AQDS, LS1028AQDS etc.
+>>>
+>>> Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
+>>> ---
+>>>  .../bindings/mfd/fsl,qixis-i2c.yaml           | 65 +++++++++++++++++++
+>>>  1 file changed, 65 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/mfd/fsl,qixis-i2c.yaml
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/mfd/fsl,qixis-i2c.yaml b/Documentation/devicetree/bindings/mfd/fsl,qixis-i2c.yaml
+>>> new file mode 100644
+>>> index 000000000000..562878050916
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/mfd/fsl,qixis-i2c.yaml
+>>
+>> Filename matching compatible.
 > 
-> =============
-> 2.5 GICv5 IWB
-> =============
+> How to choose one if there are multiple compatible strings?
+
+The fallback or the oldest or the lowest number or whichever you prefer
+as a base.
+
 > 
-> The IWB driver has been dropped owing to issues encountered with
-> core code DOMAIN_BUS_WIRED_TO_MSI bus token handling:
+>>
+>>> @@ -0,0 +1,65 @@
+>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>>> +%YAML 1.2
+>>> +---
+>>> +$id: http://devicetree.org/schemas/mfd/fsl,qixis-i2c.yaml
+>>> +$schema: http://devicetree.org/meta-schemas/core.yaml
+>>> +
+>>> +title: NXP's QIXIS CPLD board management controller
+>>> +
+>>> +maintainers:
+>>> +  - Ioana Ciornei <ioana.ciornei@nxp.com>
+>>> +
+>>> +description: |
+>>> +  The board management controller found on some Layerscape boards contains
+>>> +  different IP blocks like GPIO controllers, interrupt controllers, reg-muxes
+>>> +  etc.
+>>> +
+>>> +properties:
+>>> +  compatible:
+>>> +    enum:
+>>> +      - fsl,lx2160a-qds-qixis-i2c
+>>> +      - fsl,lx2162a-qds-qixis-i2c
+>>> +      - fsl,ls1028a-qds-qixis-i2c
+>>
+>> Keep alphabetical order.
+>>
+>> What is actual device name? I2C? Is this an I2C controller or device?
+
+I assume you will then drop the redundant part.
+
+>>
+>>> +
+>>> +  reg:
+>>> +    description:
+>>> +      I2C device address.
+>>
+>> This says device, so i2c in compatible is wrong.
+>>
+>> Anyway drop description, redundant.
 > 
-> https://lore.kernel.org/lkml/87tt6310hu.wl-maz@kernel.org/
+> Ok, will drop.
+> 
+>>
+>>
+>>> +    maxItems: 1
+>>> +
+>>> +  "#address-cells":
+>>> +    const: 1
+>>
+>> Why?
+>>
+>>> +
+>>> +  "#size-cells":
+>>> +    const: 0
+>>
+>> Why? Drop cells.
+>>
+> 
+> See below.
+> 
+>>> +
+>>> +  mux-controller:
+>>> +    $ref: /schemas/mux/reg-mux.yaml#
+>>> +
+>>> +required:
+>>> +  - "#address-cells"
+>>> +  - "#size-cells"
+>>> +  - compatible
+>>> +  - reg
+>>
+>> Keep same order as in properties
+> 
+> Ok.
+> 
+>>
+>>> +
+>>> +additionalProperties: false
+>>> +
+>>> +examples:
+>>> +  - |
+>>> +    i2c {
+>>> +        #address-cells = <1>;
+>>> +        #size-cells = <0>;
+>>> +
+>>> +        qixis@66 {
+>>
+>> Node names should be generic. See also an explanation and list of
+>> examples (not exhaustive) in DT specification:
+>> https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
+> 
+> In this case, an accepted node name is 'cpld'?
 
-This problem does not have much to do with DOMAIN_BUS_WIRED_TO_MSI.
+If this is CPLD then yes.
 
-The issues are that:
+> 
+>>
+>>> +            compatible = "fsl,lx2160a-qds-qixis-i2c";
+>>> +            reg = <0x66>;
+>>> +            #address-cells = <1>;
+>>> +            #size-cells = <0>;
+>>
+>> So were do you use address/size cells?
+>>
+> 
+> For example, fsl-ls1028a-qds.dts looks like this:
+> 
+> 	fpga@66 {
+> 		compatible = "fsl,ls1028a-qds-qixis-i2c";
+> 		reg = <0x66>;
+> 		#address-cells = <1>;
+> 		#size-cells = <0>;
+> 
+> 		mux: mux-controller@54 {
+> 			compatible = "reg-mux";
+> 			reg = <0x54>;
+> 			#mux-control-cells = <1>;
+> 			mux-reg-masks = <0x54 0xf0>; /* 0: reg 0x54, bits 7:4 */
+> 		};
+> 	};
+> 
+> Also, some boards have in their qixis CPLD gpio controllers and I am
+> planning to add them as the next step.
 
-- the core code calls into the .prepare domain on a per-interrupt
-  basis instead of on a per *device* basis. This is a complete
-  violation of the MSI API, because .prepare is when you are supposed
-  to perform resource reservation (in the GICv3 parlance, that's ITT
-  allocation + MAPD command).
+And if you tested that DTS you would see that binding does not work
+well... so my arguments stay valid - these properties in current binding
+make no sense. However binding is just wrong, so maybe these properties
+make sense after fixing the binding but then in both cases: current
+stage is not correct.
 
-- the same function calls .prepare for a *single* interrupt,
-  effectively telling the irqchip "my device has only one interrupt".
-  Because I'm super generous (and don't like wasting precious bytes),
-  I allocate 32 LPIs at the minimum. Only snag is that I could do with
-  300+ interrupts, and calling repeatedly doesn't help at all, since
-  we cannot *grow* an ITT.
+> 
+> Ioana
 
-So this code needs to be taken to the backyard and beaten into shape
-before we can make use of it. My D05 (with its collection of MBIGENs)
-only works by accident at the moment, as I found out yesterday, and
-GICv5 IWB is in the same boat, since it reuses the msi-parent thing,
-and therefore the same heuristic.
 
-I guess not having the IWB immediately isn't too big a deal, but I
-really didn't expect to find this...
-
-Thanks,
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+Best regards,
+Krzysztof
