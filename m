@@ -1,188 +1,167 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D01B27B4F4;
-	Tue,  6 May 2025 11:51:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AB4622DFB1
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 11:52:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746532281; cv=none; b=Pt57D14qY8bbHjnoiGf5kF/UO7BIu9GEglg+DvihvVMJKykiAyzX6PSSddoFD4fswLOr677qrLKqI8WBpYA/IxHSWjYnJoFFR7ryNoHPF8KyGsRuLN9cTtns0U7SoKiIwQZq7w4QN6onA8rY0wERhcfjYSu3K+iS22AsycmJfeo=
+	t=1746532377; cv=none; b=ohopMDHumkvvqhipKLGjgMpomhM+GOhno5LaIDK/Zk4yHE9IiUsPP2ulVVCXFtGPRbidMSyE66zEEe7/ZHTWWSO8IA2B9N6rowqX3KF9c+r4dz/+v6iCRNu5ctxb3GJuZfep/sYqYUQxpVQBi2x2cfxi7fOIw5dtCUvRoQjohK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746532281; c=relaxed/simple;
-	bh=cCuxWpiYYQTcQFZoQpnwaVPEjcFY17Qb4wklWzMy24M=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=BxOqIn/vgfdZiQ3f2R2YLa28hC3rNnfzAoSvO/w3rpYE5dzyh82EY4jaT2KpKUgzg5+oGadHSRCn67VlEfzI9ylyGrjqwM4h2s2lWPn2Qt9xW9Jx1hCgw2i9PizIuP4VV0IIGqu98lgxt6e03mdKdpwtYQH3LwLPTFCN9Fic/9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=usJWoeU2; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="usJWoeU2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF5F9C4CEE4;
-	Tue,  6 May 2025 11:51:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746532281;
-	bh=cCuxWpiYYQTcQFZoQpnwaVPEjcFY17Qb4wklWzMy24M=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=usJWoeU2plhK+JJTu+tuUiSCKX8ObnXGg2tn9qT3oZPyS4Nb/IrJW5hLIjfwEvk5Y
-	 FzcC6hMlsApsQWeGo7flGOjaJJYB0axZ56CZH027+OlkyS9IXc5BlAevCX0viXM/LI
-	 UOka+jVk1JddEDEHsqsuHggCo4hqunfS5YAC1IbNMTfKG7pfOgjsjQ3WclRKTrl+hC
-	 EzjZpLHOzXwtIuznjY108MHxyW/76NpjMn/vM5IidiKn172prSrvJL4kcEUf5pdR7e
-	 Yu+3LCZhx48tpFi2OtRtlPtdp6/trvGfeXEMnHiRhn/gO8pAdw3szEGqcZI+GCD/OT
-	 rdeBPNtD8/+WQ==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com>
-Cc: "Danilo Krummrich" <dakr@kernel.org>,  "Miguel Ojeda"
- <ojeda@kernel.org>,  "Alex Gaynor" <alex.gaynor@gmail.com>,  "Boqun Feng"
- <boqun.feng@gmail.com>,  "Gary Guo" <gary@garyguo.net>,  =?utf-8?Q?Bj?=
- =?utf-8?Q?=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,  "Benno Lossin" <benno.lossin@proton.me>,
-  "Alice Ryhl" <aliceryhl@google.com>,  "Trevor Gross" <tmgross@umich.edu>,
-  "Joel Becker" <jlbec@evilplan.org>,  "Peter Zijlstra"
- <peterz@infradead.org>,  "Ingo Molnar" <mingo@redhat.com>,  "Will Deacon"
- <will@kernel.org>,  "Waiman Long" <longman@redhat.com>,  "Fiona Behrens"
- <me@kloenk.dev>,  "Charalampos Mitrodimas" <charmitro@posteo.net>,
-  "Daniel Almeida" <daniel.almeida@collabora.com>,  "Breno Leitao"
- <leitao@debian.org>,  <rust-for-linux@vger.kernel.org>,
-  <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 1/3] rust: configfs: introduce rust support for configfs
-In-Reply-To: <878qnaq8ke.fsf@kernel.org> (Andreas Hindborg's message of "Tue,
-	06 May 2025 13:31:45 +0200")
-References: <20250501-configfs-v6-0-66c61eb76368@kernel.org>
-	<20250501-configfs-v6-1-66c61eb76368@kernel.org>
-	<ELsEgktE6XbGxDyusumtuVzyX-eotyYuQdviHTZaIxN7KZaGFr0fNqrv5tac_gYWfbDZYNTC-wQyQuxnmufA2g==@protonmail.internalid>
-	<CANiq72mS_HV5rDjP+t+k0jX9QeAgF2SB9_xX54iEBTH-GoPuEg@mail.gmail.com>
-	<87msbw1s9e.fsf@kernel.org>
-	<86-cT9dBPpEIyQXWVCeEmj3TRvBm6Ta0p1B20sSngRGOqOuC96i6hG3Q9Hg3bN8AQTCPXlsxg_C5Ok0G4JJzpQ==@protonmail.internalid>
-	<CANiq72nd0Pfv4TrpULGQ_fZkyBpHyVVZ1H45_RJBgBxkJuzCJQ@mail.gmail.com>
-	<87h62419r5.fsf@kernel.org>
-	<FLMJjrvUlrMEWy7KzihcYUt-V1IFyP8nt9KYysmVPsWdxUR9dRVXsRoSBw4Z0oFX8tzfWieBDkP7YPAHOXtFcg==@protonmail.internalid>
-	<CANiq72miL3eZ40ujmA-pXCqMS8y2AzJQ1UKpL1_hX03AJ0fteQ@mail.gmail.com>
-	<87bjsc154u.fsf@kernel.org>
-	<CANiq72=SD9ogr+RpPK7E+cFmn2qAVu+MBCoChdp8-hw7JFu6zA@mail.gmail.com>
-	<TbTextfZAMlWFS5cWlUE-Wtnp1bv8P783IQQbWUcnHvEgBjpIxukMngLdPkqNR9jWT9O_OtOY1ejin9JoOnsww==@protonmail.internalid>
-	<CANiq72m8VWKRyFai0Xg8AZUTjG0eUVG8nY-ZCQOqOnvwsW0ZaA@mail.gmail.com>
-	<875xij1ouy.fsf@kernel.org>
-	<m9-XLEt04AwLCzToZZoXspXzPC6RJkp8ht7DnkVuEEPHQ02CjS0SNIKyKM1gsH-QfZruoYixHlsAHzfYyNEykw==@protonmail.internalid>
-	<CANiq72m0cuf5YKfOY8oNg83dzWEqqyddGKKh_6fwQQ4hoCp+yQ@mail.gmail.com>
-	<87ecx3xzqd.fsf@kernel.org>
-	<SwuN4IgGwXbwy3_67Br6ePRhtgh9XOahiVZwowTgUCacTz4Eos44f86aFUJS7rqZfrb2FKhBkKanUDERKBMSmw==@protonmail.internalid>
-	<CANiq72nPMH06HURgZJN-o0GMmGdQQpFetm=S5SDEB+B+f0wefA@mail.gmail.com>
-	<878qnaq8ke.fsf@kernel.org>
-User-Agent: mu4e 1.12.7; emacs 30.1
-Date: Tue, 06 May 2025 13:51:08 +0200
-Message-ID: <8734diq7o3.fsf@kernel.org>
+	s=arc-20240116; t=1746532377; c=relaxed/simple;
+	bh=4Dj8J1B6emEgedZ+BggE2aDkhwBb3aam1vzdhifBmI8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Y7t5MWRCgeerS6eXEfiPPoFecHEZc3LUt3EHPZ9czj7sCNu0jllOGFMQiS9jRZWweovCGr5lriIk6tB4BK1uslWr6li/mMHnlGbFSpclpun9A+hdfspbRkl51RMWZSadP2U46J70P4ML43Fzqz50j/+Fz0FDNtEiDO29Zj9Jrkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 512CF113E;
+	Tue,  6 May 2025 04:52:43 -0700 (PDT)
+Received: from [10.163.80.199] (unknown [10.163.80.199])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A5A223F58B;
+	Tue,  6 May 2025 04:52:42 -0700 (PDT)
+Message-ID: <060ce34c-6729-4128-9190-264f7684e299@arm.com>
+Date: Tue, 6 May 2025 17:22:39 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] mm: Call pointers to ptes as ptep
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: akpm@linux-foundation.org, Liam.Howlett@oracle.com, vbabka@suse.cz,
+ jannh@google.com, pfalcato@suse.de, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, david@redhat.com, peterx@redhat.com,
+ ryan.roberts@arm.com, mingo@kernel.org, libang.li@antgroup.com,
+ maobibo@loongson.cn, zhengqi.arch@bytedance.com, baohua@kernel.org,
+ anshuman.khandual@arm.com, willy@infradead.org, ioworker0@gmail.com,
+ yang@os.amperecomputing.com
+References: <20250506050056.59250-1-dev.jain@arm.com>
+ <20250506050056.59250-2-dev.jain@arm.com>
+ <5c20ada8-4863-4a33-bb1d-3b5695d0bf66@lucifer.local>
+Content-Language: en-US
+From: Dev Jain <dev.jain@arm.com>
+In-Reply-To: <5c20ada8-4863-4a33-bb1d-3b5695d0bf66@lucifer.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Andreas Hindborg <a.hindborg@kernel.org> writes:
 
-> "Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com> writes:
->
->> On Mon, May 5, 2025 at 9:51=E2=80=AFAM Andreas Hindborg <a.hindborg@kern=
-el.org> wrote:
->>>
->>> So I was thinking that because I am initializing a static with a let
->>> statement, it would run in const context. But I see that it is not
->>> actually guaranteed.
+
+On 06/05/25 4:22 pm, Lorenzo Stoakes wrote:
+> On Tue, May 06, 2025 at 10:30:54AM +0530, Dev Jain wrote:
+>> Avoid confusion between pte_t* and pte_t data types by appending pointer
+>> type variables by p. No functional change.
+> 
+> NIT: 'appending'->'suffixing' and 'by p' -> with p'.
+
+Thanks.
+
+> 
 >>
->> No, that is actually guaranteed, i.e. when initializing a static. But
->> you aren't initializing a static here, no? Which static are you
->> referring to? If you were, then the "normal" `assert!` would work,
->> because it would be a const context.
+>> Signed-off-by: Dev Jain <dev.jain@arm.com>
+> 
+> This looks generally fine, could you fix the nit below however... sorry to
+> be a pain!
+> 
+> Thanks!
+> 
+>> ---
+>>   mm/mremap.c | 28 ++++++++++++++--------------
+>>   1 file changed, 14 insertions(+), 14 deletions(-)
 >>
->> The `add` calls I see are just in the `let` statement, not
->> initializing any static:
+>> diff --git a/mm/mremap.c b/mm/mremap.c
+>> index 7db9da609c84..1a08a7c3b92f 100644
+>> --- a/mm/mremap.c
+>> +++ b/mm/mremap.c
+>> @@ -176,7 +176,7 @@ static int move_ptes(struct pagetable_move_control *pmc,
+>>   	struct vm_area_struct *vma = pmc->old;
+>>   	bool need_clear_uffd_wp = vma_has_uffd_without_event_remap(vma);
+>>   	struct mm_struct *mm = vma->vm_mm;
+>> -	pte_t *old_pte, *new_pte, pte;
+>> +	pte_t *old_ptep, *new_ptep, pte;
+> 
+> While we're at it, can we please move the pte decl to a new line? Mixing
+> pointers and non-pointers is not great (I refactored it but mremap still
+> has a bunch of less-than-ideal stuff in it :)
+
+Sure.
+
+> 
+>>   	pmd_t dummy_pmdval;
+>>   	spinlock_t *old_ptl, *new_ptl;
+>>   	bool force_flush = false;
+>> @@ -211,8 +211,8 @@ static int move_ptes(struct pagetable_move_control *pmc,
+>>   	 * We don't have to worry about the ordering of src and dst
+>>   	 * pte locks because exclusive mmap_lock prevents deadlock.
+>>   	 */
+>> -	old_pte = pte_offset_map_lock(mm, old_pmd, old_addr, &old_ptl);
+>> -	if (!old_pte) {
+>> +	old_ptep = pte_offset_map_lock(mm, old_pmd, old_addr, &old_ptl);
+>> +	if (!old_ptep) {
+>>   		err = -EAGAIN;
+>>   		goto out;
+>>   	}
+>> @@ -223,10 +223,10 @@ static int move_ptes(struct pagetable_move_control *pmc,
+>>   	 * mmap_lock, so this new_pte page is stable, so there is no need to get
+>>   	 * pmdval and do pmd_same() check.
+>>   	 */
+>> -	new_pte = pte_offset_map_rw_nolock(mm, new_pmd, new_addr, &dummy_pmdval,
+>> +	new_ptep = pte_offset_map_rw_nolock(mm, new_pmd, new_addr, &dummy_pmdval,
+>>   					   &new_ptl);
+>> -	if (!new_pte) {
+>> -		pte_unmap_unlock(old_pte, old_ptl);
+>> +	if (!new_ptep) {
+>> +		pte_unmap_unlock(old_ptep, old_ptl);
+>>   		err = -EAGAIN;
+>>   		goto out;
+>>   	}
+>> @@ -235,12 +235,12 @@ static int move_ptes(struct pagetable_move_control *pmc,
+>>   	flush_tlb_batched_pending(vma->vm_mm);
+>>   	arch_enter_lazy_mmu_mode();
 >>
->>             {
->>                 const N: usize =3D 0usize;
->>                 unsafe { CONFIGURATION_ATTRS.add::<N, 0,
->> _>(&CONFIGURATION_MESSAGE_ATTR) };
->>             }
+>> -	for (; old_addr < old_end; old_pte++, old_addr += PAGE_SIZE,
+>> -				   new_pte++, new_addr += PAGE_SIZE) {
+>> -		if (pte_none(ptep_get(old_pte)))
+>> +	for (; old_addr < old_end; old_ptep++, old_addr += PAGE_SIZE,
+>> +				   new_ptep++, new_addr += PAGE_SIZE) {
+>> +		if (pte_none(ptep_get(old_ptep)))
+>>   			continue;
 >>
->> So it also means this comment is wrong:
+>> -		pte = ptep_get_and_clear(mm, old_addr, old_pte);
+>> +		pte = ptep_get_and_clear(mm, old_addr, old_ptep);
+>>   		/*
+>>   		 * If we are remapping a valid PTE, make sure
+>>   		 * to flush TLB before we drop the PTL for the
+>> @@ -258,7 +258,7 @@ static int move_ptes(struct pagetable_move_control *pmc,
+>>   		pte = move_soft_dirty_pte(pte);
 >>
->> +        // SAFETY: This function is only called through the `configfs_a=
-ttrs`
->> +        // macro. This ensures that we are evaluating the function in c=
-onst
->> +        // context when initializing a static. As such, the reference c=
-reated
->> +        // below will be exclusive.
+>>   		if (need_clear_uffd_wp && pte_marker_uffd_wp(pte))
+>> -			pte_clear(mm, new_addr, new_pte);
+>> +			pte_clear(mm, new_addr, new_ptep);
+>>   		else {
+>>   			if (need_clear_uffd_wp) {
+>>   				if (pte_present(pte))
+>> @@ -266,7 +266,7 @@ static int move_ptes(struct pagetable_move_control *pmc,
+>>   				else if (is_swap_pte(pte))
+>>   					pte = pte_swp_clear_uffd_wp(pte);
+>>   			}
+>> -			set_pte_at(mm, new_addr, new_pte, pte);
+>> +			set_pte_at(mm, new_addr, new_ptep, pte);
+>>   		}
+>>   	}
 >>
->> Please double-check all this... :)
->
-> Oops.
->
+>> @@ -275,8 +275,8 @@ static int move_ptes(struct pagetable_move_control *pmc,
+>>   		flush_tlb_range(vma, old_end - len, old_end);
+>>   	if (new_ptl != old_ptl)
+>>   		spin_unlock(new_ptl);
+>> -	pte_unmap(new_pte - 1);
+>> -	pte_unmap_unlock(old_pte - 1, old_ptl);
+>> +	pte_unmap(new_ptep - 1);
+>> +	pte_unmap_unlock(old_ptep - 1, old_ptl);
+>>   out:
+>>   	if (pmc->need_rmap_locks)
+>>   		drop_rmap_locks(vma);
+>> --
+>> 2.30.2
 >>
->>> Right. Which is why I opted for `build_error`. But with the `const`
->>> block solution you suggested is better.
->>
->> I thought you opted for that because you thought the `assert!` would
->> only work if not refactored. What I tried to point out was that the
->> `assert!` wouldn't have worked even before the refactoring.
->
-> I made a mistake in thinking this was in const context. I'll see if I
-> can fix that.
-
-
-I think I can fix it like this:
-
-
-modified   rust/kernel/configfs.rs
-@@ -703,8 +703,8 @@ impl<const N: usize, Data> AttributeList<N, Data> {
-=20
-     /// # Safety
-     ///
--    /// This function can only be called by the [`kernel::configfs_attrs`]
--    /// macro.
-+    /// The caller must ensure that there are no other concurrent accesses=
- to
-+    /// `self`. That is, the caller has exclusive access to `self.`
-     #[doc(hidden)]
-     pub const unsafe fn add<const I: usize, const ID: u64, O>(
-         &'static self,
-@@ -715,10 +715,8 @@ impl<const N: usize, Data> AttributeList<N, Data> {
-         // We need a space at the end of our list for a null terminator.
-         const { assert!(I < N - 1, "Invalid attribute index") };
-=20
--        // SAFETY: This function is only called through the
--        // [kernel::`configfs_attrs`] macro. This ensures that we are eval=
-uating
--        // the function in const context when initializing a static. As su=
-ch,
--        // the reference created below will be exclusive.
-+        // SAFETY: By function safety requirements, we have exclusive acce=
-ss to
-+        // `self` and the reference created below will be exclusive.
-         unsafe {
-             (&mut *self.0.get())[I] =3D (attribute as *const Attribute<ID,=
- O, Data>)
-                 .cast_mut()
-@@ -955,7 +953,12 @@ macro_rules! configfs_attrs {
-             @assign($($assign)* {
-                 const N: usize =3D $cnt;
-                 // The following macro text expands to a call to `Attribut=
-e::add`.
--                // SAFETY: We are expanding [`kernel::configfs_attrs`].
-+
-+                // SAFETY: By design of this macro, the name of the variab=
-le we
-+                // invoke the `add` method on below, is not visible outsid=
-e of
-+                // the macro expansion. The macro does not operate concurr=
-ently
-+                // on this variable, and thus we have exclusive access to =
-the
-+                // variable.
-                 unsafe {
-                     $crate::macros::paste!(
-                         [< $data:upper _ATTRS >]
-
-
-Best regards,
-Andreas Hindborg
-
 
