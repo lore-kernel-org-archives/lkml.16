@@ -1,153 +1,121 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEC83281500;
-	Tue,  6 May 2025 14:56:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A17932797A5;
+	Tue,  6 May 2025 14:57:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746543400; cv=none; b=kRQr7R1uVle233j4J9Z2fbfk6/v5BDa9Yie4+qtJAAL9gKcNddF2QrRjpsBZHaOqxdzq9RB7tNApibyZ7NI+pyjuKSUizGJFOzrQ6px1N8SBP5Y121/Dj+jgpmCrYW+kAx7LuLSrGyXt3zKt1PNp92/brRVypvK69IC/CgHGKLQ=
+	t=1746543436; cv=none; b=YrNjx8DFknW8e5kTE/SYK9N+T74Qk0T/OZ8lFSllJ6ure2r4gwaoavnub2UuzQtV6WR1ldtOzH/ilPEPclRPBO6kjfRIiH4ZwOwXxF1uf0nNUaMaq4U9hA3sPluAxAERvM6OgQlXFnZChpMpHRcaCSm3s0llkIHFxx1jb94l4TE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746543400; c=relaxed/simple;
-	bh=xRXc4wu/bRY/Kf07/sLHF46eWd3sAL/KwF1CNA0EQoM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hLKtzaFHLtd8WcQpL2PjnLniJeKcrJlZf6Yfagagh2hvRc79uHeUPbYILRO6/5n8MnXi8STxK+2hXIKx3dMS62QMBq+Sh+jLZTU2oMoZHFJLBZwl0ToobahHcHN0kx/t1y+vVa/Y4xis8lhTGMxKEVgIgaZF4El4Qztdoi5v41Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FODUeyIm; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746543436; c=relaxed/simple;
+	bh=bsqqyAJp0U5RCLC80okyrbHXY7J3utSy8jIiesJ61g0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BjF1Syk8ofS1m1F0UYM0Ldpe9OxxhtY1v4Fdtu5Wx4XVj0fFr71y605D3IGwqgMAZYqiLczKUPbZUHk2clq4imRJ9buQdz+uZdSBQi5dj4fVCMgIVtdK+yKgmDbnf8V4KetSZY+vM5+O3ci0k47tESZnLgtv17/UPjlv+6Hxp7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cE3HsRGC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FODUeyIm"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5499cca5ddbso765511e87.1;
-        Tue, 06 May 2025 07:56:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746543397; x=1747148197; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=zGl6sg7j0zxSLThVkHoNmDxdriQ/RPO7fP3JuwQs5eI=;
-        b=FODUeyImSfmTywq6d08n426ChkyidgezkWq2/y3OQEyfaWrlEDHf4zaRQ7qPIf2Go9
-         eXPVI2lBdoTKhCfX2L1WJASCAm5ZBSNqFntVjUQQaPGh1SoW4a7BefCVsVI26/Unx4/t
-         toQjFOjgnH6dnwHYyGoAEy8qqkzEORdYrKRmrGeYrgghMHhxI9OTNP0t5F2Tly5WRN2O
-         uRnYxc323dmRybyIiHoKtHEi79BSuHF+/gY4xsQR8R3CKamE78TGM2tAWTTjvWUUYMoh
-         DGO1BD3LKUgG96aMFK6j+wHrDkxC3Ca3+CTo+IrgNS9X7bh7Bui4q2IIUsutAqhEKFVQ
-         STUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746543397; x=1747148197;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zGl6sg7j0zxSLThVkHoNmDxdriQ/RPO7fP3JuwQs5eI=;
-        b=xENFWIhW8WUlgtIhMZ5eSdGq9W8lF1DCLHUBpV3g0wObEo6Ikl/oETzTnczhxygKWT
-         ZKPs4/3gifLSV+njp9mfgvZClAGJ5sxVeiTdm76tfPQf9BwVAgugr8mEIxKJXtom6LZ1
-         lzHYHaNI9zmHea15fcerQhQ8dE/C1GisqbjgdQzBsuJd6PqUfpJX+Jb2jWN6jJJRUSVQ
-         nvahaN/W2kVALiWmuQFpb1+EpLJKeKlNz1F5WMz3g26luewT9KnqfAgT+5B9lkz7/b3x
-         qh7ib1uj069TJAHBUykqzmYz+n4wynXRd03M6WkTgszQhrqCZFLnJZLokXCHlKLPhKXo
-         om7g==
-X-Forwarded-Encrypted: i=1; AJvYcCVNUCtfSre6U2vZbf42KdWr4oI0NRBObr+Hcz9JFoDoIcicOKXwi/oQwdkPHq1L6zkt/7illWZx@vger.kernel.org, AJvYcCVW1diNtKxAwNtXYYSJ0Y2v6gpI1vSUxxPP4grRck/uU7Q2q7I6kCPL/Jz0S5w9heYbYsosV257zvJNXSc=@vger.kernel.org, AJvYcCVaQSpSVO6J2/kdXAIbKehPzE9Zm0gH4W65hw2kuXXnIgqXz6uY2lOge8aigWNi2NsR3aLkZMB32mFs/Q==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyaVj5dSsg4uN68jOhp7BHEP5KrBWQp8x7Ld24qf5V4E/dBdHSY
-	NOytddh1PswV0a+vSqHDM9+sJb4j1yN783R41l12JYvCXmvAqQNh
-X-Gm-Gg: ASbGnctoMP13PF3cbHghjxRKPPdTo7hbQpbLp+qWOc5DdHSD/EoUH8YTfeEltfmd/oS
-	Fe8mLl+Q5uuccp6/n7IiHyXmvCH0GzNiQG2ay9oN7h46vm0PSkYVzCvR6cepH3P92ktmKOyYGBK
-	6tjzJqFBHp5rUY20jAvyezYSEtnRDGTsIuqRo5vu4w0XAPJAQyyHQgDxhjDUnEvG5aj52o+gX8H
-	hZGwfpUyhmJWbXHRSt2uttlcl3ux+7gLKqdcUrXR2e/3blybtIZFRPZU8AmaBveWxnuuha3/E4v
-	knjl/UFKD0pLtamYyxuu8QU1jFIJvDVvKaEPVFD3cKmMk2k=
-X-Google-Smtp-Source: AGHT+IHIniqK0Dw2iKq/2KeW3kBL4LRttdpuvsbiEa+Br6r8BEN70vWNoWz8zaAHodNkwnZWIPSYvA==
-X-Received: by 2002:a05:6512:159a:b0:549:8f39:3e63 with SMTP id 2adb3069b0e04-54eac20dcbdmr1776226e87.9.1746543396571;
-        Tue, 06 May 2025 07:56:36 -0700 (PDT)
-Received: from [10.214.35.248] ([80.93.240.68])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ea94b16b6sm2071820e87.12.2025.05.06.07.56.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 06 May 2025 07:56:35 -0700 (PDT)
-Message-ID: <d77f4afd-5d4e-4bd0-9c83-126e8ef5c4ed@gmail.com>
-Date: Tue, 6 May 2025 16:55:20 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cE3HsRGC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38291C4CEEB;
+	Tue,  6 May 2025 14:57:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746543434;
+	bh=bsqqyAJp0U5RCLC80okyrbHXY7J3utSy8jIiesJ61g0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cE3HsRGC4nh0bceeQdOwkwZd8W4wyHk3N9w5Dah5upNlqcLgosi6i8fziGSQZMdTQ
+	 raCz2h6oJF7cZGNQ61yJodIzYroWKwl4MV+zW2si+bxLydMW0rtJmmuaGTxskX6Fyn
+	 ZtIkKWTHKJO8ppUfr1tO/W2fSHyjMbPBNvK0lb2u754FHp+X6jxntLSP356MMl7n9w
+	 yeNiePFQblHK4Y0HP1lSQUxf6uPeYTo0iGC2zP8pmokhlduq50nc/0sNKY52WuVh6E
+	 49JnAh1SE3WLjQ9l0Y3Z+mQ1MiHvXvStNByIi+OCYcJ/Ybe/WmSu0aqpRaxWVDRes5
+	 /0t10m58yyzUw==
+Date: Tue, 6 May 2025 15:57:05 +0100
+From: Will Deacon <will@kernel.org>
+To: Marc Zyngier <maz@kernel.org>
+Cc: =?utf-8?Q?Miko=C5=82aj?= Lenczewski <miko.lenczewski@arm.com>,
+	ryan.roberts@arm.com, suzuki.poulose@arm.com,
+	yang@os.amperecomputing.com, corbet@lwn.net,
+	catalin.marinas@arm.com, jean-philippe@linaro.org,
+	robin.murphy@arm.com, joro@8bytes.org, akpm@linux-foundation.org,
+	paulmck@kernel.org, mark.rutland@arm.com, joey.gouly@arm.com,
+	james.morse@arm.com, broonie@kernel.org, oliver.upton@linux.dev,
+	baohua@kernel.org, david@redhat.com, ioworker0@gmail.com,
+	jgg@ziepe.ca, nicolinc@nvidia.com, mshavit@google.com,
+	jsnitsel@redhat.com, smostafa@google.com, kevin.tian@intel.com,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev
+Subject: Re: [RESEND PATCH v6 1/3] arm64: Add BBM Level 2 cpu feature
+Message-ID: <20250506145705.GB1246@willie-the-truck>
+References: <20250428153514.55772-2-miko.lenczewski@arm.com>
+ <20250428153514.55772-4-miko.lenczewski@arm.com>
+ <20250506142508.GB1197@willie-the-truck>
+ <86cyclhjw0.wl-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/1] kasan: Avoid sleepable page allocation from atomic
- context
-To: Alexander Gordeev <agordeev@linux.ibm.com>,
- Harry Yoo <harry.yoo@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Daniel Axtens
- <dja@axtens.net>, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- kasan-dev@googlegroups.com, linux-s390@vger.kernel.org,
- stable@vger.kernel.org
-References: <cover.1745940843.git.agordeev@linux.ibm.com>
- <573a823565734e1eac3aa128fb9d3506ec918a72.1745940843.git.agordeev@linux.ibm.com>
- <aBFbCP9TqNN0bGpB@harry>
- <aBoGFr5EaHFfxuON@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-Content-Language: en-US
-From: Andrey Ryabinin <ryabinin.a.a@gmail.com>
-In-Reply-To: <aBoGFr5EaHFfxuON@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <86cyclhjw0.wl-maz@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-
-
-On 5/6/25 2:52 PM, Alexander Gordeev wrote:
-> On Wed, Apr 30, 2025 at 08:04:40AM +0900, Harry Yoo wrote:
+On Tue, May 06, 2025 at 03:51:59PM +0100, Marc Zyngier wrote:
+> On Tue, 06 May 2025 15:25:09 +0100,
+> Will Deacon <will@kernel.org> wrote:
+> > 
+> > On Mon, Apr 28, 2025 at 03:35:14PM +0000, Mikołaj Lenczewski wrote:
+> > > The Break-Before-Make cpu feature supports multiple levels (levels 0-2),
+> > > and this commit adds a dedicated BBML2 cpufeature to test against
+> > > support for, as well as a kernel commandline parameter to optionally
+> > > disable BBML2 altogether.
+> > > 
+> > > This is a system feature as we might have a big.LITTLE architecture
+> > > where some cores support BBML2 and some don't, but we want all cores to
+> > > be available and BBM to default to level 0 (as opposed to having cores
+> > > without BBML2 not coming online).
+> > > 
+> > > To support BBML2 in as wide a range of contexts as we can, we want not
+> > > only the architectural guarantees that BBML2 makes, but additionally
+> > > want BBML2 to not create TLB conflict aborts. Not causing aborts avoids
+> > > us having to prove that no recursive faults can be induced in any path
+> > > that uses BBML2, allowing its use for arbitrary kernel mappings.
+> > > Support detection of such CPUs.
+> > > 
+> > > Signed-off-by: Mikołaj Lenczewski <miko.lenczewski@arm.com>
+> > > Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> > > Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
+> > > ---
+> > >  .../admin-guide/kernel-parameters.txt         |  3 +
+> > >  arch/arm64/Kconfig                            | 19 +++++
+> > >  arch/arm64/include/asm/cpucaps.h              |  2 +
+> > >  arch/arm64/include/asm/cpufeature.h           |  5 ++
+> > >  arch/arm64/kernel/cpufeature.c                | 71 +++++++++++++++++++
+> > >  arch/arm64/kernel/pi/idreg-override.c         |  2 +
+> > >  arch/arm64/tools/cpucaps                      |  1 +
+> > >  7 files changed, 103 insertions(+)
+> > > 
+> > > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> > > index d9fd26b95b34..2749c67a4f07 100644
+> > > --- a/Documentation/admin-guide/kernel-parameters.txt
+> > > +++ b/Documentation/admin-guide/kernel-parameters.txt
+> > > @@ -449,6 +449,9 @@
+> > >  	arm64.no32bit_el0 [ARM64] Unconditionally disable the execution of
+> > >  			32 bit applications.
+> > >  
+> > > +	arm64.nobbml2	[ARM64] Unconditionally disable Break-Before-Make Level
+> > > +			2 support
+> > 
+> > Hmm, I'm not sure we really want this. It opens up the door for folks to
+> > pass 'id_aa64mmfr2.bbm=2' without updating the allow-list which feels
+> > like it's going to make crashes harder to reason about.
 > 
+> Passing id_aa64mmfr2.bbm=2 shouldn't have any effect if the HW doesn't
+> advertise it already, as you can only downgrade features. Trying to
+> upgrade features should leave a nastygram in the kernel log.
 
->>>  
->>> +struct vmalloc_populate_data {
->>> +	unsigned long start;
->>> +	struct page **pages;
->>> +};
->>> +
->>>  static int kasan_populate_vmalloc_pte(pte_t *ptep, unsigned long addr,
->>> -				      void *unused)
->>> +				      void *_data)
->>>  {
->>> -	unsigned long page;
->>> +	struct vmalloc_populate_data *data = _data;
->>> +	struct page *page;
->>> +	unsigned long pfn;
->>>  	pte_t pte;
->>>  
->>>  	if (likely(!pte_none(ptep_get(ptep))))
->>>  		return 0;
->>>  
->>> -	page = __get_free_page(GFP_KERNEL);
->>> -	if (!page)
->>> -		return -ENOMEM;
->>> -
->>> -	__memset((void *)page, KASAN_VMALLOC_INVALID, PAGE_SIZE);
->>> -	pte = pfn_pte(PFN_DOWN(__pa(page)), PAGE_KERNEL);
->>> +	page = data->pages[PFN_DOWN(addr - data->start)];
->>> +	pfn = page_to_pfn(page);
->>> +	__memset(pfn_to_virt(pfn), KASAN_VMALLOC_INVALID, PAGE_SIZE);
->>> +	pte = pfn_pte(pfn, PAGE_KERNEL);
->>>  
->>>  	spin_lock(&init_mm.page_table_lock);
->>> -	if (likely(pte_none(ptep_get(ptep)))) {
->>> +	if (likely(pte_none(ptep_get(ptep))))
->>>  		set_pte_at(&init_mm, addr, ptep, pte);
->>> -		page = 0;
->>
->> With this patch, now if the pte is already set, the page is leaked?
-> 
-> Yes. But currently it is leaked for previously allocated pages anyway,
-> so no change in behaviour (unless I misread the code).
+Ah, thanks, I was playing around in QEMU and my CPU already had BBML2
+so I didn't spot that. In any case, I'd prefer to avoid adding the
+option unless we need it -- this thing is driven from an MIDR-based
+list and that should be maintained.
 
-Current code doesn't even allocate page if pte set, and if set pte discovered only after
-taking spinlock, the page will be freed, not leaked.
-
-Whereas, this patch leaks page for every single !pte_none case. This will build up over time
-as long as vmalloc called.
-
-> 
->> Should we set data->pages[PFN_DOWN(addr - data->start)] = NULL 
->> and free non-null elements later in __kasan_populate_vmalloc()?
-> 
-> Should the allocation fail on boot, the kernel would not fly anyway.
-
-This is not boot code, it's called from vmalloc() code path.
-
-> If for whatever reason we want to free, that should be a follow-up
-> change, as far as I am concerned.
-> 
-We want to free it, because we don't want unbound memory leak.
-
-
+Will
