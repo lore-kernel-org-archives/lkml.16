@@ -1,109 +1,104 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83B62280316;
-	Tue,  6 May 2025 13:10:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A23028031F
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 13:10:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746537038; cv=none; b=AMatzRFcTW3rnXJvSyggG0KYF9hB6K8zytcpZamntFeilHKTS3QfU+uCBgTcqPWZ4NazR9u4HvabOYjuohP9WYEhWpXYn2u88N5SLeiwDhTeOn1Mp+/C0Ir7nbhpatzmPfgtJC1fLZ/Ydg2FQhc2hU4PDMzMTuEmFsvTTWCwHCQ=
+	t=1746537058; cv=none; b=sYUKBE2aeqAOMZCvG+ealF+PFPdp4Vieck0njaiBWCOyqRPRa2CuQlUf6qLnEGA48TC1PwBSX2XfXYMycIwFgNSBiHNFUTsVF1fHgdNgSzIiCb8tnIZIqe5993XAshF7QmYk0qdQVnwCQ/lQRgTcOlTWU5p28CGi9CQjAmR0HmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746537038; c=relaxed/simple;
-	bh=cWroLxinSY4sP2Rfs+kr1XuBDDnUkUibIxXo7hZBxUU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=N4HeuFCiUwgjUzKaA35yq2vczkgcbW02bHaJn+D6aNETqR8g1Q7e5DWDI4jXIpmFWtCo6qK6VW66YIWENfgnHZIewjFKpCJzdyodyupXn+iZfhm/enoD0dlqBi78We6B2p82+RYauOFFAMsOpMcAZBgIA2ZE95Jetr7m3xwIwNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ImM/Ygyy; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ImM/Ygyy"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 546DARA91067998
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 6 May 2025 08:10:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1746537028;
-	bh=P7xJbqnsg/UWJ0m8ekbKleB5aKNbbovDyUEZ2H5aXQo=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=ImM/YgyyuGT0EpwE0RaqQx/cecvmBY/uXK+jphlIafaQzdBc8RRaTMcjN1usOqlXH
-	 CpV6PEKu2oX5mMT0aF9nAsSMjz7mDIOZ/Zp+RgSzix4mFDFXsAGvQvpEEm13DTROZB
-	 oFbZu1HaVZuO5uxRfawnMp1+Jkr4JQkLwY/h2/bU=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 546DAR12075507
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 6 May 2025 08:10:27 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 6
- May 2025 08:10:27 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 6 May 2025 08:10:27 -0500
-Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 546DARh6016604;
-	Tue, 6 May 2025 08:10:27 -0500
-From: Nishanth Menon <nm@ti.com>
-To: Vignesh Raghavendra <vigneshr@ti.com>, Judith Mendez <jm@ti.com>
-CC: Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>,
-        Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Hari Nagalla
-	<hnagalla@ti.com>,
-        Beleswar Padhi <b-padhi@ti.com>
-Subject: Re: [PATCH v2] arm64: dts: ti: k3-am62-main: Add PRUSS-M node
-Date: Tue, 6 May 2025 08:10:25 -0500
-Message-ID: <174653701247.728098.5031447948468588924.b4-ty@ti.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20250430144343.972234-1-jm@ti.com>
-References: <20250430144343.972234-1-jm@ti.com>
+	s=arc-20240116; t=1746537058; c=relaxed/simple;
+	bh=zJ2j21fPBxosh7tz0iTcVJuHlQr7NHXr96yA2ifDqJg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AMkcT7+Ib+hsFx8LyHQ8D+cJWCRzMfDZ8ZV61dzacYRKYNxoenywetukbRK4VBIXVc/6SPqOMCa+evfqOsc6Ivyvzkvu9rR2KKVKzFJDk/Vc6gM3jMywP37sEnG8ObapRsEW8Hdd2L9PJw5fH7OYwoeQ4FATHzlLC5msoxjni+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8C48A1007;
+	Tue,  6 May 2025 06:10:45 -0700 (PDT)
+Received: from [10.1.39.190] (e137867.arm.com [10.1.39.190])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 74C083F5A1;
+	Tue,  6 May 2025 06:10:53 -0700 (PDT)
+Message-ID: <0be8e3be-a029-4eea-a79c-310b8e0a05c3@arm.com>
+Date: Tue, 6 May 2025 14:10:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64/debug: Drop redundant DBG_MDSCR_* macros
+To: Anshuman Khandual <anshuman.khandual@arm.com>,
+ inux-arm-kernel@lists.infradead.org
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Ada Couprie Diaz <ada.coupriediaz@arm.com>
+References: <20250417105253.3188976-1-anshuman.khandual@arm.com>
+From: Ada Couprie Diaz <ada.coupriediaz@arm.com>
+Content-Language: en-US
+Organization: Arm Ltd.
+In-Reply-To: <20250417105253.3188976-1-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Judith Mendez,
+Hi Anshuman,
 
-On Wed, 30 Apr 2025 09:43:43 -0500, Judith Mendez wrote:
-> Add the DT node for the PRUSS-M processor subsystem that is present
-> on the K3 AM62x SoCs. The K3 AM62x family of SoC has one PRUSS-M
-> instance and it has two Programmable Real-Time Units (PRU0 and PRU1).
-> 
-> 
+On 17/04/2025 11:52, Anshuman Khandual wrote:
+> MDSCR_EL1 has already been defined in tools sysreg format and hence can be
+> used in all debug monitor related call paths. Subsequently all DBG_MDSCR_*
+> macros become redundant and hence can be dropped off completely. While here
+> convert all variables handling MDSCR_EL1 register as u64 which reflects its
+> true width as well.
+>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
 
-I have applied the following to branch ti-k3-dts-next on [1].
-Thank you!
+I think the changes make sense, even more so given that `kvm/debug.c` 
+already uses the sysreg format definition for MDSCR_EL1.
 
-[1/1] arm64: dts: ti: k3-am62-main: Add PRUSS-M node
-      commit: 3df22a8622fafa1c5a0dba93c207f66f48366858
+It looks good to me, but I think there is a missing conversion to 64 
+bits below.
+Would it make sense to convert the two instances of MDSCR_EL1 used in 
+`tools/testing/selftests/kvm/arm64/debug-exceptions.c`, in 
+`enable_monitor_debug_exceptions()` and `install_ss()` , to 64 bits as 
+well ? (They don't rely on `DBG_MDSCR_*`, the test defines its own macros)
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent up the chain during
-the next merge window (or sooner if it is a relevant bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+> diff --git a/arch/arm64/kernel/entry-common.c b/arch/arm64/kernel/entry-common.c
+> index b260ddc4d3e9..6dbfc1008007 100644
+> --- a/arch/arm64/kernel/entry-common.c
+> +++ b/arch/arm64/kernel/entry-common.c
+> @@ -354,7 +354,7 @@ static void cortex_a76_erratum_1463225_svc_handler(void)
+>   
+>   	__this_cpu_write(__in_cortex_a76_erratum_1463225_wa, 1);
+>   	reg = read_sysreg(mdscr_el1);
+> -	val = reg | DBG_MDSCR_SS | DBG_MDSCR_KDE;
+> +	val = reg | MDSCR_EL1_SS | MDSCR_EL1_KDE;
+>   	write_sysreg(val, mdscr_el1);
+>   	asm volatile("msr daifclr, #8");
+>   	isb();
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Given the change of width to 64 bits elsewhere, shouldn't we change val 
+and reg to u64 here as well ?
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+diff --git a/arch/arm64/kernel/entry-common.c b/arch/arm64/kernel/entry-common.c
+index 73cf6a5f41d8..d61a5ddf53d6 100644
+--- a/arch/arm64/kernel/entry-common.c
++++ b/arch/arm64/kernel/entry-common.c
+@@ -344,7 +344,7 @@ static DEFINE_PER_CPU(int, __in_cortex_a76_erratum_1463225_wa);
+  
+  static void cortex_a76_erratum_1463225_svc_handler(void)
+  {
+-	u32 reg, val;
++	u64 reg, val;
+  
+  	if (!unlikely(test_thread_flag(TIF_SINGLESTEP)))
+  		return;
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/ti/linux.git
--- 
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+Thanks,
+Ada
 
