@@ -1,64 +1,65 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4260424E014
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 12:46:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58A8627FB31
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 12:46:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746535598; cv=none; b=WqpSrXKUnejs5XRD+cUp7DX060PwkZ627hwaS2EEIPlptZN+hU/lGWQDHtR2CHxpfdVmJekL2/3EVb0flfFaRMjOx4zjBVLMzW7TsoiJZsgDO4CNsbAsd5Sq3/+zx+B2u/sqAFs0vAjazmbqbYgPDx+r7iMUOWiezzjxsoxnLbM=
+	t=1746535603; cv=none; b=hlQ2i2YVFjXcR7pF2c8CaalwnYmeWhNlZcsz88QLm/JjobNo60sAigCjVxI/h26KC7pNVVtzBBrroA/162nKkYgczSRZTFfX9kfc8qa+4XWsYVqg5aoKip9tIC8Yfnd26GkPEdsoQ8zhqisoufOoWg3GcCeC+vy1Mip/5XWdGCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746535598; c=relaxed/simple;
-	bh=tSGH2p1izsSzRGjyaTk9F2yB01tgjf//IQcyliOLsVk=;
+	s=arc-20240116; t=1746535603; c=relaxed/simple;
+	bh=5NC/31HeV/bFV7gPszc2SfNMbyljqfXDlZ++AHm2h2E=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=l11Xwa4jx8gvlhykm+sqhhiX3x2TC0Svd/+lo+4FwCXNzMh+OYWVOxlcU3+Zc9VntdT+QV0M6QathSLcTnxhzwxLUkc3WNFb7nBJQrxVC1hhLkXx0dLz9JOWt+mTkJ57XuBXJ/wNyfZw4WdSSsBuUTIGSZxsWE7xPiLksXQ2GSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CiVIrrKm; arc=none smtp.client-ip=209.85.210.178
+	 In-Reply-To:To:Cc; b=eTl0vwFcSnQ4FTi6BxMy9gEPUPNQVtEYqgzw96cy+1yzGMfc6Z42R1XAjOlG6Lm/EfzA80mnj6CvIFNtBAhGcTbwvj+om19djx7UzlhiuWyOXy4yNCHrzO63dI8CyHuZCnl2aOf5S3yLM48jft9nkMZtT0uNGyUPeVtkrdXh2w8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BDVjKQcQ; arc=none smtp.client-ip=209.85.210.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CiVIrrKm"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-7369ce5d323so5001490b3a.1
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 05:46:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BDVjKQcQ"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-7394945d37eso4628008b3a.3
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 05:46:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746535596; x=1747140396; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1746535601; x=1747140401; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=fDQ63XmeOhBW2hD0J5kGHPrC33sSQHadrxfLLtnklr0=;
-        b=CiVIrrKmo9YcgNzVr0TUoIsw7l2oGPfSW2RdKLqESowdu5y2nYjl895VbuQOU2Nrg2
-         4jJ237iup+mPJCsjZI1iv2o3glsuaJRSMYMzf3XyZf9DgVQAUahWQd+dSFq05bR23yOZ
-         TBYA5K62BFfLAzbijQ8CMw9W2xmFdYPxarDe4cbuvp7gOaqaGCxfNFThTwgygqVtHGue
-         jN90CZi/iPWrLxA4DrOtg1iVuuOhriLBCDaH8UBbn5NIOk4u7ssJCQMZIl95p0tjLlPz
-         jlSLJsBpVllVY0cVIxrQDxNS44aQQa0BSXX9lexWGhitouqpppHeVWiw8uIJQ4kgpI3s
-         StBw==
+        bh=Jo+MK/ePKofkxSXm+5enVAsUVT3cb/LUo2cfbFkW5So=;
+        b=BDVjKQcQPkjc2yg/lQY14CX8xY1XoKovfmB2JNKL+dIV5k3QtiNrIT4zmq9qOnksRK
+         TRg+v000d2hu/hcmXR6hJ2NVRgCoZRwMRtc5TD/Atd4kypVd7KxS70XRueTHF7p45lLQ
+         R/P6CSr4Xd+dl6/2LzYV4pk2AKXLRaYrSzd3Euic1jihyXBaAPsbArDlq2EkHihR3HSZ
+         xnkyHA4q828kCPuRS3LsV7qXvBa7PUGbRVt2hbp7KLAkepnU8yht12jC6sG4Mhb60DAg
+         v8bMnmiWpG/L1OKm96GMsjdcI6d/fFX/zLmpkjRD0ARiOQIem4ibyDvE4BPPCyW6c/YJ
+         EP+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746535596; x=1747140396;
+        d=1e100.net; s=20230601; t=1746535601; x=1747140401;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=fDQ63XmeOhBW2hD0J5kGHPrC33sSQHadrxfLLtnklr0=;
-        b=dibLYlGmdDedxyEYjcb3JI9Q3w63L9mp3j+hM+o5scoiElJhGsMF//Xb57qYjVcx/R
-         Zy74Mdl0c5QJv+byWGy8ia0mp+XoAjGszs0lPF2xcGiVdMyHF7uRtNw3APGBvM30ZnTP
-         W1Rpe1yquLnegumN/zIc81LouwDpvz6ej93tyny1hknzzd/F3qL6IztL5SezlL8NXKVM
-         uUOxX/LZ1/LBJh0zI5nnZZ693qUPXgd+jal0c6AtYF8YQwwFvB8JUVkd3yJqxnWZ/+0H
-         sEKQdpkR0YbQN9lRIxFUJwJlakygwZDbCQHYmoqgv7apCcXa7vCQ+IHhKzV4zJgDSeNk
-         C3UQ==
-X-Gm-Message-State: AOJu0YybBHyVNLbqdTPj2qEIirkClbSTvn8N2T4GBn3SNpK8gSnQGCNS
-	10mQL31f2HcWNUN2ciPk28jfooL6eBCNPVzOD1iCq4NXNVXTXMAa
-X-Gm-Gg: ASbGnctF5hRO1Gm8GswFgyd1JEe95pg2MQWhz8lSvVWhqqj8x61m9tdSL4z1E1CzEEn
-	IpsXLuGOFah7P+M/SeBgWMaH6YqJGpI2mIEYgfiPIYcYO8w3+U/cb5DwMfhQk4v5DSvZHDfMsWc
-	sLqiT35qaT5pJ6L67SeS2BkLdTzRVBNkkqmeJ0UoZ+6xxZ/9LchW9EsQKc4zRUnAPwtmdCV8DYc
-	HA9/a3gGtFZcI+NBBPoMVGT1mZ5oZNrLObWlE7NPszUVHrOaLWaRjtj0jnTEp3kR33IaudPyc5F
-	V2nNV1gsdUkgi/ceAXphVgnf9iFkkWAAQhwB38xIONxqd6okhOyv
-X-Google-Smtp-Source: AGHT+IH17mxLxSA2PPD32ssm2/FIfNgX6IYtN/NMQKdYqAS/9zwe1/azeH9miKCZC0U7mivk5kWCBg==
-X-Received: by 2002:a05:6a00:4090:b0:73f:f623:55f8 with SMTP id d2e1a72fcca58-7406f08b86cmr14867749b3a.5.1746535596522;
-        Tue, 06 May 2025 05:46:36 -0700 (PDT)
+        bh=Jo+MK/ePKofkxSXm+5enVAsUVT3cb/LUo2cfbFkW5So=;
+        b=VPobOLZtdAcMI5x3+lXIeMjVtfKuMm8LjQI++mZBOS2LZY2P94JNEPrUfOkNf+cAaR
+         be7BDSMoBDteiPd9cGV8E63KqMjAyqqLorSHQXeWnpe592F1B/GnBtaT0zlQvxLF1dvr
+         v9zCt8JnUhVlJdZP48YrFGfpksntAEeqNjOf8C7R+vOlsPdiKKKalSMLtmn1A91Rc2FQ
+         2gTBdrKFF4WX4/VMIpjdMaHeZ5Lnz9QqHTH0LNOZpA6YrYMTX+7FP0tntHeWqJd/WsW2
+         YPoyOZHnERtCW2rz+y1M0gQ+/BqyxHglrCV3rmcoJ3MGvVSlR89MSKf3DCb+AOqXfq8D
+         LsBQ==
+X-Gm-Message-State: AOJu0YxoJRk5vUNz33Vc2FCpJhNz1vGi4SVuOj/RwHLGauhsBYuhbvLn
+	Cvc0P5/lLT2ngIuOLWBR8nHMRVgxF9glsD62jb092wfUQ4DYsZa4
+X-Gm-Gg: ASbGnct0ynSs/QXD5sfRAB4vUTk+S1jp1nQdL21S9GjzReL46de8JErMAWjn1fxQVM+
+	zns5zm1+f8Dz98FAMOk6e/tdS2zP8lQXPf42rw4O9d9kdug/gtSyoJKxGtLRVdHeYPIQZ0ieK7S
+	/n/Mncz+jKEyIWyiJugsKcmNOuCKzBKVYHQenIhsuqaUdI2mrkiabQt/KN2Z/BQqXpv7Kl/lnx3
+	plwqohQEzTI6s8qx+5KoDPtFWCRdYnFerVMDk7h8khTlN/lq2jy/zMrte9vcp2StM7/cuyFX4cj
+	8f2yMptQUUsAomLiaJiJcBQbouItCGOqv6UUyv0iQuQa79Qt8idA
+X-Google-Smtp-Source: AGHT+IGowFY2MVMfbMWWSCYh2dopuWBl9OWrkFvlshF/0V06/C6EkV/6AUrpLqlxmj7eZ06nAxOmnA==
+X-Received: by 2002:a05:6a00:369b:b0:740:3830:4119 with SMTP id d2e1a72fcca58-7406f177d74mr15436359b3a.18.1746535601545;
+        Tue, 06 May 2025 05:46:41 -0700 (PDT)
 Received: from NB-GIGA003.letovo.school ([5.194.95.139])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7405909cd89sm8756817b3a.169.2025.05.06.05.46.32
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7405909cd89sm8756817b3a.169.2025.05.06.05.46.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 05:46:36 -0700 (PDT)
+        Tue, 06 May 2025 05:46:41 -0700 (PDT)
 From: Alexey Charkov <alchark@gmail.com>
-Date: Tue, 06 May 2025 16:46:14 +0400
-Subject: [PATCH v2 1/5] irqchip/irq-vt8500: Split up ack/mask functions
+Date: Tue, 06 May 2025 16:46:15 +0400
+Subject: [PATCH v2 2/5] irqchip/irq-vt8500: Drop redundant copy of the
+ device node pointer
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,7 +68,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250506-vt8500-intc-updates-v2-1-a3a0606cf92d@gmail.com>
+Message-Id: <20250506-vt8500-intc-updates-v2-2-a3a0606cf92d@gmail.com>
 References: <20250506-vt8500-intc-updates-v2-0-a3a0606cf92d@gmail.com>
 In-Reply-To: <20250506-vt8500-intc-updates-v2-0-a3a0606cf92d@gmail.com>
 To: Thomas Gleixner <tglx@linutronix.de>, 
@@ -75,86 +76,62 @@ To: Thomas Gleixner <tglx@linutronix.de>,
 Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
  Alexey Charkov <alchark@gmail.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746535586; l=2522;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1746535586; l=1647;
  i=alchark@gmail.com; s=20250416; h=from:subject:message-id;
- bh=tSGH2p1izsSzRGjyaTk9F2yB01tgjf//IQcyliOLsVk=;
- b=zVTy0eAGf0nk6m25bKp+JZivOS1zpVtPTNs2BF9o/WLAqfw+yjEJaO9aqqF27dhamda08FM6t
- Ltl37TGFCdGBhdQJeaN2ER//sDC67QV5qkPi8RmmBuK7+Um6FH4JdV+
+ bh=5NC/31HeV/bFV7gPszc2SfNMbyljqfXDlZ++AHm2h2E=;
+ b=lRrzoWPpBic995ZB7JmJ6Ikfz+jrP3eE9vsH/Q6Qh/pbqxKJe4IhEQmlHSrYNkspNch4vwfRJ
+ ttjdF0YlCrnD5uvwEo+6nFtUAU/mjGobOQfWkrw2RxQBHyvpt1N8WhD
 X-Developer-Key: i=alchark@gmail.com; a=ed25519;
  pk=ltKbQzKLTJPiDgPtcHxdo+dzFthCCMtC3V9qf7+0rkc=
 
-Original vt8500_irq_mask function really did the ack for edge
-triggered interrupts and the mask for level triggered interrupts.
-Edge triggered interrupts never really got masked as a result,
-and there was unnecessary reading of the status register before
-the ack even though it's write-one-to-clear.
-
-Split it up into a proper standalone vt8500_irq_ack and an
-unconditional vt8500_irq_mask.
-
-No Fixes tag added, as it has survived this way for 15 years and
-nobody complained, so apparently nothing really used edge triggered
-interrupts anyway.
+Inside vt8500_irq_init, np is the same as node. Drop it.
 
 Signed-off-by: Alexey Charkov <alchark@gmail.com>
 ---
- drivers/irqchip/irq-vt8500.c | 32 ++++++++++++++++----------------
- 1 file changed, 16 insertions(+), 16 deletions(-)
+ drivers/irqchip/irq-vt8500.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/irqchip/irq-vt8500.c b/drivers/irqchip/irq-vt8500.c
-index e17dd3a8c2d5a488fedfdea55de842177c314baa..d0580f6577c88ffd7e374d640418d1fc23db623e 100644
+index d0580f6577c88ffd7e374d640418d1fc23db623e..6d46e1a0fda953d76679ad2318674fdf0a977f0b 100644
 --- a/drivers/irqchip/irq-vt8500.c
 +++ b/drivers/irqchip/irq-vt8500.c
-@@ -67,25 +67,25 @@ struct vt8500_irq_data {
- static struct vt8500_irq_data intc[VT8500_INTC_MAX];
- static u32 active_cnt = 0;
- 
--static void vt8500_irq_mask(struct irq_data *d)
-+static void vt8500_irq_ack(struct irq_data *d)
+@@ -191,7 +191,6 @@ static int __init vt8500_irq_init(struct device_node *node,
+ 				  struct device_node *parent)
  {
- 	struct vt8500_irq_data *priv = d->domain->host_data;
- 	void __iomem *base = priv->base;
- 	void __iomem *stat_reg = base + VT8500_ICIS + (d->hwirq < 32 ? 0 : 4);
--	u8 edge, dctr;
--	u32 status;
--
--	edge = readb(base + VT8500_ICDC + d->hwirq) & VT8500_EDGE;
--	if (edge) {
--		status = readl(stat_reg);
--
--		status |= (1 << (d->hwirq & 0x1f));
--		writel(status, stat_reg);
--	} else {
--		dctr = readb(base + VT8500_ICDC + d->hwirq);
--		dctr &= ~VT8500_INT_ENABLE;
--		writeb(dctr, base + VT8500_ICDC + d->hwirq);
--	}
-+	u32 status = (1 << (d->hwirq & 0x1f));
-+
-+	writel(status, stat_reg);
-+}
-+
-+static void vt8500_irq_mask(struct irq_data *d)
-+{
-+	struct vt8500_irq_data *priv = d->domain->host_data;
-+	void __iomem *base = priv->base;
-+	u8 dctr;
-+
-+	dctr = readb(base + VT8500_ICDC + d->hwirq);
-+	dctr &= ~VT8500_INT_ENABLE;
-+	writeb(dctr, base + VT8500_ICDC + d->hwirq);
- }
+ 	int irq, i;
+-	struct device_node *np = node;
  
- static void vt8500_irq_unmask(struct irq_data *d)
-@@ -131,7 +131,7 @@ static int vt8500_irq_set_type(struct irq_data *d, unsigned int flow_type)
+ 	if (active_cnt == VT8500_INTC_MAX) {
+ 		pr_err("%s: Interrupt controllers > VT8500_INTC_MAX\n",
+@@ -199,7 +198,7 @@ static int __init vt8500_irq_init(struct device_node *node,
+ 		goto out;
+ 	}
  
- static struct irq_chip vt8500_irq_chip = {
- 	.name = "vt8500",
--	.irq_ack = vt8500_irq_mask,
-+	.irq_ack = vt8500_irq_ack,
- 	.irq_mask = vt8500_irq_mask,
- 	.irq_unmask = vt8500_irq_unmask,
- 	.irq_set_type = vt8500_irq_set_type,
+-	intc[active_cnt].base = of_iomap(np, 0);
++	intc[active_cnt].base = of_iomap(node, 0);
+ 	intc[active_cnt].domain = irq_domain_add_linear(node, 64,
+ 			&vt8500_irq_domain_ops,	&intc[active_cnt]);
+ 
+@@ -222,16 +221,16 @@ static int __init vt8500_irq_init(struct device_node *node,
+ 	active_cnt++;
+ 
+ 	/* check if this is a slaved controller */
+-	if (of_irq_count(np) != 0) {
++	if (of_irq_count(node) != 0) {
+ 		/* check that we have the correct number of interrupts */
+-		if (of_irq_count(np) != 8) {
++		if (of_irq_count(node) != 8) {
+ 			pr_err("%s: Incorrect IRQ map for slaved controller\n",
+ 					__func__);
+ 			return -EINVAL;
+ 		}
+ 
+ 		for (i = 0; i < 8; i++) {
+-			irq = irq_of_parse_and_map(np, i);
++			irq = irq_of_parse_and_map(node, i);
+ 			enable_irq(irq);
+ 		}
+ 
 
 -- 
 2.49.0
