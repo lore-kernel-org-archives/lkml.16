@@ -1,108 +1,112 @@
-Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 004EA1F5849
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 13:48:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BCAF208CA
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 13:48:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746539309; cv=none; b=DWVw011fII7xLKUkTl+KPqckwE4ONKiEwekFoWZoz4s0PYVzTJ9Wh/NqspI+FsXarhqBQ7iBx9vsa6c0M9fGj2ekyvyCbpLgYbAMFCZjqSqqH3IbBGAbynqupNQKR3x+ZM2p3/Nnj3Q7LR3ykMGG1SIj6FpGTvowbhhjbftppqc=
+	t=1746539324; cv=none; b=pY9rerUB9jJG8QyW+Irmv1+dTSVbuVV9QzQW4dJhA230a5YP0T5PuqcSA7sbghLRUjxqf5tTPT+qo12Ci/QHmgDUhrCCqZVzfj1n5A4J/SzuKwhP0ho8QyuseDrtvoMSLX+AmqeVgepCJGpgUpop+ouy6IGYk29/0+lup0BdP2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746539309; c=relaxed/simple;
-	bh=QRGdlD65eNsYAPwAC1S3BaioH7MmJ5frZWnduOm9Nfk=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=W63c1l5wlcxTl5SPg93/cJdnjcMRvCVkHrB6/udK2v8Zh4kCh/Jw6KGMPuK/gxQg6/Kuuldun4PuTNxSHHmFwngVen3PEEe5ofAogHjENAIZKVFpwAZDWiAN1TAFyYgG4aUVv3uCSWpyGuvgcoAEXuPCA7VjRmf1AJcyu8TKjr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=B4gFtCFY; arc=none smtp.client-ip=209.85.166.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="B4gFtCFY"
-Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3d940c7ea71so30460675ab.0
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 06:48:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1746539307; x=1747144107; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ouux5tEC0r8GlXcTXcTxPnn6FWgykiMGJ+EUBiPslWE=;
-        b=B4gFtCFYiTgeMUBkGtyWoAKMQatG2Ju8gQgQoJ+wPPAkKzzPGiVSqEv9B4ZuYBcnyl
-         MHRQba5+0o0+zN1nGMhZ/L5CuUjzSOHQtgS58d8I4rp31DhbamWwUxcFT+iDamxb0ug/
-         kFn9sLKPFhIhMh7akn9XyOlRikLUERfMV+AcpORKLoDUfEFqNdjHi8U0eYUU+62E1CUU
-         USAFx0SCNbwxB7V/Oa3Bh11GZlanc13zDXEan1qBvNRCpgAaG/TVxB6sx11Nn5aNYWtV
-         ucXIQSveMBsOu6xs7xcaFb28+rO0iNHDCcOwxQT8AUsuXC3Atx6D9wdmJgDe5lM+wcFV
-         r56A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746539307; x=1747144107;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ouux5tEC0r8GlXcTXcTxPnn6FWgykiMGJ+EUBiPslWE=;
-        b=fvutT0kBAr4rRrQQoWuztPqLpId77vOoyJvulyCedUBixRHi8DMFRErsXyuwHXtJHx
-         zvZDqcmYowFGP3HYrKo4scA35Znw+i/ot4TIFUKLvUDxP11FuPFZS4iRoMl5lA4y3+b3
-         qPfeoMTcSXXdUZrweeVHiZHLWuGD4AxdOXEO496rxSHp31i8bUdkyrU1A10g6r3YXbvf
-         4JCSQMUVFPsKUtDDlF6j6jTv/NAalBrSV8s5nEUPmNgEu9BXiKTSMfIPzm05AOIW7ev+
-         WDAZCDIH2pYPA48yxI+ncO0iXDBhcn0uIn6e4KFPvXnpORR3bLWINwqDECHKLd+wPubo
-         D7ww==
-X-Forwarded-Encrypted: i=1; AJvYcCWaLXBeuRa7qs9TYLLDK0ZXOKOKRzY163QbsokVBbqXH9AE9a3DMRt89uGpXztL7RkdxHvrvqJ8hQFS1yQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyk+hzLaAzmgJ77lGuQOZO8T0BJ+ZOMkai9hbqPanBhOJxCJ6dd
-	cUFTEXUe9l4H3uXNM+M6lh+jvewk26yhPx1KbVhzBsgHd3+wy4qgrvGwbkDRv1o=
-X-Gm-Gg: ASbGncssx3578KjnVJFXTs5m7KCQ9mxTY1uCsGHQT/qOk/NiFZNDylDKnCYtOyIVYaL
-	2YEm6oY0AnUlZeJCfefMPg6VHcg2COX2GAPfeh2pBRrPQq8onjE40YR+OpYRxsJEkBEmvo02NR0
-	lsRtQn7TDJyvD98tXLBsxbq4yTStyISAp6aXa84Gzq9VvvCKibfu/QKvSnJnmGFx1OqiU6fzTX1
-	WeIoGFM9kaOrG9SuhYc1w8ZF6DbJev7BtY1IWI8m3ut6AF3r4k5oYWqf88SExdQSirBnYbnTCzI
-	h2kVJpVM58rAsMsWzesxT4Pm8vzNFWo=
-X-Google-Smtp-Source: AGHT+IFS6y2zyC+HSLyH0EZxcFlNsQhUlPmnmGKHIPFidATO98ChCD+1NzFKCLy5UGcU5KTMMpWodw==
-X-Received: by 2002:a05:6e02:1fcd:b0:3d8:1fe7:4439 with SMTP id e9e14a558f8ab-3da6cdeedc4mr29148175ab.17.1746539307017;
-        Tue, 06 May 2025 06:48:27 -0700 (PDT)
-Received: from [127.0.0.1] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d975f58be3sm25930915ab.58.2025.05.06.06.48.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 06:48:26 -0700 (PDT)
-From: Jens Axboe <axboe@kernel.dk>
-To: hch@lst.de, kbusch@kernel.org, Yu Kuai <yukuai1@huaweicloud.com>
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
- yukuai3@huawei.com, yi.zhang@huawei.com, yangerkun@huawei.com, 
- johnny.chenyi@huawei.com
-In-Reply-To: <20250506061756.2970934-1-yukuai1@huaweicloud.com>
-References: <20250506061756.2970934-1-yukuai1@huaweicloud.com>
-Subject: Re: [PATCH v3 for-6.16/block 0/3] brd: discard bugfix
-Message-Id: <174653930584.1466231.14181176515309477509.b4-ty@kernel.dk>
-Date: Tue, 06 May 2025 07:48:25 -0600
+	s=arc-20240116; t=1746539324; c=relaxed/simple;
+	bh=trAzMXKXlgRtceqPV1ERmyexC67Fp7DuXfkdcBaLGZU=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=CAL5xmchhA8/uzcQyg+3ZZXVLZY6aaojqQkUW1NXepQN1YgwSoJocDyErolAPu1o9WT5lQcd6MmHAqsoHl2MYxQmxa0bfvCvKxS91OFkRAoGYhs+J43XD8y9ySR6wyFnGhV38ZDPVKuSKUzw2UlvdFXbDH3Rc9d55HtBx22ig28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+	id 13E7292009C; Tue,  6 May 2025 15:48:34 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by angie.orcam.me.uk (Postfix) with ESMTP id 0DFA892009B;
+	Tue,  6 May 2025 14:48:34 +0100 (BST)
+Date: Tue, 6 May 2025 14:48:33 +0100 (BST)
+From: "Maciej W. Rozycki" <macro@orcam.me.uk>
+To: "H. Peter Anvin" <hpa@zytor.com>
+cc: Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org, 
+    "Ahmed S . Darwish" <darwi@linutronix.de>, 
+    Andrew Cooper <andrew.cooper3@citrix.com>, 
+    Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@kernel.org>, 
+    Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+    John Ogness <john.ogness@linutronix.de>, 
+    Linus Torvalds <torvalds@linux-foundation.org>, 
+    Peter Zijlstra <peterz@infradead.org>, 
+    Thomas Gleixner <tglx@linutronix.de>, 
+    John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Subject: Re: [RFC PATCH 0/15] x86: Remove support for TSC-less and CX8-less
+ CPUs
+In-Reply-To: <1E50C160-EB89-4C5C-B9F0-6441026EE380@zytor.com>
+Message-ID: <alpine.DEB.2.21.2505060106180.31828@angie.orcam.me.uk>
+References: <20250425084216.3913608-1-mingo@kernel.org> <alpine.DEB.2.21.2505050944230.31828@angie.orcam.me.uk> <98C88CE8-C3D5-4B75-8545-71DD47C67614@zytor.com> <alpine.DEB.2.21.2505051356340.31828@angie.orcam.me.uk>
+ <1E50C160-EB89-4C5C-B9F0-6441026EE380@zytor.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.3-dev-7b9b9
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
+On Mon, 5 May 2025, H. Peter Anvin wrote:
 
-On Tue, 06 May 2025 14:17:53 +0800, Yu Kuai wrote:
-> changes in v3:
->  - rebase on the top of for-6.16/block
->  - add comments in patch 1 about NULL page.
+> >> I think if you have a use case, you need to speak up about it, rather 
+> >> than for people to guess.
+> >
+> > Which I just did; I think that's exactly what an RFC is about, isn't it?
 > 
-> changes in v2:
->  - rebase on the top of the other patchset:
->  https://lore.kernel.org/all/20250421072641.1311040-1-hch@lst.de/
->  - merge top 2 patches from v1 into one patch;
->  - add reviewed-by for patch 2,3
-> 
-> [...]
+> No, with "silly embedded nonsense hacks" (Google for it) I mean ad hoc 
+> hacks breaking the notion of a common platform.
 
-Applied, thanks!
+ I don't feel like I'm the right person to talk about such stuff.  I've 
+always cared about portability and standardisation.
 
-[1/3] brd: protect page with rcu
-      commit: 0e8acffc1be10d53e909b3aa43831d6c2d25a579
-[2/3] brd: fix aligned_sector from brd_do_discard()
-      commit: d4099f8893b057ad7e8d61df76bdeaf807ebd679
-[3/3] brd: fix discard end sector
-      commit: a26a339a654b9403f0ee1004f1db4c2b2a355460
+ In fact running old hardware is one aspect of portability verification, 
+for example I run PCIe stuff off my Pentium MMX and Alpha hardware, and 
+conversely I run conventional PCI stuff off my POWER9 (no port I/O!) and 
+RISC-V hardware.  That has triggered numerous bugs, fixed over the years.
 
-Best regards,
--- 
-Jens Axboe
+> As far as EISA is concerned, could you go into more detail? What are the 
+> remaining users of EISA? One thing that happened with i386 was that we 
+> found out that the only remaining "users" were people dragging out an 
+> old machine to test if the kernel still booted. With bigsmp we had 
+> similar experiences – in at least one case we ended up maintaining 
+> support for a system of which there were no machines left in 
+> existence...
 
+ Well, my i486 box is plain EISA, so naturally I need EISA support to run 
+it:
 
+platform eisa.0: Probing EISA bus 0
+eisa 00:00: EISA: Mainboard AEI0401 detected
+eisa 00:05: EISA: slot 5: DEC3002 detected
+defxx: v1.12 2021/03/10  Lawrence V. Stefani and others
+00:05: DEFEA at I/O addr = 0x5000, IRQ = 10, Hardware addr = 00-00-f8-xx-yy-zz
+00:05: registered as fddi0
+eisa 00:06: EISA: slot 6: NPI0303 detected
+eisa 00:08: EISA: slot 8: TCM5094 detected
+eth0: 3c5x9 found at 0x8000, 10baseT port, address 00:a0:24:xx:yy:zz, IRQ 12.
+platform eisa.0: EISA: Detected 3 cards
 
+(fddi0 is the fast intranet interface, eth0 is the slow external one).  
+It's a luggable integrated computer BTW, a Dolch PAC 60, very nice and 
+compact, previously used by a field engineer for network fault isolation.
+
+ I've already mentioned the maintenance of the defxx driver (it is also an 
+exercise in portability, with defxx supporting 3 host bus attachments).
+
+ This is also my backup box for GNU toolchain (GCC/glibc/GDB) verification 
+for the i386 target.  It has actually proved recently to still have some 
+commercial relevance (again, for portability verification), but who says 
+the use of Linux is supposed to be solely commercial even nowadays?
+
+ The origin of Linux is obvious and I wouldn't be around at all let alone 
+for so many years if not for my enthusiasm solely for the technical merit 
+of Linux (following my earlier passion for processors and systems) 
+accompanied by the fairness of the GNU GPL, with any commercial aspect 
+being at most distantly relevant and a late comer into the game.
+
+ So yes, count me in as a passionate systems software engineer with a 
+fondness for running odd configurations for the sake of experimentation 
+(and consequently a portability exercise) and please do not deprive me of 
+my enthusiasm.
+
+  Maciej
