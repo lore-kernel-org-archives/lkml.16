@@ -1,37 +1,66 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02119262FCB;
-	Tue,  6 May 2025 09:01:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 413372641EA
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 09:01:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746522092; cv=none; b=UkPWtv0ocXYOG6f0W0+DUlhZP5Vl6/Cm/BmoZGuFCwdxdMDYlmvSoFkEBLx6ZtaEqlUyIB7ZEdqo6vwDGvukoNagpcubWfcQcQ+vy8Psk90hCjG08pOycpbrI5kdTDJPNtijqmi4TwY3IgKvr+Tc2VxdhxzM2NfeIUDrFad6AfE=
+	t=1746522116; cv=none; b=tax/nrBAgR3gkgWr5dFoD7EYyX7PzMzeSHg0lDAo8LQkfX4kLKfTu+hdhmaQyvS2RhUmYSk0TtuYv23GiB69CiZHVlFY5CLHucz+t1wF4SNsntVTu7RLOloeiIrs7RNVMjTnnrzrwsep9lOqX15SUayjw+cvKwLFKKEww90DzTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746522092; c=relaxed/simple;
-	bh=nw6d/SZSKNLBkkU8aJfTtZbRWP1PXjimyeHTGPVYBYc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Vr5/FH4QbAiHILCCn9s91AEoQWqX1sZXXL3dLoo9RMuZ7AaOOm5+YrImb6nZkiYRgr+x/sIAYycR7NHHdUX/ldPKIhBsXO4p+oRI/yttBcFNCLxbIk68DbJ4t1DJjpjojWMvt+i9AMrbbLb7SLO3JuPNZ5Ss++tEf8meZNt4E5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oHKXg0tY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746522116; c=relaxed/simple;
+	bh=zzyfhEwAK0od7u7qQvaEU1irR1bKl9oLt0gopkvJps8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=bv37ASoJHNfxPRQrI3keP0JOa12SomLQDwCiUqJLvmBGjuie5KYGMfZEOHlCv2EYNE1zV2ESbWp+YkJGTC3KUM0+4ucGCzbr9YG+FFYw95+uqb6UXdusloEuGIASf0Jig5rttxoymOQiX/0UbF0ekuRRch4LchUPUZGGKVmLgQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=RGd0UEv/; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oHKXg0tY"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 71F84C4CEED;
-	Tue,  6 May 2025 09:01:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746522091;
-	bh=nw6d/SZSKNLBkkU8aJfTtZbRWP1PXjimyeHTGPVYBYc=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=oHKXg0tY4u+3+W0qrYJ/oLIdyex39OiiWr9mDuj79f4nxW6puaOLnQVYBbrTXzYm5
-	 dMkvO8vyIs8Uy77/dDEDbaYqMyio3a8kgixlMk5ng/bq6dnEW8cBaTTJJTSL+DsrjM
-	 DgqWPDXojCBEcs2mEl6b8ccNJ5qNuB5dcU8lwncySjJzKmjmKSnvYtDqihciNe+Jwl
-	 Svq9Y7LGafp2vPOQtmuh9WoIirKKwtj7BmycEAtazSwwGz8JqZi44bt++V0+E8420F
-	 w6lHTi0/Ascdldhcr+mLEw0bHu8y6gKgu13nOcJirJNi2KXqKRzqN1EoaBQCEUL1Df
-	 Y5ou1tJtRSzOQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E98C3ABC3;
-	Tue,  6 May 2025 09:01:31 +0000 (UTC)
-From: =?utf-8?q?T=C3=B3th_J=C3=A1nos_via_B4_Relay?= <devnull+gomba007.gmail.com@kernel.org>
-Date: Tue, 06 May 2025 11:01:16 +0200
-Subject: [PATCH v4 2/2] iio: chemical: Add driver for SEN0322
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="RGd0UEv/"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43cfecdd8b2so34455325e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 02:01:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1746522113; x=1747126913; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=bkSckdGbet2iMO3lK9JiFkiMA12riXIjt+egFZP9xhw=;
+        b=RGd0UEv/a/LG4BHUNtxIVCW5vNPWSKUb4rpdeHjRUJEWAmcRkF0DKmBK/3xQI87k99
+         HvQgd/l/KSp6nL6y8sq9b4ELzSFbqjoOk+DJJx6MXKXYFvdBwtOzyEBr6Gt+SABDM7hl
+         NeoG6guYMXm1hOXujFXkTN35LsxzTs8uoFYQj5f2IY0cK6j0PL3VeXqVIJH06agyOtqx
+         AlGvkjHAE0xkY6AGgqf7Vgbgol5yW0XUhvRfCYwHGTsjOmaK5jeHAVJy2+YBrix0lFgQ
+         /zdhPCFpYZ8jvrDASYnORawJ1j6EzipETxYC4H7R5vW/qeaVMzHBRRwtkMzFPH9HRGmr
+         CScg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746522113; x=1747126913;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bkSckdGbet2iMO3lK9JiFkiMA12riXIjt+egFZP9xhw=;
+        b=g0WYekJ974cWvCdYZHoHnFTQxm74WbaqEtEs/0/HplXTU7d5bukAiN+4F/skLDBnUv
+         FXfNW2L2fTzjHqUnz5kvnmYK2B4djYR85Xcx3QiadHNGoxGwmD2fEmZgJYGyuvIkvKeH
+         fJva6uDhED5osnvQ+7JijI+1vqEWOwZKafj9OeN1DT0dEBm/l1HQQWHbxPN+XsGVt9Yl
+         UnrXsPXYukpmzb6C3tSSQzZAVzFXXRP0C36lS6+JoEqU/A8AO7GB5h/vgGqnpvb89xZx
+         D1Kei6w3V19qDS+mgKHtq/y3t8tqQRRvxkfVMB0lZMzNplm2XlVDdhfNwczYQHhKfLRs
+         vHnQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWcUe8bcdNwy6d566ZqCeizzoat8mPfp1IzQBnARflrsIUj+VO6WmbL1XLEKbztYKAbHAim/a8Z8zAOQvo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YybMPUERRc6mi3XMZIlP+7X0e1UxPq7Q9I42uQX8xuu31rjCF9a
+	2tyL3NbQZGKSZCvY2AqxDY43mtjotVQiC6HBvZwIfo/8zBYGYvbt+rh3Jhx9cne3otX8MkVOEDz
+	4
+X-Gm-Gg: ASbGncuZ7ESw8HUJot1o/cROPBNfXV8/T6c0TkFTZkGbeDqNxLWBqhjCV9VC+wbpweO
+	AOJ4/o+ivMLpSaLkB3I1UwWvaa/2bDKsX38MAocVSk96d1Ij++56VdRx3/QiIWPF5zT3WAFUvQB
+	hU7RJn7pFbxJazI7xKFSWcy9PNXBz7KJtsrGJ3IRinQHA7zKpNnPPHFyLQde8lAyd2054SwRG1s
+	9gAyiFvdXk8rzzO+V1QJXSaAKikjshTIMe1Ke5XIV0mHXbVi3LNtQ72sVkSAwSSJsFq47M0WuUm
+	z3vQPQfLooxs5U4P5zR5ajWZWjROJM+HJz2vqT1g3khxag==
+X-Google-Smtp-Source: AGHT+IFj7sycuby5+Xisi67I6ctjifRj/oOl9WSXmMnv0sxBewhRFv1zbclSFWHzUaj8JwTL8LEU3A==
+X-Received: by 2002:a05:600c:4f54:b0:441:b076:fcdf with SMTP id 5b1f17b1804b1-441c48b3c97mr66535245e9.8.1746522113070;
+        Tue, 06 May 2025 02:01:53 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:bfd0:3ad7:fd8a:fe95])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441bc83d471sm138125725e9.26.2025.05.06.02.01.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 May 2025 02:01:52 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH 00/12] gpio: convert more GPIO chips to using new value
+ setters - part 3 for v6.16
+Date: Tue, 06 May 2025 11:01:43 +0200
+Message-Id: <20250506-gpiochip-set-rv-gpio-part3-v1-0-0fbdea5a9667@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,273 +68,79 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250506-iio-chemical-sen0322-v4-2-1465ac8dc190@gmail.com>
-References: <20250506-iio-chemical-sen0322-v4-0-1465ac8dc190@gmail.com>
-In-Reply-To: <20250506-iio-chemical-sen0322-v4-0-1465ac8dc190@gmail.com>
-To: Jonathan Cameron <jic23@kernel.org>, 
- Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- =?utf-8?q?T=C3=B3th_J=C3=A1nos?= <gomba007@gmail.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746522090; l=6662;
- i=gomba007@gmail.com; s=20230706; h=from:subject:message-id;
- bh=+Ezp/DsTUmLfMfPAYh8WgNX/9ol2LZWhHTJ8ACAmRtg=;
- b=aMEQUwFvHlkNzOT8e93+ZxqWL1pHUg7JyEr7k76xhaiaIJKqVnvqvOZRtqjNDGqqkxG1LYWS0
- Su0Ws1cHlNZDTtxeCxvJblQVJWa+GuBCXcTZHzspLf5C9NuxUkeOEnN
-X-Developer-Key: i=gomba007@gmail.com; a=ed25519;
- pk=iY9MjPCbud82ULS2PQJIq3QwjKyP/Sg730I6T2M8Y5U=
-X-Endpoint-Received: by B4 Relay for gomba007@gmail.com/20230706 with
- auth_id=60
-X-Original-From: =?utf-8?q?T=C3=B3th_J=C3=A1nos?= <gomba007@gmail.com>
-Reply-To: gomba007@gmail.com
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPfPGWgC/x3MQQqAIBAAwK/Inlswrai+Eh3C1tqLyioRRH9PO
+ s5lHsgkTBlm9YDQxZljqGgbBe7cwkHIezUYbXrd6wGPxNGdnDBTQbl+Y9qkWJz8aIbOWWeshxo
+ kIc/3ny/r+364QdFSbAAAAA==
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Vladimir Zapolskiy <vz@mleia.com>, 
+ Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>, 
+ Charles Keepax <ckeepax@opensource.cirrus.com>, 
+ Richard Fitzgerald <rf@opensource.cirrus.com>, 
+ Andy Shevchenko <andy@kernel.org>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-sound@vger.kernel.org, 
+ patches@opensource.cirrus.com, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2032;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=zzyfhEwAK0od7u7qQvaEU1irR1bKl9oLt0gopkvJps8=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoGc/5slEzhsD4QV82YbNGPsWnFf/VHMCf8ipQG
+ d21roh9ByyJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaBnP+QAKCRARpy6gFHHX
+ csZxD/4p08GnOddD9OWGTSyOB4+3HZn3pFgEl5zIiWCeDBSBuwfSNxTEfLgdhQhMV4SWPcuMgz7
+ zztx5NWLVVaBwFAhh45V+ILUKvXpMTIsNgCEXmDYu7/opEgQuH6qEKzTIRBbTiFQmov7SdGC8bD
+ 4l2vyF69wBGWNC5gL+5ZsIm36sgpJsAFAJN4GOV/Y+QLZ6tC5z2RTD5bEX9gz5q+peiAEEKgm/9
+ 3xsK7obO2K9DiFYUjMDcsKCEVPyNV53I67w9YcZYBjCDBgvbPPt0keoMJpHfeXPxDKeD4auTRJl
+ sLHwIRGdoX8cOmOQTm1sYsD5ISGRd6IYV0RdZ82D4gKBKft+gSgA9+rzZ2+Vz5Df73nTGCnrlA3
+ zaYVp8j3EcNKsUfT9fjdAe/zE2zn5OEcroiZo1iBJDTOzR9gleq6RBTf8Vnht+IoUhWwt5Dy5ee
+ W0QZQ5x6shgBpFdgGbdNXHfSfNcmON/yayuAzZoKud3EQ/Pdo0qaJW0hbE+ljm5KPBA0NemlL7/
+ m5mcq9EaHsXMtcLGVmaHTwCQA9LMiw4YIKOS2CRlI5wOljOBcoDPGnyRWWx8hBLBzaK+Wt/w2Hf
+ 63/qwQuNNoogtfd6p4JxCxYiqaroOH3mBmEhlIqJsPBK5NW5SEPu4bc0c9WiACtIiJhLM7RCJok
+ 1eVp+i8HvwPoY0w==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-From: Tóth János <gomba007@gmail.com>
+Commit 98ce1eb1fd87e ("gpiolib: introduce gpio_chip setters that return
+values") added new line setter callbacks to struct gpio_chip. They allow
+to indicate failures to callers. We're in the process of converting all
+GPIO controllers to using them before removing the old ones. This series
+converts another round of GPIO controllers.
 
-Add support for the DFRobot SEN0322 oxygen sensor.
-
-To instantiate (assuming device is connected to I2C-2):
-	echo 'sen0322 0x73' > /sys/class/i2c-dev/i2c-2/device/new_device
-
-To get the oxygen concentration (assuming device is iio:device0) multiply
-the values read from:
-	/sys/bus/iio/devices/iio:device0/in_concentration_raw
-	/sys/bus/iio/devices/iio:device0/in_concentration_scale
-
-Datasheet: https://wiki.dfrobot.com/Gravity_I2C_Oxygen_Sensor_SKU_SEN0322
-
-Signed-off-by: Tóth János <gomba007@gmail.com>
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- MAINTAINERS                    |   6 ++
- drivers/iio/chemical/Kconfig   |  10 +++
- drivers/iio/chemical/Makefile  |   1 +
- drivers/iio/chemical/sen0322.c | 163 +++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 180 insertions(+)
+Bartosz Golaszewski (12):
+      gpio: lp873x: use new GPIO line value setter callbacks
+      gpio: lp87565: use new GPIO line value setter callbacks
+      gpio: lpc18xx: use new GPIO line value setter callbacks
+      gpio: lpc32xx: use new GPIO line value setter callbacks
+      gpio: madera: use new GPIO line value setter callbacks
+      gpio: max3191x: remove unused callbacks
+      gpio: max730x: use new GPIO line value setter callbacks
+      gpio: max732x: use new GPIO line value setter callbacks
+      gpio: max77620: use new GPIO line value setter callbacks
+      gpio: mb86s7x: use new GPIO line value setter callbacks
+      gpio: mc33880: use new GPIO line value setter callbacks
+      gpio: ml-ioh: use new GPIO line value setter callbacks
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3cbf9ac0d83f..6fda7a2f1248 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6852,6 +6852,12 @@ L:	linux-rtc@vger.kernel.org
- S:	Maintained
- F:	drivers/rtc/rtc-sd2405al.c
- 
-+DFROBOT SEN0322 DRIVER
-+M:	Tóth János <gomba007@gmail.com>
-+L:	linux-iio@vger.kernel.org
-+S:	Maintained
-+F:	drivers/iio/chemical/sen0322.c
-+
- DH ELECTRONICS DHSOM SOM AND BOARD SUPPORT
- M:	Christoph Niedermaier <cniedermaier@dh-electronics.com>
- M:	Marek Vasut <marex@denx.de>
-diff --git a/drivers/iio/chemical/Kconfig b/drivers/iio/chemical/Kconfig
-index 330fe0af946f..60a81863d123 100644
---- a/drivers/iio/chemical/Kconfig
-+++ b/drivers/iio/chemical/Kconfig
-@@ -166,6 +166,16 @@ config SCD4X
- 	  To compile this driver as a module, choose M here: the module will
- 	  be called scd4x.
- 
-+config SEN0322
-+	tristate "SEN0322 oxygen sensor"
-+	depends on I2C
-+	select REGMAP_I2C
-+	help
-+	  Say Y here to build support for the DFRobot SEN0322 oxygen sensor.
-+
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called sen0322.
-+
- config SENSIRION_SGP30
- 	tristate "Sensirion SGPxx gas sensors"
- 	depends on I2C
-diff --git a/drivers/iio/chemical/Makefile b/drivers/iio/chemical/Makefile
-index 4866db06bdc9..deeff0e4e6f7 100644
---- a/drivers/iio/chemical/Makefile
-+++ b/drivers/iio/chemical/Makefile
-@@ -20,6 +20,7 @@ obj-$(CONFIG_SCD30_CORE) += scd30_core.o
- obj-$(CONFIG_SCD30_I2C) += scd30_i2c.o
- obj-$(CONFIG_SCD30_SERIAL) += scd30_serial.o
- obj-$(CONFIG_SCD4X) += scd4x.o
-+obj-$(CONFIG_SEN0322)	+= sen0322.o
- obj-$(CONFIG_SENSEAIR_SUNRISE_CO2) += sunrise_co2.o
- obj-$(CONFIG_SENSIRION_SGP30)	+= sgp30.o
- obj-$(CONFIG_SENSIRION_SGP40)	+= sgp40.o
-diff --git a/drivers/iio/chemical/sen0322.c b/drivers/iio/chemical/sen0322.c
-new file mode 100644
-index 000000000000..088f8947083e
---- /dev/null
-+++ b/drivers/iio/chemical/sen0322.c
-@@ -0,0 +1,163 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Driver for the DFRobot SEN0322 oxygen sensor.
-+ *
-+ * Datasheet:
-+ *	https://wiki.dfrobot.com/Gravity_I2C_Oxygen_Sensor_SKU_SEN0322
-+ *
-+ * Possible I2C slave addresses:
-+ *	0x70
-+ *	0x71
-+ *	0x72
-+ *	0x73
-+ *
-+ * Copyright (C) 2025 Tóth János <gomba007@gmail.com>
-+ */
-+
-+#include <linux/i2c.h>
-+#include <linux/regmap.h>
-+
-+#include <linux/iio/iio.h>
-+
-+#define SEN0322_REG_DATA	0x03
-+#define SEN0322_REG_COEFF	0x0A
-+
-+struct sen0322 {
-+	struct regmap	*regmap;
-+};
-+
-+static int sen0322_read_data(struct sen0322 *sen0322)
-+{
-+	u8 data[3] = { 0 };
-+	int ret;
-+
-+	ret = regmap_bulk_read(sen0322->regmap, SEN0322_REG_DATA, data,
-+			       sizeof(data));
-+	if (ret < 0)
-+		return ret;
-+
-+	/*
-+	 * The actual value in the registers is:
-+	 *	val = data[0] + data[1] / 10 + data[2] / 100
-+	 * but it is multiplied by 100 here to avoid floating-point math
-+	 * and the scale is divided by 100 to compensate this.
-+	 */
-+	ret = data[0] * 100 + data[1] * 10 + data[2];
-+
-+	return ret;
-+}
-+
-+static int sen0322_read_scale(struct sen0322 *sen0322, int *num, int *den)
-+{
-+	u32 val;
-+	int ret;
-+
-+	ret = regmap_read(sen0322->regmap, SEN0322_REG_COEFF, &val);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (val) {
-+		*num = val;
-+		*den = 100000;	/* Coeff is scaled by 1000 at calibration. */
-+	} else { /* The device is not calibrated, using the factory-defaults. */
-+		*num = 209;	/* Oxygen content in the atmosphere is 20.9%. */
-+		*den = 120000;	/* Output of the sensor at 20.9% is 120 uA. */
-+	}
-+
-+	dev_dbg(regmap_get_device(sen0322->regmap), "scale: %d/%d\n",
-+		*num, *den);
-+
-+	return 0;
-+}
-+
-+static int sen0322_read_raw(struct iio_dev *iio_dev,
-+			    const struct iio_chan_spec *chan,
-+			    int *val, int *val2, long mask)
-+{
-+	struct sen0322 *sen0322 = iio_priv(iio_dev);
-+	int ret;
-+
-+	if (chan->type != IIO_CONCENTRATION)
-+		return -EINVAL;
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		ret = sen0322_read_data(sen0322);
-+		if (ret < 0)
-+			return ret;
-+
-+		*val = ret;
-+		return IIO_VAL_INT;
-+
-+	case IIO_CHAN_INFO_SCALE:
-+		ret = sen0322_read_scale(sen0322, val, val2);
-+		if (ret < 0)
-+			return ret;
-+
-+		return IIO_VAL_FRACTIONAL;
-+
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static const struct iio_info sen0322_info = {
-+	.read_raw = sen0322_read_raw,
-+};
-+
-+static const struct regmap_config sen0322_regmap_conf = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+};
-+
-+static const struct iio_chan_spec sen0322_channel = {
-+	.type = IIO_CONCENTRATION,
-+	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
-+			      BIT(IIO_CHAN_INFO_SCALE),
-+};
-+
-+static int sen0322_probe(struct i2c_client *client)
-+{
-+	struct sen0322 *sen0322;
-+	struct iio_dev *iio_dev;
-+
-+	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C))
-+		return -ENODEV;
-+
-+	iio_dev = devm_iio_device_alloc(&client->dev, sizeof(*sen0322));
-+	if (!iio_dev)
-+		return -ENOMEM;
-+
-+	sen0322 = iio_priv(iio_dev);
-+
-+	sen0322->regmap = devm_regmap_init_i2c(client, &sen0322_regmap_conf);
-+	if (IS_ERR(sen0322->regmap))
-+		return PTR_ERR(sen0322->regmap);
-+
-+	iio_dev->info = &sen0322_info;
-+	iio_dev->name = "sen0322";
-+	iio_dev->channels = &sen0322_channel;
-+	iio_dev->num_channels = 1;
-+	iio_dev->modes = INDIO_DIRECT_MODE;
-+
-+	return devm_iio_device_register(&client->dev, iio_dev);
-+}
-+
-+static const struct of_device_id sen0322_of_match[] = {
-+	{ .compatible = "dfrobot,sen0322" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, sen0322_of_match);
-+
-+static struct i2c_driver sen0322_driver = {
-+	.driver = {
-+		.name = "sen0322",
-+		.of_match_table = sen0322_of_match,
-+	},
-+	.probe = sen0322_probe,
-+};
-+module_i2c_driver(sen0322_driver);
-+
-+MODULE_AUTHOR("Tóth János <gomba007@gmail.com>");
-+MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("SEN0322 oxygen sensor driver");
+ drivers/gpio/gpio-lp873x.c   | 12 ++++++------
+ drivers/gpio/gpio-lp87565.c  | 15 +++++++++------
+ drivers/gpio/gpio-lpc18xx.c  |  8 ++++++--
+ drivers/gpio/gpio-lpc32xx.c  | 28 +++++++++++++++++-----------
+ drivers/gpio/gpio-madera.c   | 18 ++++++------------
+ drivers/gpio/gpio-max3191x.c | 16 ----------------
+ drivers/gpio/gpio-max730x.c  |  9 ++++++---
+ drivers/gpio/gpio-max732x.c  | 15 ++++++++++-----
+ drivers/gpio/gpio-max77620.c | 13 +++++--------
+ drivers/gpio/gpio-mb86s7x.c  |  6 ++++--
+ drivers/gpio/gpio-mc33880.c  |  9 ++++++---
+ drivers/gpio/gpio-ml-ioh.c   |  6 ++++--
+ 12 files changed, 79 insertions(+), 76 deletions(-)
+---
+base-commit: 407f60a151df3c44397e5afc0111eb9b026c38d3
+change-id: 20250506-gpiochip-set-rv-gpio-part3-9f8264c3c23f
 
+Best regards,
 -- 
-2.34.1
-
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
