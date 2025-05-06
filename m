@@ -1,55 +1,55 @@
 Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F888283FDB
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 16:48:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA769288C3D
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 16:48:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746550123; cv=none; b=OfpINBUsaPlY0xzVUEzgRoahXsz5N9xrN+HXUedT2OxzSXNj275SfN+nJj7DCnD7HbQJAvg/OA/ENw1NkqITj9bHwZ5IxSt0SCZadWUf3qdPkZ7TV+9JVlR+29IIshkfP1e3xTMjMgaK9niA3URLXKFh5gx5e4BJ4uD+hNXJQwk=
+	t=1746550127; cv=none; b=cHcgECQctCMw0FZgYVPrkEbS38/LtDFrx/+1h5WCpG0wxPc+j57cIYjU97Nj0zPyUWn8ETSp3FANTa4hpXQn7Yuae1S/Gl5bgSP/pH0SjbLzYfbRHP0wIrz0W4nmacwIu5SD5yRMuhwX21qfmL6IkRW350chV/flBlJQUiQW/EQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746550123; c=relaxed/simple;
-	bh=uSA7aZY+z8hl8mgHtorRGMJ/O7R5BzUyjcDQRpVm1vw=;
+	s=arc-20240116; t=1746550127; c=relaxed/simple;
+	bh=wQBFYyELFNvHLzXQ+9NDItNJua1krR5kq62o/pGyp00=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=dQV0MFr37taGttwdfcoVAz21tQdAkKEaKld1ZOIxX39CK6tjPIqFrA1pPmi18IQUk6vvM/WF/VLu399S4ZeHPf5PY1kSIMcgY23uGybKjsVGZbAh8IUKsAFiwU0xILezFKuA2JBl7yMLRBs5fhIoMBHZxbZY9OdwnreWPGfGtKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=agkmsES2; arc=none smtp.client-ip=209.85.128.73
+	 To:Cc:Content-Type; b=rBSpKA12XjJhGJybNhaYYFkq7a58LG9MykML5UBPHCYxSpwSWoRNQ+ghKbQF2xR4uUjKUg3szcaOFcoVba9hwQiT4FbVDDqODkoo7Or+XWMkcw+8mk4yhBo52ZAtOgG9YdD5Z8MkewRf0HN05sqv3DSiupu2zugRRrX3Gsh+qXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bR9JYyrv; arc=none smtp.client-ip=209.85.128.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="agkmsES2"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43eed325461so32708965e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 09:48:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bR9JYyrv"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43d00017e9dso31813995e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 09:48:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746550119; x=1747154919; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1746550123; x=1747154923; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=DLqX+U6KC5XuCkJn67ap9ma3ZxQvqhTg5Cu1cd+kgu8=;
-        b=agkmsES2v+JqHXiDs61hrbcyVeLCTNYJceyvcw3w4576aGiKAbMKWMaG2WxOxteW38
-         aSzqJR5KI3zEcirwxrOh14uNSIWg47WsLQYVpTTq2Eo8FWVmJPm4RLG+FqUvZEu5d/CL
-         XTt058aNCjxFdgD+ft/PZroHlrrI9qaUYUEuYjKQvUgDuXk8SO8OU42igdinn6hv7iV1
-         B7/CMi0BFZEDFYNvj2zqlaga4JCE/xXzRwJ18TWKGgkSpXNDoFBAA+Il0MzaJ/brx2lB
-         udETS4InkxI1BcnmXNB6nMdd3sAA2oL/DW+dOzvi+e9JX/4hZvi4BmGAUiX1qkuU+mqH
-         B9NQ==
+        bh=BsA8D4HjHlecCQdG9p+xY7qsrnVwx8gbv9XN30ZeOP4=;
+        b=bR9JYyrvUSRjjHakZMmh4XDVWz2izyU7VdR5W3vueye2bDCYALbv2nw0QYjuu8OpJT
+         qjgWNs5PLPntopdZhqh1UqRLj38h4IcI77ELmS31x89IUrFfmXqwVUm6sPXgK2/Q/iO0
+         5zj9zLDCTKdhF+4zQg9q+r+rJuP5+kpn2KJigVkIa0Bl3g0ngNdVkWEZ2Claaxu+NS6v
+         LPR/LnX9OCqVPB+ve/CvYvwwe07rPQ0Z9mwDgRLhyPHeDyKW5IGDChuVDZSS27AujT7C
+         0fjUbWpXKFtgJOFYahEDkbuWtTJN1SBZxIt0IbgKxwDoC/mF5U02Ns/HeHH4BXBzRCIR
+         /LCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746550119; x=1747154919;
+        d=1e100.net; s=20230601; t=1746550123; x=1747154923;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DLqX+U6KC5XuCkJn67ap9ma3ZxQvqhTg5Cu1cd+kgu8=;
-        b=gr3r1ovDHzFdbFcGXJL9/r6n9K/qpSdSE+uWm1P2D2iGFWM7V/3papHC2rdK3trCV4
-         INyEfcSK9a+u3tBbYzpFv5+BSdzs4X4Nn5O0kUIi2piKBaM7hHng7SbMSKeP+KJMZdla
-         /ObveDDWaJpLjDRNCu5/hqUKHKbG5EYiEUWoyWSzpVr9zeE3b7T0WjSB3DcG7blXAtqY
-         //fzZYoElkGhtTj/Q/tGYN8TN6lGAdwTf8yyiO3VCX9NZ6rk3PoYJa6DKqgGccBEWEtd
-         xzJSeSfTO7tBCqoi1IL68okAyPOXVRsHjfPU77W+Jna7wIha/ZsL6/ZXgbwIIBK15Vt1
-         l3Aw==
-X-Forwarded-Encrypted: i=1; AJvYcCWTny3tP4Dht18TQkO+Iu4on1+JlNMSRAH4bE0+YvSZeSVeFLYVOJCI0QePGgEyxZG6oHfOdWxRKlEVcHE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxRlfow++7IVBjFK+tor+dtgGcEUdgjUuWJ9lKT/GLYOkp1QAQJ
-	IT9/afPVd34AEzJFlXT+ib8dbjI6MLojg8+pBfsK096V34nzH/s5TgVdNjesrobmPC+OltMz/cW
-	KlYke1qEZTOhUFwNVzA==
-X-Google-Smtp-Source: AGHT+IHL/sNCxNOHRhTS6oTIVa5sfoqWbd5ej9wKybTNG3/n2Z6yTk1YBNocQmTo2EsZ2HHkWXZm3cQp1zUyP4GR
-X-Received: from wmben4.prod.google.com ([2002:a05:600c:8284:b0:440:60ac:3f40])
+        bh=BsA8D4HjHlecCQdG9p+xY7qsrnVwx8gbv9XN30ZeOP4=;
+        b=V76wVvekTYm2qnw/3KO5hMNA6TFZZhsl1T/Dqv/rZaTWW+5c8hbV+rX7zBc6U1ckv3
+         XHB49w/7k8JrGSoQ3jXJ/noJCLjyK9CI6tq7OYshBBL1uxOTdzGS/kNHrCfiv7kDgwXL
+         xVfAgCF3fF+jBrP7DoRqjqPTzahajjOKc6eRiCVEZYDMtuOP3zkq/cZE1HrCh+0ry1tj
+         MmKVSRI/jonGhsMWmCEpRM+EG4tXOQK/0PyXtNSkxytD6MXcmUWNBkL7ZphalB1rFP4D
+         CS5yHnnSqVnwaJbtdDhuwZDy+168tQZps12nEwauIbz/F4eM7kQOTqZyE6mAZ3CaMvHL
+         p6Yw==
+X-Forwarded-Encrypted: i=1; AJvYcCUMqRNSx2Y5kOOqVPTvBKZLlg/8F+kXE2Bar9yRhedEKFLgqJ8tyRd0loHRMmA1NMhLg+rMulwBAAICr0s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGvy1+JAe0Xe/C1cabc0vGxCj6JNHdm1pmDiyrRBf9ghAQICUn
+	pc8fubHoyURbanjMof32EVSasHr3HAp4aGJocEZv3zIOW5t1YVqeiVzWns+9e/urATgIIoxMUpb
+	BqIFSLh5sLJKkLaNoTw==
+X-Google-Smtp-Source: AGHT+IF5PMMWTS3cwH1oB8k42s2Xq6vSAGn672jUyunHJnJQKljjoLiBSvKPyhszSFei8WE+2z41aT3Hv72Lx/Nf
+X-Received: from wmbay23.prod.google.com ([2002:a05:600c:1e17:b0:43d:522a:45e8])
  (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:3d18:b0:440:94a2:95b8 with SMTP id 5b1f17b1804b1-441d050b1ecmr44941085e9.16.1746550119630;
- Tue, 06 May 2025 09:48:39 -0700 (PDT)
-Date: Tue,  6 May 2025 17:47:57 +0100
+ 2002:a05:600c:5105:b0:43d:1840:a13f with SMTP id 5b1f17b1804b1-441d100a9edmr34417665e9.25.1746550123251;
+ Tue, 06 May 2025 09:48:43 -0700 (PDT)
+Date: Tue,  6 May 2025 17:47:59 +0100
 In-Reply-To: <20250506164820.515876-1-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250506164820.515876-1-vdonnefort@google.com>
 X-Mailer: git-send-email 2.49.0.967.g6a0df3ecc3-goog
-Message-ID: <20250506164820.515876-2-vdonnefort@google.com>
-Subject: [PATCH v4 01/24] ring-buffer: Introduce ring-buffer remotes
+Message-ID: <20250506164820.515876-4-vdonnefort@google.com>
+Subject: [PATCH v4 03/24] tracing: Add reset to trace remotes
 From: Vincent Donnefort <vdonnefort@google.com>
 To: rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
 	linux-trace-kernel@vger.kernel.org, maz@kernel.org, oliver.upton@linux.dev, 
@@ -71,437 +71,107 @@ Cc: kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
 	Vincent Donnefort <vdonnefort@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-A ring-buffer remote is an entity outside of the kernel (most likely a
-firmware or a hypervisor) capable of writing events in a ring-buffer
-following the same format as the tracefs ring-buffer.
-
-To setup the ring-buffer on the kernel side, a description of the pages
-forming the ring-buffer (struct trace_buffer_desc) must be given.
-Callbacks (swap_reader_page and reset) must also be provided.
-
-It is expected from the remote to keep the meta-page updated.
+For standard trace instance, "trace" files allow to do non-consuming
+read of the ring-buffers. This is however not applicable to ring-buffer
+remotes due to the lack of support in the meta-page. Nonetheless this
+file is still useful to reset a ring-buffer so let's add a write-only
+version.
 
 Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 
-diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
-index 56e27263acf8..c0c7f8a0dcb3 100644
---- a/include/linux/ring_buffer.h
-+++ b/include/linux/ring_buffer.h
-@@ -248,4 +248,67 @@ int ring_buffer_map(struct trace_buffer *buffer, int cpu,
- 		    struct vm_area_struct *vma);
- int ring_buffer_unmap(struct trace_buffer *buffer, int cpu);
- int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu);
-+
-+#define meta_pages_lost(__meta) \
-+	((__meta)->Reserved1)
-+#define meta_pages_touched(__meta) \
-+	((__meta)->Reserved2)
-+
-+struct ring_buffer_desc {
-+	int		cpu;
-+	unsigned int	nr_page_va; /* excludes the meta page */
-+	unsigned long	meta_va;
-+	unsigned long	page_va[];
-+};
-+
-+struct trace_buffer_desc {
-+	int		nr_cpus;
-+	size_t		struct_len;
-+	char		__data[]; /* list of ring_buffer_desc */
-+};
-+
-+static inline struct ring_buffer_desc *__next_ring_buffer_desc(struct ring_buffer_desc *desc)
-+{
-+	size_t len = struct_size(desc, page_va, desc->nr_page_va);
-+
-+	return (struct ring_buffer_desc *)((void *)desc + len);
-+}
-+
-+static inline struct ring_buffer_desc *__first_ring_buffer_desc(struct trace_buffer_desc *desc)
-+{
-+	return (struct ring_buffer_desc *)(&desc->__data[0]);
-+}
-+
-+static inline size_t trace_buffer_desc_size(size_t buffer_size, unsigned int nr_cpus)
-+{
-+	unsigned int nr_pages = (PAGE_ALIGN(buffer_size) / PAGE_SIZE) + 1;
-+	struct ring_buffer_desc *rbdesc;
-+
-+	return size_add(offsetof(struct trace_buffer_desc, __data),
-+			size_mul(nr_cpus, struct_size(rbdesc, page_va, nr_pages)));
-+}
-+
-+#define for_each_ring_buffer_desc(__pdesc, __cpu, __trace_pdesc)		\
-+	for (__pdesc = __first_ring_buffer_desc(__trace_pdesc), __cpu = 0;	\
-+	     __cpu < (__trace_pdesc)->nr_cpus;					\
-+	     __cpu++, __pdesc = __next_ring_buffer_desc(__pdesc))
-+
-+struct ring_buffer_remote {
-+	struct trace_buffer_desc	*desc;
-+	int				(*swap_reader_page)(unsigned int cpu, void *priv);
-+	int				(*reset)(unsigned int cpu, void *priv);
-+	void				*priv;
-+};
-+
-+int ring_buffer_poll_remote(struct trace_buffer *buffer, int cpu);
-+
-+struct trace_buffer *
-+__ring_buffer_alloc_remote(struct ring_buffer_remote *remote,
-+			   struct lock_class_key *key);
-+
-+#define ring_buffer_remote(remote)				\
-+({								\
-+	static struct lock_class_key __key;			\
-+	__ring_buffer_alloc_remote(remote, &__key);		\
-+})
- #endif /* _LINUX_RING_BUFFER_H */
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index c0f877d39a24..a96a0b231fee 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -523,6 +523,8 @@ struct ring_buffer_per_cpu {
- 	struct trace_buffer_meta	*meta_page;
- 	struct ring_buffer_cpu_meta	*ring_meta;
+diff --git a/include/linux/trace_remote.h b/include/linux/trace_remote.h
+index de043a6f2fe0..1aa99da3c96a 100644
+--- a/include/linux/trace_remote.h
++++ b/include/linux/trace_remote.h
+@@ -11,6 +11,7 @@ struct trace_remote_callbacks {
+ 	void	(*unload_trace_buffer)(struct trace_buffer_desc *desc, void *priv);
+ 	int	(*enable_tracing)(bool enable, void *priv);
+ 	int	(*swap_reader_page)(unsigned int cpu, void *priv);
++	int	(*reset)(unsigned int cpu, void *priv);
+ };
  
-+	struct ring_buffer_remote	*remote;
-+
- 	/* ring buffer pages to update, > 0 to add, < 0 to remove */
- 	long				nr_pages_to_update;
- 	struct list_head		new_pages; /* new pages to add */
-@@ -545,6 +547,8 @@ struct trace_buffer {
- 
- 	struct ring_buffer_per_cpu	**buffers;
- 
-+	struct ring_buffer_remote	*remote;
-+
- 	struct hlist_node		node;
- 	u64				(*clock)(void);
- 
-@@ -2196,6 +2200,41 @@ static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
- 	return -ENOMEM;
+ int trace_remote_register(const char *name, struct trace_remote_callbacks *cbs, void *priv);
+diff --git a/kernel/trace/trace_remote.c b/kernel/trace/trace_remote.c
+index 462c2d085a08..2221705f65f4 100644
+--- a/kernel/trace/trace_remote.c
++++ b/kernel/trace/trace_remote.c
+@@ -70,6 +70,7 @@ static int trace_remote_load(struct trace_remote *remote)
+ 	rb_remote->desc = remote->trace_buffer_desc;
+ 	rb_remote->swap_reader_page = remote->cbs->swap_reader_page;
+ 	rb_remote->priv = remote->priv;
++	rb_remote->reset = remote->cbs->reset;
+ 	remote->trace_buffer = ring_buffer_remote(rb_remote);
+ 	if (!remote->trace_buffer) {
+ 		remote->cbs->unload_trace_buffer(remote->trace_buffer_desc, remote->priv);
+@@ -135,6 +136,19 @@ static int trace_remote_stop(struct trace_remote *remote)
+ 	return 0;
  }
  
-+static struct ring_buffer_desc *ring_buffer_desc(struct trace_buffer_desc *trace_desc, int cpu)
++static void trace_remote_reset(struct trace_remote *remote, int cpu)
 +{
-+	struct ring_buffer_desc *desc, *end;
-+	size_t len;
-+	int i;
++	lockdep_assert_held(&remote->lock);
 +
-+	if (!trace_desc)
-+		return NULL;
-+
-+	if (cpu >= trace_desc->nr_cpus)
-+		return NULL;
-+
-+	end = (struct ring_buffer_desc *)((void *)trace_desc + trace_desc->struct_len);
-+	desc = __first_ring_buffer_desc(trace_desc);
-+	len = struct_size(desc, page_va, desc->nr_page_va);
-+	desc = (struct ring_buffer_desc *)((void *)desc + (len * cpu));
-+
-+	if (desc < end && desc->cpu == cpu)
-+		return desc;
-+
-+	/* Missing CPUs, need to linear search */
-+	for_each_ring_buffer_desc(desc, i, trace_desc) {
-+		if (desc->cpu == cpu)
-+			return desc;
-+	}
-+
-+	return NULL;
-+}
-+
-+static void *ring_buffer_desc_page(struct ring_buffer_desc *desc, int page_id)
-+{
-+	return page_id > desc->nr_page_va ? NULL : (void *)desc->page_va[page_id];
-+}
-+
-+
- static int rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
- 			     unsigned long nr_pages)
- {
-@@ -2256,6 +2295,30 @@ rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
- 
- 	cpu_buffer->reader_page = bpage;
- 
-+	if (buffer->remote) {
-+		struct ring_buffer_desc *desc = ring_buffer_desc(buffer->remote->desc, cpu);
-+
-+		if (!desc)
-+			goto fail_free_reader;
-+
-+		cpu_buffer->remote = buffer->remote;
-+		cpu_buffer->meta_page = (struct trace_buffer_meta *)(void *)desc->meta_va;
-+		cpu_buffer->subbuf_ids = desc->page_va;
-+		cpu_buffer->nr_pages = desc->nr_page_va - 1;
-+		atomic_inc(&cpu_buffer->record_disabled);
-+		atomic_inc(&cpu_buffer->resize_disabled);
-+
-+		bpage->page = ring_buffer_desc_page(desc, cpu_buffer->meta_page->reader.id);
-+		if (!bpage->page)
-+			goto fail_free_reader;
-+		/*
-+		 * The meta-page can only describe which of the ring-buffer page
-+		 * is the reader. There is no need to init the rest of the
-+		 * ring-buffer.
-+		 */
-+		return cpu_buffer;
-+	}
-+
- 	if (buffer->range_addr_start) {
- 		/*
- 		 * Range mapped buffers have the same restrictions as memory
-@@ -2333,6 +2396,10 @@ static void rb_free_cpu_buffer(struct ring_buffer_per_cpu *cpu_buffer)
- 
- 	irq_work_sync(&cpu_buffer->irq_work.work);
- 
-+	/* remote ring-buffer. We do not own the data pages */
-+	if (cpu_buffer->remote)
-+		cpu_buffer->reader_page->page = NULL;
-+
- 	free_buffer_page(cpu_buffer->reader_page);
- 
- 	if (head) {
-@@ -2355,7 +2422,8 @@ static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
- 					 int order, unsigned long start,
- 					 unsigned long end,
- 					 unsigned long scratch_size,
--					 struct lock_class_key *key)
-+					 struct lock_class_key *key,
-+					 struct ring_buffer_remote *remote)
- {
- 	struct trace_buffer *buffer;
- 	long nr_pages;
-@@ -2383,6 +2451,11 @@ static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
- 	buffer->flags = flags;
- 	buffer->clock = trace_clock_local;
- 	buffer->reader_lock_key = key;
-+	if (remote) {
-+		buffer->remote = remote;
-+		/* The writer is remote. This ring-buffer is read-only */
-+		atomic_inc(&buffer->record_disabled);
-+	}
- 
- 	init_irq_work(&buffer->irq_work.work, rb_wake_up_waiters);
- 	init_waitqueue_head(&buffer->irq_work.waiters);
-@@ -2502,7 +2575,7 @@ struct trace_buffer *__ring_buffer_alloc(unsigned long size, unsigned flags,
- 					struct lock_class_key *key)
- {
- 	/* Default buffer page size - one system page */
--	return alloc_buffer(size, flags, 0, 0, 0, 0, key);
-+	return alloc_buffer(size, flags, 0, 0, 0, 0, key, NULL);
- 
- }
- EXPORT_SYMBOL_GPL(__ring_buffer_alloc);
-@@ -2529,7 +2602,18 @@ struct trace_buffer *__ring_buffer_alloc_range(unsigned long size, unsigned flag
- 					       struct lock_class_key *key)
- {
- 	return alloc_buffer(size, flags, order, start, start + range_size,
--			    scratch_size, key);
-+			    scratch_size, key, NULL);
-+}
-+
-+/**
-+ * __ring_buffer_alloc_remote - allocate a new ring_buffer from a remote
-+ * @remote: Contains a description of the ring-buffer pages and remote callbacks.
-+ * @key: ring buffer reader_lock_key.
-+ */
-+struct trace_buffer *__ring_buffer_alloc_remote(struct ring_buffer_remote *remote,
-+						struct lock_class_key *key)
-+{
-+	return alloc_buffer(0, 0, 0, 0, 0, 0, key, remote);
- }
- 
- void *ring_buffer_meta_scratch(struct trace_buffer *buffer, unsigned int *size)
-@@ -5278,8 +5362,56 @@ rb_update_iter_read_stamp(struct ring_buffer_iter *iter,
- 	}
- }
- 
-+static bool rb_read_remote_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
-+{
-+	local_set(&cpu_buffer->entries, READ_ONCE(cpu_buffer->meta_page->entries));
-+	local_set(&cpu_buffer->overrun, READ_ONCE(cpu_buffer->meta_page->overrun));
-+	local_set(&cpu_buffer->pages_touched, READ_ONCE(meta_pages_touched(cpu_buffer->meta_page)));
-+	local_set(&cpu_buffer->pages_lost, READ_ONCE(meta_pages_lost(cpu_buffer->meta_page)));
-+	/*
-+	 * No need to get the "read" field, it can be tracked here as any
-+	 * reader will have to go through a rign_buffer_per_cpu.
-+	 */
-+
-+	return rb_num_of_entries(cpu_buffer);
-+}
-+
- static struct buffer_page *
--rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
-+__rb_get_reader_page_from_remote(struct ring_buffer_per_cpu *cpu_buffer)
-+{
-+	u32 prev_reader;
-+
-+	if (!rb_read_remote_meta_page(cpu_buffer))
-+		return NULL;
-+
-+	/* More to read on the reader page */
-+	if (cpu_buffer->reader_page->read < rb_page_size(cpu_buffer->reader_page)) {
-+		if (!cpu_buffer->reader_page->read)
-+			cpu_buffer->read_stamp = cpu_buffer->reader_page->page->time_stamp;
-+		return cpu_buffer->reader_page;
-+	}
-+
-+	prev_reader = cpu_buffer->meta_page->reader.id;
-+
-+	WARN_ON(cpu_buffer->remote->swap_reader_page(cpu_buffer->cpu, cpu_buffer->remote->priv));
-+	/* nr_pages doesn't include the reader page */
-+	if (WARN_ON(cpu_buffer->meta_page->reader.id > cpu_buffer->nr_pages))
-+		return NULL;
-+
-+	cpu_buffer->reader_page->page =
-+		(void *)cpu_buffer->subbuf_ids[cpu_buffer->meta_page->reader.id];
-+	cpu_buffer->reader_page->id = cpu_buffer->meta_page->reader.id;
-+	cpu_buffer->reader_page->read = 0;
-+	cpu_buffer->read_stamp = cpu_buffer->reader_page->page->time_stamp;
-+	cpu_buffer->lost_events = cpu_buffer->meta_page->reader.lost_events;
-+
-+	WARN_ON(prev_reader == cpu_buffer->meta_page->reader.id);
-+
-+	return rb_page_size(cpu_buffer->reader_page) ? cpu_buffer->reader_page : NULL;
-+}
-+
-+static struct buffer_page *
-+__rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
- {
- 	struct buffer_page *reader = NULL;
- 	unsigned long bsize = READ_ONCE(cpu_buffer->buffer->subbuf_size);
-@@ -5450,6 +5582,13 @@ rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
- 	return reader;
- }
- 
-+static struct buffer_page *
-+rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
-+{
-+	return cpu_buffer->remote ? __rb_get_reader_page_from_remote(cpu_buffer) :
-+				    __rb_get_reader_page(cpu_buffer);
-+}
-+
- static void rb_advance_reader(struct ring_buffer_per_cpu *cpu_buffer)
- {
- 	struct ring_buffer_event *event;
-@@ -5854,7 +5993,7 @@ ring_buffer_read_prepare(struct trace_buffer *buffer, int cpu, gfp_t flags)
- 	struct ring_buffer_per_cpu *cpu_buffer;
- 	struct ring_buffer_iter *iter;
- 
--	if (!cpumask_test_cpu(cpu, buffer->cpumask))
-+	if (!cpumask_test_cpu(cpu, buffer->cpumask) || buffer->remote)
- 		return NULL;
- 
- 	iter = kzalloc(sizeof(*iter), flags);
-@@ -6024,6 +6163,23 @@ rb_reset_cpu(struct ring_buffer_per_cpu *cpu_buffer)
- {
- 	struct buffer_page *page;
- 
-+	if (cpu_buffer->remote) {
-+		if (!cpu_buffer->remote->reset)
-+			return;
-+
-+		cpu_buffer->remote->reset(cpu_buffer->cpu, cpu_buffer->remote->priv);
-+		rb_read_remote_meta_page(cpu_buffer);
-+
-+		/* Read related values, not covered by the meta-page */
-+		local_set(&cpu_buffer->pages_read, 0);
-+		cpu_buffer->read = 0;
-+		cpu_buffer->read_bytes = 0;
-+		cpu_buffer->last_overrun = 0;
-+		cpu_buffer->reader_page->read = 0;
-+
++	if (!trace_remote_loaded(remote))
 +		return;
-+	}
 +
- 	rb_head_page_deactivate(cpu_buffer);
- 
- 	cpu_buffer->head_page
-@@ -6259,6 +6415,49 @@ bool ring_buffer_empty_cpu(struct trace_buffer *buffer, int cpu)
- }
- EXPORT_SYMBOL_GPL(ring_buffer_empty_cpu);
- 
-+int ring_buffer_poll_remote(struct trace_buffer *buffer, int cpu)
-+{
-+	struct ring_buffer_per_cpu *cpu_buffer;
-+	unsigned long flags;
-+
-+	if (cpu != RING_BUFFER_ALL_CPUS) {
-+		if (!cpumask_test_cpu(cpu, buffer->cpumask))
-+			return -EINVAL;
-+
-+		cpu_buffer = buffer->buffers[cpu];
-+
-+		raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
-+		if (rb_read_remote_meta_page(cpu_buffer))
-+			rb_wakeups(buffer, cpu_buffer);
-+		raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
-+
-+		return 0;
-+	}
-+
-+	/*
-+	 * Make sure all the ring buffers are up to date before we start reading
-+	 * them.
-+	 */
-+	for_each_buffer_cpu(buffer, cpu) {
-+		cpu_buffer = buffer->buffers[cpu];
-+
-+		raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
-+		rb_read_remote_meta_page(buffer->buffers[cpu]);
-+		raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
-+	}
-+
-+	for_each_buffer_cpu(buffer, cpu) {
-+		cpu_buffer = buffer->buffers[cpu];
-+
-+		raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
-+		if (rb_num_of_entries(cpu_buffer))
-+			rb_wakeups(buffer, buffer->buffers[cpu]);
-+		raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
-+	}
-+
-+	return 0;
++	if (cpu == RING_BUFFER_ALL_CPUS)
++		ring_buffer_reset(remote->trace_buffer);
++	else
++		ring_buffer_reset_cpu(remote->trace_buffer, cpu);
 +}
 +
- #ifdef CONFIG_RING_BUFFER_ALLOW_SWAP
- /**
-  * ring_buffer_swap_cpu - swap a CPU buffer between two ring buffers
-@@ -6510,6 +6709,7 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
- 	unsigned int commit;
- 	unsigned int read;
- 	u64 save_timestamp;
-+	bool force_memcpy;
- 	int ret = -1;
+ static ssize_t
+ tracing_on_write(struct file *filp, const char __user *ubuf, size_t cnt, loff_t *ppos)
+ {
+@@ -369,6 +383,26 @@ static const struct file_operations trace_pipe_fops = {
+ 	.release	= trace_pipe_release,
+ };
  
- 	if (!cpumask_test_cpu(cpu, buffer->cpumask))
-@@ -6547,6 +6747,8 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
- 	/* Check if any events were dropped */
- 	missed_events = cpu_buffer->lost_events;
- 
-+	force_memcpy = cpu_buffer->mapped || cpu_buffer->remote;
++static ssize_t trace_write(struct file *filp, const char __user *ubuf, size_t cnt, loff_t *ppos)
++{
++	struct inode *inode = file_inode(filp);
++	struct trace_remote *remote = inode->i_private;
++	int cpu = RING_BUFFER_ALL_CPUS;
 +
- 	/*
- 	 * If this page has been partially read or
- 	 * if len is not big enough to read the rest of the page or
-@@ -6556,7 +6758,7 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
- 	 */
- 	if (read || (len < (commit - read)) ||
- 	    cpu_buffer->reader_page == cpu_buffer->commit_page ||
--	    cpu_buffer->mapped) {
-+	    force_memcpy) {
- 		struct buffer_data_page *rpage = cpu_buffer->reader_page->page;
- 		unsigned int rpos = read;
- 		unsigned int pos = 0;
-@@ -7138,7 +7340,7 @@ int ring_buffer_map(struct trace_buffer *buffer, int cpu,
- 	unsigned long flags, *subbuf_ids;
- 	int err = 0;
++	if (inode->i_cdev)
++		cpu = (long)inode->i_cdev - 1;
++
++	guard(mutex)(&remote->lock);
++
++	trace_remote_reset(remote, cpu);
++
++	return cnt;
++}
++
++static const struct file_operations trace_fops = {
++	.write		= trace_write,
++};
++
+ static int trace_remote_init_tracefs(const char *name, struct trace_remote *remote)
+ {
+ 	struct dentry *remote_d, *percpu_d;
+@@ -399,7 +433,9 @@ static int trace_remote_init_tracefs(const char *name, struct trace_remote *remo
+ 	    !trace_create_file("buffer_size_kb", TRACEFS_MODE_WRITE, remote_d, remote,
+ 			       &buffer_size_kb_fops) ||
+ 	    !trace_create_file("trace_pipe", TRACEFS_MODE_READ, remote_d, remote,
+-			       &trace_pipe_fops))
++			       &trace_pipe_fops) ||
++	    !trace_create_file("trace", 0200, remote_d, remote,
++			       &trace_fops))
+ 		goto err;
  
--	if (!cpumask_test_cpu(cpu, buffer->cpumask))
-+	if (!cpumask_test_cpu(cpu, buffer->cpumask) || buffer->remote)
- 		return -EINVAL;
+ 	percpu_d = tracefs_create_dir("per_cpu", remote_d);
+@@ -421,7 +457,9 @@ static int trace_remote_init_tracefs(const char *name, struct trace_remote *remo
+ 		}
  
- 	cpu_buffer = buffer->buffers[cpu];
+ 		if (!trace_create_cpu_file("trace_pipe", TRACEFS_MODE_READ, cpu_d, remote, cpu,
+-					   &trace_pipe_fops))
++					   &trace_pipe_fops) ||
++		    !trace_create_cpu_file("trace", 0200, cpu_d, remote, cpu,
++					   &trace_fops))
+ 			goto err;
+ 	}
+ 
 -- 
 2.49.0.967.g6a0df3ecc3-goog
 
