@@ -1,516 +1,217 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2086.outbound.protection.outlook.com [40.107.212.86])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2E101ACEAC
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 21:34:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746567290; cv=none; b=DyXWiRBOXnhQKT8WEefBz0KvpaBB7WaR4jBPYvINBJYzTqXBe5CdNmsb5LlCr5jACJzaKYWrN80ZwLz07zG9Dxo2Js06Ms+YcB48YRlRfm6pnvkFIhg8V5N0csub/pMzw8/8hXe6oWmadmDTv2IgY2I5l1/kByBguqmEOH1L7xc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746567290; c=relaxed/simple;
-	bh=w/x6LuzoSjWLFZFEz0QMESkey1sZE8BLCYVmXVN+2Ik=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pUUCE/vYPHCShUeOAtMPuHGvkWgHkGiChbeBKtGNypQSqFDZOG/lL8HjcCJXmjiJWtmYnxGJ1uUNzTKW3L3GBVva2ZLib3yJxsqgyhUCDqYT3YG6S4y+qD83S8JUifhvkSbu9BP/6CWCllWY/LJ50vA/KaZ9wt0hGFt92VEtdF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kucprTwA; arc=none smtp.client-ip=209.85.160.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B4774B1E4B;
+	Tue,  6 May 2025 21:34:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.86
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746567291; cv=fail; b=YfP7konMRIsdiO3OzkHVlW7K0kfcfbKu3jBtVf3Koq30lj40Q3qFFIwjLgxbYPo5tGZtaANk6QK6jq4PDqvd7qz+1Xv4NqytWOCQYmMsIotT/9qP02FRTgaTVvMMzsfL8oGK+ISvldPPa3JEQFOYeGxnlOyocwiPqN88jn8X/Zw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746567291; c=relaxed/simple;
+	bh=FTqZaS4Nx21aootXfx/Si493U6kH3P1+S8KVSaMuaM8=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=dU8rIdaC5XVtME2/f5ciXLiGvWrm6rQKeVS1L1+pu/3U6pO3V9kCdReiw3sT8yXQvGb8o2DghfZd5zSXO8mTGLoYC5bFyAWxkieMUdnzr7xsf9olsTa89S45HwZMQDpzWyIGHh1oK4Y8A5beelDcUIIReYNnt2Kkr5os7RcaLZM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=AYb6t9KG; arc=fail smtp.client-ip=40.107.212.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kucprTwA"
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-48b7747f881so28011cf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 14:34:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746567286; x=1747172086; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DTY0HM/OQV3eIq9dHFagnDhjaDtC565iL3zCcgCqCrM=;
-        b=kucprTwAKy53O7qjwAvZnjW+T/r1Ki1YUMTUD1iPcfMIncMndxGcf+gQEKue3Zd5aB
-         xMmXS2JvnGfpi/v5tB3OIMZPnc3fl4yXiJkdmQrN5tutzIMmZdHbnam4w98cvi3X5xHc
-         +wjEToApsidDmhrhDvFZmAZyMr8O6rPN2ovAv3RZqIpL+DfF/Jwy9OauPfIE3ke4RFHK
-         to1Zh8iVwlTSGzs3/MLvEv6+DlgkJ7Ovh7jScI7txcUznaTUWhqgdFHkW3/U5PGT6d7O
-         YVlDtvUnoVdsJcHMBSIWxoX1+SWXzrUWbAmvfLNpkYY3R/DuPHC2pSS6NR3zGtc045nQ
-         22FA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746567286; x=1747172086;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DTY0HM/OQV3eIq9dHFagnDhjaDtC565iL3zCcgCqCrM=;
-        b=D+K+Cv4MaFxf4Ln/P61owTZXbjdGEW/1Hbd6L7ufFfzfFYOcS8WmOvzA/8wu0x2FAc
-         tn0ONOgzMs/VXze+/JRurWxmgdCgFLpCRiTNhp7amdq0xQ0KybSPAFsnateE7RTnUT6d
-         kQrq5iwGAFyJh/upbxZSB1eWToabksUe3Knc+fE9Of11x8SPEbQrU5rD3xesQTul0Yuk
-         vm6GXqm26ueXtVIIoWx/kYEdbQ3t3gq5Ggr7ebDwuwuBSQ2IEncl19LpyaFW882RCFMb
-         WIzRDrWWbL4O53lwkxD9ID/6rjXWITHtJtpNYQ9X+JRA5Cn5LF3FtwhqU90qnwTYANEJ
-         HxsA==
-X-Forwarded-Encrypted: i=1; AJvYcCVIj2GOTCMq3VjFYQ2cGlSe9vue6BDP9IyhrldX7YK7Zt7y71MAk/VrAS9vpAsuh4/NXfpwqEcqODmTKZk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YylnJwepNSjw6mKzCoNgep1+OrcTL7ovtWDmu1aQniqToqT50uD
-	3Rs5PkzqbKnGVPa/U/ltFj843Eye7k5oyGMIa46Ek8WWywfIkclfFou7QxX0lxhKd9qQ5t6btny
-	EhOzm018Kl35VZ4GobhQ0a52qp46vPtQaub99
-X-Gm-Gg: ASbGncubQ+rqGyQCH0EtbyGz34dmXoViNSsRMsax8Jd/qik8urLwnDOY5Q17ujdjhQo
-	VElKZ6NSHN2fnzqPgeSoIWd3q7Z9jT5hJaQC2sjku4ibE5XpaWowXsWTn+s5KNr0b83+GDU4pnA
-	cNJ+79TX53rnScNifTXLvZ/tkH+pW07SIXjYsBOQeFhOBqMF1G3vNMkvhDOm2FQg==
-X-Google-Smtp-Source: AGHT+IE47iWdF3PCooLGEAUO7EBuJixpjaL+7+CaNR3SivBwSMbKJFmepi+qI7SvfZMbEsQ8P8lBB5IrpUxHJrd7aLE=
-X-Received: by 2002:a05:622a:1483:b0:478:f8ac:8adf with SMTP id
- d75a77b69052e-4924bb8c606mr265011cf.19.1746567286030; Tue, 06 May 2025
- 14:34:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="AYb6t9KG"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=AsrI5iZMaKw00UbA26oAwazrZDAp9t0G8idk16qygGhjFDT4ewKr1ZsYtbYwiWJtCL/HvEiRrhPCxSIjpL1jiJrMK0SDPgQHX+wHxBbkU4OLS+piMzSdCiLP/LUoFVP1pGpgWkJQ4YelzHNcIgnQsNGJsyFkI87gbarUSr+1dnxjEIm3vuKCTO7UHUSSOA6/buLBntsaulLv+mxnfijhUeb6m4enLcNfvP4FvjEWMsR8jsMNQewVe8RWM2fc+7mm3ClrrfHDSiTiwcWI1fmZIqs2X1LtHv7xdwtQwSemQtrHAFAFVFJoO+4RHMM1CLn6jkPdH7t/u9qSLht+ncJjEg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=nu8swYFeuNnaRfL1EjOa6v3/yJlOZctfSsSsOwyZejQ=;
+ b=lE8wN9purVtjOcAkx7Cp9Q7FjKqxGL3ATiTlo6pe6z+dNN2wj47EKjw7MhoSM8/rzoW7Xy84FOGJ+mNFVbYXtbyn/G92gyl+4jOt0dflP3JuWNhnzkEqembLu3qzW+z7lQMbWSYJfcbQ4izYcBmuhNLQeFDp/mwclPq1TWuFfs4uBgp1sS1HCWlyYIdBH46O3V1JB03V8xi48KTwzUqAI8CKiWiyKUsVK9J2SZ56365vDQH/QRhNXlJ7w9aMBKRGWxgo4YzvxJYhzbyXWevv80QzVN+Di0TyiUUrwGB/Za8e429PKxVEbDHeyU0qdTBx6b171JKcoojZdJ8uh0mPLw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nu8swYFeuNnaRfL1EjOa6v3/yJlOZctfSsSsOwyZejQ=;
+ b=AYb6t9KGuvI0PBrucnaxjqKwqdugLONLZd3Lxr27JefnAjH+VMyrv9SeREzOqeJ+5qDAH9ekxjkD43F/p3e5fVwwbAP8X+p9ZVr91r+9ZoTIlMqPAPzLvEzDajS7XZTYrUXwgg6eqngIHOFWKKKKGSebKQeKA5cNgB3PtAKo6OI0DQWJ0eUjX1Uc97KeSzETQjOGJJcusBTF1sHMRD9NXFfVIAbKXh8j6RLI+KqIieRE4wNDVW1kkHjPsxb1gPp+HH37h0p7+ujxqWlnwPMnI2FN7xfvKt+TGQEo5xeK9x7uJqoBHH5mcCfJkkX0hN8T8SOGfHc7JpQmxnIFRaX0tA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from LV2PR12MB5968.namprd12.prod.outlook.com (2603:10b6:408:14f::7)
+ by CH0PR12MB8580.namprd12.prod.outlook.com (2603:10b6:610:192::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.48; Tue, 6 May
+ 2025 21:34:40 +0000
+Received: from LV2PR12MB5968.namprd12.prod.outlook.com
+ ([fe80::e6dd:1206:6677:f9c4]) by LV2PR12MB5968.namprd12.prod.outlook.com
+ ([fe80::e6dd:1206:6677:f9c4%7]) with mapi id 15.20.8699.019; Tue, 6 May 2025
+ 21:34:40 +0000
+Message-ID: <8f765dc8-421f-420f-bd3e-1a0d889238a1@nvidia.com>
+Date: Tue, 6 May 2025 14:34:37 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/3] selftests: pidfd: add tests for PIDFD_SELF_*
+To: Shuah Khan <skhan@linuxfoundation.org>,
+ Peter Zijlstra <peterz@infradead.org>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Christian Brauner <christian@brauner.io>, Shuah Khan <shuah@kernel.org>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+ Suren Baghdasaryan <surenb@google.com>, Vlastimil Babka <vbabka@suse.cz>,
+ pedro.falcato@gmail.com, linux-kselftest@vger.kernel.org,
+ linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+ linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Oliver Sang <oliver.sang@intel.com>, seanjc@google.com
+References: <cover.1729073310.git.lorenzo.stoakes@oracle.com>
+ <c083817403f98ae45a70e01f3f1873ec1ba6c215.1729073310.git.lorenzo.stoakes@oracle.com>
+ <a3778bea-0a1e-41b7-b41c-15b116bcbb32@linuxfoundation.org>
+ <a6133831-3fc3-49aa-83c6-f9aeef3713c9@lucifer.local>
+ <5b0b8e1e-6f50-4e18-bf46-39b00376c26e@nvidia.com>
+ <20250501114235.GP4198@noisy.programming.kicks-ass.net>
+ <17464a97-e7be-49d4-9422-96ff824dba7c@linuxfoundation.org>
+Content-Language: en-US
+From: John Hubbard <jhubbard@nvidia.com>
+In-Reply-To: <17464a97-e7be-49d4-9422-96ff824dba7c@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR03CA0209.namprd03.prod.outlook.com
+ (2603:10b6:a03:2ef::34) To LV2PR12MB5968.namprd12.prod.outlook.com
+ (2603:10b6:408:14f::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250425-slub-percpu-caches-v4-0-8a636982b4a4@suse.cz> <20250425-slub-percpu-caches-v4-2-8a636982b4a4@suse.cz>
-In-Reply-To: <20250425-slub-percpu-caches-v4-2-8a636982b4a4@suse.cz>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Tue, 6 May 2025 14:34:35 -0700
-X-Gm-Features: ATxdqUGSiOBGEDn6zE2SG7X-AsLucq1KRn6XY-3__dSzGYspT3KdMvRW5uhaOA0
-Message-ID: <CAJuCfpGVx2jG+S2ch2hqK=sAdmTcs9dW0kOdopxgLtH4V_wNXQ@mail.gmail.com>
-Subject: Re: [PATCH v4 2/9] slab: add sheaf support for batching kfree_rcu() operations
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Christoph Lameter <cl@linux.com>, 
-	David Rientjes <rientjes@google.com>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Harry Yoo <harry.yoo@oracle.com>, Uladzislau Rezki <urezki@gmail.com>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, rcu@vger.kernel.org, 
-	maple-tree@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV2PR12MB5968:EE_|CH0PR12MB8580:EE_
+X-MS-Office365-Filtering-Correlation-Id: fdac29b5-975a-40df-5555-08dd8ce5ced5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?ekxEeXZlR1FEUWJ3bjBqZXpUb2J0dERqN0FMcWVZTnVpeS9GUHhybEdGNzE3?=
+ =?utf-8?B?cmprNUY0K21ERFpnTnZDU2F1dmc4Znp1cHNZWTkwTFRpbDVyMm85bkJUVDZq?=
+ =?utf-8?B?ZExtbEtBQS9TcEgrWmU2dXpFZzFHYUU0bkpNeTlpekQwTUR2VWRYUW54VUFq?=
+ =?utf-8?B?Mjd0L1JPNmFMam92WVdOWmFpL3ZvKzNZUW9Gak42bWJpdDh6NFFmcDU4Q2cy?=
+ =?utf-8?B?S3BiaHhiaDF2VVBUVTh3V3QzMzVTRXE0em1Mb05XeTNuNXBSL25ON2lrU3FG?=
+ =?utf-8?B?czhTTHAvSGFmYW9lSjF2R0oyTjdpajh4cHlNR1FWSlh6ZUJNME5TN3RCejc1?=
+ =?utf-8?B?NU5HTi9WZkxXRWp1QVVsWlJJak1HTFJPaGJJaDBXTzRWUlhlRFlFZU50aVZN?=
+ =?utf-8?B?OUpIUkJCQXR4Q3ZsYTRLcElNZ2FRZ2UySkFQS1A2b05YUWlXaGY3SnI0N1cz?=
+ =?utf-8?B?TEsrZEl1cGw1QXRhZWNqdlJ0REl1NDE3aVlGdUxyWDNZMWxrc0JhTkpWV29F?=
+ =?utf-8?B?MVpCWWt1Z2NuZHRkc2lFMG83TitqVHhaT0M0R3RyYWFqQU9HWW1od2VPQVFS?=
+ =?utf-8?B?OUtoTlhoYWRqUTNkd3NUN0JNaXlGb1NiaVhjM2lUYkxYUHhGWTFFa0c4eWlD?=
+ =?utf-8?B?Y3JiYkQ4bUZzM1JVZ0VtZzBEazNCSXRsVWFQdUlGZVNsOWtWUG9iV0pJOEIy?=
+ =?utf-8?B?ckluWGJHNm83akdrSEZSMEVzbi9zdmJaclY0MXdCOVhjQ0xJTTZ0ckRtZHk3?=
+ =?utf-8?B?bzNyallQYzN0SW02UEJCT0ZSOUhxb0lOay9PbmhGVVROMUF2QjdGWEJ3dUY0?=
+ =?utf-8?B?Zk1qY3NaNFJqNXV4anI5d2I1ek5WUDZ4YmsxZDJibWY1ZzJZNEFFMURQNGRR?=
+ =?utf-8?B?M0JaVGxXN0lyZTNTSGFUTWNRSXNLMWw4UGFlZERJY096ekc2OVhMcTk1anRE?=
+ =?utf-8?B?NklpbWtTM1NsZzcxRHV2VEdaNmMwSGsrR2crOVE2RzNjTDVZM3J0aTVKZ2dM?=
+ =?utf-8?B?TWNDdWx4anRGcUdhTnpjdGpWTWUwd3dyajBsNGVrUXRzQUQ5SisyU2xiOWlm?=
+ =?utf-8?B?THFjYVNERzl1L3EwRUdJdjhjaTdOZEJBdUhTd0k2MHFjSjIzajdud05IQVZM?=
+ =?utf-8?B?UU1WL0tCRXZ4VWlSMWMyTnJueUwxNmNqTFpSVGNXUy9OeWJtOTRUS2duR0ZH?=
+ =?utf-8?B?SHp0U0hQM2lya3RnV2l5L2F1bXo3WEhteFZxZWkyNVAycnpFRHdFU2VjKy9N?=
+ =?utf-8?B?dHFmYk1ibDhYaENxWnp4UlFoMnBsVDZjSG8vMW81Zld3dGpRc1cyeHpYeGhI?=
+ =?utf-8?B?enh1cnJIQ0VONnVHbVVjcDlua0xBOXNVOVJhV2UybW9ZbXM2aGtOWTBXVXVm?=
+ =?utf-8?B?aXVRZkRPVlloY05VYmQxOXdrVW54Z0tid1VGS1NQSGcwWkdLQUg0c3padENy?=
+ =?utf-8?B?alNrcGgvN3BYWUlwSEk5TUVnd0VBV2p3Qk1nNURUVE9wV3JDYkEyUlZERVBu?=
+ =?utf-8?B?UFQ3TEVZbFNCQWRpbm13dnNlZUdWUUNIVHg3bVJoell0T0NCZ2x0WDhuSGNx?=
+ =?utf-8?B?bGtlK0RCVUxnQUV4WU00MmVuWVpkTEFlY3NQdlNGdHZsM0pCK2U2VnVKSUJa?=
+ =?utf-8?B?bjZqaVdLcWo1VklQZGhtNzg4ZkdyLzhDZk94RWxLV2NtVjFrODFucDlSUVNR?=
+ =?utf-8?B?ekpiOW8xR3l0bTJoZWZDeEhuUE5FV1E1ZGF4cHdBMWZmWUNwTEFsZTFPRWMz?=
+ =?utf-8?B?ZHRXc25LUE92elAra2VFNEtmbEowVFNyYjVLbVhzYk4zbUNiYTlXaWpuY2pV?=
+ =?utf-8?B?bWtYTzhkWTBDZWRTbldvN1NEQ2J0M1hxZGxYdDZhNno0N01HZXl0TjVxRlRC?=
+ =?utf-8?B?WDNIS0Q5ZGd0VS90ZXpFcUoxbGR2akwxNlN0VUNQYjFxZEcwMVBEeUR4RkxQ?=
+ =?utf-8?Q?QW3vGyZUKRM=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5968.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?VHU0bWJsRG1wQVJGaTF4S2RiUEVrL1NVWXpvNFJ5enZUL2haSGFFMXk2aTRV?=
+ =?utf-8?B?blFRdWZRZGJNZ1drYmREQ3luNEhkMGlQTmlFOHE3YzNEbE1oQnhrNUJybU5Z?=
+ =?utf-8?B?UEkyKzBpNGZleVlmVzUzQi83Y09XUUhpWS9BUWtPeU1NeC9mVFNSVzRUYXA4?=
+ =?utf-8?B?QjNHWHU3UHFlcHhFNDNBNFkzMXNtRVh6eVRiM2pOY3BBNW1yWFNNV2kzUkFB?=
+ =?utf-8?B?MzQvZ1VFdGIxREl4SDdJTmM3ZTV4UnhvRVZLa3lFL3JSL3dEUDQ4VDNzVDFv?=
+ =?utf-8?B?Zk10RURITVVTLzRiOXRIL1ZVMXZZaUxJTU9ieTR5ZzdybnJOMFZvUHVhM2JL?=
+ =?utf-8?B?TDNSWWtEd3JIVTIvOWMzbk1XbGRLaDYzZ3BRd2Fyd0ljK2tHemN4eUVzdmdn?=
+ =?utf-8?B?V05XemxDUmwvdUxiUDU3V0pFZXR1THVUNklNajZ0cGFNZXB1MUdlVDA2b05Z?=
+ =?utf-8?B?R0g2U00rNm4rTjFpYTdxVk9FMUVRdG1VV2dHbGF6MUVCWU1KRDVsMklmbmFE?=
+ =?utf-8?B?OW9qNGl3Z1QxZHlaZFFtU0JlRjYxMEpab1ZQRkFwcGwxS1dXR3VwSEJZdkVq?=
+ =?utf-8?B?aSsvcitqbWtHaTBXK01udFYvaTgxbFVEa3lNbEx1THJFM3ozTnJLeWVvMkJZ?=
+ =?utf-8?B?a2FqUVVaeFZOazgyWHJleU9qNEowWSsrRitrckd6bXZ1WmhleHJ2V2NJSWpp?=
+ =?utf-8?B?YlZWMzBJN2RnVDYrUHBmekd1M1BTWERRd1N4aXpYcTh4TXA5Y3VjZHdoTGFt?=
+ =?utf-8?B?SHhvQnFyN3lqVjdjRUx5cE5LekRrV3dBK1VmRHFlYW9qY0RNUE9WbTRrcWg1?=
+ =?utf-8?B?NlRpRFNhQU1uNWVPN3Z2YlJlSWZBQ0ZnVzBFd29ETG82amJYSGJOWkYxOExT?=
+ =?utf-8?B?RTdNZXVpck5wT3VTNkZ2ZWNDRlBlbVB3dnlNM0pzNk9TRkNRUDNIZXRNcCtG?=
+ =?utf-8?B?VTdqN0MyVC96ekNiWmtaUGpaV290MnpFRGV0cDk3Um1XbVJ0ek1DdzRmZkk5?=
+ =?utf-8?B?TDV0UzY4WHNTTjVNTkpWK0dTeS9KRE9EeXRwNlNyeUIvU1FzYzBpQWN3ZC9F?=
+ =?utf-8?B?dnJtMyt4WUhiUWxPVVZLa1BnQytFdm1OTWZwM3hLQjFQNlhGajAxVEJJVjUy?=
+ =?utf-8?B?ZFI0cG5ZSDk0VnpDa0g2c3JjbmdpZUN4cDA2SDQvYjAzWEVhUTJ0YTM3ZXZN?=
+ =?utf-8?B?UGZ2MEpwMXViaXI3cHM0VkltZ1Znd1VNWnREK09Pd2xrYTdzanNFRThOZlll?=
+ =?utf-8?B?MklKR2wzKzh6MWpWRVdWbnlUUUFTRkdXVXNVSU9oZVpsMldic2pNbDNrUlRj?=
+ =?utf-8?B?Um5XSlM5bThOMDNHRlI1Mmt0ZkRoREFaUmZ2S2ozMVc0TTUrRmEwS3RxdkFu?=
+ =?utf-8?B?Q2RYMEJhNHFxT3l6eENRU1RnRzBib3Q0V0EwVTVuVW1YR2NvMDgrZnAwUXBB?=
+ =?utf-8?B?d3BHbUEzYStWQXpnckNETTVzbjhzdUpLNG1Xb3NBWUgybUlKamMwSkRTdFJN?=
+ =?utf-8?B?TDlHb1RzaEUxb1hyclhVazIrdVV1NFlFajY0czVKU0xwL3RMLzlKYlJCbjVx?=
+ =?utf-8?B?aDlBbzFtQ0lscnF4dW8yT3FVbEUvQmpNS0ptNjEwWTBFOUorU1RRTFVYbmVN?=
+ =?utf-8?B?MkgxZS9ra05oQkRqTFZJeHJvQmpRQnJkMDZvOEZ0ZEpRcHFGMTQ0SUl1UmlG?=
+ =?utf-8?B?NjNqWGhUWmN3VHJSNDk3TXdOL05Mcjg1UjV0RnB6TDBna0dxNnBwblErc0lU?=
+ =?utf-8?B?Z1dXRkNBN0pRT0p5OXd0ZDN3U0poVWV5MEZUcnBEZEJzcUpRbVN0dVZYVHZR?=
+ =?utf-8?B?UlJDeFJSdzZuOHhPWCswZzNuVGVhWFBvVWJaU2RYNmkwQ29aOTZRWEIxN0U2?=
+ =?utf-8?B?NnNXVGtsVzBGQmVRYTh4VkFIaTZWTDZoaXpiWmNRY0swVFN4d2tsd05DMDRR?=
+ =?utf-8?B?b1RseEFmRXFvcm9TcllKd1hWUXBnNWJUOHVvc0JTeDkvSGZSWnFsZ3liUTZ1?=
+ =?utf-8?B?bXpFYkhlWDU3WEJITHNoYnV5Ujl4Y3JhZVg2a2hJdG8xQmx4MlJHUTd4WXU1?=
+ =?utf-8?B?bHBpOHg5WFNUOWlqRk1wRXhiUFpUNXNWU0RIUWw2MXg4VjFDUjB5VVBTZDRk?=
+ =?utf-8?Q?1zvOoGPVfl2Eyaq0GNl1G7wa/?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fdac29b5-975a-40df-5555-08dd8ce5ced5
+X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5968.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 21:34:40.3604
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: KakflZ2avcSEjumc9k3ab/JeZMOrHrEwGHqYoRi59aQF8hmhEA10gmFJEeyBTmZd4v9R6EycJonLuCPo7oZfJQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB8580
 
-On Fri, Apr 25, 2025 at 1:27=E2=80=AFAM Vlastimil Babka <vbabka@suse.cz> wr=
-ote:
->
-> Extend the sheaf infrastructure for more efficient kfree_rcu() handling.
-> For caches with sheaves, on each cpu maintain a rcu_free sheaf in
-> addition to main and spare sheaves.
->
-> kfree_rcu() operations will try to put objects on this sheaf. Once full,
-> the sheaf is detached and submitted to call_rcu() with a handler that
-> will try to put it in the barn, or flush to slab pages using bulk free,
-> when the barn is full. Then a new empty sheaf must be obtained to put
-> more objects there.
->
-> It's possible that no free sheaves are available to use for a new
-> rcu_free sheaf, and the allocation in kfree_rcu() context can only use
-> GFP_NOWAIT and thus may fail. In that case, fall back to the existing
-> kfree_rcu() implementation.
->
-> Expected advantages:
-> - batching the kfree_rcu() operations, that could eventually replace the
->   existing batching
-> - sheaves can be reused for allocations via barn instead of being
->   flushed to slabs, which is more efficient
->   - this includes cases where only some cpus are allowed to process rcu
->     callbacks (Android)
->
-> Possible disadvantage:
-> - objects might be waiting for more than their grace period (it is
->   determined by the last object freed into the sheaf), increasing memory
->   usage - but the existing batching does that too.
->
-> Only implement this for CONFIG_KVFREE_RCU_BATCHED as the tiny
-> implementation favors smaller memory footprint over performance.
->
-> Add CONFIG_SLUB_STATS counters free_rcu_sheaf and free_rcu_sheaf_fail to
-> count how many kfree_rcu() used the rcu_free sheaf successfully and how
-> many had to fall back to the existing implementation.
->
-> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-> ---
->  mm/slab.h        |   3 +
->  mm/slab_common.c |  24 ++++++++
->  mm/slub.c        | 183 +++++++++++++++++++++++++++++++++++++++++++++++++=
-+++++-
->  3 files changed, 208 insertions(+), 2 deletions(-)
->
-> diff --git a/mm/slab.h b/mm/slab.h
-> index 1980330c2fcb4a4613a7e4f7efc78b349993fd89..ddf1e4bcba734dccbf67e83bd=
-bab3ca7272f540e 100644
-> --- a/mm/slab.h
-> +++ b/mm/slab.h
-> @@ -459,6 +459,9 @@ static inline bool is_kmalloc_normal(struct kmem_cach=
-e *s)
->         return !(s->flags & (SLAB_CACHE_DMA|SLAB_ACCOUNT|SLAB_RECLAIM_ACC=
-OUNT));
->  }
->
-> +bool __kfree_rcu_sheaf(struct kmem_cache *s, void *obj);
-> +
-> +/* Legal flag mask for kmem_cache_create(), for various configurations *=
-/
->  #define SLAB_CORE_FLAGS (SLAB_HWCACHE_ALIGN | SLAB_CACHE_DMA | \
->                          SLAB_CACHE_DMA32 | SLAB_PANIC | \
->                          SLAB_TYPESAFE_BY_RCU | SLAB_DEBUG_OBJECTS | \
-> diff --git a/mm/slab_common.c b/mm/slab_common.c
-> index 4f295bdd2d42355af6311a799955301005f8a532..6c3b90f03cb79b57f42682445=
-0f576a977d85c53 100644
-> --- a/mm/slab_common.c
-> +++ b/mm/slab_common.c
-> @@ -1608,6 +1608,27 @@ static void kfree_rcu_work(struct work_struct *wor=
-k)
->                 kvfree_rcu_list(head);
->  }
->
-> +static bool kfree_rcu_sheaf(void *obj)
-> +{
-> +       struct kmem_cache *s;
-> +       struct folio *folio;
-> +       struct slab *slab;
-> +
-> +       if (is_vmalloc_addr(obj))
-> +               return false;
-> +
-> +       folio =3D virt_to_folio(obj);
-> +       if (unlikely(!folio_test_slab(folio)))
-> +               return false;
-> +
-> +       slab =3D folio_slab(folio);
-> +       s =3D slab->slab_cache;
-> +       if (s->cpu_sheaves)
-> +               return __kfree_rcu_sheaf(s, obj);
-> +
-> +       return false;
-> +}
-> +
->  static bool
->  need_offload_krc(struct kfree_rcu_cpu *krcp)
->  {
-> @@ -1952,6 +1973,9 @@ void kvfree_call_rcu(struct rcu_head *head, void *p=
-tr)
->         if (!head)
->                 might_sleep();
->
-> +       if (kfree_rcu_sheaf(ptr))
-> +               return;
-> +
->         // Queue the object but don't yet schedule the batch.
->         if (debug_rcu_head_queue(ptr)) {
->                 // Probable double kfree_rcu(), just leak.
-> diff --git a/mm/slub.c b/mm/slub.c
-> index ae3e80ad9926ca15601eef2f2aa016ca059498f8..6f31a27b5d47fa6621fa8af6d=
-6842564077d4b60 100644
-> --- a/mm/slub.c
-> +++ b/mm/slub.c
-> @@ -350,6 +350,8 @@ enum stat_item {
->         ALLOC_FASTPATH,         /* Allocation from cpu slab */
->         ALLOC_SLOWPATH,         /* Allocation by getting a new cpu slab *=
-/
->         FREE_PCS,               /* Free to percpu sheaf */
-> +       FREE_RCU_SHEAF,         /* Free to rcu_free sheaf */
-> +       FREE_RCU_SHEAF_FAIL,    /* Failed to free to a rcu_free sheaf */
->         FREE_FASTPATH,          /* Free to cpu slab */
->         FREE_SLOWPATH,          /* Freeing not to cpu slab */
->         FREE_FROZEN,            /* Freeing to frozen slab */
-> @@ -444,6 +446,7 @@ struct slab_sheaf {
->                 struct rcu_head rcu_head;
->                 struct list_head barn_list;
->         };
-> +       struct kmem_cache *cache;
->         unsigned int size;
->         void *objects[];
->  };
-> @@ -452,6 +455,7 @@ struct slub_percpu_sheaves {
->         local_trylock_t lock;
->         struct slab_sheaf *main; /* never NULL when unlocked */
->         struct slab_sheaf *spare; /* empty or full, may be NULL */
-> +       struct slab_sheaf *rcu_free; /* for batching kfree_rcu() */
->         struct node_barn *barn;
->  };
->
-> @@ -2507,6 +2511,8 @@ static struct slab_sheaf *alloc_empty_sheaf(struct =
-kmem_cache *s, gfp_t gfp)
->         if (unlikely(!sheaf))
->                 return NULL;
->
-> +       sheaf->cache =3D s;
-> +
->         stat(s, SHEAF_ALLOC);
->
->         return sheaf;
-> @@ -2631,6 +2637,24 @@ static void sheaf_flush_unused(struct kmem_cache *=
-s, struct slab_sheaf *sheaf)
->         sheaf->size =3D 0;
->  }
->
-> +static void __rcu_free_sheaf_prepare(struct kmem_cache *s,
-> +                                    struct slab_sheaf *sheaf);
+On 5/6/25 2:18 PM, Shuah Khan wrote:
+> On 5/1/25 05:42, Peter Zijlstra wrote:
+>> On Wed, Oct 16, 2024 at 07:14:34PM -0700, John Hubbard wrote:
+>>> On 10/16/24 3:06 PM, Lorenzo Stoakes wrote:
+>>>> On Wed, Oct 16, 2024 at 02:00:27PM -0600, Shuah Khan wrote:
+>>>>> On 10/16/24 04:20, Lorenzo Stoakes wrote:
+>>> ...
+>> Please fix this fucking selftests shit to just build. This is unusable
+>> garbage.
+> 
+> I don't recall all the reasons why kselftests needed "make headers"
+> One reason I could think of was that when a new test depends on a
+> header change, the test won't build unless headers are installed.
 
-I think you could safely move __rcu_free_sheaf_prepare() here and
-avoid the above forward declaration.
+...or until an updated copy of that updated header file is copied
+somewhere, and then included in the kselftests. That's the approach
+that I ultimately settled upon, after some discussion and negotion.
 
-> +
-> +static void rcu_free_sheaf_nobarn(struct rcu_head *head)
-> +{
-> +       struct slab_sheaf *sheaf;
-> +       struct kmem_cache *s;
-> +
-> +       sheaf =3D container_of(head, struct slab_sheaf, rcu_head);
-> +       s =3D sheaf->cache;
-> +
-> +       __rcu_free_sheaf_prepare(s, sheaf);
-> +
-> +       sheaf_flush_unused(s, sheaf);
-> +
-> +       free_empty_sheaf(s, sheaf);
-> +}
-> +
->  /*
->   * Caller needs to make sure migration is disabled in order to fully flu=
-sh
->   * single cpu's sheaves
-> @@ -2643,7 +2667,7 @@ static void sheaf_flush_unused(struct kmem_cache *s=
-, struct slab_sheaf *sheaf)
->  static void pcs_flush_all(struct kmem_cache *s)
->  {
->         struct slub_percpu_sheaves *pcs;
-> -       struct slab_sheaf *spare;
-> +       struct slab_sheaf *spare, *rcu_free;
->
->         local_lock(&s->cpu_sheaves->lock);
->         pcs =3D this_cpu_ptr(s->cpu_sheaves);
-> @@ -2651,6 +2675,9 @@ static void pcs_flush_all(struct kmem_cache *s)
->         spare =3D pcs->spare;
->         pcs->spare =3D NULL;
->
-> +       rcu_free =3D pcs->rcu_free;
-> +       pcs->rcu_free =3D NULL;
-> +
->         local_unlock(&s->cpu_sheaves->lock);
->
->         if (spare) {
-> @@ -2658,6 +2685,9 @@ static void pcs_flush_all(struct kmem_cache *s)
->                 free_empty_sheaf(s, spare);
->         }
->
-> +       if (rcu_free)
-> +               call_rcu(&rcu_free->rcu_head, rcu_free_sheaf_nobarn);
-> +
->         sheaf_flush_main(s);
->  }
->
-> @@ -2674,6 +2704,11 @@ static void __pcs_flush_all_cpu(struct kmem_cache =
-*s, unsigned int cpu)
->                 free_empty_sheaf(s, pcs->spare);
->                 pcs->spare =3D NULL;
->         }
-> +
-> +       if (pcs->rcu_free) {
-> +               call_rcu(&pcs->rcu_free->rcu_head, rcu_free_sheaf_nobarn)=
-;
-> +               pcs->rcu_free =3D NULL;
-> +       }
->  }
->
->  static void pcs_destroy(struct kmem_cache *s)
-> @@ -2699,6 +2734,7 @@ static void pcs_destroy(struct kmem_cache *s)
->                  */
->
->                 WARN_ON(pcs->spare);
-> +               WARN_ON(pcs->rcu_free);
->
->                 if (!WARN_ON(pcs->main->size)) {
->                         free_empty_sheaf(s, pcs->main);
-> @@ -3755,7 +3791,7 @@ static bool has_pcs_used(int cpu, struct kmem_cache=
- *s)
->
->         pcs =3D per_cpu_ptr(s->cpu_sheaves, cpu);
->
-> -       return (pcs->spare || pcs->main->size);
-> +       return (pcs->spare || pcs->rcu_free || pcs->main->size);
->  }
->
->  static void pcs_flush_all(struct kmem_cache *s);
-> @@ -5304,6 +5340,140 @@ bool free_to_pcs(struct kmem_cache *s, void *obje=
-ct)
->         return true;
->  }
->
-> +static void __rcu_free_sheaf_prepare(struct kmem_cache *s,
-> +                                    struct slab_sheaf *sheaf)
+Details below.
 
-This function seems to be an almost exact copy of free_to_pcs_bulk()
-from your previous patch. Maybe they can be consolidated?
+> 
+> If this requirement is causing problems for tests that don't fall
+> into the category and we probably have more of them mow, we can
+> clean that up.
+> 
+> John, you mentioned you got mm tests working without headers?
+> Can you share the commit here.
+> 
 
-> +{
-> +       bool init =3D slab_want_init_on_free(s);
-> +       void **p =3D &sheaf->objects[0];
-> +       unsigned int i =3D 0;
-> +
-> +       while (i < sheaf->size) {
-> +               struct slab *slab =3D virt_to_slab(p[i]);
-> +
-> +               memcg_slab_free_hook(s, slab, p + i, 1);
-> +               alloc_tagging_slab_free_hook(s, slab, p + i, 1);
-> +
-> +               if (unlikely(!slab_free_hook(s, p[i], init, true))) {
-> +                       p[i] =3D p[--sheaf->size];
-> +                       continue;
-> +               }
-> +
-> +               i++;
-> +       }
-> +}
-> +
-> +static void rcu_free_sheaf(struct rcu_head *head)
-> +{
-> +       struct slab_sheaf *sheaf;
-> +       struct node_barn *barn;
-> +       struct kmem_cache *s;
-> +
-> +       sheaf =3D container_of(head, struct slab_sheaf, rcu_head);
-> +
-> +       s =3D sheaf->cache;
-> +
-> +       /*
-> +        * This may reduce the number of objects that the sheaf is no lon=
-ger
-> +        * technically full, but it's easier to treat it that way (unless=
- it's
+Yes. This one sets up the general approach, which is available to
+all kselftests: TOOLS_INCLUDES. It also changes selftests/mm to
+set TOOLS_INCLUDES in that build:
 
-I don't understand the sentence above. Could you please clarify and
-maybe reword it?
+    e076eaca5906 ("selftests: break the dependency upon local header files")
 
-> +        * competely empty), as the code handles it fine, there's just sl=
-ightly
+And here is a representative application of the above, to selftests/mm. In
+other words, taking advantage of the new file location pointed to by
+TOOLS_INCLUDES:
 
-s/competely/completely
+    580ea358af0a ("selftests/mm: fix additional build errors for selftests")
 
-> +        * worse batching benefit. It only happens due to debugging, whic=
-h
-> +        * is a performance hit anyway.
-> +        */
-> +       __rcu_free_sheaf_prepare(s, sheaf);
-> +
-> +       barn =3D get_node(s, numa_mem_id())->barn;
-> +
-> +       /* due to slab_free_hook() */
-> +       if (unlikely(sheaf->size =3D=3D 0))
-> +               goto empty;
-> +
-> +       /*
-> +        * Checking nr_full/nr_empty outside lock avoids contention in ca=
-se the
-> +        * barn is at the respective limit. Due to the race we might go o=
-ver the
-> +        * limit but that should be rare and harmless.
-> +        */
-> +
-> +       if (data_race(barn->nr_full) < MAX_FULL_SHEAVES) {
-> +               stat(s, BARN_PUT);
-> +               barn_put_full_sheaf(barn, sheaf);
-> +               return;
-> +       }
-> +
-> +       stat(s, BARN_PUT_FAIL);
-> +       sheaf_flush_unused(s, sheaf);
-> +
-> +empty:
-> +       if (data_race(barn->nr_empty) < MAX_EMPTY_SHEAVES) {
-> +               barn_put_empty_sheaf(barn, sheaf);
-> +               return;
-> +       }
-> +
-> +       free_empty_sheaf(s, sheaf);
-> +}
-> +
-> +bool __kfree_rcu_sheaf(struct kmem_cache *s, void *obj)
-> +{
-> +       struct slub_percpu_sheaves *pcs;
-> +       struct slab_sheaf *rcu_sheaf;
-> +
-> +       if (!local_trylock(&s->cpu_sheaves->lock))
-> +               goto fail;
-> +
-> +       pcs =3D this_cpu_ptr(s->cpu_sheaves);
-> +
-> +       if (unlikely(!pcs->rcu_free)) {
-> +
-> +               struct slab_sheaf *empty;
-> +
-> +               empty =3D barn_get_empty_sheaf(pcs->barn);
-> +
-> +               if (empty) {
-> +                       pcs->rcu_free =3D empty;
-> +                       goto do_free;
-> +               }
-> +
-> +               local_unlock(&s->cpu_sheaves->lock);
-> +
-> +               empty =3D alloc_empty_sheaf(s, GFP_NOWAIT);
-> +
-> +               if (!empty)
-> +                       goto fail;
-> +
-> +               if (!local_trylock(&s->cpu_sheaves->lock))
 
-Aren't you leaking `empty` sheaf on this failure?
+thanks,
+-- 
+John Hubbard
 
-> +                       goto fail;
-> +
-> +               pcs =3D this_cpu_ptr(s->cpu_sheaves);
-> +
-> +               if (unlikely(pcs->rcu_free))
-> +                       barn_put_empty_sheaf(pcs->barn, empty);
-> +               else
-> +                       pcs->rcu_free =3D empty;
-> +       }
-> +
-> +do_free:
-> +
-> +       rcu_sheaf =3D pcs->rcu_free;
-> +
-> +       rcu_sheaf->objects[rcu_sheaf->size++] =3D obj;
-> +
-> +       if (likely(rcu_sheaf->size < s->sheaf_capacity))
-> +               rcu_sheaf =3D NULL;
-> +       else
-> +               pcs->rcu_free =3D NULL;
-> +
-> +       local_unlock(&s->cpu_sheaves->lock);
-> +
-> +       if (rcu_sheaf)
-> +               call_rcu(&rcu_sheaf->rcu_head, rcu_free_sheaf);
-> +
-> +       stat(s, FREE_RCU_SHEAF);
-> +       return true;
-> +
-> +fail:
-> +       stat(s, FREE_RCU_SHEAF_FAIL);
-> +       return false;
-> +}
-> +
->  /*
->   * Bulk free objects to the percpu sheaves.
->   * Unlike free_to_pcs() this includes the calls to all necessary hooks
-> @@ -6802,6 +6972,11 @@ int __kmem_cache_shutdown(struct kmem_cache *s)
->         struct kmem_cache_node *n;
->
->         flush_all_cpus_locked(s);
-> +
-> +       /* we might have rcu sheaves in flight */
-> +       if (s->cpu_sheaves)
-> +               rcu_barrier();
-> +
->         /* Attempt to free all objects */
->         for_each_kmem_cache_node(s, node, n) {
->                 if (n->barn)
-> @@ -8214,6 +8389,8 @@ STAT_ATTR(ALLOC_PCS, alloc_cpu_sheaf);
->  STAT_ATTR(ALLOC_FASTPATH, alloc_fastpath);
->  STAT_ATTR(ALLOC_SLOWPATH, alloc_slowpath);
->  STAT_ATTR(FREE_PCS, free_cpu_sheaf);
-> +STAT_ATTR(FREE_RCU_SHEAF, free_rcu_sheaf);
-> +STAT_ATTR(FREE_RCU_SHEAF_FAIL, free_rcu_sheaf_fail);
->  STAT_ATTR(FREE_FASTPATH, free_fastpath);
->  STAT_ATTR(FREE_SLOWPATH, free_slowpath);
->  STAT_ATTR(FREE_FROZEN, free_frozen);
-> @@ -8312,6 +8489,8 @@ static struct attribute *slab_attrs[] =3D {
->         &alloc_fastpath_attr.attr,
->         &alloc_slowpath_attr.attr,
->         &free_cpu_sheaf_attr.attr,
-> +       &free_rcu_sheaf_attr.attr,
-> +       &free_rcu_sheaf_fail_attr.attr,
->         &free_fastpath_attr.attr,
->         &free_slowpath_attr.attr,
->         &free_frozen_attr.attr,
->
-> --
-> 2.49.0
->
