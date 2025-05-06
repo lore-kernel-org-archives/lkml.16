@@ -1,208 +1,126 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24A6328030C
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 13:30:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71497280CEA
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 13:31:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746538247; cv=none; b=MHOJ3gIhTRpNRnkTeCuj5p059ci4383uj0XHxL6BU32MiQWQ9dMqFnBU/YfPcYL8wlt8xQv0uq0nqizFLhc6n7ZuPs+2YrceBj5R2n3sgO888va+8pShwhS7OBpMpDXgOMvliChrZ/NF0UvGEICoXMpniF24/sPxXvJfP63c/7A=
+	t=1746538268; cv=none; b=pXj69Wkl6SqxIGJSh9D0d24ZTgiW8/+kKI60RvFs+fLD+pfNeTZrehH6aeHcitCnb7z8VFUu2W83mKOJTZPDvQXOLfTqYJjLYBZ7RPSOmu+PT20GakrXVimS51RTFPONTMegevbocj7hcyeDHYPjIP+k7VkEUVV7Xh3tQP+7iGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746538247; c=relaxed/simple;
-	bh=1v2F6E/reecpTU0NuFpDLkVROLOTw2+0J7MSKVGr+HI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hmpsP4rZ7cxjneUVRRQeCXjqk9QnIE6AuaRI+5VCJiAmz+A28CBdsnbyXfuFEzM3kmRFpBaC7p/Gej85Ii3g7pdv9vH/7Vd8U6pYQpDmpYxBBeCV43h5ZvqY5hLP7V8qxaGRRIkTE5hASVuPYfi+WjBBSXkJ07E7T+R3x39K+9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=V/Pzh2+q; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="V/Pzh2+q"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-39c1efbefc6so4217789f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 06:30:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746538243; x=1747143043; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8tLDVhQCLyrzP+ndxjJm3VMFwBBqHU2pRrBGlwODZms=;
-        b=V/Pzh2+qYuqxxl9RhkukeH3LU9PqynodzQsEQwgMtHK6qheXL7YtPLFjKCnHS+fCJ3
-         3Z/aonljqoju9eJncYEf7kLCLhokWKKalvZaGkd1XJwatM3ct5NWf2xiiT14qhSa2f9O
-         i7Wq+0D8um2i3aqTUMmVUH0hVWfXYkKPW+g4DiVFiMFyrdU60zSL7XuLudOFYqDqhhn5
-         zXlp85s9eeIBEbASwVPc2nUqYbfD18fhWfRMK4OVtsiFwpieqeQxOj35/j8fXRDOlM1t
-         hv+OaWG8JeIiAcN1FulOtgOJa+SBqxMzRg8+nTijGGl73ASAzGCWACczI6c7JaMB+V8B
-         83dA==
+	s=arc-20240116; t=1746538268; c=relaxed/simple;
+	bh=9ujoV9LZvJmWbxlMeXVeLJdMYwB4qtzv3S7swubAUgI=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=aWn62YyYK7hhDzCkVqOhGvKd0vpW5cCiTJ997wskZDBM0zIyTx3PmIASdkc1edZ1jRwwHNXHRfGEqTyFnak4NQq8yT8E2ur25RWCXV3kUL4eCmXNorWyjv5MOIetoC7V890pdHYO9lURg1AgXQKyLOkdeAK0AepLN1VdqJfkhD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3d6c613bd79so62846465ab.2
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 06:31:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746538243; x=1747143043;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8tLDVhQCLyrzP+ndxjJm3VMFwBBqHU2pRrBGlwODZms=;
-        b=Dv0nSYopT17uvLPCDlZPSVbU6azI4zTNVbVQtDYb3XnvBZvp/hGoEWEvzSkJOeQTJr
-         2OfQPn7nWaKDmSB5S26JMHO9HiTGyXzh4qVwjfzLSDgl4Z5ux4QNlKLk2BxurtaLDaPQ
-         +QcDyk9r+a+nqDnS7YM/P96PG18PW6gcltBMDRLjcZ4tZwclEZJOyxa+fT2+SgflSSyZ
-         0RzvLzBdiXVXgigZOZeSm+0MnZuoyM9ErAgqz9Tt/FE9sb/F8FxoRdqvk0y39K0Z813H
-         4w51cB6aHmymTi1Miz2GhvsI6qqTWvNf3b2Xt6/Uym8N7dYefX9TkBhfwBNsaF//l3vp
-         Rwzg==
-X-Forwarded-Encrypted: i=1; AJvYcCUhwbTikQkqHGa/S0MVmEjEgOT/5dnYVQwvq5itHTCiX5Jubgc0KrkjnMFIkNRfOeDm/sf0zTGovlaT+94=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzO/yF/RE3n0SqMwfo6f+tSPKlXrIzaR9SoKBlEE0enVe9GAgFW
-	mn0BTKzXiWKccsw91uAVwc1zpjTOKUiK0WvjPEADVZ987WPBVr2usygrKjdQAIVf/bs31/EQwKL
-	SGxL5czuTJXCf3UL/zgmjLr0QlmmnvH0IYb9v
-X-Gm-Gg: ASbGnctk7jO4auH31uC2ZuVlDalJDm4Ke23Maa2NWH78fYv1YuL9QNUmypC7GEFsH0s
-	bhLeq2WodxeW1eFi6V1Vr12Kzp7Vu51A1/+u1i/OGYAgO08Z9GaxX5ZWIWCUQtr44WZ1oReZxAF
-	BVqYtN8IfspgdUYknwTorNSM0kpfAp30BzPL56G07JpdNtTY2yPXLjHa14TkxEW2w=
-X-Google-Smtp-Source: AGHT+IH4WVO2x+UNQJaXF3flvCK8PoRR1G1qPIbcuqcjV6irDtLwrNAO4Ic9f8W11nKVRVDOt5rlpn3yY9ihPpyjM/8=
-X-Received: by 2002:a5d:598c:0:b0:3a0:880f:1a87 with SMTP id
- ffacd0b85a97d-3a0ac3ea55fmr2474933f8f.51.1746538243088; Tue, 06 May 2025
- 06:30:43 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746538265; x=1747143065;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uixjB5h2USy6fSSWuu6C8VPE/xfzt9YOqe3bWvDb1VY=;
+        b=Vkm7lulEfH4tygU2Bqzx2YSxFz90gI0d+64U2ZsMl81elGurseHxYhq0sDFbWTX5QW
+         3BQZlQWWvJ80NHQKhktcGqqxOVBeEg40M8GXJYUH/cu5mti7h4vGWTj5KvI0vw4500hG
+         oj5SaMjzIGw0LPLj5vrfS3Lwf4+mu9MeA04fMvCARR+iAaaQmarUofs/GkwWH1DaZjXG
+         0fzc14PApCN54iSyBG+2kIRPApcx06a53PcLUMRP3rSWWtn/cgkWy+rH6pvOgnSEParu
+         /XWckYqBt1ZDrQdqdUSm0DJXUcdeGAJgNbIsg8US1ODTAA8DgEzWY9hKgy7HFabyBV0R
+         R5cQ==
+X-Gm-Message-State: AOJu0YypjIeGhIBX2I0AdlnYQXmBVk9i1Ou6ax4JkntSG21S1luupAG5
+	SQBvkHvgm9DPOkvOjGRafWu/65SM8JMVPA/WhR4153mWYV9N99LgLgJNQxWJPmIZeQYT9JgIJkE
+	uxYbznkjAHeFdW4eLRHUExe97lEFNpt5BkSobiNBCpLRveUJ6eY1NxGI=
+X-Google-Smtp-Source: AGHT+IG6yvrngeQIHLARjmXjenAZTw8rp8izQbvYeBDxgfyv4K4DGJaQTz9u+7aQ5HePdlKvXc1jPZexhRzGIkLVL7FOExpYd0BI
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250505-strncpy-from-user-v3-0-85c677fd4f91@google.com>
- <20250505-strncpy-from-user-v3-1-85c677fd4f91@google.com> <2025050544-sneak-compactor-d701@gregkh>
- <aBnT8Y3lJqd6J40q@google.com> <2025050645-trifocals-olympics-4692@gregkh>
-In-Reply-To: <2025050645-trifocals-olympics-4692@gregkh>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Tue, 6 May 2025 15:30:30 +0200
-X-Gm-Features: ATxdqUFEcNWR9cLEKaFLA0iO3V5BEC2JItlvm6igRmjYwq8ZyWUToLmqHbiS3uo
-Message-ID: <CAH5fLgjVmyAy8GRBzmRG8+i3ci16M4zk7qQghn47krpPmpLQnw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] uaccess: rust: add strncpy_from_user
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+X-Received: by 2002:a05:6e02:12e9:b0:3d8:2178:5c79 with SMTP id
+ e9e14a558f8ab-3da5b26f334mr126791475ab.7.1746538265448; Tue, 06 May 2025
+ 06:31:05 -0700 (PDT)
+Date: Tue, 06 May 2025 06:31:05 -0700
+In-Reply-To: <20250506130020.798216-1-richard120310@gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <681a0f19.050a0220.a19a9.000b.GAE@google.com>
+Subject: Re: [syzbot] [jfs?] KMSAN: uninit-value in BT_STACK_DUMP
+From: syzbot <syzbot+ba5f49027aace342d24d@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, richard120310@gmail.com, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 6, 2025 at 2:52=E2=80=AFPM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Tue, May 06, 2025 at 09:18:41AM +0000, Alice Ryhl wrote:
-> > On Mon, May 05, 2025 at 04:30:05PM +0200, Greg Kroah-Hartman wrote:
-> > > On Mon, May 05, 2025 at 12:17:31PM +0000, Alice Ryhl wrote:
-> > > > This patch adds a direct wrapper around the C function of the same =
-name.
-> > > > It's not really intended for direct use by Rust code since
-> > > > strncpy_from_user has a somewhat unfortunate API where it only
-> > > > nul-terminates the buffer if there's space for the nul-terminator. =
-This
-> > > > means that a direct Rust wrapper around it could not return a &CStr
-> > > > since the buffer may not be a cstring. However, we still add the me=
-thod
-> > > > to build more convenient APIs on top of it, which will happen in
-> > > > subsequent patches.
-> > > >
-> > > > Reviewed-by: Danilo Krummrich <dakr@kernel.org>
-> > > > Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > > Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
-> > > > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
-> > > > ---
-> > > >  rust/kernel/uaccess.rs | 35 ++++++++++++++++++++++++++++++++++-
-> > > >  1 file changed, 34 insertions(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/rust/kernel/uaccess.rs b/rust/kernel/uaccess.rs
-> > > > index 80a9782b1c6e98ed6eae308ade8551afa7adc188..a7b123915e9aa2329f3=
-76d67cad93e2fc17ae017 100644
-> > > > --- a/rust/kernel/uaccess.rs
-> > > > +++ b/rust/kernel/uaccess.rs
-> > > > @@ -8,7 +8,7 @@
-> > > >      alloc::{Allocator, Flags},
-> > > >      bindings,
-> > > >      error::Result,
-> > > > -    ffi::c_void,
-> > > > +    ffi::{c_char, c_void},
-> > > >      prelude::*,
-> > > >      transmute::{AsBytes, FromBytes},
-> > > >  };
-> > > > @@ -369,3 +369,36 @@ pub fn write<T: AsBytes>(&mut self, value: &T)=
- -> Result {
-> > > >          Ok(())
-> > > >      }
-> > > >  }
-> > > > +
-> > > > +/// Reads a nul-terminated string into `buf` and returns the lengt=
-h.
-> > > > +///
-> > > > +/// This reads from userspace until a NUL byte is encountered, or =
-until `buf.len()` bytes have been
-> > > > +/// read. Fails with [`EFAULT`] if a read happens on a bad address=
- (some data may have been
-> > > > +/// copied). When the end of the buffer is encountered, no NUL byt=
-e is added, so the string is
-> > > > +/// *not* guaranteed to be NUL-terminated when `Ok(buf.len())` is =
-returned.
-> > > > +///
-> > > > +/// # Guarantees
-> > > > +///
-> > > > +/// When this function returns `Ok(len)`, it is guaranteed that th=
-e first `len` of `buf` bytes are
-> > > > +/// initialized and non-zero. Furthermore, if `len < buf.len()`, t=
-hen `buf[len]` is a NUL byte.
-> > > > +/// Unsafe code may rely on these guarantees.
-> > > > +#[inline]
-> > > > +#[expect(dead_code)]
-> > > > +fn raw_strncpy_from_user(ptr: UserPtr, buf: &mut [MaybeUninit<u8>]=
-) -> Result<usize> {
-> > >
-> > > Nit, the parameters here are backwards from the C version of
-> > > strncpy_from_user(), which is going to cause us no end of grief when
-> > > reviewing code between the two languages :(
-> >
-> > I'll swap them.
-> >
-> > fn raw_strncpy_from_user(dst: &mut [MaybeUninit<u8>], src: UserPtr) -> =
-Result<usize> {
-> >
-> > > Also, it's not your fault, but we don't have any type of __user tag f=
-or
-> > > data coming from userspace yet to track this type of thing?  The
-> > > compiler (well sparse) can catch this type of thing in C, any hints o=
-n
-> > > what we could do in Rust for the same type of guarantee (i.e. don't
-> > > touch user data before it's been copied, and then we need to treat it=
- as
-> > > "unverified" but that's a different patch series...)
-> >
-> > The UserPtr typedef is intended to do that, but since it's only a
-> > typedef to usize, the compiler won't detect it if you mix up a user
-> > pointer with a length. (It will detect mix-ups with pointers since we
-> > use an integer type for UserPtr.)
->
-> Sorry, I missed the "UserPtr" for some reason.  But having an integer
-> type for UserPtr feels like it's going to cause problems in the
-> long-run.
->
-> > What we can do is replace the typedef with
-> >
-> > #[repr(transparent)]
-> > struct UserPtr(pub usize);
-> >
-> > That way, it becomes it's own separate type (this is called the newtype
-> > pattern [1]) so that it can't be mixed up with anything else.
->
-> Why not use a real pointer like:
->         struct UserPtr(pub *const u8)
->
-> > The #[repr(transparent)] annotation makes the compiler treat it like a
-> > bare long for ABI-purposes. I'm not sure if any function ABIs actually
-> > treat a long differently from a struct that just contains a long, but i=
-f
-> > such ABIs exist, then the annotation ensures that the long ABI is used
-> > rather than the struct-containing-long ABI.
->
-> In the kernel, "unsigned long" is guaranteed to hold a pointer.  Which
-> is why many of the old allocation functions return that type.
+Hello,
 
-Let's continue this discussion on the patch I just sent to make it a
-real struct:
-https://lore.kernel.org/r/20250506-userptr-newtype-v1-1-a0f6f8ce9fc5@google=
-.com
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+KMSAN: uninit-value in dtSearch
 
-I don't fully recall the reason, but it was changed from a raw pointer
-to usize in version 6 of the patch set that added it.
+loop0: detected capacity change from 0 to 32768
+=====================================================
+BUG: KMSAN: uninit-value in UniStrncmp_le fs/jfs/jfs_unicode.h:55 [inline]
+BUG: KMSAN: uninit-value in dtCompare fs/jfs/jfs_dtree.c:3340 [inline]
+BUG: KMSAN: uninit-value in dtSearch+0x1261/0x3d30 fs/jfs/jfs_dtree.c:650
+ UniStrncmp_le fs/jfs/jfs_unicode.h:55 [inline]
+ dtCompare fs/jfs/jfs_dtree.c:3340 [inline]
+ dtSearch+0x1261/0x3d30 fs/jfs/jfs_dtree.c:650
+ jfs_lookup+0x18b/0x5a0 fs/jfs/namei.c:1461
+ lookup_one_qstr_excl_raw+0x204/0x5b0 fs/namei.c:1689
+ lookup_one_qstr_excl fs/namei.c:1711 [inline]
+ do_unlinkat+0x2e3/0xe50 fs/namei.c:4631
+ __do_sys_unlink fs/namei.c:4689 [inline]
+ __se_sys_unlink fs/namei.c:4687 [inline]
+ __x64_sys_unlink+0x71/0xb0 fs/namei.c:4687
+ x64_sys_call+0x29de/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:88
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xd9/0x1b0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-Alice
+Uninit was created at:
+ __alloc_frozen_pages_noprof+0x689/0xf00 mm/page_alloc.c:4993
+ alloc_pages_mpol+0x328/0x860 mm/mempolicy.c:2301
+ alloc_frozen_pages_noprof+0xf7/0x200 mm/mempolicy.c:2372
+ alloc_slab_page mm/slub.c:2468 [inline]
+ allocate_slab+0x24d/0x1210 mm/slub.c:2632
+ new_slab mm/slub.c:2686 [inline]
+ ___slab_alloc+0xfec/0x3480 mm/slub.c:3872
+ __slab_alloc mm/slub.c:3962 [inline]
+ __slab_alloc_node mm/slub.c:4037 [inline]
+ slab_alloc_node mm/slub.c:4198 [inline]
+ kmem_cache_alloc_lru_noprof+0x922/0xed0 mm/slub.c:4229
+ jfs_alloc_inode+0x60/0xf0 fs/jfs/super.c:105
+ alloc_inode+0x87/0x4a0 fs/inode.c:346
+ new_inode+0x39/0x460 fs/inode.c:1145
+ diReadSpecial+0x62/0xb00 fs/jfs/jfs_imap.c:426
+ jfs_mount+0x760/0x1310 fs/jfs/jfs_mount.c:138
+ jfs_fill_super+0x8fa/0x1900 fs/jfs/super.c:523
+ get_tree_bdev_flags+0x6e3/0x920 fs/super.c:1636
+ get_tree_bdev+0x38/0x50 fs/super.c:1659
+ jfs_get_tree+0x35/0x40 fs/jfs/super.c:635
+ vfs_get_tree+0xb0/0x5c0 fs/super.c:1759
+ do_new_mount+0x73c/0x1620 fs/namespace.c:3881
+ path_mount+0x6db/0x1e90 fs/namespace.c:4208
+ do_mount fs/namespace.c:4221 [inline]
+ __do_sys_mount fs/namespace.c:4432 [inline]
+ __se_sys_mount+0x6eb/0x7d0 fs/namespace.c:4409
+ __x64_sys_mount+0xe4/0x150 fs/namespace.c:4409
+ x64_sys_call+0xfa7/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:166
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xd9/0x1b0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+CPU: 0 UID: 0 PID: 7043 Comm: syz.0.33 Not tainted 6.15.0-rc3-syzkaller-00094-g02ddfb981de8-dirty #0 PREEMPT(undef) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/29/2025
+=====================================================
+
+
+Tested on:
+
+commit:         02ddfb98 Merge tag 'scsi-fixes' of git://git.kernel.or..
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=1439c8f4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9dc42c34a3f5c357
+dashboard link: https://syzkaller.appspot.com/bug?extid=ba5f49027aace342d24d
+compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=100ae8f4580000
+
