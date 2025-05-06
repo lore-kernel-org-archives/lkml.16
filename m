@@ -1,162 +1,219 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2052.outbound.protection.outlook.com [40.107.22.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4270360316;
-	Tue,  6 May 2025 03:23:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746501814; cv=none; b=L3sBrzBoTbgBPhljqgEQ1xSg0tr5TTExwOtcoooTgEMwruxjmF1OBMCHoIxuQ+LqPs9ATIqwHAJNIwZBXf/KaThc0rVyV3CwO8SHV5wCTY8Nv00HhHhzyAp/5i4+IXzOHnAklb4B2Yj9f4Lehx95N11NLYJqboWr1VbIUxUqh8c=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746501814; c=relaxed/simple;
-	bh=88/cW2eOCSmZmQKw2Hc+K8hXwwfz2tenLj7EWsMESxo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IHHz4eRAWcF2RZTS80EbJucbjTr+naKx2pyJq6DP0S8M4LnWADVHKxjvAzjnbXeB22hwILeZfcJ6jbi509OXGQkmWCPxtQkV+ReCE7bYny0r+DdQ2jjdx+hiiFXd+u5iVy8JTLbQ/xCGIfsdgiQn0ZjCuvJ3jPduJBRyZinzzlg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=reject dis=none) header.from=fomichev.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=reject dis=none) header.from=fomichev.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-22928d629faso47825925ad.3;
-        Mon, 05 May 2025 20:23:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746501810; x=1747106610;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6iJCv4ET+7o0nSYXxo+hq86hijhA7Bxxnf2OGc3/g6A=;
-        b=fbt5DzKkG3Na1+j+k3GyGNKqPjfekgg0Adw9IxIZNXAf1tSk6w3qrJ4aCySs32QD0c
-         5v2X1Sl9Gvyd0D6Hga3HQpppfPNlF+g79qA9vJqyY0djIMVz3Uc0bZt07r5iFyds+/sS
-         Yf1dKWI7uYW5kA43b7I1t7TWHLdrR1CRetcZDaweEchTefvjUoAYB/Qmfev8qg/yrNSl
-         kuq5PuZIHQXA92QR/or9U7SeCzozrhdScp0sIwl2ldpMZbAg7O2vQ9bAITu+AdRDUd0t
-         XdkBZvYoxTj4N6vvTJc3dAIOM7byIDn9EFLeldlFc8Anbjzm/MtmSYgZPjpOEgJlH5Ky
-         7Ltg==
-X-Forwarded-Encrypted: i=1; AJvYcCUxJ795ND00FQ9p+y1/QJnKqkzki5/GRVLcIRihUV4ttwZwEx85tjKk5ngw54IGuJ8H/gj5LZ5/uAi/GcI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwuwuN6Xc65ti3KZnZyDqqJz7/iHDU5pwTOooKcXFHlqyEim2Xs
-	ucggKKTCv9hYFpqSW7WK9HFfqXma4tcluM+coU5vnGHF4kGXfI+N9AJx
-X-Gm-Gg: ASbGncvu5m4ecphz9HxTKKrtK3Vun04X790ook69D93K88hCTPWTFM/9atWIRVC30Ks
-	772wIuS8H7Z927Ko5t4ZIUsnLymN6Xvc3Pvtu5SwOfuZ6i+a00yg0HCaZzK5qyyvXZ5UgbIhMy2
-	xeayv8n2vS9qLgp1EHqP7iYURr9C6TbFRsieLB/cZXvxHBqqVw+cgHqU++M3HQjU/VKdgfilB/K
-	23lEPQjkCJvv2jVxu7B1qtdaZ2UKdOfXKcUaXv12BHsBnzAi4t9xHIOO9SjSEsnyv316V2Pw1fA
-	0wyEZEIanmlGXR7bU3sFgdSZTSPJX/jcs5UWb6c0PEUzHDuCXTx7lmx16i82dbRiobBTzHqU2vL
-	hcoN2gn6yUQ==
-X-Google-Smtp-Source: AGHT+IFKx8KWehus5QYFoZ/lKddPGSEpHeHA4FUKPZqVery3LPVL90LujiH1Yud4hG2m1QCGox0yKQ==
-X-Received: by 2002:a17:902:e5c2:b0:22e:1697:5bf6 with SMTP id d9443c01a7336-22e1ea7f298mr144003745ad.41.1746501810171;
-        Mon, 05 May 2025 20:23:30 -0700 (PDT)
-Received: from localhost (c-73-170-40-124.hsd1.ca.comcast.net. [73.170.40.124])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-22e1521fbedsm62998905ad.124.2025.05.05.20.23.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 20:23:29 -0700 (PDT)
-From: Stanislav Fomichev <sdf@fomichev.me>
-To: netdev@vger.kernel.org
-Cc: davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	horms@kernel.org,
-	andrew+netdev@lunn.ch,
-	sdf@fomichev.me,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net] net: add missing instance lock to dev_set_promiscuity
-Date: Mon,  5 May 2025 20:23:28 -0700
-Message-ID: <20250506032328.3003050-1-sdf@fomichev.me>
-X-Mailer: git-send-email 2.49.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E71A2298254;
+	Tue,  6 May 2025 03:29:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746502184; cv=fail; b=QzBMAzo16rhBCeHxa/TPUEhtbotuY5JeOxbRahU7QcFuk7djqFsT4MmCRmNulxJmeiBnREq6LQHTYgtPQF5ifLFRXKq5Iv2T8BojKGakDeenttUzSbXxR4Sej2dcDGtAhRRe+THAf9/61sul0iWRcb/I4IcYTxM6fTWmTi5KZgg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746502184; c=relaxed/simple;
+	bh=HeFFFiTNbSNnqnBPd4RJ9ib/AFKSzpkWtKU1lYuNmOQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=CpeMlcHvtiqzgUOaOY/WnrJHbCKwMcbZX74gJy0+X2iv5tS9S+1KFZ5v4UmkTXGDEJ8KXXZdgj08E1DjdtRI4bLUHMcOKiZCjR65i/+HEWXnp6+9yyW5ihzh99VP8LLK8NcyvUOPHkC5KXkOcqd2j7c0dTZ/DsSPgTdjgbXhD5U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=u2c+1lbg; arc=fail smtp.client-ip=40.107.22.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="u2c+1lbg"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=hmLQ3ZfSMgHWKNLjmbVtXDUhFZtFIyXE6Zh6cwcSo0VasLAUfER7VLXeMmEvxlF/HX4vz4e+orSy+qK1C+PZo01K7wPUtUPkskxBpBN7xgzD0zSnwmCzcjOoiUTrEw7FcxbHegMBkycsucCZRMoyzj6YsAUSIL/CWxxuvcjQd3rxOud6iR4I4bo6pS2RIDfWblFUn3SB2rLrjIdEHFQfmuiC6YV+LptIvw6nveiZ0R4PhA3cQRco6R64pMR0hs+BYvH23835rNzPBMJU0ymnKTkKKrbdjvmM3HA8mkQYysWBB2fBM1WAP3ekiLLH4F04E5cT9A3TOC5orZWHRE3jGA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Ho7ItPFlA5lzXaeNVZSviOSWNKnifX9Cp67sSf2E5Q0=;
+ b=L67eRBbeAefqLQ6emcFdEvdvppzMzUsqLno9Hp2LWUQcnFJT400BnizWAVyanrJbRJYsYOSk4KGxGLi23t6IfCjnCLb8mSy6cdbZJTrz2Oe47jWr+pXgm6FGBftr0NXi6oHOpJ64WETFONn5i22jfO98i6mjD/JGhbSuoEHqnOIB/8+P8+UNZEoIfhXQUIDFbsODt+cOsruZ/dd5pC8oTY8jnrER31VnB0poDOfabGAQuxdxD5Xv4CXPw5qyrZZ36LImMA8FCN5iPrBqK5Hkazm1t/c3psbZf8HGE+XkdbSq55Kmi0WnLwmMQV+2D7fQfJZkij1wgIaO4jj85oUERg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ho7ItPFlA5lzXaeNVZSviOSWNKnifX9Cp67sSf2E5Q0=;
+ b=u2c+1lbgbR8fiIEcUohNh7P5xi/hlMIJTOSuEntVhQy4t3mFKqjVjf61J5ApLPm9W9Fhat1LkEZyPHfmljJclTs+XPQdJKYo+xWFrrgzEFph5qOKpsPzHR6a49L3sqYFnHjEVQIBLiu2hAq7uDudynT7/HKjKyLPsRebVJPqIWgZ1cOJId5ALQC8iRFLw8CNuP05xm2T0i5CPCcLhKoWr1KF+lyBtgy7/c9ePlNDhp1dRV9H1OXJHvle6KmydZGJd5ncnztJyoJIPVl61T8az2/iBMzbIPgED76T0OvplHpdgYF1UldeKdL7g3scV5YrzDRI8Vny0We6j7P5v/e6kQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from DB9PR04MB8461.eurprd04.prod.outlook.com (2603:10a6:10:2cf::20)
+ by AS8PR04MB9143.eurprd04.prod.outlook.com (2603:10a6:20b:44a::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.24; Tue, 6 May
+ 2025 03:29:38 +0000
+Received: from DB9PR04MB8461.eurprd04.prod.outlook.com
+ ([fe80::b1b9:faa9:901b:c197]) by DB9PR04MB8461.eurprd04.prod.outlook.com
+ ([fe80::b1b9:faa9:901b:c197%4]) with mapi id 15.20.8699.022; Tue, 6 May 2025
+ 03:29:37 +0000
+Date: Tue, 6 May 2025 12:38:35 +0800
+From: Peng Fan <peng.fan@oss.nxp.com>
+To: Hiago De Franco <hiagofranco@gmail.com>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>, linux-pm@vger.kernel.org,
+	linux-remoteproc@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Hiago De Franco <hiago.franco@toradex.com>, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	daniel.baluta@nxp.com, iuliana.prodan@oss.nxp.com,
+	Fabio Estevam <festevam@gmail.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>
+Subject: Re: [PATCH 1/3] remoteproc: imx_rproc: skip clock enable when M-core
+ is managed by the SCU
+Message-ID: <20250506043835.GB24259@nxa18884-linux>
+References: <20250505154849.64889-1-hiagofranco@gmail.com>
+ <20250505154849.64889-2-hiagofranco@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250505154849.64889-2-hiagofranco@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-ClientProxiedBy: SI2PR01CA0044.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:193::8) To DB9PR04MB8461.eurprd04.prod.outlook.com
+ (2603:10a6:10:2cf::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DB9PR04MB8461:EE_|AS8PR04MB9143:EE_
+X-MS-Office365-Filtering-Correlation-Id: a8a48ff9-05b6-4c5b-37c2-08dd8c4e3a55
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|52116014|7416014|1800799024|376014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?4kSN+gO89Y9pr9Hs2dUzbFx15M8lPRWJz+tuZOImHi/0UYyQ7yGPLAiM9fFj?=
+ =?us-ascii?Q?utqeLo2l6wpwVonc65h1zvZK3x1+NyeKo9BAqmcKWLtIWQ9ogQl9GI2t/mgY?=
+ =?us-ascii?Q?BBInjCvfMf7S/1I1COxnkHa1hKxGzT6KzacQXNItromndDLwpDdADXa8SRyM?=
+ =?us-ascii?Q?7Mn7vG4Ln6RKmI5/PuK6bOJC+R1swDZMCXXlU5P1+z7KhRqYUS4Bq09UDemf?=
+ =?us-ascii?Q?baU2SfbxGTMlo1pEyKIwZbXGURA9VCqGtIoaviCqHjgsetRczzTX0z1ABmbD?=
+ =?us-ascii?Q?vJ5YWgKFq3DBJcgN60F1JYZcP/X4h2F4XQE6EbTPA75QMDPXoWo3CQc1e9V8?=
+ =?us-ascii?Q?5r3ljzHjtlRYakElix7UYsWdfwwO5lfpAqKJJTQikhIawH/TeE4rjzRRJgWS?=
+ =?us-ascii?Q?gcl0DdYn5PuoMPiPBzJJbSD9bulLvYOemer/FBVCDFwPlMUgMSt6aWXbpwlk?=
+ =?us-ascii?Q?FsgMhp25w3SXq1rSvneeeO2NWPigZLdbMWbibS82bojolz7pdiuckI3Qg3nE?=
+ =?us-ascii?Q?QvLIbOUldeqDAowXSHuurqlWrZTgzfPcY6qCEgWryZFFP3jkUcKdueaOpzwv?=
+ =?us-ascii?Q?GYiNi2LHPMLE2rvXR9j7N+ZTCzGLfpq3C4ooh0Sv8lddW4q5PPD2KXxEj99A?=
+ =?us-ascii?Q?iSz2QIIxIcLcJ6ksAZqGJw7HRq/gg1p3Cls07ett6+3V9Q9atxB9batjIiaH?=
+ =?us-ascii?Q?MPc8ugDXh26Iuxo2S4ZZPrW2Np9LbjNe+LBdFVEOntvEF7D9WWwYZJx0SsPb?=
+ =?us-ascii?Q?9E7VEDVMWi1SKFRFKWagaSORi20E/EeQxQ3RB60yMEUYgjaby/Gyeesb2dEy?=
+ =?us-ascii?Q?AQacSN6To9rGXQVki4Y0KwYXyUxkjBIgIwqzueJw3FMzb8qk8RcSb9SUca1T?=
+ =?us-ascii?Q?O0euFyY0k77VKqTLMgJAxRwGzs8gP08fHh+CS3f38JT2YhFx48sRuvx3yyA1?=
+ =?us-ascii?Q?Y9CjkfHoW9EMIDIyD9HEmDQl9h1czae0mTSVW/hryM6i+wDPtG2maKwm2QuT?=
+ =?us-ascii?Q?KO814TV/CKdRv+wOzOJcufJ2lxSs3FgBenPoOU65zf4/Zt3jPsDm4du72BXV?=
+ =?us-ascii?Q?Ta+Z2w+JWpO3G5s2ndohLc5wfPzIdp46tsnw2x/74IlvjAJSeHNdPehwESWY?=
+ =?us-ascii?Q?e5LcUI+K//vUW8dennbso001qrsQPRMQDAJHZSDwF59bqTXwBxrt2azbWzxE?=
+ =?us-ascii?Q?IiXEhu00nrV+mbTwK+6aa5SSDWxooN68nRH7nMCGWW38r0bwfBJ3KDE8nDfe?=
+ =?us-ascii?Q?CCJQyEwliDE8Zdsj0bDwx0ixf2rtkZSlLS3l0pg3Tn3Rj7sJ2G2Iz7h/XjzQ?=
+ =?us-ascii?Q?XEzmLatKyPcodqhNdThXsQwq/x+8tx/UWA6nHa796SqZhPyuArylvgHD01Yt?=
+ =?us-ascii?Q?MT2hVB2QfGuRBFzAYIvwbZjC+WBPGcngfcwUz5ftOYBQrDpJRlLiZjRvItds?=
+ =?us-ascii?Q?I0kBs0o5MSmpibNCmOh+bTC4rr+t/rY8VHosrbcYdkxc54Izd/bBxXlAugf2?=
+ =?us-ascii?Q?D/xNCqP+MMtkmB8=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB8461.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(52116014)(7416014)(1800799024)(376014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?/mgHYJ4qk1UjzdSpjvYkzOPjjyXgPsPOMLalNzW/XghCBqc9qEWsIf2H17/a?=
+ =?us-ascii?Q?ngmISWs7dIUqYeuEuiVL1cxbt//Gy2Lhq+lTqzeRttZEYz2wNt8o0ZHsiaez?=
+ =?us-ascii?Q?bWmQVraGf8eatwUm5Q55tLm3mgQ070ROt0vGBD7NL5Qz4l3oJkxiFwml8GHB?=
+ =?us-ascii?Q?zOw/kv4zpr0Us5KouZwibdU49J3gpsLDeY5+pn94SUvnj5bRn8/RWBXxiNaa?=
+ =?us-ascii?Q?+7wxE6H6AvbCQqsX17d6jHedHLg7HECyoHS+paJkoLK59/psDcwX20bQHT5W?=
+ =?us-ascii?Q?uDAVDDaipMm4O6/5J8N94B4YDa1Ke+bxL3L7boNIvQQlOITcSapxBq8JaVJd?=
+ =?us-ascii?Q?zqV73vjKDBkewfeO6pw1kdkDwr1Z7NAftfdk5FiORqOoRz+skZN7aUkkGtUk?=
+ =?us-ascii?Q?eo0X0mJPZXYolIv76vZQupXW+Vd2KVEhM6v1TVLQ68oyM033U92018C6+wZ+?=
+ =?us-ascii?Q?TNSiFMCGVPhLEEFfbfDOJ0qFHBvHDfFZjF4FwTPq3oxSMLBspf6o0bS0db1X?=
+ =?us-ascii?Q?shrbkawadyOGzsb+wFtN2h+94frc3+zwwPFnUjX3NY7hrkZt5lfvMutLKG4Y?=
+ =?us-ascii?Q?gLerKZlZS2GBjGj5BF7pCtKiIm4Ci5cJvw7hPzedHFwv9+ghhd0G4YVakXDM?=
+ =?us-ascii?Q?osGh+H3GAn7yO15C4KNfIQYzxoUjhFMZDX7FJRcZpEHTNC1F644Ey2ciAmkf?=
+ =?us-ascii?Q?6SeqZzwQ+D8HVCM+/MMWGZtMxcvktbFAikcAanMNekXaXMtFyFRAC4pK0MCf?=
+ =?us-ascii?Q?wh4i/aLyQZ+8qucZ8ANpHznMtOGYWlxJhlExqrw1QfPtJvL+q/840ohFykKJ?=
+ =?us-ascii?Q?Qouf+e18Dj+WbcmfWoWIXfRd3EsSYwVJv88MbSOdJ6U9qJBqozVhB79Nb3s1?=
+ =?us-ascii?Q?fGfTtPIhVXChgQVqefvJuHkzc2Xn/o3eUxgOWxKBCPdLIvLEK62xD5vSwtJP?=
+ =?us-ascii?Q?7C35lR//u2Zs+FUalWd30Gk0gJ3lCY0SCdbHjCwfaEAs+nINs18MO7gW1t/o?=
+ =?us-ascii?Q?9za7+C4qT12DVONxBZ0CTXryfMzqeYInzN0r4C65pPKmUR+p7b8qE+s9YPli?=
+ =?us-ascii?Q?iR6Id6K/oVlG4gYfw8w5cyp13LRW3rBv12kMITMJIF20FGVwp5lCX6K3QUIN?=
+ =?us-ascii?Q?EFKdO90LnCsZYvBn2E/qknXJXXSOc0tUtgT0Z8bCkGVv8xk9i31lLoZQgopu?=
+ =?us-ascii?Q?FX+E76dAR+SBHSLBd/UoTFerrZe3mx/g0VXmRulgcgcA6zg3Hw9gXsp/iII9?=
+ =?us-ascii?Q?sn+/T4b+Chk0vUh3gclUf7P0/MEXGuWt4FjJUQzjFGObn34CDU7Myy4EGwzI?=
+ =?us-ascii?Q?p+u/3exk7RXanCEreekeBbVKNGhqnyBtvt8stJlCMcaYkboZAm6aNamZLa66?=
+ =?us-ascii?Q?6FrNlNzq7c9kLUUTK+6NRSYAs8LZBIsYL9cXIt8ljeJWMpuyEheiQr5lKcF2?=
+ =?us-ascii?Q?BnRq7D94b5NcDK5wlMz7mpDZrEK7v8T/TnR3Ol+ZDB9LSgFW/+iZYiAWnGKq?=
+ =?us-ascii?Q?zpHQGqHLZp6ZATt6JEOhOZXF0QI2dZY4UjVInEt4ikCMm3u+zvqlkJouDOP+?=
+ =?us-ascii?Q?UFCkW/aWIOiyQyNxQLmua6A0VvVc6BODZsngSzWd?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a8a48ff9-05b6-4c5b-37c2-08dd8c4e3a55
+X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB8461.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 03:29:37.2945
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: /hGbwdMDmTIb+eZ1lgB5tY+5fqhyWucJmWw7kh2O4P//Tn9Fuygps5pKuQc3MkyyH6wVOlM6vznmXM8tlwVnNg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB9143
 
-Accidentally spotted while trying to understand what else needs
-to be renamed to netif_ prefix. Most of the calls to dev_set_promiscuity
-are adjacent to dev_set_allmulti or dev_disable_lro so it should
-be safe to add the lock. Note that new netif_set_promiscuity is
-currently unused, the locked paths call __dev_set_promiscuity directly.
+On Mon, May 05, 2025 at 12:48:47PM -0300, Hiago De Franco wrote:
+>From: Hiago De Franco <hiago.franco@toradex.com>
+>
+>For the i.MX8X and i.MX8 family SoCs, when the M-core is powered up
+>before Linux starts (e.g., by the bootloader) and it is being managed by
+>the SCU, the SCFW will not allow the kernel to enable the clock again.
+>This currently causes an SCU fault reset when the M-core is up and
+>running and the kernel boots, resetting the system.
+>
+>Therefore, add a check in the clock enable function to not execute it if
+>the M-core is being managed by the SCU.
+>
+>This change affects only the i.MX8X and i.MX8 family SoCs, as this is
+>under the IMX_RPROC_SCU_API method.
 
-Fixes: ad7c7b2172c3 ("net: hold netdev instance lock during sysfs operations")
-Signed-off-by: Stanislav Fomichev <sdf@fomichev.me>
----
- include/linux/netdevice.h |  1 +
- net/core/dev.c            | 14 +-------------
- net/core/dev_api.c        | 23 +++++++++++++++++++++++
- 3 files changed, 25 insertions(+), 13 deletions(-)
+I would rewrite as below: "
 
-diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
-index 2d11d013cabe..7ea022750e4e 100644
---- a/include/linux/netdevice.h
-+++ b/include/linux/netdevice.h
-@@ -4972,6 +4972,7 @@ static inline void __dev_mc_unsync(struct net_device *dev,
- 
- /* Functions used for secondary unicast and multicast support */
- void dev_set_rx_mode(struct net_device *dev);
-+int netif_set_promiscuity(struct net_device *dev, int inc);
- int dev_set_promiscuity(struct net_device *dev, int inc);
- int netif_set_allmulti(struct net_device *dev, int inc, bool notify);
- int dev_set_allmulti(struct net_device *dev, int inc);
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 1be7cb73a602..3b8d1e1a7e71 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -9193,18 +9193,7 @@ static int __dev_set_promiscuity(struct net_device *dev, int inc, bool notify)
- 	return 0;
- }
- 
--/**
-- *	dev_set_promiscuity	- update promiscuity count on a device
-- *	@dev: device
-- *	@inc: modifier
-- *
-- *	Add or remove promiscuity from a device. While the count in the device
-- *	remains above zero the interface remains promiscuous. Once it hits zero
-- *	the device reverts back to normal filtering operation. A negative inc
-- *	value is used to drop promiscuity on the device.
-- *	Return 0 if successful or a negative errno code on error.
-- */
--int dev_set_promiscuity(struct net_device *dev, int inc)
-+int netif_set_promiscuity(struct net_device *dev, int inc)
- {
- 	unsigned int old_flags = dev->flags;
- 	int err;
-@@ -9216,7 +9205,6 @@ int dev_set_promiscuity(struct net_device *dev, int inc)
- 		dev_set_rx_mode(dev);
- 	return err;
- }
--EXPORT_SYMBOL(dev_set_promiscuity);
- 
- int netif_set_allmulti(struct net_device *dev, int inc, bool notify)
- {
-diff --git a/net/core/dev_api.c b/net/core/dev_api.c
-index 90898cd540ce..f9a160ab596f 100644
---- a/net/core/dev_api.c
-+++ b/net/core/dev_api.c
-@@ -267,6 +267,29 @@ void dev_disable_lro(struct net_device *dev)
- }
- EXPORT_SYMBOL(dev_disable_lro);
- 
-+/**
-+ * dev_set_promiscuity() - update promiscuity count on a device
-+ * @dev: device
-+ * @inc: modifier
-+ *
-+ * Add or remove promiscuity from a device. While the count in the device
-+ * remains above zero the interface remains promiscuous. Once it hits zero
-+ * the device reverts back to normal filtering operation. A negative inc
-+ * value is used to drop promiscuity on the device.
-+ * Return 0 if successful or a negative errno code on error.
-+ */
-+int dev_set_promiscuity(struct net_device *dev, int inc)
-+{
-+	int ret;
-+
-+	netdev_lock_ops(dev);
-+	ret = netif_set_promiscuity(dev, inc);
-+	netdev_unlock_ops(dev);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL(dev_set_promiscuity);
-+
- /**
-  * dev_set_allmulti() - update allmulti count on a device
-  * @dev: device
--- 
-2.49.0
+For the i.MX8X and i.MX8 family SoCs, when the M-core is powered up
+by the bootloader, M-core and Linux are in same SCFW(System Controller
+Firmware) partition, so linux has permission to control M-core.
 
+But when M-core is started, the SCFW will automatically enable the clock
+and configure the rate, and any users that wanna to enable the clock
+will get error 'LOCKED' from SCFW. So current imx_rproc.c probe function
+gets failure because clk_prepare_enable returns failure. Then
+the power domain of M-core is powered off when M-core is still running,
+SCU(System Controller Unit) will get a fault reset, and system restarts.
+
+To address the issue, ignore handling the clk for i.MX8X and i.MX8 M-core,
+because SCFW automatically enables and configures the clock.
+"
+
+You may update if you wanna.
+
+>
+>Signed-off-by: Hiago De Franco <hiago.franco@toradex.com>
+>Suggested-by: Peng Fan <peng.fan@oss.nxp.com>
+
+-> peng.fan@nxp.com
+
+Thanks,
+Peng
+
+>---
+> drivers/remoteproc/imx_rproc.c | 4 ++--
+> 1 file changed, 2 insertions(+), 2 deletions(-)
+>
+>diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
+>index 74299af1d7f1..627e57a88db2 100644
+>--- a/drivers/remoteproc/imx_rproc.c
+>+++ b/drivers/remoteproc/imx_rproc.c
+>@@ -1029,8 +1029,8 @@ static int imx_rproc_clk_enable(struct imx_rproc *priv)
+> 	struct device *dev = priv->dev;
+> 	int ret;
+> 
+>-	/* Remote core is not under control of Linux */
+>-	if (dcfg->method == IMX_RPROC_NONE)
+>+	/* Remote core is not under control of Linux or it is managed by SCU API */
+>+	if (dcfg->method == IMX_RPROC_NONE || dcfg->method == IMX_RPROC_SCU_API)
+> 		return 0;
+> 
+> 	priv->clk = devm_clk_get(dev, NULL);
+>-- 
+>2.39.5
+>
