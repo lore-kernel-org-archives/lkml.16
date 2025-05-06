@@ -1,112 +1,129 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D58E1280A58;
-	Tue,  6 May 2025 13:52:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB9A1275842;
+	Tue,  6 May 2025 13:52:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746539533; cv=none; b=jBaJMdPmk21IEVwYCDrF8IuRQhuiqiyHB7165bRIaYbWun/CmbVkBndXpLzRAX15B0XLtrRDIRNA4gTZjtuNyC6NOSmyKfuSAnTjUXO5Dv5LJ/HGy4CjkS+S5xzyXqqimk/MOso6Osd1Vyo06PGeRgKOTCiz0enVGbOguVG8PbM=
+	t=1746539582; cv=none; b=dP+1n3i9c6Nh43BOdizX8FhFL1Ej+oq0iX/iFkTaXdJl2FXFyMxS6aztma7IPvhb4aWGHM2mo+9Ix3KLwaJu7lE68/u7GCkPkvopnMKTDh6EqGWNR9FRugsaR1BDRJXtNqIa+7qebc5HOusxJSg2ddokvQGudn5Fo7Y5zo/eQ98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746539533; c=relaxed/simple;
-	bh=1VOwQsJ3k5PogOdf1PKk0ppF8swsX//rwEr+ZjgTbKw=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mvtwVupqJuUmeAemriQKOOJ0YtK/7BXmbN0n4y88Z7ZzGiyXI5Dn50eiJ6IKXmXY33G7Z8FYjYOfNPpIYSvWQXnjDfrB8cZJIYcbVPE0HRD+S64vC20+nzP8TtR9aq2nY9sv75EHBL3RojKknqDHF86/pX/+KyiU6rLZp7sUpJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZsKZP1X96z6K8xh;
-	Tue,  6 May 2025 21:51:57 +0800 (CST)
-Received: from frapeml500003.china.huawei.com (unknown [7.182.85.28])
-	by mail.maildlp.com (Postfix) with ESMTPS id 100B31402F3;
-	Tue,  6 May 2025 21:52:08 +0800 (CST)
-Received: from localhost (10.47.68.20) by frapeml500003.china.huawei.com
- (7.182.85.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 6 May
- 2025 15:52:07 +0200
-Date: Tue, 6 May 2025 14:52:01 +0100
-From: Alireza Sanaee <alireza.sanaee@huawei.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-CC: <devicetree@vger.kernel.org>, <robh@kernel.org>,
-	<jonathan.cameron@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
-	<mark.rutland@arm.com>, <shameerali.kolothum.thodi@huawei.com>
-Subject: Re: [PATCH v2 6/6] of: of_cpu_phandle_to_id to support SMT threads
-Message-ID: <20250506145201.00000f50.alireza.sanaee@huawei.com>
-In-Reply-To: <48fd85e7-4940-4bfd-943d-3c9674828a6c@kernel.org>
-References: <20250502161300.1411-1-alireza.sanaee@huawei.com>
-	<20250502161300.1411-7-alireza.sanaee@huawei.com>
-	<20250504-acoustic-skink-of-greatness-1e90ac@kuoka>
-	<c2ace0e9-6565-44c3-84eb-555707f84509@kernel.org>
-	<20250506112337.00006918.alireza.sanaee@huawei.com>
-	<78797f80-bdd6-49ef-b1cf-ffe4dc1dc5f6@kernel.org>
-	<20250506143125.00002cae.alireza.sanaee@huawei.com>
-	<48fd85e7-4940-4bfd-943d-3c9674828a6c@kernel.org>
-Organization: Huawei
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1746539582; c=relaxed/simple;
+	bh=doBlcIkAGp9cJeKf4hCj5NkGHK+v0DTsswbEiCYjK44=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=qtCMALK6jNGj3xKEcagf3FaeLlMImCI3Ml8rRaU4bkoZsKeE9Q/slL/ZJBdQ1M1zeoyVZ8dN8CMkDQ9i7jTf3F49hLaW94BaoDYXM/4covVyluIZNmMbNgk6taO1fc2WW9zoLPLlXRMGUK58p4BHqM+AQ1Vh7CvPZK6LleLTAEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IZoo9nq7; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IZoo9nq7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746539580; x=1778075580;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=doBlcIkAGp9cJeKf4hCj5NkGHK+v0DTsswbEiCYjK44=;
+  b=IZoo9nq7/DlBiZEGACUk7Qr4GtOhAsIZWdGnVX2qeOC5yILC5xd/oCrB
+   ZWh/JovW61WrYsHleJELWQTxcLlGt+nVUmdwkeO59YChfoCoWNcr429So
+   OkGAyZfvYIGduKsPSOvT2gsC92O21fi187lnrZMLrDQunEzoKs8cfSlg0
+   FzMxjvD5NJ+j7sTCb9kQ1cvQDaO3dDiXf9aLrpYxBTIPQt3xgWQRCxh5E
+   ISCqqjGaZvc4hP7nkfWuxhiQwv5Jf3+j6HcTOtG1QJ8vraA/HN9Bq7ZJg
+   wtBjH1yI7MIucVStsiBNoYVXSXI/tRdO8IFSxNxksYYJ6xBgvpevM3D8g
+   Q==;
+X-CSE-ConnectionGUID: URgpnRrLSeGD7APha0CmDA==
+X-CSE-MsgGUID: jp6jo1hPQxG7bPDQ7Xf1MQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="58867030"
+X-IronPort-AV: E=Sophos;i="6.15,266,1739865600"; 
+   d="scan'208";a="58867030"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 06:52:59 -0700
+X-CSE-ConnectionGUID: 4oSb292TTJ65oXyNxraLWQ==
+X-CSE-MsgGUID: RGkFFAy2T1al+PF4saJVKw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,266,1739865600"; 
+   d="scan'208";a="136570123"
+Received: from smoticic-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.221])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 06:52:54 -0700
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: Jocelyn Falempe <jfalempe@redhat.com>, Thomas Zimmermann
+ <tzimmermann@suse.de>, Javier Martinez Canillas <javierm@redhat.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, David Airlie <airlied@gmail.com>, Simona Vetter
+ <simona@ffwll.ch>, dri-devel@lists.freedesktop.org,
+ rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Jocelyn Falempe <jfalempe@redhat.com>
+Subject: Re: [PATCH] MAINTAINERS: Add entries for drm_panic,
+ drm_panic_qr_code and drm_log
+In-Reply-To: <20250506133143.156447-1-jfalempe@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20250506133143.156447-1-jfalempe@redhat.com>
+Date: Tue, 06 May 2025 16:52:51 +0300
+Message-ID: <87tt5xvob0.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
- frapeml500003.china.huawei.com (7.182.85.28)
+Content-Type: text/plain
 
-On Tue, 6 May 2025 15:36:05 +0200
-Krzysztof Kozlowski <krzk@kernel.org> wrote:
+On Tue, 06 May 2025, Jocelyn Falempe <jfalempe@redhat.com> wrote:
+> Add myself and Javier as maintainer for drm_panic, drm_panic_qr_code
+> and drm_log.
+>
+> Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
+> ---
+>  MAINTAINERS | 28 ++++++++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 38df6b159a3b..df3abdcf1767 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -8177,6 +8177,34 @@ F:	drivers/gpu/drm/drm_panel.c
+>  F:	drivers/gpu/drm/panel/
+>  F:	include/drm/drm_panel.h
+>  
+> +DRM PANIC
+> +M:	Jocelyn Falempe <jfalempe@redhat.com>
+> +M:	Javier Martinez Canillas <javierm@redhat.com>
+> +L:	dri-devel@lists.freedesktop.org
+> +S:	Supported
+> +T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
+> +F:	drivers/gpu/drm/drm_draw.c
+> +F:	drivers/gpu/drm/drm_draw_internal.h
+> +F:	drivers/gpu/drm/drm_panic*.c
+> +F:	include/drm/drm_panic*
+> +
+> +DRM PANIC QR CODE
+> +M:	Jocelyn Falempe <jfalempe@redhat.com>
+> +M:	Javier Martinez Canillas <javierm@redhat.com>
+> +L:	dri-devel@lists.freedesktop.org
+> +L:	rust-for-linux@vger.kernel.org
+> +S:	Supported
+> +T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
+> +F:	drivers/gpu/drm/drm_panic_qr.rs
+> +
+> +DRM LOG
+> +M:	Jocelyn Falempe <jfalempe@redhat.com>
+> +M:	Javier Martinez Canillas <javierm@redhat.com>
+> +L:	dri-devel@lists.freedesktop.org
+> +S:	Supported
+> +T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
+> +F:	drivers/gpu/drm/clients/drm_log.c
+> +
 
-> On 06/05/2025 15:31, Alireza Sanaee wrote:
-> >>>>    
-> >>>
-> >>> Hi Krzysztof,
-> >>>
-> >>> There are some existing bindings in which this pattern has been
-> >>> used, so I don't think I am changing binding really.
-> >>>
-> >>> https://www.kernel.org/doc/Documentation/devicetree/bindings/thermal/thermal-zones.yaml#:~:text=cooling%2Ddevice%20%3D%20%3C%26CPU0%203%203%3E%2C%20%3C%26CPU1%203%203%3E%2C    
-> >> I do not understand this - it is not cpus phandle. Please respond
-> >> to specific comment: how many arguments are allowed by dtschema
-> >> for cpus?  
-> > 
-> > Hi Krzysztof,
-> > 
-> > If you mean checking
-> > here? https://github.com/devicetree-org/dt-schema/blob/e6ea659d2baa30df1ec0fcc4f8354208692489eb/dtschema/schemas/cpu-map.yaml#L110
-> > 
-> > There is no parameters allowed at this point for cpu phandles in the
-> > cpu-map tree. Of course, this is different than what's been
-> > implemented in the patchset.  
-> Hm, ok, I thought you are adding this for cpu-map, but if not, then
-> where are the bindings for this ABI?
-> 
-> BTW, share your DTS so we can be sure that it is properly validated
-> against bindings.
+MAINTAINERS is supposed to be sorted. See commit 80e62bc8487b
+("MAINTAINERS: re-sort all entries and fields").
 
-No wait, I am adding this to cpu-map indeed, I meant the code is
-different from what's available in the dt-schema, meaning that there is
-a mismatch like what you pointed.
+BR,
+Jani.
 
-Based on your comments, my conjecture is that I will need to include dt
-binding anyways.
 
-SMT threads should be represented in the reg array of CPU nodes, and
-will need to be addressed via an extra parameter specifying an index in
-the reg array. 
+>  DRM PRIVACY-SCREEN CLASS
+>  M:	Hans de Goede <hdegoede@redhat.com>
+>  L:	dri-devel@lists.freedesktop.org
+>
+> base-commit: 258aebf100540d36aba910f545d4d5ddf4ecaf0b
 
-There are various places in the kernel where we point to
-CPU node using those phandles. Now the first place that we are trying to change is cpu-map for
-enabling SMT resource sharing, and that probably means I should update
-the binding related to that.
-
-Hope that clarifies.
-
-Thanks,
-Alireza
-
-> 
-> Best regards,
-> Krzysztof
-
+-- 
+Jani Nikula, Intel
