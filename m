@@ -1,64 +1,63 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B93F288534;
-	Tue,  6 May 2025 13:20:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13A7B288C86;
+	Tue,  6 May 2025 13:20:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746537644; cv=none; b=bgdKcZLWPeC7FL8H2PRzBudthG/xjCPdFrPMzACy4XM4fQuL5lLCwTagyBmh4tV0dfAfNlywrd8ZLnW9NThvfIHy30ugPjEeu46qM9v3VG8B0IrxyiE4au/TY4Qjn+Yl8XsTvT6LAvmR6H72FkZOF+6lEB++a9Mhdir3fCnUZGI=
+	t=1746537645; cv=none; b=Rz+/zWV29Ya+coGw58ZkTIfU9kj0PfIdm6Zvp/+X0HW5w6s8YnNxvTEadQb4/BV+2qRpzqJ6/eVx0kQy+BzSiHUcPIwbGS/3ldrswqjxJ0QGOcEy4E8w5hRCbgysfSZqMZ57CBzUvalnyXtJJrru0QUY/bOLbfNxo0GULaJECJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746537644; c=relaxed/simple;
-	bh=OL9JHlLXkVmmKqYFOSJTU58ahXC9PEwzmTsgOH6D1rY=;
+	s=arc-20240116; t=1746537645; c=relaxed/simple;
+	bh=7frndUiWX3xEb//oZhV5N7x2Jz2z3kVJx1oRSTa/M6w=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=r5sD/hrTjYGBwL4X0vmwjm3NSY5gV8dlwJaPcfRgdM2DCQ7kQLwcaW0jWutcYaEVhvThXxyTa6BhWi84yK9ycO1+nuyV+DsO+QrcYp51nK0FhdVYdmUX/q7iVFfpykzZX1hGkB6AB205QSowVlQYy8lUlVEndKaejUftBHtdgio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Xh5rVEFo; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+cr1T1op; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=OYEpf6i/2v5YiXI2GKPRnJ7gUey2h1tJ2pI6HB047FloYydDM9uMG3qfJs6K8OcvzknwuK/qRppkkRNJAZEvHvAb1e7DgmpW+EAYHSY3/0v4i0SSj7USeTVCnSt/g/3Fb14wv31fK+KCTtUp1Oe/MKPAo5YurM5QIG0ubuL3dSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=s6ykpuj8; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4+o7wdoh; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Xh5rVEFo";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+cr1T1op"
-Date: Tue, 06 May 2025 13:20:39 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="s6ykpuj8";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4+o7wdoh"
+Date: Tue, 06 May 2025 13:20:41 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746537640;
+	s=2020; t=1746537642;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=H4574t3eHX8m+72hGMBnVrvD+x9Cd42MDSth1Fl18bE=;
-	b=Xh5rVEFogmaLu5xnrNx804l0Kcn9hwm6io+vX84Hmm4CZApiMwRqXNPBW6RvW4tzMIXmN6
-	0H3L2tNjaj0bu4VL2CjikdOnzlWFKwyTharuMVoJpJbedIogKi39Ca+CrPLFI2gr/HPeg/
-	vI2ABIWvJ5FVg1PhP8wH+NWmgo6iwZYHZmQt7gzmReZoAPovgw+bpemwFHRol9VK2OvywJ
-	mS/rWPaxeSDivf9zlns5WoZdRamQt0ua9/QwSSY6Cf712QeV8bqwYta5QrHT0j1l1h8VQC
-	GKuLctDSd3YKyemT7GPv6xYegnHWccc7CUqsSHUITnKCkcwYK9faCqSE5zKLpg==
+	bh=+w3I1YsvPI7inganiPMaFq/E14FcFp06JSVUL2t7pZU=;
+	b=s6ykpuj8kYzWAtwa3Z+XTYN5ktdIqrd2CJuMeg3mzQag/N86ew79Wd7yjcR9XHYlTLz88V
+	WCmq3U+zEv/PraBAPjGwCITDTXioZKIJ6SKJWuPrEcK3M0oAVxynbPKfeW+vQXIvb9mbbs
+	fN2LI0F28pinSoKCEEBV6vrKuZoxmvq7TZ1HWrOUTMg7Rc/RKqs6WpmfYTZpOOTYeLrKzW
+	9zbEIoTNwcxeBTycSBdz0HLoo0e+gCueEE5FUi7cNIrHDhcCEMbXqlo6eaoxlRn1notxWC
+	WdegGU5wF5xXV6odPlFFSfh4u67j9pv4pqRG6L3964jNdR0aS+wgo7LaRAfOng==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746537640;
+	s=2020e; t=1746537642;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=H4574t3eHX8m+72hGMBnVrvD+x9Cd42MDSth1Fl18bE=;
-	b=+cr1T1opm+MCl8iHYZSC37DYb1f6yhOOwwjkpbD2bN3CXE42Jw2ihSWqK1pcdyZo/P6B0x
-	TNSGCUpRK7GqXgAw==
+	bh=+w3I1YsvPI7inganiPMaFq/E14FcFp06JSVUL2t7pZU=;
+	b=4+o7wdoh57Z+Q+n4v5XepIiQIGW9IqpCtGE/GA9ZB8Y7Md+4j9IcRD/DkITrmcEDouOZvm
+	9xr0dBVw56jkCbCw==
 From: "tip-bot2 for Jiri Slaby (SUSE)" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: irq/cleanups] irqdomain: Make irq_domain_create_hierarchy() an inline
+Subject: [tip: irq/cleanups] x86/io_apic: Switch to of_fwnode_handle()
 Cc: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
  Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250319092951.37667-13-jirislaby@kernel.org>
-References: <20250319092951.37667-13-jirislaby@kernel.org>
+In-Reply-To: <20250319092951.37667-11-jirislaby@kernel.org>
+References: <20250319092951.37667-11-jirislaby@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174653763997.406.9485714517011367638.tip-bot2@tip-bot2>
+Message-ID: <174653764148.406.11053477800522298924.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -68,134 +67,39 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the irq/cleanups branch of tip:
 
-Commit-ID:     91453f6c42314c831c89c70ad20ebe68d886dc50
-Gitweb:        https://git.kernel.org/tip/91453f6c42314c831c89c70ad20ebe68d886dc50
+Commit-ID:     51cd7f0bee520df4dbbee6d8f813f970e3d57edb
+Gitweb:        https://git.kernel.org/tip/51cd7f0bee520df4dbbee6d8f813f970e3d57edb
 Author:        Jiri Slaby (SUSE) <jirislaby@kernel.org>
-AuthorDate:    Wed, 19 Mar 2025 10:29:05 +01:00
+AuthorDate:    Wed, 19 Mar 2025 10:29:03 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Tue, 06 May 2025 14:59:04 +02:00
 
-irqdomain: Make irq_domain_create_hierarchy() an inline
+x86/io_apic: Switch to of_fwnode_handle()
 
-There is no reason to export the function as an extra symbol. It is
-simple enough and is just a wrapper to already exported functions.
+of_node_to_fwnode() is irqdomain's reimplementation of the "officially"
+defined of_fwnode_handle(). The former is in the process of being
+removed, so use the latter instead.
 
-Therefore, switch the exported function to an inline.
+[ tglx: Fix up subject prefix ]
 
 Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/all/20250319092951.37667-13-jirislaby@kernel.org
+Link: https://lore.kernel.org/all/20250319092951.37667-11-jirislaby@kernel.org
 
 ---
- include/linux/irqdomain.h | 45 ++++++++++++++++++++++++++++++++------
- kernel/irq/irqdomain.c    | 41 +-----------------------------------
- 2 files changed, 39 insertions(+), 47 deletions(-)
+ arch/x86/kernel/apic/io_apic.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
-index 91ed86f..6e9a5ec 100644
---- a/include/linux/irqdomain.h
-+++ b/include/linux/irqdomain.h
-@@ -591,12 +591,45 @@ void irq_domain_set_info(struct irq_domain *domain, unsigned int virq,
- 			 void *handler_data, const char *handler_name);
- void irq_domain_reset_irq_data(struct irq_data *irq_data);
- #ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
--struct irq_domain *irq_domain_create_hierarchy(struct irq_domain *parent,
--					       unsigned int flags,
--					       unsigned int size,
--					       struct fwnode_handle *fwnode,
--					       const struct irq_domain_ops *ops,
--					       void *host_data);
-+/**
-+ * irq_domain_create_hierarchy - Add a irqdomain into the hierarchy
-+ * @parent:	Parent irq domain to associate with the new domain
-+ * @flags:	Irq domain flags associated to the domain
-+ * @size:	Size of the domain. See below
-+ * @fwnode:	Optional fwnode of the interrupt controller
-+ * @ops:	Pointer to the interrupt domain callbacks
-+ * @host_data:	Controller private data pointer
-+ *
-+ * If @size is 0 a tree domain is created, otherwise a linear domain.
-+ *
-+ * If successful the parent is associated to the new domain and the
-+ * domain flags are set.
-+ * Returns pointer to IRQ domain, or NULL on failure.
-+ */
-+static inline struct irq_domain *irq_domain_create_hierarchy(struct irq_domain *parent,
-+					    unsigned int flags,
-+					    unsigned int size,
-+					    struct fwnode_handle *fwnode,
-+					    const struct irq_domain_ops *ops,
-+					    void *host_data)
-+{
-+	struct irq_domain_info info = {
-+		.fwnode		= fwnode,
-+		.size		= size,
-+		.hwirq_max	= size,
-+		.ops		= ops,
-+		.host_data	= host_data,
-+		.domain_flags	= flags,
-+		.parent		= parent,
-+	};
-+	struct irq_domain *d;
-+
-+	if (!info.size)
-+		info.hwirq_max = ~0U;
-+
-+	d = irq_domain_instantiate(&info);
-+	return IS_ERR(d) ? NULL : d;
-+}
+diff --git a/arch/x86/kernel/apic/io_apic.c b/arch/x86/kernel/apic/io_apic.c
+index eebc360..487992c 100644
+--- a/arch/x86/kernel/apic/io_apic.c
++++ b/arch/x86/kernel/apic/io_apic.c
+@@ -2225,7 +2225,7 @@ static int mp_irqdomain_create(int ioapic)
  
- static inline struct irq_domain *irq_domain_add_hierarchy(struct irq_domain *parent,
- 					    unsigned int flags,
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index 0eb99d2..74ad4a8 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -1308,47 +1308,6 @@ void irq_domain_reset_irq_data(struct irq_data *irq_data)
- EXPORT_SYMBOL_GPL(irq_domain_reset_irq_data);
- 
- #ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
--/**
-- * irq_domain_create_hierarchy - Add a irqdomain into the hierarchy
-- * @parent:	Parent irq domain to associate with the new domain
-- * @flags:	Irq domain flags associated to the domain
-- * @size:	Size of the domain. See below
-- * @fwnode:	Optional fwnode of the interrupt controller
-- * @ops:	Pointer to the interrupt domain callbacks
-- * @host_data:	Controller private data pointer
-- *
-- * If @size is 0 a tree domain is created, otherwise a linear domain.
-- *
-- * If successful the parent is associated to the new domain and the
-- * domain flags are set.
-- * Returns pointer to IRQ domain, or NULL on failure.
-- */
--struct irq_domain *irq_domain_create_hierarchy(struct irq_domain *parent,
--					    unsigned int flags,
--					    unsigned int size,
--					    struct fwnode_handle *fwnode,
--					    const struct irq_domain_ops *ops,
--					    void *host_data)
--{
--	struct irq_domain_info info = {
--		.fwnode		= fwnode,
--		.size		= size,
--		.hwirq_max	= size,
--		.ops		= ops,
--		.host_data	= host_data,
--		.domain_flags	= flags,
--		.parent		= parent,
--	};
--	struct irq_domain *d;
--
--	if (!info.size)
--		info.hwirq_max = ~0U;
--
--	d = irq_domain_instantiate(&info);
--	return IS_ERR(d) ? NULL : d;
--}
--EXPORT_SYMBOL_GPL(irq_domain_create_hierarchy);
--
- static void irq_domain_insert_irq(int virq)
- {
- 	struct irq_data *data;
+ 	/* Handle device tree enumerated APICs proper */
+ 	if (cfg->dev) {
+-		fn = of_node_to_fwnode(cfg->dev);
++		fn = of_fwnode_handle(cfg->dev);
+ 	} else {
+ 		fn = irq_domain_alloc_named_id_fwnode("IO-APIC", mpc_ioapic_id(ioapic));
+ 		if (!fn)
