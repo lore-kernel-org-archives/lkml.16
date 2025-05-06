@@ -1,71 +1,25 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3014A26F44A
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 10:08:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B6641F4E34;
+	Tue,  6 May 2025 10:08:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746526087; cv=none; b=bBMI/oIMqPtT0ifWqh/6Q0xx7aGB9e3/MU++AF+x4xyEoemq53S5IzGJxmxtoQSeka4fb5JljdrQvuTGkrG4t1BlrkuBv4XK0C+Pe3bmyVwBJBCiJ7JjIrE4kmsKnnwnkF+WcL189qHYZ5vML+FlEMYMRwpUlwow96XfImzZB4w=
+	t=1746526126; cv=none; b=sTfuxzsSsaselJfbgxzSuU/g3Quaw2bGxzZMSUmq7WUyQ9dfPO6ajN7N4mSK6t9bUejugZR9nULvN1kas1522dikKdb8Y+qHzeys1+XUtVErCl5a8t32qacfIUDUrH8w9D+k6yk3YJPdpq9/mHNhvg9w/mP68g2QPX1ray5iDNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746526087; c=relaxed/simple;
-	bh=Wz6GfcLllA8wXtKZftbfMGr8twZTF0gIGI34vcXnxvA=;
+	s=arc-20240116; t=1746526126; c=relaxed/simple;
+	bh=U/sHJ0rllBZTo4yrsxKaCC6IiisHumKHo3x1yJ7lEeI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Rw/RE8MmUAVaA/dFZrkKPQuOm3vNZhz82jMQSZRNuoZmvSgXaULZ4b9kSmBSNK8cxPt5obUswEcMPRuu76jyTJoV7T6dJ/9ZqyLxTlN69lUQ7i7EL0D39lSMms6BJTHhU76t/Mwd4nr06SQOQ4rvLncurMmJGLOdnNyERe3e+F8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fVCYukBZ; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fVCYukBZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746526085;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2KtQkNqGsM537amwwqhIUa++uqwpFX6sC1hurxsMCHI=;
-	b=fVCYukBZAHcpNHxC5l7aWX7MxV7r3Xaqfu8pedC+lsO3H0/OpjrnAl5l8/gjAw8U2qLuI9
-	ePCuOYmoJ5+qi/qWOtI+FzqEraPlzMHJCxxzZV8z0FBZDCPNv9z+r+xPAloQQVyRzT8fWU
-	GMFahnY1ok+YbT7zeWqEHFMRRtnEzXg=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-682-D3fBi45ZNxWqoqPMV7Efuw-1; Tue, 06 May 2025 06:08:04 -0400
-X-MC-Unique: D3fBi45ZNxWqoqPMV7Efuw-1
-X-Mimecast-MFC-AGG-ID: D3fBi45ZNxWqoqPMV7Efuw_1746526083
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43d5ca7c86aso31798515e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 03:08:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746526083; x=1747130883;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2KtQkNqGsM537amwwqhIUa++uqwpFX6sC1hurxsMCHI=;
-        b=dScZ4AEf3B1AUH0g2DX1hpNf7ACYUiUdAQwoX7evN95vglnMWZuP3PTgn5Ku7L3uOm
-         7Qke+sgRAFG/ZNWcodl7enSM9WTg2E4szuXTq30uy06Zu2+hglJm7hmpO48p2qFxWdlr
-         IPRbfyW4IswwdoXmrlBRcssCx6UGHr2SFWQ1Z8JkC8Q69Y1/02VIiBWVY4cTTzcggBpP
-         T0T0zh6hKRXB34kmQnVhP7gHIjLL8VUV6Fz9P64d6B3jKMvY8QlSl4TsMpOAsHbj/7m8
-         63n2wGQJVFM7OzkZx8vLrFXJ6jdr83M6eMvtGcr27EV2OkM6EG09sx83LiJyaUhTaWwX
-         l4zg==
-X-Forwarded-Encrypted: i=1; AJvYcCV2YA/rsyUy3ETmv+Fyu5RT1405opULyJLN0ZKLUpkFTkvgbbB0t7JoS6lXky/HXp9LPBXN7ioZL0uxiFw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyxH1xCRfQj2S9g0JVhgfpQkWCLiCX8R4oR3w3Gmj5dcvHQ2J4M
-	tGM9u0xYBEGenxWyFzcYgihTmS8N83ziiPgP3lSGYWVQi54qg7qMesg9z6D9Xz3XZmOx3/DSmp3
-	8n1Nv6mi/pFxGJIfhvix/HHEHVYqHy0galHBQd6RB5L4tkYU7TuyTpHDP8qalMw==
-X-Gm-Gg: ASbGncvtTwqjKSh2rOfx2uE+kscUvhGaiCNotOZdLE7LSqZxPxfu9jaYZM+BH2JK5vr
-	5YiHqjIH5JEk3PSEsDelgBXMar5X4Xo0i8pbblYPokzBlRnVqwm5/Q2zeCCid/cvt5JRpnrMtor
-	uWxrl9qpMpzgT+WHnVE8aip6+cQv2nXKbJKRcp/CMccj8JTqaVvNa55EwDjXbWLek/dwduaQeo1
-	saAuzBqZOAysyMqsyz6Txg2eAsD30Qa+OkybH8RmcgFc4CyK8jwrPZObiiob6PNztxYHhanmlqk
-	5+3KPME6k3NJthqTNN+qY2po0bL6pFn8Ik1xdK+/9ZleWIg01zTI3qpUXXA=
-X-Received: by 2002:a05:600c:5304:b0:43c:fe15:41e1 with SMTP id 5b1f17b1804b1-441bbea0afbmr153287325e9.4.1746526082878;
-        Tue, 06 May 2025 03:08:02 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFhc03MBzoZWgjKorEMXR128n+knjgaDZEvqQTT3kpgSCz4Z047896lj5XIARk7un2ADQgeHA==
-X-Received: by 2002:a05:600c:5304:b0:43c:fe15:41e1 with SMTP id 5b1f17b1804b1-441bbea0afbmr153286675e9.4.1746526082521;
-        Tue, 06 May 2025 03:08:02 -0700 (PDT)
-Received: from ?IPV6:2a0d:3344:2706:e010:b099:aac6:4e70:6198? ([2a0d:3344:2706:e010:b099:aac6:4e70:6198])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b2aecb60sm207881215e9.11.2025.05.06.03.07.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 06 May 2025 03:08:01 -0700 (PDT)
-Message-ID: <19f4f38b-9962-41d6-97b7-e254db3c6dee@redhat.com>
-Date: Tue, 6 May 2025 12:07:58 +0200
+	 In-Reply-To:Content-Type; b=Ir9NA/mYm+/c9sOQOJHWd3DhI7kXBHBM/anU1fn/Jr/nmqp5r9KhkhcMIMrk9y3wIcimP1v0vxlzuMK6RPvQI4NIQPZs/e1LnWGdkq3pU8aAxxCx0PidmotJpUJi8tYk21ojeNBQYPhBnWw73K6UIzkiOF5ImsBaMTAHO/4ZExA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3F4E2113E;
+	Tue,  6 May 2025 03:08:34 -0700 (PDT)
+Received: from [10.57.93.118] (unknown [10.57.93.118])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 799073F5A1;
+	Tue,  6 May 2025 03:08:40 -0700 (PDT)
+Message-ID: <aa4241ce-02ea-4931-b60c-5ad0deba202d@arm.com>
+Date: Tue, 6 May 2025 11:08:38 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,44 +27,105 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v7 03/11] net: ti: prueth: Adds PRUETH HW and SW
- configuration
-To: Parvathi Pudi <parvathi@couthit.com>, danishanwar@ti.com,
- rogerq@kernel.org, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, nm@ti.com, ssantosh@kernel.org, tony@atomide.com,
- richardcochran@gmail.com, glaroque@baylibre.com, schnelle@linux.ibm.com,
- m-karicheri2@ti.com, s.hauer@pengutronix.de, rdunlap@infradead.org,
- diogo.ivo@siemens.com, basharath@couthit.com, horms@kernel.org,
- jacob.e.keller@intel.com, m-malladi@ti.com, javier.carrasco.cruz@gmail.com,
- afd@ti.com, s-anna@ti.com
-Cc: linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pratheesh@ti.com,
- prajith@ti.com, vigneshr@ti.com, praneeth@ti.com, srk@ti.com, rogerq@ti.com,
- krishna@couthit.com, pmohan@couthit.com, mohan@couthit.com
-References: <20250503121107.1973888-1-parvathi@couthit.com>
- <20250503121107.1973888-4-parvathi@couthit.com>
-Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <20250503121107.1973888-4-parvathi@couthit.com>
+Subject: Re: [PATCH v2] arm64/cpufeature: annotate arm64_use_ng_mappings with
+ ro_after_init to prevent wrong idmap generation
+Content-Language: en-GB
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Yeoreum Yun <yeoreum.yun@arm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, will@kernel.org,
+ nathan@kernel.org, nick.desaulniers+lkml@gmail.com, morbo@google.com,
+ justinstitt@google.com, broonie@kernel.org, maz@kernel.org,
+ oliver.upton@linux.dev, joey.gouly@arm.com,
+ shameerali.kolothum.thodi@huawei.com, james.morse@arm.com,
+ hardevsinh.palaniya@siliconsignals.io, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, llvm@lists.linux.dev, stable@vger.kernel.org
+References: <20250502180412.3774883-1-yeoreum.yun@arm.com>
+ <174626735218.2189871.10298017577558632540.b4-ty@arm.com>
+ <aBYkGJmfWDZHBEzp@arm.com> <aBZ7P3/dUfSjB0oV@e129823.arm.com>
+ <aBkL-zUpbg7_gCEp@arm.com> <aBnDqvY5c6a3qQ4H@e129823.arm.com>
+ <fbfded61-cfe2-4416-9098-ef39ef3e2b62@arm.com>
+ <CAMj1kXFAYDeCgtPspQubkY688tcqwCMzCD+jEXb6Ea=9mBcdcQ@mail.gmail.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <CAMj1kXFAYDeCgtPspQubkY688tcqwCMzCD+jEXb6Ea=9mBcdcQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 5/3/25 2:10 PM, Parvathi Pudi wrote:
-> +static int icssm_prueth_emac_config(struct prueth_emac *emac)
-> +{
-> +	struct prueth *prueth = emac->prueth;
-> +
-> +	/* PRU needs local shared RAM address for C28 */
-> +	u32 sharedramaddr = ICSS_LOCAL_SHARED_RAM;
-> +
-> +	/* PRU needs real global OCMC address for C30*/
-> +	u32 ocmcaddr = (u32)prueth->mem[PRUETH_MEM_OCMC].pa;
-> +	void __iomem *dram_base;
-> +	void __iomem *mac_addr;
-> +	void __iomem *dram;
+On 06/05/2025 10:41, Ard Biesheuvel wrote:
+> On Tue, 6 May 2025 at 10:16, Ryan Roberts <ryan.roberts@arm.com> wrote:
+>>
+>> On 06/05/2025 09:09, Yeoreum Yun wrote:
+>>> Hi Catalin,
+>>>
+>>>> On Sat, May 03, 2025 at 09:23:27PM +0100, Yeoreum Yun wrote:
+>>>>> Hi Catalin,
+>>>>>
+>>>>>> On Sat, May 03, 2025 at 11:16:12AM +0100, Catalin Marinas wrote:
+>>>>>>> On Fri, 02 May 2025 19:04:12 +0100, Yeoreum Yun wrote:
+>>>>>>>> create_init_idmap() could be called before .bss section initialization
+>>>>>>>> which is done in early_map_kernel().
+>>>>>>>> Therefore, data/test_prot could be set incorrectly by PTE_MAYBE_NG macro.
+>>>>>>>>
+>>>>>>>> PTE_MAYBE_NG macro set NG bit according to value of "arm64_use_ng_mappings".
+>>>>>>>> and this variable places in .bss section.
+>>>>>>>>
+>>>>>>>> [...]
+>>>>>>>
+>>>>>>> Applied to arm64 (for-next/fixes), with some slight tweaking of the
+>>>>>>> comment, thanks!
+>>>>>>>
+>>>>>>> [1/1] arm64/cpufeature: annotate arm64_use_ng_mappings with ro_after_init to prevent wrong idmap generation
+>>>>>>>       https://git.kernel.org/arm64/c/12657bcd1835
+>>>>>>
+>>>>>> I'm going to drop this for now. The kernel compiled with a clang 19.1.5
+>>>>>> version I have around (Debian sid) fails to boot, gets stuck early on:
+>>>>>>
+>>>>>> $ clang --version
+>>>>>> Debian clang version 19.1.5 (1)
+>>>>>> Target: aarch64-unknown-linux-gnu
+>>>>>> Thread model: posix
+>>>>>> InstalledDir: /usr/lib/llvm-19/bin
+>>>>>>
+>>>>>> I didn't have time to investigate, disassemble etc. I'll have a look
+>>>>>> next week.
+>>>>>
+>>>>> Just for your information.
+>>>>> When I see the debian package, clang 19.1.5-1 doesn't supply anymore:
+>>>>>  - https://ftp.debian.org/debian/pool/main/l/llvm-toolchain-19/
+>>>>>
+>>>>> and the default version for sid is below:
+>>>>>
+>>>>> $ clang-19 --version
+>>>>> Debian clang version 19.1.7 (3)
+>>>>> Target: aarch64-unknown-linux-gnu
+>>>>> Thread model: posix
+>>>>> InstalledDir: /usr/lib/llvm-19/bin
+>>>>>
+>>>>> When I tested with above version with arm64-linux's for-next/fixes
+>>>>> including this patch. it works well.
+>>>>
+>>>> It doesn't seem to be toolchain related. It fails with gcc as well from
+>>>> Debian stable but you'd need some older CPU (even if emulated, e.g.
+>>>> qemu). It fails with Cortex-A72 (guest on Raspberry Pi 4) but not
+>>>> Neoverse-N2. Also changing the annotation from __ro_after_init to
+>>>> __read_mostly also works.
+>>
+>> I think this is likely because __ro_after_init is also "ro before init" - i.e.
+>> if you try to write to it in the PI code an exception is generated due to it
+>> being mapped RO. Looks like early_map_kernel() is writiing to it.
+>>
+> 
+> Indeed.
+> 
+>> I've noticed a similar problem in the past and it would be nice to fix it so
+>> that PI code maps __ro_after_init RW.
+>>
+> 
+> The issue is that the store occurs via the ID map, which only consists
+> of one R-X and one RW- section. I'm not convinced that it's worth the
+> hassle to relax this.
+> 
+> If moving the variable to .data works, then let's just do that.
 
-Minor nit: please respect the reverse christmas tree order above.
+Yeah, fair enough.
 
-/P
 
