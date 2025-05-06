@@ -1,67 +1,67 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B88E25CC58;
-	Tue,  6 May 2025 12:31:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4140F257459
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 12:33:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746534715; cv=none; b=aqi/Zpufa1WUZM5YUMJGu3kEnXeEVW6vu2hTNkzuHy0St7vZZWswVgu+GoTO+0DP+ri0Wgd5yQEzEik36/JKRIMfO2q1t/zvUVLZPV2fNqz8JrQT9u8K7EZpi9P9F5SegcvaSBNm9B7wMLV91B06Kvk/fN6uL1jQz3W77FHhjJg=
+	t=1746534795; cv=none; b=txkucEOqCuwzlGQ8t/0PCiT2c/B3roYjqegNDgJ/QQBmvlU4L6O0TuqpcjhN1WOCwDpzPvJYeemXOXgWTbywTQQDFjH+g+YX6fzSReX7pSPgnmOFFTJrOWYmSHIXO0r90+Yuyg+8sMxiKVfmH6pjGiPd6CZuPDQ8SFXYP8bqN5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746534715; c=relaxed/simple;
-	bh=fbM50uctibnlw/qbePGAcHei61hqCspesv5iOU3zdbY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TCE4mOmjEF/XsbMnupo4LQm7zP6Ci1kqe469Newt5CW6/1JJNsVz3XMiiAhN2kHWTSvJOgAI4EobwmLhG69HLm+Q+izWoEPjV58/hhd5xH7epdPqsIUSB9V0SBGzqLoSj/JbVm2jLsAa/r2127wTwHKZslJ6DMYQnyoIwEBlT/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ie1PWsCz; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746534795; c=relaxed/simple;
+	bh=47vAcbyle/puwSeQOM+p45S1yN+zQVF27ceYuf20yDs=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Cp5oYEZOcQwaLRxTS1nliQH1Otne0tZ/RVw/YE6WNg4SdN4/YM3uL6HUe6Coj53nbIXH2bBvJbk5OJ2vvC7/U2wMGFpht9Ru1K9Co6z64ykXt3p4tvYCEch1KuR1dnLcpEW3ZVjHvm8X6lkTCf5RuV8fdU+/id1ueVgmWEABjYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=m3WIOhMw; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ie1PWsCz"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-30863b48553so6075322a91.0;
-        Tue, 06 May 2025 05:31:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m3WIOhMw"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43edecbfb94so47138105e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 05:33:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746534713; x=1747139513; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=8idUtLLebZkZiwySpCodlAhE9dZe3P+VXk1B2OGGqzg=;
-        b=Ie1PWsCzXpbGMZzqD+LAZcB9Ims+dkO+1JYcztkuigF2TpEVuJCf1ltTMw55y+wF+r
-         vKsz+tH5jpgs0mcUU3r6SQ2/DDLSRTB+SNFNt7WCztDlXXgaWHpB7O+AO0XQ+FNlOrXM
-         bGlkA6qOVxz8XlIEi/ap9MUS2mJ7VBKK/DTR3C2t618X7Rxg7Z0YOOx6HBiIeygmEypS
-         9RpUbvxqDSjdbNHOzadyZfQfGxnwvN8f+KsXgfWzrYpsTYL5BZqaaC4JulVyQb8Z1Xr+
-         6S16KRQ41i1oXO8DIKe3xZ5vXdGED7A1seW0wW8pPUuLyPItbC2FVfhRSA0iMbq8VKh1
-         11CA==
+        d=linaro.org; s=google; t=1746534791; x=1747139591; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tINjIjjqhDEFfQ/0pvAG/DtTHkRARd9gjmCmeJxg65o=;
+        b=m3WIOhMw9Nq4C6XQMTV3kuJ23qx/7uz566S+4Y4XNghhl2Pb3jgd7+rPJUfZhN+mYc
+         8WULU5D2UsOedStWio4IFUoXnYeqctcDwTiPXK2QfRwFnV9XOWinoM9y2w5XLi2LVrXt
+         dboIApGBM0Gwc/bts1AAdmmX1Z84e5CcIOolJ/uMHU3SxBgcxJGeLlJukF2THEbrG5Y2
+         UQWuJJ/3clMv6QLVquJSy7waojNQQFgoCrvbmVFgv3xKXYEvk1CTi1Zr/3hrqgyTIxOZ
+         SUrT/yhyfAUcdK7s+Zj4v5ePofN4YSHFt7u2D2rLQgIAi8hmwoorBXQCOmsNNP9Zng0G
+         RkZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746534713; x=1747139513;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8idUtLLebZkZiwySpCodlAhE9dZe3P+VXk1B2OGGqzg=;
-        b=cP6bLVpf9xnQVdNbHYSxD58OphHfn1fKeA0/pCVmKI9ki3tjqmVtRYzMHKLgRbk4bm
-         +F/KEzW8gikdYNkcYpfExFjcSaaKyZOuR4VcCO7JuiAfF/fsldNUDr7hFYnw00NhuBCN
-         svxhVRYYbFw7bCqskyJ8v/Z0aGyZgUguVQlbRlzxwb+Mxd1AGFlvrN6/9CYku+GxNjSh
-         rv5FnCNtD/1k3fuK8Ku3+bM9hrpiIFNq3bDGiHwbJ/Uu7JylPzTMmMpmHtu86N6ejohx
-         aecEME8oRIfjE6DfR9J+/V5wezjobxh0nehq+JZGCMYlTQsHUoSiAxvchA8CHKmCeGr7
-         kufw==
-X-Forwarded-Encrypted: i=1; AJvYcCUigod9RRUzzGlzAJuPtUJNCs6fGKX5y7naQsGxlsh+My1bT6bZj7gXe0sN+KrQCHqYDVBqc1lM9d/BPpg=@vger.kernel.org, AJvYcCXaUnzd15HNk3MWlVmCIolObn9NWgnxg9HP60NNJX5MSz57AOGle+Sdw2VGYybeRUz2IAeifTO/6gjlkc0O3Og=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKGaerogbCWSEJtXx8PRwt7G4ox6n8qHY3H03NDgmQXQmY/7+H
-	iIW84CNZF4LYZEiWX4vYTjDT8ck3HJocr3oWF3DD1+eAP/rlkxJB
-X-Gm-Gg: ASbGncu5iKqxA5K1SQ436wmFTz7YV/Hlg6IiJx0xSc4xwesb9cwSYRA1ozJfS47iAUq
-	OrUgtf8hE0uV5XUgsubR5xBZ8Rq7bfx5Z0YeHGKVObpSui3RWLjSrspJYU6abFM4kpvJx6b6ydX
-	TqhIZWq2OKPI/PgpsMhN2pU0Q5Nt8tHrRYE4mGYARpo8aiHdNlfPEih9+jQrthvGv4tGzj8TIRA
-	xZAHGpUT0a11+sdYAwWWa6khYWzW0CPWMNjP9qpLJLrLVsIX6clm6di8938Z/dtvh4z0LzwNMzL
-	4f2TvFR5gEFcV8PyWtKrEekHxmY7YaIVSuQ+I7YlEe+sdHW7CRUSbD+E/y4W+BLb4JvnEjvPeFs
-	Rn9x5GFRY/d8Dsw==
-X-Google-Smtp-Source: AGHT+IF1Bb1rptBpuPdUkW2OAkIn4AZYn07KmyxeIsJrvEXJzqjsDaqivcRJcoWPQV5mBelNcvBxvw==
-X-Received: by 2002:a17:90b:2552:b0:308:2945:3842 with SMTP id 98e67ed59e1d1-30a7bb0ab62mr4671711a91.15.1746534712352;
-        Tue, 06 May 2025 05:31:52 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30a4747719dsm11060910a91.19.2025.05.06.05.31.51
+        d=1e100.net; s=20230601; t=1746534791; x=1747139591;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=tINjIjjqhDEFfQ/0pvAG/DtTHkRARd9gjmCmeJxg65o=;
+        b=tsQSE5N5pIZgBm29feBQj7YPDTHPpkRFCchich+4c6zZEW71l+soKUgyw/DL7ZcyJJ
+         8AsFNnPllHJmxtucpndPUhUIKDUIIYtipkDiFaF689L/q+BbaNGHCACtB78jVC7dEHd5
+         6em0C24umuzhFgseqgSzPo+XbRu8l7iTDTT3XXCTfZzm0rAAli7jShQy1wbuQEQCondI
+         ks7qV/obHRdp++ZCE/EkBnpKw2dpBJa6bbofbkGnjth2A/+6uoHR8fHWABYbuLXd8QY/
+         1YI4S5rVGn6vLlOKMMGbOUT4lYIlS0Iq59YwUzPNhiREgFdWYs1praPTHvXlBZlcoZh/
+         280Q==
+X-Forwarded-Encrypted: i=1; AJvYcCX4HHQoyV6tZ1hRVCSDxAyAw/tI5ISaCYqh1CUUogbPd/Sxy2qXrdcXsBwMum4i/hgHnWzA8vwogtmAv6o=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/puDkW2OKCowTeVrOGMj5bJ492V/ZWMnhcE8tcFsj7qNaD6/B
+	tCDnca0qgSJnEalv0iB58tkvFgqldSHbTrggYeyyIG0NbJHZ8cfb5PzN4+UjYhw=
+X-Gm-Gg: ASbGncujjarbSEK1UXJSVFgQd7B+Rl79/XYal96OtNjRLqGmzWRapPjU8cxn15Y3KVA
+	imAlDi3iHxRY5rLI4cJmr5LtFnXcOTGrMjdHWqRLza7FE8jJDMT2gITz5VbkV6g0TqlZnxG4y8q
+	DtO6EkfdrX/ARJKxerhR6EPFbYfukOTJxItk8+asK/QiyySSbGf0h8+sb6uljgTb8J5SLHZVyJB
+	ROLSSKqKvC5wYJVsITB+FMZfe1a9DcOCU7etxbgdfFiHs9d8MK4BtEbAQx7sXbQR1mWTAgzhw58
+	ySjiX5KmU3zbn+cWvWb3ACRRatrfBmXUVfFtDw4LEidd3zGlhucgCRes1i/SMQYPRoHjpgf9BKu
+	Gpw1GDyP+QLdYM7f+0Q==
+X-Google-Smtp-Source: AGHT+IFLUzofA3vDK/kszQJLZSyj4bajkP+IkCV5UVmoE3eaxq2yBD91w5LJoJ1Tfb0QNKkwp9cU/w==
+X-Received: by 2002:a05:600c:46c9:b0:43d:160:cd9e with SMTP id 5b1f17b1804b1-441c48cf5dcmr113339485e9.17.1746534791552;
+        Tue, 06 May 2025 05:33:11 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:127a:7a9e:6ba7:152f? ([2a01:e0a:3d9:2080:127a:7a9e:6ba7:152f])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b8a31695sm169854865e9.40.2025.05.06.05.33.10
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 06 May 2025 05:31:51 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <7027fc8c-80d7-4d52-bf94-ad282d66e729@roeck-us.net>
-Date: Tue, 6 May 2025 05:31:50 -0700
+        Tue, 06 May 2025 05:33:11 -0700 (PDT)
+Message-ID: <27d2deda-3a18-41fc-a6d7-1c18cba2c1e8@linaro.org>
+Date: Tue, 6 May 2025 14:33:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,69 +69,67 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] watchdog: apple: set max_hw_heartbeat_ms instead of
- max_timeout
-To: Florian Klink <flokli@flokli.de>, Sven Peter <sven@svenpeter.dev>,
- Janne Grunau <j@jannau.net>, Alyssa Rosenzweig <alyssa@rosenzweig.io>,
- Neal Gompa <neal@gompa.dev>, Wim Van Sebroeck <wim@linux-watchdog.org>
-Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250506120111.5041-1-flokli@flokli.de>
-Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <20250506120111.5041-1-flokli@flokli.de>
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: Re: [PATCH v2] drm/panel: simple: Update timings for AUO G101EVN010
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+ Sam Ravnborg <sam@ravnborg.org>, Kevin Baker <kevinb@ventureresearch.com>
+Cc: Jessica Zhang <quic_jesszhan@quicinc.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Alex Gonzalez <alex.gonzalez@digi.com>, Thierry Reding <treding@nvidia.com>,
+ Rob Herring <robh@kernel.org>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+References: <dbd8e1bc-bc23-4240-b6b1-321ac6f5ed68@linaro.org>
+ <20250505170256.1385113-1-kevinb@ventureresearch.com>
+ <174653278110.2517250.15843200835087426912.b4-ty@oss.qualcomm.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <174653278110.2517250.15843200835087426912.b4-ty@oss.qualcomm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 5/6/25 05:01, Florian Klink wrote:
-> The hardware only supports timeouts slightly below 3mins, but by using
-> max_hw_heartbeat_ms we can let the kernel take care of supporting larger
-> timeouts than that requested from userspace.
+On 06/05/2025 13:59, Dmitry Baryshkov wrote:
+> On Mon, 05 May 2025 12:02:56 -0500, Kevin Baker wrote:
+>> Switch to panel timings based on datasheet for the AUO G101EVN01.0
+>> LVDS panel. Default timings were tested on the panel.
+>>
+>> Previous mode-based timings resulted in horizontal display shift.
+>>
+>>
 > 
-> Signed-off-by: Florian Klink <flokli@flokli.de>
+> Applied to drm-misc-next, thanks!
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Hmm, I applied to -fixes how it should be
+
+> 
+> [1/1] drm/panel: simple: Update timings for AUO G101EVN010
+>        commit: d5d283d45c85e774b64100137f34e7d55bfbe45e
+> 
+> Best regards,
 
