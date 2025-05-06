@@ -1,361 +1,174 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF34F24A04F
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 09:20:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746523250; cv=none; b=BrHBfASkGvg8L9ljicay3NHbSYXCa0hKomh+mozGqc/J+1W1dMBPD38cNadu0a+KXamLKcTk1s2wXYEfJlMe/oLF3TQbBjxzQ5GMahrHZLfx1/YDY49pzW0JHFgtuhzo5FJMBP6v1zFFUNt3N6R4X6RFAkR4YKGUmzY717A2aWc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746523250; c=relaxed/simple;
-	bh=oDTTGA8uXpO9qySegO3KM8xPb/HKk4ekq7QRkfocVBM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QEZ88Tu/7WKglaZHUo9xw4dp3FqdgDblXMCvp28J35lfdjyJ7iaraP9ZYkBccCUo4Mpg8p65BXDBGBTcVtEt3vAVnhCa33iQju7Mb5YgYhnliRyfWavcXYkG9hIuLB5wWCXE13tK0JNpywnX94d90gnkQGUTANZSLa5iiicL770=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=qSf4JTBY; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=qSf4JTBY; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A0C5272E62;
+	Tue,  6 May 2025 09:20:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.149.25
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746523255; cv=fail; b=EV1Y4v2aCdsy2Ad3nLAyqcljMgJTnTO0tJ8PoYBK+yvAJJ5Sg+4whQhxJEUDR/IiRAxKXMndqxyaRL1ituPxvUFDyNqco+3Fl6xQLNsqkq5znZizZZcQkZwuvBSBXc+e16GPaP3Xkh93l/fw9C2pFlcKUx08GSDeRjBmQ1ZTv3w=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746523255; c=relaxed/simple;
+	bh=TMSYCOrQ9xuj5/7gs8FP1OmuuS0vZSQIoXdvKQFqV7s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=px9HJDPTHSA4iEDlTwOy5k9k21pRbkBTAZmcDLhnwmX72OplQNmeOeHNqrXCJfPNKSy77qRvH4ekOaTEmP3zw4JZis8wnibf3yhOIODOFG8m5nn3np8WgDClqchTXswcP/awCCaaf0hJwEe8wfXBdhA4Kj9f9GRGXbO/YFbNYC4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=MG0QX6wl; dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b=af6PxPVW; arc=fail smtp.client-ip=67.231.149.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="qSf4JTBY";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="qSf4JTBY"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id CD22D1F395;
-	Tue,  6 May 2025 09:20:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1746523246; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=P1UsYlsYPKJkC5A0IWcoH/TBNwug3KwO3TAHM/SwaTE=;
-	b=qSf4JTBY8v1MjwwQxh5kJNcKb0KffmBUq1AxKkZINorFFT0D/0bAXjbTGgXCjNWHB57cc1
-	jnvSCg3V/mFf9U+fBqbKmHnc3R7fZyW3iLvsvz4vlYAAU2p4m3qd9zlg362OuO7FwHrRks
-	zRkMYuPGea/C0OMA7zk7xp44CQQeEU8=
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1746523246; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=P1UsYlsYPKJkC5A0IWcoH/TBNwug3KwO3TAHM/SwaTE=;
-	b=qSf4JTBY8v1MjwwQxh5kJNcKb0KffmBUq1AxKkZINorFFT0D/0bAXjbTGgXCjNWHB57cc1
-	jnvSCg3V/mFf9U+fBqbKmHnc3R7fZyW3iLvsvz4vlYAAU2p4m3qd9zlg362OuO7FwHrRks
-	zRkMYuPGea/C0OMA7zk7xp44CQQeEU8=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5C335137CF;
-	Tue,  6 May 2025 09:20:46 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id KBf9FG7UGWgpbAAAD6G6ig
-	(envelope-from <jgross@suse.com>); Tue, 06 May 2025 09:20:46 +0000
-From: Juergen Gross <jgross@suse.com>
-To: linux-kernel@vger.kernel.org,
-	x86@kernel.org,
-	virtualization@lists.linux.dev
-Cc: xin@zytor.com,
-	Juergen Gross <jgross@suse.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Ajay Kaher <ajay.kaher@broadcom.com>,
-	Alexey Makhalov <alexey.amakhalov@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
-Subject: [PATCH 4/6] x86/msr: Move MSR trace calls one function level up
-Date: Tue,  6 May 2025 11:20:13 +0200
-Message-ID: <20250506092015.1849-5-jgross@suse.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250506092015.1849-1-jgross@suse.com>
-References: <20250506092015.1849-1-jgross@suse.com>
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="MG0QX6wl";
+	dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b="af6PxPVW"
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5460Gxf4009174;
+	Tue, 6 May 2025 04:20:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=PODMain02222019; bh=vxxykNdg59t181owqQ
+	4RUWtBGJ5yK1IONveQdMPC5Yk=; b=MG0QX6wlVLpGTkvKQA3h1ObTmYSeX8ak2k
+	E8Tt2UX8M+88qHrEjfcv9pIxqlneWGG3p3VtZcdBmVTREgChQ/sqaLKT99BoN7Us
+	PUg3jtiCuy1+SQUed9RHoU2P059ASTK9R+EfgDH4V6bHV/rSvIpzfYvjllleaNBP
+	fnDK71IPGUfgxuJ11K1TYSbiqAS5iMfhue1ueeOOSF8jPy3gkqe6SEk/pCXj2iBU
+	nGPjSLuteHUdGi0kRp6fVJVjoFqIXfpceOSB47z6YxoKNMKeHK89lGe+nc8BpI62
+	CSXGMg4vfzpi8ZYlBSPRzYwAgwQsOSK17uteFpfEweA8qDG5itcQ==
+Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2041.outbound.protection.outlook.com [104.47.70.41])
+	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 46ew4n9cdc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 06 May 2025 04:20:35 -0500 (CDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=nDb9nh8iFwmkzxaZVEIKPBmcipeHwE53mpd8N/Kw9wicVvP9Wk0VaZkpiSfMuNWIiwNwocWgfjSLXd1tPxpuyJ/kL0T94FQk3Mq9nVtOq7a36kdWzw9y1TkKLVjCDOczg+PGW0yfVTDjKrEDQZB2qA6Ms3aLJQwx2fXcTSj7Dhb2HnPuNXAr6zvrYCNwL7BedYFhpFF1QGWc+4ILa4n91171hbbKFPlwL+ioJ+p6rypqjxyWpMc1D6ygEmp+W5rwFwmXt9bdjCU1WSfFsyPdBl8bIo+TqpipV2wWOsAHbulq0Z9LIBxBkbBSNHGaa7uu6ulPpW/3zlv7PvTDV+/Gfg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vxxykNdg59t181owqQ4RUWtBGJ5yK1IONveQdMPC5Yk=;
+ b=BH1bxx8LkvuTU7dtvavj2Ia78+RyZduQ4l9/iLWDplBZKMw5zY9Xi3gOIfjxLi26+CzyDH6HNun3TLvJiRT99/+vq/dKIsEc5e9XPM8msu8M/8yO3saBeRM/6+qNdgqu59frFJJnXlWg8lijIZ3jkTmfkn9IZJNYHkPXBsU7CVvlUSbiK/O3krt7SJ0S2zGyV7WQLYwPnaBmV5LELgWmJROg2gb34Q0ex5CTTPjznQRpEWLO+Vt0d9088ldH0T7vJC5/VSNjxFn6o3L14PIQpybVGPziRicDDvQtlVvG2cdAIA9qq7ybIrKIb1AmaUrSmZAnRmRRrvjHnO+RVxEvrw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
+ 84.19.233.75) smtp.rcpttodomain=bgdev.pl smtp.mailfrom=opensource.cirrus.com;
+ dmarc=fail (p=reject sp=reject pct=100) action=oreject
+ header.from=opensource.cirrus.com; dkim=none (message not signed); arc=none
+ (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=cirrus4.onmicrosoft.com; s=selector2-cirrus4-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vxxykNdg59t181owqQ4RUWtBGJ5yK1IONveQdMPC5Yk=;
+ b=af6PxPVWZFNx0ZdPCVzvkJn7t9GvpP/88iQaO4WTeHE70IAqCOQRiICsOC0HROP0gsEmsmlJzNWaHnpEVuC6pOhsuHIk44NcCghPChsM6thDE3yRC0Pm6DNexDO2rYKZ1tlwitovEiQnY6d3ZKJ2AwsGOtaf5CFVzc6iNgOVjzM=
+Received: from DS7P220CA0001.NAMP220.PROD.OUTLOOK.COM (2603:10b6:8:1ca::6) by
+ PH7PR19MB6531.namprd19.prod.outlook.com (2603:10b6:510:1f5::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8699.22; Tue, 6 May 2025 09:20:28 +0000
+Received: from DS1PEPF00017095.namprd03.prod.outlook.com
+ (2603:10b6:8:1ca:cafe::11) by DS7P220CA0001.outlook.office365.com
+ (2603:10b6:8:1ca::6) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.21 via Frontend Transport; Tue,
+ 6 May 2025 09:20:27 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 84.19.233.75)
+ smtp.mailfrom=opensource.cirrus.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=oreject header.from=opensource.cirrus.com;
+Received-SPF: Fail (protection.outlook.com: domain of opensource.cirrus.com
+ does not designate 84.19.233.75 as permitted sender)
+ receiver=protection.outlook.com; client-ip=84.19.233.75;
+ helo=edirelay1.ad.cirrus.com;
+Received: from edirelay1.ad.cirrus.com (84.19.233.75) by
+ DS1PEPF00017095.mail.protection.outlook.com (10.167.17.138) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.18
+ via Frontend Transport; Tue, 6 May 2025 09:20:26 +0000
+Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
+	by edirelay1.ad.cirrus.com (Postfix) with ESMTPS id 59C5E406547;
+	Tue,  6 May 2025 09:20:25 +0000 (UTC)
+Received: from opensource.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPS id 31129820270;
+	Tue,  6 May 2025 09:20:25 +0000 (UTC)
+Date: Tue, 6 May 2025 10:20:24 +0100
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>,
+        Richard Fitzgerald <rf@opensource.cirrus.com>,
+        Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-sound@vger.kernel.org, patches@opensource.cirrus.com,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH 05/12] gpio: madera: use new GPIO line value setter
+ callbacks
+Message-ID: <aBnUWP0beLwAU19Q@opensource.cirrus.com>
+References: <20250506-gpiochip-set-rv-gpio-part3-v1-0-0fbdea5a9667@linaro.org>
+ <20250506-gpiochip-set-rv-gpio-part3-v1-5-0fbdea5a9667@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Score: -6.80
-X-Spamd-Result: default: False [-6.80 / 50.00];
-	REPLY(-4.00)[];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_HAS_DN(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	R_RATELIMIT(0.00)[to_ip_from(RLfdszjqhz8kzzb9uwpzdm8png)];
-	RCVD_TLS_ALL(0.00)[]
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250506-gpiochip-set-rv-gpio-part3-v1-5-0fbdea5a9667@linaro.org>
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS1PEPF00017095:EE_|PH7PR19MB6531:EE_
+X-MS-Office365-Filtering-Correlation-Id: f3ffb657-9e58-417e-d413-08dd8c7f3cf0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|82310400026|61400799027|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Off82oPtOrfASdGKEstqtPCWCR6At7HqsTuCOSnHIURFSBSi+ALngrR8hzIV?=
+ =?us-ascii?Q?ohQGyhnbGoQf7i0JqaWxdtZvfsqyLJw/FzYeBLgcptH5epgeNhxThAhQzDaY?=
+ =?us-ascii?Q?VhAWGulvOpq66TqGUfNhxjAyQhsZkGrkL1rWZt5Q3vrrEiaMI9+6ACDUQpTF?=
+ =?us-ascii?Q?40WhrKEJUDxAnglhm+HTGOk1qCOmxgmHEi0H+MPCjyByYMbgy24+tFWjHmQY?=
+ =?us-ascii?Q?UULkqPFixVR1MJTvJzTOcE9SszCQnOvS5pSGNquiqnWmxOKYpUQJQrxTsdbG?=
+ =?us-ascii?Q?WmDeQ/zV8cTDlkrnsL+MvSpT9zmh+gqPxj8fUTUjppUdR+bHW4HjbFnkGe1k?=
+ =?us-ascii?Q?1pCv5RaxeNYPFaJ/Y7Q1RwCPFAOjYTgnAKL/91PQvYzuQ+2GFafPIBMNksec?=
+ =?us-ascii?Q?5keK7mnDVdkuCdsaFy7gFee8mW8s37CNr05oLE8XZy95mBpIDLkv0a1nSRYy?=
+ =?us-ascii?Q?PiQWPLsi2Y+qSO3CSrFhsF8W4z1FnX1aXp41uN2my4w/z1Kx1WcGwhmhzpCD?=
+ =?us-ascii?Q?xJGeuPC661pv+IJCloDitHjZYSt1+yOB7aXSO2MIqEh42OTQ9uIPBlxAzZ7C?=
+ =?us-ascii?Q?JJX1WkczqSpoG+ZQe2Q3ssreNfA1UAghyscfmDG/EXsguVnU6RoI4W8Q2HEt?=
+ =?us-ascii?Q?ALUEK5Tp3qBvLwxuHEijmm184xmKnNRl5lMsivstpj2o7BQpM9F9ZdlFDuwx?=
+ =?us-ascii?Q?i4WNX4M/pKzFv9YgxUSCZbFG7pX+3E307TFggRjXOzXAZskybazmEzJ1kML2?=
+ =?us-ascii?Q?o3EbLiwriYwMKnYrHWQ8BO2Ehr9uEU0hzhyeH/xDiI6WnEQOlmhziZrhU3wN?=
+ =?us-ascii?Q?v7hw05H4fahpSl8KLb13x/yYNQNMRElvAi+5QP/4ihm8PGnVTPW8q9fYMc3r?=
+ =?us-ascii?Q?L2lnaubmlzEEOmJ01MmYWHvyp0gwD4aikN+fWtrIir0ndj3JVhGU2LX8zMBI?=
+ =?us-ascii?Q?ImJ7lgv+xFj4ln1Tv1sYhH1+23hDNtKoiN7GV2lt9DXuA5Ksclgmj/nXI5eS?=
+ =?us-ascii?Q?cXTFdMqMzp9qgxQ5OkdtTj0gngfkHaOwXa41yJCmfD9gC6iStHJbRCVQKO1v?=
+ =?us-ascii?Q?oiOMCUdmzW+H/jAFqlzhtrUfSczvtirdRJn1YI5F/eRMRWcBE80EoGsmd/GF?=
+ =?us-ascii?Q?ApLDYHm7cvuOy/MYuKvTC1HBVBuXJax8bYSRHgeO+4DZvqXXsk00Lhduq7p7?=
+ =?us-ascii?Q?buZPfKpscyfUsmExLo0Jb+GaUI5GKzj+002WALD9yBsBiRXiltcRQvQrhJfV?=
+ =?us-ascii?Q?szgLdih3TET8y6U5XFV+HC2WRMOZG3iOIYDvrSRUllSc0tZN0fIV/bGopqPL?=
+ =?us-ascii?Q?7k08AEIZ6FqjcBj8kwpRp/mu2EH2ux4r5FgUmjeOXn5PZiNcz6AXk9HOS4b4?=
+ =?us-ascii?Q?ehOzaqIJEtm/OeHd5n3ftB7zkjte/hk4/UCUV31aH/m31a8w5D4+36YyWNqb?=
+ =?us-ascii?Q?mGZGf5F/Qs3ovNhGDlmBZP/U3urhHSGI/Qt+1faKOmERz1se6yprejfKMYWR?=
+ =?us-ascii?Q?6rglebfko+aw6+UavzMD6wyHqhwTH0Eg3YTA?=
+X-Forefront-Antispam-Report:
+	CIP:84.19.233.75;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edirelay1.ad.cirrus.com;PTR:ErrorRetry;CAT:NONE;SFS:(13230040)(7416014)(376014)(82310400026)(61400799027)(36860700013);DIR:OUT;SFP:1102;
+X-OriginatorOrg: opensource.cirrus.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 09:20:26.4780
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f3ffb657-9e58-417e-d413-08dd8c7f3cf0
+X-MS-Exchange-CrossTenant-Id: bec09025-e5bc-40d1-a355-8e955c307de8
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=bec09025-e5bc-40d1-a355-8e955c307de8;Ip=[84.19.233.75];Helo=[edirelay1.ad.cirrus.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS1PEPF00017095.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR19MB6531
+X-Authority-Analysis: v=2.4 cv=KoJN2XWN c=1 sm=1 tr=0 ts=6819d463 cx=c_pps a=ybfeQeV9t1qutTZukg5VSg==:117 a=h1hSm8JtM9GN1ddwPAif2w==:17 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10
+ a=RWc_ulEos4gA:10 a=KKAkSRfTAAAA:8 a=w1d2syhTAAAA:8 a=th__69AfSmJl4DDT63sA:9 a=CjuIK1q_8ugA:10 a=cvBusfyB2V15izCimMoJ:22 a=BGLuxUZjE2igh1l4FkT-:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA2MDA4OSBTYWx0ZWRfX1ddquDyqyZDa y14VwFtLKoKHd7QYix43EwNghyaMOfJJZ4NJ7VOkyRgJPi9iO4K/94g3/0VAn8kxKLupLmaIUsL 4w8vTvEVzTUtBKzREvaoX7xyFgsT4KrJdaVO5Xu9bPP9O03lv97qz/BGQRVWcAtmYVCMgV3UuFF
+ viD/u2SECidP+VoABk+fY91/MMwE3zb63dCnpIp46yPegeY2Krq7Gis9bPg3nFKE4A9EWTbiwfU tp3Gom3Tso++C4bdPfayArenq36U0I6Tj8Kyh+ACxSwv1MdW7OuXKtkH54sBcwkr1XEHnpIePH7 0zVq14pyHYR4htAQv4IZQKADbEBTYsOyZtwHqKWbWFAVo5/ICs6vaPehe3ZHWe9/3dZY4Karl/d
+ Pm+es11dBVMAaaqNhv9dnP4nsC9u7ijN7m+rqb4ucVCbojqf1EHFrl9nNLFpbY2WG665vLad
+X-Proofpoint-ORIG-GUID: 5HP-PmTH-C7Np3SyJqTVgFcLdmKIZq5w
+X-Proofpoint-GUID: 5HP-PmTH-C7Np3SyJqTVgFcLdmKIZq5w
+X-Proofpoint-Spam-Reason: safe
 
-In order to prepare paravirt inlining of the MSR access instructions
-move the calls of MSR trace functions one function level up.
+On Tue, May 06, 2025 at 11:01:48AM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> struct gpio_chip now has callbacks for setting line values that return
+> an integer, allowing to indicate failures. Convert the driver to using
+> them.
+> 
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
 
-Introduce helpers {read|write}_msr[_safe]() helpers allowing to have
-common definitions in msr.h doing the trace calls.
+Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 
-Signed-off-by: Juergen Gross <jgross@suse.com>
----
- arch/x86/include/asm/msr.h      | 102 ++++++++++++++++++++------------
- arch/x86/include/asm/paravirt.h |  38 +++---------
- 2 files changed, 73 insertions(+), 67 deletions(-)
-
-diff --git a/arch/x86/include/asm/msr.h b/arch/x86/include/asm/msr.h
-index a9ce56fc8785..3a94cffb6a3e 100644
---- a/arch/x86/include/asm/msr.h
-+++ b/arch/x86/include/asm/msr.h
-@@ -103,14 +103,7 @@ static __always_inline u64 native_rdmsrq(u32 msr)
- 
- static inline u64 native_read_msr(u32 msr)
- {
--	u64 val;
--
--	val = __rdmsr(msr);
--
--	if (tracepoint_enabled(read_msr))
--		do_trace_read_msr(msr, val, 0);
--
--	return val;
-+	return __rdmsr(msr);
- }
- 
- static inline int native_read_msr_safe(u32 msr, u64 *p)
-@@ -123,8 +116,6 @@ static inline int native_read_msr_safe(u32 msr, u64 *p)
- 		     _ASM_EXTABLE_TYPE_REG(1b, 2b, EX_TYPE_RDMSR_SAFE, %[err])
- 		     : [err] "=r" (err), EAX_EDX_RET(val, low, high)
- 		     : "c" (msr));
--	if (tracepoint_enabled(read_msr))
--		do_trace_read_msr(msr, EAX_EDX_VAL(val, low, high), err);
- 
- 	*p = EAX_EDX_VAL(val, low, high);
- 
-@@ -135,9 +126,6 @@ static inline int native_read_msr_safe(u32 msr, u64 *p)
- static inline void notrace native_write_msr(u32 msr, u64 val)
- {
- 	native_wrmsrq(msr, val);
--
--	if (tracepoint_enabled(write_msr))
--		do_trace_write_msr(msr, val, 0);
- }
- 
- /* Can be uninlined because referenced by paravirt */
-@@ -151,8 +139,6 @@ static inline int notrace native_write_msr_safe(u32 msr, u64 val)
- 		     : [err] "=a" (err)
- 		     : "c" (msr), "0" ((u32)val), "d" ((u32)(val >> 32))
- 		     : "memory");
--	if (tracepoint_enabled(write_msr))
--		do_trace_write_msr(msr, val, err);
- 	return err;
- }
- 
-@@ -173,59 +159,96 @@ static inline u64 native_read_pmc(int counter)
- #include <asm/paravirt.h>
- #else
- #include <linux/errno.h>
-+static __always_inline u64 read_msr(u32 msr)
-+{
-+	return native_read_msr(msr);
-+}
-+
-+static __always_inline int read_msr_safe(u32 msr, u64 *p)
-+{
-+	return native_read_msr_safe(msr, p);
-+}
-+
-+static __always_inline void write_msr(u32 msr, u64 val)
-+{
-+	native_write_msr(msr, val);
-+}
-+
-+static __always_inline int write_msr_safe(u32 msr, u64 val)
-+{
-+	return native_write_msr_safe(msr, val);
-+}
-+
-+static __always_inline u64 rdpmc(int counter)
-+{
-+	return native_read_pmc(counter);
-+}
-+
-+#endif	/* !CONFIG_PARAVIRT_XXL */
-+
- /*
-  * Access to machine-specific registers (available on 586 and better only)
-  * Note: the rd* operations modify the parameters directly (without using
-  * pointer indirection), this allows gcc to optimize better
-  */
- 
-+#define rdmsrq(msr, val)			\
-+do {						\
-+	(val) = read_msr(msr);			\
-+	if (tracepoint_enabled(read_msr))	\
-+		do_trace_read_msr(msr, val, 0);	\
-+} while (0)
-+
- #define rdmsr(msr, low, high)					\
- do {								\
--	u64 __val = native_read_msr((msr));			\
-+	u64 __val;						\
-+	rdmsrq(msr, __val);					\
- 	(void)((low) = (u32)__val);				\
- 	(void)((high) = (u32)(__val >> 32));			\
- } while (0)
- 
--static inline void wrmsr(u32 msr, u32 low, u32 high)
-+/* rdmsr with exception handling */
-+static inline int rdmsrq_safe(u32 msr, u64 *p)
- {
--	native_write_msr(msr, (u64)high << 32 | low);
--}
-+	int err;
- 
--#define rdmsrq(msr, val)			\
--	((val) = native_read_msr((msr)))
-+	err = read_msr_safe(msr, p);
- 
--static inline void wrmsrq(u32 msr, u64 val)
--{
--	native_write_msr(msr, val);
--}
-+	if (tracepoint_enabled(read_msr))
-+		do_trace_read_msr(msr, *p, err);
- 
--/* wrmsr with exception handling */
--static inline int wrmsrq_safe(u32 msr, u64 val)
--{
--	return native_write_msr_safe(msr, val);
-+	return err;
- }
- 
--/* rdmsr with exception handling */
- #define rdmsr_safe(msr, low, high)				\
- ({								\
- 	u64 __val;						\
--	int __err = native_read_msr_safe((msr), &__val);	\
-+	int __err = rdmsrq_safe((msr), &__val);			\
- 	(*low) = (u32)__val;					\
- 	(*high) = (u32)(__val >> 32);				\
- 	__err;							\
- })
- 
--static inline int rdmsrq_safe(u32 msr, u64 *p)
-+static inline void wrmsrq(u32 msr, u64 val)
- {
--	return native_read_msr_safe(msr, p);
-+	write_msr(msr, val);
-+
-+	if (tracepoint_enabled(write_msr))
-+		do_trace_write_msr(msr, val, 0);
- }
- 
--static __always_inline u64 rdpmc(int counter)
-+/* wrmsr with exception handling */
-+static inline int wrmsrq_safe(u32 msr, u64 val)
- {
--	return native_read_pmc(counter);
--}
-+	int err;
- 
--#endif	/* !CONFIG_PARAVIRT_XXL */
-+	err = write_msr_safe(msr, val);
-+
-+	if (tracepoint_enabled(write_msr))
-+		do_trace_write_msr(msr, val, err);
-+
-+	return err;
-+}
- 
- /* Instruction opcode for WRMSRNS supported in binutils >= 2.40 */
- #define WRMSRNS _ASM_BYTES(0x0f,0x01,0xc6)
-@@ -242,6 +265,11 @@ static __always_inline void wrmsrns(u32 msr, u64 val)
- 		     : : "c" (msr), "a" ((u32)val), "d" ((u32)(val >> 32)));
- }
- 
-+static inline void wrmsr(u32 msr, u32 low, u32 high)
-+{
-+	wrmsrq(msr, (u64)high << 32 | low);
-+}
-+
- /*
-  * Dual u32 version of wrmsrq_safe():
-  */
-diff --git a/arch/x86/include/asm/paravirt.h b/arch/x86/include/asm/paravirt.h
-index 03f680d1057a..a463c747c780 100644
---- a/arch/x86/include/asm/paravirt.h
-+++ b/arch/x86/include/asm/paravirt.h
-@@ -195,46 +195,24 @@ static inline int paravirt_write_msr_safe(u32 msr, u64 val)
- 	return PVOP_CALL2(int, cpu.write_msr_safe, msr, val);
- }
- 
--#define rdmsr(msr, val1, val2)			\
--do {						\
--	u64 _l = paravirt_read_msr(msr);	\
--	val1 = (u32)_l;				\
--	val2 = _l >> 32;			\
--} while (0)
--
--static __always_inline void wrmsr(u32 msr, u32 low, u32 high)
-+static __always_inline u64 read_msr(u32 msr)
- {
--	paravirt_write_msr(msr, (u64)high << 32 | low);
-+	return paravirt_read_msr(msr);
- }
- 
--#define rdmsrq(msr, val)			\
--do {						\
--	val = paravirt_read_msr(msr);		\
--} while (0)
--
--static inline void wrmsrq(u32 msr, u64 val)
-+static __always_inline int read_msr_safe(u32 msr, u64 *p)
- {
--	paravirt_write_msr(msr, val);
-+	return paravirt_read_msr_safe(msr, p);
- }
- 
--static inline int wrmsrq_safe(u32 msr, u64 val)
-+static __always_inline void write_msr(u32 msr, u64 val)
- {
--	return paravirt_write_msr_safe(msr, val);
-+	paravirt_write_msr(msr, val);
- }
- 
--/* rdmsr with exception handling */
--#define rdmsr_safe(msr, a, b)				\
--({							\
--	u64 _l;						\
--	int _err = paravirt_read_msr_safe((msr), &_l);	\
--	(*a) = (u32)_l;					\
--	(*b) = (u32)(_l >> 32);				\
--	_err;						\
--})
--
--static __always_inline int rdmsrq_safe(u32 msr, u64 *p)
-+static __always_inline int write_msr_safe(u32 msr, u64 val)
- {
--	return paravirt_read_msr_safe(msr, p);
-+	return paravirt_write_msr_safe(msr, val);
- }
- 
- static __always_inline u64 rdpmc(int counter)
--- 
-2.43.0
-
+Thanks,
+Charles
