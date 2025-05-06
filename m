@@ -1,119 +1,270 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 178981FF5F9;
-	Tue,  6 May 2025 08:06:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D47BC2206BE;
+	Tue,  6 May 2025 08:06:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746518805; cv=none; b=hYuX3WJCrFXBU2OzM0rkcXYcOCDNggDtZHhPZA8M3pbYAUmzrOItf22h4gPYFKWjeYIkff7rWBQIzcWFOFqHXT+HL+y5dgJ3GSy8GdUIw+N1gZhHPj/D3g5mclvREOeG56kF5wAiWkJgJRFo/onUUNy255kE+5nmg5UDCaBwgEc=
+	t=1746518815; cv=none; b=p7DSzHd7dtt2BFjo5GZcM78T8/3XCmF2TYOERbY3LkZmMJVuwDgngq/Jp1s6SVpYbjEtPe3ZgaF2tCTMbzAC3LuKwCOTmQSS+HVwrpYR2HvuIPhVZmpL9JgCRwIhegbn7+fWWtK4q9Ac2FoX3X9CcWPbZntI+W7ygaYfhkImHt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746518805; c=relaxed/simple;
-	bh=gf76L72s2BkIXwrh9chxmnlaUfMXDTDPRP2B6Y+/hlk=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=G7szBHOs3YpM1di/dmcpKBLeuvQr/O6GzQB0BvmcGx1VG68JzCuIL/7EbVUxnMT+Q+b3etEpKLjn2wn7MNbf//ZZ42EN+PNegGkVw+oa9VVOzRu9xamAfRGisDA8r6PpGEyMrwm133QHZ3BFSyc7n4Lw0OlGwwRmYubFFwRa2mA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=N7SylMC5; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ol+dYOjK; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1746518815; c=relaxed/simple;
+	bh=W6UAz9UDBWbujK8/4B16u1li/7N+rlY1PLsYUxw0eps=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eReAA506Np77saChYj1crEmIG6WCbDO89ONmoSKNN/rzUvsjBUTbUnnq7H1U1XamQqAa7Lj7ugVlyVIDR0axy3PU4rQ3hRJ5x2hb/r6IKhyH5AVBOcmdUE/3Siwh3GP+ziKvz0ZlwtlUcYMrZAC9GJj1/F8UsPAn9/1vHtahxe8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hkz4Bssz; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="N7SylMC5";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ol+dYOjK"
-Date: Tue, 06 May 2025 08:06:41 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746518802;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0MNqXpQ+w9eLKzeEr7MQo+lHmwyZ0Y4e+2IJSZVYgVw=;
-	b=N7SylMC5q+7mADnzpAWobXLbkavf1kmbSCLCN4x1lMrlJnwm69A4ZGvZyMoqyPnGvTsbyF
-	IW+lakDaUC8NZvjsp2AsH343Y3VEt51RCeiIMjjxhBDe2mFPzhZpSkxo2mnFp4TzMT3f88
-	x+AsnHfKgqpT0Cr5HoZ4z8rksbwZxhDFTJD13cWHlqXF/zqz57LUe1SAIHl+7p/QVwa28h
-	QBnVAcI5uvzt/hvMA7fGdnAcNFfdbCY/MsZfQGiA4ayFxxUdduu+TQJBwHz73l4WHgrVFM
-	s3QgRCERKaLXBlMLnz09eJGXwSie03XZZ9SLye7KRzNRLmgKSmDCARh3Hh2Fig==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746518802;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0MNqXpQ+w9eLKzeEr7MQo+lHmwyZ0Y4e+2IJSZVYgVw=;
-	b=ol+dYOjKoqWDbTetdVd1fHsQMuqULEtU0BIZULeKA0mmGH4Y1FreTScx+5DQwaNwjLTm+p
-	1sVbhDaYbrNm4DCQ==
-From: "tip-bot2 for Ahmed S. Darwish" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: x86/cpu] tools/x86/kcpuid: Update bitfields to x86-cpuid-db v2.4
-Cc: "Ahmed S. Darwish" <darwi@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
- Andrew Cooper <andrew.cooper3@citrix.com>, "H. Peter Anvin" <hpa@zytor.com>,
- John Ogness <john.ogness@linutronix.de>, x86-cpuid@lists.linux.dev,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250506050437.10264-2-darwi@linutronix.de>
-References: <20250506050437.10264-2-darwi@linutronix.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hkz4Bssz"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43ce71582e9so34839055e9.1;
+        Tue, 06 May 2025 01:06:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746518812; x=1747123612; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=I6b4cUQ5rcJKQNEYnrxrGnyBTnIsL8X4xA1lXrOi9Rw=;
+        b=hkz4Bssz8wE9OxH4S2eihvd9j9zopizAdtpQ/zdEcoqQaeTlfQ6OL+ehV/hSQ4ZxOG
+         rxbGFFL8Ufe6tAKumpFnFhQgbbQHRwHDUwgWptA5IHY50q0q3GXIHvC8HRgoFanb42KN
+         /9ozWioT3fHr03L4W+YDFYilUpepYE3dbZXiQ50E5tXpitS39H7AAIhMtrApxGocDoVv
+         Tk7ZkAPH8AZU0di44pwhaiJuI+I0grRN14i4ubnxMo7DWGSFQ0iy4wv756IIlA1KUcBe
+         MeA6MkNY6f0F6lQiIc+bDaJbRTd0qhkCTBNOO/MeJqoR53hDR4xyuNPoBx0RRnk26e5P
+         wT8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746518812; x=1747123612;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=I6b4cUQ5rcJKQNEYnrxrGnyBTnIsL8X4xA1lXrOi9Rw=;
+        b=qHM1Z+w++PWtcTHdCFu0fV3ELZzDjbbIvSzlLwR2ZjUycZ/1hgcsObEJl8GYLeU1qi
+         aD1nyFdFdEf702ZWyk/WSmaYG2UfkEbp9Lu5CzbiDGsfd2Vqss0/JXrhO1dq92n+eJJj
+         yktbnA+CueEbhnfnOruiObsk9Cwo3GXKUM83CJ30VKxT2xJV+hG2Y1sF/GseQT9uEeAe
+         V8FVAcmOHZODvws1yBGt5jPbeozel8o+7JrdtLJihHTSi/0ZXYAIltrvg7OGgxo4lZFQ
+         G5/MjRqth5Hq7SIpSigfnKSXpmufTiCz1bDVzH7sE7v/G4QZ3Txq3gySIZv0Rii2qLNR
+         D6kw==
+X-Forwarded-Encrypted: i=1; AJvYcCV412/9gT8sUU4XfcAWQBtuJJPXR+ZNA26IBz2qaFRdU4hXNkdBt02a7rickeRBIIy4s4dGhPE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzqgaptRDKdT0DlNjH7HCW7J4KyZtuiG/X1WGOmYMggPgs7M79+
+	e76aEp3A786+XFbYO7j/44xhtMYGUNMbgDNWTYi78Wmg1CFOoh8H
+X-Gm-Gg: ASbGncsp2Ayxntpyqbf5anC8+ZAGEXT+El1JvUZDCsWO4qsHWEJEY2E8+tpRN+e6TEe
+	GsggjcR1DNYg9uBZNkD0oanAy3xbLipeX1ARcHxPb61hBTRxJjGyUxPem6DaFextjLE8yasAkQw
+	lRvQUokx0JGm8cVjj6kD4lnlqFpFh1+JrJSCTDBJB1sP93eLPlz9jiEIjkqyu06/+whk9XK/xJO
+	f9VOsjrjtPVbfQHQo3GSXoAzgYpgD6jqjw/ogHsZoyVHpKlYAAcrKBGmw+Uv/gV/WjidvvSs+yG
+	mCsQvqAx1HOWYvNaZVkh10D10IuEkBVKgX9uSboILL8DecyeS3mIsFw3Y7bghfF49dmX3U213o5
+	q9rnItIeMR9yY
+X-Google-Smtp-Source: AGHT+IGAfianIzom4PywFaAOGN+pLrKmWg/eTkmbuEy9IxRord1UaV+xOL68wY2iCqzb3ElK5PQ7Fg==
+X-Received: by 2002:a05:600c:1e88:b0:43d:97ea:2f4 with SMTP id 5b1f17b1804b1-441c48be0bamr96267475e9.12.1746518811760;
+        Tue, 06 May 2025 01:06:51 -0700 (PDT)
+Received: from fedora.advaoptical.com ([82.166.23.19])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b89cc387sm163127765e9.4.2025.05.06.01.06.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 May 2025 01:06:51 -0700 (PDT)
+From: Sagi Maimon <maimon.sagi@gmail.com>
+To: jonathan.lemon@gmail.com,
+	vadim.fedorenko@linux.dev,
+	richardcochran@gmail.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	Sagi Maimon <maimon.sagi@gmail.com>
+Subject: [PATCH v1] ptp: ocp: Limit SMA/signal/freq counts in show/store functions
+Date: Tue,  6 May 2025 11:06:47 +0300
+Message-ID: <20250506080647.116702-1-maimon.sagi@gmail.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174651880117.406.13932723282713907887.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-The following commit has been merged into the x86/cpu branch of tip:
+The sysfs show/store operations could access uninitialized elements in
+the freq_in[], signal_out[], and sma[] arrays, leading to NULL pointer
+dereferences. This patch introduces u8 fields (nr_freq_in, nr_signal_out,
+nr_sma) to track the actual number of initialized elements, capping the
+maximum at 4 for each array. The affected show/store functions are updated to
+respect these limits, preventing out-of-bounds access and ensuring safe
+array handling.
 
-Commit-ID:     49394b5af45cc368c587371592a7c5f71834557e
-Gitweb:        https://git.kernel.org/tip/49394b5af45cc368c587371592a7c5f71834557e
-Author:        Ahmed S. Darwish <darwi@linutronix.de>
-AuthorDate:    Tue, 06 May 2025 07:04:12 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 06 May 2025 10:01:57 +02:00
-
-tools/x86/kcpuid: Update bitfields to x86-cpuid-db v2.4
-
-Update kcpuid's CSV file to version 2.4, as generated by x86-cpuid-db.
-
-Summary of the v2.4 changes:
-
-* Mark CPUID(0x80000001) EDX:23 bit, 'e_mmx', as not exclusive to
-  Transmeta since it is supported by AMD as well.
-
-Signed-off-by: Ahmed S. Darwish <darwi@linutronix.de>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Andrew Cooper <andrew.cooper3@citrix.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: John Ogness <john.ogness@linutronix.de>
-Cc: x86-cpuid@lists.linux.dev
-Link: https://gitlab.com/x86-cpuid.org/x86-cpuid-db/-/blob/v2.4/CHANGELOG.rst
-Link: https://lore.kernel.org/r/20250506050437.10264-2-darwi@linutronix.de
+Signed-off-by: Sagi Maimon <maimon.sagi@gmail.com>
 ---
- tools/arch/x86/kcpuid/cpuid.csv | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/ptp/ptp_ocp.c | 50 +++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 43 insertions(+), 7 deletions(-)
 
-diff --git a/tools/arch/x86/kcpuid/cpuid.csv b/tools/arch/x86/kcpuid/cpuid.csv
-index 8d25b0b..8d925ce 100644
---- a/tools/arch/x86/kcpuid/cpuid.csv
-+++ b/tools/arch/x86/kcpuid/cpuid.csv
-@@ -1,5 +1,5 @@
- # SPDX-License-Identifier: CC0-1.0
--# Generator: x86-cpuid-db v2.3
-+# Generator: x86-cpuid-db v2.4
+diff --git a/drivers/ptp/ptp_ocp.c b/drivers/ptp/ptp_ocp.c
+index 2ccdca4f6960..80481449dcd0 100644
+--- a/drivers/ptp/ptp_ocp.c
++++ b/drivers/ptp/ptp_ocp.c
+@@ -315,6 +315,8 @@ struct ptp_ocp_serial_port {
+ #define OCP_BOARD_ID_LEN		13
+ #define OCP_SERIAL_LEN			6
+ #define OCP_SMA_NUM			4
++#define OCP_SIGNAL_NUM			4
++#define OCP_FREQ_NUM			4
  
- #
- # Auto-generated file.
-@@ -689,7 +689,7 @@
- 0x80000001,         0,  edx,      19,    mp                     , Out-of-spec AMD Multiprocessing bit
- 0x80000001,         0,  edx,      20,    nx                     , No-execute page protection
- 0x80000001,         0,  edx,      22,    mmxext                 , AMD MMX extensions
--0x80000001,         0,  edx,      23,    e_mmx                  , MMX instructions (Transmeta)
-+0x80000001,         0,  edx,      23,    e_mmx                  , MMX instructions
- 0x80000001,         0,  edx,      24,    e_fxsr                 , FXSAVE and FXRSTOR instructions
- 0x80000001,         0,  edx,      25,    fxsr_opt               , FXSAVE and FXRSTOR optimizations
- 0x80000001,         0,  edx,      26,    pdpe1gb                , 1-GB large page support
+ enum {
+ 	PORT_GNSS,
+@@ -342,8 +344,8 @@ struct ptp_ocp {
+ 	struct dcf_master_reg	__iomem *dcf_out;
+ 	struct dcf_slave_reg	__iomem *dcf_in;
+ 	struct tod_reg		__iomem *nmea_out;
+-	struct frequency_reg	__iomem *freq_in[4];
+-	struct ptp_ocp_ext_src	*signal_out[4];
++	struct frequency_reg	__iomem *freq_in[OCP_FREQ_NUM];
++	struct ptp_ocp_ext_src	*signal_out[OCP_SIGNAL_NUM];
+ 	struct ptp_ocp_ext_src	*pps;
+ 	struct ptp_ocp_ext_src	*ts0;
+ 	struct ptp_ocp_ext_src	*ts1;
+@@ -378,10 +380,13 @@ struct ptp_ocp {
+ 	u32			utc_tai_offset;
+ 	u32			ts_window_adjust;
+ 	u64			fw_cap;
+-	struct ptp_ocp_signal	signal[4];
++	struct ptp_ocp_signal	signal[OCP_SIGNAL_NUM];
+ 	struct ptp_ocp_sma_connector sma[OCP_SMA_NUM];
+ 	const struct ocp_sma_op *sma_op;
+ 	struct dpll_device *dpll;
++	int signals_nr;
++	int freq_in_nr;
++	int sma_nr;
+ };
+ 
+ #define OCP_REQ_TIMESTAMP	BIT(0)
+@@ -2697,6 +2702,9 @@ ptp_ocp_fb_board_init(struct ptp_ocp *bp, struct ocp_resource *r)
+ 	bp->eeprom_map = fb_eeprom_map;
+ 	bp->fw_version = ioread32(&bp->image->version);
+ 	bp->sma_op = &ocp_fb_sma_op;
++	bp->signals_nr = 4;
++	bp->freq_in_nr = 4;
++	bp->sma_nr  = 4;
+ 
+ 	ptp_ocp_fb_set_version(bp);
+ 
+@@ -2862,6 +2870,9 @@ ptp_ocp_art_board_init(struct ptp_ocp *bp, struct ocp_resource *r)
+ 	bp->fw_version = ioread32(&bp->reg->version);
+ 	bp->fw_tag = 2;
+ 	bp->sma_op = &ocp_art_sma_op;
++	bp->signals_nr = 4;
++	bp->freq_in_nr = 4;
++	bp->sma_nr  = 4;
+ 
+ 	/* Enable MAC serial port during initialisation */
+ 	iowrite32(1, &bp->board_config->mro50_serial_activate);
+@@ -2888,6 +2899,9 @@ ptp_ocp_adva_board_init(struct ptp_ocp *bp, struct ocp_resource *r)
+ 	bp->flash_start = 0xA00000;
+ 	bp->eeprom_map = fb_eeprom_map;
+ 	bp->sma_op = &ocp_adva_sma_op;
++	bp->signals_nr = 2;
++	bp->freq_in_nr = 2;
++	bp->sma_nr  = 2;
+ 
+ 	version = ioread32(&bp->image->version);
+ 	/* if lower 16 bits are empty, this is the fw loader. */
+@@ -3002,6 +3016,9 @@ ptp_ocp_sma_show(struct ptp_ocp *bp, int sma_nr, char *buf,
+ 	const struct ocp_selector * const *tbl;
+ 	u32 val;
+ 
++	if (sma_nr > bp->sma_nr)
++		return 0;
++
+ 	tbl = bp->sma_op->tbl;
+ 	val = ptp_ocp_sma_get(bp, sma_nr) & SMA_SELECT_MASK;
+ 
+@@ -3091,6 +3108,9 @@ ptp_ocp_sma_store(struct ptp_ocp *bp, const char *buf, int sma_nr)
+ 	enum ptp_ocp_sma_mode mode;
+ 	int val;
+ 
++	if (sma_nr > bp->sma_nr)
++		return 0;
++
+ 	mode = sma->mode;
+ 	val = sma_parse_inputs(bp->sma_op->tbl, buf, &mode);
+ 	if (val < 0)
+@@ -3190,6 +3210,9 @@ signal_store(struct device *dev, struct device_attribute *attr,
+ 	if (!argv)
+ 		return -ENOMEM;
+ 
++	if (gen >= bp->signals_nr)
++		return 0;
++
+ 	err = -EINVAL;
+ 	s.duty = bp->signal[gen].duty;
+ 	s.phase = bp->signal[gen].phase;
+@@ -3247,6 +3270,10 @@ signal_show(struct device *dev, struct device_attribute *attr, char *buf)
+ 	int i;
+ 
+ 	i = (uintptr_t)ea->var;
++
++	if (i >= bp->signals_nr)
++		return 0;
++
+ 	signal = &bp->signal[i];
+ 
+ 	count = sysfs_emit(buf, "%llu %d %llu %d", signal->period,
+@@ -3359,6 +3386,9 @@ seconds_store(struct device *dev, struct device_attribute *attr,
+ 	u32 val;
+ 	int err;
+ 
++	if (idx >= bp->freq_in_nr)
++		return 0;
++
+ 	err = kstrtou32(buf, 0, &val);
+ 	if (err)
+ 		return err;
+@@ -3381,6 +3411,9 @@ seconds_show(struct device *dev, struct device_attribute *attr, char *buf)
+ 	int idx = (uintptr_t)ea->var;
+ 	u32 val;
+ 
++	if (idx >= bp->freq_in_nr)
++		return 0;
++
+ 	val = ioread32(&bp->freq_in[idx]->ctrl);
+ 	if (val & 1)
+ 		val = (val >> 8) & 0xff;
+@@ -3402,6 +3435,9 @@ frequency_show(struct device *dev, struct device_attribute *attr, char *buf)
+ 	int idx = (uintptr_t)ea->var;
+ 	u32 val;
+ 
++	if (idx >= bp->freq_in_nr)
++		return 0;
++
+ 	val = ioread32(&bp->freq_in[idx]->status);
+ 	if (val & FREQ_STATUS_ERROR)
+ 		return sysfs_emit(buf, "error\n");
+@@ -3975,7 +4011,7 @@ gpio_input_map(char *buf, struct ptp_ocp *bp, u16 map[][2], u16 bit,
+ {
+ 	int i;
+ 
+-	for (i = 0; i < 4; i++) {
++	for (i = 0; i < bp->sma_nr; i++) {
+ 		if (bp->sma[i].mode != SMA_MODE_IN)
+ 			continue;
+ 		if (map[i][0] & (1 << bit)) {
+@@ -3995,7 +4031,7 @@ gpio_output_map(char *buf, struct ptp_ocp *bp, u16 map[][2], u16 bit)
+ 	int i;
+ 
+ 	strcpy(ans, "----");
+-	for (i = 0; i < 4; i++) {
++	for (i = 0; i < bp->sma_nr; i++) {
+ 		if (bp->sma[i].mode != SMA_MODE_OUT)
+ 			continue;
+ 		if (map[i][1] & (1 << bit))
+@@ -4175,11 +4211,11 @@ ptp_ocp_summary_show(struct seq_file *s, void *data)
+ 	}
+ 
+ 	if (bp->fw_cap & OCP_CAP_SIGNAL)
+-		for (i = 0; i < 4; i++)
++		for (i = 0; i < bp->signals_nr; i++)
+ 			_signal_summary_show(s, bp, i);
+ 
+ 	if (bp->fw_cap & OCP_CAP_FREQ)
+-		for (i = 0; i < 4; i++)
++		for (i = 0; i < bp->freq_in_nr; i++)
+ 			_frequency_summary_show(s, i, bp->freq_in[i]);
+ 
+ 	if (bp->irig_out) {
+-- 
+2.47.0
+
