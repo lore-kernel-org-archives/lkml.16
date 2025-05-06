@@ -1,60 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27898748D;
-	Tue,  6 May 2025 21:50:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E08BF4B1E5C;
+	Tue,  6 May 2025 21:55:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746568217; cv=none; b=N5Z5URobK9hwx44VnY72QFa4DBZNxTPIKJa0upYHRlw34egDmsZX/IJ0w7Kg+DNvKXvR/0hCgDSjxw7iOb8TRcYaCGLMJhyCWmYxTX48sGdT/u7mj9PUdjQW6OVJ/E9D8D01Sj3o/8UuSUHClTcoCTXciIz81qbQJ+YyCAuz8po=
+	t=1746568512; cv=none; b=ZbXBM8BQeak81MlmoQjt+LLt49lnRcZZXlxEncylE0hjxl+gRyh5cw3ianr5FyYsVpPnCqTRStrs3WOoadoN3Ni7TO2vH2Ihd9V7aCTTMeX0sADud040mLe/46Nv4jfMCCI603FYn55G5aihCF/pK3HZkY2Wr6LCAKiWNe6SSSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746568217; c=relaxed/simple;
-	bh=TdfsfZoo1ufXztfn7xtCOUYQQhVVtnkgDa13wDitYV8=;
-	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
-	 Subject:From:Cc:To:Date; b=pFdCnC5NEpd+eovy3mhQXTBAsLihTjIvhQptcuHSFjkog2uVu8bIIAgCp5IP/FoMG68dNcFBOkxwaRA9C6W2WsInNmu8w4xwQ78uHlkvTE2iikoXigNJLKfUhHMJ5830BhmtQPuF5knRAfJ6uaHbg2TVphfeaWZh2tdGmDX5mUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tK3a8iBG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746568512; c=relaxed/simple;
+	bh=9nhpMzXTeNMxVi4L6WegKDk49ifAtG2YL+CH5aMmbLA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VSNzOLsMViDctzw4m41NfzBesUDFlpNGbAOqJCqwfjWcyCKIG8TZWZJ8wbznPJ4lH6YzsdsHxOLmZFri1kNqJsTi8Fysrym/7ghjbk00fV2QOeXE59l0LJWKYwaHmfuHqbHn+DHjgrzxnJwQsAjXbasK+Onl0OwkBRY1A8s38FE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R0vGGvLa; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tK3a8iBG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FC29C4CEE4;
-	Tue,  6 May 2025 21:50:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746568216;
-	bh=TdfsfZoo1ufXztfn7xtCOUYQQhVVtnkgDa13wDitYV8=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=tK3a8iBGwc6UVf+IBFXMpMj9D1ggiJUcv3Wk+ldnqrvDbY/fOtM0Iel3eLI8/hO55
-	 qBZjGhoC2HVbNDr8EniVvTydUHesQCIfPfJtdS9WXnwkevYrQqfAcuizQde30OlkdA
-	 fRGPAjKDOToLA+FwReUH8BqnvIVFOBtzYJHYzKETARuA7ynrTT0MMneB061A1zpMdY
-	 HW+aYy9q06Jlv10lS64zQGi0tbgjHWd/0ayS6BbKXTt6RH7ecYoL+Edny4BmO4aW0C
-	 V9srNuDl7l2CjQpKJoebKJmXL/HaIipstx+O62PS9J8zCNPtskF1sCjYAdfrXH8QpT
-	 86lB6w7Ta8FmA==
-Message-ID: <d98756b84635ae189089793ef985658d@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R0vGGvLa"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-736aaeed234so5490414b3a.0;
+        Tue, 06 May 2025 14:55:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746568510; x=1747173310; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DUulXuLoXvy+J7CYdN/iBa8zKhQkvTAtk/40HjSBy8g=;
+        b=R0vGGvLazDSaGHY1eTiCbSmx4ucfJTn5gWaC9+d6wfB0ErmIDutUk4CoE2+W9b/qCk
+         qPcq2tPMGCEbj+Zs/KHTuCIb4wPuR/xEuG0cI0VtNNxbXcgBzhFyf3HwHHZ5nyWwIx63
+         PjKxCE2uNwJskOgy+JhITPEO3qhOSg4rY6z2nT6isruWPqtBKqTqUXS0C9tRX0feVm6k
+         Khx92zqQbNaoGJXz9C0aC4liY/z4AzUyc2IGUOFAaFoIqprrk0YjQi+NKJhfGhuA9QB7
+         FfqpQmbaR2Pdpzt010/9ebvu4VFui+5I9cAu/uhSpBgFUQ6u2LWDNCBTXQV7i6kk4sw+
+         lKUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746568510; x=1747173310;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DUulXuLoXvy+J7CYdN/iBa8zKhQkvTAtk/40HjSBy8g=;
+        b=T7T73p97Oo98YwisN7SHEv5TehsyLOV42rhTt1JeDxZEZBwN4ACPDFef8DgTY8Ocxa
+         8UxcC2/aQSSxjPjMehfCgeKFf6JrrGmpykqxAojktXvSlbhpbAym/57wOy8CjDDn4RUR
+         38st/oQCayMYxmJqmshFrB45WmnLtrVgr6c0c4VDwq+uxj5FP4BuOSYYFNYgPZqhW56H
+         iEUjG7fWCtVK4x6xEFKj00OqSMkISz1epro7NpA64P54kv8F3KUKgVe41gBAUIblZHGJ
+         wDXUNeuDPRqcLyl+ch8A7Q8fCXlmLmbN1XcYYD07o4S+SMkwcApHNfFZbLuH5FtkxBk2
+         +pdg==
+X-Forwarded-Encrypted: i=1; AJvYcCUurtkxzqTPxrMgsztrt+i9/Tu9/djnpoBuZ4Hsm78O5kgL+6nooOBNgJ0zcQyr7kigePLcloNZIDNQpA==@vger.kernel.org, AJvYcCVJ/jXAUgRonzlEVWx4KuzW8V08uymuQDEARbqaUonl/lkD68rUryBtj5Bxx+ZvGXfRn9N0VFC0MGw0jvk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUVKahRtu2TXZLniFi9So7Dyle7ysi5uQEZ91HCC5sO8CRrvtW
+	BH5lp0Oy3OsOl9VDV/O5So/QNQXAbTl5nprpxmWwEKBbzORN8L3YuhKZgO4=
+X-Gm-Gg: ASbGncvjfdUNvZqSOjMH/YRMhHnod0thGMPBj8dhPUWoxbWDb7UyCptNFFROqQh8CVR
+	cGdmS6JVn7ieGoraAx5xtrobcYDPykF0rXJZapGp8cb3SqILa+SiD8yD4/ReqjprNaRascXOpGL
+	/5fGpE+vB2ZWlDTTAb0AUu4rqto0vKwwM4lqS1t1DjMTW7LGMP8Tccym/4ZoU6lU7X6IS0/JLWl
+	UBPD2ZR+9yJqdsooTUeJ5qDx0GL1cwF2mJnCxNRPnjwa+tzNc7WDvkcjc1WBESsXJ2KSubFGdNu
+	Ytxhg2Xo88JaHiN9oveL4cBRUGzjyMAp5vSKRbhftbQgRNvQ/vDL5anA8Y3JwruEoQS50c24ZQw
+	PObnm2ufWCg==
+X-Google-Smtp-Source: AGHT+IFX2Ch7efSSLeEUlCZbZ/ZnYOKg1sJE0VDho937amSJc+t2A91D7vRhYykBcY3VbybZXfNQ+Q==
+X-Received: by 2002:a05:6a00:ad8f:b0:736:d297:164 with SMTP id d2e1a72fcca58-7409cee42eamr863756b3a.1.1746568509703;
+        Tue, 06 May 2025 14:55:09 -0700 (PDT)
+Received: from localhost (c-73-170-40-124.hsd1.ca.comcast.net. [73.170.40.124])
+        by smtp.gmail.com with UTF8SMTPSA id 41be03b00d2f7-b1fb3b62502sm8016838a12.32.2025.05.06.14.55.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 May 2025 14:55:09 -0700 (PDT)
+From: Stanislav Fomichev <stfomichev@gmail.com>
+To: netdev@vger.kernel.org
+Cc: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	saeedm@nvidia.com,
+	tariqt@nvidia.com,
+	andrew+netdev@lunn.ch,
+	linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	leon@kernel.org
+Subject: [PATCH net-next] net/mlx5: support software TX timestamp
+Date: Tue,  6 May 2025 14:55:08 -0700
+Message-ID: <20250506215508.3611977-1-stfomichev@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20250327125214.82598-1-rf@opensource.cirrus.com>
-References: <20250327125214.82598-1-rf@opensource.cirrus.com>
-Subject: Re: [PATCH] clk: test: Forward-declare struct of_phandle_args in kunit/clk.h
-From: Stephen Boyd <sboyd@kernel.org>
-Cc: linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com, linux-clk@vger.kernel.org, Richard Fitzgerald <rf@opensource.cirrus.com>
-To: Richard Fitzgerald <rf@opensource.cirrus.com>, brendan.higgins@linux.dev, davidgow@google.com, rmoar@google.com
-Date: Tue, 06 May 2025 14:50:14 -0700
-User-Agent: alot/0.12.dev8+g17a99a841c4b
+Content-Transfer-Encoding: 8bit
 
-Quoting Richard Fitzgerald (2025-03-27 05:52:14)
-> Add a forward-declare of struct of_phandle_args to prevent the compiler
-> warning:
->=20
-> ../include/kunit/clk.h:29:63: warning: =E2=80=98struct of_phandle_args=E2=
-=80=99 declared
-> inside parameter list will not be visible outside of this definition or
-> declaration
->    struct clk_hw *(*get)(struct of_phandle_args *clkspec, void *data),
->=20
-> Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
-> ---
+Having a software timestamp (along with existing hardware one) is
+useful to trace how the packets flow through the stack.
+mlx5e_tx_skb_update_hwts_flags is called from tx paths
+to setup HW timestamp; extend it to add software one as well.
 
-Applied to clk-next
+Signed-off-by: Stanislav Fomichev <stfomichev@gmail.com>
+---
+ drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c | 1 +
+ drivers/net/ethernet/mellanox/mlx5/core/en_tx.c      | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
+index fdf9e9bb99ac..e399d7a3d6cb 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
+@@ -1689,6 +1689,7 @@ int mlx5e_ethtool_get_ts_info(struct mlx5e_priv *priv,
+ 		return 0;
+ 
+ 	info->so_timestamping = SOF_TIMESTAMPING_TX_HARDWARE |
++				SOF_TIMESTAMPING_TX_SOFTWARE |
+ 				SOF_TIMESTAMPING_RX_HARDWARE |
+ 				SOF_TIMESTAMPING_RAW_HARDWARE;
+ 
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c b/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
+index 4fd853d19e31..f6dd26ad29e5 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
+@@ -341,6 +341,7 @@ static void mlx5e_tx_skb_update_hwts_flags(struct sk_buff *skb)
+ {
+ 	if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP))
+ 		skb_shinfo(skb)->tx_flags |= SKBTX_IN_PROGRESS;
++	skb_tx_timestamp(skb);
+ }
+ 
+ static void mlx5e_tx_check_stop(struct mlx5e_txqsq *sq)
+-- 
+2.49.0
+
