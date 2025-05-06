@@ -1,156 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE77B300296;
-	Tue,  6 May 2025 02:22:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A073828A73C;
+	Tue,  6 May 2025 02:22:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746498148; cv=none; b=kcwAPEdIEToeiliHRJZ+V0z6W4Dgfan2ui0dXoFcX6BOUr99oc5vrVNQIgoYxUnwI8WjkTIsbr/fTwm2kEi2Brmm7sfH1wSPJbSOaW+2tAXv0XOXHwCW3fdKc+7mNLNUFKm3408Zsgiy5lCuFAp40mSzgRAULchteBPISOPXhtk=
+	t=1746498136; cv=none; b=ILoPmZuKX/haSKWA7kUyFYguI5xfCe86jUGaiBDrQSr9rXYfqP3APmuTyXKZ3hu6eNwaG1TNU9Yb6sQJnei+TTRAYIoveNf6h/O1+TsigP2mhTDdlapnXOz/uS7qka3kR6L/M2QPFkUDXnyI0eFtli2+Bb/93pKsnuZg5by2xIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746498148; c=relaxed/simple;
-	bh=iw+EcWCNPov4bxyPeoD8LUh/hbyYCdRWN30dNiEaW4I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=g7vVSOXcn5yvVcalgV1IV7Qcwu5Qze/OXOFeSE6G7qFZqYXeGlTDoZOgwjNwv0TVPWFHGu4qSrq4S2XcBqyJPZsTRYzi7E6LkMk1X/UAezR5cyf2QQHgzSOeZVYRXz3uCm8EGraeRBWtwYxiFbhyr8biXD1Jpb8s4DY2/92O61Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JRt1JKLY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746498136; c=relaxed/simple;
+	bh=RzobY4XVcgkDJ0doe1YwuuhTaZEvjGgriYp4dbdw2KY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=un8hYaRZnsyY19BwtfOzTlOdLj12b2eyXtf6CnMkv8p8PwIfdUEnIPYh2abteasoECbULiCLVNX3NyjN7iNPfTsmcGvxl5eKPsb9UJ4rIKPZ9pzbukyKwqYhI5DRbDiYOAsAvIee427YrIDxNkWPbx8mIg3NmH9DXO74TZNVGc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=LGeMnYHh; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JRt1JKLY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93FEAC4CEE4;
-	Tue,  6 May 2025 02:22:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746498146;
-	bh=iw+EcWCNPov4bxyPeoD8LUh/hbyYCdRWN30dNiEaW4I=;
-	h=From:To:Cc:Subject:Date:From;
-	b=JRt1JKLY/FNMEunKzVOTOarJkaSa5zegAItguo2V1rLuwfJD5ocIuqWWtDCNra99E
-	 MuWT4ugi5oa4XFZI2Qn7bagPuRhynfTAxPYD3BlrdEXzaQz1ldxPlmC4rgbDqsyAyj
-	 ElyutpOYa6fYodib9LTYd917wQh9/uJ7qWhoaM8Xcq/cIaDLcsOKoUEJwYmh0oOz+t
-	 PGqVJliuZhCsrK3wUhmcWLoOI3RNH4mfy4AWtGJxfOoENSvwiVPApac/W9VdXHCQxD
-	 /2CmsGboUPYpbVCVA2yQUt+QJW03zFBIxUnKQNQTRumdLVu2q87qIT3cgWN04youSi
-	 fwLg42F/tgqKg==
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="LGeMnYHh"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id CDEBD257FC;
+	Tue,  6 May 2025 04:22:05 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id 4JOhvh70GMPC; Tue,  6 May 2025 04:22:05 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1746498124; bh=RzobY4XVcgkDJ0doe1YwuuhTaZEvjGgriYp4dbdw2KY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=LGeMnYHh13eXvQTo6b7jVRLViK27EHHbt6IGVuHYYHpsIFoAkHvSmHGbngDO7cfAz
+	 wAsobVQPuGvv4+GR4WyjeK9NNLXQMp4Ov1vGVlIpk4dtb2liJA3MXhc38OlFxaMU9j
+	 oAEUu46pPkg24ZfAdG7sMr8L4CLSgOzPjJMjKhDWKB7y4JjZiJopx5LtZLzPHqWnDT
+	 UDaPlS9B27kMd8W9tEo0PLmUBQtLqFyGDJ7dtc2EY/YdGr9pzXMluLcTsHdPUw8yCk
+	 xArCj1nQZ7LzlKsbwlRfcStwfM25FiVr7y5bIMV+7hpL7JRqgXEHbYIub5rU9vq1lj
+	 C51EJbsxNlGmg==
+Date: Tue, 6 May 2025 02:21:48 +0000
+From: Yao Zi <ziyao@disroot.org>
+To: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>,
+	Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Guo Ren <guoren@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-csky@vger.kernel.org
-Subject: [PATCH] dt-bindings: timer: Convert csky,gx6605s-timer to DT schema
-Date: Mon,  5 May 2025 21:22:23 -0500
-Message-ID: <20250506022224.2586860-1-robh@kernel.org>
-X-Mailer: git-send-email 2.47.2
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Shresth Prasad <shresthprasad7@gmail.com>,
+	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+	Detlev Casanova <detlev.casanova@collabora.com>,
+	Jonas Karlman <jonas@kwiboo.se>, Chukun Pan <amadeus@jmu.edu.cn>
+Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Subject: Re: [PATCH v4 2/5] clk: rockchip: Support MMC clocks in GRF region
+Message-ID: <aBlyPL_1TFh9lNr3@pie.lan>
+References: <20250417143647.43860-1-ziyao@disroot.org>
+ <20250417143647.43860-3-ziyao@disroot.org>
+ <2737556.Isy0gbHreE@diego>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <2737556.Isy0gbHreE@diego>
 
-Convert the C-SKY gx6605s timer binding to DT schema format. It's a
-straight-forward conversion.
+On Mon, May 05, 2025 at 11:39:05PM +0200, Heiko Stübner wrote:
+> Hi,
+> 
+> Am Donnerstag, 17. April 2025, 16:36:44 Mitteleuropäische Sommerzeit schrieb Yao Zi:
+> > Registers of MMC drive/sample clocks in Rockchip RV1106 and RK3528
+> > locate in GRF regions. Adjust MMC clock code to support register
+> > operations through regmap. Also add a helper to ease registration of GRF
+> > clocks.
+> > 
+> > Signed-off-by: Yao Zi <ziyao@disroot.org>
+> 
+> > diff --git a/drivers/clk/rockchip/clk.c b/drivers/clk/rockchip/clk.c
+> > index cbf93ea119a9..ce2f3323d84e 100644
+> > --- a/drivers/clk/rockchip/clk.c
+> > +++ b/drivers/clk/rockchip/clk.c
+> > @@ -590,6 +590,7 @@ void rockchip_clk_register_branches(struct rockchip_clk_provider *ctx,
+> >  				list->name,
+> >  				list->parent_names, list->num_parents,
+> >  				ctx->reg_base + list->muxdiv_offset,
+> > +				NULL, 0,
+> >  				list->div_shift
+> >  			);
+> >  			break;
+> > @@ -619,6 +620,11 @@ void rockchip_clk_register_branches(struct rockchip_clk_provider *ctx,
+> >  			break;
+> >  		case branch_linked_gate:
+> >  			/* must be registered late, fall-through for error message */
+> > +		case branch_mmc_grf:
+> > +			/*
+> > +			 * must be registered through rockchip_clk_register_grf_branches,
+> > +			 * fall-through for error message
+> > +			 */
+> >  			break;
+> 
+> please don't create separate structures for specific clock-types.
+> Being able to "just define" clock branches is helpful and starting
+> to require separate blocks just causes issues down the road.
+> 
+> For handling multiple GRF sources, I just merged Nicolas' patches for
+> handling auxiliary GRFs [0] and GRF-gate clock type [1] .
 
-Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
----
- .../bindings/timer/csky,gx6605s-timer.txt     | 42 -------------------
- .../bindings/timer/csky,gx6605s-timer.yaml    | 40 ++++++++++++++++++
- 2 files changed, 40 insertions(+), 42 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/timer/csky,gx6605s-timer.txt
- create mode 100644 Documentation/devicetree/bindings/timer/csky,gx6605s-timer.yaml
+Thanks for the hint, it does look like a better style which I'll adapt
+in the next version.
 
-diff --git a/Documentation/devicetree/bindings/timer/csky,gx6605s-timer.txt b/Documentation/devicetree/bindings/timer/csky,gx6605s-timer.txt
-deleted file mode 100644
-index 6b04344f4bea..000000000000
---- a/Documentation/devicetree/bindings/timer/csky,gx6605s-timer.txt
-+++ /dev/null
-@@ -1,42 +0,0 @@
--=================
--gx6605s SOC Timer
--=================
--
--The timer is used in gx6605s soc as system timer and the driver
--contain clk event and clk source.
--
--==============================
--timer node bindings definition
--==============================
--
--	Description: Describes gx6605s SOC timer
--
--	PROPERTIES
--
--	- compatible
--		Usage: required
--		Value type: <string>
--		Definition: must be "csky,gx6605s-timer"
--	- reg
--		Usage: required
--		Value type: <u32 u32>
--		Definition: <phyaddr size> in soc from cpu view
--	- clocks
--		Usage: required
--		Value type: phandle + clock specifier cells
--		Definition: must be input clk node
--	- interrupt
--		Usage: required
--		Value type: <u32>
--		Definition: must be timer irq num defined by soc
--
--Examples:
-----------
--
--	timer0: timer@20a000 {
--		compatible = "csky,gx6605s-timer";
--		reg = <0x0020a000 0x400>;
--		clocks = <&dummy_apb_clk>;
--		interrupts = <10>;
--		interrupt-parent = <&intc>;
--	};
-diff --git a/Documentation/devicetree/bindings/timer/csky,gx6605s-timer.yaml b/Documentation/devicetree/bindings/timer/csky,gx6605s-timer.yaml
-new file mode 100644
-index 000000000000..888fc8113996
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/csky,gx6605s-timer.yaml
-@@ -0,0 +1,40 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/timer/csky,gx6605s-timer.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: gx6605s SOC Timer
-+
-+maintainers:
-+  - Guo Ren <guoren@kernel.org>
-+
-+properties:
-+  compatible:
-+    const: csky,gx6605s-timer
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - interrupts
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    timer@20a000 {
-+        compatible = "csky,gx6605s-timer";
-+        reg = <0x0020a000 0x400>;
-+        clocks = <&dummy_apb_clk>;
-+        interrupts = <10>;
-+    };
--- 
-2.47.2
+> So ideally, please base off from there.
+> 
+> Thanks a lot
+> Heiko
+> 
 
+Regards,
+Yao Zi
+
+> [0] https://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.git/commit/?id=70a114daf2077472e58b3cac23ba8998e35352f4
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.git/commit/?id=e277168cabe9fd99e647f5dad0bc846d5d6b0093
+> 
+> 
