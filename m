@@ -1,147 +1,140 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E6233C2F
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 14:45:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4177E27876C;
+	Tue,  6 May 2025 14:45:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746542737; cv=none; b=MoJH5azAphwpD0YxPACd8Y4axbfYJzT4S36SXJbcRnSRmw/3URR3MjG5pthuPI02gznZp72TPWKdRVt/M3OfqK12K6qQzHN30EPpFXQMV6vo74lBGwGHthGYQyyVcBDQMBvrDgfAPTPlBfI8dnoaj8UIfJ9XJXBan0TsKebfxnI=
+	t=1746542748; cv=none; b=H4bDcFe1vEMDEvIDLSCh+cZZct3SlM1kyIH6DOLTYUdnpaNN5Ed30O1AM99CrivAoVPLDa0F038QKZia1EU17F0dkNuqkAddvEJWsSA7Rfy7czZDD/0ONpqJd+PWCqCzqxYzgZDnlkJmPcq9bVXi2j4QUS+ZM/v5dcgxqrZ9Izg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746542737; c=relaxed/simple;
-	bh=AEWPUemTh9IeNsfP2Ao7WHIhs7PtJUjOwoQn5BL73z8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=n1Ka9ZZ+VuYpe+d7mhaPiy8GeMhCIygOiLZs1dGis1wQ9zCDjEtK2Sc6g/zWMbVPY6WKlZ/IjLU2tpndkCHIEapYeksNTWStrQCa1siEqqDwuievQQ6eF0WVFrxwWSqov6AN1kQ5016MYQDqDt5hSVOGlxQoeJIjj8P4oTQqWAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z4b+Yta8; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746542748; c=relaxed/simple;
+	bh=9Dten2jpmliuKUicQjSbBM7Yzb9zJDE7w61qa8+P0gs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PlP1d+VpvdbbG3qBRh48RsdzXZh85yVY3jPjUZt4TqAkORBiYeEcpJOQ6Rwj/M5JTQkuKYJ3mxisWJVsAlC18QxqaUdf8Wt3FiCLrBf3Bx+Qc3YRcIz0WUYkt5II6nm/OyvBDQ2vsVg1KXRD3EnBUpm6SxZsC7pziQOC1njcjMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tMVGHhFd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z4b+Yta8"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-224171d6826so85900425ad.3
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 07:45:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746542734; x=1747147534; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=lJgYZIz4fBAZgGi+cbkSlJEx6wDoPnaEG1+0PCFG2m4=;
-        b=Z4b+Yta8mAacNzBWj1eBLAcD18ASleptA1f5b6IOh2N5vt32mBQ8RK4YIFuA17atuj
-         jL1cMHmwHG0BV49yP00Dc5NdrJXuIUUZPoTjqId1ZEAbGK3qTQrrVsrZni87HLIRCTGl
-         jn4dhrmitM9aNb7bR65qey52NznJh7w7RGv4z/tNdW4JjG3prkYbgYbiPxCFxVkxgEkQ
-         1G6aYvgs5HZjA0bxbW5zyETrEDhAAtOtDtu35PbDexMacO6XwfNBPNK5NEXjNzAOkZj/
-         05/NuKmx9v4liK1sy4Z6/BuN4JwIzGEme+WSiE7pUuF0qVJX+uqRbHSO3Ao9sUt5IR8O
-         QiGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746542734; x=1747147534;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lJgYZIz4fBAZgGi+cbkSlJEx6wDoPnaEG1+0PCFG2m4=;
-        b=Q4yChKpXRee1jpul9fsu26vB3uIX32COhtMBVh07GiG0MkVFBiAfobdIK3AahA0yS2
-         GMYTb9uR6RDV9QJpRb4jqpFOdcrWADcQzz/vn8AfYpwBJkUn3RUrCJ1JGbUlaZGqDAT5
-         O/oTKTu0I+W3AsMRlPRkyo65PvYJtjds9R9eqXEFJMhcxseKMsm0AcTcQtbmjnnmvvKv
-         ac74+8h7yN09Xgzg6qtb8bm+KghTrVhQOaZQWwmqY9mVwR/NqSXPihEfjuHoGYFbuuD1
-         mtEK5mxlohmTvWzVs/gTVj99t9qjZKmBAKzIRhe5DDRQAG9aZyi38XJTaAj4mlu4KTwb
-         TP7g==
-X-Forwarded-Encrypted: i=1; AJvYcCWRp98WAz0bcDuBdmNNTsXgGeLvnKom1/vuVGyflkbNgLQD9mSSZd1OlB+jvLwVZDgLGG1/sVjZxT+SzEE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YydOC9Go2pQP7AiTfOjpXNJUv8XIo6Stn7qo9p+K9Wsvad+DIxL
-	omNQAxLGBAK+wQIAS557HyE2EQvQCxT2XnNMiKY8po97OVFSHmVG3D9Ihg==
-X-Gm-Gg: ASbGncvlyYLxJpod4syyQqY5ufZTSqmbaeSfBaOwiqMVuvTMf2SL8osEEGAbNzbSyUr
-	jqMCfG0YbIJzVJR/O/RaP8UiQkw0o6DCe2GdhDnmxjlsQQD36qpaFkAor/VBHVC0OdUCQV0h9UE
-	IHRqdOYvqZ4VDXfHUh8Wrvw4/xHqR7nhKMyFxLe5hWIM7m/GVe5NpTPxxkBvYppPBggJl+Vng2j
-	4g7Qcxy255dP1K9Jk8Zvsui7icMG2F5TTF6YD2Nhn8rDo6lO0myG16Z1pbzUHQNTC5rUZcY9dmU
-	/QOSci+9T+dP6w9ziWwGhPvjOf3SYcAVxqXbmdPCAcCNLHe7TsUQyKq4HtYBVdEh
-X-Google-Smtp-Source: AGHT+IH7DhWXw+Nw06LRBmzyc+Uoo0IKiFMI6q9a1xqv6nU8hVVLYfeQbemWe2K5N77Po+7ln46QWg==
-X-Received: by 2002:a17:903:18c:b0:220:e023:8fa6 with SMTP id d9443c01a7336-22e33135b52mr42552335ad.50.1746542734226;
-        Tue, 06 May 2025 07:45:34 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e152326f7sm74607275ad.227.2025.05.06.07.45.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 07:45:33 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-From: Guenter Roeck <linux@roeck-us.net>
-To: Christoph Lameter <cl@linux.com>
-Cc: David Rientjes <rientjes@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Harry Yoo <harry.yoo@oracle.com>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH] mm: Fix up memory allocation tracing
-Date: Tue,  6 May 2025 07:45:31 -0700
-Message-ID: <20250506144531.3434190-1-linux@roeck-us.net>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tMVGHhFd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A1C2C4CEE4;
+	Tue,  6 May 2025 14:45:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746542747;
+	bh=9Dten2jpmliuKUicQjSbBM7Yzb9zJDE7w61qa8+P0gs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=tMVGHhFd7T98EUetpCWQDc9vyx6B+D4dlqIDmgWnhhlA9Z0s9zBrElQTwECs189IC
+	 ogX9k3XOtwT/dHAFYDUT8hi5lTTUZLu+dQjAc/JlAW/O/8BvgXkVrnmAFQb5iDhkux
+	 OmA92CmGhTHG14eIIm249DIQ/rw1KB20qyv1YDf48In8y/d3SLvNPPJsaa4/y2mwNZ
+	 XgPg70S67mCCW6SSigURVumnqIfCfphMpRxMnhSdjIpwxi0gtKFovfrFf9TysvskO4
+	 0siKgajbU2POHcqq73dNwiQYJ+SRQtBklpaOthL1M7IOomIjj49hMQKKOSmW7p2IbQ
+	 xExZhTwEZmojQ==
+Message-ID: <1c41c15f-c1de-4329-b671-78268f99431b@kernel.org>
+Date: Tue, 6 May 2025 16:45:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6/7] rtc: s3c: drop unused module alias
+To: Johan Hovold <johan@kernel.org>
+Cc: Johan Hovold <johan+linaro@kernel.org>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Nicolas Ferre <nicolas.ferre@microchip.com>,
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ Paul Cercueil <paul@crapouillou.net>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Sebastian Reichel <sre@kernel.org>, linux-rtc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250423130318.31244-1-johan+linaro@kernel.org>
+ <20250423130318.31244-7-johan+linaro@kernel.org>
+ <193c2c8c-df64-43ab-84ef-5e981fc31469@kernel.org>
+ <aBoeFUbBKsNoqyd7@hovoldconsulting.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <aBoeFUbBKsNoqyd7@hovoldconsulting.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-intcp_init_early() calls syscon_regmap_lookup_by_compatible() which in
-turn calls of_syscon_register(). This function allocates memory.
+On 06/05/2025 16:35, Johan Hovold wrote:
+> On Tue, May 06, 2025 at 04:19:08PM +0200, Krzysztof Kozlowski wrote:
+>> On 23/04/2025 15:03, Johan Hovold wrote:
+>>> The driver only support OF probe so drop the unused platform module
+>>> alias.
+>>>
+>>> Fixes: ae05c95074e0 ("rtc: s3c: add s3c_rtc_data structure to use variant data instead of s3c_cpu_type")
+>>
+>> I believe this is not correct, but instead commit dropping last platform
+>> user, which I think was:
+>>
+>> Fixes: 0d297df03890 ("ARM: s3c: simplify platform code")
+> 
+> No, as I write in the commit message, the driver only supports OF probe
+> since the commit I refer to. It fails with -EINVAL and the following
+> error logged:
+> 
+> 	failed getting s3c_rtc_data
+> 
+> for non-OF probe.
 
-intcp_init_early() is called well before kmalloc caches are initialized.
-As consequence, kmalloc_caches[] entries are NULL, and NULL is passed as
-kmem_cache argument to __kmalloc_cache_noprof(). While slab_alloc_node()
-handles this just fine, the trace code unconditionally dereferences it.
-This results in crashes such as
+Haha, nice, so commit in 2014 nicely broke that platform's RTC.
 
-Unable to handle kernel NULL pointer dereference at virtual address 0000000c when read
-[0000000c] *pgd=00000000
-Internal error: Oops: 5 [#1] ARM
-Modules linked in:
-CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.15.0-rc5-00026-g5fcc9bf84ee5 #1 PREEMPT
-Hardware name: ARM Integrator/CP (Device Tree)
-PC is at __kmalloc_cache_noprof+0xec/0x39c
-LR is at __kmalloc_cache_noprof+0x34/0x39c
-...
-Call trace:
- __kmalloc_cache_noprof from of_syscon_register+0x7c/0x310
- of_syscon_register from device_node_get_regmap+0xa4/0xb0
- device_node_get_regmap from intcp_init_early+0xc/0x40
- intcp_init_early from start_kernel+0x60/0x688
- start_kernel from 0x0
+There is one more thing: back in 2013-2015, I don't remember exactly,
+the module loading/matching was not working with OF and you needed
+aliases for the actual bus - platform or I2C. IIRC, the bus - platform
+bus in this case - trigger uevent for module and then device match would
+be via OF.
 
-The problem is not seen with all versions of gcc. Some versions such as
-gcc 9.x apparently do not dereference the pointer, presumably if tracing
-is disabled. The problem has been reproduced with gcc 10.x, 11.x, and 13.x.
+Anyway, this would be only for s3c2410 DT platform, because all others
+(newer) use different compatible thus there would be no s3c2410-rtc
+uevent for them.
 
-Fix the problem by only dereferencing the kmem_cache pointer if it is
-not NULL, and pass a dummy parameter otherwise. Only add the check to
-__kmalloc_cache_noprof() since it is the only function known to be
-affected.
+Well, does not matter much, just sharing.
 
-The problem affects all supported branches of Linux. The crashing function
-depends on the kernel version, and some versions are only affected if
-CONFIG_TRACING is enabled.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
----
-I only changed a single call of trace_kmalloc() because it is the only one
-known to be affected. I'll be happy to change the remaining callers if that
-is preferred.
-
-I have seen this problem for a long time. I always thought it is a compiler
-problem because it is not seen with gcc 9.x. However, it turns out that the
-problem is real.
-
- mm/slub.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/mm/slub.c b/mm/slub.c
-index be8b09e09d30..627aa8d2b9fd 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -4353,7 +4353,7 @@ void *__kmalloc_cache_noprof(struct kmem_cache *s, gfp_t gfpflags, size_t size)
- 	void *ret = slab_alloc_node(s, NULL, gfpflags, NUMA_NO_NODE,
- 					    _RET_IP_, size);
- 
--	trace_kmalloc(_RET_IP_, ret, size, s->size, gfpflags, NUMA_NO_NODE);
-+	trace_kmalloc(_RET_IP_, ret, size, s ? s->size : -1, gfpflags, NUMA_NO_NODE);
- 
- 	ret = kasan_kmalloc(s, ret, size, gfpflags);
- 	return ret;
--- 
-2.45.2
-
+Best regards,
+Krzysztof
