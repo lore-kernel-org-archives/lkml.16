@@ -1,203 +1,567 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2085.outbound.protection.outlook.com [40.107.92.85])
+Received: from www637.your-server.de (www637.your-server.de [168.119.26.117])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7C851862;
-	Tue,  6 May 2025 20:13:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.85
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746562401; cv=fail; b=E1t6wNf9L1ptq84GkUaXNkBFYnd+XCuAnIZ9AUCWhYj/K0RSDnaTaDDyqaVYkTjzEiwpiuto//ZwKUkCYxx37XM9K1Un7MORfkNoYroKVL3MKRvEtprd9oewppkJN0mItR9Hr5f33Xcubw//hihupHPDEsMODSGMKNHztzD1/OM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746562401; c=relaxed/simple;
-	bh=xPAl4cPakUxGYDG/kPi9K4dDnbKX7S63pX1H4rW1JeY=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EBovgmk6rElo2XX6KBzVchML5GjP7dGVs53++P4wCMD3c399zxTV5tVkfSMxnokezuWCfnBGVm3G1mNSyxBaxq7BNW1qmZM22ANaES7FhHN/DI3x51RELZfggoRW+ZiR8+82pB7a16r3OU2iuRQWI6mQfZmp15Kev58wQ5wff+M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=BUb8MSGO; arc=fail smtp.client-ip=40.107.92.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 932B4182;
+	Tue,  6 May 2025 20:16:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.26.117
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746562600; cv=none; b=oBQpFyP4TCs9vHkLRNBGd09QEazxewYaweM3I2r66UpQ+Mn8oUxsLidFtWxGGUBct5c1ZmsoDFB8HOz/Zyh90hYBeWnD3/c2dAdhtNfNVvw6MgJvya3MRPY9ve0y7Ax5Yg33SNBeQbAD/vo5A8S2vFmOqCLhJkB+KZk8U4F7NP8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746562600; c=relaxed/simple;
+	bh=BS+pW/VRs5uOMHVzPq4cGLORKTz1DBEnBK/gDvmkdZU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Ll13tP6yokpfJdC4HwHsV8dx/Vkte3IKk6H0hLmv2ato8TqJ/IiE9hWay2QOC8SQUlHsPjrutTt/+9chK3mAhdi2Fw3sQczCWnXiEHrD+LVC7wPmpT9yVZHHQ1Dx7AmZ62MoP/9ZKtTnPn7dOUs8Y6r1HaAR0IkI1Vo3JmAZ5Zc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=apitzsch.eu; spf=pass smtp.mailfrom=apitzsch.eu; dkim=pass (2048-bit key) header.d=apitzsch.eu header.i=@apitzsch.eu header.b=Tp/IdSja; arc=none smtp.client-ip=168.119.26.117
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=apitzsch.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=apitzsch.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="BUb8MSGO"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ZoPYdvMez1I68g/0klDHkNmTTeDlmd/5UlRCQIBErpgIUCT9On32xQg+23duDIGrnIKt7CODaSD7awYnGJtonwKlySFvyun8US0FyAoNeUI8bOeurCfmuFKJeB7XwOzDzf8JQsBIxupUQqArL9yB0ix7bKeJjnU2hvEbfX8ohLewHvHKXDfyhbQH1759s9jQDC86zHUPNzo/YSqK7C8jOnrKiH8MFNxuVHTf0GXQOK1DYkr+uqfqJiX0qfUQiVzhNhISBg1wLMmJZY4Lr5iTfadilW9qEH3GnLO9hjSgiabxGvgc1OqEM8qFDfvbT+9qFb4oevLH7xgX1k+827Wbng==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3HKfT6ocbULwrgv2K2mQ+uAPIyk8urZ/WzBV2gZOKhA=;
- b=nC0mBWE8wRNed2BVs6vdqAeUtAGECIx2iLL6OMtnZwqNDEAjqXpoxkLJpKzsKueV5cC1GdwlK9h8R1SVePwmuUbLXsxl/bBWRA1jRfk+HebNjoZ4NOBDM6O+nl6vRYatEdqrhIncBIQ2MStJNmWpoeB/BsF/svFqWpBodNyJTqYx0QajQxzAPHKe+cSMEq/YUUCc8lg/LFMhWBaWZMTP/aKJPWvqGBzhnSu678U7ekf+rDSJrczxTk5hQW24K8dVOWGAzyihjzU0OnsmsRiIJ8wOsQ2TpVfm7DgK2E4s+QtT0adQf8ayU43aZ8InQd6jmAU9mACAvm5tmYRs+DKhKQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=lists.linux.dev smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3HKfT6ocbULwrgv2K2mQ+uAPIyk8urZ/WzBV2gZOKhA=;
- b=BUb8MSGON3Sf/zMPO6jsm79H23Aids/Tc1qzcoiIE28kcup9h8wKp9NQpQhg3wJmRNz9fICS4p1a8zioO3K+8ZXKZXaWqAKaL7iWtkgEi45loRkotea8pquQE10MXSyVWPOrw+X88RXe01Xu7ixVgNsdmXGO6aBHfum3/r6f6W13exlQWJmodrWWlubY9xjFfGw/h4pHXel8+YPe0unUTSz9EIL5bfVx2CkBfKZCs5y9hzz898Obl/njrwf0q9v6CdCkrV88M+ioxPlkhTaWFQmPUF9JhcmSIgzD//tQpQULIxpz26quScFnqYsfFSMCd13LdtVvyYqS+RXeczMrKA==
-Received: from SJ0PR03CA0191.namprd03.prod.outlook.com (2603:10b6:a03:2ef::16)
- by DM3PR12MB9434.namprd12.prod.outlook.com (2603:10b6:0:4b::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.21; Tue, 6 May
- 2025 20:13:11 +0000
-Received: from SJ5PEPF000001D7.namprd05.prod.outlook.com
- (2603:10b6:a03:2ef:cafe::1a) by SJ0PR03CA0191.outlook.office365.com
- (2603:10b6:a03:2ef::16) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8699.27 via Frontend Transport; Tue,
- 6 May 2025 20:13:11 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- SJ5PEPF000001D7.mail.protection.outlook.com (10.167.242.59) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8722.18 via Frontend Transport; Tue, 6 May 2025 20:13:11 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 6 May 2025
- 13:13:04 -0700
-Received: from rnnvmail202.nvidia.com (10.129.68.7) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Tue, 6 May
- 2025 13:12:55 -0700
-Received: from nvidia.com (10.127.8.14) by mail.nvidia.com (10.129.68.7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
- Transport; Tue, 6 May 2025 13:12:50 -0700
-Date: Tue, 6 May 2025 13:12:48 -0700
-From: Nicolin Chen <nicolinc@nvidia.com>
-To: "jgg@nvidia.com" <jgg@nvidia.com>, "Tian, Kevin" <kevin.tian@intel.com>
-CC: Vasant Hegde <vasant.hegde@amd.com>, "corbet@lwn.net" <corbet@lwn.net>,
-	"will@kernel.org" <will@kernel.org>, "bagasdotme@gmail.com"
-	<bagasdotme@gmail.com>, "robin.murphy@arm.com" <robin.murphy@arm.com>,
-	"joro@8bytes.org" <joro@8bytes.org>, "thierry.reding@gmail.com"
-	<thierry.reding@gmail.com>, "vdumpa@nvidia.com" <vdumpa@nvidia.com>,
-	"jonathanh@nvidia.com" <jonathanh@nvidia.com>, "shuah@kernel.org"
-	<shuah@kernel.org>, "jsnitsel@redhat.com" <jsnitsel@redhat.com>,
-	"nathan@kernel.org" <nathan@kernel.org>, "peterz@infradead.org"
-	<peterz@infradead.org>, "Liu, Yi L" <yi.l.liu@intel.com>,
-	"mshavit@google.com" <mshavit@google.com>, "praan@google.com"
-	<praan@google.com>, "zhangzekun11@huawei.com" <zhangzekun11@huawei.com>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>, "linux-doc@vger.kernel.org"
-	<linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org"
-	<linux-tegra@vger.kernel.org>, "linux-kselftest@vger.kernel.org"
-	<linux-kselftest@vger.kernel.org>, "patches@lists.linux.dev"
-	<patches@lists.linux.dev>, "mochs@nvidia.com" <mochs@nvidia.com>,
-	"alok.a.tiwari@oracle.com" <alok.a.tiwari@oracle.com>, Suravee Suthikulpanit
-	<suravee.suthikulpanit@amd.com>
-Subject: Re: [PATCH v2 10/22] iommufd/viommmu: Add IOMMUFD_CMD_VCMDQ_ALLOC
- ioctl
-Message-ID: <aBptQO9VBnO2AG9V@nvidia.com>
-References: <cover.1745646960.git.nicolinc@nvidia.com>
- <094992b874190ffdcf6012104b419c8649b5e4b4.1745646960.git.nicolinc@nvidia.com>
- <b0d01609-bdda-49a3-af0c-ca828a9c4cea@amd.com>
- <aA/exylmYJhIhEVL@Asurada-Nvidia>
- <b8338b47-6fbf-44ac-9b99-3555997c9f36@amd.com>
- <aBB1gLfahnLmn0N1@Asurada-Nvidia>
- <a3860aed-5b6b-4e68-a8fd-1a6ee28ba022@amd.com>
- <aBEI+T7P+hV8Y6tU@Asurada-Nvidia>
- <BN9PR11MB5276A00FDB2685B394FB9D4D8C892@BN9PR11MB5276.namprd11.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=apitzsch.eu header.i=@apitzsch.eu header.b="Tp/IdSja"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=apitzsch.eu
+	; s=default2410; h=MIME-Version:Content-Transfer-Encoding:Content-Type:
+	References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=m0CqCJKwo/b66BQfSphC3w5krbi/1sufLze8VLNs6ug=; b=Tp/IdSjal3L5nZnLcnMZvb1qRQ
+	TjMgrxs46bEPMskpw0PK2NehDiDDnZj0QfoFPwBUyCkHpoC0CJ/z1y5/rOTXm6TRzfsMuPy+oecVV
+	AZ5P7faGvbaYxRYH7PaujNvwxtKRswyc+O2nO3Ss4/LObV8QiMjdVi5ddel/Bn2Hz7VrjKMDc9vKU
+	fdp++4DBx9tzN6EzWUyRRY+sPL7S9WbCKYrItglIjJfcdGN18+GIOMi01yXUWhpm2XoYOJkKykg0E
+	xra8GbB/msy39I+ZZBwwUKvSezah+4i3/0Pvn3Q3k69CzQJhFkkq2JfZ3O6FvB3Un0GQ3bEhqyQi9
+	0IjvK5aQ==;
+Received: from sslproxy06.your-server.de ([78.46.172.3])
+	by www637.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96.2)
+	(envelope-from <git@apitzsch.eu>)
+	id 1uCOiG-000E0Z-2g;
+	Tue, 06 May 2025 22:16:25 +0200
+Received: from [92.206.190.59] (helo=[192.168.1.141])
+	by sslproxy06.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <git@apitzsch.eu>)
+	id 1uCOiG-000P9u-0L;
+	Tue, 06 May 2025 22:16:24 +0200
+Message-ID: <9a06eecc32e4bc1fe1c181a52c8504e00a4882fa.camel@apitzsch.eu>
+Subject: Re: [PATCH v2 3/4] media: i2c: imx214: Make use of CCS PLL
+ calculator
+From: =?ISO-8859-1?Q?Andr=E9?= Apitzsch <git@apitzsch.eu>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Ricardo Ribalda <ribalda@kernel.org>, Mauro Carvalho Chehab
+	 <mchehab@kernel.org>, ~postmarketos/upstreaming@lists.sr.ht, 
+	phone-devel@vger.kernel.org, linux-media@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Ricardo Ribalda <ribalda@chromium.org>
+Date: Tue, 06 May 2025 22:16:23 +0200
+In-Reply-To: <aBnCrlMm0EbbmB2w@kekkonen.localdomain>
+References: <20250505-imx214_ccs_pll-v2-0-f50452061ff1@apitzsch.eu>
+	 <20250505-imx214_ccs_pll-v2-3-f50452061ff1@apitzsch.eu>
+	 <aBnCrlMm0EbbmB2w@kekkonen.localdomain>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <BN9PR11MB5276A00FDB2685B394FB9D4D8C892@BN9PR11MB5276.namprd11.prod.outlook.com>
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF000001D7:EE_|DM3PR12MB9434:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3d421ba3-832a-49d6-3415-08dd8cda6ce6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|376014|82310400026|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?3t42iguishOmiZlM5uQqb1Q/HGXNdDXtPzI6HHHfmiVfJO5POvVhH+7l8IzB?=
- =?us-ascii?Q?NXfTVH+16LQHfP0LIk+RCQMyCFUhWWnAkwnm38qK1fPY6hZh9rZ03lasHQfN?=
- =?us-ascii?Q?4GREu25S2s9hGozaz4i0VfMpUDb1cVAFTJN3lPsPCxlZkwgOtAEFSrq6qL40?=
- =?us-ascii?Q?+o3p81+eaVS/aKHYDmre9GwtXos3D7+rLl00rNuyF/F3IT44w7QI3amhOjah?=
- =?us-ascii?Q?+/ADz/2+OWo9uNcv1FtaKOt75hmZyKsqrNlDzqudrGKBMwC/IUsI5rqx1CWa?=
- =?us-ascii?Q?TW43Nzg5K4DxKHpnzPZIbMVIu/Dc6k9dCdtAg3DjMkWI+dI/HijXdRTISM/B?=
- =?us-ascii?Q?OGGYtQAygxUwiwR7J4D+hfO1dmQBYwCbRNvMQDG11vSc0NTHPY7hHoyEnLO8?=
- =?us-ascii?Q?dGg+DrQm0NywQ+/yg+0/B1ObbDRaKR8VSh1MVxKBQthp6kakJPTB2l5TKSts?=
- =?us-ascii?Q?Pqjkx3R0sW86IVabDHzyK8SPrLrMrSsZOCHGtoFdr9yF4BN5l6GOl5kNgjHJ?=
- =?us-ascii?Q?hec6/soWqKvc1YOAKkkywCPBu0CMKvHA5jEv6iN/ZesDZtSXKkjr1gxkrVur?=
- =?us-ascii?Q?2vpJ3FcWskStSRzQ56WvAL/IKmWZ/ik84AiS1tYQ1MV/fAFZuYqpfYk1R4ok?=
- =?us-ascii?Q?E26/0fw8Oe6EYafWGskI+3k0JpUEP44QvRSXVn2y6SuG05oPxHP8hLiil9WH?=
- =?us-ascii?Q?KJBjvOezHX3Pv4/3bAJNnsqbeCiCKuKTSU+8Term6MHOzNaVLk11hjSWfRqY?=
- =?us-ascii?Q?GUDtTr4FgSPp1zVwi/3qp5uI1ndYprJNUsvOoSL0OQBXa2ENWXCXUjYVRNQD?=
- =?us-ascii?Q?gBpd1f3VktRK13mVZoQnaG40Nz221Un03/TUfBRedb2ZYNimuRSCNrVkyLF+?=
- =?us-ascii?Q?Cc53rtBuSeu6tPTUurek4gUZk+ZIsHW1qJBazXAS1F40R8h6+GmuBDvpN18N?=
- =?us-ascii?Q?3wif/c06m8cm/BrE3VVIr49C/6xJwx+psfN4rvAyXpOG6OTu73RkEf/J1LM9?=
- =?us-ascii?Q?95Y8fU3H0CO7Hx0RrDA92uT0jclEogVg1vmqfWlMZdsiZuSG6g5VVfDTXd0j?=
- =?us-ascii?Q?XQHsR/eSQDkI54WJ/n3fXfWySb24vACdRFePYJylCOHdcUlrtF9KDcB2r6fT?=
- =?us-ascii?Q?TkeyC0qceKdlVEg2TuOmLEt7MyGtTgw5IRC5klG9y/P/mmGOxnbjRJ6CWijF?=
- =?us-ascii?Q?wK4nfY+VSj/sf/KDjAlOZcezh8GgkjTTLjObeLS5jQ8VWqYrW3YByBCFEp4/?=
- =?us-ascii?Q?ZeznENdeC9xqudZ0gCNPkn+l+dZlQEVve+f2LmrIt+V4FqnTpGIXs46nDsW9?=
- =?us-ascii?Q?J6JivALMXMelzT12OlywgK4U/l/tt8EuyjLybLlEqHLkr9fnTjvywrlydFtN?=
- =?us-ascii?Q?VD1m8eszVLdHTxfkOBepFl7WnKQe52pxPplg0I3U2mWigtDGRJp4lXFc8rUU?=
- =?us-ascii?Q?kAQ0VDvUDiOZUGu1KeyZINbFWaJ6f+uxnw1sBAofixtA8LpV0TKr2RCGDB/p?=
- =?us-ascii?Q?l0tpVSor/JrEr8adyUiPKShzHHkAIP2qQyoh?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(376014)(82310400026)(7416014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 20:13:11.3667
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3d421ba3-832a-49d6-3415-08dd8cda6ce6
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF000001D7.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PR12MB9434
+X-Authenticated-Sender: andre@apitzsch.eu
+X-Virus-Scanned: Clear (ClamAV 1.0.7/27630/Tue May  6 11:43:15 2025)
 
-On Tue, May 06, 2025 at 09:25:59AM +0000, Tian, Kevin wrote:
-> > From: Nicolin Chen <nicolinc@nvidia.com>
-> > Sent: Wednesday, April 30, 2025 1:15 AM
-> > 
-> > On Tue, Apr 29, 2025 at 03:52:48PM +0530, Vasant Hegde wrote:
-> > > On 4/29/2025 12:15 PM, Nicolin Chen wrote:
-> > > > On Tue, Apr 29, 2025 at 11:04:06AM +0530, Vasant Hegde wrote:
-> > > >
-> > > > Will the hardware replace the physical device ID in the event with
-> > > > the virtual device ID when injecting the event to a guest event/PPR
-> > > > queue?
-> > > > If so, yea, I think you can define them separately using the> vCMDQ
-> > > infrastructures:
-> > > >  - IOMMU_VCMDQ_TYPE_AMD_VIOMMU_CMDBUF
-> > > >  - IOMMU_VCMDQ_TYPE_AMD_VIOMMU_EVENTLOG
-> > > >  - IOMMU_VCMDQ_TYPE_AMD_VIOMMU_PPRLOG
-> > > > (@Kevin @Jason Hmm, in this case we might want to revert the naming
-> > > >  "vCMDQ" back to "vQEUEUE", once Vasant confirms.)
-> > 
-> > I think I should rename IOMMUFD_OBJ_VCMDQ back to
-> > IOMMUFD_OBJ_VQUEUE
-> > since the same object fits three types of queue now in the AMD case.
-> > 
-> > Or any better naming suggestion?
-> > 
-> 
-> What about IOMMUFD_OBJ_HQUEUE to differentiate from other
-> pure software queue structs? 'H" stands for direct hw access to
-> the queue object.
+Hi Sakari,
 
-I think it make some sense. There has been a concern of mine that
-some day we might need vQUEUE to deal with some non-HW-acced case,
-given "vQUEUE" is named much wider than what it actually supports.
+thanks for the feedback. One question below.
 
-Also, vEVENTQ and FAULT_QUEUE fit into the "QUEUE" category too..
+Am Dienstag, dem 06.05.2025 um 08:05 +0000 schrieb Sakari Ailus:
+> Hi Andr=C3=A9,
+>=20
+> A few more comments below.
+>=20
+> On Mon, May 05, 2025 at 11:05:55PM +0200, Andr=C3=A9 Apitzsch via B4 Rela=
+y
+> wrote:
+> > From: Andr=C3=A9 Apitzsch <git@apitzsch.eu>
+> >=20
+> > Calculate PLL parameters based on clock frequency and link
+> > frequency.
+> >=20
+> > Acked-by: Ricardo Ribalda <ribalda@chromium.org>
+> > Signed-off-by: Andr=C3=A9 Apitzsch <git@apitzsch.eu>
+> > ---
+> > =C2=A0drivers/media/i2c/Kconfig=C2=A0 |=C2=A0=C2=A0 1 +
+> > =C2=A0drivers/media/i2c/imx214.c | 216
+> > +++++++++++++++++++++++++++++++++++++--------
+> > =C2=A02 files changed, 178 insertions(+), 39 deletions(-)
+> >=20
+> > diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
+> > index
+> > e576b213084d232e90b7e556a7a855a3bb95544c..c8e24c42e0c4ea169f1b6cdc4
+> > f2631234a51c7d9 100644
+> > --- a/drivers/media/i2c/Kconfig
+> > +++ b/drivers/media/i2c/Kconfig
+> > @@ -141,6 +141,7 @@ config VIDEO_IMX214
+> > =C2=A0	depends on GPIOLIB
+> > =C2=A0	select REGMAP_I2C
+> > =C2=A0	select V4L2_CCI_I2C
+> > +	select VIDEO_CCS_PLL
+> > =C2=A0	help
+> > =C2=A0	=C2=A0 This is a Video4Linux2 sensor driver for the Sony
+> > =C2=A0	=C2=A0 IMX214 camera.
+> > diff --git a/drivers/media/i2c/imx214.c
+> > b/drivers/media/i2c/imx214.c
+> > index
+> > 3aca6ebb02d649c1b7f0b6a6049c1e3aa3d08951..9e9be47394ec768a5b34d44b0
+> > 6b5bbb0988da5a1 100644
+> > --- a/drivers/media/i2c/imx214.c
+> > +++ b/drivers/media/i2c/imx214.c
+> > @@ -20,6 +20,8 @@
+> > =C2=A0#include <media/v4l2-fwnode.h>
+> > =C2=A0#include <media/v4l2-subdev.h>
+> > =C2=A0
+> > +#include "ccs-pll.h"
+> > +
+> > =C2=A0/* Chip ID */
+> > =C2=A0#define IMX214_REG_CHIP_ID		CCI_REG16(0x0016)
+> > =C2=A0#define IMX214_CHIP_ID			0x0214
+> > @@ -34,7 +36,6 @@
+> > =C2=A0#define IMX214_DEFAULT_LINK_FREQ	600000000
+> > =C2=A0/* Keep wrong link frequency for backward compatibility */
+> > =C2=A0#define IMX214_DEFAULT_LINK_FREQ_LEGACY	480000000
+> > -#define IMX214_DEFAULT_PIXEL_RATE ((IMX214_DEFAULT_LINK_FREQ *
+> > 8LL) / 10)
+> > =C2=A0#define IMX214_FPS 30
+> > =C2=A0
+> > =C2=A0/* V-TIMING internal */
+> > @@ -84,6 +85,7 @@
+> > =C2=A0#define IMX214_CSI_DATA_FORMAT_RAW10	0x0A0A
+> > =C2=A0#define IMX214_CSI_DATA_FORMAT_COMP6	0x0A06
+> > =C2=A0#define IMX214_CSI_DATA_FORMAT_COMP8	0x0A08
+> > +#define IMX214_BITS_PER_PIXEL_MASK	0xFF
+> > =C2=A0
+> > =C2=A0#define IMX214_REG_CSI_LANE_MODE	CCI_REG8(0x0114)
+> > =C2=A0#define IMX214_CSI_2_LANE_MODE		1
+> > @@ -249,6 +251,10 @@ struct imx214 {
+> > =C2=A0	struct clk *xclk;
+> > =C2=A0	struct regmap *regmap;
+> > =C2=A0
+> > +	struct ccs_pll pll;
+> > +
+> > +	struct v4l2_fwnode_endpoint bus_cfg;
+> > +
+> > =C2=A0	struct v4l2_subdev sd;
+> > =C2=A0	struct media_pad pad;
+> > =C2=A0
+> > @@ -758,16 +764,22 @@ static int imx214_configure_pll(struct imx214
+> > *imx214)
+> > =C2=A0{
+> > =C2=A0	int ret =3D 0;
+> > =C2=A0
+> > -	cci_write(imx214->regmap, IMX214_REG_VTPXCK_DIV, 5, &ret);
+> > -	cci_write(imx214->regmap, IMX214_REG_VTSYCK_DIV, 2, &ret);
+> > -	cci_write(imx214->regmap, IMX214_REG_PREPLLCK_VT_DIV, 3,
+> > &ret);
+> > -	cci_write(imx214->regmap, IMX214_REG_PLL_VT_MPY, 150,
+> > &ret);
+> > -	cci_write(imx214->regmap, IMX214_REG_OPPXCK_DIV, 10,
+> > &ret);
+> > -	cci_write(imx214->regmap, IMX214_REG_OPSYCK_DIV, 1, &ret);
+> > +	cci_write(imx214->regmap, IMX214_REG_VTPXCK_DIV,
+> > +		=C2=A0 imx214->pll.vt_bk.pix_clk_div, &ret);
+> > +	cci_write(imx214->regmap, IMX214_REG_VTSYCK_DIV,
+> > +		=C2=A0 imx214->pll.vt_bk.sys_clk_div, &ret);
+> > +	cci_write(imx214->regmap, IMX214_REG_PREPLLCK_VT_DIV,
+> > +		=C2=A0 imx214->pll.vt_fr.pre_pll_clk_div, &ret);
+> > +	cci_write(imx214->regmap, IMX214_REG_PLL_VT_MPY,
+> > +		=C2=A0 imx214->pll.vt_fr.pll_multiplier, &ret);
+> > +	cci_write(imx214->regmap, IMX214_REG_OPPXCK_DIV,
+> > +		=C2=A0 imx214->pll.op_bk.pix_clk_div, &ret);
+> > +	cci_write(imx214->regmap, IMX214_REG_OPSYCK_DIV,
+> > +		=C2=A0 imx214->pll.op_bk.sys_clk_div, &ret);
+> > =C2=A0	cci_write(imx214->regmap, IMX214_REG_PLL_MULT_DRIV,
+> > =C2=A0		=C2=A0 IMX214_PLL_SINGLE, &ret);
+> > =C2=A0	cci_write(imx214->regmap, IMX214_REG_EXCK_FREQ,
+> > -		=C2=A0 IMX214_EXCK_FREQ(IMX214_DEFAULT_CLK_FREQ /
+> > 1000000), &ret);
+> > +		=C2=A0 IMX214_EXCK_FREQ(imx214->pll.ext_clk_freq_hz /
+> > 1000000), &ret);
+> > =C2=A0
+> > =C2=A0	return ret;
+> > =C2=A0}
+> > @@ -872,9 +884,6 @@ static const struct v4l2_ctrl_ops
+> > imx214_ctrl_ops =3D {
+> > =C2=A0
+> > =C2=A0static int imx214_ctrls_init(struct imx214 *imx214)
+> > =C2=A0{
+> > -	static const s64 link_freq[] =3D {
+> > -		IMX214_DEFAULT_LINK_FREQ
+> > -	};
+> > =C2=A0	static const struct v4l2_area unit_size =3D {
+> > =C2=A0		.width =3D 1120,
+> > =C2=A0		.height =3D 1120,
+> > @@ -895,15 +904,14 @@ static int imx214_ctrls_init(struct imx214
+> > *imx214)
+> > =C2=A0	if (ret)
+> > =C2=A0		return ret;
+> > =C2=A0
+> > -	imx214->pixel_rate =3D v4l2_ctrl_new_std(ctrl_hdlr, NULL,
+> > -					=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
+> > V4L2_CID_PIXEL_RATE, 0,
+> > -					=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
+> > IMX214_DEFAULT_PIXEL_RATE, 1,
+> > -					=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
+> > IMX214_DEFAULT_PIXEL_RATE);
+> > +	imx214->pixel_rate =3D
+> > +		v4l2_ctrl_new_std(ctrl_hdlr, NULL,
+> > V4L2_CID_PIXEL_RATE, 1,
+> > +				=C2=A0 INT_MAX, 1, 1);
+> > =C2=A0
+> > =C2=A0	imx214->link_freq =3D v4l2_ctrl_new_int_menu(ctrl_hdlr,
+> > NULL,
+> > =C2=A0						=C2=A0=C2=A0
+> > V4L2_CID_LINK_FREQ,
+> > -						=C2=A0=C2=A0
+> > ARRAY_SIZE(link_freq) - 1,
+> > -						=C2=A0=C2=A0 0, link_freq);
+> > +						=C2=A0=C2=A0 imx214-
+> > >bus_cfg.nr_of_link_frequencies - 1,
+> > +						=C2=A0=C2=A0 0, imx214-
+> > >bus_cfg.link_frequencies);
+> > =C2=A0	if (imx214->link_freq)
+> > =C2=A0		imx214->link_freq->flags |=3D
+> > V4L2_CTRL_FLAG_READ_ONLY;
+> > =C2=A0
+> > @@ -1006,6 +1014,7 @@ static int imx214_start_streaming(struct
+> > imx214 *imx214)
+> > =C2=A0	const struct v4l2_mbus_framefmt *fmt;
+> > =C2=A0	struct v4l2_subdev_state *state;
+> > =C2=A0	const struct imx214_mode *mode;
+> > +	int bit_rate_mbps;
+> > =C2=A0	int ret;
+> > =C2=A0
+> > =C2=A0	ret =3D cci_multi_reg_write(imx214->regmap,
+> > mode_table_common,
+> > @@ -1021,8 +1030,10 @@ static int imx214_start_streaming(struct
+> > imx214 *imx214)
+> > =C2=A0		return ret;
+> > =C2=A0	}
+> > =C2=A0
+> > +	bit_rate_mbps =3D (imx214->pll.pixel_rate_pixel_array /
+> > 1000000)
+> > +			* imx214->pll.bits_per_pixel;
+> > =C2=A0	ret =3D cci_write(imx214->regmap,
+> > IMX214_REG_REQ_LINK_BIT_RATE,
+> > -			IMX214_LINK_BIT_RATE_MBPS(4800), NULL);
+> > +			IMX214_LINK_BIT_RATE_MBPS(bit_rate_mbps),
+> > NULL);
+> > =C2=A0	if (ret) {
+> > =C2=A0		dev_err(imx214->dev, "failed to configure link bit
+> > rate\n");
+> > =C2=A0		return ret;
+> > @@ -1105,6 +1116,112 @@ static int imx214_s_stream(struct
+> > v4l2_subdev *subdev, int enable)
+> > =C2=A0	return ret;
+> > =C2=A0}
+> > =C2=A0
+> > +static int imx214_pll_calculate(struct imx214 *imx214, struct
+> > ccs_pll *pll,
+> > +				unsigned int link_freq)
+> > +{
+> > +	struct ccs_pll_limits limits =3D {
+> > +		.min_ext_clk_freq_hz =3D 6000000,
+> > +		.max_ext_clk_freq_hz =3D 27000000,
+> > +
+> > +		.vt_fr =3D {
+> > +			.min_pre_pll_clk_div =3D 1,
+> > +			.max_pre_pll_clk_div =3D 15,
+> > +			/* min_pll_op_clk_freq_hz /
+> > max_pll_multiplier */
+> > +			.min_pll_ip_clk_freq_hz =3D 281667,
+> > +			/* max_pll_op_clk_freq_hz /
+> > min_pll_multiplier */
+> > +			.max_pll_ip_clk_freq_hz =3D 100000000,
+>=20
+> Regarding these limits -- the pll_ip_clk_freq_hz limits are likely
+> between around 6 MHz (lower limit) and between 12 MHz and 27 MHz. I'd
+> use 6 for lower and 12 for higher if they yield correct configuration
+> currently and loosen them up only if needed.
 
-Though "hQUEUE" would break the naming pattern that we have, maybe
-we could try something like: "HW_QUEUE", "DIRECT_QUEUE", or so?
+The range 6-12 MHz seems to work.
+With the updated min/max values, the comments are no longer valid,
+should I just remove them or what alternative comments could be used?
 
-Jason, do you have a better idea?
+Best regards,
+Andr=C3=A9
 
-Thanks
-Nicolin
+>=20
+> > +			.min_pll_multiplier =3D 12,
+> > +			.max_pll_multiplier =3D 1200,
+> > +			.min_pll_op_clk_freq_hz =3D 338000000,
+> > +			.max_pll_op_clk_freq_hz =3D 1200000000,
+> > +		},
+> > +		.vt_bk =3D {
+> > +			.min_sys_clk_div =3D 2,
+> > +			.max_sys_clk_div =3D 4,
+> > +			.min_pix_clk_div =3D 5,
+> > +			.max_pix_clk_div =3D 10,
+> > +			.min_pix_clk_freq_hz =3D 30000000,
+> > +			.max_pix_clk_freq_hz =3D 120000000,
+> > +		},
+> > +		.op_bk =3D {
+> > +			.min_sys_clk_div =3D 1,
+> > +			.max_sys_clk_div =3D 2,
+> > +			.min_pix_clk_div =3D 6,
+> > +			.max_pix_clk_div =3D 10,
+> > +			.min_pix_clk_freq_hz =3D 30000000,
+> > +			.max_pix_clk_freq_hz =3D 120000000,
+> > +		},
+> > +
+> > +		.min_line_length_pck_bin =3D IMX214_PPL_DEFAULT,
+> > +		.min_line_length_pck =3D IMX214_PPL_DEFAULT,
+> > +	};
+> > +	unsigned int num_lanes =3D imx214-
+> > >bus_cfg.bus.mipi_csi2.num_data_lanes;
+> > +	int ret;
+> > +
+> > +	/*
+> > +	 * There are no documented constraints on the sys clock
+> > frequency, for
+> > +	 * either branch. Recover them based on the PLL output
+> > clock frequency
+> > +	 * and sys_clk_div limits on one hand, and the pix clock
+> > frequency and
+> > +	 * the pix_clk_div limits on the other hand.
+> > +	 */
+> > +	limits.vt_bk.min_sys_clk_freq_hz =3D
+> > +		max(limits.vt_fr.min_pll_op_clk_freq_hz /
+> > limits.vt_bk.max_sys_clk_div,
+> > +		=C2=A0=C2=A0=C2=A0 limits.vt_bk.min_pix_clk_freq_hz *
+> > limits.vt_bk.min_pix_clk_div);
+> > +	limits.vt_bk.max_sys_clk_freq_hz =3D
+> > +		min(limits.vt_fr.max_pll_op_clk_freq_hz /
+> > limits.vt_bk.min_sys_clk_div,
+> > +		=C2=A0=C2=A0=C2=A0 limits.vt_bk.max_pix_clk_freq_hz *
+> > limits.vt_bk.max_pix_clk_div);
+> > +
+> > +	limits.op_bk.min_sys_clk_freq_hz =3D
+> > +		max(limits.vt_fr.min_pll_op_clk_freq_hz /
+> > limits.op_bk.max_sys_clk_div,
+> > +		=C2=A0=C2=A0=C2=A0 limits.op_bk.min_pix_clk_freq_hz *
+> > limits.op_bk.min_pix_clk_div);
+> > +	limits.op_bk.max_sys_clk_freq_hz =3D
+> > +		min(limits.vt_fr.max_pll_op_clk_freq_hz /
+> > limits.op_bk.min_sys_clk_div,
+> > +		=C2=A0=C2=A0=C2=A0 limits.op_bk.max_pix_clk_freq_hz *
+> > limits.op_bk.max_pix_clk_div);
+> > +
+> > +	memset(pll, 0, sizeof(*pll));
+> > +
+> > +	pll->bus_type =3D CCS_PLL_BUS_TYPE_CSI2_DPHY;
+> > +	pll->op_lanes =3D num_lanes;
+> > +	pll->vt_lanes =3D num_lanes;
+> > +	pll->csi2.lanes =3D num_lanes;
+> > +
+> > +	pll->binning_horizontal =3D 1;
+> > +	pll->binning_vertical =3D 1;
+> > +	pll->scale_m =3D 1;
+> > +	pll->scale_n =3D 1;
+> > +	pll->bits_per_pixel =3D
+> > +		IMX214_CSI_DATA_FORMAT_RAW10 &
+> > IMX214_BITS_PER_PIXEL_MASK;
+> > +	pll->flags =3D CCS_PLL_FLAG_LANE_SPEED_MODEL;
+> > +	pll->link_freq =3D link_freq;
+> > +	pll->ext_clk_freq_hz =3D clk_get_rate(imx214->xclk);
+> > +
+> > +	ret =3D ccs_pll_calculate(imx214->dev, &limits, pll);
+> > +
+> > +	return ret;
+>=20
+> You can drop ret here.
+>=20
+> > +}
+> > +
+> > +static int imx214_pll_update(struct imx214 *imx214)
+> > +{
+> > +	u64 link_freq;
+> > +	int ret;
+> > +
+> > +	link_freq =3D imx214->bus_cfg.link_frequencies[imx214-
+> > >link_freq->val];
+> > +	ret =3D imx214_pll_calculate(imx214, &imx214->pll,
+> > link_freq);
+> > +	if (ret) {
+> > +		dev_err(imx214->dev, "PLL calculations failed:
+> > %d\n", ret);
+> > +		return ret;
+> > +	}
+> > +
+> > +	ret =3D v4l2_ctrl_s_ctrl_int64(imx214->pixel_rate,
+> > +				=C2=A0=C2=A0=C2=A0=C2=A0 imx214-
+> > >pll.pixel_rate_pixel_array);
+> > +	if (ret) {
+> > +		dev_err(imx214->dev, "failed to set pixel
+> > rate\n");
+> > +		return ret;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > =C2=A0static int imx214_get_frame_interval(struct v4l2_subdev *subdev,
+> > =C2=A0				=C2=A0=C2=A0=C2=A0=C2=A0 struct v4l2_subdev_state
+> > *sd_state,
+> > =C2=A0				=C2=A0=C2=A0=C2=A0=C2=A0 struct
+> > v4l2_subdev_frame_interval *fival)
+> > @@ -1211,12 +1328,10 @@ static int imx214_identify_module(struct
+> > imx214 *imx214)
+> > =C2=A0	return 0;
+> > =C2=A0}
+> > =C2=A0
+> > -static int imx214_parse_fwnode(struct device *dev)
+> > +static int imx214_parse_fwnode(struct device *dev, struct imx214
+> > *imx214)
+> > =C2=A0{
+> > +	struct v4l2_fwnode_endpoint *bus_cfg =3D &imx214->bus_cfg;
+> > =C2=A0	struct fwnode_handle *endpoint;
+> > -	struct v4l2_fwnode_endpoint bus_cfg =3D {
+> > -		.bus_type =3D V4L2_MBUS_CSI2_DPHY,
+> > -	};
+> > =C2=A0	unsigned int i;
+> > =C2=A0	int ret;
+> > =C2=A0
+> > @@ -1224,42 +1339,52 @@ static int imx214_parse_fwnode(struct
+> > device *dev)
+> > =C2=A0	if (!endpoint)
+> > =C2=A0		return dev_err_probe(dev, -EINVAL, "endpoint node
+> > not found\n");
+> > =C2=A0
+> > -	ret =3D v4l2_fwnode_endpoint_alloc_parse(endpoint,
+> > &bus_cfg);
+> > +	bus_cfg->bus_type =3D V4L2_MBUS_CSI2_DPHY;
+> > +	ret =3D v4l2_fwnode_endpoint_alloc_parse(endpoint, bus_cfg);
+> > +	fwnode_handle_put(endpoint);
+> > =C2=A0	if (ret) {
+> > =C2=A0		dev_err_probe(dev, ret, "parsing endpoint node
+> > failed\n");
+> > -		goto done;
+> > +		goto error;
+> > =C2=A0	}
+> > =C2=A0
+> > =C2=A0	/* Check the number of MIPI CSI2 data lanes */
+> > -	if (bus_cfg.bus.mipi_csi2.num_data_lanes !=3D 4) {
+> > +	if (bus_cfg->bus.mipi_csi2.num_data_lanes !=3D 4) {
+> > =C2=A0		ret =3D dev_err_probe(dev, -EINVAL,
+> > =C2=A0				=C2=A0=C2=A0=C2=A0 "only 4 data lanes are
+> > currently supported\n");
+> > -		goto done;
+> > +		goto error;
+> > =C2=A0	}
+> > =C2=A0
+> > -	if (bus_cfg.nr_of_link_frequencies !=3D 1)
+> > +	if (bus_cfg->nr_of_link_frequencies !=3D 1)
+> > =C2=A0		dev_warn(dev, "Only one link-frequency supported,
+> > please review your DT. Continuing anyway\n");
+> > =C2=A0
+> > -	for (i =3D 0; i < bus_cfg.nr_of_link_frequencies; i++) {
+> > -		if (bus_cfg.link_frequencies[i] =3D=3D
+> > IMX214_DEFAULT_LINK_FREQ)
+> > +	for (i =3D 0; i < bus_cfg->nr_of_link_frequencies; i++) {
+> > +		u64 freq =3D bus_cfg->link_frequencies[i];
+> > +		struct ccs_pll pll;
+> > +
+> > +		if (!imx214_pll_calculate(imx214, &pll, freq))
+> > =C2=A0			break;
+> > -		if (bus_cfg.link_frequencies[i] =3D=3D
+> > -		=C2=A0=C2=A0=C2=A0 IMX214_DEFAULT_LINK_FREQ_LEGACY) {
+> > +		if (freq =3D=3D IMX214_DEFAULT_LINK_FREQ_LEGACY) {
+> > =C2=A0			dev_warn(dev,
+> > =C2=A0				 "link-frequencies %d not
+> > supported, please review your DT. Continuing anyway\n",
+> > =C2=A0				 IMX214_DEFAULT_LINK_FREQ);
+> > +			freq =3D IMX214_DEFAULT_LINK_FREQ;
+> > +			if (imx214_pll_calculate(imx214, &pll,
+> > freq))
+> > +				continue;
+> > +			bus_cfg->link_frequencies[i] =3D freq;
+> > =C2=A0			break;
+> > =C2=A0		}
+> > =C2=A0	}
+> > =C2=A0
+> > -	if (i =3D=3D bus_cfg.nr_of_link_frequencies)
+> > +	if (i =3D=3D bus_cfg->nr_of_link_frequencies)
+> > =C2=A0		ret =3D dev_err_probe(dev, -EINVAL,
+> > -				=C2=A0=C2=A0=C2=A0 "link-frequencies %d not
+> > supported, please review your DT\n",
+> > -				=C2=A0=C2=A0=C2=A0 IMX214_DEFAULT_LINK_FREQ);
+> > +				=C2=A0=C2=A0=C2=A0 "link-frequencies %lld not
+> > supported, please review your DT\n",
+> > +				=C2=A0=C2=A0=C2=A0 bus_cfg-
+> > >nr_of_link_frequencies ?
+> > +				=C2=A0=C2=A0=C2=A0 bus_cfg->link_frequencies[0] :
+> > 0);
+> > =C2=A0
+> > -done:
+> > -	v4l2_fwnode_endpoint_free(&bus_cfg);
+> > -	fwnode_handle_put(endpoint);
+> > +	return 0;
+> > +
+> > +error:
+> > +	v4l2_fwnode_endpoint_free(&imx214->bus_cfg);
+> > =C2=A0	return ret;
+> > =C2=A0}
+> > =C2=A0
+> > @@ -1299,7 +1424,7 @@ static int imx214_probe(struct i2c_client
+> > *client)
+> > =C2=A0		return dev_err_probe(dev, PTR_ERR(imx214->regmap),
+> > =C2=A0				=C2=A0=C2=A0=C2=A0=C2=A0 "failed to initialize
+> > CCI\n");
+> > =C2=A0
+> > -	ret =3D imx214_parse_fwnode(dev);
+> > +	ret =3D imx214_parse_fwnode(dev, imx214);
+> > =C2=A0	if (ret)
+> > =C2=A0		return ret;
+> > =C2=A0
+> > @@ -1310,7 +1435,9 @@ static int imx214_probe(struct i2c_client
+> > *client)
+> > =C2=A0	 * Enable power initially, to avoid warnings
+> > =C2=A0	 * from clk_disable on power_off
+> > =C2=A0	 */
+> > -	imx214_power_on(imx214->dev);
+> > +	ret =3D imx214_power_on(imx214->dev);
+> > +	if (ret < 0)
+> > +		goto error_fwnode;
+> > =C2=A0
+> > =C2=A0	ret =3D imx214_identify_module(imx214);
+> > =C2=A0	if (ret)
+> > @@ -1341,6 +1468,12 @@ static int imx214_probe(struct i2c_client
+> > *client)
+> > =C2=A0	pm_runtime_set_active(imx214->dev);
+> > =C2=A0	pm_runtime_enable(imx214->dev);
+> > =C2=A0
+> > +	ret =3D imx214_pll_update(imx214);
+> > +	if (ret < 0) {
+> > +		dev_err_probe(dev, ret, "failed to update PLL\n");
+> > +		goto error_subdev_cleanup;
+> > +	}
+> > +
+> > =C2=A0	ret =3D v4l2_async_register_subdev_sensor(&imx214->sd);
+> > =C2=A0	if (ret < 0) {
+> > =C2=A0		dev_err_probe(dev, ret,
+> > @@ -1366,6 +1499,9 @@ static int imx214_probe(struct i2c_client
+> > *client)
+> > =C2=A0error_power_off:
+> > =C2=A0	imx214_power_off(imx214->dev);
+> > =C2=A0
+> > +error_fwnode:
+> > +	v4l2_fwnode_endpoint_free(&imx214->bus_cfg);
+> > +
+> > =C2=A0	return ret;
+> > =C2=A0}
+> > =C2=A0
+> > @@ -1378,6 +1514,8 @@ static void imx214_remove(struct i2c_client
+> > *client)
+> > =C2=A0	v4l2_subdev_cleanup(sd);
+> > =C2=A0	media_entity_cleanup(&imx214->sd.entity);
+> > =C2=A0	v4l2_ctrl_handler_free(&imx214->ctrls);
+> > +	v4l2_fwnode_endpoint_free(&imx214->bus_cfg);
+> > +
+> > =C2=A0	pm_runtime_disable(&client->dev);
+> > =C2=A0	if (!pm_runtime_status_suspended(&client->dev)) {
+> > =C2=A0		imx214_power_off(imx214->dev);
+> >=20
