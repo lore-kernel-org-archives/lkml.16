@@ -1,87 +1,65 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C034C2DCB6B
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 01:43:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E3E82F15C6;
+	Tue,  6 May 2025 01:49:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746495824; cv=none; b=sgOI/xQdkk/ZPfnXAErhLRxxiMe6Sf9YIBrraW5pVAvBaoLHyZEv7JLV/Md9HfV+1MTvAozHGzE+1wabqS7/w7opWT6dby2tXWIMKHMm8aGbt138WsfeW+uPdasn71MWlyYQ0cbO5yQW4godvEoIbXvyUa1Ea7J0/3rhfKZZ6D0=
+	t=1746496188; cv=none; b=CUWiruFhGOca9LpgueTiTIGDTIC3wS6O+gT7gH8lZfJRGOFjr4MggW/UEkG7Q0kSbj/oPmHMdW71jpz1IWT+meYMigcBDDoOQ6iqrf1kn2c/gwYzgkY3iVTu/J2GYLvuS7adRZSA/NYxDl6Zu/sPW9/R3r/PwoIXNkUZ0x7EBxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746495824; c=relaxed/simple;
-	bh=esZI72QeE7XzMg5/fT1QMH6H3Z0/g8/dtrTCeXWGUiE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=mmo1PL3Kr/PjkbjZELXM6RIJN3WB01PEK0CD27oxhxAyBx52KRTgRFAGgs104pdOUl4c4YkbY/I6AVNoFWvZk5hZVPy9MZPoMpYnEbD0b2qRqSXriTSfiqLJC0AJtyQnvsQZYqaka81a7dhdboh1Vh01AP35JFGyfId6duE9U8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Two/2VAr; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1746496188; c=relaxed/simple;
+	bh=t3xhsc8cHlLfdU3Sihp5X0hn3szSOG3sA+OfTUgaocE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sS7DbVDd2X+G4CmRUum+lkmHcOj7Ww8eeu41pIpEmcWjbrb2xfiGzLanwijKJeypzCY8XJIeotIei7CXZ92bzuZn2RoPE3CAajW7ZQCJBpj4ITOgD7mcKY3yQAqU8zZNcySWVMhb1ecTEaaSviQHo+QZuBVq3mM+ZFNporx0qrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oILyJBcK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Two/2VAr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746495823; x=1778031823;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=esZI72QeE7XzMg5/fT1QMH6H3Z0/g8/dtrTCeXWGUiE=;
-  b=Two/2VArRbZ9tG9cklVnlfrRJbvUHKAfDdaurSZubUKJm5SczKXJ1E34
-   ChCFgcqBr4o2fsi1vEGYIqNVwlcvjJfRZmUNbc9zONwF5XOteYihJ9Rbp
-   Aeq5C9bCcHtwobVTyriwTR5f/bKdAvzE14UOXyUSKgiVCA6LbSwrZcv6T
-   mn/yMdZMEORh6jfFbtJuLbf90Sb0+S7SrJ+wH5iaA35ZLjQKiPfB6uHYV
-   YZ6IGHiZiwOVaYy14qnM5l347xYOKw2EC2xejg2Upz2XOGBbTr+LZgF1o
-   Z/r380DThmpRaHiW+LcgkPhs61bwpVM1exJ4K2OIjG0JiNP8afyvxgL9s
-   g==;
-X-CSE-ConnectionGUID: IeQDhhkVQ8OFHnEv/nvKbw==
-X-CSE-MsgGUID: zgqN5XVgQpW9mK41cyVrqA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11424"; a="48279003"
-X-IronPort-AV: E=Sophos;i="6.15,265,1739865600"; 
-   d="scan'208";a="48279003"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 18:43:41 -0700
-X-CSE-ConnectionGUID: +YYB/lsbQqSRAKz6IxvUqg==
-X-CSE-MsgGUID: 4iG7UOsXQWCJUDPc4g696A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,265,1739865600"; 
-   d="scan'208";a="135942542"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 05 May 2025 18:43:40 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uC7LN-0006Bx-2R;
-	Tue, 06 May 2025 01:43:37 +0000
-Date: Tue, 6 May 2025 09:42:54 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linux Memory Management List <linux-mm@kvack.org>
-Subject: WARNING: modpost: vmlinux: section mismatch in reference:
- set_high_memory+0x8c (section: .text.unlikely) -> zone_movable_pfn (section:
- .init.data)
-Message-ID: <202505060901.Qcs06UoB-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oILyJBcK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3714C4CEE4;
+	Tue,  6 May 2025 01:49:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746496186;
+	bh=t3xhsc8cHlLfdU3Sihp5X0hn3szSOG3sA+OfTUgaocE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=oILyJBcKTZFM3+EQT9Hsp0+r7OuHCdRp1PheWXVcR/mwn0OLY1LyD2CtA+WhvP+c+
+	 xu/1pxQti2uuuBiCQWUWlo6yMCBZze60Ts9hVNJEFk5OengC0ANFKX6ZwhfCw0ILsr
+	 tmgdHjkyQPAVKj/A0j0TCoUkYZrckvGVz9m9nBIek9x0i0RNV6RfI5y09gWZz+HERU
+	 cNZ9ruF86fGWyEiuLhuiLkzd4yhjFXRwb3CBoY4bKbouHdqOlQ0mllfBA0Extto09Q
+	 5S6Ec2pFT9hI0b3u/9nl89pJwCnI+ZpwlfBSzvPo3VYj9fbDizteMfvcYD5o7oDWoX
+	 nyWYpv7ys+WPQ==
+Date: Mon, 5 May 2025 18:49:45 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Moon Yeounsu <yyyynoom@gmail.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v2] net: dlink: add synchronization for stats
+ update
+Message-ID: <20250505184945.5adcac55@kernel.org>
+In-Reply-To: <CAAjsZQwymBUvn67+jWJ1WRG2iJHyQFLwWEh8+3O_ryfX31mesw@mail.gmail.com>
+References: <20250425231352.102535-2-yyyynoom@gmail.com>
+	<20250429143503.5a44a94f@kernel.org>
+	<CAAjsZQwymBUvn67+jWJ1WRG2iJHyQFLwWEh8+3O_ryfX31mesw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   01f95500a162fca88cefab9ed64ceded5afabc12
-commit: e120d1bc12da5c1bb871c346f741296610fd6fcb arch, mm: set high_memory in free_area_init()
-date:   7 weeks ago
-config: arm-randconfig-r062-20250506 (https://download.01.org/0day-ci/archive/20250506/202505060901.Qcs06UoB-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 10.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250506/202505060901.Qcs06UoB-lkp@intel.com/reproduce)
+On Sat, 3 May 2025 08:50:49 +0900 Moon Yeounsu wrote:
+> Also, I believe that `spin_lock_irq()` in `get_stats()` should be
+> changed to `spin_lock_irqsave()` since `get_stats()` can be called
+> from IRQ context (via `rio_interrupt()` -> `rio_error()` ->
+> `get_stats()`).  In my view, calling `spin_unlock_irq()` in this
+> context could be risky, as it would re-enable local IRQs via
+> local_irq_enable().
+> 
+> There are two ways to lock the `get_stats()` function: either add a
+> new parameter to check whether it's in IRQ context, or simply use
+> `spin_lock_irqsave()`. I found that `rio_free_tx()` behaves like the
+> first case. I'd appreciate your opinion on which approach would be
+> preferable here.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505060901.Qcs06UoB-lkp@intel.com/
-
-All warnings (new ones prefixed by >>, old ones prefixed by <<):
-
->> WARNING: modpost: vmlinux: section mismatch in reference: set_high_memory+0x8c (section: .text.unlikely) -> zone_movable_pfn (section: .init.data)
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+If there's a call path from the IRQ I'd go with spin_lock_irqsave()
