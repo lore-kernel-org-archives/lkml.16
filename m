@@ -1,74 +1,36 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A8FD278175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D3B626B956
 	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 10:24:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746527063; cv=none; b=YZcd33VWbrguv8118PRyLd4QB9M+1Q9LjOsC4eLeqM/EhG8EtKOULz77OrXMZLa5yJr0KtGX6+AUjhF3/3lC2YN/YMwWhluSy0G+OYaa5oTcuTt2c8ZcZnvkO+3BttSpJU1IbioznX1GetAsSTy9Cl5TBJgnr6kNgCgWUX1sH8s=
+	t=1746527067; cv=none; b=K8BnNI+JDNuH82cq2q60N2ilSeiMb8zpQC0GL8jTU9CLqXSuoNlCCOlRSXEMNKuDleslEpxYcn99WwZButyI9czqCVNwRHtHy7GvqVrohffo00CmqdaGe0dwDWqB/iPBoHwWO+TMyDrsQC+8YwOdOQHiCZYZykxJcH/FOjblP7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746527063; c=relaxed/simple;
-	bh=TFkr8ZernbCRga2u5+4e+d6LUgnGAlMEQkmjKCHUFNs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EDzb/4PbvlyUNkHRloeahKWkwRpEtT2hHbqjQEcrfG2m/ImoxT63MTVakzvvq2AG80AAOyEx6hz+TMHJsW6G1ClmgzstGwistWXWAirkzV9lvTr69lpQD9cLejdtmIa8HQrLeoWhu3m5m6EW291XLnrTdKZXexN6ycoUGPh1y8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OXfsb0bA; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746527067; c=relaxed/simple;
+	bh=dDdXzFYjbgqP4CK2I4LRvHZilWDZtx2zws9/9E2m+n4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=T6cq/lXgHTeivuhv5KTpGiBwoVFfvDi9CGWNqTM9VUb+mISmmb+jVU0VgFL0kVH83AaHvkzjLXlHXfNO6arF8gHUHyXkNOfOCdSSJetfSD+ONfAk1tLNgPlXuys73Woxtfxd9VnGGbiLhe77FH95JSEKctQbY5KW/OF9k0D33y0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=lWhqYa8n; arc=none smtp.client-ip=115.124.30.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OXfsb0bA"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-72d3b48d2ffso5750556b3a.2
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 03:24:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746527061; x=1747131861; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=5OOecS8teiPhRlJLpXUsRlmizQbllXdt4yll7Iq6sT4=;
-        b=OXfsb0bACDq0VLBwOVbY74eegnmg9i8I+piRtTFkV8UoWnRCV3ari4AgsQBJsoof92
-         lAFQHygAtqdS6pyF0mtWfogD4SJDRGVXujUtFYeBSPGKYfPiGvBvi7WN9u+tbH4xqGuo
-         Gq7lrjnCwsDCWimzZP60QiOp+7YX9sO4bWEc2V7Kt4jNHhT6o16OWjwtEqzWlts57hZB
-         SNfqCiid+bIjHH9HJ85qcJw0YuIxuC7HZMiegTIesvjZuKoXL64ZLL3RNxlb/jShXj4j
-         NyuZB3YaUhlQlsjysE7JjcdQ9vFwIatUJREMlc2P6HtHvh4NgI4wj78+MWaWCDSPTJJv
-         bvuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746527061; x=1747131861;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5OOecS8teiPhRlJLpXUsRlmizQbllXdt4yll7Iq6sT4=;
-        b=wO2tHY0w4L4X9VjP+BRhkZXGvcrLYt3OsuKzrL51+583e9QVuesGBznAFYVYm8L4my
-         8SfVyp3Gn0KVdFuPD93NCcMtrN+UvRvQ84TK/TDAIdqn6HENpHR8oGU863FNXYTJrHzT
-         CcISzYQEgH7ftwl8lSOUGtm26/eB9zImVsegL7/J4GsSXYJV/TkIJODHtdXeBIkevR8f
-         bSxkvOfA0TnRabt96M1Jj/hKWFM3jIjwXt72nqx1znnQP/GXWMP6LzCjmKz9PsWSlTeY
-         NxqQe0u1UTcSL2tSk3QcOuCge/caHBjxPXExUBEt/GTFmCM0wtQYTVr/pElZZP2C3sDI
-         hUJg==
-X-Forwarded-Encrypted: i=1; AJvYcCUcxsIMh0ZVms74AVB6zzzkRQiXThoHFrkpImdJRwXreSKYER2UtR4s8IooFOfoD9lG7SHH3lZtF2cDOb4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyFEc63GcvrgbINK9yxQM+d02d10jmKFITq4aUKFQdOILincapW
-	rt+fA3XyxWs2y9S2OPrhJNUA7OIlHNeA8KbXV4y6MaOvBt7kg7I0
-X-Gm-Gg: ASbGncu8lc1VhA3jjUaBR5iyxNJPzuC9J0FIylorKFbMyTZ7xNiM1/0LjnkwPXNQsSW
-	QDqm//WqsIAHrgw4SKBhX6pRBBQjjOyDFX44XYnbPw6PKBGV12dkDYsEEP2xbNs8neaBcgBQStd
-	6gaddrTDiWzeyYNposkw2k4ASMzbzETB1RKEPxFL9ke8+wtmYLRXICQAM4drYpijZI1qYY4H5tF
-	6OLa7rarq38H1pDu8D2cKU2wcBCX5fuUrwVi9Qt+FCNP05jzQ9LtVUCaPij8JI0IKYjwyJRQnAk
-	I9oIzH20sZZ0geUOPxN0y6XFbjiT3X+XyEaDozTqEYF3YvWsaMevGfnIFBBKoH36QdPGkQ==
-X-Google-Smtp-Source: AGHT+IHDlz/QY612dZgx+2M3TO/osh8oqkZrBLmtzexErVIpEEkK7Hjl4gPDHOWO1x61ejU+rtbYjQ==
-X-Received: by 2002:a05:6a21:398a:b0:1f5:a3e8:64dd with SMTP id adf61e73a8af0-2117dcfed41mr4638467637.0.1746527060692;
-        Tue, 06 May 2025 03:24:20 -0700 (PDT)
-Received: from localhost.localdomain ([121.185.186.233])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b1fb3c442b7sm7112621a12.54.2025.05.06.03.24.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 03:24:20 -0700 (PDT)
-From: Jeongjun Park <aha310510@gmail.com>
-To: dennis@kernel.org,
-	tj@kernel.org,
-	cl@linux.com,
-	akpm@linux-foundation.org
-Cc: jack@suse.cz,
-	hughd@google.com,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Jeongjun Park <aha310510@gmail.com>
-Subject: [PATCH] lib/percpu_counter: fix data race in __percpu_counter_limited_add()
-Date: Tue,  6 May 2025 19:24:02 +0900
-Message-ID: <20250506102402.88141-1-aha310510@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="lWhqYa8n"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1746527054; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=6hlGv60zt643L8hENoGWYQs5XN30zIHiFR6c1sWi65I=;
+	b=lWhqYa8ncKCalAHEcjIS6Ltr2rjL6ql33COYezqD4kPhKUPRohKLA2vSupCu50qWAWMVHtOc7sivw8sL6MGqDApZ0oB7jc7hlO2KWgw1gI7jPera72BzEt43YgqtmaT1pD+sGSDpI0aJI7T64/MM3avJr7dCQuJcmt/EoL1pIvY=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WZSt-3o_1746526730 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 06 May 2025 18:18:56 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [PATCH] erofs: ensure the extra temporary copy is valid for shortened bvecs
+Date: Tue,  6 May 2025 18:18:50 +0800
+Message-ID: <20250506101850.191506-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,66 +39,135 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The following data-race was found in __percpu_counter_limited_add():
+When compressed data deduplication is enabled, multiple logical extents
+may reference the same compressed physical cluster.
 
-==================================================================
-BUG: KCSAN: data-race in __percpu_counter_limited_add / __percpu_counter_limited_add
+The previous commit 94c43de73521 ("erofs: fix wrong primary bvec
+selection on deduplicated extents") already avoids using shortened
+bvecs.  However, in such cases, the extra temporary buffers also
+need to be preserved for later use in z_erofs_fill_other_copies() to
+to prevent data corruption.
 
-write to 0xffff88801f417e50 of 8 bytes by task 6663 on cpu 0:
- __percpu_counter_limited_add+0x388/0x4a0 lib/percpu_counter.c:386
- percpu_counter_limited_add include/linux/percpu_counter.h:77 [inline]
- shmem_inode_acct_blocks+0x10e/0x230 mm/shmem.c:233
- shmem_alloc_and_add_folio mm/shmem.c:1923 [inline]
- shmem_get_folio_gfp.constprop.0+0x87f/0xc90 mm/shmem.c:2533
- shmem_get_folio mm/shmem.c:2639 [inline]
- ....
+IOWs, extra temporary buffers have to be retained not only due to
+varying start relative offsets (`pageofs_out`, as indicated by
+`pcl->multibases`) but also because of shortened bvecs.
 
-read to 0xffff88801f417e50 of 8 bytes by task 6659 on cpu 1:
- __percpu_counter_limited_add+0xc8/0x4a0 lib/percpu_counter.c:344
- percpu_counter_limited_add include/linux/percpu_counter.h:77 [inline]
- shmem_inode_acct_blocks+0x10e/0x230 mm/shmem.c:233
- shmem_alloc_and_add_folio mm/shmem.c:1923 [inline]
- shmem_get_folio_gfp.constprop.0+0x87f/0xc90 mm/shmem.c:2533
- shmem_get_folio mm/shmem.c:2639 [inline]
- ....
+android.hardware.graphics.composer@2.1.so : 270696 bytes
+   0:        0..  204185 |  204185 :  628019200.. 628084736 |   65536
+-> 1:   204185..  225536 |   21351 :  544063488.. 544129024 |   65536
+   2:   225536..  270696 |   45160 :          0..         0 |       0
 
-value changed: 0x000000000000396d -> 0x000000000000398e
-==================================================================
+com.android.vndk.v28.apex : 93814897 bytes
+...
+   364: 53869896..54095257 |  225361 :  543997952.. 544063488 |   65536
+-> 365: 54095257..54309344 |  214087 :  544063488.. 544129024 |   65536
+   366: 54309344..54514557 |  205213 :  544129024.. 544194560 |   65536
+...
 
-__percpu_counter_limited_add() should protect fbc via raw_spin_lock(),
-but it calls spinlock in the wrong place. This causes a data-race,
-so we need to fix it to call raw_spin_lock() a bit earlier.
+Both 204185 and 54095257 have the same start relative offset of 3481,
+but the logical page 55 of `android.hardware.graphics.composer@2.1.so`
+ranges from 225280 to 229632, forming a shortened bvec [225280, 225536)
+that cannot be used for decompressing the range from 54095257 to
+54309344 of `com.android.vndk.v28.apex`.
 
-Fixes: beb986862844 ("shmem,percpu_counter: add _limited_add(fbc, limit, amount)")
-Signed-off-by: Jeongjun Park <aha310510@gmail.com>
+Since `pcl->multibases` is already meaningless, just mark `keepxcpy`
+on demand for simplicity.
+
+Again, this issue can only lead to data corruption if `-Ededupe` is on.
+
+Fixes: 94c43de73521 ("erofs: fix wrong primary bvec selection on deduplicated extents")
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- lib/percpu_counter.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ fs/erofs/zdata.c | 31 ++++++++++++++-----------------
+ 1 file changed, 14 insertions(+), 17 deletions(-)
 
-diff --git a/lib/percpu_counter.c b/lib/percpu_counter.c
-index 2891f94a11c6..17f9fc12b409 100644
---- a/lib/percpu_counter.c
-+++ b/lib/percpu_counter.c
-@@ -336,6 +336,7 @@ bool __percpu_counter_limited_add(struct percpu_counter *fbc,
- 		return true;
+diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+index 5c061aaeeb45..b8e6b76c23d5 100644
+--- a/fs/erofs/zdata.c
++++ b/fs/erofs/zdata.c
+@@ -79,9 +79,6 @@ struct z_erofs_pcluster {
+ 	/* L: whether partial decompression or not */
+ 	bool partial;
  
- 	local_irq_save(flags);
-+	raw_spin_lock(&fbc->lock);
- 	unknown = batch * num_online_cpus();
- 	count = __this_cpu_read(*fbc->counters);
+-	/* L: indicate several pageofs_outs or not */
+-	bool multibases;
+-
+ 	/* L: whether extra buffer allocations are best-effort */
+ 	bool besteffort;
  
-@@ -344,11 +345,10 @@ bool __percpu_counter_limited_add(struct percpu_counter *fbc,
- 	    ((amount > 0 && fbc->count + unknown <= limit) ||
- 	     (amount < 0 && fbc->count - unknown >= limit))) {
- 		this_cpu_add(*fbc->counters, amount);
--		local_irq_restore(flags);
--		return true;
-+		good = true;
-+		goto out;
+@@ -1046,8 +1043,6 @@ static int z_erofs_scan_folio(struct z_erofs_frontend *f,
+ 				break;
+ 
+ 			erofs_onlinefolio_split(folio);
+-			if (f->pcl->pageofs_out != (map->m_la & ~PAGE_MASK))
+-				f->pcl->multibases = true;
+ 			if (f->pcl->length < offset + end - map->m_la) {
+ 				f->pcl->length = offset + end - map->m_la;
+ 				f->pcl->pageofs_out = map->m_la & ~PAGE_MASK;
+@@ -1093,7 +1088,6 @@ struct z_erofs_backend {
+ 	struct page *onstack_pages[Z_EROFS_ONSTACK_PAGES];
+ 	struct super_block *sb;
+ 	struct z_erofs_pcluster *pcl;
+-
+ 	/* pages with the longest decompressed length for deduplication */
+ 	struct page **decompressed_pages;
+ 	/* pages to keep the compressed data */
+@@ -1102,6 +1096,8 @@ struct z_erofs_backend {
+ 	struct list_head decompressed_secondary_bvecs;
+ 	struct page **pagepool;
+ 	unsigned int onstack_used, nr_pages;
++	/* indicate if temporary copies should be preserved for later use */
++	bool keepxcpy;
+ };
+ 
+ struct z_erofs_bvec_item {
+@@ -1112,18 +1108,20 @@ struct z_erofs_bvec_item {
+ static void z_erofs_do_decompressed_bvec(struct z_erofs_backend *be,
+ 					 struct z_erofs_bvec *bvec)
+ {
++	int poff = bvec->offset + be->pcl->pageofs_out;
+ 	struct z_erofs_bvec_item *item;
+-	unsigned int pgnr;
+-
+-	if (!((bvec->offset + be->pcl->pageofs_out) & ~PAGE_MASK) &&
+-	    (bvec->end == PAGE_SIZE ||
+-	     bvec->offset + bvec->end == be->pcl->length)) {
+-		pgnr = (bvec->offset + be->pcl->pageofs_out) >> PAGE_SHIFT;
+-		DBG_BUGON(pgnr >= be->nr_pages);
+-		if (!be->decompressed_pages[pgnr]) {
+-			be->decompressed_pages[pgnr] = bvec->page;
++	struct page **page;
++
++	if (!(poff & ~PAGE_MASK) && (bvec->end == PAGE_SIZE ||
++			bvec->offset + bvec->end == be->pcl->length)) {
++		DBG_BUGON((poff >> PAGE_SHIFT) >= be->nr_pages);
++		page = be->decompressed_pages + (poff >> PAGE_SHIFT);
++		if (!*page) {
++			*page = bvec->page;
+ 			return;
+ 		}
++	} else {
++		be->keepxcpy = true;
  	}
  
--	raw_spin_lock(&fbc->lock);
- 	count = fbc->count + amount;
+ 	/* (cold path) one pcluster is requested multiple times */
+@@ -1289,7 +1287,7 @@ static int z_erofs_decompress_pcluster(struct z_erofs_backend *be, int err)
+ 					.alg = pcl->algorithmformat,
+ 					.inplace_io = overlapped,
+ 					.partial_decoding = pcl->partial,
+-					.fillgaps = pcl->multibases,
++					.fillgaps = be->keepxcpy,
+ 					.gfp = pcl->besteffort ? GFP_KERNEL :
+ 						GFP_NOWAIT | __GFP_NORETRY
+ 				 }, be->pagepool);
+@@ -1346,7 +1344,6 @@ static int z_erofs_decompress_pcluster(struct z_erofs_backend *be, int err)
  
- 	/* Skip percpu_counter_sum() when safe */
---
+ 	pcl->length = 0;
+ 	pcl->partial = true;
+-	pcl->multibases = false;
+ 	pcl->besteffort = false;
+ 	pcl->bvset.nextpage = NULL;
+ 	pcl->vcnt = 0;
+-- 
+2.43.5
+
