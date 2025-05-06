@@ -1,64 +1,66 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EF4B253F26
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 15:47:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36A5C253F26
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 15:47:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746546466; cv=none; b=lCTSiQlRm65XHvQlw4MZlG7vrExiuFbR4zc5LEQcx8sijOJYSWPonEttLrslvmHeyqAiIVna+y5N1kIInjzeuKusU2OdwsLuQJGzub1grWyqu9KDyXoDisoymur1lgM7UME149Pd5/CVYTm9mgk6NQpdmSjPf0tiuf1RYsUKaaU=
+	t=1746546474; cv=none; b=ZEgkMk86t+UFFGPtDDrL6xx638/uN8K15Kbmr/pfw+91nDtI8ypyNury2/kYZV7ftJStnt/EL5+wWvvuOo+VHMvjt8wuhtFeCsK8MpKDOkBehhVC/qFW6hxInSmjWa8E47HxRHMcqr74ZKagsqbhtXYCEUtUhvhN4yS9nIu/Xbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746546466; c=relaxed/simple;
-	bh=fRsSE07MO5RUSBN9OSYwWzEbBbJmQQggB3I2E+b9zdk=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=AbX10VFN/BTKiVJgmc4wmra8OTVYXMNFRRz8+3To4KIskrbMQMO+9ZirdxSOqoylZaa60zX9QvHkwbMUWo2e6VoNWPqie37mU9kqMPPcwMEXM2EgvTYPaqy1nU1eH7V8S5EYnJQbSwMecVoVL2hSvQKIA2Aj9H72kY/Jle/a69A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qDYLf2nZ; arc=none smtp.client-ip=209.85.216.51
+	s=arc-20240116; t=1746546474; c=relaxed/simple;
+	bh=e+MxQIILmTfaUEYG8mRcW6giFJAkMzchKGmqQw3Zq2A=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=R6PjHLnI0OWi8oMzWF7kRANYASjEduMnqDSoS1RM/CcROU9wefIFcSCzFH0w7yguZlquPx7HgQvWUPe1n4hagsCYKMjhH/PDa2wKvUT85u05TAddf01tVMNV8i8rGmpQQsemlFr0AXbbfEaQ/8mriDLgSde/naxI93Im/t7pNZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ALHlZBG3; arc=none smtp.client-ip=209.85.216.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qDYLf2nZ"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-30a8cbddca4so1075219a91.3
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 08:47:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ALHlZBG3"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-301e05b90caso6186500a91.2
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 08:47:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746546463; x=1747151263; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=NsrOsUBqCO5Q5SZFn+5AGarKR0SfFGjvJfXesi7IMTs=;
-        b=qDYLf2nZ3FMfPRqEabr5SU2yljmWU4djB8ut/mJ2s53m44SF5rV1tuRa4z2gXtacPs
-         WfonkrVLgrF40O/BF/AXORWh+N83l1xJbEqKxj17ayFDsOqBSf5n8ayu99THgkXS0aHA
-         ZlCu3TI+tK+gGZ7RpBx7ge/RgpL6aSVayfRd/42fZMsAA8VzIi8hRbCuQ65mFq+lz1CW
-         /DVnZmvdoLVGyoOTM2l9ioE0lUtCB1EW1lSDvD+ncPSmKDpIfLUpbjA5Ehz2sRsS3Xf9
-         FBsDyggrAa5Bo0m2LKfRT+L8dyvQr/1CDY8UP0L2hxSG6XtADKKIf3P2UWOIrxtGsC+b
-         D0cA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746546463; x=1747151263;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1746546472; x=1747151272; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=NsrOsUBqCO5Q5SZFn+5AGarKR0SfFGjvJfXesi7IMTs=;
-        b=Y620O8bf0eJTtrqkCJ+ApQhtTG3IphjreHxqf5qMvzX6i6xivjQDh45GgUVOaMds6u
-         5GSoEMy95lH89OwGfLUG0QA1bIoxj25yipmwgMDPJdXscIPWNxZt5FFditNGHUO/4KrC
-         7DZwg16QFdOsNHRiz6FTC6ikZij9YSN3+/V50im2X/2tSyCzR6SIH8wdyniuucCb9F6X
-         B1e/s0Y1z9P0fzxl7bN2eU+RYnJR4d1ohOA1dbXeEaZhts4fb708PiEc55h6AfSirGV/
-         OAv2VEw5zHA93wuXNpUA8r6g4rcggODB5bKjrbvBEWDOLJMRw1a4CmKc4QIThmoHYMWZ
-         XdSw==
-X-Forwarded-Encrypted: i=1; AJvYcCVWo8YSO8v0+Oas09NShSKKBnG9hdYobKknNUrQT14mhZtqx0W5sjmWiY9QAZSvV2xCRkvDMi4KcJcPgyw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyxC7bRRzLol0qkMRQBcsGGgS78UuVChJt2fPJKh+JvTuBuJ+4m
-	2pdNCbrvPO1LQikeCZgBacYuLSexiwLprOscxll4dELtPYfIqT/G7yR039i1b2Y=
-X-Gm-Gg: ASbGnctGuyefzyHuH5RHIidWVJXSfmOn8uP6fpcjafvT6eazXDxlUNIrLN83cT0obrw
-	gW5WQRHVeiLFO/oK/o2zmOjTHYyu4KNX9akJmIPAVsXIVrjYxCVW4wtB+FNnaI7XbNl0+ByitQT
-	3YnwyvJVU+HsKVyNJFugYVLCjhA8L5NIzxnHsG+7LMvlE0zg1Z49Clb/v2DhuX/0D2F8YR9+lQx
-	fqHFITb9I5X5kN/hg2CsiO9Do63xANUPnI0ZruhUC1CXveH7hSoFmAO7Q+CDUo9jLZcyqlrLOSx
-	3fRFBdjmerPqRjH7PiEYoEnjP0w/ou/oivO0Mg==
-X-Google-Smtp-Source: AGHT+IGYXZGu5JQQL5rWHElY0maLlBnpq0XUa98OP7P+l31dS5z2od40yCJMbghY3JLbEzXjU84fWA==
-X-Received: by 2002:a17:90b:562f:b0:309:cf0b:cb37 with SMTP id 98e67ed59e1d1-30a6196ef18mr17984829a91.7.1746546463540;
-        Tue, 06 May 2025 08:47:43 -0700 (PDT)
+        bh=EAZqwoIR5WgNwGU/xBD+IG2xOYwT2VXmbD6p9oxdt2c=;
+        b=ALHlZBG3ykLmBfuUSMScOFcItN4DJ+4RdbNdad2wSchL+9g6gVDGST0Ad8nlREnhHs
+         mFPsVaqLzYMq1qROyBsGfxh0LyrYH0BlEWHqMq+Nn+M9miey5zbzKGf07k/CYaks2p1J
+         a42cyWePtejaTKPIv2rcRCzPLN8HDvnxHN15umWgpYdIeJyQn1ueNIThA6R9Mnfhmctm
+         FP4fcT1cUEWoH+60BzU1YaBJtXNFNBXwrIveubrGaQ7ZHuAZofVcxessxQI0i16ii/Yq
+         D1Qiax2rJBafNuxhRqLlJ4wdChUip8ZyTlS1Cs2nKReb3/sRb87V7dEdb3Trwmbdi/BC
+         LDvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746546472; x=1747151272;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EAZqwoIR5WgNwGU/xBD+IG2xOYwT2VXmbD6p9oxdt2c=;
+        b=Jcb4L521rYzP9KrxAMj1xF6N1EGIzNnXMIEhXA68YPCr2kd7hYfd9Plj1cxQtH4E94
+         t+Kl9Cb2WbMAbl8b4X5JW/9JDayRhxxEUjwsKLtb2gCDkxXj4PmnXuofOvQmHObuRasH
+         uLM4AJPtRe7Fk5br/ocoZZDjigNpN6LQdSH53O+HeQHZW/GYC6GFCnOvOssUzbtG2xKl
+         yG5yLslmxFC4WptrERAqpfFCknKqxYMf3Q1+F5GzA+qJ44Oq0YWTfN0fCtqABloOBwuY
+         gdj9hbGjm18nkIK82WeU9KIWLrxYUlzkrF7vbP2rMzNKQwJkizOIg/sxPPr0NL9Tq1ps
+         HdBg==
+X-Forwarded-Encrypted: i=1; AJvYcCU0+i7kTfyLhzhehpvcHR8LqCMEDoKCNdHxRcXB124KK71HC6z8DuBcA/XsJTPW1ACrnbTq0ohkV3TYr8E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQSzPNsrMTFRKUsfPjAu63VgBQJgnnpg/kcol15dOWxu7Rr92v
+	pq7Lx7mW97r/ZLdxYoLC7SRcDf7UuE6BnbaLVgftVjrUc0vj2NsjVdLYrb3vv7g=
+X-Gm-Gg: ASbGncsTSwjKFOw2Y96P01jd8hBiu7D72vH8O6yaVoAWEw82mh+3RL3H2m3P8d4PZ7f
+	YPRSpBK6lFBU3Ltp5YUqMwjzd1wYNwQebaCV/cxwxGKuAevssvyFfb1RUHbi6XT51OdYqbNhnqn
+	gvIdB2kjNSjx9IwWSePWzIx0+LiRNNWG2qlbHjrlYejvsKQLIAOgWfo+tiiCsMU7Gm3u6BtDP3J
+	Vt9bZY4oCB2+alHv4iVzCIzxgy6WwECQ4tcCw/M++wlA9fjdk4ZuZchhIVnmVLg36uPJUEKQoIP
+	QaW55sXuy08uQeeAA25sTy1TC9zxu9tWLzpjuQ==
+X-Google-Smtp-Source: AGHT+IFnRgAer2YqJDKDG8WSftGtJ1rR+zxfOuhlRqYyJ424rX57bTivAhXqIy4syKRnXc5Ylo86Kw==
+X-Received: by 2002:a17:90b:2e0b:b0:309:f53c:b0a0 with SMTP id 98e67ed59e1d1-30a7c0c8b02mr5742205a91.24.1746546472392;
+        Tue, 06 May 2025 08:47:52 -0700 (PDT)
 Received: from [127.0.1.1] ([112.65.12.170])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30a4748e83bsm11495999a91.22.2025.05.06.08.47.36
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30a4748e83bsm11495999a91.22.2025.05.06.08.47.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 08:47:43 -0700 (PDT)
+        Tue, 06 May 2025 08:47:51 -0700 (PDT)
 From: Jun Nie <jun.nie@linaro.org>
-Subject: [PATCH v9 00/14] drm/msm/dpu: Support quad pipe with dual-DSI
-Date: Tue, 06 May 2025 23:47:30 +0800
-Message-Id: <20250506-quad-pipe-upstream-v9-0-f7b273a8cc80@linaro.org>
+Date: Tue, 06 May 2025 23:47:31 +0800
+Subject: [PATCH v9 01/14] drm/atomic-helper: Add crtc check before checking
+ plane
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,10 +69,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIABMvGmgC/x3MQQqAIBBA0avIrBswKaGuEi00p5pFZZoRhHdPW
- r7F/y9ECkwRevFCoJsjH3tBVwmYVrMvhOyKQUnVylZqPJNx6NkTJh+vQGZDoxvp3KRtbTWU0Ae
- a+fmnw5jzBwTgcDxkAAAA
-X-Change-ID: 20250506-quad-pipe-upstream-a640ddc6b1b6
+Message-Id: <20250506-quad-pipe-upstream-v9-1-f7b273a8cc80@linaro.org>
+References: <20250506-quad-pipe-upstream-v9-0-f7b273a8cc80@linaro.org>
+In-Reply-To: <20250506-quad-pipe-upstream-v9-0-f7b273a8cc80@linaro.org>
 To: Rob Clark <robdclark@gmail.com>, 
  Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
  Marijn Suijten <marijn.suijten@somainline.org>, 
@@ -83,133 +84,62 @@ Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
  freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
  Jun Nie <jun.nie@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746546456; l=6078;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1746546456; l=1629;
  i=jun.nie@linaro.org; s=20240403; h=from:subject:message-id;
- bh=fRsSE07MO5RUSBN9OSYwWzEbBbJmQQggB3I2E+b9zdk=;
- b=epsXReT144s5pEJd7o6nTP7dmucju7dZPM6w4s37QKyOAtEO+QdijmP34TGUgrfVTKRPN0MgS
- kkAvAHBS9dyDt+F6s0WDdzT96oK+YVrBEYHFtOhwfWzCEjbDf5N+Dd5
+ bh=e+MxQIILmTfaUEYG8mRcW6giFJAkMzchKGmqQw3Zq2A=;
+ b=zpOMrRtqL6iX2AnAGqg8NxcePk05uQNGAMoOqxpNJZAmmvq/T93PJYpj5MEkzyl0Fs18ufdNZ
+ mXIzLx/KpGwAtrE8yNGE6pJr71Tx85cXy5Pz8Ck0WGp71qZ5JT8CS0t
 X-Developer-Key: i=jun.nie@linaro.org; a=ed25519;
  pk=MNiBt/faLPvo+iJoP1hodyY2x6ozVXL8QMptmsKg3cc=
 
-2 or more SSPPs and dual-DSI interface are need for super wide panel.
-And 4 DSC are preferred for power optimal in this case due to width
-limitation of SSPP and MDP clock rate constrain. This patch set
-extends number of pipes to 4 and revise related mixer blending logic
-to support quad pipe. All these changes depends on the virtual plane
-feature to split a super wide drm plane horizontally into 2 or more sub
-clip. Thus DMA of multiple SSPPs can share the effort of fetching the
-whole drm plane.
+Some display controller support flexible CRTC and DMA, such as the display
+controllers in snapdragon SoCs. CRTC can be implemented with several mixers
+in parallel, and plane fetching can be implemented with several DMA under
+umberala of a virtual drm plane.
 
-The first pipe pair co-work with the first mixer pair to cover the left
-half of screen and 2nd pair of pipes and mixers are for the right half
-of screen. If a plane is only for the right half of screen, only one
-or two of pipes in the 2nd pipe pair are valid, and no SSPP or mixer is
-assinged for invalid pipe.
+The mixer number is decided per panel resolution and clock rate constrain
+first, which happens in CRTC side. Then plane is split per mixer number
+and configure DMA accordingly.
 
-For those panel that does not require quad-pipe, only 1 or 2 pipes in
-the 1st pipe pair will be used. There is no concept of right half of
-screen.
-
-For legacy non virtual plane mode, the first 1 or 2 pipes are used for
-the single SSPP and its multi-rect mode.
-
-Changes in v9:
-- Rebase to latest mainline and drop 3 patches as mainline already cover
-  the logic.
-  "Do not fix number of DSC"
-  "configure DSC per number in use"
-  "switch RM to use crtc_id rather than enc_id for allocation"
-- Add a patch to check crtc before checking plane in drm framework.
-- Add a patch to use dedicated WB number in an encoder to avoid regression.
-- Revise the condition to decide quad-pipe topology.
-- Link to v8: https://lore.kernel.org/r/20250303-sm8650-v6-14-hmd-deckard-mdss-quad-upstream-oldbootwrapper-36-prep-v8-0-eb5df105c807@linaro.org
-
-Changes in v8:
-- Fix looping pipes of a plane in _dpu_plane_color_fill()
-- Improve pipe assignment with deleting pipes loop in stage.
-- Define PIPES_PER_PLANE properly when it appears fisrt.
-- rename lms_in_pair to lms_in_stage to avoid confusion.
-- Add review tags.
-- Link to v7: https://lore.kernel.org/r/20250226-sm8650-v6-14-hmd-deckard-mdss-quad-upstream-oldbootwrapper-36-prep-v7-0-8d5f5f426eb2@linaro.org
-
-Changes in v7:
-- Improve pipe assignment to avoid point to invalid memory.
-- Define STAGES_PER_PLANE as 2 only when quad-pipe is introduced.
-- Polish LM number when blending pipes with min() and pull up to caller func.
-- Add review tags.
-- Link to v6: https://lore.kernel.org/r/20250217-sm8650-v6-14-hmd-deckard-mdss-quad-upstream-oldbootwrapper-36-prep-v6-0-c11402574367@linaro.org
-
-Changes in v6:
-- Replace LM number with PP number to calculate PP number per encoder.
-- Rebase to Linux v6.14-rc2.
-- Add review tags.
-- Link to v5: https://lore.kernel.org/r/20250118-sm8650-v6-13-hmd-deckard-mdss-quad-upstream-33-v5-0-9701a16340da@linaro.org
-
-Changes in v5:
-- Iterate SSPP flushing within the required mixer pair, instead of all
-  active mixers or specific mixer.
-- Limit qaud-pipe usage case to SoC with 4 or more DSC engines and 2
-  interfaces case.
-- Remove valid flag and use width for pipe validation.
-- Polish commit messages and code comments.
-- Link to v4: https://lore.kernel.org/r/20250116-sm8650-v6-13-hmd-deckard-mdss-quad-upstream-33-v4-0-74749c6eba33@linaro.org
-
-Changes in v4:
-- Restrict SSPP flushing to the required mixer, instead of all active mixers.
-- Polish commit messages and code comments.
-- Rebase to latest msm/drm-next branch.
-- Move pipe checking patch to the top of patch set.
-- Link to v3: https://lore.kernel.org/dri-devel/20241219-sm8650-v6-13-hmd-deckard-mdss-quad-upstream-32-v3-0-92c7c0a228e3@linaro.org
-
-Changes in v3:
-- Split change in trace into a separate patch.
-- Rebase to latest msm-next branch.
-- Reorder patch sequence to make sure valid flag is set in earlier patch
-- Rectify rewrite patch to move logic change into other patch
-- Polish commit messages and code comments.
-- Link to v2: https://lore.kernel.org/dri-devel/20241009-sm8650-v6-11-hmd-pocf-mdss-quad-upstream-21-v2-0-76d4f5d413bf@linaro.org
-
-Changes in v2:
-- Revise the patch sequence with changing to 2 pipes topology first. Then
-  prepare for quad-pipe setup, then enable quad-pipe at last.
-- Split DSI patches into other patch set.
-- Link to v1: https://lore.kernel.org/all/20240829-sm8650-v6-11-hmd-pocf-mdss-quad-upstream-8-v1-0-bdb05b4b5a2e@linaro.org
+To support such forthcoming usage case, CRTC checking shall happen before
+checking plane. Add the checking in the drm_atomic_helper_check_modeset().
 
 Signed-off-by: Jun Nie <jun.nie@linaro.org>
 ---
-Jun Nie (14):
-      drm/atomic-helper: Add crtc check before checking plane
-      drm/msm/dpu: check every pipe per capability
-      drm/msm/dpu: polish log for resource allocation
-      drm/msm/dpu: decide right side per last bit
-      drm/msm/dpu: fix mixer number counter on allocation
-      drm/msm/dpu: bind correct pingpong for quad pipe
-      drm/msm/dpu: Add pipe as trace argument
-      drm/msm/dpu: handle pipes as array
-      drm/msm/dpu: split PIPES_PER_STAGE definition per plane and mixer
-      drm/msm/dpu: Use dedicated WB number definition
-      drm/msm/dpu: blend pipes per mixer pairs config
-      drm/msm/dpu: support SSPP assignment for quad-pipe case
-      drm/msm/dpu: support plane splitting in quad-pipe case
-      drm/msm/dpu: Enable quad-pipe for DSC and dual-DSI case
+ drivers/gpu/drm/drm_atomic_helper.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
- drivers/gpu/drm/drm_atomic_helper.c              |  19 ++
- drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c         | 115 ++++---
- drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h         |   8 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c      |  43 ++-
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h |   2 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h   |   2 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h      |   2 +
- drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c        | 408 ++++++++++++++---------
- drivers/gpu/drm/msm/disp/dpu1/dpu_plane.h        |  12 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c           |  29 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_trace.h        |  10 +-
- 11 files changed, 403 insertions(+), 247 deletions(-)
----
-base-commit: 227403a8562686275197009528ff9f1b440cb20f
-change-id: 20250506-quad-pipe-upstream-a640ddc6b1b6
+diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
+index 5302ab3248985d3e0a47e40fd3deb7ad0d9f775b..5bca4c9683838c38574c8cb7c0bc9d57960314fe 100644
+--- a/drivers/gpu/drm/drm_atomic_helper.c
++++ b/drivers/gpu/drm/drm_atomic_helper.c
+@@ -816,6 +816,25 @@ drm_atomic_helper_check_modeset(struct drm_device *dev,
+ 			return ret;
+ 	}
+ 
++	for_each_new_crtc_in_state(state, crtc, new_crtc_state, i) {
++		const struct drm_crtc_helper_funcs *funcs;
++
++		funcs = crtc->helper_private;
++
++		if (!funcs || !funcs->atomic_check)
++			continue;
++
++		ret = funcs->atomic_check(crtc, state);
++		if (ret) {
++			drm_dbg_atomic(crtc->dev,
++				       "[CRTC:%d:%s] atomic driver check failed\n",
++				       crtc->base.id, crtc->name);
++			return ret;
++		}
++	}
++
++
++
+ 	ret = mode_valid(state);
+ 	if (ret)
+ 		return ret;
 
-Best regards,
 -- 
-Jun Nie <jun.nie@linaro.org>
+2.34.1
 
