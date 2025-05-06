@@ -1,117 +1,89 @@
-Received: from fout-b7-smtp.messagingengine.com (fout-b7-smtp.messagingengine.com [202.12.124.150])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2B102750F1;
-	Tue,  6 May 2025 10:23:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F04327587A
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 10:23:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746526996; cv=none; b=QvCVrFEbBlw+o2HWYDesh+gVLyv0YcGGNip07IPMRFT9u/+HZAuCAhJxZDLDm6eH/6qY2xrSYfiwXFDX0nG3ltNL7FsBessac3QKa89e8tCEBMQxJ7dszlc446tNpOuE5JyS8hw1Q5QlFuv69dwKf2T9Sr5PN87QathrTPbIkdc=
+	t=1746526997; cv=none; b=Yi6g08xwkvMkdjnb68u9ysbe/+JfOFEIyAp4Dx7fKbENF2chlrBNQFV13DeP+3Cdtd+TMm+DHfN0EetpEOytXajcPvwMDAzd9mB5FeKqzswLx84sLKQU0KsFsWRRgUpLOxOxJ0ny54HdYzQxovjMG4ciedD7qEeF4uKRl3fLa8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746526996; c=relaxed/simple;
-	bh=ufPIm0bQWPXgT/ISvj3F6tBKU4TGGEsrDy5DRKmXyTU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=smqgbOhHPIUAc2x2swy8qzaXWlV9NuVYEPj4gljJD/0wegk519r84fkWyjKx2THrx2x4ePX4d9PrItzab6++AtcY11Jyndzo1ohTfF18Nb5DzxQ4S2NE5IiZFWChJphTzwQk23nZIcxqHK0HbgShEVTDS2XOz1HvcGjrc9eiC5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name; spf=pass smtp.mailfrom=shutemov.name; dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b=t9laNfpO; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=VhWTbcbI; arc=none smtp.client-ip=202.12.124.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shutemov.name
+	s=arc-20240116; t=1746526997; c=relaxed/simple;
+	bh=kcdDVmOQtvvmsn3ve4D242yO8qOFVc2H/ZbPdqoarok=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=kWJRN2JoMa+Sc/olK8gKx8A1B/yF07lrgYYz6tU+lrg2JW3dNr52P45JrmnyDId2TAkDRY3Oxl49O6lrMMViayKs2Woa3XhKXPIyN9oIa5/W7DEJNJSaB5v/ZXSbErtCu1aRYZ8GGMffPS44PAbsfNy6PrT1jLY+O5X+kzfcZWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZLVBTvNf; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tbFQU7Cs; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b="t9laNfpO";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VhWTbcbI"
-Received: from phl-compute-07.internal (phl-compute-07.phl.internal [10.202.2.47])
-	by mailfout.stl.internal (Postfix) with ESMTP id 47CC411401C1;
-	Tue,  6 May 2025 06:23:12 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-07.internal (MEProxy); Tue, 06 May 2025 06:23:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm1; t=1746526992; x=
-	1746613392; bh=98gmRsvCbFVOGYxJYzCbqyQEH25wrcIQxT9aYd2p6fA=; b=t
-	9laNfpO3jUO3G7s379ic8qjoW7DaeY3AEH3IqlZJFOOMZZB9hAr4U59R+ktIWee5
-	TRvqLJO3ve4YNBkF8x58qX9PVm2Uj0ZnqCTxDuxBtnNHoswI23xdVnkuqKaMci76
-	Zj301rMwUrGGVBS/aT83JOBW9MwQqvzenEnkmMD16zU8+cQ81hgbftiEpMVCXNLb
-	DrjAvZsauWEw6KB97kDvnmUAhD/WKAKUjR4cH6rg6SZj4qCfDuEXR5mnpYEcYKVz
-	bhBfJdLL36x1FNhzuDPaH9gk5ajfJO7zX0wNcbIjAMg0yDHFjcn0nnTMBjrsChDV
-	Gx2qgI2HM7lyuF4ZEF5GQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1746526992; x=1746613392; bh=98gmRsvCbFVOGYxJYzCbqyQEH25wrcIQxT9
-	aYd2p6fA=; b=VhWTbcbIuxrLFcre+giObUABkIvfGIjxXofa+O5PQgz6NxpDPIQ
-	cBl/8OMdy8oOLJWzc/M7qVtRa/FdaoqC4ox4sRU1ZRqUYsn8bNMObKL05Ty126hz
-	wMPH2Hm24dgOIskG/CS2ApUzLUA7iwlzI1OFBE8kVKfWDZ6s8eP2lZKs3M7C6VHE
-	syqqlQsJoiNogZCyMVA0enGwMXu2+B6BfEz1YMMHy2a4CDu4fr9LfOxh+XrKXIeL
-	tANUrTgR6uUlwk+P6mI9h+iz+rxzM1DC/M3UV0yr1WpO4YKtL/S52ZGxPnn8zLNk
-	rO9pmzATy6fznVOAiXgP739mjPxd7UtNYlA==
-X-ME-Sender: <xms:D-MZaIxLuyyxQAik9_P6LB2gChIUUTAs4ps6EQswt6T_2f8gkHZtHw>
-    <xme:D-MZaMQOpaa4mS_EGWFHy0CZFjaMrAeDb3WLA2uKm6Xi8fWKYVmcR-W1Z7zfC_l1h
-    fiT7h4S3YZC4IpGmms>
-X-ME-Received: <xmr:D-MZaKW5m8sKV_LcTTgWacudeo_2yc8FdBgDzoBVL_2U_ntfqgAAGgXkPB3D-hZldgoQNA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeefjeefucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtsfdttddt
-    vdenucfhrhhomhepfdfmihhrihhllhcutedrucfuhhhuthgvmhhovhdfuceokhhirhhilh
-    hlsehshhhuthgvmhhovhdrnhgrmhgvqeenucggtffrrghtthgvrhhnpeffvdevueetudfh
-    hfffveelhfetfeevveekleevjeduudevvdduvdelteduvefhkeenucevlhhushhtvghruf
-    hiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehkihhrihhllhesshhhuhhtvghm
-    ohhvrdhnrghmvgdpnhgspghrtghpthhtohepudekpdhmohguvgepshhmthhpohhuthdprh
-    gtphhtthhopegsphesrghlihgvnhekrdguvgdprhgtphhtthhopegrkhhpmheslhhinhhu
-    gidqfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvg
-    hlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqthhiphdq
-    tghomhhmihhtshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehmihhngh
-    hosehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrrhhnugesrghrnhgusgdruggvpdhr
-    tghpthhtohepugifmhifsegrmhgriihonhdrtghordhukhdprhgtphhtthhopeguihhonh
-    hnrghglhgriigvsehgohhoghhlvgdrtghomhdprhgtphhtthhopehhphgrseiihihtohhr
-    rdgtohhm
-X-ME-Proxy: <xmx:D-MZaGi1Fxk_2fMQcnlUue1HCzOgrVFrlAVHmJixn2u3JJp4bzBqPA>
-    <xmx:D-MZaKBxN6SNYscqSVwneba8oPWAUeEbXvgpCDdj_dq94_gFKa0_Lg>
-    <xmx:D-MZaHK9F7x62YKyBDdB5YV3qd9k7yYi4an-5JTiBUa1OdbD66Oq7w>
-    <xmx:D-MZaBCnBV78nem-VuaiIQjOvCSwJgVYmE2kNYWQBfjHjEr7VHYUqw>
-    <xmx:EOMZaDRLjMEeRfiC5JxnVCRs6Xu3GUqYtFa5aVcwevsJ8lvcAyJCgaRT>
-Feedback-ID: ie3994620:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 6 May 2025 06:23:05 -0400 (EDT)
-Date: Tue, 6 May 2025 13:23:01 +0300
-From: "Kirill A. Shutemov" <kirill@shutemov.name>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org, 
-	Ingo Molnar <mingo@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	David Woodhouse <dwmw@amazon.co.uk>, Dionna Amalie Glaze <dionnaglaze@google.com>, 
-	"H. Peter Anvin" <hpa@zytor.com>, Kees Cook <keescook@chromium.org>, 
-	Kevin Loughlin <kevinloughlin@google.com>, Len Brown <len.brown@intel.com>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, 
-	Tom Lendacky <thomas.lendacky@amd.com>, linux-efi@vger.kernel.org, x86@kernel.org, 
-	Ard Biesheuvel <ardb@kernel.org>
-Subject: Re: 4067196a5227 ("mm/page_alloc: fix deadlock on cpu_hotplug_lock
- in __accept_page()") (was: Re: [tip: x86/boot] x86/boot: Provide
- __pti_set_user_pgtbl() to startup code)
-Message-ID: <6xlb5o4fqzn6o3jojwvav7aln5uyiraox573zntxspjkwfbkzi@yx53iy4h7gw2>
-References: <20250506092445.GBaBnVXXyvnazly6iF@fat_crate.local>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZLVBTvNf";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tbFQU7Cs"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1746526993;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gdSnzmRSIMRrJG41fqcaaOo2w9Hy032pYE4C53FeAxs=;
+	b=ZLVBTvNfJRqDpSW5AuqMtIdNH3yfH7+OYc9PQXTP0mBoLFMI/oLtwSPe4Naj2I1k1NhXGj
+	lopU+UaNOlPSj3q4dYlVLfosgWonIjooDDFvc9yVtmeLcUf2UV0ce9nd+eIDseUJD4pY1m
+	yCmgGT+d/e5ng7Rq+Cr3PMmpItaU/9smUrWbwwVWdybhatXI7GVPckm8lwBpy2EITD05w7
+	E4yIQJFZBtdFddroz5cnOWaSTWJ0qx4XSMpUehSZsTDnyCjVfPw/y7wqHwQiazqucxsTsw
+	3ltWdkjig7bo4mO/YSGtSU4qs1RHn1n6R3KuyTtGSvXHL52Wxn9Jc+t95MeroA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1746526993;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gdSnzmRSIMRrJG41fqcaaOo2w9Hy032pYE4C53FeAxs=;
+	b=tbFQU7Css3rbdpDQJ34WGORxdQwD+mC2pxuPT7mg+DNeGj2CckfeiZc4akapI2VkIVjzjR
+	dSj8TG2c8I8mZWDg==
+To: Alexey Charkov <alchark@gmail.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/5] irqchip: vt8500: Split up ack/mask functions
+In-Reply-To: <CABjd4Yx5O-ivpyZ3ewx5dfLPR2q7N9HU5t9-uOoEDZa3y2woFQ@mail.gmail.com>
+References: <20250424-vt8500-intc-updates-v1-0-4ab7397155b3@gmail.com>
+ <20250424-vt8500-intc-updates-v1-1-4ab7397155b3@gmail.com>
+ <87ldranq87.ffs@tglx>
+ <CABjd4Yx5O-ivpyZ3ewx5dfLPR2q7N9HU5t9-uOoEDZa3y2woFQ@mail.gmail.com>
+Date: Tue, 06 May 2025 12:23:12 +0200
+Message-ID: <87bjs6nilr.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250506092445.GBaBnVXXyvnazly6iF@fat_crate.local>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 06, 2025 at 11:24:45AM +0200, Borislav Petkov wrote:
-> Fun stuff.
+On Tue, May 06 2025 at 12:46, Alexey Charkov wrote:
+> On Tue, May 6, 2025 at 11:38=E2=80=AFAM Thomas Gleixner <tglx@linutronix.=
+de> wrote:
+> Looks like the older commits I was relying on for the preferred prefix
+> didn't follow the prescribed format themselves - oh well :)
+>
+> Ref:
+> 0953fb263714 ("irq: remove handle_domain_{irq,nmi}()")
+> 1a59d1b8e05e ("treewide: Replace GPLv2 boilerplate/reference with SPDX
+> - rule 156")
+> d17cab4451df ("irqchip: Kill off set_irq_flags usage")
 
-Ughh.. Thanks for digging into this.
+These three are fine because they are touching multiple files.
 
-The code around static_branch_inc/dec() getting way to complex for the
-benefit that is only visible on microbenchmark.
+> d2aa914d27f1 ("irqchip/vt8500: Use irq_set_handler_locked()")
 
-Let's just remove it all.
+> 41a83e06e2bb ("irqchip: Prepare for local stub header removal")
+> 9600973656c6 ("irqchip: Constify irq_domain_ops")
 
-I will prepare patches later today.
+Ditto
 
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+> 0beb65041e86 ("irqchip: vt8500: Convert to handle_domain_irq")
+
+This one preceeds the standard format.
+
+Thanks,
+
+        tglx
