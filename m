@@ -1,234 +1,108 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E42A27E7DC;
-	Tue,  6 May 2025 12:09:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD10F27F17D;
+	Tue,  6 May 2025 12:10:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746533381; cv=none; b=ls7hg1u7NLvNRVhQ0e+kvSOUFsgh8NbVroFxC6M6fjXboS5Z5a0qxHVND1eo+DVzYh8jcVtx1f/3+eK7YAf2beH1lLGGYCQ20gOOxIwJ+x5rQccE9fTiCyrCiI3ZQY8TojG2DLQw8PoibwIxilIBU3zn+ZcyjObbBQwfurYnY5M=
+	t=1746533418; cv=none; b=NOa0UBWKG0dD+j3LZwOsPKuFime2trl03lPemCEiSu+mzkUMaBhDeY9Ouu+R3eDIzYiYwe5t+L87GMUsfJ/aTy+SCnNe9aAdLbmtKAUKgtWShD1QduYcN5QqIi+7EyJJ6rpA3NRBWczpyK5Nb/HHO8ijHkq6PJXX7II2pm/atzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746533381; c=relaxed/simple;
-	bh=C1cNc1T1EZTLsEqWLlQZ4HP/ZrBdzYD7Gj1Q5X2lVgk=;
+	s=arc-20240116; t=1746533418; c=relaxed/simple;
+	bh=TfGf41BI+CEpoOqGEKh3oXOKY+QC+CgLE8Pee51SleQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aJFkf+DKZ+aIh2W7D0q5syZ0+TP0LVcDDZ0FFH+nmiGyDS8HSxDY+l+G0oBPaLNylKEQEQqauY/X3RUDTFSMl9Ln8GVi2tD9OuiAhpOnNWBot4pvbVd3pd3vnO50z0dbRgTrh5SfzpiGTLP6mIhS6NOES62sweRg1jkEXZ2gvms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LxCXDU9n; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=eJ2fLGqujDjc+3F4TU8V7Wp4OXnk7dATo2qViDmWI8LywNjDQ3Ea51N0yrWr+OYsjG6CCru3QeJyUr8G8LrtLVEolyZ5qE+By1i+yxiI0x7MqzwMu8/Oxz51picBNrMosciiFXppCEborv9jcEDRH1rWDzo8gsqqTjZMkTjYN0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=me/MwPh3; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LxCXDU9n"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746533379; x=1778069379;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=C1cNc1T1EZTLsEqWLlQZ4HP/ZrBdzYD7Gj1Q5X2lVgk=;
-  b=LxCXDU9nvZUIIEkIba5hhP/VBcVFFGU47vCWbPlamV5gfBrgvNcGR5Y0
-   e6boY7OoLJKpbmWH6t70wQj0eDyYjXc1eYF6ECcqqxzgUfi3QdWnUiXTc
-   /mbnUXHwGWOLGg7CIhGJnlq0MHZHbnOC49soALAKoeag0pp74VB4/0R9k
-   wkApKMFs97EZXUrha9DaGpjfPHLYkLvwPVKqzxgtVKm0G/sKzLCr89Zpa
-   yNb0ReYe4w0P6ZxevvUOPSob+27/1+kku6PtUAVXPCvky7bxMjnk7T0Rm
-   P1D0MB+Qs8WopUJKg5Cxq895015f+jOqcXJhj/7KWKiJfOaOBBYcKsX4Q
-   Q==;
-X-CSE-ConnectionGUID: Tmd3iPVeSRuGQPPaIctcCg==
-X-CSE-MsgGUID: SZBiTcwvT+22q/su0G8tGA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="52007845"
-X-IronPort-AV: E=Sophos;i="6.15,266,1739865600"; 
-   d="scan'208";a="52007845"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 05:09:38 -0700
-X-CSE-ConnectionGUID: 2HCngJfPS4OtN3NFDHOPUQ==
-X-CSE-MsgGUID: AkdwN2B/RO2PGMjkHhJ6nA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,266,1739865600"; 
-   d="scan'208";a="136595874"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO mdjait-mobl) ([10.245.245.251])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 05:09:33 -0700
-Date: Tue, 6 May 2025 14:09:24 +0200
-From: Mehdi Djait <mehdi.djait@linux.intel.com>
-To: michael.riesch@collabora.com
-Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>, 
-	=?utf-8?B?VGjDqW8=?= Lebrun <theo.lebrun@bootlin.com>, Gerald Loacker <gerald.loacker@wolfvision.net>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Heiko Stuebner <heiko@sntech.de>, Kever Yang <kever.yang@rock-chips.com>, 
-	Nicolas Dufresne <nicolas.dufresne@collabora.com>, Sebastian Reichel <sebastian.reichel@collabora.com>, 
-	Collabora Kernel Team <kernel@collabora.com>, Paul Kocialkowski <paulk@sys-base.io>, 
-	Alexander Shiyan <eagle.alexander923@gmail.com>, Val Packett <val@packett.cool>, Rob Herring <robh@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
-	Michael Riesch <michael.riesch@wolfvision.net>
-Subject: Re: [PATCH v6 05/13] media: dt-bindings: add rockchip rk3568 mipi
- csi receiver
-Message-ID: <wxwzca4i36hdhdx5ehjqvq5ljpsb7lcvzermkhqyvufsr47au4@3qcth2vawwju>
-References: <20240220-rk3568-vicap-v6-0-d2f5fbee1551@collabora.com>
- <20240220-rk3568-vicap-v6-5-d2f5fbee1551@collabora.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="me/MwPh3"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
+	In-Reply-To:References; bh=LjFg4NzOfHgj1oyywetZuH3fvyYFzX5T7Wr9eejsvHY=; b=me
+	/MwPh3urNw/U+weqBX9npRAbNuLn2pVCx5lAmrjCRsvWkQ9hmAV/0A6/YuglFD2cFELRrL/jtrpyq
+	TNa9qwVfzmUl48jPFAZXyfT4TGNqlcs00lW94ouJBvKQ29uuDhIdWN4KfnKRXvg2rXuRLgxoCBbvd
+	Z2EcZmCZd31OYO4=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uCH7h-00Bksz-7V; Tue, 06 May 2025 14:10:09 +0200
+Date: Tue, 6 May 2025 14:10:09 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Thangaraj.S@microchip.com
+Cc: Bryan.Whitehead@microchip.com, andrew+netdev@lunn.ch,
+	davem@davemloft.net, linux-kernel@vger.kernel.org,
+	pabeni@redhat.com, kuba@kernel.org, edumazet@google.com,
+	netdev@vger.kernel.org, UNGLinuxDriver@microchip.com
+Subject: Re: [PATCH v1 net-next] net: lan743x: configure interrupt moderation
+ timers based on speed
+Message-ID: <e489b483-26bb-4e63-aa6d-39315818b455@lunn.ch>
+References: <20250505072943.123943-1-thangaraj.s@microchip.com>
+ <e2d7079b-f2d3-443d-a0e5-cb4f7a85b1e6@lunn.ch>
+ <42768d74fc73cd3409f9cdd5c5c872747c2d7216.camel@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240220-rk3568-vicap-v6-5-d2f5fbee1551@collabora.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <42768d74fc73cd3409f9cdd5c5c872747c2d7216.camel@microchip.com>
 
-Hi Michael,
-
-thank you for the patch!
-
-On Wed, Apr 30, 2025 at 11:15:54AM +0200, Michael Riesch via B4 Relay wrote:
-> From: Michael Riesch <michael.riesch@wolfvision.net>
+On Tue, May 06, 2025 at 04:02:30AM +0000, Thangaraj.S@microchip.com wrote:
+> Hi Andrew,
+> Thanks for reviewing the patch,
 > 
-> Add documentation for the Rockchip RK3568 MIPI CSI-2 Receiver.
+> On Mon, 2025-05-05 at 14:15 +0200, Andrew Lunn wrote:
+> > EXTERNAL EMAIL: Do not click links or open attachments unless you
+> > know the content is safe
+> > 
+> > On Mon, May 05, 2025 at 12:59:43PM +0530, Thangaraj Samynathan wrote:
+> > > Configures the interrupt moderation timer value to 64us for 2.5G,
+> > > 150us for 1G, 330us for 10/100M. Earlier this was 400us for all
+> > > speeds. This improvess UDP TX and Bidirectional performance to
+> > > 2.3Gbps from 1.4Gbps in 2.5G. These values are derived after
+> > > experimenting with different values.
+> > 
+> > It would be good to also implement:
+> > 
+> >        ethtool -c|--show-coalesce devname
+> > 
+> >        ethtool -C|--coalesce devname [adaptive-rx on|off] [adaptive-
+> > tx on|off]
+> >               [rx-usecs N] [rx-frames N] [rx-usecs-irq N] [rx-frames-
+> > irq N]
+> >               [tx-usecs N] [tx-frames N] [tx-usecs-irq N] [tx-frames-
+> > irq N]
+> >               [stats-block-usecs N] [pkt-rate-low N] [rx-usecs-low N]
+> >               [rx-frames-low N] [tx-usecs-low N] [tx-frames-low N]
+> >               [pkt-rate-high N] [rx-usecs-high N] [rx-frames-high N]
+> >               [tx-usecs-high N] [tx-frames-high N] [sample-interval
+> > N]
+> >               [cqe-mode-rx on|off] [cqe-mode-tx on|off] [tx-aggr-max-
+> > bytes N]
+> >               [tx-aggr-max-frames N] [tx-aggr-time-usecs N]
+> > 
+> > so the user can configure it. Sometimes lower power is more important
+> > than high speed.
+> > 
+> >         Andrew
 > 
-> Signed-off-by: Michael Riesch <michael.riesch@wolfvision.net>
-> Signed-off-by: Michael Riesch <michael.riesch@collabora.com>
-> ---
->  .../bindings/media/rockchip,rk3568-mipi-csi.yaml   | 113 +++++++++++++++++++++
->  MAINTAINERS                                        |   1 +
->  2 files changed, 114 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/media/rockchip,rk3568-mipi-csi.yaml b/Documentation/devicetree/bindings/media/rockchip,rk3568-mipi-csi.yaml
-> new file mode 100644
-> index 000000000000..d5004cb288dd
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/rockchip,rk3568-mipi-csi.yaml
-> @@ -0,0 +1,113 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/media/rockchip,rk3568-mipi-csi.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Rockchip RK3568 MIPI CSI-2 Receiver
-> +
-> +maintainers:
-> +  - Michael Riesch <michael.riesch@collabora.com>
-> +
-> +description:
-> +  The Rockchip RK3568 MIPI CSI-2 Receiver is a CSI-2 bridge with one input port
-> +  and one output port. It receives the data with the help of an external
-> +  MIPI PHY (C-PHY or D-PHY) and passes it to the Rockchip RK3568 Video Capture
-> +  (VICAP) block.
-> +
-> +properties:
-> +  compatible:
-> +    const: rockchip,rk3568-mipi-csi
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  phys:
-> +    maxItems: 1
-> +    description: MIPI C-PHY or D-PHY.
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  ports:
-> +    $ref: /schemas/graph.yaml#/properties/ports
-> +
-> +    properties:
-> +      port@0:
-> +        $ref: /schemas/graph.yaml#/$defs/port-base
-> +        unevaluatedProperties: false
-> +        description: Input port node. Connect to e.g., a MIPI CSI-2 image sensor.
-> +
-> +        properties:
-> +          endpoint:
-> +            $ref: video-interfaces.yaml#
-> +            unevaluatedProperties: false
-> +
-> +            properties:
-> +              bus-type:
-> +                enum: [1, 4]
+> We've tuned the interrupt moderation values based on testing to improve
+> performance. For now, we’ll keep these fixed values optimized for
+> performance across all speeds. That said, we agree that adding ethtool
+> -c/-C support would provide valuable flexibility for users to balance
+> power and performance, and we’ll consider implementing that in a future
+> update.
 
-shouldn't you add data-lanes property here ?
+As you said, you have optimised for performance. That might cause
+regressions for some users. We try to avoid regressions, and if
+somebody does report a regression, we will have to revert this change.
+If you were to implement this ethtool option, we are a lot less likely
+to make a revert, we can instruct the user how to set the coalesce for
+there use case.
 
-                 data-lanes:
-                   minItems: 1
-                   maxItems: 4
-> +
-> +            required:
-> +              - bus-type
-
-and add it to required:
-                 - data-lanes
-
-you are actually checking for data-lanes when you enable the stream in:
-
-rkcif-mipi-csi-receiver.c +226
-
-	u32 lanes = csi_dev->vep.bus.mipi_csi2.num_data_lanes;
-
-	if (lanes < 1 || lanes > 4)
-		return -EINVAL;
-
-> +
-> +      port@1:
-> +        $ref: /schemas/graph.yaml#/properties/port
-> +        description: Output port connected to a RK3568 VICAP port.
-> +
-> +    required:
-> +      - port@0
-> +      - port@1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - phys
-> +  - phy-names
-> +  - ports
-> +  - power-domains
-> +  - resets
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/rk3568-cru.h>
-> +    #include <dt-bindings/power/rk3568-power.h>
-> +
-> +    soc {
-> +        #address-cells = <2>;
-> +        #size-cells = <2>;
-> +
-> +        csi: csi@fdfb0000 {
-> +            compatible = "rockchip,rk3568-mipi-csi";
-> +            reg = <0x0 0xfdfb0000 0x0 0x10000>;
-> +            clocks = <&cru PCLK_CSI2HOST1>;
-> +            phys = <&csi_dphy>;
-> +            power-domains = <&power RK3568_PD_VI>;
-> +            resets = <&cru SRST_P_CSI2HOST1>;
-> +
-> +            ports {
-> +                #address-cells = <1>;
-> +                #size-cells = <0>;
-> +
-> +                csi_in: port@0 {
-> +                    reg = <0>;
-> +                };
-> +
-> +                csi_out: port@1 {
-> +                    reg = <1>;
-> +
-> +                    csi_output: endpoint {
-> +                        remote-endpoint = <&vicap_mipi_input>;
-> +                    };
-> +                };
-> +            };
-> +        };
-> +    };
-
---
-Kind Regards
-Mehdi Djait
+	Andrew
