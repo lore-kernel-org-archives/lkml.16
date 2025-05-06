@@ -1,121 +1,182 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CC17282EE;
-	Tue,  6 May 2025 11:23:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F8DC2798EC
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 11:23:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746530610; cv=none; b=KLXlRLRN5ShwHfbj6LKi1OA/Bg/yvasuO1HywMoOHa7h4Hn5FUU9/bawjuPc8eV0KA4uzabtB46gojIxkGY7k027Dvdv4A3ZY4Gg9K8heXlu6OAxWLdpO7/NhS+3d7qJjm5DRyxXfBKxbJ6sZQDbXWSeCsZ0OnMl4wDAQ6KW8V4=
+	t=1746530609; cv=none; b=H0CDBS5BL0asyTAJT2EKdmSYICsDRgugSpN8hwF0JfBqWMV292Bwpfef6uBFG7Q7nkhuMSwYYlB3UvRhU7g95nBzWQ8IIrX8Oxf3UWIMWJ5OxrIj9+wCh7UlE/cbL4TZE1vvD+hXvZWbiEkUQBBUjJe1e8DetuVcKhkUgLpN7Yc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746530610; c=relaxed/simple;
-	bh=JfGn9n7xtXq88oIfWghwV1vxPHFWWIwsPGpPzWmnofo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uN+JVV7APY9WqjCslmp6JcZZ+FkqmwX4FOOOs0kxYpzeX5QbY6U9aLZoliEZVNlHge2gSARJ7e8DXVMYHa0TDncFAo1/AsQieD2rwisgIWosNLwG+FTuD6RqpJY8pRTQGFO2WlNwWHin51qvnyWmA7gX1UaguMHXJJFRuCffCT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Rswc+1X3; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1746530609; c=relaxed/simple;
+	bh=G+3WkQcpdcfeKfUTIqHj8xX8ZAGYDA7fG744ILMAolo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IEKlMqfVFJ9t609IH1zzCcfxFHBN2yVIHpjy/4IVtzYzQfMHNlE4iBrl5OnQ2TGQLdEN8oP+NMETVpxoGf4ygxmXJWO9iHF8u8QRpoikQqThygZsznEPTDNXou/JVEM3MjPE1Ohocqw5vjlhD5OgdaTflpq4kU9g6clJ2bmuz74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZlchsCGD; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Rswc+1X3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746530608; x=1778066608;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=JfGn9n7xtXq88oIfWghwV1vxPHFWWIwsPGpPzWmnofo=;
-  b=Rswc+1X3HR8PqhDJ68ICBhcRuxk2O+jMEIeau8SQxFfrmws0h9oZATJ2
-   4lBSBz97pfSFqfgaMyMfqZYzGp0xgDvolPWeUrUaEx77fZmxpA/7ukAie
-   FGly1uGdKWszulI83qCMhmcW5V9r/vfGsvI9pa6PlBSYEF1Ntn6gi1jsr
-   SIkDQOe7+fw8yd/Grza/0qtizBxYlPXQVzv95A7CDUKf7DL94V3+Xt7dc
-   +ZL7d9By1phcBUVdL/7+pkXx7cTnOOXbPGC8uPHEzsVjIXg5aTdpzDIK9
-   VCMwpU66QYwplernOsPXwPdd1640K+iXpHQzIOAlHwoXN96UOhxgxd0Tl
-   A==;
-X-CSE-ConnectionGUID: AMk/xE5ARzSrHOZJYIcOBg==
-X-CSE-MsgGUID: dUb85tSpSz2yIhk4pWODeQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11424"; a="65727957"
-X-IronPort-AV: E=Sophos;i="6.15,266,1739865600"; 
-   d="scan'208";a="65727957"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 04:23:28 -0700
-X-CSE-ConnectionGUID: soCurtFTT0aPgSHSckSn6g==
-X-CSE-MsgGUID: z91GLQMBQGSUBRLmZSjGyQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,266,1739865600"; 
-   d="scan'208";a="139646881"
-Received: from kuha.fi.intel.com ([10.237.72.152])
-  by fmviesa003.fm.intel.com with SMTP; 06 May 2025 04:23:24 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 06 May 2025 14:23:22 +0300
-Date: Tue, 6 May 2025 14:23:22 +0300
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To: amitsd@google.com
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Badhri Jagan Sridharan <badhri@google.com>,
-	=?iso-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>,
-	Peter Griffin <peter.griffin@linaro.org>,
-	Tudor Ambarus <tudor.ambarus@linaro.org>,
-	RD Babiera <rdbabiera@google.com>, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	Kyle Tso <kyletso@google.com>
-Subject: Re: [PATCH] usb: typec: tcpm/tcpci_maxim: Fix bounds check in
- process_rx()
-Message-ID: <aBnxKrVxurLZ_7k9@kuha.fi.intel.com>
-References: <20250502-b4-new-fix-pd-rx-count-v1-1-e5711ed09b3d@google.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZlchsCGD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746530607;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fBp4p4deqUzAG3SrieVeuIkuCgjpw2beSF6aI8YLfpc=;
+	b=ZlchsCGDCvYjsFXBsUkqoT7CqqozQWk9aTwSL/EqLbWJSamcpyDNmUwGs152IpmXamtcvL
+	HX7tR+YoKhTSuSSPCxvW2OQQh/PSR/quxAiZARHX3V+8180PqKtwu2Km3ze9puissY+pcl
+	oML0qRXp1VbjBIFNEpyFMMqNpqWzphw=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-528-ilMwxmQaOW-v-ExS-8dFBg-1; Tue, 06 May 2025 07:23:25 -0400
+X-MC-Unique: ilMwxmQaOW-v-ExS-8dFBg-1
+X-Mimecast-MFC-AGG-ID: ilMwxmQaOW-v-ExS-8dFBg_1746530604
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43d209dc2d3so25384295e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 04:23:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746530604; x=1747135404;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fBp4p4deqUzAG3SrieVeuIkuCgjpw2beSF6aI8YLfpc=;
+        b=C+I/NvfO9d1klWDmSBhA5GCgL9er5O6F8Ju2r9xxPZrtLaiAwXHtRMGtdZlZtb3x8T
+         ntK1sxuIJnPJ3kY1xok6ZDn5H8A7lltj/Vfv29JW/NP3j2Cc+oacIsegwCt8Qyb6FwEQ
+         S2BujA/1XnRK5zILuIvfqSPS2EAf1V7JvdGKDLNLAmFd0v2qIGdJ0kUPPyO6F6l1qjs3
+         ax41QcFGCddkY51OQHh2GfTOoTSFQg12iye4LwagFT8w5ttRwnmkfhbINs+UGHBGUMBH
+         p/9NJAaLUZNyJeySuX5DI9/eKkBy0r9QqMzLxzFmRkTS1B0T0OY1DJY7w0SCW6U0PRij
+         3WFw==
+X-Forwarded-Encrypted: i=1; AJvYcCWUQCcjppsVhGv1J2hEjfhZGWlkO4paejZAZqo3dGfWM5As0Uc51Djzd7eQ3xGok9UZbU0Q8MMJxBfPP6Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwLvoAx3v8bzufoRUKzwFlo8biuq3wtx6J8erp4CgVhM8l6799
+	UtzVJGGOR/sBmo/fzPM+wAJzleFbVt/+8G40gASDYQlh0BEzyQmxnnXC4FgIjJdmAETXtBLdAqT
+	qiJSdVwet90vcxvm7H+4RV6b3BAJFr77n+6ZOBE9MxwmDATD+kKNaSODTYqwR3g==
+X-Gm-Gg: ASbGncuFc/maLyaB2t3fmSvj5flRdJXbaq8t/YqMDxDAKC3xiakRZZX7vyFDyp2hKvZ
+	EARK8hjPBo8vi2i7hSBl0jBXDbBMuw4dQLNcy3vYh1taoYD6rbepGq+3Gsp4pF3W097hMb83afX
+	FjAyeNhBEwHC5XfxOlSKHzl7D9eB151aZor6S7r0DRsCJgaSpq6C5OLGUIGOQFxGAAk3e+RIvrB
+	lE6ZGclsarais0t0b73unbT+dB4GCaK7KlivKi4xh7BwnsklCw5MClcuO0QMvlFH/ynhHWKm9tk
+	ylr4NE7xZwT21MXNstzrDO9HxgKFUfOwDVO2YFd/MF8PnqVXKkE7Y/cKoUQ=
+X-Received: by 2002:a05:600c:1d1f:b0:43d:24d:bbe2 with SMTP id 5b1f17b1804b1-441d1014fcfmr16250085e9.28.1746530604242;
+        Tue, 06 May 2025 04:23:24 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEeYO2F4emx5hXi1uWB9URVLSGX9o9e7D7vvbT0onpTpSIZrGfufwgIJiasWRhRjn91m92mTQ==
+X-Received: by 2002:a05:600c:1d1f:b0:43d:24d:bbe2 with SMTP id 5b1f17b1804b1-441d1014fcfmr16249785e9.28.1746530603759;
+        Tue, 06 May 2025 04:23:23 -0700 (PDT)
+Received: from ?IPV6:2a0d:3344:2706:e010:b099:aac6:4e70:6198? ([2a0d:3344:2706:e010:b099:aac6:4e70:6198])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b2ad7ab1sm212836775e9.4.2025.05.06.04.23.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 06 May 2025 04:23:23 -0700 (PDT)
+Message-ID: <3e91e070-24a2-4dab-bca5-157fea921bf0@redhat.com>
+Date: Tue, 6 May 2025 13:23:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250502-b4-new-fix-pd-rx-count-v1-1-e5711ed09b3d@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [net-next v11 4/7] net: mtip: The L2 switch driver for imx287
+To: Lukasz Majewski <lukma@denx.de>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, davem@davemloft.net,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>,
+ Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ Stefan Wahren <wahrenst@gmx.net>, Simon Horman <horms@kernel.org>,
+ Andrew Lunn <andrew@lunn.ch>
+References: <20250504145538.3881294-1-lukma@denx.de>
+ <20250504145538.3881294-5-lukma@denx.de>
+ <61ebe754-d895-47cb-a4b2-bb2650b9ff7b@redhat.com>
+ <20250506130438.149c137e@wsk>
+Content-Language: en-US
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <20250506130438.149c137e@wsk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 02, 2025 at 04:57:03PM -0700, Amit Sunil Dhamne via B4 Relay wrote:
-> From: Amit Sunil Dhamne <amitsd@google.com>
+On 5/6/25 1:04 PM, Lukasz Majewski wrote:
+>> On 5/4/25 4:55 PM, Lukasz Majewski wrote:
+>>> +		/* This does 16 byte alignment, exactly what we
+>>> need.
+>>> +		 * The packet length includes FCS, but we don't
+>>> want to
+>>> +		 * include that when passing upstream as it messes
+>>> up
+>>> +		 * bridging applications.
+>>> +		 */
+>>> +		skb = netdev_alloc_skb(pndev, pkt_len +
+>>> NET_IP_ALIGN);
+>>> +		if (unlikely(!skb)) {
+>>> +			dev_dbg(&fep->pdev->dev,
+>>> +				"%s: Memory squeeze, dropping
+>>> packet.\n",
+>>> +				pndev->name);
+>>> +			pndev->stats.rx_dropped++;
+>>> +			goto err_mem;
+>>> +		} else {
+>>> +			skb_reserve(skb, NET_IP_ALIGN);
+>>> +			skb_put(skb, pkt_len);      /* Make room */
+>>> +			skb_copy_to_linear_data(skb, data,
+>>> pkt_len);
+>>> +			skb->protocol = eth_type_trans(skb, pndev);
+>>> +			napi_gro_receive(&fep->napi, skb);
+>>> +		}
+>>> +
+>>> +		bdp->cbd_bufaddr = dma_map_single(&fep->pdev->dev,
+>>> data,
+>>> +						  bdp->cbd_datlen,
+>>> +						  DMA_FROM_DEVICE);
+>>> +		if (unlikely(dma_mapping_error(&fep->pdev->dev,
+>>> +					       bdp->cbd_bufaddr)))
+>>> {
+>>> +			dev_err(&fep->pdev->dev,
+>>> +				"Failed to map descriptor rx
+>>> buffer\n");
+>>> +			pndev->stats.rx_errors++;
+>>> +			pndev->stats.rx_dropped++;
+>>> +			dev_kfree_skb_any(skb);
+>>> +			goto err_mem;
+>>> +		}  
+>>
+>> This is doing the mapping and ev. dropping the skb _after_ pushing the
+>> skb up the stack, you must attempt the mapping first.
+>>
+>>> +static void mtip_free_buffers(struct net_device *dev)
+>>> +{
+>>> +	struct mtip_ndev_priv *priv = netdev_priv(dev);
+>>> +	struct switch_enet_private *fep = priv->fep;
+>>> +	struct sk_buff *skb;
+>>> +	struct cbd_t *bdp;
+>>> +	int i;
+>>> +
+>>> +	bdp = fep->rx_bd_base;
+>>> +	for (i = 0; i < RX_RING_SIZE; i++) {
+>>> +		skb = fep->rx_skbuff[i];
+>>> +
+>>> +		if (bdp->cbd_bufaddr)
+>>> +			dma_unmap_single(&fep->pdev->dev,
+>>> bdp->cbd_bufaddr,
+>>> +					 MTIP_SWITCH_RX_FRSIZE,
+>>> +					 DMA_FROM_DEVICE);
+>>> +		if (skb)
+>>> +			dev_kfree_skb(skb);  
+>>
+>> I suspect that on error paths mtip_free_buffers() can be invoked
+>> multiple consecutive times with any successful allocation in between:
+>> skb will be freed twice. Likely you need to clear fep->rx_skbuff[i]
+>> here.
 > 
-> Register read of TCPC_RX_BYTE_CNT returns the total size consisting of:
-> 
->   PD message (pending read) size + 1 Byte for Frame Type (SOP*)
-> 
-> This is validated against the max PD message (`struct pd_message`) size
-> without accounting for the extra byte for the frame type. Note that the
-> struct pd_message does not contain a field for the frame_type. This
-> results in false negatives when the "PD message (pending read)" is equal
-> to the max PD message size.
-> 
-> Fixes: 6f413b559f86 ("usb: typec: tcpci_maxim: Chip level TCPC driver")
-> Signed-off-by: Amit Sunil Dhamne <amitsd@google.com>
-> Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
-> Reviewed-by: Kyle Tso <kyletso@google.com>
+> I don't know what I shall say now.... really... 
 
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+I suspect my email was not clear. AFAICS the current code contains at
+least 2 serious issues, possibly more not yet discovered due to the
+patch size. You need to submit (at least) a new revision coping with the
+provided feedback.
 
-> ---
->  drivers/usb/typec/tcpm/tcpci_maxim_core.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/typec/tcpm/tcpci_maxim_core.c b/drivers/usb/typec/tcpm/tcpci_maxim_core.c
-> index fd1b80593367641a6f997da2fb97a2b7238f6982..648311f5e3cf135f23b5cc0668001d2f177b9edd 100644
-> --- a/drivers/usb/typec/tcpm/tcpci_maxim_core.c
-> +++ b/drivers/usb/typec/tcpm/tcpci_maxim_core.c
-> @@ -166,7 +166,8 @@ static void process_rx(struct max_tcpci_chip *chip, u16 status)
->  		return;
->  	}
->  
-> -	if (count > sizeof(struct pd_message) || count + 1 > TCPC_RECEIVE_BUFFER_LEN) {
-> +	if (count > sizeof(struct pd_message) + 1 ||
-> +	    count + 1 > TCPC_RECEIVE_BUFFER_LEN) {
->  		dev_err(chip->dev, "Invalid TCPC_RX_BYTE_CNT %d\n", count);
->  		return;
->  	}
-> 
-> ---
-> base-commit: ebd297a2affadb6f6f4d2e5d975c1eda18ac762d
-> change-id: 20250421-b4-new-fix-pd-rx-count-79297ba619b7
-> 
-> Best regards,
-> -- 
-> Amit Sunil Dhamne <amitsd@google.com>
-> 
+Thanks,
 
--- 
-heikki
+Paolo
+
