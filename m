@@ -1,93 +1,110 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3352219A70;
-	Tue,  6 May 2025 08:24:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5066C17A2EB;
+	Tue,  6 May 2025 08:25:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746519861; cv=none; b=R+Kj1k3YqeFJYfRnaiu4XSb8WMaMQX1Dq0xEnto3l9vJvPXnkciB4EkbBiXTYfwDG4njgzU7B8i7sYGDEkAdOECxxkZ4xHjXpnXajVWLP/FxEFYat3n8RcKLnHfZ/z40xXIKyAz76xqwD8PfNrzTbaJUk6ob0pc+MXGxsrsYZSc=
+	t=1746519936; cv=none; b=eS+5E+qvfMHuoyI1BX/YrWOKxmUo5UhakH3COCstLEaZ1erNsSX0/EXybwm8tuU2/mAnH+NUDP5sDKE5lCJgHymicAaaxSsviGdNS7n/wFETd2PUcibT6sFV5KpdvDkCEBO2IYQQleJhC4154XhpWVd53qQXF6LVrFdfmnx11l0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746519861; c=relaxed/simple;
-	bh=lBTnRAFU0jsKirdN/eSj6PpIDMSdkp6AzoPeP/dvL18=;
+	s=arc-20240116; t=1746519936; c=relaxed/simple;
+	bh=9yV3LyzeKiUxHwUxf6m0FaczSx9+xCpgWW08Je15hHc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lHGCFpYEFad1TgDbNfgkD+MJ0K9X68SgGSlqTuSJSSVjvFPyPebH67mfzSmnrGknbPVZPljS+iFmfSXA3KyokNDwQeG9n6i1x+pX1CDMM0xtgC463Mnpi07t2m1bIECh0CFFUlqWz20RvPh5fTb1kkJ3gfgXbJFxgi3JF7kEMU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HM0hQepd; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=fzrK2xzo+IUnp+e15bR4lXhP3Yd0oltIXX+RqFy3x3vvZowgqKJjO65oF3n4zQAv5uMCJFvRwpVFfOxgbof5gZpEuHnJQrrhjEyWo/L3Ao2Xzcdp8Fty4Rw+UITVWW6MrOzvYkHJ2B1BDsrJXnTMYV+xaC57ahxfFcsBv9M1x6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J3WAxl3z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HM0hQepd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7E74C4CEED;
-	Tue,  6 May 2025 08:24:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J3WAxl3z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32A3CC4CEE4;
+	Tue,  6 May 2025 08:25:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746519859;
-	bh=lBTnRAFU0jsKirdN/eSj6PpIDMSdkp6AzoPeP/dvL18=;
+	s=k20201202; t=1746519935;
+	bh=9yV3LyzeKiUxHwUxf6m0FaczSx9+xCpgWW08Je15hHc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HM0hQepdvOerw0p1YZTCd+c8nmAGgz/75a1BgRUXFSbVJAWTTrJ3NgFMKwgVs6EUV
-	 2owTIDRf/872CL8P3sUQ9wxxva/29k5mFyC2GbL6ZP/I6wxKCZFeE5hc9fuj9YOAtz
-	 t0PdEjfA0P1OMz22MP+jlLnsG4b5AEETJI4TShsenJK1HGHoOv9JlBtPKG8rsHtRbI
-	 YolFohh4DZk2pHHNWKDAbQHCOcqULKzPiilzTlMpgBydsvtYmod2EWLFmZJD7+u3xH
-	 SCk9ltLmB1o35CYp6yqRNRjH3mJj+lpWBSO9A3sEZLbHA/aL2KiuvSAoFxzxHYIL8Y
-	 Eu5XOTnOMnioA==
-Date: Tue, 6 May 2025 10:24:12 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Kuniyuki Iwashima <kuniyu@amazon.com>
-Cc: alexander@mihalicyn.com, bluca@debian.org, daan.j.demeyer@gmail.com, 
-	davem@davemloft.net, david@readahead.eu, edumazet@google.com, horms@kernel.org, 
-	jack@suse.cz, jannh@google.com, kuba@kernel.org, lennart@poettering.net, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, me@yhndnzj.com, 
-	netdev@vger.kernel.org, oleg@redhat.com, pabeni@redhat.com, viro@zeniv.linux.org.uk, 
-	zbyszek@in.waw.pl
-Subject: Re: [PATCH RFC v3 04/10] coredump: add coredump socket
-Message-ID: <20250506-pilze-wegstecken-1d792c7b79b7@brauner>
-References: <20250505-work-coredump-socket-v3-4-e1832f0e1eae@kernel.org>
- <20250505184847.15534-1-kuniyu@amazon.com>
+	b=J3WAxl3z/Pwil/YaDsUwVuDG6aEWoNq6ULh0of+ysCaU8Ogyo1CeFNFUmmnLfKm5G
+	 6YZ+7kwkYRsyaF1dXjcfzcW1dor4cAKPm9aCR1jtWXcRyyD8ke3Yv2R0IMh+KMK6YB
+	 uCq3nKodtAwH2fyXWhuVUZ3GAyqXnsbGzexfa0FjnQWH/AMmG6TkWK0cyGNy3PhXVb
+	 mOLQqg8X3TrUwoidmWz3w4Ooh0CHljcn5nQixiz3N4hPMkyXYYrzIDXimapT7vmqzb
+	 81TOvLgZPqwNdpFouSOVM0lQks8ztT8m7DT/4W4gYp144uxxufYJeV2UHWBdvk3u/A
+	 lf6jfrLBARCkw==
+Date: Tue, 6 May 2025 10:25:30 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: "Ahmed S. Darwish" <darwi@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	John Ogness <john.ogness@linutronix.de>, x86@kernel.org,
+	x86-cpuid@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 12/26] x86/cpu: Use scanned CPUID(0x1)
+Message-ID: <aBnHeoNq_LBY0xxj@gmail.com>
+References: <20250506050437.10264-1-darwi@linutronix.de>
+ <20250506050437.10264-13-darwi@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250505184847.15534-1-kuniyu@amazon.com>
+In-Reply-To: <20250506050437.10264-13-darwi@linutronix.de>
 
-On Mon, May 05, 2025 at 11:48:43AM -0700, Kuniyuki Iwashima wrote:
-> From: Christian Brauner <brauner@kernel.org>
-> Date: Mon, 05 May 2025 13:13:42 +0200
-> > @@ -801,6 +846,40 @@ void do_coredump(const kernel_siginfo_t *siginfo)
-> >  		}
-> >  		break;
-> >  	}
-> > +	case COREDUMP_SOCK: {
-> > +		struct file *file __free(fput) = NULL;
-> > +#ifdef CONFIG_UNIX
-> > +		struct socket *socket;
-> > +
-> > +		/*
-> > +		 * It is possible that the userspace process which is
-> > +		 * supposed to handle the coredump and is listening on
-> > +		 * the AF_UNIX socket coredumps. Userspace should just
-> > +		 * mark itself non dumpable.
-> > +		 */
-> > +
-> > +		retval = sock_create_kern(&init_net, AF_UNIX, SOCK_STREAM, 0, &socket);
-> > +		if (retval < 0)
-> > +			goto close_fail;
-> > +
-> > +		file = sock_alloc_file(socket, 0, NULL);
-> > +		if (IS_ERR(file)) {
-> > +			sock_release(socket);
-> > +			retval = PTR_ERR(file);
-> > +			goto close_fail;
-> > +		}
-> > +
-> > +		retval = kernel_connect(socket,
-> > +					(struct sockaddr *)(&coredump_unix_socket),
-> > +					COREDUMP_UNIX_SOCKET_ADDR_SIZE, 0);
-> 
-> This blocks forever if the listener's accept() queue is full.
-> 
-> I think we don't want that and should pass O_NONBLOCK.
-> 
-> To keep the queue clean is userspace responsibility, and we don't
-> need to care about a weird user.
 
-That seems fine to me. I've changed that.
+* Ahmed S. Darwish <darwi@linutronix.de> wrote:
+
+> Use scanned CPUID(0x1) access, instead of a direct CPUID query, at early
+> boot CPU detection code.
+> 
+> Beside the centralization benefits of the scanned CPUID API, this allows
+> using the auto-generated <cpuid/leaves.h> CPUID leaf data types and their
+> full C99 bitfields instead of performing ugly bitwise operations on CPUID
+> register output.
+> 
+> Signed-off-by: Ahmed S. Darwish <darwi@linutronix.de>
+> ---
+>  arch/x86/kernel/cpu/common.c | 16 +++++++---------
+>  1 file changed, 7 insertions(+), 9 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+> index 59ddf6b074f2..a08340a5e6a5 100644
+> --- a/arch/x86/kernel/cpu/common.c
+> +++ b/arch/x86/kernel/cpu/common.c
+> @@ -895,6 +895,7 @@ void get_cpu_vendor(struct cpuinfo_x86 *c)
+>  void cpu_detect(struct cpuinfo_x86 *c)
+>  {
+>  	const struct leaf_0x0_0 *l0 = cpudata_cpuid(c, 0x0);
+> +	const struct leaf_0x1_0 *l1 = cpudata_cpuid(c, 0x1);
+>  
+>  	c->cpuid_level = l0->max_std_leaf;
+>  	*(u32 *)&c->x86_vendor_id[0] = l0->cpu_vendorid_0;
+> @@ -902,17 +903,14 @@ void cpu_detect(struct cpuinfo_x86 *c)
+>  	*(u32 *)&c->x86_vendor_id[8] = l0->cpu_vendorid_2;
+>  
+>  	c->x86 = 4;
+> -	/* Intel-defined flags: level 0x00000001 */
+> -	if (c->cpuid_level >= 0x00000001) {
+> -		u32 junk, tfms, cap0, misc;
+>  
+> -		cpuid(0x00000001, &tfms, &misc, &junk, &cap0);
+> -		c->x86		= x86_family(tfms);
+> -		c->x86_model	= x86_model(tfms);
+> -		c->x86_stepping	= x86_stepping(tfms);
+> +	if (l1) {
+> +		c->x86		= cpuid_family(l1);
+> +		c->x86_model	= cpuid_model(l1);
+> +		c->x86_stepping	= l1->stepping;
+>  
+> -		if (cap0 & (1<<19)) {
+> -			c->x86_clflush_size = ((misc >> 8) & 0xff) * 8;
+> +		if (l1->clflush) {
+> +			c->x86_clflush_size = l1->clflush_size * 8;
+>  			c->x86_cache_alignment = c->x86_clflush_size;
+>  		}
+
+Nice patch, it really nicely demonstrates the maintainability 
+advantages of the new CPUID parser.
+
+Thanks,
+
+	Ingo
