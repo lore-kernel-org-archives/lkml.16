@@ -1,118 +1,138 @@
-Received: from mail-il1-f226.google.com (mail-il1-f226.google.com [209.85.166.226])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA9DA20B806
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 17:54:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.226
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C221155C83
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 17:55:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746554064; cv=none; b=uAwIhvXiGJdD3ihzDDKEzxbsYhJDN9Akf7Z5tb/rzJdKKgmSOKg7dcEw693CLEIbipwrwDc3O3rkBFXhiMmsonV7+TiN/4oSPu5VFvDbXJtxS+uWX4IzxefVgw/nulJFN2MLBwM5D3wVXweHcavpC9eiJ9EkjbB0kWMacET7/Po=
+	t=1746554104; cv=none; b=h6oQtKB8QSlas51OmmfHMXRGStEGbq/c0kJd2zi/d21r0pLSPu1aLvDzgukNdVO/EUHryJ5GSXz0H/IkuFFnA5uX5Tf9T4q6z3w97ucmD4gNoqzAPWR2EzFtklJEVQahz5KspgzCOZ+NSW0yBQCcFShQjEB8Sbvj7TbqWOi1YkE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746554064; c=relaxed/simple;
-	bh=9mgkh+3nmmF07ECHRmFqC6uyy+zi/VIkBkd/wPvcMJw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ed8gF7LcXf6MHmOKD6piYsm2d1TAoZIj4vY2yRByF2Q4JSZ9LrBovzyzxO8WO0wkWeOxMhZkM93Grd9M37XO/TIkW0uMVnqVLQNii0wPPMxztdCrRX+GbPnM4jbU5uV2J80BxYzP6mm+oA0DJLiuShuDu/lfvu38VXtz29OqpWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=BEpB84IT; arc=none smtp.client-ip=209.85.166.226
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+	s=arc-20240116; t=1746554104; c=relaxed/simple;
+	bh=zeKQ7SJxlnH4RiLpiGhYDSXYG79t/zm3ZtEOnuEmM04=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=fGH/3vjKJhuPm6ZQD4FcQ7mp8tqo4PDnoD7MUSfi5qnu10eDgbSmxzh4RoFjsR3Nd3TP0+wwpUShfSL930M+4XNXdij3Tzb+F+2MdjqJPbZS/BCZFs/EP8GxsekKMvliYo/ixxctMGLDDRfMWlKgI+hSvzfe+PpALTwC0TJkXrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=c0dYM6Dv; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="BEpB84IT"
-Received: by mail-il1-f226.google.com with SMTP id e9e14a558f8ab-3d43bb8ac26so1694875ab.2
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 10:54:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1746554062; x=1747158862; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ovyunJMzY2BM/vnqYqDfx0z8WEcxzxmQSFfHAJD53dQ=;
-        b=BEpB84ITlSHvyHyScFGMmeBJl8SeD60NHgaltozn9Lb4/Eiz8opkpCVj6iF/Yln7CB
-         MVkZUFdYSkI9xpnqlZp74y6Cq1T/iCeAZfd+u2xfjn1wlUqpR1ntCrHryqyekcw/T+ER
-         P1pd5Pupj1RRJVfNQQC0/1Wu0wTsitv6IoLOjostAPdiywSZnccInMqW62hmupVjZZkw
-         V+gAfc/b0hh03gh/1yImSsiIIXDpPhLBHH0cs1g5D2m70AwRijwCERPk2JZfNn2Zhudu
-         lPIwqNQC10bqa3Z07GMnzNNVaQNQQLZdcRDplH4io8PacAQbTOrMa107DSFpemnTvtt1
-         UQdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746554062; x=1747158862;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ovyunJMzY2BM/vnqYqDfx0z8WEcxzxmQSFfHAJD53dQ=;
-        b=MRLvV0JQEONeVtGwC5J3AcOyG7IJsIDh0tnSirhjpEf6VhDfrA6OmSFNgWxJnyDilO
-         rK7wIVhP73FExebG4983tRlooRbcEGkHPiFySwdbP3LkH7luB0ELegMbsobUK42+A+fl
-         vEHFFsMWN6P0A/ON+0r25gMsgop2IL9wg/T5VwuI8XSLF6WiVmpU1ZFdlpCUUP0jVwIn
-         8A/E+nTOyrdQdbbs/4CPwj/Ww9T6x10ylvQAGIUCAViiEn0t4dbShsWO8XoSAiI84mrA
-         hMpYWcULqUoz5PLMKl9o0CWTKmQyyAc1jswhJa0M/T7uX84g1N5v/eCfPLk8MU9JaFDU
-         t0Zg==
-X-Forwarded-Encrypted: i=1; AJvYcCWHsRkVD2lFu3rz9MPeWp6EybxSvgrIODIz1E08f6dn/gMb/pSJnwpdaLILaP/d5EpTeMfSaQQiL5Zk6Ow=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwEftcmqlUZwRmfXTIjSOGNM282PmyBoq8jEMtNJCrljP9axhU+
-	sChQRN57husAt9pwN4Npp2z09agdZed3T35aA/jBT2HD7kA17dL0QhO68M/epznlqHQg0wtitml
-	9vgm/HFwtfkc9Ast+UvyrJHKm0Oin48UK8h1hXy778zplt2fh
-X-Gm-Gg: ASbGncvUFu3YQbCJJwuAxj8iTpk8BavdFmEdxLdNhpYARJbHHAkGucz9KCFzFwjmIl9
-	q2Jg4DyCSilPijv/MKdFezuWV0xwaopgIEiMfigrOdmewP+P/vUnguhPDBtlL9AMCwniz8RIBgX
-	8hLNQI3+72rWe+zxzzCh+XCH7nzEFtmao5go2NC01xUz4Om9gk6G42gq/s52sGDuOEgvfuSSc/c
-	FhQhXCiOiD5UbergRBAYLFWsOsa4OhgBkkmUORiEw6YgYJHre19RtxA9MfupAgH4awqCQwXdVZz
-	o8ndxXgxZ3dMU2I7kAKOmEk+4BTJBw==
-X-Google-Smtp-Source: AGHT+IGG5+67z8CZz9trHjpJ22gnk/1CqPuiaRkSCUUxhooa3Yd+geotR/Vte9dYVNo7S+ByK3+DgGrMmhi2
-X-Received: by 2002:a05:6e02:1b0e:b0:3d9:2961:fa01 with SMTP id e9e14a558f8ab-3da723e7850mr3279115ab.3.1746554061783;
-        Tue, 06 May 2025 10:54:21 -0700 (PDT)
-Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
-        by smtp-relay.gmail.com with ESMTPS id e9e14a558f8ab-3d975e34c17sm22713665ab.2.2025.05.06.10.54.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 10:54:21 -0700 (PDT)
-X-Relaying-Domain: purestorage.com
-Received: from dev-csander.dev.purestorage.com (unknown [IPv6:2620:125:9007:640:ffff::418a])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 6E8953401CE;
-	Tue,  6 May 2025 11:54:21 -0600 (MDT)
-Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
-	id 67ED5E41E7B; Tue,  6 May 2025 11:54:21 -0600 (MDT)
-From: Caleb Sander Mateos <csander@purestorage.com>
-To: Kanchan Joshi <joshi.k@samsung.com>,
-	Keith Busch <kbusch@kernel.org>,
-	Jens Axboe <axboe@kernel.dk>,
-	Christoph Hellwig <hch@lst.de>,
-	Sagi Grimberg <sagi@grimberg.me>
-Cc: Caleb Sander Mateos <csander@purestorage.com>,
-	linux-nvme@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] nvme: fix write_stream_granularity initialization
-Date: Tue,  6 May 2025 11:54:12 -0600
-Message-ID: <20250506175413.1936110-1-csander@purestorage.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="c0dYM6Dv"
+Received: from [127.0.0.1] ([76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 546HsauH1003209
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Tue, 6 May 2025 10:54:36 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 546HsauH1003209
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025042001; t=1746554077;
+	bh=0NXm/XN95lobvCxZ9ctEajsla4qk8Bp9QFGjMN8vb+E=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=c0dYM6DvBZlbms21oI9AfH/nY3vSR9cGc8v5FLB7i1MLQtXPuE20ZYfoEXB7FhfvT
+	 PwHfwtyqPstQ3PpucQNFliaX5N9n5MnTi2mlb4Gjp/W3e/bV4NVq6UA5FlSfWPLbOD
+	 ITiqmQtqAKV1M6C2j3G88vwJPADtwpvuLKmgQ/8NsE9iDp0V93/osWcEUeNY0MTpHo
+	 ATQ6CZchjGMSUTMWm5yMpAt8fGXZ7pzmMYIDzVnYISXhYncgcGEP7BWMwCTl47LgjU
+	 zorKHtKIijvvP5Vuaa2x3EtjQFYBGfVZPfcWVLqIeQTdgLRL1IF6urgdEzwh+GYLEw
+	 nu/R07Pa9KGOg==
+Date: Tue, 06 May 2025 10:54:35 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Uros Bizjak <ubizjak@gmail.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+CC: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        torvalds@linux-foundation.org
+Subject: Re: [PATCH -tip 1/3] x86/asm/32: Modernize memset() functions
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20250506165227.158932-1-ubizjak@gmail.com>
+References: <20250506165227.158932-1-ubizjak@gmail.com>
+Message-ID: <F66E73EB-7237-439F-8408-C0C39B1CE2D2@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-write_stream_granularity is set to max(info->runs, U32_MAX), which means
-that any RUNS value less than 2 ** 32 becomes U32_MAX, and any larger
-value is silently truncated to an unsigned int.
+On May 6, 2025 9:52:06 AM PDT, Uros Bizjak <ubizjak@gmail=2Ecom> wrote:
+>Use inout "+" constraint modifier where appropriate and declare
+>temporary variable using __auto_type, similar to what x86_64 does=2E
+>
+>No functional changes intended=2E
+>
+>Signed-off-by: Uros Bizjak <ubizjak@gmail=2Ecom>
+>Cc: Thomas Gleixner <tglx@linutronix=2Ede>
+>Cc: Ingo Molnar <mingo@kernel=2Eorg>
+>Cc: Borislav Petkov <bp@alien8=2Ede>
+>Cc: Dave Hansen <dave=2Ehansen@linux=2Eintel=2Ecom>
+>Cc: "H=2E Peter Anvin" <hpa@zytor=2Ecom>
+>---
+> arch/x86/include/asm/string_32=2Eh | 24 ++++++++++++------------
+> 1 file changed, 12 insertions(+), 12 deletions(-)
+>
+>diff --git a/arch/x86/include/asm/string_32=2Eh b/arch/x86/include/asm/st=
+ring_32=2Eh
+>index e9cce169bb4c=2E=2E9152d2c0f60e 100644
+>--- a/arch/x86/include/asm/string_32=2Eh
+>+++ b/arch/x86/include/asm/string_32=2Eh
+>@@ -164,12 +164,12 @@ extern void *memchr(const void *cs, int c, size_t c=
+ount);
+>=20
+> static inline void *__memset_generic(void *s, char c, size_t count)
+> {
+>-	int d0, d1;
+>+	const __auto_type s0 =3D s;
+> 	asm volatile("rep stosb"
+>-		     : "=3D&c" (d0), "=3D&D" (d1)
+>-		     : "a" (c), "1" (s), "0" (count)
+>+		     : "+D" (s), "+c" (count)
+>+		     : "a" (c)
+> 		     : "memory");
+>-	return s;
+>+	return s0;
+> }
+>=20
+> /* we might want to write optimized versions of these later */
+>@@ -197,23 +197,23 @@ extern void *memset(void *, int, size_t);
+> #define __HAVE_ARCH_MEMSET16
+> static inline void *memset16(uint16_t *s, uint16_t v, size_t n)
+> {
+>-	int d0, d1;
+>+	const __auto_type s0 =3D s;
+> 	asm volatile("rep stosw"
+>-		     : "=3D&c" (d0), "=3D&D" (d1)
+>-		     : "a" (v), "1" (s), "0" (n)
+>+		     : "+D" (s), "+c" (n)
+>+		     : "a" (v)
+> 		     : "memory");
+>-	return s;
+>+	return s0;
+> }
+>=20
+> #define __HAVE_ARCH_MEMSET32
+> static inline void *memset32(uint32_t *s, uint32_t v, size_t n)
+> {
+>-	int d0, d1;
+>+	const __auto_type s0 =3D s;
+> 	asm volatile("rep stosl"
+>-		     : "=3D&c" (d0), "=3D&D" (d1)
+>-		     : "a" (v), "1" (s), "0" (n)
+>+		     : "+D" (s), "+c" (n)
+>+		     : "a" (v)
+> 		     : "memory");
+>-	return s;
+>+	return s0;
+> }
+>=20
+> /*
 
-Use min() instead to provide the correct semantics, capping RUNS values
-at U32_MAX.
+So __auto_type is spelled "auto" in newer C versions, but "auto" was a (co=
+mpletely useless!) keyword going all the way back to K&R C=2E Can anyone th=
+ink of a reason why we don't do:=20
 
-Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
-Fixes: 30b5f20bb2dd ("nvme: register fdp parameters with the block layer")
----
- drivers/nvme/host/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+#define auto __auto_type
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 52331a14bce1..a9fb8cd54420 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -2390,11 +2390,11 @@ static int nvme_update_ns_info_block(struct nvme_ns *ns,
- 	if (!nvme_init_integrity(ns->head, &lim, info))
- 		capacity = 0;
- 
- 	lim.max_write_streams = ns->head->nr_plids;
- 	if (lim.max_write_streams)
--		lim.write_stream_granularity = max(info->runs, U32_MAX);
-+		lim.write_stream_granularity = min(info->runs, U32_MAX);
- 	else
- 		lim.write_stream_granularity = 0;
- 
- 	ret = queue_limits_commit_update(ns->disk->queue, &lim);
- 	if (ret) {
--- 
-2.45.2
+=2E=2E=2E and just start using the modern keyword right away?=20
 
+    -hpa
