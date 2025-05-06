@@ -1,238 +1,232 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2050.outbound.protection.outlook.com [40.107.94.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6408F283C8E
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 13:25:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746537943; cv=fail; b=mWs6bt1hDfEjWmlBIdzULekEeBnEwfKTN2fopGdcfF6jU+lXDnJAiSbGZ7kLR/x0qGpnMFevdMCF5WW5ucyVssVs6uEKrSSUHStWHGcWlJBLk2XF+PD4uAG+5k7JtpXDwlMtx4TTBjLq0TW0kks7BkehDqbhR0Tf/782Fu2sH4I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746537943; c=relaxed/simple;
-	bh=12LAQSB68Rkj9huAdgmetrwmRRByE8rrUU2xNmYOuc8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=q1c9qbyNQbmvkMOR/0fYNLZ1kL6trURVBX1M7XiVnitDiux1/0ZKUbcegZ4M1gEMuUvVsYaFxVSISTk0EWxhPWl658xtYnyUJwVRp3EbSHNmgBvLR03P6eVQdXnLphH02o/2YfBlM/Mq0MBcdgvySz+3h/RXG0A+9Bo6ZipMoRA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=a3IFoy5G; arc=fail smtp.client-ip=40.107.94.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60E2727FB35
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 13:26:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746537968; cv=none; b=uAPqrN+EidPHtE06ufRbQsVlHdeO6yxIjCNCDMzmPHqb/ZzlT1iiqslrQ6kZHTM2t0BOvvkdjtegDkH5tZLW05bbbZlggM6uUipOSfrRMopkg67+YFW7FM2m5mxRtk0zgLkD5AxvJ3b503JVJnFqSQgdBW7IxsUoHml898i3nGI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746537968; c=relaxed/simple;
+	bh=2XEHDDChylavDLDY+rGun5ecIVREM7AJUDpYkksAvpo=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=jJqSHwHFnVRCZ3o5r2Fmey3WyQHGwmA0ZVfM2ukh7kaEKd/1NafVvhw6Lmx6vTnhbZvvowpWPgosI6lQisAwI+8C4Sgx/NfNM5qEmviVQlwdgQnym28hY5OXDi+9TEOfy9pxF5NEGpMKV8S7h39/GvkVB0GuVcoDo/9sxsdXhVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=furFtvBL; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="a3IFoy5G"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=MjG+3AjydGwgmZVV3J+yfkJXUX3ZSNp6EyuJ0lqik0Wo4V+6coTSMJmTsD3/sHDgnriXa4uz4RKB2N1kgmGML7OLXy0czhirBJXhRQix//plO8Zmx19c/XVZob1/0rtoDm6nxMVmZTmpFGdpDBWteQgNyf63yJaBaCRrIIXzMMXZxjcyvr/3f7mILUxzzkUMr/gwtV7R3zoxWq5eDmcSUgHkjsdohSqoH244Nl73ON3Hgy5uDEOCT2bYGLKl8gSJYGzx86L39yuRtRlHmrZjgA554/2MDSUFyrUTO9QQG+w1jarjA4w4CeVQXrJqXf5+NtVUOWIhcGsJdAGyU0nbSg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wyxoX3FAE1CQMyFUF6hDwdSs5kpJGUO/aKF67GNvgd0=;
- b=cLSzSf8fTHO+222ejSSOY4BeGYzwo2e3FFHJ/AMpJw+rV58SJaRubqo1T3o4WGSNslovy9wxLCG2HXsUTchOj1oTPU0ouWNYjzcE45vZh+VVSS3jBv0MLKuFADK9/ZErOC6DNflmttIblNOqQv9VqeYVOEOl5jmRkYMnFM5Vl7KbR0PTnx4nImwfypgys85ASl5zGl7sCSY+AG8prYi1ilgLmh6mAg4V0H/HguHqZIZwf2fIMc3PI9HvALQIi/FXkhfDaof9KblZ+jH1F6V9HOxtF61z9WLh1MSdBOJps4609ei4ncc7AT+tGbm65EdJAbAJLWQNEeZS89LSYGs2yA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wyxoX3FAE1CQMyFUF6hDwdSs5kpJGUO/aKF67GNvgd0=;
- b=a3IFoy5GCsgY++63XgbjvSf5Hg173h3wpt+ixsjxlq6ZkO7ACc04g8D1IAbhv1aZHVtHSPNZ7a661mEp8Uh5WuU2oRp9SjCP6auEqcECPo8bUfafvGSjjM6s7+47llrI6XxA0sAmHVSeQozXmUm8pXGYZLih/UG6Nynj9ozOQCU=
-Received: from PH7PR17CA0018.namprd17.prod.outlook.com (2603:10b6:510:324::9)
- by BL3PR12MB6450.namprd12.prod.outlook.com (2603:10b6:208:3b9::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.24; Tue, 6 May
- 2025 13:25:34 +0000
-Received: from CO1PEPF000044FB.namprd21.prod.outlook.com
- (2603:10b6:510:324:cafe::e8) by PH7PR17CA0018.outlook.office365.com
- (2603:10b6:510:324::9) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.20 via Frontend Transport; Tue,
- 6 May 2025 13:25:34 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- CO1PEPF000044FB.mail.protection.outlook.com (10.167.241.201) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8746.3 via Frontend Transport; Tue, 6 May 2025 13:25:34 +0000
-Received: from SATLEXMB06.amd.com (10.181.40.147) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 6 May
- 2025 08:25:33 -0500
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB06.amd.com
- (10.181.40.147) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 6 May
- 2025 08:25:33 -0500
-Received: from [172.18.31.235] (10.180.168.240) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Tue, 6 May 2025 08:25:32 -0500
-Message-ID: <63d6ff3c-bed5-4a7f-bd3e-50b99b5a6f4b@amd.com>
-Date: Tue, 6 May 2025 09:25:34 -0400
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="furFtvBL"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43cf446681cso33147525e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 06:26:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746537965; x=1747142765; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=LqGg/4PX4lfPlBMEDVpCDGqvzRMbkhBQTtueIfGCAjQ=;
+        b=furFtvBLZMFgwFthkIb1lbxC31L6ciTu+QqYJmIEHcEWgxQLE4BNvbirfxBjzMNRhj
+         Vybnh+tNNYIg7LohLTtYqY1fJmcLVKKokbNoD33PgdSAnM+zH8DAXk1lmYpkIZzqg4+d
+         P8MHI+k7RbCpYaYBdtKMKm2MH5WLE2HAr+hUnVlyEp4TGhXjKHeNpE109NfI3gzsB3dY
+         ULj2oYL20moEIvt02gYQcnaY1PdsT4eNsAqFgzBmZFu+uZZeqVB59g0FO2DABID0kpB3
+         rDyGxiOV9TLeM6UhHIv58L8fSOgALTIFO3CcBgRjyuVDCOFWaWqRSQoFlW5vud5vmyMI
+         XKJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746537965; x=1747142765;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LqGg/4PX4lfPlBMEDVpCDGqvzRMbkhBQTtueIfGCAjQ=;
+        b=veVTC2QWjqs5qgT10jPfk+K73JM1MBP2DpjTXOTn/49wdg+Ra8K4P0gLIKuloMYHIt
+         WEeyemqn6VAHdS0CSAajEnPQ2Vdx6d8pbfSBDKhubbE41P+OuK0xzRa21hOhHrKxkLJi
+         i9De7iwv0HrsF2xhBdV33+4E0ayii7blbX6H7kqhbCw5L686E/loFqw6uwdjesIzGKT1
+         SHtzPx9kFrC09aK9Rk26pD5OOJVXFP8PtlsPqdKwl0B7V0goTj3dZNN9dmL3fF+qt8BF
+         tcvKCgq7TX6AhXxmQNtGediJuplpbwVW0eo/O8Z0hmS8RH8hIzvqc6o/NrlRpnIkHclO
+         pD9w==
+X-Forwarded-Encrypted: i=1; AJvYcCXkJ2afs/jgxG6oogRfL4iB8XeZPK5kZf2MO5hdPfWMLjpHqYo/IybZqintoMqqcr/ZMqZ2LCRlydMfu88=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx52XtIJeIgZR2WESRD2V858QCTOhblGa2e4yXZ0guotArYJNEV
+	039PGupxYxTytPl6vvJJ14L0nvbYKyksHrdNsRwD296yXbtAaFCMFQbXKx3bbJNS7UudomsCHPS
+	gZmd9RIuvwOEMsQ==
+X-Google-Smtp-Source: AGHT+IFoo5QcCulFekCf8I6f2N+r1G5/Ka9pAfegofIbJT/CNK4xDoFUvlPWo60yM7wW6Y2tvexbwqYKVhHFU4s=
+X-Received: from wmqe18.prod.google.com ([2002:a05:600c:4e52:b0:441:b607:4ec0])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:1986:b0:43d:585f:ebf5 with SMTP id 5b1f17b1804b1-441c48b03e9mr90672685e9.1.1746537964761;
+ Tue, 06 May 2025 06:26:04 -0700 (PDT)
+Date: Tue, 06 May 2025 13:25:58 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] xenbus: Allow PVH dom0 a non-local xenstore
-To: Stefano Stabellini <sstabellini@kernel.org>
-CC: Juergen Gross <jgross@suse.com>, Oleksandr Tyshchenko
-	<oleksandr_tyshchenko@epam.com>, <xen-devel@lists.xenproject.org>,
-	<linux-kernel@vger.kernel.org>
-References: <20250503131935.1885-1-jason.andryuk@amd.com>
- <alpine.DEB.2.22.394.2505051343080.3879245@ubuntu-linux-20-04-desktop>
-Content-Language: en-US
-From: Jason Andryuk <jason.andryuk@amd.com>
-In-Reply-To: <alpine.DEB.2.22.394.2505051343080.3879245@ubuntu-linux-20-04-desktop>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000044FB:EE_|BL3PR12MB6450:EE_
-X-MS-Office365-Filtering-Correlation-Id: 65f4bd14-cf7d-48c0-3a2c-08dd8ca17b69
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|376014|82310400026|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?NFc1LytnQWdsRE5MdVJCeUtxd1ltaStpTndRaGtFVC93NjRtaXdWSlVTWFZz?=
- =?utf-8?B?dVpCaHYvSExmUzgvSUZHWkIwdVNubThFbnM3WkFSQTRNcjhWdVFqM2dkN1o5?=
- =?utf-8?B?a0hpUG5sNTZGVndEWnZtNDNOUzExV2M2Q1RGVXo4U3R1aS9aemJvMTUvZTlV?=
- =?utf-8?B?Zkx3V2pMR09pbGdwUFNDQmhjN2l3bkxKZUhxKzVUMUdvRWlSNU10RkRMYkNh?=
- =?utf-8?B?a0tuQXlsbG11ZkE4Vkt5UVdrL2F3M3RXd0s4VEsvRms2Zk5SNHBlclVBK1Y2?=
- =?utf-8?B?TkYyN0FRZmhWbVNSRlY4SXZSR2Q4eDBNaHhETTR5Nzd0NmRUV2lPVGNodGV1?=
- =?utf-8?B?SkVoVGdKMlV6L1F2MFhHa0F2T2pncHVDUWlVVjl1bE9sZ3MwVzcxNFBoOHpL?=
- =?utf-8?B?T3lNRjRBWWdGQjlHbnM5VjFzdDYvMWZlMWliS1dZNkYrUjdkYUtCSWpRb3lF?=
- =?utf-8?B?bjRCNUtvL1RNcHhFY0Y1bWIzclZnTENuMjNKbFVDR1BBaEFmSllKM3hIMUZs?=
- =?utf-8?B?ei8xWVRqTjlPWTVuSkMxemxxakFRQzRCbEd3Vi9PN3lWNXFKbWJTN2hSckF1?=
- =?utf-8?B?ZXhqK3IzbzhEVUhCYzBTenFDVVM0SG8rL2R4Yll3b3pWc1dLMWFlUFp1RC9k?=
- =?utf-8?B?QUVubS9RalZUK01aR2xBWGxjUmlaMms2bUZVN3QyRExobU1EMlpnOHdkNmdX?=
- =?utf-8?B?L2dWZXRFczB0Q3hhRU9hbHhLMjExUG9vUnc0VFdTMHl0QmhjNTlkNktzUXdm?=
- =?utf-8?B?dHJITFRLSnl5Skpsay9rRzV6WTd1dkk5UnJOY29IdWIrOHVSYnl6eWpNMllM?=
- =?utf-8?B?U2RyMTFJT1cyQXl0YTJLV093V1hYdkt3Q3JlcHVreTZKWnJrSkNZSXJIQUN1?=
- =?utf-8?B?S3c1OEhycmhvWHlBaUlSWVUwa0pNRUdUNWZSUmc3K1NLSk0zTS8veGlyQlND?=
- =?utf-8?B?aVAzQXlXa0drb3dpYjJBeUFuVmRLTklnd2Noay9rRWltclJCL251TDE0Zk1R?=
- =?utf-8?B?RnUzWDZyeVprU0lvNzk3SElIT1VmRFZHSE9pNDJSbFJGYXlwYjNhb0VqRGNY?=
- =?utf-8?B?MjBYSnY5T2tCbENuMGJmQTJ1cW96SFBRZFMyNWwxQTMwRyt4RmNIckcyZ1I0?=
- =?utf-8?B?NUcxcFdtL2thMTE2aDduNW5QQVlnQzVDS1VIOUk3VkxQOCt2ZHJkdG5iaVRt?=
- =?utf-8?B?TDB2Ui8zTU1acFZ2Y0V2ZG5vSDlxaFRTQjNpL1FxWm5DRW45ZHpoNEQxT0ZO?=
- =?utf-8?B?Z0p1YTBUb1BUZ3JpQVBTejBBeG1DVzJjbVIrbkpVdVBVd1J5cHZJWFFCQU8z?=
- =?utf-8?B?ekRLLzV4RkJUUEsyRlVabklIMUY3b1h4VGp3Sy96dWxyeTRCU1MydnE3dG5M?=
- =?utf-8?B?R3JVVkZ4cDRha0U5b2U3Z3lkS2g3OXNIaWJJbG5GZ3E3dW9jays1VGpaRkJH?=
- =?utf-8?B?R1JSZlpGVkVBQzRTZjJrbkpSU2k3SkVtVnZ2SUkrNkNzRnNDU3dmRmFRRXB1?=
- =?utf-8?B?Q2dBcjZYbTdhQVhoTWtOcTczYjhxcDBOOU93RE5vZjBjSTBmYkhZeDJYMTVX?=
- =?utf-8?B?RDRVUkw2VnIwYUtVTTFaWW96a0U2YnVxZmhMVlRqZTBIK3drTms4RVYwaWZM?=
- =?utf-8?B?ajdiSEFseG9ZbmQ4aE9uUy9mL093cklENVBwL2lQL1hpa2I2L1R3RjVFMjRu?=
- =?utf-8?B?ZEsvRi8wTGxLZVFOdG1QbWFHNXdEM3BIQStJbmxQb0ZSeDl0dndGVktzRWti?=
- =?utf-8?B?cHJIRWtKeDdJbnU0RjdCTnl5T0pjSFRKYVlMMHZSaUF6MGYyUCtUWnU3VEdR?=
- =?utf-8?B?QkFoTktTd2ZFVGdXdXFjSDRuN044bU9udWxXUUNsNDV6a0ExUDgzYUY1b0lq?=
- =?utf-8?B?QjlyeEZYbmQ4dHcwN3BJT0paSkppbEwvZ0RJZW9iYTVHdHlxNUkzWmRFMW42?=
- =?utf-8?B?bnpGOFZvUUM4SHRLQjJLR3ZEUk9qQ3Bwa1VyOW4vdlpVRHBIWHphOUxINXdp?=
- =?utf-8?B?Qkx6WUtHZEJYeERYR0UzelJzR0M1M2VzSzZqUndmYnVUcGtPbFRwTmdCaVZW?=
- =?utf-8?Q?yPmxA0?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(376014)(82310400026)(7053199007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 13:25:34.3133
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 65f4bd14-cf7d-48c0-3a2c-08dd8ca17b69
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CO1PEPF000044FB.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR12MB6450
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAOYNGmgC/0XNQQ7CIBCF4asQ1o6hUIhyFdNFC4OyKEWg1abp3
+ cW6cPlP8r7ZaMbkMVNNNppw8dlPoUZzItQ8+nBH8LY25YxLJpmCuQ5iSRDwVdaIwB1T7HqRRoi
+ B1lVM6Pz7EG/drxM+5wqX3/HvanKoLW8hlxRMXMGlaTxeQOO4ZWpgxlrUi/jSQ58RzDSOvmiyq HMjIRlBu33/AIHHZ3HHAAAA
+X-Change-Id: 20250506-userptr-newtype-2f060985c33b
+X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5645; i=aliceryhl@google.com;
+ h=from:subject:message-id; bh=2XEHDDChylavDLDY+rGun5ecIVREM7AJUDpYkksAvpo=;
+ b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBoGg3qDaNXyRWS1mHsy/OJSeNrGJlFRLCn2VlGx
+ jC5vmCS4z+JAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCaBoN6gAKCRAEWL7uWMY5
+ RkpSD/9o7WdzaOtvDLPgmTU8X3U3DldTmrIwiEyidGsWiaPXKbbYmBZJW7VK7jwoXt8/mik5Wgu
+ wUWcMh24zL/HF9ficiFvwfDk/pGe0TxA7WCKj8mIwJgKN+1iAvG5lc8XcXzT79t6Hkbzd7Swfc9
+ F4xZ1N6ymCjKMkWZ7YvxQNjPJ8H0AXPZeRVN9LWPOu5/I6KlnpLF0NBdUGiTf+7/19FXh7+8ZBR
+ 5EToWj8X0RphLKtbEBRDve7XoAKyk61aO0rvfw/bb2kuwjOYUhhQYDyYu6VQlCc3zS0W86Lk4Rx
+ OVp4vDEsXyDsdn5XPCt6JyZasC1nEmYviu2qGtexJo8j+gpDuTHZ86rwHJLJkqNrYEZTbLb5NR0
+ xoirV2rvMVuUC6JO909Ps3KE4rD7/hbt53tMZOiYnQNoaclmiHrpCPC0QwUz6ZOE/qJLqQFjo+f
+ QIVqiaLMwQrUAFeUhAKWTBKydZo+6lMwikafudTySOIwFmt8ffctE/tC4S10MOazsx1U7234wha
+ yf9JPmx0C+sJKHxnuAduzy78jwW4oWXeGhhO6Ez2rtFUQELLa/UY7nhiKBfIeEcCaqKf/tAK3ah
+ IY/qM0jRub2NhyG28ebpA3fX4q/zvWieN2Jy+I8dkqL1IHfKcweuLTx5zBYMooA1t8c0HqCQzmM wnukExuUiexPhNQ==
+X-Mailer: b4 0.14.2
+Message-ID: <20250506-userptr-newtype-v1-1-a0f6f8ce9fc5@google.com>
+Subject: [PATCH] uaccess: rust: use newtype for user pointers
+From: Alice Ryhl <aliceryhl@google.com>
+To: Miguel Ojeda <ojeda@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?q?Bj=C3=B6rn_Roy_Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Alice Ryhl <aliceryhl@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-On 2025-05-05 16:44, Stefano Stabellini wrote:
-> On Sat, 3 May 2025, Jason Andryuk wrote:
->> Make xenbus_init() allow a non-local xenstore for a PVH dom0 - it is
->> currently forced to XS_LOCAL.  With Hyperlaunch booting dom0 and a
->> xenstore stubdom, dom0 can be handled as a regular XS_HVM following the
->> late init path.
->>
->> Drop the use of xen_initial_domain() and just check for the event
->> channel instead.  This matches the PV case where there is no check for
->> initial domain.
->>
->> Check the full 64bit HVM_PARAM_STORE_EVTCHN value to catch the off
->> chance that high bits are set for the 32bit event channel.
->>
->> Signed-off-by: Jason Andryuk <jason.andryuk@amd.com>
-> 
-> Reviewed-by: Stefano Stabellini <sstabellini@kernel.org>
+In C code we use sparse with the __user annotation to detect cases where
+a user pointer is mixed up with other things. To replicate that, we
+introduce a new struct UserPtr that serves the same purpose using the
+newtype pattern.
 
-Thanks, Stefano.  But I'm wondering if this might break ARM enhanced 
-no-xenstore.
+The UserPtr type is not marked with #[derive(Debug)], which means that
+it's not possible to print values of this type. This avoids ASLR
+breakage.
 
-> 
->> ---
->>   drivers/xen/xenbus/xenbus_probe.c | 14 ++++++++------
->>   1 file changed, 8 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/xen/xenbus/xenbus_probe.c b/drivers/xen/xenbus/xenbus_probe.c
->> index 6d32ffb01136..7604f70ee108 100644
->> --- a/drivers/xen/xenbus/xenbus_probe.c
->> +++ b/drivers/xen/xenbus/xenbus_probe.c
->> @@ -966,9 +966,15 @@ static int __init xenbus_init(void)
->>   	if (xen_pv_domain())
->>   		xen_store_domain_type = XS_PV;
->>   	if (xen_hvm_domain())
->> +	{
->>   		xen_store_domain_type = XS_HVM;
+Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+---
+ rust/kernel/uaccess.rs           | 48 ++++++++++++++++++++++++++++++++++------
+ samples/rust/rust_misc_device.rs |  4 +++-
+ 2 files changed, 44 insertions(+), 8 deletions(-)
 
-ARM would have everything set to XS_HVM...
+diff --git a/rust/kernel/uaccess.rs b/rust/kernel/uaccess.rs
+index 978205289d297a4001a51fa40ac29039bff73672..2914a35de3dfbc7860ebf0d6e11cc65d409e9481 100644
+--- a/rust/kernel/uaccess.rs
++++ b/rust/kernel/uaccess.rs
+@@ -14,8 +14,38 @@
+ };
+ use core::mem::{size_of, MaybeUninit};
+ 
+-/// The type used for userspace addresses.
+-pub type UserPtr = usize;
++/// A pointer into userspace.
++///
++/// This is the Rust equivalent to C pointers tagged with `__user`.
++#[repr(transparent)]
++#[derive(Copy, Clone)]
++pub struct UserPtr(pub usize);
++
++impl UserPtr {
++    /// Cast this userspace pointer to a raw const void pointer.
++    ///
++    /// It is up to the caller to use the returned pointer correctly.
++    #[inline]
++    pub fn as_const_ptr(self) -> *const c_void {
++        self.0 as *const c_void
++    }
++
++    /// Cast this userspace pointer to a raw mutable void pointer.
++    ///
++    /// It is up to the caller to use the returned pointer correctly.
++    #[inline]
++    pub fn as_mut_ptr(self) -> *mut c_void {
++        self.0 as *mut c_void
++    }
++
++    /// Increment this user pointer by `add` bytes.
++    ///
++    /// This is addition is wrapping, so wrapping around the address space does not result in a
++    /// panic even if `CONFIG_RUST_OVERFLOW_CHECKS` is enabled.
++    pub fn wrapping_add(self, add: usize) -> UserPtr {
++        UserPtr(self.0.wrapping_add(add))
++    }
++}
+ 
+ /// A pointer to an area in userspace memory, which can be either read-only or read-write.
+ ///
+@@ -226,7 +256,7 @@ pub fn read_raw(&mut self, out: &mut [MaybeUninit<u8>]) -> Result {
+         }
+         // SAFETY: `out_ptr` points into a mutable slice of length `len`, so we may write
+         // that many bytes to it.
+-        let res = unsafe { bindings::copy_from_user(out_ptr, self.ptr as *const c_void, len) };
++        let res = unsafe { bindings::copy_from_user(out_ptr, self.ptr.as_const_ptr(), len) };
+         if res != 0 {
+             return Err(EFAULT);
+         }
+@@ -264,7 +294,7 @@ pub fn read<T: FromBytes>(&mut self) -> Result<T> {
+         let res = unsafe {
+             bindings::_copy_from_user(
+                 out.as_mut_ptr().cast::<c_void>(),
+-                self.ptr as *const c_void,
++                self.ptr.as_const_ptr(),
+                 len,
+             )
+         };
+@@ -381,7 +411,7 @@ pub fn write_slice(&mut self, data: &[u8]) -> Result {
+         }
+         // SAFETY: `data_ptr` points into an immutable slice of length `len`, so we may read
+         // that many bytes from it.
+-        let res = unsafe { bindings::copy_to_user(self.ptr as *mut c_void, data_ptr, len) };
++        let res = unsafe { bindings::copy_to_user(self.ptr.as_mut_ptr(), data_ptr, len) };
+         if res != 0 {
+             return Err(EFAULT);
+         }
+@@ -408,7 +438,7 @@ pub fn write<T: AsBytes>(&mut self, value: &T) -> Result {
+         // is a compile-time constant.
+         let res = unsafe {
+             bindings::_copy_to_user(
+-                self.ptr as *mut c_void,
++                self.ptr.as_mut_ptr(),
+                 (value as *const T).cast::<c_void>(),
+                 len,
+             )
+@@ -441,7 +471,11 @@ fn raw_strncpy_from_user(ptr: UserPtr, buf: &mut [MaybeUninit<u8>]) -> Result<us
+ 
+     // SAFETY: `buf` is valid for writing `buf.len()` bytes.
+     let res = unsafe {
+-        bindings::strncpy_from_user(buf.as_mut_ptr().cast::<c_char>(), ptr as *const c_char, len)
++        bindings::strncpy_from_user(
++            buf.as_mut_ptr().cast::<c_char>(),
++            ptr.as_const_ptr().cast::<c_char>(),
++            len,
++        )
+     };
+ 
+     if res < 0 {
+diff --git a/samples/rust/rust_misc_device.rs b/samples/rust/rust_misc_device.rs
+index c881fd6dbd08cf4308fe1bd37d11d28374c1f034..6519c61636311b9ffb90d55c03c0a36520933fde 100644
+--- a/samples/rust/rust_misc_device.rs
++++ b/samples/rust/rust_misc_device.rs
+@@ -107,7 +107,7 @@
+     prelude::*,
+     sync::Mutex,
+     types::ARef,
+-    uaccess::{UserSlice, UserSliceReader, UserSliceWriter},
++    uaccess::{UserPtr, UserSlice, UserSliceReader, UserSliceWriter},
+ };
+ 
+ const RUST_MISC_DEV_HELLO: u32 = _IO('|' as u32, 0x80);
+@@ -176,6 +176,8 @@ fn open(_file: &File, misc: &MiscDeviceRegistration<Self>) -> Result<Pin<KBox<Se
+     fn ioctl(me: Pin<&RustMiscDevice>, _file: &File, cmd: u32, arg: usize) -> Result<isize> {
+         dev_info!(me.dev, "IOCTLing Rust Misc Device Sample\n");
+ 
++        // Treat the ioctl argument as a user pointer.
++        let arg = UserPtr(arg);
+         let size = _IOC_SIZE(cmd);
+ 
+         match cmd {
 
->> -	if (xen_hvm_domain() && xen_initial_domain())
->> -		xen_store_domain_type = XS_LOCAL;
+---
+base-commit: f34da179a4517854b2ffbe4bce8c3405bd9be04e
+change-id: 20250506-userptr-newtype-2f060985c33b
+prerequisite-change-id: 20250424-strncpy-from-user-1f2d06b0cdde:v3
+prerequisite-patch-id: 3b99605d033602b9440a12c7ca38acd5ad071a13
+prerequisite-patch-id: fae3d2f99d1b0f00a79105921dcbff30d5229b91
 
-...and only dom0 set to XS_LOCAL.
-
->> +		err = hvm_get_parameter(HVM_PARAM_STORE_EVTCHN, &v);
->> +		if (err)
->> +			goto out_error;
->> +		xen_store_evtchn = (int)v;
->> +		if (!v)
->> +			xen_store_domain_type = XS_LOCAL;
->> +	}
->>   	if (xen_pv_domain() && !xen_start_info->store_evtchn)
->>   		xen_store_domain_type = XS_LOCAL;
->>   	if (xen_pv_domain() && xen_start_info->store_evtchn)
->> @@ -987,10 +993,6 @@ static int __init xenbus_init(void)
->>   		xen_store_interface = gfn_to_virt(xen_store_gfn);
->>   		break;
->>   	case XS_HVM:
->> -		err = hvm_get_parameter(HVM_PARAM_STORE_EVTCHN, &v);
->> -		if (err)
->> -			goto out_error;
->> -		xen_store_evtchn = (int)v;
->>   		err = hvm_get_parameter(HVM_PARAM_STORE_PFN, &v);
->>   		if (err)
->>   			goto out_error;
-                 /*
-                  * Uninitialized hvm_params are zero and return no error.
-                  * Although it is theoretically possible to have
-                  * HVM_PARAM_STORE_PFN set to zero on purpose, in 
-reality it is
-                  * not zero when valid. If zero, it means that Xenstore 
-hasn't
-                  * been properly initialized. Instead of attempting to 
-map a
-                  * wrong guest physical address return error.
-                  *
-                  * Also recognize all bits set as an 
-invalid/uninitialized value.
-                  */
-                 if (!v) {
-                         err = -ENOENT;
-                         goto out_error;
-                 }
-
-IIUC, this !v check is for enhanced no-xenstore to end up in XS_UNKNOWN. 
-  I'll have to re-work to handle that case.
-
-Regards,
-Jason
-
-
->> -- 
->> 2.34.1
->>
+Best regards,
+-- 
+Alice Ryhl <aliceryhl@google.com>
 
