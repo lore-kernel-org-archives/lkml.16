@@ -1,59 +1,89 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9214623D28F;
-	Tue,  6 May 2025 13:19:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19FE8281359
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 13:19:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746537553; cv=none; b=fMuraMF6XFT0ckt5/jf6UR1YVGQhesMKLydsNClPFr8ryScC1xUHyp8qZGLoCQL6FQk9N2ncBpn+YZLplbH31cmsLJ8toopS5LWGd3k5wxHSddRiLG6kB0nH1OS3LItlN85GO2z29hPe29CssudnKFUSF+6X5VU5jBjxrCgKhYQ=
+	t=1746537558; cv=none; b=qYLBP0TNNw1sPFS6q+GXILdwtThUcFOLqvAHsxPpB/BKf5k2kTjLud3IkmWDXU0N7lxzifWjhzK4YYCBev1VPx6OhjIjKR5H9UESs/bBGObg+xxZw6xazBwUYTCdbzKjt/Kwnhpc6C8kKvhKmyCc4HcRVSgUcj8wHaBzP963HEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746537553; c=relaxed/simple;
-	bh=iUzddKqL0iIvG6UutN1G6gNVWdgxVSxIUnXyf4QycaU=;
+	s=arc-20240116; t=1746537558; c=relaxed/simple;
+	bh=kIHdzZUWaPSLTucHGZ4qp7MHA4evJhh6qsl6uhhy/YA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QMo83O4OZdHIctTSuWZm6nKpNxVRXbwX5FVHMQ3H1UqOucrV74jYDjGs1pi43ViEAYVmb/kUJxJNCF3HX+hld9XGH7eyCGl7PGJSeCYsZtMkYOfvTYb2PGd6l9ag/SYJenKjg5X6q9XhHMsPYO9LKNRb/Q7jy7NEJxHXWOy9RMg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=k/vn7zxc; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	 Content-Type:Content-Disposition:In-Reply-To; b=kUSiXpBDQ9v9eMMSkB7/LLsLwEJsyU6aZpk06HjoO8vK8KHAOhIIPpy4RIvLkeoKlJzmQ2EoMO+PS13Ym5X26rtWmDy5SbJzCYeSaIwmk+Q6j9rXFKQXiTgXjgEh5EAEUek+RiDlszrczcTkrsRRtcLbMdCV4RKI8XqnfUyyYvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=hIpoj2cL; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=czMkkcc4; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=hIpoj2cL; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=czMkkcc4; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="k/vn7zxc"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=kHR2Y14bKRrsW5EJnr2zMkLPuETcVkgoZdQEZZ47vSE=; b=k/vn7zxcxor1/UJyd8b3ED6c6Z
-	2WbLB6yu4YlPVHMb11J69ZG3daWi7WPctkWSF00cnzAAfBy70+fuY2717t7ZLYomDVd682NtZrn6X
-	QwyenJE/BpAc35Mm/f1CaU0nzBp4BfB7Vx7EdudUL4fMl5Lp6YlRKly7I+U9hishlxdBgIY94qFOA
-	W9jGO6pC4QYjDqs/qC8JUAXw8XJWy145TviuaK8h91ecFu2SP3Cs1GgpdydJs1D4ShM2iMcE6CziW
-	2gbDDKBS7davfZrmTG0X0/6mDWJpaAlKWPaJg8qBchiIvS4OXnVbjJGRPFULvhiUDkrG7j0Xl2Mb+
-	EadVEoDg==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uCICO-003y4w-2N;
-	Tue, 06 May 2025 21:19:05 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Tue, 06 May 2025 21:19:04 +0800
-Date: Tue, 6 May 2025 21:19:04 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Klaus Kudielka <klaus.kudielka@gmail.com>
-Cc: regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	Boris Brezillon <bbrezillon@kernel.org>,
-	EBALARD Arnaud <Arnaud.Ebalard@ssi.gouv.fr>,
-	Romain Perier <romain.perier@free-electrons.com>
-Subject: Re: [REGRESSION] alg: ahash: Several tests fail during boot on
- Turris Omnia
-Message-ID: <aBoMSHEMYj6FbH8o@gondor.apana.org.au>
-References: <ZwObXYVHJlBaKuj2@gondor.apana.org.au>
- <38a275a4e0224266ceb9ce822e3860fe9209d50c.camel@gmail.com>
- <ZwZAExmK52txvHE8@gondor.apana.org.au>
- <7e38e34adddb14d0a23a13cf738b6b7cccbfce6f.camel@gmail.com>
- <ZwduxHxQtHdzz-kl@gondor.apana.org.au>
- <ZwePSPG8aWm6mwKK@gondor.apana.org.au>
- <15fadc356b73a1e8e24183f284b5c0a44a53e679.camel@gmail.com>
- <Zw31JIEyh28vK9q7@gondor.apana.org.au>
- <5db212655dc98945fa3f529925821879a03ff554.camel@gmail.com>
- <Zw9AsgqKHJfySScx@gondor.apana.org.au>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="hIpoj2cL";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="czMkkcc4";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="hIpoj2cL";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="czMkkcc4"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 3FA29211BF;
+	Tue,  6 May 2025 13:19:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1746537555;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1mabCLK1CTWLb6dTp8UKgjcLgS2EFRv+m63UaRzr+4k=;
+	b=hIpoj2cLeneGAz9bfBIcqJ+ksPzEyQOlvl8h8g5NnAaq2xDQSSFsW7L0w5nGnUS2DQqDxd
+	QQgcSGL4P9PLhJGjQwQ2XRuyv8s6fjKiBYSjs/siDQGjX5Zf8ZIpsu0Nw4Lt7/vQAr2iNt
+	64xH40FSNDDezrY8xycVWBm6kd6d/fk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1746537555;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1mabCLK1CTWLb6dTp8UKgjcLgS2EFRv+m63UaRzr+4k=;
+	b=czMkkcc4aCrr9X5Mcd6OpopnaecCpIOpGEGePcxXfzuf68ozuhr+8ESODe1pIVcQcOQ7ni
+	5t1SNzBos5altNAQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1746537555;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1mabCLK1CTWLb6dTp8UKgjcLgS2EFRv+m63UaRzr+4k=;
+	b=hIpoj2cLeneGAz9bfBIcqJ+ksPzEyQOlvl8h8g5NnAaq2xDQSSFsW7L0w5nGnUS2DQqDxd
+	QQgcSGL4P9PLhJGjQwQ2XRuyv8s6fjKiBYSjs/siDQGjX5Zf8ZIpsu0Nw4Lt7/vQAr2iNt
+	64xH40FSNDDezrY8xycVWBm6kd6d/fk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1746537555;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1mabCLK1CTWLb6dTp8UKgjcLgS2EFRv+m63UaRzr+4k=;
+	b=czMkkcc4aCrr9X5Mcd6OpopnaecCpIOpGEGePcxXfzuf68ozuhr+8ESODe1pIVcQcOQ7ni
+	5t1SNzBos5altNAQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0C6D8137CF;
+	Tue,  6 May 2025 13:19:15 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id ou1ZAlMMGmjwOQAAD6G6ig
+	(envelope-from <dsterba@suse.cz>); Tue, 06 May 2025 13:19:15 +0000
+Date: Tue, 6 May 2025 15:19:13 +0200
+From: David Sterba <dsterba@suse.cz>
+To: Sasha Levin <sashal@kernel.org>
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	Qu Wenruo <wqu@suse.com>, Filipe Manana <fdmanana@suse.com>,
+	David Sterba <dsterba@suse.com>, clm@fb.com, josef@toxicpanda.com,
+	linux-btrfs@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 6.14 099/642] btrfs: prevent inline data extents
+ read from touching blocks beyond its range
+Message-ID: <20250506131913.GD9140@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+References: <20250505221419.2672473-1-sashal@kernel.org>
+ <20250505221419.2672473-99-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,42 +92,86 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Zw9AsgqKHJfySScx@gondor.apana.org.au>
+In-Reply-To: <20250505221419.2672473-99-sashal@kernel.org>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	REPLYTO_ADDR_EQ_FROM(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:replyto];
+	RCVD_COUNT_TWO(0.00)[2];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[]
+X-Spam-Score: -4.00
+X-Spam-Flag: NO
 
-On Wed, Oct 16, 2024 at 12:27:30PM +0800, Herbert Xu wrote:
-> On Tue, Oct 15, 2024 at 07:38:27PM +0200, Klaus Kudielka wrote:
-> >
-> > So, I applied the TDMA-disable patch, and I saw the same errors.
-> > Then, I applied the printk patch on top of that, and here is the result.
-> > 
-> > Not sure, whether this makes any sense...
+On Mon, May 05, 2025 at 06:05:15PM -0400, Sasha Levin wrote:
+> From: Qu Wenruo <wqu@suse.com>
 > 
-> Interesting, I think this shows that the non-TDMA path doesn't
-> work at all :)
+> [ Upstream commit 1a5b5668d711d3d1ef447446beab920826decec3 ]
+> 
+> Currently reading an inline data extent will zero out the remaining
+> range in the page.
+> 
+> This is not yet causing problems even for block size < page size
+> (subpage) cases because:
+> 
+> 1) An inline data extent always starts at file offset 0
+>    Meaning at page read, we always read the inline extent first, before
+>    any other blocks in the page. Then later blocks are properly read out
+>    and re-fill the zeroed out ranges.
+> 
+> 2) Currently btrfs will read out the whole page if a buffered write is
+>    not page aligned
+>    So a page is either fully uptodate at buffered write time (covers the
+>    whole page), or we will read out the whole page first.
+>    Meaning there is nothing to lose for such an inline extent read.
+> 
+> But it's still not ideal:
+> 
+> - We're zeroing out the page twice
+>   Once done by read_inline_extent()/uncompress_inline(), once done by
+>   btrfs_do_readpage() for ranges beyond i_size.
+> 
+> - We're touching blocks that don't belong to the inline extent
+>   In the incoming patches, we can have a partial uptodate folio, of
+>   which some dirty blocks can exist while the page is not fully uptodate:
+> 
+>   The page size is 16K and block size is 4K:
+> 
+>   0         4K        8K        12K        16K
+>   |         |         |/////////|          |
+> 
+>   And range [8K, 12K) is dirtied by a buffered write, the remaining
+>   blocks are not uptodate.
+> 
+>   If range [0, 4K) contains an inline data extent, and we try to read
+>   the whole page, the current behavior will overwrite range [8K, 12K)
+>   with zero and cause data loss.
+> 
+> So to make the behavior more consistent and in preparation for future
+> changes, limit the inline data extents read to only zero out the range
+> inside the first block, not the whole page.
+> 
+> Reviewed-by: Filipe Manana <fdmanana@suse.com>
+> Signed-off-by: Qu Wenruo <wqu@suse.com>
+> Signed-off-by: David Sterba <dsterba@suse.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-So I'm looking at this driver again as part of my partial block
-work to eliminate partial block handling from drivers.
-
-I haven't figured out exactly what's wrong with tdma, although
-the chaining IRQ completion handling looks a bit fragile in that
-if something goes wrong it'll simply mark all queued requests as
-complete, corrupting any requests that have not yet been sent to
-the hardware.
-
-However, I think I know what's wrong with the non-DMA path.  I
-dug up the old mv_cesa driver and it's clear that it simply can't
-handle zero-length final updates like a lot of other hardware drivers.
-This matches with what you sent me where all the test vectors that
-failed was test 0 which is a zero-length update.
-
-There used to be a fallback path but during the move to tdma
-that appears to have been lost.
-
-So if you're still interested I can create some patches for you
-to test.
-
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+This is not a stable dependency and the patch is not fixing anything
+but a preparation so this does not make much sense for stable backports,
+please drop it. Thanks.
