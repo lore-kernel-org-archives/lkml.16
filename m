@@ -1,83 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 089E922AE7B
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 12:36:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 120D227FB04;
+	Tue,  6 May 2025 12:36:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746534985; cv=none; b=HZ1M95kcF+9/vNqAtBBPjEni34L2FENFSM7NaMn8KYDRArlHTCYwoI7jKKd80Ow9vvwBCjW5KddOjQcNXedPtUyfbkj3mq+nUubOMYNlXZmF3bA6MUrI8Y26M7PcbWISrY8jAnVFeYCkcgjdUoi19j6amBeqcucoWzv6v/Tfl/E=
+	t=1746534988; cv=none; b=o4KCttzLGaLve9m56ZMdLAwNAW1aD853kDJOWCQYlS7AiH/gjS7pY+jWAthlAZ0I+TjXs186FftyUqipVtq+1G3+FDjy0GjE2w6ans0HjsEAhQWD9VYOisa8piJY0xM9AHIh7b3clQjSeNAcB/D8JgXqcdnvbDejGEjR5Wn6578=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746534985; c=relaxed/simple;
-	bh=ZMI8odsUTWL7O2ibZVeVjRKsgP060noUpzvYiu/+D74=;
+	s=arc-20240116; t=1746534988; c=relaxed/simple;
+	bh=X4Yh3JtCRkiQP87Dxdyse/UwWkT9JwNjx0Xs4dHDkSc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W9KupmQHQTtRO7dH6DWcQMKZYrh001usZZFOl3DI460NBk63RtWOw+5ag4aJKJk4l5we1KjktpSB3CQTNaPSP2NmpQRGvfDvUPg7hNqK7WGjHN4FT80kQwSQYuTfVVBuQlNaSsUhMtfSDgog3Rdj/pdpJXHgrezA49MWI6MA55A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZE2o90fu; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=MX+Zck0xKFYWXoyf21wrG53sO9m2FhN++ZBT7TNNywL9SZIkE0eZnQXq7b4zTqK563vJm0P2jZv33QVwyjetv1B1NPFJJbipUsW6IU0WMDw/rxLt02sFFNA3saIaLPJXL74mvG+iV0QybC8FJ107Tamg+mTpi2yoY/7eU8bbjEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ew3AERqh; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZE2o90fu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07F39C4CEE4;
-	Tue,  6 May 2025 12:36:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746534984;
-	bh=ZMI8odsUTWL7O2ibZVeVjRKsgP060noUpzvYiu/+D74=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZE2o90fuA13mBTzROjnCThsXqzopTraOQIwDEe1Sxcls0bIyr1i0jMDpFl/HZfXB8
-	 ZuJVjt43dMib/y9VaYzRykwikFqvu07i7uRcbljna/hoYmvztkjPjMZDTeR6G8crqG
-	 gcmQ1v8tQEBNcPp37b7RqjL0TEJBdKV1rt386kXsg4TDYYa0PEJ2i28ldogAsDKaq7
-	 V+QIF7jX3PJdQi391hMkWADEXGaOxoTnUfnzdM7qf7TQg3H4c9UORg4voFD07y9+py
-	 o7ay2VbFX3D6DckBbW6/+Bk2r9l2vTmg5q/C1IJV5/4qOBhYOc09mK00GrwYm04eJN
-	 35NOeMJZTnKTA==
-Date: Tue, 6 May 2025 14:36:21 +0200
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Michal Hocko <mhocko@suse.com>
-Cc: Marco Crivellari <marco.crivellari@suse.com>,
-	linux-kernel@vger.kernel.org, Tejun Heo <tj@kernel.org>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: Re: [PATCH 4/4] Workqueue: add WQ_PERCPU to every alloc_workqueue
- user
-Message-ID: <aBoCRTWyYkOCN6TE@localhost.localdomain>
-References: <20250503082834.49413-1-marco.crivellari@suse.com>
- <20250503082834.49413-5-marco.crivellari@suse.com>
- <aBiDSHee4TKs8HF-@tiehlicka>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ew3AERqh"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-736b98acaadso5295856b3a.1;
+        Tue, 06 May 2025 05:36:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746534986; x=1747139786; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=fw+usroP3NgOGNx1hpYdeiF4dmvyltKLfFB52iURL84=;
+        b=ew3AERqhF7qd+wjilcoLGF1yTXLyhBBnlRd+LhH3PvIhxZM2JIdRbDcyqman4saEC+
+         EKDPWlG3TYn4AfjWPuhotd+vwly0fK1cJF5/LZCJYd67pdV2xZpq9+B1d9FYQq3eFyif
+         v439qXglun+N1g/AxgRRshd3+j3C7ajK2Xp15CNvk9vEyE3DCHHmyzhk2UeRg3h/PECB
+         F0zq2DVs16B/K7KyiAsc4PSFg+fr5cZJTv/MK68DV8+IFO6clFqWcyfAsOchEMOhk5is
+         pA8VDz3h41GAmV94r7j3cL4tB938kEeHQuwVbqkqAIxH3rwlZLecRJCmCBRiGhumblDj
+         20gA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746534986; x=1747139786;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fw+usroP3NgOGNx1hpYdeiF4dmvyltKLfFB52iURL84=;
+        b=tx5IYtvrWxMODoT41Oap0IlWZUngXColaWx//0r+ZcJlXuEAXQXp9P9LqV8hEIGd0Q
+         XJcHpbMPXClmXBcPkLKZ52IhlygyShm8fUQ/fYyGvh/QWWY5l/gf4rZjiRCUY8aohQl4
+         hAj7sB3atiBrGLGxbKeYy1HrFMtfisgsnyTTLC4tKLqW+0qAdFREL8sEwo5p+6x+qJlY
+         AMJehMIhy5IIOeWWoD1qV195agWhy1y221VCNoK+PlFBvCNcS9PG8A0GOiYFgzV8vj+Z
+         8110vqlR5SKQcxJ0Wwq1XyVyTKmAqQi46oyWuxKGroTmhtii6kC5oqyaQcK0QFeGbmlx
+         tLhw==
+X-Forwarded-Encrypted: i=1; AJvYcCUIrFJdFEzRoejmVhHukUIf4uu5kwahUIQcMrltsBcvhV2C81NlE4OmmYbLu6cVJjQY5I+LWbMhW0rEQQv13CLxhQ==@vger.kernel.org, AJvYcCWoxOWtpVOVE08MizVIo00/dv52S/6sPaHrpssS2BtmET5bCuFD5Z6k4u6b5S8XI7tf9uupG0ebb7FY5b8=@vger.kernel.org, AJvYcCXkO1XIFnMu1j7mGvLJkJSGfvthTwsiZCMB+6nNAT0+PWML+ofXaMzR0GKNuJ5NYZfnJZb0XsRuK/s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKhRR6ng+j+ZblDmpMofyhLRuWALRZubOQSHVwBeIrHSgJsmQc
+	ZjtjWCmlJjUyy6GJzkUaTSqEPhuWph0L2277ncylF0gypa5z0nvk
+X-Gm-Gg: ASbGncvA4qSRol5kXhGq+li2frafpuROw8t9HWemwPpZLfucfPzM4WljYrd+XV2r7oT
+	k9PDYHudFygsl15CEOTgMUrFKagdoEZIQlUP00gA78ijAJ7VYkyq1rb4UwA+7yGNvH9kP/p3xUL
+	MnoIDG5OMXgE/95mhiM6V83K6ISG773F4IBZ2DMVPxn10nJSwuK6uUTp90Ij21b1EwDTfnj8bpl
+	VrNhOVGgxsAoqSe7NHn6I6k12A9dm7LIu+x5mkIOYZxpUkRM5al8JgNid1+tSV3QmV+jy8caj2k
+	jnxu3cOoAom91+sR6wJFYx4WwMmNCReqRsyo9XQ=
+X-Google-Smtp-Source: AGHT+IELVS4lhs43iILfpwkhJE1qzvUcBDpCZPSr8G03kGFiX1zF+uJrHmJifYxOzwmCsKQfm2eOFA==
+X-Received: by 2002:a05:6a00:1d21:b0:736:32d2:aa8e with SMTP id d2e1a72fcca58-74091a1ee5emr3278160b3a.6.1746534986102;
+        Tue, 06 May 2025 05:36:26 -0700 (PDT)
+Received: from hiago-nb ([67.159.246.222])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74058d7ad6csm9089557b3a.17.2025.05.06.05.36.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 May 2025 05:36:25 -0700 (PDT)
+Date: Tue, 6 May 2025 09:36:19 -0300
+From: Hiago De Franco <hiagofranco@gmail.com>
+To: Peng Fan <peng.fan@oss.nxp.com>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>, linux-pm@vger.kernel.org,
+	linux-remoteproc@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Hiago De Franco <hiago.franco@toradex.com>, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	daniel.baluta@nxp.com, iuliana.prodan@oss.nxp.com,
+	Fabio Estevam <festevam@gmail.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>
+Subject: Re: [PATCH 1/3] remoteproc: imx_rproc: skip clock enable when M-core
+ is managed by the SCU
+Message-ID: <20250506123619.egobussm6b74imso@hiago-nb>
+References: <20250505154849.64889-1-hiagofranco@gmail.com>
+ <20250505154849.64889-2-hiagofranco@gmail.com>
+ <20250506043835.GB24259@nxa18884-linux>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aBiDSHee4TKs8HF-@tiehlicka>
+In-Reply-To: <20250506043835.GB24259@nxa18884-linux>
 
-Le Mon, May 05, 2025 at 11:22:16AM +0200, Michal Hocko a écrit :
-> On Sat 03-05-25 10:28:34, Marco Crivellari wrote:
-> > By default, alloc_workqueue() creates bound workqueues
-> > (i.e., without WQ_UNBOUND).
-> > 
-> > With the introduction of the WQ_PERCPU flag (equivalent
-> > to !WQ_UNBOUND), any alloc_workqueue() caller that
-> > doesn’t explicitly specify WQ_UNBOUND must now use WQ_PERCPU.
-> > 
-> > All existing users have been updated accordingly.
+Hi Peng,
+
+On Tue, May 06, 2025 at 12:38:35PM +0800, Peng Fan wrote:
+> On Mon, May 05, 2025 at 12:48:47PM -0300, Hiago De Franco wrote:
+> >From: Hiago De Franco <hiago.franco@toradex.com>
+> >
+> >For the i.MX8X and i.MX8 family SoCs, when the M-core is powered up
+> >before Linux starts (e.g., by the bootloader) and it is being managed by
+> >the SCU, the SCFW will not allow the kernel to enable the clock again.
+> >This currently causes an SCU fault reset when the M-core is up and
+> >running and the kernel boots, resetting the system.
+> >
+> >Therefore, add a check in the clock enable function to not execute it if
+> >the M-core is being managed by the SCU.
+> >
+> >This change affects only the i.MX8X and i.MX8 family SoCs, as this is
+> >under the IMX_RPROC_SCU_API method.
 > 
-> I assume that the next step is to drop WQ_PERCPU when it is not strictly
-> necessary, right?
+> I would rewrite as below: "
+> 
+> For the i.MX8X and i.MX8 family SoCs, when the M-core is powered up
+> by the bootloader, M-core and Linux are in same SCFW(System Controller
+> Firmware) partition, so linux has permission to control M-core.
+> 
+> But when M-core is started, the SCFW will automatically enable the clock
+> and configure the rate, and any users that wanna to enable the clock
+> will get error 'LOCKED' from SCFW. So current imx_rproc.c probe function
+> gets failure because clk_prepare_enable returns failure. Then
+> the power domain of M-core is powered off when M-core is still running,
+> SCU(System Controller Unit) will get a fault reset, and system restarts.
+> 
+> To address the issue, ignore handling the clk for i.MX8X and i.MX8 M-core,
+> because SCFW automatically enables and configures the clock.
+> "
+> 
+> You may update if you wanna.
+> 
+> >
+> >Signed-off-by: Hiago De Franco <hiago.franco@toradex.com>
+> >Suggested-by: Peng Fan <peng.fan@oss.nxp.com>
+> 
+> -> peng.fan@nxp.com
 
-Indeed. And also convert the users of schedule_work() and queue_work(system_wq, ...)
+Thanks for the review, I will update the suggestions on a v2. Meanwhile,
+I will wait a little bit for other feedbacks.
 
 > 
-> Looking at the huge list this will be a huge undergoing. Is there any
-> rule of thumb to tell whether WQ_PERCPU is required or not? Maybe
-> something as simple as - if the worker doesn't use any per cpu variables
-> then it is highly likely that it doesn't need WQ_PERCPU? Are there other
-> useful hints?
+> Thanks,
+> Peng
+> 
+> >---
+> > drivers/remoteproc/imx_rproc.c | 4 ++--
+> > 1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> >diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
+> >index 74299af1d7f1..627e57a88db2 100644
+> >--- a/drivers/remoteproc/imx_rproc.c
+> >+++ b/drivers/remoteproc/imx_rproc.c
+> >@@ -1029,8 +1029,8 @@ static int imx_rproc_clk_enable(struct imx_rproc *priv)
+> > 	struct device *dev = priv->dev;
+> > 	int ret;
+> > 
+> >-	/* Remote core is not under control of Linux */
+> >-	if (dcfg->method == IMX_RPROC_NONE)
+> >+	/* Remote core is not under control of Linux or it is managed by SCU API */
+> >+	if (dcfg->method == IMX_RPROC_NONE || dcfg->method == IMX_RPROC_SCU_API)
+> > 		return 0;
+> > 
+> > 	priv->clk = devm_clk_get(dev, NULL);
+> >-- 
+> >2.39.5
+> >
 
-None that I know of. But yes it is a very big work. Ideally we
-should focus on core users first. And then we can think about
-the drivers later...
-
--- 
-Frederic Weisbecker
-SUSE Labs
+Cheers,
+Hiago.
