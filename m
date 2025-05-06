@@ -1,85 +1,145 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15F68DDC3
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 19:45:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCA3E4B1E7A;
+	Tue,  6 May 2025 19:46:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746560717; cv=none; b=U7W/nJiMob0ZrjeoipJ4Pm+0aR7kxkx1/utX3egxrdfQ+Wq5KeU1MEg5XwdsYM1c1CUhcC+eQDpDY5VkImDxu27BjRQc0/QNwxaGTeWLkQSlsOjXhziaMsnil+f3vi1Krjqfynp2aJH/jNeDZAV4PN37emBy0le+EmTyZzFaEHI=
+	t=1746560776; cv=none; b=ZSMdaM6cMEuN5J9ujbfZbnDkZgE/5P+gCTmo7ZrOV9s+7EhUhPM0lJxZvjV5VEZeKyF9sRi6NbHQiPdlkc67zBmOuli0iRh7ai67F0aAQ3uSF4YPdoOOHxNuDzgjrgsl6HjYKJ0ZcajyrbrpQNEvONI1A1OVjx6oPpJrCph34+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746560717; c=relaxed/simple;
-	bh=fA6baFrBMTZPoGqIiJ7GW9c6V8LDlSpjpVUs3FFWZkA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ilnqDgydUUx4fGzYYcpD2Wev7/yU815fO+dQ9or28Acu35sySdd42PMbgvD72CW07h7KMR2VoliZRQI1rnZUb8HOd54pSqwXVcN0oCM4QEvQIDWOcX8uEFrWvezrTggvCthxJCGfQT8NZXAfpNTsUpIlAG/orAkG5bnv2ZGmCoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gHgw+6Tb; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1746560776; c=relaxed/simple;
+	bh=EfrCHtKQ2RkR4JNDWg2D6SqkrXrN0NxL1Y1ls1PhtwE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kC4sxsLlCzV1q2uzL5wfFllu8SsSZgqT+0lP159D7BDe7mDLuJ3mwpd+EE1Sb1tOmned4Z9tdyJFK62aZFfWWmionu2KeJoAvxiN8bNVTC8AR/P5XSK+JjRSq9L6rd8+KpoHY5uglK6zSdAnx2ppzKCBTMo71K7DLvPjqL3itoU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QqkwP8pi; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gHgw+6Tb"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-22e50d4f49bso9227485ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 12:45:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QqkwP8pi"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ace94273f0dso390240966b.3;
+        Tue, 06 May 2025 12:46:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746560715; x=1747165515; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Nbit0ITm/pQP3NVf792bDV8mZNspv5mb/mti4+w+eCo=;
-        b=gHgw+6Tbi4onJw6RFC+exOn31VEOpTMUcGk7gYftiFiapBfNIF3snUKXgbhxJ0dE3P
-         WgF/kGpzdZVwXvnQutlYxv4OTLA7tmINS8p9mbbExpMN3jSfCmuoYJ6OUoGv6iDSFiNw
-         NFDOvuQIApm6EDOgjAMPhC8t7nXF2RRil8ynkHPrb4EUxCN1d7wC/xTjmObwI74gOJGe
-         ukitBNxY4eIZHD2vMS84Xc7/6EnQO3HvLHLY5z1XIlYDpStwor3sqFOxoe2DbtRa0676
-         oeh3TWeSY8XrjnvR1/aM9B2R0MX8C7kPL3E2q6HVr29eKYdppJSGEpLODkNn8tdm9R5/
-         7M8Q==
+        d=gmail.com; s=20230601; t=1746560773; x=1747165573; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6A3LKXcKbQRzOmieF/B3aokjKJXQ0R9uCqIUYyekQaA=;
+        b=QqkwP8piCwKoNXkfDAyR9ykayLTrosoTL7PShV08uhwL9y70+9lO/NQ8GDJelMbOYJ
+         bEATzD1OlBj2+5zFErwgPpdGKGbkHNipy6zbeH12ZX/f9rtSwBrmh3k36JemJDuuu4Xg
+         hLwu2gZWLB9w0g1L4SfuwxBOAzCt2MMZL+Gay2ddf+kI+PhpXeTywmDilx4nwnMeFVkc
+         6Z2VTLKb4IpA3T+epB/7xBt60NQLT2XWiuHgf34EEn55M6DUAdwSdxb//QKZtNAD9Srd
+         Mx8zl+WgR1G8H8DEpbmR/s5Km4FQslDM9giWl4+G4xjounG3Im42RFf8cMkhYPmI2Rt+
+         4Cxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746560715; x=1747165515;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Nbit0ITm/pQP3NVf792bDV8mZNspv5mb/mti4+w+eCo=;
-        b=T+9VfhskggPtRcsFRAMIP6aSi/qyDgHuAUPcnhlnlzisE+sSazxpjuQ2ee3/2Iyc7S
-         IegsJxpoCyGXswffH8P53DD3dWwORPYJ8GuKtY8mf/+vJGu+lt1teH/sMOvWBmDNfaU6
-         EVECP41a1sLiuEtWKF0EdDpfexpvpdTkdzhqTaHpZ2ABpFTM3MJ1L0bv0thisqmtp6Y9
-         v7yJPxltpK/MQ5c6OQBtMg0KXHewqp9TxeYj7aWyIxk+1u1e+qnPc1y5G+sApGOxk/4v
-         bN97oeEcSLYNb8iUrNo65XXd+PAWM4+fMSaYbKcI1yxqgVMRw9BfS6ZeEr+Gkv89T2Aj
-         Fspw==
-X-Forwarded-Encrypted: i=1; AJvYcCVPNHJ82O49ups0dnYleOTX1cMAR7UHDWR/mEtciEh1PBAT5ehsqWSNytqUM3/bWijMFrEaYCJut2PzJw0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGWjh04UhDkK9IEMARR+4L3kwfEZk2f64EIy/wTfh+tkmJvW2l
-	pnmMJPI/8RrnnfP7r5EsphpS/hDMbAufXqvI72P5ffTKlZ/qoOD/i0fNaI35CnRMKwv2ezFFPV4
-	qfQ==
-X-Google-Smtp-Source: AGHT+IFqRJC+/nE+KITlgWvBy1Ybx1q2CpPmR4WfkU+G+40vwLU3dW8GZ+n+QI5InJgQduz6JwxzACkmxAw=
-X-Received: from plbmq4.prod.google.com ([2002:a17:902:fd44:b0:22c:3374:e338])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:d54f:b0:223:635d:3e38
- with SMTP id d9443c01a7336-22e5ea6ba5amr6666535ad.15.1746560715262; Tue, 06
- May 2025 12:45:15 -0700 (PDT)
-Date: Tue, 6 May 2025 12:45:13 -0700
-In-Reply-To: <827cc30b-35e0-4a63-a993-484d4616091d@linux.intel.com>
+        d=1e100.net; s=20230601; t=1746560773; x=1747165573;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6A3LKXcKbQRzOmieF/B3aokjKJXQ0R9uCqIUYyekQaA=;
+        b=BSq/QNdfCnOQHca7GisQgI5WLxrevdSlVm0LDWwQvTainIMgtgjpQ4mEM08/78Jedu
+         qsO/F3YZaUKdHMGiGZ+j5JXBq650KcHFzPYLyGa0Grwxv1qc5rZyIy9hN1uNNkJmjeP6
+         pFNWh6ro8u8fD8l9+4BpfI39FXNcoyk13M2evbtNDsFPf9BrvOuH+HlG8axq39fYLJsC
+         xoRgQCDr73GYbDvVEEMTUgXciBI+VWZR88waC9GpdzDBUU5/NB6ESfW1Ky/oMVkMIbEQ
+         6jeST3T4dU8VLICuvx2BDhmpaVs7XFKYDNQVB914PpCA+ck6y0a6g7uZd95u9BviQsY+
+         6y9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUEnbdt/ibbXU08uXXfDM41uZR8ZkuLKNlbJKxIpVE/7R+b97IoyKvhSKxl00Cdkv+e+Cw0Qhoroh9Xpg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmJf2pPFYmNUz77/axSKkOAsd682wRZSfLP17cyOYBH7s87OKI
+	tfScSPqUgudsCNVQLjjf/dLdWnhDXarwLKoZgD5sucM8YB9E1OPGBy5RRpCJGbXc30fEv0KS6H/
+	p8mI8vBo0nXFNAEgesXgq6zpliQo=
+X-Gm-Gg: ASbGncumEiE/PLtXGNwsZX3p/qSC+x5vwC1Zp408tXE5nRmvCMjVJGWjK2GhliJglMr
+	zDsT8jv6CIfj4LluL27A7USfweMraOM4Zb2Vvl6ia3MLqGSa+W+zl/7Smb5on3Pr9ldDZR9DkI/
+	1mPYj5AVXv8QRKCtSpXEnMyiE=
+X-Google-Smtp-Source: AGHT+IH+DCQfnj+qWC+qZV6cPXJm9upBQAEspihuVpc5dbc1zorkI9URLgKeaple2qN2bMjFVkNmBm+gQ9ZSeVWAhlI=
+X-Received: by 2002:a17:906:ba90:b0:acb:ba01:4a4 with SMTP id
+ a640c23a62f3a-ad1e8b91708mr81253666b.3.1746560772980; Tue, 06 May 2025
+ 12:46:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250324173121.1275209-1-mizhang@google.com> <827cc30b-35e0-4a63-a993-484d4616091d@linux.intel.com>
-Message-ID: <aBpmycjTn4Xo4Hc4@google.com>
-Subject: Re: [PATCH v4 00/38] Mediated vPMU 4.0 for x86
-From: Sean Christopherson <seanjc@google.com>
-To: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Cc: Mingwei Zhang <mizhang@google.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com, 
-	Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	Yongwei Ma <yongwei.ma@intel.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
-	Jim Mattson <jmattson@google.com>, Sandipan Das <sandipan.das@amd.com>, 
-	Zide Chen <zide.chen@intel.com>, Eranian Stephane <eranian@google.com>, 
-	Shukla Manali <Manali.Shukla@amd.com>, Nikunj Dadhania <nikunj.dadhania@amd.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+References: <20250423194958.30715-1-linmag7@gmail.com> <202505051339.kc4bhqlt-lkp@intel.com>
+In-Reply-To: <202505051339.kc4bhqlt-lkp@intel.com>
+From: Magnus Lindholm <linmag7@gmail.com>
+Date: Tue, 6 May 2025 21:46:02 +0200
+X-Gm-Features: ATxdqUFA64GmO5svmNDpACVB3gWIvGC2bl8EQg4prGGJLCyBoJH_JupI6HfaaOU
+Message-ID: <CA+=Fv5SBcjqE=Xdjb8_YQrs1K3f4-vnY0PQ2KNg-Zetw01f_zw@mail.gmail.com>
+Subject: Re: [PATCH v2] alpha: machine check handler for tsunami
+To: kernel test robot <lkp@intel.com>
+Cc: linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org, 
+	oe-kbuild-all@lists.linux.dev, richard.henderson@linaro.org, 
+	mattst88@gmail.com, arnd@arndb.de, paulmck@kernel.org, 
+	glaubitz@physik.fu-berlin.de, macro@redhat.com, mcree@orcon.net.nz, 
+	ink@unseen.parts
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 06, 2025, Dapeng Mi wrote:
-> Hi Sean,
-> 
-> Not sure if you have bandwidth to review this mediated vPMU v4 patchset?
+Hi,
 
-I'm getting there.  I wanted to get through all the stuff I thought would likely
-be ready for 6.16 as-is before moving onto the larger series.
+
+Sorry , my bad, thanks for the feedback. I'll fix this and send it out
+as a v3 for this patch.
+
+
+Regards
+
+Magnus
+
+On Mon, May 5, 2025 at 7:37=E2=80=AFAM kernel test robot <lkp@intel.com> wr=
+ote:
+>
+> Hi Magnus,
+>
+> kernel test robot noticed the following build errors:
+>
+> [auto build test ERROR on mattst88-alpha/for-linus]
+> [also build test ERROR on linus/master v6.15-rc4 next-20250502]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+>
+> url:    https://github.com/intel-lab-lkp/linux/commits/Magnus-Lindholm/al=
+pha-machine-check-handler-for-tsunami/20250424-035141
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/mattst88/alpha.gi=
+t for-linus
+> patch link:    https://lore.kernel.org/r/20250423194958.30715-1-linmag7%4=
+0gmail.com
+> patch subject: [PATCH v2] alpha: machine check handler for tsunami
+> config: alpha-allnoconfig (https://download.01.org/0day-ci/archive/202505=
+05/202505051339.kc4bhqlt-lkp@intel.com/config)
+> compiler: alpha-linux-gcc (GCC) 14.2.0
+> reproduce (this is a W=3D1 build): (https://download.01.org/0day-ci/archi=
+ve/20250505/202505051339.kc4bhqlt-lkp@intel.com/reproduce)
+>
+> If you fix the issue in a separate patch/commit (i.e. not just a new vers=
+ion of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202505051339.kc4bhqlt-lkp=
+@intel.com/
+>
+> All errors (new ones prefixed by >>):
+>
+> >> alpha-linux-ld: arch/alpha/kernel/sys_eiger.o:(.init.data+0x118): unde=
+fined reference to `tsunami_machine_check'
+>    alpha-linux-ld: arch/alpha/kernel/sys_dp264.o: in function `clipper_in=
+it_pci':
+> >> (.init.text+0x394): undefined reference to `tsunami_register_error_han=
+dlers'
+> >> alpha-linux-ld: (.init.text+0x3a0): undefined reference to `tsunami_re=
+gister_error_handlers'
+> >> alpha-linux-ld: arch/alpha/kernel/sys_dp264.o:(.init.data+0x118): unde=
+fined reference to `tsunami_machine_check'
+>    alpha-linux-ld: arch/alpha/kernel/sys_dp264.o:(.init.data+0x298): unde=
+fined reference to `tsunami_machine_check'
+>    alpha-linux-ld: arch/alpha/kernel/sys_dp264.o:(.init.data+0x418): unde=
+fined reference to `tsunami_machine_check'
+>    alpha-linux-ld: arch/alpha/kernel/sys_dp264.o:(.init.data+0x598): unde=
+fined reference to `tsunami_machine_check'
+>    alpha-linux-ld: arch/alpha/kernel/sys_dp264.o:(.init.data+0x718): unde=
+fined reference to `tsunami_machine_check'
+>
+> --
+> 0-DAY CI Kernel Test Service
+> https://github.com/intel/lkp-tests/wiki
