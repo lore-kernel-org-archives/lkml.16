@@ -1,171 +1,212 @@
-Received: from EUR03-VI1-obe.outbound.protection.outlook.com (mail-vi1eur03on2082.outbound.protection.outlook.com [40.107.103.82])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E0FF26656C;
-	Tue,  6 May 2025 15:12:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.103.82
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746544364; cv=fail; b=piAWUtUw6INaTJ5Me4pDdXEZ98yczH3HxfGbiVkseW8KtVxO/DRBRlRmkYfD08Jiia1OrTi2XrYe58CUQLmOlNjxd6E45hTm0kT+xsFObikeNc0bsAgy/ohWfg9zCiyjGx1r7koZFtB2INFn8KkahBRlpBEvblq3WVLSXFJ+V40=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746544364; c=relaxed/simple;
-	bh=rVMfvUpH392Hg7aPtks8FmI8PfhC0btZ8ucxmMMMdPA=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=dNCzJk9d6OiZtjBqTgxxfcZLYHO6ppHqHz2lSshcOXbnH9DNEZpmpBLXWANzh5lWZesnqQQWZUuASRR5HGhzbXJgIjj07G97g2rnGYUHSedFItTBd5Rpnxscre0ODR8HNdUSvJf7pV7czavoKLoqeJG9d1e5Jm7hFrOpFJhL3ew=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kuka.com; spf=pass smtp.mailfrom=kuka.com; dkim=pass (2048-bit key) header.d=kuka.com header.i=@kuka.com header.b=vVC65tZF; arc=fail smtp.client-ip=40.107.103.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kuka.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kuka.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D754E237173
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 15:13:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746544439; cv=none; b=W9OIhvXgoK7jmshD80XZUFRgkvZKRSJoijWUNENz8bU3gEhxbLNDjWGQ7e14Uf5RBrLKrHBAm3pktZgyOlIqQJYSvCBjPW2x6P0mqBIHgrjBzBNnspWImQB952QSFwOA9jMD8zqi/wbkXJyHuhxrK6QmxoYkOGL3zTgDBABl8dk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746544439; c=relaxed/simple;
+	bh=IBytXpNaaLhMV/u17w0QJznygY6nF8ZlIqvfVG0TI6g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Qul3wTJ9SK09TrnVm3nXGOzX+fealrGuR/6lr/l9fnK/F4PtwfavkxJbrqOX50YU2R1TFo8WS7mnHyvEzlSVFV2deESG/emIfmZRtVMJm7cWLnmvffjEBSQDwFvEB4RLHnaBOzEm48R6GS0bDm8FjfwpQZgLrzHpg8jSHWqmEWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=PnoL+dEk; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=dsoAksmF; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=PnoL+dEk; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=dsoAksmF; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kuka.com header.i=@kuka.com header.b="vVC65tZF"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=fe457DQs87qt6vGT2j5iuMGbv1njjjYBefy02r3lrk+mnsY5VFVVxguhvZoj8fRWc1kAn2uPc+ZxBDlYCQhZ/8jm5RBSZM91vnZ4M7DA9lV1655PND2mHHcS58aOvdf+Rm4rd8nPV8CkyfsaWS5sC1+pkeQBV4CZsrFNmjqMts6DutSVUxEFtR033pX3zb+Hoo8X2NtXHRmdM7oH8gK+gY11ggGSvxCCCQgB3M0B7+YJTMbLjQIA9T68i+xsTregRPl0shNHenZyzMjac8n5tudcz/CP8GFvBp0ZBgKrS1yomHCR2WuY1xV+ih47Hea00sa0orUXTjaJxPSH9+U4KA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rVMfvUpH392Hg7aPtks8FmI8PfhC0btZ8ucxmMMMdPA=;
- b=uj8Rpvy2ZrcmPL7HDZrFwiH3U3UnNkAKWLmMgzEPpugW7Urw9S5tABm6d1JKak2j/dfaIxQKAJn/8i7KqSObwu6n0b5Cm55incYezB4iZuCvyV5JwlyUshFwmL910I+lB9skBDGBn6RjGHSYRPiOynnZJtmoadp4TbKoM7KNyQ51MIqpmLONXS5mewPzdYM6HPqosF6v2K285gBlFBZNtHgsErNnwFZgfxKsE5A7EPDvXsFYsV4QaquyXNsr3ZOwkPrwvWxGs/N+kay/U4310fCJ4pV1zBVXa7kEJWpYPTs2lyvknhcgRxFdyuRfzMcJJpTxjZ5c6Hym4pJaY9V6sg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=kuka.com; dmarc=pass action=none header.from=kuka.com;
- dkim=pass header.d=kuka.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kuka.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rVMfvUpH392Hg7aPtks8FmI8PfhC0btZ8ucxmMMMdPA=;
- b=vVC65tZFT3wYamX08teuFEETkikUcVrwLTV4F+J7vgFKBnEiqulIzdXd3y/oinRxuDRluhEi7hvwLID1fqAxmaT0CcRu3XxxidP2rNsWdZ952ywlOs7+gzOHGlmjux8luil7h4Ia/r1aKF3ZHfa11vFdbL+mORZgusP9iwVICOV/gQ2iCYiED8exlNP6n/h6ioIoice1gZCQcyxv9BD6gonWRUOYKEBNYCqUdCwPVmtpp07m/CYS4SIcoHCdFFEWcBecBJBd34pEw8FDTzjWM5gQGM2V3FhDryLI/K++BSP4NayF9qJIm8ex+oRkL9SatxCln2xktxmHsE0s/QI/yA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=kuka.com;
-Received: from VE1PR01MB5696.eurprd01.prod.exchangelabs.com
- (2603:10a6:803:123::12) by PR3PR01MB6283.eurprd01.prod.exchangelabs.com
- (2603:10a6:102:3e::19) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.26; Tue, 6 May
- 2025 15:12:39 +0000
-Received: from VE1PR01MB5696.eurprd01.prod.exchangelabs.com
- ([fe80::ac38:4740:6a66:b5ba]) by VE1PR01MB5696.eurprd01.prod.exchangelabs.com
- ([fe80::ac38:4740:6a66:b5ba%4]) with mapi id 15.20.8699.019; Tue, 6 May 2025
- 15:12:39 +0000
-Message-ID: <cc3365f0-7f52-4fa5-bad7-8c761150bbb6@kuka.com>
-Date: Tue, 6 May 2025 17:12:37 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/2] Map MAP_STACK to VM_NOHUGEPAGE only if THP is
- enabled
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Liam.Howlett@oracle.com, akpm@linux-foundation.org,
- yang@os.amperecomputing.com, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org,
- Matthew Wilcox <willy@infradead.org>, Ignacio.MorenoGonzalez@kuka.com
-References: <20250506-map-map_stack-to-vm_nohugepage-only-if-thp-is-enabled-v2-0-f11f0c794872@kuka.com>
- <5ebcdd05-1c82-428c-a013-b7757998ed47@lucifer.local>
-Content-Language: en-US
-From: Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>
-In-Reply-To: <5ebcdd05-1c82-428c-a013-b7757998ed47@lucifer.local>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: FR4P281CA0445.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:c6::18) To VE1PR01MB5696.eurprd01.prod.exchangelabs.com
- (2603:10a6:803:123::12)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="PnoL+dEk";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="dsoAksmF";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="PnoL+dEk";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="dsoAksmF"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id BF3011F390;
+	Tue,  6 May 2025 15:13:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1746544434; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jd6xXTmqLw4/z46X71OaL8w3NdaQT1DvHvsLk/MyuWc=;
+	b=PnoL+dEk96Fi2Ztk5oC8VYqaiFz5Up/98FxJiUHMbIqzOxKktl7vkLG5EJWzQl9Fgl7tC2
+	I8S5h83mFl51HnXGr/itp+eVwFTDAZyweOOKlrEVn2J2aQIeH+4kJ5F9Eul0A5ILVCaPrM
+	DMieilDU77zxANgP6SnnebA/Xtzv0V4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1746544434;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jd6xXTmqLw4/z46X71OaL8w3NdaQT1DvHvsLk/MyuWc=;
+	b=dsoAksmFVWU1/S6Y6chYRuhDWPMqLRhcK9q8C37nic5LP+wkQ7LyT7oQcZ5BEKquIVhQyV
+	DQxlmQ31i3R+8+DA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=PnoL+dEk;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=dsoAksmF
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1746544434; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jd6xXTmqLw4/z46X71OaL8w3NdaQT1DvHvsLk/MyuWc=;
+	b=PnoL+dEk96Fi2Ztk5oC8VYqaiFz5Up/98FxJiUHMbIqzOxKktl7vkLG5EJWzQl9Fgl7tC2
+	I8S5h83mFl51HnXGr/itp+eVwFTDAZyweOOKlrEVn2J2aQIeH+4kJ5F9Eul0A5ILVCaPrM
+	DMieilDU77zxANgP6SnnebA/Xtzv0V4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1746544434;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jd6xXTmqLw4/z46X71OaL8w3NdaQT1DvHvsLk/MyuWc=;
+	b=dsoAksmFVWU1/S6Y6chYRuhDWPMqLRhcK9q8C37nic5LP+wkQ7LyT7oQcZ5BEKquIVhQyV
+	DQxlmQ31i3R+8+DA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9893D137CF;
+	Tue,  6 May 2025 15:13:54 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id HJHeJDInGmh9XgAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Tue, 06 May 2025 15:13:54 +0000
+Message-ID: <62cf4450-c765-4641-b042-66cca71d5912@suse.cz>
+Date: Tue, 6 May 2025 17:13:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: VE1PR01MB5696:EE_|PR3PR01MB6283:EE_
-X-MS-Office365-Filtering-Correlation-Id: b9656278-b2bd-4526-d06f-08dd8cb070b1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?dGFDQ0dVc0VXTG53VUtjMTdtZlNOaFJ4S0c1bzNlenNBckE0enpFTmhyaHhm?=
- =?utf-8?B?VVRwbmVNZ0txWmRZWlRlY1k2TXZVN0J5TW5NV0FFRFZyRXNjNHQ0MlJPcTJl?=
- =?utf-8?B?dEJHTjk0cnVxbTNNQmc0bE1VLytzVzRDbEhEcmNzRVlRUmlPb0x6UURBN2kr?=
- =?utf-8?B?aXNseFpCVjVVaVF1TW9TV0dxYW5GeC9TREtOWG1ocGR0aVA4TzNGeXF4K3ZC?=
- =?utf-8?B?MDBtRzVwSjN3Y1J4NmZNQ24xeG44Q21rVncwWXhQdmZmU0xCd1JQSFhKVzFL?=
- =?utf-8?B?VkMrU2M2THcvSGtFOU0yL1lSMjlqWmQvSFBxZ0hEdy9Wczdjc2hLVGVxbjRj?=
- =?utf-8?B?ajExUjlQdWxKRjlNVjlKVXg5ejdYOVdKeWkzMjFMRGV0dHBmZ3VoM1JRNFNT?=
- =?utf-8?B?T3p0Mm5Iamgxbi9heCtMNU51M2I1MUtaYW4zNzdxR2ZlZnJhVCtjeUlTMEZC?=
- =?utf-8?B?MWQxeFlSU2YyQ3JiTVNDdkRmYlppaytYOUl6L1kvdVRwTXpVVVFMeGhhQzU3?=
- =?utf-8?B?L1Jsb0greFFXblVvRGNCdzhDOUtyWmdEVnZ3WlVWWFM0Ykt0OW1sdlJ1UUtm?=
- =?utf-8?B?NGdmbTQ5RWRabWJySng0RDlpTHdoczdUUE02NEpIcGJPbElNV0VRUElXQjB0?=
- =?utf-8?B?ZmlpL09tQlUxcGZscjNBQUsycGUvK1VvOHF1Uy9hNjY2ZnhQTlpWdkdUS1ho?=
- =?utf-8?B?YjQvVXM2c3ZiNmY3RXRZaFJ5Y0U0VCs3eUl0cFdhMlNlMTdTSkkwMHVsSmNm?=
- =?utf-8?B?bjRacU5uT1A0YUZGOHRTVDZJcHR5Z0dRWUo3dldkQWt6NUJVZVlVamI5RVlm?=
- =?utf-8?B?NldmTURrYnZ5NWltU3ljQ3pqLythOC9pZzMrakxYeXEwalcrRzdYRTJ6YkNz?=
- =?utf-8?B?SVVRV0JMdmNoN29RWURSd2JKUlJRSkN3SnNjUFFrd1FCU0ZzanlSSDZLUWQw?=
- =?utf-8?B?TE5NbktVR29hVkNKM0g3NUlVUGNNU0RuK3JuWWMzRjBRNHJwMklZTU56QUpq?=
- =?utf-8?B?YTBpL255QTFvVWVlOWNFNXdmZkFjMVBhbGFLVzFHTG5nVEZxN1BnNkFjRE1K?=
- =?utf-8?B?NTRLTjNlMnEvNkRJTnZMMXJVR0habTFSbmdCcGxXNTJ2MGNZWjNmK1FuMFdN?=
- =?utf-8?B?cnRuT3NXb1YvRWhXTEtzRzA5aGpuT1djeXowRGRURDlXSXVSeG04a2hxK1lH?=
- =?utf-8?B?bTNvY2NyYVBqZW5FQ2l0aVNiakZEa0xTbWRGVkpYVE1LdkM4cXllWmNUc1N3?=
- =?utf-8?B?SVZLa2tBUGI3NUg1bHdnWi9hOVhIUi9zL013RHM0VlNNdFZXbHZKMzRJSjY3?=
- =?utf-8?B?NkV6UitiaTR6dElkQWtlN0tydkZXZ1R5N1dNSnJ0YSt2N3RxMVozMGRZZ0lQ?=
- =?utf-8?B?bjRKNFhZTEFZVDNTSmJXSm9mcTh0eFNDb1FJUlRFZFNmalB5QlFhTkJuU3BU?=
- =?utf-8?B?a3BRL2JDVE50SWNVVVJjNDU0SjlMNnVCR0RSd2N0ZUY2cTZJbkhwd01ERW5D?=
- =?utf-8?B?SGpmVE5peEZKalpOZHVhMmRmSE9NcVRpSFZxbDRZTnBoM0pIbDR4d2t6bXlI?=
- =?utf-8?B?dHQzSE5WQm5yNGczdHU0eWgzOGo1b3JxZjRlWHBUNGducVZ2UmVkZytmVWJk?=
- =?utf-8?B?VUxidmFUd2ZIbmRBS1g1SlZ1a3U1M041Mzl3TmljR2lmQW5vWXcwa1AxUG11?=
- =?utf-8?B?ak1NWDg5SjFkVTY5VHdUclBmNDZhSGk3SUZkTDlCOWpXYS9vRkV6VDdTQnov?=
- =?utf-8?B?TjVyMWNuSXJWTW83Vys1ejZsR2ROclN2NmtMV2lkS1FERGltWkhBdjZ4VE10?=
- =?utf-8?B?amNzb0pqdTY5VlkwZkRjS09qRmNvZHpBUjhKZUdPUHZRVWVlcXFLS3BlMWo4?=
- =?utf-8?B?NTVGUytQQnIwNjA0SEN3RkJxUmhhR3dFQ3UxRnNIUUsrSlZuaGhFem5IeFlG?=
- =?utf-8?Q?a751JqGRa8g=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR01MB5696.eurprd01.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?MkhSV1dhVDVaK2k2Nk1BWG1TYVYwWjVWNkZ2N1FWVnBLbDNDbktUeCtieVJW?=
- =?utf-8?B?YVpBVFMzZEtqYWYrUUZVZVVLN2ZveTUyeGpEeGFSTkhUZUxnbnd6K2phV1dz?=
- =?utf-8?B?aVZZbkJNVFJ0b1NPWFgrNHVGbGhTT2pkWTN4cVU2L0VVMEFWcjA0bldORHFz?=
- =?utf-8?B?T0lGdzRzeTl4d3ZOUzVVUFFOWVpjQmtKbDFNRlhLcFJGaVpFcFpCdjhwRU5x?=
- =?utf-8?B?eXUvZDJPckRValg3aHg1NGRyajI0WjBDNmZZZGdoK0ZlU2M2dnFaRlQ4WS9U?=
- =?utf-8?B?eDBmbGsxZlhXcUh2MWhaVVhkanYySko1QlB3UUhxQ0liUWVNcERFMnZHUTRQ?=
- =?utf-8?B?bmhqaWFTZm5hMFA0V3JOQkIwYnlOTDBFaEE2eG5acE80ZGZIRFBPNWVmd04v?=
- =?utf-8?B?TVdZd2JGSDYwNS9BMUNpaldNOEJsZm5Ja3NjV2hqUWFQanBkUk5DUW9IV0lE?=
- =?utf-8?B?VEgzdHo0SmhVaGtRSUE2MXRIRklvTnRNRUZFVVRzcnBkZE1MY1YrR0k4MXhw?=
- =?utf-8?B?VjEvNGZURmc1OVVqNkszQ0RJUnhQVjl4aUthMU9oYzl1MFBldHpTc0FxTFVl?=
- =?utf-8?B?dEdqTGF4clY2ZS9WMXU3UGVEK0xvMEM1eWJ0QzQ5a0NtUUhJdWFqNE1GLzlK?=
- =?utf-8?B?OFFId0xieWlMbWV5K21acVU1WVZXNW1SRm5Od0pjbC9RZDI2cjJCUFhybndD?=
- =?utf-8?B?TURieHk2UW9QcTFBcWdwUjR3N0NDaUU0V29TbG11aUtMeWpkbUMvM0dSWndh?=
- =?utf-8?B?RElrOUFwMERlOE1xbElEV2UwcjRZQnU4VVorWFZ1WmpWNkQvVDVSdnpHenh5?=
- =?utf-8?B?UVc4b3JSTHhBRE9yRllaMmpxb2lKYTIzM3QvdG04NzlHSlJpbU1NakN3QnhQ?=
- =?utf-8?B?TG9jQTJ2Q2dESXM4ZHV1c21LNGtIT3E4MHpZR3BIMFpoT3Z5Yk9vb3U4Q3Yr?=
- =?utf-8?B?aFVTbjhjNkROZ1JyNVJQUnF5alJPQjJXOFhmTXFHWmpKbU45eURFU05QL3pQ?=
- =?utf-8?B?NjJRZEoxbzJIK0xzQ3ZZQXFYbXMzV0RqdnB4WFNVWlhMODN4N2czUHd2aVpX?=
- =?utf-8?B?Uk9TNklaa0pkbTZTOFdZVkRVZkMvN1RoL0xoWUFEMzNoMUZTcWNwYllITFhy?=
- =?utf-8?B?NTF6TXV2SndoMjJjNTNDS254ZEdzKzNhQkNjWFEyU0FwTUx5VjFMZGl6a3Q4?=
- =?utf-8?B?T080cldobm9ML2NJa0hzc3dQZGVJaGtXYWo0NW5Gdk5HbjVibnJsTEh2MEZB?=
- =?utf-8?B?SE1YNkx4SkhUVnpmSVFRMm1TTC8zMU5Mc1lBc2U3bU8xTlNhelJVSGFqVEQx?=
- =?utf-8?B?bC94WldUeGtBSmxKdXBTVW04UVJVQlBPTUlkUmk2ejNqc09vOE1QbFM1YWpt?=
- =?utf-8?B?Y0RJdEh1c0ZxNlJxeXR0NVBwbkNQZE5DaG85RFBheFYrQXRPREVKVWVZcUl3?=
- =?utf-8?B?WnBIQ2JScnI3ZTI2Y0w2TWVjM2NWaEtSdzJqdDZWdVpOSjdnUVdIdXZncHQv?=
- =?utf-8?B?RVhzQ2tnRW1OSHg4bjRYbS9EMUZEL1Uvc1VFOWoyWG4zWldSS0pYUW1VYjJk?=
- =?utf-8?B?UXdHMUhRRytsTVlNblZKUVpYNE1YMWpTRlRzVncwY3hzVlFGaUZidkg5Nllp?=
- =?utf-8?B?cWp1T0FHUFMrcWxkWjA1QXd1QktNVUk0QmlydnRuK0xNRTNJSUJVN0Y4MTNB?=
- =?utf-8?B?ZmFDbWc1aXZaMGUrbkQwL2drajM3L3g1ZVgwSGx0VXpuUFVSdDdIYVQ5SmJ2?=
- =?utf-8?B?Yzc4OGNJVDFUaHRwaXRPeGI0U01IVUZ6b0c0cGZkQmtXVlVrSU5va2x1a1JP?=
- =?utf-8?B?YitPS29Fd3VqRjcrOFRWalEveVU3clFIMm42aGQ0Q050UnM2WFhRYUVHaE1X?=
- =?utf-8?B?RmJBRDdzbjViRkNNQmFhcGdYWW1JQXhxVnU4b2lEd2M5am0xaXpvWXp5SGNt?=
- =?utf-8?B?bWZwZTRJem9KdTR2ZGd3djluaFFVc2ZKZHBKTHB0UUYxQnliRzYzOXlEbHow?=
- =?utf-8?B?YUIyQ3lDQ0ptWlVmM3I4N003TlZHdTFqcVJvR1BDVk9DcnRsWGdianZadjZN?=
- =?utf-8?B?cTk0S0srdjFITU1MWFM4TUgweW5SdXV2aFBNQUlTNEZYNzE3dWo2S3NwVktO?=
- =?utf-8?B?VWtHaWRJQXNuZkQzcVc4UzNHd3k4YUhmanl5QXpFdmJzYVFiVDZpbmk2Ni9F?=
- =?utf-8?Q?KiZ62B6WpfUQfTqK+KDXiPs=3D?=
-X-OriginatorOrg: kuka.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b9656278-b2bd-4526-d06f-08dd8cb070b1
-X-MS-Exchange-CrossTenant-AuthSource: VE1PR01MB5696.eurprd01.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 15:12:39.0804
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5a5c4bcf-d285-44af-8f19-ca72d454f6f7
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0yO8EGPScMnTKE6AO6/B3fkXKpfkLxxSEbnF+DJC7bc6JwR2XRK5JP2T7jjXMylZhZyRUpjOp38LHEfiPkfE7rHd4MlqCNiAB1QTxl5b+fo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR3PR01MB6283
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm: Fix up memory allocation tracing
+Content-Language: en-US
+To: Guenter Roeck <linux@roeck-us.net>, Christoph Lameter <cl@linux.com>
+Cc: David Rientjes <rientjes@google.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Roman Gushchin <roman.gushchin@linux.dev>, Harry Yoo <harry.yoo@oracle.com>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Russell King <linux@armlinux.org.uk>,
+ "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+References: <20250506144531.3434190-1-linux@roeck-us.net>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <20250506144531.3434190-1-linux@roeck-us.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: BF3011F390
+X-Spam-Score: -4.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	MIME_TRACE(0.00)[0:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[roeck-us.net:email];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On 5/6/2025 4:28 PM, Lorenzo Stoakes wrote:
-> This bit probably belongs after the rest without ellipses :P but it's not
-> important.
+On 5/6/25 16:45, Guenter Roeck wrote:
+> intcp_init_early() calls syscon_regmap_lookup_by_compatible() which in
+> turn calls of_syscon_register(). This function allocates memory.
 
-I was not sure about modifying the subject for v2. Let me know if I should change it ;)
+CCing people for intcp_init_early()
 
-> The series looks good to me, thanks!
+> intcp_init_early() is called well before kmalloc caches are initialized.
+> As consequence, kmalloc_caches[] entries are NULL, and NULL is passed as
+> kmem_cache argument to __kmalloc_cache_noprof(). While slab_alloc_node()
+> handles this just fine, the trace code unconditionally dereferences it.
+> This results in crashes such as
 
-Thank you too for reviewing it!
+OK, so we have crashes that are not deterministic. But also
+intcp_init_early() deterministically fails, right? This means it's called
+before mm_core_init(), and given the "_early" part of the name that's
+probably expected (i.e. I don't think it's due to some random initcall
+ordering) but maybe then it's wrong to rely on kmalloc() in DT's init_early
+hook?
+
+> Unable to handle kernel NULL pointer dereference at virtual address 0000000c when read
+> [0000000c] *pgd=00000000
+> Internal error: Oops: 5 [#1] ARM
+> Modules linked in:
+> CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.15.0-rc5-00026-g5fcc9bf84ee5 #1 PREEMPT
+> Hardware name: ARM Integrator/CP (Device Tree)
+> PC is at __kmalloc_cache_noprof+0xec/0x39c
+> LR is at __kmalloc_cache_noprof+0x34/0x39c
+> ...
+> Call trace:
+>  __kmalloc_cache_noprof from of_syscon_register+0x7c/0x310
+>  of_syscon_register from device_node_get_regmap+0xa4/0xb0
+>  device_node_get_regmap from intcp_init_early+0xc/0x40
+>  intcp_init_early from start_kernel+0x60/0x688
+>  start_kernel from 0x0
+> 
+> The problem is not seen with all versions of gcc. Some versions such as
+> gcc 9.x apparently do not dereference the pointer, presumably if tracing
+> is disabled. The problem has been reproduced with gcc 10.x, 11.x, and 13.x.
+> 
+> Fix the problem by only dereferencing the kmem_cache pointer if it is
+> not NULL, and pass a dummy parameter otherwise. Only add the check to
+> __kmalloc_cache_noprof() since it is the only function known to be
+> affected.
+> 
+> The problem affects all supported branches of Linux. The crashing function
+> depends on the kernel version, and some versions are only affected if
+> CONFIG_TRACING is enabled.
+> 
+> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+
+Let's see if making slab silently handle those unexpectedly early calls as
+NULL is the right way or we should warn in a debug config or something.
+
+> ---
+> I only changed a single call of trace_kmalloc() because it is the only one
+> known to be affected. I'll be happy to change the remaining callers if that
+> is preferred.
+> 
+> I have seen this problem for a long time. I always thought it is a compiler
+> problem because it is not seen with gcc 9.x. However, it turns out that the
+> problem is real.
+> 
+>  mm/slub.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/mm/slub.c b/mm/slub.c
+> index be8b09e09d30..627aa8d2b9fd 100644
+> --- a/mm/slub.c
+> +++ b/mm/slub.c
+> @@ -4353,7 +4353,7 @@ void *__kmalloc_cache_noprof(struct kmem_cache *s, gfp_t gfpflags, size_t size)
+>  	void *ret = slab_alloc_node(s, NULL, gfpflags, NUMA_NO_NODE,
+>  					    _RET_IP_, size);
+>  
+> -	trace_kmalloc(_RET_IP_, ret, size, s->size, gfpflags, NUMA_NO_NODE);
+> +	trace_kmalloc(_RET_IP_, ret, size, s ? s->size : -1, gfpflags, NUMA_NO_NODE);
+>  
+>  	ret = kasan_kmalloc(s, ret, size, gfpflags);
+>  	return ret;
+
