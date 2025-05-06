@@ -1,321 +1,419 @@
-Received: from mail-ot1-f73.google.com (mail-ot1-f73.google.com [209.85.210.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF15C321ACE
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 00:23:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 688F74A4E62
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 00:48:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746491008; cv=none; b=uExtqRa/MHkU9j3tMxko1Khk/k8JQ2wFRFEipezaO8E2TkIl0TCa77zlHcwjhVDBYReYRBxyixuDGikuPxQKaQqk0ZiByX0q2TZhvzueaIhsWf1ViHhtfugskgTnR42b8hI81rXy/GtYLq1KJ/aPZoThBQjg4l9MUdhiLkxIPgw=
+	t=1746492525; cv=none; b=a28ByPSIDPv8vYS2eSevfw0jk/RlNb4MNLAsVoPDilXZi40krx98r7gUykaw/t/qbJeXswq6oVVrxm5s9gFyF6doNE7OOoT3FWAyjMty5b7uJrekcynaR7UIqZH117GhcQRp1ZNs9fUCD9+zT5qJ4tVnr6Onz6BlJfmrQdiA/yA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746491008; c=relaxed/simple;
-	bh=bq3mLkGFG4qJT2rFNJJU+2sz284BYbzKvlS4JglvI9A=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=rJvWdHekiUzvv51kHsJbiFc+kb1tLN6ezntM0h1NS2PzqpGAvWidGgl9nq1rVuKhZLaFUIP01Uq9zX5sT5SpNboRWZxjRTTBdjvxg1IlPezIPmTP0zGFnuHl1CjBZIXqv8Ot/9AtVjFM56OL580MWve3Bg9JTKoqB3bDEMH5WEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jyescas.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XhB1xJ7x; arc=none smtp.client-ip=209.85.210.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jyescas.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XhB1xJ7x"
-Received: by mail-ot1-f73.google.com with SMTP id 46e09a7af769-72b90565341so1210364a34.0
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 17:23:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746491005; x=1747095805; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Ky7Ox4614Ju9ch/TWPsIUc4fTfh+nlNJiyC+j1YiieA=;
-        b=XhB1xJ7x19esM0G2SoCL9QUC7y77cy1CZey7254wqoBoVjyo+3ms5/CZT5D4vk3MA5
-         OJ1mRrXL1pS0BHrA3WDtKA1FgY8hwDMX9kW3BajY8a+Y8fsaywYV/JKF6W475MVUxuVC
-         9OXNhDj8uAqAZoxR5fxjSE+eQVq/YW30YWnytdQT/iSq4hk+w1f/IRhtIzLSKj9vbIxV
-         lccpLv+XarX21l9XODdYlZ99yZTB+qyPa66xPsNTRK78S/2RPpMGB3WPILo3PFXqkZ6h
-         XrnxJNMPal/+uDHgBce+ULSeAxeiAU1tdxra81UbH13WCH1D53OGz/7A90LMEh4GkjuC
-         n47g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746491005; x=1747095805;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Ky7Ox4614Ju9ch/TWPsIUc4fTfh+nlNJiyC+j1YiieA=;
-        b=sYB0ihdq/d8mpm6m97vygQmdZY9mHDDP/FZXgKcLfm9blP3MDgXGuaFBRMZCkmEOJG
-         TVo8yfmnCqNjHCujo0io4s/IwuuPRiKgUrCIgKly5cw8Z9FoDB15FtzWzfy5ZtVOx4Bw
-         KyGgQiCrY5pImZPGjjxBnK0i178rPoTDgGNUw5iihtsQlPt81U+ugfQUcnJm98BjCKrJ
-         6NggvkPe4ZM7kz23t5TLNKdHWJ99V6nN1btt8HbinkftuMHc/w3GTsBUUX+iMSWhvMDC
-         k5Xzi5Ik++bv1FSxa2RQsRpbrAKjvK1QpGy6UyKRH1evXkk0ket4wA3c09nR6E+uRnWI
-         vcOw==
-X-Forwarded-Encrypted: i=1; AJvYcCXeZrnQKc23gWkmEkW8S3/GZ/NNl180s7B0Z6YUmTP0Fd7sNfQcJlth8ayjnuOO2wXzw5PFMR5J6h9xQi4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2X/ljhLHkE4GGuGid9JJrC0fklMKp1xi1Jcl57EPPgV/xhsKC
-	MPxyICbbXzWgxcjHwK1cUcmIGTt8kUkGwTVccOKNCCJcvJQIH+LklY8mLhiYjWHtUlNmVUDiXfF
-	hOHmmPg==
-X-Google-Smtp-Source: AGHT+IGTYWrQCtVFnG6Sm8ybMYB3XLNPBp4NAwjj+gz5NG9EEwQSQh0InXP3Bp6+FcM/pbAkgkD7sZ0K8zNF
-X-Received: from oabwq2.prod.google.com ([2002:a05:6871:aa02:b0:2b7:fdc9:21f4])
- (user=jyescas job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6871:6aa:b0:2bd:456c:92a
- with SMTP id 586e51a60fabf-2db38be6b1dmr1020715fac.10.1746491004738; Mon, 05
- May 2025 17:23:24 -0700 (PDT)
-Date: Mon,  5 May 2025 17:22:58 -0700
+	s=arc-20240116; t=1746492525; c=relaxed/simple;
+	bh=6V+cb9MTePAxf7N7XVuHjske1yK2Lk8LFcjCNXlCz3I=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=AEprnuJcMMBYyMn2fHqr69ClyvS1+dgDzFMViNk6OkJQO3vrBLYe+3jhGCQTdXiPM9ISixWIZS04C9GFjKUGVaEtc0hbeo9kSHTFat8Wqm/HlX7P8VsHOQRa/A+Ih2q0erJZTD/fP1Mu+CbjqiTUeTz2fM0EeGW5u/I9bHARp6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
+Received: from fangorn.home.surriel.com ([10.0.13.7])
+	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <riel@shelob.surriel.com>)
+	id 1uC6K6-000000000IF-3ncU;
+	Mon, 05 May 2025 20:38:14 -0400
+From: Rik van Riel <riel@surriel.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org,
+	x86@kernel.org,
+	kernel-team@meta.com,
+	dave.hansen@linux.intel.com,
+	luto@kernel.org,
+	peterz@infradead.org,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	hpa@zytor.com,
+	Yu-cheng Yu <yu-cheng.yu@intel.com>,
+	Rik van Riel <riel@surriel.com>
+Subject: [RFC PATCH 7/9] x86/mm: Introduce Remote Action Request
+Date: Mon,  5 May 2025 20:37:45 -0400
+Message-ID: <20250506003811.92405-8-riel@surriel.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250506003811.92405-1-riel@surriel.com>
+References: <20250506003811.92405-1-riel@surriel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.967.g6a0df3ecc3-goog
-Message-ID: <20250506002319.513795-1-jyescas@google.com>
-Subject: [PATCH v3] mm: Add CONFIG_PAGE_BLOCK_ORDER to select page block order
-From: Juan Yescas <jyescas@google.com>
-To: Andrew Morton <akpm@linux-foundation.org>, Zi Yan <ziy@nvidia.com>, 
-	Juan Yescas <jyescas@google.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Cc: tjmercier@google.com, isaacmanjarres@google.com, surenb@google.com, 
-	kaleshsingh@google.com, Vlastimil Babka <vbabka@suse.cz>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	David Hildenbrand <david@redhat.com>, Mike Rapoport <rppt@kernel.org>, Minchan Kim <minchan@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Sender: riel@surriel.com
 
-Problem: On large page size configurations (16KiB, 64KiB), the CMA
-alignment requirement (CMA_MIN_ALIGNMENT_BYTES) increases considerably,
-and this causes the CMA reservations to be larger than necessary.
-This means that system will have less available MIGRATE_UNMOVABLE and
-MIGRATE_RECLAIMABLE page blocks since MIGRATE_CMA can't fallback to them.
+From: Yu-cheng Yu <yu-cheng.yu@intel.com>
 
-The CMA_MIN_ALIGNMENT_BYTES increases because it depends on
-MAX_PAGE_ORDER which depends on ARCH_FORCE_MAX_ORDER. The value of
-ARCH_FORCE_MAX_ORDER increases on 16k and 64k kernels.
+Remote Action Request (RAR) is a TLB flushing broadcast facility.
+To start a TLB flush, the initiator CPU creates a RAR payload and
+sends a command to the APIC.  The receiving CPUs automatically flush
+TLBs as specified in the payload without the kernel's involement.
 
-For example, in ARM, the CMA alignment requirement when:
+[ riel:
+  - add pcid parameter to smp_call_rar_many so other mms can be flushed
+  - ensure get_payload only allocates valid indices
+  - make sure rar_cpu_init does not write reserved bits
+  - fix overflow in range vs full flush decision ]
 
-- CONFIG_ARCH_FORCE_MAX_ORDER default value is used
-- CONFIG_TRANSPARENT_HUGEPAGE is set:
-
-PAGE_SIZE | MAX_PAGE_ORDER | pageblock_order | CMA_MIN_ALIGNMENT_BYTES
------------------------------------------------------------------------
-   4KiB   |      10        |      10         |  4KiB * (2 ^ 10)  =  4MiB
-  16Kib   |      11        |      11         | 16KiB * (2 ^ 11) =  32MiB
-  64KiB   |      13        |      13         | 64KiB * (2 ^ 13) = 512MiB
-
-There are some extreme cases for the CMA alignment requirement when:
-
-- CONFIG_ARCH_FORCE_MAX_ORDER maximum value is set
-- CONFIG_TRANSPARENT_HUGEPAGE is NOT set:
-- CONFIG_HUGETLB_PAGE is NOT set
-
-PAGE_SIZE | MAX_PAGE_ORDER | pageblock_order |  CMA_MIN_ALIGNMENT_BYTES
-------------------------------------------------------------------------
-   4KiB   |      15        |      15         |  4KiB * (2 ^ 15) = 128MiB
-  16Kib   |      13        |      13         | 16KiB * (2 ^ 13) = 128MiB
-  64KiB   |      13        |      13         | 64KiB * (2 ^ 13) = 512MiB
-
-This affects the CMA reservations for the drivers. If a driver in a
-4KiB kernel needs 4MiB of CMA memory, in a 16KiB kernel, the minimal
-reservation has to be 32MiB due to the alignment requirements:
-
-reserved-memory {
-    ...
-    cma_test_reserve: cma_test_reserve {
-        compatible = "shared-dma-pool";
-        size = <0x0 0x400000>; /* 4 MiB */
-        ...
-    };
-};
-
-reserved-memory {
-    ...
-    cma_test_reserve: cma_test_reserve {
-        compatible = "shared-dma-pool";
-        size = <0x0 0x2000000>; /* 32 MiB */
-        ...
-    };
-};
-
-Solution: Add a new config CONFIG_PAGE_BLOCK_ORDER that
-allows to set the page block order in all the architectures.
-The maximum page block order will be given by
-ARCH_FORCE_MAX_ORDER.
-
-By default, CONFIG_PAGE_BLOCK_ORDER will have the same
-value that ARCH_FORCE_MAX_ORDER. This will make sure that
-current kernel configurations won't be affected by this
-change. It is a opt-in change.
-
-This patch will allow to have the same CMA alignment
-requirements for large page sizes (16KiB, 64KiB) as that
-in 4kb kernels by setting a lower pageblock_order.
-
-Tests:
-
-- Verified that HugeTLB pages work when pageblock_order is 1, 7, 10
-on 4k and 16k kernels.
-
-- Verified that Transparent Huge Pages work when pageblock_order
-is 1, 7, 10 on 4k and 16k kernels.
-
-- Verified that dma-buf heaps allocations work when pageblock_order
-is 1, 7, 10 on 4k and 16k kernels.
-
-Benchmarks:
-
-The benchmarks compare 16kb kernels with pageblock_order 10 and 7. The
-reason for the pageblock_order 7 is because this value makes the min
-CMA alignment requirement the same as that in 4kb kernels (2MB).
-
-- Perform 100K dma-buf heaps (/dev/dma_heap/system) allocations of
-SZ_8M, SZ_4M, SZ_2M, SZ_1M, SZ_64, SZ_8, SZ_4. Use simpleperf
-(https://developer.android.com/ndk/guides/simpleperf) to measure
-the # of instructions and page-faults on 16k kernels.
-The benchmark was executed 10 times. The averages are below:
-
-           # instructions         |     #page-faults
-    order 10     |  order 7       | order 10 | order 7
---------------------------------------------------------
- 13,891,765,770	 | 11,425,777,314 |    220   |   217
- 14,456,293,487	 | 12,660,819,302 |    224   |   219
- 13,924,261,018	 | 13,243,970,736 |    217   |   221
- 13,910,886,504	 | 13,845,519,630 |    217   |   221
- 14,388,071,190	 | 13,498,583,098 |    223   |   224
- 13,656,442,167	 | 12,915,831,681 |    216   |   218
- 13,300,268,343	 | 12,930,484,776 |    222   |   218
- 13,625,470,223	 | 14,234,092,777 |    219   |   218
- 13,508,964,965	 | 13,432,689,094 |    225   |   219
- 13,368,950,667	 | 13,683,587,37  |    219   |   225
--------------------------------------------------------------------
- 13,803,137,433  | 13,131,974,268 |    220   |   220    Averages
-
-There were 4.85% #instructions when order was 7, in comparison
-with order 10.
-
-     13,803,137,433 - 13,131,974,268 = -671,163,166 (-4.86%)
-
-The number of page faults in order 7 and 10 were the same.
-
-These results didn't show any significant regression when the
-pageblock_order is set to 7 on 16kb kernels.
-
-- Run speedometer 3.1 (https://browserbench.org/Speedometer3.1/) 5 times
- on the 16k kernels with pageblock_order 7 and 10.
-
-order 10 | order 7  | order 7 - order 10 | (order 7 - order 10) %
--------------------------------------------------------------------
-  15.8	 |  16.4    |         0.6        |     3.80%
-  16.4	 |  16.2    |        -0.2        |    -1.22%
-  16.6	 |  16.3    |        -0.3        |    -1.81%
-  16.8	 |  16.3    |        -0.5        |    -2.98%
-  16.6	 |  16.8    |         0.2        |     1.20%
--------------------------------------------------------------------
-  16.44     16.4            -0.04	          -0.24%   Averages
-
-The results didn't show any significant regression when the
-pageblock_order is set to 7 on 16kb kernels.
-
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Liam R. Howlett <Liam.Howlett@oracle.com>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: David Hildenbrand <david@redhat.com>
-CC: Mike Rapoport <rppt@kernel.org>
-Cc: Zi Yan <ziy@nvidia.com>
-Cc: Suren Baghdasaryan <surenb@google.com>
-Cc: Minchan Kim <minchan@kernel.org>
-Signed-off-by: Juan Yescas <jyescas@google.com>
-Acked-by: Zi Yan <ziy@nvidia.com>
+Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+Signed-off-by: Rik van Riel <riel@surriel.com>
 ---
-Changes in v3:
-  - Rename ARCH_FORCE_PAGE_BLOCK_ORDER to PAGE_BLOCK_ORDER
-    as per Matthew's suggestion.
-  - Update comments in pageblock-flags.h for pageblock_order
-    value when THP or HugeTLB are not used.
+ arch/x86/include/asm/rar.h   |  69 +++++++++++
+ arch/x86/kernel/cpu/common.c |   4 +
+ arch/x86/mm/Makefile         |   1 +
+ arch/x86/mm/rar.c            | 226 +++++++++++++++++++++++++++++++++++
+ 4 files changed, 300 insertions(+)
+ create mode 100644 arch/x86/include/asm/rar.h
+ create mode 100644 arch/x86/mm/rar.c
 
-Changes in v2:
-  - Add Zi's Acked-by tag.
-  - Move ARCH_FORCE_PAGE_BLOCK_ORDER config to mm/Kconfig as
-    per Zi and Matthew suggestion so it is available to
-    all the architectures.
-  - Set ARCH_FORCE_PAGE_BLOCK_ORDER to 10 by default when
-    ARCH_FORCE_MAX_ORDER is not available.
-
-
-
-
- include/linux/pageblock-flags.h | 14 ++++++++++----
- mm/Kconfig                      | 31 +++++++++++++++++++++++++++++++
- 2 files changed, 41 insertions(+), 4 deletions(-)
-
-diff --git a/include/linux/pageblock-flags.h b/include/linux/pageblock-flags.h
-index fc6b9c87cb0a..0c4963339f0b 100644
---- a/include/linux/pageblock-flags.h
-+++ b/include/linux/pageblock-flags.h
-@@ -28,6 +28,12 @@ enum pageblock_bits {
- 	NR_PAGEBLOCK_BITS
- };
- 
-+#if defined(CONFIG_PAGE_BLOCK_ORDER)
-+#define PAGE_BLOCK_ORDER CONFIG_PAGE_BLOCK_ORDER
-+#else
-+#define PAGE_BLOCK_ORDER MAX_PAGE_ORDER
-+#endif /* CONFIG_PAGE_BLOCK_ORDER */
+diff --git a/arch/x86/include/asm/rar.h b/arch/x86/include/asm/rar.h
+new file mode 100644
+index 000000000000..b5ba856fcaa8
+--- /dev/null
++++ b/arch/x86/include/asm/rar.h
+@@ -0,0 +1,69 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ASM_X86_RAR_H
++#define _ASM_X86_RAR_H
 +
- #if defined(CONFIG_HUGETLB_PAGE)
- 
- #ifdef CONFIG_HUGETLB_PAGE_SIZE_VARIABLE
-@@ -41,18 +47,18 @@ extern unsigned int pageblock_order;
-  * Huge pages are a constant size, but don't exceed the maximum allocation
-  * granularity.
-  */
--#define pageblock_order		MIN_T(unsigned int, HUGETLB_PAGE_ORDER, MAX_PAGE_ORDER)
-+#define pageblock_order		MIN_T(unsigned int, HUGETLB_PAGE_ORDER, PAGE_BLOCK_ORDER)
- 
- #endif /* CONFIG_HUGETLB_PAGE_SIZE_VARIABLE */
- 
- #elif defined(CONFIG_TRANSPARENT_HUGEPAGE)
- 
--#define pageblock_order		MIN_T(unsigned int, HPAGE_PMD_ORDER, MAX_PAGE_ORDER)
-+#define pageblock_order		MIN_T(unsigned int, HPAGE_PMD_ORDER, PAGE_BLOCK_ORDER)
- 
- #else /* CONFIG_TRANSPARENT_HUGEPAGE */
- 
--/* If huge pages are not used, group by MAX_ORDER_NR_PAGES */
--#define pageblock_order		MAX_PAGE_ORDER
-+/* If huge pages are not used, group by PAGE_BLOCK_ORDER */
-+#define pageblock_order		PAGE_BLOCK_ORDER
- 
- #endif /* CONFIG_HUGETLB_PAGE */
- 
-diff --git a/mm/Kconfig b/mm/Kconfig
-index e113f713b493..c52be3489aa3 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -989,6 +989,37 @@ config CMA_AREAS
- 
- 	  If unsure, leave the default value "8" in UMA and "20" in NUMA.
- 
-+#
-+# Select this config option from the architecture Kconfig, if available, to set
-+# the max page order for physically contiguous allocations.
-+#
-+config ARCH_FORCE_MAX_ORDER
-+	int
++/*
++ * RAR payload types
++ */
++#define RAR_TYPE_INVPG		0
++#define RAR_TYPE_INVPG_NO_CR3	1
++#define RAR_TYPE_INVPCID	2
++#define RAR_TYPE_INVEPT		3
++#define RAR_TYPE_INVVPID	4
++#define RAR_TYPE_WRMSR		5
 +
-+# When ARCH_FORCE_MAX_ORDER is not defined, the default page block order is 10,
-+# as per include/linux/mmzone.h.
-+config PAGE_BLOCK_ORDER
-+	int "Page Block Order"
-+	range 1 10 if !ARCH_FORCE_MAX_ORDER
-+	default 10 if !ARCH_FORCE_MAX_ORDER
-+	range 1 ARCH_FORCE_MAX_ORDER if ARCH_FORCE_MAX_ORDER
-+	default ARCH_FORCE_MAX_ORDER if ARCH_FORCE_MAX_ORDER
++/*
++ * Subtypes for RAR_TYPE_INVLPG
++ */
++#define RAR_INVPG_ADDR			0 /* address specific */
++#define RAR_INVPG_ALL			2 /* all, include global */
++#define RAR_INVPG_ALL_NO_GLOBAL		3 /* all, exclude global */
 +
-+	help
-+	  The page block order refers to the power of two number of pages that
-+	  are physically contiguous and can have a migrate type associated to
-+	  them. The maximum size of the page block order is limited by
-+	  ARCH_FORCE_MAX_ORDER.
++/*
++ * Subtypes for RAR_TYPE_INVPCID
++ */
++#define RAR_INVPCID_ADDR		0 /* address specific */
++#define RAR_INVPCID_PCID		1 /* all of PCID */
++#define RAR_INVPCID_ALL			2 /* all, include global */
++#define RAR_INVPCID_ALL_NO_GLOBAL	3 /* all, exclude global */
 +
-+	  This option allows overriding the default setting when the page
-+	  block order requires to be smaller than ARCH_FORCE_MAX_ORDER.
++/*
++ * Page size for RAR_TYPE_INVLPG
++ */
++#define RAR_INVLPG_PAGE_SIZE_4K		0
++#define RAR_INVLPG_PAGE_SIZE_2M		1
++#define RAR_INVLPG_PAGE_SIZE_1G		2
 +
-+	  Reducing pageblock order can negatively impact THP generation
-+	  successful rate. If your workloads uses THP heavily, please use this
-+	  option with caution.
++/*
++ * Max number of pages per payload
++ */
++#define RAR_INVLPG_MAX_PAGES 63
 +
-+	  Don't change if unsure.
++typedef struct {
++	uint64_t for_sw : 8;
++	uint64_t type : 8;
++	uint64_t must_be_zero_1 : 16;
++	uint64_t subtype : 3;
++	uint64_t page_size: 2;
++	uint64_t num_pages : 6;
++	uint64_t must_be_zero_2 : 21;
 +
- config MEM_SOFT_DIRTY
- 	bool "Track memory changes"
- 	depends on CHECKPOINT_RESTORE && HAVE_ARCH_SOFT_DIRTY && PROC_FS
++	uint64_t must_be_zero_3;
++
++	/*
++	 * Starting address
++	 */
++	uint64_t initiator_cr3;
++	uint64_t linear_address;
++
++	/*
++	 * Padding
++	 */
++	uint64_t padding[4];
++} rar_payload_t;
++
++void rar_cpu_init(void);
++void smp_call_rar_many(const struct cpumask *mask, u16 pcid,
++		       unsigned long start, unsigned long end);
++
++#endif /* _ASM_X86_RAR_H */
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index 5666620e7153..75b43db0b129 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -71,6 +71,7 @@
+ #include <asm/tdx.h>
+ #include <asm/posted_intr.h>
+ #include <asm/runtime-const.h>
++#include <asm/rar.h>
+ 
+ #include "cpu.h"
+ 
+@@ -2395,6 +2396,9 @@ void cpu_init(void)
+ 	if (is_uv_system())
+ 		uv_cpu_init();
+ 
++	if (cpu_feature_enabled(X86_FEATURE_RAR))
++		rar_cpu_init();
++
+ 	load_fixmap_gdt(cpu);
+ }
+ 
+diff --git a/arch/x86/mm/Makefile b/arch/x86/mm/Makefile
+index cebe5812d78d..d49d16412569 100644
+--- a/arch/x86/mm/Makefile
++++ b/arch/x86/mm/Makefile
+@@ -54,6 +54,7 @@ obj-$(CONFIG_ACPI_NUMA)		+= srat.o
+ obj-$(CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS)	+= pkeys.o
+ obj-$(CONFIG_RANDOMIZE_MEMORY)			+= kaslr.o
+ obj-$(CONFIG_MITIGATION_PAGE_TABLE_ISOLATION)	+= pti.o
++obj-$(CONFIG_BROADCAST_TLB_FLUSH)		+= rar.o
+ 
+ obj-$(CONFIG_X86_MEM_ENCRYPT)	+= mem_encrypt.o
+ obj-$(CONFIG_AMD_MEM_ENCRYPT)	+= mem_encrypt_amd.o
+diff --git a/arch/x86/mm/rar.c b/arch/x86/mm/rar.c
+new file mode 100644
+index 000000000000..77a334f1e212
+--- /dev/null
++++ b/arch/x86/mm/rar.c
+@@ -0,0 +1,226 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * RAR Tlb shootdown
++ */
++
++#include <linux/kgdb.h>
++#include <linux/sched.h>
++#include <linux/bug.h>
++#include <asm/current.h>
++#include <asm/io.h>
++#include <asm/sync_bitops.h>
++#include <asm/rar.h>
++#include <asm/tlbflush.h>
++
++static DEFINE_PER_CPU(int, rar_lock);
++static DEFINE_PER_CPU(struct cpumask, rar_cpu_mask);
++
++#define RAR_ACTION_OK		0x00
++#define RAR_ACTION_START	0x01
++#define RAR_ACTION_ACKED	0x02
++#define RAR_ACTION_FAIL		0x80
++
++#define RAR_MAX_PAYLOADS 32UL
++
++static unsigned long rar_in_use = ~(RAR_MAX_PAYLOADS - 1);
++static rar_payload_t rar_payload[RAR_MAX_PAYLOADS] __page_aligned_bss;
++static DEFINE_PER_CPU_ALIGNED(u64[(RAR_MAX_PAYLOADS + 8) / 8], rar_action);
++
++static __always_inline void lock(int *lock)
++{
++	smp_cond_load_acquire(lock, !(VAL & 1));
++	*lock |= 1;
++
++	/*
++	 * prevent CPU from reordering the above assignment
++	 * to ->flags with any subsequent assignments to other
++	 * fields of the specified call_single_data structure:
++	 */
++	smp_wmb();
++}
++
++static __always_inline void unlock(int *lock)
++{
++	WARN_ON(!(*lock & 1));
++
++	/*
++	 * ensure we're all done before releasing data:
++	 */
++	smp_store_release(lock, 0);
++}
++
++static unsigned long get_payload(void)
++{
++	while (1) {
++		unsigned long bit;
++
++		/*
++		 * Find a free bit and confirm it with
++		 * test_and_set_bit() below.
++		 */
++		bit = ffz(READ_ONCE(rar_in_use));
++
++		if (bit >= RAR_MAX_PAYLOADS)
++			continue;
++
++		if (!test_and_set_bit((long)bit, &rar_in_use))
++			return bit;
++	}
++}
++
++static void free_payload(unsigned long idx)
++{
++	clear_bit(idx, &rar_in_use);
++}
++
++static void set_payload(unsigned long idx, u16 pcid, unsigned long start,
++			uint32_t pages)
++{
++	rar_payload_t *p = &rar_payload[idx];
++
++	p->must_be_zero_1	= 0;
++	p->must_be_zero_2	= 0;
++	p->must_be_zero_3	= 0;
++	p->page_size		= RAR_INVLPG_PAGE_SIZE_4K;
++	p->type			= RAR_TYPE_INVPCID;
++	p->num_pages		= pages;
++	p->initiator_cr3	= pcid;
++	p->linear_address	= start;
++
++	if (pcid) {
++		/* RAR invalidation of the mapping of a specific process. */
++		if (pages >= RAR_INVLPG_MAX_PAGES)
++			p->subtype = RAR_INVPCID_PCID;
++		else
++			p->subtype = RAR_INVPCID_ADDR;
++	} else {
++		/*
++		 * Unfortunately RAR_INVPCID_ADDR excludes global translations.
++		 * Always do a full flush for kernel invalidations.
++		 */
++		p->subtype = RAR_INVPCID_ALL;
++	}
++
++	smp_wmb();
++}
++
++static void set_action_entry(unsigned long idx, int target_cpu)
++{
++	u8 *bitmap = (u8 *)per_cpu(rar_action, target_cpu);
++
++	WRITE_ONCE(bitmap[idx], RAR_ACTION_START);
++}
++
++static void wait_for_done(unsigned long idx, int target_cpu)
++{
++	u8 status;
++	u8 *bitmap = (u8 *)per_cpu(rar_action, target_cpu);
++
++	status = READ_ONCE(bitmap[idx]);
++
++	while ((status != RAR_ACTION_OK) && (status != RAR_ACTION_FAIL)) {
++		cpu_relax();
++		status = READ_ONCE(bitmap[idx]);
++	}
++
++	WARN_ON_ONCE(bitmap[idx] == RAR_ACTION_FAIL);
++}
++
++void rar_cpu_init(void)
++{
++	u64 r;
++	u8 *bitmap;
++	int this_cpu = smp_processor_id();
++
++	per_cpu(rar_lock, this_cpu) = 0;
++	cpumask_clear(&per_cpu(rar_cpu_mask, this_cpu));
++
++	rdmsrl(MSR_IA32_RAR_INFO, r);
++	pr_info_once("RAR: support %lld payloads\n", r >> 32);
++
++	bitmap = (u8 *)per_cpu(rar_action, this_cpu);
++	memset(bitmap, 0, RAR_MAX_PAYLOADS);
++	wrmsrl(MSR_IA32_RAR_ACT_VEC, (u64)virt_to_phys(bitmap));
++	wrmsrl(MSR_IA32_RAR_PAYLOAD_BASE, (u64)virt_to_phys(rar_payload));
++
++	r = RAR_CTRL_ENABLE | RAR_CTRL_IGNORE_IF;
++	// reserved bits!!! r |= (RAR_VECTOR & 0xff);
++	wrmsrl(MSR_IA32_RAR_CTRL, r);
++}
++
++/*
++ * This is a modified version of smp_call_function_many() of kernel/smp.c,
++ * without a function pointer, because the RAR handler is the ucode.
++ */
++void smp_call_rar_many(const struct cpumask *mask, u16 pcid,
++		       unsigned long start, unsigned long end)
++{
++	unsigned long pages = (end - start + PAGE_SIZE) / PAGE_SIZE;
++	int cpu, next_cpu, this_cpu = smp_processor_id();
++	cpumask_t *dest_mask;
++	unsigned long idx;
++
++	if (pages > RAR_INVLPG_MAX_PAGES || end == TLB_FLUSH_ALL)
++		pages = RAR_INVLPG_MAX_PAGES;
++
++	/*
++	 * Can deadlock when called with interrupts disabled.
++	 * We allow cpu's that are not yet online though, as no one else can
++	 * send smp call function interrupt to this cpu and as such deadlocks
++	 * can't happen.
++	 */
++	WARN_ON_ONCE(cpu_online(this_cpu) && irqs_disabled()
++		     && !oops_in_progress && !early_boot_irqs_disabled);
++
++	/* Try to fastpath.  So, what's a CPU they want?  Ignoring this one. */
++	cpu = cpumask_first_and(mask, cpu_online_mask);
++	if (cpu == this_cpu)
++		cpu = cpumask_next_and(cpu, mask, cpu_online_mask);
++
++	/* No online cpus?  We're done. */
++	if (cpu >= nr_cpu_ids)
++		return;
++
++	/* Do we have another CPU which isn't us? */
++	next_cpu = cpumask_next_and(cpu, mask, cpu_online_mask);
++	if (next_cpu == this_cpu)
++		next_cpu = cpumask_next_and(next_cpu, mask, cpu_online_mask);
++
++	/* Fastpath: do that cpu by itself. */
++	if (next_cpu >= nr_cpu_ids) {
++		lock(this_cpu_ptr(&rar_lock));
++		idx = get_payload();
++		set_payload(idx, pcid, start, pages);
++		set_action_entry(idx, cpu);
++		arch_send_rar_single_ipi(cpu);
++		wait_for_done(idx, cpu);
++		free_payload(idx);
++		unlock(this_cpu_ptr(&rar_lock));
++		return;
++	}
++
++	dest_mask = this_cpu_ptr(&rar_cpu_mask);
++	cpumask_and(dest_mask, mask, cpu_online_mask);
++	cpumask_clear_cpu(this_cpu, dest_mask);
++
++	/* Some callers race with other cpus changing the passed mask */
++	if (unlikely(!cpumask_weight(dest_mask)))
++		return;
++
++	lock(this_cpu_ptr(&rar_lock));
++	idx = get_payload();
++	set_payload(idx, pcid, start, pages);
++
++	for_each_cpu(cpu, dest_mask)
++		set_action_entry(idx, cpu);
++
++	/* Send a message to all CPUs in the map */
++	arch_send_rar_ipi_mask(dest_mask);
++
++	for_each_cpu(cpu, dest_mask)
++		wait_for_done(idx, cpu);
++
++	free_payload(idx);
++	unlock(this_cpu_ptr(&rar_lock));
++}
++EXPORT_SYMBOL(smp_call_rar_many);
 -- 
-2.49.0.967.g6a0df3ecc3-goog
+2.49.0
 
