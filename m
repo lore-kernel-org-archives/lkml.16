@@ -1,165 +1,191 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19AE127CCD3;
-	Tue,  6 May 2025 12:12:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFF4727CCD3;
+	Tue,  6 May 2025 12:13:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746533571; cv=none; b=hGkjdqy8Qo5p9HnEAjNra6gYgTo9Vt8UsZRTBNjwBatBReTeT/HlahshtsFW3OYWx597wZfbd3a2AOLX+yWPJaGrgktdH5VkaY2WfsteE7RdO78krSDs8VcFRQoOTc9WUF5pjPvWoYMEX8ACG2hGmbZPOAqwFdEYSw9Dj9eN2qo=
+	t=1746533597; cv=none; b=ROIY1sQRZmTrQ0eKXarZwEB2lGJcws+5Myr9mYJ1Ynf61HScn6I0XWNmhysP+J8O09JtpRtG9g/PFr0w9Dh6FQNHSc90se2AdZyaVsG321h9obL5QI3x6Y7f1ga/KVQVSgXamoDEb43lgsjHrx5/XagItVuxoHJZvzJyG6PgT9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746533571; c=relaxed/simple;
-	bh=GiE5Zjx147HgqV9OaPcJjaSRQG4ViEONfV5Hc+M9G9E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QiHj0rB3fy1JfW6kjwHWPEIuChVL/k1VlBmzM6tlRbXiUcHDC8FFkoYyLbHLvCIvFlZB+QycLN3gYnZeaeClVlr733/w8DJ46yvqGb7uhAfBi31gY5bRM2gVtf51y27RurB4pA2XgAfutSpx2cHYZa2KJU2D99ojjth0IQzPUuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Dw1lR27p; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746533597; c=relaxed/simple;
+	bh=GZbsosVuzFC09eh+KVzuYMfJOd2+tuwA5yfc1+hlhF8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=K4DfV/kj0CSX6paAwgK0xb40j5CHhYRrI51xEXRNDL8aTGF0S4XsUtMEhfoIL2M1VyfJw6sMl6Ul7xUgsJyNwg2DY0JbEI/o1FhsclqkwRXIMNnCRtm7Yq+SYnh5sCKXDDfDx3q538GgUIhBZaqtBAl8NV5seB1DUgsXpMxBpwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=YyTlYYaa; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dw1lR27p"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-549b159c84cso6170612e87.3;
-        Tue, 06 May 2025 05:12:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746533568; x=1747138368; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TNTDYDfXv7z2jXvHR4xlgOAcYZHFC1OQrZAisODzUt8=;
-        b=Dw1lR27pt/GeGuStZ0HW47Ri06tKUqaZ3rffaV/7YzfqIuNTV6JRYj+IIczfEhCCFe
-         WaDu781VW7+D+IojAUaB2kqKeFYw+7noaZ78f7lUczYwEtU5M1Eik+mZdYMeOx2pqXq9
-         xOPoL5/J2iYPD6MRWbodXHHuxZC3NIixEbxncbBFSJ8ubByqiQ0SCIOYPgXNV2rEAVXk
-         DgujJtDDv/PdTINwcgWmuiutjtfqL3QfiAkuFmUG6hpnUeF5jfR3LSfE02jRPJSSfoqg
-         jfUEK3d3O0XJWQ5iBs94xyGWQonguNuXeoMiDwZyAUQZnsX7vr3o+4seHGmqyW3IMApV
-         Y0QA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746533568; x=1747138368;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TNTDYDfXv7z2jXvHR4xlgOAcYZHFC1OQrZAisODzUt8=;
-        b=CsS5wbPSvcx0Zo615g2n742FhWyAZKT1XK3EBzli5H4nRLTZeAHRLp3LsQ8+WkBVlE
-         vEyCe/Qhg/xwokvAXekKRX3OA05CvKpryq2c2YSsKHKakBq9OLLmF/DyfDzaP6u5StMJ
-         Ke8ZvpIX+yUjf48fWgbomkWyJZZbtiRN2CmNQDK/My0sBe8Th7o7r0XXzjYFdoivYifG
-         ZQyw2x3Tgd6OghPB6lLehlNs0DIA0hNHkf0Ys6CohUCY8Nrh66IIAk7vJLbQTsJp+Us3
-         8+sflqjBKuY7oUzrvEE+jAaIEhIHsYoDOgFxuyoeS7TN7dXrQf3umKVPDw53isWY/lDd
-         ECug==
-X-Forwarded-Encrypted: i=1; AJvYcCVKDD/r3aJwQxZyGDUJO6fzxTu0xQyQeYOJSSjzCt2JOZUYem7dIdecJnWdFLgpKpMAh+C4Mdv4YZLOMfxr@vger.kernel.org, AJvYcCVba/oe71GGWXZGQc8Ul4mHabyH2u5+DG68R1WJZL9z7kweM4pkHxwCFQU0noL5y0c83ijH834wVApzBQ==@vger.kernel.org, AJvYcCVrmOEjQsrBLRQCf4hGWbHMqhA9wJOK6Tfb2Eb5mBMuPhi9nJpIB9mme1NlNkpwXjS21BL/Qfx9vvJHqrWHntg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqHz+nMSaAItCpWLij+WXfyX3dBBQ0O9/DkIJa6ovEgyBEBAvg
-	xBRNOG4YlWynF8MJmbindbVFKPFMSwToaNdx/h/n+lb/AZnCMdhhvKYhe2fuxcXxCQ0BT0dNCxU
-	D80I0YSPhC8qKJ9QiL3VMADFsEfo=
-X-Gm-Gg: ASbGncsxEh14bz0vgYMYPzggG+37nwq9+rNjWCYjRKsNIqt/c6MgKk2D37PpD8Y4VY8
-	Na5URZVPOYRMdvedEyXGkAyKcOHflXlay9lCcpgfDI8JORhCAOUVRtMTndJxzMtKXda2ty0Qmkg
-	7AqCx/l54IDkLPDPTndp+/1Oo=
-X-Google-Smtp-Source: AGHT+IEb0mXK6fJsSZngroFMqdEdkMdQecAMm47YJ6g9dg6uW8ksppjIknKnuoVQDZyrpDMeRGl6kPlDDntXd/HXFao=
-X-Received: by 2002:a05:6512:ad0:b0:549:91e0:143 with SMTP id
- 2adb3069b0e04-54fb49fd94emr983970e87.5.1746533567842; Tue, 06 May 2025
- 05:12:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="YyTlYYaa"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54695gtl007469;
+	Tue, 6 May 2025 12:13:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	g+8ErY9oHQMlQMEnCRYn1BQv+DISlwRBCfGqrDlnd+s=; b=YyTlYYaaARdxifdJ
+	86gqUytYI/7Q+xkYSlqDwSrn5sOqNBOge1qhuYKiXucHKVW2h/hWZXmVSrqmYCsA
+	DX6k/ON+ByKSpg8t+vcpNlTdtfIJukBzOVhRZnZJmj7Kyi+2K0eFrJwbpM6YKCIT
+	duPlSffrNiinm/1WqF9ZLFpMvKqKkEVAK3UPUNXj7Q1KnUMKoyhDTsLuB8NGPVuF
+	+fDZykNCnaMeAbc9rb9HT2svIZMwN0o20TLSRGTD9Cnbnudirj054u3qwOh0Jgcm
+	HRQg9hGel40SsF0iPu+gzjP4wxYH6x3W1gYKu7AINL2DiZTDKfGfsbM9faSlV3I5
+	v1tdMQ==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46f5wg25da-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 06 May 2025 12:13:01 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 546CCxEs002722
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 6 May 2025 12:12:59 GMT
+Received: from [10.204.66.29] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 6 May 2025
+ 05:12:53 -0700
+Message-ID: <88b139c4-0a35-4c9e-9993-573fede29b71@quicinc.com>
+Date: Tue, 6 May 2025 17:42:50 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <aBSEwag_ducqOwy7@stanley.mountain> <CAJhJPsUZz2kwMyWPDrc_ktb5O6ECcAyO1OrXXVWh9yvkrKRidg@mail.gmail.com>
- <aBnXPYLSNJASR51f@stanley.mountain> <CAJhJPsX2-Q+Yq86_Vdyxe-_SVR0j1e5buE8Yw+RbJgp6Kadh8Q@mail.gmail.com>
- <aBnvbYaE-tud_o0x@stanley.mountain>
-In-Reply-To: <aBnvbYaE-tud_o0x@stanley.mountain>
-From: Keguang Zhang <keguang.zhang@gmail.com>
-Date: Tue, 6 May 2025 20:12:11 +0800
-X-Gm-Features: ATxdqUFxrF4BM4DqZ7edMLGkLqXagx31yQtm3t-mDISDZXy2WKaKjiAnI-dvmnw
-Message-ID: <CAJhJPsV8Pb7gXFX2gqFVYcp4O7N=zL5V+QGkfYn73UYK67zYfg@mail.gmail.com>
-Subject: Re: [PATCH next] mtd: rawnand: loongson1: Fix error code in ls1x_nand_dma_transfer()
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, 
-	Vignesh Raghavendra <vigneshr@ti.com>, linux-mips@vger.kernel.org, linux-mtd@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 07/11] arm64: dts: qcom: sa8775p-ride: add anx7625 DSI
+ to DP bridge nodes
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <robdclark@gmail.com>,
+        <sean@poorly.run>, <marijn.suijten@somainline.org>,
+        <andersson@kernel.org>, <robh@kernel.org>, <robh+dt@kernel.org>,
+        <krzk+dt@kernel.org>, <konradybcio@kernel.org>, <conor+dt@kernel.org>,
+        <andrzej.hajda@intel.com>, <neil.armstrong@linaro.org>,
+        <rfoss@kernel.org>, <Laurent.pinchart@ideasonboard.com>,
+        <jonas@kwiboo.se>, <jernej.skrabec@gmail.com>,
+        <quic_abhinavk@quicinc.com>, <quic_rajeevny@quicinc.com>,
+        <quic_vproddut@quicinc.com>, <quic_jesszhan@quicinc.com>,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+References: <20250505094245.2660750-1-quic_amakhija@quicinc.com>
+ <20250505094245.2660750-3-quic_amakhija@quicinc.com>
+ <grwlmrgi5cfv3jtuki57ug7gsqykpwdf2to2l7di6glfxtb7vz@6id6cpfkrbuh>
+Content-Language: en-US
+From: Ayushi Makhija <quic_amakhija@quicinc.com>
+In-Reply-To: <grwlmrgi5cfv3jtuki57ug7gsqykpwdf2to2l7di6glfxtb7vz@6id6cpfkrbuh>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: G1KgRhxzS8wGVuQOxOuy73P-KLg8HOge
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA2MDExNyBTYWx0ZWRfX6DTOTWhNQiUz
+ vgbkH0f/GaPe1RAjRB75eI/YgIIB3lBSA+nkS3ri13WLyxh23kPK8KLWiMqzzAnOGJbSOtDn1nG
+ zh5M2oM9OndoYb6SxefuqY3QwKoJIJplF9p2yRNYSMwqtJp9pXP9AyV8hYn1s+t2ak+bXAMjuDt
+ hrtDJ97NC7LcBLKtVuvIziQG2joTxJyKzYnlbPbgkzMwpEEmCFz3H7lLYmSy/qqV7t7Ye/n6gJ6
+ xZsYrzgytNGjguyHfOKc3Ugs/qPOJpxgXtJZrEZx//SunPZQ7xgrsjSKiqjZojA4ntvfpTrMzIS
+ pBGtydxGcB5uppluLmVZAlHyyJyc5Q/66VcmdTGcCUBjFoHDXoB8SRDBZmXi2/x/C2rboADvM31
+ 0YsPgokQ/0eTc/mVjmTNb/Xi7kckczQWomGOwzfbYiptQDCm5jzckuDhHeq6ZRJ5cbRVcjgN
+X-Authority-Analysis: v=2.4 cv=dPemmPZb c=1 sm=1 tr=0 ts=6819fccd cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
+ a=EUspDBNiAAAA:8 a=lEiHe2e3eBi0j0Qs8ccA:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: G1KgRhxzS8wGVuQOxOuy73P-KLg8HOge
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-06_05,2025-05-05_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 adultscore=0 mlxlogscore=999 priorityscore=1501 impostorscore=0
+ suspectscore=0 lowpriorityscore=0 bulkscore=0 spamscore=0 malwarescore=0
+ mlxscore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505060117
 
-On Tue, May 6, 2025 at 7:16=E2=80=AFPM Dan Carpenter <dan.carpenter@linaro.=
-org> wrote:
->
-> On Tue, May 06, 2025 at 06:01:15PM +0800, Keguang Zhang wrote:
-> > On Tue, May 6, 2025 at 5:32=E2=80=AFPM Dan Carpenter <dan.carpenter@lin=
-aro.org> wrote:
-> > >
-> > > On Tue, May 06, 2025 at 05:16:03PM +0800, Keguang Zhang wrote:
-> > > > On Fri, May 2, 2025 at 4:39=E2=80=AFPM Dan Carpenter <dan.carpenter=
-@linaro.org> wrote:
-> > > > >
-> > > > > The "desc" variable is NULL and PTR_ERR(NULL) is zero/success.  R=
-eturn
-> > > > > a negative error code instead.
-> > > > >
-> > > > > Fixes: d2d10ede04b1 ("mtd: rawnand: Add Loongson-1 NAND Controlle=
-r Driver")
-> > > > > Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-> > > > > ---
-> > > > > It's hard to know what the patch prefix should be here.  Ideally =
-when we
-> > > > > add a new driver we would use the patch prefix for the driver.
-> > > > >
-> > > > > Tired: subsystem: Add driver XXX
-> > > > > Wired: subsystem: XXX: Add driver for XXX
-> > > > >
-> > > > >  drivers/mtd/nand/raw/loongson1-nand-controller.c | 2 +-
-> > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > >
-> > > > > diff --git a/drivers/mtd/nand/raw/loongson1-nand-controller.c b/d=
-rivers/mtd/nand/raw/loongson1-nand-controller.c
-> > > > > index 6a369b1c7d86..8754bb4f8b56 100644
-> > > > > --- a/drivers/mtd/nand/raw/loongson1-nand-controller.c
-> > > > > +++ b/drivers/mtd/nand/raw/loongson1-nand-controller.c
-> > > > > @@ -371,7 +371,7 @@ static int ls1x_nand_dma_transfer(struct ls1x=
-_nand_host *host, struct ls1x_nand_
-> > > > >         desc =3D dmaengine_prep_slave_single(chan, dma_addr, op->=
-len, xfer_dir, DMA_PREP_INTERRUPT);
-> > > > >         if (!desc) {
-> > > > >                 dev_err(dev, "failed to prepare DMA descriptor\n"=
-);
-> > > > > -               ret =3D PTR_ERR(desc);
-> > > > > +               ret =3D -ENOMEM;
-> > > >
-> > > > Thank you for fixing this issue.
-> > > > However, I believe -EIO is more appropriate than -ENOMEM, since
-> > > > dmaengine_prep_slave_single() can return errors other than -ENOMEM.
-> > > >
-> > >
-> > > It's not an I/O error so -EIO isn't correct.
-> > >
-> > > There are a bunch of reasons it could fail but most likely
-> > > dma_pool_alloc() failed.  I think -ENOMEM is correct.
-> > >
-> >
-> > Have you reviewed the implementation of ls1x_dma_prep_slave_sg()?
->
-> The ls1x_dma_prep_slave_sg() has basically two error cases, buggy drivers
-> and allocation errors.  Someone could argue that if people pass invalid
-> data then the correct return is -EINVAL but in these cases it's a buggy
-> driver and we fix bugs, we don't work around them.  So the correct
-> return is -ENOMEM.
->
+Hi Dmitry,
 
-Yes, -EINVAL indicates a bug rather than a real error.
-However, this assumes that the caller is aware they are providing invalid d=
-ata.
-Otherwise, they might be misled into thinking it is an out-of-memory
-error (-ENOMEM).
+On 5/5/2025 3:32 PM, Dmitry Baryshkov wrote:
+> On Mon, May 05, 2025 at 03:12:41PM +0530, Ayushi Makhija wrote:
+>> Add anx7625 DSI to DP bridge device nodes.
+>>
+>> Signed-off-by: Ayushi Makhija <quic_amakhija@quicinc.com>
+>> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+>> ---
+>>  arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi | 183 +++++++++++++++++++++
+>>  1 file changed, 183 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi b/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
+>> index 175f8b1e3b2d..de14f3ea8835 100644
+>> --- a/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
+>> @@ -28,6 +28,15 @@ chosen {
+>>  		stdout-path = "serial0:115200n8";
+>>  	};
+>>  
+>> +	vph_pwr: vph-pwr-regulator {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "vph_pwr";
+>> +		regulator-min-microvolt = <12000000>;
+>> +		regulator-max-microvolt = <12000000>;
+> 
+> 12 V, if my eyes don't deceive me.
 
-> > Errors in this function can be caused not only by -ENOMEM, but also by =
--EINVAL.
-> > Moreover, in most cases, the error handling logic for
-> > dmaengine_prep_slave_single() returns -EIO when the function returns
-> > NULL.
->
-> There are some that return -EIO but hardly the majority.  Other places
-> return -ENOMEM or -EINVAL.  It's not worth going back and fixing all of
-> these but really -ENOMEM is the correct return.
->
-> regards,
-> dan carpenter
->
+Yes, it's 12V. According to the chipset's power grid, the VPH rail is rated at 12 volts.
+That's significantly higher than what we typically see on mobile platforms. I guess,
+this is due to the SA8775P Ride SX being designed for automotive applications, where higher voltage levels are required.
 
---
-Best regards,
+> 
+>> +		regulator-always-on;
+>> +		regulator-boot-on;
+>> +	};
+>> +
+> 
+> [...]
+> 
+>> +
+>> +			bridge@58 {
+>> +				compatible = "analogix,anx7625";
+>> +				reg = <0x58>;
+>> +				interrupts-extended = <&io_expander 2 IRQ_TYPE_EDGE_FALLING>;
+>> +				enable-gpios = <&io_expander 1 GPIO_ACTIVE_HIGH>;
+>> +				reset-gpios = <&io_expander 0 GPIO_ACTIVE_HIGH>;
+>> +				vdd10-supply = <&vph_pwr>;
+>> +				vdd18-supply = <&vph_pwr>;
+>> +				vdd33-supply = <&vph_pwr>;
+> 
+> Here you are saying that 1.0V, 1.8V and 3.3V pins are powered on by 12V
+> supply. I wonder how the board doesn't trigger all fire alarms in the
+> building.
+> 
 
-Keguang Zhang
+Let me try to explain the connections from the schematics.
+
+In the SA8775P RIDE SX platform, the ANX bridge supplies are connected from the below sources:
+
+1) AVDD1P8 is sourced from the `VREG_1P8` of the backplane card.
+2) AVDD3P0 is sourced from the `VREG_3P0` of the backplane card.
+3) AVDD1P0 is sourced from the TPS74801 LDO voltage regulator that has `VREG_1P8` connected to
+   VIN & EN lines, and `VREG_3P0` connected to BIAS line.
+ 
+The `VREG_1P8` is sourced from a buck converter TPS54618CQRTERQ1 that is using 
+`VREG_5P0` as VIN and EN_VR1P8_M3P3 as EN signal. 
+Where the `EN_VR1P8_M3P3` is an output signal from SAK-TC397XX-256F300S BD micro-controller.
+ 
+Similarly, the `VREG_1P3` and `VREG_5P0` are sourced from another buck converter LM5143QRWGRQ1
+that is using `VREG_12P0` as VIN and `EN_VR5P0_M3P3` as EN signal.
+Where the EN_VR5P0_M3P3 is an output from the same micro-controller.
+ 
+Combining above details, all three ANX bridge supplies are getting enabled by `VREG_12P0` supply,
+`EN_VR1P8_M3P3` and `EN_VR5P0_M3P3` signals once the SOC is out of reset.
+ 
+The `VREG_12P0` is directly sourced from `VBATT_IN`.
+ 
+Since, there is no SW control for ANX bridge supplies and they are getting enabled
+once the SOC is out of reset, I have used vph-pwr-regulator dummy regulator.
+I am not sure if it's the right way to handle above scenario. Please let me know if there is other way to do the same.
+
+Thanks,
+Ayushi
+
+>> +
+> 
+
