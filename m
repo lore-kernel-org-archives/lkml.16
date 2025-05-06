@@ -1,42 +1,43 @@
 Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEE1E4A1D;
-	Tue,  6 May 2025 20:05:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE1CF1D88AC;
+	Tue,  6 May 2025 20:05:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746561931; cv=none; b=aYxlzvr36qMFC2MFXtiSvlHGUue2axxnSkCFSQADf43UVemJQZW0VT0MrEKXrVSOlhcFn/z+dN0e6cnFgzravHfL52agkNdoJTdceeeRN04z2ZMyN4O7MeFEpq8h/FcVabQOwIos71LmyAVLa6sl/I2OVRzDfLF6xEf0So6wTuw=
+	t=1746561935; cv=none; b=CsO/zBK7Bt1RFGqirI/taZJjw3K9NRN0bXiAYnVJ2leluf+tBaExBoMplqgZwmBXg2JEiKoJvvCRor1AhnZj7gsb0oaWUdoCdxlbBocKw/JYBBMdLU7AUAWKw4EqjSxpMM7bh5basSczJyA1IhGXKbXeJIqFWR385Jnp63BnkN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746561931; c=relaxed/simple;
-	bh=Pl1pOocrht3vmgtnFTJ9B4+etkXCe7HNZzSd09+Zpjs=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZvmfwhRNBBb4jWSPjq38/8TjsDwAhdM8Wus4ufOpi/BOJA9zfz3taYs889qn6JTU3NkoRNcAt7Km88cq0CL75rlqZDvZ7/sPJrzbQdP0kEXGRRvHp8JXGjVbVE+v2A6JpJv3q0szphcemVNkdmKQJE1+H9+dC3oMfPnR2qRC/jo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=vwcd/nDF; arc=none smtp.client-ip=68.232.154.123
+	s=arc-20240116; t=1746561935; c=relaxed/simple;
+	bh=v1/WaetPPLIbLAn+oTP+5ur1UuwyBHGcg4dgKfrOu4U=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=F8JvqSPTCEqQdOHM78c+s9sTl7hdn1qYXo1P9kcbe0UjCUw+u1+8UPwYN/7uDf7H9S2yX45q6TgdbTBo4k3m7Z/4+wYKwxgiDfXH0u/SUhgxzqegFtdE4ooODVF0nDVFz4VoVDb3YwveO2SsFZ3NKOKKtjgyIrivhkKBuggTFC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=w5WfUMcU; arc=none smtp.client-ip=68.232.154.123
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="vwcd/nDF"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="w5WfUMcU"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1746561930; x=1778097930;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=Pl1pOocrht3vmgtnFTJ9B4+etkXCe7HNZzSd09+Zpjs=;
-  b=vwcd/nDFOA+FgaF7VoCfZlO7OSTyMkU4Fw4le8g2sgze/3Kmw9J1Mwil
-   JwWCn8AApawd9f7sryA/OMKDVALPqhMrMb+fq7BouAyaLzn0udJx2EZZN
-   mQHeSwqfX+UJzI0PApr2z43JrXFAje42wfQsCey885BIPVw3cY5B4P74R
-   yqtwR82W1p8CpOIXlj43wTeNzeYa4bTk/CzRLj75yPI1TAcrmbi0QVSak
-   cJHFy3W5h+FuNzp6HvGuhEjsMBuC1HufNRiGfv4ZbClc/yWdaXms/0NX4
-   NX8gnniBpPZoAehinX8G47AHA6TZLQP6R7dwWNnOcKEx/RuPQWkBL+mLr
-   Q==;
-X-CSE-ConnectionGUID: lZtvjl0vTEGjDKUcareavA==
-X-CSE-MsgGUID: X8leMnIES+qi7n9W3zbrQw==
+  t=1746561933; x=1778097933;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=v1/WaetPPLIbLAn+oTP+5ur1UuwyBHGcg4dgKfrOu4U=;
+  b=w5WfUMcUz41TEBN4IgbdImfV7T8O7Er23ULDdR/ThbmQdjewNBMleO5/
+   hW6/BP4UldhBLJWcct2cyvhkL/USehBdKcs35ui7mJ8qNBRdpRta1TQkZ
+   Jw6HNTu6DHAQ0/QRNlBa92guNzSvvJLIa1C5JMZjvy5kNFmCn3+s8IxCW
+   9MSUpHHwAFB0iqchJsiiDbIKUToYf4gBLOQlCKpJn3eoOoneXcg47ol4b
+   4Sm0CAxJDt1q483TZAjGpFo2ECAS7SF2h7g9deM1uMy6DTdzK5DWLZliQ
+   aBJvwL8Q88pMJaSjhqqtgZDfUIBDCefdJ6CX5/4nXMnZOkYAASvum+QTm
+   A==;
+X-CSE-ConnectionGUID: dUBqohHAQlqcpEGq8j09lg==
+X-CSE-MsgGUID: YIJGv1ATSQ2Tmu2fBmv5Ig==
 X-IronPort-AV: E=Sophos;i="6.15,267,1739862000"; 
-   d="scan'208";a="41792571"
+   d="scan'208";a="208799759"
 X-Amp-Result: SKIPPED(no attachment in message)
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 06 May 2025 13:05:22 -0700
+  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 06 May 2025 13:05:32 -0700
 Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
  15.1.2507.44; Tue, 6 May 2025 13:05:12 -0700
 Received: from ryan-Precision-3630-Tower.microchip.com (10.10.85.11) by
@@ -49,10 +50,12 @@ To: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
 CC: <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
 	<linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>, Ryan Wanner
 	<Ryan.Wanner@microchip.com>
-Subject: [PATCH v3 0/4] AT91 SAMA7 SoC Clock Adjustments
-Date: Tue, 6 May 2025 13:04:55 -0700
-Message-ID: <cover.1746561722.git.Ryan.Wanner@microchip.com>
+Subject: [PATCH v3 1/4] clk: at91: sckc: Fix parent_data struct for slow osc
+Date: Tue, 6 May 2025 13:04:56 -0700
+Message-ID: <b17dc7f0d4ed0a507ac8d0d8e7e27430a73b97a1.1746561722.git.Ryan.Wanner@microchip.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <cover.1746561722.git.Ryan.Wanner@microchip.com>
+References: <cover.1746561722.git.Ryan.Wanner@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,43 +67,79 @@ Content-Type: text/plain
 
 From: Ryan Wanner <Ryan.Wanner@microchip.com>
 
-This set has clock system adjustments for the AT91 clock system for
-sama7 SoC family.
+The slow xtal is not described correctly as a parent, the driver looks for a
+"slow_xtal" string which is incorrect and will not work with the new
+formating of xtals.
 
-The first is to adjust the slow clock driver to account for the updated
-DT node-naming for clocks and xtals and ensuring the driver is still
-backwards compatible.
+To avoid this and keep this driver backwards compatible the
+parent_data.fw_name is replaced with parent_data.name and the original
+parent_data.name is replaced with parent_data.index. Using the index is
+safe due to the driver requiring only 1 xtal.
 
-The second and third are adding a missing clk_hw struct that are not added into
-parent_data struct causing a incorrect parent for main_osc for both
-sama7d65 and sama7g54 SoCs.
+Fixes: 8aa1db9ccee0e ("clk: at91: sckc: switch to parent_data/parent_hw")
+Signed-off-by: Ryan Wanner <Ryan.Wanner@microchip.com>
+---
+ drivers/clk/at91/sckc.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-The last patch updates the device tree phandle formatting for the
-sama7g54 SoC.
-
-Changes v1 -> v2:
-- Add clk_hw struct to parent_data adjustment for the sama7g5.c driver.
-- Add correction to sama7g54 dtsi main xtal phandles.
-
-Changes v2 -> v3:
-- Removed the empty line after the fixes tag.
-- Correct commit messages to better explain the issue that this is
-  fixing.
-- Initialize parent_data index to 0.
-
-Ryan Wanner (4):
-  clk: at91: sckc: Fix parent_data struct for slow osc
-  clk: at91: sama7d65: Add missing clk_hw to parent_data
-  clk: at91: sama7g5: Add missing clk_hw to parent_data
-  ARM: dts: microchip: sama7g5: Adjust clock xtal phandle
-
- arch/arm/boot/dts/microchip/at91-sama7g5ek.dts | 18 ++++++++----------
- arch/arm/boot/dts/microchip/sama7g5.dtsi       |  4 ++--
- drivers/clk/at91/sama7d65.c                    |  3 ++-
- drivers/clk/at91/sama7g5.c                     |  3 ++-
- drivers/clk/at91/sckc.c                        | 12 ++++++------
- 5 files changed, 20 insertions(+), 20 deletions(-)
-
+diff --git a/drivers/clk/at91/sckc.c b/drivers/clk/at91/sckc.c
+index 021d1b412af4..952a805b6f7e 100644
+--- a/drivers/clk/at91/sckc.c
++++ b/drivers/clk/at91/sckc.c
+@@ -374,7 +374,7 @@ static void __init at91sam9x5_sckc_register(struct device_node *np,
+ 	const char *xtal_name;
+ 	struct clk_hw *slow_rc, *slow_osc, *slowck;
+ 	static struct clk_parent_data parent_data = {
+-		.name = "slow_xtal",
++		.index = 0,
+ 	};
+ 	const struct clk_hw *parent_hws[2];
+ 	bool bypass;
+@@ -407,7 +407,7 @@ static void __init at91sam9x5_sckc_register(struct device_node *np,
+ 	if (!xtal_name)
+ 		goto unregister_slow_rc;
+ 
+-	parent_data.fw_name = xtal_name;
++	parent_data.name = xtal_name;
+ 
+ 	slow_osc = at91_clk_register_slow_osc(regbase, "slow_osc",
+ 					      &parent_data, 1200000, bypass, bits);
+@@ -476,7 +476,7 @@ static void __init of_sam9x60_sckc_setup(struct device_node *np)
+ 	const char *xtal_name;
+ 	const struct clk_hw *parent_hws[2];
+ 	static struct clk_parent_data parent_data = {
+-		.name = "slow_xtal",
++		.index = 0,
+ 	};
+ 	bool bypass;
+ 	int ret;
+@@ -494,7 +494,7 @@ static void __init of_sam9x60_sckc_setup(struct device_node *np)
+ 	if (!xtal_name)
+ 		goto unregister_slow_rc;
+ 
+-	parent_data.fw_name = xtal_name;
++	parent_data.name = xtal_name;
+ 	bypass = of_property_read_bool(np, "atmel,osc-bypass");
+ 	slow_osc = at91_clk_register_slow_osc(regbase, "slow_osc",
+ 					      &parent_data, 5000000, bypass,
+@@ -592,7 +592,7 @@ static void __init of_sama5d4_sckc_setup(struct device_node *np)
+ 	const char *xtal_name;
+ 	const struct clk_hw *parent_hws[2];
+ 	static struct clk_parent_data parent_data = {
+-		.name = "slow_xtal",
++		.index = 0,
+ 	};
+ 	int ret;
+ 
+@@ -609,7 +609,7 @@ static void __init of_sama5d4_sckc_setup(struct device_node *np)
+ 	xtal_name = of_clk_get_parent_name(np, 0);
+ 	if (!xtal_name)
+ 		goto unregister_slow_rc;
+-	parent_data.fw_name = xtal_name;
++	parent_data.name = xtal_name;
+ 
+ 	osc = kzalloc(sizeof(*osc), GFP_KERNEL);
+ 	if (!osc)
 -- 
 2.43.0
 
