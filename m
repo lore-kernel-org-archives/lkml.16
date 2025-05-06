@@ -1,311 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C6AB262804;
-	Tue,  6 May 2025 08:53:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 162C41474B8
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 08:54:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746521635; cv=none; b=iZzC2+IsLGnsD5rvRCokgEpJKzp6NBY0LhecjiP8xh64EYOKDWCzTynP9dn/oV2SJ5+DwFblgHjuAbHFNJTaKwAKYWh2cMXf84JO0in+RxErJh1sRYul3DCaiNBGy2HwCxmheTR7Kw6EdQ32nXst+0EoUDSHaHionA/q8JWzyKc=
+	t=1746521654; cv=none; b=fb9HQ1CwFmnhie39cmP/sbFgtbzYw1C5M91aPD1qdnJ+wElDGfNtsunJEVHhCrg1PLEoEn83ze2d4J5FfL8Si4Ae2Qg6F4DUEzTyTsy4qslhg060siTyOAAgZU4HHTpsZ6iaC2wl6tC3whWTJXIACfpnwRXXA2WnaVc76O50+rk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746521635; c=relaxed/simple;
-	bh=nw6d/SZSKNLBkkU8aJfTtZbRWP1PXjimyeHTGPVYBYc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=JDdK0eX3QmbD1OKXRD9AXu5kEKw8bxTqrBU0F1qZZb8xvGlR6vHHvm5hMkLdHFKkg4ajQWVX7SwBanoIA6C3eS0LxpJLC96JUamkbcaP1ynagOHhy3l9KByUL1zSZ9JCi1rCF6NGgcUDl9dSBw7e8i7Npz8C5UzHO8Y35+NAfxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=itTox3iQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746521654; c=relaxed/simple;
+	bh=wkGsbJpTT6NwcQZnaI3cgMwR5wm69KF8kopHqpBUf1k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hxCORwhUqZtU9eC9CdnjuxLBGT0m6vLxH8GPrJp1OtwGfrpGjxfVXvZcEtG55Vf9+UPLroTA6khK3E88F+jF4NRkUzoB1DZjTmKF+Yaw5mSLXXfee8jKUaBcsYPPzt6KfFLBEg7sIiXuj+iFOmUxWlI8/STBE8EU9mM3eC6T0S4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iC7tDMw0; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="itTox3iQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 10197C4CEF3;
-	Tue,  6 May 2025 08:53:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746521635;
-	bh=nw6d/SZSKNLBkkU8aJfTtZbRWP1PXjimyeHTGPVYBYc=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=itTox3iQGQNBLBkeBw5OI0lEZBlea+ylhlYu2Aq7NtZaetHCYOHvta/Chu97AHueo
-	 stGO+Sjfp3rbgnHK5KmnF8nhRJT77mWADxNom83uWkNXS599oM0nRl8733iMjop7Yo
-	 PlR4VQ0lvH62a7cU+FnDvNNWwyQT1903DYvRHTCvj09LxVpQObkVY68WBYCOz+vPVa
-	 SuaH7eTeG7LwPXbdPCRONg7W6+zzcxCstSnpsUi37+QgH2ColWAmXQmnf3DS5SlhIp
-	 qxUk72sSF6AJANR8Im2Kac3YOA3Y5Th9cIHo4MLxa44OuT0j+3rOjpSVLEVJn6HFYW
-	 E/CuAVa3VXbBQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F310FC3ABC4;
-	Tue,  6 May 2025 08:53:54 +0000 (UTC)
-From: =?utf-8?q?T=C3=B3th_J=C3=A1nos_via_B4_Relay?= <devnull+gomba007.gmail.com@kernel.org>
-Date: Tue, 06 May 2025 10:53:45 +0200
-Subject: [PATCH v3 2/2] iio: chemical: Add driver for SEN0322
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iC7tDMw0"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cebe06e9eso33513825e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 01:54:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746521651; x=1747126451; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/0cBa9PVs+oAQ53ekJJBPQ5CTxO23NSJ0+4h1zfsmKE=;
+        b=iC7tDMw0UUrXGfEBsuAglOz4oP3qzM0WCBQEqda4p5JON9xfvijq/JPLR8dzfA6QPj
+         2n40/DoK5E6q1o7xp7NLMhxP0dAAl/p/2fuux743TRozgA8KE7PVOP4vkBY1whqgJeuM
+         h6NAqjwe8lP9RFIDpOi4CDOZL2jktZXbmuIA+XNPb1MlV9aa1Y47xRgVtVkLMe606Hvc
+         nTywp0ELEsfNjR5V7FsyNbu87Jbs1aT+FrP4jPIyUKhP/nrOdX0qDNdIwtG/KOSkkq7b
+         y/aLrUetaYcqw6GfNUsUapKy4ojaKGOJTKSWD1sycHhN2YpwH2LfTUDQlh8d3qmgrAd4
+         cMyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746521651; x=1747126451;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/0cBa9PVs+oAQ53ekJJBPQ5CTxO23NSJ0+4h1zfsmKE=;
+        b=CNtAFFpAjFyCUIuLCyUIbrmklXwW2JxeiCMKUvQAKNmdVfvlEugT68+CjsLzIFqyYy
+         ooSgrLUXKdfIFIDXg880MCSD0iBLxVcwI3SMLIgeqe510DNT4f+TwMJsmqwIRKvFdqhs
+         0tEj2Nh1AC/wqi4cZBWK+wSWk3M+MZlRVoaMqIL1/YZBOq0n4HWOwhjMq9xu/BiKE17c
+         4kN8nNu/aTsehkBzqFIiSjo7hlJyqyaCF0fNXFaJc3hRIcuNKi9sJfavRdz/4JiTpRY9
+         OmhHkre7MpfafBSfsnfmxP2UTUHLgcZtaKh2ubDxLSHadcS02SqLP/gPkW+iIoVwWsVO
+         8NPA==
+X-Forwarded-Encrypted: i=1; AJvYcCXPc8jj1hy8zJsAJGVvzv3gsp6nIaKmsvUCdZHZtsL0FVnCuzOw+KCV/58m4cg1KHC1BlG3RFys50YCW2M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YztRYMJIRr2mEupzvUBLEKeT3oAHOAj5foQPQLZtlHhZZ0FQxSw
+	isGFTAW+3MYD2dLy33X1GTBCPSONap8BPfuBMDv9RUw7P61aWBJBvicgZEA9l30=
+X-Gm-Gg: ASbGnctHMvFBtbrUJV4j2ahTaxvWByp5xhBkVKLTi2BysrjgcgyEju8MLDoh3ksObCY
+	IHBmaPNBB7U3GpQkHG603nCzjRVixsGE5CCINFldHtQdzpkY8vibHbI5NPPaLbLPgUqQSy7etlx
+	96RYWBlxY7FRUSDVgQXLP0pme5wtJXaufuDy6vofT4FSyNRk7ddUD40tWHh5RNmexS3U2g16Jfu
+	zZGSrdMUOHTLboFN/0pUVCprwhH+6iPFuAnseDUNBAF2S/oJo+ae3nTirWG+4CAjbeZVCPxQSg+
+	rgtNjsMfOffxD1GIaAl0w+/c0vWmZcKiMYGmvTHOpEQ9LqsMLJ1cgLsK+5GakKSE79K6URJFurr
+	t4Rak
+X-Google-Smtp-Source: AGHT+IHXEKsH42KRLrEmKISrJCPG8Apw+QWhDI341ouWaA3XrXnmpLIfMz6s/Acz/PZ//Y59wBBHlA==
+X-Received: by 2002:a05:600c:1d0a:b0:43b:d0fe:b8ac with SMTP id 5b1f17b1804b1-441d053b038mr18104455e9.30.1746521651357;
+        Tue, 06 May 2025 01:54:11 -0700 (PDT)
+Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-441b89ee593sm158952075e9.24.2025.05.06.01.54.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 06 May 2025 01:54:10 -0700 (PDT)
+Message-ID: <7c08cc9e-f39f-490c-85fe-5738656380e5@linaro.org>
+Date: Tue, 6 May 2025 10:54:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/7] clocksource/drivers: Add EcoNet Timer HPT driver
+To: Caleb James DeLisle <cjd@cjdns.fr>
+Cc: linux-mips@vger.kernel.org, tglx@linutronix.de, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, tsbogend@alpha.franken.de,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ benjamin.larsson@genexis.eu, linux-mediatek@lists.infradead.org
+References: <20250430133433.22222-1-cjd@cjdns.fr>
+ <20250430133433.22222-3-cjd@cjdns.fr> <aBjpBpJAIP89oiit@mai.linaro.org>
+ <92cd3689-3409-4d43-8db1-8633d35f779a@cjdns.fr>
+Content-Language: en-US
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <92cd3689-3409-4d43-8db1-8633d35f779a@cjdns.fr>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250506-iio-chemical-sen0322-v3-2-d6aa4acd00e0@gmail.com>
-References: <20250506-iio-chemical-sen0322-v3-0-d6aa4acd00e0@gmail.com>
-In-Reply-To: <20250506-iio-chemical-sen0322-v3-0-d6aa4acd00e0@gmail.com>
-To: Jonathan Cameron <jic23@kernel.org>, 
- Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- =?utf-8?q?T=C3=B3th_J=C3=A1nos?= <gomba007@gmail.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746521633; l=6662;
- i=gomba007@gmail.com; s=20230706; h=from:subject:message-id;
- bh=+Ezp/DsTUmLfMfPAYh8WgNX/9ol2LZWhHTJ8ACAmRtg=;
- b=lNJ3POaMp6+ymQM46/7mICY7Rt3Y7H3fBjsRIdZ10PvabqxzECDaYBbp6jWGR7F6SOSgNwEjI
- k6MjKiCLXLNDHExDX7cGAYdj6+silja5np2SgL4m/GSdTbjahLhLvbh
-X-Developer-Key: i=gomba007@gmail.com; a=ed25519;
- pk=iY9MjPCbud82ULS2PQJIq3QwjKyP/Sg730I6T2M8Y5U=
-X-Endpoint-Received: by B4 Relay for gomba007@gmail.com/20230706 with
- auth_id=60
-X-Original-From: =?utf-8?q?T=C3=B3th_J=C3=A1nos?= <gomba007@gmail.com>
-Reply-To: gomba007@gmail.com
 
-From: Tóth János <gomba007@gmail.com>
+On 05/05/2025 20:09, Caleb James DeLisle wrote:
+> 
+> On 05/05/2025 18:36, Daniel Lezcano wrote:
+>> On Wed, Apr 30, 2025 at 01:34:28PM +0000, Caleb James DeLisle wrote:
+>>> Introduce a clocksource driver for the so-called high-precision timer 
+>>> (HPT)
+>>> in the EcoNet EN751221 MIPS SoC.
+>> As a new driver, please document the timer (up - down ?, SPI/PPI, etc
+>> ...) that will help to understand the code more easily, especially the
+>> reg_* functions (purposes?).
+> 
+> 
+> Sure thing, I can elaborate the comment in the header of
+> timer-econet-en751221.c. Let me know if you'd like it described
+> somewhere else as well, such as the help of config ECONET_EN751221_TIMER.
 
-Add support for the DFRobot SEN0322 oxygen sensor.
+It is ok in the changelog, so it is possible to get the description when 
+looking for the patch introducing the new timer.
 
-To instantiate (assuming device is connected to I2C-2):
-	echo 'sen0322 0x73' > /sys/class/i2c-dev/i2c-2/device/new_device
+[ ... ]
 
-To get the oxygen concentration (assuming device is iio:device0) multiply
-the values read from:
-	/sys/bus/iio/devices/iio:device0/in_concentration_raw
-	/sys/bus/iio/devices/iio:device0/in_concentration_scale
+>>> +
+>>> +    cpuhp_setup_state(CPUHP_AP_MIPS_GIC_TIMER_STARTING,
+>>> +              "clockevents/en75/timer:starting",
+>>> +              cevt_init_cpu, NULL);
+>> cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, ... ) ?
+> 
+> I see that Ingenic does this. This is the only timer so until it's up,
+> sleeping causes a hang. If sleeping is prior to CPUHP_AP_ONLINE_DYN is
+> considered a bug then this should be okay, but I'm not informed enough
+> to say whether that is the case so I'll follow your guidance here.
 
-Datasheet: https://wiki.dfrobot.com/Gravity_I2C_Oxygen_Sensor_SKU_SEN0322
+Hmm, hard to say without the platform. May be just give a try with 
+CPUHP_AP_ONLINE_DYN to check if it works otherwise stick on 
+CPUHP_AP_MIPS_GIC_TIMER_STARTING as it is already defined ?
 
-Signed-off-by: Tóth János <gomba007@gmail.com>
----
- MAINTAINERS                    |   6 ++
- drivers/iio/chemical/Kconfig   |  10 +++
- drivers/iio/chemical/Makefile  |   1 +
- drivers/iio/chemical/sen0322.c | 163 +++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 180 insertions(+)
+[ ... ]
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3cbf9ac0d83f..6fda7a2f1248 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6852,6 +6852,12 @@ L:	linux-rtc@vger.kernel.org
- S:	Maintained
- F:	drivers/rtc/rtc-sd2405al.c
- 
-+DFROBOT SEN0322 DRIVER
-+M:	Tóth János <gomba007@gmail.com>
-+L:	linux-iio@vger.kernel.org
-+S:	Maintained
-+F:	drivers/iio/chemical/sen0322.c
-+
- DH ELECTRONICS DHSOM SOM AND BOARD SUPPORT
- M:	Christoph Niedermaier <cniedermaier@dh-electronics.com>
- M:	Marek Vasut <marex@denx.de>
-diff --git a/drivers/iio/chemical/Kconfig b/drivers/iio/chemical/Kconfig
-index 330fe0af946f..60a81863d123 100644
---- a/drivers/iio/chemical/Kconfig
-+++ b/drivers/iio/chemical/Kconfig
-@@ -166,6 +166,16 @@ config SCD4X
- 	  To compile this driver as a module, choose M here: the module will
- 	  be called scd4x.
- 
-+config SEN0322
-+	tristate "SEN0322 oxygen sensor"
-+	depends on I2C
-+	select REGMAP_I2C
-+	help
-+	  Say Y here to build support for the DFRobot SEN0322 oxygen sensor.
-+
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called sen0322.
-+
- config SENSIRION_SGP30
- 	tristate "Sensirion SGPxx gas sensors"
- 	depends on I2C
-diff --git a/drivers/iio/chemical/Makefile b/drivers/iio/chemical/Makefile
-index 4866db06bdc9..deeff0e4e6f7 100644
---- a/drivers/iio/chemical/Makefile
-+++ b/drivers/iio/chemical/Makefile
-@@ -20,6 +20,7 @@ obj-$(CONFIG_SCD30_CORE) += scd30_core.o
- obj-$(CONFIG_SCD30_I2C) += scd30_i2c.o
- obj-$(CONFIG_SCD30_SERIAL) += scd30_serial.o
- obj-$(CONFIG_SCD4X) += scd4x.o
-+obj-$(CONFIG_SEN0322)	+= sen0322.o
- obj-$(CONFIG_SENSEAIR_SUNRISE_CO2) += sunrise_co2.o
- obj-$(CONFIG_SENSIRION_SGP30)	+= sgp30.o
- obj-$(CONFIG_SENSIRION_SGP40)	+= sgp40.o
-diff --git a/drivers/iio/chemical/sen0322.c b/drivers/iio/chemical/sen0322.c
-new file mode 100644
-index 000000000000..088f8947083e
---- /dev/null
-+++ b/drivers/iio/chemical/sen0322.c
-@@ -0,0 +1,163 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Driver for the DFRobot SEN0322 oxygen sensor.
-+ *
-+ * Datasheet:
-+ *	https://wiki.dfrobot.com/Gravity_I2C_Oxygen_Sensor_SKU_SEN0322
-+ *
-+ * Possible I2C slave addresses:
-+ *	0x70
-+ *	0x71
-+ *	0x72
-+ *	0x73
-+ *
-+ * Copyright (C) 2025 Tóth János <gomba007@gmail.com>
-+ */
-+
-+#include <linux/i2c.h>
-+#include <linux/regmap.h>
-+
-+#include <linux/iio/iio.h>
-+
-+#define SEN0322_REG_DATA	0x03
-+#define SEN0322_REG_COEFF	0x0A
-+
-+struct sen0322 {
-+	struct regmap	*regmap;
-+};
-+
-+static int sen0322_read_data(struct sen0322 *sen0322)
-+{
-+	u8 data[3] = { 0 };
-+	int ret;
-+
-+	ret = regmap_bulk_read(sen0322->regmap, SEN0322_REG_DATA, data,
-+			       sizeof(data));
-+	if (ret < 0)
-+		return ret;
-+
-+	/*
-+	 * The actual value in the registers is:
-+	 *	val = data[0] + data[1] / 10 + data[2] / 100
-+	 * but it is multiplied by 100 here to avoid floating-point math
-+	 * and the scale is divided by 100 to compensate this.
-+	 */
-+	ret = data[0] * 100 + data[1] * 10 + data[2];
-+
-+	return ret;
-+}
-+
-+static int sen0322_read_scale(struct sen0322 *sen0322, int *num, int *den)
-+{
-+	u32 val;
-+	int ret;
-+
-+	ret = regmap_read(sen0322->regmap, SEN0322_REG_COEFF, &val);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (val) {
-+		*num = val;
-+		*den = 100000;	/* Coeff is scaled by 1000 at calibration. */
-+	} else { /* The device is not calibrated, using the factory-defaults. */
-+		*num = 209;	/* Oxygen content in the atmosphere is 20.9%. */
-+		*den = 120000;	/* Output of the sensor at 20.9% is 120 uA. */
-+	}
-+
-+	dev_dbg(regmap_get_device(sen0322->regmap), "scale: %d/%d\n",
-+		*num, *den);
-+
-+	return 0;
-+}
-+
-+static int sen0322_read_raw(struct iio_dev *iio_dev,
-+			    const struct iio_chan_spec *chan,
-+			    int *val, int *val2, long mask)
-+{
-+	struct sen0322 *sen0322 = iio_priv(iio_dev);
-+	int ret;
-+
-+	if (chan->type != IIO_CONCENTRATION)
-+		return -EINVAL;
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		ret = sen0322_read_data(sen0322);
-+		if (ret < 0)
-+			return ret;
-+
-+		*val = ret;
-+		return IIO_VAL_INT;
-+
-+	case IIO_CHAN_INFO_SCALE:
-+		ret = sen0322_read_scale(sen0322, val, val2);
-+		if (ret < 0)
-+			return ret;
-+
-+		return IIO_VAL_FRACTIONAL;
-+
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static const struct iio_info sen0322_info = {
-+	.read_raw = sen0322_read_raw,
-+};
-+
-+static const struct regmap_config sen0322_regmap_conf = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+};
-+
-+static const struct iio_chan_spec sen0322_channel = {
-+	.type = IIO_CONCENTRATION,
-+	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
-+			      BIT(IIO_CHAN_INFO_SCALE),
-+};
-+
-+static int sen0322_probe(struct i2c_client *client)
-+{
-+	struct sen0322 *sen0322;
-+	struct iio_dev *iio_dev;
-+
-+	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C))
-+		return -ENODEV;
-+
-+	iio_dev = devm_iio_device_alloc(&client->dev, sizeof(*sen0322));
-+	if (!iio_dev)
-+		return -ENOMEM;
-+
-+	sen0322 = iio_priv(iio_dev);
-+
-+	sen0322->regmap = devm_regmap_init_i2c(client, &sen0322_regmap_conf);
-+	if (IS_ERR(sen0322->regmap))
-+		return PTR_ERR(sen0322->regmap);
-+
-+	iio_dev->info = &sen0322_info;
-+	iio_dev->name = "sen0322";
-+	iio_dev->channels = &sen0322_channel;
-+	iio_dev->num_channels = 1;
-+	iio_dev->modes = INDIO_DIRECT_MODE;
-+
-+	return devm_iio_device_register(&client->dev, iio_dev);
-+}
-+
-+static const struct of_device_id sen0322_of_match[] = {
-+	{ .compatible = "dfrobot,sen0322" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, sen0322_of_match);
-+
-+static struct i2c_driver sen0322_driver = {
-+	.driver = {
-+		.name = "sen0322",
-+		.of_match_table = sen0322_of_match,
-+	},
-+	.probe = sen0322_probe,
-+};
-+module_i2c_driver(sen0322_driver);
-+
-+MODULE_AUTHOR("Tóth János <gomba007@gmail.com>");
-+MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("SEN0322 oxygen sensor driver");
 
 -- 
-2.34.1
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
