@@ -1,119 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F369127FB28;
-	Tue,  6 May 2025 12:50:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D98F27D766;
+	Tue,  6 May 2025 12:51:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746535834; cv=none; b=PplO1Ek3xy103tpojGIltBetHarShVhU4QwuPIZoP78UZdLRxemz9r84+CQaNkzmrRKe7sYuDX8ECwMyA3/plg4Rg8pmL7HdCYngeq77HnKRZMs/U7HaLu3bi+ykV8iC0RyHI9nKqhbGXNGt2S++wJssXAWbGe52R1JzuQ/qED4=
+	t=1746535907; cv=none; b=mq/DnOhMYN/vRgQkk8IPrABAK4nCjym8UVnE8EPw3S2RtwAjmL4OAKF1Wl3ub9veIb4r+ZfbvGi8FSWgHSEbQ2qSff7cV17wcnPWy3DHI43f7ncrwsA+yA3WNaOHiX3zRVYpy6LCcaqU/ARIw0UXhr8qpA1s2nPCUIAu+SJRJ/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746535834; c=relaxed/simple;
-	bh=klELssfHMqhzXeMIBTEtaCupN5OldzmXTuU8N+vlokA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nmcV2izVOThWX7m489NWaM+dXrFSSJPdt99QCShQBu/zn/MegXkSiXqv22TjJLcFl8oBrzOmli6Jee7Mf3eQni++QRqXD4srWzdVHcPsDsFOdihW4OnEkFcBMkEUiINMQ3pdE553OrpPWTAfN0Gu1GhTTjAhD3aCeLKKeUgx5VY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rb6blaLy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746535907; c=relaxed/simple;
+	bh=UdxC2W3mb0RSsOAh3jcVexeroYMpLSLZI12XCkxa2nY=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Iy9ViSAfkTJcY94diBHsXHrENP+qfItGNXpjT1q4iQQyVgHUYoaP3p9qQBLL45SEBJmPpFioV5k3yM+Lkxxmneowcc+9s7ZuxbMvWpD9aksMcMeXHX/VR/LAnGEQT68unjipFQ4MvQm+J9y7Exsaw481oP8lQyKxXHm8OCd1Aoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=nyIYz6fX; arc=none smtp.client-ip=185.70.43.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rb6blaLy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91341C4CEE4;
-	Tue,  6 May 2025 12:50:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746535833;
-	bh=klELssfHMqhzXeMIBTEtaCupN5OldzmXTuU8N+vlokA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Rb6blaLycFzVYBCF/30YSHdP29z99IGwzZRTl3lGE2FeaIygaWzVyhBnYwrJMTeGA
-	 vrUqBzraYZv1nuzzN6n1rZHvacOwNcetanECvyg/aMJeOxGqb9sbca35vCoKDAFdj0
-	 5ytwyg4OuN782Y4TkpcYDcnWeimFtPnrBryYxIJg/A2HoA7RV+RMRabSO1cFl7+DE2
-	 vNb7Y6QHLYd0iayY4fr8cOISRne7fl1SStlCUeeD//HFBytpnPWfdngc6UTTyte6mY
-	 pGovq5Gdq1Ckv28CM1252UzHFT1uE1Qxc8HwM60DQ14ghlWb8LQt90NpSnHAXCaXN8
-	 Vi57M7qPpwh4g==
-Date: Tue, 6 May 2025 13:50:29 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
-Cc: conor+dt@kernel.org, devicetree@vger.kernel.org, jic23@kernel.org,
-	krzk+dt@kernel.org, linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, robh@kernel.org,
-	~lkcamp/patches@lists.sr.ht
-Subject: Re: [PATCH v2] dt-bindings:iio:adc:st,spear600-adc: txt to yaml
- format conversion.
-Message-ID: <20250506-equivocal-snooper-8a7d1ce931c8@spud>
-References: <20250430-folic-skittle-06b0ccbedf35@spud>
- <20250503184800.27026-1-rodrigo.gobbi.7@gmail.com>
+	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="nyIYz6fX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail3; t=1746535901; x=1746795101;
+	bh=6w1E0JQK4vGVijywC0hPfVOEZE2BTKLrnsyaHr2oPWY=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
+	 List-Unsubscribe:List-Unsubscribe-Post;
+	b=nyIYz6fXiP16PPYh3rAlC+1UTsdTS+yqCeGAdAJ5t3flNA5Actd3BAoczC9DfLNy9
+	 /l8gm0w8Ad8rU5Y8+Hwdxwlco4Z25QigmvoEzrXLGHNEToQmC4PD4YPXWJkoIWdkY7
+	 p+OGTYVjNgroqtWf9lwFZO6Pw5icEpco5FJx/8VY9WEZ4Qw2V9Gxa/hYPzMuAQG7Ll
+	 hlOPCojED6PmzQDzYUuNCovMzPdJ2YvjC+m6aayiO4iAonwvaLGNWtA3InBgjG9+1m
+	 U1dhmHnjpGh6CgoqtvTGR81fGvlsETWqUH5a3axtD+o269BM7qLZGbaEz3yZzkyskV
+	 reAE9XczqdgzA==
+Date: Tue, 06 May 2025 12:51:36 +0000
+To: gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org, jason.wessel@windriver.com, danielt@kernel.org, dianders@chromium.org, jirislaby@kernel.org
+From: Roxana Nicolescu <nicolescu.roxana@protonmail.com>
+Cc: kgdb-bugreport@lists.sourceforge.net, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
+Subject: [RFC PATCH 0/2] serial: kgdboc: convert to the faux device interface
+Message-ID: <20250506125133.108786-1-nicolescu.roxana@protonmail.com>
+Feedback-ID: 136600343:user:proton
+X-Pm-Message-ID: 67af8fe5938cbd91a2c9f36bf7adce301daa31d9
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="U2GjYv40w+G35gJJ"
-Content-Disposition: inline
-In-Reply-To: <20250503184800.27026-1-rodrigo.gobbi.7@gmail.com>
-
-
---U2GjYv40w+G35gJJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, May 03, 2025 at 03:44:12PM -0300, Rodrigo Gobbi wrote:
-> > Is 0 the default here or 1? "Single data conversion" sounds more like 1
-> > sample than 0, and the default of 0 is below the minimum of 1. What's
-> > going on there?
->=20
-> Good point, after I`ve submitted the patch I was double checking it and n=
-oticed=20
-> that too. It`s stange because the public datasheet mentions "Programmable=
- averaging of results=20
-> from 1 (No averaging) up to 128". Meanwhile, the spear_adc.c driver at pr=
-obe
-> stated the following:
->=20
-> 	/*
-> 	 * Optional avg_samples defaults to 0, resulting in single data
-> 	 * conversion
-> 	 */
-> 	device_property_read_u32(dev, "average-samples", &st->avg_samples);
->=20
-> Since avg_samples is inside=20
->=20
-> 	struct spear_adc_state *st;
->=20
-> which is allocated with devm_iio_device_alloc() (which uses the kzalloc/z=
-ero filling the priv data):
->=20
-> 	indio_dev =3D devm_iio_device_alloc(dev, sizeof(struct spear_adc_state));
-> 	if (!indio_dev)
-> 		return dev_err_probe(dev, -ENOMEM,
-> 				     "failed allocating iio device\n");
->=20
-> 	st =3D iio_priv(indio_dev);
->=20
-> ...matches the driver comment meaning the default is actually "0", single=
- data, but it does
-> not match the public datasheet in my understanding. Since I don`t have ac=
-cess to a more
-> detailed datasheet, I chose to describe "1" as a minimum value, but I agr=
-ee it is weird.
-> Maybe we could drop the minimum constraint in this case (go with default =
-and max)?
-> Tks and regards.
+The kgdboc uses a "fake" platform device to handle tty drivers showing
+up late. In case the tty device is not detected during probe, it will
+return EPROBE_DEFER which means the probe will be called later when the
+tty device might be there. Before this, the kgdboc driver
+would be initialized early in the process (useful for early boot
+debugging) but then the tty device wouldn't be there, and retry wouldn't be
+done later. For a better explanation, see commit
+'68e55f61c138: ("kgdboc: Use a platform device to handle tty drivers
+showing up late")'.
 
-Sounds like it's a 4-bit register where the samples is (1 + written value),
-and the property is expected to be written directly to the register.
-I'd then expect the property to be min 0, default 0, max 127. If you
-write 128 to the register, you'll accidentally set the external vref
-bit. I'd maybe go as far as &ing the value to make sure out of range
-stuff is not permitted?
+This replaces the platform_device usage with faux_device which was
+introduced recently for scenarios like this, where there is not real
+platform device needed. Moreover, it makes the code cleaner than before.
 
---U2GjYv40w+G35gJJ
-Content-Type: application/pgp-signature; name="signature.asc"
+To acomodate this, I had to change the faux_device implementation. When
+the device is created, if probe failed and the driver did not bind to the
+device, it will be destroyed, therefore probe won't be retried later in
+case of EPROBE_DEFER. Now, the faux device is destroyed only if probe
+failed with something other than -EPROBE_DEFER.
 
------BEGIN PGP SIGNATURE-----
+I am kindly asking for your advice here, because I am not sure this is
+100% the intended usage of faux_device. In the kgdboc driver, the
+platform device is for sure fake, but if we're gonna use it for deferred
+probe, isn't it defeating the purpose of a faux device not being
+attached to real hardware? I also checked the previous discussions when
+the faux device was introduced and some people even argue than having
+probe and remove functions is also a bit contradictory.
+Let me know what you think.
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaBoFlQAKCRB4tDGHoIJi
-0kd8AQCy8PjvqyHrPoVvPOGXVeNR0WKFsj6fOykHa/GbTO7CAwEAlJgBSIudVJpe
-lhGSfvBdDeVsg2bwK7ZQaiotXNm5ag8=
-=28u9
------END PGP SIGNATURE-----
+Roxana Nicolescu (2):
+  driver core: faux: create the device if probe() is deferred too
+  serial: kgdboc: convert to use faux_device
 
---U2GjYv40w+G35gJJ--
+ drivers/base/faux.c         | 10 +++++---
+ drivers/tty/serial/kgdboc.c | 50 +++++++++++--------------------------
+ 2 files changed, 21 insertions(+), 39 deletions(-)
+
+--=20
+2.34.1
+
+
