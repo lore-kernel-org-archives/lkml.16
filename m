@@ -1,82 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81901280A20
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 13:34:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23F8E280A58
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 13:35:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746538490; cv=none; b=kpXvVPnUXrCmCv3SIlPLmIpmpQKlVSiIbZLH22TA3ndxCfSidFsoWaswVtcH72tdOfSkjlbXOMXF25J/RIZRCqGWSrb1ULdBW2EuoCI+Wb2R/gwd+MgtnEJOw90qY70X/4kI+RrZtnzG3Poh13f19D85izgIIOUAOUTYDr+85Vk=
+	t=1746538502; cv=none; b=AGFvcXWB2UIicEXziU/STF9NjxZAMvYaFxPRqXv3BTiRscJqMkNYneS7w28HKYxKW2vb9U67VEmKWzQmI2okeZbEiVsckBUa1uFxfPlIabrP3aiKi4a7BdlhaNiNa96XhsAX8KsWM3XTwNHn7lpbSVnnp1QdimkQ/2+ztx/09aE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746538490; c=relaxed/simple;
-	bh=8TSz1OWm0B5U3QCt1Nt1q8Hqzz1qhQA6Q1C1IkoBljI=;
+	s=arc-20240116; t=1746538502; c=relaxed/simple;
+	bh=2kMQEO2OriJkGJpX55hEsYnmu+hvezoN+vmiLvl+mpU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LigPCElaCfxoMItQUrn0D83gLKBeYFjc8kGsHRvGcI8tkuGtFMsoZR66uCzly8OiFcrtCbZQbH+DWuP7Jp4zWFNfl9XMFzT344vUZbY8HblQANxDsVyyo9Sslmcc0g0/9p8JH3NAeciUU2OhxmNfZEJXnRUq/gp5quaY/gqOC/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZHYlge8t; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=bB/kVVGxiYaB60KCEmzib5In24qdQAy/Z9OdcPGna2ICFmxT5bV35eSH8y1H3zm4Y+1H0nMkFvkkDBbth4TGbWzBjZQfWS7eAq5ktDc6kXzH/+zka+xewtkZGR6i7UyrrFONaAcibiOzKFUS3bKtWUGJ5BjEhUiZeKj/msxv6EU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e/MI7J5d; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZHYlge8t"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 998EBC4CEF0;
-	Tue,  6 May 2025 13:34:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746538490;
-	bh=8TSz1OWm0B5U3QCt1Nt1q8Hqzz1qhQA6Q1C1IkoBljI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZHYlge8tiqB+KlH2m3iRRIlcW7oOd/GawTHhbnZ+dk0CxjR3mJWg0RE6AV/67UzCo
-	 /YZnGumJzlndLhFE2rAYRGtmADQWML+p9FRXUERZAcfAJVuZoRe9cpjYWZZgOw2891
-	 ksLpNZ2Gv5QKZrNGK+ICKHjHIK/AWW4b0OVruveyOiEo+wUYz3MLrdGaNifobskq6p
-	 QTm7dCkHVd2CRO7tjJTmWEoTeqspOcvpZlQyaZBdsF40U2FoVEz6HNQySfvfTrZvSj
-	 ORTvxKVIYdyTiYt8bf1gdM+2y5W55ahX8Df/Te4i91ZlgARJ+YB8ibDtYg5uC3CoIu
-	 J1qxGaOU3VQJA==
-Date: Tue, 6 May 2025 22:34:44 +0900
-From: Mark Brown <broonie@kernel.org>
-To: Florent Revest <revest@chromium.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, catalin.marinas@arm.com, will@kernel.org,
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-	akpm@linux-foundation.org, thiago.bauermann@linaro.org,
-	jackmanb@google.com
-Subject: Re: [PATCH 0/4] mm: Avoid sharing high VMA flag bits
-Message-ID: <aBoP9ILEv-z4bRAQ@finisterre.sirena.org.uk>
-References: <20250506095224.176085-1-revest@chromium.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e/MI7J5d"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746538501; x=1778074501;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=2kMQEO2OriJkGJpX55hEsYnmu+hvezoN+vmiLvl+mpU=;
+  b=e/MI7J5dqvz1B2r2p4FV5pErv5S/NzKMJJ6I3/14sRYILcC61UCIAiTR
+   oLJWRQiU1T4OuMJXI0sQSS9ljqqVE3UhyF+UdEDDvi5sYxnaLhGVo9sYI
+   kQLheQQxFsGMyFT/J3MZpQt99gTct/eGqKrUHHDpYEP0QZFihuk79i1y9
+   0QaLN53kYPl8xa9lQHBExdTCWN0gkk4fp5U07IDr7VLbolHLt4ZwEcocS
+   0DZr2IxUVf3DIHcid7nd2czy/OLccHMTUH/cFsDUK7Gr/Ws3S6sjBApw0
+   4ZcDbYsOLfkd8OmPpuSzhR/ro0ZrMStXsbrGC4eSMNb+7RMwiVBPuiZvc
+   Q==;
+X-CSE-ConnectionGUID: 8gEDoW2RScytIah4QRk2KA==
+X-CSE-MsgGUID: jV+RJw3ETjyQI3itYxHz3g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="59597953"
+X-IronPort-AV: E=Sophos;i="6.15,266,1739865600"; 
+   d="scan'208";a="59597953"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 06:35:01 -0700
+X-CSE-ConnectionGUID: 9ewK3vwlT7GxsMFqB+rx2Q==
+X-CSE-MsgGUID: lUjOG8a8Qg+oFT5g5xbqFQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,266,1739865600"; 
+   d="scan'208";a="135503705"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa010.jf.intel.com with ESMTP; 06 May 2025 06:34:57 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id D5F4C172; Tue, 06 May 2025 16:34:55 +0300 (EEST)
+Date: Tue, 6 May 2025 16:34:55 +0300
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Brendan Jackman <jackmanb@google.com>
+Cc: akpm@linux-foundation.org, vbabka@suse.cz, surenb@google.com, 
+	mhocko@suse.com, hannes@cmpxchg.org, bp@alien8.de, tglx@linutronix.de, 
+	david@redhat.com, ast@kernel.org, linux-mm@kvack.org, linux-coco@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] mm/page_alloc: Ensure try_alloc_pages() plays well
+ with unaccepted memory
+Message-ID: <hqd7h7elpou6mohkdr2rqcz6u7xuanezuq3ti56ibsnccsb2d2@yokitckdkwqo>
+References: <20250506112509.905147-1-kirill.shutemov@linux.intel.com>
+ <20250506112509.905147-2-kirill.shutemov@linux.intel.com>
+ <D9P3X0NLQMW5.1J74MJ7FDRBFB@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="WfNXS5zD4YMjIjfy"
-Content-Disposition: inline
-In-Reply-To: <20250506095224.176085-1-revest@chromium.org>
-X-Cookie: Well begun is half done.
-
-
---WfNXS5zD4YMjIjfy
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <D9P3X0NLQMW5.1J74MJ7FDRBFB@google.com>
 
-On Tue, May 06, 2025 at 11:52:20AM +0200, Florent Revest wrote:
+On Tue, May 06, 2025 at 01:20:25PM +0000, Brendan Jackman wrote:
+> On Tue May 6, 2025 at 11:25 AM UTC, Kirill A. Shutemov wrote:
+> > +	/* Bailout, since try_to_accept_memory_one() needs to take a lock */
+> > +	if (alloc_flags & ALLOC_TRYLOCK)
+> > +		return false;
+> > +
+> 
+> Quick lazy question: why don't we just trylock it like we do for the zone
+> lock?
 
-> While staring at include/linux/mm.h, I was wondering why VM_UFFD_MINOR and
-> VM_SHADOW_STACK share the same bit on arm64. I think I gained enough confidence
-> now to call it a bug.
+It is not only zone lock. There's also unaccepted_memory_lock inside
+accept_memory().
 
-Yes, it's a bug - it'll be an add/add conflict with those coming in via
-different trees.
-
---WfNXS5zD4YMjIjfy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgaD/MACgkQJNaLcl1U
-h9C7Dgf9FVH1H/mNg1egXWX9AKNdUe4P0CABXFDY7Ba+WHdeijmIWGjt+SIVmg86
-oECww6n5j8RUABEu5Rjt6gR9sV57kB54ytlT30XDu/WgjAXEk/qVSsKurhzcv2og
-9o50N5VpiOxRQEH2SundwnJLdoe/B+4+/ONS+T3XZIxo0UGvIrf2ltoNiV3b5K9X
-86d9rBpZoJyftPCJcskFBzzYSIgw+CTMnaINAxBE70V6Cn2vOsqdDsSiecHRV/jj
-V6HuFUh7oCGvxNf64s+CgWCKQYbuCcQVGtYU8s9D3KSIKsQ0ghtOpoGJxoGKq3Rc
-+ic+5Ul1ak/mfMfZvoBSp4FAjZeddg==
-=YB//
------END PGP SIGNATURE-----
-
---WfNXS5zD4YMjIjfy--
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
