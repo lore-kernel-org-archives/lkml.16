@@ -1,141 +1,100 @@
-Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.51])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BDD320CCCC;
-	Tue,  6 May 2025 07:01:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746514909; cv=pass; b=U4oy+yeS5dW3HgY++ofW7ENgUV37w9PnVqiUjE6SH+aFGCM2zFWVzLoQNU6sr7Ej/WsHjHRXl8ReRQP3ztsnpK4z4E/UJf/9u725BsuXmAoVruFDT3ifgrrb96zCnPXk7tMOQ8MM97Xakqof3frI2HQ5LYkglxOVp5118FgBz1k=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746514909; c=relaxed/simple;
-	bh=XllqbI3xJZhAiQ/dxjHZbOg942lK7BhoDvXxGnARJaE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eOSQx66YhRim/gjgPJQA7UlRjAOuF0umNTDOr7Ct26B21tWNkomiDMKx/snKCff8jNzGqZcztSZ4YyFDnCap0a40zzxvO/7oDuDRbZbHgQT3cSVw9fzgPiy8xihkzXCi9xZLk2irarIiNSW8H71qHPsRqQphtz7228VJHkqcL8w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hartkopp.net; spf=pass smtp.mailfrom=hartkopp.net; dkim=pass (2048-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b=Q1NrcROw; dkim=permerror (0-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b=F6XpS7iy; arc=pass smtp.client-ip=85.215.255.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hartkopp.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hartkopp.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ABCC2153E8;
+	Tue,  6 May 2025 07:01:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746514911; cv=none; b=uK4o49KMGkj615RziDQdCYbLAX4pxvocZT3/b53ZHtmiMad0HJuTr0CcqHja5Qo31HYKlESpxEYZGACCzvhgzfKZFCI/GNr8fB+PRtfkhNfH0pzKsYAGyivu1E3q7szd32n6/eO1qpfsEzZc7hl7Blhnz6nfNlHnDGEw5FcHwd4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746514911; c=relaxed/simple;
+	bh=3e+bXisIVgWVW5HiHUl8/1fadTRryB6P+vRz6FYW0m8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WUG888kXqGAD7uaQdPUSr087E7cs5vOJVKMWOd/R60KYxOShM8oIgwJr9GLkVfSZNYUQsklRti7/b7YaSLiwaHcql3vDG60//hnqZ1JLFwEI8930TuaMl73gKiwkKU/LdjLj3Ow01yYXIrENu1+jRI3mXU63y+oTz/tO1Dh1354=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lNnbg1RP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b="Q1NrcROw";
-	dkim=permerror (0-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b="F6XpS7iy"
-ARC-Seal: i=1; a=rsa-sha256; t=1746514183; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=Hycpp/T+UZi/gwGWyEmRY6gRmxIojPuMFFe17ZwKRczYDeByJYkfSiRCJXlY+Q+wmU
-    Qn4wf+Nrn8v1dkPKy2Lpj6jszMyfbQU55TWKojPIACOcy1y2WO6jg/3w4OoihdmiuLvI
-    s8SFYfScge1EqK5/yvpevlPg8varD6ytkDDSqjhthXRM0RWv8l8JKFy2ANo63c5gdn1n
-    AEfpGvtd4l0Fy9+GBerbAh1mG4tiN1rMV4jBebFSMtjpwFJJfE3loIGPLgaduLGzVEtY
-    vG1cHC0+FKZ2fHIK8LdxOagEl+M1wlbiXUU3KjSlEac8JkphVOf0TUXVMGe6Lw0kIQZO
-    OHPA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1746514183;
-    s=strato-dkim-0002; d=strato.com;
-    h=In-Reply-To:From:References:Cc:To:Subject:Date:Message-ID:Cc:Date:
-    From:Subject:Sender;
-    bh=tfvTTDkinxycvawfTo7uNlXeAUnWjeraRoE1Ewjs8zA=;
-    b=KIyQaTGyA0GB4Nq8xPwiq2Fp+mVrlNB1P9FHJjJ80E8FpvttCj9MqFf6KB4jeznum/
-    jM9+aoRUADy5aBiq1039NUC1E0MPsr71XrQHTxDsqL39yEWFEYzrwUFcsRI8WdolznHe
-    mpdL3WEHeHaR7FbaI6KwNa2YBnw/i+G4hCZvb8eV7z7QYzNU5XDjzysNTiQolc+QsTka
-    FL40UoZGBErBI2QzRuuKo5moX0GYBdbRTqOg6CqVHXOizGnBrdMxqoqnolPGg9OIPqTX
-    AilpKsXWZEDR2/upNDMArqJth6hMq/Q4Qw14RubGlk2zeZ8ZSt6Ryr9kQIMfluVCehjB
-    37Yg==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo01
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1746514183;
-    s=strato-dkim-0002; d=hartkopp.net;
-    h=In-Reply-To:From:References:Cc:To:Subject:Date:Message-ID:Cc:Date:
-    From:Subject:Sender;
-    bh=tfvTTDkinxycvawfTo7uNlXeAUnWjeraRoE1Ewjs8zA=;
-    b=Q1NrcROwAMHCnphs4inv02ZqDuO3WFSQfzwkoAboHDMCJv5JtblduSfa7AJjcq3cQE
-    lFb53lSpAQ6Zb5iNbzR6bPqY9W1cgi87Xd/cgGoRDoWAjSK9zp8aggBR9S4Al/dxxu9q
-    R6AorzODGMtqUU2Q3tF8w03XSJbQbQfCKQ4OJLneFVJh1ohcKhRIYCShpDeVRDlNXz93
-    A2w8ne7ejJBC8U/O5qYOKFGc2GkJga4B6M8lSHS/SixCSTQixcTNa8iHeWKov5QCmYXa
-    DPaTanupyHzxTMsNTVCJJUNW10n1UNYeDpW65f/gC2AZF1ZiPvzzGNbVyRme/tl6tcIy
-    5KuA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1746514183;
-    s=strato-dkim-0003; d=hartkopp.net;
-    h=In-Reply-To:From:References:Cc:To:Subject:Date:Message-ID:Cc:Date:
-    From:Subject:Sender;
-    bh=tfvTTDkinxycvawfTo7uNlXeAUnWjeraRoE1Ewjs8zA=;
-    b=F6XpS7iyfC1Ycs4ONSH0mhvf0HEFAs/L1upsREmm1qt6UO+eN3GhGLTB2rVHeyiekP
-    Vmcy/HTYO7Rg+wdA8TDQ==
-X-RZG-AUTH: ":P2MHfkW8eP4Mre39l357AZT/I7AY/7nT2yrDxb8mjH4JKvMdQv2tTUsMrZpkO3Mw3lZ/vMMcFB+5xtv9aJntXA=="
-Received: from [IPV6:2a00:6020:4a8e:5000::9ae]
-    by smtp.strato.de (RZmta 51.3.0 AUTH)
-    with ESMTPSA id K2a3e51466ngmpo
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Tue, 6 May 2025 08:49:42 +0200 (CEST)
-Message-ID: <640538cd-d1b6-46aa-9ef8-76aaa0e05609@hartkopp.net>
-Date: Tue, 6 May 2025 08:49:37 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lNnbg1RP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 188A8C4CEED;
+	Tue,  6 May 2025 07:01:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746514911;
+	bh=3e+bXisIVgWVW5HiHUl8/1fadTRryB6P+vRz6FYW0m8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lNnbg1RP+v6AaxdDJ0aFA4TWtGcGpc6wqQgXuji88MvtJv6q++0/k3JWsLEpSF0PB
+	 iG1xEe/z3hYd/iUYCbp2OTFyWT6UgI5Kqaox8j+MqSEVdg3MO8/U4UkeHYKlYXLA2A
+	 RhpFKe6BT8JW0mlKs7pBmZSrCYduS1YwnmNle8UYtI+Od1Cp9pdYEDjIg680+rCCCD
+	 0zgFU/a/Zo7P8Ij3B1yn1L66z2SVE7xlNRsdk08pSRflVjly59euY/5rVZbJygWjJX
+	 kQnqv92FUBVNJsOdRztnWkvsh09II9WxZZItN/CpwkyArno8WfrH7J355DykJmtkd0
+	 C3kPvHfnD0JAg==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1uCCJG-000000006rV-2OBA;
+	Tue, 06 May 2025 09:01:46 +0200
+Date: Tue, 6 May 2025 09:01:46 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Andi Shyti <andi.shyti@kernel.org>
+Cc: Johan Hovold <johan+linaro@kernel.org>, Vignesh R <vigneshr@ti.com>,
+	Aaro Koskinen <aaro.koskinen@iki.fi>,
+	Andreas Kemnade <andreas@kemnade.info>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Roger Quadros <rogerq@kernel.org>, Tony Lindgren <tony@atomide.com>,
+	Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+	linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Jayesh Choudhary <j-choudhary@ti.com>
+Subject: Re: [PATCH] i2c: omap: fix deprecated of_property_read_bool() use
+Message-ID: <aBmz2iDObAgendMc@hovoldconsulting.com>
+References: <20250415075230.16235-1-johan+linaro@kernel.org>
+ <vcwjwrjgzwoil5ydds4findhcgl2ujoxwia7eh7yrbdc45yx26@kmpmvataffzr>
+ <aAIiJQVAUdWJFVy7@hovoldconsulting.com>
+ <hn3gsrizar6xbr4seclnb6xot4fo4ztryks4w7exvztsdzj4f6@jhobhujf3ezi>
+ <aBiMJ0z5q4K2xTGT@hovoldconsulting.com>
+ <6nn2l75kkbkdu3wf3kta4mezno6cy4e3zzwzdc4cpmujjhr6lp@ct7w72zwbrhu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH AUTOSEL 6.14 624/642] can: fix missing decrement of
- j1939_proto.inuse_idx
-To: Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-Cc: Davide Caratti <dcaratti@redhat.com>,
- Oleksij Rempel <o.rempel@pengutronix.de>,
- Marc Kleine-Budde <mkl@pengutronix.de>, robin@protonic.nl,
- linux-can@vger.kernel.org
-References: <20250505221419.2672473-1-sashal@kernel.org>
- <20250505221419.2672473-624-sashal@kernel.org>
-Content-Language: en-US
-From: Oliver Hartkopp <socketcan@hartkopp.net>
-In-Reply-To: <20250505221419.2672473-624-sashal@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6nn2l75kkbkdu3wf3kta4mezno6cy4e3zzwzdc4cpmujjhr6lp@ct7w72zwbrhu>
 
-Hi Sasha,
+On Tue, May 06, 2025 at 12:13:00AM +0200, Andi Shyti wrote:
+> On Mon, May 05, 2025 at 12:00:07PM +0200, Johan Hovold wrote:
+> > On Tue, Apr 29, 2025 at 03:10:13PM +0200, Andi Shyti wrote:
 
-this fix is needed for this commit
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/net/can?id=6bffe88452dbe284747442f10a7ac8249d6495d7
-
-6bffe88452db ("can: add protocol counter for AF_CAN sockets")
-
-which has been introduced in 6.15
-
-It must not be applied to 6.14-stable.
-
-Best regards,
-Oliver
-
-
-On 06.05.25 00:14, Sasha Levin wrote:
-> From: Davide Caratti <dcaratti@redhat.com>
+> > > I'm sorry, but as I understand it, the Fixes tag should be used
+> > > only when an actual bug is being fixed. I've seen stable
+> > > maintainers getting annoyed when it's used for non-bug issues.
+> > 
+> > You seem to confuse the Fixes tag with a CC stable tag. A Fixes tag is
+> > used to indicate which commit introduced an issue, while the CC stable
+> > tag is used to flag a commit for backporting (and the fact that autosel
+> > tends to pick up patches with just a Fixes doesn't change this).
 > 
-> [ Upstream commit 8b1879491472c145c58c3cbbaf0e05ea93ee5ddf ]
-> 
-> Like other protocols on top of AF_CAN family, also j1939_proto.inuse_idx
-> needs to be decremented on socket dismantle.
-> 
-> Fixes: 6bffe88452db ("can: add protocol counter for AF_CAN sockets")
-> Reported-by: Oliver Hartkopp <socketcan@hartkopp.net>
-> Closes: https://lore.kernel.org/linux-can/7e35b13f-bbc4-491e-9081-fb939e1b8df0@hartkopp.net/
-> Signed-off-by: Davide Caratti <dcaratti@redhat.com>
-> Acked-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> Link: https://patch.msgid.link/09ce71f281b9e27d1e3d1104430bf3fceb8c7321.1742292636.git.dcaratti@redhat.com
-> Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->   net/can/j1939/socket.c | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/net/can/j1939/socket.c b/net/can/j1939/socket.c
-> index 17226b2341d03..6fefe7a687611 100644
-> --- a/net/can/j1939/socket.c
-> +++ b/net/can/j1939/socket.c
-> @@ -655,6 +655,7 @@ static int j1939_sk_release(struct socket *sock)
->   	sock->sk = NULL;
->   
->   	release_sock(sk);
-> +	sock_prot_inuse_add(sock_net(sk), sk->sk_prot, -1);
->   	sock_put(sk);
->   
->   	return 0;
+> (the Cc tag for fixes is not mandatory, it's more a courtesy)
 
+You should still add it as described by the stable tree docs:
+
+	To have a patch you submit for mainline inclusion later
+	automatically picked up for stable trees, add this tag in the
+	sign-off area::
+
+	Cc: stable@vger.kernel.org
+
+The stable team also scans through patches with just a Fixes tag because
+some people forget to add the tag, don't know that they should, or don't
+care about stable, but you should not rely on that (as I alluded to
+above).
+
+> > It's perfectly fine to fix an issue and use a Fixes tag when doing so
+> > even if the fix itself does not qualify for backporting (for whatever
+> > reason).
+> 
+> Oh yes, I forgot that patch was part of the 6.15 merge window. I
+> will then move it to the -fixes and send it for this week's merge
+> request.
+
+Perfect, thanks.
+
+Johan
