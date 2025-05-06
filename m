@@ -1,123 +1,187 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82EBE27C157;
-	Tue,  6 May 2025 12:06:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86D1827EC6A
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 12:07:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746533190; cv=none; b=eKE64nNkRGtCfALgAhu0isYdjbPgLM4KMU9XLX0DoDocxuc2nW8PTpu6tNFxhVPVAyTmpwXVt6JOGT697fq/arCYTvR2Xugpd2yl1eGjojeDddm/0+QBrAendhN4q+j1Z4JovZWarfPtnk34uumWp2aPBHtp8iH1kmXG2kMiR24=
+	t=1746533255; cv=none; b=qJMDRAwwWNPtGnNx29xuWJqYXKc1wDTzyTBzSkPkenuWCbDKyWMJNN89sce6rwi65zG5zrSXyYag/0USEVXTFQfMcL48J0dkLOlo4GfeZ2t93Q7V8nfBW855VB3jIuRF5gaSb1cID2aO1G+yxDhV5CHnA9zJeEGe14FjUe538+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746533190; c=relaxed/simple;
-	bh=yrApMg2Q1BCISMtqxwlIotBwEopk5QQD4jpgaUv6yKY=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=cYDAe+2U9MTgfVn888aKjDyZNYvgEZQKegUMVLIFIWa6YXKfsr4fZ3aL2r16DsrKPGMe8ab1vtOrx5EwowQr3aOn/8tkYk6uYi2ZSQN3cc47SJaibEpVxzXOqVWJjeBGodwVrJ9qRbKL+X0vTn5WIZJOYygTbENny9DqZ6+g/is=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eIzU+cPg; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1746533255; c=relaxed/simple;
+	bh=SeRmzyMcT6JX37/ImDnhvHk8HNSqfqzsFYexZDstrTc=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=fD7ZTW/89FRaCg68peISvmO2c57dsQINKXc/mSMhL/PXU5LFq1PEbaNIz8++7vBFnTdQp5T3f6a747sISy+Qm0YyrUzn7XywfbW5KOSZ24umpFKcLR8L1SLVeyO0A3B5BSTWp2YgB6rbNMHKwvkxf0W0VjzGjffwlq9DvhHpq5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=cusdtxba; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eIzU+cPg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746533188; x=1778069188;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=yrApMg2Q1BCISMtqxwlIotBwEopk5QQD4jpgaUv6yKY=;
-  b=eIzU+cPgIIi5ZKJHNxpHx+KWa4Pvf1eGGQAwCQpyvBi/RQ/2jFgIHEzY
-   uRx14GcLhtL1MvECS5HIAGQItiYML6pr+TVgznGSJqhH/Bwmdb6eqK3vh
-   CUxxnw8lnnW/gUjvvg+H7S9CBhl4ryYoxqK2lr2ka9ugiEvvP8rmptMR7
-   tK2H2HPTwBS/fcdYFyucaP3FhxYLR42f+KVO8kJE4lCZ6myzgvpTsATZa
-   Fx5Eb2tglGj8I3p/zvC1o/NLihPmDnSBvHQqLih/vfUIL8P8fmqYdUW1p
-   6NJj62uxqJeyCZNsl7SWPU9wzCXfQOFodCUOVdtqsjDLhfXqlkBM+GBq2
-   g==;
-X-CSE-ConnectionGUID: 6Rm264A3R9qlIt5upV+h3g==
-X-CSE-MsgGUID: ahV1/4CLRaqPuSk2Bj7yGA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="52007532"
-X-IronPort-AV: E=Sophos;i="6.15,266,1739865600"; 
-   d="scan'208";a="52007532"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 05:06:27 -0700
-X-CSE-ConnectionGUID: zhgYECvEQTK5zEuXRNcezw==
-X-CSE-MsgGUID: 1tjypfTPTVe3wRdYITSyIQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,266,1739865600"; 
-   d="scan'208";a="136594290"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.207])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 05:06:21 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 6 May 2025 15:06:18 +0300 (EEST)
-To: Yunhui Cui <cuiyunhui@bytedance.com>
-cc: arnd@arndb.de, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-    benjamin.larsson@genexis.eu, 
-    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-    heikki.krogerus@linux.intel.com, Jiri Slaby <jirislaby@kernel.org>, 
-    jkeeping@inmusicbrands.com, john.ogness@linutronix.de, 
-    LKML <linux-kernel@vger.kernel.org>, 
-    linux-serial <linux-serial@vger.kernel.org>, markus.mayer@linaro.org, 
-    matt.porter@linaro.org, namcao@linutronix.de, paulmck@kernel.org, 
-    pmladek@suse.com, schnelle@linux.ibm.com, sunilvl@ventanamicro.com, 
-    tim.kryger@linaro.org
-Subject: Re: [PATCH v5 3/4] serial: 8250_dw: warning on entering dw8250_force_idle
- unlocked
-In-Reply-To: <20250506112321.61710-3-cuiyunhui@bytedance.com>
-Message-ID: <71a295db-72ea-bf2a-338f-416b178f5305@linux.intel.com>
-References: <20250506112321.61710-1-cuiyunhui@bytedance.com> <20250506112321.61710-3-cuiyunhui@bytedance.com>
+	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="cusdtxba"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5efe8d9ebdfso2296018a12.3
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 05:07:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fairphone.com; s=fair; t=1746533252; x=1747138052; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=M7v7vpdvOuhIP8be0gZZCUIgIPmqxbVGMYXTijnoryU=;
+        b=cusdtxbaM55uSkeGT6mg39KJxRPo+aL8KfVGdhhHfRpJhL8wfwON1RPyv7yi1LPyqL
+         nmnLp/IHdUnnG7l6n3DW1CyN2n649CiPCxGhxTcWCEgklVcvTor0muHnbd+a9KcKy6Gd
+         P+JPojGHdB982humWyFyvtzX4UFEWlIwKOVmRam9QdaZKCtDyuQLRCaRmkaun4fsyK5J
+         NuVVHnFAEjQuZA7y+qnmJRIkB8tm11aflTU7BRrkOVRLrveyqOYmonzoNKUQtLYkQuLN
+         r1b8IwWSSJv1jvwHfwPHvH98CqwlAxcQKYsO6SxzZCkYpZS9e6w4zqvHdWUYLgPZG14s
+         h0rA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746533252; x=1747138052;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=M7v7vpdvOuhIP8be0gZZCUIgIPmqxbVGMYXTijnoryU=;
+        b=UIUg3IIhtXiMnn2auxVnfN9a1TVeIV5VT6VMNMqhUsYs7YKsrj0qhfFOUyriQrgqkl
+         JJtXTp/gsIFh72UCjwvTZIqUmLx83CwnkHBxk1wEPLcNiKPUlNJYkqnFxPOUFIGyghAI
+         chGRpJFZBe73VP5kBBstMXJGtNe6qjHK9KJBqUN5HZ5sRDhC86PQBwQ1BclXvEYhdbKU
+         Kpgupb5uQfUlkCAZdrqzxjgk58kyWoVt1SJ6kSHuney9skX8KhO0kWxBvMmKuN+aGqp+
+         jVCgaaevv0tFWOtO4DbOMJbjotj6k7smFZ2f59bJUCfRMeZ/aNDM38QabrTom5mDp0AP
+         r07w==
+X-Forwarded-Encrypted: i=1; AJvYcCVk/a+JxHdMJ74hsBQqp55T++G6XlSVP95SLh9OM5um2QyY6/QRflADPzFioTRb3mn8bI7PMgtd1weZ2Ck=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzg7BdkZSRXDHKWfsCs3iWQPZlE5uXRARPbrDS0mfBWjffRxEwY
+	JvH1vxc/WuzLnev1Txj/ra27ERgm2SFHHexE2Sz9+F4zJPJMo5Y10htb3+HDNr0=
+X-Gm-Gg: ASbGncs5mhWryIOWU5tBo+Nb1+pvefn1Z8YsjDVZXIAoeuDedqo/3pgbufc91mg1m2H
+	FfZwkz0hZqqQWBDOgRU0/YFJp5JhDijqwLWHXPVgbWBvQxBTmG52N+VDVH96aG6Xnj4Q+gPhW+u
+	33hMIG4iNZILfZFGJWsFI5b3639wAKGYjycBNb3rojJwVeDWbdem1pBa0DdpFlHIsY/o6vVS4L0
+	+w0BZVXbqg6cMhIds9GRxMxfzGA/rclecui8ZuEtXda/R6YBw3jqnqg0tF5bCJkLoCxYUV//0W8
+	1dfs7fJwIzIYdTqupA1L0SUFHCFXtf1XnFaLH1Wcy9eyBu0LP095clsylmB9VmEUVG7GAM3vDfN
+	xP5tWoqqINhjtqbfpRgVWw/PJY6AvdrjAD2cHAhoiCz0snmXXjA==
+X-Google-Smtp-Source: AGHT+IFBdvqmi68ta2wRWiT+FRzasDJ5pBCULv7R/+BuR+Ax+JNv4/CaLyds47/kxsM107rKwn7PFw==
+X-Received: by 2002:a17:907:868e:b0:ac2:49b1:166f with SMTP id a640c23a62f3a-ad1a4b36f20mr1047373266b.52.1746533251536;
+        Tue, 06 May 2025 05:07:31 -0700 (PDT)
+Received: from localhost (2001-1c00-3b8a-ea00-c4de-d39d-05f4-c77a.cable.dynamic.v6.ziggo.nl. [2001:1c00:3b8a:ea00:c4de:d39d:5f4:c77a])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1891a5e1dsm704170466b.55.2025.05.06.05.07.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 06 May 2025 05:07:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 06 May 2025 14:07:30 +0200
+Message-Id: <D9P2D6PG7420.N4T2UBGAOFMR@fairphone.com>
+Cc: "Banajit Goswami" <bgoswami@quicinc.com>, "Liam Girdwood"
+ <lgirdwood@gmail.com>, "Mark Brown" <broonie@kernel.org>, "Rob Herring"
+ <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor
+ Dooley" <conor+dt@kernel.org>, "Jaroslav Kysela" <perex@perex.cz>, "Takashi
+ Iwai" <tiwai@suse.com>, "Bjorn Andersson" <andersson@kernel.org>, "Konrad
+ Dybcio" <konradybcio@kernel.org>, <phone-devel@vger.kernel.org>,
+ <alsa-devel@alsa-project.org>, <linux-arm-msm@vger.kernel.org>,
+ <linux-sound@vger.kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, "Dmitry Baryshkov"
+ <dmitry.baryshkov@oss.qualcomm.com>, "Neil Armstrong"
+ <neil.armstrong@linaro.org>
+Subject: Re: [PATCH v3 2/5] ASoC: qcom: sm8250: set card driver name from
+ match data
+From: "Luca Weiss" <luca.weiss@fairphone.com>
+To: "Srinivas Kandagatla" <srinivas.kandagatla@oss.qualcomm.com>, "Luca
+ Weiss" <luca@lucaweiss.eu>, <~postmarketos/upstreaming@lists.sr.ht>,
+ "Srinivas Kandagatla" <srini@kernel.org>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250425-fp5-dp-sound-v3-0-7cb45180091b@fairphone.com>
+ <20250425-fp5-dp-sound-v3-2-7cb45180091b@fairphone.com>
+ <aBNdCRk_fP2q1vxQ@srini-hackbase>
+ <91110CA9-6E83-4811-AA04-C0312B99B95E@lucaweiss.eu>
+ <0d094cec-0a2e-4e21-845f-977f3a77993d@oss.qualcomm.com>
+In-Reply-To: <0d094cec-0a2e-4e21-845f-977f3a77993d@oss.qualcomm.com>
 
-On Tue, 6 May 2025, Yunhui Cui wrote:
+Hi Srini,
 
-> Read UART_RX and check UART_LSR_DR in critical section. Unsure if
+On Fri May 2, 2025 at 1:06 PM CEST, Srinivas Kandagatla wrote:
+> On 5/1/25 15:13, Luca Weiss wrote:
+>> Hi Srini,
+>>=20
+>> Srinivas Kandagatla <srini@kernel.org> schreef op 1 mei 2025 13:37:45 CE=
+ST:
+>>> On Fri, Apr 25, 2025 at 10:07:26AM +0200, Luca Weiss wrote:
+>>>> Sound machine drivers for Qualcomm SoCs can be reused across multiple
+>>>> SoCs. But user space ALSA UCM files depend on the card driver name whi=
+ch
+>>>> should be set per board/SoC.
+>>>>
+>>>> Allow such customization by using driver match data as sound card driv=
+er
+>>>> name.
+>>>>
+>>>> Also while we're already touching these lines, sort the compatibles
+>>>> alphabetically.
+>>>>
+>>>> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+>>>> Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+>>>> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+>>>> ---
+>>>>  sound/soc/qcom/sm8250.c | 9 ++++-----
+>>>>  1 file changed, 4 insertions(+), 5 deletions(-)
+>>>>
+>>>> diff --git a/sound/soc/qcom/sm8250.c b/sound/soc/qcom/sm8250.c
+>>>> index b70b2a5031dfbf69024666f8a1049c263efcde0a..e920b413b762c803cfcc40=
+49f35deba828275478 100644
+>>>> --- a/sound/soc/qcom/sm8250.c
+>>>> +++ b/sound/soc/qcom/sm8250.c
+>>>> @@ -16,7 +16,6 @@
+>>>>  #include "usb_offload_utils.h"
+>>>>  #include "sdw.h"
+>>>> =20
+>>>> -#define DRIVER_NAME		"sm8250"
+>>>>  #define MI2S_BCLK_RATE		1536000
+>>>> =20
+>>>>  struct sm8250_snd_data {
+>>>> @@ -200,15 +199,15 @@ static int sm8250_platform_probe(struct platform=
+_device *pdev)
+>>>>  	if (ret)
+>>>>  		return ret;
+>>>> =20
+>>>> -	card->driver_name =3D DRIVER_NAME;
+>>>> +	card->driver_name =3D of_device_get_match_data(dev);
+>>>>  	sm8250_add_be_ops(card);
+>>>>  	return devm_snd_soc_register_card(dev, card);
+>>>>  }
+>>>> =20
+>>>>  static const struct of_device_id snd_sm8250_dt_match[] =3D {
+>>>> -	{.compatible =3D "qcom,sm8250-sndcard"},
+>>>> -	{.compatible =3D "qcom,qrb4210-rb2-sndcard"},
+>>>> -	{.compatible =3D "qcom,qrb5165-rb5-sndcard"},
+>>>> +	{ .compatible =3D "qcom,qrb4210-rb2-sndcard", .data =3D "sm8250" },
+>>>
+>>> sm4250 for rb2?
+>>=20
+>> Since this name is visible to user space and used for picking the UCM co=
+nfig, I don't think it's a good idea to change it.
+>>=20
+> It is not correct to pretend that rb2 is sm8250 for ucm cases, I agree pr=
+evious code was
+> already doing this, Good thing is that we do not have a ucm written yet f=
+or RB2.
+>
+> Lets fix this as you are already doing this for other compatibles.
 
-Unsure if -> Ensure the
+Okay, will change this in v4.
 
-> caller of dw8250_force_idle() holds port->lock. Don't acquire it
-> directly to avoid deadlock. Use lockdep_assert_held_once for warning.
+Regards
+Luca
 
-Add (), although the last two sentences don't seem that useful, IMO.
-
-> 
-> Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
-> ---
->  drivers/tty/serial/8250/8250_dw.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/drivers/tty/serial/8250/8250_dw.c b/drivers/tty/serial/8250/8250_dw.c
-> index af24ec25d976..f41c4a9ed58b 100644
-> --- a/drivers/tty/serial/8250/8250_dw.c
-> +++ b/drivers/tty/serial/8250/8250_dw.c
-> @@ -13,6 +13,7 @@
->  #include <linux/delay.h>
->  #include <linux/device.h>
->  #include <linux/io.h>
-> +#include <linux/lockdep.h>
->  #include <linux/mod_devicetable.h>
->  #include <linux/module.h>
->  #include <linux/notifier.h>
-> @@ -112,6 +113,13 @@ static void dw8250_force_idle(struct uart_port *p)
->  	struct uart_8250_port *up = up_to_u8250p(p);
->  	unsigned int lsr;
->  
-> +	/*
-> +	 * The serial_in(p, UART_RX) should be under port->lock, but we can't add
-> +	 * it to avoid AA deadlock as we're unsure if serial_out*(...UART_LCR)
-> +	 * is under port->lock.
-
-I'm left to wonder who/what "we" is here? Could you change it something 
-more precise.
-
-> +	 */
-> +	lockdep_assert_held_once(&p->lock);
-> +
->  	serial8250_clear_and_reinit_fifos(up);
->  
->  	/*
-> 
-
--- 
- i.
+>
+> --srini
+>
+>> Regards
+>> Luca
+>>=20
+>>>
+>>>> +	{ .compatible =3D "qcom,qrb5165-rb5-sndcard", .data =3D "sm8250" },
+>>>> +	{ .compatible =3D "qcom,sm8250-sndcard", .data =3D "sm8250" },
+>>>>  	{}
+>>>>  };
+>>>> =20
+>>>>
+>>>> --=20
+>>>> 2.49.0
+>>>>
 
