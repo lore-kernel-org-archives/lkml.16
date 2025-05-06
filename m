@@ -1,102 +1,172 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB98E25CC41;
-	Tue,  6 May 2025 16:30:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BE4D28368F
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 16:31:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746549040; cv=none; b=YSiyU9G1TeHxwbQRPcMF7/ELzBFqo+f0hgGzqf/EnRcVhn+e9VeGn/hY/7mYTiRYvx/Va7lsz4k/Q3ZfKNz5AHb1EbeB9eknNp4oCTCcYYjH3fkFI/6hgOc/P3A6MiCv47FIYKU30hz/2Kk2quu1ZmuCx7gO7m7j5Zd5jEH4Wv8=
+	t=1746549098; cv=none; b=B+t9iZOB1Wh2bhGqlaWTBEDt6Uh7NfIVkp4XurK4PQ5/0FktjMQuFpe6ZBSo52jaNZyF+2Zin1k1+s2eMrgOqrbeUreVkacQX7y5Op/z0XOBkml0oY4044BedHEdf8SvvQnIcVdeoXhG21NyiTm8oHg7QVPiyRHXMGEhsuuvb78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746549040; c=relaxed/simple;
-	bh=sy5+FLBt8V254FwUykIHfEDCfE4L9U2Cpnole7yVjV8=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=NFTrV2ct9HZFjrA9ZJ2NupWi0f44t+QLN+tdLoaeF6+YQHUo13X2TZd++NPXlJQ31qS6QKLTM5yLXSjGB5Ki2iPf8OlOq41iOSPaW+HfttA+w+eERTY1oAOc13l45LgknDV6CMUkWRv9jgfEx37IFBux8ux2VMoJiZwabZBjP9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=MIzuHMAp; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1746549098; c=relaxed/simple;
+	bh=OzRPHBpO8XEBmvQK1Rg73sH4mr4o/RDx/lXBF6O6k+c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aKV/N8/Vs9NcnC/6dSzRji8kKNjBlONDjdsgUXk3J2DcfP4xRp0zO8WDvElu7W/P5EoRNCHKHlXdgSqLSLMxUkpZxRFKIbiNFZxa4+7Vn7LTGoXRA3o1ZhGSCVpNmURSLma7LCemRguMrAg921Db/O2A+jLIfnTe5VxyJIst/f0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pav0vaxb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="MIzuHMAp"
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 546GThAV971224
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Tue, 6 May 2025 09:29:43 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 546GThAV971224
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1746548984;
-	bh=v6XPEFSGKokl1nFOIN3pFv6ErpYGqIeLKYtQQ53aKkA=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=MIzuHMApNdjpQ5ZILL8ZOPep8vI7WxRjiUiWPmXLr7AzDzOJeAGF2Mg3Bs+LAbbwx
-	 607Qn0HNOUl8WsbZ4SrOxTt3IdOUq3CoaVSLbP4fgukVo/lHgJX/w60kJhrOIv+Eo3
-	 EtnpOGnOuJCfsrahyDVkm/2FpCQnFbwHzfvd5yf9xafnZ8uVrGGS9Q/Iu79cmfdGtZ
-	 Vz83BgaoYBBM4TWQhw4lZtxPxUN5TrlgmjN4OPVBEOoz3Qn0dlROG0rcLV017k47bh
-	 Gp+ab6aHjmc5mWQcCMrcJK6tZAPb5n/0ZJvsLL+Sxd7HRUAbVbByKg3hbRG9U84j1x
-	 uAAqsuKmpoD0A==
-Date: Tue, 06 May 2025 09:29:40 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Ingo Molnar <mingo@kernel.org>, Sean Christopherson <seanjc@google.com>
-CC: Juergen Gross <jgross@suse.com>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, kvm@vger.kernel.org, xin@zytor.com,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Subject: Re: [PATCH 2/6] x86/kvm: Rename the KVM private read_msr() function
-User-Agent: K-9 Mail for Android
-In-Reply-To: <aBo1w0tRoM2JUtW_@gmail.com>
-References: <20250506092015.1849-1-jgross@suse.com> <20250506092015.1849-3-jgross@suse.com> <aBoUdApwSgnr3r9V@google.com> <aBo1w0tRoM2JUtW_@gmail.com>
-Message-ID: <55944DEC-0129-4052-BBA4-7298B16326BD@zytor.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pav0vaxb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 309F8C4CEEF;
+	Tue,  6 May 2025 16:31:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746549098;
+	bh=OzRPHBpO8XEBmvQK1Rg73sH4mr4o/RDx/lXBF6O6k+c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pav0vaxbMMllmE6t1mjqj0ph/j4pP8Ry2K9QzzKqLfMl8tXN6UHzL+xUuOg/UaEow
+	 fAtrroQjdkUi7wX/bwImJ1eChu8Bz+6lBMp1jPIzG4FzKpwQkxCm+QleR8yuiTbulD
+	 B21uIpUix86mg6jUtwebxT5khP/rjKWeGnIefLmxEtkn1B1I5/+LXv7f0sC0KXZtZm
+	 mB/g21theVgXjROmNJ1rvg+M9INYUn6y3aAG4HIgMuws65awp7du0/apxncCEKJZ3V
+	 gcg88gV8F8goRsSXjEiGRwKgweMcBp9xm3U3qlSk0GL1p9iHNo9ZRYO9Gf/Cb4v09i
+	 6eQxRKljS7Vbw==
+Date: Tue, 6 May 2025 18:31:32 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Rik van Riel <riel@surriel.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
+	kernel-team@meta.com, dave.hansen@linux.intel.com, luto@kernel.org,
+	peterz@infradead.org, tglx@linutronix.de, mingo@redhat.com,
+	bp@alien8.de, hpa@zytor.com, Yu-cheng Yu <yu-cheng.yu@intel.com>
+Subject: Re: [RFC PATCH 7/9] x86/mm: Introduce Remote Action Request
+Message-ID: <aBo5ZDvD-ME4dUc-@gmail.com>
+References: <20250506003811.92405-1-riel@surriel.com>
+ <20250506003811.92405-8-riel@surriel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250506003811.92405-8-riel@surriel.com>
 
-On May 6, 2025 9:16:03 AM PDT, Ingo Molnar <mingo@kernel=2Eorg> wrote:
->
->* Sean Christopherson <seanjc@google=2Ecom> wrote:
->
->> On Tue, May 06, 2025, Juergen Gross wrote:
->> > Avoid a name clash with a new general MSR access helper after a futur=
-e
->> > MSR infrastructure rework by renaming the KVM specific read_msr() to
->> > kvm_read_msr()=2E
->> >=20
->> > Signed-off-by: Juergen Gross <jgross@suse=2Ecom>
->> > ---
->> >  arch/x86/include/asm/kvm_host=2Eh | 2 +-
->> >  arch/x86/kvm/vmx/vmx=2Ec          | 4 ++--
->> >  2 files changed, 3 insertions(+), 3 deletions(-)
->> >=20
->> > diff --git a/arch/x86/include/asm/kvm_host=2Eh b/arch/x86/include/asm=
-/kvm_host=2Eh
->> > index 9c971f846108=2E=2E308f7020dc9d 100644
->> > --- a/arch/x86/include/asm/kvm_host=2Eh
->> > +++ b/arch/x86/include/asm/kvm_host=2Eh
->> > @@ -2275,7 +2275,7 @@ static inline void kvm_load_ldt(u16 sel)
->> >  }
->> > =20
->> >  #ifdef CONFIG_X86_64
->> > -static inline unsigned long read_msr(unsigned long msr)
->>=20
->> Ewwww=2E  Eww, eww, eww=2E  I forgot this thing existed=2E
->>=20
->> Please just delete this and use rdmsrq() directly (or is it still rdmsr=
-l()? at
->> this point?)=2E
->
->Both will work, so code-in-transition isn't build-broken unnecessarily:
->
->  arch/x86/include/asm/msr=2Eh:#define rdmsrl(msr, val) rdmsrq(msr, val)
->
->:-)
->
->Thanks,
->
->	Ingo
 
-But for forward-looking code, rdmsrq()=2E
+* Rik van Riel <riel@surriel.com> wrote:
+
+> +++ b/arch/x86/include/asm/rar.h
+> @@ -0,0 +1,69 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _ASM_X86_RAR_H
+> +#define _ASM_X86_RAR_H
+> +
+> +/*
+> + * RAR payload types
+> + */
+> +#define RAR_TYPE_INVPG		0
+> +#define RAR_TYPE_INVPG_NO_CR3	1
+> +#define RAR_TYPE_INVPCID	2
+> +#define RAR_TYPE_INVEPT		3
+> +#define RAR_TYPE_INVVPID	4
+> +#define RAR_TYPE_WRMSR		5
+> +
+> +/*
+> + * Subtypes for RAR_TYPE_INVLPG
+> + */
+> +#define RAR_INVPG_ADDR			0 /* address specific */
+> +#define RAR_INVPG_ALL			2 /* all, include global */
+> +#define RAR_INVPG_ALL_NO_GLOBAL		3 /* all, exclude global */
+> +
+> +/*
+> + * Subtypes for RAR_TYPE_INVPCID
+> + */
+> +#define RAR_INVPCID_ADDR		0 /* address specific */
+> +#define RAR_INVPCID_PCID		1 /* all of PCID */
+> +#define RAR_INVPCID_ALL			2 /* all, include global */
+> +#define RAR_INVPCID_ALL_NO_GLOBAL	3 /* all, exclude global */
+> +
+> +/*
+> + * Page size for RAR_TYPE_INVLPG
+> + */
+> +#define RAR_INVLPG_PAGE_SIZE_4K		0
+> +#define RAR_INVLPG_PAGE_SIZE_2M		1
+> +#define RAR_INVLPG_PAGE_SIZE_1G		2
+> +
+> +/*
+> + * Max number of pages per payload
+> + */
+> +#define RAR_INVLPG_MAX_PAGES 63
+> +
+> +typedef struct {
+> +	uint64_t for_sw : 8;
+> +	uint64_t type : 8;
+> +	uint64_t must_be_zero_1 : 16;
+> +	uint64_t subtype : 3;
+> +	uint64_t page_size: 2;
+> +	uint64_t num_pages : 6;
+> +	uint64_t must_be_zero_2 : 21;
+> +
+> +	uint64_t must_be_zero_3;
+> +
+> +	/*
+> +	 * Starting address
+> +	 */
+> +	uint64_t initiator_cr3;
+> +	uint64_t linear_address;
+> +
+> +	/*
+> +	 * Padding
+> +	 */
+> +	uint64_t padding[4];
+> +} rar_payload_t;
+
+- Please don't use _t typedefs for complex types. 'struct rar_payload' 
+  should be good enough.
+
+- Please use u64/u32 for HW ABI definitions.
+
+- Please align bitfield definitions vertically, for better readability:
+
+	u64 for_sw		:  8;
+	u64 type		:  8;
+	u64 must_be_zero_1	: 16;
+	u64 subtype		:  3;
+	u64 page_size		:  2;
+	u64 num_pages		:  6;
+	u64 must_be_zero_2	: 21;
+
+> +++ b/arch/x86/mm/rar.c
+> @@ -0,0 +1,226 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * RAR Tlb shootdown
+
+s/Tlb
+ /TLB
+
+> +#include <linux/kgdb.h>
+
+Is this really needed? There's nothing KGDB specific in here AFAICS.
+
+> +static DEFINE_PER_CPU_ALIGNED(u64[(RAR_MAX_PAYLOADS + 8) / 8], rar_action);
+
+> +static void set_action_entry(unsigned long idx, int target_cpu)
+> +{
+> +	u8 *bitmap = (u8 *)per_cpu(rar_action, target_cpu);
+
+> +	u8 *bitmap = (u8 *)per_cpu(rar_action, target_cpu);
+
+> +	bitmap = (u8 *)per_cpu(rar_action, this_cpu);
+
+
+So AFAICS all these ugly, forced type casts tp (u8 *) are needed only 
+because rar_action has the wrong type: if it were an u8[], then these 
+lines could be:
+
+	static DEFINE_PER_CPU_ALIGNED(u8[RAR_MAX_PAYLOADS], rar_action);
+
+	...
+
+	u8 *bitmap = per_cpu(rar_action, target_cpu);
+
+right?
+
+Thanks,
+
+	Ingo
