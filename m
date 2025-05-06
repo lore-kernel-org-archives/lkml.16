@@ -1,104 +1,166 @@
-Received: from mail-4322.protonmail.ch (mail-4322.protonmail.ch [185.70.43.22])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E694277817
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 11:42:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 192AC27A912
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 11:42:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746531743; cv=none; b=m4ykGS3XBGsQ3c4cNHiWKZKh9+kDxOYeOdxH69Zb8k4mTiEBXVOTCb4uY0LvSVdyIhrR7S2GCfi/Ng6fKmv0MEo1G+wjMWF2AqOQlu0qvqcppfUxhK51ojfuLIT31s2mm5FasmLVTr0hZsAvOy75wtWJ0p16bE+3+aohcZQPjWI=
+	t=1746531756; cv=none; b=QRVuYAxfi6ENHpLmAAxumNtAA/7khIKrjSE1WgGfA248qvq8HxYSRiqD8wB4qkEmHxsO77Gy68UsekAohMfBCdUqFbp7xFAre/uwdbvDSWx/c3l2GoWzyhPhkUwbHCqXugoT3vhdYSYAwrjbTZd68PDyfVIF3QkkWiKP/I56eoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746531743; c=relaxed/simple;
-	bh=Nh8Gg52gry0VUBrDzDbsggmHAdjxMbxxP86cU1KTFHA=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EZNeQaM2gsBfLVTrLY0sJ6ectSgrVDGtF5SNzqa5AIbK+Fcvpgz7ekQyrNnTcVPYPYHNKft2V0lIaBjG40t9WDHIJlyA0vAhK360vGAsvvusjzoHRZlRzssUN/dUC5bB4Af8pP/ggW6vNUJgWxyG90OpSFyzOY1M3JWMsmFKqT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=FiGoKJNS; arc=none smtp.client-ip=185.70.43.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
+	s=arc-20240116; t=1746531756; c=relaxed/simple;
+	bh=53o0sYJ2SFYzmVWDlseNZHgWWvafm3wu94/O9xTHfuU=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=gqBkMn+QvYLCV6neCGaglrHrcW9G/YaTdGtoo3OnVGWqb+xBJP1Y1evVb7mCogI6oCQHLwoqeu4dt3MFbCPpcXuY2VBiGKIQUvamx7Mh3WXBj7+Iy7GLVUXwJXyyYQ4SqzSWYOE2RHlJxSviGC5V5HEqhTZKIePx9MKCAyTS3jE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EgrlL2Yx; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="FiGoKJNS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
-	s=protonmail3; t=1746531733; x=1746790933;
-	bh=WesEUseaVDIR9tdbVnoG9PdxLaoq0ZROE0/xylVBFZk=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=FiGoKJNSptC8gyYMaBT9z2bnc4yH5Glqln6nijTDwgHs7D07B2fUrg1az0T92hobp
-	 LXcVgQ3DjJdqdLH06YpC5ZCvzcbKSBcm+y4swBYB8fORrNK8kJtpPMZmqZlH695SpN
-	 wET++AzVbZj8zDB4EUhHqmgZvzbcpedreN0Tz212GkixAYCqpThFpJVgb532aSZ43C
-	 baMhQToogU7YwrIh65AkIn5yNY1G74gHtMRBlRjp/IespB06eIGNh6SfJ5S0EDsRFo
-	 MjhTaIjV8NJjbW5eAHhCl6up20qsBuqWnJ7XmW0OPWuLvR2V4GKexnf8xbldByAdl6
-	 4YrajD6donRfQ==
-Date: Tue, 06 May 2025 11:42:08 +0000
-To: Alice Ryhl <aliceryhl@google.com>
-From: Oliver Mangold <oliver.mangold@pm.me>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, Asahi Lina <lina@asahilina.net>, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v10 5/5] rust: Add OwnableRefCounted and SimpleOwnableRefCounted
-Message-ID: <aBn1jJBRToyElrF3@mango>
-In-Reply-To: <aBSv0w5x8qhBfOM8@google.com>
-References: <20250502-unique-ref-v10-0-25de64c0307f@pm.me> <20250502-unique-ref-v10-5-25de64c0307f@pm.me> <aBSv0w5x8qhBfOM8@google.com>
-Feedback-ID: 31808448:user:proton
-X-Pm-Message-ID: 1f9f6158af9c54de0ef378363581205d08980101
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EgrlL2Yx"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43cfba466b2so46737515e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 04:42:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746531752; x=1747136552; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Nn7zwwW1+OwGIV0wfJqgAgTa7HI6crOwjPKwSXJSzwc=;
+        b=EgrlL2YxItiz4LuspyM9Fbyo1Boyf6mWOY8Nxts2us3tIcHRS/lfM5RHIP+lxtEPI5
+         44A6ofRCtDJJNvyl8Bw1pkiGbQDtCnPzk0paGm8TQf0UiSowIx0vNYpoto/dIP/NMx4W
+         tM6iib2hJXr6S+Sk9bSxfeDQWBQVAJnnpsl4A/Yc5kI9Wu1Yh7xqL6DaOgzDN58XNPrK
+         iyfP7fTr1FRbDBCnm5adl0IQ3m55bbzeD8oVxDxNOmPmElwd0SchmTLRQH4F2lRgnozb
+         O1iJUDJr2OTOfAPC9phxCbXTWnu1tMnYQO03BppXKYJBX1jxw/E0LAWvbT1A0YW2Lr/2
+         c1yA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746531752; x=1747136552;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Nn7zwwW1+OwGIV0wfJqgAgTa7HI6crOwjPKwSXJSzwc=;
+        b=hWw+0xRqsJhcTRBIYtERs+1lRujKBNHrlGGHZwK8lbtFlRe758tTYH9w5U73CE6yDU
+         N+mmRdVCHIe4eGi1XekZQ1HEKj/Dw1/lIuV28cNXM3ht7ZQdngvVYwOTBgb9pSDsSbD+
+         LH7dBzHwFEKvqTm0cG67KanH1avdxuKr2vZs6UVy26KBORhvwTxBY9IdyY8LXu1uEOJX
+         4MlAJr21qsJPQurXgHuVQXjWchhK9DwEq/SKvDYrTpbiT7ILRGCgnI8K4ojBtgOCLqX2
+         Lli+dI/JkcYVYOBBiYRg6fKNsARcp+TQVpqvqRxjX5m9JuSFHfwyfz8VWS4UD2HyeBKu
+         +BJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVvYLeI7E7WysU0aMgrQ+0tWzdAVfDzjMYKvF+hZXXhb6smPB+m4V2HQKvDqTSQhDZMnhtceR+MOeRz5V4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+ByQlTuNu+lqAaEJz2OvW96mYfH8EYedp9Eg7BPobxOrxpklR
+	XFDb9AonRWVUqPJ6vh52hkhwWjSGxKxxXv5AY/tdqDdkKZ6T95kwRUa8zRqukNo=
+X-Gm-Gg: ASbGncviXAJ7XjZ6l59LExG/NuVqX3N+T+bd2kt1Fwx5eJxtkpFmE9QNREPu9cTw88d
+	wQUrSqsoyBQvJhL08sMvs13aIWig0b1oIYbyKfrc5KXMITXfmsg+fUyoKxylaNbMt+O/BttpziE
+	IU3/emmHK5AlhHYDDKI8b58oHiSUH3uY+7Gh9gatCSzMOPNHD9XPdXFBCTXxqzmvJYxzNlO7bsv
+	MX2krz1YCwDR2PX98ZR9AClovJs9YqkdHWoDRkMuA6OIOXGNg21Oi7NiRc/om0uVRUXP7RVOc9R
+	5K+ZCqIUJZRgOodWG/DYwv8Rnb7L703GNNNMg8h89wq/ZkmgIFcUMowqwA==
+X-Google-Smtp-Source: AGHT+IFOFC/HYp+b/sLqshfj6fUDhVXxkvGd1k4jKO8z9uXGvrvvByGxLJkY/vukR63GyNj7W/KV9Q==
+X-Received: by 2002:a05:6000:2405:b0:3a0:80b2:eedc with SMTP id ffacd0b85a97d-3a0ac3eb337mr2198218f8f.52.1746531752133;
+        Tue, 06 May 2025 04:42:32 -0700 (PDT)
+Received: from ho-tower-lan.lan ([77.81.75.81])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099ae344esm13198473f8f.25.2025.05.06.04.42.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 May 2025 04:42:31 -0700 (PDT)
+From: James Clark <james.clark@linaro.org>
+Subject: [PATCH 00/10] perf: arm_spe: Armv8.8 SPE features
+Date: Tue, 06 May 2025 12:41:32 +0100
+Message-Id: <20250506-james-perf-feat_spe_eft-v1-0-dd480e8e4851@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAGz1GWgC/3WNQQ6CMBBFr0Jm7Zi2IIIr72EIadop1GhLpoRoC
+ He3krh0+V7y318hEXtKcClWYFp88jFkkIcCzKjDQOhtZlBCnUQpFd71kxJOxA4d6blPE/XkZqx
+ rY11lG0dtC3k9MTn/2su3LvPo0xz5vR8t8mt/zfJvc5EoUGmjhK3E2Zjm+vBBczxGHqDbtu0D0
+ veHVL8AAAA=
+To: Catalin Marinas <catalin.marinas@arm.com>, 
+ Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, Jonathan Corbet <corbet@lwn.net>, 
+ Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+ Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
+ Zenghui Yu <yuzenghui@huawei.com>, leo.yan@arm.com
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-perf-users@vger.kernel.org, James Clark <james.clark@linaro.org>, 
+ linux-doc@vger.kernel.org, kvmarm@lists.linux.dev
+X-Mailer: b4 0.14.0
 
-On 250502 1143, Alice Ryhl wrote:
-> On Fri, May 02, 2025 at 09:03:04AM +0000, Oliver Mangold wrote:
-> > +pub unsafe trait SimpleOwnableRefCounted: RefCounted {
-> > +    /// Checks if exactly one [`ARef`] to the object exists. In case t=
-he object is [`Sync`], the
-> > +    /// check needs to be race-free.
-> > +    fn is_unique(&self) -> bool;
-> > +}
-> > +
-> > +#[cfg_attr(RUSTC_HAS_DO_NOT_RECOMMEND, diagnostic::do_not_recommend)]
-> > +// SAFETY: Safe by the requirements on implementation of [`SimpleOwnab=
-leRefCounted`].
-> > +unsafe impl<T: SimpleOwnableRefCounted> OwnableRefCounted for T {
-> > +    fn try_from_shared(this: ARef<Self>) -> Result<Owned<Self>, ARef<S=
-elf>> {
-> > +        if T::is_unique(&*this) {
-> > +            // SAFETY: Safe by the requirements on implementation of [=
-`SimpleOwnable`].
-> > +            Ok(unsafe { Owned::from_raw(ARef::into_raw(this)) })
-> > +        } else {
-> > +            Err(this)
-> > +        }
-> > +    }
-> > +}
-> > +
-> > +#[cfg_attr(RUSTC_HAS_DO_NOT_RECOMMEND, diagnostic::do_not_recommend)]
-> > +// SAFETY: Safe by the requirements on implementation of [`SimpleOwnab=
-leRefCounted`].
-> > +unsafe impl<T: SimpleOwnableRefCounted> Ownable for T {
-> > +    unsafe fn release(this: NonNull<Self>) {
-> > +        // SAFETY: Safe by the requirements on implementation of
-> > +        // [`SimpleOwnableRefCounted::dec_ref()`].
-> > +        unsafe { RefCounted::dec_ref(this) };
-> > +    }
-> > +}
->=20
-> I wonder if this is too limiting. It will limit our ability to write
-> other blanket impls for Ownable and OwnableRefCounted. Using e.g. a
-> derive macro might be better?
->=20
-> Alice
+Support 3 new SPE features: FEAT_SPEv1p4 filters, FEAT_SPE_EFT extended
+filtering, and SPE_FEAT_FDS data source filtering. The features are
+independent can be applied separately:
 
-You might be right. I don't have a strong opinion on the matter.
+  * Prerequisite sysreg changes - patch 1
+  * FEAT_SPEv1p4 - patch 2
+  * FEAT_SPE_EFT - patch 3
+  * FEAT_SPE_FDS - patches 4 - 7
+  * FEAT_SPE_FDS Perf tool changes - patches 8 - 10
 
-I'm not really familiar with procmacros, though. So maybe I should just do
-away with SimpleOwnableRefCounted for now?
+The first two features will work with old Perfs but a Perf change to
+parse the new config4 is required for the last feature.
 
-I mean Andreas doesn't need it for his current use case and this or a deriv=
-e
-macro can always be added later if it makes sense.
+Signed-off-by: James Clark <james.clark@linaro.org>
+---
+To: Catalin Marinas <catalin.marinas@arm.com>
+To: Will Deacon <will@kernel.org>
+To: Mark Rutland <mark.rutland@arm.com>
+To: Jonathan Corbet <corbet@lwn.net>
+To: Marc Zyngier <maz@kernel.org>
+To: Oliver Upton <oliver.upton@linux.dev>
+To: Joey Gouly <joey.gouly@arm.com>
+To: Suzuki K Poulose <suzuki.poulose@arm.com>
+To: Zenghui Yu <yuzenghui@huawei.com>
+To: Peter Zijlstra <peterz@infradead.org>
+To: Ingo Molnar <mingo@redhat.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+To: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+To: Jiri Olsa <jolsa@kernel.org>
+To: Ian Rogers <irogers@google.com>
+To: Adrian Hunter <adrian.hunter@intel.com>
+To: Liang, Kan <kan.liang@linux.intel.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-perf-users@vger.kernel.org
+Cc: linux-doc@vger.kernel.org
+Cc: kvmarm@lists.linux.dev
+
+---
+James Clark (10):
+      arm64: sysreg: Add new PMSIDR_EL1 and PMSFCR_EL1 fields
+      perf: arm_spe: Support FEAT_SPEv1p4 filters
+      perf: arm_spe: Add support for FEAT_SPE_EFT extended filtering
+      arm64/boot: Enable EL2 requirements for SPE_FEAT_FDS
+      KVM: arm64: Add trap configs for PMSDSFR_EL1
+      perf: Add perf_event_attr::config4
+      perf: arm_spe: Add support for filtering on data source
+      tools headers UAPI: Sync linux/perf_event.h with the kernel sources
+      perf tools: Add support for perf_event_attr::config4
+      perf docs: arm-spe: Document new SPE filtering features
+
+ Documentation/arch/arm64/booting.rst      |  11 ++++
+ arch/arm64/include/asm/el2_setup.h        |  14 +++++
+ arch/arm64/include/asm/sysreg.h           |   7 +++
+ arch/arm64/kvm/emulate-nested.c           |   1 +
+ arch/arm64/kvm/sys_regs.c                 |   1 +
+ arch/arm64/tools/sysreg                   |  26 ++++++--
+ drivers/perf/arm_spe_pmu.c                | 100 +++++++++++++++++++++++++++++-
+ include/uapi/linux/perf_event.h           |   2 +
+ tools/include/uapi/linux/perf_event.h     |   2 +
+ tools/perf/Documentation/perf-arm-spe.txt |  86 ++++++++++++++++++++++---
+ tools/perf/tests/parse-events.c           |  14 ++++-
+ tools/perf/util/parse-events.c            |  11 ++++
+ tools/perf/util/parse-events.h            |   1 +
+ tools/perf/util/parse-events.l            |   1 +
+ tools/perf/util/pmu.c                     |   8 +++
+ tools/perf/util/pmu.h                     |   1 +
+ 16 files changed, 272 insertions(+), 14 deletions(-)
+---
+base-commit: 01f95500a162fca88cefab9ed64ceded5afabc12
+change-id: 20250312-james-perf-feat_spe_eft-66cdf4d8fe99
 
 Best regards,
-
-Oliver
+-- 
+James Clark <james.clark@linaro.org>
 
