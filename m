@@ -1,108 +1,53 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD10F27F17D;
-	Tue,  6 May 2025 12:10:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB3DB27F4F6;
+	Tue,  6 May 2025 12:10:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746533418; cv=none; b=NOa0UBWKG0dD+j3LZwOsPKuFime2trl03lPemCEiSu+mzkUMaBhDeY9Ouu+R3eDIzYiYwe5t+L87GMUsfJ/aTy+SCnNe9aAdLbmtKAUKgtWShD1QduYcN5QqIi+7EyJJ6rpA3NRBWczpyK5Nb/HHO8ijHkq6PJXX7II2pm/atzQ=
+	t=1746533422; cv=none; b=VYExxYIDt+1ZZZaejhPF2Dv4gSilaFhXkL+Ye7LKswAAzVG7quMZcNH/9R15uaqOPRsAZ+xwCA9jxglh4wtYNkqOcT/XSnf8l3738cYfihh+4iT9XyBIoAt31ttzlkXVW8MBs4od37YWDCAQQNnflsAaFa5CadLTYyLFHrg9ov4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746533418; c=relaxed/simple;
-	bh=TfGf41BI+CEpoOqGEKh3oXOKY+QC+CgLE8Pee51SleQ=;
+	s=arc-20240116; t=1746533422; c=relaxed/simple;
+	bh=zy4zsbjSc/YMSb4tg4xGMGlyXNyP8B5hyhAO1dO8M7g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eJ2fLGqujDjc+3F4TU8V7Wp4OXnk7dATo2qViDmWI8LywNjDQ3Ea51N0yrWr+OYsjG6CCru3QeJyUr8G8LrtLVEolyZ5qE+By1i+yxiI0x7MqzwMu8/Oxz51picBNrMosciiFXppCEborv9jcEDRH1rWDzo8gsqqTjZMkTjYN0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=me/MwPh3; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="me/MwPh3"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
-	In-Reply-To:References; bh=LjFg4NzOfHgj1oyywetZuH3fvyYFzX5T7Wr9eejsvHY=; b=me
-	/MwPh3urNw/U+weqBX9npRAbNuLn2pVCx5lAmrjCRsvWkQ9hmAV/0A6/YuglFD2cFELRrL/jtrpyq
-	TNa9qwVfzmUl48jPFAZXyfT4TGNqlcs00lW94ouJBvKQ29uuDhIdWN4KfnKRXvg2rXuRLgxoCBbvd
-	Z2EcZmCZd31OYO4=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uCH7h-00Bksz-7V; Tue, 06 May 2025 14:10:09 +0200
-Date: Tue, 6 May 2025 14:10:09 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Thangaraj.S@microchip.com
-Cc: Bryan.Whitehead@microchip.com, andrew+netdev@lunn.ch,
-	davem@davemloft.net, linux-kernel@vger.kernel.org,
-	pabeni@redhat.com, kuba@kernel.org, edumazet@google.com,
-	netdev@vger.kernel.org, UNGLinuxDriver@microchip.com
-Subject: Re: [PATCH v1 net-next] net: lan743x: configure interrupt moderation
- timers based on speed
-Message-ID: <e489b483-26bb-4e63-aa6d-39315818b455@lunn.ch>
-References: <20250505072943.123943-1-thangaraj.s@microchip.com>
- <e2d7079b-f2d3-443d-a0e5-cb4f7a85b1e6@lunn.ch>
- <42768d74fc73cd3409f9cdd5c5c872747c2d7216.camel@microchip.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=osnhMWVMU3cr71UY67AhG1CYR4Cz4+iZzfvNuZMarm50ZBwJGKeVTQhvqQbHTYGbHqUKHjx/lGo9JyO7U61PxEpAxAU+nEmdB4Dz8XMpFT9cMqhMN0KpoTZpxAO7SvckYfhm16KzLaDlXvP0QtiTbVQb0p9eE6EPFWHSY6LekrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 49E8368AA6; Tue,  6 May 2025 14:10:12 +0200 (CEST)
+Date: Tue, 6 May 2025 14:10:12 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: Zhang Yi <yi.zhang@huaweicloud.com>, dhowells@redhat.com,
+	brauner@kernel.org
+Cc: Christoph Hellwig <hch@lst.de>, "Darrick J. Wong" <djwong@kernel.org>,
+	linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+	linux-block@vger.kernel.org, dm-devel@lists.linux.dev,
+	linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
+	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	tytso@mit.edu, john.g.garry@oracle.com, bmarzins@redhat.com,
+	chaitanyak@nvidia.com, shinichiro.kawasaki@wdc.com,
+	yi.zhang@huawei.com, chengzhihao1@huawei.com, yukuai3@huawei.com,
+	yangerkun@huawei.com
+Subject: Re: [RFC PATCH v4 07/11] fs: statx add write zeroes unmap attribute
+Message-ID: <20250506121012.GA21705@lst.de>
+References: <20250421021509.2366003-1-yi.zhang@huaweicloud.com> <20250421021509.2366003-8-yi.zhang@huaweicloud.com> <20250505132208.GA22182@lst.de> <20250505142945.GJ1035866@frogsfrogsfrogs> <20250506050239.GA27687@lst.de> <20250506053654.GA25700@frogsfrogsfrogs> <20250506054722.GA28781@lst.de> <c3105509-9d63-4fa2-afaf-5b508ddeeaca@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <42768d74fc73cd3409f9cdd5c5c872747c2d7216.camel@microchip.com>
+In-Reply-To: <c3105509-9d63-4fa2-afaf-5b508ddeeaca@huaweicloud.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Tue, May 06, 2025 at 04:02:30AM +0000, Thangaraj.S@microchip.com wrote:
-> Hi Andrew,
-> Thanks for reviewing the patch,
-> 
-> On Mon, 2025-05-05 at 14:15 +0200, Andrew Lunn wrote:
-> > EXTERNAL EMAIL: Do not click links or open attachments unless you
-> > know the content is safe
-> > 
-> > On Mon, May 05, 2025 at 12:59:43PM +0530, Thangaraj Samynathan wrote:
-> > > Configures the interrupt moderation timer value to 64us for 2.5G,
-> > > 150us for 1G, 330us for 10/100M. Earlier this was 400us for all
-> > > speeds. This improvess UDP TX and Bidirectional performance to
-> > > 2.3Gbps from 1.4Gbps in 2.5G. These values are derived after
-> > > experimenting with different values.
-> > 
-> > It would be good to also implement:
-> > 
-> >        ethtool -c|--show-coalesce devname
-> > 
-> >        ethtool -C|--coalesce devname [adaptive-rx on|off] [adaptive-
-> > tx on|off]
-> >               [rx-usecs N] [rx-frames N] [rx-usecs-irq N] [rx-frames-
-> > irq N]
-> >               [tx-usecs N] [tx-frames N] [tx-usecs-irq N] [tx-frames-
-> > irq N]
-> >               [stats-block-usecs N] [pkt-rate-low N] [rx-usecs-low N]
-> >               [rx-frames-low N] [tx-usecs-low N] [tx-frames-low N]
-> >               [pkt-rate-high N] [rx-usecs-high N] [rx-frames-high N]
-> >               [tx-usecs-high N] [tx-frames-high N] [sample-interval
-> > N]
-> >               [cqe-mode-rx on|off] [cqe-mode-tx on|off] [tx-aggr-max-
-> > bytes N]
-> >               [tx-aggr-max-frames N] [tx-aggr-time-usecs N]
-> > 
-> > so the user can configure it. Sometimes lower power is more important
-> > than high speed.
-> > 
-> >         Andrew
-> 
-> We've tuned the interrupt moderation values based on testing to improve
-> performance. For now, we’ll keep these fixed values optimized for
-> performance across all speeds. That said, we agree that adding ethtool
-> -c/-C support would provide valuable flexibility for users to balance
-> power and performance, and we’ll consider implementing that in a future
-> update.
+On Tue, May 06, 2025 at 07:25:06PM +0800, Zhang Yi wrote:
+> +       if (request_mask & STATX_WRITE_ZEROES_UNMAP &&
+> +           bdev_write_zeroes_unmap(bdev))
+> +               stat->result_mask |= STATX_WRITE_ZEROES_UNMAP;
 
-As you said, you have optimised for performance. That might cause
-regressions for some users. We try to avoid regressions, and if
-somebody does report a regression, we will have to revert this change.
-If you were to implement this ethtool option, we are a lot less likely
-to make a revert, we can instruct the user how to set the coalesce for
-there use case.
+That would be my expectation.  But then again this area seems to
+confuse me a lot, so maybe we'll get Christian or Dave to chim in.
 
-	Andrew
