@@ -1,60 +1,62 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B73427AC2C;
-	Tue,  6 May 2025 09:33:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFE9927AC4A;
+	Tue,  6 May 2025 09:33:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746524033; cv=none; b=WC54TvGZKXOMHBF4G9qohuZhCxbJIdkMGP43hTZdxxygIBWXcGp6PTa7lpPM4/bjiaU4PIh4taQfn+q4JTGmZap1uKivC8zqRFgJtUi2nyPnceN8VxIMmXTddKrMJIlwVgYRTNPKHZa2lxl8nzIV5rAVxBqFWTirIr6Gh7Ri1no=
+	t=1746524034; cv=none; b=H+qffiNCy55dl3aQy/3T9AiyfPkMF/2/8tkQ0YHxziCcBVElaOoEZzAqoCyuKieP2dtG8J5ohgp50YG8pDZSeVznhBXo8j8DYD5RWD088jh5WIj7j4toehPGC2i87XbmR7jLw1/7tiGzNbI+2KQwY6xP51urJdSJpy14tc601Wg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746524033; c=relaxed/simple;
-	bh=APC8QsC5XamjErstpEMfewD9e2T7e8D4sb8+2hZZVbo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mxUErfdQT5brAnA9zfaImB0yUqOgkFTknG5bLHhpaXbK8T5jhOa5zihw9Uj0ZJTFxF5bjSHFXur2qQW+VUNhr5939N7Q8evInWRzsOsjDA7BSMHOg0JSxaEI05RvSYLuoie4SNNNAcBejhMyrCTRPvxblOsNC1vabKTI7h8Cz1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ie5RNn/W; arc=none smtp.client-ip=209.85.208.43
+	s=arc-20240116; t=1746524034; c=relaxed/simple;
+	bh=Qnk8ApjKHe7cIi2nAfJHQjcWlleZ4gTm+u7X22VKTFg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=PIG2QoFxsWUM2o9EB3CVv1KxZl8gaWcZGZPrgroGfGJG1Wp+oN4rMn3j/ZWlR9UwFIHGO9D1r0ld+sXWK4tobptKX+Cu4TtamTymI6xMtt/gQiSzRLLwdcYfnq/+vsZ7PebwSurSMZ6XVSvZMJvUo0ia9ASiYLAdj8XLycWOKEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D7Ruh78o; arc=none smtp.client-ip=209.85.218.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ie5RNn/W"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5f861d16622so9331184a12.2;
-        Tue, 06 May 2025 02:33:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D7Ruh78o"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ac3eb3fdd2eso164596166b.0;
+        Tue, 06 May 2025 02:33:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746524029; x=1747128829; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=VUmVy1erubqo8DKwJt3dysVszYaW23+/y8mD480tYSU=;
-        b=ie5RNn/WaAbxLiFfpVq1w4K5W7YDnw1VFqTfZalT4c1ZvJgNXKuIqcB3jyYtiiCudT
-         ey5/nBnK0pjycmOuZDan2+1Iwkf3bHQoriPRKlmQTI49WWIhUDw8bY8WgTGSnKgInSPz
-         cGyweQuC0jYc+CP/0JnplB5bx3JW3uGje3qzSb5wnlg9jtA9ILQuPkLs26hebUr/9hm7
-         vKIKMItdr/jNCL4XTYZZRcFvARvpCqsVTYOXU/kzbcvQuBSxNWckcqoRkXlzMutq4fE0
-         QiHx2HNYt9RfxINy7XZlouinvGQI2eiDwt0gZGaSFPjeP39x+o/Rr0T0iLRBLuo106g4
-         eY9A==
+        d=gmail.com; s=20230601; t=1746524031; x=1747128831; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qhA4vB5QX4cGx67rLq/kl8NrO4ybnOcVhUciXhl2JI0=;
+        b=D7Ruh78oXIkMnzcehoKfpdh05ahiTcbMr7bApCcK+tiH+DtjQ+Fj0XAetzy08IibHa
+         +koczC05V2dMyWbrTWnjHfISfKV7uUgeDmtEjUfPA+io6sNEwYO7U63xGs9XeFzu0X1s
+         DMFiG4Bi/puqtMaHN/+8pYFbpG8CZDu2Tl/3g/XlaAUBgOXWnobI/tUnGoayhOFCMrT7
+         6E3BacANMnLqC1lzjRxsU5iEFt7V4w2nKTKZ3DIvL5dYLKUSqDAYjWLMPgxEsS0JPNot
+         Wh0U4rA5qbUI+WRFTM5ddSConFOugBwRiEq53RJnoq0EAfhbPx6+0gFVXpmOqLsz7S1P
+         EkuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746524029; x=1747128829;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VUmVy1erubqo8DKwJt3dysVszYaW23+/y8mD480tYSU=;
-        b=Fp3SvSl9QdwcHvnq7ewgt1Xt7LuaCsox4gjf5x3QPrPjXZlDShYdgEwHBZur/U3LVz
-         ThfVDiWgWcKLlKcdJYHjcbiG8S5m7PCvEzJOA225iHo9yYrvQfzKLsk7cH0Ia0oSYZa6
-         KmYtxHZJODOcUEFNGbEz7R3wNdxEs9LWPslTOxVqypIfS2nd0sQ0pDY2U+pi/4e1UQzK
-         pQqUGFVGPrmWSb6sSBf8gkyQZ3TMCVDIECHfVO6jZj+u2IoabKGp6+WHHSZOX1SCLMfg
-         9TVcRCKeSDekqK2Kx0tSxEwj6GROJJ1k+OS5iaHGqIpnemNsJDijNcWw80M4F1t6PcNz
-         f4XQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVk8ONILK7+4G3cXRwDn28Yq3bLZZ0zli5EmHJwgHYbuXoxudYv9z6Zo5XL2/V/7NHpW+RFuNx7af8SYdUi@vger.kernel.org, AJvYcCVxEjEc2b6FoEy/6ezXqWyC/cQRKuniZGVbBu9hKqCR42BcA29sWhdpl44aIkm/yp2/lwOZDDJNclCr@vger.kernel.org
-X-Gm-Message-State: AOJu0YwnPr/A/1kxDp3pKTAc/wB2ScgImT2t7NKUbP7H+Ln6LbRFiCYC
-	vmUonJLQWw3Y6/RKfLqENca//8ADwt107tN8KhNWBl5OQUOcSu2o
-X-Gm-Gg: ASbGncsJzS84QQ+PEjaCOJrLLrBvxy06ENYBV0hcVGyDcYy20frCkrxGeHP1kz2nboK
-	OqxTe7lbQCBklw4xbAyX4y1WdTBUHZZqB97yUCYu5xuIyU+HjxCvwS2XxZ/t1ELCeY8T+deihb8
-	SI3lrf2D+U+Puc2HPhmJRa4M1QFF37IBVxEpfYcjyFVOCi6vn4eoKgdeAyNcEkgAOefKFccxA4x
-	Ebm0ZzbuCOo86eWdp7bXWf7ED/nl+K/vpH31B1f5O5XehxkkXHEOuEUOSlhRmuDTHz51eAAMUCQ
-	TDUKYe3lbJm138X55kZYqnzTVzBF9FCM
-X-Google-Smtp-Source: AGHT+IFunOPAi5lNpQEz2am+muFSqRgNnILvh4u9PAiY5CHL3xqm1l6WqdPBO0kK9vDkP0eCSnyH6Q==
-X-Received: by 2002:a17:907:f496:b0:ac7:c79d:f8ce with SMTP id a640c23a62f3a-ad1a4b7c7c6mr915428066b.57.1746524029335;
-        Tue, 06 May 2025 02:33:49 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746524031; x=1747128831;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qhA4vB5QX4cGx67rLq/kl8NrO4ybnOcVhUciXhl2JI0=;
+        b=hg+0zt3sD2k10ASzedF+bVBlzt3t1bvFW2IaWjHL+XwDOgvBlkmzE1yt9LkwsoLN4G
+         2mAlg323ENGaBLC0Xlxj+PaRD6uZtZpYGSAqX6otK0BhK779fTJVPVuM3/3OgzbsLy6U
+         a6PXYnfcFjG+wMNCRTmhyCrdyMqEqXkxRus2TOGYJmJdQROrSNDopvVgY+3sE9PjmtbP
+         OgcHiF/UQFw3aqgpzKbnN36Xhr9hrjEfTpuhQjOhTkh/kCgSwXXBgax6wRBR7gGa+wv6
+         qmrYv0dHYKC6fhc9ZpkxbCqmu57qgfP9XpeASg5ng/yRDAPqR0qmikmal5Pq+7Zgel5s
+         YA3A==
+X-Forwarded-Encrypted: i=1; AJvYcCXZ9FyhdTFiWVAeJvNZryEQ/YNBB0jUcGOMADydCim3ekrM7eXd8jWTaP3iz0OJJeey12bIwgwxzvRB@vger.kernel.org, AJvYcCXkMhDHlnPDo8CxT+eBVXW7P670QY5ffK0b7YANbbByLrFCIwJN8efu5MwbPKmJst9cKFGgd7om1AIdsjSi@vger.kernel.org
+X-Gm-Message-State: AOJu0YzLIj9fupL/8tNLEzjyNhUoNRcBGyZOGcBYjwwZa92IJrAAe59J
+	N8TIqs/LF7krKQPFP7BdRoQ4ZMwEhhXtjKJang4ul5F2zrwdAVzK
+X-Gm-Gg: ASbGncuKZYGIWL1AhmjnJk29DR4AK8PbwO427nET0iQLv0jOnZq72G080SdrIoDxPn6
+	8xudjhoChv95I+hCTaP4l6i6nNe6fUKONRzEwm34z2RlJJf+XbvwIUCscKRVtuJK/cKt9qCHdic
+	gUT3YgbC3fWn4xR2TqseEYJVarvbnT7+5KV8HV8bntRw+2Hq2sPorbbAs9yj/pyf2mhhm1QYap2
+	RO4kgv/5/O8h1F9/Q5t8lmIJA/4K+n6rHJdOidJG6cCaeRqKOpnHe/CAq04wat6qQhGqwbO6H7y
+	6dR+/5QwgQ7T45WXz4+cf/LCEuBr4y3l
+X-Google-Smtp-Source: AGHT+IFtCBcr7dFXi8hYBmPOb4L/CnUpKjpcGPLBRC3hn7FKEobypbJ4vI4+M83ZIMj8oevyLZNh3g==
+X-Received: by 2002:a17:906:c142:b0:ace:c416:4231 with SMTP id a640c23a62f3a-ad17b470739mr1692264466b.12.1746524030821;
+        Tue, 06 May 2025 02:33:50 -0700 (PDT)
 Received: from xeon.. ([188.163.112.70])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1e1292696sm25594666b.111.2025.05.06.02.33.47
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1e1292696sm25594666b.111.2025.05.06.02.33.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 02:33:48 -0700 (PDT)
+        Tue, 06 May 2025 02:33:50 -0700 (PDT)
 From: Svyatoslav Ryhel <clamor95@gmail.com>
 To: Andrzej Hajda <andrzej.hajda@intel.com>,
 	Neil Armstrong <neil.armstrong@linaro.org>,
@@ -74,10 +76,12 @@ To: Andrzej Hajda <andrzej.hajda@intel.com>,
 Cc: dri-devel@lists.freedesktop.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 0/2] drm: bridge: add ssd2825 RGB/DSI bridge support
-Date: Tue,  6 May 2025 12:33:38 +0300
-Message-ID: <20250506093340.106575-1-clamor95@gmail.com>
+Subject: [PATCH v5 1/2] dt-bindings: display: bridge: Document Solomon SSD2825
+Date: Tue,  6 May 2025 12:33:39 +0300
+Message-ID: <20250506093340.106575-2-clamor95@gmail.com>
 X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250506093340.106575-1-clamor95@gmail.com>
+References: <20250506093340.106575-1-clamor95@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -86,53 +90,165 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Solomon SSD2825 is a RGB to MIPI DSI bridge used in LG Optimus 4D P880
-and LG Optimus Vu P895
+Add bindings for Solomon SSD2825 MIPI master bridge chip that connects an
+application processor with traditional parallel LCD interface and an LCD
+driver with MIPI slave interface. The SSD2825 supports both parallel RGB
+interface and serial SPI interface.
 
+Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
-Changes on switching from v4 to v5:
-- rebased on top of drm-misc-next with adjustments to fit
-
-Changes on switching from v3 to v4:
-- no changes, resend
-
-Changes on switching from v2 to v3:
-- added mutex guard
-- configuration register flags parametrized using panel flags
-- removed unneded debug messages
-- removed unimplemented modes checks
-- added check for maximum pixel row length
-- use types header
-- remove ssd2825_to_ns
-- shift bridge setup into atomic pre-enable
-- cleaned default values of hzd and hpd
-
-Changes on switching from v1 to v2:
-- added description for clock
-- removed clock-names
-- added boundries for hs-zero-delay-ns and hs-prep-delay-ns
-- added mutex lock for host transfers
-- converted to atomic ops
-- get drm_display_mode mode with atomic helpers
-- parameterized INTERFACE_CTRL_REG_6 configuration
-- added video mode validation and fixup
-- removed clock name
-- switched to devm_regulator_bulk_get_const
-- added default timings
----
-
-Svyatoslav Ryhel (2):
-  dt-bindings: display: bridge: Document Solomon SSD2825
-  drm: bridge: Add support for Solomon SSD2825 RGB/DSI bridge
-
- .../display/bridge/solomon,ssd2825.yaml       | 141 +++
- drivers/gpu/drm/bridge/Kconfig                |  13 +
- drivers/gpu/drm/bridge/Makefile               |   1 +
- drivers/gpu/drm/bridge/ssd2825.c              | 812 ++++++++++++++++++
- 4 files changed, 967 insertions(+)
+ .../display/bridge/solomon,ssd2825.yaml       | 141 ++++++++++++++++++
+ 1 file changed, 141 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/display/bridge/solomon,ssd2825.yaml
- create mode 100644 drivers/gpu/drm/bridge/ssd2825.c
 
+diff --git a/Documentation/devicetree/bindings/display/bridge/solomon,ssd2825.yaml b/Documentation/devicetree/bindings/display/bridge/solomon,ssd2825.yaml
+new file mode 100644
+index 000000000000..e2d293d623b8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/bridge/solomon,ssd2825.yaml
+@@ -0,0 +1,141 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/bridge/solomon,ssd2825.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Solomon SSD2825 RGB to MIPI-DSI bridge
++
++maintainers:
++  - Svyatoslav Ryhel <clamor95@gmail.com>
++
++allOf:
++  - $ref: /schemas/spi/spi-peripheral-props.yaml#
++
++properties:
++  compatible:
++    const: solomon,ssd2825
++
++  reg:
++    maxItems: 1
++
++  reset-gpios: true
++
++  dvdd-supply:
++    description: Regulator for 1.2V digital power supply.
++
++  avdd-supply:
++    description: Regulator for 1.2V analog power supply.
++
++  vddio-supply:
++    description: Regulator for 1.8V IO power supply.
++
++  spi-max-frequency:
++    maximum: 1000000
++
++  spi-cpha: true
++  spi-cpol: true
++
++  clocks:
++    maxItems: 1
++    description: Reference TX_CLK used before PLL is locked.
++
++  solomon,hs-zero-delay-ns:
++    description:
++      HS zero delay period
++    minimum: 0
++    maximum: 1700
++    default: 133
++
++  solomon,hs-prep-delay-ns:
++    description:
++      HS prep delay period
++    minimum: 0
++    maximum: 1728
++    default: 40
++
++  ports:
++    $ref: /schemas/graph.yaml#/properties/ports
++
++    properties:
++      port@0:
++        $ref: /schemas/graph.yaml#/$defs/port-base
++        unevaluatedProperties: false
++        description:
++          Video port for RGB input
++
++        properties:
++          endpoint:
++            $ref: /schemas/graph.yaml#/$defs/endpoint-base
++            unevaluatedProperties: false
++
++            properties:
++              bus-width:
++                enum: [ 16, 18, 24 ]
++
++      port@1:
++        $ref: /schemas/graph.yaml#/properties/port
++        description:
++          Video port for DSI output (panel or connector)
++
++    required:
++      - port@0
++      - port@1
++
++required:
++  - compatible
++  - ports
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++
++    spi {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        dsi@2 {
++            compatible = "solomon,ssd2825";
++            reg = <2>;
++
++            spi-max-frequency = <1000000>;
++
++            spi-cpha;
++            spi-cpol;
++
++            reset-gpios = <&gpio 114 GPIO_ACTIVE_LOW>;
++
++            dvdd-supply = <&vdd_1v2>;
++            avdd-supply = <&vdd_1v2>;
++            vddio-supply = <&vdd_1v8_io>;
++
++            solomon,hs-zero-delay-ns = <300>;
++            solomon,hs-prep-delay-ns = <65>;
++
++            clocks = <&ssd2825_tx_clk>;
++
++            ports {
++                #address-cells = <1>;
++                #size-cells = <0>;
++
++                port@0 {
++                    reg = <0>;
++
++                    bridge_input: endpoint {
++                        remote-endpoint = <&dpi_output>;
++                        bus-width = <24>;
++                    };
++                };
++
++                port@1 {
++                    reg = <1>;
++
++                    bridge_output: endpoint {
++                        remote-endpoint = <&panel_input>;
++                    };
++                };
++            };
++        };
++    };
 -- 
 2.48.1
 
