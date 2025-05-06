@@ -1,178 +1,134 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F84A7262D
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 19:38:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D57D1F4C97
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 19:42:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746560313; cv=none; b=DB5qTtXtqnnuX5omxmsqaR8saCpIjc9s4qPGrjl2/XsMpdYLEs3adcfRwLERgL+MZIMpfmAKXX0PrrYpAsV8tfkvzerLCJiV7tn15cx2koZ+XAxcwrRGAKC8Z9WIOyBhoEYaeJKjYBVY6Kjx4+d8iQj0R9AM3RcRdZGjr3qKZuM=
+	t=1746560532; cv=none; b=Qblv8DsF+lWOc0Xw8f4yy3oi9g49NvlC1unLXJwoXat7GwkLf0uHTueZ5nFgsIJQZ56BqEIYLMjaXdeIFpK+83ZOFAXIiUKgrRkC1zcxz64Hlof0tc3I+a+/vNZUf4cmbFrLsWKh/vTrYzSh4/iPfo1KNIS0B32wc16ElrPT1Jg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746560313; c=relaxed/simple;
-	bh=SxKFgreVRyQF0nd+GC2Ce9i9r/KKrKUdTzJ/+cxzs/A=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=GtzAirGXZ/1S309b00qaXmgentRemRKU4NoKTlJMw9tgWO1W8m6FcYjfhLjWTdrvtwP8ZaJeEn0caDcCgG1p+rNP/zM3hLaUr86flPlhW3Nef7h7YZCmugypY/+MA9b0p43O5LoKVsc5TAg7Rhy/mxcb8LdvWvO0JcgsdcKkNEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=desiato.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=k0UC/2Z1; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=desiato.srs.infradead.org
+	s=arc-20240116; t=1746560532; c=relaxed/simple;
+	bh=02PInjaIXsSef5MIF/tczU+50TaQgtYbWkuUiCpYGNo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lWJxJl0oTWno5DFzkI408FgJA9xjioNGl2Atg7VBUhzDC44MURW2KbIJcUAbg1Kd3DEtfC6S5fDYyMRgwqmKZttP/YGZgpjgVJRTz1pKeYkbuSbA0rdS3Jy/wW3vHFBsPZUXRI3XWcLuJqMFQ9RGQ/ikG0NTiC7w+GES//o3fKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=KmJEygHU; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="k0UC/2Z1"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=MIME-Version:Content-Type:References:
-	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=SxKFgreVRyQF0nd+GC2Ce9i9r/KKrKUdTzJ/+cxzs/A=; b=k0UC/2Z18BzCLtd0oyN4xMskFu
-	GKLjf8ZK3mKFMW3I6+h3vop88CEwvV+7vX8jQeFcSLKxoIMUFeGYAePQXLJZK+9tR+udbA52joAAm
-	0gE3GW9w6E2H5Bpx2jifTXj9ejLwnqdGxFk/RfZo0AV/7Yvooysmd7Q2eTP0Ey6WFElqRtI+WPnJ/
-	9Apd1RhpvWXCXO3yRr2ntarV5w9Ef+bW7CPKsOy31HbEnZn0WgI8ZO6Xs080QLHB5g/036A3GSsic
-	iuMXwhLruWa4iWB39/uKJkFtcalERmgnBwGqLvEIvexvAPFiU6yPeqsGgbdW94H7TZLT+uM+XG9tq
-	3XA9Uxfw==;
-Received: from [15.248.7.87] (helo=u09cd745991455d.ant.amazon.com)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1uCO7U-0000000FgVe-2xOw;
-	Tue, 06 May 2025 19:38:25 +0000
-Message-ID: <47a4795427d11c7c2d7713edda36d0c63c585c8d.camel@infradead.org>
-Subject: Re: [PATCH v1 0/6] x86/boot: Enable earlyprintk on MMIO (8-bit)
-From: David Woodhouse <dwmw2@infradead.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Ashish Kalra
- <ashish.kalra@amd.com>, "Kirill A. Shutemov"
- <kirill.shutemov@linux.intel.com>,  linux-kernel@vger.kernel.org
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Denis Mukhin
- <dmukhin@ford.com>
-Date: Tue, 06 May 2025 12:38:21 -0700
-In-Reply-To: <20250502123145.4066635-1-andriy.shevchenko@linux.intel.com>
-References: <20250502123145.4066635-1-andriy.shevchenko@linux.intel.com>
-Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-	boundary="=-aPZjeCNAtlT4mXGiBIxm"
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="KmJEygHU"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-acb5ec407b1so1082501566b.1
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 12:42:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1746560528; x=1747165328; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=FLtCWwc40S7Us9tqvM35Kf0gO4qPnymYjFJDwT8BJmw=;
+        b=KmJEygHUmWE1mA6oOjiD7Oc91NOUV7TwxXqevYilWdlGh9CltCX22/kKSMwH0idODA
+         Hbuu8xeqsvH6hUw9qdbhbDgOUBg6hii8Ner/BR1KaQxJVN22FQYPvQHJsGsZU6h47Qgi
+         4nY1e/WpBue9ahA2UEEsdUbcJHA2hL18uPUQk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746560528; x=1747165328;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FLtCWwc40S7Us9tqvM35Kf0gO4qPnymYjFJDwT8BJmw=;
+        b=brVL033gc1VTdJ4r7rBhK3+K+EA0y9/yIbGoofK30dVTaTJJlP4GoEzgLLuPc+GWop
+         BtkszVG14rz+/L0+w0cVG8JF80Dlsen0ty8d1QMy7gQOiuFurETgjmF4BKUN7voKH6SG
+         KQ0UB0Jut9a2Eh/XYzQHTYM1dv2ZE1qT/eNJcEcgaHFqTABKgRtbMYq4CQGpoDxS9VF2
+         cYwWOGU9JX9vhcNtlAktBdt5FZGjCuDkDzpSC7C/5hOqgus4mG6g5IhN1pzAt7/c/cXK
+         S8OUhLtY772NGP9kAmXi3OGyATaURgGfoUGciYKrzNKj0Of0QsnJeLLo8kPcECwlklBa
+         IUkw==
+X-Forwarded-Encrypted: i=1; AJvYcCUTNYv1gnCyibMzuJENrXhdrCOuj46Brg435FN2Mh0F4Ns73k/x8uZbMOEt42DZ/wfVTZFmHpgZ7nkTzVs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGlhmOtLj3d+lJbTCnuW+1+6jVEoxPExJJYm5Ma49NyIxn7r1S
+	cBJiCDuo37cwS09GuloaiD18tGEkviUa1DtOCdGwtpw/BNyIGnmvXox3DPzDpezY7s8B+DQracQ
+	HWu8=
+X-Gm-Gg: ASbGncuTBedrT1qh5cW87BAQIijbohzdbIhjriX01h4drps3JdgTt8jLEiMjCW9meOB
+	fr0lo75t2Wcxk8tw3tcnu07usTwEchZNUa3JoaFw4HBGqsseXtaWxEzcWDx4yLhpc31S/Q7H9xo
+	YfqTtSzxDqMqgYKab6zM1f0ZYxW57mmZjgfGfEWd/0HmdJQk3LMmecCOtrbBu7Cvp16/FLCV1Mg
+	opwW8NHw7Zd3Fj+DGHQtaGSkGlJDr4IvDkUDg+3FubvQ7IFEAzxjxKFKOV2WXoDLGtU4dEmWT7P
+	CYOMm77Z+5zuYUK85hZWZ+e7c8KYt93aUiP8fs9TB+NEDM36eSAWhMfplpOUIUuF3HIZYekQlYY
+	OGFMzzl2umTspYvw=
+X-Google-Smtp-Source: AGHT+IHJfw59UDW0Pv40EGj8vdDsw9qRpT5UK4Hkiv0qz0Z5meN66cQK6NCTxPqzl6q7J1c8vnBxQA==
+X-Received: by 2002:a17:906:794a:b0:aca:a1cf:d5f8 with SMTP id a640c23a62f3a-ad1e8befd6cmr70447966b.11.1746560528106;
+        Tue, 06 May 2025 12:42:08 -0700 (PDT)
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com. [209.85.208.53])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad189146fc0sm764088266b.19.2025.05.06.12.42.06
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 06 May 2025 12:42:07 -0700 (PDT)
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5fafcdac19aso4407058a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 12:42:06 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXQz2fNwQ06cgtVFRrrgeJr9qxRQS4EGz/+YFucC47hKJN/rn4Ca+jICOxgSRutJB/tlqKZDMWuBbIqRBI=@vger.kernel.org
+X-Received: by 2002:a05:6402:3712:b0:5fb:1eed:cddc with SMTP id
+ 4fb4d7f45d1cf-5fbe9e14d48mr392630a12.16.1746560526641; Tue, 06 May 2025
+ 12:42:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
-
-
---=-aPZjeCNAtlT4mXGiBIxm
+References: <20250506154532.1281909-5-ardb+git@google.com> <20250506154532.1281909-8-ardb+git@google.com>
+ <CAHk-=whrcutH0LcMmaeJxxMeYpw2R5T80yoQAXbrRHNSTCB0Pw@mail.gmail.com>
+ <CAMj1kXFSae=stazUv8doka-zLOnDdXXR4ASxHKe5f97ikg3V2A@mail.gmail.com>
+ <CAHk-=whxP5Ywpv-U=2NPFhk929VHB9_kdp10+HFJQ4VxEGdX9A@mail.gmail.com>
+ <CAMj1kXGwYXXpjPgDwjKMEZJkuGJ8ZuCpMpc7fTvo58PNtu-czA@mail.gmail.com>
+ <CAHk-=wiz5oXq2f_87hHViN2TZQO9VHpaWb5fWWGJbUWQw1ChVw@mail.gmail.com>
+ <CAMj1kXEtW2bAQK4hN-S5C=Po5dk1q14+GJjzEJsjfz9OeOMoCg@mail.gmail.com>
+ <CAHk-=whRNPK7hTtPYh3SEe0WXEHR=aedc3bc-y_e08ujOxmgJg@mail.gmail.com>
+ <CAHk-=wj9jR8HVOoEsAppFCGH0BcRCY6CrVNUFpeSswxD3Ho67Q@mail.gmail.com> <CAMj1kXFNJEne4uDxjfq5=OiWJGA1Pu9O99mrJRky5CW4R3V32w@mail.gmail.com>
+In-Reply-To: <CAMj1kXFNJEne4uDxjfq5=OiWJGA1Pu9O99mrJRky5CW4R3V32w@mail.gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Tue, 6 May 2025 12:41:50 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wh3np3kEJ-D4OZC2nHGuY7crkTw6kefGkUYaerSpUP3Gw@mail.gmail.com>
+X-Gm-Features: ATxdqUGL8cpCtHcghXlxAoCws2vt3d7g0nqwOQJyGcZlqIbPpG7YBGAu-ou4GCk
+Message-ID: <CAHk-=wh3np3kEJ-D4OZC2nHGuY7crkTw6kefGkUYaerSpUP3Gw@mail.gmail.com>
+Subject: Re: [RFC PATCH 3/3] x86/boot: Use alternatives based selector for
+ 5-level paging constants
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
+	Ingo Molnar <mingo@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2025-05-02 at 15:29 +0300, Andy Shevchenko wrote:
-> Some of the platforms may have no legacy COM ports and only provide
-> an MMIO accessible UART. Add support for such to earlyprintk for the
-> boot phase of the kernel.
+On Tue, 6 May 2025 at 12:15, Ard Biesheuvel <ardb@kernel.org> wrote:
+>
+> First of all, that would mean calling into even more C code from the
+> 1:1 mapping of memory,
 
-Aha, I understand now... you've added this *only* for the boot code,
-and haven't added the corresponding support to the in-kernel
-earlyprintk, in arch/x86/kernel/early_printk.c
+Not a lot, actually.
 
-The latter does already support MMIO but it only supports a 32-bit
-stride, not 8-bit.
+When I did the runtime-const stuff, I refused to use the alternatives
+code, because it was called much too late and was much too
+complicated.
 
-Please could you make that consistent, and ensure the earlyprintk=3D
-arguments function the same for both phases? I'm happy to add the
-kexec-debug parts on top of *that*.
+So I just did an early fixup by hand - in the place where the variable
+was actually changed. Exactly so that you had *consistency*.
 
-It would be really helpful if we could test this in QEMU; it shouldn't
-be that hard to make it provide a 16550 on MMIO, along the lines of the
-one-line hack I posted yesterday.
+It's literally four lines of code that gets inlined.
 
---=-aPZjeCNAtlT4mXGiBIxm
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
+See runtime_const_fixup().
 
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCD9Aw
-ggSOMIIDdqADAgECAhAOmiw0ECVD4cWj5DqVrT9PMA0GCSqGSIb3DQEBCwUAMGUxCzAJBgNVBAYT
-AlVTMRUwEwYDVQQKEwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5jb20xJDAi
-BgNVBAMTG0RpZ2lDZXJ0IEFzc3VyZWQgSUQgUm9vdCBDQTAeFw0yNDAxMzAwMDAwMDBaFw0zMTEx
-MDkyMzU5NTlaMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYDVQQDExdWZXJv
-a2V5IFNlY3VyZSBFbWFpbCBHMjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMjvgLKj
-jfhCFqxYyRiW8g3cNFAvltDbK5AzcOaR7yVzVGadr4YcCVxjKrEJOgi7WEOH8rUgCNB5cTD8N/Et
-GfZI+LGqSv0YtNa54T9D1AWJy08ZKkWvfGGIXN9UFAPMJ6OLLH/UUEgFa+7KlrEvMUupDFGnnR06
-aDJAwtycb8yXtILj+TvfhLFhafxroXrflspavejQkEiHjNjtHnwbZ+o43g0/yxjwnarGI3kgcak7
-nnI9/8Lqpq79tLHYwLajotwLiGTB71AGN5xK+tzB+D4eN9lXayrjcszgbOv2ZCgzExQUAIt98mre
-8EggKs9mwtEuKAhYBIP/0K6WsoMnQCcCAwEAAaOCAVwwggFYMBIGA1UdEwEB/wQIMAYBAf8CAQAw
-HQYDVR0OBBYEFIlICOogTndrhuWByNfhjWSEf/xwMB8GA1UdIwQYMBaAFEXroq/0ksuCMS1Ri6en
-IZ3zbcgPMA4GA1UdDwEB/wQEAwIBhjAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIweQYI
-KwYBBQUHAQEEbTBrMCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5kaWdpY2VydC5jb20wQwYIKwYB
-BQUHMAKGN2h0dHA6Ly9jYWNlcnRzLmRpZ2ljZXJ0LmNvbS9EaWdpQ2VydEFzc3VyZWRJRFJvb3RD
-QS5jcnQwRQYDVR0fBD4wPDA6oDigNoY0aHR0cDovL2NybDMuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0
-QXNzdXJlZElEUm9vdENBLmNybDARBgNVHSAECjAIMAYGBFUdIAAwDQYJKoZIhvcNAQELBQADggEB
-ACiagCqvNVxOfSd0uYfJMiZsOEBXAKIR/kpqRp2YCfrP4Tz7fJogYN4fxNAw7iy/bPZcvpVCfe/H
-/CCcp3alXL0I8M/rnEnRlv8ItY4MEF+2T/MkdXI3u1vHy3ua8SxBM8eT9LBQokHZxGUX51cE0kwa
-uEOZ+PonVIOnMjuLp29kcNOVnzf8DGKiek+cT51FvGRjV6LbaxXOm2P47/aiaXrDD5O0RF5SiPo6
-xD1/ClkCETyyEAE5LRJlXtx288R598koyFcwCSXijeVcRvBB1cNOLEbg7RMSw1AGq14fNe2cH1HG
-W7xyduY/ydQt6gv5r21mDOQ5SaZSWC/ZRfLDuEYwggWbMIIEg6ADAgECAhAH5JEPagNRXYDiRPdl
-c1vgMA0GCSqGSIb3DQEBCwUAMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYD
-VQQDExdWZXJva2V5IFNlY3VyZSBFbWFpbCBHMjAeFw0yNDEyMzAwMDAwMDBaFw0yODAxMDQyMzU5
-NTlaMB4xHDAaBgNVBAMME2R3bXcyQGluZnJhZGVhZC5vcmcwggIiMA0GCSqGSIb3DQEBAQUAA4IC
-DwAwggIKAoICAQDali7HveR1thexYXx/W7oMk/3Wpyppl62zJ8+RmTQH4yZeYAS/SRV6zmfXlXaZ
-sNOE6emg8WXLRS6BA70liot+u0O0oPnIvnx+CsMH0PD4tCKSCsdp+XphIJ2zkC9S7/yHDYnqegqt
-w4smkqUqf0WX/ggH1Dckh0vHlpoS1OoxqUg+ocU6WCsnuz5q5rzFsHxhD1qGpgFdZEk2/c//ZvUN
-i12vPWipk8TcJwHw9zoZ/ZrVNybpMCC0THsJ/UEVyuyszPtNYeYZAhOJ41vav1RhZJzYan4a1gU0
-kKBPQklcpQEhq48woEu15isvwWh9/+5jjh0L+YNaN0I//nHSp6U9COUG9Z0cvnO8FM6PTqsnSbcc
-0j+GchwOHRC7aP2t5v2stVx3KbptaYEzi4MQHxm/0+HQpMEVLLUiizJqS4PWPU6zfQTOMZ9uLQRR
-ci+c5xhtMEBszlQDOvEQcyEG+hc++fH47K+MmZz21bFNfoBxLP6bjR6xtPXtREF5lLXxp+CJ6KKS
-blPKeVRg/UtyJHeFKAZXO8Zeco7TZUMVHmK0ZZ1EpnZbnAhKE19Z+FJrQPQrlR0gO3lBzuyPPArV
-hvWxjlO7S4DmaEhLzarWi/ze7EGwWSuI2eEa/8zU0INUsGI4ywe7vepQz7IqaAovAX0d+f1YjbmC
-VsAwjhLmveFjNwIDAQABo4IBsDCCAawwHwYDVR0jBBgwFoAUiUgI6iBOd2uG5YHI1+GNZIR//HAw
-HQYDVR0OBBYEFFxiGptwbOfWOtMk5loHw7uqWUOnMDAGA1UdEQQpMCeBE2R3bXcyQGluZnJhZGVh
-ZC5vcmeBEGRhdmlkQHdvb2Rob3Uuc2UwFAYDVR0gBA0wCzAJBgdngQwBBQEBMA4GA1UdDwEB/wQE
-AwIF4DAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwewYDVR0fBHQwcjA3oDWgM4YxaHR0
-cDovL2NybDMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDA3oDWgM4YxaHR0
-cDovL2NybDQuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDB2BggrBgEFBQcB
-AQRqMGgwJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmRpZ2ljZXJ0LmNvbTBABggrBgEFBQcwAoY0
-aHR0cDovL2NhY2VydHMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNydDANBgkq
-hkiG9w0BAQsFAAOCAQEAQXc4FPiPLRnTDvmOABEzkIumojfZAe5SlnuQoeFUfi+LsWCKiB8Uextv
-iBAvboKhLuN6eG/NC6WOzOCppn4mkQxRkOdLNThwMHW0d19jrZFEKtEG/epZ/hw/DdScTuZ2m7im
-8ppItAT6GXD3aPhXkXnJpC/zTs85uNSQR64cEcBFjjoQDuSsTeJ5DAWf8EMyhMuD8pcbqx5kRvyt
-JPsWBQzv1Dsdv2LDPLNd/JUKhHSgr7nbUr4+aAP2PHTXGcEBh8lTeYea9p4d5k969pe0OHYMV5aL
-xERqTagmSetuIwolkAuBCzA9vulg8Y49Nz2zrpUGfKGOD0FMqenYxdJHgDCCBZswggSDoAMCAQIC
-EAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQELBQAwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoT
-B1Zlcm9rZXkxIDAeBgNVBAMTF1Zlcm9rZXkgU2VjdXJlIEVtYWlsIEcyMB4XDTI0MTIzMDAwMDAw
-MFoXDTI4MDEwNDIzNTk1OVowHjEcMBoGA1UEAwwTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJ
-KoZIhvcNAQEBBQADggIPADCCAgoCggIBANqWLse95HW2F7FhfH9bugyT/danKmmXrbMnz5GZNAfj
-Jl5gBL9JFXrOZ9eVdpmw04Tp6aDxZctFLoEDvSWKi367Q7Sg+ci+fH4KwwfQ8Pi0IpIKx2n5emEg
-nbOQL1Lv/IcNiep6Cq3DiyaSpSp/RZf+CAfUNySHS8eWmhLU6jGpSD6hxTpYKye7PmrmvMWwfGEP
-WoamAV1kSTb9z/9m9Q2LXa89aKmTxNwnAfD3Ohn9mtU3JukwILRMewn9QRXK7KzM+01h5hkCE4nj
-W9q/VGFknNhqfhrWBTSQoE9CSVylASGrjzCgS7XmKy/BaH3/7mOOHQv5g1o3Qj/+cdKnpT0I5Qb1
-nRy+c7wUzo9OqydJtxzSP4ZyHA4dELto/a3m/ay1XHcpum1pgTOLgxAfGb/T4dCkwRUstSKLMmpL
-g9Y9TrN9BM4xn24tBFFyL5znGG0wQGzOVAM68RBzIQb6Fz758fjsr4yZnPbVsU1+gHEs/puNHrG0
-9e1EQXmUtfGn4InoopJuU8p5VGD9S3Ikd4UoBlc7xl5yjtNlQxUeYrRlnUSmdlucCEoTX1n4UmtA
-9CuVHSA7eUHO7I88CtWG9bGOU7tLgOZoSEvNqtaL/N7sQbBZK4jZ4Rr/zNTQg1SwYjjLB7u96lDP
-sipoCi8BfR35/ViNuYJWwDCOEua94WM3AgMBAAGjggGwMIIBrDAfBgNVHSMEGDAWgBSJSAjqIE53
-a4blgcjX4Y1khH/8cDAdBgNVHQ4EFgQUXGIam3Bs59Y60yTmWgfDu6pZQ6cwMAYDVR0RBCkwJ4ET
-ZHdtdzJAaW5mcmFkZWFkLm9yZ4EQZGF2aWRAd29vZGhvdS5zZTAUBgNVHSAEDTALMAkGB2eBDAEF
-AQEwDgYDVR0PAQH/BAQDAgXgMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDB7BgNVHR8E
-dDByMDegNaAzhjFodHRwOi8vY3JsMy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
-Y3JsMDegNaAzhjFodHRwOi8vY3JsNC5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
-Y3JsMHYGCCsGAQUFBwEBBGowaDAkBggrBgEFBQcwAYYYaHR0cDovL29jc3AuZGlnaWNlcnQuY29t
-MEAGCCsGAQUFBzAChjRodHRwOi8vY2FjZXJ0cy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVt
-YWlsRzIuY3J0MA0GCSqGSIb3DQEBCwUAA4IBAQBBdzgU+I8tGdMO+Y4AETOQi6aiN9kB7lKWe5Ch
-4VR+L4uxYIqIHxR7G2+IEC9ugqEu43p4b80LpY7M4KmmfiaRDFGQ50s1OHAwdbR3X2OtkUQq0Qb9
-6ln+HD8N1JxO5nabuKbymki0BPoZcPdo+FeRecmkL/NOzzm41JBHrhwRwEWOOhAO5KxN4nkMBZ/w
-QzKEy4PylxurHmRG/K0k+xYFDO/UOx2/YsM8s138lQqEdKCvudtSvj5oA/Y8dNcZwQGHyVN5h5r2
-nh3mT3r2l7Q4dgxXlovERGpNqCZJ624jCiWQC4ELMD2+6WDxjj03PbOulQZ8oY4PQUyp6djF0keA
-MYIDuzCCA7cCAQEwVTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMX
-VmVyb2tleSBTZWN1cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJYIZIAWUDBAIBBQCg
-ggE3MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDUwNjE5Mzgy
-MVowLwYJKoZIhvcNAQkEMSIEILoInd8tFdp3SLkV1itNMEI1h44pVJ6jdL8sj84vA2tgMGQGCSsG
-AQQBgjcQBDFXMFUwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoTB1Zlcm9rZXkxIDAeBgNVBAMTF1Zl
-cm9rZXkgU2VjdXJlIEVtYWlsIEcyAhAH5JEPagNRXYDiRPdlc1vgMGYGCyqGSIb3DQEJEAILMVeg
-VTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMXVmVyb2tleSBTZWN1
-cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQEBBQAEggIApG0S6pSAJPlB
-owRO8vRN/MawdgnXimppyzL+gMCB7sy5qqekAYg6wNILLa8n+vGY5X1CwaCJJIyzD6m3krDybDaF
-4XHCh4L9reToXVjJkbSKWnMOC1HDcqefJ+48N9vi3bzdl3mybinBdvSOSYPCTEA4yP4GkYTuSnuX
-KUSaRNlNsmHIIJ4KYQgCgRj/2K7PbOJsDGhhzLJjeZ246K0TE1nH0CB24tusLpHB92DzcJKX3DB/
-2aEpzxKyo5/DYSyPbZmOUNlNDZIGy3a0HEr+O89i5f5GhJRYbt+gkRM3uLqlx694FyyzYp2bMzlf
-ug56XDTsoYxo/QgGlolZaY4znaZtyIFWQedRFE+niIrl48LYkPp3c/YyzFsmUfWDYvJeqomGGxQt
-cgAJGucXolb6W4EkYId9mOQGJM1zsTtfp3rTfowkxxV/lOGHHyXFpIwQt4DBJNrIpz1WNrLy4rwE
-/cwc3E8eJrdGiW6RMB4EpIi91fMTFqmIGQiQg7lgV6bZRFgp0uj2WginziZxf0Ch/80GqUWmKcDy
-Mp8bkelc0S//rpF78JL0qLJJhlP7BBGJ1T7AMQgUONNwZlKTAW6vx6CKMln1x4d2GupMAuEw4l0Y
-l8eZLX35ncd0fw54hxcvhZlTfKMzh2mvBKsv/dNJM5GWyAqsqGvgjLBCfz9fi+0AAAAAAAA=
+And I just checked. Those four lines of code generate seven *instructions*:
 
+  .LBB80_4:
+        movq    $__start_runtime_ptr_dentry_hashtable, %rcx
+  .LBB80_6:                               # =>This Inner Loop Header: Depth=1
+        cmpq    $__stop_runtime_ptr_dentry_hashtable, %rcx
+        jae     .LBB80_7
+  # %bb.5:                                #   in Loop: Header=BB80_6 Depth=1
+        movslq  (%rcx), %rdx
+        movq    %rax, (%rcx,%rdx)
+        addq    $4, %rcx
+        jmp     .LBB80_6
 
---=-aPZjeCNAtlT4mXGiBIxm--
+that's literally what that
+
+        runtime_const_init(ptr, dentry_hashtable);
+
+generates in dcache_init_early() for me.
+
+Seriously, this is *trivial*.
+
+                Linus
+
+             Linus
