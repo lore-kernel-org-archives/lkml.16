@@ -1,148 +1,158 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D00A623D295;
-	Tue,  6 May 2025 08:15:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A203823F42D;
+	Tue,  6 May 2025 08:15:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746519321; cv=none; b=ZdOYjqONX4xpG0OPRyPWqYYDM3lAH4Um7rLKY+Gt+lcdjv2NEyEg9ArD89kDZIFQKI60v48tZGauXvMS/UcsxwkbJyP5rRJOPxPvDpXPoXBjp6WhzikjbCrPiioqQtAVYcC40A5loLcTB4PeHLNc9CS2c59f8WcKLc6harF9o3Q=
+	t=1746519348; cv=none; b=VMt+K30C82p/BSKxx6lGMXLvu/rG7S9F/6VYF3tiZguCTcmnR36CptaUmInKWnXhP8TCXWqbvphQGPXrf4z6Xu868sEOxgOUrqbf00yYJbHzzXIk1Cyp6vOk4ymu5enAWF9KKh2I5YyUY9pGOoBbvPUQCKkBS+49U/uT3rG2rTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746519321; c=relaxed/simple;
-	bh=rOvLY2UBX5VIVd+N+Q/F3fAiEXOo/Fm9hbn+UA/ZmeU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dNbuLTMNVuKIQ07ddK6g4sR2QDE3918et+3Shi6HUgCrSy0FEedlKObbiTE9DPAG1aXItbL25UBSun1jyGp62NCF4sBJLsQznnKa0fJsc4yeyIK2K3xyFrswyzjWHCg1ke458lW0P06FrpkcUbttpyt91iRKNRR36S/77DPQrNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZpnZZB5y; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1746519348; c=relaxed/simple;
+	bh=YKjqfQvee2j2+nsXOxD9gXSQQ3Wln6g5vc+oPD25nOk=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=VD4Pne6ftfza9n5fUUFxwuMROBNYWKzC28ePzdSnePGNQB8eV5gbU0tBw3pTNEpUq0Q18gAu2z+7PaYrb1SnjmD+dbhCcxWyl5orMdwyrqvlmxjJdegh/uKVfc3GdqVjKWcMqwYDRv3raqAnAS86VkAw6tp31l3SQ+di/y90dSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=T9Vb/ulC; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=t1pApqld; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZpnZZB5y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746519320; x=1778055320;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=rOvLY2UBX5VIVd+N+Q/F3fAiEXOo/Fm9hbn+UA/ZmeU=;
-  b=ZpnZZB5y9Wv9xC9Wm4Diz49QwO49PUeYWoutQM0rc6fYx7uCXbRoyiKN
-   9ug0eAsVhoHrj06Cf19vaZJnUqTPUCGAYM5CzrQTv7cdnFwRYllSqaIKF
-   3ymCaSFEgZBFr3uFjSwrYYGLRihWaPj9FJXmnJUjqiiQrRAvucAF7zT9f
-   agSXxwovy/P88TvgepPPCZIN8GccvFUQ47a9mgQQKykPsp8/eyAQ8p7JU
-   1vdRIBHk7wwh3+enjd7BKRYKACW/HoERnZWFY+a7a1uUW1tOpFyUBnDrG
-   D39JgyOmzXzRF/zQwmTuiiveURMJYvLFET0/eg6xf+K4MO+/hrd6KewAb
-   A==;
-X-CSE-ConnectionGUID: PbGa6bhKQ/K5BYp9SNQGcw==
-X-CSE-MsgGUID: qjsa8UM1TvK7VD1BnSs/9w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11424"; a="73571685"
-X-IronPort-AV: E=Sophos;i="6.15,265,1739865600"; 
-   d="scan'208";a="73571685"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 01:15:20 -0700
-X-CSE-ConnectionGUID: 7Z9qjoEfStSILJ6gJBGPcg==
-X-CSE-MsgGUID: EOPOD1WASyuhcqOAgw3PSA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,265,1739865600"; 
-   d="scan'208";a="158795600"
-Received: from oandoniu-mobl3.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.165])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 01:15:16 -0700
-Received: from kekkonen.localdomain (localhost [127.0.0.1])
-	by kekkonen.fi.intel.com (Postfix) with ESMTP id 5A9EB122F00;
-	Tue,  6 May 2025 10:45:24 +0300 (EEST)
-Date: Tue, 6 May 2025 07:45:24 +0000
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: "Nirujogi, Pratap" <pnirujog@amd.com>,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-	Pratap Nirujogi <pratap.nirujogi@amd.com>, mchehab@kernel.org,
-	hverkuil@xs4all.nl, dave.stevenson@raspberrypi.com, krzk@kernel.org,
-	dan.carpenter@linaro.org, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org, benjamin.chan@amd.com, bin.du@amd.com,
-	grosikop@amd.com, king.li@amd.com, dantony@amd.com,
-	Venkata Narendra Kumar Gutta <vengutta@amd.com>
-Subject: Re: [PATCH v2] media: i2c: Add OV05C10 camera sensor driver
-Message-ID: <aBm-FEdHqERKj9Am@kekkonen.localdomain>
-References: <MhUYQD7uWnfZQAPq7VslFWPHOmx2B2UfAIpbMhLq1-7GC_i5bI2hhns_-ov_AAVpEH_VmDDFYkS5aOKBwnY61g==@protonmail.internalid>
- <20250328214706.1516566-1-pratap.nirujogi@amd.com>
- <fef11ce6-b3b6-4677-9387-13332b9a9d43@linaro.org>
- <6ba024ef-4757-4db0-b12a-d56622329bb0@amd.com>
- <20250402012052.GG4845@pendragon.ideasonboard.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="T9Vb/ulC";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="t1pApqld"
+Date: Tue, 06 May 2025 08:15:43 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1746519345;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vJuVUAXSSyw+InaimbZuOQtnqmauSCl3M20V+lzwRjs=;
+	b=T9Vb/ulCVdiVOHujUqhFIzIAxNp6HuteNimLNUHbQ6Rh+i2u90lCADoK8FNtju1sSEaBp/
+	oaV9+LGncp8483FSQWDp3TEHa00XRMW3rfzyHrWtEuP2gJJGg9gLjn0ETkyLGR/GlP/Cqz
+	io7FDdi6wqtjvVuc3Byi3LLZ9eXRm+eEziYjFt1BTbqOKSq453T2S0IGWVJk5bN5Xv1z7T
+	xEw74tONqOfEMPoCf3A/ZYRVc0iJsqTPJJj6ouBOIh0g/XyrnOgZNaHXwvijvAnUBFzHJG
+	ZveiLXXc6w5zVbWDye73oxPPxvGRHqtUwfxnJszWI6NtuDWj6fPZm7nWjW/uQA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1746519345;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vJuVUAXSSyw+InaimbZuOQtnqmauSCl3M20V+lzwRjs=;
+	b=t1pApqldFMDgAZEhV8n9biEeapPJNvE7zjWkJZC5u5uBTiOkyGmCsgkD9f9VmrSP72FzoR
+	H5byt/NQF46TksBA==
+From: "tip-bot2 for Ahmed S. Darwish" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/cpu] x86/cpu: Sanitize CPUID(0x80000000) output
+Cc: "Ahmed S. Darwish" <darwi@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
+ Andrew Cooper <andrew.cooper3@citrix.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ John Ogness <john.ogness@linutronix.de>, x86-cpuid@lists.linux.dev,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250506050437.10264-3-darwi@linutronix.de>
+References: <20250506050437.10264-3-darwi@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250402012052.GG4845@pendragon.ideasonboard.com>
+Message-ID: <174651934390.406.14677915128369507134.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Hi Laurent,
+The following commit has been merged into the x86/cpu branch of tip:
 
-On Wed, Apr 02, 2025 at 04:20:52AM +0300, Laurent Pinchart wrote:
-> On Mon, Mar 31, 2025 at 03:17:22PM -0400, Nirujogi, Pratap wrote:
-> > On 3/28/2025 9:18 PM, Bryan O'Donoghue wrote:
-> > > On 28/03/2025 21:42, Pratap Nirujogi wrote:
-> > >> From: Bin Du <Bin.Du@amd.com>
-> > > 
-> > >> +static const struct i2c_device_id ov05c10_id[] = {
-> > >> +     {"ov05c10", 0 },
-> > >> +     { }
-> > >> +};
-> > > 
-> > > There's an IPU6/IPU7 version of this driver.
-> > > 
-> > > https://github.com/intel/ipu6-drivers/blob/master/drivers/media/i2c/ 
-> > > ov05c10.c
-> > > 
-> > > Perhaps you could import the Intel ACPI name contained in there too.
-> > > 
-> > sure, will add Intel ACPI names too in V3. To be specific, I'm going to 
-> > add the below table in addition to the existing "struct i2c_device_id 
-> > ov05c10_id[]" table:
-> > 
-> > static const struct acpi_device_id ov05c10_acpi_ids[] = {
-> > 	{ "OVTI05C1" },
-> > 	{}
-> > };
-> 
-> You could drop the i2c_device_id table if you added an OF device ID
-> table, but you'll need DT bindings for that. Sakari, any best practice
-> rule in this area ?
+Commit-ID:     cc663ba3fe383a628a812f893cc98aafff39ab04
+Gitweb:        https://git.kernel.org/tip/cc663ba3fe383a628a812f893cc98aafff39ab04
+Author:        Ahmed S. Darwish <darwi@linutronix.de>
+AuthorDate:    Tue, 06 May 2025 07:04:13 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Tue, 06 May 2025 10:04:57 +02:00
 
-I don't think there should be a need for an I²C ID in any case, having just
-ACPI _HID is fine.
+x86/cpu: Sanitize CPUID(0x80000000) output
 
-DT bindings would of course be a plus.
+CPUID(0x80000000).EAX returns the max extended CPUID leaf available.  On
+x86-32 machines without an extended CPUID range, a CPUID(0x80000000)
+query will just repeat the output of the last valid standard CPUID leaf
+on the CPU; i.e., a garbage values.  Current tip:x86/cpu code protects against
+this by doing:
 
-> 
-> > >> +
-> > >> +MODULE_DEVICE_TABLE(i2c, ov05c10_id);
-> > >> +
-> > >> +static struct i2c_driver ov05c10_i2c_driver = {
-> > >> +     .driver = {
-> > >> +             .name = DRV_NAME,
-> > >> +             .pm = pm_ptr(&ov05c10_pm_ops),
-> > >> +     },
-> > >> +     .id_table = ov05c10_id,
-> > >> +     .probe = ov05c10_probe,
-> > >> +     .remove = ov05c10_remove,
-> > >> +};
-> > >> +
-> > >> +module_i2c_driver(ov05c10_i2c_driver);
-> > >> +
-> > >> +MODULE_AUTHOR("Pratap Nirujogi <pratap.nirujogi@amd.com>");
-> > >> +MODULE_AUTHOR("Venkata Narendra Kumar Gutta <vengutta@amd.com>");
-> > >> +MODULE_AUTHOR("Bin Du <bin.du@amd.com>");
-> > >> +MODULE_DESCRIPTION("OmniVision OV05C1010 sensor driver");
-> > >> +MODULE_LICENSE("GPL v2");
-> > > 
-> > > Why v2 ? Checkpatch will complain about v2 and BTW the IPU6 driver above
-> > > is GPL not GPL v2.
-> > 
-> > sure, will replace "GPL v2" with "GPL" in V3.
-> 
+	eax = cpuid_eax(0x80000000);
+	c->extended_cpuid_level = eax;
 
--- 
-Regards,
+	if ((eax & 0xffff0000) == 0x80000000) {
+		// CPU has an extended CPUID range. Check for 0x80000001
+		if (eax >= 0x80000001) {
+			cpuid(0x80000001, ...);
+		}
+	}
 
-Sakari Ailus
+This is correct so far.  Afterwards though, the same possibly broken EAX
+value is used to check the availability of other extended CPUID leaves:
+
+	if (c->extended_cpuid_level >= 0x80000007)
+		...
+	if (c->extended_cpuid_level >= 0x80000008)
+		...
+	if (c->extended_cpuid_level >= 0x8000000a)
+		...
+	if (c->extended_cpuid_level >= 0x8000001f)
+		...
+
+which is invalid.  Fix this by immediately setting the CPU's max extended
+CPUID leaf to zero if CPUID(0x80000000).EAX doesn't indicate a valid
+CPUID extended range.
+
+While at it, add a comment, similar to kernel/head_32.S, clarifying the
+CPUID(0x80000000) sanity check.
+
+References: 8a50e5135af0 ("x86-32: Use symbolic constants, safer CPUID when enabling EFER.NX")
+Fixes: 3da99c977637 ("x86: make (early)_identify_cpu more the same between 32bit and 64 bit")
+Signed-off-by: Ahmed S. Darwish <darwi@linutronix.de>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Andrew Cooper <andrew.cooper3@citrix.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: John Ogness <john.ogness@linutronix.de>
+Cc: x86-cpuid@lists.linux.dev
+Link: https://lore.kernel.org/r/20250506050437.10264-3-darwi@linutronix.de
+---
+ arch/x86/kernel/cpu/common.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index 4ada55f..e5734df 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -1005,17 +1005,18 @@ void get_cpu_cap(struct cpuinfo_x86 *c)
+ 		c->x86_capability[CPUID_D_1_EAX] = eax;
+ 	}
+ 
+-	/* AMD-defined flags: level 0x80000001 */
++	/*
++	 * Check if extended CPUID leaves are implemented: Max extended
++	 * CPUID leaf must be in the 0x80000001-0x8000ffff range.
++	 */
+ 	eax = cpuid_eax(0x80000000);
+-	c->extended_cpuid_level = eax;
++	c->extended_cpuid_level = ((eax & 0xffff0000) == 0x80000000) ? eax : 0;
+ 
+-	if ((eax & 0xffff0000) == 0x80000000) {
+-		if (eax >= 0x80000001) {
+-			cpuid(0x80000001, &eax, &ebx, &ecx, &edx);
++	if (c->extended_cpuid_level >= 0x80000001) {
++		cpuid(0x80000001, &eax, &ebx, &ecx, &edx);
+ 
+-			c->x86_capability[CPUID_8000_0001_ECX] = ecx;
+-			c->x86_capability[CPUID_8000_0001_EDX] = edx;
+-		}
++		c->x86_capability[CPUID_8000_0001_ECX] = ecx;
++		c->x86_capability[CPUID_8000_0001_EDX] = edx;
+ 	}
+ 
+ 	if (c->extended_cpuid_level >= 0x80000007) {
