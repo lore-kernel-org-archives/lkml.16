@@ -1,197 +1,372 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2051.outbound.protection.outlook.com [40.107.220.51])
+Received: from sender3-op-o12.zoho.com (sender3-op-o12.zoho.com [136.143.184.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1627319CC0E
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 18:55:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D84E26FA5F;
+	Tue,  6 May 2025 18:55:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.184.12
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746557717; cv=fail; b=eZeTSSIpuMB3Y9UaFilVCUhtQgngGILR98ooXtuVHaxurgDPyhyoZnKjLpeOaI7nnEECZ8hb7e25JBu+jlv2DEHGbHa3DVNnYKkThmlWZWAQd4vnJ8EAyhpCbRYOJ860bCMWJtcsnmKs6jBx46QEFgUdMkPCtRI28S3Qypp4A2E=
+	t=1746557755; cv=pass; b=Ye5XHLn9KTWHdpOEvg3th1ScBFTxYGJnLEEYp8PQFxeL8M/fU4lKcdJuHnIbz0M2fkchc+7I1MenCESoZnP8YHXlB2POxmQ4FhUmETT/WI0bijMuZPgOELjbt/MDG2Gr5+dkpXADLyuE/ijfQQriALTDDmJkKCsoAXHXiZnyYJc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746557717; c=relaxed/simple;
-	bh=mWPTC8MEqWqWiJTYGJQgwoPjanFJ09E9SbtC0QcsUOM=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ck6uX7chJb4aMPI6/BB6S8NZcp5zDM/NkdS1ewOqhHTtCJVnoydB872FPbG1hAC9u2TJbmtxwGE+8rsPRr2svNbFiv9f/WQ875EC3tkkRezVLBthBoS+X3rlzF6eTY+LMgBAj2aZYB2fYi4hHnhFEl3Y2QtQkBM8WCNdqehnV3c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=tS9y6Lnq; arc=fail smtp.client-ip=40.107.220.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1746557755; c=relaxed/simple;
+	bh=+V9c9P+XLCP6epmmMfl8cUF9PvnqAjKBYuDSNlAXMnQ=;
+	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
+	 Date:MIME-Version; b=R/OrplYLGbm1oa3v/0TUlEF29nbWiMBVXnD9F+ckR2pfPFquyuqvTJHOSWyPsS0BYWhLWo1F15ydr37tKIm+CQ6zgf/q/gCrRaTcTX+sYlg2gRoofY0kndjBrP5TJCBjsTbchM2jYEcxvOj3ejo5EV4X7LgmFYFWxvmR9mM031M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (1024-bit key) header.d=rong.moe header.i=i@rong.moe header.b=nOUSIUtr; arc=pass smtp.client-ip=136.143.184.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="tS9y6Lnq"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Hnt8NCHEqUIvSSjWYTfPEQBQ3Lo4XDTMOPko+151acjWKB/3H/abkky72gx8DuGbotBFvQ5duL4ahSLoNUkOOWveH6BUxF2A2uW3qty633NTIftGB/j6PBbpduYCxbejyoyjijiOAAot6979hP7cgMaM7HrpguZkcsipzwEx2CBxVK2Bus+xtCWf56Ae2yMkZ67BBIPqYsce2VFS4WN0zyKW+vRHUHIiLubeoWGcla4bs4O2FftE+lO2zOqRPuv4Ltif3BQl7/JPD+DAMV0dGVlYiGjE2UbRJf3KdVMncrPpMJllLZDSwCFixO9vXDQH/pC+Ie4Z4uzt/TSyfBoJHg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=eR6T48a11hZlnSf9Vg+0rHZl2Ze7XtUgxwGgkIRPmug=;
- b=A7FIJJMyPSgBqb80GuMMHy3C5IO+MtoFHQdQjqh8TbFe1OVLb/NcwMXPxlhZGUnaowrenDhjQxr+wD91eHS+CGP9OStvi7bCnK6LSh+/VEDEz2OR9b2xUB3UeQpPEJHupROYpoF5kCsnIkh5S+c/DjR8mKsjOIVmslY+PvEs98Qm+tWa6NXt7T99HXc1wlgcqNEDu7x8ANBuM95uyQ08IGv631+R4G2dbwCMPO9xNkYcHTo8bYxJep3J/yzX6N1KsJW6JAOO1L2LUO9PKk17Ptu7ASlXqYNIwePOfNSRLNOGKlNkfBfT3fRdx3pm5td06QUa41QxNrQ2/bXDQL9DQg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eR6T48a11hZlnSf9Vg+0rHZl2Ze7XtUgxwGgkIRPmug=;
- b=tS9y6LnqqTnaWQy5IXIONNG/db3FP4AcPC9RhosAHL4ZXiINgXYKeJQpi1AU7IEIp4+ojaaqZ79jHRb+UvgFREMelmjpXUGwIMHWOAfancRroJcXQeFfmN2IOA+cvs9QWjLu6V8OZ94vUwTCbWBKkkmQsMYYjzcV+Uztx7CJ8pA=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB5070.namprd12.prod.outlook.com (2603:10b6:5:389::22)
- by MW4PR12MB6828.namprd12.prod.outlook.com (2603:10b6:303:209::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.26; Tue, 6 May
- 2025 18:55:09 +0000
-Received: from DM4PR12MB5070.namprd12.prod.outlook.com
- ([fe80::20a9:919e:fd6b:5a6e]) by DM4PR12MB5070.namprd12.prod.outlook.com
- ([fe80::20a9:919e:fd6b:5a6e%3]) with mapi id 15.20.8699.026; Tue, 6 May 2025
- 18:55:09 +0000
-Message-ID: <fae08232-51ed-cc88-3de0-1cd9b014603b@amd.com>
-Date: Tue, 6 May 2025 13:55:03 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH 0/4] x86/sev: Rework SNP Guest Request
-To: Alexey Kardashevskiy <aik@amd.com>, x86@kernel.org
-Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Nikunj A Dadhania <nikunj@amd.com>, Ard Biesheuvel <ardb@kernel.org>,
- Brijesh Singh <brijesh.singh@amd.com>, Ashish Kalra <ashish.kalra@amd.com>,
- Paolo Bonzini <pbonzini@redhat.com>, Michael Roth <michael.roth@amd.com>,
- Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
- Liam Merwick <liam.merwick@oracle.com>
-References: <20250505141238.4179623-1-aik@amd.com>
-Content-Language: en-US
-From: Tom Lendacky <thomas.lendacky@amd.com>
-In-Reply-To: <20250505141238.4179623-1-aik@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN7PR04CA0216.namprd04.prod.outlook.com
- (2603:10b6:806:127::11) To DM4PR12MB5070.namprd12.prod.outlook.com
- (2603:10b6:5:389::22)
+	dkim=pass (1024-bit key) header.d=rong.moe header.i=i@rong.moe header.b="nOUSIUtr"
+ARC-Seal: i=1; a=rsa-sha256; t=1746557727; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=KwnPEahn9G+egIp0b5+OMaSwG/q5yfrWq88d17l9bkWBIgXCQWegMoiTcP3SVOqdd8k/IGx/csVmeCrlRgxTc0E2kcf3+hSJvvFVhWgcSCm+1Zh26FPNhChg2mjRmltcm6g++Clh4Mi93lV9IWqrR4hEd3KhubS96fmThG7NsnE=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1746557727; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=50LGUANZtRF4CAXc8c+CQnUyp7TR6CVRCU2iSaAz4DA=; 
+	b=T+yV+qPOi6R3UBycJ/rhxomsUnQmRnwYnIrQHcAM1SymG1+pZWq7f0Jxv/76FiiPav0z1JgWmrKqSwpJbHIAEZeZRo3L+UqqnsT3OQSeJVUaYfayi/ZXY/lx9DKg2cb0EoUoro92LWX5ktCyzIQbH81oWu/KLL2MHKRQ94CRBrw=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=rong.moe;
+	spf=pass  smtp.mailfrom=i@rong.moe;
+	dmarc=pass header.from=<i@rong.moe>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1746557727;
+	s=zmail; d=rong.moe; i=i@rong.moe;
+	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:Date:MIME-Version:Message-Id:Reply-To;
+	bh=50LGUANZtRF4CAXc8c+CQnUyp7TR6CVRCU2iSaAz4DA=;
+	b=nOUSIUtryZBqY9eUXNksP7xQTW20G0nnAx1CS+i9EHNg8B3TlDn2jWpdt5HBijy4
+	hnRwN0rXS+8iyezH/UakgakxX5ZkC4ZVaFuV5pyVJ8eBvKkJgY19euzohriRfx21yXk
+	+sgFONWR+EfUf7vAuZSDU5xBZ6e7aQ+cLW3/Fy7w=
+Received: by mx.zohomail.com with SMTPS id 1746557723958215.91670959458827;
+	Tue, 6 May 2025 11:55:23 -0700 (PDT)
+Message-ID: <d71e1b74a583cf2651658151751c578218861032.camel@rong.moe>
+Subject: Re: [PATCH] platform/x86/amd/pmc: Declare quirk_spurious_8042 for
+ MECHREVO Wujie 14XA (GX4HRXL)
+From: Rong Zhang <i@rong.moe>
+To: Mingcong Bai <jeffbai@aosc.io>, Mario Limonciello
+	 <mario.limonciello@amd.com>, Runhua He <hua@aosc.io>, 
+	platform-driver-x86@vger.kernel.org
+Cc: Kexy Biscuit <kexybiscuit@aosc.io>, Xinhui Yang <cyan@cyano.uk>, Yemu
+ Lu	 <prcups@krgm.moe>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Hans de
+ Goede	 <hdegoede@redhat.com>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=	
+ <ilpo.jarvinen@linux.intel.com>, linux-kernel@vger.kernel.org
+In-Reply-To: <0c355c40-defa-4486-a89a-39f1ad3aba03@aosc.io>
+References: <20250506112514.446784-1-hua@aosc.io>
+	 <f7200e0f-d6d5-4fb8-9701-3f97d1ab64fa@amd.com>
+	 <0c355c40-defa-4486-a89a-39f1ad3aba03@aosc.io>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 07 May 2025 02:54:18 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB5070:EE_|MW4PR12MB6828:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4c671b12-124b-46bc-91c1-08dd8ccf85f8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?bVlodmcvRThSamU1dU1FQ1FKd3pWcW9LYm1WZDBzZ2NNNUNodlJYM3Nlb2NO?=
- =?utf-8?B?Yi8wYSswZk9HQXRUallNYmdyK0Nmcy9FMGVLM3JyYmRPeTFlMDZXN2h5Szh2?=
- =?utf-8?B?bWRadncwK1VVLzFSVFd2bUhoY29oSktzTEo0dDRBSnBEOG5jUHpzUmkvVm00?=
- =?utf-8?B?WFRTRldtOERDWmY4RmlPK2ZnOHR3SmZmMTJpUzhkSk04Z0RwQ05CWmxkNitU?=
- =?utf-8?B?OHJNK3BwS0JJcldvZEo0ZlB2a1J1OFA3R0Vqekg4Y0V1UjhZNGptSTJiL1N1?=
- =?utf-8?B?L2dwa2pvR0lnSXhuQk5VWmhjeU8zVWlTL01uTytOTXdBQU1kcWVwWEVkdHFP?=
- =?utf-8?B?T3hoQzNKT3p1amY3UkxQZDRScGxBTDdKM21IOFVCMjBITmtTYXZITU14ZUJI?=
- =?utf-8?B?dGpVVzZSU1ltaXJjeW05L3lNeEtWQ2tTMjNrdVZIUjkzKytSaE1EMERXcUFG?=
- =?utf-8?B?WWFoSnZxQ3ZKRHJRUXVHTGFqRGVZQWFnVWJnb1VZQ0xFRUFBcXlURHJtcDFX?=
- =?utf-8?B?N1JmZFZudEJTczJnUXZrMWlHdjlYb1pPS21MOGlJRHlEQVVZdU1FRWkyT0tt?=
- =?utf-8?B?ZTZvZGhiQzJGWmdUd3F3QmZtUHUrckUxSW4zUDhLVDJOdkJHenZwZjhhSDZD?=
- =?utf-8?B?QnFMb2dHZHQvQ3hoWjVjQmZzbDJUK2xXUzNwYUFKN0svYVpnZ0h5TzhTWGRG?=
- =?utf-8?B?TzZqR29XWUxjYmRNbWIrcHRva05GK1pUejEvMXRmcVYrS0wzNngwRktaUHhk?=
- =?utf-8?B?TEgvOWVJOUNhL2s4TEVNMWtTUFFIUm14STBsb0Yrb21vZklyMUsyTitLbi80?=
- =?utf-8?B?bnZHTWZMS0JlRzJHVEVVVElydm5ITXlHZzFJbk1YcWY0TXlpUWhiOGZqNElT?=
- =?utf-8?B?alR6VUdJd0gvdkEycnBpVXIxUkF0ZzB2TjhvWXpCazU2bGFSekdNNmZOVVdB?=
- =?utf-8?B?TUwvZlZBaTMvUng2R0E4ZkFhYm4rNGxXWm14UlN3STVhNFVkbHc5QXFRWEE2?=
- =?utf-8?B?bWdnK1JQWGVFdCtXZUtreG9LNm0wRmVjRWEwNG9DRk1EdTVtd0FMYXJ4cndR?=
- =?utf-8?B?d1FBb0U0S2dBVkpzNFNUb1p1YVY2OVIwN3pIcnBNRGhoU2tJSzB6T2ZHVHNa?=
- =?utf-8?B?VmtyL3lrcWpWSG9XTjdCd2kyWTJ5Q1p5TzY4LzVIQkhaNWhlL1NXWlJSaVNj?=
- =?utf-8?B?TjUxeTExKzE3MUdKa2k0b2hRMEdZaEo3SENvMUtqR3p5RWZxWVJpU0crMFJh?=
- =?utf-8?B?OTh5Y0RJVE1zdElDNUZIT0w4aVZCZ0dacFl6NHhBWmVaVkZTVUVSOXpPNk5B?=
- =?utf-8?B?RkQ4SkpJSkN4U1REak0zK0JGOG0vbzZxNUd5eU9uQWllZXNaMEE3ekYwenph?=
- =?utf-8?B?ZW4zN015QktHN1FZL2tWcUNlb000bzdUYko3aHloTmkzUkFsVHdGTVB0dEUz?=
- =?utf-8?B?YUdTSjRLUElPLzhLNWNkRC9mTVNFejlIWlZCaGxvRHBFcWQ0NEIwbnMwOWo3?=
- =?utf-8?B?V3ROODdFcFd6aVhJbzRDWWhuZjFnOTZuQ3MvbGpuUUZhVmVvYk1MbkdBNzgx?=
- =?utf-8?B?NXpnd1BuY1E4NnJ2cFhwTndSS1F6Q3F2S29CRWJWMk5jY2x1aDlxOGZkRVJT?=
- =?utf-8?B?WHhYZlJkR0xQMUJuamRITXJXazFvNWM1cEVkaXFydko1clVUelZ1Vyt4WWdw?=
- =?utf-8?B?a2x5TGd2eG9NcWc0cFNzYVVFL2hjalZPYmxwbUhmTHJLRVdlTDFIZENaUzhU?=
- =?utf-8?B?OUllRG1OMmwxTWtxQWZiWGM3eHVabW55Nk55c1Q3Y1NaclRkYkMvSEo4ZUpa?=
- =?utf-8?B?aFJQZGh2WFJadTAyK0lZSVJsZEN5YzRrdzBYT1NJc1NvQURDTHcxanY3dnhK?=
- =?utf-8?B?WDg4cGcvRjExemo0dnRUemwvTUk2YkpudWRlS0gvSk9CdFJWcUlVZXByVVJJ?=
- =?utf-8?Q?bns7VizkTAM=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5070.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?UmF2QVIrYVFVTnZjK1ErZTEwcWx1YUxndVlOVFJXMzZtRjg2WWZPcEIzK0xJ?=
- =?utf-8?B?RHBIbkVVbE85NFVSK05MQmo1QlFRWHhYQ2xHQm1IS1Y0YXBLVlBRekdWSHgv?=
- =?utf-8?B?a3BpZFcxSFRBNDB4SFA5aGVlM1N2eTFhUHdIaEdCdkVHY1BhUWIwVlk0ck45?=
- =?utf-8?B?eTI4Y3RxVVVmRFJqTHY0RUN2bENnMVpZakkvbVhHSEdpN0Q0b1dvWFJPdkJT?=
- =?utf-8?B?L1ZJTnVNelRVSjVSZWc3aUV2Y0wzbm5uNHRXeFpGMmUxa3lkWGNjRnFVeFRi?=
- =?utf-8?B?RDlJTTEzQ2lNYWc5OExFdzhFNzgxYTVUYWJORU9MOTJWNjI5RVRxTWRuV3d1?=
- =?utf-8?B?eHZtTnZWRm5ERktUc1IxcGZmaDFmSldNMjJoNnJwaXFjMjdpTjFaZldOUllj?=
- =?utf-8?B?akFyeDBpQ2JnSzk3Z3VXdEEvTVpHTmhPeGRXMk9sZ1NTZEZidk02RkRBaWJu?=
- =?utf-8?B?WU9BakJVeDkvVnhWbDBJSDJ4dmQ3djZqTVB5ZjR2V0NyZjdFZDhBa29ldE9D?=
- =?utf-8?B?QTRPR0wwRHlWQXBSSVdVR1NhYVg5NDdjUGhadnVXNVlWbXlIaHBKc0JGUHhq?=
- =?utf-8?B?ZFNURStNSWp2a3ZqTE05NHBUejVzaFM0dXpQMi9tRE5WU0NPdUFER21ESkQx?=
- =?utf-8?B?QThiSnVON1VnL2lILzNUYTMyRkdEZXJha0kvMG91MkFjUUtYREFYVUN6SFcv?=
- =?utf-8?B?d25WM0VLaFhHVHprbzQrYVZKWXVRaEM3ZXBhZ0xySEMrTW5JVW15UUh3Um02?=
- =?utf-8?B?NHV3Y1lPWDJLY0tHeDV6MCs2enp3Sk1CcFRuQUFrRkFLbEJ2aTE5M2lXWjVn?=
- =?utf-8?B?RlE5K1ZidEFQTmdhVmFPV09IVGV6b3A4VEM1ZTVxTHRNdjlVeTk1bHlrb1Zx?=
- =?utf-8?B?d096Z3VhS1lwZy9tWllBTFVRMVVzemN1LzFsSXNqYi9kdkxWdDUwREh0d2VU?=
- =?utf-8?B?bWdGcitHZGhLZWd3TE80a1BEMFV6SVN6endXUlBxb29sM3hCeHlFTWRjUWZ5?=
- =?utf-8?B?akp4SHA4MlROOGJaRE1NcVg0L2lwL1YzTURVcnlwcldoc0YvTm52Y1dXRm5j?=
- =?utf-8?B?MDQ2MThuMGlkUHMzQ3hqd0plZWxzWFMxbW9tT3NjSDRiQWgwMEVqMzJUU2Q2?=
- =?utf-8?B?TGNVTXdRbjNQT0UwbWtwYWZ6cUEzays1VEh0bHVlYXVOeEF1d2pYRWhvQWZU?=
- =?utf-8?B?dTRzWUFuZVFYUWpyZ1ptUU1zZDV5K2RPYWhubzRjUEg1aVJhN09YenNGdWJk?=
- =?utf-8?B?NVNwU0NFLzVFYXVsWVhadjg3Si8yeXJ4UkRRK1VYTDFMWUt5Q25kTDZ2bnUx?=
- =?utf-8?B?SVhCM3ZxRjcraFo1VUpNbE1LOUVYZmtxdldQUVJubncrZTVneUROZCsyeDN3?=
- =?utf-8?B?cWl5M3RoTlBUaXpzN1V5U0dSTDZkeDREUzdJckNMZHE1VXJLaThLc1hERVda?=
- =?utf-8?B?UGZsZnNzeXcreU0zcHNoRit2OVFzWkp6eUJFZWU5MTdxQU1ZNjBKWnR1enR1?=
- =?utf-8?B?bFhDcGYxZVFDQmhYK1RnTld3eE9wTHpLUHVieEFJVHRFeWFsMjMvV3o5Z0dn?=
- =?utf-8?B?cXhkbHRuQWJ6OVlaTUs4dE1FQWhjZjhSeExmSDBmbzVtb00wOGlJLzJNQ285?=
- =?utf-8?B?cnlRVzFMb3ZSazVTaUFtMjRoSTkvY1UzVm1PbGtCTmtiRkZmMVJJc0hlS2RE?=
- =?utf-8?B?N2NoT21OeHBnS3V5b3pxcm1pWTQ0OVdJR3FVRU11M1ZaQW9XVEEwbmRhNUN2?=
- =?utf-8?B?YXdjallWcDU3WHZ3L2w2clZMeXUzRlFkeFVGaGRySkgxWjIvdEdZUFVnUEcx?=
- =?utf-8?B?OUp0R2pYcmIvOVJWSzBhVWxzTEp6L3pKUGlad1UwRGZ1OThGRlN5MVZkREF3?=
- =?utf-8?B?RHdNNFFhZlhCcDBTMEJnRmJpMStEVzludjdYTzVSc1lKY0JsakJlbkMyekxt?=
- =?utf-8?B?S3pKbjM5T1RsZ1QwK2FtVVNWQ0YvRUhsbEwxVXAzQWdINU9iZXlUN2VwMTRu?=
- =?utf-8?B?aUdHSjNGUHV6dDh2czZNaFp0cko1N2xJMUNnQ0MyUlVobXNUM3d2UTZ6ZEhj?=
- =?utf-8?B?L012eUNrMHRuaUJqSW82UHFsZUV1N3hDdFZMTGZJRHN1TG9xQ3lTNzNvUE1t?=
- =?utf-8?Q?7lcCqaRu5u9eY+dGet5/x1WIu?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4c671b12-124b-46bc-91c1-08dd8ccf85f8
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5070.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 18:55:09.1890
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Uwc3Uo+CvS8k6EkXiZLRsQPM9t+LuIurQP09FgwQOhxSVdC3lRR7/Q5v9YSSLtpFrR9J8fyFJNDMfr3tQSonag==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB6828
+User-Agent: Evolution 3.56.1-1 
+X-ZohoMailClient: External
 
-On 5/5/25 09:12, Alexey Kardashevskiy wrote:
-> Started as a part of the fix for
-> ae596615d93d ("virt: sev-guest: Reduce the scope of SNP command mutex")
-> 
-> these are the remainder of followup fixes/improvements as
-> the SNP Guest Request code evolved enough to make it a bit hard to
-> follow.
-> 
-> 
-> This is based on sha1
-> 6c201ee95a30 Ingo Molnar "Merge branch into tip/master: 'x86/sgx'".
-> 
-> Please comment. Thanks.
-> 
-> 
-> 
-> Alexey Kardashevskiy (4):
->   virt: sev-guest: Contain snp_guest_request_ioctl in sev-guest
->   x86/sev: Allocate request in TSC_INFO_REQ on stack
->   x86/sev: Document requirement for linear mapping of Guest Request
->     buffers
->   x86/sev: Drop unnecessary parameter in snp_issue_guest_request
-> 
->  arch/x86/include/asm/sev.h              | 10 ++-
->  arch/x86/coco/sev/core.c                | 73 +++++++++-----------
->  drivers/virt/coco/sev-guest/sev-guest.c |  9 ++-
->  3 files changed, 44 insertions(+), 48 deletions(-)
+Hi all,
 
-For the series:
+On Tue, 2025-05-06 at 22:02 +0800, Mingcong Bai wrote:
+> Hi Mario,
+>=20
+> =E5=9C=A8 2025/5/6 21:29, Mario Limonciello =E5=86=99=E9=81=93:
+> > On 5/6/2025 6:25 AM, Runhua He wrote:
 
-Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
+[...]
 
-> 
+> > > I have only matched the motherboard model, as the same chassis and
+> > > motherboard (GX4HRXL) combination may be used under different product
+> > > names.
+
+Runhua's statement is *only* correct to a certain extent. (see below)
+
+> > > Suggested-by: Mingcong Bai <jeffbai@aosc.io>
+> > > Suggested-by: Xinhui Yang <cyan@cyano.uk>
+> > > Suggested-by: Rong Zhang <i@rong.moe>
+> > > Fixes: a55bdad5dfd1 ("platform/x86/amd/pmc: Disable keyboard wakeup o=
+n=20
+> > > AMD Framework 13")
+> > > Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/4166
+> > > Cc: Mario Limonciello <mario.limonciello@amd.com>
+> > > Link: https://zhuanldan.zhihu.com/p/730538041
+> > > Tested-by: Yemu Lu <prcups@krgm.moe>
+> > > Signed-off-by: Runhua He <hua@aosc.io>
+> > > ---
+> > > =C2=A0 drivers/platform/x86/amd/pmc/pmc-quirks.c | 7 +++++++
+> > > =C2=A0 1 file changed, 7 insertions(+)
+> > >=20
+> > > diff --git a/drivers/platform/x86/amd/pmc/pmc-quirks.c b/drivers/=20
+> > > platform/x86/amd/pmc/pmc-quirks.c
+> > > index b4f49720c87f..e01012d5ecd0 100644
+> > > --- a/drivers/platform/x86/amd/pmc/pmc-quirks.c
+> > > +++ b/drivers/platform/x86/amd/pmc/pmc-quirks.c
+> > > @@ -217,6 +217,13 @@ static const struct dmi_system_id fwbug_list[] =
+=3D {
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 DMI_MATCH(DMI_BIOS_VERSION, "03.05"),
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 },
+> > > +=C2=A0=C2=A0=C2=A0 {
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .ident =3D "MECHREVO Wuji=
+e 14 Series (GX4HRXL)",
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .driver_data =3D &quirk_s=
+purious_8042,
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .matches =3D {
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 D=
+MI_MATCH(DMI_BOARD_NAME, "GX4HRXL"),
+> >=20
+> > This feels like it might be too wide.=C2=A0 Could we match a system ven=
+dor as=20
+> > well?
+>=20
+> Possibly. There are two known system vendors using this motherboard -=20
+> TongFang and MECHREVO (MECHREVO is a marque owned by TongFang).
+
+There are plain "GX4HRXL" and "WUJIE14-GX4HRXL". Their BIOS/firmware
+are different - this difference is not just about marketing.
+
+Runhua's statement only applies to plain "GX4HRXL", which is not his
+model. All seen editions are:
+   - Juno GX4HRXL [1]
+   - TongFang GX4HRXL [2]
+
+Comparing [1] and [2]:
+
+   diff --git a/juno b/tongfang
+   index 88a71da..c6846eb 100644
+   --- a/juno
+   +++ b/tongfang
+   @@ -1,4 +1,4 @@
+   -# dmidecode 3.6
+   +# dmidecode 3.5
+    Getting SMBIOS data from sysfs.
+    SMBIOS 3.5.0 present.
+    Table at 0x9A92D000.
+   @@ -28,7 +28,7 @@ BIOS Information
+   =20
+    Handle 0x0001, DMI type 1, 27 bytes
+    System Information
+   -	Manufacturer: Juno
+   +	Manufacturer: TongFang
+    	Product Name: GX4HRXL
+    	Version: Standard
+    	Serial Number: --
+    [... SO-DIMM and PCIe ...]
+
+
+As for "WUJIE14-GX4HRXL", the only model I've seen is:
+   - MECHREVO WUJIE14XA [3]
+
+Comparing [2] and [3]:
+
+   diff --git a/tongfang b/mechrevo
+   index c6846eb..0f132a2 100644
+   --- a/tongfang
+   +++ b/mechrevo
+   @@ -1,13 +1,13 @@
+   -# dmidecode 3.5
+   +# dmidecode 3.6
+    Getting SMBIOS data from sysfs.
+    SMBIOS 3.5.0 present.
+   -Table at 0x9A92D000.
+   +Table at 0x9A92C000.
+   =20
+    Handle 0x0000, DMI type 0, 26 bytes
+    BIOS Information
+    	Vendor: American Megatrends International, LLC.
+   -	Version: N.1.14PCS05
+   -	Release Date: 10/24/2024
+   +	Version: N.1.14MRO19
+   +	Release Date: 01/17/2025
+    	Address: 0xF0000
+    	Runtime Size: 64 kB
+    	ROM Size: 32 MB
+   @@ -23,24 +23,24 @@ BIOS Information
+    		BIOS boot specification is supported
+    		Targeted content distribution is supported
+    		UEFI is supported
+   -	BIOS Revision: 1.5
+   -	Firmware Revision: 1.39
+   +	BIOS Revision: 1.19
+   +	Firmware Revision: 2.8
+   =20
+    Handle 0x0001, DMI type 1, 27 bytes
+    System Information
+   -	Manufacturer: TongFang
+   -	Product Name: GX4HRXL
+   +	Manufacturer: MECHREVO
+   +	Product Name: WUJIE14XA
+    	Version: Standard
+    	Serial Number: --
+    	UUID: --
+    	Wake-up Type: Power Switch
+   -	SKU Number: 0001
+   -	Family: HPT
+   +	SKU Number: WUJIE14
+   +	Family: Mechrevo WUJIE Series
+   =20
+    Handle 0x0002, DMI type 2, 15 bytes
+    Base Board Information
+   -	Manufacturer: TongFang
+   -	Product Name: GX4HRXL
+   +	Manufacturer: MECHREVO
+   +	Product Name: WUJIE14-GX4HRXL
+    	Version: Standard
+    	Serial Number: --
+    	Asset Tag: --
+   @@ -54,7 +54,7 @@ Base Board Information
+   =20
+    Handle 0x0003, DMI type 3, 22 bytes
+    Chassis Information
+   -	Manufacturer: Standard
+   +	Manufacturer: MECHREVO
+    	Type: Notebook
+    	Lock: Not Present
+    	Version: Standard
+   @@ -88,7 +88,7 @@ OEM Strings
+    	String 8: Standard
+    	String 9: Standard
+    	String 10: Standard
+   -	String 11: FBM-GX4HRXL0177PCS
+   +	String 11: FGM-GX4HRXL0202101
+    	String 12: GX4HRXL
+    	String 13: Standard
+    	String 14: Standard
+   @@ -122,11 +122,11 @@ Unknown Type
+    Handle 0x000A, DMI type 45, 26 bytes
+    Firmware Inventory Information
+    	Firmware Component Name: BIOS Firmware
+   -	Firmware Version: N.1.14PCS05
+   -	Firmware ID: D968671D-72E2-5CA3-9E09-0E48EA102BDC
+   -	Release Date: 10/24/2024
+   +	Firmware Version: N.1.14MRO19
+   +	Firmware ID: 0145F8DC-000F-5BDE-8ACB-8AD00CAE8FFE
+   +	Release Date: 01/17/2025
+    	Manufacturer: Standard
+   -	Lowest Supported Firmware Version: N.1.14PCS05
+   +	Lowest Supported Firmware Version: N.1.14MRO19
+    	Image Size: 32 MB
+    	Characteristics:
+    		Updatable: Yes
+    [... PCIe ...]
+
+
+Look for BIOS versions whose release dates are the closest between the
+two [4] [5]:
+
+   diff --git a/tongfang-1.13 b/mechrevo-1.13
+   index 3970b9a..a617bbc 100644
+   --- a/tongfang-1.13
+   +++ b/mechrevo-1.13
+   @@ -1,13 +1,13 @@
+    # dmidecode 3.6
+    Getting SMBIOS data from sysfs.
+    SMBIOS 3.5.0 present.
+   -Table at 0x9A92D000.
+   +Table at 0x9A92C000.
+   =20
+    Handle 0x0000, DMI type 0, 26 bytes
+    BIOS Information
+    	Vendor: American Megatrends International, LLC.
+   -	Version: N.1.13PCS03
+   -	Release Date: 09/06/2024
+   +	Version: N.1.13MRO14
+   +	Release Date: 08/19/2024
+    	Address: 0xF0000
+    	Runtime Size: 64 kB
+    	ROM Size: 32 MB
+   @@ -23,24 +23,24 @@ BIOS Information
+    		BIOS boot specification is supported
+    		Targeted content distribution is supported
+    		UEFI is supported
+   -	BIOS Revision: 1.3
+   -	Firmware Revision: 1.33
+   +	BIOS Revision: 1.14
+   +	Firmware Revision: 1.32
+    [...]
+   @@ -88,7 +88,7 @@ OEM Strings
+    	String 8: Standard
+    	String 9: Standard
+    	String 10: Standard
+   -	String 11: FBM-GX4HRXL0177PCS
+   +	String 11: FGM-GX4HRXL0167102
+    	String 12: GX4HRXL
+    	String 13: Standard
+    	String 14: Standard
+   @@ -122,11 +122,11 @@ Unknown Type
+    Handle 0x000A, DMI type 45, 26 bytes
+    Firmware Inventory Information
+    	Firmware Component Name: BIOS Firmware
+   -	Firmware Version: N.1.13PCS03
+   -	Firmware ID: D968671D-72E2-5CA3-9E09-0E48EA102BDC
+   -	Release Date: 09/06/2024
+   +	Firmware Version: N.1.13MRO14
+   +	Firmware ID: 0145F8DC-000F-5BDE-8ACB-8AD00CAE8FFE
+   +	Release Date: 08/19/2024
+    	Manufacturer: Standard
+   -	Lowest Supported Firmware Version: N.1.13PCS03
+   +	Lowest Supported Firmware Version: N.1.13MRO14
+    	Image Size: 32 MB
+    	Characteristics:
+    		Updatable: Yes
+    [...]
+
+
+Three bits here hint that these two variants are not completely
+identical:
+   - BIOS/firmware updates are not synced.
+   - Different characters in their BIOS version strings, i.e., PCS vs MRO.
+   - FBM-GX4HRXL0177PCS vs FGM-GX4HRXL0202101 vs FGM-GX4HRXL0167102.
+
+I guess these two variants were developed by two different teams
+(global/China) that shared some common codebase. The difference is
+probably because of the divergence of pre-installed software to
+manipulate BIOS options in Windows. I highly suspect the broken EC
+state machine is related to such software.
+
+[1]: https://linux-hardware.org/?probe=3D22e1f510a2&log=3Ddmidecode
+[2]: https://linux-hardware.org/?probe=3D0475501c8c&log=3Ddmidecode
+[3]: https://linux-hardware.org/?probe=3Dd9af608109&log=3Ddmidecode
+[4]: https://linux-hardware.org/?probe=3D599c1edc57&log=3Ddmidecode
+[5]: https://linux-hardware.org/?probe=3D7c2e3b925b&log=3Ddmidecode
+
+> See: https://linux-hardware.org/?probe=3D6783d8fc06
+
+This is TongFang GX4HRXL and uses a different BIOS then Runhua's as
+mentioned above.
+
+> Runhua, maybe we could make two entries here?
+
+Since this is a platform firmware bug, and given the information we
+have, is it too soon to say plain "GX4HRXL" suffers from the same bug?
+
+I agree with Mario here, but in a slightly different manner, i.e.,
+narrowing the DMI_BOARD_NAME match down to "WUJIE14-GX4HRXL".
+
+diff --git a/drivers/platform/x86/amd/pmc/pmc-quirks.c
+b/drivers/platform/x86/amd/pmc/pmc-quirks.c
+index b4f49720c87f..2e3f6fc67c56 100644
+--- a/drivers/platform/x86/amd/pmc/pmc-quirks.c
++++ b/drivers/platform/x86/amd/pmc/pmc-quirks.c
+@@ -217,6 +217,13 @@ static const struct dmi_system_id fwbug_list[] =3D {
+ 			DMI_MATCH(DMI_BIOS_VERSION, "03.05"),
+ 		}
+ 	},
++	{
++		.ident =3D "MECHREVO Wujie 14X (GX4HRXL)",
++		.driver_data =3D &quirk_spurious_8042,
++		.matches =3D {
++			DMI_MATCH(DMI_BOARD_NAME, "WUJIE14-GX4HRXL"),
++		}
++	},
+ 	{}
+ };
+
+Note on `s/14 Series/14X/': while glancing linux-hardware.org, I found
+Wujie 14 Series includes 14, 14S, 14 Pro, 14XA. They are all disparate
+from each other. 14X is 14XA's marketing name.
+
+> Best Regards,
+> Mingcong Bai
+
+Regards,
+Rong
