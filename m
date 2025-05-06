@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B819280CEA
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 05:05:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9AAA28150B
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 05:05:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746507955; cv=none; b=eB/x+42kJYaGGf8p5y2QgY+1nMp2V3v3UEkYPHt1i2nPq7c+zX/fWCFFvWgv3ZANNDIMv0FswcoidFr7pqJwVYyiBujh3HuF1BkoHiOsBNMa+NG2tSC1B1Hfzmw3Iyog/ysk4RsFkxlq74prdsWDMD+I5Kbjy+ftqpMZsf8Plkg=
+	t=1746507957; cv=none; b=QkM9pPgIuNm9xo4AzHz+OdSKYJ6aWYzRroPspBmhn46o/ikwcJIiItOnhpAFfEc98HjmpvLSau7mkl44xwR/i7Aokh8NvCGG55a//z91+Drr+fIsoCGqw1fxjGlDgNC7tcdbKoYKHdrkOT5+a370Y4SrkXigFuaOvGarWU2koDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746507955; c=relaxed/simple;
-	bh=oKqXotUiTJKeQeJ8pASEkkcrqdSd0ZFvMRw/27B1rv0=;
+	s=arc-20240116; t=1746507957; c=relaxed/simple;
+	bh=BQaIYv00BAAgkxuQk7VVcCGuGw4FSuFVFR/eNUOPaMs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=U0VeZKqKaHrwbpSIzMLhXPIsy3Sr36zVvAM3jtD4x0XSEvsDdyCF0pkuGrZsdKdEKdD+CjQl8kDYTbbTCzy16BggimgGbR2M6aG4jhViaD7zfsOKjHPLD15FYnSRA33dp1Hgd/04nXqPmFglpTe6bg8M+NlO8hqzIiaaKx0zwWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nyQQkFDq; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NHd3oVNC; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=kfvWuPRlRVeiDHbgCyIE1bagGsN+QdX2WFhd6zfZnp1EtgR3v6bRNVnWaXOO2VVDrrakoKK4vu5/bK+d1GxOQFIOJEU2a7H2xBZtccgU0kBLuRBKVVb8MwC8pIciIgupUd5Ji1wNSV3iAYZ8K8mXlNVddShndJhkOxWadjnoZgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OyzCv9oo; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WinFdVPX; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nyQQkFDq";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NHd3oVNC"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OyzCv9oo";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WinFdVPX"
 From: "Ahmed S. Darwish" <darwi@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746507951;
+	s=2020; t=1746507954;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=M90ft6kI0AL/023YSHWIecb8WvCPRW6KjPlv5Beet7Y=;
-	b=nyQQkFDqtx+/c2v79mY7b5V6mudD2kYhepdabIrtgEDYRETLwUhAMuRtV5pTOJQL/s+Q2C
-	ilBEgrdCE8vy6zEPrX68lun1H6s/szYoI52K0rEcfqoXR7DeeLiQuOpmq0n/rpzskfc1SR
-	11WAdbrcJ7xfqPaUBnBSfNbgyB/dSW48C5L3Vs4ZPuQTzNOyJZvDi5hZsmN4AUJu82kP5q
-	JJmOwdHzKkUivNhOb3hMt57IsabcaGzJH0w8qLNmfb+/5vDVbPH9gPeGTkzYHVONKztxk+
-	0yiitl6iThznaPnJZ5sx0cBGFjvuGdjg62lkB17RQ07HmmnMVQlduRJkyYbH/w==
+	bh=jrnPr/XKr2gjOUD7ovAZxPVNwnSc5GhyQXNzJo88z/o=;
+	b=OyzCv9oov5Lp5seiS+t8Wc7HjImkpWqfkJjR5bVjmmdNuUarXYUd2P6f3T+XdTP7HH39j/
+	EdVINk3FeXKXMI6QiUMdmov29nVdKozZbWMQMgipZj//wWcY9qDIkbcP6EwDXChASrJ0Wp
+	LnBynLwYUF78xsfhWchUXeMyMCRtEAJsybl+c32JyvUUGC8XdqkOt9Nc7xfJrZfhOBW3ya
+	u+vCtRzGxvOCXgpg56F+Yy6Vq+u0hPTxUanMhlZAKClLd1li6tQvGwHsuvRvBR7ygdBOd4
+	5UAcYtNy3HoVPImwahTdi0r9/kqWkKmJ6mXHUdwUHZadTt97Bg2vwdVy1VrucQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746507951;
+	s=2020e; t=1746507954;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=M90ft6kI0AL/023YSHWIecb8WvCPRW6KjPlv5Beet7Y=;
-	b=NHd3oVNCjjLR21xfTtsSrE91Ooae02mWSIV52RuM/9OWojK5H0cdmHX84iG6hMnsPtl6JV
-	h6HWXEfxOQNuNODg==
+	bh=jrnPr/XKr2gjOUD7ovAZxPVNwnSc5GhyQXNzJo88z/o=;
+	b=WinFdVPXDa9gUfbyBuhokq572a6x1ErfQdBc6feMoZIrJxoJg1PFPqIuELtaBhGE0QHxt+
+	ZrPlCCiBhPWrvZBQ==
 To: Ingo Molnar <mingo@redhat.com>,
 	Borislav Petkov <bp@alien8.de>,
 	Dave Hansen <dave.hansen@linux.intel.com>
@@ -50,9 +50,9 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	x86-cpuid@lists.linux.dev,
 	LKML <linux-kernel@vger.kernel.org>,
 	"Ahmed S. Darwish" <darwi@linutronix.de>
-Subject: [PATCH v1 22/26] x86/cacheinfo: Use auto-generated data types
-Date: Tue,  6 May 2025 07:04:33 +0200
-Message-ID: <20250506050437.10264-23-darwi@linutronix.de>
+Subject: [PATCH v1 23/26] x86/cacheinfo: Use scanned CPUID(0x80000005) and CPUID(0x80000006)
+Date: Tue,  6 May 2025 07:04:34 +0200
+Message-ID: <20250506050437.10264-24-darwi@linutronix.de>
 In-Reply-To: <20250506050437.10264-1-darwi@linutronix.de>
 References: <20250506050437.10264-1-darwi@linutronix.de>
 Precedence: bulk
@@ -63,251 +63,204 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-For the AMD CPUID(0x4) emulation logic, use the auto-generated
-<cpuid/leaves.h> data type:
+For the AMD CPUID(0x4)-emulation logic, use scanned CPUID(0x80000005) and
+CPUID(0x80000006) access instead of direct CPUID queries.
 
-    struct leaf_0x4_0
+Beside centralizing CPUID access, this allows using the auto-generated
+<cpuid/leaves.h> 'struct leaf_0x80000005_0' and 'struct
+leaf_0x80000006_0' data types.  Remove the 'union {l1,l2,l3}_cache'
+definitions as they are no longer needed.
 
-instead of the manually-defined:
+Note, the expression:
 
-    union _cpuid4_leaf_{eax,ebx,ecx}
+    ci->num_leaves = (cpuid_edx(0x80000006) & 0xf000) ? 4 : 3;
 
-ones.  Remove such unions entirely as they are no longer used.
+is replaced with:
+
+    ci->num_leaves = cpudata_cpuid(c, 0x80000006)->l3_assoc ? 4 : 3;
+
+which is the same logic, since the 'l3_assoc' bitfield is 4 bits wide at
+EDX offset 12.  Per AMD manuals, an L3 associativity of zero implies the
+absence of L3 cache on the CPU.
+
+While at it, separate the 'Fallback AMD CPUID(0x4) emulation' comment
+from the '@AMD_L2_L3_INVALID_ASSOC' one, since the former acts as a
+source code section header.
 
 Signed-off-by: Ahmed S. Darwish <darwi@linutronix.de>
-Link: https://gitlab.com/x86-cpuid.org/x86-cpuid-db
 ---
- arch/x86/kernel/cpu/cacheinfo.c | 130 +++++++++++---------------------
- 1 file changed, 42 insertions(+), 88 deletions(-)
+ arch/x86/kernel/cpu/cacheinfo.c | 105 ++++++++++++--------------------
+ 1 file changed, 40 insertions(+), 65 deletions(-)
 
 diff --git a/arch/x86/kernel/cpu/cacheinfo.c b/arch/x86/kernel/cpu/cacheinfo.c
-index 4f218960cc41..e0b130e592dc 100644
+index e0b130e592dc..5966ca50d601 100644
 --- a/arch/x86/kernel/cpu/cacheinfo.c
 +++ b/arch/x86/kernel/cpu/cacheinfo.c
-@@ -41,39 +41,8 @@ enum _cache_type {
- 	CTYPE_UNIFIED	= 3
+@@ -56,47 +56,17 @@ static const enum cache_type cache_type_map[] = {
  };
  
--union _cpuid4_leaf_eax {
+ /*
+- * Fallback AMD CPUID(0x4) emulation
++ * Fallback AMD CPUID(0x4) emulation:
+  * AMD CPUs with TOPOEXT can just use CPUID(0x8000001d)
+- *
++ */
++
++/*
+  * @AMD_L2_L3_INVALID_ASSOC: cache info for the respective L2/L3 cache should
+  * be determined from CPUID(0x8000001d) instead of CPUID(0x80000006).
+  */
+-
+ #define AMD_CPUID4_FULLY_ASSOCIATIVE	0xffff
+ #define AMD_L2_L3_INVALID_ASSOC		0x9
+ 
+-union l1_cache {
 -	struct {
--		enum _cache_type	type			:5;
--		unsigned int		level			:3;
--		unsigned int		is_self_initializing	:1;
--		unsigned int		is_fully_associative	:1;
--		unsigned int		reserved		:4;
--		unsigned int		num_threads_sharing	:12;
--		unsigned int		num_cores_on_die	:6;
--	} split;
--	u32 full;
+-		unsigned line_size	:8;
+-		unsigned lines_per_tag	:8;
+-		unsigned assoc		:8;
+-		unsigned size_in_kb	:8;
+-	};
+-	unsigned int val;
 -};
 -
--union _cpuid4_leaf_ebx {
+-union l2_cache {
 -	struct {
--		unsigned int		coherency_line_size	:12;
--		unsigned int		physical_line_partition	:10;
--		unsigned int		ways_of_associativity	:10;
--	} split;
--	u32 full;
+-		unsigned line_size	:8;
+-		unsigned lines_per_tag	:4;
+-		unsigned assoc		:4;
+-		unsigned size_in_kb	:16;
+-	};
+-	unsigned int val;
 -};
 -
--union _cpuid4_leaf_ecx {
+-union l3_cache {
 -	struct {
--		unsigned int		number_of_sets		:32;
--	} split;
--	u32 full;
+-		unsigned line_size	:8;
+-		unsigned lines_per_tag	:4;
+-		unsigned assoc		:4;
+-		unsigned res		:2;
+-		unsigned size_encoded	:14;
+-	};
+-	unsigned int val;
 -};
 -
- struct _cpuid4_info {
--	union _cpuid4_leaf_eax eax;
--	union _cpuid4_leaf_ebx ebx;
--	union _cpuid4_leaf_ecx ecx;
-+	struct leaf_0x4_0 regs;
- 	unsigned int id;
- 	unsigned long size;
- };
-@@ -148,17 +117,14 @@ static const unsigned short assocs[] = {
+ /* L2/L3 associativity mapping */
+ static const unsigned short assocs[] = {
+ 	[1]		= 1,
+@@ -117,50 +87,52 @@ static const unsigned short assocs[] = {
  static const unsigned char levels[] = { 1, 1, 2, 3 };
  static const unsigned char types[]  = { 1, 2, 3, 3 };
  
--static void legacy_amd_cpuid4(int index, union _cpuid4_leaf_eax *eax,
--			      union _cpuid4_leaf_ebx *ebx, union _cpuid4_leaf_ecx *ecx)
-+static void legacy_amd_cpuid4(int index, struct leaf_0x4_0 *regs)
+-static void legacy_amd_cpuid4(int index, struct leaf_0x4_0 *regs)
++static void legacy_amd_cpuid4(struct cpuinfo_x86 *c, int index, struct leaf_0x4_0 *regs)
  {
- 	unsigned int dummy, line_size, lines_per_tag, assoc, size_in_kb;
- 	union l1_cache l1i, l1d, *l1;
- 	union l2_cache l2;
- 	union l3_cache l3;
+-	unsigned int dummy, line_size, lines_per_tag, assoc, size_in_kb;
+-	union l1_cache l1i, l1d, *l1;
+-	union l2_cache l2;
+-	union l3_cache l3;
++	const struct leaf_0x80000005_0 *el5 = cpudata_cpuid(c, 0x80000005);
++	const struct leaf_0x80000006_0 *el6 = cpudata_cpuid(c, 0x80000006);
++	const struct cpuid_regs *el5_raw = (const struct cpuid_regs *)el5;
++	unsigned int line_size, lines_per_tag, assoc, size_in_kb;
  
--	eax->full = 0;
--	ebx->full = 0;
--	ecx->full = 0;
-+	*regs = (struct leaf_0x4_0){ };
+ 	*regs = (struct leaf_0x4_0){ };
  
- 	cpuid(0x80000005, &dummy, &dummy, &l1d.val, &l1i.val);
- 	cpuid(0x80000006, &dummy, &dummy, &l2.val, &l3.val);
-@@ -204,65 +170,53 @@ static void legacy_amd_cpuid4(int index, union _cpuid4_leaf_eax *eax,
+-	cpuid(0x80000005, &dummy, &dummy, &l1d.val, &l1i.val);
+-	cpuid(0x80000006, &dummy, &dummy, &l2.val, &l3.val);
+-
+-	l1 = &l1d;
+ 	switch (index) {
+-	case 1:
+-		l1 = &l1i;
+-		fallthrough;
+ 	case 0:
+-		if (!l1->val)
++		if (!el5 || !el5_raw->ecx)
+ 			return;
+ 
+-		assoc		= (l1->assoc == 0xff) ? AMD_CPUID4_FULLY_ASSOCIATIVE : l1->assoc;
+-		line_size	= l1->line_size;
+-		lines_per_tag	= l1->lines_per_tag;
+-		size_in_kb	= l1->size_in_kb;
++		assoc		= el5->l1_dcache_assoc;
++		line_size	= el5->l1_dcache_line_size;
++		lines_per_tag	= el5->l1_dcache_nlines;
++		size_in_kb	= el5->l1_dcache_size_kb;
++		break;
++	case 1:
++		if (!el5 || !el5_raw->edx)
++			return;
++
++		assoc		= el5->l1_icache_assoc;
++		line_size	= el5->l1_icache_line_size;
++		lines_per_tag	= el5->l1_icache_nlines;
++		size_in_kb	= el5->l1_icache_size_kb;
+ 		break;
+ 	case 2:
+-		if (!l2.assoc || l2.assoc == AMD_L2_L3_INVALID_ASSOC)
++		if (!el6 || !el6->l2_assoc || el6->l2_assoc == AMD_L2_L3_INVALID_ASSOC)
+ 			return;
+ 
+ 		/* Use x86_cache_size as it might have K7 errata fixes */
+-		assoc		= assocs[l2.assoc];
+-		line_size	= l2.line_size;
+-		lines_per_tag	= l2.lines_per_tag;
++		assoc		= assocs[el6->l2_assoc];
++		line_size	= el6->l2_line_size;
++		lines_per_tag	= el6->l2_nlines;
+ 		size_in_kb	= __this_cpu_read(cpu_info.x86_cache_size);
+ 		break;
+ 	case 3:
+-		if (!l3.assoc || l3.assoc == AMD_L2_L3_INVALID_ASSOC)
++		if (!el6 || !el6->l3_assoc || el6->l3_assoc == AMD_L2_L3_INVALID_ASSOC)
+ 			return;
+ 
+-		assoc		= assocs[l3.assoc];
+-		line_size	= l3.line_size;
+-		lines_per_tag	= l3.lines_per_tag;
+-		size_in_kb	= l3.size_encoded * 512;
++		assoc		= assocs[el6->l3_assoc];
++		line_size	= el6->l3_line_size;
++		lines_per_tag	= el6->l3_nlines;
++		size_in_kb	= el6->l3_size_range * 512;
+ 		if (boot_cpu_has(X86_FEATURE_AMD_DCM)) {
+ 			size_in_kb	= size_in_kb >> 1;
+ 			assoc		= assoc >> 1;
+@@ -170,6 +142,10 @@ static void legacy_amd_cpuid4(int index, struct leaf_0x4_0 *regs)
  		return;
  	}
  
--	eax->split.is_self_initializing		= 1;
--	eax->split.type				= types[index];
--	eax->split.level			= levels[index];
--	eax->split.num_threads_sharing		= 0;
--	eax->split.num_cores_on_die		= topology_num_cores_per_package();
-+	regs->cache_self_init		= 1;
-+	regs->cache_type		= types[index];
-+	regs->cache_level		= levels[index];
-+	regs->num_threads_sharing	= 0;
-+	regs->num_cores_on_die		= topology_num_cores_per_package();
++	/* For L1d and L1i caches, 0xff is the full associativity marker */
++	if ((index == 0 || index == 1) && assoc == 0xff)
++		assoc = AMD_CPUID4_FULLY_ASSOCIATIVE;
++
+ 	regs->cache_self_init		= 1;
+ 	regs->cache_type		= types[index];
+ 	regs->cache_level		= levels[index];
+@@ -207,7 +183,7 @@ static int amd_fill_cpuid4_info(struct cpuinfo_x86 *c, int index, struct _cpuid4
+ 	if (boot_cpu_has(X86_FEATURE_TOPOEXT) || boot_cpu_data.x86_vendor == X86_VENDOR_HYGON)
+ 		regs = *(struct leaf_0x4_0 *)cpudata_cpuid_index(c, 0x8000001d, index);
+ 	else
+-		legacy_amd_cpuid4(index, &regs);
++		legacy_amd_cpuid4(c, index, &regs);
  
- 	if (assoc == AMD_CPUID4_FULLY_ASSOCIATIVE)
--		eax->split.is_fully_associative = 1;
-+		regs->fully_associative	= 1;
- 
--	ebx->split.coherency_line_size		= line_size - 1;
--	ebx->split.ways_of_associativity	= assoc - 1;
--	ebx->split.physical_line_partition	= lines_per_tag - 1;
--	ecx->split.number_of_sets		= (size_in_kb * 1024) / line_size /
--		(ebx->split.ways_of_associativity + 1) - 1;
-+	regs->cache_linesize		= line_size - 1;
-+	regs->cache_nways		= assoc - 1;
-+	regs->cache_npartitions		= lines_per_tag - 1;
-+	regs->cache_nsets		= (size_in_kb * 1024) / line_size /
-+		(regs->cache_nways + 1) - 1;
+ 	return cpuid4_info_fill_done(id4, &regs);
  }
- 
--static int cpuid4_info_fill_done(struct _cpuid4_info *id4, union _cpuid4_leaf_eax eax,
--				 union _cpuid4_leaf_ebx ebx, union _cpuid4_leaf_ecx ecx)
-+static int cpuid4_info_fill_done(struct _cpuid4_info *id4, const struct leaf_0x4_0 *regs)
+@@ -279,10 +255,9 @@ void init_amd_cacheinfo(struct cpuinfo_x86 *c)
  {
--	if (eax.split.type == CTYPE_NULL)
-+	if (regs->cache_type == CTYPE_NULL)
- 		return -EIO;
+ 	struct cpu_cacheinfo *ci = get_cpu_cacheinfo(c->cpu_index);
  
--	id4->eax = eax;
--	id4->ebx = ebx;
--	id4->ecx = ecx;
--	id4->size = (ecx.split.number_of_sets          + 1) *
--		    (ebx.split.coherency_line_size     + 1) *
--		    (ebx.split.physical_line_partition + 1) *
--		    (ebx.split.ways_of_associativity   + 1);
-+	id4->regs = *regs;
-+	id4->size = (regs->cache_nsets	     + 1) *
-+		    (regs->cache_linesize    + 1) *
-+		    (regs->cache_npartitions + 1) *
-+		    (regs->cache_nways	     + 1);
- 
- 	return 0;
+-	if (boot_cpu_has(X86_FEATURE_TOPOEXT))
+-		ci->num_leaves = cpudata_cpuid_nr_entries(c, 0x8000001d);
+-	else if (c->extended_cpuid_level >= 0x80000006)
+-		ci->num_leaves = (cpuid_edx(0x80000006) & 0xf000) ? 4 : 3;
++	ci->num_leaves = boot_cpu_has(X86_FEATURE_TOPOEXT) ?
++		cpudata_cpuid_nr_entries(c, 0x8000001d) :
++		cpudata_cpuid(c, 0x80000006)->l3_assoc ? 4 : 3;
  }
  
- static int amd_fill_cpuid4_info(struct cpuinfo_x86 *c, int index, struct _cpuid4_info *id4)
- {
--	union _cpuid4_leaf_eax eax;
--	union _cpuid4_leaf_ebx ebx;
--	union _cpuid4_leaf_ecx ecx;
-+	struct leaf_0x4_0 regs;
- 
--	if (boot_cpu_has(X86_FEATURE_TOPOEXT) || boot_cpu_data.x86_vendor == X86_VENDOR_HYGON) {
--		const struct cpuid_regs *regs = cpudata_cpuid_index_regs(c, 0x8000001d, index);
--
--		eax.full = regs->eax;
--		ebx.full = regs->ebx;
--		ecx.full = regs->ecx;
--	} else
--		legacy_amd_cpuid4(index, &eax, &ebx, &ecx);
-+	if (boot_cpu_has(X86_FEATURE_TOPOEXT) || boot_cpu_data.x86_vendor == X86_VENDOR_HYGON)
-+		regs = *(struct leaf_0x4_0 *)cpudata_cpuid_index(c, 0x8000001d, index);
-+	else
-+		legacy_amd_cpuid4(index, &regs);
- 
--	return cpuid4_info_fill_done(id4, eax, ebx, ecx);
-+	return cpuid4_info_fill_done(id4, &regs);
- }
- 
- static int intel_fill_cpuid4_info(struct cpuinfo_x86 *c, int index, struct _cpuid4_info *id4)
- {
--	const struct cpuid_regs *regs = cpudata_cpuid_index_regs(c, 0x4, index);
-+	const struct leaf_0x4_0 *regs = cpudata_cpuid_index(c, 0x4, index);
- 
--	return cpuid4_info_fill_done(id4,
--				     (union _cpuid4_leaf_eax)(regs->eax),
--				     (union _cpuid4_leaf_ebx)(regs->ebx),
--				     (union _cpuid4_leaf_ecx)(regs->ecx));
-+	return cpuid4_info_fill_done(id4, regs);
- }
- 
- static int fill_cpuid4_info(struct cpuinfo_x86 *c, int index, struct _cpuid4_info *id4)
-@@ -388,7 +342,7 @@ static unsigned int calc_cache_topo_id(struct cpuinfo_x86 *c, const struct _cpui
- 	unsigned int num_threads_sharing;
- 	int index_msb;
- 
--	num_threads_sharing = 1 + id4->eax.split.num_threads_sharing;
-+	num_threads_sharing = 1 + id4->regs.num_threads_sharing;
- 	index_msb = get_count_order(num_threads_sharing);
- 	return c->topo.apicid & ~((1 << index_msb) - 1);
- }
-@@ -420,11 +374,11 @@ static bool intel_cacheinfo_0x4(struct cpuinfo_x86 *c)
- 		if (ret < 0)
- 			continue;
- 
--		switch (id4.eax.split.level) {
-+		switch (id4.regs.cache_level) {
- 		case 1:
--			if (id4.eax.split.type == CTYPE_DATA)
-+			if (id4.regs.cache_type == CTYPE_DATA)
- 				l1d = id4.size / 1024;
--			else if (id4.eax.split.type == CTYPE_INST)
-+			else if (id4.regs.cache_type == CTYPE_INST)
- 				l1i = id4.size / 1024;
- 			break;
- 		case 2:
-@@ -485,7 +439,7 @@ static int __cache_amd_cpumap_setup(unsigned int cpu, int index,
- 	} else if (boot_cpu_has(X86_FEATURE_TOPOEXT)) {
- 		unsigned int apicid, nshared, first, last;
- 
--		nshared = id4->eax.split.num_threads_sharing + 1;
-+		nshared = id4->regs.num_threads_sharing + 1;
- 		apicid = cpu_data(cpu).topo.apicid;
- 		first = apicid - (apicid % nshared);
- 		last = first + nshared - 1;
-@@ -532,7 +486,7 @@ static void __cache_cpumap_setup(unsigned int cpu, int index,
- 	}
- 
- 	ci = this_cpu_ci->info_list + index;
--	num_threads_sharing = 1 + id4->eax.split.num_threads_sharing;
-+	num_threads_sharing = 1 + id4->regs.num_threads_sharing;
- 
- 	cpumask_set_cpu(cpu, &ci->shared_cpu_map);
- 	if (num_threads_sharing == 1)
-@@ -559,13 +513,13 @@ static void ci_info_init(struct cacheinfo *ci, const struct _cpuid4_info *id4,
- {
- 	ci->id				= id4->id;
- 	ci->attributes			= CACHE_ID;
--	ci->level			= id4->eax.split.level;
--	ci->type			= cache_type_map[id4->eax.split.type];
--	ci->coherency_line_size		= id4->ebx.split.coherency_line_size + 1;
--	ci->ways_of_associativity	= id4->ebx.split.ways_of_associativity + 1;
-+	ci->level			= id4->regs.cache_level;
-+	ci->type			= cache_type_map[id4->regs.cache_type];
-+	ci->coherency_line_size		= id4->regs.cache_linesize + 1;
-+	ci->ways_of_associativity	= id4->regs.cache_nways + 1;
- 	ci->size			= id4->size;
--	ci->number_of_sets		= id4->ecx.split.number_of_sets + 1;
--	ci->physical_line_partition	= id4->ebx.split.physical_line_partition + 1;
-+	ci->number_of_sets		= id4->regs.cache_nsets + 1;
-+	ci->physical_line_partition	= id4->regs.cache_npartitions + 1;
- 	ci->priv			= nb;
- }
- 
-@@ -591,7 +545,7 @@ static void get_cache_id(int cpu, struct _cpuid4_info *id4)
- 	unsigned long num_threads_sharing;
- 	int index_msb;
- 
--	num_threads_sharing = 1 + id4->eax.split.num_threads_sharing;
-+	num_threads_sharing = 1 + id4->regs.num_threads_sharing;
- 	index_msb = get_count_order(num_threads_sharing);
- 	id4->id = c->topo.apicid >> index_msb;
- }
+ void init_hygon_cacheinfo(struct cpuinfo_x86 *c)
 -- 
 2.49.0
 
