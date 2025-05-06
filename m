@@ -1,92 +1,119 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B6CA72624;
-	Tue,  6 May 2025 19:29:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5C793B1AB
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 19:30:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746559794; cv=none; b=HGD/SfZFT7cse/T5xb6niNl6fthdqdbftsjQBij5vmEpUiKyNeKPSKDBw+toH6wJ1Z9qLJl7q61y7x8rWBVQt0nVY8f5fRjU08GuYR/CaE717XEY543OndG9J+usM1GZTme3HhGkT6vW0I1Gzsgo6FmH9qj9KBiVtK3nyDyvxwE=
+	t=1746559829; cv=none; b=sSKGaiVfSS4PQ1LV0kT2RxQd8D/6NJj0VlA4fZoMlqYM5cnp2I0dIKY+BrCxpLSYhKuk72tuNgI/KCGuHj05gVAEn1gdh2j5rotWAiNwwN7sfy3CWGuSC2y37FDI0AH1Hzq/fPuWAai3FN9DluqkJc7YtYPs6A4lHgk4o0jZTpY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746559794; c=relaxed/simple;
-	bh=2Nr6xoHOYD2AZgbjEKQatn263DDeL2kognSV97Y6VQw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SHaLCLuxaB//Kg0/VhXYW7UPCaSPBgQ0bCNMH7B3TpCP8BMu3u/jJSv6cVaUePq7X3XJpB1Rbie8hlz6LGA2JstjmCxqiujkG2MP1TAYesvQvNKO9rmjm8HnaTrJr3lnPkphxPmaqBmFWp1GTmFotliIJEfeL+FNDg82Yf9OfLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G67WQ/J8; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746559829; c=relaxed/simple;
+	bh=evOuE7aB+74YsfoELzd7nolFPAtsEaVvGiSs0mHtAbI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HjO/x2GR2McNQ4oQApxvwfqd7A1m91mXD9hnt0aRJrmXrwizQmNU/Z/0p540OfD2gcOIZ8JlRKTA2djz9REEBhXlaMfVrstISsRQ9JV2ezBQL0HAB3MHx0m4BfXu4ucNOXrvZwh+K3OiXdi40jb6uvgt+28plv/Kv6qz2dmfVyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=WgHMedeS; arc=none smtp.client-ip=95.215.58.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G67WQ/J8"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2264aefc45dso95771575ad.0;
-        Tue, 06 May 2025 12:29:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746559793; x=1747164593; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BpkYYFBreEWHOH7F3jeTr12XOgMxGnYzg9h+2a61kIc=;
-        b=G67WQ/J8mqmh6TZFMbw3IjD+ZRKT+wU6EamiqI3JDObUDBFLxUZmRy4JFAiX/HOrtw
-         vqYQ9cGJfuXGJdn3e+Mx1ZxYrd9PsGL5OTcxJUAvsrsfyPrzMy+1tiJc8uPr8uif10ar
-         HmWDlglRxEjwRr/8mLCv88Lp6bZcqkwMdhRLuMzu7ayzsZFpcUOAnviRdms7qp93DO4M
-         WxGxyNkptFrRPElo+WeX5N7iFE+RSDE+UqwjJcFUWgWuwrualvvAW/AcH53qHdrAAqCm
-         LXwADdbEQvOpm7M6kWvOsNVluyJR+ecXDTqa3wC5ZzBZxTFyA1eY838lk2/Nes3KuNrp
-         GRLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746559793; x=1747164593;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BpkYYFBreEWHOH7F3jeTr12XOgMxGnYzg9h+2a61kIc=;
-        b=GWIpcAkacA/a9HEihGqdm/Ict9Mnqv/pD586verkhjevg+bL4BP0kw2+JyoveoK0yT
-         tuXUPeo6CfR7iPkhy4dMIWnfot9GEqIRRmrbITjg0s0ILH0+xeZvsHi+w+2QLoSDzcpT
-         lQY0oN+oLDzGMzN7zSKDybGhhDxxh7tSdUSNjc8oF4jzo6a0Gb7sdRj24zHZeSX+Gf86
-         FsMWLHKPueslHWMbOKH5HdjOMC0WnSGyXHurV3Ll+emKDcXnKcY+1RWSSVBPbh8wJUEY
-         Q3GjuBAjMaB3OeOren93VnYlknoJgSXTuZ9pD0YMurMWpuW/YDmu90Ecm0dqAJ7v2Y9+
-         1GIg==
-X-Forwarded-Encrypted: i=1; AJvYcCVU3xe5bcraLu99thFJ7Lh6Rl+S65pAwjGrQj+n0d0IyHM22Qr0fRlx/nc8aHe71KDP7zXWDzaPBqaqTk6f@vger.kernel.org, AJvYcCX95Ea3W3V+2bEr19ersGI8Ty3Cu3pGnKyt4bDbhH2YfusBqmiGeZRVkak+NC3SIs+vls0irPqwh0U=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5HysAD5MjCmerEIoJjK6PFHF2PkZ4QY77dj3pryBySeLm2gIJ
-	ykphs1eoWgHssbHRLL6JyRzQ1b4fb5vIM9WSQdYmO3vKq23ac+QgB5FzGJo7
-X-Gm-Gg: ASbGncu3mKprMrVd8aXZi9xkkoJUU+JCudnldA05yBGYgjfhReABh+sAmV/50NAbKxm
-	WtwQjA0hwh1plEwZpQrpxvpHigFIw5X2CwtqRyIT9q865OU/X7i2P+6841V27jNhjPcKdPVDMVa
-	YQ2R5LdveETKCLNz9YdAg1u8oHupW20s50Ubdj92PdCuemntb0lu4sR/NENRXG8GXwj7B43asgL
-	KmKVqO27HKWpHMT007PXGz2RIWw2N3zGFUX9JVtWyllqQ59Ca3p6guBFbmeUVzD9B+t80pVAdBs
-	oWOzaItc378LuwOHFgHj7thz4ebK0D79yKkzS9O2u3UQIA343ODR
-X-Google-Smtp-Source: AGHT+IERN6pWd7PqOdXnAVYxBJizmywR1rfimLAvRPrCgrDfgBt7psbyQxn7CavgvmMOvMw8Rl60aA==
-X-Received: by 2002:a17:902:f70a:b0:224:13a4:d61e with SMTP id d9443c01a7336-22e5ee0b785mr5732955ad.51.1746559792808;
-        Tue, 06 May 2025 12:29:52 -0700 (PDT)
-Received: from localhost.localdomain ([104.28.249.218])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b1fca324a9bsm5264577a12.0.2025.05.06.12.29.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 12:29:52 -0700 (PDT)
-From: Jesung Yang <y.j3ms.n@gmail.com>
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: workflows@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jesung Yang <y.j3ms.n@gmail.com>
-Subject: Re: [PATCH] docs: align with scripts/syscall.tbl migration
-Date: Wed,  7 May 2025 04:29:00 +0900
-Message-ID: <20250506192900.1547017-1-y.j3ms.n@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <87v7qdx59u.fsf@trenco.lwn.net>
-References: <87v7qdx59u.fsf@trenco.lwn.net>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="WgHMedeS"
+Date: Tue, 6 May 2025 12:30:18 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1746559824;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Db7MspoP+g08mHEp6RilCFjIi85bP/lhDWJS4kUMnGA=;
+	b=WgHMedeStoJSRNGI5VPxIeFmszKMKGVN84MrVLAxJ/1hLXKDKsbQ+ltgT4OqupjK1mnVnh
+	YmFcqpGYpnyHXjUXEWg2gUz/ypJXo6z5pm+YzOdHFSGWcgT7d/KHDKxNng5Gdn05emiz4h
+	SlUp/GBNVP0wd2MFonT/+O6b3MOwKro=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Yosry Ahmed <yosry.ahmed@linux.dev>
+Cc: Tejun Heo <tj@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
+	Muchun Song <muchun.song@linux.dev>, Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
+	JP Kobryn <inwardvessel@gmail.com>, bpf@vger.kernel.org, linux-mm@kvack.org, cgroups@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Meta kernel team <kernel-team@meta.com>
+Subject: Re: [RFC PATCH 3/3] cgroup: make css_rstat_updated nmi safe
+Message-ID: <mie6pn3q4epjgfm4kdilqmx55d6zowpmf7tfjm6a3bxuilza7y@nmt7xr3vctbu>
+References: <20250429061211.1295443-1-shakeel.butt@linux.dev>
+ <20250429061211.1295443-4-shakeel.butt@linux.dev>
+ <aBIiNMXIl6vyaNQ6@Asmaa.>
+ <6u7ccequ5ye3e4iqblcdeqsigindo3xjpsvkdb6hyaw7cpjddc@u2ujv7ymlxc6>
+ <aBnZMBJ-OOEXvpUa@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aBnZMBJ-OOEXvpUa@google.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, May 6, 2025 at 10:01 PM Jonathan Corbet <corbet@lwn.net> wrote:
+On Tue, May 06, 2025 at 09:41:04AM +0000, Yosry Ahmed wrote:
+> On Thu, May 01, 2025 at 03:10:20PM -0700, Shakeel Butt wrote:
+> > On Wed, Apr 30, 2025 at 06:14:28AM -0700, Yosry Ahmed wrote:
+> > [...]
+> > > > +
+> > > > +	if (!_css_rstat_cpu_trylock(css, cpu, &flags)) {
+> > > 
+> > > 
+> > > IIUC this trylock will only fail if a BPF program runs in NMI context
+> > > and tries to update cgroup stats, interrupting a context that is already
+> > > holding the lock (i.e. updating or flushing stats).
+> > > 
+> > 
+> > Correct (though note that flushing side can be on a different CPU).
+> > 
+> > > How often does this happen in practice tho? Is it worth the complexity?
+> > 
+> > This is about correctness, so even a chance of occurance need the
+> > solution.
+> 
+> Right, my question was more about the need to special case NMIs, see
+> below.
+> 
+> > 
+> > > 
+> > > I wonder if it's better if we make css_rstat_updated() inherently
+> > > lockless instead.
+> > > 
+> > > What if css_rstat_updated() always just adds to a lockless tree,
+> > 
+> > Here I assume you meant lockless list instead of tree.
+> 
+> Yeah, in a sense. I meant using lockless lists to implement the rstat
+> tree instead of normal linked lists.
+> 
+> > 
+> > > and we
+> > > defer constructing the proper tree to the flushing side? This should
+> > > make updates generally faster and avoids locking or disabling interrupts
+> > > in the fast path. We essentially push more work to the flushing side.
+> > > 
+> > > We may be able to consolidate some of the code too if all the logic
+> > > manipulating the tree is on the flushing side.
+> > > 
+> > > WDYT? Am I missing something here?
+> > > 
+> > 
+> > Yes this can be done but I don't think we need to tie that to current
+> > series. I think we can start with lockless in the nmi context and then
+> > iteratively make css_rstat_updated() lockless for all contexts.
+> 
+> My question is basically whether it would be simpler to actually make it
+> all lockless than special casing NMIs. With this patch we have two
+> different paths and a deferred list that we process at a later point. I
+> think it may be simpler if we just make it all lockless to begin with.
+> Then we would have a single path and no special deferred processing.
+> 
+> WDYT?
 
-> So this seems fine to me, but I would feel a bit better about it if the
-> relevant architecture maintainers and lists had been copied.  Could I
-> convince you to repost with those addresses included?
-
-Thanks for the feedback.
-
-I'll resend the patch with the relevant architecture maintainers and
-mailing lists CC'd, as suggested.
-
-Best regards,
-Jesung
+So, in the update side, always add to the lockless list (if not already)
+and on the flush side, built the udpate tree from the lockless list and
+flush it. Hopefully this tree building and flushing can be done in a
+more optimized way. Is this what you are suggesting?
