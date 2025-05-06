@@ -1,128 +1,163 @@
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD0B4284B49;
-	Tue,  6 May 2025 16:35:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54764220F59
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 16:36:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746549341; cv=none; b=IeIYgYtFRIsjD/SytTVxHU//GTtPd42cyWM4F11BqXaWAiQZ84mX/7SPkm2ObmKcpi4O5AVTc/1hX7J7jy3WBONrj8hcSKPzPOtD5NaKWIFouaM5/SHymZ3KAbGC08bXsY/lEqCf72hT90lYbtk4B4B4TT7eWlJf7ljg5YRLT/w=
+	t=1746549379; cv=none; b=rbeCwhX7YbNab68IJvRhnmvjzYK2qLZ7yNn8ZuSyH7DRnYumWhQb+eOmeqwjxwjmqett+VoAzYNa+5LG3FVUT9rrwkbRROtT7fwM11TZ6cW3IlTmRn9qZ4OTxQGn8zoQcfj0moR5PxAD9+6CLghDxdcBfx9qXHOjLD8Y5ANy/FI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746549341; c=relaxed/simple;
-	bh=hx2GmfBEs3YVwCNE28DAdxss5g0w8K0I8FdV8jDQkp0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZJCTSByWSHlB97ZEJImCIDv7odnX6RHHPkCQvRMeId7fgugli1/W50V6eGVSwn5okLmwDsNiUE/Ax4CFGMpoHfRLiTU9BqtGnqGKBVkAElhjh+S72OobH2XUjnPUJ1G80YAu/Vo3bwoztbKRhQoqZu+C8WaQRGa7dCxQZ2omXnY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CTwRICpZ; arc=none smtp.client-ip=209.85.219.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746549379; c=relaxed/simple;
+	bh=tUMH77MHsK8Qrrdw/Nfp3fcPeq3fsjxxnl6U0Dn26+I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iUvQBAo5InPSuJKqn+nqtLDqB6fxR+GtmrOtFLm7FSUGh/NXmUal73640LDrJePRf5VNUKZuEzlV/umtrgPUdd30KS8GXJVJRSqm+RpjTQIjlrY+AAfqgegRQFWJe3f4rd7EsnidRp4s//yOvloyIv/2r+ptxD5yzu8PxRlyxcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=2CCsXtvZ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=qC982Qq8; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=2CCsXtvZ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=qC982Qq8; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CTwRICpZ"
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6f5365bdbaeso8879946d6.3;
-        Tue, 06 May 2025 09:35:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746549338; x=1747154138; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=RvT+lXwAZdK17G8fy8dtsIjqoMmINzyyTp6bNm9ENFU=;
-        b=CTwRICpZE5UQr33dXWSVQm3PIoYtkz48J7J+6WQjY4Pw10gSLNazR/PQj03amu0yxS
-         eEF5o3rC4Z5j1ibVxLMVDD7sSOZ/ZwyG2sRJrQT1DtHlDNHj5JjMnC6peoM1m+0p/ROy
-         BhSgF2SiBRN/sjkp1thHfElOdG19PO0yzFntvUdkjpibLwpe/hy9sNlZN30xjdAVCang
-         WY487wJQq+dYgIjGLxsCRyzX+q8dniNi42Zfb/smIjNT7VmLHZBUPa2N2KqnH9GrqKe4
-         PpG5ziIP2EjQ2+Ceirozmt67f1MvkWLaXPIHPAMt4lu/EeAdnayn2zgQs7TDvBtaedEm
-         m7hQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746549338; x=1747154138;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RvT+lXwAZdK17G8fy8dtsIjqoMmINzyyTp6bNm9ENFU=;
-        b=rYaXTEl6u+uMbkIgay+k/vJkxcXEV+ZDQh7GL21pNaJFxwqPs/qGnOHldL2v8V7ddZ
-         crjd6XsnvlyrkNs8GeZbKDwch8ZY25jbHvkqfBHHrhFuuxtn7mPhjd9+OiSUd+i6GJO1
-         /+LElDexcUF/DJetu1hYQcALqDRUMJZxx7qj045/9xCzMjM5m7ehm0z0EH5hbKlNgJ3c
-         yMRcUnCKyWSnIWMVOGjxlx7Kh2wkCwH5IwztpJBhYAExWdPqMb9RoSowWbPdD4lrOCxK
-         9HY3eyke/Puv0M5iYC3PswAUlbSPLOZh331ljZJAOB/GmDHwuQTmRGTy6zJ04p53CM/Y
-         DQBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVdqQgUO3uzsc3yx/ebJtBMzzhh7R+5VDo0OHffzbTKNFEGb9p1/X2lSCyagArCVRZbDdg49YZCgBI=@vger.kernel.org, AJvYcCVkQalhRM27OpUf5Hvv4IzN6KQW1au2IZ5YjKP2+zRqQtSRsNHcIP7Qd6b9ONAcD8AsoTnzMhfNolWPyDxx@vger.kernel.org
-X-Gm-Message-State: AOJu0YzffpKFbyvwVcB7K6CMMPizVASXu/JWXFMgMPLLwq1ST5yzkWhJ
-	NqWotjr49kVrh/dPR/vgdQf6GceKpB7cX2xCIx6cmmvsijL9RFmb
-X-Gm-Gg: ASbGncsqHjtb75xDZFS5e05wgW97ms34eSAOaqQ8e1aFFXzpO+LYT2yMcu4loxigS9T
-	dsU7XChHElTearMMBu36cHMOxMcm1XBcIiOYRh/1MUoN3azVwVGRLeKRCpziCcNVmRPg09UoUhL
-	1asbCwU3S7KM8Z7BZ5esNqBbuJ1cd+eyBrohYEBQRtyqaPKC4XIT+hDvB8sQLhBIIPHQ2oH7asb
-	/qIdNaitF12bmWyCF+Al0bP+1LHtSXY6/MNpImYpaZByhx2hKVd7PXeagWf16sC1MW0GOKe2PcX
-	ZgGmQVpnCKbUXV+hul2qnDk2qpTlsBPgJU9FhSS68L7Aj+4mG8rEjLN3NEhXQg==
-X-Google-Smtp-Source: AGHT+IE8E1nnlrLB/Gb2SXRckPO/voZepjzp7qWkwi6b3Lmh+d9W75XhkFp+uX9L+AEakgV84zNREw==
-X-Received: by 2002:a05:6214:496:b0:6e8:f4e2:26ef with SMTP id 6a1803df08f44-6f5354174ecmr64482786d6.31.1746549338554;
-        Tue, 06 May 2025 09:35:38 -0700 (PDT)
-Received: from c65201v1.fyre.ibm.com ([129.41.87.7])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f50f3b030fsm72331396d6.13.2025.05.06.09.35.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 09:35:38 -0700 (PDT)
-From: Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
-To: jikos@kernel.org,
-	bentiss@kernel.org,
-	jic23@kernel.org,
-	srinivas.pandruvada@linux.intel.com
-Cc: linux-input@vger.kernel.org,
-	linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
-Subject: [PATCH] HID: sensor-hub: Fix typo and improve documentation
-Date: Tue,  6 May 2025 09:35:23 -0700
-Message-ID: <20250506163523.3262037-1-chelsyratnawat2001@gmail.com>
-X-Mailer: git-send-email 2.43.5
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="2CCsXtvZ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="qC982Qq8";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="2CCsXtvZ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="qC982Qq8"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 32D1A1F393;
+	Tue,  6 May 2025 16:36:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1746549375; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CVgOF5htGgXTxeqgootQCNOyXhH1t1T2eIGBUtemh/I=;
+	b=2CCsXtvZxAqDQMljkijEpYnKLjkj/hjiZjJwy52pIHG0NbxFSee8ePByzN1mA7f1Ci+W2S
+	sJTKC+lCk3A0+3NjsQ+YBw/ESclXN3Vp3oogG/OP/ZbAO8jo+md5P+N6LriugGzbCkgjYH
+	lmvq9U/IFG/qUKeueiqEu8zwCwbRbZk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1746549375;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CVgOF5htGgXTxeqgootQCNOyXhH1t1T2eIGBUtemh/I=;
+	b=qC982Qq8299An0TUOWoGF03gIjt7Jkhv8DJgLEemPumVieFVTx9o+25AqzS228Fq3K/zzB
+	thN7SeRLiTFk05DQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=2CCsXtvZ;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=qC982Qq8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1746549375; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CVgOF5htGgXTxeqgootQCNOyXhH1t1T2eIGBUtemh/I=;
+	b=2CCsXtvZxAqDQMljkijEpYnKLjkj/hjiZjJwy52pIHG0NbxFSee8ePByzN1mA7f1Ci+W2S
+	sJTKC+lCk3A0+3NjsQ+YBw/ESclXN3Vp3oogG/OP/ZbAO8jo+md5P+N6LriugGzbCkgjYH
+	lmvq9U/IFG/qUKeueiqEu8zwCwbRbZk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1746549375;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CVgOF5htGgXTxeqgootQCNOyXhH1t1T2eIGBUtemh/I=;
+	b=qC982Qq8299An0TUOWoGF03gIjt7Jkhv8DJgLEemPumVieFVTx9o+25AqzS228Fq3K/zzB
+	thN7SeRLiTFk05DQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1861513687;
+	Tue,  6 May 2025 16:36:15 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id qHqUA386GmjydAAAD6G6ig
+	(envelope-from <dwagner@suse.de>); Tue, 06 May 2025 16:36:15 +0000
+Date: Tue, 6 May 2025 18:36:14 +0200
+From: Daniel Wagner <dwagner@suse.de>
+To: linux-nvme@lists.infradead.org
+Cc: James Smart <james.smart@broadcom.com>, Christoph Hellwig <hch@lst.de>, 
+	Sagi Grimberg <sagi@grimberg.me>, Chaitanya Kulkarni <kch@nvidia.com>, 
+	Hannes Reinecke <hare@suse.de>, Keith Busch <kbusch@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 00/14] nvmet-fcloop: track resources via reference
+ counting
+Message-ID: <144a314b-75b8-4d0c-ae19-40680cb681d1@flourine.local>
+References: <20250423-nvmet-fcloop-v5-0-3d7f968728a5@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250423-nvmet-fcloop-v5-0-3d7f968728a5@kernel.org>
+X-Rspamd-Queue-Id: 32D1A1F393
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	DWL_DNSWL_BLOCKED(0.00)[suse.de:dkim];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:dkim]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.51
+X-Spam-Flag: NO
 
-Includes the following corrections -
- - Changed Measurment -> Measurement
- - Changed clode -> close
- - Gyro -> gyro
+On Wed, Apr 23, 2025 at 03:21:43PM +0200, Daniel Wagner wrote:
+> Note blktests nvme/030 test is likely to fail if the
+> 70-nvmf-autoconnect.rules is active. In this case two discovery are
+> running in parallel and nvme-cli/libnvme gets out of sync. I don't see a
+> problem in blktests, but maybe I am just blind:
+> 
+> nvme/030 (tr=fc) (ensure the discovery generation counter is updated appropriately) [failed]
+>     runtime  1.843s  ...  1.719s
+>     --- tests/nvme/030.out      2023-08-30 08:39:08.428409596 +0000
+>     +++ /tmp/blktests/nodev_tr_fc/nvme/030.out.bad      2025-04-10 10:56:05.146372112 +0000
+>     @@ -1,2 +1,6 @@
+>      Running nvme/030
+>     +Failed to open ctrl nvme1, errno 11
+>     +Failed to open ctrl nvme1, errno 11
+>     +failed to get discovery log: Bad file descriptor
 
-Signed-off-by: Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
----
- include/linux/hid-sensor-hub.h | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+It turns out that nvme/030 uncovered a bunch of bugs. First the kernel
+returned EAGAIN consistently for a while and could easily reproduce it.
+But after updating something it went away. I think the EAGAIN was issued
+because in my test setup the udev rule is active and triggers a discover
+(creates a discover ctrl) which runs in parallel with the test, also
+running a discover. I think EAGAIN was alwasys there but it is hard to
+hit.
 
-diff --git a/include/linux/hid-sensor-hub.h b/include/linux/hid-sensor-hub.h
-index 0f9f7df865db..3621d35a00d6 100644
---- a/include/linux/hid-sensor-hub.h
-+++ b/include/linux/hid-sensor-hub.h
-@@ -17,7 +17,7 @@
-  * @attrib_id:		Attribute id for this attribute.
-  * @report_id:		Report id in which this information resides.
-  * @index:		Field index in the report.
-- * @units:		Measurment unit for this attribute.
-+ * @units:		Measurement unit for this attribute.
-  * @unit_expo:		Exponent used in the data.
-  * @size:		Size in bytes for data size.
-  * @logical_minimum:	Logical minimum value for this attribute.
-@@ -39,8 +39,8 @@ struct hid_sensor_hub_attribute_info {
-  * struct sensor_hub_pending - Synchronous read pending information
-  * @status:		Pending status true/false.
-  * @ready:		Completion synchronization data.
-- * @usage_id:		Usage id for physical device, E.g. Gyro usage id.
-- * @attr_usage_id:	Usage Id of a field, E.g. X-AXIS for a gyro.
-+ * @usage_id:		Usage id for physical device, e.g. gyro usage id.
-+ * @attr_usage_id:	Usage Id of a field, e.g. X-AXIS for a gyro.
-  * @raw_size:		Response size for a read request.
-  * @raw_data:		Place holder for received response.
-  */
-@@ -104,10 +104,10 @@ struct hid_sensor_hub_callbacks {
- int sensor_hub_device_open(struct hid_sensor_hub_device *hsdev);
- 
- /**
--* sensor_hub_device_clode() - Close hub device
-+* sensor_hub_device_close() - Close hub device
- * @hsdev:	Hub device instance.
- *
--* Used to clode hid device for sensor hub.
-+* Used to close hid device for sensor hub.
- */
- void sensor_hub_device_close(struct hid_sensor_hub_device *hsdev);
- 
--- 
-2.43.5
+I've added a workaround to handle EINTR to libnvme but after reading up
+on signals, I came to the conclusion, nvme-cli needs to handle EAGAIN
+and EINTR. The EINTR case might be entered with Ctrl-C and in this case
+we want to terminate the loop. Installing a signal handler in a library
+is a no go from my understanding:
 
+  https://github.com/linux-nvme/nvme-cli/pull/2797
+
+After getting this out of the way, I figured out that nvmet-fc is not
+able to handle more than on in flight async, and there is a nested
+locking issue in nvme-fc.
+
+The tests get more and more reliable, though I thought I saw a KASAN
+report but now it's not reproducing. Yeah, everyone loves heisenbugs.
