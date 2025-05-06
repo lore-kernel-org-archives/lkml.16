@@ -1,110 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f74.google.com (mail-wr1-f74.google.com [209.85.221.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E827427A476;
-	Tue,  6 May 2025 09:09:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E260B26659D
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 09:10:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746522573; cv=none; b=gqCYawwZ/7YW7EEDFm+O1yANoKZNbNZgGzde16riEU0X1f6x/tCDmykXh+peJhaNOEkygCO3iMxrmFwlQgR2+p375fZ4tf+ONOO3gAYsJtyG2oMMVdNnmPLon4nJKnFE6E3tw/QFaybKQYpHckNfhHsregQYsiR5mssyT0agqdk=
+	t=1746522658; cv=none; b=fPRwjGbyNnG18JXGLMtvo97bw1y94Gcd4OfAsoiWB9CDc0YJ9DZMRK9G3A5jMODZL+huGbEPYLQVME4L2YyOwrooo2N4lDdXtEXGPetEI4bK63dn89rx7wlOBMA/f0QT+3jEozp1k42Kg73Zx0Zwze38dsgh0yHha5SmmKQxMBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746522573; c=relaxed/simple;
-	bh=3S+K8XIeC71C6TtT8cddTivigWUywntRwYzAEJ4uX6o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m536iworMdMf1v8V6Ekd9OQSXeMlTnlVp7gAIQ8CAJRK7ypF1EqkrKa7XmQpvEFZy284I1mBIhStIrJ+OABwDT/ilAhmMmbEODRwnsJKBfA995ze3AsLspkRk7RbcPAQ8yTIPLJtlFLdl9n/jxkn4t0XCbC2FquoTmBoNmdSFBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51C68C4CEF1;
-	Tue,  6 May 2025 09:09:29 +0000 (UTC)
-Date: Tue, 6 May 2025 10:09:27 +0100
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Yeoreum Yun <yeoreum.yun@arm.com>
-Cc: will@kernel.org, nathan@kernel.org, nick.desaulniers+lkml@gmail.com,
-	morbo@google.com, justinstitt@google.com, broonie@kernel.org,
-	maz@kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com,
-	shameerali.kolothum.thodi@huawei.com, james.morse@arm.com,
-	hardevsinh.palaniya@siliconsignals.io, ardb@kernel.org,
-	ryan.roberts@arm.com, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v2] arm64/cpufeature: annotate arm64_use_ng_mappings with
- ro_after_init to prevent wrong idmap generation
-Message-ID: <aBnRx4do8Ly0llZ8@arm.com>
-References: <20250502180412.3774883-1-yeoreum.yun@arm.com>
- <174626735218.2189871.10298017577558632540.b4-ty@arm.com>
- <aBYkGJmfWDZHBEzp@arm.com>
- <aBZ7P3/dUfSjB0oV@e129823.arm.com>
- <aBkL-zUpbg7_gCEp@arm.com>
- <aBnDqvY5c6a3qQ4H@e129823.arm.com>
+	s=arc-20240116; t=1746522658; c=relaxed/simple;
+	bh=+gd3EFD3tIRaf8uZxUpcsQzp9JqRZMQZZXab+O+Anys=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=UAccTsZiaPiC0D/VX5dH0nUdlJdtkgBKrP6EkQu7J52i9B9F11nTKCAu0KCZUM2zhL+XRwQrjpclfNfK9d7PtCj69AkCqlOeOY/CupSJxG/zp4S+rJB84+FHKm0M0GFGf9Q0PXpsw3IbkOHgNXkW5X8a9b6I71cbG0hh9Ret9eQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QOg8GFlK; arc=none smtp.client-ip=209.85.221.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QOg8GFlK"
+Received: by mail-wr1-f74.google.com with SMTP id ffacd0b85a97d-39134c762ebso1594369f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 02:10:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746522655; x=1747127455; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=jz3a5HwxM73VUsygopVsk7ADqOlPWS+1Glxw6UncPHk=;
+        b=QOg8GFlKzLlIYbJbNCx9niKrqxskzXZq35hZx+RjOIVf1H1tt+4q3V8n1gFE0i9Cdp
+         fLAnWfEogHvJsz9tQZ5OukCMykiVYfJwN/WmAFmeAHCHCykQ5lu7LEmDlln1BrF5bMGk
+         GVRKHN665Himf0jgzvG9hrEaKIpl0Le7KJOWxqKnB09x7s7o44BokZNctANY6ulOcnmP
+         bcwVdaXnJZRsqanE9QBLgZEdAcERTUqYT41SOFiHBl8lu7MI4LCCXahvdKK01MmUGBZ2
+         zK8MCos9Ao0Rk3dTPa5UFy6ttKvDBXHG5ihbkSnOwNr2lGNqhS3rpqdnwNbdTD5qBNcm
+         tSfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746522655; x=1747127455;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jz3a5HwxM73VUsygopVsk7ADqOlPWS+1Glxw6UncPHk=;
+        b=NBbTjWqU59HyjB9Y6j0gKnOXhUW232xUwwGi9GPD1ZNi8T2e6f1MTYKtlp8RG4uI0Z
+         Hwrut6XguiXg8K3n/YS7kE1eHiKag9yPVfDHsahU8nhpVFnLSmwtKfpfhXYTYYMSZugH
+         SuXRUATU/J8SznfGE+f768Ou3BpR6TuTgKur3L9vkZ6l0mi3VMdq0IV8UuacEuuguawC
+         KjExT+NDd/FHoBVp8ISSGoZkQQXntHJx14Av2WPIwulNcL5nrGzHraBojz/6wfOjKtYF
+         yUgPOW5SWJcblMUcebUueQzT1sBDV/0ddpcC38NgA4gtdzZX2oj/SSjrDDe3PPR+4+Yh
+         ndEg==
+X-Forwarded-Encrypted: i=1; AJvYcCX0ObjsjrkuVaVgIJFV3B3+bOzIpbcVKyu93NdYb240a63qZnTP7vA+lxP0dBEM4T9bBTUEMCpnfmizbAA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEMJRcFpW2kEl+evVzxpIkumcGqIc7z0mLPEckGjPJzjg8fWWB
+	/JmW6DAHbVmb4UNHOYw/V9t9FMkPqRV49PisdWJCAt1dx2C/gYcneHmNezNU0q7pxnuRNMOOrOq
+	1jtsFRrtogRqeRw==
+X-Google-Smtp-Source: AGHT+IGyiMkYwbaMmB8dqPMDkvSFdJCivatLGhIBQhLPFZ0JT3dRMRjM3/jxKXeyS5cJ9gy5621ZK8OdcyZ3mWo=
+X-Received: from wrbay3.prod.google.com ([2002:a5d:6f03:0:b0:3a0:6fdd:fcab])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6000:2404:b0:39c:142c:e889 with SMTP id ffacd0b85a97d-3a0ac0ec30emr1669780f8f.27.1746522655314;
+ Tue, 06 May 2025 02:10:55 -0700 (PDT)
+Date: Tue, 6 May 2025 09:10:53 +0000
+In-Reply-To: <aBjlx_AfQCS-pmht@polis>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aBnDqvY5c6a3qQ4H@e129823.arm.com>
+Mime-Version: 1.0
+References: <20250505-strncpy-from-user-v3-0-85c677fd4f91@google.com>
+ <20250505-strncpy-from-user-v3-2-85c677fd4f91@google.com> <aBjlx_AfQCS-pmht@polis>
+Message-ID: <aBnSHfFGAyMxAtQa@google.com>
+Subject: Re: [PATCH v3 2/2] uaccess: rust: add UserSliceReader::strcpy_into_buf
+From: Alice Ryhl <aliceryhl@google.com>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-On Tue, May 06, 2025 at 09:09:14AM +0100, Yeoreum Yun wrote:
-> > On Sat, May 03, 2025 at 09:23:27PM +0100, Yeoreum Yun wrote:
-> > > Hi Catalin,
-> > >
-> > > > On Sat, May 03, 2025 at 11:16:12AM +0100, Catalin Marinas wrote:
-> > > > > On Fri, 02 May 2025 19:04:12 +0100, Yeoreum Yun wrote:
-> > > > > > create_init_idmap() could be called before .bss section initialization
-> > > > > > which is done in early_map_kernel().
-> > > > > > Therefore, data/test_prot could be set incorrectly by PTE_MAYBE_NG macro.
-> > > > > >
-> > > > > > PTE_MAYBE_NG macro set NG bit according to value of "arm64_use_ng_mappings".
-> > > > > > and this variable places in .bss section.
-> > > > > >
-> > > > > > [...]
-> > > > >
-> > > > > Applied to arm64 (for-next/fixes), with some slight tweaking of the
-> > > > > comment, thanks!
-> > > > >
-> > > > > [1/1] arm64/cpufeature: annotate arm64_use_ng_mappings with ro_after_init to prevent wrong idmap generation
-> > > > >       https://git.kernel.org/arm64/c/12657bcd1835
-> > > >
-> > > > I'm going to drop this for now. The kernel compiled with a clang 19.1.5
-> > > > version I have around (Debian sid) fails to boot, gets stuck early on:
-> > > >
-> > > > $ clang --version
-> > > > Debian clang version 19.1.5 (1)
-> > > > Target: aarch64-unknown-linux-gnu
-> > > > Thread model: posix
-> > > > InstalledDir: /usr/lib/llvm-19/bin
-> > > >
-> > > > I didn't have time to investigate, disassemble etc. I'll have a look
-> > > > next week.
-> > >
-> > > Just for your information.
-> > > When I see the debian package, clang 19.1.5-1 doesn't supply anymore:
-> > >  - https://ftp.debian.org/debian/pool/main/l/llvm-toolchain-19/
-> > >
-> > > and the default version for sid is below:
-> > >
-> > > $ clang-19 --version
-> > > Debian clang version 19.1.7 (3)
-> > > Target: aarch64-unknown-linux-gnu
-> > > Thread model: posix
-> > > InstalledDir: /usr/lib/llvm-19/bin
-> > >
-> > > When I tested with above version with arm64-linux's for-next/fixes
-> > > including this patch. it works well.
-> >
-> > It doesn't seem to be toolchain related. It fails with gcc as well from
-> > Debian stable but you'd need some older CPU (even if emulated, e.g.
-> > qemu). It fails with Cortex-A72 (guest on Raspberry Pi 4) but not
-> > Neoverse-N2. Also changing the annotation from __ro_after_init to
-> > __read_mostly also works.
+On Mon, May 05, 2025 at 06:22:31PM +0200, Danilo Krummrich wrote:
+> On Mon, May 05, 2025 at 12:17:32PM +0000, Alice Ryhl wrote:
+> > +    /// Read a NUL-terminated string from userspace and return it.
+> > +    ///
+> > +    /// The string is read into `buf` and a NUL-terminator is added if the end of `buf` is reached.
+> > +    /// Since there must be space to add a NUL-terminator, the buffer must not be empty. The
+> > +    /// returned `&CStr` points into `buf`.
+> > +    ///
+> > +    /// Fails with [`EFAULT`] if the read happens on a bad address (some data may have been
+> > +    /// copied).
+> > +    #[doc(alias = "strncpy_from_user")]
+> > +    pub fn strcpy_into_buf<'buf>(self, buf: &'buf mut [u8]) -> Result<&'buf CStr> {
+> > +        if buf.is_empty() {
+> > +            return Err(EINVAL);
+> > +        }
+> > +
+> > +        // SAFETY: The types are compatible and `strncpy_from_user` doesn't write uninitialized
+> > +        // bytes to `buf`.
+> > +        let mut dst = unsafe { &mut *(buf as *mut [u8] as *mut [MaybeUninit<u8>]) };
+> > +
+> > +        // We never read more than `self.length` bytes.
+> > +        if dst.len() > self.length {
+> > +            dst = &mut dst[..self.length];
+> > +        }
+> > +
+> > +        let mut len = raw_strncpy_from_user(self.ptr, dst)?;
+> > +        if len < dst.len() {
+> > +            // Add one to include the NUL-terminator.
+> > +            len += 1;
+> > +        } else if len < buf.len() {
+> > +            // This implies that len == dst.len() < buf.len().
+> > +            //
+> > +            // This means that we could not fill the entire buffer, but we had to stop reading
+> > +            // because we hit the `self.length` limit of this `UserSliceReader`. Since we did not
+> > +            // fill the buffer, we treat this case as if we tried to read past the `self.length`
+> > +            // limit and received a page fault, which is consistent with other `UserSliceReader`
+> > +            // methods that also return page faults when you exceed `self.length`.
+> > +            return Err(EFAULT);
+> > +        } else {
+> > +            // This implies that len == buf.len().
+> > +            //
+> > +            // This means that we filled the buffer exactly. In this case, we add a NUL-terminator
+> > +            // and return it. Unlike the `len < dst.len()` branch, don't modify `len` because it
+> > +            // already represents the length including the NUL-terminator.
+> > +            //
+> > +            // SAFETY: Due to the check at the beginning, the buffer is not empty.
+> > +            unsafe { *buf.last_mut().unwrap_unchecked() = 0 };
+> > +        }
+> > +
+> > +        // SAFETY: `raw_strncpy_from_user` guarantees that this range of bytes represents a
+> > +        // NUL-terminated string with the only NUL byte being at the end.
 > 
-> Thanks to let me know. But still I've failed to reproduce this
-> on Cortex-a72 and any older cpu on qeum.
-> If you don't mind, would you share your Kconfig?
+> This isn't true if we hit the else case above, no?
+> 
+> With that fixed,
+> 
+> 	Reviewed-by: Danilo Krummrich <dakr@kernel.org>
 
-Just defconfig with gcc (Debian 12.2.0-14) 12.2.0. It fails for me with
-"qemu -bios /usr/share/qemu-efi-aarch64/QEMU_EFI.fd -cpu cortex-a53" (I
-have qemu 9.1.1 around, I don't think that's relevant).
+I guess the wording is a bit off. I will update to this:
 
--- 
-Catalin
+// SAFETY: There are two cases:
+// * If we hit the `len < dst.len()` case, then `raw_strncpy_from_user`
+//   guarantees that this slice contains exactly one NUL byte at the end
+//   of the string.
+// * Otherwise, `raw_strncpy_from_user` guarantees that the string
+//   contained no NUL bytes, and we have since added a NUL byte at the
+//   end.
+
+Alice
