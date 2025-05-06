@@ -1,145 +1,152 @@
-Received: from sgoci-sdnproxy-4.icoremail.net (sgoci-sdnproxy-4.icoremail.net [129.150.39.64])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC99119342F;
-	Tue,  6 May 2025 06:23:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.150.39.64
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C996E7260E;
+	Tue,  6 May 2025 06:23:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746512608; cv=none; b=XPay8iXQLKVTIgLKtwsGz5+Z21XFXefv4HDtr9TgOI7H3RtX9St1oVPtLPvawuudMLeW6A4dhwL+RPxZHADb4r8NubxCiazRcse/m7C7hLCmxX72V43wBxVgncAllwiJz6FKZcspENEG8C5TZ/XruWaaEq47y5SpM8zIkaQojac=
+	t=1746512624; cv=none; b=sUTYXV5XSXsd2oXy4qH+3YiVsx6+fHfDM/gKZUivfrIxhgtYndx1okTZ7Ktl9urgW9ZGI0ZuCA4betfrQZzQ73/5385teQ5EtIszZN8E5fsQwvIaef1Ir8TEjERLoyHmAtmy0xprNix1AahpIDBuuyeRdigtkL+fA1FVc9GFmlY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746512608; c=relaxed/simple;
-	bh=RIkJJP+RXcI6vPURQiIkAusnMMfRzBhxynerb81vkFY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gh2jdc+R0ZLTYVaUXEqrxWWjXc8eJRV1kHnmc4Qw626lGV4EA9ISNZlmABi+egs3bXNe8X/uCW3lZN2NWCxHT13vbatrTqjcg9vYrFjDoF/jxh0CgixXzgxkLB1SB13Qm0kaEfUdM+XX5g8rnhjvZTNgNslNNItfh5w9NQbSG2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=129.150.39.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
-Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
-	by hzbj-icmmx-6 (Coremail) with SMTP id AQAAfwBXXmrVqhlonb+oAg--.27522S2;
-	Tue, 06 May 2025 14:23:17 +0800 (CST)
-Received: from phytium.com.cn (unknown [123.150.8.50])
-	by mail (Coremail) with SMTP id AQAAfwA3yyTJqhloDVAUAA--.24S3;
-	Tue, 06 May 2025 14:23:06 +0800 (CST)
-From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-To: Jonathan.Cameron@huawei.com,
-	dan.j.williams@intel.com,
-	rppt@kernel.org,
-	rafael@kernel.org,
-	lenb@kernel.org,
-	akpm@linux-foundation.org,
-	alison.schofield@intel.com,
-	rrichter@amd.com,
-	bfaccini@nvidia.com,
-	haibo1.xu@intel.com,
-	david@redhat.com,
-	chenhuacai@kernel.org
-Cc: linux-cxl@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	chenbaozi@phytium.com.cn,
-	loongarch@lists.linux.dev,
-	Yuquan Wang <wangyuquan1236@phytium.com.cn>
-Subject: [PATCH v2] mm: numa_memblks: introduce numa_add_reserved_memblk
-Date: Tue,  6 May 2025 14:22:45 +0800
-Message-Id: <20250506062245.3816791-1-wangyuquan1236@phytium.com.cn>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1746512624; c=relaxed/simple;
+	bh=uLOj3gzjzJHXb5dMIMlDQDK7dGmsb0GWN4kozaXfopI=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=KieTdO9iJ9s+rfeq4dPFghsWFDcKMlB7ny8nqRA0wLi1Tj3JTSI2vHicm4yMRwOEu09+O29mrvQ+ALZUQk67e5zJ6SAxlGPeiOwwITyxXdRgiWfFMuImsYVoVUQPFkzXDiIrfE7SEerHTGoE0+Hq3q+Jabk+ARt6g2J7zCKpPIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Kupw8XaS; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Kupw8XaS"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 545M4e85010779;
+	Tue, 6 May 2025 06:23:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=EcGgFtMnMHu7y/f6bO7AuW
+	GTFEhhyK8BvFHxsHOBdjM=; b=Kupw8XaS4yFkt1czS+Q8DRQ9NGrNfvU7sIuwmc
+	07aF8tpxQ+MZgF1C+i4+2yKHtWkdYooKie7/UNv9jo/rwgkY4dPLZuKJeDGwjGHr
+	V5lMlQKf1OcmKNL+RCvXwaDNE1136KFbiEqSrv4CP2GmKK+myUFrHa7jUWGc9JGi
+	8MXpuC24ssEtwgGyHILRdqrrQar2V8cy90rC7epL9KkB25yZ+AXttXYFvTZOZyHb
+	wb3t0Yo7Ce74Ab5O2hYMkoVAQE0vNTe2UXzEpkQ3SZCfGl0qnQ1ITdKHJ9otjolg
+	zvuhY/frNMr4lk4E+4RRFhXc6GjapBpUXy8BLj6y8Xh+vUjw==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46f5tb95ph-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 06 May 2025 06:23:38 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5466NbJw023138
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 6 May 2025 06:23:37 GMT
+Received: from lijuang2-gv.ap.qualcomm.com (10.80.80.8) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Mon, 5 May 2025 23:23:30 -0700
+From: Lijuan Gao <quic_lijuang@quicinc.com>
+Subject: [PATCH v3 0/4] Correct the number of GPIOs in gpio-ranges for
+ QCS615 and QCS8300
+Date: Tue, 6 May 2025 14:22:57 +0800
+Message-ID: <20250506-correct_gpio_ranges-v3-0-49a7d292befa@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAfwA3yyTJqhloDVAUAA--.24S3
-X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQAQAWgRLLwIYwBJsb
-Authentication-Results: hzbj-icmmx-6; spf=neutral smtp.mail=wangyuquan
-	1236@phytium.com.cn;
-X-Coremail-Antispam: 1Uk129KBjvJXoWxXFW7Ar4xuF4DCry5trWrKrg_yoW5uFyrpa
-	yUG3Z8XF4xGw1xGw1xuryj9w1S93WrKr1DJFZrGr43ZF4rWry2vr4UtFsxZF1DtrW7Zr1r
-	Wr4vyw15uw1rAF7anT9S1TB71UUUUjDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
-	UUUUU
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAMGqGWgC/22NzQ6CMBCEX4X0bE1/pAIn38MQgtsF9iDFLRIN4
+ d0tnD1+k5lvVhGRCaOoslUwLhQpjAnsKRMwtGOPknxiYZTJVa6chMCMMDf9RKHhvRElts5eHTi
+ lvRVpOTF29Dms9zrxQHEO/D1OFrunu++ijS7/+hYjldRl2xV5UfiHV7fXm4BGOEN4inrbth81k
+ qC3uAAAAA==
+To: Bjorn Andersson <andersson@kernel.org>,
+        Linus Walleij
+	<linus.walleij@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        "Jingyi
+ Wang" <quic_jingyw@quicinc.com>
+CC: <kernel@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>,
+        Lijuan Gao <quic_lijuang@quicinc.com>,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+X-Mailer: b4 0.15-dev-99b12
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1746512610; l=1774;
+ i=quic_lijuang@quicinc.com; s=20240827; h=from:subject:message-id;
+ bh=uLOj3gzjzJHXb5dMIMlDQDK7dGmsb0GWN4kozaXfopI=;
+ b=aMPICzuACzuB605bXfuI+uVxjqiMN5d3jmjW5WCcbM1kis9lFZR81Wx69I/OyUUDuP0jt3k6+
+ DlB4NR18+daDWOal2/88mMobKVWa+NEUiVKQIBAx6yfl99qqCZYf/S0
+X-Developer-Key: i=quic_lijuang@quicinc.com; a=ed25519;
+ pk=1zeM8FpQK/J1jSFHn8iXHeb3xt7F/3GvHv7ET2RNJxE=
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: FjHJ9exTdrmn4dTfVv84QUesSzZQBKCd
+X-Proofpoint-GUID: FjHJ9exTdrmn4dTfVv84QUesSzZQBKCd
+X-Authority-Analysis: v=2.4 cv=doXbC0g4 c=1 sm=1 tr=0 ts=6819aaea cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8
+ a=COk6AnOGAAAA:8 a=Uo5fGkIgM_B_5ApAZXMA:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA2MDA1OSBTYWx0ZWRfX9KnuV38w98Nn
+ OPVaOBH+OJcPpFPsZa8BS5j/x3+QBcWVk2r7ShgAUhGK5LaQ8F/Pqh0EqhjwbOPLiMNwzN/BOiT
+ AbOpKpCxvHb23qbwAPJ0bR3yddz3giZJs/+8nnNBJd6xEs1L1GAn/ddtZaq//K8B9k3ggqL2UHL
+ m/h6GOl8QKCP9WosE0YNvEzDmIB1PTtHYXl12z8G5yiPH+t3YQpVkHYqY6BKhsUL7mrypPx4Q14
+ eeQjzY/eGvdb0hsitWGSKMgarD5uHtmAWTAziJ63dyQFyU3/UCBNco9zzMgCjM0EpPHxX+TWlzn
+ ahiKcZlPaX2Bu29sAfnynqS1RP+NnzIRKwbr//avcMm1G1VTYTknXqwKxvEnLH+TR3YgzMgqCxm
+ WNXUs6uE0aOQxnw+5Weqt9hcv3uw6sv6yAA8Wq0UwqwolQTAJomRmZbyhFjp7buTSbT496lJ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-06_03,2025-05-05_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 bulkscore=0 adultscore=0 malwarescore=0 phishscore=0
+ mlxlogscore=720 impostorscore=0 clxscore=1011 mlxscore=0 priorityscore=1501
+ spamscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505060059
 
-acpi_parse_cfmws() currently adds empty CFMWS ranges to numa_meminfo
-with the expectation that numa_cleanup_meminfo moves them to
-numa_reserved_meminfo. There is no need for that indirection when it is
-known in advance that these unpopulated ranges are meant for
-numa_reserved_meminfo in support of future hotplug / CXL provisioning.
+The UFS_RESET pin on Qualcomm SoCs are controlled by TLMM and exposed
+through the GPIO framework. It is expected to be wired to the reset pin
+of the primary UFS memory so that the UFS driver can toggle it.
 
-Introduce and use numa_add_reserved_memblk() to add the empty CFMWS
-ranges directly.
+The UFS_RESET pin is exported as GPIOs in addtion to the real GPIOs. The
+QCS615 TLMM pin controller has GPIOs 0-122, so correct the gpio-rangs to
+124. The QCS8300 TLMM pin controller has GPIOs 0-132, so correct the
+gpio-rangs to 134.
 
-Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+Signed-off-by: Lijuan Gao <quic_lijuang@quicinc.com>
 ---
+Changes in v3:
+- Add tags from Rob Herring and Konrad Dybcio.
+- Remove applied patches.
+- Link to v2: https://lore.kernel.org/r/20241219-correct_gpio_ranges-v2-0-19af8588dbd0@quicinc.com
 
-Changes in v2 (Thanks to Dan & Alison):
-- Use numa_add_reserved_memblk() to replace numa_add_memblk() in acpi_parse_cfmws()
-- Add comments to describe the usage of numa_add_reserved_memblk()
-- Updating the commit message to clarify the purpose of the patch
+Changes in v2:
+- Update the introductory information in the cover letter
+- Update the commit message
+- Update the title of the TLMM driver patch
+- Link to v1: https://lore.kernel.org/r/20241212-correct_gpio_ranges-v1-0-c5f20d61882f@quicinc.com
 
-By the way, "LoongArch: Introduce the numa_memblks conversion" is in linux-next.
+---
+Lijuan Gao (4):
+      dt-bindings: pinctrl: qcom: correct gpio-ranges in examples for qcs615
+      dt-bindings: pinctrl: qcom: correct gpio-ranges in examples for qcs8300
+      pinctrl: qcom: correct the ngpios entry for QCS615
+      pinctrl: qcom: correct the ngpios entry for QCS8300
 
- drivers/acpi/numa/srat.c     |  2 +-
- include/linux/numa_memblks.h |  1 +
- mm/numa_memblks.c            | 22 ++++++++++++++++++++++
- 3 files changed, 24 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/pinctrl/qcom,qcs615-tlmm.yaml  | 2 +-
+ Documentation/devicetree/bindings/pinctrl/qcom,qcs8300-tlmm.yaml | 2 +-
+ drivers/pinctrl/qcom/pinctrl-qcs615.c                            | 2 +-
+ drivers/pinctrl/qcom/pinctrl-qcs8300.c                           | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
+---
+base-commit: 407f60a151df3c44397e5afc0111eb9b026c38d3
+change-id: 20250506-correct_gpio_ranges-ea6376c601d3
 
-diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
-index 0a725e46d017..751774f0b4e5 100644
---- a/drivers/acpi/numa/srat.c
-+++ b/drivers/acpi/numa/srat.c
-@@ -453,7 +453,7 @@ static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
- 		return -EINVAL;
- 	}
- 
--	if (numa_add_memblk(node, start, end) < 0) {
-+	if (numa_add_reserved_memblk(node, start, end) < 0) {
- 		/* CXL driver must handle the NUMA_NO_NODE case */
- 		pr_warn("ACPI NUMA: Failed to add memblk for CFMWS node %d [mem %#llx-%#llx]\n",
- 			node, start, end);
-diff --git a/include/linux/numa_memblks.h b/include/linux/numa_memblks.h
-index dd85613cdd86..991076cba7c5 100644
---- a/include/linux/numa_memblks.h
-+++ b/include/linux/numa_memblks.h
-@@ -22,6 +22,7 @@ struct numa_meminfo {
- };
- 
- int __init numa_add_memblk(int nodeid, u64 start, u64 end);
-+int __init numa_add_reserved_memblk(int nid, u64 start, u64 end);
- void __init numa_remove_memblk_from(int idx, struct numa_meminfo *mi);
- 
- int __init numa_cleanup_meminfo(struct numa_meminfo *mi);
-diff --git a/mm/numa_memblks.c b/mm/numa_memblks.c
-index ff4054f4334d..541a99c4071a 100644
---- a/mm/numa_memblks.c
-+++ b/mm/numa_memblks.c
-@@ -200,6 +200,28 @@ int __init numa_add_memblk(int nid, u64 start, u64 end)
- 	return numa_add_memblk_to(nid, start, end, &numa_meminfo);
- }
- 
-+/**
-+ * numa_add_reserved_memblk - Add one numa_memblk to numa_reserved_meminfo
-+ * @nid: NUMA node ID of the new memblk
-+ * @start: Start address of the new memblk
-+ * @end: End address of the new memblk
-+ *
-+ * Add a new memblk to the numa_reserved_meminfo.
-+ *
-+ * Usage Case: numa_cleanup_meminfo() reconciles all numa_memblk instances
-+ * against memblock_type information and moves any that intersect reserved
-+ * ranges to numa_reserved_meminfo. However, when that information is known
-+ * ahead of time, we use numa_add_reserved_memblk() to add the numa_memblk
-+ * to numa_reserved_meminfo directly.
-+ *
-+ * RETURNS:
-+ * 0 on success, -errno on failure.
-+ */
-+int __init numa_add_reserved_memblk(int nid, u64 start, u64 end)
-+{
-+	return numa_add_memblk_to(nid, start, end, &numa_reserved_meminfo);
-+}
-+
- /**
-  * numa_cleanup_meminfo - Cleanup a numa_meminfo
-  * @mi: numa_meminfo to clean up
+Best regards,
 -- 
-2.34.1
+Lijuan Gao <quic_lijuang@quicinc.com>
 
