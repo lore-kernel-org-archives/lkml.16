@@ -1,594 +1,227 @@
-Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A95A221773D
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 13:13:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746537215; cv=none; b=LtR8Rml7qa72eCTgdP+d/fdYKNbuTHI0nG6XK9VvZ+DSCzTVPKDGzV26h9b5vwkquHKqrp13V0Mp/A/DrlmWv4o5kHaEpLFwrNdi6jgW/pPFwfo7hIwnJlLv+BYziy/199LKTdnQx0jr6iC/4Fp8KqBCwtrxAwxA9ObX9b8bqOg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746537215; c=relaxed/simple;
-	bh=mgsGk9gCT3M1lf9HueIEtSPHqqF57smwqeFtLbtqDZE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GZQZrYiAv32FdqF/ql0qXhLaBVmr9dZKcltXOMW3Y6lcd5LZvUY9qaE7DK4XEIf/meQv+rn1JJgRm5zB7Z2FdpdRdAmneYvL17bwtoDpKAq5JzrxevuWc2/pESh7whJJdwRJRpTTi83K87z8SOENVLcBE6MumtSGaX+yPm8Xoo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=h2Gwclv+; arc=none smtp.client-ip=95.215.58.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A1513C0C
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 13:13:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746537237; cv=fail; b=i2Wog19OkWoyZBhaZvET4pE5X2ty5tcyuyt+GVZ43eUHie8QmReKC4z2FxR7DJxbLKGq2BsA3RUWOfnCuKMKpYySO3tYPLBR4Tye5ydHoG0ozva9Mm59yELsS2Eq+Ms4V44orx99+VALVOZlfBUp601k1Feo735PNb9mFymvd58=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746537237; c=relaxed/simple;
+	bh=gd36qG7jMdJhBZ88bGAsQUbzCQEhMX0llQkXc7GDq28=;
+	h=Date:From:To:CC:Subject:Message-ID:Content-Type:
+	 Content-Disposition:MIME-Version; b=lgVB4A/I9iwLOOonSx/oyYFPVYHCNl0Bhi11wVwNzqT55qbpFhpIl3TfwGiUxgJBOSeQqRXV2jAoJHlP8pwJH06voMhm3OHf4rytIu69M/AsprNN5AuyQ4/WPGiIcN9Xd8WNvrNbSJ1pPYIO7z0i0Sx3WHzFzFC4xHliekPB0Bk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h2qX/I/b; arc=fail smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="h2Gwclv+"
-Date: Tue, 6 May 2025 13:13:17 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1746537209;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9wfa4l7beRgLCNqc7AkmKuNjzqaMq8QBn/PTMeTLAvM=;
-	b=h2Gwclv+gkyG4vFbtwLU2+HPz3NoIiu/6uxj2EKCZqh8IfvM5Y4vMtOR+94EZH31HKVDoN
-	W7fGlqksfFwNu4UizLy9/zssX/JLHKyQrBCfsM47G5MQXl2Omw3fvPbiux76zo65pIgBWX
-	VLVwd4ENr9JA8uGYxulCKp1Ylmjelmg=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yosry Ahmed <yosry.ahmed@linux.dev>
-To: Vitaly Wool <vitaly.wool@konsulko.se>
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org,
-	linux-kernel@vger.kernel.org, Nhat Pham <nphamcs@gmail.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Minchan Kim <minchan@kernel.org>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Igor Belousov <igor.b@beldev.am>,
-	Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH] mm/zblock: use vmalloc for page allocations
-Message-ID: <aBoK7f7rtfbPFGap@google.com>
-References: <20250502080156.1672957-1-vitaly.wool@konsulko.se>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h2qX/I/b"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746537235; x=1778073235;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=gd36qG7jMdJhBZ88bGAsQUbzCQEhMX0llQkXc7GDq28=;
+  b=h2qX/I/bozD77uymvcoCT1HMb0zw/+lk25D8+ddY/6k2D1jP+Sb7FIUn
+   ie9Z+yb2deBzA4tgNp91jJhi3u7P5KHWT5KQLt8Pcpl4akDMeOirdJGPX
+   d08V6jr+GTCuPFB5byCBIB00at7hSHlnjTTf0lDXFfl70Am4aIrDyPG3r
+   xiUqdgEUS3YsegLcfM2lfJ/je+r3kSdahVyXRNDY4NZArpzIkUeX3s8GY
+   lk53e0us+ASmhhuMsvi+N24PEelA0Ex8BcxGO8nxy0nyQXBJQhcUlsE2+
+   BDa6qcPvrp62I/2jl21QAuryHnS3c+oZRTUTeD+e4FG51xJI3kVZ0mAM8
+   Q==;
+X-CSE-ConnectionGUID: jsWKgOQUStiDCu2AYELYjQ==
+X-CSE-MsgGUID: LJf+6etUS3yujnj7kgJ4VQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="51854016"
+X-IronPort-AV: E=Sophos;i="6.15,266,1739865600"; 
+   d="scan'208";a="51854016"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 06:13:55 -0700
+X-CSE-ConnectionGUID: YW7FTUAPTDqDndaKOctuFw==
+X-CSE-MsgGUID: pD/LMl7mQnarAKPFEgvBsQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,266,1739865600"; 
+   d="scan'208";a="136612179"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 06:13:55 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Tue, 6 May 2025 06:13:54 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Tue, 6 May 2025 06:13:54 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.172)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Tue, 6 May 2025 06:13:53 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=vkUOhGMdTg5JZVLE9YhO1+jQibzxgf9LiTUEAG5l2HXUXA5FV0L6nBu5xt43uRmcGCN7ylq/6/morpWm6vAbztB7AT8T95QmKRAF8riEzcTcd2fxBX0RRTXrfuv3w2UJyfGN1ZyM7GQwjR+monOK1mg4Hd0nGyg48RbNdIPMOp9yurJcHlBOEUhjDaPmzmzVvCjcWue94iSiJAcGRF3pP/vrvGuRqTCGBiAOMpk1qx9dIdlYP/jPKUg3qHYZ6Uhr9RW85wLBWW8AU3LI6HesG5E1N11SeBcBgeube0hvfa0l9D81Cr4B1kq3AouH5yMHkbLscfQMqdaGxGi+L3VwuA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9jCr6qI8KNp++0w/RpaRL0dLEFHmSEnjETrO34zPAWM=;
+ b=Ql3UtHlpaa0ZUSZViPoz8FcGO5JmeO13g7iN9m5gAluzY0URkDNviyYlmHQ2J6RNm/JorS26Yz/rdgg8GPYpWE1U9muSM7mRkSN8whVPZ3+TtT+zvmZ2n2E47Pf5P2gieEaBTolKrRK01/dAQyg0551vziBwlnVQ/km3wH4CivWCdOZHj8r7azWrDpgO85vFy2jzpfx9XPUYkJeQLtp8rItOo+OL6MjKPa3U7Kk4rS5m/LU0HmoCXzFLxtHebLDtt2hsEHeG+jDky5KScBGm6sOqHGsiej5gDouV03aNnFJ+/MUxwh3l/44qPJO8RA76vmP0UagnK6QrM3Pd6Bm7xQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH0PR11MB5674.namprd11.prod.outlook.com (2603:10b6:510:ec::10)
+ by PH0PR11MB4984.namprd11.prod.outlook.com (2603:10b6:510:34::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.21; Tue, 6 May
+ 2025 13:13:47 +0000
+Received: from PH0PR11MB5674.namprd11.prod.outlook.com
+ ([fe80::77d3:dfb2:3bd:e02a]) by PH0PR11MB5674.namprd11.prod.outlook.com
+ ([fe80::77d3:dfb2:3bd:e02a%6]) with mapi id 15.20.8699.012; Tue, 6 May 2025
+ 13:13:47 +0000
+Date: Tue, 6 May 2025 21:13:39 +0800
+From: kernel test robot <lkp@intel.com>
+To: Chen-Yu Tsai <wenst@chromium.org>
+CC: <oe-kbuild-all@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Subject: arch/arm64/boot/dts/mediatek/mt8186-corsola-voltorb-sku589824.dtb:
+ spmi@10015000 (mediatek,mt8186-spmi): Unevaluated properties are not allowed
+ ('interrupts' was unexpected)
+Message-ID: <aBoLAywAbPsDbmGy@rli9-mobl>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+X-ClientProxiedBy: SG2PR04CA0162.apcprd04.prod.outlook.com (2603:1096:4::24)
+ To PH0PR11MB5674.namprd11.prod.outlook.com (2603:10b6:510:ec::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250502080156.1672957-1-vitaly.wool@konsulko.se>
-X-Migadu-Flow: FLOW_OUT
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH0PR11MB5674:EE_|PH0PR11MB4984:EE_
+X-MS-Office365-Filtering-Correlation-Id: f88de2a6-3725-45e2-ae93-08dd8c9fd557
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|13003099007|220923002;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?18vIgjHPWxRCV1o5p2R6rmh5RGAzqPQ217wZIHxMeWXiqObI2Q04EFyu5Yd8?=
+ =?us-ascii?Q?y3Qx3jtIUtxiXud3X7D8VhmRK9DBiHAj22ziYjNoOSFvDzdh8jDIU9XOifoa?=
+ =?us-ascii?Q?1Y59v0agPbJ+39pUqNpqHIz9THAQ9nUqUywB3dV8E6CfUnktetCBLxaejYbA?=
+ =?us-ascii?Q?57Olxv3itjjwpmGofHcEU/926rMIsWO02lWeZKhClQNrpOvwVdVCjp0SuKJj?=
+ =?us-ascii?Q?lF4Li8w+Z+kbPJ/TpDJskMqNADF8yNMXgFSEoSNZGxaykdddf8F026nD0hap?=
+ =?us-ascii?Q?Nt9j6DmJwdqilCglBByh9yXPMrvjMP2BqIflpvELVtgL5QajZMQTq0LqfoZR?=
+ =?us-ascii?Q?+kfPFdHNyieOiM+r2Wt3SLRaibg8V/1SghMbuoz4hX/ikCKzKs0L5f0kEL/R?=
+ =?us-ascii?Q?tWLphy3nbDCmOupqKiHVYZ/aOwgo7O378wGnIOHpJukIOJ60fjusSO3XCaMN?=
+ =?us-ascii?Q?cP8EC8L05Q3/HtvkhdhNuX1GRxV9eEZlwcNmsXFNAoAe9webFyb6tT/BukUD?=
+ =?us-ascii?Q?ZmV95u2StinseEM7JvrfrlQZIytY7+oN3g7ph77gJyXU9gST6M0+VWmVPGTQ?=
+ =?us-ascii?Q?hXg82B64/NjvbCKiZI/67VjdEQhqWKkIMo5m48xQBa500U7yng65F2meePCh?=
+ =?us-ascii?Q?Bcb7k6c3IbEXqFSyNF2keeTKxrvJrOfgIbF9JebinGu7dweLjEtoqlQemuPF?=
+ =?us-ascii?Q?zp/BaaUJ+QNJ3ERxRvVznjg7M+CgbMjhk9HvWqPmazkmVGyjn9BmJdZ8RNDJ?=
+ =?us-ascii?Q?h4tMx0FZm3oodJM6hDbP0aZXU0tVerCzQ6cNu0Gii8Nw5et7t6UJ/1i9tagQ?=
+ =?us-ascii?Q?TUtP9MNL9mgYqrsNeNytaiXwWLg557GRVOewOplepf7cfz+eHAmacd4ooPoZ?=
+ =?us-ascii?Q?46tnc2IaqJJ4/6lNkZWjIBUOXEUJnD1BBkPRnj40HIvIfStrzteoOT3dFjwQ?=
+ =?us-ascii?Q?yeV4i5dP6onlJ6Jhe3NJn9Z8VMjkopGBJ0kkkirtR7+ZWxxa7FtUCEEl6OiC?=
+ =?us-ascii?Q?A2yvk/vQiyO6UZq7a9MBknrfgD1W92eGsNO++kYB1WwMRqGFiEdORWkX59aG?=
+ =?us-ascii?Q?ax2s/FZFWe7oFe9m+QcILGszu3VyhekJwjwVvDe1yJPJ5jQKgY8Qw3oD+HS6?=
+ =?us-ascii?Q?o5zplV9R0T6XhsSiZCaSCEycEkox2BXp0B0519mFbl6w+DXEeBIe2udLed2A?=
+ =?us-ascii?Q?0+xvUeAAWjoqmMP61f9PMvet8ih3fa5lW1HzRK8fawP19uOcVA5QXqhXbd7Q?=
+ =?us-ascii?Q?VSd8nsaESJOsRQuEe/1diRZjidf3riAu37M9+sNqDwT/jX8GSTla9tpYgDIH?=
+ =?us-ascii?Q?gJX45LINRv4DmxlPQeyC+112EJKAFrrW8CAIugQpdj0juz4DB9+AMUq9BeBI?=
+ =?us-ascii?Q?BvdP202HPx8kGSEyqkxcyaQy4AqcLqBoALPbPSlCf3rcN92F6wIfkGUv5tdJ?=
+ =?us-ascii?Q?EwjUwMgtrGs=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR11MB5674.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(13003099007)(220923002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?ijRXOriysXZXUd9Cla3nfs5x/kR0nLAYL90sQbB26Y7CFNQoNhLLDHMbuvum?=
+ =?us-ascii?Q?lYz6xyQYoPnr7Q4ArLs9wJI+qpkvI0sHMqBNHnuPpiUaCVXFe+94/ccb7MvP?=
+ =?us-ascii?Q?sdkCMF3wDuPPW58eX/OzZ8rlVWhjFtbqmjdpAYUGXByz0MyG3DkpL89u9t24?=
+ =?us-ascii?Q?0ebNEFjTR+qXcO3GB3G40vYGsUq6HRGMTYXxOI+lIPOn+tHFPEXjRG6gzV5e?=
+ =?us-ascii?Q?iom6rO/A5AWxccmzADzbo4OpHxTejX5CcQKWNwKL1OnYeGLpPTfDcobaHbDM?=
+ =?us-ascii?Q?Ca7XcfLnwWv5QsM9JEG9gIGd7WI2YNnYOKZ/5Xc30HUtOo2leogjazM2DrBz?=
+ =?us-ascii?Q?A3i+iCb+Cyfh6SSUr9kxrnV3rP4p2ADHsjstvj9j0ETM40zwvnbHBCaLLTQ1?=
+ =?us-ascii?Q?Zch6kOzq1aUp0ud0pSUtotfcbZf9Wm3KEIQHD8qSRRQ9zhGzgD0hAS2SgC8Y?=
+ =?us-ascii?Q?F8Hz4LVd5/CU7sB8zm3zoW/gqAs5yiCilqnzZiMSgjxQIE1YaLAZVgA0VRwn?=
+ =?us-ascii?Q?SE3531y4AoQM1lCQhWxl/0J4l7fTXAXWVZCyEeOJeqLwghwl2pRQfHWTZDBS?=
+ =?us-ascii?Q?lJM9gS/dUbPJRXpV+rVFTQ30iJNV9Vd+aZVVFiTDK/SZoH5USp8D/H04MFtd?=
+ =?us-ascii?Q?FVB3x0mziXAJ3EeVYDBwOdVqeDei7fY+SY3W996xLA+Ac1pHbghKLQ75tmnO?=
+ =?us-ascii?Q?4ThNIcaapKXDn5c8A9ArOeuLjNgVunX6V6laBh3ngMKDE0z2XP2dWZ6950ob?=
+ =?us-ascii?Q?TCRqDlorF5K293+UbLgrrd5v/z6Wih7JrZFEI38/kZIwtsfhrf9ML7P0Gnqq?=
+ =?us-ascii?Q?tarrxlx6gAnPLEFSeP4ytRAPRdomDWqyVy6bZPiLRUE8L9nRgoZGZWfmabet?=
+ =?us-ascii?Q?5SvG+Cumg+AivUDrrd3bha2eOV7d/nucHwvLZvo7lzvYk4mS2d3qHsJpBjcI?=
+ =?us-ascii?Q?4SMvFoV2aO+6VOnURD4RcM7UdjK9f9ZruW51k+hC1TnLsvEmRWfuAVS0CAqC?=
+ =?us-ascii?Q?UGr+NAneJjMOKqdqk25vn6KoH/vfGzbx3O3+zgIUoy/xmJVBeLHTML2cn5+C?=
+ =?us-ascii?Q?YC0SABfX+c2BBi341Gbfnkf8tw9qs55YoSlx4XQC+iEbJ4mrhkLRfAGI4VKg?=
+ =?us-ascii?Q?JLwxmN3GZSEz5Q+1XlT9HG9FjmfOmutIYVma84jf8+5VMwcome4gLPiSKcQQ?=
+ =?us-ascii?Q?idJ4nQe4CfHkgwBoS29EbhDMqV448G6CjSrWUhu0vAsAF7zRC8dhzQwMIS1+?=
+ =?us-ascii?Q?gw4eu8p9MMwS7GsIbKT4usVaSHAiIn9fML2SI62nfh1fGOHzd24twfSUPKzr?=
+ =?us-ascii?Q?r9ZzQtzs4kIMPkwh1c2Irqt6erzDIH1zO0Ipe06zqp7O+Kn9a+lGp90AFdH8?=
+ =?us-ascii?Q?ARFgZEHNfQCsFfef5SHB+5MRoV6bX434z4UAwt1asjpzdBPvSvO3w2shQKnJ?=
+ =?us-ascii?Q?BfW2arJyOdv9CsuzPWYfu9hXuAuslyNIdVM4JVLySucNhC3rnwqLslNXV3/r?=
+ =?us-ascii?Q?UU+VQgL8S+3Rx0WSrRWkbGevzr8feH7wkbW19ava4Ze845fwRy9VgW3GvXQF?=
+ =?us-ascii?Q?BEn/K2AKZBgM+G+/BHQRIuUI4z9d+KalNKQyKWV4kQX2b+xqAmpL1iSjNEFK?=
+ =?us-ascii?Q?OQ=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: f88de2a6-3725-45e2-ae93-08dd8c9fd557
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR11MB5674.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 13:13:46.9604
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4jJHwPM9veFJFXm8/MP6Z5PNvTQhQHsG/AK5N6K7pfkDmPtQ0KNuIm99T3O8rUUj60XcS+R/Rl3owBPywV7J8Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB4984
+X-OriginatorOrg: intel.com
 
-On Fri, May 02, 2025 at 10:01:56AM +0200, Vitaly Wool wrote:
-> From: Igor Belousov <igor.b@beldev.am>
-> 
-> Use vmalloc for page allocations for zblock blocks to avoid extra
-> pressure on the memmory subsystem with multiple higher order
-> allocations.
-> 
-> While at it, introduce a module parameter to opportunistically
-> allocate pages of lower orders via try_page_alloc() for faster
-> allocations whenever possible.
-> 
-> Since vmalloc works fine with non-power of 2 numbers of pages,
-> rewrite the block size tables to use that opportunity.
-> 
-> Signed-off-by: Igor Belousov <igor.b@beldev.am>
-> Signed-off-by: Vitaly Wool <vitaly.wool@konsulko.se>
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   01f95500a162fca88cefab9ed64ceded5afabc12
+commit: 321ad586e6073e33dd576ec33ae1803db3b1e717 arm64: dts: mediatek: Add MT8186 Voltorb Chromebooks
+date:   10 months ago
+:::::: branch date: 21 hours ago
+:::::: commit date: 10 months ago
+config: arm64-randconfig-2051-20250429 (https://download.01.org/0day-ci/archive/20250506/202505062001.h4c2eK7p-lkp@intel.com/config)
+compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
+dtschema version: 2025.3.dev21+ge6ea659
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250506/202505062001.h4c2eK7p-lkp@intel.com/reproduce)
 
-Keep in mind that zswap_decompress() will always do an extra copy if the
-address returned by zpool_obj_read_begin() is a vmalloc address. To
-avoid this we need to enlighten the scatterlist API to work with vmalloc
-addresses.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/r/202505062001.h4c2eK7p-lkp@intel.com/
 
-(CC'ing Herbert as he was looking into this)
+dtcheck warnings: (new ones prefixed by >>)
+   arch/arm64/boot/dts/mediatek/mt8186-corsola-voltorb-sku589824.dtb: /soc/pwrap@1000d000/pmic: failed to match any schema with compatible: ['mediatek,mt6366', 'mediatek,mt6358']
+   arch/arm64/boot/dts/mediatek/mt8186-corsola-voltorb-sku589824.dtb: /soc/pwrap@1000d000/pmic: failed to match any schema with compatible: ['mediatek,mt6366', 'mediatek,mt6358']
+   arch/arm64/boot/dts/mediatek/mt8186-corsola-voltorb-sku589824.dtb: /soc/pwrap@1000d000/pmic/codec: failed to match any schema with compatible: ['mediatek,mt6366-sound', 'mediatek,mt6358-sound']
+   arch/arm64/boot/dts/mediatek/mt8186-corsola-voltorb-sku589824.dtb: /soc/pwrap@1000d000/pmic/codec: failed to match any schema with compatible: ['mediatek,mt6366-sound', 'mediatek,mt6358-sound']
+   arch/arm64/boot/dts/mediatek/mt8186-corsola-voltorb-sku589824.dtb: /soc/pwrap@1000d000/pmic/rtc: failed to match any schema with compatible: ['mediatek,mt6366-rtc', 'mediatek,mt6358-rtc']
+   arch/arm64/boot/dts/mediatek/mt8186-corsola-voltorb-sku589824.dtb: /soc/pwrap@1000d000/pmic/rtc: failed to match any schema with compatible: ['mediatek,mt6366-rtc', 'mediatek,mt6358-rtc']
+>> arch/arm64/boot/dts/mediatek/mt8186-corsola-voltorb-sku589824.dtb: spmi@10015000 (mediatek,mt8186-spmi): Unevaluated properties are not allowed ('interrupts' was unexpected)
+   	from schema $id: http://devicetree.org/schemas/spmi/mtk,spmi-mtk-pmif.yaml#
+   arch/arm64/boot/dts/mediatek/mt8186-corsola-voltorb-sku589824.dtb: pmic@6 (mediatek,mt6319-regulator): compatible:0: 'mediatek,mt6315-regulator' was expected
+   	from schema $id: http://devicetree.org/schemas/regulator/mt6315-regulator.yaml#
+   arch/arm64/boot/dts/mediatek/mt8186-corsola-voltorb-sku589824.dtb: pmic@6 (mediatek,mt6319-regulator): compatible: ['mediatek,mt6319-regulator', 'mediatek,mt6315-regulator'] is too long
+   	from schema $id: http://devicetree.org/schemas/regulator/mt6315-regulator.yaml#
+   arch/arm64/boot/dts/mediatek/mt8186-corsola-voltorb-sku589824.dtb: /soc/spmi@10015000/pmic@6: failed to match any schema with compatible: ['mediatek,mt6319-regulator', 'mediatek,mt6315-regulator']
+   arch/arm64/boot/dts/mediatek/mt8186-corsola-voltorb-sku589824.dtb: dp-bridge@5c (ite,it6505): 'extcon' is a required property
+   	from schema $id: http://devicetree.org/schemas/display/bridge/ite,it6505.yaml#
+>> arch/arm64/boot/dts/mediatek/mt8186-corsola-voltorb-sku589824.dtb: sound (mediatek,mt8186-mt6366-rt5682s-max98360-sound): 'model' is a required property
+   	from schema $id: http://devicetree.org/schemas/sound/mt8186-mt6366-rt1019-rt5682s.yaml#
+--
+   arch/arm64/boot/dts/mediatek/mt8186-corsola-voltorb-sku589825.dtb: /soc/pwrap@1000d000/pmic: failed to match any schema with compatible: ['mediatek,mt6366', 'mediatek,mt6358']
+   arch/arm64/boot/dts/mediatek/mt8186-corsola-voltorb-sku589825.dtb: /soc/pwrap@1000d000/pmic: failed to match any schema with compatible: ['mediatek,mt6366', 'mediatek,mt6358']
+   arch/arm64/boot/dts/mediatek/mt8186-corsola-voltorb-sku589825.dtb: /soc/pwrap@1000d000/pmic/codec: failed to match any schema with compatible: ['mediatek,mt6366-sound', 'mediatek,mt6358-sound']
+   arch/arm64/boot/dts/mediatek/mt8186-corsola-voltorb-sku589825.dtb: /soc/pwrap@1000d000/pmic/codec: failed to match any schema with compatible: ['mediatek,mt6366-sound', 'mediatek,mt6358-sound']
+   arch/arm64/boot/dts/mediatek/mt8186-corsola-voltorb-sku589825.dtb: /soc/pwrap@1000d000/pmic/rtc: failed to match any schema with compatible: ['mediatek,mt6366-rtc', 'mediatek,mt6358-rtc']
+   arch/arm64/boot/dts/mediatek/mt8186-corsola-voltorb-sku589825.dtb: /soc/pwrap@1000d000/pmic/rtc: failed to match any schema with compatible: ['mediatek,mt6366-rtc', 'mediatek,mt6358-rtc']
+>> arch/arm64/boot/dts/mediatek/mt8186-corsola-voltorb-sku589825.dtb: spmi@10015000 (mediatek,mt8186-spmi): Unevaluated properties are not allowed ('interrupts' was unexpected)
+   	from schema $id: http://devicetree.org/schemas/spmi/mtk,spmi-mtk-pmif.yaml#
+   arch/arm64/boot/dts/mediatek/mt8186-corsola-voltorb-sku589825.dtb: pmic@6 (mediatek,mt6319-regulator): compatible:0: 'mediatek,mt6315-regulator' was expected
+   	from schema $id: http://devicetree.org/schemas/regulator/mt6315-regulator.yaml#
+   arch/arm64/boot/dts/mediatek/mt8186-corsola-voltorb-sku589825.dtb: pmic@6 (mediatek,mt6319-regulator): compatible: ['mediatek,mt6319-regulator', 'mediatek,mt6315-regulator'] is too long
+   	from schema $id: http://devicetree.org/schemas/regulator/mt6315-regulator.yaml#
+   arch/arm64/boot/dts/mediatek/mt8186-corsola-voltorb-sku589825.dtb: /soc/spmi@10015000/pmic@6: failed to match any schema with compatible: ['mediatek,mt6319-regulator', 'mediatek,mt6315-regulator']
+   arch/arm64/boot/dts/mediatek/mt8186-corsola-voltorb-sku589825.dtb: dp-bridge@5c (ite,it6505): 'extcon' is a required property
+   	from schema $id: http://devicetree.org/schemas/display/bridge/ite,it6505.yaml#
+>> arch/arm64/boot/dts/mediatek/mt8186-corsola-voltorb-sku589825.dtb: sound (mediatek,mt8186-mt6366-rt5682s-max98360-sound): 'model' is a required property
+   	from schema $id: http://devicetree.org/schemas/sound/mt8186-mt6366-rt1019-rt5682s.yaml#
 
-If we can use vmalloc for zblock, then we can probably also use vmalloc
-in zsmalloc and get rid of the chaining logic completely. This would
-make zsmalloc simpler and closer to zblock in that regard.
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
-Sergey, WDYT?
-
-> ---
-> 
-> Tests run on qemu-arm64 (8 CPUs, 1.5G RAM, 4K pages):
-> 1. zblock
-> 43205.38user
-> 7320.53system
-> 2:12:04elapsed
-> zswpin 346127
-> zswpout 1642438
-> 
-> 2. zsmalloc
-> 47194.61user 
-> 7978.48system 
-> 2:25:03elapsed 
-> zswpin 448031
-> zswpout 1810485
-> 
-> So zblock gives a nearly 10% advantage.
-> 
-> Please note that zsmalloc *crashes* on 16K page tests so I couldn't
-> compare performance in that case.
-> 
->  mm/zblock.c | 101 ++++++++++++++++++++++------------
->  mm/zblock.h | 153 ++++++++++++++++++++++++++++++----------------------
->  2 files changed, 156 insertions(+), 98 deletions(-)
-> 
-> diff --git a/mm/zblock.c b/mm/zblock.c
-> index e2036a6e1617..38468028e129 100644
-> --- a/mm/zblock.c
-> +++ b/mm/zblock.c
-> @@ -24,12 +24,17 @@
->  #include <linux/preempt.h>
->  #include <linux/slab.h>
->  #include <linux/spinlock.h>
-> +#include <linux/vmalloc.h>
->  #include <linux/zpool.h>
->  #include "zblock.h"
->  
->  static struct rb_root block_desc_tree = RB_ROOT;
->  static struct dentry *zblock_debugfs_root;
->  
-> +/* allocate order 0 blocks using vmalloc? <-- disabled by default */
-> +static bool vmalloc_small_blocks;
-> +module_param_named(vmalloc_small_blocks, vmalloc_small_blocks, bool, 0644);
-> +
->  /* Encode handle of a particular slot in the pool using metadata */
->  static inline unsigned long metadata_to_handle(struct zblock_block *block,
->  				unsigned int block_type, unsigned int slot)
-> @@ -56,13 +61,14 @@ static inline struct zblock_block *find_and_claim_block(struct block_list *b,
->  	struct list_head *l = &b->active_list;
->  	unsigned int slot;
->  
-> -	if (!list_empty(l)) {
-> +	spin_lock(&b->lock);
-> +	if (likely(!list_empty(l))) {
->  		struct zblock_block *z = list_first_entry(l, typeof(*z), link);
->  
->  		if (--z->free_slots == 0)
-> -			list_move(&z->link, &b->full_list);
-> +			__list_del_clearprev(&z->link);
->  		/*
-> -		 * There is a slot in the block and we just made sure it would
-> +		 * There is a slot in the block and we just made sure it will
->  		 * remain.
->  		 * Find that slot and set the busy bit.
->  		 */
-> @@ -74,31 +80,57 @@ static inline struct zblock_block *find_and_claim_block(struct block_list *b,
->  					slot)) {
->  			if (!test_and_set_bit(slot, z->slot_info))
->  				break;
-> -			barrier();
->  		}
-> +		spin_unlock(&b->lock);
->  
-> -		WARN_ON(slot >= block_desc[block_type].slots_per_block);
->  		*handle = metadata_to_handle(z, block_type, slot);
->  		return z;
->  	}
-> +	spin_unlock(&b->lock);
->  	return NULL;
->  }
->  
-> +static inline int zblock_get_order(unsigned int num_pages)
-> +{
-> +	switch (num_pages) {
-> +	case 1:
-> +	case 2:
-> +		return num_pages - 1;
-> +	case 4:
-> +		return 2;
-> +	default:
-> +		break;
-> +	}
-> +	return -1;
-> +}
->  /*
->   * allocate new block and add it to corresponding block list
->   */
->  static struct zblock_block *alloc_block(struct zblock_pool *pool,
->  					int block_type, gfp_t gfp,
-> -					unsigned long *handle)
-> +					unsigned long *handle,
-> +					unsigned int nid)
->  {
-> +	struct block_list *block_list = &pool->block_lists[block_type];
-> +	unsigned int num_pages = block_desc[block_type].num_pages;
->  	struct zblock_block *block;
-> -	struct block_list *block_list;
-> +	struct page *page = NULL;
->  
-> -	block = (void *)__get_free_pages(gfp, block_desc[block_type].order);
-> -	if (!block)
-> -		return NULL;
-> +	if (!vmalloc_small_blocks && zblock_get_order(num_pages) >= 0) {
-> +		page = try_alloc_pages(nid, zblock_get_order(num_pages));
-> +		if (page) {
-> +			page->private = PAGE_SMALL_BLOCK;
-> +			block = page_address(page);
-> +		}
-> +	}
-> +	if (!page) {
-> +		block = __vmalloc_node(PAGE_SIZE * num_pages, PAGE_SIZE, gfp, nid, NULL);
-> +		if (!block)
-> +			return NULL;
->  
-> -	block_list = &pool->block_lists[block_type];
-> +		page = vmalloc_to_page(block);
-> +		page->private = 0;
-> +	}
->  
->  	/* init block data  */
->  	block->free_slots = block_desc[block_type].slots_per_block - 1;
-> @@ -122,8 +154,8 @@ static int zblock_blocks_show(struct seq_file *s, void *v)
->  		struct block_list *block_list = &pool->block_lists[i];
->  
->  		seq_printf(s, "%d: %ld blocks of %d pages (total %ld pages)\n",
-> -			i, block_list->block_count, 1 << block_desc[i].order,
-> -			block_list->block_count << block_desc[i].order);
-> +			i, block_list->block_count, block_desc[i].num_pages,
-> +			block_list->block_count * block_desc[i].num_pages);
->  	}
->  	return 0;
->  }
-> @@ -142,19 +174,17 @@ DEFINE_SHOW_ATTRIBUTE(zblock_blocks);
->   */
->  static struct zblock_pool *zblock_create_pool(gfp_t gfp)
->  {
-> -	struct zblock_pool *pool;
-> -	struct block_list *block_list;
-> +	struct zblock_pool *pool = kmalloc(sizeof(struct zblock_pool), gfp);
->  	int i;
->  
-> -	pool = kmalloc(sizeof(struct zblock_pool), gfp);
->  	if (!pool)
->  		return NULL;
->  
->  	/* init each block list */
->  	for (i = 0; i < ARRAY_SIZE(block_desc); i++) {
-> -		block_list = &pool->block_lists[i];
-> +		struct block_list *block_list = &pool->block_lists[i];
-> +
->  		spin_lock_init(&block_list->lock);
-> -		INIT_LIST_HEAD(&block_list->full_list);
->  		INIT_LIST_HEAD(&block_list->active_list);
->  		block_list->block_count = 0;
->  	}
-> @@ -187,7 +217,7 @@ static void zblock_destroy_pool(struct zblock_pool *pool)
->   * a new slot.
->   */
->  static int zblock_alloc(struct zblock_pool *pool, size_t size, gfp_t gfp,
-> -			unsigned long *handle)
-> +			unsigned long *handle, unsigned int nid)
->  {
->  	int block_type = -1;
->  	struct zblock_block *block;
-> @@ -196,7 +226,7 @@ static int zblock_alloc(struct zblock_pool *pool, size_t size, gfp_t gfp,
->  	if (!size)
->  		return -EINVAL;
->  
-> -	if (size > PAGE_SIZE)
-> +	if (size > block_desc[ARRAY_SIZE(block_desc) - 1].slot_size)
->  		return -ENOSPC;
->  
->  	/* find basic block type with suitable slot size */
-> @@ -220,19 +250,15 @@ static int zblock_alloc(struct zblock_pool *pool, size_t size, gfp_t gfp,
->  	}
->  	if (WARN_ON(block_type < 0))
->  		return -EINVAL;
-> -	if (block_type >= ARRAY_SIZE(block_desc))
-> -		return -ENOSPC;
->  
->  	block_list = &pool->block_lists[block_type];
->  
-> -	spin_lock(&block_list->lock);
->  	block = find_and_claim_block(block_list, block_type, handle);
-> -	spin_unlock(&block_list->lock);
->  	if (block)
->  		return 0;
->  
->  	/* not found block with free slots try to allocate new empty block */
-> -	block = alloc_block(pool, block_type, gfp & ~(__GFP_MOVABLE | __GFP_HIGHMEM), handle);
-> +	block = alloc_block(pool, block_type, gfp, handle, nid);
->  	return block ? 0 : -ENOMEM;
->  }
->  
-> @@ -251,17 +277,25 @@ static void zblock_free(struct zblock_pool *pool, unsigned long handle)
->  	block = handle_to_metadata(handle, &block_type, &slot);
->  	block_list = &pool->block_lists[block_type];
->  
-> +	/* clear bit early, this will shorten the search */
-> +	clear_bit(slot, block->slot_info);
-> +
->  	spin_lock(&block_list->lock);
-> -	/* if all slots in block are empty delete whole block */
-> +	/* if all slots in block are empty delete the whole block */
->  	if (++block->free_slots == block_desc[block_type].slots_per_block) {
-> +		struct page *page = vmalloc_to_page(block);
-> +		int num_pages = block_desc[block_type].num_pages;
-> +
->  		block_list->block_count--;
-> -		list_del(&block->link);
-> +		__list_del_clearprev(&block->link);
->  		spin_unlock(&block_list->lock);
-> -		free_pages((unsigned long)block, block_desc[block_type].order);
-> +		if (page->private & PAGE_SMALL_BLOCK)
-> +			__free_pages(page, zblock_get_order(num_pages));
-> +		else
-> +			vfree(block);
->  		return;
->  	} else if (block->free_slots == 1)
-> -		list_move_tail(&block->link, &block_list->active_list);
-> -	clear_bit(slot, block->slot_info);
-> +		list_add(&block->link, &block_list->active_list);
->  	spin_unlock(&block_list->lock);
->  }
->  
-> @@ -329,7 +363,7 @@ static u64 zblock_get_total_pages(struct zblock_pool *pool)
->  
->  	total_size = 0;
->  	for (i = 0; i < ARRAY_SIZE(block_desc); i++)
-> -		total_size += pool->block_lists[i].block_count << block_desc[i].order;
-> +		total_size += pool->block_lists[i].block_count * block_desc[i].num_pages;
->  
->  	return total_size;
->  }
-> @@ -351,7 +385,7 @@ static void zblock_zpool_destroy(void *pool)
->  static int zblock_zpool_malloc(void *pool, size_t size, gfp_t gfp,
->  			unsigned long *handle, const int nid)
->  {
-> -	return zblock_alloc(pool, size, gfp, handle);
-> +	return zblock_alloc(pool, size, gfp, handle, nid);
->  }
->  
->  static void zblock_zpool_free(void *pool, unsigned long handle)
-> @@ -407,6 +441,7 @@ static int __init create_rbtree(void)
->  {
->  	int i;
->  
-> +	BUILD_BUG_ON(ARRAY_SIZE(block_desc) > MAX_TABLE_SIZE);
->  	for (i = 0; i < ARRAY_SIZE(block_desc); i++) {
->  		struct block_desc_node *block_node = kmalloc(sizeof(*block_node),
->  							GFP_KERNEL);
-> @@ -425,7 +460,7 @@ static int __init create_rbtree(void)
->  		block_node->this_slot_size = block_desc[i].slot_size;
->  		block_node->block_idx = i;
->  		if (i == ARRAY_SIZE(block_desc) - 1)
-> -			block_node->next_slot_size = PAGE_SIZE;
-> +			block_node->next_slot_size = PAGE_SIZE * 2;
->  		else
->  			block_node->next_slot_size = block_desc[i+1].slot_size;
->  		while (*new) {
-> diff --git a/mm/zblock.h b/mm/zblock.h
-> index 9af11f392f97..d433237d6ad4 100644
-> --- a/mm/zblock.h
-> +++ b/mm/zblock.h
-> @@ -10,13 +10,11 @@
->  #include <linux/rbtree.h>
->  #include <linux/types.h>
->  
-> -#define SLOT_FREE 0
-> -#define BIT_SLOT_OCCUPIED 0
-> -#define BIT_SLOT_MAPPED 1
-> +#define PAGE_SMALL_BLOCK	1
->  
->  #if PAGE_SIZE == 0x1000
-> -/* max 128 slots per block, max table size 32 */
-> -#define SLOT_BITS 7
-> +/* max 64 slots per block, max table size 64 */
-> +#define SLOT_BITS 6
->  #elif PAGE_SIZE == 0x4000
->  /* max 256 slots per block, max table size 64 */
->  #define SLOT_BITS 8
-> @@ -25,24 +23,26 @@
->  #define SLOT_BITS 8
->  #endif
->  
-> +#define MAX_TABLE_SIZE (1 << (PAGE_SHIFT - SLOT_BITS))
-> +
->  #define MAX_SLOTS (1 << SLOT_BITS)
->  #define SLOT_MASK ((0x1UL << SLOT_BITS) - 1)
->  
->  #define ZBLOCK_HEADER_SIZE	round_up(sizeof(struct zblock_block), sizeof(long))
-> -#define BLOCK_DATA_SIZE(order) ((PAGE_SIZE << order) - ZBLOCK_HEADER_SIZE)
-> -#define SLOT_SIZE(nslots, order) (round_down((BLOCK_DATA_SIZE(order) / nslots), sizeof(long)))
-> +#define BLOCK_DATA_SIZE(num) ((PAGE_SIZE * (num)) - ZBLOCK_HEADER_SIZE)
-> +#define SLOT_SIZE(nslots, num) (round_down((BLOCK_DATA_SIZE(num) / nslots), sizeof(long)))
->  
->  /**
->   * struct zblock_block - block metadata
-> - * Block consists of several (1/2/4/8) pages and contains fixed
-> + * Block consists of several pages and contains fixed
->   * integer number of slots for allocating compressed pages.
->   *
->   * free_slots:	number of free slots in the block
->   * slot_info:	contains data about free/occupied slots
->   */
->  struct zblock_block {
-> -	struct list_head link;
->  	DECLARE_BITMAP(slot_info, 1 << SLOT_BITS);
-> +	struct list_head link;
->  	u32 free_slots;
->  };
->  
-> @@ -54,12 +54,12 @@ struct zblock_block {
->   *
->   * slot_size:		size of slot for this list
->   * slots_per_block:	number of slots per block for this list
-> - * order:		order for __get_free_pages
-> + * num_pages:		number of pages per block
->   */
->  struct block_desc {
->  	unsigned int slot_size;
->  	unsigned short slots_per_block;
-> -	unsigned short order;
-> +	unsigned short num_pages;
->  };
->  
->  struct block_desc_node {
-> @@ -71,78 +71,103 @@ struct block_desc_node {
->  
->  static const struct block_desc block_desc[] = {
->  #if PAGE_SIZE == 0x1000
-> -	{ SLOT_SIZE(63, 0), 63, 0 },
-> -	{ SLOT_SIZE(32, 0), 32, 0 },
-> -	{ SLOT_SIZE(21, 0), 21, 0 },
-> -	{ SLOT_SIZE(15, 0), 15, 0 },
-> -	{ SLOT_SIZE(12, 0), 12, 0 },
-> -	{ SLOT_SIZE(10, 0), 10, 0 },
-> -	{ SLOT_SIZE(9, 0), 9, 0 },
-> -	{ SLOT_SIZE(8, 0), 8, 0 },
-> -	{ SLOT_SIZE(29, 2), 29, 2 },
-> -	{ SLOT_SIZE(13, 1), 13, 1 },
-> -	{ SLOT_SIZE(6, 0), 6, 0 },
-> -	{ SLOT_SIZE(11, 1), 11, 1 },
-> -	{ SLOT_SIZE(5, 0), 5, 0 },
-> -	{ SLOT_SIZE(9, 1), 9, 1 },
-> -	{ SLOT_SIZE(8, 1), 8, 1 },
-> -	{ SLOT_SIZE(29, 3), 29, 3 },
-> +	{ SLOT_SIZE(28, 1), 28, 1 },
-> +	{ SLOT_SIZE(18, 1), 18, 1 },
-> +	{ SLOT_SIZE(12, 1), 12, 1 },
-> +	{ SLOT_SIZE(10, 1), 10, 1 },
-> +	{ SLOT_SIZE(17, 2), 17, 2 },
-> +	{ SLOT_SIZE(15, 2), 15, 2 },
->  	{ SLOT_SIZE(13, 2), 13, 2 },
-> -	{ SLOT_SIZE(12, 2), 12, 2 },
-> +	{ SLOT_SIZE(6, 1), 6, 1 },
->  	{ SLOT_SIZE(11, 2), 11, 2 },
-> -	{ SLOT_SIZE(10, 2), 10, 2 },
-> +	{ SLOT_SIZE(5, 1), 5, 1 },
-> +	{ SLOT_SIZE(19, 4), 19, 4 },
->  	{ SLOT_SIZE(9, 2), 9, 2 },
-> -	{ SLOT_SIZE(17, 3), 17, 3 },
-> -	{ SLOT_SIZE(8, 2), 8, 2 },
-> -	{ SLOT_SIZE(15, 3), 15, 3 },
-> -	{ SLOT_SIZE(14, 3), 14, 3 },
-> -	{ SLOT_SIZE(13, 3), 13, 3 },
-> -	{ SLOT_SIZE(6, 2), 6, 2 },
-> +	{ SLOT_SIZE(17, 4), 17, 4 },
-> +	{ SLOT_SIZE(4, 1), 4, 1 },
-> +	{ SLOT_SIZE(23, 6), 23, 6 },
->  	{ SLOT_SIZE(11, 3), 11, 3 },
-> +	{ SLOT_SIZE(7, 2), 7, 2 },
->  	{ SLOT_SIZE(10, 3), 10, 3 },
-> -	{ SLOT_SIZE(9, 3), 9, 3 },
-> -	{ SLOT_SIZE(4, 2), 4, 2 },
-> +	{ SLOT_SIZE(19, 6), 19, 6 },
-> +	{ SLOT_SIZE(6, 2), 6, 2 },
-> +	{ SLOT_SIZE(14, 5), 14, 5 },
-> +	{ SLOT_SIZE(8, 3), 8, 3 },
-> +	{ SLOT_SIZE(5, 2), 5, 2 },
-> +	{ SLOT_SIZE(12, 5), 12, 5 },
-> +	{ SLOT_SIZE(9, 4), 9, 4 },
-> +	{ SLOT_SIZE(15, 7), 15, 7 },
-> +	{ SLOT_SIZE(2, 1), 2, 1 },
-> +	{ SLOT_SIZE(15, 8), 15, 8 },
-> +	{ SLOT_SIZE(9, 5), 9, 5 },
-> +	{ SLOT_SIZE(12, 7), 12, 7 },
-> +	{ SLOT_SIZE(13, 8), 13, 8 },
-> +	{ SLOT_SIZE(6, 4), 6, 4 },
-> +	{ SLOT_SIZE(11, 8), 11, 8 },
-> +	{ SLOT_SIZE(9, 7), 9, 7 },
-> +	{ SLOT_SIZE(6, 5), 6, 5 },
-> +	{ SLOT_SIZE(9, 8), 9, 8 },
-> +	{ SLOT_SIZE(4, 4), 4, 4 },
->  #else
-> -	{ SLOT_SIZE(255, 0), 255, 0 },
-> -	{ SLOT_SIZE(185, 0), 185, 0 },
-> -	{ SLOT_SIZE(145, 0), 145, 0 },
-> -	{ SLOT_SIZE(113, 0), 113, 0 },
-> -	{ SLOT_SIZE(92, 0), 92, 0 },
-> -	{ SLOT_SIZE(75, 0), 75, 0 },
-> -	{ SLOT_SIZE(60, 0), 60, 0 },
-> -	{ SLOT_SIZE(51, 0), 51, 0 },
-> -	{ SLOT_SIZE(43, 0), 43, 0 },
-> -	{ SLOT_SIZE(37, 0), 37, 0 },
-> -	{ SLOT_SIZE(32, 0), 32, 0 },
-> -	{ SLOT_SIZE(27, 0), 27, 0 },
-> -	{ SLOT_SIZE(23, 0), 23, 0 },
-> -	{ SLOT_SIZE(19, 0), 19, 0 },
-> -	{ SLOT_SIZE(17, 0), 17, 0 },
-> -	{ SLOT_SIZE(15, 0), 15, 0 },
-> -	{ SLOT_SIZE(13, 0), 13, 0 },
-> -	{ SLOT_SIZE(11, 0), 11, 0 },
-> -	{ SLOT_SIZE(10, 0), 10, 0 },
-> -	{ SLOT_SIZE(9, 0), 9, 0 },
-> -	{ SLOT_SIZE(8, 0), 8, 0 },
-> -	{ SLOT_SIZE(15, 1), 15, 1 },
-> -	{ SLOT_SIZE(14, 1), 14, 1 },
-> -	{ SLOT_SIZE(13, 1), 13, 1 },
-> +	{ SLOT_SIZE(185, 1), 185, 1 },
-> +	{ SLOT_SIZE(113, 1), 113, 1 },
-> +	{ SLOT_SIZE(86, 1), 86, 1 },
-> +	{ SLOT_SIZE(72, 1), 72, 1 },
-> +	{ SLOT_SIZE(58, 1), 58, 1 },
-> +	{ SLOT_SIZE(49, 1), 49, 1 },
-> +	{ SLOT_SIZE(42, 1), 42, 1 },
-> +	{ SLOT_SIZE(37, 1), 37, 1 },
-> +	{ SLOT_SIZE(33, 1), 33, 1 },
-> +	{ SLOT_SIZE(59, 2), 59, 2 },
-> +	{ SLOT_SIZE(27, 1), 27, 1 },
-> +	{ SLOT_SIZE(25, 1), 25, 1 },
-> +	{ SLOT_SIZE(23, 1), 23, 1 },
-> +	{ SLOT_SIZE(21, 1), 21, 1 },
-> +	{ SLOT_SIZE(39, 2), 39, 2 },
-> +	{ SLOT_SIZE(37, 2), 37, 2 },
-> +	{ SLOT_SIZE(35, 2), 35, 2 },
-> +	{ SLOT_SIZE(33, 2), 33, 2 },
-> +	{ SLOT_SIZE(31, 2), 31, 2 },
-> +	{ SLOT_SIZE(29, 2), 29, 2 },
-> +	{ SLOT_SIZE(27, 2), 27, 2 },
-> +	{ SLOT_SIZE(25, 2), 25, 2 },
->  	{ SLOT_SIZE(12, 1), 12, 1 },
->  	{ SLOT_SIZE(11, 1), 11, 1 },
-> +	{ SLOT_SIZE(21, 2), 21, 2 },
->  	{ SLOT_SIZE(10, 1), 10, 1 },
-> +	{ SLOT_SIZE(19, 2), 19, 2 },
->  	{ SLOT_SIZE(9, 1), 9, 1 },
-> +	{ SLOT_SIZE(17, 2), 17, 2 },
->  	{ SLOT_SIZE(8, 1), 8, 1 },
->  	{ SLOT_SIZE(15, 2), 15, 2 },
->  	{ SLOT_SIZE(14, 2), 14, 2 },
->  	{ SLOT_SIZE(13, 2), 13, 2 },
->  	{ SLOT_SIZE(12, 2), 12, 2 },
-> +	{ SLOT_SIZE(23, 4), 23, 4 },
->  	{ SLOT_SIZE(11, 2), 11, 2 },
-> +	{ SLOT_SIZE(21, 4), 21, 4 },
->  	{ SLOT_SIZE(10, 2), 10, 2 },
-> +	{ SLOT_SIZE(19, 4), 19, 4 },
->  	{ SLOT_SIZE(9, 2), 9, 2 },
-> +	{ SLOT_SIZE(17, 4), 17, 4 },
->  	{ SLOT_SIZE(8, 2), 8, 2 },
-> -	{ SLOT_SIZE(7, 2), 7, 2 },
-> -	{ SLOT_SIZE(6, 2), 6, 2 },
-> +	{ SLOT_SIZE(15, 4), 15, 4 },
-> +	{ SLOT_SIZE(14, 4), 14, 4 },
-> +	{ SLOT_SIZE(10, 3), 10, 3 },
-> +	{ SLOT_SIZE(16, 5), 16, 5 },
-> +	{ SLOT_SIZE(12, 4), 12, 4 },
-> +	{ SLOT_SIZE(11, 4), 11, 4 },
-> +	{ SLOT_SIZE(8, 3), 8, 3 },
->  	{ SLOT_SIZE(5, 2), 5, 2 },
-> +	{ SLOT_SIZE(7, 3), 7, 3 },
-> +	{ SLOT_SIZE(11, 5), 11, 5 },
-> +	{ SLOT_SIZE(4, 2), 4, 2 },
-> +	{ SLOT_SIZE(9, 5), 9, 5 },
-> +	{ SLOT_SIZE(8, 5), 8, 5 },
-> +	{ SLOT_SIZE(3, 2), 3, 2 },
-> +	{ SLOT_SIZE(4, 3), 4, 3 },
-> +	{ SLOT_SIZE(7, 6), 7, 6 },
-> +	{ SLOT_SIZE(4, 4), 4, 4 },
->  #endif /* PAGE_SIZE */
->  };
->  
-> @@ -150,13 +175,11 @@ static const struct block_desc block_desc[] = {
->   * struct block_list - stores metadata of particular list
->   * lock:		protects the list of blocks
->   * active_list:		linked list of active (non-full) blocks
-> - * full_list:		linked list of full blocks
->   * block_count:		total number of blocks in the list
->   */
->  struct block_list {
->  	spinlock_t lock;
->  	struct list_head active_list;
-> -	struct list_head full_list;
->  	unsigned long block_count;
->  };
->  
-> -- 
-> 2.39.2
-> 
