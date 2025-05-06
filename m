@@ -1,44 +1,45 @@
 Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFF8C278771;
-	Tue,  6 May 2025 10:43:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DC32278771;
+	Tue,  6 May 2025 10:43:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746528219; cv=pass; b=NqdQHzvnGMfYt9HWuPGrKoRKoOntKekr4wBLZD2Y902plf19P67eA3pyltVSBhw7fo3Zrk5oQHRfKo/GlBJZfa9xxI12m63wiDYQZgCFfB+Uwo9ikNkaA1lFAHivMagDK8dZXM+APuIsFq4HTKYVeTThTnYZtFgaZSAh67SrjmA=
+	t=1746528226; cv=pass; b=tv24uBMZUxqnWsZelYAz2p0ncNEvX8sCfv9goC9xDinnwlEZqFVSBtXNKFwcSz+IFfmjGJq5LImteGNsH/aURkabtoI2FcLUPidPZFlZmjUKRNcbLBwZHxtqA741bmYvA7ron+fYdeZjOFc+TAGaXSeIAXALVWhkwady6bLOBrc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746528219; c=relaxed/simple;
-	bh=eUI7JFuMHDcOjo9SML9gOZkOJRLohYjAeJuMIRLFUxU=;
+	s=arc-20240116; t=1746528226; c=relaxed/simple;
+	bh=gjFsYyl3zi4PwMmGnKtfu9pJqLMqRxhwSZu8oUau0W0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=olO1waW8vLS1xTT2ApcW/USAfD+PT/mTVgwpF9dtkk8cs0k8o//Iw9z+c4zz/66ii5B1EPvLcisibs8PNns1Ol5uOdklSQBV5IMlJouJ5ThtbMCKDp7yrRJN1bxbyFprSNpNnk1UJUhAWH7ZTl6OSqO7RyHKV+2ZGb94gdS7YY8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=UbONrpCN; arc=pass smtp.client-ip=136.143.188.112
+	 In-Reply-To:To:Cc; b=BAfH5j24YnQk6BM5i0O6/ZyXtu3NSlTKIfxB1zJxdlvQnYlzy3hion/7bt+4n95hlxxOYINgrm5ewRpN1dRXZcUIk2x3Wy7+738IMX4xU1FBU6DGoiOMX2ZKPpXX0cN4G6Vnuve7GuDwu3fxQlJ6QWGqg2+jwB27rTtfb2J5zFs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=XqgjtmHI; arc=pass smtp.client-ip=136.143.188.112
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="UbONrpCN"
-ARC-Seal: i=1; a=rsa-sha256; t=1746528186; cv=none; 
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="XqgjtmHI"
+ARC-Seal: i=1; a=rsa-sha256; t=1746528196; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=DgF/zVWGWJl7AAReI1hJR9cRPTrndBwCbBKuQpJrH/SbLlxEk3YGhWq84FfRAKATOjx8g3Lm6818VcE7SliEcyT1agSTtARB8762l0P1mT3jspTEGDGBZzTul3GZ1SqrqQOFEoEPiUyNFbJpEmpwyD3jMnczkRIdAiS5frbTbPY=
+	b=brMsqbzUL/KN1CckQAUYqK/OAB0Wx9uBKKMTeQhCyEVls2zi+aaahcVKbG4Zmc7JMi+X/Rqe/KqK/2CtHnnRrnkmOEniFRreEQQtfumR2PqCRsoH4U5npmrmHEtUoHatD73PD/5zfiXjAZEL/0jrZL6n0i4F5O9edG1kVxSqc28=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1746528186; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=tLCasK8e9R84NfOujCZyRtRjQpqhlhhO1RqpULpghak=; 
-	b=lwJ5oBa4vV4azfh4btroVPf7MgZmFgQQ70L7luUclq4TirEuA2OX/2BJOi5mb8JcqN+jff/ye5Wr/GuEG0NqNnMQk7uAFcEgjU1BJn0qeNdfPychoDl96aXZEDohs5a2plH4GCJqho2l14rxySrkIhUSWt4lNdFzqZgJXroX8bs=
+	t=1746528196; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=kaCYyrbqrYjh5lrSJFFiV+CYsBoA1EBJh7E+FO7i5KI=; 
+	b=Q7DenkidvfqoQ/StQETFuXZyjGlZicELNp7Ujb1FxI5UyiBGg3fjEiphxqZs/LBMLxvWKu4FlzG2Q2CEQubz0zetQLHZ1HkWKoeXkRDC8pyP/9dR/jCMnjWFxY2SGRua1cAvVjpWYrqJMQRXmtTW5sLQ3VV7EANf9WJK4be5LKk=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=collabora.com;
 	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
 	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1746528186;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1746528196;
 	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
 	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=tLCasK8e9R84NfOujCZyRtRjQpqhlhhO1RqpULpghak=;
-	b=UbONrpCNlDVWVrMcywxVeN3yNMoi0eeYd9YsAI/gS86pcaJz/K/p1Tzs3CssQ8f5
-	shNjzjFPOvasChjoE5Vpa9AFjfcqH5QcA8HuFj/XHEXwi0l2ODHX/1S0JZS2bnwoSZt
-	7LNeA8mU6vMXgH0hNcWoAZxGIxzAzvicHaDq5h44=
-Received: by mx.zohomail.com with SMTPS id 1746528184511266.37259709756916;
-	Tue, 6 May 2025 03:43:04 -0700 (PDT)
+	bh=kaCYyrbqrYjh5lrSJFFiV+CYsBoA1EBJh7E+FO7i5KI=;
+	b=XqgjtmHIXCY0ZhC9PQzgNgmVG4gNLFmOwchgsphWtenU9mIdCQrnLrPxuUNgBUx6
+	F//4WZcdfHeX/TTM3oTnU4H4Lc3UPiTfpm4INv2xq0MT03P0j0Mz7KPbVpDRLwsUAn9
+	acWVZAERN7uj/GpAvG2SXdKY7Vy9WY6uBx2XHbfc=
+Received: by mx.zohomail.com with SMTPS id 1746528194017991.5681611931021;
+	Tue, 6 May 2025 03:43:14 -0700 (PDT)
 From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Date: Tue, 06 May 2025 12:42:40 +0200
-Subject: [PATCH v4 1/5] arm64: dts: rockchip: Add RK3576 SAI nodes
+Date: Tue, 06 May 2025 12:42:42 +0200
+Subject: [PATCH v4 3/5] arm64: dts: rockchip: Add analog audio on RK3576
+ Sige5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,7 +48,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250506-rk3576-sai-v4-1-a8b5f5733ceb@collabora.com>
+Message-Id: <20250506-rk3576-sai-v4-3-a8b5f5733ceb@collabora.com>
 References: <20250506-rk3576-sai-v4-0-a8b5f5733ceb@collabora.com>
 In-Reply-To: <20250506-rk3576-sai-v4-0-a8b5f5733ceb@collabora.com>
 To: Michael Turquette <mturquette@baylibre.com>, 
@@ -67,244 +68,124 @@ Cc: Luca Ceresoli <luca.ceresoli@bootlin.com>,
  Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 X-Mailer: b4 0.14.2
 
-The RK3576 SoC has 10 SAI controllers in total. Five of them are in the
-video output power domains, and are used for digital audio output along
-with the video signal of those, e.g. HDMI audio.
+The ArmSoM Sige5 board features an Everest ES8388 codec to provide
+analog stereo audio output, as well as analog audio input. The codec
+hangs off the i2c2 bus and responds to address 0x10. It is connected to
+the SAI1 audio controller of the RK3576, with one SDO (output) lane and
+one SDI (input) lane.
 
-The other five, SAI0 through SAI4, are exposed externally. SAI0 and SAI1
-are capable of 8-channel audio, whereas SAI2, SAI3 and SAI4 are limited
-to two channels. These five are in the audio power domain.
+The codec has two sets of outputs. One set, LOUT1/ROUT1, is connected
+through a set of 22uF non-polarised coupling capacitors to a 3-position
+connector that appears to be a clone of the JST BM03B-SURS-TF header,
+and is capable of mating with a JST 03SUR-32S (or JST 03SUR-36L if you
+prefer lemon-lime) or compatible clone connector. The right headphone
+output is the one closest to the Type-C DC input connector, the left
+headphone output is the one in the middle, and the third position, the
+one closest to the USB3 Type-A host connector, is puzzingly labelled as
+"HP_GND" in the schematic but is in fact connected to the codecs RIN1
+input through a 1uF non-plarised coupling capacitor.
+
+LOUT2 and ROUT2 are routed to 1mm test pads T36 and T37 respectively.
+These are located on the bottom of the board, and do not go through any
+coupling capacitor. For use as line out, the ES8388 datasheet recommends
+adding 1uF coupling capacitor if one wishes to use it as a line-level
+output.
+
+There is also a pair of inputs for a stereo microphone, going from two
+1mm testpads T34 and T35, which are decoupled with a 100pF capacitor and
+pulled to 3.3v and ground respectively. These inputs then go through 1uF
+capacitors each and end up in the LINPUT2 and RINPUT2 pins of the
+ES8388 codec.
+
+The codec's power inputs are routed to receive 3.3V for both its analog
+and digital inputs, though from different supplies.
 
 Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 ---
- arch/arm64/boot/dts/rockchip/rk3576.dtsi | 200 +++++++++++++++++++++++++++++++
- 1 file changed, 200 insertions(+)
+ .../boot/dts/rockchip/rk3576-armsom-sige5.dts      | 56 ++++++++++++++++++++++
+ 1 file changed, 56 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3576.dtsi b/arch/arm64/boot/dts/rockchip/rk3576.dtsi
-index d7c6495e18c08042e7d541e21c06d9c7a3f18286..335a868a1200493d60d08983281fe5637a20ec61 100644
---- a/arch/arm64/boot/dts/rockchip/rk3576.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3576.dtsi
-@@ -1010,6 +1010,41 @@ vop_mmu: iommu@27d07e00 {
- 			status = "disabled";
+diff --git a/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts b/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts
+index 570252c4c0bfe56a3c269e47d81fca7676e61787..2c991ad974a95fe1995a8d15eaba3e7b07d4dfb6 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts
+@@ -56,6 +56,34 @@ red_led: red-led {
  		};
+ 	};
  
-+		sai5: sai@27d40000 {
-+			compatible = "rockchip,rk3576-sai";
-+			reg = <0x0 0x27d40000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cru MCLK_SAI5_8CH>, <&cru HCLK_SAI5_8CH>;
-+			clock-names = "mclk", "hclk";
-+			dmas = <&dmac2 3>;
-+			dma-names = "rx";
-+			power-domains = <&power RK3576_PD_VO0>;
-+			resets = <&cru SRST_M_SAI5_8CH>, <&cru SRST_H_SAI5_8CH>;
-+			reset-names = "m", "h";
-+			rockchip,sai-rx-route = <0 1 2 3>;
-+			#sound-dai-cells = <0>;
-+			sound-name-prefix = "SAI5";
-+			status = "disabled";
++	es8388_sound: es8388-sound {
++		compatible = "simple-audio-card";
++		simple-audio-card,format = "i2s";
++		simple-audio-card,mclk-fs = <256>;
++		simple-audio-card,name = "On-board Analog ES8388";
++		simple-audio-card,widgets = "Microphone", "Headphone Mic",
++					    "Microphone", "Mic Pads",
++					    "Headphone", "Headphone",
++					    "Line Out", "Line Out";
++		simple-audio-card,routing = "Headphone", "LOUT1",
++					    "Headphone", "ROUT1",
++					    "Line Out", "LOUT2",
++					    "Line Out", "ROUT2",
++					    "RINPUT1", "Headphone Mic",
++					    "LINPUT2", "Mic Pads",
++					    "RINPUT2", "Mic Pads";
++		simple-audio-card,pin-switches = "Headphone", "Line Out";
++
++		simple-audio-card,cpu {
++			sound-dai = <&sai1>;
 +		};
 +
-+		sai6: sai@27d50000 {
-+			compatible = "rockchip,rk3576-sai";
-+			reg = <0x0 0x27d50000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 193 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cru MCLK_SAI6_8CH>, <&cru HCLK_SAI6_8CH>;
-+			clock-names = "mclk", "hclk";
-+			dmas = <&dmac2 4>, <&dmac2 5>;
-+			dma-names = "tx", "rx";
-+			power-domains = <&power RK3576_PD_VO0>;
-+			resets = <&cru SRST_M_SAI6_8CH>, <&cru SRST_H_SAI6_8CH>;
-+			reset-names = "m", "h";
-+			rockchip,sai-rx-route = <0 1 2 3>;
-+			rockchip,sai-tx-route = <0 1 2 3>;
-+			#sound-dai-cells = <0>;
-+			sound-name-prefix = "SAI6";
-+			status = "disabled";
++		simple-audio-card,codec {
++			sound-dai = <&es8388>;
++			system-clock-frequency = <12288000>;
 +		};
++	};
 +
- 		hdmi: hdmi@27da0000 {
- 			compatible = "rockchip,rk3576-dw-hdmi-qp";
- 			reg = <0x0 0x27da0000 0x0 0x20000>;
-@@ -1050,6 +1085,57 @@ hdmi_out: port@1 {
- 			};
- 		};
+ 	vcc_12v0_dcin: regulator-vcc-12v0-dcin {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "vcc_12v0_dcin";
+@@ -624,6 +652,25 @@ hym8563: rtc@51 {
+ 	};
+ };
  
-+		sai7: sai@27ed0000 {
-+			compatible = "rockchip,rk3576-sai";
-+			reg = <0x0 0x27ed0000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 194 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cru MCLK_SAI7_8CH>, <&cru HCLK_SAI7_8CH>;
-+			clock-names = "mclk", "hclk";
-+			dmas = <&dmac2 19>;
-+			dma-names = "tx";
-+			power-domains = <&power RK3576_PD_VO1>;
-+			resets = <&cru SRST_M_SAI7_8CH>, <&cru SRST_H_SAI7_8CH>;
-+			reset-names = "m", "h";
-+			rockchip,sai-tx-route = <0 1 2 3>;
-+			#sound-dai-cells = <0>;
-+			sound-name-prefix = "SAI7";
-+			status = "disabled";
-+		};
++&i2c3 {
++	status = "okay";
 +
-+		sai8: sai@27ee0000 {
-+			compatible = "rockchip,rk3576-sai";
-+			reg = <0x0 0x27ee0000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 372 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cru MCLK_SAI8_8CH>, <&cru HCLK_SAI8_8CH>;
-+			clock-names = "mclk", "hclk";
-+			dmas = <&dmac1 7>;
-+			dma-names = "tx";
-+			power-domains = <&power RK3576_PD_VO1>;
-+			resets = <&cru SRST_M_SAI8_8CH>, <&cru SRST_H_SAI8_8CH>;
-+			reset-names = "m", "h";
-+			rockchip,sai-tx-route = <0 1 2 3>;
-+			#sound-dai-cells = <0>;
-+			sound-name-prefix = "SAI8";
-+			status = "disabled";
-+		};
++	es8388: audio-codec@10 {
++		compatible = "everest,es8388", "everest,es8328";
++		reg = <0x10>;
++		clocks = <&cru CLK_SAI1_MCLKOUT_TO_IO>;
++		AVDD-supply = <&vcca_3v3_s0>;
++		DVDD-supply = <&vcc_3v3_s0>;
++		HPVDD-supply = <&vcca_3v3_s0>;
++		PVDD-supply = <&vcc_3v3_s0>;
++		assigned-clocks = <&cru CLK_SAI1_MCLKOUT_TO_IO>;
++		assigned-clock-rates = <12288000>;
++		#sound-dai-cells = <0>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&sai1m0_mclk>;
++	};
++};
 +
-+		sai9: sai@27ef0000 {
-+			compatible = "rockchip,rk3576-sai";
-+			reg = <0x0 0x27ef0000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 373 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cru MCLK_SAI9_8CH>, <&cru HCLK_SAI9_8CH>;
-+			clock-names = "mclk", "hclk";
-+			dmas = <&dmac0 26>;
-+			dma-names = "tx";
-+			power-domains = <&power RK3576_PD_VO1>;
-+			resets = <&cru SRST_M_SAI9_8CH>, <&cru SRST_H_SAI9_8CH>;
-+			reset-names = "m", "h";
-+			rockchip,sai-tx-route = <0 1 2 3>;
-+			#sound-dai-cells = <0>;
-+			sound-name-prefix = "SAI9";
-+			status = "disabled";
-+		};
-+
- 		qos_hdcp1: qos@27f02000 {
- 			compatible = "rockchip,rk3576-qos", "syscon";
- 			reg = <0x0 0x27f02000 0x0 0x20>;
-@@ -1604,6 +1690,120 @@ log_leakage: log-leakage@22 {
- 			};
- 		};
+ &mdio0 {
+ 	rgmii_phy0: phy@1 {
+ 		compatible = "ethernet-phy-ieee802.3-c22";
+@@ -680,6 +727,15 @@ pcie_reset: pcie-reset {
+ 	};
+ };
  
-+		sai0: sai@2a600000 {
-+			compatible = "rockchip,rk3576-sai";
-+			reg = <0x0 0x2a600000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 187 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cru MCLK_SAI0_8CH>, <&cru HCLK_SAI0_8CH>;
-+			clock-names = "mclk", "hclk";
-+			dmas = <&dmac0 0>, <&dmac0 1>;
-+			dma-names = "tx", "rx";
-+			power-domains = <&power RK3576_PD_AUDIO>;
-+			resets = <&cru SRST_M_SAI0_8CH>, <&cru SRST_H_SAI0_8CH>;
-+			reset-names = "m", "h";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&sai0m0_lrck
-+				&sai0m0_sclk
-+				&sai0m0_sdi0
-+				&sai0m0_sdi1
-+				&sai0m0_sdi2
-+				&sai0m0_sdi3
-+				&sai0m0_sdo0
-+				&sai0m0_sdo1
-+				&sai0m0_sdo2
-+				&sai0m0_sdo3>;
-+			#sound-dai-cells = <0>;
-+			sound-name-prefix = "SAI0";
-+			status = "disabled";
-+		};
++&sai1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&sai1m0_lrck
++		     &sai1m0_sclk
++		     &sai1m0_sdi0
++		     &sai1m0_sdo0>;
++	status = "okay";
++};
 +
-+		sai1: sai@2a610000 {
-+			compatible = "rockchip,rk3576-sai";
-+			reg = <0x0 0x2a610000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 188 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cru MCLK_SAI1_8CH>, <&cru HCLK_SAI1_8CH>;
-+			clock-names = "mclk", "hclk";
-+			dmas = <&dmac0 2>, <&dmac0 3>;
-+			dma-names = "tx", "rx";
-+			power-domains = <&power RK3576_PD_AUDIO>;
-+			resets = <&cru SRST_M_SAI1_8CH>, <&cru SRST_H_SAI1_8CH>;
-+			reset-names = "m", "h";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&sai1m0_lrck
-+				&sai1m0_sclk
-+				&sai1m0_sdi0
-+				&sai1m0_sdo0
-+				&sai1m0_sdo1
-+				&sai1m0_sdo2
-+				&sai1m0_sdo3>;
-+			#sound-dai-cells = <0>;
-+			sound-name-prefix = "SAI1";
-+			status = "disabled";
-+		};
-+
-+		sai2: sai@2a620000 {
-+			compatible = "rockchip,rk3576-sai";
-+			reg = <0x0 0x2a620000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 189 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cru MCLK_SAI2_2CH>, <&cru HCLK_SAI2_2CH>;
-+			clock-names = "mclk", "hclk";
-+			dmas = <&dmac1 0>, <&dmac1 1>;
-+			dma-names = "tx", "rx";
-+			power-domains = <&power RK3576_PD_AUDIO>;
-+			resets = <&cru SRST_M_SAI2_2CH>, <&cru SRST_H_SAI2_2CH>;
-+			reset-names = "m", "h";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&sai2m0_lrck
-+				&sai2m0_sclk
-+				&sai2m0_sdi
-+				&sai2m0_sdo>;
-+			#sound-dai-cells = <0>;
-+			sound-name-prefix = "SAI2";
-+			status = "disabled";
-+		};
-+
-+		sai3: sai@2a630000 {
-+			compatible = "rockchip,rk3576-sai";
-+			reg = <0x0 0x2a630000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 190 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cru MCLK_SAI3_2CH>, <&cru HCLK_SAI3_2CH>;
-+			clock-names = "mclk", "hclk";
-+			dmas = <&dmac1 2>, <&dmac1 3>;
-+			dma-names = "tx", "rx";
-+			power-domains = <&power RK3576_PD_AUDIO>;
-+			resets = <&cru SRST_M_SAI3_2CH>, <&cru SRST_H_SAI3_2CH>;
-+			reset-names = "m", "h";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&sai3m0_lrck
-+				&sai3m0_sclk
-+				&sai3m0_sdi
-+				&sai3m0_sdo>;
-+			#sound-dai-cells = <0>;
-+			sound-name-prefix = "SAI3";
-+			status = "disabled";
-+		};
-+
-+		sai4: sai@2a640000 {
-+			compatible = "rockchip,rk3576-sai";
-+			reg = <0x0 0x2a640000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 191 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cru MCLK_SAI4_2CH>, <&cru HCLK_SAI4_2CH>;
-+			clock-names = "mclk", "hclk";
-+			dmas = <&dmac2 0>, <&dmac2 1>;
-+			dma-names = "tx", "rx";
-+			power-domains = <&power RK3576_PD_AUDIO>;
-+			resets = <&cru SRST_M_SAI4_2CH>, <&cru SRST_H_SAI4_2CH>;
-+			reset-names = "m", "h";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&sai4m0_lrck
-+				&sai4m0_sclk
-+				&sai4m0_sdi
-+				&sai4m0_sdo>;
-+			#sound-dai-cells = <0>;
-+			sound-name-prefix = "SAI4";
-+			status = "disabled";
-+		};
-+
- 		gic: interrupt-controller@2a701000 {
- 			compatible = "arm,gic-400";
- 			reg = <0x0 0x2a701000 0 0x10000>,
+ &sdhci {
+ 	bus-width = <8>;
+ 	full-pwr-cycle-in-suspend;
 
 -- 
 2.49.0
