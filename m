@@ -1,105 +1,73 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB31324169A;
-	Tue,  6 May 2025 08:32:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 385BD22DFB1;
+	Tue,  6 May 2025 08:33:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746520346; cv=none; b=Z+IHHHb2e+hp3sArtMuzNeTr+4DUV0kvXFRr6qdzYuZiZ+IDNl7NVUdBJ+Up9us7U3BRI3ok6cxVK6MUJsXyKS2hfUIiSkijsqeKQ9MDL89xJhnsgo1hEkM2JKcYyZRvm7tHToswsavM30ZW317X4qhyx+cZP8U/2VZbvOkOIIs=
+	t=1746520401; cv=none; b=iDR+sDtz7U3KceT6U7DdzhBj/OpFkXWAeFPXzxMZaHHSOPEF98NjIdyArexx5dVK7djszqST96potvxSiSQnYyIRcq3jvGW9fNIma9faoM22p3YbiKguAUcOhJBc2mUNaD13/686+fQoOpkMe2lmVEK+b5Y5swDXlxMOxUMUPd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746520346; c=relaxed/simple;
-	bh=ypJ9hdbekmAtwiansv/u/Vu9Y546qW0ilyEarbxlrvg=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Rnih/8k8z589+svWA96ZRFzF2jbqx/aAYZiYa4/7VvEE1hgVaartnVBZaPBLkiCEKVZb0WDxld1l2WbdqIqXX8Ka27TgeCCY5SBO2n7Bbb0FZ6xRZZqN5ZCW0PBeSHH0b0fZeIjy3Wc/ZS+Jai5ffmkF+7Wuf2xS3aNKRsoV7hg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IB6K6Lxl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746520401; c=relaxed/simple;
+	bh=Xz/XZoWdLK9sjxD5LgW3w0A+B+hpmKHOEi8obS3nq38=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=Ak7LW9V7SMdP15euZOeaAWYq9WJIzI/tvpQ5Kcy8S7ZdwuSIkTXJfphUazg6CLRrtj2ZklKCDXcJOHUgqaOHVN3JYANet4BP2tjKJA/uBojDkNnWgXpYLH87WOLi4XoTCzRbvAqMYovWrytfLHjjtsn1AMEf4xZoTaLvOV+mMsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=j9Z2yEth; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IB6K6Lxl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3629DC4CEE4;
-	Tue,  6 May 2025 08:32:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746520346;
-	bh=ypJ9hdbekmAtwiansv/u/Vu9Y546qW0ilyEarbxlrvg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=IB6K6LxlTNc840zPic9i8KZTQDyAZLzCUPzmL2W2NFshYtVmaz2/GTPaMxcQtDNDc
-	 7QnQbD6zk0FraWGT1DnRrlzURslfrslxeA2w+UwB4W/KEYfdIBFXwvHzCexSW9VJTX
-	 DNULODwfnEwmZoJk9YphrRWlhjHnGt8sVSDJ19j/ThLOvc2AiSp8hXIUUKSgvI0fSU
-	 XRcRmTbWp28eLwsA02SCPRGHxV1vNv4Xp2L3FrMZxfcLsN5UZciY/k7SKv2NUlNPEn
-	 eU+iUiZmhA4NbiroTMwGaV2o5uRyLZ3HY8YO0HheLO6nX8Xk1LHBZ2DXvDSqbl9wxf
-	 Wp6kcj3BWKGdg==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uCDiw-00C91n-Hp;
-	Tue, 06 May 2025 09:32:23 +0100
-Date: Tue, 06 May 2025 09:32:22 +0100
-Message-ID: <86ikmegmw9.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Mostafa Saleh <smostafa@google.com>
-Cc: linux-kernel@vger.kernel.org,
-	kvmarm@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	oliver.upton@linux.dev,
-	joey.gouly@arm.com,
-	suzuki.poulose@arm.com,
-	yuzenghui@huawei.com,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	qperret@google.com
-Subject: Re: [PATCH] KVM: arm64: Fix memory check in host_stage2_set_owner_locked()
-In-Reply-To: <20250501162450.2784043-1-smostafa@google.com>
-References: <20250501162450.2784043-1-smostafa@google.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="j9Z2yEth"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1746520398;
+	bh=Xz/XZoWdLK9sjxD5LgW3w0A+B+hpmKHOEi8obS3nq38=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=j9Z2yEthJUOpZhCQGy8ad6UVLa5tE+PmU25AQXWomdrypN9ePQmxewE3PfoVuDkJH
+	 x8LMGp6bm/c0H5lSmZ4dEHNd3M4Uu5tkhNlaLLZHBJY8fVAtoO+7mheqa0/fWq24WY
+	 JMW+FSRIMKyxlZ+CNCCiPxg4qUaPhU/UZ/D4w1+7PEHdjVy2nyGjWJVUlypqwt0WdT
+	 AxwUWEGWTOlBMCAq9k77tkUr9+dv2dkbehKgKaC5wooLsH4+hpA+FS6owyAYhQGOci
+	 5n5cBP5saJDzr7N020b95TWO8dVLfLAeA1bAvcCqg8bOl6Rjrspr//+3Ar86KYeW8r
+	 qNN6okFAWJICw==
+Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id EF62217E049F;
+	Tue,  6 May 2025 10:33:17 +0200 (CEST)
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+To: Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ "Rob Herring (Arm)" <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+In-Reply-To: <20250409205001.1522009-1-robh@kernel.org>
+References: <20250409205001.1522009-1-robh@kernel.org>
+Subject: Re: [PATCH] arm/arm64: dts: mediatek: Add missing
+ "#sound-dai-cells" to linux,bt-sco
+Message-Id: <174652039790.26427.3827996167340215423.b4-ty@collabora.com>
+Date: Tue, 06 May 2025 10:33:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: smostafa@google.com, linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org, qperret@google.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
-On Thu, 01 May 2025 17:24:50 +0100,
-Mostafa Saleh <smostafa@google.com> wrote:
+On Wed, 09 Apr 2025 15:50:00 -0500, Rob Herring (Arm) wrote:
+> Add missing "#sound-dai-cells" which is required by the linux,bt-sco
+> binding.
 > 
-> I found this simple bug while preparing some patches for pKVM.
-> AFAICT, it should be harmless (besides crashing the kernel if it
-> was misbehaving)
 > 
-> Fixes: e94a7dea2972 ("KVM: arm64: Move host page ownership tracking to the hyp vmemmap")
-> Signed-off-by: Mostafa Saleh <smostafa@google.com>
-> ---
->  arch/arm64/kvm/hyp/nvhe/mem_protect.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/kvm/hyp/nvhe/mem_protect.c b/arch/arm64/kvm/hyp/nvhe/mem_protect.c
-> index 2a5284f749b4..e80f3ebd3e2a 100644
-> --- a/arch/arm64/kvm/hyp/nvhe/mem_protect.c
-> +++ b/arch/arm64/kvm/hyp/nvhe/mem_protect.c
-> @@ -503,7 +503,7 @@ int host_stage2_set_owner_locked(phys_addr_t addr, u64 size, u8 owner_id)
->  {
->  	int ret;
->  
-> -	if (!addr_is_memory(addr))
-> +	if (!range_is_memory(addr, addr + size))
->  		return -EPERM;
->  
->  	ret = host_stage2_try(kvm_pgtable_stage2_set_owner, &host_mmu.pgt,
 
-I vaguely seem to remember that there was an assumption around
-addr/size representing a single page, and therefore addr_is_memory()
-was doing the right thing.
+Applied to v6.15-next/dts64, thanks!
 
-Has this assumption changed? Or is this only a figment of my imagination?
+[1/1] arm/arm64: dts: mediatek: Add missing "#sound-dai-cells" to linux,bt-sco
+      commit: b8202a12cdd771b55a9565814022ea8c69572cd7
 
-Thanks,
+Cheers,
+Angelo
 
-	M.
 
--- 
-Without deviation from the norm, progress is not possible.
