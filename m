@@ -1,3725 +1,2244 @@
-Received: from mail-m19731105.qiye.163.com (mail-m19731105.qiye.163.com [220.197.31.105])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B9B331A0CF;
-	Tue,  6 May 2025 03:12:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.105
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746501181; cv=none; b=Vg1PKZncfuYXnbA3LOVuqYmVweO0a9P7f87GVNv7G6jBuaCcraeCqeiu6NxLmMTS5KMBKpvmq4WsKLmh16zuPD5FCqe+BrFgVRl4TF8LfCoLb89aXX68nAmkasd4V33TPZnlsNz28zSikA2tnGPer3Msi0VMviVQPNnGEJlwhBc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746501181; c=relaxed/simple;
-	bh=anbNopejwLK3RckU/nW8DCkV6vY43zkmY2Y01B0sei4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=imvUbEIZUMh0PNSD0Bt0+NAWSo/PBGhJc/sstVqPt0HrYnRD3SJPiIJ0QWcRKOqdWZpBYwB+InRn+5dvOZawnLyRGfP/gazFPCdn7xCu5fJVpzteAzFJuftW/qlRw0496g2GzDIj19VoLM9fQFROblxZVWZG3sfsJ/OLJrUcM88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=TSnIMbad; arc=none smtp.client-ip=220.197.31.105
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76E0434DC5B
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 03:11:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.18
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746501075; cv=fail; b=h6AlCcq2MzXG5nlLHRajlQuL96R392w+4NTVzMUtJQixK9oq5Q/fX8h+HM1ObKPQ7oPHKgHtlrtkJxbTgBQG/Wctc9bS1ReGuKMkclSPBivl9fAcqMtkI8Y7J9QUteo7i/NOuZ4YCzqH2/LSh7M4Q+TB/oOODRsdHRZonHDpoS4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746501075; c=relaxed/simple;
+	bh=QDuivU+vVsdW2i9pAX9ZeF7ugHEcmFfS0Uhsx2lywFw=;
+	h=Date:From:To:CC:Subject:Message-ID:Content-Type:
+	 Content-Disposition:MIME-Version; b=Xn+OFGkGsukJX0ZCmIhKHl2Hj8JVTplT5q9wjMCWHGENaoj8oBnNzTxDuk6bUjT5ga8es/geBzXFCz83wwpyXTAOxiLotNltC3gUD7lKROA+pV+moR95Qgc9US/bkWNkGe5u3fJfPM92FjrbrsZD/l4o2Zbf9pX1BfKd+hCjLC8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WRoFo7hk; arc=fail smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="TSnIMbad"
-Received: from localhost.localdomain (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 140c6eb14;
-	Tue, 6 May 2025 10:57:28 +0800 (GMT+08:00)
-From: Kever Yang <kever.yang@rock-chips.com>
-To: heiko@sntech.de
-Cc: linux-rockchip@lists.infradead.org,
-	Finley Xiao <finley.xiao@rock-chips.com>,
-	Kever Yang <kever.yang@rock-chips.com>,
-	devicetree@vger.kernel.org,
-	Conor Dooley <conor+dt@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v5 5/6] arm64: dts: rockchip: add core dtsi for RK3562 SoC
-Date: Tue,  6 May 2025 10:57:14 +0800
-Message-Id: <20250506025715.33595-6-kever.yang@rock-chips.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250506025715.33595-1-kever.yang@rock-chips.com>
-References: <20250506025715.33595-1-kever.yang@rock-chips.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WRoFo7hk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746501063; x=1778037063;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=QDuivU+vVsdW2i9pAX9ZeF7ugHEcmFfS0Uhsx2lywFw=;
+  b=WRoFo7hkNSxl5EuCcjhU78ppcJEo8sfrgCOwh+/pUf4Divr47oCOtKgk
+   rGOmagf9QQe93SF4/BwyjWrZ4t6Ohtzyfq1GIWfaBQxvk1SqfRbSfs45+
+   fPUDcEyHoVw4wkO7ocUwEYYjMpBW105tV2p1kS1+z9rySsD7Y1e7gSLV1
+   88GjvU7M1EhhLCyfC0Z53n2+xoWwH7di7JR2nsAVprgx0xcgt+V+sYZpU
+   bLFPrksP5f4e7lzTWRSdPPbcZFUBdYm/EVvAouaHgO0k1ylE25sHkMfXz
+   GS0LqrzBHvJDeh/GLpCk++VHEGZ66caP1rZqiacWCiynV4q8gewkPHLhi
+   g==;
+X-CSE-ConnectionGUID: 7Qq+8+3TQRyKEbrS5ddpVw==
+X-CSE-MsgGUID: qVHCHg3dQv2L7uDeaMJ3JQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11424"; a="47401748"
+X-IronPort-AV: E=Sophos;i="6.15,265,1739865600"; 
+   d="scan'208";a="47401748"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 20:11:02 -0700
+X-CSE-ConnectionGUID: UWidl7LbQUy1GM7tRmkOQw==
+X-CSE-MsgGUID: /+rlkNCfS6+RJzfVlL2Aiw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,265,1739865600"; 
+   d="scan'208";a="166382743"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 20:11:02 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Mon, 5 May 2025 20:11:00 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Mon, 5 May 2025 20:11:00 -0700
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.57.41) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Mon, 5 May 2025 20:10:58 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=GDYl6F0JH2QaiV4Oj3FSgvfth6/WPSaFbDmSTki30D8SMS2uKdlrnelSTFQQlV3GbpOYm+a1OB0Gxv83+I91Yo8ixNtHr2UnNuxMMvOEcNMOMUyYJI46YY43/UQk07g1seaD3k4yvkCbTb4YRSvuecPvT9Q7/ReghX2XqbEUpmN+fOlTaZJ+bXhBm8eENM4WX93ztmWbJ8ipbNblp4jqmSupBcvQj59qtWG8lJLdWMRPf7EME4Dlc20v9djBGyVOVr/F5cT+1U0/0D6kfeA2NYl8IrI0NGblugtJGaCLib1pLNU38a16ogKGdAcKgTXgb4fzfX99ktIJOyEJV/UEGg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=uwRP2awFalgrWYwAhPKmKObmUyZiu/sVLxzESH/EO0o=;
+ b=fFoIRg3WXFBf69ajWekFmV4TuogvqzfTTFV4J5/B/rgpxU1q3b/Q18VdmNxG3uhe+SnBlYIHQ+TcB7Q08KWQFWoAlZ/OqjmRl+N+G/9G62tdNNSaXbeiLhaCOl1ShaK+4zx+QMOtEHAqQYmxI/JDTYesvvTJmhSWxOALHx9V2AHAuOuXv+Pdoiv1AO/SDdLQ7FtMF9zl0RCaGKBbcP8n9hYntPhoCGEsUQiEwLURDaa60TOucBHByA+rmxOjLcHExlPgJ4r2pvkQEffLm0arKOSsP18crPUu0c4RnO6EgMTTuqZ8uH6LdK9TH9rbnPGTC61h5L63pXDJDV8oikWq/w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH0PR11MB5674.namprd11.prod.outlook.com (2603:10b6:510:ec::10)
+ by DM3PPF777B3455C.namprd11.prod.outlook.com (2603:10b6:f:fc00::f2f) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.22; Tue, 6 May
+ 2025 03:10:24 +0000
+Received: from PH0PR11MB5674.namprd11.prod.outlook.com
+ ([fe80::77d3:dfb2:3bd:e02a]) by PH0PR11MB5674.namprd11.prod.outlook.com
+ ([fe80::77d3:dfb2:3bd:e02a%6]) with mapi id 15.20.8699.012; Tue, 6 May 2025
+ 03:10:23 +0000
+Date: Tue, 6 May 2025 11:10:15 +0800
+From: kernel test robot <lkp@intel.com>
+To: Frank Li <Frank.Li@nxp.com>
+CC: <oe-kbuild-all@lists.linux.dev>, <linux-kernel@vger.kernel.org>, "Ulf
+ Hansson" <ulf.hansson@linaro.org>, "Rob Herring (Arm)" <robh@kernel.org>
+Subject: arch/powerpc/boot/dts/mpc832x_rdb.dtb: / (MPC8323ERDB): memory:
+ False schema does not allow {'device_type': ['memory'], 'reg': [[0,
+ 67108864]]}
+Message-ID: <aBl9lwFy2gKf/W7t@rli9-mobl>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+X-ClientProxiedBy: SG2PR04CA0171.apcprd04.prod.outlook.com (2603:1096:4::33)
+ To PH0PR11MB5674.namprd11.prod.outlook.com (2603:10b6:510:ec::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQxkZGlYaSUlNH0weSE5DH0xWFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
-	hVSktLVUpCS0tZBg++
-X-HM-Tid: 0a96a386e3c803afkunm140c6eb14
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PTY6Sjo*EzIBCRFIFD4DMCgD
-	P0pPCklVSlVKTE9NTktLSU9CQkxLVTMWGhIXVRAeDR4JVQIaFRw7CRQYEFYYExILCFUYFBZFWVdZ
-	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFCSExNQzcG
-DKIM-Signature:a=rsa-sha256;
-	b=TSnIMbad3WczILS5vmtITQeN6vNrSRaaIDX+bgXpnXbHaMsTzuFMASA+XAbMGmOCkFEUyD5TFM3PDv7BbqDOq6F0RHnMexncTvoEjXC5ZDteOc2F1zyJkLoFZWJW9RcI28l754/Ad1+SHgOTJwMCMSCrfcXeSxLECphpPG5kRhQ=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
-	bh=8C4y0J9Lr4D6COr7CIRNXkPCW/YPoFQC9fLLysS+QuQ=;
-	h=date:mime-version:subject:message-id:from;
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH0PR11MB5674:EE_|DM3PPF777B3455C:EE_
+X-MS-Office365-Filtering-Correlation-Id: 656755b0-a2af-4e3a-40e5-08dd8c4b8a88
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|13003099007;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?xj1yk9NRkwod8wLAsKipBaPQ6wbEEjsRkkHlhH7Wj/erCfBdXkcTz/7jWWit?=
+ =?us-ascii?Q?mHrGViWWC15Fw1FddckxW8LBRll3DjSTY5WuDw3hROFP9XxLmNh2m/4moJV4?=
+ =?us-ascii?Q?mcGmgt8qtCdQQ5r77qQlrx+wtQsMFo84y0jTNrwIMTWxFRNBqHVRUJogYEXf?=
+ =?us-ascii?Q?khPopJpFzw2ZdACjfdDYpycq6j0/9oi1brL2wyCYCiUWz1AASlRHdPCxp/hg?=
+ =?us-ascii?Q?4GySlMNNhLToHiJnG2wDtuhCUcX/28xlVu4sdv8AReBvnrcSrjnKik5iK+oy?=
+ =?us-ascii?Q?o4Uc17h0FG9BT/kiKndhurV/HGwXBeXlT/6JZ6n7SrG05NENSYCi9tpXQ1Q5?=
+ =?us-ascii?Q?aR9jYJ0cn9POC30qDay8sos9AVdJPCp689wkZ+jrRIgjyLjpyV5LTCgxp1qp?=
+ =?us-ascii?Q?SX+sSQ6eP6ZXIsjpSvDa6Qs7oJL3IBXH9DCi1eYEyQj2vNe+iqtOSEIvAf71?=
+ =?us-ascii?Q?aqa5yvGfLETMUXfrWk0YrqTd1CgiRHww56IHiW+dK8CHbL3/khpZlQ9PAhmb?=
+ =?us-ascii?Q?rtr86X1/bOtfUO/lXTE6dQydTy9sSnuNVEV+ugzdPkP973pr9brWhxDpLvCt?=
+ =?us-ascii?Q?cNoQq57TJpxi/DRsqfPVCE43VlqGyrjpPu8kNFpC3DwzGsNujf6Of6arLZ8t?=
+ =?us-ascii?Q?i6DgrxlWzm5IixYOxMLLD6k2wY/Zq2j1JDlHwqkAiySE52qxj/2l7poQ08UE?=
+ =?us-ascii?Q?5MJW2cfcTAuJvl5qKFvgAfPe0hJDtl88ZlZg9ffT8dh8zrow/7yB9HaYPISW?=
+ =?us-ascii?Q?lIV+F6bIEURJi/tnnmxhaBRI+lNU5dmluL689wSfRJtA5fYGyU3j6CxWbdMX?=
+ =?us-ascii?Q?HuHZ/+buRjy0PXOoMLlJlIKWGMeQPmsSZwmpL8WF1uu1WNcjQXMH+V1keGrv?=
+ =?us-ascii?Q?Wu736TPIDjV8ssyIgQiOP4djTqMvDnpq6g7DbHkOWiX//IuKZ+mmEWU7Os5W?=
+ =?us-ascii?Q?rDmRVXQRvikBEdAlQu3p4PLWBa9JnHB3dc7Nj/XBwPqFFSEqV3Q3TjKRTwUW?=
+ =?us-ascii?Q?Fp8O/PoDOQL2pSCJPTd3tD2bBK6fm02m4uhNWVdRhUUdz0rq8330d1lg35Ab?=
+ =?us-ascii?Q?0IzhBkyiJu+s3/ui7NbExWMUs4Br4lIjn8NA3QxOuz8Lo0FunbY/NKl6J0yJ?=
+ =?us-ascii?Q?InRk5SpvBscqz87CxHSN+g8kXIwfqvWBZE7CXYJBny9yeXZ1o64vSf03FUVf?=
+ =?us-ascii?Q?T8+YvCA+Spveix8AF9RMFaqGgefKHUUpGhR8Jtju/Zg3DTOMAHWzOg6nHeXc?=
+ =?us-ascii?Q?qdsyQKVCYudPmj0IPssI18aslLXxGV3UFtzwUGkzv0h0DjDk5N1HyA33yI4D?=
+ =?us-ascii?Q?r4KSe3ya8YPvcGfNm0dKpNkbuEwQHFe/C5jvus66xhZKjcMoW3oTSBz9szoa?=
+ =?us-ascii?Q?nzEvHCitNFZFMPv87CIHnZt/9EOT?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR11MB5674.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(13003099007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?suJaTmFQjCdEW3YWcu6LIfJTRQXuod2rmN1qphN9U9NQc4EcpczWDBld6t0u?=
+ =?us-ascii?Q?mGfPaFbFM2WaUOcd71Hvw6AYicoCsRzEayS7I2hbF5F8xYTQkR7HDvEMLSwt?=
+ =?us-ascii?Q?yfWfKkXuCdKe6Kl6kjP6ddRkZOYlZZ75euKPc08Jh9gu13TPOYC8MSMT2w6p?=
+ =?us-ascii?Q?quGgNlA++wO2NnfGn2GWdczfjG037IBxvr8yQjWLfJla3njqYcIBPL5QQRgE?=
+ =?us-ascii?Q?hh1YC2yS9FolnGOGTpx38/PwC3DUWcnUFNIDFPCc0ohVEQGsZhPQ2xj5e9bh?=
+ =?us-ascii?Q?NCfHf3K7rLdCmOpoPXmgMGVz0dF50QdXzp7a2+BsRZXnoXyHFTV/Wu1z6Ln1?=
+ =?us-ascii?Q?TK7bQfBXGD/n/rx+bJ6eQtgRs68vdOlmmDQCactK4bnVKVUp7hvgK4Ht2HBE?=
+ =?us-ascii?Q?t5lC+5tEQTq9X/TPcEWET1wRLoWM5TRT2jGTEfKf5uazcoIRsaHrbYfaWWOh?=
+ =?us-ascii?Q?t0rY98KbPTqMu3JVYxno/eZ9/XkpJIx+yLgBug+4WTO3gIFCg29dci3vNdsS?=
+ =?us-ascii?Q?Hq8Ba+yklOUJS9jTgmSJlNLr+8N9Z7dul4oWMnj2HdHWC3SyJeObnDiS9jQk?=
+ =?us-ascii?Q?3Q/NPfDy1wWp/mfV85NgNpDXXhRpkyjQ1s50MziBj5wg5k9mAtQE603ZkOIc?=
+ =?us-ascii?Q?NECMU+8IOG7wz8uzHHffCACnNUy+jrQvY375zaYYAaddvQ+EFR+R0wwBIWXs?=
+ =?us-ascii?Q?OMUUibhBNz9oT/QFzpsP5ID9vGfok6FDH+yMU22sd4NScA3FkksW0Buan3Z1?=
+ =?us-ascii?Q?ayvapl9+QeCEaMWG5qm8YW0XyA8U94KlkE1xFTUzmOyES4ePBMEhIjnFJeyi?=
+ =?us-ascii?Q?GQOohumNr4FcTUuGhzOUcTS1FY2rw5F8vbv2y8peXu8bqL1Q3qHT2selbXlA?=
+ =?us-ascii?Q?8DQMDgIHTiMo04UY1FVhJCck6c2nnpgdVBsnpfDiMKetl2EoLFtaJeNdyfWJ?=
+ =?us-ascii?Q?GCbj0FaaUSUBNUxvQAgA/B5Io7G0lIaGTP5k3q0OcypHBDGg0YEdeVHGAoHL?=
+ =?us-ascii?Q?50pWwZOg1TcA/2XJ9wTRzNSdUe32dnuRCdu5c+JCybs09ed2GL67NnO7BMxf?=
+ =?us-ascii?Q?iRgI6AkZa0e/PMP/tG8Zy8YkGmGz4f+Zpb3K96cO4RRqYHGIzEYwXmCXrpBS?=
+ =?us-ascii?Q?dvf7U2zoDr59fYbQo3MwT1PI+kjcFD9N8zo9BsZ6gSWatF6Uvi2U2e+xwThs?=
+ =?us-ascii?Q?qDMPXO58GLhKY/2DWMm9+xm14tm94fwYA/r5DxQlK7i079otu0thVTqkemGX?=
+ =?us-ascii?Q?6gXvXbXNZiYBO5sIWbTP9KO4Ft/LtPTDKFx2FppNlPvyLb9UUlnsIQ2FgkJ0?=
+ =?us-ascii?Q?QdI/1IVW/ZBHtsoJpP4IvsAWuc9u2wrMo8g+rX632HEwcuqHHXklduXaPQHe?=
+ =?us-ascii?Q?cFjtnHUJnTlQPIUtmb0mbn6pEZh7ZFizRQfyO9qM63nhmk6Xi0x7dG+SEXwx?=
+ =?us-ascii?Q?VEBysYpms4jM++VA9rqqEOX9/SGfDag83mu9v34tVV2d/K3gpbN6ZN+ioSAj?=
+ =?us-ascii?Q?nES0HN+HIH48uNih7/Sg9q8Y1+E3PvdReZO47TELdfsBB5r4wAKJ4EQ1wc3Q?=
+ =?us-ascii?Q?dbpSpLra9NUgcV1WhKJIP7mBvP7pS5PoxJq0tSIi0vskw0XUp9KQ5s3lSp/K?=
+ =?us-ascii?Q?9g=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 656755b0-a2af-4e3a-40e5-08dd8c4b8a88
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR11MB5674.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 03:10:23.8465
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: KbbnlJ/9ffbykcw5fUqOLUdgttC0uBaFp7suIXkfsiJkaj8fBDcLK1GLHdWUCY05BURk2CAOigVjDNRoHt+QAw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PPF777B3455C
+X-OriginatorOrg: intel.com
 
-From: Finley Xiao <finley.xiao@rock-chips.com>
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   78109c591b806e41987e0b83390e61d675d1f724
+commit: ce4f2199a099c1394ad2343c0e3393690d0cd08f dt-bindings: mmc: mmc-spi-slot: Change voltage-ranges to uint32-matrix
+date:   11 months ago
+:::::: branch date: 2 days ago
+:::::: commit date: 11 months ago
+config: powerpc-randconfig-052-20250428 (https://download.01.org/0day-ci/archive/20250501/202505011404.DMbb58Li-lkp@intel.com/config)
+compiler: clang version 19.1.7 (https://github.com/llvm/llvm-project cd708029e0b2869e80abe31ddb175f7c35361f90)
+dtschema version: 2025.3.dev21+ge6ea659
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250501/202505011404.DMbb58Li-lkp@intel.com/reproduce)
 
-RK3562 is a SoC from Rockchip, which embedded with quad
-ARM Cortex-A53.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/r/202505011404.DMbb58Li-lkp@intel.com/
 
-Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
-Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
----
+dtcheck warnings: (new ones prefixed by >>)
+   arch/powerpc/boot/dts/mpc832x_rdb.dts:41.9-44.4: Warning (unit_address_vs_reg): /memory: node has a reg or ranges property, but no unit name
+   arch/powerpc/boot/dts/mpc832x_rdb.dts:174.22-195.6: Warning (unit_address_vs_reg): /soc8323@e0000000/par_io@1400/ucc_pin@2: node has a unit name, but no reg or ranges property
+   arch/powerpc/boot/dts/mpc832x_rdb.dts:196.22-215.6: Warning (unit_address_vs_reg): /soc8323@e0000000/par_io@1400/ucc_pin@3: node has a unit name, but no reg or ranges property
+   arch/powerpc/boot/dts/mpc832x_rdb.dtb: /: failed to match any schema with compatible: ['MPC8323ERDB', 'MPC832xRDB', 'MPC83xxRDB']
+   arch/powerpc/boot/dts/mpc832x_rdb.dtb: /: failed to match any schema with compatible: ['MPC8323ERDB', 'MPC832xRDB', 'MPC83xxRDB']
+   arch/powerpc/boot/dts/mpc832x_rdb.dtb: /: failed to match any schema with compatible: ['MPC8323ERDB', 'MPC832xRDB', 'MPC83xxRDB']
+>> arch/powerpc/boot/dts/mpc832x_rdb.dtb: / (MPC8323ERDB): memory: False schema does not allow {'device_type': ['memory'], 'reg': [[0, 67108864]]}
+   	from schema $id: http://devicetree.org/schemas/root-node.yaml#
+>> arch/powerpc/boot/dts/mpc832x_rdb.dtb: soc8323@e0000000 (simple-bus): $nodename:0: 'soc8323@e0000000' does not match '^([a-z][a-z0-9\\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
+   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+   arch/powerpc/boot/dts/mpc832x_rdb.dtb: /soc8323@e0000000/wdt@200: failed to match any schema with compatible: ['mpc83xx_wdt']
+   arch/powerpc/boot/dts/mpc832x_rdb.dtb: /soc8323@e0000000/power@b00: failed to match any schema with compatible: ['fsl,mpc8323-pmc', 'fsl,mpc8349-pmc']
+   arch/powerpc/boot/dts/mpc832x_rdb.dtb: /soc8323@e0000000/power@b00: failed to match any schema with compatible: ['fsl,mpc8323-pmc', 'fsl,mpc8349-pmc']
+>> arch/powerpc/boot/dts/mpc832x_rdb.dtb: i2c@3000 (fsl-i2c): compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl-i2c'] is too short
+   	'fsl-i2c' is not one of ['mpc5200-i2c', 'fsl,mpc5200-i2c', 'fsl,mpc5121-i2c', 'fsl,mpc8313-i2c', 'fsl,mpc8543-i2c', 'fsl,mpc8544-i2c']
+   	'fsl,mpc5200b-i2c' was expected
+   	from schema $id: http://devicetree.org/schemas/i2c/i2c-mpc.yaml#
+>> arch/powerpc/boot/dts/mpc832x_rdb.dtb: i2c@3000 (fsl-i2c): Unevaluated properties are not allowed ('cell-index', 'compatible', 'dfsrr' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/i2c/i2c-mpc.yaml#
+   arch/powerpc/boot/dts/mpc832x_rdb.dtb: serial@4500 (fsl,ns16550): compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl,ns16550', 'ns16550'] is too long
+   	['fsl,ns16550', 'ns16550'] is too short
+   	'ns8250' was expected
+   	'ns16450' was expected
+   	'ns16550' was expected
+   	'ns16550a' was expected
+   	'ns16850' was expected
+   	'aspeed,ast2400-vuart' was expected
+--
+   arch/powerpc/boot/dts/mpc832x_rdb.dtb: /soc8323@e0000000/crypto@30000: failed to match any schema with compatible: ['fsl,sec2.2', 'fsl,sec2.1', 'fsl,sec2.0']
+   arch/powerpc/boot/dts/mpc832x_rdb.dtb: /soc8323@e0000000/crypto@30000: failed to match any schema with compatible: ['fsl,sec2.2', 'fsl,sec2.1', 'fsl,sec2.0']
+   arch/powerpc/boot/dts/mpc832x_rdb.dtb: /soc8323@e0000000/par_io@1400: failed to match any schema with compatible: ['fsl,mpc8323-qe-pario']
+   arch/powerpc/boot/dts/mpc832x_rdb.dtb: /soc8323@e0000000/par_io@1400/gpio-controller@1448: failed to match any schema with compatible: ['fsl,mpc8323-qe-pario-bank']
+   arch/powerpc/boot/dts/mpc832x_rdb.dtb: /qe@e0100000: failed to match any schema with compatible: ['fsl,qe']
+   arch/powerpc/boot/dts/mpc832x_rdb.dtb: /qe@e0100000/muram@10000: failed to match any schema with compatible: ['fsl,qe-muram', 'fsl,cpm-muram']
+   arch/powerpc/boot/dts/mpc832x_rdb.dtb: /qe@e0100000/muram@10000: failed to match any schema with compatible: ['fsl,qe-muram', 'fsl,cpm-muram']
+   arch/powerpc/boot/dts/mpc832x_rdb.dtb: /qe@e0100000/muram@10000/data-only@0: failed to match any schema with compatible: ['fsl,qe-muram-data', 'fsl,cpm-muram-data']
+   arch/powerpc/boot/dts/mpc832x_rdb.dtb: /qe@e0100000/muram@10000/data-only@0: failed to match any schema with compatible: ['fsl,qe-muram-data', 'fsl,cpm-muram-data']
+   arch/powerpc/boot/dts/mpc832x_rdb.dtb: /qe@e0100000/spi@4c0: failed to match any schema with compatible: ['fsl,spi']
+>> arch/powerpc/boot/dts/mpc832x_rdb.dtb: mmc-slot@0 (fsl,mpc8323rdb-mmc-slot): $nodename:0: 'mmc-slot@0' does not match '^mmc(@.*)?$'
+   	from schema $id: http://devicetree.org/schemas/mmc/mmc-spi-slot.yaml#
+>> arch/powerpc/boot/dts/mpc832x_rdb.dtb: mmc-slot@0 (fsl,mpc8323rdb-mmc-slot): compatible:0: 'mmc-spi-slot' was expected
+   	from schema $id: http://devicetree.org/schemas/mmc/mmc-spi-slot.yaml#
+>> arch/powerpc/boot/dts/mpc832x_rdb.dtb: mmc-slot@0 (fsl,mpc8323rdb-mmc-slot): compatible: ['fsl,mpc8323rdb-mmc-slot', 'mmc-spi-slot'] is too long
+   	from schema $id: http://devicetree.org/schemas/mmc/mmc-spi-slot.yaml#
+>> arch/powerpc/boot/dts/mpc832x_rdb.dtb: mmc-slot@0 (fsl,mpc8323rdb-mmc-slot): Unevaluated properties are not allowed ('compatible' was unexpected)
+   	from schema $id: http://devicetree.org/schemas/mmc/mmc-spi-slot.yaml#
+   arch/powerpc/boot/dts/mpc832x_rdb.dtb: /qe@e0100000/spi@4c0/mmc-slot@0: failed to match any schema with compatible: ['fsl,mpc8323rdb-mmc-slot', 'mmc-spi-slot']
+   arch/powerpc/boot/dts/mpc832x_rdb.dtb: /qe@e0100000/spi@500: failed to match any schema with compatible: ['fsl,spi']
+   arch/powerpc/boot/dts/mpc832x_rdb.dtb: /qe@e0100000/ucc@3000: failed to match any schema with compatible: ['ucc_geth']
+   arch/powerpc/boot/dts/mpc832x_rdb.dtb: /qe@e0100000/ucc@2200: failed to match any schema with compatible: ['ucc_geth']
+   arch/powerpc/boot/dts/mpc832x_rdb.dtb: /qe@e0100000/mdio@3120: failed to match any schema with compatible: ['fsl,ucc-mdio']
+   arch/powerpc/boot/dts/mpc832x_rdb.dtb: /qe@e0100000/interrupt-controller@80: failed to match any schema with compatible: ['fsl,qe-ic']
+   arch/powerpc/boot/dts/mpc832x_rdb.dtb: /pci@e0008500: failed to match any schema with compatible: ['fsl,mpc8349-pci']
+--
+   arch/powerpc/boot/dts/fsl/p4080si-pre.dtsi:45.10-88.4: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
+   arch/powerpc/boot/dts/fsl/p4080si-pre.dtsi:45.10-88.4: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
+   arch/powerpc/boot/dts/fsl/p4080si-pre.dtsi:45.10-88.4: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
+   arch/powerpc/boot/dts/fsl/p4080si-pre.dtsi:45.10-88.4: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
+   arch/powerpc/boot/dts/fsl/p4080si-pre.dtsi:45.10-88.4: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
+   arch/powerpc/boot/dts/fsl/p4080si-pre.dtsi:45.10-88.4: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
+   arch/powerpc/boot/dts/fsl/p4080si-pre.dtsi:45.10-88.4: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
+   arch/powerpc/boot/dts/fsl/p4080si-pre.dtsi:45.10-88.4: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
+   arch/powerpc/boot/dts/fsl/p4080si-pre.dtsi:45.10-88.4: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /: failed to match any schema with compatible: ['fsl,OCA4080']
+>> arch/powerpc/boot/dts/fsl/oca4080.dtb: / (fsl,OCA4080): memory: 'reg' is a required property
+   	from schema $id: http://devicetree.org/schemas/memory.yaml#
+>> arch/powerpc/boot/dts/fsl/oca4080.dtb: / (fsl,OCA4080): memory: False schema does not allow {'device_type': ['memory']}
+   	from schema $id: http://devicetree.org/schemas/root-node.yaml#
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: aliases: 'rtic_a', 'rtic_b', 'rtic_c', 'rtic_d', 'sec_jr0', 'sec_jr1', 'sec_jr2', 'sec_jr3', 'sec_mon' do not match any of the regexes: '^[a-z][a-z0-9\\-]*$', 'pinctrl-[0-9]+'
+   	from schema $id: http://devicetree.org/schemas/aliases.yaml#
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /reserved-memory/bman-fbpr: failed to match any schema with compatible: ['fsl,bman-fbpr']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /reserved-memory/qman-fqd: failed to match any schema with compatible: ['fsl,qman-fqd']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /reserved-memory/qman-pfdr: failed to match any schema with compatible: ['fsl,qman-pfdr']
+>> arch/powerpc/boot/dts/fsl/oca4080.dtb: dcsr@f00000000 (fsl,dcsr): dcsr-npc: 'ranges' is a required property
+   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+>> arch/powerpc/boot/dts/fsl/oca4080.dtb: dcsr@f00000000 (fsl,dcsr): dcsr-corenet: 'ranges' is a required property
+   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+>> arch/powerpc/boot/dts/fsl/oca4080.dtb: dcsr@f00000000 (fsl,dcsr): $nodename:0: 'dcsr@f00000000' does not match '^([a-z][a-z0-9\\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
+   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /dcsr@f00000000: failed to match any schema with compatible: ['fsl,dcsr', 'simple-bus']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /dcsr@f00000000/dcsr-epu@0: failed to match any schema with compatible: ['fsl,p4080-dcsr-epu', 'fsl,dcsr-epu']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /dcsr@f00000000/dcsr-epu@0: failed to match any schema with compatible: ['fsl,p4080-dcsr-epu', 'fsl,dcsr-epu']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /dcsr@f00000000/dcsr-npc: failed to match any schema with compatible: ['fsl,dcsr-npc']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /dcsr@f00000000/dcsr-nxc@2000: failed to match any schema with compatible: ['fsl,dcsr-nxc']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /dcsr@f00000000/dcsr-corenet: failed to match any schema with compatible: ['fsl,dcsr-corenet']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /dcsr@f00000000/dcsr-dpaa@9000: failed to match any schema with compatible: ['fsl,p4080-dcsr-dpaa', 'fsl,dcsr-dpaa']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /dcsr@f00000000/dcsr-dpaa@9000: failed to match any schema with compatible: ['fsl,p4080-dcsr-dpaa', 'fsl,dcsr-dpaa']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /dcsr@f00000000/dcsr-ocn@11000: failed to match any schema with compatible: ['fsl,p4080-dcsr-ocn', 'fsl,dcsr-ocn']
+--
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@43000: failed to match any schema with compatible: ['fsl,dcsr-e500mc-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@43000: failed to match any schema with compatible: ['fsl,dcsr-e500mc-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@44000: failed to match any schema with compatible: ['fsl,dcsr-e500mc-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@44000: failed to match any schema with compatible: ['fsl,dcsr-e500mc-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@45000: failed to match any schema with compatible: ['fsl,dcsr-e500mc-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@45000: failed to match any schema with compatible: ['fsl,dcsr-e500mc-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@46000: failed to match any schema with compatible: ['fsl,dcsr-e500mc-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@46000: failed to match any schema with compatible: ['fsl,dcsr-e500mc-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@47000: failed to match any schema with compatible: ['fsl,dcsr-e500mc-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@47000: failed to match any schema with compatible: ['fsl,dcsr-e500mc-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+>> arch/powerpc/boot/dts/fsl/oca4080.dtb: bman-portals@ff4000000 (simple-bus): $nodename:0: 'bman-portals@ff4000000' does not match '^([a-z][a-z0-9\\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
+   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /bman-portals@ff4000000/bman-portal@0: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /bman-portals@ff4000000/bman-portal@4000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /bman-portals@ff4000000/bman-portal@8000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /bman-portals@ff4000000/bman-portal@c000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /bman-portals@ff4000000/bman-portal@10000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /bman-portals@ff4000000/bman-portal@14000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /bman-portals@ff4000000/bman-portal@18000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /bman-portals@ff4000000/bman-portal@1c000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /bman-portals@ff4000000/bman-portal@20000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /bman-portals@ff4000000/bman-portal@24000: failed to match any schema with compatible: ['fsl,bman-portal']
+>> arch/powerpc/boot/dts/fsl/oca4080.dtb: qman-portals@ff4200000 (simple-bus): $nodename:0: 'qman-portals@ff4200000' does not match '^([a-z][a-z0-9\\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
+   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /qman-portals@ff4200000/qman-portal@0: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /qman-portals@ff4200000/qman-portal@4000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /qman-portals@ff4200000/qman-portal@8000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /qman-portals@ff4200000/qman-portal@c000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /qman-portals@ff4200000/qman-portal@10000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /qman-portals@ff4200000/qman-portal@14000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /qman-portals@ff4200000/qman-portal@18000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /qman-portals@ff4200000/qman-portal@1c000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /qman-portals@ff4200000/qman-portal@20000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /qman-portals@ff4200000/qman-portal@24000: failed to match any schema with compatible: ['fsl,qman-portal']
+>> arch/powerpc/boot/dts/fsl/oca4080.dtb: soc@ffe000000 (simple-bus): soc-sram-error: 'ranges' is a required property
+   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+>> arch/powerpc/boot/dts/fsl/oca4080.dtb: i2c@118000 (fsl-i2c): compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl-i2c'] is too short
+   	'fsl-i2c' is not one of ['mpc5200-i2c', 'fsl,mpc5200-i2c', 'fsl,mpc5121-i2c', 'fsl,mpc8313-i2c', 'fsl,mpc8543-i2c', 'fsl,mpc8544-i2c']
+   	'fsl,mpc5200b-i2c' was expected
+   	from schema $id: http://devicetree.org/schemas/i2c/i2c-mpc.yaml#
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: i2c@118100 (fsl-i2c): compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl-i2c'] is too short
+   	'fsl-i2c' is not one of ['mpc5200-i2c', 'fsl,mpc5200-i2c', 'fsl,mpc5121-i2c', 'fsl,mpc8313-i2c', 'fsl,mpc8543-i2c', 'fsl,mpc8544-i2c']
+   	'fsl,mpc5200b-i2c' was expected
+   	from schema $id: http://devicetree.org/schemas/i2c/i2c-mpc.yaml#
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: i2c@119000 (fsl-i2c): compatible: 'oneOf' conditional failed, one must be fixed:
+--
+   	'fsl,ns16550' is not one of ['ralink,mt7620a-uart', 'ralink,rt3052-uart', 'ralink,rt3883-uart']
+   	'fsl,ns16550' is not one of ['mediatek,mt7622-btif', 'mediatek,mt7623-btif']
+   	'mrvl,mmp-uart' was expected
+   	'fsl,ns16550' is not one of ['nvidia,tegra30-uart', 'nvidia,tegra114-uart', 'nvidia,tegra124-uart', 'nvidia,tegra210-uart', 'nvidia,tegra186-uart', 'nvidia,tegra194-uart', 'nvidia,tegra234-uart']
+   	'ralink,rt2880-uart' was expected
+   	'mediatek,mtk-btif' was expected
+   	from schema $id: http://devicetree.org/schemas/serial/8250.yaml#
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: serial@11d600 (fsl,ns16550): Unevaluated properties are not allowed ('cell-index', 'compatible', 'device_type' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/serial/8250.yaml#
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /soc@ffe000000/gpio@130000: failed to match any schema with compatible: ['fsl,qoriq-gpio']
+>> arch/powerpc/boot/dts/fsl/oca4080.dtb: crypto@300000 (fsl,sec-v4.0): 'fsl,iommu-parent' does not match any of the regexes: '^jr@[0-9a-f]+$', '^rtic@[0-9a-f]+$', 'pinctrl-[0-9]+'
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0.yaml#
+>> arch/powerpc/boot/dts/fsl/oca4080.dtb: sec_mon@314000 (fsl,sec-v4.0-mon): compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl,sec-v4.0-mon'] is too short
+   	'fsl,sec-v5.0-mon' was expected
+   	'fsl,sec-v4.0-mon' is not one of ['fsl,sec-v5.3-mon', 'fsl,sec-v5.4-mon']
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0-mon.yaml#
+>> arch/powerpc/boot/dts/fsl/oca4080.dtb: sec_mon@314000 (fsl,sec-v4.0-mon): interrupts: [[93, 2, 0, 0]] is too short
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0-mon.yaml#
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /soc@ffe000000/qman@318000: failed to match any schema with compatible: ['fsl,qman']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /soc@ffe000000/bman@31a000: failed to match any schema with compatible: ['fsl,bman']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /soc@ffe000000/fman@400000: failed to match any schema with compatible: ['fsl,fman']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /soc@ffe000000/fman@400000/muram@0: failed to match any schema with compatible: ['fsl,fman-muram']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /soc@ffe000000/fman@400000/port@81000: failed to match any schema with compatible: ['fsl,fman-v2-port-oh']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /soc@ffe000000/fman@400000/port@82000: failed to match any schema with compatible: ['fsl,fman-v2-port-oh']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /soc@ffe000000/fman@400000/port@83000: failed to match any schema with compatible: ['fsl,fman-v2-port-oh']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /soc@ffe000000/fman@400000/port@84000: failed to match any schema with compatible: ['fsl,fman-v2-port-oh']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /soc@ffe000000/fman@400000/port@85000: failed to match any schema with compatible: ['fsl,fman-v2-port-oh']
+--
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /soc@ffe000000/fman@500000/port@8b000: failed to match any schema with compatible: ['fsl,fman-v2-port-rx']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /soc@ffe000000/fman@500000/port@ab000: failed to match any schema with compatible: ['fsl,fman-v2-port-tx']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /soc@ffe000000/fman@500000/mdio@e7120: failed to match any schema with compatible: ['fsl,fman-mdio']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /soc@ffe000000/fman@500000/port@90000: failed to match any schema with compatible: ['fsl,fman-v2-port-rx']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /soc@ffe000000/fman@500000/port@b0000: failed to match any schema with compatible: ['fsl,fman-v2-port-tx']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: ethernet@f0000 (fsl,fman-xgec): 'ptp-timer' is a required property
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /soc@ffe000000/fman@500000/mdio@f1000: failed to match any schema with compatible: ['fsl,fman-xmdio']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /soc@ffe000000/ptp-timer@5fe000: failed to match any schema with compatible: ['fsl,fman-ptp-timer']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /rapidio@ffe0c0000: failed to match any schema with compatible: ['fsl,srio']
+>> arch/powerpc/boot/dts/fsl/oca4080.dtb: localbus@ffe124000 (fsl,p4080-elbc): flash@0,0: 'ranges' is a required property
+   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /localbus@ffe124000: failed to match any schema with compatible: ['fsl,p4080-elbc', 'fsl,elbc', 'simple-bus']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /localbus@ffe124000: failed to match any schema with compatible: ['fsl,p4080-elbc', 'fsl,elbc', 'simple-bus']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /pcie@ffe200000: failed to match any schema with compatible: ['fsl,p4080-pcie', 'fsl,qoriq-pcie-v2.1']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /pcie@ffe200000: failed to match any schema with compatible: ['fsl,p4080-pcie', 'fsl,qoriq-pcie-v2.1']
+>> arch/powerpc/boot/dts/fsl/oca4080.dtb: pcie@ffe200000 (fsl,p4080-pcie): pcie@0:interrupts:0:0: 16 is not one of [1, 2, 3, 4]
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+>> arch/powerpc/boot/dts/fsl/oca4080.dtb: pcie@ffe200000 (fsl,p4080-pcie): pcie@0:interrupts:0: [16, 2, 1, 15] is too long
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /pcie@ffe201000: failed to match any schema with compatible: ['fsl,p4080-pcie', 'fsl,qoriq-pcie-v2.1']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /pcie@ffe201000: failed to match any schema with compatible: ['fsl,p4080-pcie', 'fsl,qoriq-pcie-v2.1']
+>> arch/powerpc/boot/dts/fsl/oca4080.dtb: pcie@ffe201000 (fsl,p4080-pcie): pcie@0:interrupts:0:0: 16 is not one of [1, 2, 3, 4]
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+>> arch/powerpc/boot/dts/fsl/oca4080.dtb: pcie@ffe201000 (fsl,p4080-pcie): pcie@0:interrupts:0: [16, 2, 1, 14] is too long
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /pcie@ffe202000: failed to match any schema with compatible: ['fsl,p4080-pcie', 'fsl,qoriq-pcie-v2.1']
+   arch/powerpc/boot/dts/fsl/oca4080.dtb: /pcie@ffe202000: failed to match any schema with compatible: ['fsl,p4080-pcie', 'fsl,qoriq-pcie-v2.1']
+>> arch/powerpc/boot/dts/fsl/oca4080.dtb: pcie@ffe202000 (fsl,p4080-pcie): pcie@0:interrupts:0:0: 16 is not one of [1, 2, 3, 4]
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+>> arch/powerpc/boot/dts/fsl/oca4080.dtb: pcie@ffe202000 (fsl,p4080-pcie): pcie@0:interrupts:0: [16, 2, 1, 13] is too long
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+--
+   arch/powerpc/boot/dts/fsl/p4080si-pre.dtsi:45.10-88.4: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
+   arch/powerpc/boot/dts/fsl/p4080si-pre.dtsi:45.10-88.4: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
+   arch/powerpc/boot/dts/fsl/p4080si-pre.dtsi:45.10-88.4: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
+   arch/powerpc/boot/dts/fsl/p4080si-pre.dtsi:45.10-88.4: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /: failed to match any schema with compatible: ['fsl,P4080DS']
+>> arch/powerpc/boot/dts/fsl/p4080ds.dtb: / (fsl,P4080DS): memory: 'reg' is a required property
+   	from schema $id: http://devicetree.org/schemas/memory.yaml#
+>> arch/powerpc/boot/dts/fsl/p4080ds.dtb: / (fsl,P4080DS): memory: False schema does not allow {'device_type': ['memory']}
+   	from schema $id: http://devicetree.org/schemas/root-node.yaml#
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: aliases: 'emi1_rgmii', 'emi1_slot3', 'emi1_slot4', 'emi1_slot5', 'emi2_slot4', 'emi2_slot5', 'phy5_slot3', 'phy6_slot3', 'phy7_slot3', 'phy8_slot3', 'phy_rgmii', 'rtic_a', 'rtic_b', 'rtic_c', 'rtic_d', 'sec_jr0', 'sec_jr1', 'sec_jr2', 'sec_jr3', 'sec_mon' do not match any of the regexes: '^[a-z][a-z0-9\\-]*$', 'pinctrl-[0-9]+'
+   	from schema $id: http://devicetree.org/schemas/aliases.yaml#
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /reserved-memory/bman-fbpr: failed to match any schema with compatible: ['fsl,bman-fbpr']
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /reserved-memory/qman-fqd: failed to match any schema with compatible: ['fsl,qman-fqd']
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /reserved-memory/qman-pfdr: failed to match any schema with compatible: ['fsl,qman-pfdr']
+>> arch/powerpc/boot/dts/fsl/p4080ds.dtb: dcsr@f00000000 (fsl,dcsr): dcsr-corenet: 'ranges' is a required property
+   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+>> arch/powerpc/boot/dts/fsl/p4080ds.dtb: dcsr@f00000000 (fsl,dcsr): dcsr-npc: 'ranges' is a required property
+   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+>> arch/powerpc/boot/dts/fsl/p4080ds.dtb: dcsr@f00000000 (fsl,dcsr): $nodename:0: 'dcsr@f00000000' does not match '^([a-z][a-z0-9\\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
+   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /dcsr@f00000000: failed to match any schema with compatible: ['fsl,dcsr', 'simple-bus']
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /dcsr@f00000000/dcsr-epu@0: failed to match any schema with compatible: ['fsl,p4080-dcsr-epu', 'fsl,dcsr-epu']
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /dcsr@f00000000/dcsr-epu@0: failed to match any schema with compatible: ['fsl,p4080-dcsr-epu', 'fsl,dcsr-epu']
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /dcsr@f00000000/dcsr-npc: failed to match any schema with compatible: ['fsl,dcsr-npc']
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /dcsr@f00000000/dcsr-nxc@2000: failed to match any schema with compatible: ['fsl,dcsr-nxc']
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /dcsr@f00000000/dcsr-corenet: failed to match any schema with compatible: ['fsl,dcsr-corenet']
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /dcsr@f00000000/dcsr-dpaa@9000: failed to match any schema with compatible: ['fsl,p4080-dcsr-dpaa', 'fsl,dcsr-dpaa']
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /dcsr@f00000000/dcsr-dpaa@9000: failed to match any schema with compatible: ['fsl,p4080-dcsr-dpaa', 'fsl,dcsr-dpaa']
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /dcsr@f00000000/dcsr-ocn@11000: failed to match any schema with compatible: ['fsl,p4080-dcsr-ocn', 'fsl,dcsr-ocn']
+--
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@43000: failed to match any schema with compatible: ['fsl,dcsr-e500mc-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@43000: failed to match any schema with compatible: ['fsl,dcsr-e500mc-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@44000: failed to match any schema with compatible: ['fsl,dcsr-e500mc-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@44000: failed to match any schema with compatible: ['fsl,dcsr-e500mc-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@45000: failed to match any schema with compatible: ['fsl,dcsr-e500mc-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@45000: failed to match any schema with compatible: ['fsl,dcsr-e500mc-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@46000: failed to match any schema with compatible: ['fsl,dcsr-e500mc-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@46000: failed to match any schema with compatible: ['fsl,dcsr-e500mc-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@47000: failed to match any schema with compatible: ['fsl,dcsr-e500mc-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@47000: failed to match any schema with compatible: ['fsl,dcsr-e500mc-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+>> arch/powerpc/boot/dts/fsl/p4080ds.dtb: bman-portals@ff4000000 (simple-bus): $nodename:0: 'bman-portals@ff4000000' does not match '^([a-z][a-z0-9\\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
+   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /bman-portals@ff4000000/bman-portal@0: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /bman-portals@ff4000000/bman-portal@4000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /bman-portals@ff4000000/bman-portal@8000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /bman-portals@ff4000000/bman-portal@c000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /bman-portals@ff4000000/bman-portal@10000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /bman-portals@ff4000000/bman-portal@14000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /bman-portals@ff4000000/bman-portal@18000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /bman-portals@ff4000000/bman-portal@1c000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /bman-portals@ff4000000/bman-portal@20000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /bman-portals@ff4000000/bman-portal@24000: failed to match any schema with compatible: ['fsl,bman-portal']
+>> arch/powerpc/boot/dts/fsl/p4080ds.dtb: qman-portals@ff4200000 (simple-bus): $nodename:0: 'qman-portals@ff4200000' does not match '^([a-z][a-z0-9\\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
+   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /qman-portals@ff4200000/qman-portal@0: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /qman-portals@ff4200000/qman-portal@4000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /qman-portals@ff4200000/qman-portal@8000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /qman-portals@ff4200000/qman-portal@c000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /qman-portals@ff4200000/qman-portal@10000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /qman-portals@ff4200000/qman-portal@14000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /qman-portals@ff4200000/qman-portal@18000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /qman-portals@ff4200000/qman-portal@1c000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /qman-portals@ff4200000/qman-portal@20000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /qman-portals@ff4200000/qman-portal@24000: failed to match any schema with compatible: ['fsl,qman-portal']
+>> arch/powerpc/boot/dts/fsl/p4080ds.dtb: soc@ffe000000 (simple-bus): soc-sram-error: 'ranges' is a required property
+   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /soc@ffe000000/spi@110000: failed to match any schema with compatible: ['fsl,mpc8536-espi']
+>> arch/powerpc/boot/dts/fsl/p4080ds.dtb: flash@0 (spansion,s25sl12801): Unevaluated properties are not allowed ('partition@kernel', 'partition@u-boot' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/mtd/jedec,spi-nor.yaml#
+>> arch/powerpc/boot/dts/fsl/p4080ds.dtb: flash@0 (spansion,s25sl12801): 'partition@dtb', 'partition@fs', 'partition@kernel', 'partition@u-boot' do not match any of the regexes: '.*-names$', '.*-supply$', '^#.*-cells$', '^#[a-zA-Z0-9,+\\-._]{0,63}$', '^[a-zA-Z0-9][a-zA-Z0-9#,+\\-._]{0,63}$', '^[a-zA-Z0-9][a-zA-Z0-9,+\\-._]{0,63}@[0-9a-fA-F]+(,[0-9a-fA-F]+)*$', '^__.*__$', 'pinctrl-[0-9]+'
+   	from schema $id: http://devicetree.org/schemas/dt-core.yaml#
+>> arch/powerpc/boot/dts/fsl/p4080ds.dtb: i2c@118100 (fsl-i2c): compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl-i2c'] is too short
+   	'fsl-i2c' is not one of ['mpc5200-i2c', 'fsl,mpc5200-i2c', 'fsl,mpc5121-i2c', 'fsl,mpc8313-i2c', 'fsl,mpc8543-i2c', 'fsl,mpc8544-i2c']
+   	'fsl,mpc5200b-i2c' was expected
+   	from schema $id: http://devicetree.org/schemas/i2c/i2c-mpc.yaml#
+>> arch/powerpc/boot/dts/fsl/p4080ds.dtb: i2c@118100 (fsl-i2c): Unevaluated properties are not allowed ('cell-index', 'compatible', 'dfsrr' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/i2c/i2c-mpc.yaml#
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: i2c@118000 (fsl-i2c): compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl-i2c'] is too short
+   	'fsl-i2c' is not one of ['mpc5200-i2c', 'fsl,mpc5200-i2c', 'fsl,mpc5121-i2c', 'fsl,mpc8313-i2c', 'fsl,mpc8543-i2c', 'fsl,mpc8544-i2c']
+   	'fsl,mpc5200b-i2c' was expected
+   	from schema $id: http://devicetree.org/schemas/i2c/i2c-mpc.yaml#
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: i2c@118000 (fsl-i2c): Unevaluated properties are not allowed ('cell-index', 'compatible', 'dfsrr' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/i2c/i2c-mpc.yaml#
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /soc@ffe000000/i2c@118000/zl2006@21: failed to match any schema with compatible: ['zl2006']
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /soc@ffe000000/i2c@118000/zl2006@22: failed to match any schema with compatible: ['zl2006']
+--
+   	'fsl,ns16550' is not one of ['ralink,mt7620a-uart', 'ralink,rt3052-uart', 'ralink,rt3883-uart']
+   	'fsl,ns16550' is not one of ['mediatek,mt7622-btif', 'mediatek,mt7623-btif']
+   	'mrvl,mmp-uart' was expected
+   	'fsl,ns16550' is not one of ['nvidia,tegra30-uart', 'nvidia,tegra114-uart', 'nvidia,tegra124-uart', 'nvidia,tegra210-uart', 'nvidia,tegra186-uart', 'nvidia,tegra194-uart', 'nvidia,tegra234-uart']
+   	'ralink,rt2880-uart' was expected
+   	'mediatek,mtk-btif' was expected
+   	from schema $id: http://devicetree.org/schemas/serial/8250.yaml#
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: serial@11d600 (fsl,ns16550): Unevaluated properties are not allowed ('cell-index', 'compatible', 'device_type' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/serial/8250.yaml#
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /soc@ffe000000/gpio@130000: failed to match any schema with compatible: ['fsl,qoriq-gpio']
+>> arch/powerpc/boot/dts/fsl/p4080ds.dtb: crypto@300000 (fsl,sec-v4.0): 'fsl,iommu-parent' does not match any of the regexes: '^jr@[0-9a-f]+$', '^rtic@[0-9a-f]+$', 'pinctrl-[0-9]+'
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0.yaml#
+>> arch/powerpc/boot/dts/fsl/p4080ds.dtb: sec_mon@314000 (fsl,sec-v4.0-mon): compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl,sec-v4.0-mon'] is too short
+   	'fsl,sec-v5.0-mon' was expected
+   	'fsl,sec-v4.0-mon' is not one of ['fsl,sec-v5.3-mon', 'fsl,sec-v5.4-mon']
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0-mon.yaml#
+>> arch/powerpc/boot/dts/fsl/p4080ds.dtb: sec_mon@314000 (fsl,sec-v4.0-mon): interrupts: [[93, 2, 0, 0]] is too short
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0-mon.yaml#
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /soc@ffe000000/qman@318000: failed to match any schema with compatible: ['fsl,qman']
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /soc@ffe000000/bman@31a000: failed to match any schema with compatible: ['fsl,bman']
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /soc@ffe000000/ptp-timer@4fe000: failed to match any schema with compatible: ['fsl,fman-ptp-timer']
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /soc@ffe000000/ptp-timer@5fe000: failed to match any schema with compatible: ['fsl,fman-ptp-timer']
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /rapidio@ffe0c0000: failed to match any schema with compatible: ['fsl,srio']
+>> arch/powerpc/boot/dts/fsl/p4080ds.dtb: localbus@ffe124000 (fsl,p4080-elbc): flash@0,0: 'ranges' is a required property
+   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+>> arch/powerpc/boot/dts/fsl/p4080ds.dtb: localbus@ffe124000 (fsl,p4080-elbc): board-control@3,0: 'ranges' is a required property
+   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /localbus@ffe124000: failed to match any schema with compatible: ['fsl,p4080-elbc', 'fsl,elbc', 'simple-bus']
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /localbus@ffe124000: failed to match any schema with compatible: ['fsl,p4080-elbc', 'fsl,elbc', 'simple-bus']
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /localbus@ffe124000/board-control@3,0: failed to match any schema with compatible: ['fsl,p4080ds-fpga', 'fsl,fpga-ngpixis']
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /localbus@ffe124000/board-control@3,0: failed to match any schema with compatible: ['fsl,p4080ds-fpga', 'fsl,fpga-ngpixis']
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /pcie@ffe200000: failed to match any schema with compatible: ['fsl,p4080-pcie', 'fsl,qoriq-pcie-v2.1']
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /pcie@ffe200000: failed to match any schema with compatible: ['fsl,p4080-pcie', 'fsl,qoriq-pcie-v2.1']
+>> arch/powerpc/boot/dts/fsl/p4080ds.dtb: pcie@ffe200000 (fsl,p4080-pcie): pcie@0:interrupts:0:0: 16 is not one of [1, 2, 3, 4]
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+>> arch/powerpc/boot/dts/fsl/p4080ds.dtb: pcie@ffe200000 (fsl,p4080-pcie): pcie@0:interrupts:0: [16, 2, 1, 15] is too long
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /pcie@ffe201000: failed to match any schema with compatible: ['fsl,p4080-pcie', 'fsl,qoriq-pcie-v2.1']
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /pcie@ffe201000: failed to match any schema with compatible: ['fsl,p4080-pcie', 'fsl,qoriq-pcie-v2.1']
+>> arch/powerpc/boot/dts/fsl/p4080ds.dtb: pcie@ffe201000 (fsl,p4080-pcie): pcie@0:interrupts:0:0: 16 is not one of [1, 2, 3, 4]
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+>> arch/powerpc/boot/dts/fsl/p4080ds.dtb: pcie@ffe201000 (fsl,p4080-pcie): pcie@0:interrupts:0: [16, 2, 1, 14] is too long
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /pcie@ffe202000: failed to match any schema with compatible: ['fsl,p4080-pcie', 'fsl,qoriq-pcie-v2.1']
+   arch/powerpc/boot/dts/fsl/p4080ds.dtb: /pcie@ffe202000: failed to match any schema with compatible: ['fsl,p4080-pcie', 'fsl,qoriq-pcie-v2.1']
+>> arch/powerpc/boot/dts/fsl/p4080ds.dtb: pcie@ffe202000 (fsl,p4080-pcie): pcie@0:interrupts:0:0: 16 is not one of [1, 2, 3, 4]
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+>> arch/powerpc/boot/dts/fsl/p4080ds.dtb: pcie@ffe202000 (fsl,p4080-pcie): pcie@0:interrupts:0: [16, 2, 1, 13] is too long
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+>> arch/powerpc/boot/dts/fsl/p4080ds.dtb: mdio-mux-emi1 (mdio-mux-gpio): compatible: ['mdio-mux-gpio', 'mdio-mux'] is too long
+   	from schema $id: http://devicetree.org/schemas/net/mdio-mux-gpio.yaml#
+>> arch/powerpc/boot/dts/fsl/p4080ds.dtb: mdio-mux-emi1 (mdio-mux-gpio): Unevaluated properties are not allowed ('compatible' was unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/mdio-mux-gpio.yaml#
+>> arch/powerpc/boot/dts/fsl/p4080ds.dtb: mdio-mux-emi2 (mdio-mux-gpio): compatible: ['mdio-mux-gpio', 'mdio-mux'] is too long
+   	from schema $id: http://devicetree.org/schemas/net/mdio-mux-gpio.yaml#
+>> arch/powerpc/boot/dts/fsl/p4080ds.dtb: mdio-mux-emi2 (mdio-mux-gpio): Unevaluated properties are not allowed ('compatible' was unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/mdio-mux-gpio.yaml#
+--
+   arch/powerpc/boot/dts/fsl/t2081si-post.dtsi:179.11-182.4: Warning (simple_bus_reg): /dcsr@f00000000/dcsr-npc: simple-bus unit address format error, expected "1000"
+   arch/powerpc/boot/dts/fsl/t2081si-post.dtsi:187.15-190.4: Warning (simple_bus_reg): /dcsr@f00000000/dcsr-corenet: simple-bus unit address format error, expected "8000"
+   arch/powerpc/boot/dts/fsl/t2081si-post.dtsi:460.17-463.4: Warning (simple_bus_reg): /soc@ffe000000/soc-sram-error: missing or empty reg/ranges property
+   arch/powerpc/boot/dts/fsl/t208xsi-pre.dtsi:44.10-75.4: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
+   arch/powerpc/boot/dts/fsl/t208xsi-pre.dtsi:44.10-75.4: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
+   arch/powerpc/boot/dts/fsl/t208xsi-pre.dtsi:44.10-75.4: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /: failed to match any schema with compatible: ['fsl,T2080QDS']
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: / (fsl,T2080QDS): memory: 'reg' is a required property
+   	from schema $id: http://devicetree.org/schemas/memory.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: / (fsl,T2080QDS): memory: False schema does not allow {'device_type': ['memory']}
+   	from schema $id: http://devicetree.org/schemas/root-node.yaml#
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: aliases: 'emi1_slot1', 'emi1_slot2', 'emi1_slot3' do not match any of the regexes: '^[a-z][a-z0-9\\-]*$', 'pinctrl-[0-9]+'
+   	from schema $id: http://devicetree.org/schemas/aliases.yaml#
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /reserved-memory/bman-fbpr: failed to match any schema with compatible: ['fsl,bman-fbpr']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /reserved-memory/qman-fqd: failed to match any schema with compatible: ['fsl,qman-fqd']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /reserved-memory/qman-pfdr: failed to match any schema with compatible: ['fsl,qman-pfdr']
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: localbus@ffe124000 (fsl,ifc): $nodename:0: 'localbus@ffe124000' does not match '^memory-controller@[0-9a-f]+$'
+   	from schema $id: http://devicetree.org/schemas/memory-controllers/fsl/fsl,ifc.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: nor@0,0 (cfi-flash): $nodename:0: 'nor@0,0' does not match '^(flash|.*sram|nand)(@.*)?$'
+   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /localbus@ffe124000/nand@2,0: failed to match any schema with compatible: ['fsl,ifc-nand']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /localbus@ffe124000/board-control@3,0: failed to match any schema with compatible: ['fsl,fpga-qixis']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: mdio-mux-emi1 (mdio-mux-mmioreg): mdio@20:reg:0:0: 32 is greater than the maximum of 31
+   	from schema $id: http://devicetree.org/schemas/net/mdio.yaml#
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: mdio-mux-emi1 (mdio-mux-mmioreg): mdio@40:reg:0:0: 64 is greater than the maximum of 31
+   	from schema $id: http://devicetree.org/schemas/net/mdio.yaml#
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: mdio-mux-emi1 (mdio-mux-mmioreg): mdio@c0:reg:0:0: 192 is greater than the maximum of 31
+   	from schema $id: http://devicetree.org/schemas/net/mdio.yaml#
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: mdio-mux-emi1 (mdio-mux-mmioreg): mdio@60:reg:0:0: 96 is greater than the maximum of 31
+   	from schema $id: http://devicetree.org/schemas/net/mdio.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: dcsr@f00000000 (fsl,dcsr): dcsr-corenet: 'ranges' is a required property
+   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: dcsr@f00000000 (fsl,dcsr): dcsr-npc: 'ranges' is a required property
+   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: dcsr@f00000000 (fsl,dcsr): $nodename:0: 'dcsr@f00000000' does not match '^([a-z][a-z0-9\\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
+   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /dcsr@f00000000: failed to match any schema with compatible: ['fsl,dcsr', 'simple-bus']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /dcsr@f00000000/dcsr-epu@0: failed to match any schema with compatible: ['fsl,t2080-dcsr-epu', 'fsl,dcsr-epu']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /dcsr@f00000000/dcsr-epu@0: failed to match any schema with compatible: ['fsl,t2080-dcsr-epu', 'fsl,dcsr-epu']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /dcsr@f00000000/dcsr-npc: failed to match any schema with compatible: ['fsl,t2080-dcsr-cnpc', 'fsl,dcsr-cnpc']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /dcsr@f00000000/dcsr-npc: failed to match any schema with compatible: ['fsl,t2080-dcsr-cnpc', 'fsl,dcsr-cnpc']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /dcsr@f00000000/dcsr-nxc@2000: failed to match any schema with compatible: ['fsl,dcsr-nxc']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /dcsr@f00000000/dcsr-corenet: failed to match any schema with compatible: ['fsl,dcsr-corenet']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /dcsr@f00000000/dcsr-ocn@11000: failed to match any schema with compatible: ['fsl,t2080-dcsr-ocn', 'fsl,dcsr-ocn']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /dcsr@f00000000/dcsr-ocn@11000: failed to match any schema with compatible: ['fsl,t2080-dcsr-ocn', 'fsl,dcsr-ocn']
+--
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /dcsr@f00000000/dcsr-snpc@32000: failed to match any schema with compatible: ['fsl,t2080-dcsr-snpc', 'fsl,dcsr-snpc']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /dcsr@f00000000/dcsr-snpc@32000: failed to match any schema with compatible: ['fsl,t2080-dcsr-snpc', 'fsl,dcsr-snpc']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@100000: failed to match any schema with compatible: ['fsl,dcsr-e6500-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@100000: failed to match any schema with compatible: ['fsl,dcsr-e6500-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@108000: failed to match any schema with compatible: ['fsl,dcsr-e6500-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@108000: failed to match any schema with compatible: ['fsl,dcsr-e6500-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@110000: failed to match any schema with compatible: ['fsl,dcsr-e6500-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@110000: failed to match any schema with compatible: ['fsl,dcsr-e6500-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@118000: failed to match any schema with compatible: ['fsl,dcsr-e6500-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@118000: failed to match any schema with compatible: ['fsl,dcsr-e6500-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: bman-portals@ff4000000 (simple-bus): $nodename:0: 'bman-portals@ff4000000' does not match '^([a-z][a-z0-9\\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
+   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /bman-portals@ff4000000/bman-portal@0: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /bman-portals@ff4000000/bman-portal@4000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /bman-portals@ff4000000/bman-portal@8000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /bman-portals@ff4000000/bman-portal@c000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /bman-portals@ff4000000/bman-portal@10000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /bman-portals@ff4000000/bman-portal@14000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /bman-portals@ff4000000/bman-portal@18000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /bman-portals@ff4000000/bman-portal@1c000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /bman-portals@ff4000000/bman-portal@20000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /bman-portals@ff4000000/bman-portal@24000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /bman-portals@ff4000000/bman-portal@28000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /bman-portals@ff4000000/bman-portal@2c000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /bman-portals@ff4000000/bman-portal@30000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /bman-portals@ff4000000/bman-portal@34000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /bman-portals@ff4000000/bman-portal@38000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /bman-portals@ff4000000/bman-portal@3c000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /bman-portals@ff4000000/bman-portal@40000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /bman-portals@ff4000000/bman-portal@44000: failed to match any schema with compatible: ['fsl,bman-portal']
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: qman-portals@ff6000000 (simple-bus): $nodename:0: 'qman-portals@ff6000000' does not match '^([a-z][a-z0-9\\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
+   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /qman-portals@ff6000000/qman-portal@0: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /qman-portals@ff6000000/qman-portal@4000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /qman-portals@ff6000000/qman-portal@8000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /qman-portals@ff6000000/qman-portal@c000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /qman-portals@ff6000000/qman-portal@10000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /qman-portals@ff6000000/qman-portal@14000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /qman-portals@ff6000000/qman-portal@18000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /qman-portals@ff6000000/qman-portal@1c000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /qman-portals@ff6000000/qman-portal@20000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /qman-portals@ff6000000/qman-portal@24000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /qman-portals@ff6000000/qman-portal@28000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /qman-portals@ff6000000/qman-portal@2c000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /qman-portals@ff6000000/qman-portal@30000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /qman-portals@ff6000000/qman-portal@34000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /qman-portals@ff6000000/qman-portal@38000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /qman-portals@ff6000000/qman-portal@3c000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /qman-portals@ff6000000/qman-portal@40000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /qman-portals@ff6000000/qman-portal@44000: failed to match any schema with compatible: ['fsl,qman-portal']
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: soc@ffe000000 (simple-bus): soc-sram-error: 'ranges' is a required property
+   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /soc@ffe000000/spi@110000: failed to match any schema with compatible: ['fsl,mpc8536-espi']
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: flash@1 (sst,sst25wf040): compatible: 'oneOf' conditional failed, one must be fixed:
+   	['sst,sst25wf040', 'jedec,spi-nor'] is too long
+   	'sst,sst25wf040' does not match '^((((micron|spansion|st),)?(m25p(40|80|16|32|64|128)|n25q(32b|064|128a11|128a13|256a|512a|164k)))|atmel,at25df(321a|641|081a)|everspin,mr25h(10|40|128|256)|(mxicy|macronix),mx25l(4005a|1606e|6405d|8005|12805d|25635e)|(mxicy|macronix),mx25u(4033|4035)|(spansion,)?s25fl(128s|256s1|512s|008k|064k|164k)|(sst|microchip),sst25vf(016b|032b|040b)|(sst,)?sst26wf016b|(sst,)?sst25wf(040b|080)|winbond,w25x(80|32)|(winbond,)?w25q(16|32(w|dw)?|64(dw)?|80bl|128(fw)?|256))$'
+   	'sst,sst25wf040' is not one of ['issi,is25lp016d', 'micron,mt25qu02g', 'mxicy,mx25r1635f', 'mxicy,mx25u6435f', 'mxicy,mx25v8035f', 'spansion,s25sl12801', 'spansion,s25fs512s']
+   	'jedec,spi-nor' was expected
+   	from schema $id: http://devicetree.org/schemas/mtd/jedec,spi-nor.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: flash@1 (sst,sst25wf040): Unevaluated properties are not allowed ('compatible' was unexpected)
+   	from schema $id: http://devicetree.org/schemas/mtd/jedec,spi-nor.yaml#
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /soc@ffe000000/spi@110000/flash@1: failed to match any schema with compatible: ['sst,sst25wf040', 'jedec,spi-nor']
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: flash@2 (eon,en25s64): compatible: 'oneOf' conditional failed, one must be fixed:
+   	['eon,en25s64', 'jedec,spi-nor'] is too long
+   	'eon,en25s64' does not match '^((((micron|spansion|st),)?(m25p(40|80|16|32|64|128)|n25q(32b|064|128a11|128a13|256a|512a|164k)))|atmel,at25df(321a|641|081a)|everspin,mr25h(10|40|128|256)|(mxicy|macronix),mx25l(4005a|1606e|6405d|8005|12805d|25635e)|(mxicy|macronix),mx25u(4033|4035)|(spansion,)?s25fl(128s|256s1|512s|008k|064k|164k)|(sst|microchip),sst25vf(016b|032b|040b)|(sst,)?sst26wf016b|(sst,)?sst25wf(040b|080)|winbond,w25x(80|32)|(winbond,)?w25q(16|32(w|dw)?|64(dw)?|80bl|128(fw)?|256))$'
+   	'eon,en25s64' is not one of ['issi,is25lp016d', 'micron,mt25qu02g', 'mxicy,mx25r1635f', 'mxicy,mx25u6435f', 'mxicy,mx25v8035f', 'spansion,s25sl12801', 'spansion,s25fs512s']
+   	'jedec,spi-nor' was expected
+   	from schema $id: http://devicetree.org/schemas/mtd/jedec,spi-nor.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: flash@2 (eon,en25s64): Unevaluated properties are not allowed ('compatible' was unexpected)
+   	from schema $id: http://devicetree.org/schemas/mtd/jedec,spi-nor.yaml#
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /soc@ffe000000/spi@110000/flash@2: failed to match any schema with compatible: ['eon,en25s64', 'jedec,spi-nor']
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: i2c@118000 (fsl-i2c): compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl-i2c'] is too short
+   	'fsl-i2c' is not one of ['mpc5200-i2c', 'fsl,mpc5200-i2c', 'fsl,mpc5121-i2c', 'fsl,mpc8313-i2c', 'fsl,mpc8543-i2c', 'fsl,mpc8544-i2c']
+   	'fsl,mpc5200b-i2c' was expected
+   	from schema $id: http://devicetree.org/schemas/i2c/i2c-mpc.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: i2c@118000 (fsl-i2c): Unevaluated properties are not allowed ('cell-index', 'compatible', 'dfsrr' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/i2c/i2c-mpc.yaml#
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /soc@ffe000000/sdhc@114000: failed to match any schema with compatible: ['fsl,t2080-esdhc', 'fsl,esdhc']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /soc@ffe000000/sdhc@114000: failed to match any schema with compatible: ['fsl,t2080-esdhc', 'fsl,esdhc']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /soc@ffe000000/fman@400000: failed to match any schema with compatible: ['fsl,fman']
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: ethernet@e0000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: ethernet@e0000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: ethernet@e0000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: ethernet@e0000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: ethernet@e2000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: ethernet@e2000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: ethernet@e2000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: ethernet@e2000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: ethernet@e4000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: ethernet@e4000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: ethernet@e4000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: ethernet@e4000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: ethernet@e6000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: ethernet@e6000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: ethernet@e6000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: ethernet@e6000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: ethernet@e8000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: ethernet@e8000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: ethernet@e8000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: ethernet@e8000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: ethernet@ea000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: ethernet@ea000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: ethernet@ea000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: ethernet@ea000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: ethernet@f0000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: ethernet@f0000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: ethernet@f0000 (fsl,fman-memac): 'ptp-timer' is a required property
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: ethernet@f0000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: ethernet@f0000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: ethernet@f2000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: ethernet@f2000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: ethernet@f2000 (fsl,fman-memac): 'ptp-timer' is a required property
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: ethernet@f2000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: ethernet@f2000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /soc@ffe000000/fman@400000/mdio@fd000: failed to match any schema with compatible: ['fsl,fman-memac-mdio', 'fsl,fman-xmdio']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /soc@ffe000000/fman@400000/mdio@fd000: failed to match any schema with compatible: ['fsl,fman-memac-mdio', 'fsl,fman-xmdio']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /soc@ffe000000/fman@400000/muram@0: failed to match any schema with compatible: ['fsl,fman-muram']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /soc@ffe000000/fman@400000/port@82000: failed to match any schema with compatible: ['fsl,fman-v3-port-oh']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /soc@ffe000000/fman@400000/port@83000: failed to match any schema with compatible: ['fsl,fman-v3-port-oh']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /soc@ffe000000/fman@400000/port@84000: failed to match any schema with compatible: ['fsl,fman-v3-port-oh']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /soc@ffe000000/fman@400000/port@85000: failed to match any schema with compatible: ['fsl,fman-v3-port-oh']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /soc@ffe000000/fman@400000/port@86000: failed to match any schema with compatible: ['fsl,fman-v3-port-oh']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /soc@ffe000000/fman@400000/port@87000: failed to match any schema with compatible: ['fsl,fman-v3-port-oh']
+--
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: serial@11d600 (fsl,ns16550): Unevaluated properties are not allowed ('cell-index', 'compatible', 'device_type' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/serial/8250.yaml#
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /soc@ffe000000/gpio@130000: failed to match any schema with compatible: ['fsl,qoriq-gpio']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /soc@ffe000000/gpio@131000: failed to match any schema with compatible: ['fsl,qoriq-gpio']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /soc@ffe000000/gpio@132000: failed to match any schema with compatible: ['fsl,qoriq-gpio']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /soc@ffe000000/gpio@133000: failed to match any schema with compatible: ['fsl,qoriq-gpio']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /soc@ffe000000/usb@210000: failed to match any schema with compatible: ['fsl-usb2-mph-v2.5', 'fsl-usb2-mph']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /soc@ffe000000/usb@210000: failed to match any schema with compatible: ['fsl-usb2-mph-v2.5', 'fsl-usb2-mph']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /soc@ffe000000/usb@211000: failed to match any schema with compatible: ['fsl-usb2-dr-v2.5', 'fsl-usb2-dr']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /soc@ffe000000/usb@211000: failed to match any schema with compatible: ['fsl-usb2-dr-v2.5', 'fsl-usb2-dr']
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: crypto@300000 (fsl,sec-v5.2): jr@1000:compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl,sec-v5.2-job-ring', 'fsl,sec-v5.0-job-ring', 'fsl,sec-v4.0-job-ring'] is too long
+   	'fsl,sec-v5.4-job-ring' was expected
+   	'fsl,sec-v5.0-job-ring' was expected
+   	'fsl,sec-v4.0-job-ring' was expected
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0.yaml#
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: crypto@300000 (fsl,sec-v5.2): jr@2000:compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl,sec-v5.2-job-ring', 'fsl,sec-v5.0-job-ring', 'fsl,sec-v4.0-job-ring'] is too long
+   	'fsl,sec-v5.4-job-ring' was expected
+   	'fsl,sec-v5.0-job-ring' was expected
+   	'fsl,sec-v4.0-job-ring' was expected
+--
+   	'fsl,sec-v5.4-job-ring' was expected
+   	'fsl,sec-v5.0-job-ring' was expected
+   	'fsl,sec-v4.0-job-ring' was expected
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0.yaml#
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: crypto@300000 (fsl,sec-v5.2): jr@4000:compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl,sec-v5.2-job-ring', 'fsl,sec-v5.0-job-ring', 'fsl,sec-v4.0-job-ring'] is too long
+   	'fsl,sec-v5.4-job-ring' was expected
+   	'fsl,sec-v5.0-job-ring' was expected
+   	'fsl,sec-v4.0-job-ring' was expected
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: crypto@300000 (fsl,sec-v5.2): rtic@6000:rtic-a@0:compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl,sec-v5.2-rtic-memory', 'fsl,sec-v5.0-rtic-memory', 'fsl,sec-v4.0-rtic-memory'] is too long
+   	'fsl,sec-v5.4-rtic-memory' was expected
+   	'fsl,sec-v4.0-rtic-memory' was expected
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: crypto@300000 (fsl,sec-v5.2): rtic@6000:rtic-b@20:compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl,sec-v5.2-rtic-memory', 'fsl,sec-v5.0-rtic-memory', 'fsl,sec-v4.0-rtic-memory'] is too long
+   	'fsl,sec-v5.4-rtic-memory' was expected
+   	'fsl,sec-v4.0-rtic-memory' was expected
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: crypto@300000 (fsl,sec-v5.2): rtic@6000:rtic-c@40:compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl,sec-v5.2-rtic-memory', 'fsl,sec-v5.0-rtic-memory', 'fsl,sec-v4.0-rtic-memory'] is too long
+   	'fsl,sec-v5.4-rtic-memory' was expected
+   	'fsl,sec-v4.0-rtic-memory' was expected
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: crypto@300000 (fsl,sec-v5.2): rtic@6000:rtic-d@60:compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl,sec-v5.2-rtic-memory', 'fsl,sec-v5.0-rtic-memory', 'fsl,sec-v4.0-rtic-memory'] is too long
+   	'fsl,sec-v5.4-rtic-memory' was expected
+   	'fsl,sec-v4.0-rtic-memory' was expected
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: crypto@300000 (fsl,sec-v5.2): rtic@6000:compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl,sec-v5.2-rtic', 'fsl,sec-v5.0-rtic', 'fsl,sec-v4.0-rtic'] is too long
+   	'fsl,sec-v5.4-rtic' was expected
+   	'fsl,sec-v4.0-rtic' was expected
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: crypto@300000 (fsl,sec-v5.2): compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl,sec-v5.2', 'fsl,sec-v5.0', 'fsl,sec-v4.0'] is too long
+   	'fsl,sec-v5.4' was expected
+   	'fsl,sec-v5.2' is not one of ['fsl,imx6ul-caam', 'fsl,sec-v5.0']
+   	'fsl,sec-v4.0' was expected
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0.yaml#
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /soc@ffe000000/crypto@300000: failed to match any schema with compatible: ['fsl,sec-v5.2', 'fsl,sec-v5.0', 'fsl,sec-v4.0']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /soc@ffe000000/crypto@300000/jr@1000: failed to match any schema with compatible: ['fsl,sec-v5.2-job-ring', 'fsl,sec-v5.0-job-ring', 'fsl,sec-v4.0-job-ring']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /soc@ffe000000/crypto@300000/jr@2000: failed to match any schema with compatible: ['fsl,sec-v5.2-job-ring', 'fsl,sec-v5.0-job-ring', 'fsl,sec-v4.0-job-ring']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /soc@ffe000000/crypto@300000/jr@3000: failed to match any schema with compatible: ['fsl,sec-v5.2-job-ring', 'fsl,sec-v5.0-job-ring', 'fsl,sec-v4.0-job-ring']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /soc@ffe000000/crypto@300000/jr@4000: failed to match any schema with compatible: ['fsl,sec-v5.2-job-ring', 'fsl,sec-v5.0-job-ring', 'fsl,sec-v4.0-job-ring']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /soc@ffe000000/crypto@300000/rtic@6000: failed to match any schema with compatible: ['fsl,sec-v5.2-rtic', 'fsl,sec-v5.0-rtic', 'fsl,sec-v4.0-rtic']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /soc@ffe000000/crypto@300000/rtic@6000/rtic-a@0: failed to match any schema with compatible: ['fsl,sec-v5.2-rtic-memory', 'fsl,sec-v5.0-rtic-memory', 'fsl,sec-v4.0-rtic-memory']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /soc@ffe000000/crypto@300000/rtic@6000/rtic-b@20: failed to match any schema with compatible: ['fsl,sec-v5.2-rtic-memory', 'fsl,sec-v5.0-rtic-memory', 'fsl,sec-v4.0-rtic-memory']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /soc@ffe000000/crypto@300000/rtic@6000/rtic-c@40: failed to match any schema with compatible: ['fsl,sec-v5.2-rtic-memory', 'fsl,sec-v5.0-rtic-memory', 'fsl,sec-v4.0-rtic-memory']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /soc@ffe000000/crypto@300000/rtic@6000/rtic-d@60: failed to match any schema with compatible: ['fsl,sec-v5.2-rtic-memory', 'fsl,sec-v5.0-rtic-memory', 'fsl,sec-v4.0-rtic-memory']
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: sec_mon@314000 (fsl,sec-v5.2-mon): compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl,sec-v5.2-mon', 'fsl,sec-v5.0-mon', 'fsl,sec-v4.0-mon'] is too long
+   	'fsl,sec-v4.0-mon' was expected
+   	'fsl,sec-v5.0-mon' was expected
+   	'fsl,sec-v5.2-mon' is not one of ['fsl,sec-v5.3-mon', 'fsl,sec-v5.4-mon']
+   	'syscon' was expected
+   	'simple-mfd' was expected
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0-mon.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: sec_mon@314000 (fsl,sec-v5.2-mon): interrupts: [[93, 2, 0, 0]] is too short
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0-mon.yaml#
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /soc@ffe000000/sec_mon@314000: failed to match any schema with compatible: ['fsl,sec-v5.2-mon', 'fsl,sec-v5.0-mon', 'fsl,sec-v4.0-mon']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /soc@ffe000000/qman@318000: failed to match any schema with compatible: ['fsl,qman']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /soc@ffe000000/bman@31a000: failed to match any schema with compatible: ['fsl,bman']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /soc@ffe000000/ptp-timer@4fe000: failed to match any schema with compatible: ['fsl,fman-ptp-timer']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /soc@ffe000000/l2-cache-controller@c20000: failed to match any schema with compatible: ['fsl,t2080-l2-cache-controller']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /soc@ffe000000/sata@220000: failed to match any schema with compatible: ['fsl,pq-sata-v2']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /soc@ffe000000/sata@221000: failed to match any schema with compatible: ['fsl,pq-sata-v2']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /pcie@ffe240000: failed to match any schema with compatible: ['fsl,t2080-pcie', 'fsl,qoriq-pcie-v3.0', 'fsl,qoriq-pcie']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /pcie@ffe240000: failed to match any schema with compatible: ['fsl,t2080-pcie', 'fsl,qoriq-pcie-v3.0', 'fsl,qoriq-pcie']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /pcie@ffe240000: failed to match any schema with compatible: ['fsl,t2080-pcie', 'fsl,qoriq-pcie-v3.0', 'fsl,qoriq-pcie']
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: pcie@ffe240000 (fsl,t2080-pcie): pcie@0:interrupts:0:0: 20 is not one of [1, 2, 3, 4]
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: pcie@ffe240000 (fsl,t2080-pcie): pcie@0:interrupts:0: [20, 2, 0, 0] is too long
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /pcie@ffe250000: failed to match any schema with compatible: ['fsl,t2080-pcie', 'fsl,qoriq-pcie-v3.0', 'fsl,qoriq-pcie']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /pcie@ffe250000: failed to match any schema with compatible: ['fsl,t2080-pcie', 'fsl,qoriq-pcie-v3.0', 'fsl,qoriq-pcie']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /pcie@ffe250000: failed to match any schema with compatible: ['fsl,t2080-pcie', 'fsl,qoriq-pcie-v3.0', 'fsl,qoriq-pcie']
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: pcie@ffe250000 (fsl,t2080-pcie): pcie@0:interrupts:0:0: 21 is not one of [1, 2, 3, 4]
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: pcie@ffe250000 (fsl,t2080-pcie): pcie@0:interrupts:0: [21, 2, 0, 0] is too long
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /pcie@ffe260000: failed to match any schema with compatible: ['fsl,t2080-pcie', 'fsl,qoriq-pcie-v3.0', 'fsl,qoriq-pcie']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /pcie@ffe260000: failed to match any schema with compatible: ['fsl,t2080-pcie', 'fsl,qoriq-pcie-v3.0', 'fsl,qoriq-pcie']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /pcie@ffe260000: failed to match any schema with compatible: ['fsl,t2080-pcie', 'fsl,qoriq-pcie-v3.0', 'fsl,qoriq-pcie']
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: pcie@ffe260000 (fsl,t2080-pcie): pcie@0:interrupts:0:0: 22 is not one of [1, 2, 3, 4]
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: pcie@ffe260000 (fsl,t2080-pcie): pcie@0:interrupts:0: [22, 2, 0, 0] is too long
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /pcie@ffe270000: failed to match any schema with compatible: ['fsl,t2080-pcie', 'fsl,qoriq-pcie-v3.0', 'fsl,qoriq-pcie']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /pcie@ffe270000: failed to match any schema with compatible: ['fsl,t2080-pcie', 'fsl,qoriq-pcie-v3.0', 'fsl,qoriq-pcie']
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /pcie@ffe270000: failed to match any schema with compatible: ['fsl,t2080-pcie', 'fsl,qoriq-pcie-v3.0', 'fsl,qoriq-pcie']
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: pcie@ffe270000 (fsl,t2080-pcie): pcie@0:interrupts:0:0: 23 is not one of [1, 2, 3, 4]
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080qds.dtb: pcie@ffe270000 (fsl,t2080-pcie): pcie@0:interrupts:0: [23, 2, 0, 0] is too long
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+   arch/powerpc/boot/dts/fsl/t2080qds.dtb: /rapidio@ffe0c0000: failed to match any schema with compatible: ['fsl,srio']
+--
+   arch/powerpc/boot/dts/fsl/t2081si-post.dtsi:179.11-182.4: Warning (unit_address_vs_reg): /dcsr@f00000000/dcsr-npc: node has a reg or ranges property, but no unit name
+   arch/powerpc/boot/dts/fsl/t2081si-post.dtsi:187.15-190.4: Warning (unit_address_vs_reg): /dcsr@f00000000/dcsr-corenet: node has a reg or ranges property, but no unit name
+   arch/powerpc/boot/dts/fsl/t2080rdb.dts:48.9-50.5: Warning (unit_address_vs_reg): /rapidio@ffe0c0000/port1: node has a reg or ranges property, but no unit name
+   arch/powerpc/boot/dts/fsl/t2080rdb.dts:51.9-53.5: Warning (unit_address_vs_reg): /rapidio@ffe0c0000/port2: node has a reg or ranges property, but no unit name
+   arch/powerpc/boot/dts/fsl/t2081si-post.dtsi:179.11-182.4: Warning (simple_bus_reg): /dcsr@f00000000/dcsr-npc: simple-bus unit address format error, expected "1000"
+   arch/powerpc/boot/dts/fsl/t2081si-post.dtsi:187.15-190.4: Warning (simple_bus_reg): /dcsr@f00000000/dcsr-corenet: simple-bus unit address format error, expected "8000"
+   arch/powerpc/boot/dts/fsl/t2081si-post.dtsi:460.17-463.4: Warning (simple_bus_reg): /soc@ffe000000/soc-sram-error: missing or empty reg/ranges property
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /: failed to match any schema with compatible: ['fsl,T2080RDB']
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: / (fsl,T2080RDB): memory: 'reg' is a required property
+   	from schema $id: http://devicetree.org/schemas/memory.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: / (fsl,T2080RDB): memory: False schema does not allow {'device_type': ['memory']}
+   	from schema $id: http://devicetree.org/schemas/root-node.yaml#
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /reserved-memory/bman-fbpr: failed to match any schema with compatible: ['fsl,bman-fbpr']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /reserved-memory/qman-fqd: failed to match any schema with compatible: ['fsl,qman-fqd']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /reserved-memory/qman-pfdr: failed to match any schema with compatible: ['fsl,qman-pfdr']
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: localbus@ffe124000 (fsl,ifc): $nodename:0: 'localbus@ffe124000' does not match '^memory-controller@[0-9a-f]+$'
+   	from schema $id: http://devicetree.org/schemas/memory-controllers/fsl/fsl,ifc.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: nor@0,0 (cfi-flash): $nodename:0: 'nor@0,0' does not match '^(flash|.*sram|nand)(@.*)?$'
+   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /localbus@ffe124000/nand@1,0: failed to match any schema with compatible: ['fsl,ifc-nand']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /localbus@ffe124000/board-control@2,0: failed to match any schema with compatible: ['fsl,t2080-cpld']
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: dcsr@f00000000 (fsl,dcsr): dcsr-npc: 'ranges' is a required property
+   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: dcsr@f00000000 (fsl,dcsr): dcsr-corenet: 'ranges' is a required property
+   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: dcsr@f00000000 (fsl,dcsr): $nodename:0: 'dcsr@f00000000' does not match '^([a-z][a-z0-9\\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
+   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /dcsr@f00000000: failed to match any schema with compatible: ['fsl,dcsr', 'simple-bus']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /dcsr@f00000000/dcsr-epu@0: failed to match any schema with compatible: ['fsl,t2080-dcsr-epu', 'fsl,dcsr-epu']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /dcsr@f00000000/dcsr-epu@0: failed to match any schema with compatible: ['fsl,t2080-dcsr-epu', 'fsl,dcsr-epu']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /dcsr@f00000000/dcsr-npc: failed to match any schema with compatible: ['fsl,t2080-dcsr-cnpc', 'fsl,dcsr-cnpc']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /dcsr@f00000000/dcsr-npc: failed to match any schema with compatible: ['fsl,t2080-dcsr-cnpc', 'fsl,dcsr-cnpc']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /dcsr@f00000000/dcsr-nxc@2000: failed to match any schema with compatible: ['fsl,dcsr-nxc']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /dcsr@f00000000/dcsr-corenet: failed to match any schema with compatible: ['fsl,dcsr-corenet']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /dcsr@f00000000/dcsr-ocn@11000: failed to match any schema with compatible: ['fsl,t2080-dcsr-ocn', 'fsl,dcsr-ocn']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /dcsr@f00000000/dcsr-ocn@11000: failed to match any schema with compatible: ['fsl,t2080-dcsr-ocn', 'fsl,dcsr-ocn']
+--
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /dcsr@f00000000/dcsr-snpc@32000: failed to match any schema with compatible: ['fsl,t2080-dcsr-snpc', 'fsl,dcsr-snpc']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /dcsr@f00000000/dcsr-snpc@32000: failed to match any schema with compatible: ['fsl,t2080-dcsr-snpc', 'fsl,dcsr-snpc']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@100000: failed to match any schema with compatible: ['fsl,dcsr-e6500-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@100000: failed to match any schema with compatible: ['fsl,dcsr-e6500-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@108000: failed to match any schema with compatible: ['fsl,dcsr-e6500-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@108000: failed to match any schema with compatible: ['fsl,dcsr-e6500-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@110000: failed to match any schema with compatible: ['fsl,dcsr-e6500-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@110000: failed to match any schema with compatible: ['fsl,dcsr-e6500-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@118000: failed to match any schema with compatible: ['fsl,dcsr-e6500-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@118000: failed to match any schema with compatible: ['fsl,dcsr-e6500-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: bman-portals@ff4000000 (simple-bus): $nodename:0: 'bman-portals@ff4000000' does not match '^([a-z][a-z0-9\\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
+   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /bman-portals@ff4000000/bman-portal@0: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /bman-portals@ff4000000/bman-portal@4000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /bman-portals@ff4000000/bman-portal@8000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /bman-portals@ff4000000/bman-portal@c000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /bman-portals@ff4000000/bman-portal@10000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /bman-portals@ff4000000/bman-portal@14000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /bman-portals@ff4000000/bman-portal@18000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /bman-portals@ff4000000/bman-portal@1c000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /bman-portals@ff4000000/bman-portal@20000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /bman-portals@ff4000000/bman-portal@24000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /bman-portals@ff4000000/bman-portal@28000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /bman-portals@ff4000000/bman-portal@2c000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /bman-portals@ff4000000/bman-portal@30000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /bman-portals@ff4000000/bman-portal@34000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /bman-portals@ff4000000/bman-portal@38000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /bman-portals@ff4000000/bman-portal@3c000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /bman-portals@ff4000000/bman-portal@40000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /bman-portals@ff4000000/bman-portal@44000: failed to match any schema with compatible: ['fsl,bman-portal']
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: qman-portals@ff6000000 (simple-bus): $nodename:0: 'qman-portals@ff6000000' does not match '^([a-z][a-z0-9\\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
+   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /qman-portals@ff6000000/qman-portal@0: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /qman-portals@ff6000000/qman-portal@4000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /qman-portals@ff6000000/qman-portal@8000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /qman-portals@ff6000000/qman-portal@c000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /qman-portals@ff6000000/qman-portal@10000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /qman-portals@ff6000000/qman-portal@14000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /qman-portals@ff6000000/qman-portal@18000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /qman-portals@ff6000000/qman-portal@1c000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /qman-portals@ff6000000/qman-portal@20000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /qman-portals@ff6000000/qman-portal@24000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /qman-portals@ff6000000/qman-portal@28000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /qman-portals@ff6000000/qman-portal@2c000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /qman-portals@ff6000000/qman-portal@30000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /qman-portals@ff6000000/qman-portal@34000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /qman-portals@ff6000000/qman-portal@38000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /qman-portals@ff6000000/qman-portal@3c000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /qman-portals@ff6000000/qman-portal@40000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /qman-portals@ff6000000/qman-portal@44000: failed to match any schema with compatible: ['fsl,qman-portal']
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: soc@ffe000000 (simple-bus): soc-sram-error: 'ranges' is a required property
+   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/spi@110000: failed to match any schema with compatible: ['fsl,mpc8536-espi']
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: flash@0 (micron,n25q512ax3): compatible: 'oneOf' conditional failed, one must be fixed:
+   	['micron,n25q512ax3', 'jedec,spi-nor'] is too long
+   	'micron,n25q512ax3' does not match '^((((micron|spansion|st),)?(m25p(40|80|16|32|64|128)|n25q(32b|064|128a11|128a13|256a|512a|164k)))|atmel,at25df(321a|641|081a)|everspin,mr25h(10|40|128|256)|(mxicy|macronix),mx25l(4005a|1606e|6405d|8005|12805d|25635e)|(mxicy|macronix),mx25u(4033|4035)|(spansion,)?s25fl(128s|256s1|512s|008k|064k|164k)|(sst|microchip),sst25vf(016b|032b|040b)|(sst,)?sst26wf016b|(sst,)?sst25wf(040b|080)|winbond,w25x(80|32)|(winbond,)?w25q(16|32(w|dw)?|64(dw)?|80bl|128(fw)?|256))$'
+   	'micron,n25q512ax3' is not one of ['issi,is25lp016d', 'micron,mt25qu02g', 'mxicy,mx25r1635f', 'mxicy,mx25u6435f', 'mxicy,mx25v8035f', 'spansion,s25sl12801', 'spansion,s25fs512s']
+   	'jedec,spi-nor' was expected
+   	from schema $id: http://devicetree.org/schemas/mtd/jedec,spi-nor.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: flash@0 (micron,n25q512ax3): Unevaluated properties are not allowed ('compatible' was unexpected)
+   	from schema $id: http://devicetree.org/schemas/mtd/jedec,spi-nor.yaml#
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/spi@110000/flash@0: failed to match any schema with compatible: ['micron,n25q512ax3', 'jedec,spi-nor']
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: i2c@118000 (fsl-i2c): compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl-i2c'] is too short
+   	'fsl-i2c' is not one of ['mpc5200-i2c', 'fsl,mpc5200-i2c', 'fsl,mpc5121-i2c', 'fsl,mpc8313-i2c', 'fsl,mpc8543-i2c', 'fsl,mpc8544-i2c']
+   	'fsl,mpc5200b-i2c' was expected
+   	from schema $id: http://devicetree.org/schemas/i2c/i2c-mpc.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: i2c@118000 (fsl-i2c): Unevaluated properties are not allowed ('cell-index', 'compatible', 'dfsrr' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/i2c/i2c-mpc.yaml#
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: i2c@118100 (fsl-i2c): compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl-i2c'] is too short
+   	'fsl-i2c' is not one of ['mpc5200-i2c', 'fsl,mpc5200-i2c', 'fsl,mpc5121-i2c', 'fsl,mpc8313-i2c', 'fsl,mpc8543-i2c', 'fsl,mpc8544-i2c']
+   	'fsl,mpc5200b-i2c' was expected
+   	from schema $id: http://devicetree.org/schemas/i2c/i2c-mpc.yaml#
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: i2c@118100 (fsl-i2c): Unevaluated properties are not allowed ('cell-index', 'compatible', 'dfsrr' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/i2c/i2c-mpc.yaml#
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/sdhc@114000: failed to match any schema with compatible: ['fsl,t2080-esdhc', 'fsl,esdhc']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/sdhc@114000: failed to match any schema with compatible: ['fsl,t2080-esdhc', 'fsl,esdhc']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/fman@400000: failed to match any schema with compatible: ['fsl,fman']
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: ethernet@e0000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: ethernet@e0000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: ethernet@e0000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: ethernet@e0000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: ethernet@e2000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: ethernet@e2000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: ethernet@e2000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: ethernet@e2000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: ethernet@e4000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: ethernet@e4000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: ethernet@e4000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: ethernet@e4000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: ethernet@e6000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: ethernet@e6000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: ethernet@e6000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: ethernet@e6000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: ethernet@f0000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: ethernet@f0000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: ethernet@f0000 (fsl,fman-memac): 'ptp-timer' is a required property
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: ethernet@f0000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: ethernet@f0000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: ethernet@f2000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: ethernet@f2000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: ethernet@f2000 (fsl,fman-memac): 'ptp-timer' is a required property
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: ethernet@f2000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: ethernet@f2000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/fman@400000/mdio@fc000: failed to match any schema with compatible: ['fsl,fman-memac-mdio', 'fsl,fman-xmdio']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/fman@400000/mdio@fc000: failed to match any schema with compatible: ['fsl,fman-memac-mdio', 'fsl,fman-xmdio']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/fman@400000/mdio@fd000: failed to match any schema with compatible: ['fsl,fman-memac-mdio', 'fsl,fman-xmdio']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/fman@400000/mdio@fd000: failed to match any schema with compatible: ['fsl,fman-memac-mdio', 'fsl,fman-xmdio']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/fman@400000/muram@0: failed to match any schema with compatible: ['fsl,fman-muram']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/fman@400000/port@82000: failed to match any schema with compatible: ['fsl,fman-v3-port-oh']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/fman@400000/port@83000: failed to match any schema with compatible: ['fsl,fman-v3-port-oh']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/fman@400000/port@84000: failed to match any schema with compatible: ['fsl,fman-v3-port-oh']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/fman@400000/port@85000: failed to match any schema with compatible: ['fsl,fman-v3-port-oh']
+--
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/fman@400000/port@8a000: failed to match any schema with compatible: ['fsl,fman-v3-port-rx']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/fman@400000/port@aa000: failed to match any schema with compatible: ['fsl,fman-v3-port-tx']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/fman@400000/mdio@e5000: failed to match any schema with compatible: ['fsl,fman-memac-mdio', 'fsl,fman-xmdio']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/fman@400000/mdio@e5000: failed to match any schema with compatible: ['fsl,fman-memac-mdio', 'fsl,fman-xmdio']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/fman@400000/port@8b000: failed to match any schema with compatible: ['fsl,fman-v3-port-rx']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/fman@400000/port@ab000: failed to match any schema with compatible: ['fsl,fman-v3-port-tx']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/fman@400000/mdio@e7000: failed to match any schema with compatible: ['fsl,fman-memac-mdio', 'fsl,fman-xmdio']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/fman@400000/mdio@e7000: failed to match any schema with compatible: ['fsl,fman-memac-mdio', 'fsl,fman-xmdio']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/fman@400000/port@8c000: failed to match any schema with compatible: ['fsl,fman-v3-port-rx']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/fman@400000/port@ac000: failed to match any schema with compatible: ['fsl,fman-v3-port-tx']
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: ethernet@e8000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: ethernet@e8000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: ethernet@e8000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/fman@400000/mdio@e9000: failed to match any schema with compatible: ['fsl,fman-memac-mdio', 'fsl,fman-xmdio']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/fman@400000/mdio@e9000: failed to match any schema with compatible: ['fsl,fman-memac-mdio', 'fsl,fman-xmdio']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/fman@400000/port@8d000: failed to match any schema with compatible: ['fsl,fman-v3-port-rx']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/fman@400000/port@ad000: failed to match any schema with compatible: ['fsl,fman-v3-port-tx']
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: ethernet@ea000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: ethernet@ea000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: ethernet@ea000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/fman@400000/mdio@eb000: failed to match any schema with compatible: ['fsl,fman-memac-mdio', 'fsl,fman-xmdio']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/fman@400000/mdio@eb000: failed to match any schema with compatible: ['fsl,fman-memac-mdio', 'fsl,fman-xmdio']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/fman@400000/port@90000: failed to match any schema with compatible: ['fsl,fman-v3-port-rx']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/fman@400000/port@b0000: failed to match any schema with compatible: ['fsl,fman-v3-port-tx']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/fman@400000/mdio@f1000: failed to match any schema with compatible: ['fsl,fman-memac-mdio', 'fsl,fman-xmdio']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/fman@400000/mdio@f1000: failed to match any schema with compatible: ['fsl,fman-memac-mdio', 'fsl,fman-xmdio']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/fman@400000/port@91000: failed to match any schema with compatible: ['fsl,fman-v3-port-rx']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/fman@400000/port@b1000: failed to match any schema with compatible: ['fsl,fman-v3-port-tx']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/fman@400000/mdio@f3000: failed to match any schema with compatible: ['fsl,fman-memac-mdio', 'fsl,fman-xmdio']
+--
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: serial@11d600 (fsl,ns16550): Unevaluated properties are not allowed ('cell-index', 'compatible', 'device_type' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/serial/8250.yaml#
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/gpio@130000: failed to match any schema with compatible: ['fsl,qoriq-gpio']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/gpio@131000: failed to match any schema with compatible: ['fsl,qoriq-gpio']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/gpio@132000: failed to match any schema with compatible: ['fsl,qoriq-gpio']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/gpio@133000: failed to match any schema with compatible: ['fsl,qoriq-gpio']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/usb@210000: failed to match any schema with compatible: ['fsl-usb2-mph-v2.5', 'fsl-usb2-mph']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/usb@210000: failed to match any schema with compatible: ['fsl-usb2-mph-v2.5', 'fsl-usb2-mph']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/usb@211000: failed to match any schema with compatible: ['fsl-usb2-dr-v2.5', 'fsl-usb2-dr']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/usb@211000: failed to match any schema with compatible: ['fsl-usb2-dr-v2.5', 'fsl-usb2-dr']
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: crypto@300000 (fsl,sec-v5.2): jr@1000:compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl,sec-v5.2-job-ring', 'fsl,sec-v5.0-job-ring', 'fsl,sec-v4.0-job-ring'] is too long
+   	'fsl,sec-v5.4-job-ring' was expected
+   	'fsl,sec-v5.0-job-ring' was expected
+   	'fsl,sec-v4.0-job-ring' was expected
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0.yaml#
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: crypto@300000 (fsl,sec-v5.2): jr@2000:compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl,sec-v5.2-job-ring', 'fsl,sec-v5.0-job-ring', 'fsl,sec-v4.0-job-ring'] is too long
+   	'fsl,sec-v5.4-job-ring' was expected
+   	'fsl,sec-v5.0-job-ring' was expected
+   	'fsl,sec-v4.0-job-ring' was expected
+--
+   	'fsl,sec-v5.4-job-ring' was expected
+   	'fsl,sec-v5.0-job-ring' was expected
+   	'fsl,sec-v4.0-job-ring' was expected
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0.yaml#
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: crypto@300000 (fsl,sec-v5.2): jr@4000:compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl,sec-v5.2-job-ring', 'fsl,sec-v5.0-job-ring', 'fsl,sec-v4.0-job-ring'] is too long
+   	'fsl,sec-v5.4-job-ring' was expected
+   	'fsl,sec-v5.0-job-ring' was expected
+   	'fsl,sec-v4.0-job-ring' was expected
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: crypto@300000 (fsl,sec-v5.2): rtic@6000:rtic-a@0:compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl,sec-v5.2-rtic-memory', 'fsl,sec-v5.0-rtic-memory', 'fsl,sec-v4.0-rtic-memory'] is too long
+   	'fsl,sec-v5.4-rtic-memory' was expected
+   	'fsl,sec-v4.0-rtic-memory' was expected
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: crypto@300000 (fsl,sec-v5.2): rtic@6000:rtic-b@20:compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl,sec-v5.2-rtic-memory', 'fsl,sec-v5.0-rtic-memory', 'fsl,sec-v4.0-rtic-memory'] is too long
+   	'fsl,sec-v5.4-rtic-memory' was expected
+   	'fsl,sec-v4.0-rtic-memory' was expected
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: crypto@300000 (fsl,sec-v5.2): rtic@6000:rtic-c@40:compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl,sec-v5.2-rtic-memory', 'fsl,sec-v5.0-rtic-memory', 'fsl,sec-v4.0-rtic-memory'] is too long
+   	'fsl,sec-v5.4-rtic-memory' was expected
+   	'fsl,sec-v4.0-rtic-memory' was expected
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: crypto@300000 (fsl,sec-v5.2): rtic@6000:rtic-d@60:compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl,sec-v5.2-rtic-memory', 'fsl,sec-v5.0-rtic-memory', 'fsl,sec-v4.0-rtic-memory'] is too long
+   	'fsl,sec-v5.4-rtic-memory' was expected
+   	'fsl,sec-v4.0-rtic-memory' was expected
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: crypto@300000 (fsl,sec-v5.2): rtic@6000:compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl,sec-v5.2-rtic', 'fsl,sec-v5.0-rtic', 'fsl,sec-v4.0-rtic'] is too long
+   	'fsl,sec-v5.4-rtic' was expected
+   	'fsl,sec-v4.0-rtic' was expected
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: crypto@300000 (fsl,sec-v5.2): compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl,sec-v5.2', 'fsl,sec-v5.0', 'fsl,sec-v4.0'] is too long
+   	'fsl,sec-v5.4' was expected
+   	'fsl,sec-v5.2' is not one of ['fsl,imx6ul-caam', 'fsl,sec-v5.0']
+   	'fsl,sec-v4.0' was expected
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0.yaml#
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/crypto@300000: failed to match any schema with compatible: ['fsl,sec-v5.2', 'fsl,sec-v5.0', 'fsl,sec-v4.0']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/crypto@300000/jr@1000: failed to match any schema with compatible: ['fsl,sec-v5.2-job-ring', 'fsl,sec-v5.0-job-ring', 'fsl,sec-v4.0-job-ring']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/crypto@300000/jr@2000: failed to match any schema with compatible: ['fsl,sec-v5.2-job-ring', 'fsl,sec-v5.0-job-ring', 'fsl,sec-v4.0-job-ring']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/crypto@300000/jr@3000: failed to match any schema with compatible: ['fsl,sec-v5.2-job-ring', 'fsl,sec-v5.0-job-ring', 'fsl,sec-v4.0-job-ring']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/crypto@300000/jr@4000: failed to match any schema with compatible: ['fsl,sec-v5.2-job-ring', 'fsl,sec-v5.0-job-ring', 'fsl,sec-v4.0-job-ring']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/crypto@300000/rtic@6000: failed to match any schema with compatible: ['fsl,sec-v5.2-rtic', 'fsl,sec-v5.0-rtic', 'fsl,sec-v4.0-rtic']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/crypto@300000/rtic@6000/rtic-a@0: failed to match any schema with compatible: ['fsl,sec-v5.2-rtic-memory', 'fsl,sec-v5.0-rtic-memory', 'fsl,sec-v4.0-rtic-memory']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/crypto@300000/rtic@6000/rtic-b@20: failed to match any schema with compatible: ['fsl,sec-v5.2-rtic-memory', 'fsl,sec-v5.0-rtic-memory', 'fsl,sec-v4.0-rtic-memory']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/crypto@300000/rtic@6000/rtic-c@40: failed to match any schema with compatible: ['fsl,sec-v5.2-rtic-memory', 'fsl,sec-v5.0-rtic-memory', 'fsl,sec-v4.0-rtic-memory']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/crypto@300000/rtic@6000/rtic-d@60: failed to match any schema with compatible: ['fsl,sec-v5.2-rtic-memory', 'fsl,sec-v5.0-rtic-memory', 'fsl,sec-v4.0-rtic-memory']
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: sec_mon@314000 (fsl,sec-v5.2-mon): compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl,sec-v5.2-mon', 'fsl,sec-v5.0-mon', 'fsl,sec-v4.0-mon'] is too long
+   	'fsl,sec-v4.0-mon' was expected
+   	'fsl,sec-v5.0-mon' was expected
+   	'fsl,sec-v5.2-mon' is not one of ['fsl,sec-v5.3-mon', 'fsl,sec-v5.4-mon']
+   	'syscon' was expected
+   	'simple-mfd' was expected
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0-mon.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: sec_mon@314000 (fsl,sec-v5.2-mon): interrupts: [[93, 2, 0, 0]] is too short
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0-mon.yaml#
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/sec_mon@314000: failed to match any schema with compatible: ['fsl,sec-v5.2-mon', 'fsl,sec-v5.0-mon', 'fsl,sec-v4.0-mon']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/qman@318000: failed to match any schema with compatible: ['fsl,qman']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/bman@31a000: failed to match any schema with compatible: ['fsl,bman']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/ptp-timer@4fe000: failed to match any schema with compatible: ['fsl,fman-ptp-timer']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/l2-cache-controller@c20000: failed to match any schema with compatible: ['fsl,t2080-l2-cache-controller']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/sata@220000: failed to match any schema with compatible: ['fsl,pq-sata-v2']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /soc@ffe000000/sata@221000: failed to match any schema with compatible: ['fsl,pq-sata-v2']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /pcie@ffe240000: failed to match any schema with compatible: ['fsl,t2080-pcie', 'fsl,qoriq-pcie-v3.0', 'fsl,qoriq-pcie']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /pcie@ffe240000: failed to match any schema with compatible: ['fsl,t2080-pcie', 'fsl,qoriq-pcie-v3.0', 'fsl,qoriq-pcie']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /pcie@ffe240000: failed to match any schema with compatible: ['fsl,t2080-pcie', 'fsl,qoriq-pcie-v3.0', 'fsl,qoriq-pcie']
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: pcie@ffe240000 (fsl,t2080-pcie): pcie@0:interrupts:0:0: 20 is not one of [1, 2, 3, 4]
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: pcie@ffe240000 (fsl,t2080-pcie): pcie@0:interrupts:0: [20, 2, 0, 0] is too long
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /pcie@ffe250000: failed to match any schema with compatible: ['fsl,t2080-pcie', 'fsl,qoriq-pcie-v3.0', 'fsl,qoriq-pcie']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /pcie@ffe250000: failed to match any schema with compatible: ['fsl,t2080-pcie', 'fsl,qoriq-pcie-v3.0', 'fsl,qoriq-pcie']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /pcie@ffe250000: failed to match any schema with compatible: ['fsl,t2080-pcie', 'fsl,qoriq-pcie-v3.0', 'fsl,qoriq-pcie']
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: pcie@ffe250000 (fsl,t2080-pcie): pcie@0:interrupts:0:0: 21 is not one of [1, 2, 3, 4]
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: pcie@ffe250000 (fsl,t2080-pcie): pcie@0:interrupts:0: [21, 2, 0, 0] is too long
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /pcie@ffe260000: failed to match any schema with compatible: ['fsl,t2080-pcie', 'fsl,qoriq-pcie-v3.0', 'fsl,qoriq-pcie']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /pcie@ffe260000: failed to match any schema with compatible: ['fsl,t2080-pcie', 'fsl,qoriq-pcie-v3.0', 'fsl,qoriq-pcie']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /pcie@ffe260000: failed to match any schema with compatible: ['fsl,t2080-pcie', 'fsl,qoriq-pcie-v3.0', 'fsl,qoriq-pcie']
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: pcie@ffe260000 (fsl,t2080-pcie): pcie@0:interrupts:0:0: 22 is not one of [1, 2, 3, 4]
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: pcie@ffe260000 (fsl,t2080-pcie): pcie@0:interrupts:0: [22, 2, 0, 0] is too long
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /pcie@ffe270000: failed to match any schema with compatible: ['fsl,t2080-pcie', 'fsl,qoriq-pcie-v3.0', 'fsl,qoriq-pcie']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /pcie@ffe270000: failed to match any schema with compatible: ['fsl,t2080-pcie', 'fsl,qoriq-pcie-v3.0', 'fsl,qoriq-pcie']
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /pcie@ffe270000: failed to match any schema with compatible: ['fsl,t2080-pcie', 'fsl,qoriq-pcie-v3.0', 'fsl,qoriq-pcie']
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: pcie@ffe270000 (fsl,t2080-pcie): pcie@0:interrupts:0:0: 23 is not one of [1, 2, 3, 4]
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+>> arch/powerpc/boot/dts/fsl/t2080rdb.dtb: pcie@ffe270000 (fsl,t2080-pcie): pcie@0:interrupts:0: [23, 2, 0, 0] is too long
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+   arch/powerpc/boot/dts/fsl/t2080rdb.dtb: /rapidio@ffe0c0000: failed to match any schema with compatible: ['fsl,srio']
+--
+   arch/powerpc/boot/dts/fsl/t208xsi-pre.dtsi:44.10-75.4: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
+   arch/powerpc/boot/dts/fsl/t208xsi-pre.dtsi:44.10-75.4: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
+   arch/powerpc/boot/dts/fsl/t208xsi-pre.dtsi:44.10-75.4: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
+   arch/powerpc/boot/dts/fsl/t208xsi-pre.dtsi:44.10-75.4: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /: failed to match any schema with compatible: ['fsl,T2081QDS']
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: / (fsl,T2081QDS): memory: 'reg' is a required property
+   	from schema $id: http://devicetree.org/schemas/memory.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: / (fsl,T2081QDS): memory: False schema does not allow {'device_type': ['memory']}
+   	from schema $id: http://devicetree.org/schemas/root-node.yaml#
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: aliases: 'emi1_slot1', 'emi1_slot2', 'emi1_slot3', 'emi1_slot5', 'emi1_slot6', 'emi1_slot7' do not match any of the regexes: '^[a-z][a-z0-9\\-]*$', 'pinctrl-[0-9]+'
+   	from schema $id: http://devicetree.org/schemas/aliases.yaml#
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /reserved-memory/bman-fbpr: failed to match any schema with compatible: ['fsl,bman-fbpr']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /reserved-memory/qman-fqd: failed to match any schema with compatible: ['fsl,qman-fqd']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /reserved-memory/qman-pfdr: failed to match any schema with compatible: ['fsl,qman-pfdr']
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: localbus@ffe124000 (fsl,ifc): $nodename:0: 'localbus@ffe124000' does not match '^memory-controller@[0-9a-f]+$'
+   	from schema $id: http://devicetree.org/schemas/memory-controllers/fsl/fsl,ifc.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: nor@0,0 (cfi-flash): $nodename:0: 'nor@0,0' does not match '^(flash|.*sram|nand)(@.*)?$'
+   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /localbus@ffe124000/nand@2,0: failed to match any schema with compatible: ['fsl,ifc-nand']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /localbus@ffe124000/board-control@3,0: failed to match any schema with compatible: ['fsl,fpga-qixis']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: mdio-mux-emi1 (mdio-mux-mmioreg): mdio@20:reg:0:0: 32 is greater than the maximum of 31
+   	from schema $id: http://devicetree.org/schemas/net/mdio.yaml#
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: mdio-mux-emi1 (mdio-mux-mmioreg): mdio@40:reg:0:0: 64 is greater than the maximum of 31
+   	from schema $id: http://devicetree.org/schemas/net/mdio.yaml#
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: mdio-mux-emi1 (mdio-mux-mmioreg): mdio@60:reg:0:0: 96 is greater than the maximum of 31
+   	from schema $id: http://devicetree.org/schemas/net/mdio.yaml#
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: mdio-mux-emi1 (mdio-mux-mmioreg): mdio@80:reg:0:0: 128 is greater than the maximum of 31
+   	from schema $id: http://devicetree.org/schemas/net/mdio.yaml#
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: mdio-mux-emi1 (mdio-mux-mmioreg): mdio@a0:reg:0:0: 160 is greater than the maximum of 31
+   	from schema $id: http://devicetree.org/schemas/net/mdio.yaml#
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: mdio-mux-emi1 (mdio-mux-mmioreg): mdio@c0:reg:0:0: 192 is greater than the maximum of 31
+   	from schema $id: http://devicetree.org/schemas/net/mdio.yaml#
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: mdio-mux-emi1 (mdio-mux-mmioreg): mdio@e0:reg:0:0: 224 is greater than the maximum of 31
+   	from schema $id: http://devicetree.org/schemas/net/mdio.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: dcsr@f00000000 (fsl,dcsr): dcsr-npc: 'ranges' is a required property
+   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: dcsr@f00000000 (fsl,dcsr): dcsr-corenet: 'ranges' is a required property
+   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: dcsr@f00000000 (fsl,dcsr): $nodename:0: 'dcsr@f00000000' does not match '^([a-z][a-z0-9\\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
+   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /dcsr@f00000000: failed to match any schema with compatible: ['fsl,dcsr', 'simple-bus']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /dcsr@f00000000/dcsr-epu@0: failed to match any schema with compatible: ['fsl,t2080-dcsr-epu', 'fsl,dcsr-epu']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /dcsr@f00000000/dcsr-epu@0: failed to match any schema with compatible: ['fsl,t2080-dcsr-epu', 'fsl,dcsr-epu']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /dcsr@f00000000/dcsr-npc: failed to match any schema with compatible: ['fsl,t2080-dcsr-cnpc', 'fsl,dcsr-cnpc']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /dcsr@f00000000/dcsr-npc: failed to match any schema with compatible: ['fsl,t2080-dcsr-cnpc', 'fsl,dcsr-cnpc']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /dcsr@f00000000/dcsr-nxc@2000: failed to match any schema with compatible: ['fsl,dcsr-nxc']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /dcsr@f00000000/dcsr-corenet: failed to match any schema with compatible: ['fsl,dcsr-corenet']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /dcsr@f00000000/dcsr-ocn@11000: failed to match any schema with compatible: ['fsl,t2080-dcsr-ocn', 'fsl,dcsr-ocn']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /dcsr@f00000000/dcsr-ocn@11000: failed to match any schema with compatible: ['fsl,t2080-dcsr-ocn', 'fsl,dcsr-ocn']
+--
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /dcsr@f00000000/dcsr-snpc@32000: failed to match any schema with compatible: ['fsl,t2080-dcsr-snpc', 'fsl,dcsr-snpc']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /dcsr@f00000000/dcsr-snpc@32000: failed to match any schema with compatible: ['fsl,t2080-dcsr-snpc', 'fsl,dcsr-snpc']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@100000: failed to match any schema with compatible: ['fsl,dcsr-e6500-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@100000: failed to match any schema with compatible: ['fsl,dcsr-e6500-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@108000: failed to match any schema with compatible: ['fsl,dcsr-e6500-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@108000: failed to match any schema with compatible: ['fsl,dcsr-e6500-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@110000: failed to match any schema with compatible: ['fsl,dcsr-e6500-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@110000: failed to match any schema with compatible: ['fsl,dcsr-e6500-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@118000: failed to match any schema with compatible: ['fsl,dcsr-e6500-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@118000: failed to match any schema with compatible: ['fsl,dcsr-e6500-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: bman-portals@ff4000000 (simple-bus): $nodename:0: 'bman-portals@ff4000000' does not match '^([a-z][a-z0-9\\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
+   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /bman-portals@ff4000000/bman-portal@0: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /bman-portals@ff4000000/bman-portal@4000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /bman-portals@ff4000000/bman-portal@8000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /bman-portals@ff4000000/bman-portal@c000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /bman-portals@ff4000000/bman-portal@10000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /bman-portals@ff4000000/bman-portal@14000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /bman-portals@ff4000000/bman-portal@18000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /bman-portals@ff4000000/bman-portal@1c000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /bman-portals@ff4000000/bman-portal@20000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /bman-portals@ff4000000/bman-portal@24000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /bman-portals@ff4000000/bman-portal@28000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /bman-portals@ff4000000/bman-portal@2c000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /bman-portals@ff4000000/bman-portal@30000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /bman-portals@ff4000000/bman-portal@34000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /bman-portals@ff4000000/bman-portal@38000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /bman-portals@ff4000000/bman-portal@3c000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /bman-portals@ff4000000/bman-portal@40000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /bman-portals@ff4000000/bman-portal@44000: failed to match any schema with compatible: ['fsl,bman-portal']
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: qman-portals@ff6000000 (simple-bus): $nodename:0: 'qman-portals@ff6000000' does not match '^([a-z][a-z0-9\\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
+   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /qman-portals@ff6000000/qman-portal@0: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /qman-portals@ff6000000/qman-portal@4000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /qman-portals@ff6000000/qman-portal@8000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /qman-portals@ff6000000/qman-portal@c000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /qman-portals@ff6000000/qman-portal@10000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /qman-portals@ff6000000/qman-portal@14000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /qman-portals@ff6000000/qman-portal@18000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /qman-portals@ff6000000/qman-portal@1c000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /qman-portals@ff6000000/qman-portal@20000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /qman-portals@ff6000000/qman-portal@24000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /qman-portals@ff6000000/qman-portal@28000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /qman-portals@ff6000000/qman-portal@2c000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /qman-portals@ff6000000/qman-portal@30000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /qman-portals@ff6000000/qman-portal@34000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /qman-portals@ff6000000/qman-portal@38000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /qman-portals@ff6000000/qman-portal@3c000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /qman-portals@ff6000000/qman-portal@40000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /qman-portals@ff6000000/qman-portal@44000: failed to match any schema with compatible: ['fsl,qman-portal']
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: soc@ffe000000 (simple-bus): soc-sram-error: 'ranges' is a required property
+   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /soc@ffe000000/spi@110000: failed to match any schema with compatible: ['fsl,mpc8536-espi']
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: flash@1 (sst,sst25wf040): compatible: 'oneOf' conditional failed, one must be fixed:
+   	['sst,sst25wf040', 'jedec,spi-nor'] is too long
+   	'sst,sst25wf040' does not match '^((((micron|spansion|st),)?(m25p(40|80|16|32|64|128)|n25q(32b|064|128a11|128a13|256a|512a|164k)))|atmel,at25df(321a|641|081a)|everspin,mr25h(10|40|128|256)|(mxicy|macronix),mx25l(4005a|1606e|6405d|8005|12805d|25635e)|(mxicy|macronix),mx25u(4033|4035)|(spansion,)?s25fl(128s|256s1|512s|008k|064k|164k)|(sst|microchip),sst25vf(016b|032b|040b)|(sst,)?sst26wf016b|(sst,)?sst25wf(040b|080)|winbond,w25x(80|32)|(winbond,)?w25q(16|32(w|dw)?|64(dw)?|80bl|128(fw)?|256))$'
+   	'sst,sst25wf040' is not one of ['issi,is25lp016d', 'micron,mt25qu02g', 'mxicy,mx25r1635f', 'mxicy,mx25u6435f', 'mxicy,mx25v8035f', 'spansion,s25sl12801', 'spansion,s25fs512s']
+   	'jedec,spi-nor' was expected
+   	from schema $id: http://devicetree.org/schemas/mtd/jedec,spi-nor.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: flash@1 (sst,sst25wf040): Unevaluated properties are not allowed ('compatible' was unexpected)
+   	from schema $id: http://devicetree.org/schemas/mtd/jedec,spi-nor.yaml#
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /soc@ffe000000/spi@110000/flash@1: failed to match any schema with compatible: ['sst,sst25wf040', 'jedec,spi-nor']
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: flash@2 (eon,en25s64): compatible: 'oneOf' conditional failed, one must be fixed:
+   	['eon,en25s64', 'jedec,spi-nor'] is too long
+   	'eon,en25s64' does not match '^((((micron|spansion|st),)?(m25p(40|80|16|32|64|128)|n25q(32b|064|128a11|128a13|256a|512a|164k)))|atmel,at25df(321a|641|081a)|everspin,mr25h(10|40|128|256)|(mxicy|macronix),mx25l(4005a|1606e|6405d|8005|12805d|25635e)|(mxicy|macronix),mx25u(4033|4035)|(spansion,)?s25fl(128s|256s1|512s|008k|064k|164k)|(sst|microchip),sst25vf(016b|032b|040b)|(sst,)?sst26wf016b|(sst,)?sst25wf(040b|080)|winbond,w25x(80|32)|(winbond,)?w25q(16|32(w|dw)?|64(dw)?|80bl|128(fw)?|256))$'
+   	'eon,en25s64' is not one of ['issi,is25lp016d', 'micron,mt25qu02g', 'mxicy,mx25r1635f', 'mxicy,mx25u6435f', 'mxicy,mx25v8035f', 'spansion,s25sl12801', 'spansion,s25fs512s']
+   	'jedec,spi-nor' was expected
+   	from schema $id: http://devicetree.org/schemas/mtd/jedec,spi-nor.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: flash@2 (eon,en25s64): Unevaluated properties are not allowed ('compatible' was unexpected)
+   	from schema $id: http://devicetree.org/schemas/mtd/jedec,spi-nor.yaml#
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /soc@ffe000000/spi@110000/flash@2: failed to match any schema with compatible: ['eon,en25s64', 'jedec,spi-nor']
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: i2c@118000 (fsl-i2c): compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl-i2c'] is too short
+   	'fsl-i2c' is not one of ['mpc5200-i2c', 'fsl,mpc5200-i2c', 'fsl,mpc5121-i2c', 'fsl,mpc8313-i2c', 'fsl,mpc8543-i2c', 'fsl,mpc8544-i2c']
+   	'fsl,mpc5200b-i2c' was expected
+   	from schema $id: http://devicetree.org/schemas/i2c/i2c-mpc.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: i2c@118000 (fsl-i2c): Unevaluated properties are not allowed ('cell-index', 'compatible', 'dfsrr' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/i2c/i2c-mpc.yaml#
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /soc@ffe000000/sdhc@114000: failed to match any schema with compatible: ['fsl,t2080-esdhc', 'fsl,esdhc']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /soc@ffe000000/sdhc@114000: failed to match any schema with compatible: ['fsl,t2080-esdhc', 'fsl,esdhc']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /soc@ffe000000/fman@400000: failed to match any schema with compatible: ['fsl,fman']
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: ethernet@e0000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: ethernet@e0000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: ethernet@e0000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: ethernet@e0000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: ethernet@e2000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: ethernet@e2000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: ethernet@e2000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: ethernet@e2000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: ethernet@e4000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: ethernet@e4000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: ethernet@e4000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: ethernet@e4000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: ethernet@e6000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: ethernet@e6000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: ethernet@e6000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: ethernet@e6000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: ethernet@e8000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: ethernet@e8000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: ethernet@e8000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: ethernet@e8000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: ethernet@ea000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: ethernet@ea000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: ethernet@ea000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: ethernet@ea000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: ethernet@f0000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: ethernet@f0000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: ethernet@f0000 (fsl,fman-memac): 'ptp-timer' is a required property
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: ethernet@f0000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: ethernet@f0000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: ethernet@f2000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: ethernet@f2000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: ethernet@f2000 (fsl,fman-memac): 'ptp-timer' is a required property
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: ethernet@f2000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: ethernet@f2000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /soc@ffe000000/fman@400000/muram@0: failed to match any schema with compatible: ['fsl,fman-muram']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /soc@ffe000000/fman@400000/port@82000: failed to match any schema with compatible: ['fsl,fman-v3-port-oh']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /soc@ffe000000/fman@400000/port@83000: failed to match any schema with compatible: ['fsl,fman-v3-port-oh']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /soc@ffe000000/fman@400000/port@84000: failed to match any schema with compatible: ['fsl,fman-v3-port-oh']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /soc@ffe000000/fman@400000/port@85000: failed to match any schema with compatible: ['fsl,fman-v3-port-oh']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /soc@ffe000000/fman@400000/port@86000: failed to match any schema with compatible: ['fsl,fman-v3-port-oh']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /soc@ffe000000/fman@400000/port@87000: failed to match any schema with compatible: ['fsl,fman-v3-port-oh']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /soc@ffe000000/fman@400000/mdio@fc000: failed to match any schema with compatible: ['fsl,fman-memac-mdio', 'fsl,fman-xmdio']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /soc@ffe000000/fman@400000/mdio@fc000: failed to match any schema with compatible: ['fsl,fman-memac-mdio', 'fsl,fman-xmdio']
+--
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: serial@11d600 (fsl,ns16550): Unevaluated properties are not allowed ('cell-index', 'compatible', 'device_type' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/serial/8250.yaml#
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /soc@ffe000000/gpio@130000: failed to match any schema with compatible: ['fsl,qoriq-gpio']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /soc@ffe000000/gpio@131000: failed to match any schema with compatible: ['fsl,qoriq-gpio']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /soc@ffe000000/gpio@132000: failed to match any schema with compatible: ['fsl,qoriq-gpio']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /soc@ffe000000/gpio@133000: failed to match any schema with compatible: ['fsl,qoriq-gpio']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /soc@ffe000000/usb@210000: failed to match any schema with compatible: ['fsl-usb2-mph-v2.5', 'fsl-usb2-mph']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /soc@ffe000000/usb@210000: failed to match any schema with compatible: ['fsl-usb2-mph-v2.5', 'fsl-usb2-mph']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /soc@ffe000000/usb@211000: failed to match any schema with compatible: ['fsl-usb2-dr-v2.5', 'fsl-usb2-dr']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /soc@ffe000000/usb@211000: failed to match any schema with compatible: ['fsl-usb2-dr-v2.5', 'fsl-usb2-dr']
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: crypto@300000 (fsl,sec-v5.2): jr@1000:compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl,sec-v5.2-job-ring', 'fsl,sec-v5.0-job-ring', 'fsl,sec-v4.0-job-ring'] is too long
+   	'fsl,sec-v5.4-job-ring' was expected
+   	'fsl,sec-v5.0-job-ring' was expected
+   	'fsl,sec-v4.0-job-ring' was expected
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0.yaml#
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: crypto@300000 (fsl,sec-v5.2): jr@2000:compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl,sec-v5.2-job-ring', 'fsl,sec-v5.0-job-ring', 'fsl,sec-v4.0-job-ring'] is too long
+   	'fsl,sec-v5.4-job-ring' was expected
+   	'fsl,sec-v5.0-job-ring' was expected
+   	'fsl,sec-v4.0-job-ring' was expected
+--
+   	'fsl,sec-v5.4-job-ring' was expected
+   	'fsl,sec-v5.0-job-ring' was expected
+   	'fsl,sec-v4.0-job-ring' was expected
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0.yaml#
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: crypto@300000 (fsl,sec-v5.2): jr@4000:compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl,sec-v5.2-job-ring', 'fsl,sec-v5.0-job-ring', 'fsl,sec-v4.0-job-ring'] is too long
+   	'fsl,sec-v5.4-job-ring' was expected
+   	'fsl,sec-v5.0-job-ring' was expected
+   	'fsl,sec-v4.0-job-ring' was expected
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: crypto@300000 (fsl,sec-v5.2): rtic@6000:rtic-a@0:compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl,sec-v5.2-rtic-memory', 'fsl,sec-v5.0-rtic-memory', 'fsl,sec-v4.0-rtic-memory'] is too long
+   	'fsl,sec-v5.4-rtic-memory' was expected
+   	'fsl,sec-v4.0-rtic-memory' was expected
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: crypto@300000 (fsl,sec-v5.2): rtic@6000:rtic-b@20:compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl,sec-v5.2-rtic-memory', 'fsl,sec-v5.0-rtic-memory', 'fsl,sec-v4.0-rtic-memory'] is too long
+   	'fsl,sec-v5.4-rtic-memory' was expected
+   	'fsl,sec-v4.0-rtic-memory' was expected
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: crypto@300000 (fsl,sec-v5.2): rtic@6000:rtic-c@40:compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl,sec-v5.2-rtic-memory', 'fsl,sec-v5.0-rtic-memory', 'fsl,sec-v4.0-rtic-memory'] is too long
+   	'fsl,sec-v5.4-rtic-memory' was expected
+   	'fsl,sec-v4.0-rtic-memory' was expected
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: crypto@300000 (fsl,sec-v5.2): rtic@6000:rtic-d@60:compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl,sec-v5.2-rtic-memory', 'fsl,sec-v5.0-rtic-memory', 'fsl,sec-v4.0-rtic-memory'] is too long
+   	'fsl,sec-v5.4-rtic-memory' was expected
+   	'fsl,sec-v4.0-rtic-memory' was expected
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: crypto@300000 (fsl,sec-v5.2): rtic@6000:compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl,sec-v5.2-rtic', 'fsl,sec-v5.0-rtic', 'fsl,sec-v4.0-rtic'] is too long
+   	'fsl,sec-v5.4-rtic' was expected
+   	'fsl,sec-v4.0-rtic' was expected
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: crypto@300000 (fsl,sec-v5.2): compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl,sec-v5.2', 'fsl,sec-v5.0', 'fsl,sec-v4.0'] is too long
+   	'fsl,sec-v5.4' was expected
+   	'fsl,sec-v5.2' is not one of ['fsl,imx6ul-caam', 'fsl,sec-v5.0']
+   	'fsl,sec-v4.0' was expected
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0.yaml#
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /soc@ffe000000/crypto@300000: failed to match any schema with compatible: ['fsl,sec-v5.2', 'fsl,sec-v5.0', 'fsl,sec-v4.0']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /soc@ffe000000/crypto@300000/jr@1000: failed to match any schema with compatible: ['fsl,sec-v5.2-job-ring', 'fsl,sec-v5.0-job-ring', 'fsl,sec-v4.0-job-ring']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /soc@ffe000000/crypto@300000/jr@2000: failed to match any schema with compatible: ['fsl,sec-v5.2-job-ring', 'fsl,sec-v5.0-job-ring', 'fsl,sec-v4.0-job-ring']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /soc@ffe000000/crypto@300000/jr@3000: failed to match any schema with compatible: ['fsl,sec-v5.2-job-ring', 'fsl,sec-v5.0-job-ring', 'fsl,sec-v4.0-job-ring']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /soc@ffe000000/crypto@300000/jr@4000: failed to match any schema with compatible: ['fsl,sec-v5.2-job-ring', 'fsl,sec-v5.0-job-ring', 'fsl,sec-v4.0-job-ring']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /soc@ffe000000/crypto@300000/rtic@6000: failed to match any schema with compatible: ['fsl,sec-v5.2-rtic', 'fsl,sec-v5.0-rtic', 'fsl,sec-v4.0-rtic']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /soc@ffe000000/crypto@300000/rtic@6000/rtic-a@0: failed to match any schema with compatible: ['fsl,sec-v5.2-rtic-memory', 'fsl,sec-v5.0-rtic-memory', 'fsl,sec-v4.0-rtic-memory']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /soc@ffe000000/crypto@300000/rtic@6000/rtic-b@20: failed to match any schema with compatible: ['fsl,sec-v5.2-rtic-memory', 'fsl,sec-v5.0-rtic-memory', 'fsl,sec-v4.0-rtic-memory']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /soc@ffe000000/crypto@300000/rtic@6000/rtic-c@40: failed to match any schema with compatible: ['fsl,sec-v5.2-rtic-memory', 'fsl,sec-v5.0-rtic-memory', 'fsl,sec-v4.0-rtic-memory']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /soc@ffe000000/crypto@300000/rtic@6000/rtic-d@60: failed to match any schema with compatible: ['fsl,sec-v5.2-rtic-memory', 'fsl,sec-v5.0-rtic-memory', 'fsl,sec-v4.0-rtic-memory']
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: sec_mon@314000 (fsl,sec-v5.2-mon): compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl,sec-v5.2-mon', 'fsl,sec-v5.0-mon', 'fsl,sec-v4.0-mon'] is too long
+   	'fsl,sec-v4.0-mon' was expected
+   	'fsl,sec-v5.0-mon' was expected
+   	'fsl,sec-v5.2-mon' is not one of ['fsl,sec-v5.3-mon', 'fsl,sec-v5.4-mon']
+   	'syscon' was expected
+   	'simple-mfd' was expected
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0-mon.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: sec_mon@314000 (fsl,sec-v5.2-mon): interrupts: [[93, 2, 0, 0]] is too short
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0-mon.yaml#
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /soc@ffe000000/sec_mon@314000: failed to match any schema with compatible: ['fsl,sec-v5.2-mon', 'fsl,sec-v5.0-mon', 'fsl,sec-v4.0-mon']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /soc@ffe000000/qman@318000: failed to match any schema with compatible: ['fsl,qman']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /soc@ffe000000/bman@31a000: failed to match any schema with compatible: ['fsl,bman']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /soc@ffe000000/ptp-timer@4fe000: failed to match any schema with compatible: ['fsl,fman-ptp-timer']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /soc@ffe000000/l2-cache-controller@c20000: failed to match any schema with compatible: ['fsl,t2080-l2-cache-controller']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /pcie@ffe240000: failed to match any schema with compatible: ['fsl,t2080-pcie', 'fsl,qoriq-pcie-v3.0', 'fsl,qoriq-pcie']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /pcie@ffe240000: failed to match any schema with compatible: ['fsl,t2080-pcie', 'fsl,qoriq-pcie-v3.0', 'fsl,qoriq-pcie']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /pcie@ffe240000: failed to match any schema with compatible: ['fsl,t2080-pcie', 'fsl,qoriq-pcie-v3.0', 'fsl,qoriq-pcie']
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: pcie@ffe240000 (fsl,t2080-pcie): pcie@0:interrupts:0:0: 20 is not one of [1, 2, 3, 4]
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: pcie@ffe240000 (fsl,t2080-pcie): pcie@0:interrupts:0: [20, 2, 0, 0] is too long
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /pcie@ffe250000: failed to match any schema with compatible: ['fsl,t2080-pcie', 'fsl,qoriq-pcie-v3.0', 'fsl,qoriq-pcie']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /pcie@ffe250000: failed to match any schema with compatible: ['fsl,t2080-pcie', 'fsl,qoriq-pcie-v3.0', 'fsl,qoriq-pcie']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /pcie@ffe250000: failed to match any schema with compatible: ['fsl,t2080-pcie', 'fsl,qoriq-pcie-v3.0', 'fsl,qoriq-pcie']
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: pcie@ffe250000 (fsl,t2080-pcie): pcie@0:interrupts:0:0: 21 is not one of [1, 2, 3, 4]
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: pcie@ffe250000 (fsl,t2080-pcie): pcie@0:interrupts:0: [21, 2, 0, 0] is too long
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /pcie@ffe260000: failed to match any schema with compatible: ['fsl,t2080-pcie', 'fsl,qoriq-pcie-v3.0', 'fsl,qoriq-pcie']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /pcie@ffe260000: failed to match any schema with compatible: ['fsl,t2080-pcie', 'fsl,qoriq-pcie-v3.0', 'fsl,qoriq-pcie']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /pcie@ffe260000: failed to match any schema with compatible: ['fsl,t2080-pcie', 'fsl,qoriq-pcie-v3.0', 'fsl,qoriq-pcie']
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: pcie@ffe260000 (fsl,t2080-pcie): pcie@0:interrupts:0:0: 22 is not one of [1, 2, 3, 4]
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: pcie@ffe260000 (fsl,t2080-pcie): pcie@0:interrupts:0: [22, 2, 0, 0] is too long
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /pcie@ffe270000: failed to match any schema with compatible: ['fsl,t2080-pcie', 'fsl,qoriq-pcie-v3.0', 'fsl,qoriq-pcie']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /pcie@ffe270000: failed to match any schema with compatible: ['fsl,t2080-pcie', 'fsl,qoriq-pcie-v3.0', 'fsl,qoriq-pcie']
+   arch/powerpc/boot/dts/fsl/t2081qds.dtb: /pcie@ffe270000: failed to match any schema with compatible: ['fsl,t2080-pcie', 'fsl,qoriq-pcie-v3.0', 'fsl,qoriq-pcie']
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: pcie@ffe270000 (fsl,t2080-pcie): pcie@0:interrupts:0:0: 23 is not one of [1, 2, 3, 4]
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+>> arch/powerpc/boot/dts/fsl/t2081qds.dtb: pcie@ffe270000 (fsl,t2080-pcie): pcie@0:interrupts:0: [23, 2, 0, 0] is too long
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+--
+   arch/powerpc/boot/dts/fsl/t4240si-pre.dtsi:45.10-84.4: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
+   arch/powerpc/boot/dts/fsl/t4240si-pre.dtsi:45.10-84.4: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
+   arch/powerpc/boot/dts/fsl/t4240si-pre.dtsi:45.10-84.4: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
+   arch/powerpc/boot/dts/fsl/t4240si-pre.dtsi:45.10-84.4: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /: failed to match any schema with compatible: ['fsl,T4240QDS']
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: / (fsl,T4240QDS): memory: 'reg' is a required property
+   	from schema $id: http://devicetree.org/schemas/memory.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: / (fsl,T4240QDS): memory: False schema does not allow {'device_type': ['memory']}
+   	from schema $id: http://devicetree.org/schemas/root-node.yaml#
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: aliases: 'emi1_rgmii', 'emi1_slot1', 'emi1_slot2', 'emi1_slot3', 'emi1_slot4', 'phy_rgmii1', 'phy_rgmii2', 'phy_sgmii11', 'phy_sgmii12', 'phy_sgmii3', 'phy_sgmii4', 'phy_xfi1', 'phy_xfi2', 'phy_xfi3', 'phy_xfi4', 'sgmii_phy11', 'sgmii_phy12', 'sgmii_phy13', 'sgmii_phy14', 'sgmii_phy21', 'sgmii_phy22', 'sgmii_phy23', 'sgmii_phy24', 'sgmii_phy31', 'sgmii_phy32', 'sgmii_phy33', 'sgmii_phy34', 'sgmii_phy41', 'sgmii_phy42', 'sgmii_phy43', 'sgmii_phy44', 'xfi_pcs_mdio1', 'xfi_pcs_mdio2', 'xfi_pcs_mdio3', 'xfi_pcs_mdio4' do not match any of the regexes: '^[a-z][a-z0-9\\-]*$', 'pinctrl-[0-9]+'
+   	from schema $id: http://devicetree.org/schemas/aliases.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: localbus@ffe124000 (fsl,ifc): $nodename:0: 'localbus@ffe124000' does not match '^memory-controller@[0-9a-f]+$'
+   	from schema $id: http://devicetree.org/schemas/memory-controllers/fsl/fsl,ifc.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: nor@0,0 (cfi-flash): $nodename:0: 'nor@0,0' does not match '^(flash|.*sram|nand)(@.*)?$'
+   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /localbus@ffe124000/nand@2,0: failed to match any schema with compatible: ['fsl,ifc-nand']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /localbus@ffe124000/board-control@3,0: failed to match any schema with compatible: ['fsl,t4240qds-fpga', 'fsl,fpga-qixis']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /localbus@ffe124000/board-control@3,0: failed to match any schema with compatible: ['fsl,t4240qds-fpga', 'fsl,fpga-qixis']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: mdio-mux-emi1 (mdio-mux-mmioreg): mdio@20:reg:0:0: 32 is greater than the maximum of 31
+   	from schema $id: http://devicetree.org/schemas/net/mdio.yaml#
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: mdio-mux-emi1 (mdio-mux-mmioreg): mdio@40:reg:0:0: 64 is greater than the maximum of 31
+   	from schema $id: http://devicetree.org/schemas/net/mdio.yaml#
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: mdio-mux-emi1 (mdio-mux-mmioreg): mdio@60:reg:0:0: 96 is greater than the maximum of 31
+   	from schema $id: http://devicetree.org/schemas/net/mdio.yaml#
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: mdio-mux-emi1 (mdio-mux-mmioreg): mdio@80:reg:0:0: 128 is greater than the maximum of 31
+   	from schema $id: http://devicetree.org/schemas/net/mdio.yaml#
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /reserved-memory/bman-fbpr: failed to match any schema with compatible: ['fsl,bman-fbpr']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /reserved-memory/qman-fqd: failed to match any schema with compatible: ['fsl,qman-fqd']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /reserved-memory/qman-pfdr: failed to match any schema with compatible: ['fsl,qman-pfdr']
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: dcsr@f00000000 (fsl,dcsr): dcsr-corenet: 'ranges' is a required property
+   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: dcsr@f00000000 (fsl,dcsr): dcsr-npc: 'ranges' is a required property
+   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: dcsr@f00000000 (fsl,dcsr): $nodename:0: 'dcsr@f00000000' does not match '^([a-z][a-z0-9\\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
+   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /dcsr@f00000000: failed to match any schema with compatible: ['fsl,dcsr', 'simple-bus']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /dcsr@f00000000/dcsr-epu@0: failed to match any schema with compatible: ['fsl,t4240-dcsr-epu', 'fsl,dcsr-epu']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /dcsr@f00000000/dcsr-epu@0: failed to match any schema with compatible: ['fsl,t4240-dcsr-epu', 'fsl,dcsr-epu']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /dcsr@f00000000/dcsr-npc: failed to match any schema with compatible: ['fsl,t4240-dcsr-cnpc', 'fsl,dcsr-cnpc']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /dcsr@f00000000/dcsr-npc: failed to match any schema with compatible: ['fsl,t4240-dcsr-cnpc', 'fsl,dcsr-cnpc']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /dcsr@f00000000/dcsr-nxc@2000: failed to match any schema with compatible: ['fsl,dcsr-nxc']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /dcsr@f00000000/dcsr-corenet: failed to match any schema with compatible: ['fsl,dcsr-corenet']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /dcsr@f00000000/dcsr-dpaa@9000: failed to match any schema with compatible: ['fsl,t4240-dcsr-dpaa', 'fsl,dcsr-dpaa']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /dcsr@f00000000/dcsr-dpaa@9000: failed to match any schema with compatible: ['fsl,t4240-dcsr-dpaa', 'fsl,dcsr-dpaa']
+--
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@138000: failed to match any schema with compatible: ['fsl,dcsr-e6500-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@138000: failed to match any schema with compatible: ['fsl,dcsr-e6500-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@140000: failed to match any schema with compatible: ['fsl,dcsr-e6500-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@140000: failed to match any schema with compatible: ['fsl,dcsr-e6500-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@148000: failed to match any schema with compatible: ['fsl,dcsr-e6500-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@148000: failed to match any schema with compatible: ['fsl,dcsr-e6500-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@150000: failed to match any schema with compatible: ['fsl,dcsr-e6500-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@150000: failed to match any schema with compatible: ['fsl,dcsr-e6500-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@158000: failed to match any schema with compatible: ['fsl,dcsr-e6500-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@158000: failed to match any schema with compatible: ['fsl,dcsr-e6500-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: bman-portals@ff4000000 (simple-bus): $nodename:0: 'bman-portals@ff4000000' does not match '^([a-z][a-z0-9\\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
+   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /bman-portals@ff4000000/bman-portal@0: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /bman-portals@ff4000000/bman-portal@4000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /bman-portals@ff4000000/bman-portal@8000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /bman-portals@ff4000000/bman-portal@c000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /bman-portals@ff4000000/bman-portal@10000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /bman-portals@ff4000000/bman-portal@14000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /bman-portals@ff4000000/bman-portal@18000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /bman-portals@ff4000000/bman-portal@1c000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /bman-portals@ff4000000/bman-portal@20000: failed to match any schema with compatible: ['fsl,bman-portal']
+--
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /bman-portals@ff4000000/bman-portal@a0000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /bman-portals@ff4000000/bman-portal@a4000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /bman-portals@ff4000000/bman-portal@a8000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /bman-portals@ff4000000/bman-portal@ac000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /bman-portals@ff4000000/bman-portal@b0000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /bman-portals@ff4000000/bman-portal@b4000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /bman-portals@ff4000000/bman-portal@b8000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /bman-portals@ff4000000/bman-portal@bc000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /bman-portals@ff4000000/bman-portal@c0000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /bman-portals@ff4000000/bman-portal@c4000: failed to match any schema with compatible: ['fsl,bman-portal']
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: qman-portals@ff6000000 (simple-bus): $nodename:0: 'qman-portals@ff6000000' does not match '^([a-z][a-z0-9\\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
+   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /qman-portals@ff6000000/qman-portal@0: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /qman-portals@ff6000000/qman-portal@4000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /qman-portals@ff6000000/qman-portal@8000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /qman-portals@ff6000000/qman-portal@c000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /qman-portals@ff6000000/qman-portal@10000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /qman-portals@ff6000000/qman-portal@14000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /qman-portals@ff6000000/qman-portal@18000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /qman-portals@ff6000000/qman-portal@1c000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /qman-portals@ff6000000/qman-portal@20000: failed to match any schema with compatible: ['fsl,qman-portal']
+--
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /qman-portals@ff6000000/qman-portal@a0000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /qman-portals@ff6000000/qman-portal@a4000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /qman-portals@ff6000000/qman-portal@a8000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /qman-portals@ff6000000/qman-portal@ac000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /qman-portals@ff6000000/qman-portal@b0000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /qman-portals@ff6000000/qman-portal@b4000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /qman-portals@ff6000000/qman-portal@b8000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /qman-portals@ff6000000/qman-portal@bc000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /qman-portals@ff6000000/qman-portal@c0000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /qman-portals@ff6000000/qman-portal@c4000: failed to match any schema with compatible: ['fsl,qman-portal']
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: soc@ffe000000 (simple-bus): soc-sram-error: 'ranges' is a required property
+   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/spi@110000: failed to match any schema with compatible: ['fsl,mpc8536-espi']
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: flash@0 (sst,sst25wf040): compatible: 'oneOf' conditional failed, one must be fixed:
+   	['sst,sst25wf040', 'jedec,spi-nor'] is too long
+   	'sst,sst25wf040' does not match '^((((micron|spansion|st),)?(m25p(40|80|16|32|64|128)|n25q(32b|064|128a11|128a13|256a|512a|164k)))|atmel,at25df(321a|641|081a)|everspin,mr25h(10|40|128|256)|(mxicy|macronix),mx25l(4005a|1606e|6405d|8005|12805d|25635e)|(mxicy|macronix),mx25u(4033|4035)|(spansion,)?s25fl(128s|256s1|512s|008k|064k|164k)|(sst|microchip),sst25vf(016b|032b|040b)|(sst,)?sst26wf016b|(sst,)?sst25wf(040b|080)|winbond,w25x(80|32)|(winbond,)?w25q(16|32(w|dw)?|64(dw)?|80bl|128(fw)?|256))$'
+   	'sst,sst25wf040' is not one of ['issi,is25lp016d', 'micron,mt25qu02g', 'mxicy,mx25r1635f', 'mxicy,mx25u6435f', 'mxicy,mx25v8035f', 'spansion,s25sl12801', 'spansion,s25fs512s']
+   	'jedec,spi-nor' was expected
+   	from schema $id: http://devicetree.org/schemas/mtd/jedec,spi-nor.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: flash@0 (sst,sst25wf040): Unevaluated properties are not allowed ('compatible' was unexpected)
+   	from schema $id: http://devicetree.org/schemas/mtd/jedec,spi-nor.yaml#
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/spi@110000/flash@0: failed to match any schema with compatible: ['sst,sst25wf040', 'jedec,spi-nor']
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: i2c@118000 (fsl-i2c): compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl-i2c'] is too short
+   	'fsl-i2c' is not one of ['mpc5200-i2c', 'fsl,mpc5200-i2c', 'fsl,mpc5121-i2c', 'fsl,mpc8313-i2c', 'fsl,mpc8543-i2c', 'fsl,mpc8544-i2c']
+   	'fsl,mpc5200b-i2c' was expected
+   	from schema $id: http://devicetree.org/schemas/i2c/i2c-mpc.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: i2c@118000 (fsl-i2c): Unevaluated properties are not allowed ('cell-index', 'compatible', 'dfsrr' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/i2c/i2c-mpc.yaml#
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/sdhc@114000: failed to match any schema with compatible: ['fsl,t4240-esdhc', 'fsl,esdhc']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/sdhc@114000: failed to match any schema with compatible: ['fsl,t4240-esdhc', 'fsl,esdhc']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/fman@400000: failed to match any schema with compatible: ['fsl,fman']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/fman@400000/port@83000: failed to match any schema with compatible: ['fsl,fman-v3-port-oh']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/fman@400000/port@84000: failed to match any schema with compatible: ['fsl,fman-v3-port-oh']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/fman@400000/port@85000: failed to match any schema with compatible: ['fsl,fman-v3-port-oh']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/fman@400000/port@86000: failed to match any schema with compatible: ['fsl,fman-v3-port-oh']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/fman@400000/port@87000: failed to match any schema with compatible: ['fsl,fman-v3-port-oh']
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@e0000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@e0000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@e0000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@e0000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@e2000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@e2000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@e2000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@e2000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@e4000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@e4000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@e4000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@e4000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@e6000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@e6000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@e6000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@e6000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@e8000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@e8000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@e8000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@e8000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@ea000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@ea000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@ea000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@ea000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@f0000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@f0000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@f0000 (fsl,fman-memac): 'ptp-timer' is a required property
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@f0000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@f0000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@f2000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@f2000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@f2000 (fsl,fman-memac): 'ptp-timer' is a required property
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@f2000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@f2000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/fman@400000/mdio@f1000: failed to match any schema with compatible: ['fsl,fman-memac-mdio', 'fsl,fman-xmdio']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/fman@400000/mdio@f1000: failed to match any schema with compatible: ['fsl,fman-memac-mdio', 'fsl,fman-xmdio']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/fman@400000/mdio@f3000: failed to match any schema with compatible: ['fsl,fman-memac-mdio', 'fsl,fman-xmdio']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/fman@400000/mdio@f3000: failed to match any schema with compatible: ['fsl,fman-memac-mdio', 'fsl,fman-xmdio']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/fman@400000/muram@0: failed to match any schema with compatible: ['fsl,fman-muram']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/fman@400000/port@82000: failed to match any schema with compatible: ['fsl,fman-v3-port-oh']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/fman@400000/mdio@fc000: failed to match any schema with compatible: ['fsl,fman-memac-mdio', 'fsl,fman-xmdio']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/fman@400000/mdio@fc000: failed to match any schema with compatible: ['fsl,fman-memac-mdio', 'fsl,fman-xmdio']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/fman@400000/mdio@fd000: failed to match any schema with compatible: ['fsl,fman-memac-mdio', 'fsl,fman-xmdio']
+--
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/fman@400000/mdio@eb000: failed to match any schema with compatible: ['fsl,fman-memac-mdio', 'fsl,fman-xmdio']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/fman@400000/port@90000: failed to match any schema with compatible: ['fsl,fman-v3-port-rx']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/fman@400000/port@b0000: failed to match any schema with compatible: ['fsl,fman-v3-port-tx']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/fman@400000/port@91000: failed to match any schema with compatible: ['fsl,fman-v3-port-rx']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/fman@400000/port@b1000: failed to match any schema with compatible: ['fsl,fman-v3-port-tx']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/fman@500000: failed to match any schema with compatible: ['fsl,fman']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/fman@500000/port@84000: failed to match any schema with compatible: ['fsl,fman-v3-port-oh']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/fman@500000/port@85000: failed to match any schema with compatible: ['fsl,fman-v3-port-oh']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/fman@500000/port@86000: failed to match any schema with compatible: ['fsl,fman-v3-port-oh']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/fman@500000/port@87000: failed to match any schema with compatible: ['fsl,fman-v3-port-oh']
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@e0000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@e0000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@e0000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@e0000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@e2000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@e2000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@e2000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@e2000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@e4000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@e4000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@e4000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@e4000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@e6000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@e6000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@e6000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@e6000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@e8000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@e8000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@e8000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@e8000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@ea000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@ea000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@ea000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@ea000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@f0000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@f0000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@f0000 (fsl,fman-memac): 'ptp-timer' is a required property
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@f0000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@f0000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@f2000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@f2000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@f2000 (fsl,fman-memac): 'ptp-timer' is a required property
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@f2000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: ethernet@f2000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/fman@500000/mdio@f1000: failed to match any schema with compatible: ['fsl,fman-memac-mdio', 'fsl,fman-xmdio']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/fman@500000/mdio@f1000: failed to match any schema with compatible: ['fsl,fman-memac-mdio', 'fsl,fman-xmdio']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/fman@500000/mdio@f3000: failed to match any schema with compatible: ['fsl,fman-memac-mdio', 'fsl,fman-xmdio']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/fman@500000/mdio@f3000: failed to match any schema with compatible: ['fsl,fman-memac-mdio', 'fsl,fman-xmdio']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/fman@500000/mdio@fd000: failed to match any schema with compatible: ['fsl,fman-memac-mdio', 'fsl,fman-xmdio']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/fman@500000/mdio@fd000: failed to match any schema with compatible: ['fsl,fman-memac-mdio', 'fsl,fman-xmdio']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/fman@500000/muram@0: failed to match any schema with compatible: ['fsl,fman-muram']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/fman@500000/port@82000: failed to match any schema with compatible: ['fsl,fman-v3-port-oh']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/fman@500000/port@83000: failed to match any schema with compatible: ['fsl,fman-v3-port-oh']
+--
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/gpio@130000: failed to match any schema with compatible: ['fsl,qoriq-gpio']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/gpio@131000: failed to match any schema with compatible: ['fsl,qoriq-gpio']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/gpio@132000: failed to match any schema with compatible: ['fsl,qoriq-gpio']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/gpio@133000: failed to match any schema with compatible: ['fsl,qoriq-gpio']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/usb@210000: failed to match any schema with compatible: ['fsl-usb2-mph-v2.5', 'fsl-usb2-mph']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/usb@210000: failed to match any schema with compatible: ['fsl-usb2-mph-v2.5', 'fsl-usb2-mph']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/usb@211000: failed to match any schema with compatible: ['fsl-usb2-dr-v2.5', 'fsl-usb2-dr']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/usb@211000: failed to match any schema with compatible: ['fsl-usb2-dr-v2.5', 'fsl-usb2-dr']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/sata@220000: failed to match any schema with compatible: ['fsl,pq-sata-v2']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/sata@221000: failed to match any schema with compatible: ['fsl,pq-sata-v2']
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: crypto@300000 (fsl,sec-v5.0): rtic@6000:rtic-a@0:compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl,sec-v5.0-rtic-memory', 'fsl,sec-v4.0-rtic-memory'] is too short
+   	['fsl,sec-v5.0-rtic-memory', 'fsl,sec-v4.0-rtic-memory'] is too long
+   	'fsl,sec-v5.4-rtic-memory' was expected
+   	'fsl,sec-v4.0-rtic-memory' was expected
+   	'fsl,sec-v5.0-rtic-memory' was expected
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: crypto@300000 (fsl,sec-v5.0): rtic@6000:rtic-b@20:compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl,sec-v5.0-rtic-memory', 'fsl,sec-v4.0-rtic-memory'] is too short
+   	['fsl,sec-v5.0-rtic-memory', 'fsl,sec-v4.0-rtic-memory'] is too long
+   	'fsl,sec-v5.4-rtic-memory' was expected
+   	'fsl,sec-v4.0-rtic-memory' was expected
+   	'fsl,sec-v5.0-rtic-memory' was expected
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: crypto@300000 (fsl,sec-v5.0): rtic@6000:rtic-c@40:compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl,sec-v5.0-rtic-memory', 'fsl,sec-v4.0-rtic-memory'] is too short
+   	['fsl,sec-v5.0-rtic-memory', 'fsl,sec-v4.0-rtic-memory'] is too long
+   	'fsl,sec-v5.4-rtic-memory' was expected
+   	'fsl,sec-v4.0-rtic-memory' was expected
+   	'fsl,sec-v5.0-rtic-memory' was expected
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: crypto@300000 (fsl,sec-v5.0): rtic@6000:rtic-d@60:compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl,sec-v5.0-rtic-memory', 'fsl,sec-v4.0-rtic-memory'] is too short
+   	['fsl,sec-v5.0-rtic-memory', 'fsl,sec-v4.0-rtic-memory'] is too long
+   	'fsl,sec-v5.4-rtic-memory' was expected
+   	'fsl,sec-v4.0-rtic-memory' was expected
+   	'fsl,sec-v5.0-rtic-memory' was expected
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: crypto@300000 (fsl,sec-v5.0): rtic@6000:compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl,sec-v5.0-rtic', 'fsl,sec-v4.0-rtic'] is too short
+   	['fsl,sec-v5.0-rtic', 'fsl,sec-v4.0-rtic'] is too long
+   	'fsl,sec-v5.4-rtic' was expected
+   	'fsl,sec-v4.0-rtic' was expected
+   	'fsl,sec-v5.0-rtic' was expected
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: sec_mon@314000 (fsl,sec-v5.0-mon): interrupts: [[93, 2, 0, 0]] is too short
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0-mon.yaml#
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/qman@318000: failed to match any schema with compatible: ['fsl,qman']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/bman@31a000: failed to match any schema with compatible: ['fsl,bman']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/ptp-timer@4fe000: failed to match any schema with compatible: ['fsl,fman-ptp-timer']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/ptp-timer@5fe000: failed to match any schema with compatible: ['fsl,fman-ptp-timer']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/l2-cache-controller@c20000: failed to match any schema with compatible: ['fsl,t4240-l2-cache-controller']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/l2-cache-controller@c60000: failed to match any schema with compatible: ['fsl,t4240-l2-cache-controller']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /soc@ffe000000/l2-cache-controller@ca0000: failed to match any schema with compatible: ['fsl,t4240-l2-cache-controller']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /pcie@ffe240000: failed to match any schema with compatible: ['fsl,t4240-pcie', 'fsl,qoriq-pcie-v3.0']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /pcie@ffe240000: failed to match any schema with compatible: ['fsl,t4240-pcie', 'fsl,qoriq-pcie-v3.0']
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: pcie@ffe240000 (fsl,t4240-pcie): pcie@0:interrupts:0:0: 20 is not one of [1, 2, 3, 4]
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: pcie@ffe240000 (fsl,t4240-pcie): pcie@0:interrupts:0: [20, 2, 0, 0] is too long
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /pcie@ffe250000: failed to match any schema with compatible: ['fsl,t4240-pcie', 'fsl,qoriq-pcie-v3.0']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /pcie@ffe250000: failed to match any schema with compatible: ['fsl,t4240-pcie', 'fsl,qoriq-pcie-v3.0']
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: pcie@ffe250000 (fsl,t4240-pcie): pcie@0:interrupts:0:0: 21 is not one of [1, 2, 3, 4]
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: pcie@ffe250000 (fsl,t4240-pcie): pcie@0:interrupts:0: [21, 2, 0, 0] is too long
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /pcie@ffe260000: failed to match any schema with compatible: ['fsl,t4240-pcie', 'fsl,qoriq-pcie-v3.0']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /pcie@ffe260000: failed to match any schema with compatible: ['fsl,t4240-pcie', 'fsl,qoriq-pcie-v3.0']
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: pcie@ffe260000 (fsl,t4240-pcie): pcie@0:interrupts:0:0: 22 is not one of [1, 2, 3, 4]
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: pcie@ffe260000 (fsl,t4240-pcie): pcie@0:interrupts:0: [22, 2, 0, 0] is too long
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /pcie@ffe270000: failed to match any schema with compatible: ['fsl,t4240-pcie', 'fsl,qoriq-pcie-v3.0']
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /pcie@ffe270000: failed to match any schema with compatible: ['fsl,t4240-pcie', 'fsl,qoriq-pcie-v3.0']
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: pcie@ffe270000 (fsl,t4240-pcie): pcie@0:interrupts:0:0: 23 is not one of [1, 2, 3, 4]
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240qds.dtb: pcie@ffe270000 (fsl,t4240-pcie): pcie@0:interrupts:0: [23, 2, 0, 0] is too long
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+   arch/powerpc/boot/dts/fsl/t4240qds.dtb: /rapidio@ffe0c0000: failed to match any schema with compatible: ['fsl,srio']
+--
+   arch/powerpc/boot/dts/fsl/t4240si-pre.dtsi:45.10-84.4: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
+   arch/powerpc/boot/dts/fsl/t4240si-pre.dtsi:45.10-84.4: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
+   arch/powerpc/boot/dts/fsl/t4240si-pre.dtsi:45.10-84.4: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
+   arch/powerpc/boot/dts/fsl/t4240si-pre.dtsi:45.10-84.4: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /: failed to match any schema with compatible: ['fsl,T4240RDB']
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: / (fsl,T4240RDB): memory: 'reg' is a required property
+   	from schema $id: http://devicetree.org/schemas/memory.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: / (fsl,T4240RDB): memory: False schema does not allow {'device_type': ['memory']}
+   	from schema $id: http://devicetree.org/schemas/root-node.yaml#
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: aliases: 'sgmii_phy21', 'sgmii_phy22', 'sgmii_phy23', 'sgmii_phy24', 'sgmii_phy41', 'sgmii_phy42', 'sgmii_phy43', 'sgmii_phy44' do not match any of the regexes: '^[a-z][a-z0-9\\-]*$', 'pinctrl-[0-9]+'
+   	from schema $id: http://devicetree.org/schemas/aliases.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: localbus@ffe124000 (fsl,ifc): $nodename:0: 'localbus@ffe124000' does not match '^memory-controller@[0-9a-f]+$'
+   	from schema $id: http://devicetree.org/schemas/memory-controllers/fsl/fsl,ifc.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: nor@0,0 (cfi-flash): $nodename:0: 'nor@0,0' does not match '^(flash|.*sram|nand)(@.*)?$'
+   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /localbus@ffe124000/nand@2,0: failed to match any schema with compatible: ['fsl,ifc-nand']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /reserved-memory/bman-fbpr: failed to match any schema with compatible: ['fsl,bman-fbpr']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /reserved-memory/qman-fqd: failed to match any schema with compatible: ['fsl,qman-fqd']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /reserved-memory/qman-pfdr: failed to match any schema with compatible: ['fsl,qman-pfdr']
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: dcsr@f00000000 (fsl,dcsr): dcsr-corenet: 'ranges' is a required property
+   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: dcsr@f00000000 (fsl,dcsr): dcsr-npc: 'ranges' is a required property
+   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: dcsr@f00000000 (fsl,dcsr): $nodename:0: 'dcsr@f00000000' does not match '^([a-z][a-z0-9\\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
+   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /dcsr@f00000000: failed to match any schema with compatible: ['fsl,dcsr', 'simple-bus']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /dcsr@f00000000/dcsr-epu@0: failed to match any schema with compatible: ['fsl,t4240-dcsr-epu', 'fsl,dcsr-epu']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /dcsr@f00000000/dcsr-epu@0: failed to match any schema with compatible: ['fsl,t4240-dcsr-epu', 'fsl,dcsr-epu']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /dcsr@f00000000/dcsr-npc: failed to match any schema with compatible: ['fsl,t4240-dcsr-cnpc', 'fsl,dcsr-cnpc']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /dcsr@f00000000/dcsr-npc: failed to match any schema with compatible: ['fsl,t4240-dcsr-cnpc', 'fsl,dcsr-cnpc']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /dcsr@f00000000/dcsr-nxc@2000: failed to match any schema with compatible: ['fsl,dcsr-nxc']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /dcsr@f00000000/dcsr-corenet: failed to match any schema with compatible: ['fsl,dcsr-corenet']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /dcsr@f00000000/dcsr-dpaa@9000: failed to match any schema with compatible: ['fsl,t4240-dcsr-dpaa', 'fsl,dcsr-dpaa']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /dcsr@f00000000/dcsr-dpaa@9000: failed to match any schema with compatible: ['fsl,t4240-dcsr-dpaa', 'fsl,dcsr-dpaa']
+--
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@138000: failed to match any schema with compatible: ['fsl,dcsr-e6500-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@138000: failed to match any schema with compatible: ['fsl,dcsr-e6500-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@140000: failed to match any schema with compatible: ['fsl,dcsr-e6500-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@140000: failed to match any schema with compatible: ['fsl,dcsr-e6500-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@148000: failed to match any schema with compatible: ['fsl,dcsr-e6500-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@148000: failed to match any schema with compatible: ['fsl,dcsr-e6500-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@150000: failed to match any schema with compatible: ['fsl,dcsr-e6500-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@150000: failed to match any schema with compatible: ['fsl,dcsr-e6500-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@158000: failed to match any schema with compatible: ['fsl,dcsr-e6500-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /dcsr@f00000000/dcsr-cpu-sb-proxy@158000: failed to match any schema with compatible: ['fsl,dcsr-e6500-sb-proxy', 'fsl,dcsr-cpu-sb-proxy']
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: bman-portals@ff4000000 (simple-bus): $nodename:0: 'bman-portals@ff4000000' does not match '^([a-z][a-z0-9\\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
+   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /bman-portals@ff4000000/bman-portal@0: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /bman-portals@ff4000000/bman-portal@4000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /bman-portals@ff4000000/bman-portal@8000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /bman-portals@ff4000000/bman-portal@c000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /bman-portals@ff4000000/bman-portal@10000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /bman-portals@ff4000000/bman-portal@14000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /bman-portals@ff4000000/bman-portal@18000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /bman-portals@ff4000000/bman-portal@1c000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /bman-portals@ff4000000/bman-portal@20000: failed to match any schema with compatible: ['fsl,bman-portal']
+--
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /bman-portals@ff4000000/bman-portal@a0000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /bman-portals@ff4000000/bman-portal@a4000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /bman-portals@ff4000000/bman-portal@a8000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /bman-portals@ff4000000/bman-portal@ac000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /bman-portals@ff4000000/bman-portal@b0000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /bman-portals@ff4000000/bman-portal@b4000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /bman-portals@ff4000000/bman-portal@b8000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /bman-portals@ff4000000/bman-portal@bc000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /bman-portals@ff4000000/bman-portal@c0000: failed to match any schema with compatible: ['fsl,bman-portal']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /bman-portals@ff4000000/bman-portal@c4000: failed to match any schema with compatible: ['fsl,bman-portal']
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: qman-portals@ff6000000 (simple-bus): $nodename:0: 'qman-portals@ff6000000' does not match '^([a-z][a-z0-9\\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
+   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /qman-portals@ff6000000/qman-portal@0: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /qman-portals@ff6000000/qman-portal@4000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /qman-portals@ff6000000/qman-portal@8000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /qman-portals@ff6000000/qman-portal@c000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /qman-portals@ff6000000/qman-portal@10000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /qman-portals@ff6000000/qman-portal@14000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /qman-portals@ff6000000/qman-portal@18000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /qman-portals@ff6000000/qman-portal@1c000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /qman-portals@ff6000000/qman-portal@20000: failed to match any schema with compatible: ['fsl,qman-portal']
+--
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /qman-portals@ff6000000/qman-portal@a0000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /qman-portals@ff6000000/qman-portal@a4000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /qman-portals@ff6000000/qman-portal@a8000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /qman-portals@ff6000000/qman-portal@ac000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /qman-portals@ff6000000/qman-portal@b0000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /qman-portals@ff6000000/qman-portal@b4000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /qman-portals@ff6000000/qman-portal@b8000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /qman-portals@ff6000000/qman-portal@bc000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /qman-portals@ff6000000/qman-portal@c0000: failed to match any schema with compatible: ['fsl,qman-portal']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /qman-portals@ff6000000/qman-portal@c4000: failed to match any schema with compatible: ['fsl,qman-portal']
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: soc@ffe000000 (simple-bus): soc-sram-error: 'ranges' is a required property
+   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/spi@110000: failed to match any schema with compatible: ['fsl,mpc8536-espi']
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: flash@0 (sst,sst25wf040): compatible: 'oneOf' conditional failed, one must be fixed:
+   	['sst,sst25wf040', 'jedec,spi-nor'] is too long
+   	'sst,sst25wf040' does not match '^((((micron|spansion|st),)?(m25p(40|80|16|32|64|128)|n25q(32b|064|128a11|128a13|256a|512a|164k)))|atmel,at25df(321a|641|081a)|everspin,mr25h(10|40|128|256)|(mxicy|macronix),mx25l(4005a|1606e|6405d|8005|12805d|25635e)|(mxicy|macronix),mx25u(4033|4035)|(spansion,)?s25fl(128s|256s1|512s|008k|064k|164k)|(sst|microchip),sst25vf(016b|032b|040b)|(sst,)?sst26wf016b|(sst,)?sst25wf(040b|080)|winbond,w25x(80|32)|(winbond,)?w25q(16|32(w|dw)?|64(dw)?|80bl|128(fw)?|256))$'
+   	'sst,sst25wf040' is not one of ['issi,is25lp016d', 'micron,mt25qu02g', 'mxicy,mx25r1635f', 'mxicy,mx25u6435f', 'mxicy,mx25v8035f', 'spansion,s25sl12801', 'spansion,s25fs512s']
+   	'jedec,spi-nor' was expected
+   	from schema $id: http://devicetree.org/schemas/mtd/jedec,spi-nor.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: flash@0 (sst,sst25wf040): Unevaluated properties are not allowed ('compatible' was unexpected)
+   	from schema $id: http://devicetree.org/schemas/mtd/jedec,spi-nor.yaml#
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/spi@110000/flash@0: failed to match any schema with compatible: ['sst,sst25wf040', 'jedec,spi-nor']
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: i2c@118000 (fsl-i2c): compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl-i2c'] is too short
+   	'fsl-i2c' is not one of ['mpc5200-i2c', 'fsl,mpc5200-i2c', 'fsl,mpc5121-i2c', 'fsl,mpc8313-i2c', 'fsl,mpc8543-i2c', 'fsl,mpc8544-i2c']
+   	'fsl,mpc5200b-i2c' was expected
+   	from schema $id: http://devicetree.org/schemas/i2c/i2c-mpc.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: i2c@118000 (fsl-i2c): Unevaluated properties are not allowed ('cell-index', 'compatible', 'dfsrr' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/i2c/i2c-mpc.yaml#
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/sdhc@114000: failed to match any schema with compatible: ['fsl,t4240-esdhc', 'fsl,esdhc']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/sdhc@114000: failed to match any schema with compatible: ['fsl,t4240-esdhc', 'fsl,esdhc']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/fman@400000: failed to match any schema with compatible: ['fsl,fman']
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@e0000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@e0000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@e0000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@e0000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@e2000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@e2000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@e2000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@e2000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@e4000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@e4000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@e4000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@e4000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@e6000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@e6000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@e6000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@e6000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@e8000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@e8000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@e8000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@ea000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@ea000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@ea000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@f0000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@f0000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@f0000 (fsl,fman-memac): 'ptp-timer' is a required property
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@f0000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@f0000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@f2000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@f2000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@f2000 (fsl,fman-memac): 'ptp-timer' is a required property
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@f2000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@f2000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/fman@400000/muram@0: failed to match any schema with compatible: ['fsl,fman-muram']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/fman@400000/port@82000: failed to match any schema with compatible: ['fsl,fman-v3-port-oh']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/fman@400000/port@83000: failed to match any schema with compatible: ['fsl,fman-v3-port-oh']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/fman@400000/port@84000: failed to match any schema with compatible: ['fsl,fman-v3-port-oh']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/fman@400000/port@85000: failed to match any schema with compatible: ['fsl,fman-v3-port-oh']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/fman@400000/port@86000: failed to match any schema with compatible: ['fsl,fman-v3-port-oh']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/fman@400000/port@87000: failed to match any schema with compatible: ['fsl,fman-v3-port-oh']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/fman@400000/mdio@fc000: failed to match any schema with compatible: ['fsl,fman-memac-mdio', 'fsl,fman-xmdio']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/fman@400000/mdio@fc000: failed to match any schema with compatible: ['fsl,fman-memac-mdio', 'fsl,fman-xmdio']
+--
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/fman@400000/mdio@eb000: failed to match any schema with compatible: ['fsl,fman-memac-mdio', 'fsl,fman-xmdio']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/fman@400000/port@90000: failed to match any schema with compatible: ['fsl,fman-v3-port-rx']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/fman@400000/port@b0000: failed to match any schema with compatible: ['fsl,fman-v3-port-tx']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/fman@400000/mdio@f1000: failed to match any schema with compatible: ['fsl,fman-memac-mdio', 'fsl,fman-xmdio']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/fman@400000/mdio@f1000: failed to match any schema with compatible: ['fsl,fman-memac-mdio', 'fsl,fman-xmdio']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/fman@400000/port@91000: failed to match any schema with compatible: ['fsl,fman-v3-port-rx']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/fman@400000/port@b1000: failed to match any schema with compatible: ['fsl,fman-v3-port-tx']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/fman@400000/mdio@f3000: failed to match any schema with compatible: ['fsl,fman-memac-mdio', 'fsl,fman-xmdio']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/fman@400000/mdio@f3000: failed to match any schema with compatible: ['fsl,fman-memac-mdio', 'fsl,fman-xmdio']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/fman@500000: failed to match any schema with compatible: ['fsl,fman']
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@e0000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@e0000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@e0000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@e0000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@e2000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@e2000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@e2000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@e2000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@e4000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@e4000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@e4000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@e4000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@e6000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@e6000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@e6000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@e6000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@e8000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@e8000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@e8000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@ea000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@ea000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@ea000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@f0000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@f0000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@f0000 (fsl,fman-memac): 'ptp-timer' is a required property
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@f0000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@f0000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@f2000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@f2000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@f2000 (fsl,fman-memac): 'ptp-timer' is a required property
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@f2000 (fsl,fman-memac): Unevaluated properties are not allowed ('phy-connection-type', 'phy-handle' were unexpected)
+   	from schema $id: http://devicetree.org/schemas/net/fsl,fman-dtsec.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: ethernet@f2000 (fsl,fman-memac): 'pcs-handle' is a dependency of 'pcs-handle-names'
+   	from schema $id: http://devicetree.org/schemas/net/ethernet-controller.yaml#
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/fman@500000/mdio@fc000: failed to match any schema with compatible: ['fsl,fman-memac-mdio', 'fsl,fman-xmdio']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/fman@500000/mdio@fc000: failed to match any schema with compatible: ['fsl,fman-memac-mdio', 'fsl,fman-xmdio']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/fman@500000/mdio@fd000: failed to match any schema with compatible: ['fsl,fman-memac-mdio', 'fsl,fman-xmdio']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/fman@500000/mdio@fd000: failed to match any schema with compatible: ['fsl,fman-memac-mdio', 'fsl,fman-xmdio']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/fman@500000/muram@0: failed to match any schema with compatible: ['fsl,fman-muram']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/fman@500000/port@82000: failed to match any schema with compatible: ['fsl,fman-v3-port-oh']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/fman@500000/port@83000: failed to match any schema with compatible: ['fsl,fman-v3-port-oh']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/fman@500000/port@84000: failed to match any schema with compatible: ['fsl,fman-v3-port-oh']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/fman@500000/port@85000: failed to match any schema with compatible: ['fsl,fman-v3-port-oh']
+--
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/gpio@130000: failed to match any schema with compatible: ['fsl,qoriq-gpio']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/gpio@131000: failed to match any schema with compatible: ['fsl,qoriq-gpio']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/gpio@132000: failed to match any schema with compatible: ['fsl,qoriq-gpio']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/gpio@133000: failed to match any schema with compatible: ['fsl,qoriq-gpio']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/usb@210000: failed to match any schema with compatible: ['fsl-usb2-mph-v2.5', 'fsl-usb2-mph']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/usb@210000: failed to match any schema with compatible: ['fsl-usb2-mph-v2.5', 'fsl-usb2-mph']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/usb@211000: failed to match any schema with compatible: ['fsl-usb2-dr-v2.5', 'fsl-usb2-dr']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/usb@211000: failed to match any schema with compatible: ['fsl-usb2-dr-v2.5', 'fsl-usb2-dr']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/sata@220000: failed to match any schema with compatible: ['fsl,pq-sata-v2']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/sata@221000: failed to match any schema with compatible: ['fsl,pq-sata-v2']
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: crypto@300000 (fsl,sec-v5.0): rtic@6000:rtic-a@0:compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl,sec-v5.0-rtic-memory', 'fsl,sec-v4.0-rtic-memory'] is too short
+   	['fsl,sec-v5.0-rtic-memory', 'fsl,sec-v4.0-rtic-memory'] is too long
+   	'fsl,sec-v5.4-rtic-memory' was expected
+   	'fsl,sec-v4.0-rtic-memory' was expected
+   	'fsl,sec-v5.0-rtic-memory' was expected
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: crypto@300000 (fsl,sec-v5.0): rtic@6000:rtic-b@20:compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl,sec-v5.0-rtic-memory', 'fsl,sec-v4.0-rtic-memory'] is too short
+   	['fsl,sec-v5.0-rtic-memory', 'fsl,sec-v4.0-rtic-memory'] is too long
+   	'fsl,sec-v5.4-rtic-memory' was expected
+   	'fsl,sec-v4.0-rtic-memory' was expected
+   	'fsl,sec-v5.0-rtic-memory' was expected
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: crypto@300000 (fsl,sec-v5.0): rtic@6000:rtic-c@40:compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl,sec-v5.0-rtic-memory', 'fsl,sec-v4.0-rtic-memory'] is too short
+   	['fsl,sec-v5.0-rtic-memory', 'fsl,sec-v4.0-rtic-memory'] is too long
+   	'fsl,sec-v5.4-rtic-memory' was expected
+   	'fsl,sec-v4.0-rtic-memory' was expected
+   	'fsl,sec-v5.0-rtic-memory' was expected
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: crypto@300000 (fsl,sec-v5.0): rtic@6000:rtic-d@60:compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl,sec-v5.0-rtic-memory', 'fsl,sec-v4.0-rtic-memory'] is too short
+   	['fsl,sec-v5.0-rtic-memory', 'fsl,sec-v4.0-rtic-memory'] is too long
+   	'fsl,sec-v5.4-rtic-memory' was expected
+   	'fsl,sec-v4.0-rtic-memory' was expected
+   	'fsl,sec-v5.0-rtic-memory' was expected
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: crypto@300000 (fsl,sec-v5.0): rtic@6000:compatible: 'oneOf' conditional failed, one must be fixed:
+   	['fsl,sec-v5.0-rtic', 'fsl,sec-v4.0-rtic'] is too short
+   	['fsl,sec-v5.0-rtic', 'fsl,sec-v4.0-rtic'] is too long
+   	'fsl,sec-v5.4-rtic' was expected
+   	'fsl,sec-v4.0-rtic' was expected
+   	'fsl,sec-v5.0-rtic' was expected
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: sec_mon@314000 (fsl,sec-v5.0-mon): interrupts: [[93, 2, 0, 0]] is too short
+   	from schema $id: http://devicetree.org/schemas/crypto/fsl,sec-v4.0-mon.yaml#
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/qman@318000: failed to match any schema with compatible: ['fsl,qman']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/bman@31a000: failed to match any schema with compatible: ['fsl,bman']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/ptp-timer@4fe000: failed to match any schema with compatible: ['fsl,fman-ptp-timer']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/ptp-timer@5fe000: failed to match any schema with compatible: ['fsl,fman-ptp-timer']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/l2-cache-controller@c20000: failed to match any schema with compatible: ['fsl,t4240-l2-cache-controller']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/l2-cache-controller@c60000: failed to match any schema with compatible: ['fsl,t4240-l2-cache-controller']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /soc@ffe000000/l2-cache-controller@ca0000: failed to match any schema with compatible: ['fsl,t4240-l2-cache-controller']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /pcie@ffe240000: failed to match any schema with compatible: ['fsl,t4240-pcie', 'fsl,qoriq-pcie-v3.0']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /pcie@ffe240000: failed to match any schema with compatible: ['fsl,t4240-pcie', 'fsl,qoriq-pcie-v3.0']
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: pcie@ffe240000 (fsl,t4240-pcie): pcie@0:interrupts:0:0: 20 is not one of [1, 2, 3, 4]
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: pcie@ffe240000 (fsl,t4240-pcie): pcie@0:interrupts:0: [20, 2, 0, 0] is too long
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /pcie@ffe250000: failed to match any schema with compatible: ['fsl,t4240-pcie', 'fsl,qoriq-pcie-v3.0']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /pcie@ffe250000: failed to match any schema with compatible: ['fsl,t4240-pcie', 'fsl,qoriq-pcie-v3.0']
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: pcie@ffe250000 (fsl,t4240-pcie): pcie@0:interrupts:0:0: 21 is not one of [1, 2, 3, 4]
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: pcie@ffe250000 (fsl,t4240-pcie): pcie@0:interrupts:0: [21, 2, 0, 0] is too long
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /pcie@ffe260000: failed to match any schema with compatible: ['fsl,t4240-pcie', 'fsl,qoriq-pcie-v3.0']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /pcie@ffe260000: failed to match any schema with compatible: ['fsl,t4240-pcie', 'fsl,qoriq-pcie-v3.0']
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: pcie@ffe260000 (fsl,t4240-pcie): pcie@0:interrupts:0:0: 22 is not one of [1, 2, 3, 4]
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: pcie@ffe260000 (fsl,t4240-pcie): pcie@0:interrupts:0: [22, 2, 0, 0] is too long
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /pcie@ffe270000: failed to match any schema with compatible: ['fsl,t4240-pcie', 'fsl,qoriq-pcie-v3.0']
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /pcie@ffe270000: failed to match any schema with compatible: ['fsl,t4240-pcie', 'fsl,qoriq-pcie-v3.0']
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: pcie@ffe270000 (fsl,t4240-pcie): pcie@0:interrupts:0:0: 23 is not one of [1, 2, 3, 4]
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+>> arch/powerpc/boot/dts/fsl/t4240rdb.dtb: pcie@ffe270000 (fsl,t4240-pcie): pcie@0:interrupts:0: [23, 2, 0, 0] is too long
+   	from schema $id: http://devicetree.org/schemas/pci/pci-bus-common.yaml#
+   arch/powerpc/boot/dts/fsl/t4240rdb.dtb: /rapidio@ffe0c0000: failed to match any schema with compatible: ['fsl,srio']
 
-Changes in v5:
-- Update scmi-shmem from soc to reserved memory
-
-Changes in v4:
-- remove gmac and otp nodes
-
-Changes in v3:
-- remove i2c/serial/spi alias
-- add soc node
-
-Changes in v2:
-- remove grf in cru
-- Update some properties order
-
- .../boot/dts/rockchip/rk3562-pinctrl.dtsi     | 2352 +++++++++++++++++
- arch/arm64/boot/dts/rockchip/rk3562.dtsi      | 1270 +++++++++
- 2 files changed, 3622 insertions(+)
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3562-pinctrl.dtsi
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3562.dtsi
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3562-pinctrl.dtsi b/arch/arm64/boot/dts/rockchip/rk3562-pinctrl.dtsi
-new file mode 100644
-index 000000000000..b311448d77a3
---- /dev/null
-+++ b/arch/arm64/boot/dts/rockchip/rk3562-pinctrl.dtsi
-@@ -0,0 +1,2352 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2022 Rockchip Electronics Co., Ltd.
-+ */
-+
-+#include <dt-bindings/pinctrl/rockchip.h>
-+#include "rockchip-pinconf.dtsi"
-+
-+/*
-+ * This file is auto generated by pin2dts tool, please keep these code
-+ * by adding changes at end of this file.
-+ */
-+&pinctrl {
-+	cam {
-+		/omit-if-no-ref/
-+		camm0_clk0_out: camm0-clk0-out {
-+			rockchip,pins =
-+				/* camm0_clk0_out */
-+				<3 RK_PB2 2 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		camm0_clk1_out: camm0-clk1-out {
-+			rockchip,pins =
-+				/* camm0_clk1_out */
-+				<3 RK_PB3 2 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		camm1_clk0_out: camm1-clk0-out {
-+			rockchip,pins =
-+				/* camm1_clk0_out */
-+				<4 RK_PB1 3 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		camm1_clk1_out: camm1-clk1-out {
-+			rockchip,pins =
-+				/* camm1_clk1_out */
-+				<4 RK_PB7 3 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		cam_clk2_out: cam-clk2-out {
-+			rockchip,pins =
-+				/* cam_clk2_out */
-+				<3 RK_PB4 2 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		cam_clk3_out: cam-clk3-out {
-+			rockchip,pins =
-+				/* cam_clk3_out */
-+				<3 RK_PB5 2 &pcfg_pull_none>;
-+		};
-+	};
-+
-+	can0 {
-+		/omit-if-no-ref/
-+		can0m0_pins: can0m0-pins {
-+			rockchip,pins =
-+				/* can0_rx_m0 */
-+				<3 RK_PA1 4 &pcfg_pull_none>,
-+				/* can0_tx_m0 */
-+				<3 RK_PA0 4 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		can0m1_pins: can0m1-pins {
-+			rockchip,pins =
-+				/* can0_rx_m1 */
-+				<3 RK_PB7 6 &pcfg_pull_none>,
-+				/* can0_tx_m1 */
-+				<3 RK_PB6 6 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		can0m2_pins: can0m2-pins {
-+			rockchip,pins =
-+				/* can0_rx_m2 */
-+				<0 RK_PC7 2 &pcfg_pull_none>,
-+				/* can0_tx_m2 */
-+				<0 RK_PC6 2 &pcfg_pull_none>;
-+		};
-+	};
-+
-+	can1 {
-+		/omit-if-no-ref/
-+		can1m0_pins: can1m0-pins {
-+			rockchip,pins =
-+				/* can1_rx_m0 */
-+				<1 RK_PB7 4 &pcfg_pull_none>,
-+				/* can1_tx_m0 */
-+				<1 RK_PC0 5 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		can1m1_pins: can1m1-pins {
-+			rockchip,pins =
-+				/* can1_rx_m1 */
-+				<0 RK_PC1 4 &pcfg_pull_none>,
-+				/* can1_tx_m1 */
-+				<0 RK_PC0 4 &pcfg_pull_none>;
-+		};
-+	};
-+
-+	clk {
-+		/omit-if-no-ref/
-+		clk_32k_in: clk-32k-in {
-+			rockchip,pins =
-+				/* clk_32k_in */
-+				<0 RK_PB0 1 &pcfg_pull_none>;
-+		};
-+	};
-+
-+	clk0 {
-+		/omit-if-no-ref/
-+		clk0_32k_out: clk0-32k-out {
-+			rockchip,pins =
-+				/* clk0_32k_out */
-+				<0 RK_PB0 2 &pcfg_pull_none>;
-+		};
-+	};
-+
-+	clk1 {
-+		/omit-if-no-ref/
-+		clk1_32k_out: clk1-32k-out {
-+			rockchip,pins =
-+				/* clk1_32k_out */
-+				<2 RK_PA1 3 &pcfg_pull_none>;
-+		};
-+	};
-+
-+	cpu {
-+		/omit-if-no-ref/
-+		cpu_pins: cpu-pins {
-+			rockchip,pins =
-+				/* cpu_avs */
-+				<0 RK_PB7 3 &pcfg_pull_none>;
-+		};
-+	};
-+
-+	dsm {
-+		/omit-if-no-ref/
-+		dsm_pins: dsm-pins {
-+			rockchip,pins =
-+				/* dsm_aud_ln */
-+				<1 RK_PB4 5 &pcfg_pull_none>,
-+				/* dsm_aud_lp */
-+				<1 RK_PB3 5 &pcfg_pull_none>,
-+				/* dsm_aud_rn */
-+				<1 RK_PB6 6 &pcfg_pull_none>,
-+				/* dsm_aud_rp */
-+				<1 RK_PB5 6 &pcfg_pull_none>;
-+		};
-+	};
-+
-+	emmc {
-+		/omit-if-no-ref/
-+		emmc_bus8: emmc-bus8 {
-+			rockchip,pins =
-+				/* emmc_d0 */
-+				<1 RK_PA0 1 &pcfg_pull_up_drv_level_2>,
-+				/* emmc_d1 */
-+				<1 RK_PA1 1 &pcfg_pull_up_drv_level_2>,
-+				/* emmc_d2 */
-+				<1 RK_PA2 1 &pcfg_pull_up_drv_level_2>,
-+				/* emmc_d3 */
-+				<1 RK_PA3 1 &pcfg_pull_up_drv_level_2>,
-+				/* emmc_d4 */
-+				<1 RK_PA4 1 &pcfg_pull_up_drv_level_2>,
-+				/* emmc_d5 */
-+				<1 RK_PA5 1 &pcfg_pull_up_drv_level_2>,
-+				/* emmc_d6 */
-+				<1 RK_PA6 1 &pcfg_pull_up_drv_level_2>,
-+				/* emmc_d7 */
-+				<1 RK_PA7 1 &pcfg_pull_up_drv_level_2>;
-+		};
-+
-+		/omit-if-no-ref/
-+		emmc_clk: emmc-clk {
-+			rockchip,pins =
-+				/* emmc_clk */
-+				<1 RK_PB1 1 &pcfg_pull_up_drv_level_2>;
-+		};
-+
-+		/omit-if-no-ref/
-+		emmc_cmd: emmc-cmd {
-+			rockchip,pins =
-+				/* emmc_cmd */
-+				<1 RK_PB0 1 &pcfg_pull_up_drv_level_2>;
-+		};
-+
-+		/omit-if-no-ref/
-+		emmc_strb: emmc-strb {
-+			rockchip,pins =
-+				/* emmc_strb */
-+				<1 RK_PB2 1 &pcfg_pull_none>;
-+		};
-+	};
-+
-+	eth {
-+		/omit-if-no-ref/
-+		ethm0_pins: ethm0-pins {
-+			rockchip,pins =
-+				/* eth_clk_25m_out_m0 */
-+				<4 RK_PB1 2 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		ethm1_pins: ethm1-pins {
-+			rockchip,pins =
-+				/* eth_clk_25m_out_m1 */
-+				<2 RK_PA1 2 &pcfg_pull_none>;
-+		};
-+	};
-+
-+	fspi {
-+		/omit-if-no-ref/
-+		fspi_pins: fspi-pins {
-+			rockchip,pins =
-+				/* fspi_clk */
-+				<1 RK_PB1 2 &pcfg_pull_none>,
-+				/* fspi_d0 */
-+				<1 RK_PA0 2 &pcfg_pull_none>,
-+				/* fspi_d1 */
-+				<1 RK_PA1 2 &pcfg_pull_none>,
-+				/* fspi_d2 */
-+				<1 RK_PA2 2 &pcfg_pull_none>,
-+				/* fspi_d3 */
-+				<1 RK_PA3 2 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		fspi_csn0: fspi-csn0 {
-+			rockchip,pins =
-+				/* fspi_csn0 */
-+				<1 RK_PB0 2 &pcfg_pull_none>;
-+		};
-+		/omit-if-no-ref/
-+		fspi_csn1: fspi-csn1 {
-+			rockchip,pins =
-+				/* fspi_csn1 */
-+				<1 RK_PB2 2 &pcfg_pull_none>;
-+		};
-+	};
-+
-+	gpu {
-+		/omit-if-no-ref/
-+		gpu_pins: gpu-pins {
-+			rockchip,pins =
-+				/* gpu_avs */
-+				<0 RK_PC0 3 &pcfg_pull_none>;
-+		};
-+	};
-+
-+	i2c0 {
-+		/omit-if-no-ref/
-+		i2c0_xfer: i2c0-xfer {
-+			rockchip,pins =
-+				/* i2c0_scl */
-+				<0 RK_PB1 1 &pcfg_pull_none_smt>,
-+				/* i2c0_sda */
-+				<0 RK_PB2 1 &pcfg_pull_none_smt>;
-+		};
-+	};
-+
-+	i2c1 {
-+		/omit-if-no-ref/
-+		i2c1m0_xfer: i2c1m0-xfer {
-+			rockchip,pins =
-+				/* i2c1_scl_m0 */
-+				<0 RK_PB3 1 &pcfg_pull_none_smt>,
-+				/* i2c1_sda_m0 */
-+				<0 RK_PB4 1 &pcfg_pull_none_smt>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2c1m1_xfer: i2c1m1-xfer {
-+			rockchip,pins =
-+				/* i2c1_scl_m1 */
-+				<4 RK_PB4 5 &pcfg_pull_none_smt>,
-+				/* i2c1_sda_m1 */
-+				<4 RK_PB5 5 &pcfg_pull_none_smt>;
-+		};
-+	};
-+
-+	i2c2 {
-+		/omit-if-no-ref/
-+		i2c2m0_xfer: i2c2m0-xfer {
-+			rockchip,pins =
-+				/* i2c2_scl_m0 */
-+				<0 RK_PB5 1 &pcfg_pull_none_smt>,
-+				/* i2c2_sda_m0 */
-+				<0 RK_PB6 1 &pcfg_pull_none_smt>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2c2m1_xfer: i2c2m1-xfer {
-+			rockchip,pins =
-+				/* i2c2_scl_m1 */
-+				<3 RK_PD2 5 &pcfg_pull_none_smt>,
-+				/* i2c2_sda_m1 */
-+				<3 RK_PD3 5 &pcfg_pull_none_smt>;
-+		};
-+	};
-+
-+	i2c3 {
-+		/omit-if-no-ref/
-+		i2c3m0_xfer: i2c3m0-xfer {
-+			rockchip,pins =
-+				/* i2c3_scl_m0 */
-+				<3 RK_PA0 1 &pcfg_pull_none_smt>,
-+				/* i2c3_sda_m0 */
-+				<3 RK_PA1 1 &pcfg_pull_none_smt>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2c3m1_xfer: i2c3m1-xfer {
-+			rockchip,pins =
-+				/* i2c3_scl_m1 */
-+				<4 RK_PA5 5 &pcfg_pull_none_smt>,
-+				/* i2c3_sda_m1 */
-+				<4 RK_PA6 5 &pcfg_pull_none_smt>;
-+		};
-+	};
-+
-+	i2c4 {
-+		/omit-if-no-ref/
-+		i2c4m0_xfer: i2c4m0-xfer {
-+			rockchip,pins =
-+				/* i2c4_scl_m0 */
-+				<3 RK_PB6 5 &pcfg_pull_none_smt>,
-+				/* i2c4_sda_m0 */
-+				<3 RK_PB7 5 &pcfg_pull_none_smt>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2c4m1_xfer: i2c4m1-xfer {
-+			rockchip,pins =
-+				/* i2c4_scl_m1 */
-+				<0 RK_PA5 2 &pcfg_pull_none_smt>,
-+				/* i2c4_sda_m1 */
-+				<0 RK_PA4 2 &pcfg_pull_none_smt>;
-+		};
-+	};
-+
-+	i2c5 {
-+		/omit-if-no-ref/
-+		i2c5m0_xfer: i2c5m0-xfer {
-+			rockchip,pins =
-+				/* i2c5_scl_m0 */
-+				<3 RK_PC2 1 &pcfg_pull_none_smt>,
-+				/* i2c5_sda_m0 */
-+				<3 RK_PC3 1 &pcfg_pull_none_smt>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2c5m1_xfer: i2c5m1-xfer {
-+			rockchip,pins =
-+				/* i2c5_scl_m1 */
-+				<1 RK_PC7 4 &pcfg_pull_none_smt>,
-+				/* i2c5_sda_m1 */
-+				<1 RK_PD0 4 &pcfg_pull_none_smt>;
-+		};
-+	};
-+
-+	i2s0 {
-+		/omit-if-no-ref/
-+		i2s0m0_lrck: i2s0m0-lrck {
-+			rockchip,pins =
-+				/* i2s0_lrck_m0 */
-+				<3 RK_PA4 1 &pcfg_pull_none_smt>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s0m0_mclk: i2s0m0-mclk {
-+			rockchip,pins =
-+				/* i2s0_mclk_m0 */
-+				<3 RK_PA2 1 &pcfg_pull_none_smt>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s0m0_sclk: i2s0m0-sclk {
-+			rockchip,pins =
-+				/* i2s0_sclk_m0 */
-+				<3 RK_PA3 1 &pcfg_pull_none_smt>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s0m0_sdi0: i2s0m0-sdi0 {
-+			rockchip,pins =
-+				/* i2s0_sdi0_m0 */
-+				<3 RK_PB1 1 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s0m0_sdi1: i2s0m0-sdi1 {
-+			rockchip,pins =
-+				/* i2s0_sdi1_m0 */
-+				<3 RK_PB0 2 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s0m0_sdi2: i2s0m0-sdi2 {
-+			rockchip,pins =
-+				/* i2s0_sdi2_m0 */
-+				<3 RK_PA7 2 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s0m0_sdi3: i2s0m0-sdi3 {
-+			rockchip,pins =
-+				/* i2s0_sdi3_m0 */
-+				<3 RK_PA6 2 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s0m0_sdo0: i2s0m0-sdo0 {
-+			rockchip,pins =
-+				/* i2s0_sdo0_m0 */
-+				<3 RK_PA5 1 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s0m0_sdo1: i2s0m0-sdo1 {
-+			rockchip,pins =
-+				/* i2s0_sdo1_m0 */
-+				<3 RK_PA6 1 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s0m0_sdo2: i2s0m0-sdo2 {
-+			rockchip,pins =
-+				/* i2s0_sdo2_m0 */
-+				<3 RK_PA7 1 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s0m0_sdo3: i2s0m0-sdo3 {
-+			rockchip,pins =
-+				/* i2s0_sdo3_m0 */
-+				<3 RK_PB0 1 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s0m1_lrck: i2s0m1-lrck {
-+			rockchip,pins =
-+				/* i2s0_lrck_m1 */
-+				<1 RK_PC4 3 &pcfg_pull_none_smt>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s0m1_mclk: i2s0m1-mclk {
-+			rockchip,pins =
-+				/* i2s0_mclk_m1 */
-+				<1 RK_PC6 3 &pcfg_pull_none_smt>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s0m1_sclk: i2s0m1-sclk {
-+			rockchip,pins =
-+				/* i2s0_sclk_m1 */
-+				<1 RK_PC5 3 &pcfg_pull_none_smt>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s0m1_sdi0: i2s0m1-sdi0 {
-+			rockchip,pins =
-+				/* i2s0_sdi0_m1 */
-+				<1 RK_PC1 3 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s0m1_sdi1: i2s0m1-sdi1 {
-+			rockchip,pins =
-+				/* i2s0_sdi1_m1 */
-+				<1 RK_PC2 3 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s0m1_sdi2: i2s0m1-sdi2 {
-+			rockchip,pins =
-+				/* i2s0_sdi2_m1 */
-+				<1 RK_PD3 3 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s0m1_sdi3: i2s0m1-sdi3 {
-+			rockchip,pins =
-+				/* i2s0_sdi3_m1 */
-+				<1 RK_PD4 3 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s0m1_sdo0: i2s0m1-sdo0 {
-+			rockchip,pins =
-+				/* i2s0_sdo0_m1 */
-+				<1 RK_PC3 3 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s0m1_sdo1: i2s0m1-sdo1 {
-+			rockchip,pins =
-+				/* i2s0_sdo1_m1 */
-+				<1 RK_PD1 3 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s0m1_sdo2: i2s0m1-sdo2 {
-+			rockchip,pins =
-+				/* i2s0_sdo2_m1 */
-+				<1 RK_PD2 3 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s0m1_sdo3: i2s0m1-sdo3 {
-+			rockchip,pins =
-+				/* i2s0_sdo3_m1 */
-+				<2 RK_PA1 5 &pcfg_pull_none>;
-+		};
-+	};
-+
-+	i2s1 {
-+		/omit-if-no-ref/
-+		i2s1m0_lrck: i2s1m0-lrck {
-+			rockchip,pins =
-+				/* i2s1_lrck_m0 */
-+				<3 RK_PC6 2 &pcfg_pull_none_smt>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s1m0_mclk: i2s1m0-mclk {
-+			rockchip,pins =
-+				/* i2s1_mclk_m0 */
-+				<3 RK_PC4 2 &pcfg_pull_none_smt>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s1m0_sclk: i2s1m0-sclk {
-+			rockchip,pins =
-+				/* i2s1_sclk_m0 */
-+				<3 RK_PC5 2 &pcfg_pull_none_smt>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s1m0_sdi0: i2s1m0-sdi0 {
-+			rockchip,pins =
-+				/* i2s1_sdi0_m0 */
-+				<3 RK_PD0 2 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s1m0_sdi1: i2s1m0-sdi1 {
-+			rockchip,pins =
-+				/* i2s1_sdi1_m0 */
-+				<3 RK_PD1 2 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s1m0_sdi2: i2s1m0-sdi2 {
-+			rockchip,pins =
-+				/* i2s1_sdi2_m0 */
-+				<3 RK_PD2 2 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s1m0_sdi3: i2s1m0-sdi3 {
-+			rockchip,pins =
-+				/* i2s1_sdi3_m0 */
-+				<3 RK_PD3 2 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s1m0_sdo0: i2s1m0-sdo0 {
-+			rockchip,pins =
-+				/* i2s1_sdo0_m0 */
-+				<3 RK_PC7 2 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s1m0_sdo1: i2s1m0-sdo1 {
-+			rockchip,pins =
-+				/* i2s1_sdo1_m0 */
-+				<4 RK_PB4 2 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s1m0_sdo2: i2s1m0-sdo2 {
-+			rockchip,pins =
-+				/* i2s1_sdo2_m0 */
-+				<4 RK_PB5 2 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s1m0_sdo3: i2s1m0-sdo3 {
-+			rockchip,pins =
-+				/* i2s1_sdo3_m0 */
-+				<4 RK_PB6 2 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s1m1_lrck: i2s1m1-lrck {
-+			rockchip,pins =
-+				/* i2s1_lrck_m1 */
-+				<3 RK_PB4 1 &pcfg_pull_none_smt>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s1m1_mclk: i2s1m1-mclk {
-+			rockchip,pins =
-+				/* i2s1_mclk_m1 */
-+				<3 RK_PB2 1 &pcfg_pull_none_smt>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s1m1_sclk: i2s1m1-sclk {
-+			rockchip,pins =
-+				/* i2s1_sclk_m1 */
-+				<3 RK_PB3 1 &pcfg_pull_none_smt>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s1m1_sdi0: i2s1m1-sdi0 {
-+			rockchip,pins =
-+				/* i2s1_sdi0_m1 */
-+				<3 RK_PC1 1 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s1m1_sdi1: i2s1m1-sdi1 {
-+			rockchip,pins =
-+				/* i2s1_sdi1_m1 */
-+				<3 RK_PC0 2 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s1m1_sdi2: i2s1m1-sdi2 {
-+			rockchip,pins =
-+				/* i2s1_sdi2_m1 */
-+				<3 RK_PB7 2 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s1m1_sdi3: i2s1m1-sdi3 {
-+			rockchip,pins =
-+				/* i2s1_sdi3_m1 */
-+				<3 RK_PB6 2 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s1m1_sdo0: i2s1m1-sdo0 {
-+			rockchip,pins =
-+				/* i2s1_sdo0_m1 */
-+				<3 RK_PB5 1 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s1m1_sdo1: i2s1m1-sdo1 {
-+			rockchip,pins =
-+				/* i2s1_sdo1_m1 */
-+				<3 RK_PB6 1 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s1m1_sdo2: i2s1m1-sdo2 {
-+			rockchip,pins =
-+				/* i2s1_sdo2_m1 */
-+				<3 RK_PB7 1 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s1m1_sdo3: i2s1m1-sdo3 {
-+			rockchip,pins =
-+				/* i2s1_sdo3_m1 */
-+				<3 RK_PC0 1 &pcfg_pull_none>;
-+		};
-+	};
-+
-+	i2s2 {
-+		/omit-if-no-ref/
-+		i2s2m0_lrck: i2s2m0-lrck {
-+			rockchip,pins =
-+				/* i2s2_lrck_m0 */
-+				<1 RK_PD6 1 &pcfg_pull_none_smt>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s2m0_mclk: i2s2m0-mclk {
-+			rockchip,pins =
-+				/* i2s2_mclk_m0 */
-+				<2 RK_PA1 1 &pcfg_pull_none_smt>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s2m0_sclk: i2s2m0-sclk {
-+			rockchip,pins =
-+				/* i2s2_sclk_m0 */
-+				<1 RK_PD5 1 &pcfg_pull_none_smt>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s2m0_sdi: i2s2m0-sdi {
-+			rockchip,pins =
-+				/* i2s2_sdi_m0 */
-+				<2 RK_PA0 1 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s2m0_sdo: i2s2m0-sdo {
-+			rockchip,pins =
-+				/* i2s2_sdo_m0 */
-+				<1 RK_PD7 1 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s2m1_lrck: i2s2m1-lrck {
-+			rockchip,pins =
-+				/* i2s2_lrck_m1 */
-+				<4 RK_PA1 3 &pcfg_pull_none_smt>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s2m1_mclk: i2s2m1-mclk {
-+			rockchip,pins =
-+				/* i2s2_mclk_m1 */
-+				<3 RK_PD6 3 &pcfg_pull_none_smt>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s2m1_sclk: i2s2m1-sclk {
-+			rockchip,pins =
-+				/* i2s2_sclk_m1 */
-+				<4 RK_PB1 4 &pcfg_pull_none_smt>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s2m1_sdi: i2s2m1-sdi {
-+			rockchip,pins =
-+				/* i2s2_sdi_m1 */
-+				<3 RK_PD4 4 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		i2s2m1_sdo: i2s2m1-sdo {
-+			rockchip,pins =
-+				/* i2s2_sdo_m1 */
-+				<3 RK_PD5 4 &pcfg_pull_none>;
-+		};
-+	};
-+
-+	isp {
-+		/omit-if-no-ref/
-+		isp_pins: isp-pins {
-+			rockchip,pins =
-+				/* isp_flash_trigin */
-+				<3 RK_PC1 2 &pcfg_pull_none>,
-+				/* isp_flash_trigout */
-+				<3 RK_PC3 2 &pcfg_pull_none>,
-+				/* isp_prelight_trigout */
-+				<3 RK_PC2 2 &pcfg_pull_none>;
-+		};
-+	};
-+
-+	jtag {
-+		/omit-if-no-ref/
-+		jtagm0_pins: jtagm0-pins {
-+			rockchip,pins =
-+				/* jtag_cpu_mcu_tck_m0 */
-+				<0 RK_PD1 2 &pcfg_pull_none>,
-+				/* jtag_cpu_mcu_tms_m0 */
-+				<0 RK_PD0 2 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		jtagm1_pins: jtagm1-pins {
-+			rockchip,pins =
-+				/* jtag_cpu_mcu_tck_m1 */
-+				<1 RK_PB5 2 &pcfg_pull_none>,
-+				/* jtag_cpu_mcu_tms_m1 */
-+				<1 RK_PB6 2 &pcfg_pull_none>;
-+		};
-+	};
-+
-+	npu {
-+		/omit-if-no-ref/
-+		npu_pins: npu-pins {
-+			rockchip,pins =
-+				/* npu_avs */
-+				<0 RK_PC1 3 &pcfg_pull_none>;
-+		};
-+	};
-+
-+	pcie20 {
-+		/omit-if-no-ref/
-+		pcie20m0_pins: pcie20m0-pins {
-+			rockchip,pins =
-+				/* pcie20_clkreqn_m0 */
-+				<0 RK_PA6 1 &pcfg_pull_none>,
-+				/* pcie20_perstn_m0 */
-+				<0 RK_PB5 2 &pcfg_pull_none>,
-+				/* pcie20_waken_m0 */
-+				<0 RK_PB6 2 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		pcie20m1_pins: pcie20m1-pins {
-+			rockchip,pins =
-+				/* pcie20_clkreqn_m1 */
-+				<3 RK_PA6 4 &pcfg_pull_none>,
-+				/* pcie20_perstn_m1 */
-+				<3 RK_PB0 4 &pcfg_pull_none>,
-+				/* pcie20_waken_m1 */
-+				<3 RK_PA7 4 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		pcie20_buttonrstn: pcie20-buttonrstn {
-+			rockchip,pins =
-+				/* pcie20_buttonrstn */
-+				<0 RK_PB0 3 &pcfg_pull_none>;
-+		};
-+	};
-+
-+	pdm {
-+		/omit-if-no-ref/
-+		pdmm0_clk0: pdmm0-clk0 {
-+			rockchip,pins =
-+				/* pdm_clk0_m0 */
-+				<3 RK_PA6 3 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		pdmm0_clk1: pdmm0-clk1 {
-+			rockchip,pins =
-+				/* pdm_clk1_m0 */
-+				<3 RK_PA2 3 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		pdmm0_sdi0: pdmm0-sdi0 {
-+			rockchip,pins =
-+				/* pdm_sdi0_m0 */
-+				<3 RK_PB1 2 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		pdmm0_sdi1: pdmm0-sdi1 {
-+			rockchip,pins =
-+				/* pdm_sdi1_m0 */
-+				<3 RK_PB0 3 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		pdmm0_sdi2: pdmm0-sdi2 {
-+			rockchip,pins =
-+				/* pdm_sdi2_m0 */
-+				<3 RK_PA7 3 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		pdmm0_sdi3: pdmm0-sdi3 {
-+			rockchip,pins =
-+				/* pdm_sdi3_m0 */
-+				<3 RK_PA0 3 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		pdmm1_clk0: pdmm1-clk0 {
-+			rockchip,pins =
-+				/* pdm_clk0_m1 */
-+				<4 RK_PB7 4 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		pdmm1_clk1: pdmm1-clk1 {
-+			rockchip,pins =
-+				/* pdm_clk1_m1 */
-+				<4 RK_PB1 5 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		pdmm1_sdi0: pdmm1-sdi0 {
-+			rockchip,pins =
-+				/* pdm_sdi0_m1 */
-+				<4 RK_PA7 4 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		pdmm1_sdi1: pdmm1-sdi1 {
-+			rockchip,pins =
-+				/* pdm_sdi1_m1 */
-+				<4 RK_PB0 4 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		pdmm1_sdi2: pdmm1-sdi2 {
-+			rockchip,pins =
-+				/* pdm_sdi2_m1 */
-+				<4 RK_PA5 4 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		pdmm1_sdi3: pdmm1-sdi3 {
-+			rockchip,pins =
-+				/* pdm_sdi3_m1 */
-+				<4 RK_PA6 4 &pcfg_pull_none>;
-+		};
-+	};
-+
-+	pmic {
-+		/omit-if-no-ref/
-+		pmic_int: pmic-int {
-+			rockchip,pins =
-+				<0 RK_PA3 0 &pcfg_pull_up>;
-+		};
-+
-+		/omit-if-no-ref/
-+		soc_slppin_gpio: soc-slppin-gpio {
-+			rockchip,pins =
-+				<0 RK_PA2 0 &pcfg_output_low>;
-+		};
-+
-+		/omit-if-no-ref/
-+		soc_slppin_slp: soc-slppin-slp {
-+			rockchip,pins =
-+				<0 RK_PA2 1 &pcfg_pull_none>;
-+		};
-+	};
-+
-+	pmu {
-+		/omit-if-no-ref/
-+		pmu_pins: pmu-pins {
-+			rockchip,pins =
-+				/* pmu_debug */
-+				<0 RK_PA5 3 &pcfg_pull_none>;
-+		};
-+	};
-+
-+	pwm0 {
-+		/omit-if-no-ref/
-+		pwm0m0_pins: pwm0m0-pins {
-+			rockchip,pins =
-+				/* pwm0_m0 */
-+				<0 RK_PC3 2 &pcfg_pull_none_drv_level_1>;
-+		};
-+
-+		/omit-if-no-ref/
-+		pwm0m1_pins: pwm0m1-pins {
-+			rockchip,pins =
-+				/* pwm0_m1 */
-+				<1 RK_PC5 4 &pcfg_pull_none_drv_level_1>;
-+		};
-+	};
-+
-+	pwm1 {
-+		/omit-if-no-ref/
-+		pwm1m0_pins: pwm1m0-pins {
-+			rockchip,pins =
-+				/* pwm1_m0 */
-+				<0 RK_PC4 2 &pcfg_pull_none_drv_level_1>;
-+		};
-+
-+		/omit-if-no-ref/
-+		pwm1m1_pins: pwm1m1-pins {
-+			rockchip,pins =
-+				/* pwm1_m1 */
-+				<1 RK_PC6 4 &pcfg_pull_none_drv_level_1>;
-+		};
-+	};
-+
-+	pwm2 {
-+		/omit-if-no-ref/
-+		pwm2m0_pins: pwm2m0-pins {
-+			rockchip,pins =
-+				/* pwm2_m0 */
-+				<0 RK_PC5 2 &pcfg_pull_none_drv_level_1>;
-+		};
-+
-+		/omit-if-no-ref/
-+		pwm2m1_pins: pwm2m1-pins {
-+			rockchip,pins =
-+				/* pwm2_m1 */
-+				<1 RK_PC7 3 &pcfg_pull_none_drv_level_1>;
-+		};
-+	};
-+
-+	pwm3 {
-+		/omit-if-no-ref/
-+		pwm3m0_pins: pwm3m0-pins {
-+			rockchip,pins =
-+				/* pwm3_m0 */
-+				<0 RK_PA7 1 &pcfg_pull_none_drv_level_1>;
-+		};
-+
-+		/omit-if-no-ref/
-+		pwm3m1_pins: pwm3m1-pins {
-+			rockchip,pins =
-+				/* pwm3_m1 */
-+				<1 RK_PD0 3 &pcfg_pull_none_drv_level_1>;
-+		};
-+	};
-+
-+	pwm4 {
-+		/omit-if-no-ref/
-+		pwm4m0_pins: pwm4m0-pins {
-+			rockchip,pins =
-+				/* pwm4_m0 */
-+				<0 RK_PB7 2 &pcfg_pull_none_drv_level_1>;
-+		};
-+
-+		/omit-if-no-ref/
-+		pwm4m1_pins: pwm4m1-pins {
-+			rockchip,pins =
-+				/* pwm4_m1 */
-+				<1 RK_PD1 4 &pcfg_pull_none_drv_level_1>;
-+		};
-+	};
-+
-+	pwm5 {
-+		/omit-if-no-ref/
-+		pwm5m0_pins: pwm5m0-pins {
-+			rockchip,pins =
-+				/* pwm5_m0 */
-+				<0 RK_PC2 2 &pcfg_pull_none_drv_level_1>;
-+		};
-+
-+		/omit-if-no-ref/
-+		pwm5m1_pins: pwm5m1-pins {
-+			rockchip,pins =
-+				/* pwm5_m1 */
-+				<1 RK_PD2 4 &pcfg_pull_none_drv_level_1>;
-+		};
-+	};
-+
-+	pwm6 {
-+		/omit-if-no-ref/
-+		pwm6m0_pins: pwm6m0-pins {
-+			rockchip,pins =
-+				/* pwm6_m0 */
-+				<0 RK_PC1 2 &pcfg_pull_none_drv_level_1>;
-+		};
-+
-+		/omit-if-no-ref/
-+		pwm6m1_pins: pwm6m1-pins {
-+			rockchip,pins =
-+				/* pwm6_m1 */
-+				<1 RK_PD3 4 &pcfg_pull_none_drv_level_1>;
-+		};
-+	};
-+
-+	pwm7 {
-+		/omit-if-no-ref/
-+		pwm7m0_pins: pwm7m0-pins {
-+			rockchip,pins =
-+				/* pwm7_m0 */
-+				<0 RK_PC0 2 &pcfg_pull_none_drv_level_1>;
-+		};
-+
-+		/omit-if-no-ref/
-+		pwm7m1_pins: pwm7m1-pins {
-+			rockchip,pins =
-+				/* pwm7_m1 */
-+				<1 RK_PD4 4 &pcfg_pull_none_drv_level_1>;
-+		};
-+	};
-+
-+	pwm8 {
-+		/omit-if-no-ref/
-+		pwm8m0_pins: pwm8m0-pins {
-+			rockchip,pins =
-+				/* pwm8_m0 */
-+				<3 RK_PA4 2 &pcfg_pull_none_drv_level_1>;
-+		};
-+
-+		/omit-if-no-ref/
-+		pwm8m1_pins: pwm8m1-pins {
-+			rockchip,pins =
-+				/* pwm8_m1 */
-+				<1 RK_PC1 4 &pcfg_pull_none_drv_level_1>;
-+		};
-+	};
-+
-+	pwm9 {
-+		/omit-if-no-ref/
-+		pwm9m0_pins: pwm9m0-pins {
-+			rockchip,pins =
-+				/* pwm9_m0 */
-+				<3 RK_PA5 2 &pcfg_pull_none_drv_level_1>;
-+		};
-+
-+		/omit-if-no-ref/
-+		pwm9m1_pins: pwm9m1-pins {
-+			rockchip,pins =
-+				/* pwm9_m1 */
-+				<1 RK_PC2 4 &pcfg_pull_none_drv_level_1>;
-+		};
-+	};
-+
-+	pwm10 {
-+		/omit-if-no-ref/
-+		pwm10m0_pins: pwm10m0-pins {
-+			rockchip,pins =
-+				/* pwm10_m0 */
-+				<1 RK_PB5 5 &pcfg_pull_none_drv_level_1>;
-+		};
-+
-+		/omit-if-no-ref/
-+		pwm10m1_pins: pwm10m1-pins {
-+			rockchip,pins =
-+				/* pwm10_m1 */
-+				<1 RK_PC3 4 &pcfg_pull_none_drv_level_1>;
-+		};
-+	};
-+
-+	pwm11 {
-+		/omit-if-no-ref/
-+		pwm11m0_pins: pwm11m0-pins {
-+			rockchip,pins =
-+				/* pwm11_m0 */
-+				<1 RK_PB6 5 &pcfg_pull_none_drv_level_1>;
-+		};
-+
-+		/omit-if-no-ref/
-+		pwm11m1_pins: pwm11m1-pins {
-+			rockchip,pins =
-+				/* pwm11_m1 */
-+				<1 RK_PC4 4 &pcfg_pull_none_drv_level_1>;
-+		};
-+	};
-+
-+	pwm12 {
-+		/omit-if-no-ref/
-+		pwm12m0_pins: pwm12m0-pins {
-+			rockchip,pins =
-+				/* pwm12_m0 */
-+				<4 RK_PA1 4 &pcfg_pull_none_drv_level_1>;
-+		};
-+
-+		/omit-if-no-ref/
-+		pwm12m1_pins: pwm12m1-pins {
-+			rockchip,pins =
-+				/* pwm12_m1 */
-+				<3 RK_PB4 5 &pcfg_pull_none_drv_level_1>;
-+		};
-+	};
-+
-+	pwm13 {
-+		/omit-if-no-ref/
-+		pwm13m0_pins: pwm13m0-pins {
-+			rockchip,pins =
-+				/* pwm13_m0 */
-+				<4 RK_PA4 3 &pcfg_pull_none_drv_level_1>;
-+		};
-+
-+		/omit-if-no-ref/
-+		pwm13m1_pins: pwm13m1-pins {
-+			rockchip,pins =
-+				/* pwm13_m1 */
-+				<3 RK_PB5 5 &pcfg_pull_none_drv_level_1>;
-+		};
-+	};
-+
-+	pwm14 {
-+		/omit-if-no-ref/
-+		pwm14m0_pins: pwm14m0-pins {
-+			rockchip,pins =
-+				/* pwm14_m0 */
-+				<3 RK_PC5 4 &pcfg_pull_none_drv_level_1>;
-+		};
-+
-+		/omit-if-no-ref/
-+		pwm14m1_pins: pwm14m1-pins {
-+			rockchip,pins =
-+				/* pwm14_m1 */
-+				<1 RK_PD7 5 &pcfg_pull_none_drv_level_1>;
-+		};
-+	};
-+
-+	pwm15 {
-+		/omit-if-no-ref/
-+		pwm15m0_pins: pwm15m0-pins {
-+			rockchip,pins =
-+				/* pwm15_m0 */
-+				<3 RK_PC6 4 &pcfg_pull_none_drv_level_1>;
-+		};
-+
-+		/omit-if-no-ref/
-+		pwm15m1_pins: pwm15m1-pins {
-+			rockchip,pins =
-+				/* pwm15_m1 */
-+				<2 RK_PA0 5 &pcfg_pull_none_drv_level_1>;
-+		};
-+	};
-+
-+	pwr {
-+		/omit-if-no-ref/
-+		pwr_pins: pwr-pins {
-+			rockchip,pins =
-+				/* pwr_ctrl0 */
-+				<0 RK_PA2 1 &pcfg_pull_none>,
-+				/* pwr_ctrl1 */
-+				<0 RK_PA3 1 &pcfg_pull_none>;
-+		};
-+	};
-+
-+	ref {
-+		/omit-if-no-ref/
-+		ref_pins: ref-pins {
-+			rockchip,pins =
-+				/* ref_clk_out */
-+				<0 RK_PA0 1 &pcfg_pull_none>;
-+		};
-+	};
-+
-+	rgmii {
-+		/omit-if-no-ref/
-+		rgmiim0_miim: rgmiim0-miim {
-+			rockchip,pins =
-+				/* rgmii_mdc_m0 */
-+				<4 RK_PB2 2 &pcfg_pull_none>,
-+				/* rgmii_mdio_m0 */
-+				<4 RK_PB3 2 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		rgmiim0_rx_er: rgmiim0-rx_er {
-+			rockchip,pins =
-+				/* rgmii_rxer_m0 */
-+				<4 RK_PB0 2 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		rgmiim0_rx_bus2: rgmiim0-rx_bus2 {
-+			rockchip,pins =
-+				/* rgmii_rxd0_m0 */
-+				<4 RK_PA5 2 &pcfg_pull_none>,
-+				/* rgmii_rxd1_m0 */
-+				<4 RK_PA6 2 &pcfg_pull_none>,
-+				/* rgmii_rxdv_m0 */
-+				<4 RK_PA7 2 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		rgmiim0_tx_bus2: rgmiim0-tx_bus2 {
-+			rockchip,pins =
-+				/* rgmii_txd0_m0 */
-+				<4 RK_PA2 2 &pcfg_pull_none>,
-+				/* rgmii_txd1_m0 */
-+				<4 RK_PA3 2 &pcfg_pull_none>,
-+				/* rgmii_txen_m0 */
-+				<4 RK_PA4 2 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		rgmiim0_rgmii_clk: rgmiim0-rgmii_clk {
-+			rockchip,pins =
-+				/* rgmii_rxclk_m0 */
-+				<4 RK_PA1 2 &pcfg_pull_none>,
-+				/* rgmii_txclk_m0 */
-+				<3 RK_PD6 2 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		rgmiim0_rgmii_bus: rgmiim0-rgmii_bus {
-+			rockchip,pins =
-+				/* rgmii_rxd2_m0 */
-+				<3 RK_PD7 2 &pcfg_pull_none>,
-+				/* rgmii_rxd3_m0 */
-+				<4 RK_PA0 2 &pcfg_pull_none>,
-+				/* rgmii_txd2_m0 */
-+				<3 RK_PD4 2 &pcfg_pull_none>,
-+				/* rgmii_txd3_m0 */
-+				<3 RK_PD5 2 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		rgmiim0_clk: rgmiim0-clk {
-+			rockchip,pins =
-+				/* rgmiim0_clk */
-+				<4 RK_PB7 2 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		rgmiim1_miim: rgmiim1-miim {
-+			rockchip,pins =
-+				/* rgmii_mdc_m1 */
-+				<1 RK_PC7 2 &pcfg_pull_none>,
-+				/* rgmii_mdio_m1 */
-+				<1 RK_PD0 2 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		rgmiim1_rx_er: rgmiim1-rx_er {
-+			rockchip,pins =
-+				/* rgmii_rxer_m1 */
-+				<2 RK_PA0 2 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		rgmiim1_rx_bus2: rgmiim1-rx_bus2 {
-+			rockchip,pins =
-+				/* rgmii_rxd0_m1 */
-+				<1 RK_PD4 2 &pcfg_pull_none>,
-+				/* rgmii_rxd1_m1 */
-+				<1 RK_PD7 2 &pcfg_pull_none>,
-+				/* rgmii_rxdv_m1 */
-+				<1 RK_PD6 2 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		rgmiim1_tx_bus2: rgmiim1-tx_bus2 {
-+			rockchip,pins =
-+				/* rgmii_txd0_m1 */
-+				<1 RK_PD1 2 &pcfg_pull_none>,
-+				/* rgmii_txd1_m1 */
-+				<1 RK_PD2 2 &pcfg_pull_none>,
-+				/* rgmii_txen_m1 */
-+				<1 RK_PD3 2 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		rgmiim1_rgmii_clk: rgmiim1-rgmii_clk {
-+			rockchip,pins =
-+				/* rgmii_rxclk_m1 */
-+				<1 RK_PC6 2 &pcfg_pull_none>,
-+				/* rgmii_txclk_m1 */
-+				<1 RK_PC3 2 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		rgmiim1_rgmii_bus: rgmiim1-rgmii_bus {
-+			rockchip,pins =
-+				/* rgmii_rxd2_m1 */
-+				<1 RK_PC4 2 &pcfg_pull_none>,
-+				/* rgmii_rxd3_m1 */
-+				<1 RK_PC5 2 &pcfg_pull_none>,
-+				/* rgmii_txd2_m1 */
-+				<1 RK_PC1 2 &pcfg_pull_none>,
-+				/* rgmii_txd3_m1 */
-+				<1 RK_PC2 2 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		rgmiim1_clk: rgmiim1-clk {
-+			rockchip,pins =
-+				/* rgmiim1_clk */
-+				<1 RK_PD5 2 &pcfg_pull_none>;
-+		};
-+	};
-+
-+	rmii {
-+		/omit-if-no-ref/
-+		rmii_pins: rmii-pins {
-+			rockchip,pins =
-+				/* rmii_clk */
-+				<1 RK_PD5 5 &pcfg_pull_none>,
-+				/* rmii_mdc */
-+				<1 RK_PC7 5 &pcfg_pull_none>,
-+				/* rmii_mdio */
-+				<1 RK_PD0 5 &pcfg_pull_none>,
-+				/* rmii_rxd0 */
-+				<1 RK_PD4 5 &pcfg_pull_none>,
-+				/* rmii_rxd1 */
-+				<1 RK_PD7 6 &pcfg_pull_none>,
-+				/* rmii_rxdv_crs */
-+				<1 RK_PD6 5 &pcfg_pull_none>,
-+				/* rmii_rxer */
-+				<2 RK_PA0 6 &pcfg_pull_none>,
-+				/* rmii_txd0 */
-+				<1 RK_PD1 5 &pcfg_pull_none>,
-+				/* rmii_txd1 */
-+				<1 RK_PD2 5 &pcfg_pull_none>,
-+				/* rmii_txen */
-+				<1 RK_PD3 5 &pcfg_pull_none>;
-+		};
-+	};
-+
-+	sdmmc0 {
-+		/omit-if-no-ref/
-+		sdmmc0_bus4: sdmmc0-bus4 {
-+			rockchip,pins =
-+				/* sdmmc0_d0 */
-+				<1 RK_PB3 1 &pcfg_pull_up_drv_level_2>,
-+				/* sdmmc0_d1 */
-+				<1 RK_PB4 1 &pcfg_pull_up_drv_level_2>,
-+				/* sdmmc0_d2 */
-+				<1 RK_PB5 1 &pcfg_pull_up_drv_level_2>,
-+				/* sdmmc0_d3 */
-+				<1 RK_PB6 1 &pcfg_pull_up_drv_level_2>;
-+		};
-+
-+		/omit-if-no-ref/
-+		sdmmc0_clk: sdmmc0-clk {
-+			rockchip,pins =
-+				/* sdmmc0_clk */
-+				<1 RK_PC0 1 &pcfg_pull_up_drv_level_2>;
-+		};
-+
-+		/omit-if-no-ref/
-+		sdmmc0_cmd: sdmmc0-cmd {
-+			rockchip,pins =
-+				/* sdmmc0_cmd */
-+				<1 RK_PB7 1 &pcfg_pull_up_drv_level_2>;
-+		};
-+
-+		/omit-if-no-ref/
-+		sdmmc0_det: sdmmc0-det {
-+			rockchip,pins =
-+				/* sdmmc0_detn */
-+				<0 RK_PA4 1 &pcfg_pull_up>;
-+		};
-+
-+		/omit-if-no-ref/
-+		sdmmc0_pwren: sdmmc0-pwren {
-+			rockchip,pins =
-+				/* sdmmc0_pwren */
-+				<0 RK_PA5 1 &pcfg_pull_none>;
-+		};
-+	};
-+
-+	sdmmc1 {
-+		/omit-if-no-ref/
-+		sdmmc1_bus4: sdmmc1-bus4 {
-+			rockchip,pins =
-+				/* sdmmc1_d0 */
-+				<1 RK_PC1 1 &pcfg_pull_up_drv_level_2>,
-+				/* sdmmc1_d1 */
-+				<1 RK_PC2 1 &pcfg_pull_up_drv_level_2>,
-+				/* sdmmc1_d2 */
-+				<1 RK_PC3 1 &pcfg_pull_up_drv_level_2>,
-+				/* sdmmc1_d3 */
-+				<1 RK_PC4 1 &pcfg_pull_up_drv_level_2>;
-+		};
-+
-+		/omit-if-no-ref/
-+		sdmmc1_clk: sdmmc1-clk {
-+			rockchip,pins =
-+				/* sdmmc1_clk */
-+				<1 RK_PC6 1 &pcfg_pull_up_drv_level_2>;
-+		};
-+
-+		/omit-if-no-ref/
-+		sdmmc1_cmd: sdmmc1-cmd {
-+			rockchip,pins =
-+				/* sdmmc1_cmd */
-+				<1 RK_PC5 1 &pcfg_pull_up_drv_level_2>;
-+		};
-+
-+		/omit-if-no-ref/
-+		sdmmc1_det: sdmmc1-det {
-+			rockchip,pins =
-+				/* sdmmc1_detn */
-+				<1 RK_PD0 1 &pcfg_pull_up>;
-+		};
-+
-+		/omit-if-no-ref/
-+		sdmmc1_pwren: sdmmc1-pwren {
-+			rockchip,pins =
-+				/* sdmmc1_pwren */
-+				<1 RK_PC7 1 &pcfg_pull_none>;
-+		};
-+	};
-+
-+	spdif {
-+		/omit-if-no-ref/
-+		spdifm0_pins: spdifm0-pins {
-+			rockchip,pins =
-+				/* spdif_tx_m0 */
-+				<3 RK_PA1 3 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		spdifm1_pins: spdifm1-pins {
-+			rockchip,pins =
-+				/* spdif_tx_m1 */
-+				<0 RK_PB7 4 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		spdifm2_pins: spdifm2-pins {
-+			rockchip,pins =
-+				/* spdif_tx_m2 */
-+				<1 RK_PB7 2 &pcfg_pull_none>;
-+		};
-+	};
-+
-+	spi0 {
-+		/omit-if-no-ref/
-+		spi0m0_pins: spi0m0-pins {
-+			rockchip,pins =
-+				/* spi0_clk_m0 */
-+				<0 RK_PC3 3 &pcfg_pull_none_drv_level_3>,
-+				/* spi0_miso_m0 */
-+				<0 RK_PC5 3 &pcfg_pull_none_drv_level_3>,
-+				/* spi0_mosi_m0 */
-+				<0 RK_PC4 3 &pcfg_pull_none_drv_level_3>;
-+		};
-+
-+		/omit-if-no-ref/
-+		spi0m0_csn0: spi0m0-csn0 {
-+			rockchip,pins =
-+				/* spi0m0_csn0 */
-+				<0 RK_PC2 3 &pcfg_pull_none_drv_level_3>;
-+		};
-+		/omit-if-no-ref/
-+		spi0m0_csn1: spi0m0-csn1 {
-+			rockchip,pins =
-+				/* spi0m0_csn1 */
-+				<0 RK_PB7 1 &pcfg_pull_none_drv_level_3>;
-+		};
-+
-+		/omit-if-no-ref/
-+		spi0m1_pins: spi0m1-pins {
-+			rockchip,pins =
-+				/* spi0_clk_m1 */
-+				<3 RK_PB5 4 &pcfg_pull_none_drv_level_3>,
-+				/* spi0_miso_m1 */
-+				<3 RK_PC0 4 &pcfg_pull_none_drv_level_3>,
-+				/* spi0_mosi_m1 */
-+				<3 RK_PB4 4 &pcfg_pull_none_drv_level_3>;
-+		};
-+
-+		/omit-if-no-ref/
-+		spi0m1_csn0: spi0m1-csn0 {
-+			rockchip,pins =
-+				/* spi0m1_csn0 */
-+				<3 RK_PB7 4 &pcfg_pull_none_drv_level_3>;
-+		};
-+		/omit-if-no-ref/
-+		spi0m1_csn1: spi0m1-csn1 {
-+			rockchip,pins =
-+				/* spi0m1_csn1 */
-+				<3 RK_PB6 4 &pcfg_pull_none_drv_level_3>;
-+		};
-+	};
-+
-+	spi1 {
-+		/omit-if-no-ref/
-+		spi1m0_pins: spi1m0-pins {
-+			rockchip,pins =
-+				/* spi1_clk_m0 */
-+				<3 RK_PD6 4 &pcfg_pull_none_drv_level_3>,
-+				/* spi1_miso_m0 */
-+				<4 RK_PA3 4 &pcfg_pull_none_drv_level_3>,
-+				/* spi1_mosi_m0 */
-+				<4 RK_PA2 4 &pcfg_pull_none_drv_level_3>;
-+		};
-+
-+		/omit-if-no-ref/
-+		spi1m0_csn0: spi1m0-csn0 {
-+			rockchip,pins =
-+				/* spi1m0_csn0 */
-+				<3 RK_PD7 4 &pcfg_pull_none_drv_level_3>;
-+		};
-+		/omit-if-no-ref/
-+		spi1m0_csn1: spi1m0-csn1 {
-+			rockchip,pins =
-+				/* spi1m0_csn1 */
-+				<4 RK_PA0 4 &pcfg_pull_none_drv_level_3>;
-+		};
-+
-+		/omit-if-no-ref/
-+		spi1m1_pins: spi1m1-pins {
-+			rockchip,pins =
-+				/* spi1_clk_m1 */
-+				<1 RK_PC0 4 &pcfg_pull_none_drv_level_3>,
-+				/* spi1_miso_m1 */
-+				<1 RK_PB4 4 &pcfg_pull_none_drv_level_3>,
-+				/* spi1_mosi_m1 */
-+				<1 RK_PB3 4 &pcfg_pull_none_drv_level_3>;
-+		};
-+
-+		/omit-if-no-ref/
-+		spi1m1_csn0: spi1m1-csn0 {
-+			rockchip,pins =
-+				/* spi1m1_csn0 */
-+				<1 RK_PB6 4 &pcfg_pull_none_drv_level_3>;
-+		};
-+		/omit-if-no-ref/
-+		spi1m1_csn1: spi1m1-csn1 {
-+			rockchip,pins =
-+				/* spi1m1_csn1 */
-+				<1 RK_PB5 4 &pcfg_pull_none_drv_level_3>;
-+		};
-+	};
-+
-+	spi2 {
-+		/omit-if-no-ref/
-+		spi2m0_pins: spi2m0-pins {
-+			rockchip,pins =
-+				/* spi2_clk_m0 */
-+				<4 RK_PB6 4 &pcfg_pull_none_drv_level_3>,
-+				/* spi2_miso_m0 */
-+				<3 RK_PD2 4 &pcfg_pull_none_drv_level_3>,
-+				/* spi2_mosi_m0 */
-+				<3 RK_PD3 4 &pcfg_pull_none_drv_level_3>;
-+		};
-+
-+		/omit-if-no-ref/
-+		spi2m0_csn0: spi2m0-csn0 {
-+			rockchip,pins =
-+				/* spi2m0_csn0 */
-+				<4 RK_PB5 4 &pcfg_pull_none_drv_level_3>;
-+		};
-+		/omit-if-no-ref/
-+		spi2m0_csn1: spi2m0-csn1 {
-+			rockchip,pins =
-+				/* spi2m0_csn1 */
-+				<4 RK_PB4 4 &pcfg_pull_none_drv_level_3>;
-+		};
-+
-+		/omit-if-no-ref/
-+		spi2m1_pins: spi2m1-pins {
-+			rockchip,pins =
-+				/* spi2_clk_m1 */
-+				<2 RK_PA1 4 &pcfg_pull_none_drv_level_3>,
-+				/* spi2_miso_m1 */
-+				<2 RK_PA0 4 &pcfg_pull_none_drv_level_3>,
-+				/* spi2_mosi_m1 */
-+				<1 RK_PD7 4 &pcfg_pull_none_drv_level_3>;
-+		};
-+
-+		/omit-if-no-ref/
-+		spi2m1_csn0: spi2m1-csn0 {
-+			rockchip,pins =
-+				/* spi2m1_csn0 */
-+				<1 RK_PD6 4 &pcfg_pull_none_drv_level_3>;
-+		};
-+		/omit-if-no-ref/
-+		spi2m1_csn1: spi2m1-csn1 {
-+			rockchip,pins =
-+				/* spi2m1_csn1 */
-+				<1 RK_PD5 4 &pcfg_pull_none_drv_level_3>;
-+		};
-+	};
-+
-+	tsadc {
-+		/omit-if-no-ref/
-+		tsadcm0_pins: tsadcm0-pins {
-+			rockchip,pins =
-+				/* tsadc_shut_m0 */
-+				<0 RK_PA1 1 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		tsadcm1_pins: tsadcm1-pins {
-+			rockchip,pins =
-+				/* tsadc_shut_m1 */
-+				<0 RK_PA2 2 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		tsadc_shut_org: tsadc-shut-org {
-+			rockchip,pins =
-+				/* tsadc_shut_org */
-+				<0 RK_PA1 2 &pcfg_pull_none>;
-+		};
-+	};
-+
-+	uart0 {
-+		/omit-if-no-ref/
-+		uart0m0_xfer: uart0m0-xfer {
-+			rockchip,pins =
-+				/* uart0_rx_m0 */
-+				<0 RK_PD0 1 &pcfg_pull_up>,
-+				/* uart0_tx_m0 */
-+				<0 RK_PD1 1 &pcfg_pull_up>;
-+		};
-+
-+		/omit-if-no-ref/
-+		uart0m1_xfer: uart0m1-xfer {
-+			rockchip,pins =
-+				/* uart0_rx_m1 */
-+				<1 RK_PB3 2 &pcfg_pull_up>,
-+				/* uart0_tx_m1 */
-+				<1 RK_PB4 2 &pcfg_pull_up>;
-+		};
-+	};
-+
-+	uart1 {
-+		/omit-if-no-ref/
-+		uart1m0_xfer: uart1m0-xfer {
-+			rockchip,pins =
-+				/* uart1_rx_m0 */
-+				<1 RK_PD1 1 &pcfg_pull_up>,
-+				/* uart1_tx_m0 */
-+				<1 RK_PD2 1 &pcfg_pull_up>;
-+		};
-+
-+		/omit-if-no-ref/
-+		uart1m0_ctsn: uart1m0-ctsn {
-+			rockchip,pins =
-+				/* uart1m0_ctsn */
-+				<1 RK_PD4 1 &pcfg_pull_none>;
-+		};
-+		/omit-if-no-ref/
-+		uart1m0_rtsn: uart1m0-rtsn {
-+			rockchip,pins =
-+				/* uart1m0_rtsn */
-+				<1 RK_PD3 1 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		uart1m1_xfer: uart1m1-xfer {
-+			rockchip,pins =
-+				/* uart1_rx_m1 */
-+				<4 RK_PA6 3 &pcfg_pull_up>,
-+				/* uart1_tx_m1 */
-+				<4 RK_PA5 3 &pcfg_pull_up>;
-+		};
-+
-+		/omit-if-no-ref/
-+		uart1m1_ctsn: uart1m1-ctsn {
-+			rockchip,pins =
-+				/* uart1m1_ctsn */
-+				<4 RK_PB0 3 &pcfg_pull_none>;
-+		};
-+		/omit-if-no-ref/
-+		uart1m1_rtsn: uart1m1-rtsn {
-+			rockchip,pins =
-+				/* uart1m1_rtsn */
-+				<4 RK_PA7 3 &pcfg_pull_none>;
-+		};
-+	};
-+
-+	uart2 {
-+		/omit-if-no-ref/
-+		uart2m0_xfer: uart2m0-xfer {
-+			rockchip,pins =
-+				/* uart2_rx_m0 */
-+				<0 RK_PC1 1 &pcfg_pull_up>,
-+				/* uart2_tx_m0 */
-+				<0 RK_PC0 1 &pcfg_pull_up>;
-+		};
-+
-+		/omit-if-no-ref/
-+		uart2m0_ctsn: uart2m0-ctsn {
-+			rockchip,pins =
-+				/* uart2m0_ctsn */
-+				<0 RK_PC2 1 &pcfg_pull_none>;
-+		};
-+		/omit-if-no-ref/
-+		uart2m0_rtsn: uart2m0-rtsn {
-+			rockchip,pins =
-+				/* uart2m0_rtsn */
-+				<0 RK_PC3 1 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		uart2m1_xfer: uart2m1-xfer {
-+			rockchip,pins =
-+				/* uart2_rx_m1 */
-+				<3 RK_PA1 2 &pcfg_pull_up>,
-+				/* uart2_tx_m1 */
-+				<3 RK_PA0 2 &pcfg_pull_up>;
-+		};
-+
-+		/omit-if-no-ref/
-+		uart2m1_ctsn: uart2m1-ctsn {
-+			rockchip,pins =
-+				/* uart2m1_ctsn */
-+				<3 RK_PA2 2 &pcfg_pull_none>;
-+		};
-+		/omit-if-no-ref/
-+		uart2m1_rtsn: uart2m1-rtsn {
-+			rockchip,pins =
-+				/* uart2m1_rtsn */
-+				<3 RK_PA3 2 &pcfg_pull_none>;
-+		};
-+	};
-+
-+	uart3 {
-+		/omit-if-no-ref/
-+		uart3m0_xfer: uart3m0-xfer {
-+			rockchip,pins =
-+				/* uart3_rx_m0 */
-+				<4 RK_PB5 6 &pcfg_pull_up>,
-+				/* uart3_tx_m0 */
-+				<4 RK_PB4 6 &pcfg_pull_up>;
-+		};
-+
-+		/omit-if-no-ref/
-+		uart3m0_ctsn: uart3m0-ctsn {
-+			rockchip,pins =
-+				/* uart3m0_ctsn */
-+				<4 RK_PB6 3 &pcfg_pull_none>;
-+		};
-+		/omit-if-no-ref/
-+		uart3m0_rtsn: uart3m0-rtsn {
-+			rockchip,pins =
-+				/* uart3m0_rtsn */
-+				<3 RK_PD1 4 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		uart3m1_xfer: uart3m1-xfer {
-+			rockchip,pins =
-+				/* uart3_rx_m1 */
-+				<3 RK_PC0 3 &pcfg_pull_up>,
-+				/* uart3_tx_m1 */
-+				<3 RK_PB7 3 &pcfg_pull_up>;
-+		};
-+
-+		/omit-if-no-ref/
-+		uart3m1_ctsn: uart3m1-ctsn {
-+			rockchip,pins =
-+				/* uart3m1_ctsn */
-+				<3 RK_PB6 3 &pcfg_pull_none>;
-+		};
-+		/omit-if-no-ref/
-+		uart3m1_rtsn: uart3m1-rtsn {
-+			rockchip,pins =
-+				/* uart3m1_rtsn */
-+				<3 RK_PC1 3 &pcfg_pull_none>;
-+		};
-+	};
-+
-+	uart4 {
-+		/omit-if-no-ref/
-+		uart4m0_xfer: uart4m0-xfer {
-+			rockchip,pins =
-+				/* uart4_rx_m0 */
-+				<3 RK_PD1 3 &pcfg_pull_up>,
-+				/* uart4_tx_m0 */
-+				<3 RK_PD0 3 &pcfg_pull_up>;
-+		};
-+
-+		/omit-if-no-ref/
-+		uart4m0_ctsn: uart4m0-ctsn {
-+			rockchip,pins =
-+				/* uart4m0_ctsn */
-+				<3 RK_PC5 3 &pcfg_pull_none>;
-+		};
-+		/omit-if-no-ref/
-+		uart4m0_rtsn: uart4m0-rtsn {
-+			rockchip,pins =
-+				/* uart4m0_rtsn */
-+				<3 RK_PC6 3 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		uart4m1_xfer: uart4m1-xfer {
-+			rockchip,pins =
-+				/* uart4_rx_m1 */
-+				<1 RK_PD5 3 &pcfg_pull_up>,
-+				/* uart4_tx_m1 */
-+				<1 RK_PD6 3 &pcfg_pull_up>;
-+		};
-+
-+		/omit-if-no-ref/
-+		uart4m1_ctsn: uart4m1-ctsn {
-+			rockchip,pins =
-+				/* uart4m1_ctsn */
-+				<2 RK_PA0 3 &pcfg_pull_none>;
-+		};
-+		/omit-if-no-ref/
-+		uart4m1_rtsn: uart4m1-rtsn {
-+			rockchip,pins =
-+				/* uart4m1_rtsn */
-+				<1 RK_PD7 3 &pcfg_pull_none>;
-+		};
-+	};
-+
-+	uart5 {
-+		/omit-if-no-ref/
-+		uart5m0_xfer: uart5m0-xfer {
-+			rockchip,pins =
-+				/* uart5_rx_m0 */
-+				<1 RK_PB7 3 &pcfg_pull_up>,
-+				/* uart5_tx_m0 */
-+				<1 RK_PC0 3 &pcfg_pull_up>;
-+		};
-+
-+		/omit-if-no-ref/
-+		uart5m0_ctsn: uart5m0-ctsn {
-+			rockchip,pins =
-+				/* uart5m0_ctsn */
-+				<1 RK_PB5 3 &pcfg_pull_none>;
-+		};
-+		/omit-if-no-ref/
-+		uart5m0_rtsn: uart5m0-rtsn {
-+			rockchip,pins =
-+				/* uart5m0_rtsn */
-+				<1 RK_PB6 3 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		uart5m1_xfer: uart5m1-xfer {
-+			rockchip,pins =
-+				/* uart5_rx_m1 */
-+				<3 RK_PA7 5 &pcfg_pull_up>,
-+				/* uart5_tx_m1 */
-+				<3 RK_PA6 5 &pcfg_pull_up>;
-+		};
-+
-+		/omit-if-no-ref/
-+		uart5m1_ctsn: uart5m1-ctsn {
-+			rockchip,pins =
-+				/* uart5m1_ctsn */
-+				<3 RK_PA0 5 &pcfg_pull_none>;
-+		};
-+		/omit-if-no-ref/
-+		uart5m1_rtsn: uart5m1-rtsn {
-+			rockchip,pins =
-+				/* uart5m1_rtsn */
-+				<3 RK_PA1 5 &pcfg_pull_none>;
-+		};
-+	};
-+
-+	uart6 {
-+		/omit-if-no-ref/
-+		uart6m0_xfer: uart6m0-xfer {
-+			rockchip,pins =
-+				/* uart6_rx_m0 */
-+				<0 RK_PC7 1 &pcfg_pull_up>,
-+				/* uart6_tx_m0 */
-+				<0 RK_PC6 1 &pcfg_pull_up>;
-+		};
-+
-+		/omit-if-no-ref/
-+		uart6m0_ctsn: uart6m0-ctsn {
-+			rockchip,pins =
-+				/* uart6m0_ctsn */
-+				<0 RK_PC4 1 &pcfg_pull_none>;
-+		};
-+		/omit-if-no-ref/
-+		uart6m0_rtsn: uart6m0-rtsn {
-+			rockchip,pins =
-+				/* uart6m0_rtsn */
-+				<0 RK_PC5 1 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		uart6m1_xfer: uart6m1-xfer {
-+			rockchip,pins =
-+				/* uart6_rx_m1 */
-+				<4 RK_PB0 5 &pcfg_pull_up>,
-+				/* uart6_tx_m1 */
-+				<4 RK_PA7 5 &pcfg_pull_up>;
-+		};
-+
-+		/omit-if-no-ref/
-+		uart6m1_ctsn: uart6m1-ctsn {
-+			rockchip,pins =
-+				/* uart6m1_ctsn */
-+				<4 RK_PA2 3 &pcfg_pull_none>;
-+		};
-+		/omit-if-no-ref/
-+		uart6m1_rtsn: uart6m1-rtsn {
-+			rockchip,pins =
-+				/* uart6m1_rtsn */
-+				<4 RK_PA3 3 &pcfg_pull_none>;
-+		};
-+	};
-+
-+	uart7 {
-+		/omit-if-no-ref/
-+		uart7m0_xfer: uart7m0-xfer {
-+			rockchip,pins =
-+				/* uart7_rx_m0 */
-+				<3 RK_PC7 3 &pcfg_pull_up>,
-+				/* uart7_tx_m0 */
-+				<3 RK_PC4 3 &pcfg_pull_up>;
-+		};
-+
-+		/omit-if-no-ref/
-+		uart7m0_ctsn: uart7m0-ctsn {
-+			rockchip,pins =
-+				/* uart7m0_ctsn */
-+				<3 RK_PD2 3 &pcfg_pull_none>;
-+		};
-+		/omit-if-no-ref/
-+		uart7m0_rtsn: uart7m0-rtsn {
-+			rockchip,pins =
-+				/* uart7m0_rtsn */
-+				<3 RK_PD3 3 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		uart7m1_xfer: uart7m1-xfer {
-+			rockchip,pins =
-+				/* uart7_rx_m1 */
-+				<1 RK_PB3 3 &pcfg_pull_up>,
-+				/* uart7_tx_m1 */
-+				<1 RK_PB4 3 &pcfg_pull_up>;
-+		};
-+	};
-+
-+	uart8 {
-+		/omit-if-no-ref/
-+		uart8m0_xfer: uart8m0-xfer {
-+			rockchip,pins =
-+				/* uart8_rx_m0 */
-+				<3 RK_PB3 3 &pcfg_pull_up>,
-+				/* uart8_tx_m0 */
-+				<3 RK_PB2 3 &pcfg_pull_up>;
-+		};
-+
-+		/omit-if-no-ref/
-+		uart8m0_ctsn: uart8m0-ctsn {
-+			rockchip,pins =
-+				/* uart8m0_ctsn */
-+				<3 RK_PB4 3 &pcfg_pull_none>;
-+		};
-+		/omit-if-no-ref/
-+		uart8m0_rtsn: uart8m0-rtsn {
-+			rockchip,pins =
-+				/* uart8m0_rtsn */
-+				<3 RK_PB5 3 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		uart8m1_xfer: uart8m1-xfer {
-+			rockchip,pins =
-+				/* uart8_rx_m1 */
-+				<3 RK_PD5 3 &pcfg_pull_up>,
-+				/* uart8_tx_m1 */
-+				<3 RK_PD4 3 &pcfg_pull_up>;
-+		};
-+
-+		/omit-if-no-ref/
-+		uart8m1_ctsn: uart8m1-ctsn {
-+			rockchip,pins =
-+				/* uart8m1_ctsn */
-+				<3 RK_PD7 3 &pcfg_pull_none>;
-+		};
-+		/omit-if-no-ref/
-+		uart8m1_rtsn: uart8m1-rtsn {
-+			rockchip,pins =
-+				/* uart8m1_rtsn */
-+				<4 RK_PA0 3 &pcfg_pull_none>;
-+		};
-+	};
-+
-+	uart9 {
-+		/omit-if-no-ref/
-+		uart9m0_xfer: uart9m0-xfer {
-+			rockchip,pins =
-+				/* uart9_rx_m0 */
-+				<4 RK_PB3 3 &pcfg_pull_up>,
-+				/* uart9_tx_m0 */
-+				<4 RK_PB2 3 &pcfg_pull_up>;
-+		};
-+
-+		/omit-if-no-ref/
-+		uart9m0_ctsn: uart9m0-ctsn {
-+			rockchip,pins =
-+				/* uart9m0_ctsn */
-+				<4 RK_PB4 3 &pcfg_pull_none>;
-+		};
-+		/omit-if-no-ref/
-+		uart9m0_rtsn: uart9m0-rtsn {
-+			rockchip,pins =
-+				/* uart9m0_rtsn */
-+				<4 RK_PB5 3 &pcfg_pull_none>;
-+		};
-+
-+		/omit-if-no-ref/
-+		uart9m1_xfer: uart9m1-xfer {
-+			rockchip,pins =
-+				/* uart9_rx_m1 */
-+				<3 RK_PC3 3 &pcfg_pull_up>,
-+				/* uart9_tx_m1 */
-+				<3 RK_PC2 3 &pcfg_pull_up>;
-+		};
-+	};
-+
-+	vo {
-+		/omit-if-no-ref/
-+		vo_pins: vo-pins {
-+			rockchip,pins =
-+				/* vo_lcdc_clk */
-+				<4 RK_PB7 1 &pcfg_pull_none_drv_level_4>,
-+				/* vo_lcdc_d0 */
-+				<4 RK_PA4 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d1 */
-+				<4 RK_PA5 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d2 */
-+				<4 RK_PB2 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d3 */
-+				<3 RK_PC4 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d4 */
-+				<3 RK_PC5 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d5 */
-+				<3 RK_PC6 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d6 */
-+				<3 RK_PC7 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d7 */
-+				<3 RK_PD0 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d8 */
-+				<4 RK_PA6 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d9 */
-+				<4 RK_PA7 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d10 */
-+				<3 RK_PD1 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d11 */
-+				<3 RK_PD2 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d12 */
-+				<3 RK_PD3 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d13 */
-+				<3 RK_PD4 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d14 */
-+				<3 RK_PD5 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d15 */
-+				<3 RK_PD6 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d16 */
-+				<4 RK_PB0 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d17 */
-+				<4 RK_PB1 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d18 */
-+				<4 RK_PB3 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d19 */
-+				<3 RK_PD7 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d20 */
-+				<4 RK_PA0 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d21 */
-+				<4 RK_PA1 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d22 */
-+				<4 RK_PA2 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d23 */
-+				<4 RK_PA3 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_den */
-+				<4 RK_PB6 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_hsync */
-+				<4 RK_PB4 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_vsync */
-+				<4 RK_PB5 1 &pcfg_pull_none_drv_level_3>;
-+		};
-+	};
-+};
-+
-+/*
-+ * This part is edited handly.
-+ */
-+&pinctrl {
-+	vo {
-+		/omit-if-no-ref/
-+		bt1120_pins: bt1120-pins {
-+			rockchip,pins =
-+				/* vo_lcdc_clk */
-+				<4 RK_PB7 1 &pcfg_pull_none_drv_level_4>,
-+				/* vo_lcdc_d3 */
-+				<3 RK_PC4 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d4 */
-+				<3 RK_PC5 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d5 */
-+				<3 RK_PC6 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d6 */
-+				<3 RK_PC7 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d7 */
-+				<3 RK_PD0 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d10 */
-+				<3 RK_PD1 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d11 */
-+				<3 RK_PD2 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d12 */
-+				<3 RK_PD3 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d13 */
-+				<3 RK_PD4 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d14 */
-+				<3 RK_PD5 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d15 */
-+				<3 RK_PD6 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d19 */
-+				<3 RK_PD7 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d20 */
-+				<4 RK_PA0 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d21 */
-+				<4 RK_PA1 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d22 */
-+				<4 RK_PA2 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d23 */
-+				<4 RK_PA3 1 &pcfg_pull_none_drv_level_3>;
-+		};
-+
-+		/omit-if-no-ref/
-+		bt656_pins: bt656-pins {
-+			rockchip,pins =
-+				/* vo_lcdc_clk */
-+				<4 RK_PB7 1 &pcfg_pull_none_drv_level_4>,
-+				/* vo_lcdc_d3 */
-+				<3 RK_PC4 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d4 */
-+				<3 RK_PC5 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d5 */
-+				<3 RK_PC6 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d6 */
-+				<3 RK_PC7 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d7 */
-+				<3 RK_PD0 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d10 */
-+				<3 RK_PD1 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d11 */
-+				<3 RK_PD2 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d12 */
-+				<3 RK_PD3 1 &pcfg_pull_none_drv_level_3>;
-+		};
-+
-+		/omit-if-no-ref/
-+		rgb3x8_pins_m0: rgb3x8-pins-m0 {
-+			rockchip,pins =
-+				/* vo_lcdc_clk */
-+				<4 RK_PB7 1 &pcfg_pull_none_drv_level_4>,
-+				/* vo_lcdc_d3 */
-+				<3 RK_PC4 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d4 */
-+				<3 RK_PC5 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d5 */
-+				<3 RK_PC6 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d6 */
-+				<3 RK_PC7 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d7 */
-+				<3 RK_PD0 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d10 */
-+				<3 RK_PD1 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d11 */
-+				<3 RK_PD2 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d12 */
-+				<3 RK_PD3 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_den */
-+				<4 RK_PB6 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_hsync */
-+				<4 RK_PB4 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_vsync */
-+				<4 RK_PB5 1 &pcfg_pull_none_drv_level_3>;
-+		};
-+
-+		/omit-if-no-ref/
-+		rgb3x8_pins_m1: rgb3x8-pins-m1 {
-+			rockchip,pins =
-+				/* vo_lcdc_clk */
-+				<4 RK_PB7 1 &pcfg_pull_none_drv_level_4>,
-+				/* vo_lcdc_d13 */
-+				<3 RK_PD4 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d14 */
-+				<3 RK_PD5 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d15 */
-+				<3 RK_PD6 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d19 */
-+				<3 RK_PD7 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d20 */
-+				<4 RK_PA0 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d21 */
-+				<4 RK_PA1 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d22 */
-+				<4 RK_PA2 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d23 */
-+				<4 RK_PA3 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_den */
-+				<4 RK_PB6 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_hsync */
-+				<4 RK_PB4 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_vsync */
-+				<4 RK_PB5 1 &pcfg_pull_none_drv_level_3>;
-+		};
-+
-+		/omit-if-no-ref/
-+		rgb565_pins: rgb565-pins {
-+			rockchip,pins =
-+				/* vo_lcdc_clk */
-+				<4 RK_PB7 1 &pcfg_pull_none_drv_level_4>,
-+				/* vo_lcdc_d3 */
-+				<3 RK_PC4 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d4 */
-+				<3 RK_PC5 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d5 */
-+				<3 RK_PC6 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d6 */
-+				<3 RK_PC7 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d7 */
-+				<3 RK_PD0 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d10 */
-+				<3 RK_PD1 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d11 */
-+				<3 RK_PD2 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d12 */
-+				<3 RK_PD3 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d13 */
-+				<3 RK_PD4 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d14 */
-+				<3 RK_PD5 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d15 */
-+				<3 RK_PD6 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d19 */
-+				<3 RK_PD7 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d20 */
-+				<4 RK_PA0 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d21 */
-+				<4 RK_PA1 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d22 */
-+				<4 RK_PA2 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d23 */
-+				<4 RK_PA3 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_den */
-+				<4 RK_PB6 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_hsync */
-+				<4 RK_PB4 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_vsync */
-+				<4 RK_PB5 1 &pcfg_pull_none_drv_level_3>;
-+		};
-+
-+		/omit-if-no-ref/
-+		rgb666_pins: rgb666-pins {
-+			rockchip,pins =
-+				/* vo_lcdc_clk */
-+				<4 RK_PB7 1 &pcfg_pull_none_drv_level_4>,
-+				/* vo_lcdc_d2 */
-+				<4 RK_PB2 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d3 */
-+				<3 RK_PC4 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d4 */
-+				<3 RK_PC5 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d5 */
-+				<3 RK_PC6 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d6 */
-+				<3 RK_PC7 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d7 */
-+				<3 RK_PD0 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d10 */
-+				<3 RK_PD1 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d11 */
-+				<3 RK_PD2 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d12 */
-+				<3 RK_PD3 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d13 */
-+				<3 RK_PD4 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d14 */
-+				<3 RK_PD5 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d15 */
-+				<3 RK_PD6 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d18 */
-+				<4 RK_PB3 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d19 */
-+				<3 RK_PD7 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d20 */
-+				<4 RK_PA0 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d21 */
-+				<4 RK_PA1 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d22 */
-+				<4 RK_PA2 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_d23 */
-+				<4 RK_PA3 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_den */
-+				<4 RK_PB6 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_hsync */
-+				<4 RK_PB4 1 &pcfg_pull_none_drv_level_3>,
-+				/* vo_lcdc_vsync */
-+				<4 RK_PB5 1 &pcfg_pull_none_drv_level_3>;
-+		};
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/rockchip/rk3562.dtsi b/arch/arm64/boot/dts/rockchip/rk3562.dtsi
-new file mode 100644
-index 000000000000..95ace4ddc2b5
---- /dev/null
-+++ b/arch/arm64/boot/dts/rockchip/rk3562.dtsi
-@@ -0,0 +1,1270 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2022 Rockchip Electronics Co., Ltd.
-+ */
-+
-+#include <dt-bindings/clock/rockchip,rk3562-cru.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/phy/phy.h>
-+#include <dt-bindings/power/rockchip,rk3562-power.h>
-+#include <dt-bindings/pinctrl/rockchip.h>
-+#include <dt-bindings/reset/rockchip,rk3562-cru.h>
-+#include <dt-bindings/soc/rockchip,boot-mode.h>
-+#include <dt-bindings/thermal/thermal.h>
-+
-+/ {
-+	compatible = "rockchip,rk3562";
-+
-+	interrupt-parent = <&gic>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	aliases {
-+		gpio0 = &gpio0;
-+		gpio1 = &gpio1;
-+		gpio2 = &gpio2;
-+		gpio3 = &gpio3;
-+		gpio4 = &gpio4;
-+	};
-+
-+	xin32k: clock-xin32k {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <32768>;
-+		clock-output-names = "xin32k";
-+	};
-+
-+	xin24m: clock-xin24m {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <24000000>;
-+		clock-output-names = "xin24m";
-+	};
-+
-+	cpus {
-+		#address-cells = <2>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			reg = <0x0 0x0>;
-+			enable-method = "psci";
-+			clocks = <&scmi_clk ARMCLK>;
-+			cpu-idle-states = <&CPU_SLEEP>;
-+			operating-points-v2 = <&cpu0_opp_table>;
-+			#cooling-cells = <2>;
-+			dynamic-power-coefficient = <138>;
-+		};
-+
-+		cpu1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			reg = <0x0 0x1>;
-+			enable-method = "psci";
-+			clocks = <&scmi_clk ARMCLK>;
-+			cpu-idle-states = <&CPU_SLEEP>;
-+			operating-points-v2 = <&cpu0_opp_table>;
-+			#cooling-cells = <2>;
-+			dynamic-power-coefficient = <138>;
-+		};
-+
-+		cpu2: cpu@2 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			reg = <0x0 0x2>;
-+			enable-method = "psci";
-+			clocks = <&scmi_clk ARMCLK>;
-+			cpu-idle-states = <&CPU_SLEEP>;
-+			operating-points-v2 = <&cpu0_opp_table>;
-+			#cooling-cells = <2>;
-+			dynamic-power-coefficient = <138>;
-+		};
-+
-+		cpu3: cpu@3 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			reg = <0x0 0x3>;
-+			enable-method = "psci";
-+			clocks = <&scmi_clk ARMCLK>;
-+			cpu-idle-states = <&CPU_SLEEP>;
-+			operating-points-v2 = <&cpu0_opp_table>;
-+			#cooling-cells = <2>;
-+			dynamic-power-coefficient = <138>;
-+		};
-+
-+		idle-states {
-+			entry-method = "psci";
-+			CPU_SLEEP: cpu-sleep {
-+				compatible = "arm,idle-state";
-+				local-timer-stop;
-+				arm,psci-suspend-param = <0x0010000>;
-+				entry-latency-us = <120>;
-+				exit-latency-us = <250>;
-+				min-residency-us = <900>;
-+			};
-+		};
-+	};
-+
-+	cpu0_opp_table: opp-table-cpu0 {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		opp-408000000 {
-+			opp-hz = /bits/ 64 <408000000>;
-+			opp-microvolt = <825000 825000 1150000>;
-+			clock-latency-ns = <40000>;
-+			opp-suspend;
-+		};
-+		opp-600000000 {
-+			opp-hz = /bits/ 64 <600000000>;
-+			opp-microvolt = <825000 825000 1150000>;
-+			clock-latency-ns = <40000>;
-+		};
-+		opp-816000000 {
-+			opp-hz = /bits/ 64 <816000000>;
-+			opp-microvolt = <825000 825000 1150000>;
-+			clock-latency-ns = <40000>;
-+		};
-+		opp-1008000000 {
-+			opp-hz = /bits/ 64 <1008000000>;
-+			opp-microvolt = <850000 850000 1150000>;
-+			clock-latency-ns = <40000>;
-+		};
-+		opp-1200000000 {
-+			opp-hz = /bits/ 64 <1200000000>;
-+			opp-microvolt = <925000 925000 1150000>;
-+			clock-latency-ns = <40000>;
-+		};
-+		opp-1416000000 {
-+			opp-hz = /bits/ 64 <1416000000>;
-+			opp-microvolt = <1000000 1000000 1150000>;
-+			clock-latency-ns = <40000>;
-+		};
-+		opp-1608000000 {
-+			opp-supported-hw = <0xf9 0xffff>;
-+			opp-hz = /bits/ 64 <1608000000>;
-+			opp-microvolt = <1037500 1037500 1150000>;
-+			clock-latency-ns = <40000>;
-+		};
-+		opp-1800000000 {
-+			opp-hz = /bits/ 64 <1800000000>;
-+			opp-microvolt = <1125000 1125000 1150000>;
-+			clock-latency-ns = <40000>;
-+		};
-+		opp-2016000000 {
-+			opp-hz = /bits/ 64 <2016000000>;
-+			opp-microvolt = <1150000 1150000 1150000>;
-+			clock-latency-ns = <40000>;
-+		};
-+
-+	};
-+
-+	gpu_opp_table: opp-table-gpu {
-+		compatible = "operating-points-v2";
-+
-+		opp-300000000 {
-+			opp-hz = /bits/ 64 <300000000>;
-+			opp-microvolt = <825000 825000 1000000>;
-+		};
-+		opp-400000000 {
-+		opp-hz = /bits/ 64 <400000000>;
-+			opp-microvolt = <825000 825000 1000000>;
-+		};
-+		opp-500000000 {
-+			opp-hz = /bits/ 64 <500000000>;
-+			opp-microvolt = <825000 825000 1000000>;
-+		};
-+		opp-600000000 {
-+			opp-hz = /bits/ 64 <600000000>;
-+			opp-microvolt = <825000 825000 1000000>;
-+		};
-+		opp-700000000 {
-+			opp-hz = /bits/ 64 <700000000>;
-+			opp-microvolt = <900000 900000 1000000>;
-+		};
-+		opp-800000000 {
-+			opp-hz = /bits/ 64 <800000000>;
-+			opp-microvolt = <950000 950000 1000000>;
-+		};
-+		opp-900000000 {
-+			opp-hz = /bits/ 64 <900000000>;
-+			opp-microvolt = <1000000 1000000 1000000>;
-+		};
-+	};
-+
-+	arm_pmu: arm-pmu {
-+		compatible = "arm,cortex-a53-pmu";
-+		interrupts = <GIC_SPI 228 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 229 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 230 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 231 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
-+	};
-+
-+	firmware {
-+		scmi: scmi {
-+			compatible = "arm,scmi-smc";
-+			shmem = <&scmi_shmem>;
-+			arm,smc-id = <0x82000010>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			scmi_clk: protocol@14 {
-+				reg = <0x14>;
-+				#clock-cells = <1>;
-+			};
-+		};
-+	};
-+
-+	psci {
-+		compatible = "arm,psci-1.0";
-+		method = "smc";
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		scmi_shmem: shmem@10f000 {
-+			compatible = "arm,scmi-shmem";
-+			reg = <0x0 0x0010f000 0x0 0x100>;
-+			no-map;
-+		};
-+	};
-+
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		usbdrd_dwc3: usb@fe500000 {
-+			compatible = "rockchip,rk3562-dwc3", "snps,dwc3";
-+			reg = <0x0 0xfe500000 0x0 0x400000>;
-+			clocks = <&cru CLK_USB3OTG_REF>, <&cru CLK_USB3OTG_SUSPEND>,
-+				 <&cru ACLK_USB3OTG>, <&cru PCLK_PHP>;
-+			clock-names = "ref_clk", "suspend_clk", "bus_clk", "pipe";
-+			interrupts = <GIC_SPI 149 IRQ_TYPE_LEVEL_HIGH>;
-+			power-domains = <&power RK3562_PD_PHP>;
-+			resets = <&cru SRST_USB3OTG>;
-+			dr_mode = "otg";
-+			phys = <&u2phy_otg>;
-+			phy-names = "usb2-phy";
-+			phy_type = "utmi_wide";
-+			snps,dis_enblslpm_quirk;
-+			snps,dis-u1-entry-quirk;
-+			snps,dis-u2-entry-quirk;
-+			snps,dis-u2-freeclk-exists-quirk;
-+			snps,dis-del-phy-power-chg-quirk;
-+			snps,dis-tx-ipgap-linecheck-quirk;
-+			snps,dis_rxdet_inp3_quirk;
-+			snps,parkmode-disable-hs-quirk;
-+			snps,parkmode-disable-ss-quirk;
-+			status = "disabled";
-+		};
-+
-+		gic: interrupt-controller@fe901000 {
-+			compatible = "arm,gic-400";
-+			#interrupt-cells = <3>;
-+			#address-cells = <0>;
-+			interrupt-controller;
-+			reg = <0x0 0xfe901000 0 0x1000>,
-+			      <0x0 0xfe902000 0 0x2000>,
-+			      <0x0 0xfe904000 0 0x2000>,
-+			      <0x0 0xfe906000 0 0x2000>;
-+			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
-+		};
-+
-+		usb_host0_ehci: usb@fed00000 {
-+			compatible = "generic-ehci";
-+			reg = <0x0 0xfed00000 0x0 0x40000>;
-+			interrupts = <GIC_SPI 150 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cru HCLK_USB2HOST>, <&cru HCLK_USB2HOST_ARB>,
-+				 <&u2phy>;
-+			phys = <&u2phy_host>;
-+			phy-names = "usb";
-+			status = "disabled";
-+		};
-+
-+		usb_host0_ohci: usb@fed40000 {
-+			compatible = "generic-ohci";
-+			reg = <0x0 0xfed40000 0x0 0x40000>;
-+			interrupts = <GIC_SPI 151 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cru HCLK_USB2HOST>, <&cru HCLK_USB2HOST_ARB>,
-+				 <&u2phy>;
-+			phys = <&u2phy_host>;
-+			phy-names = "usb";
-+			status = "disabled";
-+		};
-+
-+		qos_dma2ddr: qos@fee03800 {
-+			compatible = "rockchip,rk3562-qos", "syscon";
-+			reg = <0x0 0xfee03800 0x0 0x20>;
-+		};
-+
-+		qos_mcu: qos@fee10000 {
-+			compatible = "rockchip,rk3562-qos", "syscon";
-+			reg = <0x0 0xfee10000 0x0 0x20>;
-+		};
-+
-+		qos_dft_apb: qos@fee10100 {
-+			compatible = "rockchip,rk3562-qos", "syscon";
-+			reg = <0x0 0xfee10100 0x0 0x20>;
-+		};
-+
-+		qos_gmac: qos@fee10200 {
-+			compatible = "rockchip,rk3562-qos", "syscon";
-+			reg = <0x0 0xfee10200 0x0 0x20>;
-+		};
-+
-+		qos_mac100: qos@fee10300 {
-+			compatible = "rockchip,rk3562-qos", "syscon";
-+			reg = <0x0 0xfee10300 0x0 0x20>;
-+		};
-+
-+		qos_dcf: qos@fee10400 {
-+			compatible = "rockchip,rk3562-qos", "syscon";
-+			reg = <0x0 0xfee10400 0x0 0x20>;
-+		};
-+
-+		qos_cpu: qos@fee20000 {
-+			compatible = "rockchip,rk3562-qos", "syscon";
-+			reg = <0x0 0xfee20000 0x0 0x20>;
-+		};
-+
-+		qos_gpu: qos@fee30000 {
-+			compatible = "rockchip,rk3562-qos", "syscon";
-+			reg = <0x0 0xfee30000 0x0 0x20>;
-+		};
-+
-+		qos_npu: qos@fee40000 {
-+			compatible = "rockchip,rk3562-qos", "syscon";
-+			reg = <0x0 0xfee40000 0x0 0x20>;
-+		};
-+
-+		qos_rkvdec: qos@fee50000 {
-+			compatible = "rockchip,rk3562-qos", "syscon";
-+			reg = <0x0 0xfee50000 0x0 0x20>;
-+		};
-+
-+		qos_vepu: qos@fee60000 {
-+			compatible = "rockchip,rk3562-qos", "syscon";
-+			reg = <0x0 0xfee60000 0x0 0x20>;
-+		};
-+
-+		qos_isp: qos@fee70000 {
-+			compatible = "rockchip,rk3562-qos", "syscon";
-+			reg = <0x0 0xfee70000 0x0 0x20>;
-+		};
-+
-+		qos_vicap: qos@fee70100 {
-+			compatible = "rockchip,rk3562-qos", "syscon";
-+			reg = <0x0 0xfee70100 0x0 0x20>;
-+		};
-+
-+		qos_vop: qos@fee80000 {
-+			compatible = "rockchip,rk3562-qos", "syscon";
-+			reg = <0x0 0xfee80000 0x0 0x20>;
-+		};
-+
-+		qos_jpeg: qos@fee90000 {
-+			compatible = "rockchip,rk3562-qos", "syscon";
-+			reg = <0x0 0xfee90000 0x0 0x20>;
-+		};
-+
-+		qos_rga_rd: qos@fee90100 {
-+			compatible = "rockchip,rk3562-qos", "syscon";
-+			reg = <0x0 0xfee90100 0x0 0x20>;
-+		};
-+
-+		qos_rga_wr: qos@fee90200 {
-+			compatible = "rockchip,rk3562-qos", "syscon";
-+			reg = <0x0 0xfee90200 0x0 0x20>;
-+		};
-+
-+		qos_pcie: qos@feea0000 {
-+			compatible = "rockchip,rk3562-qos", "syscon";
-+			reg = <0x0 0xfeea0000 0x0 0x20>;
-+		};
-+
-+		qos_usb3: qos@feea0100 {
-+			compatible = "rockchip,rk3562-qos", "syscon";
-+			reg = <0x0 0xfeea0100 0x0 0x20>;
-+		};
-+
-+		qos_crypto_apb: qos@feeb0000 {
-+			compatible = "rockchip,rk3562-qos", "syscon";
-+			reg = <0x0 0xfeeb0000 0x0 0x20>;
-+		};
-+
-+		qos_crypto: qos@feeb0100 {
-+			compatible = "rockchip,rk3562-qos", "syscon";
-+			reg = <0x0 0xfeeb0100 0x0 0x20>;
-+		};
-+
-+		qos_dmac: qos@feeb0200 {
-+			compatible = "rockchip,rk3562-qos", "syscon";
-+			reg = <0x0 0xfeeb0200 0x0 0x20>;
-+		};
-+
-+		qos_emmc: qos@feeb0300 {
-+			compatible = "rockchip,rk3562-qos", "syscon";
-+			reg = <0x0 0xfeeb0300 0x0 0x20>;
-+		};
-+
-+		qos_fspi: qos@feeb0400 {
-+			compatible = "rockchip,rk3562-qos", "syscon";
-+			reg = <0x0 0xfeeb0400 0x0 0x20>;
-+		};
-+
-+		qos_rkdma: qos@feeb0500 {
-+			compatible = "rockchip,rk3562-qos", "syscon";
-+			reg = <0x0 0xfeeb0500 0x0 0x20>;
-+		};
-+
-+		qos_sdmmc0: qos@feeb0600 {
-+			compatible = "rockchip,rk3562-qos", "syscon";
-+			reg = <0x0 0xfeeb0600 0x0 0x20>;
-+		};
-+
-+		qos_sdmmc1: qos@feeb0700 {
-+			compatible = "rockchip,rk3562-qos", "syscon";
-+			reg = <0x0 0xfeeb0700 0x0 0x20>;
-+		};
-+
-+		qos_usb2: qos@feeb0800 {
-+			compatible = "rockchip,rk3562-qos", "syscon";
-+			reg = <0x0 0xfeeb0800 0x0 0x20>;
-+		};
-+
-+		pmu_grf: syscon@ff010000 {
-+			compatible = "rockchip,rk3562-pmu-grf", "syscon", "simple-mfd";
-+			reg = <0x0 0xff010000 0x0 0x10000>;
-+
-+			reboot_mode: reboot-mode {
-+				compatible = "syscon-reboot-mode";
-+				offset = <0x220>;
-+				mode-normal = <BOOT_NORMAL>;
-+				mode-loader = <BOOT_BL_DOWNLOAD>;
-+				mode-recovery = <BOOT_RECOVERY>;
-+				mode-bootloader = <BOOT_FASTBOOT>;
-+			};
-+		};
-+
-+		sys_grf: syscon@ff030000 {
-+			compatible = "rockchip,rk3562-sys-grf", "syscon";
-+			reg = <0x0 0xff030000 0x0 0x10000>;
-+		};
-+
-+		peri_grf: syscon@ff040000 {
-+			compatible = "rockchip,rk3562-peri-grf", "syscon";
-+			reg = <0x0 0xff040000 0x0 0x10000>;
-+		};
-+
-+		ioc_grf: syscon@ff060000 {
-+			compatible = "rockchip,rk3562-ioc-grf", "syscon";
-+			reg = <0x0 0xff060000 0x0 0x30000>;
-+		};
-+
-+		usbphy_grf: syscon@ff090000 {
-+			compatible = "rockchip,rk3562-usbphy-grf", "syscon";
-+			reg = <0x0 0xff090000 0x0 0x8000>;
-+		};
-+
-+		pipephy_grf: syscon@ff098000 {
-+			compatible = "rockchip,rk3562-pipephy-grf", "syscon";
-+			reg = <0x0 0xff098000 0x0 0x8000>;
-+		};
-+
-+		cru: clock-controller@ff100000 {
-+			compatible = "rockchip,rk3562-cru";
-+			reg = <0x0 0xff100000 0x0 0x40000>;
-+			#clock-cells = <1>;
-+			#reset-cells = <1>;
-+
-+			assigned-clocks = <&cru PLL_GPLL>, <&cru PLL_CPLL>,
-+					  <&cru PLL_HPLL>;
-+			assigned-clock-rates = <1188000000>, <1000000000>,
-+					       <983040000>;
-+		};
-+
-+		i2c0: i2c@ff200000 {
-+			compatible = "rockchip,rk3562-i2c", "rockchip,rk3399-i2c";
-+			reg = <0x0 0xff200000 0x0 0x1000>;
-+			clocks = <&cru CLK_PMU0_I2C0>, <&cru PCLK_PMU0_I2C0>;
-+			clock-names = "i2c", "pclk";
-+			interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&i2c0_xfer>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		uart0: serial@ff210000 {
-+			compatible = "rockchip,rk3562-uart", "snps,dw-apb-uart";
-+			reg = <0x0 0xff210000 0x0 0x100>;
-+			interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cru SCLK_PMU1_UART0>, <&cru PCLK_PMU1_UART0>;
-+			clock-names = "baudclk", "apb_pclk";
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			status = "disabled";
-+		};
-+
-+		spi0: spi@ff220000 {
-+			compatible = "rockchip,rk3562-spi", "rockchip,rk3066-spi";
-+			reg = <0x0 0xff220000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			clocks = <&cru CLK_PMU1_SPI0>, <&cru PCLK_PMU1_SPI0>;
-+			clock-names = "spiclk", "apb_pclk";
-+			dmas = <&dmac 13>, <&dmac 12>;
-+			dma-names = "tx", "rx";
-+			num-cs = <2>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&spi0m0_csn0 &spi0m0_csn1 &spi0m0_pins>;
-+			status = "disabled";
-+		};
-+
-+		pwm0: pwm@ff230000 {
-+			compatible = "rockchip,rk3562-pwm", "rockchip,rk3328-pwm";
-+			reg = <0x0 0xff230000 0x0 0x10>;
-+			#pwm-cells = <3>;
-+			pinctrl-names = "active";
-+			pinctrl-0 = <&pwm0m0_pins>;
-+			clocks = <&cru CLK_PMU1_PWM0>, <&cru PCLK_PMU1_PWM0>;
-+			clock-names = "pwm", "pclk";
-+			status = "disabled";
-+		};
-+
-+		pwm1: pwm@ff230010 {
-+			compatible = "rockchip,rk3562-pwm", "rockchip,rk3328-pwm";
-+			reg = <0x0 0xff230010 0x0 0x10>;
-+			#pwm-cells = <3>;
-+			pinctrl-names = "active";
-+			pinctrl-0 = <&pwm1m0_pins>;
-+			clocks = <&cru CLK_PMU1_PWM0>, <&cru PCLK_PMU1_PWM0>;
-+			clock-names = "pwm", "pclk";
-+			status = "disabled";
-+		};
-+
-+		pwm2: pwm@ff230020 {
-+			compatible = "rockchip,rk3562-pwm", "rockchip,rk3328-pwm";
-+			reg = <0x0 0xff230020 0x0 0x10>;
-+			#pwm-cells = <3>;
-+			pinctrl-names = "active";
-+			pinctrl-0 = <&pwm2m0_pins>;
-+			clocks = <&cru CLK_PMU1_PWM0>, <&cru PCLK_PMU1_PWM0>;
-+			clock-names = "pwm", "pclk";
-+			status = "disabled";
-+		};
-+
-+		pwm3: pwm@ff230030 {
-+			compatible = "rockchip,rk3562-pwm", "rockchip,rk3328-pwm";
-+			reg = <0x0 0xff230030 0x0 0x10>;
-+			#pwm-cells = <3>;
-+			pinctrl-names = "active";
-+			pinctrl-0 = <&pwm3m0_pins>;
-+			clocks = <&cru CLK_PMU1_PWM0>, <&cru PCLK_PMU1_PWM0>;
-+			clock-names = "pwm", "pclk";
-+			status = "disabled";
-+		};
-+
-+		pmu: power-management@ff258000 {
-+			compatible = "rockchip,rk3562-pmu", "syscon", "simple-mfd";
-+			reg = <0x0 0xff258000 0x0 0x1000>;
-+
-+			power: power-controller {
-+				compatible = "rockchip,rk3562-power-controller";
-+				#power-domain-cells = <1>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				status = "okay";
-+
-+
-+				power-domain@RK3562_PD_GPU {
-+					reg = <RK3562_PD_GPU>;
-+					pm_qos = <&qos_gpu>;
-+					#power-domain-cells = <0>;
-+				};
-+
-+				power-domain@RK3562_PD_NPU {
-+					reg = <RK3562_PD_NPU>;
-+					pm_qos = <&qos_npu>;
-+					#power-domain-cells = <0>;
-+				};
-+
-+				power-domain@RK3562_PD_VDPU {
-+					reg = <RK3562_PD_VDPU>;
-+					pm_qos = <&qos_rkvdec>;
-+					#power-domain-cells = <0>;
-+				};
-+
-+				power-domain@RK3562_PD_VI {
-+					reg = <RK3562_PD_VI>;
-+					#power-domain-cells = <1>;
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+					pm_qos = <&qos_isp>,
-+						 <&qos_vicap>;
-+
-+					power-domain@RK3562_PD_VEPU {
-+						reg = <RK3562_PD_VEPU>;
-+						pm_qos = <&qos_vepu>;
-+					#power-domain-cells = <0>;
-+					};
-+				};
-+
-+				power-domain@RK3562_PD_VO {
-+					reg = <RK3562_PD_VO>;
-+					#power-domain-cells = <1>;
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+					pm_qos = <&qos_vop>;
-+
-+					power-domain@RK3562_PD_RGA {
-+						reg = <RK3562_PD_RGA>;
-+						pm_qos = <&qos_rga_rd>,
-+							 <&qos_rga_wr>,
-+							 <&qos_jpeg>;
-+						#power-domain-cells = <0>;
-+					};
-+				};
-+
-+				power-domain@RK3562_PD_PHP {
-+					reg = <RK3562_PD_PHP>;
-+					pm_qos = <&qos_pcie>,
-+						 <&qos_usb3>;
-+					#power-domain-cells = <0>;
-+				};
-+			};
-+		};
-+
-+		gpu: gpu@ff320000 {
-+			compatible = "rockchip,rk3562-mali", "arm,mali-bifrost";
-+			reg = <0x0 0xff320000 0x0 0x4000>;
-+			clocks = <&cru CLK_GPU>, <&cru CLK_GPU_BRG>,
-+				 <&cru ACLK_GPU_PRE>;
-+			clock-names = "clk_gpu", "clk_gpu_brg", "aclk_gpu";
-+			dynamic-power-coefficient = <820>;
-+			interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "job", "mmu", "gpu";
-+			operating-points-v2 = <&gpu_opp_table>;
-+			power-domains = <&power RK3562_PD_GPU>;
-+			#cooling-cells = <2>;
-+			status = "disabled";
-+		};
-+
-+		pcie2x1: pcie@ff500000 {
-+			compatible = "rockchip,rk3562-pcie", "rockchip,rk3568-pcie";
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			bus-range = <0x0 0xff>;
-+			clocks = <&cru ACLK_PCIE20_MST>, <&cru ACLK_PCIE20_SLV>,
-+				 <&cru ACLK_PCIE20_DBI>, <&cru PCLK_PCIE20>,
-+				 <&cru CLK_PCIE20_AUX>;
-+			clock-names = "aclk_mst", "aclk_slv",
-+				      "aclk_dbi", "pclk", "aux";
-+			device_type = "pci";
-+			interrupts = <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "sys", "pmc", "msg", "legacy", "err", "msi";
-+			#interrupt-cells = <1>;
-+			interrupt-map-mask = <0 0 0 7>;
-+			interrupt-map = <0 0 0 1 &pcie2x1_intc 0>,
-+					<0 0 0 2 &pcie2x1_intc 1>,
-+					<0 0 0 3 &pcie2x1_intc 2>,
-+					<0 0 0 4 &pcie2x1_intc 3>;
-+			linux,pci-domain = <0>;
-+			max-link-speed = <2>;
-+			num-ib-windows = <8>;
-+			num-viewport = <8>;
-+			num-ob-windows = <2>;
-+			num-lanes = <1>;
-+			phys = <&combphy_pu PHY_TYPE_PCIE>;
-+			phy-names = "pcie-phy";
-+			power-domains = <&power RK3562_PD_PHP>;
-+			ranges = <0x01000000 0x0 0xfc100000 0x0 0xfc100000 0x0 0x100000
-+				  0x02000000 0x0 0xfc200000 0x0 0xfc200000 0x0 0x1e00000
-+				  0x03000000 0x3 0x00000000 0x3 0x00000000 0x0 0x40000000>;
-+			reg = <0x0 0xfe000000 0x0 0x400000>,
-+			      <0x0 0xff500000 0x0 0x10000>,
-+			      <0x0 0xfc000000 0x0 0x100000>;
-+			reg-names = "dbi", "apb", "config";
-+			resets = <&cru SRST_PCIE20_POWERUP>;
-+			reset-names = "pipe";
-+			status = "disabled";
-+
-+			pcie2x1_intc: legacy-interrupt-controller {
-+				interrupt-controller;
-+				#address-cells = <0>;
-+				#interrupt-cells = <1>;
-+				interrupt-parent = <&gic>;
-+				interrupts = <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+		};
-+
-+		spi1: spi@ff640000 {
-+			compatible = "rockchip,rk3066-spi";
-+			reg = <0x0 0xff640000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			clocks = <&cru CLK_SPI1>, <&cru PCLK_SPI1>;
-+			clock-names = "spiclk", "apb_pclk";
-+			dmas = <&dmac 15>, <&dmac 14>;
-+			dma-names = "tx", "rx";
-+			num-cs = <2>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&spi1m0_csn0 &spi1m0_csn1 &spi1m0_pins>;
-+			status = "disabled";
-+		};
-+
-+		spi2: spi@ff650000 {
-+			compatible = "rockchip,rk3066-spi";
-+			reg = <0x0 0xff650000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			clocks = <&cru CLK_SPI2>, <&cru PCLK_SPI2>;
-+			clock-names = "spiclk", "apb_pclk";
-+			dmas = <&dmac 17>, <&dmac 16>;
-+			dma-names = "tx", "rx";
-+			num-cs = <2>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&spi2m0_csn0 &spi2m0_csn1 &spi2m0_pins>;
-+			status = "disabled";
-+		};
-+
-+		uart1: serial@ff670000 {
-+			compatible = "rockchip,rk3562-uart", "snps,dw-apb-uart";
-+			reg = <0x0 0xff670000 0x0 0x100>;
-+			interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cru SCLK_UART1>, <&cru PCLK_UART1>;
-+			clock-names = "baudclk", "apb_pclk";
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			status = "disabled";
-+		};
-+
-+		uart2: serial@ff680000 {
-+			compatible = "rockchip,rk3562-uart", "snps,dw-apb-uart";
-+			reg = <0x0 0xff680000 0x0 0x100>;
-+			interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cru SCLK_UART2>, <&cru PCLK_UART2>;
-+			clock-names = "baudclk", "apb_pclk";
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			status = "disabled";
-+		};
-+
-+		uart3: serial@ff690000 {
-+			compatible = "rockchip,rk3562-uart", "snps,dw-apb-uart";
-+			reg = <0x0 0xff690000 0x0 0x100>;
-+			interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cru SCLK_UART3>, <&cru PCLK_UART3>;
-+			clock-names = "baudclk", "apb_pclk";
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			status = "disabled";
-+		};
-+
-+		uart4: serial@ff6a0000 {
-+			compatible = "rockchip,rk3562-uart", "snps,dw-apb-uart";
-+			reg = <0x0 0xff6a0000 0x0 0x100>;
-+			interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cru SCLK_UART4>, <&cru PCLK_UART4>;
-+			clock-names = "baudclk", "apb_pclk";
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			status = "disabled";
-+		};
-+
-+		uart5: serial@ff6b0000 {
-+			compatible = "rockchip,rk3562-uart", "snps,dw-apb-uart";
-+			reg = <0x0 0xff6b0000 0x0 0x100>;
-+			interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cru SCLK_UART5>, <&cru PCLK_UART5>;
-+			clock-names = "baudclk", "apb_pclk";
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			status = "disabled";
-+		};
-+
-+		uart6: serial@ff6c0000 {
-+			compatible = "rockchip,rk3562-uart", "snps,dw-apb-uart";
-+			reg = <0x0 0xff6c0000 0x0 0x100>;
-+			interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cru SCLK_UART6>, <&cru PCLK_UART6>;
-+			clock-names = "baudclk", "apb_pclk";
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			status = "disabled";
-+		};
-+
-+		uart7: serial@ff6d0000 {
-+			compatible = "rockchip,rk3562-uart", "snps,dw-apb-uart";
-+			reg = <0x0 0xff6d0000 0x0 0x100>;
-+			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cru SCLK_UART7>, <&cru PCLK_UART7>;
-+			clock-names = "baudclk", "apb_pclk";
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			status = "disabled";
-+		};
-+
-+		uart8: serial@ff6e0000 {
-+			compatible = "rockchip,rk3562-uart", "snps,dw-apb-uart";
-+			reg = <0x0 0xff6e0000 0x0 0x100>;
-+			interrupts = <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cru SCLK_UART8>, <&cru PCLK_UART8>;
-+			clock-names = "baudclk", "apb_pclk";
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			status = "disabled";
-+		};
-+
-+		uart9: serial@ff6f0000 {
-+			compatible = "rockchip,rk3562-uart", "snps,dw-apb-uart";
-+			reg = <0x0 0xff6f0000 0x0 0x100>;
-+			interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cru SCLK_UART9>, <&cru PCLK_UART9>;
-+			clock-names = "baudclk", "apb_pclk";
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			status = "disabled";
-+		};
-+
-+		pwm4: pwm@ff700000 {
-+			compatible = "rockchip,rk3562-pwm", "rockchip,rk3328-pwm";
-+			reg = <0x0 0xff700000 0x0 0x10>;
-+			#pwm-cells = <3>;
-+			pinctrl-names = "active";
-+			pinctrl-0 = <&pwm4m0_pins>;
-+			clocks = <&cru CLK_PWM1_PERI>, <&cru PCLK_PWM1_PERI>;
-+			clock-names = "pwm", "pclk";
-+			status = "disabled";
-+		};
-+
-+		pwm5: pwm@ff700010 {
-+			compatible = "rockchip,rk3562-pwm", "rockchip,rk3328-pwm";
-+			reg = <0x0 0xff700010 0x0 0x10>;
-+			#pwm-cells = <3>;
-+			pinctrl-names = "active";
-+			pinctrl-0 = <&pwm5m0_pins>;
-+			clocks = <&cru CLK_PWM1_PERI>, <&cru PCLK_PWM1_PERI>;
-+			clock-names = "pwm", "pclk";
-+			status = "disabled";
-+		};
-+
-+		pwm6: pwm@ff700020 {
-+			compatible = "rockchip,rk3562-pwm", "rockchip,rk3328-pwm";
-+			reg = <0x0 0xff700020 0x0 0x10>;
-+			#pwm-cells = <3>;
-+			pinctrl-names = "active";
-+			pinctrl-0 = <&pwm6m0_pins>;
-+			clocks = <&cru CLK_PWM1_PERI>, <&cru PCLK_PWM1_PERI>;
-+			clock-names = "pwm", "pclk";
-+			status = "disabled";
-+		};
-+
-+		pwm7: pwm@ff700030 {
-+			compatible = "rockchip,rk3562-pwm", "rockchip,rk3328-pwm";
-+			reg = <0x0 0xff700030 0x0 0x10>;
-+			#pwm-cells = <3>;
-+			pinctrl-names = "active";
-+			pinctrl-0 = <&pwm7m0_pins>;
-+			clocks = <&cru CLK_PWM1_PERI>, <&cru PCLK_PWM1_PERI>;
-+			clock-names = "pwm", "pclk";
-+			status = "disabled";
-+		};
-+
-+		pwm8: pwm@ff710000 {
-+			compatible = "rockchip,rk3562-pwm", "rockchip,rk3328-pwm";
-+			reg = <0x0 0xff710000 0x0 0x10>;
-+			#pwm-cells = <3>;
-+			pinctrl-names = "active";
-+			pinctrl-0 = <&pwm8m0_pins>;
-+			clocks = <&cru CLK_PWM2_PERI>, <&cru PCLK_PWM2_PERI>;
-+			clock-names = "pwm", "pclk";
-+			status = "disabled";
-+		};
-+
-+		pwm9: pwm@ff710010 {
-+			compatible = "rockchip,rk3562-pwm", "rockchip,rk3328-pwm";
-+			reg = <0x0 0xff710010 0x0 0x10>;
-+			#pwm-cells = <3>;
-+			pinctrl-names = "active";
-+			pinctrl-0 = <&pwm9m0_pins>;
-+			clocks = <&cru CLK_PWM2_PERI>, <&cru PCLK_PWM2_PERI>;
-+			clock-names = "pwm", "pclk";
-+			status = "disabled";
-+		};
-+
-+		pwm10: pwm@ff710020 {
-+			compatible = "rockchip,rk3562-pwm", "rockchip,rk3328-pwm";
-+			reg = <0x0 0xff710020 0x0 0x10>;
-+			#pwm-cells = <3>;
-+			pinctrl-names = "active";
-+			pinctrl-0 = <&pwm10m0_pins>;
-+			clocks = <&cru CLK_PWM2_PERI>, <&cru PCLK_PWM2_PERI>;
-+			clock-names = "pwm", "pclk";
-+			status = "disabled";
-+		};
-+
-+		pwm11: pwm@ff710030 {
-+			compatible = "rockchip,rk3562-pwm", "rockchip,rk3328-pwm";
-+			reg = <0x0 0xff710030 0x0 0x10>;
-+			#pwm-cells = <3>;
-+			pinctrl-names = "active";
-+			pinctrl-0 = <&pwm11m0_pins>;
-+			clocks = <&cru CLK_PWM2_PERI>, <&cru PCLK_PWM2_PERI>;
-+			clock-names = "pwm", "pclk";
-+			status = "disabled";
-+		};
-+
-+		pwm12: pwm@ff720000 {
-+			compatible = "rockchip,rk3562-pwm", "rockchip,rk3328-pwm";
-+			reg = <0x0 0xff720000 0x0 0x10>;
-+			#pwm-cells = <3>;
-+			pinctrl-names = "active";
-+			pinctrl-0 = <&pwm12m0_pins>;
-+			clocks = <&cru CLK_PWM3_PERI>, <&cru PCLK_PWM3_PERI>;
-+			clock-names = "pwm", "pclk";
-+			status = "disabled";
-+		};
-+
-+		pwm13: pwm@ff720010 {
-+			compatible = "rockchip,rk3562-pwm", "rockchip,rk3328-pwm";
-+			reg = <0x0 0xff720010 0x0 0x10>;
-+			#pwm-cells = <3>;
-+			pinctrl-names = "active";
-+			pinctrl-0 = <&pwm13m0_pins>;
-+			clocks = <&cru CLK_PWM3_PERI>, <&cru PCLK_PWM3_PERI>;
-+			clock-names = "pwm", "pclk";
-+			status = "disabled";
-+		};
-+
-+		pwm14: pwm@ff720020 {
-+			compatible = "rockchip,rk3562-pwm", "rockchip,rk3328-pwm";
-+			reg = <0x0 0xff720020 0x0 0x10>;
-+			#pwm-cells = <3>;
-+			pinctrl-names = "active";
-+			pinctrl-0 = <&pwm14m0_pins>;
-+			clocks = <&cru CLK_PWM3_PERI>, <&cru PCLK_PWM3_PERI>;
-+			clock-names = "pwm", "pclk";
-+			status = "disabled";
-+		};
-+
-+		pwm15: pwm@ff720030 {
-+			compatible = "rockchip,rk3562-pwm", "rockchip,rk3328-pwm";
-+			reg = <0x0 0xff720030 0x0 0x10>;
-+			#pwm-cells = <3>;
-+			pinctrl-names = "active";
-+			pinctrl-0 = <&pwm15m0_pins>;
-+			clocks = <&cru CLK_PWM3_PERI>, <&cru PCLK_PWM3_PERI>;
-+			clock-names = "pwm", "pclk";
-+			status = "disabled";
-+		};
-+
-+		saradc0: adc@ff730000 {
-+			compatible = "rockchip,rk3562-saradc";
-+			reg = <0x0 0xff730000 0x0 0x100>;
-+			interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
-+			#io-channel-cells = <1>;
-+			clocks = <&cru CLK_SARADC>, <&cru PCLK_SARADC>;
-+			clock-names = "saradc", "apb_pclk";
-+			resets = <&cru SRST_P_SARADC>;
-+			reset-names = "saradc-apb";
-+			status = "disabled";
-+		};
-+
-+		u2phy: usb2-phy@ff740000 {
-+			compatible = "rockchip,rk3562-usb2phy";
-+			reg = <0x0 0xff740000 0x0 0x10000>;
-+			clocks = <&cru CLK_USB2PHY_REF>;
-+			clock-names = "phyclk";
-+			#clock-cells = <0>;
-+			clock-output-names = "usb480m_phy";
-+			rockchip,usbgrf = <&usbphy_grf>;
-+			status = "disabled";
-+
-+			u2phy_otg: otg-port {
-+				#phy-cells = <0>;
-+				interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 155 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-names = "otg-bvalid", "otg-id", "linestate";
-+				status = "disabled";
-+			};
-+
-+			u2phy_host: host-port {
-+				#phy-cells = <0>;
-+				interrupts = <GIC_SPI 156 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-names = "linestate";
-+				status = "disabled";
-+			};
-+		};
-+
-+		combphy_pu: phy@ff750000 {
-+			compatible = "rockchip,rk3562-naneng-combphy";
-+			reg = <0x0 0xff750000 0x0 0x100>;
-+			#phy-cells = <1>;
-+			clocks = <&cru CLK_PIPEPHY_REF>, <&cru PCLK_PIPEPHY>,
-+				 <&cru PCLK_PHP>;
-+			clock-names = "ref", "apb", "pipe";
-+			assigned-clocks = <&cru CLK_PIPEPHY_REF>;
-+			assigned-clock-rates = <100000000>;
-+			resets = <&cru SRST_PIPEPHY>;
-+			reset-names = "phy";
-+			rockchip,pipe-grf = <&peri_grf>;
-+			rockchip,pipe-phy-grf = <&pipephy_grf>;
-+			status = "disabled";
-+		};
-+
-+		sfc: spi@ff860000 {
-+			compatible = "rockchip,sfc";
-+			reg = <0x0 0xff860000 0x0 0x10000>;
-+			interrupts = <GIC_SPI 128 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cru SCLK_SFC>, <&cru HCLK_SFC>;
-+			clock-names = "clk_sfc", "hclk_sfc";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		sdhci: mmc@ff870000 {
-+			compatible = "rockchip,rk3562-dwcmshc", "rockchip,rk3588-dwcmshc";
-+			reg = <0x0 0xff870000 0x0 0x10000>;
-+			interrupts = <GIC_SPI 63 IRQ_TYPE_LEVEL_HIGH>;
-+			assigned-clocks = <&cru BCLK_EMMC>, <&cru CCLK_EMMC>;
-+			assigned-clock-rates = <200000000>, <200000000>;
-+			clocks = <&cru CCLK_EMMC>, <&cru HCLK_EMMC>,
-+				 <&cru ACLK_EMMC>, <&cru BCLK_EMMC>,
-+				 <&cru TMCLK_EMMC>;
-+			clock-names = "core", "bus", "axi", "block", "timer";
-+			resets = <&cru SRST_C_EMMC>, <&cru SRST_H_EMMC>,
-+				 <&cru SRST_A_EMMC>, <&cru SRST_B_EMMC>,
-+				 <&cru SRST_T_EMMC>;
-+			reset-names = "core", "bus", "axi", "block", "timer";
-+			max-frequency = <200000000>;
-+			status = "disabled";
-+		};
-+
-+		sdmmc0: mmc@ff880000 {
-+			compatible = "rockchip,rk3562-dw-mshc",
-+				     "rockchip,rk3288-dw-mshc";
-+			reg = <0x0 0xff880000 0x0 0x10000>;
-+			interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
-+			max-frequency = <200000000>;
-+			clocks = <&cru HCLK_SDMMC0>, <&cru CCLK_SDMMC0>,
-+				 <&cru SCLK_SDMMC0_DRV>, <&cru SCLK_SDMMC0_SAMPLE>;
-+			clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
-+			resets = <&cru SRST_H_SDMMC0>;
-+			reset-names = "reset";
-+			fifo-depth = <0x100>;
-+			status = "disabled";
-+		};
-+
-+		sdmmc1: mmc@ff890000 {
-+			compatible = "rockchip,rk3562-dw-mshc",
-+				     "rockchip,rk3288-dw-mshc";
-+			reg = <0x0 0xff890000 0x0 0x10000>;
-+			interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>;
-+			max-frequency = <200000000>;
-+			clocks = <&cru HCLK_SDMMC1>, <&cru CCLK_SDMMC1>,
-+				 <&cru SCLK_SDMMC1_DRV>, <&cru SCLK_SDMMC1_SAMPLE>;
-+			clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
-+			resets = <&cru SRST_H_SDMMC1>;
-+			reset-names = "reset";
-+			fifo-depth = <0x100>;
-+			status = "disabled";
-+		};
-+
-+		dmac: dma-controller@ff990000 {
-+			compatible = "arm,pl330", "arm,primecell";
-+			reg = <0x0 0xff990000 0x0 0x4000>;
-+			arm,pl330-periph-burst;
-+			clocks = <&cru ACLK_DMAC>;
-+			clock-names = "apb_pclk";
-+			interrupts = <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
-+			#dma-cells = <1>;
-+		};
-+
-+		i2c1: i2c@ffa00000 {
-+			compatible = "rockchip,rk3562-i2c", "rockchip,rk3399-i2c";
-+			reg = <0x0 0xffa00000 0x0 0x1000>;
-+			clocks = <&cru CLK_I2C1>, <&cru PCLK_I2C1>;
-+			clock-names = "i2c", "pclk";
-+			interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&i2c1m0_xfer>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		i2c2: i2c@ffa10000 {
-+			compatible = "rockchip,rk3562-i2c", "rockchip,rk3399-i2c";
-+			reg = <0x0 0xffa10000 0x0 0x1000>;
-+			clocks = <&cru CLK_I2C2>, <&cru PCLK_I2C2>;
-+			clock-names = "i2c", "pclk";
-+			interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&i2c2m0_xfer>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		i2c3: i2c@ffa20000 {
-+			compatible = "rockchip,rk3562-i2c", "rockchip,rk3399-i2c";
-+			reg = <0x0 0xffa20000 0x0 0x1000>;
-+			clocks = <&cru CLK_I2C3>, <&cru PCLK_I2C3>;
-+			clock-names = "i2c", "pclk";
-+			interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&i2c3m0_xfer>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		i2c4: i2c@ffa30000 {
-+			compatible = "rockchip,rk3562-i2c", "rockchip,rk3399-i2c";
-+			reg = <0x0 0xffa30000 0x0 0x1000>;
-+			clocks = <&cru CLK_I2C4>, <&cru PCLK_I2C4>;
-+			clock-names = "i2c", "pclk";
-+			interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&i2c4m0_xfer>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		i2c5: i2c@ffa40000 {
-+			compatible = "rockchip,rk3562-i2c", "rockchip,rk3399-i2c";
-+			reg = <0x0 0xffa40000 0x0 0x1000>;
-+			clocks = <&cru CLK_I2C5>, <&cru PCLK_I2C5>;
-+			clock-names = "i2c", "pclk";
-+			interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&i2c5m0_xfer>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		wdt: watchdog@ffa60000 {
-+			compatible = "rockchip,rk3562-wdt", "snps,dw-wdt";
-+			reg = <0x0 0xffa60000 0x0 0x100>;
-+			clocks = <&cru CLK_WDTNS>, <&cru PCLK_WDTNS>;
-+			clock-names = "tclk", "pclk";
-+			interrupts = <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
-+		saradc1: adc@ffaa0000 {
-+			compatible = "rockchip,rk3562-saradc";
-+			reg = <0x0 0xffaa0000 0x0 0x100>;
-+			interrupts = <GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>;
-+			#io-channel-cells = <1>;
-+			clocks = <&cru CLK_SARADC_VCCIO156>, <&cru PCLK_SARADC_VCCIO156>;
-+			clock-names = "saradc", "apb_pclk";
-+			resets = <&cru SRST_P_SARADC_VCCIO156>;
-+			reset-names = "saradc-apb";
-+			status = "disabled";
-+		};
-+
-+		pinctrl: pinctrl {
-+			compatible = "rockchip,rk3562-pinctrl";
-+			rockchip,grf = <&ioc_grf>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges;
-+
-+			gpio0: gpio@ff260000 {
-+				compatible = "rockchip,gpio-bank";
-+				reg = <0x0 0xff260000 0x0 0x100>;
-+				clocks = <&cru PCLK_PMU0_GPIO0>, <&cru DBCLK_PMU0_GPIO0>;
-+				gpio-controller;
-+				gpio-ranges = <&pinctrl 0 0 32>;
-+				interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-controller;
-+				#gpio-cells = <2>;
-+				#interrupt-cells = <2>;
-+			};
-+
-+			gpio1: gpio@ff620000 {
-+				compatible = "rockchip,gpio-bank";
-+				reg = <0x0 0xff620000 0x0 0x100>;
-+				clocks = <&cru PCLK_PERI_GPIO1>, <&cru DCLK_PERI_GPIO1>;
-+				gpio-controller;
-+				gpio-ranges = <&pinctrl 0 32 32>;
-+				interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-controller;
-+				#gpio-cells = <2>;
-+				#interrupt-cells = <2>;
-+			};
-+
-+			gpio2: gpio@ff630000 {
-+				compatible = "rockchip,gpio-bank";
-+				reg = <0x0 0xff630000 0x0 0x100>;
-+				clocks = <&cru PCLK_PERI_GPIO2>, <&cru DCLK_PERI_GPIO2>;
-+				gpio-controller;
-+				gpio-ranges = <&pinctrl 0 64 32>;
-+				interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-controller;
-+				#gpio-cells = <2>;
-+				#interrupt-cells = <2>;
-+			};
-+
-+			gpio3: gpio@ffac0000 {
-+				compatible = "rockchip,gpio-bank";
-+				reg = <0x0 0xffac0000 0x0 0x100>;
-+				clocks = <&cru PCLK_GPIO3_VCCIO156>, <&cru DCLK_BUS_GPIO3>;
-+				gpio-controller;
-+				gpio-ranges = <&pinctrl 0 96 32>;
-+				interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-controller;
-+				#gpio-cells = <2>;
-+				#interrupt-cells = <2>;
-+			};
-+
-+			gpio4: gpio@ffad0000 {
-+				compatible = "rockchip,gpio-bank";
-+				reg = <0x0 0xffad0000 0x0 0x100>;
-+				clocks = <&cru PCLK_GPIO4_VCCIO156>, <&cru DCLK_BUS_GPIO4>;
-+				gpio-controller;
-+				gpio-ranges = <&pinctrl 0 128 32>;
-+				interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-controller;
-+				#gpio-cells = <2>;
-+				#interrupt-cells = <2>;
-+			};
-+		};
-+	};
-+};
-+
-+#include "rk3562-pinctrl.dtsi"
 -- 
-2.25.1
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
