@@ -1,64 +1,64 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B69222857FD;
-	Tue,  6 May 2025 13:20:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B8E72853E5;
+	Tue,  6 May 2025 13:20:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746537634; cv=none; b=FfJwNfu+7tGTERufAOBH8nHLt26BjUMbVegCAyrfNVhBonXWC6TPuY9CjYZ2QTEGoPGmWIXW4fyweYzpAYPdUQqDmqr4pqlu8U4JiKg33huN3V9fTKRhSAolmw+be+m6B5OxBKL36RyQ7g76Ci2msQSsV/iv9mBJGpHpaHnHxPo=
+	t=1746537633; cv=none; b=qmWORDAGsMaE1Bb0buUQyRaEL6JcaxbG2NJLURyUo0xCFeGST2u87uDqWaY72KRbJOLoU9E/AJ2MZgR6d5upFV5NPbrqmXWIovFqsw9imrvVdvNSPZBUPIPR0+X34YrbbVUI2sjAxqHfTGTUr+a/asaBxq28QABKCugjVrUpUGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746537634; c=relaxed/simple;
-	bh=KxpEPSl2KigB3j+YL8uR7OgafSoVRpXjjqfn6zXAdX0=;
+	s=arc-20240116; t=1746537633; c=relaxed/simple;
+	bh=zHQccy8K0H39gbNf+QKOfgpx0HCVZEWs196kRhwvvt0=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=e4Vx3RikUlKiwQK7ObRfL+jE2hnLYnKv3l3oof8jCzoy/sYfKT/TZBm0uldTKzpbEBhHL+zhYylMOsBayew8FptYkJjVS7xBBY9y7immenyA6tUp/gc2ItoXV91bXcrvsqscq2W0DiKlkJpPJM9dqvyrNrJLF/p1QmSfDEFdLB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gjWofrER; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dYS+TOLr; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=YQF0efSGM9FAV0Uf4Dax5jdVFzT/tZDMPkLfh4ZU9ZoUZUGFTVQuEFOnxnklhGvzKmhe5ZbaRHCEQhONPDm1igSdEdYRwWwwp2p5NVJuql3z+/O9QM9hFODjr00s+0+mdnZ7z1nNi+wa/kXTxRIxb76RBpzSzw7qcL3IZjEhvaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Dot9lQgD; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tls2X1bB; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gjWofrER";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dYS+TOLr"
-Date: Tue, 06 May 2025 13:20:30 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Dot9lQgD";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tls2X1bB"
+Date: Tue, 06 May 2025 13:20:27 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746537631;
+	s=2020; t=1746537628;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=IBjeB8sA8qPPP/e6xke9vSkYI12vcoDYxz6n2ciJpc0=;
-	b=gjWofrERLDhM1bZvZ6AaCMSXghhFMFmrbEt4UrK3oqUExdkBGkFRLJ3TKMxakCPgA9BWeN
-	/DV8NHWvJ0QT6MixDOUfWKxXGthpnJYrcBmEFUxYU3stF4CJxvHy0onf2iLW5noXteklB2
-	yyVucp0/Q4n+QD0D8C8j1Yi9kQBzg2JJSRDKWiR3pUydiU7qORjzZhlCBmYqwM9RTUIUHz
-	RGX4hjwA3b2X8OFaOD1+lS2dNoWDFzOqro92M7qOynYIoKfnE4DpCJKUmXJY/3De/YH2eT
-	cREe1ZtaG3XawQwMF8KZQjGlBmagQGv39O2wdsww92zeP+l3nW3rT1I/nzIPnw==
+	bh=0FR4uuv1HnRToR7R+VI6hwkfPd9sVxNRpl0W8M6GZDc=;
+	b=Dot9lQgDWEov/217Q7T6IOspYlXVtPJn95BFAmA91FUgq3oZFSpGIgTaoZ70awgfmIRGAd
+	+vT7/fhKoBQWpGehtFuhUOnJF7xitRG2aBSGHrKheob+o4sYvlun3joWF55wcd73znqY5C
+	x4juY+ARMYYDZu8jm+PBXab99fSUFlh0yAg9gHtBvOF015B1Ai3165qb4HM1Ic05ASKeIM
+	s5d0kR/l/DgEr2Zh+FE/W91e57U1AvR192ah1E32lTUI49uY5O3SjG5ql1kgqEEElUp1Iz
+	3hpJ3Qc8F120uaK2F4KLqAvuUQDUEpR7UCv+mU5w5X6m6k8Dpp93CprfBEWRKg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746537631;
+	s=2020e; t=1746537628;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=IBjeB8sA8qPPP/e6xke9vSkYI12vcoDYxz6n2ciJpc0=;
-	b=dYS+TOLr1Lj8r8nwFnP5KwvISim0rKPg2eGH5thTcDNxSjWqB40s2w6DI/IhLPBcne5qHT
-	D8BKKK4XATwMaNDQ==
+	bh=0FR4uuv1HnRToR7R+VI6hwkfPd9sVxNRpl0W8M6GZDc=;
+	b=tls2X1bBCQGKlqSOI3tthUX/rTNcx7QiXUe1xukLvwlXUd14L3IrWCjsjQG4dacPRgM0oN
+	UinItnrtGfhIWVAA==
 From: "tip-bot2 for Jiri Slaby (SUSE)" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/cleanups] misc: hi6421-spmi-pmic: Switch to
- irq_domain_create_simple()
+Subject: [tip: irq/cleanups] pinctrl: Switch to irq_domain_create_*()
 Cc: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Linus Walleij <linus.walleij@linaro.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250319092951.37667-27-jirislaby@kernel.org>
-References: <20250319092951.37667-27-jirislaby@kernel.org>
+In-Reply-To: <20250319092951.37667-31-jirislaby@kernel.org>
+References: <20250319092951.37667-31-jirislaby@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174653763022.406.6923562167165893308.tip-bot2@tip-bot2>
+Message-ID: <174653762746.406.13838760570127669529.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -68,20 +68,20 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the irq/cleanups branch of tip:
 
-Commit-ID:     ae619cab900f362dabc847a999c9e82dacdeb533
-Gitweb:        https://git.kernel.org/tip/ae619cab900f362dabc847a999c9e82dacdeb533
+Commit-ID:     bd7d1603347f36c16ca7f6df42cdb0f95c45ce02
+Gitweb:        https://git.kernel.org/tip/bd7d1603347f36c16ca7f6df42cdb0f95c45ce02
 Author:        Jiri Slaby (SUSE) <jirislaby@kernel.org>
-AuthorDate:    Wed, 19 Mar 2025 10:29:19 +01:00
+AuthorDate:    Wed, 19 Mar 2025 10:29:23 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Tue, 06 May 2025 14:59:06 +02:00
 
-misc: hi6421-spmi-pmic: Switch to irq_domain_create_simple()
+pinctrl: Switch to irq_domain_create_*()
 
-irq_domain_add_simple() is going away as being obsolete now. Switch to
-the preferred irq_domain_create_simple(). That differs in the first
-parameter: It takes more generic struct fwnode_handle instead of struct
-device_node. Therefore, of_fwnode_handle() is added around the
-parameter.
+irq_domain_add_*() interfaces are going away as being obsolete now.
+Switch to the preferred irq_domain_create_*() ones. Those differ in the
+node parameter: They take more generic struct fwnode_handle instead of
+struct device_node. Therefore, of_fwnode_handle() is added around the
+original parameter.
 
 Note some of the users can likely use dev->fwnode directly instead of
 indirect of_fwnode_handle(dev->of_node). But dev->fwnode is not
@@ -92,25 +92,85 @@ case basis (by people who can actually test with the HW).
 
 Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/all/20250319092951.37667-27-jirislaby@kernel.org
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/all/20250319092951.37667-31-jirislaby@kernel.org
 
 ---
- drivers/misc/hi6421v600-irq.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/pinctrl/mediatek/mtk-eint.c   |  5 ++---
+ drivers/pinctrl/pinctrl-at91-pio4.c   |  2 +-
+ drivers/pinctrl/pinctrl-single.c      |  9 +++++----
+ drivers/pinctrl/sunxi/pinctrl-sunxi.c |  7 +++----
+ 4 files changed, 11 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/misc/hi6421v600-irq.c b/drivers/misc/hi6421v600-irq.c
-index 69ee4f3..187c5bc 100644
---- a/drivers/misc/hi6421v600-irq.c
-+++ b/drivers/misc/hi6421v600-irq.c
-@@ -254,8 +254,9 @@ static int hi6421v600_irq_probe(struct platform_device *pdev)
- 	if (!priv->irqs)
- 		return -ENOMEM;
+diff --git a/drivers/pinctrl/mediatek/mtk-eint.c b/drivers/pinctrl/mediatek/mtk-eint.c
+index ced4ee5..8bbe2aa 100644
+--- a/drivers/pinctrl/mediatek/mtk-eint.c
++++ b/drivers/pinctrl/mediatek/mtk-eint.c
+@@ -565,9 +565,8 @@ int mtk_eint_do_init(struct mtk_eint *eint)
+ 			goto err_eint;
+ 	}
  
--	priv->domain = irq_domain_add_simple(np, PMIC_IRQ_LIST_MAX, 0,
--					     &hi6421v600_domain_ops, priv);
-+	priv->domain = irq_domain_create_simple(of_fwnode_handle(np),
-+						PMIC_IRQ_LIST_MAX, 0,
-+						&hi6421v600_domain_ops, priv);
- 	if (!priv->domain) {
- 		dev_err(dev, "Failed to create IRQ domain\n");
- 		return -ENODEV;
+-	eint->domain = irq_domain_add_linear(eint->dev->of_node,
+-					     eint->hw->ap_num,
+-					     &irq_domain_simple_ops, NULL);
++	eint->domain = irq_domain_create_linear(of_fwnode_handle(eint->dev->of_node),
++						eint->hw->ap_num, &irq_domain_simple_ops, NULL);
+ 	if (!eint->domain)
+ 		goto err_eint;
+ 
+diff --git a/drivers/pinctrl/pinctrl-at91-pio4.c b/drivers/pinctrl/pinctrl-at91-pio4.c
+index 8b01d31..e57ac4e 100644
+--- a/drivers/pinctrl/pinctrl-at91-pio4.c
++++ b/drivers/pinctrl/pinctrl-at91-pio4.c
+@@ -1206,7 +1206,7 @@ static int atmel_pinctrl_probe(struct platform_device *pdev)
+ 		dev_dbg(dev, "bank %i: irq=%d\n", i, ret);
+ 	}
+ 
+-	atmel_pioctrl->irq_domain = irq_domain_add_linear(dev->of_node,
++	atmel_pioctrl->irq_domain = irq_domain_create_linear(of_fwnode_handle(dev->of_node),
+ 			atmel_pioctrl->gpio_chip->ngpio,
+ 			&irq_domain_simple_ops, NULL);
+ 	if (!atmel_pioctrl->irq_domain)
+diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
+index 5be14dc..5cda620 100644
+--- a/drivers/pinctrl/pinctrl-single.c
++++ b/drivers/pinctrl/pinctrl-single.c
+@@ -1611,15 +1611,16 @@ static int pcs_irq_init_chained_handler(struct pcs_device *pcs,
+ 
+ 	/*
+ 	 * We can use the register offset as the hardirq
+-	 * number as irq_domain_add_simple maps them lazily.
++	 * number as irq_domain_create_simple maps them lazily.
+ 	 * This way we can easily support more than one
+ 	 * interrupt per function if needed.
+ 	 */
+ 	num_irqs = pcs->size;
+ 
+-	pcs->domain = irq_domain_add_simple(np, num_irqs, 0,
+-					    &pcs_irqdomain_ops,
+-					    pcs_soc);
++	pcs->domain = irq_domain_create_simple(of_fwnode_handle(np),
++					       num_irqs, 0,
++					       &pcs_irqdomain_ops,
++					       pcs_soc);
+ 	if (!pcs->domain) {
+ 		irq_set_chained_handler(pcs_soc->irq, NULL);
+ 		return -EINVAL;
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+index f1c5a99..bf8612d 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
++++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+@@ -1646,10 +1646,9 @@ int sunxi_pinctrl_init_with_flags(struct platform_device *pdev,
+ 		}
+ 	}
+ 
+-	pctl->domain = irq_domain_add_linear(node,
+-					     pctl->desc->irq_banks * IRQ_PER_BANK,
+-					     &sunxi_pinctrl_irq_domain_ops,
+-					     pctl);
++	pctl->domain = irq_domain_create_linear(of_fwnode_handle(node),
++						pctl->desc->irq_banks * IRQ_PER_BANK,
++						&sunxi_pinctrl_irq_domain_ops, pctl);
+ 	if (!pctl->domain) {
+ 		dev_err(&pdev->dev, "Couldn't register IRQ domain\n");
+ 		ret = -ENOMEM;
