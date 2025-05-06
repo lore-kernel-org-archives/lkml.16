@@ -1,226 +1,131 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09D08146593
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 19:22:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0A3B158538
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 19:23:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746559372; cv=none; b=AaeF9yGpbl4OwOohhLaiX+uPDWOBz+s/V+uVrh7zQciMvWk8tj62aVXCTW3JHPi2Wj9tr8I2uxA5KMQJ1dmaIir2FR4WeAZ20Nlb39jEUooL+MU1gR4ppsUKwWhHTt4P8Ve3kiLSg9TiGzR/zOj4zQ2VyPRWAZXODH6OnZhBj3Y=
+	t=1746559400; cv=none; b=WoQhkjW0QSiRk88hBBbJNXALfsxZOOGMPdCdrsOc/ok8/efMt5TO3lmhp930NdX8g0GP0n687Jd+DE161TFCzPYQDde5zAI2lMHae+Pylku4KgaVyR1iLLHXe3MS0cOgt2DCedt3GTXYm14fajxtRVCwfEoR4ZC/WvbD8emhYqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746559372; c=relaxed/simple;
-	bh=adViIxT4K+8OILyTBF/w5gsHiQUH4RC4i3QZNQkAnEE=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=cRzE6z3ZCg5vheNMDNzOm1lAa/23X83xMdA10/it4BkRtRODg4996nHPBTtJ/JtusD39nXK8IVBi8ccK1sXad7IWzFrfJ+yegpO52lcDg32+8u2TkI5kerm0AcO8OF3LP+JOizUGhqLi9lDnN3WcQTl7Vu0NO/TVRKGyzaX8lGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uUaswSTJ; arc=none smtp.client-ip=209.85.210.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
+	s=arc-20240116; t=1746559400; c=relaxed/simple;
+	bh=JXwvNmUGY5Rp9nbfjwRP1kb0d04rlCLFkc3CvzDIZXg=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=doczRapl6csGZky5OC4+iz2iD42A7mas1rbJvyKYg0XjqHwr5JGirZqBpvrk3B9nweMWB+vx+QeEsjiLWlT+WIOJi2DejZHVdl/ofxHPoV8zksd37k7tdY/5l8wbwgns6SKOFHuvPZSOWqIgq8W5hb6IjLTyRstLI8sIgqcHqEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fSgNP7Wn; arc=none smtp.client-ip=209.85.215.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uUaswSTJ"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-73917303082so3969551b3a.3
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 12:22:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fSgNP7Wn"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-af50f56b862so4256536a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 12:23:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746559369; x=1747164169; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=YdVfAUAmDEBQ8JFX7fJFifwcWORGf91hOm42i7pODPI=;
-        b=uUaswSTJjmb1FQo3fau9BMJ+wOuLnRKen5mr6LtEv4UH1TYO5KySFZgUoF6vYRC7Ho
-         5SCmkOFM18Jqv6a8Eo4CqE671a9RU15WqQBqHN18jMnk+s7s8qK1b1yu6VSxAahL73OA
-         nyBaiXXapSnK2j/P3XUJ12c1Ulz1WIXS3RScjfCAbpmMC02pjR4RRCMvoAmHjn3V1JQB
-         3FhQ9fWzJjons3hGUFGYIxPQPUIOCi26kAWUyPq7ByhGXanFNBRAKUkRyVnwow5Z4mCs
-         ZB7ugRkPCtqOnWrFZOVLfQUuAy86fEvg8cLTz3QGNSGL5lmaRJqnRh8rI57mHWObise9
-         9GsA==
+        d=gmail.com; s=20230601; t=1746559398; x=1747164198; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=1C8SA1mk9A5OP3mj+vvhNYYeMx2fYijbXtLOmpd6G8U=;
+        b=fSgNP7Wn0/ma3jidXZcqjDJdXMzl52ub2xiVbFeZr68CeGg/xb88YTeJCg2K3C25UL
+         GDaScKCqjt4Xota5VN6W2Ht8ho5Oyhz3+xvR50KhhXB/Nj75PbxX1a5OFh9LYGtrnsv2
+         u9fDhQQpeBYzWGKj6LvjoofkqlTRlBBwEft91HHwKXRsZ0LAKnxnRzuTh4rf02gupcdq
+         U5hcFTbI8cvQnSgOBTRFtolD28NVZz5OiGksQc5tpBpUbKRF0ObeSWUeyn15vz5cXayy
+         y9LcJoB4ohlF68mUJrRLDAaLN8qZfWunIHjBBVEez0Fq9igY2UOJu66Ablsy9vBg4xl+
+         5xBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746559369; x=1747164169;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YdVfAUAmDEBQ8JFX7fJFifwcWORGf91hOm42i7pODPI=;
-        b=ZIUcomp6PZjyueB+75QxiOoi+abUmUd2eWkiZodbC2PGG8G3gA/b3MZvl7mkbSXqPD
-         Rvj6vJSN/8G8RM2NW8tam7mz0syKZljEirPYtjUpX0yIC29hD93CW2AuUY0JuRJ8k6U9
-         xUvY+0P6xGsAwfXZuVpT44sIbCMlRAgHI+o2tJ2o3PGlFO4LNhJNh+JvH4mDVSpc09y2
-         Zr7j22PKDjOGSfejacmqek4xSof/M2KoKmOd/0ZDlwTwR9Jxt5v0RCjPwGoJOaJCDUzj
-         VPwRczB2NYkTm2brKmnHWYICn9DW1i2i2Rg/GfDfhYNLMRprXEweDH18EUgjR3EH3YPa
-         cHQA==
-X-Forwarded-Encrypted: i=1; AJvYcCV4EKo0mapGi1jbL6P40dhw+/yHaOI+N8GCl8i4gvEAeuaXPdlcYCrVMU06qLBtlNJv+EmpeS4gJ943Xoo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhFThdOSgCU0fBE5YXEJDeHGna+JqzU4E5dkS5PKjpGm9h+JXR
-	CoKtayQDcJshzjY8wTrY6UcZmTjUeVxoqU0cMGsPwPPJLJVMtfLO0qwnYJipBW3JMZqWoh+x7Fo
-	h3krP/Lyu+bqrs6+mKsDS6g==
-X-Google-Smtp-Source: AGHT+IF6xVKxxuyEiNYi+0vPcETYSLwUkqiD4tqqqh48d1N2zs7IMgRp17ja4z+L+OzOmL3DebRn7uSN+uZhGnUzFw==
-X-Received: from pfcg7.prod.google.com ([2002:a05:6a00:23c7:b0:730:8e17:ed13])
- (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a00:ab05:b0:730:9946:5973 with SMTP id d2e1a72fcca58-7409cf1e873mr452083b3a.5.1746559369363;
- Tue, 06 May 2025 12:22:49 -0700 (PDT)
-Date: Tue, 06 May 2025 12:22:47 -0700
-In-Reply-To: <aBlkplRxLNojF4m1@yzhao56-desk.sh.intel.com>
+        d=1e100.net; s=20230601; t=1746559398; x=1747164198;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1C8SA1mk9A5OP3mj+vvhNYYeMx2fYijbXtLOmpd6G8U=;
+        b=eJutwitLDTMPNTJ9RdVGBL4GJowPvRlTqLRz2Rbh/NuVGaMzBQnWAtIA4BAZoU00LX
+         +f9OnKzLdZJ6eYV4W41FePlM/YjAjfs2mU70nDP6db6FOZoZlMKCDxL1EtcWpdOG5uBX
+         avH+/uk4HDf8pwZoJ4hCa8Zoq33UlazR/VCz0MqPUEdrLaNMEwx8b2xVa1RRKpR+hKfq
+         EWNrAXhdWW0Wrn/xd79nK675TZvUkk79DsFE0pEFGETL0sNkuZHa/SXTOUHQqdHCjaME
+         Q+9+epzPud3c1/z4750HwF1RZVhLxQSZKhHxhZ+R7U0Nn0jL80lzjBxlGYioToQpfjd4
+         bAug==
+X-Forwarded-Encrypted: i=1; AJvYcCU/UjZX/EpsQtrs546v8vuAY0cwKpsfg2NKEUrpOm8grWwVKMylfzDRJ8kfXAKr3b6G0sU0+wV8owfui4E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwI8KjMtsXwFClX1ytPcmEgNt2fNsaa5lvot1r5Y73LBCL1aa3d
+	zaVjAhuezohDPFH8PhJxbw1TzujxFHj2QCbtwFBbuSuiuDy5jNmo
+X-Gm-Gg: ASbGnctctmjjX3ZVtL1EBgap5dSjox++MZ47e2LxDtIs+EFc3fA3oBWez7O8dAhRqNm
+	0bfl9GJTR6nHcYMEVivz6NcTMEaqE8Zg3VM6GYX2KihNKpMklbu+MH9tdBXSUCss4ZJaGRBKo+n
+	HCB8Gzk//Xu+lo1b+tUDTe8+B3n1RT8fqi4a88q/dgQoj2hU2q+K/d3beFVCcJQnwz1/RK5REFq
+	25q//FS01xyrkh7OWEs9oH7idKZhieFvosvg17lF87nKYvaCiu5wsOMYslf/+0dLXd8hnj+wUMM
+	qqnTiOnmLZNR84u36VlaR8toShbD71g=
+X-Google-Smtp-Source: AGHT+IGslbzQxQPOsnF7iVmmTW83x3b8B6TmcHa49T+CWfLk80V9sI8dKCWCYWqY9ayQbfuJ6snOHQ==
+X-Received: by 2002:a05:6a20:3941:b0:1f5:6e00:14c4 with SMTP id adf61e73a8af0-2148d891a92mr492719637.42.1746559398069;
+        Tue, 06 May 2025 12:23:18 -0700 (PDT)
+Received: from lg ([2601:646:8f03:9fee:3afe:d39d:8565:ed44])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7405905d0desm9647634b3a.137.2025.05.06.12.23.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 May 2025 12:23:17 -0700 (PDT)
+From: Fan Ni <nifan.cxl@gmail.com>
+X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
+Date: Tue, 6 May 2025 12:23:15 -0700
+To: Matthew Wilcox <willy@infradead.org>
+Cc: nifan.cxl@gmail.com, muchun.song@linux.dev, osalvador@suse.de,
+	mcgrof@kernel.org, a.manzanares@samsung.com, dave@stgolabs.net,
+	akpm@linux-foundation.org, david@redhat.com, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC 0/1] Convert is_migrate_isolate_page() to
+ is_migrate_isolate_folio()
+Message-ID: <aBpho6pICFz-0Mbw@lg>
+References: <20250506184155.587070-1-nifan.cxl@gmail.com>
+ <aBpeR5E6XoneDcEj@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <aA7UXI0NB7oQQrL2@yzhao56-desk.sh.intel.com> <diqz4iy5xvgi.fsf@ackerleytng-ctop.c.googlers.com>
- <aBlkplRxLNojF4m1@yzhao56-desk.sh.intel.com>
-Message-ID: <diqz1pt1sfw8.fsf@ackerleytng-ctop.c.googlers.com>
-Subject: Re: [RFC PATCH 39/39] KVM: guest_memfd: Dynamically split/reconstruct
- HugeTLB page
-From: Ackerley Tng <ackerleytng@google.com>
-To: Yan Zhao <yan.y.zhao@intel.com>
-Cc: vannapurve@google.com, chenyi.qiang@intel.com, tabba@google.com, 
-	quic_eberman@quicinc.com, roypat@amazon.co.uk, jgg@nvidia.com, 
-	peterx@redhat.com, david@redhat.com, rientjes@google.com, fvdl@google.com, 
-	jthoughton@google.com, seanjc@google.com, pbonzini@redhat.com, 
-	zhiquan1.li@intel.com, fan.du@intel.com, jun.miao@intel.com, 
-	isaku.yamahata@intel.com, muchun.song@linux.dev, erdemaktas@google.com, 
-	qperret@google.com, jhubbard@nvidia.com, willy@infradead.org, 
-	shuah@kernel.org, brauner@kernel.org, bfoster@redhat.com, 
-	kent.overstreet@linux.dev, pvorel@suse.cz, rppt@kernel.org, 
-	richard.weiyang@gmail.com, anup@brainfault.org, haibo1.xu@intel.com, 
-	ajones@ventanamicro.com, vkuznets@redhat.com, maciej.wieczor-retman@intel.com, 
-	pgonda@google.com, oliver.upton@linux.dev, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, kvm@vger.kernel.org, linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aBpeR5E6XoneDcEj@casper.infradead.org>
 
-Yan Zhao <yan.y.zhao@intel.com> writes:
+On Tue, May 06, 2025 at 08:08:55PM +0100, Matthew Wilcox wrote:
+> On Tue, May 06, 2025 at 11:38:28AM -0700, nifan.cxl@gmail.com wrote:
+> > From: Fan Ni <fan.ni@samsung.com>
+> > 
+> > Sending out this patch per Matthew Wilcox's suggestion 
+> > that we need to convert is_migrate_isolate_page() to use folio
+> > https://lore.kernel.org/linux-mm/Z_XmUrbxKtYmzmJ6@casper.infradead.org/
+> 
+> That's not what I said!
+> 
+> This is what I said:
+> > >  
+> > > -		if (is_migrate_isolate_page(&folio->page))
+> > > +		if (is_migrate_isolate_page(folio_page(folio, 0)))
+> > >  			continue;
+> >
+> > I think we need an is_migrate_isolate_folio() instead of this.
+> 
+> > However, when looking into the code, I have noticed that among the uers
+> > of is_migrate_isolate_page(), in most cases the page passed in is from a 
+> > a pageblock. 
+> > I am not sure how we should proceed with these cases.
+> > Should we deal with pageblock or just leave it as it is and only do the page
+> > to folio conversion for the pages within?
+> 
+> Neither.  Add a folio_test_migrate_isolate() in addition to
+> is_migrate_isolate_page().  Don't force a conversion as it's a
+> legitimate question to ask of pages as well as of folios.
+> And some of the pages you want to ask it of may well not be part of
+> folios (they may be part of a slab or some other memdesc).
 
->> > <snip>
->> >
->> > What options does userspace have in this scenario?
->> > It can't reduce the flag to KVM_GUEST_MEMFD_HUGE_2MB. Adjusting the gmem.pgoff
->> > isn't ideal either.
->> >
->> > What about something similar as below?
->> >
->> > diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
->> > index d2feacd14786..87c33704a748 100644
->> > --- a/virt/kvm/guest_memfd.c
->> > +++ b/virt/kvm/guest_memfd.c
->> > @@ -1842,8 +1842,16 @@ __kvm_gmem_get_pfn(struct file *file, struct kvm_memory_slot *slot,
->> >         }
->> >
->> >         *pfn = folio_file_pfn(folio, index);
->> > -       if (max_order)
->> > -               *max_order = folio_order(folio);
->> > +       if (max_order) {
->> > +               int order;
->> > +
->> > +               order = folio_order(folio);
->> > +
->> > +               while (order > 0 && ((slot->base_gfn ^ slot->gmem.pgoff) & ((1 << order) - 1)))
->> > +                       order--;
->> > +
->> > +               *max_order = order;
->> > +       }
->> >
->> >         *is_prepared = folio_test_uptodate(folio);
->> >         return folio;
->> >
->> 
->> Vishal was wondering how this is working before guest_memfd was
->> introduced, for other backing memory like HugeTLB.
->> 
->> I then poked around and found this [1]. I will be adding a similar check
->> for any slot where kvm_slot_can_be_private(slot).
->>
->> Yan, that should work, right?
-> No, I don't think the checking of ugfn [1] should work.
->
-> 1. Even for slots bound to in-place-conversion guest_memfd (i.e. shared memory
-> are allocated from guest_memfd), the slot->userspace_addr does not necessarily
-> have the same offset as slot->gmem.pgoff. Even if we audit the offset in
-> kvm_gmem_bind(), userspace could invoke munmap() and mmap() afterwards, causing
-> slot->userspace_addr to point to a different offset.
->
-> 2. for slots bound to guest_memfd that do not support in-place-conversion,
-> shared memory is allocated from a different backend. Therefore, checking
-> "slot->base_gfn ^ slot->gmem.pgoff" is required for private memory. The check is
-> currently absent because guest_memfd supports 4K only.
->
->
+Oh. I misunderstood "we need ... instead of .." :-(.
+Thanks for the the clarification.
 
-Let me clarify, I meant these changes:
+Another separate question.
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 4b64ab3..d0dccf1 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -12938,6 +12938,11 @@ int memslot_rmap_alloc(struct kvm_memory_slot *slot, unsigned long npages)
-        return 0;
- }
- 
-+static inline bool kvm_is_level_aligned(u64 value, int level)
-+{
-+       return IS_ALIGNED(value, KVM_PAGES_PER_HPAGE(level));
-+}
-+
- static int kvm_alloc_memslot_metadata(struct kvm *kvm,
-                                      struct kvm_memory_slot *slot)
- {
-@@ -12971,16 +12976,20 @@ static int kvm_alloc_memslot_metadata(struct kvm *kvm,
- 
-                slot->arch.lpage_info[i - 1] = linfo;
- 
--               if (slot->base_gfn & (KVM_PAGES_PER_HPAGE(level) - 1))
-+               if (!kvm_is_level_aligned(slot->base_gfn, level))
-                        linfo[0].disallow_lpage = 1;
--               if ((slot->base_gfn + npages) & (KVM_PAGES_PER_HPAGE(level) - 1))
-+               if (!kvm_is_level_aligned(slot->base_gfn + npages, level))
-                        linfo[lpages - 1].disallow_lpage = 1;
-                ugfn = slot->userspace_addr >> PAGE_SHIFT;
-                /*
--                * If the gfn and userspace address are not aligned wrt each
--                * other, disable large page support for this slot.
-+                * If the gfn and userspace address are not aligned or if gfn
-+                * and guest_memfd offset are not aligned wrt each other,
-+                * disable large page support for this slot.
-                 */
--               if ((slot->base_gfn ^ ugfn) & (KVM_PAGES_PER_HPAGE(level) - 1)) {
-+               if (!kvm_is_level_aligned(slot->base_gfn ^ ugfn, level) ||
-+                   (kvm_slot_can_be_private(slot) &&
-+                    !kvm_is_level_aligned(slot->base_gfn ^ slot->gmem.pgoff,
-+                                          level))) {
-                        unsigned long j;
- 
-                        for (j = 0; j < lpages; ++j)
+We have a free_frozen_pages(page, order), which have two types of users
+1) head page and order directly from a struct folio; or
+2) page pointer that does not neccesarily be the head page of a
+folio and order that may not be directly related to a folio;
 
-This does not rely on the ugfn check, but adds a similar check for gmem.pgoff.
+Does it make sense to introduce a dedicate function like
+free_frozen_folio(struct folio *folio) to handle case 1)?
 
-I think this should take care of case (1.), for guest_memfds going to be
-used for both shared and private memory. Userspace can't update
-slot->userspace_addr, since guest_memfd memslots cannot be updated and
-can only be deleted.
+Fan
 
-If userspace re-uses slot->userspace_addr for some other memory address
-without deleting and re-adding a memslot,
 
-+ KVM's access to memory should still be fine, since after the recent
-  discussion at guest_memfd upstream call, KVM's guest faults will
-  always go via fd+offset and KVM's access won't be disrupted
-  there. Whatever checking done at memslot binding time will still be
-  valid.
-+ Host's access and other accesses (e.g. instruction emulation, which
-  uses slot->userspace_addr) to guest memory will be broken, but I think
-  there's nothing protecting against that. The same breakage would
-  happen for non-guest_memfd memslot.
 
-p.s. I will be adding the validation as you suggested [1], though that
-shouldn't make a difference here, since the above check directly
-validates against gmem.pgoff.
-
-Regarding 2., checking this checks against gmem.pgoff and should handle
-that as well.
-
-[1] https://lore.kernel.org/all/aBnMp26iWWhUrsVf@yzhao56-desk.sh.intel.com/
-
-I prefer checking at binding time because it aligns with the ugfn check
-that is already there, and avoids having to check at every fault.
-
->> [1] https://github.com/torvalds/linux/blob/b6ea1680d0ac0e45157a819c41b46565f4616186/arch/x86/kvm/x86.c#L12996
->> 
->> >> >> Adding checks at binding time will allow hugepage-unaligned offsets (to
->> >> >> be at parity with non-guest_memfd backing memory) but still fix this
->> >> >> issue.
->> >> >> 
->> >> >> lpage_info will make sure that ranges near the bounds will be
->> >> >> fragmented, but the hugepages in the middle will still be mappable as
->> >> >> hugepages.
->> >> >> 
->> >> >> [1] https://lpc.events/event/18/contributions/1764/attachments/1409/3706/binding-must-have-same-alignment.svg
+-- 
+Fan Ni
