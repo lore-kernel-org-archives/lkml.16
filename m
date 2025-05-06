@@ -1,88 +1,159 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1382438DEC
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 09:48:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E16438DEC
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 09:48:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746524933; cv=none; b=Q2jZ8uwoghx3t053uM/+e1MJoEbEXOSbNuJzr78ocYRppKG1CD1Q0IcPgvqNyY+LHcdbzwCeiIfZ2mvXc/jbv0gtTrcyWmwACqOD++QwAS+244P3sqLTLWxkr0nQDYqRRzlj7X/7csZ5qjg4m2UbPIw2u8JZdnW7JnjfHobvDsI=
+	t=1746524941; cv=none; b=c1cirMKcCWVugEovBvF6oolrplk1Xw+84vlrp1niGrYDZA2DQqeQ4elF5XzBsGESZcf9XqyQgnIs0S9yUVsZegx1lGlMleOyGDgY8PUtB+NNUpT9LHT/azHZBQ2mQf9Dul5yDSRMti24f8D8FbODsLJe95Fcb34ySSNpr492krY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746524933; c=relaxed/simple;
-	bh=kRb/5X69aPRwuLvRz0/p0QXcuCk16tK+mbqgcWpPvwU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=t8eq6wcNhPa4bPgezB30BZKMcTQr478F9ryyOA/yAdXtt6AuhJmQzrI1XzVxhNlEVlQTHWnIhr2omFCpE0HW15NgB2pZxTG3X5lg1U6rXIdi2AwvEby5to8W9ZTalPxVBHjmQRzBur6eAXGCazKT04zVB2yiGVxCVq7+AnOdvQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=AuYYxBwo; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1746524941; c=relaxed/simple;
+	bh=wscBd0+K73Iu2KF17/+m0xbBKq1LwXoTntpULm27Yc4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uo+Ochxmud1Q8ctOUllUlyOzmxskgwRGhuvo4PXOVccqUbPmc1rC+1cKlP4lVCuESthM22TU2SaNS/D0PMtpUW14v5lr7deIzow3nhNDO+Cgq9Uq4Ce/FIf47VWjd53bnyTjIpCkFnVSmJ5oCMzLNo3/Pe4J7bwi1GGKTrpEnn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=bcPuPxt9; arc=none smtp.client-ip=91.218.175.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="AuYYxBwo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=jj6Ka
-	z/NNsOVgJjQ3fg3cdWpuwGqwGBbfxNLd5/qzxw=; b=AuYYxBwoxPcDI/DXm5YaK
-	lXLDODOa6BO7kkjqnC8UcJsvL8ZNDJc/01b53yssYvWtsj4YXLbObl29pHnjXlEk
-	OaZVbbx6stVuwjl7k3UhxdgfrmMt1aokacsidqDGL3TBlrJw309qjsrBIRBbZyiJ
-	U2xB8V6ECLZ4nJrv+y8g1Q=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g0-0 (Coremail) with SMTP id _____wAHzmK_2hloI9kMFA--.14234S3;
-	Tue, 06 May 2025 17:47:47 +0800 (CST)
-From: oushixiong1025@163.com
-To: =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Sean Paul <sean@poorly.run>,
-	Jocelyn Falempe <jfalempe@redhat.com>,
-	dri-devel@lists.freedesktop.org,
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="bcPuPxt9"
+Date: Tue, 6 May 2025 09:48:52 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1746524937;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SGyzWRmJQQwN3Wi10eV4TGMzAWHWRlBB87uJefqwcVU=;
+	b=bcPuPxt9FAJuszqfy37ye6a4kxx+HpJaH0+wEJHo1W8Yf6vWg8Fk6YRlAgAhtiTJxGF7gG
+	M24jKSK0Xoyn3/QqOViDGVoz268x+O75YmWYcJvZTowai++uYcJ5ZqW1ppfQIQzY6hNToX
+	ztJoaMSNkxCmU0yBn1wh4Nn5flC7qQ8=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yosry Ahmed <yosry.ahmed@linux.dev>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Shixiong Ou <oushixiong@kylinos.cn>
-Subject: [PATCH v2 2/3] drm/ast: use DRM_GEM_SHMEM_SIMPLE_DRIVER_OPS
-Date: Tue,  6 May 2025 17:47:39 +0800
-Message-Id: <20250506094740.621420-2-oushixiong1025@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250506094740.621420-1-oushixiong1025@163.com>
-References: <20250506094740.621420-1-oushixiong1025@163.com>
+	Michael Larabel <Michael@michaellarabel.com>,
+	Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v2] KVM: SVM: Set/clear SRSO's BP_SPEC_REDUCE on 0 <=> 1
+ VM count transitions
+Message-ID: <aBnbBL8Db0rHXxFX@google.com>
+References: <20250505180300.973137-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wAHzmK_2hloI9kMFA--.14234S3
-X-Coremail-Antispam: 1Uf129KBjvdXoWrZFWfCrWfKr15Gw4rXw1fZwb_yoW3KrXEkF
-	10qan3WrWDua4Duw1Iyay3ZryIvr15WrWfGF1Utasxtw47Jr4UZ34v9rW0vF1j9F4xZF90
-	yw1DWF43CFsakjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU8b_-PUUUUU==
-X-CM-SenderInfo: xrxvxxx0lr0wirqskqqrwthudrp/xtbBYwlFD2gZ2bcW-gABsW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250505180300.973137-1-seanjc@google.com>
+X-Migadu-Flow: FLOW_OUT
 
-From: Shixiong Ou <oushixiong@kylinos.cn>
+On Mon, May 05, 2025 at 11:03:00AM -0700, Sean Christopherson wrote:
+> Set the magic BP_SPEC_REDUCE bit to mitigate SRSO when running VMs if and
+> only if KVM has at least one active VM.  Leaving the bit set at all times
+> unfortunately degrades performance by a wee bit more than expected.
+> 
+> Use a dedicated spinlock and counter instead of hooking virtualization
+> enablement, as changing the behavior of kvm.enable_virt_at_load based on
+> SRSO_BP_SPEC_REDUCE is painful, and has its own drawbacks, e.g. could
+> result in performance issues for flows that are sensitive to VM creation
+> latency.
+> 
+> Defer setting BP_SPEC_REDUCE until VMRUN is imminent to avoid impacting
+> performance on CPUs that aren't running VMs, e.g. if a setup is using
+> housekeeping CPUs.  Setting BP_SPEC_REDUCE in task context, i.e. without
+> blasting IPIs to all CPUs, also helps avoid serializing 1<=>N transitions
+> without incurring a gross amount of complexity (see the Link for details
+> on how ugly coordinating via IPIs gets).
+> 
+> Link: https://lore.kernel.org/all/aBOnzNCngyS_pQIW@google.com
+> Fixes: 8442df2b49ed ("x86/bugs: KVM: Add support for SRSO_MSR_FIX")
+> Reported-by: Michael Larabel <Michael@michaellarabel.com>
+> Closes: https://www.phoronix.com/review/linux-615-amd-regression
+> Cc: Borislav Petkov <bp@alien8.de>
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+> 
+> v2: Defer setting BP_SPEC_REDUCE until VMRUN is imminent, which in turn
+>     allows for eliding the lock on 0<=>1 transitions as there is no race
+>     with CPUs doing VMRUN before receiving the IPI to set the bit, and
+>     having multiple tasks take the lock during svm_srso_vm_init() is a-ok.
+> 
+> v1: https://lore.kernel.org/all/20250502223456.887618-1-seanjc@google.com
+> 
+>  arch/x86/kvm/svm/svm.c | 71 ++++++++++++++++++++++++++++++++++++++----
+>  arch/x86/kvm/svm/svm.h |  2 ++
+>  2 files changed, 67 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+> index cc1c721ba067..15f7a0703c16 100644
+> --- a/arch/x86/kvm/svm/svm.c
+> +++ b/arch/x86/kvm/svm/svm.c
+> @@ -607,9 +607,6 @@ static void svm_disable_virtualization_cpu(void)
+>  	kvm_cpu_svm_disable();
+>  
+>  	amd_pmu_disable_virt();
+> -
+> -	if (cpu_feature_enabled(X86_FEATURE_SRSO_BP_SPEC_REDUCE))
+> -		msr_clear_bit(MSR_ZEN4_BP_CFG, MSR_ZEN4_BP_CFG_BP_SPEC_REDUCE_BIT);
+>  }
+>  
+>  static int svm_enable_virtualization_cpu(void)
+> @@ -687,9 +684,6 @@ static int svm_enable_virtualization_cpu(void)
+>  		rdmsr(MSR_TSC_AUX, sev_es_host_save_area(sd)->tsc_aux, msr_hi);
+>  	}
+>  
+> -	if (cpu_feature_enabled(X86_FEATURE_SRSO_BP_SPEC_REDUCE))
+> -		msr_set_bit(MSR_ZEN4_BP_CFG, MSR_ZEN4_BP_CFG_BP_SPEC_REDUCE_BIT);
+> -
+>  	return 0;
+>  }
+>  
+> @@ -1518,6 +1512,63 @@ static void svm_vcpu_free(struct kvm_vcpu *vcpu)
+>  	__free_pages(virt_to_page(svm->msrpm), get_order(MSRPM_SIZE));
+>  }
+>  
+> +#ifdef CONFIG_CPU_MITIGATIONS
+> +static DEFINE_SPINLOCK(srso_lock);
+> +static atomic_t srso_nr_vms;
+> +
+> +static void svm_srso_clear_bp_spec_reduce(void *ign)
+> +{
+> +	struct svm_cpu_data *sd = this_cpu_ptr(&svm_data);
+> +
+> +	if (!sd->bp_spec_reduce_set)
+> +		return;
+> +
+> +	msr_clear_bit(MSR_ZEN4_BP_CFG, MSR_ZEN4_BP_CFG_BP_SPEC_REDUCE_BIT);
+> +	sd->bp_spec_reduce_set = false;
+> +}
+> +
+> +static void svm_srso_vm_destroy(void)
+> +{
+> +	if (!cpu_feature_enabled(X86_FEATURE_SRSO_BP_SPEC_REDUCE))
+> +		return;
+> +
+> +	if (atomic_dec_return(&srso_nr_vms))
+> +		return;
+> +
+> +	guard(spinlock)(&srso_lock);
+> +
+> +	/*
+> +	 * Verify a new VM didn't come along, acquire the lock, and increment
+> +	 * the count before this task acquired the lock.
+> +	 */
+> +	if (atomic_read(&srso_nr_vms))
+> +		return;
+> +
+> +	on_each_cpu(svm_srso_clear_bp_spec_reduce, NULL, 1);
 
-Import dmabuf without mapping its sg_table to avoid issues likes:
-  ast 0000:07:00.0: swiotlb buffer is full (sz: 3145728 bytes), total 32768 (slots), used 0 (slots)
+Just a passing-by comment. I get worried about sending IPIs while
+holding a spinlock because if someone ever tries to hold that spinlock
+with IRQs disabled, it may cause a deadlock.
 
-Signed-off-by: Shixiong Ou <oushixiong@kylinos.cn>
----
-v1->v2:
-        patch rebase.
+This is not the case for this lock, but it's not obvious (at least to
+me) that holding it in a different code path that doesn't send IPIs with
+IRQs disabled could cause a problem.
 
- drivers/gpu/drm/ast/ast_drv.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/ast/ast_drv.c b/drivers/gpu/drm/ast/ast_drv.c
-index 6fbf62a99c48..2dac6acf79e7 100644
---- a/drivers/gpu/drm/ast/ast_drv.c
-+++ b/drivers/gpu/drm/ast/ast_drv.c
-@@ -64,7 +64,7 @@ static const struct drm_driver ast_driver = {
- 	.minor = DRIVER_MINOR,
- 	.patchlevel = DRIVER_PATCHLEVEL,
- 
--	DRM_GEM_SHMEM_DRIVER_OPS,
-+	DRM_GEM_SHMEM_SIMPLE_DRIVER_OPS,
- 	DRM_FBDEV_SHMEM_DRIVER_OPS,
- };
- 
--- 
-2.17.1
-
+You could add a comment, convert it to a mutex to make this scenario
+impossible, or dismiss my comment as being too paranoid/ridiculous :)
