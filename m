@@ -1,159 +1,146 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75754283159;
-	Tue,  6 May 2025 15:55:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A02BE283683;
+	Tue,  6 May 2025 15:56:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746546940; cv=none; b=I7YrOODGSvKSaXDSSyhM2MRMKZKE79aV+EQZbHaGBLgNXSPZ4ZGwfxpHoHDKIw1XUmiwwtkQ2wZpIVKwWIwOYgP2QGkpQjWLHnO7xct/ICUtyi22Imgm36IYpFVNAmFa59bLwBcVqCjygI0yUhIXq90SXxJwr2KaojyqSB4NJZE=
+	t=1746546978; cv=none; b=Jv6Q3W+G+1Lah3c85HzcIQk4sI7SiwF1I8CRWIVDIf63+LNGyJjosygWu/1vi/y9OAHHa7AM/D7aa7mbFQHmMx6tGRhmSDicM0egprDd9vFJJKHLDJMQaS1Q8XXAyL6e9+cZiLC7e+4z2dk2sRj7h5RVnY+EpDzkq3Hp0dSDu88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746546940; c=relaxed/simple;
-	bh=mCFQ+ucNuyMo3C5xld3jMo5WkJTHaPdSBRjzt64xstg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=E68Ez4F6bI8U1U3dnFOjH52esD6wMl/Fl9Z09weB9EwL/dOl374J2hqmSXr9CKcaRimfIrjwXzx6ikgwAU6G5CqOl5qEnHZB2V3tocYgslRKqZHgS2A61K00ehR/IX+yc9lSYgv91K5ReH9Gcvk4mqoLOOjY2qi6joB37azdpBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XaszKUbc; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746546978; c=relaxed/simple;
+	bh=2SoxB3NHD8Ps6GC9v+38YxKziXQIx1dUTPfuOnXpEro=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aCaCRzTSPFOTqe/rII09kaa9ZvbqA/v+C7Kru6KtYr/OGTtKy3owKHvreiNMoiNvpkZWuDqo1+coasEJfitCfQbLlh+51VSCbSujhxCOq5xFVpB9NYvmidhhLBRFN3Qvi28hbEPz74tlyZw6ltp8uNtgAYdLF+d6oC9JfDQI3Ns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bWwpJ86h; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XaszKUbc"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-22c33ac23edso64254465ad.0;
-        Tue, 06 May 2025 08:55:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746546939; x=1747151739; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UgR5FUf+57QhLp7U3yKuzQJoQ3wyAe9WAkKlCi6IjmE=;
-        b=XaszKUbck6YenAp3KNhMDNQSaeh41aEVPyCey5z44QWV1PchCVgr29fhWbOXvqeI5O
-         PDA4u7kxa/DEQykafnmW+6+2k8+OKtAhY+XZrG3RRN0sma7FZziFm6STzHIqQ8Hjtfaa
-         1JrRgSwWkjcSJZlCVbGhLAQCjeY6AmoynHXldoARiXkj95+qZtP/mPVRCwomtdsRddAn
-         q4KrlsPgrytfUT7AiLHUz6lUNGrvmiacnifSD19NRcgbj7UYrnFOKW3YyvZxfNh0rbZ8
-         IDff9hZXXFNVV5EvXIxL0ckuJ2I8Y2ia12KnjLleqA/yILRb5skPj4hqrsqNEi3PNQbU
-         vsqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746546939; x=1747151739;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UgR5FUf+57QhLp7U3yKuzQJoQ3wyAe9WAkKlCi6IjmE=;
-        b=H+pJDelK9njR0aOf6gQEPz9gdeLDPF0uqkLFhE/UfuDeOMzPnTuQqTrRgO24jR4BcD
-         gc+x+VVCiW51an8wTYnAXvFdYXPlI2zQ6sewCg6fl3BUE+xuFw/+WhLz2dNjghMb4pqZ
-         wqHdUeA+7v7ctD7sw4m3yx/+IPO0AEnWoRwx3CJYfssPclURlgpQgpxFgxhjK5JWp4uN
-         uujCuojZWtw9e67dT3ocAdZ53zmdiZ85rdngxKZmLZR1jC1AsKF5eLESEEIf6hCMgG0n
-         ZGkVcr2jjhLw+CL0SRlGRPPq+v9MXq2oXIf2j+ffu0iF5KfoYmVc88+eaTACauCFKYEx
-         IbXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWY+2VHQT+3yEJbat9cHd6HbwLKHrvOEdIXrqFHnOlfVLldlApv05IZo+UR5XvPV1wg7F3UEviq+Zg=@vger.kernel.org, AJvYcCX2JYmocNlkN/eRVPsER0GEZrYl8PqmKbc9SP7gHIsRMiDFvzKW7anYu4Vfy1Y/en1NXc8+uQJ+DG7BSXnj@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJUKxk27V7KDd5tKpd+YFd35aUHGhEV2dlGRyLZ8ffzycMGDRl
-	wno9kg2SyrnrbRt3TiEaaDS0/fiPEoG4izSO6OaRALtio5yiI171JqqttY9DwSwTghv665ySlNS
-	Z+hihxCp2RPp/p5RH31xm9Kyzi70=
-X-Gm-Gg: ASbGncve57gS1j0jnqWvR1nWpQ/1h/CipU+x+HPNDkxtKW9ttvqZ33r9i1kBBYYsfmI
-	meXNezsqpxfC9sdH66CfigmVs+hAniYgs6MlbLdcS3wImR6P/RUjWl69aNJeXdNXgZtOoEf7SYq
-	KKoIOPMWR21lB8iJjejRTJguo=
-X-Google-Smtp-Source: AGHT+IFQT7YE0wPz7OxIzXL3HY1tUyH9E5KZ0IigNFCx542OaM6J2+1+qSLFAdPCTYJM1AXpAoX0OxanubYRe/Hhg6w=
-X-Received: by 2002:a17:902:ea0f:b0:22e:4b74:5f66 with SMTP id
- d9443c01a7336-22e4b746322mr28489255ad.42.1746546938637; Tue, 06 May 2025
- 08:55:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bWwpJ86h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43272C4CEE4;
+	Tue,  6 May 2025 15:56:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746546978;
+	bh=2SoxB3NHD8Ps6GC9v+38YxKziXQIx1dUTPfuOnXpEro=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bWwpJ86hlQiUW9zdWW7S6eiNlsvlCwncKV2/DbQ1uoAGG2tdlAq0Rbq/rLNdwdw9n
+	 52dvQAhw//fLVprgIfAUlUtB9Dl+PD5262iPHMDc73eQrRHgvTtNyEEtYqNNXebCZK
+	 f0MOiYmlKtHbmrSdAsEwTUJvLUOqAeKHD5aEQ/2eem0MGdQwqngcoH34yOKeUYyIvU
+	 JVWFm/yZdabAzfF2cOnq0hVdE0VP3rPs1t7AHcDaVXpE1FmGrupKux+iohiJWSdqLN
+	 NRw/Yh0WRK681h409b1xZt3qFce/aHyjDM3I3ZGs9b2IufH6whOqV2AuAOZz44uYrN
+	 zNoaMKCv8mGHQ==
+Date: Tue, 6 May 2025 16:56:10 +0100
+From: Simon Horman <horms@kernel.org>
+To: Larysa Zaremba <larysa.zaremba@intel.com>
+Cc: intel-wired-lan@lists.osuosl.org,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Jiri Pirko <jiri@resnulli.us>,
+	Tatyana Nikolova <tatyana.e.nikolova@intel.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+	Lee Trager <lee@trager.us>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Sridhar Samudrala <sridhar.samudrala@intel.com>,
+	Jacob Keller <jacob.e.keller@intel.com>,
+	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
+	Mateusz Polchlopek <mateusz.polchlopek@intel.com>,
+	Ahmed Zaki <ahmed.zaki@intel.com>, netdev@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Karlsson, Magnus" <magnus.karlsson@intel.com>,
+	Emil Tantilov <emil.s.tantilov@intel.com>,
+	Madhu Chittim <madhu.chittim@intel.com>,
+	Josh Hay <joshua.a.hay@intel.com>,
+	Milena Olech <milena.olech@intel.com>, pavan.kumar.linga@intel.com,
+	"Singhai, Anjali" <anjali.singhai@intel.com>,
+	Phani R Burra <phani.r.burra@intel.com>
+Subject: Re: [PATCH iwl-next v2 03/14] libie: add PCI device initialization
+ helpers to libie
+Message-ID: <20250506155610.GS3339421@horms.kernel.org>
+References: <20250424113241.10061-1-larysa.zaremba@intel.com>
+ <20250424113241.10061-4-larysa.zaremba@intel.com>
+ <20250428165657.GE3339421@horms.kernel.org>
+ <aBhhEgEvjjsxtobY@soc-5CG4396X81.clients.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250503190044.32511-1-gye976@gmail.com> <20250504152441.13772899@jic23-huawei>
-In-Reply-To: <20250504152441.13772899@jic23-huawei>
-From: Gyeyoung Baek <gye976@gmail.com>
-Date: Wed, 7 May 2025 00:55:27 +0900
-X-Gm-Features: ATxdqUH9epeIH4jzPRzk09llcEw5SL3ADnjkWOTdNmRvxdHmR3Qt9xb21jLxo0c
-Message-ID: <CAKbEznvZ3BHJK8TjGg7MR2dDMtWk+gZ5SewF_u_J0=Nw6c082Q@mail.gmail.com>
-Subject: Re: [PATCH] iio: trigger: Add validation to reject devices requiring
- top half
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: David Lechner <dlechner@baylibre.com>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aBhhEgEvjjsxtobY@soc-5CG4396X81.clients.intel.com>
 
-Hello Jonathan, thank you for the review.
-I would appreciate it if you could review my additional comments.
-
-On Sun, May 4, 2025 at 11:24=E2=80=AFPM Jonathan Cameron <jic23@kernel.org>=
- wrote:
->
-> On Sun,  4 May 2025 04:00:43 +0900
-> Gyeyoung Baek <gye976@gmail.com> wrote:
->
-> > Some device drivers implement top-half handler,
-> > which is not compatible with threaded handler trigger.
-> > This patch adds a validation function to reject such devices,
-> > allowing only iio_pollfunc_store_time().
->
-> This needs more reasoning.  What makes it not work?
-> + what do we mean by not compatible?
-> I'd expect at least a reference to it using iio_trigger_poll_nested()
-> directly.
-
-Of course, even if the IIO device registers a top-half,
-`iio_trigger_poll_nested()` ignores the top-half and only calls the
-bottom-half, so it works properly.
-What I misunderstood here is that I thought there were other IIO
-devices implementing a top-half other than
-`iio_pollfunc_store_time()`. So I assumed that the TODO was to block
-those.
-I had confused it with the IIO trigger's top-half handler, apologies
-for the confusion.
-
----
-
-> It's unfortunately hard to tell whether a top half handler is
-> actually needed or not.  As a follow up question, what cases do we have
-> of top half / interrupt context handlers other than iio_pollfunc_store_ti=
-me()?
-
-No, it seems that `iio_pollfunc_store_time()` is the only top-half
-handler for IIO devices.
-
----
-
-> Maybe we don't need this code to be this complex any more at all
-> (i.e. could it become a flag to say whether the timestamp is useful or no=
-t)
-> rather than registering the callback.
-
-my new understanding of TODO is as follows:
-    - Since `iio_loop_thread()` can only call
-`iio_trigger_poll_nested()` and not `iio_trigger_poll()`,
-      if the connected IIO device expects a top half such as
-`iio_pollfunc_store_time()`,
-      then `iio_loop_thread()` needs to directly call
-`iio_pollfunc_store_time().`
-
-Would my understanding be correct?
-
----
-
+On Mon, May 05, 2025 at 08:56:18AM +0200, Larysa Zaremba wrote:
+> On Mon, Apr 28, 2025 at 05:56:57PM +0100, Simon Horman wrote:
+> > On Thu, Apr 24, 2025 at 01:32:26PM +0200, Larysa Zaremba wrote:
+> > > From: Phani R Burra <phani.r.burra@intel.com>
+> > > 
+> > > Add memory related support functions for drivers to access MMIO space and
+> > > allocate/free dma buffers.
+> > > 
+> > > Reviewed-by: Maciej Fijalkowski <maciej.fijalkowski@intel.com>
+> > > Signed-off-by: Phani R Burra <phani.r.burra@intel.com>
+> > > Co-developed-by: Victor Raj <victor.raj@intel.com>
+> > > Signed-off-by: Victor Raj <victor.raj@intel.com>
+> > > Co-developed-by: Sridhar Samudrala <sridhar.samudrala@intel.com>
+> > > Signed-off-by: Sridhar Samudrala <sridhar.samudrala@intel.com>
+> > > Co-developed-by: Pavan Kumar Linga <pavan.kumar.linga@intel.com>
+> > > Signed-off-by: Pavan Kumar Linga <pavan.kumar.linga@intel.com>
+> > > Co-developed-by: Larysa Zaremba <larysa.zaremba@intel.com>
+> > > Signed-off-by: Larysa Zaremba <larysa.zaremba@intel.com>
+> > 
+> > ...
+> > 
+> > > diff --git a/include/linux/intel/libie/pci.h b/include/linux/intel/libie/pci.h
+> > 
+> > ...
+> > 
+> > > +#define libie_pci_map_mmio_region(mmio_info, offset, size, ...)	\
+> > > +	__libie_pci_map_mmio_region(mmio_info, offset, size,		\
+> > > +				     COUNT_ARGS(__VA_ARGS__), ##__VA_ARGS__)
+> > > +
+> > > +#define libie_pci_get_mmio_addr(mmio_info, offset, ...)		\
+> > > +	__libie_pci_get_mmio_addr(mmio_info, offset,			\
+> > > +				   COUNT_ARGS(__VA_ARGS__), ##__VA_ARGS__)
+> > 
+> > Perhaps I'm missing something terribly obvious.  But it seems to me that
+> > both libie_pci_map_mmio_region() and libie_pci_get_mmio_addr() are always
+> > called with the same number of arguments in this patchset.
+> 
+> This is true.
+> 
+> > And if so,
+> > perhaps the va_args handling would be best dropped.
 > >
-> > +/*
-> > + * Protect against connection of devices that 'need' the top half
-> > + * handler.
-> > + */
-> > +static int iio_loop_trigger_validate_device(struct iio_trigger *trig,
-> > +                                             struct iio_dev *indio_dev=
-)
-> > +{
-> > +     struct iio_poll_func *pf =3D indio_dev->pollfunc;
-> > +
-> > +     /* Only iio timestamp grabbing is allowed. */
-> > +     if (pf->h && pf->h !=3D iio_pollfunc_store_time)
->
-> Why is iio_pollfunc_store_time useable here?  It's not going to store the
-> time if we don't call it...  We could special case it probably but we'd
-> need to ensure the call is actually made.
+> 
+> For now (but this will change), we do not map BAR indexes other than zero, 
+> therefore it is the default less-argument variant, this looks nicer than adding 
+> ', 0);'. Still, it does not feel right to hardcode the library function to use 
+> BAR0 only, hence the variadic macro.
 
-Yes, If my new understanding is correct, `iio_loop_thread()` needs to
-call `iio_pollfunc_store_time()` directly,
-depending on whether the IIO device's top-half is NULL or
-`iio_pollfunc_store_time()`.
+Thanks for the clarification. I would slightly lead towards adding
+va_args support when it is needed. But I understand if you want
+to stick with the approach that you have taken in this patch.
 
---
-Regards,
-Gyeyoung
+> 
+> > > +
+> > > +bool __libie_pci_map_mmio_region(struct libie_mmio_info *mmio_info,
+> > > +				 resource_size_t offset, resource_size_t size,
+> > > +				 int num_args, ...);
+> > > +void __iomem *__libie_pci_get_mmio_addr(struct libie_mmio_info *mmio_info,
+> > > +					resource_size_t region_offset,
+> > > +					int num_args, ...);
+> > > +void libie_pci_unmap_all_mmio_regions(struct libie_mmio_info *mmio_info);
+> > > +int libie_pci_init_dev(struct pci_dev *pdev);
+> > > +void libie_pci_deinit_dev(struct pci_dev *pdev);
+> > > +
+> > > +#endif /* __LIBIE_PCI_H */
+> > > -- 
+> > > 2.47.0
+> > > 
+> > 
+> 
