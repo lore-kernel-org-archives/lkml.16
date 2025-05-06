@@ -1,209 +1,157 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF3D1280322
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 15:03:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D32B9198A08;
+	Tue,  6 May 2025 15:04:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746543817; cv=none; b=uj2Sh1+WHhBgBDe+PKqnDJOsYScbThSmqAVcfFmF2XtaaF+eCFwDM3fcc8H5LI4dwmwo/Wbm30yWUIU0ztVcFPowWVNEEDmfq16tnAX3ujVT+X4VC6fAbNCm5i6NLj+QziJIBLz6mTq29MzAHo3dGFt/2BP/k1OptBmrk042dHk=
+	t=1746543870; cv=none; b=p44dAW5U45RDVOCKjqwbLLdCQ/yKCqAoQpErVyIodMQo+1nmqzov4ire34kCtITn8h12hhpZz392kPB86umMibq7YKPbDxGxWgILfCw+0NN5Q6f7uxy32x0Dl1l4jcfKXwKAt1Qd0zlSfaYAx9QGTseosvDhPE9B8w8i57fDrBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746543817; c=relaxed/simple;
-	bh=uqjOHkZCL/zt6C0moxUa6bUQR0377CxgzSLQDGT2e/s=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=gvshpZnvhPH3lKVU36ea/i9nPXB1QC4Je0EeREK0+VTvBC/vTQlPmhAwQ/plzKrFSW1pBcNsb1V2kwdHSJOZYSRpiYbbZltaAOl8EKigCvgscgLRLhDqA1qRL7dSjCz910Prxpgyqb0J3H17ieLUxbl5zGvN++tqFWcOKLOM6P4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gUfLRdwF; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746543870; c=relaxed/simple;
+	bh=ybjMWZBXLO90PK7pN8yjtr5+qIPMuXs9hipLkKd1VqI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=c9WaUoyHSIgoNUqWLr8jdRb04PTd/2UNTgDdocy3JFFKRqyJx0q83qqBN0ASVC59P3g9kLhkylPze4zXbjlLX98ZRnQf91u1oabYr1+V2zgLUWuerFl8nfI9Ib1NDekExPWKyoVps2wyXbhH6iaQJIAZm0WqeN9z+ImvseIvHTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dG5wQ8c/; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gUfLRdwF"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5fab81d6677so2766936a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 08:03:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dG5wQ8c/"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-3087a70557bso665097a91.2;
+        Tue, 06 May 2025 08:04:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746543813; x=1747148613; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=fAr8rijhsB+/WBGv8V0DB6GGHRO/HlF67zAcvOr1M70=;
-        b=gUfLRdwFPVq6oWUULZISaX0AaQ5fOV270GaiXHQNjXa0MWTz2C7nZp+LQg+o+3d55I
-         Ps1EAbkcfQYzcqqIDoF5WreaiKoQxGn/V/NnVZp9Adt02O5fr3kxLsmoGlVOQ7agju/e
-         WADoBnUphjp/VUmiDdX+Z+fFAN22yWqXWD96HuLT0zZbcQ3lP/mQEeKFK4rf2np2iAq0
-         pLRbe17aZ+c6I7fkOqPwTceAADTYGQKTtwjjF6IVy8dO6hh+eTB+jqYZ9HlKkL1Ps7J/
-         popHuQQZ3H/6aGUYS1r7ixTOgZhGWwLtqmKYmYIfa3P4B9GthYD+HJg7QoDJ9Yc1VhVp
-         jMlQ==
+        d=gmail.com; s=20230601; t=1746543868; x=1747148668; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=q4N5L0OBe3ScafzL36/5ps8MdmhuELISisHME8PJ2jE=;
+        b=dG5wQ8c/eCKgAtnfQNv6cmDo2RfnYzZw6vvR8+ESGDZ4Q0dIYh1/2sUvAsfuuVOKgZ
+         3nHslAzEwf5d90RbwBDEDFIM6TFHloGq2c4h91577lGZ6bUlO0GKgL8hEhcpOUdAuyM7
+         h/ppM0u3f1uKFRoFIIUo6WSS38trd5+PPqhR+phpmwsA6WjJKG3HvY+zAStBls/sEl6I
+         1bKqRoXnigKfp5WFZZjhHQ2vYoK64Oqt/iEMoEfB2T+b+lZxv70SvqKIKlSZM/L+hcJo
+         SLgOn3jCywhVVLCDnAOAzt7noRYZ4lgkSQmL4K3rnri6Um0GD6cZeBHztErygpH8ii0x
+         gj1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746543813; x=1747148613;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fAr8rijhsB+/WBGv8V0DB6GGHRO/HlF67zAcvOr1M70=;
-        b=jVqNOBDlgUJH2fw3rnQSSVv0E7ZUUb4djqfuiLCcGDIn3NBVeGkr5T72vdpQSXBfxf
-         41TQjlQ6mvB4CtG+xBRZskezkHfCjiGn3Cd793n3LYtgzP1SRzzSNjRVr4f5bR8z3PF2
-         ODeXanzpoBsym4tzMe8GvlYSIUu5cXSX/XuAjEs4EG31xu++GbuElx4Kid6WZTzn9o8B
-         0x5+eSQHBLGA8mQ4gnkAm1Ja/zp9wof7gb0F36xNmPIL4tumSUuAOQ5LJyRLrdZBwD+O
-         HaoV2VyqOH2JxfuyS1sO30GIIaCNfuz2sWOg40JqFWhrBewINHNIU5OoFQTlGPITBYkK
-         aK7g==
-X-Forwarded-Encrypted: i=1; AJvYcCXjC8aqLCNmBEq3YF+zwdn0uju5B7+oNDns898dVadwjlomX2XoqS4FnZctsQXm0cfX7yxNhOlth+OVB9c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXmLzQ4P7nRgeqRA9Cr/QPJEDOQk9yhWf4ElcuFuHAVY9SaYiq
-	h2tEP8UEOiU6GB40uVsqUnM5hwLBwl/xG6HZQZHnNRNixrJfYrAF6oAnhJ9BTP0=
-X-Gm-Gg: ASbGnct3eFQEpa/1CP8YiuHjkRdr3H5CnZLT3SWZTA5v+UA0WKZL+3N3DyBnbMWv8K6
-	dyCz0RYfsheBhuZ/RVfDV9vc/ZG7fIWLFjFETM7OP1vAvJO5+5rITGgtq++T/Nq66sqUUWm0c8d
-	wCk8H44o67X4999znIkxQrDRwcY8vw+Nth4v9a4gkaSp75HkQrbgmIs/6wC+H87eO+EsjH7hBhu
-	mvB04PFNzIjVc+k6m87PFgipC+qr1ksfCspsYhit/LnJHXN4cPC0U/BijcIa7LIVr4ugeBahvgL
-	/tdW30ACtCoRLhxffumzxPYu9yKjPUmc/XFWTNQ7/LZgeIObkw==
-X-Google-Smtp-Source: AGHT+IHKXrG7MW210zoA061o77YgCxufmlwobLpi0cswfVizvVYnxRI7NlJxwV0c9z+3Jw9Q0WirIw==
-X-Received: by 2002:a50:c94a:0:b0:5fb:1fba:cd93 with SMTP id 4fb4d7f45d1cf-5fb1fbacdd8mr4486921a12.5.1746543813070;
-        Tue, 06 May 2025 08:03:33 -0700 (PDT)
-Received: from [10.11.12.107] ([82.76.212.167])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fa7781bfa2sm7803407a12.43.2025.05.06.08.03.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 06 May 2025 08:03:32 -0700 (PDT)
-Message-ID: <5f103643-5e1c-43c6-b8fe-9617d3b5447c@linaro.org>
-Date: Tue, 6 May 2025 16:03:30 +0100
+        d=1e100.net; s=20230601; t=1746543868; x=1747148668;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=q4N5L0OBe3ScafzL36/5ps8MdmhuELISisHME8PJ2jE=;
+        b=h6mZ8O1ZGieQ59l+iYqor0UYwSFTD7gw0bENE0XrVVS5EgRhOFM/8z6tRB4y7OZ0ww
+         MFK6kK1XaNPeBp0AQGi9Xk11c1kY5ji3bCe/Gu6nLdP2a1vEqvNmnCWLvX1Jjt1uLjlI
+         vaZLS450DR+cTFN1YgZrAk2JtvRocHUPJkHIw+xHaBDff0dL4Uv9j27u4Yh9KCBQ6QOH
+         jMkPYSfqeC213H9lOqtvnJmk8iHvk5UU+t3nHYqQxR8s6x1PrLvUpTOLiktYXVkzbxtc
+         Fu3ZfYC8XVCWBaAF/nZHnGw7XRRsAsx3hGnokSi9nICDYC3pCfkwoSjBjmGf5NvCCUky
+         OVdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXhLkwW367iCp0zWXMzrvAQD45ZH8/KxHYORaiJ2rVJPTqH7H3iZjYzTOPG1rNm6Gqgf21liX0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZZfP6QziYPGFhfdxkYnEmcLi0Uuu66Vn5QZHXRco4Hbbu1+wl
+	sZ2ERF/r4EDnbfRY0tR/tdJJ7VZ27n+fIkdyGphoCo3VNqJ73BC+LAPfbG6E1xwxKCZyTIhnYuh
+	f0ZF8HBJ0Uy6sZxg/fVPpiuv1UfgOMw==
+X-Gm-Gg: ASbGnctj+PrWjC5ZvZehdQym92v7kPf43AC1DoJeIL9HuC8Uk3DAMjdMCiQenWh55gY
+	Q0XS6929yR4Z0dZNqMgv4W7bZ909dgWJxW7JHUXt5npBXcW5FNhU0iktH9Y6k98/zrvo3BuyDNd
+	ZdsDI1L9S/qsuYaUFkI3UpqA==
+X-Google-Smtp-Source: AGHT+IEwhGFD8IpYiUNhIRLVGumkHh+0GyHsr9sLU3ivDsfBTh2hkFmQUsf7kNoEKGjP7WIXJpifuA65WP3UfME/oGg=
+X-Received: by 2002:a17:90a:2c83:b0:30a:9935:bea8 with SMTP id
+ 98e67ed59e1d1-30a9935c11fmr469594a91.8.1746543867772; Tue, 06 May 2025
+ 08:04:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-Subject: Re: [PATCH 24/25] PCI: Perform reset_resource() and build fail list
- in sync
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
- =?UTF-8?Q?Micha=C5=82_Winiarski?= <michal.winiarski@intel.com>,
- Igor Mammedov <imammedo@redhat.com>, linux-kernel@vger.kernel.org
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
- William McVicker <willmcvicker@google.com>
-References: <20241216175632.4175-1-ilpo.jarvinen@linux.intel.com>
- <20241216175632.4175-25-ilpo.jarvinen@linux.intel.com>
-Content-Language: en-US
-In-Reply-To: <20241216175632.4175-25-ilpo.jarvinen@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250505223922.2682012-1-sashal@kernel.org> <20250505223922.2682012-376-sashal@kernel.org>
+In-Reply-To: <20250505223922.2682012-376-sashal@kernel.org>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Tue, 6 May 2025 11:04:16 -0400
+X-Gm-Features: ATxdqUH3rURebALiwxQAtHGTZB9JcLWKbXWjGIu3U-Z3H9ymj5qHKILAnoy8wd0
+Message-ID: <CADnq5_PTVy-gTr=xWnTULQfUsBYY9WbyL1yZ45ew+OPHpO8xdA@mail.gmail.com>
+Subject: Re: [PATCH AUTOSEL 6.12 376/486] drm/amd/display/dc: enable oem i2c
+ support for DCE 12.x
+To: Sasha Levin <sashal@kernel.org>
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
+	Alex Deucher <alexander.deucher@amd.com>, Harry Wentland <harry.wentland@amd.com>, sunpeng.li@amd.com, 
+	christian.koenig@amd.com, airlied@gmail.com, simona@ffwll.ch, 
+	roman.li@amd.com, srinivasan.shanmugam@amd.com, amd-gfx@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi!
+On Mon, May 5, 2025 at 6:53=E2=80=AFPM Sasha Levin <sashal@kernel.org> wrot=
+e:
+>
+> From: Alex Deucher <alexander.deucher@amd.com>
+>
+> [ Upstream commit 2ed83f2cc41e8f7ced1c0610ec2b0821c5522ed5 ]
+>
+> Use the value pulled from the vbios just like newer chips.
+>
+> Reviewed-by: Harry Wentland <harry.wentland@amd.com>
+> Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-On 12/16/24 5:56 PM, Ilpo Järvinen wrote:
-> Resetting resource is problematic as it prevent attempting to allocate
-> the resource later, unless something in between restores the resource.
-> Similarly, if fail_head does not contain all resources that were reset,
-> those resource cannot be restored later.
-> 
-> The entire reset/restore cycle adds complexity and leaving resources
-> into reseted state causes issues to other code such as for checks done
-> in pci_enable_resources(). Take a small step towards not resetting
-> resources by delaying reset until the end of resource assignment and
-> build failure list (fail_head) in sync with the reset to avoid leaving
-> behind resources that cannot be restored (for the case where the caller
-> provides fail_head in the first place to allow restore somewhere in the
-> callchain, as is not all callers pass non-NULL fail_head).
-> 
-> The Expansion ROM check is temporarily left in place while building the
-> failure list until the upcoming change which reworks optional resource
-> handling.
-> 
-> Ideally, whole resource reset could be removed but doing that in a big
-> step would make the impact non-tractable due to complexity of all
-> related code.
-> 
-> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+This is not a bug fix.  It's only applicable as part of a new feature
+that was added in 6.15.
 
-I'm hitting the BUG_ON(!list_empty(&add_list)); in
-pci_assign_unassigned_bus_resources() [1] with 6.15-rc5 and the the
-pixel6 downstream pcie driver.
+Alex
 
-I saw the thread where "a34d74877c66 PCI: Restore assigned resources
-fully after release" fixes things for some other cases, but it's not the
-case here.
-
-Reverting the following patches fixes the problem:
-a34d74877c66 PCI: Restore assigned resources fully after release
-2499f5348431 PCI: Rework optional resource handling
-96336ec70264 PCI: Perform reset_resource() and build fail list in sync
-
-In the working case the add_list list is empty throughout the entire
-body of pci_assign_unassigned_bus_resources().
-
-In the failing case __pci_bus_size_bridges() leaves the add_list not
-empty and __pci_bus_assign_resources() does not consume the list, thus
-the BUG_ON. The failing case contains an extra print that's not shown
-when reverting the blamed commits:
-[   13.951185][ T1101] pcieport 0000:00:00.0: bridge window [mem
-0x00100000-0x001fffff] to [bus 01-ff] add_size 100000 add_align 100000
-
-I've added some prints trying to describe the code path, see
-https://paste.ofcode.org/Aeu2YBpLztc49ZDw3uUJmd#
-
-Failing case:
-[   13.944231][ T1101] pci 0000:01:00.0: [144d:a5a5] type 00 class
-0x000000 PCIe Endpoint
-[   13.944412][ T1101] pci 0000:01:00.0: BAR 0 [mem
-0x00000000-0x000fffff 64bit]
-[   13.944532][ T1101] pci 0000:01:00.0: ROM [mem 0x00000000-0x0000ffff
-pref]
-[   13.944649][ T1101] pci 0000:01:00.0: enabling Extended Tags
-[   13.944844][ T1101] pci 0000:01:00.0: PME# supported from D0 D3hot D3cold
-[   13.945015][ T1101] pci 0000:01:00.0: 15.752 Gb/s available PCIe
-bandwidth, limited by 8.0 GT/s PCIe x2 link at 0000:00:00.0 (capable of
-31.506 Gb/s with 16.0 GT/s PCIe x2 link)
-[   13.950616][ T1101] __pci_bus_size_bridges: before pbus_size_mem.
-list empty? 1
-[   13.950784][ T1101] pbus_size_mem: 2. list empty? 1
-[   13.950886][ T1101] pbus_size_mem: 1 list empty? 0
-[   13.950982][ T1101] pbus_size_mem: 3. list empty? 0
-[   13.951082][ T1101] pbus_size_mem: 4. list empty? 0
-[   13.951185][ T1101] pcieport 0000:00:00.0: bridge window [mem
-0x00100000-0x001fffff] to [bus 01-ff] add_size 100000 add_align 100000
-[   13.951448][ T1101] __pci_bus_size_bridges: after pbus_size_mem. list
-empty? 0
-[   13.951643][ T1101] pci_assign_unassigned_bus_resources: before
-__pci_bus_assign_resources -> list empty? 0
-[   13.951924][ T1101] pcieport 0000:00:00.0: bridge window [mem
-0x40000000-0x401fffff]: assigned
-[   13.952248][ T1101] pci_assign_unassigned_bus_resources: after
-__pci_bus_assign_resources -> list empty? 0
-[   13.952634][ T1101] ------------[ cut here ]------------
-[   13.952818][ T1101] kernel BUG at drivers/pci/setup-bus.c:2514!
-[   13.953045][ T1101] Internal error: Oops - BUG: 00000000f2000800 [#1]
- SMP
-...
-[   13.976086][ T1101] Call trace:
-[   13.976206][ T1101]  pci_assign_unassigned_bus_resources+0x110/0x114 (P)
-[   13.976462][ T1101]  pci_rescan_bus+0x28/0x48
-[   13.976628][ T1101]  exynos_pcie_rc_poweron
-
-Working case:
-[   13.786961][ T1120] pci 0000:01:00.0: [144d:a5a5] type 00 class
-0x000000 PCIe Endpoint
-[   13.787136][ T1120] pci 0000:01:00.0: BAR 0 [mem
-0x00000000-0x000fffff 64bit]
-[   13.787280][ T1120] pci 0000:01:00.0: ROM [mem 0x00000000-0x0000ffff
-pref]
-[   13.787541][ T1120] pci 0000:01:00.0: enabling Extended Tags
-[   13.787808][ T1120] pci 0000:01:00.0: PME# supported from D0 D3hot D3cold
-[   13.787988][ T1120] pci 0000:01:00.0: 15.752 Gb/s available PCIe
-bandwidth, limited by 8.0 GT/s PCIe x2 link at 0000:00:00.0 (capable of
-31.506 Gb/s with 16.0 GT/s PCIe x2 link)
-[   13.795279][ T1120] __pci_bus_size_bridges: before pbus_size_mem.
-list empty? 1
-[   13.795408][ T1120] pbus_size_mem: 2. list empty? 1
-[   13.795495][ T1120] pbus_size_mem: 2. list empty? 1
-[   13.795577][ T1120] __pci_bus_size_bridges: after pbus_size_mem. list
-empty? 1
-[   13.795692][ T1120] pci_assign_unassigned_bus_resources: before
-__pci_bus_assign_resources -> list empty? 1
-[   13.795849][ T1120] pcieport 0000:00:00.0: bridge window [mem
-0x40000000-0x401fffff]: assigned
-[   13.796072][ T1120] pci_assign_unassigned_bus_resources: after
-__pci_bus_assign_resources -> list empty? 1
-[   13.796662][ T1120] cpif: s5100_poweron_pcie: DBG: MSI sfr not set
-up, yet(s5100_pdev is NULL)
-[   13.796666][ T1120] cpif: register_pcie: s51xx_pcie_init start
-
-
-Any hints are welcomed. Thanks,
-ta
-
-[1]
-https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/setup-bus.c?h=v6.15-rc5#n2500
+> ---
+>  .../dc/resource/dce120/dce120_resource.c        | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/amd/display/dc/resource/dce120/dce120_resour=
+ce.c b/drivers/gpu/drm/amd/display/dc/resource/dce120/dce120_resource.c
+> index 621825a51f46e..a2ab6776b8855 100644
+> --- a/drivers/gpu/drm/amd/display/dc/resource/dce120/dce120_resource.c
+> +++ b/drivers/gpu/drm/amd/display/dc/resource/dce120/dce120_resource.c
+> @@ -67,6 +67,7 @@
+>  #include "reg_helper.h"
+>
+>  #include "dce100/dce100_resource.h"
+> +#include "link.h"
+>
+>  #ifndef mmDP0_DP_DPHY_INTERNAL_CTRL
+>         #define mmDP0_DP_DPHY_INTERNAL_CTRL             0x210f
+> @@ -659,6 +660,12 @@ static void dce120_resource_destruct(struct dce110_r=
+esource_pool *pool)
+>
+>         if (pool->base.dmcu !=3D NULL)
+>                 dce_dmcu_destroy(&pool->base.dmcu);
+> +
+> +       if (pool->base.oem_device !=3D NULL) {
+> +               struct dc *dc =3D pool->base.oem_device->ctx->dc;
+> +
+> +               dc->link_srv->destroy_ddc_service(&pool->base.oem_device)=
+;
+> +       }
+>  }
+>
+>  static void read_dce_straps(
+> @@ -1054,6 +1061,7 @@ static bool dce120_resource_construct(
+>         struct dc *dc,
+>         struct dce110_resource_pool *pool)
+>  {
+> +       struct ddc_service_init_data ddc_init_data =3D {0};
+>         unsigned int i;
+>         int j;
+>         struct dc_context *ctx =3D dc->ctx;
+> @@ -1257,6 +1265,15 @@ static bool dce120_resource_construct(
+>
+>         bw_calcs_data_update_from_pplib(dc);
+>
+> +       if (dc->ctx->dc_bios->fw_info.oem_i2c_present) {
+> +               ddc_init_data.ctx =3D dc->ctx;
+> +               ddc_init_data.link =3D NULL;
+> +               ddc_init_data.id.id =3D dc->ctx->dc_bios->fw_info.oem_i2c=
+_obj_id;
+> +               ddc_init_data.id.enum_id =3D 0;
+> +               ddc_init_data.id.type =3D OBJECT_TYPE_GENERIC;
+> +               pool->base.oem_device =3D dc->link_srv->create_ddc_servic=
+e(&ddc_init_data);
+> +       }
+> +
+>         return true;
+>
+>  irqs_create_fail:
+> --
+> 2.39.5
+>
