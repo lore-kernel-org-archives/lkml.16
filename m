@@ -1,152 +1,104 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7233415E5DC;
-	Tue,  6 May 2025 14:16:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDD2F272E7E
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 14:16:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746541024; cv=none; b=kMfrQg75Ct/ueRqdjzU5XCW55lE5/r3w5AO3NdrgweicC6knUavP+eXrqkqlQRvjJNNJsMvbjRjHy0f6gpSXOmbeooDBGxA1W2lCxp+h8SWui4iG7J9tU8DIJ9hIJhe+2/b3+VLwl0DISAAQFAXjAg3888a3wAdwgKguCzjFPYs=
+	t=1746541023; cv=none; b=YfLJjs1R00cpVt8eCEwca3qJr8BR/mGaT7t7BhH0aI0MtfcZLPZKV30xN/Dvx6h9ai5n7X3Fm5lXBiQ+1T9JIaRdMBsIP/msbtOK7CBEqXBJmvCwGogwNLzJflfGQ1jo1jwbrsjCK6G1BnFvOXVJNJpprpU0jryYo+eHFCL9MoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746541024; c=relaxed/simple;
-	bh=RR40BhlGIflZAiH8OFxXICiwwKql1UvoZGo4oKCp7ws=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=fsD3fbNDbuGvdBQK9QvvjGrFNPSFO6IoKGBoKyJhNg+3PTDq9G5JTEU3+C69USaMnwrXN6fTHs2TiEk6w+t1/C0lDPDblQt5ZB3hfD3+9pLP7dD4f7Fy/uYOTxo7kCz+dE5gfmwps8IfBCr/r4FlElYIXNR0/VHky4E0W/8bviM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=mB4KK8ZA; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1746541023; c=relaxed/simple;
+	bh=Fl2/IZykO5fo3DsiqvCeXEV6EFYBiFXUzvunvnzZGbI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GhpbGdSieMNgw1zqGB/e7FofDfgHtUsVlRcufW4uEQq80hsGD8RziEHyX7ZvxaRa2AIlawihgdvJLz3Sck9Scwc/fxuvpL4zIoJr1gVMkDzUoCw/JrIV8tLJm6zNxC7NCyo0knH+xxBSyBcT+p0BXyJYTIT9qXN91uhOZQ2QALk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=VubFrAYW; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mB4KK8ZA"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 546EGhR61246333
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 6 May 2025 09:16:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1746541003;
-	bh=SQ4xo6hk5l/bcEXtSDFBnMutbh2T1oPpRjR/kXjFglk=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=mB4KK8ZA3KAIIn1uQKNCKdBQR2FhuT5QQq3ab+bF6hahaGoEJ7dC19Kb4H3EG+4eo
-	 xTmng2OhesH+aCbOhw7N8icM7cPG1OXXtv7tG3mnJJuOzcuiARICMjUD2z7CL2c4I1
-	 fA6dYHjnQtnTmI3BFWt2Xz5dKelU7SY/Evynx6yo=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 546EGhH4018807
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 6 May 2025 09:16:43 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 6
- May 2025 09:16:43 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 6 May 2025 09:16:43 -0500
-Received: from [10.249.42.149] ([10.249.42.149])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 546EGgNe110067;
-	Tue, 6 May 2025 09:16:42 -0500
-Message-ID: <b366f989-3eb5-4716-8dfc-d8f6ce961296@ti.com>
-Date: Tue, 6 May 2025 09:16:42 -0500
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="VubFrAYW"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id DD1C540E01FA;
+	Tue,  6 May 2025 14:16:56 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id DV5r8T6erDJX; Tue,  6 May 2025 14:16:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1746541012; bh=sm+ZeARaiuXhjoU/wKu8rMAtBmA6fQht8L/TJUh5E8Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VubFrAYWe6tvYPew6VLgUmtUy9cpKKlMqMjpYi5njbLDJT+riE9i6RgTyUjXeMviZ
+	 TPrhqTHcq3GNn77DctBSR76M2olXo1AskhDTmS+OoTUqGo6P5YS0pZbD/AVNevlBHc
+	 /ub5/U7Xrm7BGOjooU5TpF4IXeviTeVM8UdqjOxSCVOuiR9Qwtk6VjGkk4Iyy08KWY
+	 rRwHjtwSI1rkZROQlm1slftjBOe13s5BKsLp4cBY9wUnmOg48j/GcLvtwKBkgvR9y6
+	 SphvUb7glfnfKhLHfrkJtTVF7ozO8Ph9TX154ONYFBdQSPphV/nuew0NawHvCoUmYJ
+	 R8sbXH+Pg+RfJdHWwrAwG0y5Fbccvh+y9PKwL8K7c38T2KoJ8cIVeOg0OEw0FGZoDM
+	 liP9heUwnH51W99UovKQ8BdE2dL95ViOBtwfmZEBdHz/1BpTg4BEeE99HXFygDaZ+4
+	 khtnclE6yBfFwpOEOnEGc4rouNp7B7B+J1V+7CTNt8uU8jfzOB6KzBkSi90A5L+Ic6
+	 PsMmZO4gwNQ8vKG2wkK33BGYsO2z6hvnDVUOWcAzjt/K3gu166dwSjEIcJbTiaWwIs
+	 1wa+vUo11DWtVTvuzX7EOYMnclXpMcZKwgHvhGuduybyEPp7qc+hKPEIf3i+e77niF
+	 LbDCl9WP6Dbws8V01Yy1MD+I=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0BD7740E0196;
+	Tue,  6 May 2025 14:16:37 +0000 (UTC)
+Date: Tue, 6 May 2025 16:16:31 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: "Maciej W. Rozycki" <macro@orcam.me.uk>
+Cc: "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	"Ahmed S . Darwish" <darwi@linutronix.de>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@kernel.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	John Ogness <john.ogness@linutronix.de>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Subject: Re: [RFC PATCH 0/15] x86: Remove support for TSC-less and CX8-less
+ CPUs
+Message-ID: <20250506141631.GEaBoZvzPCWh88xDzu@fat_crate.local>
+References: <20250425084216.3913608-1-mingo@kernel.org>
+ <alpine.DEB.2.21.2505050944230.31828@angie.orcam.me.uk>
+ <98C88CE8-C3D5-4B75-8545-71DD47C67614@zytor.com>
+ <alpine.DEB.2.21.2505051356340.31828@angie.orcam.me.uk>
+ <1E50C160-EB89-4C5C-B9F0-6441026EE380@zytor.com>
+ <20250505205405.GNaBklbdKLbadRATbr@fat_crate.local>
+ <alpine.DEB.2.21.2505060059010.31828@angie.orcam.me.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/4] arm64: dts: ti: k3-am62-phycore-som: Enable
- Co-processors
-To: Daniel Schultz <d.schultz@phytec.de>, <nm@ti.com>, <vigneshr@ti.com>,
-        <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <upstream@lists.phytec.de>
-References: <20250506115502.3515599-1-d.schultz@phytec.de>
- <20250506115502.3515599-2-d.schultz@phytec.de>
-Content-Language: en-US
-From: Andrew Davis <afd@ti.com>
-In-Reply-To: <20250506115502.3515599-2-d.schultz@phytec.de>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.2505060059010.31828@angie.orcam.me.uk>
 
-On 5/6/25 6:54 AM, Daniel Schultz wrote:
-> For every remote processor, set up dedicated memory regions and
-> associate the required mailbox channels. Allocate two memory areas
-> per remote core: one 1MB region for vring shared buffers, and
-> another for external memory used by the remote processor for its
-> resource table and trace buffer.
-> 
-> Signed-off-by: Daniel Schultz <d.schultz@phytec.de>
-> ---
+On Tue, May 06, 2025 at 02:51:51PM +0100, Maciej W. Rozycki wrote:
+>  Doesn't work for ongoing driver maintenance
 
-Reviewed-by: Andrew Davis <afd@ti.com>
+Dunno, I'd concentrate my efforts on something, a *little* *bit* more modern.
+At some point this is old rusty hw no matter from which way you look at it and
+it might as well be left to rest in its sunset days.
 
->   .../boot/dts/ti/k3-am62-phycore-som.dtsi      | 35 +++++++++++++++----
->   1 file changed, 29 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/ti/k3-am62-phycore-som.dtsi b/arch/arm64/boot/dts/ti/k3-am62-phycore-som.dtsi
-> index 2ef4cbaec789..71d165a7abe0 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am62-phycore-som.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-am62-phycore-som.dtsi
-> @@ -57,6 +57,18 @@ mcu_m4fss_memory_region: m4f-memory@9cc00000 {
->   			no-map;
->   		};
->   
-> +		wkup_r5fss0_core0_dma_memory_region: r5f-dma-memory@9da00000 {
-> +			compatible = "shared-dma-pool";
-> +			reg = <0x00 0x9da00000 0x00 0x100000>;
-> +			no-map;
-> +		};
-> +
-> +		wkup_r5fss0_core0_memory_region: r5f-memory@9db00000 {
-> +			compatible = "shared-dma-pool";
-> +			reg = <0x00 0x9db00000 0x00 0xc00000>;
-> +			no-map;
-> +		};
-> +
->   		secure_tfa_ddr: tfa@9e780000 {
->   			reg = <0x00 0x9e780000 0x00 0x80000>;
->   			alignment = <0x1000>;
-> @@ -68,12 +80,6 @@ secure_ddr: optee@9e800000 {
->   			alignment = <0x1000>;
->   			no-map;
->   		};
-> -
-> -		wkup_r5fss0_core0_dma_memory_region: r5f-dma-memory@9db00000 {
-> -			compatible = "shared-dma-pool";
-> -			reg = <0x00 0x9db00000 0x00 0x00c00000>;
-> -			no-map;
-> -		};
->   	};
->   
->   	vcc_5v0_som: regulator-vcc-5v0-som {
-> @@ -226,10 +232,17 @@ cpsw3g_phy1: ethernet-phy@1 {
->   };
->   
->   &mailbox0_cluster0 {
-> +	status = "okay";
-> +
->   	mbox_m4_0: mbox-m4-0 {
->   		ti,mbox-rx = <0 0 0>;
->   		ti,mbox-tx = <1 0 0>;
->   	};
-> +
-> +	mbox_r5_0: mbox-r5-0 {
-> +		ti,mbox-rx = <2 0 0>;
-> +		ti,mbox-tx = <3 0 0>;
-> +	};
->   };
->   
->   &main_i2c0 {
-> @@ -365,3 +378,13 @@ &sdhci0 {
->   	non-removable;
->   	status = "okay";
->   };
-> +
-> +&wkup_r5fss0 {
-> +	status = "okay";
-> +};
-> +
-> +&wkup_r5fss0_core0 {
-> +	mboxes = <&mailbox0_cluster0 &mbox_r5_0>;
-> +	memory-region = <&wkup_r5fss0_core0_dma_memory_region>,
-> +			<&wkup_r5fss0_core0_memory_region>;
-> +};
+But I certainly am not trying to tell you what to do with your time.
+
+What I have problem with is wasting my time maintaining old, ancient hw which
+is not worth the electricity it needs to run. Especially if you can get
+something orders of magnitudes better in *any* aspect you can think of, and
+actually get some real work done.
+
+:-P
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
