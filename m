@@ -1,193 +1,154 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80180280310
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 12:46:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 590271DE883
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 12:48:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746535619; cv=none; b=sA3hOH0LxWKbZkVs44LHRF4aeZ/zk8EU9MBjCaeqZYAcW78KL0jF2I6XwL+Z+JTV1SJoxiIT75CIzKLUDBc4zkpd2xGCyI3epAgrGmmebT1WByeERSP+XnxOgSkVKRC3ycU7WMj4bxHUELRcd8l2pMMn79/6XjFkbECl1cp+NEo=
+	t=1746535703; cv=none; b=oioNpvK+UQcNM2yoVXK0pUyhv9+P2sveyvFAXBbeyq3VW4vdAdrvi7flTuNiRukDSdAEPRD/8cmTH/O/vabnk64TQNREf4ZJXn5s+MUarjxIlME4aounTfgTJKnh0VY6KLle374rD54Y9uLw7KL2XqGFEwWbwW2jBp3rL0VZcto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746535619; c=relaxed/simple;
-	bh=ZvhDtpu1XnYczmFh42T13jRZysqmiKlyJitHmezAOec=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=j/Hb2HXhv7EmCM61OvzuAih3pUVPIppEnvaZ0Ft5FD26lvNmjldoeD7NV8mgvtqvP4bxXEMOfOt4qCangYWav1y4hlfv4StYPR7ZGL22+QzZkJ/XK4nzFAvVIDypdhCPfR9Li2CbHEcw1t6FYDgDEv21I1YnTqxb6M7pgBbSL/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BcXbBczt; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746535703; c=relaxed/simple;
+	bh=8ubOWI8+2mUl2eaNqwg0k/WqOEL9YcUblXgwsyAtyo8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uw8d7VdlOyy0BLW/37LxvqNVpEiHSE7oTOGH+G48JSfUErC8ebdFqnOMpAHDXfOgodKZH3rCoZi8R+0tujUy+n9QZ1I/LaS1pU9ETrN3eXI7CAPxzUUQRbihL+xP0CZ7SBif0PXq0zN0rmKNZwSM1Xg22/dpKktxamyz011z+Pg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=QSfxMzlT; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=8TItqUap; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=dVX6yepa; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=1/PorQBd; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BcXbBczt"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-72d3b48d2ffso5887434b3a.2
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 05:46:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746535616; x=1747140416; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=V7d2y3ul5N0Mf7A+x8KbqIBRsyxegjHYdT7Sjr9I/BQ=;
-        b=BcXbBcztr8QbXuWR/84Nvb2NZZjRWpJbdhvL7wxN1tiubv8VMpgZKvGmUE4c7xlrKb
-         NcdPngVYEHE35T+OM1Zwf22AFJHvO2NBipA5wVW3U5+wAb6dm4vBphSwwwz9Ao/hTWkl
-         nJQJMdtSrP5AQMt71BwOxDc0Iuvbn+Vbimr1RvXc4IEclxuKPF/BwZOtT4cWibD653M1
-         MayOlzOwhI3B7maueWvQdOlS4QXOu9gS+IgxqKRNhgFLqii6tRO6c0Y6auXPBmeVGWY7
-         +3a7E9Mp+WhARLwpqFl5HZDterhV6J5xoloKN0Y1PZ3ejebDHpV/fGkpqabvfrgGJTfM
-         nzDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746535616; x=1747140416;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=V7d2y3ul5N0Mf7A+x8KbqIBRsyxegjHYdT7Sjr9I/BQ=;
-        b=VheHRWBP2PR7JLEcNS00nJOa4JW9q4w8zUxCxhiy7MLPX8vIzOR4Pb/+QybGFyTacY
-         xNeVBvz55V8br0e4TbA2dYnBVTbhDiXsPxa7S+av2shG0TlKulrGB57RJyZOxkkyXV8A
-         bHBiga5ts5/Ec7Mq3fvbDtpSmJlWFjfz/U3VaMrn43Ay/dwdf86zVcIZMEpOSk2P9w3A
-         oQBlmDgRP5q0YwiFLFzfx8Z+bWCNANMlj0dzgvFwQDz4EXf7W3mPlAu7tyo3Gu6Iyq//
-         KutDqKAX2hNBhCsDVuTccI68gydleFjpsYZhsdkCzYa6HY/2rEK6k35TeCNBoG9PK6k1
-         MEZg==
-X-Gm-Message-State: AOJu0YxP7g/ee5tGiU7pQkBcmItbiOHPH5d7JapmQ2n1XVeX0PmIBVXs
-	auh4KnDgLRLVANxDNDnBSXd4NIX67uWcd3qbAZvQEWxhaL06uftc/t3IUGuRUSg=
-X-Gm-Gg: ASbGnctWfX1w4voWV0tlDtVQDNiOO87Kbw4mCOEyC6uZ8k+Z1R9LYQU7lOxun8KhjJs
-	rV7LBg9gwNpEakJlXDcM5nebNB905j5Qf2aKQKnz19yXsX9q5OIs3QAV0D99rpcSbeocDQygTKa
-	JF7bTcny4EyvnRb8J134C1yl6V2g894hAQwWY6QREDGM4J32NrDBNt91iTmPQMt8mcwFwbpoQ9i
-	lN9RjVO/yKAj33BBIUt6lYRpS+8cux5ZBXndkZ4BSYGURPqeasFgyeYTcI+y8nVmZ3Lbjv0Xq/4
-	/SK4eqy9WRy3y1q5PreZDmVXF2LN03AlR7Vgp6p9px6rj8qPk9qM
-X-Google-Smtp-Source: AGHT+IGNnSAXy5brjBvE4/Ufe8niP9wxz79TSWuqxShduDXk0L8S+++Yl5TbcxjPSKCoiJ99zpb4Bw==
-X-Received: by 2002:a05:6a00:414a:b0:736:62a8:e52d with SMTP id d2e1a72fcca58-740919e8b75mr3877019b3a.12.1746535616578;
-        Tue, 06 May 2025 05:46:56 -0700 (PDT)
-Received: from NB-GIGA003.letovo.school ([5.194.95.139])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7405909cd89sm8756817b3a.169.2025.05.06.05.46.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 05:46:56 -0700 (PDT)
-From: Alexey Charkov <alchark@gmail.com>
-Date: Tue, 06 May 2025 16:46:18 +0400
-Subject: [PATCH v2 5/5] irqchip/irq-vt8500: Use fewer global variables and
- add error handling
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="QSfxMzlT";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="8TItqUap";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="dVX6yepa";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="1/PorQBd"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 7953C1F390;
+	Tue,  6 May 2025 12:48:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1746535700; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5K/N/0WLkbc+DdrII6oye3X6T8Ni1CdM9Ifo6jBFaF0=;
+	b=QSfxMzlTxlx/0DcSc0Q/Iw2mZ6eLIHjzK5HZqDXAjMHPDH8qJ9BD8v1nPZ12wn7icoXTL0
+	JTJAY6PjnZvJb8pzWBdrd6Ql6ZXJMP9BPe+np11Q5Ewjm4SgdRl42a5J+ibdsLFPxyiycq
+	uywjCKexqJhsp7FXRpJ8jd9lLYcAD1c=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1746535700;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5K/N/0WLkbc+DdrII6oye3X6T8Ni1CdM9Ifo6jBFaF0=;
+	b=8TItqUaplNDt0Wh9r9FOWtrzKNMcFn2ZHVEDyp+JNpx/P1LMdEaWRfHt/AtzMIE9Iw6p95
+	TNwAo+TboQbcxxDQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1746535699; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5K/N/0WLkbc+DdrII6oye3X6T8Ni1CdM9Ifo6jBFaF0=;
+	b=dVX6yepaOsEz2V8wDOPXqEFaw5e9i++/fW/bsz58A44B6rwiwXYQ50bo64MyOjbXDlr4nZ
+	mWR8Xq+v9dfvxlm7QbG0c983qrkuB3CFeHfhMYCPHue7x9uvY1ZCERsMQ9HkcSBMdqrYxh
+	D+wdwBsQyuyrVThUgiR3NLOW1ok9fKY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1746535699;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5K/N/0WLkbc+DdrII6oye3X6T8Ni1CdM9Ifo6jBFaF0=;
+	b=1/PorQBdQXDlzKYyY+e2WKbk7dhTiv5GobGnvxKOCVFUMy4d1niEK6oaJCyCrSke7MeqiH
+	mbzaEKCgaeR1ZaCg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5582313687;
+	Tue,  6 May 2025 12:48:19 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id qfWIFBMFGmizLwAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Tue, 06 May 2025 12:48:19 +0000
+Message-ID: <baeb1200-5293-4fe0-aa76-b1d41875af58@suse.cz>
+Date: Tue, 6 May 2025 14:48:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] mm: Add CONFIG_PAGE_BLOCK_ORDER to select page block
+ order
+To: Andrew Morton <akpm@linux-foundation.org>,
+ Juan Yescas <jyescas@google.com>
+Cc: Zi Yan <ziy@nvidia.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, tjmercier@google.com,
+ isaacmanjarres@google.com, surenb@google.com, kaleshsingh@google.com,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ David Hildenbrand <david@redhat.com>, Mike Rapoport <rppt@kernel.org>,
+ Minchan Kim <minchan@kernel.org>
+References: <20250506002319.513795-1-jyescas@google.com>
+ <20250506000133.ba44539dd517e4f54515751b@linux-foundation.org>
+Content-Language: en-US
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <20250506000133.ba44539dd517e4f54515751b@linux-foundation.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250506-vt8500-intc-updates-v2-5-a3a0606cf92d@gmail.com>
-References: <20250506-vt8500-intc-updates-v2-0-a3a0606cf92d@gmail.com>
-In-Reply-To: <20250506-vt8500-intc-updates-v2-0-a3a0606cf92d@gmail.com>
-To: Thomas Gleixner <tglx@linutronix.de>, 
- Krzysztof Kozlowski <krzk@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- Alexey Charkov <alchark@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746535586; l=3067;
- i=alchark@gmail.com; s=20250416; h=from:subject:message-id;
- bh=ZvhDtpu1XnYczmFh42T13jRZysqmiKlyJitHmezAOec=;
- b=hopGDJ1av82b4uhMrK9KRsi9pPIm+0cG0QqUktUu2DfKw/R0jeG+0DfJ8Ha+Nagjm+pp4HA8t
- y3nQTlp2jYaA7ESiaGbw4sOF+uoJcaOmN3h2V2rK4i48cwtMykjaPTe
-X-Developer-Key: i=alchark@gmail.com; a=ed25519;
- pk=ltKbQzKLTJPiDgPtcHxdo+dzFthCCMtC3V9qf7+0rkc=
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.990];
+	MIME_GOOD(-0.10)[text/plain];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:mid,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Score: -4.30
+X-Spam-Flag: NO
 
-Controller private data doesn't really need to be in a global
-statically allocated array - kzalloc it per controller instead,
-keeping only one pointer to the primary controller global.
+On 5/6/25 09:01, Andrew Morton wrote:
+> On Mon,  5 May 2025 17:22:58 -0700 Juan Yescas <jyescas@google.com> wrote:
+> 
+>> Problem: On large page size configurations (16KiB, 64KiB), the CMA
+>> alignment requirement (CMA_MIN_ALIGNMENT_BYTES) increases considerably,
+>> and this causes the CMA reservations to be larger than necessary.
+>> This means that system will have less available MIGRATE_UNMOVABLE and
+>> MIGRATE_RECLAIMABLE page blocks since MIGRATE_CMA can't fallback to them.
+>> 
+>> The CMA_MIN_ALIGNMENT_BYTES increases because it depends on
+>> MAX_PAGE_ORDER which depends on ARCH_FORCE_MAX_ORDER. The value of
+>> ARCH_FORCE_MAX_ORDER increases on 16k and 64k kernels.
+>> 
+>> ...
+>>
+>> +config PAGE_BLOCK_ORDER
+>> +	int "Page Block Order"
+>> +	range 1 10 if !ARCH_FORCE_MAX_ORDER
+>> +	default 10 if !ARCH_FORCE_MAX_ORDER
+>> +	range 1 ARCH_FORCE_MAX_ORDER if ARCH_FORCE_MAX_ORDER
+>> +	default ARCH_FORCE_MAX_ORDER if ARCH_FORCE_MAX_ORDER
+> 
+> Do we really need to do this arithmetic within Kconfig?  Would it be
+> cleaner to do this at runtime, presumably when calculating
+> pageblock_order?
 
-While at that, also add proper error return statuses in the init
-path and respective cleanup of resources on errors.
-
-Signed-off-by: Alexey Charkov <alchark@gmail.com>
----
- drivers/irqchip/irq-vt8500.c | 49 +++++++++++++++++++++++---------------------
- 1 file changed, 26 insertions(+), 23 deletions(-)
-
-diff --git a/drivers/irqchip/irq-vt8500.c b/drivers/irqchip/irq-vt8500.c
-index aea43c838430d2a541aa9b3127a215531abecad8..0bf478c6541ede30719eb1e403d9cafe6474643a 100644
---- a/drivers/irqchip/irq-vt8500.c
-+++ b/drivers/irqchip/irq-vt8500.c
-@@ -64,9 +64,6 @@ struct vt8500_irq_data {
- 	struct irq_domain	*domain;	/* Domain for this controller */
- };
- 
--/* Global variable for accessing io-mem addresses */
--static struct vt8500_irq_data intc[VT8500_INTC_MAX];
--static u32 active_cnt = 0;
- /* Primary interrupt controller data */
- static struct vt8500_irq_data *primary_intc;
- 
-@@ -203,50 +200,56 @@ static void vt8500_handle_irq_chained(struct irq_desc *desc)
- static int __init vt8500_irq_init(struct device_node *node,
- 				  struct device_node *parent)
- {
--	int irq, i;
-+	struct vt8500_irq_data *intc;
-+	int irq, i, ret = 0;
- 
--	if (active_cnt == VT8500_INTC_MAX) {
--		pr_err("%s: Interrupt controllers > VT8500_INTC_MAX\n",
--								__func__);
--		goto out;
--	}
--
--	intc[active_cnt].base = of_iomap(node, 0);
--	intc[active_cnt].domain = irq_domain_add_linear(node, 64,
--			&vt8500_irq_domain_ops,	&intc[active_cnt]);
-+	intc = kzalloc(sizeof(*intc), GFP_KERNEL);
-+	if (!intc)
-+		return -ENOMEM;
- 
--	if (!intc[active_cnt].base) {
-+	intc->base = of_iomap(node, 0);
-+	if (!intc->base) {
- 		pr_err("%s: Unable to map IO memory\n", __func__);
--		goto out;
-+		ret = -ENOMEM;
-+		goto err_free;
- 	}
- 
--	if (!intc[active_cnt].domain) {
-+	intc->domain = irq_domain_add_linear(node,
-+					     64,
-+					     &vt8500_irq_domain_ops,
-+					     intc);
-+	if (!intc->domain) {
- 		pr_err("%s: Unable to add irq domain!\n", __func__);
--		goto out;
-+		ret = -ENOMEM;
-+		goto err_unmap;
- 	}
- 
--	vt8500_init_irq_hw(intc[active_cnt].base);
-+	vt8500_init_irq_hw(intc->base);
- 
- 	pr_info("vt8500-irq: Added interrupt controller\n");
- 
--	active_cnt++;
--
- 	/* check if this is a chained controller */
- 	if (of_irq_count(node) != 0) {
- 		for (i = 0; i < of_irq_count(node); i++) {
- 			irq = irq_of_parse_and_map(node, i);
- 			irq_set_chained_handler_and_data(irq,
- 				vt8500_handle_irq_chained,
--				&intc[active_cnt]);
-+				intc);
- 		}
- 
- 		pr_info("vt8500-irq: Enabled slave->parent interrupts\n");
- 	} else {
--		primary_intc = &intc[active_cnt];
-+		primary_intc = intc;
- 		set_handle_irq(vt8500_handle_irq);
- 	}
--out:
-+
- 	return 0;
-+
-+err_unmap:
-+	iounmap(intc->base);
-+err_free:
-+	kfree(intc);
-+	return ret;
- }
- 
- IRQCHIP_DECLARE(vt8500_irq, "via,vt8500-intc", vt8500_irq_init);
-
--- 
-2.49.0
-
+AFAIK pageblock_order is compile-time constant. Making this a boot parameter
+was proposed in v1 but explained as not useful. That explanation could be
+added in the changelog?
