@@ -1,83 +1,209 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53C0F1FBEA8;
-	Tue,  6 May 2025 21:03:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 341A41487F4;
+	Tue,  6 May 2025 21:05:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746565436; cv=none; b=O0jFT4LW/VUWBkdpOOJ5eN3z2mpaakAJH5CqqJxzLrL6SGRzg8T9/9sR7TCg5mzsX7sOXxPCgHLf4zpBLs+OjOjLtSa6LkCjelBBl8ZeanprMvzSkFmvK4V9dDK9fs7b1SuzZ80R2G57Q/G6eFV5FWEINLCDyP8LSLGNchPXjQI=
+	t=1746565512; cv=none; b=h6pBl7qcN9Z/OMvLtlGd/BD6w0yWZLZXWBX/ian/HyRTyIKvCVKzi4viBjsImx4g33nMKT0gifNdC17Yzw7reLU9wt63rrD9oS/sD6vvU7EqEFtrdGrQgqlfxh8m4YGK5KWOw48inoxyrAjscIFnwvWbibEHrHaQexi7URaQBhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746565436; c=relaxed/simple;
-	bh=LHrYhKlqZILVgbd7KYmKwZwzU0CiU83Fx5NpSx6UcLc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=srMLDek+udBr1fiv0VgM0jWAowbKpC0IC+CfPtQfeqFGAUFkbRQIDfA7bAOIB9JxGMsA6xfDrhmgYHx4o3EV8RBPt0BBqfhUILqV4D4B4VfyOdluqle7vyonmiV2DwtA68NtcFxf6lYuJ02ErlKokBrEpMZJdnBUywzaV7yAGGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=pmrK+fV+; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1746565512; c=relaxed/simple;
+	bh=e1qHEgJ4EBKnE6gLzmeR5RPFCj9U6szUNm8w/lrJ8Us=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=B7ITFeRrb/SVIWlAYYxMRGVU3emQ+rmD9Yv7OOdd9ulvvCecv5+rkqwE/PevXYPKm8QpcS1PXNvpM8KgesOz9BACAUJ5is6toWUrj7dedMryfZHXBaG/gnfgs8AAxObt8Tq8ReL8rdn/tYIVpEp5xZ11KvbiM3E4eLF5cPIPQ7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bE/utUxq; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="pmrK+fV+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1746564975;
-	bh=EEP0LiccBuacFAQRnC3jVpubZXJBLSGWuCsUWqexnv0=;
-	h=Date:From:To:Cc:Subject:From;
-	b=pmrK+fV+zrOkguPQjf3rlcbFqMTocqtLL4Onp9nAMDLN9HHV0srdrghgkNas4A4TF
-	 94CTB9CkvKhfSr5iNmUhKIgQ2CFBg5oNOQ12wGFU8Din5S5ZBW6aCAsRenV0ANk9IY
-	 6iCT111GpsRrT50IUXHvb3ZGggj+Hf8bUKm3DbFJUKbNdr09dJDcwVKoIQL5ilC5WR
-	 poskeGCfUFVrc+QZHRtIlAsu8wdRjjqErZOx7YZ8B0dg8NLnEJ/R7CYgl25WY9Y8on
-	 5ohlXSyXWIOcEEmYdzlArtB12pPyIN27qYTK4/SSETpGPsc5zjyxxdBZqANbZjGPpB
-	 76K6owuEC2HHQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZsVzz5NJ5z4xN6;
-	Wed,  7 May 2025 06:56:15 +1000 (AEST)
-Date: Wed, 7 May 2025 06:56:14 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Stafford Horne <shorne@gmail.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the openrisc tree
-Message-ID: <20250507065614.7df38178@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bE/utUxq"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-7370a2d1981so5165553b3a.2;
+        Tue, 06 May 2025 14:05:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746565510; x=1747170310; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RSEhCjYjnsEXr9UG7zTvIDQr3+9PxPuO34pFmbrJ5vc=;
+        b=bE/utUxqObzSZk8Cyp9UsX6MHQDXn0IV4Um4VWz5SOdDc4bhWDEaJjFpvkJO40/oLg
+         IIseRxPqoVm5w3wFaSEQ52d+j5/Nm+Zl0t4SYVelZ1tZscPLwu5mHSbDGzTHvIZdjkSD
+         AX/xaSkru8w9w2ITHco9Iz90lkwW/k0Go5AzREW9+kNP0v99KiR6lTBHhpKzxKyzMfNq
+         cPZLSFvvrU65kH0YtYUABhmNKL3lxu98cpkjruq25yxbK6HpLnc7nQS3eo3yIeD6jBXA
+         QSlwcvHbuJR7biPqICfXgdBWYBmtXV73sBMReZrPgV+IDkTgPQ60870T+iOZEr9gQfWS
+         c6+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746565510; x=1747170310;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RSEhCjYjnsEXr9UG7zTvIDQr3+9PxPuO34pFmbrJ5vc=;
+        b=RNO4DNteVhtoGVoXHtTvQscBk3NIsVTbECT6oUp0+CVaPPjK/18B6A8nmvbabZFTwO
+         HsfDSwNhFCdOxEBvDNzsyz92RfRQy597nX6NdI2vMZoWMkFYgtgTvvuVaWvlaRFG+CoH
+         d85i9wPoQGxxhYy74PPiD10S2RHYu1UZdqCuW2vxlhaLnfDqAUmkBvhC7OAVHeS5AIhw
+         Q6VIjhmXcgsElvbk5N11/2j2L9/UBVZD/N87wSYU9IBeIEP+a5qDCyQHL4i369XyDXAW
+         VvGrx/ScTnTPoifAfej2PLpp/w1f8csc/oVM+irb9RWRd8Ki+ffGdWVo/EefxZ0RAzL3
+         SJoQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUyF0/uL1T8FQSFVtZizHFSnu4IqvpLYSIB3RcIrQZIlN8EzwhXAmnJbnhtA+TT8SscQwR9jyJ3GepXZ9F5@vger.kernel.org, AJvYcCVpAhqq85wzxOMfCnBRO6Zlwe1ou43tzjCcMd8bZWVYg3NeYCOA1w4cfaD2i3sLHdEceuo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhWo5HmDzFXgYLUPLWZLpHVGKuO5wE1xKPJtZPE3HFxoZvzfCm
+	b5SbXqie1Q9CZyRYayzmBB/vONjuTi4Pw6L+83gaNvyq/51B+bWcr9zdDpOfm8jpZBtU9jNVw/7
+	MqkT5OJM+ffUqzOq4eqbGgVa89UEFV87G
+X-Gm-Gg: ASbGncshwXoT3UgEpOFYjEFhwK5dGtEE7zsw8gXK8+L0AgPPbI36ye9gE2WZFXPZX4d
+	J3GA8yHcOePAy1Fn4rZ+uEiKoOzTxtQ44BVK4xDTNCMLCl2jbz7rTBonqhGpldtr5zifPdGEfN4
+	5UQEAR0dSzDUQ8WrcD59BAka4xw/tSvzXD9EXitg==
+X-Google-Smtp-Source: AGHT+IEGbzaclPrSNLbpwY1OjJoztl6kRb0Wac9OKLNnw72VNagCJqiXskWxYP1WEfrIg74zt+O0FI62KRgHtD8He0Y=
+X-Received: by 2002:a05:6a00:2a08:b0:73e:96f:d4c1 with SMTP id
+ d2e1a72fcca58-7409cf15e7fmr865953b3a.13.1746565510404; Tue, 06 May 2025
+ 14:05:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/K3rCKtFxv1l1Wso9mtjCfPF";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-
---Sig_/K3rCKtFxv1l1Wso9mtjCfPF
-Content-Type: text/plain; charset=US-ASCII
+References: <20250502085710.3980-1-holger@applied-asynchrony.com>
+ <7326223e-0cb9-4d22-872f-cbf1ff42227d@kernel.org> <913f66a8-6745-0e30-b5b8-96d23bf05b90@applied-asynchrony.com>
+ <CAADnVQLpyNiyghWLMq5AxkBgZX4J9VfX5j4ToNh6UsrQ=4yndg@mail.gmail.com> <2a8208af-bc4b-f1bd-af0b-f5db485ed1f0@applied-asynchrony.com>
+In-Reply-To: <2a8208af-bc4b-f1bd-af0b-f5db485ed1f0@applied-asynchrony.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Tue, 6 May 2025 14:04:58 -0700
+X-Gm-Features: ATxdqUECGu980ouGjP2nCihP-TZ97sK48XyTR3etD-Bc401zNqeE7OzjIFc_omc
+Message-ID: <CAEf4BzYLYJtcehZhB22YsxRXZBcVnunNx-rm9CfTcDZFiY10jQ@mail.gmail.com>
+Subject: Re: [PATCH] bpftool: build bpf bits with -std=gnu11
+To: =?UTF-8?Q?Holger_Hoffst=C3=A4tte?= <holger@applied-asynchrony.com>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Quentin Monnet <qmo@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, bpf <bpf@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On Sun, May 4, 2025 at 3:24=E2=80=AFAM Holger Hoffst=C3=A4tte
+<holger@applied-asynchrony.com> wrote:
+>
+> On 2025-05-03 04:36, Alexei Starovoitov wrote:
+> > On Fri, May 2, 2025 at 2:53=E2=80=AFAM Holger Hoffst=C3=A4tte
+> > <holger@applied-asynchrony.com> wrote:
+> >>
+> >> On 2025-05-02 11:26, Quentin Monnet wrote:
+> >>> On 02/05/2025 09:57, Holger Hoffst=C3=A4tte wrote:
+> >>>> A gcc-15-based bpf toolchain defaults to C23 and fails to compile va=
+rious
+> >>>> kernel headers due to their use of a custom 'bool' type.
+> >>>> Explicitly using -std=3Dgnu11 works with both clang and bpf-toolchai=
+n.
+> >>>>
+> >>>> Signed-off-by: Holger Hoffst=C3=A4tte <holger@applied-asynchrony.com=
+>
+> >>>
+> >>> Thanks! I tested that it still works with clang.
+> >>>
+> >>> Acked-by: Quentin Monnet <qmo@kernel.org>
+> >>
+> >> Thanks!
+> >>
+> >>> I didn't manage to compile with gcc, though. I tried with gcc 15.1.1 =
+but
+> >>> option '--target=3Dbpf' is apparently unrecognised by the gcc version=
+ on
+> >>> my setup.
+> >>>
+> >>> Out of curiosity, how did you build using gcc for the skeleton? Was i=
+t
+> >>> enough to run "CLANG=3Dgcc make"? Does it pass the clang-bpf-co-re bu=
+ild
+> >>> probe successfully?
+> >>
+> >> I'm on Gentoo where we have a gcc-14/15 based "bpf-toolchain" package,
+> >> which is just gcc configured & packaged for the bpf target.
+> >> Our bpftool package can be built with clang (default) or without, in
+> >> which case it depend on the bpf-toolchain. The idea is to gradually
+> >> allow bpf/xdp tooling to build/run without requiring clang.
+> >>
+> >> The --target definition is conditional and removed when not using clan=
+g:
+> >> https://gitweb.gentoo.org/repo/gentoo.git/tree/dev-util/bpftool/bpftoo=
+l-7.5.0.ebuild?id=3Dbf70fbf7b0dc97fbc97af579954ea81a8df36113#n94
+> >>
+> >> The bug for building with the new gcc-15 based toolchain where this
+> >> patch originated is here: https://bugs.gentoo.org/955156
+> >
+> > So you're fixing this build error:
+> >
+> > bpf-unknown-none-gcc \
+> >          -I. \
+> >          -I/var/tmp/portage/dev-util/bpftool-7.5.0/work/bpftool-libbpf-=
+v7.5.0-sources/include/uapi/
+> > \
+> >          -I/var/tmp/portage/dev-util/bpftool-7.5.0/work/bpftool-libbpf-=
+v7.5.0-sources/src/bootstrap/libbpf/include
+> > \
+> >          -g -O2 -Wall -fno-stack-protector \
+> >           -c skeleton/profiler.bpf.c -o profiler.bpf.o
+> > In file included from skeleton/profiler.bpf.c:3:
+> > ./vmlinux.h:5: warning: ignoring '#pragma clang attribute' [-Wunknown-p=
+ragmas]
+> >      5 | #pragma clang attribute push
+> > (__attribute__((preserve_access_index)), apply_to =3D record)
+> > ./vmlinux.h:9845:9: error: cannot use keyword 'false' as enumeration co=
+nstant
+> >   9845 |         false =3D 0,
+> >        |         ^~~~~
+> > ./vmlinux.h:9845:9: note: 'false' is a keyword with '-std=3Dc23' onward=
+s
+> > ./vmlinux.h:31137:15: error: 'bool' cannot be defined via 'typedef'
+> > 31137 | typedef _Bool bool;
+> >        |               ^~~~
+> >
+> > with -std=3Dgnu11 flag and
+>
+> Yes, correct. This is the same as all over the kernel or the bpf tests
+> for handling C23. I fully understand that this particular patch is only
+> one piece of the puzzle.
+>
 
-Commit
+What's the best way to detect (at compile time) whether bool, false,
+and true are treated as reserved keywords? To solve this properly
+vmlinux.h would have to be adjusted by vmlinux.h to avoid emitting
+bool/false/true *iff* compiler version/mode doesn't like that
 
-  218b8d897551 ("dt-bindings: interrupt-controller: Convert openrisc,ompic =
-to DT schema")
-
-is missing a Signed-off-by from its committer.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/K3rCKtFxv1l1Wso9mtjCfPF
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgad24ACgkQAVBC80lX
-0Gy3LAgAm+z4XI+r1ZL4zbBG+yAWxfrrTRwoS0Mnz6452P1wBtygA0+WeBjzUQan
-kxXzmtz1E9lVFAG4HdBn4VcACDcN3U4NMHPlqbI0Sf84/gQPVI7zM9RU5QzYVdhO
-zp9aJ7wu9j8uht5t8/dO9qasgwdN8HZ1TbnuwSLpNBw2d857DHYoAqRsFYu77vHw
-0Ag8UUiHftsUFZbPuzJDHTVXP4qn+8oHEzFdaChBUzpeIgUyEO/yIlspEG26p8qP
-NG+88IlPPOkbkRLUkeWal1I2DOckbnJqGLNwbMy7QoItH6yGpK1r47MLEqjYbyqD
-lbddbzv06rq2PvJGhYZC+QJdByMtcQ==
-=7+tH
------END PGP SIGNATURE-----
-
---Sig_/K3rCKtFxv1l1Wso9mtjCfPF--
+> > ignoring an important warning ?
+>
+> Nobody is (or was) ignoring the warning - it was under discussion when
+> I posted the patch. After reaching out to Oracle to verify, we have now
+> added the BPF_NO_PRESERVE_ACCESS_INDEX define when building with gcc-bpf;
+> this resolves the warning, just like in the bpf self-tests.
+>
+> You are right that such an addition to the in-kernel bpftool build is
+> still missing. If you have a suggestion on how best to do that via the
+> existing Makefile I'm all ears.
+>
+> As for the remaining warnings - we are also very aware of the ongoing
+> upstream work to support btf_type_tag:
+> https://gcc.gnu.org/pipermail/gcc-patches/2025-April/682340.html.
+>
+> > End result: partially functional bpftool,
+> > and users will have no idea why some features of bpftool are not workin=
+g.
+>
+> First of all this is never shipped to any users; using gcc-bpf requires
+> active opt-in by developers or users, and now also warns that such a setu=
+p
+> may result in unexpected bugs due to ongoing work in both Linux and bpfto=
+ol.
+> Like I said before, by default everyone builds with clang and that is als=
+o
+> true for our distributed binaries.
+>
+> If you think adding the -std=3Dgnu11 bit is inappropriate at this time th=
+en
+> just ignore this patch for now. Sooner or later the bpftool build will ha=
+ve
+> to be adapted with BPF_CFLAGS (liek in the selftests) and hopefuilly an
+> abstracted BPF_CC so that we no longer have to pretend to be clang when
+> using gcc.
+>
+> cheers
+> Holger
