@@ -1,72 +1,72 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85E22278E5D
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 14:30:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B1A618D656
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 14:34:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746541827; cv=none; b=f5C5UEipj1VCjLMqm5D/pyPXymnc9/rJ84u6DIwjrnxZqtd5ef0+brokhp1Q4U0hRGKN1nsbkMMRSrhHZWkVfZ+N7KPXbbMgB6dfiIrmQddfw1wpCTLgZIwnuidxaHJUOiw75PMGz2Sa6ZqCW5ZGL6lrCUlJzZVBRjQt2EsQ81Q=
+	t=1746542051; cv=none; b=fPBqqDZROntP4XT9ivKAONjGVt6SZDiaNX4h1aZQK6g4dmcn/jjabR4tHIH4zLI4S5dFTxwlWkicGvmxoysrKU5+NnqHl+DL3xh9fEN6vnEo4g2ZXppPcj1ydTVNBhCTOR1LlOZuMdlxA/XeXuMdPugzAWFxnhcjX3Xkh3QP3ck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746541827; c=relaxed/simple;
-	bh=IZx7SbNRuTwXgIWEnNwSMEwEX3OHpnm0g6dsJanHgMA=;
+	s=arc-20240116; t=1746542051; c=relaxed/simple;
+	bh=kkFk/0AGhto/RyNrBsPnwKy+9ZIcCRZfLTqarJRbPaA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=spjsBdCTtTcbJp5fCfSP9/sxEvcZqESo4IV03u447EF+/ojpl1eENoaEGXyCJggsFcTli5hKBnvLczKWEWjWZUQJEA/KtrIVapfjLxQbBEdDjvemVGCo7TkbHm69EF/8dWv+0yeqXFTpc1pVzz39yOSSZU6jRMQmu2xF4uFa9OU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LzSUbZoI; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=Mqb/yko8z6dpK02MZzDBoTOl5obxG9ZIAeLLGohIlDcUq93i7Q7oTF5fMqB4rfsTtmp0qQGi0TNR9QkLhEu/Cpp7ZOs4dFn+wRFX6MeRnYKWWqSfgzCZQnl2M2XWcyKfxCxJQQoLFN3NXrgMPAXiDahOIubSQAiSBUBkdhhcW6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ia69dSt0; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LzSUbZoI"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ia69dSt0"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746541824;
+	s=mimecast20190719; t=1746542048;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=xzVtOMRvqr4t0G1TYddk8v9l3UI3FBrHFszhipiSpNM=;
-	b=LzSUbZoIf6iWFRNyNFaZeT/oIzqZYSkcLQINAK1VjH6UkndSpZe8E9BBy2WzTQEoQ6UoFC
-	RZu3rxOwmPF/cgMsYrrrgmW7ESUunbC2P9wIT6PTaNQ9MLcuwBdlFlsigS0k/mfImzVPus
-	hU3FXvUirhXk9qcRcECJTrqJe41mjIc=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=zSYTzLzA4I8JDg4pBsPS0ZO1xAUoaORmUFU9cepMeAE=;
+	b=Ia69dSt008n8RYfVGfkicPAHCzoK95SENX1X3UiSHoGr42wz8aJRMzfsRmZ/03hmkek/u9
+	lyyuMoo6aAE+TteJNczGn3sAXsf2OyUkL5w5ZteD/dBgjv4O1AbsaMgjLxEFQm7IXjaZb8
+	xCoY8nH5m5gNYeUCXYwmsYPQ/SN6fOU=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-284-UKJEKDMFMDCxbivKeHbYuQ-1; Tue, 06 May 2025 10:30:23 -0400
-X-MC-Unique: UKJEKDMFMDCxbivKeHbYuQ-1
-X-Mimecast-MFC-AGG-ID: UKJEKDMFMDCxbivKeHbYuQ_1746541822
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43d0a037f97so31068735e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 07:30:22 -0700 (PDT)
+ us-mta-88-A0MRuL0bOIWpyLu2VT6THA-1; Tue, 06 May 2025 10:34:07 -0400
+X-MC-Unique: A0MRuL0bOIWpyLu2VT6THA-1
+X-Mimecast-MFC-AGG-ID: A0MRuL0bOIWpyLu2VT6THA_1746542046
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3912d5f6689so2748195f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 07:34:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746541822; x=1747146622;
+        d=1e100.net; s=20230601; t=1746542046; x=1747146846;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=xzVtOMRvqr4t0G1TYddk8v9l3UI3FBrHFszhipiSpNM=;
-        b=S9KeJkNq/k0OLaSXnJPu9FeNOKrpcG5PzceEyV9WfmpF1ipRB8WlYym0xG2blwIKHL
-         mXIxGusvEQL7fpymep8+/+Tjdmzy8IscS/TW8FvNIcsGFctH2bONSWEGEiOObQ09Qk4R
-         0JY093nttJR8huJ9+/fmCjmMQ2UkAXa9rmmOaZDnoqtjPiaCJLPa5UW98Mahj1jur17n
-         xTAqGHpndlRF5V3j8UTOZPb4hK0voh1lKTbEu+W+TMkXpfRbZj1Gidh+06Nf4CgHGz+k
-         HhR4SoxqzuEtejsTOEjnD22d4Xm5w1BWg8QtY4U4st4ZyOJHOayvBeGFf/iQuWp+77x0
-         b8Fw==
-X-Forwarded-Encrypted: i=1; AJvYcCW6IPb6z883EYixdkMyVddA8uBVu75Miaq6IDX3N762GNxDbRlUIUm/p/7aGQ4hmMVN4MtkDdNsRBH/lPI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwALCsxUaDuTCtsB90aM1lJ9lClUkbQ31aBm+IRNEpcxTgG6B8z
-	yqkxWqsllO3TEkTB2u5Zm/UOt4fZ17qhCu+5gicvVf9w1uxIpebmZgZXPFl73bovVxOAaAOWBLH
-	8GEqpEgQpz9D0m9zGmi5fzO4bFDEk1V8xHrloLn45tgqGY7jx1Cjj/thir9wJRQ==
-X-Gm-Gg: ASbGncsQWzmX86UK6ICVydhsModEkPUxB/PUWaTZKrnOc1ahDcKQsyjK4lM0Z+rrLC4
-	rLZWaJ+JOyxRcBi04DDuxvBDE6fsImFdRmKdihaKvdJxyz3WswgBQ92Uge3gsroEkadejtGsNVZ
-	H+cSqj8a3uTKQ8qGT88MTvbhH7QI0aojmy/cWy2FzS7DkujhKtAuPJxa1XNxEVErT/7hzVWUcBI
-	lEYJqdfftYEfqFbaqTuzBi44wzXqkPR35SiYGEFqQjaSbD8u3w+OUPkMME+F0Ep7tXxDC7NdTv2
-	0gR20rAgWgXbCY5zSDHUlq6YduDFEp/CPUmGXye+wDTzq6sEKD8=
-X-Received: by 2002:a05:600c:8212:b0:43c:fae1:5151 with SMTP id 5b1f17b1804b1-441d0531289mr27396325e9.25.1746541821982;
-        Tue, 06 May 2025 07:30:21 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHrqKUakJ81rTTSc/yI/KVHcy9QDl42wyvP7IrrpqAdZZC+8BrwTI3phEb3ObqqDYnpHb1cyg==
-X-Received: by 2002:a05:600c:8212:b0:43c:fae1:5151 with SMTP id 5b1f17b1804b1-441d0531289mr27395905e9.25.1746541821582;
-        Tue, 06 May 2025 07:30:21 -0700 (PDT)
+        bh=zSYTzLzA4I8JDg4pBsPS0ZO1xAUoaORmUFU9cepMeAE=;
+        b=iwSw+JP0TyD9RqHupk3ZUuf1Uo6n/zD9pY1dczpZS7uZbkh+5CZ/Oq9BxbRt03tjEd
+         9VDeR0r87WheagdI2kyhD8jBEaj5dBLPt8e2RXo5ddl4p1JazjQEYOv1UF6rsMuYq57y
+         C55Gwsg4+wUPzIzL+qDK3lPdfidcIpSYo+KAIAD/ASW2amb+KTehu/ISYa584LnH7B+2
+         w/TasD06zZDGKgA2GQGf5KewDnOXm0M/CVA3hqUNb5ibtzy5JpYN+wL6rnjWjYHb/rT1
+         GOo7GLBgYnndcN5klg1cL64wVKBqC9ZHwHU7jzbIwwav6w/KN77oJa106fBRhtw/nFhN
+         Cv3A==
+X-Forwarded-Encrypted: i=1; AJvYcCXJEtoMjA9kOpx0JdxbfEigYtCTbdg9B/oepmrxYRpilqJilb0q2//Y7eVO9+lzzEn8wje3oDoQ8LthXX8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzbz603oP2yQMqBkJaHo9LYWyIFxdJ5r8kIUsrjisVZS5s+3sql
+	8B98gGapw05bz9lRmw+KJ51TU3ejbMDwIAuGUpf8nJZoyGDYRXTEfojNxTduztNyqrdEYmFg8/W
+	szhW3TSYooWhEgyh0MDsQWJoglAwXqdgKSVC575+dmom2s8EfrV9vk2r3IMv9mg==
+X-Gm-Gg: ASbGncsfRixbqJyAGGOyhX0QNFEqClI6qn0cCl6QYaDi9ZT/SO+exImDvmlSrKmXxd6
+	167MQajpmtAQvEa6151Z34JbhS5D1SnRpfIa0xDIt3340tOZKRBdSO6D+s7ZMaSAJZQPpGHibT6
+	j7HMPUC4MJoEQbke2IDKEMGZaC64oKnAycdtPvAcUZIZ5bMr+SsdojesYOYIkctzNBPnsjYxfEu
+	Jr7VmzmlAUcjFt4k77BmnMwHvICNPWf9x6HyeB2RIae8KazGnR+B1r6uiyfDze4H32511GSP2wK
+	IG3VXrol9xWBgqQ/eKQyQn6l8WajVK12+lm67nTiAEbgHGh6EbI=
+X-Received: by 2002:a05:6000:2204:b0:39c:268e:ae04 with SMTP id ffacd0b85a97d-3a09fd0d09dmr8962673f8f.0.1746542046359;
+        Tue, 06 May 2025 07:34:06 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFUJh5j9TVIQWsrv8+lQopvkfyv6q0sW1QF6jcjHqVsYskzyqmZ/uFzWwuXJfP4bPKTDBUOGA==
+X-Received: by 2002:a05:6000:2204:b0:39c:268e:ae04 with SMTP id ffacd0b85a97d-3a09fd0d09dmr8962630f8f.0.1746542045945;
+        Tue, 06 May 2025 07:34:05 -0700 (PDT)
 Received: from ?IPV6:2a01:599:915:8911:b13f:d972:e237:7fe2? ([2a01:599:915:8911:b13f:d972:e237:7fe2])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b2ad7ab1sm218825645e9.4.2025.05.06.07.30.18
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b8a286b9sm170753685e9.28.2025.05.06.07.34.04
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 06 May 2025 07:30:20 -0700 (PDT)
-Message-ID: <f0c57d50-075e-4ff3-9bcd-4b223eb9fd8a@redhat.com>
-Date: Tue, 6 May 2025 16:30:18 +0200
+        Tue, 06 May 2025 07:34:05 -0700 (PDT)
+Message-ID: <faff1a33-28e6-4fd9-9276-fb901192f17a@redhat.com>
+Date: Tue, 6 May 2025 16:34:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,23 +74,22 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/7] mm: Add batched versions of
- ptep_modify_prot_start/commit
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Dev Jain <dev.jain@arm.com>
-Cc: akpm@linux-foundation.org, ryan.roberts@arm.com, willy@infradead.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
- will@kernel.org, Liam.Howlett@oracle.com, vbabka@suse.cz, jannh@google.com,
- anshuman.khandual@arm.com, peterx@redhat.com, joey.gouly@arm.com,
- ioworker0@gmail.com, baohua@kernel.org, kevin.brodsky@arm.com,
- quic_zhenhuah@quicinc.com, christophe.leroy@csgroup.eu,
- yangyicong@hisilicon.com, linux-arm-kernel@lists.infradead.org,
- namit@vmware.com, hughd@google.com, yang@os.amperecomputing.com,
- ziy@nvidia.com
+Subject: Re: [PATCH v2 6/7] mm: Batch around can_change_pte_writable()
+To: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org
+Cc: ryan.roberts@arm.com, willy@infradead.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will@kernel.org,
+ Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, vbabka@suse.cz,
+ jannh@google.com, anshuman.khandual@arm.com, peterx@redhat.com,
+ joey.gouly@arm.com, ioworker0@gmail.com, baohua@kernel.org,
+ kevin.brodsky@arm.com, quic_zhenhuah@quicinc.com,
+ christophe.leroy@csgroup.eu, yangyicong@hisilicon.com,
+ linux-arm-kernel@lists.infradead.org, namit@vmware.com, hughd@google.com,
+ yang@os.amperecomputing.com, ziy@nvidia.com
 References: <20250429052336.18912-1-dev.jain@arm.com>
- <20250429052336.18912-4-dev.jain@arm.com>
- <8780e63d-22c1-4133-a800-dec50fd1b5fa@lucifer.local>
- <f52746e9-f57a-4e65-af48-f5de3c5887c6@arm.com>
- <ec68b9ac-5d89-4048-a680-788525870e15@lucifer.local>
+ <20250429052336.18912-7-dev.jain@arm.com>
+ <25dcf969-e479-4d4a-a95c-0e83706af99e@redhat.com>
+ <9a770aec-a020-4199-a53e-eddda657999d@redhat.com>
+ <0857761c-bb4c-4ea5-a96a-90d555673527@arm.com>
 From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
 Autocrypt: addr=david@redhat.com; keydata=
@@ -138,75 +137,76 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <ec68b9ac-5d89-4048-a680-788525870e15@lucifer.local>
+In-Reply-To: <0857761c-bb4c-4ea5-a96a-90d555673527@arm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 30.04.25 16:37, Lorenzo Stoakes wrote:
-> On Wed, Apr 30, 2025 at 11:55:12AM +0530, Dev Jain wrote:
->>
->>
->> On 29/04/25 7:22 pm, Lorenzo Stoakes wrote:
->>> On Tue, Apr 29, 2025 at 10:53:32AM +0530, Dev Jain wrote:
->>>> Batch ptep_modify_prot_start/commit in preparation for optimizing mprotect.
->>>> Architecture can override these helpers.
->>>>
->>>> Signed-off-by: Dev Jain <dev.jain@arm.com>
->>>> ---
->>>>    include/linux/pgtable.h | 38 ++++++++++++++++++++++++++++++++++++++
->>>>    1 file changed, 38 insertions(+)
->>>>
->>>> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
->>>> index b50447ef1c92..ed287289335f 100644
->>>> --- a/include/linux/pgtable.h
->>>> +++ b/include/linux/pgtable.h
->>>> @@ -891,6 +891,44 @@ static inline void wrprotect_ptes(struct mm_struct *mm, unsigned long addr,
->>>>    }
->>>>    #endif
->>>>
->>>> +/* See the comment for ptep_modify_prot_start */
->>>
->>> I feel like you really should add a little more here, perhaps point out
->>> that it's batched etc.
->>
->> Sure. I couldn't easily figure out a way to write the documentation nicely,
->> I'll do it this time.
+On 06.05.25 11:16, Dev Jain wrote:
 > 
-> Thanks! Though see the discussion with Ryan also.
 > 
->>
+> On 29/04/25 2:57 pm, David Hildenbrand wrote:
+>> On 29.04.25 11:19, David Hildenbrand wrote:
 >>>
->>>> +#ifndef modify_prot_start_ptes
->>>> +static inline pte_t modify_prot_start_ptes(struct vm_area_struct *vma,
->>>> +		unsigned long addr, pte_t *ptep, unsigned int nr)
+>>>>     #include "internal.h"
+>>>> -bool can_change_pte_writable(struct vm_area_struct *vma, unsigned
+>>>> long addr,
+>>>> -                 pte_t pte)
+>>>> +bool can_change_ptes_writable(struct vm_area_struct *vma, unsigned
+>>>> long addr,
+>>>> +                  pte_t pte, struct folio *folio, unsigned int nr)
+>>>>     {
+>>>>         struct page *page;
+>>>> @@ -67,8 +67,9 @@ bool can_change_pte_writable(struct vm_area_struct
+>>>> *vma, unsigned long addr,
+>>>>              * write-fault handler similarly would map them writable
+>>>> without
+>>>>              * any additional checks while holding the PT lock.
+>>>>              */
+>>>> -        page = vm_normal_page(vma, addr, pte);
+>>>> -        return page && PageAnon(page) && PageAnonExclusive(page);
+>>>> +        if (!folio)
+>>>> +            folio = vm_normal_folio(vma, addr, pte);
+>>>> +        return folio_test_anon(folio) && !
+>>>> folio_maybe_mapped_shared(folio);
 >>>
->>> This name is a bit confusing, it's not any ptes, it's those pte entries
->>> belonging to a large folio capped to the PTE table right that you are
->>> batching right?
->>
->> yes, but I am just following the convention. See wrprotect_ptes(), etc. I
->> don't have a strong preference anyways.
->>
+>>> Oh no, now I spot it. That is horribly wrong.
 >>>
->>> Perhaps modify_prot_start_large_folio() ? Or something with 'batched' in
->>> the name?
+>>> Please understand first what you are doing.
 >>
->> How about modify_prot_start_batched_ptes()?
+>> Also, would expect that the cow.c selftest would catch that:
+>>
+>> "vmsplice() + unmap in child with mprotect() optimization"
+>>
+>> After fork() we have a R/O PTE in the parent. Our child then uses
+>> vmsplice() and unmaps the R/O PTE, meaning it is only left mapped by the
+>> parent.
+>>
+>> ret = mprotect(mem, size, PROT_READ);
+>> ret |= mprotect(mem, size, PROT_READ|PROT_WRITE);
+>>
+>> should turn the PTE writable, although it shouldn't.
+>>
+>> If that test case does not detect the issue you're introducing, we
+>> should look into adding a test case that detects it.
+>>
 > 
-> I like this :) Ryan - that work for you, or do you feel _batched_ should be
-> dropped here?
+> Hi David, I am afraid I don't understand my mistake :( PageAnon(page)
+> boils down to folio_test_anon(folio). Next we want to determine whether
+> the page underlying a PTE is mapped exclusively or not.
 
+No. :)
 
-modify_prot_start_folio_ptes ?
+There is your mistake.
 
-But I would rather go with
+We need to know if this folio page is *exclusive* not if the folio is 
+*mapped exclusively*.
 
-modify_prot_folio_ptes_start
+I know, it's confusing, but that's an important distinction.
 
-The "batched" is implicit, and "large folio" is not required if it's 
-more than one pte ...
-
-:)
+You really have to test all PAE bits. I recently sent a mail on how we 
+could remove PAE and encode it in the PTE value itself (W || (!W 
++dirty)), which would mean that we could batch more easily. For the time 
+being, we have to stick with what we have.
 
 -- 
 Cheers,
