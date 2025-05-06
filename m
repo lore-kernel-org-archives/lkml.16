@@ -1,195 +1,237 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F52A2798EE;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 383DB279900;
 	Tue,  6 May 2025 09:33:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746524017; cv=none; b=mN16bHGBH+cj9TnaDw8YaVf76/lxCehmAQhAMr6I4RixvcSGR0ho0s1AOQ0vJa/9vBmk3Z9tDsiuDWIWiLRYV6xMb1OcZHoU0HxL5beuHaW9UJKl+CJ/II+YgvHaYheHixWb2WOntKee/VYslbkRoMxks41kioe30nFr2T4DfcA=
+	t=1746524019; cv=none; b=h9V1uA17JYTBDpQUWrtMxSm6ZH7P6o7B3UTGxMHov9nt9ROUsBgWeEnRWg4Gfnbbkty0WU+NyW8ObM4LibrF045b4+IUZ4H3R0uanXbH19nc2Hlkhyn0Y8PyOdfLegLtTngtTZAyB4+W0+leXEc+7KrRIoT8Ghi18Bon4bk4jso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746524017; c=relaxed/simple;
-	bh=h/lliX6NxpYvnSxi2fEeCbKydjYF8K73+XODDlMMvVg=;
+	s=arc-20240116; t=1746524019; c=relaxed/simple;
+	bh=aJVYBo6drvmcTv/txl/DmxL0wX3+CLuv7hTrsvr1hSU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fsVLbdwaxkVPh2EtuzRQlgIfr//IyoE/KHn1hwyGVL3hOYwsb2Qk8Cpw2K2cD8/Ff59NcfdGX1w3BZlm8J5FGdgeKyGtJs2CeeQw/sAy3Kl185SXgw+tEsYvDoV1++NzkCj8X35Pww7IHPdBzKSNtstUFDoc8NAAZ5X5ojsq8UM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Fj1yFHvU; arc=none smtp.client-ip=209.85.160.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 MIME-Version:Content-Type; b=Irsvx40usfv/5X7PqIB5Tk6YUHVHRGiFxcp+Ef0OhEKCXiKy0KtKhNXet3U7IWBiYH1z9SwpbT7VIlejlKCAsxY10RjOrl7Ixrk0b+KcBivJZHl4TO1cg/xKkA4R7n6Pv7fYjdRpTaBLXQiUf/3QP+FLC1IQsEMJDEK81T0Sqi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mINTQcgL; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fj1yFHvU"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-476ae781d21so63983781cf.3;
-        Tue, 06 May 2025 02:33:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746524015; x=1747128815; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TalyY7f0z8WFpKTCKpbbWsIQgKcxq7l3XWcN5VvgXPM=;
-        b=Fj1yFHvU3tNtw66Eyk1WT29e/geuYw3SCeYsUNBOEhveC0zbo89G1Q+9HWulVBsLZd
-         FDahy6teU4omGuYV1y/BJIFmUgJluqR+buQnpyaPshjTQUok1zHstACMNIg0dKSU5OfU
-         jL/BLLE1lHe8UGopZMSKSwNAnuCO7N1ndgE4sXh2pWXdslbGlUcNQpaaR/V5gnom+6Gx
-         KDKxFWyu3LNUqvMh6hnQqv2mvLlzRoluxxq+/xofz58RUZjayT7PNennyesCRTQYYPQK
-         LTf+GaKc6I/e9TK5v73gIy5OY5/2iX0QID9Z8Ao16F2whq1hE3hO0368KxuRRsbXj2KX
-         urUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746524015; x=1747128815;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TalyY7f0z8WFpKTCKpbbWsIQgKcxq7l3XWcN5VvgXPM=;
-        b=Y+N0UdHtAeu/Kg7iaQaKcx6cslwFQnhC358Hq7xVaE7uKDC4v4f+nZtElRppb3Wyd1
-         T52GmmNHR0+Clezw6t3GXViGkZSUSNhfRcwzXsrE7u1nwoo4W3mXpbrtnT5Fehjqo9we
-         a66RnLfG+htjH/ghEkfQL6N1og/JDx103pfkUGT62WieSs26hWI6XYM4nM9vpRuKzqUl
-         n/er3qjJvQflmqiManSzY1ADpqQTucEZ7c0uDKrIkeP2UWJfIHGnX0bvuC3nrrvJB6bS
-         blU7nddx1rXOPVP/TdteZz0wJxMp1qXA7RCHlrxB4ZiKBYt3CFky9fj4LIVmGlYrcQeE
-         AX2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUc/r1gJssAF2iOw1peabBLhbbyKDaZSnHptk88SGuVdbhkAZYHQuE2iXxYpNRSkNY1ppSu0iUQhD41@vger.kernel.org, AJvYcCW46Aq27ypwJ291Sb/Kv0Pnln9i2KSCB5cQnTThp5Kpge4svt0y0LiZEbYvnhBr7uZfFgaewoRFQg/lavh8@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8n6OMsmCqE23WUWop4vmjOibfoKZcY4tAtRZtxCYX7f5/E3wn
-	g0rSZ+lpEoUCaR54T96EFzj+7uQRZDIBsI6IUF7d0LuFNS5t+tBD
-X-Gm-Gg: ASbGncsYV4lb3auQiJuJOdZ+XQv8Nndt/gU1355vCc1dxlab58YVd4gNsSGSQWcQItp
-	ZdsatHSs9BXGNVyTEN8OR+0aBmLpXzJ0+oPA+ov3b7a5ulzsChYbLLPYoMou3ylWtqAZzMR/8LC
-	ttWs1mrmEsKuHnndDdXr3s0bswGFyhwI8uEpnM2Yf1F01Q3hnfBfuvnJY2QPdCWd0uL7EmOHf9l
-	0CP80KV7EjteP1nJeoeQ8Pi7j2Vq+rR7ajxvKTSOwciPvGtv/E8kLcWdMTcnO59ji2TQemrux+j
-	Rz5DK5OSu5lywt0Z
-X-Google-Smtp-Source: AGHT+IEXTIp4yFfB4Q9w6fbdseD2o1pqfO5Hhy0H0j3RnKD3vdKl89OZk1qQra91sAFPJlTcnfVM6w==
-X-Received: by 2002:a05:622a:288:b0:476:8eb5:1669 with SMTP id d75a77b69052e-490f2d813f1mr47198331cf.32.1746524014995;
-        Tue, 06 May 2025 02:33:34 -0700 (PDT)
-Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-48b98721c43sm69901391cf.63.2025.05.06.02.33.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 02:33:34 -0700 (PDT)
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Inochi Amaoto <inochiama@gmail.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Guo Ren <guoren@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	Romain Gantois <romain.gantois@bootlin.com>,
-	Joe Hattori <joe@pf.is.s.u-tokyo.ac.jp>,
-	Lothar Rubusch <l.rubusch@gmail.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-	Jose Abreu <joabreu@synopsys.com>
-Cc: netdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mINTQcgL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746524017; x=1778060017;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=aJVYBo6drvmcTv/txl/DmxL0wX3+CLuv7hTrsvr1hSU=;
+  b=mINTQcgLPhWsMAKTpdIJUMp5q+tulflCQKZXvJDymQf9+B9JyKbeS8NM
+   CkxnAtkXbM4Y/I74K2Uzn9Eb2jxPZd/3ytVRoNsJuiequzffDtYrwA7qE
+   65fY0gFsyVPRazEUSmCpotjqyWTxy0bKU+qWeH2G35I1pXyW4qXThIway
+   2daS4xe6Hi3iDyBwMoIiiMPsnJKDMtsOq+urqALCF7NkC0xcgtRgSfzDl
+   lMrQPS3zA3Gympy1HFTjAaLRiC70AgipsDCxvbbfpaXM2SXEBMvcgfNyk
+   BlcQGUlGiXWjYzyZE9Vv8SMItHNOOtQ0xPjvBBpHAIeFVoShGpIxh6uEC
+   w==;
+X-CSE-ConnectionGUID: 8Xo5SxiyRgi1inQgiEROxA==
+X-CSE-MsgGUID: sJZVC3iaS/asegMggphDMA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11424"; a="35800471"
+X-IronPort-AV: E=Sophos;i="6.15,266,1739865600"; 
+   d="scan'208";a="35800471"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 02:33:36 -0700
+X-CSE-ConnectionGUID: P5JZKl+gS16tY4KTMduFPw==
+X-CSE-MsgGUID: 99H2DwPISGOeLj/OziCFxQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,266,1739865600"; 
+   d="scan'208";a="135446965"
+Received: from spr.sh.intel.com ([10.239.53.19])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 02:33:30 -0700
+From: Chao Gao <chao.gao@intel.com>
+To: x86@kernel.org,
 	linux-kernel@vger.kernel.org,
-	sophgo@lists.linux.dev,
-	linux-riscv@lists.infradead.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	Yixun Lan <dlan@gentoo.org>,
-	Longbin Li <looong.bin@gmail.com>,
-	Han Gao <rabenda.cn@gmail.com>
-Subject: [PATCH net-next 4/4] riscv: dts: sophgo: add ethernet GMAC device for sg2042
-Date: Tue,  6 May 2025 17:32:54 +0800
-Message-ID: <20250506093256.1107770-5-inochiama@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250506093256.1107770-1-inochiama@gmail.com>
-References: <20250506093256.1107770-1-inochiama@gmail.com>
+	kvm@vger.kernel.org,
+	tglx@linutronix.de,
+	dave.hansen@intel.com,
+	seanjc@google.com,
+	pbonzini@redhat.com
+Cc: peterz@infradead.org,
+	rick.p.edgecombe@intel.com,
+	weijiang.yang@intel.com,
+	john.allen@amd.com,
+	bp@alien8.de,
+	chang.seok.bae@intel.com,
+	xin3.li@intel.com,
+	Chao Gao <chao.gao@intel.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Mitchell Levy <levymitchell0@gmail.com>,
+	Vignesh Balasubramanian <vigbalas@amd.com>,
+	Aruna Ramakrishna <aruna.ramakrishna@oracle.com>,
+	Uros Bizjak <ubizjak@gmail.com>
+Subject: [PATCH v6 6/7] x86/fpu/xstate: Introduce "guest-only" supervisor xfeature set
+Date: Tue,  6 May 2025 17:36:11 +0800
+Message-ID: <20250506093740.2864458-7-chao.gao@intel.com>
+X-Mailer: git-send-email 2.46.1
+In-Reply-To: <20250506093740.2864458-1-chao.gao@intel.com>
+References: <20250506093740.2864458-1-chao.gao@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Add ethernet GMAC device node for the sg2042.
+From: Yang Weijiang <weijiang.yang@intel.com>
 
-Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
-Tested-by: Han Gao <rabenda.cn@gmail.com>
+In preparation for upcoming CET virtualization support, the CET supervisor
+state will be added as a "guest-only" feature, since it is required only by
+KVM (i.e., guest FPUs). Establish the infrastructure for "guest-only"
+features.
+
+Define a new XFEATURE_MASK_GUEST_SUPERVISOR mask to specify features that
+are enabled by default in guest FPUs but not in host FPUs. Specifically,
+for any bit in this set, permission is granted and XSAVE space is allocated
+during vCPU creation. Non-guest FPUs cannot enable guest-only features,
+even dynamically, and no XSAVE space will be allocated for them.
+
+The mask is currently empty, but this will be changed by a subsequent
+patch.
+
+Co-developed-by: Chao Gao <chao.gao@intel.com>
+Signed-off-by: Chao Gao <chao.gao@intel.com>
+Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+Reviewed-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
 ---
- arch/riscv/boot/dts/sophgo/sg2042.dtsi | 62 ++++++++++++++++++++++++++
- 1 file changed, 62 insertions(+)
+v6: Collect reviews
 
-diff --git a/arch/riscv/boot/dts/sophgo/sg2042.dtsi b/arch/riscv/boot/dts/sophgo/sg2042.dtsi
-index f61de4788475..886c13cef6ba 100644
---- a/arch/riscv/boot/dts/sophgo/sg2042.dtsi
-+++ b/arch/riscv/boot/dts/sophgo/sg2042.dtsi
-@@ -543,6 +543,68 @@ uart0: serial@7040000000 {
- 			status = "disabled";
- 		};
+v5: Explain in detail the reasoning behind the mask name choice below the
+"---" separator line.
+
+In previous versions, the mask was named "XFEATURE_MASK_SUPERVISOR_DYNAMIC"
+Dave suggested this name [1], but he also noted, "I don't feel strongly about
+it and I've said my piece. I won't NAK it one way or the other."
+
+The term "dynamic" was initially preferred because it reflects the impact
+on XSAVE buffers—some buffers accommodate dynamic features while others do
+not. This naming allows for the introduction of dynamic features that are
+not strictly "guest-only", offering flexibility beyond KVM.
+
+However, using "dynamic" has led to confusion [2]. Chang pointed out that
+permission granting and buffer allocation are actually static at VCPU
+allocation, diverging from the model for user dynamic features. He also
+questioned the rationale for introducing a kernel dynamic feature mask
+while using it as a guest-only feature mask [3]. Moreover, Thomas remarked
+that "the dynamic naming is really bad" [4]. Although his specific concerns
+are unclear, we should be cautious about reinstating the "kernel dynamic
+feature" naming.
+
+Therefore, in v4, I renamed the mask to "XFEATURE_MASK_SUPERVISOR_GUEST"
+and further refined it to "XFEATURE_MASK_GUEST_SUPERVISOR" in this v5.
+
+[1]: https://lore.kernel.org/all/893ac578-baaf-4f4f-96ee-e012dfc073a8@intel.com/#t
+[2]: https://lore.kernel.org/kvm/e15d1074-d5ec-431d-86e5-a58bc6297df8@intel.com/
+[3]: https://lore.kernel.org/kvm/7bee70fd-b2b9-4466-a694-4bf3486b19c7@intel.com/
+[4]: https://lore.kernel.org/all/87sg1owmth.ffs@nanos.tec.linutronix.de/
+---
+ arch/x86/include/asm/fpu/types.h  |  9 +++++----
+ arch/x86/include/asm/fpu/xstate.h |  6 +++++-
+ arch/x86/kernel/fpu/xstate.c      | 14 +++++++++++---
+ arch/x86/kernel/fpu/xstate.h      |  5 +++++
+ 4 files changed, 26 insertions(+), 8 deletions(-)
+
+diff --git a/arch/x86/include/asm/fpu/types.h b/arch/x86/include/asm/fpu/types.h
+index abd193a1a52e..54ba567258d6 100644
+--- a/arch/x86/include/asm/fpu/types.h
++++ b/arch/x86/include/asm/fpu/types.h
+@@ -592,8 +592,9 @@ struct fpu_state_config {
+ 	 * @default_size:
+ 	 *
+ 	 * The default size of the register state buffer. Includes all
+-	 * supported features except independent managed features and
+-	 * features which have to be requested by user space before usage.
++	 * supported features except independent managed features,
++	 * guest-only features and features which have to be requested by
++	 * user space before usage.
+ 	 */
+ 	unsigned int		default_size;
  
-+		gmac0: ethernet@7040026000 {
-+			compatible = "sophgo,sg2042-dwmac", "snps,dwmac-5.00a";
-+			reg = <0x70 0x40026000 0x0 0x4000>;
-+			clocks = <&clkgen GATE_CLK_AXI_ETH0>,
-+				 <&clkgen GATE_CLK_PTP_REF_I_ETH0>,
-+				 <&clkgen GATE_CLK_TX_ETH0>;
-+			clock-names = "stmmaceth", "ptp_ref", "tx";
-+			dma-noncoherent;
-+			interrupt-parent = <&intc>;
-+			interrupts = <132 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "macirq";
-+			resets = <&rstgen RST_ETH0>;
-+			reset-names = "stmmaceth";
-+			snps,multicast-filter-bins = <0>;
-+			snps,perfect-filter-entries = <1>;
-+			snps,aal;
-+			snps,tso;
-+			snps,txpbl = <32>;
-+			snps,rxpbl = <32>;
-+			snps,mtl-rx-config = <&gmac0_mtl_rx_setup>;
-+			snps,mtl-tx-config = <&gmac0_mtl_tx_setup>;
-+			snps,axi-config = <&gmac0_stmmac_axi_setup>;
-+			status = "disabled";
+@@ -609,8 +610,8 @@ struct fpu_state_config {
+ 	 * @default_features:
+ 	 *
+ 	 * The default supported features bitmap. Does not include
+-	 * independent managed features and features which have to
+-	 * be requested by user space before usage.
++	 * independent managed features, guest-only features and features
++	 * which have to be requested by user space before usage.
+ 	 */
+ 	u64 default_features;
+ 	/*
+diff --git a/arch/x86/include/asm/fpu/xstate.h b/arch/x86/include/asm/fpu/xstate.h
+index b308a76afbb7..a3cd25453f94 100644
+--- a/arch/x86/include/asm/fpu/xstate.h
++++ b/arch/x86/include/asm/fpu/xstate.h
+@@ -46,9 +46,13 @@
+ /* Features which are dynamically enabled for a process on request */
+ #define XFEATURE_MASK_USER_DYNAMIC	XFEATURE_MASK_XTILE_DATA
+ 
++/* Supervisor features which are enabled only in guest FPUs */
++#define XFEATURE_MASK_GUEST_SUPERVISOR	0
 +
-+			mdio {
-+				compatible = "snps,dwmac-mdio";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+			};
+ /* All currently supported supervisor features */
+ #define XFEATURE_MASK_SUPERVISOR_SUPPORTED (XFEATURE_MASK_PASID | \
+-					    XFEATURE_MASK_CET_USER)
++					    XFEATURE_MASK_CET_USER | \
++					    XFEATURE_MASK_GUEST_SUPERVISOR)
+ 
+ /*
+  * A supervisor state component may not always contain valuable information,
+diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
+index f32047e12500..e77cbfd18094 100644
+--- a/arch/x86/kernel/fpu/xstate.c
++++ b/arch/x86/kernel/fpu/xstate.c
+@@ -781,14 +781,22 @@ static void __init init_default_features(u64 kernel_max_features, u64 user_max_f
+ 	u64 kfeatures = kernel_max_features;
+ 	u64 ufeatures = user_max_features;
+ 
+-	/* Default feature sets should not include dynamic xfeatures. */
+-	kfeatures &= ~XFEATURE_MASK_USER_DYNAMIC;
++	/*
++	 * Default feature sets should not include dynamic and guest-only
++	 * xfeatures at all.
++	 */
++	kfeatures &= ~(XFEATURE_MASK_USER_DYNAMIC | XFEATURE_MASK_GUEST_SUPERVISOR);
+ 	ufeatures &= ~XFEATURE_MASK_USER_DYNAMIC;
+ 
+ 	fpu_kernel_cfg.default_features = kfeatures;
+ 	fpu_user_cfg.default_features   = ufeatures;
+ 
+-	guest_default_cfg.features      = kfeatures;
++	/*
++	 * Ensure VCPU FPU container only reserves a space for guest-only
++	 * xfeatures. This distinction can save kernel memory by
++	 * maintaining a necessary amount of XSAVE buffer.
++	 */
++	guest_default_cfg.features      = kfeatures | xfeatures_mask_guest_supervisor();
+ }
+ 
+ /*
+diff --git a/arch/x86/kernel/fpu/xstate.h b/arch/x86/kernel/fpu/xstate.h
+index a0256ef34ecb..5ced1a92e666 100644
+--- a/arch/x86/kernel/fpu/xstate.h
++++ b/arch/x86/kernel/fpu/xstate.h
+@@ -61,6 +61,11 @@ static inline u64 xfeatures_mask_supervisor(void)
+ 	return fpu_kernel_cfg.max_features & XFEATURE_MASK_SUPERVISOR_SUPPORTED;
+ }
+ 
++static inline u64 xfeatures_mask_guest_supervisor(void)
++{
++	return fpu_kernel_cfg.max_features & XFEATURE_MASK_GUEST_SUPERVISOR;
++}
 +
-+			gmac0_mtl_rx_setup: rx-queues-config {
-+				snps,rx-queues-to-use = <8>;
-+				snps,rx-sched-wsp;
-+				queue0 {};
-+				queue1 {};
-+				queue2 {};
-+				queue3 {};
-+				queue4 {};
-+				queue5 {};
-+				queue6 {};
-+				queue7 {};
-+			};
-+
-+			gmac0_mtl_tx_setup: tx-queues-config {
-+				snps,tx-queues-to-use = <8>;
-+				queue0 {};
-+				queue1 {};
-+				queue2 {};
-+				queue3 {};
-+				queue4 {};
-+				queue5 {};
-+				queue6 {};
-+				queue7 {};
-+			};
-+
-+			gmac0_stmmac_axi_setup: stmmac-axi-config {
-+				snps,blen = <16 8 4 0 0 0 0>;
-+				snps,wr_osr_lmt = <1>;
-+				snps,rd_osr_lmt = <2>;
-+			};
-+		};
-+
- 		emmc: mmc@704002a000 {
- 			compatible = "sophgo,sg2042-dwcmshc";
- 			reg = <0x70 0x4002a000 0x0 0x1000>;
+ static inline u64 xfeatures_mask_independent(void)
+ {
+ 	if (!cpu_feature_enabled(X86_FEATURE_ARCH_LBR))
 -- 
-2.49.0
+2.47.1
 
