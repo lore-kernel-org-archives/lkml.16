@@ -1,91 +1,71 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from AS8PR03CU001.outbound.protection.outlook.com (mail-westeuropeazon11012049.outbound.protection.outlook.com [52.101.71.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F0BB30793A
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 03:34:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C362528ECFE;
+	Tue,  6 May 2025 03:37:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.71.49
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746502492; cv=fail; b=MGM1VWCWbEC5nSr1FhRqBqK0RcIWYYJlvs9KGzAqG12JV7B+AlQpcH3f21fZVqMrTzNW0nUKgQXwGC3leQAfgGvLdi8MQkKN35TE6pS5DKjWTIY6uEozclo3PIWRoW8dsZxosFo6gxZevGrseIL8xdp4AGBEWpvzusQKIQ+3Igo=
+	t=1746502635; cv=fail; b=sc3OpvbK57lFoMq12W0WiBW7Aerf/+vpF4yckWlDv44UENVcJMrQzJh8M7KNzNCF9PBPlXn9D8uoJ8s112m1AmUERLLQ7pbbBnUVtOz2cryst8L/MZ4x7fY8ZbmuNCmjNi4DICWW8Rgw/0dowWnUg4c48zGlyomRoSrL+J3fB40=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746502492; c=relaxed/simple;
-	bh=4JdCXual+ktddROF6pxaYoDX0PKmY2t7FjRXVoNUyP8=;
-	h=Date:From:To:CC:Subject:Message-ID:Content-Type:
-	 Content-Disposition:MIME-Version; b=I/ZT5eRRbqSUKAiG05CkhVlbgyhhgkkN83herX3a1YCia3ET2gptcybqmAAAccTTYfQSF8P58UOrCoBFo8ViI/3cQkYvLoBcLTbYwHB0GuFGfMpHZ+sxvsyvIb4y4BE60y5PCGBKmrSgC+CB/xfrPRyYTlvigQe4bslGhc9I0rI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g57DvnCA; arc=fail smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1746502635; c=relaxed/simple;
+	bh=aZ9eRJ/VrHZ7fASaK9lJuxNe2i1YmPORtW0glY7Gg3o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=aduSfBtjTYNbo579ioat+FzHsNiayl45A19prktDwqJ72Dgg76Dj8mVGE3pCmNgIHzT7uHCUHleCoXd2kpP9gIt5Xo71z9LI6o9O459f1kUbq+Y3aRACRwrQGHAPTAje0ynakhXn68XkwsuT8GbR8M8P+X/ZNF8xU8OJqxMMrEE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=EkD/QNa8; arc=fail smtp.client-ip=52.101.71.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g57DvnCA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746502490; x=1778038490;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=4JdCXual+ktddROF6pxaYoDX0PKmY2t7FjRXVoNUyP8=;
-  b=g57DvnCAlfwYwSvkvgkUru11FZOdGzUevxplZXOGem5jGFs+siUmuHbq
-   cBxazULxoDEZX59eLKDF2kxT6OdYL5hV0undawuWcSHjfDxwuylVY92U0
-   YREt6ROvjaj60BHKK/oEhZmBGi5ZlNjq7z4MnkqWgrs1Kj4CrJO8cDcQI
-   24U5mxPIMGUhF7FmB0aC+MTsi0aE4OC4wEL1I7fyW5Q+DiF/LFVbG90gB
-   D8JXMDVBVn71MxwctPO48BtlgROxiwA/+b6fBokR22NHWTiSLR3f7/rkL
-   Aruw9PeoNwwwPqQkM4HI/X7xw51a2K0jeNpvm6y9NWWs6vzxB+w+vtKR4
-   A==;
-X-CSE-ConnectionGUID: I4rXKhz7QZe5jYJlLSdkgg==
-X-CSE-MsgGUID: nsw5HtKfTOO2SDY5cAqU6A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11424"; a="51963385"
-X-IronPort-AV: E=Sophos;i="6.15,265,1739865600"; 
-   d="scan'208";a="51963385"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 20:34:48 -0700
-X-CSE-ConnectionGUID: lveOtD2ySRiWibTPFkzsUQ==
-X-CSE-MsgGUID: ZgFk7yP2TAaFu31Dvtvo2w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,265,1739865600"; 
-   d="scan'208";a="140604554"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 20:34:48 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Mon, 5 May 2025 20:34:47 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Mon, 5 May 2025 20:34:47 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.174)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Mon, 5 May 2025 20:34:47 -0700
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="EkD/QNa8"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=YNy1cbh8+NLclTqXUqlLIZfvi0S6nFtDor61Ykcq2Iq6kQdRSVuFngKWrxoo0fgZAenZI4nwFQUcCSOfoeQkSHBgkOSWTNa/t5G0iuGBe8Wx5JaPc9LKD7eKKs0YOyhBX12Ry4uHCoXcz5FdVSyDgr8HVhxQvemrBxAQrtdrSnIOIa407duHWHQGO9nzln7h6u/LnKCbivTWSRNT4tAtNsnl4NkYtbloTBpYuFzNEAXnk3KtzrfDOHbNMnLrw9qYS+kyNasLUUr0gv1Y2joYRJRJRDvVo5XUrIVRx2u78ffZafygKuiYxOcTAXGjkwHYiYu7puX9ZcsKuVR3rK/ddg==
+ b=KIQ3izgW6FsO/ClImp0LPRzLLdJq5Bmy9ts9nsSWfpknhxg2V6jMU357cHOqclVlK92AWThRkS8M3ACAls1/aPPVmziTSyI88H9EJqWKxPyRHJEdHt/B+B67mCBuR/JYsr8xWO04gIePl8HvDkJ7s0sVqJgZrig3f39azSSOuGZrDFrv/SoQGP1G+2kR4n3jvhxIsck94GnYzmk1ycO/m3pTMlhW0cMa9TqiahwMqjtEbTtHtRiNtw2TVd9Q4KSYtj7Wq3cLSSw5OAd5GbnCtgDyvbh+iaB/GJZRGXT5krtu60xsvXGcwNo5sG9FP6dnURpm8th22sSUZg8oc5nzSw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mvkA0l6YDFmXJQDPnReDOrijDNwNdtDxv75aWyxVFy8=;
- b=fzjSYr/K0YKYKeSwAisWIDU349iANVdztR1bcmrYLnySsf/y/Z5HLk4wVPRFcPnMDl8c5HIKkfJv1jKdKUp/a3z7QED5u65XyorceFjx4W9L6DkNEDevHobOzD9hM0gZGGcKCD2FqY3lMu05kiQAhL31o9j3XDrJQR984DAgWQ/vx1WIJKivR+H1rX4m7E2XwqS5wkLbJnhO+m3so+5DyM4l4Y074esCBv0d2EGH9NE783d+VgrpU2vja9AxITWoWZ51vwD4+8UN/tnGaYlYbCNjGmOIaer1f9Yqr4yoLBe+NuuAvDKqIdVHt8HCeojBp9FDrnxxB+wYwJGGC/x1Ow==
+ bh=JC4JElB+rpQhiA/GcUeEL4R9keldKICAKef6QnSg7Os=;
+ b=Ci/b0oo6ojvvohn7qw/w/3zl9Pump0exrpm5PXUZGE/EuN81sUkF5hiVWvBr0yIHMRGNfT1Sc5xAvNbrHktnU8tqsawOaw5s0Vztd2iMEulTDemqQMhgJZmcf/Abc41N/9aXPbVDIR3qjGYsFq8Svp+a4VEj8flbL/u/pNOoyXH5jW2IQPk6UgBe0lBOZZrtFNu+6e+EDbiObGxwjGkGxfbWPDRUNpnkPAOZEhjMerzpknV3uEht6isAGmyPCSF0Z0ym5reBedcxy2mv5xt5XREeS0jDNDlc2KYZN8IkiilfZmD2/WGQQA/NiCDVZsVXfIfTcBRJ/wCYkQSmGuBPtA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JC4JElB+rpQhiA/GcUeEL4R9keldKICAKef6QnSg7Os=;
+ b=EkD/QNa8JhpXgWdAPhI2bz5pFWb02l+EaAGZ/dkDz6iHU+OWGT9dPZ0mUJZAfiGOOKzAOh/TMa5XcTOdUX9TIqJxw5V8xemkiVLstVIufsUmBz/2bLKFhfMRg4XRe3XdZ5ncx4ZPb3reriHzFyFEh124tMUTiCLExpOQoFppS6I+Kzv7usuRHXn/FjeExj4fGl/yTpeRXdnzFurqH4Lw7Ty53tzjLUEqmotygFXxCERU8yfIElTKRWsRMjH65EXNs8F2AhbwfW4tbhFtJg6H/PhdfhC5SzAt+R5R8L9WVIX9FLEl4nRv7eMv/ToNNyIM+bOYRP/rXok6Jmj+ntvn9g==
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH0PR11MB5674.namprd11.prod.outlook.com (2603:10b6:510:ec::10)
- by CY8PR11MB7244.namprd11.prod.outlook.com (2603:10b6:930:97::18) with
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from DB9PR04MB8461.eurprd04.prod.outlook.com (2603:10a6:10:2cf::20)
+ by AM8PR04MB7473.eurprd04.prod.outlook.com (2603:10a6:20b:1d0::22) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.26; Tue, 6 May
- 2025 03:34:40 +0000
-Received: from PH0PR11MB5674.namprd11.prod.outlook.com
- ([fe80::77d3:dfb2:3bd:e02a]) by PH0PR11MB5674.namprd11.prod.outlook.com
- ([fe80::77d3:dfb2:3bd:e02a%6]) with mapi id 15.20.8699.012; Tue, 6 May 2025
- 03:34:40 +0000
-Date: Tue, 6 May 2025 11:34:32 +0800
-From: kernel test robot <lkp@intel.com>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-CC: <oe-kbuild-all@lists.linux.dev>, <linux-kernel@vger.kernel.org>
-Subject: arch/arm64/boot/dts/mediatek/mt8188-evb.dtb: mailbox@10320000
- (mediatek,mt8188-gce): 'clock-names' is a required property
-Message-ID: <aBmDSNx3EB/PJSaU@rli9-mobl>
-Content-Type: text/plain; charset="us-ascii"
+ 2025 03:37:09 +0000
+Received: from DB9PR04MB8461.eurprd04.prod.outlook.com
+ ([fe80::b1b9:faa9:901b:c197]) by DB9PR04MB8461.eurprd04.prod.outlook.com
+ ([fe80::b1b9:faa9:901b:c197%4]) with mapi id 15.20.8699.022; Tue, 6 May 2025
+ 03:37:09 +0000
+Date: Tue, 6 May 2025 12:46:18 +0800
+From: Peng Fan <peng.fan@oss.nxp.com>
+To: Hiago De Franco <hiagofranco@gmail.com>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>, linux-pm@vger.kernel.org,
+	linux-remoteproc@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Hiago De Franco <hiago.franco@toradex.com>, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	daniel.baluta@nxp.com, iuliana.prodan@oss.nxp.com,
+	Fabio Estevam <festevam@gmail.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>
+Subject: Re: [PATCH 2/3] firmware: imx: move get power mode function from
+ scu-pd.c to misc.c
+Message-ID: <20250506044618.GC24259@nxa18884-linux>
+References: <20250505154849.64889-1-hiagofranco@gmail.com>
+ <20250505154849.64889-3-hiagofranco@gmail.com>
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-ClientProxiedBy: SG2PR04CA0160.apcprd04.prod.outlook.com (2603:1096:4::22)
- To PH0PR11MB5674.namprd11.prod.outlook.com (2603:10b6:510:ec::10)
+In-Reply-To: <20250505154849.64889-3-hiagofranco@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-ClientProxiedBy: SG2PR04CA0169.apcprd04.prod.outlook.com (2603:1096:4::31)
+ To DB9PR04MB8461.eurprd04.prod.outlook.com (2603:10a6:10:2cf::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -94,124 +74,254 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR11MB5674:EE_|CY8PR11MB7244:EE_
-X-MS-Office365-Filtering-Correlation-Id: 087de1c2-18f7-4183-208f-08dd8c4eeec7
+X-MS-TrafficTypeDiagnostic: DB9PR04MB8461:EE_|AM8PR04MB7473:EE_
+X-MS-Office365-Filtering-Correlation-Id: 79ecb0d4-8001-440d-d7e0-08dd8c4f47ca
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|13003099007|220923002;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?mJVh6aLTAO30u46f43fMrcIQHFq09+BXJxqUuLEvXuoP7LM6t5iKxKrQdW5K?=
- =?us-ascii?Q?gaNghBK+ueRgArN/AwMdeVN9GsaxmMQhpSJ4PHG/ORvDc5CgMfwgF7tXg1Kn?=
- =?us-ascii?Q?CzXN9Dcm2NOUNKOD6DoR6fz3Q1coJe9uyU36M7+UnipjjUhQH19pMVkC9+Rm?=
- =?us-ascii?Q?cIBXkcArPyw3GCFAxFxnJS9y4tGomX9K5/EqG2AA2DCu/Sp3Wem6dPzsYNvP?=
- =?us-ascii?Q?tNQ+UIeet4eSlPCNbyCAlCMjae3LmlF/dj6f3c4GrRJXD6c3mlXCioFIAuog?=
- =?us-ascii?Q?VhT2qgEBgzKB/x2NfrxwFWPqNrXdyzUaluKhwf1Z/NP/YnByuiVUnRsEepXn?=
- =?us-ascii?Q?CdPWKY19q2ze7fAnWPCphDzZx/12uUviQdfSr9jGDJDOgIWZhhKbNutyW4uA?=
- =?us-ascii?Q?yMOebPaCmtQ98YAQESUqcTPeFyvWmHausr8SCKiosNM0qo3j5jZpnZkqQGeW?=
- =?us-ascii?Q?PEBQEdro8l1lHmhhaFk9OI0yv1OFfbbFvPQ6hGYOhmwqjLNFaoPGQn18aNaJ?=
- =?us-ascii?Q?CHbxXBNI5mEu0o1+LHrQPFTUUx1U8RBlOrNHlB/H+yzZnDF9SDQ4U5CuxuIw?=
- =?us-ascii?Q?hSqQT73bW2VGfApgnC4ew0rNsVcmIaMIGzdX7yXfZ/Am6PsY0c1OHatqG7gU?=
- =?us-ascii?Q?VAd3ivFfKx9B5IBCcaLGeDTPNuiQEB/sQO7hw4Hqh3T4XuH6bHL3rnO5l2jw?=
- =?us-ascii?Q?XRk7yMiI4aNXFskZK3GClKiBYnV2kwX4RlsOd3iQ1sHU693vgpsOa/Rp7yfC?=
- =?us-ascii?Q?3ZW6BLNZI6gTM8optSYYhTzaVlgAH3MNGrWlRI+Bxf/n0R/cfWMwDIbRqGtW?=
- =?us-ascii?Q?XwJzU36LibLC9A3yl0dvmrqjGbbCQu0oHnUBeTcbcqB2/55wASyL6dkKo2xV?=
- =?us-ascii?Q?HRKHKUPQjAR+Ap1yKPp9/JD+VhUWuku7A9TsJzGBKGNGtj5IeRptzitlGDI4?=
- =?us-ascii?Q?4vAMxiYGg1ABpLHSH0LHG/g+ZarV6h5c+mtA7TfifMBA35XQJLI+u5Q6373S?=
- =?us-ascii?Q?0bm+zinGQvXSz8HNqVhk/MBS4Qcph4FBOrXUUufqmjDFaWmz8JRVLC5K/hsI?=
- =?us-ascii?Q?kefyRIeFo+6oFr23iJ4gQptTiWYBT5O/GAVymfKszoudDbtGQs9o459Lh5Gz?=
- =?us-ascii?Q?y/JQRTBQt1z2uAzfaDOsr4I4wWvmcDJ9mm12uvVilkmBNxG5dcPJ9UsKlE6t?=
- =?us-ascii?Q?GpvrliY/kGX0b/xZGJYAbrRNRDloKiBfldYDqnMeLQhlHc49DB88iWRGId9D?=
- =?us-ascii?Q?5cuy7LUmZDbj6CZJ9et5pPnVtRa2xCvz55qqewEy7leVD/ocBiZYA7/NvS3K?=
- =?us-ascii?Q?zXPpvzE9Akg4DHdlPhXNEjlW0RxMy+A7ACEkujcbnaaFzm/Vt13AGcUCXSWS?=
- =?us-ascii?Q?9X8PdJaZj52kqeX8YWI9DEzIvIdwy9+pRmkOX1ELzQC/e5MnhYWNdCGe8MdN?=
- =?us-ascii?Q?keMplNAJD0I=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR11MB5674.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(13003099007)(220923002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|52116014|7416014|376014|366016|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?ktN0AzhIkz13rwyAllRN3MtsxbZkJUb9n48oZmhHIqd4W7ya0I2+V+y5onYi?=
+ =?us-ascii?Q?zhSkp5cEGdYMiktM5Hp+G/mjYf0iHZtOAfBwPfn7BViqFZQ/v6Y2a6V7Dy8X?=
+ =?us-ascii?Q?kjzfH/ti7TFbibCcSsIZ5wbQCDtS618gqK/USDaMCILOvjtL6mQ/pMgptFeQ?=
+ =?us-ascii?Q?m9Gmimn6KtDODkyyW3dMSlEnyCe7CklfkG0lC8PlCSF0d/Am55+0bTb6pxE+?=
+ =?us-ascii?Q?WiGDFedIHoomb/SyaycQyn1JMZqPQneVVF04tZCvaXXQdl5OofKh16qIqUuU?=
+ =?us-ascii?Q?sStqiZvuWMl97NJYU94/cJEBaXtNN+M9n/KgthUpFZY85x9GR/iOKtfEgIUz?=
+ =?us-ascii?Q?cZ42jWeS0keR1IUWr/YAU0+7RQYqWuO4+FZtnhisOeo8Ya+1kNImBe/jSRpp?=
+ =?us-ascii?Q?Rcnfx6wrqlysm1EXFdjzCT/iHnEZ58RCrplSs+GSUYjx7s34ciujZQUkW007?=
+ =?us-ascii?Q?NFYVfRzX9YEiiH/2goBF8QnX1/wKKbY3ETIJfqN0BScycdhWYU3euNEleAbH?=
+ =?us-ascii?Q?lW2of1GSZmIdwL65sPatVfHiqTH+cnKErjauu0MZ8x2uNyGBK4gi0c26kbiF?=
+ =?us-ascii?Q?7Z6m7SCTlWn4hPMfuGdo55KrLKi2+hLEhjs2w5+YxGrbjgON99QKjWscTATE?=
+ =?us-ascii?Q?TiNzboaSqxkKV1QO+RCHRgMlYd0cqS4qNDmbukvziXqFKGnZG+uY1+HZuHxV?=
+ =?us-ascii?Q?0RDfDbmkmEQlqHWjGHmcnpRGO04pW68UG+mDY7GxEAeN1jVR1DpEcjCw7BYk?=
+ =?us-ascii?Q?KRSOCqa8TMKHSyZUSUfIIGBuo5eJIApLzLuE8oMvNrmgBZcXnAkgb8mJLbep?=
+ =?us-ascii?Q?V8GJT/flPrLj8d12iodo8aPG4PCxgjfbO4hBIULXT1+3rd63sLscIFPzxtvX?=
+ =?us-ascii?Q?G/kM0qmHSdFBARpGzsQ1WdpXhss9gmY6H/dyuNpFUqFh/s/YrkRpGxHMOiit?=
+ =?us-ascii?Q?WVr2Vnfl4elOKgYTgcTtjwc1HLe0lmPRGlIQYYPgA972TsMG0JRNf3D1jZGZ?=
+ =?us-ascii?Q?K+LThrhS/5+uZpklTI13DUwRSSbB8gogS+ZnDxpMh08eVCq/S0P5ggB9iZz0?=
+ =?us-ascii?Q?Raa0kD0oFVDF9OHL0Hm+st2hIlTk+aC8zDjcTflf+8KI9xKFDVDJxoTHmPNg?=
+ =?us-ascii?Q?dHN0I3DV1vrftOQvK4bVgq5ccEA7RtSlbRRw7652u2TFvQvG8u7MTtAWW3/f?=
+ =?us-ascii?Q?bhTC2O4OPVo4DcaCSD5kKhb0K4xxWYbHQWlliTht8eSapqtW1+elocIfzRCf?=
+ =?us-ascii?Q?gWSED2c6D8m7fDlkq3xgaoPJ83c8YqDrJOhp+bJdQYHFK7dUsbBQVyGZ30fX?=
+ =?us-ascii?Q?KTKDF7ipxMgvL3P83yKl2Qa4DyLdKSEvtWLrNpUp0+L6H71qmNhwpvUP2zRS?=
+ =?us-ascii?Q?2aAFigOmtuHfLuU18mF6DmdFR+tktJKI5uSIEt/7q1KA7U1OqOohIvtNfHui?=
+ =?us-ascii?Q?DWn8DuwO65+N1WAWban9AZb+t3/HFoaBQZK63sGAWanTboYxHvxEUC1RLs1V?=
+ =?us-ascii?Q?KIQWVfdDHemFPoc=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB8461.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(52116014)(7416014)(376014)(366016)(38350700014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?x5FwgyylU8ESBJQUecu3sVaVul6g9lXFT5QW0bvl+VAcVcOgci0rLyMPLv+/?=
- =?us-ascii?Q?BlXbDzgYhLDHC3fKl1WBW7K5mdjNnpOj5G5vThXkE90QNQR+d1B1xgpBbBs2?=
- =?us-ascii?Q?ILZwyMzmpd9WohdeThwN6t3EI6zde6vwqnbMrFVvwSSUW4L7jTGrrFXAiUXk?=
- =?us-ascii?Q?h7tewfdOsputQfJHUYxlRTfr/vkdmY7ZZoA31+7ow2aCAMoL5Pbdk+xhbHMQ?=
- =?us-ascii?Q?uJzSCFTnTqSFpe60SOrSM51cgl4GNC2dhZb2b67VDMVZAIYL6/l/QsV6pp6m?=
- =?us-ascii?Q?UBVDYAlMSkb4mKsWWOXZSfpjRo5hmvaoDEZTyfWY/0mIdRw4CfkCxDPMAcLL?=
- =?us-ascii?Q?2tGPCZsPE19GR1HH16cvRIJ3b24TzvBgADUFFHR3fVKk2SWKHgW9VQsb9vW5?=
- =?us-ascii?Q?xFYwTZziCbGuWSDxMZvNCoubeT4heg7smeBnHXmBaXIvFtOu4LoehSSK06Iv?=
- =?us-ascii?Q?kIqBISRlr9XffGH4Rs5LY2MytZxwdFXbE1jlKomCYtsyFcy706vopUePNTa9?=
- =?us-ascii?Q?8LJLohviAiYe4FFMavCnFjDp9LIry+J4ggDHVmh+5+jBHfr8pYjxsVnE7zgI?=
- =?us-ascii?Q?BiquBYaJ876x1yR3TuauYnHHXA+OWHwyahK+3/aWcnN+FG5Bt1OzXhYJcLYU?=
- =?us-ascii?Q?ap7S96Wr+utHNPleZkjyeElASEypVeGlg+kmh2itoo0ICG1aoRe/cJE+L+uv?=
- =?us-ascii?Q?oUtCO7l9wxqdahqNSjqVYyMpiCmX++8WI7bqNR+zWQUdq/AuNlNIyyq6l+WO?=
- =?us-ascii?Q?7WsQ781UQiDLa2T7mCihm8Wg4y2BoIPMC/VOdDFb3wbTYyslHY6C6enRghJN?=
- =?us-ascii?Q?ileEaqy8HsZAQaI5WW7H7PP8+9XLxUagNgjkrZs2Wo/5HUccajGJnOAMJJea?=
- =?us-ascii?Q?VX6kuQjk8XrYbUSWhajNW1002mptYwhGe2e+GEGCcPf6XmNZML9SGoHiImQj?=
- =?us-ascii?Q?ZHamRiblNZow96ZohJEOTjxHNUpbuiTXNC5US3eN7/ryv9DJ8TUCMSaFYkbH?=
- =?us-ascii?Q?VgLxyFvHpW2pN4Z3GDBi20s6vagvjTdZoTChIMMnJqJTLb40ZJK0NJmWzS7v?=
- =?us-ascii?Q?4oaDfYhdMlBkRd5n97aAHKxeekR2sbew+8wP9QgVlyW7xXa5MSd6jH7jNh/5?=
- =?us-ascii?Q?R9yWWpaifya6BJ+iN83VbwxDSiBmyzQpVtHamDmWPR7ngzVkajCehLkCAfbi?=
- =?us-ascii?Q?5EyOfIe2lyPepadyGGG/bXoSD9XWoGXlk8OGHJzGJa3oNfL2jwWW6kgap87E?=
- =?us-ascii?Q?2Vm2+f/k0AvrXL57zoX+/SJi6crecz/Plqvol5SocnlWBmLaoNK0QWsvIyO/?=
- =?us-ascii?Q?sOEcqXNPlsFW+V5lti3U/d0EpSR2xknKJ+3Lub1mTBI5Yl4ifwIepbnwyoE9?=
- =?us-ascii?Q?TjoGcWQyjf4V6hf0B46bmI7i+ZV4jj59EGjV7Xy/vN/l2K8C64v50kxGfjCY?=
- =?us-ascii?Q?0OeYbcX4/8BybmMhguc6fFU8i6PLaFKm51Z7WZfDPjnF+EwDnODVnK1NOwR/?=
- =?us-ascii?Q?PwJHVgannzYUqBPvEEpnGaNVdQVkFQYyV3jOSn+6TC3vFwDHFgTBStUYv2xY?=
- =?us-ascii?Q?S47uanw+Snpyk7/5vi9jV43sreHv7EuJ8Lo+bEKScTRDTTt1boAaLO+WZvJs?=
- =?us-ascii?Q?5A=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 087de1c2-18f7-4183-208f-08dd8c4eeec7
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR11MB5674.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?Ixx64L6zo6+/09YPudv7K6a2SMH3JkDSEUdZ8a+2wE19rgPuALcmHrbs6guq?=
+ =?us-ascii?Q?9f3Z72ciwC9YUmYFAuRk2/W7pzzhC4qHreq0QGNDlYAoYcD87s1dt3iNCTyA?=
+ =?us-ascii?Q?vaahQdCnYxOPjI3cOS4JmGLwSt7sgoFeqx3ByVdDoYOm3q4UwwPfQx+UcEAJ?=
+ =?us-ascii?Q?zViCrdIM+N43c4M4TrgAyfRe+33F4YGezhZDu13OvwCiNtSte5CIFskcydH8?=
+ =?us-ascii?Q?Nkkods7ctaMu+in+t2wF6gxuGQ6To+0A4x/VHZv+UvYsSz2I8xWaD7UHVxLw?=
+ =?us-ascii?Q?OL6YneofOV1TJ6MxJyrWNqA7quXUJNnbMttH+S02M3mvkTKR+oPEeApzPCoi?=
+ =?us-ascii?Q?Ijc1s9/luVJE7rnCKKMKIQDAO87ATQW6XSZXHxOpJYrVlPtFKkQGudzHRLmK?=
+ =?us-ascii?Q?yBhWMgcu5exoJdgFxfPvBKDg6M8LVuEzFcnHKLYwQslNZLN++nz7bSSFQmnL?=
+ =?us-ascii?Q?3BOr6jFc+las4P7IWL/RniP4VTkFIRCo/ZzTNp19uKrNy3WF2kqXgOom8YW7?=
+ =?us-ascii?Q?RSBYK5b9E7w+aivvbyx6F+Fkg8YutC9sPI7IGHg4HQZVPDy+etT9zOOpXVNg?=
+ =?us-ascii?Q?EH9cPotw+S/+3vsBJGsabfP9EDcHr0y/Tfll9Zzx+83PfSR9y5bWV+cY+a/4?=
+ =?us-ascii?Q?ow0tfRJZnNbOL0VuZ9ZbQcqXRFofXV/FQODBaAjHG6nFpGpWnihx+/xKM4wx?=
+ =?us-ascii?Q?suvJZT9Q3hZNodUvSOXfhvGM1PMztiEPnC3xQN/PZpZy0/gmjmLR+S8Mbend?=
+ =?us-ascii?Q?/1roYoP3mNeaN+Q/Cx4UF9xH5sGhI8gNJgdmHn9gLSDwAGdqEruTsn7mIErZ?=
+ =?us-ascii?Q?Tlqm7VG6gfivT5MbOzI3S+b6EYOVq3eUGDhH2oPYtoz5TACcCjryt9ynZUnA?=
+ =?us-ascii?Q?HcYP65bK1UNl/gVG3Of5OxfZ/ukJXBEuipUu0TOKW+J9QO2JqdgWK3/tOXA5?=
+ =?us-ascii?Q?azVoxKLQxD2uX2ZFBXMkIEAsTDSvAup7nujz6FAvVCWoRZoSfo98+P+tVY8I?=
+ =?us-ascii?Q?Nnhj9A4XMp+rX3eD+AC/0jmPjzuthiFYZ0tYDbq2jkypmeGhcq9TPLPCymgw?=
+ =?us-ascii?Q?gowW3RiTHz5RlYfsANpu+eTAaIgPmBSTQbBdKFuAPnvxQoHCekMyjDsvwxF5?=
+ =?us-ascii?Q?309ti15T+AuGiZWtJgJGV9CWm6fYWSbjJsMXvEGNT2kfXPhkBUQZyH5s1izp?=
+ =?us-ascii?Q?EyEqYRn8Q3YyqzWJq+mZMu2QwEf/oY7fjmnr4ileT6e/hN1w3okWzJ8em8z6?=
+ =?us-ascii?Q?kNxwVJCpcHzolrYfERmZ2BAj9JY6bP79nvub3ExPGEBTgk5Tg0+nzc+znhMW?=
+ =?us-ascii?Q?YfL96Wp+wpQgFObKLGmqs2pPrefGxXe/AV5YTQAKxtHvpVAk2gb1wN4yVwV7?=
+ =?us-ascii?Q?MXu/2dtwsLrrOGp44690tX29BtqxmUS6TyLnfsiLYfPbc4ZKAskcZjfGZJ1s?=
+ =?us-ascii?Q?+LjRzr4y6S9Id8Vnw7uPlsUL7DHV1gYyB6JPP52ALXI1cFuUbTeDBRKg/BXz?=
+ =?us-ascii?Q?xPHgev/ynh2ukeJXo4cjwjyH3/enNRiZNdrnA9csmqUn9iuhjtswyhHNXNc0?=
+ =?us-ascii?Q?ar/rIsVlyRtEURBc+Z5cLQx4eFXBdFiN1WL+OKNF?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 79ecb0d4-8001-440d-d7e0-08dd8c4f47ca
+X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB8461.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 03:34:40.1237
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 03:37:09.3773
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: IbWF8ylmmNX8FR7Uy+svyAyDLcmKdAJ11P1G8D8IvU8HN8d1DYB+s52Px8Rm+Q+LeDsEDe8gPAU9wIeE6prWRw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR11MB7244
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-UserPrincipalName: mQzJjZYVCOym1PcGIsbIzc9o9L/710PkFtpRLqYMa7gkNZM4D2xBm4YMZNsmBjHYXJLVPrOaZ49PTI+GkQjrPw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB7473
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   01f95500a162fca88cefab9ed64ceded5afabc12
-commit: 45682a4fffdd9abd6e2df9c5c534d22f2eda94f9 arm64: dts: mediatek: mt8188: Add Global Command Engine mailboxes
-date:   10 months ago
-:::::: branch date: 11 hours ago
-:::::: commit date: 10 months ago
-config: arm64-randconfig-2051-20250429 (https://download.01.org/0day-ci/archive/20250506/202505061054.AL5OvX40-lkp@intel.com/config)
-compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
-dtschema version: 2025.3.dev21+ge6ea659
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250506/202505061054.AL5OvX40-lkp@intel.com/reproduce)
+On Mon, May 05, 2025 at 12:48:48PM -0300, Hiago De Franco wrote:
+>From: Hiago De Franco <hiago.franco@toradex.com>
+>
+>Move imx_sc_get_pd_power() from pmdomain/imx/scu-pd.c to
+>firmware/imx/misc.c and rename it to imx_sc_pm_get_resource_power_mode()
+>to maintain the same naming logic with other functions in misc.c.
+>
+>This makes the API available for other use cases. For example,
+>remoteproc/imx_rproc.c can now use this function to check the power mode
+>of the remote core.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/r/202505061054.AL5OvX40-lkp@intel.com/
+Better put this patch at the first I think.
 
-dtcheck warnings: (new ones prefixed by >>)
-   arch/arm64/boot/dts/mediatek/mt8188-evb.dtb: /soc/pwrap@10024000/pmic: failed to match any schema with compatible: ['mediatek,mt6359']
-   arch/arm64/boot/dts/mediatek/mt8188-evb.dtb: /soc/pwrap@10024000/pmic/mt6359rtc: failed to match any schema with compatible: ['mediatek,mt6358-rtc']
->> arch/arm64/boot/dts/mediatek/mt8188-evb.dtb: mailbox@10320000 (mediatek,mt8188-gce): 'clock-names' is a required property
-   	from schema $id: http://devicetree.org/schemas/mailbox/mediatek,gce-mailbox.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-evb.dtb: mailbox@10330000 (mediatek,mt8188-gce): 'clock-names' is a required property
-   	from schema $id: http://devicetree.org/schemas/mailbox/mediatek,gce-mailbox.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-evb.dtb: clock-controller@14000000 (mediatek,mt8188-vppsys0): $nodename:0: 'clock-controller@14000000' does not match '^syscon@[0-9a-f]+$'
-   	from schema $id: http://devicetree.org/schemas/arm/mediatek/mediatek,mmsys.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-evb.dtb: clock-controller@14000000 (mediatek,mt8188-vppsys0): compatible: 'oneOf' conditional failed, one must be fixed:
-   	['mediatek,mt8188-vppsys0'] is too short
-   	'mediatek,mt8195-mmsys' was expected
-   	'mediatek,mt7623-mmsys' was expected
-   	'mediatek,mt8195-vdosys0' was expected
---
-   arch/arm64/boot/dts/mediatek/mt8390-genio-700-evk.dtb: /soc/pwrap@10024000/pmic: failed to match any schema with compatible: ['mediatek,mt6359']
-   arch/arm64/boot/dts/mediatek/mt8390-genio-700-evk.dtb: /soc/pwrap@10024000/pmic/mt6359rtc: failed to match any schema with compatible: ['mediatek,mt6358-rtc']
->> arch/arm64/boot/dts/mediatek/mt8390-genio-700-evk.dtb: mailbox@10320000 (mediatek,mt8188-gce): 'clock-names' is a required property
-   	from schema $id: http://devicetree.org/schemas/mailbox/mediatek,gce-mailbox.yaml#
-   arch/arm64/boot/dts/mediatek/mt8390-genio-700-evk.dtb: mailbox@10330000 (mediatek,mt8188-gce): 'clock-names' is a required property
-   	from schema $id: http://devicetree.org/schemas/mailbox/mediatek,gce-mailbox.yaml#
-   arch/arm64/boot/dts/mediatek/mt8390-genio-700-evk.dtb: clock-controller@14000000 (mediatek,mt8188-vppsys0): $nodename:0: 'clock-controller@14000000' does not match '^syscon@[0-9a-f]+$'
-   	from schema $id: http://devicetree.org/schemas/arm/mediatek/mediatek,mmsys.yaml#
-   arch/arm64/boot/dts/mediatek/mt8390-genio-700-evk.dtb: clock-controller@14000000 (mediatek,mt8188-vppsys0): compatible: 'oneOf' conditional failed, one must be fixed:
-   	['mediatek,mt8188-vppsys0'] is too short
-   	'mediatek,mt8195-mmsys' was expected
-   	'mediatek,mt7623-mmsys' was expected
-   	'mediatek,mt8195-vdosys0' was expected
+To be simple, I think just export
+imx_sc_get_pd_power in drivers/pmdomain/imx/scu-pd.c.
+And add the function declaration in include/linux/firmware/imx/sci.h.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Not sure Ulf or Shawn is good with it.
 
+Regards,
+Peng
+
+>
+>Signed-off-by: Hiago De Franco <hiago.franco@toradex.com>
+>---
+> drivers/firmware/imx/misc.c           | 47 +++++++++++++++++++++++++++
+> drivers/pmdomain/imx/scu-pd.c         | 29 ++++-------------
+> include/linux/firmware/imx/svc/misc.h |  8 +++++
+> 3 files changed, 62 insertions(+), 22 deletions(-)
+>
+>diff --git a/drivers/firmware/imx/misc.c b/drivers/firmware/imx/misc.c
+>index d073cb3ce699..61fcb0066ec9 100644
+>--- a/drivers/firmware/imx/misc.c
+>+++ b/drivers/firmware/imx/misc.c
+>@@ -37,6 +37,18 @@ struct imx_sc_msg_resp_misc_get_ctrl {
+> 	u32 val;
+> } __packed __aligned(4);
+> 
+>+struct imx_sc_msg_req_get_resource_power_mode {
+>+	struct imx_sc_rpc_msg hdr;
+>+	union {
+>+		struct {
+>+			u16 resource;
+>+		} req;
+>+		struct {
+>+			u8 mode;
+>+		} resp;
+>+	} data;
+>+} __packed __aligned(4);
+>+
+> /*
+>  * This function sets a miscellaneous control value.
+>  *
+>@@ -135,3 +147,38 @@ int imx_sc_pm_cpu_start(struct imx_sc_ipc *ipc, u32 resource,
+> 	return imx_scu_call_rpc(ipc, &msg, true);
+> }
+> EXPORT_SYMBOL(imx_sc_pm_cpu_start);
+>+
+>+/*
+>+ * This function gets the power mode from a given @resource
+>+ *
+>+ * @param[in]     ipc         IPC handle
+>+ * @param[in]     resource    resource to check the power mode
+>+ *
+>+ * @return Returns < 0 for errors or the following for success:
+>+ * IMX_SC_PM_PW_MODE_OFF  0	Power off
+>+ * IMX_SC_PM_PW_MODE_STBY 1	Power in standby
+>+ * IMX_SC_PM_PW_MODE_LP   2	Power in low-power
+>+ * IMX_SC_PM_PW_MODE_ON   3	Power on
+>+ *
+>+ * These are defined under firmware/imx/svc/pm.h
+>+ */
+>+int imx_sc_pm_get_resource_power_mode(struct imx_sc_ipc *ipc, u32 resource)
+>+{
+>+	struct imx_sc_msg_req_get_resource_power_mode msg;
+>+	struct imx_sc_rpc_msg *hdr = &msg.hdr;
+>+	int ret;
+>+
+>+	hdr->ver = IMX_SC_RPC_VERSION;
+>+	hdr->svc = IMX_SC_RPC_SVC_PM;
+>+	hdr->func = IMX_SC_PM_FUNC_GET_RESOURCE_POWER_MODE;
+>+	hdr->size = 2;
+>+
+>+	msg.data.req.resource = resource;
+>+
+>+	ret = imx_scu_call_rpc(ipc, &msg, true);
+>+	if (ret)
+>+		return ret;
+>+
+>+	return msg.data.resp.mode;
+>+}
+>+EXPORT_SYMBOL(imx_sc_pm_get_resource_power_mode);
+>diff --git a/drivers/pmdomain/imx/scu-pd.c b/drivers/pmdomain/imx/scu-pd.c
+>index 01d465d88f60..945f972e636f 100644
+>--- a/drivers/pmdomain/imx/scu-pd.c
+>+++ b/drivers/pmdomain/imx/scu-pd.c
+>@@ -54,6 +54,7 @@
+> #include <dt-bindings/firmware/imx/rsrc.h>
+> #include <linux/console.h>
+> #include <linux/firmware/imx/sci.h>
+>+#include <linux/firmware/imx/svc/misc.h>
+> #include <linux/firmware/imx/svc/rm.h>
+> #include <linux/io.h>
+> #include <linux/module.h>
+>@@ -328,27 +329,6 @@ static void imx_sc_pd_get_console_rsrc(void)
+> 	imx_con_rsrc = specs.args[0];
+> }
+> 
+>-static int imx_sc_get_pd_power(struct device *dev, u32 rsrc)
+>-{
+>-	struct imx_sc_msg_req_get_resource_power_mode msg;
+>-	struct imx_sc_rpc_msg *hdr = &msg.hdr;
+>-	int ret;
+>-
+>-	hdr->ver = IMX_SC_RPC_VERSION;
+>-	hdr->svc = IMX_SC_RPC_SVC_PM;
+>-	hdr->func = IMX_SC_PM_FUNC_GET_RESOURCE_POWER_MODE;
+>-	hdr->size = 2;
+>-
+>-	msg.data.req.resource = rsrc;
+>-
+>-	ret = imx_scu_call_rpc(pm_ipc_handle, &msg, true);
+>-	if (ret)
+>-		dev_err(dev, "failed to get power resource %d mode, ret %d\n",
+>-			rsrc, ret);
+>-
+>-	return msg.data.resp.mode;
+>-}
+>-
+> static int imx_sc_pd_power(struct generic_pm_domain *domain, bool power_on)
+> {
+> 	struct imx_sc_msg_req_set_resource_power_mode msg;
+>@@ -438,7 +418,12 @@ imx_scu_add_pm_domain(struct device *dev, int idx,
+> 	if (imx_con_rsrc == sc_pd->rsrc)
+> 		sc_pd->pd.flags = GENPD_FLAG_RPM_ALWAYS_ON;
+> 
+>-	mode = imx_sc_get_pd_power(dev, pd_ranges->rsrc + idx);
+>+	mode = imx_sc_pm_get_resource_power_mode(pm_ipc_handle,
+>+						 pd_ranges->rsrc + idx);
+>+	if (mode < 0)
+>+		dev_err(dev, "failed to get power resource %d mode, ret %d\n",
+>+			pd_ranges->rsrc + idx, mode);
+>+
+> 	if (mode == IMX_SC_PM_PW_MODE_ON)
+> 		is_off = false;
+> 	else
+>diff --git a/include/linux/firmware/imx/svc/misc.h b/include/linux/firmware/imx/svc/misc.h
+>index 760db08a67fc..376c800a88d0 100644
+>--- a/include/linux/firmware/imx/svc/misc.h
+>+++ b/include/linux/firmware/imx/svc/misc.h
+>@@ -55,6 +55,8 @@ int imx_sc_misc_get_control(struct imx_sc_ipc *ipc, u32 resource,
+> 
+> int imx_sc_pm_cpu_start(struct imx_sc_ipc *ipc, u32 resource,
+> 			bool enable, u64 phys_addr);
+>+
+>+int imx_sc_pm_get_resource_power_mode(struct imx_sc_ipc *ipc, u32 resource);
+> #else
+> static inline int imx_sc_misc_set_control(struct imx_sc_ipc *ipc,
+> 					  u32 resource, u8 ctrl, u32 val)
+>@@ -73,5 +75,11 @@ static inline int imx_sc_pm_cpu_start(struct imx_sc_ipc *ipc, u32 resource,
+> {
+> 	return -ENOTSUPP;
+> }
+>+
+>+static inline int imx_sc_pm_get_resource_power_mode(struct imx_sc_ipc *ipc,
+>+						    u32 resource)
+>+{
+>+	return -ENOTSUPP;
+>+}
+> #endif
+> #endif /* _SC_MISC_API_H */
+>-- 
+>2.39.5
+>
