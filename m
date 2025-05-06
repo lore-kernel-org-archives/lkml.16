@@ -1,140 +1,107 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4177E27876C;
-	Tue,  6 May 2025 14:45:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEF773C2F;
+	Tue,  6 May 2025 14:46:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746542748; cv=none; b=H4bDcFe1vEMDEvIDLSCh+cZZct3SlM1kyIH6DOLTYUdnpaNN5Ed30O1AM99CrivAoVPLDa0F038QKZia1EU17F0dkNuqkAddvEJWsSA7Rfy7czZDD/0ONpqJd+PWCqCzqxYzgZDnlkJmPcq9bVXi2j4QUS+ZM/v5dcgxqrZ9Izg=
+	t=1746542763; cv=none; b=fU5EuGkcNWNWw1h7tsoXNkuvKSWxjGq0Ar7B1wxWGMOkvl7gsY7KgV479idjCHuCJS5H09T5LGREOPBwXf3R95XMdZ+73X4iV+0GGuy27Ca7a9b1dVvVjHz6TG0NzfWoZHyyhIU5YvLEtLQSGuNFCZi2ahqQxazjDUIyyInv0b4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746542748; c=relaxed/simple;
-	bh=9Dten2jpmliuKUicQjSbBM7Yzb9zJDE7w61qa8+P0gs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PlP1d+VpvdbbG3qBRh48RsdzXZh85yVY3jPjUZt4TqAkORBiYeEcpJOQ6Rwj/M5JTQkuKYJ3mxisWJVsAlC18QxqaUdf8Wt3FiCLrBf3Bx+Qc3YRcIz0WUYkt5II6nm/OyvBDQ2vsVg1KXRD3EnBUpm6SxZsC7pziQOC1njcjMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tMVGHhFd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746542763; c=relaxed/simple;
+	bh=fIJbfUQctiq2wDcZ/jqu77lTV9KuBWzOO/CYwNRPkwY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=tFMqX5jSSV28XuGpxzagh+K7+6OdkCpB1rTjEgJuDZv8CzzKXSW5wdgRLUjuyD0tu2pFVKITYyy8Klau6t2JhP3S5BYTfbBd1QsRjJjrc4dyRILpDKh3pag+xnh0Z7c/2M7hUcybmm5SXVeFGY6+PiW4XM/EwwcvVsn1bYuO3y4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kp/ATNZQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tMVGHhFd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A1C2C4CEE4;
-	Tue,  6 May 2025 14:45:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kp/ATNZQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6443CC4CEE4;
+	Tue,  6 May 2025 14:46:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746542747;
-	bh=9Dten2jpmliuKUicQjSbBM7Yzb9zJDE7w61qa8+P0gs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=tMVGHhFd7T98EUetpCWQDc9vyx6B+D4dlqIDmgWnhhlA9Z0s9zBrElQTwECs189IC
-	 ogX9k3XOtwT/dHAFYDUT8hi5lTTUZLu+dQjAc/JlAW/O/8BvgXkVrnmAFQb5iDhkux
-	 OmA92CmGhTHG14eIIm249DIQ/rw1KB20qyv1YDf48In8y/d3SLvNPPJsaa4/y2mwNZ
-	 XgPg70S67mCCW6SSigURVumnqIfCfphMpRxMnhSdjIpwxi0gtKFovfrFf9TysvskO4
-	 0siKgajbU2POHcqq73dNwiQYJ+SRQtBklpaOthL1M7IOomIjj49hMQKKOSmW7p2IbQ
-	 xExZhTwEZmojQ==
-Message-ID: <1c41c15f-c1de-4329-b671-78268f99431b@kernel.org>
-Date: Tue, 6 May 2025 16:45:43 +0200
+	s=k20201202; t=1746542763;
+	bh=fIJbfUQctiq2wDcZ/jqu77lTV9KuBWzOO/CYwNRPkwY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=kp/ATNZQLl54jmyulrFpKZ+5Z3A+Cuip1zA3bhq2jLZVHK/TzXExvC4i+hMPXyiwc
+	 SRYPppBCZ92dEWyuvVQ2BsxOu19m2EaSkC5mIRqRnNUrq+pRJUeGF8M2jQyDNC9qmK
+	 ny4vLXqXB1dmse2NYvFj7YJTg7JwII6JCS50tLPm20Fq5MrkYGe1NvhUMy/rmCWTlj
+	 IeiQrUG/fAONNIA8Jv/kRT/emUCd55xB0lSoNQLDI+2OEXc9LTwPeSUpRnb0PcXj/U
+	 b8Bw5o4bGL+pZoeiBxa1lnfBmz5ssN8zfw/DQGSHhucSTsf2co6Rogh/NGfpLd7kMb
+	 3Cd1sReFtw6Lg==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Boqun Feng" <boqun.feng@gmail.com>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
+ <alex.gaynor@gmail.com>,  "Gary Guo" <gary@garyguo.net>,  =?utf-8?Q?Bj?=
+ =?utf-8?Q?=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Benno Lossin" <benno.lossin@proton.me>,
+  "Alice Ryhl" <aliceryhl@google.com>,  "Trevor Gross" <tmgross@umich.edu>,
+  "Danilo Krummrich" <dakr@kernel.org>,  "Oliver Mangold"
+ <oliver.mangold@pm.me>,  <rust-for-linux@vger.kernel.org>,
+  <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] rust: elaborate safety requirements for
+ `AlwaysReferenceCounted`
+In-Reply-To: <aBoYYzj7sGEbsQzw@Mac.home> (Boqun Feng's message of "Tue, 06 May
+	2025 07:10:43 -0700")
+References: <20250506-aref-from-raw-v2-1-5a35e47f4ec2@kernel.org>
+	<-FILHsjUNOHid0QC-VLnnlLwag2varq7O6v_N8hj9fxOE1z0mRuRY8OKoEx0Z3yKvXskBEWotxngdTMGLvay6Q==@protonmail.internalid>
+	<aBoYYzj7sGEbsQzw@Mac.home>
+User-Agent: mu4e 1.12.7; emacs 30.1
+Date: Tue, 06 May 2025 16:45:45 +0200
+Message-ID: <87r011pzl2.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6/7] rtc: s3c: drop unused module alias
-To: Johan Hovold <johan@kernel.org>
-Cc: Johan Hovold <johan+linaro@kernel.org>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Nicolas Ferre <nicolas.ferre@microchip.com>,
- Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- Paul Cercueil <paul@crapouillou.net>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Sebastian Reichel <sre@kernel.org>, linux-rtc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250423130318.31244-1-johan+linaro@kernel.org>
- <20250423130318.31244-7-johan+linaro@kernel.org>
- <193c2c8c-df64-43ab-84ef-5e981fc31469@kernel.org>
- <aBoeFUbBKsNoqyd7@hovoldconsulting.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <aBoeFUbBKsNoqyd7@hovoldconsulting.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On 06/05/2025 16:35, Johan Hovold wrote:
-> On Tue, May 06, 2025 at 04:19:08PM +0200, Krzysztof Kozlowski wrote:
->> On 23/04/2025 15:03, Johan Hovold wrote:
->>> The driver only support OF probe so drop the unused platform module
->>> alias.
->>>
->>> Fixes: ae05c95074e0 ("rtc: s3c: add s3c_rtc_data structure to use variant data instead of s3c_cpu_type")
+"Boqun Feng" <boqun.feng@gmail.com> writes:
+
+> On Tue, May 06, 2025 at 10:29:02AM +0200, Andreas Hindborg wrote:
+>> Clarify that implementers of `AlwaysReferenceCounted` must prevent the
+>> implementer from being directly initialized by users.
 >>
->> I believe this is not correct, but instead commit dropping last platform
->> user, which I think was:
+>> It is a violation of the safety requirements of `AlwaysReferenceCounted` if
+>> its implementers can be initialized on the stack by users. Although this
+>> follows from the safety requirements, it is not immediately obvious.
 >>
->> Fixes: 0d297df03890 ("ARM: s3c: simplify platform code")
-> 
-> No, as I write in the commit message, the driver only supports OF probe
-> since the commit I refer to. It fails with -EINVAL and the following
-> error logged:
-> 
-> 	failed getting s3c_rtc_data
-> 
-> for non-OF probe.
+>> The following example demonstrates the issue. Note that the safety
+>> requirements for implementing `AlwaysRefCounted` and for calling
+>> `ARef::from_raw` are satisfied.
+>>
+>>   struct Empty {}
+>>
+>>   unsafe impl AlwaysRefCounted for Empty {
+>>       fn inc_ref(&self) {}
+>>       unsafe fn dec_ref(_obj: NonNull<Self>) {}
+>>   }
+>>
+>>   fn unsound() -> ARef<Empty> {
+>>       use core::ptr::NonNull;
+>>       use kernel::types::{ARef, RefCounted};
+>>
+>>       let mut data = Empty {};
+>>       let ptr = NonNull::<Empty>::new(&mut data).unwrap();
+>>       let aref: ARef<Empty> = unsafe { ARef::from_raw(ptr) };
+>>
+>
+> Hmm.. I would say in this case, what gets violated is the safe
+> requirement of ARef::from_raw(), because callers are supposed to
+> guarantee that an refcount increment was passed to `ARef` and in this
+> case, and unsound() cannot guarantee that here because it's going to
+> clean up `data` when the it returns.
 
-Haha, nice, so commit in 2014 nicely broke that platform's RTC.
+Right, `unsound` is not following this part of the safety requirement:
 
-There is one more thing: back in 2013-2015, I don't remember exactly,
-the module loading/matching was not working with OF and you needed
-aliases for the actual bus - platform or I2C. IIRC, the bus - platform
-bus in this case - trigger uevent for module and then device match would
-be via OF.
+  and that they are properly relinquishing one increment ...
+  callers must not use the underlying object anymore
 
-Anyway, this would be only for s3c2410 DT platform, because all others
-(newer) use different compatible thus there would be no s3c2410-rtc
-uevent for them.
+Freeing the object by returning is using the object.
 
-Well, does not matter much, just sharing.
+So maybe we don't need to change anything, we can just fix up the
+example for `ARef::into_raw`.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
-Krzysztof
+Andreas Hindborg
+
+
