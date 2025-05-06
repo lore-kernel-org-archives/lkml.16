@@ -1,131 +1,185 @@
-Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169])
+Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94A93220F56;
-	Tue,  6 May 2025 06:47:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D68C76410
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 06:50:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746514047; cv=none; b=VwfLdrvbiUOJ5LXX0bi35Q5kN/fSHjNY4wRwzlw3fZbm/ec00L+2fCAQk5ahwBeCyo/rv4n2aNRjtguNPn9OXjyhQP0whsvTIIWswwa2x1LZ7IZpZrq5IyodXmzN2iWAPb2DBHIkZ2gMW0/df7LTJdUddKs7LYrysEh6Dh9B3lE=
+	t=1746514234; cv=none; b=X51Eot9bGnlTTfdOTT1iXBjNdOb+VOQRSkC+LE/sTGf3/m9EfGtmkBNbz85PJyic8eIWlv3EK9MLrZh1Qa0xs5dQiZHRkJ1xL63HMHG3BI673/e0HdshVb2lzhWVNJ2rzcOd8o1jbfK3qXgmfnFohlgXm9Sctcg1cRuUJdil1Po=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746514047; c=relaxed/simple;
-	bh=pVa0CJMQohvJFeF+ZNF9Ma62VDUja6pu7AjYGdUxCxA=;
+	s=arc-20240116; t=1746514234; c=relaxed/simple;
+	bh=ep43/qWrZUzx9hnGwWmsp/LpXI1rag15V9ecAQ+cc+I=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WlO3sfumW0ygDQ8OZ6hqjAaEgddfL0TNNf4GGI3G4hEhNSVBke5YWd8b3ihi4T8tuUhXUcPz4jfFKBEI5E94l+6hFX/4t3KJyjA5WOwQZw2Q7hF9ZL5SvpMRRMp/gaMdCW+tv33n47qeXzeLREhJEVfUVVwg1uhHKivE47uUUoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-523de5611a3so1511382e0c.1;
-        Mon, 05 May 2025 23:47:25 -0700 (PDT)
+	 To:Cc:Content-Type; b=aqKAl5GfpgaVuLHm3yU0ZpKOoYcX5PJ+uet/0CDaYeKA4YKCvnctSZ+LB1/6g6qABapR7PkANt65isZNhEqPuzJ2xtv/2/xEc1RKnXfhYfWr6mh4f330OkYOfFHKylT1r7bipWzD3XHTisAQmG/NWU3+wrt12vYOaHAip5ztStE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OLT5cdvo; arc=none smtp.client-ip=209.85.210.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OLT5cdvo"
+Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-7301c227512so3705422a34.2
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 23:50:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746514231; x=1747119031; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=P+rnsBrnSg8rRMbhF6ZzJCKOKKucd9+x+mvQiH4XndI=;
+        b=OLT5cdvoBuaRrrA8qutLjPJsFehLz7FzJr0voag8pJQsAmmn2rFdH7n3l3rpdUt/J2
+         NrW+ztktVpfhGEP4CoBMfwjJNNqtzBTH3Zi96iST1GnuRHDzi6r77iiGGlE1LuwOSNBH
+         f0rnyezAfEMHytcekQkyz5Np41fsubOhfGjx5s6PWRnGTXyWa98AmLMF8KGFxpALeEC2
+         IGGrZutfuz14mHxlkBwd6pYal6vFmwBVxWSTz+LtcMZI6sEVDnU85/55rz7GHkn/0Fyk
+         47HDzszd6orfGWWBQBXm1CpNpu0/dfdgh5id61p9Kv8R2nnVeMMdOTBBIE2owcvt3nn4
+         94SQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746514043; x=1747118843;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SqgYyr5n+leyP12ba9J/lddzsffexOyM+zyrxvJnv0A=;
-        b=MZApsrSZSNZxI984ghcYL5OSFzv9q4kJqZ+Psguu1dclhAlSkgZnqA5oXk4KgfYmo7
-         EU0+8fOe2z0/0rLxWNfYbUnuFmthapVgBMizQqQwFq0fZZfgNsPPWh51Cm9D8CeQ9CEX
-         2DiekU0zJ2xdDugiaZ1EIAygCPihCqs81ZClWGO+4kJHtRPK/DGN7PFIz7AYqgaNbiMM
-         seJh5BOfJDmV7YJQ1VamXso7fuaSzs0HfgNEgQtUyQ15vDEx52R6gihFywcDTXDhSpeT
-         +dHJgcT0ZPthNyOVTB8eg5zaLC5ldVNqmt53mlgaPsmXwIkrJr8OfCanUY+J+ZBwQzk/
-         PNOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUmiUEnMtOHm5m+6RfNb4gXWRjbFBi2u+Hy+38umDGOaviO+5pCnCuD+QecztjWxv+6XVnFurtr@vger.kernel.org, AJvYcCXTuaPcSReGT0NVaNSHZwhoLVHmv2ChFSwV6sJ0J+2Bo6bYJmrLLIloIVaXKAojIbo03THG+NW2BfJJH84=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz5DZdWMxt4Y2XmNC2s3GgfqFaTxD3A3eZ1XREbSRwJwg9HGXjX
-	C5sYaNl8tkyEEzXXZYFUqQJLQ3sf9py/xOuqxBnsE+ZSIlIWgfA4puDmM/V2
-X-Gm-Gg: ASbGncvgHxtPCXHJPVQpkzxqVoga9zTz1X9p7qBoex4Z8LvXFr8wkh0egTGBUu1LKk2
-	mclDtUyHzDj5M2xplpDueqfU5HblSYrArGUG10iFT/O8B8DjuOIhNIogZPl88Wp7p3Z1P0MaVjK
-	KV8oJBR+aOmC6Qil+oZ0H++puXUVxRyLNVEW439lSLYtxFXeFHLkgKecYOKjPwptlvxjbNBSL4v
-	507w8YZVWXv4E9gL8mU/C2hD9+dkfPkSAFhZ6YjmHiZbIRUvkVx3bm/ja4u7dr24E0omRJDVIpB
-	/noZX6ejmmY/Kq6TT6GPkhyKThDtWa/WE1s6BzkfgAx/W+xNsJJup++uKq3hliSPn0z4c7AFIOZ
-	XYVg=
-X-Google-Smtp-Source: AGHT+IFFS8ibfJPuHI8DlMmSWPuN6q/GNv7qgRMVd+nv38Jq9NRXEp8lE6LAQvuaiRDnp7n7Bb9DqQ==
-X-Received: by 2002:a05:6122:3296:b0:52a:d0f2:d4da with SMTP id 71dfb90a1353d-52b26a7321cmr1156630e0c.5.1746514042839;
-        Mon, 05 May 2025 23:47:22 -0700 (PDT)
-Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com. [209.85.222.44])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52ae41eb5d7sm1841430e0c.39.2025.05.05.23.47.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 05 May 2025 23:47:21 -0700 (PDT)
-Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-86b9d1f729eso1421505241.3;
-        Mon, 05 May 2025 23:47:21 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUU0zEgwDbO52gwSQ48gc2wd61cA8Tc2c2+bte7OrpGXf4LBR4zUh+6rRIYkRoJOnub4Xmn0U5M@vger.kernel.org, AJvYcCVIZ+uwaka04YxVKy/C9R3c0ks77fqE0Y9GsRQNxjnbthcKZUaWroDU1eGzDK86bhrhuOnPRW+g+69BCrI=@vger.kernel.org
-X-Received: by 2002:a05:6102:4bca:b0:4bb:eb4a:fa03 with SMTP id
- ada2fe7eead31-4dc6393f8f9mr1426940137.23.1746514041522; Mon, 05 May 2025
- 23:47:21 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746514231; x=1747119031;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=P+rnsBrnSg8rRMbhF6ZzJCKOKKucd9+x+mvQiH4XndI=;
+        b=f1uF1ZKIonv5c8M2pUZKcJ+fKZ1R5OEzr0Ua+gABRXWMhQEoVjdGZdA9kiK+JDBwdX
+         C2sDX9DgqO07tpP/LgUOu19NucXYdOFNhkcPo7TYHA+MMThtPCMxHp5F1PVIyiu2Df4t
+         HPdjPKrZrJAlxCFodnhvR2amTAS33EMS+Q8syF+64kGS89NvoQsfAJC2rT6pW8jZZnei
+         +53FTaq+tDIXG2PsG9np2nioZfq1fu792Mv9f48oXASA14YsOvqwA9h/7qZsVokgEndO
+         vQIkg45wJQ5A5sloMcdDCMdTTI1mgDnNjp3IyiGBxkkjsU53ADicCgWDz0/aGdVOsuLS
+         YuLw==
+X-Gm-Message-State: AOJu0YxtEnOKP0zR4ACq5DjO9JqoS2h5lzXVaM1YUOZuS/ogtZ6mOBZJ
+	MGbYpFcmt83ON/sbg6/PVinjLYkhMNZfjblG+IiJsaeAQacjwEv73EGaIYGlM4P7UlSN3CRVdST
+	MCrdBazv+U1nrKlJSs4vCO8tGxMgEttACJfwPCmkH/425bgkzOls=
+X-Gm-Gg: ASbGncuIGhZQIF5YkygU4VXedTXS7SNv6b5uACW/VWc+Ti+c4eAB5dIlgH0x5AWx6Wi
+	z6dfTkg7du1uIhgLqJP/bjTPOQeIO6uJJArgVXfXxgWTAO1dCAaUW99GNhIybVuyewE3+KYxF2e
+	SfD2Udf2OIJSAPg7pcRBc3Fog=
+X-Google-Smtp-Source: AGHT+IHNm5GVjhXN3B45lmCfKthx/G+NZUk5+CRKyT+Ba0DNEGI76r0X6+RqWLQrptXlWXRbeCBTBu5IP8WF2QNe6QA=
+X-Received: by 2002:a05:6870:a1a3:b0:2d4:e8fd:7ffb with SMTP id
+ 586e51a60fabf-2db3ccf9c7emr900510fac.1.1746514231320; Mon, 05 May 2025
+ 23:50:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250505221419.2672473-1-sashal@kernel.org> <20250505221419.2672473-636-sashal@kernel.org>
-In-Reply-To: <20250505221419.2672473-636-sashal@kernel.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 6 May 2025 08:47:09 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXzu1oP5hKAFFjqZ0T=d8jG8eqsTmeX5RKdjLB-jFCPMw@mail.gmail.com>
-X-Gm-Features: ATxdqUGNQFMlcoIrk5ACx2Al76XOGh7HE0_txHIvrqtXiY6-LRhTUMxpIsyJcTQ
-Message-ID: <CAMuHMdXzu1oP5hKAFFjqZ0T=d8jG8eqsTmeX5RKdjLB-jFCPMw@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 6.14 636/642] serial: sh-sci: Save and restore
- more registers
-To: Sasha Levin <sashal@kernel.org>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, jirislaby@kernel.org, 
-	wsa+renesas@sang-engineering.com, zack.rusin@broadcom.com, 
-	namcao@linutronix.de, prabhakar.mahadev-lad.rj@bp.renesas.com, 
-	linux-serial@vger.kernel.org
+References: <20250502100049.1746335-1-jens.wiklander@linaro.org>
+ <20250502100049.1746335-7-jens.wiklander@linaro.org> <6a33e85f-6b60-4260-993d-974dd29cf8e6@arm.com>
+In-Reply-To: <6a33e85f-6b60-4260-993d-974dd29cf8e6@arm.com>
+From: Jens Wiklander <jens.wiklander@linaro.org>
+Date: Tue, 6 May 2025 08:50:20 +0200
+X-Gm-Features: ATxdqUHZrVfop0JU0rG-vcdbXQsIPujzLICkuywbLk5p8m1md7a0mES_eJcPprM
+Message-ID: <CAHUa44EQV5O+KZbE19-d-Z6Wu=HAQuGQmZe+mXZRpmdvRDbmSA@mail.gmail.com>
+Subject: Re: [PATCH v8 06/14] tee: implement protected DMA-heap
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
+	op-tee@lists.trustedfirmware.org, linux-arm-kernel@lists.infradead.org, 
+	Olivier Masse <olivier.masse@nxp.com>, Thierry Reding <thierry.reding@gmail.com>, 
+	Yong Wu <yong.wu@mediatek.com>, Sumit Semwal <sumit.semwal@linaro.org>, 
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey <Brian.Starkey@arm.com>, 
+	John Stultz <jstultz@google.com>, "T . J . Mercier" <tjmercier@google.com>, 
+	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Sumit Garg <sumit.garg@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, azarrabi@qti.qualcomm.com, 
+	Simona Vetter <simona.vetter@ffwll.ch>, Daniel Stone <daniel@fooishbar.org>, 
+	Rouven Czerwinski <rouven.czerwinski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Sasha,
+Hi,
 
-On Tue, 6 May 2025 at 00:39, Sasha Levin <sashal@kernel.org> wrote:
-> From: Geert Uytterhoeven <geert+renesas@glider.be>
+On Fri, May 2, 2025 at 3:59=E2=80=AFPM Robin Murphy <robin.murphy@arm.com> =
+wrote:
 >
-> [ Upstream commit 81100b9a7b0515132996d62a7a676a77676cb6e3 ]
+> On 02/05/2025 10:59 am, Jens Wiklander wrote:
+> > Implement DMA heap for protected DMA-buf allocation in the TEE
+> > subsystem.
+> >
+> > Restricted memory refers to memory buffers behind a hardware enforced
+> > firewall. It is not accessible to the kernel during normal circumstance=
+s
+> > but rather only accessible to certain hardware IPs or CPUs executing in
+> > higher or differently privileged mode than the kernel itself. This
+> > interface allows to allocate and manage such protected memory buffers
+> > via interaction with a TEE implementation.
+> >
+> > The protected memory is allocated for a specific use-case, like Secure
+> > Video Playback, Trusted UI, or Secure Video Recording where certain
+> > hardware devices can access the memory.
+> >
+> > The DMA-heaps are enabled explicitly by the TEE backend driver. The TEE
+> > backend drivers needs to implement protected memory pool to manage the
+> > protected memory.
 >
-> On (H)SCIF with a Baud Rate Generator for External Clock (BRG), there
-> are multiple ways to configure the requested serial speed.  If firmware
-> uses a different method than Linux, and if any debug info is printed
-> after the Bit Rate Register (SCBRR) is restored, but before termios is
-> reconfigured (which configures the alternative method), the system may
-> lock-up during resume.
+> [...]> +static struct sg_table *
+> > +tee_heap_map_dma_buf(struct dma_buf_attachment *attachment,
+> > +                  enum dma_data_direction direction)
+> > +{
+> > +     struct tee_heap_attachment *a =3D attachment->priv;
+> > +     int ret;
+> > +
+> > +     ret =3D dma_map_sgtable(attachment->dev, &a->table, direction,
+> > +                           DMA_ATTR_SKIP_CPU_SYNC);
 >
-> Fix this by saving and restoring the contents of the BRG Frequency
-> Division (SCDL) and Clock Select (SCCKS) registers as well.
+> If the memory is inaccessible to the kernel, what does this DMA mapping
+> even mean? What happens when it tries to perform cache maintenance or
+> bounce-buffering on inaccessible memory (which presumably doesn't even
+> have a VA if it's not usable as normal kernel memory)?
+
+Doesn't DMA_ATTR_SKIP_CPU_SYNC say that the kernel shouldn't perform
+cache maintenance on the buffer since it's already in the device
+domain? The device is expected to be permitted to access the memory.
+
 >
-> Also save and restore the HSCIF's Sampling Rate Register (HSSRR), which
-> configures the sampling point, and the SCIFA/SCIFB's Serial Port Control
-> and Data Registers (SCPCR/SCPDR), which configure the optional control
-> flow signals.
+> If we're simply housekeeping the TEE's resources on its behalf, and
+> giving it back some token to tell it which resource to go do its thing
+> with, then that's really not "DMA" as far as the kernel is concerned.
+
+These buffers are supposed to be passed to devices that might be under
+only partial control of the kernel.
+
 >
-> After this, all registers that are not saved/restored are either:
->   - read-only,
->   - write-only,
->   - status registers containing flags with clear-after-set semantics,
->   - FIFO Data Count Trigger registers, which do not matter much for
->     the serial console.
+> [...]
+> > +static int protmem_pool_op_static_alloc(struct tee_protmem_pool *pool,
+> > +                                     struct sg_table *sgt, size_t size=
+,
+> > +                                     size_t *offs)
+> > +{
+> > +     struct tee_protmem_static_pool *stp =3D to_protmem_static_pool(po=
+ol);
+> > +     phys_addr_t pa;
+> > +     int ret;
+> > +
+> > +     pa =3D gen_pool_alloc(stp->gen_pool, size);
+> > +     if (!pa)
+> > +             return -ENOMEM;
+> > +
+> > +     ret =3D sg_alloc_table(sgt, 1, GFP_KERNEL);
+> > +     if (ret) {
+> > +             gen_pool_free(stp->gen_pool, pa, size);
+> > +             return ret;
+> > +     }
+> > +
+> > +     sg_set_page(sgt->sgl, phys_to_page(pa), size, 0);
+>
+> Where does "pa" come from here (i.e. what's the provenance of the
+> initial "paddr" passed to tee_protmem_static_pool_alloc())? In general
+> we can't call {phys,pfn}_to_page() an arbitrary addresses without
+> checking pfn_valid() first. A bogus address might even crash
+> __pfn_to_page() itself under CONFIG_SPARSEMEM.
 
-Please make sure to backport this to v6.1, v6.6, and v6.12, too,
-as the commit this fixes:
+That's a good point. Would it be enough to check the address with
+pfn_valid() in tee_protmem_static_pool_alloc()?
 
-> Fixes: 22a6984c5b5df8ea ("serial: sh-sci: Update the suspend/resume support")
+I expect that the memory is normally carved out of DDR and made secure
+or protected in a platform-specific way, either at boot with a static
+carveout or dynamically after boot.
 
-is already queued for v6.1, v6.6, and v6.12.
+Thanks,
+Jens
 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Tested-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> Reviewed-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> Link: https://lore.kernel.org/r/11c2eab45d48211e75d8b8202cce60400880fe55.1741114989.git.geert+renesas@glider.be
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+>
+> Thanks,
+> Robin.
+>
+> > +     *offs =3D pa - stp->pa_base;
+> > +
+> > +     return 0;
+> > +}
