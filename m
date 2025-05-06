@@ -1,827 +1,228 @@
-Received: from zg8tmja5ljk3lje4ms43mwaa.icoremail.net (zg8tmja5ljk3lje4ms43mwaa.icoremail.net [209.97.181.73])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B37E326E17D;
-	Tue,  6 May 2025 09:12:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.97.181.73
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746522783; cv=none; b=IyZEr+pM5mwz4m0ATEySe/9Zpl/gcT91hLsuxBuY62crL9uEO4HmL1wsZY1lzM7Fga19AsyLNfVsKZxxIt6LORUEiwZDZIx/Z/FVh1dnHs7UM3XhkK7CTAKEdYaSQivbIJkC5n9jOMcqsSejt9SMIp0JYYngn0pnAvwJe+/7w5w=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746522783; c=relaxed/simple;
-	bh=FuKYerAvgUwnMi+61ynrHxZRT59ys9bGsnXKWjCKop0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=hI5Ky2lGcEO8FkDAUte7+WJr6D53A0O6nIEsGcBtIbasGkceSoTdWTYFmmaWgHlj/rJc4WCVdJ75hlAhAZrwrQULxqJakdBa0ujpQ3ArKkuT7kufNUlzsVgxWPx1kM5oN3HbCnJ6eg9nhE2ZD0Q4ToPzWZkTjfeOVGFAMROGiE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=209.97.181.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
-Received: from E0006800LT.eswin.cn (unknown [10.12.96.77])
-	by app2 (Coremail) with SMTP id TQJkCgAXtpSK0hloYTJiAA--.47751S2;
-	Tue, 06 May 2025 17:12:45 +0800 (CST)
-From: luyulin <luyulin@eswincomputing.com>
-To: linus.walleij@linaro.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kees@kernel.org,
-	gustavoars@kernel.org,
-	brgl@bgdev.pl,
-	linux-hardening@vger.kernel.org
-Cc: zhengyu@eswincomputing.com,
-	ningyu@eswincomputing.com,
-	huangyifeng@eswincomputing.com,
-	linmin@eswincomputing.com,
-	fenglin@eswincomputing.com,
-	lianghujun@eswincomputing.com,
-	luyulin <luyulin@eswincomputing.com>,
-	Samuel Holland <samuel.holland@sifive.com>
-Subject: [PATCH 2/2] pinctrl: eswin: Add eic7700 pinctrl driver
-Date: Tue,  6 May 2025 17:12:41 +0800
-Message-Id: <20250506091241.941-1-luyulin@eswincomputing.com>
-X-Mailer: git-send-email 2.31.1.windows.1
-In-Reply-To: <20250506090844.1516-1-luyulin@eswincomputing.com>
-References: <20250506090844.1516-1-luyulin@eswincomputing.com>
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2061.outbound.protection.outlook.com [40.107.212.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A97D1266B65;
+	Tue,  6 May 2025 09:15:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.61
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746522925; cv=fail; b=WQJP0IZ0CTs5yEKhg9lcxACH9/zdXBbpGd7XdJPbr7juWhphcKKWMryQvM1JcTkbZOcE6ZyHfNJZwF9AoYEbDb3k7lkft3Mw75cPvk7s3J8+AcziF36V13dL8J6sQNgrqaoFfr3xKgYzl6amX9FB2JEJhSh8fabxvYz3VFLhQTw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746522925; c=relaxed/simple;
+	bh=HHbqG9yHv+M+OQeazMBcILw3NylTSRFBXzUTd6YLhOk=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=dDlWk5BC08ILWHfuvImYflCADREACJUf24MSA6nPqvey99bs3YStWm45ljM/+5+zlCcZA9qcWVInDChcXSUSOzC/ggF4sg5iMJPJIaH9ZZ/UGcjXKEuHe8vWQyaBzTP92mZLpRgyDkQW+blTd/B8DYi2whzgcv8JZ+HRBiLrN00=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=rAheDo5C; arc=fail smtp.client-ip=40.107.212.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="rAheDo5C"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=c5ZBA5rHKI8+tSE3oh7RcIjury1Z11CVBFPpUcvUBlInfscZkoJVmYb/aQYfDppXvBHHz3X2ujfeEl2bXzQGTdZzR/v+DgTadVPv+ZDpBgvhucqSyoI3QhopMKYDlLtXTlVXoC0xnxUJZA9mmwVwJp34oVdbLYodikZODkrPTiW+P1D24s5WS6aJU+0dmS1psrZKZQKD+N/eAXiImcvxFkMjF30Nb+lh6CsabbfEbLJtrRFq6qEHT5vTnyd1KX4G3U6MI6Pjp9Sp80b1RGA66URhSCRQyuAZ+tjEv7mJWJivU14Rh3XxED5se2OtUY2oq8NvhuahnX75J+v6rJSI1g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=fq20y2nrejaOAkIDUCbu/CjgSaW0xQeDQAkBCO7Zl3Q=;
+ b=vhSQmxzyl5oMNFHHapt2IT7sLSy06WgicMDQ5To3pnEB26yPGAoku+xcSyoyfkoQPOEvFDzbwlVAOcNF1OrF3iaGtkwtMNJRmirAw5Oa6C+wlxXrCIBva4C19E3Fd9/BceWA5HNoI4RX6eFey4Ivu+W5Kr1IN/B6EjpaGhuq2amKJyCW4Jiwdf4k6vRjN4JhAVdz4oIKVMDFdnPAujX/IMyEerwgYZxA9g5s+wCM06SqwgvZ1ALvzvUYSyTif6OP3Rp03KLnU7/O212z0FeBmK9CWdj49MdTX2GI52BLPg/gIpePRr5pycD3rMqM33otLZmhjjOeX7/36CHiP+PUPA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fq20y2nrejaOAkIDUCbu/CjgSaW0xQeDQAkBCO7Zl3Q=;
+ b=rAheDo5CIiNPqx3YHk+8pmS3GjwC9qK05ZpuR5m7s8MenzKdWweU3L3c6q+EtnqQDNINq4f54NW1OGfQug9uqmaEP/YwZAQ4gmomTifSTJbGocj+zdQHbSoAK0B1X3/UWydGWFoFNeHPbP0xMJjB7I0L4nKjkyQXQ0CtECx6bag=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS7PR12MB6048.namprd12.prod.outlook.com (2603:10b6:8:9f::5) by
+ SA1PR12MB7222.namprd12.prod.outlook.com (2603:10b6:806:2bf::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.23; Tue, 6 May
+ 2025 09:15:16 +0000
+Received: from DS7PR12MB6048.namprd12.prod.outlook.com
+ ([fe80::6318:26e5:357a:74a5]) by DS7PR12MB6048.namprd12.prod.outlook.com
+ ([fe80::6318:26e5:357a:74a5%5]) with mapi id 15.20.8699.019; Tue, 6 May 2025
+ 09:15:16 +0000
+Message-ID: <6ffe5249-b429-435e-a780-ee90aeb3f0da@amd.com>
+Date: Tue, 6 May 2025 14:45:00 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 11/23] iommufd/viommu: Add IOMMUFD_CMD_VQUEUE_ALLOC
+ ioctl
+To: Nicolin Chen <nicolinc@nvidia.com>, jgg@nvidia.com, kevin.tian@intel.com,
+ corbet@lwn.net, will@kernel.org
+Cc: bagasdotme@gmail.com, robin.murphy@arm.com, joro@8bytes.org,
+ thierry.reding@gmail.com, vdumpa@nvidia.com, jonathanh@nvidia.com,
+ shuah@kernel.org, jsnitsel@redhat.com, nathan@kernel.org,
+ peterz@infradead.org, yi.l.liu@intel.com, mshavit@google.com,
+ praan@google.com, zhangzekun11@huawei.com, iommu@lists.linux.dev,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, patches@lists.linux.dev, mochs@nvidia.com,
+ alok.a.tiwari@oracle.com,
+ Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+References: <cover.1746139811.git.nicolinc@nvidia.com>
+ <1ef2e242ee1d844f823581a5365823d78c67ec6a.1746139811.git.nicolinc@nvidia.com>
+Content-Language: en-US
+From: Vasant Hegde <vasant.hegde@amd.com>
+In-Reply-To: <1ef2e242ee1d844f823581a5365823d78c67ec6a.1746139811.git.nicolinc@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN2PR01CA0073.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:23::18) To DS7PR12MB6048.namprd12.prod.outlook.com
+ (2603:10b6:8:9f::5)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:TQJkCgAXtpSK0hloYTJiAA--.47751S2
-X-Coremail-Antispam: 1UD129KBjvAXoWfXrWfJF47uryxurWUJF1DJrb_yoW5Wr4UAo
-	WfCw47Xr1Ygr48ZrW3CFZ5K3Z5XrnakF1Yvw15Ar13AF18Ar1IgrZYgr4qg343Jryjyry8
-	ur1DWry3A395Xa43n29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
-	AaLaJ3UjIYCTnIWjp_UUUYl7AC8VAFwI0_Xr0_Wr1l1xkIjI8I6I8E6xAIw20EY4v20xva
-	j40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2
-	x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8
-	Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
-	xl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
-	6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
-	0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E
-	8cxan2IY04v7MxkF7I0En4kS14v26r4a6rW5MxkIecxEwVCm-wCF04k20xvY0x0EwIxGrw
-	CFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE
-	14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2
-	IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAv
-	wI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14
-	v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjTR_OzsDUUUU
-X-CM-SenderInfo: pox13z1lq6v25zlqu0xpsx3x1qjou0bp/
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR12MB6048:EE_|SA1PR12MB7222:EE_
+X-MS-Office365-Filtering-Correlation-Id: e2806eef-b75e-4726-c64a-08dd8c7e83bd
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?TEFiU1h2WVlxUTFCaVJ3aWdmRS9uZGx2OUd4YVVETEJ5NXoyWG9XOU5oRUZP?=
+ =?utf-8?B?SnBCcWt6dHlPRTdNRHhiaUoyc2VlZTFJNTF6d0xnSytqUG1XczA1WmZ5RXd2?=
+ =?utf-8?B?L0VuS3hZZ3FuWWprMzErK2xuS0dpbzZWYTRNYUFVVlhwT2JiNkNXUzhqODBy?=
+ =?utf-8?B?KzBsQ0psSHhzTTYrUkpWUTFMTWpwNksxNXJDWG9pM2FHdk1MZzhCTitmby9B?=
+ =?utf-8?B?dWJ1dC9CSDNXVGxoSWx1dlRldmI2TjBWdk4wYkFQR25DUlRyNGY1Um1OSjVM?=
+ =?utf-8?B?dzZSZVdLUkxrUStTWjMwTjlvTVZnKzJsTUw2U1ltSndPbzhxN3dqL3pURG5D?=
+ =?utf-8?B?NFhES2Vyb1FEMENadnhpYjM4cVk5emlndmVDVXRpVlNaeUVXbmlSL1ZzYlMz?=
+ =?utf-8?B?bUZSakNid1dXbkVnMzJYMFlYNDV5eHVEZFNYQ2w5WW80ajY2UGJHVjlsWlEr?=
+ =?utf-8?B?d2dXZEl0cHlnYnJhVEV5Tk1kY2xXcTBjN2ttb2o5VWYxdGJTeGI0ckN1ZnBn?=
+ =?utf-8?B?QkMxMURoaUljSFRERmlmSnB6QU1jeEdFMG1rVHB2Sm5kaEIxYXdvdk5JVVhu?=
+ =?utf-8?B?a01qdWI1Z3o5WEhNS2RaR0hybXlicHY4aGZIU1BKSEpVSGN3SGMrUVVsUzJv?=
+ =?utf-8?B?UElMditKQ09pYmJ0WTZxdEVZTlpvTVk1ZnNPVVBMSjhLLytnTUJyRDJ4UG93?=
+ =?utf-8?B?QlpKcFl4N0tzM1pBUFFsN09xbFJsaTliSkR3dWhweGpIU0lhazJ4eGJEcWx1?=
+ =?utf-8?B?RVJndnVLSFA3bmx4SVlhdWpYWXhYWi90T1FjVEl4ak85d0djdkpwL1lDdSt2?=
+ =?utf-8?B?bjEvamV0TTc0UU1xVVg2a2dHUWNITUIrRVd6bk8xTkpRRmdOYmVkWFYraUZD?=
+ =?utf-8?B?N3JsRFVsbG0wL01Mc1ZIcjVra0R5SXFYamg5ZmVUeHlyUE9YcjdHV25iOVAv?=
+ =?utf-8?B?Z2ZFVlBhWWJ2M2VrNUU5SDlBRE1DMW11RXphVDNNY2I3aUN0NVA0eGtZbUMr?=
+ =?utf-8?B?bEpkMGFkOXdqaDN3VXE2SDdWUEgzVTRGMUM2VG9HY3hxckd2OUVwM0ZGY29k?=
+ =?utf-8?B?d2R0TXE3RmdMUktSVCtZc01NUFNzRlNpYXBXWUJZMnROYVRMaUdXbjhMMXls?=
+ =?utf-8?B?RTJkdGJSbjFMM29ENVJRem1RK21aM3ZJajVGbGdkYTJ5WGtPc3c2QnNRajJ2?=
+ =?utf-8?B?cVRvbEJ2R2tyYTErYytWZFRXc3RrYUJGRHBjV0F0RzRTVjNzSldNSDFnc3Jz?=
+ =?utf-8?B?WmxTZHovQmd5SFdqOGhuZkxHdkVHd0hqb2VxL0dhaXFYVlcwQTg2MFdyYVVN?=
+ =?utf-8?B?U20raDlGS2tVS0I5ZzluZnJyTm1iK0VRc0pra3MyNmhlYktHcG9XR210cE5H?=
+ =?utf-8?B?Y05uRXZ4MlZvZjNmVjRLaWM1S1A3NnVKNG81dDFvc2dPSG1MbjhWNk9weWto?=
+ =?utf-8?B?UFNIdURXbEFtTVFEQlFXdkQ2WDZnamorcDdRSGpYblFsVmhwSzJEaVFFdFZr?=
+ =?utf-8?B?T09HV2pERDk0NXZCZVc2MUtpcml2a0dsVEVhYzNTck1pSklFUVVvUmpaVG0x?=
+ =?utf-8?B?aVpZZTdPNkZMbHhXeEV0SU02M09KUFRHTlU1VXFwOENBMFdxalQ5dHBheWlz?=
+ =?utf-8?B?NzBhQ1JEMExsb1FuUVNXdmNLNjBaWkJPT0NaTW43WjNOaFdTRmE0cDRLRzRy?=
+ =?utf-8?B?Ym1YeEdwd2o0dFNmUTkzZEtVRXFuUGYzdlc0OS84WHloUi9ZOVFYWVY4ZEM2?=
+ =?utf-8?B?NDM4M2UvS1g1bWRlTUVwNlVRb09HQjJOY1V1aWRMZXRSSnMvZHVnb1ZsdG9z?=
+ =?utf-8?B?RkE2Y21ZZ0dxcjNCVnRvQUc5Y25nd29ETjJGZUdVV09KY0docFlNSGE3WnI2?=
+ =?utf-8?B?ZXptSEJMenZ1TUZTWlFBTDkrajZDdjlYVmZWc0YxR1JEdlZqQnJvSFphTXRu?=
+ =?utf-8?Q?2D5RyKYwEJM=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB6048.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ZVFrbFJSTktHdHNua2xRUmxIL0J6bDM4SmtaSGFacUZua1RxSTBFamI5WlYr?=
+ =?utf-8?B?ZnpKcTMwdmxLY2VHVGhiN2tYZHNBdXpHamhDZjlhZlZwRGxOdEFMR2RQMFo0?=
+ =?utf-8?B?SXBsK2ZYNWIxcVd6S09DcTZ4S2xxcEtzRytFbGlYdXFocXlHNDBhUGwvR0h4?=
+ =?utf-8?B?S1h5ODZMTFVrTlM1czI3L0tSQ2QxY2N0ZVlMVURqUStmNUIzOUFINGhhT0lU?=
+ =?utf-8?B?NkV3VStiZFlheGplaGF2L2NOeXpuL3VQTDJEcEtjTHdDSklxbG9PWjA0RzhD?=
+ =?utf-8?B?VWcyY1pyb1RVZzRrbXVLakRRcXRBUEY3bjZ0ZGFqK2dhanAxTmJOMmkzRFpy?=
+ =?utf-8?B?ZEIxOHJvWW41eVBaT2RtTUcxZEJGdFkzUVFtYkhPL3RKbFJBRHg5K1NyRlQ4?=
+ =?utf-8?B?MUdGT2FVRVdCWFp1WDN4dzRrUThpNnJxNHF1SnhWRFZXdDBQZzNYbGgxenRD?=
+ =?utf-8?B?UktIYkhzL0h4djFQaU5IRVAvdkRKdGsyR1BKYWp3VnpFV2N0YkpydCtSVkRH?=
+ =?utf-8?B?Y0tzUUpZYUdHTXJ5V09yV3I5d3RCSnNxWVl6T0VGK29IVHV3WWZUYTVYbzlT?=
+ =?utf-8?B?cWI0ankwMlhUUDNqODgvQ05LRzlBbWFlNU9ER1lFdXYxZ29tSXk4L3RhbElM?=
+ =?utf-8?B?em1DbEpNeVJrREJiNExSQml6WHpMSHpqcnZZUXRaRElDU2JIL0FmcmNCNm0w?=
+ =?utf-8?B?Z2tvM012b2dMdDFTa09ObWRJQ00wSThSZXg4WHNDVTNySDBYWDd6MG9vcDFX?=
+ =?utf-8?B?RmNzVWtEYmZmclIyQXkwTFhPd092d2REV2RVRnBzWWxmd1J0VWwzQTBIRlV5?=
+ =?utf-8?B?V1ZQRjBuakJwcU1tYkRRRlFCTUlYR3dXQ0dtVGlySnpONDRCSEd3ZXFHUEdi?=
+ =?utf-8?B?WlZyS2NydStFY0thNVZ2ME5lRGxyTHlRdENyTVBOQ1g2YWpsb0pQd1dZOW9y?=
+ =?utf-8?B?dHBvNUlzeU9uTHVESlFJaFdGQTNQVGdFV3F6OTd5YTIrNjgwNjBPQU5XWW9m?=
+ =?utf-8?B?bjNlT25mb0YxQWNvT1V6S1lLcGhQc2FIQi9yZ0ZqdnBHbmJhOWVOb21BVW1X?=
+ =?utf-8?B?RlYxRS95ckdCOEh1ckxUUk5ITXhWaTEzanA1alN2dG9CTTR4THFsdjNENG1F?=
+ =?utf-8?B?ZE5nQnNHWThQZHNVTFVQQ0VIRTNFZGdHSVZlbXZjbnQwK3Y5V250M3EzWHU5?=
+ =?utf-8?B?OFVjMEw1b3dkNC9hME1JaHY3Z3g4aWxMU3haQ3IvcjRram1JME02Zk1DdTBG?=
+ =?utf-8?B?MFNSTW51VVNiRnA5eC9tcVFCalRCLy9QLzhtcVRSRzVHc1gya3NWeWxJdXNX?=
+ =?utf-8?B?cFU5VlIxV2JiREUwVVFYYkdyWVZ0blROMUVrOFdlUWtJMXVVdVp2ZmxPYkJq?=
+ =?utf-8?B?QjZWVUJ5WE8zTGpRY0IxejI3M0poWGhzVmk2ZnArUEZSTFJraTlUYm0wcVIy?=
+ =?utf-8?B?S3Blcmt3VnJQbjVrOEpBVUIvdTU4bGxadlZRY2tYako0ZDNoWUd4OCtlOEY5?=
+ =?utf-8?B?dmpucHBtQTgyQ2oyakZJRnVEaU94aC9CN3hSa2pIZzJkTmlsTkgvV3pnaUp6?=
+ =?utf-8?B?RVNqbWt5Q0JYQTRXeGpYNCsxblg1aTA1RXB4NXZJQ0JvcjVycTNqaHdwanpa?=
+ =?utf-8?B?d1dxRUZRZEU1RkRWUUxvelJBWHJ1M1ptSkhpdkw3UC95WUs0K0dYbkNuejgz?=
+ =?utf-8?B?R0hDRlFaa3h5Ny9QVXpoRytyZjdnMWtkZVFSakRVSzROKzYyVmZVTXlpY0p4?=
+ =?utf-8?B?YmRyRytxcEhxRjVrMlV1d3E2azRHT1BGaTVhaklZZ0grOXNYUDFQc25GK1Zn?=
+ =?utf-8?B?MW40YW4xelYvUThNSTFkYUs5eU4vOXU0OEZ0UW83Rlcza3BWcHFHbTdWZEw3?=
+ =?utf-8?B?ZTMyMTFHQmtjNmx6Y0NESWM1MWUvVm4xQktvcDMwUGJiaS9HSDVoS0NPcldG?=
+ =?utf-8?B?UFJia1ZyeW5HYWc1VnU2dktYYk9PRnBwT0g1blZEOEFiT0VVb3l5eWRybWxK?=
+ =?utf-8?B?aWlyaFFEY0dzYnkzUWhCZDdMYmJpNEhJbyt2a0hnVitwRlNkT0JMek5XR1pJ?=
+ =?utf-8?B?TnFlRTJneU9EcGtHNEZabTRHUnhKTzlyMmowWkRsWXIrMzR6Njluc3RwMGho?=
+ =?utf-8?Q?+whQQGCXJ1zLzrRVT8pM0XvPv?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e2806eef-b75e-4726-c64a-08dd8c7e83bd
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB6048.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 09:15:16.4393
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: /5ChaMc5aThU8gFYkFelBEsUG44KobRq5cth6IDqdcAQF/gN9U3bbL54D4RSZEXQQF2yOmyui3Q1suREHJF8pQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7222
 
-Add support for the pin controller in ESWIN's EIC7700 SoC,
-which supports pin multiplexing, pin configuration,
-and rgmii voltage control.
+Hi Nicolin,
 
-Co-developed-by: Samuel Holland <samuel.holland@sifive.com>
-Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
-Signed-off-by: luyulin <luyulin@eswincomputing.com>
----
- drivers/pinctrl/Kconfig           |  11 +
- drivers/pinctrl/Makefile          |   1 +
- drivers/pinctrl/pinctrl-eic7700.c | 701 ++++++++++++++++++++++++++++++
- 3 files changed, 713 insertions(+)
- create mode 100644 drivers/pinctrl/pinctrl-eic7700.c
 
-diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-index 464cc9aca157..5e709a3f76bc 100644
---- a/drivers/pinctrl/Kconfig
-+++ b/drivers/pinctrl/Kconfig
-@@ -208,6 +208,17 @@ config PINCTRL_DIGICOLOR
- 	select PINMUX
- 	select GENERIC_PINCONF
- 
-+config PINCTRL_EIC7700
-+	tristate "EIC7700 PINCTRL driver"
-+	depends on ARCH_ESWIN || COMPILE_TEST
-+	select PINMUX
-+	select GENERIC_PINCONF
-+	help
-+	  This driver support for the pin controller in ESWIN's EIC7700 SoC,
-+	  which supports pin multiplexing, pin configuration,and rgmii voltage
-+	  control.
-+	  Say Y here to enable the eic7700 pinctrl driver
-+
- config PINCTRL_EP93XX
- 	bool
- 	depends on ARCH_EP93XX || COMPILE_TEST
-diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
-index ac27e88677d1..82e0d4cf5045 100644
---- a/drivers/pinctrl/Makefile
-+++ b/drivers/pinctrl/Makefile
-@@ -23,6 +23,7 @@ obj-$(CONFIG_PINCTRL_CY8C95X0)	+= pinctrl-cy8c95x0.o
- obj-$(CONFIG_PINCTRL_DA850_PUPD) += pinctrl-da850-pupd.o
- obj-$(CONFIG_PINCTRL_DA9062)	+= pinctrl-da9062.o
- obj-$(CONFIG_PINCTRL_DIGICOLOR)	+= pinctrl-digicolor.o
-+obj-$(CONFIG_PINCTRL_EIC7700)	+= pinctrl-eic7700.o
- obj-$(CONFIG_PINCTRL_EQUILIBRIUM)   += pinctrl-equilibrium.o
- obj-$(CONFIG_PINCTRL_EP93XX)	+= pinctrl-ep93xx.o
- obj-$(CONFIG_PINCTRL_EYEQ5)	+= pinctrl-eyeq5.o
-diff --git a/drivers/pinctrl/pinctrl-eic7700.c b/drivers/pinctrl/pinctrl-eic7700.c
-new file mode 100644
-index 000000000000..32eec889949f
---- /dev/null
-+++ b/drivers/pinctrl/pinctrl-eic7700.c
-@@ -0,0 +1,701 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * ESWIN Pinctrl Controller Platform Device Driver
-+ *
-+ * Copyright 2024, Beijing ESWIN Computing Technology Co., Ltd.. All rights reserved.
-+ *
-+ * Authors: Samuel Holland <samuel.holland@sifive.com>
-+ *          Yulin Lu <luyulin@eswincomputing.com>
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/device.h>
-+#include <linux/io.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/seq_file.h>
-+#include <linux/regulator/consumer.h>
-+
-+#include <linux/pinctrl/pinconf.h>
-+#include <linux/pinctrl/pinconf-generic.h>
-+#include <linux/pinctrl/pinctrl.h>
-+#include <linux/pinctrl/pinmux.h>
-+
-+#include "core.h"
-+#include "pinmux.h"
-+#include "pinconf.h"
-+
-+#define EIC7700_PIN_REG(i)		(4 * (i))
-+#define EIC7700_IE			BIT(0)
-+#define EIC7700_PU			BIT(1)
-+#define EIC7700_PD			BIT(2)
-+#define EIC7700_DS			GENMASK(6, 3)
-+#define EIC7700_ST			BIT(7)
-+#define EIC7700_FUNC_SEL		GENMASK(18, 16)
-+
-+#define EIC7700_BIAS			(EIC7700_PD | EIC7700_PU)
-+#define EIC7700_PINCONF			GENMASK(7, 0)
-+
-+#define EIC7700_RGMII0_SEL_MODE		(0x310 - 0x80)
-+#define EIC7700_RGMII1_SEL_MODE		(0x314 - 0x80)
-+#define EIC7700_MS			GENMASK(1, 0)
-+#define EIC7700_MS_3V3			0x0
-+#define EIC7700_MS_1V8			0x3
-+
-+#define EIC7700_FUNCTIONS_PER_PIN	8
-+
-+struct eic7700_pin {
-+	u8 functions[EIC7700_FUNCTIONS_PER_PIN];
-+};
-+
-+struct eic7700_pinctrl {
-+	void __iomem *base;
-+	struct pinctrl_desc desc;
-+	unsigned int functions_count;
-+	struct pinfunction functions[] __counted_by(functions_count);
-+};
-+
-+enum {
-+	F_DISABLED,
-+	F_BOOT_SEL,
-+	F_CHIP_MODE,
-+	F_EMMC,
-+	F_FAN_TACH,
-+	F_GPIO,
-+	F_HDMI,
-+	F_I2C,
-+	F_I2S,
-+	F_JTAG,
-+	F_DDR_REF_CLK_SEL,
-+	F_LPDDR_REF_CLK,
-+	F_MIPI_CSI,
-+	F_OSC,
-+	F_PCIE,
-+	F_PWM,
-+	F_RGMII,
-+	F_RESET,
-+	F_SATA,
-+	F_SDIO,
-+	F_SPI,
-+	F_S_MODE,
-+	F_UART,
-+	F_USB,
-+	EIC7700_FUNCTIONS_COUNT
-+};
-+
-+static const char *const eic7700_functions[EIC7700_FUNCTIONS_COUNT] = {
-+	[F_DISABLED]		= "disabled",
-+	[F_BOOT_SEL]		= "boot_sel",
-+	[F_CHIP_MODE]		= "chip_mode",
-+	[F_EMMC]		= "emmc",
-+	[F_FAN_TACH]		= "fan_tach",
-+	[F_GPIO]		= "gpio",
-+	[F_HDMI]		= "hdmi",
-+	[F_I2C]			= "i2c",
-+	[F_I2S]			= "i2s",
-+	[F_JTAG]		= "jtag",
-+	[F_DDR_REF_CLK_SEL]	= "ddr_ref_clk_sel",
-+	[F_LPDDR_REF_CLK]	= "lpddr_ref_clk",
-+	[F_MIPI_CSI]		= "mipi_csi",
-+	[F_OSC]			= "osc",
-+	[F_PCIE]		= "pcie",
-+	[F_PWM]			= "pwm",
-+	[F_RGMII]		= "rgmii",
-+	[F_RESET]		= "reset",
-+	[F_SATA]		= "sata",
-+	[F_SDIO]		= "sdio",
-+	[F_SPI]			= "spi",
-+	[F_S_MODE]		= "s_mode",
-+	[F_UART]		= "uart",
-+	[F_USB]			= "usb",
-+};
-+
-+#define EIC7700_PIN(_number, _name, ...) \
-+	{ \
-+		.number	= _number, \
-+		.name = _name, \
-+		.drv_data = (void *)&(static const struct eic7700_pin) { { __VA_ARGS__ } } \
-+	}
-+
-+static const struct pinctrl_pin_desc eic7700_pins[] = {
-+	EIC7700_PIN(0,   "chip_mode",		[0] = F_CHIP_MODE),
-+	EIC7700_PIN(1,   "mode_set0",		[0] = F_SDIO, [2] = F_GPIO),
-+	EIC7700_PIN(2,   "mode_set1",		[0] = F_SDIO, [2] = F_GPIO),
-+	EIC7700_PIN(3,   "mode_set2",		[0] = F_SDIO, [2] = F_GPIO),
-+	EIC7700_PIN(4,   "mode_set3",		[0] = F_SDIO, [2] = F_GPIO),
-+	EIC7700_PIN(5,   "xin",			[0] = F_OSC),
-+	EIC7700_PIN(6,   "rtc_xin",		[0] = F_DISABLED),
-+	EIC7700_PIN(7,   "rst_out_n",		[0] = F_RESET),
-+	EIC7700_PIN(8,   "key_reset_n",		[0] = F_RESET),
-+	EIC7700_PIN(9,   "rst_in_n",		[0] = F_DISABLED),
-+	EIC7700_PIN(10,  "por_in_n",		[0] = F_DISABLED),
-+	EIC7700_PIN(11,  "por_out_n",		[0] = F_DISABLED),
-+	EIC7700_PIN(12,  "gpio0",		[0] = F_GPIO),
-+	EIC7700_PIN(13,  "por_sel",		[0] = F_RESET),
-+	EIC7700_PIN(14,  "jtag0_tck",		[0] = F_JTAG, [1] = F_SPI, [2] = F_GPIO),
-+	EIC7700_PIN(15,  "jtag0_tms",		[0] = F_JTAG, [1] = F_SPI, [2] = F_GPIO),
-+	EIC7700_PIN(16,  "jtag0_tdi",		[0] = F_JTAG, [1] = F_SPI, [2] = F_GPIO),
-+	EIC7700_PIN(17,  "jtag0_tdo",		[0] = F_JTAG, [1] = F_SPI, [2] = F_GPIO),
-+	EIC7700_PIN(18,  "gpio5",		[0] = F_GPIO, [1] = F_SPI),
-+	EIC7700_PIN(19,  "spi2_cs0_n",		[0] = F_SPI, [2] = F_GPIO),
-+	EIC7700_PIN(20,  "jtag1_tck",		[0] = F_JTAG, [2] = F_GPIO),
-+	EIC7700_PIN(21,  "jtag1_tms",		[0] = F_JTAG, [2] = F_GPIO),
-+	EIC7700_PIN(22,  "jtag1_tdi",		[0] = F_JTAG, [2] = F_GPIO),
-+	EIC7700_PIN(23,  "jtag1_tdo",		[0] = F_JTAG, [2] = F_GPIO),
-+	EIC7700_PIN(24,  "gpio11",		[0] = F_GPIO),
-+	EIC7700_PIN(25,  "spi2_cs1_n",		[0] = F_SPI, [2] = F_GPIO),
-+	EIC7700_PIN(26,  "pcie_clkreq_n",	[0] = F_PCIE),
-+	EIC7700_PIN(27,  "pcie_wake_n",		[0] = F_PCIE),
-+	EIC7700_PIN(28,  "pcie_perst_n",	[0] = F_PCIE),
-+	EIC7700_PIN(29,  "hdmi_scl",		[0] = F_HDMI),
-+	EIC7700_PIN(30,  "hdmi_sda",		[0] = F_HDMI),
-+	EIC7700_PIN(31,  "hdmi_cec",		[0] = F_HDMI),
-+	EIC7700_PIN(32,  "jtag2_trst",		[0] = F_JTAG, [2] = F_GPIO),
-+	EIC7700_PIN(33,  "rgmii0_clk_125",	[0] = F_RGMII),
-+	EIC7700_PIN(34,  "rgmii0_txen",		[0] = F_RGMII),
-+	EIC7700_PIN(35,  "rgmii0_txclk",	[0] = F_RGMII),
-+	EIC7700_PIN(36,  "rgmii0_txd0",		[0] = F_RGMII),
-+	EIC7700_PIN(37,  "rgmii0_txd1",		[0] = F_RGMII),
-+	EIC7700_PIN(38,  "rgmii0_txd2",		[0] = F_RGMII),
-+	EIC7700_PIN(39,  "rgmii0_txd3",		[0] = F_RGMII),
-+	EIC7700_PIN(40,  "i2s0_bclk",		[0] = F_I2S, [2] = F_GPIO),
-+	EIC7700_PIN(41,  "i2s0_wclk",		[0] = F_I2S, [2] = F_GPIO),
-+	EIC7700_PIN(42,  "i2s0_sdi",		[0] = F_I2S, [2] = F_GPIO),
-+	EIC7700_PIN(43,  "i2s0_sdo",		[0] = F_I2S, [2] = F_GPIO),
-+	EIC7700_PIN(44,  "i2s_mclk",		[0] = F_I2S, [2] = F_GPIO),
-+	EIC7700_PIN(45,  "rgmii0_rxclk",	[0] = F_RGMII),
-+	EIC7700_PIN(46,  "rgmii0_rxdv",		[0] = F_RGMII),
-+	EIC7700_PIN(47,  "rgmii0_rxd0",		[0] = F_RGMII),
-+	EIC7700_PIN(48,  "rgmii0_rxd1",		[0] = F_RGMII),
-+	EIC7700_PIN(49,  "rgmii0_rxd2",		[0] = F_RGMII),
-+	EIC7700_PIN(50,  "rgmii0_rxd3",		[0] = F_RGMII),
-+	EIC7700_PIN(51,  "i2s2_bclk",		[0] = F_I2S, [2] = F_GPIO),
-+	EIC7700_PIN(52,  "i2s2_wclk",		[0] = F_I2S, [2] = F_GPIO),
-+	EIC7700_PIN(53,  "i2s2_sdi",		[0] = F_I2S, [2] = F_GPIO),
-+	EIC7700_PIN(54,  "i2s2_sdo",		[0] = F_I2S, [2] = F_GPIO),
-+	EIC7700_PIN(55,  "gpio27",		[0] = F_GPIO, [1] = F_SATA),
-+	EIC7700_PIN(56,  "gpio28",		[0] = F_GPIO),
-+	EIC7700_PIN(57,  "gpio29",		[0] = F_RESET, [1] = F_EMMC, [2] = F_GPIO),
-+	EIC7700_PIN(58,  "rgmii0_mdc",		[0] = F_RGMII),
-+	EIC7700_PIN(59,  "rgmii0_mdio",		[0] = F_RGMII),
-+	EIC7700_PIN(60,  "rgmii0_intb",		[0] = F_RGMII),
-+	EIC7700_PIN(61,  "rgmii1_clk_125",	[0] = F_RGMII),
-+	EIC7700_PIN(62,  "rgmii1_txen",		[0] = F_RGMII),
-+	EIC7700_PIN(63,  "rgmii1_txclk",	[0] = F_RGMII),
-+	EIC7700_PIN(64,  "rgmii1_txd0",		[0] = F_RGMII),
-+	EIC7700_PIN(65,  "rgmii1_txd1",		[0] = F_RGMII),
-+	EIC7700_PIN(66,  "rgmii1_txd2",		[0] = F_RGMII),
-+	EIC7700_PIN(67,  "rgmii1_txd3",		[0] = F_RGMII),
-+	EIC7700_PIN(68,  "i2s1_bclk",		[0] = F_I2S, [2] = F_GPIO),
-+	EIC7700_PIN(69,  "i2s1_wclk",		[0] = F_I2S, [2] = F_GPIO),
-+	EIC7700_PIN(70,  "i2s1_sdi",		[0] = F_I2S, [2] = F_GPIO),
-+	EIC7700_PIN(71,  "i2s1_sdo",		[0] = F_I2S, [2] = F_GPIO),
-+	EIC7700_PIN(72,  "gpio34",		[0] = F_RESET, [1] = F_SDIO, [2] = F_GPIO),
-+	EIC7700_PIN(73,  "rgmii1_rxclk",	[0] = F_RGMII),
-+	EIC7700_PIN(74,  "rgmii1_rxdv",		[0] = F_RGMII),
-+	EIC7700_PIN(75,  "rgmii1_rxd0",		[0] = F_RGMII),
-+	EIC7700_PIN(76,  "rgmii1_rxd1",		[0] = F_RGMII),
-+	EIC7700_PIN(77,  "rgmii1_rxd2",		[0] = F_RGMII),
-+	EIC7700_PIN(78,  "rgmii1_rxd3",		[0] = F_RGMII),
-+	EIC7700_PIN(79,  "spi1_cs0_n",		[0] = F_SPI, [2] = F_GPIO),
-+	EIC7700_PIN(80,  "spi1_clk",        [0] = F_SPI, [2] = F_GPIO),
-+	EIC7700_PIN(81,  "spi1_d0", [0] = F_SPI, [1] = F_I2C, [2] = F_GPIO, [3] = F_UART),
-+	EIC7700_PIN(82,  "spi1_d1", [0] = F_SPI, [1] = F_I2C, [2] = F_GPIO, [3] = F_UART),
-+	EIC7700_PIN(83,  "spi1_d2",		[0] = F_SPI, [1] = F_SDIO, [2] = F_GPIO),
-+	EIC7700_PIN(84,  "spi1_d3",		[0] = F_SPI, [1] = F_PWM, [2] = F_GPIO),
-+	EIC7700_PIN(85,  "spi1_cs1_n",		[0] = F_SPI, [1] = F_PWM, [2] = F_GPIO),
-+	EIC7700_PIN(86,  "rgmii1_mdc",		[0] = F_RGMII),
-+	EIC7700_PIN(87,  "rgmii1_mdio",		[0] = F_RGMII),
-+	EIC7700_PIN(88,  "rgmii1_intb",		[0] = F_RGMII),
-+	EIC7700_PIN(89,  "usb0_pwren",		[0] = F_USB, [2] = F_GPIO),
-+	EIC7700_PIN(90,  "usb1_pwren",		[0] = F_USB, [2] = F_GPIO),
-+	EIC7700_PIN(91,  "i2c0_scl",		[0] = F_I2C, [2] = F_GPIO),
-+	EIC7700_PIN(92,  "i2c0_sda",		[0] = F_I2C, [2] = F_GPIO),
-+	EIC7700_PIN(93,  "i2c1_scl",		[0] = F_I2C, [2] = F_GPIO),
-+	EIC7700_PIN(94,  "i2c1_sda",		[0] = F_I2C, [2] = F_GPIO),
-+	EIC7700_PIN(95,  "i2c2_scl",		[0] = F_I2C, [2] = F_GPIO),
-+	EIC7700_PIN(96,  "i2c2_sda",		[0] = F_I2C, [2] = F_GPIO),
-+	EIC7700_PIN(97,  "i2c3_scl",		[0] = F_I2C, [2] = F_GPIO),
-+	EIC7700_PIN(98,  "i2c3_sda",		[0] = F_I2C, [2] = F_GPIO),
-+	EIC7700_PIN(99,  "i2c4_scl",		[0] = F_I2C, [2] = F_GPIO),
-+	EIC7700_PIN(100, "i2c4_sda",		[0] = F_I2C, [2] = F_GPIO),
-+	EIC7700_PIN(101, "i2c5_scl",		[0] = F_I2C, [2] = F_GPIO),
-+	EIC7700_PIN(102, "i2c5_sda",		[0] = F_I2C, [2] = F_GPIO),
-+	EIC7700_PIN(103, "uart0_tx",		[0] = F_UART, [2] = F_GPIO),
-+	EIC7700_PIN(104, "uart0_rx",		[0] = F_UART, [2] = F_GPIO),
-+	EIC7700_PIN(105, "uart1_tx",		[0] = F_UART, [2] = F_GPIO),
-+	EIC7700_PIN(106, "uart1_rx",		[0] = F_UART, [2] = F_GPIO),
-+	EIC7700_PIN(107, "uart1_cts",		[0] = F_UART, [1] = F_I2C, [2] = F_GPIO),
-+	EIC7700_PIN(108, "uart1_rts",		[0] = F_UART, [1] = F_I2C, [2] = F_GPIO),
-+	EIC7700_PIN(109, "uart2_tx",		[0] = F_UART, [1] = F_I2C, [2] = F_GPIO),
-+	EIC7700_PIN(110, "uart2_rx",		[0] = F_UART, [1] = F_I2C, [2] = F_GPIO),
-+	EIC7700_PIN(111, "jtag2_tck",		[0] = F_JTAG, [2] = F_GPIO),
-+	EIC7700_PIN(112, "jtag2_tms",		[0] = F_JTAG, [2] = F_GPIO),
-+	EIC7700_PIN(113, "jtag2_tdi",		[0] = F_JTAG, [2] = F_GPIO),
-+	EIC7700_PIN(114, "jtag2_tdo",		[0] = F_JTAG, [2] = F_GPIO),
-+	EIC7700_PIN(115, "fan_pwm",		[0] = F_PWM, [2] = F_GPIO),
-+	EIC7700_PIN(116, "fan_tach",		[0] = F_FAN_TACH, [2] = F_GPIO),
-+	EIC7700_PIN(117, "mipi_csi0_xvs",	[0] = F_MIPI_CSI, [2] = F_GPIO),
-+	EIC7700_PIN(118, "mipi_csi0_xhs",	[0] = F_MIPI_CSI, [2] = F_GPIO),
-+	EIC7700_PIN(119, "mipi_csi0_mclk",	[0] = F_MIPI_CSI, [2] = F_GPIO),
-+	EIC7700_PIN(120, "mipi_csi1_xvs",	[0] = F_MIPI_CSI, [2] = F_GPIO),
-+	EIC7700_PIN(121, "mipi_csi1_xhs",	[0] = F_MIPI_CSI, [2] = F_GPIO),
-+	EIC7700_PIN(122, "mipi_csi1_mclk",	[0] = F_MIPI_CSI, [2] = F_GPIO),
-+	EIC7700_PIN(123, "mipi_csi2_xvs",	[0] = F_MIPI_CSI, [2] = F_GPIO),
-+	EIC7700_PIN(124, "mipi_csi2_xhs",	[0] = F_MIPI_CSI, [2] = F_GPIO),
-+	EIC7700_PIN(125, "mipi_csi2_mclk",	[0] = F_MIPI_CSI, [2] = F_GPIO),
-+	EIC7700_PIN(126, "mipi_csi3_xvs",	[0] = F_MIPI_CSI, [2] = F_GPIO),
-+	EIC7700_PIN(127, "mipi_csi3_xhs",	[0] = F_MIPI_CSI, [2] = F_GPIO),
-+	EIC7700_PIN(128, "mipi_csi3_mclk",	[0] = F_MIPI_CSI, [2] = F_GPIO),
-+	EIC7700_PIN(129, "mipi_csi4_xvs",	[0] = F_MIPI_CSI, [2] = F_GPIO),
-+	EIC7700_PIN(130, "mipi_csi4_xhs",	[0] = F_MIPI_CSI, [2] = F_GPIO),
-+	EIC7700_PIN(131, "mipi_csi4_mclk",	[0] = F_MIPI_CSI, [2] = F_GPIO),
-+	EIC7700_PIN(132, "mipi_csi5_xvs",	[0] = F_MIPI_CSI, [2] = F_GPIO),
-+	EIC7700_PIN(133, "mipi_csi5_xhs",	[0] = F_MIPI_CSI, [2] = F_GPIO),
-+	EIC7700_PIN(134, "mipi_csi5_mclk",	[0] = F_MIPI_CSI, [2] = F_GPIO),
-+	EIC7700_PIN(135, "spi3_cs_n",		[0] = F_SPI, [2] = F_GPIO),
-+	EIC7700_PIN(136, "spi3_clk",		[0] = F_SPI, [2] = F_GPIO),
-+	EIC7700_PIN(137, "spi3_di",		[0] = F_SPI, [2] = F_GPIO),
-+	EIC7700_PIN(138, "spi3_do",		[0] = F_SPI, [2] = F_GPIO),
-+	EIC7700_PIN(139, "gpio92",	[0] = F_I2C, [1] = F_MIPI_CSI, [2] = F_GPIO, [3] = F_UART),
-+	EIC7700_PIN(140, "gpio93",	[0] = F_I2C, [1] = F_MIPI_CSI, [2] = F_GPIO, [3] = F_UART),
-+	EIC7700_PIN(141, "s_mode",		[0] = F_S_MODE, [2] = F_GPIO),
-+	EIC7700_PIN(142, "gpio95",		[0] = F_DDR_REF_CLK_SEL, [2] = F_GPIO),
-+	EIC7700_PIN(143, "spi0_cs_n",		[0] = F_SPI, [2] = F_GPIO),
-+	EIC7700_PIN(144, "spi0_clk",		[0] = F_SPI, [2] = F_GPIO),
-+	EIC7700_PIN(145, "spi0_d0",		[0] = F_SPI, [2] = F_GPIO),
-+	EIC7700_PIN(146, "spi0_d1",		[0] = F_SPI, [2] = F_GPIO),
-+	EIC7700_PIN(147, "spi0_d2",		[0] = F_SPI, [2] = F_GPIO),
-+	EIC7700_PIN(148, "spi0_d3",		[0] = F_SPI, [2] = F_GPIO),
-+	EIC7700_PIN(149, "i2c10_scl",		[0] = F_I2C, [2] = F_GPIO),
-+	EIC7700_PIN(150, "i2c10_sda",		[0] = F_I2C, [2] = F_GPIO),
-+	EIC7700_PIN(151, "i2c11_scl",		[0] = F_I2C, [2] = F_GPIO),
-+	EIC7700_PIN(152, "i2c11_sda",		[0] = F_I2C, [2] = F_GPIO),
-+	EIC7700_PIN(153, "gpio106",		[0] = F_GPIO),
-+	EIC7700_PIN(154, "boot_sel0",		[0] = F_BOOT_SEL, [2] = F_GPIO),
-+	EIC7700_PIN(155, "boot_sel1",		[0] = F_BOOT_SEL, [2] = F_GPIO),
-+	EIC7700_PIN(156, "boot_sel2",		[0] = F_BOOT_SEL, [2] = F_GPIO),
-+	EIC7700_PIN(157, "boot_sel3",		[0] = F_BOOT_SEL, [2] = F_GPIO),
-+	EIC7700_PIN(158, "gpio111",		[0] = F_GPIO),
-+	EIC7700_PIN(159, "reserved0",		[0] = F_DISABLED),
-+	EIC7700_PIN(160, "reserved1",		[0] = F_DISABLED),
-+	EIC7700_PIN(161, "reserved2",		[0] = F_DISABLED),
-+	EIC7700_PIN(162, "reserved3",		[0] = F_DISABLED),
-+	EIC7700_PIN(163, "lpddr_ref_clk",		[0] = F_LPDDR_REF_CLK),
-+};
-+
-+static int eic7700_get_groups_count(struct pinctrl_dev *pctldev)
-+{
-+	struct eic7700_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
-+
-+	return pc->desc.npins;
-+}
-+
-+static const char *eic7700_get_group_name(struct pinctrl_dev *pctldev, unsigned int selector)
-+{
-+	struct eic7700_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
-+
-+	return pc->desc.pins[selector].name;
-+}
-+
-+static int eic7700_get_group_pins(struct pinctrl_dev *pctldev, unsigned int selector,
-+				  const unsigned int **pins, unsigned int *npins)
-+{
-+	struct eic7700_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
-+
-+	*pins = &pc->desc.pins[selector].number;
-+	*npins = 1;
-+
-+	return 0;
-+}
-+
-+static const struct pinctrl_ops eic7700_pinctrl_ops = {
-+	.get_groups_count	= eic7700_get_groups_count,
-+	.get_group_name		= eic7700_get_group_name,
-+	.get_group_pins		= eic7700_get_group_pins,
-+	.dt_node_to_map		= pinconf_generic_dt_node_to_map_pin,
-+	.dt_free_map		= pinconf_generic_dt_free_map,
-+};
-+
-+static int eic7700_pin_config_get(struct pinctrl_dev *pctldev, unsigned int pin,
-+				  unsigned long *config)
-+{
-+	struct eic7700_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
-+	const struct eic7700_pin *pin_data = pc->desc.pins[pin].drv_data;
-+	u32 arg, value;
-+	int param;
-+
-+	if (pin_data->functions[0] == F_OSC || pin_data->functions[0] == F_DISABLED)
-+		return -EOPNOTSUPP;
-+
-+	value = readl_relaxed(pc->base + EIC7700_PIN_REG(pin));
-+
-+	param = pinconf_to_config_param(*config);
-+	switch (param) {
-+	case PIN_CONFIG_BIAS_DISABLE:
-+		arg = (value & EIC7700_BIAS) == 0;
-+		break;
-+	case PIN_CONFIG_BIAS_PULL_DOWN:
-+		arg = (value & EIC7700_BIAS) == EIC7700_PD;
-+		break;
-+	case PIN_CONFIG_BIAS_PULL_UP:
-+		arg = (value & EIC7700_BIAS) == EIC7700_PU;
-+		break;
-+	case PIN_CONFIG_DRIVE_STRENGTH_UA:
-+		if (pin_data->functions[0] == F_RGMII ||
-+			pin_data->functions[0] == F_LPDDR_REF_CLK)
-+			arg = FIELD_GET(EIC7700_DS, value) * 3000 + 3000;
-+		else
-+			arg = FIELD_GET(EIC7700_DS, value) * 3000 + 6000;
-+		break;
-+	case PIN_CONFIG_INPUT_ENABLE:
-+		arg = value & EIC7700_IE;
-+		break;
-+	case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
-+		arg = value & EIC7700_ST;
-+		break;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+
-+	*config = pinconf_to_config_packed(param, arg);
-+	return arg ? 0 : -EINVAL;
-+}
-+
-+static int eic7700_pin_config_set(struct pinctrl_dev *pctldev, unsigned int pin,
-+				  unsigned long *configs, unsigned int num_configs)
-+{
-+	struct eic7700_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
-+	const struct eic7700_pin *pin_data = pc->desc.pins[pin].drv_data;
-+	u32 value;
-+
-+	if (pin_data->functions[0] == F_OSC || pin_data->functions[0] == F_DISABLED)
-+		return -EOPNOTSUPP;
-+
-+	value = readl_relaxed(pc->base + EIC7700_PIN_REG(pin));
-+
-+	for (unsigned int i = 0; i < num_configs; i++) {
-+		int param = pinconf_to_config_param(configs[i]);
-+		u32 arg = pinconf_to_config_argument(configs[i]);
-+
-+		switch (param) {
-+		case PIN_CONFIG_BIAS_DISABLE:
-+			value &= ~EIC7700_BIAS;
-+			break;
-+		case PIN_CONFIG_BIAS_PULL_DOWN:
-+			if (arg == 0)
-+				return -EOPNOTSUPP;
-+			value &= ~EIC7700_BIAS;
-+			value |= EIC7700_PD;
-+			break;
-+		case PIN_CONFIG_BIAS_PULL_UP:
-+			if (arg == 0)
-+				return -EOPNOTSUPP;
-+			value &= ~EIC7700_BIAS;
-+			value |= EIC7700_PU;
-+			break;
-+		case PIN_CONFIG_DRIVE_STRENGTH_UA:
-+			value &= ~EIC7700_DS;
-+			if (pin_data->functions[0] == F_RGMII ||
-+				pin_data->functions[0] == F_LPDDR_REF_CLK) {
-+				if (arg < 3000 || arg > 24000)
-+					return -EOPNOTSUPP;
-+				value |= FIELD_PREP(EIC7700_DS, (arg - 3000) / 3000);
-+			} else {
-+				if (arg < 6000 || arg > 27000)
-+					return -EOPNOTSUPP;
-+				value |= FIELD_PREP(EIC7700_DS, (arg - 6000) / 3000);
-+			}
-+			break;
-+		case PIN_CONFIG_INPUT_ENABLE:
-+			if (arg)
-+				value |= EIC7700_IE;
-+			else
-+				value &= ~EIC7700_IE;
-+			break;
-+		case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
-+			if (arg)
-+				value |= EIC7700_ST;
-+			else
-+				value &= ~EIC7700_ST;
-+			break;
-+		default:
-+			return -EOPNOTSUPP;
-+		}
-+	}
-+
-+	writel_relaxed(value, pc->base + EIC7700_PIN_REG(pin));
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_DEBUG_FS
-+static void eic7700_pin_config_dbg_show(struct pinctrl_dev *pctldev, struct seq_file *s,
-+					unsigned int pin)
-+{
-+	struct eic7700_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
-+	u32 value = readl_relaxed(pc->base + EIC7700_PIN_REG(pin)) & EIC7700_PINCONF;
-+
-+	seq_printf(s, " [0x%02x]", value);
-+}
-+#else
-+#define eic7700_pin_config_dbg_show NULL
-+#endif
-+
-+static const struct pinconf_ops eic7700_pinconf_ops = {
-+	.is_generic			= true,
-+	.pin_config_get			= eic7700_pin_config_get,
-+	.pin_config_set			= eic7700_pin_config_set,
-+	.pin_config_group_get		= eic7700_pin_config_get,
-+	.pin_config_group_set		= eic7700_pin_config_set,
-+	.pin_config_dbg_show		= eic7700_pin_config_dbg_show,
-+	.pin_config_group_dbg_show	= eic7700_pin_config_dbg_show,
-+};
-+
-+static int eic7700_get_functions_count(struct pinctrl_dev *pctldev)
-+{
-+	struct eic7700_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
-+
-+	return pc->functions_count;
-+}
-+
-+static const char *eic7700_get_function_name(struct pinctrl_dev *pctldev, unsigned int selector)
-+{
-+	struct eic7700_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
-+
-+	return pc->functions[selector].name;
-+}
-+
-+static int eic7700_get_function_groups(struct pinctrl_dev *pctldev, unsigned int selector,
-+				       const char *const **groups, unsigned int *num_groups)
-+{
-+	struct eic7700_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
-+
-+	*groups = pc->functions[selector].groups;
-+	*num_groups = pc->functions[selector].ngroups;
-+
-+	return 0;
-+}
-+
-+static int eic7700_set_mux(struct pinctrl_dev *pctldev, unsigned int func_selector,
-+			   unsigned int group_selector)
-+{
-+	struct eic7700_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
-+	const struct eic7700_pin *pin_data = pc->desc.pins[group_selector].drv_data;
-+	u32 fs, value;
-+
-+	if (pin_data->functions[0] == F_OSC || pin_data->functions[0] == F_DISABLED)
-+		return -EOPNOTSUPP;
-+
-+	for (fs = 0; fs < EIC7700_FUNCTIONS_PER_PIN; fs++)
-+		if (pin_data->functions[fs] == func_selector)
-+			break;
-+
-+	if (fs == EIC7700_FUNCTIONS_PER_PIN) {
-+		dev_err(pctldev->dev, "invalid mux %s for pin %s\n",
-+			pc->functions[func_selector].name,
-+			pc->desc.pins[group_selector].name);
-+		return -EINVAL;
-+	}
-+
-+	value = readl_relaxed(pc->base + EIC7700_PIN_REG(group_selector));
-+	value &= ~EIC7700_FUNC_SEL;
-+	value |= FIELD_PREP(EIC7700_FUNC_SEL, fs);
-+	writel_relaxed(value, pc->base + EIC7700_PIN_REG(group_selector));
-+
-+	return 0;
-+}
-+
-+static int eic7700_gpio_request_enable(struct pinctrl_dev *pctldev,
-+				       struct pinctrl_gpio_range *range, unsigned int offset)
-+{
-+	return eic7700_set_mux(pctldev, F_GPIO, offset);
-+}
-+
-+static void eic7700_gpio_disable_free(struct pinctrl_dev *pctldev,
-+				      struct pinctrl_gpio_range *range, unsigned int offset)
-+{
-+	eic7700_set_mux(pctldev, F_DISABLED, offset);
-+}
-+
-+static int eic7700_gpio_set_direction(struct pinctrl_dev *pctldev,
-+				      struct pinctrl_gpio_range *range, unsigned int offset,
-+				      bool input)
-+{
-+	struct eic7700_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
-+	u32 value;
-+
-+	value = readl_relaxed(pc->base + EIC7700_PIN_REG(offset));
-+	if (input)
-+		value |= EIC7700_IE;
-+	else
-+		value &= ~EIC7700_IE;
-+	writel_relaxed(value, pc->base + EIC7700_PIN_REG(offset));
-+
-+	return 0;
-+}
-+
-+static const struct pinmux_ops eic7700_pinmux_ops = {
-+	.get_functions_count	= eic7700_get_functions_count,
-+	.get_function_name	= eic7700_get_function_name,
-+	.get_function_groups	= eic7700_get_function_groups,
-+	.set_mux		= eic7700_set_mux,
-+	.gpio_request_enable	= eic7700_gpio_request_enable,
-+	.gpio_disable_free	= eic7700_gpio_disable_free,
-+	.gpio_set_direction	= eic7700_gpio_set_direction,
-+	.strict			= true,
-+};
-+
-+static int eic7700_pinctrl_init_function_groups(struct device *dev, struct eic7700_pinctrl *pc,
-+						const char *const *function_names)
-+{
-+	unsigned int ngroups = 0;
-+	const char **groups;
-+
-+	/* Count the number of groups for each function */
-+	for (unsigned int pin = 0; pin < pc->desc.npins; pin++) {
-+		const struct eic7700_pin *pin_data = pc->desc.pins[pin].drv_data;
-+		bool found_disabled = false;
-+
-+		for (unsigned int fs = 0; fs < EIC7700_FUNCTIONS_PER_PIN; fs++) {
-+			unsigned int selector = pin_data->functions[fs];
-+			struct pinfunction *function = &pc->functions[selector];
-+
-+			/* Only count F_DISABLED once per pin */
-+			if (selector == F_DISABLED) {
-+				if (found_disabled)
-+					continue;
-+				found_disabled = true;
-+			}
-+
-+			function->ngroups++;
-+			ngroups++;
-+		}
-+	}
-+
-+	groups = devm_kcalloc(dev, ngroups, sizeof(*groups), GFP_KERNEL);
-+	if (!groups)
-+		return -ENOMEM;
-+
-+	for (unsigned int selector = 0; selector < pc->functions_count; selector++) {
-+		struct pinfunction *function = &pc->functions[selector];
-+
-+		function->name = function_names[selector];
-+		function->groups = groups;
-+		groups += function->ngroups;
-+
-+		/* Reset per-function ngroups for use as iterator below */
-+		function->ngroups = 0;
-+	}
-+
-+	/* Fill in the group pointers for each function */
-+	for (unsigned int pin = 0; pin < pc->desc.npins; pin++) {
-+		const struct pinctrl_pin_desc *desc = &pc->desc.pins[pin];
-+		const struct eic7700_pin *pin_data = desc->drv_data;
-+		bool found_disabled = false;
-+
-+		for (unsigned int fs = 0; fs < EIC7700_FUNCTIONS_PER_PIN; fs++) {
-+			unsigned int selector = pin_data->functions[fs];
-+			struct pinfunction *function = &pc->functions[selector];
-+
-+			/* Only count F_DISABLED once per pin */
-+			if (selector == F_DISABLED) {
-+				if (found_disabled)
-+					continue;
-+				found_disabled = true;
-+			}
-+
-+			((const char **)function->groups)[function->ngroups++] = desc->name;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int eic7700_pinctrl_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct pinctrl_dev *pctldev;
-+	struct eic7700_pinctrl *pc;
-+	struct regulator *regulator;
-+	u32 voltage, rgmii0_mode, rgmii1_mode;
-+	int ret;
-+
-+	pc = devm_kzalloc(dev, struct_size(pc, functions, EIC7700_FUNCTIONS_COUNT), GFP_KERNEL);
-+	if (!pc)
-+		return -ENOMEM;
-+
-+	pc->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(pc->base))
-+		return PTR_ERR(pc->base);
-+
-+	regulator = devm_regulator_get(dev, "vrgmii");
-+	if (IS_ERR_OR_NULL(regulator)) {
-+		dev_err(dev, "failed to get vrgmii regulator!\n");
-+		return -ENODEV;
-+	}
-+
-+	voltage = regulator_get_voltage(regulator);
-+	if (voltage < 0) {
-+		dev_err(&pdev->dev, "Failed to get voltage from regulator\n");
-+		return voltage;
-+	}
-+
-+	rgmii0_mode = readl_relaxed(pc->base + EIC7700_RGMII0_SEL_MODE);
-+	rgmii1_mode = readl_relaxed(pc->base + EIC7700_RGMII1_SEL_MODE);
-+	rgmii0_mode &= ~EIC7700_MS;
-+	rgmii1_mode &= ~EIC7700_MS;
-+	if (voltage == 1800000) {
-+		rgmii0_mode |= FIELD_PREP(EIC7700_MS, EIC7700_MS_1V8);
-+		rgmii1_mode |= FIELD_PREP(EIC7700_MS, EIC7700_MS_1V8);
-+	} else if (voltage == 3300000) {
-+		rgmii0_mode |= FIELD_PREP(EIC7700_MS, EIC7700_MS_3V3);
-+		rgmii1_mode |= FIELD_PREP(EIC7700_MS, EIC7700_MS_3V3);
-+	} else {
-+		dev_err(&pdev->dev, "Invalid voltage configuration, should be either 1.8V or 3.3V\n");
-+	}
-+
-+	writel_relaxed(rgmii0_mode, pc->base + EIC7700_RGMII0_SEL_MODE);
-+	writel_relaxed(rgmii1_mode, pc->base + EIC7700_RGMII1_SEL_MODE);
-+
-+	pc->desc.name = dev_name(dev);
-+	pc->desc.pins = eic7700_pins;
-+	pc->desc.npins = ARRAY_SIZE(eic7700_pins);
-+	pc->desc.pctlops = &eic7700_pinctrl_ops;
-+	pc->desc.pmxops = &eic7700_pinmux_ops;
-+	pc->desc.confops = &eic7700_pinconf_ops;
-+	pc->desc.owner = THIS_MODULE;
-+
-+	pc->functions_count = EIC7700_FUNCTIONS_COUNT;
-+	ret = eic7700_pinctrl_init_function_groups(dev, pc, eic7700_functions);
-+	if (ret)
-+		return ret;
-+
-+	ret = devm_pinctrl_register_and_init(dev, &pc->desc, pc, &pctldev);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "could not register pinctrl driver\n");
-+
-+	return pinctrl_enable(pctldev);
-+}
-+
-+static const struct of_device_id eic7700_pinctrl_of_match[] = {
-+	{ .compatible = "eswin,eic7700-pinctrl" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, eic7700_pinctrl_of_match);
-+
-+static struct platform_driver eic7700_pinctrl_driver = {
-+	.probe	= eic7700_pinctrl_probe,
-+	.driver	= {
-+		.name		= "pinctrl-eic7700",
-+		.of_match_table	= eic7700_pinctrl_of_match,
-+	},
-+};
-+module_platform_driver(eic7700_pinctrl_driver);
-+
-+MODULE_DESCRIPTION("Pinctrl driver for the ESWIN EIC7700 SoC");
-+MODULE_AUTHOR("Samuel Holland <samuel.holland@sifive.com>");
-+MODULE_AUTHOR("Yulin Lu <luyulin@eswincomputing.com>");
-+MODULE_LICENSE("GPL");
--- 
-2.25.1
+On 5/2/2025 4:31 AM, Nicolin Chen wrote:
+> Introduce a new IOMMUFD_CMD_VQUEUE_ALLOC ioctl for user space to allocate
+> a vQUEUE object for a vIOMMU specific HW-accelerated virtual queue, e.g.:
+>  - NVIDIA's Virtual Command Queue
+>  - AMD vIOMMU's Command Buffer, Event Log Buffer, and PPR Log Buffer
+> 
+> This is a vIOMMU based ioctl. Simply increase the refcount of the vIOMMU.
+> 
+> Reviewed-by: Pranjal Shrivastava <praan@google.com>
+> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
+> ---
+>  drivers/iommu/iommufd/iommufd_private.h |  2 +
+>  include/uapi/linux/iommufd.h            | 44 +++++++++++
+>  drivers/iommu/iommufd/main.c            |  6 ++
+>  drivers/iommu/iommufd/viommu.c          | 99 +++++++++++++++++++++++++
+>  4 files changed, 151 insertions(+)
+> 
+
+
+.../...
+
+
+> +
+> +/**
+> + * struct iommu_vqueue_alloc - ioctl(IOMMU_VQUEUE_ALLOC)
+> + * @size: sizeof(struct iommu_vqueue_alloc)
+> + * @flags: Must be 0
+> + * @viommu_id: Virtual IOMMU ID to associate the virtual queue with
+> + * @type: One of enum iommu_vqueue_type
+> + * @index: The logical index to the virtual queue per virtual IOMMU, for a multi
+> + *         queue model
+> + * @out_vqueue_id: The ID of the new virtual queue
+> + * @addr: Base address of the queue memory in the guest physical address space
+> + * @length: Length of the queue memory in the guest physical address space
+> + *
+> + * Allocate a virtual queue object for a vIOMMU-specific HW-acceleration feature
+> + * that allows HW to access a guest queue memory described by @addr and @length.
+> + * It's suggested for VMM to back the queue memory using a single huge page with
+> + * a proper alignment for its contiguity in the host physical address space. The
+> + * call will fail, if the queue memory is not contiguous in the physical address
+> + * space. Upon success, its underlying physical pages will be pinned to prevent
+> + * VMM from unmapping them in the IOAS, until the virtual queue gets destroyed.
+> + *
+> + * A vIOMMU can allocate multiple queues, but it must use a different @index to
+> + * separate each allocation, e.g. VCMDQ0, VCMDQ1, ...
+
+This will handle multiple queues. But AMD vIOMMU needs to comunicate certain
+control bit setting which is not related to buffers like "Completion wait
+interrupt".
+
+How do we handle that? extend iommu_queue_alloc() or have different interface?
+
+-Vasant
+
+
 
