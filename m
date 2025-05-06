@@ -1,78 +1,117 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DCA71474B8
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 11:05:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B9591474B8;
+	Tue,  6 May 2025 11:05:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746529543; cv=none; b=WENkPPry9v0LPkwIPj6UrInglq8+NoxYsHhpIchiEIFw6a1xYQddbvqdZj+/JYQ1ySy6lea7XiPaYFT6c1Gw2YqWJcvlowpmABIhS1siokyObaGBb0bC22E+M8cfF+p06wTAxWeGIiOD+CDCcc05X1gbryvQpo77xkpPxffMUAg=
+	t=1746529550; cv=none; b=oxQ3qTW9ZW/t5fQsTYJ6siltag77iTv3gFnGtLIOJVvuxX7ZJs46+xoRnBj6rBskTOerSutks9/1k3xLbU4w5496UYeTI9Xvy09APgohF3sK7wMTfqFZp0H4Zst4w69+jNsgIXviBnp3Yb5jhkb1ZKGmF50uY+YtP2pRh84yowY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746529543; c=relaxed/simple;
-	bh=C6D2Qs77TfFaEEkGAb3RmEHmCZ2E02PUE4L+fd6eAak=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QNnrIcRVZel842XYztDbYLQlOSL6roMuOZJUk90UVMffiGehGi7YyBdrg34hcBA0JjHdHTg/lVOUgM+d5fz371r66AbzxKXg2Ak4AvyJYinyeOQBQAzRyBCxfDGo71RIJ+1mMw/WuaFenF231VdSVcXxuJE7GGyAh3TVH5DV9wo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B0B7A113E;
-	Tue,  6 May 2025 04:05:31 -0700 (PDT)
-Received: from ewhatever.cambridge.arm.com (ewhatever.cambridge.arm.com [10.1.197.1])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 363B33F58B;
-	Tue,  6 May 2025 04:05:40 -0700 (PDT)
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-To: Mike Leach <mike.leach@linaro.org>,
-	James Clark <james.clark@linaro.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Yeoreum Yun <yeoreum.yun@arm.com>,
-	coresight@lists.linaro.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Leo Yan <leo.yan@arm.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: Re: [PATCH] coresight: replicator: Fix panic for clearing claim tag
-Date: Tue,  6 May 2025 12:05:26 +0100
-Message-ID: <174652950905.248615.15182322345223514612.b4-ty@arm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250502111108.2726217-1-leo.yan@arm.com>
-References: <20250502111108.2726217-1-leo.yan@arm.com>
+	s=arc-20240116; t=1746529550; c=relaxed/simple;
+	bh=89cjKHvoRST42Pq7X5iFhQSf+hCiwmnbRkDTR6diccU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dkHwAjFQPy8Nahdsm9s8ASbpuUARarOzmBKZRPid4LrqHFkRyGeC17fgDoML2X85mWV5auaqbnmZe6lNFRFA5DtzelCoixAq4mRWbBOHeimRi/Ng+dktjmmgNq+66n/RcJ49wlXLnnVwPTDlH7rytU8XQAvq2sDzuuljMYrXN+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tyr4mtC+; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tyr4mtC+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5195FC4CEE4;
+	Tue,  6 May 2025 11:05:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746529549;
+	bh=89cjKHvoRST42Pq7X5iFhQSf+hCiwmnbRkDTR6diccU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Tyr4mtC+vJjGAC3aIANbZKcOkMz+8mwzCmOTVOtmPWh54uWjnNDwgpCKAamV9ygT9
+	 3yz1X8bn3EXCnZ1Xv3pUC8YKQx7bV7xKOQi6OYXT9StnYtt5YOU0yXuh6iNXQMSYLc
+	 Yy9RnOvZShD8KMCde6uQQOCkEMtzMUGZgzbAIfE8rdCrWfUJ8NivH37Hq/i3LFsYx5
+	 IHZFHAzBdHfbwejYDtvMDAcPIQ6IVKpGXuWaEEJ7BOylOnRoSAXybjsG7CbepoDeMn
+	 m8WB/P8OajsS6RLv0P8KYrfNwFepMKXPHc0NIwN7hJ8mrKEdmJvdhJW+MMlKF/Fs7E
+	 2VQYqV13mPWTA==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: Miguel Ojeda <ojeda@kernel.org>
+Cc: Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?utf-8?Q?Bj=C3=B6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Tamir Duberstein <tamird@gmail.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Rust xarray for v6.16
+User-Agent: mu4e 1.12.7; emacs 30.1
+Date: Tue, 06 May 2025 13:05:13 +0200
+Message-ID: <87jz6uq9sm.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
+Hi Miguel,
 
-On Fri, 02 May 2025 12:11:08 +0100, Leo Yan wrote:
-> On platforms with a static replicator, a kernel panic occurs during boot:
-> 
->   [    4.999406]  replicator_probe+0x1f8/0x360
->   [    5.003455]  replicator_platform_probe+0x64/0xd8
->   [    5.008115]  platform_probe+0x70/0xf0
->   [    5.011812]  really_probe+0xc4/0x2a8
->   [    5.015417]  __driver_probe_device+0x80/0x140
->   [    5.019813]  driver_probe_device+0xe4/0x170
->   [    5.024032]  __driver_attach+0x9c/0x1b0
->   [    5.027900]  bus_for_each_dev+0x7c/0xe8
->   [    5.031769]  driver_attach+0x2c/0x40
->   [    5.035373]  bus_add_driver+0xec/0x218
->   [    5.039154]  driver_register+0x68/0x138
->   [    5.043023]  __platform_driver_register+0x2c/0x40
->   [    5.047771]  coresight_init_driver+0x4c/0xe0
->   [    5.052079]  replicator_init+0x30/0x48
->   [    5.055865]  do_one_initcall+0x4c/0x280
->   [    5.059736]  kernel_init_freeable+0x1ec/0x3c8
->   [    5.064134]  kernel_init+0x28/0x1f0
->   [    5.067655]  ret_from_fork+0x10/0x20
-> 
-> [...]
+Please pull these changes to enable access to the xarray data structure
+from rust.
 
-Applied, thanks!
+The following changes since commit 9c32cda43eb78f78c73aee4aa344b777714e259b:
 
-[1/1] coresight: replicator: Fix panic for clearing claim tag
-      https://git.kernel.org/coresight/c/f42df204
+  Linux 6.15-rc3 (2025-04-20 13:43:47 -0700)
+
+are available in the Git repository at:
+
+  https://github.com/rust-for-linux/linux.git tags/rust-xarray-for-v6.16
+
+for you to fetch changes up to fa616196fbea12462107774fb6a1908c95f71cf0:
+
+  MAINTAINERS: add entry for Rust XArray API (2025-05-01 11:37:59 +0200)
+
 
 Best regards,
--- 
-Suzuki K Poulose <suzuki.poulose@arm.com>
+Andreas Hindborg
+
+----------------------------------------------------------------
+Rust xarray API for v6.16
+
+Introduce Rust support for the `xarray` data structure:
+
+ - Add a rust abstraction for the `xarray` data structure. This abstraction
+   allows rust code to leverage the `xarray` to store types that implement
+   `ForeignOwnable`. This support is a dependency for memory backing feature of
+   the rust null block driver, which is waiting to be merged.
+
+ - Set up an entry in MAINTAINERS for the xarray rust support. Patches will go
+   to the new rust xarray tree and then via the rust subsystem tree for now.
+
+`kernel` crate:
+
+ - Allow `ForeignOwnable` to carry information about the pointed-to type. This
+   helps asserting alignment requirements for the pointer passed to the foreign
+   language.
+
+----------------------------------------------------------------
+Tamir Duberstein (3):
+      rust: types: add `ForeignOwnable::PointedTo`
+      rust: xarray: Add an abstraction for XArray
+      MAINTAINERS: add entry for Rust XArray API
+
+ MAINTAINERS                     |  11 ++
+ rust/bindings/bindings_helper.h |   6 +
+ rust/helpers/helpers.c          |   1 +
+ rust/helpers/xarray.c           |  28 ++++
+ rust/kernel/alloc/kbox.rs       |  38 +++---
+ rust/kernel/lib.rs              |   1 +
+ rust/kernel/miscdevice.rs       |  10 +-
+ rust/kernel/pci.rs              |   2 +-
+ rust/kernel/platform.rs         |   2 +-
+ rust/kernel/sync/arc.rs         |  21 +--
+ rust/kernel/types.rs            |  46 ++++---
+ rust/kernel/xarray.rs           | 275 ++++++++++++++++++++++++++++++++++++++++
+ 12 files changed, 392 insertions(+), 49 deletions(-)
+ create mode 100644 rust/helpers/xarray.c
+ create mode 100644 rust/kernel/xarray.rs
+
