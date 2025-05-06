@@ -1,88 +1,76 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E35B7275117
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 10:11:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B1AA26560B;
+	Tue,  6 May 2025 10:12:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746526296; cv=none; b=WJx3fKl/zVe4Sa9ka+UIvpgvWnvROitm/CCaCwJiV1dDYcn+hhKzQqLlXcADsYQU8KFPeFLs+lYLbtDCFtWc8y7p8YZtK58KQMlh5ILv+N/GW35caSnRr5C6Y0FJtCBysdtWb6DF33ZXILF0zI+7bfkFKuqBlJErFl0/RVN6PLo=
+	t=1746526334; cv=none; b=kCiZGDKGhwPUrg934ynAt586uQXY9MbzGqi6DukB/UWMaLQZWDmj8E/Ej5Snc3Hx1J9ELy4dIqnN/04RfDwu2evMvNfQ9IwOQ7QF2xEQ+A8jmC71EBd/CkomjCoj6tmfTwyS8xZBw1aD28jvoOXzLUAn68ebRGXXJ3oPiDGKha8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746526296; c=relaxed/simple;
-	bh=/14muUSnjrguA3XDoHQcGk3OKFUssHvmhKsZnJ4M/DM=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=JwaGEK9JlQU18CR8bZjc7mdWwjNflOCmElFgMouo0gfUIAnjFoDyEc2dSwOmc/VFPBGD2qfoN87beXDv4TOcbsu9FWKkzluPy0Ww+a1ZckwR+9P4pRUem3lyG5Ib02mGsd3ky8C6szDHVp+/dLveuwjjxkstYcElP1hUUxKuHkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1uCFGh-0002Dd-2d; Tue, 06 May 2025 12:11:19 +0200
-Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1uCFGg-001NTB-1n;
-	Tue, 06 May 2025 12:11:18 +0200
-Received: from pza by lupine with local (Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1uCFGg-0005kT-1X;
-	Tue, 06 May 2025 12:11:18 +0200
-Message-ID: <bce05a662787134194d20951b8de7f6defb4f9bb.camel@pengutronix.de>
-Subject: Re: [PATCH 1/4] dt-bindings: i2c: Specify reset as optional
-From: Philipp Zabel <p.zabel@pengutronix.de>
-To: Akhil R <akhilrajeev@nvidia.com>, andi.shyti@kernel.org,
- robh@kernel.org,  krzk+dt@kernel.org, onor+dt@kernel.org,
- thierry.reding@gmail.com,  jonathanh@nvidia.com, ldewangan@nvidia.com,
- digetx@gmail.com,  linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Tue, 06 May 2025 12:11:18 +0200
-In-Reply-To: <20250506095936.10687-1-akhilrajeev@nvidia.com>
-References: <20250506095936.10687-1-akhilrajeev@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	s=arc-20240116; t=1746526334; c=relaxed/simple;
+	bh=yCdfwrBsl/xCwXkqHogoX2iASKM3lEEo2PqiI8L3efA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aU7NYGYe8WrisCSDLn8aZM7WkofiEPIf7Yix7UbDXQd24co5ttscvdJ3pvOCNyM6IyY1WPl4ZT7oxTGe259FpNHJZS9cLdU+NL7j/iK8P+mv84xjy4xTlbdqwyKyCwSYl9rFrTmniGPC5376vFo/phz17cPZ2/NjRHtHsGm/C/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2BD16113E;
+	Tue,  6 May 2025 03:12:02 -0700 (PDT)
+Received: from bogus (e133711.arm.com [10.1.196.55])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1D3AF3F5A1;
+	Tue,  6 May 2025 03:12:09 -0700 (PDT)
+Date: Tue, 6 May 2025 11:12:07 +0100
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Mike Tipton <quic_mdtipton@quicinc.com>
+Cc: Cristian Marussi <cristian.marussi@arm.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>, <arm-scmi@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Peng Fan <peng.fan@oss.nxp.com>,
+	Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH v3] cpufreq: scmi: Skip SCMI devices that aren't used by
+ the CPUs
+Message-ID: <20250506-stirring-competent-ladybug-9cadb5@sudeepholla>
+References: <20250428144728.871404-1-quic_mdtipton@quicinc.com>
+ <aBllHt7A2nP/9x3N@hu-mdtipton-lv.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aBllHt7A2nP/9x3N@hu-mdtipton-lv.qualcomm.com>
 
-On Di, 2025-05-06 at 15:29 +0530, Akhil R wrote:
-> Specify reset as optional in the description for controllers that has an
-> internal software reset available
->=20
-> Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
-> ---
->  Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.yaml | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.yam=
-l b/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.yaml
-> index b57ae6963e62..19aefc022c8b 100644
-> --- a/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.yaml
-> +++ b/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.yaml
-> @@ -97,7 +97,9 @@ properties:
-> =20
->    resets:
->      items:
-> -      - description: module reset
-> +      - description: |
-> +          Module reset. This property is optional for controllers in Teg=
-ra194 and later
-> +          chips where an internal software reset is available as an alte=
-rnative.
+On Mon, May 05, 2025 at 06:25:50PM -0700, Mike Tipton wrote:
+> On Mon, Apr 28, 2025 at 07:47:28AM -0700, Mike Tipton wrote:
+> > Currently, all SCMI devices with performance domains attempt to register
+> > a cpufreq driver, even if their performance domains aren't used to
+> > control the CPUs. The cpufreq framework only supports registering a
+> > single driver, so only the first device will succeed. And if that device
+> > isn't used for the CPUs, then cpufreq will scale the wrong domains.
+> > 
+> > To avoid this, return early from scmi_cpufreq_probe() if the probing
+> > SCMI device isn't referenced by the CPU device phandles.
+> > 
+> > This keeps the existing assumption that all CPUs are controlled by a
+> > single SCMI device.
+> > 
+> > Signed-off-by: Mike Tipton <quic_mdtipton@quicinc.com>
+> > Reviewed-by: Peng Fan <peng.fan@nxp.com>
+> > ---
+> 
+> Hi Sudeep / Viresh,
+> 
+> Any thoughts on this?
+> 
 
-If the module reset was not optional before, shouldn't the resets
-property have been marked as required? Then, instead of the comment,
-you could conditionally remove the required status for nvidia,tegra194-
-i2c.
+I have actually queued and forgot to respond. Though I realise the change
+is not dependent on any other changes now.
 
-regards
-Philipp
+Viresh, hope you are OK with me taking this change or do you prefer to take
+it via your tree ? I am fine with that as well.
+
+-- 
+Regards,
+Sudeep
