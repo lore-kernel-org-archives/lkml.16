@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7A6624A076
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 05:05:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAB0C24C076
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 05:05:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746507913; cv=none; b=Idx6OiWJ7oeBeUXEzBimb4WhkBGsfzBHYAJypjFuHSBYcFzbRGFuazffmCvDFSaar9g69V28QR19iDH9wUxwAd548NdTyD/y1VVlMSLGY1nK8G429MIYHCoIku2dmPYOKYVoWRnSAZeNyDNUubenkdoWSSq2DlSc17Q3FcoORX4=
+	t=1746507915; cv=none; b=E1v2sAzVYgEuQLxe5FIOSgqXyth/LTYuN0vEVR7e7mo/ad5WQMoQDfpeWqWEz7JIxYyvA4wFi1wtKkplEC47KY+1H2VZw5za/HuEyDQXasIIvs4N74nXRy3SM2kqVqQhTLc5fTMf3qWrp14+/xe6SOH7UchTBKQP+7LeqsvnFrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746507913; c=relaxed/simple;
-	bh=DirrYUOkJKsq4AEPujeetMH3JS4Vq8qX1aZeSD62dyM=;
+	s=arc-20240116; t=1746507915; c=relaxed/simple;
+	bh=bbW8PfIdv2AD4XBo/NzbvGb0OCETPVArPGaq4rVPAco=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Xr17VPgtkavLLIOl9YAwq9ocg4jcHNld/Jjz5W4y5dQ0LDOc/p0AFjxY7FXKeTn1tq/wtni6pVhvBZOkDdl9lgPb+MlePubk/pmikJx+fJy+MmKyeZBz63VZ0H9npCEYWQvO3sMrx69/WOA5u+RN8LCxkYy+YnuMJxTi+WU0UUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PTbJ/KCS; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DbQ6a9mz; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=igsk5kuX74o+7GHc9OwFbW40SiZ96Zr+5fB7LWG0yzBclGXoQCdIqTSguXeJ6FFsHtSd5yPds2vwhGwS/oilkL/jB5X4OO4EtLdPCiX8Y3oDdhc99bdZwNMeSupnSD2pVVtTcAj4hKVgq2C4BQ9irfOEd4WWqxOwxPi+lkLcrdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FSaS2yEU; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=7liYQRxr; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PTbJ/KCS";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DbQ6a9mz"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FSaS2yEU";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="7liYQRxr"
 From: "Ahmed S. Darwish" <darwi@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746507908;
+	s=2020; t=1746507911;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=xXAo7blaQX2bmL74gt2hb8UBPnwcJyTXJ6tEKJfM9qk=;
-	b=PTbJ/KCSo3EpAlEG1elV4MFuB0O3FoHBpE1qrxKn3IMC0vC3YE+L+5Lbh1oA5rHSh1m4yr
-	xUREvq4VPwABo7pQbHC8X7zCtgN2itqgl4FmHNgOvDyKP1WX4mzHkNnLmaZYLdYjaLgn63
-	cumiiTLm0vHktjyGxjgiPh9Cy++OHmfKxQPrIMqXGDi9BdesKIjfsVTN4JOD9BR8/pspPM
-	TOIR+nwtcqTfeJgzaQa1v1n9NJjEEcqFBntdXsiEZ1I61GK3Ohy9omJdahblSTKOiV7JmU
-	7zZKUDGWitzZq0+pKhpcRQ6iTWSsyH3ivjXZoGOfHVbW1qGc1FiX+7A9fnbGRg==
+	bh=8nuLOQqtFBzYbvrSpcZLKRVUltALfLlOONjAmyFZtnk=;
+	b=FSaS2yEUdjqoKf2R0q5pBSS4u0KGMRjA9O39d2mKuIhuEI7szckQqS1UNXEaW3+UD8tv+E
+	YDghc879OnMy+nJL2SC94wiu0oA3CN4aJ/9wPzCbL3DrNwCitERFD57gd9e2nC72n6UQ3b
+	fMijIM1z3tv1rQL93uICFcJxTc6g8ipXUQX4iZuIIGq4bYCa8Xq1qrFGnnACeBGIC5nzCP
+	CLQU1N3dQNIoA/Nd0Ai7Moc3gkxXr1eA1WxJ7t6O8IjKMjgzSTamG6KE6iv2fvxUSqk4BF
+	M3jGqGYCMYS2kXgLi5887RCShsUZryYGcvhZOI+a1of/cz9N2u/e8cl3mj5bfg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746507908;
+	s=2020e; t=1746507911;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=xXAo7blaQX2bmL74gt2hb8UBPnwcJyTXJ6tEKJfM9qk=;
-	b=DbQ6a9mzIs7U69uv/ogOqOfLX6+3sgFKsTBmoj9DF0MlkRC94FBFAjKQpslkrBRZxzW9Xd
-	narFEz2I2+tgISDQ==
+	bh=8nuLOQqtFBzYbvrSpcZLKRVUltALfLlOONjAmyFZtnk=;
+	b=7liYQRxr3g7zsHHgZ3Tw2eQhOSeJF8sj0Ci/21lhqIQiCj//aRiPS9w+ibPeTU2Twhf9vH
+	8nFbWnognEWq6XBg==
 To: Ingo Molnar <mingo@redhat.com>,
 	Borislav Petkov <bp@alien8.de>,
 	Dave Hansen <dave.hansen@linux.intel.com>
@@ -50,9 +50,9 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	x86-cpuid@lists.linux.dev,
 	LKML <linux-kernel@vger.kernel.org>,
 	"Ahmed S. Darwish" <darwi@linutronix.de>
-Subject: [PATCH v1 07/26] x86/cpuid: Introduce debugfs 'x86/scanned_cpuid/[0-ncpus]'
-Date: Tue,  6 May 2025 07:04:18 +0200
-Message-ID: <20250506050437.10264-8-darwi@linutronix.de>
+Subject: [PATCH v1 08/26] x86/cpuid: Introduce external CPUID table accessors
+Date: Tue,  6 May 2025 07:04:19 +0200
+Message-ID: <20250506050437.10264-9-darwi@linutronix.de>
 In-Reply-To: <20250506050437.10264-1-darwi@linutronix.de>
 References: <20250506050437.10264-1-darwi@linutronix.de>
 Precedence: bulk
@@ -63,187 +63,151 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Introduce the debugfs files 'x86/scanned_cpuid/[0-ncpus]' to dump the
-scanned CPUID table for each CPU.
+Introduce the scanned CPUID tables accessors below at <cpuid/table_api.h>,
+which are intended for external use:
 
-While dumping the tables, for each cached CPUID leaf/subleaf entry, run
-the corresponding CPUID instruction on the target CPU.  Compare the live
-hardware output with the cached register values.  If a cached register
-differs, mark its cached value output entry with an asterisk.
+    cpudata_cpuid(c, leaf)
+    cpudata_cpuid_nr_entries(c, leaf)
+    cpudata_cpuid_regs(c, leaf)
+    cpudata_cpuid_index(c, leaf, idx)
+    cpudata_cpuid_index_regs(c, leaf, idx)
+    cpudata_cpuid_subleaf(c, leaf, subleaf)
 
-This should help with tricky bug reports in the future, if/when the
-scanned CPUID tables get (unexpectedly) out of sync with actual hardware
-state.  It also simplifies the development and testing of adding new
-CPUID leaves and custom read functions to the CPUID scanner.
+Unlike the internal __cpuid_get() and __cpuid_info_get() macros at
+<cpuid/internal_api.h>, the above macros take a struct cpuinfo_x86 as
+first parameter and always do the necessary sanity checks beforehand.
+Both are necessary for external call sites.
 
-Note, add an extern 'cpuid_common_scan_entries[]' declaration to the
-"cpuid_scanner.h" internal header to allow the debugfs code to access the
-CPUID scan entries directly.
+Add proper kernel-doc for each macro as well.
 
 Signed-off-by: Ahmed S. Darwish <darwi@linutronix.de>
 ---
- arch/x86/kernel/cpu/Makefile        |  1 +
- arch/x86/kernel/cpu/cpuid_debugfs.c | 98 +++++++++++++++++++++++++++++
- arch/x86/kernel/cpu/cpuid_scanner.c |  6 +-
- arch/x86/kernel/cpu/cpuid_scanner.h |  3 +
- 4 files changed, 106 insertions(+), 2 deletions(-)
- create mode 100644 arch/x86/kernel/cpu/cpuid_debugfs.c
+ arch/x86/include/asm/cpuid/table_api.h | 110 +++++++++++++++++++++++++
+ 1 file changed, 110 insertions(+)
 
-diff --git a/arch/x86/kernel/cpu/Makefile b/arch/x86/kernel/cpu/Makefile
-index 994539fd0e17..eb9cd1dee58e 100644
---- a/arch/x86/kernel/cpu/Makefile
-+++ b/arch/x86/kernel/cpu/Makefile
-@@ -62,6 +62,7 @@ obj-$(CONFIG_HYPERVISOR_GUEST)		+= vmware.o hypervisor.o mshyperv.o
- obj-$(CONFIG_ACRN_GUEST)		+= acrn.o
+diff --git a/arch/x86/include/asm/cpuid/table_api.h b/arch/x86/include/asm/cpuid/table_api.h
+index d4b6d848eac2..5c4788741dfb 100644
+--- a/arch/x86/include/asm/cpuid/table_api.h
++++ b/arch/x86/include/asm/cpuid/table_api.h
+@@ -2,8 +2,118 @@
+ #ifndef _ASM_X86_CPUID_TABLE_API_H
+ #define _ASM_X86_CPUID_TABLE_API_H
  
- obj-$(CONFIG_DEBUG_FS)			+= debugfs.o
-+obj-$(CONFIG_DEBUG_FS)			+= cpuid_debugfs.o
++#include <asm/cpuid/internal_api.h>
++#include <asm/cpuid/types.h>
+ #include <asm/processor.h>
  
- obj-$(CONFIG_X86_BUS_LOCK_DETECT)	+= bus_lock.o
- 
-diff --git a/arch/x86/kernel/cpu/cpuid_debugfs.c b/arch/x86/kernel/cpu/cpuid_debugfs.c
-new file mode 100644
-index 000000000000..f6ef93b0a403
---- /dev/null
-+++ b/arch/x86/kernel/cpu/cpuid_debugfs.c
-@@ -0,0 +1,98 @@
-+// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * CPUID scanner debugfs entries: x86/scanned_cpuid/[0-ncpus]
++ * Accessors of scanned CPUID data, intended for external use:
 + *
-+ * Dump each CPU's scanned CPUID table and compare cached values against
-+ * current CPUID output.  Mark changed entries with an asterisk.
++ * Note, all the accessors below require @_leaf and @_subleaf as literals.
++ * For example:
++ *
++ *		cpudata_cpuid(c, 0x0);
++ *		cpudata_cpuid_subleaf(c, 0x7, 1);
++ *
++ * This is due to the CPP tokenization used to construct the CPUID tables
++ * at <cpuid/types.h>.
 + */
 +
-+#include <linux/debugfs.h>
-+#include <linux/init.h>
-+#include <linux/smp.h>
-+#include <linux/types.h>
++/**
++ * cpudata_cpuid_subleaf() - Get scanned CPUID data
++ * @_cpuinfo:	CPU capability table (struct cpuinfo_x86)
++ * @_leaf:	CPUID leaf, in 0xN format
++ * @_subleaf:	CPUID subleaf, in decimal format
++ *
++ * Return scanned CPUID output in a ready-to-parse <cpuid/leaves.h> type:
++ * 'struct leaf_0xN_M', where 0xN is the leaf token from @_leaf, and M is
++ * the subleaf token from @_subleaf.
++ *
++ * Return NULL if the leaf/subleaf is not present in the scanned table
++ * referenced by @_cpuinfo.  This may occur if the leaf is beyond the CPU's
++ * max supported standard/extended leaf, or if the CPUID scanner code
++ * skipped the @_leaf entry because it was considered invalid.
++ */
++#define cpudata_cpuid_subleaf(_cpuinfo, _leaf, _subleaf)		\
++	__cpudata_cpuid_subleaf(&_cpuinfo->cpuid_table, _leaf, _subleaf)
 +
-+#include <asm/cpuid.h>
-+#include <asm/cpuid/internal_api.h>
-+#include <asm/percpu.h>
-+#include <asm/processor.h>
++/**
++ * cpudata_cpuid() - Get scanned CPUID data (subleaf = 0)
++ * @_cpuinfo:	CPU capability table (struct cpuinfo_x86)
++ * @_leaf:	CPUID leaf, in 0xN format
++ *
++ * Shortcut for cpudata_cpuid_subleaf() with subleaf = 0.
++ */
++#define cpudata_cpuid(_cpuinfo, _leaf)					\
++	__cpudata_cpuid_subleaf(&_cpuinfo->cpuid_table, _leaf, 0)
 +
-+#include "cpuid_scanner.h"
++/**
++ * cpudata_cpuid_nr_entries() - Get Number of filled entries for @_leaf
++ * @_cpuinfo:	CPU capability table (struct cpuinfo_x86)
++ * @_leaf:	CPUID leaf, in 0xN format
++ *
++ * CPUID leaves that enumerate hierarchical structures (e.g. cache topology
++ * with leaf 0x4, XSAVE with 0xd, SGX with 0x12) can have multiple valid
++ * subleafs with identical output formats. The scanned CPUID table stores
++ * these in an output storage array.
++ *
++ * Return the number of entries filled by the CPUID scanner for @_leaf.
++ */
++#define cpudata_cpuid_nr_entries(_cpuinfo, _leaf)			\
++	__cpuid_info_get(&_cpuinfo->cpuid_table.leaves, _leaf, 0).nr_entries
 +
-+static void cpuid_this_cpu(void *info)
-+{
-+	struct cpuid_regs *regs = info;
++/**
++ * cpudata_cpuid_index() - Get scanned CPUID data at index
++ * @_cpuinfo:	CPU capability table (struct cpuinfo_x86)
++ * @_leaf:	CPUID leaf, in 0xN format
++ * @_idx:	Index within leaf 0xN output storage array. It must be smaller
++ *		than cpudata_cpuid_nr_entries(@_cpuinfo, @_leaf).
++ *
++ * Similar to cpudata_cpuid(), but accesses a specific indexed entry.  This is
++ * useful for CPUID leaves with identical output format for multiple subleaves.
++ * For example, accessing CPUID leaf 0x4 output can be done as::
++ *
++ *	for (int i = 0; i < cpudata_cpuid_nr_entries(c, 0x4); i++) {
++ *		const struct leaf_0x4_0 *l4 = cpudata_cpuid_index(c, 0x4, i);
++ *		if (!l4)
++ *			break;
++ *
++ *		// Access l4->cache_type, etc.
++ *	}
++ *
++ * Beside the "return NULL" situations detailed at cpudata_cpuid_subleaf(),
++ * NULL will also be returned if @_idx is out of range.
++ *
++ * See 'struct cpuid_leaves' at <asm/cpuid/types.h> for multi-entry leaves.
++ * Such leaves will have a CPUID_LEAF() @_count parameter bigger than one.
++ */
++#define cpudata_cpuid_index(_cpuinfo, _leaf, _idx)			\
++	__cpudata_cpuid_subleaf_idx(&_cpuinfo->cpuid_table, _leaf, 0, _idx)
 +
-+	__cpuid(&regs->eax, &regs->ebx, &regs->ecx, &regs->edx);
-+};
++/**
++ * cpudata_cpuid_regs() - Get raw register output for scanned CPUID leaf
++ * @_cpuinfo:	CPU capability table (struct cpuinfo_x86)
++ * @_leaf:	CPUID leaf, 0xN format
++ *
++ * Similar to cpudata_cpuid(), but returns a raw 'struct cpuid_regs *' instead
++ * of a <cpuid/leaves.h> data type.
++ */
++#define cpudata_cpuid_regs(_cpuinfo, _leaf)				\
++	(struct cpuid_regs *)(cpudata_cpuid(_cpuinfo, _leaf))
 +
-+static void
-+cpuid_show_leaf(struct seq_file *m, uintptr_t cpu_id, const struct leaf_query_info *info,
-+		const struct cpuid_regs *cached, const struct cpuid_scan_entry *entry)
-+{
-+	for (int j = 0; j < info->nr_entries; j++) {
-+		u32 subleaf = entry->subleaf + j;
-+		struct cpuid_regs regs = {
-+			.eax = entry->leaf,
-+			.ecx = subleaf,
-+		};
++/**
++ * cpudata_cpuid_index_regs() - Get raw scanned CPUID register output
++ * @_cpuinfo:	CPU capability table (struct cpuinfo_x86)
++ * @_leaf:	CPUID leaf, in 0xN format
++ * @_idx:	Index within leaf 0xN output storage entry. It must be smaller
++ *		than cpudata_cpuid_nr_entries(@_cpuinfo, @_leaf).
++ *
++ * Like cpudata_cpuid_index(), but returns a raw 'struct cpuid_regs *' instead
++ * of a <cpuid/leaves.h> data type.
++ */
++#define cpudata_cpuid_index_regs(_cpuinfo, _leaf, _idx)			\
++	(struct cpuid_regs *)cpudata_cpuid_index(_cpuinfo, _leaf, _idx)
 +
-+		smp_call_function_single(cpu_id, cpuid_this_cpu, &regs, true);
-+
-+		seq_printf(m, "Leaf 0x%08x, subleaf %u:\n", entry->leaf, subleaf);
-+
-+		seq_printf(m, "cached: EAX=0x%08x%s\tEBX=0x%08x%s\tECX=0x%08x%s\tEDX=0x%08x%s\n",
-+			   cached[j].eax, cached[j].eax == regs.eax ? "" : "*",
-+			   cached[j].ebx, cached[j].ebx == regs.ebx ? "" : "*",
-+			   cached[j].ecx, cached[j].ecx == regs.ecx ? "" : "*",
-+			   cached[j].edx, cached[j].edx == regs.edx ? "" : "*");
-+		seq_printf(m, "actual: EAX=0x%08x\tEBX=0x%08x\tECX=0x%08x\tEDX=0x%08x\n",
-+			   regs.eax, regs.ebx, regs.ecx, regs.edx);
-+	}
-+}
-+
-+static int cpuid_debug_show(struct seq_file *m, void *p)
-+{
-+	uintptr_t cpu_id = (uintptr_t)m->private;
-+	const struct cpuinfo_x86 *c = per_cpu_ptr(&cpu_info, cpu_id);
-+	const struct cpuid_leaves *leaves = &c->cpuid_table.leaves;
-+	const struct cpuid_scan_entry *entry = cpuid_common_scan_entries;
-+
-+	for (unsigned int i = 0; i < cpuid_common_scan_entries_size; i++, entry++) {
-+		const struct leaf_query_info *info = cpuid_leaves_info_p(leaves, entry->info_offs);
-+		const struct cpuid_regs *leaf = cpuid_leaves_leaf_p(leaves, entry->leaf_offs);
-+
-+		cpuid_show_leaf(m, cpu_id, info, leaf, entry);
-+	}
-+
-+	return 0;
-+}
-+
-+static int cpuid_debug_open(struct inode *inode, struct file *file)
-+{
-+	return single_open(file, cpuid_debug_show, inode->i_private);
-+}
-+
-+static const struct file_operations cpuid_ops = {
-+	.open		= cpuid_debug_open,
-+	.read		= seq_read,
-+	.llseek		= seq_lseek,
-+	.release	= single_release,
-+};
-+
-+static __init int cpuid_init_debugfs(void)
-+{
-+	struct dentry *base, *dir;
-+	uintptr_t cpu_id;
-+	char cpu_name[24];
-+
-+	base = debugfs_create_dir("scanned_cpuid", arch_debugfs_dir);
-+	dir = debugfs_create_dir("cpus", base);
-+
-+	for_each_possible_cpu(cpu_id) {
-+		scnprintf(cpu_name, sizeof(cpu_name), "%lu", cpu_id);
-+		debugfs_create_file(cpu_name, 0444, dir, (void *)cpu_id, &cpuid_ops);
-+	}
-+
-+	return 0;
-+}
-+late_initcall(cpuid_init_debugfs);
-diff --git a/arch/x86/kernel/cpu/cpuid_scanner.c b/arch/x86/kernel/cpu/cpuid_scanner.c
-index ec45c441bde5..7200dd66939f 100644
---- a/arch/x86/kernel/cpu/cpuid_scanner.c
-+++ b/arch/x86/kernel/cpu/cpuid_scanner.c
-@@ -62,10 +62,12 @@ static bool cpuid_leaf_valid(const struct cpuid_leaves *l, unsigned int leaf)
- 		cpuid_range_valid(l, leaf, CPUID_EXT_START, CPUID_EXT_END);
- }
+ void cpuid_scan_cpu(struct cpuinfo_x86 *c);
  
--static const struct cpuid_scan_entry cpuid_common_scan_entries[] = {
-+const struct cpuid_scan_entry cpuid_common_scan_entries[] = {
- 	CPUID_SCAN_ENTRIES
- };
- 
-+const int cpuid_common_scan_entries_size = ARRAY_SIZE(cpuid_common_scan_entries);
-+
- static void cpuid_scan(const struct cpuid_scan_info *info)
- {
- 	const struct cpuid_scan_entry *entry = info->entries;
-@@ -97,7 +99,7 @@ void cpuid_scan_cpu(struct cpuinfo_x86 *c)
- 	const struct cpuid_scan_info info = {
- 		.cpuid_table	= &c->cpuid_table,
- 		.entries	= cpuid_common_scan_entries,
--		.nr_entries	= ARRAY_SIZE(cpuid_common_scan_entries),
-+		.nr_entries	= cpuid_common_scan_entries_size,
- 	};
- 
- 	cpuid_scan(&info);
-diff --git a/arch/x86/kernel/cpu/cpuid_scanner.h b/arch/x86/kernel/cpu/cpuid_scanner.h
-index b3e4676ab7f7..02bb223b406a 100644
---- a/arch/x86/kernel/cpu/cpuid_scanner.h
-+++ b/arch/x86/kernel/cpu/cpuid_scanner.h
-@@ -106,4 +106,7 @@ struct cpuid_scan_info {
- 	unsigned int			nr_entries;
- };
- 
-+extern const struct cpuid_scan_entry cpuid_common_scan_entries[];
-+extern const int cpuid_common_scan_entries_size;
-+
- #endif /* _ARCH_X86_CPUID_SCANNER_H */
+ #endif /* _ASM_X86_CPUID_TABLE_API_H */
 -- 
 2.49.0
 
