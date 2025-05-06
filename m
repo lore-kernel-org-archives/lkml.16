@@ -1,124 +1,100 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A17EF2820C8
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 15:27:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EDD3283FCC
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 15:27:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746545274; cv=none; b=OX3thcorrssHzN8oWePTJB8l5a8chHPTe7/aiw5rl1cXiF7wAFNMPmgoTZQH68vgfjztTJjDK8erfy6e6mQr9H3IEsYb86KxEOAbtofcE4fvpJNGTpycoWAW0w1a/u0KHi/aFhycB0EBFrghjwW86Aq5dIRvgvV9QCNgziq8GP8=
+	t=1746545279; cv=none; b=DVKcTGLNnoYpGuQ3cvuZWgi36oe4nktPlrMU1v3p3KsjaOuik1IER5eZbQNw9AZm8OP8sTgVgKSAKfOF49K5eGvE70d9GhPyOJsNhb69dEO2cpb5toV6pKlMNhIATi2nk1c2zh7B2n8tJuVV8N4bIjPN7WhwgbbmaR3t2a6fYow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746545274; c=relaxed/simple;
-	bh=zSofyqgRK91SDPYpsjVGN6rQA+7og+FiB/kW4Y5Em2k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qWwhprCTeQmhnrHXASQbcYrWHHGA0W3KXKbDK891Dj0rKsD5VoRWHdaEzJelelFwbJZG82cTQEm+BMeZpZmdsh+k5drqy4OtDVOX7Kwru7SIzOt5/fVuZBB508ES5HLPwwBc/6fTIGvMAGs5iOp8/O8yY48K05HhwUzZK8MZnqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lV0/PzKW; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1746545279; c=relaxed/simple;
+	bh=q6yD1hgb9gL5tWjzslo1xUDCSEc3dComkIFW77xR5V4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IRxkHV/4HO4i0+AzQGO8QFJcuygRtNKEkPZ9Hw7quNK6rdTHs9KM6w8xa5t9osVAARRA9ZlFfa1KC0GbG6MRa+kIoJZ05Td9m1ayjOb4AjR/hpvaUo60jEH2oco+s2ZG+bzIS5+vJH2oUQ4Go22xTRnC72E1Flo0H887fNUiIPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=XLCJNHYA; arc=none smtp.client-ip=209.85.219.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lV0/PzKW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746545270; x=1778081270;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=zSofyqgRK91SDPYpsjVGN6rQA+7og+FiB/kW4Y5Em2k=;
-  b=lV0/PzKWDpxZQ5ew94OCY7hMF2JuRG3TJlixrSN1w+8b5LUMsfI9TWlO
-   amSE5FocYXfzoIe4Le1e1IHvviXyFSUu2gdUySUXtVmx5R/SYvqts9cjB
-   1POLl8moXU5G4/pjM+qwAAvw9DyneDTrC4JVx+pHfwQCCcnhP4lgu8xAU
-   TZIWDuYF8GFPzg7WvbvxmeMWH7SEtx2go1nbDgNWCpHm/i7SERIGqrGHu
-   KSJL4lp5R1csv8DPL3OQSGV+plS7G/2I/YxsZGSLPYKzghu3NLbZViBDu
-   sYqEVMN8G+RD7w3m89Ncuchhc/6WwkWu8X7XTH9Q9dATQ/lueVwb4TuvF
-   w==;
-X-CSE-ConnectionGUID: rTBIOFt7SlOW3EN3dmZHNQ==
-X-CSE-MsgGUID: lZW3vR4BSP64cw9KfKMaVg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="50870594"
-X-IronPort-AV: E=Sophos;i="6.15,266,1739865600"; 
-   d="scan'208";a="50870594"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 08:27:49 -0700
-X-CSE-ConnectionGUID: IInSZmFrTRCtOhxRWaUl7g==
-X-CSE-MsgGUID: ZH1ddz28SJyz7nkp/dcV4g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,266,1739865600"; 
-   d="scan'208";a="140600784"
-Received: from sramkris-mobl1.amr.corp.intel.com (HELO [10.124.221.205]) ([10.124.221.205])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 08:27:48 -0700
-Message-ID: <ff4ae42d-e56d-4e94-b8c9-bcd9b638d97a@intel.com>
-Date: Tue, 6 May 2025 08:27:44 -0700
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="XLCJNHYA"
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6ecfc7ed0c1so53249096d6.3
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 08:27:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1746545277; x=1747150077; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=UAmqzYzWZIcDvblA53R8o+pxqG6akPJefQO4BMgGGbg=;
+        b=XLCJNHYAIBkm5AJuhjUlcGjnbGsxNBqm/43bo9v+VCiU/5BvOmT7Cqfx56J/BwnURO
+         aLZczKJSo3SJy8o+sH/GaZztPV7714S9XO4s2MiI21PMn7G5HmTBQml1ptNNvAMM6Wu1
+         64EB76UkDBParXRBK8qpEELdYIhUf4sqOLALyIH41fYaZBn5Q+HfZiPw2Er34tzqqgGg
+         dqRxL6MRDiunpYwtl665Rkg/u+NddQiUa+r+uSSqIVb5hx7iUuxOPeCoQeg1IW0e0MDt
+         zSobdqffhd4iGOVhNQHXBVOKoTnDokGFbNvNXXcOG/sp7IcapwY0s9Jab1K9iu0l6HCA
+         Qyng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746545277; x=1747150077;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UAmqzYzWZIcDvblA53R8o+pxqG6akPJefQO4BMgGGbg=;
+        b=B9vx8lYqTk6aC7Ga9XOwD7MfGCqwWf5qz8JiY3L/1SEhwWQScBb1Fu0R3DPO0x/YsD
+         fdd5hR7gHR+0fMSp0XmXJbMUdLHHurHV5FtNXHD851r7rgsQuo7BrtTFMIBHtFhUdOW8
+         fmCtEpM8rsmMGBdH/K63ig+0Lr1eFqkm5RLPZS7QBUEv+tcNrh2Yi1JuVqIHgARFpfii
+         rJiE+tbsjHabCs0429RVAkalo9IRZrUEx+yqRLRc5txxE28HUgCvwbtuK3/R6OXDu29l
+         cQFatGDUuvqekLjBo85Lv5hDHolq3M3S4z5xmL7c0Vo0+gNM9XhQNtBdAah9zodxFX6m
+         45Uw==
+X-Forwarded-Encrypted: i=1; AJvYcCWmH0xWSuzUDLl+8XKBRMaCFBPSfp35ZiR/GoOVu58xCOMX0KGt8oDCJuuYlhObotv2w+5cyFLzWM1+FbQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwkY1AH2rw09e8oReic+Ts/KIHBtypq97YhNnwEb30BnTnB6BUf
+	4/hZwxnr3wTQJHVOU8drJW7bgt4yzLiqbT5D5cYRO0yEowIqUFjR+rI2lkF5gm8=
+X-Gm-Gg: ASbGnctZduGi803DFhav9j8lA7OZxBZFCxm7eH83VAavrltYpjKXzatKBxOIVYHsSu1
+	LVMI0OWttKKUXGatPNAYC20DxIX1edTQBpW/+Vm/mbI9dyO6YhuFGi3UOEXAqr18gSuRsbu06mm
+	nZ8Eyu3HcinBq09Jp49rQ98G8L8mPUNr7rfrOhJugnszQkYbtL8gIewrPTuilWXmtwCQEQ5WVs4
+	bc/d2tJ1g6NICBXG5G8yFEfWlq1OfKGJAut6PXrUSl3Pjb0zgZM9NBcT7XY79TC9MTMmNTNZ3iL
+	73bwSyH/C3KnD4AhNCrZlUQDUUI8vuN5p+tMIchxfHnsRTUrYfrj+lnRFhh1UY6zjy5YBVCDBXm
+	9zgajpc311XhPY953fbU=
+X-Google-Smtp-Source: AGHT+IGk8GO6QkuDXe8YPX7kWFBYemERDMNBd+Jcc85mtaA3x/CtnVOa2UU6sYAQeDk4KAunVgGCKQ==
+X-Received: by 2002:a05:6214:d0d:b0:6f0:e302:7c1 with SMTP id 6a1803df08f44-6f5358873e7mr64121196d6.5.1746545276896;
+        Tue, 06 May 2025 08:27:56 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-167-219-86.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.219.86])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f50f44f489sm71153706d6.90.2025.05.06.08.27.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 May 2025 08:27:56 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1uCKD5-000000008S4-3tnb;
+	Tue, 06 May 2025 12:27:55 -0300
+Date: Tue, 6 May 2025 12:27:55 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Vasant Hegde <vasant.hegde@amd.com>
+Cc: Ankit Soni <Ankit.Soni@amd.com>, iommu@lists.linux.dev,
+	suravee.suthikulpanit@amd.com, joro@8bytes.org, will@kernel.org,
+	robin.murphy@arm.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] iommu/amd: Add efr[HATS] max v1 page table level
+Message-ID: <20250506152755.GK2260621@ziepe.ca>
+References: <cover.1745389415.git.Ankit.Soni@amd.com>
+ <e11bcff900090636a547f03c77baeb35b43234f7.1745389415.git.Ankit.Soni@amd.com>
+ <252eb71c-9913-4199-8645-59d8a7513b10@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 7/9] x86/mm: Introduce Remote Action Request
-To: Rik van Riel <riel@surriel.com>, Nadav Amit <nadav.amit@gmail.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
- the arch/x86 maintainers <x86@kernel.org>, kernel-team@meta.com,
- Dave Hansen <dave.hansen@linux.intel.com>, luto@kernel.org,
- peterz@infradead.org, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- "H. Peter Anvin" <hpa@zytor.com>, Yu-cheng Yu <yu-cheng.yu@intel.com>
-References: <20250506003811.92405-1-riel@surriel.com>
- <20250506003811.92405-8-riel@surriel.com>
- <03E5F4D7-3E3F-4809-87FE-6BD0B792E90F@gmail.com>
- <09b6eb12ede47b2e2be69bdd68a8732104b26eb0.camel@surriel.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- xsFNBE6HMP0BEADIMA3XYkQfF3dwHlj58Yjsc4E5y5G67cfbt8dvaUq2fx1lR0K9h1bOI6fC
- oAiUXvGAOxPDsB/P6UEOISPpLl5IuYsSwAeZGkdQ5g6m1xq7AlDJQZddhr/1DC/nMVa/2BoY
- 2UnKuZuSBu7lgOE193+7Uks3416N2hTkyKUSNkduyoZ9F5twiBhxPJwPtn/wnch6n5RsoXsb
- ygOEDxLEsSk/7eyFycjE+btUtAWZtx+HseyaGfqkZK0Z9bT1lsaHecmB203xShwCPT49Blxz
- VOab8668QpaEOdLGhtvrVYVK7x4skyT3nGWcgDCl5/Vp3TWA4K+IofwvXzX2ON/Mj7aQwf5W
- iC+3nWC7q0uxKwwsddJ0Nu+dpA/UORQWa1NiAftEoSpk5+nUUi0WE+5DRm0H+TXKBWMGNCFn
- c6+EKg5zQaa8KqymHcOrSXNPmzJuXvDQ8uj2J8XuzCZfK4uy1+YdIr0yyEMI7mdh4KX50LO1
- pmowEqDh7dLShTOif/7UtQYrzYq9cPnjU2ZW4qd5Qz2joSGTG9eCXLz5PRe5SqHxv6ljk8mb
- ApNuY7bOXO/A7T2j5RwXIlcmssqIjBcxsRRoIbpCwWWGjkYjzYCjgsNFL6rt4OL11OUF37wL
- QcTl7fbCGv53KfKPdYD5hcbguLKi/aCccJK18ZwNjFhqr4MliQARAQABzUVEYXZpZCBDaHJp
- c3RvcGhlciBIYW5zZW4gKEludGVsIFdvcmsgQWRkcmVzcykgPGRhdmUuaGFuc2VuQGludGVs
- LmNvbT7CwXgEEwECACIFAlQ+9J0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEGg1
- lTBwyZKwLZUP/0dnbhDc229u2u6WtK1s1cSd9WsflGXGagkR6liJ4um3XCfYWDHvIdkHYC1t
- MNcVHFBwmQkawxsYvgO8kXT3SaFZe4ISfB4K4CL2qp4JO+nJdlFUbZI7cz/Td9z8nHjMcWYF
- IQuTsWOLs/LBMTs+ANumibtw6UkiGVD3dfHJAOPNApjVr+M0P/lVmTeP8w0uVcd2syiaU5jB
- aht9CYATn+ytFGWZnBEEQFnqcibIaOrmoBLu2b3fKJEd8Jp7NHDSIdrvrMjYynmc6sZKUqH2
- I1qOevaa8jUg7wlLJAWGfIqnu85kkqrVOkbNbk4TPub7VOqA6qG5GCNEIv6ZY7HLYd/vAkVY
- E8Plzq/NwLAuOWxvGrOl7OPuwVeR4hBDfcrNb990MFPpjGgACzAZyjdmYoMu8j3/MAEW4P0z
- F5+EYJAOZ+z212y1pchNNauehORXgjrNKsZwxwKpPY9qb84E3O9KYpwfATsqOoQ6tTgr+1BR
- CCwP712H+E9U5HJ0iibN/CDZFVPL1bRerHziuwuQuvE0qWg0+0SChFe9oq0KAwEkVs6ZDMB2
- P16MieEEQ6StQRlvy2YBv80L1TMl3T90Bo1UUn6ARXEpcbFE0/aORH/jEXcRteb+vuik5UGY
- 5TsyLYdPur3TXm7XDBdmmyQVJjnJKYK9AQxj95KlXLVO38lczsFNBFRjzmoBEACyAxbvUEhd
- GDGNg0JhDdezyTdN8C9BFsdxyTLnSH31NRiyp1QtuxvcqGZjb2trDVuCbIzRrgMZLVgo3upr
- MIOx1CXEgmn23Zhh0EpdVHM8IKx9Z7V0r+rrpRWFE8/wQZngKYVi49PGoZj50ZEifEJ5qn/H
- Nsp2+Y+bTUjDdgWMATg9DiFMyv8fvoqgNsNyrrZTnSgoLzdxr89FGHZCoSoAK8gfgFHuO54B
- lI8QOfPDG9WDPJ66HCodjTlBEr/Cwq6GruxS5i2Y33YVqxvFvDa1tUtl+iJ2SWKS9kCai2DR
- 3BwVONJEYSDQaven/EHMlY1q8Vln3lGPsS11vSUK3QcNJjmrgYxH5KsVsf6PNRj9mp8Z1kIG
- qjRx08+nnyStWC0gZH6NrYyS9rpqH3j+hA2WcI7De51L4Rv9pFwzp161mvtc6eC/GxaiUGuH
- BNAVP0PY0fqvIC68p3rLIAW3f97uv4ce2RSQ7LbsPsimOeCo/5vgS6YQsj83E+AipPr09Caj
- 0hloj+hFoqiticNpmsxdWKoOsV0PftcQvBCCYuhKbZV9s5hjt9qn8CE86A5g5KqDf83Fxqm/
- vXKgHNFHE5zgXGZnrmaf6resQzbvJHO0Fb0CcIohzrpPaL3YepcLDoCCgElGMGQjdCcSQ+Ci
- FCRl0Bvyj1YZUql+ZkptgGjikQARAQABwsFfBBgBAgAJBQJUY85qAhsMAAoJEGg1lTBwyZKw
- l4IQAIKHs/9po4spZDFyfDjunimEhVHqlUt7ggR1Hsl/tkvTSze8pI1P6dGp2XW6AnH1iayn
- yRcoyT0ZJ+Zmm4xAH1zqKjWplzqdb/dO28qk0bPso8+1oPO8oDhLm1+tY+cOvufXkBTm+whm
- +AyNTjaCRt6aSMnA/QHVGSJ8grrTJCoACVNhnXg/R0g90g8iV8Q+IBZyDkG0tBThaDdw1B2l
- asInUTeb9EiVfL/Zjdg5VWiF9LL7iS+9hTeVdR09vThQ/DhVbCNxVk+DtyBHsjOKifrVsYep
- WpRGBIAu3bK8eXtyvrw1igWTNs2wazJ71+0z2jMzbclKAyRHKU9JdN6Hkkgr2nPb561yjcB8
- sIq1pFXKyO+nKy6SZYxOvHxCcjk2fkw6UmPU6/j/nQlj2lfOAgNVKuDLothIxzi8pndB8Jju
- KktE5HJqUUMXePkAYIxEQ0mMc8Po7tuXdejgPMwgP7x65xtfEqI0RuzbUioFltsp1jUaRwQZ
- MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
- hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
- vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
-In-Reply-To: <09b6eb12ede47b2e2be69bdd68a8732104b26eb0.camel@surriel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <252eb71c-9913-4199-8645-59d8a7513b10@amd.com>
 
-On 5/6/25 08:16, Rik van Riel wrote:
-> I suspect that lock is no longer needed, but maybe
-> somebody at Intel has a reason why we still do?
+On Wed, Apr 30, 2025 at 05:27:10PM +0530, Vasant Hegde wrote:
+> > +	efr_hats = FIELD_GET(FEATURE_HATS, amd_iommu_efr);
+> > +	if (efr_hats != 0x3) {
+> > +		/*
+> > +		 * efr[HATS] bits specify the maximum host translation level
+> > +		 * supported, with LEVEL 4 being initial max level.
+> > +		 */
+> > +		amd_iommu_hpt_level = efr_hats + PAGE_MODE_4_LEVEL;
+> > +	} else {
+> > +		pr_warn_once("Disable host address translation due to invalid max level (%#x).\n",
+> 
+> s/invalid max level/invalid translation level/
 
-I just took a quick look at the locking. It doesn't make any sense to me
-either.
+This should have a FW_BUG annotation too?
 
-I suspect it's just plain not needed.
+Jason
