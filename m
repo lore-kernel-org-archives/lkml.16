@@ -1,189 +1,187 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2050.outbound.protection.outlook.com [40.107.244.50])
+Received: from mx.denx.de (mx.denx.de [89.58.32.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1531A224250;
-	Tue,  6 May 2025 11:04:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746529466; cv=fail; b=KSTtDSYsuonIjA5gUVPKjFNxUClFgc5bBpH8F8pLXItqY9RUzNHHmNujgFngn2rnpR+ptDx5z0QOQYn3NjFMzcZAkqysyEQQl0K7r9C2RAuA2bbfWXoJ9WWE9n+QPQOUa8GFg4DPwLV2OGu3iKs4s6dDduFOa3cInajTT1tHJFI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746529466; c=relaxed/simple;
-	bh=zojVOCt3rvobv7vN5OdOTqg/kejFjWarpYqyGBlNAn8=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=qlhZXmQLPO+ZoYFU6ovg+ybBxkRyH/f8J88NQX+t74N2qiwZndnmbfdbGB9GkoNgTIqeDaeYdNdR9792yLc4H5OAWC28RDWBrS+ZDv+VJxW71gf8whNv8I7ADVcjFrb7XNARnKq4Ruf6Y95MutBfG9uTQvM5YeG0t/Nyne3HWdY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=BVvqzmtK; arc=fail smtp.client-ip=40.107.244.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F68B278E49;
+	Tue,  6 May 2025 11:04:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746529494; cv=none; b=bzk2rD0sPBVUhzHwwiRVDsYCQagt1PU9EhjQdmF9SqOy6KmvRiVS+o+GLq05fXnyqfFtymQioMczbSJylkvJlFi+R2uP6AYIadk69IXprnP0Z1/kGbuE9z9oGAmwF9a1TJ6vCB6+DqtXqb/QewW2g9j5kV5Bqsk35cMyKMRGwJg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746529494; c=relaxed/simple;
+	bh=pjPSBZN/Mfk5jqUTuqEyMQU0j98SWAtl2iKUPD9duZw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aGby3zc6+oXRBc84I6v5SFScXIwZYNs3vtZ1ptZ89M0zykPdaek0DmxLQyYnKnpUr02J2KeFEtgB8gjcPdlln1a6IExyJaCUBvlFH0d1cASxOduybZO0Z+xCGhLEtCsgaoJdIXScnsCcQfKU+dLV3VypdWxVXmTfi8JfLU1uMO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=EAAN14My; arc=none smtp.client-ip=89.58.32.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="BVvqzmtK"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=fjCMJSqkqQgSCUemCA7q+g1cnw2rLD6aGS55pl1DwUVf4uQgKgfj7a7oGiDpCefZRB2ORDtA0lMqlqBeZFdFswyJsXbPf75IlPXfWZquEnoct42D+FVzJLm1My98/8DgvFy1B3SaEOUX7IZ+ygIWewqdFO/RVJPpwJz5QcYGxieT0btn/TKZ+9tjY/WRS8LNioMWAGPbvC5VY1bxZPODbSPABVtzR9DNKg4DGhWFyUN+mZpLZnQcYcUovsHpNMz158MPMbzwFsFEDUjV6RquQbIJ7SuLN83JofBuXqIqviX6OMIAu5ajlsrn3B+WuF8VEIFYLBUAikDfZHdqrpkgsg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+rof/MOk49DfhVAGgwfxe16AxEo5YFpZ62+bZkM4rMU=;
- b=R3NMZW78xMsOaJn49ER4c39+dMw+0HvF0CcoUajwJ4YMl7ReAn0mtw7rxubywLwrOrVcHcWvq0PqrSpYRVXFbmtyamQpULXURwW2NYqlmMtOksAnEWxjeZbdR9bc/bvyNJZmysEESqEO3e7qZQDm0x7Fx9DRtAvBQKLrANdcfv12G8B9GFHpfFdxR34a2C7jaHiCrjQnhOsz6cmUXYEbg1jZYcgUfZUA+Ac/QOCK4IlRuxXX4UHpNhTxkfejsBwgwOIZXYejzK8HNPwsPBh0sBhmyL8vTyjBBw7gFiTeJToyOBQudnCvi+pYi7bfuSwxXhfcBvQd9fId9eiYoD/Yuw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+rof/MOk49DfhVAGgwfxe16AxEo5YFpZ62+bZkM4rMU=;
- b=BVvqzmtKW4Rjb7gKSPfraxAQGm8y0utSKD8pimKWoaRlazS/5l1HTFbwzBq9C7OAFq/vU6utvnhii0J1U1I/qggCEQGYnUwthfUFEYT434viZs5TS4kMyITKEnwvn/g0Plwyfz4TloevsUidBDt5EzTeBqYJYCQ9g7TGN4/ErknVVr3sGqoj6Dvw/3ommTKrpAXHvMnhYt6T7gZT2Cg0Kqs2yuOna1JBb6RpP0hmUItn5JqdEWYhqAaPur1eLj2MdLkS/peGUFBZa9Kxt8oXeqxxg/mZzLjlAGqclMVBhv6KuJCQxRMnuld7sBohsh8AWiw7ZdK8Km8XwI7jCc/wYw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from SJ2PR12MB8784.namprd12.prod.outlook.com (2603:10b6:a03:4d0::11)
- by SN7PR12MB6863.namprd12.prod.outlook.com (2603:10b6:806:264::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.24; Tue, 6 May
- 2025 11:04:18 +0000
-Received: from SJ2PR12MB8784.namprd12.prod.outlook.com
- ([fe80::1660:3173:eef6:6cd9]) by SJ2PR12MB8784.namprd12.prod.outlook.com
- ([fe80::1660:3173:eef6:6cd9%3]) with mapi id 15.20.8699.022; Tue, 6 May 2025
- 11:04:18 +0000
-Message-ID: <53c531a4-5d75-4595-98d3-b3abf1b1243d@nvidia.com>
-Date: Tue, 6 May 2025 12:04:13 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] phy: tegra: xusb: Default otg mode to peripheral
-To: Aaron Kling <webgeek1234@gmail.com>
-Cc: JC Kuo <jckuo@nvidia.com>, Vinod Koul <vkoul@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>,
- Thierry Reding <thierry.reding@gmail.com>, linux-phy@lists.infradead.org,
- linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250404-xusb-peripheral-v1-1-99c184b9bf5f@gmail.com>
- <CALHNRZ_QUY7NPH87RYqFWEy4PkTgV5uZVZ6hh3sbe=U_8ga2jQ@mail.gmail.com>
- <CALHNRZ9s5EdL3vapyJS4TdT=v5v_QG-=n8ABNJDLU4B-7w+wRw@mail.gmail.com>
- <CALHNRZ96Cs8+gyyb=_jTpvCq--uF3P1s8_m7t25nN_vPx0ELXA@mail.gmail.com>
- <66776953-ef1d-40ac-9d4b-a35a6ebae20c@nvidia.com>
- <CALHNRZ8uXZQObwQBC-sLudUdtprM24qU5yYdb4D3FEP2AQVkmQ@mail.gmail.com>
- <b96ab3b0-3afb-4918-8db8-f6cab45576fd@nvidia.com>
- <CALHNRZ9tgWTo8tUB1+Whf68CYu+qiMhO_S+KC2R0kFbDAjT9OQ@mail.gmail.com>
-From: Jon Hunter <jonathanh@nvidia.com>
-Content-Language: en-US
-In-Reply-To: <CALHNRZ9tgWTo8tUB1+Whf68CYu+qiMhO_S+KC2R0kFbDAjT9OQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO2P123CA0098.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:139::13) To SJ2PR12MB8784.namprd12.prod.outlook.com
- (2603:10b6:a03:4d0::11)
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="EAAN14My"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id A24331048C2EF;
+	Tue,  6 May 2025 13:04:39 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
+	t=1746529483; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 in-reply-to:references; bh=xoo6sbESeyMu4C1VAqN+/dYdjb4WLdeB4YQBhu0GSeE=;
+	b=EAAN14MyA20btevFZPvu6BMNnnlFaTyQAnW6z0GPRjzZk3Yi2rmN7FPCyS3PA2YvBQj3sl
+	FNhgRG9NVNpLKa+zBxYxtk+GbhVTaeScgVPKvzaRoM8/lYbWfq48kxtIijn92+jzPIPQiw
+	l8Ba8h9SsikRqx7ilXFTkrWNwrxmQkgXJJsTvkqt8iXiBEjUebFgo8lE6dqSf0EmESvUbF
+	cuOoIr0GteTs8hpT8shefM/KbYS8NHPRacoqlZW7Td93crdUK2o4dyjmO/6NJqB3PzqjYJ
+	3g0flqLo00vwJmk+yY/YB+O00BGgPi1JAIzGH04jBGJF+8NKlC7l/yjPPvkNCA==
+Date: Tue, 6 May 2025 13:04:38 +0200
+From: Lukasz Majewski <lukma@denx.de>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, davem@davemloft.net, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
+ <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Richard Cochran
+ <richardcochran@gmail.com>, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, Stefan Wahren
+ <wahrenst@gmx.net>, Simon Horman <horms@kernel.org>, Andrew Lunn
+ <andrew@lunn.ch>
+Subject: Re: [net-next v11 4/7] net: mtip: The L2 switch driver for imx287
+Message-ID: <20250506130438.149c137e@wsk>
+In-Reply-To: <61ebe754-d895-47cb-a4b2-bb2650b9ff7b@redhat.com>
+References: <20250504145538.3881294-1-lukma@denx.de>
+	<20250504145538.3881294-5-lukma@denx.de>
+	<61ebe754-d895-47cb-a4b2-bb2650b9ff7b@redhat.com>
+Organization: denx.de
+X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR12MB8784:EE_|SN7PR12MB6863:EE_
-X-MS-Office365-Filtering-Correlation-Id: dc0044b9-efe4-4e4a-8b81-08dd8c8dbeec
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|10070799003|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?a2dIM01RVDExbmg0L0VFUlRYdkNuMDc1bVJvRjFMK0hNc3pjL2ZGYTIwQVNa?=
- =?utf-8?B?U0ZvaTlFMzY5UmZjMDRqWDhDSU9JN0NxZ3FNbzV2OFI0czdWQ1l1cUxIZjNB?=
- =?utf-8?B?N1lwY2xqRHoxV0hHNkFHSzlMR1p5UWxrL3FVWUUrK3BoUzJqTTFsMWY5bWIx?=
- =?utf-8?B?THpMMTkraGlwdVJ5UVZmSk1TNzNxTVdvbWtUYjEzeWdpUDRZS29JOGRGYzhh?=
- =?utf-8?B?S2phUXcwM21pT3ArMWhtNU5EKy9HZWdmTnA5cGp3SDUyYmJjRncrMklSdks1?=
- =?utf-8?B?Y0pYS1V0aGYyOFExWVdyUkVoRVdiWXppajdZazh5VXBHMUZxY2lXVTVIR3Ix?=
- =?utf-8?B?RlZkYitEQ0RsOW5oeU9jM2thMWJyVjZ0cmwyenZscnFKTzc0Wi9EaHRLVjdk?=
- =?utf-8?B?T3ZHQjdrUmJSSENKN0xOZkRsYUJuZ1dDaVFZOWFLdS9wVytMbXRJSjE2UVpN?=
- =?utf-8?B?WUdVSXgvaHRvKzljb3hJNUNNNjdTSUl3NnNQbklpeGRVUXMzYWIzeEhHVWx4?=
- =?utf-8?B?dXdaVkxGZWJ6NjlveVJ5dXN4Q29IQWJXZVdUdkY4eHRpVTB1T2tUeXJjVStw?=
- =?utf-8?B?MCtKV1RhZ0RNRE9pL3lQWmZSNHdjcXQzN1ROV2ZWK0U5bm9sV2ZlUWFmRHNF?=
- =?utf-8?B?RGxXZGtYMzQ4U241RUF6UEJEQVFWUTVTa0VUazBzWVlaMHdTUWtjRDJmTS8w?=
- =?utf-8?B?NGxjR3JidFpBOE1GQ1V1L3A4cm0yOFZkTThwNTg2Y28ya0NzaFJLdDNwRjRQ?=
- =?utf-8?B?K1lJTlhvSlpydk9yNTBCWURkNUc4Ty9Cc1VEN2kzNlFpZU5sNzhaZmREQTNI?=
- =?utf-8?B?RWEzVkh2VStqeDBtK2tUaUtUTkdyUUR4dEdUYTI4allGZDBaaGZiZTB6aWZF?=
- =?utf-8?B?SFB6VFpMU3haU20yeGZpT3o2RWJJNXd0Zm5hUEIvVFJtR3lsQzl5M092b1N3?=
- =?utf-8?B?Y3hPekxwZlJNY044aEV1VzVESWlmcEN0UmxTOVVXTnRUWCt2enYrR2ZESElU?=
- =?utf-8?B?TDBpK0oyUWhQMUdNcXp5OGRtQlk4S05xSEEyZVdzQk1HaHFnV2NyZjE0QmVl?=
- =?utf-8?B?ak1ZNzFYeUdoQUVOVm9rTDdKalB4OU01dVRzSHdkdXhiUVZQc21KaVR0VFpW?=
- =?utf-8?B?dElnTEJyb1ZsTHdCc0lmckJYejBnZHhnS1lQU0k2OEZJOXdiMURnWU90dW9j?=
- =?utf-8?B?SUZ6eTNLaUQrWE0vVnA0WXllQnpmUVUwaDFnWU5jS0F6MHNocHlJR1BaK3Vj?=
- =?utf-8?B?UlY5dlZveE5qVnV1bmszNEluNDJTM3VkZWJRaFpDQ2Fud2VuamFQOUdKK2JO?=
- =?utf-8?B?TnBaYjdxK2kwaDJQZmozemVHOEMrVW5NK1RZTVVuMTRWaWtjRWEwVWZhenRE?=
- =?utf-8?B?OGw4TGFrLy9SNHd1TjFQTm9rTk9rSWZlQUQ5dmtxRllKWkkwbnY0RTBrQUFP?=
- =?utf-8?B?UW1ZNUY1cXlRb2pycHpBQUFFSU1HaVdLcEF5OXk4eFZxQU9ISkYzT240VWxh?=
- =?utf-8?B?NWxvM3FEV2JHN3VoRUViY2J0ZWtFVVdJRTEydzFmTTNsWVV2K2J0d3E2UlJs?=
- =?utf-8?B?VGFLQTdCc3NpaVVLMTFzakdMZ21mQmtSajFaRi9mYTlISC8yQUw0OVhORHZM?=
- =?utf-8?B?YU5ZVnozd1NYRnA1ODB5T2lYQTRES3hSMmNiRFBqeWlTRGVWaVI5UmV3cVk0?=
- =?utf-8?B?L3JPMWJaRHRLbllIOWFmU1NBc3Mwa3M3L1JRK3NMZ0ZMNS9wMkQrdmI4c0s0?=
- =?utf-8?B?MUVsc2JQTGM2RjRmTWxLUXdiTXp6OGViR0RtVjNrWkRRWFVkZEpnMGd3eVQ0?=
- =?utf-8?B?MXI5TDQweERyYWJtUVAxWmlrbUJFL1BsK0ZhdVhHV1VEOCtVbXVLT3dMcWpP?=
- =?utf-8?B?UWFMZ0VJN2xYOHBXQ1MrZCtkYUw0ZllqZVBzc05RU1BaMXc9PQ==?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR12MB8784.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ZkZhTDRuSkFRMnVvK0ROWnRCalFlN3lpRkFoOFN6MVk3NmhrTnR3WjRVWEtj?=
- =?utf-8?B?a0JiZkF5Q2dkWjZnT0dwWnliOGxMRXFWbGtsMENLVGlNSk5IQmxyQ0ozazZK?=
- =?utf-8?B?QUdneFR3WmUvUXNxajlXZzRlN1Y4SjRtUGh0Qi9VNzVVemNrQmFpVlZRdlBY?=
- =?utf-8?B?Q2svVjcyM2ZSck5oVjEvWmpPdjRWMG5iaFFvZ1J0a1lJVXg1ZEE4dC9CTlRJ?=
- =?utf-8?B?WGRyVjRvV1NCb3kwTmMzTG1SalBoMnBXdjdoSXQ0UEZpYno4bG1tdTlPVkJs?=
- =?utf-8?B?RUs1akU3S2tOa0tFcmJSRE1JUWlCeGxhZFZkUGthVnZLc0VIYUl2d3F5N3l4?=
- =?utf-8?B?U3lKM29ycVhLUzM4N0hVMzVmSWVsTlIzemRPOVM2cDBmOHRTejZ4dGVmOVNy?=
- =?utf-8?B?cHZUdkVZWjZmWjJxUlBzbHNQbXNXN0g1M3g4ckgvUGd5OVNrWGY2Y1RSOWUx?=
- =?utf-8?B?UTZlSjhndkg0QlArek9TdXR6aXcwTlFUZDRmem11dFFwQzZMNmJMbmthU01s?=
- =?utf-8?B?MEVMbFFQWkVYZG80K0R4dUlZbDBlNEdrcEljcDRvZVpPcEdJSlhFVFkxUEpL?=
- =?utf-8?B?ajBxQnVsTzNIRFRmN1lZN3V2c3hZRmpwSzYxSjBWa2lHbVNRTlhiN2NnWUtq?=
- =?utf-8?B?REV3ZGkyOGkxSHl6R2JRQ3Q2d0dxZU5nVTFDTm43cEF1VzlvdldreHJMeFIw?=
- =?utf-8?B?YXBXdGQ4cGUySlJJWENQNS82TjlFK056cDlBV2VBeWZyRFRySFY4TWd2eHFu?=
- =?utf-8?B?b25DcmtuazhGODZtSDkyWHFaTU1HSWZPMVhnZnFUUmpRWVFPUzJiTTc2eHZi?=
- =?utf-8?B?cVc1UGhtRWR4VzBzTTlVdXZaUk9HOVNWelRsR3F2RXVyK0JESGc1VHVEVlJ0?=
- =?utf-8?B?TXJPUWNSaEFhcXpHNnJHSDZoN0RaMkFwdVhOODVnRXFKY2FDYS9mWHBHQXpQ?=
- =?utf-8?B?L245eWRyOGRjUGk4RXlvTWIrMkJHN3ppdXU4ZXNtNE5CRzk5a2xhU0haQk5G?=
- =?utf-8?B?ck5xdnpQMDV0WDl3SU5LZHpSTm1lRWxqanpBRDVRb3A0eFlsOTQ0dUZvNjhO?=
- =?utf-8?B?QmpWVGR3RkozaDY0TTFsUHg1WVFWVUZLbEE1R3MyeVByOG5sdWo2SnRZdWdX?=
- =?utf-8?B?UHlmM3hOeS9Oa2lGS0lZOGJwczVKcEZNRFAwTXgvVloxbC9ma1JITUNxRHJ1?=
- =?utf-8?B?NUFSV2ZPMU1zdWhOY3pkeFd1cDNTVVdaNXk1cXlBSGdZVmV5aTFWWEZ5T0ht?=
- =?utf-8?B?NjF4Szc5SU9Dbkt1akVHbGNuYTJ0TytnRTQyTzZoR1dpcTZ2MllxUk9BODFK?=
- =?utf-8?B?dkpseDZUTnppV3lieXhNY0xHenF1MEZoMHFjN2FReVRkZ1BSUG9ITlZMeVhy?=
- =?utf-8?B?cTB5aGpPdThoS3JjbUQydUoxb3laNFJ1YW42T3hvMVYxL3QxVEJ4SDlMdUx5?=
- =?utf-8?B?VkI0ZDU4L01BWldxaHk1eXFoeXRIdDFaK2xBYXNrSVlOM0FHcElhQU8vU3JK?=
- =?utf-8?B?a1AzSUZONkZPcmRoZElVTU5ndG9xUVdQbE1qMjVSTkluR0JENnhYNU1xMHZx?=
- =?utf-8?B?MHRSRWwxNTZNOHVpQVNiQWRxZ1Uyc2lUVEpQbk1jbU5EeHcwTk5Ua0RtK3pw?=
- =?utf-8?B?dUhCTVZNbmtlSWR0Vk5odmZIbW1UOWYwWVN3QkRiMjhPMzFuNWdoajhFNk1I?=
- =?utf-8?B?YXpxZVhheGpsRXBnM2hLWVhYcEZNRjVyZHRlZE8wKytrU3BCRkhNWnRQdnZ1?=
- =?utf-8?B?Q0M4aFBURlJqWEh0RlRBZzJFSEhINUx1V09sYjlBTU5aN01vNUdHcDM4UjB1?=
- =?utf-8?B?NmVKb2hzOE1jcXJ2VDliQXFnUmdvOHZDMHB1T2g1WUtpeGRkT1VyNXhoVWdN?=
- =?utf-8?B?R1JGZVQ0WHNEaTFKR1R1UGY5c0hKTWVLWFQwd1IwblM0ZGEzSDkxdFFHRlVh?=
- =?utf-8?B?SmF6dkZudG1iMlVGNDE5Ri9SSGJHSGNZN2pFcUVCMHdtd3ZsRE9mbmRJeTBJ?=
- =?utf-8?B?c1MrZndpeFIyNC9CdGdwaitzN05YL2Znd2NEN1hnL01GSmFtVE9YSWcrODZq?=
- =?utf-8?B?VVJxaHlHSG0zSWxWbElvRUp3RytwaVdSZFRHYTV0R1R0NEYydTFpdnJOL0hB?=
- =?utf-8?B?WE9VcXpJaG5sb2RsWE4zQ3kwUnNwQ2p4OTRWZWdUdjk5MHZod3RNclB5NDVI?=
- =?utf-8?Q?D5ziqXKCnzrMq+q8resmV9MXL1oqyFUQjaMh/c9DsNsw?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dc0044b9-efe4-4e4a-8b81-08dd8c8dbeec
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR12MB8784.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 11:04:18.0375
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xqSYoTBATO9vdYXN/z2l4w90dBiXGHLU2w42heFhMPjjxbHJv4p3gEm8aPUSzOW4pEGg7PiQ7kYgR7g52NavYQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB6863
+Content-Type: multipart/signed; boundary="Sig_/jzWygP56FGIH1XjAZKtG7zv";
+ protocol="application/pgp-signature"; micalg=pgp-sha512
+X-Last-TLS-Session-Version: TLSv1.3
+
+--Sig_/jzWygP56FGIH1XjAZKtG7zv
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi Paolo,
+
+> On 5/4/25 4:55 PM, Lukasz Majewski wrote:
+> > +		/* This does 16 byte alignment, exactly what we
+> > need.
+> > +		 * The packet length includes FCS, but we don't
+> > want to
+> > +		 * include that when passing upstream as it messes
+> > up
+> > +		 * bridging applications.
+> > +		 */
+> > +		skb =3D netdev_alloc_skb(pndev, pkt_len +
+> > NET_IP_ALIGN);
+> > +		if (unlikely(!skb)) {
+> > +			dev_dbg(&fep->pdev->dev,
+> > +				"%s: Memory squeeze, dropping
+> > packet.\n",
+> > +				pndev->name);
+> > +			pndev->stats.rx_dropped++;
+> > +			goto err_mem;
+> > +		} else {
+> > +			skb_reserve(skb, NET_IP_ALIGN);
+> > +			skb_put(skb, pkt_len);      /* Make room */
+> > +			skb_copy_to_linear_data(skb, data,
+> > pkt_len);
+> > +			skb->protocol =3D eth_type_trans(skb, pndev);
+> > +			napi_gro_receive(&fep->napi, skb);
+> > +		}
+> > +
+> > +		bdp->cbd_bufaddr =3D dma_map_single(&fep->pdev->dev,
+> > data,
+> > +						  bdp->cbd_datlen,
+> > +						  DMA_FROM_DEVICE);
+> > +		if (unlikely(dma_mapping_error(&fep->pdev->dev,
+> > +					       bdp->cbd_bufaddr)))
+> > {
+> > +			dev_err(&fep->pdev->dev,
+> > +				"Failed to map descriptor rx
+> > buffer\n");
+> > +			pndev->stats.rx_errors++;
+> > +			pndev->stats.rx_dropped++;
+> > +			dev_kfree_skb_any(skb);
+> > +			goto err_mem;
+> > +		} =20
+>=20
+> This is doing the mapping and ev. dropping the skb _after_ pushing the
+> skb up the stack, you must attempt the mapping first.
+>=20
+> > +static void mtip_free_buffers(struct net_device *dev)
+> > +{
+> > +	struct mtip_ndev_priv *priv =3D netdev_priv(dev);
+> > +	struct switch_enet_private *fep =3D priv->fep;
+> > +	struct sk_buff *skb;
+> > +	struct cbd_t *bdp;
+> > +	int i;
+> > +
+> > +	bdp =3D fep->rx_bd_base;
+> > +	for (i =3D 0; i < RX_RING_SIZE; i++) {
+> > +		skb =3D fep->rx_skbuff[i];
+> > +
+> > +		if (bdp->cbd_bufaddr)
+> > +			dma_unmap_single(&fep->pdev->dev,
+> > bdp->cbd_bufaddr,
+> > +					 MTIP_SWITCH_RX_FRSIZE,
+> > +					 DMA_FROM_DEVICE);
+> > +		if (skb)
+> > +			dev_kfree_skb(skb); =20
+>=20
+> I suspect that on error paths mtip_free_buffers() can be invoked
+> multiple consecutive times with any successful allocation in between:
+> skb will be freed twice. Likely you need to clear fep->rx_skbuff[i]
+> here.
+
+I don't know what I shall say now.... really...=20
+
+>=20
+> Side note: this patch is way too big for a proper review: you need to
+> break it in multiple smaller ones, introducing the basic features
+> separately.
+>=20
+
+This code is a basic version of the driver as discussed on March with
+the community (Andrew).
+
+It provides the basic functionality - like separate ports support and
+then, if required, configures the IP block to perform L2 switching in
+HW.=20
+
+> Cheers,
+>=20
+> Paolo
+>=20
 
 
-On 06/05/2025 11:44, Aaron Kling wrote:
 
-...
 
->> Rather than reference 'synopsys dwc3' which is not related to the Tegra,
->> it would be better to update the binding doc for Tegra XUSB padctl device
->> to list this property and define the default mode.
-> 
-> Let me make sure I understand you correctly. You're requesting to
-> update the binding as above, listing peripheral as default when unset;
-> fix my commit message; and leave my code change as-is? I'm unclear on
-> if the code is okay as-is or not.
+Best regards,
 
-If the dt-binding doc states that the default is peripheral mode when 
-the property is not present, then yes your patch should be OK as-is.
+Lukasz Majewski
 
-Jon
+--
 
--- 
-nvpublic
+DENX Software Engineering GmbH,      Managing Director: Erika Unter
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
 
+--Sig_/jzWygP56FGIH1XjAZKtG7zv
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAmgZ7MYACgkQAR8vZIA0
+zr1SGgf/X4lTSbA5wV/GRygSxbZlIT0eA/yxbGzZMIHf7CmhmX20nnuSJN6B51s2
+pqBZzQ6lcB8krbIdDTFJ1/W4xeUTeW5SZSI2UCXt6IlimlLwN5NkV3R+QBKEYOuK
+bjHWjaafO8fSZtmvX67xuiSmBTtKDjLKGY95M0dIp+vahKvru1Fm/mwZL56xHQzR
+yBrMeVkjFTttMxkIHdbxXTL4LyCefczvGGIiEHMBb/o0UTZzk2bnPeUKVW23/zd+
+gUstiifHLosnY9DB/iIhR9kNCwHQGOwpp5VYWKSzG8fdU/ttDgmECQuAqMPncx0T
+KEKJrQEQUIUNYoZ/4C1nSAM0N6Oh3w==
+=NnK5
+-----END PGP SIGNATURE-----
+
+--Sig_/jzWygP56FGIH1XjAZKtG7zv--
