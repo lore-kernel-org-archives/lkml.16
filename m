@@ -1,137 +1,142 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C3F826B956
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 10:24:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A8FD278175
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 10:24:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746527053; cv=none; b=cFVvYdYo3Q2K4yYMnlI7hElqsYi9YogiNGb5o00iZt7OOEpapibNw0H1uUk4mQnxiArJurvWT8Ez5cUabTwBqwa8QNPirRsVyRXM0mTfUQFWFFLYMXUjWLTT554QJsfT9Ksp5jkwp/QnqBxAwc+tu6C3CTQeG4RYThIcWqI7DYY=
+	t=1746527063; cv=none; b=YZcd33VWbrguv8118PRyLd4QB9M+1Q9LjOsC4eLeqM/EhG8EtKOULz77OrXMZLa5yJr0KtGX6+AUjhF3/3lC2YN/YMwWhluSy0G+OYaa5oTcuTt2c8ZcZnvkO+3BttSpJU1IbioznX1GetAsSTy9Cl5TBJgnr6kNgCgWUX1sH8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746527053; c=relaxed/simple;
-	bh=lIMGlCcAWdK9vLmeZ3zcIQDXpg99SHJUMMuzp5geo8k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kBhhvRsW9GS6eYrCMv84tTTl80zA/ZKz6ANRQv94FK7OO0nW4BHQAte57TmHltjFKUXBTGE+SPOTaJH0QgUVWEZS3CQgEJwJkCfBr2c57NCwESu/sQh4ztfZ8Z2TE3Q6PAIwUe0/SOx2Xg9NWaRIWIFERTigDDl+DnYoiQ0fJyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1083D113E;
-	Tue,  6 May 2025 03:24:02 -0700 (PDT)
-Received: from [10.57.93.118] (unknown [10.57.93.118])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 94A743F5A1;
-	Tue,  6 May 2025 03:24:10 -0700 (PDT)
-Message-ID: <0d227893-38f5-4f77-a3d1-4caed29c7663@arm.com>
-Date: Tue, 6 May 2025 11:24:08 +0100
+	s=arc-20240116; t=1746527063; c=relaxed/simple;
+	bh=TFkr8ZernbCRga2u5+4e+d6LUgnGAlMEQkmjKCHUFNs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EDzb/4PbvlyUNkHRloeahKWkwRpEtT2hHbqjQEcrfG2m/ImoxT63MTVakzvvq2AG80AAOyEx6hz+TMHJsW6G1ClmgzstGwistWXWAirkzV9lvTr69lpQD9cLejdtmIa8HQrLeoWhu3m5m6EW291XLnrTdKZXexN6ycoUGPh1y8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OXfsb0bA; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OXfsb0bA"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-72d3b48d2ffso5750556b3a.2
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 03:24:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746527061; x=1747131861; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5OOecS8teiPhRlJLpXUsRlmizQbllXdt4yll7Iq6sT4=;
+        b=OXfsb0bACDq0VLBwOVbY74eegnmg9i8I+piRtTFkV8UoWnRCV3ari4AgsQBJsoof92
+         lAFQHygAtqdS6pyF0mtWfogD4SJDRGVXujUtFYeBSPGKYfPiGvBvi7WN9u+tbH4xqGuo
+         Gq7lrjnCwsDCWimzZP60QiOp+7YX9sO4bWEc2V7Kt4jNHhT6o16OWjwtEqzWlts57hZB
+         SNfqCiid+bIjHH9HJ85qcJw0YuIxuC7HZMiegTIesvjZuKoXL64ZLL3RNxlb/jShXj4j
+         NyuZB3YaUhlQlsjysE7JjcdQ9vFwIatUJREMlc2P6HtHvh4NgI4wj78+MWaWCDSPTJJv
+         bvuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746527061; x=1747131861;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5OOecS8teiPhRlJLpXUsRlmizQbllXdt4yll7Iq6sT4=;
+        b=wO2tHY0w4L4X9VjP+BRhkZXGvcrLYt3OsuKzrL51+583e9QVuesGBznAFYVYm8L4my
+         8SfVyp3Gn0KVdFuPD93NCcMtrN+UvRvQ84TK/TDAIdqn6HENpHR8oGU863FNXYTJrHzT
+         CcISzYQEgH7ftwl8lSOUGtm26/eB9zImVsegL7/J4GsSXYJV/TkIJODHtdXeBIkevR8f
+         bSxkvOfA0TnRabt96M1Jj/hKWFM3jIjwXt72nqx1znnQP/GXWMP6LzCjmKz9PsWSlTeY
+         NxqQe0u1UTcSL2tSk3QcOuCge/caHBjxPXExUBEt/GTFmCM0wtQYTVr/pElZZP2C3sDI
+         hUJg==
+X-Forwarded-Encrypted: i=1; AJvYcCUcxsIMh0ZVms74AVB6zzzkRQiXThoHFrkpImdJRwXreSKYER2UtR4s8IooFOfoD9lG7SHH3lZtF2cDOb4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFEc63GcvrgbINK9yxQM+d02d10jmKFITq4aUKFQdOILincapW
+	rt+fA3XyxWs2y9S2OPrhJNUA7OIlHNeA8KbXV4y6MaOvBt7kg7I0
+X-Gm-Gg: ASbGncu8lc1VhA3jjUaBR5iyxNJPzuC9J0FIylorKFbMyTZ7xNiM1/0LjnkwPXNQsSW
+	QDqm//WqsIAHrgw4SKBhX6pRBBQjjOyDFX44XYnbPw6PKBGV12dkDYsEEP2xbNs8neaBcgBQStd
+	6gaddrTDiWzeyYNposkw2k4ASMzbzETB1RKEPxFL9ke8+wtmYLRXICQAM4drYpijZI1qYY4H5tF
+	6OLa7rarq38H1pDu8D2cKU2wcBCX5fuUrwVi9Qt+FCNP05jzQ9LtVUCaPij8JI0IKYjwyJRQnAk
+	I9oIzH20sZZ0geUOPxN0y6XFbjiT3X+XyEaDozTqEYF3YvWsaMevGfnIFBBKoH36QdPGkQ==
+X-Google-Smtp-Source: AGHT+IHDlz/QY612dZgx+2M3TO/osh8oqkZrBLmtzexErVIpEEkK7Hjl4gPDHOWO1x61ejU+rtbYjQ==
+X-Received: by 2002:a05:6a21:398a:b0:1f5:a3e8:64dd with SMTP id adf61e73a8af0-2117dcfed41mr4638467637.0.1746527060692;
+        Tue, 06 May 2025 03:24:20 -0700 (PDT)
+Received: from localhost.localdomain ([121.185.186.233])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b1fb3c442b7sm7112621a12.54.2025.05.06.03.24.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 May 2025 03:24:20 -0700 (PDT)
+From: Jeongjun Park <aha310510@gmail.com>
+To: dennis@kernel.org,
+	tj@kernel.org,
+	cl@linux.com,
+	akpm@linux-foundation.org
+Cc: jack@suse.cz,
+	hughd@google.com,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Jeongjun Park <aha310510@gmail.com>
+Subject: [PATCH] lib/percpu_counter: fix data race in __percpu_counter_limited_add()
+Date: Tue,  6 May 2025 19:24:02 +0900
+Message-ID: <20250506102402.88141-1-aha310510@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3] arm64/mm: Re-organise setting up FEAT_S1PIE registers
- PIRE0_EL1 and PIR_EL1
-Content-Language: en-GB
-To: Anshuman Khandual <anshuman.khandual@arm.com>,
- linux-arm-kernel@lists.infradead.org
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ardb@kernel.org>,
- linux-kernel@vger.kernel.org
-References: <20250429050511.1663235-1-anshuman.khandual@arm.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <20250429050511.1663235-1-anshuman.khandual@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 29/04/2025 06:05, Anshuman Khandual wrote:
-> mov_q cannot really move PIE_E[0|1] macros into a general purpose register
-> as expected if those macro constants contain some 128 bit layout elements,
-> that are required for D128 page tables. The primary issue is that for D128,
-> PIE_E[0|1] are defined in terms of 128-bit types with shifting and masking,
-> which the assembler can't accommodate.
-> 
-> Instead pre-calculate these PIRE0_EL1/PIR_EL1 constants into asm-offsets.h
-> based PIE_E0_ASM/PIE_E1_ASM which can then be used in arch/arm64/mm/proc.S.
-> 
-> While here also drop PTE_MAYBE_NG/PTE_MAYBE_SHARED assembly overrides which
-> are not required any longer, as the compiler toolchains are smart enough to
-> compute both the PIE_[E0|E1]_ASM constants in all scenarios.
-> 
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Ard Biesheuvel <ardb@kernel.org>
-> Cc: Ryan Roberts <ryan.roberts@arm.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+The following data-race was found in __percpu_counter_limited_add():
 
-Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
+==================================================================
+BUG: KCSAN: data-race in __percpu_counter_limited_add / __percpu_counter_limited_add
 
-> ---
-> This patch applies on v6.15-rc4
-> 
-> Changes in V3:
-> 
-> - Dropped off macros PTE_MAYBE_NG and PTE_MAYBE_SHARED as per Ryan
-> 
-> Changes in V2:
-> 
-> https://lore.kernel.org/all/20250416035604.2717188-1-anshuman.khandual@arm.com/
-> 
-> - Added asm-offsets.c based PIE_E0_ASM and PIE_E1_ASM symbols as per Ard
-> - Moved PTE_MAYBE_NG and PTE_MAYBE_SHARED overrides inside asm-offsets.c
->   along with the corresponding comment as per Ard
-> 
-> Changes in V1:
-> 
-> https://lore.kernel.org/linux-arm-kernel/20250410074024.1545768-1-anshuman.khandual@arm.com/
-> 
->  arch/arm64/kernel/asm-offsets.c |  2 ++
->  arch/arm64/mm/proc.S            | 19 ++-----------------
->  2 files changed, 4 insertions(+), 17 deletions(-)
-> 
-> diff --git a/arch/arm64/kernel/asm-offsets.c b/arch/arm64/kernel/asm-offsets.c
-> index eb1a840e4110..30d4bbe68661 100644
-> --- a/arch/arm64/kernel/asm-offsets.c
-> +++ b/arch/arm64/kernel/asm-offsets.c
-> @@ -182,5 +182,7 @@ int main(void)
->  #ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
->    DEFINE(FTRACE_OPS_DIRECT_CALL,	offsetof(struct ftrace_ops, direct_call));
->  #endif
-> +  DEFINE(PIE_E0_ASM, PIE_E0);
-> +  DEFINE(PIE_E1_ASM, PIE_E1);
->    return 0;
->  }
-> diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
-> index fb30c8804f87..80d470aa469d 100644
-> --- a/arch/arm64/mm/proc.S
-> +++ b/arch/arm64/mm/proc.S
-> @@ -512,26 +512,11 @@ alternative_else_nop_endif
->  	ubfx	x1, x1, #ID_AA64MMFR3_EL1_S1PIE_SHIFT, #4
->  	cbz	x1, .Lskip_indirection
->  
-> -	/*
-> -	 * The PROT_* macros describing the various memory types may resolve to
-> -	 * C expressions if they include the PTE_MAYBE_* macros, and so they
-> -	 * can only be used from C code. The PIE_E* constants below are also
-> -	 * defined in terms of those macros, but will mask out those
-> -	 * PTE_MAYBE_* constants, whether they are set or not. So #define them
-> -	 * as 0x0 here so we can evaluate the PIE_E* constants in asm context.
-> -	 */
-> -
-> -#define PTE_MAYBE_NG		0
-> -#define PTE_MAYBE_SHARED	0
-> -
-> -	mov_q	x0, PIE_E0
-> +	mov_q	x0, PIE_E0_ASM
->  	msr	REG_PIRE0_EL1, x0
-> -	mov_q	x0, PIE_E1
-> +	mov_q	x0, PIE_E1_ASM
->  	msr	REG_PIR_EL1, x0
->  
-> -#undef PTE_MAYBE_NG
-> -#undef PTE_MAYBE_SHARED
-> -
->  	orr	tcr2, tcr2, TCR2_EL1_PIE
->  	msr	REG_TCR2_EL1, x0
->  
+write to 0xffff88801f417e50 of 8 bytes by task 6663 on cpu 0:
+ __percpu_counter_limited_add+0x388/0x4a0 lib/percpu_counter.c:386
+ percpu_counter_limited_add include/linux/percpu_counter.h:77 [inline]
+ shmem_inode_acct_blocks+0x10e/0x230 mm/shmem.c:233
+ shmem_alloc_and_add_folio mm/shmem.c:1923 [inline]
+ shmem_get_folio_gfp.constprop.0+0x87f/0xc90 mm/shmem.c:2533
+ shmem_get_folio mm/shmem.c:2639 [inline]
+ ....
 
+read to 0xffff88801f417e50 of 8 bytes by task 6659 on cpu 1:
+ __percpu_counter_limited_add+0xc8/0x4a0 lib/percpu_counter.c:344
+ percpu_counter_limited_add include/linux/percpu_counter.h:77 [inline]
+ shmem_inode_acct_blocks+0x10e/0x230 mm/shmem.c:233
+ shmem_alloc_and_add_folio mm/shmem.c:1923 [inline]
+ shmem_get_folio_gfp.constprop.0+0x87f/0xc90 mm/shmem.c:2533
+ shmem_get_folio mm/shmem.c:2639 [inline]
+ ....
+
+value changed: 0x000000000000396d -> 0x000000000000398e
+==================================================================
+
+__percpu_counter_limited_add() should protect fbc via raw_spin_lock(),
+but it calls spinlock in the wrong place. This causes a data-race,
+so we need to fix it to call raw_spin_lock() a bit earlier.
+
+Fixes: beb986862844 ("shmem,percpu_counter: add _limited_add(fbc, limit, amount)")
+Signed-off-by: Jeongjun Park <aha310510@gmail.com>
+---
+ lib/percpu_counter.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/lib/percpu_counter.c b/lib/percpu_counter.c
+index 2891f94a11c6..17f9fc12b409 100644
+--- a/lib/percpu_counter.c
++++ b/lib/percpu_counter.c
+@@ -336,6 +336,7 @@ bool __percpu_counter_limited_add(struct percpu_counter *fbc,
+ 		return true;
+ 
+ 	local_irq_save(flags);
++	raw_spin_lock(&fbc->lock);
+ 	unknown = batch * num_online_cpus();
+ 	count = __this_cpu_read(*fbc->counters);
+ 
+@@ -344,11 +345,10 @@ bool __percpu_counter_limited_add(struct percpu_counter *fbc,
+ 	    ((amount > 0 && fbc->count + unknown <= limit) ||
+ 	     (amount < 0 && fbc->count - unknown >= limit))) {
+ 		this_cpu_add(*fbc->counters, amount);
+-		local_irq_restore(flags);
+-		return true;
++		good = true;
++		goto out;
+ 	}
+ 
+-	raw_spin_lock(&fbc->lock);
+ 	count = fbc->count + amount;
+ 
+ 	/* Skip percpu_counter_sum() when safe */
+--
