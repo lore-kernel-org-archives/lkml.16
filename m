@@ -1,158 +1,133 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A203823F42D;
-	Tue,  6 May 2025 08:15:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A4A023F417;
+	Tue,  6 May 2025 08:15:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746519348; cv=none; b=VMt+K30C82p/BSKxx6lGMXLvu/rG7S9F/6VYF3tiZguCTcmnR36CptaUmInKWnXhP8TCXWqbvphQGPXrf4z6Xu868sEOxgOUrqbf00yYJbHzzXIk1Cyp6vOk4ymu5enAWF9KKh2I5YyUY9pGOoBbvPUQCKkBS+49U/uT3rG2rTo=
+	t=1746519357; cv=none; b=PJ7fSeM9gLL3JJ6wPP6Kqn4Z4DR+pFR/zLAIPJvrSM81h1KafyxaJiQ0R49LYmUkjiQ3cnx6tv3eSHCs1gQRzcHaAwkej4lczKm9WxCQO/LZ5XNJSBGekVSclTtmvJUeCvK/DiJ9/lW99nXWlzAyzeQiUbu7UBhcffSKDQWPMwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746519348; c=relaxed/simple;
-	bh=YKjqfQvee2j2+nsXOxD9gXSQQ3Wln6g5vc+oPD25nOk=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=VD4Pne6ftfza9n5fUUFxwuMROBNYWKzC28ePzdSnePGNQB8eV5gbU0tBw3pTNEpUq0Q18gAu2z+7PaYrb1SnjmD+dbhCcxWyl5orMdwyrqvlmxjJdegh/uKVfc3GdqVjKWcMqwYDRv3raqAnAS86VkAw6tp31l3SQ+di/y90dSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=T9Vb/ulC; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=t1pApqld; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="T9Vb/ulC";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="t1pApqld"
-Date: Tue, 06 May 2025 08:15:43 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746519345;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vJuVUAXSSyw+InaimbZuOQtnqmauSCl3M20V+lzwRjs=;
-	b=T9Vb/ulCVdiVOHujUqhFIzIAxNp6HuteNimLNUHbQ6Rh+i2u90lCADoK8FNtju1sSEaBp/
-	oaV9+LGncp8483FSQWDp3TEHa00XRMW3rfzyHrWtEuP2gJJGg9gLjn0ETkyLGR/GlP/Cqz
-	io7FDdi6wqtjvVuc3Byi3LLZ9eXRm+eEziYjFt1BTbqOKSq453T2S0IGWVJk5bN5Xv1z7T
-	xEw74tONqOfEMPoCf3A/ZYRVc0iJsqTPJJj6ouBOIh0g/XyrnOgZNaHXwvijvAnUBFzHJG
-	ZveiLXXc6w5zVbWDye73oxPPxvGRHqtUwfxnJszWI6NtuDWj6fPZm7nWjW/uQA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746519345;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vJuVUAXSSyw+InaimbZuOQtnqmauSCl3M20V+lzwRjs=;
-	b=t1pApqldFMDgAZEhV8n9biEeapPJNvE7zjWkJZC5u5uBTiOkyGmCsgkD9f9VmrSP72FzoR
-	H5byt/NQF46TksBA==
-From: "tip-bot2 for Ahmed S. Darwish" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cpu] x86/cpu: Sanitize CPUID(0x80000000) output
-Cc: "Ahmed S. Darwish" <darwi@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
- Andrew Cooper <andrew.cooper3@citrix.com>, "H. Peter Anvin" <hpa@zytor.com>,
- John Ogness <john.ogness@linutronix.de>, x86-cpuid@lists.linux.dev,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250506050437.10264-3-darwi@linutronix.de>
-References: <20250506050437.10264-3-darwi@linutronix.de>
+	s=arc-20240116; t=1746519357; c=relaxed/simple;
+	bh=CfZVKeYNbfhVnlmmFxZfDkwiP+Fo3N99MhQ1aFcsCG4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GikHHqKcZmkqXmHANcMGKRlH6t0tXPfe/aUE0Of27SshujKq/IKfdqmyyFSBHOSdb6WOWwYIccF512lsN4ObjkRdAi3X2iFQfyc3lxb3vcCpoTBFr2VqBXUiO0LgRIG8y2gbCMB353xVA6i5LM4pB0Ik5z9A7QLNFOZHNg3+2pw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CCE39113E;
+	Tue,  6 May 2025 01:15:44 -0700 (PDT)
+Received: from [10.57.93.118] (unknown [10.57.93.118])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 338A43F673;
+	Tue,  6 May 2025 01:15:50 -0700 (PDT)
+Message-ID: <fbfded61-cfe2-4416-9098-ef39ef3e2b62@arm.com>
+Date: Tue, 6 May 2025 09:15:48 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174651934390.406.14677915128369507134.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] arm64/cpufeature: annotate arm64_use_ng_mappings with
+ ro_after_init to prevent wrong idmap generation
+Content-Language: en-GB
+To: Yeoreum Yun <yeoreum.yun@arm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>
+Cc: will@kernel.org, nathan@kernel.org, nick.desaulniers+lkml@gmail.com,
+ morbo@google.com, justinstitt@google.com, broonie@kernel.org,
+ maz@kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com,
+ shameerali.kolothum.thodi@huawei.com, james.morse@arm.com,
+ hardevsinh.palaniya@siliconsignals.io, ardb@kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ llvm@lists.linux.dev, stable@vger.kernel.org
+References: <20250502180412.3774883-1-yeoreum.yun@arm.com>
+ <174626735218.2189871.10298017577558632540.b4-ty@arm.com>
+ <aBYkGJmfWDZHBEzp@arm.com> <aBZ7P3/dUfSjB0oV@e129823.arm.com>
+ <aBkL-zUpbg7_gCEp@arm.com> <aBnDqvY5c6a3qQ4H@e129823.arm.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <aBnDqvY5c6a3qQ4H@e129823.arm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-The following commit has been merged into the x86/cpu branch of tip:
+On 06/05/2025 09:09, Yeoreum Yun wrote:
+> Hi Catalin,
+> 
+>> On Sat, May 03, 2025 at 09:23:27PM +0100, Yeoreum Yun wrote:
+>>> Hi Catalin,
+>>>
+>>>> On Sat, May 03, 2025 at 11:16:12AM +0100, Catalin Marinas wrote:
+>>>>> On Fri, 02 May 2025 19:04:12 +0100, Yeoreum Yun wrote:
+>>>>>> create_init_idmap() could be called before .bss section initialization
+>>>>>> which is done in early_map_kernel().
+>>>>>> Therefore, data/test_prot could be set incorrectly by PTE_MAYBE_NG macro.
+>>>>>>
+>>>>>> PTE_MAYBE_NG macro set NG bit according to value of "arm64_use_ng_mappings".
+>>>>>> and this variable places in .bss section.
+>>>>>>
+>>>>>> [...]
+>>>>>
+>>>>> Applied to arm64 (for-next/fixes), with some slight tweaking of the
+>>>>> comment, thanks!
+>>>>>
+>>>>> [1/1] arm64/cpufeature: annotate arm64_use_ng_mappings with ro_after_init to prevent wrong idmap generation
+>>>>>       https://git.kernel.org/arm64/c/12657bcd1835
+>>>>
+>>>> I'm going to drop this for now. The kernel compiled with a clang 19.1.5
+>>>> version I have around (Debian sid) fails to boot, gets stuck early on:
+>>>>
+>>>> $ clang --version
+>>>> Debian clang version 19.1.5 (1)
+>>>> Target: aarch64-unknown-linux-gnu
+>>>> Thread model: posix
+>>>> InstalledDir: /usr/lib/llvm-19/bin
+>>>>
+>>>> I didn't have time to investigate, disassemble etc. I'll have a look
+>>>> next week.
+>>>
+>>> Just for your information.
+>>> When I see the debian package, clang 19.1.5-1 doesn't supply anymore:
+>>>  - https://ftp.debian.org/debian/pool/main/l/llvm-toolchain-19/
+>>>
+>>> and the default version for sid is below:
+>>>
+>>> $ clang-19 --version
+>>> Debian clang version 19.1.7 (3)
+>>> Target: aarch64-unknown-linux-gnu
+>>> Thread model: posix
+>>> InstalledDir: /usr/lib/llvm-19/bin
+>>>
+>>> When I tested with above version with arm64-linux's for-next/fixes
+>>> including this patch. it works well.
+>>
+>> It doesn't seem to be toolchain related. It fails with gcc as well from
+>> Debian stable but you'd need some older CPU (even if emulated, e.g.
+>> qemu). It fails with Cortex-A72 (guest on Raspberry Pi 4) but not
+>> Neoverse-N2. Also changing the annotation from __ro_after_init to
+>> __read_mostly also works.
 
-Commit-ID:     cc663ba3fe383a628a812f893cc98aafff39ab04
-Gitweb:        https://git.kernel.org/tip/cc663ba3fe383a628a812f893cc98aafff39ab04
-Author:        Ahmed S. Darwish <darwi@linutronix.de>
-AuthorDate:    Tue, 06 May 2025 07:04:13 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 06 May 2025 10:04:57 +02:00
+I think this is likely because __ro_after_init is also "ro before init" - i.e.
+if you try to write to it in the PI code an exception is generated due to it
+being mapped RO. Looks like early_map_kernel() is writiing to it.
 
-x86/cpu: Sanitize CPUID(0x80000000) output
+I've noticed a similar problem in the past and it would be nice to fix it so
+that PI code maps __ro_after_init RW.
 
-CPUID(0x80000000).EAX returns the max extended CPUID leaf available.  On
-x86-32 machines without an extended CPUID range, a CPUID(0x80000000)
-query will just repeat the output of the last valid standard CPUID leaf
-on the CPU; i.e., a garbage values.  Current tip:x86/cpu code protects against
-this by doing:
+Thanks,
+Ryan
 
-	eax = cpuid_eax(0x80000000);
-	c->extended_cpuid_level = eax;
+> 
+> Thanks to let me know. But still I've failed to reproduce this
+> on Cortex-a72 and any older cpu on qeum.
+> If you don't mind, would you share your Kconfig?
+> 
+>> I haven't debugged it yet but I wonder whether something wants to write
+>> this variable after it was made read-only (well, I couldn't find any by
+>> grep'ing the code, so it needs some step-by-step debugging).
+>>
+> [...]
+> 
+> Thanks!
+> 
+> --
+> Sincerely,
+> Yeoreum Yun
 
-	if ((eax & 0xffff0000) == 0x80000000) {
-		// CPU has an extended CPUID range. Check for 0x80000001
-		if (eax >= 0x80000001) {
-			cpuid(0x80000001, ...);
-		}
-	}
-
-This is correct so far.  Afterwards though, the same possibly broken EAX
-value is used to check the availability of other extended CPUID leaves:
-
-	if (c->extended_cpuid_level >= 0x80000007)
-		...
-	if (c->extended_cpuid_level >= 0x80000008)
-		...
-	if (c->extended_cpuid_level >= 0x8000000a)
-		...
-	if (c->extended_cpuid_level >= 0x8000001f)
-		...
-
-which is invalid.  Fix this by immediately setting the CPU's max extended
-CPUID leaf to zero if CPUID(0x80000000).EAX doesn't indicate a valid
-CPUID extended range.
-
-While at it, add a comment, similar to kernel/head_32.S, clarifying the
-CPUID(0x80000000) sanity check.
-
-References: 8a50e5135af0 ("x86-32: Use symbolic constants, safer CPUID when enabling EFER.NX")
-Fixes: 3da99c977637 ("x86: make (early)_identify_cpu more the same between 32bit and 64 bit")
-Signed-off-by: Ahmed S. Darwish <darwi@linutronix.de>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Andrew Cooper <andrew.cooper3@citrix.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: John Ogness <john.ogness@linutronix.de>
-Cc: x86-cpuid@lists.linux.dev
-Link: https://lore.kernel.org/r/20250506050437.10264-3-darwi@linutronix.de
----
- arch/x86/kernel/cpu/common.c | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index 4ada55f..e5734df 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -1005,17 +1005,18 @@ void get_cpu_cap(struct cpuinfo_x86 *c)
- 		c->x86_capability[CPUID_D_1_EAX] = eax;
- 	}
- 
--	/* AMD-defined flags: level 0x80000001 */
-+	/*
-+	 * Check if extended CPUID leaves are implemented: Max extended
-+	 * CPUID leaf must be in the 0x80000001-0x8000ffff range.
-+	 */
- 	eax = cpuid_eax(0x80000000);
--	c->extended_cpuid_level = eax;
-+	c->extended_cpuid_level = ((eax & 0xffff0000) == 0x80000000) ? eax : 0;
- 
--	if ((eax & 0xffff0000) == 0x80000000) {
--		if (eax >= 0x80000001) {
--			cpuid(0x80000001, &eax, &ebx, &ecx, &edx);
-+	if (c->extended_cpuid_level >= 0x80000001) {
-+		cpuid(0x80000001, &eax, &ebx, &ecx, &edx);
- 
--			c->x86_capability[CPUID_8000_0001_ECX] = ecx;
--			c->x86_capability[CPUID_8000_0001_EDX] = edx;
--		}
-+		c->x86_capability[CPUID_8000_0001_ECX] = ecx;
-+		c->x86_capability[CPUID_8000_0001_EDX] = edx;
- 	}
- 
- 	if (c->extended_cpuid_level >= 0x80000007) {
