@@ -1,124 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24394212B04;
-	Tue,  6 May 2025 10:17:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A31EE1F7580;
+	Tue,  6 May 2025 10:18:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746526663; cv=none; b=RIOnHNEmNHf8Y9GI9R/yJw6Fd5wHnRN24V+O00o/RCUpZeDYECBARUQQHQE/PVJrg9W009DfIEh6Ri1TNi9Fp+deQGw8t9u3CTNyovBcM4hGDlM3WLWfTQmzBFT1BVDayUsJ+TpOCe2Ar/qu/eJfv94q7J7PrYMHs6+uMbpnbdE=
+	t=1746526703; cv=none; b=ukIdhUzwSLX5O77pqkq8/huABVFKh7fU02ePXIrlpK1LT/lDQOWKvrgao81yGzNuDLj0jdbIL7+m61fOaNHHnt0x+cBQp6ezwF92zN8fJBVdL5RWaUNJ3fjAbmzLpAfY6Ca2VZrgmeQ7B344PUeuDNzvOMQ0lRJKnhMXDnR+HRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746526663; c=relaxed/simple;
-	bh=IX+PP8LlX1bH0FcoepRyMQgD9hjjLVq86Rm6toSU0G0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mxRiCQlZuU0G2YXLSOS5EaSxBP0oGyYWJks3OsdqYZ4aHLCpWRMallsFwb/W1RUQdhDo3fphUOti8tuY5YnTvdtQ9pSb4b8Q8c8r4nEx5LtJFMvI6Lic8D4Y0F0apGX54FP5DHEBHB9iD7G9KZHQXEqAFDGt56BtJJyq3oYFvMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8494CC4CEE4;
-	Tue,  6 May 2025 10:17:39 +0000 (UTC)
-Date: Tue, 6 May 2025 11:17:37 +0100
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Ryan Roberts <ryan.roberts@arm.com>, Yeoreum Yun <yeoreum.yun@arm.com>,
-	will@kernel.org, nathan@kernel.org, nick.desaulniers+lkml@gmail.com,
-	morbo@google.com, justinstitt@google.com, broonie@kernel.org,
-	maz@kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com,
-	shameerali.kolothum.thodi@huawei.com, james.morse@arm.com,
-	hardevsinh.palaniya@siliconsignals.io,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, stable@vger.kernel.org
-Subject: Re: [PATCH v2] arm64/cpufeature: annotate arm64_use_ng_mappings with
- ro_after_init to prevent wrong idmap generation
-Message-ID: <aBnhwZKInFEiPkhz@arm.com>
-References: <20250502180412.3774883-1-yeoreum.yun@arm.com>
- <174626735218.2189871.10298017577558632540.b4-ty@arm.com>
- <aBYkGJmfWDZHBEzp@arm.com>
- <aBZ7P3/dUfSjB0oV@e129823.arm.com>
- <aBkL-zUpbg7_gCEp@arm.com>
- <aBnDqvY5c6a3qQ4H@e129823.arm.com>
- <fbfded61-cfe2-4416-9098-ef39ef3e2b62@arm.com>
- <CAMj1kXFAYDeCgtPspQubkY688tcqwCMzCD+jEXb6Ea=9mBcdcQ@mail.gmail.com>
+	s=arc-20240116; t=1746526703; c=relaxed/simple;
+	bh=TkVB+8a7Equf/EbuOsvzUv62MCHrmk/SwZSQs4n6MgI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gB15cDRsO5eBlOYw4Emy4Bry1Fe7RH4+33iF1lHBb6MPec/V7dPdWtBAUIfJi4oyk3x6RG6E8KoNxfSC84WI6n3wtdLYCN1DdnSLgKZ66ZtZgkoWfnVNBZFmuNdNgIkHvDvtB0YvsDb8CdTcW1v4nqjMVpb1s45MYOBkq2pbVM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gFbnB9dC; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gFbnB9dC"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-30a892f8124so28970a91.3;
+        Tue, 06 May 2025 03:18:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746526701; x=1747131501; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TkVB+8a7Equf/EbuOsvzUv62MCHrmk/SwZSQs4n6MgI=;
+        b=gFbnB9dCVtg1U46K2SCi9EpWQjEPyUw9la7eZx0KQ6cTOdNYEH5g03JIXR1ehJYkeD
+         5KDP6GV2qtcFvsr/esKfTAOYXCHBPPMK0BrsL85Tm+cSm7t7IdJjV/0w6RC7GplvBYpv
+         JBwh1CCfUiGdMNX0W1Cmg64ZP4WWQqDRPK2dFJbijsON+LZnBAwbo4VAmutLvXLM5S1T
+         ykXXHt/slsOSHuY8q3DpLsiEc5uWAzDKroVbZq2l/eE4x1PEBSPoFnSIJwf59wq8NasR
+         iypnFYe2XQC8P98OrrnheA9nmfzD+uQ8lDyf0u5ZPVA4FTJsUq7cQkzDS2xnSAMG4w8w
+         cNzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746526701; x=1747131501;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TkVB+8a7Equf/EbuOsvzUv62MCHrmk/SwZSQs4n6MgI=;
+        b=UU+Ui1Wjj1bxmIh6QHO428hGy2uiZhciciN3yciGHFOwuCg+qZTVAs9R9muogvWm5u
+         9Gcta7AdH2qSKLKKfcPtDEYJQoLbHyxzS1+CdU1MgtG/GnfunGpVjxg8020be5795Kqy
+         3pRSlqSFDgFhF6uqSltS9+A9/6l8ugeG2OMYrpCve0N11z52Dv1YLhgzyLgn/vPks2pL
+         Q9855z0OtMb+VRRe8qD0KrpRY9Kq98WtTGdLg4UcWy53oJ1oZEP5oNAtNInm/IZ+HErr
+         4MjnYkWCwZ4bG9FTdM3uDM8wbFvCxNDyeSW4c+7FYOLbOZxyT0uELYSsJb0kGnto98Hb
+         lb2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUTB97NRSJnbHuLRz0GxfehPtIGC5uuradZJqI/S/tSxtpP0AUcAZNf4O1SBjtEZeRTf5U9p36U2FOxYoc=@vger.kernel.org, AJvYcCV4E5e/LPUzmq0PAgIvCbIsf4gT9Hsm1tu6uf5gDF0lz/61UMyjE/fJlb9DZT45jhlkpWaaih7cNa66mPrAnjk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8aavXui+jslKwthCFvONV2zrqWBcOMBkeR6Ipvs14G4tMROrA
+	p9kMCHWn8r2NcUzq64qpck33EOzuuz9FUGGWb8vthPaFSfJ3S7WBE4yB/Fzp2LF2629aXVl4h0x
+	/U0sHCOe1fVj6ecC04KgzqUTmMf4=
+X-Gm-Gg: ASbGncup6lEdheT5bZjneQZTtDTX6TI3lujXCOID2l4m867bSmPdjzY2lTMY+aIBDJy
+	1G8xSlU3ErnS1S7ruNKP9AU1/BzobY7Dtbd0DuGnEYUJf9YP84UjK38lIsbKkxsJie+/GL97lzp
+	8MuR1ErOza4855JBZNjSl3vg==
+X-Google-Smtp-Source: AGHT+IFTQhMrziTWlbb2M+/2CKqeuD9ySvQIFR7HINWqYlufRDWodWwGFdpGFLHaN5vk5bUQ2xswfOSdmk+Gd3iNYOY=
+X-Received: by 2002:a17:90b:4c42:b0:305:5f20:b28c with SMTP id
+ 98e67ed59e1d1-30a4e6f3564mr9396337a91.5.1746526700829; Tue, 06 May 2025
+ 03:18:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXFAYDeCgtPspQubkY688tcqwCMzCD+jEXb6Ea=9mBcdcQ@mail.gmail.com>
+References: <CANiq72mvu54B=U+YCUmbFctj_wXgF5zjeE-BB-vHVnAP+3mPcQ@mail.gmail.com>
+ <20250506042330.281501-1-contact@antoniohickey.com>
+In-Reply-To: <20250506042330.281501-1-contact@antoniohickey.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 6 May 2025 12:18:08 +0200
+X-Gm-Features: ATxdqUHheYcgH2uYtGDqL5P2WC747Ik5cUU8Qk9P-Zl-sb_irLvy-lFNrX6m8BI
+Message-ID: <CANiq72nu9MrTaQBABxiveqSqX4b9zJZL0MsazG+D64ULQ_Shqg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] rust: kernel: create `overflow_assert!`
+To: Antonio Hickey <contact@antoniohickey.com>
+Cc: a.hindborg@kernel.org, alex.gaynor@gmail.com, aliceryhl@google.com, 
+	benno.lossin@proton.me, bjorn3_gh@protonmail.com, boqun.feng@gmail.com, 
+	dakr@kernel.org, gary@garyguo.net, linux-kernel@vger.kernel.org, 
+	ojeda@kernel.org, rust-for-linux@vger.kernel.org, tmgross@umich.edu
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 06, 2025 at 11:41:05AM +0200, Ard Biesheuvel wrote:
-> On Tue, 6 May 2025 at 10:16, Ryan Roberts <ryan.roberts@arm.com> wrote:
-> > On 06/05/2025 09:09, Yeoreum Yun wrote:
-> > >> On Sat, May 03, 2025 at 09:23:27PM +0100, Yeoreum Yun wrote:
-> > >>>> On Sat, May 03, 2025 at 11:16:12AM +0100, Catalin Marinas wrote:
-> > >>>>> On Fri, 02 May 2025 19:04:12 +0100, Yeoreum Yun wrote:
-> > >>>>>> create_init_idmap() could be called before .bss section initialization
-> > >>>>>> which is done in early_map_kernel().
-> > >>>>>> Therefore, data/test_prot could be set incorrectly by PTE_MAYBE_NG macro.
-> > >>>>>>
-> > >>>>>> PTE_MAYBE_NG macro set NG bit according to value of "arm64_use_ng_mappings".
-> > >>>>>> and this variable places in .bss section.
-> > >>>>>>
-> > >>>>>> [...]
-> > >>>>>
-> > >>>>> Applied to arm64 (for-next/fixes), with some slight tweaking of the
-> > >>>>> comment, thanks!
-> > >>>>>
-> > >>>>> [1/1] arm64/cpufeature: annotate arm64_use_ng_mappings with ro_after_init to prevent wrong idmap generation
-> > >>>>>       https://git.kernel.org/arm64/c/12657bcd1835
-> > >>>>
-> > >>>> I'm going to drop this for now. The kernel compiled with a clang 19.1.5
-> > >>>> version I have around (Debian sid) fails to boot, gets stuck early on:
-> > >>>>
-> > >>>> $ clang --version
-> > >>>> Debian clang version 19.1.5 (1)
-> > >>>> Target: aarch64-unknown-linux-gnu
-> > >>>> Thread model: posix
-> > >>>> InstalledDir: /usr/lib/llvm-19/bin
-> > >>>>
-> > >>>> I didn't have time to investigate, disassemble etc. I'll have a look
-> > >>>> next week.
-> > >>>
-> > >>> Just for your information.
-> > >>> When I see the debian package, clang 19.1.5-1 doesn't supply anymore:
-> > >>>  - https://ftp.debian.org/debian/pool/main/l/llvm-toolchain-19/
-> > >>>
-> > >>> and the default version for sid is below:
-> > >>>
-> > >>> $ clang-19 --version
-> > >>> Debian clang version 19.1.7 (3)
-> > >>> Target: aarch64-unknown-linux-gnu
-> > >>> Thread model: posix
-> > >>> InstalledDir: /usr/lib/llvm-19/bin
-> > >>>
-> > >>> When I tested with above version with arm64-linux's for-next/fixes
-> > >>> including this patch. it works well.
-> > >>
-> > >> It doesn't seem to be toolchain related. It fails with gcc as well from
-> > >> Debian stable but you'd need some older CPU (even if emulated, e.g.
-> > >> qemu). It fails with Cortex-A72 (guest on Raspberry Pi 4) but not
-> > >> Neoverse-N2. Also changing the annotation from __ro_after_init to
-> > >> __read_mostly also works.
-> >
-> > I think this is likely because __ro_after_init is also "ro before init" - i.e.
-> > if you try to write to it in the PI code an exception is generated due to it
-> > being mapped RO. Looks like early_map_kernel() is writiing to it.
-> 
-> Indeed.
-> 
-> > I've noticed a similar problem in the past and it would be nice to fix it so
-> > that PI code maps __ro_after_init RW.
-> 
-> The issue is that the store occurs via the ID map, which only consists
-> of one R-X and one RW- section. I'm not convinced that it's worth the
-> hassle to relax this.
-> 
-> If moving the variable to .data works, then let's just do that.
+On Tue, May 6, 2025 at 6:23=E2=80=AFAM Antonio Hickey <contact@antoniohicke=
+y.com> wrote:
+>
+> I do like the idea utilizing the `cfg!` macro, it's cleaner as it
+> reduces the empty boilerplate currently required. I do wonder though
+> could that potentially cause warnings like unreachable code or
+> unused variables?
 
-Good to know there's no other more serious issue. I'll move this
-variable to __read_mostly.
+Hmm... Isn't it the other way around? i.e. `#[cfg]` is the one that
+completely removes code and thus could introduce cases where no other
+code references something.
 
-It seems to fail in early_map_kernel() if RANDOMIZE_BASE is enabled.
+As for unreachable, I don't think that triggers with an `if false {
+... }` (it does with e.g. code after a diverging call).
 
--- 
-Catalin
+The `debug_assert!` macro works with `cfg!`, so unless the compiler
+does something custom on linting for it, I think it should work for us
+here too.
+
+Thanks!
+
+Cheers,
+Miguel
