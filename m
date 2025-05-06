@@ -1,209 +1,154 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 341A41487F4;
-	Tue,  6 May 2025 21:05:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73D802153D2
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 21:05:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746565512; cv=none; b=h6pBl7qcN9Z/OMvLtlGd/BD6w0yWZLZXWBX/ian/HyRTyIKvCVKzi4viBjsImx4g33nMKT0gifNdC17Yzw7reLU9wt63rrD9oS/sD6vvU7EqEFtrdGrQgqlfxh8m4YGK5KWOw48inoxyrAjscIFnwvWbibEHrHaQexi7URaQBhg=
+	t=1746565523; cv=none; b=GubNDBAke+K8zkWkDVP+0Q77Oqsz40RZRi4RoDwLqeR22VLXznfYiKNpq3eVcqJu8U7b8ZUGrUtIza7JmYe7rHF9dqqGhBubqqP0kc8xdWvHgRVvq1RrybgDlrUzxJIEvIX3+kTF6dsnc4L7hV8zNBGDzEn89MkkwIKeHpO4Pms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746565512; c=relaxed/simple;
-	bh=e1qHEgJ4EBKnE6gLzmeR5RPFCj9U6szUNm8w/lrJ8Us=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=B7ITFeRrb/SVIWlAYYxMRGVU3emQ+rmD9Yv7OOdd9ulvvCecv5+rkqwE/PevXYPKm8QpcS1PXNvpM8KgesOz9BACAUJ5is6toWUrj7dedMryfZHXBaG/gnfgs8AAxObt8Tq8ReL8rdn/tYIVpEp5xZ11KvbiM3E4eLF5cPIPQ7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bE/utUxq; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746565523; c=relaxed/simple;
+	bh=DtfGGT3IGxKqdB3FC1mVlHDnlo7XpWTSUsAjxMBNLfc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=UG9sOMvxgdRj0YzVU/sgoRVmi7jUPwGIlTWWmNPqiXzSxjb+Xbontpe5xUDKgN8iWnq71TYz2V0f/SXb34iIBdthTeoKwgsrba35pM6fKTe8/ca+7gln2GJcOhHthtOPCT8KQM2r58tN09Onjk83AvXdJX0u3oA9facMTBkwatM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=1TrRsykv; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bE/utUxq"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-7370a2d1981so5165553b3a.2;
-        Tue, 06 May 2025 14:05:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="1TrRsykv"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43cfe63c592so57633475e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 14:05:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746565510; x=1747170310; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RSEhCjYjnsEXr9UG7zTvIDQr3+9PxPuO34pFmbrJ5vc=;
-        b=bE/utUxqObzSZk8Cyp9UsX6MHQDXn0IV4Um4VWz5SOdDc4bhWDEaJjFpvkJO40/oLg
-         IIseRxPqoVm5w3wFaSEQ52d+j5/Nm+Zl0t4SYVelZ1tZscPLwu5mHSbDGzTHvIZdjkSD
-         AX/xaSkru8w9w2ITHco9Iz90lkwW/k0Go5AzREW9+kNP0v99KiR6lTBHhpKzxKyzMfNq
-         cPZLSFvvrU65kH0YtYUABhmNKL3lxu98cpkjruq25yxbK6HpLnc7nQS3eo3yIeD6jBXA
-         QSlwcvHbuJR7biPqICfXgdBWYBmtXV73sBMReZrPgV+IDkTgPQ60870T+iOZEr9gQfWS
-         c6+Q==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746565520; x=1747170320; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=m8JsgWUKbE/peIKbAfNn2XRYX9tbkW2uKeLMmFKymPk=;
+        b=1TrRsykvF4Fk5gk61we8hdojF4BI4/1C44Ud6pNg8glqiDGCc5btIJ6SLfGPPPQMRJ
+         aT2h47ZSbadDAC1TghvjlBuDuLztgyJhsHktgHlCknOxxeErSa1dgwNUamhHsQc1M+1R
+         +lC/FvbkKhyxsi2/zkXI7z8O6lU8bHTYbodHULw39HaXtEUcLzIC9ZNEwT9kc1fuxVh4
+         azsYDDhedRq9Z4kqOdY21QTZPv4pXFTV9Awc6OETG35dGU27c7YCm/zOlmsxDkcKvlRh
+         HCbBgd7UB+Z/94s4ZcMWMekZjozDnqquFEZNphQiGek9sJykWoguir0A1jOfJcHUHYkG
+         jWaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746565510; x=1747170310;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RSEhCjYjnsEXr9UG7zTvIDQr3+9PxPuO34pFmbrJ5vc=;
-        b=RNO4DNteVhtoGVoXHtTvQscBk3NIsVTbECT6oUp0+CVaPPjK/18B6A8nmvbabZFTwO
-         HsfDSwNhFCdOxEBvDNzsyz92RfRQy597nX6NdI2vMZoWMkFYgtgTvvuVaWvlaRFG+CoH
-         d85i9wPoQGxxhYy74PPiD10S2RHYu1UZdqCuW2vxlhaLnfDqAUmkBvhC7OAVHeS5AIhw
-         Q6VIjhmXcgsElvbk5N11/2j2L9/UBVZD/N87wSYU9IBeIEP+a5qDCyQHL4i369XyDXAW
-         VvGrx/ScTnTPoifAfej2PLpp/w1f8csc/oVM+irb9RWRd8Ki+ffGdWVo/EefxZ0RAzL3
-         SJoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUyF0/uL1T8FQSFVtZizHFSnu4IqvpLYSIB3RcIrQZIlN8EzwhXAmnJbnhtA+TT8SscQwR9jyJ3GepXZ9F5@vger.kernel.org, AJvYcCVpAhqq85wzxOMfCnBRO6Zlwe1ou43tzjCcMd8bZWVYg3NeYCOA1w4cfaD2i3sLHdEceuo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhWo5HmDzFXgYLUPLWZLpHVGKuO5wE1xKPJtZPE3HFxoZvzfCm
-	b5SbXqie1Q9CZyRYayzmBB/vONjuTi4Pw6L+83gaNvyq/51B+bWcr9zdDpOfm8jpZBtU9jNVw/7
-	MqkT5OJM+ffUqzOq4eqbGgVa89UEFV87G
-X-Gm-Gg: ASbGncshwXoT3UgEpOFYjEFhwK5dGtEE7zsw8gXK8+L0AgPPbI36ye9gE2WZFXPZX4d
-	J3GA8yHcOePAy1Fn4rZ+uEiKoOzTxtQ44BVK4xDTNCMLCl2jbz7rTBonqhGpldtr5zifPdGEfN4
-	5UQEAR0dSzDUQ8WrcD59BAka4xw/tSvzXD9EXitg==
-X-Google-Smtp-Source: AGHT+IEGbzaclPrSNLbpwY1OjJoztl6kRb0Wac9OKLNnw72VNagCJqiXskWxYP1WEfrIg74zt+O0FI62KRgHtD8He0Y=
-X-Received: by 2002:a05:6a00:2a08:b0:73e:96f:d4c1 with SMTP id
- d2e1a72fcca58-7409cf15e7fmr865953b3a.13.1746565510404; Tue, 06 May 2025
- 14:05:10 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746565520; x=1747170320;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=m8JsgWUKbE/peIKbAfNn2XRYX9tbkW2uKeLMmFKymPk=;
+        b=gYvWxvzu5XS7kIk8fAwZ7YxvK9Y69l8y7VDF7NU+wSj88JK3US6I4NeGMAoUR37J2x
+         Y7tjt8+T8eH6IMis5oJrpscBz6EHapU+tEjo8PkpVFyLn3ti+u/B/pCONLWE3jxocjcG
+         r7haNijSCQ6RTuOva9yJLwD9w2A/1weaSl8Sa34y+ZIVQ297HY0k6EUaQaVjXUtXv+cP
+         GcoKcB3jQHZtl1sxYJszTLiBXSZ9kKRpnmCwKXu2En0b+l4Ivyj5lGplbYy7GxYJNUec
+         SA3LJ1VM0JlD7UZldGJY/0fHqb14wv3c/MEJS2KE/m3dDvgPxQAouqVS3HBl9yjK0S6I
+         98DA==
+X-Forwarded-Encrypted: i=1; AJvYcCU62/5C1pKbZAjWwZMe8ExTWz70PjXvBJjWU1MELxn6DdakrgVDYmwUkZE4V1DfwgsHmWJD6tRZMvXO3gU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxUhsQuBsOtfcWrpilufRL9Zx7i1DWIa1TlSMKHIsygvhwkqESE
+	4pEkGyBcIis6t3nhfYr6GNku3x/yGbDdabG+othCryQlEOuoepVQwxFEoGEK8fo=
+X-Gm-Gg: ASbGnctRUNcQBJG7abbTF2Zedi++naytBotGN3msQeA3TQoaEV7BXt1WCf/Xp3MIjiU
+	+YKOE2T5BMitIQ1ZCctd+J9SHVm0gyjRjun3TGMFVFNpwXaaSU358mwSIg8EKmhz+Ph2907dgSV
+	tgKgt6drKn0M58R2jcWbvYCu4ZTA5+XtTuRn80MpgdnYxSSDu9ItDK8skUbv+m/xU2e8pO0X/sG
+	wJqVfgsRA7tK642Pd8MB+kc8tgueFxhMj9P5GMsBzOVJLaOzf4cTcTpKyBI26IaEWqg8IPvQZyE
+	t4zpeVaOZ3wF8R/B198kn+O/+B0cbb5pmwairdqyW0eVePb9sfKokQrvCPTONHxP7Q8Gc/86/n0
+	C9s/0S+WjDKUGwSBab2Ag6Zo=
+X-Google-Smtp-Source: AGHT+IFdcNg9xalwI/vP6wkduaNeYlIs7UH23AvEcqdx7FJHsBxWlW0U2gNA2iDaY0NitktQrxSABw==
+X-Received: by 2002:a05:600c:5252:b0:43c:f44c:72a6 with SMTP id 5b1f17b1804b1-441d44bc466mr4438175e9.2.1746565519709;
+        Tue, 06 May 2025 14:05:19 -0700 (PDT)
+Received: from [192.168.0.2] (host-87-8-31-78.retail.telecomitalia.it. [87.8.31.78])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441d4351abdsm6794475e9.23.2025.05.06.14.05.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 May 2025 14:05:19 -0700 (PDT)
+From: Angelo Dureghello <adureghello@baylibre.com>
+X-Google-Original-From: Angelo Dureghello <adureghello@baylibre.org>
+Subject: [PATCH v3 0/5] iio: adc: add ad7606 calibration support
+Date: Tue, 06 May 2025 23:03:46 +0200
+Message-Id: <20250506-wip-bl-ad7606-calibration-v3-0-6eb7b6e72307@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250502085710.3980-1-holger@applied-asynchrony.com>
- <7326223e-0cb9-4d22-872f-cbf1ff42227d@kernel.org> <913f66a8-6745-0e30-b5b8-96d23bf05b90@applied-asynchrony.com>
- <CAADnVQLpyNiyghWLMq5AxkBgZX4J9VfX5j4ToNh6UsrQ=4yndg@mail.gmail.com> <2a8208af-bc4b-f1bd-af0b-f5db485ed1f0@applied-asynchrony.com>
-In-Reply-To: <2a8208af-bc4b-f1bd-af0b-f5db485ed1f0@applied-asynchrony.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Tue, 6 May 2025 14:04:58 -0700
-X-Gm-Features: ATxdqUECGu980ouGjP2nCihP-TZ97sK48XyTR3etD-Bc401zNqeE7OzjIFc_omc
-Message-ID: <CAEf4BzYLYJtcehZhB22YsxRXZBcVnunNx-rm9CfTcDZFiY10jQ@mail.gmail.com>
-Subject: Re: [PATCH] bpftool: build bpf bits with -std=gnu11
-To: =?UTF-8?Q?Holger_Hoffst=C3=A4tte?= <holger@applied-asynchrony.com>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Quentin Monnet <qmo@kernel.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, bpf <bpf@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIADJ5GmgC/43NQQ6CMBAF0KuYrq2ZDqWAK+9hXLS0yCQIpCVVQ
+ ri7hY2JC+Py/8l/s7DgPLnAzoeFeRcp0NCnkB0PrG51f3ecbMoMAXOQWPEnjdx0XNtCgeK17sh
+ 4PaUVR9BZpbSCLEeW9qN3Db12+3pLuaUwDX7eX0Wxtf+oUXDgzkgrSxRGFHgxet7O7lQPD7bBE
+ T9YDvgLw4SJQhoLuoFSmC9sXdc3preGCBIBAAA=
+X-Change-ID: 20250429-wip-bl-ad7606-calibration-20a396a60352
+To: Jonathan Cameron <jic23@kernel.org>, 
+ David Lechner <dlechner@baylibre.com>, 
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
+ Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
+ Michael Hennerich <Michael.Hennerich@analog.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Michael Hennerich <michael.hennerich@analog.com>, 
+ devicetree@vger.kernel.org, Angelo Dureghello <adureghello@baylibre.com>, 
+ Conor Dooley <conor.dooley@microchip.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2206;
+ i=adureghello@baylibre.com; h=from:subject:message-id;
+ bh=DtfGGT3IGxKqdB3FC1mVlHDnlo7XpWTSUsAjxMBNLfc=;
+ b=owGbwMvMwCXGf3bn1e/btlsznlZLYsiQqnR3nG7z87zWxa9ntFJKyu25tzlxzixg4px1Z2uM9
+ 4+Ht/8e6ChlYRDjYpAVU2SpS4wwCb0dKqW8gHE2zBxWJpAhDFycAjCR+L0M/0vunzh8b1VD/Kb5
+ E805vU4vtAu4nmrN+by6XCWr846Dzj+G/yFR7PeMLZKTgq/ULuMO2ulU0NYt6BR5KPL3wXe5yen
+ r+QA=
+X-Developer-Key: i=adureghello@baylibre.com; a=openpgp;
+ fpr=703CDFAD8B573EB00850E38366D1CB9419AF3953
 
-On Sun, May 4, 2025 at 3:24=E2=80=AFAM Holger Hoffst=C3=A4tte
-<holger@applied-asynchrony.com> wrote:
->
-> On 2025-05-03 04:36, Alexei Starovoitov wrote:
-> > On Fri, May 2, 2025 at 2:53=E2=80=AFAM Holger Hoffst=C3=A4tte
-> > <holger@applied-asynchrony.com> wrote:
-> >>
-> >> On 2025-05-02 11:26, Quentin Monnet wrote:
-> >>> On 02/05/2025 09:57, Holger Hoffst=C3=A4tte wrote:
-> >>>> A gcc-15-based bpf toolchain defaults to C23 and fails to compile va=
-rious
-> >>>> kernel headers due to their use of a custom 'bool' type.
-> >>>> Explicitly using -std=3Dgnu11 works with both clang and bpf-toolchai=
-n.
-> >>>>
-> >>>> Signed-off-by: Holger Hoffst=C3=A4tte <holger@applied-asynchrony.com=
->
-> >>>
-> >>> Thanks! I tested that it still works with clang.
-> >>>
-> >>> Acked-by: Quentin Monnet <qmo@kernel.org>
-> >>
-> >> Thanks!
-> >>
-> >>> I didn't manage to compile with gcc, though. I tried with gcc 15.1.1 =
-but
-> >>> option '--target=3Dbpf' is apparently unrecognised by the gcc version=
- on
-> >>> my setup.
-> >>>
-> >>> Out of curiosity, how did you build using gcc for the skeleton? Was i=
-t
-> >>> enough to run "CLANG=3Dgcc make"? Does it pass the clang-bpf-co-re bu=
-ild
-> >>> probe successfully?
-> >>
-> >> I'm on Gentoo where we have a gcc-14/15 based "bpf-toolchain" package,
-> >> which is just gcc configured & packaged for the bpf target.
-> >> Our bpftool package can be built with clang (default) or without, in
-> >> which case it depend on the bpf-toolchain. The idea is to gradually
-> >> allow bpf/xdp tooling to build/run without requiring clang.
-> >>
-> >> The --target definition is conditional and removed when not using clan=
-g:
-> >> https://gitweb.gentoo.org/repo/gentoo.git/tree/dev-util/bpftool/bpftoo=
-l-7.5.0.ebuild?id=3Dbf70fbf7b0dc97fbc97af579954ea81a8df36113#n94
-> >>
-> >> The bug for building with the new gcc-15 based toolchain where this
-> >> patch originated is here: https://bugs.gentoo.org/955156
-> >
-> > So you're fixing this build error:
-> >
-> > bpf-unknown-none-gcc \
-> >          -I. \
-> >          -I/var/tmp/portage/dev-util/bpftool-7.5.0/work/bpftool-libbpf-=
-v7.5.0-sources/include/uapi/
-> > \
-> >          -I/var/tmp/portage/dev-util/bpftool-7.5.0/work/bpftool-libbpf-=
-v7.5.0-sources/src/bootstrap/libbpf/include
-> > \
-> >          -g -O2 -Wall -fno-stack-protector \
-> >           -c skeleton/profiler.bpf.c -o profiler.bpf.o
-> > In file included from skeleton/profiler.bpf.c:3:
-> > ./vmlinux.h:5: warning: ignoring '#pragma clang attribute' [-Wunknown-p=
-ragmas]
-> >      5 | #pragma clang attribute push
-> > (__attribute__((preserve_access_index)), apply_to =3D record)
-> > ./vmlinux.h:9845:9: error: cannot use keyword 'false' as enumeration co=
-nstant
-> >   9845 |         false =3D 0,
-> >        |         ^~~~~
-> > ./vmlinux.h:9845:9: note: 'false' is a keyword with '-std=3Dc23' onward=
-s
-> > ./vmlinux.h:31137:15: error: 'bool' cannot be defined via 'typedef'
-> > 31137 | typedef _Bool bool;
-> >        |               ^~~~
-> >
-> > with -std=3Dgnu11 flag and
->
-> Yes, correct. This is the same as all over the kernel or the bpf tests
-> for handling C23. I fully understand that this particular patch is only
-> one piece of the puzzle.
->
+Add gain, offset and phase (as a delay) calibration support, for
+ad7606b, ad7606c16 and ad7606c18.
 
-What's the best way to detect (at compile time) whether bool, false,
-and true are treated as reserved keywords? To solve this properly
-vmlinux.h would have to be adjusted by vmlinux.h to avoid emitting
-bool/false/true *iff* compiler version/mode doesn't like that
+Calibration is available for devices with software mode capability. 
 
-> > ignoring an important warning ?
->
-> Nobody is (or was) ignoring the warning - it was under discussion when
-> I posted the patch. After reaching out to Oracle to verify, we have now
-> added the BPF_NO_PRESERVE_ACCESS_INDEX define when building with gcc-bpf;
-> this resolves the warning, just like in the bpf self-tests.
->
-> You are right that such an addition to the in-kernel bpftool build is
-> still missing. If you have a suggestion on how best to do that via the
-> existing Makefile I'm all ears.
->
-> As for the remaining warnings - we are also very aware of the ongoing
-> upstream work to support btf_type_tag:
-> https://gcc.gnu.org/pipermail/gcc-patches/2025-April/682340.html.
->
-> > End result: partially functional bpftool,
-> > and users will have no idea why some features of bpftool are not workin=
-g.
->
-> First of all this is never shipped to any users; using gcc-bpf requires
-> active opt-in by developers or users, and now also warns that such a setu=
-p
-> may result in unexpected bugs due to ongoing work in both Linux and bpfto=
-ol.
-> Like I said before, by default everyone builds with clang and that is als=
-o
-> true for our distributed binaries.
->
-> If you think adding the -std=3Dgnu11 bit is inappropriate at this time th=
-en
-> just ignore this patch for now. Sooner or later the bpftool build will ha=
-ve
-> to be adapted with BPF_CFLAGS (liek in the selftests) and hopefuilly an
-> abstracted BPF_CC so that we no longer have to pretend to be clang when
-> using gcc.
->
-> cheers
-> Holger
+Offset and phase calibration is configurable by sysfs attributes, while
+gain calibration value in ohms must match the external RFilter value,
+when an external RFilter is available, so implemented through a specific
+devicetree "adi,rfilter-ohms" property.
+
+This patchset depends on:
+https://lore.kernel.org/linux-iio/20250505131544.0a7477a2@jic23-huawei/
+
+Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
+---
+Changes in v3:
+- fix dt_bindings,
+- change sysfs calib_delay to convdelay,
+- fix sysfs documentation accordingly,
+- used u32 for reg and r_gain,
+- used DIV_ROUND_CLOSEST for setting r_gain,
+- minor syntax fixes,
+- Link to v2: https://lore.kernel.org/r/20250502-wip-bl-ad7606-calibration-v2-0-174bd0af081b@baylibre.com
+
+Changes in v2:
+- change phase_delay to calib_delay,
+- fix dt_bindings,
+- fix gain calibarion fdt parsing,
+- fix ad7606c-18 calib offset range,
+- fix calib offset calculation,
+- fix calib gain range,
+- Link to v1: https://lore.kernel.org/r/20250429-wip-bl-ad7606-calibration-v1-0-eb4d4821b172@baylibre.com
+
+---
+Angelo Dureghello (5):
+      Documentation: ABI: IIO: add calibconv_delay documentation
+      iio: core: add ADC delay calibration definition
+      iio: adc: ad7606: add offset and phase calibration support
+      dt-bindings: iio: adc: adi,ad7606: add gain calibration support
+      iio: adc: ad7606: add gain calibration support
+
+ Documentation/ABI/testing/sysfs-bus-iio            |  24 +++
+ .../devicetree/bindings/iio/adc/adi,ad7606.yaml    |  29 +++
+ drivers/iio/adc/ad7606.c                           | 216 +++++++++++++++++++++
+ drivers/iio/adc/ad7606.h                           |  13 ++
+ drivers/iio/industrialio-core.c                    |   1 +
+ include/linux/iio/types.h                          |   1 +
+ 6 files changed, 284 insertions(+)
+---
+base-commit: 2f122cfb4c5d0ee7e44ed34ccb2d148d4146c0a5
+change-id: 20250429-wip-bl-ad7606-calibration-20a396a60352
+
+Best regards,
+-- 
+Angelo Dureghello <adureghello@baylibre.com>
+
