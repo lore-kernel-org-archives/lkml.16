@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9405287502;
-	Tue,  6 May 2025 01:39:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37B902C1E34;
+	Tue,  6 May 2025 01:39:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746495594; cv=none; b=MfJHMSpKH1UvnVoU/mjXvxto+7WNz4MOTWNNzajJmar61kKY9x0boRPRyjNIYT+cmEoIFyOG00rxMk2wL82ZpWvyxSMwxkX7fuxVE1x4xQ18Zakig8U4AAeMdZWCZ90+gQRJrpPtLxsbSWjY9oqRGCXhNR8aK6FdMD5BHjboPYs=
+	t=1746495597; cv=none; b=XVhCRupf92nvA5/5efuAnBoDWCECy/eIDPT2ybplHYY0zbChD9h0XiJ6PxB0a8YARv2xNdAFyYelpV2gi8HmV/+NMruUK5BiRn0U8mZ/+IHBNMtqoxMMChBjZ3RoB99yT3Z/0CyipIFubE2kR9pPUaY4ekzrEzWISnVy4Ns4540=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746495594; c=relaxed/simple;
-	bh=c9unjY9lvC/8kPwyEX04TWZ3vKRV4vrlN+1WvwRm4ac=;
+	s=arc-20240116; t=1746495597; c=relaxed/simple;
+	bh=RG7Fv4098vXZjKXhbYhSAmFoeYwghoNLjQ6woj5h+vQ=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=FXuVKuVYaxwX0bUMYUubP7lvvXu2G6C7zVLJJvgHz9kQ913QBAdAE59T500RORUekrhQ33rDJOZHktBFeoQrQsGOqvN+uYG+T4pvIVjyIie8kWxT1C+YQkZ9jmDN+2i7Dwre9BKzOhcIjZIuJfWuBKDR76i1OfUp6UgA5aQIN08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P/U7ZYbd; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=hVeIEH5hBR6F2rjvRV6Qd97wScYr6WTkEEh/cnzqESQuCAyY/lSdYTRn8oQSIbucVH4ICy9yCoEq0vwI4Vxsic8xTnbn46Fx2SUad5Ao1r22uLuJpJ8jE2q5lV+8yKkAMOH/USEDxlQKjALUNakq9Ga9kBoKusrttWtZuvs49qI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E58El8rg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P/U7ZYbd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FB20C4CEE4;
-	Tue,  6 May 2025 01:39:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E58El8rg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B260AC4CEE4;
+	Tue,  6 May 2025 01:39:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746495594;
-	bh=c9unjY9lvC/8kPwyEX04TWZ3vKRV4vrlN+1WvwRm4ac=;
+	s=k20201202; t=1746495596;
+	bh=RG7Fv4098vXZjKXhbYhSAmFoeYwghoNLjQ6woj5h+vQ=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=P/U7ZYbdN1BSZfXzVUdfJJZaSwWKp/DX0ESCeyVVFk/+CQ6MuQ3OzZrUNdMNokS0d
-	 8P//8feOjDFoc2BJACtCpYtgGw4UVR0OiZfsJHQ6uaa2iOIeuWVi7DCTp/AdTNddKG
-	 38YRxKNfxXaDJ+8C2U9SW7Ngh56yH1k/0WjcBYwsIMsTWV44iYL6T8uK5sQGrASb7v
-	 BaiY/zBmpXpVEjg4UESkEYRNY1JGjxtmdt2LCr+GPK6Xi3mvYu+7lUKuonYupPN5xg
-	 dmihM3pDPXFICNhd+jpdDhvMU0zLgeHlOBlbBOROWb3VY/eDo72OzQ7DWQgroRqktk
-	 NFlmuEdr4WKag==
+	b=E58El8rgXquEtN8ubo2Plj5XwQnib9vZEvNYqi6QSLlNzDg5KcL83KhQ4p7B0i7Yl
+	 jh9HAGlxggCzxmhYMXIPau2IiYx3GgqK9wo94OgoDTYX0PO9knEoZgyqC+/jIry9Bf
+	 c+rvzhuc8s0UEWn+I6M4gRgcnzFFUQuDKTQqFozNjmTD2gSgdLAu7bKpZQE/ubJHrh
+	 ofENS+3MdRO6vMCJ2S5IeNG/7waVGd5XaSWjF477YaCWSPNuOwtcR6ezklZXelsSml
+	 ms6oVQl8hK1GdOKqTIaAjafJioKAbQisvR7H59jnTiowVQs/eQLaEmjePVipqp5Wr0
+	 VT00OdZSerh+Q==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADD4F380664B;
-	Tue,  6 May 2025 01:40:34 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33AC7380664B;
+	Tue,  6 May 2025 01:40:37 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,16 +37,17 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v2 net-next] ipv4: ip_tunnel: Replace strcpy use with strscpy
+Subject: Re: [PATCH net-next v3] vhost/net: Defer TX queue re-enable until after
+ sendmsg
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <174649563350.1007977.12065018765324353318.git-patchwork-notify@kernel.org>
-Date: Tue, 06 May 2025 01:40:33 +0000
-References: <20250501202935.46318-1-rubenru09@aol.com>
-In-Reply-To: <20250501202935.46318-1-rubenru09@aol.com>
-To: Ruben Wauters <rubenru09@aol.com>
-Cc: davem@davemloft.net, dsahern@kernel.org, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, netdev@vger.kernel.org,
+ <174649563599.1007977.10317536057166889809.git-patchwork-notify@kernel.org>
+Date: Tue, 06 May 2025 01:40:35 +0000
+References: <20250501020428.1889162-1-jon@nutanix.com>
+In-Reply-To: <20250501020428.1889162-1-jon@nutanix.com>
+To: Jon Kohler <jon@nutanix.com>
+Cc: mst@redhat.com, jasowang@redhat.com, eperezma@redhat.com,
+ kvm@vger.kernel.org, virtualization@lists.linux.dev, netdev@vger.kernel.org,
  linux-kernel@vger.kernel.org
 
 Hello:
@@ -54,22 +55,20 @@ Hello:
 This patch was applied to netdev/net-next.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Thu,  1 May 2025 21:23:55 +0100 you wrote:
-> Use of strcpy is decpreated, replaces the use of strcpy with strscpy as
-> recommended.
+On Wed, 30 Apr 2025 19:04:28 -0700 you wrote:
+> In handle_tx_copy, TX batching processes packets below ~PAGE_SIZE and
+> batches up to 64 messages before calling sock->sendmsg.
 > 
-> strscpy was chosen as it requires a NUL terminated non-padded string,
-> which is the case here.
-> 
-> I am aware there is an explicit bounds check above the second instance,
-> however using strscpy protects against buffer overflows in any future
-> code, and there is no good reason I can see to not use it.
+> Currently, when there are no more messages on the ring to dequeue,
+> handle_tx_copy re-enables kicks on the ring *before* firing off the
+> batch sendmsg. However, sock->sendmsg incurs a non-zero delay,
+> especially if it needs to wake up a thread (e.g., another vhost worker).
 > 
 > [...]
 
 Here is the summary with links:
-  - [v2,net-next] ipv4: ip_tunnel: Replace strcpy use with strscpy
-    https://git.kernel.org/netdev/net-next/c/c2dbda07662e
+  - [net-next,v3] vhost/net: Defer TX queue re-enable until after sendmsg
+    https://git.kernel.org/netdev/net-next/c/8c2e6b26ffe2
 
 You are awesome, thank you!
 -- 
