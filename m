@@ -1,61 +1,103 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73672264A94;
-	Tue,  6 May 2025 12:38:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8669D27A478;
+	Tue,  6 May 2025 12:41:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746535082; cv=none; b=jbV9pIEmfOXHP5kc4xNRQksewPwGEmR+hp4hNoUzD7zsb+M9JjchfifwAsJBRsb85zl9yYtNt0+XUVEKbg/YbapulzxKsz/nJTz3hsYXPUWxdjanT1aWj2qZX9l0IaOEB/FX7F92tYg2iIal63GgVqJmC2SypXp+RPbylOXGXDY=
+	t=1746535270; cv=none; b=qVDacWzz2gCOFNLSoyM4ruEDw24kAySX4pJCm7SmkrNVdeQqvxNh66KGVA5IibmOxBbnBMzR7sttGQpJNAuD/vz7lp0BCmG3SnG19HshXkzBgllMLiPBBuaZFMkMq7167L3SY6e2fxlGe04oyLc79oWlFd9N2j1SfxSFvLgBwA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746535082; c=relaxed/simple;
-	bh=8pEwVmxSd5/k9VwZONa5T9VOsEUR7lsS4AVBM+/xJaI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qCvOzXvFw1LCIOArJkr7DxnOaytl92TPZ7E+2sox2mIpzvpMFJeN29nYAtYHOKKiWSKoCQBFkOYPGAlmYZqhdti9EoYf2XOJ0u8fT1/ThY1Eig/ZbGlMXyVB1v/zNR7veIVJlTXA0NvsqP+0LJi3u8quCiw7hGZ4nFbWODcVWJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=QH8h8kv5; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1746535270; c=relaxed/simple;
+	bh=fKAjeUu7aJ2cAoUuZNbRM4pTCnVbVDOkQZPM/+G+pdE=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Subject:Cc:From:
+	 References:In-Reply-To; b=XluRxXYjiGJmxKmFQCpM4vgtWyqK/Qo8N+KqH972pH85zthIco1zv+BUjAssbgw8O95JJKpA6UNFtatUc5vq0ETZqOBIsokq09VZBRhKhsATiR8QjaXWpvhos+tzy5HRgxAbgS188VorUmHU7JKoApUMHMr4gPiaBae7LBZdA2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=QKSOfD4B; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="QH8h8kv5"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=fX4hC4wtwnpA4kRyTNVi9k79+L9Hkq8xM6nbvmPzJh0=; b=QH8h8kv5xgI1oMVh74eElxJ7k7
-	afhVIZ1zohVuyXzsiwUEEpcKbldcCARqE45e3/4AXnwJnkcM8KUg0/EN2LnDlIaRRAhn5gAU+TDtV
-	uo6k3OtdoyQYNZS114EkR999xtSbFrCMnDA6tx8b2xqu2vKys6ORyaQnMOFjxkobLIgY=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uCHYb-00BlGs-PS; Tue, 06 May 2025 14:37:57 +0200
-Date: Tue, 6 May 2025 14:37:57 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Gregory Clement <gregory.clement@bootlin.com>,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: timer: Convert marvell,orion-timer to DT
- schema
-Message-ID: <f6c8731c-6d8c-481d-a359-cbd628fa4748@lunn.ch>
-References: <20250506022305.2588431-1-robh@kernel.org>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="QKSOfD4B"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id AD73B43B04;
+	Tue,  6 May 2025 12:41:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1746535264;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0sqKVcBEt6pQmMwRIYYIzEuUV/01lrMK0Zw8BI9CN/k=;
+	b=QKSOfD4BfheMezgztCkjPf4/2L/rXlXNBI6VznfgOptD6RjikLqYOqRBLdlu4UdwlUw+uA
+	YQWgQh5Mb8hGO8Qlod4DrEOyTSzUmPPk7YATMA7PvL/Yg9n/RCE01u/1vCdFqx4Yhx3VHl
+	8PLnIt645r6+EF3G2mGcERTp89/Mq0vKccIh09vNzcC12JQTNKh1fN4ZgXTUvMdqYfqS8n
+	+ILvwpmYyLZxipsa8SADLUYEPNZBqBZa6gaIRLBCik/BSZjvfxvvaeGA91PFBUIDsKoyRi
+	d/7uHyDA76WT2xZ524HjSpFIDI1uTldbpg2zGODJ03l3qv3Pu1lWtA3D61Q0Rw==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250506022305.2588431-1-robh@kernel.org>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 06 May 2025 14:41:03 +0200
+Message-Id: <D9P32VIGJX5V.1VV0F5MZ17QDW@bootlin.com>
+To: "Dmitry Torokhov" <dmitry.torokhov@gmail.com>, "Andy Shevchenko"
+ <andriy.shevchenko@intel.com>
+Subject: Re: [PATCH v7 09/11] input: keyboard: Add support for MAX7360
+ keypad
+Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
+ Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, "Michael Walle"
+ <mwalle@kernel.org>, "Mark Brown" <broonie@kernel.org>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
+ <linux-pwm@vger.kernel.org>, =?utf-8?q?Gr=C3=A9gory_Clement?=
+ <gregory.clement@bootlin.com>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>
+From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
+X-Mailer: aerc 0.19.0-0-gadd9e15e475d
+References: <20250428-mdb-max7360-support-v7-0-4e0608d0a7ff@bootlin.com>
+ <20250428-mdb-max7360-support-v7-9-4e0608d0a7ff@bootlin.com>
+ <aBSii0rHox72GM5Y@smile.fi.intel.com>
+ <aggrss4doko5scdlmyzdsujkifryzuzqdnpkh6sd33rg5ibqmm@aiikzv732rkq>
+In-Reply-To: <aggrss4doko5scdlmyzdsujkifryzuzqdnpkh6sd33rg5ibqmm@aiikzv732rkq>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeegtdduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkvffuvefhofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeethfeiheehheegheekueeigfekffdvheegfeeivefgkeeftdehhfdthfehueejfeenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvvddprhgtphhtthhopegumhhithhrhidrthhorhhokhhhohhvsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghnughrihihrdhshhgvvhgth
+ hgvnhhkohesihhnthgvlhdrtghomhdprhgtphhtthhopehlvggvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrghmvghlrdgsohhuhhgrrhgrsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhg
+X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-On Mon, May 05, 2025 at 09:23:04PM -0500, Rob Herring (Arm) wrote:
-> Convert the Marvell Orion Timer binding to DT schema format. It's a
-> straight-forward conversion.
-> 
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+On Tue May 6, 2025 at 7:14 AM CEST, Dmitry Torokhov wrote:
+> On Fri, May 02, 2025 at 01:46:35PM +0300, Andy Shevchenko wrote:
+>> On Mon, Apr 28, 2025 at 01:57:27PM +0200, Mathieu Dubois-Briand wrote:
+>> > +	error =3D matrix_keypad_build_keymap(&keymap_data, NULL,
+>> > +					   max7360_keypad->rows, max7360_keypad->cols,
+>> > +					   max7360_keypad->keycodes, max7360_keypad->input);
+>> > +
+>> > +	return error;
+>>=20
+>> 	return matrix_...(...);
+>
+> Because that function has multiple failure points please
+>
+> 	if (error)
+> 		return error; // or return dev_err_probe()
+>
+> 	return 0;
+>
+> Thanks.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-    Andrew
+Noted, I will change this.
+
+Thanks for your review.
+Mathieu
+
+--=20
+Mathieu Dubois-Briand, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
