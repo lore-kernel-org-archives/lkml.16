@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 247BC336775;
-	Tue,  6 May 2025 02:22:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF0FC336B6F;
+	Tue,  6 May 2025 02:22:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746498164; cv=none; b=rVCfRMtivNTPxtfwEL1nxnabhzNTO6UhMNIFPLrdclRxrqmLTj95gSE4hbyYZ3Q0Mr2AlQY9xFjhPJGU3oyNEW5HaZvJGxEtyu+9xjAJI+Ie8GZAJtxk3xxNPhTrHCpOS9NvNH0IC6bt6OVQoftyP410eZpJdjApzLOUoSkr+t0=
+	t=1746498167; cv=none; b=rex4+o6Moagw+AySRxKHmmU1ajbvUKW2yCNK6VXtDOZfVU+IpDbxYdGTSSPB99YaQpBuuBgd6P45K+fP64MknLhscWdqmtsjWEeBfIXqdAuTbdQMqo7RLKo3x0tsw2U1l5z9aCDNfTdyrRmlXvrwNrTKhzP1uL6FgykNjIZebNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746498164; c=relaxed/simple;
-	bh=dKF5cqv9nwsRP0Q+VO2CHb8JYRdezyAl8BkwSGE6dJY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IgAMHcndAxv+5TzC1E1J4HPvUjcquIIwYJ0p0XzRxtXzW/aSggegesAFrdOsVJ8m1TzD2TYc0eWb9GrGZvnScYpxafcjHIvtvsycHYUeNf1LEO/+vBFrf4PrGBCKg24B1sp/FcU+zZwca93V5aJx779xTBfLy/vRL6DDL4P0H5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WfK1bMis; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746498167; c=relaxed/simple;
+	bh=YtU3XhtrGdmElcr5Xcinm5PmM5Cdi+2rz477+giBWBk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AmEkYdeyaC/YdjVmdRCTZhlastvWTwPotog9kxdsKaaW6StrP0WwdBwgKfFqRS6iswH+B2g6ULIPse+n1nnZTy50PQOZgrN1sNHWnh3mlyLjdTKMBH7dcsCw1Ju60QzDMPZ7vSIZ610qZs924wsB45CdMwAFlr74sko00/W4Vm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QZ0iIMLx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WfK1bMis"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DF5DC4CEE4;
-	Tue,  6 May 2025 02:22:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QZ0iIMLx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79E30C4CEE4;
+	Tue,  6 May 2025 02:22:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746498163;
-	bh=dKF5cqv9nwsRP0Q+VO2CHb8JYRdezyAl8BkwSGE6dJY=;
+	s=k20201202; t=1746498167;
+	bh=YtU3XhtrGdmElcr5Xcinm5PmM5Cdi+2rz477+giBWBk=;
 	h=From:To:Cc:Subject:Date:From;
-	b=WfK1bMislzlVSHss/n2gdWKITgtyR0C3XHPm7Tr8R1z4ciN481xF1jcnCr5Id9+mk
-	 BfyZps0mVivUj1hElijBN4GduS0xSPwjFVnkrcjIVmDUZvBUeY8PNE3MneZLKtytYJ
-	 J6ErjQQQ6Tt4SeW+xPZIpOZlTxOsLGS71BbZkm5xmSF9xf6Esqq7CqCTeG8EVxf6Ow
-	 XxfkqW5juKlNkCTZqN7kA7Ag0ZoNaigXAaeeDtUPBi014Azy5/CPOCi4QFf+7aaExv
-	 4kXO67kXjqIFXztIZ3fwlZpVTJc03AAMc9QC+TV0HhpPra8CyC/NEtioQEONloMHc2
-	 CstqL8cC0Wtsg==
+	b=QZ0iIMLxwv4A5naKrIqerjqtlib7aHiGzl3zD5ojpJQlThm9ZpvvMhY5eoo6bsIOt
+	 JjwDju2PEFHRqY9gHy0sWajHkDMhR4mGVjwJL5lKH7BiIVy1xbkWuMwgvzOnZ6dCNq
+	 EQHHXJqGvkobVIoC7HsX06uPUe4fjEPsrjdB+eY5xHSq8eJftxrPBvarAqezSJzXFW
+	 0sMX+aFdkaRwFRfmaDOYuygohWlLNmtLZvAp0QDYgUkNjHnbkTQLMJRjhhS00Ny9+0
+	 HOaig3EU+A7SoGvgFr895b0s/VE/MKri+D63DAYW4ZohPU3Zb+MUUSegHrVyF2gFNS
+	 /TFGOiJ/3YNFg==
 From: "Rob Herring (Arm)" <robh@kernel.org>
 To: Daniel Lezcano <daniel.lezcano@linaro.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Joel Stanley <joel@jms.id.au>,
-	Linus Walleij <linus.walleij@linaro.org>
+	Conor Dooley <conor+dt@kernel.org>
 Cc: linux-kernel@vger.kernel.org,
 	devicetree@vger.kernel.org
-Subject: [PATCH] dt-bindings: timer: Convert faraday,fttmr010 to DT schema
-Date: Mon,  5 May 2025 21:22:40 -0500
-Message-ID: <20250506022241.2587534-1-robh@kernel.org>
+Subject: [PATCH] dt-bindings: timer: Convert fsl,gtm to DT schema
+Date: Mon,  5 May 2025 21:22:43 -0500
+Message-ID: <20250506022245.2587662-1-robh@kernel.org>
 X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -46,157 +44,115 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Convert the Faraday fttmr010 Timer binding to DT schema format. Adjust
-the compatible string values to match what's in use. The number of
-interrupts can also be anywhere from 1 to 8. The clock-names order was
-reversed compared to what's used.
+Convert the Freescale General Purpose Timer binding to DT schema format.
+Add the specific compatibles in use. Drop the "fsl,cpm2-gtm" compatible
+which is not used. The examples are all similar, so just leave 1
+example.
 
 Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- .../bindings/timer/faraday,fttmr010.txt       | 38 --------
- .../bindings/timer/faraday,fttmr010.yaml      | 89 +++++++++++++++++++
- 2 files changed, 89 insertions(+), 38 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/timer/faraday,fttmr010.txt
- create mode 100644 Documentation/devicetree/bindings/timer/faraday,fttmr010.yaml
+ .../devicetree/bindings/timer/fsl,gtm.txt     | 30 ----------
+ .../devicetree/bindings/timer/fsl,gtm.yaml    | 55 +++++++++++++++++++
+ 2 files changed, 55 insertions(+), 30 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/timer/fsl,gtm.txt
+ create mode 100644 Documentation/devicetree/bindings/timer/fsl,gtm.yaml
 
-diff --git a/Documentation/devicetree/bindings/timer/faraday,fttmr010.txt b/Documentation/devicetree/bindings/timer/faraday,fttmr010.txt
+diff --git a/Documentation/devicetree/bindings/timer/fsl,gtm.txt b/Documentation/devicetree/bindings/timer/fsl,gtm.txt
 deleted file mode 100644
-index 3cb2f4c98d64..000000000000
---- a/Documentation/devicetree/bindings/timer/faraday,fttmr010.txt
+index fc1c571f7412..000000000000
+--- a/Documentation/devicetree/bindings/timer/fsl,gtm.txt
 +++ /dev/null
-@@ -1,38 +0,0 @@
--Faraday Technology timer
--
--This timer is a generic IP block from Faraday Technology, embedded in the
--Cortina Systems Gemini SoCs and other designs.
+@@ -1,30 +0,0 @@
+-* Freescale General-purpose Timers Module
 -
 -Required properties:
--
--- compatible : Must be one of
--  "faraday,fttmr010"
--  "cortina,gemini-timer", "faraday,fttmr010"
--  "moxa,moxart-timer", "faraday,fttmr010"
--  "aspeed,ast2400-timer"
--  "aspeed,ast2500-timer"
--  "aspeed,ast2600-timer"
--
--- reg : Should contain registers location and length
--- interrupts : Should contain the three timer interrupts usually with
--  flags for falling edge
--
--Optionally required properties:
--
--- clocks : a clock to provide the tick rate for "faraday,fttmr010"
--- clock-names : should be "EXTCLK" and "PCLK" for the external tick timer
--  and peripheral clock respectively, for "faraday,fttmr010"
--- syscon : a phandle to the global Gemini system controller if the compatible
--  type is "cortina,gemini-timer"
+-  - compatible : should be
+-    "fsl,<chip>-gtm", "fsl,gtm" for SOC GTMs
+-    "fsl,<chip>-qe-gtm", "fsl,qe-gtm", "fsl,gtm" for QE GTMs
+-    "fsl,<chip>-cpm2-gtm", "fsl,cpm2-gtm", "fsl,gtm" for CPM2 GTMs
+-  - reg : should contain gtm registers location and length (0x40).
+-  - interrupts : should contain four interrupts.
+-  - clock-frequency : specifies the frequency driving the timer.
 -
 -Example:
 -
--timer@43000000 {
--	compatible = "faraday,fttmr010";
--	reg = <0x43000000 0x1000>;
--	interrupts = <14 IRQ_TYPE_EDGE_FALLING>, /* Timer 1 */
--		   <15 IRQ_TYPE_EDGE_FALLING>, /* Timer 2 */
--		   <16 IRQ_TYPE_EDGE_FALLING>; /* Timer 3 */
--	clocks = <&extclk>, <&pclk>;
--	clock-names = "EXTCLK", "PCLK";
+-timer@500 {
+-	compatible = "fsl,mpc8360-gtm", "fsl,gtm";
+-	reg = <0x500 0x40>;
+-	interrupts = <90 8 78 8 84 8 72 8>;
+-	interrupt-parent = <&ipic>;
+-	/* filled by u-boot */
+-	clock-frequency = <0>;
 -};
-diff --git a/Documentation/devicetree/bindings/timer/faraday,fttmr010.yaml b/Documentation/devicetree/bindings/timer/faraday,fttmr010.yaml
+-
+-timer@440 {
+-	compatible = "fsl,mpc8360-qe-gtm", "fsl,qe-gtm", "fsl,gtm";
+-	reg = <0x440 0x40>;
+-	interrupts = <12 13 14 15>;
+-	interrupt-parent = <&qeic>;
+-	/* filled by u-boot */
+-	clock-frequency = <0>;
+-};
+diff --git a/Documentation/devicetree/bindings/timer/fsl,gtm.yaml b/Documentation/devicetree/bindings/timer/fsl,gtm.yaml
 new file mode 100644
-index 000000000000..6f67ec0505bd
+index 000000000000..31d8534ac868
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/faraday,fttmr010.yaml
-@@ -0,0 +1,89 @@
++++ b/Documentation/devicetree/bindings/timer/fsl,gtm.yaml
+@@ -0,0 +1,55 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/timer/faraday,fttmr010.yaml#
++$id: http://devicetree.org/schemas/timer/fsl,gtm.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Faraday FTTMR010 timer
++title: Freescale General-purpose Timers Module
 +
 +maintainers:
-+  - Joel Stanley <joel@jms.id.au>
-+  - Linus Walleij <linus.walleij@linaro.org>
-+
-+description:
-+  This timer is a generic IP block from Faraday Technology, embedded in the
-+  Cortina Systems Gemini SoCs and other designs.
++  - Rob Herring <robh@kernel.org>
 +
 +properties:
 +  compatible:
 +    oneOf:
 +      - items:
-+          - const: moxa,moxart-timer
-+          - const: faraday,fttmr010
-+      - enum:
-+          - aspeed,ast2400-timer
-+          - aspeed,ast2500-timer
-+          - aspeed,ast2600-timer
-+          - cortina,gemini-timer
-+          - faraday,fttmr010
++          - enum:
++              - fsl,mpc8308-gtm
++              - fsl,mpc8313-gtm
++              - fsl,mpc8315-gtm
++          - const: fsl,gtm
++      - items:
++          - enum:
++              - fsl,mpc8569-qe-gtm
++              - fsl,mpc8360-qe-gtm
++          - const: fsl,qe-gtm
++          - const: fsl,gtm
 +
 +  reg:
 +    maxItems: 1
 +
 +  interrupts:
-+    minItems: 1
-+    maxItems: 8
-+    description: One interrupt per timer
++    maxItems: 4
++    description:
++      One interrupt for each timer
 +
-+  clocks:
-+    minItems: 1
-+    items:
-+      - description: Peripheral clock
-+      - description: External tick clock
-+
-+  clock-names:
-+    minItems: 1
-+    items:
-+      - const: PCLK
-+      - const: EXTCLK
-+
-+  resets:
-+    maxItems: 1
-+
-+  syscon:
-+    description: System controller phandle for Gemini systems
-+    $ref: /schemas/types.yaml#/definitions/phandle
++  clock-frequency:
++    description: Specifies the frequency driving the timer.
++    default: 0
 +
 +required:
 +  - compatible
 +  - reg
 +  - interrupts
-+
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: cortina,gemini-timer
-+    then:
-+      required:
-+        - syscon
-+    else:
-+      properties:
-+        syscon: false
++  - clock-frequency
 +
 +additionalProperties: false
 +
 +examples:
 +  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    timer@43000000 {
-+        compatible = "faraday,fttmr010";
-+        reg = <0x43000000 0x1000>;
-+        interrupts = <14 IRQ_TYPE_EDGE_FALLING>, /* Timer 1 */
-+                    <15 IRQ_TYPE_EDGE_FALLING>, /* Timer 2 */
-+                    <16 IRQ_TYPE_EDGE_FALLING>; /* Timer 3 */
-+        clocks = <&extclk>, <&pclk>;
-+        clock-names = "EXTCLK", "PCLK";
++    timer@440 {
++        compatible = "fsl,mpc8360-qe-gtm", "fsl,qe-gtm", "fsl,gtm";
++        reg = <0x440 0x40>;
++        interrupts = <12>, <13>, <14>, <15>;
++        clock-frequency = <0>;
 +    };
 -- 
 2.47.2
