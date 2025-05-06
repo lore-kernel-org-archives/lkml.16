@@ -1,153 +1,409 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2379F2857FB
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 17:09:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3DA52853F7;
+	Tue,  6 May 2025 17:09:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746551376; cv=none; b=HHZruhI7/GPB98Ap8fn0ckGbkQnIqC9YF3ycB6yl8vtUy5Pxtfo9x3FwW9r6hIwar+iXkugpk560OAGuLsWH+7wzG3n1IUO0peFegrEjhn1lBHAEoRNPRTyWpkVsISvhwwLHb6XALndWgk6KCcLg5FTGO/Lm9lNnPxpVdRs/sGE=
+	t=1746551374; cv=none; b=N0BT/MbtNrc8/7v0TMMseIjMFzH5BaQ0onQgEMrAxPk+d6ifZtGRIme0XSDS3sXjY2Msd6+g3YNLvjt6+jl6gQElT/k+Y1TKlj2D39wfoICjysW2MxTfbCeuz7+JxLFXCqK//6egUQzr3Kli9t8vZjazaC/B3xyS4yITE/L+qU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746551376; c=relaxed/simple;
-	bh=dOJtECNKkBxi48qMeisCrCtM6mzZ/b4yWbrlZ7GczE8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VIrd2wPy5Dey3WGZZ+N+K6s9zKvEawbhHQVDJS7DkTom3Cq3MVkKNeiAfGMSQlDdf4Bn2BTLzkUHOeI5cAhtxHg0ITbgyVC+hVfzmiKVIyRYzPgpQRdANZE3TepAkPcYwEsRre4S5HC6Lg3z6UR8zc2miOgbi73oJhrMpOkOpaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pSHYiMXG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746551374; c=relaxed/simple;
+	bh=pwtLzPif3UxjTFKs4y8IgdJ7SvrBTPG4ooY9nRPu9+k=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=OUGJblcfISq/wRoTnXX7LVx8tIOAXyUDwIzPN2KyQrFh7LIj8ilFbyVExPmc3CUNOymGXwa7EHItKkbIsrH/Ayd/Qaks0rLThPSS9vZmUwZ61b3LfG4DtLAAhiUJkblKzU4VuOu7yqa1JzaOHrqVUwx9QlR+VXE/sgeiV5u8FqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cd1jEIrN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pSHYiMXG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB767C4CEEB;
-	Tue,  6 May 2025 17:09:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cd1jEIrN"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 4B814C4CEE4;
+	Tue,  6 May 2025 17:09:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746551375;
-	bh=dOJtECNKkBxi48qMeisCrCtM6mzZ/b4yWbrlZ7GczE8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pSHYiMXGh6nMZ23zKhCEwNx06BbjkMOJYQiVPO5PKler0bRpJymBznQny56TvZkjK
-	 EfoCo3Sp/kG+d/GzefpbgAcPTQmiITqLVBgcAL12HzAOMBAp/566KbOcxdm3Op8/6W
-	 hk8MIvCZ2YKa5WV4X7Ae7l6rCKhADqMD22a5w0thWLgmtdCmvertHqt6AEV5IyXn0t
-	 5T92XUHxPMbm4tNto5kH7HPsCGEqbvSP1o8hjR71pjHDsIGi/vTSYMXcevSC/BzJjL
-	 hzl5Dyagb3WoYVjI671JauUpYOyBCEgv3tu6GQS+HpT2EabeQmAhMkKPBpyUllWPMn
-	 tiJDtlrg1CK2A==
-From: Ingo Molnar <mingo@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: "H . Peter Anvin" <hpa@zytor.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	Masahiro Yamada <yamada.masahiro@socionext.com>,
-	Michal Marek <michal.lkml@markovi.net>
-Subject: [PATCH 02/15] x86/kconfig/32: Refresh defconfig
-Date: Tue,  6 May 2025 19:09:11 +0200
-Message-ID: <20250506170924.3513161-3-mingo@kernel.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250506170924.3513161-1-mingo@kernel.org>
-References: <20250506170924.3513161-1-mingo@kernel.org>
+	s=k20201202; t=1746551374;
+	bh=pwtLzPif3UxjTFKs4y8IgdJ7SvrBTPG4ooY9nRPu9+k=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=Cd1jEIrNH1fw0sN+2+GlMNYkOvpFtrAY3fqw5Xo8at07tAyBQZVeWPYdyq8Dz6S3T
+	 1/8rzORY+vcApvzVLW1nvA1VgtzwWKIiRHIS1mK8qDYEoCzR7oDxLu3UzDhqxJAuXv
+	 9XxUpSwbac1zAj0xQKK419sMsD0WEA/dd7LQC3Ld5A5o5D0fq1CC7qfFN0lTCeZiqx
+	 kG9u8DnpK+vaL1C4mjA44JEqoVCufjf7vs7/5VicrCtSyQotaPcWkoAQjqrGo/Bv4H
+	 OyGImq7sYuxJygk1TlehM+iiOZ2XUgOhsEy94qC27Ii+OhaO8tpe6yQY6BC1z1kZdt
+	 xerSJVtB5Gz8A==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD31C3ABBC;
+	Tue,  6 May 2025 17:09:34 +0000 (UTC)
+From: Aaron Kling via B4 Relay <devnull+webgeek1234.gmail.com@kernel.org>
+Date: Tue, 06 May 2025 12:09:17 -0500
+Subject: [PATCH v2 1/2] dt-bindings: phy: tegra-xusb: Document
+ role-switch-default-mode
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250506-xusb-peripheral-v2-1-bfbe00671389@gmail.com>
+References: <20250506-xusb-peripheral-v2-0-bfbe00671389@gmail.com>
+In-Reply-To: <20250506-xusb-peripheral-v2-0-bfbe00671389@gmail.com>
+To: JC Kuo <jckuo@nvidia.com>, Vinod Koul <vkoul@kernel.org>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Thierry Reding <thierry.reding@gmail.com>, 
+ Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-phy@lists.infradead.org, linux-tegra@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ Aaron Kling <webgeek1234@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1746551373; l=12515;
+ i=webgeek1234@gmail.com; s=20250217; h=from:subject:message-id;
+ bh=bXDz9V7ijjOjEJDjbseeUMoc4cMqeqy8K+grZCx+HLw=;
+ b=GK4I3KpBd+lxijxREOMj3v4HHSzQOPDNux/+SXpHMeMi8uzDS6uEDdGuyu5bXQw2ENsgPvtPL
+ L19irEOUYKfDSAsiMpZ9XZxUubnrs+Hepayj3lgnO6WCO/Hi5ly24XI
+X-Developer-Key: i=webgeek1234@gmail.com; a=ed25519;
+ pk=TQwd6q26txw7bkK7B8qtI/kcAohZc7bHHGSD7domdrU=
+X-Endpoint-Received: by B4 Relay for webgeek1234@gmail.com/20250217 with
+ auth_id=342
+X-Original-From: Aaron Kling <webgeek1234@gmail.com>
+Reply-To: webgeek1234@gmail.com
 
-Refresh the x86-32 defconfig to pick up changes in the
-general Kconfig environment: removed options, different
-defaults, renames, etc.
+From: Aaron Kling <webgeek1234@gmail.com>
 
-No changes to the actual result of 'make ARCH=i386 defconfig'.
+This property is used to default an otg port to host or peripheral.
 
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: David Woodhouse <dwmw@amazon.co.uk>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Michal Marek <michal.lkml@markovi.net>
+Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
 ---
- arch/x86/configs/i386_defconfig | 14 +++-----------
- 1 file changed, 3 insertions(+), 11 deletions(-)
+ .../bindings/phy/nvidia,tegra124-xusb-padctl.yaml  | 33 ++++++++++++++++++++
+ .../bindings/phy/nvidia,tegra186-xusb-padctl.yaml  | 27 ++++++++++++++++
+ .../bindings/phy/nvidia,tegra194-xusb-padctl.yaml  | 36 ++++++++++++++++++++++
+ .../bindings/phy/nvidia,tegra210-xusb-padctl.yaml  | 36 ++++++++++++++++++++++
+ 4 files changed, 132 insertions(+)
 
-diff --git a/arch/x86/configs/i386_defconfig b/arch/x86/configs/i386_defconfig
-index 91801138b10b..e983f1db22dd 100644
---- a/arch/x86/configs/i386_defconfig
-+++ b/arch/x86/configs/i386_defconfig
-@@ -28,6 +28,7 @@ CONFIG_CGROUP_DEBUG=y
- CONFIG_BLK_DEV_INITRD=y
- CONFIG_KALLSYMS_ALL=y
- CONFIG_PROFILING=y
-+CONFIG_KEXEC=y
- CONFIG_SMP=y
- CONFIG_HYPERVISOR_GUEST=y
- CONFIG_PARAVIRT=y
-@@ -40,8 +41,6 @@ CONFIG_X86_CHECK_BIOS_CORRUPTION=y
- CONFIG_EFI=y
- CONFIG_EFI_STUB=y
- CONFIG_HZ_1000=y
--CONFIG_KEXEC=y
--CONFIG_CRASH_DUMP=y
- # CONFIG_MITIGATION_RETHUNK is not set
- CONFIG_HIBERNATION=y
- CONFIG_PM_DEBUG=y
-@@ -64,9 +63,7 @@ CONFIG_BINFMT_MISC=y
- # CONFIG_COMPAT_BRK is not set
- CONFIG_NET=y
- CONFIG_PACKET=y
--CONFIG_UNIX=y
- CONFIG_XFRM_USER=y
--CONFIG_INET=y
- CONFIG_IP_MULTICAST=y
- CONFIG_IP_ADVANCED_ROUTER=y
- CONFIG_IP_MULTIPLE_TABLES=y
-@@ -138,6 +135,7 @@ CONFIG_CONNECTOR=y
- CONFIG_EFI_CAPSULE_LOADER=y
- CONFIG_BLK_DEV_LOOP=y
- CONFIG_VIRTIO_BLK=y
-+# CONFIG_INTEL_MEI is not set
- CONFIG_BLK_DEV_SD=y
- CONFIG_BLK_DEV_SR=y
- CONFIG_CHR_DEV_SG=y
-@@ -211,7 +209,6 @@ CONFIG_SND_HDA_INTEL=y
- CONFIG_SND_HDA_HWDEP=y
- CONFIG_HIDRAW=y
- CONFIG_HID_GYRATION=y
--CONFIG_LOGITECH_FF=y
- CONFIG_HID_NTRIG=y
- CONFIG_HID_PANTHERLORD=y
- CONFIG_PANTHERLORD_FF=y
-@@ -242,7 +239,6 @@ CONFIG_EXT4_FS_POSIX_ACL=y
- CONFIG_EXT4_FS_SECURITY=y
- CONFIG_QUOTA=y
- CONFIG_QUOTA_NETLINK_INTERFACE=y
--# CONFIG_PRINT_QUOTA_WARNING is not set
- CONFIG_QFMT_V2=y
- CONFIG_AUTOFS_FS=y
- CONFIG_ISO9660_FS=y
-@@ -267,19 +263,15 @@ CONFIG_SECURITY=y
- CONFIG_SECURITY_NETWORK=y
- CONFIG_SECURITY_SELINUX=y
- CONFIG_SECURITY_SELINUX_BOOTPARAM=y
--CONFIG_SECURITY_SELINUX_DISABLE=y
- CONFIG_PRINTK_TIME=y
- CONFIG_DEBUG_KERNEL=y
- CONFIG_FRAME_WARN=1024
- CONFIG_MAGIC_SYSRQ=y
--CONFIG_DEBUG_WX=y
- CONFIG_DEBUG_STACK_USAGE=y
--# CONFIG_SCHED_DEBUG is not set
- CONFIG_SCHEDSTATS=y
- CONFIG_BLK_DEV_IO_TRACE=y
- CONFIG_PROVIDE_OHCI1394_DMA_INIT=y
- CONFIG_EARLY_PRINTK_DBGP=y
- CONFIG_DEBUG_BOOT_PARAMS=y
--CONFIG_UNWINDER_FRAME_POINTER=y
- CONFIG_DEBUG_ENTRY=y
--# CONFIG_64BIT is not set
-+CONFIG_UNWINDER_FRAME_POINTER=y
+diff --git a/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.yaml b/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.yaml
+index 33b41b6b2fd539450f9ce72db8bba204e9c08eba..f383f25d932071bb4e4c86cb9f87f51e6a59aaac 100644
+--- a/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.yaml
++++ b/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.yaml
+@@ -357,10 +357,21 @@ properties:
+ 
+               See ../connector/usb-connector.yaml.
+ 
++          role-switch-default-mode:
++            description:
++              Indicates if usb-role-switch is enabled, the device default operation
++              mode of controller while usb role is USB_ROLE_NONE.
++            $ref: /schemas/types.yaml#/definitions/string
++            enum: [host, peripheral]
++            default: peripheral
++
+           vbus-supply:
+             description: A phandle to the regulator supplying the VBUS
+               voltage.
+ 
++        dependencies:
++          role-switch-default-mode: [ usb-role-switch ]
++
+       usb2-1:
+         type: object
+         additionalProperties: false
+@@ -392,10 +403,21 @@ properties:
+ 
+               See ../connector/usb-connector.yaml.
+ 
++          role-switch-default-mode:
++            description:
++              Indicates if usb-role-switch is enabled, the device default operation
++              mode of controller while usb role is USB_ROLE_NONE.
++            $ref: /schemas/types.yaml#/definitions/string
++            enum: [host, peripheral]
++            default: peripheral
++
+           vbus-supply:
+             description: A phandle to the regulator supplying the VBUS
+               voltage.
+ 
++        dependencies:
++          role-switch-default-mode: [ usb-role-switch ]
++
+       usb2-2:
+         type: object
+         additionalProperties: false
+@@ -427,10 +449,21 @@ properties:
+ 
+               See ../connector/usb-connector.yaml.
+ 
++          role-switch-default-mode:
++            description:
++              Indicates if usb-role-switch is enabled, the device default operation
++              mode of controller while usb role is USB_ROLE_NONE.
++            $ref: /schemas/types.yaml#/definitions/string
++            enum: [host, peripheral]
++            default: peripheral
++
+           vbus-supply:
+             description: A phandle to the regulator supplying the VBUS
+               voltage.
+ 
++        dependencies:
++          role-switch-default-mode: [ usb-role-switch ]
++
+       ulpi-0:
+         type: object
+         additionalProperties: false
+diff --git a/Documentation/devicetree/bindings/phy/nvidia,tegra186-xusb-padctl.yaml b/Documentation/devicetree/bindings/phy/nvidia,tegra186-xusb-padctl.yaml
+index 8b1d5a8529e38a1956a60e402c40ebec089ff2e9..f38ed6d339f125df136bcf0e954efb9f5b46466a 100644
+--- a/Documentation/devicetree/bindings/phy/nvidia,tegra186-xusb-padctl.yaml
++++ b/Documentation/devicetree/bindings/phy/nvidia,tegra186-xusb-padctl.yaml
+@@ -260,12 +260,21 @@ properties:
+ 
+               See ../connector/usb-connector.yaml.
+ 
++          role-switch-default-mode:
++            description:
++              Indicates if usb-role-switch is enabled, the device default operation
++              mode of controller while usb role is USB_ROLE_NONE.
++            $ref: /schemas/types.yaml#/definitions/string
++            enum: [host, peripheral]
++            default: peripheral
++
+           vbus-supply:
+             description: A phandle to the regulator supplying the VBUS
+               voltage.
+ 
+         dependencies:
+           usb-role-switch: [ connector ]
++          role-switch-default-mode: [ usb-role-switch ]
+ 
+       usb2-1:
+         type: object
+@@ -298,12 +307,21 @@ properties:
+ 
+               See ../connector/usb-connector.yaml.
+ 
++          role-switch-default-mode:
++            description:
++              Indicates if usb-role-switch is enabled, the device default operation
++              mode of controller while usb role is USB_ROLE_NONE.
++            $ref: /schemas/types.yaml#/definitions/string
++            enum: [host, peripheral]
++            default: peripheral
++
+           vbus-supply:
+             description: A phandle to the regulator supplying the VBUS
+               voltage.
+ 
+         dependencies:
+           usb-role-switch: [ connector ]
++          role-switch-default-mode: [ usb-role-switch ]
+ 
+       usb2-2:
+         type: object
+@@ -336,12 +354,21 @@ properties:
+ 
+               See ../connector/usb-connector.yaml.
+ 
++          role-switch-default-mode:
++            description:
++              Indicates if usb-role-switch is enabled, the device default operation
++              mode of controller while usb role is USB_ROLE_NONE.
++            $ref: /schemas/types.yaml#/definitions/string
++            enum: [host, peripheral]
++            default: peripheral
++
+           vbus-supply:
+             description: A phandle to the regulator supplying the VBUS
+               voltage.
+ 
+         dependencies:
+           usb-role-switch: [ connector ]
++          role-switch-default-mode: [ usb-role-switch ]
+ 
+       hsic-0:
+         type: object
+diff --git a/Documentation/devicetree/bindings/phy/nvidia,tegra194-xusb-padctl.yaml b/Documentation/devicetree/bindings/phy/nvidia,tegra194-xusb-padctl.yaml
+index 6e3398399628766e820ff2a5da0ee644dcdee956..8253ff3ac5e8cffba16ddca3fbbc0fa32b58384f 100644
+--- a/Documentation/devicetree/bindings/phy/nvidia,tegra194-xusb-padctl.yaml
++++ b/Documentation/devicetree/bindings/phy/nvidia,tegra194-xusb-padctl.yaml
+@@ -251,12 +251,21 @@ properties:
+ 
+               See ../connector/usb-connector.yaml.
+ 
++          role-switch-default-mode:
++            description:
++              Indicates if usb-role-switch is enabled, the device default operation
++              mode of controller while usb role is USB_ROLE_NONE.
++            $ref: /schemas/types.yaml#/definitions/string
++            enum: [host, peripheral]
++            default: peripheral
++
+           vbus-supply:
+             description: A phandle to the regulator supplying the VBUS
+               voltage.
+ 
+         dependencies:
+           usb-role-switch: [ connector ]
++          role-switch-default-mode: [ usb-role-switch ]
+ 
+       usb2-1:
+         type: object
+@@ -289,12 +298,21 @@ properties:
+ 
+               See ../connector/usb-connector.yaml.
+ 
++          role-switch-default-mode:
++            description:
++              Indicates if usb-role-switch is enabled, the device default operation
++              mode of controller while usb role is USB_ROLE_NONE.
++            $ref: /schemas/types.yaml#/definitions/string
++            enum: [host, peripheral]
++            default: peripheral
++
+           vbus-supply:
+             description: A phandle to the regulator supplying the VBUS
+               voltage.
+ 
+         dependencies:
+           usb-role-switch: [ connector ]
++          role-switch-default-mode: [ usb-role-switch ]
+ 
+       usb2-2:
+         type: object
+@@ -327,12 +345,21 @@ properties:
+ 
+               See ../connector/usb-connector.yaml.
+ 
++          role-switch-default-mode:
++            description:
++              Indicates if usb-role-switch is enabled, the device default operation
++              mode of controller while usb role is USB_ROLE_NONE.
++            $ref: /schemas/types.yaml#/definitions/string
++            enum: [host, peripheral]
++            default: peripheral
++
+           vbus-supply:
+             description: A phandle to the regulator supplying the VBUS
+               voltage.
+ 
+         dependencies:
+           usb-role-switch: [ connector ]
++          role-switch-default-mode: [ usb-role-switch ]
+ 
+       usb2-3:
+         type: object
+@@ -365,12 +392,21 @@ properties:
+ 
+               See ../connector/usb-connector.yaml.
+ 
++          role-switch-default-mode:
++            description:
++              Indicates if usb-role-switch is enabled, the device default operation
++              mode of controller while usb role is USB_ROLE_NONE.
++            $ref: /schemas/types.yaml#/definitions/string
++            enum: [host, peripheral]
++            default: peripheral
++
+           vbus-supply:
+             description: A phandle to the regulator supplying the VBUS
+               voltage.
+ 
+         dependencies:
+           usb-role-switch: [ connector ]
++          role-switch-default-mode: [ usb-role-switch ]
+ 
+       usb3-0:
+         type: object
+diff --git a/Documentation/devicetree/bindings/phy/nvidia,tegra210-xusb-padctl.yaml b/Documentation/devicetree/bindings/phy/nvidia,tegra210-xusb-padctl.yaml
+index e9237c58ce45df7fa25cac861891b3fe76efe83d..c14bb947d306912fb732ff219511c6d6fda80f7c 100644
+--- a/Documentation/devicetree/bindings/phy/nvidia,tegra210-xusb-padctl.yaml
++++ b/Documentation/devicetree/bindings/phy/nvidia,tegra210-xusb-padctl.yaml
+@@ -379,12 +379,21 @@ properties:
+ 
+               See ../connector/usb-connector.yaml.
+ 
++          role-switch-default-mode:
++            description:
++              Indicates if usb-role-switch is enabled, the device default operation
++              mode of controller while usb role is USB_ROLE_NONE.
++            $ref: /schemas/types.yaml#/definitions/string
++            enum: [host, peripheral]
++            default: peripheral
++
+           vbus-supply:
+             description: A phandle to the regulator supplying the VBUS
+               voltage.
+ 
+         dependencies:
+           usb-role-switch: [ connector ]
++          role-switch-default-mode: [ usb-role-switch ]
+ 
+       usb2-1:
+         type: object
+@@ -417,12 +426,21 @@ properties:
+ 
+               See ../connector/usb-connector.yaml.
+ 
++          role-switch-default-mode:
++            description:
++              Indicates if usb-role-switch is enabled, the device default operation
++              mode of controller while usb role is USB_ROLE_NONE.
++            $ref: /schemas/types.yaml#/definitions/string
++            enum: [host, peripheral]
++            default: peripheral
++
+           vbus-supply:
+             description: A phandle to the regulator supplying the VBUS
+               voltage.
+ 
+         dependencies:
+           usb-role-switch: [ connector ]
++          role-switch-default-mode: [ usb-role-switch ]
+ 
+       usb2-2:
+         type: object
+@@ -455,12 +473,21 @@ properties:
+ 
+               See ../connector/usb-connector.yaml.
+ 
++          role-switch-default-mode:
++            description:
++              Indicates if usb-role-switch is enabled, the device default operation
++              mode of controller while usb role is USB_ROLE_NONE.
++            $ref: /schemas/types.yaml#/definitions/string
++            enum: [host, peripheral]
++            default: peripheral
++
+           vbus-supply:
+             description: A phandle to the regulator supplying the VBUS
+               voltage.
+ 
+         dependencies:
+           usb-role-switch: [ connector ]
++          role-switch-default-mode: [ usb-role-switch ]
+ 
+       usb2-3:
+         type: object
+@@ -493,12 +520,21 @@ properties:
+ 
+               See ../connector/usb-connector.yaml.
+ 
++          role-switch-default-mode:
++            description:
++              Indicates if usb-role-switch is enabled, the device default operation
++              mode of controller while usb role is USB_ROLE_NONE.
++            $ref: /schemas/types.yaml#/definitions/string
++            enum: [host, peripheral]
++            default: peripheral
++
+           vbus-supply:
+             description: A phandle to the regulator supplying the VBUS
+               voltage.
+ 
+         dependencies:
+           usb-role-switch: [ connector ]
++          role-switch-default-mode: [ usb-role-switch ]
+ 
+       hsic-0:
+         type: object
+
 -- 
-2.45.2
+2.48.1
+
 
