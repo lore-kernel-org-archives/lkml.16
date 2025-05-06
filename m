@@ -1,118 +1,110 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9422B2777FC;
-	Tue,  6 May 2025 10:25:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F507272E7E;
+	Tue,  6 May 2025 10:25:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746527122; cv=none; b=JgF4imwGsg0ACC81itnXG079o3dvKFOyrkoXl1WUNk36V3lM+K1Q+JbeAV7HeB6JB+5j8Bx2TfNSQ9wvydn9OHguh+AeNdKcCm0jt1ICRnCV3HEaJHro2RZ5Hw9my6cPWWPI3Fi5Bt9009iWokHd2L9LX1gOMudbG47FuRpF6WI=
+	t=1746527130; cv=none; b=nCRLtl2gUyUJ35toHWfNLJj9oOemiAJR2t79Wo8AZokiLdYe6VYsx0bGtE52i00sOMKiC4Unpl0Ct7i8Ivitlaeo9EaYeN7lq82A4eFYo+O5K4sVOlJtnNzu2mBxzqRXGTB2AZ+ANeZLqoOyFXPoefqYqIsdCVAlV5ONwBGNlDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746527122; c=relaxed/simple;
-	bh=ER3+WX6Fn7TizF7Fs+zanDiEtNNqVrG5KKHsKgWbPvo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=MWLPPL4kUX//BXZTRWF2ax9+gXljjlLx8Rhc2y3Qflp6tXfdAzKPVfDBxWdA6Sz67k6cOW26sacraudo4h/74cyPJTHf+2Kv/y+A97q6AcROl7Jdg/Gh0mITiKT4gK5sXdwC0Wy1nlOrrX1viFPog22P8Mwk3mTb9uckViNAc2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z8Mt6uQS; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z8Mt6uQS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746527120; x=1778063120;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=ER3+WX6Fn7TizF7Fs+zanDiEtNNqVrG5KKHsKgWbPvo=;
-  b=Z8Mt6uQSKt64D28NpQRdjCWX5TQuFzFXT52a4Ngm4hxr8VdKAjgNmmly
-   XqOXgxXGZbbO4uAo+CQzzzEtabOXV/yiMsPskNwTBDo5Z2RKlxortUUop
-   INbCIzTu8/jqb+KhF3/qTZynnoBKF5wlJPAuPyKrprq6g+vhzTHpWrWsL
-   hTvcFaUDISCyEg+x1UklmmMU8W6ThTZxGAOsc6PVCVDgOmT9U5ClltOfx
-   ufD/ai4AhpLO/Y83ekCjtyteZhlYfY/9EX/x+XIosDZfnImCcDkvCWfat
-   sWX3dBnxDK7QQI0bLRQCyaWZ6ZAi2/xwjCRwg0fKLp6EjqWD6R0EAwnGG
-   A==;
-X-CSE-ConnectionGUID: ShK7N9VmS7+rQaa4u+puZA==
-X-CSE-MsgGUID: JrsFAsy7R3qa5a9Y0JlutQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11424"; a="51993564"
-X-IronPort-AV: E=Sophos;i="6.15,266,1739865600"; 
-   d="scan'208";a="51993564"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 03:25:18 -0700
-X-CSE-ConnectionGUID: Ck10n3cyRsacHwt1VjnfGw==
-X-CSE-MsgGUID: 3lF5rXSWRaSZ0eaBD3MM2g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,266,1739865600"; 
-   d="scan'208";a="158825654"
-Received: from smoticic-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.221])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 03:25:13 -0700
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Jeff Layton <jlayton@kernel.org>, Andrew Morton
- <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David
- Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Joonas
- Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi
- <rodrigo.vivi@intel.com>, Tvrtko Ursulin <tursulin@ursulin.net>
-Cc: Kuniyuki Iwashima <kuniyu@amazon.com>, Qasim Ijaz <qasdev00@gmail.com>,
- Nathan Chancellor <nathan@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, Jeff
- Layton <jlayton@kernel.org>
-Subject: Re: [PATCH v7 09/10] i915: add ref_tracker_dir symlinks for each
- tracker
-In-Reply-To: <20250505-reftrack-dbgfs-v7-9-f78c5d97bcca@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20250505-reftrack-dbgfs-v7-0-f78c5d97bcca@kernel.org>
- <20250505-reftrack-dbgfs-v7-9-f78c5d97bcca@kernel.org>
-Date: Tue, 06 May 2025 13:25:10 +0300
-Message-ID: <87zffqujcp.fsf@intel.com>
+	s=arc-20240116; t=1746527130; c=relaxed/simple;
+	bh=Gxeu/lHitlfOUk5aO+/kjKeR2jgfFH8H7yWTg/NYvQI=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WksfSFuK0+NBhOEbODU7U57yXrRv78syUwdCu/qY6DMuGU4UpReS21JoBewdYA8ka+cKXNNO7eS6xqQEAhANXUfH7z7thlR+oyMdnxvhYAY8NVZf/sxYZEJqQusT3GdfmRGJraYfIFwVlfMY3WT59IUMKgnJyv2frYm0vF98Qdo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZsDxM0Gqrz6L5hX;
+	Tue,  6 May 2025 18:23:03 +0800 (CST)
+Received: from frapeml500003.china.huawei.com (unknown [7.182.85.28])
+	by mail.maildlp.com (Postfix) with ESMTPS id 99F731402F3;
+	Tue,  6 May 2025 18:25:26 +0800 (CST)
+Received: from localhost (10.47.68.20) by frapeml500003.china.huawei.com
+ (7.182.85.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 6 May
+ 2025 12:25:26 +0200
+Date: Tue, 6 May 2025 11:25:20 +0100
+From: Alireza Sanaee <alireza.sanaee@huawei.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+CC: <devicetree@vger.kernel.org>, <robh@kernel.org>,
+	<jonathan.cameron@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
+	<mark.rutland@arm.com>, <shameerali.kolothum.thodi@huawei.com>
+Subject: Re: [PATCH v2 6/6] of: of_cpu_phandle_to_id to support SMT threads
+Message-ID: <20250506112520.00004545.alireza.sanaee@huawei.com>
+In-Reply-To: <20250504-acoustic-skink-of-greatness-1e90ac@kuoka>
+References: <20250502161300.1411-1-alireza.sanaee@huawei.com>
+	<20250502161300.1411-7-alireza.sanaee@huawei.com>
+	<20250504-acoustic-skink-of-greatness-1e90ac@kuoka>
+Organization: Huawei
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500012.china.huawei.com (7.191.174.4) To
+ frapeml500003.china.huawei.com (7.182.85.28)
 
-On Mon, 05 May 2025, Jeff Layton <jlayton@kernel.org> wrote:
-> Now that there is the ability to create a symlink for each tracker, do
-> so for the i915 entries.
+On Sun, 4 May 2025 19:51:02 +0200
+Krzysztof Kozlowski <krzk@kernel.org> wrote:
 
-I haven't tried this, but
+> On Fri, May 02, 2025 at 05:13:00PM GMT, Alireza Sanaee wrote:
+> > Enhance the API to support SMT threads, this will allow sharing
+> > resources among multiple SMT threads.  
+> 
+> <form letter>
+> Please use scripts/get_maintainers.pl to get a list of necessary
+> people and lists to CC (and consider --no-git-fallback argument, so
+> you will not CC people just because they made one commit years ago).
+> It might happen, that command when run on an older kernel, gives you
+> outdated entries. Therefore please be sure you base your patches on
+> recent Linux kernel.
+> 
+> Tools like b4 or scripts/get_maintainer.pl provide you proper list of
+> people, so fix your workflow. Tools might also fail if you work on
+> some ancient tree (don't, instead use mainline) or work on fork of
+> kernel (don't, instead use mainline). Just use b4 and everything
+> should be fine, although remember about 'b4 prep --auto-to-cc' if you
+> added new patches to the patchset.
+> </form letter>	
+> 
+> > 
+> > Enabled the sharing of resources, such as L1 Cache and clocks,
+> > between SMT threads. It introduces a fix that uses thread IDs to
+> > match each CPU thread in the register array within the cpu-node.
+> > This ensures that the cpu-map or any driver relying on this API is
+> > fine even when SMT threads share resources.
+> > 
+> > Additionally, I have tested this for CPU based on the discussions
+> > in [1], I adopted the new cpu-map layout, where the first parameter
+> > is a phandle and the second is the local thread index, as shown
+> > below:
+> > 
+> > In the CPU map, there are two cases that only one occurs at at time.
+> >     1) "cpu" = <phandle>
+> >     2) "cpus" = <phandle> <index>
+> > 
+> > The first case addresses non-SMTs and the second case addresses SMTs
+> > that the variable must be cpu(s) with an index where we later look
+> > up the reg array with that.
+> > 
+> >     core0 {
+> >       thread0 {
+> >         cpus = <&cpu0 0>;  
+> 
+> Not so sure, dtschema says only one item is allowed in the phandle
+> and I do not see here binding change.
+> 
+> Although this wasn't even sent to me, so I'll just ignore your
+> patchset.
+> 
+> Best regards,
+> Krzysztof
+> 
 
-Acked-by: Jani Nikula <jani.nikula@intel.com>
-
-
->
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> ---
->  drivers/gpu/drm/i915/intel_runtime_pm.c | 1 +
->  drivers/gpu/drm/i915/intel_wakeref.c    | 1 +
->  2 files changed, 2 insertions(+)
->
-> diff --git a/drivers/gpu/drm/i915/intel_runtime_pm.c b/drivers/gpu/drm/i915/intel_runtime_pm.c
-> index 3fdab3b44c08cea16ac2f73aafc2bea2ffbb19e7..94315e952ead9be276298fb2a0200d102005a0c1 100644
-> --- a/drivers/gpu/drm/i915/intel_runtime_pm.c
-> +++ b/drivers/gpu/drm/i915/intel_runtime_pm.c
-> @@ -61,6 +61,7 @@ static void init_intel_runtime_pm_wakeref(struct intel_runtime_pm *rpm)
->  {
->  	ref_tracker_dir_init(&rpm->debug, INTEL_REFTRACK_DEAD_COUNT,
->  			     "intel_runtime_pm", dev_name(rpm->kdev));
-> +	ref_tracker_dir_symlink(&rpm->debug, "intel_runtime_pm-%s", dev_name(rpm->kdev));
->  }
->  
->  static intel_wakeref_t
-> diff --git a/drivers/gpu/drm/i915/intel_wakeref.c b/drivers/gpu/drm/i915/intel_wakeref.c
-> index 5269e64c58a49884f5d712557546272bfdeb8417..2e0498b3fa7947f994de1339d4d2bed93de1a795 100644
-> --- a/drivers/gpu/drm/i915/intel_wakeref.c
-> +++ b/drivers/gpu/drm/i915/intel_wakeref.c
-> @@ -115,6 +115,7 @@ void __intel_wakeref_init(struct intel_wakeref *wf,
->  
->  #if IS_ENABLED(CONFIG_DRM_I915_DEBUG_WAKEREF)
->  	ref_tracker_dir_init(&wf->debug, INTEL_REFTRACK_DEAD_COUNT, "intel_wakeref", name);
-> +	ref_tracker_dir_symlink(&wf->debug, "intel_wakeref-%s", name);
->  #endif
->  }
-
--- 
-Jani Nikula, Intel
+Sorry, I didn't use the script, I will next time.
