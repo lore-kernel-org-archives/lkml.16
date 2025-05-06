@@ -1,118 +1,246 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59AEE249F9
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 19:50:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 740EF1FBCB1;
+	Tue,  6 May 2025 19:54:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746561023; cv=none; b=hsafrUFpUh0wR4ZinSCk0PVqc1gpw8L0WuqHun2TGl6RA7qdkn6/5wvkMYPHg4f4InZaQWepjBcyiY96WpYNtiqZecQcWbe+lasgXeGVKrA7CzkR78g6Fec5tznlOzeq/RSW2nxX2Zj6UHtvO404oTCMVAu7DWrGvzcYo1C8Rko=
+	t=1746561296; cv=none; b=igKSrEG6y6gErsF37Mm611x/LDoIITpWFA8bcJMKgthx5WazyXQUP1MFMLepzX4nAw2RzmuqjggG9CDcdl9uSMLAn+yvXzOw0m3+eZ2BYFqFYd9JLAKZSRqEfBPUa2vTMYuMgeHBay3ya42f4jeUs5O2yKYLHBxaYafpVCaD/Ps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746561023; c=relaxed/simple;
-	bh=kNbZ21dhdbGHQQ7oxgt0oAsM9mbpZYvkNgn24U3J3TM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=e9VTUF1VeC5XREahwrEAHNgNatnZqAuTaeBLYmDlkjMYd5MQKBGKJmF4O/6rR1RsS183vyQlfvUw8gOJQriGgYORNM+NLLFJYcYvxK1EBtM35HlC1T5iwAt+XpJA6Vm070l9CEk3u/TfztFXNZ/422d7CutJFYKWjuaMjm9nz7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=loh+pcP9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746561296; c=relaxed/simple;
+	bh=TX6fnqyOQLRCqud7L1fLcyM5ocSTEz2pblmDAnAzXbs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dKpgDmeDVQgqcNEQxUn7UAqMaAb3KhwUQV98FoPSN0BipgRwtZeO/uwboOnLWyyUkABpYUK/DGZvW+OA1NicFDe6cLzf21BFgA3Y6aA6kPTCXyY0TSTt/y4r22LX2eIxsCxVCKnPVlF2klpMyGUwhNFmLSXL/JQ4bOcks8K5qV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=m7HJo9jl; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="loh+pcP9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EFACC4CEE4
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 19:50:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746561022;
-	bh=kNbZ21dhdbGHQQ7oxgt0oAsM9mbpZYvkNgn24U3J3TM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=loh+pcP9BSAcpNYTW0VLUy9JZy4c3iCDkhoWc2ReJlR/gPSPIl/7H1XSkYlue516U
-	 1FRI4vwK1EGx+gvFPuhI6V4K7lI6XYO0ShzCDTI3ELi5NJsnFZMybGfmL6BDNCxicb
-	 Jx31ZlQcIaG3E0J4a6fv7Twoa0fQXu+pIaUzoLt/0w5vE7XrwvZZkJNHoy8uCLkKAt
-	 G7PFNnweMaRDP7DyVwa8rnR2vcefKOLwk0rTz/tzGqAYULEyAt6GPqkIrjvoJBWP32
-	 jPQhaBHE+3jG0mToT/fU+Gn1gxawzmAgf+nkPQKCl+E6M3m9s9C+Bpe0j6xOsaoWqq
-	 w1QEfMqHqbvxg==
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30bfca745c7so55275291fa.0
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 12:50:22 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUFXLxBQiIsavD5e2PsxoLqCthjQupDgyuZBnn9QlyhRhCJjLNSmEEhZiP/yK/m8ljcGVSnbO0I36vNV/c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCvhYvhAyeX7va5BeIm39EpwOSFa1rLfrmaT1I7uS54nkny8eA
-	XH61d+04NdxCu0hacTA97D+LfxmDpkkr8UtVCprf+Ix/fvFuF2VWXvJruu9zkMzIKagRTIz2NJs
-	sHX3K4utOILg2hTDvJ6amgfJ618I=
-X-Google-Smtp-Source: AGHT+IGCcznNTbeOY9pRpVxpm++2olnw9PbjNBmGg9KPuB7a9taNGqTf7ScjZK/Cw35/AO7DHcVwJzaZO4hG4PiZ/fQ=
-X-Received: by 2002:a05:651c:b0a:b0:30c:40d6:5cdb with SMTP id
- 38308e7fff4ca-326ad17d8f4mr1091421fa.11.1746561020937; Tue, 06 May 2025
- 12:50:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="m7HJo9jl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1746561292;
+	bh=TX6fnqyOQLRCqud7L1fLcyM5ocSTEz2pblmDAnAzXbs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=m7HJo9jl86sLv4qpeTc+fxgIuJA6St3d9IyKACbTZaZC6aWIHO6SCnopb3UOR1HTf
+	 LDl13EJMxzqGAz3J1wdnPXNK68paaGDnzQLhfbL8/IEhznNnrHp/VkeIv0WaDLSTYX
+	 +iOuMFyVfxBmSWp+mzaO5hkMM707SKDij4F0hTegTHveJCMRXIw42+yGTNCefzvYmP
+	 LhgTdC0f9v1sTf+e53HWJGNAkFqSfjZoOzRp/detfV1C6Zuxjdqbw9+ZkqVdhOr8do
+	 8JCO++cM8Pt/3MURn4C9lN9JIskVvJs7huknkV2LCVDmXWhO33IJ7FtM/b0KTqFgzk
+	 oIWV7O3oGfdIw==
+Received: from [IPV6:2a05:1141:1cc:8600:1cd7:9a7e:17d7:cd2c] (unknown [IPv6:2a05:1141:1cc:8600:1cd7:9a7e:17d7:cd2c])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: mriesch)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 4380E17E10D3;
+	Tue,  6 May 2025 21:54:51 +0200 (CEST)
+Message-ID: <82fd6088-2979-4a4b-8eb5-dd8da965369e@collabora.com>
+Date: Tue, 6 May 2025 21:54:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250506154532.1281909-5-ardb+git@google.com> <20250506154532.1281909-8-ardb+git@google.com>
- <CAHk-=whrcutH0LcMmaeJxxMeYpw2R5T80yoQAXbrRHNSTCB0Pw@mail.gmail.com>
- <CAMj1kXFSae=stazUv8doka-zLOnDdXXR4ASxHKe5f97ikg3V2A@mail.gmail.com>
- <CAHk-=whxP5Ywpv-U=2NPFhk929VHB9_kdp10+HFJQ4VxEGdX9A@mail.gmail.com>
- <CAMj1kXGwYXXpjPgDwjKMEZJkuGJ8ZuCpMpc7fTvo58PNtu-czA@mail.gmail.com>
- <CAHk-=wiz5oXq2f_87hHViN2TZQO9VHpaWb5fWWGJbUWQw1ChVw@mail.gmail.com>
- <CAMj1kXEtW2bAQK4hN-S5C=Po5dk1q14+GJjzEJsjfz9OeOMoCg@mail.gmail.com>
- <CAHk-=whRNPK7hTtPYh3SEe0WXEHR=aedc3bc-y_e08ujOxmgJg@mail.gmail.com>
- <CAHk-=wj9jR8HVOoEsAppFCGH0BcRCY6CrVNUFpeSswxD3Ho67Q@mail.gmail.com>
- <CAMj1kXFNJEne4uDxjfq5=OiWJGA1Pu9O99mrJRky5CW4R3V32w@mail.gmail.com> <CAHk-=wh3np3kEJ-D4OZC2nHGuY7crkTw6kefGkUYaerSpUP3Gw@mail.gmail.com>
-In-Reply-To: <CAHk-=wh3np3kEJ-D4OZC2nHGuY7crkTw6kefGkUYaerSpUP3Gw@mail.gmail.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Tue, 6 May 2025 21:50:09 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXHtovutcgJXbsCMA+cmrJgN+K-3Dk5ihuFMzgT9eEe7sA@mail.gmail.com>
-X-Gm-Features: ATxdqUGq8dg9rp0Nctp7ftZrcKyPNNA_2ihKOcf5feGZdyscq2ue0PzNzRx0NSY
-Message-ID: <CAMj1kXHtovutcgJXbsCMA+cmrJgN+K-3Dk5ihuFMzgT9eEe7sA@mail.gmail.com>
-Subject: Re: [RFC PATCH 3/3] x86/boot: Use alternatives based selector for
- 5-level paging constants
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
-	Ingo Molnar <mingo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 05/13] media: dt-bindings: add rockchip rk3568 mipi csi
+ receiver
+To: Mehdi Djait <mehdi.djait@linux.intel.com>
+Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
+ =?UTF-8?Q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>,
+ Gerald Loacker <gerald.loacker@wolfvision.net>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring
+ <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
+ Kever Yang <kever.yang@rock-chips.com>,
+ Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ Collabora Kernel Team <kernel@collabora.com>,
+ Paul Kocialkowski <paulk@sys-base.io>,
+ Alexander Shiyan <eagle.alexander923@gmail.com>,
+ Val Packett <val@packett.cool>, Rob Herring <robh@kernel.org>,
+ Philipp Zabel <p.zabel@pengutronix.de>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ Michael Riesch <michael.riesch@wolfvision.net>
+References: <20240220-rk3568-vicap-v6-0-d2f5fbee1551@collabora.com>
+ <20240220-rk3568-vicap-v6-5-d2f5fbee1551@collabora.com>
+ <wxwzca4i36hdhdx5ehjqvq5ljpsb7lcvzermkhqyvufsr47au4@3qcth2vawwju>
+Content-Language: en-US
+From: Michael Riesch <michael.riesch@collabora.com>
+In-Reply-To: <wxwzca4i36hdhdx5ehjqvq5ljpsb7lcvzermkhqyvufsr47au4@3qcth2vawwju>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, 6 May 2025 at 21:42, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Tue, 6 May 2025 at 12:15, Ard Biesheuvel <ardb@kernel.org> wrote:
-> >
-> > First of all, that would mean calling into even more C code from the
-> > 1:1 mapping of memory,
->
-> Not a lot, actually.
->
-> When I did the runtime-const stuff, I refused to use the alternatives
-> code, because it was called much too late and was much too
-> complicated.
->
-> So I just did an early fixup by hand - in the place where the variable
-> was actually changed. Exactly so that you had *consistency*.
->
-> It's literally four lines of code that gets inlined.
->
-> See runtime_const_fixup().
->
-> And I just checked. Those four lines of code generate seven *instructions*:
->
->   .LBB80_4:
->         movq    $__start_runtime_ptr_dentry_hashtable, %rcx
->   .LBB80_6:                               # =>This Inner Loop Header: Depth=1
->         cmpq    $__stop_runtime_ptr_dentry_hashtable, %rcx
->         jae     .LBB80_7
->   # %bb.5:                                #   in Loop: Header=BB80_6 Depth=1
->         movslq  (%rcx), %rdx
->         movq    %rax, (%rcx,%rdx)
->         addq    $4, %rcx
->         jmp     .LBB80_6
->
-> that's literally what that
->
->         runtime_const_init(ptr, dentry_hashtable);
->
-> generates in dcache_init_early() for me.
->
-> Seriously, this is *trivial*.
->
+Hi Mehdi,
 
-This looks trivial, yes - I thought you were talking about the
-alternatives patching code, which seems rather complex, and either
-pulling it into the startup code or writing an 'early' version of it
-seem like a lot of work for little gain.
+On 5/6/25 14:09, Mehdi Djait wrote:
+> Hi Michael,
+> 
+> thank you for the patch!
+> 
+> On Wed, Apr 30, 2025 at 11:15:54AM +0200, Michael Riesch via B4 Relay wrote:
+>> From: Michael Riesch <michael.riesch@wolfvision.net>
+>>
+>> Add documentation for the Rockchip RK3568 MIPI CSI-2 Receiver.
+>>
+>> Signed-off-by: Michael Riesch <michael.riesch@wolfvision.net>
+>> Signed-off-by: Michael Riesch <michael.riesch@collabora.com>
+>> ---
+>>  .../bindings/media/rockchip,rk3568-mipi-csi.yaml   | 113 +++++++++++++++++++++
+>>  MAINTAINERS                                        |   1 +
+>>  2 files changed, 114 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/rockchip,rk3568-mipi-csi.yaml b/Documentation/devicetree/bindings/media/rockchip,rk3568-mipi-csi.yaml
+>> new file mode 100644
+>> index 000000000000..d5004cb288dd
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/media/rockchip,rk3568-mipi-csi.yaml
+>> @@ -0,0 +1,113 @@
+>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/media/rockchip,rk3568-mipi-csi.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Rockchip RK3568 MIPI CSI-2 Receiver
+>> +
+>> +maintainers:
+>> +  - Michael Riesch <michael.riesch@collabora.com>
+>> +
+>> +description:
+>> +  The Rockchip RK3568 MIPI CSI-2 Receiver is a CSI-2 bridge with one input port
+>> +  and one output port. It receives the data with the help of an external
+>> +  MIPI PHY (C-PHY or D-PHY) and passes it to the Rockchip RK3568 Video Capture
+>> +  (VICAP) block.
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: rockchip,rk3568-mipi-csi
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  clocks:
+>> +    maxItems: 1
+>> +
+>> +  phys:
+>> +    maxItems: 1
+>> +    description: MIPI C-PHY or D-PHY.
+>> +
+>> +  power-domains:
+>> +    maxItems: 1
+>> +
+>> +  resets:
+>> +    maxItems: 1
+>> +
+>> +  ports:
+>> +    $ref: /schemas/graph.yaml#/properties/ports
+>> +
+>> +    properties:
+>> +      port@0:
+>> +        $ref: /schemas/graph.yaml#/$defs/port-base
+>> +        unevaluatedProperties: false
+>> +        description: Input port node. Connect to e.g., a MIPI CSI-2 image sensor.
+>> +
+>> +        properties:
+>> +          endpoint:
+>> +            $ref: video-interfaces.yaml#
+>> +            unevaluatedProperties: false
+>> +
+>> +            properties:
+>> +              bus-type:
+>> +                enum: [1, 4]
+> 
+> shouldn't you add data-lanes property here ?
 
-So yes, let's use this from the startup code, once we figure out which
-of these constants are too costly to be expressed as
-'pgtable_l5_enabled() ? foo : bar'
+Yes, makes sense.
+
+Thanks for pointing it out -- will be in v7.
+
+Best regards,
+Michael
+
+> 
+>                  data-lanes:
+>                    minItems: 1
+>                    maxItems: 4
+>> +
+>> +            required:
+>> +              - bus-type
+> 
+> and add it to required:
+>                  - data-lanes
+> 
+> you are actually checking for data-lanes when you enable the stream in:
+> 
+> rkcif-mipi-csi-receiver.c +226
+> 
+> 	u32 lanes = csi_dev->vep.bus.mipi_csi2.num_data_lanes;
+> 
+> 	if (lanes < 1 || lanes > 4)
+> 		return -EINVAL;
+> 
+>> +
+>> +      port@1:
+>> +        $ref: /schemas/graph.yaml#/properties/port
+>> +        description: Output port connected to a RK3568 VICAP port.
+>> +
+>> +    required:
+>> +      - port@0
+>> +      - port@1
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - clocks
+>> +  - phys
+>> +  - phy-names
+>> +  - ports
+>> +  - power-domains
+>> +  - resets
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/clock/rk3568-cru.h>
+>> +    #include <dt-bindings/power/rk3568-power.h>
+>> +
+>> +    soc {
+>> +        #address-cells = <2>;
+>> +        #size-cells = <2>;
+>> +
+>> +        csi: csi@fdfb0000 {
+>> +            compatible = "rockchip,rk3568-mipi-csi";
+>> +            reg = <0x0 0xfdfb0000 0x0 0x10000>;
+>> +            clocks = <&cru PCLK_CSI2HOST1>;
+>> +            phys = <&csi_dphy>;
+>> +            power-domains = <&power RK3568_PD_VI>;
+>> +            resets = <&cru SRST_P_CSI2HOST1>;
+>> +
+>> +            ports {
+>> +                #address-cells = <1>;
+>> +                #size-cells = <0>;
+>> +
+>> +                csi_in: port@0 {
+>> +                    reg = <0>;
+>> +                };
+>> +
+>> +                csi_out: port@1 {
+>> +                    reg = <1>;
+>> +
+>> +                    csi_output: endpoint {
+>> +                        remote-endpoint = <&vicap_mipi_input>;
+>> +                    };
+>> +                };
+>> +            };
+>> +        };
+>> +    };
+> 
+> --
+> Kind Regards
+> Mehdi Djait
+
