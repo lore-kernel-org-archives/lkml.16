@@ -1,260 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABF56281517;
-	Tue,  6 May 2025 14:05:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25DDF28000E
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 14:06:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746540350; cv=none; b=u+rqyzAy5GKKzE2qSi6Jf2lElh3KHYtyUS7QyjZtD670geQ9L8JQ3w5s0WC46LEHrjwmpNoSUXFi7B9SyQOpXLeDjHnre5VpmQMQtUvr4iAfbnUVaJmn7Nqc3GG+GScrvHrdF++9hTVwbQW+tY6AL2mCkNmLmENp5em/tXOiUY4=
+	t=1746540384; cv=none; b=XCll0Btvr07e33RdU3kJSl35tqa1qzy2IWMmjxaz3/WSbNncFMiSx7CIcqBq8PDZuGcNGGlJe08iAlQIWWvXYObI2QDVeWa45YbRYkypuFFbeQVvGjAtrTWN6/OBaU+MaKGC7QDcb13ygC4Kjfs5zB/SvQd4x5p0JVWhvPJ5c1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746540350; c=relaxed/simple;
-	bh=rtGooarvZfFQ6BrtD0+1cwijdv62pjdrrNWljVpj0xE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sS8FN/ojCTnwj+nEBmyrsnIQGpSK7MdOmlGMCM1BHu5GMgasmsTv8SrcTRt0DSMTl3sMG2j53acXzfDsQEs4g+qBRMDm0OuM7BSzbFj1dIdtBkrDDEHbwEdDIcht+iMuGzdWMcSgFAcwRsMshOKuH2HzT9FAeUb6CciwWbnOglQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CavGFfBw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746540384; c=relaxed/simple;
+	bh=3opEq2h5w0UOxmosWULNPMfe5jZlpZBAVrsnMKF+44k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JgMdj9NqQUhfz30HjjgF806QhYw58IvLNTF4G2a2lBw6vZ6NdsiGXeRPgrO4CRYzc3p/0yto3tVMMpF7sJZuRlGMoBge+nbhl/05dwFGxiyBCzuQbdTp4paYbiose8kJAPnAqVMHsH/1tvq82pyLCDCG9lumtXZSnzIhzAkcitA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=YdUYhF60; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=YdUYhF60; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CavGFfBw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D45F9C4CEE4;
-	Tue,  6 May 2025 14:05:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746540350;
-	bh=rtGooarvZfFQ6BrtD0+1cwijdv62pjdrrNWljVpj0xE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=CavGFfBwe9eA/J6fTn0Tc/ljif6AN4LkaacNCnZkVSq3FCx6ez0zoz9ribQZvba8o
-	 sTLNzMNCwV6R3Op/hF1n1jrxZ6FW389LOKmY493/xvA1/WTja0I8V9cAvbnfWJfYd/
-	 9r6bmUe7lB2DppQDa75YmhaS039cyMhITVsRAgXw4I6d/YJab93M2PSaFxK25Bgy0p
-	 hnTQipJBobZ/g5oTm2MXUyDxplCbpRdEF3ShJh4IDv5qAob3BHS5IUCDN5RFue6Pm9
-	 0AHIccSZGSkMrtjE1djQbal3DwNW7zwzHbMZAx6twgSKK5AhwP+pE+nLfs8tEq70TE
-	 P6LzEBV07MilQ==
-Message-ID: <959b56f0-ff63-485b-86eb-96ae32bdeb88@kernel.org>
-Date: Tue, 6 May 2025 16:05:46 +0200
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="YdUYhF60";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="YdUYhF60"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 1074E1F443;
+	Tue,  6 May 2025 14:06:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1746540380; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=j6BNXNAYY3Jp10QsWYb3agAYiro+Uv/XF2h14CWtep4=;
+	b=YdUYhF60cyT2tj29IA/BJ8V+ZsO3LVYSFawtU+7lZpo40SWbylv1Tq1WSFdIC5gWyrTMSL
+	Vo88YND6YuVmONIFz0N9xVoXdQ1ia2K2Ve+w6EoliP5/27HHLEyGkT6H8UxqMinhHFYAJD
+	4vPfpRo3Mw25iNNkuF4zgOCHmTl5o8I=
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b=YdUYhF60
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1746540380; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=j6BNXNAYY3Jp10QsWYb3agAYiro+Uv/XF2h14CWtep4=;
+	b=YdUYhF60cyT2tj29IA/BJ8V+ZsO3LVYSFawtU+7lZpo40SWbylv1Tq1WSFdIC5gWyrTMSL
+	Vo88YND6YuVmONIFz0N9xVoXdQ1ia2K2Ve+w6EoliP5/27HHLEyGkT6H8UxqMinhHFYAJD
+	4vPfpRo3Mw25iNNkuF4zgOCHmTl5o8I=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 09286137CF;
+	Tue,  6 May 2025 14:06:20 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id /iE1AlwXGmhjSgAAD6G6ig
+	(envelope-from <dsterba@suse.com>); Tue, 06 May 2025 14:06:20 +0000
+From: David Sterba <dsterba@suse.com>
+To: linux-btrfs@vger.kernel.org,
+	torvalds@linux-foundation.org
+Cc: David Sterba <dsterba@suse.com>,
+	linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Btrfs fixes for 6.15-rc6
+Date: Tue,  6 May 2025 16:06:18 +0200
+Message-ID: <cover.1746539430.git.dsterba@suse.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/6] dt-bindings: mfd: add bindings for QIXIS CPLD
-To: Ioana Ciornei <ioana.ciornei@nxp.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-References: <20250430153634.2971736-1-ioana.ciornei@nxp.com>
- <20250430153634.2971736-2-ioana.ciornei@nxp.com>
- <20250502-meticulous-bulky-wildebeest-c1a8b6@kuoka>
- <wna3loahthqbn5hnw2pbt3yznmzzv3zppi7f2nblvq3t22jdc2@7cse4r4p6q5z>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <wna3loahthqbn5hnw2pbt3yznmzzv3zppi7f2nblvq3t22jdc2@7cse4r4p6q5z>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 1074E1F443
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.com:+];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCPT_COUNT_THREE(0.00)[4];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:dkim,suse.com:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -3.01
+X-Spam-Flag: NO
 
-On 06/05/2025 15:57, Ioana Ciornei wrote:
-> On Fri, May 02, 2025 at 09:01:59AM +0200, Krzysztof Kozlowski wrote:
->> On Wed, Apr 30, 2025 at 06:36:29PM GMT, Ioana Ciornei wrote:
->>> This adds device tree bindings for the board management controller -
->>> QIXIS CPLD - found on some Layerscape based boards such as LX2160A-RDB,
->>> LX2160AQDS, LS1028AQDS etc.
->>>
->>> Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
->>> ---
->>>  .../bindings/mfd/fsl,qixis-i2c.yaml           | 65 +++++++++++++++++++
->>>  1 file changed, 65 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/mfd/fsl,qixis-i2c.yaml
->>>
->>> diff --git a/Documentation/devicetree/bindings/mfd/fsl,qixis-i2c.yaml b/Documentation/devicetree/bindings/mfd/fsl,qixis-i2c.yaml
->>> new file mode 100644
->>> index 000000000000..562878050916
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/mfd/fsl,qixis-i2c.yaml
->>
->> Filename matching compatible.
-> 
-> How to choose one if there are multiple compatible strings?
+Hi,
 
-The fallback or the oldest or the lowest number or whichever you prefer
-as a base.
+a few more fixes, minor updates and one revert. Please pull, thanks.
 
-> 
->>
->>> @@ -0,0 +1,65 @@
->>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->>> +%YAML 1.2
->>> +---
->>> +$id: http://devicetree.org/schemas/mfd/fsl,qixis-i2c.yaml
->>> +$schema: http://devicetree.org/meta-schemas/core.yaml
->>> +
->>> +title: NXP's QIXIS CPLD board management controller
->>> +
->>> +maintainers:
->>> +  - Ioana Ciornei <ioana.ciornei@nxp.com>
->>> +
->>> +description: |
->>> +  The board management controller found on some Layerscape boards contains
->>> +  different IP blocks like GPIO controllers, interrupt controllers, reg-muxes
->>> +  etc.
->>> +
->>> +properties:
->>> +  compatible:
->>> +    enum:
->>> +      - fsl,lx2160a-qds-qixis-i2c
->>> +      - fsl,lx2162a-qds-qixis-i2c
->>> +      - fsl,ls1028a-qds-qixis-i2c
->>
->> Keep alphabetical order.
->>
->> What is actual device name? I2C? Is this an I2C controller or device?
+- revert device path canonicalization, this does not work as intended
+  with namespaces and is not reliable in all setups
 
-I assume you will then drop the redundant part.
+- fix crash in scrub when checksum tree is not valid, e.g. when mounted
+  with rescue=ignoredatacsums
 
->>
->>> +
->>> +  reg:
->>> +    description:
->>> +      I2C device address.
->>
->> This says device, so i2c in compatible is wrong.
->>
->> Anyway drop description, redundant.
-> 
-> Ok, will drop.
-> 
->>
->>
->>> +    maxItems: 1
->>> +
->>> +  "#address-cells":
->>> +    const: 1
->>
->> Why?
->>
->>> +
->>> +  "#size-cells":
->>> +    const: 0
->>
->> Why? Drop cells.
->>
-> 
-> See below.
-> 
->>> +
->>> +  mux-controller:
->>> +    $ref: /schemas/mux/reg-mux.yaml#
->>> +
->>> +required:
->>> +  - "#address-cells"
->>> +  - "#size-cells"
->>> +  - compatible
->>> +  - reg
->>
->> Keep same order as in properties
-> 
-> Ok.
-> 
->>
->>> +
->>> +additionalProperties: false
->>> +
->>> +examples:
->>> +  - |
->>> +    i2c {
->>> +        #address-cells = <1>;
->>> +        #size-cells = <0>;
->>> +
->>> +        qixis@66 {
->>
->> Node names should be generic. See also an explanation and list of
->> examples (not exhaustive) in DT specification:
->> https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
-> 
-> In this case, an accepted node name is 'cpld'?
+- fix crash when tracepoint btrfs_prelim_ref_insert is enabled
 
-If this is CPLD then yes.
+- other minor fixups
+  - open code folio_index(), meant to be used in MM code
+  - use matching type for sizeof in compression allocation
 
-> 
->>
->>> +            compatible = "fsl,lx2160a-qds-qixis-i2c";
->>> +            reg = <0x66>;
->>> +            #address-cells = <1>;
->>> +            #size-cells = <0>;
->>
->> So were do you use address/size cells?
->>
-> 
-> For example, fsl-ls1028a-qds.dts looks like this:
-> 
-> 	fpga@66 {
-> 		compatible = "fsl,ls1028a-qds-qixis-i2c";
-> 		reg = <0x66>;
-> 		#address-cells = <1>;
-> 		#size-cells = <0>;
-> 
-> 		mux: mux-controller@54 {
-> 			compatible = "reg-mux";
-> 			reg = <0x54>;
-> 			#mux-control-cells = <1>;
-> 			mux-reg-masks = <0x54 0xf0>; /* 0: reg 0x54, bits 7:4 */
-> 		};
-> 	};
-> 
-> Also, some boards have in their qixis CPLD gpio controllers and I am
-> planning to add them as the next step.
+----------------------------------------------------------------
+The following changes since commit e08e49d986f82c30f42ad0ed43ebbede1e1e3739:
 
-And if you tested that DTS you would see that binding does not work
-well... so my arguments stay valid - these properties in current binding
-make no sense. However binding is just wrong, so maybe these properties
-make sense after fixing the binding but then in both cases: current
-stage is not correct.
+  btrfs: adjust subpage bit start based on sectorsize (2025-04-23 08:42:10 +0200)
 
-> 
-> Ioana
+are available in the Git repository at:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git tags/for-6.15-rc5-tag
 
-Best regards,
-Krzysztof
+for you to fetch changes up to 38e541051e1d19e8b1479a6af587a7884653e041:
+
+  btrfs: open code folio_index() in btree_clear_folio_dirty_tag() (2025-05-02 13:20:56 +0200)
+
+----------------------------------------------------------------
+Boris Burkov (1):
+      btrfs: handle empty eb->folios in num_extent_folios()
+
+Goldwyn Rodrigues (1):
+      btrfs: correct the order of prelim_ref arguments in btrfs__prelim_ref
+
+Kairui Song (1):
+      btrfs: open code folio_index() in btree_clear_folio_dirty_tag()
+
+Kees Cook (1):
+      btrfs: compression: adjust cb->compressed_folios allocation type
+
+Qu Wenruo (2):
+      btrfs: avoid NULL pointer dereference if no valid csum tree
+      Revert "btrfs: canonicalize the device path before adding it"
+
+ fs/btrfs/compression.c       |  2 +-
+ fs/btrfs/extent_io.c         |  4 +-
+ fs/btrfs/extent_io.h         |  2 +
+ fs/btrfs/scrub.c             |  4 +-
+ fs/btrfs/volumes.c           | 91 +-------------------------------------------
+ include/trace/events/btrfs.h |  2 +-
+ 6 files changed, 9 insertions(+), 96 deletions(-)
