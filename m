@@ -1,226 +1,242 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBB5D1FFC5C
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 06:56:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D388321ADB9;
+	Tue,  6 May 2025 06:57:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746514573; cv=none; b=U6mBNwFVRryxqGjXQRgFMocw3DWxR5nUDvdOtXUcjMqWNnHJ6OerOcGprqDQ8oYxqgPOANDCaOaralH/2UKlk7t5RylSzW9oFlzO00NGseohg11c5Jhx+b0obkeEuj0AVqOFIdFmPu7o3hgwjQZYmKk5E5CaqbZjTdeu09s37Yg=
+	t=1746514644; cv=none; b=ZqkBrIv4ieYCPp0nUJ186V4d4+GUGjfmGAzyT0COJ/XP0Y4XXGwoSAaRznyxx/UXDBo4qamLvZ7IafhDMp4Yp9kr8L5ciVbLRwEEDu69EmEKIEpC18LB0I37FF8V5eHF1Xbm1LN+QkJ9tKnhBkqarnI7g3qJNFGhCcASO7mqSa4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746514573; c=relaxed/simple;
-	bh=a+I9Q2/IDUgbzScxa83+l03FoiQJZNFZzGWX2jYHBPU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JMGUuC9PDkTNBn7ZN0YLVy1Ejfdxyogm1bWobyGkljJXVbMMbfyAJczQ4afYeH5JFnF+LStGHx5+WBJd3zgZAKHrM9KhYNBW19+kmf+USUJtAi7XaPAUsLRciMGihp9rrZFUt5mge8wO8JfxQGkUEK71BpAA/6gMa+hvfojXpwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=PsdL7a5g; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1746514644; c=relaxed/simple;
+	bh=jmxxIbzqKYSBJ1ZYZ8TvH3M6DSe+Gh2o2IqwWJRzrlA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=M+CvlABJLY31zKDdXp1dtoj/AsxtFNBmPwC6SafOChrFByunuMgwQJJLcs+TOLMgg4IkUl+WWTiJrAb2SOVcacYoIh0+Hkmz7xKpAaGK9we/ZZVTZd4tnMRo4BFM26T8x1M9hLjQon81LuOnD+BKVIIUehPnc76JpheaVEX5XKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=niXS9vJD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="PsdL7a5g"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1746514569;
-	bh=a+I9Q2/IDUgbzScxa83+l03FoiQJZNFZzGWX2jYHBPU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=PsdL7a5gUWBzzj6WHLi3LyT0i9xpO9CmDUMSbHVeti3/BE3fyzc45zzcVAEAjJs/f
-	 w4an1X5v7zaZd9TYCeWd3lLs5Mv3w0GReBIIR7oCwrwLLynqRlhBDDS+megOFU12gV
-	 2/XFo/Hz/ZCWqLT4eDF3TdodNWkUAr9zINM/2S45QeQHlUx1Yl1RzCpgi32dZBuKdu
-	 oFC06VocPHy/EKIHOrqtcMYntH2JhTURtMcO2aXo1DozOJrY03honB4GP43PEs+2z3
-	 WHu5jRP28I9gqM76+OMgtutLkA7XKedzPA96yFXE1v4FPBA5SoR/ajWSzvOuxy4n3L
-	 qxyB+zbcggBzg==
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bbrezillon)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 9988217E0630;
-	Tue,  6 May 2025 08:56:08 +0200 (CEST)
-Date: Tue, 6 May 2025 08:56:03 +0200
-From: Boris Brezillon <boris.brezillon@collabora.com>
-To: =?UTF-8?B?QWRyacOhbg==?= Larumbe <adrian.larumbe@collabora.com>
-Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
- kernel@collabora.com, Rob Herring <robh@kernel.org>, Steven Price
- <steven.price@arm.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>
-Subject: Re: [PATCH 2/3] drm/panfrost: Add driver IOCTL for setting BO
- labels
-Message-ID: <20250506085603.49eb803b@collabora.com>
-In-Reply-To: <20250424022138.709303-3-adrian.larumbe@collabora.com>
-References: <20250424022138.709303-1-adrian.larumbe@collabora.com>
-	<20250424022138.709303-3-adrian.larumbe@collabora.com>
-Organization: Collabora
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="niXS9vJD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C6E9C4CEE4;
+	Tue,  6 May 2025 06:57:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746514644;
+	bh=jmxxIbzqKYSBJ1ZYZ8TvH3M6DSe+Gh2o2IqwWJRzrlA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=niXS9vJDBbl74HJG7BMxJx0ezJru9LnnTdImpiFfPAWDz1TV9f8NaPhgOvlou7DLL
+	 YR7Ymim2r2aVEu68jncTxc0Z43NtijYzrEjKCvLC7coeiNwd2/nAA4pTJeA840aGNF
+	 UVgJ08bl8eujq9WFeKh84c1yi9Ibo3XTQVFDrkUEJxgCWcTGTMVIWDJxJH4VdyqX08
+	 4EZTcTn+1tw7qB2pSyM/rCMhamsIFmZvb/YQZEKWUve+Jc6cTC6kIlvn0A9i5f3HVP
+	 /3mEgg2kZK5XtciRNm8goYBIoLgN6m1Q2wM6OsX2DLH1hxZvdEgUKYq1eBMN5iJd8q
+	 OJ4gAQ3gPhztw==
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-acbb48bad09so976943966b.0;
+        Mon, 05 May 2025 23:57:24 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUkwM1Wppczmt1Sjl+pXAmQA63M6idIQqrEe6zVAEdtvTlaIG++tCHvZfCyCzBVURrtRLQLr235ybO6@vger.kernel.org, AJvYcCWc9DTUOx580/pTNPlDM/0AmO8otXHc1lw3Ek5e2r5SM7gwi6U6ng/aOzSGaSK2NihlZL/oGPTeTzUhciyd@vger.kernel.org
+X-Gm-Message-State: AOJu0YzIY56FpAvV8SMR5/aMkHYqlcGoLOl29e7FHSOTIwlRkWVwOM5j
+	cQ0Mz0S7aVLPTuMdrva4EohRPp6j3DICIij8iyECyXYzcmiVixw3cePPjTdVnbpuex4NFunDTps
+	8nY5D3dM7WlXZhv9PgOQZk+vqc1E=
+X-Google-Smtp-Source: AGHT+IHqT3uZQgVbS8zzGchNicDCxaGgHK15LYaUKIzG0HK3z4buSjYRHnO51K7zWfR57fyko+u8zvaJcxJf/ibZ4E0=
+X-Received: by 2002:a17:907:d40e:b0:aca:c8aa:5899 with SMTP id
+ a640c23a62f3a-ad1d349bc2cmr199839966b.22.1746514643038; Mon, 05 May 2025
+ 23:57:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <20250225090014.59067-1-clamor95@gmail.com> <20250225090014.59067-3-clamor95@gmail.com>
+In-Reply-To: <20250225090014.59067-3-clamor95@gmail.com>
+From: Chanwoo Choi <chanwoo@kernel.org>
+Date: Tue, 6 May 2025 15:56:42 +0900
+X-Gmail-Original-Message-ID: <CAGTfZH3qAXwB6gD4Jxb6s5QZQFE8zkAG3cPZC5KoWEaZi4fQYg@mail.gmail.com>
+X-Gm-Features: ATxdqUG3o8cHQPZFii1jFBNrMYogu47ZLQun4AWci1craFWNsch5lxW3bY0GIMQ
+Message-ID: <CAGTfZH3qAXwB6gD4Jxb6s5QZQFE8zkAG3cPZC5KoWEaZi4fQYg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] extcon: Add basic support for Maxim MAX14526 MUIC
+To: Svyatoslav Ryhel <clamor95@gmail.com>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 24 Apr 2025 03:21:31 +0100
-Adri=C3=A1n Larumbe <adrian.larumbe@collabora.com> wrote:
+Hi,
 
-> Allow UM to label a BO for which it possesses a DRM handle.
->=20
-> Signed-off-by: Adri=C3=A1n Larumbe <adrian.larumbe@collabora.com>
-
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
-
+On Tue, Feb 25, 2025 at 6:09=E2=80=AFPM Svyatoslav Ryhel <clamor95@gmail.co=
+m> wrote:
+>
+> The MAX14526 is designed to simplify interface requirements on
+> portable devices by multiplexing common inputs (USB, UART,
+> Microphone, Stereo Audio and Composite Video) on a single
+> micro/mini USB connector. The USB input supports Hi-Speed USB
+> and the audio/video inputs feature negative rail signal
+> operation allowing simple DC coupled accessories. These device
+> allow a single micro/mini USB port to support all the common
+> interfaces on Cellular phones and portable media players over
+> the same external lines.
+>
+> Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
 > ---
->  drivers/gpu/drm/panfrost/panfrost_drv.c | 44 ++++++++++++++++++++++++-
->  drivers/gpu/drm/panfrost/panfrost_gem.h |  2 ++
->  include/uapi/drm/panfrost_drm.h         | 20 +++++++++++
->  3 files changed, 65 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_drv.c b/drivers/gpu/drm/pa=
-nfrost/panfrost_drv.c
-> index b87f83e94eda..b0ab76d67e96 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_drv.c
-> +++ b/drivers/gpu/drm/panfrost/panfrost_drv.c
-> @@ -495,6 +495,46 @@ static int panfrost_ioctl_madvise(struct drm_device =
-*dev, void *data,
->  	return ret;
->  }
-> =20
-> +static int panfrost_ioctl_set_label_bo(struct drm_device *ddev, void *da=
-ta,
-> +				       struct drm_file *file)
-> +{
-> +	struct drm_panfrost_set_label_bo *args =3D data;
-> +	struct drm_gem_object *obj;
-> +	const char *label =3D NULL;
-> +	int ret =3D 0;
+>  drivers/extcon/Kconfig           |  12 ++
+>  drivers/extcon/Makefile          |   1 +
+>  drivers/extcon/extcon-max14526.c | 301 +++++++++++++++++++++++++++++++
+>  3 files changed, 314 insertions(+)
+>  create mode 100644 drivers/extcon/extcon-max14526.c
+>
+> diff --git a/drivers/extcon/Kconfig b/drivers/extcon/Kconfig
+> index a6f6d467aacf..1096afc0b5bb 100644
+> --- a/drivers/extcon/Kconfig
+> +++ b/drivers/extcon/Kconfig
+> @@ -134,6 +134,18 @@ config EXTCON_MAX8997
+>           Maxim MAX8997 PMIC. The MAX8997 MUIC is a USB port accessory
+>           detector and switch.
+>
+> +config EXTCON_MAX14526
+> +       tristate "Maxim MAX14526 EXTCON Support"
+> +       select IRQ_DOMAIN
+> +       select REGMAP_I2C
+> +       help
+> +         If you say yes here you get support for the Maxim MAX14526
+> +         MUIC device. The MAX14526 MUIC is a USB port accessory
+> +         detector and switch. The MAX14526 is designed to simplify
+> +         interface requirements on portable devices by multiplexing
+> +         common inputs (USB, UART, Microphone, Stereo Audio and
+> +         Composite Video) on a single micro/mini USB connector.
 > +
-> +	if (args->pad)
-> +		return -EINVAL;
+>  config EXTCON_PALMAS
+>         tristate "Palmas USB EXTCON support"
+>         depends on MFD_PALMAS
+> diff --git a/drivers/extcon/Makefile b/drivers/extcon/Makefile
+> index 0d6d23faf748..6482f2bfd661 100644
+> --- a/drivers/extcon/Makefile
+> +++ b/drivers/extcon/Makefile
+> @@ -18,6 +18,7 @@ obj-$(CONFIG_EXTCON_MAX3355)  +=3D extcon-max3355.o
+>  obj-$(CONFIG_EXTCON_MAX77693)  +=3D extcon-max77693.o
+>  obj-$(CONFIG_EXTCON_MAX77843)  +=3D extcon-max77843.o
+>  obj-$(CONFIG_EXTCON_MAX8997)   +=3D extcon-max8997.o
+> +obj-$(CONFIG_EXTCON_MAX14526)  +=3D extcon-max14526.o
+>  obj-$(CONFIG_EXTCON_PALMAS)    +=3D extcon-palmas.o
+>  obj-$(CONFIG_EXTCON_PTN5150)   +=3D extcon-ptn5150.o
+>  obj-$(CONFIG_EXTCON_QCOM_SPMI_MISC) +=3D extcon-qcom-spmi-misc.o
+> diff --git a/drivers/extcon/extcon-max14526.c b/drivers/extcon/extcon-max=
+14526.c
+> new file mode 100644
+> index 000000000000..b38b20a4db47
+> --- /dev/null
+> +++ b/drivers/extcon/extcon-max14526.c
+> @@ -0,0 +1,301 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +#include <linux/device.h>
+> +#include <linux/devm-helpers.h>
+> +#include <linux/delay.h>
+> +#include <linux/err.h>
+> +#include <linux/extcon-provider.h>
+> +#include <linux/i2c.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/module.h>
+> +#include <linux/pm.h>
+> +#include <linux/regmap.h>
 > +
-> +	obj =3D drm_gem_object_lookup(file, args->handle);
-> +	if (!obj)
-> +		return -ENOENT;
+> +/* I2C addresses of MUIC internal registers */
+> +#define MAX14526_DEVICE_ID     0x00
+> +#define MAX14526_ID            0x02
 > +
-> +	if (args->label) {
-> +		label =3D strndup_user((const char __user *)(uintptr_t)args->label,
-> +				     PANFROST_BO_LABEL_MAXLEN);
-> +		if (IS_ERR(label)) {
-> +			ret =3D PTR_ERR(label);
-> +			if (ret =3D=3D -EINVAL)
-> +				ret =3D -E2BIG;
-> +			goto err_put_obj;
-> +		}
-> +	}
+> +/* CONTROL_1 register masks */
+> +#define MAX14526_CONTROL_1     0x01
+> +#define   ID_2P2               BIT(6)
+> +#define   ID_620               BIT(5)
+> +#define   ID_200               BIT(4)
+> +#define   VLDO                 BIT(3)
+> +#define   SEMREN               BIT(2)
+> +#define   ADC_EN               BIT(1)
+> +#define   CP_EN                        BIT(0)
 > +
-> +	/*
-> +	 * We treat passing a label of length 0 and passing a NULL label
-> +	 * differently, because even though they might seem conceptually
-> +	 * similar, future uses of the BO label might expect a different
-> +	 * behaviour in each case.
-> +	 */
-> +	panfrost_gem_set_label(obj, label);
-> +
-> +err_put_obj:
-> +	drm_gem_object_put(obj);
-> +
-> +	return ret;
-> +}
-> +
->  int panfrost_unstable_ioctl_check(void)
->  {
->  	if (!unstable_ioctls)
-> @@ -561,6 +601,7 @@ static const struct drm_ioctl_desc panfrost_drm_drive=
-r_ioctls[] =3D {
->  	PANFROST_IOCTL(PERFCNT_ENABLE,	perfcnt_enable,	DRM_RENDER_ALLOW),
->  	PANFROST_IOCTL(PERFCNT_DUMP,	perfcnt_dump,	DRM_RENDER_ALLOW),
->  	PANFROST_IOCTL(MADVISE,		madvise,	DRM_RENDER_ALLOW),
-> +	PANFROST_IOCTL(SET_LABEL_BO,	set_label_bo,	DRM_RENDER_ALLOW),
->  };
-> =20
->  static void panfrost_gpu_show_fdinfo(struct panfrost_device *pfdev,
-> @@ -625,6 +666,7 @@ static const struct file_operations panfrost_drm_driv=
-er_fops =3D {
->   * - 1.2 - adds AFBC_FEATURES query
->   * - 1.3 - adds JD_REQ_CYCLE_COUNT job requirement for SUBMIT
->   *       - adds SYSTEM_TIMESTAMP and SYSTEM_TIMESTAMP_FREQUENCY queries
-> + * - 1.4 - adds SET_LABEL_BO
->   */
->  static const struct drm_driver panfrost_drm_driver =3D {
->  	.driver_features	=3D DRIVER_RENDER | DRIVER_GEM | DRIVER_SYNCOBJ,
-> @@ -637,7 +679,7 @@ static const struct drm_driver panfrost_drm_driver =
-=3D {
->  	.name			=3D "panfrost",
->  	.desc			=3D "panfrost DRM",
->  	.major			=3D 1,
-> -	.minor			=3D 3,
-> +	.minor			=3D 4,
-> =20
->  	.gem_create_object	=3D panfrost_gem_create_object,
->  	.gem_prime_import_sg_table =3D panfrost_gem_prime_import_sg_table,
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_gem.h b/drivers/gpu/drm/pa=
-nfrost/panfrost_gem.h
-> index c0be2934f229..842e025b9bdc 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_gem.h
-> +++ b/drivers/gpu/drm/panfrost/panfrost_gem.h
-> @@ -9,6 +9,8 @@
-> =20
->  struct panfrost_mmu;
-> =20
-> +#define PANFROST_BO_LABEL_MAXLEN	4096
-> +
->  struct panfrost_gem_object {
->  	struct drm_gem_shmem_object base;
->  	struct sg_table *sgts;
-> diff --git a/include/uapi/drm/panfrost_drm.h b/include/uapi/drm/panfrost_=
-drm.h
-> index 568724be6628..b0445c5e514d 100644
-> --- a/include/uapi/drm/panfrost_drm.h
-> +++ b/include/uapi/drm/panfrost_drm.h
-> @@ -21,6 +21,7 @@ extern "C" {
->  #define DRM_PANFROST_PERFCNT_ENABLE		0x06
->  #define DRM_PANFROST_PERFCNT_DUMP		0x07
->  #define DRM_PANFROST_MADVISE			0x08
-> +#define DRM_PANFROST_SET_LABEL_BO		0x09
-> =20
->  #define DRM_IOCTL_PANFROST_SUBMIT		DRM_IOW(DRM_COMMAND_BASE + DRM_PANFRO=
-ST_SUBMIT, struct drm_panfrost_submit)
->  #define DRM_IOCTL_PANFROST_WAIT_BO		DRM_IOW(DRM_COMMAND_BASE + DRM_PANFR=
-OST_WAIT_BO, struct drm_panfrost_wait_bo)
-> @@ -29,6 +30,7 @@ extern "C" {
->  #define DRM_IOCTL_PANFROST_GET_PARAM		DRM_IOWR(DRM_COMMAND_BASE + DRM_PA=
-NFROST_GET_PARAM, struct drm_panfrost_get_param)
->  #define DRM_IOCTL_PANFROST_GET_BO_OFFSET	DRM_IOWR(DRM_COMMAND_BASE + DRM=
-_PANFROST_GET_BO_OFFSET, struct drm_panfrost_get_bo_offset)
->  #define DRM_IOCTL_PANFROST_MADVISE		DRM_IOWR(DRM_COMMAND_BASE + DRM_PANF=
-ROST_MADVISE, struct drm_panfrost_madvise)
-> +#define DRM_IOCTL_PANFROST_SET_LABEL_BO		DRM_IOWR(DRM_COMMAND_BASE + DRM=
-_PANFROST_SET_LABEL_BO, struct drm_panfrost_set_label_bo)
-> =20
->  /*
->   * Unstable ioctl(s): only exposed when the unsafe unstable_ioctls module
-> @@ -227,6 +229,24 @@ struct drm_panfrost_madvise {
->  	__u32 retained;       /* out, whether backing store still exists */
->  };
-> =20
-> +/**
-> + * struct drm_panfrost_set_label_bo - ioctl argument for labelling Panfr=
-ost BOs.
-> + */
-> +struct drm_panfrost_set_label_bo {
-> +	/** @handle: Handle of the buffer object to label. */
-> +	__u32 handle;
-> +
-> +	/**  @pad: MBZ. */
-> +	__u32 pad;
-> +
-> +	/**
-> +	 * @label: User pointer to a NUL-terminated string
-> +	 *
-> +	 * Length cannot be greater than 4096
-> +	 */
-> +	__u64 label;
-> +};
-> +
->  /* Definitions for coredump decoding in user space */
->  #define PANFROSTDUMP_MAJOR 1
->  #define PANFROSTDUMP_MINOR 0
+> +/* CONTROL_2 register masks */
+> +#define MAX14526_CONTROL_2     0x02
+> +#define   INTPOL               BIT(7)
+> +#define   INT_EN               BIT(6)
+> +#define   MIC_LP               BIT(5)
+> +#define   CP_AUD               BIT(4)
+> +#define   CHG_TYPE             BIT(1)
+> +#define   USB_DET_DIS          BIT(0)
 
+(snip)
+
+> +static int max14526_probe(struct i2c_client *client)
+> +{
+> +       struct device *dev =3D &client->dev;
+> +       struct max14526_data *priv;
+> +       int ret, dev_id, rev, i;
+> +
+> +       priv =3D devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +       if (!priv)
+> +               return -ENOMEM;
+> +
+> +       priv->client =3D client;
+> +       i2c_set_clientdata(client, priv);
+> +
+> +       priv->regmap =3D devm_regmap_init_i2c(client, &max14526_regmap_co=
+nfig);
+> +       if (IS_ERR(priv->regmap))
+> +               return dev_err_probe(dev, PTR_ERR(priv->regmap), "cannot =
+allocate regmap\n");
+> +
+> +       for (i =3D 0; i < MAX14526_N_REGMAP_FIELDS; i++) {
+> +               priv->rfield[i] =3D devm_regmap_field_alloc(dev, priv->re=
+gmap,
+> +                                                         max14526_reg_fi=
+eld[i]);
+> +               if (IS_ERR(priv->rfield[i]))
+> +                       return dev_err_probe(dev, PTR_ERR(priv->rfield[i]=
+),
+> +                                            "cannot allocate regmap fiel=
+d\n");
+> +       }
+> +
+> +       /* Detect if MUIC version is supported */
+> +       ret =3D regmap_field_read(priv->rfield[VENDOR_ID], &dev_id);
+> +       if (ret)
+> +               return dev_err_probe(dev, ret, "failed to read MUIC ID\n"=
+);
+> +
+> +       regmap_field_read(priv->rfield[CHIP_REV], &rev);
+> +
+> +       if (dev_id =3D=3D MAX14526_ID)
+> +               dev_info(dev, "detected MAX14526 MUIC with id 0x%x, rev 0=
+x%x\n", dev_id, rev);
+> +       else
+> +               dev_err_probe(dev, -EINVAL, "MUIC vendor id 0x%X is not r=
+ecognized\n", dev_id);
+> +
+> +       priv->edev =3D devm_extcon_dev_allocate(dev, max14526_extcon_cabl=
+e);
+> +       if (IS_ERR(priv->edev))
+> +               return dev_err_probe(dev, (IS_ERR(priv->edev)),
+> +                                    "failed to allocate extcon device\n"=
+);
+> +
+> +       ret =3D devm_extcon_dev_register(dev, priv->edev);
+> +       if (ret < 0)
+> +               return dev_err_probe(dev, ret, "failed to register extcon=
+ device\n");
+> +
+> +       ret =3D max14526_ap_usb_mode(priv);
+> +       if (ret < 0)
+> +               return dev_err_probe(dev, ret, "failed to set AP USB mode=
+\n");
+> +
+> +       regmap_write_bits(priv->regmap, MAX14526_CONTROL_2, INT_EN, INT_E=
+N);
+> +       regmap_write_bits(priv->regmap, MAX14526_CONTROL_2, USB_DET_DIS, =
+~USB_DET_DIS);
+
+When using ~USB_DET_DIS, there is overflow issue like you are received
+mail from linux-next.
+I'd like you to fix this issue.
+
+I'm sorry for late reply.
+
+(snip)
+
+--=20
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
