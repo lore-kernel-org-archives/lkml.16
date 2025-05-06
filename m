@@ -1,117 +1,92 @@
-Received: from smtp-fw-6001.amazon.com (smtp-fw-6001.amazon.com [52.95.48.154])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5BFD72624;
-	Tue,  6 May 2025 19:29:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.95.48.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B6CA72624;
+	Tue,  6 May 2025 19:29:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746559780; cv=none; b=faWhKhOu5EKqKn5p/Id3CSlau/MajUDow+hs9CkO07+U4Hbdt726BpJs7+pfBwRlFUijmx0z7oS1atIW8iwvYnq+rlkW5gOA7sjs80dKkiwAi13jKXPKwg1NprLbuWUSZXvIOiRTKwpESZKHz5hUdIkQ/DxoHz/y0n+5z15oK40=
+	t=1746559794; cv=none; b=HGD/SfZFT7cse/T5xb6niNl6fthdqdbftsjQBij5vmEpUiKyNeKPSKDBw+toH6wJ1Z9qLJl7q61y7x8rWBVQt0nVY8f5fRjU08GuYR/CaE717XEY543OndG9J+usM1GZTme3HhGkT6vW0I1Gzsgo6FmH9qj9KBiVtK3nyDyvxwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746559780; c=relaxed/simple;
-	bh=b1VVsab0OH/DxDyZuw5vIf9OGWV1aWvyxGG6Y4CMI48=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PdFuv/ni8y1Gs8vwIJ8YW57EJFHyURPwT0YRRjj4C6idhPEzpmbL5A2d9qznfa3eCkyQSvg1sNdt7wJ+j+xuQdbMuBs2ro/11KwxYnAox4ueFq/sHVSPNdHXIAKlt+rx73lgK7v2JnRyt83gUa6X8xpoJvYDyW0buLeHQeCPpqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=rqJnXozN; arc=none smtp.client-ip=52.95.48.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1746559794; c=relaxed/simple;
+	bh=2Nr6xoHOYD2AZgbjEKQatn263DDeL2kognSV97Y6VQw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=SHaLCLuxaB//Kg0/VhXYW7UPCaSPBgQ0bCNMH7B3TpCP8BMu3u/jJSv6cVaUePq7X3XJpB1Rbie8hlz6LGA2JstjmCxqiujkG2MP1TAYesvQvNKO9rmjm8HnaTrJr3lnPkphxPmaqBmFWp1GTmFotliIJEfeL+FNDg82Yf9OfLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G67WQ/J8; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="rqJnXozN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G67WQ/J8"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2264aefc45dso95771575ad.0;
+        Tue, 06 May 2025 12:29:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1746559779; x=1778095779;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=eCdDBNAJ30AvlG3uxF4+zSKk9L3XGdJAilQrs6Phzuw=;
-  b=rqJnXozNH3EqnifXC+klhiOAIS2EZF3dHwUniQAC9LnfNJV2SKE0wLCK
-   1kCEE3PF/VUMAyVDDd6PjQdNkwlumjN7wcvxcUulPKIUR26gBOF3Ho3hN
-   dDIV8vHq5UQ/Xyt2aA6EAMSsws1SJZSZw4eLFY6cgUTVli9qINnNp/XvY
-   4=;
-X-IronPort-AV: E=Sophos;i="6.15,267,1739836800"; 
-   d="scan'208";a="487328028"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.2])
-  by smtp-border-fw-6001.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 19:29:33 +0000
-Received: from EX19MTAUWB001.ant.amazon.com [10.0.7.35:23426]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.21.231:2525] with esmtp (Farcaster)
- id e0cbbc4a-76b6-456b-b756-aa36bf60c849; Tue, 6 May 2025 19:29:33 +0000 (UTC)
-X-Farcaster-Flow-ID: e0cbbc4a-76b6-456b-b756-aa36bf60c849
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Tue, 6 May 2025 19:29:31 +0000
-Received: from 6c7e67bfbae3.amazon.com (10.187.170.44) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Tue, 6 May 2025 19:29:27 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <brauner@kernel.org>
-CC: <alexander@mihalicyn.com>, <bluca@debian.org>, <daan.j.demeyer@gmail.com>,
-	<davem@davemloft.net>, <david@readahead.eu>, <edumazet@google.com>,
-	<horms@kernel.org>, <jack@suse.cz>, <jannh@google.com>, <kuba@kernel.org>,
-	<kuniyu@amazon.com>, <lennart@poettering.net>,
-	<linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<me@yhndnzj.com>, <netdev@vger.kernel.org>, <oleg@redhat.com>,
-	<pabeni@redhat.com>, <viro@zeniv.linux.org.uk>, <zbyszek@in.waw.pl>
-Subject: Re: [PATCH RFC v3 08/10] net, pidfs, coredump: only allow coredumping tasks to connect to coredump socket
-Date: Tue, 6 May 2025 12:28:44 -0700
-Message-ID: <20250506192920.17567-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250506-buchmacher-gratulant-9960af036671@brauner>
-References: <20250506-buchmacher-gratulant-9960af036671@brauner>
+        d=gmail.com; s=20230601; t=1746559793; x=1747164593; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BpkYYFBreEWHOH7F3jeTr12XOgMxGnYzg9h+2a61kIc=;
+        b=G67WQ/J8mqmh6TZFMbw3IjD+ZRKT+wU6EamiqI3JDObUDBFLxUZmRy4JFAiX/HOrtw
+         vqYQ9cGJfuXGJdn3e+Mx1ZxYrd9PsGL5OTcxJUAvsrsfyPrzMy+1tiJc8uPr8uif10ar
+         HmWDlglRxEjwRr/8mLCv88Lp6bZcqkwMdhRLuMzu7ayzsZFpcUOAnviRdms7qp93DO4M
+         WxGxyNkptFrRPElo+WeX5N7iFE+RSDE+UqwjJcFUWgWuwrualvvAW/AcH53qHdrAAqCm
+         LXwADdbEQvOpm7M6kWvOsNVluyJR+ecXDTqa3wC5ZzBZxTFyA1eY838lk2/Nes3KuNrp
+         GRLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746559793; x=1747164593;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BpkYYFBreEWHOH7F3jeTr12XOgMxGnYzg9h+2a61kIc=;
+        b=GWIpcAkacA/a9HEihGqdm/Ict9Mnqv/pD586verkhjevg+bL4BP0kw2+JyoveoK0yT
+         tuXUPeo6CfR7iPkhy4dMIWnfot9GEqIRRmrbITjg0s0ILH0+xeZvsHi+w+2QLoSDzcpT
+         lQY0oN+oLDzGMzN7zSKDybGhhDxxh7tSdUSNjc8oF4jzo6a0Gb7sdRj24zHZeSX+Gf86
+         FsMWLHKPueslHWMbOKH5HdjOMC0WnSGyXHurV3Ll+emKDcXnKcY+1RWSSVBPbh8wJUEY
+         Q3GjuBAjMaB3OeOren93VnYlknoJgSXTuZ9pD0YMurMWpuW/YDmu90Ecm0dqAJ7v2Y9+
+         1GIg==
+X-Forwarded-Encrypted: i=1; AJvYcCVU3xe5bcraLu99thFJ7Lh6Rl+S65pAwjGrQj+n0d0IyHM22Qr0fRlx/nc8aHe71KDP7zXWDzaPBqaqTk6f@vger.kernel.org, AJvYcCX95Ea3W3V+2bEr19ersGI8Ty3Cu3pGnKyt4bDbhH2YfusBqmiGeZRVkak+NC3SIs+vls0irPqwh0U=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy5HysAD5MjCmerEIoJjK6PFHF2PkZ4QY77dj3pryBySeLm2gIJ
+	ykphs1eoWgHssbHRLL6JyRzQ1b4fb5vIM9WSQdYmO3vKq23ac+QgB5FzGJo7
+X-Gm-Gg: ASbGncu3mKprMrVd8aXZi9xkkoJUU+JCudnldA05yBGYgjfhReABh+sAmV/50NAbKxm
+	WtwQjA0hwh1plEwZpQrpxvpHigFIw5X2CwtqRyIT9q865OU/X7i2P+6841V27jNhjPcKdPVDMVa
+	YQ2R5LdveETKCLNz9YdAg1u8oHupW20s50Ubdj92PdCuemntb0lu4sR/NENRXG8GXwj7B43asgL
+	KmKVqO27HKWpHMT007PXGz2RIWw2N3zGFUX9JVtWyllqQ59Ca3p6guBFbmeUVzD9B+t80pVAdBs
+	oWOzaItc378LuwOHFgHj7thz4ebK0D79yKkzS9O2u3UQIA343ODR
+X-Google-Smtp-Source: AGHT+IERN6pWd7PqOdXnAVYxBJizmywR1rfimLAvRPrCgrDfgBt7psbyQxn7CavgvmMOvMw8Rl60aA==
+X-Received: by 2002:a17:902:f70a:b0:224:13a4:d61e with SMTP id d9443c01a7336-22e5ee0b785mr5732955ad.51.1746559792808;
+        Tue, 06 May 2025 12:29:52 -0700 (PDT)
+Received: from localhost.localdomain ([104.28.249.218])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b1fca324a9bsm5264577a12.0.2025.05.06.12.29.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 May 2025 12:29:52 -0700 (PDT)
+From: Jesung Yang <y.j3ms.n@gmail.com>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: workflows@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jesung Yang <y.j3ms.n@gmail.com>
+Subject: Re: [PATCH] docs: align with scripts/syscall.tbl migration
+Date: Wed,  7 May 2025 04:29:00 +0900
+Message-ID: <20250506192900.1547017-1-y.j3ms.n@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <87v7qdx59u.fsf@trenco.lwn.net>
+References: <87v7qdx59u.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: EX19D032UWA003.ant.amazon.com (10.13.139.37) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-From: Christian Brauner <brauner@kernel.org>
-Date: Tue, 6 May 2025 17:16:13 +0200
-> On Tue, May 06, 2025 at 04:51:25PM +0200, Jann Horn wrote:
-> > On Tue, May 6, 2025 at 9:39 AM Christian Brauner <brauner@kernel.org> wrote:
-> > > > ("a kernel socket" is not necessarily the same as "a kernel socket
-> > > > intended for core dumping")
-> > >
-> > > Indeed. The usermodehelper is a kernel protocol. Here it's the task with
-> > > its own credentials that's connecting to a userspace socket. Which makes
-> > > this very elegant because it's just userspace IPC. No one is running
-> > > around with kernel credentials anywhere.
-> > 
-> > To be clear: I think your current patch is using special kernel
-> > privileges in one regard, because kernel_connect() bypasses the
-> > security_socket_connect() security hook.
+On Tue, May 6, 2025 at 10:01 PM Jonathan Corbet <corbet@lwn.net> wrote:
 
-Precisely, whether LSM ignores kernel sockets or not depends on LSM.
+> So this seems fine to me, but I would feel a bit better about it if the
+> relevant architecture maintainers and lists had been copied.  Could I
+> convince you to repost with those addresses included?
 
-When we create a socket, kern=0/1 is passed to security_socket_create().
-Currently, SELinux always ignore the kernel socket, and AppArmor depends
-on another condition.  Other LSM doesn't care.  Especially, BPF LSM is
-just a set of functions to attach BPF programs, so it can enfoce whatever.
+Thanks for the feedback.
 
+I'll resend the patch with the relevant architecture maintainers and
+mailing lists CC'd, as suggested.
 
-> I think it is a good thing
-> > that it bypasses security hooks in this way; I think we wouldn't want
-> > LSMs to get in the way of this special connect(), since the task in
-> > whose context the connect() call happens is not in control of this
-> > connection; the system administrator is the one who decided that this
-> > connect() should happen on core dumps. It is kind of inconsistent
-> > though that that separate security_unix_stream_connect() LSM hook will
-> > still be invoked in this case, and we might have to watch out to make
-> > sure that LSMs won't end up blocking such connections... which I think
-> 
-> Right, it is the same as for the usermode helper. It calls
-> kernel_execve() which invokes at least security_bprm_creds_for_exec()
-> and security_bprm_check(). Both of which can be used to make the
-> usermodehelper execve fail.
-> 
-> Fwiw, it's even the case for dumping directly to a file as in that case
-> it's subject to all kinds of lookup and open security hooks like
-> security_file_open() and then another round in do_truncate().
-> 
-> All of that happens fully in the task's context as well via
-> file_open()/file_open_root() or do_truncate().
-> 
-> So there's nothing special here.
+Best regards,
+Jesung
