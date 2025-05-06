@@ -1,110 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2BC91917D0;
-	Tue,  6 May 2025 18:16:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0002A221FBC
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 18:17:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746555370; cv=none; b=KuoTfv40vP09TSIHPGDPVH7OpLDRr1upNe8/OriiEvgjDE3T/fzjzSq0+QI1QDtzAVQojHqfbTGd6ODKf6kXLsgPw163XemErUJTf/uc+l/qak/D+pgHuE+RxQTHbrfKvt4jRyCrha6z1RIkqejXljtN+O+5eh6bKdEmwHbV9gs=
+	t=1746555453; cv=none; b=FCDwPApygp8M1RKTPRi+Pg1DmeG1nxQ+6fLoB27Fr0+XqvKAx7D3WQrUEX3NTEULli0Uv26pPx3U4jvLQo3fJTAcAeSncDrQWY8sornSK+Srs/252nyu5DQ78TOviVGrLmEgQFpPxxAVCpjfat4hP+7v5eJo1L5CW3V5WWcdbyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746555370; c=relaxed/simple;
-	bh=dNtQ/jpOnpZSTymrY6wNigWYOY25EWijiZO1AACKaNI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=spyHWglkr/HlhePLGqiJK5cHzfFKSuNSbDrykZ9kj9LBDCtpHDf0rdvq2mfZz/rkHO0kGdEXAdfEZgbvyMXPd18suOngQa6koDZPhiSWInMawSxrxN87KP3Qd4KkNgulgftNDMZaXyN9qrNxQKFFlvea7hL4Ro2MSVNeIAGi4Yc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FmfShspE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746555453; c=relaxed/simple;
+	bh=y7Y9d+RzANox2+qqaCL+MzxUJmPb7O8ZAsLwLLyIZyc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KIp+lDem7qrrD8x263hXj/VJiLktWElzy/U8bpNnYK8XTlqNqYNA2qEmWJ46m090/mBrl8PygVOoj61UE/Tv+ugU9tIB0EAH1vDX3oX4VKJ4mrxMMkWthbusg77yDQGHwl7UN4i5KfLjUhKWyssQKbOZupj8EmuyaKxyfMozrMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=TVudDeC6; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FmfShspE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADC57C4CEE4;
-	Tue,  6 May 2025 18:16:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746555369;
-	bh=dNtQ/jpOnpZSTymrY6wNigWYOY25EWijiZO1AACKaNI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FmfShspEphme/nslS8vv2ja//AnrqrqZIOqTw03nmCU14twtkjtU2n7JWfieUxaqM
-	 WEHtGlxM6c95i5Fcd590MooaTtug4sl5a/oWi7KXTRjN8HNObUjVQ8PErHOjV/zieO
-	 risAdzDcoSOYF/cukwPPYlx+eNyc7XCdGDMtITgVWeBo+Wqv1ufJl00C47QhIfFXL6
-	 t6d+4CKER7hGtFkbZO/CR+WFxyTQ4FX8FRmqQkQN1QZ8WBdobuxgVkHN8VN2FdryHS
-	 kDjuKzHUCN6gOZpqRGPUnL7/2Oan1vAPGV/iNnPNjUH+egy7Sf/SrjAMvDXqxORotA
-	 6Ix2qGuR4H5LA==
-Message-ID: <667e43a7-a33c-491b-83ca-fe06a2a5d9c3@kernel.org>
-Date: Tue, 6 May 2025 20:16:03 +0200
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="TVudDeC6"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ac2ab99e16eso377858266b.0
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 11:17:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1746555448; x=1747160248; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=FPIulgxlKuYRMZuK6xb/XllU+vIpireS36cyNGgbuCQ=;
+        b=TVudDeC6Jk3hf7XB7WRNyL68HBT27bEEcTjisSfrfwo8be+ILtqyuonfAg3e6uzz52
+         l5VGIMzv12XrOh7sk4PYJJ3MYkUIVhKebbKoWYgBthGRs+67w3tCl4hYM4TLKY5Pq2Gw
+         oBeXDW4idy+YOoMyNehc6t1phB82wV1Tt/kWc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746555448; x=1747160248;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FPIulgxlKuYRMZuK6xb/XllU+vIpireS36cyNGgbuCQ=;
+        b=s1mINy2o2D8ElEjUK9EbBLp4vhANkFFz/BRlYVvJ58JPxShns33v8O5wmzYO1NvBQH
+         INAG8xgC5W1X95/7cwUVWDYX6FqkCEpxtcQzCbmRGn1fNgi5bcO0gLzU77zbMs9BZcJA
+         5m4h+FCoNomd14W2fWB0pTjFyWW1dBd7p+6tdxf1tONzqiCIcHIKQFP9f84iQV/yc4Dx
+         1iQOQM6CPIsA8yiFQZN/4+PzMl8BDMc06v70QGzCSefE3FvZUhrA2kCXOFMSFHgnd9Fn
+         NvyNFx4jcBH0FBh2wz9P4MFB/f0vgRK9WJLmoc3Vlh9mieV7zUD9eN5wi/w/5uQ6DXA/
+         +Utw==
+X-Forwarded-Encrypted: i=1; AJvYcCWF57PgkUjPheMWKmPJkUKjHeBciK8tr9RZf+fth3AlkA/XaBLfGTQWsuaiYmPLd96rZ45oBl//KZIzrew=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXxsyYn7X9V0xFv93KLpFp2I7qA5j3OwVbLguj83/JSq6nPx6I
+	vyoW3BY2TD+Z5yCyPBvncCXZuo/XRGC7RMbloBgaawJgHZk3bLJy+9ZS1TdnI++YlWSsph4zTpp
+	di4I=
+X-Gm-Gg: ASbGncs1JH9Y993iHYxpJuZ3skZg5FpRwQswwzczYVhRrgaq5zrc1aigPYV3gJ3lu0b
+	/SxvIAtEo+nXOQlW3KKlV6HuDVRKw9KEc79rsP8qBnRMkayVY6otHLwySj482WorO7jCAmewHB6
+	HQ3Ytmgvy1VvPz6Vbb7C6H2m4U43vt7jtSULzXL3FlNnFnylfpHzSTYG5Ii4qxVS8A3Ygo3KYbg
+	aPLaaD7zduJ29ApjzUzQ/TWjczWvnv+LDj6vPm7N8eFCCbM/OmUNVSxT0SiCvy+whIJK+ETqMW6
+	I3/m8E3pytyPVkT+iSfBsFEMPq/tzGqk9KxtXrvkUfPcoYL/EHc/NZKuzkWp6wpHNhKZfXXVYjw
+	rildx3JXbyHJINca6XN5SzUuROA==
+X-Google-Smtp-Source: AGHT+IHsb17krWAFYm1+d8t8jZqsWwugqHrbdFZvS4xrwb6j+r4YWVY637BJOwRIpJ15TtDlBW02xw==
+X-Received: by 2002:a17:906:dc8b:b0:ac3:b12c:b1f2 with SMTP id a640c23a62f3a-ad1e8bf70damr42494366b.35.1746555447721;
+        Tue, 06 May 2025 11:17:27 -0700 (PDT)
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com. [209.85.208.49])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad189508afdsm749829166b.140.2025.05.06.11.17.26
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 06 May 2025 11:17:27 -0700 (PDT)
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5e5e0caa151so1062758a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 11:17:26 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXxYSBjYARMTYpkq3IdqgVKjWqpEj6ePYkdJXHgPV7CZtpv57dO1InGBvpUkjqq843XjNveWAdrp9HR3ME=@vger.kernel.org
+X-Received: by 2002:a05:6402:26c6:b0:5de:39fd:b2f5 with SMTP id
+ 4fb4d7f45d1cf-5fbe9d77dbemr236721a12.1.1746555446640; Tue, 06 May 2025
+ 11:17:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 1/3] scsi: ufs: dt-bindings: Document UFS Disable LPM
- property
-To: Nitin Rawat <quic_nitirawa@quicinc.com>, alim.akhtar@samsung.com,
- avri.altman@wdc.com, bvanassche@acm.org, krzk+dt@kernel.org,
- robh@kernel.org, mani@kernel.org, conor+dt@kernel.org,
- James.Bottomley@HansenPartnership.com, martin.petersen@oracle.com,
- beanhuo@micron.com, peter.wang@mediatek.com
-Cc: linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-References: <20250506163705.31518-1-quic_nitirawa@quicinc.com>
- <20250506163705.31518-2-quic_nitirawa@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250506163705.31518-2-quic_nitirawa@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250506154532.1281909-5-ardb+git@google.com> <20250506154532.1281909-8-ardb+git@google.com>
+ <CAHk-=whrcutH0LcMmaeJxxMeYpw2R5T80yoQAXbrRHNSTCB0Pw@mail.gmail.com>
+ <CAMj1kXFSae=stazUv8doka-zLOnDdXXR4ASxHKe5f97ikg3V2A@mail.gmail.com>
+ <CAHk-=whxP5Ywpv-U=2NPFhk929VHB9_kdp10+HFJQ4VxEGdX9A@mail.gmail.com>
+ <CAMj1kXGwYXXpjPgDwjKMEZJkuGJ8ZuCpMpc7fTvo58PNtu-czA@mail.gmail.com>
+ <CAHk-=wiz5oXq2f_87hHViN2TZQO9VHpaWb5fWWGJbUWQw1ChVw@mail.gmail.com> <CAMj1kXEtW2bAQK4hN-S5C=Po5dk1q14+GJjzEJsjfz9OeOMoCg@mail.gmail.com>
+In-Reply-To: <CAMj1kXEtW2bAQK4hN-S5C=Po5dk1q14+GJjzEJsjfz9OeOMoCg@mail.gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Tue, 6 May 2025 11:17:09 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whRNPK7hTtPYh3SEe0WXEHR=aedc3bc-y_e08ujOxmgJg@mail.gmail.com>
+X-Gm-Features: ATxdqUEG8NOjdijJRZScifQxyyYMRZQH35uZ19B1EyOlpH1dvcullkaUKFQgYZg
+Message-ID: <CAHk-=whRNPK7hTtPYh3SEe0WXEHR=aedc3bc-y_e08ujOxmgJg@mail.gmail.com>
+Subject: Re: [RFC PATCH 3/3] x86/boot: Use alternatives based selector for
+ 5-level paging constants
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
+	Ingo Molnar <mingo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On 06/05/2025 18:37, Nitin Rawat wrote:
-> Disable UFS low power mode on emulation FPGA platforms or other platforms
+On Tue, 6 May 2025 at 10:53, Ard Biesheuvel <ardb@kernel.org> wrote:
+>
+> The very first thing we do when entering the core kernel is populate
+> the page tables, and this uses all the macros and #define's that are
+> based on pgtable_l5_enabled(). Alternatives patching occurs *much*
+> later.
 
-Why wouldn't you like to test LPM also on FPGA designs? I do not see
-here correlation.
+.. but that's my *point*.
 
-> where it is either unsupported or power efficiency is not a critical
-> requirement.
+If you depend on pgtable_l5_enabled() when you set up early paging,
+you likely also depend on ptrs_per_p4d.
 
-That's a policy, not hardware, thus not suitable for DT.
+And if you depend on that, then you depend on having run check_la57_support().
 
-Best regards,
-Krzysztof
+And we should have some way to *verify* that, rather than say "you can
+use pgtable_l5_enabled randomly early".
+
+Maybe we could have a "early alternatives fixup" for this. I thnk
+RISC-V does something like that, where it has separate early
+alternatives fixup.
+
+The early boot alternatives code fixup should be really easy - no need
+to worry about IPIs and things like that.
+
+Hmm?
+
+              Linus
