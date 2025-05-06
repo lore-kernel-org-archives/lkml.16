@@ -1,86 +1,60 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D69525B69F;
-	Tue,  6 May 2025 15:46:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D474728315A
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 15:47:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746546408; cv=none; b=QCTrtJrZ2FRdySPqJJqrpT1u5lLZTAU6i+O8FH6diwOUiUuPCEsR5fpIiJZzFE5Tth+N7Q5ta6C7Xy6o+QXh3mvgNWvnejnx6eH9OIHQ9G+xQFErCK/DB+TT9MRkFVdgkRZcUdo/ys1jm0qCufGdiKbN1a1aNPLLz/HL+14rM9g=
+	t=1746546423; cv=none; b=NyjLfTpmfr4pVCsF9yEo0E/Jzn19LdtRztkGmqkrs8ymYdfvQas7QjoaWvko3C8em0gouwlTcYBPxqdH2gmGmzgw1Rp6FLpPVM+901c/ZeC39ht61/sf0/CJtpmEM2bsrjTrAc6gtEqHonV0q3CUVkD/G0JPKBTlZBBmk8AJKRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746546408; c=relaxed/simple;
-	bh=XaGt/wgvCVS+f4R0x+QN06JYj9JPXLkLe3hpPcXtxqM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D8PfMYaU2sX4VBIt5H2tn3+29UN+IgwBRR6+xO46C2E3A+XbjrsbBzQd/yTWAqj5+cXOj6BRM73ROJCTLmOyKGCXYW6Aw5xekJnbnDNCa0LGT4r454VU5ir6l+at1nMcr9MnylI+78nP5kG1oSqxVNAX3oCMn1x0ptimfQ/pMMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=MB7yFrPj; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1746546423; c=relaxed/simple;
+	bh=1kOTEB+XotqMQtGZyzuTL2CzKhbLpX1xkyCPEPsG3VY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AKzqh8C42ZaMsMxr58/dEmJcX8/BwqWon3sQHQ3MA5T7liYAGOYpQ2+V1YTVuDcc/ZQEyjW/OWIlgYe3gxkXyPXWNaTu9ss7Sak4fIveul4i8+iEMS+S+ZdaLuy/k7zkzHsHum+kkmF3D3uTIlI/Xix4EG5Zd1t0ZLTb+uaLxEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=m6jASJtV; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="MB7yFrPj"
-Received: from [10.137.184.60] (unknown [131.107.1.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id EE09A2115DCE;
-	Tue,  6 May 2025 08:46:44 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com EE09A2115DCE
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1746546405;
-	bh=o03gSEDectcJtbA60ZihPtdHX0CvqvofYZ/7BrhHloY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=MB7yFrPjCO3DI086vQye8gYGPsGkGbL2SCT3TheA4RJKlFU/axYH+FgBZIO3y6BT7
-	 gunsAQ1pQDdvxIlrXLzJUrmNmu2usjpvi2XrhUm25f5XXTuHqtmSW2Q/k47GfROhQ6
-	 C/3CtxvoxL9D812S69vDpegalwY5gZ+xHUqygMw4=
-Message-ID: <7f9212eb-f8c1-4f7b-a268-e7e4161fa1a9@linux.microsoft.com>
-Date: Tue, 6 May 2025 08:46:44 -0700
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="m6jASJtV"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=3HBGcSU1ag8kdhmbzKBu+ZaOAcgBI9VSpgvysRkMghw=; b=m6jASJtVPwIQsM9PpXilPbY/Qf
+	TN3LXuNIpar9SAPINGO84PBgldOKuGcrlb0WpiokVF6OIkI7d8CJ97uvNI1nnA/eo1tK9GRG+lu4J
+	XSbzTDCqpjSkrHOORxGwihokgkUJobXOfX/LGD6AsJM7yTcKNstBGarYXkndhA91ApkyhhibF54F9
+	OkRiS1l0Nfu59uNlPnShs02k4DDVXiIBndejRjpjIqyt60BENfO+pUwaS6DQwNTGOXLiWfkaW/g+l
+	xsdCX+zPqTE5gccXYIPa6pAR7nX2atuWGMcP40O9kXJdjF+oWbqECoe8Niya4ybs9JCEvKhKeIpQ8
+	nUEhEFvQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uCKVK-00000005RYW-3lJC;
+	Tue, 06 May 2025 15:46:46 +0000
+Date: Tue, 6 May 2025 16:46:46 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Dev Jain <dev.jain@arm.com>
+Cc: akpm@linux-foundation.org, Liam.Howlett@oracle.com,
+	lorenzo.stoakes@oracle.com, vbabka@suse.cz, jannh@google.com,
+	pfalcato@suse.de, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	david@redhat.com, peterx@redhat.com, ryan.roberts@arm.com,
+	mingo@kernel.org, libang.li@antgroup.com, maobibo@loongson.cn,
+	zhengqi.arch@bytedance.com, baohua@kernel.org,
+	anshuman.khandual@arm.com, ioworker0@gmail.com,
+	yang@os.amperecomputing.com
+Subject: Re: [PATCH 2/3] mm: Add generic helper to hint a large folio
+Message-ID: <aBou5i71eiLSvzUU@casper.infradead.org>
+References: <20250506050056.59250-1-dev.jain@arm.com>
+ <20250506050056.59250-3-dev.jain@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH hyperv-next v3] x86/hyperv: Fix APIC ID and VP index
- confusion in hv_snp_boot_ap()
-To: Wei Liu <wei.liu@kernel.org>
-Cc: bp@alien8.de, dave.hansen@linux.intel.com, decui@microsoft.com,
- haiyangz@microsoft.com, hpa@zytor.com, kys@microsoft.com,
- mikelley@microsoft.com, mingo@redhat.com, tglx@linutronix.de,
- tiala@microsoft.com, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, x86@kernel.org, apais@microsoft.com,
- benhill@microsoft.com, bperkins@microsoft.com, sunilmut@microsoft.com
-References: <20250428182705.132755-1-romank@linux.microsoft.com>
- <aBmsIjIfgCv5G3Lj@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
-Content-Language: en-US
-From: Roman Kisel <romank@linux.microsoft.com>
-In-Reply-To: <aBmsIjIfgCv5G3Lj@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250506050056.59250-3-dev.jain@arm.com>
 
+On Tue, May 06, 2025 at 10:30:55AM +0530, Dev Jain wrote:
+> +	return unlikely(pte_pfn(next_pte) - pte_pfn(pte) == PAGE_SIZE);
 
-
-On 5/5/2025 11:28 PM, Wei Liu wrote:
-> On Mon, Apr 28, 2025 at 11:27:05AM -0700, Roman Kisel wrote:
->> To start an application processor in SNP-isolated guest, a hypercall
->> is used that takes a virtual processor index. The hv_snp_boot_ap()
->> function uses that START_VP hypercall but passes as VP index to it
->> what it receives as a wakeup_secondary_cpu_64 callback: the APIC ID.
->>
->> As those two aren't generally interchangeable, that may lead to hung
->> APs if the VP index and the APIC ID don't match up.
->>
->> Update the parameter names to avoid confusion as to what the parameter
->> is. Use the APIC ID to the VP index conversion to provide the correct
->> input to the hypercall.
->>
->> Cc: stable@vger.kernel.org
->> Fixes: 44676bb9d566 ("x86/hyperv: Add smp support for SEV-SNP guest")
->> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
-> 
-> Unfortunately this patch fails to apply. Please send a new version based
-> on the latest hyperv-next.
-> 
-
-Will do, thanks a lot for letting me know!!
-
-> Thanks,
-> Wei.
-
--- 
-Thank you,
-Roman
-
+umm ... PFN is in units of PAGE_SIZE.  Did you mean == 1?
