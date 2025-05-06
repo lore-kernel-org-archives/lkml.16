@@ -1,83 +1,48 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7009127CB31;
-	Tue,  6 May 2025 11:59:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63FD22798EE;
+	Tue,  6 May 2025 12:00:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746532795; cv=none; b=eCcZQdIjHPZBnLBL5oBT8KVEr+ozZSkxPn7CXLcK5CxH0VW0RrpEXXbveyL7jfmhrbrRWsorsrWYx09sgM67mSLyjxjFsonSFy0aUyOR5XMcYnQ6tARokdsn4BnmuatI6JpxWgxDaCBYF5G9ige/WHQtjaAz35b3SV5LJkXNo2s=
+	t=1746532823; cv=none; b=p/pkXybfb1IlNfQ8/NBVpsYp7wheBsEMGnFAPB87X5hPrqKWmRNzTTPOgWFlHUPv7BAiiHF7b0m+OapTAV6DPDT0fhSZJsC27aE9y2Q7R4fhV6CTcUYSJje3ql5pJdORTEFLNctxM7IdssvPf21V4PR9CKpCXq9MFT5F3+0ksIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746532795; c=relaxed/simple;
-	bh=7Sg/XeS6j36e1f9i8iczSP4VRhrz2+oSrIEypk8cmQY=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=rdlXK3dSKLgRenFB2uHEGWZflj4PAgYHX6sPYIXvmz6iUHnfZo0hhM+VUIkiBdJYK2dboZJcrJWhiyVmcN08t98SNJJ0wfJ6lxW1cnADz4A/Xgz+Qx5NwzkFIbaPtuMmAV/RcVt+oehCnsPxw3jbV1s8GMICAQWKK6uPKlePOOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p7L5EbSz; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p7L5EbSz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E4C6C4CEE4;
-	Tue,  6 May 2025 11:59:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746532795;
-	bh=7Sg/XeS6j36e1f9i8iczSP4VRhrz2+oSrIEypk8cmQY=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=p7L5EbSz9jf4lgXejuBDmiHsIB8vp2yrK00DAaLNIfQzP3YUtZLKpLTAaKBy1QoNL
-	 DVzKr9nJsY+/7E9ibfhlKaXo/FRxqU6XQIPOnhY+gUdksQkRjw2hnyQZ10AleXI+LW
-	 1hz5vBWeetFITqYFZaP8cz1q/1uynNJKPiSNzPaKVCLWjcQ569G1AyIGhSd4McjWWC
-	 gNvgvWqAReYkUWfmZY8Lh2WrXIsNsG0GJJmgsHuPV24p0vf4Zt8WMsPlnYApSti+mK
-	 zimRmcP5z+xAmwjiu2gckR9w/qYJ0J9/DZs3JojQrMn8wAYRTveWq5gZYuiMC0+8/L
-	 LFkdteZ2LTMAA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADDB9380CFD7;
-	Tue,  6 May 2025 12:00:35 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1746532823; c=relaxed/simple;
+	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JAOEtMJ25MYfJ541OuKnPHgfQMClJYxkGVRyswpzBJGip3J+YCInuX9c58QVsNwVmhUVvkBH7bJaUgcy9X79P4DFqlpdsaQpOO1oOINKnPySPmIZOPJdtk6+vXhxBCNHxUFK5ViuOQgHKl88IMJ3xlh3RJpmOgHPBbPkt8RVLx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id D34DF68B05; Tue,  6 May 2025 14:00:14 +0200 (CEST)
+Date: Tue, 6 May 2025 14:00:14 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: John Garry <john.g.garry@oracle.com>
+Cc: brauner@kernel.org, djwong@kernel.org, hch@lst.de,
+	viro@zeniv.linux.org.uk, jack@suse.cz, cem@kernel.org,
+	linux-fsdevel@vger.kernel.org, dchinner@redhat.com,
+	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ojaswin@linux.ibm.com, ritesh.list@gmail.com,
+	martin.petersen@oracle.com, linux-ext4@vger.kernel.org,
+	linux-block@vger.kernel.org, catherine.hoang@oracle.com,
+	linux-api@vger.kernel.org
+Subject: Re: [PATCH v12 02/17] xfs: only call xfs_setsize_buftarg once per
+ buffer target
+Message-ID: <20250506120014.GB20817@lst.de>
+References: <20250506090427.2549456-1-john.g.garry@oracle.com> <20250506090427.2549456-3-john.g.garry@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net v2 1/2] net: ethernet: mtk_eth_soc: reset all TX queues
- on DMA free
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174653283451.1493761.12837257504091062082.git-patchwork-notify@kernel.org>
-Date: Tue, 06 May 2025 12:00:34 +0000
-References: <c9ff9adceac4f152239a0f65c397f13547639175.1746406763.git.daniel@makrotopia.org>
-In-Reply-To: <c9ff9adceac4f152239a0f65c397f13547639175.1746406763.git.daniel@makrotopia.org>
-To: Daniel Golle <daniel@makrotopia.org>
-Cc: nbd@nbd.name, sean.wang@mediatek.com, lorenzo@kernel.org,
- andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, matthias.bgg@gmail.com,
- angelogioacchino.delregno@collabora.com, eladwf@gmail.com,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250506090427.2549456-3-john.g.garry@oracle.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-Hello:
+Looks good:
 
-This series was applied to netdev/net.git (main)
-by Paolo Abeni <pabeni@redhat.com>:
-
-On Mon, 5 May 2025 02:07:32 +0100 you wrote:
-> The purpose of resetting the TX queue is to reset the byte and packet
-> count as well as to clear the software flow control XOFF bit.
-> 
-> MediaTek developers pointed out that netdev_reset_queue would only
-> resets queue 0 of the network device.
-> 
-> Queues that are not reset may cause unexpected issues.
-> 
-> [...]
-
-Here is the summary with links:
-  - [net,v2,1/2] net: ethernet: mtk_eth_soc: reset all TX queues on DMA free
-    https://git.kernel.org/netdev/net/c/4db6c75124d8
-  - [net,v2,2/2] net: ethernet: mtk_eth_soc: do not reset PSE when setting FE
-    https://git.kernel.org/netdev/net/c/e8716b5b0dff
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 
