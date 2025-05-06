@@ -1,81 +1,117 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FC1027BF63;
-	Tue,  6 May 2025 11:53:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F13027B51F;
+	Tue,  6 May 2025 11:53:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746532391; cv=none; b=mS5SM7YMM9jm+f2dKP+3jHUEonu47fcxioZkIuZ3r09FBi5jkGR5CpF7xIeGRkMWV3/Cjf3rL1y0oNhLmCaddYS9UpA05TCOOsD1RhfC55w/vQLsyWvkxRkLwo7YsdmhyJTry8NTlF+Pi3SRxGFzwMDIdi2G5FOVRX2cmwHa8NE=
+	t=1746532400; cv=none; b=C1OFGjZ8sjc+3MTTsNXDpSikVrP1TCK7H2M7CQNfOIL1MSr2/DAFx2x7Vz93Bow590jAtaHcj2dpso+hO1p44LIONICVeYSddqokBEUTHRY1sHY8G8gypK98SR7zaXLo4UaWu6GfHwy7344arqbuLJJX2uM6XAM6TDiYHOgyn70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746532391; c=relaxed/simple;
-	bh=a3ps9uCYt23Egn1BlGHFcrAxg4jOYy6virWRYklcfrc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KeTYsK7rMVap7pKbgNtl2gVLjXMv9gh/UHniWPynz/sBPkQTvAlKOaX8SaWGskxHTGdPuGd+p1IJzqAJDb7L7+TBe4SymEzV4vwYoqGEl00Hn8uGpilXKiVy4iQUUQGZZO/mbAE35CC571DeD91TbVRyB1v86ZJYJtI/07wk14c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RwqOAx3B; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746532400; c=relaxed/simple;
+	bh=phKhwzwBBsKUNTwTuCqGqFtLytQEhltV8oTOiryixAw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=spO8ud7BgRaz+TqwYfaJQEcFJYJqE0VPagyIXXMTDmgaNb7KGEeEImMlAXihT8UXEKIiLFMZlFu8j+xXtpPWvYos4+QylvRfCGEV/PxHiUk0cdLhOZR34eU0UVGaXQdAeDd/2d8YKNZzq8PaRJrXOa4UXp2vdHBh8MASSwfxMP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BuJXK8f3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RwqOAx3B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDC98C4CEED;
-	Tue,  6 May 2025 11:53:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BuJXK8f3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25C16C4CEED;
+	Tue,  6 May 2025 11:53:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746532391;
-	bh=a3ps9uCYt23Egn1BlGHFcrAxg4jOYy6virWRYklcfrc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RwqOAx3BBIETT8Ay7yDxoU1f+sNu6c8B0bt77zhBlIe1XRoB/u7qHnx98F15Sfn/N
-	 ri1zYfndAg3iBJzliOElNc56M3pzPeZ3c5m1I72NrzqVcFeuGp3EW8z04lrKwreyjH
-	 AOZkZMjOHZZ1TelnFyJ/ah+tH1PKcqKnVL5jVilkrJ0lqcFPCC0T6JHf/vS6zu/Dwf
-	 HZovT6yWhClYxXeL6BVMqmH6ae+Im2GEHKddriOpmXKYWIIawwllxKWdHp/IPGWFJG
-	 7Di+n7q2DHODzEz4rfP04xGKMFSIBO81hP7PQlWXfCsNcAYOztRzfYbTibE8LbUzy0
-	 Zjuekwu9D8h1Q==
-Date: Tue, 6 May 2025 13:53:07 +0200
-From: Andi Shyti <andi.shyti@kernel.org>
-To: "Yo-Jung (Leo) Lin" <leo.lin@canonical.com>
-Cc: Jean Delvare <jdelvare@suse.com>, 
-	Wolfram Sang <wsa+renesas@sang-engineering.com>, Guenter Roeck <linux@roeck-us.net>, 
-	"Chia-Lin Kao (AceLan)" <acelan.kao@canonical.com>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] i2c: i801: don't instantiate spd5118 under SPD
- Write Disable
-Message-ID: <nfxz37zk2nnqmjwaychfvpl5y5f2stkean2oyxxbk3gzduqvcz@ons6jtbtotuf>
-References: <20250430-for-upstream-i801-spd5118-no-instantiate-v2-0-2f54d91ae2c7@canonical.com>
- <20250430-for-upstream-i801-spd5118-no-instantiate-v2-2-2f54d91ae2c7@canonical.com>
+	s=k20201202; t=1746532400;
+	bh=phKhwzwBBsKUNTwTuCqGqFtLytQEhltV8oTOiryixAw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=BuJXK8f3+6nrBJZh0HBI891bC/OR1WxkU+iQAKcDASsi4/nJdYeI8vLjcVaxGe3P6
+	 Se26eRn0cDqIVbUqfi8A9cDyUQEufUYPOY0owQw2r34LWmHOIEKWB+LSU/c6CP8bCD
+	 8FSeySu6MCjlBKrBvqLn4W3CqWBjZa7XPaZQVKwve5nreGsK6XnCO4JUHhc5x7TuqQ
+	 0j3EyF29AKQ0L+EakP0hIJndY4mE28l9on11E71DV5Sw5uksmXAG6wsXDfdcwRqCHo
+	 Kkb6s3yDACNb47S7Kil81NA+VKaSnium/RdsC4jAlcYgOVyOf0mYP8hHFWdS0ocXGh
+	 AkcKqAtSE0FHQ==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Alice Ryhl" <aliceryhl@google.com>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
+ <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
+ <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Benno
+ Lossin" <benno.lossin@proton.me>,  "Masahiro Yamada"
+ <masahiroy@kernel.org>,  "Nathan Chancellor" <nathan@kernel.org>,  "Luis
+ Chamberlain" <mcgrof@kernel.org>,  "Danilo Krummrich" <dakr@kernel.org>,
+  "Nicolas Schier" <nicolas.schier@linux.dev>,  "Trevor Gross"
+ <tmgross@umich.edu>,  "Adam Bratschi-Kaye" <ark.email@gmail.com>,
+  <rust-for-linux@vger.kernel.org>,  <linux-kernel@vger.kernel.org>,
+  <linux-kbuild@vger.kernel.org>,  "Petr Pavlu" <petr.pavlu@suse.com>,
+  "Sami Tolvanen" <samitolvanen@google.com>,  "Daniel Gomez"
+ <da.gomez@samsung.com>,  "Simona Vetter" <simona.vetter@ffwll.ch>,  "Greg
+ KH" <gregkh@linuxfoundation.org>,  "Fiona Behrens" <me@kloenk.dev>,
+  "Daniel Almeida" <daniel.almeida@collabora.com>,
+  <linux-modules@vger.kernel.org>
+Subject: Re: [PATCH v11 2/3] rust: add parameter support to the `module!` macro
+In-Reply-To: <aBnQpWJeiRKIMJ5D@google.com> (Alice Ryhl's message of "Tue, 06
+	May 2025 09:04:37 +0000")
+References: <20250502-module-params-v3-v11-0-6096875a2b78@kernel.org>
+	<20250502-module-params-v3-v11-2-6096875a2b78@kernel.org>
+	<WroEJHY8a-y8vbSQkUvGJJs7yTQGKMsHJqmWFYGkz5bZ_PsiE8GAozjSaNpWjWina1XanjVNpV0Av3woiaUtJg==@protonmail.internalid>
+	<aBTMMHWNXS7wK7zS@google.com> <878qnbxtyi.fsf@kernel.org>
+	<I9aVTs-nIPqYQrXB9KHd84xis2sWTBG-c8R8JQfCa23WzZopwS4vt4mA07cO3byOUNYf9sYUxrFi-O_kWdQGxQ==@protonmail.internalid>
+	<aBnQpWJeiRKIMJ5D@google.com>
+User-Agent: mu4e 1.12.7; emacs 30.1
+Date: Tue, 06 May 2025 13:53:08 +0200
+Message-ID: <87wmauot0b.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250430-for-upstream-i801-spd5118-no-instantiate-v2-2-2f54d91ae2c7@canonical.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Yo-Jung,
+"Alice Ryhl" <aliceryhl@google.com> writes:
 
-...
+> On Mon, May 05, 2025 at 11:55:33AM +0200, Andreas Hindborg wrote:
+>> "Alice Ryhl" <aliceryhl@google.com> writes:
+>>
+>> > On Fri, May 02, 2025 at 02:16:35PM +0200, Andreas Hindborg wrote:
+>> > It would be a use-after-free to
+>> > access it during module teardown. For example, what if I access this
+>> > static during its own destructor? Or during the destructor of another
+>> > module parameter?
+>>
+>> Yes, that is a problem.
+>>
+>> We can get around it for now by just not calling `free` for now. We only
+>> support simple types that do not need drop. I think we would have to
+>> seal the `ModuleParam` trait for this.
+>>
+>> For a proper solution, we could
+>>  - Require a token to read the parameter.
+>>  - Synchronize on a module private field and return an option from the
+>>    parameter getter. This would require module exit to run before param
+>>    free. I think this is the case, but I did not check.
+>>  - Use a `Revocable` and revoke the parameter in `free`.
+>>
+>> Any other ideas or comments on the outlined solutions?
+>
+> I think the simplest you can do right now is
+>
+> trait ModuleParam: Copy
 
-> diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
-> index a7f89946dad4..88474409e82d 100644
-> --- a/drivers/i2c/busses/i2c-i801.c
-> +++ b/drivers/i2c/busses/i2c-i801.c
-> @@ -1177,10 +1177,12 @@ static void i801_probe_optional_targets(struct i801_priv *priv)
->  		dmi_walk(dmi_check_onboard_devices, &priv->adapter);
->  
->  	/* Instantiate SPD EEPROMs unless the SMBus is multiplexed */
-> -#ifdef CONFIG_I2C_I801_MUX
-> -	if (!priv->mux_pdev)
-> -#endif
-> -		i2c_register_spd_write_enable(&priv->adapter);
-> +	if (!IS_ENABLED(CONFIG_I2C_I801_MUX) || !priv->mux_pdev) {
+Cool =F0=9F=91=8D
 
-this if is not really working and it has been reported the
-following compile error:
+>
+> so that it can't contain any non-trivial values. That way you don't need
+> Drop either.
+>
+> Long term, I think we need a way to detect whether it's safe to access
+> module globals. The exact same problem applies to the existing global
+> for the module itself - except it's worse there because we can't access
+> that one during init either.
 
-drivers/i2c/busses/i2c-i801.c: In function 'i801_probe_optional_targets':
-drivers/i2c/busses/i2c-i801.c:1180:54: error: 'struct i801_priv' has no member named 'mux_pdev'
- 1180 |         if (!IS_ENABLED(CONFIG_I2C_I801_MUX) || !priv->mux_pdev) {
-      |
+Yep.
 
-Therefore I'm going to revert just this patch 2/2. Please do
-resubmit it and please test it properly with the
-CONFIG_I2C_I801_MUX enabled and disabled.
 
-Thanks,
-Andi
+
+Best regards,
+Andreas Hindborg
+
+
+
