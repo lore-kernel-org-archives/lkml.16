@@ -1,137 +1,230 @@
-Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D81BE1BC9F4
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 19:10:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AD9E1B412B
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 19:10:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746558609; cv=none; b=nEdNSt5VFj6jISb1rQBBIuxrTGvBz+Q0Xb6cDO/RIAeRsn9KuGJ9b+Bwc2dKg9AO86C2D6ruJ1elMLJBITaIkPyQ2NanLy67hlW0QnxqCed9lBPshN64BRIcFoLPV1C3GbzvNM7AbKfz/HJzsdYk+ySgKm8kFIwRQPv/B8U0oIc=
+	t=1746558646; cv=none; b=iOIXy7A6HPveKnCMPuMqSL94UfKTPz4jhi49hVVBeuC2k30yusbF0zitjzoCnEtZ4H5pn1OaukhBmluaF50F+AQtgZvJIoWKdDa7t1aCLz5ScdCtRWliN6rXmoQ+vZZnGq/GoSSECxQfxKTJ0LvOv5SS9tCCWV+gqUsHqFpJWRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746558609; c=relaxed/simple;
-	bh=W5LSkZiC6OONbIl3yFWmvcAKLA5RZHe07Z/De94PpK0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LdRhvL4KqlGJF/SPCKq6fazQO4m9PZPlPaMB9EKsMIh7BBlVUXmRtwAF3yW7uSQ1pxnxGV3rZRceI9HYDgC9UnC5xBCSNT4N3fKAQmeh5I3/s4RlolncVPn+F6Y/4jT0OG7qHqRQ2iePZejZ+ksFsP71J2fQoH1gqxryoU3dkoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=L9K2OaAI; arc=none smtp.client-ip=209.85.167.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1746558646; c=relaxed/simple;
+	bh=inUFxvNR6eEm0KTB8hsK4GiFsStwDXopUw8a0m+SPJg=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BUOYHClKJaeTrAkRgtskI6kSVW9hk6hh93MKfxXMzYR4hOvBs8FpoR1gCBFI3bhIlrFPjlPtHLYRXnNJ4L3FGQmtRQE8iptYOxTadQQ+h8arQEFQAiwCjun2gL+7Iyc2S+A2nqFaItlB165eBWEbFD6dt/hpnKKN1Cb1ScbVlLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=00YUfhbk; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=FgsnKxMK; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=00YUfhbk; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=FgsnKxMK; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="L9K2OaAI"
-Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-403407e998eso2942995b6e.0
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 12:10:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746558606; x=1747163406; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=b7M9Vh4cA/vAEJWog9BRDwxxCIas5FuWV5Bkti2ZaSc=;
-        b=L9K2OaAIKVJ8XEzNDHMNOWFDCeDWHbk7vxcjHe6TwHNTNXJiGkmBEAWJj7whlwiThs
-         Knujaf2rbDwwFsqsWQYkSG4fW1+JqRjRfkC0A6jYs4roOfbr45W2viX9p54DPX80rdME
-         qFQcZR97DU7ewyoIbxu64EPkkgOfzuJ2o1smoy63YmEY+0cnw5Jy5v7sDFpSZF5J/VqE
-         aFuugtq/S1QQZ73qk5me4LOf/rapVVoj2CYj9782GWiqT4+6mcJ7ZhgilICEifl+K63m
-         0UNrWMc/8aDGPAJ+QdxCG0AKtN5lu530l8pdjRfQuO9kc2PmxbRTXf3lJ0PNMjaQHmkr
-         vsOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746558606; x=1747163406;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=b7M9Vh4cA/vAEJWog9BRDwxxCIas5FuWV5Bkti2ZaSc=;
-        b=WXHDIHyAqdJUQ41/jviPsCBLoTUBvgDyfmAm3dc+iTXlyJroRXaWWYpMvPZsiwfHZ9
-         0D3kXIvwKb08DQ+jF9CSnSlIE8GRcDwey5uzzQGcpF5wJQMIO8coXoxMNM5hqXmiXKyu
-         WoXXYJwGLKjJiI4CCdtmOrtaRfrVqKfsgA0qf7oreU4MAXv8sOGDfRPajOG2thl7y1+U
-         1PfCjpglq/OTvCGWKvg55WveRQkJq/foNTbca+oMI67KqRZZtzjNk08xu8WuKBuc+iJ0
-         GOGpdIlBGwxisvJe7NGM3ct56eWCEfdbos6UeWbVEaeZr5KngjSH43hflm4E9u6/r0B6
-         UhdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVmQuA5GCjhNAxw+gHNT3GqRpqA2PVz9v5dr2E2rcizwNYF3b/iMF5Y0DOtcHUrzFRJl88xi9w/9Lg2ohg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw04acvakIUIOaZkpDUynU25yoRTrpV7gOHD3zWGV1Egp1fx6SX
-	epOhquGVWqIKv5CpqFf7hHfZopcQ6opHpC29c9VpK8IRFzxIR0ShYZk4FoyuFFE=
-X-Gm-Gg: ASbGncv2iEg7Ud98q564LCOwQbUZ6r89daQLFval5Wffy0Sgsh8nvwufmweKDA+aiF+
-	5S3NhqyP1e3+rfBZwROJP58KyJvatMs/sC+cZPa0LDQ781ZpVkvZKM1FuZTewAT276UPJ/+lHbM
-	PgoHwadBMfXsu/m9+r8eGHCG2m+8htHPXrTrmkTX0HAS+4++lENIiNkQKl0Tprckw3nTTqMr10/
-	1pRkl8K2CAtM/otYMHnl7h8rSRkXu3MsSyp6UHU8u7EO9qPWbM6ph+nYE0bauPOZfzaIYT+6pXs
-	RyT7Wd4NJOe8SkOKBfmp70iQ6DZiZ7ctxGb0Xr6S+LITh5+BY4fK6nKys5ueJufA0AIVBWh8LtV
-	ijlAN6xqzDdnug07TCg==
-X-Google-Smtp-Source: AGHT+IFJhJoNsdYwSL56KZvKfxZoVwS9PDEA9mN250fkyvogc1aJUfgOT11q5mMwvC2Qeq/RUXmjcg==
-X-Received: by 2002:a05:6808:11cd:b0:3fe:b0ad:f927 with SMTP id 5614622812f47-4036f085567mr471124b6e.16.1746558605880;
-        Tue, 06 May 2025 12:10:05 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:5172:9f6c:997a:41ea? ([2600:8803:e7e4:1d00:5172:9f6c:997a:41ea])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-4036f3b12c8sm42180b6e.49.2025.05.06.12.10.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 06 May 2025 12:10:05 -0700 (PDT)
-Message-ID: <64b41a31-6224-4ab7-b26d-ea3e60a60d3b@baylibre.com>
-Date: Tue, 6 May 2025 14:10:04 -0500
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="00YUfhbk";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="FgsnKxMK";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="00YUfhbk";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="FgsnKxMK"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 7216A211C9;
+	Tue,  6 May 2025 19:10:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1746558642; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=e2yoe17/X8WdBHAxqQVl2NYwIsvDdu0JonWJHAFvSHc=;
+	b=00YUfhbkHc2Vu8Tk2eev+RM11MzTlYzkyrmZd8pCd2Ascz7fyDyeOQ3cA69OxUkejrJ05p
+	dLulYU7YFnze/mn9JpHUAdFBZg6zbbLkGKlIBBUqHcFHxeeJD/7KG8bO+pQqAXH5ToKCwl
+	5TbYqwQSi4+3FLLmz6QDYnixhd/seVQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1746558642;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=e2yoe17/X8WdBHAxqQVl2NYwIsvDdu0JonWJHAFvSHc=;
+	b=FgsnKxMK4gs9nN+PErk02S/fBe4KrtLLsPs7CWIz4LX8XpqbT7sFJSNsUskXfdy2saxS/o
+	QwjoPgvPWnfTz/Bg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=00YUfhbk;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=FgsnKxMK
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1746558642; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=e2yoe17/X8WdBHAxqQVl2NYwIsvDdu0JonWJHAFvSHc=;
+	b=00YUfhbkHc2Vu8Tk2eev+RM11MzTlYzkyrmZd8pCd2Ascz7fyDyeOQ3cA69OxUkejrJ05p
+	dLulYU7YFnze/mn9JpHUAdFBZg6zbbLkGKlIBBUqHcFHxeeJD/7KG8bO+pQqAXH5ToKCwl
+	5TbYqwQSi4+3FLLmz6QDYnixhd/seVQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1746558642;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=e2yoe17/X8WdBHAxqQVl2NYwIsvDdu0JonWJHAFvSHc=;
+	b=FgsnKxMK4gs9nN+PErk02S/fBe4KrtLLsPs7CWIz4LX8XpqbT7sFJSNsUskXfdy2saxS/o
+	QwjoPgvPWnfTz/Bg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2F48313687;
+	Tue,  6 May 2025 19:10:42 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id X7saCrJeGmgbHQAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Tue, 06 May 2025 19:10:42 +0000
+Date: Tue, 06 May 2025 21:10:41 +0200
+Message-ID: <87y0v9v9la.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Ezra Khuzadi <ekhuzadi@uci.edu>
+Cc: kernel test robot <lkp@intel.com>,
+	sound-dev@vger.kernel.org,
+	stable@vger.kernel.org,
+	oe-kbuild-all@lists.linux.dev,
+	alsa-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org,
+	alsa-devel@alsa-project.org,
+	"perex@perex.cz" <perex@perex.cz>
+Subject: Re: sound/pci/hda: add quirk for HP Spectre x360 15-eb0xxx
+In-Reply-To: <CAPXr0uw7Dj9ckM_pLDkUaAH3vid9BmePrACOYZv-N549AUEHfw@mail.gmail.com>
+References: <CAPXr0uxh0c_2b2-zJF=N8T6DfccfyvOQRX0X0VO24dS7YsxzzQ@mail.gmail.com>
+	<aBHgOsqA4qfe7LbN@c757f733ca9e>
+	<CAPXr0uxJg0kMu_N7Gxb14kVdhkFGXO_KbK5RxfAcY9dEA8vrEA@mail.gmail.com>
+	<CAPXr0uw7Dj9ckM_pLDkUaAH3vid9BmePrACOYZv-N549AUEHfw@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 10/11] iio: adc: ad7768-1: add filter type and
- oversampling ratio attributes
-To: 20250505170950.1d7941d0@jic23-huawei, Jonathan Cameron <jic23@kernel.org>
-Cc: Jonathan Santos <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-gpio@vger.kernel.org, andy@kernel.org, nuno.sa@analog.com,
- Michael.Hennerich@analog.com, marcelo.schmitt@analog.com, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
- linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
- broonie@kernel.org, Pop Paul <paul.pop@analog.com>
-References: <cover.1745605382.git.Jonathan.Santos@analog.com>
- <4493dc2e3e0fb61ba3e8a0e54571998aaaaf46c8.1745605382.git.Jonathan.Santos@analog.com>
- <20250505170950.1d7941d0@jic23-huawei>
- <aBpdDN12wdV/gOBB@JSANTO12-L01.ad.analog.com>
-From: David Lechner <dlechner@baylibre.com>
-Content-Language: en-US
-In-Reply-To: <aBpdDN12wdV/gOBB@JSANTO12-L01.ad.analog.com>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 7216A211C9
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	REDIRECTOR_URL(0.00)[urldefense.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_TLS_ALL(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:email,suse.de:dkim,suse.de:mid];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -3.51
+X-Spam-Flag: NO
 
-On 5/6/25 2:03 PM, Jonathan Santos wrote:
-> On 05/05, Jonathan Cameron wrote:
->> On Sun, 27 Apr 2025 21:14:17 -0300
->> Jonathan Santos <Jonathan.Santos@analog.com> wrote:
->>
-> ...
->>  drivers/iio/adc/ad7768-1.c | 363 ++++++++++++++++++++++++++++++-------
->>>  1 file changed, 293 insertions(+), 70 deletions(-)
->>>
->>> diff --git a/drivers/iio/adc/ad7768-1.c b/drivers/iio/adc/ad7768-1.c
->>> index 10791a85d2c5..e2b8f12260a5 100644
->>> --- a/drivers/iio/adc/ad7768-1.c
->>> +++ b/drivers/iio/adc/ad7768-1.c
->>> @@ -20,6 +20,8 @@
->>>  #include <linux/regulator/driver.h>
->>>  #include <linux/sysfs.h>
->>>  #include <linux/spi/spi.h>
->>> +#include <linux/unaligned.h>
->>> +#include <linux/util_macros.h>
->>>  
->>>  #include <linux/iio/buffer.h>
->>>  #include <linux/iio/iio.h>
->>> @@ -77,7 +79,7 @@
->>>  #define AD7768_PWR_PWRMODE(x)		FIELD_PREP(AD7768_PWR_PWRMODE_MSK, x)
->>>  
->>>  /* AD7768_REG_DIGITAL_FILTER */
->>> -#define AD7768_DIG_FIL_FIL_MSK		GENMASK(6, 4)
->>> +#define AD7768_DIG_FIL_FIL_MSK		GENMASK(7, 4)
->>
->> Bug?  If so does this belong in a precursor patch?
->>
+On Tue, 06 May 2025 12:11:26 +0200,
+Ezra Khuzadi wrote:
 > 
-> Actually not, this extra bit is to include the 60Hz rejection enable
-> for sinc3 filter
+> 
+> Hi Takashi, Jaroslav, all maintainers,
+> 
+> Could you please review it or let me know if any changes are needed? This is
+> my first kernel patch as a student, and I’d appreciate any feedback.
 
-Seems odd to me to group those together since they are two separate fields in
-the register. It would make more sense to have a separate BIT(7) for the
-EN_60HZ_REJ bit.
+I guess you submitted to a wrong address.  The proper mailing list is
+linux-sound@vger.kernel.org.  Please try to resubmit.
+And, make sure that your mailer doesn't break tabs and whitespaces.
+You can test sending to yourself and verify that the submitted patch
+is properly applicable beforehand.
 
-If we need to manipulate both at the same time in the driver, then we would
-use AD7768_DIG_FIL_EN_60HZ_REJ | AD7768_DIG_FIL_FIL_MSK.
+
+thanks,
+
+Takashi
 
 > 
->>>  #define AD7768_DIG_FIL_FIL(x)		FIELD_PREP(AD7768_DIG_FIL_FIL_MSK, x)
->>
-> ...
->  
-
+> Thanks,
+> Ezra Khuzadi
+> 
+> On Wed, Apr 30, 2025 at 1:43 AM Ezra Khuzadi <ekhuzadi@uci.edu> wrote:
+> 
+>     sound/pci/hda/patch_realtek.c: add quirk for HP Spectre x360 15-eb0xxx
+>    
+>     Add subsystem ID 0x86e5 for HP Spectre x360 15-eb0xxx so that
+>     ALC285_FIXUP_HP_SPECTRE_X360_EB1 (GPIO amp-enable, mic-mute LED and
+>     pinconfigs) is applied.
+>    
+>     Tested on HP Spectre x360 15-eb0043dx (Vendor 0x10ec0285, Subsys
+>     0x103c86e5)
+>     with legacy HDA driver and hda-verb toggles:
+>    
+>       $ cat /proc/asound/card0/codec#0 \
+>           | sed -n -e '1,5p;/Vendor Id:/p;/Subsystem Id:/p'
+>       Codec: Realtek ALC285
+>       Vendor Id: 0x10ec0285
+>       Subsystem Id: 0x103c86e5
+>    
+>       $ dmesg | grep -i realtek
+>       [    5.828728] snd_hda_codec_realtek ehdaudio0D0: ALC285: picked fixup
+>             for PCI SSID 103c:86e5
+>    
+>     Signed-off-by: Ezra Khuzadi <ekhuzadi@uci.edu>
+>     Cc: stable@vger.kernel.org
+>    
+>     ---
+>      sound/pci/hda/patch_realtek.c | 1 +
+>      1 file changed, 1 insertion(+)
+>    
+>     diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+>     index 877137cb09ac..82ad105e7fa9 100644
+>     --- a/sound/pci/hda/patch_realtek.c
+>     +++ b/sound/pci/hda/patch_realtek.c
+>     @@ -10563,6 +10563,7 @@ static const struct hda_quirk alc269_fixup_tbl[] =
+>     {
+>        SND_PCI_QUIRK(0x103c, 0x86c7, "HP Envy AiO 32",
+>     ALC274_FIXUP_HP_ENVY_GPIO),
+>     +  SND_PCI_QUIRK(0x103c, 0x86e5, "HP Spectre x360 15-eb0xxx",
+>     ALC285_FIXUP_HP_SPECTRE_X360_EB1),
+>        SND_PCI_QUIRK(0x103c, 0x86e7, "HP Spectre x360 15-eb0xxx",
+>     ALC285_FIXUP_HP_SPECTRE_X360_EB1),
+>        SND_PCI_QUIRK(0x103c, 0x86e8, "HP Spectre x360 15-eb0xxx",
+>     ALC285_FIXUP_HP_SPECTRE_X360_EB1),
+>        SND_PCI_QUIRK(0x103c, 0x86f9, "HP Spectre x360 13-aw0xxx",
+>     ALC285_FIXUP_HP_SPECTRE_X360_MUTE_LED),
+>    
+>     On Wed, Apr 30, 2025 at 1:33 AM kernel test robot <lkp@intel.com> wrote:
+>     >
+>     > Hi,
+>     >
+>     > Thanks for your patch.
+>     >
+>     > FYI: kernel test robot notices the stable kernel rule is not satisfied.
+>     >
+>     > The check is based on 
+>     https://urldefense.com/v3/__https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html*option-1__;Iw!!CzAuKJ42GuquVTTmVmPViYEvSg!PiCmDJsbkP48HY6ady0rbC21rGusuY-IjJ61JqQnp99GdHsbc5uEQDwV-Q9TeKK7R4THFV7fXQ$
+>     >
+>     > Rule: add the tag "Cc: stable@vger.kernel.org" in the sign-off area to
+>     have the patch automatically included in the stable tree.
+>     > Subject: sound/pci/hda: add quirk for HP Spectre x360 15-eb0xxx
+>     > Link: 
+>     https://urldefense.com/v3/__https://lore.kernel.org/stable/CAPXr0uxh0c_2b2-zJF*3DN8T6DfccfyvOQRX0X0VO24dS7YsxzzQ*40mail.gmail.com__;JSU!!CzAuKJ42GuquVTTmVmPViYEvSg!PiCmDJsbkP48HY6ady0rbC21rGusuY-IjJ61JqQnp99GdHsbc5uEQDwV-Q9TeKK7R4SyRLIbeQ$
+>     >
+>     > --
+>     > 0-DAY CI Kernel Test Service
+>     > 
+>     https://urldefense.com/v3/__https://github.com/intel/lkp-tests/wiki__;!!CzAuKJ42GuquVTTmVmPViYEvSg!PiCmDJsbkP48HY6ady0rbC21rGusuY-IjJ61JqQnp99GdHsbc5uEQDwV-Q9TeKK7R4QdTQyPmg$
+>     >
+>     >
+>     >
+> 
