@@ -1,139 +1,146 @@
-Received: from smtp.smtpout.orange.fr (smtp-81.smtpout.orange.fr [80.12.242.81])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3C3D2853F3;
-	Tue,  6 May 2025 17:59:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87A7A1AAA1F;
+	Tue,  6 May 2025 18:03:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746554348; cv=none; b=hGntl1VLMpdRzP3hng/OVfvaP1OHKtDRbd2Ibhv5+GFjkSahzwgS+Dqsb1My/6ru1/j3TCOxh/w3PJynnH4swjWsDHrgEMUxbXr//AR6gakoMur4kKQjiQzx/89nSXUYY8LcOWEAp5RZ41BCCP8g8xv8vwkxBRBNseValWQwdT4=
+	t=1746554584; cv=none; b=qZAfz3qIHdrXLV4xfJuVwjoFOv/+wBCkBN0aqub3OUCTWrfLH5+/bvu1KXcTQfwoy9/UVFi4f8skZzHE0H9xcka0lsQsFBTY/yjE4Wj+j3qIEJPQHLTsse9OyAmpr9RGouHCGKDe6DMnas6Bx0M1g6FV2Wi1xGpRosVAQ8aVyZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746554348; c=relaxed/simple;
-	bh=uudGy7w4gYHm21SK73gNGYJUxIiMq982WBX2mZKcv0M=;
-	h=Message-ID:Date:MIME-Version:Subject:References:From:To:Cc:
-	 In-Reply-To:Content-Type; b=ZujzqPUYG2z3ulEkflQOy0GTzNVBthFmb+q6+7v7hBsnPmZFkPY6mJiKy+302/vqK390+54vEfclbnTVzm+aMnD+BjZgzXrx/JUejqYlP9xgB+MejPXLFTKhvCJsJ1HIKwrXNALWGGJ4mbomiXuQ/mPtvoN1iZYRUvVUqkdLiOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=kapDodpN; arc=none smtp.client-ip=80.12.242.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1746554584; c=relaxed/simple;
+	bh=I6ZJf1ewxQVUGMccsiKD0bYREX3+2yWx/jb9aQwbA4o=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=l2SgFz3rfKtwDvS7dd8Ph8qre6Xn8qK21g2+VmijmC5gHYGqN98xqGgVPn/vpaYHiTtHENcnepHoi62LzvnoGjTACOniJAehhQEjwIdlHSW4TCfCEyKlIEw2jCQEyxNT1F3o8xcd3i9NE+WIk4m6ObfkZwU3vIUTMB3ShTMzvvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=kyKSasU9; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="kapDodpN"
-Received: from [192.168.1.37] ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id CMQKuaPSQcZeMCMQKuBdP0; Tue, 06 May 2025 19:49:47 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1746553787;
-	bh=99j4ktQ4ioERQ7ClGtknHWIhUAX0d0+faJNQyJyUCgc=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To;
-	b=kapDodpNSQNPkdpb9Lvxb39Ed5OliWZhN5loHwBzN0BxU9VySASzXGebp6ic9KaP8
-	 Nghn5IeyIpvJWA34QrPoy2lfQZYwro+coJ78nd+QQYuhTpf5hslrUChD1jG44SnszT
-	 JF/65qcOmkAEcQiDI4m+baKKs/TNOnU+YYjValvJiNXU+uJiUd6mWWl8UrmvtW994s
-	 e/jtQOvLSaCiVc5577c7l8Bs1x13T2oGvho1FVM9coiDFKJCbwDzI9sF/ZArsDiDln
-	 Ak6s5n1jJWVjEHqxPl2S4Ahx6MCMq9XEpeAzU86J9Np0ApYG+m15nOJRvq9LlYwX4f
-	 YHjaTE/Y8NcFg==
-X-ME-Helo: [192.168.1.37]
-X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
-X-ME-Date: Tue, 06 May 2025 19:49:47 +0200
-X-ME-IP: 90.11.132.44
-Message-ID: <48472736-4182-4d47-9980-6d63541f6975@wanadoo.fr>
-Date: Tue, 6 May 2025 19:49:44 +0200
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="kyKSasU9"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 546HfLrK017515;
+	Tue, 6 May 2025 18:02:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-type:date:from:message-id:mime-version:subject:to; s=
+	qcppdkim1; bh=C4NefBXU1mIg6NtdQJ5DyHLItC3++Kb51ZY9LzbsbEU=; b=ky
+	KSasU9WXVZMeHQPeKX2mgvChtRnkYXVTzjHKVENNiQYX2BMkPBLes2xFKoJpMaxj
+	DYcOM6sJsSmN87ubT7SYrvSwYglZbvsOIZwrn7RP63uZS3OF4abacjRxGeMP30Dh
+	HrqBajjHeTy0Tfhcq/TWzABto3dHhPss0VaB238AXzOmR+pLW27ehTwe7K5Qra4E
+	IhiehqatQnrG/03Ez7fSCTU7/0YeoEuAM3xFfPxF/9vRjCHnuoF8NTZgV7B7Mi/F
+	D9G29iCGc+6pMPjWv1ItE02RGarqUDAdaBoLbFjMdwx7GdjbMuPx25rz07ahDHX9
+	vagsZtobNdy+q5+Vzwgg==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46e0xsy0nv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 06 May 2025 18:02:58 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 546I2vLZ022167
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 6 May 2025 18:02:57 GMT
+Received: from hu-ptalari-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Tue, 6 May 2025 11:02:51 -0700
+From: Praveen Talari <quic_ptalari@quicinc.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby
+	<jirislaby@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        "Praveen
+ Talari" <quic_ptalari@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-serial@vger.kernel.org>, <devicetree@vger.kernel.org>
+CC: <psodagud@quicinc.com>, <djaggi@quicinc.com>, <quic_msavaliy@quicinc.com>,
+        <quic_vtanuku@quicinc.com>, <quic_arandive@quicinc.com>,
+        <quic_mnaresh@quicinc.com>, <quic_shazhuss@quicinc.com>
+Subject: [PATCH v5 0/8] Enable QUPs and Serial on SA8255p Qualcomm platforms
+Date: Tue, 6 May 2025 23:32:24 +0530
+Message-ID: <20250506180232.1299-1-quic_ptalari@quicinc.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/2] drm: bridge: Add support for Solomon SSD2825
- RGB/DSI bridge
-References: <20250506093340.106575-1-clamor95@gmail.com>
- <20250506093340.106575-3-clamor95@gmail.com>
-Content-Language: en-US, fr-FR
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: clamor95@gmail.com
-Cc: Laurent.pinchart@ideasonboard.com, airlied@gmail.com,
- andrzej.hajda@intel.com, conor+dt@kernel.org, devicetree@vger.kernel.org,
- dri-devel@lists.freedesktop.org, jernej.skrabec@gmail.com, jonas@kwiboo.se,
- krzk+dt@kernel.org, linux-kernel@vger.kernel.org,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org,
- neil.armstrong@linaro.org, rfoss@kernel.org, robh@kernel.org,
- simona@ffwll.ch, tzimmermann@suse.de
-In-Reply-To: <20250506093340.106575-3-clamor95@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: JfGfiCwIjBAI4LnAuCJsK7yP6NqbtM5i
+X-Proofpoint-ORIG-GUID: JfGfiCwIjBAI4LnAuCJsK7yP6NqbtM5i
+X-Authority-Analysis: v=2.4 cv=bdprUPPB c=1 sm=1 tr=0 ts=681a4ed2 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=dt9VzEwgFbYA:10 a=wPpz0gULE6-aHRqVbM0A:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA2MDE3MCBTYWx0ZWRfX3rbHOC+Ql4Ht
+ berbE6tg/93GbbQEeWNlz2kvhUkAoKQ+CFAak4fO222pxcQ/5oV+qeEAf5BtHS3DSP79RUP0JYn
+ gzKfyw7dszUOLpjeWUmXeRJKAb53KuLcvOBRPYwQ4kucEt8lcpYs9pnwubTH46HdK2vrltvFw9+
+ JFY1bdsCN8PvGttVWBqKxExRXn0OqTaw/i0EqESqWb7sumE1iKnt7eIiDXaGNmzKfc6TnEmkvl/
+ VoXCoy9L6LaQbTKPGvJtxUsp0mTAmxlvq1c0y2p7xz42TTpuwVwUBIUq6SYrVitVa4Y5HwdJ3hS
+ Iz5oUmEvPyssAOC1kOpy5Qn3uNAZLu87myROY0I8aaIYOmmQeAp3BzzogDii5IFTe/7c2zjaWch
+ yLjMdGFJLh3OhF2HQxHeaPfj6naj5hEh22QoDqXG8wT/XvcayXEYMBZkbaWo9L6aLWppoaxL
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-06_08,2025-05-05_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 lowpriorityscore=0 suspectscore=0 malwarescore=0
+ clxscore=1015 phishscore=0 adultscore=0 spamscore=0 impostorscore=0
+ mlxlogscore=760 mlxscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2504070000 definitions=main-2505060170
 
-Le 06/05/2025 à 11:33, Svyatoslav Ryhel a écrit :
-> SSD2825 is a cost-effective MIPI Bridge Chip solution targeting mainly
-> smartphones. It can convert 24bit RGB interface into 4-lane MIPI-DSI
-> interface to drive display modules of up to 800 x 1366, while supporting
-> AMOLED, a-si LCD or LTPS panel technologies for smartphone applications.
+The Qualcomm automotive SA8255p SoC relies on firmware to configure
+platform resources, including clocks, interconnects and TLMM. The device
+drivers request resources operations over SCMI using power and
+performance protocols.
 
-Hi,
+The SCMI power protocol enables or disables resources like clocks,
+interconnect paths, and TLMM (GPIOs) using runtime PM framework APIs,
+such as resume/suspend, to control power states(on/off).
 
-...
+The SCMI performance protocol manages UART baud rates, with each baud
+rate represented by a performance level. Drivers use the
+dev_pm_opp_set_level() API to request the desired baud rate by
+specifying the performance level.
 
-> +config DRM_SOLOMON_SSD2825
-> +	tristate "SSD2825 RGB/DSI bridge"
-> +	depends on SPI_MASTER && OF
-> +	select DRM_MIPI_DSI
-> +	select DRM_KMS_HELPER
-> +	select DRM_PANEL
-> +	help
-> +	  Say Y here if you want support for the Solomon SSD2825 RGB/DSI
-> +	  SPI bridge driver.
-> +
-> +	  Say M here if you want to support this hardware as a module.
-> +	  The module will be named "solomon-ssd2825".
+The QUP drivers are SCMI clients, with clocks, interconnects, pinctrl
+and power-domains abstracted by a SCMI server.
 
-Is it "solomon-ssd2825" or just "ssd2825"?
+The serial driver has a dependency on the dev_pm_opp_set_level() function,
+which is applied in the OPP tree's linux-next branch.
 
-> +
->   config DRM_THINE_THC63LVD1024
->   	tristate "Thine THC63LVD1024 LVDS decoder bridge"
->   	depends on OF
+Nikunj Kela (2):
+  dt-bindings: serial: describe SA8255p
+  dt-bindings: qcom: geni-se: describe SA8255p
 
-...
+Praveen Talari (6):
+  soc: qcom: geni-se: Enable QUPs on SA8255p Qualcomm platforms
+  serial: qcom-geni: move resource initialization to separate function
+  serial: qcom-geni: move resource control logic to separate functions
+  serial: qcom-geni: move clock-rate logic to separate function
+  serial: qcom-geni: Enable PM runtime for serial driver
+  serial: qcom-geni: Enable Serial on SA8255p Qualcomm platforms
+---
+v3 -> v4
+- removed patch "[PATCH v3 1/9] opp: add new helper API dev_pm_opp_set_level()"
+  from series and serial driver has dependency of this API which is
+  applied in the OPP tree's linux-next branch.
+---
 
-> +static int ssd2825_read_raw(struct ssd2825_priv *priv, u8 cmd, u16 *data)
-> +{
-> +	struct spi_device *spi = priv->spi;
-> +	struct spi_message msg;
-> +	struct spi_transfer xfer[2];
-> +	u8 tx_buf[2];
-> +	u8 rx_buf[2];
-> +	int ret;
-> +
-> +	memset(&xfer, 0, sizeof(xfer));
-> +
-> +	tx_buf[1] = (cmd & 0xFF00) >> 8;
-> +	tx_buf[0] = (cmd & 0x00FF);
-> +
-> +	xfer[0].tx_buf = tx_buf;
-> +	xfer[0].bits_per_word = 9;
-> +	xfer[0].len = 2;
-> +
-> +	xfer[1].rx_buf = rx_buf;
-> +	xfer[1].bits_per_word = 16;
-> +	xfer[1].len = 2;
-> +
-> +	spi_message_init(&msg);
-> +	spi_message_add_tail(&xfer[0], &msg);
-> +	spi_message_add_tail(&xfer[1], &msg);
-> +
-> +	ret = spi_sync(spi, &msg);
-> +	if (ret)
-> +		dev_err(&spi->dev, "spi_sync_read failed %d\n", ret);
+ .../serial/qcom,sa8255p-geni-uart.yaml        |  66 ++++
+ .../soc/qcom/qcom,sa8255p-geni-se-qup.yaml    | 107 ++++++
+ drivers/soc/qcom/qcom-geni-se.c               |  73 ++--
+ drivers/tty/serial/qcom_geni_serial.c         | 351 ++++++++++++++----
+ 4 files changed, 496 insertions(+), 101 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/serial/qcom,sa8255p-geni-uart.yaml
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,sa8255p-geni-se-qup.yaml
 
-Maybe, just spi_sync in the message?
 
-> +
-> +	*data = rx_buf[1] | (rx_buf[0] << 8);
-> +
-> +	return 0;
+base-commit: 37ff6e9a2ce321b7932d3987701757fb4d87b0e6
+-- 
+2.17.1
 
-Is it on purpose that ret is never returned?
-Is it safe to update *data if ret is not 0?
-
-> +}
-
-...
-
-CJ
