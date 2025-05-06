@@ -1,131 +1,218 @@
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45FC21EB5DD;
-	Tue,  6 May 2025 20:49:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 484BC72637
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 20:51:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746564587; cv=none; b=RcfdfIUgH+Zv/WsULU/7ncKolSV+3rOVemQaxOwUqGrc7G5zdM8n6BPpAKBAE7eWvRp+xCIpc8JV3uYAsXrvFlH/4GTwJCUtTbNy0ZqJjitmeOUwRdOVWUY4FqVht0/yOY8e+gukl5OG90Ram6qZhFwmwqvBLdFaHOvaigvgHZk=
+	t=1746564693; cv=none; b=B5BNGSuP/uCpHRTgGL1YWrcmc2JvkyXgcnWN/SOjoCMZszFnyUxdu7+JM2vADTyu3UkXTh8j415TNWYWPwfk1Pk5HrpFOAi7aDOC6PtVtlSBhZaGu99XgqvrvowsVyjeGjtRlycKw61+ZCebaagykXIUpSD+y/xgwyKbTztG9AU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746564587; c=relaxed/simple;
-	bh=3ifhBa8IsbFHOoBX5X+2uisAdJUzd51bhh3lYFD8pJo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JblbrVMRDy8yfIH4B6OCRp+wRmNlInHm6c8xfO+3dVE0dW3ijtto3IJBnYWm+zSFQEBTZjExQQBE87cRBnihc0DY7KXpDCBYcE/70HM1vWulQtDv0kD7lRPLj7N9NbGkrKBTB8EAlEi/j27rDwsjH2K08f5OQor3aVnLHPW7iB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=o8ZiNbMj; arc=none smtp.client-ip=79.96.170.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
+	s=arc-20240116; t=1746564693; c=relaxed/simple;
+	bh=7mMS2yJelq5QA8tcBDYUwoki+2oUhqtcxsnYj5KYXpE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=i3kWs5vRJccxwN5SfYKXNEF1srCtvu8PWuMm4UApRzoBIM6LYoyLeOrQbvDt/+u28yvtt0onP9c/d4mNUYJW2MqXw2dj3dAqVO6Zx7bRuX0QkcKet0mM1+tOfeeOLGbny1TBbRlTlO14Qi7ey76ofUR08kB4drKQpCIiRgFkI3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=P402uOUe; arc=none smtp.client-ip=209.85.166.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="o8ZiNbMj"
-Received: from kreacher.localnet (unknown [217.114.34.19])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 26541666BB5;
-	Tue,  6 May 2025 22:49:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
-	s=dkim; t=1746564578;
-	bh=3ifhBa8IsbFHOoBX5X+2uisAdJUzd51bhh3lYFD8pJo=;
-	h=From:Subject:Date;
-	b=o8ZiNbMjd2E/slvetW65vMCFZpkGwqOyrGH5a//PblFJiZ537EZtZZUGe/u2RGjZM
-	 ey1JoaC+viV+QoHlmdKI5/dojbiWBMxqlzuED699t2qDrpnLTV+c8y+9pUt5WFi2gc
-	 MjCCkHPQKGOPBvkJzfhS9FAZA9z8FwzajbKdtOaiQFnI/Lbs1DIFddDKVvcw7oIP4J
-	 bk80rvpFJh1gGyEYsiWjv9eKE+f3uOnTtNiYoaTEbuSXLGci3Vgj7mPFY3VrKfsQ+h
-	 pzYBYuF4+Y3p7hV9fB71yFAyeEaB/pvZXqbepwG1+8b5l7dSMt16dqrVF6wIHNetLn
-	 CVcmgpQvRf72g==
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To: Linux PM <linux-pm@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Lukasz Luba <lukasz.luba@arm.com>,
- Peter Zijlstra <peterz@infradead.org>,
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Morten Rasmussen <morten.rasmussen@arm.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
- Pierre Gondois <pierre.gondois@arm.com>,
- Christian Loehle <christian.loehle@arm.com>
-Subject:
- [PATCH v2 0/7] cpufreq: intel_pstate: Enable EAS on hybrid platforms without
- SMT
-Date: Tue, 06 May 2025 22:32:47 +0200
-Message-ID: <2999205.e9J7NaK4W3@rjwysocki.net>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="P402uOUe"
+Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3d44cb27ef4so7575ab.1
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 13:51:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746564690; x=1747169490; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fUPv9bCntwuSWSGgezKVl0DfrzoizhTecNOmZ/JksA4=;
+        b=P402uOUedbZSIpRS6SPhs6TyR8b4wsaScervhBTrR9N4lOdN+A5GPcFdN/fjs8mYyv
+         WnbVYdj8F3UMjEy6nVgfkwJGKpCiyllRSJazhvq9/Czsh0Ve01AM3AUUMi+hrb1t1lSE
+         hDiMZk3EW/CVBRr7FHfwSZVb+T0RPKJPaK0c+G7vxdiPNPMCuj8eaVwLcxkuvftTeZje
+         +Al6UfpogmhRic/Goqz4bZsSHYMs6rWHZSR9UghVX6NPR9t8IhSU1IuDLmVoTmwk1q+v
+         XW/lmniuWxhZKEITrPLyCUJx7K7DYClR86HMRKpVtIywB5jr4oWMY0KdbCU2yLoqGlOz
+         30XQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746564690; x=1747169490;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fUPv9bCntwuSWSGgezKVl0DfrzoizhTecNOmZ/JksA4=;
+        b=mJQEB6mpCF/3MqRlmVkkAUerbUcAz2ojh3IXVNJwz/BWp+QtxBpyYiOxC+D5/vspJN
+         4KWJzxdCxNlV1GgkTxT403XdhwliILXOu5eOQDJFZrXvznUJwzim63mQbsZ2YODBF2ZG
+         JlVNRbuErAimqBSCX/43HP3p2d96JeBj3Zla42L2DozvcOI7TIt/VcVlgErM40ZJcHkj
+         6DCenOKlF0Pklumtv9hO8WOn58zk3r9AqnKcsWXG9jc7gWD+DATP9BY+0ngHyPiqXWPn
+         I4qgykQZqu4Se4n3HjHhQLxZ0+NvWJQhrYLBshyShaTGICIrDOEMCznqgGVtaQ7U1+kT
+         +UNg==
+X-Forwarded-Encrypted: i=1; AJvYcCVusOZ4ktmC5JJ907ABHkbz7sQf/4Q5E1sdTqbhOjEGLFXGkzv5zFVjwbZWyOLkYhA1C8SP1WVtZKdGnb4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxlRTUlP1T/zsZ/guswlOiyuE+n9CSMHVStt3u9FrZQuEiBndMx
+	ygP+egIzhuFTTWicUrQf3HWsmxZdxIEPjFAoTqVvOVmZKOhPJY+JHY5pV6iR18SBnjuYmMkMot6
+	poy6A40zqhMxxkHqRB2UBIEdK77zW3rh4mWl9
+X-Gm-Gg: ASbGncuassiTxppuxCx/6KySh5SDUC2MfQl7pXhsISyLz11YEvfxbgVA6pQvDNV3HPM
+	vqrwQUYQMp5UqJZC5VDeSJSXFVcDNr8//iyqVSgqqWXdINnhyKXzSWhQIhuSsbcSIti9c5K7nxT
+	tS5XBCYMt0vUwMmF3pH3ROd57bC45zbV2mRzSskKklsBZwRSNXM4U=
+X-Google-Smtp-Source: AGHT+IGOCkEUQUGsoFLVPGo6sLVzHWCDwX9AdpvPly0JQhN/zJbqbAKQDhLtjEeDicAomjADjWwTttq3FWsvzxjxmH0=
+X-Received: by 2002:a05:6e02:17c6:b0:3d3:d954:d3f with SMTP id
+ e9e14a558f8ab-3da7390f965mr627845ab.26.1746564690006; Tue, 06 May 2025
+ 13:51:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
+References: <20250501022809.449767-1-howardchu95@gmail.com>
+ <aBjfrUqFe444h_CF@x1> <CAP-5=fXMwyGm5KUecSS4pUhgBB_py=R_c0LqEYfnjyRrf4bcMQ@mail.gmail.com>
+ <CA+JHD93FaugH5ny6+bBkciwoWzLN5RKCbtBq77V2bi8Rs15-UQ@mail.gmail.com>
+In-Reply-To: <CA+JHD93FaugH5ny6+bBkciwoWzLN5RKCbtBq77V2bi8Rs15-UQ@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 6 May 2025 13:51:18 -0700
+X-Gm-Features: ATxdqUFcRR5ams1QhaXJE29xzzghsFa5RYuxRCjI1U40XWPkZVAdID5LjEIol90
+Message-ID: <CAP-5=fX8+nyvisxybD6gWBhJd=GpuMiBkSA+CqnLuUc7Mx2KHw@mail.gmail.com>
+Subject: Re: [PATCH v16 00/10] perf record --off-cpu: Dump off-cpu samples directly
+To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Howard Chu <howardchu95@gmail.com>, 
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Kan Liang <kan.liang@linux.intel.com>, 
+	linux-perf-users <linux-perf-users@vger.kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, gautam@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 217.114.34.19
-X-CLIENT-HOSTNAME: 217.114.34.19
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeegleekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepgeffhfdujeelhfdtgeffkeetudfhtefhhfeiteethfekvefgvdfgfeeikeeigfehnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepvddujedruddugedrfeegrdduleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvudejrdduudegrdefgedrudelpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpehrjhifsehrjhifhihsohgtkhhirdhnvghtpdhnsggprhgtphhtthhopeduuddprhgtphhtthhopehlihhnuhigqdhpmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehluhhkrghsiidrlhhusggrsegrrhhmrdgtohhmpdhrtghpthhtohepphgvthgvrhiisehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepshhrihhnihhvrghsrdh
-X-DCC--Metrics: v370.home.net.pl 1024; Body=11 Fuz1=11 Fuz2=11
+Content-Transfer-Encoding: quoted-printable
 
-Hi Everyone,
+On Tue, May 6, 2025 at 1:03=E2=80=AFPM Arnaldo Carvalho de Melo
+<arnaldo.melo@gmail.com> wrote:
+>
+>
+>
+> On Tue, May 6, 2025, 4:48=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
+e:
+>>
+>> On Mon, May 5, 2025 at 8:56=E2=80=AFAM Arnaldo Carvalho de Melo <acme@ke=
+rnel.org> wrote:
+>> >
+>> > On Wed, Apr 30, 2025 at 07:27:58PM -0700, Howard Chu wrote:
+>> > > Changes in v16:
+>> > >  - Add Tested-by from Gautam and Acked-by from Namhyung.
+>> > >  - Rebase on the perf-tools-next branch.
+>> > >  - Edit the commit message of patch 10.
+>> > >  - Fix a bug caused by the type change of struct perf_cpu.
+>> > >  - Rename test_offcpu_over_thresh() to test_offcpu_above_thresh().
+>> >
+>> > Please take a look at the tmp.perf-tools-next branch at:
+>> >
+>> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.g=
+it
+>> >
+>> > I added some Committer testing with some extra steps to describe how t=
+o
+>> > reproduce the results and there is one point that I have to retest,
+>> > where there is a FIXME in the Committer testing notes, perhaps I made =
+a
+>> > mistake or that fix should be moved to after or before some patch,
+>> > unsure.
+>>
+>>
+>> Hi Arnaldo,
+>>
+>> so I tried out the tree, perf tests pass as usual, etc. I tried to dig
+>> into your FIXME issue. Initially I thought I had a reproduction but
+>> now I think it was a user error.
+>
+>
+>
+> It was a misunderstanding, I already pushed everything to perf-tools-next=
+ an removed that FIXME, that was here:
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/=
+commit/?h=3Dperf-tools-next&id=3D7f8f56475d58511729429b2e52787606c4062ad0
+>
+> Next thing I plan to look is that DRM PMU (IIRC) from you.
 
-This is a new (and most likely final) version of
+Great thanks! Looking back over the last few months we also have
+(somewhat priority sorted - probably best to fix crashes ahead of the
+new DRM work :-) ):
+* The second patch of Wshorten changes to help Leo:
+https://lore.kernel.org/lkml/20250430175036.184610-1-irogers@google.com/
+* segv in PMU fix (acked-by Namhyung):
+https://lore.kernel.org/lkml/20250402211301.4153441-1-irogers@google.com/
+* memory leak in perf trace (reviewed-by Howard):
+https://lore.kernel.org/lkml/20250401202715.3493567-1-irogers@google.com/
+* event parsing NMI watchdog/debug improvements (reviewed-by Kan) :
+https://lore.kernel.org/lkml/18c2fb33-2b3a-4ebe-ab26-8cebe0b6b94c@linux.int=
+el.com/
+* Rust demangling (no tags):
+https://lore.kernel.org/lkml/20250430004128.474388-1-irogers@google.com/
+* Speed ups in PMU/metric code but particularly for testing (tested-by
+Namhyung): https://lore.kernel.org/lkml/Z_dp7E2wtSek-KHo@z2/
+* Stat testing improvements (no tags):
+https://lore.kernel.org/lkml/20250412004704.2297939-1-irogers@google.com/
+* Cpu term (tested-by Kan):
+https://lore.kernel.org/lkml/c21d05c6-d71c-47e3-b4a2-e275d9d487f2@linux.int=
+el.com/
+* Uniquification fixes/clean-up (no tags by CT/me):
+https://lore.kernel.org/lkml/20250327225651.642965-1-ctshao@google.com/
+* Branch stack test hardening (no tags):
+https://lore.kernel.org/lkml/20250318161639.34446-1-irogers@google.com/
 
-https://lore.kernel.org/linux-pm/3344336.aeNJFYEL58@rjwysocki.net/
+Perhaps more controversial:
+* Uid filtering with BPF:
+https://lore.kernel.org/lkml/20250425214008.176100-1-irogers@google.com/
+* dlopen/dlsym for capstone and libllvm:
+https://lore.kernel.org/lkml/20250417230740.86048-1-irogers@google.com/
+* BuildID mmaps as default:
+https://lore.kernel.org/lkml/20250428213409.1417584-1-irogers@google.com/
+* Sysfs/json event priority consistency:
+https://lore.kernel.org/lkml/20250416045117.876775-1-irogers@google.com/
+* Build with Wunreachable-code:
+https://lore.kernel.org/lkml/20250410202647.1899125-1-irogers@google.com/
 
-The most significant difference between it and the above is that schedutil is
-now required for EAS to be enabled, like on the other platforms using EAS,
-which means that intel_pstate needs to operate in the passive mode in order
-to use it (the most straightforward way to switch it over to the passive mode
-is to write "passive" to /sys/devices/system/cpu/intel_pstate/status).
+Thanks,
+Ian
 
-Accordingly, the changes that were needed for EAS to work without schedutil are
-not needed any more, so there is one patch less in the series because of that
-and patch [5/7] is simpler than its previous version because some changes made
-by it are not necessary any more.
-
-Another patch that has been dropped is
-
-https://lore.kernel.org/linux-pm/1964444.taCxCBeP46@rjwysocki.net/
-
-because it didn't take CPU online into account properly and it is not essential
-for the current hardware anyway.
-
-There is a new patch, [7/7], which adds CAS/EAS/hybrid support description to
-the intel_pstate admin-guide documentation.
-
-The following paragraph from the original cover letter still applies:
-
-"The underlying observation is that on the platforms targeted by these changes,
-Lunar Lake at the time of this writing, the "small" CPUs (E-cores), when run at
-the same performance level, are always more energy-efficient than the "big" or
-"performance" CPUs (P-cores).  This means that, regardless of the scale-
-invariant utilization of a task, as long as there is enough spare capacity on
-E-cores, the relative cost of running it there is always lower."
-
-The first 2 patches depend on the current cpufreq material queued up for 6.16
-in linux-pm.git/linux-next (and in linux-next proper) and are not really
-depended on by the rest of the series, but I've decided to include them into
-this series because they have been slightly updated since the previous version,
-mostly to take review feedback into account (I'm going to queue them up for
-6.16 shortly because they don't appear to be objectionable).
-
-The next 2 patches (Energy Model code changes) were reviewed previously, but
-they are only needed because of patch [5/7].
-
-Patch [5/7] has not changed much except that some changes made by the previous
-version have been dropped from it.  Also its changelog has been updated.  It
-causes perf domains to be registered per CPU and in addition to the primary cost
-component, which is related to the CPU type, there is a small component
-proportional to performance whose role is to help balance the load between CPUs
-of the same type.
-
-The expected effect is still that the CPUs of the "low-cost" type will be
-preferred so long as there is enough spare capacity on any of them.
-
-Patch [6/7] has been updated to walk all of the cache leaves and look for
-the ones with level equal to 3 because the check used in the previous version
-does not always work.
-
-The documentation patch, [7/7], is new.
-
-Please refer to the individual patch changelogs for details.
-
-Thanks!
-
-
-
+> Thanks for doing the extra tests and reporting your results,
+>
+> - Arnaldo
+>
+> Sent from smartphone, doing some routine med checks
+>
+>
+>> So I wrote a little script where
+>> we're setting the off CPU threshold to 10 seconds and then looking for
+>> off CPU events that took less than than:
+>> ```
+>> for i in $(seq 1 100)
+>> do
+>>   echo -n "Iteration $i of 100 "
+>>   sudo /tmp/perf/perf record --off-cpu --off-cpu-thresh 10000 -a sleep
+>> 11 2> /dev/null
+>>   if sudo /tmp/perf/perf script -D |grep -P '.* [0-9]{1,10} offcpu.*'
+>>   then
+>>     echo "BAD"
+>>   else
+>>     echo "GOOD"
+>>   fi
+>> done
+>> ```
+>> To remove the BPF map generated events I added:
+>> ```
+>> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+>> index 8898357325cf..6c23b2cf8b66 100644
+>> --- a/tools/perf/builtin-record.c
+>> +++ b/tools/perf/builtin-record.c
+>> @@ -2841,7 +2841,7 @@ static int __cmd_record(struct record *rec, int
+>> argc, const char **argv)
+>>        } else
+>>                status =3D err;
+>>
+>> -       if (rec->off_cpu)
+>> +       if (rec->off_cpu && false)
+>>                rec->bytes_written +=3D off_cpu_write(rec->session);
+>>
+>>        record__read_lost_samples(rec);
+>> ```
+>> Anyway, running the script for nearly 20 minutes, I couldn't get a
+>> sample below the threshold. Hand testing things also look correct.
+>>
+>> Thanks,
+>> Ian
