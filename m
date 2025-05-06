@@ -1,105 +1,117 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF9CB1D5ADC;
-	Tue,  6 May 2025 18:37:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 815E5283C89;
+	Tue,  6 May 2025 18:37:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746556626; cv=none; b=PWZ6KXT1cynquRER573sMLF6U7EOHx0GFzBLiy8+6srp3sc5LPWZUawdWmdoWuIO3DS/jF33a6QLb6EzWmRLL7yrX47pj9HDMV3J9YCkG8fGgskxRXAFITp/ahSbwuditLJ/ZJEYSqBmufb9JQ633Aor64Q6eLokfQAGWxYlAe0=
+	t=1746556652; cv=none; b=Bl+l9CNHrVPvBejaCiqnmlC0tXIHeoF9XgRsT3XUaPvFyYsyglC8RxvlVqVxWn9lB8Fx/Yn+CytcpuQBJ4gnMaYVBfhPPPuzopoClmRn8KTPUMGilBWWgo7wEy/FBR5r+VhSyE1K3VRYYXGjw7eGvGykwhNhqYDb1umDx0GXNWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746556626; c=relaxed/simple;
-	bh=VPN3CYOPSJElSKB5YL3erOKXcLAZVNE6IXlCcyuNueA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=S+2kwQ0vgokAIfKSDvsPsuOQvNF1V+/rwi7A1/3g+m1yj9I3Gy4LJtEEjlQ0KZNGMS5LeUcLA1gCd8JeD5mQeAq4PLAKJInVOZlSM7XdRuBNEK3qvCFHgJ+hHPZkWTdRs699jtW8zc+38kvArZc13zP9/mIyFNjeo3WwUOPNT9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZXyl2JuC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746556652; c=relaxed/simple;
+	bh=1t6ifNaTTzKgr2uUkBF2eN7jEVCbkIA3GK8BNoDuxKo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uPeAwEsH4XfuECynFNWoZmrAi/yNkn3kseSPrw73Kf0uOGdGMTnsoHh+hGaLY7hYP/kJOZBcqX7dSwzNmSuJGqyXpgdBdBHgRmePaxS6/4yEvvNqz7/eFFBlMMwEXKDOdVdC6kAMuxQbGRMeD0zLBHhRfv8aLhbBKkh+glDTpZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q2BHOxDw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZXyl2JuC"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 5A84BC4CEEF;
-	Tue,  6 May 2025 18:37:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q2BHOxDw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55630C4CEE4;
+	Tue,  6 May 2025 18:37:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746556625;
-	bh=VPN3CYOPSJElSKB5YL3erOKXcLAZVNE6IXlCcyuNueA=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=ZXyl2JuCaoRm/k8vqvz+FWYtutFwBh+AeejLzveDiEUxSU10Qz3UrDLGDO1Y7Bw4s
-	 EnEJOTcvCIKiUhyh6aaiPQAtPGdUuT7ouS0I4YBocz2RjeI8PK6MeC0y6vtUAFRAGV
-	 g1gHr142uHDKu6GW30Pq5ifvdgD/35AuAmHjbeD9c/uLY3l8+P0PMw9skkF9/VoWyC
-	 x7JCxyGr07t8zuLTtYukmU80KRPPAxlbAPstmo7ihvUH3soNvGU5bkgWKr6vxxDbKR
-	 p/D8gSYGyMhyLo+VZCyaWLYsin2SDj0flVcYRKK331TJAHE6bc1MQBx/F5zSAITqUt
-	 4I/OZfOWjLzKw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B961C3ABBC;
-	Tue,  6 May 2025 18:37:05 +0000 (UTC)
-From: Aaron Kling via B4 Relay <devnull+webgeek1234.gmail.com@kernel.org>
-Date: Tue, 06 May 2025 13:36:59 -0500
-Subject: [PATCH] spi: tegra114: Use value to check for invalid delays
+	s=k20201202; t=1746556651;
+	bh=1t6ifNaTTzKgr2uUkBF2eN7jEVCbkIA3GK8BNoDuxKo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Q2BHOxDwSo1WmG4EmsV60CjLvifCNxeDKaIpySQKp/ktqAIopYWP7goYECDLaqqkf
+	 XHPktFERb8hV96KIZu4ideaCiQjRbMN2qR3KeEsIq9pmSji2LNsMIjTOs5dmv3Occb
+	 zy0HCI+47VYW7oMR/LLvIcZ8rLJIYugHOsynk3rBttPz9EFck2rmKaBrhwT4BrVeYi
+	 SvyVub4O5tCQFBYp7I9DMuuXU++a/K+o7piB3qVUAXlek0vzdBLcQyJob9UYraw2Ik
+	 jWMMgKeSRQ4PqvRacldx6emYDAlB7Pk/guEpXM7PaBJM5x1BaKP5uR6XG+yN+pSqSz
+	 eKyIRhVMvsydA==
+Date: Tue, 6 May 2025 11:37:28 -0700
+From: Kees Cook <kees@kernel.org>
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>, justinstitt@google.com,
+	Dan Williams <dan.j.williams@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, nvdimm@lists.linux.dev,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] UAPI: ndctl / acpi: intel: Avoid multiple
+ -Wflex-array-member-not-at-end warnings
+Message-ID: <202505061135.C76B6CA9F@keescook>
+References: <Z618ILbAR8YAvTkd@kspp>
+ <Z65xV2TaFY32eYdp@aschofie-mobl2.lan>
+ <202504071106.3A0AF875F@keescook>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250506-spi-tegra114-fixup-v1-1-136dc2f732f3@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAMtWGmgC/x2MQQ5AMBAAv9Ls2SbbohVfEQd0sReaFpGIv2scJ
- 5OZBxJH4QSteiDyJUn2LYMuFEzrsC2M4jODIVNTTRZTEDx4iYPWFc5ynwH9OFtXkh+pcZDDEDm
- Lf9r17/sBsguP3GQAAAA=
-X-Change-ID: 20250506-spi-tegra114-fixup-dbf6730db087
-To: Laxman Dewangan <ldewangan@nvidia.com>, Mark Brown <broonie@kernel.org>, 
- Thierry Reding <thierry.reding@gmail.com>, 
- Jonathan Hunter <jonathanh@nvidia.com>
-Cc: linux-spi@vger.kernel.org, linux-tegra@vger.kernel.org, 
- linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
- Aaron Kling <webgeek1234@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746556624; l=1451;
- i=webgeek1234@gmail.com; s=20250217; h=from:subject:message-id;
- bh=Hw03YaXk/WZ6EX96VNFe6W5UJoy0p3RB6GhwI2lDOas=;
- b=CEGKjV7XRxmWJqtCmKGXcQ1HRrEygIotyDIVa2P8UldIcnnCCRRgM51WuUQ6TYSNQoHyZ0ZnP
- mzcTFoaFAUQCEtiHeb0NckUCgy8uofM8thOYzVHLVLhG2C2EQN9sG7r
-X-Developer-Key: i=webgeek1234@gmail.com; a=ed25519;
- pk=TQwd6q26txw7bkK7B8qtI/kcAohZc7bHHGSD7domdrU=
-X-Endpoint-Received: by B4 Relay for webgeek1234@gmail.com/20250217 with
- auth_id=342
-X-Original-From: Aaron Kling <webgeek1234@gmail.com>
-Reply-To: webgeek1234@gmail.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202504071106.3A0AF875F@keescook>
 
-From: Aaron Kling <webgeek1234@gmail.com>
+On Mon, Apr 07, 2025 at 11:11:08AM -0700, Kees Cook wrote:
+> On Thu, Feb 13, 2025 at 02:25:27PM -0800, Alison Schofield wrote:
+> > On Thu, Feb 13, 2025 at 03:29:12PM +1030, Gustavo A. R. Silva wrote:
+> > > -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> > > getting ready to enable it, globally.
+> > > 
+> > > So, in order to avoid ending up with flexible-array members in the
+> > > middle of other structs, we use the `__struct_group()` helper to
+> > > separate the flexible array from the rest of the members in the
+> > > flexible structure. We then use the newly created tagged `struct
+> > > nd_cmd_pkg_hdr` to replace the type of the objects causing trouble
+> > > (`pkg`) in multiple structs.
+> > > 
+> > > So, with these changes, fix the following warnings:
+> > > 
+> > > drivers/acpi/nfit/intel.c:692:35: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> > 
+> > One sample warning is good.
+> > 
+> > How about adding a comment on why the usage of __struct_group() here
+> > means this doesn't break userspace.
+> > 
+> > snip
+> > 
+> > > diff --git a/include/uapi/linux/ndctl.h b/include/uapi/linux/ndctl.h
+> > > index 73516e263627..34c11644d5d7 100644
+> > > --- a/include/uapi/linux/ndctl.h
+> > > +++ b/include/uapi/linux/ndctl.h
+> > 
+> > FWIW: In a patch like this where reviewers likely want to see
+> > the header file change first, put it first in the diff.
+> > (git diff.orderfile)
+> 
+> TIL about diff.orderfile! :) Just for my own education, what do you have
+> as the contents for your orderfile? Is it just simply:
+> 
+> *.h
+> 
+> ?
 
-A delay unit of 0 is a valid entry, thus it is not valid to check for
-unused delays. Instead, check the value field; if that is zero, the
-given delay is unset.
+I've updated my local environment to use this, to see how well it ends up
+behaving:
 
-Fixes: 4426e6b4ecf6 ("spi: tegra114: Don't fail set_cs_timing when delays are zero")
-Cc: stable@vger.kernel.org
-Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
----
- drivers/spi/spi-tegra114.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Kconfig
+*/Kconfig
+*/Kconfig.*
+Makefile
+*/Makefile
+*/Makefile.*
+scripts/*
+Documentation/*
+*.h
+*.S
+*.c
+tools/testing/*
 
-diff --git a/drivers/spi/spi-tegra114.c b/drivers/spi/spi-tegra114.c
-index 2a8bb798e95b954fe573f1c50445ed2e7fcbfd78..795a8482c2c700c3768bd50bf59971256893a486 100644
---- a/drivers/spi/spi-tegra114.c
-+++ b/drivers/spi/spi-tegra114.c
-@@ -728,9 +728,9 @@ static int tegra_spi_set_hw_cs_timing(struct spi_device *spi)
- 	u32 inactive_cycles;
- 	u8 cs_state;
- 
--	if ((setup->unit && setup->unit != SPI_DELAY_UNIT_SCK) ||
--	    (hold->unit && hold->unit != SPI_DELAY_UNIT_SCK) ||
--	    (inactive->unit && inactive->unit != SPI_DELAY_UNIT_SCK)) {
-+	if ((setup->value && setup->unit != SPI_DELAY_UNIT_SCK) ||
-+	    (hold->value && hold->unit != SPI_DELAY_UNIT_SCK) ||
-+	    (inactive->value && inactive->unit != SPI_DELAY_UNIT_SCK)) {
- 		dev_err(&spi->dev,
- 			"Invalid delay unit %d, should be SPI_DELAY_UNIT_SCK\n",
- 			SPI_DELAY_UNIT_SCK);
+https://github.com/kees/kernel-tools/commit/909db155b5cd36832d10d7d9932d7b51b46388aa
 
----
-base-commit: 0d8d44db295ccad20052d6301ef49ff01fb8ae2d
-change-id: 20250506-spi-tegra114-fixup-dbf6730db087
+-Kees
 
-Best regards,
 -- 
-Aaron Kling <webgeek1234@gmail.com>
-
-
+Kees Cook
