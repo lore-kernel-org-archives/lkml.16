@@ -1,38 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AD9A2836AB;
-	Tue,  6 May 2025 18:18:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ACCE278778;
+	Tue,  6 May 2025 18:18:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746555529; cv=none; b=HaVX5mBxwkOWx2WjKa9ONg6P74dpyLSDacWsqvjZcvRkX0fMRF1ciq6Ghpvk8lRz7iVFG94iAVjt7su/fZoqHcoa+VGxuGpqJov/J6cO3/N7B4WaTUV07L2mRxJOlYCnWDNu0hvoe22f42kHqZh/4dAQ94CLhi7dcMCfewm/A14=
+	t=1746555529; cv=none; b=Mqv55+IEo0ywp/uih69/gSnlX2C3dJuQLJ8CplZ/fqNA6AuwN7eWtRRN1QAPsMYN2IL+FuhACcrHXlYfEPVJxfUZjb1gxWCwa6PIDWHLUiCRPI0NpX4drISkIvoWyL4fRHaWLQY2TLIaKEvYw02AKcf1+wr0yL9yOzcs7faO220=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746555529; c=relaxed/simple;
-	bh=MtrDpZZAZ+r0yXmU209tpMQxLiYvsieCjIgqojkxYGk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=nDP/gtZWBeqfdE1QrhEt2Gh+d4cBglGUNhC2X0Y5vHI4nrCpbBH6Y+ljHvrkjF21sAipVV76GAs5sPMbpxAPrnePvhxJ2+nhRZ2gLgDPfF6T7gvSm+qWOFm7jG+3dPuBXwRF0H1EDAszLrKRkoeWG0vJdHrBAI8lKuOtEFb35fo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=juw0Lqov; arc=none smtp.client-ip=10.30.226.201
+	bh=AAwL5uoOTe6wCwpJpDywIRpKXFmiHBgm7TpEJavHXSQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=f2m8+FDVRSFkGj09QA8ffWvi/dqwGmm9wBlW/h8i8aIxSCLG8jDonZkaOp2ivNKxaIDL+het5xBqDBQ032IEAdtyM4THjUVzpTvfZ4zAWgyYoH+5MHkxNQwNIhZi8bAFblDKx0hTRZjJcY8uAJvXUsL20VpsMEVj2T9JdyAvQK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dHvdqk+R; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="juw0Lqov"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D7370C4CEEF;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dHvdqk+R"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C15ABC4CEE4;
 	Tue,  6 May 2025 18:18:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1746555528;
-	bh=MtrDpZZAZ+r0yXmU209tpMQxLiYvsieCjIgqojkxYGk=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=juw0Lqov/OhFDokNATjYltZwjhknOppWjxSrQtOQX9L1rM8BX7Xuw4ck2QIItuGmW
-	 hXEUBqLD8LQiBgLIewW9K5uXY7FD+RQdh+lMkCSMB92iISX86DaleOC3cgVZDWmAc0
-	 S2VXvIJUfc2hHOdME6K37eq1VK3rR8zBOvUsUzMgXrO1YMEZ1KNE+/aSIETv0ES9PW
-	 BvjrD5PuQkhELujkvDgJs/xnjBH5gxAdjmMpwcHBFa0dPjgOIjrURAotT4tnZBCzIJ
-	 KowVqcKB7mwRUP2Mx/jIe3LJLgheL9Bj92Vozn2lAATOPAbjI+jeN+JtFhg59Vq+bI
-	 3y/4oZMertmog==
+	bh=AAwL5uoOTe6wCwpJpDywIRpKXFmiHBgm7TpEJavHXSQ=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=dHvdqk+R7rdmoZ9kFh+KjtQ1zUblgOvfZCiBYbKbDX/JONpmEdwpFfISCL69w3YWK
+	 ++DIbe+3bUNJ+sdCqMe68Vf/Q9qZNKvo/OuN6dWNO8RdNTTRsUPc8iOp2mxEzO86Du
+	 G9aH735ezk6iHbnmKRR/OHGyWjcR5351ALAVqFTM1LJzzqOyAMu2nj8FJh5hz5zwDt
+	 FWV4qzrk78a8n0MUSrLgZ/ZOptScAFoFD9qaft0kSeg+Xuv26Wj5GQFvp7FHBenjWi
+	 BNlWPfIEpk87NqF6aNFVZ4eLSDuTI7/1mYocYuNVt8RRBx3els0zBCg9rKRvXPG9sT
+	 kHig0wjF/l31A==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C73F5C3ABBE;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF040C3ABBC;
 	Tue,  6 May 2025 18:18:48 +0000 (UTC)
 From: Joel Selvaraj via B4 Relay <devnull+foss.joelselvaraj.com@kernel.org>
-Date: Tue, 06 May 2025 13:18:39 -0500
-Subject: [PATCH RESEND v4 2/4] arm64: dts: qcom:
- sdm845-xiaomi-beryllium-common: add touchscreen related nodes
+Subject: [PATCH RESEND v4 0/4] Add Xiaomi Poco F1 touchscreen support
+Date: Tue, 06 May 2025 13:18:37 -0500
+Message-Id: <20250506-pocof1-touchscreen-support-v4-0-bfb53da52945@joelselvaraj.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,9 +40,13 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250506-pocof1-touchscreen-support-v4-2-bfb53da52945@joelselvaraj.com>
-References: <20250506-pocof1-touchscreen-support-v4-0-bfb53da52945@joelselvaraj.com>
-In-Reply-To: <20250506-pocof1-touchscreen-support-v4-0-bfb53da52945@joelselvaraj.com>
+X-B4-Tracking: v=1; b=H4sIAH1SGmgC/43RPU/DMBAG4L9SecbIn3HciYGuDDAiBvtyIa7aO
+ NhJBKr63zEBBAON2O5Dek5670QypoCZbDcnknAOOcS+NOpqQ6Bz/TPS0JSeCCYUZ8zQIUJsOR3
+ jBF2GhNjTPA1DTCMFo4XjlYAGBCnAkLANrwv+SO53D7u7W/JU5l3IY0xvy82ZL9v/8DOnjDZec
+ i94zWvQN/uIh4yH2SW3v4Z4XPRZ/IiC1auiKKJ2FRojLbbqkii/Rc0k46uiLKJrGQfpJfP6kqh
+ +i3JVVEUsiUqPHqRV4g/x/Bl2wpepPHD8Sty7jLTsj2HcboChr7SyCrVtbC2Vaw1491FWwqJl3
+ HihHS/Y+R3Z4NAbFQIAAA==
+X-Change-ID: 20241007-pocof1-touchscreen-support-c752a162cdc2
 To: Bjorn Andersson <andersson@kernel.org>, 
  Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -52,14 +55,14 @@ To: Bjorn Andersson <andersson@kernel.org>,
 Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, 
  Joel Selvaraj <foss@joelselvaraj.com>, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746555528; l=2153;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1746555528; l=2842;
  i=foss@joelselvaraj.com; s=20250506; h=from:subject:message-id;
- bh=ogqFejWPe9Mh62xxDZD39Gia/pg/UEL4oDRQ0rgvLdk=;
- b=LucKALOxQFPrCrpheTgcRdQB46QwtgpnJ7jHR0Ua8vgNCspN8NEVTdrwlxcBgdzqRYnQS2kAW
- ErYQCHh5Eq9BKd9m8FL9OKtUvZBBmQ1kPmrfixBZSOl4GPiuLglGpPq
+ bh=AAwL5uoOTe6wCwpJpDywIRpKXFmiHBgm7TpEJavHXSQ=;
+ b=INuU4+qYGCE/v6P5oMl5xtD0ThiZimqH3pLqAa6TCOiX0ZoDbVdCM1e4NImNyO0ctlVed4g0M
+ hbERnbpVHQsD5B6sUs9tlg3rRW1vCour20TigfYe5jd2MBnHgYkIOKM
 X-Developer-Key: i=foss@joelselvaraj.com; a=ed25519;
  pk=/jk63vyofgC3YCat+t/kcBv+rlSEVcI4PLN/LN0SQlQ=
 X-Endpoint-Received: by B4 Relay for foss@joelselvaraj.com/20250506 with
@@ -67,89 +70,60 @@ X-Endpoint-Received: by B4 Relay for foss@joelselvaraj.com/20250506 with
 X-Original-From: Joel Selvaraj <foss@joelselvaraj.com>
 Reply-To: foss@joelselvaraj.com
 
-From: Joel Selvaraj <foss@joelselvaraj.com>
+In the first patch, I have updated the edt-ft5x06 touchscreen binding 
+documentation. In Xiaomi Poco F1(qcom/sdm845-xiaomi-beryllium-ebbg.dts),
+the FocalTech FT8719 touchscreen is integrally connected to the display 
+panel (EBBG FT8719) and thus should be power sequenced together with 
+display panel for proper functioning using the panel property. Since the
+edt-ft5x06 touchscreen binding uses almost all the properties present in 
+touchscreen.yaml, let's remove additionalProperties: false and use 
+unevaluatedProperties to include all the properties, including the needed
+panel property.
 
-Enable qupv3_id_1 and gpi_dma1 as they are required for configuring
-touchscreen. Also add pinctrl configurations needed for touchscreen.
-These are common for both the tianma and ebbg touchscreen variant.
-In the subsequent patches, we will enable support for the Novatek NT36672a
+In the second patch, I have enabled the qupv3_id_1 and gpi_dma1 as they
+are required for configuring touchscreen. Also added the pinctrl
+configurations. These are common for both the Poco F1 Tianma and EBBG
+panel variant.
+
+In the subsequent patches, I have enabled support for the Novatek NT36672a
 touchscreen and FocalTech FT8719 touchscreen that are used in the Poco F1
-Tianma and EBBG panel variant respectively. This is done in preparation
-for that.
+Tianma and EBBG panel variant respectively.
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Signed-off-by: Joel Selvaraj <foss@joelselvaraj.com>
 ---
+Changes in v4:
+- Update the dt-binding patch's commit message to be more accurate
+- Link to v3: https://lore.kernel.org/r/20250301-pocof1-touchscreen-support-v3-0-af01c3b30b55@joelselvaraj.com
+
+Changes in v3:
+- Fix SoB email id mismatch (suggested by Krzysztof Kozlowski)
+- Use unevaluatedProperties instead additionalProperties in dt-binding (suggested by Krzysztof Kozlowski)
+- Link to v2: https://lore.kernel.org/r/20241208-pocof1-touchscreen-support-v2-0-5a6e7739ef45@joelselvaraj.com
+
+Changes in v2:
+- Fixed the missing "panel" property dt-binding error reported by Rob Herring's bot.
+- Change the "input-enable" property to "output-disable" in qcom/sdm845-xiaomi-beryllium-common.dtsi
+  (Based on a patch suggested by Konrad Dybcio).
+- Link to v1: https://lore.kernel.org/r/20241007-pocof1-touchscreen-support-v1-0-db31b21818c5@joelselvaraj.com
+
+---
+Joel Selvaraj (4):
+      dt-bindings: input: touchscreen: edt-ft5x06: use unevaluatedProperties
+      arm64: dts: qcom: sdm845-xiaomi-beryllium-common: add touchscreen related nodes
+      arm64: dts: qcom: sdm845-xiaomi-beryllium-tianma: introduce touchscreen support
+      arm64: dts: qcom: sdm845-xiaomi-beryllium-ebbg: introduce touchscreen support
+
+ .../bindings/input/touchscreen/edt-ft5x06.yaml     |  9 +----
  .../dts/qcom/sdm845-xiaomi-beryllium-common.dtsi   | 39 ++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+ .../boot/dts/qcom/sdm845-xiaomi-beryllium-ebbg.dts | 23 +++++++++++++
+ .../dts/qcom/sdm845-xiaomi-beryllium-tianma.dts    | 23 +++++++++++++
+ 4 files changed, 86 insertions(+), 8 deletions(-)
+---
+base-commit: c0eb65494e59d9834af7cbad983629e9017b25a1
+change-id: 20241007-pocof1-touchscreen-support-c752a162cdc2
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-xiaomi-beryllium-common.dtsi b/arch/arm64/boot/dts/qcom/sdm845-xiaomi-beryllium-common.dtsi
-index 617b17b2d7d9dfb686445e02cfc8f97de5b6f7a6..e93ed6effdd7384c750e671a2bc1be3a472c54f8 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-xiaomi-beryllium-common.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845-xiaomi-beryllium-common.dtsi
-@@ -243,6 +243,10 @@ &gmu {
- 	status = "okay";
- };
- 
-+&gpi_dma1 {
-+	status = "okay";
-+};
-+
- &gpu {
- 	status = "okay";
- 
-@@ -408,6 +412,10 @@ &qupv3_id_0 {
- 	status = "okay";
- };
- 
-+&qupv3_id_1 {
-+	status = "okay";
-+};
-+
- &sdhc_2 {
- 	status = "okay";
- 
-@@ -513,6 +521,37 @@ sdc2_card_det_n: sd-card-det-n-state {
- 		function = "gpio";
- 		bias-pull-up;
- 	};
-+
-+	ts_int_default: ts-int-default-state {
-+		pins = "gpio31";
-+		function = "gpio";
-+		drive-strength = <16>;
-+		bias-pull-down;
-+		output-disable;
-+	};
-+
-+	ts_reset_default: ts-reset-default-state {
-+		pins = "gpio32";
-+		function = "gpio";
-+		drive-strength = <16>;
-+		output-high;
-+	};
-+
-+	ts_int_sleep: ts-int-sleep-state {
-+		pins = "gpio31";
-+		function = "gpio";
-+		drive-strength = <2>;
-+		bias-pull-down;
-+		output-disable;
-+	};
-+
-+	ts_reset_sleep: ts-reset-sleep-state {
-+		pins = "gpio32";
-+		function = "gpio";
-+		drive-strength = <2>;
-+		bias-disable;
-+		output-low;
-+	};
- };
- 
- &uart6 {
-
+Best regards,
 -- 
-2.49.0
+Joel Selvaraj <foss@joelselvaraj.com>
 
 
