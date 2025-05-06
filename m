@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73D7E7260A;
-	Tue,  6 May 2025 00:00:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF5207260B;
+	Tue,  6 May 2025 00:00:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746489652; cv=none; b=FkJJ7gXB5Xs7G93Kn+XI4ANLMnOO2915iJ79d7Lp6ziIzeugdvHitRIq0qu6367L4dCB++raaLUvlqDF1crtZzXuo6AIuWR7DXTX3l5fDIR6l3LV0Ig7PMB25qFpu9dtcD5S2f2A+tXOZRRjoO1/RL7ZjUJvsd95xngXEfKemSA=
+	t=1746489655; cv=none; b=RrpsYX9eZ4WGdeeT74Os2ac8PFqi7CcTi+HwUF4LFnYKOi452N3ktcZGD4vpbUVDI2OSV0X1PVvdr8KWZaitgCedJ/SvqrD2SghUVVYHp9B9TTIv2namE54jpgU/NBsfGRBs82fM9Ti0QWNrUFyXBctU8Q7lImXDxRBZupEWOpQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746489652; c=relaxed/simple;
-	bh=CaP6yASIRa//2KTQtwqAOTv5UeCAUs9+VGcQFdJ3f+A=;
+	s=arc-20240116; t=1746489655; c=relaxed/simple;
+	bh=7UmPEgd2stUZWNUlGXSMSq6FvDhWJiXCAAfS3fJyJ1Q=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=Ga0GG+ML2LTpM9vNAl5uS4ie/jdgJSHjsvYRK5GJMc2afoPWdr43IJgrSV8xsHSqRmgzPKYVjSciAlyUM7SU+ht2owSWju+Jatao3J1N8MhSdSAyvGGCLd2EtOE3VXQeX6A/nnMHVvjrNUV/9hIxecktqUSs0wqIK3XqhrJA844=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nRHDhXNd; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=VDRpjRA8BRHg5Aso4bmaP5gcy9E+MLIHLgpyOanC070onQg5i/xdQDKO5kxtuGxLbCb3NQyWwHMMveqjBt4EV4twKpWe64nBd3nlnp1YyfgemGOK+M54e5aHp7T95bTJltHAFbi/Dx2Ja4OnUXo8Q0cUipNZxzhOQTHPHNR0nmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WwcstDNv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nRHDhXNd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECCE6C4CEE4;
-	Tue,  6 May 2025 00:00:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WwcstDNv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D584C4CEEE;
+	Tue,  6 May 2025 00:00:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746489652;
-	bh=CaP6yASIRa//2KTQtwqAOTv5UeCAUs9+VGcQFdJ3f+A=;
+	s=k20201202; t=1746489655;
+	bh=7UmPEgd2stUZWNUlGXSMSq6FvDhWJiXCAAfS3fJyJ1Q=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=nRHDhXNdcRxyHurkyHxRMR3KnCbTW/1o509RQoPlrMn/J4tv/mxLzMoJXKPBBAmy+
-	 4U2lkQxlpmXJ1tAGIOfYK8mgeZgNF5j9l/dqLLpH7xMmrFqtbiAvP4B/xYF/qewCzU
-	 Nro5WhI/gg/F1X1FGftPc4ZqKp/BNAd2LCrADgICsGrdtS1f3iOzp9KqO4V5dWL1qm
-	 N7z7SWNj7xS/6Lx98gGheNqzd0Sb2BpRljUoqw2G2gSa2LU5pqWR6S2f6XlhRJskry
-	 hmfWaTAQm6qzWfsVk+OZmi6tmQzEl65J2YxqiXC4hSXlYk2pE8532cEOfMNZXou5JL
-	 YArV76efxD8Mw==
+	b=WwcstDNv0IYwi2wq87TsuMr9MWdc5QXmmH2BNldNLphEjLvv3oR7Qda4S68+IuTgt
+	 owKKYKH1Mj3UAaTR2KAZICcsreWZWAcpwnhJHi4h5lRbjpohAei/rlw3qolAgtPShg
+	 GDqiHYhwzEzf0gZ80lrPeQQsAXrteMpCQkiTOgDfB/Sh8GOMbHpZPmk6tdb6G1ZxHC
+	 dHSL4KMpyVX9GZJJtyZQ46YlDHTkckuUEbiSRXAD62pMnfvOjJP3oxEcZWkPiRiwqj
+	 LRatn3dWsFJHkUCS9wOduPd1l6I9Hnl1ZUkVrCZN+l+n17P0RiQtyZf94eVcSpybzq
+	 p8lU6dLAcrU7A==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70BEA380CFD9;
-	Tue,  6 May 2025 00:01:32 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADD71380CFD9;
+	Tue,  6 May 2025 00:01:35 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,52 +37,40 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 0/7] selftests: mptcp: increase code coverage
+Subject: Re: [PATCH net-next] sctp: Remove unused sctp_assoc_del_peer and
+ sctp_chunk_iif
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <174648969104.970984.3012582895759124945.git-patchwork-notify@kernel.org>
-Date: Tue, 06 May 2025 00:01:31 +0000
-References: <20250502-net-next-mptcp-sft-inc-cover-v1-0-68eec95898fb@kernel.org>
-In-Reply-To: <20250502-net-next-mptcp-sft-inc-cover-v1-0-68eec95898fb@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang@kernel.org,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- horms@kernel.org, shuah@kernel.org, netdev@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
- yangang@kylinos.cn
+ <174648969424.970984.5023891788546204578.git-patchwork-notify@kernel.org>
+Date: Tue, 06 May 2025 00:01:34 +0000
+References: <20250501233815.99832-1-linux@treblig.org>
+In-Reply-To: <20250501233815.99832-1-linux@treblig.org>
+To: Dr. David Alan Gilbert <linux@treblig.org>
+Cc: marcelo.leitner@gmail.com, lucien.xin@gmail.com, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+ linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
 
 Hello:
 
-This series was applied to netdev/net-next.git (main)
+This patch was applied to netdev/net-next.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Fri, 02 May 2025 14:29:20 +0200 you wrote:
-> Here are various patches slightly improving MPTCP code coverage:
+On Fri,  2 May 2025 00:38:15 +0100 you wrote:
+> From: "Dr. David Alan Gilbert" <linux@treblig.org>
 > 
-> - Patch 1: avoid a harmless 'grep: write error' warning.
+> sctp_assoc_del_peer() last use was removed in 2015 by
+> commit 73e6742027f5 ("sctp: Do not try to search for the transport twice")
+> which now uses rm_peer instead of del_peer.
 > 
-> - Patch 2: use getaddrinfo() with IPPROTO_MPTCP in more places.
-> 
-> - Patch 3-6: prepare and add support to get info for a specific subflow
->   when giving the 5-tuple.
+> sctp_chunk_iif() last use was removed in 2016 by
+> commit 1f45f78f8e51 ("sctp: allow GSO frags to access the chunk too")
 > 
 > [...]
 
 Here is the summary with links:
-  - [net-next,1/7] selftests: mptcp: info: hide 'grep: write error' warnings
-    https://git.kernel.org/netdev/net-next/c/6d0eb15c6501
-  - [net-next,2/7] selftests: mptcp: sockopt: use IPPROTO_MPTCP for getaddrinfo
-    https://git.kernel.org/netdev/net-next/c/dd367e81b79a
-  - [net-next,3/7] selftests: mptcp: add struct params in mptcp_diag
-    https://git.kernel.org/netdev/net-next/c/cd732d5110a2
-  - [net-next,4/7] selftests: mptcp: refactor send_query parameters for code clarity
-    https://git.kernel.org/netdev/net-next/c/3fea468dca4f
-  - [net-next,5/7] selftests: mptcp: refactor NLMSG handling with 'proto'
-    https://git.kernel.org/netdev/net-next/c/caa6811ccaed
-  - [net-next,6/7] selftests: mptcp: add helpers to get subflow_info
-    https://git.kernel.org/netdev/net-next/c/c7ac7452df70
-  - [net-next,7/7] selftests: mptcp: add chk_sublfow in diag.sh
-    https://git.kernel.org/netdev/net-next/c/110f8f77fd8d
+  - [net-next] sctp: Remove unused sctp_assoc_del_peer and sctp_chunk_iif
+    https://git.kernel.org/netdev/net-next/c/ac8f09b9210c
 
 You are awesome, thank you!
 -- 
