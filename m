@@ -1,152 +1,145 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D504C339A1
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 07:29:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B60951FF7BC;
+	Tue,  6 May 2025 07:30:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746516576; cv=none; b=L4YoZx1RiwXVjf7L4d3lvrDC/VO4IcwGRBI3ghwcL66M7UJvufNkgGKgQYWZDhn96nc8xvjh6K8ETk7KyBWa5dpkDHmrVgQwmeaUGHuzwUbAHo6PgzBsBSsA76+BreWWixz9TrOw0SZeI5AGPpbf/konB9KMuzWqsbEXFl2GVTU=
+	t=1746516606; cv=none; b=sJo5FQC8K6i1wcklPDYZjBwEOFis8B2TO64dT+PnnsEshfWE2TJCadH2T+ndKOWR87EEaP0sLWsYh9TKSM9I/6T9CUc53CusYTddvJalLyA8PoSKJ+o4tbrzyZxdndwil6Oc1iWNrM7rWocvfOBUkfCOE1m8zi5Q+mwFQEYSsVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746516576; c=relaxed/simple;
-	bh=hpftcSQU6FGDHjHNmoGwyCRlc1IEHICer4LHf9Rkwt0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fJF7r16R/Exhayr/TGya2ZiMuy+eMbp4KcZdMzQPAqW6s59LqDrv9gOG43eYyhIR1d/YhLlVbYwEVgBqbJGvk6fzG0I2nG6nfgQL7P4wa65Yhh32+exAS4nTQ6HusfvEOLyiylmJ6QbhKRlUwJ8FjO8Yafvd/qmc4AgV8P2Hhlg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=hFaTlkjm; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=sMW0zZP5; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=hFaTlkjm; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=sMW0zZP5; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1746516606; c=relaxed/simple;
+	bh=QL9Yda3IJCixa8daj2LAWtDbxmA4WSFNg0ufgRSx8F0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=S0t54sRk5lnrvT8pOBQySw6vMygW9kWoVG1K+onZiM9KSEvvY2ZYf8x73kcm8E55Voo9gR9wWrIxUc3tpYRKwW6/nWRADbfHn94PCI47ZoLUsjxqspmk/JRSZ3whowzrA4qUfWVMHrWWQPgt+4qtgIreTeehgSMhOtqb8gQ4nvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jlSaOfDD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="hFaTlkjm";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="sMW0zZP5";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="hFaTlkjm";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="sMW0zZP5"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 0FB39211BF;
-	Tue,  6 May 2025 07:29:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1746516566; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YWoJIjGVoamhc8sC5DhI99Gtot5xrOK5X2qP7LJujw4=;
-	b=hFaTlkjmpBdlvm2/aFPU4jD8RcBsy8P66vrKSotouBAwqphosYZsdAl42SwSXL2tTVMmW/
-	3InZJXVCUF8n3buJceW3+PhKid3UpU5UrfJtwJ8dzNRz6KFAQxqZvBDzsy3oZzDHbpxwt/
-	7MuD5kroaiXPkM/Wt8MpoOk0QodyiHA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1746516566;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YWoJIjGVoamhc8sC5DhI99Gtot5xrOK5X2qP7LJujw4=;
-	b=sMW0zZP5ZamwGzCWa5ml5lbfNwbx4uOcCjUQfzWnPAJYlpQQiRg8QsOz4K188IadAezZGl
-	5/SrOSbpDk7RzHBw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1746516566; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YWoJIjGVoamhc8sC5DhI99Gtot5xrOK5X2qP7LJujw4=;
-	b=hFaTlkjmpBdlvm2/aFPU4jD8RcBsy8P66vrKSotouBAwqphosYZsdAl42SwSXL2tTVMmW/
-	3InZJXVCUF8n3buJceW3+PhKid3UpU5UrfJtwJ8dzNRz6KFAQxqZvBDzsy3oZzDHbpxwt/
-	7MuD5kroaiXPkM/Wt8MpoOk0QodyiHA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1746516566;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YWoJIjGVoamhc8sC5DhI99Gtot5xrOK5X2qP7LJujw4=;
-	b=sMW0zZP5ZamwGzCWa5ml5lbfNwbx4uOcCjUQfzWnPAJYlpQQiRg8QsOz4K188IadAezZGl
-	5/SrOSbpDk7RzHBw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A53EB137CF;
-	Tue,  6 May 2025 07:29:25 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id ExUaJVW6GWjGSAAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Tue, 06 May 2025 07:29:25 +0000
-Date: Tue, 6 May 2025 09:29:08 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: kernel test robot <lkp@intel.com>
-Cc: "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
-	oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linux Memory Management List <linux-mm@kvack.org>
-Subject: Re: WARNING: modpost: vmlinux: section mismatch in reference:
- set_high_memory+0x8c (section: .text.unlikely) -> zone_movable_pfn (section:
- .init.data)
-Message-ID: <aBm6RKy_AO5iISh1@localhost.localdomain>
-References: <202505060901.Qcs06UoB-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jlSaOfDD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90358C4CEEB;
+	Tue,  6 May 2025 07:30:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746516606;
+	bh=QL9Yda3IJCixa8daj2LAWtDbxmA4WSFNg0ufgRSx8F0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=jlSaOfDDthynbIuA4lOj9yCQrJgk2CaBTZ3Fqjh4vcK/sCrCMtlu5oUE4xb/1Utae
+	 Wb7piuINPUcsPYIZfWWLgBtzoE02h5sMcWG4lEqbMul1rl3L/SzQz3dp3SOXdX7IEO
+	 jkoHv7h+mQzuKLjQDGoyUNhByREGAOqIbVs5r22Ycm9yFOA2/dSY0VojL8gTntW9Sv
+	 GJ+wgpfBNssxdCrBGzIgiFfejEOYxcdFQyUUCzQ3Z336iHnGi8kA9cLkFxq3goBIZc
+	 L/qyHH/90F1VHuUr/lgx5izB8Leh+wKKmQAqiSMJzUDYYdziJBnVvRZAnFF9oHKNmm
+	 bxkTNKf/JLXhA==
+Message-ID: <28afd932-1d63-4bc7-8ed2-33bf838a858d@kernel.org>
+Date: Tue, 6 May 2025 09:30:02 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202505060901.Qcs06UoB-lkp@intel.com>
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[01.org:url,intel.com:email,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Level: 
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] dt-bindings: dma: nvidia,tegra20-apbdma: convert
+ text based binding to json schema
+To: Charan Pedumuru <charan.pedumuru@gmail.com>, Vinod Koul
+ <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>,
+ Jonathan Hunter <jonathanh@nvidia.com>
+Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250506-nvidea-dma-v2-0-2427159c4c4b@gmail.com>
+ <20250506-nvidea-dma-v2-2-2427159c4c4b@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250506-nvidea-dma-v2-2-2427159c4c4b@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 06, 2025 at 09:42:54AM +0800, kernel test robot wrote:
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> head:   01f95500a162fca88cefab9ed64ceded5afabc12
-> commit: e120d1bc12da5c1bb871c346f741296610fd6fcb arch, mm: set high_memory in free_area_init()
-> date:   7 weeks ago
-> config: arm-randconfig-r062-20250506 (https://download.01.org/0day-ci/archive/20250506/202505060901.Qcs06UoB-lkp@intel.com/config)
-> compiler: arm-linux-gnueabi-gcc (GCC) 10.5.0
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250506/202505060901.Qcs06UoB-lkp@intel.com/reproduce)
+On 06/05/2025 09:07, Charan Pedumuru wrote:
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+
+Why is this a irq.h now?
+
+> +    #include <dt-bindings/reset/tegra186-reset.h>
+> +    dma-controller@6000a000 {
+> +        compatible = "nvidia,tegra30-apbdma", "nvidia,tegra20-apbdma";
+> +        reg = <0x6000a000 0x1200>;
+> +        interrupts = <0 136 0x04>,
+> +                     <0 137 0x04>,
+> +                     <0 138 0x04>,
+> +                     <0 139 0x04>,
+> +                     <0 140 0x04>,
+> +                     <0 141 0x04>,
+> +                     <0 142 0x04>,
+> +                     <0 143 0x04>,
+> +                     <0 144 0x04>,
+> +                     <0 145 0x04>,
+> +                     <0 146 0x04>,
+> +                     <0 147 0x04>,
+> +                     <0 148 0x04>,
+> +                     <0 149 0x04>,
+> +                     <0 150 0x04>,
+> +                     <0 151 0x04>;
+
+
+Again, quoting:
+
+You included this...
+... so use it.
+
+Otherwise what would be the point of including the header?
+
+> +        clocks = <&tegra_car 34>;
+> +        resets = <&tegra_car 34>;
+> +        reset-names = "dma";
+> +        #dma-cells = <1>;
+> +    };
+> +...
 > 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202505060901.Qcs06UoB-lkp@intel.com/
-> 
-> All warnings (new ones prefixed by >>, old ones prefixed by <<):
-> 
-> >> WARNING: modpost: vmlinux: section mismatch in reference: set_high_memory+0x8c (section: .text.unlikely) -> zone_movable_pfn (section: .init.data)
-
-Perhaps?
-
- diff --git a/mm/mm_init.c b/mm/mm_init.c
- index 80a5370ac6ab..5efec0399e18 100644
- --- a/mm/mm_init.c
- +++ b/mm/mm_init.c
- @@ -1785,7 +1785,7 @@ static bool arch_has_descending_max_zone_pfns(void)
-  	return IS_ENABLED(CONFIG_ARC) && !IS_ENABLED(CONFIG_ARC_HAS_PAE40);
-  }
- 
- -static void set_high_memory(void)
- +static void __init set_high_memory(void)
-  {
-  	phys_addr_t highmem = memblock_end_of_DRAM();
 
 
--- 
-Oscar Salvador
-SUSE Labs
+Best regards,
+Krzysztof
