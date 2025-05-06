@@ -1,145 +1,82 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32771279919;
-	Tue,  6 May 2025 13:38:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4BF91A9B28;
+	Tue,  6 May 2025 13:40:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746538682; cv=none; b=McK6EDETugCxjo5LWsHOuG4Dbkjb+wGDp5kihsnrBt1Qzz7L8FVLK2tCwdbrabiMwR61z8sol07ObAd5csIY3Y4eUxKUumWuxKpYLhrlT8JxPuRsEmSztCYBjf2pfVEEdcrYDXhuF9QwNHcYvz3VTmf2S7CK5753xkV5Bmsu8PY=
+	t=1746538847; cv=none; b=FlMoDA7uVNggVstuMuBgBnsvTiIiG8oWuQ8cg3LpdiWJ0wVrYofWSMkKarKngdsIdwLFomarsCfl0Hzwv+E0/1xZEVSB6jg8ALr8j/CqSYthf/dQB+/VNi6CvaLbpLL8rZ3myzVRla/vTZfGZNc0GuLHdYKZ+cDZ48zVlKWK/IA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746538682; c=relaxed/simple;
-	bh=j3pZC/XaZxq1nTfApPbo0UhslwhHoqMDuBioTufbjAI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=gknCHYqVW+/ZquTCO0jPEgQDibIp1uL09dABLEc8++DH/uHsFQh1tBb1GdCKGIKddNKXn1d0UoMJpgNiuoc22sosUN7dZzxIp7V5vj2J1tnK9RbAnZU3+hAugGNnvPyB75/zJIsBWZdgmhP2dSgyV3CtvVl1yt9mqH/XLG2OBkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ffM2f71k; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746538847; c=relaxed/simple;
+	bh=TnsMB6oXDTL83dZ5GGXgMLoaKxr/HvwUPrxb2FLg/nk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tIeItECUQ1Kxsgz+u0VnLZwtoJGjDiX0y2SgUohwP9tATsgyL3cOHEBm46xRbj/6Fmm4igN4t1VNefy5Ke8q9THQMR5N2c27CKQDeD9AG7IBxfO1v8yv/V6bIvNG048dIiE0Eo4OfG3L8TwoPcF3KZVrzlNltz7FggYHGU+HWS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CA/BBRAB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ffM2f71k"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5fbcc5aa54aso474802a12.0;
-        Tue, 06 May 2025 06:38:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746538679; x=1747143479; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=uSF+OJIgK26VEh3x/SDKQXMT6lVshgj+NKwxNjbf6F4=;
-        b=ffM2f71kgepuKIfMN2ikyKDA4j+dyQYzGeY8qJjdDYSAts9FPAI5aOLiX21p8y4b22
-         HIuJ4g1P0fNg+uF+zvtd6gm/UAwU5tekEqPwKCAMNhVzSghuKDly11268GdXxRX+rh7e
-         1mJjzoH4y8b8M+9VOqer0FrcJoITv0TYvq2SQu8UzKF96BZ0LDx5H8FzIKyzo9+aAdM+
-         hdanS8b3rdgTtLXJK0TXbA/J/+DbGninkJY7sb9Q83ycD1PhGBdPgS4ORzRltEUdZaJ2
-         +xZDawSRKEVFe80d8trMmsMf877YKnlMXP8GNx4UPozIK0D8b7Cx+5Xf2zd/VskQNUdT
-         BIHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746538679; x=1747143479;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uSF+OJIgK26VEh3x/SDKQXMT6lVshgj+NKwxNjbf6F4=;
-        b=ZMzojbu7tGBqOWv5R5yG2i+mMZ6FNbk14Sek2VHKfv0gXC5NUevZaE3Txn5mRatnyn
-         pSHp8bM0ohqtcZfzR8n/spRoq46ERXDFOP0aZ8KkAzfLksbnriRQcN0ifgr1W3BVUG3U
-         /4qk0HHEUTFoyM9BzvuCJv1Cdmxnb/3EgNOFqTv2llc9XQ1oxoftg4zb12XSCt9XFk5n
-         WCe2z0nB2PVRffcNq0rUEQEHmVltRoGVKbTxwhD84drEVkBNMLAf9+k4Ie1hBr+3w6Vg
-         T6WpS5oKg4LE3+PcAIytcPcj8v4DV+1CAyj7ABASZRtIJESkCXjrJV5MomlUV3Zq5TU0
-         nk/g==
-X-Forwarded-Encrypted: i=1; AJvYcCV7eYy8A5oyn7h0H/XEui3uDdWQLjDlbS5hXn7LTquf3ZNdsZX5PlWcBVf7jc0LaVwx6xKUP31P4EO4@vger.kernel.org, AJvYcCWssB1z8Dsi9IOGhkoS4mKAHRgNUlEAkgfHzE5UD9OQo+9Rwlz681cV97BkILNMpyKtzCwlYzRrp4m2gR71@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWjIwh3cFy0+snQQJuc+9D1awwhzS2HatTjexxqsX1bPM98Ua5
-	ayQtAC36TMJu5slHI8hUyklutNq5zn5fY9ufuj9FJO+1vqwLqpxNyFsAfQ==
-X-Gm-Gg: ASbGncsP3AKTzNpuFhBwKx3tg6btZEQ0TwtiyxCfWlB5e/ScPmWX9rqaNErlEDECdtZ
-	GApc+zOh3qru+CfnonK1D9mMGLgxvB5XCgefZH/7bivQH+0XRl6MzwqN2vKlPDok/fHkDBvzEtj
-	LED2BZkSM6n4lMX5QhN5nivJ4WgSVvFY9W+c+c8c/bOBbf8VX4zv5aGHWCozukRbR0DNGQRDJLD
-	j+5rB8jJm8edQA38e64sMZ3n4cqEYMzWEGIWujAWqL5biF5RMykxIKvqpiL872o3/78Y9HqBTV1
-	U0qhdRRpc6BT1eD4nSfikXlwS31P+ZyZlhOJo/4OveKTS/wUHKXeKvPGe9ztlpdmPPXpmpc=
-X-Google-Smtp-Source: AGHT+IHdBx2trF6WSf/C+/MvDSiam7ynoOC/9Th/EBM168yVaFg+D0ObGm+tyCAkPnXFePNlctaGPw==
-X-Received: by 2002:a05:6402:84d:b0:5fb:2041:6bd2 with SMTP id 4fb4d7f45d1cf-5fb700a2dd3mr2496423a12.16.1746538679153;
-        Tue, 06 May 2025 06:37:59 -0700 (PDT)
-Received: from [192.168.20.124] (5D59A51C.catv.pool.telekom.hu. [93.89.165.28])
-        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-5fa77b8ffcfsm7735801a12.64.2025.05.06.06.37.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 06:37:58 -0700 (PDT)
-From: Gabor Juhos <j4g8y7@gmail.com>
-Date: Tue, 06 May 2025 15:37:47 +0200
-Subject: [PATCH] arm64: dts: ipq6018: drop standalone 'smem' node
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CA/BBRAB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7FCAC4CEE4;
+	Tue,  6 May 2025 13:40:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746538847;
+	bh=TnsMB6oXDTL83dZ5GGXgMLoaKxr/HvwUPrxb2FLg/nk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CA/BBRABGSCouOyN2s3DHXWxIxY8k8K6lcCeP/Bp6YFHEubJsj4q+Ki9edUoAXCWZ
+	 zr1IX+FZJgWOfUse3y1JyM5uCIRKbEB8FMrpZd3qX/WEyfo9aYc2fA0QpPom8A2/hX
+	 Hjdhjx7Z1lrRpTvQXnokDcwF1QxPyMCNBF8Y1jd4OV5u1i6o/CHZDyJuX7Hoe2i6Vl
+	 f25johlq2LtiUN49ATle/TkFnWqP0PtEgxE7lDsBlqf/6//yxZHX9LHcG+StQonmjh
+	 H9WvZDxG7uIY2cU+51vrXsqkbGDhMkaQSxMoEndxI1wGaAkaf/r2X+rcYb/JPP5OJG
+	 PjeRWevC2sVYQ==
+Date: Tue, 6 May 2025 22:40:41 +0900
+From: Mark Brown <broonie@kernel.org>
+To: Florent Revest <revest@chromium.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, catalin.marinas@arm.com, will@kernel.org,
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+	akpm@linux-foundation.org, thiago.bauermann@linaro.org,
+	jackmanb@google.com, stable@vger.kernel.org
+Subject: Re: [PATCH 1/4] mm: fix VM_UFFD_MINOR == VM_SHADOW_STACK on
+ USERFAULTFD=y && ARM64_GCS=y
+Message-ID: <aBoRWZr3oGh94_qr@finisterre.sirena.org.uk>
+References: <20250506095224.176085-1-revest@chromium.org>
+ <20250506095224.176085-2-revest@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250506-ipq6018-drop-smem-v1-1-af99d177be2f@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAKoQGmgC/x3MQQ5AMBBA0avIrE0yqFJXEQthyixQbSKSpnfXW
- L7F/xECe+EAQxHB8yNBrjOjKgtY9vncGGXNhprqllrSKO7WVPW4+sthOPhANtZ0puFZKYLcOc9
- W3v85Til9PVt/WWMAAAA=
-X-Change-ID: 20250506-ipq6018-drop-smem-e9f9793ea440
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Gabor Juhos <j4g8y7@gmail.com>
-X-Mailer: b4 0.14.2
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="x2jWddA5IH0klT0O"
+Content-Disposition: inline
+In-Reply-To: <20250506095224.176085-2-revest@chromium.org>
+X-Cookie: Well begun is half done.
 
-Since commit b5af64fceb04 ("soc: qcom: smem: Support reserved-memory
-description") the SMEM device can be instantiated directly from a
-reserved-memory node.
 
-The 'smem' node is defined in this way for each modern IPQ SoCs except for
-IPQ6018. In order to make it inline with the others, move the 'compatible'
-and the 'hwlock' properties into the respective reserved-memory node, and
-drop the standalone 'smem' node.
+--x2jWddA5IH0klT0O
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
----
-Note: dtbcheck produces the warnings below, but those are present even
-without the patch.
+On Tue, May 06, 2025 at 11:52:21AM +0200, Florent Revest wrote:
+> On configs with CONFIG_ARM64_GCS=y, VM_SHADOW_STACK is bit 38.
+> On configs with CONFIG_HAVE_ARCH_USERFAULTFD_MINOR=y (selected by
+> CONFIG_ARM64 when CONFIG_USERFAULTFD=y), VM_UFFD_MINOR is _also_ bit 38.
 
-  DTC [C] arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dtb
-arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dtb: qusb@59000: 'vdd-supply' is a required property
-	from schema $id: http://devicetree.org/schemas/phy/qcom,qusb2-phy.yaml#
-arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dtb: qusb@59000: 'vdda-pll-supply' is a required property
-	from schema $id: http://devicetree.org/schemas/phy/qcom,qusb2-phy.yaml#
-arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dtb: qusb@59000: 'vdda-phy-dpdm-supply' is a required property
-	from schema $id: http://devicetree.org/schemas/phy/qcom,qusb2-phy.yaml#
-arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dtb: /soc@0/remoteproc@cd00000: failed to match any schema with compatible: ['qcom,ipq6018-wcss-pil']
----
- arch/arm64/boot/dts/qcom/ipq6018.dtsi | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+Reviewed-by: Mark Brown <broonie@kernel.org>
 
-diff --git a/arch/arm64/boot/dts/qcom/ipq6018.dtsi b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-index dbf6716bcb59a04939c2b994d85cf58c12365962..b5266702accb62056eb57d9ef75ee0383c8bd54f 100644
---- a/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-+++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-@@ -210,8 +210,11 @@ tz: memory@4a600000 {
- 		};
- 
- 		smem_region: memory@4aa00000 {
-+			compatible = "qcom,smem";
- 			reg = <0x0 0x4aa00000 0x0 0x100000>;
- 			no-map;
-+
-+			hwlocks = <&tcsr_mutex 3>;
- 		};
- 
- 		q6_region: memory@4ab00000 {
-@@ -220,12 +223,6 @@ q6_region: memory@4ab00000 {
- 		};
- 	};
- 
--	smem {
--		compatible = "qcom,smem";
--		memory-region = <&smem_region>;
--		hwlocks = <&tcsr_mutex 3>;
--	};
--
- 	soc: soc@0 {
- 		#address-cells = <2>;
- 		#size-cells = <2>;
+--x2jWddA5IH0klT0O
+Content-Type: application/pgp-signature; name="signature.asc"
 
----
-base-commit: 92a09c47464d040866cf2b4cd052bc60555185fb
-change-id: 20250506-ipq6018-drop-smem-e9f9793ea440
+-----BEGIN PGP SIGNATURE-----
 
-Best regards,
--- 
-Gabor Juhos <j4g8y7@gmail.com>
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgaEVkACgkQJNaLcl1U
+h9DNhQf+Od2vOQsm8ZSTF5BxQFaQvck4UfZc2SRgJP4yUv++XNZmdwyXQ3L5+JiS
+EQiK3uPOGueSO5nt3GBaP4Jmh6Ii1a2kLENKY5dpGf1Gp7cwvyJbVD6wSeoBX3Q8
+rHZvWoaDzvHS6xsmGpLfNKN6CcS9w8HR4t0g4em1pDeJCyo0CgF46fZE3ljtarcU
+VPrWEPGWqeccT5PfP5EexnEhR5ChJXLS9Gx8q36mIJivayq3mbwkvCTnPOKnNXxy
+l04gz3JAWDhZ9hvw+64iVK/FtcO7c4BGKfDyij1RZ8W15RJpRwHcy9aCNcQ0oRqd
+UyYKkkjph35w5vBvN4Cg49RoFXNGnA==
+=f8rh
+-----END PGP SIGNATURE-----
 
+--x2jWddA5IH0klT0O--
