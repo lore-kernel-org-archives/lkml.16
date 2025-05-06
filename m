@@ -1,214 +1,208 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2064.outbound.protection.outlook.com [40.107.93.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E573280032;
-	Tue,  6 May 2025 13:29:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.64
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746538175; cv=fail; b=FJpcll6R2Bk87UKHaN+nzlssJ6C8lsuTnH5x/IRAcMAh7ZuWRuC5MU98HuICgw3e2j7JETQPCpJ0YWAH+l/vCbw0CZSTZ1quSvjTtihz8RvBvO7QvAydQoBz0zkypJSwQCkzdmINcIil2nYG7RMSy4O3aSWKVW4VmnQc4QosPR0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746538175; c=relaxed/simple;
-	bh=mPdc5nSQvfHazVyGgc/H5PFQFL3C/YN/AT152isN9MU=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=C+Th/u/sH4Lu7tgQNj/5j94YSde0CSh/aI6isZIfJAH+99yixRXs0Dg/Ia9X5c7ESMbDeuY30BwJUDEixGfVNI0+fp2CJXpvI9NGou3McMcZTrPnvvFSgrPBMARQfuZtbKmNrlW28cv53Trt/1ZdnjvPfYXV2H3OA5VdaE+I1a8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=JQXu34rf; arc=fail smtp.client-ip=40.107.93.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24A6328030C
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 13:30:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746538247; cv=none; b=MHOJ3gIhTRpNRnkTeCuj5p059ci4383uj0XHxL6BU32MiQWQ9dMqFnBU/YfPcYL8wlt8xQv0uq0nqizFLhc6n7ZuPs+2YrceBj5R2n3sgO888va+8pShwhS7OBpMpDXgOMvliChrZ/NF0UvGEICoXMpniF24/sPxXvJfP63c/7A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746538247; c=relaxed/simple;
+	bh=1v2F6E/reecpTU0NuFpDLkVROLOTw2+0J7MSKVGr+HI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hmpsP4rZ7cxjneUVRRQeCXjqk9QnIE6AuaRI+5VCJiAmz+A28CBdsnbyXfuFEzM3kmRFpBaC7p/Gej85Ii3g7pdv9vH/7Vd8U6pYQpDmpYxBBeCV43h5ZvqY5hLP7V8qxaGRRIkTE5hASVuPYfi+WjBBSXkJ07E7T+R3x39K+9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=V/Pzh2+q; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="JQXu34rf"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=yvlplRlUotPUyW37BnaukFVbbXyR9e+VnyMhBjdbg4rCi58rRjexc5r6atefBz2Qe46+R8o+lVGVSU2uFh2vEC1faR66dFlkFbrDP4zwW0q44TbBPBiaFxmtWZZwBNxfcNGyFdfnfukj6Gk1U3rwmHMCGKh8hlLvkvmDaqwxR/Vunlt9lNMfMfkNwbIQKKXSGVnimpA0/8jlOvQ5FdvVvWbHiYjX3RI9fOQG7H9ND4lUDn5XUSaVRZ0IAspoHnCZkbZAgMFIePp9Dpwnvtl/plSgl7su+SiK1tvVU5SHkBAcUukBKeyFcAK+CbwCItLtzr9u/v27ajwLh1HVQqAqMQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=EW+iqn/vYHlRCOj5EGhKthH48l1AXS7K3uLFAnNRwbk=;
- b=Q23eMgJwv9lufF/bxR5o5QIknM5CHVtcfj3qXo/XScxHjWG4q2UPMt4488pt1/KtDag/aNkPlpRJR4hDQpswbldkcdorU1h9uPpTwKD3a4sIt0KadTHaq+CiJ/Ovnb5dFiV2BwSrSmBv+I/LiWv1LrBV8buypwjI20o5xJnPWVemXmwS18ijMhLl8Hk833rB6Srw4k4t1Qd4jtvHtssU4J33ybs0H1MF0KLVCDZc+Y5oHR/h9Y/g5XwBJphw1RiBZXRXdccSGcM2BCFnz0Bg+eR7UnNGrOEHlMqlJr8IKFJ7NxM1UweaLB20tHCHB4lxAw9MaFSeM3sSztmVqvR4fA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EW+iqn/vYHlRCOj5EGhKthH48l1AXS7K3uLFAnNRwbk=;
- b=JQXu34rf+fiaxBxMFVlikI2Tt8snCRjfhytfrMItCdCvj55PIsSFeSqZaWnDZOgpX69IbqpBrHoAlxD+L3jL5fzHwpFyWbvjIcWnmaCoPQvyFR7fMhUkMcpUMPndYAY8R3IP8xH+Xhs5Cqq/K+nFalAY2H/tVWQlCFJ21ZYFHVY=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by DM4PR12MB7501.namprd12.prod.outlook.com (2603:10b6:8:113::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.26; Tue, 6 May
- 2025 13:29:25 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca%6]) with mapi id 15.20.8699.022; Tue, 6 May 2025
- 13:29:25 +0000
-Message-ID: <f7200e0f-d6d5-4fb8-9701-3f97d1ab64fa@amd.com>
-Date: Tue, 6 May 2025 08:29:22 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86/amd/pmc: Declare quirk_spurious_8042 for
- MECHREVO Wujie 14XA (GX4HRXL)
-To: Runhua He <hua@aosc.io>, platform-driver-x86@vger.kernel.org
-Cc: Rong Zhang <i@rong.moe>, Mingcong Bai <jeffbai@aosc.io>,
- Kexy Biscuit <kexybiscuit@aosc.io>, Xinhui Yang <cyan@cyano.uk>,
- Yemu Lu <prcups@krgm.moe>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- linux-kernel@vger.kernel.org
-References: <20250506112514.446784-1-hua@aosc.io>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <20250506112514.446784-1-hua@aosc.io>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN4PR0501CA0112.namprd05.prod.outlook.com
- (2603:10b6:803:42::29) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="V/Pzh2+q"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-39c1efbefc6so4217789f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 06:30:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746538243; x=1747143043; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8tLDVhQCLyrzP+ndxjJm3VMFwBBqHU2pRrBGlwODZms=;
+        b=V/Pzh2+qYuqxxl9RhkukeH3LU9PqynodzQsEQwgMtHK6qheXL7YtPLFjKCnHS+fCJ3
+         3Z/aonljqoju9eJncYEf7kLCLhokWKKalvZaGkd1XJwatM3ct5NWf2xiiT14qhSa2f9O
+         i7Wq+0D8um2i3aqTUMmVUH0hVWfXYkKPW+g4DiVFiMFyrdU60zSL7XuLudOFYqDqhhn5
+         zXlp85s9eeIBEbASwVPc2nUqYbfD18fhWfRMK4OVtsiFwpieqeQxOj35/j8fXRDOlM1t
+         hv+OaWG8JeIiAcN1FulOtgOJa+SBqxMzRg8+nTijGGl73ASAzGCWACczI6c7JaMB+V8B
+         83dA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746538243; x=1747143043;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8tLDVhQCLyrzP+ndxjJm3VMFwBBqHU2pRrBGlwODZms=;
+        b=Dv0nSYopT17uvLPCDlZPSVbU6azI4zTNVbVQtDYb3XnvBZvp/hGoEWEvzSkJOeQTJr
+         2OfQPn7nWaKDmSB5S26JMHO9HiTGyXzh4qVwjfzLSDgl4Z5ux4QNlKLk2BxurtaLDaPQ
+         +QcDyk9r+a+nqDnS7YM/P96PG18PW6gcltBMDRLjcZ4tZwclEZJOyxa+fT2+SgflSSyZ
+         0RzvLzBdiXVXgigZOZeSm+0MnZuoyM9ErAgqz9Tt/FE9sb/F8FxoRdqvk0y39K0Z813H
+         4w51cB6aHmymTi1Miz2GhvsI6qqTWvNf3b2Xt6/Uym8N7dYefX9TkBhfwBNsaF//l3vp
+         Rwzg==
+X-Forwarded-Encrypted: i=1; AJvYcCUhwbTikQkqHGa/S0MVmEjEgOT/5dnYVQwvq5itHTCiX5Jubgc0KrkjnMFIkNRfOeDm/sf0zTGovlaT+94=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzO/yF/RE3n0SqMwfo6f+tSPKlXrIzaR9SoKBlEE0enVe9GAgFW
+	mn0BTKzXiWKccsw91uAVwc1zpjTOKUiK0WvjPEADVZ987WPBVr2usygrKjdQAIVf/bs31/EQwKL
+	SGxL5czuTJXCf3UL/zgmjLr0QlmmnvH0IYb9v
+X-Gm-Gg: ASbGnctk7jO4auH31uC2ZuVlDalJDm4Ke23Maa2NWH78fYv1YuL9QNUmypC7GEFsH0s
+	bhLeq2WodxeW1eFi6V1Vr12Kzp7Vu51A1/+u1i/OGYAgO08Z9GaxX5ZWIWCUQtr44WZ1oReZxAF
+	BVqYtN8IfspgdUYknwTorNSM0kpfAp30BzPL56G07JpdNtTY2yPXLjHa14TkxEW2w=
+X-Google-Smtp-Source: AGHT+IH4WVO2x+UNQJaXF3flvCK8PoRR1G1qPIbcuqcjV6irDtLwrNAO4Ic9f8W11nKVRVDOt5rlpn3yY9ihPpyjM/8=
+X-Received: by 2002:a5d:598c:0:b0:3a0:880f:1a87 with SMTP id
+ ffacd0b85a97d-3a0ac3ea55fmr2474933f8f.51.1746538243088; Tue, 06 May 2025
+ 06:30:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|DM4PR12MB7501:EE_
-X-MS-Office365-Filtering-Correlation-Id: dae5c8de-5237-48aa-207a-08dd8ca204bd
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|7416014|376014|366016|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?SEpnRDlFRWxNQi93cWxHVldpMzMxeG54Q2U5em9LZWdzKy9LWFJhUG1jQ040?=
- =?utf-8?B?QVkvc1NMdVhUWmhCZmk3eXlEd29HdTRaVkJlZDdTckJsUXBkaVk1bVB4SUti?=
- =?utf-8?B?d2FFVDZ6UUIydEtaUlBPbXdLc05iK1hTM0ZYUFZJZ2dySHliaGFnUTkxakU3?=
- =?utf-8?B?cXFaT29EajdNZVFvM09ha2FHd1l5a3g5TDlPZFdOai9nc3liUTJXeStUQW9h?=
- =?utf-8?B?NlZBZHRNN2xWZTkrMitOcWxwelF2eDZkZndkUThZQzlQeHloSWdybU8rNEJw?=
- =?utf-8?B?M1cvRWhmc2NHUVFvci9iTEtQQ2xXU3lsZTdHc05Gb2hpdUtFMzM1dUNWVlhu?=
- =?utf-8?B?aFRXYnZvQnpjUFpMMytNTU1HRGtZd243M09qSkhLNmNsU2UvR3B3R1pMamQv?=
- =?utf-8?B?cVdmaDBZOFhOMW1ES0U0dXEzWWJoMExrUlNOZEVmQWZQeGg4VWRrUFZpRFV4?=
- =?utf-8?B?alR4Ti8zekVQQUcydUhWVGRKclRtZlhhcUhRY3JyTG1ZazJJeU9ERlBnWGgx?=
- =?utf-8?B?MEd2a0xQd3p5NGVRV1JQc3d5WnZ1bXNJVEtUdGpsSng1K29LYjI2WllOVldK?=
- =?utf-8?B?MG4vK3BHcjBRNndYTXhlLzFkeWdLNXNCTG5jWEhuL2gvUW4yVGw0MHlkVzY0?=
- =?utf-8?B?aXJiQ2l6dHBJYmhTNjNqakVqV3FhT3JjUVVWWjV1dk9vaHZuL2xtS2FtVVdH?=
- =?utf-8?B?TmtXS3lmSlM3SEtESVcrM0hmeFpaUENzc3djemZEVXVrMk1mVnozTExXdkgv?=
- =?utf-8?B?N3RLc0xueUE2N2NKR01sZ1lBTDVITUVWQ0RYZkVjV3lIQUpLVzNDS3ZsQVhV?=
- =?utf-8?B?VjdnaTViK0JtQWZkemkzcldjUlNWQUFSNzlJdnVDRmtLVzZBMWdVNU8xdlBR?=
- =?utf-8?B?czlHYjBBVmFRcDYranFyLzVBQ0tmUHRWeGQxMyt1UXhGRW42eWZpeVhMUmJQ?=
- =?utf-8?B?akZIUEdtNThmUG9vUVJOZGd6ZWs2OUg1YVUxbmsyNWM1VVRHMzYxbUdqbTVK?=
- =?utf-8?B?VHk2MDhQMWVvWFZKUGpOa1NnVnA4RHhWSTFoZXhhdEUzczRZcEJJemErelhY?=
- =?utf-8?B?N1UxbHZnVjVKNzZXNktIK24za1p6enVuU3UwdUdKakFhcC9BWUNjYjNPWDl4?=
- =?utf-8?B?aHFuV09tSTdqMDE4NEdMWFBIQmdobmhsSXM1MU9FMzFqTElhWmhFUVdZdW5v?=
- =?utf-8?B?Y0JtYVAxeVNpT3h3Qm5xNUwxNmtCYVMxOXlodml2RFA5cmRzU3B1aHV3cS9L?=
- =?utf-8?B?NkorRTI3VkkrK0o3eU5JQlNIQ3pxUmhqQmtsNW5BMk0wZXZiN1FlNTBXTVBM?=
- =?utf-8?B?M3BpSllvL0RtUDlsNExzblRxSEtrTXpnVzY0dVlXUnhwZm1vaFhrelF4RXQ2?=
- =?utf-8?B?VE5jNVM5eG54TDBjVHR1UGhsTnNZNkNRK1hSalJLejJYemZScFR5TTR5NXBC?=
- =?utf-8?B?Q0JTc2VwbXhscjUxWThLY1VTUGNHSWVhRUVOREVFVEptWFV1UzhRUmhwTkkx?=
- =?utf-8?B?ZTlXcmJldmRaVmtBcnlSbStzNmdJd3JkbkltSm1zZWQ5TCtoMlk2S0VDNC9u?=
- =?utf-8?B?Rk5pdENmUWJVcG5IUnl1c2V1NWd1dFRmQmlXbExDOWVnaGJGeUowYzU4cnpx?=
- =?utf-8?B?SXVGTmphRXFYSmZYaEJIaEtad2MyNG15TkdLVjhzYnQ1NExNKzFEOVEybzQ2?=
- =?utf-8?B?SDVBcVVHekFTaUZzY3c3VHl1TVpsVXdDRTlETlB4eE4vSG1CMFN2VnNOVkRm?=
- =?utf-8?B?WXF1ZzZ1a3kyalJFcEdTTDBoNUFpeHdVNjFXNElQQmJHRTZ4ZFF5WWFxUFl0?=
- =?utf-8?Q?UVDzCgHA5H/5LSXaCT0ot1znwyoHaigx9zfaI=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?eEVKUXFseHV1a2lZSHlGTlY4bDBjMHdKYmRJYVB4TzByZWJqSkV1L2NZWHNN?=
- =?utf-8?B?VVU3TExCNVZuOXJlUElKSkxyU25PSGRxdFovd1Vzd2E2VDJDV29XVUdMbjd0?=
- =?utf-8?B?SXkyMmh1MHpHclF0dldwSXkxOTVnS1V4cjZzN3pZY0ZBRlpYRk5mcjNDN1JY?=
- =?utf-8?B?UTlnbUZJVVNERkpqUWJjSGY5QzVmUXlQYU1ZTGpwRm51OW90VlE1U2xHbXhS?=
- =?utf-8?B?TkxDeVNxSUVGTXBiN3B6dlM2WTdPTmxOZVQwMG1USE1GSys4ejJoT0lxbDdE?=
- =?utf-8?B?MHJVanNXOWpKallkTFR6VWJwRFMrSWh0L0lHam9yeDgvbStwV3ZDajY5Q1M1?=
- =?utf-8?B?MVhVS3ZZeUEwODBwTUNSM1FDUWp4bU8yZUlTTG1UVWRsVWNlWEYzTzlXOXRR?=
- =?utf-8?B?b1lzQ2g0S3FKSGdPemQ2a0RPS3kxYU5QcTN4aXNJL3h2QnZEakRIbzdzR0hC?=
- =?utf-8?B?ekYxUnJ6eWlDbS9ZR1A1c1lFQ29LVVNlQWQ3U2hxQ1BwNEU5NStFUEp2UFJ2?=
- =?utf-8?B?ZmxZbkxwckpzTjdYeWs0NHNmZTl3YmZsT3dJaXkwK3JxK2F0bDc0Y3hidDFM?=
- =?utf-8?B?Q0pldlNJTHdVV3hvYzcxOHZ1U0IzSDVsMFp1MGxQOU1UcmpML2ZranBoR051?=
- =?utf-8?B?ZlpscE1ML2R3R3Ryb3BtM21sRDNQUGNkVFhjYnZxTTV5Z0ZJc3ZQM3VrYkhV?=
- =?utf-8?B?czJiUmJqVmlkN2FOVWIvckh5WmY0OVJ2QXRFNjl1S3dkOTZQcmRCZ2o5dkxZ?=
- =?utf-8?B?bFovMlo0Tm1KaExJc0d1VUVDZTMxS0Jid3JtVjE2Tm9zcFdybmtoSG1lL1dI?=
- =?utf-8?B?NU1Lc09Ta3ZNaVNveG5PS2JPc09tZTlqZlY2bFpMMjlhWExsMUU3eVpZSjBr?=
- =?utf-8?B?NGxqNW5WUnN2NDZyempGMU9nbnNDVE8yb2wrVXg3TEtNenI2UTNFRDA5WmxX?=
- =?utf-8?B?a01uL1hlUnEzMko0cnMrZTNBSjVML0w0aXk4VkFBSVE4a2EwTTR0bkc1Q21S?=
- =?utf-8?B?Q2R5ODNpSzJhb05DRWowSktjL0NPQzg1RkQ0NTRLRm0zZTFXOXZ0ckhSSEpt?=
- =?utf-8?B?TmlBUEZJRWJlVC9qZjlhR3RRcU13Z3BlQW9JOWxYMWpNdTROR3FBcEw5QS9p?=
- =?utf-8?B?UUtqMlgrN3JJVXE1ZURORUl0dW9lWDc4UWRkNWhSUWpIUXBNSGZ2TkovY2Zp?=
- =?utf-8?B?ZkFLYWNPUDd0Sklqc3hoc0lyWnFvVklHb1ZPMU9ybkpnR05TaUNyN1VKZDVF?=
- =?utf-8?B?RjE2Um1nbEtZbEVpYkduNkZJTUp2b2JqbmV5bUZNcVpyZHNSYnJUOTMzR09U?=
- =?utf-8?B?WndlUGZnYnIyd0FwVzhEc0Y1NG03SWVsRjBoZGl1YjJwSGVsUG1vRzJuZWlp?=
- =?utf-8?B?RzF2Z09yWHZnN1phdUNRRTQ1ZXU3cDRPOGdIaTdVV3RKNWRJNkRKVW5WS245?=
- =?utf-8?B?NER3QWZzdEZ0NG1aTldiT0lNbVY3a1RhMFp3Q1NvdmZqQmR0cVJ6T1FkVGlJ?=
- =?utf-8?B?endwTjZKTUdsRE55akRCVWxLR1l3RHZxM3JUMitVQjhPRGxQd1RROTliR3dT?=
- =?utf-8?B?UjFQMXgvNytNcmg5MytDcTdZQnN5cHJqSjNEY0VoZlRVcEhlTkN5T2llTnhI?=
- =?utf-8?B?WndNUnBxQk9rZUNUTE4yWmhwZDhGd2hyOFNrTDFTcjNYL0lQeCtSK3c1cDVT?=
- =?utf-8?B?LzY5ZnJueTdET3B3L3pWTWV4NzdIZ1VlcGxYMk9qaGc4Vm1maWRVd3JwKzBU?=
- =?utf-8?B?djIrU05oSk8xcndxbHpVOUJDaURNNm53T2FJcCs1ZnNHTVRqOHRLaWJLc0VD?=
- =?utf-8?B?YVNJU0VUeWhiM0pEc0ZMejM3a21aQjYxdWlNS3pySGp6bmpVYk9uZFdxaDU0?=
- =?utf-8?B?cjROd3kwdzdyb29US0tJaHhUYlEremNTRHVUQ1RKU1lGdXJ4UVBnTFNRVG9R?=
- =?utf-8?B?ZVFTUzJMRE0vbnJVbTdUb3FSeXh3bjR4dTNlaHlQTElvT1hKQUhqMG5qYnFu?=
- =?utf-8?B?U2JXZ1paS3BPWFRKODBiSTZaeWF1RHhZUWtobVpWNkJDbElZdU9HSVExZ095?=
- =?utf-8?B?R3VpOUNCQUxhT2h0MUFIb0JzemdtQytKcTJpU2gydURwMEFFVnowcVhkMDFN?=
- =?utf-8?Q?I4IHTUJ570QBpr2EoYr62qEMu?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dae5c8de-5237-48aa-207a-08dd8ca204bd
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 13:29:25.1585
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: e3Kw9eV/A0Zicq5Vy1FJp1hDxJk6Z6WXgSTsFvLuSqn5HnWyuAOBY7xHWeX+CQdCsyGJdrreIQ/ji6OII15whQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB7501
+References: <20250505-strncpy-from-user-v3-0-85c677fd4f91@google.com>
+ <20250505-strncpy-from-user-v3-1-85c677fd4f91@google.com> <2025050544-sneak-compactor-d701@gregkh>
+ <aBnT8Y3lJqd6J40q@google.com> <2025050645-trifocals-olympics-4692@gregkh>
+In-Reply-To: <2025050645-trifocals-olympics-4692@gregkh>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Tue, 6 May 2025 15:30:30 +0200
+X-Gm-Features: ATxdqUFEcNWR9cLEKaFLA0iO3V5BEC2JItlvm6igRmjYwq8ZyWUToLmqHbiS3uo
+Message-ID: <CAH5fLgjVmyAy8GRBzmRG8+i3ci16M4zk7qQghn47krpPmpLQnw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] uaccess: rust: add strncpy_from_user
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 5/6/2025 6:25 AM, Runhua He wrote:
-> MECHREVO Wujie 14XA (GX4HRXL) wakes up immediately after s2idle entry.
-> This happens regardless of whether the laptop is plugged into AC power,
-> or whether any peripheral is plugged into the laptop.
-> 
-> Similar to commit a55bdad5dfd1 ("platform/x86/amd/pmc: Disable keyboard
-> wakeup on AMD Framework 13"), the MECHREVO Wujie 14XA wakes up almost
-> instantly after s2idle suspend entry (IRQ1 is the keyboard):
-> 
-> 2025-04-18 17:23:57,588 DEBUG:  PM: Triggering wakeup from IRQ 9
-> 2025-04-18 17:23:57,588 DEBUG:  PM: Triggering wakeup from IRQ 1
-> 
-> Add this model to the spurious_8042 quirk to workaround this.
-> 
-> This patch does not affect the wake-up function of the built-in keyboard.
-> Because the firmware of this machine adds an insurance for keyboard
-> wake-up events, as it always triggers an additional IRQ 9 to wake up the
-> system.
-> 
-> I have only matched the motherboard model, as the same chassis and
-> motherboard (GX4HRXL) combination may be used under different product
-> names.
-> 
-> Suggested-by: Mingcong Bai <jeffbai@aosc.io>
-> Suggested-by: Xinhui Yang <cyan@cyano.uk>
-> Suggested-by: Rong Zhang <i@rong.moe>
-> Fixes: a55bdad5dfd1 ("platform/x86/amd/pmc: Disable keyboard wakeup on AMD Framework 13")
-> Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/4166
-> Cc: Mario Limonciello <mario.limonciello@amd.com>
-> Link: https://zhuanldan.zhihu.com/p/730538041
-> Tested-by: Yemu Lu <prcups@krgm.moe>
-> Signed-off-by: Runhua He <hua@aosc.io>
-> ---
->   drivers/platform/x86/amd/pmc/pmc-quirks.c | 7 +++++++
->   1 file changed, 7 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/amd/pmc/pmc-quirks.c b/drivers/platform/x86/amd/pmc/pmc-quirks.c
-> index b4f49720c87f..e01012d5ecd0 100644
-> --- a/drivers/platform/x86/amd/pmc/pmc-quirks.c
-> +++ b/drivers/platform/x86/amd/pmc/pmc-quirks.c
-> @@ -217,6 +217,13 @@ static const struct dmi_system_id fwbug_list[] = {
->   			DMI_MATCH(DMI_BIOS_VERSION, "03.05"),
->   		}
->   	},
-> +	{
-> +		.ident = "MECHREVO Wujie 14 Series (GX4HRXL)",
-> +		.driver_data = &quirk_spurious_8042,
-> +		.matches = {
-> +			DMI_MATCH(DMI_BOARD_NAME, "GX4HRXL"),
+On Tue, May 6, 2025 at 2:52=E2=80=AFPM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Tue, May 06, 2025 at 09:18:41AM +0000, Alice Ryhl wrote:
+> > On Mon, May 05, 2025 at 04:30:05PM +0200, Greg Kroah-Hartman wrote:
+> > > On Mon, May 05, 2025 at 12:17:31PM +0000, Alice Ryhl wrote:
+> > > > This patch adds a direct wrapper around the C function of the same =
+name.
+> > > > It's not really intended for direct use by Rust code since
+> > > > strncpy_from_user has a somewhat unfortunate API where it only
+> > > > nul-terminates the buffer if there's space for the nul-terminator. =
+This
+> > > > means that a direct Rust wrapper around it could not return a &CStr
+> > > > since the buffer may not be a cstring. However, we still add the me=
+thod
+> > > > to build more convenient APIs on top of it, which will happen in
+> > > > subsequent patches.
+> > > >
+> > > > Reviewed-by: Danilo Krummrich <dakr@kernel.org>
+> > > > Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > > Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
+> > > > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+> > > > ---
+> > > >  rust/kernel/uaccess.rs | 35 ++++++++++++++++++++++++++++++++++-
+> > > >  1 file changed, 34 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/rust/kernel/uaccess.rs b/rust/kernel/uaccess.rs
+> > > > index 80a9782b1c6e98ed6eae308ade8551afa7adc188..a7b123915e9aa2329f3=
+76d67cad93e2fc17ae017 100644
+> > > > --- a/rust/kernel/uaccess.rs
+> > > > +++ b/rust/kernel/uaccess.rs
+> > > > @@ -8,7 +8,7 @@
+> > > >      alloc::{Allocator, Flags},
+> > > >      bindings,
+> > > >      error::Result,
+> > > > -    ffi::c_void,
+> > > > +    ffi::{c_char, c_void},
+> > > >      prelude::*,
+> > > >      transmute::{AsBytes, FromBytes},
+> > > >  };
+> > > > @@ -369,3 +369,36 @@ pub fn write<T: AsBytes>(&mut self, value: &T)=
+ -> Result {
+> > > >          Ok(())
+> > > >      }
+> > > >  }
+> > > > +
+> > > > +/// Reads a nul-terminated string into `buf` and returns the lengt=
+h.
+> > > > +///
+> > > > +/// This reads from userspace until a NUL byte is encountered, or =
+until `buf.len()` bytes have been
+> > > > +/// read. Fails with [`EFAULT`] if a read happens on a bad address=
+ (some data may have been
+> > > > +/// copied). When the end of the buffer is encountered, no NUL byt=
+e is added, so the string is
+> > > > +/// *not* guaranteed to be NUL-terminated when `Ok(buf.len())` is =
+returned.
+> > > > +///
+> > > > +/// # Guarantees
+> > > > +///
+> > > > +/// When this function returns `Ok(len)`, it is guaranteed that th=
+e first `len` of `buf` bytes are
+> > > > +/// initialized and non-zero. Furthermore, if `len < buf.len()`, t=
+hen `buf[len]` is a NUL byte.
+> > > > +/// Unsafe code may rely on these guarantees.
+> > > > +#[inline]
+> > > > +#[expect(dead_code)]
+> > > > +fn raw_strncpy_from_user(ptr: UserPtr, buf: &mut [MaybeUninit<u8>]=
+) -> Result<usize> {
+> > >
+> > > Nit, the parameters here are backwards from the C version of
+> > > strncpy_from_user(), which is going to cause us no end of grief when
+> > > reviewing code between the two languages :(
+> >
+> > I'll swap them.
+> >
+> > fn raw_strncpy_from_user(dst: &mut [MaybeUninit<u8>], src: UserPtr) -> =
+Result<usize> {
+> >
+> > > Also, it's not your fault, but we don't have any type of __user tag f=
+or
+> > > data coming from userspace yet to track this type of thing?  The
+> > > compiler (well sparse) can catch this type of thing in C, any hints o=
+n
+> > > what we could do in Rust for the same type of guarantee (i.e. don't
+> > > touch user data before it's been copied, and then we need to treat it=
+ as
+> > > "unverified" but that's a different patch series...)
+> >
+> > The UserPtr typedef is intended to do that, but since it's only a
+> > typedef to usize, the compiler won't detect it if you mix up a user
+> > pointer with a length. (It will detect mix-ups with pointers since we
+> > use an integer type for UserPtr.)
+>
+> Sorry, I missed the "UserPtr" for some reason.  But having an integer
+> type for UserPtr feels like it's going to cause problems in the
+> long-run.
+>
+> > What we can do is replace the typedef with
+> >
+> > #[repr(transparent)]
+> > struct UserPtr(pub usize);
+> >
+> > That way, it becomes it's own separate type (this is called the newtype
+> > pattern [1]) so that it can't be mixed up with anything else.
+>
+> Why not use a real pointer like:
+>         struct UserPtr(pub *const u8)
+>
+> > The #[repr(transparent)] annotation makes the compiler treat it like a
+> > bare long for ABI-purposes. I'm not sure if any function ABIs actually
+> > treat a long differently from a struct that just contains a long, but i=
+f
+> > such ABIs exist, then the annotation ensures that the long ABI is used
+> > rather than the struct-containing-long ABI.
+>
+> In the kernel, "unsigned long" is guaranteed to hold a pointer.  Which
+> is why many of the old allocation functions return that type.
 
-This feels like it might be too wide.  Could we match a system vendor as 
-well?
+Let's continue this discussion on the patch I just sent to make it a
+real struct:
+https://lore.kernel.org/r/20250506-userptr-newtype-v1-1-a0f6f8ce9fc5@google=
+.com
 
+I don't fully recall the reason, but it was changed from a raw pointer
+to usize in version 6 of the patch set that added it.
+
+Alice
