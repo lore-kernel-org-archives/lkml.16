@@ -1,136 +1,242 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEE68335BA
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 07:58:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E84867263C
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 07:58:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746518289; cv=none; b=d/EXCmjffSRNJOpZVNzZPnBI7rfDfJxaZ8uw3IeWe37fZdaAmwN78WjA+ON+fXItJtXqCfFdcqliwNNkV2c+rmiii6Mc+4/43phK/SOSnUAtSHlVVSNfqb5BxLMxIsEOQc7pyoiXd/WhvIDk7mw3+I8ED3H23/ZANS4iyfRppac=
+	t=1746518299; cv=none; b=BjrtSGE+bAgftZ3WOYi8dL4oQSawJHmz2NWJy38o5wH7v/2RXJINd1vlDII0iEIcBU6kj/hcgzeGNPAgfl236nuJPyt3lszqliwi5cS+qZd7RRlzzluf1Buv/WtMWcOvrVpkfLhiJvGBpc2ejPF++GfE0kl7iYmq9ZZ7fZpZqJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746518289; c=relaxed/simple;
-	bh=AQ4Bb0VLW7e1ui85vWcSm3HQyeJ062lsUi/lQFbOLS0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kM6sB0PNfvPYiy9fX+EpTknL3ZBux4I2Ibe3hEYRssbP6hns+/LzF0fl0Oo18Cwwr0aaOkC53TC+L7DnfB5IxUagGvBl+XgexVl3kq+9Mem+F35cKXMyZ9p/NwpQzn0g6wpJR+qIgM/S3KOv/OqDbhi0yVqvYsNTjqkxeElMh7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=P3MwjMtW; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1746518299; c=relaxed/simple;
+	bh=PKq9TAWqsSHfIrNQ+J4jNBmLNJ2CPQsJGtDp/FGt6cI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NklPy0uP/SxpA4Yhfh29WPotC63BCpHYXDSsSyH88YRVIyog7J8R+QAXV7yTAC830cyYanQmYgvwRWmzTTW9/9/f3r1DbkCI8zjX/7ItmtefkRcqTAsgzTYtCjofNj5RKrkkkc7L5zXuNpYul/Zyz1fvysIHE3rfvqwxk4aqkeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=M0gBjKGI; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=/lQucb07; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=M0gBjKGI; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=/lQucb07; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="P3MwjMtW"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 545KTaM2007918;
-	Tue, 6 May 2025 07:57:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=R8dssKgp38bn+aPY1QZCiT
-	mgUUPkrCM2qDFlCseHqvA=; b=P3MwjMtWXAUk9RRAQHSNscda3U4Cn5XVd1/vwO
-	B0Uff7fgVeA9b/yjcZX/p/wVzyEOyQzelBPCIbVIfl7awZ/7a20j4r22Z3BEFvyz
-	Xoe5em4h8JT6+gHPntCh+lvxKdG3ku3opHscpkR1EThsC3OMsjsoPI+PqyJ4qCkn
-	es71mgybxDeWKiRoLwBO39wC/aPcwdHyA3heDnX61V37AjFiS7KWYsjmeVb0n/pr
-	VoRpYN3EMKpp9lH7uB3hdl1H4YPLeFrUx6IgmHp3fgt2RL3ytlXc6vPA3rYYllIh
-	619SJcu64sgeBGP3G+uf+PU+D8NYIkAToLLVvaLBjP5ppV3w==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46d9ep6wpe-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 06 May 2025 07:57:58 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5467vvlp009306
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 6 May 2025 07:57:57 GMT
-Received: from hu-jinlmao-lv.qualcomm.com (10.49.16.6) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 6 May 2025 00:57:56 -0700
-From: Mao Jinlong <quic_jinlmao@quicinc.com>
-To: Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach
-	<mike.leach@linaro.org>,
-        James Clark <james.clark@linaro.org>,
-        "Alexander
- Shishkin" <alexander.shishkin@linux.intel.com>,
-        Leo Yan <leo.yan@arm.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>
-CC: Mao Jinlong <quic_jinlmao@quicinc.com>, <coresight@lists.linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] coresight: Disable MMIO logging for coresight stm driver
-Date: Tue, 6 May 2025 00:57:43 -0700
-Message-ID: <20250506075743.1398257-1-quic_jinlmao@quicinc.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="M0gBjKGI";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="/lQucb07";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="M0gBjKGI";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="/lQucb07"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 0982B21207;
+	Tue,  6 May 2025 07:58:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1746518296; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=klf7XpHy1vcHXVSurXNJ4MOlF+r3ds7ekfP2woB+Iyo=;
+	b=M0gBjKGITzJa4WJRfR3ZCvs/15VxZbIhsoan9LvQXyNcmFqZXpsF3yNkyqktuR3UrfTVPW
+	vYpOwlngIweZAipfYAila29k/Twjj52xuFQ22EmpaT/ugPpUbwbb7g9gYMbECNGcSTmhRU
+	RQ9LQvg3pdoa1zgc+aBmV2r7y3pVt3M=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1746518296;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=klf7XpHy1vcHXVSurXNJ4MOlF+r3ds7ekfP2woB+Iyo=;
+	b=/lQucb07VgeDYkjL9vaQaeFp0nlLp9q24rD8AnSjedSojswzUUhtsz56akZ1Gl1jb0OAnt
+	F8xnVAMFpovcHPAA==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=M0gBjKGI;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b="/lQucb07"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1746518296; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=klf7XpHy1vcHXVSurXNJ4MOlF+r3ds7ekfP2woB+Iyo=;
+	b=M0gBjKGITzJa4WJRfR3ZCvs/15VxZbIhsoan9LvQXyNcmFqZXpsF3yNkyqktuR3UrfTVPW
+	vYpOwlngIweZAipfYAila29k/Twjj52xuFQ22EmpaT/ugPpUbwbb7g9gYMbECNGcSTmhRU
+	RQ9LQvg3pdoa1zgc+aBmV2r7y3pVt3M=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1746518296;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=klf7XpHy1vcHXVSurXNJ4MOlF+r3ds7ekfP2woB+Iyo=;
+	b=/lQucb07VgeDYkjL9vaQaeFp0nlLp9q24rD8AnSjedSojswzUUhtsz56akZ1Gl1jb0OAnt
+	F8xnVAMFpovcHPAA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DB57E137CF;
+	Tue,  6 May 2025 07:58:15 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id Ja4PNRfBGWh1UQAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Tue, 06 May 2025 07:58:15 +0000
+Message-ID: <a8fd8cb3-c3e5-48be-a034-7a5c9f3ce778@suse.cz>
+Date: Tue, 6 May 2025 09:58:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=EOUG00ZC c=1 sm=1 tr=0 ts=6819c106 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=3H110R4YSZwA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=7CQSdrXTAAAA:8
- a=21C3pMOLxur-W5BfXY8A:9 a=TjNXssC_j7lpFel5tvFf:22 a=a-qgeE7W1pNrGK8U0ZQC:22
-X-Proofpoint-ORIG-GUID: dpmJSzssu7uMYa7nqJtrEP3vru78PRkK
-X-Proofpoint-GUID: dpmJSzssu7uMYa7nqJtrEP3vru78PRkK
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA2MDA3NCBTYWx0ZWRfX23bFD/n/kS0r
- AQp2zfE2yOs5Z3sc9Oz/9jurnwaWrWKXNim8MInnnmbcd6+/PF/g3MLbYH1zMWcuhWtl/s5bcq5
- dMzHYLu9li1a/UcZO35CWL5Yld8QhzTVeMrRECqdLKNd49f23VP5B5AYOGkDKYyK78wPZJaH7ck
- hyNPK6/Osw+VLca+TlmjVm7COCIXrC6gF9dqCYBz179X/vxj8Yd4knl/IPInVt3vVCuv9vCwg/G
- I5Zkr+SbUlC3Rrhca0wZQd6c9EEM9SNAFp7+UHBdvyroNd6QWhJlbBiupfX38KWPgvpdapnGvmB
- FqfczTRuSN6uXOUKQYtn8jJFRpSsx+/U8RsrQTHfCDaDkSIraG4RM7jg09aSBXdVobMcqlb/sWr
- fNbeWsEKe3H/BZuwsmFNxoEWoVTraEDcfyIT67NUE0reJv1I5JUi06e2HYSy/ghCZTIUoZpJ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-06_03,2025-05-05_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 clxscore=1011 impostorscore=0 spamscore=0 lowpriorityscore=0
- bulkscore=0 phishscore=0 suspectscore=0 mlxlogscore=995 mlxscore=0
- priorityscore=1501 malwarescore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2504070000 definitions=main-2505060074
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] mm/codetag: move tag retrieval back upfront in
+ __free_pages()
+To: David Wang <00107082@163.com>, akpm@linux-foundation.org,
+ surenb@google.com, mhocko@suse.com, jackmanb@google.com, hannes@cmpxchg.org,
+ ziy@nvidia.com
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <CAJuCfpHKcDkce=no0Uu3UO2ua2GkgkKMZxnctMuDbOqQNKj_KA@mail.gmail.com>
+ <20250505193034.91682-1-00107082@163.com>
+Content-Language: en-US
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <20250505193034.91682-1-00107082@163.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 0982B21207
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	FREEMAIL_TO(0.00)[163.com,linux-foundation.org,google.com,suse.com,cmpxchg.org,nvidia.com];
+	FREEMAIL_ENVRCPT(0.00)[163.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,suse.cz:dkim,suse.cz:mid];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.51
+X-Spam-Flag: NO
 
-With MMIO logging enabled, the MMIO access are traced and could be
-sent to an STM device. Thus, an STM driver MMIO access could create
-circular call chain with MMIO logging. Disable it for STM driver.
+On 5/5/25 21:30, David Wang wrote:
+> Commit 51ff4d7486f0 ("mm: avoid extra mem_alloc_profiling_enabled()
+>  checks") introduces a possible use-after-free scenario, when page
+> is non-compound, page[0] could be released by other thread right
+> after put_page_testzero failed in current thread, pgalloc_tag_sub_pages
+> afterwards would manipulate an invalid page for accounting remaining
+> pages:
+> 
+> [timeline]   [thread1]                     [thread2]
+>   |          alloc_page non-compound
+>   V
+>   |                                        get_page, rf counter inc
+>   V
+>   |          in ___free_pages
+>   |          put_page_testzero fails
+>   V
+>   |                                        put_page, page released
+>   V
+>   |          in ___free_pages,
+>   |          pgalloc_tag_sub_pages
+>   |          manipulate an invalid page
+>   V
+> 
+> Restore __free_pages() to its state before, retrieve alloc tag
+> beforehand.
+> 
+> Fixes: 51ff4d7486f0 ("mm: avoid extra mem_alloc_profiling_enabled() checks")
 
-[] stm_source_write[stm_core]+0xc4
-[] stm_ftrace_write[stm_ftrace]+0x40
-[] trace_event_buffer_commit+0x238
-[] trace_event_raw_event_rwmmio_rw_template+0x8c
-[] log_post_write_mmio+0xb4
-[] writel_relaxed[coresight_stm]+0x80
-[] stm_generic_packet[coresight_stm]+0x1a8
-[] stm_data_write[stm_core]+0x78
-[] stm_source_write[stm_core]+0x7c
-[] stm_ftrace_write[stm_ftrace]+0x40
-[] trace_event_buffer_commit+0x238
-[] trace_event_raw_event_rwmmio_read+0x84
-[] log_read_mmio+0xac
-[] readl_relaxed[coresight_tmc]+0x50
+That's a 6.15-rc1 commit, so no cc: stable needed, but should go to mm-hotfixes.
 
-Signed-off-by: Mao Jinlong <quic_jinlmao@quicinc.com>
-Reviewed-by: Leo Yan <leo.yan@arm.com>
-Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
-Changes in V2:
-update the commit message
+> Signed-off-by: David Wang <00107082@163.com>
 
- drivers/hwtracing/coresight/Makefile | 2 ++
- 1 file changed, 2 insertions(+)
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 
-diff --git a/drivers/hwtracing/coresight/Makefile b/drivers/hwtracing/coresight/Makefile
-index 4ba478211b31..f3158266f75e 100644
---- a/drivers/hwtracing/coresight/Makefile
-+++ b/drivers/hwtracing/coresight/Makefile
-@@ -22,6 +22,8 @@ condflags := \
- 	$(call cc-option, -Wstringop-truncation)
- subdir-ccflags-y += $(condflags)
- 
-+CFLAGS_coresight-stm.o := -D__DISABLE_TRACE_MMIO__
-+
- obj-$(CONFIG_CORESIGHT) += coresight.o
- coresight-y := coresight-core.o  coresight-etm-perf.o coresight-platform.o \
- 		coresight-sysfs.o coresight-syscfg.o coresight-config.o \
--- 
-2.25.1
+Thanks!
+
+> ---
+>  include/linux/pgalloc_tag.h |  8 ++++++++
+>  mm/page_alloc.c             | 15 ++++++---------
+>  2 files changed, 14 insertions(+), 9 deletions(-)
+> 
+> diff --git a/include/linux/pgalloc_tag.h b/include/linux/pgalloc_tag.h
+> index c74077977830..8a7f4f802c57 100644
+> --- a/include/linux/pgalloc_tag.h
+> +++ b/include/linux/pgalloc_tag.h
+> @@ -188,6 +188,13 @@ static inline struct alloc_tag *__pgalloc_tag_get(struct page *page)
+>  	return tag;
+>  }
+>  
+> +static inline struct alloc_tag *pgalloc_tag_get(struct page *page)
+> +{
+> +	if (mem_alloc_profiling_enabled())
+> +		return __pgalloc_tag_get(page);
+> +	return NULL;
+> +}
+> +
+>  void pgalloc_tag_split(struct folio *folio, int old_order, int new_order);
+>  void pgalloc_tag_swap(struct folio *new, struct folio *old);
+>  
+> @@ -199,6 +206,7 @@ static inline void clear_page_tag_ref(struct page *page) {}
+>  static inline void alloc_tag_sec_init(void) {}
+>  static inline void pgalloc_tag_split(struct folio *folio, int old_order, int new_order) {}
+>  static inline void pgalloc_tag_swap(struct folio *new, struct folio *old) {}
+> +static inline struct alloc_tag *pgalloc_tag_get(struct page *page) { return NULL; }
+>  
+>  #endif /* CONFIG_MEM_ALLOC_PROFILING */
+>  
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 5669baf2a6fe..1b00e14a9780 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -1151,14 +1151,9 @@ static inline void pgalloc_tag_sub(struct page *page, unsigned int nr)
+>  		__pgalloc_tag_sub(page, nr);
+>  }
+>  
+> -static inline void pgalloc_tag_sub_pages(struct page *page, unsigned int nr)
+> +/* When tag is not NULL, assuming mem_alloc_profiling_enabled */
+> +static inline void pgalloc_tag_sub_pages(struct alloc_tag *tag, unsigned int nr)
+>  {
+> -	struct alloc_tag *tag;
+> -
+> -	if (!mem_alloc_profiling_enabled())
+> -		return;
+> -
+> -	tag = __pgalloc_tag_get(page);
+>  	if (tag)
+>  		this_cpu_sub(tag->counters->bytes, PAGE_SIZE * nr);
+>  }
+> @@ -1168,7 +1163,7 @@ static inline void pgalloc_tag_sub_pages(struct page *page, unsigned int nr)
+>  static inline void pgalloc_tag_add(struct page *page, struct task_struct *task,
+>  				   unsigned int nr) {}
+>  static inline void pgalloc_tag_sub(struct page *page, unsigned int nr) {}
+> -static inline void pgalloc_tag_sub_pages(struct page *page, unsigned int nr) {}
+> +static inline void pgalloc_tag_sub_pages(struct alloc_tag *tag, unsigned int nr) {}
+>  
+>  #endif /* CONFIG_MEM_ALLOC_PROFILING */
+>  
+> @@ -5065,11 +5060,13 @@ static void ___free_pages(struct page *page, unsigned int order,
+>  {
+>  	/* get PageHead before we drop reference */
+>  	int head = PageHead(page);
+> +	/* get alloc tag in case the page is released by others */
+> +	struct alloc_tag *tag = pgalloc_tag_get(page);
+>  
+>  	if (put_page_testzero(page))
+>  		__free_frozen_pages(page, order, fpi_flags);
+>  	else if (!head) {
+> -		pgalloc_tag_sub_pages(page, (1 << order) - 1);
+> +		pgalloc_tag_sub_pages(tag, (1 << order) - 1);
+>  		while (order-- > 0)
+>  			__free_frozen_pages(page + (1 << order), order,
+>  					    fpi_flags);
 
