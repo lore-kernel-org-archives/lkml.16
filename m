@@ -1,40 +1,45 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 332CD142E86
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 19:09:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B14E8198A08
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 19:09:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746558591; cv=none; b=PMkqIsUTmC5ruFerCgtyqWL+NEBB4gfaVFdPAymxB5XB63KYxmxCmmK550FmLZHXoBpR7SWGnDdWsYhpI7aFAGsbs9Qw9pp4kaKQRtKn/WMimf0jELSvAMlqjlQkyenM4TWQA+L0axc0N+txQBEdpoU0lPb/vpclt9Fz9iVmtJY=
+	t=1746558599; cv=none; b=dsb6KDkHhhRAtHEyVkcyLXv4BKo15T9yXBktyJuDgOFbfnzIO+zc10450lmEOzvJkcl8eV3ygpAD7egZ0PKNdEUxDrAzfFvBJWelpL0tDF0ibMUHUHR03d5ayZfcBsm6IpjVukY1eWP6VTpvv+se3P3jb155bSG2Z4z63Lvd3+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746558591; c=relaxed/simple;
-	bh=oV8ggCP65igJYRgUaYqei7WOxkp+hAjecNa0WNiomWE=;
+	s=arc-20240116; t=1746558599; c=relaxed/simple;
+	bh=zdG2D9Rb2C2ESNufQJCGm+Wf8FimRoEiC9vKGXqYzJk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=owePMjLCC6JlO7bnk/85jCD/2M77rt/uaA4hb1zfz9pnJcFAw42Sj3bvqK7M2KaAhOLWPhCReQnKMRCNvGkMqEzeRxk1dN4AP1aYiEwB02zueH2T82F0E4pxuXohTlQy0Gn6QZbLoFAdRDWW7F+P81ZQ06DgN48Hu9N9+DnK01s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FooJy39G; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=LhrGKoRZrkNwJbSW/osi5LvmWAVhe57uyTBRl6QSoujtTLG/LgLU6kO6jn5vCbIuNHdGjjmpu1US4y/XTTqjNaKPNafKySx5QuF2AOn3ZWFwPAVUuhs06u98WznozggR71d863sAm0ZJmKVwy85yCDuz5RxjRcZAuXC2NfDEC8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=rb5LWJyy; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FooJy39G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4BE8C4CEE4;
-	Tue,  6 May 2025 19:09:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746558590;
-	bh=oV8ggCP65igJYRgUaYqei7WOxkp+hAjecNa0WNiomWE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FooJy39GjQyA+I0kYX3R99gO5bMDgiBQeXgi4Y1cVZqh1sl4BIKAoGwjjZqFEVpgW
-	 u/SVLiT2g6YWSKPc4Eoq3K0jgTLE0Iow7bOc6tMLKtmZlyfJgg30waCNUoniD/9yY0
-	 eLV4///PY9Jj881bHkPPT1zHoVcHHEu4AV1m/Ln4s1RePgDG1jv5q9f3fWSUP51c+5
-	 D5wZ+vzM0u22EO32q2sEnpkaLZDDOUG6IySkkAXY2s02lth4dKy/s6GlvrB0ixsNQH
-	 CcqhsmeocQ7MoRUR91Et2L2TW7IQvkB48XNqUiGrljQNGjCyiBlNVJ14ZLqeic1/jI
-	 NAn6RX16q8ftA==
-Date: Tue, 6 May 2025 13:09:47 -0600
-From: Keith Busch <kbusch@kernel.org>
-To: Caleb Sander Mateos <csander@purestorage.com>
-Cc: Kanchan Joshi <joshi.k@samsung.com>, Jens Axboe <axboe@kernel.dk>,
-	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
-	linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] nvme: fix write_stream_granularity initialization
-Message-ID: <aBpee6L-UXEDcH_h@kbusch-mbp.dhcp.thefacebook.com>
-References: <20250506175413.1936110-1-csander@purestorage.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rb5LWJyy"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Cv9t2nkiOZ/C9O6X5BLHLPxC2u6g2ujAp/9JLD+z1W8=; b=rb5LWJyy0B3NTyyMjI2TAecWxx
+	yU5LTtjU5LeixJbuXVwZfORNexR/eEFsILkG6WbuiJ79+WcaqxgeU9dIgFavrtKk2/9qlcBY1hmt6
+	4ZOjNiCjRutGizruYrNkvBWRnLEBQu0HY6INJEl9vZrSsBZRgQrDMUqSg4dZ1aQoBUZUHT7esdUGN
+	UfqvbLfrKiunxYpHF5fTj0es5ra3AbKc1DdabL2bCQAnd8aTdcC51saCpCOHIeOMdcPbniD0MgaKg
+	rpuRrURi3ZBxbYaOdnHfRXvuSOmqELrrOvmGnSyMs1a8OotHCwH5jsvVG3EZp9woXjw84n4viG+78
+	fh61sMng==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uCNey-00000009vG1-0hdC;
+	Tue, 06 May 2025 19:08:56 +0000
+Date: Tue, 6 May 2025 20:08:55 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: nifan.cxl@gmail.com
+Cc: muchun.song@linux.dev, osalvador@suse.de, mcgrof@kernel.org,
+	a.manzanares@samsung.com, dave@stgolabs.net,
+	akpm@linux-foundation.org, david@redhat.com, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, Fan Ni <fan.ni@samsung.com>
+Subject: Re: [RFC 0/1] Convert is_migrate_isolate_page() to
+ is_migrate_isolate_folio()
+Message-ID: <aBpeR5E6XoneDcEj@casper.infradead.org>
+References: <20250506184155.587070-1-nifan.cxl@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,19 +48,34 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250506175413.1936110-1-csander@purestorage.com>
+In-Reply-To: <20250506184155.587070-1-nifan.cxl@gmail.com>
 
-On Tue, May 06, 2025 at 11:54:12AM -0600, Caleb Sander Mateos wrote:
-> write_stream_granularity is set to max(info->runs, U32_MAX), which means
-> that any RUNS value less than 2 ** 32 becomes U32_MAX, and any larger
-> value is silently truncated to an unsigned int.
+On Tue, May 06, 2025 at 11:38:28AM -0700, nifan.cxl@gmail.com wrote:
+> From: Fan Ni <fan.ni@samsung.com>
 > 
-> Use min() instead to provide the correct semantics, capping RUNS values
-> at U32_MAX.
-> 
-> Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
-> Fixes: 30b5f20bb2dd ("nvme: register fdp parameters with the block layer")
+> Sending out this patch per Matthew Wilcox's suggestion 
+> that we need to convert is_migrate_isolate_page() to use folio
+> https://lore.kernel.org/linux-mm/Z_XmUrbxKtYmzmJ6@casper.infradead.org/
 
-Looks good
+That's not what I said!
 
-Reviewed-by: Keith Busch <kbusch@kernel.org>
+This is what I said:
+> >  
+> > -		if (is_migrate_isolate_page(&folio->page))
+> > +		if (is_migrate_isolate_page(folio_page(folio, 0)))
+> >  			continue;
+>
+> I think we need an is_migrate_isolate_folio() instead of this.
+
+> However, when looking into the code, I have noticed that among the uers
+> of is_migrate_isolate_page(), in most cases the page passed in is from a 
+> a pageblock. 
+> I am not sure how we should proceed with these cases.
+> Should we deal with pageblock or just leave it as it is and only do the page
+> to folio conversion for the pages within?
+
+Neither.  Add a folio_test_migrate_isolate() in addition to
+is_migrate_isolate_page().  Don't force a conversion as it's a
+legitimate question to ask of pages as well as of folios.
+And some of the pages you want to ask it of may well not be part of
+folios (they may be part of a slab or some other memdesc).
