@@ -1,145 +1,163 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07F80283FE2
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 16:40:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A19A289378
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 16:44:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746549623; cv=none; b=BrIJZKyMxF/wnVcb+D61aSK4F4HJLKHYGDG+DwECCoVcFo+TzUS1OYIGNZePylM/qbun0r0uvjSQ8SNSY9lLRmlzsjSnXvu1wYjr+jZxRvDkh4mtJKic+T4btQ+MfBBdWNI31+9VS938Lsjboqcj5sRfATu+1bgQqbOohkEX19E=
+	t=1746549881; cv=none; b=AAIKtagi533VIdm3WEYwBdmcG7lkubbkPcNCqH59eLdUG6uVmacr9n7R8D9V4bAufGW+my12p7gPxSXjcXKqhR7rs0nXYgcgfnDvMQrh2C+fZuA+l9S7HUs4uaYCDQVm1yQdU2JU/2uwHXwrN+X1gxLGwxER7dkjVNe0uEY9sps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746549623; c=relaxed/simple;
-	bh=sKS+oajAdKrkXbW05N59mQE2XpopEuyeq8HD25s1BU4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OU5Bt9ASPOezivqcCWTnShmsr1TrH0bLcO/pVSr5qlG1F1BZhU3GV2FTJHcSlN6hdCIEgMSK10KQhmvJxXcTRCGrwK2gCw14GFPogzMgGo1EXR0/52j0VsUE1W4sCAvu5oEtIwD/eZTiTLJjXs4/APPwXABn/OSBebit5SQEPQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=UQhR01uv; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ionos.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
+	s=arc-20240116; t=1746549881; c=relaxed/simple;
+	bh=wpqJCi8HG3WiomHyP8fMfm6jQ/iezinu9YOFtJXTSG4=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=Tu+N4M9uRLbgSZeXe51o07epsyJv6jwF2SKWdcbzPSx/GPCwlazPwFNijgUHAHaMGwnsLZONdBCbRK8cQtghISSHgs6zIHsJK7/E2NIsHJF8fv7o/bNiIFPBoPJDMkwq26OKOl1nVzf3/mb0FevA+7Ixf9SUhjAy2CL+4u0VjQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=U6P+bqI3; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="UQhR01uv"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43d0782d787so37487235e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 09:40:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1746549619; x=1747154419; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=YDxac0WTKpNYAqKy6qqh/ldgoTgxO9yAZvAySkLr8eQ=;
-        b=UQhR01uvJwThy6Nb8BCxBoNpbYsV0uJEhIo0WoHo7Shgrvl7oDnDpmp27mVxmuwGdp
-         gxscuitKteaTUpR7AwhULI9ZTqWXYrgzz41QbCU5c2h45pR7FY1WqeL2I+7kQ3OesOQt
-         GrW2NuiiFzlpMDUwpw/AkY3waUhkFoHHLsFjB4ZKbttXYbT3WoNqVsiyoE4D6H8S/A/H
-         QsVGxe2CNP4hUIZEzuTNQ6+giT4p609hEEqRPIFB+rFrXJDm+/Rq5f6l4cugFBts81Ui
-         T1RpLyazsmQvC+8uEUAre978NytXH8ts+g/yu87FsX50Rrx8UuMi5QgOy77rtpbqj2oD
-         Oj3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746549619; x=1747154419;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YDxac0WTKpNYAqKy6qqh/ldgoTgxO9yAZvAySkLr8eQ=;
-        b=rICWqj0n6rcyNs/xe1fcqKzZo8tuFBkouI4LeLQaHu4zNG2duA3i6ikSxNA+yY1Xt2
-         50OsuY5nPrFH5VkI3iamxJbeaBSymZf1kaOLSExAdJv88weKKjeFHj4jtdCl0YRi63R+
-         rKKKqqEnBwUQZ92092hXlF3cSrTionn+6SLZ7dRuNxs4fHuY2XrdNtoYCf8Csqt0pUqK
-         KAdmiBwbkrCgLa2xkr//pzj3qCmdL7TEsu9VmSDstJkI/AWHddrbdh9AKrIE7IB9SmBz
-         hXN30JKXGcgonKZoTJ6z51XoVyi6MOirs2CJxyCvI6aAMuqGT38KhFOVO20NJZrYao46
-         2+SA==
-X-Forwarded-Encrypted: i=1; AJvYcCW7OD8SIH8CfhPRqx8PlfSSNmT2sEFONtal+vtkCaUzay0duMFz7qKMl2I/tgHpxMeGnkT5DKTrn+Gib/o=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxp24o4lijBWeqrZYzbjqlpkMKeOHVNTAEIEKW0ix3BD3t2XRjB
-	fjQiFSPtFin1xkF8Xi7l0skV34Qo5MV7+mTle6cVbiQzs/g/WwJI/CZQKhEHwYmtg7WO86eu+9S
-	6Uug=
-X-Gm-Gg: ASbGnctfrYWUsKoplJMwQvT7xg9KpVqsBWoldYtBIXmNANp64VMdZHOfIVopD89RE7B
-	maKOgPN8aJgB99onOJAc+eWLotFKHHG6N19DGlpxJFWJlUXxqVb8wO+5sCE0RifPn6bIPF4A9ZQ
-	YG8FtAEdByncbZ+Q0rCf715mI4EwlB2GcBAfc7nTEh3ieBeuwlRTmylY1YrXU2KRW5/LIyFo9uo
-	hmT6dKbe36p5NQvqC9n1CCtx0mzwElipqa923yokcDz1reqJ3gcZyJ8RTutylvn327Pr14yG5bt
-	P12gJBIdU4Z5B8gkTJNiowusenEhU1zwooM6bDBihPHqUOs+8XdNoqJk0WzP1v9bK4MSzdwu9yQ
-	LT+IroZyM7dHS0UmQ9Q0Ol8Zdss9BCZyZJTHWAAId
-X-Google-Smtp-Source: AGHT+IE6JlF6LcWEHOve+lS51YR1l5bhOAPO1WVtAJ57rwt/OA8Oq/W9Y5e0xEcHuMEp8U1hdl0uDg==
-X-Received: by 2002:a05:600c:1e09:b0:43c:f895:cb4e with SMTP id 5b1f17b1804b1-441cb49494cmr81944285e9.17.1746549619147;
-        Tue, 06 May 2025 09:40:19 -0700 (PDT)
-Received: from raven.intern.cm-ag (p200300dc6f46c100023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f46:c100:230:64ff:fe74:809])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b8a285c2sm174555925e9.32.2025.05.06.09.40.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 09:40:18 -0700 (PDT)
-From: Max Kellermann <max.kellermann@ionos.com>
-To: gregkh@linuxfoundation.org,
-	tj@kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Max Kellermann <max.kellermann@ionos.com>
-Subject: [PATCH] fs/kernfs: implement STATX_BTIME
-Date: Tue,  6 May 2025 18:40:17 +0200
-Message-ID: <20250506164017.249149-1-max.kellermann@ionos.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="U6P+bqI3"
+Received: from [127.0.0.1] ([76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 546Gi3k5975950
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Tue, 6 May 2025 09:44:04 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 546Gi3k5975950
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025042001; t=1746549845;
+	bh=lrUXxvgqxewJgKKyCt+6+ALiF2c29NTphVVao6dyW5s=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=U6P+bqI3yEOS+sdxVqiCsAz4xHXjHXZpKGwisKWH3Izac1i+ONC3MMOxz8Go0WocJ
+	 Ul5CfdzYprhgO+5HJDnUiP3FCL9zOgWMWTPIiH5M+mCpQbp6b6rs8LvyFvct8/dP32
+	 AbiDworhuWibVabUkNHh5DeLPwRiewIXOd/1T5wu7Mm1rQhj5/u+nveRMgVoVnPCWs
+	 fUTHOOTBX4O24lRLXwnbKvWmm2qbnqJ/lKWyKsOXGcQJQ7kftrSOdBv2t9tAePRpV4
+	 A2Q/vYiSP6CppdqDqSEOlxq9k+ptHTAy0z5uOidv/hvvUpTZMCXEiZq2pwAxzgKiY/
+	 2+r/hBzDJme3g==
+Date: Tue, 06 May 2025 09:44:01 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: "Maciej W. Rozycki" <macro@orcam.me.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+CC: Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
+        "Ahmed S . Darwish" <darwi@linutronix.de>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        John Ogness <john.ogness@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Subject: =?US-ASCII?Q?Re=3A_=5BRFC_PATCH_0/15=5D_x86=3A_Remove_su?=
+ =?US-ASCII?Q?pport_for_TSC-less_and_CX8-less_CPUs?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <alpine.DEB.2.21.2505061104490.31828@angie.orcam.me.uk>
+References: <20250425084216.3913608-1-mingo@kernel.org> <alpine.DEB.2.21.2505050944230.31828@angie.orcam.me.uk> <CAHk-=wicfBCyMj_x5BiL32o55jqXfnxgn=X5BZZjA-FFER82Jg@mail.gmail.com> <alpine.DEB.2.21.2505061104490.31828@angie.orcam.me.uk>
+Message-ID: <A5AC3B8B-335C-4594-B0DC-D9247B286A37@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-This allows finding out when an inode was initially created, for
-example:
+On May 6, 2025 6:53:34 AM PDT, "Maciej W=2E Rozycki" <macro@orcam=2Eme=2Euk=
+> wrote:
+>On Mon, 5 May 2025, Linus Torvalds wrote:
+>
+>> >  We also have platforms that lack atomics, let alone double-precision=
+ ones
+>> > and they're fine too, so why is x86 different?
+>>=20
+>> So I don't know if you saw this thread:
+>>=20
+>>    https://lore=2Ekernel=2Eorg/all/202504211553=2E3ba9400-lkp@intel=2Ec=
+om/
+>>=20
+>> where I initially thought that it was the lack of TSC, but it looks
+>> like it's the CMPXCHG8B code that ends up causing problems=2E
+>
+> I did glance over (in my effort to process outstanding 40k mailing list=
+=20
+>messages in two days), but haven't spotted CMPXCHG8B being the culprit;=
+=20
+>thanks for the pointer=2E
+>
+>> And the core issue boils down to "there's no point in wasting time on
+>> even debugging this"=2E
+>
+> Sadly I tend to agree, being unable, owing to time constraints, to commi=
+t=20
+>myself to doing such debugging (NB glibc verification crashes i386 Linux=
+=20
+>reliably on Pentium MMX, apparently due to FP context corruption, and I=
+=20
+>need to prioritise debugging that, once I've figured out which actual tes=
+t=20
+>case triggers it, as due to the oddity of the glibc test system it's quit=
+e=20
+>tough getting the logs matched between the host and the target system)=2E
+>
+>> So basically, the support for i486 costs us more than it is worth=2E
+>
+> So the cost has to be reduced and just as I proposed on the previous=20
+>iteration last year this can be solved quite easily without sacrificing=
+=20
+>i486 support by adding #UD handler for CMPXCHG8B, just as we did for=20
+>analogous stuff with some RISC platforms years if not decades ago=2E
+>
+> I was told in said discussion that decoding x86 address modes was not as
+>easy as with RISC modes (thank you, Captain Obvious!), but still that=20
+>boils down to indexing into registers by ModR/M and SIB bit-fields, with =
+a=20
+>couple of corner cases, which ought to be less than a screenful of code=
+=2E =20
+>If objdump(1) can do it, so can we=2E
+>
+> No i486 has ever run Linux SMP=2E  Back in the day I tried hard to chase=
+ by=20
+>the spec a single i486 system built around the APIC and Intel MP Spec and=
+=20
+>could not find any=2E  Compaq had some proprietary stuff (Corollary bus?)=
+ we=20
+>never had support for=2E  And we discarded support for the discrete i8248=
+9DX=20
+>APIC years ago anyway that some Pentium systems used too for the original=
+=20
+>P5 microarchitecture or to go beyond dual=2E  So said emulation would hav=
+e=20
+>to handle the UP case only, which ought to be straightforward and well=20
+>contained=2E
+>
+> Thoughts?
+>
+>  Maciej
 
-- when was a device plugged in (and its node in sysfs was created)?
-- when was a cgroup created?
+However, building a #UD instruction emulator is a project in itself that s=
+omeone would have to take on=2E It isn't inherently simpler =E2=80=93 quite=
+ the opposite =E2=80=93 than the alternatives calling to a stub function th=
+an we have now=2E
 
-kernfs currently only implements `atime`, `mtime` and `ctime`.  All of
-these are volatile (`mtime` and `ctime` get updated automatically, and
-`atime` can be mainpulated using utime()).  Therefore, I suggest
-implementing STATX_BTIME to have a reliable birth time in userspace.
+We have the tools to do it; there is now a full x86 instruction decoder in=
+ the kernel that one could use to do this, but=2E=2E=2E
 
-Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
----
- fs/kernfs/dir.c        | 2 ++
- fs/kernfs/inode.c      | 6 ++++++
- include/linux/kernfs.h | 7 +++++++
- 3 files changed, 15 insertions(+)
+a=2E Someone would have to take it on;
+b=2E It will need continuous testing;
+c=2E That someone would *also* have to go through the additional effort of=
+ keeping the mainline code clean for the maintainers of the modern hardware=
+=2E
 
-diff --git a/fs/kernfs/dir.c b/fs/kernfs/dir.c
-index fc70d72c3fe8..9a6857f2f3d7 100644
---- a/fs/kernfs/dir.c
-+++ b/fs/kernfs/dir.c
-@@ -678,6 +678,8 @@ static struct kernfs_node *__kernfs_new_node(struct kernfs_root *root,
- 			goto err_out3;
- 	}
- 
-+	ktime_get_real_ts64(&kn->btime);
-+
- 	return kn;
- 
-  err_out3:
-diff --git a/fs/kernfs/inode.c b/fs/kernfs/inode.c
-index b83054da68b3..1ff2ee62bfe6 100644
---- a/fs/kernfs/inode.c
-+++ b/fs/kernfs/inode.c
-@@ -189,6 +189,12 @@ int kernfs_iop_getattr(struct mnt_idmap *idmap,
- 	struct kernfs_root *root = kernfs_root(kn);
- 
- 	down_read(&root->kernfs_iattr_rwsem);
-+
-+	if (request_mask & STATX_BTIME) {
-+		stat->result_mask |= STATX_BTIME;
-+		stat->btime = kn->btime;
-+	}
-+
- 	kernfs_refresh_inode(kn, inode);
- 	generic_fillattr(&nop_mnt_idmap, request_mask, inode, stat);
- 	up_read(&root->kernfs_iattr_rwsem);
-diff --git a/include/linux/kernfs.h b/include/linux/kernfs.h
-index b5a5f32fdfd1..9332aadf4b48 100644
---- a/include/linux/kernfs.h
-+++ b/include/linux/kernfs.h
-@@ -229,6 +229,13 @@ struct kernfs_node {
- 	void			*priv;
- 	struct kernfs_iattrs	*iattr;
- 
-+	/*
-+	 * The birth time (for STATX_BTIME).  It lives here and not in
-+	 * struct kernfs_iattrs because the latter is only created on
-+	 * demand, not at actual node birth time.
-+	 */
-+	struct timespec64	btime;
-+
- 	struct rcu_head		rcu;
- };
- 
--- 
-2.47.2
+And at some point we will be at a point where we were with i386 that the o=
+nly users are occasional testers=2E
 
+With regards to EISA, you still haven't clarified if there is a true use c=
+ase or if this is a museum/nostalgia project=2E There isn't anything *wrong=
+* with museum projects, not at all (I recently got to play SPACEWAR! on a r=
+eal PDP-1; it was amazing) but imposing a maintenance burden on the mainlin=
+e developers of one of the most heavily used architecture on the planet is =
+not practical=2E
+
+If someone really wanted to, they could maybe fork off, say, arch/i486 and=
+ maintain the a version of the kernel limited to these old machines, but it=
+ would require someone being willing to do the work=2E=20
