@@ -1,78 +1,159 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9341427FD67;
-	Tue,  6 May 2025 15:55:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75754283159;
+	Tue,  6 May 2025 15:55:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746546918; cv=none; b=RCmQWK8JeMm0JUN34d0YhXl/2DQ4tMmjzyWBUPt7xCf/23mjl7Q64v5iPbIZg/WAbO2fGr8HnAIMllfcMBZTUbC3MtVEYhtW7D4vQ3C4lA0BP3QQ/vjnNWqhVzI+fLxrEp4XSu2Q1OiA+TjQjRHh8AwUeG7lsa0FALzrm5uuCsY=
+	t=1746546940; cv=none; b=I7YrOODGSvKSaXDSSyhM2MRMKZKE79aV+EQZbHaGBLgNXSPZ4ZGwfxpHoHDKIw1XUmiwwtkQ2wZpIVKwWIwOYgP2QGkpQjWLHnO7xct/ICUtyi22Imgm36IYpFVNAmFa59bLwBcVqCjygI0yUhIXq90SXxJwr2KaojyqSB4NJZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746546918; c=relaxed/simple;
-	bh=KokwTcsPEjcIZ/f64cPMglQ909nlpDnMzhPyZGYvzxw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=exbdEODe0RwZrlhJEf6UbFgU8jULxbkEmqeF0o0R+Bbuh3e6un8eXXZTDU1Pv2KR0ZJAaxso8hwMvyLNjpVqdu2NQjNo1AeG89u4d5NhWsQsYToSjpFENdHKv0+SCELEgg/5ZaO6p0V8KmDl7kayMm2DqynBsvNsXyFu+OViZzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YA/lDEym; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746546940; c=relaxed/simple;
+	bh=mCFQ+ucNuyMo3C5xld3jMo5WkJTHaPdSBRjzt64xstg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=E68Ez4F6bI8U1U3dnFOjH52esD6wMl/Fl9Z09weB9EwL/dOl374J2hqmSXr9CKcaRimfIrjwXzx6ikgwAU6G5CqOl5qEnHZB2V3tocYgslRKqZHgS2A61K00ehR/IX+yc9lSYgv91K5ReH9Gcvk4mqoLOOjY2qi6joB37azdpBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XaszKUbc; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YA/lDEym"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED659C4CEE4;
-	Tue,  6 May 2025 15:55:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746546916;
-	bh=KokwTcsPEjcIZ/f64cPMglQ909nlpDnMzhPyZGYvzxw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YA/lDEym02kXPHJYYAshEh37VVEPXYr6h6uUOT3HR5v3gjEgKBOj1grHVWAuVgdtJ
-	 8reM6KCZV5esAd60c4cIkLJo1L6p4kV6Roxnos9n5MjPW7xW/XLfQYonwyhmXvLFoM
-	 9EI3HKKa7GNlohfqkWY+hAhP3v46T18EJBGhmMXzu49uqvTibHpMsanT7iWqsoHoqh
-	 ecDC9NIr1t/MsHrIYhKdR/msNFEoAQHS1f8sa9oQR7tXwFKusOM38K7A7cjMzKOwEs
-	 nQCLhZaGH+jh7whmh0N7cGYW2y2NP4M7dC3JhGvHmT9xJhTbyH5ljZTmmslu47n5Ia
-	 hP7QgfInSFQWQ==
-Date: Tue, 6 May 2025 08:55:15 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Zhang Yi <yi.zhang@huaweicloud.com>, dhowells@redhat.com,
-	brauner@kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-ext4@vger.kernel.org, linux-block@vger.kernel.org,
-	dm-devel@lists.linux.dev, linux-nvme@lists.infradead.org,
-	linux-scsi@vger.kernel.org, linux-xfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org, tytso@mit.edu,
-	john.g.garry@oracle.com, bmarzins@redhat.com, chaitanyak@nvidia.com,
-	shinichiro.kawasaki@wdc.com, yi.zhang@huawei.com,
-	chengzhihao1@huawei.com, yukuai3@huawei.com, yangerkun@huawei.com
-Subject: Re: [RFC PATCH v4 07/11] fs: statx add write zeroes unmap attribute
-Message-ID: <20250506155515.GL1035866@frogsfrogsfrogs>
-References: <20250421021509.2366003-1-yi.zhang@huaweicloud.com>
- <20250421021509.2366003-8-yi.zhang@huaweicloud.com>
- <20250505132208.GA22182@lst.de>
- <20250505142945.GJ1035866@frogsfrogsfrogs>
- <20250506050239.GA27687@lst.de>
- <20250506053654.GA25700@frogsfrogsfrogs>
- <20250506054722.GA28781@lst.de>
- <c3105509-9d63-4fa2-afaf-5b508ddeeaca@huaweicloud.com>
- <20250506121012.GA21705@lst.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XaszKUbc"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-22c33ac23edso64254465ad.0;
+        Tue, 06 May 2025 08:55:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746546939; x=1747151739; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UgR5FUf+57QhLp7U3yKuzQJoQ3wyAe9WAkKlCi6IjmE=;
+        b=XaszKUbck6YenAp3KNhMDNQSaeh41aEVPyCey5z44QWV1PchCVgr29fhWbOXvqeI5O
+         PDA4u7kxa/DEQykafnmW+6+2k8+OKtAhY+XZrG3RRN0sma7FZziFm6STzHIqQ8Hjtfaa
+         1JrRgSwWkjcSJZlCVbGhLAQCjeY6AmoynHXldoARiXkj95+qZtP/mPVRCwomtdsRddAn
+         q4KrlsPgrytfUT7AiLHUz6lUNGrvmiacnifSD19NRcgbj7UYrnFOKW3YyvZxfNh0rbZ8
+         IDff9hZXXFNVV5EvXIxL0ckuJ2I8Y2ia12KnjLleqA/yILRb5skPj4hqrsqNEi3PNQbU
+         vsqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746546939; x=1747151739;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UgR5FUf+57QhLp7U3yKuzQJoQ3wyAe9WAkKlCi6IjmE=;
+        b=H+pJDelK9njR0aOf6gQEPz9gdeLDPF0uqkLFhE/UfuDeOMzPnTuQqTrRgO24jR4BcD
+         gc+x+VVCiW51an8wTYnAXvFdYXPlI2zQ6sewCg6fl3BUE+xuFw/+WhLz2dNjghMb4pqZ
+         wqHdUeA+7v7ctD7sw4m3yx/+IPO0AEnWoRwx3CJYfssPclURlgpQgpxFgxhjK5JWp4uN
+         uujCuojZWtw9e67dT3ocAdZ53zmdiZ85rdngxKZmLZR1jC1AsKF5eLESEEIf6hCMgG0n
+         ZGkVcr2jjhLw+CL0SRlGRPPq+v9MXq2oXIf2j+ffu0iF5KfoYmVc88+eaTACauCFKYEx
+         IbXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWY+2VHQT+3yEJbat9cHd6HbwLKHrvOEdIXrqFHnOlfVLldlApv05IZo+UR5XvPV1wg7F3UEviq+Zg=@vger.kernel.org, AJvYcCX2JYmocNlkN/eRVPsER0GEZrYl8PqmKbc9SP7gHIsRMiDFvzKW7anYu4Vfy1Y/en1NXc8+uQJ+DG7BSXnj@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJUKxk27V7KDd5tKpd+YFd35aUHGhEV2dlGRyLZ8ffzycMGDRl
+	wno9kg2SyrnrbRt3TiEaaDS0/fiPEoG4izSO6OaRALtio5yiI171JqqttY9DwSwTghv665ySlNS
+	Z+hihxCp2RPp/p5RH31xm9Kyzi70=
+X-Gm-Gg: ASbGncve57gS1j0jnqWvR1nWpQ/1h/CipU+x+HPNDkxtKW9ttvqZ33r9i1kBBYYsfmI
+	meXNezsqpxfC9sdH66CfigmVs+hAniYgs6MlbLdcS3wImR6P/RUjWl69aNJeXdNXgZtOoEf7SYq
+	KKoIOPMWR21lB8iJjejRTJguo=
+X-Google-Smtp-Source: AGHT+IFQT7YE0wPz7OxIzXL3HY1tUyH9E5KZ0IigNFCx542OaM6J2+1+qSLFAdPCTYJM1AXpAoX0OxanubYRe/Hhg6w=
+X-Received: by 2002:a17:902:ea0f:b0:22e:4b74:5f66 with SMTP id
+ d9443c01a7336-22e4b746322mr28489255ad.42.1746546938637; Tue, 06 May 2025
+ 08:55:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250506121012.GA21705@lst.de>
+References: <20250503190044.32511-1-gye976@gmail.com> <20250504152441.13772899@jic23-huawei>
+In-Reply-To: <20250504152441.13772899@jic23-huawei>
+From: Gyeyoung Baek <gye976@gmail.com>
+Date: Wed, 7 May 2025 00:55:27 +0900
+X-Gm-Features: ATxdqUH9epeIH4jzPRzk09llcEw5SL3ADnjkWOTdNmRvxdHmR3Qt9xb21jLxo0c
+Message-ID: <CAKbEznvZ3BHJK8TjGg7MR2dDMtWk+gZ5SewF_u_J0=Nw6c082Q@mail.gmail.com>
+Subject: Re: [PATCH] iio: trigger: Add validation to reject devices requiring
+ top half
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: David Lechner <dlechner@baylibre.com>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 06, 2025 at 02:10:12PM +0200, Christoph Hellwig wrote:
-> On Tue, May 06, 2025 at 07:25:06PM +0800, Zhang Yi wrote:
-> > +       if (request_mask & STATX_WRITE_ZEROES_UNMAP &&
-> > +           bdev_write_zeroes_unmap(bdev))
-> > +               stat->result_mask |= STATX_WRITE_ZEROES_UNMAP;
-> 
-> That would be my expectation.  But then again this area seems to
-> confuse me a lot, so maybe we'll get Christian or Dave to chim in.
+Hello Jonathan, thank you for the review.
+I would appreciate it if you could review my additional comments.
 
-Um... does STATX_WRITE_ZEROES_UNMAP protect a field somewhere?
-It might be nice to expose the request alignment granularity/max
-size/etc.  Or does this flag exist solely to support discovering that
-FALLOC_FL_WRITE_ZEROES is supported?  In which case, why not discover
-its existence by calling fallocate(fd, WRITE_ZEROES, 0, 0) like the
-other modes?
+On Sun, May 4, 2025 at 11:24=E2=80=AFPM Jonathan Cameron <jic23@kernel.org>=
+ wrote:
+>
+> On Sun,  4 May 2025 04:00:43 +0900
+> Gyeyoung Baek <gye976@gmail.com> wrote:
+>
+> > Some device drivers implement top-half handler,
+> > which is not compatible with threaded handler trigger.
+> > This patch adds a validation function to reject such devices,
+> > allowing only iio_pollfunc_store_time().
+>
+> This needs more reasoning.  What makes it not work?
+> + what do we mean by not compatible?
+> I'd expect at least a reference to it using iio_trigger_poll_nested()
+> directly.
 
---D
+Of course, even if the IIO device registers a top-half,
+`iio_trigger_poll_nested()` ignores the top-half and only calls the
+bottom-half, so it works properly.
+What I misunderstood here is that I thought there were other IIO
+devices implementing a top-half other than
+`iio_pollfunc_store_time()`. So I assumed that the TODO was to block
+those.
+I had confused it with the IIO trigger's top-half handler, apologies
+for the confusion.
+
+---
+
+> It's unfortunately hard to tell whether a top half handler is
+> actually needed or not.  As a follow up question, what cases do we have
+> of top half / interrupt context handlers other than iio_pollfunc_store_ti=
+me()?
+
+No, it seems that `iio_pollfunc_store_time()` is the only top-half
+handler for IIO devices.
+
+---
+
+> Maybe we don't need this code to be this complex any more at all
+> (i.e. could it become a flag to say whether the timestamp is useful or no=
+t)
+> rather than registering the callback.
+
+my new understanding of TODO is as follows:
+    - Since `iio_loop_thread()` can only call
+`iio_trigger_poll_nested()` and not `iio_trigger_poll()`,
+      if the connected IIO device expects a top half such as
+`iio_pollfunc_store_time()`,
+      then `iio_loop_thread()` needs to directly call
+`iio_pollfunc_store_time().`
+
+Would my understanding be correct?
+
+---
+
+> >
+> > +/*
+> > + * Protect against connection of devices that 'need' the top half
+> > + * handler.
+> > + */
+> > +static int iio_loop_trigger_validate_device(struct iio_trigger *trig,
+> > +                                             struct iio_dev *indio_dev=
+)
+> > +{
+> > +     struct iio_poll_func *pf =3D indio_dev->pollfunc;
+> > +
+> > +     /* Only iio timestamp grabbing is allowed. */
+> > +     if (pf->h && pf->h !=3D iio_pollfunc_store_time)
+>
+> Why is iio_pollfunc_store_time useable here?  It's not going to store the
+> time if we don't call it...  We could special case it probably but we'd
+> need to ensure the call is actually made.
+
+Yes, If my new understanding is correct, `iio_loop_thread()` needs to
+call `iio_pollfunc_store_time()` directly,
+depending on whether the IIO device's top-half is NULL or
+`iio_pollfunc_store_time()`.
+
+--
+Regards,
+Gyeyoung
