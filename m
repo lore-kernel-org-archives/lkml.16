@@ -1,129 +1,117 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CC5C201270
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 10:53:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4603C15573F;
+	Tue,  6 May 2025 10:56:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746528839; cv=none; b=TP03VY33fTrmF5UWoZLPQnJbe/m98ejWS+chBI/qXUb2lOdk9VjR9Amywn9rGwvOm2gDBAcnUU9w/Sz9dyHZLtRWRUlGaQG0Rky8Fnt8YvCi/od8gqzNgK22/fUUl9QMF7Hgg1FZm2vn0Waf9bQCVx/C6733Qsc+g0Y9OSrn7yc=
+	t=1746528984; cv=none; b=CCUmG4yLhMTm9s1RwrgYo2Ogenk+uZrcQ9ITnLD0fXpz4prCISRc14YtMjPGXHf2iwwwTZT9lht3FuqxeC6ktn/Cp4yvbbPM3qFfDxxGEP6IEONFyHP2wSaAXLVT7QK3K+MfzZ8REwCvnb3nv1ytBLstsf7r7z8xUgKI9wM+Uf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746528839; c=relaxed/simple;
-	bh=eV8TRYyRHyk4qSolrSUWSrNWlAk6y1mQqiFizVd1vAw=;
+	s=arc-20240116; t=1746528984; c=relaxed/simple;
+	bh=GA5ZpnID6igHQeFhaVM1Qu7EkyLsdryND2TVMd43AxE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hOtu7ntm6ED8FVQy4fbuA/zgOiJLVHUEYIAX9EN0qca/7YYMpw+qyY4oYSTQMiD5VD0B9Qs+SD1b+HuI84bYjuROgNyS5iAjyfg2HJTVboE/zn4I5ndNb5rUffi+EGMCDdslP4SHWnbSWZAERdWJBUdZpGdwsxvEJcSdYjXG+k8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8E73B113E;
-	Tue,  6 May 2025 03:53:47 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D70033F673;
-	Tue,  6 May 2025 03:53:56 -0700 (PDT)
-Date: Tue, 6 May 2025 11:53:52 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	James Clark <james.clark@linaro.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH v2 7/9] coresight: Consolidate clock enabling
-Message-ID: <20250506105352.GE177796@e132581.arm.com>
-References: <20250423151726.372561-1-leo.yan@arm.com>
- <20250423151726.372561-8-leo.yan@arm.com>
- <08690315-ce0e-4b2e-b85e-d8b9a82f4b11@arm.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=KBlSvc4nbWhoEgVx4eMct7sA6NdajGkyTSv2WZO1RGLdVreYHmHvSHnbnLhHe7Ko3htE5d2e7sJ84T3VsW4fmNhQjYt4rj5quWnNOI5wfmQu1CRz72H3pMAWVEiFo6NOquPOSA533sle8xI+AynwyB9llrflctmIrZmbnNSfid0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VALaqXbB; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VALaqXbB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F9B2C4CEE4;
+	Tue,  6 May 2025 10:56:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746528983;
+	bh=GA5ZpnID6igHQeFhaVM1Qu7EkyLsdryND2TVMd43AxE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VALaqXbBU21GEo0EF59CUDy2Om4a8W2Evcq19YuXW2QWIqMGomanWGf4NUFTJr8T2
+	 wG+Wci8SxOAIHoxeaAaGSY8UTI9vi6Xvr6TLXEFRxgwMx4Lag57jrufY9h9uLdrQR6
+	 kVLbbyjhGN9gdxcHPaEcEJvDA+l+bznyxUNkh60+7A0E9L9On7mxTyTfSGqDVzHuOW
+	 DLczOE9pKHZ5sQLOHMCc/tAHR+z4vM3q0SCFx7OfgDimZL0uRvQkPth5NoyHUNOg+G
+	 DLfwDsaXsPLz8AjoL9HsKQXxss6+vpkCNN1x7ZMp5c2xKUGkbnhnfLqZptF7jGST44
+	 GOiQJRPTXczeA==
+Date: Tue, 6 May 2025 11:56:19 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Andi Shyti <andi.shyti@kernel.org>
+Cc: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>,
+	linux-i2c@vger.kernel.org,
+	prashanth kumar burujukindi <prashanthkumar.burujukindi@microchip.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] i2c: microchip-corei2c: add smbus support
+Message-ID: <20250506-bunny-puma-996aafbf3f56@spud>
+References: <20250430-preview-dormitory-85191523283d@spud>
+ <3421bf4a-afa1-4b4c-8421-bad7187d3d8e@quicinc.com>
+ <7q4gdh3jcbnsptmdv6fywnwqta5nekof4wtut35apw5wphhkio@veeu4ogcm44h>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="20FjOMVKKGof8BGx"
+Content-Disposition: inline
+In-Reply-To: <7q4gdh3jcbnsptmdv6fywnwqta5nekof4wtut35apw5wphhkio@veeu4ogcm44h>
+
+
+--20FjOMVKKGof8BGx
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <08690315-ce0e-4b2e-b85e-d8b9a82f4b11@arm.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 05, 2025 at 12:58:06PM +0530, Anshuman Khandual wrote:
+On Mon, May 05, 2025 at 10:04:27PM +0200, Andi Shyti wrote:
+> Hi,
+>=20
+> On Wed, Apr 30, 2025 at 05:06:09PM +0530, Mukesh Kumar Savaliya wrote:
+> > On 4/30/2025 4:53 PM, Conor Dooley wrote:
+> > > From: prashanth kumar burujukindi <prashanthkumar.burujukindi@microch=
+ip.com>
+> > >=20
+> > > In this driver the supported SMBUS commands are smbus_quick,
+> > > smbus_byte, smbus_byte_data, smbus_word_data and smbus_block_data.
+> > >=20
+> > Write completely in imperative mood. something like :
+> >=20
+> > Add support for SMBUS commands in driver
+> >=20
+> > Add support for SMBUS commands: smbus_quick, smbus_byte, smbus_byte_dat=
+a,
+> > smbus_word_data, and smbus_block_data.
+>=20
+> yes, I agree that the original commit log is a bit lazy written :-)
 
-[...]
+I don't personally think the suggested wording makes any meaningful
+difference, but I can rework it if required.
 
-> > --- a/drivers/hwtracing/coresight/coresight-core.c
-> > +++ b/drivers/hwtracing/coresight/coresight-core.c
-> > @@ -1645,6 +1645,51 @@ int coresight_etm_get_trace_id(struct coresight_device *csdev, enum cs_mode mode
-> >  }
-> >  EXPORT_SYMBOL_GPL(coresight_etm_get_trace_id);
-> >  
-> > +/*
-> > + * Attempt to find and enable programming clock (pclk) and trace clock (atclk)
-> > + * for the given device.
-> > + *
-> > + * The AMBA bus driver will cover the pclk, to avoid duplicate operations,
-> > + * skip to get and enable the pclk for an AMBA device.
-> > + *
-> > + * atclk is an optional clock, it will be only enabled when it is existed.
-> > + * Otherwise, a NULL pointer will be returned to caller.
-> > + *
-> > + * Returns: '0' on Success; Error code otherwise.
-> > + */
-> > +int coresight_get_enable_clocks(struct device *dev, struct clk **pclk,
-> > +				struct clk **atclk)
-> 
-> These arguments probably could be arranged better as pclk and atclk are
-> always contained inside 'xxx_drvdata' structure, which could be derived
-> from the 'dev' structure itself, if [dev|platform]_set_drvdata() always
-> ensured to be called earlier.
+> > Also mention below limitations here .
 
-Seems to me, the conclusion "pclk and atclk ... could be derived from
-the 'dev' structure itself" is not true.
+I actually removed them from the commit message, since they're not
+limitations just what was and was not tested. I can put them back too
+if that's needed.
 
-The reason is the coresight_get_enable_clocks() function is located in
-the CoreSight core layer, it has no knowledge for driver data
-definitions (see etmv4_drvdata, funnel_drvdata, etc).  as a result, it
-cannot directly access the fields "drvdata->pclk" and "drvdata->atclk".
+> > SMBUS block read is supported by the controller but has not been tested=
+ due
+> > to lack of hardware. However, SMBUS I2C block read has been tested.
+>=20
+> Smbus i2c block has not been tested? If so, can we leave it out?
+> What is the interest to keep it in?
 
-> Currently there are only two instances where a NULL is being passed to
-> indicate that 'atclk' clock is not to be probed or enabled. Could not
-> individual clock requirements be passed in a flag argument instead ?
-> 
-> #define CORESIGHT_ENABLE_PCLK	0x1
-> #define CORESIGHT_ENABLE_ATCLK	0x2
-> 
-> coresight_get_enable_clocks(struct device *dev, unsigned long flags)
-> 
-> - atclk/pclk derived from drdvata which in turn from dev
-> - flags can be checked for pclk/atclk requirements
-> 
-> Even better - as atlck is the only optional clock here, it could just
-> have a boolean flag argument to indicate for atclk clock.
->
-> > +{
-> > +	WARN_ON(!pclk);
-> > +
-> > +	if (!dev_is_amba(dev)) {
-> > +		/*
-> > +		 * "apb_pclk" is the default clock name for an Arm Primecell
-> > +		 * peripheral, while "apb" is used only by the CTCU driver.
-> > +		 *
-> > +		 * For easier maintenance, CoreSight drivers should use
-> > +		 * "apb_pclk" as the programming clock name.
-> > +		 */
-> > +		*pclk = devm_clk_get_enabled(dev, "apb_pclk");
-> > +		if (IS_ERR(*pclk))
-> > +			*pclk = devm_clk_get_enabled(dev, "apb");
-> > +		if (IS_ERR(*pclk))
-> > +			return PTR_ERR(*pclk);
-> > +	} else {
-> > +		/* Don't enable pclk for an AMBA device */
-> > +		*pclk = NULL;
-> > +	}
-> 
-> Might be better to invert this conditional check as if (dev_is_amba(dev))
-> for better readability.
+What's the interest in adding any feature? Someone might want to use it.
+We did not have a piece of hardware that uses it, so didn't do testing
+of that specific command, but a customer may well want to so we included
+it. Again, if you think removing it is the play, I can do that.
 
-Will refine code for this.
+Cheers,
+Conor.
 
-Thanks,
-Leo
+
+--20FjOMVKKGof8BGx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaBnq0wAKCRB4tDGHoIJi
+0jdYAQDoDbL9wfGYgWjhpFIl3U1CUgwFBkvgTqNVU9pISEKhaQEA2HL2vRmyNiuE
+NhfTAbHkN9decclgXBD3bNvp3uUdPwY=
+=X6gl
+-----END PGP SIGNATURE-----
+
+--20FjOMVKKGof8BGx--
