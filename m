@@ -1,111 +1,151 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6EEF28002E
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 17:03:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D92EF283FE8
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 17:03:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746551008; cv=none; b=mBYhge+0oh8PgZWi613Srn3vGJrddBlH1GhYYGTaeTSRMBT7Uejy0YqWRuZpNwJIE/qednselukB5Yq1utN3VQrJMWtnLjemrqC9LPv6m8aT4LtK/eDimNtDF7cMmpQCXdifEjvaqYnUc0ZZZthBGcpD6wDRJNUZERGWUY7girk=
+	t=1746551018; cv=none; b=ur0KYnJIURAoGu8vHgPZAeeY5Yii8CE5AaKOHsxtTkdkQaYpWo1kuX8iB4nw14NahI+twjtp61Ip4PrzfznIpCb1t4a+c4nBhMe4Gh8Bm2Z65HC3y6iy30iHGw9NJBUyDI0BhooO0SSqWupdfquXIpfnFmWKaCW6inITcGV6OXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746551008; c=relaxed/simple;
-	bh=oAZmhMH/J7xZM0RB3kIseO4CGKpKwCQ/2uk3SmifGys=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=In/4MOZoPV0f36T0lFfTVGOB5+pucwhY2WtK0LtLL0/8ousqh3x3SBxTzXJqE4rl9xk3bGl01ft1DchIqOInJfyMCUBbkJI/F2TsrxOVHU9B5t7fAAs1KXu3+/7SWRio6JocYu/flYbqEhkSb6sm2EskVqBjwqulykaQhWdVfTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JozH4/0V; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746551018; c=relaxed/simple;
+	bh=S36e/AfvMii+zYLLY4uuHcRj6uHTGDzxO9akAzlMCEA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qnnBQcBNB7ryVXbSaItdQeXdIauiwKyZ6irAIWmyd3oW2+IL9qgQd7MzOInxuG39PyolmnNbWR0cU48Odb+lKKANmE+AqnlWUt00SjOrrg1GgUM/nbp707Tcf/j72Cm60orqvyR2fA0/zPkhqIVSMlk6JO7KY4PWwhHcQUqxs8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=TGxcufOI; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JozH4/0V"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43cf628cb14so555235e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 10:03:26 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="TGxcufOI"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ac2902f7c2aso937610466b.1
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 10:03:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746551005; x=1747155805; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/CCnLyjkaGTMbxhwfFBlgGdaiHRaA0exvf0TsA4hrqk=;
-        b=JozH4/0VZOws8RUiRW7wpuAv3tBk51T19yjZEKUz6sA8vKs3tP+GpG7PAsm+jeWpq7
-         rsq6Owg881wSfyMQO8bzdJz9eIBEwyXPUUSlbB03iaPZjc15SlP7aAGojwfv+CToSOIM
-         j8AUo9RSFILkVDhEkS7klZWsIKGVX89NddLUQdQ1+3UmTcWXQCsFWzAfB9LAPh/suzwC
-         egeRkSvviXCekhSQ+i/HTXRouksJDqrBWqAJwgh243Rkoyxz3r3RINKWM4PZFZkJ70NH
-         obQnlv1yqtdfD7hBx0VIf0YEcHyZKEya41mMg2QAKyYICJ6pqnpGk5v2HekDis04V6IY
-         u4lg==
+        d=linux-foundation.org; s=google; t=1746551014; x=1747155814; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=9tsrXetGcHXhlhDD75jAH1r6uQJobxHanpR51VAuyMw=;
+        b=TGxcufOIFLu0AI7Xg65mcYE0TOk8/HYSHJ6PuTKz3jPDBghs62fZypxYZcym2ynFuQ
+         geQs4D+zyrDWXPYQqrC4+8kugxI7Vld5otIEsnisnXfVhdhsPAGEUf2j4LrgkPSmJCy8
+         nLbdc6XligG0LXkLfWc/iwAYSb6nz7WTuyJFA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746551005; x=1747155805;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1746551014; x=1747155814;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=/CCnLyjkaGTMbxhwfFBlgGdaiHRaA0exvf0TsA4hrqk=;
-        b=nJL0ieqe1JPJD0QIy+UaS4Z4hh5Lroww4mWWzxUv6qMcZ1LDXHQ4YmkDuEWon9JuB7
-         XyfQgDXP9vmuv6MknIRz6vgMMG5F11klp8Dk/EO9zuwFY1JdB2EavrvmFmBOpXSISYQD
-         C64Vlsj6NJhRgA/1d15s2t8AMp39zOrcp0wxzOq7oGq92/S2PMWo2j1KJDPiAN2X874f
-         7cerc4fKsGQCvIfeF8XctOYBzgBCz/uznVNny0jWWA9OieMAobH3u5AU61I+wwSCnK0H
-         6dtWPecKxzLorBv1ZMaxkz5KMoD2nTpDrQvjjWULAQzu3FIWp4lVD0Si8c+jm0RMWxkb
-         3pGA==
-X-Forwarded-Encrypted: i=1; AJvYcCXkzIwf/6xE0zPSVpD+phBEgvOKcRK1OVkzWqgJ/9uNrMVrwW8/KhePZN4R2nDNmAN1jT7EeikRIJ8adlM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbjyV/W1xXD+gtPRY1TbfPtUuUxdGzf0GvYgVSwiTTOrZjju0y
-	ZtiqaUfq0AASYQ0KWXu2Oh9KI0Lc3JMXbfXNjSaCZcbTFeQ0Dbai
-X-Gm-Gg: ASbGncsymf8nVrXoVQHk/rfrOSrEFrH5Du4UeQP0HYV27T4JuFPHkNUK/yaK2ZlvYuK
-	KHuMHVDt9OThgd8nP+jREXF54wur0hRGuKx63Dfdqgh6c1C3ZRL7eJw0ykJiIROphdaf3Ml+iZO
-	1rxtGpXcE0cw3ZXUXBObcir2GRg8bfW/d/22zsp05Yo3XaLc1HByhr8+NzXuLBy1LSXoVoa7oRG
-	NivHO27f4lr/i+aR8kOwcgiq9sPiTHlAPqJsuRxoYmmn+zqPqzovnX+kcoFqfm/XXv6n6Mc++pl
-	Y+ZIri8HYjV/JgIxKD0MlxmXWbKWcdfS7B0rRk6i5ZAQJQVI3g==
-X-Google-Smtp-Source: AGHT+IGciSgh+as98UaUzEXZ9KKzoL39AppBd0P968eJiBnLcLLJnEAbq7PskIA1zJtpaTWxAgHPOw==
-X-Received: by 2002:a05:600c:5291:b0:439:9737:675b with SMTP id 5b1f17b1804b1-441d3b3a794mr5836435e9.7.1746551004823;
-        Tue, 06 May 2025 10:03:24 -0700 (PDT)
-Received: from localhost.localdomain ([46.248.82.114])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a0ad54f105sm2738226f8f.85.2025.05.06.10.03.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 10:03:24 -0700 (PDT)
-From: Uros Bizjak <ubizjak@gmail.com>
-To: x86@kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Uros Bizjak <ubizjak@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH -tip] x86/asm: Use inout "+" constraint modifier in __iowrite32_copy()
-Date: Tue,  6 May 2025 19:02:48 +0200
-Message-ID: <20250506170313.197530-1-ubizjak@gmail.com>
-X-Mailer: git-send-email 2.49.0
+        bh=9tsrXetGcHXhlhDD75jAH1r6uQJobxHanpR51VAuyMw=;
+        b=nxaDDmxIxkqX7wMmF0A/+HEY811Ypx4fZRvX5yuGqDkAAwaD6cWtsEc27rEsyC8uQa
+         1MyIJjiR+2QoJmcHZXayOpV7TuOJ4/90BEtIoYNpSOaV+DPeLLYhbvsA8T+j1LfIAAZ0
+         yTgCptw7kooacI/OHrQNCrjPSIplHA8xzYuJYOZa4KzzP/Z5aayrXZwGYzmmSeaq0Sks
+         aDEXPJhRJkmh7MQJzEYxf5xrtv8mkwLR4JhXqkmMEav3BSgcQm131LiY9pUTou8kyxwx
+         20+lio7iCN2P0EBzmirUryvell2NSKDx3TBtA1fnQYx1Fqh2wwaIEkTsDW0ntDs0YCpf
+         PFBw==
+X-Forwarded-Encrypted: i=1; AJvYcCVnhZfQLbxOOxjSDp6/XS6o4TBHlJgtyWVVuImS3LZ8yEHqEapTx8Ac1ISILOR+zhfzCxl6ZcVpBfd2Ihg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyT+Inm/nA4Ouy4SOpoqvhXHWiU5Dj7/vLpr88qkOy9aAAe9uL8
+	57hXoUz3rshaWa9m0pWfIBDUkKClbcDS1cjny5Y+Y3Zq0cpKXBTnyTtDMVtxWipXKv51COnLIkA
+	Ph/Y=
+X-Gm-Gg: ASbGnctgN3GTtgzQL4XoppVBHxjiSxoHU9gfmwJyEtLuzlRvx12cXAwZSJcx9fPrWwb
+	67lFrlPGDsGWOBkeMYHnBs69ZMWTfV2cFhP5rZ41EmUUTAI+jznvQZELiEmSLobzIVLb2tGwJOL
+	w3EujGGhY2dvlyoTugwB/LwAKG48HR+CEVlRxikW61yH/KYA2QyIwwv5/+X0xSPGlkqhGcGGGna
+	1TdveiNR/mr1V/RBsenpTYqcc6t0talVEHZAxZOP2ASfP6iFGCSImomKcOX4erYnlx6pOzXSVb4
+	ZOx2VtnmSGQazsOW3R8tQcA7mwzRbKrv7UcawXFLPjv7xnYZcNBBNp7iofLQFwX2RWNQPIKfEAq
+	QiRAUOMlCNW9GttMtQWewfEVi0w==
+X-Google-Smtp-Source: AGHT+IHZeIn3M0qVUoOcEY4wQg34jzIBzbFf6CIdav704+eg2jdwa3X94HFVPXlGN46HOTZX6hEgOw==
+X-Received: by 2002:a17:907:3f92:b0:ac2:6910:a12f with SMTP id a640c23a62f3a-ad1e8cd6ab6mr23745966b.46.1746551013699;
+        Tue, 06 May 2025 10:03:33 -0700 (PDT)
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com. [209.85.218.42])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1894c024asm722439066b.117.2025.05.06.10.03.33
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 06 May 2025 10:03:33 -0700 (PDT)
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ac2902f7c2aso937604566b.1
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 10:03:33 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWVQdbFdxxv2M3WD4OV2GHQJkzWss9/tLE/UekXZSSXPPjj9Jf10trpJwf8GFh4SqzG9ZPFLJ/ohiqY8DQ=@vger.kernel.org
+X-Received: by 2002:a17:906:ba90:b0:acb:63a4:e8e5 with SMTP id
+ a640c23a62f3a-ad1e8b92457mr27316766b.6.1746551012621; Tue, 06 May 2025
+ 10:03:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250506154532.1281909-5-ardb+git@google.com> <20250506154532.1281909-8-ardb+git@google.com>
+ <CAHk-=whrcutH0LcMmaeJxxMeYpw2R5T80yoQAXbrRHNSTCB0Pw@mail.gmail.com> <CAMj1kXFSae=stazUv8doka-zLOnDdXXR4ASxHKe5f97ikg3V2A@mail.gmail.com>
+In-Reply-To: <CAMj1kXFSae=stazUv8doka-zLOnDdXXR4ASxHKe5f97ikg3V2A@mail.gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Tue, 6 May 2025 10:03:16 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whxP5Ywpv-U=2NPFhk929VHB9_kdp10+HFJQ4VxEGdX9A@mail.gmail.com>
+X-Gm-Features: ATxdqUEevwtOmN_Ygu0D9Ha17vaJcrOoRxli3ahIdE2x69cQoMke62jq9Birbdk
+Message-ID: <CAHk-=whxP5Ywpv-U=2NPFhk929VHB9_kdp10+HFJQ4VxEGdX9A@mail.gmail.com>
+Subject: Re: [RFC PATCH 3/3] x86/boot: Use alternatives based selector for
+ 5-level paging constants
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
+	Ingo Molnar <mingo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Use inout "+" constraint modifier where appropriate.
+On Tue, 6 May 2025 at 09:35, Ard Biesheuvel <ardb@kernel.org> wrote:
+>
+> I think the first two patches are important, though, as they are about
+> robustness/consistency rather than optimization.
 
-No functional changes intended.
+That first patch already has another copy of that insane inline asm
+optimization.
 
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
----
- arch/x86/include/asm/io.h | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+Let's fix this properly, not this disgusting way.
 
-diff --git a/arch/x86/include/asm/io.h b/arch/x86/include/asm/io.h
-index ca309a3227c7..2ea25745e059 100644
---- a/arch/x86/include/asm/io.h
-+++ b/arch/x86/include/asm/io.h
-@@ -218,9 +218,8 @@ static inline void __iowrite32_copy(void __iomem *to, const void *from,
- 				    size_t count)
- {
- 	asm volatile("rep movsl"
--		     : "=&c"(count), "=&D"(to), "=&S"(from)
--		     : "0"(count), "1"(to), "2"(from)
--		     : "memory");
-+		     : "+D"(to), "+S"(from), "+c"(count)
-+		     : : "memory");
- }
- #define __iowrite32_copy __iowrite32_copy
- #endif
--- 
-2.49.0
+Let's get rid of that USE_EARLY_PGTABLE_L5 crazy case entirely, and
+fix the few places where it is currently used.
 
+That code is bogus *anyway*, because your argument for these patches
+is "one single truth", but the fact is, there's at least *SIX*
+different values that get set depending on this value: pgdir_shift,
+ptrs_per_p4d, vmalloc_base, etc. All of those change depending on
+whether we do 5-level page tables or not, so the whole argument that
+"pgtable_l5_enabled() is special" is just wrong to begin with.
+
+Any code that makes pgtable_l5_enabled() will fundamentally then just
+have *another* inconsistency, namely the inconsistency between that
+"is_enabled" and all the other values that L5 paging actually
+modifies.
+
+So I don't think your patches even fix anything. They only paper over
+one very particular issue.
+
+For example, as far as I can tell, the only real reason for it in
+arch/x86/kernel/cpu/common.c is *one* single use where we do that
+
+        if (!pgtable_l5_enabled())
+                setup_clear_cpu_cap(X86_FEATURE_LA57);
+
+in early_identify_cpu().
+
+And then we have __early_make_pgtable(), but that's the SAME FILE that
+has all the magical special __pgtable_l5_enabled logic anyway. So that
+damn well could just write out the actual real logic, instead of using
+that "is L5 enabled" helper function THAT IT IS ITSELF INITIALIZING.
+
+So I reall ythink this whole issue goes much deeper, and is much more
+broken than your patches imply. And I think your patches in many ways
+make it *worse*, because they may make that pgtable_l5_enabled() be
+set up early, but that just hides all the *other* issues that aren't.,
+
+As a very real example of that, just look at what happens in
+arch/x86/mm/mem_encrypt_identity.c
+
+It does all that page table setup, but if __pgtable_l5_enabled hassn't
+been set up yet, then all those *othger* values that go with it also
+haven't been set up yet, so now it uses the *wrong* value for
+ptrs_per_p4d etc.
+
+And I just checked: that code very much does use ptrs_per_p4d,
+although it's hidden by
+
+                memset(p4d, 0, sizeof(*p4d) * PTRS_PER_P4D);
+
+so I really think this is all papering over things. That code CANNOT
+WORK before __pgtable_l5_enabled hass been initialized in its
+*current* location.
+
+IOW, I think your patches only make things *less* consistent, not more.
+
+               Linus
