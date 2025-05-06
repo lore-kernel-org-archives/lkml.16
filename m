@@ -1,115 +1,172 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9C2F220F43
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 17:27:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ED05153BD9
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 17:28:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746552468; cv=none; b=q5quyA7NFIp+DVT05O7lWct0dNpZZMIONRBYgLMytl5JYw1U4q2/NwJNDKAQ97iqyKjZ3NmIu1REBVkNFkBvyjvW+tQkJqhpG6zmRuCmhuF6XwbgjX54hXz0n0pxe6U5DmQSlyNS08ayRDBrcc9R8AII0yoeoG+PbSCKhB26s14=
+	t=1746552495; cv=none; b=NAeC2W7MHDogpZh8NFfnOnyZC7VJu9+i6ZgHI07QoYGGhrtVbKN4Bjqv1frTT8+jEI1LN0yrkVcUaB9caqZJQk1XaMdRYZ0yNyhjJuYzdatDxOh7zfDRWYVwM4aj6nfyiXVCVhuEnVb0X8ykCPwN0J7SVWqm73ZdHVeohKkYkHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746552468; c=relaxed/simple;
-	bh=VZvedTE73bYMhdMPuuSG6IzGG8tV020eWS/PwiWAOIU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DBIJFO7LacWXmTsvTotuHz3W2RVSMZhQkc3gIV0738DB+UIVDB/kV2j1bogbxC35ueXY1av7wyXP89XsdxdsxA+A/OjEq6jng6VcQ4qq5t5IHWs8T9bnrhyiO1K9uuetz9IF3aGCR81GrSQe/Eci3GeAdipwq0PrY6IaZuzpg8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RQrOF3WE; arc=none smtp.client-ip=209.85.214.175
+	s=arc-20240116; t=1746552495; c=relaxed/simple;
+	bh=jnnYN3kbrZDz/R+9FtFmAiIQLTBC/H1JHKyfCk46ZWQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RtiMflGByFLeYg7ZrHQ7O7yihoXvTz8xmZOnCQpM95xiI6I7min2/jLVwXlkwv9j25bYhjx/M9UDjxZE5GagCeU4dwzQrN4KYQD0PpYtD88mPKqDzw+wGeUWk74VM7QjtuYV+7I3XN6tbsyaTOnwIXQ2f6feeFZX/SDpG4UCaX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VbOdnteZ; arc=none smtp.client-ip=209.85.208.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RQrOF3WE"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-22e09f57ed4so1417385ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 10:27:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VbOdnteZ"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5fafcdac19aso4184567a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 10:28:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746552466; x=1747157266; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=QntcJ9JC7N6KnoCCkYdEnTnrHKLcwgcPOoyiEKb/q5Y=;
-        b=RQrOF3WEkxj488AF++sb+gDfJIaeku9qfo2Rzd/iKMeDJXEows66TYFE5sOcUICCaP
-         Zi/8X6BTnwh/TC0WksaMXkNhGXLiTN8Ug1KvOB5JL5Dszv2RihaT1dePuOes9HYXHDlT
-         4JKkuTVGsAnPqQxNOweCPJfvja36yji8QpC81rf64EgoEJkwVVtP1/6o2Ba05OPdVqC1
-         S8a4KRzfW//c0BXoQ+8yJk7WknwvTuCMfpUNUDIsW7TdV1jMU0NscWzXEDYBQbKOqDFo
-         FqA5A9Z3+SF9EAi0NKg6SEY8iZXJBxu7PSL+WQ7vJybDuKm/g7Jg52on6YE/zpkLQPaI
-         5njQ==
+        d=linaro.org; s=google; t=1746552492; x=1747157292; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=grXy49nE1iJUPXKhEEBd+iUH9oxUUGc1jM22YoCJ94M=;
+        b=VbOdnteZzTGFiiJyf7EJqBUqk/pDrimIS7Htjm0qmRcZg+ioxb1uqumEqzdC0qli8S
+         hAG20boCT0mQknLw4RkWzBnGwn7M19I6mmdZcI5DTv8Amvp0BiqBfIUmANqf8wwc6Wpc
+         DraGQG4TQilnZXsRXjwYwkw4KaRKhqkZW+vrm/SvDSLGJPa+Bk7HIxKT0FY8eOUv7zfv
+         rgBCRbQfNCDXf0sVgXzH1Or0gfiufcXplTkftXLE/eLkNlxQ/s3NPv7aBYtJwzTAdbOU
+         wYjCDUCdK/jyiTswPiwxutaVPVnugakmJQotEUVMilNX3E5AQlTGNJJ0X+i68a4B7Q7X
+         TQJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746552466; x=1747157266;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QntcJ9JC7N6KnoCCkYdEnTnrHKLcwgcPOoyiEKb/q5Y=;
-        b=d4Yj+/00RZKmCMk+/qCnuQlKypF40mNXRV7OMyHHTwyePZ+8hJg/SVzHYgEkOyxUbm
-         Z4RtNtQv/FNhhQNIvI3yVP8o44ve8ubtr5j6tGbMfFP/3/39tSLZ/NAow9yep6Ig3NME
-         0DG4AiM5Ce0yD2eZwwIlIQG7PQKsNhaa7mFJ64KvhggxzO5EFf2pKTSG07kExVH8zzMH
-         qmpd10tEmxtweYYZMT6ptDT6bZt1pWzrLiEZ4ip95m2jNUjGKQKR3ZNIJxgQ91bA0BTz
-         zqWEfl9c0/4Wz5dhFqGMvpfAiSGHl1y05x4l93F9CXo/Z0+vx1zAyAiPuuRdayRfnGFX
-         NGLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVTB8R86I85xqlh8hVKLY8X5+PWczfoC2ULy87xOgm5LFsMMsoUBkNWMxflg0J2MP2xAorWRB8GFipkDQ8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1YxpdgTUbKDkywpdc4S1lteSad/xZ71li80ZZE74lAugElIOB
-	crf08Yt8nHmsi7iwdGiGpSaRKt3ylkZclaxF0JowaFUx/UHZWplgBxf573g3GjQ=
-X-Gm-Gg: ASbGncvfSE1Fh3zk65S0Yv0an+0wBky3UDzLwdYt5hphJFZAWGPRzBsmtZI4ze6QpL/
-	yoipkjU8ebubk2CkqSmuhljIOE0FgBOZkPwxijDhfhSDuEqbB7quvvwiUc43svqz4KZV25PHt2o
-	7bYbolRISOIyKhRN0vsgoJS2JR12Fl5qqU2FNRD5dEePqhSK4LvciDczsxw6CRjBudcxs4qKcWP
-	XSzDDUMJPRdn+dZqFlmbe4kw3pQfzJEaMWIDkra0yVvM3y6mWPYnNw1Mlbh4VawkdzMcKd/NSAT
-	sDsxht+zfn/WVEKiNP9N2LX3HN0+PxnVPMki8VqMbJ/mfM/JcA77NbA=
-X-Google-Smtp-Source: AGHT+IGb8PrWjxNOFSHqY4dUSPx0THioDcdMr2Zu+IP4nb33zCe+XaNuoMpebGjNT9nY0LAwSXTtUg==
-X-Received: by 2002:a17:903:283:b0:21f:5063:d3ca with SMTP id d9443c01a7336-22e5d9a1cfamr7061195ad.16.1746552466098;
-        Tue, 06 May 2025 10:27:46 -0700 (PDT)
-Received: from p14s ([2604:3d09:148c:c800:18ea:e7ed:8d1e:88a0])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e150ebfa4sm76661845ad.13.2025.05.06.10.27.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 10:27:45 -0700 (PDT)
-Date: Tue, 6 May 2025 11:27:43 -0600
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-To: linux@treblig.org
-Cc: arnaud.pouliquen@foss.st.com, andersson@kernel.org, corbet@lwn.net,
-	linux-remoteproc@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/3] rpmsg offchannel deadcoding
-Message-ID: <aBpGj35VsjvAjNmL@p14s>
-References: <20250429234600.301083-1-linux@treblig.org>
+        d=1e100.net; s=20230601; t=1746552492; x=1747157292;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=grXy49nE1iJUPXKhEEBd+iUH9oxUUGc1jM22YoCJ94M=;
+        b=ty2TRt0PCXzfIgEaRQ/cu6EqPC+wkDpdpSF/rKjSk2IRbjsRznW4a1dXJZe/W604eh
+         pMrg1MdLd0e24BGl2GnV+iF8cCV9OPPsG9eveF4BYlePrrsStVsoj9UxSAwij+CMywMg
+         4retZbJ2NHt+ZqLKPLv8KzM9lqm5o8XOrydPg0ZN8X1qv4HhkUK6ABgMoI3yETwLBc+Q
+         TY5f9lDEhAHX4wSezVxrVgt1JfC/WiIViWjBeDd3AwKfjog5TcHayMXYlWDHUdVIepWC
+         gM3lG93LzshauoWnJ0ctaX1bg2Qt4MnEssIZjG2/r1LbgV5SQZxy/OU3D3pHSYGkxNcy
+         Jo8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVGEo2Ifr7O4Zq1JpuYjTsYLzG2F9alfrGR1+zGzF5fxlgWYZvH0LVUKh4DupKa2vighBtHxz9Jdn3ZgBE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YytqO4C0jSSqPLLtrZz49MdC+tGXDvqkgmbrAri9T6n0p1Xk5xV
+	CtcWRsMm2eVDCP1h7GnqeN7lZLP3WsKDbdTmmopcdTWj7NKHhGVxg7wt1utSNGXNxyb/mR7v9kT
+	vHk09XTLu0Hj7/zbIgw2sk5P7zotTZ2WEI8btSw==
+X-Gm-Gg: ASbGncudd+8xNVHwsDX1Vi7YmXwpHpUCFjwj/RBTzL3jognfFIFP6P+L0neQSlJPyyj
+	TCUTOPGahn+Vn0OHtQwRf6QA7YG0AYPpKN4x1vD40bWGOXc66baaYC43TbjZQyR4XNr3XVVQdx0
+	wN28VfVgbt/kqS9dXef6AO4d0QedyjYi2V8F8Zh+3zgRlMjh9hTCF2mg==
+X-Google-Smtp-Source: AGHT+IH61rER+jFaiIMyOhqOEUN8cALas+FRcUonmSs8Vu5Kdp86RSl4BnRw/SiVr0jad8d0Ju9qzSTzny2sUIMnvOs=
+X-Received: by 2002:a17:907:7207:b0:abf:4da0:28e3 with SMTP id
+ a640c23a62f3a-ad1e8c50735mr32187466b.18.1746552491747; Tue, 06 May 2025
+ 10:28:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250429234600.301083-1-linux@treblig.org>
+References: <20250503-pinctrl-msm-fix-v1-0-da9b7f6408f4@oss.qualcomm.com> <20250503-pinctrl-msm-fix-v1-1-da9b7f6408f4@oss.qualcomm.com>
+In-Reply-To: <20250503-pinctrl-msm-fix-v1-1-da9b7f6408f4@oss.qualcomm.com>
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Date: Tue, 6 May 2025 19:28:00 +0200
+X-Gm-Features: ATxdqUEJCS-layHQflUTslWJjo7dTQpNOzT3ZmPo75mYuoogCm-sg4h65dFuYco
+Message-ID: <CACMJSesqtkorg1akuXjMa9U1fe60aDhfGOSB_T6mX5CtCYDwtg@mail.gmail.com>
+Subject: Re: [PATCH 1/4] pinctrl: qcom: don't crash on enabling GPIO HOG pins
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	Guenter Roeck <linux@roeck-us.net>, Josh Cartwright <joshc@codeaurora.org>, 
+	Matti Vaittinen <mazziesaccount@gmail.com>, Doug Anderson <dianders@chromium.org>, 
+	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Apr 30, 2025 at 12:45:56AM +0100, linux@treblig.org wrote:
-> From: "Dr. David Alan Gilbert" <linux@treblig.org>
-> 
-> Hi,
->   This removes a couple of unused functions in rpmsg,
-> and (v2) after discussions with Arnaud, follows the thread
-> and removes code that they would call.
-> 
-> (Build tested only)
-> 
-> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
-> 
-> V3
->   Fixup comment on rpmsg_send_offchannel_raw(),
->   removing the reference to "_offchannel" - as per Mathieu's
->   review
-> 
-> Dr. David Alan Gilbert (3):
->   rpmsg: core:  Remove deadcode
->   rpmsg: virtio: Remove uncallable offchannel functions
->   rpmsg: Remove unused method pointers *send_offchannel
-> 
->  Documentation/staging/rpmsg.rst  | 46 -----------------------
->  drivers/rpmsg/rpmsg_core.c       | 63 --------------------------------
->  drivers/rpmsg/rpmsg_internal.h   |  6 ---
->  drivers/rpmsg/virtio_rpmsg_bus.c | 24 +-----------
->  include/linux/rpmsg.h            | 22 -----------
->  5 files changed, 1 insertion(+), 160 deletions(-)
+On Sat, 3 May 2025 at 07:32, Dmitry Baryshkov
+<dmitry.baryshkov@oss.qualcomm.com> wrote:
+>
+> On Qualcomm platforms if the board uses GPIO hogs msm_pinmux_request()
+> calls gpiochip_line_is_valid(). After commit 8015443e24e7 ("gpio: Hide
+> valid_mask from direct assignments") gpiochip_line_is_valid() uses
+> gc->gpiodev, which is NULL when GPIO hog pins are being processed.
+> Thus after this commit using GPIO hogs causes the following crash. In
+> order to fix this, verify that gpiochip->gpiodev is not NULL.
+>
+> Note: it is not possible to reorder calls (e.g. by calling
+> msm_gpio_init() before pinctrl registration or by splitting
+> pinctrl_register() into _and_init() and pinctrl_enable() and calling the
+> latter function after msm_gpio_init()) because GPIO chip registration
+> would fail with EPROBE_DEFER if pinctrl is not enabled at the time of
+> registration.
+>
+> pc : gpiochip_line_is_valid+0x4/0x28
+> lr : msm_pinmux_request+0x24/0x40
+> sp : ffff8000808eb870
+> x29: ffff8000808eb870 x28: 0000000000000000 x27: 0000000000000000
+> x26: 0000000000000000 x25: ffff726240f9d040 x24: 0000000000000000
+> x23: ffff7262438c0510 x22: 0000000000000080 x21: ffff726243ea7000
+> x20: ffffab13f2c4e698 x19: 0000000000000080 x18: 00000000ffffffff
+> x17: ffff726242ba6000 x16: 0000000000000100 x15: 0000000000000028
+> x14: 0000000000000000 x13: 0000000000002948 x12: 0000000000000003
+> x11: 0000000000000078 x10: 0000000000002948 x9 : ffffab13f50eb5e8
+> x8 : 0000000003ecb21b x7 : 000000000000002d x6 : 0000000000000b68
+> x5 : 0000007fffffffff x4 : ffffab13f52f84a8 x3 : ffff8000808eb804
+> x2 : ffffab13f1de8190 x1 : 0000000000000080 x0 : 0000000000000000
+> Call trace:
+>  gpiochip_line_is_valid+0x4/0x28 (P)
+>  pin_request+0x208/0x2c0
+>  pinmux_enable_setting+0xa0/0x2e0
+>  pinctrl_commit_state+0x150/0x26c
+>  pinctrl_enable+0x6c/0x2a4
+>  pinctrl_register+0x3c/0xb0
+>  devm_pinctrl_register+0x58/0xa0
+>  msm_pinctrl_probe+0x2a8/0x584
+>  sdm845_pinctrl_probe+0x20/0x88
+>  platform_probe+0x68/0xc0
+>  really_probe+0xbc/0x298
+>  __driver_probe_device+0x78/0x12c
+>  driver_probe_device+0x3c/0x160
+>  __device_attach_driver+0xb8/0x138
+>  bus_for_each_drv+0x84/0xe0
+>  __device_attach+0x9c/0x188
+>  device_initial_probe+0x14/0x20
+>  bus_probe_device+0xac/0xb0
+>  deferred_probe_work_func+0x8c/0xc8
+>  process_one_work+0x208/0x5e8
+>  worker_thread+0x1b4/0x35c
+>  kthread+0x144/0x220
+>  ret_from_fork+0x10/0x20
+> Code: b5fffba0 17fffff2 9432ec27 f9400400 (f9428800)
+>
+> Fixes: 8015443e24e7 ("gpio: Hide valid_mask from direct assignments")
+> Reported-by: Doug Anderson <dianders@chromium.org>
+> Closes: https://lore.kernel.org/r/CAD=FV=Vg8_ZOLgLoC4WhFPzhVsxXFC19NrF38W6cW_W_3nFjbw@mail.gmail.com
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> ---
+>  drivers/pinctrl/qcom/pinctrl-msm.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+> index 9ec15ae4a104cbeb9a7d819b964d341f3bba58ea..a99275f3c4a66a39f4d9318fe918101127ef4487 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+> @@ -149,6 +149,13 @@ static int msm_pinmux_request(struct pinctrl_dev *pctldev, unsigned offset)
+>         struct msm_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
+>         struct gpio_chip *chip = &pctrl->chip;
+>
+> +       /*
+> +        * hog pins are requested before registering GPIO chip, don't crash in
+> +        * gpiochip_line_is_valid().
+> +        */
+> +       if (!chip->gpiodev)
+> +               return 0;
+> +
 
-I have applied this patchet.
+I really dislike you dereferencing gpiodev here which is (implicitly,
+I know...) very much a private structure for GPIOLIB. Can we move this
+into gpiochip_line_is_valid() itself?
 
-Thanks,
-Mathieu
+Treewide there's only one driver (under drivers/pinctrl/) that
+accesses gc->gpiodev and I would love to fix that as well and have
+nobody dereference this.
 
-> 
-> -- 
-> 2.49.0
-> 
+Bart
+
+>         return gpiochip_line_is_valid(chip, offset) ? 0 : -EINVAL;
+>  }
+>
+>
+> --
+> 2.39.5
+>
