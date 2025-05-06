@@ -1,63 +1,84 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6982283FFA
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 16:23:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 328C225949A;
+	Tue,  6 May 2025 16:24:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746548620; cv=none; b=M5YXee3VEGsMJlWSOoCMX2XjfGiaoxTTeCsOgdcJDFHZXTqH2tdDen+ieeTUa8NJsxXia64yCntzPQefPKVzYmXYP6uHnx/Il6l5QuFJtgT2YgoranG3sjXjW2GFxJ68UtcKLRBRnaykH3SfO1xMzFnk7xoMJPGZKr5WgpRHggQ=
+	t=1746548679; cv=none; b=dG+w2QEIiT7QiYQInLyInt8fY9Q+Qxrf0JZ4Wu+MBRLin9Tku5M+3FU+wzcKOLBXU0v42mh3B0t/m7Gw0QPxwQjTQs0xzPCMNVCimuvcRkUQYLyC3oEBCeOYvazGTNEKz81/IVDtn+zVAwTXFnEJV6FlRBTgtqLqz5ZhIn4tCEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746548620; c=relaxed/simple;
-	bh=701UnYDcVbEDGaRQY7wmhFr+nJp1bCiPUr2hODKeX98=;
+	s=arc-20240116; t=1746548679; c=relaxed/simple;
+	bh=6+AzYXO0+ZpuHKJPEjy4CD2Mhi6+e9atkIbMEDc7uPA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QOjE1kfy9B12KJaDOo8mq+dfEMqQ2XVxuzKQivEZHHv2BBLqGaOFND1mHmCrfpPPCeuiZ4Ji30MpxoTEVTa1GfXQBrQmw/arnhtM6U6m6Uxa1vg0rJY0gkTxSSIf2Q4otVxjvBZvfR9a7oTK0iuACSY+IY7HF6G7SZzVOIJHs8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=CGcmUjZz; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=hPkgxW94XPC+bRmFXMZw+vLkrmVlM8lJ/QM7REy983HCwkRaRuoxFEBmaj+UK0g8H6uQxg1tfsV1XvfjpYVH8KiFpXQLM28m0NxkaxYvZNBOmS4P6ouzTcnuv8rDn4dWwMUJDqcBt4O/e6zt1YRj/ljNE3P2LaEJGp2YpxBlQNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZxV3Vry2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CGcmUjZz"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=btB7v32iOtkPnjE82G1pR3gHE5orNYbXznqK0OzF1Tk=; b=CGcmUjZz4iKAFYVIoj/eD2mJpL
-	vvNG+xtJ1NIHDZLBjQXkDzN2K21pIJ/EeB5lM/IYnUEu/5+T+vcDY4+XvJ1gLD/uOcxOnF4tBdZ7J
-	MhhM90EQ9VL7Y+cspNK6tvPc5KkdSU4P2yC3gBq6bCqXC1/z0XtjKUNQFbtXnopq3Oa5QnZMD8UI7
-	AlEMjBTVaHEJS4OQJuQv18tPsTMCtv4QKdz453+KSmAphCh647WUs8sRP3yeCDlniHGCOhBhH2/sr
-	DnGc5vC89wAomqBPRFc7zuKPLpeN/zbRv6SW+cHZC31Sx1WD+b9uPGmujCrsZ1TLYif89mGqPw67C
-	056b79tg==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uCL4F-00000006KQn-1RbP;
-	Tue, 06 May 2025 16:22:51 +0000
-Date: Tue, 6 May 2025 17:22:51 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: WangYuli <wangyuli@uniontech.com>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, yuzhao@google.com,
-	stevensd@chromium.org, kaleshsingh@google.com,
-	zhanjun@uniontech.com, niecheng1@uniontech.com,
-	guanwentao@uniontech.com
-Subject: Re: [PATCH] mm: vmscan: Avoid signedness error for GCC 5.4
-Message-ID: <aBo3W5HNMxLdtV2p@casper.infradead.org>
-References: <85050791B887DC13+20250506160238.799984-1-wangyuli@uniontech.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZxV3Vry2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0E5DC4CEE4;
+	Tue,  6 May 2025 16:24:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746548678;
+	bh=6+AzYXO0+ZpuHKJPEjy4CD2Mhi6+e9atkIbMEDc7uPA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZxV3Vry2aNCG/2NFKmWiKWDWiA8hz7CA/FrBuvTyTK47Qkk0Sc3JfTba6MswVoTkc
+	 fPGfD+kCi3ywCx/sEVKzCCRW4Bg/hikHoEZ2A1mDWIsW5O1555t6y/PFhas9ptd9/e
+	 87Okr2xqzFKzczpU105GCgilbleGfvTGUxyBAfo96MifiGk5nQx7ml8qphHdzewWjq
+	 1biE73DYbbC52Cr5v5PO4y7hnjE4swcj703c5NwYVnJ5NRghatc6CC7YC/+LH66W1R
+	 2d9do0ma+M10fKBG1Wkd86hzGNuSN80uBb7tht0jTw27GDZ8Q0rr4+hJzwgWcx2TRA
+	 AH6kPqYKje67w==
+Date: Tue, 6 May 2025 17:24:33 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Ben Zong-You Xie <ben717@andestech.com>
+Cc: devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org, paul.walmsley@sifive.com,
+	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	tglx@linutronix.de, daniel.lezcano@linaro.org,
+	prabhakar.mahadev-lad.rj@bp.renesas.com, tim609@andestech.com
+Subject: Re: [PATCH v2 4/9] dt-bindings: interrupt-controller: add Andes
+ machine-level software interrupt controller
+Message-ID: <20250506-vocation-herbs-a2c84688ce03@spud>
+References: <20250503151829.605006-1-ben717@andestech.com>
+ <20250503151829.605006-5-ben717@andestech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="0bdWrlMUgMOcOWqv"
+Content-Disposition: inline
+In-Reply-To: <20250503151829.605006-5-ben717@andestech.com>
+
+
+--0bdWrlMUgMOcOWqv
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <85050791B887DC13+20250506160238.799984-1-wangyuli@uniontech.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 07, 2025 at 12:02:38AM +0800, WangYuli wrote:
-> To the compiler, (MAX_NR_TIERS - 1) (i.e., (4U - 1)) is unsigned,
-> whereas tier is a signed integer.
-> 
-> GCC 5.4 does not permit the minimum operation on such
-> type-inconsistent operands.
+On Sat, May 03, 2025 at 11:18:24PM +0800, Ben Zong-You Xie wrote:
+> Add the DT binding documentation for Andes machine-level software
+> interrupt controller.
+>=20
+> In the Andes platform such as QiLai SoC, the PLIC module is instantiated a
+> second time with all interrupt sources tied to zero as the software
+> interrupt controller (PLICSW). PLICSW can generate machine-level software
+> interrupts through programming its registers.
+>=20
+> Signed-off-by: Ben Zong-You Xie <ben717@andestech.com>
 
-1. This has nothing to do with the compiler version; the type-checking
-is built into min().
-2. We have min_t for a reason
-3. Why is a signed min the right answer instead of an unsigned min?
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+
+--0bdWrlMUgMOcOWqv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaBo3wQAKCRB4tDGHoIJi
+0o8zAP92lbwWkHAN8n5L5vt7gwGbaVT5MfKv0s0yWfVwM3ObhwEApTIMtPUnOpOJ
+IatmZoOtytwSw9dPTa/GXpGpJ02+CA4=
+=JFu/
+-----END PGP SIGNATURE-----
+
+--0bdWrlMUgMOcOWqv--
