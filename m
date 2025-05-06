@@ -1,154 +1,144 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25DDF28000E
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 14:06:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3EF8275842
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 14:06:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746540384; cv=none; b=XCll0Btvr07e33RdU3kJSl35tqa1qzy2IWMmjxaz3/WSbNncFMiSx7CIcqBq8PDZuGcNGGlJe08iAlQIWWvXYObI2QDVeWa45YbRYkypuFFbeQVvGjAtrTWN6/OBaU+MaKGC7QDcb13ygC4Kjfs5zB/SvQd4x5p0JVWhvPJ5c1k=
+	t=1746540402; cv=none; b=rrhf/scvhH9JwyWcZs6m68oW0d2iaFUWRhw0uTrC5deRDq6l4wfgWrSrj4iK3jCwREBhsW+q9Znex8nh4ikmjX4UIk5+E7LYcYAm/lw0SQDTitCoG81RKR0o9nO6XSG6rLb5Mg78w+qxzfa0jZHVvZwxYO2a5ks4xpLOMo25AuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746540384; c=relaxed/simple;
-	bh=3opEq2h5w0UOxmosWULNPMfe5jZlpZBAVrsnMKF+44k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JgMdj9NqQUhfz30HjjgF806QhYw58IvLNTF4G2a2lBw6vZ6NdsiGXeRPgrO4CRYzc3p/0yto3tVMMpF7sJZuRlGMoBge+nbhl/05dwFGxiyBCzuQbdTp4paYbiose8kJAPnAqVMHsH/1tvq82pyLCDCG9lumtXZSnzIhzAkcitA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=YdUYhF60; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=YdUYhF60; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="YdUYhF60";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="YdUYhF60"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 1074E1F443;
-	Tue,  6 May 2025 14:06:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1746540380; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=j6BNXNAYY3Jp10QsWYb3agAYiro+Uv/XF2h14CWtep4=;
-	b=YdUYhF60cyT2tj29IA/BJ8V+ZsO3LVYSFawtU+7lZpo40SWbylv1Tq1WSFdIC5gWyrTMSL
-	Vo88YND6YuVmONIFz0N9xVoXdQ1ia2K2Ve+w6EoliP5/27HHLEyGkT6H8UxqMinhHFYAJD
-	4vPfpRo3Mw25iNNkuF4zgOCHmTl5o8I=
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.com header.s=susede1 header.b=YdUYhF60
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1746540380; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=j6BNXNAYY3Jp10QsWYb3agAYiro+Uv/XF2h14CWtep4=;
-	b=YdUYhF60cyT2tj29IA/BJ8V+ZsO3LVYSFawtU+7lZpo40SWbylv1Tq1WSFdIC5gWyrTMSL
-	Vo88YND6YuVmONIFz0N9xVoXdQ1ia2K2Ve+w6EoliP5/27HHLEyGkT6H8UxqMinhHFYAJD
-	4vPfpRo3Mw25iNNkuF4zgOCHmTl5o8I=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 09286137CF;
-	Tue,  6 May 2025 14:06:20 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id /iE1AlwXGmhjSgAAD6G6ig
-	(envelope-from <dsterba@suse.com>); Tue, 06 May 2025 14:06:20 +0000
-From: David Sterba <dsterba@suse.com>
-To: linux-btrfs@vger.kernel.org,
-	torvalds@linux-foundation.org
-Cc: David Sterba <dsterba@suse.com>,
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Btrfs fixes for 6.15-rc6
-Date: Tue,  6 May 2025 16:06:18 +0200
-Message-ID: <cover.1746539430.git.dsterba@suse.com>
-X-Mailer: git-send-email 2.47.1
+	s=arc-20240116; t=1746540402; c=relaxed/simple;
+	bh=bv0HVRCix0niu2IxUzJdkDMcsBHYP7kgZZ1LxLAv67w=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=bZ187h8KUsJ44MWmjVG0B+DjMCLo9BYQRd+S8NDrYhru1E48L3lDUQ+lLgETm7EXd6sSo/tI8J4LYUakRmksfJGZM5F1xd/oY3C8WSfGwAXwhsx39sjOL8CoopyXHLC2H/BGwtTYtK5adORtTXMTYnbVbYVzpBSfiSTaykks/3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3d8a9b1c84eso73009245ab.2
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 07:06:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746540400; x=1747145200;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Szl6w1gWdmmSf2FjvrqVayNusKTVuHe3uUlO8IkO8EA=;
+        b=d1lEzniIbkXJEN4AWUSFYpRD8dW3YFDMNHitpoa8BgTuU0ee3QotdETZiUtpyMsLVm
+         oQsWW51RpZenlTSXDLK0Vn/jIjPHunLFp5tg00Mo0K20C0UucHXtKcyEetjcz4aLoYmA
+         aIOtnBrpXed/KRuQOybI57C6lgl70ZAB4dNnGEeUwMWCKQmhO2W68RD5HnEoIiv5+5gG
+         Nxjtj8DWOJZ4U4XTExweaknuliybJ7Fa+GbkSRQA4cKVxMKeHdBKnTCha6ZY3osJ/3h3
+         EaDL3Amyj+Kjd6eiZFNcmnXZXQfyHCIIfAqBQzJEAa8Rhle9XrDSffldaYbg9ma1WeZH
+         +sIA==
+X-Forwarded-Encrypted: i=1; AJvYcCXdWkHA9jit0cbQZTgZUbxyicivFnX8UmwHIzVhqgOzd4R7dmeBo56ewIb53OYrtypICm9fwigatP/k8h0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZ+mZ0UMJxJVq95d6jg/2DqlKgk4DJfbGQWUwRZEJTzSq7pQ3T
+	q3dKZcHqxxIiEInPe1uxZ2fnoeSd9+T/Rfa3G/3/l2F0KQB1YryAfeH/VoBkV1HDkfZCO2HnsiU
+	jWFFA23IPI8nx/DVtJcONrFaEEcRz4kA6W7WPP3olAtyIb6ib6XyW990=
+X-Google-Smtp-Source: AGHT+IGspIrZv6C+Lbf+tFwTXKQYE44l8MuohkH0H68fEeVMBrlmKRrEQpEU7BNp5fyidqWtolP7xt7Voo8KcPyR87fAs1xX58Y1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 1074E1F443
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.com:+];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCPT_COUNT_THREE(0.00)[4];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:dkim,suse.com:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -3.01
-X-Spam-Flag: NO
+X-Received: by 2002:a05:6e02:2283:b0:3d8:20f0:4026 with SMTP id
+ e9e14a558f8ab-3da5b23c4bbmr110510875ab.1.1746540399979; Tue, 06 May 2025
+ 07:06:39 -0700 (PDT)
+Date: Tue, 06 May 2025 07:06:39 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <681a176f.050a0220.a19a9.000c.GAE@google.com>
+Subject: [syzbot] [net?] INFO: task hung in inet6_rtm_newaddr (2)
+From: syzbot <syzbot+101224300649c3eb8af4@syzkaller.appspotmail.com>
+To: davem@davemloft.net, dsahern@kernel.org, edumazet@google.com, 
+	horms@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org, 
+	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi,
+Hello,
 
-a few more fixes, minor updates and one revert. Please pull, thanks.
+syzbot found the following issue on:
 
-- revert device path canonicalization, this does not work as intended
-  with namespaces and is not reliable in all setups
+HEAD commit:    01f95500a162 Merge tag 'uml-for-linux-6.15-rc6' of git://g..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=13c0b0f4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=91c351a0f6229e67
+dashboard link: https://syzkaller.appspot.com/bug?extid=101224300649c3eb8af4
+compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1223bb68580000
 
-- fix crash in scrub when checksum tree is not valid, e.g. when mounted
-  with rescue=ignoredatacsums
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-01f95500.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/db1628150472/vmlinux-01f95500.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/ecd327744f2e/bzImage-01f95500.xz
 
-- fix crash when tracepoint btrfs_prelim_ref_insert is enabled
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+101224300649c3eb8af4@syzkaller.appspotmail.com
 
-- other minor fixups
-  - open code folio_index(), meant to be used in MM code
-  - use matching type for sizeof in compression allocation
+INFO: task syz-executor:5435 blocked for more than 143 seconds.
+      Not tainted 6.15.0-rc5-syzkaller-00022-g01f95500a162 #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:syz-executor    state:D stack:22056 pid:5435  tgid:5435  ppid:1      task_flags:0x400140 flags:0x00004006
+Call Trace:
+ <TASK>
+ context_switch kernel/sched/core.c:5382 [inline]
+ __schedule+0x16e2/0x4cd0 kernel/sched/core.c:6767
+ __schedule_loop kernel/sched/core.c:6845 [inline]
+ schedule+0x165/0x360 kernel/sched/core.c:6860
+ schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6917
+ __mutex_lock_common kernel/locking/mutex.c:678 [inline]
+ __mutex_lock+0x724/0xe80 kernel/locking/mutex.c:746
+ rtnl_net_lock include/linux/rtnetlink.h:130 [inline]
+ inet6_rtm_newaddr+0x5b7/0xd20 net/ipv6/addrconf.c:5028
+ rtnetlink_rcv_msg+0x7cc/0xb70 net/core/rtnetlink.c:6955
+ netlink_rcv_skb+0x219/0x490 net/netlink/af_netlink.c:2534
+ netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
+ netlink_unicast+0x758/0x8d0 net/netlink/af_netlink.c:1339
+ netlink_sendmsg+0x805/0xb30 net/netlink/af_netlink.c:1883
+ sock_sendmsg_nosec net/socket.c:712 [inline]
+ __sock_sendmsg+0x219/0x270 net/socket.c:727
+ __sys_sendto+0x3bd/0x520 net/socket.c:2180
+ __do_sys_sendto net/socket.c:2187 [inline]
+ __se_sys_sendto net/socket.c:2183 [inline]
+ __x64_sys_sendto+0xde/0x100 net/socket.c:2183
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7ff7979907fc
+RSP: 002b:00007ffd90db52d0 EFLAGS: 00000293 ORIG_RAX: 000000000000002c
+RAX: ffffffffffffffda RBX: 00007ff7986e4620 RCX: 00007ff7979907fc
+RDX: 0000000000000040 RSI: 00007ff7986e4670 RDI: 0000000000000003
+RBP: 0000000000000000 R08: 00007ffd90db5324 R09: 000000000000000c
+R10: 0000000000000000 R11: 0000000000000293 R12: 0000000000000003
+R13: 0000000000000000 R14: 00007ff7986e4670 R15: 0000000000000000
+ </TASK>
+INFO: task syz-executor:5442 blocked for more than 152 seconds.
+      Not tainted 6.15.0-rc5-syzkaller-00022-g01f95500a162 #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:syz-executor    state:D stack:21848 pid:5442  tgid:5442  ppid:1      task_flags:0x400140 flags:0x00004006
+Call Trace:
+ <TASK>
+ context_switch kernel/sched/core.c:5382 [inline]
+ __schedule+0x16e2/0x4cd0 kernel/sched/core.c:6767
 
-----------------------------------------------------------------
-The following changes since commit e08e49d986f82c30f42ad0ed43ebbede1e1e3739:
 
-  btrfs: adjust subpage bit start based on sectorsize (2025-04-23 08:42:10 +0200)
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-are available in the Git repository at:
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git tags/for-6.15-rc5-tag
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-for you to fetch changes up to 38e541051e1d19e8b1479a6af587a7884653e041:
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
 
-  btrfs: open code folio_index() in btree_clear_folio_dirty_tag() (2025-05-02 13:20:56 +0200)
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
-----------------------------------------------------------------
-Boris Burkov (1):
-      btrfs: handle empty eb->folios in num_extent_folios()
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
 
-Goldwyn Rodrigues (1):
-      btrfs: correct the order of prelim_ref arguments in btrfs__prelim_ref
-
-Kairui Song (1):
-      btrfs: open code folio_index() in btree_clear_folio_dirty_tag()
-
-Kees Cook (1):
-      btrfs: compression: adjust cb->compressed_folios allocation type
-
-Qu Wenruo (2):
-      btrfs: avoid NULL pointer dereference if no valid csum tree
-      Revert "btrfs: canonicalize the device path before adding it"
-
- fs/btrfs/compression.c       |  2 +-
- fs/btrfs/extent_io.c         |  4 +-
- fs/btrfs/extent_io.h         |  2 +
- fs/btrfs/scrub.c             |  4 +-
- fs/btrfs/volumes.c           | 91 +-------------------------------------------
- include/trace/events/btrfs.h |  2 +-
- 6 files changed, 9 insertions(+), 96 deletions(-)
+If you want to undo deduplication, reply with:
+#syz undup
