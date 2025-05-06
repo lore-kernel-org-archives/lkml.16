@@ -1,91 +1,112 @@
-Received: from mail.hallyn.com (mail.hallyn.com [178.63.66.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E55EE2820A5;
-	Tue,  6 May 2025 13:22:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.63.66.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EF3727AC41;
+	Tue,  6 May 2025 13:23:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746537728; cv=none; b=gUgBmjxW6sDuJl2jECENR/ebR1Dr8AVueZ8jQSKBdPXm7EFne1hWXuo9czvZYFt0dHij9XmV1Hrkt0SGSBOB0yTiAtgWLMU0RP+NnWOh0R4E4asmlI9lUYqpxyFHlIOg56tn0PfIPFOaaqPpk/qxS1d2J9EK3y6LgtS+6cl+lw8=
+	t=1746537785; cv=none; b=S7LbWxnUOZTCjgD6Nw5A7w4gIGVrZh7YZQGAXag17+JG2095LvEayhvSHYPMu15GuqhY3c1chmXQnZuXfkWnLoS/IISwEah35hnhBn0cD8fXqaq823snN8TwkVFlImo7ZHOo7A7OUf8UWZIejonltBZdTeXJKUPac6hV/PF9nRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746537728; c=relaxed/simple;
-	bh=GPTTPMuoFY2R3xwbARsVC8wijXO7L1qrPRg4T885sN8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VgHIjptJ+11TSqV8JMJrwTZn+F2yPUzeMpI5am96xbNJnOq8OLmnJ+V4TSXO+h8hZjutr/TH8Sl6NPyB8geS+3r0gmOfV8c1xVDXsVO5FgymwGX43p6nEQJHVIvUoi6QzCfx88DDJ0xRhFv00NCj2sR8uazqd/PhM9MV9XEv954=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hallyn.com; spf=pass smtp.mailfrom=mail.hallyn.com; arc=none smtp.client-ip=178.63.66.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hallyn.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mail.hallyn.com
-Received: by mail.hallyn.com (Postfix, from userid 1001)
-	id 821331603; Tue,  6 May 2025 08:21:58 -0500 (CDT)
-Date: Tue, 6 May 2025 08:21:58 -0500
-From: "Serge E. Hallyn" <serge@hallyn.com>
-To: Max Kellermann <max.kellermann@ionos.com>
-Cc: "Serge E. Hallyn" <serge@hallyn.com>, Andy Lutomirski <luto@kernel.org>,
-	paul@paul-moore.com, jmorris@namei.org, kees@kernel.org,
-	morgan@kernel.org, linux-security-module@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] security/commoncap: don't assume "setid" if all ids are
- identical
-Message-ID: <20250506132158.GA682102@mail.hallyn.com>
-References: <20250306082615.174777-1-max.kellermann@ionos.com>
- <20250309151907.GA178120@mail.hallyn.com>
- <CAKPOu+_vTuZqsBLfRH+kyphiWAtRfWq=nKAcAYu=Wn2JBAkkYg@mail.gmail.com>
+	s=arc-20240116; t=1746537785; c=relaxed/simple;
+	bh=SdTbQRmvxVkDHJ0Zmj3+GRgE9uEvKkYZ4qhq+hZjXfc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Bb+oRr5vC4PV+yfctuQTlmX4fddFc/76uCWMk1pOKcfwl//Gw9hM9mMzGBPEkW9yFLmsq1Qm8ArsUullQsWu1tqrRZTLqHXsMw+RDv0oTbOUF/yRfZ3iqsXcJGnUCtBYMIfbE3QumyTD23TJf/NX212CSDvugt7ImS/F67PeiJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nkY85565; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nkY85565"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ac2bb7ca40bso972673766b.3;
+        Tue, 06 May 2025 06:23:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746537781; x=1747142581; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ychOGS0fwVtT0GZZg8j7lVAB5ILds60YZKRJT8XDlKg=;
+        b=nkY85565eoc04yRbeWzquGhf9hVs65ZDUnSKzAlrHzhQ6HvEFWYcG2ooEQk3ra+P7s
+         ftU9CG9THchi7yCkIWO6m2YYJuv0XqQScoLHtnE6S/1IHNwI6hbNMjjzUnztaY/03eE0
+         Oi24PKaiGEzsByQexXuOcOQeit0Jp4T7Jw/dNy3O8QhsECswWtU7zoMHVoEupqLTaEky
+         ovm9qB4a6ZjOBwrde7NCVqmiG6ug+zRRC0XP4vd/CPZGvVmlUxhgzILP1YrHHY+x863u
+         Wu17oJABnLQR5KRwdhcKM8fZRl78OHw4HhSEJ18TpJs79FYHZEfOfnDH+8CV7ms2AKET
+         R0Lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746537781; x=1747142581;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ychOGS0fwVtT0GZZg8j7lVAB5ILds60YZKRJT8XDlKg=;
+        b=NcK8z2V4H551OzB+h486/BGlmxratAkL5LxDUXoOgsuId2USU6b+o1k4hIsDtb+xD0
+         lq1FCI/yWTcFkqaclMXspkzDHgvHDR/FhHFF0N1BEn7bs4o+su28DUAZ9GcPH6EP6nRz
+         iHbvemJJA9BhcxXuBADtUItBY1unXkDtg3bUMo11RXQVKc8EXbJI0XfcNmwZ4hwUf0CX
+         fEzNjwlNFKpLmqzwWC/XyHFzSscS7N8CVwkfEeQiUwI7oBwh//O7SY3QUL/BZI2IUiL8
+         NK2whkX76hLWQlviZ+bIfSWkx/bNdi01HKn7qHyzz81QuqXBRpxpJTvNxwYm0WYNouTi
+         FZSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXieyDaNm6vPs7ppA6le+3s5keS3dgSUtHkFVLddV8ujItk+895vTABA/yqJaQEldExlpqGrsHER2syfj4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YygrqUVEztZ6rCQlUuswATPd7ea59jw5E+wsvTS7tD4znx9hkvP
+	lfnb9avpImVn/uaqws151EL7PD0S34KIfQnfKubJ3vRayv/Vu+FY
+X-Gm-Gg: ASbGncuyY9gx9vuFQIaNkg80rFNyIa6ekPgFLOtGs3a5k6RBnE9yuVosdC9OwiYW2YO
+	IFAKhlmOlyZx92USyr5mvMQmRhP/S179P/Abohkr8nGTKP7rVJX5ywWmu8X4DQbK/2W0Po2jXQC
+	p2gRIPfqQZZLnaO7FgIZGniqFSAj1L98LK6fwrHDTKl49OG3VSlByB41+tedpBSiIWekYxeZq0t
+	7Bfq0B9BhgI/O/OSQcw9M/SUrSjhj3w7NXcqf+LrqEWkAEAEvv+qrJlp7jQJH8sts+jC869EsZl
+	GkhRXYyaHq3ZoCNxvbFDXJDPFMQror573DJk7V1Al7KgxVMs59D4em2RDsTxTC2uwa/OQ8u9G/m
+	mJQRTP4sQySGgWKF/lQiRZGvDb0+nvBt5WNc=
+X-Google-Smtp-Source: AGHT+IG+BsbWupjoQzskKZOgAx9L65nh+d6RPW44BjEcFwPpA/8TXeD1ngr7i7XpwoAfFBy+3NeFmw==
+X-Received: by 2002:a17:906:7952:b0:aca:c38d:fef0 with SMTP id a640c23a62f3a-ad17b249c58mr1412115266b.0.1746537781283;
+        Tue, 06 May 2025 06:23:01 -0700 (PDT)
+Received: from [10.0.0.176] (248.201.173.83.static.wline.lns.sme.cust.swisscom.ch. [83.173.201.248])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad189147431sm705332566b.8.2025.05.06.06.23.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 06 May 2025 06:23:00 -0700 (PDT)
+Message-ID: <091539c4-8ed1-46a4-aab5-8eb0e62a9027@gmail.com>
+Date: Tue, 6 May 2025 15:23:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAKPOu+_vTuZqsBLfRH+kyphiWAtRfWq=nKAcAYu=Wn2JBAkkYg@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] power: reset: POWER_RESET_TORADEX_EC should depend on
+ ARCH_MXC
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+ Sebastian Reichel <sre@kernel.org>,
+ Emanuele Ghidoli <emanuele.ghidoli@toradex.com>,
+ Francesco Dolcini <francesco.dolcini@toradex.com>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1ef0beb1e09bf914650f9f9885a33af06772540d.1746536287.git.geert+renesas@glider.be>
+Content-Language: en-US
+From: Emanuele Ghidoli <ghidoliemanuele@gmail.com>
+In-Reply-To: <1ef0beb1e09bf914650f9f9885a33af06772540d.1746536287.git.geert+renesas@glider.be>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 28, 2025 at 01:43:43PM +0200, Max Kellermann wrote:
-> On Sun, Mar 9, 2025 at 4:19 PM Serge E. Hallyn <serge@hallyn.com> wrote:
-> >
-
-Adding Kees and Andrew Morgan for their opinions.
-
-Sorry, I had snipped the actual patch below.  Pre-b4 I would have appended it
-here, but as you can just
-   b4 mbox CAKPOu+_vTuZqsBLfRH+kyphiWAtRfWq=nKAcAYu=Wn2JBAkkYg@mail.gmail.com
-I won't do so unless you ask me to.
-
-> > On Thu, Mar 06, 2025 at 09:26:15AM +0100, Max Kellermann wrote:
-> > > If a program enables `NO_NEW_PRIVS` and sets up
-> > > differing real/effective/saved/fs ids, the effective ids are
-> > > downgraded during exec because the kernel believes it should "get no
-> > > more than they had, and maybe less".
-
-Just to quibble here: I don't use NO_NEW_PRIVS, but it seems to me quite
-likely that your claim is wrong here.  The whole SECBIT_KEEP_CAPS etc
-dance is based on the idea that you understand that once you exec, you
-lose some of your existing privilege.  Similarly, it seems quite
-likely to me that people using NO_NEW_PRIVS understand, expect, and
-count on the fact that their effective ids will be cleared on exec.
-
-Note also that so far I'm only asking about the intent of the patch.
-Apart from that, I do think the implementation is wrong, because you
-are impacting non-NO_NEW_PRIVS behavior as well, such as calculation
-of cap_permitted and the clearing of ambient capabilities.
-And, I'm not sure the has_identical_uids_gids() is quite right, as I'm
-not sure what the bprm->cred->fsuid and suid make sense, though the
-process's fsuid and suid of course need to be checked.
-
-> > > I believe it is safe to keep differing ids even if `NO_NEW_PRIVS` is
-> > > set.  The newly executed program doesn't get any more, but there's no
-> > > reason to give it less.
-> > >
-> > > This is different from "set[ug]id/setpcap" execution where privileges
-> > > may be raised; here, the assumption that it's "set[ug]id" if
-> > > effective!=real is too broad.
-> > >
-> > > If we verify that all user/group ids remain as they were, we can
-> > > safely allow the new program to keep them.
-> >
-> > Thanks, it's an interesting point.  Seems to mainly depend on what users
-> > of the feature have come to expect.
-> >
-> > Andy, what do you think?
+On 06/05/2025 15:01, Geert Uytterhoeven wrote:
+> The Toradex Embedded Controller is currently only present on Toradex
+> SMARC iMX8MP and iMX95 SoMs.  Hence add a dependency on ARCH_MXC, to
+> prevent asking the user about this driver when configuring a kernel
+> without NXP i.MX SoC family support.
 > 
-> Serge & Andy, what's your opinion on my patch?
+> Fixes: 18672fe12367ed44 ("power: reset: add Toradex Embedded Controller")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  drivers/power/reset/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
+> index 5ce402ff71964f59..1a17c5192818de1e 100644
+> --- a/drivers/power/reset/Kconfig
+> +++ b/drivers/power/reset/Kconfig
+> @@ -218,6 +218,7 @@ config POWER_RESET_ST
+>  
+>  config POWER_RESET_TORADEX_EC
+>  	tristate "Toradex Embedded Controller power-off and reset driver"
+> +	depends on ARCH_MXC || COMPILE_TEST
+>  	depends on I2C
+>  	select REGMAP_I2C
+>  	help
+
+The default is 'N', and the EC is just an I2C device, unrelated to ARCH_MXC.
+Is it really annoying if the user is asked about this driver during
+configuration? Or is it just normal?
+Wouldn't there be a better way to handle this?
