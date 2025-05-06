@@ -1,207 +1,158 @@
-Received: from BYAPR05CU005.outbound.protection.outlook.com (mail-westusazon11020114.outbound.protection.outlook.com [52.101.85.114])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FE6C2980AE;
-	Tue,  6 May 2025 00:58:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.85.114
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746493116; cv=fail; b=bVq9RLSBeJRaogTN29jOoKI4Ne6Xc5flzqaltKexloWi5P6XSzozqU9PosaiIcYCZPdefXuBs5cEWp3990asAvXF2dfwwJx0wm8geeq4/9BS+Yxv9+Xy/hEX0uM+a9JsckQftEPBelDzv2yeeQ1MgPiGVA7gbkBBisoQctp3F1Q=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746493116; c=relaxed/simple;
-	bh=KU94t1EmBwcKae1syOY4Enwpn0uYrgOoKFURqpYGCCQ=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=UpjwddYDlJfD2WJBCjX+AZYdU2bo7Xcg/6O6mWU76VJ1j5DDqDNwguf5P5EPaL57+7Eu1B6ubufYMXNGg6eq3+kpxI+oX6XXrkFM06gnWWxKrKU0Z0VgbgyIFP+XE4dqXTV5qWyL5SjqXBMgfR8cDvnQtsb834MEnokMJXcC2KE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=K1m9oqPx; arc=fail smtp.client-ip=52.101.85.114
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 224B0350DE6
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 01:00:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746493207; cv=none; b=i9luv0QOSReJZlLTy+76PezLxLaNdH28O+bVd+Gbh28H29GlzV7FTbHCSe50L3ux/bzXFQAR7Ib5lOHBluyj9v7RWGb0WEX8dHUJ960d55VqdWW5641gmJlXRITohfTJIFgwusY2euQ4Veb8v3lMdsyciSOwg+IlWt17ymdjV9c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746493207; c=relaxed/simple;
+	bh=mu+Bs8ufgmYPoMWaa3r4Rn+xjkFBtrCiihgK0Hdki7k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jVOwKp1UOGtTi0EcGlbhbSvPCoPP64PhanF9yTGPpqsPnue5XcwiV9qlrqeDN3QMUXPy8FGcngeEeWRQHUuqoOH/F8nNpAQFMRz46z0TqyDinLOOoZWyLN/I93r+DpY3YqaBrxROZjsVe5srHztN0QBkTIHHVbGQhWPqYMATDXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=HkpX+czY; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="K1m9oqPx"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=CkqQBEwrJfmCrn7QRH/TOPPippC7g901uyPcDTBFm88BSOG9N3VhP/CHp22X0X7NXpZigKbQ9QNDFHM8rMJ9JvicXaN8LWy5Wy02wsirTEKNtvMSHt8OwoMMCrZtR5qN93eqOMDQhbMIXXI3AYgBVJ49AVpy4QtkSgYqfG7Emdp1Q52N8rtNPkwGkJz2Yb5l9tNFR8Y0D7iNdjPAsgP15CYLwSqm0irdiuK/unDyQziwaLqVUAwvmzkL2ndoh22eUaWT+qSGbhbuNnQimEj8j3oafzg3unJ24gd/5l75TZ+8I+/apE+TDSNC6W8xFNMmyr3DNILbXBYIrDNmALAJGw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KU94t1EmBwcKae1syOY4Enwpn0uYrgOoKFURqpYGCCQ=;
- b=AzSLId78GSb/8p8uak7PaBkaEMKSSQ1UxNt51VZEEU1H0bGQGENKBVQJ13ZJ4g/npt49+AY74T5ka4lbgdnnvTjkzFMu06cqm9bdgdd+Tn5Cm/6ixMB0wzLnA3YYGKlFIi5Hrs9Lf4Xm/ZLR6IljV/x249UN+Y7WMMPBsms84L0Sw+nkhfBkwgDwCqu6BGVq44+W16frFCWrXvN+gHtQQwoQcLH58fi+tZec65Dw2qflya2DdIMkX3jmWOHDjb4kOtOaEiG81aZWmrm2CVeTtwO5qyRHuw1z8aOW3fuzDcPMc4L4egSsxwDW1W36bV7HifmAq2lxA3s4azzD8CezdQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KU94t1EmBwcKae1syOY4Enwpn0uYrgOoKFURqpYGCCQ=;
- b=K1m9oqPxRcWWqC2N/GuXrSmcvjAbmUFPANPJMR1RiQO/7JpLHIG+dDcw38Pjk1j4PHqFn7X01dJMmqiHziN051dUA7MVOUBYHlI42MDnRwgOx3K5q97FcKd5FgO0v2+HLb4+MqLOCJuuoMP1OoSgZJnAr0XHDKP+s/2V7vi0OVA=
-Received: from SA6PR21MB4231.namprd21.prod.outlook.com (2603:10b6:806:412::20)
- by SA3PR21MB3934.namprd21.prod.outlook.com (2603:10b6:806:302::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.11; Tue, 6 May
- 2025 00:58:31 +0000
-Received: from SA6PR21MB4231.namprd21.prod.outlook.com
- ([fe80::5c62:d7c6:4531:3aff]) by SA6PR21MB4231.namprd21.prod.outlook.com
- ([fe80::5c62:d7c6:4531:3aff%6]) with mapi id 15.20.8699.012; Tue, 6 May 2025
- 00:58:31 +0000
-From: Long Li <longli@microsoft.com>
-To: Michael Kelley <mhklinux@outlook.com>, "longli@linuxonhyperv.com"
-	<longli@linuxonhyperv.com>, KY Srinivasan <kys@microsoft.com>, Haiyang Zhang
-	<haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui
-	<decui@microsoft.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC: "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [Patch v2 1/4] Drivers: hv: Allocate interrupt and monitor pages
- aligned to system page boundary
-Thread-Topic: [Patch v2 1/4] Drivers: hv: Allocate interrupt and monitor pages
- aligned to system page boundary
-Thread-Index: AQHbujwoYg+9s60/wky4OwIZJHyS5rPEz1Jg
-Date: Tue, 6 May 2025 00:58:31 +0000
-Message-ID:
- <SA6PR21MB423107B78D442AA07B586169CE892@SA6PR21MB4231.namprd21.prod.outlook.com>
-References: <1746050758-6829-1-git-send-email-longli@linuxonhyperv.com>
- <1746050758-6829-2-git-send-email-longli@linuxonhyperv.com>
- <SN6PR02MB41574E031668E0F27AABB978D4822@SN6PR02MB4157.namprd02.prod.outlook.com>
-In-Reply-To:
- <SN6PR02MB41574E031668E0F27AABB978D4822@SN6PR02MB4157.namprd02.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=d289c044-6cfb-420f-acca-c8ee4afc69c3;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2025-05-06T00:57:53Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
- 3, 0, 1;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA6PR21MB4231:EE_|SA3PR21MB3934:EE_
-x-ms-office365-filtering-correlation-id: df0e3123-3b73-401f-8aaf-08dd8c391e98
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|376014|366016|1800799024|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?wyOewsqEa9+ed09v0XnI1EU8FGpwzOCY0jOm/Z+VvVzoGNVSdIbSxjNPoCDF?=
- =?us-ascii?Q?9QccTw7HmntgkQNl4U+HA4tiObvp89rbMunZHlkRkQlL4pqS5jaLDwpda88L?=
- =?us-ascii?Q?BhgpIuTESpSW7yJ+e6AZ1Xgz/Vn00MidGOkTEr84cdy/tNs9wd0fenjQ4wPn?=
- =?us-ascii?Q?1sI7d74th+9CGrQ/FJasLKHnszM/v6GtQ8a9lltsTYnuaO3deUJc1j8U88Li?=
- =?us-ascii?Q?4z/tMnCp5eCddfx3z8nHIvbrMGTvrHEhatwRzOmLXwAlsmAbZ+UHzAtG07Lg?=
- =?us-ascii?Q?69iTfY6PzPPhna++nLURsBqKUayP22QtuEFxT5UEhBkAGD0mipSywzs7KXhy?=
- =?us-ascii?Q?aLnSc0Bho09bW/E+Eu9RbWLHEHjbEnmjc/XnvbJupYjzt0lzvyT6b0EOy0qN?=
- =?us-ascii?Q?lpJu2j7yoqBgCOYcO6gccsa5SrEA6zh97EJxZqHlQQvFKTClkh5AoBfmWfh7?=
- =?us-ascii?Q?6fPQa/IU1934ZLeUe+EiFdTSUYgb3tO1JFe7SGizGoOy8h5szYceBtJAwupN?=
- =?us-ascii?Q?4v2QuehO+L/bYLJM4edncGodyYik4dm/Uty5VpXEwYnKVwgOCSr5voilvqvJ?=
- =?us-ascii?Q?KXxJrMewA41bYaKNzN44dWbj0NrQWonS/7iHghUrDDlafZ12ZOFEAm1QcRkJ?=
- =?us-ascii?Q?ydPYi86tb97drR5AY02M3rfz6iKRINB1dNTfyWYlhjeknHPadYwtMqvRbR0S?=
- =?us-ascii?Q?y6BGIyYCgry9NZOBrEPK0t2BkCpCWGaTF8UcqGfkT6r+7fyRwhc04Sy/OWC+?=
- =?us-ascii?Q?C7b+VNAlQhcfrly3J5WvQhxWW3kTVJ6Yi//JkT4lF5hty3NFgkbuYXz7oMX1?=
- =?us-ascii?Q?vzKsa3OkBaZV0eVPBfCRSqvPeWCGdL186uPxAAkBa79up0yYpWmG7db6SIP9?=
- =?us-ascii?Q?ktsrkASQoA7/6KccQLwGAoHTozpKURUMMZUG7o0FHLBFD/DyEFRrUZsnVO7g?=
- =?us-ascii?Q?4sXYhf0d8kW+ANNpQ5yJ6LJFn3zUN5wL61nq+5+IVHjADa/RFGypYqWKH06P?=
- =?us-ascii?Q?vg7ZcFJvgVfCIcI7O8HBfli9r0owQOkhaXCsd24doSSSDLp7WnUWF54vFPGx?=
- =?us-ascii?Q?49B5tmeVdwAwWvrLt3IyCRnE1h+VVtImldDjzI/hXUZhkuPPsUZX0L3w+kQm?=
- =?us-ascii?Q?y618OGzhsMOCM5Myp8EM2SFJPcbKIE1J2iDgsq2T8zstaMkbJBAJH8qCAcM+?=
- =?us-ascii?Q?evSffUB20+Cavw5elhfWtvS6A1OFF3J4FZQ8gw2g6qnFKKTH0sVkI4tfEus9?=
- =?us-ascii?Q?LQmbWtDP0a6rsqmaW72rTes2Q1bC/FZ16D91pISAsEQWdKEjUwhbuW1f85eV?=
- =?us-ascii?Q?RWqOYyR/fKJZ6iq0ydiV8NMxejBUcPBXLprKQDh0x1phY8ZjBNTB+OU+Dnnv?=
- =?us-ascii?Q?HnM8JQ+YgH4Idi4rSLZ9CPa8AbXp6/vzW5qmxMu3xbAumj+XlLLZMAVe10iE?=
- =?us-ascii?Q?p6Xa5+EjLtNcjaxJcy7aKkBG30Jwc2GttNZ5VGaHAj5CqLyDvQ5wMA=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA6PR21MB4231.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?IWsaI2cMCRlq9ZPXvpS6Vt9ZbzZ52naNj/QnkXBULYvhEAZm/zZermEgEoc+?=
- =?us-ascii?Q?7TlNzrY6PupyeS44viSdAMGoKquDfNH731jdXK1hVgrXCrSt3z/GlNR/68Kr?=
- =?us-ascii?Q?Zt8UePa9kCsDgiEXJpQ6H9tLZASZv7N4rosU78Bc5MfmP0gvhNtUJCNamcAE?=
- =?us-ascii?Q?gAgLqQRTA/hVYTBvUxymeiZV3v3QxGDfyNLO+cn3Voo8MidCDWUpEc0Nv1kO?=
- =?us-ascii?Q?Yy0degGBRplSvlEXioGG6GEfQuzp8xaA/eR4dpgApy7G28zyzVYiKsFS5hxb?=
- =?us-ascii?Q?/AONa3P0czj+EtHvDQ2z8ezm5SN45phqxA+NS12rGhGBzy9mQ78qYTfEyaA4?=
- =?us-ascii?Q?k1KRX90PCb94riDOweaTdY9zGha3ojgxahdR/iebB+4ip7Otb0SR3le9nzSs?=
- =?us-ascii?Q?ZM6s7E5YD8r7avjrIjYPUGWEN1E8D2b99rLjXr7qCN/TzrAvJAXRw0bgBPwJ?=
- =?us-ascii?Q?QYbw7xrMK+JQpqtGWj11iYCnT6fQcqsC+Hl9ieQcw2DnveaU4eTcU22SAA7q?=
- =?us-ascii?Q?bMQAXPZfMJcjIVrwcsM6mNSuyA/vLk8jIS+nplB0jdxZUjg/wdZL8rv0y8k2?=
- =?us-ascii?Q?//ZHaDIzn+lCCkx26bhotqjaEVwVvKjF5Jm9mTtONdFfHd9zSxUeNpi8c3d4?=
- =?us-ascii?Q?KQ2zjprfsj+KfufoZT04XebKa5QJug8Da7fmDN4Tkvcta/JRzSMDlfsJK+7Y?=
- =?us-ascii?Q?owtptrHEqGuL9NpyH51uzezCw/MLzNwczzq3VoJVpgYnYgqqQs8Ulg2FITTJ?=
- =?us-ascii?Q?fb1dagm94ByOvZaCorAIBG7c5nJoTAKJdhWpDhukEqGwOS69yeHn/0aYgK0S?=
- =?us-ascii?Q?O2kXxRcs70AmFQQaCKgj9McuFzsGYsLP3J3icXafmGgUSHxx/JZ7m8afeGHH?=
- =?us-ascii?Q?2sthBMshrjAQkPZhO9Iui7nNbYV+Dbl44dqCDbxdOoqI68druJlwhwV6MWAq?=
- =?us-ascii?Q?ZBlkCrtIzn2+X+p1alpjzpJd5nHfAWCJtqArc0k4IgL26H4yqNd1OPc65Frg?=
- =?us-ascii?Q?R3VODY788o1WPNVGDPTvxgxEs6BDAl6PexfRYt6b4Go7MwVKgFR47jXyKnAc?=
- =?us-ascii?Q?rUZGDR7Kc0I5yhDItyvCPiSNgbHxLtlY8Mn7KZOGClxH3w3Ytst+E6nsVR2G?=
- =?us-ascii?Q?yH7ivitksBHkvZ3QIOYcGEXST2DmoYBPuvMTg6wMEja2/rEzoD7W5hw0TRQ0?=
- =?us-ascii?Q?EiugZAZ1//y9es/xdVaqRmnWWT6KGADqmn3ZRpdVyFDNrqQiV0+Shqv7cZXY?=
- =?us-ascii?Q?oSvaAHKnzD5i9ZCFUa/iFZf3OqbiexDP39Y+Rive2DtSuLEXlX+G3H8+FyMP?=
- =?us-ascii?Q?x4wXi61Gq4V0Qd0cRUs+6JoTtF8vmfiUWprdM1fOXu6jb1t//cX7+sEAvzNb?=
- =?us-ascii?Q?/+xazuDfwEeokiTWptuKYGbB5X8EE7/TugfC2CqQVqUsHWLAChyYZpd4V63B?=
- =?us-ascii?Q?JPDKlDQOCUqqedO1m/+eBu00Smba/Jrqbwrj/PsqhR/jybo+Of1VOt9Mzgy/?=
- =?us-ascii?Q?QcYVMG2/Uvq8TalGQYViN1ldv0PHMOFtck4PKusgy9utDa6yNr0n7rk1mCIH?=
- =?us-ascii?Q?xgxeX/c6tn4rupcu+5SY7vJk3ydaADcszm5YWr/6?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="HkpX+czY"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 545M4kj9011164
+	for <linux-kernel@vger.kernel.org>; Tue, 6 May 2025 01:00:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Xdv764RLRrGf3SUwbhabEY+EiTd1qUAhXP6mTrPrGoA=; b=HkpX+czYmjPE+Ljl
+	Yu7zmZ6gdpcFxonh39cOaEq6Z9KbmHcNxGOEZTM2yrmu244MLQ7ccc4BiGRrRJN3
+	YThX+WcL1fk5Gq8rKpnc7/QjsYLn+UKHXz+5NJcRRXXp6Jm9YIxeltquaQEBVwLn
+	SLPnSl/Dql1Z+baVnO2QSeWRg/OieWVSCa2wSKYoJDt0JHzfbihjXc/14r/0sKUM
+	0KehQDWdIuNLtyzW7ENYRIZxVCnvtPgAOzxUKTHXzdEYrs5WT21gFkyxcbAPrrW7
+	oGPVEs9bBDqcc5wiwKud8pR4aiGOGLQhHsLRT6HYWZ88g7MN98Iq4+6J3BmSNXe9
+	7bqqGA==
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46f5tb8c26-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 01:00:02 +0000 (GMT)
+Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-48f812db91aso2106701cf.0
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 18:00:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746493202; x=1747098002;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Xdv764RLRrGf3SUwbhabEY+EiTd1qUAhXP6mTrPrGoA=;
+        b=sO+xBxRWRsADAwe/jqUMl5OoGCn84hqW3WFj7AN0lO8fxbtf3vM/vk3b/KJ1bijPB7
+         r+Gs6n/P9PDJ0p2otaYNkvUNcTAH0VRm1qs1RuhLLezG9zZlw0LSAuU/AVafUZpGILcn
+         PXlLgfzhnV1VF7aatM8xy8vM40f81kUKHrpWru7eE+Bgpz2Rywi/GO4H6z/aEtS+RLw3
+         iCHAzmsnI0idgBptr5vIG0RfgkPaGOlbKSPGiQ2ZJ/Kkh2o8PRISLAMjEMyD/AHIjCIa
+         LRKEOGm+O+VXxzYAaMZ/XmQv6CqHcZ1aSn04+SyH3eNFSC8Qsh3LENbao9R6dFy4pv/G
+         PycA==
+X-Forwarded-Encrypted: i=1; AJvYcCXUSrG0KJYiDwtBf2CkHcRxmgQncGSbXYQign5ss9jh5irO43GIUIb1G6grQPgX35/3L+DoAbiPOiTdcUU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz229mIqCQI0MDizKHuIyBbZnmrUjBuRUi+R2zPeZDHVWzdYDbe
+	C7HmRuZZoBQ0ntHUHHfhjyewGDgHHU5eUGcBTuwg+GdWAxfT10eMHwbkTsGEGDirN7mzPqCT24O
+	XGbS9GDETOE5lCQZJ4XQPTHwk2Rjs34FtZX0ES5AxDfXGdLCS4CqnbK/hDpYpQ4M=
+X-Gm-Gg: ASbGncvdUjQaAJNehtMGHLouZK8vm1oHmaNmm4uA/oS7SCeq8AGHK6lwlZZB6xjrImd
+	bktwDJUErICvvU19IYGkjsgekgPSYRzLbJePtfsz+WfzgMrSwPsa39XJzdtF8StmMIfpSJlWtya
+	RxrotFXZl8qMTpKwFfPLJss1vWfHrIzBNJjfOv/2oSC35PREoOwDYx0WLK67Db3t5SshHsL51Gc
+	Dhwn7smItkjfyLD85tx2pGtNL2eHwHYWjxEoVB2QUFQKRQ+9rkBeReQIY6I3tsBIQJhwr1CQufw
+	raAHKm18sYDudIdaMEAwVC7sJgJWVNohXwjjQVm3hc2yNlVpekH7bYOc+JhGE3juViw=
+X-Received: by 2002:ac8:5d0e:0:b0:47a:ecc3:296c with SMTP id d75a77b69052e-48c2e0916e0mr86864431cf.0.1746493201916;
+        Mon, 05 May 2025 18:00:01 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH2SXWHDRs6cCc/ENSCxWEM4J3053zB5ep3H8W4JdHCVxT6N9A6giFp3tQ2bpDMGbTdjClJzQ==
+X-Received: by 2002:ac8:5d0e:0:b0:47a:ecc3:296c with SMTP id d75a77b69052e-48c2e0916e0mr86864211cf.0.1746493201577;
+        Mon, 05 May 2025 18:00:01 -0700 (PDT)
+Received: from [192.168.65.169] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fa77b8fe52sm6532159a12.55.2025.05.05.17.59.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 05 May 2025 18:00:00 -0700 (PDT)
+Message-ID: <31008c59-afed-405a-a330-e42d89a62790@oss.qualcomm.com>
+Date: Tue, 6 May 2025 02:59:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA6PR21MB4231.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: df0e3123-3b73-401f-8aaf-08dd8c391e98
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 May 2025 00:58:31.0591
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: SBF8IytuREfrCsaWGaRkE4IT1GoLi3xf9gezW8R+VkUjODiyET0QS++rHra+VWmieBJZAwEAHia+q+wq+kXw5w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR21MB3934
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/6] clk: qcom: ipq5018: mark XO clock as critical
+To: George Moussalem <george.moussalem@outlook.com>,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>, Luo Jie <quic_luoj@quicinc.com>,
+        Lee Jones <lee@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250502-ipq5018-cmn-pll-v1-0-27902c1c4071@outlook.com>
+ <20250502-ipq5018-cmn-pll-v1-2-27902c1c4071@outlook.com>
+ <1435b068-3bb9-4285-8399-81fc278152c4@oss.qualcomm.com>
+ <b05d9351-cc79-4e60-a6e0-de2fe698098f@outlook.com>
+ <DS7PR19MB8883995CB86AE2784CAFF8AC9D8F2@DS7PR19MB8883.namprd19.prod.outlook.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <DS7PR19MB8883995CB86AE2784CAFF8AC9D8F2@DS7PR19MB8883.namprd19.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: 5FmBQyl95GfoK_pI-YGOvma27lGQKd6b
+X-Proofpoint-GUID: 5FmBQyl95GfoK_pI-YGOvma27lGQKd6b
+X-Authority-Analysis: v=2.4 cv=doXbC0g4 c=1 sm=1 tr=0 ts=68195f12 cx=c_pps
+ a=JbAStetqSzwMeJznSMzCyw==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=qC_FGOx9AAAA:8 a=UqCG9HQmAAAA:8
+ a=NYj23yi3rhxQzrYcNZoA:9 a=93bzvrPoB/MOLOjVLaw53YuoC0c=:19 a=QEXdDO2ut3YA:10
+ a=uxP6HrT_eTzRwkO_Te1X:22 a=fsdK_YakeE02zTmptMdW:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA2MDAwNyBTYWx0ZWRfX9/MeNBwo5CV8
+ kBTi7GgPRXDxIy5CtscD7os7+T1E3rRJqc5lJth9lZC2PCQJ7PkM3YZpI8e7EydFyjjrfsNsKC+
+ Gqy3oCJLYy7HKOazOcyDg8LZoAsq4Jm+qeL3wZFHj430F45edkD3uW0C8WDfqXioyoHf7Crozz6
+ ZjPlDDlNhwLVmCo0NSHIAsLa+4swc5lnbBOf34Q1dzOjhvoIyk2PU35INJ70uXPxczX9XW2WUwM
+ 9lENUfkjTn/JQmtdtTeNm+zUbnjVQB79qmI3XeDpfbcVLH+4SnxH3r9ndQBNxqRKi+NsUivL+Da
+ Zax/XBwmQDdaVIL7ScJ83iha5diM1Njzb1fXEoMuS4DFwuPyQLUCzNLrVfuc2O3gwa/pOJWj9aH
+ 95Bp6SQg2rCz0a2qpo/A7dn6IMgCJaE3UEmEgC2bNLqc5an3KaNpbUBRBDH2r1l9S5wAvitg
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-06_01,2025-05-05_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 bulkscore=0 adultscore=0 malwarescore=0 phishscore=0
+ mlxlogscore=999 impostorscore=0 clxscore=1015 mlxscore=0 priorityscore=1501
+ spamscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505060007
 
+On 5/4/25 8:59 AM, George Moussalem wrote:
+> 
+> 
+> On 5/2/25 16:45, George Moussalem wrote:
+>>
+>>
+>> On 5/2/25 14:29, Konrad Dybcio wrote:
+>>> On 5/2/25 12:15 PM, George Moussalem via B4 Relay wrote:
+>>>> From: George Moussalem <george.moussalem@outlook.com>
+>>>>
+>>>> The XO clock must not be disabled, so let's add the CLK_IS_CRITICAL
+>>>> flag to avoid the kernel trying to disable the XO clock (when parenting
+>>>> it under the CMN PLL reference clock), else the kernel will panic and
+>>>> the following message will appear in the kernel logs:
+>>>
+>>> Remove the struct definition for this clock (and the assignment in
+>>> blah_blah_clks[]) and replace it with:
+>>>
+>>> qcom_branch_set_clk_en(regmap, 0x30030); /* GCC_XO_CLK */
+>>
+>> understood, thanks for the quick turnaround!
+> 
+> Tested it, but then then the issue is still there. This time fixable by setting the CLK_IS_CRITICAL flag on gcc_xo_clk_src. I was looking at removing the struct for gcc_xo_clk_src too and use qcom_branch_set_clk_en, but there are clocks that refer to the gcc_xo_clk_src as their parent. I'm a bit hesitant to tinker with the GCC driver without access to the datasheet. The downstream driver actually has the CLK_IS_CRITICAL flag set too on gcc_xo_clk as initially proposed in this patch:
+> 
+> https://git.codelinaro.org/clo/qsdk/oss/kernel/linux-ipq-5.4/-/blob/NHSS.QSDK.12.5/drivers/clk/qcom/gcc-ipq5018.c#L1457
+> 
+> Are you okay with this suggested approach?
 
+Since turning off XO means the CPU (and nothing else on the soc for that
+matter) clock will not tick, just unregister the RCG along with it
 
-> -----Original Message-----
-> From: Michael Kelley <mhklinux@outlook.com>
-> Sent: Wednesday, April 30, 2025 6:56 PM
-> To: longli@linuxonhyperv.com; KY Srinivasan <kys@microsoft.com>; Haiyang
-> Zhang <haiyangz@microsoft.com>; Wei Liu <wei.liu@kernel.org>; Dexuan Cui
-> <decui@microsoft.com>; Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org>; linux-hyperv@vger.kernel.org; linux-
-> kernel@vger.kernel.org
-> Cc: Long Li <longli@microsoft.com>; stable@vger.kernel.org
-> Subject: [EXTERNAL] RE: [Patch v2 1/4] Drivers: hv: Allocate interrupt an=
-d
-> monitor pages aligned to system page boundary
->=20
-> From: longli@linuxonhyperv.com <longli@linuxonhyperv.com> Sent:
-> Wednesday, April 30, 2025 3:06 PM
-> >
-> > There are use cases that interrupt and monitor pages are mapped to
-> > user-mode through UIO, they need to be system page aligned. Some
-> > Hyper-V
->=20
-> s/UIO, they/UIO, so they/
->=20
-> > allocation APIs introduced earlier broke those requirements.
-> >
-> > Fix those APIs by always allocating Hyper-V page at system page boundar=
-ies.
->=20
-> This patch modifies hv_alloc_hyperv_page() and friends. Then Patch 4 of t=
-he
-> series deletes them, including the modifications. It would be less code m=
-otion
-> to do the first part of Patch 4 (i.e., the use of __get_free_page directl=
-y in
-> connection.c) here in Patch 1, and leave hv_alloc_hyperv_page() and frien=
-ds
-> unmodified. Continue to make the change to hv_kmsg_dump_register() here
-> in Patch 1 as well.
->=20
-> Then have Patch 2 simply delete hv_alloc_hyperv_page() and friends becaus=
-e
-> they are no longer used. The modifications to hv_alloc_hyperv_page() and
-> friends would not be needed.
->=20
-> Patch 3 and 4 would be the additional changes in uio_hv_generic.c.
->=20
-> Michael
+you can remove the .parent_hws (dont forget .num_parents along with it)
+from the affected clocks, this is effectively cosmetic
 
-I have sent v3 of the patch series.
-
-Long
+Konrad
