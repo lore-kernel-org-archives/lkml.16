@@ -1,25 +1,40 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2C63212B04
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 10:20:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79EDD212B04;
+	Tue,  6 May 2025 10:20:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746526826; cv=none; b=g965ODypmp4iGuFgqdHRSPi4Njnxiji1NqBHPgukUrdKJKvrbBnPXdMC/P/NDsXdJQ2U3zDhvW/9MGfzz/NB5JxELo5UfnmQauIFIvkIGBTAG405Ihg/LNjSOTr4jm+CX+ufZtIOYBMn+FqzacOXsdLmL1krh0shc3dJoQzQE7Y=
+	t=1746526852; cv=none; b=taEsuezdJZAc2pWt3/kplIEQxwMZUJj+q0QGg4C1z8jy8CT+jfGK9s4rLXDQ/6nRiUu47u4tq6vyquqPcuBF5OWUt1K+vUTx+yPP6z/gd1bMEHT0PARwYdyJuQUHf7ENBrCn6OT7nBZYc3OSEkcz2jc0cGWcEkBsRYpMgh7Ze+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746526826; c=relaxed/simple;
-	bh=+1pd1hUFweb7CCwtak3nlYPflslSIxDWfznZ7NCj4Z4=;
+	s=arc-20240116; t=1746526852; c=relaxed/simple;
+	bh=cTlctsLV2/rm79eOqeotyVv+FV9QLw5D/EGMnFgswkQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AoAz1n/SxVHFWAm9uRAjLQnaMrqFyaQy8YGoJqTTqdu24PEcETsy7BA8qi0RNFgvWrTHzn1Z0fnJ9RkrVXVBHPv2B4olY9d6nhmSn0MDQ/z0BLGxw3m/0gEoNydbU2es21inaxe0aEy2dO4KEkWzorKHsgyfoCvPWhe4sI7Gocc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6BBC6113E;
-	Tue,  6 May 2025 03:20:14 -0700 (PDT)
-Received: from [10.162.43.13] (K4MQJ0H1H2.blr.arm.com [10.162.43.13])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B1A813F5A1;
-	Tue,  6 May 2025 03:20:18 -0700 (PDT)
-Message-ID: <35966495-6922-4e18-a852-efb5d159a343@arm.com>
-Date: Tue, 6 May 2025 15:50:15 +0530
+	 In-Reply-To:Content-Type; b=mpFC406pM3S7YJS6JfS3AigIVAHbHXpd4n8dF8btdsMq+ZKztG7NP92EW8XCtxkhVAfY32TNNciqoYGEAnllqZ29fxRC9Y+/KwJKgHFAqPV5dJvoWHSE66CGuWVwsRNC6YkQ5/DX8SnK0FJilwdRQr1n9W8ND2oeTyrhRyK81TE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Oic6ZbqM; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Oic6ZbqM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1746526848;
+	bh=cTlctsLV2/rm79eOqeotyVv+FV9QLw5D/EGMnFgswkQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Oic6ZbqMxNknj0hcfe+ZvNlfYvKMruLwQGy/idLjU5+wHNR2dqVkJ+YfCmH1IK6WP
+	 bkuqQJLdrFtkcvwYnNM/MJ+GEBjIlpCFFalEaVWlq/x9f/EQNdTH8gJwtZOeWdCGHk
+	 iAL7PuEQ2kl1x6OLuV3IQVGDmRzUFEZ8K7kJSQU4wI7tOUGhNmpkxFWwV3WRIfCU4i
+	 YQDbrbhm99KAbgZQQLZ2RoZsRevMRvMiMUmC26hB0OsJMyPxrzbgKMcAi6b5B/s1b/
+	 S16uKYZkLIj1dZGqinA4nvSK2rOyrdiBGUiUryzeZtmOxpMPkOJ5obOpVtCVdkrer2
+	 PjxX9fcWQ7OrA==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 62EEB17E088B;
+	Tue,  6 May 2025 12:20:47 +0200 (CEST)
+Message-ID: <c8bb938d-5a43-47a2-b7de-695f95b077ad@collabora.com>
+Date: Tue, 6 May 2025 12:20:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,120 +42,75 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] mm: Optimize mremap() by PTE batching
-To: Anshuman Khandual <anshuman.khandual@arm.com>, akpm@linux-foundation.org
-Cc: Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, vbabka@suse.cz,
- jannh@google.com, pfalcato@suse.de, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, david@redhat.com, peterx@redhat.com,
- ryan.roberts@arm.com, mingo@kernel.org, libang.li@antgroup.com,
- maobibo@loongson.cn, zhengqi.arch@bytedance.com, baohua@kernel.org,
- willy@infradead.org, ioworker0@gmail.com, yang@os.amperecomputing.com
-References: <20250506050056.59250-1-dev.jain@arm.com>
- <20250506050056.59250-4-dev.jain@arm.com>
- <e430344b-76b9-43be-b497-0152a8910faf@arm.com>
+Subject: Re: [PATCH 2/4] dt-bindings: iommu: mediatek: mt8195 Accept up to 5
+ interrupts
+To: Julien Massot <julien.massot@collabora.com>, kernel@collabora.com,
+ Sen Chu <sen.chu@mediatek.com>, Sean Wang <sean.wang@mediatek.com>,
+ Macpaul Lin <macpaul.lin@mediatek.com>, Lee Jones <lee@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
+ <matthias.bgg@gmail.com>, =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?=
+ <nfraprado@collabora.com>, Hui Liu <hui.liu@mediatek.com>,
+ Yong Wu <yong.wu@mediatek.com>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+ Tinghan Shen <tinghan.shen@mediatek.com>
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, iommu@lists.linux.dev
+References: <20250505-mt8395-dtb-errors-v1-0-9c4714dcdcdb@collabora.com>
+ <20250505-mt8395-dtb-errors-v1-2-9c4714dcdcdb@collabora.com>
+ <cb715936-3a44-4002-8d64-565f8d31820c@collabora.com>
+ <2d3a8e55105526c999b490a2e92dd448c099faab.camel@collabora.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Content-Language: en-US
-From: Dev Jain <dev.jain@arm.com>
-In-Reply-To: <e430344b-76b9-43be-b497-0152a8910faf@arm.com>
+In-Reply-To: <2d3a8e55105526c999b490a2e92dd448c099faab.camel@collabora.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-
-
-On 06/05/25 3:40 pm, Anshuman Khandual wrote:
-> On 5/6/25 10:30, Dev Jain wrote:
->> Use folio_pte_batch() to optimize move_ptes(). Use get_and_clear_full_ptes()
->> so as to elide TLBIs on each contig block, which was previously done by
->> ptep_get_and_clear().
+Il 06/05/25 12:03, Julien Massot ha scritto:
+> Hi Angelo,
+> 
+> On Tue, 2025-05-06 at 10:34 +0200, AngeloGioacchino Del Regno wrote:
+>> Il 05/05/25 15:23, Julien Massot ha scritto:
+>>> Some Mediatek IOMMU can have up to five interrupts so increase
+>>> the 'maxItems' to 5.
+>>>
+>>> Fix the following dtb-check error:
+>>>
+>>> mediatek/mt8395-radxa-nio-12l.dtb: infra-iommu@10315000: interrupts:
+>>> [[0, 795, 4, 0], [0, 796, 4, 0], [0, 797, 4, 0], [0, 798, 4, 0], [0, 799, 4, 0]] is too long
+>>>
+>>> Fixes: 3b5838d1d82e3 ("arm64: dts: mt8195: Add iommu and smi nodes")
+>>> Signed-off-by: Julien Massot <julien.massot@collabora.com>
+>>> ---
+>>>    Documentation/devicetree/bindings/iommu/mediatek,iommu.yaml | 3 ++-
+>>>    1 file changed, 2 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/iommu/mediatek,iommu.yaml
+>>> b/Documentation/devicetree/bindings/iommu/mediatek,iommu.yaml
+>>> index 75750c64157c868725c087500ac81be4e282c829..035941c2db32170e9a69a5363d8c05ef767bb251 100644
+>>> --- a/Documentation/devicetree/bindings/iommu/mediatek,iommu.yaml
+>>> +++ b/Documentation/devicetree/bindings/iommu/mediatek,iommu.yaml
+>>> @@ -97,7 +97,8 @@ properties:
+>>>        maxItems: 1
+>>>    
+>>>      interrupts:
+>>> -    maxItems: 1
+>>> +    minItems: 1
 >>
->> Signed-off-by: Dev Jain <dev.jain@arm.com>
->> ---
->>   mm/mremap.c | 24 +++++++++++++++++++-----
->>   1 file changed, 19 insertions(+), 5 deletions(-)
+>> Isn't minItems already implicitly 1? :-)
 >>
->> diff --git a/mm/mremap.c b/mm/mremap.c
->> index 1a08a7c3b92f..3621c07d8eea 100644
->> --- a/mm/mremap.c
->> +++ b/mm/mremap.c
->> @@ -176,7 +176,7 @@ static int move_ptes(struct pagetable_move_control *pmc,
->>   	struct vm_area_struct *vma = pmc->old;
->>   	bool need_clear_uffd_wp = vma_has_uffd_without_event_remap(vma);
->>   	struct mm_struct *mm = vma->vm_mm;
->> -	pte_t *old_ptep, *new_ptep, pte;
->> +	pte_t *old_ptep, *new_ptep, old_pte, pte;
->>   	pmd_t dummy_pmdval;
->>   	spinlock_t *old_ptl, *new_ptl;
->>   	bool force_flush = false;
->> @@ -185,6 +185,7 @@ static int move_ptes(struct pagetable_move_control *pmc,
->>   	unsigned long old_end = old_addr + extent;
->>   	unsigned long len = old_end - old_addr;
->>   	int err = 0;
->> +	int nr;
->>   
->>   	/*
->>   	 * When need_rmap_locks is true, we take the i_mmap_rwsem and anon_vma
->> @@ -237,10 +238,14 @@ static int move_ptes(struct pagetable_move_control *pmc,
->>   
->>   	for (; old_addr < old_end; old_ptep++, old_addr += PAGE_SIZE,
->>   				   new_ptep++, new_addr += PAGE_SIZE) {
->> -		if (pte_none(ptep_get(old_ptep)))
->> +		const fpb_t fpb_flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
->> +		int max_nr = (old_end - old_addr) >> PAGE_SHIFT;
->> +
->> +		nr = 1;
->> +		old_pte = ptep_get(old_ptep);
->> +		if (pte_none(old_pte))
->>   			continue;
->>   
->> -		pte = ptep_get_and_clear(mm, old_addr, old_ptep);
->>   		/*
->>   		 * If we are remapping a valid PTE, make sure
->>   		 * to flush TLB before we drop the PTL for the
->> @@ -252,8 +257,17 @@ static int move_ptes(struct pagetable_move_control *pmc,
->>   		 * the TLB entry for the old mapping has been
->>   		 * flushed.
->>   		 */
->> -		if (pte_present(pte))
->> +		if (pte_present(old_pte)) {
->> +			if ((max_nr != 1) && maybe_contiguous_pte_pfns(old_ptep, old_pte)) {
+>> Looks not, from my understanding if 'minItems' is omitted then
+> dt-schema is setting it to 'maxItems'.
+> https://github.com/devicetree-org/dt-schema/blob/v2025.02/dtschema/fixups.py#L129
 > 
-> maybe_contiguous_pte_pfns() cost will be applicable for memory
-> areas greater than a single PAGE_SIZE (i.e max_nr != 1) ? This
-> helper extracts an additional consecutive pte, ensures that it
-> is valid mapped and extracts pfn before comparing for the span.
+> And you will have an error for a one item interrupts:
+> Documentation/devicetree/bindings/iommu/mediatek,iommu.example.dtb: iommu@10205000: interrupts: [[0,
+> 139, 8]] is too short
 > 
-> There is some cost associated with the above code sequence which
-> looks justified for sequential access of memory buffers that has
-> consecutive physical memory backing.
 
-I did not see any regression for the simple case of mremapping base pages.
+Whoops, you're right.
 
-> But what happens when such
-> buffers are less probable, will those buffers take a performance
-> hit for all the comparisons that just turn out to be negative ?
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
-When would that be the case? We are remapping consecutive ptes to 
-consecutive ptes.
-
-> 
->> +				struct folio *folio = vm_normal_folio(vma, old_addr, old_pte);
->> +
->> +				if (folio && folio_test_large(folio))
->> +					nr = folio_pte_batch(folio, old_addr, old_ptep,
->> +					old_pte, max_nr, fpb_flags, NULL, NULL, NULL);
->> +			}
->>   			force_flush = true;
->> +		}
->> +		pte = get_and_clear_full_ptes(mm, old_addr, old_ptep, nr, 0);
->>   		pte = move_pte(pte, old_addr, new_addr);
->>   		pte = move_soft_dirty_pte(pte);
->>   
->> @@ -266,7 +280,7 @@ static int move_ptes(struct pagetable_move_control *pmc,
->>   				else if (is_swap_pte(pte))
->>   					pte = pte_swp_clear_uffd_wp(pte);
->>   			}
->> -			set_pte_at(mm, new_addr, new_ptep, pte);
->> +			set_ptes(mm, new_addr, new_ptep, pte, nr);
->>   		}
->>   	}
->>   
 
