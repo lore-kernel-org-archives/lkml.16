@@ -1,98 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6757722A1D5;
-	Tue,  6 May 2025 07:47:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D48311865E3;
+	Tue,  6 May 2025 07:47:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746517668; cv=none; b=rF8xP/nLnbmbigkW4segS87YaXDF5V7m/eEhdcxefpEhetLD5R2/1OmcaSayYiAWhRNvN7++PSpIK/xPZdMTjfOLOkrD04i1EZsRoaxCF/LicpAS537dx3MzlExAXXNjvRpMsjycQcQyPWRq5DCpluEhUyzL0O0/X8Gmsh/f4jk=
+	t=1746517680; cv=none; b=kRz4OGqXFIME/HWRmYrCnLimSQr+h9ws7NCCNQ3vAPNfUUWMNeD3xuAvFd8xjfmxy+ZQcpPhTTbgdSW13Lrh/mnuyTHd8eOAnxCE26Q9is8zfZGspTXxx0SouLEaI0W+fWfUxIgQGxj1O1Hau0t+6t1ELhdaHLhtlwsC0O83c48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746517668; c=relaxed/simple;
-	bh=byVt9xfRc8s+dXIAdeg+0V4A2ekYEgOY1v3KclMOezI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=T1/lVnUU7AYPMhqVCKPY9ZWzBtgQ1/t+MtK9tguimVHr1s6PBO0fjs1RdjxMWlcnVW/Qhtoa56D2psk8HBzyDHO7q3/0wPbHrnKixWyTGoWtjr6yYQ0FPJbOUuDv2GOle9UB1XMICMdR2sg14rkIKYhs5N6JbSPWpVcsZcDab38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XeJ922e2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746517680; c=relaxed/simple;
+	bh=p7pvOZB2NRNvGY3O257XuxFkgiCcQz8KrGDhaUE1jeM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=OmGgwQ2E3HCu0EjAsjkCWyVBIpDJtKWY+Lh3KNqyIsq/eOeG2/wojn2b/mu9+PviSNzzkQnR+tFxdiRM8GTO2Mk9VFWWVDeU4rEPb4KgmyucJb72yQQyETfAbJ8KIa2wp6urYRQBjUzI2fVEa15MfB5En92wK0F8258ir6Rlgk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FcrvVufE; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XeJ922e2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9691C4CEE4;
-	Tue,  6 May 2025 07:47:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746517667;
-	bh=byVt9xfRc8s+dXIAdeg+0V4A2ekYEgOY1v3KclMOezI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=XeJ922e2sX0yCALZ/jclHMv816QkOvg0sqrO58916MPWoUhnBTUN4vPqOqgbvZdar
-	 MSqyV3yyGDK2voEtP0wV3k6elKTw08nndff8pa1iXyn/gCZD5mt4/oN/FmaWhiAtgO
-	 WnZeGQFLIPI7WlNmQ5yyOjekHbQMcbYhHKffXGAe5xhpGMoaowwmjTjQCckOvxugy/
-	 0H7eU6FgcPKc384N2j9Lpc6g/D0SysOkVzBdQbPyAP43Tiqp5TJADWa/y9vQ5F7OkK
-	 UO7qAA+YB7BwHfVkYNu3wpYUKtS5aKCZRAG8BUtxsNmwypZqLJ7V2FDNIusY6XmcrX
-	 uLd139p2UH0ng==
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-54d65cb6e8aso6724144e87.1;
-        Tue, 06 May 2025 00:47:47 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUzAuv5To1Xr9bbS02rNr/XqvvMKcQ6+tneiQysMuhy0YPSgtP/BWefm1xeogKcATOKn/7bCdpRVEFR6gp4@vger.kernel.org, AJvYcCXzhgYgiiU/k9nlMChChtZXMWkxg/IyhdoVUnUMsE+2p/1ftei6Z3yU0/WBW0aamxcfOl6Ke1hn/fwtHsg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7QL/dIkiG6A4q+kktDb87NVVlpyPyLINzjjs+FP6L49L+th1P
-	mAJMNKSCbelXfkFgSft4rs0Hrpq94q2zxkhjsMgqQgEcMFndZKoTH00oW52daRV0cEN1Z6iEzlo
-	6E+miMNV3negtkv2zwNPxWVbdV4U=
-X-Google-Smtp-Source: AGHT+IGsRriShthUIHUN0lZ1T7kKyMxf6GCaVXjohavEUJNT1M/4Ab5QDBIhpkV7zgomAtQ+iSB2d8myFm8aaeN3Nog=
-X-Received: by 2002:a05:6512:689:b0:54c:348d:19b7 with SMTP id
- 2adb3069b0e04-54fb4a9788bmr547286e87.46.1746517666599; Tue, 06 May 2025
- 00:47:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FcrvVufE"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43cfebc343dso35031775e9.2;
+        Tue, 06 May 2025 00:47:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746517677; x=1747122477; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=cP0pNdBoaxygoFAdiEmhS7Skmfb1gZrZwVoFfqQfonA=;
+        b=FcrvVufEuwppPtCTbIosdQu9c3e0sjkwqNPJ1bOSQ5zd1sssbH2bo/rcqSpVQ9rgor
+         xjRJjnODdWt3RYF09ZDC0qr8/MAWPzNW5sOAUBVpNMMs7Zleu7u6SKDvzFZKIsJpfqec
+         ECfeShkgdnE0/j3ESHWMOBL68Zs23kg8H8+2ZsgyJYbKh81wRXspBdeCpLcLK/k4JXXd
+         9KRmTue2aTGksptkVBFCYovjmUCkfMrstgXisSxys0sn5m792LCxxERvVtuq4FdRR2ti
+         jlt5VGxCHsbA0a94/OAK0Gxpu5oBG93yi7CmeKKgRx5JfMdY8Q4t9Ed42CfX2KPXS9lG
+         psLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746517677; x=1747122477;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=cP0pNdBoaxygoFAdiEmhS7Skmfb1gZrZwVoFfqQfonA=;
+        b=vbzxbs4bgOfyiT5jvGJOHO/btMr0qHdPFZAgzkzdTTWsgXx7qll4MmrIvCiFy1uQz4
+         5w1xUq0vAlTLMoRyOXK5+doAmDxyAKd4tIgwojSJJqmJAOfE/a6vMlEkNxi/ug7VscNU
+         j0G8j+I9VsJpLBMy768hH74Xn4BjptKQNWYjh3RekQ5BSM8sL1hslt4F7ntVHaGMCrEd
+         rW79Eaw3r1xTVXuOkhSsXPY1osXDpyJ+Lf9BPCJ9awDv3Hb9fdzz9QZ+JZmZr4vd9v+s
+         uKntk1s4V4/lKatjoNxAkdadXatkiBemG+pwvJ5P/pZx3yIdRlMTZ+eGbmyuW07NoXCV
+         vkWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVW92RZ65kBpDzJXtTZ4CbBlg7vGnyzTor5wqA+2/eMSGuZLa89WSjcL26YsRUAH5n53IqX2Zk3qK0=@vger.kernel.org, AJvYcCXd9F66/Ni7cHzXBsos9HqI9stMFDo+HbXq9P4BqeT2ioT5YXWLpT4v2Z45V4/yZ0ZEXCt1QBfRT/zb8+hb@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQXFe00+TgFva57eM6w10qlc1XUT3X9hI4p/GXDAECjIxNhgLj
+	sVSlCjJh6oiv4noTSeKiZvChXbDHAaroPIUMJLam2FXOSrRZLUmIT7l1ZGKk
+X-Gm-Gg: ASbGnctfKnNG5OnXTCgfhIZioSBLA2nrfv6qCt1Go2Nk8alyav8vvrsHX9jE6GSbiXh
+	rcbISaqG7ZXozD0kOjQWwYCP1OBiWbpKYcXDsHiiA1NYrsH4x06NyMaRRZNIwwPvvFWjRPmZoeE
+	kBZOYx2CQeKAxdTpOBow1chx9vzu/8TX3ksFKE+RBETXk2Rjw1Hdrmh2XE3KeKtMorJO/38V/A2
+	3h/qqEn93HyeJC3cS3AEIdc9Rm/KUI00irNQBfiO67GH/u8UFf9xkU7Qkrq2A41U8pmHGW4pO6E
+	jTr8fbjjlue+sCSkbajgU68oYnt/nJejbjzh3r/2vJiFFs1T7e4H3XGDSTubHWgdrSo04DRcM4Y
+	yjrUc2Jx08hqQn1eAivIL8ZDTnA==
+X-Google-Smtp-Source: AGHT+IGM/ONloZ3cXEEt7TBduShHNzqs0myDIHa0Xt1OqT9XaAYxmOg1/XJiS7mExmrFrJsw9Fuh5g==
+X-Received: by 2002:a05:600c:1c91:b0:43c:fe90:1282 with SMTP id 5b1f17b1804b1-441bbea0cdamr113462375e9.7.1746517676785;
+        Tue, 06 May 2025 00:47:56 -0700 (PDT)
+Received: from ?IPv6:2001:818:ea56:d000:56e0:ceba:7da4:6673? ([2001:818:ea56:d000:56e0:ceba:7da4:6673])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099ae7a46sm12535159f8f.44.2025.05.06.00.47.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 May 2025 00:47:56 -0700 (PDT)
+Message-ID: <bf75a685e8e94a90a84123122994592a505b8d02.camel@gmail.com>
+Subject: Re: [PATCH v3] iio: backend: fix out-of-bound write
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Markus Burri <markus.burri@mt.com>, linux-kernel@vger.kernel.org
+Cc: Nuno Sa <nuno.sa@analog.com>, Olivier Moysan
+ <olivier.moysan@foss.st.com>,  Jonathan Cameron <jic23@kernel.org>,
+ Lars-Peter Clausen <lars@metafoo.de>,  linux-iio@vger.kernel.org, Markus
+ Burri <markus.burri@bbv.ch>
+Date: Tue, 06 May 2025 07:48:20 +0100
+In-Reply-To: <20250505203830.5117-1-markus.burri@mt.com>
+References: <20250505203830.5117-1-markus.burri@mt.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <79C925DCE2E963FF+20250422104927.144252-1-wangyuli@uniontech.com> <D62AECCF56C6EEFC+20250422105402.145635-2-wangyuli@uniontech.com>
-In-Reply-To: <D62AECCF56C6EEFC+20250422105402.145635-2-wangyuli@uniontech.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Tue, 6 May 2025 16:47:10 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQg=WwPXL2BQfTMw_a5ZhtnKRugufgo1_TiCKe514t9uQ@mail.gmail.com>
-X-Gm-Features: ATxdqUFRI6PDaZqJ3eM7XHeSrY6wVRjuWtwU7AsOOd3WH0ybiypwb9yA_j-cdmM
-Message-ID: <CAK7LNAQg=WwPXL2BQfTMw_a5ZhtnKRugufgo1_TiCKe514t9uQ@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] kbuild: rpm-pkg: Add (elfutils-devel or
- libdw-devel) to BuildRequires
-To: WangYuli <wangyuli@uniontech.com>
-Cc: guanwentao@uniontech.com, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, nathan@kernel.org, nicolas.schier@linux.dev, 
-	niecheng1@uniontech.com, petr.pavlu@suse.com, samitolvanen@google.com, 
-	zhanjun@uniontech.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 22, 2025 at 7:55=E2=80=AFPM WangYuli <wangyuli@uniontech.com> w=
-rote:
->
-> The dwarf.h header, which is included by
-> scripts/gendwarfksyms/gendwarfksyms.h, resides within elfutils-devel
-> or libdw-devel package.
->
-> This portion of the code is compiled under the condition that
-> CONFIG_GENDWARFKSYMS is enabled.
->
-> Consequently, add (elfutils-devel or libdw-devel) to BuildRequires to
-> prevent unforeseen compilation failures.
->
-> Fix follow possible error:
->   In file included from scripts/gendwarfksyms/cache.c:6:
->   scripts/gendwarfksyms/gendwarfksyms.h:6:10: fatal error: 'dwarf.h' file=
- not found
->       6 | #include <dwarf.h>
->         |          ^~~~~~~~~
->
-> Link: https://lore.kernel.org/all/3e52d80d-0c60-4df5-8cb5-21d4b1fce7b7@su=
-se.com/
-> Fixes: f28568841ae0 ("tools: Add gendwarfksyms")
-> Suggested-by: Petr Pavlu <petr.pavlu@suse.com>
-> Signed-off-by: WangYuli <wangyuli@uniontech.com>
+On Mon, 2025-05-05 at 22:38 +0200, Markus Burri wrote:
+> The buffer is set to 80 character. If a caller write more characters,
+> count is truncated to the max available space in "simple_write_to_buffer"=
+.
+> But afterwards a string terminator is written to the buffer at offset cou=
+nt
+> without boundary check. The zero termination is written OUT-OF-BOUND.
+>=20
+> Add a check that the given buffer is smaller then the buffer to prevent.
+>=20
+> Fixes: 035b4989211d ("iio: backend: make sure to NULL terminate stack buf=
+fer")
+> Signed-off-by: Markus Burri <markus.burri@mt.com>
 > ---
 
-Applied to linux-kbuild.
-Thanks.
+LGTM
 
+Reviewed-by: Nuno S=C3=A1 <nuno.sa@analog.com>
 
+> =C2=A0drivers/iio/industrialio-backend.c | 5 ++++-
+> =C2=A01 file changed, 4 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/iio/industrialio-backend.c b/drivers/iio/industriali=
+o-
+> backend.c
+> index a43c8d1bb3d0..4a364e038449 100644
+> --- a/drivers/iio/industrialio-backend.c
+> +++ b/drivers/iio/industrialio-backend.c
+> @@ -155,11 +155,14 @@ static ssize_t iio_backend_debugfs_write_reg(struct=
+ file
+> *file,
+> =C2=A0	ssize_t rc;
+> =C2=A0	int ret;
+> =C2=A0
+> +	if (count >=3D sizeof(buf) - 1)
+> +		return -ENOSPC;
+> +
+> =C2=A0	rc =3D simple_write_to_buffer(buf, sizeof(buf) - 1, ppos, userbuf,=
+ count);
+> =C2=A0	if (rc < 0)
+> =C2=A0		return rc;
+> =C2=A0
+> -	buf[count] =3D '\0';
+> +	buf[rc] =3D '\0';
 
+you could have mentioned this change in the commit message...
 
+>=20
+> =C2=A0	ret =3D sscanf(buf, "%i %i", &back->cached_reg_addr, &val);
+> =C2=A0
+>=20
+> base-commit: b4432656b36e5cc1d50a1f2dc15357543add530e
 
---=20
-Best Regards
-Masahiro Yamada
