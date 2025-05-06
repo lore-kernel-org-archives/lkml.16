@@ -1,263 +1,205 @@
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from WA1P291CU003.outbound.protection.outlook.com (mail-polandcentralazon11021117.outbound.protection.outlook.com [40.107.154.117])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD86E81E
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 19:15:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746558951; cv=none; b=Qzj1n6UZrxF5wIQmfxR2YnNDW+hH7wFBVOfLcogsdl1I+rIwqaNsG12qVmB3llNvIJObsAaO//930p2RwplzHD0kAC8FKvYWKolMt3jLyAFq+DVV6ifOW6iFMz4J+H3+c4R+4ZjuRKodRM8ICIEWfuLessOSkt0w1qQDOB0abvg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746558951; c=relaxed/simple;
-	bh=Z1yJoGEhUIwQUXueo6n/ha+JgB9QzMeGmPIixD+GFao=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jhVTmafvfRSiyQu2tvbT6Ra+qiugdRqWi4wQ/IfpFUlyLyeZZpqQ1uoqH5Kui8fF2rOblv63vuueKWv/D11ET4y1EWqUbRWwAes5WwN4oxspcSTS/ZElSd5Zc6pkM4a2RrJCdUWJxsWGP4wV9YOPYQgHFy/q141V7tkHtRFA4/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jakerice.dev; spf=pass smtp.mailfrom=jakerice.dev; dkim=pass (2048-bit key) header.d=jakerice-dev.20230601.gappssmtp.com header.i=@jakerice-dev.20230601.gappssmtp.com header.b=hsbj9FJo; arc=none smtp.client-ip=209.85.222.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jakerice.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jakerice.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jakerice-dev.20230601.gappssmtp.com header.i=@jakerice-dev.20230601.gappssmtp.com header.b="hsbj9FJo"
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7c56a3def84so620672685a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 12:15:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jakerice-dev.20230601.gappssmtp.com; s=20230601; t=1746558947; x=1747163747; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7taY46IGc0mDFv9NltJivBJOSYvv+pAntv3/xJ8NA4w=;
-        b=hsbj9FJolBf0N7EoSVgjVYzWpY4ocX/SgmQ4osP6NyejcAPVdRUBlbbNbz+bqtil+C
-         BkiBA45iSwZyS1aP0p5cQF9BFLeFgZd7NidQfO5SfaLSK+kjcKRo/HQmXa6EKN16awDh
-         n4OlAvRajaLwDoPLxIkNidtKhjU5Q1CkNpdhfsykdvptzi5UQIc4fQaIQixSsCS0cEEB
-         POCmmzTxW2QqbVsNPYfwjv/GvNaIUJX2VIyqO9x2ke3xdhhM5mSDl7saevYGpaUBUs7O
-         +Jye0cW61vDSFnTmhD/Evgvn/y+rVUcbbt8cpZy3nDPw8jhsCItaCQMlYMcnGloNop6h
-         giaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746558947; x=1747163747;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7taY46IGc0mDFv9NltJivBJOSYvv+pAntv3/xJ8NA4w=;
-        b=vIzrwwx97yGoj/K9+/ab98nS1LJoOCBSSjLfmU1OMUIM0ZKlLLUW5M8DHXoEORUodo
-         h8Wumj9fv+iDz3LyxN9ft3VC5hCuWCAHGXMyrrx9UEiziXKC2kxKsoCjPPVuko0R1dh1
-         08rdXlanosaanDS+rywBc3Hv8qEcZ6Yj/8P8Wv3hiVSzfmtP1rP+IjudFhjuIPVq/bcr
-         IBXMTKzjkYXbZ7w7cP8MRJ4WryW4PAac3HrIDfbJYayZqWP7nhxMqmGN/JifUAu8Dley
-         CyKGQQa+FHkuJKcGb+Ffv/aMQZHpDNyAQ+yNOi67P0gXjs/bAqE0cg3GlrTblBlk3pPt
-         ihQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWNzC06eRFnof+PKKHHPzd+ie2Tme2OOysChVnVIBs3XBiaEWWSwQM6ygu+GDk6/aEs1+7flv8qmBUa9mI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YynT7ScWF4dJdNIpe9MWSPfJPOi9VkztQjkoJsWqyBUW/fYggoP
-	zST5m/1ccpYXd6vmKVjCPYRneXoJ7lBRsFccnyxzx83DIsTh2el7eGkc/NMomCU=
-X-Gm-Gg: ASbGncs4FeRYh203YPC09UtM4sOklJcEKk2qsrLrV+sp+YqTQy1GxNtIjdqt8Jr4LLE
-	OeRToylmRXVL1eaMx4fqUvH/K8QQxmP9yvrdmpzcKpPuV+3+lz3VO2Pa5CXbsSLReIj9bMfpJNf
-	LO5/aL5Sw/FiuIXEq8APmSdOoxcxay7xZXzkEC+SJBbJzAT+4EPSC4lMyDLHPplp0FtkE8thmRb
-	gkRjX+8Myxzf4isVV8ZSXNlbXWrtQawih7Y4F0XJl4G2hdreRpd7VR6FkG0lOJ9gnDHLBcIQSuy
-	FM/b12VwMw8kUwlIGPtGB5Ugk7v/lRcFcUm0BBVmtwQatalBSWPzNKjnaArD+w7ez0zKczwGw3V
-	NkjtH5B5Dpg==
-X-Google-Smtp-Source: AGHT+IHmeX/Vp3tBioEkx0O70r0EXrgFloiq02wtUU/AX3bPTNj6+4Vwqu5TkuE0j0bZmzdtFAOang==
-X-Received: by 2002:a05:620a:40c7:b0:7c5:af73:4f72 with SMTP id af79cd13be357-7caf74020bbmr76661085a.42.1746558943029;
-        Tue, 06 May 2025 12:15:43 -0700 (PDT)
-Received: from localhost (c-67-162-238-230.hsd1.md.comcast.net. [67.162.238.230])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7caf75b884csm14778485a.86.2025.05.06.12.15.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 12:15:42 -0700 (PDT)
-From: Jake Rice <jake@jakerice.dev>
-To: linux-usb@vger.kernel.org
-Cc: stern@rowland.harvard.edu,
-	gregkh@linuxfoundation.org,
-	usb-storage@lists.one-eyed-alien.net,
-	linux-kernel@vger.kernel.org,
-	Jake Rice <jake@jakerice.dev>
-Subject: [RFC PATCH] usb: storage: Add blockbuffer ptr to info struct of sddr09 driver
-Date: Tue,  6 May 2025 15:15:31 -0400
-Message-Id: <20250506191531.3326-1-jake@jakerice.dev>
-X-Mailer: git-send-email 2.34.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ACDC4B1E45;
+	Tue,  6 May 2025 19:15:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.154.117
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746558959; cv=fail; b=OIHT2gKGVMBXI19bz2YoSKK3Ys1amD39ElmTyezY0VQSVvkDwH1EE0mhtrYvM8KH5q1SaiWDxh3HKUrb3bo4RyDdm8RYeHrVWDWp5OgGYxxT/ukHyRGq9zjDtAXrMXyod6LGMk5nJd/cWRhBaOhNaO65gPpNYwWpzsiHY4nuPLQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746558959; c=relaxed/simple;
+	bh=FNoEyIPSk3gg+9ziuBVmDiwtONvjq5yXxgq3mIhNumQ=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=c+uOy+vhwExlaF3hBI5K5OCnV44+Mx/v7sjRyLpGI6ST/+ona00PM8A4GpFUfPwxx2cMF42de6aoeom1x+z98FBdyBnmnHKL2QxDDJ4GeN7fmPDHfFMUQHYq6pf2ph7XHBxpR4HCRgtADpzdMZ7h11DxxyLLYN3z+YZR9iCRI/0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=videtronic.com; spf=pass smtp.mailfrom=videtronic.com; arc=fail smtp.client-ip=40.107.154.117
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=videtronic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=videtronic.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=uD0K7sigZvDe5JNMPl2b6M5K305FdQQsdXbri4D/sb7OR0V6uKSLNm7C3DLNZG5f8WgYg03vrtrXPUBDJpBh85cs6uYPe7RmO+waJ+vPDHO7UssqKJR2TKk+Ky3L3bFF9QPwph0LKvCrAFlJeOX+rygBPPDNkq0LNK0UNy3pWy8sYwYpsfJTqGPWWUMJcsxDKfPlCVVwPlPtExeb1IcDMfMaU64IfY+ZMWe2v9dSk8DGXLg0ADypSZejt71LazlHEZYsCehk427MmYUGTXNtH/QoyXKRApeR7NTcdsRmxk7AwNNDQMxu4JmdcoK37L7RASaBE05YYF4/m3fRuGARGg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=FNoEyIPSk3gg+9ziuBVmDiwtONvjq5yXxgq3mIhNumQ=;
+ b=ZnVuMY3wEcsAK0E1YHaj3Yd8CSp+fSP6Xo2kDKaU/RXNK3v0JgY+YgJPdMdj+NKwobDdHZztCOL+uI8M44kA6WHNE4W4xuCH07LfLsxtbq3zo6MbUZ2jM5AzkdtLlxUiir5kGolKCP4vfwJ08Ej/aBXWdE7oKa8nMJMfuHFZ0Sxxh08NzjRrqWWjtYorGGygeZSM51FSP89Xt9Tna81l4SdJ1UzsY999wejJnGN9j8P+8mm+FXB3dw8hiKQvxIgKXWqG4sIsa/NA3+cS9A18VbuzVyec7xGpsUWPZP43KrgxzfgmZFTSPjdL1Sim1uQsKw3QIsdz8pLnAzZ3EC/jQg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=videtronic.com; dmarc=pass action=none
+ header.from=videtronic.com; dkim=pass header.d=videtronic.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=videtronic.com;
+Received: from WA2P291MB0309.POLP291.PROD.OUTLOOK.COM (2603:10a6:1d0:24::14)
+ by WA1P291MB0012.POLP291.PROD.OUTLOOK.COM (2603:10a6:1d0:11::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.26; Tue, 6 May
+ 2025 19:15:52 +0000
+Received: from WA2P291MB0309.POLP291.PROD.OUTLOOK.COM
+ ([fe80::5b7e:db51:5934:a36f]) by WA2P291MB0309.POLP291.PROD.OUTLOOK.COM
+ ([fe80::5b7e:db51:5934:a36f%3]) with mapi id 15.20.8678.028; Tue, 6 May 2025
+ 19:15:52 +0000
+Message-ID: <d4165e96-7587-471c-a7c5-ffa26531a796@videtronic.com>
+Date: Tue, 6 May 2025 21:15:51 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 12/16] media: i2c: add Maxim GMSL2/3 serializer and
+ deserializer drivers
+To: Cosmin Tanislav <demonsingur@gmail.com>
+Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+ Cosmin Tanislav <cosmin.tanislav@analog.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, =?UTF-8?Q?Niklas_S=C3=B6derlund?=
+ <niklas.soderlund@ragnatech.se>, Julien Massot
+ <julien.massot@collabora.com>, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, Bjorn Andersson <quic_bjorande@quicinc.com>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Arnd Bergmann
+ <arnd@arndb.de>, Taniya Das <quic_tdas@quicinc.com>,
+ Biju Das <biju.das.jz@bp.renesas.com>,
+ =?UTF-8?Q?N=C3=ADcolas_F_=2E_R_=2E_A_=2E_Prado?= <nfraprado@collabora.com>,
+ Eric Biggers <ebiggers@google.com>,
+ Javier Carrasco <javier.carrasco@wolfvision.net>,
+ Ross Burton <ross.burton@arm.com>, Hans Verkuil <hverkuil@xs4all.nl>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Zhi Mao <zhi.mao@mediatek.com>,
+ Kieran Bingham <kieran.bingham@ideasonboard.com>,
+ Dongcheng Yan <dongcheng.yan@intel.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Benjamin Mugnier <benjamin.mugnier@foss.st.com>,
+ Tommaso Merciai <tomm.merciai@gmail.com>,
+ Dan Carpenter <dan.carpenter@linaro.org>,
+ Ihor Matushchak <ihor.matushchak@foobox.net>,
+ Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>, linux-media@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-staging@lists.linux.dev,
+ linux-gpio@vger.kernel.org
+References: <20250309084814.3114794-1-demonsingur@gmail.com>
+ <20250309084814.3114794-13-demonsingur@gmail.com>
+ <b214bf8d-33d0-4da8-bf16-cc62bd1fbd55@videtronic.com>
+ <f22f1343-9b7b-4ae6-9461-bc1b8108619f@gmail.com>
+Content-Language: en-US
+From: Jakub Kostiw <jakub.kostiw@videtronic.com>
+In-Reply-To: <f22f1343-9b7b-4ae6-9461-bc1b8108619f@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: WA2P291CA0016.POLP291.PROD.OUTLOOK.COM
+ (2603:10a6:1d0:1e::12) To WA2P291MB0309.POLP291.PROD.OUTLOOK.COM
+ (2603:10a6:1d0:24::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: WA2P291MB0309:EE_|WA1P291MB0012:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5622dd41-b440-4be9-41ba-08dd8cd26ad0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Q2VnYlVOYWxISmxTWEdYSkEwSE1uMThhQmJ1TkovZm9BNzFGY2l3V0dRbHRG?=
+ =?utf-8?B?dm9RalU4aitodTlJQmh4MGxYbEZYSHdOMGFHbzI4TFpCL2w4N3V3NWtqc3hB?=
+ =?utf-8?B?K3d0ZlVsdXJtYkhCNzNCUGhwQlNFNGQ5K28xUWJZcVNDdWJWd1hiaFlGQlJD?=
+ =?utf-8?B?VzZhTXhBOXJoSm9PWitVUUJweGVpaVk3Y0wxWWMwNWEwNnVjbXc0ejJQeHBS?=
+ =?utf-8?B?YWZ1bkprRkNaOENYYTdIOSszSXVMTEJ3OUpULzBTWkxFTXpHR3hMV3RzN0NB?=
+ =?utf-8?B?dUp2czJ5UXEyQ0wva2tST0F6VFZ3SXpGVDRSTUJJQzRhUkM0bHoyUWdScHMv?=
+ =?utf-8?B?Q2YremI0Z0U1K1grQUlmTVVZUllxcWNDK2ZpdEdyZlBuTXVlN050aEhValJk?=
+ =?utf-8?B?UHdXbXhQNE44ZHk5Mk82WU1ZWTVxaGJYWi80YytVVm9jb2dtQ2JnWGw2Ui93?=
+ =?utf-8?B?MlR0UmdCNzVpby9TQ0RqL1pWR0dXOC9HeWE2MWtjRklCSStYL2o0UnErQXhF?=
+ =?utf-8?B?aENYRFRNQkg1ZUpYOU9SNG1jYnU0Sm1NSTB5QmlYYW1CemtWNkYxNVpENmpD?=
+ =?utf-8?B?RWZsYTlHSEJKbi9mQWJNWHZPRlBEN3hYQ1lSZnZlbXFzTVlsbTBBZjZSY25I?=
+ =?utf-8?B?OXVXMUZPemhPU1NBSmxaSHQ4bklZUDdJYUJhK2owS1JRdTI5dXZWWk1jSmVs?=
+ =?utf-8?B?YTc4ZmJyakhXYWhTWDZVRXZseFduV1h4ZUl3VmpZNCszaVBYQTlVeWU0NzY3?=
+ =?utf-8?B?U2lkY3B1R2RxYlh3Z1VPZE10RlgvUmdTZ1FhRCtuVXl6UWJWOXh4TmVuOXRJ?=
+ =?utf-8?B?YUVlSmZJaHRWTjR1Q1VWNWZBbndhc1k1cCtFOERVOHkvVFl2dmV3WlRiTEw4?=
+ =?utf-8?B?b1lTZkxFNFZGWmx4eGV6K0NoN1VjWnFmS2VDTi93RDhRaEtKd082RGpMWnk3?=
+ =?utf-8?B?OXdBTHVWeTU4UFVCZnJDTG9qaFlsM0J3SVR6cTd0QkwrWXpBeS95LzFndXVt?=
+ =?utf-8?B?dnVVdVlGZkNZWk5PRFhtTnVzV0R4QjQzUTMrY2kvNkRiMjB5MG5rdnYyQWpQ?=
+ =?utf-8?B?eE9uWi9LbjFtYlRkTVZUTktCS3ZrbTg5QkVtaGFEemk3Nnh3d1dlMmRaWmVu?=
+ =?utf-8?B?SjhpaDlyVEowZU5YbHVXT0JQdFJtMHE0RjhrNkRJT2IzZzVUMXU2U05NdlZE?=
+ =?utf-8?B?Y09ZWkQ4VTJUMnlHTkhwM2FJZVRCbFVwcWZNNnY4MkR3UHpOdDNtbnM2cm1n?=
+ =?utf-8?B?VVIzaHlJeUplVWNNTDIwWU1XSXUxNnJ2T2tUVGpXVjBMK245akZlT0ljbTBG?=
+ =?utf-8?B?Tm1vNlc1UFVjTit4YUZBdk1OdzByRE5JU1diVTVsbjZNUVpMRGxtMWQxa0Zm?=
+ =?utf-8?B?NmNlNGhTL3piTkgwREh6eWpTeVJjSGFvUGlXMFdOc0pmc1VFeWRZL1lpaUk1?=
+ =?utf-8?B?THZvMDdXVXFnaWkyemt0c2V4SFZnYkM5Nkg2dzQrdkNHMnVZZTJsQWhLT1di?=
+ =?utf-8?B?SW9lN3FMdDZsOFNZYytaVlp5WW5PU3hvUkRsYXc2SmgrU3hvVzJ6MWwxRzM0?=
+ =?utf-8?B?Nnh4SWRTOXBTTDVQbG9UbER5MVV5TVI3VG1YNHoxNkhWUkM2aEtTeTNpb2VU?=
+ =?utf-8?B?eS91dHh3ZmJ0VGlxdHFmYzBoZTNIVWVaaE91aFhMNm0zMmdXSkVYK3pZRVBI?=
+ =?utf-8?B?RDhMbk1FMjVkSWwxZkVuSnlWQlY0SFcrRG9MaGNXbGI5OFBja2g2OHc2UXVH?=
+ =?utf-8?B?c29PczBqZGlrZWFBSlF2bU9mRUVadFdDNWg4MjNSUXVQUlVnU0xBRGxxSVdG?=
+ =?utf-8?B?RVVVS0NNU2M1MzZWODkvTGVqS2dJdmNiMDQ1YTVJMUF3S0ZGM2IzbkFwYXNr?=
+ =?utf-8?B?ZGVlTkVicjVnWGlMaGRkdUNJbmhTWE92UW5NMWJyQmlzOUE9PQ==?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:WA2P291MB0309.POLP291.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?QlFjdGNNTW5Dd0EwQ1NDZklhRGdmQlBZMTJqWStIQ1JFdXh2Y05IY0JHYS9U?=
+ =?utf-8?B?T2RxNkc0RlFsTUxxVXpOdTR0M0UzZ3BwSmI2cW9ESVhNYmdXVlFQYVVzZnVF?=
+ =?utf-8?B?eldDRUNKYU5CMVRKeDhmVEgwaUpHUUI1MTlaQ2xQNzZobFhFNWY5VURUVjlr?=
+ =?utf-8?B?N24ydjNYS0RDTWxsTEx2TnhOODUrazExYnI2enJoOWd0dkUvM1hJOW5hc2Ja?=
+ =?utf-8?B?UHkzTnRBSms3WEVkczhyTThDNWp0ckc5cmZ6SHZqZEFrTXFxNlJQV1VZSTg4?=
+ =?utf-8?B?RWh0TjZZZ1pBdVFrZ29wUkFtU1hUdzJaeUdpbFZ3MzM5MUpnRkhySjdjTitG?=
+ =?utf-8?B?Yk5NQ0VXN1Z1ZlgzWERPRUdpVXVqTU5jaTJIV3pOc2prdUtWV2cyUWhaejMy?=
+ =?utf-8?B?UHRyMGg2WHZQTkc1WUUwZXUwd3VRVXRCUkVUUTVlcjJ5YW84MERjUnQ3WWZK?=
+ =?utf-8?B?WFdDcDBUMVZtVm9LUVlxdGtCZG0zK0pabUhTVy8xTXpKeDM4S0F2c0diT012?=
+ =?utf-8?B?d2xIQVJCbnpNMjlzVTN3K0ttLzZ3TmtnWVRvTTAyVGY1a2NYNEtQckNHaWdo?=
+ =?utf-8?B?Umx6QkRpcjJOb09NZWtnYWhZZWVPM0lmNXZ2d0xUZDZHZFVleE1HYUpualh2?=
+ =?utf-8?B?TDFEODhUbTdPQjN2ckdYSzdyVmdYMU10V1FiNUFHOThsZVNlTitxK0RQZHBk?=
+ =?utf-8?B?MHBNMGZIZkhDMXRwZXJrRVpUOVF2VlF1ZVJaM05rWnVGc0ZFdWhhdFhveXZ6?=
+ =?utf-8?B?RDRjMm53TTlTaXREcjl1bUJSazN2WC9tZ0QySEJYMVJQdmp1dGVqS0U1bDNN?=
+ =?utf-8?B?bTYxY202c2F4NndiQjNJclhFWFl4cG0yNm9pZVVGcE56K1VtbGFpYmZFdWdM?=
+ =?utf-8?B?NXU3U1R1ekdicGE4aGQvT0ZjcUlid2JxM0pWeVZHb2FDUzNmVmhtMDlsTmpo?=
+ =?utf-8?B?TFlLSFpVNi9Bc2lYUTZkU21CMktyVitxQVpzLy85MzR2ZjBoTjNhL1hEeEdv?=
+ =?utf-8?B?bmlWaTFheGFsSW9NeG5UQWtXSEQyV2k1ZWYwbExhMXBqbmg3M0FmZXF2MkNG?=
+ =?utf-8?B?d3dXVjQzeCtHNWtWVWV2QWxrTmVITk51ZDNmNVJlMHdSa1JZaldPem0zU0RR?=
+ =?utf-8?B?WXVZNlZQVWlDMmlwaWorTUh0UHNaN2QrakZZSkhudWVlTnFSbjI4VkhWRFVr?=
+ =?utf-8?B?MGNNOEtiZ1NWeUpPT0dXY1BaMDVOdTVVRmJwRE5DYnlkeEhycFg1NEd5WHFI?=
+ =?utf-8?B?WjVBWmFUeWZUcnE2YTlhOXJiMkZaajY0OXpsd2hJMXZjcEo1UUVpYnI0Z2dU?=
+ =?utf-8?B?SmZKdCsvTEFvMHV4bklqQ1U3NUVXVUNlSDdyTDF1bUdQKzV1b3hxVUMzdXEx?=
+ =?utf-8?B?UEFnVTNuaHk2SnFQOGhZUUhHRThpeHVGaUVRMXZxRFZDMVVhYUJCbWZtd2xH?=
+ =?utf-8?B?SjE5Z3dQVDFNNkgzV2dyYWdKUkxDYys5Tm9BT1NiREZrVExOSlE3VU9kVnJG?=
+ =?utf-8?B?VkdqOHUzRTd5VjJwNllzZ3l1MXNRL1JLd0NjTzBVNHJYOFRFZ0JJSGpLUU1y?=
+ =?utf-8?B?b3BxeVRaRmh1dWJmakI2MCtkZVUrOS9ZdThLQWQxYUtkNTcrZHZkSE9EVTFi?=
+ =?utf-8?B?U1I4aGVjbVNvN2dmbkE0bDVuMUQyNFNXK1E0T3loTi9veWtPSTFaU2dUYmho?=
+ =?utf-8?B?dTJvVmtINUpURzc5cHdmM0Q1Q1BLbHRBdFI4ME15WWNJanZ6c0JMSjBVbWNY?=
+ =?utf-8?B?R292MUZDQmsyTjlGTUZJM25EOU1DaW1ML2Y5amZ3Y2xjWjRWUWdZMFVoODF5?=
+ =?utf-8?B?NE5VeWxUejRUVEJIMFBORlZRYXdBa25USmgxUDQ0dkUwZ3BwNy81UlNzOElM?=
+ =?utf-8?B?RTIxT0x2b1Q4czEzRzhCRmZ2Z3l1Z2Yxc2F2QXZDSlI4dzZXblNiMjZIMFpt?=
+ =?utf-8?B?b3Q1cm9ZbWhlUGhOZytGMFd2bnJwSFJZL3RNY3Rvb05Pa2NLSnJkVkVpMk5N?=
+ =?utf-8?B?Sk44RnVPYTB1QWNkN1JZM3duRXJuUjE5UTAvbEtLNHlrRm1vd0NsOFkwOHNr?=
+ =?utf-8?B?QStCMmx6UzFUU1grOW9POHZ6ZVk1V2kzSWJlc1p0VENUNDEyaTN3S0FiMUhG?=
+ =?utf-8?B?STV4cy9jZmg1cExsNUdJc1F1R083aEdGOFdNd1NjMS9lU01mTmsxaU9QekVU?=
+ =?utf-8?B?ekE9PQ==?=
+X-OriginatorOrg: videtronic.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5622dd41-b440-4be9-41ba-08dd8cd26ad0
+X-MS-Exchange-CrossTenant-AuthSource: WA2P291MB0309.POLP291.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 19:15:52.0633
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 42908bfd-23a4-4a6c-951d-1ef4d8e0c612
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: WdU6A4mfzIMTfzotfxX36x6ZQk6Qi2t8F7X/KsIin+3zLnA5cVM3pjOxK6E15zoOVoUtHM6PhpsoZdDIGT0mqcPvkY/x43hh05JFI3ig+XA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: WA1P291MB0012
 
-Hi all,
+ > I'm aware of this issue and had it fixed locally, just haven't submitted
+ > a new version yet.
 
-This patch updates the sddr09 driver to allocate a reusable block
-buffer. Unfortunately, I don't have access to the SDDR-00 hardware
-(which I know is pretty ancient), so I'm requesting testing from anyone who does. 
-Please let me now if the patch causes any issues or improves performance.
+Great !
 
-Best,
-Jake
+ > Are you setting a specific polarity on the lanes? I've validated
+ > MAX96714 (after the upstream submission) myself and it works.
 
----
-Currently, upon every write the block buffer is allocated and freed which is
-computationally expensive. With this implementation, a buffer pointer
-is added as a member to the info struct and allocated when the card
-information is read. The buffer is freed during desconstruction if
-necessary.
+Our design has all lanes inverted, so we used:
+lane-polarities = <1 1 1>;
 
-Signed-off-by: Jake Rice <jake@jakerice.dev>
----
- drivers/usb/storage/sddr09.c | 60 +++++++++++++++++++-----------------
- 1 file changed, 31 insertions(+), 29 deletions(-)
+Only after mentioned change we managed to get the video stream.
 
-diff --git a/drivers/usb/storage/sddr09.c b/drivers/usb/storage/sddr09.c
-index e66b920e99e2..1d75b1a88c17 100644
---- a/drivers/usb/storage/sddr09.c
-+++ b/drivers/usb/storage/sddr09.c
-@@ -255,6 +255,7 @@ struct sddr09_card_info {
- 	int		*pba_to_lba;	/* physical to logical map */
- 	int		lbact;		/* number of available pages */
- 	int		flags;
-+	unsigned char   *blockbuffer;
- #define	SDDR09_WP	1		/* write protected */
- };
- 
-@@ -850,7 +851,7 @@ sddr09_find_unused_pba(struct sddr09_card_info *info, unsigned int lba) {
- static int
- sddr09_write_lba(struct us_data *us, unsigned int lba,
- 		 unsigned int page, unsigned int pages,
--		 unsigned char *ptr, unsigned char *blockbuffer) {
-+		 unsigned char *ptr) {
- 
- 	struct sddr09_card_info *info = (struct sddr09_card_info *) us->extra;
- 	unsigned long address;
-@@ -890,13 +891,13 @@ sddr09_write_lba(struct us_data *us, unsigned int lba,
- 	/* read old contents */
- 	address = (pba << (info->pageshift + info->blockshift));
- 	result = sddr09_read22(us, address>>1, info->blocksize,
--			       info->pageshift, blockbuffer, 0);
-+			       info->pageshift, info->blockbuffer, 0);
- 	if (result)
- 		return result;
- 
- 	/* check old contents and fill lba */
- 	for (i = 0; i < info->blocksize; i++) {
--		bptr = blockbuffer + i*pagelen;
-+		bptr = info->blockbuffer + i*pagelen;
- 		cptr = bptr + info->pagesize;
- 		nand_compute_ecc(bptr, ecc);
- 		if (!nand_compare_ecc(cptr+13, ecc)) {
-@@ -917,7 +918,7 @@ sddr09_write_lba(struct us_data *us, unsigned int lba,
- 	/* copy in new stuff and compute ECC */
- 	xptr = ptr;
- 	for (i = page; i < page+pages; i++) {
--		bptr = blockbuffer + i*pagelen;
-+		bptr = info->blockbuffer + i*pagelen;
- 		cptr = bptr + info->pagesize;
- 		memcpy(bptr, xptr, info->pagesize);
- 		xptr += info->pagesize;
-@@ -930,7 +931,7 @@ sddr09_write_lba(struct us_data *us, unsigned int lba,
- 	usb_stor_dbg(us, "Rewrite PBA %d (LBA %d)\n", pba, lba);
- 
- 	result = sddr09_write_inplace(us, address>>1, info->blocksize,
--				      info->pageshift, blockbuffer, 0);
-+				      info->pageshift, info->blockbuffer, 0);
- 
- 	usb_stor_dbg(us, "sddr09_write_inplace returns %d\n", result);
- 
-@@ -961,8 +962,6 @@ sddr09_write_data(struct us_data *us,
- 
- 	struct sddr09_card_info *info = (struct sddr09_card_info *) us->extra;
- 	unsigned int lba, maxlba, page, pages;
--	unsigned int pagelen, blocklen;
--	unsigned char *blockbuffer;
- 	unsigned char *buffer;
- 	unsigned int len, offset;
- 	struct scatterlist *sg;
-@@ -975,21 +974,6 @@ sddr09_write_data(struct us_data *us,
- 	if (lba >= maxlba)
- 		return -EIO;
- 
--	/*
--	 * blockbuffer is used for reading in the old data, overwriting
--	 * with the new data, and performing ECC calculations
--	 */
--
--	/*
--	 * TODO: instead of doing kmalloc/kfree for each write,
--	 * add a bufferpointer to the info structure
--	 */
--
--	pagelen = (1 << info->pageshift) + (1 << CONTROL_SHIFT);
--	blocklen = (pagelen << info->blockshift);
--	blockbuffer = kmalloc(blocklen, GFP_NOIO);
--	if (!blockbuffer)
--		return -ENOMEM;
- 
- 	/*
- 	 * Since we don't write the user data directly to the device,
-@@ -999,10 +983,8 @@ sddr09_write_data(struct us_data *us,
- 
- 	len = min_t(unsigned int, sectors, info->blocksize) * info->pagesize;
- 	buffer = kmalloc(len, GFP_NOIO);
--	if (!buffer) {
--		kfree(blockbuffer);
-+	if (!buffer)
- 		return -ENOMEM;
--	}
- 
- 	result = 0;
- 	offset = 0;
-@@ -1028,7 +1010,7 @@ sddr09_write_data(struct us_data *us,
- 				&sg, &offset, FROM_XFER_BUF);
- 
- 		result = sddr09_write_lba(us, lba, page, pages,
--				buffer, blockbuffer);
-+				buffer);
- 		if (result)
- 			break;
- 
-@@ -1037,9 +1019,6 @@ sddr09_write_data(struct us_data *us,
- 		sectors -= pages;
- 	}
- 
--	kfree(buffer);
--	kfree(blockbuffer);
--
- 	return result;
- }
- 
-@@ -1405,6 +1384,7 @@ sddr09_card_info_destructor(void *extra) {
- 
- 	kfree(info->lba_to_pba);
- 	kfree(info->pba_to_lba);
-+	kfree(info->blockbuffer);
- }
- 
- static int
-@@ -1585,6 +1565,8 @@ static int sddr09_transport(struct scsi_cmnd *srb, struct us_data *us)
- 
- 	if (srb->cmnd[0] == READ_CAPACITY) {
- 		const struct nand_flash_dev *cardinfo;
-+		unsigned int pagelen;
-+		unsigned int blocklen;
- 
- 		sddr09_get_wp(us, info);	/* read WP bit */
- 
-@@ -1603,6 +1585,26 @@ static int sddr09_transport(struct scsi_cmnd *srb, struct us_data *us)
- 		info->blockshift = cardinfo->blockshift;
- 		info->blocksize = (1 << info->blockshift);
- 		info->blockmask = info->blocksize - 1;
-+		
-+		pagelen = (1 << info->pageshift) + (1 << CONTROL_SHIFT);
-+		blocklen = (pagelen << info->blockshift);
-+
-+		/*
-+		 * If it has already been allocated and is changed 
-+		 * (i.e. a new card is inserted), we want to free
-+		 * it and reallocate it with the updates size
-+		 */
-+
-+		kfree(info->blockbuffer);
-+
-+		/*
-+		 * blockbuffer is used for reading in the old data, overwriting
-+		 * with the new data, and performing ECC calculations
-+		 */
-+
-+		info->blockbuffer = kmalloc(blocklen, GFP_NOIO);
-+		if (!info->blockbuffer)
-+			return -ENOMEM;
- 
- 		// map initialization, must follow get_cardinfo()
- 		if (sddr09_read_map(us)) {
--- 
-2.34.1
+ > This should already be implemented by using different numbers in
+ > data-lanes property in devicetree.
+
+Awesome, this will come in handy for sure.
 
