@@ -1,101 +1,141 @@
-Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
+Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C587C72634
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 19:47:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB43F2747B
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 19:48:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746560833; cv=none; b=dJZqaU22jprEg05x9Kda1HXH0VFwdEOqbf07vSng1ciJp0O+ysap7+pCDUFjAzSctAtfQg5J79lChrFEpP+dvBLeXbmTBSSpYpRhE5DtEz9nBGvhSBCKtCZ3qmt7g7HfTs8JA8P9PtvYh+LiaGJkTJaczTRhB96XkQ4L2xL9qNw=
+	t=1746560913; cv=none; b=IFgKvxF8Cp8hhwhjPcf7Q1aWB1g7uY5jbpXm5Iwl9Xst/cTsdLNjUgqUp7mVsfdWc+NnehqbSLluJgDXQg6o7WB8Ubf4D8Z6hampVtTMG+Peu1nxxUJtkpVU/DUaYhFkhOepD6+KOlHPg670hnscrB5BrNc5F7OwRNUBWdPbQ4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746560833; c=relaxed/simple;
-	bh=TDw9phRmXi3xVcDWD/Dodi/SegUbRaaI4gpyeqzoYfo=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=CzE6ZAePA/UydnVArchGJtEVhuRKoAU57tg6RYVoeDbSto9Fc0wS5KRcqbdAwMan4b8ZVZyvgE4LSeERKznnf51tZ6XZ/BXienjxhAGN9GFBshRnFyNhy3/U/kavbK0T9ANqxa2+R0Io/oGjcuLT6WgO9CEQYabWGbip15pCFBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=zXp5RD0C; arc=none smtp.client-ip=209.85.166.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1746560913; c=relaxed/simple;
+	bh=afIIIx1i3n9WMn66pOmFMd9JP7vGAvAmrSUmZwWaRzU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RDy9JwyD/xNg6qUmdf1ZMTuktwCPeQt+8JhTPIakL7ajF2SsBGH8NldbbQ1r7pXoiIB3VQ9fXNMtU56qQs4/ZE/kznTKxVIRTsJewcYDXzMXffll0BjOBrZs6waIz2gjP36PfFoC6XSXq/hceadZRWEUCrcAiFcDcEnKlWHdPfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nt2AUS4u; arc=none smtp.client-ip=209.85.166.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="zXp5RD0C"
-Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3d8e9f26b96so53672635ab.1
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 12:47:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nt2AUS4u"
+Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-3d8c4222fc9so56335ab.0
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 12:48:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1746560831; x=1747165631; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1746560911; x=1747165711; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zkX3c5/GMMV4oRJ74gAOyvqF/rDoibhnZNI5+zww/CI=;
-        b=zXp5RD0CvoGRePRcOL4aPuGAm6rY6GtFDO2FmhYj6WtOV5LjhXAmYKnpic+M1JPxW3
-         mAn8wCVtpEzcZoh9lFemqmhFU78ocZ6T0ERtJsUHH8SMQnBkRN54+x4RKRQuVW81Pw3S
-         S9kQxidx68sp27ee4P1pB11fHrZItesXvZkjK2T9nXr9MnMc5+lQz9IqSEjivdAzBrV9
-         TzjGO/imSf7+lCxIYgHnZOMgcrgeqidyE8/gSNj9WZJhXcl7QOZX4M6cgzYHmGSMnauH
-         rwErfvjYhcOVVnISEmDUNDvKVvpnDjGUuINZLOU+UPlC9RKb+aP7rtIusNkQjIepwBZL
-         tb3g==
+        bh=q+5EcfYFnWWjpo1NpjkXHEYi4iVGCXA+w8EhD5ednbo=;
+        b=nt2AUS4uVVacrg10aCiOl0mkdTGZUBQz7NyWM2AP6s0S0bbxFzWUFRL5sSrCxqjlNs
+         ULHPy2E2fKRRrNK+TUKW0ls4rrn+U4l2/U8tqYixZk0HwOsctuuegTOc0AQaNFEsp9LV
+         rJfRoljFhD0UF97q91llwD8YufKOLrqncfz9d2xT01mrBAyboTsVM/tAUIBaElLbmeAF
+         Akmgy3pQr1ysQia/Xc160DyH0Bcvfg1M3UDKpq71Kw9L5EY/I5SorgnjXp3MeM5m19xB
+         Mik8bfA52sxsm/mov6cx2I0mw5bNOoYLcGiNcj+NcQZ0CNNiVPcMwSpm/wZZ0PgyPxOM
+         HN7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746560831; x=1747165631;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1746560911; x=1747165711;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zkX3c5/GMMV4oRJ74gAOyvqF/rDoibhnZNI5+zww/CI=;
-        b=MzzC6nMeEZOP43nblzvQfEqTfjq0D/DOIhfWvFXVYqnxIrSu0nfC4EjQ7D3tfbHabL
-         Ll3nSn4OkD4dvQl+2+dyibYJM33S+q42Awzg9J+rGIqm4lHO9fQ3axxpfDaBu2SLwlRb
-         5BxMmet1kkOmEtQTolQZtBzcMiG8d61698PBKZU5uYlW6Pdk19DEUNiSc0oOmE/duU1W
-         T9q6uAbW94hSLodBSGp/H5GryJa4mzrGIZYjk9e1C3vgnjirHB43ozgpIiNePXzA/vAR
-         Z0jW6oj6LtX4NTMUUdZ5Pl7jSIGr2T/92qhb6T6Ljrud5LWou9SLq+uOxu+dbey6g5BH
-         89Bg==
-X-Forwarded-Encrypted: i=1; AJvYcCU1mDvBFFaGJSmbQ3rlJMB3817RQ/5DN3smpwPGC5zNb+BcHRiZ3h/qI+IK4mjaqt1qm4pila+MM8LTXZw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyR6X3L1kmvCTAtQUkB74OlRLXOHTmVVVmcW97TaJENZrMoK8lI
-	4Vugx+WabE9IbnL7JNyLnnqtjT5SdIo0IW2RA5C4B9AGlXXYx6Hazel3N9/V5ok=
-X-Gm-Gg: ASbGncu2D+cFR99K3vtIqRAJRO7QTc8JqhHO+kmCTCst/wU+AJeeHR4DYOmmTp2hVqB
-	JdkvGqMkk/v+p8DFz3N1Y6DfknLix/zYfxHm0J/bWb90pyXPWrhn2ryf8hvFULor3+OeUVxSKg1
-	q2ub6xwjWIUwIPIA4VnFWZpGYgEYHEnajKT8v9XzkQujbkFgA/hAexZl9NsmF+KsRP3jjdM2hit
-	6ECrSwsbv0BOaRM/Iv5FrDP3VjwdvYzFt1AoPBSUQdGf+ywtZavv713H58ugrP4Uj32I/SL5vbS
-	Fn0X2fRKeSxCxt2ZtCiZa0t4UoEa1vE=
-X-Google-Smtp-Source: AGHT+IEy+u0t14HIzWKrfb4cSWqt6yNDK8lOEUGmHQp0wvCPWclPXGAJTOLeWBXuCnkVFmOaq5G2Jw==
-X-Received: by 2002:a05:6e02:398b:b0:3d9:3a09:415e with SMTP id e9e14a558f8ab-3da73933cdfmr4603155ab.19.1746560830842;
-        Tue, 06 May 2025 12:47:10 -0700 (PDT)
-Received: from [127.0.0.1] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d975f58f36sm25962075ab.51.2025.05.06.12.47.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 12:47:10 -0700 (PDT)
-From: Jens Axboe <axboe@kernel.dk>
-To: Kanchan Joshi <joshi.k@samsung.com>, Keith Busch <kbusch@kernel.org>, 
- Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, 
- Caleb Sander Mateos <csander@purestorage.com>
-Cc: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250506175413.1936110-1-csander@purestorage.com>
-References: <20250506175413.1936110-1-csander@purestorage.com>
-Subject: Re: [PATCH] nvme: fix write_stream_granularity initialization
-Message-Id: <174656083001.1636559.2161433067551641939.b4-ty@kernel.dk>
-Date: Tue, 06 May 2025 13:47:10 -0600
+        bh=q+5EcfYFnWWjpo1NpjkXHEYi4iVGCXA+w8EhD5ednbo=;
+        b=bATOJhrt/rtwHs2MYI+Uiy0xlbjHYe+jOj0SGfVRY3n//VdKpfoWuZfNU1UUBK/xS1
+         RjLk9188vkWkN6YLLAQYpYfPjWZax3JMYmbTDBZV+IBZQHgMBWMZDexzPHZ7cLG2Wncd
+         Q2utRfg8N0/Zw+KEKEMdJOQ/ZCw2CCNLhfQj0fG2ig50W1BawZdRu1oqrQZDiUfoDP/z
+         wuwWKgbRAXsa5HF/PNiNjqosswF5hCZCHGhmkAKvjyxSqJdJ9NveAagR5M78ousiZCf2
+         s2+xv2Dq4K7h34WxUAXzKC+dFK65EaEE1t9bfp986L4L/bhPCTkkh/Sq6I7JItpQeb9q
+         dbEA==
+X-Forwarded-Encrypted: i=1; AJvYcCWIVIih8U6U0KNg7+WpsYqeBoT+kTjFwFiOpU/tJVbtqDg1tLzDHctDOgrBkjuuGmvDlQxWGempqafrDxs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5WrlC8yDHzco95Nmq9fnmvsSFt9SfDifcCwhgYZmYz5x8addp
+	6a1j3upwhAqpbwb+bpc/rFNGCMB8gaHwaTKRhSwt0HXnS1J+vPDpMBGfna97AwLZiIjhIPteJdZ
+	cznn06hA5v25DDXws9HKK7Enp6A8Qf3gFUjiS
+X-Gm-Gg: ASbGncvfkwLTMkH4g0yvDQLTSiZ+8WgiJYEQvEhms13FOxk6iMiKsmjeDPhCVEG3Mqj
+	Q1vDPOXcNByQV5h3XMLcaeNuXXhuR6LKpSrkHguVuTQ+L0n1GtTXWJ7ZLOVG1JNS++sF88sa8OZ
+	xpCEhjP9Dzw3EkBwEUjovVq4xZV9puY357cuILl0YekSKd6eM4fA==
+X-Google-Smtp-Source: AGHT+IEmWlxjc1obM/2bq0YIRAsoBKqq56tlW+1CYyZLopTUiCaCmFsLFNH4E9SXNopnembNmtIG/9dN2a8JMvgpzwg=
+X-Received: by 2002:a05:6e02:17c9:b0:3d5:e202:6f05 with SMTP id
+ e9e14a558f8ab-3da7390f68cmr522635ab.18.1746560910764; Tue, 06 May 2025
+ 12:48:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.3-dev-7b9b9
+References: <20250501022809.449767-1-howardchu95@gmail.com> <aBjfrUqFe444h_CF@x1>
+In-Reply-To: <aBjfrUqFe444h_CF@x1>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 6 May 2025 12:48:19 -0700
+X-Gm-Features: ATxdqUF-fVkA9dgsHZ5k89fcfEUgZDncXr7cSG9ixwZi9_0p52yiUtIGroRkZoU
+Message-ID: <CAP-5=fXMwyGm5KUecSS4pUhgBB_py=R_c0LqEYfnjyRrf4bcMQ@mail.gmail.com>
+Subject: Re: [PATCH v16 00/10] perf record --off-cpu: Dump off-cpu samples directly
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Howard Chu <howardchu95@gmail.com>, mingo@redhat.com, namhyung@kernel.org, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	adrian.hunter@intel.com, peterz@infradead.org, kan.liang@linux.intel.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	gautam@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, May 5, 2025 at 8:56=E2=80=AFAM Arnaldo Carvalho de Melo <acme@kerne=
+l.org> wrote:
+>
+> On Wed, Apr 30, 2025 at 07:27:58PM -0700, Howard Chu wrote:
+> > Changes in v16:
+> >  - Add Tested-by from Gautam and Acked-by from Namhyung.
+> >  - Rebase on the perf-tools-next branch.
+> >  - Edit the commit message of patch 10.
+> >  - Fix a bug caused by the type change of struct perf_cpu.
+> >  - Rename test_offcpu_over_thresh() to test_offcpu_above_thresh().
+>
+> Please take a look at the tmp.perf-tools-next branch at:
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git
+>
+> I added some Committer testing with some extra steps to describe how to
+> reproduce the results and there is one point that I have to retest,
+> where there is a FIXME in the Committer testing notes, perhaps I made a
+> mistake or that fix should be moved to after or before some patch,
+> unsure.
 
-On Tue, 06 May 2025 11:54:12 -0600, Caleb Sander Mateos wrote:
-> write_stream_granularity is set to max(info->runs, U32_MAX), which means
-> that any RUNS value less than 2 ** 32 becomes U32_MAX, and any larger
-> value is silently truncated to an unsigned int.
-> 
-> Use min() instead to provide the correct semantics, capping RUNS values
-> at U32_MAX.
-> 
-> [...]
+Hi Arnaldo,
 
-Applied, thanks!
+so I tried out the tree, perf tests pass as usual, etc. I tried to dig
+into your FIXME issue. Initially I thought I had a reproduction but
+now I think it was a user error. So I wrote a little script where
+we're setting the off CPU threshold to 10 seconds and then looking for
+off CPU events that took less than than:
+```
+for i in $(seq 1 100)
+do
+  echo -n "Iteration $i of 100 "
+  sudo /tmp/perf/perf record --off-cpu --off-cpu-thresh 10000 -a sleep
+11 2> /dev/null
+  if sudo /tmp/perf/perf script -D |grep -P '.* [0-9]{1,10} offcpu.*'
+  then
+    echo "BAD"
+  else
+    echo "GOOD"
+  fi
+done
+```
+To remove the BPF map generated events I added:
+```
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 8898357325cf..6c23b2cf8b66 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -2841,7 +2841,7 @@ static int __cmd_record(struct record *rec, int
+argc, const char **argv)
+       } else
+               status =3D err;
 
-[1/1] nvme: fix write_stream_granularity initialization
-      commit: 86b6e0bd1a69efd0ed408997e0adfb85df96a0c7
+-       if (rec->off_cpu)
++       if (rec->off_cpu && false)
+               rec->bytes_written +=3D off_cpu_write(rec->session);
 
-Best regards,
--- 
-Jens Axboe
+       record__read_lost_samples(rec);
+```
+Anyway, running the script for nearly 20 minutes, I couldn't get a
+sample below the threshold. Hand testing things also look correct.
 
-
-
+Thanks,
+Ian
