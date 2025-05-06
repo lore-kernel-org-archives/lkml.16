@@ -1,52 +1,60 @@
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 030F922C328;
-	Tue,  6 May 2025 08:42:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 858AA24C075;
+	Tue,  6 May 2025 08:42:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746520976; cv=none; b=EIwqYSxh4ApXZn6ZJeRVV9eo6EM9Aut3toU4X/tI5Nzd4KoDpuekLTZ6LElkOBoho+xSTNxoAfzCjKjk5fHlPY2kYQjE6V/JFELwgXQGV6gombvW80iAdnRQkZTuNJn77HwbI5tApdFAjwUGYbjyzImNATCcHTNfENBiAgHePgc=
+	t=1746520978; cv=none; b=VhEzWqSKj1HqV0xZG/goXeJHssyARPRJZZwRCOD5vAMLx1u09baX2NA/IraNugvJHbEUr9VIYKMR618Z9N4qyFmNPefukbu6B+KW1F1BZLy31Dcu+yqsQ8dR7fBE/mKiKSxBAVW9wb0vm1vM/R/U4LGua3vXQ2T6qukCUO+/RJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746520976; c=relaxed/simple;
-	bh=HVSA/f8ngYKv2PGABAW8NreyMXgo8DAkmUqwnuGJrdo=;
+	s=arc-20240116; t=1746520978; c=relaxed/simple;
+	bh=F3dtZtfd8sl1XZfT8M5NMHOnj5cKiMAgsEOR1aqdr6U=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=sScHLxpe1DOZuHISr1d9GeYp4g8gLaEBvrGCJRDNPbQVgo9PjrR9G1uVzOd0lgiYCPj/ye0yZ6ICCy7ekOcT5H7Xt2O2POR+rAMAMEV+pHKMxBJdrkdh7RffkBxHXGUeLyVpUSdWuMutICzK+/EZeV62Ypoo353HSuxDqnjiR7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=kRXBSD6B; arc=none smtp.client-ip=148.251.105.195
+	 MIME-Version:Content-Type; b=O3I6GJwnKKvpAgv2pALq4tOXaXtwHfOFcttdPxYgFN7nlN8vZlQ6jpHtoYMZfPax2iRn4PzAusAJ9AhviykTAULyRPPg3KEYc/tFgsk+Ib6aTJjzuPxBfBdVcLZTMUYZG2+3jDGW7/X6dYELl26W3x5SJZ3KkQr90iBY0wQSKog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Rv++PX5Y; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="kRXBSD6B"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Rv++PX5Y"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1746520973;
-	bh=HVSA/f8ngYKv2PGABAW8NreyMXgo8DAkmUqwnuGJrdo=;
+	s=mail; t=1746520974;
+	bh=F3dtZtfd8sl1XZfT8M5NMHOnj5cKiMAgsEOR1aqdr6U=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=kRXBSD6BUCQpEaVubdqqssc+hVFKNSOZ0y/3crIK1bXqEB0WBTM4ccJwRlyhoEAFH
-	 bj8e+Xlkx+nssA5+QVPwajqJgq7HO7olKoclX4qkPHkk97PpCM0KulGhTwSTjSHr6v
-	 wHKQ0AGKd2aURwfQWqwJNSqCIy+LlbB1PC4wkZ66Tp5G61y61jYryBP7eULVdy1+g9
-	 1TM3D4+uKXHOt6/GUOjp6xWEp36RvmLA3SnLrTB5PZDf4TWUL++9ony48/kIylRjmk
-	 iizUHOLtG2WtXImGOOb0d9WD5XRj6Hs9yStZgQhGn0wjsHRkglCvVyY1V4Z/YBBOyd
-	 W7yJe2bY2KhNA==
+	b=Rv++PX5YnRbe1dXiOufvraYla5D0NWb/6s+6JD5AA3B6FoN/SegaGrRC6IHGdxVD0
+	 TNIsIj0OE9zu65/1Qpmjhpj8lhBjHCcLa+ceewQZFQ1CgK0CHjob1zBMDC25c17rIc
+	 pzod58fsLIUPj6W/LkxLNKrVmY6r29JBY+BDKT/xslesJ9oS0EMgswwM1vmbKdJujI
+	 fDN2xvIH2Jpey+9r1zRx1jfA5TZAcvIegh5NyubUmaohozZ00Utw9tzE6KcdSDuFBQ
+	 juSiKrI+o82NKlLKgqWUo2C3qe98W0abkcAxWDsfz3DNrcIYGP35Y1W4nFd5/TQb+0
+	 dPg2LT6M9+17Q==
 Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id A85A817E153A;
-	Tue,  6 May 2025 10:42:52 +0200 (CEST)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 75C2C17E153D;
+	Tue,  6 May 2025 10:42:53 +0200 (CEST)
 From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+To: kernel@collabora.com, Sen Chu <sen.chu@mediatek.com>, 
+ Sean Wang <sean.wang@mediatek.com>, Macpaul Lin <macpaul.lin@mediatek.com>, 
+ Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
  Conor Dooley <conor+dt@kernel.org>, 
  Matthias Brugger <matthias.bgg@gmail.com>, 
- Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
-Cc: kernel@collabora.com, devicetree@vger.kernel.org, 
+ =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>, 
+ Hui Liu <hui.liu@mediatek.com>, Yong Wu <yong.wu@mediatek.com>, 
+ Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
+ Robin Murphy <robin.murphy@arm.com>, 
+ Tinghan Shen <tinghan.shen@mediatek.com>, 
+ Julien Massot <julien.massot@collabora.com>
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-mediatek@lists.infradead.org
-In-Reply-To: <20250502-mtk-genio-510-700-fix-bt-detection-v2-1-870aa2145480@collabora.com>
-References: <20250502-mtk-genio-510-700-fix-bt-detection-v2-1-870aa2145480@collabora.com>
-Subject: Re: [PATCH v2] arm64: dts: mediatek: mt8390-genio-common: Set
- ssusb2 default dual role mode to host
-Message-Id: <174652097261.119919.932042428704090741.b4-ty@collabora.com>
-Date: Tue, 06 May 2025 10:42:52 +0200
+ linux-mediatek@lists.infradead.org, iommu@lists.linux.dev
+In-Reply-To: <20250505-mt8395-dtb-errors-v1-0-9c4714dcdcdb@collabora.com>
+References: <20250505-mt8395-dtb-errors-v1-0-9c4714dcdcdb@collabora.com>
+Subject: Re: (subset) [PATCH 0/4] mt8395/mt6359: Fix several dtb-check
+ errors
+Message-Id: <174652097340.119919.13115180921625978268.b4-ty@collabora.com>
+Date: Tue, 06 May 2025 10:42:53 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,27 +65,21 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.2
 
-On Fri, 02 May 2025 15:17:19 +0200, Louis-Alexis Eyraud wrote:
-> On the Mediatek Genio 510-EVK and 700-EVK boards, ssusb2 controller is
-> one but has two ports: one is routed to the M.2 slot, the other is on
-> the RPi header who does support full OTG.
-> Since Mediatek Genio 700-EVK USB support was added, dual role mode
-> property is set to otg for ssusb2. This config prevents the M.2
-> Wifi/Bluetooth module, present on those boards and exposing Bluetooth
-> as an USB device to be properly detected at startup as the default role
-> is device.
-> To keep the OTG functionality and make the M.2 module be detected at
-> the same time, add role-switch-default-mode property set to host and
-> also fix the polarity of GPIO associated to the USB connector, so the
-> ssusb2 controller role is properly set to host when the other port is
-> unused.
+On Mon, 05 May 2025 15:23:36 +0200, Julien Massot wrote:
+> This patch series addresses several dtb-check errors reported for the mt8395-genio-1200-evk.dtb and mt8395-radxa-nio-12l.dtb device trees.
+> 
+> The fixes include:
+> - Adding the missing #sound-dai-cells property in the mt6397 binding.
+> - Allowing up to 5 interrupts in the MediaTek IOMMU binding to support MT8395 properly.
+> - Defining the required compatible property in the regulators node of the mt6359.dtsi.
+> - Renaming the rtc node to match expected schema naming.
 > 
 > [...]
 
 Applied to v6.15-next/dts64, thanks!
 
-[1/1] arm64: dts: mediatek: mt8390-genio-common: Set ssusb2 default dual role mode to host
-      commit: f9167f15dd4e70b124023a2f7ba2b09401b3b6ff
+[3/4] arm64: dts: mt6359: Add missing 'compatible' property to regulators node
+      commit: 1fe38d2a19950fa6dbc384ee8967c057aef9faf4
 
 Cheers,
 Angelo
