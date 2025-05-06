@@ -1,134 +1,60 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8BA923C8BE
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 05:01:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24339235BF4;
+	Tue,  6 May 2025 05:02:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746507701; cv=none; b=SYTbnOi96lWjc7+nwlOcmA4/7JKufm+XjEg4Y4f7+PvppJn0ywkQGyuneyme73pCMNtoveknOO+Emh0hIhTttT11Zl3BknGKRqBzS9QfPFfapxvlwKpbYFknMj+72qfllTzfIqQklWl+Af0SThwkd1oNdPC5FGQw1DJ5HX3aBMY=
+	t=1746507767; cv=none; b=Nlf7KvAmvpnFt/bTbYCX41jjRwbo4rWlaIlRwvdTOhKzYEE+EWLuorXlxzH6ENYHtEjpyKBuoogxlintZc73g4yn6958SoEmgX/XymyKiYY+5WeKbNLuMm3yJ8n+pgBtQx2DMACpGu0M2X8KEAc5f5OXh1SmvW6MtppJ6l1jFE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746507701; c=relaxed/simple;
-	bh=ue4CNnv4c/0imbT/7fs2S/8y/JnUgfdHYmeIPCw4uwA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=RH2CmiG35GH9SiwfOJPiTNkWpXjkteoEiDn8cEnleCtvNs1BueDz0Css9E2ZQ+vFAN/r3m3aHCEkS6Pn0Rv52wRZvp/Dys/8GpOzyClEbIXRMh0Y2n2KkikZE/0lp0kEOMX6fWzpwxUoCsU9GSf47m7PvtmOQLtjJUc+uW0SNSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AA970113E;
-	Mon,  5 May 2025 22:01:29 -0700 (PDT)
-Received: from K4MQJ0H1H2.emea.arm.com (K4MQJ0H1H2.blr.arm.com [10.162.43.13])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0F0973F5A1;
-	Mon,  5 May 2025 22:01:32 -0700 (PDT)
-From: Dev Jain <dev.jain@arm.com>
-To: akpm@linux-foundation.org
-Cc: Liam.Howlett@oracle.com,
-	lorenzo.stoakes@oracle.com,
-	vbabka@suse.cz,
-	jannh@google.com,
-	pfalcato@suse.de,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	david@redhat.com,
-	peterx@redhat.com,
-	ryan.roberts@arm.com,
-	mingo@kernel.org,
-	libang.li@antgroup.com,
-	maobibo@loongson.cn,
-	zhengqi.arch@bytedance.com,
-	baohua@kernel.org,
-	anshuman.khandual@arm.com,
-	willy@infradead.org,
-	ioworker0@gmail.com,
-	yang@os.amperecomputing.com,
-	Dev Jain <dev.jain@arm.com>
-Subject: [PATCH 3/3] mm: Optimize mremap() by PTE batching
-Date: Tue,  6 May 2025 10:30:56 +0530
-Message-Id: <20250506050056.59250-4-dev.jain@arm.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
-In-Reply-To: <20250506050056.59250-1-dev.jain@arm.com>
-References: <20250506050056.59250-1-dev.jain@arm.com>
+	s=arc-20240116; t=1746507767; c=relaxed/simple;
+	bh=WpiL9RUKgpw4IAWGl2V9dyiwaKBSUahbWcqFMg2jLmA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JOU6oi/vRLjUY8vDYxklKALq+TjYqt7zqPD/iaW2AI59gvGMi4XlilgQCrMnVusgV2cc1l5jLHWo15/+GXIzTYtyeNbrRoGLzr2BRoJUIx5OJWEQXD7tUTqXfZSybyXI40wzMSejtnd/A9HriZQMhMUZ+GxYMV1zZXhhAY4LZd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 9C5A767373; Tue,  6 May 2025 07:02:39 +0200 (CEST)
+Date: Tue, 6 May 2025 07:02:39 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>, Zhang Yi <yi.zhang@huaweicloud.com>,
+	linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+	linux-block@vger.kernel.org, dm-devel@lists.linux.dev,
+	linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
+	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	tytso@mit.edu, john.g.garry@oracle.com, bmarzins@redhat.com,
+	chaitanyak@nvidia.com, shinichiro.kawasaki@wdc.com,
+	brauner@kernel.org, yi.zhang@huawei.com, chengzhihao1@huawei.com,
+	yukuai3@huawei.com, yangerkun@huawei.com
+Subject: Re: [RFC PATCH v4 07/11] fs: statx add write zeroes unmap attribute
+Message-ID: <20250506050239.GA27687@lst.de>
+References: <20250421021509.2366003-1-yi.zhang@huaweicloud.com> <20250421021509.2366003-8-yi.zhang@huaweicloud.com> <20250505132208.GA22182@lst.de> <20250505142945.GJ1035866@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250505142945.GJ1035866@frogsfrogsfrogs>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-Use folio_pte_batch() to optimize move_ptes(). Use get_and_clear_full_ptes()
-so as to elide TLBIs on each contig block, which was previously done by
-ptep_get_and_clear().
+On Mon, May 05, 2025 at 07:29:45AM -0700, Darrick J. Wong wrote:
+> attributes_mask contains attribute flags known to the filesystem,
+> whereas attributes contains flags actually set on the file.
+> "known_attributes" would have been a better name, but that's water under
+> the bridge. :P
 
-Signed-off-by: Dev Jain <dev.jain@arm.com>
----
- mm/mremap.c | 24 +++++++++++++++++++-----
- 1 file changed, 19 insertions(+), 5 deletions(-)
+Oooh.  I think I was very confused at what this patch does, and what
+it does seems confused as well.
 
-diff --git a/mm/mremap.c b/mm/mremap.c
-index 1a08a7c3b92f..3621c07d8eea 100644
---- a/mm/mremap.c
-+++ b/mm/mremap.c
-@@ -176,7 +176,7 @@ static int move_ptes(struct pagetable_move_control *pmc,
- 	struct vm_area_struct *vma = pmc->old;
- 	bool need_clear_uffd_wp = vma_has_uffd_without_event_remap(vma);
- 	struct mm_struct *mm = vma->vm_mm;
--	pte_t *old_ptep, *new_ptep, pte;
-+	pte_t *old_ptep, *new_ptep, old_pte, pte;
- 	pmd_t dummy_pmdval;
- 	spinlock_t *old_ptl, *new_ptl;
- 	bool force_flush = false;
-@@ -185,6 +185,7 @@ static int move_ptes(struct pagetable_move_control *pmc,
- 	unsigned long old_end = old_addr + extent;
- 	unsigned long len = old_end - old_addr;
- 	int err = 0;
-+	int nr;
- 
- 	/*
- 	 * When need_rmap_locks is true, we take the i_mmap_rwsem and anon_vma
-@@ -237,10 +238,14 @@ static int move_ptes(struct pagetable_move_control *pmc,
- 
- 	for (; old_addr < old_end; old_ptep++, old_addr += PAGE_SIZE,
- 				   new_ptep++, new_addr += PAGE_SIZE) {
--		if (pte_none(ptep_get(old_ptep)))
-+		const fpb_t fpb_flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
-+		int max_nr = (old_end - old_addr) >> PAGE_SHIFT;
-+
-+		nr = 1;
-+		old_pte = ptep_get(old_ptep);
-+		if (pte_none(old_pte))
- 			continue;
- 
--		pte = ptep_get_and_clear(mm, old_addr, old_ptep);
- 		/*
- 		 * If we are remapping a valid PTE, make sure
- 		 * to flush TLB before we drop the PTL for the
-@@ -252,8 +257,17 @@ static int move_ptes(struct pagetable_move_control *pmc,
- 		 * the TLB entry for the old mapping has been
- 		 * flushed.
- 		 */
--		if (pte_present(pte))
-+		if (pte_present(old_pte)) {
-+			if ((max_nr != 1) && maybe_contiguous_pte_pfns(old_ptep, old_pte)) {
-+				struct folio *folio = vm_normal_folio(vma, old_addr, old_pte);
-+
-+				if (folio && folio_test_large(folio))
-+					nr = folio_pte_batch(folio, old_addr, old_ptep,
-+					old_pte, max_nr, fpb_flags, NULL, NULL, NULL);
-+			}
- 			force_flush = true;
-+		}
-+		pte = get_and_clear_full_ptes(mm, old_addr, old_ptep, nr, 0);
- 		pte = move_pte(pte, old_addr, new_addr);
- 		pte = move_soft_dirty_pte(pte);
- 
-@@ -266,7 +280,7 @@ static int move_ptes(struct pagetable_move_control *pmc,
- 				else if (is_swap_pte(pte))
- 					pte = pte_swp_clear_uffd_wp(pte);
- 			}
--			set_pte_at(mm, new_addr, new_ptep, pte);
-+			set_ptes(mm, new_addr, new_ptep, pte, nr);
- 		}
- 	}
- 
--- 
-2.30.2
+The patch adds a new flag to the STATX_ATTR_* namespace, which
+historically was used for persistent on-disk flags like immutable,
+not the STATX_* namespace where I assumed it, and which has no
+support mask.  Which seems really odd for a pure kernel feature.
+Then again it seems to follow STATX_ATTR_WRITE_ATOMIC which seems
+just as wrongly place unless I'm missing something?
 
