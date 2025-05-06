@@ -1,268 +1,199 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11013033.outbound.protection.outlook.com [40.107.162.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED9437262E;
-	Tue,  6 May 2025 22:17:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746569876; cv=none; b=jku4zqxi4/EyVvhc5YikZpGA0vw0FNaxPsjBxS9HbJCUCdvbKfYG4SEVuL9h1Y329QK4HdYGWuhhfeiwiXPRKzxUZgAmcamsdiOOpmenJHwtvdcqjctDNc/ZwdmSIPKnZ9QIAqUW6u9Fi3dEVDi1rEKLdvGh8rlTi/OrLcLh40Q=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746569876; c=relaxed/simple;
-	bh=qZH0GlY8+x6orE1nAMK2QAd0Y/5Cgrue4HjmDPfwwCA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gtK9cG5rS3vkOV76g3LPii3idDafmwCM/dR2Drpk5z15fSDP8KE88aLk059q6ajfym390WEAti3BMG63AcNcjfYM0Y6YdtaQIhd+xX7OrSfciU+zhuk4tG7r8mVTSzssUPlzJoRLyKKMdD+Y+cnG7CQm4fQsNvXm/LBze3PzEtk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=APJI/q06; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 925CF157A6B;
+	Tue,  6 May 2025 22:18:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.162.33
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746569924; cv=fail; b=pxyWO1Df5ukJaOi1pJ483CRIX0fX8ZGGSLVPRwMn6zIhXEjKY/DK8TGqkua1H1nyf6GmUf+cQFcr2V+10X/D+YXcL61jqytQtIEsUoPgrt8Z0Z0556Dtb8x04mhbLWBGSIT835pyCB6n0S668vNoVcwAhBL/pydrckIHmTx3Lnk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746569924; c=relaxed/simple;
+	bh=Vm3n2Krj7SGoYN6W5N9MW1CGRPcVtttNaJexs8/Q8SI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=YTqCTK+mQyMswy+zcx3QTJYTBy/EXmSLq7iiAyaTcxsv5xNihcKqQTCC/usB4sTEO6iOZSLc6tX8+NFeKjaCJ+BtBkK+1+lTRQX30nLiL90x4LSj+3H3aLI7zX5OsKDqtRQjPR1+ilFw5itPTtucT75Trgnq1u2gezq+xqRbPd0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=dapYQJ37; arc=fail smtp.client-ip=40.107.162.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="APJI/q06"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0486AC4CEE4;
-	Tue,  6 May 2025 22:17:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746569875;
-	bh=qZH0GlY8+x6orE1nAMK2QAd0Y/5Cgrue4HjmDPfwwCA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=APJI/q06j2akXY7u2+C+4m0YRb/FnyeGA4Vz87JUAjPBUPMcpOWHKDetoeis/cg5J
-	 8lV9WzmyQDMK0MVoZPf/F8OuDSwxtkZSOr/mIWhNpmEnvkb/gRZI+JNsa/YD+1gU4t
-	 iCQbo1Ep75GIR4TOqqjgpvzodEpDZbqUyhsmqTHp7yUhp/nX9lG9nGxN657hMCF1WZ
-	 9mZPJ5iobHtDCGVSS5VXEQ3yh9zGiUtZo+gqgj6mgaOpeAHISM614F3m8yDR3Wz49g
-	 ukqalCat3fCzm1a7Iq+24f0N0x6T6G3stZ6fcb11q4jGnejucTYi+vDN4TtV3ridzP
-	 vpgHIW4/HgcKg==
-Received: by pali.im (Postfix)
-	id 0A00067E; Wed,  7 May 2025 00:17:51 +0200 (CEST)
-Date: Wed, 7 May 2025 00:17:51 +0200
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH] irq-names dt-bindings: serial: Convert
- marvell,armada-3700-uart to DT schema
-Message-ID: <20250506221751.t3iwqquzjgysjaai@pali>
-References: <20250506220044.2546706-1-robh@kernel.org>
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="dapYQJ37"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Ree+vVkRrlLRpszsFyjV/nsR4NcszkjaZ95+z45xBglD+uiae2vJfrugPEBZXpq72E6rYAykTC1Xwa4FBPI5Kf8pCl82+I/VefihmXwRzmMVe/SKGY3CBVTqKIotVXE4CgiJTbGsJmpmZHOjeJgsJjm0013FdCT5nNiyaTl7PkorhZ8gFRij/UzDuqrxWCuZTZhWKlpi715xUlWXzAj8WgncAUiOavFyfbJQTxdFyExECaEiGvxs09QSJ3RBtQhYpdpJXMrdZp2qMLFfR7KeixDUwC3tvh8QvCijNCEIY1U0CtWzjOAO7gqGgsou3zRcSgTffLtwiwDWgoxUapIcZg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=uZ3Y0UP5+30xKw23aI0BmflkXsNMdFBSdUU3jpS2mmg=;
+ b=NtEb7EyG3qbP405ceJH2h/mdWQLNNSta5N9/EmSUP364kypmaRoSxGY31q8P6fgWAx4lAEF3ozELhKbbjiRHaPaYLkRd3LbvbSgrvOEhty2bagSlLLK01V20zYz8jA0I16xTKpNpvpm5toB58JPsgSfyCcJmGZDA/w5Aw+SBrMawrlsmdarcV89jHhUTvGIbZwAIcsYkjtyqRrTiklVBf3vlKWO3e2kgN12On1aiZvhdSHJTKvWbudfBynrre1EO/6X13kRWk9fhQMwx9+XXFBy7hfAuMq2HJwRwDoFCVZ02HsdxGQmUi9D4D6w//K/YF4dkfQHozluq1dkR4X2NqA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uZ3Y0UP5+30xKw23aI0BmflkXsNMdFBSdUU3jpS2mmg=;
+ b=dapYQJ37KSjLF/eQW68Luo68UdgndcaMlR3V/ZFMcKk/B3egvgZ9yMHtetGntX5Dq6yrM/CTQ5fNWXbHm7pNVifEkmG0oDb8+QLOp7DuOiYOsXcPDlsQbVh3LcMvbs0nx0eiEnc+8nwSCvmNO+bGhfDek3NOl1RiKFqkRUckrQyW3t3IXPRXXnmbpHxQGu3XGs1lRFJXvHmzCwiD/Tru/fNtyU/0oDEeG2ht/489hzVDXoPm4ZzRzZWWRvg5GWUfoyylNCh1+CRn0gkr80X+1CLQndNDFI8cC9kmtauWMdCIaAmvh1l3PAOIYq02QU6CNhiJFr3x0n/no1Af6zBVnA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM8PR04MB7779.eurprd04.prod.outlook.com (2603:10a6:20b:24b::14)
+ by AM8PR04MB7747.eurprd04.prod.outlook.com (2603:10a6:20b:24a::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.26; Tue, 6 May
+ 2025 22:18:39 +0000
+Received: from AM8PR04MB7779.eurprd04.prod.outlook.com
+ ([fe80::7417:d17f:8d97:44d2]) by AM8PR04MB7779.eurprd04.prod.outlook.com
+ ([fe80::7417:d17f:8d97:44d2%4]) with mapi id 15.20.8699.022; Tue, 6 May 2025
+ 22:18:39 +0000
+Date: Wed, 7 May 2025 01:18:34 +0300
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
+To: Sean Anderson <sean.anderson@linux.dev>
+Cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Russell King <linux@armlinux.org.uk>, upstream@airoha.com,
+	Christian Marangi <ansuelsmth@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	Kory Maincent <kory.maincent@bootlin.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Clark Wang <xiaoning.wang@nxp.com>,
+	Claudiu Manoil <claudiu.manoil@nxp.com>,
+	Ioana Ciornei <ioana.ciornei@nxp.com>,
+	Joyce Ooi <joyce.ooi@intel.com>,
+	Madalin Bucur <madalin.bucur@nxp.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	UNGLinuxDriver@microchip.com, Wei Fang <wei.fang@nxp.com>,
+	imx@lists.linux.dev, linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [net-next PATCH v3 05/11] net: pcs: lynx: Convert to an MDIO
+ driver
+Message-ID: <20250506221834.uw5ijjeyinehdm3x@skbuf>
+References: <20250415193323.2794214-6-sean.anderson@linux.dev>
+ <20250415193323.2794214-6-sean.anderson@linux.dev>
+ <20250506215841.54rnxy3wqtlywxgb@skbuf>
+ <20250415193323.2794214-1-sean.anderson@linux.dev>
+ <20250415193323.2794214-1-sean.anderson@linux.dev>
+ <20250415193323.2794214-6-sean.anderson@linux.dev>
+ <20250415193323.2794214-6-sean.anderson@linux.dev>
+ <20250506215841.54rnxy3wqtlywxgb@skbuf>
+ <50e809ea-62a4-413d-af63-7900929c3247@linux.dev>
+ <50e809ea-62a4-413d-af63-7900929c3247@linux.dev>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <50e809ea-62a4-413d-af63-7900929c3247@linux.dev>
+ <50e809ea-62a4-413d-af63-7900929c3247@linux.dev>
+X-ClientProxiedBy: VE1PR08CA0017.eurprd08.prod.outlook.com
+ (2603:10a6:803:104::30) To AM8PR04MB7779.eurprd04.prod.outlook.com
+ (2603:10a6:20b:24b::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250506220044.2546706-1-robh@kernel.org>
-User-Agent: NeoMutt/20180716
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM8PR04MB7779:EE_|AM8PR04MB7747:EE_
+X-MS-Office365-Filtering-Correlation-Id: 38f30819-5134-471f-2c66-08dd8cebf30f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?mkDlWvSLQU3PxozDHsre5Pxw4nCVGIPrQY2hl0QBS8mNsExYuh02/5g3twBY?=
+ =?us-ascii?Q?4b5napycBm9c5z/hnZ3y7izCJJDvjIedC0FX3t2S1arQ/m3qaY6cQOtobzIL?=
+ =?us-ascii?Q?8ruB7iCsHyCcPh+NVlxQGplyaeMoakgSskfD4owfu+9aei6lsXgE5O1/E905?=
+ =?us-ascii?Q?dD1lG2Ta2tpGr2fYFvEwCnDZqbBu+ddBFocj+LpqIcE9oyNNTA1JoWpu2D6P?=
+ =?us-ascii?Q?mrRLupUUPR38h0Kxej56gPHKG6nEw6b/ADfVX3Mh/UGPRxjeOKg2Iy5U6tbD?=
+ =?us-ascii?Q?yFatcAbfatSwDg18kgLcqJhR+hHt5jddo+Kkp01ajYpd8mTBnEL8n3lGLu6o?=
+ =?us-ascii?Q?MBGUsfr/EKhAAEbgu+NBfHEPqjykK4//pIcHWo9GucgNqvokQK5TQuYP8JWc?=
+ =?us-ascii?Q?CgsliDr03OksnqquZvVRNn56W3rF0y8Y8iu3dQT8tDrgCsIQx9/g447g7oWN?=
+ =?us-ascii?Q?sl+dLloeVssmEyUutH6vl6HbbmZG5p5C3Ntb7emM6WPqTLyx4Sr2kURL+ktA?=
+ =?us-ascii?Q?hy/fg/i7KvutsAEarsPUnN59wQXlMRJP5XKAA/sZ5Mvm1ntN2yc3iBDpstfI?=
+ =?us-ascii?Q?2GKT6Tid0nMNTGLYsWR1rycArnhWQ5q5Rtq8vlnEZ2unJjdcLCwWkEByDRH3?=
+ =?us-ascii?Q?/UKTzzNe8mn2zFKw9WTIHxVwtDzOcaP7rF8l/lZpDzF2IHX6vryD6lXWTgWJ?=
+ =?us-ascii?Q?v/u+RusofRHPHdP9m8y3VQmKTfuE1WkkGiWm5Hj8rpQHnHdUh2PI1JPtb+dl?=
+ =?us-ascii?Q?0BOP737r16Lo8yNuTrzpJi/3s/BTJKW93Jj/QcbpZTgxCv3Hxkklx1+XDTmr?=
+ =?us-ascii?Q?fSlVMmBkNmC33sFwNo61z72wgClpQltjV831FAmCNj5bTt4zJxlkZnCykHZj?=
+ =?us-ascii?Q?D6aTVWTJfoUZWSjaFzrV/HDRmtaJ/dDqb6yBmxOsZtrU9B72dhdoN48SP9b7?=
+ =?us-ascii?Q?bXu8wYeUh/Pdhwt4NuvKCXe3HmIdYJKBldiskww34uNc4BSBEaUZAwvK2CpS?=
+ =?us-ascii?Q?IYbDpFLCmwTxZTmD6HuAhc7C5VpItPFIkRWY2mHaKE8hi8+W842jIf815vcW?=
+ =?us-ascii?Q?Qn5ygmhx01BO6Gcd35ORvmsJyFdVzkpSpji/IZ8V+rz75xe/ETkVM7ywwdMb?=
+ =?us-ascii?Q?fiCYq2I4LzmWXJyKkMVnAp9puh1V9UT61p6FdEDXMbegL1pIaBZSXvp45JE6?=
+ =?us-ascii?Q?L2U6ToOArX1z0JRR5o5MxXblC84TDIVUsIqTwHLpXtKZpjYC+lr67mcOjdVg?=
+ =?us-ascii?Q?pKMHtV1uLA8LxIiAFXUJsKWw80qqxTtd7hx1DZMHUyem34MsHJJxx2WhBWBY?=
+ =?us-ascii?Q?qqIeOpJONxE0ynWoY8HwuZe0K5xyxeQeyjkkWQzF52vSaG7Qseeb8S6HmFgQ?=
+ =?us-ascii?Q?6XnaPF7Yj7DhhEcTktfXm92YBwdQbi8TXW+U3NUFzlHEer/ODw=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM8PR04MB7779.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?ypsu6fSsKUN8SzuCij7+CUWn7FuUE09izcYsLwE+bz3M43nByiaDuWxcZ7Dc?=
+ =?us-ascii?Q?OtaF5UlBres2o7TsQBHVoZ9XDmCiC5djKBAGpPHZbarY6qod8Jyos1MeHABu?=
+ =?us-ascii?Q?dwRfWMtsT+dAKDa2UGpNOPafrulWVMfWGgNlFH2riNktjG7Xix/WMOC3eT48?=
+ =?us-ascii?Q?3Qudx9kmr/UdLDbQ+5J1Pwt5OKcseBNpF8G/hkYdLUFzM6Hg8raCL9aVsGwX?=
+ =?us-ascii?Q?5+448znfcp0KpKhP7ZrvvnhRpDOZQfwNJ/6495lo9/e2DZWU5z+UO/X/+yFF?=
+ =?us-ascii?Q?063SzOq2D9TYbYhePRSXfzgSc1agHVerUgUkQXy7Z8DZgUylZm/VEEqUKg8b?=
+ =?us-ascii?Q?RBzaFOZUUAEXVAtFsfZQhe9itffraPNE6lIg6RapUmGr7DiJMqxpTUAOoxBf?=
+ =?us-ascii?Q?MWQxKYaEIXOmg7I7UjmmMQcAt7eIHeZQVsPltQyplhGBZKl3IknIsKDNc/CJ?=
+ =?us-ascii?Q?clqQVUQQToMlHpVy91LgNzmG1q1RwK2ca7eDQ9QdH10cIzEVeWKtx4pqwzde?=
+ =?us-ascii?Q?XM0H4j/GNkg/DvadDoieBMwL8C1YPSnFaZd06rdeT6kkwGQY2AxPeuEfPG+h?=
+ =?us-ascii?Q?dTk+aGw/IaqR7rqchaHOzwh2/UkPR8hv4euzhmw0CrP6DYs/dxCyOqhEm9Re?=
+ =?us-ascii?Q?F7afgnjjJ3sAgaL7907y5N4CAxm7beaXCSblH7AWI90dJ72iK8NN9neCVSEd?=
+ =?us-ascii?Q?sFU4MEKUAHBuAgAREb9/IALwJve4IWW9app/hd1rdqylrDVGtImbvkHUktje?=
+ =?us-ascii?Q?eimD/ybyqFqR9xFeW3O99/KgTql66JmlmXvtVnyb4vRAZPVnvxAc1utVb4uO?=
+ =?us-ascii?Q?C/O13vm5IP4VgVuuF1YQUIkoTEHrzl1+WLMIYYGKbYJ7U/Rp9EdayDFcu3QF?=
+ =?us-ascii?Q?TzHzvWAu29LdcXfrHEX62PyilW/YGAggqPjhIzdkAMHHfEqtH4s2+krowdIf?=
+ =?us-ascii?Q?UigY5LEVdxrS7b0tgwkKkVfBzPPUqSvqiGDDN68olvSY0UOn8Gf7UsrtPCZv?=
+ =?us-ascii?Q?H2pkp6fsjhKYPr9ecVlaA8PkTf2QDcBhJjspCGGEabQkJkNfuwY3lMN+7vAb?=
+ =?us-ascii?Q?WztAXul2n4wLJH1eVJ8A7Ms9AqpcnmTBYKzKHiisqEL38MvMMNHFyjoMu2Qi?=
+ =?us-ascii?Q?07BkOJIidvw59kufjmDmqo8C2ZEassvQ0e5z6zvtYgVuDv4vYKZ9FykPdcPc?=
+ =?us-ascii?Q?X+KLJw2ZAWZbaIxkf1hiaHFvJYtw9MGbDYoUBAw+c/JTxkzWfoIM2hVGalvq?=
+ =?us-ascii?Q?hB9ArkL9szIoqE9qXUaxReT6Rf1VpApqgKLM77lFxjnknYBeTa3thRO7EHk8?=
+ =?us-ascii?Q?mkFV5pI5TOz7MW97n1eLxlLXm17/ilchctFHKzT5MRV0SyJz2AiLRp4uHRr+?=
+ =?us-ascii?Q?mysi57FItSsoNfQcLIk+cNGsKnss3z1dOelhW6Ir4NWIrsKb4ZvkH0ZFJc++?=
+ =?us-ascii?Q?w1TZzOCBwMGa1oEXgZB7hLpadGMFayHt5jXr6pBg86sNofEces4d/W+Bm3Sp?=
+ =?us-ascii?Q?qlIGa026sQbevnF/7PZQt9ElVQ0EyMsq49XvXUYDi5wDQZXN08BCMPhhTJI0?=
+ =?us-ascii?Q?rx3zAYsTvh259+aCoV6QqX8Vxw+/OX9ySTKw0waZlq1xmvol9sSjBQkOfOUf?=
+ =?us-ascii?Q?4w=3D=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 38f30819-5134-471f-2c66-08dd8cebf30f
+X-MS-Exchange-CrossTenant-AuthSource: AM8PR04MB7779.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 22:18:39.3084
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 1MqsfiDotGrlp+RaClhoYfC9TNFQf5wjOTeQNQa7KDhMu6sojoV0RRyhbbSurZkldVvDLhaTSml3in3pqOQepQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB7747
 
-On Tuesday 06 May 2025 17:00:41 Rob Herring (Arm) wrote:
-> Convert the Marvell Armada-3700 UART binding to DT schema. It is a
-> straight-forward conversion.
+On Tue, May 06, 2025 at 06:03:35PM -0400, Sean Anderson wrote:
+> On 5/6/25 17:58, Vladimir Oltean wrote:
+> > Hello Sean,
+> > 
+> > On Tue, Apr 15, 2025 at 03:33:17PM -0400, Sean Anderson wrote:
+> >> diff --git a/drivers/net/pcs/pcs-lynx.c b/drivers/net/pcs/pcs-lynx.c
+> >> index 23b40e9eacbb..bacba1dd52e2 100644
+> >> --- a/drivers/net/pcs/pcs-lynx.c
+> >> +++ b/drivers/net/pcs/pcs-lynx.c
+> >> @@ -1,11 +1,15 @@
+> >> -// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
+> >> -/* Copyright 2020 NXP
+> >> +// SPDX-License-Identifier: GPL-2.0+
+> >> +/* Copyright (C) 2022 Sean Anderson <seanga2@gmail.com>
+> >> + * Copyright 2020 NXP
+> >>   * Lynx PCS MDIO helpers
+> >>   */
+> >>  
+> >> -MODULE_DESCRIPTION("NXP Lynx PCS phylink library");
+> >> -MODULE_LICENSE("Dual BSD/GPL");
+> >> +MODULE_DESCRIPTION("NXP Lynx PCS phylink driver");
+> >> +MODULE_LICENSE("GPL");
+> > 
+> > What's the idea with the license change for this code?
 > 
-> Drop the long deprecated single interrupt support.
+> I would like to license my contributions under the GPL in order to
+> ensure that they remain free software.
 > 
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
->  .../serial/marvell,armada-3700-uart.yaml      | 102 ++++++++++++++++++
->  .../devicetree/bindings/serial/mvebu-uart.txt |  56 ----------
->  MAINTAINERS                                   |   2 +-
->  3 files changed, 103 insertions(+), 57 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/serial/marvell,armada-3700-uart.yaml
->  delete mode 100644 Documentation/devicetree/bindings/serial/mvebu-uart.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/serial/marvell,armada-3700-uart.yaml b/Documentation/devicetree/bindings/serial/marvell,armada-3700-uart.yaml
-> new file mode 100644
-> index 000000000000..fa454337f06f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/serial/marvell,armada-3700-uart.yaml
-> @@ -0,0 +1,102 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/serial/marvell,armada-3700-uart.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Marvell Armada-3700 UART
-> +
-> +maintainers:
-> +  - Pali Rohár <pali@kernel.org>
-> +
-> +description:
-> +  Marvell UART is a non standard UART used in some of Marvell EBU SoCs (e.g.
-> +  Armada-3700).
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - marvell,armada-3700-uart
-> +      - marvell,armada-3700-uart-ext
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +    description:
-> +      UART reference clock used to derive the baud rate. If absent, only fixed
-> +      baud rate from the bootloader is supported.
-> +
-> +  interrupts:
-> +    minItems: 2
-> +    items:
-> +      - description: UART sum interrupt (deprecated single-element form)
-> +      - description: UART TX interrupt
-> +      - description: UART RX interrupt
+> --Sean
 
-I think that this is wrong description and does not match the old txt
-description:
-
-- Must contain three elements for the standard variant of the IP
-  (marvell,armada-3700-uart): "uart-sum", "uart-tx" and "uart-rx",
-
-- Must contain two elements for the extended variant of the IP
-  (marvell,armada-3700-uart-ext): "uart-tx" and "uart-rx",
-
-"UART sum interrupt" is not deprecated, it must be present for the
-marvell,armada-3700-uart.
-
-> +
-> +  interrupt-names:
-> +    minItems: 2
-> +    maxItems: 3
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - interrupt-names
-> +
-> +unevaluatedProperties: false
-> +
-> +allOf:
-> +  - $ref: /schemas/serial.yaml#
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          const: marvell,armada-3700-uart-ext
-> +    then:
-> +      properties:
-> +        interrupts:
-> +          maxItems: 2
-> +          
-> +        interrupt-names:
-> +          items:
-> +            - const: uart-tx
-> +            - const: uart-rx
-> +    else:
-> +      properties:
-> +        interrupts:
-> +          minItems: 3
-> +
-> +        interrupt-names:
-> +          items:
-> +            - const: uart-sum
-> +            - const: uart-tx
-> +            - const: uart-rx
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    serial@12000 {
-> +        compatible = "marvell,armada-3700-uart";
-> +        reg = <0x12000 0x18>;
-> +        clocks = <&uartclk 0>;
-> +        interrupts =
-> +            <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
-> +            <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
-> +            <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
-> +        interrupt-names = "uart-sum", "uart-tx", "uart-rx";
-> +    };
-> +
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    serial@12200 {
-> +        compatible = "marvell,armada-3700-uart-ext";
-> +        reg = <0x12200 0x30>;
-> +        clocks = <&uartclk 1>;
-> +        interrupts =
-> +            <GIC_SPI 30 IRQ_TYPE_EDGE_RISING>,
-> +            <GIC_SPI 31 IRQ_TYPE_EDGE_RISING>;
-> +        interrupt-names = "uart-tx", "uart-rx";
-> +    };
-> diff --git a/Documentation/devicetree/bindings/serial/mvebu-uart.txt b/Documentation/devicetree/bindings/serial/mvebu-uart.txt
-> deleted file mode 100644
-> index a062bbca532c..000000000000
-> --- a/Documentation/devicetree/bindings/serial/mvebu-uart.txt
-> +++ /dev/null
-> @@ -1,56 +0,0 @@
-> -* Marvell UART : Non standard UART used in some of Marvell EBU SoCs
-> -                 e.g., Armada-3700.
-> -
-> -Required properties:
-> -- compatible:
-> -    - "marvell,armada-3700-uart" for the standard variant of the UART
-> -      (32 bytes FIFO, no DMA, level interrupts, 8-bit access to the
-> -      FIFO), called also UART1.
-> -    - "marvell,armada-3700-uart-ext" for the extended variant of the
-> -      UART (128 bytes FIFO, DMA, front interrupts, 8-bit or 32-bit
-> -      accesses to the FIFO), called also UART2.
-> -- reg: offset and length of the register set for the device.
-> -- clocks: UART reference clock used to derive the baudrate. If no clock
-> -      is provided (possible only with the "marvell,armada-3700-uart"
-> -      compatible string for backward compatibility), it will only work
-> -      if the baudrate was initialized by the bootloader and no baudrate
-> -      change will then be possible. When provided it should be UART1-clk
-> -      for standard variant of UART and UART2-clk for extended variant
-> -      of UART. TBG clock (with UART TBG divisors d1=d2=1) or xtal clock
-> -      should not be used and are supported only for backward compatibility.
-> -- interrupts:
-> -    - Must contain three elements for the standard variant of the IP
-> -      (marvell,armada-3700-uart): "uart-sum", "uart-tx" and "uart-rx",
-> -      respectively the UART sum interrupt, the UART TX interrupt and
-> -      UART RX interrupt. A corresponding interrupt-names property must
-> -      be defined.
-> -    - Must contain two elements for the extended variant of the IP
-> -      (marvell,armada-3700-uart-ext): "uart-tx" and "uart-rx",
-> -      respectively the UART TX interrupt and the UART RX interrupt. A
-> -      corresponding interrupt-names property must be defined.
-> -    - For backward compatibility reasons, a single element interrupts
-> -      property is also supported for the standard variant of the IP,
-> -      containing only the UART sum interrupt. This form is deprecated
-> -      and should no longer be used.
-> -
-> -Example:
-> -	uart0: serial@12000 {
-> -		compatible = "marvell,armada-3700-uart";
-> -		reg = <0x12000 0x18>;
-> -		clocks = <&uartclk 0>;
-> -		interrupts =
-> -		<GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
-> -		<GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
-> -		<GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
-> -		interrupt-names = "uart-sum", "uart-tx", "uart-rx";
-> -	};
-> -
-> -	uart1: serial@12200 {
-> -		compatible = "marvell,armada-3700-uart-ext";
-> -		reg = <0x12200 0x30>;
-> -		clocks = <&uartclk 1>;
-> -		interrupts =
-> -		<GIC_SPI 30 IRQ_TYPE_EDGE_RISING>,
-> -		<GIC_SPI 31 IRQ_TYPE_EDGE_RISING>;
-> -		interrupt-names = "uart-tx", "uart-rx";
-> -	};
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 96b827049501..8b1306c14380 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -14254,7 +14254,7 @@ MARVELL ARMADA 3700 SERIAL DRIVER
->  M:	Pali Rohár <pali@kernel.org>
->  S:	Maintained
->  F:	Documentation/devicetree/bindings/clock/marvell,armada-3700-uart-clock.yaml
-> -F:	Documentation/devicetree/bindings/serial/mvebu-uart.txt
-> +F:	Documentation/devicetree/bindings/serial/marvell,armada-3700-uart.yaml
->  F:	drivers/tty/serial/mvebu-uart.c
->  
->  MARVELL ARMADA DRM SUPPORT
-> -- 
-> 2.47.2
-> 
+But in the process, you are relicensing code which is not yours.
+Do you have agreement from the copyright owners of this file that the
+license can be changed?
