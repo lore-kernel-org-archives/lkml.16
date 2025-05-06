@@ -1,88 +1,153 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8BD11DF723;
-	Tue,  6 May 2025 22:40:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 302674B1E7B;
+	Tue,  6 May 2025 22:45:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746571224; cv=none; b=kLH0WuBNjx8cydtQBhkWNw2LlpT4QTStvPzmwERaF8IEX1oCOsSdtoDYWTYPH2/zCzSCY1A+PEoz0T7t6FT9sI6pO1e5f1p+nb4ThlGF9qMKQ1n8CwK7XW6Daf0HVr0FiLYD33wrPjlzzPlYuINAjnalnqeYBhYJWUtNfuVs5IA=
+	t=1746571521; cv=none; b=iz7N8xRaL14PlHFsuy9Ak55c9WR5z6CirTPb1Mv5PT/6vSaoxNgZABIjJRMOA42SA+ZvL08sM67LBe/uvQFbEN6mmHFb7+pg0JaNGVRuNKP6adi4aHxUvYZ3rIX58XXyQT19PLDwDA/Wj0tLupdnOCKng4tqD31ZKlpTDRVeG1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746571224; c=relaxed/simple;
-	bh=58MuswtWK5vHvV3fOte1SoNuqyyHmTOuxtWNK3CdJgc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Cj8i+2eqJUW5XyfJ/EfQI67bE/9VE4031VNJZAKTygqpdCCpvsUWarIHOU9FN1W7FhJluBfWuBYtrfjO8DJTIXxfyd4wY5gMwcOfP/XgCvcpPDgw0sbjbjAH0+cX674zoDNdzsXHqlHPbBn6gYIhZtotNSgn/3iXpz/DGEymXgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=O3gFeU5N; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1746571521; c=relaxed/simple;
+	bh=1dvlnqYsecpUo9pwUMnCVzZ/m+Jv+YQscZRphjofhN4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=soPdc8ahljzLSZjSYJoRVl1Kr4f59cWo7eBukVCoC1FCq+EJCjFi7MU3/fJ3Kl2Gfy22hy9UgU5MrJKYvgnRPAk17kOwHblQc3rHLoD9wd3tusrDS/21P/HDE6GzEO+ukdCGYOOyklr0dM5OPandpwTVdml/BjaukSGdTySHLJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fjVyPuq4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="O3gFeU5N"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1746571218;
-	bh=vQOM4UGcFV2EAkH1U+ltzrtI5kG//euSnT5u5Gebau4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=O3gFeU5NB4IxnA94Bo7WZTL8BZZD4JbGzVLLeDcOdx/GBKOC5I3zw5S6WsIYN6507
-	 JWNHwmzu3i/gQ1miz4Xy0+mWMrB9JzHU+t1U2KRDVyBWHbA5Nq7A5Hdu4XjldPQgwP
-	 GJxDmnv4JZARUKAqPSlveLr5q8RtnzjlmP0E6WdSKgDFcM6ICQZolIevhJkSZTZqHL
-	 NtEybXyvTQuZ846bbxISIe6F54y+aT9xA392L7GltqP2AVP/sa6UqTb9vWR+1o0miu
-	 KMzExw/Q3D1WoX+F3wfiKxPfQCnN5P8YTAeKsmd958IBcCMLqmyWln5louRvfgc7dr
-	 ETMsu8ltR4kkg==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZsYJ24xcXz4x6n;
-	Wed,  7 May 2025 08:40:18 +1000 (AEST)
-Date: Wed, 7 May 2025 08:40:18 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: Signed-off-by missing for commit in the kvm-x86
- tree
-Message-ID: <20250507084018.3af5dbbd@canb.auug.org.au>
-In-Reply-To: <aBqOiq9frzCAkNm_@google.com>
-References: <20250507073027.72fe0914@canb.auug.org.au>
-	<aBqOiq9frzCAkNm_@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fjVyPuq4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5C82C4CEEF;
+	Tue,  6 May 2025 22:45:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746571519;
+	bh=1dvlnqYsecpUo9pwUMnCVzZ/m+Jv+YQscZRphjofhN4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=fjVyPuq4XKL3s9VatmaT0mMpeD3eZlMCpntqD0JThWu/Xw/EXm8uqFcGFPXiRJbnd
+	 I1/66bfMU4+b8mySYP9GJfQBS8MU+adCgGk/GscaEEop7k0a0fiektJwQT/8SJLr1J
+	 LUxjPVHSprwXA6kl9sj7k3ber9oSdNPFLeRvlHwtg+akN8A2QbiVGYISaUC3sQhvXu
+	 3m2Aj/JeGkBsSFYvzaXggtyrJz8AiyObfNuzqVtj6jEVORxhFNg7amsbV5GM8MPLcV
+	 ACJA1JoSijFpc7iqpfP1wpQE8LWd9KrlVgZFyrAQcQ5iW7gGwNwhycrPnc6fWkbV3Y
+	 It4DUXxdRJrwA==
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5f4ca707e31so10032586a12.2;
+        Tue, 06 May 2025 15:45:19 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVe3x3YxJF2ah6kOoq/S5Mzw+h1OiSzTmuUZ3cEzrUR8c3yluPKoHD6XunO966iyNQqsjSu+jaHqVh/oyZw@vger.kernel.org, AJvYcCVqFRlR6iK8pgXidUWTPvci0hniaBur6RaX8pLPRGKEc13J24JWqxstDvmu3/3SB/Cvq1SnXvEzOQa7dlfF@vger.kernel.org, AJvYcCXi0YJuhAtJFM+QkKgcmOdJm8GNJI/5I+RRF08h6tKCwFULISu6RnbDJ2O25AT8HZolBbc1U2+Ym/27@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJg0ihtWR4W9vDqsMce6keN4NmMdxY4NhNG/xs38QyejPWWtud
+	Oa8dNTp937LjJaOfAVw1vgJALnKxzeDfOhVSbF+ytczwnSJViueWwsi3d8sS/kH9GCFhwf9WZj+
+	cXT8LUjrCL5XQqri/SWp9LhVcXQ==
+X-Google-Smtp-Source: AGHT+IGM3HfyPBRSSoNpCu9csErC2rnv60HCqPbdFjrsw9xOdMGNTWOymyb3x+Dvi7cgeDRWJfU56lfe8iJhazULcJM=
+X-Received: by 2002:a05:6402:35c3:b0:5f4:d4e7:3c37 with SMTP id
+ 4fb4d7f45d1cf-5fbe9d47899mr799186a12.6.1746571518264; Tue, 06 May 2025
+ 15:45:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/ARn4BuCttfMFdJpE5ch0g4F";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-
---Sig_/ARn4BuCttfMFdJpE5ch0g4F
-Content-Type: text/plain; charset=US-ASCII
+References: <20250506220044.2546706-1-robh@kernel.org> <20250506221751.t3iwqquzjgysjaai@pali>
+In-Reply-To: <20250506221751.t3iwqquzjgysjaai@pali>
+From: Rob Herring <robh@kernel.org>
+Date: Tue, 6 May 2025 17:45:06 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+T-NZE1--VN7J2c5GbpG8d4nWpfceKE=ZGg3wfXn5iFQ@mail.gmail.com>
+X-Gm-Features: ATxdqUFiJ50th5PWc3bVyidIL9UXE1B-QZu3aTbehYousZMT6MMcxddc8PgW7yk
+Message-ID: <CAL_Jsq+T-NZE1--VN7J2c5GbpG8d4nWpfceKE=ZGg3wfXn5iFQ@mail.gmail.com>
+Subject: Re: [PATCH] irq-names dt-bindings: serial: Convert
+ marvell,armada-3700-uart to DT schema
+To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-serial@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Sean,
-
-On Tue, 6 May 2025 15:34:50 -0700 Sean Christopherson <seanjc@google.com> w=
-rote:
+On Tue, May 6, 2025 at 5:17=E2=80=AFPM Pali Roh=C3=A1r <pali@kernel.org> wr=
+ote:
 >
-> My bad, I fat-fingered a push.  The bad commit is now gone.
+> On Tuesday 06 May 2025 17:00:41 Rob Herring (Arm) wrote:
+> > Convert the Marvell Armada-3700 UART binding to DT schema. It is a
+> > straight-forward conversion.
+> >
+> > Drop the long deprecated single interrupt support.
+> >
+> > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> > ---
+> >  .../serial/marvell,armada-3700-uart.yaml      | 102 ++++++++++++++++++
+> >  .../devicetree/bindings/serial/mvebu-uart.txt |  56 ----------
+> >  MAINTAINERS                                   |   2 +-
+> >  3 files changed, 103 insertions(+), 57 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/serial/marvell,ar=
+mada-3700-uart.yaml
+> >  delete mode 100644 Documentation/devicetree/bindings/serial/mvebu-uart=
+.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/serial/marvell,armada-37=
+00-uart.yaml b/Documentation/devicetree/bindings/serial/marvell,armada-3700=
+-uart.yaml
+> > new file mode 100644
+> > index 000000000000..fa454337f06f
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/serial/marvell,armada-3700-uart=
+.yaml
+> > @@ -0,0 +1,102 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/serial/marvell,armada-3700-uart.yam=
+l#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Marvell Armada-3700 UART
+> > +
+> > +maintainers:
+> > +  - Pali Roh=C3=A1r <pali@kernel.org>
+> > +
+> > +description:
+> > +  Marvell UART is a non standard UART used in some of Marvell EBU SoCs=
+ (e.g.
+> > +  Armada-3700).
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - marvell,armada-3700-uart
+> > +      - marvell,armada-3700-uart-ext
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  clocks:
+> > +    maxItems: 1
+> > +    description:
+> > +      UART reference clock used to derive the baud rate. If absent, on=
+ly fixed
+> > +      baud rate from the bootloader is supported.
+> > +
+> > +  interrupts:
+> > +    minItems: 2
+> > +    items:
+> > +      - description: UART sum interrupt (deprecated single-element for=
+m)
+> > +      - description: UART TX interrupt
+> > +      - description: UART RX interrupt
+>
+> I think that this is wrong description and does not match the old txt
+> description:
 
-Thanks.
+It's correct that a single irq entry is deprecated, but I did say I
+dropped that. So "(deprecated single-element form)" should be dropped
+here.
 
---=20
-Cheers,
-Stephen Rothwell
+> - Must contain three elements for the standard variant of the IP
+>   (marvell,armada-3700-uart): "uart-sum", "uart-tx" and "uart-rx",
+>
+> - Must contain two elements for the extended variant of the IP
+>   (marvell,armada-3700-uart-ext): "uart-tx" and "uart-rx",
 
---Sig_/ARn4BuCttfMFdJpE5ch0g4F
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Note that the descriptions don't really match this either. Expressing
+it correctly makes the schema worse (using a oneOf) and doesn't
+improve validation. We have interrupt-names correct, so I think it is
+fine.
 
------BEGIN PGP SIGNATURE-----
+Really, no one has cared for 6 years about this binding and converting
+it, so I'm not going to spend a lot of time worrying about
+descriptions. There's a 1000 more to do.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgaj9IACgkQAVBC80lX
-0GyL7Af+O6TRi3Liy4RdgxN/+l3lYsT8NyPiFMx28lul6taCgmDUL+K2B2P9c6+2
-itIvIVWGnHIbGRk5uJRnp2bzFLp+XSQNXcZuLnSlzb9fgqmoXqSVP6sRErsfIS+u
-3Q4yX/Ihgawz0pzc1h1Jas6uv8tdiHAo+dZXSiXh8E05qsUlJrHCDqS8m4EXW9tp
-0Jm8wq6C5lPgVeGVQ2sMSx8piOApZzIqGhM4ncFM5Hc4A6T+RLw+u0quGZDUEcrR
-tBXzXJAuA1hOhV4Uut6T3nzhj1pkU5ZkAuI6dcT4JIa5G3b+fjV5myF/XxhxhQOZ
-ww7paZ/343Kb8wBIRKSLYtzf8NdzMA==
-=qcgF
------END PGP SIGNATURE-----
-
---Sig_/ARn4BuCttfMFdJpE5ch0g4F--
+Rob
