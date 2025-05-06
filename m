@@ -1,137 +1,348 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 019DB8F66;
-	Tue,  6 May 2025 11:18:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CDD61474B8;
+	Tue,  6 May 2025 11:18:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746530327; cv=none; b=axXbC+J52WeUjn4NiS2Uc0a7lBWGtk2mjQnJakEH7aJBs2ZjLgYmp6igKD3zb+zuj4pf3yUpPBxHMhsFbJYXpGTj0FTDmQuEOzD1gE8x46ivCKxsBMe89xQHqpIVObH5RTAuvypbxmEtwe8I6FgWsUOTUziA9S0qC4+DqM+4qbo=
+	t=1746530335; cv=none; b=Ph6jsrx+3M6kELyMf2IZlDOhElO2V/uy4FzPnRKW69YAa1+W3Xz31K5HIonp+lyjwtsdnjM/nm2HslVdRJBqHCzuyqGn4zjl2FXBQdgOU9yjA/uqyzQQ3+Wc900h11EVzPUed+4qMCNQOoV9DurEAjmNMGLbACBfKIx8IXcCXaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746530327; c=relaxed/simple;
-	bh=YvNBY0Ps4akcWEgCN/IAs0lFkOXnfxNdZvQc4xvgLMM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=S7Ruy7TfPXj2v8UUS6rsYuy3DFZGrx8NFpVlt3hM14XzkHfCY0xgl1Kt5JSkYcoH3bDs4ULSZ1u8KnrHC7PI+oz3po1pkGVq+NfGw5E5gOnhYBTswTtQCz1mvVh2QZbag4Ym9QsmIXZKUjFCT5Ax10jpOs+EB5KJjSAKliINVmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FuqASAEY; arc=none smtp.client-ip=209.85.215.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746530335; c=relaxed/simple;
+	bh=wtRQ4XQBaMQmvOwsZOh6o7ClrKrzaIGqwwsEjf66U4U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=aad1zRrMw9MEodsrjzzhYHv8Ewdc8pCIDsXG3+jCVLT+0UgJeOBqQRhebJZBB28CIAwy2tYuda6Q8DVWDfbT6nEjmwnV7VPiJuOMMgSbhIYqOok4PhJ4AawB4G60v5TdBdEVRc1/Po3jXFq1f3r+g0uVjuMvmqD1ZvyPunT+T+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=wlakhSX1; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FuqASAEY"
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-af90510be2eso553131a12.3;
-        Tue, 06 May 2025 04:18:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746530325; x=1747135125; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HRpeckz8pShVDypGXyJGOnSLEbZFu2aGaUPEjsNeRyg=;
-        b=FuqASAEYKlYzLXD8KO0V9jdzuj+oLsOwE2mXhTVHq3nRY6nznBfMkmeu4Th5IX5v+K
-         mXT/GqLch4X1kERS7mQFHv+PWJw6ZIzNDCFxniTfw4sVzd54T34gbLajIzUea9cFrfy/
-         iVgNlip7E3Aw0l0JUaTndQvFx2ADfUgOYN0nsTS3LhvSacPMEUZ3SRc0/mSaF2Bq+8UA
-         osR9BXa+XajcCwnZZ9qobChVPGQ4rrnDiQ6QLyWXZqy2Po+zMmxB3RDAyCz+jtA/Xk6L
-         SdJi195zo7JG6tQkHqOgF2/sgL2q1InCuHAQER3t4PHrhTNc4Dc6l89i2JG0Z+S1WxuC
-         p1Qg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746530325; x=1747135125;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HRpeckz8pShVDypGXyJGOnSLEbZFu2aGaUPEjsNeRyg=;
-        b=UyNtJczDgASTfz6pQExrni25fmqXgZFCj1joKyn2guc2D+TJSxQosMdKUeFViD0I1l
-         ETm10c3QDbcGNeavGyvZqgooQroGdHEWWj8PxsG5kHaCANFNGx+z6OalG5dtqOu7jka/
-         Q0cbEbSaP67u4SCIIA9WqlVKZ7Ks+mY5iH0W5N4nvYb2ixgmz0DhIL0UdKS3B6IdlGH6
-         4DB/uKqHoh93q61ozreekan95n/+JP8BqojZnfsJqRqhWKEeFv62NKEhmNX9yotUbC7W
-         VmA5Jn0kVcc5kDRo0ifS9bj5WZvQ5CL6h2MvpG1wC/5OhvsJnp2CYB5WlEDwBj37085H
-         mOFA==
-X-Forwarded-Encrypted: i=1; AJvYcCV7ak5gb7xNhx/tbOBr9w1Rx+NbLr+rDDHsP4L9CicgGCIcP6x7YGyHUqP6EjQ1+wkCWGVN7snJmAv48lQ=@vger.kernel.org, AJvYcCVG7dAdHP0pkIhu9HLcf0d1HYsNkoedSJhROr5jm1K9gLrhWJQxxlqrzUUq2IkcG6INDdkqqZz8p3/vB2UznR8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOd56MHIstlDYop1F1Yd+mJh/a3WaqxAWEDCQaVPwyHehD4kBM
-	YvTIeC3VPx+J86ToJwkrt2EDjwFTG+ENBLR6NvDmXt895QKSodgOSjV8mQwSxcVLZyvs8WJltQO
-	c6jW7AA/lqI+qTdsWfJOo6ClrBN0=
-X-Gm-Gg: ASbGncsHzudH12Zq61+BdY1wJ3feJIRHzrJcWymqCl54HTLH2gB/zte1pW8Ef2suFIT
-	yY99S8oa/L734gf2dFkyh+apBT6M/NjUlWM1LQhWpTzZ3TSthUb0cfuxp6S/F8C7zVJseKbv854
-	sj05LgWUyk/k0jO1NOh/FiD5VJggzdVo4=
-X-Google-Smtp-Source: AGHT+IF0A8X7TKL/5b/MTu3H0JRvBU4yLKp10ldMQJuWkLJDB/QpF0Nj+hZHgQcmBCBaWpAZ6/ycuZG4dhGpTJR/184=
-X-Received: by 2002:a17:90b:1b4e:b0:2ff:7b41:c3cf with SMTP id
- 98e67ed59e1d1-30a4e621c63mr9103953a91.4.1746530325095; Tue, 06 May 2025
- 04:18:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="wlakhSX1"
+Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5467UZHj021792;
+	Tue, 6 May 2025 13:18:23 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	WxmcLrwGcqc7QpVv6acAd0gwXsrDP5fqTcYOjQ8D9+0=; b=wlakhSX1t7nqDwZS
+	JjTrcRTqDaTRp69fMCys7ZY7eh7oS03D3w7Fbve4fg7cEuyEbNHG3YZHxqt2BUSS
+	Smt5G9wwa0GAwbWc9c+kgyLJqChn5VFL6LfC2hhSUZiCYCF1fbolm+2uk0JqjLZ/
+	Hbru7zzKocFnFKbq9tHvPIvphmq+5/RhbpjYUUyda2UMdxaen9cSeXBkGiLHPXAK
+	8EqbkLgedveMbKl1KdgUHuX/nGqj8z2uyjdArY/UuEubiGmTwmO41gBtOGoWs1Iz
+	rpee5Zl6HyN0g4fgqmYnRpKA9ThIZsaLJQAJlx2Se4q+s8T6i5QRiBt0voFlvDsl
+	yrAYFw==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46dx3m937d-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 06 May 2025 13:18:22 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 0DAA74004C;
+	Tue,  6 May 2025 13:17:13 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7A381AA8119;
+	Tue,  6 May 2025 13:16:23 +0200 (CEST)
+Received: from [10.48.87.62] (10.48.87.62) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 6 May
+ 2025 13:16:22 +0200
+Message-ID: <ad80e3b8-4f62-4c58-8dbd-762f0b268713@foss.st.com>
+Date: Tue, 6 May 2025 13:16:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250501-configfs-v6-0-66c61eb76368@kernel.org>
- <20250501-configfs-v6-1-66c61eb76368@kernel.org> <ELsEgktE6XbGxDyusumtuVzyX-eotyYuQdviHTZaIxN7KZaGFr0fNqrv5tac_gYWfbDZYNTC-wQyQuxnmufA2g==@protonmail.internalid>
- <CANiq72mS_HV5rDjP+t+k0jX9QeAgF2SB9_xX54iEBTH-GoPuEg@mail.gmail.com>
- <87msbw1s9e.fsf@kernel.org> <86-cT9dBPpEIyQXWVCeEmj3TRvBm6Ta0p1B20sSngRGOqOuC96i6hG3Q9Hg3bN8AQTCPXlsxg_C5Ok0G4JJzpQ==@protonmail.internalid>
- <CANiq72nd0Pfv4TrpULGQ_fZkyBpHyVVZ1H45_RJBgBxkJuzCJQ@mail.gmail.com>
- <87h62419r5.fsf@kernel.org> <FLMJjrvUlrMEWy7KzihcYUt-V1IFyP8nt9KYysmVPsWdxUR9dRVXsRoSBw4Z0oFX8tzfWieBDkP7YPAHOXtFcg==@protonmail.internalid>
- <CANiq72miL3eZ40ujmA-pXCqMS8y2AzJQ1UKpL1_hX03AJ0fteQ@mail.gmail.com>
- <87bjsc154u.fsf@kernel.org> <CANiq72=SD9ogr+RpPK7E+cFmn2qAVu+MBCoChdp8-hw7JFu6zA@mail.gmail.com>
- <TbTextfZAMlWFS5cWlUE-Wtnp1bv8P783IQQbWUcnHvEgBjpIxukMngLdPkqNR9jWT9O_OtOY1ejin9JoOnsww==@protonmail.internalid>
- <CANiq72m8VWKRyFai0Xg8AZUTjG0eUVG8nY-ZCQOqOnvwsW0ZaA@mail.gmail.com>
- <875xij1ouy.fsf@kernel.org> <m9-XLEt04AwLCzToZZoXspXzPC6RJkp8ht7DnkVuEEPHQ02CjS0SNIKyKM1gsH-QfZruoYixHlsAHzfYyNEykw==@protonmail.internalid>
- <CANiq72m0cuf5YKfOY8oNg83dzWEqqyddGKKh_6fwQQ4hoCp+yQ@mail.gmail.com> <87ecx3xzqd.fsf@kernel.org>
-In-Reply-To: <87ecx3xzqd.fsf@kernel.org>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 6 May 2025 13:18:31 +0200
-X-Gm-Features: ATxdqUHdMDblEh-0NHJk5v64ga_hltalfD0ejiteX-MhcryQrsXXQBo8t4zMhec
-Message-ID: <CANiq72nPMH06HURgZJN-o0GMmGdQQpFetm=S5SDEB+B+f0wefA@mail.gmail.com>
-Subject: Re: [PATCH v6 1/3] rust: configfs: introduce rust support for configfs
-To: Andreas Hindborg <a.hindborg@kernel.org>
-Cc: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Joel Becker <jlbec@evilplan.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, 
-	Waiman Long <longman@redhat.com>, Fiona Behrens <me@kloenk.dev>, 
-	Charalampos Mitrodimas <charmitro@posteo.net>, Daniel Almeida <daniel.almeida@collabora.com>, 
-	Breno Leitao <leitao@debian.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v12 2/3] memory: Add STM32 Octo Memory Manager driver
+To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon
+	<will@kernel.org>
+CC: <christophe.kerello@foss.st.com>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20250506-upstream_ospi_v6-v12-0-e3bb5a0d78fb@foss.st.com>
+ <20250506-upstream_ospi_v6-v12-2-e3bb5a0d78fb@foss.st.com>
+ <88b463b2-6cd3-4b92-acc5-447bbfadabde@kernel.org>
+Content-Language: en-US
+From: Patrice CHOTARD <patrice.chotard@foss.st.com>
+In-Reply-To: <88b463b2-6cd3-4b92-acc5-447bbfadabde@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-06_05,2025-05-05_01,2025-02-21_01
 
-On Mon, May 5, 2025 at 9:51=E2=80=AFAM Andreas Hindborg <a.hindborg@kernel.=
-org> wrote:
->
-> So I was thinking that because I am initializing a static with a let
-> statement, it would run in const context. But I see that it is not
-> actually guaranteed.
 
-No, that is actually guaranteed, i.e. when initializing a static. But
-you aren't initializing a static here, no? Which static are you
-referring to? If you were, then the "normal" `assert!` would work,
-because it would be a const context.
 
-The `add` calls I see are just in the `let` statement, not
-initializing any static:
+On 5/6/25 10:02, Krzysztof Kozlowski wrote:
+> On 06/05/2025 09:52, Patrice Chotard wrote:
+>> Octo Memory Manager driver (OMM) manages:
+>>   - the muxing between 2 OSPI busses and 2 output ports.
+>>     There are 4 possible muxing configurations:
+>>       - direct mode (no multiplexing): OSPI1 output is on port 1 and OSPI2
+>>         output is on port 2
+>>       - OSPI1 and OSPI2 are multiplexed over the same output port 1
+>>       - swapped mode (no multiplexing), OSPI1 output is on port 2,
+>>         OSPI2 output is on port 1
+>>       - OSPI1 and OSPI2 are multiplexed over the same output port 2
+>>   - the split of the memory area shared between the 2 OSPI instances.
+>>   - chip select selection override.
+>>   - the time between 2 transactions in multiplexed mode.
+>>   - check firewall access.
+>>
+>> Signed-off-by: Christophe Kerello <christophe.kerello@foss.st.com>
+>> Signed-off-by: Patrice Chotard <patrice.chotard@foss.st.com>
+>> ---
+>>  drivers/memory/Kconfig     |  18 ++
+>>  drivers/memory/Makefile    |   1 +
+>>  drivers/memory/stm32_omm.c | 476 +++++++++++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 495 insertions(+)
+>>
+>> diff --git a/drivers/memory/Kconfig b/drivers/memory/Kconfig
+>> index c82d8d8a16eaf154c247c0dbb9aff428b7c81402..bc7ab46bd8b98a89f0d9173e884a99b778cdc9c4 100644
+>> --- a/drivers/memory/Kconfig
+>> +++ b/drivers/memory/Kconfig
+>> @@ -225,6 +225,24 @@ config STM32_FMC2_EBI
+>>  	  devices (like SRAM, ethernet adapters, FPGAs, LCD displays, ...) on
+>>  	  SOCs containing the FMC2 External Bus Interface.
+>>  
+>> +config STM32_OMM
+>> +	tristate "STM32 Octo Memory Manager"
+>> +	depends on ARCH_STM32 || COMPILE_TEST
+>> +	depends on SPI_STM32_OSPI
+> 
+> I don't think you tested for the reported issue. I reported that
+> firewall symbols are missing and you add dependency on ospi. How is that
+> related? How does this solve any problem?
 
-            {
-                const N: usize =3D 0usize;
-                unsafe { CONFIGURATION_ATTRS.add::<N, 0,
-_>(&CONFIGURATION_MESSAGE_ATTR) };
-            }
+Hi Krzysztof
 
-So it also means this comment is wrong:
+The dependency with SPI_STM32_OSPI was already present since the beginning.
+I just added dependency on ARCH_STM32 on this current version to avoid issue on x86_64 arch.
 
-+        // SAFETY: This function is only called through the `configfs_attr=
-s`
-+        // macro. This ensures that we are evaluating the function in cons=
-t
-+        // context when initializing a static. As such, the reference crea=
-ted
-+        // below will be exclusive.
+On my side i tested compilation on arm, arm64 and x86_64 without any issue.
 
-Please double-check all this... :)
+I tried to reproduce your build process:
 
-> Right. Which is why I opted for `build_error`. But with the `const`
-> block solution you suggested is better.
 
-I thought you opted for that because you thought the `assert!` would
-only work if not refactored. What I tried to point out was that the
-`assert!` wouldn't have worked even before the refactoring.
 
-I hope that helps.
+make -j16 defconfig
+  HOSTCC  scripts/basic/fixdep
+  HOSTCC  scripts/kconfig/conf.o
+  HOSTCC  scripts/kconfig/confdata.o
+  HOSTCC  scripts/kconfig/expr.o
+  LEX     scripts/kconfig/lexer.lex.c
+  YACC    scripts/kconfig/parser.tab.[ch]
+  HOSTCC  scripts/kconfig/menu.o
+  HOSTCC  scripts/kconfig/preprocess.o
+  HOSTCC  scripts/kconfig/symbol.o
+  HOSTCC  scripts/kconfig/util.o
+  HOSTCC  scripts/kconfig/lexer.lex.o
+  HOSTCC  scripts/kconfig/parser.tab.o
+  HOSTLD  scripts/kconfig/conf
+*** Default configuration is based on 'x86_64_defconfig'
+#
+# configuration written to .config
+#
 
-Cheers,
-Miguel
+scripts/config --file .config -e COMPILE_TEST -e OF -e SRAM -e MEMORY -e PM_DEVFREQ -e FPGA -e FPGA_DFL
+
+scripts/config --file .config -e SAMSUNG_MC
+scripts/config --file .config -e EXYNOS5422_DMC
+scripts/config --file .config -e EXYNOS_SROM
+scripts/config --file .config -e TEGRA_MC
+scripts/config --file .config -e TEGRA20_EMC
+scripts/config --file .config -e TEGRA30_EMC
+scripts/config --file .config -e TEGRA124_EMC
+scripts/config --file .config -e TEGRA210_EMC_TABLE
+scripts/config --file .config -e TEGRA210_EMC
+scripts/config --file .config -e MEMORY
+scripts/config --file .config -e DDR
+scripts/config --file .config -e ARM_PL172_MPMC
+scripts/config --file .config -e ATMEL_EBI
+scripts/config --file .config -e BRCMSTB_DPFE
+scripts/config --file .config -e BRCMSTB_MEMC
+scripts/config --file .config -e BT1_L2_CTL
+scripts/config --file .config -e TI_AEMIF
+scripts/config --file .config -e TI_EMIF
+scripts/config --file .config -e OMAP_GPMC
+scripts/config --file .config -e OMAP_GPMC_DEBUG
+scripts/config --file .config -e TI_EMIF_SRAM
+scripts/config --file .config -e FPGA_DFL_EMIF
+scripts/config --file .config -e MVEBU_DEVBUS
+scripts/config --file .config -e FSL_CORENET_CF
+scripts/config --file .config -e FSL_IFC
+scripts/config --file .config -e JZ4780_NEMC
+scripts/config --file .config -e MTK_SMI
+scripts/config --file .config -e DA8XX_DDRCTL
+scripts/config --file .config -e PL353_SMC
+scripts/config --file .config -e RENESAS_RPCIF
+scripts/config --file .config -e STM32_FMC2_EBI
+scripts/config --file .config -e STM32_OMM
+
+make -j16 olddefconfig
+
+#
+# configuration written to .config
+#
+
+make -j16
+
+SYNC    include/config/auto.conf.cmd
+  GEN     arch/x86/include/generated/asm/orc_hash.h
+  WRAP    arch/x86/include/generated/uapi/asm/bpf_perf_event.h
+  WRAP    arch/x86/include/generated/uapi/asm/errno.h
+  WRAP    arch/x86/include/generated/uapi/asm/fcntl.h
+  WRAP    arch/x86/include/generated/uapi/asm/ioctl.h
+  WRAP    arch/x86/include/generated/uapi/asm/ioctls.h
+  WRAP    arch/x86/include/generated/uapi/asm/ipcbuf.h
+  SYSHDR  arch/x86/include/generated/uapi/asm/unistd_32.h
+  SYSHDR  arch/x86/include/generated/uapi/asm/unistd_64.h
+  WRAP    arch/x86/include/generated/uapi/asm/param.h
+  WRAP    arch/x86/include/generated/uapi/asm/poll.h
+  SYSHDR  arch/x86/include/generated/uapi/asm/unistd_x32.h
+  WRAP    arch/x86/include/generated/uapi/asm/resource.h
+  SYSTBL  arch/x86/include/generated/asm/syscalls_32.h
+  UPD     include/generated/uapi/linux/version.h
+  SYSHDR  arch/x86/include/generated/asm/unistd_32_ia32.h
+  SYSHDR  arch/x86/include/generated/asm/unistd_64_x32.h
+  WRAP    arch/x86/include/generated/uapi/asm/socket.h
+  SYSTBL  arch/x86/include/generated/asm/syscalls_64.h
+  WRAP    arch/x86/include/generated/uapi/asm/sockios.h
+  WRAP    arch/x86/include/generated/uapi/asm/termbits.h
+  UPD     arch/x86/include/generated/asm/cpufeaturemasks.h
+  WRAP    arch/x86/include/generated/uapi/asm/termios.h
+  HOSTCC  scripts/dtc/dtc.o
+
+[...]
+
+ CC      drivers/gpu/drm/i915/i915_vgpu.o
+  AR      drivers/gpu/drm/i915/built-in.a
+  AR      drivers/gpu/drm/built-in.a
+  AR      drivers/gpu/built-in.a
+  AR      drivers/built-in.a
+  AR      built-in.a
+  AR      vmlinux.a
+  LD      vmlinux.o
+  OBJCOPY modules.builtin.modinfo
+  GEN     modules.builtin
+  MODPOST Module.symvers
+  CC      .vmlinux.export.o
+  CC [M]  fs/efivarfs/efivarfs.mod.o
+  CC [M]  .module-common.o
+  CC [M]  drivers/thermal/intel/x86_pkg_temp_thermal.mod.o
+  CC [M]  drivers/cpufreq/mediatek-cpufreq-hw.mod.o
+  CC [M]  drivers/perf/thunderx2_pmu.mod.o
+  CC [M]  net/netfilter/xt_mark.mod.o
+  CC [M]  net/netfilter/nf_log_syslog.mod.o
+  CC [M]  net/netfilter/xt_nat.mod.o
+  CC [M]  net/netfilter/xt_LOG.mod.o
+  CC [M]  net/netfilter/xt_MASQUERADE.mod.o
+  CC [M]  net/netfilter/xt_addrtype.mod.o
+  CC [M]  net/ipv4/netfilter/iptable_nat.mod.o
+  LD [M]  fs/efivarfs/efivarfs.ko
+  LD [M]  drivers/cpufreq/mediatek-cpufreq-hw.ko
+  LD [M]  drivers/thermal/intel/x86_pkg_temp_thermal.ko
+  LD [M]  drivers/perf/thunderx2_pmu.ko
+  LD [M]  net/netfilter/xt_mark.ko
+  LD [M]  net/netfilter/nf_log_syslog.ko
+  LD [M]  net/ipv4/netfilter/iptable_nat.ko
+  LD [M]  net/netfilter/xt_MASQUERADE.ko
+  LD [M]  net/netfilter/xt_addrtype.ko
+  LD [M]  net/netfilter/xt_LOG.ko
+  LD [M]  net/netfilter/xt_nat.ko
+  UPD     include/generated/utsversion.h
+  CC      init/version-timestamp.o
+  KSYMS   .tmp_vmlinux0.kallsyms.S
+  AS      .tmp_vmlinux0.kallsyms.o
+  LD      .tmp_vmlinux1
+  NM      .tmp_vmlinux1.syms
+  KSYMS   .tmp_vmlinux1.kallsyms.S
+  AS      .tmp_vmlinux1.kallsyms.o
+  LD      .tmp_vmlinux2
+  NM      .tmp_vmlinux2.syms
+  KSYMS   .tmp_vmlinux2.kallsyms.S
+  AS      .tmp_vmlinux2.kallsyms.o
+  LD      vmlinux.unstripped
+  NM      System.map
+  SORTTAB vmlinux.unstripped
+  RSTRIP  vmlinux
+  CC      arch/x86/boot/a20.o
+  AS      arch/x86/boot/bioscall.o
+  CC      arch/x86/boot/cmdline.o
+  AS      arch/x86/boot/copy.o
+  HOSTCC  arch/x86/boot/mkcpustr
+  CC      arch/x86/boot/cpuflags.o
+  CC      arch/x86/boot/cpucheck.o
+  CC      arch/x86/boot/edd.o
+  CC      arch/x86/boot/early_serial_console.o
+  CC      arch/x86/boot/main.o
+  CC      arch/x86/boot/memory.o
+  CC      arch/x86/boot/pm.o
+  AS      arch/x86/boot/pmjump.o
+  CC      arch/x86/boot/printf.o
+  CC      arch/x86/boot/regs.o
+  CC      arch/x86/boot/string.o
+  CC      arch/x86/boot/tty.o
+  CC      arch/x86/boot/video.o
+  CC      arch/x86/boot/video-mode.o
+  CC      arch/x86/boot/version.o
+  CC      arch/x86/boot/video-vga.o
+  CC      arch/x86/boot/video-vesa.o
+  CC      arch/x86/boot/video-bios.o
+  CPUSTR  arch/x86/boot/cpustr.h
+  CC      arch/x86/boot/cpu.o
+  LDS     arch/x86/boot/compressed/vmlinux.lds
+  AS      arch/x86/boot/compressed/kernel_info.o
+  AS      arch/x86/boot/compressed/head_64.o
+  VOFFSET arch/x86/boot/compressed/../voffset.h
+  CC      arch/x86/boot/compressed/string.o
+  CC      arch/x86/boot/compressed/error.o
+  CC      arch/x86/boot/compressed/cmdline.o
+  OBJCOPY arch/x86/boot/compressed/vmlinux.bin
+  RELOCS  arch/x86/boot/compressed/vmlinux.relocs
+  HOSTCC  arch/x86/boot/compressed/mkpiggy
+  CC      arch/x86/boot/compressed/cpuflags.o
+  CC      arch/x86/boot/compressed/early_serial_console.o
+  CC      arch/x86/boot/compressed/kaslr.o
+  CC      arch/x86/boot/compressed/ident_map_64.o
+  CC      arch/x86/boot/compressed/idt_64.o
+  AS      arch/x86/boot/compressed/idt_handlers_64.o
+  CC      arch/x86/boot/compressed/pgtable_64.o
+  AS      arch/x86/boot/compressed/la57toggle.o
+  CC      arch/x86/boot/compressed/acpi.o
+  CC      arch/x86/boot/compressed/efi.o
+  GZIP    arch/x86/boot/compressed/vmlinux.bin.gz
+  CC      arch/x86/boot/compressed/misc.o
+  MKPIGGY arch/x86/boot/compressed/piggy.S
+  AS      arch/x86/boot/compressed/piggy.o
+  LD      arch/x86/boot/compressed/vmlinux
+  ZOFFSET arch/x86/boot/zoffset.h
+  OBJCOPY arch/x86/boot/vmlinux.bin
+  AS      arch/x86/boot/header.o
+  LD      arch/x86/boot/setup.elf
+  OBJCOPY arch/x86/boot/setup.bin
+  BUILD   arch/x86/boot/bzImage
+Kernel: arch/x86/boot/bzImage is ready  (#1)
+
+
+As shown there is no issue, i don't know what is missing to reproduce the issue ?
+
+Thanks
+Patrice
+
+> 
+> And to be sure, I applied this and obviously - as expected - same errors.
+> 
+> Best regards,
+> Krzysztof
