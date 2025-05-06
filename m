@@ -1,71 +1,103 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B40AB35566D;
-	Tue,  6 May 2025 01:14:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F2352D162B
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 01:14:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746494052; cv=none; b=kiuHR3VpaujvG5MWc8ntr8KVGuqYgrNyc1bFctdmXkC3wbVa/E7n97/7KZvVQXvSo54qlA/taGeDVK31Kk5ju/6dKaSa+mtFTXbtDUHJ4Mxs2rC3qTld3XaOf7a7C8zgnSj/c9fTmYFRV3wDuCLpZmIFmNpA+TDQx1/6nGb4SVE=
+	t=1746494085; cv=none; b=clpRV4e78U8McbEiBSG4WpSvF/PFVcGXved7ZHlPevXAWRGwcMjyaBIo4y7fR2M1s4x4uNTpgMWbBC6I8qzbyLSDJWaEcnVUxxLhLiwMnltOX0XZFXCC6lBN3laVVnN+zVJF8ttroE9ZMpwWhm0rFXx+iQlba0CtaOlehRcA/hI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746494052; c=relaxed/simple;
-	bh=DkjqaiNHBXbV+0n9cmGdTkEwmBKD3xmvL6XjuBD/yFQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mAbsvEGF2Je0Ylb3yMzVm41H6pXAhgBa3O/HpXpK2//widj/WxHda6Q3hBnsClPxavx0wWa0Fqx09dPjy+hIdAvCbF8QWPm8pbXDumTgqjpIcL8fmwmErwOtIh5DWEEprilIplSEIfTav0Vr2NRXkjivVqUnPvKxXdIFzApykp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p/BG53Zd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746494085; c=relaxed/simple;
+	bh=B8VSePGLL0xgYq4QfA2a7fSkju08c1YRRrLTNhha0AY=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=MIAHJlU6GRdT8S58e7lBXhYgTi9nb7MLS8Kqz8wkZRQtxUzUKEoZE2WlfqP9MCOhpCjsZiUcBLctYbhiBfXgO2+RRj+33+CjVS6VYcgmyO4YjZe4XkCupplbzMJWf9LlFCaRr4u+jTgfiFVXoWMyvQC8BXVsP8fTLstt43GwjmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=KvzPkpYO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p/BG53Zd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95270C4CEE4;
-	Tue,  6 May 2025 01:14:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746494052;
-	bh=DkjqaiNHBXbV+0n9cmGdTkEwmBKD3xmvL6XjuBD/yFQ=;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="KvzPkpYO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65DD4C4CEE4;
+	Tue,  6 May 2025 01:14:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1746494083;
+	bh=B8VSePGLL0xgYq4QfA2a7fSkju08c1YRRrLTNhha0AY=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=p/BG53ZdqJ6Wn5cParmccP7A0YFtuLl7Zz6shvfwtCSmRBLaBnQvECXAVIRYQvzwz
-	 xxWcYe7T0IHGzTfcVsFuUTaJzrnHacCQ3x22eEj7iOblx0hqu5yAjsvvCZUTxD3vH4
-	 raak2xREqdtbF7l9j2wucw0YE50WAvmUbszWJ0to4iRU08pwilXBd9+DMmMDXO0FGI
-	 y1B7yIAfc/ONISDgkyp2S4zONlX7ZeeQGq6zf6oC8HihUvO/RKocjLfccnLu3cd4lA
-	 ERyeQOwEidtPkXPnEsLgTw46BKx+Mq3GLymH+9grB4tOrlIiPWcUafC+cqjS1PV3yG
-	 eKwWF0UVSAKAA==
-Date: Mon, 5 May 2025 18:14:10 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Ivan Vecera <ivecera@redhat.com>
-Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
- Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>, Jiri Pirko
- <jiri@resnulli.us>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Prathosh Satish
- <Prathosh.Satish@microchip.com>, "David S. Miller" <davem@davemloft.net>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Lee Jones
- <lee@kernel.org>, Andy Shevchenko <andy@kernel.org>, Michal Schmidt
- <mschmidt@redhat.com>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH net-next v6 0/8] Add Microchip ZL3073x support (part 1)
-Message-ID: <20250505181410.24b54946@kernel.org>
-In-Reply-To: <20250430101126.83708-1-ivecera@redhat.com>
-References: <20250430101126.83708-1-ivecera@redhat.com>
+	b=KvzPkpYOEVbkJrWMr8zsI04udjJGga23c7wCN8xPE2HqHbagEXg17YkZngCs9c2fS
+	 7NSAPnJZzm4ZZm2ne4//f4xjR1aDvagp65qrAv30IYSYM5lvCzOoGXae97j82/mUr0
+	 A77OzyLk5lrwL6eyD0zPaXiW+I3JqDLmvwp7/42Y=
+Date: Mon, 5 May 2025 18:14:42 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Juan Yescas <jyescas@google.com>
+Cc: Zi Yan <ziy@nvidia.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, tjmercier@google.com,
+ isaacmanjarres@google.com, surenb@google.com, kaleshsingh@google.com,
+ Vlastimil Babka <vbabka@suse.cz>, "Liam R. Howlett"
+ <Liam.Howlett@oracle.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ David Hildenbrand <david@redhat.com>, Mike Rapoport <rppt@kernel.org>,
+ Minchan Kim <minchan@kernel.org>
+Subject: Re: [PATCH v3] mm: Add CONFIG_PAGE_BLOCK_ORDER to select page block
+ order
+Message-Id: <20250505181442.898f17e6edfce39bc9c4cde3@linux-foundation.org>
+In-Reply-To: <20250506002319.513795-1-jyescas@google.com>
+References: <20250506002319.513795-1-jyescas@google.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 30 Apr 2025 12:11:18 +0200 Ivan Vecera wrote:
-> Add support for Microchip Azurite DPLL/PTP/SyncE chip family that
-> provides DPLL and PTP functionality. This series bring first part
-> that adds the common MFD driver that provides an access to the bus
-> that can be either I2C or SPI.
-> 
-> The next part of the series is bringing the DPLL driver that will
-> covers DPLL functionality. Another series will bring PTP driver and
-> flashing capability via devlink in the MFD driver will follow soon.
-> 
-> Testing was done by myself and by Prathosh Satish on Microchip EDS2
-> development board with ZL30732 DPLL chip connected over I2C bus.
+On Mon,  5 May 2025 17:22:58 -0700 Juan Yescas <jyescas@google.com> wrote:
 
-Looks fine now from the network-ish perspective.
-Whenever we get a green light from Lee I can put it on a stable branch
-which then both Lee and netdev can pull?
-I'll hide it from networking patchwork for now so it doesn't get
-accidentally applied..
+> Problem: On large page size configurations (16KiB, 64KiB), the CMA
+> alignment requirement (CMA_MIN_ALIGNMENT_BYTES) increases considerably,
+> and this causes the CMA reservations to be larger than necessary.
+> This means that system will have less available MIGRATE_UNMOVABLE and
+> MIGRATE_RECLAIMABLE page blocks since MIGRATE_CMA can't fallback to them.
+
+Thanks, I'll add this for testing while we consider the proposal.
+
+> +# as per include/linux/mmzone.h.
+> +config PAGE_BLOCK_ORDER
+> +	int "Page Block Order"
+> +	range 1 10 if !ARCH_FORCE_MAX_ORDER
+> +	default 10 if !ARCH_FORCE_MAX_ORDER
+> +	range 1 ARCH_FORCE_MAX_ORDER if ARCH_FORCE_MAX_ORDER
+> +	default ARCH_FORCE_MAX_ORDER if ARCH_FORCE_MAX_ORDER
+> +
+> +	help
+> +	  The page block order refers to the power of two number of pages that
+> +	  are physically contiguous and can have a migrate type associated to
+> +	  them. The maximum size of the page block order is limited by
+> +	  ARCH_FORCE_MAX_ORDER.
+> +
+> +	  This option allows overriding the default setting when the page
+> +	  block order requires to be smaller than ARCH_FORCE_MAX_ORDER.
+> +
+> +	  Reducing pageblock order can negatively impact THP generation
+> +	  successful rate. If your workloads uses THP heavily, please use this
+> +	  option with caution.
+> +
+> +	  Don't change if unsure.
+> +
+
+I messed with the text a little.
+
+--- a/mm/Kconfig~mm-add-config_page_block_order-to-select-page-block-order-fix
++++ a/mm/Kconfig
+@@ -1028,10 +1028,10 @@ config PAGE_BLOCK_ORDER
+ 	  ARCH_FORCE_MAX_ORDER.
+ 
+ 	  This option allows overriding the default setting when the page
+-	  block order requires to be smaller than ARCH_FORCE_MAX_ORDER.
++	  block order is required to be smaller than ARCH_FORCE_MAX_ORDER.
+ 
+ 	  Reducing pageblock order can negatively impact THP generation
+-	  successful rate. If your workloads uses THP heavily, please use this
++	  success rate. If your workloads uses THP heavily, please use this
+ 	  option with caution.
+ 
+ 	  Don't change if unsure.
+_
+
