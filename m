@@ -1,139 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9072026FD8B;
-	Tue,  6 May 2025 09:41:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E681442C
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 09:42:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746524478; cv=none; b=ea2pDy48i71a4QzUT5yVzO8G9a6oyn7bSlhoEpNf+qxdLbhng4BUujUs0k2EVdZNxKPxVKpNwkOESozxx06fIbgFvT1yafjEXMKQ5FaZ61Szl35AsLkhgP9xCbNR7T3X1exQsJ9gaHayvRinzclbUwAD44AvuzDXWmT8RoGp4UE=
+	t=1746524538; cv=none; b=dOUT0Olx/EUCrhRrF7rvGiBrWXSnBGSEtQZSE21Y1JG0BkM9v4NylpubfdZFuv7fquXrd8RBKJPQsSrvWI1mkxIoJKWOEGn1ovuZBpeXKo1QLjwrPW6d7q4ZnxQblugAwcsyvtjGvhWtIA7X0Rk8VYMgvKfCpn0Gz70lcg8bikE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746524478; c=relaxed/simple;
-	bh=br72ww44nN9vuAjzP+3KW+ZVFIk7/0bblmuQ7sdKp3g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TET/l4AxVp86VGsVIhg5bHQO0K0N4NrZ1Z4ib4F5gnJroVnk8g4rnZZpE6zMs5+FzN1EN8bIBNTqJw17aLFc0Z3h5n57HzS6xuKIJ4TX2Tgv0n5osFFN51/RN7MPay8x8pRGAX0nAlwUjn9dU5+U0AVEU0pnyWge+feQRw8dmvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C7kAkwfX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746524538; c=relaxed/simple;
+	bh=deLiRQ4N/GJJ6TgPdYtR8EjONNDuSOEKsEWL5QReYJE=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q2aFkAYF3TZbpqXLXX4d83PTP2DwKvsUgipa94Om0S1NLQOevxl587m4nG+PYbrl2HFG1Bu7yX8Uo1400RWEl0VKkh2F0+cIE4Fi0PVArS5SkpCW3/bDFhyh5ldiidDBVIqToHUaBQzUolHDQcQ3XFzIfEgRdSGL5EN02OIpvFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KqxtYdD+; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C7kAkwfX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20186C4CEF2;
-	Tue,  6 May 2025 09:41:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746524478;
-	bh=br72ww44nN9vuAjzP+3KW+ZVFIk7/0bblmuQ7sdKp3g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=C7kAkwfXVBJgJLjRZHUyukIyhm03dtJAasR/1UdcHz+JzfvPuMhC32t33R51WK/Qg
-	 P7uNYYLu2hzyCMjbRsD05nI852tLfx9s3uiQutpvdCoJYDUth/bzLlz5jlyHeO359x
-	 Lp2RWOKnOXJFgai/zCGcQpN8XShh6xdhOefiROEncGCzfTNf8P08Sim6d1G9rNK419
-	 sA08qCHEUpJVENk1wkgAbNx+ZvQhC4IvzIMaUXa7eFeDhrqYf46z0CY78C1DXXhZZb
-	 hPmFzEl/VtK8/Y5scGLWPd717pb2TyxWIThqS2aXcgexjuUW/t6KWRI6YAm8QytKDo
-	 ttUxIoJgWmXWA==
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-549963b5551so6026911e87.2;
-        Tue, 06 May 2025 02:41:18 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU+PAb46JT/1ICExEaokBCNBXANnpB+ZQPEil8NGSbqdTqicmJ4W63vkqjPXn5Sk/iOTeCkhBqD@vger.kernel.org, AJvYcCU+u+nTVvGHu74DVHT93cW2UbDI3kXuwYvkuEL+MmqaG5V10OabCws6tAXK2rti1obHOhvH96MQayrc8aE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMNSFk+bIdKEgRxu57ajIxdzFiXpbe+m0VpoHt+l+Qv2rBn7M+
-	4Vt98zzYpLTSatNRqXbZAGvDyHpHbyYNJDGBLYx7M0rpynC8Isyf23hBgTyrUS3K429CXZga5T5
-	KQdU4P9p9qWbXyYUPgXix0UAuif4=
-X-Google-Smtp-Source: AGHT+IEjeZbst1pQGA92OmhjPfI/oOusUk2csD0mgQFEIaa7RUAqCWbSuTrzE+pZLh2YflGxsAOAY9FTC9nE+zZ0n6I=
-X-Received: by 2002:a05:6512:a85:b0:545:2300:9256 with SMTP id
- 2adb3069b0e04-54fb4a30ea0mr751630e87.12.1746524476461; Tue, 06 May 2025
- 02:41:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KqxtYdD+"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-54d6f933152so7477701e87.1
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 02:42:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746524535; x=1747129335; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DnYgIEbZbM7AEX1GIIDCB7iTsvQrOHQFzeVr1mPAjRI=;
+        b=KqxtYdD+w/XKTM210JMd7P2g5VglpnHMRobhZ4SOe6mJCEMXck0d4UK0pQawfRCgIy
+         PpQ5cJxiJ0G1a7+pQWKNJHHYJy3XUiPjnUMISbuDgAq2b2svnjU5y1numkxzEfPLi4sa
+         PPfTKXOrAJsXO7Edhiib1Ljxr9gtNUpWMsKFzmfGq7PKsh21ADINkRufPZ3Y649ytJBu
+         pdpsz9giK+LZ6haEQW6UoP6G53+uTziIShgzGjU01wtwLpX7OEBoN3bLQE8+gLzqGsrB
+         DUFVWVaOP4u1azuvZwiPKzOm2W1jQuUFbqm1rDcjFeimQysoVeGRPMdyCGsb6/b2EdmP
+         Eu1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746524535; x=1747129335;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DnYgIEbZbM7AEX1GIIDCB7iTsvQrOHQFzeVr1mPAjRI=;
+        b=DPVLefnvp/i1whx5hJFkFhVuvx42rYjohDplTkmk12Jnb2TKzpY3vrm0bUYRJ8J4VS
+         4KqZfghebMatzGrQNiZ8efjkIef8jSBCaFoCSSt2SdssCGnUkmguoNxW+wHCa4uUsAvg
+         enpbFRH3hoYAT7WXIT/aTsmSiPe3dFVc0jgVDBl+RxMIyrenoWgOzDF7ShL8JLoUxd7J
+         PDyU77ovbUKiolFLJ5GynJWe+/u1F4bVBD1WTfS7XiUABMl4LF4cekQQukTR6k9tVYQ6
+         /uldRsgHq0mPnT81CobNU+Hn054Y515vsFdzxgbvdCqiRgO41lmM0izZbGwgKilqyKHM
+         KVQg==
+X-Forwarded-Encrypted: i=1; AJvYcCUyyuwpZklieAqN6zfHjLJVaKJIuSQUizSVs2vbhRwZwLvA3qybZ5a4yM9dRvQnPYT2eA1ivhdWwPZCNmk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvB0bqcla21BVeRyBzYHoIUqPeDcW/6u8quXQ/c7UJUEC4+Bu0
+	gTNOePz8K4oLm+HpEBgNOSzpYMeSrXA0wdo8Zvpt1ZZdvfBK/qwN
+X-Gm-Gg: ASbGncsliRJzDfIIIjdUXx0sjPn6t5J4BL7U3PTC8GxLGK25sscu8xtpTp0kjY3VGDz
+	ZBscQFHHnlKkOx+NirhtLKZKoWwhnQnhonAwAoVXvAfoy/+jaFNfvEPZ64m7MQdrnqd0LOhmH45
+	n/4fWzuNjRNLsm9ZU5BAYj5NPpuJiRO3lI84v6L41DEuFMW352ImdhBx3DhbhwM2hiuQrK1h1Z+
+	m44pudsrz+frqV+Vi/isK4lI43moVZYiGM8V0rCZ0CtIPhE3tcApOWb4Qrv3lCoZsdJYdOdl/Fg
+	BX9zXoy+89LPw+6ic2ynl4gw3TJSGPkYPs5dpXCzNsFelFNDAivqnkqivlBBPVcDUeab
+X-Google-Smtp-Source: AGHT+IE5oihn/tybHKHZFV6TFYH6vzBVfOCZNSggfeKTY+cJcyX8A2k/xGaUzO6rR+eZ7R/hhrCsPw==
+X-Received: by 2002:a05:6512:1093:b0:54a:cbfd:5517 with SMTP id 2adb3069b0e04-54fb4a70fe0mr675574e87.53.1746524534762;
+        Tue, 06 May 2025 02:42:14 -0700 (PDT)
+Received: from pc636 (host-95-203-26-253.mobileonline.telia.com. [95.203.26.253])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ea94ee6ccsm2001951e87.122.2025.05.06.02.42.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 May 2025 02:42:14 -0700 (PDT)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Tue, 6 May 2025 11:42:12 +0200
+To: Johannes Weiner <hannes@cmpxchg.org>,
+	Vitaly Wool <vitaly.wool@konsulko.se>
+Cc: Vitaly Wool <vitaly.wool@konsulko.se>, linux-mm@kvack.org,
+	akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+	Nhat Pham <nphamcs@gmail.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Yosry Ahmed <yosry.ahmed@linux.dev>,
+	Minchan Kim <minchan@kernel.org>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Igor Belousov <igor.b@beldev.am>
+Subject: Re: [PATCH] mm/zblock: use vmalloc for page allocations
+Message-ID: <aBnZdLvgtz_54URF@pc636>
+References: <20250502080156.1672957-1-vitaly.wool@konsulko.se>
+ <20250505142949.GB30814@cmpxchg.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250502180412.3774883-1-yeoreum.yun@arm.com> <174626735218.2189871.10298017577558632540.b4-ty@arm.com>
- <aBYkGJmfWDZHBEzp@arm.com> <aBZ7P3/dUfSjB0oV@e129823.arm.com>
- <aBkL-zUpbg7_gCEp@arm.com> <aBnDqvY5c6a3qQ4H@e129823.arm.com> <fbfded61-cfe2-4416-9098-ef39ef3e2b62@arm.com>
-In-Reply-To: <fbfded61-cfe2-4416-9098-ef39ef3e2b62@arm.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Tue, 6 May 2025 11:41:05 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXFAYDeCgtPspQubkY688tcqwCMzCD+jEXb6Ea=9mBcdcQ@mail.gmail.com>
-X-Gm-Features: ATxdqUF3rsIatyGROlcnz-MTnOMfbB4SgCxO0t-VeVXO3pVmMlbooW1DvC6xzx4
-Message-ID: <CAMj1kXFAYDeCgtPspQubkY688tcqwCMzCD+jEXb6Ea=9mBcdcQ@mail.gmail.com>
-Subject: Re: [PATCH v2] arm64/cpufeature: annotate arm64_use_ng_mappings with
- ro_after_init to prevent wrong idmap generation
-To: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Yeoreum Yun <yeoreum.yun@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, will@kernel.org, 
-	nathan@kernel.org, nick.desaulniers+lkml@gmail.com, morbo@google.com, 
-	justinstitt@google.com, broonie@kernel.org, maz@kernel.org, 
-	oliver.upton@linux.dev, joey.gouly@arm.com, 
-	shameerali.kolothum.thodi@huawei.com, james.morse@arm.com, 
-	hardevsinh.palaniya@siliconsignals.io, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250505142949.GB30814@cmpxchg.org>
 
-On Tue, 6 May 2025 at 10:16, Ryan Roberts <ryan.roberts@arm.com> wrote:
->
-> On 06/05/2025 09:09, Yeoreum Yun wrote:
-> > Hi Catalin,
-> >
-> >> On Sat, May 03, 2025 at 09:23:27PM +0100, Yeoreum Yun wrote:
-> >>> Hi Catalin,
-> >>>
-> >>>> On Sat, May 03, 2025 at 11:16:12AM +0100, Catalin Marinas wrote:
-> >>>>> On Fri, 02 May 2025 19:04:12 +0100, Yeoreum Yun wrote:
-> >>>>>> create_init_idmap() could be called before .bss section initialization
-> >>>>>> which is done in early_map_kernel().
-> >>>>>> Therefore, data/test_prot could be set incorrectly by PTE_MAYBE_NG macro.
-> >>>>>>
-> >>>>>> PTE_MAYBE_NG macro set NG bit according to value of "arm64_use_ng_mappings".
-> >>>>>> and this variable places in .bss section.
-> >>>>>>
-> >>>>>> [...]
-> >>>>>
-> >>>>> Applied to arm64 (for-next/fixes), with some slight tweaking of the
-> >>>>> comment, thanks!
-> >>>>>
-> >>>>> [1/1] arm64/cpufeature: annotate arm64_use_ng_mappings with ro_after_init to prevent wrong idmap generation
-> >>>>>       https://git.kernel.org/arm64/c/12657bcd1835
-> >>>>
-> >>>> I'm going to drop this for now. The kernel compiled with a clang 19.1.5
-> >>>> version I have around (Debian sid) fails to boot, gets stuck early on:
-> >>>>
-> >>>> $ clang --version
-> >>>> Debian clang version 19.1.5 (1)
-> >>>> Target: aarch64-unknown-linux-gnu
-> >>>> Thread model: posix
-> >>>> InstalledDir: /usr/lib/llvm-19/bin
-> >>>>
-> >>>> I didn't have time to investigate, disassemble etc. I'll have a look
-> >>>> next week.
-> >>>
-> >>> Just for your information.
-> >>> When I see the debian package, clang 19.1.5-1 doesn't supply anymore:
-> >>>  - https://ftp.debian.org/debian/pool/main/l/llvm-toolchain-19/
-> >>>
-> >>> and the default version for sid is below:
-> >>>
-> >>> $ clang-19 --version
-> >>> Debian clang version 19.1.7 (3)
-> >>> Target: aarch64-unknown-linux-gnu
-> >>> Thread model: posix
-> >>> InstalledDir: /usr/lib/llvm-19/bin
-> >>>
-> >>> When I tested with above version with arm64-linux's for-next/fixes
-> >>> including this patch. it works well.
-> >>
-> >> It doesn't seem to be toolchain related. It fails with gcc as well from
-> >> Debian stable but you'd need some older CPU (even if emulated, e.g.
-> >> qemu). It fails with Cortex-A72 (guest on Raspberry Pi 4) but not
-> >> Neoverse-N2. Also changing the annotation from __ro_after_init to
-> >> __read_mostly also works.
->
-> I think this is likely because __ro_after_init is also "ro before init" - i.e.
-> if you try to write to it in the PI code an exception is generated due to it
-> being mapped RO. Looks like early_map_kernel() is writiing to it.
->
+On Mon, May 05, 2025 at 10:29:49AM -0400, Johannes Weiner wrote:
+> On Fri, May 02, 2025 at 10:01:56AM +0200, Vitaly Wool wrote:
+> >  static struct zblock_block *alloc_block(struct zblock_pool *pool,
+> >  					int block_type, gfp_t gfp,
+> > -					unsigned long *handle)
+> > +					unsigned long *handle,
+> > +					unsigned int nid)
+> >  {
+> > +	struct block_list *block_list = &pool->block_lists[block_type];
+> > +	unsigned int num_pages = block_desc[block_type].num_pages;
+> >  	struct zblock_block *block;
+> > -	struct block_list *block_list;
+> > +	struct page *page = NULL;
+> >  
+> > -	block = (void *)__get_free_pages(gfp, block_desc[block_type].order);
+> > -	if (!block)
+> > -		return NULL;
+> > +	if (!vmalloc_small_blocks && zblock_get_order(num_pages) >= 0) {
+> > +		page = try_alloc_pages(nid, zblock_get_order(num_pages));
+> 
+> This is broken in several ways.
+> 
+> The function is meant for NMI contexts - the "try" refers to
+> trylocking the freelists, in case whatever got interrupted was inside
+> the allocator already. This will fall back to vmalloc unpredictably.
+> 
+> It also doesn't take a gfp parameter, which ignores the zswap ones,
+> and substitutes a set that doesn't make any sense in this context:
+> __GFP_NOMEMALLOC is counter productive inside reclaim; __GFP_ACCOUNT
+> wreaks complete havoc on how compressed memory is charged to cgroups
+> (double charging the wrong groups for shared blocks).
+> 
++ "&& zblock_get_order(num_pages) >= 0" is always true?
 
-Indeed.
+A fallback makes sense to use when order > 0, IMO. Or just stick
+fully to vmalloc. Another option is kvmalloc()/kvfree().
 
-> I've noticed a similar problem in the past and it would be nice to fix it so
-> that PI code maps __ro_after_init RW.
->
-
-The issue is that the store occurs via the ID map, which only consists
-of one R-X and one RW- section. I'm not convinced that it's worth the
-hassle to relax this.
-
-If moving the variable to .data works, then let's just do that.
+--
+Uladzislau Rezki
