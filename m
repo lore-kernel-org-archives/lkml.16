@@ -1,403 +1,147 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from EUR03-VI1-obe.outbound.protection.outlook.com (mail-vi1eur03on2111.outbound.protection.outlook.com [40.107.103.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 218B627BF70;
-	Tue,  6 May 2025 11:54:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746532479; cv=none; b=ciCGeEICWntwYBnyXW2buA/RTtuOye0SM4ZXzyQyYfnV+fZ8juoJ0txTJ41OahHqNslOdoQ7K8l8HuDS4ffVD6Bh81t+fcL9IkUcr1KdqhgVKeyLt9YSqcV/BvFkgiEJQchXaIKc7qSQeu6mqgF1RtYA+moamDEo9kJVEdFOcII=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746532479; c=relaxed/simple;
-	bh=AozbHgUnjFFmHlxsXVpfmP9D/2pqNPZ1ViDKGlIfoKE=;
-	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=ErSTWwq2k1WpTohVtaYw02kALmn8B/Wb9XroC38GjXonHls8XcSWR0Q64DTHTKi/Xj4RFc6ys6kW3fx1GQqOxOiwof1+S6JG4Sq9nTHU8wQL+vVi+JQ6ZX8GRJeEdMhrPUDIFoN3CP+bZdSJnF/If1BbrgZNjbWl3A+vU/Mgexg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cLb8l2mp; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=48n1YalE; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD71927AC53;
+	Tue,  6 May 2025 11:55:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.103.111
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746532526; cv=fail; b=YbXDyym2VgQonxxR4z/0dw5r0GMg/OvkaD1GHqKQBvKdkxVmqOCk5n5KzDhsrBncJdp9jKiiopU/aKNHM3IzMGkwVAewj6NpbrhSf5rCeaJDStODO9bbIiK4lYX57zK41OB0zCOKlCYOkcbgMn+IlBVp0ipKN2K97jg+iCntfDo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746532526; c=relaxed/simple;
+	bh=2/phhhbWOke+YBjqQDHRfwQY70kz77fzN2mdgEJ00bc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Fcnrm+cePHAJ9C4GwcyqJpFryMhpxSmOSuKsQy848jNC3mVTRtDmsTTgfISsOzLCkSQ318qjBO29X9ob8zb+mj1XkecUSWlxInYJX1rIgWvGcpwQSVrrgEA1RqDktK1T0CYfTSEKOG3oZutBb9xHg7LL/WJO7sHf/NbPmz6LUIY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=phytec.de; spf=pass smtp.mailfrom=phytec.de; dkim=pass (2048-bit key) header.d=phytec.de header.i=@phytec.de header.b=PRrxO/5V; arc=fail smtp.client-ip=40.107.103.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=phytec.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytec.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cLb8l2mp";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="48n1YalE"
-Date: Tue, 06 May 2025 11:54:31 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746532472;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=svfykVx/zq3dtJQeWWLNLLKxD2FUQceLBq/9f8wwR3U=;
-	b=cLb8l2mpGSZN6Lwqwk5nJwGDSfBJGMaKHGEgSjwZ7u6LTRr/kXVE4KM7lqLi73JGpiRw03
-	XqQyhcUE0tctgpw2D7J3ylzdkmCVQHslOJ7VPN9bz85C6/nxO607FdKosrRx/YD5fXCAjq
-	0PKoZAo4bYqgkO3Nev3QLasKk94cU2CrRFSB3DrP88YoXLc9ObcuYd8hUrhHZPUhQTEIj9
-	fPRhV5zxqzk3oNxlc9IJ/7WgE5XUF772hSkwJBsL3Kqsq6/JkNP+TOvsGT5912L0djwCq+
-	MEmWFRq10+rmfWwqejY1+M4yKCVypm2cEjMrivkGxo3UCc00uqbsnMJv4Icheg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746532472;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=svfykVx/zq3dtJQeWWLNLLKxD2FUQceLBq/9f8wwR3U=;
-	b=48n1YalE+BOcZxixORNk8cKeXatjy4jbepg44/ThVPt+pIDt6DPRu3rXQGnTcooVUXmmq3
-	Q5fYxZijmcdZyPBA==
-From: "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cpu] tools/arch/x86: Move the <asm/amd-ibs.h> header to
- <asm/amd/ibs.h>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Ingo Molnar <mingo@kernel.org>,
- linux-kernel@vger.kernel.org, x86@kernel.org
+	dkim=pass (2048-bit key) header.d=phytec.de header.i=@phytec.de header.b="PRrxO/5V"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=IkkuDtIbUoy51GLFQcAL1d85yPl99gvwXOO1BuCkRh3athesEo8CWmDrDV3weZwEgsCzrri0LloNg4SgcUTAvbkp0n22xPeS3A70E9+LlDB9K7DWJvZxzhcKYPdP1NpVt+VG7k0hxjBRC841XwXUeJ4lcQ085VTPHRKM46Yv1Ilh0aRLqFZPUEsCnVd2I/IU7nZDpl6CDswj32rORSvlcNg+cBmksn9H35Ra5ZIPaGvOKc8AanntnCOwPmH0kPlFnU8+sgiu3RaWrHRN9BQKp6kynvc6uRc3yh40A96XcGsqJCUXLVPWMDDVgOaN60JuGBn3g1zztxIvw/0ZaxZdnA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=EHBk0e0Dk03IgkfMjb1pLkuYS2Yufmrv61krzuTQRLo=;
+ b=XoNKsRlNVlFejJwuAJ46eQgXOZ2Nwv6voi2zFa2bykGWrRZTlLVA5Ah4bGXs5t7M/A0LkeKQgVgYKF8JSzeYSMgSi5BRTyYptSJjLBcCeNEjFd49bVOrIJRHZUYZCRU4w1c/wxhl5tGvz6j4hU+cBnhZWkod+/CUtDgzqds9L2UHdBQVc3if2Q7aiPRbLm4rXR7KLvEL4ju8q9Lhz+rHkQ/9Qn0LqDjtRRWTFtHbZ3yJET6yi4TEgCKpeFEuCZ0VEasDLs3f3wXrxDVERZYheIaftvpvARUYWxUPyRoLCh5f6F1o3VQA3MnXRYpxaHTLTrDgqud4worMB3iUyBcxhA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
+ is 91.26.50.189) smtp.rcpttodomain=ti.com smtp.mailfrom=phytec.de; dmarc=fail
+ (p=quarantine sp=quarantine pct=100) action=quarantine header.from=phytec.de;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=phytec.de;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EHBk0e0Dk03IgkfMjb1pLkuYS2Yufmrv61krzuTQRLo=;
+ b=PRrxO/5Vctza8Np1UuZMrebK2HO1A+fdQ63SwzCEdZcOHyD0GRSfZN6NPfea68/Tet1MADY71UMvutmpK5xM3tNFxBHRYWy91C+ACxE94owpAWpi5bXTzTFCY8pNNlmwzryr0qNDhKhqRSMz9kPVqfufE9xKwnUcpCuVS30L0Y8crobxmf7mToZ6y30xa8j7VyGcEmKmrYgi2ps4GdqI3+GdsWKqnY/cNvaH3TH3kEE3B4MWlyjmTjyjygV3M4tvoz2dQNuemGMVRDui4we3guK+FKZ2gQxgIg0t1YcfQ95/ofVaDpgHb4hA096Ww9k9F5JlJEzm3KIQEPEoOA9lgQ==
+Received: from AS9PR01CA0048.eurprd01.prod.exchangelabs.com
+ (2603:10a6:20b:542::22) by AS2P195MB2111.EURP195.PROD.OUTLOOK.COM
+ (2603:10a6:20b:547::9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.24; Tue, 6 May
+ 2025 11:55:19 +0000
+Received: from AMS0EPF00000190.eurprd05.prod.outlook.com
+ (2603:10a6:20b:542:cafe::fe) by AS9PR01CA0048.outlook.office365.com
+ (2603:10a6:20b:542::22) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8699.31 via Frontend Transport; Tue,
+ 6 May 2025 11:55:19 +0000
+X-MS-Exchange-Authentication-Results: spf=softfail (sender IP is 91.26.50.189)
+ smtp.mailfrom=phytec.de; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=quarantine header.from=phytec.de;
+Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
+ phytec.de discourages use of 91.26.50.189 as permitted sender)
+Received: from Diagnostix.phytec.de (91.26.50.189) by
+ AMS0EPF00000190.mail.protection.outlook.com (10.167.16.213) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8722.18 via Frontend Transport; Tue, 6 May 2025 11:55:18 +0000
+Received: from Florix.phytec.de (172.25.0.13) by Diagnostix.phytec.de
+ (172.25.0.14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Tue, 6 May
+ 2025 13:55:17 +0200
+Received: from ls-radium.phytec (172.25.39.17) by Florix.phytec.de
+ (172.25.0.13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Tue, 6 May
+ 2025 13:55:15 +0200
+From: Daniel Schultz <d.schultz@phytec.de>
+To: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
+	<krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: <upstream@lists.phytec.de>, Daniel Schultz <d.schultz@phytec.de>
+Subject: [PATCH 0/4] {am62,am62a}-phycore-som: Add R5F and C7xv device nodes
+Date: Tue, 6 May 2025 04:54:58 -0700
+Message-ID: <20250506115502.3515599-1-d.schultz@phytec.de>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174653247195.406.17814105641969847306.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: Diagnostix.phytec.de (172.25.0.14) To Florix.phytec.de
+ (172.25.0.13)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AMS0EPF00000190:EE_|AS2P195MB2111:EE_
+X-MS-Office365-Filtering-Correlation-Id: b2afd300-443c-49b7-c503-08dd8c94df1b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|82310400026|36860700013|1800799024|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?EN64lnKfvusKTAmkCqH3VN+6+RQE9Fedf1M21aGYwqIEmypBfrjwyRWvyht0?=
+ =?us-ascii?Q?+aqeayzwIS/ZdpvAgqWAjf3FPB6jzb8it7iVhqqc5TRJFqUZpm5NNTr51Nxa?=
+ =?us-ascii?Q?ztEGyDK+v0OkQer2Kdfiaqx5wzEBIusudj7ZNYx67n19V/tYHZCgF8X3TrCK?=
+ =?us-ascii?Q?rdffdo4KWNks0hetR+SjGauxZ8K50S9yVsdcrC23bGiLbKof9pX/vbfSCvUg?=
+ =?us-ascii?Q?UwGbiT9oQeGTqBZx4elirAIlZGVMzgHSu/JvzVf3plVpuv7HgZeU7yHMfPrS?=
+ =?us-ascii?Q?zelR08PUmJimOXEFkQUqBaNZuHSY9NZDMRbewphGjJFNoBvkBNP5aRrU8WYH?=
+ =?us-ascii?Q?cHX0pJ0VwtkJDL8s9R9NAOexmacwJHZPDBTqXsiFW4T+LWYQqM9skXsNnpCh?=
+ =?us-ascii?Q?GRnGN7ywCP2BmhCEqux6VY//18WV9xway4XdDQwQKisSnOwj3wX7yXZ2Kv2c?=
+ =?us-ascii?Q?wYnS8jv+p4XA4piEepvllxQOCKBmGXuW4k9iHCcasf9zbybssxEXZgprL0UI?=
+ =?us-ascii?Q?ZqqKj1ISN8pd+FF+1HH3zhjdEWHJ7XjG1fmnSUG1ZHwe6B8fWMvU9FI7J2UA?=
+ =?us-ascii?Q?54JEBeFYyv9QgJbOZG7FSXSbmeFOaIdftXYthzGOJkd1ZDeRtyr5j+mmc4BJ?=
+ =?us-ascii?Q?ABgYwTkHUuoHi/G97r+pLzDVDfOgSAALDR3P/h6Z4G/58T2kDy5Yomxtpkvn?=
+ =?us-ascii?Q?7YpnyijZcfHZq7+SncQtoGdfEaJ7Lm3qOPTr4E5uKNZkjIMiMDqe678ax6U1?=
+ =?us-ascii?Q?bwdeDrLGXVTW7aSPtwr/DEZ9OdyZ0Yx2bZobIrGHb8EVwsli4Im4+Nzte7x0?=
+ =?us-ascii?Q?Ezzu7XeyELTyczMqp35yXnoBBriCysNZxapuNfAJd27j1UDAEIswyAZwHTtT?=
+ =?us-ascii?Q?wVVuO3DAd4K25V6SYhsnPGCk1bIxAqdEA6OHUW3V39RRussW86Ny7s/XmeO1?=
+ =?us-ascii?Q?k+nZDE+uHp7VM5jlykNpTSxzLw34VN72O/h/1P2FEmih3rSqh+SHmgL6nvw7?=
+ =?us-ascii?Q?BCRbkpx1ox2lFbd00fg9++oQj8eMLOXNdfGLou/7zfnTPEt47NET3UPa8EMr?=
+ =?us-ascii?Q?JG9fM4k+wMW639qCoW9mQjJk65J0IwNxUWmYTEjpkN4aIbQBVhCF+CBhXanY?=
+ =?us-ascii?Q?LW/ss5Ig6iTjB2oxTtHCia1210fcykB2gHTagG7bPh02jxzri4oVz+NhY0Rk?=
+ =?us-ascii?Q?me+sz6Oq9q4yS73btPjFwbOc7cRmRImKFOjE89o7kT9VddMx34yAZowhTdv1?=
+ =?us-ascii?Q?lKTVUNgYRLW6DF9Z4WTbrmUeWrkRYknxzmIu+CSsV+6Se0JOwVBnLX2qsGRL?=
+ =?us-ascii?Q?CS9EnTSNbWglZOzRoU30Wlf5Wsg7m9U/sRVPvqohWsakgbkfCjWWT75k1oUd?=
+ =?us-ascii?Q?Kc61exZ5kNkmAHuqrenG1TQbJkGsDj4TO1lZYkiW6AHqiRkjuSq2v+Kpopjx?=
+ =?us-ascii?Q?KMR99pMr8OIqXZ/q0cbmnLyKx4KMApm+Klwvh82hJmG9Z+na2eZoeA=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:91.26.50.189;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:Diagnostix.phytec.de;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(36860700013)(1800799024)(13003099007);DIR:OUT;SFP:1102;
+X-OriginatorOrg: phytec.de
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 11:55:18.2217
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b2afd300-443c-49b7-c503-08dd8c94df1b
+X-MS-Exchange-CrossTenant-Id: e609157c-80e2-446d-9be3-9c99c2399d29
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e609157c-80e2-446d-9be3-9c99c2399d29;Ip=[91.26.50.189];Helo=[Diagnostix.phytec.de]
+X-MS-Exchange-CrossTenant-AuthSource:
+	AMS0EPF00000190.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS2P195MB2111
 
-The following commit has been merged into the x86/cpu branch of tip:
+This patch series is based on [1] and adds these R5F and C7xv device nodes
+to the am62- and am62a-phycore-som device-trees. It also reserves main_timer2
+as well as main_rti4 for the C7 DSP firmware.
 
-Commit-ID:     c1ab4ce3cb759f69fb9085a060e568b73e8f5cd8
-Gitweb:        https://git.kernel.org/tip/c1ab4ce3cb759f69fb9085a060e568b73e8f5cd8
-Author:        Ingo Molnar <mingo@kernel.org>
-AuthorDate:    Tue, 06 May 2025 13:41:43 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 06 May 2025 13:45:13 +02:00
+1: https://lore.kernel.org/linux-arm-kernel/20250502220325.3230653-1-jm@ti.com/T/#t
 
-tools/arch/x86: Move the <asm/amd-ibs.h> header to <asm/amd/ibs.h>
+Daniel Schultz (4):
+  arm64: dts: ti: k3-am62-phycore-som: Enable Co-processors
+  arm64: dts: ti: k3-am62a-phycore-som: Enable Co-processors
+  arm64: dts: ti: k3-am62a-phycore-som: Reserve main_rti4 for C7x DSP
+  arm64: dts: ti: k3-am62a-phycore-som: Reserve main_timer2 for C7x DSP
 
-Synchronize with what we did with the kernel side header in:
+ .../boot/dts/ti/k3-am62-phycore-som.dtsi      |  35 +++++-
+ .../boot/dts/ti/k3-am62a-phycore-som.dtsi     | 106 +++++++++++++++++-
+ 2 files changed, 129 insertions(+), 12 deletions(-)
 
-  3846389c03a8 ("x86/platform/amd: Move the <asm/amd-ibs.h> header to <asm/amd/ibs.h>")
+-- 
+2.25.1
 
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org
----
- tools/arch/x86/include/asm/amd-ibs.h | 153 +--------------------------
- tools/arch/x86/include/asm/amd/ibs.h | 153 ++++++++++++++++++++++++++-
- 2 files changed, 153 insertions(+), 153 deletions(-)
- delete mode 100644 tools/arch/x86/include/asm/amd-ibs.h
- create mode 100644 tools/arch/x86/include/asm/amd/ibs.h
-
-diff --git a/tools/arch/x86/include/asm/amd-ibs.h b/tools/arch/x86/include/asm/amd-ibs.h
-deleted file mode 100644
-index cb1740b..0000000
---- a/tools/arch/x86/include/asm/amd-ibs.h
-+++ /dev/null
-@@ -1,153 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--/*
-- * From PPR Vol 1 for AMD Family 19h Model 01h B1
-- * 55898 Rev 0.35 - Feb 5, 2021
-- */
--
--#include "msr-index.h"
--
--/* IBS_OP_DATA2 DataSrc */
--#define IBS_DATA_SRC_LOC_CACHE			 2
--#define IBS_DATA_SRC_DRAM			 3
--#define IBS_DATA_SRC_REM_CACHE			 4
--#define IBS_DATA_SRC_IO				 7
--
--/* IBS_OP_DATA2 DataSrc Extension */
--#define IBS_DATA_SRC_EXT_LOC_CACHE		 1
--#define IBS_DATA_SRC_EXT_NEAR_CCX_CACHE		 2
--#define IBS_DATA_SRC_EXT_DRAM			 3
--#define IBS_DATA_SRC_EXT_FAR_CCX_CACHE		 5
--#define IBS_DATA_SRC_EXT_PMEM			 6
--#define IBS_DATA_SRC_EXT_IO			 7
--#define IBS_DATA_SRC_EXT_EXT_MEM		 8
--#define IBS_DATA_SRC_EXT_PEER_AGENT_MEM		12
--
--/*
-- * IBS Hardware MSRs
-- */
--
--/* MSR 0xc0011030: IBS Fetch Control */
--union ibs_fetch_ctl {
--	__u64 val;
--	struct {
--		__u64	fetch_maxcnt:16,/* 0-15: instruction fetch max. count */
--			fetch_cnt:16,	/* 16-31: instruction fetch count */
--			fetch_lat:16,	/* 32-47: instruction fetch latency */
--			fetch_en:1,	/* 48: instruction fetch enable */
--			fetch_val:1,	/* 49: instruction fetch valid */
--			fetch_comp:1,	/* 50: instruction fetch complete */
--			ic_miss:1,	/* 51: i-cache miss */
--			phy_addr_valid:1,/* 52: physical address valid */
--			l1tlb_pgsz:2,	/* 53-54: i-cache L1TLB page size
--					 *	  (needs IbsPhyAddrValid) */
--			l1tlb_miss:1,	/* 55: i-cache fetch missed in L1TLB */
--			l2tlb_miss:1,	/* 56: i-cache fetch missed in L2TLB */
--			rand_en:1,	/* 57: random tagging enable */
--			fetch_l2_miss:1,/* 58: L2 miss for sampled fetch
--					 *      (needs IbsFetchComp) */
--			l3_miss_only:1,	/* 59: Collect L3 miss samples only */
--			fetch_oc_miss:1,/* 60: Op cache miss for the sampled fetch */
--			fetch_l3_miss:1,/* 61: L3 cache miss for the sampled fetch */
--			reserved:2;	/* 62-63: reserved */
--	};
--};
--
--/* MSR 0xc0011033: IBS Execution Control */
--union ibs_op_ctl {
--	__u64 val;
--	struct {
--		__u64	opmaxcnt:16,	/* 0-15: periodic op max. count */
--			l3_miss_only:1,	/* 16: Collect L3 miss samples only */
--			op_en:1,	/* 17: op sampling enable */
--			op_val:1,	/* 18: op sample valid */
--			cnt_ctl:1,	/* 19: periodic op counter control */
--			opmaxcnt_ext:7,	/* 20-26: upper 7 bits of periodic op maximum count */
--			reserved0:5,	/* 27-31: reserved */
--			opcurcnt:27,	/* 32-58: periodic op counter current count */
--			ldlat_thrsh:4,	/* 59-62: Load Latency threshold */
--			ldlat_en:1;	/* 63: Load Latency enabled */
--	};
--};
--
--/* MSR 0xc0011035: IBS Op Data 1 */
--union ibs_op_data {
--	__u64 val;
--	struct {
--		__u64	comp_to_ret_ctr:16,	/* 0-15: op completion to retire count */
--			tag_to_ret_ctr:16,	/* 15-31: op tag to retire count */
--			reserved1:2,		/* 32-33: reserved */
--			op_return:1,		/* 34: return op */
--			op_brn_taken:1,		/* 35: taken branch op */
--			op_brn_misp:1,		/* 36: mispredicted branch op */
--			op_brn_ret:1,		/* 37: branch op retired */
--			op_rip_invalid:1,	/* 38: RIP is invalid */
--			op_brn_fuse:1,		/* 39: fused branch op */
--			op_microcode:1,		/* 40: microcode op */
--			reserved2:23;		/* 41-63: reserved */
--	};
--};
--
--/* MSR 0xc0011036: IBS Op Data 2 */
--union ibs_op_data2 {
--	__u64 val;
--	struct {
--		__u64	data_src_lo:3,	/* 0-2: data source low */
--			reserved0:1,	/* 3: reserved */
--			rmt_node:1,	/* 4: destination node */
--			cache_hit_st:1,	/* 5: cache hit state */
--			data_src_hi:2,	/* 6-7: data source high */
--			reserved1:56;	/* 8-63: reserved */
--	};
--};
--
--/* MSR 0xc0011037: IBS Op Data 3 */
--union ibs_op_data3 {
--	__u64 val;
--	struct {
--		__u64	ld_op:1,			/* 0: load op */
--			st_op:1,			/* 1: store op */
--			dc_l1tlb_miss:1,		/* 2: data cache L1TLB miss */
--			dc_l2tlb_miss:1,		/* 3: data cache L2TLB hit in 2M page */
--			dc_l1tlb_hit_2m:1,		/* 4: data cache L1TLB hit in 2M page */
--			dc_l1tlb_hit_1g:1,		/* 5: data cache L1TLB hit in 1G page */
--			dc_l2tlb_hit_2m:1,		/* 6: data cache L2TLB hit in 2M page */
--			dc_miss:1,			/* 7: data cache miss */
--			dc_mis_acc:1,			/* 8: misaligned access */
--			reserved:4,			/* 9-12: reserved */
--			dc_wc_mem_acc:1,		/* 13: write combining memory access */
--			dc_uc_mem_acc:1,		/* 14: uncacheable memory access */
--			dc_locked_op:1,			/* 15: locked operation */
--			dc_miss_no_mab_alloc:1,		/* 16: DC miss with no MAB allocated */
--			dc_lin_addr_valid:1,		/* 17: data cache linear address valid */
--			dc_phy_addr_valid:1,		/* 18: data cache physical address valid */
--			dc_l2_tlb_hit_1g:1,		/* 19: data cache L2 hit in 1GB page */
--			l2_miss:1,			/* 20: L2 cache miss */
--			sw_pf:1,			/* 21: software prefetch */
--			op_mem_width:4,			/* 22-25: load/store size in bytes */
--			op_dc_miss_open_mem_reqs:6,	/* 26-31: outstanding mem reqs on DC fill */
--			dc_miss_lat:16,			/* 32-47: data cache miss latency */
--			tlb_refill_lat:16;		/* 48-63: L1 TLB refill latency */
--	};
--};
--
--/* MSR 0xc001103c: IBS Fetch Control Extended */
--union ic_ibs_extd_ctl {
--	__u64 val;
--	struct {
--		__u64	itlb_refill_lat:16,	/* 0-15: ITLB Refill latency for sampled fetch */
--			reserved:48;		/* 16-63: reserved */
--	};
--};
--
--/*
-- * IBS driver related
-- */
--
--struct perf_ibs_data {
--	u32		size;
--	union {
--		u32	data[0];	/* data buffer starts here */
--		u32	caps;
--	};
--	u64		regs[MSR_AMD64_IBS_REG_COUNT_MAX];
--};
-diff --git a/tools/arch/x86/include/asm/amd/ibs.h b/tools/arch/x86/include/asm/amd/ibs.h
-new file mode 100644
-index 0000000..300b6e0
---- /dev/null
-+++ b/tools/arch/x86/include/asm/amd/ibs.h
-@@ -0,0 +1,153 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * From PPR Vol 1 for AMD Family 19h Model 01h B1
-+ * 55898 Rev 0.35 - Feb 5, 2021
-+ */
-+
-+#include "../msr-index.h"
-+
-+/* IBS_OP_DATA2 DataSrc */
-+#define IBS_DATA_SRC_LOC_CACHE			 2
-+#define IBS_DATA_SRC_DRAM			 3
-+#define IBS_DATA_SRC_REM_CACHE			 4
-+#define IBS_DATA_SRC_IO				 7
-+
-+/* IBS_OP_DATA2 DataSrc Extension */
-+#define IBS_DATA_SRC_EXT_LOC_CACHE		 1
-+#define IBS_DATA_SRC_EXT_NEAR_CCX_CACHE		 2
-+#define IBS_DATA_SRC_EXT_DRAM			 3
-+#define IBS_DATA_SRC_EXT_FAR_CCX_CACHE		 5
-+#define IBS_DATA_SRC_EXT_PMEM			 6
-+#define IBS_DATA_SRC_EXT_IO			 7
-+#define IBS_DATA_SRC_EXT_EXT_MEM		 8
-+#define IBS_DATA_SRC_EXT_PEER_AGENT_MEM		12
-+
-+/*
-+ * IBS Hardware MSRs
-+ */
-+
-+/* MSR 0xc0011030: IBS Fetch Control */
-+union ibs_fetch_ctl {
-+	__u64 val;
-+	struct {
-+		__u64	fetch_maxcnt:16,/* 0-15: instruction fetch max. count */
-+			fetch_cnt:16,	/* 16-31: instruction fetch count */
-+			fetch_lat:16,	/* 32-47: instruction fetch latency */
-+			fetch_en:1,	/* 48: instruction fetch enable */
-+			fetch_val:1,	/* 49: instruction fetch valid */
-+			fetch_comp:1,	/* 50: instruction fetch complete */
-+			ic_miss:1,	/* 51: i-cache miss */
-+			phy_addr_valid:1,/* 52: physical address valid */
-+			l1tlb_pgsz:2,	/* 53-54: i-cache L1TLB page size
-+					 *	  (needs IbsPhyAddrValid) */
-+			l1tlb_miss:1,	/* 55: i-cache fetch missed in L1TLB */
-+			l2tlb_miss:1,	/* 56: i-cache fetch missed in L2TLB */
-+			rand_en:1,	/* 57: random tagging enable */
-+			fetch_l2_miss:1,/* 58: L2 miss for sampled fetch
-+					 *      (needs IbsFetchComp) */
-+			l3_miss_only:1,	/* 59: Collect L3 miss samples only */
-+			fetch_oc_miss:1,/* 60: Op cache miss for the sampled fetch */
-+			fetch_l3_miss:1,/* 61: L3 cache miss for the sampled fetch */
-+			reserved:2;	/* 62-63: reserved */
-+	};
-+};
-+
-+/* MSR 0xc0011033: IBS Execution Control */
-+union ibs_op_ctl {
-+	__u64 val;
-+	struct {
-+		__u64	opmaxcnt:16,	/* 0-15: periodic op max. count */
-+			l3_miss_only:1,	/* 16: Collect L3 miss samples only */
-+			op_en:1,	/* 17: op sampling enable */
-+			op_val:1,	/* 18: op sample valid */
-+			cnt_ctl:1,	/* 19: periodic op counter control */
-+			opmaxcnt_ext:7,	/* 20-26: upper 7 bits of periodic op maximum count */
-+			reserved0:5,	/* 27-31: reserved */
-+			opcurcnt:27,	/* 32-58: periodic op counter current count */
-+			ldlat_thrsh:4,	/* 59-62: Load Latency threshold */
-+			ldlat_en:1;	/* 63: Load Latency enabled */
-+	};
-+};
-+
-+/* MSR 0xc0011035: IBS Op Data 1 */
-+union ibs_op_data {
-+	__u64 val;
-+	struct {
-+		__u64	comp_to_ret_ctr:16,	/* 0-15: op completion to retire count */
-+			tag_to_ret_ctr:16,	/* 15-31: op tag to retire count */
-+			reserved1:2,		/* 32-33: reserved */
-+			op_return:1,		/* 34: return op */
-+			op_brn_taken:1,		/* 35: taken branch op */
-+			op_brn_misp:1,		/* 36: mispredicted branch op */
-+			op_brn_ret:1,		/* 37: branch op retired */
-+			op_rip_invalid:1,	/* 38: RIP is invalid */
-+			op_brn_fuse:1,		/* 39: fused branch op */
-+			op_microcode:1,		/* 40: microcode op */
-+			reserved2:23;		/* 41-63: reserved */
-+	};
-+};
-+
-+/* MSR 0xc0011036: IBS Op Data 2 */
-+union ibs_op_data2 {
-+	__u64 val;
-+	struct {
-+		__u64	data_src_lo:3,	/* 0-2: data source low */
-+			reserved0:1,	/* 3: reserved */
-+			rmt_node:1,	/* 4: destination node */
-+			cache_hit_st:1,	/* 5: cache hit state */
-+			data_src_hi:2,	/* 6-7: data source high */
-+			reserved1:56;	/* 8-63: reserved */
-+	};
-+};
-+
-+/* MSR 0xc0011037: IBS Op Data 3 */
-+union ibs_op_data3 {
-+	__u64 val;
-+	struct {
-+		__u64	ld_op:1,			/* 0: load op */
-+			st_op:1,			/* 1: store op */
-+			dc_l1tlb_miss:1,		/* 2: data cache L1TLB miss */
-+			dc_l2tlb_miss:1,		/* 3: data cache L2TLB hit in 2M page */
-+			dc_l1tlb_hit_2m:1,		/* 4: data cache L1TLB hit in 2M page */
-+			dc_l1tlb_hit_1g:1,		/* 5: data cache L1TLB hit in 1G page */
-+			dc_l2tlb_hit_2m:1,		/* 6: data cache L2TLB hit in 2M page */
-+			dc_miss:1,			/* 7: data cache miss */
-+			dc_mis_acc:1,			/* 8: misaligned access */
-+			reserved:4,			/* 9-12: reserved */
-+			dc_wc_mem_acc:1,		/* 13: write combining memory access */
-+			dc_uc_mem_acc:1,		/* 14: uncacheable memory access */
-+			dc_locked_op:1,			/* 15: locked operation */
-+			dc_miss_no_mab_alloc:1,		/* 16: DC miss with no MAB allocated */
-+			dc_lin_addr_valid:1,		/* 17: data cache linear address valid */
-+			dc_phy_addr_valid:1,		/* 18: data cache physical address valid */
-+			dc_l2_tlb_hit_1g:1,		/* 19: data cache L2 hit in 1GB page */
-+			l2_miss:1,			/* 20: L2 cache miss */
-+			sw_pf:1,			/* 21: software prefetch */
-+			op_mem_width:4,			/* 22-25: load/store size in bytes */
-+			op_dc_miss_open_mem_reqs:6,	/* 26-31: outstanding mem reqs on DC fill */
-+			dc_miss_lat:16,			/* 32-47: data cache miss latency */
-+			tlb_refill_lat:16;		/* 48-63: L1 TLB refill latency */
-+	};
-+};
-+
-+/* MSR 0xc001103c: IBS Fetch Control Extended */
-+union ic_ibs_extd_ctl {
-+	__u64 val;
-+	struct {
-+		__u64	itlb_refill_lat:16,	/* 0-15: ITLB Refill latency for sampled fetch */
-+			reserved:48;		/* 16-63: reserved */
-+	};
-+};
-+
-+/*
-+ * IBS driver related
-+ */
-+
-+struct perf_ibs_data {
-+	u32		size;
-+	union {
-+		u32	data[0];	/* data buffer starts here */
-+		u32	caps;
-+	};
-+	u64		regs[MSR_AMD64_IBS_REG_COUNT_MAX];
-+};
