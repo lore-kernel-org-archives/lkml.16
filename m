@@ -1,93 +1,112 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B5DC19D892;
-	Tue,  6 May 2025 08:36:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BAAD19D892;
+	Tue,  6 May 2025 08:36:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746520593; cv=none; b=gSABUFA7rBOSJrYuRuS4kguW0cPelQlwTKtio/PS0qoWVrfoenZyhIZR198vbi1JWaITg1MnLmJ6HSscSeY/DMvMK4B+F39DGmNyVCWXTHyU6l+HmLq9P19uEUYX3+G6mZ3uikegtKPwDpc00SF3+j8AmjsZVtp1FPl9PJ+YayM=
+	t=1746520608; cv=none; b=L+ZJha/DPauISbBv7FThQMncn/1pC4vgf8dzOJgM+89cZQ7/O8qm6V4BU5AkydaSkTmpceEPu56XK/ZHrgy3OplYu1u4ke9u2GRC+XkmuCYwNNR5ZOOl8/7OvBpFZD2mz7BkOU5zr4mGuW6caHMFJfv4YkI6NFDaGstsFB7YzMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746520593; c=relaxed/simple;
-	bh=+9mpv0BaF4cHinsYyWqRzjMvWVxnqlfFBy9goAV2c4k=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=lIKzwJxuMzLKmmLCtIMF1ocgD8ANWSFaSKgRGUK7qvRwsDNLVQkf4VGMUienSR7CX5JV8eMF1f7erEaXJLNJo8TFa4U2wMHbefpglXV+lPdJSQRI5jsS3fi4DWgJzzsf+pejb0VelmDkpCojg2YN+EOldKa35PNza7huFzPSoKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CzhV+SbH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746520608; c=relaxed/simple;
+	bh=9VOMYTlC6ALS5IdAgzBAWP1xvgjsjQLiqbJ2O0ZhVHc=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CNztpUsBHipjkw6DyCBfSg2tEsysDazJ01wSGYNsyShSU2ahL5YzRMROz/UG19xPdrq2ij3SFuukrksbboGWIDZlQMEBuzSS8LJFOruTL/sUdP2HVE3iBFCxaxkrgrx7gw0aIAI5G6ldT+ogPztxvSIeMwkQLfoijlVEcDNJ0P8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G2RqhqDT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CzhV+SbH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A8AEC4CEED;
-	Tue,  6 May 2025 08:36:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G2RqhqDT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65BFFC4CEE4;
+	Tue,  6 May 2025 08:36:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746520592;
-	bh=+9mpv0BaF4cHinsYyWqRzjMvWVxnqlfFBy9goAV2c4k=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=CzhV+SbHwBKFGnLXYQ6VWWdQbh3fU4l0BQBFpk6dzU+5uzJ9vqRP7Jq8qqrUaUOrM
-	 vO0ZIHnSWlfQ1g4Bp/soJ4IaiLNq/ybdeYI3yt1HQ6SkqJkereIl7tLZLL9i3oNBFX
-	 vCtLZvIxXHvsLUijCbvlCXJSriI80xMng0TAsnavUUSC3I/sX8Jc8PAyhpPYyNhS4t
-	 uQp3ZRPT5vH1yhhNYzg0S8AjrnkmLJ7Yiw72ek59ZqqB0Q4lxAVLN24MFTeH/7k0eM
-	 kXHkUVqiAlrH+xOV50OT4bG18B92hc4cID1dIyRydcn+O8aAj9lJRNcY8ymY9UuDJS
-	 9+duoNSgAD0Bw==
-Date: Tue, 06 May 2025 03:36:30 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=k20201202; t=1746520607;
+	bh=9VOMYTlC6ALS5IdAgzBAWP1xvgjsjQLiqbJ2O0ZhVHc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=G2RqhqDT+gZcdaDr4WlZdP0vofL3oNiEIDADXbadpArkaiurY9O2NUT46rZO3n8HL
+	 jheqZY23TyYhxAdGoyvOBgunYrbJggEAmbLA6prLdruFjdxUVZK+Fdj4BLg+/be53X
+	 ljTpmaR8UBdsVD0pU8pxIlLg2i+N/VYk06hW7XmwZB8a7kC58GIBqOxd90gR3K15t4
+	 mZS8hULgWZ050J/nBHpd3DhBjt2ikA0BHa1pZbWQDcIkT/0j5oRrxDepWyb2lqQWk7
+	 wpKD8UXmWU7x5bd1cFOUj72v+j9pbH3QdzheDN1EVmX9M899aGKEM9buy6Yewu3pjJ
+	 UhkhI1czrIBAw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uCDnA-00C97H-GY;
+	Tue, 06 May 2025 09:36:45 +0100
+Date: Tue, 06 May 2025 09:36:44 +0100
+Message-ID: <86h61ygmoz.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Mostafa Saleh <smostafa@google.com>,
+	kvmarm@lists.linux.dev,
+	kasan-dev@googlegroups.com,
+	linux-hardening@vger.kernel.org,
+	linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	will@kernel.org,
+	oliver.upton@linux.dev,
+	broonie@kernel.org,
+	catalin.marinas@arm.com,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	elver@google.com,
+	andreyknvl@gmail.com,
+	ryabinin.a.a@gmail.com,
+	akpm@linux-foundation.org,
+	yuzenghui@huawei.com,
+	suzuki.poulose@arm.com,
+	joey.gouly@arm.com,
+	masahiroy@kernel.org,
+	nathan@kernel.org,
+	nicolas.schier@linux.dev
+Subject: Re: [PATCH v2 0/4] KVM: arm64: UBSAN at EL2
+In-Reply-To: <202504301131.3C1CBCA8@keescook>
+References: <20250430162713.1997569-1-smostafa@google.com>
+	<202504301131.3C1CBCA8@keescook>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, 
- Joel Stanley <joel@jms.id.au>, Thomas Gleixner <tglx@linutronix.de>, 
- devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-In-Reply-To: <20250506022241.2587534-1-robh@kernel.org>
-References: <20250506022241.2587534-1-robh@kernel.org>
-Message-Id: <174652059077.3542988.5596879030416436987.robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: timer: Convert faraday,fttmr010 to DT
- schema
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: kees@kernel.org, smostafa@google.com, kvmarm@lists.linux.dev, kasan-dev@googlegroups.com, linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, will@kernel.org, oliver.upton@linux.dev, broonie@kernel.org, catalin.marinas@arm.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, elver@google.com, andreyknvl@gmail.com, ryabinin.a.a@gmail.com, akpm@linux-foundation.org, yuzenghui@huawei.com, suzuki.poulose@arm.com, joey.gouly@arm.com, masahiroy@kernel.org, nathan@kernel.org, nicolas.schier@linux.dev
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-
-On Mon, 05 May 2025 21:22:40 -0500, Rob Herring (Arm) wrote:
-> Convert the Faraday fttmr010 Timer binding to DT schema format. Adjust
-> the compatible string values to match what's in use. The number of
-> interrupts can also be anywhere from 1 to 8. The clock-names order was
-> reversed compared to what's used.
+On Wed, 30 Apr 2025 19:32:23 +0100,
+Kees Cook <kees@kernel.org> wrote:
 > 
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
->  .../bindings/timer/faraday,fttmr010.txt       | 38 --------
->  .../bindings/timer/faraday,fttmr010.yaml      | 89 +++++++++++++++++++
->  2 files changed, 89 insertions(+), 38 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/timer/faraday,fttmr010.txt
->  create mode 100644 Documentation/devicetree/bindings/timer/faraday,fttmr010.yaml
+> On Wed, Apr 30, 2025 at 04:27:07PM +0000, Mostafa Saleh wrote:
+> > Many of the sanitizers the kernel supports are disabled when running
+> > in EL2 with nvhe/hvhe/proctected modes, some of those are easier
+> > (and makes more sense) to integrate than others.
+> > Last year, kCFI support was added in [1]
+> > 
+> > This patchset adds support for UBSAN in EL2.
 > 
+> This touches both UBSAN and arm64 -- I'm happy to land this via the
+> hardening tree, but I expect the arm64 folks would rather take it via
+> their tree. What would people like to have happen?
 
-My bot found errors running 'make dt_binding_check' on your patch:
+I don't mind either way, but in any case I'd like a stable branch with
+that code so that I can merge it if any conflict occurs in -next.
 
-yamllint warnings/errors:
+Alternatively, I can take it via the kvmarm tree, and publish a stable
+branch for anyone to pick and resolve conflicts ahead of the merge
+window.
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/timer/faraday,fttmr010.example.dtb: timer@43000000 (faraday,fttmr010): clock-names:0: 'PCLK' was expected
-	from schema $id: http://devicetree.org/schemas/timer/faraday,fttmr010.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/timer/faraday,fttmr010.example.dtb: timer@43000000 (faraday,fttmr010): clock-names:1: 'EXTCLK' was expected
-	from schema $id: http://devicetree.org/schemas/timer/faraday,fttmr010.yaml#
+Thanks,
 
-doc reference errors (make refcheckdocs):
+	M.
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250506022241.2587534-1-robh@kernel.org
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+-- 
+Without deviation from the norm, progress is not possible.
