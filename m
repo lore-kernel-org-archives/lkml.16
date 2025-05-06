@@ -1,141 +1,321 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BBAE278E6B;
-	Tue,  6 May 2025 11:06:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD09A1F55F8;
+	Tue,  6 May 2025 11:06:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746529599; cv=none; b=YTOZzKwC1Z/YGDJNe8HvCrQyIPmeQ9rbB/nG7vcHdalOdeh8USRUiymhR1PtrKGZfq6qwoIvgM8f9hFqQ9f1ZQoZa8p4C7ccgpPzzN5sWJwrYxfjFNfeU5FALMaQsARCe5vUduVpw3dNF2gp/bRWf421rttAye/Z3bvODlH8V8c=
+	t=1746529609; cv=none; b=mR9gcOL+Vv0Qct5s4bg20qanyDR0bPa+R2HVaCktQvU2P+iLOpzJuYzjtVsz1NZvhGT629kcCnMOat4f0OLvR7FOhYYNeaCyFvpsS4XnflptXzzAXrmbT2DUG9SvEPpIRDNTaseotVYzhczCVR5enbIHwios870pUrTWiKES4KA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746529599; c=relaxed/simple;
-	bh=pPG4A69Jzv1j/u680hscZcO9XMsYyYhAZW5FYEahAQc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ETJnASNOSW+VRXde5sa7TVGKd24R5d98WXk1ZO0sAgeI3zuYR76ZrIAUAJWl+a+odGQD5hQMhKc8YBB1Mu2PFmJZwr7E+RBvtIyPOmJM8dGBurOL/frHCo2smycKZQyJJe3UsdADzU0byiD+kOvNyfdbqCtcOLWqsR2nFWjuskk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=mtGajJ+2; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1746529609; c=relaxed/simple;
+	bh=IsJ4knD6xjH5ocv5Yne+kV9PRiqyTgJ8O5upyfZ3XeI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=K/7U+OncLlRLCDxzw9RQ0qAa/s6QEvLyzx+w32ucaeQEsSok2bma6xmKZTfSLxr3M5q6fCgyYcsO8KDc4yvJspei8NOhhMVJgrqZK3FCxOAIPLnEgquqdYfyHZvjpkSGDy3yVVTB/91zFDOU/b8ehSC51earX9wdiN2LXGwQXU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VHspKYof; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mtGajJ+2"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 546B61Z8485503
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 6 May 2025 06:06:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1746529561;
-	bh=RpHmsXnTE8Ah4aeveKhPrmGpWgl0nHpMPDu8HAWcLjI=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=mtGajJ+2ocilvtKLbYDb2fA4eaC6yhkid+AANZKiHs/wo99xmiAUbXhyqIAZ/9EeG
-	 9FxgLhpalUm3bdpHxcsZZJLsGioZ7tXeIS9RTsLNNvYU0Nf9ESwUdxOvkwITi+omZc
-	 Xhn77h3nhSEZV3fStZNG8j4T61STZj8Dveqp86HU=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 546B61Dw003211
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 6 May 2025 06:06:01 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 6
- May 2025 06:06:01 -0500
-Received: from fllvsmtp7.itg.ti.com (10.64.40.31) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 6 May 2025 06:06:00 -0500
-Received: from lelv0854.itg.ti.com (lelv0854.itg.ti.com [10.181.64.140])
-	by fllvsmtp7.itg.ti.com (8.15.2/8.15.2) with ESMTP id 546B60II102224;
-	Tue, 6 May 2025 06:06:00 -0500
-Received: from localhost (meghana-pc.dhcp.ti.com [10.24.69.13] (may be forged))
-	by lelv0854.itg.ti.com (8.14.7/8.14.7) with ESMTP id 546B5xXU010352;
-	Tue, 6 May 2025 06:06:00 -0500
-From: Meghana Malladi <m-malladi@ti.com>
-To: <namcao@linutronix.de>, <horms@kernel.org>, <m-malladi@ti.com>,
-        <john.fastabend@gmail.com>, <hawk@kernel.org>, <daniel@iogearbox.net>,
-        <ast@kernel.org>, <pabeni@redhat.com>, <kuba@kernel.org>,
-        <edumazet@google.com>, <davem@davemloft.net>, <andrew+netdev@lunn.ch>
-CC: <bpf@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <srk@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-        Roger Quadros
-	<rogerq@kernel.org>, <danishanwar@ti.com>
-Subject: [PATCH net v2 3/3] net: ti: icssg-prueth: Report BQL before sending XDP packets
-Date: Tue, 6 May 2025 16:35:46 +0530
-Message-ID: <20250506110546.4065715-4-m-malladi@ti.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250506110546.4065715-1-m-malladi@ti.com>
-References: <20250506110546.4065715-1-m-malladi@ti.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VHspKYof"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4103C4CEE4;
+	Tue,  6 May 2025 11:06:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746529609;
+	bh=IsJ4knD6xjH5ocv5Yne+kV9PRiqyTgJ8O5upyfZ3XeI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=VHspKYofF/Nbn6SlNqc2bfQfo93MlLP2GC3foMiOYd3Eiklnd7rPNpcz52HrTTAxA
+	 RyOMCgF2bin4Y8P0OrTQIb5EQeEgkHW3+gQzPvDMY4AMlhLwZHRf3dzgiDVuKQtI9n
+	 Xbvo2y8+aEPxn7KaGqIDiWQHWVwgGaUi7DKj6ygp32Gq4/ERY+0i+etHbnoRVXX2gM
+	 t0LIY7mrqL7hfNKX7G7DVo6vTecO+n4f5Nr3XCkjDW29nYsmTunY0y+nhh9uvh1Dga
+	 fTUu5paF0JAum7VGi/TnSR2miv1EvODG+xg2kAAWzlMhfOdeoKOtfYwyjPuUHemdFe
+	 5TeIRD8PRCSRQ==
+Message-ID: <9015e10e-effb-4dc8-b100-1906db731f57@kernel.org>
+Date: Tue, 6 May 2025 13:06:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: eswin: Document for eic7700 SoC
+To: luyulin <luyulin@eswincomputing.com>, linus.walleij@linaro.org,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kees@kernel.org, gustavoars@kernel.org,
+ brgl@bgdev.pl, linux-hardening@vger.kernel.org
+Cc: zhengyu@eswincomputing.com, ningyu@eswincomputing.com,
+ huangyifeng@eswincomputing.com, linmin@eswincomputing.com,
+ fenglin@eswincomputing.com, lianghujun@eswincomputing.com,
+ Samuel Holland <samuel.holland@sifive.com>
+References: <20250506090844.1516-1-luyulin@eswincomputing.com>
+ <20250506091145.1953-1-luyulin@eswincomputing.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250506091145.1953-1-luyulin@eswincomputing.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-When sending out any kind of traffic, it is essential that the driver
-keeps reporting BQL of the number of bytes that have been sent so that
-BQL can track the amount of data in the queue and prevents it from
-overflowing. If BQL is not reported, the driver may continue sending
-packets even when the queue is full, leading to packet loss, congestion
-and decreased network performance. Currently this is missing in
-emac_xmit_xdp_frame() and this patch fixes it.
+On 06/05/2025 11:11, luyulin wrote:
+> This commit adds Device Tree binding documentation for the
 
-Fixes: 62aa3246f462 ("net: ti: icssg-prueth: Add XDP support")
-Signed-off-by: Meghana Malladi <m-malladi@ti.com>
----
+Please do not use "This commit/patch/change", but imperative mood. See
+longer explanation here:
+https://elixir.bootlin.com/linux/v5.17.1/source/Documentation/process/submitting-patches.rst#L95
 
-Changes from v1 (v2-v1):
-- reordered the patches in the series as suggested by Jakub Kicinski <kuba@kernel.org>
-- Dropped patch 3/4 from v1 as suggested by Jakub Kicinski <kuba@kernel.org>
 
- drivers/net/ethernet/ti/icssg/icssg_common.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+> ESWIN EIC7700 pinctrl controller module. The document describes
+> the required properties, compatible strings, and usage examples
+> in the device tree configuration when applying this module.
 
-diff --git a/drivers/net/ethernet/ti/icssg/icssg_common.c b/drivers/net/ethernet/ti/icssg/icssg_common.c
-index 36d5cb25c017..5b8fdb882172 100644
---- a/drivers/net/ethernet/ti/icssg/icssg_common.c
-+++ b/drivers/net/ethernet/ti/icssg/icssg_common.c
-@@ -187,7 +187,6 @@ int emac_tx_complete_packets(struct prueth_emac *emac, int chn,
- 			xdp_return_frame(xdpf);
- 			break;
- 		default:
--			netdev_err(ndev, "tx_complete: invalid swdata type %d\n", swdata->type);
- 			prueth_xmit_free(tx_chn, desc_tx);
- 			ndev->stats.tx_dropped++;
- 			continue;
-@@ -567,6 +566,7 @@ u32 emac_xmit_xdp_frame(struct prueth_emac *emac,
- {
- 	struct cppi5_host_desc_t *first_desc;
- 	struct net_device *ndev = emac->ndev;
-+	struct netdev_queue *netif_txq;
- 	struct prueth_tx_chn *tx_chn;
- 	dma_addr_t desc_dma, buf_dma;
- 	struct prueth_swdata *swdata;
-@@ -620,12 +620,17 @@ u32 emac_xmit_xdp_frame(struct prueth_emac *emac,
- 		swdata->data.xdpf = xdpf;
- 	}
- 
-+	/* Report BQL before sending the packet */
-+	netif_txq = netdev_get_tx_queue(ndev, tx_chn->id);
-+	netdev_tx_sent_queue(netif_txq, xdpf->len);
-+
- 	cppi5_hdesc_set_pktlen(first_desc, xdpf->len);
- 	desc_dma = k3_cppi_desc_pool_virt2dma(tx_chn->desc_pool, first_desc);
- 
- 	ret = k3_udma_glue_push_tx_chn(tx_chn->tx_chn, first_desc, desc_dma);
- 	if (ret) {
- 		netdev_err(ndev, "xdp tx: push failed: %d\n", ret);
-+		netdev_tx_completed_queue(netif_txq, 1, xdpf->len);
- 		goto drop_free_descs;
- 	}
- 
-@@ -984,6 +989,7 @@ enum netdev_tx icssg_ndo_start_xmit(struct sk_buff *skb, struct net_device *ndev
- 	ret = k3_udma_glue_push_tx_chn(tx_chn->tx_chn, first_desc, desc_dma);
- 	if (ret) {
- 		netdev_err(ndev, "tx: push failed: %d\n", ret);
-+		netdev_tx_completed_queue(netif_txq, 1, pkt_len);
- 		goto drop_free_descs;
- 	}
- 
--- 
-2.43.0
+Do not explain what DT binding is. We all know. Explain the hardware.
+See also other comits as examples.
 
+> 
+> Co-developed-by: Samuel Holland <samuel.holland@sifive.com>
+> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
+> Signed-off-by: luyulin <luyulin@eswincomputing.com>
+
+
+Looks like you used login name as full name. Use rather latin
+transcription or your name in your native language.
+
+> ---
+>  .../pinctrl/eswin,eic7700-pinctrl.yaml        | 156 ++++++++++++++++++
+
+
+This was already send and reviewed. Implement previous feedback
+
+https://lore.kernel.org/all/20250326-owl-of-algebraic-wealth-61aeda@krzk-bin/
+
+Then please version your patches correctly, e.g. use b4 or git
+format-patch -vX, and add changelog in cover letter or under '---' of
+individual patches describing changes from previous version.
+
+
+>  1 file changed, 156 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/eswin,eic7700-pinctrl.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/eswin,eic7700-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/eswin,eic7700-pinctrl.yaml
+> new file mode 100644
+> index 000000000000..d8811a8e0a51
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/eswin,eic7700-pinctrl.yaml
+> @@ -0,0 +1,156 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/eswin,eic7700-pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Eswin Eic7700 Pinctrl
+> +
+> +maintainers:
+> +  - LuYuLin <luyulin@eswincomputing.com>
+> +
+> +description: |
+> +  Please refer to pinctrl-bindings.txt in this directory for details of the
+> +  common pinctrl bindings used by client devices, including the meaning of the
+> +  phrase "pin configuration node".
+
+Drop this paragraph, redundant.
+
+> +
+> +  eic7700 pin configuration nodes act as a container for an arbitrary number of
+> +  subnodes. Each of these subnodes represents some desired configuration for one or
+> +  more pins. This configuration can include the mux function to select on those pin(s),
+> +  and various pin configuration parameters, such as input-enable, pull-up, etc.
+> +
+> +properties:
+> +  compatible:
+> +    const: eswin,eic7700-pinctrl
+> +
+> +  reg:
+> +    description: Specifies the base address and size of the SLCR space.
+
+Drop description, redundant.
+
+> +    maxItems: 1
+> +
+> +  "vrgmii-supply":
+
+Open existing bindings. Do you see any property written like that? No,
+therefore do not come with own syntax,
+
+Drop quotes,
+
+> +    description:
+> +      Regulator supply for the RGMII interface IO power domain.
+> +      This property should reference a regulator that provides either 1.8V or 3.3V,
+> +      depending on the board-level voltage configuration required by the RGMII interface.
+> +
+> +patternProperties:
+> +  '^(.*-)?(pins)$':
+
+Weirdly complicated pattern. Why not just "-pins$"? For which case do
+you need "pins" name?
+
+
+> +    type: object
+> +    description:
+> +      Pinctrl node's client devices use subnodes for pin muxes,
+> +      which in turn use below standard properties.
+> +
+> +    properties:
+> +      pins:
+> +        description:
+> +          For eic7700, specifies the name(s) of one or more pins to be configured by
+> +          this node.
+> +        items:
+> +          enum: [ chip_mode, mode_set0, mode_set1, mode_set2, mode_set3, xin,
+> +                  rst_out_n, key_reset_n, gpio0, por_sel, jtag0_tck, jtag0_tms,
+> +                  jtag0_tdi, jtag0_tdo, gpio5, spi2_cs0_n, jtag1_tck, jtag1_tms,
+> +                  jtag1_tdi, jtag1_tdo, gpio11, spi2_cs1_n, pcie_clkreq_n,
+> +                  pcie_wake_n, pcie_perst_n, hdmi_scl, hdmi_sda, hdmi_cec,
+> +                  jtag2_trst, rgmii0_clk_125, rgmii0_txen, rgmii0_txclk,
+> +                  rgmii0_txd0, rgmii0_txd1, rgmii0_txd2, rgmii0_txd3, i2s0_bclk,
+> +                  i2s0_wclk, i2s0_sdi, i2s0_sdo, i2s_mclk, rgmii0_rxclk,
+> +                  rgmii0_rxdv, rgmii0_rxd0, rgmii0_rxd1, rgmii0_rxd2, rgmii0_rxd3,
+> +                  i2s2_bclk, i2s2_wclk, i2s2_sdi, i2s2_sdo, gpio27, gpio28, gpio29,
+> +                  rgmii0_mdc, rgmii0_mdio, rgmii0_intb, rgmii1_clk_125, rgmii1_txen,
+> +                  rgmii1_txclk, rgmii1_txd0, rgmii1_txd1, rgmii1_txd2, rgmii1_txd3,
+> +                  i2s1_bclk, i2s1_wclk, i2s1_sdi, i2s1_sdo, gpio34, rgmii1_rxclk,
+> +                  rgmii1_rxdv, rgmii1_rxd0, rgmii1_rxd1, rgmii1_rxd2, rgmii1_rxd3,
+> +                  spi1_cs0_n, spi1_clk, spi1_d0, spi1_d1, spi1_d2, spi1_d3, spi1_cs1_n,
+> +                  rgmii1_mdc, rgmii1_mdio, rgmii1_intb, usb0_pwren, usb1_pwren,
+> +                  i2c0_scl, i2c0_sda, i2c1_scl, i2c1_sda, i2c2_scl, i2c2_sda,
+> +                  i2c3_scl, i2c3_sda, i2c4_scl, i2c4_sda, i2c5_scl, i2c5_sda,
+> +                  uart0_tx, uart0_rx, uart1_tx, uart1_rx, uart1_cts, uart1_rts,
+> +                  uart2_tx, uart2_rx, jtag2_tck, jtag2_tms, jtag2_tdi, jtag2_tdo,
+> +                  fan_pwm, fan_tach, mipi_csi0_xvs, mipi_csi0_xhs, mipi_csi0_mclk,
+> +                  mipi_csi1_xvs, mipi_csi1_xhs, mipi_csi1_mclk, mipi_csi2_xvs,
+> +                  mipi_csi2_xhs, mipi_csi2_mclk, mipi_csi3_xvs, mipi_csi3_xhs,
+> +                  mipi_csi3_mclk, mipi_csi4_xvs, mipi_csi4_xhs, mipi_csi4_mclk,
+> +                  mipi_csi5_xvs, mipi_csi5_xhs, mipi_csi5_mclk, spi3_cs_n, spi3_clk,
+> +                  spi3_di, spi3_do, gpio92, gpio93, s_mode, gpio95, spi0_cs_n,
+> +                  spi0_clk, spi0_d0, spi0_d1, spi0_d2, spi0_d3, i2c10_scl,
+> +                  i2c10_sda, i2c11_scl, i2c11_sda, gpio106, boot_sel0, boot_sel1,
+> +                  boot_sel2, boot_sel3, gpio111, lpddr_ref_clk ]
+> +
+> +      function:
+> +        description:
+> +          Specify the alternative function to be configured for the
+> +          given pins.
+> +        enum: [ disabled, boot_sel, chip_mode, emmc, fan_tach,
+> +                gpio, hdmi, i2c, i2s, jtag, ddr_ref_clk_sel,
+> +                lpddr_ref_clk, mipi_csi, osc, pcie, pwm,
+> +                rgmii, reset, sata, sdio, spi, s_mode, uart, usb ]
+> +
+> +      input-schmitt-enable: true
+> +
+> +      input-schmitt-disable: true
+> +
+> +      bias-disable: true
+> +
+> +      bias-pull-down: true
+> +
+> +      bias-pull-up: true
+> +
+> +      input-enable: true
+> +
+> +      input-disable: true
+> +
+> +      drive-strength-microamp: true
+> +
+> +    allOf:
+> +      - $ref: pincfg-node.yaml#
+> +      - $ref: pinmux-node.yaml#
+> +
+> +      - if:
+> +          properties:
+> +            pins:
+> +              anyOf:
+> +                - pattern: '^rgmii'
+> +                - const: lpddr_ref_clk
+> +        then:
+> +          properties:
+> +            drive-strength-microamp:
+> +              enum: [3000, 6000, 9000, 12000, 15000, 18000, 21000, 24000]
+> +        else:
+> +          properties:
+> +            drive-strength-microamp:
+> +              enum: [6000, 9000, 12000, 15000, 18000, 21000, 24000, 27000]
+> +
+> +    required:
+> +      - pins
+> +
+> +    additionalProperties: false
+> +
+> +allOf:
+> +  - $ref: pinctrl.yaml#
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    pinctrl@51600080 {
+> +      compatible = "eswin,eic7700-pinctrl";
+> +      reg = <0x51600080 0x1fff80>;
+> +      vrgmii-supply = <&vcc_1v8>;
+> +      gpio10_pins: gpio10-pins {
+
+Drop label.
+
+> +          pins = "jtag1_tdo";
+> +          function = "gpio";
+> +          input-enable;
+> +          bias-pull-up;
+> +      };
+> +    };
+> +
+> +    i2c2 {
+
+Drop this node, not relevant.
+
+
+Best regards,
+Krzysztof
