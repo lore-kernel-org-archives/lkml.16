@@ -1,136 +1,88 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9404FC0E
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 22:39:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8BD11DF723;
+	Tue,  6 May 2025 22:40:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746571195; cv=none; b=twadyVvkmGGYvY5nNcOjePUJtt73eVbsYO10567KQWbVKbnKXkxF63JUPZEwTTFvzQ3UmTvWCdjzDX26pBlRo/iff3ihPEnTVR9qJ4Xodw8XF8XMA83XjPLThK6X2+GnvzThOXJZzoiDGcZTBuvQw4dXT7KuIGHaf8UafVXpdes=
+	t=1746571224; cv=none; b=kLH0WuBNjx8cydtQBhkWNw2LlpT4QTStvPzmwERaF8IEX1oCOsSdtoDYWTYPH2/zCzSCY1A+PEoz0T7t6FT9sI6pO1e5f1p+nb4ThlGF9qMKQ1n8CwK7XW6Daf0HVr0FiLYD33wrPjlzzPlYuINAjnalnqeYBhYJWUtNfuVs5IA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746571195; c=relaxed/simple;
-	bh=9GzFnldB/RPzmJjAClHv/ObE6Ew9kZSOMYJFBVJl3eg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AN7I9GYVbng+Uk6pdzG8U47oQ94YEBW9DZ+yvSg4jFjJvMe5D4PwW05r7v3m2Ti4EYzhM2Y7oUrn5iGWCV+owKOjoDKvp3k4w69+qS/m8wh+D+M5/1uZMMFbGSefPEg7jNslXN+ms89duUM4mdrs69nKw6DDLu/pOLoIlXxs9ok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=dBxvYUbG; arc=none smtp.client-ip=95.215.58.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1746571224; c=relaxed/simple;
+	bh=58MuswtWK5vHvV3fOte1SoNuqyyHmTOuxtWNK3CdJgc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Cj8i+2eqJUW5XyfJ/EfQI67bE/9VE4031VNJZAKTygqpdCCpvsUWarIHOU9FN1W7FhJluBfWuBYtrfjO8DJTIXxfyd4wY5gMwcOfP/XgCvcpPDgw0sbjbjAH0+cX674zoDNdzsXHqlHPbBn6gYIhZtotNSgn/3iXpz/DGEymXgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=O3gFeU5N; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="dBxvYUbG"
-Message-ID: <39753b36-adfd-4e00-beea-b58c1e5606e3@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1746571191;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MGtKCWxeeCvHWwIXpg+TiH0nAUubbBX52QN4JIdpmDA=;
-	b=dBxvYUbGFjSvYPErgbn2TcYVIGRVNpmNzM/8TioVlNVuOPAa0Eoy6QGm+QMdUJI1S/c5Kk
-	SH90tg7O5nhrD6XwUoh5Kwh5p7UVhNWbyid5ILzAO3KUTRUQVfpGfA+046gTFSNWjxZrFe
-	YFaKCJiQNFIjmHFD29gIbGGiKmhAgZ0=
-Date: Tue, 6 May 2025 18:39:43 -0400
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="O3gFeU5N"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1746571218;
+	bh=vQOM4UGcFV2EAkH1U+ltzrtI5kG//euSnT5u5Gebau4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=O3gFeU5NB4IxnA94Bo7WZTL8BZZD4JbGzVLLeDcOdx/GBKOC5I3zw5S6WsIYN6507
+	 JWNHwmzu3i/gQ1miz4Xy0+mWMrB9JzHU+t1U2KRDVyBWHbA5Nq7A5Hdu4XjldPQgwP
+	 GJxDmnv4JZARUKAqPSlveLr5q8RtnzjlmP0E6WdSKgDFcM6ICQZolIevhJkSZTZqHL
+	 NtEybXyvTQuZ846bbxISIe6F54y+aT9xA392L7GltqP2AVP/sa6UqTb9vWR+1o0miu
+	 KMzExw/Q3D1WoX+F3wfiKxPfQCnN5P8YTAeKsmd958IBcCMLqmyWln5louRvfgc7dr
+	 ETMsu8ltR4kkg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZsYJ24xcXz4x6n;
+	Wed,  7 May 2025 08:40:18 +1000 (AEST)
+Date: Wed, 7 May 2025 08:40:18 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: Signed-off-by missing for commit in the kvm-x86
+ tree
+Message-ID: <20250507084018.3af5dbbd@canb.auug.org.au>
+In-Reply-To: <aBqOiq9frzCAkNm_@google.com>
+References: <20250507073027.72fe0914@canb.auug.org.au>
+	<aBqOiq9frzCAkNm_@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [net-next PATCH v3 05/11] net: pcs: lynx: Convert to an MDIO
- driver
-To: Vladimir Oltean <vladimir.oltean@nxp.com>
-Cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>,
- upstream@airoha.com, Christian Marangi <ansuelsmth@gmail.com>,
- linux-kernel@vger.kernel.org, Kory Maincent <kory.maincent@bootlin.com>,
- Heiner Kallweit <hkallweit1@gmail.com>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Clark Wang <xiaoning.wang@nxp.com>, Claudiu Manoil <claudiu.manoil@nxp.com>,
- Ioana Ciornei <ioana.ciornei@nxp.com>, Joyce Ooi <joyce.ooi@intel.com>,
- Madalin Bucur <madalin.bucur@nxp.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, UNGLinuxDriver@microchip.com,
- Wei Fang <wei.fang@nxp.com>, imx@lists.linux.dev,
- linux-stm32@st-md-mailman.stormreply.com
-References: <20250506215841.54rnxy3wqtlywxgb@skbuf>
- <20250415193323.2794214-1-sean.anderson@linux.dev>
- <20250415193323.2794214-1-sean.anderson@linux.dev>
- <20250415193323.2794214-6-sean.anderson@linux.dev>
- <20250415193323.2794214-6-sean.anderson@linux.dev>
- <20250506215841.54rnxy3wqtlywxgb@skbuf>
- <50e809ea-62a4-413d-af63-7900929c3247@linux.dev>
- <50e809ea-62a4-413d-af63-7900929c3247@linux.dev>
- <20250506221834.uw5ijjeyinehdm3x@skbuf>
- <d66ac48c-8fe3-4782-9b36-8506bb1da779@linux.dev>
- <20250506222928.fozoqcxuf7roxur5@skbuf>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sean Anderson <sean.anderson@linux.dev>
-In-Reply-To: <20250506222928.fozoqcxuf7roxur5@skbuf>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: multipart/signed; boundary="Sig_/ARn4BuCttfMFdJpE5ch0g4F";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On 5/6/25 18:29, Vladimir Oltean wrote:
-> On Tue, May 06, 2025 at 06:20:32PM -0400, Sean Anderson wrote:
->> On 5/6/25 18:18, Vladimir Oltean wrote:
->> > On Tue, May 06, 2025 at 06:03:35PM -0400, Sean Anderson wrote:
->> >> On 5/6/25 17:58, Vladimir Oltean wrote:
->> >> > Hello Sean,
->> >> > 
->> >> > On Tue, Apr 15, 2025 at 03:33:17PM -0400, Sean Anderson wrote:
->> >> >> diff --git a/drivers/net/pcs/pcs-lynx.c b/drivers/net/pcs/pcs-lynx.c
->> >> >> index 23b40e9eacbb..bacba1dd52e2 100644
->> >> >> --- a/drivers/net/pcs/pcs-lynx.c
->> >> >> +++ b/drivers/net/pcs/pcs-lynx.c
->> >> >> @@ -1,11 +1,15 @@
->> >> >> -// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
->> >> >> -/* Copyright 2020 NXP
->> >> >> +// SPDX-License-Identifier: GPL-2.0+
->> >> >> +/* Copyright (C) 2022 Sean Anderson <seanga2@gmail.com>
->> >> >> + * Copyright 2020 NXP
->> >> >>   * Lynx PCS MDIO helpers
->> >> >>   */
->> >> >>  
->> >> >> -MODULE_DESCRIPTION("NXP Lynx PCS phylink library");
->> >> >> -MODULE_LICENSE("Dual BSD/GPL");
->> >> >> +MODULE_DESCRIPTION("NXP Lynx PCS phylink driver");
->> >> >> +MODULE_LICENSE("GPL");
->> >> > 
->> >> > What's the idea with the license change for this code?
->> >> 
->> >> I would like to license my contributions under the GPL in order to
->> >> ensure that they remain free software.
->> >> 
->> >> --Sean
->> > 
->> > But in the process, you are relicensing code which is not yours.
->> > Do you have agreement from the copyright owners of this file that the
->> > license can be changed?
->> 
->> I'm not relicensing anything. It's already (GPL OR BSD-3-Clause). I'm
->> just choosing not to license my contributions under BSD-3-Clause.
->> 
->> --Sean
-> 
-> You will need to explain that better, because what I see is that the
-> "BSD-3-Clause" portion of the license has disappeared and that applies
-> file-wide, not just to your contribution.
+--Sig_/ARn4BuCttfMFdJpE5ch0g4F
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-But I also have the option to just use the GPL-2.0+ license. When you
-have an SPDX like (GPL-2.0+ OR BSD-3-Clause) that means the authors gave
-permission to relicense it as
+Hi Sean,
 
-- BSD-3-Clause
-- GPL-2.0+
-- GPL-2.0+ OR BSD-3-Clause
-- GPL-2.0
-- GPL-2.0 OR BSD-3-Clause
-- GPL-3.0
-- GPL-3.0 OR BSD-3-Clause
-- GPL-4.0 (if it ever happens)
+On Tue, 6 May 2025 15:34:50 -0700 Sean Christopherson <seanjc@google.com> w=
+rote:
+>
+> My bad, I fat-fingered a push.  The bad commit is now gone.
 
-I want my contributions to remain free software, so I don't want to
-allow someone to take the BSD-3-Clause option (without the GPL).
+Thanks.
 
---Sean
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/ARn4BuCttfMFdJpE5ch0g4F
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgaj9IACgkQAVBC80lX
+0GyL7Af+O6TRi3Liy4RdgxN/+l3lYsT8NyPiFMx28lul6taCgmDUL+K2B2P9c6+2
+itIvIVWGnHIbGRk5uJRnp2bzFLp+XSQNXcZuLnSlzb9fgqmoXqSVP6sRErsfIS+u
+3Q4yX/Ihgawz0pzc1h1Jas6uv8tdiHAo+dZXSiXh8E05qsUlJrHCDqS8m4EXW9tp
+0Jm8wq6C5lPgVeGVQ2sMSx8piOApZzIqGhM4ncFM5Hc4A6T+RLw+u0quGZDUEcrR
+tBXzXJAuA1hOhV4Uut6T3nzhj1pkU5ZkAuI6dcT4JIa5G3b+fjV5myF/XxhxhQOZ
+ww7paZ/343Kb8wBIRKSLYtzf8NdzMA==
+=qcgF
+-----END PGP SIGNATURE-----
+
+--Sig_/ARn4BuCttfMFdJpE5ch0g4F--
