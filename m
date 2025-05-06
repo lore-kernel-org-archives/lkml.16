@@ -1,120 +1,128 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0792121CC46;
-	Tue,  6 May 2025 03:30:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F42B28DF2A
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 03:30:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746502259; cv=none; b=lqC2mUcPAodwuR5s81WDJgHg9Mz/ITNjso0vC2tJG7aLUYB2XUZIZs0x9nn1T/qPS98MkvlbXqf757I4nRWg3SOXDJ2q25ZK06n6L80G+oVuXXmmN8yYynuEJ+TaKHIf5faWNTDcxqq0GolwQ6CC9OvgPMIlHEOgDWMLzPdQOt8=
+	t=1746502227; cv=none; b=in5FVrawaQak5PRpfxAW+xwGjM5LcrKNmI/LOFRtsHkxuFf/3bC259hlcBaW1VVZFccl91ND8zoJ6wkZoxGIg7j3Rhc6C/wvg8U3KcYYGipqvyKXuHnUHURrpQMsIyv+TaqFP6GeEloaNb5eeD8ettpoEOkebdqoxSkEx4k6MX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746502259; c=relaxed/simple;
-	bh=FQeEv8mzsne1Ekkhh4vm4/236JXt/QQUApEcOzWKQHI=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TuJp/5WlTbd86bPtbVZyt2Kw9DLl9hP8Aq1yZhn1UUd78FMRZ+wGj1gdQRuQFCy3JjWYJjhWVXMLJPcz2ipLofleDKU4JAFrLABM+me/14ostUeyr1ycp/MRUcMiesI7h8eNJkkmYiLQTgbD/o6qG82+asQW0jtGMCKLEengCqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Zs3n816cFz2TSDR;
-	Tue,  6 May 2025 11:30:20 +0800 (CST)
-Received: from dggemv706-chm.china.huawei.com (unknown [10.3.19.33])
-	by mail.maildlp.com (Postfix) with ESMTPS id 01CE81402CA;
-	Tue,  6 May 2025 11:30:53 +0800 (CST)
-Received: from kwepemq200017.china.huawei.com (7.202.195.228) by
- dggemv706-chm.china.huawei.com (10.3.19.33) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 6 May 2025 11:30:52 +0800
-Received: from hulk-vt.huawei.com (10.67.174.72) by
- kwepemq200017.china.huawei.com (7.202.195.228) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 6 May 2025 11:30:52 +0800
-From: Cai Xinchen <caixinchen1@huawei.com>
-To: <linux-kernel@vger.kernel.org>, <selinux@vger.kernel.org>
-CC: <paul@paul-moore.com>, <stephen.smalley.work@gmail.com>,
-	<omosnace@redhat.com>, <ericsu@linux.microsoft.com>, <caixinchen1@huawei.com>
-Subject: [PATCH] SELinux: Add check for the user data passed to kcalloc in hashtab_init
-Date: Tue, 6 May 2025 03:18:33 +0000
-Message-ID: <20250506031833.6107-1-caixinchen1@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1746502227; c=relaxed/simple;
+	bh=uQ2m9taISz9kgdzKcaOZy7/AGaZmKNDvMtyrnRVo8Ek=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EaEG2HI4WX6Pk3HMYCmzcOu+notbOisfOpop8yoZDGZjEwEjqrF1PQ0FNuJdqaSjeiUqr7LrCph2W3d0rc9oSTwMc0bJ0HtEydr1j7yaF+jwtPiFvh5S8cVFzMYnPV6xFj0ehQiwej5FvmLmaC2YHE8hsYTRt3OENGI66qvlWEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=WGln8P2b; arc=none smtp.client-ip=115.124.30.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="WGln8P2b"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1746502215; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=qVR8T8FmyXrwS8bihvMwLtX38nPsMBJYh/Ep2JgBEjU=;
+	b=WGln8P2btndWqDmvzk/Wd109WtLZOxO1+o/6HxAjtgveEcEMzmGzfS/9jHnQLqWof+miirVxRxXMNUdKt1NcnE/ZSJYJHcZEfz4T6vJ6XeoejH033KbRlWnC9oKZQERUC+p8goop3k/PUpcUJDJSIL52JQ8d4dGv0yEyP7z2IN4=
+Received: from 30.221.130.226(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WZJNpx4_1746502214 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 06 May 2025 11:30:15 +0800
+Message-ID: <8de6a220-45a3-4885-890f-0538522e620c@linux.alibaba.com>
+Date: Tue, 6 May 2025 11:30:14 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemq200017.china.huawei.com (7.202.195.228)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5] erofs: lazily initialize per-CPU workers and CPU
+ hotplug hooks
+To: Sandeep Dhavale <dhavale@google.com>, linux-erofs@lists.ozlabs.org,
+ Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
+ Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>
+Cc: kernel-team@android.com, linux-kernel@vger.kernel.org
+References: <20250501183003.1125531-1-dhavale@google.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20250501183003.1125531-1-dhavale@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-When the user writes some data to the file /sys/fs/selinux/policy,
-there is no check for the user buf passed to kcalloc. Syzkaller shows
- this warning:
-WARNING: CPU: 1 PID: 6642 at mm/page_alloc.c
+Hi Sandeep,
 
-__alloc_pages_noprof
-___kmalloc_large_node
-__kmalloc_large_node_noprof
-__kmalloc_noprof
-hashtab_init
-common_read
-policydb_read
-security_load_policy
-sel_write_load
-vfs_write
-ksys_write
-do_syscall_64
+On 2025/5/2 02:30, Sandeep Dhavale wrote:
+> Currently, when EROFS is built with per-CPU workers, the workers are
+> started and CPU hotplug hooks are registered during module initialization.
+> This leads to unnecessary worker start/stop cycles during CPU hotplug
+> events, particularly on Android devices that frequently suspend and resume.
+> 
+> This change defers the initialization of per-CPU workers and the
+> registration of CPU hotplug hooks until the first EROFS mount. This
+> ensures that these resources are only allocated and managed when EROFS is
+> actually in use.
+> 
+> The tear down of per-CPU workers and unregistration of CPU hotplug hooks
+> still occurs during z_erofs_exit_subsystem(), but only if they were
+> initialized.
+> 
+> Signed-off-by: Sandeep Dhavale <dhavale@google.com>
+> ---
+> v4: https://lore.kernel.org/linux-erofs/20250423061023.131354-1-dhavale@google.com/
+> Changes since v4:
+> - remove redundant blank line as suggested by Gao
+> - add a log for failure path as suggested by Chao
+> - also add success log which will help in case there was a failure
+>    before, else stale failure log could cause unnecessary concern
+> 
+>   fs/erofs/zdata.c | 65 ++++++++++++++++++++++++++++++++++++------------
+>   1 file changed, 49 insertions(+), 16 deletions(-)
+> 
+> diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+> index 0671184d9cf1..a5d3aef319b2 100644
+> --- a/fs/erofs/zdata.c
+> +++ b/fs/erofs/zdata.c
+> @@ -291,6 +291,9 @@ static struct workqueue_struct *z_erofs_workqueue __read_mostly;
+>   
+>   #ifdef CONFIG_EROFS_FS_PCPU_KTHREAD
+>   static struct kthread_worker __rcu **z_erofs_pcpu_workers;
+> +static atomic_t erofs_percpu_workers_initialized = ATOMIC_INIT(0);
+> +static int erofs_cpu_hotplug_init(void);
+> +static void erofs_cpu_hotplug_destroy(void);
 
-This warning can be reproduced by writing this content to
-/sys/fs/selinux/policy
-8cff7cf9 08000000 5345204c 696e7578 15000000 e0ff962a 08000000 07000000
-4cf523cd 7eec2688 6d70a6b7 c78b496f 1a0a192c ea34ff41 70581a74 3ff0cfb9
-7ea0f0d1 70d1fe14 41c2f7c8 ea1c78dd 17a19249 35210081 a83c30ec 4171450b
-fc1de12c fe1ff342 a887
+We could move downwards to avoid those forward declarations;
 
-Add check to prevent the size passed to kcalloc larger than MAX_PAGE_ORDER
-after get_order.
+>   
+>   static void erofs_destroy_percpu_workers(void)
+>   {
+> @@ -336,9 +339,45 @@ static int erofs_init_percpu_workers(void)
+>   	}
+>   	return 0;
+>   }
+> +
+> +static int z_erofs_init_pcpu_workers(void)
 
-Signed-off-by: Cai Xinchen <caixinchen1@huawei.com>
----
- security/selinux/ss/hashtab.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+How about passing in `struct super_block *` here?
+Since print messages are introduced, it's much better to
+know which instance caused the error/info.
 
-diff --git a/security/selinux/ss/hashtab.c b/security/selinux/ss/hashtab.c
-index 383fd2d70878..18bcf3978c9e 100644
---- a/security/selinux/ss/hashtab.c
-+++ b/security/selinux/ss/hashtab.c
-@@ -30,6 +30,21 @@ static u32 hashtab_compute_size(u32 nel)
- 	return nel == 0 ? 0 : roundup_pow_of_two(nel);
- }
- 
-+static bool is_order_out_of_range(u32 size, struct hashtab *h)
-+{
-+	size_t bytes;
-+	u32 order;
-+
-+	if (unlikely(check_mul_overflow(size, sizeof(*h->htable), &bytes)))
-+		return true;
-+
-+	order = get_order(bytes);
-+	if (order > MAX_PAGE_ORDER)
-+		return true;
-+
-+	return false;
-+}
-+
- int hashtab_init(struct hashtab *h, u32 nel_hint)
- {
- 	u32 size = hashtab_compute_size(nel_hint);
-@@ -40,6 +55,9 @@ int hashtab_init(struct hashtab *h, u32 nel_hint)
- 	h->htable = NULL;
- 
- 	if (size) {
-+		if (is_order_out_of_range(size, h))
-+			return -ENOMEM;
-+
- 		h->htable = kcalloc(size, sizeof(*h->htable), GFP_KERNEL);
- 		if (!h->htable)
- 			return -ENOMEM;
--- 
-2.34.1
+> +{
+> +	int err;
+> +
+> +	if (atomic_xchg(&erofs_percpu_workers_initialized, 1))
+> +		return 0;
+> +
+> +	err = erofs_init_percpu_workers();
+> +	if (err) {
+> +		erofs_err(NULL, "per-cpu workers: failed to allocate.");
+> +		goto err_init_percpu_workers;
+> +	}
+> +
+> +	err = erofs_cpu_hotplug_init();
+> +	if (err < 0) {
+> +		erofs_err(NULL, "per-cpu workers: failed CPU hotplug init.");
+> +		goto err_cpuhp_init;
+> +	}
+> +	erofs_info(NULL, "initialized per-cpu workers successfully.");
 
+
+Otherwise it looks good to me know.
+
+Thanks,
+Gao Xiang
