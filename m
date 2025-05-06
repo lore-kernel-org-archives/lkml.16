@@ -1,124 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16E9B28031C
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 17:43:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E42D723D2B1
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 17:44:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746553412; cv=none; b=TpQSilCDimA20HD0r8RNew6YeXTJOwHDvtKPFcERo4sDs13kFX3mKqyg/fEBdfi3b4Db5riP0Y9MqZtv6PuWsfNujc40lMKdG43GVroOh4BM4CB0mzBiMAFSLf6D/ysY+o1opPh23DoxNmLyx+jmUwgYy3UxNbAv8KeOnC8LKCI=
+	t=1746553464; cv=none; b=h1uwOrvny2htNLoY2T/SRR0iKVHPgxR+z7KCEsVYrJ+uqzcBNx0e7ggQgkSrExHIAsSkn/sraWok1dZyHVpnSFNQS9juBLIhsbNbNvl1dBgPgeILfXTBqCAiGg+hpRuxDOjgodBaScUkl7PQw4DgnGO0U7kZlULTs3Pag5DN/H8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746553412; c=relaxed/simple;
-	bh=mgzNx2JitA8EJLTJpOcjyilT7XTQTJY4X0lnZ5Pikjs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r7J2C06boF4VpRYj8YLCkrJM5nt8f8f5mSsXXqNZFzVfznIbtyu9jwqs1fgBI9Qoo2PdtuaxsbaOJVSquitIyt9gR9QjDKKJHJUzyBXuJ8K0n0lemkFN0tXqd3p0QZcHVT/DPpfFo3dsj54bPhNnVR4eHxYIvN88Aj2sc+7P6sg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=UET0dNXp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746553464; c=relaxed/simple;
+	bh=rC0C12NOCKJh0NfX7Cz0tfHB41yjQVr31E4OUzZC3bM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jYJ077j+dOFS6wobDq1122orRWfTe2TSrGaX/ww8brBXaMlzfMtdic3+NpRXS5Y4BA6atLDfcebatZDBnK8EJP6H+t80TRj8SmLOfZJePqKulrk/mflqCg0HwGk0KHjC/6CpSjsunyPFHp1CEXFnKswY8hn9OY+VoGntsVUaN9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=KBQy6grr; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="UET0dNXp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0863BC4CEE4;
-	Tue,  6 May 2025 17:43:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1746553411;
-	bh=mgzNx2JitA8EJLTJpOcjyilT7XTQTJY4X0lnZ5Pikjs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UET0dNXpBeH8HtAuUVINk3NWN0LU3Z8wLW3KIBn9mdjMubhFzA/t5ngkbr/wS2xIy
-	 vUEiIkkIjuCZsc3veDxwvzq5T5cwEzmql8Vw86a3vHrbECd/+Gu1nl045ZJ2c7Hyus
-	 uIb0w2mZSzv8ZYfsvlOeqZXOdNBa2I7rzAxGlgLQ=
-Date: Tue, 6 May 2025 19:43:28 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Max Kellermann <max.kellermann@ionos.com>
-Cc: tj@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fs/kernfs: implement STATX_BTIME
-Message-ID: <2025050600-economist-display-2d25@gregkh>
-References: <20250506164017.249149-1-max.kellermann@ionos.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="KBQy6grr"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5e6f4b3ebe5so10471603a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 10:44:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1746553451; x=1747158251; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=xCvURJIlT7xu3GAB0dy/1xpWZQI44cAwmeBh24G9KJM=;
+        b=KBQy6grrZEfwUyigc2p5ZN4zduDzI6KZqHKoTd4GictQHeAPEoTYhEF34idszlBD5O
+         Hn42skuPyH66AtP+DGDLczSjFoJRWKNUX2GqM5Ft6mWDDzJBiRcfofNYiSSscoHuehIS
+         eRp7s0oW9o6/8iFeHjTSg0pPj/+jigqUjXc3I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746553451; x=1747158251;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xCvURJIlT7xu3GAB0dy/1xpWZQI44cAwmeBh24G9KJM=;
+        b=iJGRPG2NBr9JUGKiSjue4qUydJcsUKE2IwdI8XP6DE8/ZwJWNS6kk8REEn2IKCdNai
+         nrBdSfYVIdaP2PaZ1zT1skhpN0qOSKqwk31M7BQaJvnRVb2T0bL2CcwJiMxDEyH9k8pr
+         xnHruxVdJj4CHSFLl0cBcyCA3Ti6YHpxCmnaqntXc0zy8dFjICTRYnyM6oUavw7ouzMW
+         WSxqvfx/rzuXmBAgCPmi99icwRUEy3tHGlYYd0cgGQAGw9Khs1rT9FEJeF4Qvwdy129m
+         wKzXK60CTzE0s+uSELW7ZZkAyJvNpCAcnQY+dRcdzbnNrRw0/XoOM2kzh0UD49ujdMkn
+         qQ7A==
+X-Forwarded-Encrypted: i=1; AJvYcCV0GWh8DlrKCdUNKQU7fzyHuporLSiulNwyRX4mB83hMBb1AnMDxfa7JmW03W4zC6Jk1pLJvi+fPhm8PZs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyv0TTcnSKyL612xNSp3sWPE2Mt1SNHZ2KMEDud1xF9Xws4BbdF
+	BWkHLc16wmE+c/y6RxoVBF9rtEiLEwJHx6OU9Ywd26+t9aXd6qTz1K5WTKwr7LHHDL9442vFq6v
+	6ipk=
+X-Gm-Gg: ASbGncuyHgp3SV3WNRLYLMdM1xyvgMZLHeYQwBz//GC8+4uabEy2ZFrGLb03t4GUK3e
+	yx6DKAIalm+IMNExqSNVIDH3hvszB2XDqLenpqgzXbhTuMEziTzIdKmk8vf1qWRlgFsb3vRerCL
+	/iLnR4Wm9bucf8w1UdG6yNxXCVxbFQbHMJRo21GY2NhCTkTko1aKle7y+KHHCjzMHcjUjxzEr38
+	0+w+EE0VirchGXyL5yVA3CI44qGcWH2v8CzmNXcApIIQyWo3pLWDrPoTbZWdWxD80z+Qq0AvK8e
+	do/Qoe/lDdKAK6Oyo8rw0HhibkCYkczMXzeyuWX093kgikfSry2Es6gNQzq2PBV+wYDj7lbi5Xl
+	Nd7cgmmO1X3EecFY=
+X-Google-Smtp-Source: AGHT+IGX2rHTSEmczL8SYaK7jaCJ3Q20+S/KF9p/VtObvZeeg0eASb0NmseUIEthiHAn4gvas0Fb3w==
+X-Received: by 2002:a17:907:60d5:b0:aca:c699:8d3a with SMTP id a640c23a62f3a-ad1e8bc8c10mr40367266b.22.1746553450760;
+        Tue, 06 May 2025 10:44:10 -0700 (PDT)
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com. [209.85.208.49])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad189540ea1sm736181366b.184.2025.05.06.10.44.10
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 06 May 2025 10:44:10 -0700 (PDT)
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5e6f4b3ebe5so10471567a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 10:44:10 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXZkkB9nG4DE/5mhJP+RylI2LlCay5RfOeIcylZ9CHT4oyxO8auI7bQ2E7s7D0f9HA4GogHNtXTcJ08Rpw=@vger.kernel.org
+X-Received: by 2002:a05:6402:5c8:b0:5e7:b011:6c09 with SMTP id
+ 4fb4d7f45d1cf-5fbe9e68bcfmr158763a12.18.1746553449840; Tue, 06 May 2025
+ 10:44:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250506164017.249149-1-max.kellermann@ionos.com>
+References: <20250506154532.1281909-5-ardb+git@google.com> <20250506154532.1281909-8-ardb+git@google.com>
+ <CAHk-=whrcutH0LcMmaeJxxMeYpw2R5T80yoQAXbrRHNSTCB0Pw@mail.gmail.com>
+ <CAMj1kXFSae=stazUv8doka-zLOnDdXXR4ASxHKe5f97ikg3V2A@mail.gmail.com>
+ <CAHk-=whxP5Ywpv-U=2NPFhk929VHB9_kdp10+HFJQ4VxEGdX9A@mail.gmail.com> <CAMj1kXGwYXXpjPgDwjKMEZJkuGJ8ZuCpMpc7fTvo58PNtu-czA@mail.gmail.com>
+In-Reply-To: <CAMj1kXGwYXXpjPgDwjKMEZJkuGJ8ZuCpMpc7fTvo58PNtu-czA@mail.gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Tue, 6 May 2025 10:43:51 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiz5oXq2f_87hHViN2TZQO9VHpaWb5fWWGJbUWQw1ChVw@mail.gmail.com>
+X-Gm-Features: ATxdqUEue06zP1DrNrIUDeETi4Hz4Hcx1vEhqBSEEk1kniYZ0QrNBPJbANsbBoQ
+Message-ID: <CAHk-=wiz5oXq2f_87hHViN2TZQO9VHpaWb5fWWGJbUWQw1ChVw@mail.gmail.com>
+Subject: Re: [RFC PATCH 3/3] x86/boot: Use alternatives based selector for
+ 5-level paging constants
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
+	Ingo Molnar <mingo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, May 06, 2025 at 06:40:17PM +0200, Max Kellermann wrote:
-> This allows finding out when an inode was initially created, for
-> example:
-> 
-> - when was a device plugged in (and its node in sysfs was created)?
-> - when was a cgroup created?
-> 
-> kernfs currently only implements `atime`, `mtime` and `ctime`.  All of
-> these are volatile (`mtime` and `ctime` get updated automatically, and
-> `atime` can be mainpulated using utime()).  Therefore, I suggest
-> implementing STATX_BTIME to have a reliable birth time in userspace.
-> 
-> Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
-> ---
->  fs/kernfs/dir.c        | 2 ++
->  fs/kernfs/inode.c      | 6 ++++++
->  include/linux/kernfs.h | 7 +++++++
->  3 files changed, 15 insertions(+)
-> 
-> diff --git a/fs/kernfs/dir.c b/fs/kernfs/dir.c
-> index fc70d72c3fe8..9a6857f2f3d7 100644
-> --- a/fs/kernfs/dir.c
-> +++ b/fs/kernfs/dir.c
-> @@ -678,6 +678,8 @@ static struct kernfs_node *__kernfs_new_node(struct kernfs_root *root,
->  			goto err_out3;
->  	}
->  
-> +	ktime_get_real_ts64(&kn->btime);
-> +
->  	return kn;
->  
->   err_out3:
-> diff --git a/fs/kernfs/inode.c b/fs/kernfs/inode.c
-> index b83054da68b3..1ff2ee62bfe6 100644
-> --- a/fs/kernfs/inode.c
-> +++ b/fs/kernfs/inode.c
-> @@ -189,6 +189,12 @@ int kernfs_iop_getattr(struct mnt_idmap *idmap,
->  	struct kernfs_root *root = kernfs_root(kn);
->  
->  	down_read(&root->kernfs_iattr_rwsem);
-> +
-> +	if (request_mask & STATX_BTIME) {
-> +		stat->result_mask |= STATX_BTIME;
-> +		stat->btime = kn->btime;
-> +	}
-> +
->  	kernfs_refresh_inode(kn, inode);
->  	generic_fillattr(&nop_mnt_idmap, request_mask, inode, stat);
->  	up_read(&root->kernfs_iattr_rwsem);
-> diff --git a/include/linux/kernfs.h b/include/linux/kernfs.h
-> index b5a5f32fdfd1..9332aadf4b48 100644
-> --- a/include/linux/kernfs.h
-> +++ b/include/linux/kernfs.h
-> @@ -229,6 +229,13 @@ struct kernfs_node {
->  	void			*priv;
->  	struct kernfs_iattrs	*iattr;
->  
-> +	/*
-> +	 * The birth time (for STATX_BTIME).  It lives here and not in
-> +	 * struct kernfs_iattrs because the latter is only created on
-> +	 * demand, not at actual node birth time.
-> +	 */
-> +	struct timespec64	btime;
+On Tue, 6 May 2025 at 10:26, Ard Biesheuvel <ardb@kernel.org> wrote:
+>
+> In the light of the above, care to comment on the previous approach?
+>
+> https://lore.kernel.org/all/20250504095230.2932860-28-ardb+git@google.com/
 
-You did just make this structure bigger, which has a real effect on many
-systems (think 32bit s390 systems with 30k disks.)  Are you sure this is
-really needed?
+I have to say, I find that one much more palatable.
 
-What userspace tools want this in such that they can not determine this
-any other way?  What do they want this information for?  What is going
-to depend and require this to warrent it being added like this?
+That said, I still think it would be better to get rid of the early
+case *entirely*.
 
-I'm loath to increase the size of this structure just for "it would be
-nice" type of things.  We need to see a real user and a real use case
-for this please.
+ So it would be lovely to have a subsequent patch that just makes the
+"before fixup" case result in an UD2 instead of "read cr4 and check
+the LA57 bit" and then fix the fallout.
 
-And knowing when a device shows up in the system isn't that, sorry, the
-kernel log shows that for you already, right?
+I think that fallout could be handled by having it be an exception
+that prints out a warning, and then jumps to the right target.
+Anything else would be very painful (as in "oh, the machion doesn't
+boot, because things go wrong during early boot").
 
-thanks,
+But I think that first version of yours is simpler and more
+straightforward than the later alternatives, and it does get rid of
+that nasty USE_EARLY_PGTABLE_L5 thing.
 
-greg k-h
+I just think that in a perfect world we could then do more cleanups on
+top of that.
+
+              Linus
