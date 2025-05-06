@@ -1,268 +1,117 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp-fw-6001.amazon.com (smtp-fw-6001.amazon.com [52.95.48.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9B061C5D72;
-	Tue,  6 May 2025 19:27:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5BFD72624;
+	Tue,  6 May 2025 19:29:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.95.48.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746559673; cv=none; b=k01V9oh7cbWwdz4qeHNTFEsYhdD9tg5RqEH1Yme2JviGfPWtsoiOwt3oWtgb05KrlJnkswRCKRHRhf+2v2QwmYqUBTuHoRkCDW7t3lDlo1mbOZW5RrshYg3PT6/SY6Gq+9lntUR4eUV2d9FVQHG0aFTiw6DERPUVTfMx1pV9cIM=
+	t=1746559780; cv=none; b=faWhKhOu5EKqKn5p/Id3CSlau/MajUDow+hs9CkO07+U4Hbdt726BpJs7+pfBwRlFUijmx0z7oS1atIW8iwvYnq+rlkW5gOA7sjs80dKkiwAi13jKXPKwg1NprLbuWUSZXvIOiRTKwpESZKHz5hUdIkQ/DxoHz/y0n+5z15oK40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746559673; c=relaxed/simple;
-	bh=xkUdm8gUojXZKd4b0QSbhbZRULi2i0KKRxD2jDItZoY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tLBcuxg/PLCImolbYrR+vnCEPKGqm0idc2Cn8T8hEARQI2hcR4asInixVKoKpXSOp2ibo7RsDcl41I/p5SatSX6nibQcsGR//thicU25EwtouZhEJsAxUaTPbhUXnrLbe3LdZZX0vRFVlezUWYPuSfqHSKe7gyDghd54wpwbwws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=kakncqkO; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1746559780; c=relaxed/simple;
+	bh=b1VVsab0OH/DxDyZuw5vIf9OGWV1aWvyxGG6Y4CMI48=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PdFuv/ni8y1Gs8vwIJ8YW57EJFHyURPwT0YRRjj4C6idhPEzpmbL5A2d9qznfa3eCkyQSvg1sNdt7wJ+j+xuQdbMuBs2ro/11KwxYnAox4ueFq/sHVSPNdHXIAKlt+rx73lgK7v2JnRyt83gUa6X8xpoJvYDyW0buLeHQeCPpqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=rqJnXozN; arc=none smtp.client-ip=52.95.48.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="kakncqkO"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 546B4jWd018011;
-	Tue, 6 May 2025 19:27:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=9CKr8L
-	n3nt2SxOfg0/UtWumQ6eO2SXY096BCvVYgX/0=; b=kakncqkOKMEU6XYcuzsUR8
-	f+H+Mw9nr30pWt7wXPEQNWq9Sf5NRMDFyDS3V87Qhio75GGa6HLrMWeV0nO0/m1E
-	6NQZcO0pgZHOpGZ69s5k08xHSNZM2GEcRD7omQbpi8b3DX/mb+aX2v/rJIuKObXR
-	gWAo/CuKUqFsHkXScRSMuGy1NJU1tsN8LEI+KMhpa+rrln9uIfGJ6Uz7q2dZ84iS
-	d04/l/vJ1fqTF4TZcXc/6nHMkOW+AaOybqMzuHigB6zcrqG82UNQhMbnNXs+MUiv
-	rzey0EVoTRhUY1vFfMRuiqFlNur0uLzxpBuA+N2S0h1UadUFZ+46P4mY8ITnmksw
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46f4wkn9p0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 06 May 2025 19:27:37 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 546JRarT023249;
-	Tue, 6 May 2025 19:27:37 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46f4wkn9nx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 06 May 2025 19:27:36 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 546Hi2ao014082;
-	Tue, 6 May 2025 19:27:36 GMT
-Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 46dypkmqn0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 06 May 2025 19:27:35 +0000
-Received: from smtpav02.dal12v.mail.ibm.com (smtpav02.dal12v.mail.ibm.com [10.241.53.101])
-	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 546JRZ2c18022938
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 6 May 2025 19:27:35 GMT
-Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0AAE65805A;
-	Tue,  6 May 2025 19:27:35 +0000 (GMT)
-Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6E7BE58051;
-	Tue,  6 May 2025 19:27:34 +0000 (GMT)
-Received: from [9.61.28.170] (unknown [9.61.28.170])
-	by smtpav02.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  6 May 2025 19:27:34 +0000 (GMT)
-Message-ID: <3fe59767-954b-4c2c-a602-9801f1c1080a@linux.ibm.com>
-Date: Tue, 6 May 2025 15:27:34 -0400
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="rqJnXozN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1746559779; x=1778095779;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=eCdDBNAJ30AvlG3uxF4+zSKk9L3XGdJAilQrs6Phzuw=;
+  b=rqJnXozNH3EqnifXC+klhiOAIS2EZF3dHwUniQAC9LnfNJV2SKE0wLCK
+   1kCEE3PF/VUMAyVDDd6PjQdNkwlumjN7wcvxcUulPKIUR26gBOF3Ho3hN
+   dDIV8vHq5UQ/Xyt2aA6EAMSsws1SJZSZw4eLFY6cgUTVli9qINnNp/XvY
+   4=;
+X-IronPort-AV: E=Sophos;i="6.15,267,1739836800"; 
+   d="scan'208";a="487328028"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.2])
+  by smtp-border-fw-6001.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 19:29:33 +0000
+Received: from EX19MTAUWB001.ant.amazon.com [10.0.7.35:23426]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.21.231:2525] with esmtp (Farcaster)
+ id e0cbbc4a-76b6-456b-b756-aa36bf60c849; Tue, 6 May 2025 19:29:33 +0000 (UTC)
+X-Farcaster-Flow-ID: e0cbbc4a-76b6-456b-b756-aa36bf60c849
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Tue, 6 May 2025 19:29:31 +0000
+Received: from 6c7e67bfbae3.amazon.com (10.187.170.44) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Tue, 6 May 2025 19:29:27 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <brauner@kernel.org>
+CC: <alexander@mihalicyn.com>, <bluca@debian.org>, <daan.j.demeyer@gmail.com>,
+	<davem@davemloft.net>, <david@readahead.eu>, <edumazet@google.com>,
+	<horms@kernel.org>, <jack@suse.cz>, <jannh@google.com>, <kuba@kernel.org>,
+	<kuniyu@amazon.com>, <lennart@poettering.net>,
+	<linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<me@yhndnzj.com>, <netdev@vger.kernel.org>, <oleg@redhat.com>,
+	<pabeni@redhat.com>, <viro@zeniv.linux.org.uk>, <zbyszek@in.waw.pl>
+Subject: Re: [PATCH RFC v3 08/10] net, pidfs, coredump: only allow coredumping tasks to connect to coredump socket
+Date: Tue, 6 May 2025 12:28:44 -0700
+Message-ID: <20250506192920.17567-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250506-buchmacher-gratulant-9960af036671@brauner>
+References: <20250506-buchmacher-gratulant-9960af036671@brauner>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] powerpc/pseries: Correct secvar format representation
- for static key management
-To: Andrew Donnellan <ajd@linux.ibm.com>,
-        Srish Srinivasan <ssrish@linux.ibm.com>,
-        linux-integrity@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Cc: maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
-        christophe.leroy@csgroup.eu, naveen@kernel.org, zohar@linux.ibm.com,
-        linux-kernel@vger.kernel.org
-References: <20250430090350.30023-1-ssrish@linux.ibm.com>
- <20250430090350.30023-2-ssrish@linux.ibm.com>
- <87e1185273ce21e5fd69ff071a1be986c2a0301a.camel@linux.ibm.com>
-Content-Language: en-US
-From: Nayna Jain <nayna@linux.ibm.com>
-In-Reply-To: <87e1185273ce21e5fd69ff071a1be986c2a0301a.camel@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=Up9jN/wB c=1 sm=1 tr=0 ts=681a62a9 cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=UZ5C6JHDXKJ_dhtl4DAA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: 0cvndxHY9UJMP2VkpR2QjnVifzB51N3Z
-X-Proofpoint-GUID: XxBzFcS7CkdmKszy940OiMo5s8xoMgWM
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA2MDE4MCBTYWx0ZWRfX46/rbUTAY6UT biEU1yq0oDcrDTH/4D4an7SnnND8aQovGaKOH3cEuwnzPKdgRlkBvyDiKU2r12wSWWBhqlBP7d4 fZhyaRJaF3b8PvG8yyDmWmt3CjuC7/wqT/rooiB4+VsDjiimlEdpQugGThn3Bp1lUZHkk/PlANv
- McbmP2OMtusaaFaVEDqr4RJWLdZb5jQ6aUxRNS1N0icYTIyXhpj3nF5iVhbaMnG0EnWXqX/IAFV dY0h6dkwrjXElwXwfsO+kz9NQXIL3niyKiEGorWav2jm0XWdLsQNnNAQImw9j6DAb7lDSjBhf0S SGLg8Wy5enTlak39o6Bb/2rcs8FocrfNDQ+OE5aPR8areetI8K1IeElgnILi6HRXRugWKmDXjfb
- 0TuFq6/xuAzuXsMgflyWsj7cpJpS4qvrXyKvG/2Hygh72bQoHNbjRfKfgde0SYiLuoig/Ua1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-06_08,2025-05-06_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 spamscore=0
- phishscore=0 bulkscore=0 lowpriorityscore=0 mlxscore=0 impostorscore=0
- suspectscore=0 adultscore=0 priorityscore=1501 clxscore=1015
- malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505060180
+X-ClientProxiedBy: EX19D032UWA003.ant.amazon.com (10.13.139.37) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
+
+From: Christian Brauner <brauner@kernel.org>
+Date: Tue, 6 May 2025 17:16:13 +0200
+> On Tue, May 06, 2025 at 04:51:25PM +0200, Jann Horn wrote:
+> > On Tue, May 6, 2025 at 9:39 AM Christian Brauner <brauner@kernel.org> wrote:
+> > > > ("a kernel socket" is not necessarily the same as "a kernel socket
+> > > > intended for core dumping")
+> > >
+> > > Indeed. The usermodehelper is a kernel protocol. Here it's the task with
+> > > its own credentials that's connecting to a userspace socket. Which makes
+> > > this very elegant because it's just userspace IPC. No one is running
+> > > around with kernel credentials anywhere.
+> > 
+> > To be clear: I think your current patch is using special kernel
+> > privileges in one regard, because kernel_connect() bypasses the
+> > security_socket_connect() security hook.
+
+Precisely, whether LSM ignores kernel sockets or not depends on LSM.
+
+When we create a socket, kern=0/1 is passed to security_socket_create().
+Currently, SELinux always ignore the kernel socket, and AppArmor depends
+on another condition.  Other LSM doesn't care.  Especially, BPF LSM is
+just a set of functions to attach BPF programs, so it can enfoce whatever.
 
 
-On 5/5/25 4:36 AM, Andrew Donnellan wrote:
-> On Wed, 2025-04-30 at 14:33 +0530, Srish Srinivasan wrote:
->> On a PLPKS enabled PowerVM LPAR, the secvar format property for
->> static
->> key management is misrepresented as "ibm,plpks-sb-unknown", creating
->> reason for confusion.
->>
->> Static key management mode uses fixed, built-in keys. Dynamic key
->> management mode allows keys to be updated in production to handle
->> security updates without firmware rebuilds.
->>
->> Define a function named plpks_get_sb_keymgmt_mode() to retrieve the
->> key management mode based on the existence of the SB_VERSION property
->> in the firmware.
->>
->> Set the secvar format property to either "ibm,plpks-sb-v1" or
->> "ibm,plpks-sb-v0" based on the key management mode, and return the
->> length of the secvar format property.
->>
->> Co-developed-by: Souradeep <soura@imap.linux.ibm.com>
->> Signed-off-by: Souradeep <soura@imap.linux.ibm.com>
->> Signed-off-by: Srish Srinivasan <ssrish@linux.ibm.com>
->> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
->> Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
->> ---
->>   arch/powerpc/platforms/pseries/plpks-secvar.c | 70 +++++++++++------
->> --
->>   1 file changed, 40 insertions(+), 30 deletions(-)
->>
->> diff --git a/arch/powerpc/platforms/pseries/plpks-secvar.c
->> b/arch/powerpc/platforms/pseries/plpks-secvar.c
->> index 257fd1f8bc19..d57067a733ab 100644
->> --- a/arch/powerpc/platforms/pseries/plpks-secvar.c
->> +++ b/arch/powerpc/platforms/pseries/plpks-secvar.c
->> @@ -152,39 +152,49 @@ static int plpks_set_variable(const char *key,
->> u64 key_len, u8 *data,
->>   	return rc;
->>   }
->>   
->> -// PLPKS dynamic secure boot doesn't give us a format string in the
->> same way OPAL does.
->> -// Instead, report the format using the SB_VERSION variable in the
->> keystore.
->> -// The string is made up by us, and takes the form "ibm,plpks-sb-
->> v<n>" (or "ibm,plpks-sb-unknown"
->> -// if the SB_VERSION variable doesn't exist). Hypervisor defines the
->> SB_VERSION variable as a
->> -// "1 byte unsigned integer value".
->> -static ssize_t plpks_secvar_format(char *buf, size_t bufsize)
->> +/*
->> + * Return the key management mode.
->> + *
->> + * SB_VERSION is defined as a "1 byte unsigned integer value". It is
->> owned by
->> + * the Partition Firmware and its presence indicates that the key
->> management
->> + * mode is dynamic. Only signed variables have null bytes in their
->> names.
->> + * SB_VERSION does not.
->> + *
->> + * Return 1 to indicate that the key management mode is dynamic.
->> Otherwise
->> + * return 0, indicating that the key management mode is static.
->> + */
-> This description isn't accurate.
->
-> For dynamic mode, it doesn't return 1, it returns whatever version is
-> defined in SB_VERSION, which could be 1, or could at some later point be
-> a higher version.
->
-> Which makes the function name a bit of a misnomer too - it is returning
-> the version number, just the version number can now be zero.
->
->> +static u8 plpks_get_sb_keymgmt_mode(void)
->>   {
->> -	struct plpks_var var = {0};
->> -	ssize_t ret;
->> -	u8 version;
->> -
->> -	var.component = NULL;
->> -	// Only the signed variables have null bytes in their names,
->> this one doesn't
->> -	var.name = "SB_VERSION";
->> -	var.namelen = strlen(var.name);
->> -	var.datalen = 1;
->> -	var.data = &version;
->> -
->> -	// Unlike the other vars, SB_VERSION is owned by firmware
->> instead of the OS
->> -	ret = plpks_read_fw_var(&var);
->> -	if (ret) {
->> -		if (ret == -ENOENT) {
->> -			ret = snprintf(buf, bufsize, "ibm,plpks-sb-
->> unknown");
->> -		} else {
->> -			pr_err("Error %ld reading SB_VERSION from
->> firmware\n", ret);
->> -			ret = -EIO;
->> -		}
->> -		goto err;
->> +	u8 mode;
->> +	ssize_t rc;
->> +	struct plpks_var var = {
->> +		.component = NULL,
->> +		.name = "SB_VERSION",
->> +		.namelen = 10,
->> +		.datalen = 1,
->> +		.data = &mode,
->> +	};
->> +
->> +	rc = plpks_read_fw_var(&var);
->> +	if (rc) {
->> +		pr_info("Error %ld reading SB_VERSION from
->> firmware\n", rc);
-> We need to check for -ENOENT, otherwise this message is going to be
-> printed every time you boot a machine in static mode.
->
-> I think you should handle this as the existing code does: if it's
-> ENOENT, return 0, and for other codes print an error and return -EIO.
->
->> +		mode = 0;
->>   	}
->> +	return mode;
->> +}
->>   
->> -	ret = snprintf(buf, bufsize, "ibm,plpks-sb-v%hhu", version);
->> -err:
->> -	return ret;
->> +// PLPKS dynamic secure boot doesn't give us a format string in the
->> same way
->> +// OPAL does. Instead, report the format using the SB_VERSION
->> variable in the
->> +// keystore. The string, made up by us, takes the form "ibm,plpks-
->> sb-v<n>".Set
->> +// the secvar format property to either "ibm,plpks-sb-v1" or
->> "ibm,plpks-sb-v0",
->> +// based on the key management mode, and return the length of the
->> secvar format
->> +// property.
->> +static ssize_t plpks_secvar_format(char *buf, size_t bufsize)
->> +{
->> +	u8 mode;
->> +
->> +	mode = plpks_get_sb_keymgmt_mode();
->> +	return snprintf(buf, bufsize, "ibm,plpks-sb-v%hhu", mode);
-> It might be better to use something like "ibm,plpks-sb-static" in place
-> of "ibm,plpks-sb-v0" to make it instantly clear that static mode
-> doesn't use the same version numbering scheme as dynamic mode.
-
-Yes, "ibm,plpks-sb-static" is more clear compared to "ibm,plpks-sb-v0".  
-However, I am not sure why "static mode doesn't use the same version 
-numbering scheme as dynamic mode". Infact, as per my understanding,  it 
-is part of same versioning system. "0 represent static, 1 represent 
-dynamic and anything beyond 1 would mean dynamic with additional features".
-
-Also, wouldn't having "ibm,pkpks-sb-static" and then "ibm,pkpk-sb-v1" 
-for dynamic would be bit confusing? I mean being static is clear, but 
-what they relate v1 to? Or did you mean to have "ibm,plpks-sb-static" 
-and "ibm,plpks-sb-dynamic"  for the two modes?
-
-Thanks & Regards,
-          - Nayna
-
+> I think it is a good thing
+> > that it bypasses security hooks in this way; I think we wouldn't want
+> > LSMs to get in the way of this special connect(), since the task in
+> > whose context the connect() call happens is not in control of this
+> > connection; the system administrator is the one who decided that this
+> > connect() should happen on core dumps. It is kind of inconsistent
+> > though that that separate security_unix_stream_connect() LSM hook will
+> > still be invoked in this case, and we might have to watch out to make
+> > sure that LSMs won't end up blocking such connections... which I think
+> 
+> Right, it is the same as for the usermode helper. It calls
+> kernel_execve() which invokes at least security_bprm_creds_for_exec()
+> and security_bprm_check(). Both of which can be used to make the
+> usermodehelper execve fail.
+> 
+> Fwiw, it's even the case for dumping directly to a file as in that case
+> it's subject to all kinds of lookup and open security hooks like
+> security_file_open() and then another round in do_truncate().
+> 
+> All of that happens fully in the task's context as well via
+> file_open()/file_open_root() or do_truncate().
+> 
+> So there's nothing special here.
