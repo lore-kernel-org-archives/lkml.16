@@ -1,110 +1,224 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 828FB442C;
-	Tue,  6 May 2025 09:42:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6FFA27703D;
+	Tue,  6 May 2025 09:42:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746524548; cv=none; b=Wa4R5nZjYZRUsV7AA2EWHVXwlrKMAtcgzTyio9I30oUFhPkzN8Z5x5xdGllKt2yfhIc1UMt3vfoMs55EQ/iwEDI3ttqasvwg9JGlJcVbOJwDoPcleyghmUxoTiJNVPjHObzYx5YABsbyFWXzCN7CzBWdKHGZjeCi+K7Hu4yJXk8=
+	t=1746524554; cv=none; b=HwZtIqraZ2ikYcpDazE8PZvZJFNhuRvWM1JKYX5XAcAkOd3YhBMtbEE4prHr+mWXGS9QCzI6iHYVDa7uDxh2Oq3CN98wsYDBk5Tblvl+SSPOm4FAuMrA8AQFb2UkNSkegZWQH+jOQnaX/OOUYCJZqcmEQXz648fP/LYkhk29GpQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746524548; c=relaxed/simple;
-	bh=tV0nDwIoH2g7mHnHzytl/Ey8Bl8yk1y+cNBPV8pyc5s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BqdnmcNpP0CXKuirJwuUQ5luH5D53n38b2MLkMojQvUERUaQClGVflz7PftJNcbkmsi/5SeaKcW8QHfMeZRmQWUg/oP2nZfI95hSsVk4bgZMRQKeHGFZ6z5g3Dds1oi+Bu5VEVi3nuxDIHmsIe9iPX3uhQq8ZnzFMeaGEKZuuto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kzalloc.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kzalloc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-7373aa99e2cso794963b3a.0;
-        Tue, 06 May 2025 02:42:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746524547; x=1747129347;
-        h=content-transfer-encoding:in-reply-to:organization:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=T0NjyGvijBDvIUSC5O5zU3aez3V3m7u5cMnfIW2NYxk=;
-        b=vNWKMPvb3P3CPwoVYGONDAs/4Q8brwXpho4xViHaThaWq8WhBd4dls4a5JsTMN0seD
-         zPQdXlo0AVkbrB1aoVAwJiLvwWQkd9TCdCE3N9QASwL/uBNJiiUYY23tnnVeKfqZF6gc
-         lslvL+jMjnOATIDGuwzcUkI68VmJBZ4+LAFKw5rdMbTj7k5noLj2qaNTxZn8eKqYTlAu
-         7I3QGqaavCLvBfHHOJW2gHfi4GbFZfXELxE+tYBME3I31vi6ylwjsHF9MDkqsidxqp//
-         /nybecEWhSI9DAZfhw6V3oXIN5ZB2OezxByVkBz1PAFm2K/anMvFJsMPtM9x4mQBFNwi
-         C/qw==
-X-Forwarded-Encrypted: i=1; AJvYcCUJJ/I9/VqqszwvvSk43rAU+C07g0qQ3N+2drK4yCYTv+Fo6D69UIACNjIn97eDBgrWzdBWn9pmoMWJPrQp@vger.kernel.org, AJvYcCWA3x+owDHEvcV6d/lTrjjc3S7lrz2JRtAIkPWj+aCHsEpqRAzU1/2A0J6TvH3VfVx3Az2K29BU2AY=@vger.kernel.org, AJvYcCWrN8FVv/sps6D6Dlm3amA/ecldIy9/ggCX3+6RSiuzdjHKPQSjfFeJoVajy8HEVUWmKi1DqGZ/CT6KNlVS@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQg1JatYahWw6eChXHfAxZ0JpU/Q79+O7HLMFe9/a+MppAghqh
-	owNzhhT9BugCHtyEbaVhxJHwAsSHnFdH4luidT/GmJkbqrWlFpY2sxG3VQ==
-X-Gm-Gg: ASbGncu5blTw5Hhc4Sn97kEMgWgxAfIVKB7z5vTaZqGS4ZW/XmTFK/zZmawTckOdDUF
-	c5ibeU+LrtVgZtV38dy/TmjMMz34LhQT4GT7A0ae8Dr8T7e4pj1CQpbYDyDNIKSh/6k9lLn3DRG
-	AV+zs/r0wMTvobzzRS2Bto2z8BXCcyOxC17gKtlt1B1l5nS7oFyLHf30J5k4yN6KBUhhFR+fpyK
-	H2FM1dtpJB/I/0H3IsSAKcXycXxXNarR72jTmH11m5gFSe+/y5zYtzNLTGPCFNy2ylYREu3nbw2
-	V2bwKm8WkSqwCWRbCl07CGQ8Eu105AnIL98S1HYOJRze/MX+sUKe
-X-Google-Smtp-Source: AGHT+IHJPV6QHn0fik5+fgOnYxj6sw2W5noBjtawQua2EwoODPBFi11YGxjUR1TwWEuCjtTqOEsvmA==
-X-Received: by 2002:a05:6a21:e89:b0:1ee:ea8f:2e9f with SMTP id adf61e73a8af0-20cdc0f5235mr9752018637.0.1746524546592;
-        Tue, 06 May 2025 02:42:26 -0700 (PDT)
-Received: from [192.168.50.136] ([118.32.98.101])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b1fc0e32b8bsm5555899a12.48.2025.05.06.02.42.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 06 May 2025 02:42:26 -0700 (PDT)
-Message-ID: <4dcff9ce-4ec8-4b57-9f21-a7e2f37b4d5c@kzalloc.com>
-Date: Tue, 6 May 2025 18:42:21 +0900
+	s=arc-20240116; t=1746524554; c=relaxed/simple;
+	bh=P9a2pNHPAdAkPwbRHauhlTEXGppXguI6212ViJ55eaI=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=q1rD6BRXMFKhbf/1Alir+eUibFz1VQHT1rh9/M/f5oahf181ltUXzlSoZiOxcvCrIspjH/Rz7K4YllWBtIRKbOuTdKboY+CeiQvSFzXNya0aIuJibfcBhJXlyYI3sczugABIyKT3tEQgcEMVGAf5UWHqE1dQ1QsZ+cV/4DpzCkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DxuIHvrg; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bUXF1F5u; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DxuIHvrg";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bUXF1F5u"
+Date: Tue, 06 May 2025 09:42:28 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1746524549;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=F8YI95wP4mSj9oc4W3VJlQVPMAGQ0JQ9GE5xAfT/SlM=;
+	b=DxuIHvrgj938Q3AuS7EfnA0L5BXcCCthiLlmcGtKBhgaXyxz2bKH49Qq8RS33xgNv24WrA
+	DczTuhYza5Dk/ATXT3kEuFQNHC+gxqe192dpuyiK8AjTzS3earT2eLsJy7ULdYrBgZQw2X
+	9NfCsyfLEX6PnGdXbgZFvPIx86gj7a2FyYo58WCAbTupTRSj+UYPk+/ZRaSvxydNA7U/ye
+	rJxxs+oXCDQe4qbn36QMTVe7hzn9sTwOaHM1UG/FicbVcR8kH9j7Qlci8KrCW/NnNJcWtC
+	oG88IPv2CpzvjJwRlOVO57RsdlKi2qpr/wNZGVHzuTC/HPjEfDIEPq7ACZlZfA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1746524549;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=F8YI95wP4mSj9oc4W3VJlQVPMAGQ0JQ9GE5xAfT/SlM=;
+	b=bUXF1F5utZK3vaUBPTdjqZvAGlTgkNTYyyf2ri7bNnknzvtHu1EHvfB0RqYd/ky4ndSrsM
+	5GPRwJ6KPLaPU4CA==
+From: "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/alternatives] x86/mm: Fix false positive warning in
+ switch_mm_irqs_off()
+Cc: Chaitanya Kumar Borah <chaitanya.kumar.borah@intel.com>,
+ Jani Nikula <jani.nikula@linux.intel.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+ Andrew Cooper <andrew.cooper3@citrix.com>, Andy Lutomirski <luto@kernel.org>,
+ Brian Gerst <brgerst@gmail.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ Juergen Gross <jgross@suse.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Rik van Riel <riel@surriel.com>, x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250430081154.GH4439@noisy.programming.kicks-ass.net>
+References: <20250430081154.GH4439@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] fs: Prevent panic from NULL dereference in
- alloc_fs_context() during do_exit()
-To: Christian Brauner <brauner@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>
-Cc: Jan Kara <jack@suse.cz>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Pavel Machek <pavel@kernel.org>, Len Brown <len.brown@intel.com>,
- byungchul@sk.com, max.byungchul.park@gmail.com,
- linux-fsdevel@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250505203801.83699-2-ysk@kzalloc.com>
- <20250505223615.GK2023217@ZenIV>
- <20250506-hochphase-kicken-7fa895216c2a@brauner>
-Content-Language: en-US
-From: Yunseong Kim <ysk@kzalloc.com>
-Organization: kzalloc
-In-Reply-To: <20250506-hochphase-kicken-7fa895216c2a@brauner>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Message-ID: <174652454811.406.13340350863311949872.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Hi Christian,
+The following commit has been merged into the x86/alternatives branch of tip:
 
-On 5/6/25 5:45 오후, Christian Brauner wrote:
->>> diff --git a/fs/fs_context.c b/fs/fs_context.c
->>> index 582d33e81117..529de43b8b5e 100644
->>> --- a/fs/fs_context.c
->>> +++ b/fs/fs_context.c
->>> @@ -282,6 +282,9 @@ static struct fs_context *alloc_fs_context(struct file_system_type *fs_type,
->>>  	struct fs_context *fc;
->>>  	int ret = -ENOMEM;
->>>  
->>> +	if (!current->nsproxy || !current->nsproxy->net_ns)
->>> +		return ERR_PTR(-EINVAL);
->>> +
->>>  	fc = kzalloc(sizeof(struct fs_context), GFP_KERNEL_ACCOUNT);
->>>  	if (!fc)
->>>  		return ERR_PTR(-ENOMEM);
->>
->> That might paper over the oops, but I very much doubt that this will be
->> a correct fix...  Note that in efivarfs_pm_notify() we have other
->> fun issues when run from such context - have task_work_add() fail in
->> fput() and if delayed_fput() runs right afterwards and
->>         efivar_init(efivarfs_check_missing, sfi->sb, false);
->> in there might end up with UAF...
-> 
-> We've already accepted a patch that removes the need for
-> vfs_kern_mount() from efivarfs completely.
+Commit-ID:     7f9958230d8a79d474829bee25ec9426397335ce
+Gitweb:        https://git.kernel.org/tip/7f9958230d8a79d474829bee25ec9426397335ce
+Author:        Peter Zijlstra <peterz@infradead.org>
+AuthorDate:    Wed, 30 Apr 2025 10:11:54 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Tue, 06 May 2025 11:28:57 +02:00
 
-I’ll take a look at the patch you mentioned, check if the issue reproduces, and get back to you.
+x86/mm: Fix false positive warning in switch_mm_irqs_off()
 
-Link: https://lore.kernel.org/all/20250318194111.19419-4-James.Bottomley@HansenPartnership.com/
+Multiple testers reported the following new warning:
 
-Thanks for checking it!
+	WARNING: CPU: 0 PID: 0 at arch/x86/mm/tlb.c:795
 
-Best regards,
-Yunseong Kim
+Which corresponds to:
 
+	if (IS_ENABLED(CONFIG_DEBUG_VM) && WARN_ON_ONCE(prev != &init_mm &&
+	    !cpumask_test_cpu(cpu, mm_cpumask(next))))
+		cpumask_set_cpu(cpu, mm_cpumask(next));
+
+So the problem is that unuse_temporary_mm() explicitly clears
+that bit; and it has to, because otherwise the flush_tlb_mm_range() in
+__text_poke() will try sending IPIs, which are not at all needed.
+
+See also:
+
+   https://lore.kernel.org/all/20241113095550.GBZzR3pg-RhJKPDazS@fat_crate.local/
+
+Notably, the whole {,un}use_temporary_mm() thing requires preemption to
+be disabled across it with the express purpose of keeping all TLB
+nonsense CPU local, such that invalidations can also stay local etc.
+
+However, as a side-effect, we violate this above WARN(), which sorta
+makes sense for the normal case, but very much doesn't make sense here.
+
+Change unuse_temporary_mm() to mark the mm_struct such that a further
+exception (beyond init_mm) can be grafted, to keep the warning for all
+the other cases.
+
+Reported-by: Chaitanya Kumar Borah <chaitanya.kumar.borah@intel.com>
+Reported-by: Jani Nikula <jani.nikula@linux.intel.com>
+Signed-off-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Andrew Cooper <andrew.cooper3@citrix.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Rik van Riel <riel@surriel.com>
+Link: https://lore.kernel.org/r/20250430081154.GH4439@noisy.programming.kicks-ass.net
+---
+ arch/x86/include/asm/mmu.h         |  4 ++--
+ arch/x86/include/asm/mmu_context.h | 10 ++++++++++
+ arch/x86/mm/init.c                 |  3 +++
+ arch/x86/mm/tlb.c                  |  3 ++-
+ arch/x86/platform/efi/efi_64.c     |  1 +
+ 5 files changed, 18 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/include/asm/mmu.h b/arch/x86/include/asm/mmu.h
+index 8b8055a..0fe9c56 100644
+--- a/arch/x86/include/asm/mmu.h
++++ b/arch/x86/include/asm/mmu.h
+@@ -16,6 +16,8 @@
+ #define MM_CONTEXT_LOCK_LAM		2
+ /* Allow LAM and SVA coexisting */
+ #define MM_CONTEXT_FORCE_TAGGED_SVA	3
++/* Tracks mm_cpumask */
++#define MM_CONTEXT_NOTRACK		4
+ 
+ /*
+  * x86 has arch-specific MMU state beyond what lives in mm_struct.
+@@ -44,9 +46,7 @@ typedef struct {
+ 	struct ldt_struct	*ldt;
+ #endif
+ 
+-#ifdef CONFIG_X86_64
+ 	unsigned long flags;
+-#endif
+ 
+ #ifdef CONFIG_ADDRESS_MASKING
+ 	/* Active LAM mode:  X86_CR3_LAM_U48 or X86_CR3_LAM_U57 or 0 (disabled) */
+diff --git a/arch/x86/include/asm/mmu_context.h b/arch/x86/include/asm/mmu_context.h
+index c511f85..73bf3b1 100644
+--- a/arch/x86/include/asm/mmu_context.h
++++ b/arch/x86/include/asm/mmu_context.h
+@@ -247,6 +247,16 @@ static inline bool is_64bit_mm(struct mm_struct *mm)
+ }
+ #endif
+ 
++static inline bool is_notrack_mm(struct mm_struct *mm)
++{
++	return test_bit(MM_CONTEXT_NOTRACK, &mm->context.flags);
++}
++
++static inline void set_notrack_mm(struct mm_struct *mm)
++{
++	set_bit(MM_CONTEXT_NOTRACK, &mm->context.flags);
++}
++
+ /*
+  * We only want to enforce protection keys on the current process
+  * because we effectively have no access to PKRU for other
+diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
+index f8c74d1..aa56d9a 100644
+--- a/arch/x86/mm/init.c
++++ b/arch/x86/mm/init.c
+@@ -28,6 +28,7 @@
+ #include <asm/text-patching.h>
+ #include <asm/memtype.h>
+ #include <asm/paravirt.h>
++#include <asm/mmu_context.h>
+ 
+ /*
+  * We need to define the tracepoints somewhere, and tlb.c
+@@ -830,6 +831,8 @@ void __init poking_init(void)
+ 	/* Xen PV guests need the PGD to be pinned. */
+ 	paravirt_enter_mmap(text_poke_mm);
+ 
++	set_notrack_mm(text_poke_mm);
++
+ 	/*
+ 	 * Randomize the poking address, but make sure that the following page
+ 	 * will be mapped at the same PMD. We need 2 pages, so find space for 3,
+diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
+index 39761c7..f5b990e 100644
+--- a/arch/x86/mm/tlb.c
++++ b/arch/x86/mm/tlb.c
+@@ -847,7 +847,8 @@ void switch_mm_irqs_off(struct mm_struct *unused, struct mm_struct *next,
+ 		 * mm_cpumask. The TLB shootdown code can figure out from
+ 		 * cpu_tlbstate_shared.is_lazy whether or not to send an IPI.
+ 		 */
+-		if (IS_ENABLED(CONFIG_DEBUG_VM) && WARN_ON_ONCE(prev != &init_mm &&
++		if (IS_ENABLED(CONFIG_DEBUG_VM) &&
++		    WARN_ON_ONCE(prev != &init_mm && !is_notrack_mm(prev) &&
+ 				 !cpumask_test_cpu(cpu, mm_cpumask(next))))
+ 			cpumask_set_cpu(cpu, mm_cpumask(next));
+ 
+diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
+index a5d3496..ce4c08a 100644
+--- a/arch/x86/platform/efi/efi_64.c
++++ b/arch/x86/platform/efi/efi_64.c
+@@ -89,6 +89,7 @@ int __init efi_alloc_page_tables(void)
+ 	efi_mm.pgd = efi_pgd;
+ 	mm_init_cpumask(&efi_mm);
+ 	init_new_context(NULL, &efi_mm);
++	set_notrack_mm(&efi_mm);
+ 
+ 	return 0;
+ 
