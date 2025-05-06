@@ -1,194 +1,152 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbgjp3.qq.com (smtpbgjp3.qq.com [54.92.39.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C8A9306CCB;
-	Tue,  6 May 2025 02:31:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33F5328D8C2;
+	Tue,  6 May 2025 02:33:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.92.39.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746498712; cv=none; b=SrFMG6XSOVjZEaf3plbzK9ZURqYuNglGBKetouX5PJkEUVYeKB7Vl9WxmAsWtyZKrhqwRDzuYmyKx8cvkDcAG2RjMhYjE1xcosz5VJOVglRYyPbahf+iyVFWdLKZ1i0wm4XP4xBEstmqf2I7gxR8HwCZaz6omWEsmZCa9MFX4Wo=
+	t=1746498798; cv=none; b=ta2hOfWbDHpLOSPz6U+4wr5UnN6VhMZHVlIK1KTKOtO64Nn2asaB58adCBvxvqnM3qyFDeFZ7+SbTbDv2egAoZ+sBQAvo4qd/wZnoweJhlw0vyevZIsKZgjZrpT76zdTM9PMqsLdhncKcRwHKQCP8rSAOlIcAQlh2YiNDjoKATM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746498712; c=relaxed/simple;
-	bh=wYBErgk59yRPYTKpFOXAiimpZRl4DE2BrEA04HijqEs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XwOiXxbyYtZ5bUxTyzohr3k7LHaofIxhINzmX1tc1G0+e7BEFnwoNiC3IGwn/f9M9e4vvV53tUwL5bICuf03xD51ZQ9TmDs00V9uIexAJNIt7f+r73t04P1ayvTuQEqzMxAxiIbYbTdvTCyMDeeGI7vClQrr5c76UXnWB09uXkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HBiMS0kC; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746498798; c=relaxed/simple;
+	bh=RK8CB/ILucoxkojMLroxyaAqpj6rXkr8cb1h0tuO+FM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=AF2zqg+naWnQFIpLDRWgQtRF1ubUTQDYm41gkj2Z+Af6YUU0osTZ9X2Y+vtSWLtlBFfFIoeD8xsqtsAA+LA9PdxPDpl4f7iGVfrT+iio9rGNNOlo5+p5G7dyRkNDybKk52JmnGqX6gkOX9f8jfjGMmSLknAhHoS9DWSrXkgJ5fw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=kafLiDKX; arc=none smtp.client-ip=54.92.39.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HBiMS0kC"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-739525d4e12so5009852b3a.3;
-        Mon, 05 May 2025 19:31:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746498710; x=1747103510; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=poh4flnsblOTuXQPZPNN2P3hxWXnOplQoLoK9Oy5wOo=;
-        b=HBiMS0kCDr0na03K2B6HG6M/yJzGpk/ipa3ed6WvtQQS/mjXljmZaGB0v3ecm/hu6G
-         BjOiHEDPQginwuHomuENFlOVI3xA4F/D3w9NKVfsnEMNg9cgn2X+PT2xN+8VDUwylG0n
-         V6Wfv/HChRkSrKKOvvIVqEKK+8pv/zW2MEbNM9EPAYGCMD0p6f187IsKSKge/S3kFSag
-         9kFCgrpmDfpPSv69qUZMazcbjsEk+0lOF3CmjL03sfut0QxlMKa/aF4Gm1DeZND7Cm5U
-         kQeN3tWP5Kpot0hA+V1SZyd0HT9/Xe9AbCxFrircct00f7NwcLhGZJ+SUsWiTSXpdnGH
-         Z9zQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746498710; x=1747103510;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=poh4flnsblOTuXQPZPNN2P3hxWXnOplQoLoK9Oy5wOo=;
-        b=urwcifXifzEXqSFLaPDb8MYLCbZOGQpHlhZYCgn8puGUlQlvBZXCn/cVJ+NeKUX1fk
-         ghMQYjqYmmRO4m7J8+XMfjFghZawZ+8e6FNUfPVZhOT+WyqRF5hsz+apWKwAk/3hyBAO
-         qkOjZUbJkDl7cB+HLC5p/NZxC2DDyvX09Fs2Bu+kRucquNyJ4+KfQLjdQh9kXPLA+WS9
-         joov7+FMC0qOejE0uocf6zyC8XMRmbYArCN+RfpCTDbqku8XYnq/1eaLXJXpcrkJwiJE
-         IiBg8H6+L8QaHLs1gvXxXAwwbbEK+MBDqb+WbszKS0eDqmPQiLhfrrZ0bxI7YPDibXTK
-         1dEw==
-X-Forwarded-Encrypted: i=1; AJvYcCW/Y3Xb6O9CyoCmfQlLd1+ieGKo3HLz5/Ah34cihugQ+s4L3n17Mh3pWnDYm6sftrjLC9++FzpxMzOK@vger.kernel.org, AJvYcCWfB91Ae8fv2O5NeAUBtcHJCpX56zzFHqLYbNn81I9RbuXxhGV30srk0fG6uVyYST0hUVDmDVrPZvCZ@vger.kernel.org, AJvYcCXochhPSuScBjofzh7oz2v5dbqw0LF+2gv/zFwGXNtcEow0y0ny9g4POUqsLQjqb9riPK1HvAU2x+iQ2fn9@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxf8cbwmU3IrnqVrMmeoVafviK/+9tMDBATLb19vo244AnBhlFk
-	x/VdiHF+53NQxXHDQI133SUy+xdUHE0oVKf6A1a9zF0D0aiIaqRu
-X-Gm-Gg: ASbGncs9SLOJBDNPGVNC8Q8fht2MkoqWeB4GzAH3NJLwC8B6HGESnKnoRgmwMHl4+wm
-	/6mY3nrPmBWHsVWwDDHTYmpCGgCaV9rXYl9AkNtdKzRX+Rz4Qq/58AEYC4dP4RuUq5HN+XQGvwa
-	C0XgTrukfmAmDpWCHpcgTI8FxfhF4Yef7UOYgTaPd4vxO0ZKrnGU18ViEGIvjM5gAtLoA1ittIZ
-	jyERcWFQz1isA4eYd9l16M7WCI1iZYi2179/uEqWsjWTtCDnj2EOUGai2wizCzSZzO1VDzB+bGO
-	degWnb4umytQ19aR7GZudhX4mZ+LPkXJfDPhXvR/
-X-Google-Smtp-Source: AGHT+IFm2DxJzuwGUz6BKAo8aCcTy5T+PX1t2f2NG17JtptJTbCdw+A9Vy7/npC+48IEhStxuhVLiA==
-X-Received: by 2002:a05:6a00:4294:b0:736:6ecd:8e32 with SMTP id d2e1a72fcca58-74058b23ef3mr18912149b3a.21.1746498710367;
-        Mon, 05 May 2025 19:31:50 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74058dbbb15sm7939011b3a.58.2025.05.05.19.31.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 19:31:49 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id 3FFBD42439E4; Tue, 06 May 2025 09:31:45 +0700 (WIB)
-Date: Tue, 6 May 2025 09:31:45 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Changyuan Lyu <changyuanl@google.com>, linux-kernel@vger.kernel.org
-Cc: akpm@linux-foundation.org, anthony.yznaga@oracle.com, arnd@arndb.de,
-	ashish.kalra@amd.com, benh@kernel.crashing.org, bp@alien8.de,
-	catalin.marinas@arm.com, corbet@lwn.net,
-	dave.hansen@linux.intel.com, devicetree@vger.kernel.org,
-	dwmw2@infradead.org, ebiederm@xmission.com, graf@amazon.com,
-	hpa@zytor.com, jgowans@amazon.com, kexec@lists.infradead.org,
-	krzk@kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-doc@vger.kernel.org, linux-mm@kvack.org, luto@kernel.org,
-	mark.rutland@arm.com, mingo@redhat.com, pasha.tatashin@soleen.com,
-	pbonzini@redhat.com, peterz@infradead.org, ptyadav@amazon.de,
-	robh@kernel.org, rostedt@goodmis.org, rppt@kernel.org,
-	saravanak@google.com, skinsburskii@linux.microsoft.com,
-	tglx@linutronix.de, thomas.lendacky@amd.com, will@kernel.org,
-	x86@kernel.org
-Subject: Re: [PATCH v7 17/18] Documentation: add documentation for KHO
-Message-ID: <aBl0kUIKryH5AUD5@archie.me>
-References: <20250501225425.635167-1-changyuanl@google.com>
- <20250501225425.635167-18-changyuanl@google.com>
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="kafLiDKX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1746498699;
+	bh=RK8CB/ILucoxkojMLroxyaAqpj6rXkr8cb1h0tuO+FM=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=kafLiDKXS816BmywaQFx+/F9Y6knLlHjegnJC8EOCpdTsnxr/e1yaY6y4wWVWU5Cc
+	 pEmJcSIFvrEg1Nxq/uND+kyneyz+lm4cL848VLV2wWlvOab3SEPuOTkyOQdSj+ClQW
+	 LZ+Ex6H0L9ikuOIyZud7Tr25Wd3PVQAdT9G4v3o8=
+X-QQ-mid: esmtpsz17t1746498663t4c1b9905
+X-QQ-Originating-IP: 2vhUXsJq6NqiLO1Htm0IxhFYAPx746WeA0MvTVyM9nk=
+Received: from localhost.localdomain ( [113.57.152.160])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Tue, 06 May 2025 10:30:59 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 1353101163767275647
+EX-QQ-RecipientCnt: 52
+From: Chen Linxuan <chenlinxuan@uniontech.com>
+To: hch@lst.de
+Cc: akpm@linux-foundation.org,
+	alex.williamson@redhat.com,
+	andreyknvl@gmail.com,
+	axboe@kernel.dk,
+	boqun.feng@gmail.com,
+	boris.ostrovsky@oracle.com,
+	bp@alien8.de,
+	changbin.du@intel.com,
+	chenlinxuan@uniontech.com,
+	dave.hansen@linux.intel.com,
+	dvyukov@google.com,
+	hannes@cmpxchg.org,
+	hpa@zytor.com,
+	jackmanb@google.com,
+	jarkko@kernel.org,
+	jgg@ziepe.ca,
+	jgross@suse.com,
+	justinstitt@google.com,
+	kasan-dev@googlegroups.com,
+	kbusch@kernel.org,
+	kevin.tian@intel.com,
+	kvm@vger.kernel.org,
+	linux-integrity@vger.kernel.org,
+	linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-nvme@lists.infradead.org,
+	llvm@lists.linux.dev,
+	masahiroy@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	mhocko@suse.com,
+	mingo@redhat.com,
+	morbo@google.com,
+	nathan@kernel.org,
+	nick.desaulniers+lkml@gmail.com,
+	nicolas.schier@linux.dev,
+	paulmck@kernel.org,
+	peterhuewe@gmx.de,
+	peterz@infradead.org,
+	sagi@grimberg.me,
+	shameerali.kolothum.thodi@huawei.com,
+	surenb@google.com,
+	tglx@linutronix.de,
+	torvalds@linux-foundation.org,
+	vbabka@suse.cz,
+	virtualization@lists.linux.dev,
+	wentao@uniontech.com,
+	x86@kernel.org,
+	xen-devel@lists.xenproject.org,
+	yishaih@nvidia.com,
+	ziy@nvidia.com
+Subject: Re: [PATCH RFC v3 0/8] kernel-hacking: introduce CONFIG_NO_AUTO_INLINE
+Date: Tue,  6 May 2025 10:30:53 +0800
+Message-ID: <AB2D78307A5FD403+20250506023053.541751-1-chenlinxuan@uniontech.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250429123504.GA13093@lst.de>
+References: <20250429123504.GA13093@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="7/7+Tnuu7kTtOC0+"
-Content-Disposition: inline
-In-Reply-To: <20250501225425.635167-18-changyuanl@google.com>
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: esmtpsz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-1
+X-QQ-XMAILINFO: NYwvw9/V3eZZYpedOr8jwZgzIt+Nn0Burlbno8RYLO+9Fuq2TsAj+tZX
+	bCFNFygJ3Swd5s8Jo4yUIDF8Pq//PsZoXmckP0HGuXmwE1diSBpDRVd+qMkJxRpB5LmNOcq
+	Sen+lMxflHr/OXP/REeL6nstqNFJMWUc4yaJZldbeeybf45r5u8JloooYAwB3mTNCgs3qsr
+	cuHELjO0Jp43LeqVUrgMNVzTWsApLN365ZHE67sMM4PcD5ts7cDFGmoGBxFGgwEuYv8dA2E
+	zACoWzjPrjTOcJ9JfVRexWtsK618S5CFE66Fl/1x7gHmXVzSsq0GcDgCR2GPN+spDgDKDDc
+	aIXYepkT3ti1mTqay5fINjwzjORtN0HHpasIC82QGVNXCJHHQz5CIxX9EYa8GD65yKErZ3e
+	rkMS5Wj7GycTiIZosuInTgRyOeLE/c8sA1GYeus1acnrPiBOJh1ICo/NJH3M4P3TJBYEecu
+	ROWHVRkgAS48TTcheSGqOOQDTe/L6B008otdAsKTQm0lcDcz81woANxd0PkD6rkBsEeAWIX
+	0M1krjBUmbWAqzLknZNotIb5LfXHbalBZrix8OuednLPQK9CSEvSbK6KjuYWvTOzdurHFw6
+	L4SOzRhNxpVhBFWEClOxVMve4lpkBntr4pbD/U7/vdTbZQjMQ6xptzY1ISkCUr34lWm1UDc
+	b18zUjUpWmr5WnA3KXfUq/VrLyEtj0WbNqfLprSxbmgwrG79OoMnAmViO5N9DamWCcuDcLv
+	Hl00leM6/grk9Hnhd8tX+h2KSSzdWWngf2tpwGYe8eLcsq1ssJ28NSAlmrTwNAxkAr5ZZsA
+	bZXW3QTR9cU+pV5g+st2AsY33FmZubXPTmI6C1FTHnA6SzWa3N9WhiLdMro7WtCY2h7pafB
+	/JhCot0ZuiGDm5/WkvZXn08uNMH9poQC5ABs9GLZlKRf0q/AjIVp8l5RsZ+nVM3JlKWCerZ
+	7/cp1495nrc22umlv0oW0ZsLrI9glSjBz1xF1VMPCUOaKUQFyZw0W6v4rWZD4i98Juaehm/
+	lsfQbjOX+5vl1GFmCw/S4b256ZsrY=
+X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
+X-QQ-RECHKSPAM: 0
 
+On Tue, 29 Apr 2025 14:35:04 +0200 Christoph Hellwig wrote:
 
---7/7+Tnuu7kTtOC0+
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On Tue, Apr 29, 2025 at 12:06:04PM +0800, Chen Linxuan via B4 Relay wrote:
+>
+> > This series introduces a new kernel configuration option NO_AUTO_INLINE,
+> > which can be used to disable the automatic inlining of functions.
+> >
+> > This will allow the function tracer to trace more functions
+> > because it only traces functions that the compiler has not inlined.
+>
+> This still feels like a bad idea because it is extremely fragile.
 
-On Thu, May 01, 2025 at 03:54:24PM -0700, Changyuan Lyu wrote:
-> +This document expects that you are familiar with the base KHO
-> +:ref:`concepts <concepts>`. If you have not read
-The reference label is generic and can collide with future patches.
-It should've been disambiguated as kho_concepts instead.
-> +them yet, please do so now.
-> +
-> +Prerequisites
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +KHO is available when the ``CONFIG_KEXEC_HANDOVER`` config option is set=
- to y
-> +at compile time. Every KHO producer may have its own config option that =
-you
-when the kernel is compiled with ``CONFIG_KEXEC_HANDOVER`` set to y.
-> +need to enable if you would like to preserve their respective state acro=
-ss
-> +kexec.
-> +
-> <snipped>...
-> +First, before you perform a KHO kexec, you need to move the system into
-> +the :ref:`KHO finalization phase <finalization_phase>` ::
+I'm not entirely sure if we're on the same page regarding this issue.
+However, I'd like to address the concerns about the fragility of NO_AUTO_INLINE.
 
-kho_finalization_phase to disambiguate label.
+Maintaining NO_AUTO_INLINE to function correctly is indeed challenging,
+and I share some reservations about whether it should exist as a Kbuild option,
+which is precisely why this patch series is submitted as an RFC.
+I cannot even guarantee that I've addressed all existing issues in the current
+kernel repository with this patch series, as testing all possible compilation
+configurations is beyond my capabilities.
 
-> +Next, load the target payload and kexec into it. It is important that you
-> +use the ``-s`` parameter to use the in-kernel kexec file loader, as user
-> +space kexec tooling currently has no support for KHO with the user space
-> +based file loader ::
-> +
-> +  # kexec -l Image --initrd=3Dinitrd -s
-> +  # kexec -e
+Looking at the functions where I've added __always_inline in this patch series,
+nearly all of them require inlining specifically because their calls need to be
+resolved at compile time.
 
-Use full paths to kernel and initramfs image.
-
-> +``/sys/kernel/debug/kho/out/scratch_len``
-> +    To support continuous KHO kexecs, we need to reserve
-> +    physically contiguous memory regions that will always stay
-> +    available for future kexec allocations. This file describes
-> +    the length of these memory regions. Kexec user space tooling
-> +    can use this to determine where it should place its payload
-> +    images.
-
-"Length of KHO scratch region, which is a physically contiguous memory regi=
-ons
-that will always available for future kexec allocations. Kexec user space
-tools can use this file to determine where it should place its payload imag=
-es."
-
-> +
-> +``/sys/kernel/debug/kho/out/scratch_phys``
-> +    To support continuous KHO kexecs, we need to reserve
-> +    physically contiguous memory regions that will always stay
-> +    available for future kexec allocations. This file describes
-> +    the physical location of these memory regions. Kexec user space
-> +    tooling can use this to determine where it should place its
-> +    payload images.
-
-"Physical location of KHO scratch region. Kexec user space tools can use th=
-is
-file in conjunction to scratch_phys to determine where it should place its
-payload images."
-
-> +.. SPDX-License-Identifier: GPL-2.0-or-later
-> +.. _concepts:
-
-The label can be ambiguous. It should've been _kho_concepts instead.
-
-> +.. _finalization_phase:
-
-The label should be _kho_finalization_phase.
-
-> +Generally, A KHO user serialize its state into its own FDT and instructs
-"Generally, a KHO user ..."
-> +KHO to preserve the underlying memory, such that after kexec, the new ke=
-rnel
-> +can recover its state from the preserved FDT.
-> +
-
-Thanks.
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---7/7+Tnuu7kTtOC0+
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaBl0iQAKCRD2uYlJVVFO
-oy/8AP48Fa7VB0kwt+kqGg4VMR/+tEgBDGxzTX5HXZWYD5fZLQEAm6XrPJBViu5A
-Mpce1oumgUOmlwq+sRSgixha15i4eAo=
-=lxMZ
------END PGP SIGNATURE-----
-
---7/7+Tnuu7kTtOC0+--
+The fundamental source of this fragility stems from the fact that compiler
+auto-inlining decisions aren't well-defined. If these functions were to change
+in the future for unrelated reasons - for example, if they became longer - and
+the compiler consequently decided not to automatically inline them, these same
+issues would surface regardless.
