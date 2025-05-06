@@ -1,37 +1,33 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F318628368F;
-	Tue,  6 May 2025 15:54:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BA13283159;
+	Tue,  6 May 2025 15:54:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746546876; cv=none; b=PD3AIph4cf0YtiPAah135TM1KAENgv00nXwXnjKzhboGeYD3j9ZtJkww4vuMp9XGFj4e7hko2ISG+gquBb3OA8VYoBKzf5e2RriILzPHzuUyxpAJgDwQYgvbYJxxCVtDBzxMP0/fE3MSTOAtf+D0PpXbQ8xcBaV3UzjZhrNLvD8=
+	t=1746546890; cv=none; b=pTeyCIyDbvy7RCbkhc5qFBmN0pN1if9j2j6iohIgIeTDEZTZmpC+c1SmYffMYfN5hIdCaQFMzZlEzSHzzpHh5Auq6vXgKnOaAkl844fa5nAFosuTwU2+99o1Yw2sz5jqVogUZUPeAmDpBdAhvIvExLREqtTrF9H6ZocH8VqolZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746546876; c=relaxed/simple;
-	bh=oRFV4V24cNjhr8AbioozP1pFhr7NS7efnPWyyGZeWNY=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=oXkxE+PfS+e/K7RxtujmGzq4VqPAaOy5LozVOP2QzhGz2dXqu9OZxlJOW5ko1B5UZljgRFN/fcGJNRdt4OLEm4YU9NP0aEq3TTaC/FDIT78FbqaRLts1Jwa+UfdBAq5F00hWOnnBl+dDziThcBKUYoNvdTHDINdpR8OIzhQPs+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=N6kDT5Bh; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1746546890; c=relaxed/simple;
+	bh=CN4H43AlZ5yAzJyJzLWrVuFa8slUBC0Ks7P4bDi+zL4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=CX66oY9ci4X2S5y0vi5sP/LYdiKQ+B0AerU7EdOmhC43V7p2chQxxYV4cYZnsYGc4KP7o24oy5tXYzPn1ksNmjYbjs08JJIejMtlNe2Aoa2ph7vpg4l2f1cJo76vLNGXKL07X/FyB8LAH5WZlLD2iD06h331pRW49/tQRfl9Jj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c5nHp5fJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="N6kDT5Bh"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:In-Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:Message-ID:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=5kkxAIEuRdRGzTzcSjdlPRJhQQFv+AIF+5UYrxRSzZg=; b=N6kDT5Bh3VNnpddBQhTU2eZVEW
-	qQAp39HTogt+PZhSrGQVZnUcWtjPjS0jzN08l5hKcXRgohI+bP8jYl8pi+dO3qMbPH9YJtrYWL83h
-	e99PMcTlrpweHtJEUsE5wRfDlogx7JrEn9ruZqnKoL4FYNmZ/CR8iB5PftxmG5fvhFjjIN74vZzR0
-	jvPqsM+wGo5GXGNAYhFq22s4kEdRXOJ7KlJ8o+kpE2LeQpe+8wDZ2FZTFuconrZsa9bRUOvVYiZ1O
-	F86jqkQhf9yOutzjsygdBScOt3rU7ocqAHMKLXcs6HXDdGbt6w0KwB2h6H6+DVoVuTN4ySUahXAvE
-	2s1Ynwiw==;
-Received: from [50.39.124.201] (helo=[192.168.254.17])
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1uCKcp-0000000Ff7x-4Ahm;
-	Tue, 06 May 2025 15:54:32 +0000
-Message-ID: <98d34958-e57e-40df-9196-920d40fd57f9@infradead.org>
-Date: Tue, 6 May 2025 08:54:29 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c5nHp5fJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1283BC4CEE4;
+	Tue,  6 May 2025 15:54:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746546889;
+	bh=CN4H43AlZ5yAzJyJzLWrVuFa8slUBC0Ks7P4bDi+zL4=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=c5nHp5fJIZPVpV8nyOTL/WSC/KG3eKQx+DyBSy/p+RzRvp1BXeEv8BYcnbU8v2YJa
+	 HLzaXkc+tNNmjOJNZeoyL78e2SDipRbMyLCdJkcdTQrMPa3Zmcs6e4g5xg1U2gFyFI
+	 HOu3G8paiBuD439SIXqHxgifwNiLNYvAxcJ6HONhhwCVvb0e3nQ/pES4EcxIppW2cQ
+	 qGy7XaMz3Pwmi2QihdwuPYn5tj8Kz1lm9PMyTvaQRejrmuCybjz0TQYS+TPpPN/dsz
+	 l8y0J+JQ4LD3iaBl9qJEWQ3DVwpZ3d+dYpq3Wsr0qvBeJKjB/8CbCNr/+fwks0rYQw
+	 ja0+CWpmyNUYA==
+Message-ID: <0aedf5fb-557b-4c8c-a336-182498e2c3ea@kernel.org>
+Date: Tue, 6 May 2025 17:54:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,68 +35,95 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] EISA: Move devlist.h out of obj to always
-From: Randy Dunlap <rdunlap@infradead.org>
-To: Kees Cook <kees@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Alejandro Colomar <alx@kernel.org>, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20250423023743.work.350-kees@kernel.org>
- <1f7c8220-09e8-42ae-a611-9a21779badaf@infradead.org>
+Subject: Re: [PATCH RESEND 1/3] spi: tegra210-quad: Add iommus property to DT
+ bindings
+To: Vishwaroop A <va@nvidia.com>, broonie@kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, thierry.reding@gmail.com,
+ jonathanh@nvidia.com, skomatineni@nvidia.com, ldewangan@nvidia.com,
+ kyarlagadda@nvidia.com, smangipudi@nvidia.com, linux-spi@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250506152350.3370291-1-va@nvidia.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-In-Reply-To: <1f7c8220-09e8-42ae-a611-9a21779badaf@infradead.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250506152350.3370291-1-va@nvidia.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Kees,
+On 06/05/2025 17:23, Vishwaroop A wrote:
+> The Tegra210 Quad SPI controller uses internal DMA engines to
+> efficiently transfer data between system memory and the SPI bus.
+> On platforms with an IOMMU, such as Tegra234, DMA transactions
+> must be properly mapped and protected to ensure system security
+> and functional correctness.
 
-On 4/22/25 8:50 PM, Randy Dunlap wrote:
-> 
-> 
-> On 4/22/25 7:37 PM, Kees Cook wrote:
->> I put devlist.h into the wrong Makefile macro ("obj") to get it included
->> in "targets". Put it into "always" so nothing tries to link against it.
->> Solves CONFIG_EISA=y i386 build failure:
->>
->> ld: vmlinux.a: member drivers/eisa/devlist.h in archive is not an object
->>
->> Reported-by: Randy Dunlap <rdunlap@infradead.org>
->> Closes: https://lore.kernel.org/all/4a8ba1d0-d2d9-41f8-abf1-d45ec8996d10@infradead.org
->> Fixes: dd09eb0e2cc4 ("EISA: Increase length of device names")
->> Signed-off-by: Kees Cook <kees@kernel.org>
-> 
-> Acked-by: Randy Dunlap <rdunlap@infradead.org>
-> Tested-by: Randy Dunlap <rdunlap@infradead.org>
-> 
-> Thanks.
-> 
+Does this mean this is not valid for other platforms? Then in
+allOf:if:then: disallow it (iommus: false) for hardware this is invalid.
 
-Please merge this patch. The build failure is killing lots of i386 builds.
-Thanks.
 
->> ---
->> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> Cc: Alejandro Colomar <alx@kernel.org>
->> ---
->>  drivers/eisa/Makefile | 3 ++-
->>  1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/eisa/Makefile b/drivers/eisa/Makefile
->> index f0d6cf7d1f32..552bd9478340 100644
->> --- a/drivers/eisa/Makefile
->> +++ b/drivers/eisa/Makefile
->> @@ -1,7 +1,8 @@
->>  # SPDX-License-Identifier: GPL-2.0
->>  # Makefile for the Linux device tree
->>  
->> -obj-$(CONFIG_EISA)	        += devlist.h eisa-bus.o
->> +always-$(CONFIG_EISA)		+= devlist.h
->> +obj-$(CONFIG_EISA)	        += eisa-bus.o
->>  obj-${CONFIG_EISA_PCI_EISA}     += pci_eisa.o
->>  
->>  # virtual_root.o should be the last EISA root device to initialize,
+> 
+> This patch adds the iommus property to the device tree binding.
+
+Please do not use "This commit/patch/change", but imperative mood. See
+longer explanation here:
+https://elixir.bootlin.com/linux/v5.17.1/source/Documentation/process/submitting-patches.rst#L95
+
+> This property is required to associate the SPI controller with
+> the system IOMMU, specifying the correct stream ID for address
+> translation and access protection.
 > 
 
--- 
-~Randy
+Please use subject prefixes matching the subsystem. You can get them for
+example with `git log --oneline -- DIRECTORY_OR_FILE` on the directory
+your patch is touching. For bindings, the preferred subjects are
+explained here:
+https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html#i-for-patch-submitters
 
+Missing: dt-bindings
+
+
+Best regards,
+Krzysztof
