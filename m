@@ -1,256 +1,213 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8422F280006;
-	Tue,  6 May 2025 14:52:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EEA4728312C;
+	Tue,  6 May 2025 14:53:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746543139; cv=none; b=Masmr7QFlsuaFO2pVxbf+DhOmYY4ViEeN+862/RgZuYxB5oSLNC/3ZmajsFqbm1MKakdwJvHUF4UR9m4T5+L+FDcDY2NE4rZif6C6VdUU2jHixWRIdeHzZPGuvQwIr4Yw4+GQv5t3PMldYyR6b9QrHA5dr/kn8juB/Z/UltjYt0=
+	t=1746543189; cv=none; b=SBVhvSUEzbyiVeuOeIENhwigPLA/KnArZZKg7pQh5GaN3ioOVOr7tqnz0yxmNSDTxe+mzRo0ukcuko7lcidO3r5icPU2KFE0Gf0o+QNBf/0N/RlPcITCZtkwwefgGp6HrPTGcEOun42Ah3K3VdV7mnVabFkqKllT2Q8ucPj+G4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746543139; c=relaxed/simple;
-	bh=Xc8uV93DtLs7S8IMFtDcMlDXGM60gIa3A536pCU0bWA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OEOmDgpuJAINsimJEcMyN/v3qr4eVexOchjpxo6ttz8AsnQp72hIOM+MnKMBnDDJlHQjZMhBLySudrtguKyyjQGu6IS1QTG1sxsVL09+H9i3IW6S0OhMMNdgjn4mwWNVWMOIB8LuihhKsxAwihr2qEBTXubnR9PeV69Q5oude88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=a+5JjxOv; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="a+5JjxOv"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5468e2fb014186;
-	Tue, 6 May 2025 14:52:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=XEcBsARco6QpGU97OKN38n
-	oBlqXGcNH/7Y9jiSHXa3w=; b=a+5JjxOvgmw0IAJ+T9ro7IfwK6ukRB0Q9MFhxK
-	eXfReiOk7JUOTOwUSuSnlxMk+BE4ux7rmNmePzBDvWnfAhNFOOBIxlJqAPTtStdC
-	oM1j5lCE/jwODeBWpLCRGIDdXlErJvcsseQa9G0Le7IYgu0boupVn6xEgbPSVz7V
-	J7Na+Va492LnHIYjT0OVyPjIZxNVV06VR12e94olaiq9a0LL1TpA3v6XaMgbEfH7
-	r/PAUi10X2iZEYNqSep/7ciUVJt/UdnF3OosAtXForrdhDElUgQ/aE6fHu/+6wkp
-	3PEL/injLqt6yaGcm6HMPLuR29IoxkavM9sOop7YliXmbcmw==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46f5u42pc6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 06 May 2025 14:52:13 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 546EqCgU016570
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 6 May 2025 14:52:12 GMT
-Received: from hu-mdtipton-lv.qualcomm.com (10.49.16.6) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 6 May 2025 07:52:12 -0700
-From: Mike Tipton <quic_mdtipton@quicinc.com>
-To: Georgi Djakov <djakov@kernel.org>
-CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <quic_aiquny@quicinc.com>, <quic_okukatla@quicinc.com>,
-        Mike Tipton
-	<quic_mdtipton@quicinc.com>
-Subject: [PATCH v2] interconnect: Use rt_mutex for icc_bw_lock
-Date: Tue, 6 May 2025 07:51:59 -0700
-Message-ID: <20250506145159.1951159-1-quic_mdtipton@quicinc.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1746543189; c=relaxed/simple;
+	bh=sZjR7g+ytLQ85oSSAmyj70daiFNFpcO2dZT6RlYmfuU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FFW31q9I4UQfNi2Ob+TbCSYO9CRntYSwzoS+UO3TB9RUVqC8bTzHRHc88XLLNck6txYNURE1bLP/1tZ0NEtbYbGM3dpMD8iOAgce/2HCtNS08GEntHzJFkHLOQ8mBZO9ZrQcbfzjiw+18USvwWtIGgTNWjZS5QTUtCPg8jk3r3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8887D339;
+	Tue,  6 May 2025 07:52:56 -0700 (PDT)
+Received: from [10.1.29.178] (XHFQ2J9959.cambridge.arm.com [10.1.29.178])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E80603F58B;
+	Tue,  6 May 2025 07:53:00 -0700 (PDT)
+Message-ID: <78fec33d-fe66-4352-be11-900f456c9af3@arm.com>
+Date: Tue, 6 May 2025 15:52:59 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RESEND PATCH v6 1/3] arm64: Add BBM Level 2 cpu feature
+Content-Language: en-GB
+To: Will Deacon <will@kernel.org>,
+ =?UTF-8?Q?Miko=C5=82aj_Lenczewski?= <miko.lenczewski@arm.com>
+Cc: suzuki.poulose@arm.com, yang@os.amperecomputing.com, corbet@lwn.net,
+ catalin.marinas@arm.com, jean-philippe@linaro.org, robin.murphy@arm.com,
+ joro@8bytes.org, akpm@linux-foundation.org, paulmck@kernel.org,
+ mark.rutland@arm.com, joey.gouly@arm.com, maz@kernel.org,
+ james.morse@arm.com, broonie@kernel.org, oliver.upton@linux.dev,
+ baohua@kernel.org, david@redhat.com, ioworker0@gmail.com, jgg@ziepe.ca,
+ nicolinc@nvidia.com, mshavit@google.com, jsnitsel@redhat.com,
+ smostafa@google.com, kevin.tian@intel.com, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ iommu@lists.linux.dev
+References: <20250428153514.55772-2-miko.lenczewski@arm.com>
+ <20250428153514.55772-4-miko.lenczewski@arm.com>
+ <20250506142508.GB1197@willie-the-truck>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20250506142508.GB1197@willie-the-truck>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=KcfSsRYD c=1 sm=1 tr=0 ts=681a221d cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=3H110R4YSZwA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=1XWaLZrsAAAA:8
- a=COk6AnOGAAAA:8 a=KKAgPzKmHZGUr0HHQOcA:9 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: E99k0zjUfBrwcWG18iapbR3Gj7wivgLU
-X-Proofpoint-ORIG-GUID: E99k0zjUfBrwcWG18iapbR3Gj7wivgLU
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA2MDE0MyBTYWx0ZWRfX4uA8awaLCExb
- b12WrXAvTy9fpA13NSJL1IRBEGEFA9NjicJ+pggjcxobmA2byqFS2hZ7CvIcUyDin78zfqKszRP
- i7cUJL7ND45wSlzbAZZh7Thuw6LBRPmdlWCIDSY3L6Qd4PYTokehb2s24wl7Yza4uGSGfI7MKsi
- F0zUmFcZaHkgjpPj8CILO0antMfE7a8kbpnZg4JdE6mCXH0rJwSxHMX0JdXLfclZGvzZxAwZv7P
- esafO3lC6DeIxm8hag9Tftzm0PcKMZIInDQWaeq1Mg6HeLdV9eZcGir+xikuh2pxQMiDBzl2yMQ
- Li7cuanvEiXlaErWb5QDZlZYFKaN9hOFiiaH0TDXplaZQva6OE0CiPIwu5xDyOeNKlm4t/H+Um4
- kmZvYYEhx3h9CWRigPwkJ4tDmjC3k33I3rpMY+WQtNFioxsIcl+Cy/MsQOyS/FR6bRcSEVHj
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-06_06,2025-05-05_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 spamscore=0 suspectscore=0 bulkscore=0 mlxlogscore=999
- phishscore=0 impostorscore=0 priorityscore=1501 malwarescore=0 adultscore=0
- clxscore=1015 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505060143
 
-The icc_set_bw() function is often used in latency sensitive paths to
-scale BW on a per-frame basis by high priority clients such as GPU and
-display. However, there are many low priority clients of icc_set_bw() as
-well. This can lead to priority inversion and unacceptable delays for
-the high priority clients. Which in the case of GPU and display can
-result in frame drops and visual glitches.
+On 06/05/2025 15:25, Will Deacon wrote:
+> On Mon, Apr 28, 2025 at 03:35:14PM +0000, Mikołaj Lenczewski wrote:
+>> The Break-Before-Make cpu feature supports multiple levels (levels 0-2),
+>> and this commit adds a dedicated BBML2 cpufeature to test against
+>> support for, as well as a kernel commandline parameter to optionally
+>> disable BBML2 altogether.
+>>
+>> This is a system feature as we might have a big.LITTLE architecture
+>> where some cores support BBML2 and some don't, but we want all cores to
+>> be available and BBM to default to level 0 (as opposed to having cores
+>> without BBML2 not coming online).
+>>
+>> To support BBML2 in as wide a range of contexts as we can, we want not
+>> only the architectural guarantees that BBML2 makes, but additionally
+>> want BBML2 to not create TLB conflict aborts. Not causing aborts avoids
+>> us having to prove that no recursive faults can be induced in any path
+>> that uses BBML2, allowing its use for arbitrary kernel mappings.
+>> Support detection of such CPUs.
+>>
+>> Signed-off-by: Mikołaj Lenczewski <miko.lenczewski@arm.com>
+>> Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+>> Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
+>> ---
+>>  .../admin-guide/kernel-parameters.txt         |  3 +
+>>  arch/arm64/Kconfig                            | 19 +++++
+>>  arch/arm64/include/asm/cpucaps.h              |  2 +
+>>  arch/arm64/include/asm/cpufeature.h           |  5 ++
+>>  arch/arm64/kernel/cpufeature.c                | 71 +++++++++++++++++++
+>>  arch/arm64/kernel/pi/idreg-override.c         |  2 +
+>>  arch/arm64/tools/cpucaps                      |  1 +
+>>  7 files changed, 103 insertions(+)
+>>
+>> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+>> index d9fd26b95b34..2749c67a4f07 100644
+>> --- a/Documentation/admin-guide/kernel-parameters.txt
+>> +++ b/Documentation/admin-guide/kernel-parameters.txt
+>> @@ -449,6 +449,9 @@
+>>  	arm64.no32bit_el0 [ARM64] Unconditionally disable the execution of
+>>  			32 bit applications.
+>>  
+>> +	arm64.nobbml2	[ARM64] Unconditionally disable Break-Before-Make Level
+>> +			2 support
+> 
+> Hmm, I'm not sure we really want this. It opens up the door for folks to
+> pass 'id_aa64mmfr2.bbm=2' without updating the allow-list which feels
+> like it's going to make crashes harder to reason about.
+> 
+> Is there a compelling reason to add this right now?
 
-To prevent this priority inversion, switch to using rt_mutex for
-icc_bw_lock. This isn't needed for icc_lock since that's not used in the
-critical, latency-sensitive voting paths.
+I don't think there is a *compelling* reason. This came about from Suzuki's
+feedback at [1]. He was keen to have a mechanism to disable BBML2 in case issues
+were found.
 
-Signed-off-by: Mike Tipton <quic_mdtipton@quicinc.com>
----
+But simpler is usually better; I'd be ok with removing.
 
-Since the original patch was posted a couple years ago, we've continued
-to hit this for display and now for GPU as well. How frequently depends
-heavily on the specific chip, product, and use case. Different
-configurations hit it easier than others. But for both cases it results
-in obvious visual glitches.
+[1] https://lore.kernel.org/all/0ac0f1f5-e4a0-46ae-8ea0-2eba7e21a7e1@arm.com/
 
-The paths being voted for (primarily DDR) are fundamentally shared
-between clients of all types and priority levels. We can't control their
-priorities, so aside from having those priorities inherited we're always
-subject to these sorts of inversions.
+> 
+>>  	arm64.nobti	[ARM64] Unconditionally disable Branch Target
+>>  			Identification support
+>>  
+>> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+>> index a182295e6f08..613b4925ca06 100644
+>> --- a/arch/arm64/Kconfig
+>> +++ b/arch/arm64/Kconfig
+>> @@ -2070,6 +2070,25 @@ config ARM64_TLB_RANGE
+>>  	  The feature introduces new assembly instructions, and they were
+>>  	  support when binutils >= 2.30.
+>>  
+>> +config ARM64_BBML2_NOABORT
+>> +	bool "Enable support for Break-Before-Make Level 2 detection and usage"
+>> +	default y
+> 
+> I don't think we need a new Kconfig option for this. It's a
+> kernel-internal detail and I'd prefer not to fragment the testing base.
 
-The motivation isn't really for general performance improvement, but
-instead to fix the rare cases of visual glitches and artifacts.
+Fair enough. This originated based on a similar argument to above. Let's just
+remove then.
 
-A similar patch was posted last year [1] to address similar problems.
+> 
+>> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+>> index 9c4d6d552b25..7a85a1bdc6e9 100644
+>> --- a/arch/arm64/kernel/cpufeature.c
+>> +++ b/arch/arm64/kernel/cpufeature.c
+>> @@ -2200,6 +2200,70 @@ static bool hvhe_possible(const struct arm64_cpu_capabilities *entry,
+>>  	return arm64_test_sw_feature_override(ARM64_SW_FEATURE_OVERRIDE_HVHE);
+>>  }
+>>  
+>> +static bool cpu_has_bbml2_noabort(unsigned int cpu_midr)
+>> +{
+>> +	/*
+>> +	 * We want to allow usage of bbml2 in as wide a range of kernel contexts
+>> +	 * as possible. This list is therefore an allow-list of known-good
+>> +	 * implementations that both support bbml2 and additionally, fulfill the
+>> +	 * extra constraint of never generating TLB conflict aborts when using
+>> +	 * the relaxed bbml2 semantics (such aborts make use of bbml2 in certain
+>> +	 * kernel contexts difficult to prove safe against recursive aborts).
+>> +	 *
+>> +	 * Note that implementations can only be considered "known-good" if their
+>> +	 * implementors attest to the fact that the implementation never raises
+>> +	 * TLBI conflict aborts for bbml2 mapping granularity changes.
+>> +	 */
+>> +	static const struct midr_range supports_bbml2_noabort_list[] = {
+>> +		MIDR_REV_RANGE(MIDR_CORTEX_X4, 0, 3, 0xf),
+>> +		MIDR_REV_RANGE(MIDR_NEOVERSE_V3, 0, 2, 0xf),
+>> +		{}
+>> +	};
+>> +
+>> +	return is_midr_in_range_list(cpu_midr, supports_bbml2_noabort_list);
+> 
+> This doesn't compile against latest mainline as is_midr_in_range_list()
+> no longer takes the midr.
 
-[1] https://lore.kernel.org/all/20240220074300.10805-1-wangrumeng@xiaomi.corp-partner.google.com/
+Will ask Miko to fix.
 
-Changes in v2:
-- Rebase onto linux-next.
-- Select RT_MUTEXES in Kconfig.
-- Only use rt_mutex for icc_bw_lock since now there are separate locks
-  and icc_lock isn't in the critical path.
-- Reword commit text.
-- Link to v1: https://lore.kernel.org/all/20220906191423.30109-1-quic_mdtipton@quicinc.com/
+> 
+>> +static bool has_bbml2_noabort(const struct arm64_cpu_capabilities *caps, int scope)
+>> +{
+>> +	if (!IS_ENABLED(CONFIG_ARM64_BBML2_NOABORT))
+>> +		return false;
+>> +
+>> +	if (scope & SCOPE_SYSTEM) {
+>> +		int cpu;
+>> +
+>> +		/*
+>> +		 * We are a boot CPU, and must verify that all enumerated boot
+>> +		 * CPUs have MIDR values within our allowlist. Otherwise, we do
+>> +		 * not allow the BBML2 feature to avoid potential faults when
+>> +		 * the insufficient CPUs access memory regions using BBML2
+>> +		 * semantics.
+>> +		 */
+>> +		for_each_online_cpu(cpu) {
+>> +			if (!cpu_has_bbml2_noabort(cpu_read_midr(cpu)))
+>> +				return false;
+>> +		}
+> 
+> This penalises large homogeneous systems and it feels unnecessary given
+> that we have the ability to check this per-CPU. Can you use
+> ARM64_CPUCAP_BOOT_CPU_FEATURE instead of ARM64_CPUCAP_SYSTEM_FEATURE
+> to solve this?
 
- drivers/interconnect/Kconfig |  1 +
- drivers/interconnect/core.c  | 23 ++++++++++++-----------
- 2 files changed, 13 insertions(+), 11 deletions(-)
+We are trying to solve for the case where the boot CPU has BBML2 but a secondary
+CPU doesn't. (e.g. hetrogeneous system where boot CPU is big and secondary is
+little and does not advertise the feature. I can't remember if we proved there
+are real systems with this config - I have vague recollection that we did but my
+memory is poor...).
 
-diff --git a/drivers/interconnect/Kconfig b/drivers/interconnect/Kconfig
-index f2e49bd97d31..f6fd5f2d7d40 100644
---- a/drivers/interconnect/Kconfig
-+++ b/drivers/interconnect/Kconfig
-@@ -1,6 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0-only
- menuconfig INTERCONNECT
- 	bool "On-Chip Interconnect management support"
-+	select RT_MUTEXES
- 	help
- 	  Support for management of the on-chip interconnects.
- 
-diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
-index 1a41e59c77f8..2e86a3c95d1a 100644
---- a/drivers/interconnect/core.c
-+++ b/drivers/interconnect/core.c
-@@ -14,6 +14,7 @@
- #include <linux/interconnect-provider.h>
- #include <linux/list.h>
- #include <linux/mutex.h>
-+#include <linux/rtmutex.h>
- #include <linux/slab.h>
- #include <linux/of.h>
- #include <linux/overflow.h>
-@@ -30,7 +31,7 @@ static LIST_HEAD(icc_providers);
- static int providers_count;
- static bool synced_state;
- static DEFINE_MUTEX(icc_lock);
--static DEFINE_MUTEX(icc_bw_lock);
-+static DEFINE_RT_MUTEX(icc_bw_lock);
- static struct dentry *icc_debugfs_dir;
- 
- static void icc_summary_show_one(struct seq_file *s, struct icc_node *n)
-@@ -178,7 +179,7 @@ static struct icc_path *path_init(struct device *dev, struct icc_node *dst,
- 
- 	path->num_nodes = num_nodes;
- 
--	mutex_lock(&icc_bw_lock);
-+	rt_mutex_lock(&icc_bw_lock);
- 
- 	for (i = num_nodes - 1; i >= 0; i--) {
- 		node->provider->users++;
-@@ -190,7 +191,7 @@ static struct icc_path *path_init(struct device *dev, struct icc_node *dst,
- 		node = node->reverse;
- 	}
- 
--	mutex_unlock(&icc_bw_lock);
-+	rt_mutex_unlock(&icc_bw_lock);
- 
- 	return path;
- }
-@@ -704,7 +705,7 @@ int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw)
- 	if (WARN_ON(IS_ERR(path) || !path->num_nodes))
- 		return -EINVAL;
- 
--	mutex_lock(&icc_bw_lock);
-+	rt_mutex_lock(&icc_bw_lock);
- 
- 	old_avg = path->reqs[0].avg_bw;
- 	old_peak = path->reqs[0].peak_bw;
-@@ -736,7 +737,7 @@ int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw)
- 		apply_constraints(path);
- 	}
- 
--	mutex_unlock(&icc_bw_lock);
-+	rt_mutex_unlock(&icc_bw_lock);
- 
- 	trace_icc_set_bw_end(path, ret);
- 
-@@ -798,7 +799,7 @@ void icc_put(struct icc_path *path)
- 		pr_err("%s: error (%d)\n", __func__, ret);
- 
- 	mutex_lock(&icc_lock);
--	mutex_lock(&icc_bw_lock);
-+	rt_mutex_lock(&icc_bw_lock);
- 
- 	for (i = 0; i < path->num_nodes; i++) {
- 		node = path->reqs[i].node;
-@@ -807,7 +808,7 @@ void icc_put(struct icc_path *path)
- 			node->provider->users--;
- 	}
- 
--	mutex_unlock(&icc_bw_lock);
-+	rt_mutex_unlock(&icc_bw_lock);
- 	mutex_unlock(&icc_lock);
- 
- 	kfree(path->name);
-@@ -1023,7 +1024,7 @@ void icc_node_add(struct icc_node *node, struct icc_provider *provider)
- 		return;
- 
- 	mutex_lock(&icc_lock);
--	mutex_lock(&icc_bw_lock);
-+	rt_mutex_lock(&icc_bw_lock);
- 
- 	node->provider = provider;
- 	list_add_tail(&node->node_list, &provider->nodes);
-@@ -1056,7 +1057,7 @@ void icc_node_add(struct icc_node *node, struct icc_provider *provider)
- 	node->avg_bw = 0;
- 	node->peak_bw = 0;
- 
--	mutex_unlock(&icc_bw_lock);
-+	rt_mutex_unlock(&icc_bw_lock);
- 	mutex_unlock(&icc_lock);
- }
- EXPORT_SYMBOL_GPL(icc_node_add);
-@@ -1182,7 +1183,7 @@ void icc_sync_state(struct device *dev)
- 		return;
- 
- 	mutex_lock(&icc_lock);
--	mutex_lock(&icc_bw_lock);
-+	rt_mutex_lock(&icc_bw_lock);
- 	synced_state = true;
- 	list_for_each_entry(p, &icc_providers, provider_list) {
- 		dev_dbg(p->dev, "interconnect provider is in synced state\n");
-@@ -1195,7 +1196,7 @@ void icc_sync_state(struct device *dev)
- 			}
- 		}
- 	}
--	mutex_unlock(&icc_bw_lock);
-+	rt_mutex_unlock(&icc_bw_lock);
- 	mutex_unlock(&icc_lock);
- }
- EXPORT_SYMBOL_GPL(icc_sync_state);
--- 
-2.34.1
+My understanding is that for ARM64_CPUCAP_BOOT_CPU_FEATURE, "If the boot CPU
+has enabled this feature already, then every late CPU must have it". So that
+would exclude any secondary CPUs without BBML2 from coming online?
+
+Suzuki guided us towards this solution.
+
+How do you see this working with ARM64_CPUCAP_BOOT_CPU_FEATURE? Or do you just
+think that all systems will always be homogeneous with respect to FEAT_BBM?
+
+Thanks,
+Ryan
+
+> 
+> Will
 
