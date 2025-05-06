@@ -1,176 +1,127 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-80007.amazon.com (smtp-fw-80007.amazon.com [99.78.197.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C8B81DE2C9;
-	Tue,  6 May 2025 20:07:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37E1E4B1E58;
+	Tue,  6 May 2025 20:08:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746562028; cv=none; b=ol62Apg24fW7ACQx1//WV44774VRAJjr5xaao9gh19IaiZwlSK4gdSd/7z4yYTLlDCCTikqcVDtW/7JOpYJcuFnxI+odiyNog2FIaHCiHKuGmiHSlK8AgX+kXVQFVG9FpdDVi/G7/YPxUsGwgcVI6UmvguyfKd5JRrrhteoRjGA=
+	t=1746562132; cv=none; b=QY4TmEzv+HdeRObr+72fJDcq/GibF480UUdC+Cpj360qiHnycS+ubDSelpeF6lnikD9SlsZqWZ+/maCr8jcV3K0dXlHhYsbTjTfQF4KzIqZdYU5dqkhAH8XoN3CroC+b4Ht9xn71YN25GmnAG2JIcpfc2lZG+PxUOd4fkMPUFDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746562028; c=relaxed/simple;
-	bh=np1yhCpp/qpjWGPuT2g9hwqJ7HuHqaWY+xGRBXC7yJw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=R4EeUHZYroAaeMX1OecJu1aFgdJSpjnxsMbLW4mOOgNccGj+5KJmRAYPTzSR/Ie4EFLwZIt29P534eMU9gRAdJhGOzBdX8sionI5TdG7gmSLRSGbP/8jQKDfwoYsV48rxP9CQhSNdItzdz/RD8Tv06Ol7noOkS07ng4Eb0LzWJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mCuakODT; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746562132; c=relaxed/simple;
+	bh=eGtaT8YHa2NeK+bQ1S1q6NtQdzVxZEmIZRqdE0nnG8I=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=XS1RNBB4j8FENHROmZPStBATdjifxfJ8uuYeXR6gp+4Y1MYWmSANRhfi/vS4z5rEDyCUyH2tPazwB56wJBOFxy86rxGQkXzvoQYQvwf6dydg2xqgXw62sS5oAzRKWHiju/fZ4U0sjQTKK1Y7LK3vNkcmDxnSh001iyDEpIZ0Ae4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.de; dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b=ke1j2KIO; arc=none smtp.client-ip=99.78.197.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mCuakODT"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2241053582dso95268445ad.1;
-        Tue, 06 May 2025 13:07:07 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="ke1j2KIO"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746562026; x=1747166826; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4ZxCy7mrct22eBjkvKCaCp8i27n4yjdKKChzB9Nlcrw=;
-        b=mCuakODTArWwyJStrZwTroLuKqwZ4cbExcu6c2Ph1HkfPqIznAk0sH5JAicBNdNgFk
-         +9Im9XmsaCDIgSmww5mVTrNB5gEILQJuDnFNquR7polUTTXkNDrRercp5ePhZGYXg8O+
-         CS0hNO4Dv/jtEyu6tCzTcLI6Ctdoh/MgMjzub5rsSSNINx6zVK0iFIUwoo8jtomlqUMG
-         LxSbQWd7l/xVKGqHhtiSaLFAQ1gGowdIoMcxEhKfbJ0z19Rfzj1pmApSexRsQRXVQtBS
-         2fqDV3yrg6J9qKMdfWITtPWRhTHhrNY21KT7QzqQcQFf6nnkNSNQgj25dPi2BISgSrqB
-         tORw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746562026; x=1747166826;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4ZxCy7mrct22eBjkvKCaCp8i27n4yjdKKChzB9Nlcrw=;
-        b=vkjlXc0x15wUW4xZ582PFoZQqfScRlKEH8RZqVDCIZhZA9007bbhvkjXURY+UX8mhR
-         Y4oT8cdt/WBebKuUaWOflj+ALgTtQnMG4tU4f8jY0CdlpGDdZhAHASiGGAszOo3y3JYM
-         rZIW97U4UWVweqqX+KuI0TWcWSBvwDv6L42wlKx8R1Y6SJxYPav3Q+MCVKOmd0yu035L
-         2Nc149QKwolmwv6S3C22XhPoqmKFP8WdGcXmOUyAmhxP2As+Vgz308mx4OYb/07wU+p1
-         YjfM0TDbOpDegpn8NDLxxoQVTl86/hWC+hBs+xdXHUFkifSdmOZCavgT/o/kCj0Iw6O+
-         S7hg==
-X-Forwarded-Encrypted: i=1; AJvYcCWB6Evfl9jpTX7zz+ru0mMT0anrku+bRJRk2soB2LLU1opk7+dFwqy2dUmPQy3MxwrAxWCrP95hklEwD1fe@vger.kernel.org, AJvYcCWMqID0B+FLnDnBChBfDJgB+fs0C/cJ0Z/7Sr6EPzD/NNmuYh8Z3h9t6S70FHGOSwIdfYuC3pfhiKcQ@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJ4JqkiCeLbNQo5BrKmhgeJjy8Bf0NJRJji+Fi3QG6TpwNDHJh
-	8CdD0T3KGUWprmiDgReT+s/xFKGd2ZKiBZmL7DmQys/E8LF19pvBTyfx7dxtyLo=
-X-Gm-Gg: ASbGnctLkw6D65CcTs5JdYZczt1A0zGQ3dVr0MFPKyNa9htOk9udveAKi+ZURUxVF5A
-	aM02qBEA9ePof19FPja7uvIE7yNrdtNkTsM1/xY2wzW7OaG0TZVXXTDv1wFgYxxevRhXkkcF+R5
-	BDbyMGKd8B1YEXGS/7nmWe+qKmM4HJ5i5oW2c3rkRlsJzENVWLOEg2IqHBoAuNodAiuuaE5HXFy
-	D7YyhtEeKmTBX8xLil9CRYbae28TtJEwvEal/VVIOeqrOCa4HCy3VLVCIo5W4cP3RIuKVhqyGFG
-	QaqJ0Rc+ZjhJXYIYSWMhsoT+uqPkoLgsVxJzrccJnVP6c+Q1LaLK8ItCJxGgnY0=
-X-Google-Smtp-Source: AGHT+IHgty+nWlNjvTn6uA89Smf4WEwkFQeboQPPyPj2tQrZt5RL3JsInUt016uy2gN0K4G0GCNLdw==
-X-Received: by 2002:a17:902:e784:b0:21f:1202:f2f5 with SMTP id d9443c01a7336-22e5ea70a93mr7009825ad.8.1746562026263;
-        Tue, 06 May 2025 13:07:06 -0700 (PDT)
-Received: from NB-GIGA003.letovo.school ([5.194.95.139])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e151e97absm78378635ad.62.2025.05.06.13.07.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 13:07:05 -0700 (PDT)
-From: Alexey Charkov <alchark@gmail.com>
-Date: Wed, 07 May 2025 00:06:14 +0400
-Subject: [PATCH 3/3] ARM: dts: vt8500: list all four timer interrupts
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
+  t=1746562132; x=1778098132;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:mime-version:
+   content-transfer-encoding;
+  bh=XgZWLsQQ1oA86ivWixQClpY8pfBKjEwnYDV1vhlMomQ=;
+  b=ke1j2KIOkgdUb+fUf0v+zKdHOhse7zAL5Hz4ZOVFScHfOTtyM7KiJsQk
+   PatqTdscxSf5Uhvucnxo9njDkZ0qENuj4VDjxLtf0uaO27vbhsZyxU4eK
+   Z/zfn1xPg1jafJveJk7Klx2eojamMhMe58JuGASbznoruqMBh0ibIly8h
+   M=;
+X-IronPort-AV: E=Sophos;i="6.15,267,1739836800"; 
+   d="scan'208";a="402665285"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
+  by smtp-border-fw-80007.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 20:08:50 +0000
+Received: from EX19MTAEUA001.ant.amazon.com [10.0.43.254:59930]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.45.202:2525] with esmtp (Farcaster)
+ id 32e0986e-25b2-4c4a-923a-248d30395490; Tue, 6 May 2025 20:08:48 +0000 (UTC)
+X-Farcaster-Flow-ID: 32e0986e-25b2-4c4a-923a-248d30395490
+Received: from EX19D008EUC001.ant.amazon.com (10.252.51.165) by
+ EX19MTAEUA001.ant.amazon.com (10.252.50.50) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Tue, 6 May 2025 20:08:47 +0000
+Received: from EX19D008EUC001.ant.amazon.com (10.252.51.165) by
+ EX19D008EUC001.ant.amazon.com (10.252.51.165) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Tue, 6 May 2025 20:08:47 +0000
+Received: from EX19D008EUC001.ant.amazon.com ([fe80::9611:c62b:a7ba:aee1]) by
+ EX19D008EUC001.ant.amazon.com ([fe80::9611:c62b:a7ba:aee1%3]) with mapi id
+ 15.02.1544.014; Tue, 6 May 2025 20:08:47 +0000
+From: "Heyne, Maximilian" <mheyne@amazon.de>
+To: Sudeep Holla <sudeep.holla@arm.com>
+CC: "stable@vger.kernel.org" <stable@vger.kernel.org>, "Rafael J. Wysocki"
+	<rafael@kernel.org>, Len Brown <lenb@kernel.org>, Ard Biesheuvel
+	<ardb@kernel.org>, Jeremy Linton <jeremy.linton@arm.com>, Catalin Marinas
+	<catalin.marinas@arm.com>, "linux-acpi@vger.kernel.org"
+	<linux-acpi@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ACPI/PPTT: fix off-by-one error
+Thread-Topic: [PATCH] ACPI/PPTT: fix off-by-one error
+Thread-Index: AQHbvsKtPvPHOudq9EiKfnbEmFnf/w==
+Date: Tue, 6 May 2025 20:08:47 +0000
+Message-ID: <20250506-dialog-57th-c4e70064@mheyne-amazon>
+References: <20250506-draco-taped-15f475cd@mheyne-amazon>
+ <20250506-shapeless-merciful-inchworm-7bfdb4@sudeepholla>
+In-Reply-To: <20250506-shapeless-merciful-inchworm-7bfdb4@sudeepholla>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1F9E7353BFA2664393D7E4C8429FA22B@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250507-vt8500-timer-updates-v1-3-6b76f7f340a6@gmail.com>
-References: <20250507-vt8500-timer-updates-v1-0-6b76f7f340a6@gmail.com>
-In-Reply-To: <20250507-vt8500-timer-updates-v1-0-6b76f7f340a6@gmail.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>, 
- Daniel Lezcano <daniel.lezcano@linaro.org>, 
- Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org, Alexey Charkov <alchark@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746562005; l=3301;
- i=alchark@gmail.com; s=20250416; h=from:subject:message-id;
- bh=np1yhCpp/qpjWGPuT2g9hwqJ7HuHqaWY+xGRBXC7yJw=;
- b=acj9oqY6ajaVU5Jdm/+NS52srXwXFDErkKw/vH45g0NmZPqUHKsdDmqsG39gjwMEAfZdC+dIX
- Kxa/8yKPuWGBEKPxh2MZY5a0osj9FK/0b0OPvbVxF9Ahurk+TAxBM3O
-X-Developer-Key: i=alchark@gmail.com; a=ed25519;
- pk=ltKbQzKLTJPiDgPtcHxdo+dzFthCCMtC3V9qf7+0rkc=
+Content-Transfer-Encoding: quoted-printable
 
-VIA/WonderMedia SoC timer can generate up to four interrupts corresponding
-to four timer match registers (firing when the 32-bit freerunning clock
-source counter matches either of the match registers, respectively).
+On Tue, May 06, 2025 at 02:43:39PM +0100, Sudeep Holla wrote:
+> On Tue, May 06, 2025 at 01:13:02PM +0000, Heyne, Maximilian wrote:
+> > Commit 7ab4f0e37a0f ("ACPI PPTT: Fix coding mistakes in a couple of
+> > sizeof() calls") corrects the processer entry size but unmasked a longer
+> > standing bug where the last entry in the structure can get skipped due
+> > to an off-by-one mistake if the last entry ends exactly at the end of
+> > the ACPI subtable.
+> >
+> =
 
-List all four interrupts in device trees.
+> Unless the firmware has populated an incorrect value for the header lengt=
+h, I
+> don't see how this is possible. The table_end should point to the address
+> immediately following the last byte of the table. None of the headers are=
+ only
+> one byte long, so what am I missing that could explain this apparent
+> off-by-one issue?.
+> =
 
-This also enables the system event timer to use a match register other
-than 0, which can then in turn be used as a system watchdog (watchdog
-function is not available on other channels)
+> -- =
 
-Signed-off-by: Alexey Charkov <alchark@gmail.com>
----
- arch/arm/boot/dts/vt8500/vt8500.dtsi | 2 +-
- arch/arm/boot/dts/vt8500/wm8505.dtsi | 2 +-
- arch/arm/boot/dts/vt8500/wm8650.dtsi | 2 +-
- arch/arm/boot/dts/vt8500/wm8750.dtsi | 2 +-
- arch/arm/boot/dts/vt8500/wm8850.dtsi | 2 +-
- 5 files changed, 5 insertions(+), 5 deletions(-)
+> Regards,
+> Sudeep
 
-diff --git a/arch/arm/boot/dts/vt8500/vt8500.dtsi b/arch/arm/boot/dts/vt8500/vt8500.dtsi
-index 2ba021585d4889f29777a12473964c29f999f3a0..d1dd37220d41becece5d24fbb19aa71b01723e35 100644
---- a/arch/arm/boot/dts/vt8500/vt8500.dtsi
-+++ b/arch/arm/boot/dts/vt8500/vt8500.dtsi
-@@ -111,7 +111,7 @@ clkuart3: uart3 {
- 		timer@d8130100 {
- 			compatible = "via,vt8500-timer";
- 			reg = <0xd8130100 0x28>;
--			interrupts = <36>;
-+			interrupts = <36>, <37>, <38>, <39>;
- 		};
- 
- 		usb@d8007900 {
-diff --git a/arch/arm/boot/dts/vt8500/wm8505.dtsi b/arch/arm/boot/dts/vt8500/wm8505.dtsi
-index 99c064c916b2279797f71261ca9306e9dcd4bbd8..2b1819f0c5412648a83cd3eeb495f68d2e4100ef 100644
---- a/arch/arm/boot/dts/vt8500/wm8505.dtsi
-+++ b/arch/arm/boot/dts/vt8500/wm8505.dtsi
-@@ -209,7 +209,7 @@ clksdhc: sdhc {
- 		timer@d8130100 {
- 			compatible = "via,vt8500-timer";
- 			reg = <0xd8130100 0x28>;
--			interrupts = <36>;
-+			interrupts = <36>, <37>, <38>, <39>;
- 		};
- 
- 		usb@d8007100 {
-diff --git a/arch/arm/boot/dts/vt8500/wm8650.dtsi b/arch/arm/boot/dts/vt8500/wm8650.dtsi
-index 0d6c7bd87f7dcce0eef056d04c38ab1de5d52639..042eec78c085d19fc97d7f0f9721399c0716ff74 100644
---- a/arch/arm/boot/dts/vt8500/wm8650.dtsi
-+++ b/arch/arm/boot/dts/vt8500/wm8650.dtsi
-@@ -181,7 +181,7 @@ clksdhc: sdhc {
- 		timer@d8130100 {
- 			compatible = "via,vt8500-timer";
- 			reg = <0xd8130100 0x28>;
--			interrupts = <36>;
-+			interrupts = <36>, <37>, <38>, <39>;
- 		};
- 
- 		usb@d8007900 {
-diff --git a/arch/arm/boot/dts/vt8500/wm8750.dtsi b/arch/arm/boot/dts/vt8500/wm8750.dtsi
-index 0158c0ba5dd110957eac38775d3bf3ebd2ab4154..56342aa1d993a43e7ee766f93151c6d456496262 100644
---- a/arch/arm/boot/dts/vt8500/wm8750.dtsi
-+++ b/arch/arm/boot/dts/vt8500/wm8750.dtsi
-@@ -253,7 +253,7 @@ pwm: pwm@d8220000 {
- 		timer@d8130100 {
- 			compatible = "via,vt8500-timer";
- 			reg = <0xd8130100 0x28>;
--			interrupts = <36>;
-+			interrupts = <36>, <37>, <38>, <39>;
- 		};
- 
- 		usb@d8007900 {
-diff --git a/arch/arm/boot/dts/vt8500/wm8850.dtsi b/arch/arm/boot/dts/vt8500/wm8850.dtsi
-index c4bfb4d30aad0358b39cbf30edf0c63e32167bbd..03e72f28d31b1cfdcfa71ede93b8943971bae4e3 100644
---- a/arch/arm/boot/dts/vt8500/wm8850.dtsi
-+++ b/arch/arm/boot/dts/vt8500/wm8850.dtsi
-@@ -240,7 +240,7 @@ pwm: pwm@d8220000 {
- 		timer@d8130100 {
- 			compatible = "via,vt8500-timer";
- 			reg = <0xd8130100 0x28>;
--			interrupts = <36>;
-+			interrupts = <36>, <37>, <38>, <39>;
- 		};
- 
- 		usb@d8007900 {
+Maybe calling it off-by-one is not very exact. You're right table_end
+points to the address following the last byte *but*
+  (unsigned long)entry + proc_sz
+also points to this very byte if it's the last entry. And in this case
+the while condition is not taken which means we're ignoring the last
+processor node.
 
--- 
-2.49.0
+For example, in our specific case the table has a length of 0xCBE and
+the last processor node entry is at 0xCAA with a length of 0x14 fitting
+exactly into the table but 0xCAA + 0x14 =3D=3D 0xCBE which turns the
+condition false.
+
+Disclaimer: I'm not an expert in this topic but stumbled upon this bug
+when looking at the latest kernels.
+
+
+
+Amazon Web Services Development Center Germany GmbH
+Tamara-Danz-Str. 13
+10243 Berlin
+Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
+Eingetragen am Amtsgericht Charlottenburg unter HRB 257764 B
+Sitz: Berlin
+Ust-ID: DE 365 538 597
 
