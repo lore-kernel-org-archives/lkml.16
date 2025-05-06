@@ -1,137 +1,862 @@
-Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA7861A23A9;
-	Tue,  6 May 2025 23:14:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EF43139E
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 23:15:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746573301; cv=none; b=T1mCsE+Qa/z+TCenTXvzWP+Loe/6WSEgpyYF+UBqt7kC5hRYY5ioV2gjVNnmnXLZJleRdqelr57S4Nb6/JPSNe4p6PFgUV2e5wONmFcDsLtvGhWRbklU5h3qpP+F3el53ywTSx9Y7NVXNa6Lr3NRMznCpjalkL3jvRuTPolir2k=
+	t=1746573333; cv=none; b=mXnyEM61f8VtmxAgg5BcvfDIOMTgm8ZB1ObSqihu5jBU68+KHJAUUJxhOmNnxxoXcTaTTCw+ZpUZIU+sDckDXyONWKWI8dwehfe7oFJuWlncXfs1rfvgKsIsfTWepmyPhur2Eg+XHKzVh0BqDQu5dLLl2UiUV01F5hdVy9foJO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746573301; c=relaxed/simple;
-	bh=0APPBYsT8cIqi0gvG0DV20fanKAT7WzukD/B32mb0z4=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=S+AHn8t7C4HHYeskUjmhPV0fCWdXzVeik+biZw8jv1tdeUx2GOMrfphXlLr509v2fsmeSd+ZWc3q51p8LcyncL7OEAZQ1eeJmK+5nDf5AR/OpjRbqv3RpENEdT4WfS10EXN9Bd9ETLecynY9v6Iyr8RmYVr5CbuVmdyCDw/wzDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=QfaO9SCT; arc=none smtp.client-ip=185.226.149.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
+	s=arc-20240116; t=1746573333; c=relaxed/simple;
+	bh=WOmVYPmC5pxHj00yrcEwBqM9eQIVjijTOrekzNkQk3A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KhvQN34z/pmYI1kFsD56Rc8oWQIfI5K5Ai8NR5F2x6PLmLU18zhdLTTX5j6thDZJxvWfdm4EZ5hqxsI+ZqMRlXqg3N8oTpEXisceczxWIN78nd418Z6dGxYqz1daMVbKD4lsjMnL4ds6aywoizxt7ne552pbPFHBrgoAr1iq4r0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MyGmEI/n; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="QfaO9SCT"
-Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
-	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.93)
-	(envelope-from <mhal@rbox.co>)
-	id 1uCR4T-007tJK-2w; Wed, 07 May 2025 00:47:29 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
-	s=selector1; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:References:
-	Cc:To:Subject:From:MIME-Version:Date:Message-ID;
-	bh=BMq0rqR/Z/Nu+2i3yDlis9NI97iG+saHQkwWMHw8sw0=; b=QfaO9SCT4A3ryrokVq0tNv2Ie2
-	Jb8lnps96YvimNQOJvx9Nl8/eT8AFAFTYBlN95CQfx3p2oG4EvTHjvie1JPaOplGPfmetkwP2ZWvy
-	3d13IpFuEusdcv35+zYSAaB2J+429FqjE5otK1KCXupg5PqLIRfqSs5buokqa4Y8kNRY6tTSF9lcj
-	rKBFnADYjurMWzlu2WpsrxiTy4+jSDEWlazkUiuM29/h1wHoWAe5GPdzrDlA3Y07fNeLmb2s4KEzP
-	3F5mk8nExShIi/bWKum/TISh5BngU6aXcSKaz4tCIdl+545PBUGAFykCSPdREnA8oxFr6WiziKbu/
-	SI72Cj5Q==;
-Received: from [10.9.9.72] (helo=submission01.runbox)
-	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
-	(envelope-from <mhal@rbox.co>)
-	id 1uCR4R-0006Gd-Rg; Wed, 07 May 2025 00:47:28 +0200
-Received: by submission01.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.93)
-	id 1uCR4A-00FMcb-5o; Wed, 07 May 2025 00:47:10 +0200
-Message-ID: <6a818cc6-f26c-417b-ad06-0686b698b2fe@rbox.co>
-Date: Wed, 7 May 2025 00:47:08 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MyGmEI/n"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ac2ab99e16eso425943766b.0
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 16:15:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746573329; x=1747178129; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=si1NvQoSZ9TytzkoJDclPRYe8DzN5blXaQffB/RGQb8=;
+        b=MyGmEI/nYX8m/ffOXyqF3TJTaYBEhwF2J8SfslchwnvgtFfvSXCLGId7gAo/e/PL3Y
+         SYYAfN57RmfszFr4t71c355+Jgi2nS+bQ/WM8+g3JfewxpsbqCvlhrzoyeZMN5C83HaD
+         cepzAyJJjtjq5EwIX6Vw/Ry1Be50kSNPdHMG0FAHK0+JxJzd9XU6j02QWwYqvcCeVubd
+         HWHiQegc4RlOz+RrA1vTM//qXSDq5YArTttAgCfglMBB7d8pm/KidsvA1qPIWPCCsq39
+         uWlzGGgfQTthNG+pHalyNWsQo71pS9Kyi+eRczomNC1dI6aNkpJ8viayP5O0h5LYqkTj
+         v13w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746573329; x=1747178129;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=si1NvQoSZ9TytzkoJDclPRYe8DzN5blXaQffB/RGQb8=;
+        b=WCPWuvw2HgdjvfEF099i9LiFwE3ZFz3HcXtcjlVIVx0FjSCwFw6QPRVmlwh+CvTqw5
+         GwXukUQmKACF5Hw0CHtrUAGG8SQkKFiy9qKU8nc6+V+nm3dwT3emjyOtGMsbcZKikfCH
+         4iRDkj/NcToX0jlwr95GOeiXomPjk4GMo2UA8iXI1p727r9Ey5xB6VAy1baqul35ohno
+         UzR8VChhvNPQQk1bT9lMhfSmUFS/lBkp6S38ATrpQniUIsuxOMP/lcSY6oL1+jUbjOBm
+         CoVOqQhqDyr+0PujvuVMwrb0ZG1RsB14LN5x/t0Jaz+lm5BGK/XyoL6QC3Bhifzex0hM
+         gm8w==
+X-Gm-Message-State: AOJu0YxX4vthsfpIi8mq6qT6sWTUmK6RUMNs1uYindXGVElo8wUaXUrB
+	DH3o3+9G8KiEr9WMMyOtuEf+DpwtKIP7ysmJGL5/28/0tyXxZZYqu0CYi23NsCNQcjrmoMrpuLb
+	MnykbIw+hBsgzQILBhS0+TXfuJ6cRdqjbO4Px
+X-Gm-Gg: ASbGncvn/p2zDaIhr/yvKX7nUH0aW1bAVGvmu7NtSzjdUKsZwPTQm6tABYxt5csYWY5
+	RodfMjcvbgP2E/CgWQiD7RQPjV/3iWH76WVHL3JCGOHp5zxfp9mmsGbfN5stbweFEWHollw8InN
+	63oTDQ2BAAdy1z6VOZT4E/DLMLvA89uY6sUcYQBKJA7p1e04DJaojs6Ug9
+X-Google-Smtp-Source: AGHT+IFvXXihP2c5xxP7Gl8fO1ieraTaz0RPHZmimDr3RO6cjvCm433dTdThf0XPgsYbrtWeAlriOb2iAuT1uY+67+Y=
+X-Received: by 2002:a17:907:7e82:b0:ace:c225:c71d with SMTP id
+ a640c23a62f3a-ad1e8b9246emr130414966b.2.1746573329144; Tue, 06 May 2025
+ 16:15:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Michal Luczaj <mhal@rbox.co>
-Subject: Re: [PATCH net-next v4 2/3] vsock: Move lingering logic to af_vsock
- core
-To: Stefano Garzarella <sgarzare@redhat.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
- <eperezma@redhat.com>, Stefan Hajnoczi <stefanha@redhat.com>,
- virtualization@lists.linux.dev, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-References: <20250501-vsock-linger-v4-0-beabbd8a0847@rbox.co>
- <20250501-vsock-linger-v4-2-beabbd8a0847@rbox.co>
- <hcme242wm3h33zvbo6g6xinhbsjkeaawhsjjutxrhkjoh6xhin@gm5yvzv4ao7k>
-Content-Language: pl-PL, en-GB
-In-Reply-To: <hcme242wm3h33zvbo6g6xinhbsjkeaawhsjjutxrhkjoh6xhin@gm5yvzv4ao7k>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250506183533.1917459-1-xii@google.com> <0e380555-5cd3-41f6-8cc9-5f8ca6472a6e@redhat.com>
+In-Reply-To: <0e380555-5cd3-41f6-8cc9-5f8ca6472a6e@redhat.com>
+From: Xi Wang <xii@google.com>
+Date: Tue, 6 May 2025 16:15:16 -0700
+X-Gm-Features: ATxdqUGJYeeZM8HHfw01aF1R1-AsDM0NetAWxXwFC-oojqhZELMZEMLvPLeb5cE
+Message-ID: <CAOBoifguyy0zh==gN5XN7mHP28N3Lv1GSf5_KB49Ce101QTMGA@mail.gmail.com>
+Subject: Re: [RFC/PATCH] sched: Support moving kthreads into cpuset cgroups
+To: Waiman Long <llong@redhat.com>
+Cc: linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, 
+	Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
+	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Ben Segall <bsegall@google.com>, David Rientjes <rientjes@google.com>, Mel Gorman <mgorman@suse.de>, 
+	Valentin Schneider <vschneid@redhat.com>, Tejun Heo <tj@kernel.org>, 
+	Johannes Weiner <hannes@cmpxchg.org>, =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>, 
+	Lai Jiangshan <jiangshanlai@gmail.com1>, Frederic Weisbecker <frederic@kernel.org>, 
+	Vlastimil Babka <vbabka@suse.cz>, Dan Carpenter <dan.carpenter@linaro.org>, Chen Yu <yu.c.chen@intel.com>, 
+	Kees Cook <kees@kernel.org>, Yu-Chun Lin <eleanor15x@gmail.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 5/6/25 11:53, Stefano Garzarella wrote:
-> On Thu, May 01, 2025 at 10:05:23AM +0200, Michal Luczaj wrote:
->> Lingering should be transport-independent in the long run. In preparation
->> for supporting other transports, as well the linger on shutdown(), move
->> code to core.
->>
->> Generalize by querying vsock_transport::unsent_bytes(), guard against the
->> callback being unimplemented. Do not pass sk_lingertime explicitly. Pull
->> SOCK_LINGER check into vsock_linger().
->>
->> Flatten the function. Remove the nested block by inverting the condition:
->> return early on !timeout.
->>
->> Suggested-by: Stefano Garzarella <sgarzare@redhat.com>
->> Signed-off-by: Michal Luczaj <mhal@rbox.co>
->> ---
->> include/net/af_vsock.h                  |  1 +
->> net/vmw_vsock/af_vsock.c                | 30 ++++++++++++++++++++++++++++++
->> net/vmw_vsock/virtio_transport_common.c | 23 ++---------------------
->> 3 files changed, 33 insertions(+), 21 deletions(-)
->>
->> diff --git a/include/net/af_vsock.h b/include/net/af_vsock.h
->> index 9e85424c834353d016a527070dd62e15ff3bfce1..d56e6e135158939087d060dfcf65d3fdaea53bf3 100644
->> --- a/include/net/af_vsock.h
->> +++ b/include/net/af_vsock.h
->> @@ -221,6 +221,7 @@ void vsock_for_each_connected_socket(struct vsock_transport *transport,
->> 				     void (*fn)(struct sock *sk));
->> int vsock_assign_transport(struct vsock_sock *vsk, struct vsock_sock 
->> *psk);
->> bool vsock_find_cid(unsigned int cid);
->> +void vsock_linger(struct sock *sk);
->>
->> /**** TAP ****/
->>
->> diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
->> index fc6afbc8d6806a4d98c66abc3af4bd139c583b08..a31ad6b141cd38d1806df4b5d417924bb8607e32 100644
->> --- a/net/vmw_vsock/af_vsock.c
->> +++ b/net/vmw_vsock/af_vsock.c
->> @@ -1013,6 +1013,36 @@ static int vsock_getname(struct socket *sock,
->> 	return err;
->> }
->>
->> +void vsock_linger(struct sock *sk)
->> +{
->> +	DEFINE_WAIT_FUNC(wait, woken_wake_function);
->> +	ssize_t (*unsent)(struct vsock_sock *vsk);
->> +	struct vsock_sock *vsk = vsock_sk(sk);
->> +	long timeout;
->> +
->> +	if (!sock_flag(sk, SOCK_LINGER))
->> +		return;
->> +
->> +	timeout = sk->sk_lingertime;
->> +	if (!timeout)
->> +		return;
->> +
->> +	/* unsent_bytes() may be unimplemented. */
-> 
-> This comment IMO should be enriched, as it is now it doesn't add much to 
-> the code. I'm thinking on something like this:
->      Transports must implement `unsent_bytes` if they want to support
->      SOCK_LINGER through `vsock_linger()` since we use it to check when
->      the socket can be closed.
+On Tue, May 6, 2025 at 12:58=E2=80=AFPM Waiman Long <llong@redhat.com> wrot=
+e:
+>
+> On 5/6/25 2:35 PM, Xi Wang wrote:
+> > In theory we should be able to manage kernel tasks with cpuset
+> > cgroups just like user tasks, would be a flexible way to limit
+> > interferences to real-time and other sensitive workloads. This is
+> > however not supported today: When setting cpu affinity for kthreads,
+> > kernel code uses a simpler control path that directly lead to
+> > __set_cpus_allowed_ptr or __ktread_bind_mask. Neither honors cpuset
+> > restrictions.
+> >
+> > This patch adds cpuset support for kernel tasks by merging userspace
+> > and kernel cpu affinity control paths and applying the same
+> > restrictions to kthreads.
+> >
+> > The PF_NO_SETAFFINITY flag is still supported for tasks that have to
+> > run with certain cpu affinities. Kernel ensures kthreads with this
+> > flag have their affinities locked and they stay in the root cpuset:
+> >
+> > If userspace moves kthreadd out of the root cpuset (see example
+> > below), a newly forked kthread will be in a non root cgroup as well.
+> > If PF_NO_SETAFFINITY is detected for the kthread, it will move itself
+> > into the root cpuset before the threadfn is called. This does depend
+> > on the kthread create -> kthread bind -> wake up sequence.
+> >
+> > Since kthreads are clones of kthreadd, the typical usage pattern is:
+> >
+> > Create a cpuset cgroup for kernel threads.
+> >
+> > Move kthreadd to that cgroup - all new newly created kthreads are
+> > automatically enrolled into that cgroup.
+> >
+> > Move all remaining unlocked (!PF_NO_SETAFFINITY) kthreads into that
+> > group.
+> >
+> > After these steps, all unlocked kthreads are managed by the cgroup,
+> > including current and future kthreads.
+> >
+> > Command line example:
+> >
+> > mkdir /sys/fs/cgroup/kernel
+> > echo "+cpuset" > /sys/fs/cgroup/cgroup.subtree_control
+> > echo "+cpuset" > /sys/fs/cgroup/kernel/cgroup.subtree_control
+> >
+> > ktd=3D`pgrep -x kthreadd`; echo "move kthreadd/$ktd first"; echo $ktd >=
+ /dev/cgroup/cpuset/kernel/tasks
+> > kthreads=3D`ps -e -o pgrp=3D -o pid=3D  | sed -ne 's/^ *0 *// p'`
+> > for p in $kthreads; do echo "moving $p (ok to fail for locked kthreads)=
+"; echo $p > /sys/fs/cgroup/kernel/cgroup.procs; done
+> > echo 4-7 > /sys/fs/cgroup/kernel/cpuset.cpus
+> >
+> > Signed-off-by: Xi Wang <xii@google.com>
+> > ---
+> >   include/linux/kthread.h | 10 ++++-
+> >   include/linux/sched.h   | 11 +++++
+> >   kernel/cgroup/cpuset.c  | 31 ++++++++++++--
+> >   kernel/kthread.c        | 89 +++++++++++++++++++++++++++++++++++---
+> >   kernel/sched/core.c     | 95 ++++++++++++++++++++++++++++++++++++++--=
+-
+> >   kernel/sched/sched.h    |  6 ---
+> >   kernel/sched/syscalls.c | 63 +--------------------------
+> >   kernel/workqueue.c      |  7 ++-
+> >   8 files changed, 226 insertions(+), 86 deletions(-)
+> >
+> > diff --git a/include/linux/kthread.h b/include/linux/kthread.h
+> > index 8d27403888ce..36215a30d7f7 100644
+> > --- a/include/linux/kthread.h
+> > +++ b/include/linux/kthread.h
+> > @@ -13,6 +13,14 @@ struct task_struct *kthread_create_on_node(int (*thr=
+eadfn)(void *data),
+> >                                          int node,
+> >                                          const char namefmt[], ...);
+> >
+> > +__printf(4, 5)
+> > +struct task_struct *kthread_create_on_node_root_cpuset(
+> > +                                        int (*threadfn)(void *data),
+> > +                                        void *data,
+> > +                                        int node,
+> > +                                        const char namefmt[], ...);
+> > +
+> > +
+> >   /**
+> >    * kthread_create - create a kthread on the current node
+> >    * @threadfn: the function to run in the thread
+> > @@ -27,7 +35,6 @@ struct task_struct *kthread_create_on_node(int (*thre=
+adfn)(void *data),
+> >   #define kthread_create(threadfn, data, namefmt, arg...) \
+> >       kthread_create_on_node(threadfn, data, NUMA_NO_NODE, namefmt, ##a=
+rg)
+> >
+> > -
+> >   struct task_struct *kthread_create_on_cpu(int (*threadfn)(void *data)=
+,
+> >                                         void *data,
+> >                                         unsigned int cpu,
+> > @@ -85,6 +92,7 @@ kthread_run_on_cpu(int (*threadfn)(void *data), void =
+*data,
+> >   void free_kthread_struct(struct task_struct *k);
+> >   void kthread_bind(struct task_struct *k, unsigned int cpu);
+> >   void kthread_bind_mask(struct task_struct *k, const struct cpumask *m=
+ask);
+> > +void kthread_bind_mask_cpuset(struct task_struct *k, const struct cpum=
+ask *mask);
+> >   int kthread_affine_preferred(struct task_struct *p, const struct cpum=
+ask *mask);
+> >   int kthread_stop(struct task_struct *k);
+> >   int kthread_stop_put(struct task_struct *k);
+> > diff --git a/include/linux/sched.h b/include/linux/sched.h
+> > index 0782de6b20d5..45b912e21239 100644
+> > --- a/include/linux/sched.h
+> > +++ b/include/linux/sched.h
+> > @@ -1855,6 +1855,13 @@ extern int cpuset_cpumask_can_shrink(const struc=
+t cpumask *cur, const struct cpu
+> >   extern int task_can_attach(struct task_struct *p);
+> >   extern int dl_bw_alloc(int cpu, u64 dl_bw);
+> >   extern void dl_bw_free(int cpu, u64 dl_bw);
+> > +
+> > +#define SCA_CHECK            0x01
+> > +#define SCA_MIGRATE_DISABLE  0x02
+> > +#define SCA_MIGRATE_ENABLE   0x04
+> > +#define SCA_USER             0x08
+> > +#define SCA_NO_CPUSET        0x10
+> > +
+> >   #ifdef CONFIG_SMP
+> >
+> >   /* do_set_cpus_allowed() - consider using set_cpus_allowed_ptr() inst=
+ead */
+> > @@ -1868,6 +1875,9 @@ extern void do_set_cpus_allowed(struct task_struc=
+t *p, const struct cpumask *new
+> >    * Return: zero if successful, or a negative error code
+> >    */
+> >   extern int set_cpus_allowed_ptr(struct task_struct *p, const struct c=
+pumask *new_mask);
+> > +extern int set_cpus_allowed_ptr_no_cpuset(struct task_struct *p, const=
+ struct cpumask *new_mask);
+> > +extern int set_cpus_allowed_ptr_flags(
+> > +     struct task_struct *p, const struct cpumask *new_mask, u32 flags)=
+;
+> >   extern int dup_user_cpus_ptr(struct task_struct *dst, struct task_str=
+uct *src, int node);
+> >   extern void release_user_cpus_ptr(struct task_struct *p);
+> >   extern int dl_task_check_affinity(struct task_struct *p, const struct=
+ cpumask *mask);
+> > @@ -1884,6 +1894,7 @@ static inline int set_cpus_allowed_ptr(struct tas=
+k_struct *p, const struct cpuma
+> >               return -EINVAL;
+> >       return 0;
+> >   }
+> > +
+> >   static inline int dup_user_cpus_ptr(struct task_struct *dst, struct t=
+ask_struct *src, int node)
+> >   {
+> >       if (src->user_cpus_ptr)
+> > diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+> > index d0143b3dce47..ef929b349da8 100644
+> > --- a/kernel/cgroup/cpuset.c
+> > +++ b/kernel/cgroup/cpuset.c
+> > @@ -1128,6 +1128,13 @@ void cpuset_update_tasks_cpumask(struct cpuset *=
+cs, struct cpumask *new_cpus)
+> >       while ((task =3D css_task_iter_next(&it))) {
+> >               const struct cpumask *possible_mask =3D task_cpu_possible=
+_mask(task);
+> >
+> > +             /*
+> > +              * See also cpuset_can_attach. A thead with the flag coul=
+d temporarily
+> > +              * reside in a non root cpuset. Don't change its affinity=
+.
+> > +              */
+> > +             if (task->flags & PF_NO_SETAFFINITY)
+> > +                     continue;
+> > +
+> >               if (top_cs) {
+> >                       /*
+> >                        * Percpu kthreads in top_cpuset are ignored
+> > @@ -3034,7 +3041,14 @@ static int cpuset_can_attach(struct cgroup_tasks=
+et *tset)
+> >       mems_updated =3D !nodes_equal(cs->effective_mems, oldcs->effectiv=
+e_mems);
+> >
+> >       cgroup_taskset_for_each(task, css, tset) {
+> > -             ret =3D task_can_attach(task);
+> > +             /*
+> > +              * With the kthreads in cpuset feature, kthreadd can be m=
+oved to a
+> > +              * non root cpuset. We want to allow a PF_NO_SETAFFINITY =
+task to be
+> > +              * spawned and then moved to root, which needs to be allo=
+wed here.
+> > +              */
+> > +             ret =3D !(cs =3D=3D &top_cpuset && task->flags & PF_NO_SE=
+TAFFINITY);
+> > +             /* Check regular threads */
+> > +             ret =3D ret && task_can_attach(task);
+> >               if (ret)
+> >                       goto out_unlock;
+> >
+> > @@ -3127,7 +3141,7 @@ static void cpuset_attach_task(struct cpuset *cs,=
+ struct task_struct *task)
+> >        * can_attach beforehand should guarantee that this doesn't
+> >        * fail.  TODO: have a better way to handle failure here
+> >        */
+> > -     WARN_ON_ONCE(set_cpus_allowed_ptr(task, cpus_attach));
+> > +     WARN_ON_ONCE(set_cpus_allowed_ptr_flags(task, cpus_attach, SCA_NO=
+_CPUSET));
+> >
+> >       cpuset_change_task_nodemask(task, &cpuset_attach_nodemask_to);
+> >       cpuset1_update_task_spread_flags(cs, task);
+> > @@ -3164,8 +3178,19 @@ static void cpuset_attach(struct cgroup_taskset =
+*tset)
+> >
+> >       guarantee_online_mems(cs, &cpuset_attach_nodemask_to);
+> >
+> > -     cgroup_taskset_for_each(task, css, tset)
+> > +     cgroup_taskset_for_each(task, css, tset) {
+> > +             /*
+> > +              * See cpuset_can_attach.
+> > +              * With the kthreads in cpuset feature, kthreadd can be m=
+oved to a
+> > +              * non root cpuset. We want to allow a PF_NO_SETAFFINITY =
+task to be
+> > +              * spawned and then moved to root as it starts running. D=
+on't reset the
+> > +              * cpu affinity in this case because the thread could hav=
+e already been
+> > +              * pinned to a cpu with kthread_bind and we want to prese=
+rve that.
+> > +              */
+> > +             if (task->flags & PF_NO_SETAFFINITY)
+> > +                     continue;
+> >               cpuset_attach_task(cs, task);
+> > +     }
+> >
+> >       /*
+> >        * Change mm for all threadgroup leaders. This is expensive and m=
+ay
+> > diff --git a/kernel/kthread.c b/kernel/kthread.c
+> > index 77c44924cf54..2689eb67846e 100644
+> > --- a/kernel/kthread.c
+> > +++ b/kernel/kthread.c
+> > @@ -45,6 +45,7 @@ struct kthread_create_info
+> >       int (*threadfn)(void *data);
+> >       void *data;
+> >       int node;
+> > +     bool move_to_root;
+> >
+> >       /* Result passed back to kthread_create() from kthreadd. */
+> >       struct task_struct *result;
+> > @@ -409,6 +410,9 @@ static void kthread_affine_node(void)
+> >       }
+> >   }
+> >
+> > +int cgroup_attach_task(struct cgroup *dst_cgrp, struct task_struct *le=
+ader,
+> > +                    bool threadgroup);
+> > +
+> >   static int kthread(void *_create)
+> >   {
+> >       static const struct sched_param param =3D { .sched_priority =3D 0=
+ };
+> > @@ -418,6 +422,7 @@ static int kthread(void *_create)
+> >       void *data =3D create->data;
+> >       struct completion *done;
+> >       struct kthread *self;
+> > +     bool move_to_root =3D create->move_to_root;
+> >       int ret;
+> >
+> >       self =3D to_kthread(current);
+> > @@ -454,6 +459,42 @@ static int kthread(void *_create)
+> >
+> >       self->started =3D 1;
+> >
+> > +#ifdef CONFIG_CPUSETS
+> > +     /*
+> > +      * With the kthreads in cgroup feature, kthreadd can be optionall=
+y put
+> > +      * into a non root cpuset (such that newly created kernel threads=
+ are
+> > +      * automatically restricted). Certain kernel threads that must to=
+ be in
+> > +      * the root cpuset are moved to root here.
+> > +      *
+> > +      * This code is called after the schedule() above, thus kthread_b=
+ind
+> > +      * or kthread_bind_mask should have already been called if presen=
+t.
+> > +      * PF_NO_SETAFFINITY set by these functions implicitly triggers t=
+he
+> > +      * move to root action. It can also be explicitly triggered with =
+the
+> > +      * move_to_root flag.
+> > +      *
+> > +      * Potential races between the conditional and cgroup mutex lock:
+> > +      *
+> > +      * current can be out of root then moved into root before mutex l=
+ock,
+> > +      * which is ok because cgroup_attach_task should be able to handl=
+e
+> > +      * src =3D=3D dst. There are checks in cgroup_migrate_prepare_dst=
+ etc.
+> > +      *
+> > +      * current can be in root then moved out of root before mutex loc=
+k,
+> > +      * which is also ok: For threads with PF_NO_SETAFFINITY the move =
+is
+> > +      * disallowed so we can't have this race. For other threads, we a=
+llow
+> > +      * users to move them out of the root cgroup and there is no guar=
+antee
+> > +      * on the order of actions.
+> > +      */
+> > +     if ((current->flags & PF_NO_SETAFFINITY || move_to_root) &&
+> > +       !task_css_is_root(current, cpuset_cgrp_id)) {
+> > +             mutex_lock(&cgroup_mutex);
+> > +             percpu_down_write(&cgroup_threadgroup_rwsem);
+> > +             if (cgroup_attach_task(&cpuset_cgrp_subsys.root->cgrp, cu=
+rrent, false))
+> > +                     WARN_ONCE(1, "Cannot move newly created kernel th=
+read to root cpuset");
+> > +             percpu_up_write(&cgroup_threadgroup_rwsem);
+> > +             mutex_unlock(&cgroup_mutex);
+> > +     }
+> > +#endif
+> > +
+> >       if (!(current->flags & PF_NO_SETAFFINITY) && !self->preferred_aff=
+inity)
+> >               kthread_affine_node();
+> >
+> > @@ -504,7 +545,8 @@ static __printf(4, 0)
+> >   struct task_struct *__kthread_create_on_node(int (*threadfn)(void *da=
+ta),
+> >                                                   void *data, int node,
+> >                                                   const char namefmt[],
+> > -                                                 va_list args)
+> > +                                                 va_list args,
+> > +                                                 bool move_to_root)
+> >   {
+> >       DECLARE_COMPLETION_ONSTACK(done);
+> >       struct task_struct *task;
+> > @@ -516,6 +558,7 @@ struct task_struct *__kthread_create_on_node(int (*=
+threadfn)(void *data),
+> >       create->threadfn =3D threadfn;
+> >       create->data =3D data;
+> >       create->node =3D node;
+> > +     create->move_to_root =3D move_to_root;
+> >       create->done =3D &done;
+> >       create->full_name =3D kvasprintf(GFP_KERNEL, namefmt, args);
+> >       if (!create->full_name) {
+> > @@ -585,14 +628,40 @@ struct task_struct *kthread_create_on_node(int (*=
+threadfn)(void *data),
+> >       va_list args;
+> >
+> >       va_start(args, namefmt);
+> > -     task =3D __kthread_create_on_node(threadfn, data, node, namefmt, =
+args);
+> > +     task =3D __kthread_create_on_node(threadfn, data, node, namefmt, =
+args, false);
+> >       va_end(args);
+> >
+> >       return task;
+> >   }
+> >   EXPORT_SYMBOL(kthread_create_on_node);
+> >
+> > -static void __kthread_bind_mask(struct task_struct *p, const struct cp=
+umask *mask, unsigned int state)
+> > +/*
+> > + * Move the newly created kthread to root cpuset if it is not already =
+there.
+> > + * This happens if kthreadd is moved out of root cpuset by user. Other=
+wise same
+> > + * as the regular version.
+> > + */
+> > +struct task_struct *kthread_create_on_node_root_cpuset(
+> > +                                        int (*threadfn)(void *data),
+> > +                                        void *data, int node,
+> > +                                        const char namefmt[],
+> > +                                        ...)
+> > +
+> > +{
+> > +     struct task_struct *task;
+> > +     va_list args;
+> > +
+> > +     va_start(args, namefmt);
+> > +     task =3D __kthread_create_on_node(threadfn, data, node, namefmt, =
+args, true);
+> > +     va_end(args);
+> > +
+> > +     return task;
+> > +}
+> > +EXPORT_SYMBOL(kthread_create_on_node_root_cpuset);
+> > +
+> > +
+> > +static void __kthread_bind_mask(struct task_struct *p, const struct cp=
+umask *mask,
+> > +  unsigned int state, bool no_setaffinity)
+> > +
+> >   {
+> >       unsigned long flags;
+> >
+> > @@ -604,22 +673,28 @@ static void __kthread_bind_mask(struct task_struc=
+t *p, const struct cpumask *mas
+> >       /* It's safe because the task is inactive. */
+> >       raw_spin_lock_irqsave(&p->pi_lock, flags);
+> >       do_set_cpus_allowed(p, mask);
+> > -     p->flags |=3D PF_NO_SETAFFINITY;
+> > +     if (no_setaffinity)
+> > +             p->flags |=3D PF_NO_SETAFFINITY;
+> >       raw_spin_unlock_irqrestore(&p->pi_lock, flags);
+> >   }
+> >
+> >   static void __kthread_bind(struct task_struct *p, unsigned int cpu, u=
+nsigned int state)
+> >   {
+> > -     __kthread_bind_mask(p, cpumask_of(cpu), state);
+> > +     __kthread_bind_mask(p, cpumask_of(cpu), state, true);
+> >   }
+> >
+> >   void kthread_bind_mask(struct task_struct *p, const struct cpumask *m=
+ask)
+> >   {
+> >       struct kthread *kthread =3D to_kthread(p);
+> > -     __kthread_bind_mask(p, mask, TASK_UNINTERRUPTIBLE);
+> > +     __kthread_bind_mask(p, mask, TASK_UNINTERRUPTIBLE, true);
+> >       WARN_ON_ONCE(kthread->started);
+> >   }
+> >
+> > +void kthread_bind_mask_cpuset(struct task_struct *p, const struct cpum=
+ask *mask)
+> > +{
+> > +     set_cpus_allowed_ptr(p, mask);
+> > +}
+> > +
+> >   /**
+> >    * kthread_bind - bind a just-created kthread to a cpu.
+> >    * @p: thread created by kthread_create().
+> > @@ -1044,7 +1119,7 @@ __kthread_create_worker_on_node(unsigned int flag=
+s, int node,
+> >       kthread_init_worker(worker);
+> >
+> >       task =3D __kthread_create_on_node(kthread_worker_fn, worker,
+> > -                                     node, namefmt, args);
+> > +                                     node, namefmt, args, true);
+> >       if (IS_ERR(task))
+> >               goto fail_task;
+> >
+> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> > index 54e7d63f7785..b604a8451ba3 100644
+> > --- a/kernel/sched/core.c
+> > +++ b/kernel/sched/core.c
+> > @@ -2393,7 +2393,7 @@ void migrate_enable(void)
+> >       struct task_struct *p =3D current;
+> >       struct affinity_context ac =3D {
+> >               .new_mask  =3D &p->cpus_mask,
+> > -             .flags     =3D SCA_MIGRATE_ENABLE,
+> > +             .flags     =3D SCA_MIGRATE_ENABLE | SCA_NO_CPUSET,
+> >       };
+> >
+> >   #ifdef CONFIG_DEBUG_PREEMPT
+> > @@ -3153,7 +3153,7 @@ static int __set_cpus_allowed_ptr_locked(struct t=
+ask_struct *p,
+> >    * task must not exit() & deallocate itself prematurely. The
+> >    * call is not atomic; no spinlocks may be held.
+> >    */
+> > -int __set_cpus_allowed_ptr(struct task_struct *p, struct affinity_cont=
+ext *ctx)
+> > +static int do_set_cpus_allowed_ptr(struct task_struct *p, struct affin=
+ity_context *ctx)
+> >   {
+> >       struct rq_flags rf;
+> >       struct rq *rq;
+> > @@ -3171,6 +3171,79 @@ int __set_cpus_allowed_ptr(struct task_struct *p=
+, struct affinity_context *ctx)
+> >       return __set_cpus_allowed_ptr_locked(p, ctx, rq, &rf);
+> >   }
+> >
+> > +int __set_cpus_allowed_ptr(struct task_struct *p,
+> > +                               struct affinity_context *ctx)
+> The __set_cpus_allowed_ptr() function is almost the same as
+> __sched_setaffinity(). Please break the moving and renaming parts out
+> into a separate patch to make it easier to review.
+> > +{
+> > +     int retval;
+> > +     cpumask_var_t cpus_allowed, new_mask;
+> > +
+> > +     /*
+> > +      * Don't restrict the thread to cpuset if explicitly specified or=
+ if locked.
+> > +      */
+> > +     if ((ctx->flags & SCA_NO_CPUSET) || (p->flags & PF_NO_SETAFFINITY=
+))
+> > +             return do_set_cpus_allowed_ptr(p, ctx);
+>
+> Why you will allow a PF_NO_SETAFFIINITY task to change its affinity?
+> What exactly is the purpose of the SCA_NO_CPUSET flag?
 
-OK, will do.
+A PF_NO_SETAFFIINITY task still needs to have its affinity changed once aft=
+er
+creation - kthread_create doesn't have an affinity parameter so we have the
+kthread_create -> kthread_bind -> wake up sequence for these tasks.
 
-Thanks,
-Michal
+SCA_NO_CPUSET means don't do cpuset based restriction just like how it is d=
+one
+without this patch, or passthrough mode for __set_cpus_allowed_ptr.
 
+> > +
+> > +     if (!alloc_cpumask_var(&cpus_allowed, GFP_KERNEL)) {
+> > +             WARN_ONCE(!(ctx->flags & SCA_USER),
+> > +               "Unable to restrict kernel thread to cpuset due to low =
+memory");
+> > +             return -ENOMEM;
+> > +     }
+> > +
+> > +     if (!alloc_cpumask_var(&new_mask, GFP_KERNEL)) {
+> > +             WARN_ONCE(!(ctx->flags & SCA_USER),
+> > +               "Unable to restrict kernel thread to cpuset due to low =
+memory");
+> > +             retval =3D -ENOMEM;
+> > +             goto out_free_cpus_allowed;
+> > +     }
+> > +
+> > +     cpuset_cpus_allowed(p, cpus_allowed);
+> > +     cpumask_and(new_mask, ctx->new_mask, cpus_allowed);
+> > +
+> > +     ctx->new_mask =3D new_mask;
+> > +     ctx->flags |=3D SCA_CHECK;
+> > +
+> > +     retval =3D dl_task_check_affinity(p, new_mask);
+> > +     if (retval)
+> > +             goto out_free_new_mask;
+> > +
+> > +     retval =3D do_set_cpus_allowed_ptr(p, ctx);
+> > +     if (retval)
+> > +             goto out_free_new_mask;
+> > +
+> > +     cpuset_cpus_allowed(p, cpus_allowed);
+> > +     if (!cpumask_subset(new_mask, cpus_allowed)) {
+> > +             /*
+> > +              * We must have raced with a concurrent cpuset update.
+> > +              * Just reset the cpumask to the cpuset's cpus_allowed.
+> > +              */
+> > +             cpumask_copy(new_mask, cpus_allowed);
+> > +
+> > +             /*
+> > +              * If SCA_USER is set, a 2nd call to __set_cpus_allowed_p=
+tr()
+> > +              * will restore the previous user_cpus_ptr value.
+> > +              *
+> > +              * In the unlikely event a previous user_cpus_ptr exists,
+> > +              * we need to further restrict the mask to what is allowe=
+d
+> > +              * by that old user_cpus_ptr.
+> > +              */
+> > +             if (unlikely((ctx->flags & SCA_USER) && ctx->user_mask)) =
+{
+> > +                     bool empty =3D !cpumask_and(new_mask, new_mask,
+> > +                                               ctx->user_mask);
+> > +
+> > +                     if (empty)
+> > +                             cpumask_copy(new_mask, cpus_allowed);
+> > +             }
+> > +             __set_cpus_allowed_ptr(p, ctx);
+> > +             retval =3D -EINVAL;
+> > +     }
+> > +
+> > +out_free_new_mask:
+> > +     free_cpumask_var(new_mask);
+> > +out_free_cpus_allowed:
+> > +     free_cpumask_var(cpus_allowed);
+> > +     return retval;
+> > +}
+> > +
+> >   int set_cpus_allowed_ptr(struct task_struct *p, const struct cpumask =
+*new_mask)
+> >   {
+> >       struct affinity_context ac =3D {
+> > @@ -3182,6 +3255,17 @@ int set_cpus_allowed_ptr(struct task_struct *p, =
+const struct cpumask *new_mask)
+> >   }
+> >   EXPORT_SYMBOL_GPL(set_cpus_allowed_ptr);
+> >
+> > +int set_cpus_allowed_ptr_flags(struct task_struct *p, const struct cpu=
+mask *new_mask, u32 flags)
+> > +{
+> > +     struct affinity_context ac =3D {
+> > +             .new_mask  =3D new_mask,
+> > +             .flags     =3D flags,
+> > +     };
+> > +
+> > +     return __set_cpus_allowed_ptr(p, &ac);
+> > +}
+> > +EXPORT_SYMBOL_GPL(set_cpus_allowed_ptr_flags);
+> > +
+> >   /*
+> >    * Change a given task's CPU affinity to the intersection of its curr=
+ent
+> >    * affinity mask and @subset_mask, writing the resulting mask to @new=
+_mask.
+> > @@ -3283,15 +3367,15 @@ void relax_compatible_cpus_allowed_ptr(struct t=
+ask_struct *p)
+> >   {
+> >       struct affinity_context ac =3D {
+> >               .new_mask  =3D task_user_cpus(p),
+> > -             .flags     =3D 0,
+> > +             .flags     =3D SCA_NO_CPUSET,
+> >       };
+> >       int ret;
+> >
+> >       /*
+> > -      * Try to restore the old affinity mask with __sched_setaffinity(=
+).
+> > +      * Try to restore the old affinity mask with __set_cpus_allowed_p=
+tr().
+> >        * Cpuset masking will be done there too.
+> >        */
+> > -     ret =3D __sched_setaffinity(p, &ac);
+> > +     ret =3D __set_cpus_allowed_ptr(p, &ac);
+> >       WARN_ON_ONCE(ret);
+> >   }
+> >
+> > @@ -7292,6 +7376,7 @@ void rt_mutex_setprio(struct task_struct *p, stru=
+ct task_struct *pi_task)
+> >   }
+> >   #endif
+> >
+> > +
+> >   #if !defined(CONFIG_PREEMPTION) || defined(CONFIG_PREEMPT_DYNAMIC)
+> >   int __sched __cond_resched(void)
+> >   {
+> > diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> > index 91bea8d0a90b..9833432c9a75 100644
+> > --- a/kernel/sched/sched.h
+> > +++ b/kernel/sched/sched.h
+> > @@ -2576,11 +2576,6 @@ static inline bool sched_fair_runnable(struct rq=
+ *rq)
+> >   extern struct task_struct *pick_next_task_fair(struct rq *rq, struct =
+task_struct *prev, struct rq_flags *rf);
+> >   extern struct task_struct *pick_task_idle(struct rq *rq);
+> >
+> > -#define SCA_CHECK            0x01
+> > -#define SCA_MIGRATE_DISABLE  0x02
+> > -#define SCA_MIGRATE_ENABLE   0x04
+> > -#define SCA_USER             0x08
+> > -
+> >   #ifdef CONFIG_SMP
+> >
+> >   extern void update_group_capacity(struct sched_domain *sd, int cpu);
+> > @@ -3939,7 +3934,6 @@ static inline int rt_effective_prio(struct task_s=
+truct *p, int prio)
+> >   #endif /* !CONFIG_RT_MUTEXES */
+> >
+> >   extern int __sched_setscheduler(struct task_struct *p, const struct s=
+ched_attr *attr, bool user, bool pi);
+> > -extern int __sched_setaffinity(struct task_struct *p, struct affinity_=
+context *ctx);
+> >   extern const struct sched_class *__setscheduler_class(int policy, int=
+ prio);
+> >   extern void set_load_weight(struct task_struct *p, bool update_load);
+> >   extern void enqueue_task(struct rq *rq, struct task_struct *p, int fl=
+ags);
+> > diff --git a/kernel/sched/syscalls.c b/kernel/sched/syscalls.c
+> > index 547c1f05b667..6528153c1297 100644
+> > --- a/kernel/sched/syscalls.c
+> > +++ b/kernel/sched/syscalls.c
+> > @@ -1151,67 +1151,6 @@ int dl_task_check_affinity(struct task_struct *p=
+, const struct cpumask *mask)
+> >   }
+> >   #endif /* CONFIG_SMP */
+> >
+> > -int __sched_setaffinity(struct task_struct *p, struct affinity_context=
+ *ctx)
+> > -{
+> > -     int retval;
+> > -     cpumask_var_t cpus_allowed, new_mask;
+> > -
+> > -     if (!alloc_cpumask_var(&cpus_allowed, GFP_KERNEL))
+> > -             return -ENOMEM;
+> > -
+> > -     if (!alloc_cpumask_var(&new_mask, GFP_KERNEL)) {
+> > -             retval =3D -ENOMEM;
+> > -             goto out_free_cpus_allowed;
+> > -     }
+> > -
+> > -     cpuset_cpus_allowed(p, cpus_allowed);
+> > -     cpumask_and(new_mask, ctx->new_mask, cpus_allowed);
+> > -
+> > -     ctx->new_mask =3D new_mask;
+> > -     ctx->flags |=3D SCA_CHECK;
+> > -
+> > -     retval =3D dl_task_check_affinity(p, new_mask);
+> > -     if (retval)
+> > -             goto out_free_new_mask;
+> > -
+> > -     retval =3D __set_cpus_allowed_ptr(p, ctx);
+> > -     if (retval)
+> > -             goto out_free_new_mask;
+> > -
+> > -     cpuset_cpus_allowed(p, cpus_allowed);
+> > -     if (!cpumask_subset(new_mask, cpus_allowed)) {
+> > -             /*
+> > -              * We must have raced with a concurrent cpuset update.
+> > -              * Just reset the cpumask to the cpuset's cpus_allowed.
+> > -              */
+> > -             cpumask_copy(new_mask, cpus_allowed);
+> > -
+> > -             /*
+> > -              * If SCA_USER is set, a 2nd call to __set_cpus_allowed_p=
+tr()
+> > -              * will restore the previous user_cpus_ptr value.
+> > -              *
+> > -              * In the unlikely event a previous user_cpus_ptr exists,
+> > -              * we need to further restrict the mask to what is allowe=
+d
+> > -              * by that old user_cpus_ptr.
+> > -              */
+> > -             if (unlikely((ctx->flags & SCA_USER) && ctx->user_mask)) =
+{
+> > -                     bool empty =3D !cpumask_and(new_mask, new_mask,
+> > -                                               ctx->user_mask);
+> > -
+> > -                     if (empty)
+> > -                             cpumask_copy(new_mask, cpus_allowed);
+> > -             }
+> > -             __set_cpus_allowed_ptr(p, ctx);
+> > -             retval =3D -EINVAL;
+> > -     }
+> > -
+> > -out_free_new_mask:
+> > -     free_cpumask_var(new_mask);
+> > -out_free_cpus_allowed:
+> > -     free_cpumask_var(cpus_allowed);
+> > -     return retval;
+> > -}
+> > -
+> >   long sched_setaffinity(pid_t pid, const struct cpumask *in_mask)
+> >   {
+> >       struct affinity_context ac;
+> > @@ -1252,7 +1191,7 @@ long sched_setaffinity(pid_t pid, const struct cp=
+umask *in_mask)
+> >               .flags     =3D SCA_USER,
+> >       };
+> >
+> > -     retval =3D __sched_setaffinity(p, &ac);
+> > +     retval =3D __set_cpus_allowed_ptr(p, &ac);
+> >       kfree(ac.user_mask);
+> >
+> >       return retval;
+> > diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+> > index f9ef467020cf..d51c0716674e 100644
+> > --- a/kernel/workqueue.c
+> > +++ b/kernel/workqueue.c
+> > @@ -2813,7 +2813,10 @@ static struct worker *create_worker(struct worke=
+r_pool *pool)
+> >               }
+> >
+> >               set_user_nice(worker->task, pool->attrs->nice);
+> > -             kthread_bind_mask(worker->task, pool_allowed_cpus(pool));
+> > +             if (!pool || (!worker->rescue_wq && pool->cpu >=3D 0))
+> > +                     kthread_bind_mask(worker->task, pool_allowed_cpus=
+(pool));
+> > +             else
+> > +                     kthread_bind_mask_cpuset(worker->task, pool_allow=
+ed_cpus(pool));
+> >       }
+> >
+> >       /* successful, attach the worker to the pool */
+> > @@ -5587,7 +5590,7 @@ static int init_rescuer(struct workqueue_struct *=
+wq)
+> >       if (wq->flags & WQ_UNBOUND)
+> >               kthread_bind_mask(rescuer->task, unbound_effective_cpumas=
+k(wq));
+> >       else
+> > -             kthread_bind_mask(rescuer->task, cpu_possible_mask);
+> > +             kthread_bind_mask_cpuset(rescuer->task, cpu_possible_mask=
+);
+> >       wake_up_process(rescuer->task);
+> >
+> >       return 0;
+> >
+>
