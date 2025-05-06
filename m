@@ -1,162 +1,121 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2A262BD909;
-	Tue,  6 May 2025 01:19:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+Received: from zg8tmja5ljk3lje4ms43mwaa.icoremail.net (zg8tmja5ljk3lje4ms43mwaa.icoremail.net [209.97.181.73])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CDFDE198823
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 01:22:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.97.181.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746494365; cv=none; b=glgcd8CKVRD4XAImqLSGA8CkUD4NwxGOjGuJRuZzQ+6IbXLyREP+qAHzozyzM2t+CsW21Ege4JQ58saEslXg6eN9APufwaGVOuD9rPJEXdv2wxNKSSQFBG18F1wLJ+ajy/d9cRsHT5JIZedMV2O5Ki/OgR1SD31rwck5TjYK4Lo=
+	t=1746494541; cv=none; b=ZFTjcQtIC/LFDpVv5SMzzELa4NB6bNoJlY+3gBaoUrTXndyO2QT0orRZzsL9Ko8hqx1w9WBlns9DMvjpg2dC48G0fds4uRqgiE5WjJmsVBq7bhdSe0ShY2fYr/s4MN5atofOceXbAjaZF18AbM+h6lGB38ZlnM0PE++B5duF0XI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746494365; c=relaxed/simple;
-	bh=88/cW2eOCSmZmQKw2Hc+K8hXwwfz2tenLj7EWsMESxo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XgzDGoN3gnr0cva26Gv69vguN7egwL30r0JcraKMkVzsV9zqZC6svOqvXRC332TeLJNmMiMlpiUKbnPHd2dhjWNxexDIJMVxjww05L1Fh5ru3WN9JdnFomafj/Yd+/NrADftNLWX+OjFH5drvLSDWZZQKDrENWdq4SHvk6+d080=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=reject dis=none) header.from=fomichev.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=reject dis=none) header.from=fomichev.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-30a8cbddca4so76076a91.3;
-        Mon, 05 May 2025 18:19:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746494361; x=1747099161;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6iJCv4ET+7o0nSYXxo+hq86hijhA7Bxxnf2OGc3/g6A=;
-        b=C4MTIxxxxz/MfAEgKSJ1KMg5YJFsQU9MLQqtIC660buJf3Tnt2v3cpz5QpDAzSRv6Q
-         cVhjxbLu1xR1jsoEtzAnxfE2LEXaJny2AM8UFoG6nTpnFElBgnZGu7Qb/1gjtriBxB+X
-         CLQ/0FfojfltLjm9y76L/k1UESmQSO7zP35+SUQKtYxtdJCuPtOKt/tcNrXj0vFHLgwe
-         mX4sMqM0mKtGfhk3gHR40Wl02aOQ1OykaawBy78ZUWqFmZEvtHRSPKnMGyc5L2fN3eG4
-         4alUmCz+HiVC+iifMIUWiiNH9n6zktR5aA4pUPzd2e0RF03Fbd/Az+1/pdjWpTALaBAg
-         YMow==
-X-Forwarded-Encrypted: i=1; AJvYcCU9u1i+Uh3DCQdVNaFNl7ujPsPhauDbM8Iur8+FPOYwp/4SwBNYSrZK+gqL87wbx8dDayehm2iruKUI9R8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmC07mm14o6Q8xiVOpj4TH6Ts2qH3vakDLAx8+vxeNDJ6FcIq1
-	5c9qv6AsWXBn+mVdDxIGJpknD0tlJl6J0eUpSiDJldNRQ17lc8y6BV2G
-X-Gm-Gg: ASbGncsL4gJ82C89LqE08kchxk2XrK1Ne27z2fFZWknGygGMFcr/RkEKiWrV7RlfjBN
-	KZbCHLzld4u39m/52PhHJwfZaWIOvNmcapGIzzl8X09euFr8tH0kgqGq4OlJ2S7kfka6sVbCrVl
-	oWpIStEiEvSqJuW9RUA1Qi3gOewenmXH6jOc9RHsp7YlJ8UOfiAmt/vHu0Nye29xCS1+ucV63if
-	sJyVZc6NKzYgvqDtrY9/cg1PtX+0lAltd2lCSIsPduPdny8V3706DCeyTEtgOoMVOqfckJOJQDz
-	5h+dD0/A6ClQzabN0sExM/BZDmeQyp3Hdo0Tk0lShIJUI7orrQAmuiSsG40LKterBFkYZUD06Sw
-	=
-X-Google-Smtp-Source: AGHT+IFRP1Y359t6TAO+NTVK5mKLUP6YcaDfDORBRsKZ6N8rIaHdYWSLKTvj4J0JfuYYuD2HW3tb9A==
-X-Received: by 2002:a17:90b:2641:b0:2ee:8427:4b02 with SMTP id 98e67ed59e1d1-30a61a50827mr14709083a91.28.1746494361331;
-        Mon, 05 May 2025 18:19:21 -0700 (PDT)
-Received: from localhost (c-73-170-40-124.hsd1.ca.comcast.net. [73.170.40.124])
-        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-30a8087f302sm420815a91.5.2025.05.05.18.19.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 18:19:20 -0700 (PDT)
-From: Stanislav Fomichev <sdf@fomichev.me>
-To: netdev@vger.kernel.org
-Cc: davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	horms@kernel.org,
-	andrew+netdev@lunn.ch,
-	sdf@fomichev.me,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net] net: add missing instance lock to dev_set_promiscuity
-Date: Mon,  5 May 2025 18:19:19 -0700
-Message-ID: <20250506011919.2882313-1-sdf@fomichev.me>
-X-Mailer: git-send-email 2.49.0
+	s=arc-20240116; t=1746494541; c=relaxed/simple;
+	bh=JfbMqOgKa807whHUusnnPM1sxQC4+hvuDSEV5c4e/QU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AbC9mfDL0D0S8HPtFtSwRL0PJVcGbSivYqU77Qc/kxUbU8GtFMCSG7b5W0XjpzpsAlht1cJWciqpgyUuyOi0vIhbSRVeQDWjt+37C6f1sAVl2sWfwlUBpjtNkx/ylVh/0I7PEKtrmgC2r4TQrz4KfCfilXT1YelmDjDjciHK4lw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=209.97.181.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
+Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
+	by hzbj-icmmx-6 (Coremail) with SMTP id AQAAfwBXXXk6ZBlozYyiAg--.12934S2;
+	Tue, 06 May 2025 09:22:02 +0800 (CST)
+Received: from localhost (unknown [123.150.8.50])
+	by mail (Coremail) with SMTP id AQAAfwD3iyU4ZBlozLoTAA--.13091S2;
+	Tue, 06 May 2025 09:22:01 +0800 (CST)
+Date: Tue, 6 May 2025 09:22:00 +0800
+From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Mike Rapoport <rppt@kernel.org>, Huacai Chen <chenhuacai@loongson.cn>,
+	loongarch@lists.linux.dev, Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: Re: [PATCH V2] LoongArch: Introduce the numa_memblks conversion
+Message-ID: <aBlkOBwIjvUDE0hY@phytium.com.cn>
+References: <20250415072118.3774454-1-chenhuacai@loongson.cn>
+ <aANVMaepni3KeABI@kernel.org>
+ <CAAhV-H65jh29ccYzcaJf1=QpDuV5xZfBd-1Kr0=in_nk-Z4h7Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAhV-H65jh29ccYzcaJf1=QpDuV5xZfBd-1Kr0=in_nk-Z4h7Q@mail.gmail.com>
+X-CM-TRANSID:AQAAfwD3iyU4ZBlozLoTAA--.13091S2
+X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQAQAWgRLLwIYwBFsX
+Authentication-Results: hzbj-icmmx-6; spf=neutral smtp.mail=wangyuquan
+	1236@phytium.com.cn;
+X-Coremail-Antispam: 1Uk129KBjvJXoW7CrWDGrWUZr1DXr1xtF4ktFb_yoW5Jr4kpF
+	WS9a1DCF48CrWrA3Z2v34UWryYvwn7GrnFqFnxKry09ry2v345Zr40qwsY9FyDX3y8JFy0
+	vFn8J3ZxW3WUAFDanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
+	UUUUU
 
-Accidentally spotted while trying to understand what else needs
-to be renamed to netif_ prefix. Most of the calls to dev_set_promiscuity
-are adjacent to dev_set_allmulti or dev_disable_lro so it should
-be safe to add the lock. Note that new netif_set_promiscuity is
-currently unused, the locked paths call __dev_set_promiscuity directly.
+On Sat, Apr 19, 2025 at 03:57:16PM +0800, Huacai Chen wrote:
+> Hi, Mike,
+> 
+> On Sat, Apr 19, 2025 at 3:48 PM Mike Rapoport <rppt@kernel.org> wrote:
+> >
+> > Hi Huacai,
+> >
+> > On Tue, Apr 15, 2025 at 03:21:18PM +0800, Huacai Chen wrote:
+> > > Commit 87482708210ff3333a ("mm: introduce numa_memblks") has moved
+> > > numa_memblks from x86 to the generic code, but LoongArch was left out
+> > > of this conversion.
+> > >
+> > > This patch introduces the generic numa_memblks for LoongArch.
+> > >
+> > > In detail:
+> > > 1. Enable NUMA_MEMBLKS (but disable NUMA_EMU) in Kconfig;
+> > > 2. Use generic definition for numa_memblk and numa_meminfo;
+> > > 3. Use generic implementation for numa_add_memblk() and its friends;
+> > > 4. Use generic implementation for numa_set_distance() and its friends;
+> > > 5. Use generic implementation for memory_add_physaddr_to_nid() and its
+> > >    friends.
+> > >
+> > > Note: Disable NUMA_EMU because it needs more efforts and no obvious
+> > > demand now.
+> > >
+> > > Tested-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> > > Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+> > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > > ---
+> > >  arch/loongarch/Kconfig                 |   1 +
+> > >  arch/loongarch/include/asm/numa.h      |  14 ----
+> > >  arch/loongarch/include/asm/sparsemem.h |   5 --
+> > >  arch/loongarch/include/asm/topology.h  |   7 +-
+> > >  arch/loongarch/kernel/acpi.c           |  11 ---
+> > >  arch/loongarch/kernel/numa.c           | 108 +++----------------------
+> > >  arch/loongarch/mm/init.c               |   8 --
+> > >  mm/Kconfig                             |   1 +
+> > >  8 files changed, 16 insertions(+), 139 deletions(-)
+> >
+> > This is really cool simplification!
+> >
+> > I wonder if maybe we can take a step or two further and make loongarch to
+> > share more code with other architectures.
+> >
+> > Is there a strong reason not to call numa_memblks_init() from
+> > init_numa_memory()?
+> > And more broadly, maybe loongarch can be even switched to arch_numa?
+> This is a minimal change for Yuquan, I will make it in linux-next as
+> soon as possible so Yuquan can continue his work.
+> 
+Hi, Huacai & Mike
 
-Fixes: ad7c7b2172c3 ("net: hold netdev instance lock during sysfs operations")
-Signed-off-by: Stanislav Fomichev <sdf@fomichev.me>
----
- include/linux/netdevice.h |  1 +
- net/core/dev.c            | 14 +-------------
- net/core/dev_api.c        | 23 +++++++++++++++++++++++
- 3 files changed, 25 insertions(+), 13 deletions(-)
+Where could I know this has been merged in linux-next? After that, should I
+re-push my commit "introduce numa_add_reserved_memblk"?
 
-diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
-index 2d11d013cabe..7ea022750e4e 100644
---- a/include/linux/netdevice.h
-+++ b/include/linux/netdevice.h
-@@ -4972,6 +4972,7 @@ static inline void __dev_mc_unsync(struct net_device *dev,
- 
- /* Functions used for secondary unicast and multicast support */
- void dev_set_rx_mode(struct net_device *dev);
-+int netif_set_promiscuity(struct net_device *dev, int inc);
- int dev_set_promiscuity(struct net_device *dev, int inc);
- int netif_set_allmulti(struct net_device *dev, int inc, bool notify);
- int dev_set_allmulti(struct net_device *dev, int inc);
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 1be7cb73a602..3b8d1e1a7e71 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -9193,18 +9193,7 @@ static int __dev_set_promiscuity(struct net_device *dev, int inc, bool notify)
- 	return 0;
- }
- 
--/**
-- *	dev_set_promiscuity	- update promiscuity count on a device
-- *	@dev: device
-- *	@inc: modifier
-- *
-- *	Add or remove promiscuity from a device. While the count in the device
-- *	remains above zero the interface remains promiscuous. Once it hits zero
-- *	the device reverts back to normal filtering operation. A negative inc
-- *	value is used to drop promiscuity on the device.
-- *	Return 0 if successful or a negative errno code on error.
-- */
--int dev_set_promiscuity(struct net_device *dev, int inc)
-+int netif_set_promiscuity(struct net_device *dev, int inc)
- {
- 	unsigned int old_flags = dev->flags;
- 	int err;
-@@ -9216,7 +9205,6 @@ int dev_set_promiscuity(struct net_device *dev, int inc)
- 		dev_set_rx_mode(dev);
- 	return err;
- }
--EXPORT_SYMBOL(dev_set_promiscuity);
- 
- int netif_set_allmulti(struct net_device *dev, int inc, bool notify)
- {
-diff --git a/net/core/dev_api.c b/net/core/dev_api.c
-index 90898cd540ce..f9a160ab596f 100644
---- a/net/core/dev_api.c
-+++ b/net/core/dev_api.c
-@@ -267,6 +267,29 @@ void dev_disable_lro(struct net_device *dev)
- }
- EXPORT_SYMBOL(dev_disable_lro);
- 
-+/**
-+ * dev_set_promiscuity() - update promiscuity count on a device
-+ * @dev: device
-+ * @inc: modifier
-+ *
-+ * Add or remove promiscuity from a device. While the count in the device
-+ * remains above zero the interface remains promiscuous. Once it hits zero
-+ * the device reverts back to normal filtering operation. A negative inc
-+ * value is used to drop promiscuity on the device.
-+ * Return 0 if successful or a negative errno code on error.
-+ */
-+int dev_set_promiscuity(struct net_device *dev, int inc)
-+{
-+	int ret;
-+
-+	netdev_lock_ops(dev);
-+	ret = netif_set_promiscuity(dev, inc);
-+	netdev_unlock_ops(dev);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL(dev_set_promiscuity);
-+
- /**
-  * dev_set_allmulti() - update allmulti count on a device
-  * @dev: device
--- 
-2.49.0
+Sorry for my unfamiliarity with the community rules.
+
+Yuquan
+> Switching to numa_memblks_init() or arch_numa will be done in future,
+> but need some time because some machines seem to need some hacks.
+> 
+> Huacai
+> 
+> >
+> > --
+> > Sincerely yours,
+> > Mike.
 
