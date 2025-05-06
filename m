@@ -1,110 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8100F28003A;
-	Tue,  6 May 2025 14:22:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E200A15E5DC;
+	Tue,  6 May 2025 14:22:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746541355; cv=none; b=Ie/ces3+q8MQSEyPgjaoO5RmCBDL7SEdLubIRuX33RUfrAgPvJGSuyafp8yutf0Wq9yx03GOpFvBPsYmYFM70/gHQ+EMl1JE782jbwgfLuqcpoXsH27O6OrmBEBTRowoNvley69Sa7nmSPjjZRHqEO1BvarJGi545REve3Qa86c=
+	t=1746541366; cv=none; b=RVFWkHMCs+bQEi1OCxM18agzhFXGbXW9iNtodsQp1uRoSS9fBzXn83AC05XA8iGgiu0Veydk7rYui4P4g4ApuYQy5MbHlZphocDYdsKXJZyrAPPmban7zwRFjy+Qeg4ja3h+Spg2w3sryEv375KFy1zRoOUNW9+96boDQI+ms6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746541355; c=relaxed/simple;
-	bh=B3IJfeeHm7MBDad8ILkVBS7OQmTioSWCS4teDJIhcfU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bjdnl4+JxZ+BRJIPwUqgsF6iPmc15xUyDtEFA84sgjdZ8eTC7fpDpWw3Q7F/OjcRgEStil3WTiCvS5EpLwcYTOcl40MzxQ1qe7IQA6kxhfr+iRQfMmXJHXJTf5l9xsy3i0Oax/OPuaOzxHj05JSLUZxruRJf735H7EePFszJzxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ue2l5+XK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746541366; c=relaxed/simple;
+	bh=ZAqSEbsXGwAJha8vmzmKJrQMEo1vB2z12gMphbknyXU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rAxsi8HzmUVMu3EKlskCaiOgK+lDCJd+kQDzllpMxIhSQKCGJgGevmxSOzaDL2k/QuPQW3H1qEp6bgyXfc0MY8EAONBP3m+GpE/cMu1G70v2TwOubI7QraxQgvlWyouJLa7tRkrYCN9XT7dXBi47N/gefVCQY2iYolFQQUX5OAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=jgy4Ccfq; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ue2l5+XK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F78CC4CEE4;
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="jgy4Ccfq"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id A843E40E01FA;
+	Tue,  6 May 2025 14:22:41 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id TiIS_12gnCY9; Tue,  6 May 2025 14:22:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1746541356; bh=5uG7iiLE/nm+bAeu3HWka2R0/ZZ5zJHcClr8b2IHgEk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jgy4Ccfq++xcOxmjJLbUEZ4rJHlPPJ3lk+Gg+us2KYdtTVsHpWovEsbtbd6k6FJVL
+	 L2YLUvFnqGSljRsgqAbdLZMJ/gwy1v7zHyAKhpne5arDBdqvr1d98vNmSrgH+F8dXK
+	 PTwBhWFO50eZXk19+yybwuS/mStjQ1i8bIVCe3o/Sw0t10ryFaa8SDR1AdMFiCzqfz
+	 /OZDK4Nyz9bX5qAUDPXCxO3vL4otM2JI400kFdZaqPAjN0qAENOCkWcG7NDbdFELZW
+	 FImdVZWxn7tH20Kjdg7z7AY4n2ZyrQhlcCgui8dpt0rs3vAtI/9b5MECEVHGhGkv2w
+	 4wWDbV3Lp5bvCuvMvC1LXxgr74X5m7KUNhrBD0injdQphPC/xoF36mdtZqEDyW9Jv4
+	 c0163OmAR/71QhQsT4DPuR7yVRSdwKIszLns49IhQLoqwgE9ZXbmsytYj+eL01iF4d
+	 c9faQlBiUVFVIp7/rwBFW9MUmVaLHiCdRKYgM3t2k2kk+uDUdolihFI+uEb1eyDAMb
+	 PMKu8EsEt49gPDOeEUMkEnIiEosaMAChnTpUnP12kXciQDos6GBgxMAlYiX+LEw8Vw
+	 Elz17G8uUtqX2FeJAvy1F/85Y0i/0P2DLpuueohINd1mxlZGb3zTHBvpcQOxdg5eSv
+	 IjnHgxFXnOj9zRZ19FxI3U48=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3BBC040E0196;
 	Tue,  6 May 2025 14:22:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746541354;
-	bh=B3IJfeeHm7MBDad8ILkVBS7OQmTioSWCS4teDJIhcfU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Ue2l5+XKNYhAfHZaGyvRpKUkUrIXHTRPgufT7/WrdsLl53kpY2nVXxf8DfxsH1KHC
-	 zKdoGpY1C/QTEBzCjI0OzfeI1BtruMdlLVGMoqrtUurcRKCCiot4NNKO6Ci7LHTGBo
-	 kmVs8lP9NH5nI9c57YGR4nfBVPozpuLCWGe/Hj6+waAt70N7RvfVZpFVLIRYtqoHrf
-	 kqrsvdwxqDwg0sxbbmuv2azJWyNHyydFssDznjVC2MtEpepfGN1r5v6NQEH/Dz00Wt
-	 j/46jk15A0xePEt57nHRWkjjgzeB3LdQdLEM9hhOKfwN1GdPfV2MQIqkeipBUdu158
-	 03kChFhDaS9dQ==
-Message-ID: <b2ee0a96-004e-4c20-baa6-a5cc87ec7247@kernel.org>
 Date: Tue, 6 May 2025 16:22:30 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Michael Larabel <Michael@michaellarabel.com>
+Subject: Re: [PATCH v2] KVM: SVM: Set/clear SRSO's BP_SPEC_REDUCE on 0 <=> 1
+ VM count transitions
+Message-ID: <20250506142230.GFaBobJucboX7ZWnxi@fat_crate.local>
+References: <20250505180300.973137-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 7/7] rtc: stm32: drop unused module alias
-To: Johan Hovold <johan+linaro@kernel.org>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>,
- Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- Paul Cercueil <paul@crapouillou.net>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Sebastian Reichel <sre@kernel.org>, linux-rtc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250423130318.31244-1-johan+linaro@kernel.org>
- <20250423130318.31244-8-johan+linaro@kernel.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250423130318.31244-8-johan+linaro@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250505180300.973137-1-seanjc@google.com>
 
-On 23/04/2025 15:03, Johan Hovold wrote:
-> The driver only support OF probe so drop the unused platform module
-> alias.
+On Mon, May 05, 2025 at 11:03:00AM -0700, Sean Christopherson wrote:
+> Set the magic BP_SPEC_REDUCE bit to mitigate SRSO when running VMs if and
+> only if KVM has at least one active VM.  Leaving the bit set at all times
+> unfortunately degrades performance by a wee bit more than expected.
 > 
-> Fixes: 4e64350f42e2 ("rtc: add STM32 RTC driver")
-> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+> Use a dedicated spinlock and counter instead of hooking virtualization
+> enablement, as changing the behavior of kvm.enable_virt_at_load based on
+> SRSO_BP_SPEC_REDUCE is painful, and has its own drawbacks, e.g. could
+> result in performance issues for flows that are sensitive to VM creation
+> latency.
+> 
+> Defer setting BP_SPEC_REDUCE until VMRUN is imminent to avoid impacting
+> performance on CPUs that aren't running VMs, e.g. if a setup is using
+> housekeeping CPUs.  Setting BP_SPEC_REDUCE in task context, i.e. without
+> blasting IPIs to all CPUs, also helps avoid serializing 1<=>N transitions
+> without incurring a gross amount of complexity (see the Link for details
+> on how ugly coordinating via IPIs gets).
+> 
+> Link: https://lore.kernel.org/all/aBOnzNCngyS_pQIW@google.com
+> Fixes: 8442df2b49ed ("x86/bugs: KVM: Add support for SRSO_MSR_FIX")
 
+I guess
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: <stable@kernel.org>
 
-Best regards,
-Krzysztof
+as the above is in 6.14.
+
+> Reported-by: Michael Larabel <Michael@michaellarabel.com>
+> Closes: https://www.phoronix.com/review/linux-615-amd-regression
+> Cc: Borislav Petkov <bp@alien8.de>
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+
+LGTM, seems to work too on my machine.
+
+Tested-by: Borislav Petkov (AMD) <bp@alien8.de>
+
+Thx for sticking with this and improving it!
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
