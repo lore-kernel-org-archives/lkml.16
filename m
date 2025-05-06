@@ -1,187 +1,140 @@
-Received: from out199-5.us.a.mail.aliyun.com (out199-5.us.a.mail.aliyun.com [47.90.199.5])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1A06233739
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 15:11:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.199.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2993EA32;
+	Tue,  6 May 2025 15:12:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746544271; cv=none; b=YR4d0RcwmQodlv9nBVM27hCEaEABNauIm5QqJQ5AS4fB2m5xiee12Rx8ubEVIXRv3A5KFbVhPmf+Kgz4sO6GmIQXgov27fwRfughEo2lW4CIkSXHntr+NLY+TIMc8PHoWrEtpGUtstFEvdU3ZeagKpbe90OzlMMpl5Slms8fm0I=
+	t=1746544342; cv=none; b=kGAgPbbbPYnX74ee4FmMLatl7A9VnEjpg9ey4aTYKa6A1qd/CgHirSKhipzzLenQVLS8WN9HJeFyEEixOmpoIF1owa5N/qnC4iBO1MjOFUrQ/PPwAp8N1GyFnerHGLxk2J8BKxZBSJmg6OOS2wWPPlkaEGQiQ1WWSzcfdZxFKNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746544271; c=relaxed/simple;
-	bh=kqnJHCTnpiPV6uFsP81VUdMxyHCGniWXLDM3rG5nMfM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BXf2ccecYUXnQ9W6FFe/c6HPtgSNma2DwRYu6oZuycOHxrExbQKiJmUPXoCKVxmBkwusy8F7PtBx69n9r1bmj5yA2zYLa9w3Bx/TajhS0455u+YULCqey21h4kXacCENPlFdMdWYgvp3JDUj5HOAq2pLOkqkY06jBfhJmNAH6ss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=rgak4S/y; arc=none smtp.client-ip=47.90.199.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1746544342; c=relaxed/simple;
+	bh=bl7NXRPrjzhZaD4kmbaD1MUm7yIwDx4c2piFZWFMp3M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eTJWFQoTLwXBgB64PryoyLXBgolq56Mu4vg3YqATiBrMxn2XHOtIQ/2xTfcEXpXbGvJd0zcsGwmsofzYHoKCk1ABZ4thp8ebW59/JEEW4kBKh9KCoeFwX3Ijm4jo4B7ZWYmGWcHt3xiPbxr+rgOZCcFxxBWRL02KU81/W1reoMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=IBGWaweE; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="rgak4S/y"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1746544250; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=GeNymH+klft7mdhfQZi/jBImRDyPtAkJHpdNSIxr5aI=;
-	b=rgak4S/yh9CVLgPGtSyJXKNGQSAVctpBGAhPAqhXNuL8cr6VJvcAFECbrqR6sEad+KmC/qXOvx6L5lOabrFhxGxlz7Yo+JMKB7/sQSYVNMnNdZKX870HuZZOWYymOx3612IERYfNaCJmHc6cB2bjSeZiCpqwlieseyD/6wVydAs=
-Received: from 30.134.100.0(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WZYPgkD_1746544248 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 06 May 2025 23:10:49 +0800
-Message-ID: <18d272ce-6a80-4fdc-b67b-ddc2ffa522d4@linux.alibaba.com>
-Date: Tue, 6 May 2025 23:10:46 +0800
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="IBGWaweE"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5465gaaF006476;
+	Tue, 6 May 2025 15:12:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=DptX2UeZwcMMuIu3rqeAdS+aATNzHG
+	t6NJTQ/66uAY0=; b=IBGWaweEygUEgjspn+NlOD05m16ZQ7NXtU/XUDgur97chj
+	vPlotgnxZ7WaG09nGEnfZE6pvPp3hJ2VQxufXv8zZ5tcbFNvgm+wfqB6fsPpvb9c
+	e85O0gX4X21MSJ8uZGs6no9iZ0S+aKfmtxdWhVYXUttgCNkb+spdi78lVuH2muJk
+	LefkFW/zpGLSKM/ucFqi72Zd62MwA7tfDprlSNPgI+E8PdyGnpoi4Wn/flpo5Dd3
+	amXaGS5TWtbRkPqttcLBi9tG9CTIfbxZb5Ko1wggL7zE9qPIQI025Mj/u73PPm76
+	I5OvxQ9b0fCk5lhHjZx91jk23MXACPw6/zaRKTMg==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46fcgy2kc5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 06 May 2025 15:12:13 +0000 (GMT)
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 546F7FdA009118;
+	Tue, 6 May 2025 15:12:13 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46fcgy2ka0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 06 May 2025 15:12:13 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 546EK3eN013770;
+	Tue, 6 May 2025 15:11:31 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 46e062bqn0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 06 May 2025 15:11:31 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 546FBUK835717386
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 6 May 2025 15:11:30 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2A02820043;
+	Tue,  6 May 2025 15:11:30 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DD0BB20040;
+	Tue,  6 May 2025 15:11:29 +0000 (GMT)
+Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.155.204.135])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue,  6 May 2025 15:11:29 +0000 (GMT)
+Date: Tue, 6 May 2025 17:11:28 +0200
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Andrey Ryabinin <ryabinin.a.a@gmail.com>
+Cc: Harry Yoo <harry.yoo@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Daniel Axtens <dja@axtens.net>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, kasan-dev@googlegroups.com,
+        linux-s390@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v3 1/1] kasan: Avoid sleepable page allocation from
+ atomic context
+Message-ID: <aBomoDkNgiEAJjgX@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+References: <cover.1745940843.git.agordeev@linux.ibm.com>
+ <573a823565734e1eac3aa128fb9d3506ec918a72.1745940843.git.agordeev@linux.ibm.com>
+ <aBFbCP9TqNN0bGpB@harry>
+ <aBoGFr5EaHFfxuON@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+ <d77f4afd-5d4e-4bd0-9c83-126e8ef5c4ed@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] erofs: fix file handle encoding for 64-bit NIDs
-To: Hongbo Li <lihongbo22@huawei.com>, xiang@kernel.org, chao@kernel.org,
- zbestahu@gmail.com, jefflexu@linux.alibaba.com
-Cc: dhavale@google.com, linux-erofs@lists.ozlabs.org,
- linux-kernel@vger.kernel.org
-References: <20250429134257.690176-1-lihongbo22@huawei.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20250429134257.690176-1-lihongbo22@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d77f4afd-5d4e-4bd0-9c83-126e8ef5c4ed@gmail.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: gCu2k3kzWhwCVIxf2DSXQrISTGR2DThe
+X-Authority-Analysis: v=2.4 cv=Pa7/hjhd c=1 sm=1 tr=0 ts=681a26ce cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=7FHASCDaF61PvbNbS9YA:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-ORIG-GUID: Gu4J50MXSzFrSjYitZme6bowNsEc1S8i
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA2MDE0NiBTYWx0ZWRfX63DfIGolAsmI wti07+s8BO9WtAzNDxvGO/1dKf56kvZ6IKPlQVij7HSGJUZxblTqIpVA1OcoyMOxWDrrJwEwvJs RcdN5hLk36bh1CGsIDPnMpf3bDmhJtWMt5hcvZ4F3BlD7gorA/t0S7yjvwFeHfYPr6SYppkvqWn
+ 3OEf4hDBbauqcJC5kjVGAdx7E2bDtvz6V/onIhQaU0TJmlcRkjUvVGAhMmW0MNYTYu3Xga1jcv2 zTG2PvOWegkCwo7Fmtr2u3E1LHxcSSd8mPJ0FVCdp+04X6/8yEAN165+5mHdqH8gBMy29N4mV8e Ya8VxBIuqa5kan5L91dB46ryq0d+SKGfEk03sPs6p0IDka6wSBQiq/9Z5qPx4gWLM3I1/+jBI94
+ YF41ALJMF9Vtf4hZDH5yGEqzQhNpCtQQ/5hqk15VGTb2jnQcNvQIEdtlPxevPQLukJ7tbKJX
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-06_07,2025-05-05_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ priorityscore=1501 suspectscore=0 spamscore=0 bulkscore=0 mlxlogscore=852
+ adultscore=0 impostorscore=0 lowpriorityscore=0 malwarescore=0 mlxscore=0
+ phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505060146
 
-Hi Hongbo,
-
-On 2025/4/29 21:42, Hongbo Li wrote:
-> In erofs, the inode number has the location information of
-> files. The default encode_fh uses the ino32, this will lack
-> of some information when the file is too big. So we need
-> the internal helpers to encode filehandle.
-
-EROFS uses NID to indicate the on-disk inode offset, which can
-exceed 32 bits. However, the default encode_fh uses the ino32,
-thus it doesn't work if the image is large than 128GiB.
-
-Let's introduce our own helpers to encode file handles.
-
+On Tue, May 06, 2025 at 04:55:20PM +0200, Andrey Ryabinin wrote:
+> >>> -	if (likely(pte_none(ptep_get(ptep)))) {
+> >>> +	if (likely(pte_none(ptep_get(ptep))))
+> >>>  		set_pte_at(&init_mm, addr, ptep, pte);
+> >>> -		page = 0;
+> >>
+> >> With this patch, now if the pte is already set, the page is leaked?
+> > 
+> > Yes. But currently it is leaked for previously allocated pages anyway,
+> > so no change in behaviour (unless I misread the code).
 > 
-> It is easy to reproduce test:
+> Current code doesn't even allocate page if pte set, and if set pte discovered only after
+> taking spinlock, the page will be freed, not leaked.
 
-It's easy to reproduce:
+Oh, right. I rather meant pages that are leaked in case of a failure. My bad.
 
->    1. prepare an erofs image with nid bigger than UINT_MAX
-
-      1. Prepare an EROFS image with NIDs larger than U32_MAX
-
->    2. mount -t erofs foo.img /mnt/erofs
->    3. set exportfs with configuration: /mnt/erofs *(rw,sync,
->       no_root_squash)
->    4. mount -t nfs $IP:/mnt/erofs /mnt/nfs
->    5. md5sum /mnt/nfs/foo # foo is the file which nid bigger
->       than UINT_MAX.
-> For overlayfs case, the under filesystem's file handle is
-> encoded in ovl_fb.fid, it is same as NFS's case.
+> Whereas, this patch leaks page for every single !pte_none case. This will build up over time
+> as long as vmalloc called.
 > 
-> Fixes: 3e917cc305c6 ("erofs: make filesystem exportable")
-> Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
-> ---
-> v2: https://lore.kernel.org/all/20250429074109.689075-1-lihongbo22@huawei.com/
->    - Assign parent nid with correct value.
+> > 
+> >> Should we set data->pages[PFN_DOWN(addr - data->start)] = NULL 
+> >> and free non-null elements later in __kasan_populate_vmalloc()?
+> > 
+> > Should the allocation fail on boot, the kernel would not fly anyway.
 > 
-> v1: https://lore.kernel.org/all/20250429011139.686847-1-lihongbo22@huawei.com/
->     - Encode generation into file handle and minor clean code.
->     - Update the commiti's title.
-> ---
->   fs/erofs/super.c | 54 +++++++++++++++++++++++++++++++++++++++++-------
->   1 file changed, 46 insertions(+), 8 deletions(-)
-> 
-> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-> index cadec6b1b554..28b3701165cc 100644
-> --- a/fs/erofs/super.c
-> +++ b/fs/erofs/super.c
-> @@ -511,24 +511,62 @@ static int erofs_fc_parse_param(struct fs_context *fc,
->   	return 0;
->   }
->   
-> -static struct inode *erofs_nfs_get_inode(struct super_block *sb,
-> -					 u64 ino, u32 generation)
-> +static int erofs_encode_fh(struct inode *inode, u32 *fh, int *max_len,
-> +			   struct inode *parent)
->   {
-> -	return erofs_iget(sb, ino);
-> +	int len = parent ? 6 : 3;
-> +	erofs_nid_t nid;
+> This is not boot code, it's called from vmalloc() code path.
 
-Just `erofs_nid_t nid = EROFS_I(inode)->nid;`?
+FWIW, it is called from rest_init() too.
 
-I think the compiler will optimize out `if (*max_len < len)`.
+> > If for whatever reason we want to free, that should be a follow-up
+> > change, as far as I am concerned.
+> > 
+> We want to free it, because we don't want unbound memory leak.
 
-> +	u32 generation;
+Will send v5.
 
-It seems it's unnecessary to introduce `generation` variable here?
-
-> +
-> +	if (*max_len < len) {
-> +		*max_len = len;
-> +		return FILEID_INVALID;
-> +	}
-> +
-> +	nid = EROFS_I(inode)->nid;
-> +	generation = inode->i_generation;
-
-So drop these two lines.
-
-> +	fh[0] = (u32)(nid >> 32);
-> +	fh[1] = (u32)(nid & 0xffffffff);
-> +	fh[2] = generation;
-> +
-> +	if (parent) {
-> +		nid = EROFS_I(parent)->nid;
-> +		generation = parent->i_generation;
-> +
-> +		fh[3] = (u32)(nid >> 32);
-> +		fh[4] = (u32)(nid & 0xffffffff);
-> +		fh[5] = generation;
-
-		fh[5] = parent->i_generation;
-
-> +	}
-> +
-> +	*max_len = len;
-> +	return parent ? FILEID_INO64_GEN_PARENT : FILEID_INO64_GEN;
->   }
->   
->   static struct dentry *erofs_fh_to_dentry(struct super_block *sb,
->   		struct fid *fid, int fh_len, int fh_type)
->   {
-> -	return generic_fh_to_dentry(sb, fid, fh_len, fh_type,
-> -				    erofs_nfs_get_inode);
-> +	erofs_nid_t nid;
-> +
-> +	if ((fh_type != FILEID_INO64_GEN &&
-> +	     fh_type != FILEID_INO64_GEN_PARENT) || fh_len < 3)
-> +		return NULL;
-> +
-> +	nid = (u64) fid->raw[0] << 32;
-> +	nid |= (u64) fid->raw[1];
-
-Unnecessary nid variable.
-
-> +	return d_obtain_alias(erofs_iget(sb, nid));
-
-	return d_obtain_alias(erofs_iget(sb,
-			((u64)fid->raw[0] << 32) | fid->raw[1]));
-
->   }
->   
->   static struct dentry *erofs_fh_to_parent(struct super_block *sb,
->   		struct fid *fid, int fh_len, int fh_type)
->   {
-> -	return generic_fh_to_parent(sb, fid, fh_len, fh_type,
-> -				    erofs_nfs_get_inode);
-> +	erofs_nid_t nid;
-> +
-> +	if (fh_type != FILEID_INO64_GEN_PARENT || fh_len < 6)
-> +		return NULL;
-> +
-> +	nid = (u64) fid->raw[3] << 32;
-> +	nid |= (u64) fid->raw[4];
-
-Same here.
-
-Thanks,
-Gao Xiang
+Thanks!
