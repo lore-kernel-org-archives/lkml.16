@@ -1,442 +1,81 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1E24283C98;
-	Tue,  6 May 2025 13:20:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BC6E284B37
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 13:20:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746537628; cv=none; b=O2XOl/RCnoVJQfsB0xr6/glOj5kZQufFUVQMcIuSn2z67OeKbEIeIqfHRkPxqp8vNm+MFvoI0psc5IdNXbIjdijBwxlOwaaiw7uohf3AZC1MYYLEXX7HWalnPQKcbAd4hDfGPc6GtBsriRJ5lgdvy3cjX8Bq4lh+VITi/N/W4xk=
+	t=1746537631; cv=none; b=RDCCp8eRdP9OSHcafzROFYiuQUdrSULNqYRhSwSF0sV/5h8hBKou1/wSdUVV7INFh6N7CjHW2xntvoVC7k3225Q3Cgf9ElUkQmxZvXfxub54C8ssYYi8r9XeKlRDAQpDT7zPFBa557GB5ADPjZtBvjBCryXpRBEWSYoZCjtnIsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746537628; c=relaxed/simple;
-	bh=DEdwXGqylymYvmVDyQCDVchz4pvCnFr60kvUQB6wpYg=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=ftekc/O5uuIs8RI0GLOMKpiYVBGLtfMsqOJghhXgYecmXw1fpNfFx8qMV+C2V+MfsNQX8FmBCQxhCdcusYoxKlobK4ujHYbDW1L5+7h9eMQ/ioHaXt/UvBL7cIez6vKr5mY7iGhoThxo6XIHMBhliKm9LnbXWgbjifqSyZmaKIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Kg6OAusb; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0cWi7IJY; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1746537631; c=relaxed/simple;
+	bh=4DeN/DPKw5wRuHPLDO0TZYd7KmFT2iB1A89ex9ARX5Q=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=lL0m5ATaEBA/edQumUaaSjwGhoFKSeIBZdPTL7VYql0p+uvnwxO7DP2E9J44iWR7d6+zAcCX/SJPjF7Lpp4W4gAVNgDTLhwKV7am1T1Eek4CUxoKxztjJu5bbs/f3NfqxhkN8RQ1tfoJNWlP7gl7m8Y6RVztM+trEgWBOH2XIvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=f1mHoExS; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Kg6OAusb";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0cWi7IJY"
-Date: Tue, 06 May 2025 13:20:23 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746537624;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=u2cE1D9VPixwGZGOpK2b/AqtGcJsdlpg9WWvTQie1ac=;
-	b=Kg6OAusbg3rqMF4IBQn0hu+yg9vfXw0tXi/9Zb5rXDjBYSk+BXc6AYXwTWVhOaEQlkfKef
-	KfeM7da9b1WRssvxuW1Fdu2dGAjjTj2ExBKLxKoV5x2HInEe8kDkPZCVv/zKL3KLOlLXP2
-	olvJ57g4M9QzudRpgbbyS+M2FcziQ+ZC7fvK2RljdoVdes3tTYVSbMHVZVR1PR7EX6BNXd
-	o6MdtPp5sLxUlosMLqLbPdafidrM95rSiMtve5V/451C3XnB6BJIgCFRrykVRbrswE8W1p
-	nr76XKbtPsf4D+5eENzSQaD3ZVze7c/Oh3zsJx4uQ7av4CI5vYheEKbz8j0Jgg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746537624;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=u2cE1D9VPixwGZGOpK2b/AqtGcJsdlpg9WWvTQie1ac=;
-	b=0cWi7IJY9slBb5DZh5yjeICfnfq+xHFAW3TksmCkaJ0YSPHTREXyQQXI4g4WJ/CqlXQPof
-	rV/GC5+nYudZUjBA==
-From: "tip-bot2 for Jiri Slaby (SUSE)" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/cleanups] irqdomain: Drop irq_domain_add_*() functions
-Cc: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250319092951.37667-41-jirislaby@kernel.org>
-References: <20250319092951.37667-41-jirislaby@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f1mHoExS"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43d00017e9dso30050185e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 06:20:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746537627; x=1747142427; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=oIiqBCWX5MzqP0t3XcVAZebiA0Ed8DRzeZF9xiXf3Ao=;
+        b=f1mHoExS12v/NMYUmhq8pfz8YhfgyBVbDf7zu1NTk+DMUQAVi4qvpvJfFzmFMetQg2
+         KinJmYCU1htuG9ofGwTCJaSrVRpuiRZcByvuTlHgJ6XSd2LwzCU78gMZZJXFLCQQhq65
+         AMFicP9gJkWbS8t21A8aS5QWbplA5C6vhk5unHs6mxwJ/Zkhdqvmpsdm5xfeRIX/EN68
+         Snm10g2i0uCxl1tHBjUrWdNuh3066f6KsxJ1LwR2drybZXJ3mZKinj+eIks+NhR4034s
+         LNLKzo3T1WxI+Yhoj5YLFqpFzMGH6btwaz/RyH1dPJsFG+t6k9XLFYGnh/R2tZoc0FKF
+         u8uw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746537627; x=1747142427;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oIiqBCWX5MzqP0t3XcVAZebiA0Ed8DRzeZF9xiXf3Ao=;
+        b=U0YzxSmngRdt18O/rk78g4DBhiADrD9pneYYVoIvMStlVkPzOewILfROlukmAYkc66
+         5sNfwckBhMg86tugDMFBCxPdDZUH/Ez4ys01PGpKG+phPxoSoPK2wRooubsgFQv5Pgp9
+         1QKKfPieCm/b6SxSjnSIUdFnH9r0HbZNIY2HHXFWkixhxIFRn4fSaG67cS3WSsdHd0Kc
+         uB5bU0sW4Cl7Nlf0nqhcNEbM19joSNmBuLegS6F3Erbhxu4ZcJ8d2hnmF7k1IsaWi3ZV
+         VVmnB0TKa4iVIsd8+5Y2nZANOD4wpeCEatpGHanuxRKNBrgF9x9PyvwGnyLhIaJIoUgY
+         HYxw==
+X-Forwarded-Encrypted: i=1; AJvYcCV25RbJ4Q8NYChG5R8sfewT/ztMA3LjlYxVL7fKPYTpujQM06D0RNQuvrSpZEi5kXW2+LaJBjw1Tx4JtyY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzwIoEF0KgmeL4FMTGeq5I+iYFbQb3o1YvARgqPK9WaCPebmwkv
+	3+6uuvSAWu5KSLrEdmJHbAEUsDblJ1SF/GiqdDlzKNKp7vcfVxYHW1VSQQCY9Pi10rQFZxJ9YEb
+	nelDeaa6Zbw==
+X-Google-Smtp-Source: AGHT+IFY78pcCTbbccXODWSDVdP1qDT1isRm3G/s4SH8FJC+JVpZUwNfnB50fPQ1ngFDis6ebOiU9A1BaDFDbw==
+X-Received: from wmbjg12.prod.google.com ([2002:a05:600c:a00c:b0:43c:eaf6:525e])
+ (user=jackmanb job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:3e05:b0:43c:e467:d6ce with SMTP id 5b1f17b1804b1-441d0fbd329mr28022185e9.4.1746537627644;
+ Tue, 06 May 2025 06:20:27 -0700 (PDT)
+Date: Tue, 06 May 2025 13:20:25 +0000
+In-Reply-To: <20250506112509.905147-2-kirill.shutemov@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Message-ID: <174653762347.406.4768704798335414812.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+References: <20250506112509.905147-1-kirill.shutemov@linux.intel.com> <20250506112509.905147-2-kirill.shutemov@linux.intel.com>
+X-Mailer: aerc 0.20.0
+Message-ID: <D9P3X0NLQMW5.1J74MJ7FDRBFB@google.com>
+Subject: Re: [PATCH 1/2] mm/page_alloc: Ensure try_alloc_pages() plays well
+ with unaccepted memory
+From: Brendan Jackman <jackmanb@google.com>
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, <akpm@linux-foundation.org>, 
+	<vbabka@suse.cz>, <surenb@google.com>, <mhocko@suse.com>, 
+	<hannes@cmpxchg.org>, <bp@alien8.de>, <tglx@linutronix.de>, 
+	<david@redhat.com>
+Cc: <ast@kernel.org>, <linux-mm@kvack.org>, <linux-coco@lists.linux.dev>, 
+	<linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-The following commit has been merged into the irq/cleanups branch of tip:
+On Tue May 6, 2025 at 11:25 AM UTC, Kirill A. Shutemov wrote:
+> +	/* Bailout, since try_to_accept_memory_one() needs to take a lock */
+> +	if (alloc_flags & ALLOC_TRYLOCK)
+> +		return false;
+> +
 
-Commit-ID:     41287841eeb3a4ef4bcec8bd61399f9cd76188e5
-Gitweb:        https://git.kernel.org/tip/41287841eeb3a4ef4bcec8bd61399f9cd76=
-188e5
-Author:        Jiri Slaby (SUSE) <jirislaby@kernel.org>
-AuthorDate:    Wed, 19 Mar 2025 10:29:33 +01:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Tue, 06 May 2025 14:59:07 +02:00
-
-irqdomain: Drop irq_domain_add_*() functions
-
-Most irq_domain_add_*() functions are unused now, so drop them. The
-remaining ones are moved to the deprecated section and will be removed
-during the merge window after the patches in various trees have been
-merged.
-
-Note: The Chinese docs are touched but unfinished. I cannot parse those.
-
-[ tglx: Remove the leftover in irq-domain.rst and handle merge logistics ]
-
-Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/all/20250319092951.37667-41-jirislaby@kernel.org
----
- Documentation/core-api/irq/irq-domain.rst                    |  41 +---
- Documentation/translations/zh_CN/core-api/irq/irq-domain.rst |   4 +-
- include/linux/irqdomain.h                                    | 102 ++-----
- kernel/irq/irqdomain.c                                       |  27 +--
- 4 files changed, 44 insertions(+), 130 deletions(-)
-
-diff --git a/Documentation/core-api/irq/irq-domain.rst b/Documentation/core-a=
-pi/irq/irq-domain.rst
-index 44f4ba5..7624607 100644
---- a/Documentation/core-api/irq/irq-domain.rst
-+++ b/Documentation/core-api/irq/irq-domain.rst
-@@ -42,10 +42,9 @@ irq_domain usage
- =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-=20
- An interrupt controller driver creates and registers an irq_domain by
--calling one of the irq_domain_add_*() or irq_domain_create_*() functions
--(each mapping method has a different allocator function, more on that later).
--The function will return a pointer to the irq_domain on success. The caller
--must provide the allocator function with an irq_domain_ops structure.
-+calling one of the irq_domain_create_*() functions.  The function will
-+return a pointer to the irq_domain on success. The caller must provide the
-+allocator function with an irq_domain_ops structure.
-=20
- In most cases, the irq_domain will begin empty without any mappings
- between hwirq and IRQ numbers.  Mappings are added to the irq_domain
-@@ -92,7 +91,6 @@ Linear
-=20
- ::
-=20
--	irq_domain_add_linear()
- 	irq_domain_create_linear()
-=20
- The linear reverse map maintains a fixed size table indexed by the
-@@ -105,11 +103,6 @@ map are fixed time lookup for IRQ numbers, and irq_descs=
- are only
- allocated for in-use IRQs.  The disadvantage is that the table must be
- as large as the largest possible hwirq number.
-=20
--irq_domain_add_linear() and irq_domain_create_linear() are functionally
--equivalent, except for the first argument is different - the former
--accepts an Open Firmware specific 'struct device_node', while the latter
--accepts a more general abstraction 'struct fwnode_handle'.
--
- The majority of drivers should use the linear map.
-=20
- Tree
-@@ -117,7 +110,6 @@ Tree
-=20
- ::
-=20
--	irq_domain_add_tree()
- 	irq_domain_create_tree()
-=20
- The irq_domain maintains a radix tree map from hwirq numbers to Linux
-@@ -129,11 +121,6 @@ since it doesn't need to allocate a table as large as th=
-e largest
- hwirq number.  The disadvantage is that hwirq to IRQ number lookup is
- dependent on how many entries are in the table.
-=20
--irq_domain_add_tree() and irq_domain_create_tree() are functionally
--equivalent, except for the first argument is different - the former
--accepts an Open Firmware specific 'struct device_node', while the latter
--accepts a more general abstraction 'struct fwnode_handle'.
--
- Very few drivers should need this mapping.
-=20
- No Map
-@@ -159,8 +146,6 @@ Legacy
-=20
- ::
-=20
--	irq_domain_add_simple()
--	irq_domain_add_legacy()
- 	irq_domain_create_simple()
- 	irq_domain_create_legacy()
-=20
-@@ -189,13 +174,13 @@ supported.  For example, ISA controllers would use the =
-legacy map for
- mapping Linux IRQs 0-15 so that existing ISA drivers get the correct IRQ
- numbers.
-=20
--Most users of legacy mappings should use irq_domain_add_simple() or
--irq_domain_create_simple() which will use a legacy domain only if an IRQ ran=
-ge
--is supplied by the system and will otherwise use a linear domain mapping.
--The semantics of this call are such that if an IRQ range is specified then
--descriptors will be allocated on-the-fly for it, and if no range is
--specified it will fall through to irq_domain_add_linear() or
--irq_domain_create_linear() which means *no* irq descriptors will be allocate=
-d.
-+Most users of legacy mappings should use irq_domain_create_simple()
-+which will use a legacy domain only if an IRQ range is supplied by the
-+system and will otherwise use a linear domain mapping. The semantics of
-+this call are such that if an IRQ range is specified then descriptors
-+will be allocated on-the-fly for it, and if no range is specified it
-+will fall through to irq_domain_create_linear() which means *no* irq
-+descriptors will be allocated.
-=20
- A typical use case for simple domains is where an irqchip provider
- is supporting both dynamic and static IRQ assignments.
-@@ -206,12 +191,6 @@ that the driver using the simple domain call irq_create_=
-mapping()
- before any irq_find_mapping() since the latter will actually work
- for the static IRQ assignment case.
-=20
--irq_domain_add_simple() and irq_domain_create_simple() as well as
--irq_domain_add_legacy() and irq_domain_create_legacy() are functionally
--equivalent, except for the first argument is different - the former
--accepts an Open Firmware specific 'struct device_node', while the latter
--accepts a more general abstraction 'struct fwnode_handle'.
--
- Hierarchy IRQ domain
- --------------------
-=20
-diff --git a/Documentation/translations/zh_CN/core-api/irq/irq-domain.rst b/D=
-ocumentation/translations/zh_CN/core-api/irq/irq-domain.rst
-index ecb23cf..913c3ed 100644
---- a/Documentation/translations/zh_CN/core-api/irq/irq-domain.rst
-+++ b/Documentation/translations/zh_CN/core-api/irq/irq-domain.rst
-@@ -83,7 +83,6 @@ irq_domain=E6=98=A0=E5=B0=84=E7=9A=84=E7=B1=BB=E5=9E=8B
-=20
- ::
-=20
--	irq_domain_add_linear()
- 	irq_domain_create_linear()
-=20
- =E7=BA=BF=E6=80=A7=E5=8F=8D=E5=90=91=E6=98=A0=E5=B0=84=E7=BB=B4=E6=8A=A4=E4=
-=BA=86=E4=B8=80=E4=B8=AA=E5=9B=BA=E5=AE=9A=E5=A4=A7=E5=B0=8F=E7=9A=84=E8=A1=
-=A8=EF=BC=8C=E8=AF=A5=E8=A1=A8=E4=BB=A5hwirq=E5=8F=B7=E4=B8=BA=E7=B4=A2=E5=BC=
-=95=E3=80=82 =E5=BD=93=E4=B8=80=E4=B8=AAhwirq=E8=A2=AB=E6=98=A0=E5=B0=84
-@@ -104,7 +103,6 @@ irq_domain_add_linear()=E5=92=8Cirq_domain_create_linear(=
-)=E5=9C=A8=E5=8A=9F=E8=83=BD=E4=B8=8A=E6=98=AF=E7=AD=89=E4=BB=B7=E7=9A=84=EF=
-=BC=8C
-=20
- ::
-=20
--	irq_domain_add_tree()
- 	irq_domain_create_tree()
-=20
- irq_domain=E7=BB=B4=E6=8A=A4=E7=9D=80=E4=BB=8Ehwirq=E5=8F=B7=E5=88=B0Linux I=
-RQ=E7=9A=84radix=E7=9A=84=E6=A0=91=E7=8A=B6=E6=98=A0=E5=B0=84=E3=80=82 =E5=BD=
-=93=E4=B8=80=E4=B8=AAhwirq=E8=A2=AB=E6=98=A0=E5=B0=84=E6=97=B6=EF=BC=8C
-@@ -138,8 +136,6 @@ Linux IRQ=E5=8F=B7=E7=BC=96=E5=85=A5=E7=A1=AC=E4=BB=B6=E6=
-=9C=AC=E8=BA=AB=EF=BC=8C=E8=BF=99=E6=A0=B7=E5=B0=B1=E4=B8=8D=E9=9C=80=E8=A6=
-=81=E6=98=A0=E5=B0=84=E4=BA=86=E3=80=82 =E8=B0=83=E7=94=A8irq_create
-=20
- ::
-=20
--	irq_domain_add_simple()
--	irq_domain_add_legacy()
- 	irq_domain_create_simple()
- 	irq_domain_create_legacy()
-=20
-diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
-index f3c79f9..712c662 100644
---- a/include/linux/irqdomain.h
-+++ b/include/linux/irqdomain.h
-@@ -338,12 +338,6 @@ struct irq_domain *irq_domain_create_simple(struct fwnod=
-e_handle *fwnode,
- 					    unsigned int first_irq,
- 					    const struct irq_domain_ops *ops,
- 					    void *host_data);
--struct irq_domain *irq_domain_add_legacy(struct device_node *of_node,
--					 unsigned int size,
--					 unsigned int first_irq,
--					 irq_hw_number_t first_hwirq,
--					 const struct irq_domain_ops *ops,
--					 void *host_data);
- struct irq_domain *irq_domain_create_legacy(struct fwnode_handle *fwnode,
- 					    unsigned int size,
- 					    unsigned int first_irq,
-@@ -396,40 +390,6 @@ static inline struct irq_domain *irq_find_host(struct de=
-vice_node *node)
- 	return d;
- }
-=20
--static inline struct irq_domain *irq_domain_add_simple(struct device_node *o=
-f_node,
--						       unsigned int size,
--						       unsigned int first_irq,
--						       const struct irq_domain_ops *ops,
--						       void *host_data)
--{
--	return irq_domain_create_simple(of_fwnode_handle(of_node), size, first_irq,=
- ops, host_data);
--}
--
--/**
-- * irq_domain_add_linear() - Allocate and register a linear revmap irq_domai=
-n.
-- * @of_node: pointer to interrupt controller's device tree node.
-- * @size: Number of interrupts in the domain.
-- * @ops: map/unmap domain callbacks
-- * @host_data: Controller private data pointer
-- */
--static inline struct irq_domain *irq_domain_add_linear(struct device_node *o=
-f_node,
--					 unsigned int size,
--					 const struct irq_domain_ops *ops,
--					 void *host_data)
--{
--	struct irq_domain_info info =3D {
--		.fwnode		=3D of_fwnode_handle(of_node),
--		.size		=3D size,
--		.hwirq_max	=3D size,
--		.ops		=3D ops,
--		.host_data	=3D host_data,
--	};
--	struct irq_domain *d;
--
--	d =3D irq_domain_instantiate(&info);
--	return IS_ERR(d) ? NULL : d;
--}
--
- #ifdef CONFIG_IRQ_DOMAIN_NOMAP
- static inline struct irq_domain *irq_domain_create_nomap(struct fwnode_handl=
-e *fwnode,
- 					 unsigned int max_irq,
-@@ -452,22 +412,6 @@ static inline struct irq_domain *irq_domain_create_nomap=
-(struct fwnode_handle *f
- unsigned int irq_create_direct_mapping(struct irq_domain *domain);
- #endif
-=20
--static inline struct irq_domain *irq_domain_add_tree(struct device_node *of_=
-node,
--					 const struct irq_domain_ops *ops,
--					 void *host_data)
--{
--	struct irq_domain_info info =3D {
--		.fwnode		=3D of_fwnode_handle(of_node),
--		.hwirq_max	=3D ~0U,
--		.ops		=3D ops,
--		.host_data	=3D host_data,
--	};
--	struct irq_domain *d;
--
--	d =3D irq_domain_instantiate(&info);
--	return IS_ERR(d) ? NULL : d;
--}
--
- static inline struct irq_domain *irq_domain_create_linear(struct fwnode_hand=
-le *fwnode,
- 					 unsigned int size,
- 					 const struct irq_domain_ops *ops,
-@@ -631,18 +575,6 @@ static inline struct irq_domain *irq_domain_create_hiera=
-rchy(struct irq_domain *
- 	return IS_ERR(d) ? NULL : d;
- }
-=20
--static inline struct irq_domain *irq_domain_add_hierarchy(struct irq_domain =
-*parent,
--					    unsigned int flags,
--					    unsigned int size,
--					    struct device_node *node,
--					    const struct irq_domain_ops *ops,
--					    void *host_data)
--{
--	return irq_domain_create_hierarchy(parent, flags, size,
--					   of_fwnode_handle(node),
--					   ops, host_data);
--}
--
- int __irq_domain_alloc_irqs(struct irq_domain *domain, int irq_base,
- 			    unsigned int nr_irqs, int node, void *arg,
- 			    bool realloc,
-@@ -789,6 +721,40 @@ static inline struct fwnode_handle *of_node_to_fwnode(st=
-ruct device_node *node)
- 	return node ? &node->fwnode : NULL;
- }
-=20
-+static inline struct irq_domain *irq_domain_add_tree(struct device_node *of_=
-node,
-+					 const struct irq_domain_ops *ops,
-+					 void *host_data)
-+{
-+	struct irq_domain_info info =3D {
-+		.fwnode		=3D of_fwnode_handle(of_node),
-+		.hwirq_max	=3D ~0U,
-+		.ops		=3D ops,
-+		.host_data	=3D host_data,
-+	};
-+	struct irq_domain *d;
-+
-+	d =3D irq_domain_instantiate(&info);
-+	return IS_ERR(d) ? NULL : d;
-+}
-+
-+static inline struct irq_domain *irq_domain_add_linear(struct device_node *o=
-f_node,
-+					 unsigned int size,
-+					 const struct irq_domain_ops *ops,
-+					 void *host_data)
-+{
-+	struct irq_domain_info info =3D {
-+		.fwnode		=3D of_fwnode_handle(of_node),
-+		.size		=3D size,
-+		.hwirq_max	=3D size,
-+		.ops		=3D ops,
-+		.host_data	=3D host_data,
-+	};
-+	struct irq_domain *d;
-+
-+	d =3D irq_domain_instantiate(&info);
-+	return IS_ERR(d) ? NULL : d;
-+}
-+
- #else /* CONFIG_IRQ_DOMAIN */
- static inline void irq_dispose_mapping(unsigned int virq) { }
- static inline struct irq_domain *irq_find_matching_fwnode(
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index 74ad4a8..57098c7 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -480,33 +480,6 @@ struct irq_domain *irq_domain_create_simple(struct fwnod=
-e_handle *fwnode,
- }
- EXPORT_SYMBOL_GPL(irq_domain_create_simple);
-=20
--/**
-- * irq_domain_add_legacy() - Allocate and register a legacy revmap irq_domai=
-n.
-- * @of_node: pointer to interrupt controller's device tree node.
-- * @size: total number of irqs in legacy mapping
-- * @first_irq: first number of irq block assigned to the domain
-- * @first_hwirq: first hwirq number to use for the translation. Should norma=
-lly
-- *               be '0', but a positive integer can be used if the effective
-- *               hwirqs numbering does not begin at zero.
-- * @ops: map/unmap domain callbacks
-- * @host_data: Controller private data pointer
-- *
-- * Note: the map() callback will be called before this function returns
-- * for all legacy interrupts except 0 (which is always the invalid irq for
-- * a legacy controller).
-- */
--struct irq_domain *irq_domain_add_legacy(struct device_node *of_node,
--					 unsigned int size,
--					 unsigned int first_irq,
--					 irq_hw_number_t first_hwirq,
--					 const struct irq_domain_ops *ops,
--					 void *host_data)
--{
--	return irq_domain_create_legacy(of_fwnode_handle(of_node), size,
--					first_irq, first_hwirq, ops, host_data);
--}
--EXPORT_SYMBOL_GPL(irq_domain_add_legacy);
--
- struct irq_domain *irq_domain_create_legacy(struct fwnode_handle *fwnode,
- 					 unsigned int size,
- 					 unsigned int first_irq,
+Quick lazy question: why don't we just trylock it like we do for the zone
+lock?
