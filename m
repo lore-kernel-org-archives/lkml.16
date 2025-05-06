@@ -1,55 +1,55 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6E89289817
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 16:48:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFEF3289834
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 16:48:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746550136; cv=none; b=oICjS7qvL+DhQrpuwmPcSqqj/Ij22rAr9d0F3MZCpCPqFWF2a+VJwSNx8Ut3aoRmTYGrBVPAVF3ZKSsfdgdqOzi87NNssumR+i/nNgq+xxVaxWUxOLU6oFae8tTRkUvaV8abyHYGI2DqtktR4apGjv+kaJ8eCePTjfTFVPrGbXg=
+	t=1746550141; cv=none; b=J/6myz7ol2J1HVHWqtdQPsNRwVxunvNS4xhDM01CbcWd6gUbuojqK3DxYfdKoqx5xj1GMRPB1tA8EG2kaG6lwFaWS/foX1dfnDJUjHh8niO7S4TmtzU1v/n0Loc5N7vHGbZLbeTcOygrJiZSH6gEwFJvywnhzOxjsT5WvKFGxkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746550136; c=relaxed/simple;
-	bh=P5fqf7GLSzb7bwzSSyJnj5fukWX4Yfbn+JGf94Z5P6s=;
+	s=arc-20240116; t=1746550141; c=relaxed/simple;
+	bh=iuQhFRef46J5MkexbFZGx7vlrdeCQfDMXYmqnqqtQ2E=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=EqjG4KkTpKCrpmRmptmUHCZ6whX2cThvruwpSt7YbiTnHbWkslyQJrIJ2Gvbi+ELSYEBhWunC0V+JjKzfVEWoANdRR/U0PaiINlojqNS6L8YFR7UxcGaectFo9+ooiEmDLICxjtgT5QWrcHjXw9ga73tsm0IWw2RbGCXTn3B6/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CswxNSwK; arc=none smtp.client-ip=209.85.128.73
+	 To:Cc:Content-Type; b=pzliwAydoJBtz2vjU7uWLwwA3w7Ibh2icRNVaYSlLbTsKdCQpiEy/QZG0FndksWBWbAihHHS5zRlQf8OdSJrpTIkPjX9YZPY9cRbuESzx+EwEhLWaCcuDWI8U2nKD4CGoD3i/WI22QgTA6oTZ/1F9JJDgcddQlUJhwBRyyBkUvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ueN/hm9l; arc=none smtp.client-ip=209.85.221.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CswxNSwK"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43d734da1a3so27600475e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 09:48:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ueN/hm9l"
+Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-3912fe32a30so1858964f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 09:48:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746550133; x=1747154933; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1746550137; x=1747154937; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z0lEPcVl31Ep+ZkAHQCvo9hIAtaxt0RYlv/tYPLRXN4=;
-        b=CswxNSwKFoeimDAXRNDCNAaQRsTyzyKybaQ+pda+mxRIHoQ7OLi0PzJbjfG4tA7Gvx
-         f3lORSA7DVSuYXwpnhXxFjZPuiBL4UpLjD4avSJLP4Qoym9nJkV9rzV2w/Je6enHRL4K
-         P1mo0KxVPJYwSCY37FIsGZi3NlQIWzpbp0dVnHaJ9MgdW9CwgAhJC9WZHv2WlkL2jmu2
-         cqwar3941GWV4jIvfj3UTvOwiccNvWM8A5X8rw5yM2oFiLdD4U5Pzw6vTYH0thf9hzP/
-         0eBKuR5j/3RaKsPwyB8LfTwV8wb6T47zqNac9RpKDJYn8xClFsosGgBXZvMqGNiQmlSW
-         sJrg==
+        bh=uUEhUY6y+yq4hnPAgSB4Z9pgwwb6EfBVQ/uoSljwjUs=;
+        b=ueN/hm9lDhNtkulexxgjzlEqzpTF2lJAL82xZRwMKk+CXk3/uA6/ewiS8tbpMPDfPW
+         fEOws+zEAYKO8G3JGXmOI7cwS5tF8yFznfm8h5EGHkupMccyp1AKONMMo3bYqBlYPQIh
+         JijrClhSWAi1DUVrqzb+E0/ZwmpRo1xB9ozvzAcQLuvF3uAsyy0hz3Kv+2+S2xjtPRS/
+         EV2115vQa7EwiqjvBCIBA4roX/nB7GMseBM60+wO4Ws5o4K722Hf7GB7lCoeCyTqDTMG
+         VWdzJbhGKuVhTRoOqwjYCrEex+/3blSBsEX78vTJn7bue17E+hJvU1awghZ9kkdLYWR0
+         GdAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746550133; x=1747154933;
+        d=1e100.net; s=20230601; t=1746550137; x=1747154937;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z0lEPcVl31Ep+ZkAHQCvo9hIAtaxt0RYlv/tYPLRXN4=;
-        b=TlBpBZhHPbdz8wVGj/Fd1jpzzH3OhWdpQvaxXi3gM7rGymWPt/e6Ptz2OjvWKriqkt
-         tHG/mdFQR3MVN3ozEqvqYzkA7ldhnrR75dSIc2vyZIikasIh+HLilK52eXrvKi6DuTpf
-         k2W/PT2Z7U4yt7feISShrBvOKEwA3st05+Ua4srrJ+P57DV7cEWP8bJrxj+39iIq+nGr
-         olMGWZtRKTIxuxePf4fwmyCWl/JwUR+xZFN7Cj/MQzCHO2q3KT2MSm9p2z6Mkws524o5
-         UKj/9fcRHJsCeBu6gLBKc8KnEuAweYbZensCDut9z/UZneJXC4wTfgCpijzp0ZONVUR4
-         /flg==
-X-Forwarded-Encrypted: i=1; AJvYcCWMtGkjdEBEDqyhanzvbYLfPvzKoSHcMrQtl77RDebQBV9YLD2yqDEBwwkeeoYCgJI7A8tgCEsFc7zuJqY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQ0TTr0RM3eLqXbwtyJUpRcEK7boFovxGPEr2XUX++wZY16Pta
-	RE8GzAtbI9B5tf5MP89t/wOZ9TdtfIVAl1BRybIZ78WtcyWArw4tK+TUUhqypnnChMarAItE3z+
-	2RaojN6RWnj3jWGtX6A==
-X-Google-Smtp-Source: AGHT+IGq1vAJ+GKWhJtsv/JkxJGIe/fYEg66JYCRx2JA9lFVNOYu2CXLapcz44nyPnWBPM6MV8fK/V35DhKZhEiX
-X-Received: from wmbfp20.prod.google.com ([2002:a05:600c:6994:b0:43c:f5b8:aad0])
+        bh=uUEhUY6y+yq4hnPAgSB4Z9pgwwb6EfBVQ/uoSljwjUs=;
+        b=n5dYgb+Mtg1F0OMfDYexhqPbWHE7p5jJP1FGxrpLMQlt26D0+Q29evvY1/iyS9RyzO
+         a+xEZb9t7llilJHUi9crQHkyLBhXwMd/ejuE4CVYWU4Fx+0rAiShODp106E6DxG6BKi/
+         GLUcI9XIot4wEueFiKyHAcq8JmGb+Se+Wt8BqvdV1wOvpkwOMqckFDVxzDo1M9ciSzzk
+         xpornmhENU4TnLmxF9PoWQrpAqsOii+EVhbQySevYHi5w6ijyh7oExUWZZ9UnsYzlO8e
+         WFpYnr0x7MLn2abDd11c+ei7BjndOXAvUAYOe40KGcMyWwDl70I7mOBrXv+DxgRFt+MT
+         MwIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU0xsV9X4/Qs/pTSMGnSvEFKzYEsFaEhdjV9xihULSX4uHL6ZgIrvFdOnyKxkisakQzdnTidpAyFzMz+C0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyaWC7g+MEmCGvBMyprSSSdy1+J1yUR82cxRza9G42gP5CWg2zV
+	25GuhYHLTr6UnGX4wdcRmPPYiotEge0RGwXn1dvY1IJ8QzIG2UIH6OB2YFqc80YfFUalXPajX5Z
+	RofdGrAmdraM9A7VeEQ==
+X-Google-Smtp-Source: AGHT+IFsuDLoQRKLKmWQ5FaaPQkguDjVQpGkgUMdm86U7WBeGkKEJmPriD9uujpKK0RffgNbuMzCI/zCmJHFIlVx
+X-Received: from wmbz7.prod.google.com ([2002:a05:600c:c087:b0:440:59df:376a])
  (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:a4c:b0:43c:f8fc:f69a with SMTP id 5b1f17b1804b1-441d04f45b7mr38855715e9.4.1746550133269;
- Tue, 06 May 2025 09:48:53 -0700 (PDT)
-Date: Tue,  6 May 2025 17:48:04 +0100
+ 2002:a05:6000:4210:b0:3a0:8020:c5c5 with SMTP id ffacd0b85a97d-3a0b4a4d575mr86047f8f.58.1746550137291;
+ Tue, 06 May 2025 09:48:57 -0700 (PDT)
+Date: Tue,  6 May 2025 17:48:06 +0100
 In-Reply-To: <20250506164820.515876-1-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250506164820.515876-1-vdonnefort@google.com>
 X-Mailer: git-send-email 2.49.0.967.g6a0df3ecc3-goog
-Message-ID: <20250506164820.515876-9-vdonnefort@google.com>
-Subject: [PATCH v4 08/24] ring-buffer: Expose buffer_data_page material
+Message-ID: <20250506164820.515876-11-vdonnefort@google.com>
+Subject: [PATCH v4 10/24] tracing: Add a trace remote module for testing
 From: Vincent Donnefort <vdonnefort@google.com>
 To: rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
 	linux-trace-kernel@vger.kernel.org, maz@kernel.org, oliver.upton@linux.dev, 
@@ -71,142 +71,327 @@ Cc: kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
 	Vincent Donnefort <vdonnefort@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-In preparation for allowing the write of ring-buffer compliant pages
-outside of ring_buffer.c, move buffer_data_page and timestamps
-encoding functions into the publicly available ring_buffer.h.
+Add a module to help testing the tracefs support for trace remotes. This
+module:
+
+  * Use simple_ring_buffer to write into a ring-buffer.
+  * Declare a single "selftest" event that can be triggered from
+    user-space.
+  * Register a "test" trace remote.
+
+This is intended to be used by trace remote selftests.
 
 Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 
-diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
-index c0c7f8a0dcb3..c26fba4a643c 100644
---- a/include/linux/ring_buffer.h
-+++ b/include/linux/ring_buffer.h
-@@ -3,8 +3,10 @@
- #define _LINUX_RING_BUFFER_H
+diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+index 407cb05cc8a0..2e27d9d1799e 100644
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -1221,4 +1221,12 @@ config TRACE_REMOTE
+ config SIMPLE_RING_BUFFER
+ 	bool
  
- #include <linux/mm.h>
--#include <linux/seq_file.h>
- #include <linux/poll.h>
-+#include <linux/seq_file.h>
++config TRACE_REMOTE_TEST
++	tristate "Test module for remote tracing"
++	select TRACE_REMOTE
++	select SIMPLE_RING_BUFFER
++	help
++	  This trace remote includes a ring-buffer writer implementation using
++	  "simple_ring_buffer". This is solely intending for testing.
 +
-+#include <asm/local.h>
+ endif # FTRACE
+diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
+index cece10b1f97c..8f5e194eba71 100644
+--- a/kernel/trace/Makefile
++++ b/kernel/trace/Makefile
+@@ -112,4 +112,6 @@ obj-$(CONFIG_RV) += rv/
  
- #include <uapi/linux/trace_mmap.h>
- 
-@@ -61,11 +63,46 @@ enum ring_buffer_type {
- 	RINGBUF_TYPE_TIME_STAMP,
- };
- 
-+#define TS_SHIFT        27
-+#define TS_MASK         ((1ULL << TS_SHIFT) - 1)
-+#define TS_DELTA_TEST   (~TS_MASK)
+ obj-$(CONFIG_TRACE_REMOTE) += trace_remote.o
+ obj-$(CONFIG_SIMPLE_RING_BUFFER) += simple_ring_buffer.o
++obj-$(CONFIG_TRACE_REMOTE_TEST) += remote_test.o
++
+ libftrace-y := ftrace.o
+diff --git a/kernel/trace/remote_test.c b/kernel/trace/remote_test.c
+new file mode 100644
+index 000000000000..05556a879ba7
+--- /dev/null
++++ b/kernel/trace/remote_test.c
+@@ -0,0 +1,259 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2025 - Google LLC
++ * Author: Vincent Donnefort <vdonnefort@google.com>
++ */
++
++#include <linux/module.h>
++#include <linux/simple_ring_buffer.h>
++#include <linux/trace_remote.h>
++#include <linux/tracefs.h>
++#include <linux/types.h>
++
++#define REMOTE_EVENT_INCLUDE_FILE kernel/trace/remote_test_events.h
++#include <trace/define_remote_events.h>
++
++static DEFINE_PER_CPU(struct simple_rb_per_cpu *, simple_rbs);
++static struct trace_buffer_desc *remote_test_buffer_desc;
 +
 +/*
-+ * We need to fit the time_stamp delta into 27 bits.
++ * The trace_remote lock already serializes accesses from the trace_remote_callbacks.
++ * However write_event can still race with load/unload.
 + */
-+static inline bool test_time_stamp(u64 delta)
++static DEFINE_MUTEX(simple_rbs_lock);
++
++static int remote_test_load_simple_rb(int cpu, struct ring_buffer_desc *rb_desc)
 +{
-+	return !!(delta & TS_DELTA_TEST);
++	struct simple_rb_per_cpu *cpu_buffer;
++	struct simple_buffer_page *bpages;
++	int ret = -ENOMEM;
++
++	cpu_buffer = kzalloc(sizeof(*cpu_buffer), GFP_KERNEL);
++	if (!cpu_buffer)
++		return ret;
++
++	bpages = kmalloc_array(rb_desc->nr_page_va, sizeof(*bpages), GFP_KERNEL);
++	if (!bpages)
++		goto err_free_cpu_buffer;
++
++	ret = simple_ring_buffer_init(cpu_buffer, bpages, rb_desc);
++	if (ret)
++		goto err_free_bpages;
++
++	guard(mutex)(&simple_rbs_lock);
++
++	*per_cpu_ptr(&simple_rbs, cpu) = cpu_buffer;
++
++	return 0;
++
++err_free_bpages:
++	kfree(bpages);
++
++err_free_cpu_buffer:
++	kfree(cpu_buffer);
++
++	return ret;
 +}
 +
- unsigned ring_buffer_event_length(struct ring_buffer_event *event);
- void *ring_buffer_event_data(struct ring_buffer_event *event);
- u64 ring_buffer_event_time_stamp(struct trace_buffer *buffer,
- 				 struct ring_buffer_event *event);
- 
-+#define BUF_PAGE_HDR_SIZE offsetof(struct buffer_data_page, data)
++static void remote_test_unload_simple_rb(int cpu)
++{
++	struct simple_rb_per_cpu *cpu_buffer = *per_cpu_ptr(&simple_rbs, cpu);
++	struct simple_buffer_page *bpages;
 +
-+#define RB_EVNT_HDR_SIZE (offsetof(struct ring_buffer_event, array))
-+#define RB_ALIGNMENT		4U
-+#define RB_MAX_SMALL_DATA	(RB_ALIGNMENT * RINGBUF_TYPE_DATA_TYPE_LEN_MAX)
-+#define RB_EVNT_MIN_SIZE	8U	/* two 32bit words */
++	if (!cpu_buffer)
++		return;
 +
-+#ifndef CONFIG_HAVE_64BIT_ALIGNED_ACCESS
-+# define RB_FORCE_8BYTE_ALIGNMENT	0
-+# define RB_ARCH_ALIGNMENT		RB_ALIGNMENT
-+#else
-+# define RB_FORCE_8BYTE_ALIGNMENT	1
-+# define RB_ARCH_ALIGNMENT		8U
-+#endif
++	guard(mutex)(&simple_rbs_lock);
 +
-+#define RB_ALIGN_DATA		__aligned(RB_ARCH_ALIGNMENT)
++	bpages = cpu_buffer->bpages;
++	simple_ring_buffer_unload(cpu_buffer);
++	kfree(bpages);
++	kfree(cpu_buffer);
++	*per_cpu_ptr(&simple_rbs, cpu) = NULL;
++}
 +
-+struct buffer_data_page {
-+	u64		 time_stamp;	/* page time stamp */
-+	local_t		 commit;	/* write committed index */
-+	unsigned char	 data[] RB_ALIGN_DATA;	/* data of buffer page */
++static struct trace_buffer_desc *remote_test_load(unsigned long size, void *unused)
++{
++	struct ring_buffer_desc *rb_desc;
++	struct trace_buffer_desc *desc;
++	size_t desc_size;
++	int cpu, ret;
++
++	if (WARN_ON(remote_test_buffer_desc))
++		return NULL;
++
++	cpus_read_lock();
++
++	desc_size = trace_buffer_desc_size(size, num_online_cpus());
++	if (desc_size == SIZE_MAX)
++		goto err_unlock_cpus;
++
++	desc = kmalloc(desc_size, GFP_KERNEL);
++	if (!desc)
++		goto err_unlock_cpus;
++
++	ret = trace_remote_alloc_buffer(desc, size, cpu_online_mask);
++	if (ret)
++		goto err_free_desc;
++
++	for_each_ring_buffer_desc(rb_desc, cpu, desc) {
++		ret = remote_test_load_simple_rb(rb_desc->cpu, rb_desc);
++		if (ret)
++			goto err;
++	}
++
++	remote_test_buffer_desc = desc;
++
++	cpus_read_unlock();
++
++	return remote_test_buffer_desc;
++
++err:
++	for_each_ring_buffer_desc(rb_desc, cpu, remote_test_buffer_desc)
++		remote_test_unload_simple_rb(rb_desc->cpu);
++	trace_remote_free_buffer(remote_test_buffer_desc);
++
++err_free_desc:
++	kfree(desc);
++
++err_unlock_cpus:
++	cpus_read_unlock();
++
++	return NULL;
++}
++
++static void remote_test_unload(struct trace_buffer_desc *desc, void *unused)
++{
++	struct ring_buffer_desc *rb_desc;
++	int cpu;
++
++	if (WARN_ON(desc != remote_test_buffer_desc))
++		return;
++
++	for_each_ring_buffer_desc(rb_desc, cpu, desc)
++		remote_test_unload_simple_rb(rb_desc->cpu);
++
++	remote_test_buffer_desc = NULL;
++	trace_remote_free_buffer(desc);
++}
++
++static int remote_test_enable_tracing(bool enable, void *unused)
++{
++	struct ring_buffer_desc *rb_desc;
++	int cpu;
++
++	if (!remote_test_buffer_desc)
++		return -ENODEV;
++
++	for_each_ring_buffer_desc(rb_desc, cpu, remote_test_buffer_desc)
++		WARN_ON(simple_ring_buffer_enable_tracing(*per_cpu_ptr(&simple_rbs, rb_desc->cpu),
++							  enable));
++	return 0;
++}
++
++static int remote_test_swap_reader_page(unsigned int cpu, void *unused)
++{
++	struct simple_rb_per_cpu *cpu_buffer;
++
++	if (cpu >= NR_CPUS)
++		return -EINVAL;
++
++	cpu_buffer = *per_cpu_ptr(&simple_rbs, cpu);
++	if (!cpu_buffer)
++		return -EINVAL;
++
++	return simple_ring_buffer_swap_reader_page(cpu_buffer);
++}
++
++static int remote_test_reset(unsigned int cpu, void *unused)
++{
++	struct simple_rb_per_cpu *cpu_buffer;
++
++	if (cpu >= NR_CPUS)
++		return -EINVAL;
++
++	cpu_buffer = *per_cpu_ptr(&simple_rbs, cpu);
++	if (!cpu_buffer)
++		return -EINVAL;
++
++	return simple_ring_buffer_reset(cpu_buffer);
++}
++
++static int remote_test_enable_event(unsigned short id, bool enable, void *unused)
++{
++	if (id != REMOTE_TEST_EVENT_ID)
++		return -EINVAL;
++
++	/*
++	 * Let's just use the struct remote_event enabled field that is turned on and off by
++	 * trace_remote. This is a bit racy but good enough for a simple test module.
++	 */
++	return 0;
++}
++
++static ssize_t
++write_event_write(struct file *filp, const char __user *ubuf, size_t cnt, loff_t *pos)
++{
++	struct remote_event_format_selftest *evt_test;
++	struct simple_rb_per_cpu *cpu_buffer;
++	unsigned long val;
++	int ret;
++
++	ret = kstrtoul_from_user(ubuf, cnt, 10, &val);
++	if (ret)
++		return ret;
++
++	guard(mutex)(&simple_rbs_lock);
++
++	if (!remote_event_selftest.enabled)
++		return cnt;
++
++	cpu_buffer = *this_cpu_ptr(&simple_rbs);
++	if (!cpu_buffer)
++		return -ENODEV;
++
++	evt_test = simple_ring_buffer_reserve(cpu_buffer,
++					      sizeof(struct remote_event_format_selftest),
++					      trace_clock_global());
++	if (!evt_test)
++		return -ENODEV;
++
++	evt_test->hdr.id = REMOTE_TEST_EVENT_ID;
++	evt_test->id = val;
++
++	simple_ring_buffer_commit(cpu_buffer);
++
++	return cnt;
++}
++
++static const struct file_operations write_event_fops = {
++	.write	= write_event_write,
 +};
 +
- /*
-  * ring_buffer_discard_commit will remove an event that has not
-  *   been committed yet. If this is used, then ring_buffer_unlock_commit
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index cff1e700d4b7..e99e8d4ab615 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -156,23 +156,6 @@ int ring_buffer_print_entry_header(struct trace_seq *s)
- /* Used for individual buffers (after the counter) */
- #define RB_BUFFER_OFF		(1 << 20)
- 
--#define BUF_PAGE_HDR_SIZE offsetof(struct buffer_data_page, data)
--
--#define RB_EVNT_HDR_SIZE (offsetof(struct ring_buffer_event, array))
--#define RB_ALIGNMENT		4U
--#define RB_MAX_SMALL_DATA	(RB_ALIGNMENT * RINGBUF_TYPE_DATA_TYPE_LEN_MAX)
--#define RB_EVNT_MIN_SIZE	8U	/* two 32bit words */
--
--#ifndef CONFIG_HAVE_64BIT_ALIGNED_ACCESS
--# define RB_FORCE_8BYTE_ALIGNMENT	0
--# define RB_ARCH_ALIGNMENT		RB_ALIGNMENT
--#else
--# define RB_FORCE_8BYTE_ALIGNMENT	1
--# define RB_ARCH_ALIGNMENT		8U
--#endif
--
--#define RB_ALIGN_DATA		__aligned(RB_ARCH_ALIGNMENT)
--
- /* define RINGBUF_TYPE_DATA for 'case RINGBUF_TYPE_DATA:' */
- #define RINGBUF_TYPE_DATA 0 ... RINGBUF_TYPE_DATA_TYPE_LEN_MAX
- 
-@@ -315,10 +298,6 @@ EXPORT_SYMBOL_GPL(ring_buffer_event_data);
- #define for_each_online_buffer_cpu(buffer, cpu)		\
- 	for_each_cpu_and(cpu, buffer->cpumask, cpu_online_mask)
- 
--#define TS_SHIFT	27
--#define TS_MASK		((1ULL << TS_SHIFT) - 1)
--#define TS_DELTA_TEST	(~TS_MASK)
--
- static u64 rb_event_time_stamp(struct ring_buffer_event *event)
- {
- 	u64 ts;
-@@ -337,12 +316,6 @@ static u64 rb_event_time_stamp(struct ring_buffer_event *event)
- 
- #define RB_MISSED_MASK		(3 << 30)
- 
--struct buffer_data_page {
--	u64		 time_stamp;	/* page time stamp */
--	local_t		 commit;	/* write committed index */
--	unsigned char	 data[] RB_ALIGN_DATA;	/* data of buffer page */
--};
--
- struct buffer_data_read_page {
- 	unsigned		order;	/* order of the page */
- 	struct buffer_data_page	*data;	/* actual data, stored in this page */
-@@ -401,14 +374,6 @@ static void free_buffer_page(struct buffer_page *bpage)
- 	kfree(bpage);
- }
- 
--/*
-- * We need to fit the time_stamp delta into 27 bits.
-- */
--static inline bool test_time_stamp(u64 delta)
--{
--	return !!(delta & TS_DELTA_TEST);
--}
--
- struct rb_irq_work {
- 	struct irq_work			work;
- 	wait_queue_head_t		waiters;
++static int remote_test_init_tracefs(struct dentry *d, void *unused)
++{
++	return tracefs_create_file("write_event", 0200, d, NULL, &write_event_fops) ?
++		0 : -ENOMEM;
++}
++
++static struct trace_remote_callbacks trace_remote_callbacks = {
++	.init			= remote_test_init_tracefs,
++	.load_trace_buffer	= remote_test_load,
++	.unload_trace_buffer	= remote_test_unload,
++	.enable_tracing		= remote_test_enable_tracing,
++	.swap_reader_page	= remote_test_swap_reader_page,
++	.reset			= remote_test_reset,
++	.enable_event		= remote_test_enable_event,
++};
++
++static int __init remote_test_init(void)
++{
++	return trace_remote_register("test", &trace_remote_callbacks, NULL,
++				     &remote_event_selftest, 1);
++}
++
++module_init(remote_test_init);
++
++MODULE_DESCRIPTION("Test module for the trace remote interface");
++MODULE_AUTHOR("Vincent Donnefort");
++MODULE_LICENSE("GPL");
+diff --git a/kernel/trace/remote_test_events.h b/kernel/trace/remote_test_events.h
+new file mode 100644
+index 000000000000..bb68aac4a25c
+--- /dev/null
++++ b/kernel/trace/remote_test_events.h
+@@ -0,0 +1,10 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++#define REMOTE_TEST_EVENT_ID 1
++
++REMOTE_EVENT(selftest, REMOTE_TEST_EVENT_ID,
++	RE_STRUCT(
++		re_field(u64, id)
++	),
++	RE_PRINTK("id=%lld", __entry->id)
++);
 -- 
 2.49.0.967.g6a0df3ecc3-goog
 
