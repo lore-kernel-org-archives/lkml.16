@@ -1,88 +1,149 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m19731110.qiye.163.com (mail-m19731110.qiye.163.com [220.197.31.110])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 972DA35C901
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 03:12:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CEBA319A5E;
+	Tue,  6 May 2025 03:12:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.110
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746501143; cv=none; b=mnV4rGy2Tsk8XkpbI8Wx9LoFYOcQfnY/zp4Hnd2leWsBBWq8aG6hzXVi2Ot5dLCSB/y9Abvbig1SHd7tbBDw8opL+z3UC8xUJaISA+SGgvP4HNyfNr+Ec9or5N5KOr54AXKECS5ai9Y04wTMNiWCkheAc7Y/AWJemUayHOKeK4w=
+	t=1746501170; cv=none; b=cuDmZ530+mrpkP9i0j2Ms/NagXF/DaJxSb/9i/rlSvT6CRULbstLyivw5PAq6oVgezAJyNuJ/iPwEIf2OF6M4N9iO3QfNRJgXYApgL94lJ0DtM+HvDaXeEzIj9B6H6koMlGzAvYZWM9bxRhO36F+SNB0flvDkfanOMRKNykwIPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746501143; c=relaxed/simple;
-	bh=RqqvXt513iIsi4tEHeAi0LVjqWyjH4X/JB/2aZa5zjQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Obke+41XsZT0zY7l2bu0SkCjTIq5Mdd7OFR9BLSHdRvh+te/U8G8z+beRM1ah6uCeDvhNypcY4M4LkYy16zYF2OJtNnu3ssQLbEXFr+sco4MstL2I5CIq2VfK/m78EHDI3BLArZ7M5+YIMrjM8ogBDiyOvJyxSSkVJuZKCtcObQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=cJn0CY9N; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1746501170; c=relaxed/simple;
+	bh=oW9HeIeCmokvmEUwG5AjU4lvlrfAArDaT9DBtFEWufc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=S+I/KkD/t7wBT9ZmEkVqk79mnHbhyydse54TcQ7BpBmuEP4ms4ZsIr1R+k59cYBNDeEb34bP3xOcuzfAUmZIcDOVyJQ58/XRAp/SGjHcQuhZ4Jhwy/5i5jIaNKvrTszD2IZWV5Fh+C1w7t0aOcJMzfm8mWR34vR1Dft2ISWTxIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=JXt3rZTM; arc=none smtp.client-ip=220.197.31.110
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cJn0CY9N"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-30a509649e3so2803715a91.2
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 20:12:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1746501139; x=1747105939; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=RqqvXt513iIsi4tEHeAi0LVjqWyjH4X/JB/2aZa5zjQ=;
-        b=cJn0CY9NZ3pbmevczDz/80RrUdulL3i9FvnttFsS2l1L67X1YTc1UNTLgcYTwROx6g
-         IYyCqOlv3Z8Wilg1d1+7qaY16FGrzQ9Un8YFP7AojmNPirSp6o/zLmbsIkKuoDIWgUDU
-         YYFfkKEVcH5rmf8u0MonNsafcDynGSvHL0I2Y=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746501139; x=1747105939;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RqqvXt513iIsi4tEHeAi0LVjqWyjH4X/JB/2aZa5zjQ=;
-        b=aR8vkqjAJ1Oqbjfs8flrweKgsqTPDf0MRdt4JadUa/ZLs0hxMAKdkxN8OxKXtAI+Mb
-         K3yzpQZYSH+BZ4a2UUZ8qTlNl9efnJM0M9ZU1qRN1OxMvdBVv3C/6UM2mm7C20F13u1V
-         pz/hBzhDfYXRHQu878hohEgKQd7Uu2ukWlO1ISXQ2fuiQJwIW/0dCcV9nhNoZudpPOds
-         l1QF9itrKAOoNx/lME5qeW65g5I3/9RM0YLJPEFAaXKVrw80/iN2PF7j3zoi2l9gi2xX
-         4WtiV2oBgWPNtlGmbWqzUm+fV8ddqCHGtElIaVyuKVukyl0rjq6Dk5ehd9hZuW1FVkWO
-         YLKw==
-X-Forwarded-Encrypted: i=1; AJvYcCXj9IUQ7OCW+RdbCWcQiqfbndwk+fW7tLg0fFuZLyjudNhDvH5Kbe6MKyU2Rph04kR7yzYg7MMPlGQpbgk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBTiNeXhSuB8O1EV2A81NP4J9wbv7X3B1XGvcs3CKfyV4IwmBj
-	4EUuHkzuTkIJykkidQdKJfzJBARgxWyzsMeS0Z94TaEpXXRKnbP/035N6P8u7g==
-X-Gm-Gg: ASbGncvO+GGzMIS+m/Nkev6bCK84Cp5SktLyNDGwyruWNgL2btCSAIcDYnV0eddrMdF
-	Fx10BoHUv2TxASPcEEKZsYbUrCTgUK/M2Opsd8ASpRDXTfljOou/kuJxeQ8Psb+3Qum+oZLigCd
-	kL7jt45k1fJ0Oq5YtEwqJlP/bD/0TOfdnuhO/Oqah5mzC/JS/E+PukE7DeB8kU/pYT+XllgPCvQ
-	g6eMfql4RoHvjMhGCy2qC1kApRnk88kzupLkqdiIw9rGQdy4Fg3Y6Gi8qKINcy1FeK18Eu+wVNC
-	XpotKKq5vlWM5Q3Ezl+UGfxmWy8l6K5X0XqrBr3nYWM=
-X-Google-Smtp-Source: AGHT+IEoP0z3CQ01WfsoSBzGXyLXz6fM+zSx5xAVq1j+5tcUHWpw1G3BbjuLnXDQ6/FXH15JqRBSUA==
-X-Received: by 2002:a17:90b:3f83:b0:2fc:a3b7:108e with SMTP id 98e67ed59e1d1-30a7dabd723mr1736929a91.4.1746501138855;
-        Mon, 05 May 2025 20:12:18 -0700 (PDT)
-Received: from google.com ([2401:fa00:8f:203:761:97e0:917d:ad1e])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30a47642083sm9968386a91.45.2025.05.05.20.12.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 20:12:18 -0700 (PDT)
-Date: Tue, 6 May 2025 12:12:14 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC] BPF fault/jitter-injection framework
-Message-ID: <giu7jtmw7ixfej4hkpmdjy6agplhokinyo7lzfd6pc3chi6zm3@7jjqpl4m5r2i>
-References: <5l4btekupkqatpxkfaolqhc5kw5wra3xvd7dosalem6zuo5vp5@vwfd7idoqdzv>
- <CAADnVQKgEViz3gQ2QJzCmnm-ou-r-=_i3yLaW5JoKK9okVcGzA@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="JXt3rZTM"
+Received: from localhost.localdomain (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 140c6eae0;
+	Tue, 6 May 2025 10:57:19 +0800 (GMT+08:00)
+From: Kever Yang <kever.yang@rock-chips.com>
+To: heiko@sntech.de
+Cc: linux-rockchip@lists.infradead.org,
+	Kever Yang <kever.yang@rock-chips.com>,
+	Jamie Iles <jamie@jamieiles.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Frank Wang <frank.wang@rock-chips.com>,
+	FUKAUMI Naoki <naoki@radxa.com>,
+	Johan Jonker <jbx6244@gmail.com>,
+	Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+	Junhao Xie <bigfoot@classfun.cn>,
+	Elaine Zhang <zhangqing@rock-chips.com>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Finley Xiao <finley.xiao@rock-chips.com>,
+	Yao Zi <ziyao@disroot.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Quentin Schulz <quentin.schulz@cherry.de>,
+	devicetree@vger.kernel.org,
+	Diederik de Haas <didi.debian@cknow.org>,
+	linux-watchdog@vger.kernel.org,
+	Rob Herring <robh@kernel.org>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shresth Prasad <shresthprasad7@gmail.com>,
+	linux-arm-kernel@lists.infradead.org,
+	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+	Detlev Casanova <detlev.casanova@collabora.com>,
+	Dragan Simic <dsimic@manjaro.org>,
+	linux-kernel@vger.kernel.org,
+	Jimmy Hon <honyuenkwun@gmail.com>
+Subject: [PATCH v5 0/6] rockchip: Add rk3562 SoC and evb support
+Date: Tue,  6 May 2025 10:57:09 +0800
+Message-Id: <20250506025715.33595-1-kever.yang@rock-chips.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAADnVQKgEViz3gQ2QJzCmnm-ou-r-=_i3yLaW5JoKK9okVcGzA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQxoZSFYYGhlPGktMSB1DThpWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSEpKQk
+	1VSktLVUpCWQY+
+X-HM-Tid: 0a96a386c1a103afkunm140c6eae0
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NxQ6Fio4SjJJShEtMjxMMDIe
+	KS4KCjBVSlVKTE9NTktLSU9KQkpLVTMWGhIXVRAeDR4JVQIaFRw7CRQYEFYYExILCFUYFBZFWVdZ
+	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFIQkNKNwY+
+DKIM-Signature:a=rsa-sha256;
+	b=JXt3rZTMDb7HXMD+niuonbqjJO5oAH8E9/BS/AneQJR5fV0DyZvEkJj5FvNTpH8YpOqSHRatefzpH/oVzeTuTrmZ0GwEM28dHv5+b0Q8SjBCu8Di4pHtPVYu7GhLUfP1HIYTumDe32xV7t4WYRL8JK79ZaoLr28DDGYcKGofxXY=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=3dqzEK6o7cHu5/0LtgezIfFhqUApVg/7ee7umICA/ho=;
+	h=date:mime-version:subject:message-id:from;
 
-On (25/05/02 19:10), Alexei Starovoitov wrote:
-> To call schedule_timeout() bpf program needs to be sleepable.
-> Majority of LSM and ALLOW_ERROR_INJECTION hooks are sleepable.
-> All syscalls are sleepable too.
 
-Thank you for your reply, Alexei.
+Patch series V5 remove [v4 1/7] which had taken by Manivannan, and move
+scmi-shmem from soc node to reserved memory.
 
-A question:
-Are "ALLOW_ERROR_INJECTION hooks" some sort of BPF programs type?
-I looked at libbpf but couldn't find any mention of ALLOW_ERROR_INJECTION.
+Patch series V4 remove patches already landed, and remove dts nodes for
+modules still under review.
 
-Is there a way to make sure that "bpf_sleep()" can only be called from
-those special programs (that would require CONFIG_FAULT_INJECTION)?
+This patch set adds rk3562 SoC and its evb support.
+
+I have split out patches need driver change for different subsystem.
+And all the modules with dt-binding document update in this patch set
+do not need any driver change. I put them together to make it clear we
+have a new SoC and board to use the new compatible. Please pick up the
+patch for your subsystem, or please let me know if the patch has to
+send separate.
+
+Test with USB, PCIe, EMMC, SD Card.
+
+This patch set is base on the patch set for rk3576 evb1 support.
+
+V3:
+https://lore.kernel.org/linux-rockchip/20250227111913.2344207-1-kever.yang@rock-chips.com/
+V2:
+https://lore.kernel.org/linux-rockchip/b4df8a73-58a2-4765-a9e4-3513cb2bc720@rock-chips.com/T/
+
+
+Changes in v5:
+- Collect review tag
+- Update scmi-shmem from soc to reserved memory
+
+Changes in v4:
+- Collect ack tag
+- Collect ack tag
+- Collect ack tag
+- remove gmac and otp nodes
+- remove gmac nodes
+
+Changes in v3:
+- Collect reveiw tag
+- Collect the Acked-by tag
+- remove i2c/serial/spi alias
+- add soc node
+
+Changes in v2:
+- Update in sort order
+- remove grf in cru
+- Update some properties order
+
+Finley Xiao (2):
+  arm64: dts: rockchip: add core dtsi for RK3562 Soc
+  arm64: dts: rockchip: Add RK3562 evb2 devicetree
+
+Kever Yang (4):
+  dt-bindings: watchdog: Add rk3562 compatible
+  dt-bindings: rockchip: pmu: Add rk3562 compatible
+  dt-bindings: soc: rockchip: Add rk3562 syscon compatibles
+  dt-bindings: arm: rockchip: Add rk3562 evb2 board
+
+ .../devicetree/bindings/arm/rockchip.yaml     |    5 +
+ .../devicetree/bindings/arm/rockchip/pmu.yaml |    2 +
+ .../devicetree/bindings/soc/rockchip/grf.yaml |    7 +
+ .../bindings/watchdog/snps,dw-wdt.yaml        |    1 +
+ arch/arm64/boot/dts/rockchip/Makefile         |    1 +
+ .../boot/dts/rockchip/rk3562-evb2-v10.dts     |  488 ++++
+ .../boot/dts/rockchip/rk3562-pinctrl.dtsi     | 2352 +++++++++++++++++
+ arch/arm64/boot/dts/rockchip/rk3562.dtsi      | 1270 +++++++++
+ 8 files changed, 4126 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3562-evb2-v10.dts
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3562-pinctrl.dtsi
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3562.dtsi
+
+-- 
+2.25.1
+
