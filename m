@@ -1,42 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F91A338BF6;
-	Tue,  6 May 2025 02:23:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C88A3365E9;
+	Tue,  6 May 2025 02:22:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746498189; cv=none; b=P6QXc/mkGIheH6S3Y5NjCvT6Ri7iIjAdtT0qOJZPqCbPeEjgmLtLGATRidXbPIbQ0XOPq0CMu4UkCrLzaR56G1dmADI0yLKC4h8fMnQ7kswgieNR7twh7MHgDadasP+s0U0+egoW+8GTv9m1mta+KsQoMgd5Uys9Y31SSbMclfI=
+	t=1746498162; cv=none; b=Vdj7yZwROgvWcR48MBbRC4nJgmCiNRrC14PC2EG495j/67vkhdBTMUCpogNtXR+bmjrU3NDjDlxsXJ0JzKcRPYwXUwI4udR8kE1A8J2eI8a9qsTjcU9GqMz1h1AmRopS/cES7vR/6QIi1H6vaSACOMDVHBIVJS0SssgcbVNAZsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746498189; c=relaxed/simple;
-	bh=p2VThZz1v3Wx04Mvu/n4pyFuxEQ0Dv1zbwer2XSOSdU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bqq6YUgBdBxYtrotQ3i57T3SFVY37Mp131DT5MS97cYK4W6OWrsSNZFHG8F20ORsyXXSAnGxpFetgU8RH6qLDC81Nk3j5rOpq1TMxOjny8/4pw/U9+i2tcvbjr3bW+mxNmiyAyuZL4W52YuJg0LmnmWeDvoZGoKi3pG8MYLVfsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TKTlvl04; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746498162; c=relaxed/simple;
+	bh=s8mhfLhCGAtF0bguEvGQoujlaMzsaSBRGrkTBQxcYzM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=m1uhysxgm8VVxYQo9vGzQqaLh5+Jc38M20YQcEYFQk57z2p4eJeP2Le/rqEQqOKc2UIdAayLxWJRy0BckQW6qES9XFAsAgTxsOJILWO7tvw6dg9Sra8p2yEA049L4ELm9eQOgz5Jx5vLqC+wD10BGSrasqCz+KMyhRrSghF+Kk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aXXwZyQ/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TKTlvl04"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA586C4CEE4;
-	Tue,  6 May 2025 02:23:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aXXwZyQ/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77C59C4CEE4;
+	Tue,  6 May 2025 02:22:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746498188;
-	bh=p2VThZz1v3Wx04Mvu/n4pyFuxEQ0Dv1zbwer2XSOSdU=;
+	s=k20201202; t=1746498159;
+	bh=s8mhfLhCGAtF0bguEvGQoujlaMzsaSBRGrkTBQxcYzM=;
 	h=From:To:Cc:Subject:Date:From;
-	b=TKTlvl044L6Ba8VS7jlAQs5V8j0zQLP+nMg/xIHNnQTrgeUjIEQho5+WZQNO/6Qfu
-	 YqVlCdU7gDFyoRiTZTY8sL5vXa+SZnd79VYs6zt/S/5nAdJSQ6z25GF22Z/KWqiuLk
-	 40uCyISmgcJtAVPQUvJrlB9NPjAfr1ZBZRrx2P00crINClH9mEyC4XzYzus6aCfx9+
-	 synE1SKkyCbWwG1XcCBCdJ7V4flB/RNhj04URiF2w4ZNLV8gTV+ZPZA2LdMuB5MBJr
-	 hJ5AWCQdfH33CK07wa7FgZDjc320gWojvw6LSLlatP7k5NC0D+IpdozQL/6qrR//p9
-	 r2gfjLhwrCEPA==
+	b=aXXwZyQ/th0UCAFKK6yzRASnv9wK9gwMuwohX6tOq0m8bchsYzqN8ZXZR1KlZnTND
+	 02Q6jlKLz3XUGyo2Eq33Kj+4zSphf4srHXbYaiVr0CXw0BtNXWvYy0yjlm2ERU4sc4
+	 iBGrA46+p9zWiZTn4JYLx15NPQHz3NQGyLRS8JDr68VR+MFhj2URVNQ0NR0z/sgp2u
+	 BCdXyMnE1KCMJWqU0Pbqavh3FIN1ssID0JlE1HNLr90SFa+mx1SxQfbGU4lM7lC4Ax
+	 VEqTHJweUeq5pASmfiKXXiEzUc77v5InrzzW1RB7KDVF6W4aZrlEdEXUzCMjmDKOfi
+	 0Wvb7Ioarqvhw==
 From: "Rob Herring (Arm)" <robh@kernel.org>
 To: Daniel Lezcano <daniel.lezcano@linaro.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Gregory Clement <gregory.clement@bootlin.com>
+	Noam Camus <noamca@mellanox.com>
 Cc: linux-kernel@vger.kernel.org,
 	devicetree@vger.kernel.org
-Subject: [PATCH] dt-bindings: timer: Convert marvell,orion-timer to DT schema
-Date: Mon,  5 May 2025 21:23:04 -0500
-Message-ID: <20250506022305.2588431-1-robh@kernel.org>
+Subject: [PATCH] dt-bindings: timer: Convert ezchip,nps400-timer to DT schema
+Date: Mon,  5 May 2025 21:22:35 -0500
+Message-ID: <20250506022237.2587355-1-robh@kernel.org>
 X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -46,88 +45,115 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Convert the Marvell Orion Timer binding to DT schema format. It's a
-straight-forward conversion.
+Convert the EZChip NPS400 Timer bindings to DT schema format. It's a
+straight-forward conversion. The 2 bindings only differ in compatible
+and one required property, so the schemas can be combined.
 
 Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- .../bindings/timer/marvell,orion-timer.txt    | 16 -------
- .../bindings/timer/marvell,orion-timer.yaml   | 43 +++++++++++++++++++
- 2 files changed, 43 insertions(+), 16 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/timer/marvell,orion-timer.txt
- create mode 100644 Documentation/devicetree/bindings/timer/marvell,orion-timer.yaml
+ .../bindings/timer/ezchip,nps400-timer.yaml   | 45 +++++++++++++++++++
+ .../bindings/timer/ezchip,nps400-timer0.txt   | 17 -------
+ .../bindings/timer/ezchip,nps400-timer1.txt   | 15 -------
+ 3 files changed, 45 insertions(+), 32 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/timer/ezchip,nps400-timer.yaml
+ delete mode 100644 Documentation/devicetree/bindings/timer/ezchip,nps400-timer0.txt
+ delete mode 100644 Documentation/devicetree/bindings/timer/ezchip,nps400-timer1.txt
 
-diff --git a/Documentation/devicetree/bindings/timer/marvell,orion-timer.txt b/Documentation/devicetree/bindings/timer/marvell,orion-timer.txt
-deleted file mode 100644
-index cd1a0c256f94..000000000000
---- a/Documentation/devicetree/bindings/timer/marvell,orion-timer.txt
-+++ /dev/null
-@@ -1,16 +0,0 @@
--Marvell Orion SoC timer
--
--Required properties:
--- compatible: shall be "marvell,orion-timer"
--- reg: base address of the timer register starting with TIMERS CONTROL register
--- interrupts: should contain the interrupts for Timer0 and Timer1
--- clocks: phandle of timer reference clock (tclk)
--
--Example:
--	timer: timer {
--		compatible = "marvell,orion-timer";
--		reg = <0x20300 0x20>;
--		interrupt-parent = <&bridge_intc>;
--		interrupts = <1>, <2>;
--		clocks = <&core_clk 0>;
--	};
-diff --git a/Documentation/devicetree/bindings/timer/marvell,orion-timer.yaml b/Documentation/devicetree/bindings/timer/marvell,orion-timer.yaml
+diff --git a/Documentation/devicetree/bindings/timer/ezchip,nps400-timer.yaml b/Documentation/devicetree/bindings/timer/ezchip,nps400-timer.yaml
 new file mode 100644
-index 000000000000..f973afffa5ba
+index 000000000000..317c5010c4c1
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/marvell,orion-timer.yaml
-@@ -0,0 +1,43 @@
++++ b/Documentation/devicetree/bindings/timer/ezchip,nps400-timer.yaml
+@@ -0,0 +1,45 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/marvell,orion-timer.yaml#
++$id: http://devicetree.org/schemas/ezchip,nps400-timer.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Marvell Orion SoC timer
++title: EZChip NPS400 Timers
 +
 +maintainers:
-+  - Andrew Lunn <andrew@lunn.ch>
-+  - Gregory Clement <gregory.clement@bootlin.com>
++  - Noam Camus <noamca@mellanox.com>
 +
 +properties:
 +  compatible:
-+    const: marvell,orion-timer
++    enum:
++      - ezchip,nps400-timer0
++      - ezchip,nps400-timer1
 +
-+  reg:
++  interrupts:
 +    maxItems: 1
 +
 +  clocks:
 +    maxItems: 1
 +
-+  interrupts:
-+    items:
-+      - description: Timer0 interrupt
-+      - description: Timer1 interrupt
-+
 +required:
 +  - compatible
-+  - reg
-+  - interrupts
 +  - clocks
 +
 +additionalProperties: false
 +
++allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: ezchip,nps400-timer0
++    then:
++      required: [ interrupts ]
++
 +examples:
 +  - |
-+    timer@20300 {
-+        compatible = "marvell,orion-timer";
-+        reg = <0x20300 0x20>;
-+        interrupts = <1>, <2>;
-+        clocks = <&core_clk 0>;
++    timer {
++        compatible = "ezchip,nps400-timer0";
++        interrupts = <3>;
++        clocks = <&sysclk>;
 +    };
+diff --git a/Documentation/devicetree/bindings/timer/ezchip,nps400-timer0.txt b/Documentation/devicetree/bindings/timer/ezchip,nps400-timer0.txt
+deleted file mode 100644
+index e3cfce8fecc5..000000000000
+--- a/Documentation/devicetree/bindings/timer/ezchip,nps400-timer0.txt
++++ /dev/null
+@@ -1,17 +0,0 @@
+-NPS Network Processor
+-
+-Required properties:
+-
+-- compatible :	should be "ezchip,nps400-timer0"
+-
+-Clocks required for compatible = "ezchip,nps400-timer0":
+-- interrupts : The interrupt of the first timer
+-- clocks : Must contain a single entry describing the clock input
+-
+-Example:
+-
+-timer {
+-	compatible = "ezchip,nps400-timer0";
+-	interrupts = <3>;
+-	clocks = <&sysclk>;
+-};
+diff --git a/Documentation/devicetree/bindings/timer/ezchip,nps400-timer1.txt b/Documentation/devicetree/bindings/timer/ezchip,nps400-timer1.txt
+deleted file mode 100644
+index c0ab4190b8fb..000000000000
+--- a/Documentation/devicetree/bindings/timer/ezchip,nps400-timer1.txt
++++ /dev/null
+@@ -1,15 +0,0 @@
+-NPS Network Processor
+-
+-Required properties:
+-
+-- compatible :	should be "ezchip,nps400-timer1"
+-
+-Clocks required for compatible = "ezchip,nps400-timer1":
+-- clocks : Must contain a single entry describing the clock input
+-
+-Example:
+-
+-timer {
+-	compatible = "ezchip,nps400-timer1";
+-	clocks = <&sysclk>;
+-};
 -- 
 2.47.2
 
