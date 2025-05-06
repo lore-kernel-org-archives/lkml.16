@@ -1,214 +1,216 @@
-Received: from EUR03-VI1-obe.outbound.protection.outlook.com (mail-vi1eur03on2100.outbound.protection.outlook.com [40.107.103.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11AB227B4E9;
-	Tue,  6 May 2025 11:55:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.103.100
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746532544; cv=fail; b=mjsuWvWWvB6NSXvYnlRnzVc0o0zVnZOiwg2jhpOjnru9dIRwkApvcf1VwCHnWGdWwdK84mZPcXj2rt42qBQo5Bo/MPR4dJGdHjJjI4Iwu56DpChtLDQHsDm6SaJLTnSCZQm/Ujb4JbawtCsrhsdTp4w0JkJTrsUjWvUfFmULUjo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746532544; c=relaxed/simple;
-	bh=7V9IRm0qD9yDqcjjCppIVtzjKDkqHkXaNgO/Mijulw0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iBrTnXvY2d09oMDfvH4gXtaiZNfrdk0NFP7/3JcMypk6s87JjwEnFXOU7vilYMAabNIowIAAQ7AgQYp8AxAveirKxzuGa+xIr12VLzZZESwgqjix2m2QNWyNQRAVSmahG1R37pmhnIzCPdVFUTHh0SuyQ5vk6Pm/08RgY0NGJUU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=phytec.de; spf=pass smtp.mailfrom=phytec.de; dkim=pass (2048-bit key) header.d=phytec.de header.i=@phytec.de header.b=Uua5nVCY; arc=fail smtp.client-ip=40.107.103.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=phytec.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytec.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4733B27C150
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 11:55:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746532546; cv=none; b=IPzPBdGN6BpCU2qUqyK2zRWHnPUSJec6IXjrpl3Yl/e1di6QDsqZF5g4J9ug+qpJX+3vaESNyLX5qnwOCfdb+TM/GlD3jqnWHYqWX2zyAnpWqIA565rwI3sC8op5StGdDoHjr74wYksR+G3B+gm1oZ1XylUJ6HK/qMd9YC6/Gcc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746532546; c=relaxed/simple;
+	bh=Ju78M2uASabNhZvnSg+EamWDDI7twx0IX8YzmrF1b3U=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MqvU9K/STf1qBNKw2rc3nkz9dWQ+rgoQhTfj80i192tkh/e/RN9VX4GR8rM//E2aepI6bxMkRAaySW8H3EucDYvEvrITDFMUlBh5HhVTEalqo2tPQL0p4MN+OHGjpSFIXs4hCskSDUib5uAXsBa+4aJTT8CXG+ZWTqAydzK+4Js=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y4zMR8zo; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=phytec.de header.i=@phytec.de header.b="Uua5nVCY"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=PKYGkpamxxi6acF0yBrDkFAVpR/INfnAocPhGs8eEYv6iZkIweeiIKpPIvt47aGvZFqTbAqAgCVhJnU6U3SMYvYCvh79OS0pDhChjuztNVl90wdOjOnb2Alrc/quDPZiWx+LtsZmNIJ2tSm14isJ3gt5fVaucAgpNmr3LmMuwZp5sZuQzR3tfYkIkLtjA9TmlWQ5hZyBS3R5u9F9+RQrgDRtDQzPF8yHoK/OmABzAG/0xK6qcG2gOxZvKAxf1tswGQAT5weskUVW8hOoHD0R1gfnUTWyWAypEihi9h3LKec/fgIuidGM32m/dP9PICZIrjBhG3I4/4epCBDhUqAUow==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=x6NeFz3IFZAX4MPCpdCWywkx/ixlzqoga1MKZ07wUak=;
- b=qY1ztQ8pjz8QMHlr5VCAo5MVZH3WDoFcjhJ0mbRg2y3BXq1JRNVaFExONF7XTohDP8N1GQfocZnztSKFANgT+yC29AEXN26MOcqVF3BqKbUHwuQJlnx920Ec6hSgC6j9vxcJT00l3EPtM7zMjCEH3IUylc35CfzaUGtr0/nKYAPj4ckAQCffo+GMET1ZzqR6LjP10FCGo+BhN/SyOat7kSUknXYgETFNiRH7HbCRuY9uSQb8w7uCZKuTcWcp7yfdzpA1T3/TUxGAf6nMhHOZvv5w8cGWHzxEsvIyD8YN985u0L3w8dOX9MSeibl3kUhOB211sCmVXXSf4KK2A9QzeA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
- is 91.26.50.189) smtp.rcpttodomain=ti.com smtp.mailfrom=phytec.de; dmarc=fail
- (p=quarantine sp=quarantine pct=100) action=quarantine header.from=phytec.de;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=phytec.de;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=x6NeFz3IFZAX4MPCpdCWywkx/ixlzqoga1MKZ07wUak=;
- b=Uua5nVCYNKtOBegdyhSPEAO7EqPAgbdhpGeXANmWFU4IGFx+XwPLXY2/kSByQvGdZYeuswjUzFCo5JeAbCjJFYiPZTdBZ5uE6COETxWxGZ0ynFijZ4M0/tRX773fLjx9e16d/vD+/jGNYXOv18DMDiZzdRIv4BobvRVqcqGEFwY/yUFk6bCdz9AUHO4BusCOsnePsZD/lpc3DuzZsGHCDS665zjoygedRZT10UrKt2MEcMhY2ZXLS4mCFFPptrEzNLxdogI7Sji/0RZBR7eO6ncHvXcgA2RYCBDXRaAkNRqp/OpXhrRzQEkyAL4tViU4v7AdWuzUVKDRGmc1Y37lxg==
-Received: from AS9PR01CA0045.eurprd01.prod.exchangelabs.com
- (2603:10a6:20b:542::27) by PRAP195MB1434.EURP195.PROD.OUTLOOK.COM
- (2603:10a6:102:278::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.24; Tue, 6 May
- 2025 11:55:37 +0000
-Received: from AMS0EPF00000190.eurprd05.prod.outlook.com
- (2603:10a6:20b:542:cafe::5f) by AS9PR01CA0045.outlook.office365.com
- (2603:10a6:20b:542::27) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8699.31 via Frontend Transport; Tue,
- 6 May 2025 11:56:05 +0000
-X-MS-Exchange-Authentication-Results: spf=softfail (sender IP is 91.26.50.189)
- smtp.mailfrom=phytec.de; dkim=none (message not signed)
- header.d=none;dmarc=fail action=quarantine header.from=phytec.de;
-Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
- phytec.de discourages use of 91.26.50.189 as permitted sender)
-Received: from Diagnostix.phytec.de (91.26.50.189) by
- AMS0EPF00000190.mail.protection.outlook.com (10.167.16.213) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8722.18 via Frontend Transport; Tue, 6 May 2025 11:55:36 +0000
-Received: from Florix.phytec.de (172.25.0.13) by Diagnostix.phytec.de
- (172.25.0.14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Tue, 6 May
- 2025 13:55:20 +0200
-Received: from ls-radium.phytec (172.25.39.17) by Florix.phytec.de
- (172.25.0.13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Tue, 6 May
- 2025 13:55:18 +0200
-From: Daniel Schultz <d.schultz@phytec.de>
-To: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
-	<krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-CC: <upstream@lists.phytec.de>, Daniel Schultz <d.schultz@phytec.de>
-Subject: [PATCH 1/4] arm64: dts: ti: k3-am62-phycore-som: Enable Co-processors
-Date: Tue, 6 May 2025 04:54:59 -0700
-Message-ID: <20250506115502.3515599-2-d.schultz@phytec.de>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250506115502.3515599-1-d.schultz@phytec.de>
-References: <20250506115502.3515599-1-d.schultz@phytec.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y4zMR8zo"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-30bf1d48843so50084891fa.2
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 04:55:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746532542; x=1747137342; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Crh33s5odmDcmUH7zaHEyWwCZ73pPpLq4AVQUaMDOP4=;
+        b=Y4zMR8zoYFJqSMqENUmTxS5T4UmRBd2UC00colgeX7TNUGhk9CE8xElWocNttoXHnZ
+         zlxMDoAlaLqLXOA8Dhp/wa8Uj4Z/yv+BQdPTK2euKG6xfclgBiCyRbE2gCRD9FZH5ZyI
+         Fqz2u3q+yNimN+b0v6Gkh04zKNMpPfraQDbcO3FW6bavlNhiZOwzCRtf7tdkrfWCa0iy
+         5g1mp7xnXLgUyWwEFun42sq3diDKaSk9R+PyR1qda1Ue3tXG7SepygUawSw9LeSwMBdE
+         n2VChTq98Xnz4bB92Q9MOjr2ssnbExRmcZhGsrrhUEQPC7WcIjFWD+VoIHsiepy29Mud
+         hOcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746532542; x=1747137342;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Crh33s5odmDcmUH7zaHEyWwCZ73pPpLq4AVQUaMDOP4=;
+        b=t6biZVXT6N3Dgd50ADZfOE2z8SzAd3h5nROPnVscWfIYFB2Aw8I+jTAfU87M7fpep8
+         xlHA4+4HinDOWpJE9xLayBH8UJXoEejyhVtSZxPndOYAM1P8bDpYruYe7xS5pOUl0uzb
+         6yCdb3zIt+2oUZasv3Mm1Iv1VbzL5Wb0q9ZTBXKN+PA9F75HxkP8EPIxw7j0ey2TDMiA
+         CjXOcneqtmdRssHYJX8O5G7TpCezii/CZ15SybIVYTWZxAyVSpfyUMd6r7+TBEDQ3kAt
+         8wFo4fjTpaBeXXE2z9qhBZxbXEzEBNwok1IgAnphYvW8NTs5TV5zyFBXsr93wew3WxmB
+         4bQA==
+X-Forwarded-Encrypted: i=1; AJvYcCXnn5W0ZCf6S6j9o+nUXrpvXb0AzbKbnLWAQtKCVo+7IoDaeTsGGBVbi5ljdEuTV7IpaZDwp4lX2fjtX/o=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3p8O6GXYSsNJbrlS9Vc1xFsBBOIts49oupnIg7Kv8j4C3/8cT
+	Es2K6wGNstV7ekA0pzVENuX9ZlGyG1c4hWJ3HRZRIDoBVFQClR8Y
+X-Gm-Gg: ASbGncsFHEBYNSYnKjvGPOHgp1C0khHROh9+cQxY/2IVMayD80ouebk3S2gqPGvRDMj
+	3aRTOODktoxOI1skT9GBX/CaAhN6Mq8UxC2ae9s2phdU3TgQGN2mGFDmuq/TBCNJaixJSvg92cy
+	8P7LKslkI2JQHcC+Nfn/kxsvtex6FFNbCakVs7Vppf8idoAprLlc2Hm4v7kJncVr/Ly+TShOBnK
+	kyDMINSs0lfm5J2QVWt7sWxz7CRSJPJvpMNTnsLzs9xj5BoX0eCtn1mW56ZgXgsK2M3Ls2wysK+
+	hIqKYh8kow+sKopkzlkWL2IoZ91qr9Pwb6fRLebySjJKozebAZXWgN91WgpigGQFsXP0ITMZdNa
+	qH+0=
+X-Google-Smtp-Source: AGHT+IGVVspd/1uOxqE6l9hGFvhjEDKvNt/3J+RFEmbCQXyzg7F2oN/Dg1ndiK5dW2/9Z4+UR9isfw==
+X-Received: by 2002:a2e:7019:0:b0:30a:2a8a:e4b5 with SMTP id 38308e7fff4ca-3235201a3c7mr26588281fa.27.1746532541900;
+        Tue, 06 May 2025 04:55:41 -0700 (PDT)
+Received: from pc636 (host-95-203-26-253.mobileonline.telia.com. [95.203.26.253])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3202a89f33bsm21226421fa.72.2025.05.06.04.55.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 May 2025 04:55:40 -0700 (PDT)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Tue, 6 May 2025 13:55:38 +0200
+To: Jeongjun Park <aha310510@gmail.com>
+Cc: akpm@linux-foundation.org, urezki@gmail.com, edumazet@google.com,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] mm/vmalloc: fix data race in show_numa_info()
+Message-ID: <aBn4uqA7hnLBH2kL@pc636>
+References: <20250506082520.84153-1-aha310510@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: Diagnostix.phytec.de (172.25.0.14) To Florix.phytec.de
- (172.25.0.13)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AMS0EPF00000190:EE_|PRAP195MB1434:EE_
-X-MS-Office365-Filtering-Correlation-Id: 433db1c9-f866-4e95-01f4-08dd8c94e9ec
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|82310400026|36860700013|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?stSK06VYUYZasCXMT+lRkKYhHd7LY9V8Jb9PLgnj+sv945DDD+GfHpVx3YKy?=
- =?us-ascii?Q?e5M74L9FpVxcrjKhy8bXYvCrVRy8ckrmXSSjI7iiiAt5cwHS9RjzRnLffbV1?=
- =?us-ascii?Q?zbCt26VK1aPg4Mg9SElAiAZV2OSI5bscZkb/hNHhVUD3rMJHtEEKlZPr3yit?=
- =?us-ascii?Q?FIr9DTqj0COhgJv7E6ixFaBeORna2dIax7D5t57phuZConioGhRqLn01ZvgM?=
- =?us-ascii?Q?m2HxURKbc6JoPtMJ6q4oOnMJIUVwG9a2yN0aO2WuIJCJiwmNdbWw18kYQkg5?=
- =?us-ascii?Q?/btrFHfGh6yDqQJk9p/sjMZqbTgBq2NSAwAYeQ2wtnpOGUTSfgQaeEyTZnvy?=
- =?us-ascii?Q?IEFO6aXYP1YuEqFYj/V4EVl+NBp6cLzDs7UhydQRGzCdxPyr/q5rcrzsSaus?=
- =?us-ascii?Q?MMBm/k/ndDizD0s/S/PBO+AmQKTl4OeRmeZ47apqbmNmQCtk+DglS3zKp+8x?=
- =?us-ascii?Q?OOhYa7xovWQSieyrmgPJ/UzxxrDLqmoSegsGC/Ev2/Qo4V+GdUM0sjxpDpge?=
- =?us-ascii?Q?iXbicUNmpg4x9acT9zgWhug6VHk0MauqbismZoOPqT1mxr3/BnAs5TRt4zRf?=
- =?us-ascii?Q?iYt+EU0HhoSY6qxx3ne87dE31YfF0BWOlFi8d5zUFbINN9Anmt/Kf3qQBDp+?=
- =?us-ascii?Q?qM9bccRdrM4WBch65kGgJmXY4UyUDRl7ifqmuYf/9Hi9aA9pOBoXNwX57bzt?=
- =?us-ascii?Q?1KF7VnzlWsvA02+7nTbNW9c4iRYxTWFHbX2t3NSq9qbjgIo5uZOQQacpZq3y?=
- =?us-ascii?Q?5yXLZ/4Q9uPMtkWOD7QV7zR0n7ppOFAYvtb8IqM/bV4huCArvl01+ZDAAJR/?=
- =?us-ascii?Q?8cUsXOeQtI659fC5SPT6FIKD9IHKNknrX3ywA1O+J1YukyvRtnLHqsmwNTRC?=
- =?us-ascii?Q?Nc53pm9r7FjNDEjjifh1RC7FFJSsBthMrW2XcrIu7RvXpJPMYfAlWb45lASE?=
- =?us-ascii?Q?tCARzNX8soamBrMvobL5M2OFI7/7FqRdmvf0hlY4kkKduiPSrb31vmWjGDqT?=
- =?us-ascii?Q?eCN7Y7+ZEYB9nTcvLNsgmODBgP+Q0aHa94PQKtE9SZVKU1l6vC2NsxQPz7A0?=
- =?us-ascii?Q?+5J12hsyHK3DBYvP+I+JtUXCPWuqq6i33NCW+8fum4Lp+pgL6XO8Fg+M6Q3C?=
- =?us-ascii?Q?1rRreHNrWSzZEt7hJLT2pDMfqvjFIP4/W+8E9aVIvjt+o/UIIHRxVg+aa5eL?=
- =?us-ascii?Q?zdxoE+aAT6AWLwrKZCjav58hZ0bnyEgkG/S9yaVn+I6c+G36uuP9+ueCTdW3?=
- =?us-ascii?Q?4N/oKbZgyw70BIrk0vLyPU0THg557UTTQfqOjJXYki/oLnJTxoRIPhacZtfY?=
- =?us-ascii?Q?u+SOp0e2Y1gDM0/ZneesFAMskcovht8U3bh0xaqKw+joUR0UIN8yZFuN17ia?=
- =?us-ascii?Q?BLMxqGhujy/HysXracb8FjGGY4AL6Z93f6e3a/RZftmoaRovWgQ2jXfJUsdx?=
- =?us-ascii?Q?TgihukUp8bsuzaM6X9cAs2JAlg4WpNHJJr8+Ug8IoR4bvm/DfnGpns7JPZWb?=
- =?us-ascii?Q?oa7mutEQKxafl/YRZy23ZQm+ryUHTxay2ysF?=
-X-Forefront-Antispam-Report:
-	CIP:91.26.50.189;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:Diagnostix.phytec.de;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(36860700013)(1800799024);DIR:OUT;SFP:1102;
-X-OriginatorOrg: phytec.de
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 11:55:36.3628
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 433db1c9-f866-4e95-01f4-08dd8c94e9ec
-X-MS-Exchange-CrossTenant-Id: e609157c-80e2-446d-9be3-9c99c2399d29
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e609157c-80e2-446d-9be3-9c99c2399d29;Ip=[91.26.50.189];Helo=[Diagnostix.phytec.de]
-X-MS-Exchange-CrossTenant-AuthSource:
-	AMS0EPF00000190.eurprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PRAP195MB1434
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250506082520.84153-1-aha310510@gmail.com>
 
-For every remote processor, set up dedicated memory regions and
-associate the required mailbox channels. Allocate two memory areas
-per remote core: one 1MB region for vring shared buffers, and
-another for external memory used by the remote processor for its
-resource table and trace buffer.
+On Tue, May 06, 2025 at 05:25:19PM +0900, Jeongjun Park wrote:
+> The following data-race was found in show_numa_info():
+> 
+> ==================================================================
+> BUG: KCSAN: data-race in vmalloc_info_show / vmalloc_info_show
+> 
+> read to 0xffff88800971fe30 of 4 bytes by task 8289 on cpu 0:
+>  show_numa_info mm/vmalloc.c:4936 [inline]
+>  vmalloc_info_show+0x5a8/0x7e0 mm/vmalloc.c:5016
+>  seq_read_iter+0x373/0xb40 fs/seq_file.c:230
+>  proc_reg_read_iter+0x11e/0x170 fs/proc/inode.c:299
+>  new_sync_read fs/read_write.c:489 [inline]
+>  vfs_read+0x5b4/0x740 fs/read_write.c:570
+>  ksys_read+0xbe/0x190 fs/read_write.c:713
+>  __do_sys_read fs/read_write.c:722 [inline]
+>  __se_sys_read fs/read_write.c:720 [inline]
+>  __x64_sys_read+0x41/0x50 fs/read_write.c:720
+>  x64_sys_call+0x1729/0x1fd0 arch/x86/include/generated/asm/syscalls_64.h:1
+>  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+>  do_syscall_64+0xa6/0x1b0 arch/x86/entry/syscall_64.c:94
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> 
+> write to 0xffff88800971fe30 of 4 bytes by task 8287 on cpu 1:
+>  show_numa_info mm/vmalloc.c:4934 [inline]
+>  vmalloc_info_show+0x38f/0x7e0 mm/vmalloc.c:5016
+>  seq_read_iter+0x373/0xb40 fs/seq_file.c:230
+>  proc_reg_read_iter+0x11e/0x170 fs/proc/inode.c:299
+>  new_sync_read fs/read_write.c:489 [inline]
+>  vfs_read+0x5b4/0x740 fs/read_write.c:570
+>  ksys_read+0xbe/0x190 fs/read_write.c:713
+>  __do_sys_read fs/read_write.c:722 [inline]
+>  __se_sys_read fs/read_write.c:720 [inline]
+>  __x64_sys_read+0x41/0x50 fs/read_write.c:720
+>  x64_sys_call+0x1729/0x1fd0 arch/x86/include/generated/asm/syscalls_64.h:1
+>  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+>  do_syscall_64+0xa6/0x1b0 arch/x86/entry/syscall_64.c:94
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> 
+> value changed: 0x0000008f -> 0x00000000
+> ==================================================================
+> 
+> According to this report, there is a read/write data-race because m->private
+> is accessible to multiple CPUs. To fix this, instead of allocating the heap
+> in proc_vmalloc_init() and passing the heap address to m->private,
+> show_numa_info() should allocate the heap.
+> 
+> One thing to note is that show_numa_info() is called in a critical section
+> of a spinlock, so it must be allocated on the heap with GFP_ATOMIC flag.
+> 
+> Fixes: a47a126ad5ea ("vmallocinfo: add NUMA information")
+> Suggested-by: Eric Dumazet <edumazet@google.com>
+> Signed-off-by: Jeongjun Park <aha310510@gmail.com>
+> ---
+> v2: Refactoring some functions and fix patch as per Eric Dumazet suggestion
+> - Link to v1: https://lore.kernel.org/all/20250505171948.24410-1-aha310510@gmail.com/
+> ---
+>  mm/vmalloc.c | 50 +++++++++++++++++++++++++-------------------------
+>  1 file changed, 25 insertions(+), 25 deletions(-)
+> 
+> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> index 3ed720a787ec..a5e795346141 100644
+> --- a/mm/vmalloc.c
+> +++ b/mm/vmalloc.c
+> @@ -4914,28 +4914,32 @@ bool vmalloc_dump_obj(void *object)
+>  #endif
+>  
+>  #ifdef CONFIG_PROC_FS
+> +
+> +/*
+> + * Print number of pages allocated on each memory node.
+> + *
+> + * This function can only be called if CONFIG_NUMA is enabled
+> + * and VM_UNINITIALIZED bit in v->flags is disabled.
+> + */
+>  static void show_numa_info(struct seq_file *m, struct vm_struct *v)
+>  {
+> -	if (IS_ENABLED(CONFIG_NUMA)) {
+> -		unsigned int nr, *counters = m->private;
+> -		unsigned int step = 1U << vm_area_page_order(v);
+> +	unsigned int nr, *counters;
+> +	unsigned int step = 1U << vm_area_page_order(v);
+>  
+> -		if (!counters)
+> -			return;
+> +	counters = kcalloc(nr_node_ids, sizeof(unsigned int), GFP_ATOMIC);
+> +	if (!counters)
+> +		return;
+>  
+> -		if (v->flags & VM_UNINITIALIZED)
+> -			return;
+> -		/* Pair with smp_wmb() in clear_vm_uninitialized_flag() */
+> -		smp_rmb();
+> +	/* Pair with smp_wmb() in clear_vm_uninitialized_flag() */
+> +	smp_rmb();
+>  
+> -		memset(counters, 0, nr_node_ids * sizeof(unsigned int));
+> +	for (nr = 0; nr < v->nr_pages; nr += step)
+> +		counters[page_to_nid(v->pages[nr])] += step;
+> +	for_each_node_state(nr, N_HIGH_MEMORY)
+> +		if (counters[nr])
+> +			seq_printf(m, " N%u=%u", nr, counters[nr]);
+>  
+> -		for (nr = 0; nr < v->nr_pages; nr += step)
+> -			counters[page_to_nid(v->pages[nr])] += step;
+> -		for_each_node_state(nr, N_HIGH_MEMORY)
+> -			if (counters[nr])
+> -				seq_printf(m, " N%u=%u", nr, counters[nr]);
+> -	}
+> +	kfree(counters);
+>  }
+>  
+>  static void show_purge_info(struct seq_file *m)
+> @@ -5013,7 +5017,10 @@ static int vmalloc_info_show(struct seq_file *m, void *p)
+>  			if (is_vmalloc_addr(v->pages))
+>  				seq_puts(m, " vpages");
+>  
+> -			show_numa_info(m, v);
+> +			if (!(v->flags & VM_UNINITIALIZED) &&
+>
+I think it makes sense to move the VM_UNINITIALIZED check before:
 
-Signed-off-by: Daniel Schultz <d.schultz@phytec.de>
----
- .../boot/dts/ti/k3-am62-phycore-som.dtsi      | 35 +++++++++++++++----
- 1 file changed, 29 insertions(+), 6 deletions(-)
+<snip>
+			v = va->vm;
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am62-phycore-som.dtsi b/arch/arm64/boot/dts/ti/k3-am62-phycore-som.dtsi
-index 2ef4cbaec789..71d165a7abe0 100644
---- a/arch/arm64/boot/dts/ti/k3-am62-phycore-som.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am62-phycore-som.dtsi
-@@ -57,6 +57,18 @@ mcu_m4fss_memory_region: m4f-memory@9cc00000 {
- 			no-map;
- 		};
- 
-+		wkup_r5fss0_core0_dma_memory_region: r5f-dma-memory@9da00000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x00 0x9da00000 0x00 0x100000>;
-+			no-map;
-+		};
-+
-+		wkup_r5fss0_core0_memory_region: r5f-memory@9db00000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x00 0x9db00000 0x00 0xc00000>;
-+			no-map;
-+		};
-+
- 		secure_tfa_ddr: tfa@9e780000 {
- 			reg = <0x00 0x9e780000 0x00 0x80000>;
- 			alignment = <0x1000>;
-@@ -68,12 +80,6 @@ secure_ddr: optee@9e800000 {
- 			alignment = <0x1000>;
- 			no-map;
- 		};
--
--		wkup_r5fss0_core0_dma_memory_region: r5f-dma-memory@9db00000 {
--			compatible = "shared-dma-pool";
--			reg = <0x00 0x9db00000 0x00 0x00c00000>;
--			no-map;
--		};
- 	};
- 
- 	vcc_5v0_som: regulator-vcc-5v0-som {
-@@ -226,10 +232,17 @@ cpsw3g_phy1: ethernet-phy@1 {
- };
- 
- &mailbox0_cluster0 {
-+	status = "okay";
-+
- 	mbox_m4_0: mbox-m4-0 {
- 		ti,mbox-rx = <0 0 0>;
- 		ti,mbox-tx = <1 0 0>;
- 	};
-+
-+	mbox_r5_0: mbox-r5-0 {
-+		ti,mbox-rx = <2 0 0>;
-+		ti,mbox-tx = <3 0 0>;
-+	};
- };
- 
- &main_i2c0 {
-@@ -365,3 +378,13 @@ &sdhci0 {
- 	non-removable;
- 	status = "okay";
- };
-+
-+&wkup_r5fss0 {
-+	status = "okay";
-+};
-+
-+&wkup_r5fss0_core0 {
-+	mboxes = <&mailbox0_cluster0 &mbox_r5_0>;
-+	memory-region = <&wkup_r5fss0_core0_dma_memory_region>,
-+			<&wkup_r5fss0_core0_memory_region>;
-+};
--- 
-2.25.1
+			seq_printf(m, "0x%pK-0x%pK %7ld",
+				v->addr, v->addr + v->size, v->size);
+<snip>
 
+because it can be still un-initialized, thus flags like "nr_pages", etc
+will not be valid.
+
+Any thoughts? It has nothing to do with a patch, because it fixes other
+race issue and what i propose might well be a separate patch if we agree.
+
+Thanks!
+
+--
+Uladzislau Rezki
