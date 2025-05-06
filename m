@@ -1,80 +1,72 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from albert.telenet-ops.be (albert.telenet-ops.be [195.130.137.90])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32CDB24BBF3;
-	Tue,  6 May 2025 13:01:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DBCD139E
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 13:01:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.90
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746536467; cv=none; b=odeNpqUpakElcjJQOKic6RFYPiLKzUMV3w6OPAsjcbcxTuddGIc6By4vgqCSJ4Gs0bzZk+MXlK8L4wF419cwvv07HQDrBTeh3cGuE0NLWI3an5dBIJjO+29COeFJO6onEnOxlLaPUfFIwUao05AwdhipF43N8DsI8Qy1jHNFva4=
+	t=1746536493; cv=none; b=WVsIASV2ewzwAj/jvDGmgXapESe5wRCragzqducFJID2aR7kFqnHVijmssrpdttECiqreWgAh9hY+HVvAIrz9E0kNqhnxmt9qKQuBTB6VwfKSdA5CPNS8XTNU67xYgd0y46X3WWWwlkT829yCnmTFD3mrYHWhGk7e16CxK4/fYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746536467; c=relaxed/simple;
-	bh=h6xZS9dC7e4iNV3fhXey6pp7M5IToS1iWD8Re0zXhy0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=mhmnzaT+WsCQ08gDewVYQLx2BNb4ts0iFT+u6gX7pvh/N9bcR+BqTvFIisHSbONL2hCMnW+zUUszPrElHzWdL6mKc/D7pTwDokkIUKeU4xXmvVTFG1Sjs6LJGuJxnT3Y2A4YrxzbYcSLg2q50YiM3XIMNZXPb2erpgc/HyX7gNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=qPnSFf1N; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="qPnSFf1N"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 7517A403A7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1746536465; bh=Z8cvL+fbKoL0avjcHP6hxGrJDr4rR6GnALatRgdPlck=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=qPnSFf1NLh7OOxzLpm3gHnahPBmFUWq5Oh77IVkeP3uo5vHCiAcl0zNzV/Uuj7YZc
-	 xufrYaHyWZOruRW/Ih4Pnjs+kyTyLFSpcR9phzgt35w//eZezUUQXwOVDNXLtchZjC
-	 /+2QYeqtFfgvph9Qi/P79u69uox73V0E8wjjyn3lhyGjSYtk+W80yOY4PmrLokPVB5
-	 P+zJrvP/hbuiwIbHkmXqs/brsyvxSKXsa2v98iGXgV87BUGytvaE9K7KG6P6Vvqv5D
-	 DtcLuH41emOiUi8feh4He1kdQ0qmwoZfMiJDdvjOr+VlvVfb2Z2sEWXJhbSxJBwhmX
-	 anMdjwmIa0P7g==
-Received: from localhost (mdns.lwn.net [45.79.72.68])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 7517A403A7;
-	Tue,  6 May 2025 13:01:04 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Jesung Yang <y.j3ms.n@gmail.com>
-Cc: workflows@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, Jesung Yang <y.j3ms.n@gmail.com>
-Subject: Re: [PATCH] docs: align with scripts/syscall.tbl migration
-In-Reply-To: <20250504093351.2134552-1-y.j3ms.n@gmail.com>
-References: <20250504093351.2134552-1-y.j3ms.n@gmail.com>
-Date: Tue, 06 May 2025 07:01:01 -0600
-Message-ID: <87v7qdx59u.fsf@trenco.lwn.net>
+	s=arc-20240116; t=1746536493; c=relaxed/simple;
+	bh=gI82l2lyS97cu92CLGX7rCCyZCYRyH0fZELOEUQnMVg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aDs/AwjnT6JWdFxbOqoPScRX92e805e6VxpUuxje+8kT2B/3m83CXMePJOUe3LGVSPUPLJushPNkSGnn6AVP+i7GWDPdrXAbUqZvc47ZyvNnLQl5JL+vf6EYghWfmu3qPSkxXQRYrMu30x6Ef2wqbxmt8QL1LiQM4sHXNe76Y6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:ed69:3ad8:f2dc:ba56])
+	by albert.telenet-ops.be with cmsmtp
+	id lp1V2E00D2coBU206p1VoF; Tue, 06 May 2025 15:01:29 +0200
+Received: from rox.of.borg ([192.168.97.57])
+	by ramsan.of.borg with esmtp (Exim 4.97)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1uCHvH-00000000qoa-0jW9;
+	Tue, 06 May 2025 15:01:29 +0200
+Received: from geert by rox.of.borg with local (Exim 4.97)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1uCHvN-00000001daA-0iP8;
+	Tue, 06 May 2025 15:01:29 +0200
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+To: Sebastian Reichel <sre@kernel.org>,
+	Emanuele Ghidoli <emanuele.ghidoli@toradex.com>,
+	Francesco Dolcini <francesco.dolcini@toradex.com>
+Cc: linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] power: reset: POWER_RESET_TORADEX_EC should depend on ARCH_MXC
+Date: Tue,  6 May 2025 15:01:27 +0200
+Message-ID: <1ef0beb1e09bf914650f9f9885a33af06772540d.1746536287.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-Jesung Yang <y.j3ms.n@gmail.com> writes:
+The Toradex Embedded Controller is currently only present on Toradex
+SMARC iMX8MP and iMX95 SoMs.  Hence add a dependency on ARCH_MXC, to
+prevent asking the user about this driver when configuring a kernel
+without NXP i.MX SoC family support.
 
-> Update the documentation to reflect the migration of the following
-> architectures to the centralized syscall table format:
->
->   arc, arm64, csky, hexagon, loongarch, nios2, openrisc, riscv
->
-> As of commit 3db80c999debbad ("riscv: convert to generic syscall table"),
-> these architectures no longer rely on include/uapi/asm-generic/unistd.h.
-> Instead, syscall table headers (syscall_table_{32,64}.h) are generated by
-> scripts/syscalltbl.sh based on entries in scripts/syscall.tbl, with ABIs
-> specified in arch/*/kernel/Makefile.syscalls.
->
-> For the convenience of developers working with older kernel versions, the
-> original documentation is fully retained, with new sections added to
-> cover the scripts/syscall.tbl approach.
->
-> Verified with `make htmldocs`.
->
-> Signed-off-by: Jesung Yang <y.j3ms.n@gmail.com>
-> Link: https://lore.kernel.org/lkml/20240704143611.2979589-1-arnd@kernel.org
+Fixes: 18672fe12367ed44 ("power: reset: add Toradex Embedded Controller")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ drivers/power/reset/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-So this seems fine to me, but I would feel a bit better about it if the
-relevant architecture maintainers and lists had been copied.  Could I
-convince you to repost with those addresses included?
+diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
+index 5ce402ff71964f59..1a17c5192818de1e 100644
+--- a/drivers/power/reset/Kconfig
++++ b/drivers/power/reset/Kconfig
+@@ -218,6 +218,7 @@ config POWER_RESET_ST
+ 
+ config POWER_RESET_TORADEX_EC
+ 	tristate "Toradex Embedded Controller power-off and reset driver"
++	depends on ARCH_MXC || COMPILE_TEST
+ 	depends on I2C
+ 	select REGMAP_I2C
+ 	help
+-- 
+2.43.0
 
-Thanks,
-
-jon
