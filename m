@@ -1,142 +1,136 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A21F267709;
-	Tue,  6 May 2025 09:18:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55A0324EA8F
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 09:18:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746523082; cv=none; b=NmD8sI38x/vhLxzRV1TxiNbtIDRi3Ia0h80Eglai6pr0fRPSkdn4zALJh87uEDddLlMo889bRqCUhoEzrja8HWc6uljO5qMxsVVfRlZkrUdoVV7upYJTiPxgCQTbdmPpdmsh1n2u1Zfgtdvmyp37dFTJ4LjQZxdSiVqAJyAkcHE=
+	t=1746523129; cv=none; b=HhG/ysKTRM3Ucl/d58d0kyF2s/G3w6p13wMfGsXL1fswVGTwn5E0qhKufgIjM01PvDkipiG66exdtoVagp+i0hEEPxH6yQei0s3UjXCuq65C5o+8uVlWx4pjVsaG5OwbpMrhYdzhCjZM38OpYn8GBFLo7z6PVO9K7tlnaUmjDWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746523082; c=relaxed/simple;
-	bh=vaStXvVTH57RGFjkd58B8TnlgxAfHk3sZF8GDs6h1iQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=LpDNhsdxG6NDt/EVxLsXlQ/7TJcVuIWjrXy5VswahM3nSNlfuU60yPGWc2Ofua0aQNr+Y9ysyB8ozXKoPyZWQw/GzdjSGRKXUeXkSRi1vay8km3OBEcqPxhNzyIs5+vEcFCp2TK49kIkFQ0mQP8vblx7ubXrsS5WuAtXLTgqR+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=j+NOS8aU; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="j+NOS8aU"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5468r5sQ013949;
-	Tue, 6 May 2025 09:17:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	tIVehaM4um1sGZFCaMHKsi5sDekljpiBO26H2plk8zk=; b=j+NOS8aUtgx253JX
-	90tbRNUXkERtnME+in+IZkO7b9s5ypWz9Hcdkcrp6QnDuPW3F72VrlqGGZaNDST1
-	HZFd9nrA6h8+nzVMxaPWyGV4KSptj8WAeASavThJgUMlLBkVUHdSk4/iE5Hjb2C6
-	2Wzf936PuK/eRW4TX/7iwiLCfA9GUtSTfE3hFVEeXaPzhlqx2cWMOJaEip+QuCWy
-	yYri5vkLei5WHNHDq8iAOIlLczZ2TlL3YPKGVv/wODXdZ7mCvDqUqpU7fLJydMe2
-	uTvgvQeXm6gF88+7Uuo7l9gfQG0PrIoYpVI1p1WnS6ql2RsWkr0/25Az8d0FxsIn
-	9iDlLw==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46f5u41p92-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 06 May 2025 09:17:56 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5469Htlk008010
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 6 May 2025 09:17:55 GMT
-Received: from [10.216.1.69] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 6 May 2025
- 02:17:49 -0700
-Message-ID: <97cba4b6-2966-4356-888f-b7e4e091b8ee@quicinc.com>
-Date: Tue, 6 May 2025 14:47:45 +0530
+	s=arc-20240116; t=1746523129; c=relaxed/simple;
+	bh=0Qoqu1h3JNv3RjhwbFFVwQ11InBwuXMrGYdLiROiSps=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N4w9R47sZ97m9I6BnUoObAq0xQO/bxVYHDG7CcFtZEfAoLNoINkP6uRTKNRQQQbS8kp6YuaQOdu4uCcl+kOrft42zS3AnQwmhafXKviYWDUoxq+KwP7JepY7+5scZy+/3S/ztiOzqkYtWvrfb2kpR6qOutK/QHIl0svutIHcrFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 004D9113E;
+	Tue,  6 May 2025 02:18:38 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 427983F5A1;
+	Tue,  6 May 2025 02:18:47 -0700 (PDT)
+Date: Tue, 6 May 2025 10:18:41 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	James Clark <james.clark@linaro.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH v2 6/9] coresight: Avoid enable programming clock
+ duplicately
+Message-ID: <20250506091841.GA177796@e132581.arm.com>
+References: <20250423151726.372561-1-leo.yan@arm.com>
+ <20250423151726.372561-7-leo.yan@arm.com>
+ <063577a4-1530-4658-9838-934b0606e8e0@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 6/9] soc: qcom: geni-se: Add support to load QUP SE
- Firmware via Linux subsystem
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-CC: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, <andi.shyti@kernel.org>,
-        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <gregkh@linuxfoundation.org>, <jirislaby@kernel.org>,
-        <andersson@kernel.org>, <konradybcio@kernel.org>,
-        <johan+linaro@kernel.org>, <dianders@chromium.org>,
-        <agross@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-serial@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>, <quic_msavaliy@quicinc.com>,
-        <quic_anupkulk@quicinc.com>
-References: <20250303124349.3474185-1-quic_vdadhani@quicinc.com>
- <20250303124349.3474185-7-quic_vdadhani@quicinc.com>
- <58f46660-a17a-4e20-981a-53cad7320e5a@oss.qualcomm.com>
- <9cc6bdf8-ba4c-4561-962a-74ceb09b72a8@quicinc.com>
- <vpm4ee4bjuqje7zrpay3pllvcghh547yce4nbqgbeujgdbu3lk@fahrgwfjbrzy>
-Content-Language: en-US
-From: Viken Dadhaniya <quic_vdadhani@quicinc.com>
-In-Reply-To: <vpm4ee4bjuqje7zrpay3pllvcghh547yce4nbqgbeujgdbu3lk@fahrgwfjbrzy>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=KcfSsRYD c=1 sm=1 tr=0 ts=6819d3c4 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
- a=D34P7LM_aV9bT36-NOIA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: UUlPaJvvvm2i-xCJTxZWEKCEcDLqTmVU
-X-Proofpoint-ORIG-GUID: UUlPaJvvvm2i-xCJTxZWEKCEcDLqTmVU
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA2MDA4OCBTYWx0ZWRfX4gH4doa8q82y
- yfJZpFhzExnrhU0ChAKIhKwvxswWvjvUsLRwHhFAM5qU3i9cxJkCbtQ/7Amk6Xg548kvwb0F4Vn
- tGlTu1OQ0X3rJ5LYdNNYh0znNocahAl7prZdbpl1yrtTYAB2EPiegsv2Af2fGHZK1tutAr1vSSm
- AiGCMxdy0yJJmNdjCYJQSOtr3WQj5h1/fFKCeRuOrNO6HjCo1xMqASmiJaIRc8IMPoI+0gR/ICd
- m8A8Pu41NJuRMujdoGn9elMxH7Tw1EiuZtK4IzLbSPnOyK2xi6aymi7uuUpZqgq1CDDD2Lf70EX
- RhxTWWj6lJ6rfxWQt9XDd8fzjzjsGOzmbRSudmFehb013W+tMA1CrOcisUh2YfxAevWIhvVlwzu
- GDz4jZ06pQ6jH86VL9TnJTZ793wnT1pcE5kLp0lGlcTiynn53iRcSZm9zFwKJhZ50eKTvTc+
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-06_04,2025-05-05_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 spamscore=0 suspectscore=0 bulkscore=0 mlxlogscore=999
- phishscore=0 impostorscore=0 priorityscore=1501 malwarescore=0 adultscore=0
- clxscore=1015 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505060088
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <063577a4-1530-4658-9838-934b0606e8e0@arm.com>
 
+Hi Anshuman,
 
-
-On 5/3/2025 10:51 PM, Dmitry Baryshkov wrote:
-> On Sat, May 03, 2025 at 04:47:52PM +0530, Viken Dadhaniya wrote:
->>
->>
->> On 3/8/2025 11:36 PM, Konrad Dybcio wrote:
->>> On 3.03.2025 1:43 PM, Viken Dadhaniya wrote:
->>>> Load the firmware to QUP SE based on the 'firmware-name' property specified
->>>> in devicetree. Populate Serial engine and base address details in the probe
->>>> function of the protocol driver and pass to firmware load routine.
->>>>
->>>> Skip the firmware loading if the firmware is already loaded in Serial
->>>> Engine's firmware memory area.
->>>>
->>>> Co-developed-by: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
->>>> Signed-off-by: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
->>>> Signed-off-by: Viken Dadhaniya <quic_vdadhani@quicinc.com>
->>>> ---
->>>
->>> [...]
->>>
->>>> +		break;
->>>> +
->>>> +	default:
->>>> +		dev_err(rsc->se->dev, "invalid se mode: %d\n", rsc->mode);
->>>> +		return -EINVAL;
->>>
->>> I wouldn't expect this to ever fail..
->>
->> Yes, that's correct. But including a default case helps handle unexpected or
->> invalid input gracefully.
->>
->> Please let me know if you would like me to remove it.
+On Fri, May 02, 2025 at 12:08:55PM +0530, Anshuman Khandual wrote:
+> On 4/23/25 20:47, Leo Yan wrote:
+> > The programming clock is enabled by AMBA bus driver before a dynamic
+> > probe.  As a result, a CoreSight driver may redundantly enable the same
+> > clock.
 > 
-> If you are asking for additional comments, please refrain from sending
-> the next iteration until you actally resolve all the open questions.
-> 
+> Are you sure AMBA bus driver always enables such clocks in all scenarios ?
 
-Sure, I will take care of it in future patches.
+Yes.  I confirmed that AMBA bus driver enables the programming clock
+prior to calling CoreSight device's probes (see amba_probe()).
+
+I checked other AMBA device drivers (e.g., drivers/dma/amba-pl08x.c)
+never touch APB programming clock and the clock by default is covered
+by AMAB bus driver.
+
+> Even if that is true - why cannot coresight_get_enable_apb_pclk() ensured
+> to be called only for the platform drivers cases via code re-organization,
+> rather than changing the coresight_get_enable_apb_pclk() helper itself.
+
+The purpose is to unify the clock enabling for both static probe and
+dynamic (AMBA) probe.
+
+Let us take funnel driver as an example.  With the change in this patch,
+the clock operations will be consolidated in a central place
+(e.g., funnel_probe()).  Therefore, we can avoid to spread the drvdata
+allocation and clock operations into dynamic probe and static (platform)
+probe separately.
+
+  funnel_probe()
+  {
+      drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
+
+      drvdata->pclk = coresight_get_enable_apb_pclk();
+  }
+
+  dynamic_funnel_probe()
+  {
+      funnel_probe();
+  }
+
+  funnel_platform_probe()
+  {
+      funnel_probe();
+  }
+
+Thanks,
+Leo
+
+> > To avoid this, add a check for device type and skip enabling the
+> > programming clock for AMBA devices.  The returned NULL pointer will be
+> > tolerated by the drivers.
+> > 
+> > Fixes: 73d779a03a76 ("coresight: etm4x: Change etm4_platform_driver driver for MMIO devices")
+> > Signed-off-by: Leo Yan <leo.yan@arm.com>
+> > ---
+> >  include/linux/coresight.h | 11 +++++++----
+> >  1 file changed, 7 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/include/linux/coresight.h b/include/linux/coresight.h
+> > index b888f6ed59b2..26eb4a61b992 100644
+> > --- a/include/linux/coresight.h
+> > +++ b/include/linux/coresight.h
+> > @@ -476,15 +476,18 @@ static inline bool is_coresight_device(void __iomem *base)
+> >   * Returns:
+> >   *
+> >   * clk   - Clock is found and enabled
+> > + * NULL  - Clock is not needed as it is managed by the AMBA bus driver
+> >   * ERROR - Clock is found but failed to enable
+> >   */
+> >  static inline struct clk *coresight_get_enable_apb_pclk(struct device *dev)
+> >  {
+> > -	struct clk *pclk;
+> > +	struct clk *pclk = NULL;
+> >  
+> > -	pclk = devm_clk_get_enabled(dev, "apb_pclk");
+> > -	if (IS_ERR(pclk))
+> > -		pclk = devm_clk_get_enabled(dev, "apb");
+> > +	if (!dev_is_amba(dev)) {
+> > +		pclk = devm_clk_get_enabled(dev, "apb_pclk");
+> > +		if (IS_ERR(pclk))
+> > +			pclk = devm_clk_get_enabled(dev, "apb");
+> > +	}
+> >  
+> >  	return pclk;
+> >  }
