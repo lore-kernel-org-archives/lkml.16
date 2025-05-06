@@ -1,123 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D64C224250;
-	Tue,  6 May 2025 11:12:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07D2A2798E1;
+	Tue,  6 May 2025 11:12:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746529957; cv=none; b=oPrxukfkb7NUI27jLQIOi+5pGEPAU00Yl+iTKyfCvcB4dZftKJ0gShJCGsiwx3UNZ0OD5lnX0FkedfrxCVud4MQlW93I7NEDkSA+hG5gGkt82cP0ztWKiYF3ykQy3ZSiAB2HR35zBx1AGHpSbflmflmrFsHqwP6mZyJZJSb5xys=
+	t=1746529975; cv=none; b=rZ0rOFXDJAPck9Mj0dRP2S9L6lhwiyf8gobhSPRg3GHkkhpEazVMFtiJESP81Cljp5nvoUC4crLrf8Zb3ICZwWnPn5eP5Se7lWc4WrMBx9XrvaklC0pDrgT6VIp9NCUPk5IOyQ+rNYQ5hmYpF8nUuG7rO4Qr2UM9p3pXVacwGZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746529957; c=relaxed/simple;
-	bh=NGhTUQxKwHpGF5b4VFHgUHZrCVEnRrlcNKNuUbJdrJQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FuHMXQA52JMX5wFvlqOluXN9C2jff8V4t2tU1lam6rc30YgH7UdMpLWKT1bepRjFlsg6MND7q3RGYYCTJ37iHOlkj77ph+kdnmRc+gesjI/R2IWkQmRnu6DXpCXbK5x9hiwulw+XRdFXRUuPWS0YVq68G09UzCf6O2ddNyTGZnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hcLcxZut; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746529975; c=relaxed/simple;
+	bh=O2rqsS+7CIPhwzmnA7i4FOO8hEThqmeuLPa/ESAe03U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VRyToNrpQ3lyPCTybnqmYWXqe08T+bCUkE4TTPQqin4tMEIDyiTkR/JqDgDg5rGwZ1+4orSAWZtTCd+ops88ynzYV+e8M9ZBZEp3ygGyiIsWNsHLr+dbsiUuLvkPtPjxB50MKsM7DcQjG7Nfn7DiGYOdjSdhsoQawQ33/+lJ7qo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dUDJ5Ia6; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hcLcxZut"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49F7FC4CEE4;
-	Tue,  6 May 2025 11:12:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746529957;
-	bh=NGhTUQxKwHpGF5b4VFHgUHZrCVEnRrlcNKNuUbJdrJQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=hcLcxZutwIknyTvhOe6c2cW/CvT00A0bNAuwB5TlNKv5HOjNgnBf8O8Nqo+U2Ziui
-	 2SOT740dgJuJS7aflrts26/ltGVntUmnVmKy8seY69S3vTU1QijZup3LYZD2Dcy6k/
-	 8DN+1uVSNJuqHqF8LrFE6DeN0dpGFAoBET1r/4Rq+OIaDr+Fp/MJlAk4eQpl6DeHRz
-	 bjiz8WxBqgoQyPdzO7BW/LZIL/HS4VChvX57pz4Id5q8P8wA8Uclp4M9yGLOGCS7hj
-	 bPdeSng0fGdlo43uQGpw97piPH6oV/AdH27mGIxIprvpjFTD7/T7BXryvJjez/0+eZ
-	 OyACLFXeU06bQ==
-Message-ID: <28757bb3-61b4-423d-850a-70fd5a4c2786@kernel.org>
-Date: Tue, 6 May 2025 13:12:32 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dUDJ5Ia6"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43cfebc343dso36753835e9.2;
+        Tue, 06 May 2025 04:12:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746529972; x=1747134772; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O2rqsS+7CIPhwzmnA7i4FOO8hEThqmeuLPa/ESAe03U=;
+        b=dUDJ5Ia6juYazFBBmP6+GmFsSJTV42UzH10YwQswFry3wVPRbWI3bjaJTWh9y6/WE8
+         5nb7yMOyzNiTSQKwVVGz3WUksr3knvnPczQorsaS6wxZObVCkUhwBoIkETNG/XYi78eE
+         YZ2OnmwRFYq2ml8ozwleOVHXB7X1qh2irvTIsZhg8tYJcQYQW8pkICwu9GE/ps90CPi7
+         SzDPLROmvfeo8JjmKjlZ0wCqSUYdHvsUTGH0oHVwGGsOY9vXqOOIWTnhPQuhuCdiqQlc
+         UCSCjGMWZ0LholZ1kn/ZoxpjOZRBWRmsjGY53gTG9ATkgUbBbv1sXw+QMcVibOjJvfDS
+         cvbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746529972; x=1747134772;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=O2rqsS+7CIPhwzmnA7i4FOO8hEThqmeuLPa/ESAe03U=;
+        b=OdHIdKPE1qZk7N/TTi/qqPlrMRSsjKTICqIYEyn14SMX+l+fVi+CMS5V9cPYhNTx9w
+         fIROm+KbgeyXLH30VHt2b8rNbHyhvCIKFHZZ6EuRAmdxdpnLCwil1GQqkfr2oxvk3Q1+
+         n7KfqmF7+Kmpi5tc8X57XMWLIVjdUQm6+tUbk9llxmXwaBEL9pOrU9RpThglEKTl8fJD
+         rZ6X1bDfRkUbvZC8gMj2LtuFIEh/h8gt4wYG3HSPCI93IXprYeETVVXNxabqpMMYXayG
+         Li8L4SLk5cPNP6GG4xhtYtDc3awcS4y+3gndkk3j0tsptpGJMuxgpjz2SkSWy/o7yTVE
+         7y1g==
+X-Forwarded-Encrypted: i=1; AJvYcCVyx1TJAmDbLMKmfh5CATZyiRkstQUvZm8+H587CZGpQDOuEIUGAEcza2hLLMdSA/0Azo92phApYg0PsbI=@vger.kernel.org, AJvYcCXTHb3N+deCHuULavwaTGpyH2p5nYyx1z33ctFhfdIJROshw2ctgQqECmdD7TVfif3Xugg7nG+wVaCUXVgkCrnKZ0A=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywhsd20frh5vFeDIHZJsynp0TpJr/7D/LNl1Is8EJSY881G/y3O
+	9DsERI2WCM1chJ0F7HRJPBD7ofNoBqcY4hiAB4vik2HaqxsvGdnSZ70p6eTAieQOY0jCGmgUyfU
+	hsoc0ADpeN68ykE2pScUC5tuIcaw=
+X-Gm-Gg: ASbGncsUzKh2ccyW8KEOj+wy0y9/HY/HYoQaCO6aFq+jyh3mRZZMX4O23Cvi6QIdcCr
+	S6+i0S52Ko2rAyNb0jlGVmKLTpKGUzgAlUm/zatFvDPBr9LqR2OPMTDB+PUWLRH+VT65Zdgc56b
+	DbbXX/UMgCwg6QT9w4JuspqTQpA1oWdyLbOg==
+X-Google-Smtp-Source: AGHT+IEl8WOsOctZB6vC/J5QfmXY3sgD9nIFkIDBu4WcUX+Px3DXCBoXBfXgsmay8+RXay1gXsI3eMHzNv+p6FEZHbU=
+X-Received: by 2002:a05:600c:37ce:b0:43c:f4b3:b094 with SMTP id
+ 5b1f17b1804b1-441bbea0e40mr140979485e9.6.1746529971892; Tue, 06 May 2025
+ 04:12:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] dt-bindings: dma: nvidia,tegra20-apbdma: convert
- text based binding to json schema
-To: Charan Pedumuru <charan.pedumuru@gmail.com>, Vinod Koul
- <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>,
- Jonathan Hunter <jonathanh@nvidia.com>
-Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
- linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250506-nvidea-dma-v3-0-3add38d49c03@gmail.com>
- <20250506-nvidea-dma-v3-2-3add38d49c03@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250506-nvidea-dma-v3-2-3add38d49c03@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250506104731.111876-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <3a11ba8a-a9f4-4829-8bcd-56f1702bee8f@linaro.org>
+In-Reply-To: <3a11ba8a-a9f4-4829-8bcd-56f1702bee8f@linaro.org>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Tue, 6 May 2025 12:12:26 +0100
+X-Gm-Features: ATxdqUEJZorzolIgvsTdLshEsTPYYiqnZz4o7Z9Dl-6jDsMyiFJ-9tbycLt3cAM
+Message-ID: <CA+V-a8s_98eGfBe353Tp6TxZMtkc8JyP2KtxW55c_uN9ZB=NxQ@mail.gmail.com>
+Subject: Re: [PATCH] arm64: defconfig: Build STMMAC Ethernet driver into the
+ kernel for NFS boot
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 06/05/2025 13:02, Charan Pedumuru wrote:
-> +
-> +allOf:
-> +  - $ref: dma-controller.yaml#
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/reset/tegra186-reset.h>
-> +    dma-controller@6000a000 {
-> +        compatible = "nvidia,tegra30-apbdma", "nvidia,tegra20-apbdma";
-> +        reg = <0x6000a000 0x1200>;
-> +        interrupts = <0 136 0x04>,
+Hi Krzysztof,
 
-You gave me little time to respond - 15 minutes - and then you sent v3.
+On Tue, May 6, 2025 at 11:52=E2=80=AFAM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+>
+> On 06/05/2025 12:47, Prabhakar wrote:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > Enable `CONFIG_STMMAC_ETH` as built-in (`y`) instead of a module (`m`) =
+to
+> > ensure the Ethernet driver is available early in the boot process. This
+> > is necessary for platforms mounting the root filesystem via NFS, as the
+> > driver must be available before the root filesystem is accessed.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Same comments as for previous patches like this (even the same?): you
+> are supposed to use initramfs for your arm74 boards. Even armv7 boards
+> use initramfs, so network driver does not have to be built in.
+>
+> For example all of our setups use it thus we do not have to populate all
+> other vendors with our own drivers.
+>
+> Sorry, but I am strongly against such change. Kernel is already way too
+> big and with KASAN it does not fit to boot partitions in some of the
+> devices (and I cannot change the boot partition size, at least not
+> without big effort).
+>
+Thanks for the feedback. I understand your concerns, and I agree with
+your comments regarding the use of initramfs and the impact on kernel
+size. I'll drop this change and avoid adding the driver as built-in.
 
-Use the header and its defines instead of hard-coding it. Wasn't this
-the entire point why you included the header in the first place in v1?
-Otherwise why was it included?
-
-> 
-
-
-Best regards,
-Krzysztof
+Cheers,
+Prabhakar
