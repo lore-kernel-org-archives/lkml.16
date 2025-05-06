@@ -1,59 +1,62 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6C0A27AC5D
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 11:23:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8085127B511
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 11:23:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746530613; cv=none; b=nJYf/z/FNdbk5f4RriTdXCRd7jCMcYFV0l2n/ZehUuiwXeKLUjo0MK1Z7H+o9/FcyqduPo1UqIl1gGMhCEegnRK1+DZNw7AU0MbsyT7np1c9b0Z041pjaY9y7bRHGlC/Xf/QQpDkXs7SA6y02X7F6Pg7VciLu2bzcG8yHYqfjek=
+	t=1746530619; cv=none; b=KDSs17byKDn84bOzA0k9+1Lex3oqOZbN5aVYYtIhfA2h2HtDdGhyLxDYFZzqaj5rTeuRJihsP9OvhgFAqf+c/z2j4QNtUq3Ke3wd+g616jkbrzkcNicnLe0QjvqLH31gslfICCEiAUI94DzJdmmoofPZyZTeREA85mQCaCiVOAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746530613; c=relaxed/simple;
-	bh=xjL65vzHaYnd2+Zu9zg+UVvkfoWrRNrqH2KTKvwr7nk=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version; b=RVDKO6WH/GKHkMHik4leuITQFFnyey9M4MbrH2/edMYcgVY119A5eIi8CKMirpUMqX425IGMabj3f7FveX6seoB93rbjRvqtrcOBWDvAMqj19iOkQp6BdEgTWgFqyUeqguQLsEDLlgnvMjznvZh3GFwsCVh6+ZEEnMpeQRE/lDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=eRXQ5XhT; arc=none smtp.client-ip=209.85.216.45
+	s=arc-20240116; t=1746530619; c=relaxed/simple;
+	bh=H3l282jI5Layhto6Pmynhm3ddZElvS+Gd+StASMFlFc=;
+	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=nBHEA5thyUU8FRJlmlnLilKka1cY+1iXu9/JtVbODpTu45x9ioigmFG8BF4nlA94vqeJOJrhiZvd9xvNBYC4p336xNzkw1jIvDrJsEXSs6KuG67bSwRpGmW9fzV0sMztzhNgYfmEu7Yb4UPxF6njvHn3nSdktABlXcOK6Mwg5Z8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=ihvYTMsb; arc=none smtp.client-ip=209.85.216.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="eRXQ5XhT"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-3035858c687so4108813a91.2
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 04:23:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="ihvYTMsb"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-309f3bf23b8so7238357a91.3
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 04:23:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1746530611; x=1747135411; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=lj+Ua/fxMyjIfoIv2F4j22EXalsnM7wsPJwCRLC9/bk=;
-        b=eRXQ5XhT6sobBVK6SdyeCkzoJBQY+Uj9EA8VYsyVTDRZ2E6zgvPcYkMdkcbIqipQuF
-         RktkxhUk+zROq9iv+XmdDDxaqWZS3bjVcS8wRH1fr2InH1XyXJECwWNQvF6ytCtUz0zu
-         zFyO5J6sppKI7XThFy5Fj+A1plCuyhMyJC6aUUEPBY7ReH/O8U/bi/fjE2ROGaLn12wj
-         RZLXHXLWKHY9SSsr+q+oBnXLF5YFvCirU9d6rD1ESqmMHCl1OoSMd+OJFisG4q6i2f9e
-         o3vgeGI1SyACrluZ/+z/Za4ZxZxi6Ia9N2+vc41t6hn5NpGIFjRd9FcY8FdnxkYMYlE6
-         WPcg==
+        d=bytedance.com; s=google; t=1746530617; x=1747135417; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1iSa5DYMN+92PEYo5yJGBYTHY1dFKEUc+Tn0/1DSVH4=;
+        b=ihvYTMsbbGDAe1YiME3im0853yv4UUXCEtvl/G4FYtDpiW8Ys/nDhSkxOj8DEj7Iqf
+         8lHJSr9PWCmQ3NarlKQS9rlgI5zlFY00d1KUwskX7vMiPxqBHBEu+wkbuQjNgCja4T2l
+         k9FGvaGD5R1zge6XG/PMot2uR/9Gm7eSKJflk6lFZRLpyIV7L0iJhJ/2eeqzGVvuzR6W
+         hswBVuiehvvMHRIxy2eetTjCpnQGrK921/xViSxW9B8XPHk3/4NMGbg0cw1S9SHlyKPW
+         Tp4dqvA4HwfWt0/hIuMFQB/JcOas4C21Qx278uDCn6mLvOq22YOHJayz2Aq5SahQJEYr
+         SvZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746530611; x=1747135411;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lj+Ua/fxMyjIfoIv2F4j22EXalsnM7wsPJwCRLC9/bk=;
-        b=Y8iK2h0B1I8h/vKmdrO+BD7px9ME0pYosq0FOxPzgWMbUd7imSFXqUZ6tuemTkARv2
-         S+Gwj1oHd+gOSulC2iqko0QFZnHpzovM3TKCACH8OP/z+H2+854wnN49ztSPTcSXSdqH
-         IRWSO8stREPfUyUydFS7S4LR1sf0WIsZhQNmZrTlDJUItC/gsiJlKoW1yOfuqse7d5ws
-         DO9UXxI5HATmeCAch5DOFZLZ8cb2/+8CbM5FZBQlhoqi5wLvOdrCugyBKO141906jnDa
-         /QIexi+P2FrFxbh77FcAZKT0PyFAYEPj8Wq8vPoCHu/VOHeB/UVELdv/fAAdnKpjmSN5
-         hTVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU+aDBvG0j98m7zk8V8vVKXlRiiEY3+IjwWIRYrO5CbHbOA5FT0Usd5WTbkm4JiNmfg6t+hvfYAMJWixkw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz42mk7SGweI1nDTwDXFUx7bgTROHbbpL2IeMExk4PPS+MXyB4G
-	bCmRFE8DqlcUd1tpGEsKIFfY927xw5TBsB45kGpKWpW/5p/6Fl7x16tINGiskq8=
-X-Gm-Gg: ASbGncsuFtQ9YzdZ0ZDIj4SBljvFe2dW7YycsZO8ZPKmJQ76yG39leu/3NwkYcuj1/s
-	23OHvUO5j0uhCKcC+ve96MKBIZhAQcU+HKISmWquspwualZLIQgbnU0CReyjMOTbNqftr3DpTtn
-	yLDYmVZW7T6t0o96Vq1bjpZjetXAzC1spl/XCFs73aL/xHYNHerX10BlrCCwzSuULTfLG5rmqRM
-	+Qmnvk13a4y9xFU6SZFhhGUqt4sPXf1GcM3F5PRvQFFY3e+9Vu/C1ykN7um5g3mxxWUghaXKT4y
-	VDkdHwhsFq9xXCgkeqqUY7cFrFWJm8SPmJuR0dpsNqQT7+Kl+zFf+54mVgeZObgTxmSWTTkV
-X-Google-Smtp-Source: AGHT+IEOXeQAPiRigAJRM+ag8kVULH/CPzkxnG0tEFjbXvabNNYE6kFbgeM+fhK2lrsDJD43flM35w==
-X-Received: by 2002:a17:90b:2703:b0:308:6d7a:5d30 with SMTP id 98e67ed59e1d1-30a619ab240mr19584577a91.18.1746530611028;
-        Tue, 06 May 2025 04:23:31 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746530617; x=1747135417;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1iSa5DYMN+92PEYo5yJGBYTHY1dFKEUc+Tn0/1DSVH4=;
+        b=BIl6KQEXDuG5vW3HXMmpF81zIsJvON7FBKUOzMCtxocrie7O0YajSf2p8Fjq+3h8K7
+         bePZ2XvxDMHYT9wB3PPfpMNG2N4DmRYGcEaFg4HIWtBDl/U0n/E2Iv6IvIdJF6dbd7WA
+         HsMnfH5TyhkdJl+an7Dpdh2c19yjakDVQ/Dj1arBEnCyAUrWPRw6YjSNYHqCx7m/KQob
+         cJLe+ba+HDUcMPTFQpbjaFU+8YbJw39MYHPn7z3bcNlduxSGMGzbnd3VOKJTjflgMT2/
+         lB6YYkLeYF9OsIXaCevPtGduQjPGnRrOefrUfgTLf+4+ccr6SNoSctX77DwtQ/DuhD3h
+         Nl0g==
+X-Forwarded-Encrypted: i=1; AJvYcCXGA1aOTX26yUrdeNP5hJKMnm8p4zS9a0QxS8Iq7M0TXxcEEreW2idJHpSK8bFLRss3YEuwtynA1kjBHdk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzm7Zf6qNIT7uHyQXqs7Tn8R0MW+uKSKhTYy2Wcm7X9WEoQYfd/
+	CDt86CEJHw8PYDmvAqJYN3qDadXlgPBqlzaUg5j+6UibIjYrSNUsIyfIZ6cEFEw=
+X-Gm-Gg: ASbGncuaQhauWJ25xQGFgSyRiXUTr3va1EAk3ygUXQEyqU9ie2Nt8oC59sKfi0eg2X9
+	1JLtlt8kCQIGw6nDDadGuQnvia4hXYJNtTzRPpsEerbIULdcRxb14m3+U+hvAs8iCWSKAuID68A
+	4BLKJIC6IntJygFg65qNJrLhu0+SKfHmJwjJ3y7olFSzeysCTG8SMD6ifk0JysMgAvNHNmOdSJm
+	9aOuxoGmydsJ6rq67NsQmXbj/WPc7je/g4iY8SapJnyt7/PfbIcHZkR0daBwnqEAivvUIlbTXA2
+	MPJlT2kLetRStClkjFjVJLaEUnwVwn//COyfuilJ63vgWsc4bn3XJbBp+tAh9BGXeITtUy1w
+X-Google-Smtp-Source: AGHT+IFZHmt25dELEMwZQhUshisxGn6bjEwlTvzFcbNJLIa3RfN+PGPZSE1vLKGtcV12XFgGyQr6kA==
+X-Received: by 2002:a17:90b:1f82:b0:2fe:baa3:b8bc with SMTP id 98e67ed59e1d1-30a7c0c8b8emr3223643a91.23.1746530616613;
+        Tue, 06 May 2025 04:23:36 -0700 (PDT)
 Received: from L6YN4KR4K9.bytedance.net ([61.213.176.14])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30a3480ea0dsm13630303a91.37.2025.05.06.04.23.25
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30a3480ea0dsm13630303a91.37.2025.05.06.04.23.31
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Tue, 06 May 2025 04:23:30 -0700 (PDT)
+        Tue, 06 May 2025 04:23:36 -0700 (PDT)
 From: Yunhui Cui <cuiyunhui@bytedance.com>
 To: arnd@arndb.de,
 	andriy.shevchenko@linux.intel.com,
@@ -75,10 +78,12 @@ To: arnd@arndb.de,
 	schnelle@linux.ibm.com,
 	sunilvl@ventanamicro.com,
 	tim.kryger@linaro.org
-Subject: [PATCH v5 1/4] serial: 8250: fix panic due to PSLVERR
-Date: Tue,  6 May 2025 19:23:18 +0800
-Message-Id: <20250506112321.61710-1-cuiyunhui@bytedance.com>
+Subject: [PATCH v5 2/4] serial: 8250: avoid potential PSLVERR issue
+Date: Tue,  6 May 2025 19:23:19 +0800
+Message-Id: <20250506112321.61710-2-cuiyunhui@bytedance.com>
 X-Mailer: git-send-email 2.39.2 (Apple Git-143)
+In-Reply-To: <20250506112321.61710-1-cuiyunhui@bytedance.com>
+References: <20250506112321.61710-1-cuiyunhui@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -87,56 +92,159 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When the PSLVERR_RESP_EN parameter is set to 1, the device generates
-an error response if an attempt is made to read an empty RBR (Receive
-Buffer Register) while the FIFO is enabled.
+Failure to check the UART_LSR_DR before reading UART_RX, or the
+non-atomic nature of clearing the FIFO and reading UART_RX, poses
+potential risks that could lead to PSLVERR.
 
-In serial8250_do_startup(), calling serial_port_out(port, UART_LCR,
-UART_LCR_WLEN8) triggers dw8250_check_lcr(), which invokes
-dw8250_force_idle() and serial8250_clear_and_reinit_fifos(). The latter
-function enables the FIFO via serial_out(p, UART_FCR, p->fcr).
-Execution proceeds to the dont_test_tx_en label:
-...
-serial_port_in(port, UART_RX);
-This satisfies the PSLVERR trigger condition.
-
-Because another CPU(e.g., using printk()) is accessing the UART (UART
-is busy), the current CPU fails the check (value & ~UART_LCR_SPAR) ==
-(lcr & ~UART_LCR_SPAR), causing it to enter dw8250_force_idle().
-
-Put serial_port_out(port, UART_LCR, UART_LCR_WLEN8) under the port->lock
-to fix this issue.
-
-Panic backtrace:
-[    0.442336] Oops - unknown exception [#1]
-[    0.442343] epc : dw8250_serial_in32+0x1e/0x4a
-[    0.442351]  ra : serial8250_do_startup+0x2c8/0x88e
-...
-[    0.442416] console_on_rootfs+0x26/0x70
-
-Fixes: c49436b657d0 ("serial: 8250_dw: Improve unwritable LCR workaround")
-Link: https://lore.kernel.org/all/84cydt5peu.fsf@jogness.linutronix.de/T/
 Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
 ---
- drivers/tty/serial/8250/8250_port.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/tty/serial/8250/8250.h      | 13 +++++++++
+ drivers/tty/serial/8250/8250_port.c | 43 +++++++++++++++--------------
+ 2 files changed, 35 insertions(+), 21 deletions(-)
 
+diff --git a/drivers/tty/serial/8250/8250.h b/drivers/tty/serial/8250/8250.h
+index b861585ca02a..6f97ff3a197d 100644
+--- a/drivers/tty/serial/8250/8250.h
++++ b/drivers/tty/serial/8250/8250.h
+@@ -162,6 +162,19 @@ static inline u16 serial_lsr_in(struct uart_8250_port *up)
+ 	return lsr;
+ }
+ 
++/*
++ * To avoid PSLVERR, check UART_LSR_DR in UART_LSR before
++ * reading UART_RX.
++ */
++static inline void serial8250_discard_data(struct uart_8250_port *up)
++{
++	u16 lsr;
++
++	lsr = serial_in(up, UART_LSR);
++	if (lsr & UART_LSR_DR)
++		serial_in(up, UART_RX);
++}
++
+ /*
+  * For the 16C950
+  */
 diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
-index 3f256e96c722..a913135d5217 100644
+index a913135d5217..1666b965f6a0 100644
 --- a/drivers/tty/serial/8250/8250_port.c
 +++ b/drivers/tty/serial/8250/8250_port.c
-@@ -2380,9 +2380,10 @@ int serial8250_do_startup(struct uart_port *port)
- 	/*
- 	 * Now, initialize the UART
- 	 */
--	serial_port_out(port, UART_LCR, UART_LCR_WLEN8);
+@@ -1357,9 +1357,8 @@ static void autoconfig_irq(struct uart_8250_port *up)
+ 	/* Synchronize UART_IER access against the console. */
+ 	uart_port_lock_irq(port);
+ 	serial_out(up, UART_IER, UART_IER_ALL_INTR);
++	serial8250_discard_data(up);
+ 	uart_port_unlock_irq(port);
+-	serial_in(up, UART_LSR);
+-	serial_in(up, UART_RX);
+ 	serial_in(up, UART_IIR);
+ 	serial_in(up, UART_MSR);
+ 	serial_out(up, UART_TX, 0xFF);
+@@ -2137,25 +2136,22 @@ static void wait_for_xmitr(struct uart_8250_port *up, int bits)
+ static int serial8250_get_poll_char(struct uart_port *port)
+ {
+ 	struct uart_8250_port *up = up_to_u8250p(port);
+-	int status;
++	int status = NO_POLL_CHAR;
+ 	u16 lsr;
++	unsigned long flags;
  
- 	uart_port_lock_irqsave(port, &flags);
-+	serial_port_out(port, UART_LCR, UART_LCR_WLEN8);
-+
- 	if (up->port.flags & UPF_FOURPORT) {
- 		if (!up->port.irq)
- 			up->port.mctrl |= TIOCM_OUT1;
+ 	serial8250_rpm_get(up);
+ 
++	uart_port_lock_irqsave(port, &flags);
+ 	lsr = serial_port_in(port, UART_LSR);
++	if (lsr & UART_LSR_DR)
++		status = serial_port_in(port, UART_RX);
++	uart_port_unlock_irqrestore(port, flags);
+ 
+-	if (!(lsr & UART_LSR_DR)) {
+-		status = NO_POLL_CHAR;
+-		goto out;
+-	}
+-
+-	status = serial_port_in(port, UART_RX);
+-out:
+ 	serial8250_rpm_put(up);
+ 	return status;
+ }
+ 
+-
+ static void serial8250_put_poll_char(struct uart_port *port,
+ 			 unsigned char c)
+ {
+@@ -2264,13 +2260,17 @@ int serial8250_do_startup(struct uart_port *port)
+ 	 * Clear the FIFO buffers and disable them.
+ 	 * (they will be reenabled in set_termios())
+ 	 */
++	uart_port_lock_irqsave(port, &flags);
+ 	serial8250_clear_fifos(up);
+ 
+ 	/*
+-	 * Clear the interrupt registers.
++	 * Read UART_RX to clear interrupts (e.g., Character Timeout).
++	 * No data on UART_IIR_RX_TIMEOUT, UART_LSR_DR won't set.
++	 * FIFO disabled, read UART_RX without LSR check, no PSLVERR.
+ 	 */
+ 	serial_port_in(port, UART_LSR);
+ 	serial_port_in(port, UART_RX);
++	uart_port_unlock_irqrestore(port, flags);
+ 	serial_port_in(port, UART_IIR);
+ 	serial_port_in(port, UART_MSR);
+ 
+@@ -2429,15 +2429,14 @@ int serial8250_do_startup(struct uart_port *port)
+ 	}
+ 
+ dont_test_tx_en:
+-	uart_port_unlock_irqrestore(port, flags);
+ 
+ 	/*
+ 	 * Clear the interrupt registers again for luck, and clear the
+ 	 * saved flags to avoid getting false values from polling
+ 	 * routines or the previous session.
+ 	 */
+-	serial_port_in(port, UART_LSR);
+-	serial_port_in(port, UART_RX);
++	serial8250_discard_data(up);
++	uart_port_unlock_irqrestore(port, flags);
+ 	serial_port_in(port, UART_IIR);
+ 	serial_port_in(port, UART_MSR);
+ 	up->lsr_saved_flags = 0;
+@@ -2519,7 +2518,6 @@ void serial8250_do_shutdown(struct uart_port *port)
+ 		port->mctrl &= ~TIOCM_OUT2;
+ 
+ 	serial8250_set_mctrl(port, port->mctrl);
+-	uart_port_unlock_irqrestore(port, flags);
+ 
+ 	/*
+ 	 * Disable break condition and FIFOs
+@@ -2527,6 +2525,14 @@ void serial8250_do_shutdown(struct uart_port *port)
+ 	serial_port_out(port, UART_LCR,
+ 			serial_port_in(port, UART_LCR) & ~UART_LCR_SBC);
+ 	serial8250_clear_fifos(up);
++	/*
++	 * Read data port to reset things, and then unlink from
++	 * the IRQ chain.
++	 * Since reading UART_RX clears interrupts, doing so with
++	 * FIFO disabled won't trigger PSLVERR.
++	 */
++	serial_port_in(port, UART_RX);
++	uart_port_unlock_irqrestore(port, flags);
+ 
+ #ifdef CONFIG_SERIAL_8250_RSA
+ 	/*
+@@ -2535,11 +2541,6 @@ void serial8250_do_shutdown(struct uart_port *port)
+ 	disable_rsa(up);
+ #endif
+ 
+-	/*
+-	 * Read data port to reset things, and then unlink from
+-	 * the IRQ chain.
+-	 */
+-	serial_port_in(port, UART_RX);
+ 	serial8250_rpm_put(up);
+ 
+ 	up->ops->release_irq(up);
 -- 
 2.39.2
 
