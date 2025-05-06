@@ -1,190 +1,186 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2043.outbound.protection.outlook.com [40.107.223.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29BE033DF;
-	Tue,  6 May 2025 06:33:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746513201; cv=none; b=pY8Ylz8Vutp6sxxsioQELc9utXcpsuaaRAHPuJ+5/YX7TJ+CXmxIW8ivwsuycRD2wzrSOMXulKi48RzRjBd4EZBrer1IKxVRniur7jTLkVBKxLFpfWU8MUS14UO5kvMztjp+89sDQveDHeAKlSwpnybkgYSNI/kw0d+S1up3kkQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746513201; c=relaxed/simple;
-	bh=RnqLr2aNSgtNJPVm9QkWt1ci1fAjU/AK8o1DXpNSegg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XTZJ8wh7lc4OOs9SMKVJgDHwMnWQNkBcOsKmDsVIvSaOYihbg1vhaNdm6Vl/DnC7NvGymDs1OIPdkyRio1Dfk06VMbk7KA9HEXGGHhG+5BoEu4LIn2Rq2xwV05jqBOjP82L5+PV7hJ4RsooGUMc6QE2JiMBatfgwWu1ITZbrcnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ntmrBBix; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8B11205ABA
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 06:35:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.43
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746513341; cv=fail; b=ZyTMDChZ9AlAv4vmPN43hMMl+COD150E6x4LtHXzTos//LQTw2ttzfOwbyw9k8MrxAcUcu4U2ko1LnSth/VMR+mK6GqwFr+bnNBrA89sNqJUTXnooLMudLrX4K76i3NdPSrf3LUCOvRb/EcuMyhZDa/T3KTg76RyVTWtZmRO80E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746513341; c=relaxed/simple;
+	bh=gghN7N2JWPcPtKqhH5OfbgPH7Uotaaht7ZqIe88/ZEQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=CHe8HLj/sMNWPDVrBBcLKnDcalAbtPe+eRRVb0VBxsaC2NKFuJpShXou94OuK+D1z7Hyxa/ObkedkSAh4LxD6PYcL+ayN/8h+W7ogfM8vDI8RCgVpIl7hVdOSJ2+2qNVCR5iiPn7IGxQMHEkprX/y1KdkiR5JSurUysqcVxUPOg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=e9YpVeR7; arc=fail smtp.client-ip=40.107.223.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ntmrBBix"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84EEEC4CEE4;
-	Tue,  6 May 2025 06:33:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746513199;
-	bh=RnqLr2aNSgtNJPVm9QkWt1ci1fAjU/AK8o1DXpNSegg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ntmrBBixvNhNmwy6gGIBO/+guMHb0lOvrJwM93dC0qQuwrhk9r9dKEnXZT/K/2DSR
-	 toZlQWKCTqAk74kQR9CvuwMsxtgeSIyFfjTY1Z0pnAlFmknIV/W0f/hIXSNk/RLMRi
-	 IEwmVsOcczzvfhXlC/QXN1zAVMJSh7aWIrIzdTyu9T8Q9lgCoKv9Xc25XkN/+N0Ee+
-	 wOIlqRLpP88r9fzs4AKdYPPMv6LODD+Usx5+EFyC4zDF5rpdaEMACzmf76xGmL154m
-	 aNjtTdGVV7oczYg7tY45e9Fds/hNXMMQmyDt7aXXarmX8WnD9pVydLnTXwhqCFjG/r
-	 sDnHL9qaXJ/Pw==
-Message-ID: <1a91b1b3-a8b8-4040-add6-857c8207b97c@kernel.org>
-Date: Tue, 6 May 2025 08:33:16 +0200
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="e9YpVeR7"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=WAKN2FGAPL7vawxE8hPPw1iP9hxzGocXQtqeZn+RLm/NavdU09ouxXvLomDnoI/bGqARPikCNJPQcxQxbw8uw9mp7cBZMXffkNkwaRS/aocL9BtfH6VKBbzcJu+mVWT9+8XqokLRi9t8hCwmIEtP98a58TXIk8wfW2pbOJtJEqaBWIjyKftPWHuiERrrpF0p9pGAcZEj7cP3RXA9mLCNldnxvcXF4M1W1qg8ijaC2NsyrVp82+wu9jDG5T30965HWf3ArJv79NrvcHAQN4VJm9Zc8jP0tVzNRseXuiglNczE9HMHi/0+DQVVjey/A3oRk8b8sdHygatadjYclyd5Hw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=tlgCbRtG95RuN7c1fusUlL6/TEea1/rLuCBV2L1VpkI=;
+ b=m68hL006L/igV+VkIQ2SU1iFPnXuFgHx2ggZ55wYdxJv6Th/Erp1odXmYCApENlIW3UPGAazeUoH+PalGlzBulEmrH3Q4Phx+JiSlF+oyOywlGPjX7M+UYUNu54R5iZ+aAPytsXfJWXUFpbni8QhRKLX+jUnNboLUY1wR/0fNqhuzVzYgjKVv8D3Tj2IWM+TnlYsy1yH2BVj/AqD/bQPCWW/v0FU/y+sra+422YxCVpBMS9PQLoXqawn8yEUtFGCHZiiSt7GDvJl5F4jriWn6ZvKclq4wgdnVO4i93F6rK6Y9o06ABccbDnRUy+uDxyXdggbF2/4DGnXv9U9gYy+NA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tlgCbRtG95RuN7c1fusUlL6/TEea1/rLuCBV2L1VpkI=;
+ b=e9YpVeR7oX7hxV7dvM5RHm/9fZVCiqWUzyoydAmC45t0k3CUmMrB4jhuEzCmlAnAxKRTrePCN8UD7ucD0W/xf5ViaZn8rUyhBWB5IoNT2yGGJanDHcG9NXiJCTSDXeJlUkvmzv1U1AZpFZrepnlHsAN5NK9c/Cnb+nUeP0dLT3o5sB5ZY8xiBQYU+Ijbva0as0KjQ+d/z58rq3nCxg6RDkvoR2yhhMehMQl0dCqT6lPXanSaeLuW1zKiFi40zPKX9oP4YWHdDg30vNhLuaft2Oaj8FquW7J3/EkjlZjztAMPnfmzmFS9mQds8bCUOhNTBnnNmCqseDVM63oUkiNcdg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CY5PR12MB6405.namprd12.prod.outlook.com (2603:10b6:930:3e::17)
+ by LV8PR12MB9205.namprd12.prod.outlook.com (2603:10b6:408:191::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.23; Tue, 6 May
+ 2025 06:35:33 +0000
+Received: from CY5PR12MB6405.namprd12.prod.outlook.com
+ ([fe80::2119:c96c:b455:53b5]) by CY5PR12MB6405.namprd12.prod.outlook.com
+ ([fe80::2119:c96c:b455:53b5%6]) with mapi id 15.20.8699.024; Tue, 6 May 2025
+ 06:35:33 +0000
+Date: Tue, 6 May 2025 08:35:22 +0200
+From: Andrea Righi <arighi@nvidia.com>
+To: Tejun Heo <tj@kernel.org>
+Cc: David Vernet <void@manifault.com>, Changwoo Min <changwoo@igalia.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH sched_ext/for-6.15-fixes] sched_ext:
+ bpf_iter_scx_dsq_new() should always initialize iterator
+Message-ID: <aBmtqqmP8JiIKKDB@gpd3>
+References: <aBkt_4tEZATxf6-Q@slm.duckdns.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aBkt_4tEZATxf6-Q@slm.duckdns.org>
+X-ClientProxiedBy: ZR0P278CA0108.CHEP278.PROD.OUTLOOK.COM
+ (2603:10a6:910:23::23) To CY5PR12MB6405.namprd12.prod.outlook.com
+ (2603:10b6:930:3e::17)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/8] vt: introduce gen_ucs_fallback_table.py to create
- ucs_fallback_table.h
-To: Nicolas Pitre <nico@fluxnic.net>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Nicolas Pitre <npitre@baylibre.com>, linux-serial@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250505170021.29944-1-nico@fluxnic.net>
- <20250505170021.29944-5-nico@fluxnic.net>
-Content-Language: en-US
-From: Jiri Slaby <jirislaby@kernel.org>
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <20250505170021.29944-5-nico@fluxnic.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY5PR12MB6405:EE_|LV8PR12MB9205:EE_
+X-MS-Office365-Filtering-Correlation-Id: d77d9716-b4f7-4e56-826c-08dd8c6833ba
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?xbzNhdybLSzl8ObB9IOY/CI+a0giVcGm92Lay7hPWw1+9HbHZa01RThzkzAc?=
+ =?us-ascii?Q?KNsUke+qgpkTY3yb1YePhDW8sBF6axAhyYr1QRZ6TEdcTrmFO8EBLMgvTjtC?=
+ =?us-ascii?Q?pGKgZ18JTjam2JHw+GIxuY2oxOxrHCclUhyzVLVLy1CO3Gpyj8f8Fu4JdiU6?=
+ =?us-ascii?Q?6jHEEepRCs5vtMxgdWve2tgd8hpe9Pe+7tFEHDi1RQ4BKSZOU3L4fHIumnru?=
+ =?us-ascii?Q?ThHMgnqN+rH2oAXv58HqOVvTeUPmYxVlVKLFDZCYHtPdYReCackAMNgKHcef?=
+ =?us-ascii?Q?BndBMhW2zPZsOmlC6Rh4HVa8QlDCeIL+IKuGr+GoWHOkOOWcnQ0BnNmK4dCD?=
+ =?us-ascii?Q?1hMrP6KPcN/M077AfRXFyWeEQDM3tS2kyhIPrAjFOVOrMTgp1aSHbWbmu6Bf?=
+ =?us-ascii?Q?DRfhtr3wZt59cUfTgzYpBTFXie2GdxvjzTLsuKytMCP69HY268UB/oTCOUoo?=
+ =?us-ascii?Q?PQtdG+4duM3XRV8gIFyskfXjCa6z+Wg1e5mcmxrhUgKHC72SsZKJ/GkIUZTc?=
+ =?us-ascii?Q?meXMX7c17d6m/NuU0NFbHHJQNyJTJmwZR1rWLs2i4N4wbnmL7xR6r7l8TmuO?=
+ =?us-ascii?Q?0yZlcsNhyCwfX6vh19EcNkQntirPuOclxi59aTP2e/VZBkHTBba4kHE+N+nX?=
+ =?us-ascii?Q?EQ5FduPyfM/B9He1mw+fBTstHuQxpGeF+hF962h+6WFXK56ePSyF2reeyyTh?=
+ =?us-ascii?Q?Zl/AJdZjkCZw8KO0tVUAKU/bO8hteaDwNS0TAC/C+fnwMPIP6IU70D1XORQr?=
+ =?us-ascii?Q?ac3ca0lEiZ+RJXRkY6GQVWSbVOPmm71q+ZgbtqQPdjZLj5TLQT6FzKTKsCl/?=
+ =?us-ascii?Q?VSNgJNNw9YXtj9MmIpQiY7Jp9WRwrUVmfG8XvLB5c0xd8aJB8tlFfiWK+fZg?=
+ =?us-ascii?Q?Qqkp6wYP6mDgCud105UDp081X0Vr6mr6Uhr3lQPXZgI3hRqbyukkD7K7QJf3?=
+ =?us-ascii?Q?LDmXBkBlbMqysF/jO0JSx+/qxFdsj0eIHCn67K+obAM6X6I9lQoq1Syrbw2+?=
+ =?us-ascii?Q?AaaUCIISvvp4j3DB3xLm2teqzkIbQzj2H+guWOqj9CTZzGOiIlMKd/D2Ub30?=
+ =?us-ascii?Q?ZKuKuc0o63u30lP6YqB8EUvG7J4flPDySKTXaiGEKL6sqlrzBkMJCjx9dOFO?=
+ =?us-ascii?Q?qgLbTYL43mznszhKHkaWM7AqA89Vtlck//m3QA9radN/SQ34Dsk39XcOzsVr?=
+ =?us-ascii?Q?Bdu5+AHySQtHuMs3CS74OXp+fQQXbOsCQ2vZ6gtXwkwvCB8aN6OCdjCR4mfg?=
+ =?us-ascii?Q?D7zOZO0vUAeRSW3GQZ4dYCKbIvrrbzrw2tjPmUrchk5gjoyX69DGNTHxBdy/?=
+ =?us-ascii?Q?iUlMRS3p9zcVESVB54ricLzXl0H4UPk8Sr5K193O6t8eZCSrwlokcUsljRQ9?=
+ =?us-ascii?Q?MhQ6uyxYx6z1JHp25MfbT7ucxqIb3HefL6068/RrDyn3r3k+NRslAb3RoT2U?=
+ =?us-ascii?Q?/jKru7ERB20=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6405.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?S8Orypi2Sy7jUDY2QT/wRkAtoijU8QajAzxve0+1xNAyaZFzTawcXFrwf3mN?=
+ =?us-ascii?Q?WXuGkN5C8ZOiyCm7gppJ/WW9Mwkvr8Ylro3jZ0WSDNitqyhjhUwQSzl0Sar6?=
+ =?us-ascii?Q?2eZGFTHRFN4rLa9bxh2hbA9tXxEZ1wfGes+o3YPlVngAAAV0zFqchuVJmP8O?=
+ =?us-ascii?Q?evRqEYQ8+QhhRmnydoX1+UwXiZAkBtYA8wKLA9P1XgnfDMWHvOKGd//DsdC3?=
+ =?us-ascii?Q?lwwqwjJdaPm6svOGY3nPneWj5pW5R425Ml+72KjsfE/05zyZxPNXe08wpoBp?=
+ =?us-ascii?Q?XGv2EAKFSuL+HD9DtWfLUU+q0nD9lPOJ/Tk73lZgEBQBFNImgsL2bPRqqRAB?=
+ =?us-ascii?Q?66uGGEXfN7uIgQ3Bdt3gl1tSjnhZRz46zPZH4jZ8odCOBC+zEUAiUgPXyW6v?=
+ =?us-ascii?Q?ep/WQg2RpOc3OtCF+d0ls/UcxoThQDDyQYl5P5tE7I67ie88LLANe2XA/zNV?=
+ =?us-ascii?Q?BzqBaDCg+cjFmE6+R6zfoZ3J5pgHrJIYYqtLoVw/l+WNUp3GyQ1y9HQxQSH7?=
+ =?us-ascii?Q?baivYyejM4nTOTB6gb6UrClan01n1eFWS08oxt+IHIawkT//uVn/qkjO4HK9?=
+ =?us-ascii?Q?Elz+QM53GgI5Cu0CLT7BZ1DZj5d090QYNNILpunirn13XLk75p6018aavl4N?=
+ =?us-ascii?Q?s4MT+2M6a2rb7rfl55SepaizSX8JFBZhT46BWoe4OUXptrVvnWX+40G9/hYL?=
+ =?us-ascii?Q?mLIPnaa334n0fWnGwOl27tiQOJEOjebftIqdTK7Zq7PeBHmI9gePKyvmzPs7?=
+ =?us-ascii?Q?HMHtefSZzMs1IdhD/ZiNpgJbcNEapF05gvsIs+MySediXmEMLrXfTz6lFWVf?=
+ =?us-ascii?Q?sm2wms+LXHNGvIZDyCu7DKJ6WKs+bAv/PaNREcuUP86mOtLez4saHUrL4R/G?=
+ =?us-ascii?Q?l03lFmdhwp/oG5njFHD/ho8Lbvnwa5d0P3Nu2X6vktE17e46o24hUhhMHvns?=
+ =?us-ascii?Q?xr1mwbvENm+ElfAPYL2PzYOKEOPCbltpuWUI2FpvnbXTZfTSuFtWHQ3hfInV?=
+ =?us-ascii?Q?Z8Qu11snQUL1Bd5Aj7651i+Gm0r4rqR1T2uUxqqudVJ1BYyFsSd+N5hng1uw?=
+ =?us-ascii?Q?P0cMU8saLl163MWyPTftyn7fN5YcUxO/gWnARHGO8hTkynMhTBkSrj7NYFHU?=
+ =?us-ascii?Q?+fNnVB6GdhQrfgqPqVbm6AKbsPLEau7nsq/gHOUA0zy5/5/FOqSzMaeajx9s?=
+ =?us-ascii?Q?TpYkcfDgCUF5v3nXm9tqdtnOyRXqIsukMYFRbpoUNTrY89PphFeUb0cfznrl?=
+ =?us-ascii?Q?6N+FviYOrTjii/lt5vkt/4GrMANevWS3thSI/svSUVzZsxrloeqtU3WUYYdw?=
+ =?us-ascii?Q?UjyvCbmfGENV6NuocZC6VrUtAYA0K4IbeCnJUQJJlPYGkNqCwJ560n3liGEC?=
+ =?us-ascii?Q?wUkSnNK5SSxQu4KuVoINZ9xw5cSb9bSMnOoDjnDW+P/CcWxkjJRn3PBsRxZO?=
+ =?us-ascii?Q?APtuIlGm+cbUxIXwgsrBVCYm2QFgFjOlL3XpklhFadlRHKdgY90vS/k2Ndzj?=
+ =?us-ascii?Q?Ifd8jWtO/TB+/K27tRpwniNk5WY9I8ISGTAmd0VTqen1lICckc07vdqmPu47?=
+ =?us-ascii?Q?l0fO0ucpnPVWQAQqAafYhWpuerwOU6hgDbPFct6s?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d77d9716-b4f7-4e56-826c-08dd8c6833ba
+X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6405.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 06:35:33.0397
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: oIB2/IRi3xc+iR+wqFw3/aW/eVb39TPHFNS96ctd/eFMx5OcuWIMGhxCC6vmdYpHuODU42UR/o33PGafYYb2Kg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9205
 
-On 05. 05. 25, 18:55, Nicolas Pitre wrote:
-> From: Nicolas Pitre <npitre@baylibre.com>
+On Mon, May 05, 2025 at 11:30:39AM -1000, Tejun Heo wrote:
+> From 3ca42b7aea35cbcfb8d1fdde09e10a54edf97b26 Mon Sep 17 00:00:00 2001
+> From: Tejun Heo <tj@kernel.org>
+> Date: Mon, 5 May 2025 11:28:21 -1000
 > 
-> The generated table maps complex characters to their simpler fallback
-> forms for a terminal display when corresponding glyphs are unavailable.
-> This includes diacritics, symbols as well as many drawing characters.
-> Fallback characters aren't perfect replacements, obviously. But they are
-> still far more useful than a bunch of squared question marks.
+> BPF programs may call next() and destroy() on BPF iterators even after new()
+> returns an error value. bpf_iter_scx_dsq_new() could leave the iterator in
+> an uninitialized state after an error return causing bpf_iter_scx_dsq_next()
+> to dereference garbage data. Make bpf_iter_scx_dsq_new() always clear
+> $kit->dsq so that next() and destroy() become noops.
 > 
-> Signed-off-by: Nicolas Pitre <npitre@baylibre.com>
+> Signed-off-by: Tejun Heo <tj@kernel.org>
+> Fixes: 650ba21b131e ("sched_ext: Implement DSQ iterator")
+> Cc: stable@vger.kernel.org # v6.12+
 > ---
->   drivers/tty/vt/gen_ucs_fallback_table.py | 882 +++++++++++++++++++++++
->   1 file changed, 882 insertions(+)
->   create mode 100755 drivers/tty/vt/gen_ucs_fallback_table.py
+>  kernel/sched/ext.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> diff --git a/drivers/tty/vt/gen_ucs_fallback_table.py b/drivers/tty/vt/gen_ucs_fallback_table.py
-> new file mode 100755
-> index 000000000000..cb4e75b454fe
-> --- /dev/null
-> +++ b/drivers/tty/vt/gen_ucs_fallback_table.py
-> @@ -0,0 +1,882 @@
-> +#!/usr/bin/env python3
-> +# SPDX-License-Identifier: GPL-2.0
-> +#
-> +# Leverage Python's unicodedata module to generate ucs_fallback_table.h
-> +#
-> +# The generated table maps complex characters to their simpler fallback forms
-> +# for a terminal display when corresponding glyphs are unavailable.
-> +#
-> +# Usage:
-> +#   python3 gen_ucs_fallback_table.py         # Generate fallback tables
-> +#   python3 gen_ucs_fallback_table.py -o FILE # Specify output file
+> diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
+> index 4e37b40ce280..f5133249fd4d 100644
+> --- a/kernel/sched/ext.c
+> +++ b/kernel/sched/ext.c
+> @@ -6827,6 +6827,12 @@ __bpf_kfunc int bpf_iter_scx_dsq_new(struct bpf_iter_scx_dsq *it, u64 dsq_id,
+>  	BUILD_BUG_ON(__alignof__(struct bpf_iter_scx_dsq_kern) !=
+>  		     __alignof__(struct bpf_iter_scx_dsq));
+>  
+> +	/*
+> +	 * next() and destroy() will be called regardless of the return value.
+> +	 * Always clear $kit->dsq.
+
+Nit (feel free to ignore): we could mention that bpf_for_each() is the one
+calling next() and destroy(), but overall looks good to me.
+
+Acked-by: Andrea Righi <arighi@nvidia.com>
+
+Thanks,
+-Andrea
+
+> +	 */
+> +	kit->dsq = NULL;
 > +
-> +import unicodedata
-> +import sys
-> +import argparse
-> +from collections import defaultdict
-> +
-> +# This script's file name
-> +from pathlib import Path
-> +this_file = Path(__file__).name
-> +
-> +# Default output file name
-> +DEFAULT_OUT_FILE = "ucs_fallback_table.h"
-> +
-> +def collect_accented_latin_letters():
-> +    """Collect already composed Latin letters with diacritics."""
-> +    fallback_map = {}
-> +
-> +    # Latin-1 Supplement (0x00C0-0x00FF)
-> +    # Capital letters with accents to their base forms
-> +    fallback_map[0x00C0] = ord('A')  # À LATIN CAPITAL LETTER A WITH GRAVE
-> +    fallback_map[0x00C1] = ord('A')  # Á LATIN CAPITAL LETTER A WITH ACUTE
-> +    fallback_map[0x00C2] = ord('A')  # Â LATIN CAPITAL LETTER A WITH CIRCUMFLEX
-> +    fallback_map[0x00C3] = ord('A')  # Ã LATIN CAPITAL LETTER A WITH TILDE
-> +    fallback_map[0x00C4] = ord('A')  # Ä LATIN CAPITAL LETTER A WITH DIAERESIS
-> +    fallback_map[0x00C5] = ord('A')  # Å LATIN CAPITAL LETTER A WITH RING ABOVE
-> +    fallback_map[0x00C7] = ord('C')  # Ç LATIN CAPITAL LETTER C WITH CEDILLA
-> +    fallback_map[0x00C8] = ord('E')  # È LATIN CAPITAL LETTER E WITH GRAVE
-> +    fallback_map[0x00C9] = ord('E')  # É LATIN CAPITAL LETTER E WITH ACUTE
-> +    fallback_map[0x00CA] = ord('E')  # Ê LATIN CAPITAL LETTER E WITH CIRCUMFLEX
-> +    fallback_map[0x00CB] = ord('E')  # Ë LATIN CAPITAL LETTER E WITH DIAERESIS
-> +    fallback_map[0x00CC] = ord('I')  # Ì LATIN CAPITAL LETTER I WITH GRAVE
-> +    fallback_map[0x00CD] = ord('I')  # Í LATIN CAPITAL LETTER I WITH ACUTE
-> +    fallback_map[0x00CE] = ord('I')  # Î LATIN CAPITAL LETTER I WITH CIRCUMFLEX
-> +    fallback_map[0x00CF] = ord('I')  # Ï LATIN CAPITAL LETTER I WITH DIAERESIS
-> +    fallback_map[0x00D1] = ord('N')  # Ñ LATIN CAPITAL LETTER N WITH TILDE
-> +    fallback_map[0x00D2] = ord('O')  # Ò LATIN CAPITAL LETTER O WITH GRAVE
-> +    fallback_map[0x00D3] = ord('O')  # Ó LATIN CAPITAL LETTER O WITH ACUTE
-> +    fallback_map[0x00D4] = ord('O')  # Ô LATIN CAPITAL LETTER O WITH CIRCUMFLEX
-> +    fallback_map[0x00D5] = ord('O')  # Õ LATIN CAPITAL LETTER O WITH TILDE
-> +    fallback_map[0x00D6] = ord('O')  # Ö LATIN CAPITAL LETTER O WITH DIAERESIS
-> +    fallback_map[0x00D9] = ord('U')  # Ù LATIN CAPITAL LETTER U WITH GRAVE
-> +    fallback_map[0x00DA] = ord('U')  # Ú LATIN CAPITAL LETTER U WITH ACUTE
-> +    fallback_map[0x00DB] = ord('U')  # Û LATIN CAPITAL LETTER U WITH CIRCUMFLEX
-> +    fallback_map[0x00DC] = ord('U')  # Ü LATIN CAPITAL LETTER U WITH DIAERESIS
-> +    fallback_map[0x00DD] = ord('Y')  # Ý LATIN CAPITAL LETTER Y WITH ACUTE
-
-
-So you are in fact doing iconv's utf-8 -> ascii//translit conversion. 
-Does python not have an iconv lib?
-
- > perl -e 'use Text::Iconv; print Text::Iconv->new("UTF8", 
-"ASCII//TRANSLIT")->convert("áąà"), "\n";'
-aaa
-
-/me digging
-
-Ah, unidecode:
- > python3 -c 'from unidecode import unidecode; print(unidecode("áąà"))'
-aaa
-
-Perhaps use that instead of manual table?
-
--- 
-js
-suse labs
+>  	if (flags & ~__SCX_DSQ_ITER_USER_FLAGS)
+>  		return -EINVAL;
+>  
+> -- 
+> 2.49.0
