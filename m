@@ -1,106 +1,129 @@
-Received: from tarta.nabijaczleweli.xyz (tarta.nabijaczleweli.xyz [139.28.40.42])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA2AC1F37D3
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 19:12:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.28.40.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FC2D20AF67
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 19:15:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746558757; cv=none; b=Ng+88umegOxTXHhr9xAlQnedBEpblW+dPMfovgCi2TaOXyzp0bAvnvWrNh2xLWZMTXperIRwC7K0DUmQYEKr/A0SD+kEXQ2b+lnVoqY/0FtgtbvMZJdStLjcP7+PKuzI+hYUcz0/ngmEQzclFdVELDSG9vqOYNeZoJytQziQUFs=
+	t=1746558908; cv=none; b=IdVF+/Hym9FwhNBMeeRlBbBwCnrLQx2Fg/Y3oyBjy1qPCKYbYd9T1CM+ABzpGpl/kya489RwMiwaWc5Rq/+hH4oAY0rNnOGqvKe7JeUbASNEa+t7tbrKOS/r0ctLFP12NILHfK+xZDEo4owJurHa/2hwGuJuTe2c/iUZy5SzugE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746558757; c=relaxed/simple;
-	bh=siJYkGd4SXyOVGRizOomB/pQfJE70mADNoQBMltNr+0=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=YQKjwvLJOQ9gbJNJNaggDu+U9ir3vKOusgfVcjh1pu+/3a6Aan2OcdT+yB7E/OuRVNlhvqg0WTukDkYIuTWMlcJlGEqdwB8o9XvzbB2A1394VZA9ylsN77/GGkLAPNKv3salpUOkIEF/KKwnc+wTgsYFpW5QP8j+nlrWoOcw5+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nabijaczleweli.xyz; spf=pass smtp.mailfrom=nabijaczleweli.xyz; dkim=pass (2048-bit key) header.d=nabijaczleweli.xyz header.i=@nabijaczleweli.xyz header.b=Nv/oKvXx; arc=none smtp.client-ip=139.28.40.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nabijaczleweli.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nabijaczleweli.xyz
+	s=arc-20240116; t=1746558908; c=relaxed/simple;
+	bh=uMlYw7BJ7BqtSlJ2dFCAID9nt+MOBb+zWfhrI61EITc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=joj26IXgLTXr/TI4lHUf7MwHpgLcS1KTsLuO90O1UcQncq6lvJhDH6TYVDf0Em0ZrhzmUwkkb95DQkoU/6/4X+zOD14uKoI5JndOADhSmmW5ElXipLCQW2n8Se1MEBihj88OG+iHYTelhDSYyv013oVXGIbU83OUp8StfB96Ggs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ap6QfqH6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nabijaczleweli.xyz header.i=@nabijaczleweli.xyz header.b="Nv/oKvXx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nabijaczleweli.xyz;
-	s=202505; t=1746558600;
-	bh=siJYkGd4SXyOVGRizOomB/pQfJE70mADNoQBMltNr+0=;
-	h=Date:From:To:Subject:From;
-	b=Nv/oKvXxVZw4CdNsAwwb4ojvqiLpZbVjmHL2MUvUqYIBHOR1qBRS9Gab70Gf2u8Fy
-	 wWXgPSHH3gss/gzevcxhqof70z3vJGskDQe8neygo8Q1RMsC7BHkjO2Xn/NVnUEqjl
-	 hUxyVGtXHDS6spMly8JHK/0AMPDlqaapH2Ykch9zPc5ABYN17kmPysA65E0jPjU0Df
-	 gcC7LN1cJblyZsCQH5Y29lWHAZ7Tta2/anmVF6x5XLAuWhDY4EegkXgsrrp0q5H+hj
-	 a4uR96EGRCUxY8xDAmbRAT2XJoCQV+39AwNgAo6RZTOAvR21qvfzK+DXfZOE0OMnLM
-	 eVp/nPVx5lrPQ==
-Received: from tarta.nabijaczleweli.xyz (unknown [192.168.1.250])
-	by tarta.nabijaczleweli.xyz (Postfix) with ESMTPSA id 6860610734;
-	Tue,  6 May 2025 21:10:00 +0200 (CEST)
-Date: Tue, 6 May 2025 21:10:00 +0200
-From: 
-	Ahelenia =?utf-8?Q?Ziemia=C5=84ska?= <nabijaczleweli@nabijaczleweli.xyz>
-To: Michal Simek <monstr@monstr.eu>, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] microblaze: optimalize -> optimize
-Message-ID: <f6e465fee5a824a67be1ae7c3bc1b72adcf9471f.1746558529.git.nabijaczleweli@nabijaczleweli.xyz>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ap6QfqH6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9C4FC4CEF0
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 19:15:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746558907;
+	bh=uMlYw7BJ7BqtSlJ2dFCAID9nt+MOBb+zWfhrI61EITc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Ap6QfqH6HrgZonSmM9Ra2bo6hQrl0QttCDT/R/DeYFrtJYtJFTGIhD7qMH+w2qNEE
+	 R8oxJohdBVALTjV74VpEf1livlaQYCokHRArFlylP5e6lQs/wZeIOafrxWJ0ZMuKk9
+	 TYdHj6caMWbcHN3J3MkQFtpd9nivOMxKN8TncmylEsD0Vo+zcg61H47NoxrUyie2os
+	 /I13bsOac6MHRwdZUfYGqUw6aEfmxzXoCTyKXn0lSaJBin5XRRNH0AradNs0ksBFf4
+	 Jsuf4poxvd/Quh/JCJnwu0LrNMeB/la+ZAvj4+oS+72CZ2X3PNybjl3C4Vval11OcY
+	 UlclnOAz/RXBA==
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-54b0d638e86so7489082e87.1
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 12:15:07 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW9FeUxpwoKIqVPlRkkf2Gx6+tHxhc8lzUl53hsM+U+RQg1/8AyqEC4NwJl6Zig7ZWsA20xMlGvAUrLWwo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywaz7rBeFxfCRHMOx+mxkMc+/iT6TSH+S6MPueh9QmoinBoS5kj
+	m+2cTGgaW7Y7A3QOBUfq+9RW9hOW8BL+pa0ZWXspjGQOCaDGRccgju4/Iqw5LE6jKXWBiY/34N1
+	Z6hQTuIRUacfZmfizSNsq+hpgz90=
+X-Google-Smtp-Source: AGHT+IFeApfvSuxNJMKoxqfvWmuLIm9XuqkZ6TU4z+fD+sAVwwoTqOlKqfEkfs/2tXDvreRE9XHlg4KEpLXQMI28I24=
+X-Received: by 2002:a05:6512:3985:b0:54e:8fd5:3f53 with SMTP id
+ 2adb3069b0e04-54fb95f4d97mr227475e87.10.1746558906104; Tue, 06 May 2025
+ 12:15:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="v4quvq7u7zugag4l"
-Content-Disposition: inline
-User-Agent: NeoMutt/20231221-2-4202cf-dirty
+References: <20250506154532.1281909-5-ardb+git@google.com> <20250506154532.1281909-8-ardb+git@google.com>
+ <CAHk-=whrcutH0LcMmaeJxxMeYpw2R5T80yoQAXbrRHNSTCB0Pw@mail.gmail.com>
+ <CAMj1kXFSae=stazUv8doka-zLOnDdXXR4ASxHKe5f97ikg3V2A@mail.gmail.com>
+ <CAHk-=whxP5Ywpv-U=2NPFhk929VHB9_kdp10+HFJQ4VxEGdX9A@mail.gmail.com>
+ <CAMj1kXGwYXXpjPgDwjKMEZJkuGJ8ZuCpMpc7fTvo58PNtu-czA@mail.gmail.com>
+ <CAHk-=wiz5oXq2f_87hHViN2TZQO9VHpaWb5fWWGJbUWQw1ChVw@mail.gmail.com>
+ <CAMj1kXEtW2bAQK4hN-S5C=Po5dk1q14+GJjzEJsjfz9OeOMoCg@mail.gmail.com>
+ <CAHk-=whRNPK7hTtPYh3SEe0WXEHR=aedc3bc-y_e08ujOxmgJg@mail.gmail.com> <CAHk-=wj9jR8HVOoEsAppFCGH0BcRCY6CrVNUFpeSswxD3Ho67Q@mail.gmail.com>
+In-Reply-To: <CAHk-=wj9jR8HVOoEsAppFCGH0BcRCY6CrVNUFpeSswxD3Ho67Q@mail.gmail.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Tue, 6 May 2025 21:14:55 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXFNJEne4uDxjfq5=OiWJGA1Pu9O99mrJRky5CW4R3V32w@mail.gmail.com>
+X-Gm-Features: ATxdqUGRhhGOL7vU96swpWak7i2haUW7zKDR6UIEkEwjBZdYhQNw8gbofNvg4Hg
+Message-ID: <CAMj1kXFNJEne4uDxjfq5=OiWJGA1Pu9O99mrJRky5CW4R3V32w@mail.gmail.com>
+Subject: Re: [RFC PATCH 3/3] x86/boot: Use alternatives based selector for
+ 5-level paging constants
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
+	Ingo Molnar <mingo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
+On Tue, 6 May 2025 at 20:39, Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Tue, 6 May 2025 at 11:17, Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+> >
+> > The early boot alternatives code fixup should be really easy - no need
+> > to worry about IPIs and things like that.
+>
+> Actually, we already run the alternatives fixup before smp, so I guess
+> we already do that.
+>
+> But I think we could fairly easily add another section for early boot
+> alternatives and just use the existing apply_alternatives() for this,
+> and run it long before arch_cpu_finalize_init().
+>
+> No?
+>
 
---v4quvq7u7zugag4l
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Not great.
 
-Signed-off-by: Ahelenia Ziemia=C5=84ska <nabijaczleweli@nabijaczleweli.xyz>
----
- arch/microblaze/Kconfig.platform | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+First of all, that would mean calling into even more C code from the
+1:1 mapping of memory, and this whole effort is about reducing and
+confining that, so we don't get more random breakage in confidential
+guests at boot time because some absolute address is being used before
+it is mapped. (i.e., all the RIP_REL_REF() changes)
 
-diff --git a/arch/microblaze/Kconfig.platform b/arch/microblaze/Kconfig.pla=
-tform
-index 7795f90dad86..2d18edde4823 100644
---- a/arch/microblaze/Kconfig.platform
-+++ b/arch/microblaze/Kconfig.platform
-@@ -11,7 +11,7 @@ config OPT_LIB_FUNCTION
- 	bool "Optimalized lib function"
- 	default y
- 	help
--	  Allows turn on optimalized library function (memcpy and memmove).
-+	  Allows turn on optimized library function (memcpy and memmove).
- 	  They are optimized by using word alignment. This will work
- 	  fine if both source and destination are aligned on the same
- 	  boundary. However, if they are aligned on different boundaries
-@@ -24,7 +24,7 @@ config OPT_LIB_ASM
- 	depends on CPU_BIG_ENDIAN
- 	default n
- 	help
--	  Allows turn on optimalized library function (memcpy and memmove).
-+	  Allows turn on optimized library function (memcpy and memmove).
- 	  Function are written in asm code.
-=20
- # Definitions for MICROBLAZE0
---=20
-2.39.5
+But patching alternatives is fundamentally an optimization, and so
+things will look something like
 
---v4quvq7u7zugag4l
-Content-Type: application/pgp-signature; name="signature.asc"
+void __startup_64()
+{
+    if (cr4.la57)
+        set_capability(foo)
 
------BEGIN PGP SIGNATURE-----
+    apply_alternatives();
 
-iQIzBAABCgAdFiEEfWlHToQCjFzAxEFjvP0LAY0mWPEFAmgaXocACgkQvP0LAY0m
-WPH52xAAnKhlvrA/nyf4skgUk5CosQFSF+q7QulQXkk6Bn9glSmwn2XFDORExUDM
-MohBWIj/5dZ6osiMvlcEpF5KDhM3VO9Qj9mqtppYP/uSCnTrGCp5LNUDT2wyOjfE
-ZZRAfU12llghMf/io5vFRwSuFCpkQ4PERk/Bi/nxoJ617il6J15Pvahb81EyHTt2
-8l+cWrwB8R+peEQheWUYqFZBX+1oh4Zqxyn7K2onYAhTbFNGHjj167bsjRZa1I5L
-l8F3cPuLlKz+8qHkjHsCFffNbJQOOivlbViFJyccJTGzIrhua8Wc8g8eXG4YgQvX
-a9y7rl6y1g1fzxPhYmK4o2ut9c0ZW2WhNItQ59y6ZnntK6yzJdMrXhi9MQruXrtC
-T+jXm1wyiIguTMDtLhRwkBmkNDWPXfjTcg539TFV3X4J0h9sbIkby2X6CsUKqEG1
-DerLLiVzrjG806JIvXEqaLJSjfTG4hdtnF0L20DgJLg43sVC/F14I6wZ6OPKSrpa
-l+dM+zXBSQGCC7NmudnkFFWrK/fU8CIYQcgSbo4fKR9ttR0BwTVWY1jdGlHmYLT6
-nK507vjEHCotwMN2aXQVmqCc/ccB+YS7dhC8AWd+CjjDdMayXM/bthvuv5OLze82
-lbV1UeWfBOzUjnZWYmYlBE3MoiMq1gE1ZevZ7Xw0AEYQkk44ico=
-=o1n6
------END PGP SIGNATURE-----
+    // set up the page tables etc etc
+}
 
---v4quvq7u7zugag4l--
+and given that the code would work equally well without the
+alternatives being applied, I'm not sure what we gain here, given that
+we are still relying on the C code not touching the page tables before
+this code executes.
+
+This is why I included patch #2, so that at the very least, the
+variable cannot be observed by C code before it assumes the correct
+value.
+
+So what I'd like to do instead is
+
+- make cpu_feature_enabled() work early on
+- replace all global variables that are derived from
+pgtable_l5_enabled() with expressions based on it.
+
+That still means we need to set the capability before populating the
+page tables, but we might be able to do that in a not too nasty way
+from the startup asm code.
+
+Then, if the codegen for those LA57 related expressions sucks, perhaps
+we could look into expanding the runtime const stuff to handle those
+constants. That code looks like it is more suitable for execution from
+the confined early startup code that runs from the 1:1 mapping, and
+conceptually already does what we need.
