@@ -1,25 +1,43 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A23028031F
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 13:10:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746537058; cv=none; b=sYUKBE2aeqAOMZCvG+ealF+PFPdp4Vieck0njaiBWCOyqRPRa2CuQlUf6qLnEGA48TC1PwBSX2XfXYMycIwFgNSBiHNFUTsVF1fHgdNgSzIiCb8tnIZIqe5993XAshF7QmYk0qdQVnwCQ/lQRgTcOlTWU5p28CGi9CQjAmR0HmY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746537058; c=relaxed/simple;
-	bh=zJ2j21fPBxosh7tz0iTcVJuHlQr7NHXr96yA2ifDqJg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AMkcT7+Ib+hsFx8LyHQ8D+cJWCRzMfDZ8ZV61dzacYRKYNxoenywetukbRK4VBIXVc/6SPqOMCa+evfqOsc6Ivyvzkvu9rR2KKVKzFJDk/Vc6gM3jMywP37sEnG8ObapRsEW8Hdd2L9PJw5fH7OYwoeQ4FATHzlLC5msoxjni+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8C48A1007;
-	Tue,  6 May 2025 06:10:45 -0700 (PDT)
-Received: from [10.1.39.190] (e137867.arm.com [10.1.39.190])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 74C083F5A1;
-	Tue,  6 May 2025 06:10:53 -0700 (PDT)
-Message-ID: <0be8e3be-a029-4eea-a79c-310b8e0a05c3@arm.com>
-Date: Tue, 6 May 2025 14:10:46 +0100
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB9DC21773D;
+	Tue,  6 May 2025 13:11:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746537077; cv=pass; b=AXe6Fo3mlXFMaUTgsYNA62DsM/juCMV8ZIYZJrl9zrgegoyrcuRPp8ItS5r/4gf+wer+sOot+xmmzqMGBukA11e2pbpAQrpONfdjnuzsCahY7kT+nPVgEQmv+OGhTFI5j6bMC6ZEX6IX27KCKJBLD5Dz+uHjXFrAfL+vO0SjpYo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746537077; c=relaxed/simple;
+	bh=bqEDUeRg0Z13orMPXIlqQ9MbK2GR9UJRD02DfsPmnL8=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=MQmLEW0zL83IgKK8TN2cgBKnikiFRJrK90CxasCTsQc7AVVRW/kL9CMYtBmNG34bKAM+rykZWpvXb/TUbPv5y3THsmc2N3ERZ1cnzuLdCOUXYg86jUuXFbUa6BBI86PKL0OxmSFfnOiIhKBYC95/bKNnSlrveWeN3mF8UHxa6Xw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b=dJkQeUSi; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b="dJkQeUSi"
+ARC-Seal: i=1; a=rsa-sha256; t=1746537055; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=Mi3wkTw0euUe1uZMnqrVoRQTAXYgJJJpKX+sAdKc+DsIa9D58bptoy+VYTDd0PXgDOyP8xV98/AX/FrMMeFuhd/Kky+4/jkm9g/tkIWUwAnKOfuOPrjGdWHXblqjUTP94ePSAb8itAD6JRgtpEkfiu4sqyMRYV1IctmbHzhFjcE=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1746537055; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=le+RGOEXf+PLjSVW04iEzrbaCc2v/k7AHP12FCt1V0Y=; 
+	b=T0STJ2kuRkK56z6+ILP8yF7R6fyJKSscrn2rQl9bhUWQwaTFxhdws9qzTGcz046IX1WfjQGFwdl9i5p1r/dStlYcq9BMFslV6EMtQmpi+uYGlJ1E9JEzM2gyxrl38lfpo7wi4pUquPRm7FXvVvO9sbETZUT/S6m2pVPBM+Bcl3Q=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=usama.anjum@collabora.com;
+	dmarc=pass header.from=<usama.anjum@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1746537055;
+	s=zohomail; d=collabora.com; i=usama.anjum@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Cc:Cc:Subject:Subject:To:To:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=le+RGOEXf+PLjSVW04iEzrbaCc2v/k7AHP12FCt1V0Y=;
+	b=dJkQeUSiBYBeRg/Hpa4Cz7IPFuwAeLIk1iv2kmqb3DzxaY4ulM12yl4CsYaRqlKy
+	+mFLgkbWqQWWJ5lJOrdMGDDnZMwXoCttV6TMDoxQorJCQ/V+HacA4Uy7nnz87cQWsnC
+	p4YG4fAU6WRQKU/qjbxh0xvkd4pBaLq+KpoS9AO8=
+Received: by mx.zohomail.com with SMTPS id 17465370533315.429619863376274;
+	Tue, 6 May 2025 06:10:53 -0700 (PDT)
+Message-ID: <ec0bb100-4a70-4827-86b1-e4a7e8867a2d@collabora.com>
+Date: Tue, 6 May 2025 18:10:48 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,78 +45,43 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64/debug: Drop redundant DBG_MDSCR_* macros
-To: Anshuman Khandual <anshuman.khandual@arm.com>,
- inux-arm-kernel@lists.infradead.org
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Ada Couprie Diaz <ada.coupriediaz@arm.com>
-References: <20250417105253.3188976-1-anshuman.khandual@arm.com>
-From: Ada Couprie Diaz <ada.coupriediaz@arm.com>
+Cc: usama.anjum@collabora.com, kernel@collabora.com,
+ linux-wireless@vger.kernel.org, ath11k@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5] wifi: ath11k: Fix memory reuse logic
+To: Jeff Johnson <jeff.johnson@oss.qualcomm.com>, quic_bqiang@quicinc.com,
+ Jeff Johnson <jjohnson@kernel.org>
+References: <20250428080242.466901-1-usama.anjum@collabora.com>
+ <f58075f7-f643-4e47-b774-dc529aaa01e5@oss.qualcomm.com>
 Content-Language: en-US
-Organization: Arm Ltd.
-In-Reply-To: <20250417105253.3188976-1-anshuman.khandual@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <f58075f7-f643-4e47-b774-dc529aaa01e5@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 
-Hi Anshuman,
+On 5/6/25 12:17 AM, Jeff Johnson wrote:
+> v2 feedback was not incorporated:
+> For starters, can we make the subject a bit more specific, i.e.
+> Fix MHI target memory reuse logic
+> 
+> But don't repost for this -- I'll make that change in ath/pending
+I'd changed again on the request of another reviewer. Please feel free
+to change as you like. I don't have any opinion on it.
 
-On 17/04/2025 11:52, Anshuman Khandual wrote:
-> MDSCR_EL1 has already been defined in tools sysreg format and hence can be
-> used in all debug monitor related call paths. Subsequently all DBG_MDSCR_*
-> macros become redundant and hence can be dropped off completely. While here
-> convert all variables handling MDSCR_EL1 register as u64 which reflects its
-> true width as well.
->
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
+> 
+> However, does ath12k need the same fix?
+Looking at ath12k, there is similar code structure in
+ath12k_qmi_alloc_chunk(). By adding some logging, we can confirm if
+ath12k requires the fix or not. As a lot of code is similar in both
+drivers, ath12k may require the same fix.
 
-I think the changes make sense, even more so given that `kvm/debug.c` 
-already uses the sysreg format definition for MDSCR_EL1.
+I don't have access to ath12k. So I cannot test on it.
 
-It looks good to me, but I think there is a missing conversion to 64 
-bits below.
-Would it make sense to convert the two instances of MDSCR_EL1 used in 
-`tools/testing/selftests/kvm/arm64/debug-exceptions.c`, in 
-`enable_monitor_debug_exceptions()` and `install_ss()` , to 64 bits as 
-well ? (They don't rely on `DBG_MDSCR_*`, the test defines its own macros)
+> If so, can you post a separate patch for that?
+> 
+> /jeff
 
-> diff --git a/arch/arm64/kernel/entry-common.c b/arch/arm64/kernel/entry-common.c
-> index b260ddc4d3e9..6dbfc1008007 100644
-> --- a/arch/arm64/kernel/entry-common.c
-> +++ b/arch/arm64/kernel/entry-common.c
-> @@ -354,7 +354,7 @@ static void cortex_a76_erratum_1463225_svc_handler(void)
->   
->   	__this_cpu_write(__in_cortex_a76_erratum_1463225_wa, 1);
->   	reg = read_sysreg(mdscr_el1);
-> -	val = reg | DBG_MDSCR_SS | DBG_MDSCR_KDE;
-> +	val = reg | MDSCR_EL1_SS | MDSCR_EL1_KDE;
->   	write_sysreg(val, mdscr_el1);
->   	asm volatile("msr daifclr, #8");
->   	isb();
-
-Given the change of width to 64 bits elsewhere, shouldn't we change val 
-and reg to u64 here as well ?
-
-diff --git a/arch/arm64/kernel/entry-common.c b/arch/arm64/kernel/entry-common.c
-index 73cf6a5f41d8..d61a5ddf53d6 100644
---- a/arch/arm64/kernel/entry-common.c
-+++ b/arch/arm64/kernel/entry-common.c
-@@ -344,7 +344,7 @@ static DEFINE_PER_CPU(int, __in_cortex_a76_erratum_1463225_wa);
-  
-  static void cortex_a76_erratum_1463225_svc_handler(void)
-  {
--	u32 reg, val;
-+	u64 reg, val;
-  
-  	if (!unlikely(test_thread_flag(TIF_SINGLESTEP)))
-  		return;
-
-Thanks,
-Ada
-
+-- 
+Regards,
+Usama
