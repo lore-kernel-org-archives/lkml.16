@@ -1,139 +1,133 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D457277036
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 10:10:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46665201270
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 10:10:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746526239; cv=none; b=U3XBZWc5zgdd79sLPAC+etUHqy2hF8JQFP5BOdv+1QC5HlAtrdA/aBvg1mHwC/4g2U1TJTLQusBzw+jGer6Xpl313XzelWninpXWED/zxLTzddGsgcVRtLo+2cCMzsJZ9osyfqsiUwG85j3ZGOI+5ZuJI6xFqZR9zVH9ilF4l2M=
+	t=1746526257; cv=none; b=XS0RjjS0MWxLO2h2HQte/3ObBNDtP/Bt/XjXxq68cBakwzXFgPrbALvJqqmkk4JHInHxcmgEq5HTLQH0/d4w0L6dxrj8j6+EYhNw8lRcYXaq57N+F0l/rSb+bhbNhGUKEhcLGBqkqTmkZ29qyBnbrYA7e2RSp6YY0YRxWBocQ/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746526239; c=relaxed/simple;
-	bh=/HBE0X80tekKwVpe/I6rSG6afei1xLRG1IopLTv4b90=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
-	 References:In-Reply-To; b=ZSXmBJiRqLw6Hc2HMNX58oNn5pLFQj17Ets/ndKwKRuYyGyVZfuKx0EX5uQdfJWBsDozqdt+i+Zx1oOr4AY6I1GV91dOZHJx3GhuaBLQdjprTftuyX4HFjjt9fTPi/7s098oZKj8chQhC6eKN9y2ectZg1xLTBKYXcQj6hO/Fjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=k3yezd4p; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="k3yezd4p"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3912a28e629so138511f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 03:10:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1746526235; x=1747131035; darn=vger.kernel.org;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MDlCPukG676ZkXDqA7+irYPpUi8ypltoa/WLU7iYTZw=;
-        b=k3yezd4pHOP993DCvnJYvnnrLQ1mQCRimlX6KF3OwLBGIjRxOc3HI5AcNZB8pZhuWj
-         pzuW1eppoxocBCntG/gAypFjNT0c2K33klUSjcfO5TClCnm76dz3JLIX/z5ESFhaprPT
-         nRwfLtrtLlpz8HVBl5tXVu+qSANl+Vudwd5La9yJ9av/tFmsKPxcvsVmai85Yg9S0G2j
-         gBYB/Q3FrSGMB3QfoQs0HpjGJymi73TUlgOsy1VraKjWGcyD6teiRQxVunD8dpEx3FX4
-         iAKFmr0MeOH735cMF502s277NyhW/SvQIBLSEPUkrR6JYMN+955NaiHnc5d/DcCc8Z9d
-         C91w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746526235; x=1747131035;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=MDlCPukG676ZkXDqA7+irYPpUi8ypltoa/WLU7iYTZw=;
-        b=W891BaD5GKpFk3ZPYgl8B81a5CRcg6YHTS6SD6LPZyaljBgnTS0QYhLeganLrFMmod
-         9UzRDr/roshX/vwnBviv6/ODbrGMCilhGZgqScQz1OkJ7u3s0PhH89QXM3CCZJGRz+m1
-         DAcFLgWl7fPwFKvJ7Rz2luWF1jo05GbhX0P2v4e5INLDL00B0xVTb1OI+EA+MeXLdlg/
-         w0gWoNOQG1n4WALgiMFb5m8unQMeppEbQxe9hkUiQbZasKAEw9n21pgRL2hl9oYy5Y/N
-         66pDyGgZia+biWXmutgaOhpHbK2kB72NnIVkPWOm/TrteFS0u5P9xQu72jAjFiLq4vIS
-         KwWA==
-X-Gm-Message-State: AOJu0Yx6KxcMrQZpHZjQHnWUCNJF8TgOMBMHdeznBenOryhyPlW+mjsr
-	yMu4/cae9XjBl+eR99NWDbYz/0IvD60ZxZkLhqyjEUXMPL5FyfmMwzQ2OcY5dQw=
-X-Gm-Gg: ASbGncveDsO1WVYvtkXfeHNU5nLUTsCD4EcvRE77TUhQ/ZV5Zuo//WPBkTmxiI6oor2
-	PJJ9WskKhKto9NveyGof86Jj4rqO5QDaWnXJRh73mPhumSkJITTAOx2nrPQjlKbLoL+ebK1mLiJ
-	YF7Z+hCwqatdO2dAaD9bDoNwYPhsyE7JchvnseA1k5MJtnQshzqJ1fvg4lau26QdVjZ3oVYqHUL
-	42if5dabBAfkIrrihOub88QcZbmTh84ypKu3qUOOfoIWFKcfx3msV/Dvg1T0/QIwopeVXSfSj3U
-	5urThBAhCePr0m69sm1dGxIsxVJVbkHnzpkuVs01Jci9skDg
-X-Google-Smtp-Source: AGHT+IEUjKjGwlmMCjrKZvF7YuhMUsrs5D+dPoN1CPSaPd4oD3QBATAQzTQqUOqU1bgynoQlRYwsyA==
-X-Received: by 2002:a05:6000:144a:b0:3a0:9f28:2e53 with SMTP id ffacd0b85a97d-3a09f282ec4mr3244079f8f.0.1746526235363;
-        Tue, 06 May 2025 03:10:35 -0700 (PDT)
-Received: from localhost ([2a02:8308:a00c:e200:d5f0:7802:c94b:10f6])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b89cc441sm166448565e9.3.2025.05.06.03.10.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 03:10:35 -0700 (PDT)
+	s=arc-20240116; t=1746526257; c=relaxed/simple;
+	bh=ngpPPqPmSUtxwjz/4sB2Ojab/DbrjWjgZ9X6H9z1WTc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IMdhE/ZprXe+70gnl7By0BBzsNeGLC53K85L05THYiXaEi2Y81JXe66wQRR8ikFzz+oa5cC+3DiTStK39sKxS+xabz0QdtLz5J0Nx3Q1HXwYUudf6BFv2Gs/WD2u2V2q79X5k7DMM1lO9x5TuP1+Lq0LzHANNLqmur7JXjXUwDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AC3C8113E;
+	Tue,  6 May 2025 03:10:44 -0700 (PDT)
+Received: from [10.163.53.181] (unknown [10.163.53.181])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DBDCC3F5A1;
+	Tue,  6 May 2025 03:10:44 -0700 (PDT)
+Message-ID: <e430344b-76b9-43be-b497-0152a8910faf@arm.com>
+Date: Tue, 6 May 2025 15:40:32 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] mm: Optimize mremap() by PTE batching
+To: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org
+Cc: Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, vbabka@suse.cz,
+ jannh@google.com, pfalcato@suse.de, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, david@redhat.com, peterx@redhat.com,
+ ryan.roberts@arm.com, mingo@kernel.org, libang.li@antgroup.com,
+ maobibo@loongson.cn, zhengqi.arch@bytedance.com, baohua@kernel.org,
+ willy@infradead.org, ioworker0@gmail.com, yang@os.amperecomputing.com
+References: <20250506050056.59250-1-dev.jain@arm.com>
+ <20250506050056.59250-4-dev.jain@arm.com>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20250506050056.59250-4-dev.jain@arm.com>
 Content-Type: text/plain; charset=UTF-8
-Date: Tue, 06 May 2025 12:10:34 +0200
-Message-Id: <D9OZVNOGLU4T.2XOUPX27HN0W8@ventanamicro.com>
-Subject: Re: [PATCH v15 05/27] riscv: usercfi state for task and
- save/restore of CSR_SSP on trap entry/exit
-Cc: <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
- <linux-mm@kvack.org>, <linux-riscv@lists.infradead.org>,
- <devicetree@vger.kernel.org>, <linux-arch@vger.kernel.org>,
- <linux-doc@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
- <alistair.francis@wdc.com>, <richard.henderson@linaro.org>,
- <jim.shu@sifive.com>, <andybnac@gmail.com>, <kito.cheng@sifive.com>,
- <charlie@rivosinc.com>, <atishp@rivosinc.com>, <evan@rivosinc.com>,
- <cleger@rivosinc.com>, <alexghiti@rivosinc.com>, <samitolvanen@google.com>,
- <broonie@kernel.org>, <rick.p.edgecombe@intel.com>,
- <rust-for-linux@vger.kernel.org>, "Zong Li" <zong.li@sifive.com>,
- "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-To: "Deepak Gupta" <debug@rivosinc.com>, "Thomas Gleixner"
- <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov"
- <bp@alien8.de>, "Dave Hansen" <dave.hansen@linux.intel.com>,
- <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, "Andrew Morton"
- <akpm@linux-foundation.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- "Vlastimil Babka" <vbabka@suse.cz>, "Lorenzo Stoakes"
- <lorenzo.stoakes@oracle.com>, "Paul Walmsley" <paul.walmsley@sifive.com>,
- "Palmer Dabbelt" <palmer@dabbelt.com>, "Albert Ou" <aou@eecs.berkeley.edu>,
- "Conor Dooley" <conor@kernel.org>, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Arnd Bergmann"
- <arnd@arndb.de>, "Christian Brauner" <brauner@kernel.org>, "Peter Zijlstra"
- <peterz@infradead.org>, "Oleg Nesterov" <oleg@redhat.com>, "Eric Biederman"
- <ebiederm@xmission.com>, "Kees Cook" <kees@kernel.org>, "Jonathan Corbet"
- <corbet@lwn.net>, "Shuah Khan" <shuah@kernel.org>, "Jann Horn"
- <jannh@google.com>, "Conor Dooley" <conor+dt@kernel.org>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
- <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
- <benno.lossin@proton.me>, "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>
-From: =?utf-8?q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
-References: <20250502-v5_user_cfi_series-v15-0-914966471885@rivosinc.com>
- <20250502-v5_user_cfi_series-v15-5-914966471885@rivosinc.com>
-In-Reply-To: <20250502-v5_user_cfi_series-v15-5-914966471885@rivosinc.com>
+Content-Transfer-Encoding: 7bit
 
-[Ah, I missed v13 and v14, feel free to Cc me on next versions.]
-
-2025-05-02T16:30:36-07:00, Deepak Gupta <debug@rivosinc.com>:
-> diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
-> @@ -91,6 +91,32 @@
-> +.macro save_userssp tmp, status
-> +	ALTERNATIVE("nops(4)",
-> +		__stringify(				\
-> +		andi \tmp, \status, SR_SPP;		\
-> +		bnez \tmp, skip_ssp_save;		\
-> +		csrrw \tmp, CSR_SSP, x0;		\
-> +		REG_S \tmp, TASK_TI_USER_SSP(tp);	\
-> +		skip_ssp_save:),
-> +		0,
-> +		RISCV_ISA_EXT_ZICFISS,
-> +		CONFIG_RISCV_USER_CFI)
-> +.endm
+On 5/6/25 10:30, Dev Jain wrote:
+> Use folio_pte_batch() to optimize move_ptes(). Use get_and_clear_full_ptes()
+> so as to elide TLBIs on each contig block, which was previously done by
+> ptep_get_and_clear().
+> 
+> Signed-off-by: Dev Jain <dev.jain@arm.com>
+> ---
+>  mm/mremap.c | 24 +++++++++++++++++++-----
+>  1 file changed, 19 insertions(+), 5 deletions(-)
+> 
+> diff --git a/mm/mremap.c b/mm/mremap.c
+> index 1a08a7c3b92f..3621c07d8eea 100644
+> --- a/mm/mremap.c
+> +++ b/mm/mremap.c
+> @@ -176,7 +176,7 @@ static int move_ptes(struct pagetable_move_control *pmc,
+>  	struct vm_area_struct *vma = pmc->old;
+>  	bool need_clear_uffd_wp = vma_has_uffd_without_event_remap(vma);
+>  	struct mm_struct *mm = vma->vm_mm;
+> -	pte_t *old_ptep, *new_ptep, pte;
+> +	pte_t *old_ptep, *new_ptep, old_pte, pte;
+>  	pmd_t dummy_pmdval;
+>  	spinlock_t *old_ptl, *new_ptl;
+>  	bool force_flush = false;
+> @@ -185,6 +185,7 @@ static int move_ptes(struct pagetable_move_control *pmc,
+>  	unsigned long old_end = old_addr + extent;
+>  	unsigned long len = old_end - old_addr;
+>  	int err = 0;
+> +	int nr;
+>  
+>  	/*
+>  	 * When need_rmap_locks is true, we take the i_mmap_rwsem and anon_vma
+> @@ -237,10 +238,14 @@ static int move_ptes(struct pagetable_move_control *pmc,
+>  
+>  	for (; old_addr < old_end; old_ptep++, old_addr += PAGE_SIZE,
+>  				   new_ptep++, new_addr += PAGE_SIZE) {
+> -		if (pte_none(ptep_get(old_ptep)))
+> +		const fpb_t fpb_flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
+> +		int max_nr = (old_end - old_addr) >> PAGE_SHIFT;
 > +
-> +.macro restore_userssp tmp
-> +	ALTERNATIVE("nops(2)",
-> +		__stringify(				\
-> +		REG_L \tmp, TASK_TI_USER_SSP(tp);	\
-> +		csrw CSR_SSP, \tmp),
-> +		0,
-> +		RISCV_ISA_EXT_ZICFISS,
-> +		CONFIG_RISCV_USER_CFI)
-> +.endm
+> +		nr = 1;
+> +		old_pte = ptep_get(old_ptep);
+> +		if (pte_none(old_pte))
+>  			continue;
+>  
+> -		pte = ptep_get_and_clear(mm, old_addr, old_ptep);
+>  		/*
+>  		 * If we are remapping a valid PTE, make sure
+>  		 * to flush TLB before we drop the PTL for the
+> @@ -252,8 +257,17 @@ static int move_ptes(struct pagetable_move_control *pmc,
+>  		 * the TLB entry for the old mapping has been
+>  		 * flushed.
+>  		 */
+> -		if (pte_present(pte))
+> +		if (pte_present(old_pte)) {
+> +			if ((max_nr != 1) && maybe_contiguous_pte_pfns(old_ptep, old_pte)) {
 
-Do we need to emit the nops when CONFIG_RISCV_USER_CFI isn't selected?
+maybe_contiguous_pte_pfns() cost will be applicable for memory
+areas greater than a single PAGE_SIZE (i.e max_nr != 1) ? This
+helper extracts an additional consecutive pte, ensures that it
+is valid mapped and extracts pfn before comparing for the span.
 
-(Why not put #ifdef CONFIG_RISCV_USER_CFI around the ALTERNATIVES?)
+There is some cost associated with the above code sequence which
+looks justified for sequential access of memory buffers that has
+consecutive physical memory backing. But what happens when such
+buffers are less probable, will those buffers take a performance
+hit for all the comparisons that just turn out to be negative ?
 
-Thanks.
+> +				struct folio *folio = vm_normal_folio(vma, old_addr, old_pte);
+> +
+> +				if (folio && folio_test_large(folio))
+> +					nr = folio_pte_batch(folio, old_addr, old_ptep,
+> +					old_pte, max_nr, fpb_flags, NULL, NULL, NULL);
+> +			}
+>  			force_flush = true;
+> +		}
+> +		pte = get_and_clear_full_ptes(mm, old_addr, old_ptep, nr, 0);
+>  		pte = move_pte(pte, old_addr, new_addr);
+>  		pte = move_soft_dirty_pte(pte);
+>  
+> @@ -266,7 +280,7 @@ static int move_ptes(struct pagetable_move_control *pmc,
+>  				else if (is_swap_pte(pte))
+>  					pte = pte_swp_clear_uffd_wp(pte);
+>  			}
+> -			set_pte_at(mm, new_addr, new_ptep, pte);
+> +			set_ptes(mm, new_addr, new_ptep, pte, nr);
+>  		}
+>  	}
+>  
