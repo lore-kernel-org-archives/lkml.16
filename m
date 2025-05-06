@@ -1,129 +1,108 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9908A280A5F
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 14:42:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E22EE270EA1;
+	Tue,  6 May 2025 14:44:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746542557; cv=none; b=HuhO+43Wm13Ckckpagu5UKlsHiR8NlK1/WywdTX6m6nYiC6+rNGvnY2h2zRCHv2MA6tpkcWKQndSzt8zO1cmvVCG9cHTgmlQsFzdQgam86spF9XosuO/kx3UIFQgnqCWEC/YvedspPzQbP3Ct8arWeHLtwPkXQELCLCeqPv1haI=
+	t=1746542647; cv=none; b=ELzPa1jvbhk43czkTOLoagZuA7LKIFS6PApVY4QIOEtqT35+tz7MajJVZfgD8NFVnDkZrpwNvFkeVByH9nhgSeWaShTqxxyu5dHzwmVTj6w9Ot/MEB5ZxqJ/CX0J79sLws3AZffHmih5ks9MuC5bULp/ZupsEe3ktqzuSj0zTbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746542557; c=relaxed/simple;
-	bh=NVuxPtmNgFRLLO/QEEuCdsEnIPhYSYgqnwTKkSkHlB8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=W8Z+3D0qD+/4hSDgBYkBSd6xwzavWPeIr3WdQTmBYWUjYzDCKOCHQLje69RSksZ91kSn/v9+lNXBaOgyHRVFzbOFSPJXn+QvwndFb+sAcRZQmx0o+dRaPTbkv8Oyx0F5YCx/fkfrWaD4AlAUkc1weAga/A1LBW9CMDK7Qjt+K2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=jm+aKk81; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1746542647; c=relaxed/simple;
+	bh=3QfXSnc5w8R7jrH8OugG82kWJ+PxgyWUlsLE3oZD9XI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lWqMeb1Y9IKuw7vQMsW8FHXoB+JdZUKiTYRT2WUTJmB1vdy9apBVUdrj3x3AVwha+PrFxEY8Y8YqySvvSaZxiqKKWjEJE9rM+iCIk+PIiTSW79vgusjLAi1QPZFzv91JAGKxWGP/OmceV+Ckv+68MEruRlj8wBFS653Se8A9jZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GcQmmg8c; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="jm+aKk81"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5468njdp007590
-	for <linux-kernel@vger.kernel.org>; Tue, 6 May 2025 14:42:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	3VjgACMnGXxy3UlT5YxgJrb2cSeHYPLeC1Xee4gzTH8=; b=jm+aKk81D9yzSpwd
-	P+4aDZBe+cSFF1NF3Zx7gJM3FR6Cs9rjarzoTcGmjaRWYStMzUTYIoKnj2kmTZHs
-	vV+R0te18Pw37vbGoYoHP2SmAN9WXe82s+aFqL8mc1y9phhTfl2hBXUMTBWvNxyl
-	/aqwGbxEay0HI/BLPNYR5bB6YD0joIQV0FInFDwBaCBpolrEiWaSnqKqiRcVaigI
-	xfi9WCxzltMntgZcZyWo6dYBroSVeKkEaWnBR5HLvK4wPc3MsPyREHBUIgm9i3Qs
-	Cb3iD6WeBuAvPJpFbza3Svk5/+dHS0u/UtyS2rfMeTd0sPNf22hU9/kvbXob7pYD
-	EzVgTw==
-Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com [209.85.210.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46f5wg2jxs-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 14:42:34 +0000 (GMT)
-Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-7395095a505so3958414b3a.1
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 07:42:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GcQmmg8c"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a0adcc3e54so472700f8f.1;
+        Tue, 06 May 2025 07:44:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746542644; x=1747147444; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Kgv2Oz6iPtMbJz2CTRkx8b47IVM/KLpXEmF8ocTs9kc=;
+        b=GcQmmg8c3imgKQKYsW0Vk5g/NoxyzB95h1HJR9sleHqgGJA+2mDR4+hNYV4tsm1+UK
+         fqamAjHcUa7YtZh2z1ssMATUaYa+LDp9Zzex+6FTR08RinZ0VJrBttkZ/2z3lWgeX5Ed
+         DzR9t/BjZqbXyUIftzE6kCdVn2f/1DL37pcT9nHXKl/bcV1oUauOFGoPaLU51wvNnxwo
+         yMeKIBTzoUXfN5mg1TlSYtlbAiKDY3dUnDqL47j7r9SdLFfjcJOspP4GWfKvIYuhE9wd
+         +23yF1eKqAdaL4nBHhxK4zBzBltgwRLX16Be+VOoxS3CcAMY5Njhu4jvUhbK4Q6X4zwc
+         +QeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746542553; x=1747147353;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3VjgACMnGXxy3UlT5YxgJrb2cSeHYPLeC1Xee4gzTH8=;
-        b=kjgrZB3CMZ7Bfd8pCckpUaS6TCm+Yz0kQtQL0SgZWsdMiPa5afXMiuM2XXRfi7AOKH
-         zLvqqzwrDwkL9zesR4opd0F2XlR9uVvuWrOzkQF4x+aCOuIAUVQvvqjwENC7kjy5oQ2y
-         kHvlMzfUu2frCMbWqj29e+WUuyLE+U0jfN7AwHR/BPUlOQB50GomajncnWLcTUEeozs0
-         fRuWrjwp0xw4rO4HTCngeT7AI27NfxQ5F55phevdHOO1Kwg79UZUIHcdWE4USSRb7VAj
-         2fi6omUsNMt4duspaBGZ8Mnrni/9GoJDo1i56cDuuvJx2pArHrRytulSwC8q9vUCnIcv
-         a/2g==
-X-Forwarded-Encrypted: i=1; AJvYcCXtNL8avOOsknO6KfX7BQ7D4VWVZM+S4IGCMGkiK/BB6OniCa+Srqu9kMZQzNAmVKXP6RvHjbMChwLrOCQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1R+TuWs8TaeL3IY2Pu52vfvvFvwiMjvVCUGcS2C7lcQLkNjx6
-	8bpSDiz6iG4n1UvWN4ICebA/Qb1rq6Nfcu0JGtXKwO7Nm8Z99xCjK7Yj3U/a7rT9lJRZyKLvyIM
-	fQZ6m6C85nK5PqLEoFOdrI8YCaXc59G6I2whOYeqc5O1heEM+oJQwVWuTDu2sRtM=
-X-Gm-Gg: ASbGncs3/tDQyBIVosJTo6cJ97nMHewnyUWL/7AEYqGW2dd8ql6v5N4sVDXKgk5v7hL
-	YsaTAvkriXJeneLV2424ci/SBZlRmE/3hNcjjoXgjdC1jlkys9K3b3mC7gjmmXo+hEZX0y9Hya+
-	knoJv++0HyuODjfKQeSIOK4itdS9NubBl0Rwk2B0YEqT481Fzere5Ll1v6b+zQETIKxa/OPryEL
-	67rh0G7gCjhvlQ7BT/aX8R6U27QeWR/UTOqAifTMnyiBjlzdfFe8bqmb0msNd9yMy52Qlchjfgo
-	J9RNa1+z2rsnTnS5Ii5rSWKE9IE4xdLf/8Zkyvv9JJajxDY36fZNQ0ml3StlLLm3vKs=
-X-Received: by 2002:a05:6a00:2a07:b0:740:6615:33c7 with SMTP id d2e1a72fcca58-74091a937b2mr4842335b3a.23.1746542553023;
-        Tue, 06 May 2025 07:42:33 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGENE7YHnc3ggGxLX9mbaGNGvNws07uOv9xUg5kw47zlhrUsZlSNkxEzxWCz8ioV3P51rTswQ==
-X-Received: by 2002:a05:6a00:2a07:b0:740:6615:33c7 with SMTP id d2e1a72fcca58-74091a937b2mr4842304b3a.23.1746542552655;
-        Tue, 06 May 2025 07:42:32 -0700 (PDT)
-Received: from [10.227.110.203] (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74058dedcc4sm8989298b3a.79.2025.05.06.07.42.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 06 May 2025 07:42:32 -0700 (PDT)
-Message-ID: <2b85ccce-70c5-44c2-b598-d148358843c8@oss.qualcomm.com>
-Date: Tue, 6 May 2025 07:42:31 -0700
+        d=1e100.net; s=20230601; t=1746542644; x=1747147444;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Kgv2Oz6iPtMbJz2CTRkx8b47IVM/KLpXEmF8ocTs9kc=;
+        b=dRaI4mjJ/gSiM8CGdH/CIT/YXCG/18jy5g9ZFhhwn169XD31n4Y+Kle90rX4lfKHTj
+         JGrUGlTlM3bUSVm1CoGXpGp15ZnHgS4u7jiDq/UTnposRa9ZE8LUpx8yWi1/RwOo1yRC
+         saVGL1B6dBdk6m9wNcYssz/hQewbBZAsHOMW2Rer6Vv7MhZV3DncKH25ggoCJFAO7G2B
+         Ykvup5+tLbEQoHS+l7lDiRftseQpqMZVNONMPvz+FbAF89FIAqp8cJpDhzvdq4C5LDJY
+         pAZxL8h5TLH1l1pmWgF34MrLawOqa474sp9p+rfUMFPrm4hGcYUIv8PgV3/ai5JdgdFQ
+         nbrA==
+X-Forwarded-Encrypted: i=1; AJvYcCU0DcMcgLsqIhkuIqvHh8yDy8rZ5O5tePbnOIOR6cMxMh4wp9IpD0tTXVv9tOUUvMcmjZUbrMitK/cJGeXA@vger.kernel.org, AJvYcCWb4HCiZLmZz0TELzjM51KoQWOEw+dYTCaSaflQkabT1zD3jJ8u6BUbSAOHBN5xm6ZFVVlPe60YPDCymfDX@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywcqh33TR35+BhIULW9uWcXWNv6nEYTrBPgIJjXGCTXBVGnxq7r
+	Rb99xdJU2AeyswVx5TcOyeCt4pD6o+MeCnmViMlmIyACmUz+CsceQej/yw==
+X-Gm-Gg: ASbGncuYy721Hy1+5avY8Ni0VqGD1LXbVzPm9AbBBuWDWz1aeZ4wfz+EMP3mDR+Tzv1
+	eYm2gEd/Fl4RvEJT3znH+OKlCK6uIuKLLxmRZ31zNL+M1d0iTiYE3tz8CURQhWkVRDanBtcLDjA
+	VxNr4jNCwvJqiJGKcmwSltbsioIPXVfuUzSOda637fjn+qFVCzeYnfVwsyV3Vjl2ERPRmAUUZeF
+	4cPeGrRmkWTPJn3KP3j32xXFhk+63oOvOBFSVxjGTjddlSbJzyCK+NDYDi2OAY/y4/vjFq8hEEy
+	ceqbSfJae2nWn5YE9B/E0ZMMSmrboctrJN4/cYUWIyCh2rBix8M=
+X-Google-Smtp-Source: AGHT+IHbMZ5DozORsI2hRq+KWiNqDXAo9wLcIv2syQJ6WB+ScvWPPTo+aWIn/YhouYmVnEXqo73U8Q==
+X-Received: by 2002:a05:6000:1785:b0:39c:1f11:ead with SMTP id ffacd0b85a97d-3a09fd87a2cmr7930671f8f.26.1746542643823;
+        Tue, 06 May 2025 07:44:03 -0700 (PDT)
+Received: from f (cst-prg-3-11.cust.vodafone.cz. [46.135.3.11])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099b178absm14124554f8f.97.2025.05.06.07.44.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 May 2025 07:44:03 -0700 (PDT)
+Date: Tue, 6 May 2025 16:43:56 +0200
+From: Mateusz Guzik <mjguzik@gmail.com>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pidfs: detect refcount bugs
+Message-ID: <bsap2vh4o7h3c5kwmtbgrcjuzldic2m33tlierxx6eqxz7uuqy@p3v3ipakqv3y>
+References: <20250506-uferbereich-guttun-7c8b1a0a431f@brauner>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5] wifi: ath11k: Fix memory reuse logic
-To: Baochen Qiang <quic_bqiang@quicinc.com>,
-        Muhammad Usama Anjum <usama.anjum@collabora.com>,
-        Jeff Johnson <jjohnson@kernel.org>
-Cc: kernel@collabora.com, linux-wireless@vger.kernel.org,
-        ath11k@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250428080242.466901-1-usama.anjum@collabora.com>
- <f58075f7-f643-4e47-b774-dc529aaa01e5@oss.qualcomm.com>
- <3732e542-5b8c-4351-8e41-f9f0cdeb4643@quicinc.com>
-From: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-Content-Language: en-US
-In-Reply-To: <3732e542-5b8c-4351-8e41-f9f0cdeb4643@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: doBeIMO5iZSswjhdcvNAAipwWQb-qa21
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA2MDE0MSBTYWx0ZWRfX33gzyYXKX4Lq
- O0JslpV8UF7vPIds/5lP8OxKghSTVE+9pbZYaMUz3mvZQkQq+tZRXkLt9qaHD6Kj4V/5OATnsK0
- TPScT2SJQCcoQWJ8pVeqhm/97dx/Ki5UQbPM14NG1i97OxOwrehEA3opnjII0wjXe5y+eta2hNH
- ZOqKS9X4mzC6QckEQKijpA8w12Q5saTN1Qcel254TOCxHoKlr73U/M+nOlALeDvSnMiJKDO0HhY
- jGzV9f7pT5lxaQRvidSyP1uV5teXk11Unt0f8Bxl9FNENl2axyUZKGepcNvlwhkY8CFQSX2iRSp
- l7lU2mN/CruwgSJB1mKmjccxHbhmHj6wkADw6lxvQxrSN6dEK3VLijsasn4nyy/SRucOzRXYaYz
- BS0ROoRsweGgnhRG8N1XAb1lhsNZzv/ARHIwCgEz/AJeZx9sa5BYr1j/GYUVihnW/C82jPhN
-X-Authority-Analysis: v=2.4 cv=dPemmPZb c=1 sm=1 tr=0 ts=681a1fda cx=c_pps
- a=mDZGXZTwRPZaeRUbqKGCBw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=X3YIGVxls8OrOZudXCwA:9
- a=QEXdDO2ut3YA:10 a=zc0IvFSfCIW2DFIPzwfm:22
-X-Proofpoint-GUID: doBeIMO5iZSswjhdcvNAAipwWQb-qa21
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-06_06,2025-05-05_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 adultscore=0 mlxlogscore=999 priorityscore=1501 impostorscore=0
- suspectscore=0 lowpriorityscore=0 bulkscore=0 spamscore=0 malwarescore=0
- mlxscore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505060141
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250506-uferbereich-guttun-7c8b1a0a431f@brauner>
 
-On 5/5/2025 11:43 PM, Baochen Qiang wrote:
+On Tue, May 06, 2025 at 01:55:54PM +0200, Christian Brauner wrote:
+> Now that we have pidfs_{get,register}_pid() that needs to be paired with
+> pidfs_put_pid() it's possible that someone pairs them with put_pid().
+> Thus freeing struct pid while it's still used by pidfs. Notice when that
+> happens. I'll also add a scheme to detect invalid uses of
+> pidfs_get_pid() and pidfs_put_pid() later.
 > 
+> Signed-off-by: Christian Brauner <brauner@kernel.org>
+> ---
+>  kernel/pid.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> On 5/6/2025 3:17 AM, Jeff Johnson wrote:
->> v2 feedback was not incorporated:
->> For starters, can we make the subject a bit more specific, i.e.
->> Fix MHI target memory reuse logic
->>
+> diff --git a/kernel/pid.c b/kernel/pid.c
+> index 26f1e136f017..8317bcbc7cf7 100644
+> --- a/kernel/pid.c
+> +++ b/kernel/pid.c
+> @@ -100,6 +100,7 @@ void put_pid(struct pid *pid)
+>  
+>  	ns = pid->numbers[pid->level].ns;
+>  	if (refcount_dec_and_test(&pid->count)) {
+> +		WARN_ON_ONCE(pid->stashed);
+>  		kmem_cache_free(ns->pid_cachep, pid);
+>  		put_pid_ns(ns);
+>  	}
+> -- 
+> 2.47.2
 > 
-> Ideally I prefer below subject
-> 
-> wifi: ath12k: Fix QMI target memory reuse logic
 
-Done:
-https://git.kernel.org/pub/scm/linux/kernel/git/ath/ath.git/commit/?h=pending&id=ec570013de60b8b0bfa3cafd516ba323e6e29a8d
+With the patch as proposed you are only catching the misuse if this is
+the last ref though.
 
+iow, the check should be hoisted above unrefing?
