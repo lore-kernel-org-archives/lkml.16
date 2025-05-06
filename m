@@ -1,25 +1,31 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15490262FD3;
-	Tue,  6 May 2025 10:05:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mailgate02.uberspace.is (mailgate02.uberspace.is [185.26.156.114])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A8B9262FD3
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 10:05:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.26.156.114
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746525940; cv=none; b=ewuSQ0GrW7Lmfcpj/KFJ6nAM5Uyib9KiiXZjBPIbie35FRPAngzg7yNuNp10+5Zj1q/ZPOIvNpbL+6kJCYQtmWXM/EI1rg0LoNcMMpipFHKuqPG7YahnvV3Xpx0rLPbhsT+lksw68ptal8+9xnP2QoixZ2qnyjgWQbmNdLYtFcQ=
+	t=1746525951; cv=none; b=hRp5NTL/2UPdWuRdGqwcG4i4VlU4HJY9UGXLqw0eadxKLDEK2Ett3FAiL1BUmCujf+WWIoViJd12GK01iFyGPatnfTmU1hpEA67lD2rglxJvnwexMOQRpe6yBhxbwxysxnWbv2RGAB7WD9ld6q3NWxMWMt5U1esIhnZV/D7tfUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746525940; c=relaxed/simple;
-	bh=cO+ESA8xlpPTuXuVM1MtTA6UZ8uvRadu715Dnt4GB7o=;
+	s=arc-20240116; t=1746525951; c=relaxed/simple;
+	bh=BwhNMp0UKnG882cpIKMkCxp3AB6dxSGE8tTxzzwppPY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dwDRZi4hXFskrvz06PZHgPud2yNtUwSQ9In820nIhOS+VlWVFCjbRFP/dkR412iaQihAAIyfL0jfVOLUfXWJeCEchB6USw/EMaGn9g36WDBrjbhV7MQdVW7VMaWWLxW2tHtgyMovpU1469NgkelkwVkL8zG8fr3+Re5t2DI3pgA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B1D0B113E;
-	Tue,  6 May 2025 03:05:28 -0700 (PDT)
-Received: from [10.57.93.118] (unknown [10.57.93.118])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 158083F5A1;
-	Tue,  6 May 2025 03:05:35 -0700 (PDT)
-Message-ID: <2a90ec6c-1725-4c32-8819-c46e8c0e4630@arm.com>
-Date: Tue, 6 May 2025 11:05:34 +0100
+	 In-Reply-To:Content-Type; b=IVe9UpkVxcVOZZr/9EXZljXDL14xVCH3GL8WBjk1xwSY12Ss6bkmps5AuvhPk+wBdWxH9iXLusx18sLU2j7LkgQnShJZ2ufCd370rKpAfk+lWbOSciiaIRUMwNfe50xuRdP3WPA/zs/8OA8JbqNRXNVPUEX/ugQM6jjKSSCePOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=david-bauer.net; spf=pass smtp.mailfrom=david-bauer.net; dkim=pass (4096-bit key) header.d=david-bauer.net header.i=@david-bauer.net header.b=Ydn5wlgH; arc=none smtp.client-ip=185.26.156.114
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=david-bauer.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=david-bauer.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (4096-bit key) header.d=david-bauer.net header.i=@david-bauer.net header.b="Ydn5wlgH"
+Received: from perseus.uberspace.de (perseus.uberspace.de [95.143.172.134])
+	by mailgate02.uberspace.is (Postfix) with ESMTPS id A30A317FEA3
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 12:05:44 +0200 (CEST)
+Received: (qmail 10419 invoked by uid 988); 6 May 2025 10:05:44 -0000
+Authentication-Results: perseus.uberspace.de;
+	auth=pass (plain)
+Received: from unknown (HELO unkown) (::1)
+	by perseus.uberspace.de (Haraka/3.0.1) with ESMTPSA; Tue, 06 May 2025 12:05:44 +0200
+Message-ID: <8c9e5e74-966b-4969-9776-7655863fd197@david-bauer.net>
+Date: Tue, 6 May 2025 12:05:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,102 +33,258 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v4 0/5] Readahead tweaks for larger folios
-Content-Language: en-GB
-To: Andrew Morton <akpm@linux-foundation.org>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- David Hildenbrand <david@redhat.com>, Dave Chinner <david@fromorbit.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Kalesh Singh <kaleshsingh@google.com>, Zi Yan <ziy@nvidia.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
-References: <20250430145920.3748738-1-ryan.roberts@arm.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <20250430145920.3748738-1-ryan.roberts@arm.com>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH 1/2] dt-bindings: input: add Semtech SX951x binding
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250505203847.86714-1-mail@david-bauer.net>
+ <cbf42385-9803-4bea-bf99-a6f31f1454f6@linaro.org>
+Content-Language: en-US
+From: David Bauer <mail@david-bauer.net>
+Autocrypt: addr=mail@david-bauer.net; keydata=
+ xjMEZgynMBYJKwYBBAHaRw8BAQdA+32xE63/l6uaRAU+fPDToCtlZtYJhzI/dt3I6VxixXnN
+ IkRhdmlkIEJhdWVyIDxtYWlsQGRhdmlkLWJhdWVyLm5ldD7CjwQTFggANxYhBLPGu7DmE/84
+ Uyu0uW0x5c9UngunBQJmDKcwBQkFo5qAAhsDBAsJCAcFFQgJCgsFFgIDAQAACgkQbTHlz1Se
+ C6eKAwEA8B6TGkUMw8X7Kv3JdBIoDqJG9+fZuuwlmFsRrdyDyHkBAPtLydDdancCVWNucImJ
+ GSk+M80qzgemqIBjFXW0CZYPzjgEZgynMBIKKwYBBAGXVQEFAQEHQPIm0qo7519c7VUOTAUD
+ 4OR6mZJXFJDJBprBfnXZUlY4AwEIB8J+BBgWCAAmFiEEs8a7sOYT/zhTK7S5bTHlz1SeC6cF
+ AmYMpzAFCQWjmoACGwwACgkQbTHlz1SeC6fP2AD8CduoErEo6JePUdZXwZ1e58+lAeXOLLvC
+ 2kj1OiLjqK4BANoZuHf/ku8ARYjUdIEgfgOzMX/OdYvn0HiaoEfMg7oB
+In-Reply-To: <cbf42385-9803-4bea-bf99-a6f31f1454f6@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Rspamd-Bar: ---
+X-Rspamd-Report: BAYES_HAM(-3) XM_UA_NO_VERSION(0.01) MIME_GOOD(-0.1)
+X-Rspamd-Score: -3.09
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=david-bauer.net; s=uberspace;
+	h=from:to:cc:subject:date;
+	bh=BwhNMp0UKnG882cpIKMkCxp3AB6dxSGE8tTxzzwppPY=;
+	b=Ydn5wlgHz9wy9nIQG9lu+5dKh6m5Pgvhcu3UGrxIMMnwOiVUu7N3UIpgo72D5NqdwbEeO4C+gm
+	evJKo+SYUWl2K/vb0BURikzVbeyUjYIRq8YkNElCX40RMW5PVTM098RcU0j5Jos1tY5+J/2er/LF
+	sMDGW+jVwxMDTkU7kOu54mB+rWcCB/5je5RaNa0oOxiJOm+rNp2Yb1RCYOg62+Vo+4vCUC3xthJO
+	3UyBNyfv6hewu1+w1nnozKhrxWa6DtV059NAW7CTrLq0K6J6EqLyJj/DXzPr5LHNKM4S1bWJAjj7
+	td6NiCrR3/rZYgWdeDWgoXi0fogI6wiHJAPlEefSdEIF/xV3xfUWxbHhfz12cLqqMaU2GMfCAZJN
+	n0z7N2pnZeOJKqM4pfDk3hm/Sp5H/jvvhq5t3LfW+LfGk0o5oq9RP1bw3X7mZ9FhQS1HyleebMlL
+	ZEPkTS7VFx9rSioj+j0chbq9zL9ohe42uHVDD1cUQRVfNwyZ+uE2exv6pWZ0AC2Guqi5khyoQmrZ
+	q/zI+kRlMYYzOheNkGkKQI4hVmAuzbHov/cPRdo8DyIUMYHig1LA7c18hmH5lgZTDHHx7uWUDU3m
+	jw8nVb/1go8SX9/XDgY3M9dloAps0TBde8jyALJnWY6c58aGT4TORCZI9YDvci2I90Gc8MKqt7V2
+	c=
 
-On 30/04/2025 15:59, Ryan Roberts wrote:
-> Hi All,
-> 
-> This RFC series adds some tweaks to readahead so that it does a better job of
-> ramping up folio sizes as readahead extends further into the file. And it
-> additionally special-cases executable mappings to allow the arch to request a
-> preferred folio size for text.
-> 
-> Previous versions of the series focussed on the latter part only (large folios
-> for text). See [3]. But after discussion with Matthew Wilcox last week, we
-> decided that we should really be fixing some of the unintended behaviours in how
-> a folio size is selected in general before special-casing for text. As a result
-> patches 1-4 make folio size selection behave more sanely, then patch 5
-> introduces large folios for text. Patch 5 depends on patch 1, but does not
-> depend on patches 2-4.
-> 
-> ---
-> 
-> I'm leaving this marked as RFC for now as I intend to do more testing, and
-> haven't yet updated the benchmark results in patch 5 (although I expect them to
-> be similar).
+Hi Krzysztof,
 
-Thanks Jan, David and Anshuman for the reviews! I'll do the suggested changes
-and complete my testing, then aim to post again against -rc1, to hopefully get
-it into linux-next.
+thanks for the review.
 
-Thanks,
-Ryan
+On 5/6/25 08:21, Krzysztof Kozlowski wrote:
+> On 05/05/2025 22:38, David Bauer wrote:
+>> Add device-tree binding for the Semtech SX9512/SX9513 family of touch
+>> controllers with integrated LED driver.
+>>
+>> Signed-off-by: David Bauer <mail@david-bauer.net>
+> 
+> You CC-ed an address, which suggests you do not work on mainline kernel
+> or you do not use get_maintainers.pl/b4/patman. Please rebase and always
+> work on mainline or start using mentioned tools, so correct addresses
+> will be used.
+I'm a bit unsure what you are referring to - maybe I've set the options
+for get_maintainer.pl wrong, but i use
 
+get_maintainer.pl --nogit --nogit-fallback --norolestats --nol
+
+to determine TO recipients and
+
+get_maintainer.pl --nogit --nogit-fallback --norolestats --nom
+
+for CC destinations.
+
+Granted, my tree was a bit out of date but it was from mainline
+and after rebase both commands returned consistent results.
+
+Hope you can provide me with some guidance there.
 
 > 
-> Applies on top of Monday's mm-unstable (b18dec6a6ad3) and passes all mm
-> kselftests.
+> Please use scripts/get_maintainers.pl to get a list of necessary people
+> and lists to CC (and consider --no-git-fallback argument, so you will
+> not CC people just because they made one commit years ago). It might
+> happen, that command when run on an older kernel, gives you outdated
+> entries. Therefore please be sure you base your patches on recent Linux
+> kernel.
 > 
-> Changes since v3 [3]
-> ====================
+> Tools like b4 or scripts/get_maintainer.pl provide you proper list of
+> people, so fix your workflow. Tools might also fail if you work on some
+> ancient tree (don't, instead use mainline) or work on fork of kernel
+> (don't, instead use mainline). Just use b4 and everything should be
+> fine, although remember about `b4 prep --auto-to-cc` if you added new
+> patches to the patchset.
 > 
->  - Added patchs 1-4 to do better job of ramping up folio order
->  - In patch 5:
->    - Confine readahead blocks to vma boundaries (per Kalesh)
->    - Rename arch_exec_folio_order() to exec_folio_order() (per Matthew)
->    - exec_folio_order() now returns unsigned int and defaults to order-0
->      (per Matthew)
->    - readahead size is honoured (including when disabled)
 > 
-> Changes since v2 [2]
-> ====================
+>> ---
+>>   .../bindings/input/semtech,sx951x.yaml        | 180 ++++++++++++++++++
+>>   1 file changed, 180 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/input/semtech,sx951x.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/input/semtech,sx951x.yaml b/Documentation/devicetree/bindings/input/semtech,sx951x.yaml
+>> new file mode 100644
+>> index 000000000000..e4f938decd86
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/input/semtech,sx951x.yaml
+>> @@ -0,0 +1,180 @@
+>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/input/semtech,sx951x.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Semtech SX9512/SX9513 based capacitive touch sensors
+>> +
+>> +description: |
 > 
->  - Rename arch_wants_exec_folio_order() to arch_exec_folio_order() (per Andrew)
->  - Fixed some typos (per Andrew)
+> Do not need '|' unless you need to preserve formatting.
 > 
-> Changes since v1 [1]
-> ====================
+>> +  The Semtech SX9512/SX9513 Family of capacitive touch controllers
+>> +  with integrated LED drivers. The device communication is using I2C only.
+>> +
+>> +maintainers:
+>> +  - David Bauer <mail@david-bauer.net>
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - semtech,sx9512
+>> +      - semtech,sx9513
 > 
->  - Remove "void" from arch_wants_exec_folio_order() macro args list
-> 
-> [1] https://lore.kernel.org/linux-mm/20240111154106.3692206-1-ryan.roberts@arm.com/
-> [2] https://lore.kernel.org/all/20240215154059.2863126-1-ryan.roberts@arm.com/
-> [3] https://lore.kernel.org/linux-mm/20250327160700.1147155-1-ryan.roberts@arm.com/
-> 
-> Thanks,
-> Ryan
-> 
-> Ryan Roberts (5):
->   mm/readahead: Honour new_order in page_cache_ra_order()
->   mm/readahead: Terminate async readahead on natural boundary
->   mm/readahead: Make space in struct file_ra_state
->   mm/readahead: Store folio order in struct file_ra_state
->   mm/filemap: Allow arch to request folio size for exec memory
-> 
->  arch/arm64/include/asm/pgtable.h |  8 +++++
->  include/linux/fs.h               |  4 ++-
->  include/linux/pgtable.h          | 11 +++++++
->  mm/filemap.c                     | 55 ++++++++++++++++++++++++--------
->  mm/internal.h                    |  3 +-
->  mm/readahead.c                   | 27 +++++++++-------
->  6 files changed, 81 insertions(+), 27 deletions(-)
-> 
-> --
-> 2.43.0
-> 
+> Devices are not compatible? What are the differences?
 
+The SX9513 is a cost-reduced version which does not
+support proximity sensing. With the current support
+of the driver they work identical. Should i add this
+information as a comment?
+
+> 
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  '#address-cells':
+>> +    const: 1
+>> +
+>> +  '#size-cells':
+>> +    const: 0
+>> +
+>> +  poll-interval:
+>> +    default: 100
+>> +    description: |
+> 
+> Do not need '|' unless you need to preserve formatting. Same comment
+> everywhere.
+> 
+>> +      The polling interval for touch events in milliseconds.
+> 
+> Missing -ms property unit suffix... unless you are using existing
+> property from common schema, but I do not see any reference (and thus
+> unevaluatedProperties at the end).
+> 
+>> +
+>> +patternProperties:
+>> +  "^channel@[0-7]$":
+>> +    $ref: input.yaml#
+>> +    type: object
+>> +    description: |
+>> +      Each node represents a channel of the touch controller.
+>> +      Each channel provides a capacitive touch sensor input and
+>> +      an LED driver output.
+>> +
+>> +    properties:
+>> +      reg:
+>> +        enum: [0, 1, 2, 3, 4, 5, 6, 7]
+>> +
+>> +      linux,keycodes:
+>> +        maxItems: 1
+>> +        description: |
+>> +          Specifies an array of numeric keycode values to
+>> +          be used for the channels. If this property is
+>> +          omitted, the channel is not used as a key.
+>> +
+>> +      semtech,cin-delta:
+> 
+> Use proper unit suffix and express it in pF.
+
+To represent 2.3 and 3.8 pF, would it be better to represent in
+femtofarad?
+
+> 
+>> +        $ref: /schemas/types.yaml#/definitions/uint32
+>> +        minimum: 0
+>> +        maximum: 3
+>> +        default: 3
+>> +        description: |
+>> +          The capacitance delta which is used to detect a touch
+>> +          or release event. The property value is mapped to a
+>> +          farad range between 7pF and 2.3pF internally. The delta
+>> +          becomes smaller the higher the value is.
+>> +
+>> +      semtech,sense-threshold:
+>> +        $ref: /schemas/types.yaml#/definitions/uint32
+>> +        minimum: 0
+>> +        maximum: 255
+>> +        default: 4
+>> +        description: |
+>> +          The threshold value after which the channel detects a touch.
+>> +          Refer to the datasheet for the internal calculation of the
+>> +          resulting touch sensitivity.
+>> +
+>> +      led:
+> 
+> I think subnode is here not needed. This should be part of the channel,
+> probably.
+
+Just to be sure - you mean to have a property "led" upon which instructs
+the channel to be used to drive an LED and include the LED specific
+properties in the node of the channel?
+
+> 
+>> +        $ref: /schemas/leds/common.yaml#
+>> +        type: object
+>> +        unevaluatedProperties: false
+>> +        description: |
+>> +          Presence of this property indicates the channel
+>> +          is used as an LED driver.
+>> +
+>> +    required:
+>> +      - reg
+>> +
+>> +    additionalProperties: false
+> 
+> unevaluatedProperties instead
+> 
+>> +
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/input/input.h>
+>> +    #include <dt-bindings/leds/common.h>
+>> +    i2c {
+>> +      #address-cells = <1>;
+>> +      #size-cells = <0>;
+>> +
+>> +      touch@2b {
+>> +        compatible = "semtech,sx9512";
+>> +
+> 
+> Drop blank line
+> 
+>> +        reg = <0x2b>;
+>> +
+> 
+> 
+> Best regards,
+> Krzysztof
