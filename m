@@ -1,246 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mail-m1973172.qiye.163.com (mail-m1973172.qiye.163.com [220.197.31.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3175827D77E;
-	Tue,  6 May 2025 12:00:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B93F127D77F
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 12:00:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746532838; cv=none; b=u+pwIr8G0OlnsuxdOmBpmmlZk8QC43cz80xaCtzoZSHvSDkwdGwT8paE2Jjye2jHoxt2CGZZC8UTmrRpoeYFh9s45x85t3XCEV+8F5R9zOd/iSth8wNlEa/9vuTs5E9Ubw+A1UO07bqYtXvnOm+ineXotfqf4jV4kNawpvw0yq0=
+	t=1746532839; cv=none; b=g3d7Bm44FK5c2sUEpdCqGRGz4xBFK3PscCbb9T+D+pfmL1k5FzO6e6wxD5yVKlGWBOXrnMZH4XQOWbPv2Utlva0+QBx/h/iPQJuWBAercVZnKY9X9ttIw3biNhKT31cTveDRLkTyRfMDC7XRwtAzA+GJ1YOWQwEV0QzOyMM8jMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746532838; c=relaxed/simple;
-	bh=I/RDgY0bkQF81lF3O3auo+izugUDSU30xMIrYYNzkwI=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Qh3hq2N+nyXAcWnPJWBKH330cYPZGYb1OFLGOk5+dm27d9JonugauBFmBWzpUSSP6PWBohlOpePRjZUX1x62a8BHQB/zq0HhdQKgKZsv5wRFZL8zHgRc4Z6klGjCZ/Myrd6/FworTpEUEMGRwggxOn1c2+hcraQ7N+GFkqx5NVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q+DXdSVq; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1746532839; c=relaxed/simple;
+	bh=H3nSmQofOPbyGH9/LAxyApDbeSy3bZQ2QhgMQtZHcJY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ec+GSUwkgTCyqlemRstuyiYhJcrpXbYkUOWN8kpdwO6z8JtOJ5eO/gK+fqboJOyBqn+bz8NQtzDWzo9+Wo0Y6wI3rkfxKXUoPVrIU7/xARdiyH543cLxrhNE0DJdujTYpIU0bfk0n1OUaiQOPkdtDAEtI0FAnfMCdM9StIUwLto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=POqrcbhW; arc=none smtp.client-ip=220.197.31.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q+DXdSVq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746532836; x=1778068836;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=I/RDgY0bkQF81lF3O3auo+izugUDSU30xMIrYYNzkwI=;
-  b=Q+DXdSVqNsqRH9u+QCUYGomLhnR2N2PpVCpzKT6vR8iM3cAqvERP9VRC
-   IZEpLrEpWEA56BQE+c405dVwAdoCOJugjSHfq6wYBL+OtU6/nzcJs6R0m
-   W/gb9CsE7DggyFHzoNoHSOmGjUPDdyP92WW+qopIfqI+jdAKG/K191BRY
-   R2ur//Fdg5Gi51n9hajA7aNxN+QXN4OuUlEGbGSfU/l75UJiCw5PBwvDI
-   PUFkpAw7AKj0n2o12dTKS1Y+CkjpcMMzkv1trsMlCqbv7oSk+aNYGlZi6
-   DjUzKpcsPJvgqkJCIZIe5y1ZuZJRG+O1adltlvrgS1PHpzizCfXQeRo11
-   Q==;
-X-CSE-ConnectionGUID: aI771yEuSAaxh8ziHbmO+Q==
-X-CSE-MsgGUID: 1QNZgYySSKGPhZS5v/Mfjg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="48105311"
-X-IronPort-AV: E=Sophos;i="6.15,266,1739865600"; 
-   d="scan'208";a="48105311"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 05:00:35 -0700
-X-CSE-ConnectionGUID: YwAXDTVoQZ2NiHQUYPaizw==
-X-CSE-MsgGUID: nWh3ECRFTLmiVlkRw/K74w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,266,1739865600"; 
-   d="scan'208";a="136534519"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.207])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 05:00:29 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 6 May 2025 15:00:25 +0300 (EEST)
-To: Yunhui Cui <cuiyunhui@bytedance.com>
-cc: arnd@arndb.de, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-    benjamin.larsson@genexis.eu, 
-    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-    heikki.krogerus@linux.intel.com, Jiri Slaby <jirislaby@kernel.org>, 
-    jkeeping@inmusicbrands.com, john.ogness@linutronix.de, 
-    LKML <linux-kernel@vger.kernel.org>, 
-    linux-serial <linux-serial@vger.kernel.org>, markus.mayer@linaro.org, 
-    matt.porter@linaro.org, namcao@linutronix.de, paulmck@kernel.org, 
-    pmladek@suse.com, schnelle@linux.ibm.com, sunilvl@ventanamicro.com, 
-    tim.kryger@linaro.org
-Subject: Re: [PATCH v5 2/4] serial: 8250: avoid potential PSLVERR issue
-In-Reply-To: <20250506112321.61710-2-cuiyunhui@bytedance.com>
-Message-ID: <6801686d-a0b3-7093-1293-cdac6ad055e4@linux.intel.com>
-References: <20250506112321.61710-1-cuiyunhui@bytedance.com> <20250506112321.61710-2-cuiyunhui@bytedance.com>
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="POqrcbhW"
+Received: from localhost.localdomain (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 140c6eaec;
+	Tue, 6 May 2025 10:57:22 +0800 (GMT+08:00)
+From: Kever Yang <kever.yang@rock-chips.com>
+To: heiko@sntech.de
+Cc: linux-rockchip@lists.infradead.org,
+	Kever Yang <kever.yang@rock-chips.com>,
+	Rob Herring <robh@kernel.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Jamie Iles <jamie@jamieiles.com>,
+	linux-watchdog@vger.kernel.org,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	devicetree@vger.kernel.org,
+	Conor Dooley <conor+dt@kernel.org>
+Subject: [PATCH v5 1/6] dt-bindings: watchdog: Add rk3562 compatible
+Date: Tue,  6 May 2025 10:57:10 +0800
+Message-Id: <20250506025715.33595-2-kever.yang@rock-chips.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250506025715.33595-1-kever.yang@rock-chips.com>
+References: <20250506025715.33595-1-kever.yang@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQx8ZGFZKTUpMGExIQkxCGBpWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+X-HM-Tid: 0a96a386ca9703afkunm140c6eaec
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Mww6Dxw6ETJRCRE6Ij4jMD8e
+	DylPCklVSlVKTE9NTktLSU9IT0xLVTMWGhIXVRAeDR4JVQIaFRw7CRQYEFYYExILCFUYFBZFWVdZ
+	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFJS0tLNwY+
+DKIM-Signature:a=rsa-sha256;
+	b=POqrcbhWPq/szZJhg5FtRNV3pU+U2EtZcabw4xkutZdrqY2EVN8+tAxVgIV8WfvIdK+G3YrIqKoFsJ8WYBc3Dhxq4sw/CZVQngIhJgHw/B8ZqwBqhC/v6Vapz3g6N5u7t0XuARFArD1RTUCDz3YHiXE5rgltCybZ8pTikKBnmZw=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=1taHNHL+bdAlejzIloZs57RLJBN6GLNLvJDGZdKJmkI=;
+	h=date:mime-version:subject:message-id:from;
 
-On Tue, 6 May 2025, Yunhui Cui wrote:
+Add rockchip,rk3562-wdt for rk3562.
 
-> Failure to check the UART_LSR_DR before reading UART_RX, or the
-> non-atomic nature of clearing the FIFO and reading UART_RX, poses
-> potential risks that could lead to PSLVERR.
+Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+---
 
-Don't expect reader to know the condition how PSLVERR is triggered. I know 
-it's worded out in the other patch but also explain it here.
+Changes in v5:
+- Collect review tag
 
-You're only explaining problem and missing what this patch does to solve 
-the problem.
+Changes in v4:
+- Collect ack tag
 
-> Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
-> ---
->  drivers/tty/serial/8250/8250.h      | 13 +++++++++
->  drivers/tty/serial/8250/8250_port.c | 43 +++++++++++++++--------------
->  2 files changed, 35 insertions(+), 21 deletions(-)
-> 
-> diff --git a/drivers/tty/serial/8250/8250.h b/drivers/tty/serial/8250/8250.h
-> index b861585ca02a..6f97ff3a197d 100644
-> --- a/drivers/tty/serial/8250/8250.h
-> +++ b/drivers/tty/serial/8250/8250.h
-> @@ -162,6 +162,19 @@ static inline u16 serial_lsr_in(struct uart_8250_port *up)
->  	return lsr;
->  }
->  
-> +/*
-> + * To avoid PSLVERR, check UART_LSR_DR in UART_LSR before
-> + * reading UART_RX.
-> + */
-> +static inline void serial8250_discard_data(struct uart_8250_port *up)
-> +{
-> +	u16 lsr;
-> +
-> +	lsr = serial_in(up, UART_LSR);
-> +	if (lsr & UART_LSR_DR)
-> +		serial_in(up, UART_RX);
-> +}
-> +
->  /*
->   * For the 16C950
->   */
-> diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
-> index a913135d5217..1666b965f6a0 100644
-> --- a/drivers/tty/serial/8250/8250_port.c
-> +++ b/drivers/tty/serial/8250/8250_port.c
-> @@ -1357,9 +1357,8 @@ static void autoconfig_irq(struct uart_8250_port *up)
->  	/* Synchronize UART_IER access against the console. */
->  	uart_port_lock_irq(port);
->  	serial_out(up, UART_IER, UART_IER_ALL_INTR);
-> +	serial8250_discard_data(up);
->  	uart_port_unlock_irq(port);
-> -	serial_in(up, UART_LSR);
-> -	serial_in(up, UART_RX);
->  	serial_in(up, UART_IIR);
->  	serial_in(up, UART_MSR);
->  	serial_out(up, UART_TX, 0xFF);
-> @@ -2137,25 +2136,22 @@ static void wait_for_xmitr(struct uart_8250_port *up, int bits)
->  static int serial8250_get_poll_char(struct uart_port *port)
->  {
->  	struct uart_8250_port *up = up_to_u8250p(port);
-> -	int status;
-> +	int status = NO_POLL_CHAR;
->  	u16 lsr;
-> +	unsigned long flags;
->  
->  	serial8250_rpm_get(up);
->  
-> +	uart_port_lock_irqsave(port, &flags);
->  	lsr = serial_port_in(port, UART_LSR);
-> +	if (lsr & UART_LSR_DR)
-> +		status = serial_port_in(port, UART_RX);
-> +	uart_port_unlock_irqrestore(port, flags);
->  
-> -	if (!(lsr & UART_LSR_DR)) {
-> -		status = NO_POLL_CHAR;
-> -		goto out;
-> -	}
-> -
-> -	status = serial_port_in(port, UART_RX);
-> -out:
->  	serial8250_rpm_put(up);
->  	return status;
+Changes in v3:
+- Collect reveiw tag
 
-Not a problem that originates from you, but IMO calling this variable 
-"status" is quite misleading when it is the character (or NO_POLL_CHAR 
-is no character is present).
+Changes in v2: None
 
->  }
->  
-> -
->  static void serial8250_put_poll_char(struct uart_port *port,
->  			 unsigned char c)
->  {
-> @@ -2264,13 +2260,17 @@ int serial8250_do_startup(struct uart_port *port)
->  	 * Clear the FIFO buffers and disable them.
->  	 * (they will be reenabled in set_termios())
->  	 */
-> +	uart_port_lock_irqsave(port, &flags);
->  	serial8250_clear_fifos(up);
->  
->  	/*
-> -	 * Clear the interrupt registers.
-> +	 * Read UART_RX to clear interrupts (e.g., Character Timeout).
-> +	 * No data on UART_IIR_RX_TIMEOUT, UART_LSR_DR won't set.
-> +	 * FIFO disabled, read UART_RX without LSR check, no PSLVERR.
+ Documentation/devicetree/bindings/watchdog/snps,dw-wdt.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-I don't understand what the last two lines mean and I don't see the 
-connection to the code that is below the comment either, could you try to 
-rephrase the comment.
-
->  	 */
->  	serial_port_in(port, UART_LSR);
->  	serial_port_in(port, UART_RX);
-> +	uart_port_unlock_irqrestore(port, flags);
->  	serial_port_in(port, UART_IIR);
->  	serial_port_in(port, UART_MSR);
->  
-> @@ -2429,15 +2429,14 @@ int serial8250_do_startup(struct uart_port *port)
->  	}
->  
->  dont_test_tx_en:
-> -	uart_port_unlock_irqrestore(port, flags);
->  
->  	/*
->  	 * Clear the interrupt registers again for luck, and clear the
->  	 * saved flags to avoid getting false values from polling
->  	 * routines or the previous session.
->  	 */
-> -	serial_port_in(port, UART_LSR);
-> -	serial_port_in(port, UART_RX);
-> +	serial8250_discard_data(up);
-> +	uart_port_unlock_irqrestore(port, flags);
->  	serial_port_in(port, UART_IIR);
->  	serial_port_in(port, UART_MSR);
->  	up->lsr_saved_flags = 0;
-> @@ -2519,7 +2518,6 @@ void serial8250_do_shutdown(struct uart_port *port)
->  		port->mctrl &= ~TIOCM_OUT2;
->  
->  	serial8250_set_mctrl(port, port->mctrl);
-> -	uart_port_unlock_irqrestore(port, flags);
->  
->  	/*
->  	 * Disable break condition and FIFOs
-> @@ -2527,6 +2525,14 @@ void serial8250_do_shutdown(struct uart_port *port)
->  	serial_port_out(port, UART_LCR,
->  			serial_port_in(port, UART_LCR) & ~UART_LCR_SBC);
->  	serial8250_clear_fifos(up);
-> +	/*
-> +	 * Read data port to reset things, and then unlink from
-> +	 * the IRQ chain.
-> +	 * Since reading UART_RX clears interrupts, doing so with
-> +	 * FIFO disabled won't trigger PSLVERR.
-> +	 */
-> +	serial_port_in(port, UART_RX);
-> +	uart_port_unlock_irqrestore(port, flags);
->  
->  #ifdef CONFIG_SERIAL_8250_RSA
->  	/*
-> @@ -2535,11 +2541,6 @@ void serial8250_do_shutdown(struct uart_port *port)
->  	disable_rsa(up);
->  #endif
->  
-> -	/*
-> -	 * Read data port to reset things, and then unlink from
-> -	 * the IRQ chain.
-> -	 */
-> -	serial_port_in(port, UART_RX);
->  	serial8250_rpm_put(up);
->  
->  	up->ops->release_irq(up);
-> 
-
+diff --git a/Documentation/devicetree/bindings/watchdog/snps,dw-wdt.yaml b/Documentation/devicetree/bindings/watchdog/snps,dw-wdt.yaml
+index 1efefd741c06..ef088e0f6917 100644
+--- a/Documentation/devicetree/bindings/watchdog/snps,dw-wdt.yaml
++++ b/Documentation/devicetree/bindings/watchdog/snps,dw-wdt.yaml
+@@ -28,6 +28,7 @@ properties:
+               - rockchip,rk3328-wdt
+               - rockchip,rk3368-wdt
+               - rockchip,rk3399-wdt
++              - rockchip,rk3562-wdt
+               - rockchip,rk3568-wdt
+               - rockchip,rk3576-wdt
+               - rockchip,rk3588-wdt
 -- 
- i.
+2.25.1
 
