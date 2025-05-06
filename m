@@ -1,105 +1,94 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9F9833450C;
-	Tue,  6 May 2025 03:19:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF7772FD1B5
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 03:17:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746501549; cv=none; b=V9YzfckpwK8eI7P0mHsAonrlsdnJc8ZijmC72MQ6dphTTfpsMaeui4bTvpKDJqJbYLJjJN2nSLWZ8rLlCCJWypAmF4mGBMh940ouGk9hKYVoJhB1hreV6/Sq/kXvhWels+UkYs7Oxq6L1Am2Wnzfjr/CtyjE0XNqoQhnHh0wU3o=
+	t=1746501471; cv=none; b=JfiF5cGcKX8l/CqMS/z9kY/h8SbQjXF9saGpMoqE1YMW/t7ZWVyEBgutnUOWzEj+nCZBZRftlMqoSyG+8KmWia4eQuddVOuHtQ+91HMmBGZOWEgMyfeEx33k0bOQ+vI4rHAS8hk9+UMkAYnFQNadu0b46OLO3OTHG/URgi41RdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746501549; c=relaxed/simple;
-	bh=ryhKPoWUwe+Ng4U4DIgXodBgXBepgQ2tgOqcnAOfeD0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Aqh/MMnSo39iYepwFGTNbz1E0IQ09pZGrgZ+bPUXSGKWn73Hc7qCyp8A8iiTStwY5lbPAwe9/inS0aYKg7VdhPli4oHZecqRA2yQyZh7rxMvil45xVfv/lZpZmb/KHbV0UkFf14OPbW2vBRwidsHOe/yD9P8ncfFhtVzcroorjI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.40.54.178])
-	by gateway (Coremail) with SMTP id _____8Ax3eKlfxlosErWAA--.50662S3;
-	Tue, 06 May 2025 11:19:01 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.40.54.178])
-	by front1 (Coremail) with SMTP id qMiowMCx7MSPfxloqre1AA--.770S5;
-	Tue, 06 May 2025 11:18:53 +0800 (CST)
-From: Qunqin Zhao <zhaoqunqin@loongson.cn>
-To: lee@kernel.org,
-	herbert@gondor.apana.org.au,
-	davem@davemloft.net,
-	peterhuewe@gmx.de,
-	jarkko@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-crypto@vger.kernel.org,
-	jgg@ziepe.ca,
-	linux-integrity@vger.kernel.org,
-	pmenzel@molgen.mpg.de,
-	Qunqin Zhao <zhaoqunqin@loongson.cn>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH v9 3/5] MAINTAINERS: Add entry for Loongson crypto driver
-Date: Tue,  6 May 2025 11:19:45 +0800
-Message-ID: <20250506031947.11130-4-zhaoqunqin@loongson.cn>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250506031947.11130-1-zhaoqunqin@loongson.cn>
-References: <20250506031947.11130-1-zhaoqunqin@loongson.cn>
+	s=arc-20240116; t=1746501471; c=relaxed/simple;
+	bh=ZYfEe9dfbOlh4TB4RxQM+dfsYnGAY1/9qAXesK03RiA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IBl894XATuuBaVx8lc1+2ILfv2uLFOmfr6AsrhnqnuPInXThiebcjh+AHH+fZc8eU/EQowMHyT9nQP+CyROsPdkHGLGDwhidphC7C8DXsj0Ti+E6PejcWyw/zZTEmCU/gQr2HS/bAROzS34cJ1/Oz0xw2j150KOb7BScrSsZogU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=MXLeBZVU; arc=none smtp.client-ip=91.218.175.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="MXLeBZVU"
+Message-ID: <cbb2a2d2-0810-4ea7-946f-bb592ba31d18@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1746501456;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4hExdwsduTAZkeZ42lU5nwgYu99F31594YfZgZwFWlw=;
+	b=MXLeBZVUmb3QEbq9zmSZ+JbOGD5oonYBsWLaaShIfJPT+nfTTqoy2J6UyXmrz46pVvp9nc
+	8uOwddQdSDwr//qxV+hVDmRP9CaA2Ii6PU/dbBy/t/bJ12bcY09XcnYtigKWbSAQhSYbRQ
+	eMT2wr2wckXmDb+XXDz1eyVHE0nWO1U=
+Date: Tue, 6 May 2025 11:17:28 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Subject: Re: [RFC PATCH bpf-next 2/2] bpf: Get fentry func addr from user when
+ BTF info invalid
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+ Alan Maguire <alan.maguire@oracle.com>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>,
+ John Fastabend <john.fastabend@gmail.com>,
+ Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
+ <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>,
+ Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
+ KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+ Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+ bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+References: <20250430164608.3790552-1-chen.dylane@linux.dev>
+ <20250430164608.3790552-3-chen.dylane@linux.dev>
+ <4cabeaa5-0a6f-4be0-89c8-b7d0552b0dd0@oracle.com>
+ <CAADnVQKPLH7q2KcJM_Nkgc1z=OZmOPZes-0c8A-5gty1xEOKzA@mail.gmail.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Tao Chen <chen.dylane@linux.dev>
+In-Reply-To: <CAADnVQKPLH7q2KcJM_Nkgc1z=OZmOPZes-0c8A-5gty1xEOKzA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCx7MSPfxloqre1AA--.770S5
-X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7XFy7urWfGryxCFyUurWUZFc_yoWDtFg_A3
-	42g3yxXr1kJFn2kay09FZ3JrWa93yfX3WxC3Z7tw1fZ3sFyF98AFyDAryxG3W3urWj9F43
-	uayxGrn7Cr17ZosvyTuYvTs0mTUanT9S1TB71UUUUjDqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbfkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	WxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
-	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5
-	McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
-	1lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_
-	Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
-	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
-	cVAFwI0_Xr0_Ar1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI
-	8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v2
-	6r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU4Xo7DUUUU
+X-Migadu-Flow: FLOW_OUT
 
-This patch adds an entry for Loongson crypto driver in the list of
-maintainers.
+在 2025/5/1 06:23, Alexei Starovoitov 写道:
+> On Wed, Apr 30, 2025 at 10:57 AM Alan Maguire <alan.maguire@oracle.com> wrote:
+>>> +
+>>> +                     if (!addr && (prog->expected_attach_type == BPF_TRACE_FENTRY ||
+>>> +                                     prog->expected_attach_type == BPF_TRACE_FEXIT)) {
+>>> +                             fname = kallsyms_lookup((unsigned long)prog->aux->fentry_func,
+>>> +                                                     NULL, NULL, NULL, trace_symbol);
+>>> +                             if (fname)
+>>> +                                     addr = (long)prog->aux->fentry_func;
+>>
+>>
+>> We should do some validation that the fname we get back matches the BTF
+>> func name prefix (fname "foo.isra.0" matches "foo") I think?
+> 
+> I don't think that will be enough.
+> User space should not be able to pass a random kernel address
+> and convince the kernel that it matches a particular btf_id.
+> As discussed in the other thread matching based on name is
+> breaking apart.
+> pahole does all the safety check to make sure name/addr/btf_id
+> are consistent.
+> We shouldn't be adding workarounds like this because
+> pahole/btf/kernel build is not smart enough.
+> 
 
-Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
-Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
----
-v9: Added loongson-se.c/.h to the entry.
-v8: "RNG" --> "crypto"
-v7: Added Huacai's tag
-v5-v6: None
-v4: Changed tile to "Add entry for ...".
-    Lowcased "Maintainers" in commit message.
+Got it thanks for your reply, it is hoped that pahole/btf can have a 
+better way to solve such problems.
 
- MAINTAINERS | 8 ++++++++
- 1 file changed, 8 insertions(+)
+> pw-bot: cr
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 69511c3b2..2d696671e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13931,6 +13931,14 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml
- F:	drivers/i2c/busses/i2c-ls2x.c
- 
-+LOONGSON CRYPTO DRIVER
-+M:	Qunqin Zhao <zhaoqunqin@loongson.cn>
-+L:	linux-crypto@vger.kernel.org
-+S:	Maintained
-+F:	drivers/crypto/loongson/
-+F:	drivers/mfd/loongson-se.c
-+F:	include/linux/mfd/loongson-se.h
-+
- LOONGSON-2 SOC SERIES CLOCK DRIVER
- M:	Yinbo Zhu <zhuyinbo@loongson.cn>
- L:	linux-clk@vger.kernel.org
+
 -- 
-2.45.2
-
+Best Regards
+Tao Chen
