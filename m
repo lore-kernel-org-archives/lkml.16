@@ -1,133 +1,205 @@
-Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68C171F4C85
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 17:00:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28F5F252282
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 17:02:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746550823; cv=none; b=lYuINEGXEpDiL9krDeEmb5iAwgturZSJXMhcd09CdjsugDt++Jkt/kI6ekWJSBE2xF7bVRPpPDU1iH5s18DZ0HIGUIIQKSfFcz3/loG4z8mBXtr4dmZQe0xZewKOuwikmaWH+u/AOJDU0f1ZL7XQGoUjevuNb7pIOdiM9K8jzXM=
+	t=1746550964; cv=none; b=Px17fWt0L3CtkyvTwUEm6rFT4UNtJSlFU5KJQVBqdLlf88LPfKejPlIBA2dZYOstpFjoTt5k/gznmAGkTSx0rffq89TxElsZw6hTXd2PdJMYOukrfRjlxWV01gf4wKaG7LYoOi0Q1L+52lnJMNnsUG3KCCVBme/b10/qM6XV8TY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746550823; c=relaxed/simple;
-	bh=rMT0xdQQt+3r2qtKrekqHV+J40aw9Vry4Sfm4EzwYgE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KjF5zUgcHcVaYX2NmtLPlXDgW5cYCg3upuJgA0BJ3zDsKfNFKY/b8cDZHwdKq5mZ1K/wSmuwt0YhLgnACsSQQoX1uLrMQA0dtgSDBQTC++8xAqBazVGr/+7SLHRUn+2h/sRolq5kBbBg7zBk2wBLhQEmrzEQeLW5czOvU7LTWvw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=j/IIUOf9; arc=none smtp.client-ip=209.85.210.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1746550964; c=relaxed/simple;
+	bh=D+DMk4J3J4PZmLIDq0Alk66bZIdPLcFhzbmDSkbr73c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PdBrJZvTi8rcRIT27HwFz/5KAnIp43xNnftEf80xJswMhFzwBMo19DVeGsus/nFaRDXuKYV2+hCSRuHk3Z5jUcFlnpD9pOGH870iRLtrjjXkrQzSBH6pNbNUwng+xLlOyY/Qv3ZpDdg+Yo9QCqZoXNq+fgDP9zdkeC8WWMn6AQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dYfa3I+8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="j/IIUOf9"
-Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-72b0626c785so4786895a34.2
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 10:00:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746550820; x=1747155620; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xowZWkm/X/sMYc/KKOP8flO/U1/kVq3qKvxE/W0L3a8=;
-        b=j/IIUOf9BexEyHGjaJmxI6TDjN99j297fHbw/1LjK/L4DGCdJCwuqlWbr7puXKz+eF
-         /LpjxztpXlEvlyfxzbBqaB5tYmEdqUFEsSZgYSsFPEnNxMOrLi6+q3MW71thgwplhCY3
-         +GOtCNXDopmfazRsFnNTMXgmsdlL1VJNnOzwnI8EzIP8JC6AZSgMXNaBHOSLgfB2ji9i
-         R4I3VGqvwdYEoRlwAqDxXwy4RVU9ro5zOPNuVQXkXWycEolrimS/7af/UMkuRwWtF1q9
-         SykVmgqQ6gUoGMMXOwVuhYweuZPyTfPUJ/A/c9PDB32bWDAMlnW+LazPL1Q/JIKNjkYa
-         L1NQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746550820; x=1747155620;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xowZWkm/X/sMYc/KKOP8flO/U1/kVq3qKvxE/W0L3a8=;
-        b=SGzMtayWw/IBXOtVsWhUec/v/xYHqXFIKfaOOub0NI7KcH49VafwwLOVYil8AgEvro
-         ywkbo2s+hseVO2TO6GOmuL+qHABt3U/M8ZNYEsc51lg0skNDjqwkccWNONgD6bnZuM8T
-         tAuP+SHJT04eOK6dJ9bPUvKQls2PoPyXtt8xujqZP3MUZfcr9cWj26MOIg/zW4TX3MQU
-         yhUBa9WTye9/ARbhu4y8RJpwMU49gMO1OsUMuqP0lsmmAw41KZTU0qFQHbLzXumPOlDK
-         BLjM2MTK8V0B+hCTvdGWZb5H0lLeTIYyJ6//Qt65D3w+fBMsMUwEhLx4jSZDCAff6VeL
-         mRLg==
-X-Forwarded-Encrypted: i=1; AJvYcCWtLlTzfoVRqSK44vpjj+1hYludjnWhDKsz6yxtrS9a/8gMUtv0hHjXCKZt2XSyfN/2a0hV895EkkncRlo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzANeNU4q+AQvOxkevjtyDBLyUXk8YNphZ8UNPaEGbtNLVQ64PA
-	buMIT8Xmw3uuV0UM6EfYS0zdzb8Jn/+qgTJJThL80FdP+cr2eVJJ7HRNwOUlyjAvuI1t2VdgacU
-	s
-X-Gm-Gg: ASbGncsDSVWav3yeKYogxX+R5P6vnKQ+YFxTNdP66yaf+Z8lbb1NlpriUNPYrNwPjUj
-	aVRjtlJyVdCF9aQ/hAfTeSgRiFNZawnLQLbrdxPaScvoUmDypsBloPS+DSPSSEUP05KTsQm7Fqi
-	w4YkcGRPJ16qi0rylbqvghhTRChwTn+4VoaRBl8E0Zg5+7FmdPJmRGJSj2mFlmz4fpz7Rcwolp3
-	kMSMxUigdN8IkcqHwYXxHvtfw1ujNsIo0oFiJ907WJ6kmqNqxJrLT7NWPXQPyzeLvUV7+iZHViT
-	Fz1tfumV0+AZ/GbUipjZOeGRrrqxmOhaS5DHVgMTqQ+7LFE634GARE+HtEGqTUMuSL2Ynv2pUrk
-	aV/cSvHgbsZv73O0QHQ==
-X-Google-Smtp-Source: AGHT+IFNPKlrUp5qRyXmpfL7F/ah602Gc3+IjI75vJg0+e7TbpPzmIhUUjvuHpOtYUHtumXvXy+COg==
-X-Received: by 2002:a05:6830:2a9e:b0:72b:872f:efc8 with SMTP id 46e09a7af769-731eae95b90mr8191432a34.24.1746550820406;
-        Tue, 06 May 2025 10:00:20 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:5172:9f6c:997a:41ea? ([2600:8803:e7e4:1d00:5172:9f6c:997a:41ea])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-731d31c71aasm2135889a34.20.2025.05.06.10.00.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 06 May 2025 10:00:20 -0700 (PDT)
-Message-ID: <aa7f18ce-9330-4a30-93e5-85489f507a42@baylibre.com>
-Date: Tue, 6 May 2025 12:00:19 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dYfa3I+8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46EAFC4CEEB;
+	Tue,  6 May 2025 17:02:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746550963;
+	bh=D+DMk4J3J4PZmLIDq0Alk66bZIdPLcFhzbmDSkbr73c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dYfa3I+8xjihRLms+wYG+uwS6tVxSLcgjeKx7DuXia15Fk/DAwpb2u78+13K/JJKf
+	 lbPwkv1nFospZzhoHzFOULeWosMQqFjJqofBzvk2gfFgZyrQEFRX01zm/hUAOBkqIh
+	 jwT0QEVL+AB4YmW1OqeXVHmIBYabspiawB6rNu1yLV9FrqN+ZcFF4jr7EXRmrPJnKn
+	 Dedsk7p0O7prsR1E3pytUXy8WKq0Rmv2VRiG55KGShC6KajiKTQz77CGWu5KnK4Wf5
+	 ZROcLezti8xzWvDXiMdZvbbWRyUJhyd+1yxFxYLICTZNL08jBomXJVFPoRQiP9TZ9T
+	 bxFKi6TEfbzdA==
+Date: Tue, 6 May 2025 19:02:36 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc: linux-kernel@vger.kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Carlos Bilbao <carlos.bilbao@kernel.org>,
+	David Woodhouse <dwmw@amazon.co.uk>,
+	Elena Reshetova <elena.reshetova@intel.com>,
+	Fei Li <fei1.li@intel.com>, Jan Kiszka <jan.kiszka@siemens.com>,
+	Juergen Gross <jgross@suse.com>,
+	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+	Masahiro Yamada <yamada.masahiro@socionext.com>,
+	Michal Marek <michal.lkml@markovi.net>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Stefano Stabellini <sstabellini@kernel.org>
+Subject: [PATCH -v2 09/15] x86/kconfig/64: Enable more virtualization guest
+ options in the defconfig: enable Xen, Xen_PVH, Jailhouse, ACRN, Intel TDX
+ and Hyper-V
+Message-ID: <aBpArFOCEhP5ZESO@gmail.com>
+References: <20250505110946.1095363-1-mingo@kernel.org>
+ <20250505110946.1095363-10-mingo@kernel.org>
+ <87msbp278e.fsf@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] iio: backend: fix out-of-bound write
-To: Markus Burri <markus.burri@mt.com>, linux-kernel@vger.kernel.org
-Cc: Nuno Sa <nuno.sa@analog.com>, Olivier Moysan
- <olivier.moysan@foss.st.com>, Jonathan Cameron <jic23@kernel.org>,
- Lars-Peter Clausen <lars@metafoo.de>, linux-iio@vger.kernel.org,
- Markus Burri <markus.burri@bbv.ch>
-References: <20250505203830.5117-1-markus.burri@mt.com>
-From: David Lechner <dlechner@baylibre.com>
-Content-Language: en-US
-In-Reply-To: <20250505203830.5117-1-markus.burri@mt.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87msbp278e.fsf@redhat.com>
 
-On 5/5/25 3:38 PM, Markus Burri wrote:
-> The buffer is set to 80 character. If a caller write more characters,
-> count is truncated to the max available space in "simple_write_to_buffer".
-> But afterwards a string terminator is written to the buffer at offset count
-> without boundary check. The zero termination is written OUT-OF-BOUND.
+
+* Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+
+> Ingo Molnar <mingo@kernel.org> writes:
 > 
-> Add a check that the given buffer is smaller then the buffer to prevent.
+> > Since the x86 defconfig aims to be a distro kernel work-alike with
+> > fewer drivers and a shorter build time, refresh all the virtualization
+> > guest Kconfig features, enabling paravirt spinlocks, and
+> > enabling the guest support code for the following guests:
+> >
+> >  - Xen
+> >  - Xen_PVH
+> >  - Jailhouse
+> >  - ACRN
+> >  - Intel TDX
 > 
-> Fixes: 035b4989211d ("iio: backend: make sure to NULL terminate stack buffer")
-> Signed-off-by: Markus Burri <markus.burri@mt.com>
-> ---
->  drivers/iio/industrialio-backend.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+> Out of curiosity and to get the idea what's good for defconfig and
+> what's not: do we want to enable Hyper-V and its drivers as well? I
+> think all popular distros enable it nowdays because of Azure. E.g.
 > 
-> diff --git a/drivers/iio/industrialio-backend.c b/drivers/iio/industrialio-backend.c
-> index a43c8d1bb3d0..4a364e038449 100644
-> --- a/drivers/iio/industrialio-backend.c
-> +++ b/drivers/iio/industrialio-backend.c
-> @@ -155,11 +155,14 @@ static ssize_t iio_backend_debugfs_write_reg(struct file *file,
->  	ssize_t rc;
->  	int ret;
->  
-> +	if (count >= sizeof(buf) - 1)
+> CONFIG_PCI_HYPERV=m
+> CONFIG_HYPERV_STORAGE=m
+> CONFIG_HYPERV_NET=m
+> CONFIG_HYPERV_KEYBOARD=m
+> CONFIG_DRM_HYPERV=m
+> CONFIG_HID_HYPERV_MOUSE=m
+> CONFIG_HYPERV=m
+> CONFIG_HYPERV_UTILS=m
+> CONFIG_HYPERV_BALLOON=m
 
-Isn't it OK if count == sizeof(buf) - 1? In other words, should be:
+We can certainly do that. The only reason I missed it is because 
+CONFIG_HYPERV et al have hidden away in the 'drivers' section of the 
+.config, which I didn't examine. The other guest support options are in 
+the generic config section.
 
-	if (count >= sizeof(buf))
+Updated patch attached.
 
-> +		return -ENOSPC;
-> +
->  	rc = simple_write_to_buffer(buf, sizeof(buf) - 1, ppos, userbuf, count);
->  	if (rc < 0)
->  		return rc;
->  
-> -	buf[count] = '\0';
-> +	buf[rc] = '\0';
->  
->  	ret = sscanf(buf, "%i %i", &back->cached_reg_addr, &val);
->  
-> 
-> base-commit: b4432656b36e5cc1d50a1f2dc15357543add530e
+Thanks,
 
-It looks like we have the same or similar bugs in:
+	Ingo
 
-drivers/accel/ivpu/ivpu_debugfs.c
-drivers/gpio/gpio-virtuser.c
-drivers/iio/industrialio-core.c
-drivers/iio/dac/ad3552r-hs.c
+=================================>
+From: Ingo Molnar <mingo@kernel.org>
+Date: Mon, 5 May 2025 10:49:11 +0200
+Subject: [PATCH] x86/kconfig/64: Enable more virtualization guest options in the defconfig: enable Xen, Xen_PVH, Jailhouse, ACRN, Intel TDX and Hyper-V
 
-Do you plan to fix these as well? 
+Since the x86 defconfig aims to be a distro kernel work-alike with
+fewer drivers and a shorter build time, refresh all the virtualization
+guest Kconfig features, enabling paravirt spinlocks, and
+enabling the guest support code for the following guests:
+
+ - Xen
+ - Xen_PVH
+ - Jailhouse
+ - ACRN
+ - Intel TDX
+ - Hyper-V
+
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Carlos Bilbao <carlos.bilbao@kernel.org>
+Cc: David Woodhouse <dwmw@amazon.co.uk>
+Cc: Elena Reshetova <elena.reshetova@intel.com>
+Cc: Fei Li <fei1.li@intel.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Jan Kiszka <jan.kiszka@siemens.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Michal Marek <michal.lkml@markovi.net>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Sean Christopherson <seanjc@google.com>
+Cc: Stefano Stabellini <sstabellini@kernel.org>
+Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+---
+ arch/x86/configs/defconfig.x86_64 | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/configs/defconfig.x86_64 b/arch/x86/configs/defconfig.x86_64
+index 156e9490e29b..df786b8b4e85 100644
+--- a/arch/x86/configs/defconfig.x86_64
++++ b/arch/x86/configs/defconfig.x86_64
+@@ -30,7 +30,12 @@ CONFIG_PROFILING=y
+ CONFIG_KEXEC=y
+ CONFIG_SMP=y
+ CONFIG_HYPERVISOR_GUEST=y
+-CONFIG_PARAVIRT=y
++CONFIG_PARAVIRT_SPINLOCKS=y
++CONFIG_XEN=y
++CONFIG_XEN_PVH=y
++CONFIG_JAILHOUSE_GUEST=y
++CONFIG_ACRN_GUEST=y
++CONFIG_INTEL_TDX_GUEST=y
+ CONFIG_X86_REROUTE_FOR_BROKEN_BOOT_IRQS=y
+ CONFIG_X86_MSR=y
+ CONFIG_X86_CPUID=y
+@@ -128,6 +133,7 @@ CONFIG_NET_9P=y
+ CONFIG_NET_9P_VIRTIO=y
+ CONFIG_PCI=y
+ CONFIG_PCIEPORTBUS=y
++CONFIG_PCI_HYPERV=y
+ CONFIG_HOTPLUG_PCI=y
+ CONFIG_PCCARD=y
+ CONFIG_YENTA=y
+@@ -168,6 +174,7 @@ CONFIG_SKY2=y
+ CONFIG_FORCEDETH=y
+ CONFIG_8139TOO=y
+ CONFIG_R8169=y
++CONFIG_HYPERV_NET=y
+ CONFIG_INPUT_EVDEV=y
+ CONFIG_INPUT_JOYSTICK=y
+ CONFIG_INPUT_TABLET=y
+@@ -198,6 +205,7 @@ CONFIG_AGP_INTEL=y
+ CONFIG_DRM=y
+ CONFIG_DRM_I915=y
+ CONFIG_DRM_VIRTIO_GPU=y
++CONFIG_DRM_HYPERV=y
+ CONFIG_SOUND=y
+ CONFIG_SND=y
+ CONFIG_SND_HRTIMER=y
+@@ -214,6 +222,7 @@ CONFIG_HID_PETALYNX=y
+ CONFIG_HID_SAMSUNG=y
+ CONFIG_HID_SONY=y
+ CONFIG_HID_SUNPLUS=y
++CONFIG_HID_HYPERV_MOUSE=y
+ CONFIG_HID_TOPSEED=y
+ CONFIG_HID_PID=y
+ CONFIG_USB_HIDDEV=y
+@@ -231,6 +240,9 @@ CONFIG_RTC_CLASS=y
+ CONFIG_DMADEVICES=y
+ CONFIG_VIRTIO_PCI=y
+ CONFIG_VIRTIO_INPUT=y
++CONFIG_HYPERV=y
++CONFIG_HYPERV_UTILS=y
++CONFIG_HYPERV_BALLOON=y
+ CONFIG_EEEPC_LAPTOP=y
+ CONFIG_AMD_IOMMU=y
+ CONFIG_INTEL_IOMMU=y
