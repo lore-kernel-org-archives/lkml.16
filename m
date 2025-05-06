@@ -1,83 +1,60 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C10527877A
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 11:13:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BD4D263F31
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 11:14:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746530001; cv=none; b=tBLn0OwzIUsxz8RWgIhpBTWFuIIkHYV5mbiSrvuXDeM/1ukZ0vc18Hgih074Y8OpeZY/EzNAXpRCAEq4sKOIAINpLb4GUPGNoKgdcOV9mdvOj6P5n3cWvbATu3JIcMxDO1eP5BT+xxll5ou6pO6JE7dKEo2dWUKOWJHAlUdBTZw=
+	t=1746530099; cv=none; b=JxYbA/oG0xbAp3nza4kTjETwie9MUravryb9LeUmj0c/LYNKrOJ3adjX54uivK9RI29ve0LLIo03fLmv2hdeBapxV/2ro5H67OrNaQDGaA4xFSDTvdkDrqIDMz2SzLjhAePCLSYaWQzoojbbL+5IpIB3LtJRtWjeVzFCm3homAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746530001; c=relaxed/simple;
-	bh=dQDbQ4aWHtVtXQihztdnepN+Gqyu0Lf6TyGHhNtbKuc=;
+	s=arc-20240116; t=1746530099; c=relaxed/simple;
+	bh=iNDXndNS0psG5zwgSqZ1ZEQgECK96DWsmfy1XbYV5TM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JG167WCOlM722lAGhl4wWfEo9WIfT8cWS7/vm0rD3Jd7Z73uHugoZuxEgCiiVG9FpCj7QsZ8dvdjfYEPRLIlaKPuJDgDHAgPWoIqWCY7oDV+YT0E/Dw3UYh+dDzzAU+SzIfxd1v1n+09NUFK55o+NgioJSQ1xdFflJe1AKXeNIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=qqQXPFUX; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ME6YFNUE; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=qqQXPFUX; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ME6YFNUE; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=Eb5VGlMOqeptdMoY/eDKovD9M1ESXiVlzoeKBnVSAl2fR0VAAkvtP1HwTqSq6CqVtKMAuLylbAJnx8ixb3xpwVvgCjyZu+DPG2qiZTsFBBUSwW0R8FHQHKchCryMpVFUv4o3oq8GrFGVJDDMLKb2qRmGYfJvQrOELfxYOTiCuwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XYfu3Hm1; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="qqQXPFUX";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ME6YFNUE";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="qqQXPFUX";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ME6YFNUE"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XYfu3Hm1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746530095;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WPr0Ma55LXpDzIrYy137g/YiRzM88HOwoh8sYc6w+Gc=;
+	b=XYfu3Hm1VjCGQMtmOyzRHyftuD4O/aHP1kZyaWWsC00HO5sjsRMva1f0O75z1gkrBM+/dU
+	CloPrqK/InbZYJrm4DatIuStKvQ56dBBKkUmxjJvJiQ2WC5Y4AVostK/SmTM/Nyv5eSYIj
+	LwIlVSGUqBbQe5lfscVTuC+47lAQGd0=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-171-mH_4oftnOLenk3Um4rrXog-1; Tue,
+ 06 May 2025 07:14:52 -0400
+X-MC-Unique: mH_4oftnOLenk3Um4rrXog-1
+X-Mimecast-MFC-AGG-ID: mH_4oftnOLenk3Um4rrXog_1746530091
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 2F9082117D;
-	Tue,  6 May 2025 11:13:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1746529998; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LA3GkO9ePyvoKNTpWTfqovGBR1rMnUKl6jDdtWHcXoA=;
-	b=qqQXPFUXcAZ8gFv+0I70dJmE01IQBTBFbtGS2WDBIOpKMpOBEco+s0BWAL3DBpHI7u7bbY
-	Madp8VOqv9pahbKfUDk/ceAOAJP/DZ0imVO0T8VRsXIWDl2UfgYa/P0KoLDFWmkiRkkTNX
-	B/5tI55VCw/YY2FYw8x5T1ogvhWd9NQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1746529998;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LA3GkO9ePyvoKNTpWTfqovGBR1rMnUKl6jDdtWHcXoA=;
-	b=ME6YFNUEL9aD8h8Gr6GIQ5/IITR8dO57D+r9aVbgaD2PEKuXitlEWYnr4GUhKsAKXTjYhC
-	HDT2SnBccyLC3oCg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=qqQXPFUX;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=ME6YFNUE
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1746529998; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LA3GkO9ePyvoKNTpWTfqovGBR1rMnUKl6jDdtWHcXoA=;
-	b=qqQXPFUXcAZ8gFv+0I70dJmE01IQBTBFbtGS2WDBIOpKMpOBEco+s0BWAL3DBpHI7u7bbY
-	Madp8VOqv9pahbKfUDk/ceAOAJP/DZ0imVO0T8VRsXIWDl2UfgYa/P0KoLDFWmkiRkkTNX
-	B/5tI55VCw/YY2FYw8x5T1ogvhWd9NQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1746529998;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LA3GkO9ePyvoKNTpWTfqovGBR1rMnUKl6jDdtWHcXoA=;
-	b=ME6YFNUEL9aD8h8Gr6GIQ5/IITR8dO57D+r9aVbgaD2PEKuXitlEWYnr4GUhKsAKXTjYhC
-	HDT2SnBccyLC3oCg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DCB5B137CF;
-	Tue,  6 May 2025 11:13:17 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id no9QM83uGWigEQAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Tue, 06 May 2025 11:13:17 +0000
-Date: Tue, 6 May 2025 13:13:16 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Mike Rapoport <rppt@kernel.org>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm,mm_init: Mark set_high_memory as _init
-Message-ID: <aBnuzKw-zYDPwLE3@localhost.localdomain>
-References: <20250506111012.108743-1-osalvador@suse.de>
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 817FB180034E;
+	Tue,  6 May 2025 11:14:50 +0000 (UTC)
+Received: from fedora (unknown [10.44.33.231])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id AE66018001DA;
+	Tue,  6 May 2025 11:14:46 +0000 (UTC)
+Received: by fedora (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Tue,  6 May 2025 13:14:50 +0200 (CEST)
+Date: Tue, 6 May 2025 13:14:45 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Sasha Levin <sashal@kernel.org>
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	Christian Brauner <brauner@kernel.org>, akpm@linux-foundation.org,
+	mhocko@suse.com, mjguzik@gmail.com, pasha.tatashin@soleen.com,
+	alexjlzheng@tencent.com
+Subject: Re: [PATCH AUTOSEL 6.14 046/642] exit: fix the usage of
+ delay_group_leader->exit_code in do_notify_parent() and pidfs_exit()
+Message-ID: <aBnvJYXqsfn0YG19@redhat.com>
+References: <20250505221419.2672473-1-sashal@kernel.org>
+ <20250505221419.2672473-46-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -86,59 +63,65 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250506111012.108743-1-osalvador@suse.de>
-X-Rspamd-Queue-Id: 2F9082117D
-X-Spam-Score: -4.51
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,intel.com:email,suse.de:email,suse.de:dkim]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+In-Reply-To: <20250505221419.2672473-46-sashal@kernel.org>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On Tue, May 06, 2025 at 01:10:12PM +0200, Oscar Salvador wrote:
-> set_high_memory() touches arch_zone_lowest_possible_pfn which is
-> marked as _initdata, which creates a section mismatch.
-> Since the only user of the function is free_area_init() which is also marked
-> as _init, mark set_high_memory() as _init as well.
+I'm on PTO until May 15, can't read the code.
+
+Does 6.14 have pidfs_exit() ? If no, then I don't think this patch should be
+backported.
+
+Yes, do_notify_parent() can use the "wrong" exit_code too, but this is minor
+and we need more changes to make it actually correct.
+
+Oleg.
+
+On 05/05, Sasha Levin wrote:
+>
+> From: Oleg Nesterov <oleg@redhat.com>
 > 
-> Signed-off-by: Oscar Salvador <osalvador@suse.de>
+> [ Upstream commit 9133607de37a4887c6f89ed937176a0a0c1ebb17 ]
+> 
+> Consider a process with a group leader L and a sub-thread T.
+> L does sys_exit(1), then T does sys_exit_group(2).
+> 
+> In this case wait_task_zombie(L) will notice SIGNAL_GROUP_EXIT and use
+> L->signal->group_exit_code, this is correct.
+> 
+> But, before that, do_notify_parent(L) called by release_task(T) will use
+> L->exit_code != L->signal->group_exit_code, and this is not consistent.
+> We don't really care, I think that nobody relies on the info which comes
+> with SIGCHLD, if nothing else SIGCHLD < SIGRTMIN can be queued only once.
+> 
+> But pidfs_exit() is more problematic, I think pidfs_exit_info->exit_code
+> should report ->group_exit_code in this case, just like wait_task_zombie().
+> 
+> TODO: with this change we can hopefully cleanup (or may be even kill) the
+> similar SIGNAL_GROUP_EXIT checks, at least in wait_task_zombie().
+> 
+> Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+> Link: https://lore.kernel.org/r/20250324171941.GA13114@redhat.com
+> Signed-off-by: Christian Brauner <brauner@kernel.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  kernel/exit.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/kernel/exit.c b/kernel/exit.c
+> index 3485e5fc499e4..6bb59b16e33e1 100644
+> --- a/kernel/exit.c
+> +++ b/kernel/exit.c
+> @@ -265,6 +265,9 @@ void release_task(struct task_struct *p)
+>  	leader = p->group_leader;
+>  	if (leader != p && thread_group_empty(leader)
+>  			&& leader->exit_state == EXIT_ZOMBIE) {
+> +		/* for pidfs_exit() and do_notify_parent() */
+> +		if (leader->signal->flags & SIGNAL_GROUP_EXIT)
+> +			leader->exit_code = leader->signal->group_exit_code;
+>  		/*
+>  		 * If we were the last child thread and the leader has
+>  		 * exited already, and the leader's parent ignores SIGCHLD,
+> -- 
+> 2.39.5
+> 
 
-Of course, the second after I pressed intro I realized I missed:
-
- Reported-by: kernel test robot <lkp@intel.com>
- Closes: https://lore.kernel.org/oe-kbuild-all/202505060901.Qcs06UoB-lkp@intel.com/
-
-@Andrew: Any chance you could squeeze those? Or should I send v2?
-
-Thanks
-
-
--- 
-Oscar Salvador
-SUSE Labs
