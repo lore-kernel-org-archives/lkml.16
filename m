@@ -1,72 +1,154 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E0BC2749EB;
-	Tue,  6 May 2025 10:14:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A4A1238D42;
+	Tue,  6 May 2025 10:14:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746526441; cv=none; b=ECLTcDFSWnuLwOFB+7zuXQk016JRg+3Js4Gen6WgqV3f/kXPSYnej+Qm1x7L1o9qJYM77T7P78JAUkE1dqzzu2GgfmwxZ117IQ4mIbODAeY7bUW381mHWE2kp5ceTZaku+64uniiG5yWv41zyTWVwBJTBOm4YW3OkDaFulNEeQs=
+	t=1746526461; cv=none; b=d7flGBo0m6Bhq9xgvIWwtSRbC3Cr5xM9U5I1PewINjmX3UAI2yU/C87e9nSNjbpuvpJs9YI64EImkCOXbRgTOaT4J25uEYMv3IjioOHHZwgOjPWtfbMbXY5R/8zAN3hd4FxlS87WB7TQTDmTc5os9RMg9ugc4xvmhk3IGdZ/y+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746526441; c=relaxed/simple;
-	bh=5AWVl9a+q1WS9q1OSptDsM0mFQJLdZ6UHEH3Ksk81hs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uz3FdrhhZL1XHDfr+3yqnJcjsSfz14DhkQBpvK2Dp0Ug4jM8TJ2PoorJ7SSvq0VyHzXe33P6punoDZV7TqvDTrYRXGy/VT9aCFSZBbvDEco8E6P/G1+rY1xWi+5bwShHwZBeSPyZZd2A0cDLZgH8/EKbQIYE56qxkqkVt6Prd+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com; spf=none smtp.mailfrom=foss.arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=foss.arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 04E80113E;
-	Tue,  6 May 2025 03:13:50 -0700 (PDT)
-Received: from usa.arm.com (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 528053F5A1;
-	Tue,  6 May 2025 03:13:57 -0700 (PDT)
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	arm-scmi@vger.kernel.org,
-	Cristian Marussi <cristian.marussi@arm.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>,
-	james.quinlan@broadcom.com,
-	f.fainelli@gmail.com,
-	vincent.guittot@linaro.org,
-	peng.fan@oss.nxp.com,
-	michal.simek@amd.com,
-	quic_sibis@quicinc.com,
-	dan.carpenter@linaro.org,
-	maz@kernel.org,
-	johan@kernel.org
-Subject: Re: [PATCH v3 0/3] Introduce SCMI Quirks framework
-Date: Tue,  6 May 2025 11:13:51 +0100
-Message-Id: <174652639726.3776516.14512391795874302742.b4-ty@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250429141108.406045-1-cristian.marussi@arm.com>
-References: <20250429141108.406045-1-cristian.marussi@arm.com>
+	s=arc-20240116; t=1746526461; c=relaxed/simple;
+	bh=OHii1xj6q/F5zdHk24zD9OScfcV+zuskRf29yIQFnEo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=IqMrSHjjeDFCB0dAeK1Xo1ANdQlptFQZyw9gCywXfE/f5yd7t0acxEAas5pU3bDFxsCG47OPuL9UAsMOVZwPpFvl+AUg0SUI7dYwsxZzM4NassQhJBKSjKuj+Ng2OxqWLT5Z9RP2GSIw20xgny9AEj0VtkWUDPZ3Nl7i06q6sc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YJ2Jf6l+; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=v5UFqz3d; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YJ2Jf6l+";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="v5UFqz3d"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1746526456;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mJ8WdMOnFRzNKxgDyBF0xvwiYnKnT6r3ADol9Bg/q1A=;
+	b=YJ2Jf6l+BASIk2WAgzgUXFai8QAvNj4c7VhH3BiiSaqoAcx5cg0olGaLYvnfnSFIJ8L64k
+	2Pn91bQbvZhKqHP/v/uBAHY0XS9CU80VV1M8H/Ied/3+Yy1FEVOhjza+cCpcA1zh5wxrXJ
+	axXeYZ94IRasI+7J/0t/zQRE0gqpWUToTu3XUJ7zMbqD8s7zNHKWyQHUjZWFtOnSGuxQaB
+	PdXKC4mraIzjqvWxfmkt1TEtdR2ISUthkohl5EDZjy7/RT1dIpDY4sKHxPKxkC7WerhNyP
+	wOrZ4153UrWYwAO8grps45uJkYuEE5swvOiVa9i3vyO4fDfhDunvHiSE2orQjA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1746526456;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mJ8WdMOnFRzNKxgDyBF0xvwiYnKnT6r3ADol9Bg/q1A=;
+	b=v5UFqz3ddK035FgD3U+YSwraTs8jST+ye1fE1kPSUh2eyEEeRYaPrwAqpW4KdZw2qElBeH
+	CtD630ZUxwYgjgDg==
+To: Borislav Petkov <bp@alien8.de>, "Kirill A. Shutemov"
+ <kirill@shutemov.name>, Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org, Ingo
+ Molnar <mingo@kernel.org>, Arnd Bergmann <arnd@arndb.de>, David Woodhouse
+ <dwmw@amazon.co.uk>, Dionna Amalie Glaze <dionnaglaze@google.com>, "H.
+ Peter Anvin" <hpa@zytor.com>, Kees Cook <keescook@chromium.org>, Kevin
+ Loughlin <kevinloughlin@google.com>, Len Brown <len.brown@intel.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, "Rafael J. Wysocki"
+ <rafael.j.wysocki@intel.com>, Tom Lendacky <thomas.lendacky@amd.com>,
+ linux-efi@vger.kernel.org, x86@kernel.org, Ard Biesheuvel
+ <ardb@kernel.org>, Peter Zijlstra <peterz@infradead.org>
+Subject: Re: 4067196a5227 ("mm/page_alloc: fix deadlock on cpu_hotplug_lock
+ in __accept_page()") (was: Re: [tip: x86/boot] x86/boot: Provide
+ __pti_set_user_pgtbl() to startup code)
+In-Reply-To: <20250506092445.GBaBnVXXyvnazly6iF@fat_crate.local>
+References: <20250506092445.GBaBnVXXyvnazly6iF@fat_crate.local>
+Date: Tue, 06 May 2025 12:14:15 +0200
+Message-ID: <87ecx2nj0o.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Tue, 29 Apr 2025 15:11:05 +0100, Cristian Marussi wrote:
-> with the increasing adoption of SCMI across arm64 ecosystems, we have to
-> start considering how to deal and take care of out-of-spec SCMI firmware
-> platforms that are actively deployed in the wild, in a consistent manner.
-> 
-> This small series introduces a simple framework, based on static_keys,
-> that allows a user to:
-> 
-> [...]
+On Tue, May 06 2025 at 11:24, Borislav Petkov wrote:
+> [    1.329836] ---[ end Kernel panic - not syncing: kernel: panic_on_warn set ... ]---
+>
+> Fun stuff.
 
-Applied to sudeep.holla/linux (for-next/scmi/updates), thanks!
+The only workable fix for this is:
 
-[1/3] firmware: arm_scmi: Ensure that the message-id supports fastchannel
-      https://git.kernel.org/sudeep.holla/c/94a263f981a3
-[2/3] firmware: arm_scmi: Add Quirks framework
-      https://git.kernel.org/sudeep.holla/c/487c407d57d6
-[3/3] firmware: arm_scmi: quirk: Fix CLOCK_DESCRIBE_RATES triplet
-      https://git.kernel.org/sudeep.holla/c/7b487beab7cd
---
-Regards,
-Sudeep
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -894,7 +894,7 @@ config INTEL_TDX_GUEST
+ 	select ARCH_HAS_CC_PLATFORM
+ 	select X86_MEM_ENCRYPT
+ 	select X86_MCE
+-	select UNACCEPTED_MEMORY
++	select UNACCEPTED_MEMORY if BROKEN
+ 	help
+ 	  Support running as a guest under Intel TDX.  Without this support,
+ 	  the guest kernel can not boot or run under TDX.
+@@ -1515,7 +1515,7 @@ config AMD_MEM_ENCRYPT
+ 	select INSTRUCTION_DECODER
+ 	select ARCH_HAS_CC_PLATFORM
+ 	select X86_MEM_ENCRYPT
+-	select UNACCEPTED_MEMORY
++	select UNACCEPTED_MEMORY if BROKEN
+ 	select CRYPTO_LIB_AESGCM
+ 	help
+ 	  Say yes to enable support for the encryption of system memory.
 
+Why?
+
+The whole logic of this static branch _is_ completely broken. It wants to
+track whether any zone has unaccepted memory, but all of that lacks any
+form of global serialization.
+
+__accept_page()
+        last = list_empty(&zone->unaccepted_pages);
+        spin_unlock_irqrestore(&zone->lock, *flags);
+        if (last)
+                static_branch_dec();
+
+__free_unaccepted()
+	spin_lock_irqsave(&zone->lock, flags);
+	first = list_empty(&zone->unaccepted_pages);
+	spin_unlock_irqrestore(&zone->lock, flags);
+        if (first)
+                static_branch_inc();
+
+So anything which operates on the same zone after the lock was dropped
+can race against the actual dec/inc operations. It's not even consistent
+on the same zone, so how is that supposed to be consistent even across
+different zones?
+
+The work deferement:
+
+__accept_page()
+        last = list_empty(&zone->unaccepted_pages);
+        spin_unlock_irqrestore(&zone->lock, *flags);
+        if (last) {
+                if (...)
+                	schedule_work(...);
+                else
+                        static_branch_dec();
+
+made this actually worse as the work is fully async and therefore
+decrements can be lost:
+
+__accept_page()
+        schedule_work()
+
+....
+
+__accept_page()
+        schedule_work()
+
+    -> As the work is already scheduled, but not yet processed,
+       it is not queued again, which means the second decrement
+       is lost.
+
+But that is just the tip of the iceberg as everything underneath which
+"manages" and depends on that static branch is completely broken
+already.
+
+Seriously?
+
+Thanks,
+
+        tglx
+
+                           
