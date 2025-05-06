@@ -1,131 +1,118 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D50B1E1DEF;
-	Tue,  6 May 2025 01:26:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DB0F1E1C02;
+	Tue,  6 May 2025 01:26:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746494769; cv=none; b=AYgJ2+Z2aJ5zgr0ewqwYxmcEcaCZd0fqZ/Kl0UwgReluYEfcHfYpZkU51/52ncMMpsBE/rnJw7AGN+FtRwB8mwTcv3w6069mNQjev96DoWHAM3VblTDd7AOE5ko8DQ1dUjzvDmd5qTVAwkYOKccnxSocP6lGlJNpdzTwJLYqbEE=
+	t=1746494771; cv=none; b=Y5sLNkEZtPZatnjJB++MssKeimbNKYp/x2oucB48nf1tTsTI30R2hwX3WfioMSZ1tJ3dODN8xoVqKldAue9zAac0/kZQzj9fDc/6PHUIC1dZM87kaSUwJhX8qTWWye2x2A/0UcowWP9YicP8k0L06Hkvk7PWMP4J6DLV6pRHY7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746494769; c=relaxed/simple;
-	bh=yqO5N+PlLNkY4mIRLHix0b1VTSn6zED+m8H+R9a0gwo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=kqlt1aw/jmsLZlvGsb31Zlxbm43VKNXtdYlBix9SgV6+IfhwKnKFTgLozrTRfyIpB9ZE81XaW7gbn5O6Jy//O5L/MSz50j1bkFV2g6XAeS032B/AX1Y78xgYgasK7Gy1BlqWO9TB69SXYugYXLTmZheyBwIeF+iopNlqIBq7PwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=o+QumNOW; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1746494771; c=relaxed/simple;
+	bh=lMA9xqdteBtAICMBE4dR29eHiKv0C8YGXInXwEg4QJs=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g3w4ONzWY1B2N52eXpaGiN2xdwvLklu4E7nwTA3AyA00I6R7D7Ck+V/as7s2ja78oZE8Bz/EORdtlkAxnqozOz8QfUhHsqIr74Vbu5fEeq2BrViFQgo+cVOlsN0Re9GAaZIK5bnmXqfeOpY1UQOhv/kk0t3EfNr5I7Iy9BnKfoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=lLWokG/o; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="o+QumNOW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1746494757;
-	bh=E003ozl3HMPtf+EUX7TMGXJJ5Zb3SEgE/KzqNV3jMQc=;
-	h=Date:From:To:Cc:Subject:From;
-	b=o+QumNOWtM9/LCYRjhU2K93IbhgVvRS3GjrQlFcRyy9+yivRzWaYSQQ15UJPNOHYi
-	 mDCe3vq941I7NIJXpFJiSE+1BI0NtcV0+1gRWagDYKzkrjdi68vw7tWDIZK8eGqjdM
-	 /waSscg7o+bEzU6oGVloUAB/Or0U38opiprusNICh1EF/bxzd527bwjMN6PzLSbfA3
-	 0zjFAfBKxVqmECijmUktRAotJMCF0iBqQnzUZhnCky+y1cY/umJ5jvwIJw9JVsFx45
-	 99Av54jn1Ht5ivBlv+Y6vxvFZnMWfueQa9utR0+BzCCzPaNQGbwUXApLIm3VTT6cC1
-	 eQCa1qH25fJCg==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Zs11c2bf0z4wyh;
-	Tue,  6 May 2025 11:25:55 +1000 (AEST)
-Date: Tue, 6 May 2025 11:25:54 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: David Miller <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, Networking
- <netdev@vger.kernel.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: manual merge of the net-next tree with the reset tree
-Message-ID: <20250506112554.3832cd40@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="lLWokG/o"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 545KTahu007918;
+	Tue, 6 May 2025 01:25:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=a+3iGwj/hO6S7Q34SFvoBpBv
+	Y/YCE7J0Uke+mqkFKdM=; b=lLWokG/oTSHi6rlDNIPU9NU/6RtsEIwXEn99+Dqn
+	LGbfLebmWVRwfX8hTtAcN7uZbSYiMAOA/AUYrQqtyCfph/eFNFR55B+AmYfuzskK
+	qp9s9QvxkXJinwdh+1fV975rl16fxG3SChI4GGuEOuecfDdQvB5KFuCvURJbyyes
+	jmP4zE7fewYkZJ4xEe0WIWzuJSRDLXSX4bG7O3WyMIJ093QPwzuLeXdllALpbqZe
+	iRvn392OydCJLw0J8O31CeLzBY1dMO/8P+RJSOUurXGQ+2PKtUVzi98/4CEP2DkW
+	gcjQLH3yPwFILQh4k+DmL3zF+j3P4SxOD1rkAgE9KyGDnQ==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46d9ep5xbn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 06 May 2025 01:25:52 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5461PpoR000950
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 6 May 2025 01:25:51 GMT
+Received: from hu-mdtipton-lv.qualcomm.com (10.49.16.6) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Mon, 5 May 2025 18:25:51 -0700
+Date: Mon, 5 May 2025 18:25:50 -0700
+From: Mike Tipton <quic_mdtipton@quicinc.com>
+To: Sudeep Holla <sudeep.holla@arm.com>,
+        Cristian Marussi
+	<cristian.marussi@arm.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Viresh
+ Kumar <viresh.kumar@linaro.org>
+CC: <arm-scmi@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Peng Fan
+	<peng.fan@oss.nxp.com>, Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH v3] cpufreq: scmi: Skip SCMI devices that aren't used by
+ the CPUs
+Message-ID: <aBllHt7A2nP/9x3N@hu-mdtipton-lv.qualcomm.com>
+References: <20250428144728.871404-1-quic_mdtipton@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/LpSby9OtKnEIEs_fDNqXHfs";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250428144728.871404-1-quic_mdtipton@quicinc.com>
+X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=EOUG00ZC c=1 sm=1 tr=0 ts=68196520 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=3H110R4YSZwA:10 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
+ a=8AirrxEcAAAA:8 a=yJaCyoTPdldMf7LLIq8A:9 a=CjuIK1q_8ugA:10 a=ZXulRonScM0A:10
+ a=zZCYzV9kfG8A:10 a=TjNXssC_j7lpFel5tvFf:22 a=ST-jHhOKWsTCqRlWije3:22
+X-Proofpoint-ORIG-GUID: xQyI9TTY1mL-lT4GgZf6t5ZYvE89kQxv
+X-Proofpoint-GUID: xQyI9TTY1mL-lT4GgZf6t5ZYvE89kQxv
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA2MDAxMSBTYWx0ZWRfX0c07hmmoRyzu
+ LDWrWnnWv0/IlnrcjiVXRgnYvkD5HQsp5bdZIcTS3Ww3dRnV6+lb3FHQzRn0Nu4CE5ohLo35EE3
+ MKWpVsDkWPL7//XRwgO1B5Ap0ztm9P674s9K5i4ifZIqFlhXWCbSIc9r5ABVp+gZjTfGb0tUbRX
+ tplERRuJtyhiHFdJkXtIfrRcmuWfMWUtvQqH9IyzS+B7z24iL8mT2Uitj7uf/LCk8tCHk0My3yu
+ 9bOsebPbHJWneXjaOU674k3uq0f0ax1pgOOQ/HLaF/3yMt/V+qK2tDRbQ9TDPhMMZXuUt/3/iRY
+ iUVUEF9bHJ3gqd78jAUeDbRZM8AkFGjdDvnbqJhp6oUQIfhzS12fZ+JxzDVF3KKdkfa9Pyyvbkb
+ KznSbL3vilQGSjCN0mGXpeB7U4v3hct0eDyZenBiokuEQJs7RfQKSxAzer5ybRqNDw4Kbexz
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-06_01,2025-05-05_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 clxscore=1015 impostorscore=0 spamscore=0 lowpriorityscore=0
+ bulkscore=0 phishscore=0 suspectscore=0 mlxlogscore=809 mlxscore=0
+ priorityscore=1501 malwarescore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2504070000 definitions=main-2505060011
 
---Sig_/LpSby9OtKnEIEs_fDNqXHfs
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Apr 28, 2025 at 07:47:28AM -0700, Mike Tipton wrote:
+> Currently, all SCMI devices with performance domains attempt to register
+> a cpufreq driver, even if their performance domains aren't used to
+> control the CPUs. The cpufreq framework only supports registering a
+> single driver, so only the first device will succeed. And if that device
+> isn't used for the CPUs, then cpufreq will scale the wrong domains.
+> 
+> To avoid this, return early from scmi_cpufreq_probe() if the probing
+> SCMI device isn't referenced by the CPU device phandles.
+> 
+> This keeps the existing assumption that all CPUs are controlled by a
+> single SCMI device.
+> 
+> Signed-off-by: Mike Tipton <quic_mdtipton@quicinc.com>
+> Reviewed-by: Peng Fan <peng.fan@nxp.com>
+> ---
 
-Hi all,
+Hi Sudeep / Viresh,
 
-Today's linux-next merge of the net-next tree got a conflict in:
+Any thoughts on this?
 
-  MAINTAINERS
-
-between commit:
-
-  57dfdfbe1a03 ("MAINTAINERS: Add entry for Renesas RZ/V2H(P) USB2PHY Port =
-Reset driver")
-
-from the reset tree and commit:
-
-  326976b05543 ("MAINTAINERS: Add entry for Renesas RZ/V2H(P) DWMAC GBETH g=
-lue layer driver")
-
-from the net-next tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc MAINTAINERS
-index c056bd633983,5c31814c9687..000000000000
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@@ -20827,14 -20699,14 +20829,22 @@@ S:	Maintaine
-  F:	Documentation/devicetree/bindings/usb/renesas,rzn1-usbf.yaml
-  F:	drivers/usb/gadget/udc/renesas_usbf.c
- =20
-+ RENESAS RZ/V2H(P) DWMAC GBETH GLUE LAYER DRIVER
-+ M:	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-+ L:	netdev@vger.kernel.org
-+ L:	linux-renesas-soc@vger.kernel.org
-+ S:	Maintained
-+ F:	Documentation/devicetree/bindings/net/renesas,r9a09g057-gbeth.yaml
-+ F:	drivers/net/ethernet/stmicro/stmmac/dwmac-renesas-gbeth.c
-+=20
- +RENESAS RZ/V2H(P) USB2PHY PORT RESET DRIVER
- +M:	Fabrizio Castro <fabrizio.castro.jz@renesas.com>
- +M:	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
- +L:	linux-renesas-soc@vger.kernel.org
- +S:	Supported
- +F:	Documentation/devicetree/bindings/reset/renesas,rzv2h-usb2phy-reset.ya=
-ml
- +F:	drivers/reset/reset-rzv2h-usb2phy.c
- +
-  RENESAS RZ/V2M I2C DRIVER
-  M:	Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-  L:	linux-i2c@vger.kernel.org
-
---Sig_/LpSby9OtKnEIEs_fDNqXHfs
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgZZSIACgkQAVBC80lX
-0GyiQAgAiBOVH2URILyoPYMPJPn0jjgUcL9pFe1T4dFQ7MuefzektIWuYkyIO6pM
-VTwEjnEJ+XVluyVPPQ+fmAHU+ZD12LzGPUmk4ylfc5/mgZZeQk83d5AnE+PK6K2V
-wBt0wpB/hjIHaQ5kwQvyqplZdyS1Rmd1nWPAKJB3aY4zGAbYyZf7fDAIPR9Nmte/
-prBRr9OEDSdz/0gkywwhveRcLS9IJWMgM3A5YD3xzh2HzVCuLkHBYLYXBlUXtSNu
-ae/Mv7pATGFoAgTyCrKRLeuOdaFOTZXPvMhiwluVMJH4+brJlnOm/8WFomFD66g8
-hs+p3KpEBtf0KnwuI2Tk40i//+1iEQ==
-=c2h4
------END PGP SIGNATURE-----
-
---Sig_/LpSby9OtKnEIEs_fDNqXHfs--
+Thanks,
+Mike
