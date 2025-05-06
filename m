@@ -1,205 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28F5F252282
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 17:02:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65F30280003;
+	Tue,  6 May 2025 17:03:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746550964; cv=none; b=Px17fWt0L3CtkyvTwUEm6rFT4UNtJSlFU5KJQVBqdLlf88LPfKejPlIBA2dZYOstpFjoTt5k/gznmAGkTSx0rffq89TxElsZw6hTXd2PdJMYOukrfRjlxWV01gf4wKaG7LYoOi0Q1L+52lnJMNnsUG3KCCVBme/b10/qM6XV8TY=
+	t=1746550987; cv=none; b=agoIJe70KINe4oKv3zpL17H5s0Mmu41TeQedRyutdaSVC6el9U0Az1tpUqqzR4TOndZgnLjfI/e8y1334qSu5a9c1UEuWhdoqL5W8iCNaNFNxgeRskf0IEWIa1QrdG3lDHgvtRhXFlX3EN64W/2gJtqyBR84DEjP9q6aUuQYZ8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746550964; c=relaxed/simple;
-	bh=D+DMk4J3J4PZmLIDq0Alk66bZIdPLcFhzbmDSkbr73c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PdBrJZvTi8rcRIT27HwFz/5KAnIp43xNnftEf80xJswMhFzwBMo19DVeGsus/nFaRDXuKYV2+hCSRuHk3Z5jUcFlnpD9pOGH870iRLtrjjXkrQzSBH6pNbNUwng+xLlOyY/Qv3ZpDdg+Yo9QCqZoXNq+fgDP9zdkeC8WWMn6AQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dYfa3I+8; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dYfa3I+8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46EAFC4CEEB;
-	Tue,  6 May 2025 17:02:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746550963;
-	bh=D+DMk4J3J4PZmLIDq0Alk66bZIdPLcFhzbmDSkbr73c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dYfa3I+8xjihRLms+wYG+uwS6tVxSLcgjeKx7DuXia15Fk/DAwpb2u78+13K/JJKf
-	 lbPwkv1nFospZzhoHzFOULeWosMQqFjJqofBzvk2gfFgZyrQEFRX01zm/hUAOBkqIh
-	 jwT0QEVL+AB4YmW1OqeXVHmIBYabspiawB6rNu1yLV9FrqN+ZcFF4jr7EXRmrPJnKn
-	 Dedsk7p0O7prsR1E3pytUXy8WKq0Rmv2VRiG55KGShC6KajiKTQz77CGWu5KnK4Wf5
-	 ZROcLezti8xzWvDXiMdZvbbWRyUJhyd+1yxFxYLICTZNL08jBomXJVFPoRQiP9TZ9T
-	 bxFKi6TEfbzdA==
-Date: Tue, 6 May 2025 19:02:36 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc: linux-kernel@vger.kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Carlos Bilbao <carlos.bilbao@kernel.org>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	Elena Reshetova <elena.reshetova@intel.com>,
-	Fei Li <fei1.li@intel.com>, Jan Kiszka <jan.kiszka@siemens.com>,
-	Juergen Gross <jgross@suse.com>,
-	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-	Masahiro Yamada <yamada.masahiro@socionext.com>,
-	Michal Marek <michal.lkml@markovi.net>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Stefano Stabellini <sstabellini@kernel.org>
-Subject: [PATCH -v2 09/15] x86/kconfig/64: Enable more virtualization guest
- options in the defconfig: enable Xen, Xen_PVH, Jailhouse, ACRN, Intel TDX
- and Hyper-V
-Message-ID: <aBpArFOCEhP5ZESO@gmail.com>
-References: <20250505110946.1095363-1-mingo@kernel.org>
- <20250505110946.1095363-10-mingo@kernel.org>
- <87msbp278e.fsf@redhat.com>
+	s=arc-20240116; t=1746550987; c=relaxed/simple;
+	bh=0WOaw5RZ043+rJnJTVHll4zM5aaNrrkCl4+hWKBWnZA=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fJFEPP/u5m8aie1rdn4dqnsHOCIlk3lDMCrMxFRvms9/5quFgCX8e4BMCpyZM5b4EORFYxFN108m3e9M2l/XxjTSsuvvnuMfo+JSQkMkVlJZtKqLv5c1SkpbbUVNJLUga6sTH/p6d0Ft745rfdAIFoyqpeg0CAyDHPrOQZso4J4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZsPm619ypz6L52x;
+	Wed,  7 May 2025 01:00:38 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 9D90C1402ED;
+	Wed,  7 May 2025 01:03:02 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 6 May
+ 2025 19:03:01 +0200
+Date: Tue, 6 May 2025 18:03:00 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Karolina Stolarek <karolina.stolarek@oracle.com>
+CC: Bjorn Helgaas <helgaas@kernel.org>, "Shen, Yijun" <Yijun.Shen@dell.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, <linux-pci@vger.kernel.org>, Jon Pan-Doh
+	<pandoh@google.com>, Terry Bowman <terry.bowman@amd.com>, Len Brown
+	<lenb@kernel.org>, James Morse <james.morse@arm.com>, Tony Luck
+	<tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>, Ben Cheatham
+	<Benjamin.Cheatham@amd.com>, Ira Weiny <ira.weiny@intel.com>, Shuai Xue
+	<xueshuai@linux.alibaba.com>, Liu Xinpeng <liuxp11@chinatelecom.cn>, "Darren
+ Hart" <darren@os.amperecomputing.com>, Dan Williams
+	<dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] PCI/AER: Consolidate CXL, ACPI GHES and native AER
+ reporting paths
+Message-ID: <20250506180300.00006527@huawei.com>
+In-Reply-To: <1fb6b57b-4317-404d-8361-19e1c3bd499c@oracle.com>
+References: <20250424172809.GA492728@bhelgaas>
+	<61d3f860-9411-4c86-b9c4-a4524ec8ea6d@oracle.com>
+	<20250425141401.0000067b@huawei.com>
+	<0f4944a4-fd05-4365-9416-378a7385547b@oracle.com>
+	<20250429165410.00002c86@huawei.com>
+	<1fb6b57b-4317-404d-8361-19e1c3bd499c@oracle.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87msbp278e.fsf@redhat.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
+On Mon, 5 May 2025 11:58:25 +0200
+Karolina Stolarek <karolina.stolarek@oracle.com> wrote:
 
-* Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
-
-> Ingo Molnar <mingo@kernel.org> writes:
+> On 29/04/2025 17:54, Jonathan Cameron wrote:
+> > On Fri, 25 Apr 2025 16:12:26 +0200
+> > Karolina Stolarek <karolina.stolarek@oracle.com> wrote:  
+> >>
+> >> OK, that means even if we manage to inject a PCIe error, AER wouldn't be
+> >> able to look up the Source ID and other values it needs to report an
+> >> error, which is not quite the solution I was looking for.  
+> > 
+> > Isn't the source ID in the CPER record? (Device ID field) or do
+> > you mean something else?  
 > 
-> > Since the x86 defconfig aims to be a distro kernel work-alike with
-> > fewer drivers and a shorter build time, refresh all the virtualization
-> > guest Kconfig features, enabling paravirt spinlocks, and
-> > enabling the guest support code for the following guests:
-> >
-> >  - Xen
-> >  - Xen_PVH
-> >  - Jailhouse
-> >  - ACRN
-> >  - Intel TDX
+> Ah, sorry, I got confused on the way. I meant that even if we have the 
+> Device ID in CPER set, the specific device has no data in aer_regs if we 
+> inject an error using the GHES error injection script. We probably would 
+> end up with !info->status in aer_print_error(), thus printing only a 
+> line about "Inaccessible" agent and return early.
+
+If you were feeling creative with scripts you might be able to make this
+work today...  Qemu does allow native aer injection via pcie_aer_inject_error
+which will fill in the stuff in the device and 'try' to trigger an interrupt.
+That last bit will fail (I think) if we are doing fw first handling.
+(you might need to just prevent the interrupt generation in a similar fashion
+to this code did here:
+
+https://gitlab.com/jic23/qemu/-/commit/ce801e4d5b5cc5417cc7c7e5ecdaaa2ca5d6efe3#8eeec1fb38fa7149cc37b7a56dc193d69281ee96_704_708
+
+At that point if you were to inject GHES error using Mauro's stuff it will work
+and find that pre injected hardware info.
+
+If not we need a refresh of that patch to hook up record generation with
+Mauro's new handling. That's what I plan to get to but will be a while yet.
+
+J
+
+
+
 > 
-> Out of curiosity and to get the idea what's good for defconfig and
-> what's not: do we want to enable Hyper-V and its drivers as well? I
-> think all popular distros enable it nowdays because of Azure. E.g.
+> >>> The aim is specifically to allow exercising FW first error handling
+> >>> paths because it's a pain to get real systems that have firmware to inject
+> >>> the full range of what the kernel etc need to handle.  
+> >>
+> >> Does this include PCIe errors? If so, that probably doesn't make sense
+> >> to try to test my patch on an actual system?  
+> > 
+> > Ideally test it on a real system as well, but indeed the intent is to
+> > allow testing of PCI errors on emulation.  
 > 
-> CONFIG_PCI_HYPERV=m
-> CONFIG_HYPERV_STORAGE=m
-> CONFIG_HYPERV_NET=m
-> CONFIG_HYPERV_KEYBOARD=m
-> CONFIG_DRM_HYPERV=m
-> CONFIG_HID_HYPERV_MOUSE=m
-> CONFIG_HYPERV=m
-> CONFIG_HYPERV_UTILS=m
-> CONFIG_HYPERV_BALLOON=m
+> I understand. Do you have pointers on how to inject it on a real system? 
+> All info I could find about FW error injection pointed to the qemu 
+> scripts I mentioned.
 
-We can certainly do that. The only reason I missed it is because 
-CONFIG_HYPERV et al have hidden away in the 'drivers' section of the 
-.config, which I didn't examine. The other guest support options are in 
-the generic config section.
+Sorry no.  It maybe system specific and disabled on production bios.
 
-Updated patch attached.
+> 
+> >>> x86 support for emulated injection is a work in progress (more of a mess wrt
+> >>> to the different ways the event signaling is handled than it is on arm64).
+> >>>
+> >>> I did have an earlier version of that work wired up to the same
+> >>> hooks as the native CXL error injection but I dropped it from my QEMU
+> >>> CXL staging tree for now as it was a pain to rebase whilst Mauro was rapidly
+> >>> revising the infrastructure.  I'll bring it back when I get time.  
+> >>
+> >> I understand, I saw some of your series while looking for ways to test
+> >> my patch. Thank you very much for your work. As you can see, there are
+> >> people actually looking forward to it :)  
+> > 
+> > Great!  I'll try and get back to wiring it all up again sometime soon.  
+> 
+> Awesome, thanks.
+> 
+> Bjorn, is this patch blocking the ratelimiting series? Would it be 
+> acceptable to use public logs in the commit message? I'm asking because 
+> it looks like there's no easy way to trigger the GHES path, or it would 
+> take some time, further delaying the ratelimiting work.
+> 
+> All the best,
+> Karolina
+> 
+> > 
+> > Jonathan
+> >   
+> 
 
-Thanks,
-
-	Ingo
-
-=================================>
-From: Ingo Molnar <mingo@kernel.org>
-Date: Mon, 5 May 2025 10:49:11 +0200
-Subject: [PATCH] x86/kconfig/64: Enable more virtualization guest options in the defconfig: enable Xen, Xen_PVH, Jailhouse, ACRN, Intel TDX and Hyper-V
-
-Since the x86 defconfig aims to be a distro kernel work-alike with
-fewer drivers and a shorter build time, refresh all the virtualization
-guest Kconfig features, enabling paravirt spinlocks, and
-enabling the guest support code for the following guests:
-
- - Xen
- - Xen_PVH
- - Jailhouse
- - ACRN
- - Intel TDX
- - Hyper-V
-
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: Ard Biesheuvel <ardb@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Carlos Bilbao <carlos.bilbao@kernel.org>
-Cc: David Woodhouse <dwmw@amazon.co.uk>
-Cc: Elena Reshetova <elena.reshetova@intel.com>
-Cc: Fei Li <fei1.li@intel.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Jan Kiszka <jan.kiszka@siemens.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Michal Marek <michal.lkml@markovi.net>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Sean Christopherson <seanjc@google.com>
-Cc: Stefano Stabellini <sstabellini@kernel.org>
-Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
----
- arch/x86/configs/defconfig.x86_64 | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/configs/defconfig.x86_64 b/arch/x86/configs/defconfig.x86_64
-index 156e9490e29b..df786b8b4e85 100644
---- a/arch/x86/configs/defconfig.x86_64
-+++ b/arch/x86/configs/defconfig.x86_64
-@@ -30,7 +30,12 @@ CONFIG_PROFILING=y
- CONFIG_KEXEC=y
- CONFIG_SMP=y
- CONFIG_HYPERVISOR_GUEST=y
--CONFIG_PARAVIRT=y
-+CONFIG_PARAVIRT_SPINLOCKS=y
-+CONFIG_XEN=y
-+CONFIG_XEN_PVH=y
-+CONFIG_JAILHOUSE_GUEST=y
-+CONFIG_ACRN_GUEST=y
-+CONFIG_INTEL_TDX_GUEST=y
- CONFIG_X86_REROUTE_FOR_BROKEN_BOOT_IRQS=y
- CONFIG_X86_MSR=y
- CONFIG_X86_CPUID=y
-@@ -128,6 +133,7 @@ CONFIG_NET_9P=y
- CONFIG_NET_9P_VIRTIO=y
- CONFIG_PCI=y
- CONFIG_PCIEPORTBUS=y
-+CONFIG_PCI_HYPERV=y
- CONFIG_HOTPLUG_PCI=y
- CONFIG_PCCARD=y
- CONFIG_YENTA=y
-@@ -168,6 +174,7 @@ CONFIG_SKY2=y
- CONFIG_FORCEDETH=y
- CONFIG_8139TOO=y
- CONFIG_R8169=y
-+CONFIG_HYPERV_NET=y
- CONFIG_INPUT_EVDEV=y
- CONFIG_INPUT_JOYSTICK=y
- CONFIG_INPUT_TABLET=y
-@@ -198,6 +205,7 @@ CONFIG_AGP_INTEL=y
- CONFIG_DRM=y
- CONFIG_DRM_I915=y
- CONFIG_DRM_VIRTIO_GPU=y
-+CONFIG_DRM_HYPERV=y
- CONFIG_SOUND=y
- CONFIG_SND=y
- CONFIG_SND_HRTIMER=y
-@@ -214,6 +222,7 @@ CONFIG_HID_PETALYNX=y
- CONFIG_HID_SAMSUNG=y
- CONFIG_HID_SONY=y
- CONFIG_HID_SUNPLUS=y
-+CONFIG_HID_HYPERV_MOUSE=y
- CONFIG_HID_TOPSEED=y
- CONFIG_HID_PID=y
- CONFIG_USB_HIDDEV=y
-@@ -231,6 +240,9 @@ CONFIG_RTC_CLASS=y
- CONFIG_DMADEVICES=y
- CONFIG_VIRTIO_PCI=y
- CONFIG_VIRTIO_INPUT=y
-+CONFIG_HYPERV=y
-+CONFIG_HYPERV_UTILS=y
-+CONFIG_HYPERV_BALLOON=y
- CONFIG_EEEPC_LAPTOP=y
- CONFIG_AMD_IOMMU=y
- CONFIG_INTEL_IOMMU=y
