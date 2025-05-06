@@ -1,143 +1,90 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DA46256C7D
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 08:50:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4228C216399;
+	Tue,  6 May 2025 08:52:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746521415; cv=none; b=KpN4nX3vknagH1mMDMEuBv/bf8ZiMqL/hSS5Y/cEK7/gUPiV0tv37pqRc06NCXVR0Qqm5uzuODts7c8AxqRs0A5OeNLMjErKbkQ1BkcT8zBkrYxfI6Rmms5c5qQaZgAUAjSdiQF+MLj5FQATmHkwTxmjDMx4S39v3Hc+KNqaeN8=
+	t=1746521521; cv=none; b=kA45cyeNp4WaDu15KKufu052+aMDqS8i/IInhH/6Y6jH+wljLO6mcsfB4/S4XLzK2PV7EGlqUCaUgRRQTLRd6KzPWfJpb3QbWQXAzSrTwbfpguFAMAt2XvqzrQk6ag8j2mC1vSiCeC7UoeZbq3p0rqu/vb2Lwlt8lCyEpSXmzjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746521415; c=relaxed/simple;
-	bh=3RvPLD8Bc/MghdA2heAQ7y4RvOnnzNfb+rU6nieE8e8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hLZzO7ygAyv+kinA2XxwN0wRlGBuMtk7LU4JfQQsVqRogIn971RmhSK2ziqbT/942+8p5Pi5uxHjC3dG9fsDcYxrEpvEc6Yo5tstO5bQHB+Tss3sQRfr/RZUY4QCCNdf7LcSzj8jGbaHwMcYR4eOdgVrx8acDAamgzIstaPs/FI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7381D113E;
-	Tue,  6 May 2025 01:50:03 -0700 (PDT)
-Received: from [10.163.54.208] (unknown [10.163.54.208])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C04EC3F673;
-	Tue,  6 May 2025 01:50:04 -0700 (PDT)
-Message-ID: <4cee3168-cb9f-4b73-a2f5-51ac177c35dc@arm.com>
-Date: Tue, 6 May 2025 14:20:01 +0530
+	s=arc-20240116; t=1746521521; c=relaxed/simple;
+	bh=6NUiTuauuVTTWDJGRfLdUgLEoCQtYK+fPlsDsFdb7uc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jKxXKSggSaWl1c0n4U7Wpvzaz7BfiMsfSE5mc51zlQ8ONjN12Iu67aTvcJ0AzLEFiOLanyppChKhEIxgRIQVlHuGaZ9oCM6VVsAhcl2I/Ty3zWvU7M7PQUsxXQlbURJfmy4A3zg5DBEnfrdPj74KaPJ5tbcU7PiNxDG8ReW7lls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OWnoo6Xe; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OWnoo6Xe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C5BAC4CEE4;
+	Tue,  6 May 2025 08:52:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746521520;
+	bh=6NUiTuauuVTTWDJGRfLdUgLEoCQtYK+fPlsDsFdb7uc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=OWnoo6XeiUf/E7X7aaYO2Wh16ejc7WkatxpgR04nnkXPUwev+4plNxTx6AYD5nZry
+	 rKM5g+jeKlRdWscq5qD9QuHgGejaznVxNuVahZB8tbRLOSOtCcriS1DBKNtC8nPp7n
+	 Yhr0itoXjoEC1WXwb6dV/fmLDkXGL5Qps4iB1cs8/vwE4U8zA1XMSSNw6/XAot22of
+	 5eW9RpWWKKK2ccdoPRbYq6gA3RgyNjcGcEIvLvhTayFjr+xpCq21j7JUVq/7jT7jYG
+	 4qWECc9C0iWGt3L/HFnyJx6/+c16osgt56vPofuA1hNnZXbSbTBiQ6L7WQRHgqOMEM
+	 +gAyGHTaKAP6Q==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=valley-girl.lan)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uCE1u-00C9X1-O6;
+	Tue, 06 May 2025 09:51:58 +0100
+From: Marc Zyngier <maz@kernel.org>
+To: Paolo Bonzini <pbonzini@redhat.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev
+Subject: Re: [PATCH] KVM: selftests: add test for SVE host corruption
+Date: Tue,  6 May 2025 09:51:54 +0100
+Message-Id: <174652150331.339671.16106130205951028954.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20250417-kvm-selftest-sve-signal-v1-1-6330c2f3da0c@kernel.org>
+References: <20250417-kvm-selftest-sve-signal-v1-1-6330c2f3da0c@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] mm: Call pointers to ptes as ptep
-To: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org
-Cc: Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, vbabka@suse.cz,
- jannh@google.com, pfalcato@suse.de, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, david@redhat.com, peterx@redhat.com,
- ryan.roberts@arm.com, mingo@kernel.org, libang.li@antgroup.com,
- maobibo@loongson.cn, zhengqi.arch@bytedance.com, baohua@kernel.org,
- willy@infradead.org, ioworker0@gmail.com, yang@os.amperecomputing.com
-References: <20250506050056.59250-1-dev.jain@arm.com>
- <20250506050056.59250-2-dev.jain@arm.com>
-Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20250506050056.59250-2-dev.jain@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: pbonzini@redhat.com, shuah@kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, broonie@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On 5/6/25 10:30, Dev Jain wrote:
-> Avoid confusion between pte_t* and pte_t data types by appending pointer
-> type variables by p. No functional change.
+On Thu, 17 Apr 2025 00:32:49 +0100, Mark Brown wrote:
+> This test program, originally written by Mark Rutland and lightly modified
+> by me for upstream, verifies that we do not have the issues with host SVE
+> state being discarded which were fixed in
 > 
-> Signed-off-by: Dev Jain <dev.jain@arm.com>
-> ---
->  mm/mremap.c | 28 ++++++++++++++--------------
->  1 file changed, 14 insertions(+), 14 deletions(-)
+>    fbc7e61195e2 ("KVM: arm64: Unconditionally save+flush host FPSIMD/SVE/SME state")
 > 
-> diff --git a/mm/mremap.c b/mm/mremap.c
-> index 7db9da609c84..1a08a7c3b92f 100644
-> --- a/mm/mremap.c
-> +++ b/mm/mremap.c
-> @@ -176,7 +176,7 @@ static int move_ptes(struct pagetable_move_control *pmc,
->  	struct vm_area_struct *vma = pmc->old;
->  	bool need_clear_uffd_wp = vma_has_uffd_without_event_remap(vma);
->  	struct mm_struct *mm = vma->vm_mm;
-> -	pte_t *old_pte, *new_pte, pte;
-> +	pte_t *old_ptep, *new_ptep, pte;
->  	pmd_t dummy_pmdval;
->  	spinlock_t *old_ptl, *new_ptl;
->  	bool force_flush = false;
-> @@ -211,8 +211,8 @@ static int move_ptes(struct pagetable_move_control *pmc,
->  	 * We don't have to worry about the ordering of src and dst
->  	 * pte locks because exclusive mmap_lock prevents deadlock.
->  	 */
-> -	old_pte = pte_offset_map_lock(mm, old_pmd, old_addr, &old_ptl);
-> -	if (!old_pte) {
-> +	old_ptep = pte_offset_map_lock(mm, old_pmd, old_addr, &old_ptl);
-> +	if (!old_ptep) {
->  		err = -EAGAIN;
->  		goto out;
->  	}
-> @@ -223,10 +223,10 @@ static int move_ptes(struct pagetable_move_control *pmc,
->  	 * mmap_lock, so this new_pte page is stable, so there is no need to get
->  	 * pmdval and do pmd_same() check.
->  	 */
-> -	new_pte = pte_offset_map_rw_nolock(mm, new_pmd, new_addr, &dummy_pmdval,
-> +	new_ptep = pte_offset_map_rw_nolock(mm, new_pmd, new_addr, &dummy_pmdval,
->  					   &new_ptl);
-> -	if (!new_pte) {
-> -		pte_unmap_unlock(old_pte, old_ptl);
-> +	if (!new_ptep) {
-> +		pte_unmap_unlock(old_ptep, old_ptl);
->  		err = -EAGAIN;
->  		goto out;
->  	}
-> @@ -235,12 +235,12 @@ static int move_ptes(struct pagetable_move_control *pmc,
->  	flush_tlb_batched_pending(vma->vm_mm);
->  	arch_enter_lazy_mmu_mode();
->  
-> -	for (; old_addr < old_end; old_pte++, old_addr += PAGE_SIZE,
-> -				   new_pte++, new_addr += PAGE_SIZE) {
-> -		if (pte_none(ptep_get(old_pte)))
-> +	for (; old_addr < old_end; old_ptep++, old_addr += PAGE_SIZE,
-> +				   new_ptep++, new_addr += PAGE_SIZE) {
-> +		if (pte_none(ptep_get(old_ptep)))
->  			continue;
->  
-> -		pte = ptep_get_and_clear(mm, old_addr, old_pte);
-> +		pte = ptep_get_and_clear(mm, old_addr, old_ptep);
->  		/*
->  		 * If we are remapping a valid PTE, make sure
->  		 * to flush TLB before we drop the PTL for the
-> @@ -258,7 +258,7 @@ static int move_ptes(struct pagetable_move_control *pmc,
->  		pte = move_soft_dirty_pte(pte);
->  
->  		if (need_clear_uffd_wp && pte_marker_uffd_wp(pte))
-> -			pte_clear(mm, new_addr, new_pte);
-> +			pte_clear(mm, new_addr, new_ptep);
->  		else {
->  			if (need_clear_uffd_wp) {
->  				if (pte_present(pte))
-> @@ -266,7 +266,7 @@ static int move_ptes(struct pagetable_move_control *pmc,
->  				else if (is_swap_pte(pte))
->  					pte = pte_swp_clear_uffd_wp(pte);
->  			}
-> -			set_pte_at(mm, new_addr, new_pte, pte);
-> +			set_pte_at(mm, new_addr, new_ptep, pte);
->  		}
->  	}
->  
-> @@ -275,8 +275,8 @@ static int move_ptes(struct pagetable_move_control *pmc,
->  		flush_tlb_range(vma, old_end - len, old_end);
->  	if (new_ptl != old_ptl)
->  		spin_unlock(new_ptl);
-> -	pte_unmap(new_pte - 1);
-> -	pte_unmap_unlock(old_pte - 1, old_ptl);
-> +	pte_unmap(new_ptep - 1);
-> +	pte_unmap_unlock(old_ptep - 1, old_ptl);
->  out:
->  	if (pmc->need_rmap_locks)
->  		drop_rmap_locks(vma);
+> by running a simple VM while checking the SVE register state for
+> corruption.
+> 
+> [...]
 
-Although this makes sense, mm/mremap.c might not be the only place with such
-naming confusions regarding page table entry and page table pointers. Rather
-than fixing this in just a single file, I guess generic MM wide change will
-be better.
+Applied to kvm-arm64/misc-6.16, thanks!
+
+[1/1] KVM: selftests: add test for SVE host corruption
+      commit: e0ccc45b056d626d4b271820faeedf3837337ceb
+
+Cheers,
+
+	M.
+-- 
+Without deviation from the norm, progress is not possible.
+
+
