@@ -1,174 +1,233 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7178A27585E;
-	Tue,  6 May 2025 10:00:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51FC2278771
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 10:00:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746525639; cv=none; b=ZB8VCMnx7+xeyvwm3R57XgK5EDqeMzGzgQcZXMqIiDdf7FIMORs4B3RSdrWj4qCYLGgEisKMZhKJ23Gz8zkOxfLpRTKh9MdRa/8UrgpPVZPjIJRxfgEJSovc/H8prgwmw/HYLDjlCPPPqaMOk3YsWu48a8uI5m1GR5RhN8528Uc=
+	t=1746525643; cv=none; b=fLJ2t+uj8crw8l4agpNF5gmuJ1gSz16CglgfQI82R0yJbfAi5OILmv/Hy7Hsf8OZVlOdhpPdxFCr94bCdevYKXLiagfSsBfrp//1k9smFtB7J5DmqJVpKpR/eK8MdCkW+oZSmYmRqKLy55z46VXIRn++SxVVHTrKf7EODriDBEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746525639; c=relaxed/simple;
-	bh=LcBMFkhasJc971Tz04TX1N3XqhKT5s31zVenJZH5N88=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=kqrcegZCV/D7bjugpJaNRtJ3QYGPQd+fxtc7F0FAgWah9zxsRRGdHPPHTNt9mIpWRLC3mXkCuOQWElWKMtpRQQ1glIs7lFpc6dplUmFdU1GW4DgMRdHZuz8JUsbBh37zoAalh8jh4ZbYrXJToaZta4hVCVWI0vH8vdsTJM92cmc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=M1XAp5+C; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CwwNwgIv; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1746525643; c=relaxed/simple;
+	bh=Am0FhtgRvNS+ApiRAvTZvfpAd3o4zu618YZ5hkEZwlQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FRFgR+xf3jZ9G2D6ijNShRky1Ho2NSQ08fskF4ziDtqbpJNnOPSlJ91/r0J79XYOe9d8hZQ3e+tX73I0mTduABeNNQEVPl1CRQrbNSzkIuYQ7PEjVSkvhxIkOerSm0EesDWH51T/CWy1GzAiv2TfWkUY1w2Ppcr6PuOyrKe8UDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=kLzeMBIU; arc=none smtp.client-ip=209.85.161.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="M1XAp5+C";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CwwNwgIv"
-Date: Tue, 06 May 2025 10:00:34 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746525635;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zcmS+q78ENUBjWEzIBDQ84QsT8wWNZGNer2Dnj1RXp4=;
-	b=M1XAp5+CFIhrok+ZLNA4H78VxQ+42xpR9W+99SfEnYBjpR3Ozbm/HI1eqK/OEPQTbNE0wJ
-	pxOnGFHi+NXICcZ+EqSFRo9gF2l4zXHnP3kMuqzElrVxUd8/xaXYwwErlT+v2xCrK3KZjr
-	6RHsbDrnhNfH0rgc+S9u3ajeYt8DCVWoZ2B9RZmxg0KGNT3mkIutbxd/nEkpwBgg95nHJx
-	ejxHWhhIaLTKehggFafGpJbaYgtyWSFr+LoEDpezT8r2SAqFuZApg/89a1t+KpFz7AsaKn
-	jcdLEQysgK45y4RwQTQjJi0XN7ICxt0Z/AxNf7Q+9lw2rn+CpiOoTJtvdYB2Sw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746525635;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zcmS+q78ENUBjWEzIBDQ84QsT8wWNZGNer2Dnj1RXp4=;
-	b=CwwNwgIvKFC+PEMmnEm7owDYQHi06YXcT2PYNk9/soaRMW0fp+RyRYYP18yUo8DV8ICrfi
-	qqDhwSU7tv0rkpCw==
-From: "tip-bot2 for Chao Gao" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/fpu] x86/fpu: Drop @perm from guest pseudo FPU container
-Cc: Maxim Levitsky <mlevitsk@redhat.com>, Chao Gao <chao.gao@intel.com>,
- Ingo Molnar <mingo@kernel.org>, "Chang S. Bae" <chang.seok.bae@intel.com>,
- Andy Lutomirski <luto@kernel.org>, David Woodhouse <dwmw2@infradead.org>,
- Eric Biggers <ebiggers@google.com>, Fenghua Yu <fenghua.yu@intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>, Kees Cook <kees@kernel.org>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Mitchell Levy <levymitchell0@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
- Paolo Bonzini <pbonzini@redhat.com>,
- Samuel Holland <samuel.holland@sifive.com>,
- Sean Christopherson <seanjc@google.com>,
- Vitaly Kuznetsov <vkuznets@redhat.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250506093740.2864458-3-chao.gao@intel.com>
-References: <20250506093740.2864458-3-chao.gao@intel.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kLzeMBIU"
+Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-601a99977faso384639eaf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 03:00:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1746525640; x=1747130440; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PgnwHbz1AjhGioq038lpvG95tXZpXvS33HP9z+P5ExU=;
+        b=kLzeMBIUehcm6MCoBYnGaqn08Bu57IGPvpJ1z+WCrxcWoG84d9Yml/TLsNc4bTfjb/
+         aX15rvfCEpZXuUmwlkL2ggsOiH269C5PHGuRRXzA7xNuS5YESBEUcI5IPwveTUDx2f5P
+         FPakH+zzIUGLtjh0dFl878CMj3lUFsmD/DODY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746525640; x=1747130440;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PgnwHbz1AjhGioq038lpvG95tXZpXvS33HP9z+P5ExU=;
+        b=vD9+iWEeQI99ZZfLGMvYzEpoWJjISbnJJSzS7jhDDnd+55NACMScgU4yOudPPNQHV3
+         sbwRjDMQZvGUbFMQoYseD0D72o2g+0aBFaacROMUO9YfDPCcXpCBtDOYEDrIfQiZabPO
+         D+l3dlY+DYGd3NEgm8MBn7tS9tVBe8vue7OtE7vVCx/GzHBdmfVbRb4v0sApyIblfGfY
+         PTDRTRz3bO7373GQphL7EJj9IVnVjbOJNXvk8595p/mb7+xVDxefRGAVhd8qkU0Xpnu2
+         aNi5840NzjrZMfR0SMo8t7DJxJExgT/uPa31dmgV9A2tbqqK6tDEJs2+EB4F8tWz5MOp
+         FmqA==
+X-Forwarded-Encrypted: i=1; AJvYcCX8Eh9Z949BTqDUaN5BqsE2wnysVs36IDeE91lkKvoolpxe8N4QyhUB5Zc8z/GiyCYbmW6Wce3IP2dAtco=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFn9Lqkxj6gPniGO8l62pW4nTqgL2JXNefAosqm4OlrHkpNlfe
+	X4v97febAGpSKecagTRcaK7QuzWcuL0ZmPXDqtoFiBa5iZxbnq6wt0tie4QWJMY0RLc9Zu6NkP2
+	usTrYM/AypUGX25ze7NV6zcD5VDxKBM9T2rBZ
+X-Gm-Gg: ASbGncv8wyrQgX/3Wqj1jm8plPvXbRpd78KoQFjPNEe2dPTdgpO7i5y39znYgdFZZR+
+	3VvQtlnP3CC7TBPzJO2ft5k1DFHBIQkolN0AVFho2ybI4FFDv8ykvlymucb1BWJQfpFBsvtdaPk
+	+awIdwFaNRK0StQ4Gd2dwnnOVbCi30wu92LtSs7HJT7VQUFSXyWw==
+X-Google-Smtp-Source: AGHT+IHhiyIn/3nXmyB0TYKrtQeZw6wh97jFrO+F43EodTx1tAmH3sRUHkuhHaTX6F/Xwh2Vb3HsEaBkMH8rLIg5VLU=
+X-Received: by 2002:a4a:e0d9:0:b0:606:3a5d:c7ad with SMTP id
+ 006d021491bc7-607ee513583mr2347984eaf.0.1746525640269; Tue, 06 May 2025
+ 03:00:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174652563422.406.4328703554427720603.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <20250506095224.176085-1-revest@chromium.org> <20250506095224.176085-5-revest@chromium.org>
+In-Reply-To: <20250506095224.176085-5-revest@chromium.org>
+From: Florent Revest <revest@chromium.org>
+Date: Tue, 6 May 2025 12:00:29 +0200
+X-Gm-Features: ATxdqUEWe64mgnWNWtDc2kPZf5XuKvFECDO9Vew2NFN-uLRlx3rHuyFczgLc0LE
+Message-ID: <CABRcYm+vgD+BNYQ6H7=n6Bdhvq8QXriKx5Ksjhsx+DpYq6064g@mail.gmail.com>
+Subject: Re: [PATCH 4/4] mm: consolidate VM_HIGH_ARCH_* macros into parametric macros
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org
+Cc: catalin.marinas@arm.com, will@kernel.org, tglx@linutronix.de, 
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
+	hpa@zytor.com, akpm@linux-foundation.org, broonie@kernel.org, 
+	thiago.bauermann@linaro.org, jackmanb@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The following commit has been merged into the x86/fpu branch of tip:
+On Tue, May 6, 2025 at 11:53=E2=80=AFAM Florent Revest <revest@chromium.org=
+> wrote:
+>
+> This reduces code duplication and chances of mistakes.
+>
+> Signed-off-by: Florent Revest <revest@chromium.org>
+> ---
+>  include/linux/mm.h | 50 ++++++++++++++--------------------------------
+>  1 file changed, 15 insertions(+), 35 deletions(-)
+>
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index b12549f0a6dce..6750020d5ea37 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -298,42 +298,22 @@ extern unsigned int kobjsize(const void *objp);
+>  #define VM_MERGEABLE   0x80000000      /* KSM may merge identical pages =
+*/
+>
+>  #ifdef CONFIG_64BIT
+> -#define VM_HIGH_ARCH_BIT_0     32      /* bit only usable on 64-bit arch=
+itectures */
+> -#define VM_HIGH_ARCH_BIT_1     33      /* bit only usable on 64-bit arch=
+itectures */
+> -#define VM_HIGH_ARCH_BIT_2     34      /* bit only usable on 64-bit arch=
+itectures */
+> -#define VM_HIGH_ARCH_BIT_3     35      /* bit only usable on 64-bit arch=
+itectures */
+> -#define VM_HIGH_ARCH_BIT_4     36      /* bit only usable on 64-bit arch=
+itectures */
+> -#define VM_HIGH_ARCH_BIT_5     37      /* bit only usable on 64-bit arch=
+itectures */
+> -#define VM_HIGH_ARCH_BIT_6     38      /* bit only usable on 64-bit arch=
+itectures */
+> -#define VM_HIGH_ARCH_BIT_7     39      /* bit only usable on 64-bit arch=
+itectures */
+> -#define VM_HIGH_ARCH_BIT_8     40      /* bit only usable on 64-bit arch=
+itectures */
+> -#define VM_HIGH_ARCH_BIT_9     41      /* bit only usable on 64-bit arch=
+itectures */
+> -#define VM_HIGH_ARCH_BIT_10    42      /* bit only usable on 64-bit arch=
+itectures */
+> -#define VM_HIGH_ARCH_0 BIT(VM_HIGH_ARCH_BIT_0)
+> -#define VM_HIGH_ARCH_1 BIT(VM_HIGH_ARCH_BIT_1)
+> -#define VM_HIGH_ARCH_2 BIT(VM_HIGH_ARCH_BIT_2)
+> -#define VM_HIGH_ARCH_3 BIT(VM_HIGH_ARCH_BIT_3)
+> -#define VM_HIGH_ARCH_4 BIT(VM_HIGH_ARCH_BIT_4)
+> -#define VM_HIGH_ARCH_5 BIT(VM_HIGH_ARCH_BIT_5)
+> -#define VM_HIGH_ARCH_6 BIT(VM_HIGH_ARCH_BIT_6)
+> -#define VM_HIGH_ARCH_7 BIT(VM_HIGH_ARCH_BIT_7)
+> -#define VM_HIGH_ARCH_8 BIT(VM_HIGH_ARCH_BIT_8)
+> -#define VM_HIGH_ARCH_9 BIT(VM_HIGH_ARCH_BIT_9)
+> -#define VM_HIGH_ARCH_10        BIT(VM_HIGH_ARCH_BIT_10)
+> +#define VM_HIGH_ARCH_BIT(i)    (32+i)  /* bit only usable on 64-bit arch=
+itectures */
+> +#define VM_HIGH_ARCH_(i)       BIT(VM_HIGH_ARCH_BIT(i))
 
-Commit-ID:     32d5fa804dc9bd7cf6651a1378ba616d332e7444
-Gitweb:        https://git.kernel.org/tip/32d5fa804dc9bd7cf6651a1378ba616d332e7444
-Author:        Chao Gao <chao.gao@intel.com>
-AuthorDate:    Tue, 06 May 2025 17:36:07 +08:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 06 May 2025 11:52:22 +02:00
+Argh, and of course I forgot to squash two local fixes before sending
+the series out...
 
-x86/fpu: Drop @perm from guest pseudo FPU container
+This should have been VM_HIGH_ARCH() here (the _ at the end is a typo)
 
-Remove @perm from the guest pseudo FPU container. The field is
-initialized during allocation and never used later.
+>  #endif /* CONFIG_64BIT */
+>
+>  #ifdef CONFIG_ARCH_HAS_PKEYS
+>  # define VM_PKEY_SHIFT VM_HIGH_ARCH_BIT_0
 
-Rename fpu_init_guest_permissions() to show that its sole purpose is to
-lock down guest permissions.
+And this should have been a VM_HIGH_ARCH_BIT(0)
 
-Suggested-by: Maxim Levitsky <mlevitsk@redhat.com>
-Signed-off-by: Chao Gao <chao.gao@intel.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Chang S. Bae <chang.seok.bae@intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: David Woodhouse <dwmw2@infradead.org>
-Cc: Eric Biggers <ebiggers@google.com>
-Cc: Fenghua Yu <fenghua.yu@intel.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Kees Cook <kees@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mitchell Levy <levymitchell0@gmail.com>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Samuel Holland <samuel.holland@sifive.com>
-Cc: Sean Christopherson <seanjc@google.com>
-Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-Link: https://lore.kernel.org/kvm/af972fe5981b9e7101b64de43c7be0a8cc165323.camel@redhat.com/
-Link: https://lore.kernel.org/r/20250506093740.2864458-3-chao.gao@intel.com
----
- arch/x86/include/asm/fpu/types.h | 7 -------
- arch/x86/kernel/fpu/core.c       | 7 ++-----
- 2 files changed, 2 insertions(+), 12 deletions(-)
+... Anyway, I think it still gets the point across that it could make
+some sense to change those VM_HIGH_ARCH macros.
 
-diff --git a/arch/x86/include/asm/fpu/types.h b/arch/x86/include/asm/fpu/types.h
-index e64db0e..1c94121 100644
---- a/arch/x86/include/asm/fpu/types.h
-+++ b/arch/x86/include/asm/fpu/types.h
-@@ -536,13 +536,6 @@ struct fpu_guest {
- 	u64				xfeatures;
- 
- 	/*
--	 * @perm:			xfeature bitmap of features which are
--	 *				permitted to be enabled for the guest
--	 *				vCPU.
--	 */
--	u64				perm;
--
--	/*
- 	 * @xfd_err:			Save the guest value.
- 	 */
- 	u64				xfd_err;
-diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
-index 105b1b8..1cda5b7 100644
---- a/arch/x86/kernel/fpu/core.c
-+++ b/arch/x86/kernel/fpu/core.c
-@@ -212,7 +212,7 @@ void fpu_reset_from_exception_fixup(void)
- #if IS_ENABLED(CONFIG_KVM)
- static void __fpstate_reset(struct fpstate *fpstate, u64 xfd);
- 
--static void fpu_init_guest_permissions(struct fpu_guest *gfpu)
-+static void fpu_lock_guest_permissions(void)
- {
- 	struct fpu_state_perm *fpuperm;
- 	u64 perm;
-@@ -228,8 +228,6 @@ static void fpu_init_guest_permissions(struct fpu_guest *gfpu)
- 	WRITE_ONCE(fpuperm->__state_perm, perm | FPU_GUEST_PERM_LOCKED);
- 
- 	spin_unlock_irq(&current->sighand->siglock);
--
--	gfpu->perm = perm & ~FPU_GUEST_PERM_LOCKED;
- }
- 
- bool fpu_alloc_guest_fpstate(struct fpu_guest *gfpu)
-@@ -250,7 +248,6 @@ bool fpu_alloc_guest_fpstate(struct fpu_guest *gfpu)
- 
- 	gfpu->fpstate		= fpstate;
- 	gfpu->xfeatures		= fpu_kernel_cfg.default_features;
--	gfpu->perm		= fpu_kernel_cfg.default_features;
- 
- 	/*
- 	 * KVM sets the FP+SSE bits in the XSAVE header when copying FPU state
-@@ -265,7 +262,7 @@ bool fpu_alloc_guest_fpstate(struct fpu_guest *gfpu)
- 	if (WARN_ON_ONCE(fpu_user_cfg.default_size > gfpu->uabi_size))
- 		gfpu->uabi_size = fpu_user_cfg.default_size;
- 
--	fpu_init_guest_permissions(gfpu);
-+	fpu_lock_guest_permissions();
- 
- 	return true;
- }
+> -# define VM_PKEY_BIT0  VM_HIGH_ARCH_0
+> -# define VM_PKEY_BIT1  VM_HIGH_ARCH_1
+> -# define VM_PKEY_BIT2  VM_HIGH_ARCH_2
+> +# define VM_PKEY_BIT0  VM_HIGH_ARCH(0)
+> +# define VM_PKEY_BIT1  VM_HIGH_ARCH(1)
+> +# define VM_PKEY_BIT2  VM_HIGH_ARCH(2)
+>  #if CONFIG_ARCH_PKEY_BITS > 3
+> -# define VM_PKEY_BIT3  VM_HIGH_ARCH_3
+> +# define VM_PKEY_BIT3  VM_HIGH_ARCH(3)
+>  #else
+>  # define VM_PKEY_BIT3  0
+>  #endif
+>  #if CONFIG_ARCH_PKEY_BITS > 4
+> -# define VM_PKEY_BIT4  VM_HIGH_ARCH_4
+> +# define VM_PKEY_BIT4  VM_HIGH_ARCH(4)
+>  #else
+>  # define VM_PKEY_BIT4  0
+>  #endif
+> @@ -349,7 +329,7 @@ extern unsigned int kobjsize(const void *objp);
+>   * (x86). See the comments near alloc_shstk() in arch/x86/kernel/shstk.c
+>   * for more details on the guard size.
+>   */
+> -# define VM_SHADOW_STACK       VM_HIGH_ARCH_5
+> +# define VM_SHADOW_STACK       VM_HIGH_ARCH(5)
+>  #endif
+>
+>  #if defined(CONFIG_ARM64_GCS)
+> @@ -357,7 +337,7 @@ extern unsigned int kobjsize(const void *objp);
+>   * arm64's Guarded Control Stack implements similar functionality and
+>   * has similar constraints to shadow stacks.
+>   */
+> -# define VM_SHADOW_STACK       VM_HIGH_ARCH_6
+> +# define VM_SHADOW_STACK       VM_HIGH_ARCH(6)
+>  #endif
+>
+>  #ifndef VM_SHADOW_STACK
+> @@ -381,8 +361,8 @@ extern unsigned int kobjsize(const void *objp);
+>  #endif
+>
+>  #if defined(CONFIG_ARM64_MTE)
+> -# define VM_MTE                VM_HIGH_ARCH_4  /* Use Tagged memory for =
+access control */
+> -# define VM_MTE_ALLOWED        VM_HIGH_ARCH_5  /* Tagged memory permitte=
+d */
+> +# define VM_MTE                VM_HIGH_ARCH(4) /* Use Tagged memory for =
+access control */
+> +# define VM_MTE_ALLOWED        VM_HIGH_ARCH(5) /* Tagged memory permitte=
+d */
+>  #else
+>  # define VM_MTE                VM_NONE
+>  # define VM_MTE_ALLOWED        VM_NONE
+> @@ -393,7 +373,7 @@ extern unsigned int kobjsize(const void *objp);
+>  #endif
+>
+>  #ifdef CONFIG_HAVE_ARCH_USERFAULTFD_MINOR
+> -# define VM_UFFD_MINOR         VM_HIGH_ARCH_9  /* UFFD minor faults */
+> +# define VM_UFFD_MINOR         VM_HIGH_ARCH(9) /* UFFD minor faults */
+>  #else /* !CONFIG_HAVE_ARCH_USERFAULTFD_MINOR */
+>  # define VM_UFFD_MINOR         VM_NONE
+>  #endif /* CONFIG_HAVE_ARCH_USERFAULTFD_MINOR */
+> @@ -406,13 +386,13 @@ extern unsigned int kobjsize(const void *objp);
+>   * if KVM does not lock down the memory type.
+>   */
+>  #ifdef CONFIG_64BIT
+> -#define VM_ALLOW_ANY_UNCACHED          VM_HIGH_ARCH_7
+> +#define VM_ALLOW_ANY_UNCACHED          VM_HIGH_ARCH(7)
+>  #else
+>  #define VM_ALLOW_ANY_UNCACHED          VM_NONE
+>  #endif
+>
+>  #ifdef CONFIG_64BIT
+> -#define VM_DROPPABLE           VM_HIGH_ARCH_8
+> +#define VM_DROPPABLE           VM_HIGH_ARCH(8)
+>  #elif defined(CONFIG_PPC32)
+>  #define VM_DROPPABLE           VM_ARCH_1
+>  #else
+> @@ -421,7 +401,7 @@ extern unsigned int kobjsize(const void *objp);
+>
+>  #ifdef CONFIG_64BIT
+>  /* VM is sealed, in vm_flags */
+> -#define VM_SEALED      VM_HIGH_ARCH_10
+> +#define VM_SEALED      VM_HIGH_ARCH(10)
+>  #endif
+>
+>  /* Bits set in the VMA until the stack is in its final location */
+> --
+> 2.49.0.967.g6a0df3ecc3-goog
+>
