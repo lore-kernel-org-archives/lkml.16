@@ -1,119 +1,185 @@
-Received: from smtpbgeu1.qq.com (smtpbgeu1.qq.com [52.59.177.22])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52BB729AB03;
-	Tue,  6 May 2025 02:41:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.59.177.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EB4E2D4B68
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 02:49:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746499287; cv=none; b=ON7I4evRyOHLZZlHiythz9HJZJ2YhJPyMaqhOii9V7CfFoj0FOBdXXTBi7dbwsXWk7ZqdJS2EQZyFLiumW+vWe4ktXJnHquECPUCu5SAYmWgE09yFiKCwirzFbQwYyEZeE8uZWj8suwMiu5Jv7v0zWJgFrJDwkDB2AtcNkF3wew=
+	t=1746499785; cv=none; b=Htp0evWft2Sp+wq3UOE0coaKtwJnncVEw3kjSPjZEHzmc8QiDnDyXJq4Wa1gX1uVgx7Sef1iGlZcnMr5cqu+znp9BxuWjuJG5xqZ/67qyIfUqfaV6DCGvfxgNI6x3wDFu7xWK8inBdJEOb7s3rYHeK6ARM7LMVuRNAnMqJ4jxIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746499287; c=relaxed/simple;
-	bh=dDn4W5v9t6AyHBHxLWO7FuLjj98KbpZnLxWf1Zria3s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Uqy7immX9SlBa+q/jbrac1M/HGf8kIE7nUo+8YF4js0e+v4lf4C5iPSG5qhvPOX7C7gsc86iAXJYxr/Kwc1JCGUVJLVAY3XJlcMcu/JWfZIGQAZFdw3PPnU4fyHQpItlFszjBPAJNaHTHMrR8i/Zsdcdz0Obe4azKEfeeGa26Vw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=JPXukTQ7; arc=none smtp.client-ip=52.59.177.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1746499785; c=relaxed/simple;
+	bh=BVcS6y/RkytdfYbg6aiFphNw4k53SlFmqyW2ahlf+8Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ufzjUcwhQpmXQHR1LvyCzCXalyuGKVtx0hhD3hkCBN+cSVEcEvvKRUnP+nmxD4EaBTiByo/oJC0kfIErg22JTr/vm/VumJjyjOKUlAiDa0ApNtoXU28E7jkUoX3Nc03PKxd0HK/YQvLj7i7jcwRB83ja0QQlOYpsGEeYUUx9XA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=KTjtg1OE; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="JPXukTQ7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1746499279;
-	bh=dDn4W5v9t6AyHBHxLWO7FuLjj98KbpZnLxWf1Zria3s=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To;
-	b=JPXukTQ7lcEdJZ6z+nfwNXkm5FYZ7C5fnLDNlf3sBvo/2VQJNN0P+t3gFdY6YiHR/
-	 DvMdIKgh013hU6GOyOA5JqaScgApCAX87+DPo4khZLQ5SS9e4Bgv6qPkc7yuJeB036
-	 je9bv17CCVvCO59o6LjqqVdCwK/3mLiHxhFSu+yY=
-X-QQ-mid: zesmtpgz4t1746499273ta1f35d3e
-X-QQ-Originating-IP: l24iImKHMNBQ9uisIlimcZxyg0yZaIgIQW6RYpyxGBs=
-Received: from mail-yb1-f172.google.com ( [209.85.219.172])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 06 May 2025 10:41:11 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 13454101743019331379
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e6e1cd3f1c5so4199376276.0;
-        Mon, 05 May 2025 19:41:12 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUV8LyYHlq0nlDsI4XZmlJr3s76aR90jtwTRMNgzCvsrD/O9Sn6g+mJUMhurWDCNnCJpT4=@vger.kernel.org, AJvYcCWPaGxZ2Oh4ZqQ7q0ap/SWBBhMCo2k3LQnvXIGmluoBrzzZ7oAqfotTUsYkI1eJUSxp3ePut6QxRA/CUcLu@vger.kernel.org, AJvYcCXDcMqOSkeFP9h3blrWYXgp0u01gR7+fQtAMniawU5eKbKfYfStjQ2xLgaC6iazCgArNLkwIHtERiJpfZKr@vger.kernel.org, AJvYcCXPa5fv+QCNRlDogsrF3p2mXOSFYUfkCSib42z7S4ywPyQpIwmriEriF18d5tv2kArMiXGvnB+R20rVUGroY3EK@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyc1Ibqj9Iok+qmarjs2vgJs5+txWB56miUWFGadRCndAKNDK/J
-	kepnO5JJZ/jjdo8XjqqlyfE/c52CR0OhBRGmFToxFizwjcFFPqCo06Nt+0Dmj+NfHdfdeBUlbsf
-	kXUuqeiEMB1M375UQu/yNgu6vtdU=
-X-Google-Smtp-Source: AGHT+IFgFFlMacdloLtgDC8BYlif3b1M5uLk0pWcJg25Fujp9vccWuhfsfXobAggGBnTnNta+8cIxYeCcW4lzf1hqZQ=
-X-Received: by 2002:a05:6902:1ac5:b0:e6d:f3ca:3e15 with SMTP id
- 3f1490d57ef6-e75c08b698bmr1960395276.3.1746499270786; Mon, 05 May 2025
- 19:41:10 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KTjtg1OE"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-736c1cf75e4so4599527b3a.2
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 19:49:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1746499782; x=1747104582; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=q0+JSDpYT5BNX3k6gPTP+QpNOml9kj6YJgCfvY0JCRs=;
+        b=KTjtg1OEHaijcvjo+g0DgZpMEWvryOFq4uOnmLvDSZPE3l2KjSX2P4zaX2XVZosm+J
+         NyeEkECA21eh5/ct5hV+99+fu76Oymt6THZe40hSXSO9eYiCB6okRSEZjhNzUZr5TVt/
+         +ZllpcB7MgSLRdW0LAbb9J5lLI90bV2245AYY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746499782; x=1747104582;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=q0+JSDpYT5BNX3k6gPTP+QpNOml9kj6YJgCfvY0JCRs=;
+        b=nUkitu7d105rYO2bjDHNwviPy/LdkxRHSp7KDINVzVI9sZv4EeDwlC4G/v4KY4ZPr1
+         oh0LlKbwAFyPzq/YK7B35nhhaIjAEhQQ5W2t0sKeK4dkqCke9AB1RJR2a6JFicJAv1QF
+         KH96+8vDkflhy9XcFG1/K3TFO71Dj+5SoOv3D8UK3SlZBWzJK+UoxSbJEYSosc1BtGxK
+         ajMLjLr048F7u2DymYnKus9NaBLBOMeXQ+/VReoCk4ScJqgRUiLm4jy3IOarlkyRjPn1
+         ZRf2TZ6d/O0t/1gIRk6+2x5ouhCmzbBltmv9m+LLdDzpkzi7qma5Vz5Tjy70bRdlMj+k
+         f34Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVEe/aKNBI8HT4uu+T0OInlqftUes+/12NOB5Mk6dYb7g5cFqeMfVyPRV3F9AVhGL27Xpd0jmDiwTKe2co=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyN+/tTlFT2i89qb5IQMKfsiOiiSO06u+/a5aZiA6xArSeVSkfu
+	KfBu1YXRJaqq9wbTDhE0BRqPdZrzUUhNl14rbGtgQTyQaAQ7/tYxOVwQqV1NRg==
+X-Gm-Gg: ASbGncs/tKTWvfARypqL7Hbt4PjK0Q6KQGk2OexPEcYMEfN8Xl2w51pusEMmUm04Rdl
+	kbXxodVSriHvZIVYcRol/jDPRxtyh4I9lkGyImaAWPEmdmcKczyxzH/9WpiQfVkBZ9U+i2VeEnz
+	uPr0QcDt7xvPBl8Cx9OlFmKi8TrSR2QUpUBFb+CXHldCI24wJOD9i71eNFYKiqFUINYmhMSwKBm
+	sAtRmVZPQYthcUl3kwMNv4AiaLZUMP18fawsKBEVnuVuBH/K1o8nbXahb0zjwCXIW/O2kIP1s7L
+	tG6qTQOE/JUC2tprR77bDmo0X6LZIqrSrQ==
+X-Google-Smtp-Source: AGHT+IEEZ1PfoCNd1C1LjNnH37ZRF5k8qCVtLcVSMSDNAUIZcoEsuzle0aPuWxV/v0FJ4LrYSFQ+Ew==
+X-Received: by 2002:a05:6a20:2d2b:b0:1f5:619a:8f75 with SMTP id adf61e73a8af0-20e96108b51mr15452923637.2.1746499782489;
+        Mon, 05 May 2025 19:49:42 -0700 (PDT)
+Received: from google.com ([2401:fa00:1:10:d4bd:e7e5:608:dbd7])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b1fb3c6b6d8sm6384494a12.69.2025.05.05.19.49.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 May 2025 19:49:42 -0700 (PDT)
+Date: Tue, 6 May 2025 10:49:37 +0800
+From: Sung-Chi Li <lschyi@chromium.org>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Cc: Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>,
+	Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Jonathan Corbet <corbet@lwn.net>, chrome-platform@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] hwmon: (cros_ec) register fans into thermal
+ framework cooling devices
+Message-ID: <aBl4wcX889otz_ms@google.com>
+References: <20250502-cros_ec_fan-v2-0-4d588504a01f@chromium.org>
+ <20250502-cros_ec_fan-v2-3-4d588504a01f@chromium.org>
+ <b2432c5c-2589-4cfe-821f-47e5128af2d0@t-8ch.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250429-noautoinline-v3-0-4c49f28ea5b5@uniontech.com>
- <20250429123504.GA13093@lst.de> <D9KW1QQR88EY.2TOSTVYZZH5KN@google.com>
- <20250501150229.GU4439@noisy.programming.kicks-ass.net> <D9KXE2YX8R2M.3L7Q6NVIXKPE9@google.com>
- <08163d8b-4056-4b84-82a1-3dd553ee6468@acm.org>
-In-Reply-To: <08163d8b-4056-4b84-82a1-3dd553ee6468@acm.org>
-From: Chen Linxuan <chenlinxuan@uniontech.com>
-Date: Tue, 6 May 2025 10:40:59 +0800
-X-Gmail-Original-Message-ID: <973B455678FC1BDD+CAC1kPDM2pUEwFRiUZFHKq_7sYpjARkFczJnp_FRu+r9-xYdgKg@mail.gmail.com>
-X-Gm-Features: ATxdqUHhA0M6lhr1xavQzClQ8qzartLkG1qHh9aYbVlX-6LFgZ39KxjHPoTQnkI
-Message-ID: <CAC1kPDM2pUEwFRiUZFHKq_7sYpjARkFczJnp_FRu+r9-xYdgKg@mail.gmail.com>
-Subject: Re: [PATCH RFC v3 0/8] kernel-hacking: introduce CONFIG_NO_AUTO_INLINE
-To: Bart Van Assche <bvanassche@acm.org>
-Cc: Brendan Jackman <jackmanb@google.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Christoph Hellwig <hch@lst.de>, chenlinxuan@uniontech.com, Keith Busch <kbusch@kernel.org>, 
-	Jens Axboe <axboe@kernel.dk>, Sagi Grimberg <sagi@grimberg.me>, 
-	Andrew Morton <akpm@linux-foundation.org>, Yishai Hadas <yishaih@nvidia.com>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>, 
-	Kevin Tian <kevin.tian@intel.com>, Alex Williamson <alex.williamson@redhat.com>, 
-	Peter Huewe <peterhuewe@gmx.de>, Jarkko Sakkinen <jarkko@kernel.org>, 
-	Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nicolas.schier@linux.dev>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, "Paul E. McKenney" <paulmck@kernel.org>, 
-	Boqun Feng <boqun.feng@gmail.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	Andrey Konovalov <andreyknvl@gmail.com>, Juergen Gross <jgross@suse.com>, 
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, linux-nvme@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, kvm@vger.kernel.org, 
-	virtualization@lists.linux.dev, linux-integrity@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, llvm@lists.linux.dev, 
-	Winston Wen <wentao@uniontech.com>, kasan-dev@googlegroups.com, 
-	xen-devel@lists.xenproject.org, Changbin Du <changbin.du@intel.com>, 
-	Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpgz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-1
-X-QQ-XMAILINFO: OTRn99tF6xIxu9Ld/4bLApMY6+iBc72zONdY674Kg0NAe1QsuDk1M4PR
-	EZ/1uvu9h7uaFi4a62oAx7mSC7CSt3iFhjaQTebJaGEwk05awfFdGwpEPfOx+PLQv2RW/O3
-	d8VqZeBb5/m2zlbm7/rcHVDJFrdW0JvwXbCSpQoE9TfyKu1NjiW3wmg6GH6yM7EmdTl9DsF
-	J6FdLzLwxD297JmcqJoW0JP71eoOgPC4T2LZnlCkW3z3ODt7Zv8SpsvY8rOcwtg96jDyPo4
-	/DV3q54mZ+s+er3vVqzqZ3VCA1MTQ/BqVvgC7J7dUg71NZXrGVyoli3bL3lE9orlDsgc+O6
-	9sUZd19Hl+LVo4iCopqYb44fyOrkzuwF3UfxQIF/cl8D+q/IrrgojXJx5varFYJm5Q+FQO/
-	PtxR/CRTNOloiVz3qjbSQ/4W6uEyneifXP/fK84y0ECyLanykGf1n52/jreb/+ENV9ZkIcx
-	p3ywWYx01lJ2UJ+xURHcQqwjXC1jIYGdbA4fi0I0TbfnpuPocTL5EzlLmOJYo/u8JAT6HPm
-	hIbrW6LfgntiQva0bpmy05arTcB0pJgwOcZXYtwrl3i2c5OaNWmRceJtxCalQTMlr7Ya6gl
-	BuGneyFtbXdjthZlQr3UbqKNSEOuqx0cli9wBTlnodQrNou7l2tDQYJhZsG03xVLXRNMXMI
-	/QXufTqxJIElWxVptsCMSXnqqiTn087oRMhbD4JgY+QY+bp8rHn6CPVpnZQf9q5tV8+/hpN
-	JPwMENFQwK2KQTJA+qQ9rssSYXDl2b47wIZ/QmhK05iwyEk0Y9bZG2p6qJPrSvbIfRgn3Yj
-	+tdVn81JTsQYE5k0/tBwRb19PB5+Vshe/e/iKexCSi57TPr/VypYrpk4TtoIcwPWB1bYBJs
-	I3nuAeJgW/9S6e9KFz/FImOMK7Ukhpmv6tOBCYmYKle3K44qtYL6bz1Z/DHlLcpVEO0GRHi
-	3KfnmnpAngaOKS5GYpgNyAPj0yE/ptSqAk5IFKMWkQsJ4MQZn9bxkm1IqNQN5LsORkaOaVS
-	eWRfT+iBmAgqa9k7Az+thgGV/R/L+HyQyPBNaNskF3GmKKReav60DhPSkOrmZ6mKV4y4YMq
-	g4UrWtMo0lB
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-X-QQ-RECHKSPAM: 0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b2432c5c-2589-4cfe-821f-47e5128af2d0@t-8ch.de>
 
-On Sun, May 4, 2025 at 3:14=E2=80=AFAM Bart Van Assche <bvanassche@acm.org>=
- wrote:
+On Sat, May 03, 2025 at 09:27:18AM +0200, Thomas Weißschuh wrote:
+> On 2025-05-02 13:34:47+0800, Sung-Chi Li via B4 Relay wrote:
+> > From: Sung-Chi Li <lschyi@chromium.org>
+> > 
+> > Register fans connected under EC as thermal cooling devices as well, so
+> > these fans can then work with the thermal framework.
+> > 
+> > During the driver probing phase, we will also try to register each fan
+> > as a thermal cooling device based on previous probe result (whether the
+> > there are fans connected on that channel, and whether EC supports fan
+> > control). The basic get max state, get current state, and set current
+> > state methods are then implemented as well.
+> > 
+> > Signed-off-by: Sung-Chi Li <lschyi@chromium.org>
+> > ---
+> >  Documentation/hwmon/cros_ec_hwmon.rst |  2 ++
+> >  drivers/hwmon/cros_ec_hwmon.c         | 66 +++++++++++++++++++++++++++++++++++
+> >  2 files changed, 68 insertions(+)
+> > 
+> > diff --git a/Documentation/hwmon/cros_ec_hwmon.rst b/Documentation/hwmon/cros_ec_hwmon.rst
+> > index 5b802be120438732529c3d25b1afa8b4ee353305..82c75bdaf912a116eaafa3149dc1252b3f7007d2 100644
+> > --- a/Documentation/hwmon/cros_ec_hwmon.rst
+> > +++ b/Documentation/hwmon/cros_ec_hwmon.rst
+> > @@ -27,3 +27,5 @@ Fan and temperature readings are supported. PWM fan control is also supported if
+> >  the EC also supports setting fan PWM values and fan mode. Note that EC will
+> >  switch fan control mode back to auto when suspended. This driver will restore
+> >  the fan state before suspended.
+> > +If a fan is controllable, this driver will register that fan as a cooling device
+> > +in the thermal framework as well.
+> > diff --git a/drivers/hwmon/cros_ec_hwmon.c b/drivers/hwmon/cros_ec_hwmon.c
+> > index c5e42e2a03a0c8c68d3f8afbb2bb45b93a58b955..abfcf44fb7505189124e78c651b0eb1e0533b4e8 100644
+> > --- a/drivers/hwmon/cros_ec_hwmon.c
+> > +++ b/drivers/hwmon/cros_ec_hwmon.c
+> > @@ -13,6 +13,7 @@
+> >  #include <linux/platform_device.h>
+> >  #include <linux/platform_data/cros_ec_commands.h>
+> >  #include <linux/platform_data/cros_ec_proto.h>
+> > +#include <linux/thermal.h>
+> 
+> Needs a dependency on CONFIG_THERMAL.
+> 
 
-> If this is for test builds only, has it been consider to add
-> -fno-inline-functions as a local change in the top-level Makefile?
+I think adding the `if (!IS_ENABLED(CONFIG_THERMAL))` you suggested is
+sufficient, and turning on or off CONFIG_THERMAL both can compile, so I'll only
+add the guarding statement in the `cros_ec_hwmon_register_fan_cooling_devices`.
 
-The issue here is that the current kernel cannot be compiled when
-these compiler options that reduce inlining behavior are added.
+> > +
+> > +	if (!priv->fan_control_supported)
+> > +		return;
+> > +
+> > +	for (i = 0; i < EC_FAN_SPEED_ENTRIES; i++) {
+> > +		if (!(priv->usable_fans & BIT(i)))
+> > +			continue;
+> > +
+> > +		cpriv = devm_kzalloc(dev, sizeof(*cpriv), GFP_KERNEL);
+> > +		if (!cpriv)
+> > +			return;
+> > +
+> > +		cpriv->hwmon_priv = priv;
+> > +		cpriv->index = i;
+> > +		devm_thermal_of_cooling_device_register(
+> > +			dev, NULL, devm_kasprintf(dev, GFP_KERNEL, "cros-ec-fan%zu", i), cpriv,
+> 
+> What happens for multiple/chained ECs? If both provide sensors the
+> thermal device names will collide.
+> 
+
+How about changing the "cros-ec-fan%zu" to "%s-fan%zu", which prefixes the
+`dev_name()`? Here is an example from a device: cros-ec-hwmon.12.auto-fan0.
+
+> Error handling for devm_kasprintf() is missing.
+> 
+
+Thank you for catching this, I will skip registering that device if the
+devm_kasprintf() fails.
+
+> > +			&cros_ec_thermal_cooling_ops);
+> 
+> Error handling for devm_thermal_of_cooling_device_register() is missing.
+> 
+
+I think we should continue registering other fans, so maybe we add a warning
+here if the registration fails?
+
+> > +	}
+> > +}
+> > +
+> >  static int cros_ec_hwmon_probe(struct platform_device *pdev)
+> >  {
+> >  	struct device *dev = &pdev->dev;
+> > @@ -402,6 +467,7 @@ static int cros_ec_hwmon_probe(struct platform_device *pdev)
+> >  	cros_ec_hwmon_probe_fans(priv);
+> >  	priv->fan_control_supported =
+> >  		cros_ec_hwmon_probe_fan_control_supported(priv->cros_ec);
+> > +	cros_ec_hwmon_register_fan_cooling_devices(dev, priv);
+> >  
+> >  	hwmon_dev = devm_hwmon_device_register_with_info(dev, "cros_ec", priv,
+> >  							 &cros_ec_hwmon_chip_info, NULL);
+> > 
+> > -- 
+> > 2.49.0.906.g1f30a19c02-goog
+> > 
+> > 
