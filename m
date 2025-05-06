@@ -1,106 +1,117 @@
-Received: from sgoci-sdnproxy-4.icoremail.net (sgoci-sdnproxy-4.icoremail.net [129.150.39.64])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11925264A9E;
-	Tue,  6 May 2025 09:09:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.150.39.64
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A33327A126
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 09:09:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746522559; cv=none; b=MEX/J6ruz2kfqXJi3CY81PuLzgR6tXMRJ/KyXaRJnYurf16Pvr+0TUDaGKnQBrXpzwnlB0snSrneRGcJDHt2plpv7J7g/4XHK3ilRi1BSIOzRenWH36rH0O3sfkiEz5Z0f2pEY0vsFhKhMS5VP9tC2l6W3LWEy5FNiz179eR0Qc=
+	t=1746522569; cv=none; b=VtMJKPaeYv7LOevyaZThY49cJ+IliimChbJcfbb048KOcqodKhCMpKAGtAZUNJi3gBMJ2u64hJXUbNSxP/xnK/UolhWoZgUyhZSaSS5r3E3IMy3EORRICiGFis9JAGlo82XJRr+sD2r84ltfjrCu4eiApA7tJYhiguC1And7lxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746522559; c=relaxed/simple;
-	bh=vSUbMIpTRLHktM0iNQa7tKGDC2wPWrqGiVyANR5NiNI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=i4yfLeEQ/nDQ7uuHpVy806NTDTkFml+sEP4jIhvxug9OZeXiQOd67rgGHx94+h/ajxsQSMtht5sjuv1UeffCpGMjGPxjLZ66oVKlJ/o+9zM+RsQBAq9rSoSHGEonKT3GzIYon0Z8K3+rp+P+ev1r9Egq1q+oIsKPxF2AGghgt/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=129.150.39.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
-Received: from E0006800LT.eswin.cn (unknown [10.12.96.77])
-	by app1 (Coremail) with SMTP id TAJkCgBHXg+f0RloSiViAA--.38522S2;
-	Tue, 06 May 2025 17:08:49 +0800 (CST)
-From: luyulin <luyulin@eswincomputing.com>
-To: linus.walleij@linaro.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kees@kernel.org,
-	gustavoars@kernel.org,
-	brgl@bgdev.pl,
-	linux-hardening@vger.kernel.org
-Cc: zhengyu@eswincomputing.com,
-	ningyu@eswincomputing.com,
-	huangyifeng@eswincomputing.com,
-	linmin@eswincomputing.com,
-	fenglin@eswincomputing.com,
-	lianghujun@eswincomputing.com,
-	luyulin <luyulin@eswincomputing.com>
-Subject: [PATCH 0/2]
-Date: Tue,  6 May 2025 17:08:44 +0800
-Message-Id: <20250506090844.1516-1-luyulin@eswincomputing.com>
-X-Mailer: git-send-email 2.31.1.windows.1
+	s=arc-20240116; t=1746522569; c=relaxed/simple;
+	bh=FAVp5gt8PSpT2EQxUuM5Z3ZpVFQzfkF4ChHcboUUy+E=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=DHdE/m/MqHjsjxnop9v7Ty2OpSmhbhd41eV96evyvUhV4HaUZqNgyFys7c8ukGKGe6m0Uar3zLBCnzkva2BU5Lj4feVDbayo8O6+qT2gjCGUKkjXXFN7J5rEztEaggz/n0NYvgtef6UzAnvXAWIn42qr38fCIRFjTluHmHmQSzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UNswAuDF; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UNswAuDF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1CD5C4CEE4;
+	Tue,  6 May 2025 09:09:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746522568;
+	bh=FAVp5gt8PSpT2EQxUuM5Z3ZpVFQzfkF4ChHcboUUy+E=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=UNswAuDFp7+m3dYB43ly7MXiMujbuBIR7N0X2CDZcGdoREIfkrYH29B0GeDFBGDIu
+	 D4TEKeQ8B4OC6yOEdHU8cy/sV6vugnPMAaVZwcNrWCv+qzTsb2jXlGLXTdVJYjDCCx
+	 Fz7bthFBb3D1uK7bn2h6uzMXbwoolq/GLpoPr3QgfAFesiB8swJYAdJ6J2nCCxHMQo
+	 mdFmOyG+hOEfKO5lULSe4nqX3oRiX34aPsR6r7qrgEaA3zwnPSIVyaUcEGtBprAuvI
+	 CU2fQsKJoEKgq2U4E6iFx63ciqPpniyRPr8L1cBsx8YGZS9w7Dn2J1HDk7vVS3oyjz
+	 hLjCAW1KrNYrA==
+Message-ID: <1db80259-a29d-439e-aaff-2a7daac9c1e5@kernel.org>
+Date: Tue, 6 May 2025 17:09:26 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:TAJkCgBHXg+f0RloSiViAA--.38522S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Cr17AF4UWF45tr18Gw45KFg_yoW8XrWDpF
-	43GF1rtrn8XFZrXa47Jw4FkrW3Ga1xAr1a9ayft347XFs8A348AF15K3W5XrWDWF48JrnI
-	yryYgryUuF1DArJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9G14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_GFv_Wrylc2xSY4AK6svPMxAIw28IcxkI7VAKI48JMx
-	C20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAF
-	wI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20x
-	vE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v2
-	0xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxV
-	W8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7sRidbbtUUUUU==
-X-CM-SenderInfo: pox13z1lq6v25zlqu0xpsx3x1qjou0bp/
+User-Agent: Mozilla Thunderbird
+Cc: chao@kernel.org, linux-kernel@vger.kernel.org,
+ linux-f2fs-devel@lists.sourceforge.net, pilhyun.kim@sk.com
+Subject: Re: [PATCH v2 1/2] f2fs: Add a method for calculating the remaining
+ blocks in the current segment in LFS mode.
+To: "yohan.joung" <yohan.joung@sk.com>, jaegeuk@kernel.org,
+ daehojeong@google.com
+References: <20250502044146.552-1-yohan.joung@sk.com>
+Content-Language: en-US
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <20250502044146.552-1-yohan.joung@sk.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-  This patch introduces a driver for the Eswin eic7700 SoC pinctrl
-  controller, adding support for the pinctrl functionality in the Linux
-  kernel. The driver provides basic functionality to manage and control
-  the pinctrl signals for the eic7700 SoC.
+On 2025/5/2 12:41, yohan.joung wrote:
+> In LFS mode, the previous segment cannot use invalid blocks,
+> so the remaining blocks from the next_blkoff of the current segment
+> to the end of the section are calculated.
+> 
+> Signed-off-by: yohan.joung <yohan.joung@sk.com>
+> ---
+>   fs/f2fs/segment.h | 21 +++++++++++++++++----
+>   1 file changed, 17 insertions(+), 4 deletions(-)
+> 
+> diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
+> index 03c0f59be5a8..345da052f0e1 100644
+> --- a/fs/f2fs/segment.h
+> +++ b/fs/f2fs/segment.h
+> @@ -582,8 +582,14 @@ static inline bool has_curseg_enough_space(struct f2fs_sb_info *sbi,
+>   		if (unlikely(segno == NULL_SEGNO))
+>   			return false;
+>   
+> -		left_blocks = CAP_BLKS_PER_SEC(sbi) -
+> -				get_ckpt_valid_blocks(sbi, segno, true);
+> +		if (f2fs_lfs_mode(sbi)) {
 
-  The driver integrates with the Linux pinctrl subsystem, enabling kernel
-  code to trigger pinctrl operations on hardware and ensuring support for
-  pin multiplexing and pin configuration.
+f2fs_lfs_mode() && __is_large_section(sbi)?
 
-  Features:
+> +			left_blocks = CAP_BLKS_PER_SEC(sbi) -
+> +				(segno - rounddown(segno, SEGS_PER_SEC(sbi))) * BLKS_PER_SEG(sbi) -
 
-    Implements support for the Eswin eic7700 SoC pinctrl controller.
-    Provides API to manage pinctrl for the eic7700 SoC.
-    Integration with the Linux pinctrl subsystem for consistency and
-    scalability.
+How about using SEGS_TO_BLKS() which will be more efficient? and what do you
+think of introducing a new macro to improve code readability?
 
-  Supported chips:
-    Eswin eic7700 SoC.
+#define GET_START_SEG_FROM_SEC(sbi, segno)	(rounddown(segno, SEGS_PER_SEC(sbi)))
 
-  Test:
-    I tested this patch on the Sifive HiFive Premier P550 (which uses
-    the EIC7700 SoC), including system boot, networking, EMMC, display,
-    and other peripherals. The drivers for these modules all use the
-    pinctrl module, so this verifies that this pinctrl driver
-    patch is working properly.
+> +				CURSEG_I(sbi, i)->next_blkoff;
+> +		} else {
+> +			left_blocks = CAP_BLKS_PER_SEC(sbi) -
+> +					get_ckpt_valid_blocks(sbi, segno, true);
+> +		}
+>   
+>   		blocks = i <= CURSEG_COLD_DATA ? data_blocks : node_blocks;
+>   		if (blocks > left_blocks)
+> @@ -596,8 +602,15 @@ static inline bool has_curseg_enough_space(struct f2fs_sb_info *sbi,
+>   	if (unlikely(segno == NULL_SEGNO))
+>   		return false;
+>   
+> -	left_blocks = CAP_BLKS_PER_SEC(sbi) -
+> -			get_ckpt_valid_blocks(sbi, segno, true);
+> +	if (f2fs_lfs_mode(sbi)) {
 
-luyulin (2):
-  dt-bindings: pinctrl: eswin: Document for eic7700 SoC
-  pinctrl: eswin: Add eic7700 pinctrl driver
+Ditto,
 
- .../pinctrl/eswin,eic7700-pinctrl.yaml        | 156 ++++
- drivers/pinctrl/Kconfig                       |  11 +
- drivers/pinctrl/Makefile                      |   1 +
- drivers/pinctrl/pinctrl-eic7700.c             | 701 ++++++++++++++++++
- 4 files changed, 869 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/eswin,eic7700-pinctrl.yaml
- create mode 100644 drivers/pinctrl/pinctrl-eic7700.c
+> +		left_blocks = CAP_BLKS_PER_SEC(sbi) -
+> +				(segno - rounddown(segno, SEGS_PER_SEC(sbi))) * BLKS_PER_SEG(sbi) -
+> +				CURSEG_I(sbi, CURSEG_HOT_DATA)->next_blkoff;
 
--- 
-2.25.1
+Ditto,
+
+Thanks,
+
+> +	} else {
+> +		left_blocks = CAP_BLKS_PER_SEC(sbi) -
+> +				get_ckpt_valid_blocks(sbi, segno, true);
+> +	}
+> +
+>   	if (dent_blocks > left_blocks)
+>   		return false;
+>   	return true;
 
