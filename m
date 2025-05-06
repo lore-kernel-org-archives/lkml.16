@@ -1,79 +1,119 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtpbgeu1.qq.com (smtpbgeu1.qq.com [52.59.177.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF9783103F7
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 02:40:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52BB729AB03;
+	Tue,  6 May 2025 02:41:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.59.177.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746499213; cv=none; b=ls0M9rKyHw2TgIdCRO5RE5eEQxYQUfjeeoWLkI/ABZx7z6hKAIRj7kvb58AzSTC8oycGMLZtHrHdqwW0EmJJB9S+I2JhjRBR4IIF/Kkbr3gHe8pjF/nodGlroZMRzlP4bC2FpDCbXgnqnIkqwKrH0h3+9ZKEmIR3CJ5fE6uSDCk=
+	t=1746499287; cv=none; b=ON7I4evRyOHLZZlHiythz9HJZJ2YhJPyMaqhOii9V7CfFoj0FOBdXXTBi7dbwsXWk7ZqdJS2EQZyFLiumW+vWe4ktXJnHquECPUCu5SAYmWgE09yFiKCwirzFbQwYyEZeE8uZWj8suwMiu5Jv7v0zWJgFrJDwkDB2AtcNkF3wew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746499213; c=relaxed/simple;
-	bh=CTbLsyl58iltfZZfRBi+FNlAbbyFqCv8E4mvbDWbueA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NUrdE3eZ8mCcNtrCCs74kO0YaS2ZBVa7obc4MY+YeLEcojkeEj9a9pVWSR7AD7JtHNbG2TE5eF4Y48Du10drsd3lecW1WQuIomPJzLMlYbXGWLJZ3sHlFmo3XEM02Jzqopl8d8tORawyGfir7b1kspx30+4TFggNSRqACdnwFrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TuBAV8i0; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1746499287; c=relaxed/simple;
+	bh=dDn4W5v9t6AyHBHxLWO7FuLjj98KbpZnLxWf1Zria3s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Uqy7immX9SlBa+q/jbrac1M/HGf8kIE7nUo+8YF4js0e+v4lf4C5iPSG5qhvPOX7C7gsc86iAXJYxr/Kwc1JCGUVJLVAY3XJlcMcu/JWfZIGQAZFdw3PPnU4fyHQpItlFszjBPAJNaHTHMrR8i/Zsdcdz0Obe4azKEfeeGa26Vw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=JPXukTQ7; arc=none smtp.client-ip=52.59.177.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TuBAV8i0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746499208;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cEYYbJsPFV36ejeonpvfPVQlMdzMST330wtCWmXF40w=;
-	b=TuBAV8i0Bn5T7wtBP37C1r1RSJhtKP/LbWt06yAryv67naTeohcNChpt1j9A3Kqfsfn2b3
-	3t0/z178w3ZAL5nEgAD87V3fNj3CVHweoFkIm03lbGbbdIwbpFisKmgAWr12uYNXR+BVzz
-	Jwc1x19/bUNB9cNj5Gs288Z/Q9mB3W4=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-606-dzS3dgcLMEuTTv1vBNJieQ-1; Mon,
- 05 May 2025 22:40:07 -0400
-X-MC-Unique: dzS3dgcLMEuTTv1vBNJieQ-1
-X-Mimecast-MFC-AGG-ID: dzS3dgcLMEuTTv1vBNJieQ_1746499206
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 02EBA1956088;
-	Tue,  6 May 2025 02:40:06 +0000 (UTC)
-Received: from fedora (unknown [10.72.116.13])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A7F0830001AB;
-	Tue,  6 May 2025 02:40:02 +0000 (UTC)
-Date: Tue, 6 May 2025 10:39:58 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Caleb Sander Mateos <csander@purestorage.com>
-Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] ublk: consolidate UBLK_IO_FLAG_OWNED_BY_SRV checks
-Message-ID: <aBl2fkjRwh3SJqWE@fedora>
-References: <20250505172624.1121839-1-csander@purestorage.com>
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="JPXukTQ7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1746499279;
+	bh=dDn4W5v9t6AyHBHxLWO7FuLjj98KbpZnLxWf1Zria3s=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To;
+	b=JPXukTQ7lcEdJZ6z+nfwNXkm5FYZ7C5fnLDNlf3sBvo/2VQJNN0P+t3gFdY6YiHR/
+	 DvMdIKgh013hU6GOyOA5JqaScgApCAX87+DPo4khZLQ5SS9e4Bgv6qPkc7yuJeB036
+	 je9bv17CCVvCO59o6LjqqVdCwK/3mLiHxhFSu+yY=
+X-QQ-mid: zesmtpgz4t1746499273ta1f35d3e
+X-QQ-Originating-IP: l24iImKHMNBQ9uisIlimcZxyg0yZaIgIQW6RYpyxGBs=
+Received: from mail-yb1-f172.google.com ( [209.85.219.172])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Tue, 06 May 2025 10:41:11 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 13454101743019331379
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e6e1cd3f1c5so4199376276.0;
+        Mon, 05 May 2025 19:41:12 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUV8LyYHlq0nlDsI4XZmlJr3s76aR90jtwTRMNgzCvsrD/O9Sn6g+mJUMhurWDCNnCJpT4=@vger.kernel.org, AJvYcCWPaGxZ2Oh4ZqQ7q0ap/SWBBhMCo2k3LQnvXIGmluoBrzzZ7oAqfotTUsYkI1eJUSxp3ePut6QxRA/CUcLu@vger.kernel.org, AJvYcCXDcMqOSkeFP9h3blrWYXgp0u01gR7+fQtAMniawU5eKbKfYfStjQ2xLgaC6iazCgArNLkwIHtERiJpfZKr@vger.kernel.org, AJvYcCXPa5fv+QCNRlDogsrF3p2mXOSFYUfkCSib42z7S4ywPyQpIwmriEriF18d5tv2kArMiXGvnB+R20rVUGroY3EK@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyc1Ibqj9Iok+qmarjs2vgJs5+txWB56miUWFGadRCndAKNDK/J
+	kepnO5JJZ/jjdo8XjqqlyfE/c52CR0OhBRGmFToxFizwjcFFPqCo06Nt+0Dmj+NfHdfdeBUlbsf
+	kXUuqeiEMB1M375UQu/yNgu6vtdU=
+X-Google-Smtp-Source: AGHT+IFgFFlMacdloLtgDC8BYlif3b1M5uLk0pWcJg25Fujp9vccWuhfsfXobAggGBnTnNta+8cIxYeCcW4lzf1hqZQ=
+X-Received: by 2002:a05:6902:1ac5:b0:e6d:f3ca:3e15 with SMTP id
+ 3f1490d57ef6-e75c08b698bmr1960395276.3.1746499270786; Mon, 05 May 2025
+ 19:41:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250505172624.1121839-1-csander@purestorage.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+References: <20250429-noautoinline-v3-0-4c49f28ea5b5@uniontech.com>
+ <20250429123504.GA13093@lst.de> <D9KW1QQR88EY.2TOSTVYZZH5KN@google.com>
+ <20250501150229.GU4439@noisy.programming.kicks-ass.net> <D9KXE2YX8R2M.3L7Q6NVIXKPE9@google.com>
+ <08163d8b-4056-4b84-82a1-3dd553ee6468@acm.org>
+In-Reply-To: <08163d8b-4056-4b84-82a1-3dd553ee6468@acm.org>
+From: Chen Linxuan <chenlinxuan@uniontech.com>
+Date: Tue, 6 May 2025 10:40:59 +0800
+X-Gmail-Original-Message-ID: <973B455678FC1BDD+CAC1kPDM2pUEwFRiUZFHKq_7sYpjARkFczJnp_FRu+r9-xYdgKg@mail.gmail.com>
+X-Gm-Features: ATxdqUHhA0M6lhr1xavQzClQ8qzartLkG1qHh9aYbVlX-6LFgZ39KxjHPoTQnkI
+Message-ID: <CAC1kPDM2pUEwFRiUZFHKq_7sYpjARkFczJnp_FRu+r9-xYdgKg@mail.gmail.com>
+Subject: Re: [PATCH RFC v3 0/8] kernel-hacking: introduce CONFIG_NO_AUTO_INLINE
+To: Bart Van Assche <bvanassche@acm.org>
+Cc: Brendan Jackman <jackmanb@google.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Christoph Hellwig <hch@lst.de>, chenlinxuan@uniontech.com, Keith Busch <kbusch@kernel.org>, 
+	Jens Axboe <axboe@kernel.dk>, Sagi Grimberg <sagi@grimberg.me>, 
+	Andrew Morton <akpm@linux-foundation.org>, Yishai Hadas <yishaih@nvidia.com>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>, 
+	Kevin Tian <kevin.tian@intel.com>, Alex Williamson <alex.williamson@redhat.com>, 
+	Peter Huewe <peterhuewe@gmx.de>, Jarkko Sakkinen <jarkko@kernel.org>, 
+	Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nicolas.schier@linux.dev>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, "Paul E. McKenney" <paulmck@kernel.org>, 
+	Boqun Feng <boqun.feng@gmail.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	Andrey Konovalov <andreyknvl@gmail.com>, Juergen Gross <jgross@suse.com>, 
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, linux-nvme@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, kvm@vger.kernel.org, 
+	virtualization@lists.linux.dev, linux-integrity@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, llvm@lists.linux.dev, 
+	Winston Wen <wentao@uniontech.com>, kasan-dev@googlegroups.com, 
+	xen-devel@lists.xenproject.org, Changbin Du <changbin.du@intel.com>, 
+	Linus Torvalds <torvalds@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpgz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-1
+X-QQ-XMAILINFO: OTRn99tF6xIxu9Ld/4bLApMY6+iBc72zONdY674Kg0NAe1QsuDk1M4PR
+	EZ/1uvu9h7uaFi4a62oAx7mSC7CSt3iFhjaQTebJaGEwk05awfFdGwpEPfOx+PLQv2RW/O3
+	d8VqZeBb5/m2zlbm7/rcHVDJFrdW0JvwXbCSpQoE9TfyKu1NjiW3wmg6GH6yM7EmdTl9DsF
+	J6FdLzLwxD297JmcqJoW0JP71eoOgPC4T2LZnlCkW3z3ODt7Zv8SpsvY8rOcwtg96jDyPo4
+	/DV3q54mZ+s+er3vVqzqZ3VCA1MTQ/BqVvgC7J7dUg71NZXrGVyoli3bL3lE9orlDsgc+O6
+	9sUZd19Hl+LVo4iCopqYb44fyOrkzuwF3UfxQIF/cl8D+q/IrrgojXJx5varFYJm5Q+FQO/
+	PtxR/CRTNOloiVz3qjbSQ/4W6uEyneifXP/fK84y0ECyLanykGf1n52/jreb/+ENV9ZkIcx
+	p3ywWYx01lJ2UJ+xURHcQqwjXC1jIYGdbA4fi0I0TbfnpuPocTL5EzlLmOJYo/u8JAT6HPm
+	hIbrW6LfgntiQva0bpmy05arTcB0pJgwOcZXYtwrl3i2c5OaNWmRceJtxCalQTMlr7Ya6gl
+	BuGneyFtbXdjthZlQr3UbqKNSEOuqx0cli9wBTlnodQrNou7l2tDQYJhZsG03xVLXRNMXMI
+	/QXufTqxJIElWxVptsCMSXnqqiTn087oRMhbD4JgY+QY+bp8rHn6CPVpnZQf9q5tV8+/hpN
+	JPwMENFQwK2KQTJA+qQ9rssSYXDl2b47wIZ/QmhK05iwyEk0Y9bZG2p6qJPrSvbIfRgn3Yj
+	+tdVn81JTsQYE5k0/tBwRb19PB5+Vshe/e/iKexCSi57TPr/VypYrpk4TtoIcwPWB1bYBJs
+	I3nuAeJgW/9S6e9KFz/FImOMK7Ukhpmv6tOBCYmYKle3K44qtYL6bz1Z/DHlLcpVEO0GRHi
+	3KfnmnpAngaOKS5GYpgNyAPj0yE/ptSqAk5IFKMWkQsJ4MQZn9bxkm1IqNQN5LsORkaOaVS
+	eWRfT+iBmAgqa9k7Az+thgGV/R/L+HyQyPBNaNskF3GmKKReav60DhPSkOrmZ6mKV4y4YMq
+	g4UrWtMo0lB
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+X-QQ-RECHKSPAM: 0
 
-On Mon, May 05, 2025 at 11:26:23AM -0600, Caleb Sander Mateos wrote:
-> Every ublk I/O command except UBLK_IO_FETCH_REQ checks that the ublk_io
-> has UBLK_IO_FLAG_OWNED_BY_SRV set. Consolidate the separate checks into
-> a single one in __ublk_ch_uring_cmd(), analogous to those for
-> UBLK_IO_FLAG_ACTIVE and UBLK_IO_FLAG_NEED_GET_DATA.
-> 
-> Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
-> ---
-> v2: rebase
+On Sun, May 4, 2025 at 3:14=E2=80=AFAM Bart Van Assche <bvanassche@acm.org>=
+ wrote:
 
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
+> If this is for test builds only, has it been consider to add
+> -fno-inline-functions as a local change in the top-level Makefile?
 
-
-
-Thanks,
-Ming
-
+The issue here is that the current kernel cannot be compiled when
+these compiler options that reduce inlining behavior are added.
