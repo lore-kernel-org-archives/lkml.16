@@ -1,81 +1,134 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from smtp-fw-2101.amazon.com (smtp-fw-2101.amazon.com [72.21.196.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E0C921773D;
-	Tue,  6 May 2025 13:12:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0B3C21773D;
+	Tue,  6 May 2025 13:13:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=72.21.196.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746537164; cv=none; b=jBlrA5fvgPQ1++N8WnHMTij9Cdn6zaCauuErx8UA6f1M6dUf9+ffNqoikzpddTNOsbAial9Rafea4c7RCFTHNg4S1NUTk9/sqWrIW5idOKC1zBvCNsggFPc8NYkhq/W/+cTV3zK8tlXLVhkPPO4fD1VGUQxrd4+hWmHar796//M=
+	t=1746537190; cv=none; b=U51dffdaLG5gL95KSftsBB41RDZdUaRxmOQaLRrp++j7daB6ufGCOCHoRQgfI0BIUqDA0xip3brgTwoXkm5Hh3OWCU9uvWVE21PCYJgcBfOJn5vCF1X+M/82yWM9HMFaICLXk5uro/SJFCaPJFZfRIkY0EixjT/RhzHaA59+7ac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746537164; c=relaxed/simple;
-	bh=WLluURKbm4eGnI6fPXUW+jlJLn5vL0ww++Ei8KhjTqI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=M90hVr5kjGJGU+94kgTWjpjvc+SmEMG4G4jyLB5yf0+E80QIN8BI358R5Eolndaj2HRlRjm1CQav+l5QwRyfBM/9sNA9mGoqVERyJ8hOVzX/HMdD4pjuzXjQS5HsZbs91u8PuB9XiZNDdCFjkC5FkWoHypXDV6uN4wOczBfm6rA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=IR10GhDy; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1746537190; c=relaxed/simple;
+	bh=YMI0vj0OrGpE/eP6t8dJ6R2e/dntMlSP+AkMjMPh4h4=;
+	h=From:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=NgJjdsxdJHiTWiqfBXQhi+WrO4GKjfs5snC0g+E4LgzcC/LRinDOx+EfW1cpH9tRufZSa6gNYbt1E/LOVIWmmM1m603y5woZBJK6wKpeEKPfJ8qG3D4HozuNcx2hkz7EOwLRYjEmKeDk7CGKxARHQMC+XDrx6LWil67xYCSErWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.de; dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b=bob6YepX; arc=none smtp.client-ip=72.21.196.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="IR10GhDy"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 026A2403A7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1746537161; bh=m8AIbhmxSPITdk7Wy5PZ0OjI7Z8rf39QNecnep+a59k=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=IR10GhDySlD3IFtodkh3Iiciiwj5Q6TYxO3X293u114YIfE2BHgi+c+h2PzLTuzyn
-	 jy/A5sZ7XiVneRvAJxHHzFDKuQcHzrbnZUs8C8fUcerorgP7IdbJ8G8LeleT5D54kU
-	 +yc0s54sVFG+l0bEcdOWuM1QkqYG9Ctw14RRChqP8sSen23qAN0OEAnqXSFwXgwRKB
-	 H53Rb/VuCXdQ8yoGFChoknszcKW6S44N1YPagqZe2Cctv6X+AgOjXVPsj+A7ydmr3C
-	 x45eO054b/PWztWYBPbT7VOmuYxcIbu4+azb+Hhp9AMh2SAQukX6tEDwG16fWcLV98
-	 0qyzSvfJc03cQ==
-Received: from localhost (mdns.lwn.net [45.79.72.68])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 026A2403A7;
-	Tue,  6 May 2025 13:12:40 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: WangYuli <wangyuli@uniontech.com>, akpm@linux-foundation.org,
- rostedt@goodmis.org, paulmck@kernel.org, thuth@redhat.com, bp@alien8.de,
- ardb@kernel.org, gregkh@linuxfoundation.org
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- chenhuacai@kernel.org, kernel@xen0n.name, loongarch@lists.linux.dev,
- tsbogend@alpha.franken.de, linux-mips@vger.kernel.org, chris@zankel.net,
- jcmvbkbc@gmail.com, WangYuli <wangyuli@uniontech.com>
-Subject: Re: [PATCH] Documentation/kernel-parameters: Update memtest parameter
-In-Reply-To: <0FC3D21CA22E8251+20250428034746.21216-1-wangyuli@uniontech.com>
-References: <0FC3D21CA22E8251+20250428034746.21216-1-wangyuli@uniontech.com>
-Date: Tue, 06 May 2025 07:12:37 -0600
-Message-ID: <87a57px4qi.fsf@trenco.lwn.net>
+	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="bob6YepX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
+  t=1746537189; x=1778073189;
+  h=from:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=eroNId8QJzKeQKmRo8q0ozQ4Sy0oITvhszR0rqprBLQ=;
+  b=bob6YepXO5zQMZ9M8G1aoivh0yzGLDI841vQ0llDoypVSIq+M7HYhIES
+   87+uJeb9puJlZ35mw84aIJ9DgWHgLJjZuSilZlDfC2M8O1FREwp4i3anU
+   +k04HtjrXClbsuzfSXReRpEYAee7GZaNjdoOCF7vCNitHPcQL8wzwn9Dj
+   Y=;
+X-IronPort-AV: E=Sophos;i="6.15,266,1739836800"; 
+   d="scan'208";a="489596055"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-2101.iad2.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 13:13:05 +0000
+Received: from EX19MTAEUC002.ant.amazon.com [10.0.17.79:30777]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.36.85:2525] with esmtp (Farcaster)
+ id 11723db5-b7e5-4450-80c2-cb2f93ea780e; Tue, 6 May 2025 13:13:02 +0000 (UTC)
+X-Farcaster-Flow-ID: 11723db5-b7e5-4450-80c2-cb2f93ea780e
+Received: from EX19D008EUC003.ant.amazon.com (10.252.51.205) by
+ EX19MTAEUC002.ant.amazon.com (10.252.51.181) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Tue, 6 May 2025 13:13:02 +0000
+Received: from EX19D008EUC001.ant.amazon.com (10.252.51.165) by
+ EX19D008EUC003.ant.amazon.com (10.252.51.205) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Tue, 6 May 2025 13:13:02 +0000
+Received: from EX19D008EUC001.ant.amazon.com ([fe80::9611:c62b:a7ba:aee1]) by
+ EX19D008EUC001.ant.amazon.com ([fe80::9611:c62b:a7ba:aee1%3]) with mapi id
+ 15.02.1544.014; Tue, 6 May 2025 13:13:02 +0000
+From: "Heyne, Maximilian" <mheyne@amazon.de>
+CC: "Heyne, Maximilian" <mheyne@amazon.de>, "stable@vger.kernel.org"
+	<stable@vger.kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown
+	<lenb@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Ard Biesheuvel
+	<ardb@kernel.org>, Jeremy Linton <jeremy.linton@arm.com>, Catalin Marinas
+	<catalin.marinas@arm.com>, "linux-acpi@vger.kernel.org"
+	<linux-acpi@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH] ACPI/PPTT: fix off-by-one error
+Thread-Topic: [PATCH] ACPI/PPTT: fix off-by-one error
+Thread-Index: AQHbvoiY1LpDnn/Xs0e1Rmh//GxC4g==
+Date: Tue, 6 May 2025 13:13:02 +0000
+Message-ID: <20250506-draco-taped-15f475cd@mheyne-amazon>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+Content-Type: text/plain; charset="iso-8859-1"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-WangYuli <wangyuli@uniontech.com> writes:
+Commit 7ab4f0e37a0f ("ACPI PPTT: Fix coding mistakes in a couple of
+sizeof() calls") corrects the processer entry size but unmasked a longer
+standing bug where the last entry in the structure can get skipped due
+to an off-by-one mistake if the last entry ends exactly at the end of
+the ACPI subtable.
 
-> LoongArch, MIPS and XTENSA has supported memtest now.
-> Update documentation for them.
->
-> Link: https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=dce44566192ec0b38597fdfd435013c2d54653ff
-> Link: https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=fb8e9f59d6f292c3d9fea6c155c22ea5fc3053ab
-> Signed-off-by: WangYuli <wangyuli@uniontech.com>
-> ---
->  Documentation/admin-guide/kernel-parameters.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index d9fd26b95b34..eeba55deb38d 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -3620,7 +3620,7 @@
->  			Note that even when enabled, there are a few cases where
->  			the feature is not effective.
->  
-> -	memtest=	[KNL,X86,ARM,M68K,PPC,RISCV,EARLY] Enable memtest
-> +	memtest=	[KNL,X86,ARM,LOONGARCH,MIPS,M68K,PPC,RISCV,XTENSA,EARLY] Enable memtest
+The error manifests for instance on EC2 Graviton Metal instances with
 
-Applied, thanks.
+  ACPI PPTT: PPTT table found, but unable to locate core 63 (63)
+  [...]
+  ACPI: SPE must be homogeneous
 
-jon
+Fixes: 2bd00bcd73e5 ("ACPI/PPTT: Add Processor Properties Topology Table pa=
+rsing")
+Cc: stable@vger.kernel.org
+Signed-off-by: Maximilian Heyne <mheyne@amazon.de>
+---
+ drivers/acpi/pptt.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/acpi/pptt.c b/drivers/acpi/pptt.c
+index f73ce6e13065d..4364da90902e5 100644
+--- a/drivers/acpi/pptt.c
++++ b/drivers/acpi/pptt.c
+@@ -231,7 +231,7 @@ static int acpi_pptt_leaf_node(struct acpi_table_header=
+ *table_hdr,
+ 			     sizeof(struct acpi_table_pptt));
+ 	proc_sz =3D sizeof(struct acpi_pptt_processor);
+ =
+
+-	while ((unsigned long)entry + proc_sz < table_end) {
++	while ((unsigned long)entry + proc_sz <=3D table_end) {
+ 		cpu_node =3D (struct acpi_pptt_processor *)entry;
+ 		if (entry->type =3D=3D ACPI_PPTT_TYPE_PROCESSOR &&
+ 		    cpu_node->parent =3D=3D node_entry)
+@@ -273,7 +273,7 @@ static struct acpi_pptt_processor *acpi_find_processor_=
+node(struct acpi_table_he
+ 	proc_sz =3D sizeof(struct acpi_pptt_processor);
+ =
+
+ 	/* find the processor structure associated with this cpuid */
+-	while ((unsigned long)entry + proc_sz < table_end) {
++	while ((unsigned long)entry + proc_sz <=3D table_end) {
+ 		cpu_node =3D (struct acpi_pptt_processor *)entry;
+ =
+
+ 		if (entry->length =3D=3D 0) {
+-- =
+
+2.47.1
+
+
+
+
+Amazon Web Services Development Center Germany GmbH
+Tamara-Danz-Str. 13
+10243 Berlin
+Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
+Eingetragen am Amtsgericht Charlottenburg unter HRB 257764 B
+Sitz: Berlin
+Ust-ID: DE 365 538 597
+
