@@ -1,117 +1,69 @@
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B25B0214815;
-	Tue,  6 May 2025 23:49:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6C511FBC92
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 23:50:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746575367; cv=none; b=NxglABRp1oi25lR4ekPBJKoG5IUBPQsIgmHu8F6q5DFEXy579M/erEZFNWSIqOTFMLKzrNHZj8ueDH9pHD1B1x7jANpARszTr+MAgFaaoKlJHZesHM6GdhncT5VDFQ+y6ehN4dd3AZmHJ9g1tRyQ0JVRhaW1BWsyICEBc7IG8lQ=
+	t=1746575414; cv=none; b=F7vCNcNdCl48+nLOhpjj/7H7TM+oScnxoH27jm2XXsUhdGxkSNhy7KWNKeC6RN0IoPEd888p1E7brcazC/2W565UAGCf6mzP8piwIr3INJnPix2+oNKslYtBt23S50VrvtwRmbPogJ7qd1WfudqhDo1RgYAc4DxhZdY+qvACj2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746575367; c=relaxed/simple;
-	bh=bN6Xre6GbjWnrrHg6esYssYxyunEvPUSznLL1o7vQYE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HfY1+JMiG5EQBqn+lxwYB10azz1WIErabxrtlhzd/MbvTSfT08aDYB9qObIpSShKmUZ9xfse1uL4NsB/OCE3qH9jWNet6qGyDWF33t5nLASmuAkkbAl4XrzGNVg1JmGYb/pYYbUR94xTv7nNE0OoPmhLLr0MESUUIc8mhXLpGFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IiPHhhQZ; arc=none smtp.client-ip=209.85.222.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746575414; c=relaxed/simple;
+	bh=W/TFAeZfFS7VZ2Whby13swcOwpYaxUdhL025szOJPWM=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=seV8Fx7O3AEA4LO3aXMyTbVpxPo/EtiPrMjdi6t5/h6fSnVGSzTaGCREUMXMaZ5fcvFngDfuIsCGksvb6JcePWx/sAIJNDpmSGKMyxr2cAXzmR/x6hzUbCEX44xc6aFttCknB1rn1DJKAjEvn5j/r61cq3s/FXd5XJ1hnBz/PGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=spaUvWo4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IiPHhhQZ"
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7c56a3def84so639874585a.0;
-        Tue, 06 May 2025 16:49:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746575364; x=1747180164; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sLfEz//YxlWSQrp0pxzZLIDi5MwZhlRnzYF53iBHKBc=;
-        b=IiPHhhQZhSdi0GKGu2f2hiqIwIhFEVgR7jxdBoNWOgKlcJNTE32DydpKmebAk5irRg
-         rfVcWvEXPaHyLVyd/NrhGqo84s9+Wnq50bhSgv6IkPUowihP/EsP1Qbcj5Exyiwa+90j
-         cg5AnnRhtTZoU764bH7NfjZ+EdFRvM2zPyRSdfephAtTe78EP0dF4CkSSrvB2ILd1+36
-         N9JcqbqpguVzXuYsnODut1sfb53btZzh+uIchFaaaLMeOGb2zrEs/s2iXjQbGLOcu9Vo
-         hcO/4+3D+j/UXFV2w4g0OOrlPcwUfKXahPO4SGdqzcxeuWJ54dH2t0NQW3Hrf7S00enh
-         y/6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746575364; x=1747180164;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sLfEz//YxlWSQrp0pxzZLIDi5MwZhlRnzYF53iBHKBc=;
-        b=bi/OvKbHWz6AB+in4NpXxePxJeSyEpnXNUCs34VqX7ve/sgZgeJKSBUwBP/9e0HczX
-         dsCZQ0KjKm9egxDGz72likz6Uu8jADZEoMw4jA8KVgS2y4QSLBqWdjk9nGqub2dc57o8
-         8hbTWPjuWv3Z5qRiY0WKwx+XkYOwuOwM2aehV0voIfrTq3cA1VPu3clPD+8n2qujDfd1
-         dWWfjeLckm6DSTbu65xRRgrScDdr6nd07rFm/oa1lVu58gqHXPHWs2eWzKW/5ryRsK36
-         z5Zg0UInDCnwR1NiGr5FOri3kIjDHPZ3mUkeIDPFolSrKEv7PDWqrKt/irGDlHB7lxT0
-         BLug==
-X-Forwarded-Encrypted: i=1; AJvYcCUTpz7rxS4xBn54+k1qENc+D5kSPCR2OF28HWHWgHwMYVHanlNVgO+IcNVVJkmdUQeK7SgxlEDo@vger.kernel.org, AJvYcCUanD9MkAxqBx4edOEN8W3ASjsd1MXy1uMDYP4iSzDkBv76txS2zOAwL6exz23H8ilYv+Bu+iv8LBtg@vger.kernel.org, AJvYcCXn4B9Ixsw2COMwXZoiUvgWtvNlnNSo9X7NCT9nDC5fEdkHvjYE/b4AEJfi/6QBiTzM2Vb6FeMC3FzUbQOq@vger.kernel.org
-X-Gm-Message-State: AOJu0YwDGXww7dbAknumRpdn93mRlOdC5YoTkZ/ZbGBpVDaLt9Zo9IXx
-	iMWuIzvR31ZGV9CC15e1/LpXvfVJ+6xsSJ6CC8fBD2QXMR5fh4Ll
-X-Gm-Gg: ASbGncsSRaR37p1A5qkwHkslI2r/UVDGnvyFLkF6AIFiLTh5lh97UhWlJeDIOMiUHX9
-	NLJp8NKS4M+plPZeaEbGvG9XbxLwy2F75U0zxYUZSz5yT8NhMYwBPGw0eIqxgDw64xPBHWCu6L8
-	xksB0KaLLi3xu7VpnNCJFMH6KMxu7Lt9TPa4KjeoHZSB1Bypgp1nWd2W58jL3bjNU/VrlyduBTw
-	0KwkhEjGLEhE1kQhiothleYdIpQbLs3k8uoif72lVHv+ahJrXQmnRzzWi8ecxyJOz6/gVur9Bf8
-	n1dU++U7lx3YyEdF
-X-Google-Smtp-Source: AGHT+IFNc9H3OqbhDKWVWD4by0j8urZWA+6ou0PeVS7Ar9B3flHhOj6AnypYnW3OvckJNbDCCZLsQg==
-X-Received: by 2002:a05:620a:f12:b0:7c7:a5cd:5bd3 with SMTP id af79cd13be357-7caf73b1a87mr181273185a.28.1746575363534;
-        Tue, 06 May 2025 16:49:23 -0700 (PDT)
-Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7caf752b635sm48956385a.43.2025.05.06.16.49.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 16:49:23 -0700 (PDT)
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-	Nikita Shubin <nikita.shubin@maquefel.me>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Inochi Amaoto <inochiama@gmail.com>
-Cc: linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	sophgo@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	Yixun Lan <dlan@gentoo.org>,
-	Longbin Li <looong.bin@gmail.com>
-Subject: Re: (subset) [PATCH v5 0/5] clk: sophgo: add SG2044 clock controller support
-Date: Wed,  7 May 2025 07:48:58 +0800
-Message-ID: <174657533290.212327.15123615268219732476.b4-ty@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250418020325.421257-1-inochiama@gmail.com>
-References: <20250418020325.421257-1-inochiama@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="spaUvWo4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3D2AC4CEE4;
+	Tue,  6 May 2025 23:50:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1746575414;
+	bh=W/TFAeZfFS7VZ2Whby13swcOwpYaxUdhL025szOJPWM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=spaUvWo4mjg3LS8dif9YOHepQ5BCUFreEbD0UY4TxYAhfHY8laGzPdfBKRZDzaF14
+	 M8lnb+Nz9WcDqCmOxDvJ3c3Mx0J+blqlJTKzC3Tz2X0yuM7RSZaFrLxzRbjn89yY7e
+	 IjkUu7WS3R1nrd/3p1TLe6ExH2cm4atnBIRDPvOg=
+Date: Tue, 6 May 2025 16:50:13 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Juan Yescas <jyescas@google.com>, Zi Yan <ziy@nvidia.com>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, tjmercier@google.com,
+ isaacmanjarres@google.com, surenb@google.com, kaleshsingh@google.com,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Lorenzo Stoakes
+ <lorenzo.stoakes@oracle.com>, David Hildenbrand <david@redhat.com>, Mike
+ Rapoport <rppt@kernel.org>, Minchan Kim <minchan@kernel.org>
+Subject: Re: [PATCH v3] mm: Add CONFIG_PAGE_BLOCK_ORDER to select page block
+ order
+Message-Id: <20250506165013.4d48314b6d52d76148cb51f2@linux-foundation.org>
+In-Reply-To: <baeb1200-5293-4fe0-aa76-b1d41875af58@suse.cz>
+References: <20250506002319.513795-1-jyescas@google.com>
+	<20250506000133.ba44539dd517e4f54515751b@linux-foundation.org>
+	<baeb1200-5293-4fe0-aa76-b1d41875af58@suse.cz>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, 18 Apr 2025 10:03:19 +0800, Inochi Amaoto wrote:
-> The clock controller of SG2044 provides multiple clocks for various
-> IPs on the SoC, including PLL, mux, div and gates. As the PLL and
-> div have obvious changed and do not fit the framework of SG2042,
-> a new implement is provided to handle these.
+On Tue, 6 May 2025 14:48:19 +0200 Vlastimil Babka <vbabka@suse.cz> wrote:
+
+> >> +config PAGE_BLOCK_ORDER
+> >> +	int "Page Block Order"
+> >> +	range 1 10 if !ARCH_FORCE_MAX_ORDER
+> >> +	default 10 if !ARCH_FORCE_MAX_ORDER
+> >> +	range 1 ARCH_FORCE_MAX_ORDER if ARCH_FORCE_MAX_ORDER
+> >> +	default ARCH_FORCE_MAX_ORDER if ARCH_FORCE_MAX_ORDER
+> > 
+> > Do we really need to do this arithmetic within Kconfig?  Would it be
+> > cleaner to do this at runtime, presumably when calculating
+> > pageblock_order?
 > 
-> Changed from v4:
-> 1. patch 1,3: Applied Krzysztof's tag.
-> 2. patch 1: fix header path in description.
-> 3. patch 4: drop duplicated module alias.
-> 4. patch 5: make sg2044_clk_desc_data const.
-> 
-> [...]
+> AFAIK pageblock_order is compile-time constant.
 
-Applied to soc-for-next, thanks!
+So it is.  Why the heck did we make it lower case?
 
-[2/5] soc: sophgo: sg2044: Add support for SG2044 TOP syscon device
-      https://github.com/sophgo/linux/commit/f18198c0de56ea636c74312bd09b9d67273412d8
-
-Thanks,
-Inochi
-
+And pageblock_nr_pages.
