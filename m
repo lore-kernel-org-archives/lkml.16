@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4655A28688C;
-	Tue,  6 May 2025 18:23:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04DF82868A5;
+	Tue,  6 May 2025 18:23:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746555834; cv=none; b=Cv++80NRffTRio1JY0ayl4IJsLsHn0s+mxrcSRPY5QR8uVI/a6c4YW2w6M+UD/3JcluxRI42L3UJdn59NakVOdFCww1agxIr3xt3CqR0VTXyX8/uVnZOKfXg0jx9+G4XELis8mqK7EPOkEU1eDR55ufw2vhRNP3Jox84x4CksG8=
+	t=1746555836; cv=none; b=dw31Bft8YgvLhit7BpFkT2P1N0JVwiaQ2gzrjDQc3vTLt5YKE+J348u8Bn+Axl2cZtJXCksMqMAGLigGdtTZYJcqmC8rV+ZAZt7HmKFa4XMSDWhHNvoQ5oSLbMtM0g5h/1fGL+IHtujxPGfOiZ4va8sEQq3ZNrgjYSZaIjr2Ysc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746555834; c=relaxed/simple;
-	bh=ZEAGjwIFjybc/HGuQRpeGkvdPGM1CPmJpu83eTHjeHY=;
+	s=arc-20240116; t=1746555836; c=relaxed/simple;
+	bh=O7yshzV7ZmJF0pt/p2C4mkBTE5rpLNK0CSOvJGcgwFU=;
 	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=IWBZaq296TMX/IQglwkDF1kERagpFPZE1cM6Y/XhzWH1fbmjaZcq4zLKQMKCPukdiLJXip+MWLfDvPzcWErS7b3dntkvlZYT1aQCwvQ2+jnwdjhbiZrjFGS4vfkW+GZR+iDECNkwZvs1QBzFvTat1rwd6Y9yGb3ovdbK3GYTHaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J2Axxfi7; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id:Subject; b=aqRZN/UJG05eJeEtbsH21AWki4NETRC8qXlKrzZkjIPRspAtRB32/N5l3giJD7AhTORhapfiKsZ6bY1PJdrmSZQEl+xjXC0zKIHWjJT5LhRwbaPZYMI+56wSRU05NS4jM28LTrjmzAUH1l/8KFf7pHynrjGqMK7wcL37gvMVNEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rFFHoken; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J2Axxfi7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FB20C4CEE4;
-	Tue,  6 May 2025 18:23:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rFFHoken"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50702C4CEE4;
+	Tue,  6 May 2025 18:23:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746555833;
-	bh=ZEAGjwIFjybc/HGuQRpeGkvdPGM1CPmJpu83eTHjeHY=;
+	s=k20201202; t=1746555835;
+	bh=O7yshzV7ZmJF0pt/p2C4mkBTE5rpLNK0CSOvJGcgwFU=;
 	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=J2Axxfi7zb9TfRjQzYpz4uELBa1yRNXuJU2ZPxuI+nYb26O0ECUNZSZS6C5YYlBZo
-	 IMVZgxTBOuHoYLXXKxrxqfTFCLQCAXOvI45dc/Q3IQaUQdl6deseQnjljgop1uvTo/
-	 A/+9EnnfP9+WPeNv4aX98MskcNF/yhIGWJDIl7XdyDmN1LdMQXZ6nQVt4GBCEImAbv
-	 UXq5igTpjIrBkTGvu36607jrTnccYqTpiRXLpvJxu874m2HlocpzEVD73+GR9WZWBf
-	 9MmX4teM14pxvLlQp0PztgVQHt9SDAhS7qD0X1pnlcoQ0Oedcj4HUjx4O33ziLmPJl
-	 0Hh0zIv4dsoqw==
-Date: Tue, 06 May 2025 13:23:51 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	b=rFFHokenCiTgPO/0Ter9/lREgZWg6qzlfqbwKkqkPlaNNgeYzJUwkwrCm08QWVmPV
+	 8uPCl2rdVhfSh+761+yWx5FdABmIAotgxrcByaxJWLaLmSThnfJiek7Z+dWqyKAgsB
+	 5MYdZQyrNqpBM/6OlbobWDyNhoXiVEppRXkMhBrktEkgm2ul0AkYHT6aGrQgt/ByB1
+	 YcLTjWw4V8ri2uxKij3xO6GInHL02Ka/I6RLT0OkRTl1+SmOMQLragucS8bvfN8E9p
+	 tBxnoBMLYNVDabtQGGwzBH4p5OGfDf2V0TYXjQgYWoKKbjQIhzsAm6pSawBwpXM8nC
+	 ZccOhvBNT3LHQ==
+Date: Tue, 06 May 2025 13:23:54 -0500
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -36,106 +36,70 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: heiko@sntech.de, linux-kernel@vger.kernel.org, 
- Jonas Karlman <jonas@kwiboo.se>, 
- Detlev Casanova <detlev.casanova@collabora.com>, 
- Dragan Simic <dsimic@manjaro.org>, Yao Zi <ziyao@disroot.org>, 
- Junhao Xie <bigfoot@classfun.cn>, devicetree@vger.kernel.org, 
- Elaine Zhang <zhangqing@rock-chips.com>, 
- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>, 
- Jamie Iles <jamie@jamieiles.com>, Guenter Roeck <linux@roeck-us.net>, 
- Frank Wang <frank.wang@rock-chips.com>, linux-rockchip@lists.infradead.org, 
- linux-watchdog@vger.kernel.org, Jimmy Hon <honyuenkwun@gmail.com>, 
- Wim Van Sebroeck <wim@linux-watchdog.org>, 
- linux-arm-kernel@lists.infradead.org, 
- Finley Xiao <finley.xiao@rock-chips.com>, 
+Cc: Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ Geert Uytterhoeven <geert+renesas@glider.be>, 
+ Jimmy Hon <honyuenkwun@gmail.com>, 
+ Quentin Schulz <quentin.schulz@cherry.de>, FUKAUMI Naoki <naoki@radxa.com>, 
+ Andrew Lunn <andrew@lunn.ch>, Kever Yang <kever.yang@rock-chips.com>, 
+ linux-kernel@vger.kernel.org, Chaoyi Chen <chaoyi.chen@rock-chips.com>, 
+ Sebastian Reichel <sebastian.reichel@collabora.com>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Dragan Simic <dsimic@manjaro.org>, 
+ Jianfeng Liu <liujianfeng1994@gmail.com>, 
+ Alexey Charkov <alchark@gmail.com>, 
  Cristian Ciocaltea <cristian.ciocaltea@collabora.com>, 
- FUKAUMI Naoki <naoki@radxa.com>, Diederik de Haas <didi.debian@cknow.org>, 
- Shresth Prasad <shresthprasad7@gmail.com>, 
- Quentin Schulz <quentin.schulz@cherry.de>, Johan Jonker <jbx6244@gmail.com>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>
-To: Kever Yang <kever.yang@rock-chips.com>
-In-Reply-To: <20250506025715.33595-1-kever.yang@rock-chips.com>
-References: <20250506025715.33595-1-kever.yang@rock-chips.com>
-Message-Id: <174655575165.2171034.16453137338500014976.robh@kernel.org>
-Subject: Re: [PATCH v5 0/6] rockchip: Add rk3562 SoC and evb support
+ Jonas Karlman <jonas@kwiboo.se>, Conor Dooley <conor+dt@kernel.org>
+To: Chaoyi Chen <kernel@airkyi.com>
+In-Reply-To: <20250506034347.57-1-kernel@airkyi.com>
+References: <20250506034347.57-1-kernel@airkyi.com>
+Message-Id: <174655575211.2171051.17738454556851250078.robh@kernel.org>
+Subject: Re: [PATCH v3 0/2] Add support for rk3399 industry evaluation
+ board
 
 
-On Tue, 06 May 2025 10:57:09 +0800, Kever Yang wrote:
+On Tue, 06 May 2025 11:43:45 +0800, Chaoyi Chen wrote:
+> From: Chaoyi Chen <chaoyi.chen@rock-chips.com>
 > 
-> Patch series V5 remove [v4 1/7] which had taken by Manivannan, and move
-> scmi-shmem from soc node to reserved memory.
+> General feature for rk3399 industry evaluation board:
+> - Rockchip RK3399
+> - 4GB LPDDR4
+> - emmc5.1
+> - SDIO3.0 compatible TF card
+> - 1x HDMI2.0a TX
+> - 1x HDMI1.4b RX with TC358749XBG HDMI to MIPI CSI2 bridge chip
+> - 1x type-c DisplayPort
+> - 3x USB3.0 Host
+> - 1x USB2.0 Host
+> - 1x Ethernet / USB3.0 to Ethernet
 > 
-> Patch series V4 remove patches already landed, and remove dts nodes for
-> modules still under review.
-> 
-> This patch set adds rk3562 SoC and its evb support.
-> 
-> I have split out patches need driver change for different subsystem.
-> And all the modules with dt-binding document update in this patch set
-> do not need any driver change. I put them together to make it clear we
-> have a new SoC and board to use the new compatible. Please pick up the
-> patch for your subsystem, or please let me know if the patch has to
-> send separate.
-> 
-> Test with USB, PCIe, EMMC, SD Card.
-> 
-> This patch set is base on the patch set for rk3576 evb1 support.
-> 
-> V3:
-> https://lore.kernel.org/linux-rockchip/20250227111913.2344207-1-kever.yang@rock-chips.com/
-> V2:
-> https://lore.kernel.org/linux-rockchip/b4df8a73-58a2-4765-a9e4-3513cb2bc720@rock-chips.com/T/
-> 
-> 
-> Changes in v5:
-> - Collect review tag
-> - Update scmi-shmem from soc to reserved memory
-> 
-> Changes in v4:
-> - Collect ack tag
-> - Collect ack tag
-> - Collect ack tag
-> - remove gmac and otp nodes
-> - remove gmac nodes
+> Tested with HDMI/GPU/USB2.0/USB3.0/TF card/emmc.
 > 
 > Changes in v3:
-> - Collect reveiw tag
-> - Collect the Acked-by tag
-> - remove i2c/serial/spi alias
-> - add soc node
+> - Link to V2: https://lore.kernel.org/all/20250430074848.539-1-kernel@airkyi.com/
+> - Add i2s
+> - Add tsadc
+> - Fix devicetree coding style
 > 
 > Changes in v2:
-> - Update in sort order
-> - remove grf in cru
-> - Update some properties order
+> - Link to V1: https://lore.kernel.org/all/20250427094211.246-1-kernel@airkyi.com/
+> - Remove gmac
+> - Add rk809 PMIC
+> - Add CPU supply
+> - Fix io-domain for sdmmc
+> - Enable vopl
 > 
-> Finley Xiao (2):
->   arm64: dts: rockchip: add core dtsi for RK3562 Soc
->   arm64: dts: rockchip: Add RK3562 evb2 devicetree
+> Chaoyi Chen (2):
+>   dt-bindings: arm: rockchip: Add rk3399 industry evaluation board
+>   arm64: dts: rockchip: Add rk3399-evb-ind board
 > 
-> Kever Yang (4):
->   dt-bindings: watchdog: Add rk3562 compatible
->   dt-bindings: rockchip: pmu: Add rk3562 compatible
->   dt-bindings: soc: rockchip: Add rk3562 syscon compatibles
->   dt-bindings: arm: rockchip: Add rk3562 evb2 board
-> 
->  .../devicetree/bindings/arm/rockchip.yaml     |    5 +
->  .../devicetree/bindings/arm/rockchip/pmu.yaml |    2 +
->  .../devicetree/bindings/soc/rockchip/grf.yaml |    7 +
->  .../bindings/watchdog/snps,dw-wdt.yaml        |    1 +
->  arch/arm64/boot/dts/rockchip/Makefile         |    1 +
->  .../boot/dts/rockchip/rk3562-evb2-v10.dts     |  488 ++++
->  .../boot/dts/rockchip/rk3562-pinctrl.dtsi     | 2352 +++++++++++++++++
->  arch/arm64/boot/dts/rockchip/rk3562.dtsi      | 1270 +++++++++
->  8 files changed, 4126 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/rockchip/rk3562-evb2-v10.dts
->  create mode 100644 arch/arm64/boot/dts/rockchip/rk3562-pinctrl.dtsi
->  create mode 100644 arch/arm64/boot/dts/rockchip/rk3562.dtsi
+>  .../devicetree/bindings/arm/rockchip.yaml     |   5 +
+>  arch/arm64/boot/dts/rockchip/Makefile         |   1 +
+>  .../boot/dts/rockchip/rk3399-evb-ind.dts      | 496 ++++++++++++++++++
+>  3 files changed, 502 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-evb-ind.dts
 > 
 > --
-> 2.25.1
+> 2.49.0
 > 
 > 
 > 
@@ -157,14 +121,21 @@ make sure dt-schema is up to date:
 
 This patch series was applied (using b4) to base:
  Base: attempting to guess base-commit...
- Base: tags/next-20250506 (exact match)
+ Base: tags/v6.15-rc1-23-g0d0947766d87 (exact match)
 
 If this is not the correct base, please add 'base-commit' tag
 (or use b4 which does this automatically)
 
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/rockchip/' for 20250506025715.33595-1-kever.yang@rock-chips.com:
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/rockchip/' for 20250506034347.57-1-kernel@airkyi.com:
 
-arch/arm64/boot/dts/rockchip/rk3562-evb2-v10.dtb: /soc/usb2-phy@ff740000: failed to match any schema with compatible: ['rockchip,rk3562-usb2phy']
+arch/arm64/boot/dts/rockchip/rk3399-evb-ind.dtb: /dp@fec00000: failed to match any schema with compatible: ['rockchip,rk3399-cdn-dp']
+arch/arm64/boot/dts/rockchip/rk3399-evb-ind.dtb: regulator@10 (tcs,tcs4525): Unevaluated properties are not allowed ('regulator-compatible' was unexpected)
+	from schema $id: http://devicetree.org/schemas/regulator/fcs,fan53555.yaml#
+arch/arm64/boot/dts/rockchip/rk3399-evb-ind.dtb: regulator@1c (tcs,tcs4525): Unevaluated properties are not allowed ('regulator-compatible' was unexpected)
+	from schema $id: http://devicetree.org/schemas/regulator/fcs,fan53555.yaml#
+arch/arm64/boot/dts/rockchip/rk3399-evb-ind.dtb: /syscon@ff770000/pcie-phy: failed to match any schema with compatible: ['rockchip,rk3399-pcie-phy']
+arch/arm64/boot/dts/rockchip/rk3399-evb-ind.dtb: /phy@ff7c0000: failed to match any schema with compatible: ['rockchip,rk3399-typec-phy']
+arch/arm64/boot/dts/rockchip/rk3399-evb-ind.dtb: /phy@ff800000: failed to match any schema with compatible: ['rockchip,rk3399-typec-phy']
 
 
 
