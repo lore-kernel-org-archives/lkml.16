@@ -1,81 +1,237 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 783331E3DF4;
-	Tue,  6 May 2025 14:19:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC0F428151F
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 14:20:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746541198; cv=none; b=JD/gJ77kzVf8lsc8BVRIxrdL9uMeSn0z6JxidHRNuWj0IJXo3gsxEi8UMHEogn3erxLQCtnGcXgjbluOQz+0bHLEQ9i/PpcPPok4VUFvrZx44Rm6yUncpQFtNMVIFqh8vMgAY+XyjbpCYBzn+gOnVqiWRwyWKDo6Oduo/WS5p3k=
+	t=1746541219; cv=none; b=cbdcleoPW/Nb2/xjoZkl0nQK8lF4AI+JMqoC9fmJyeEZOd8mJSb1/7+2Vxz1GBK9n4rwqYaJhpl5fJHqscvdoPoanT0MEgDfGPUhUREbYXYxBbt14r87sTq/VTyGbtELtTC4yYSvONCZVhg4grwFMLkWDODxL7QBSOae1PvV7NY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746541198; c=relaxed/simple;
-	bh=mTMRUMgR4L/7RvmPvU/2UmZ78JGiv9EeVU2GVr4rwT4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q8xtaNeq0hUNkEtMRDzdqf/bhQGkwf9rniTGWDxdzdAVS7Cxpe5+PrIbbO/UmsI0U1VDoEzvJ765BclxBllAdkDclQnx5OnNuS23yyOuVmoE8iOuTWWt9R1aT9WRo2FXQQ6H+Kx+CBfcBWWTuJ+Oi2PCj4RtfDoQCQLpeDXhrPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mjKpFh6x; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mjKpFh6x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C1F0C4CEE4;
-	Tue,  6 May 2025 14:19:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746541197;
-	bh=mTMRUMgR4L/7RvmPvU/2UmZ78JGiv9EeVU2GVr4rwT4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mjKpFh6x+eNnuikWStC2X+QGu1Fl0efOWw++cCFWdpDStaJJsRlBxvrhHbsLt8th+
-	 YkqLKUIUVSIzYYURi0ngt9sUpNErDhsod0lN+41Z1wNjdrT6fI/2PH9i/5S6nLjKn4
-	 KHB0jCRiniVTa6PqaSFdT16ATwKV51S47DKjDRc8v8YLEWT4U+RpaIivsw4NxDlEMB
-	 onLFp4YsRE7SJfcz2zs/JY6b9IEvpUqOgEkiMeykztAJ48sM60fZ9v6Um2lXAcnm1T
-	 Nl74zX5JyeBVL1E0HnrCQVL8L2e3iWHfnNRZ26cMEMM1bAfrveFOSulD96tWCGnfuh
-	 i0bnNYruJw3Hg==
-Date: Tue, 6 May 2025 15:19:49 +0100
-From: Will Deacon <will@kernel.org>
-To: =?utf-8?Q?Miko=C5=82aj?= Lenczewski <miko.lenczewski@arm.com>
-Cc: ryan.roberts@arm.com, suzuki.poulose@arm.com,
-	yang@os.amperecomputing.com, corbet@lwn.net,
-	catalin.marinas@arm.com, jean-philippe@linaro.org,
-	robin.murphy@arm.com, joro@8bytes.org, akpm@linux-foundation.org,
-	paulmck@kernel.org, mark.rutland@arm.com, joey.gouly@arm.com,
-	maz@kernel.org, james.morse@arm.com, broonie@kernel.org,
-	oliver.upton@linux.dev, baohua@kernel.org, david@redhat.com,
-	ioworker0@gmail.com, jgg@ziepe.ca, nicolinc@nvidia.com,
-	mshavit@google.com, jsnitsel@redhat.com, smostafa@google.com,
-	kevin.tian@intel.com, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	iommu@lists.linux.dev
-Subject: Re: [RESEND PATCH v6 2/3] iommu/arm: Add BBM Level 2 smmu feature
-Message-ID: <20250506141949.GA1197@willie-the-truck>
-References: <20250428153514.55772-2-miko.lenczewski@arm.com>
- <20250428153514.55772-6-miko.lenczewski@arm.com>
+	s=arc-20240116; t=1746541219; c=relaxed/simple;
+	bh=81aEPCcsJ/e6mOPbXDMh5xnnkudxyH/Lh/p+3c3/BZY=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=WfCAZ73llM7JuD4s8g36zX2oCvpgTNMZFNz7NogTevaOqYFU3HARVOCJRplRb/W+InH+cQZ+i5dDSd4Hc4Q8JIXN0oioTqbucMwnpOvPRF4YN9lgrZ0dydNzTR+XDf7TPYzgQzanyc7f0RKR3aQcPGV4YidDJV4W+SrWmjp6wYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3d5da4fb5e0so51244555ab.2
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 07:20:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746541216; x=1747146016;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=juvepVSO4FokjGYiIKhtY9Wro5+tj8hRv914JsGucko=;
+        b=ZA+mxo/ueZ4+/7XCe3UMmM7k+sEAIjiXEqeDq6tN+tHd0v71dpJTfZUa8BZKQ/yPha
+         rTr1tOPX471EY6RQsqjwsgb3dnPDnafvbgsLuYnoqT14GWxl3CuRUuP1C5okXBBVaec5
+         Mf3DqBKuMMODSCHdcSeRfjtl91IpvR6BqalRFkFCx1SfE3Nwf5GFNbkcmhJg1HNCGxoN
+         peFPpxA4wIGxOjT7v8c716Uh0GyUe7SS9Bh0jNJf800XZe3VLMlu3tXQHhMqxVTBWERT
+         MBe3n62P8W+Z6bvLhotxocYpgV/xzfhQcuCxAKpEKkDh5VvQdH/uoo/Gt1HjKEysm2Fi
+         tfEQ==
+X-Gm-Message-State: AOJu0YyQktxjn19WLn6ikcU8iS9dJRxVNTot/+J6Ldvkxk1W6vps9e1W
+	4tDnetfab1ivC3/GDC3JaClPq1j4Yi22NvoLVPMi+qpq4OOP6pQaukZ8JqxDOPmSJz3LgEgIlPh
+	iT+Jwyd+PbUilGF5//b4emSgoKSC5Y5ndD5lb2nBxIshBSd7Nac+8OOs=
+X-Google-Smtp-Source: AGHT+IFJWAXaGJKhNfjAoTFOLO6qMqdsosx81agp/WjhT16vW6QJIvtk7pQnGy0kYkIifQFX0+WIvR8iDxNlV+23pW/ErEwyS3+E
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250428153514.55772-6-miko.lenczewski@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Received: by 2002:a05:6e02:17c9:b0:3d3:fcff:edae with SMTP id
+ e9e14a558f8ab-3da6cdc61bemr34217455ab.3.1746541216630; Tue, 06 May 2025
+ 07:20:16 -0700 (PDT)
+Date: Tue, 06 May 2025 07:20:16 -0700
+In-Reply-To: <68197d2b.050a0220.23d401.2859.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <681a1aa0.050a0220.a19a9.000f.GAE@google.com>
+Subject: Re: [syzbot] Re: [syzbot] [jfs?] KMSAN: uninit-value in BT_STACK_DUMP
+From: syzbot <syzbot+ba5f49027aace342d24d@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Apr 28, 2025 at 03:35:16PM +0000, Mikołaj Lenczewski wrote:
-> For supporting BBM Level 2 for userspace mappings, we want to ensure
-> that the smmu also supports its own version of BBM Level 2. Luckily, the
-> smmu spec (IHI 0070G 3.21.1.3) is stricter than the aarch64 spec (DDI
-> 0487K.a D8.16.2), so already guarantees that no aborts are raised when
-> BBM level 2 is claimed.
-> 
-> Add the feature and testing for it under arm_smmu_sva_supported().
-> 
-> Signed-off-by: Mikołaj Lenczewski <miko.lenczewski@arm.com>
-> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-> Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
-> ---
->  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-sva.c | 3 +++
->  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c     | 3 +++
->  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h     | 4 ++++
->  3 files changed, 10 insertions(+)
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org.
 
-This looks fine to me but please note that it doesn't apply against
-mainline (v6.15-rc5).
+***
 
-Will
+Subject: Re: [syzbot] [jfs?] KMSAN: uninit-value in BT_STACK_DUMP
+Author: richard120310@gmail.com
+
+#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 02ddfb981de8
+
+Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
+---
+ fs/jfs/jfs_dtree.c |  6 +++---
+ fs/jfs/jfs_xtree.c | 14 +++++++-------
+ fs/jfs/namei.c     | 14 +++++++-------
+ 3 files changed, 17 insertions(+), 17 deletions(-)
+
+diff --git a/fs/jfs/jfs_dtree.c b/fs/jfs/jfs_dtree.c
+index 93db6eec4465..87025d832758 100644
+--- a/fs/jfs/jfs_dtree.c
++++ b/fs/jfs/jfs_dtree.c
+@@ -2083,7 +2083,7 @@ int dtDelete(tid_t tid,
+ 	struct metapage *mp, *imp;
+ 	dtpage_t *p;
+ 	int index;
+-	struct btstack btstack;
++	struct btstack btstack = {0};
+ 	struct dt_lock *dtlck;
+ 	struct tlock *tlck;
+ 	struct lv *lv;
+@@ -2716,7 +2716,7 @@ int jfs_readdir(struct file *file, struct dir_context *ctx)
+ 	dtpage_t *p;
+ 	int index;
+ 	s8 *stbl;
+-	struct btstack btstack;
++	struct btstack btstack = {0};
+ 	int i, next;
+ 	struct ldtentry *d;
+ 	struct dtslot *t;
+@@ -4237,7 +4237,7 @@ int dtModify(tid_t tid, struct inode *ip,
+ 	struct metapage *mp;
+ 	dtpage_t *p;
+ 	int index;
+-	struct btstack btstack;
++	struct btstack btstack = {0};
+ 	struct tlock *tlck;
+ 	struct dt_lock *dtlck;
+ 	struct lv *lv;
+diff --git a/fs/jfs/jfs_xtree.c b/fs/jfs/jfs_xtree.c
+index 5ee618d17e77..dd0e542a4978 100644
+--- a/fs/jfs/jfs_xtree.c
++++ b/fs/jfs/jfs_xtree.c
+@@ -123,7 +123,7 @@ int xtLookup(struct inode *ip, s64 lstart,
+ 	     s64 llen, int *pflag, s64 * paddr, s32 * plen, int no_check)
+ {
+ 	int rc = 0;
+-	struct btstack btstack;
++	struct btstack btstack = {0};
+ 	int cmp;
+ 	s64 bn;
+ 	struct metapage *mp;
+@@ -520,7 +520,7 @@ int xtInsert(tid_t tid,		/* transaction id */
+ 	xtpage_t *p;		/* base B+-tree index page */
+ 	s64 bn;
+ 	int index, nextindex;
+-	struct btstack btstack;	/* traverse stack */
++	struct btstack btstack = {0};	/* traverse stack */
+ 	struct xtsplit split;	/* split information */
+ 	xad_t *xad;
+ 	int cmp;
+@@ -1344,7 +1344,7 @@ int xtExtend(tid_t tid,		/* transaction id */
+ 	xtpage_t *p;		/* base B+-tree index page */
+ 	s64 bn;
+ 	int index, nextindex, len;
+-	struct btstack btstack;	/* traverse stack */
++	struct btstack btstack = {0};	/* traverse stack */
+ 	struct xtsplit split;	/* split information */
+ 	xad_t *xad;
+ 	s64 xaddr;
+@@ -1503,7 +1503,7 @@ int xtUpdate(tid_t tid, struct inode *ip, xad_t * nxad)
+ 	xtpage_t *p;		/* base B+-tree index page */
+ 	s64 bn;
+ 	int index0, index, newindex, nextindex;
+-	struct btstack btstack;	/* traverse stack */
++	struct btstack btstack = {0};	/* traverse stack */
+ 	struct xtsplit split;	/* split information */
+ 	xad_t *xad, *lxad, *rxad;
+ 	int xflag;
+@@ -1949,7 +1949,7 @@ int xtAppend(tid_t tid,		/* transaction id */
+ 	xtpage_t *p;		/* base B+-tree index page */
+ 	s64 bn, xaddr;
+ 	int index, nextindex;
+-	struct btstack btstack;	/* traverse stack */
++	struct btstack btstack = {0};	/* traverse stack */
+ 	struct xtsplit split;	/* split information */
+ 	xad_t *xad;
+ 	int cmp;
+@@ -2196,7 +2196,7 @@ s64 xtTruncate(tid_t tid, struct inode *ip, s64 newsize, int flag)
+ 	xad_t *xad;
+ 	s64 xoff, xaddr;
+ 	int xlen, len, freexlen;
+-	struct btstack btstack;
++	struct btstack btstack = {0};
+ 	struct btframe *parent;
+ 	struct tblock *tblk = NULL;
+ 	struct tlock *tlck = NULL;
+@@ -2744,7 +2744,7 @@ s64 xtTruncate(tid_t tid, struct inode *ip, s64 newsize, int flag)
+ s64 xtTruncate_pmap(tid_t tid, struct inode *ip, s64 committed_size)
+ {
+ 	s64 bn;
+-	struct btstack btstack;
++	struct btstack btstack = {0};
+ 	int cmp;
+ 	int index;
+ 	int locked_leaves = 0;
+diff --git a/fs/jfs/namei.c b/fs/jfs/namei.c
+index 65a218eba8fa..d04c752823ea 100644
+--- a/fs/jfs/namei.c
++++ b/fs/jfs/namei.c
+@@ -67,7 +67,7 @@ static int jfs_create(struct mnt_idmap *idmap, struct inode *dip,
+ 	struct inode *ip = NULL;	/* child directory inode */
+ 	ino_t ino;
+ 	struct component_name dname;	/* child directory name */
+-	struct btstack btstack;
++	struct btstack btstack = {0};
+ 	struct inode *iplist[2];
+ 	struct tblock *tblk;
+ 
+@@ -200,7 +200,7 @@ static struct dentry *jfs_mkdir(struct mnt_idmap *idmap, struct inode *dip,
+ 	struct inode *ip = NULL;	/* child directory inode */
+ 	ino_t ino;
+ 	struct component_name dname;	/* child directory name */
+-	struct btstack btstack;
++	struct btstack btstack = {0};
+ 	struct inode *iplist[2];
+ 	struct tblock *tblk;
+ 
+@@ -791,7 +791,7 @@ static int jfs_link(struct dentry *old_dentry,
+ 	struct inode *ip = d_inode(old_dentry);
+ 	ino_t ino;
+ 	struct component_name dname;
+-	struct btstack btstack;
++	struct btstack btstack = {0};
+ 	struct inode *iplist[2];
+ 
+ 	jfs_info("jfs_link: %pd %pd", old_dentry, dentry);
+@@ -883,7 +883,7 @@ static int jfs_symlink(struct mnt_idmap *idmap, struct inode *dip,
+ 	ino_t ino = 0;
+ 	struct component_name dname;
+ 	u32 ssize;		/* source pathname size */
+-	struct btstack btstack;
++	struct btstack btstack = {0};
+ 	struct inode *ip;
+ 	s64 xlen = 0;
+ 	int bmask = 0, xsize;
+@@ -1069,7 +1069,7 @@ static int jfs_rename(struct mnt_idmap *idmap, struct inode *old_dir,
+ 		      struct dentry *old_dentry, struct inode *new_dir,
+ 		      struct dentry *new_dentry, unsigned int flags)
+ {
+-	struct btstack btstack;
++	struct btstack btstack = {0};
+ 	ino_t ino;
+ 	struct component_name new_dname;
+ 	struct inode *new_ip;
+@@ -1356,7 +1356,7 @@ static int jfs_mknod(struct mnt_idmap *idmap, struct inode *dir,
+ 		     struct dentry *dentry, umode_t mode, dev_t rdev)
+ {
+ 	struct jfs_inode_info *jfs_ip;
+-	struct btstack btstack;
++	struct btstack btstack = {0};
+ 	struct component_name dname;
+ 	ino_t ino;
+ 	struct inode *ip;
+@@ -1448,7 +1448,7 @@ static int jfs_mknod(struct mnt_idmap *idmap, struct inode *dir,
+ 
+ static struct dentry *jfs_lookup(struct inode *dip, struct dentry *dentry, unsigned int flags)
+ {
+-	struct btstack btstack;
++	struct btstack btstack = {0};
+ 	ino_t inum;
+ 	struct inode *ip;
+ 	struct component_name key;
+-- 
+2.43.0
+
