@@ -1,162 +1,238 @@
-Received: from lamorak.hansenpartnership.com (lamorak.hansenpartnership.com [198.37.111.173])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2050.outbound.protection.outlook.com [40.107.94.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96044280A4C;
-	Tue,  6 May 2025 13:24:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.37.111.173
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746537872; cv=none; b=hFq6SvA9mNXXDybalffJKmPN2iPcYd5f4wbDb877husqDFcNfyZv3j2ZG1zPdJ1vsUcb5dmRDYuUEesnRfr/hu5ky2s9lYfoAv1jYR7K0s9dYW5wS6x9mHJjh4Hh0rX+62aDQgB3mA+JaQBRf9h58cKRwXoD0AlML38rOVp7ovY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746537872; c=relaxed/simple;
-	bh=F7zOBD4JAh8eNkUq1aOu8T2CC42hIfJGwb4RjEXOjWE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=qlxDulI+yk1za725yEyPUm6rXKMxvKrKzTxzUb43C702Krp5aoiJ3pMUoIwcYXP7gN56Xkc76Vw49rqD3ZMIVADuNE1+H2PUI4TI91bfn3HB+lMcr25jNA44kKFGiSp+MPZWB9wVmmAZsGt0ASIfI7NX6Yx/NEHBt4W6kGfWZuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=kudIcstS; arc=none smtp.client-ip=198.37.111.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6408F283C8E
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 13:25:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.50
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746537943; cv=fail; b=mWs6bt1hDfEjWmlBIdzULekEeBnEwfKTN2fopGdcfF6jU+lXDnJAiSbGZ7kLR/x0qGpnMFevdMCF5WW5ucyVssVs6uEKrSSUHStWHGcWlJBLk2XF+PD4uAG+5k7JtpXDwlMtx4TTBjLq0TW0kks7BkehDqbhR0Tf/782Fu2sH4I=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746537943; c=relaxed/simple;
+	bh=12LAQSB68Rkj9huAdgmetrwmRRByE8rrUU2xNmYOuc8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=q1c9qbyNQbmvkMOR/0fYNLZ1kL6trURVBX1M7XiVnitDiux1/0ZKUbcegZ4M1gEMuUvVsYaFxVSISTk0EWxhPWl658xtYnyUJwVRp3EbSHNmgBvLR03P6eVQdXnLphH02o/2YfBlM/Mq0MBcdgvySz+3h/RXG0A+9Bo6ZipMoRA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=a3IFoy5G; arc=fail smtp.client-ip=40.107.94.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="kudIcstS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1746537868;
-	bh=F7zOBD4JAh8eNkUq1aOu8T2CC42hIfJGwb4RjEXOjWE=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
-	b=kudIcstShORppqVcWOgm2xMuqo86L3l191A+iiZoP0FH1mJF8lNXO3O/TSyOyzBrK
-	 QpOlI6wKJX7OdQYhwilMuzVSEaGljo5UHrNLFMhKtKn+cx2niRNWCTdQwh/UMzliIu
-	 An4D/+ZkXSqXFIDIuRxX2gWa3/jcvEhZmnx/0bgg=
-Received: from lingrow.int.hansenpartnership.com (unknown [IPv6:2601:5c4:4302:c21::a774])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519)
-	(No client certificate requested)
-	by lamorak.hansenpartnership.com (Postfix) with ESMTPSA id F0B8D1C0320;
-	Tue, 06 May 2025 09:24:27 -0400 (EDT)
-Message-ID: <2413d57aee6d808177024e3a88aaf61e14f9ddf4.camel@HansenPartnership.com>
-Subject: Re: [PATCH v3 0/9] module: Introduce hash-based integrity checking
-From: James Bottomley <James.Bottomley@HansenPartnership.com>
-To: Arnout Engelen <arnout@bzzt.net>, Thomas =?ISO-8859-1?Q?Wei=DFschuh?=
-	 <linux@weissschuh.net>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor
- <nathan@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Luis Chamberlain
- <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen
- <samitolvanen@google.com>, Daniel Gomez <da.gomez@samsung.com>, Paul Moore
- <paul@paul-moore.com>, James Morris <jmorris@namei.org>, "Serge E. Hallyn"
- <serge@hallyn.com>, Jonathan Corbet <corbet@lwn.net>, Madhavan Srinivasan
- <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, Nicholas
- Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>,
- Naveen N Rao <naveen@kernel.org>, Mimi Zohar <zohar@linux.ibm.com>, Roberto
- Sassu <roberto.sassu@huawei.com>, Dmitry Kasatkin
- <dmitry.kasatkin@gmail.com>,  Eric Snowberg <eric.snowberg@oracle.com>,
- Nicolas Schier <nicolas.schier@linux.dev>, Fabian
- =?ISO-8859-1?Q?Gr=FCnbichler?= <f.gruenbichler@proxmox.com>, Mattia Rizzolo
- <mattia@mapreri.org>, kpcyrd <kpcyrd@archlinux.org>, Christian Heusel
- <christian@heusel.eu>,  =?ISO-8859-1?Q?C=E2ju?= Mihai-Drosi
- <mcaju95@gmail.com>, linux-kbuild@vger.kernel.org,
- linux-kernel@vger.kernel.org,  linux-arch@vger.kernel.org,
- linux-modules@vger.kernel.org,  linux-security-module@vger.kernel.org,
- linux-doc@vger.kernel.org,  linuxppc-dev@lists.ozlabs.org,
- linux-integrity@vger.kernel.org
-Date: Tue, 06 May 2025 09:24:26 -0400
-In-Reply-To: <072b392f-8122-4e4f-9a94-700dadcc0529@app.fastmail.com>
-References: <20250429-module-hashes-v3-0-00e9258def9e@weissschuh.net>
-	 <f1dca9daa01d0d2432c12ecabede3fa1389b1d29.camel@HansenPartnership.com>
-	 <840b0334-71e4-45b1-80b0-e883586ba05c@t-8ch.de>
-	 <b586e946c8514cecde65f98de8e19eb276c09703.camel@HansenPartnership.com>
-	 <072b392f-8122-4e4f-9a94-700dadcc0529@app.fastmail.com>
-Autocrypt: addr=James.Bottomley@HansenPartnership.com;
- prefer-encrypt=mutual;
- keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3 
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="a3IFoy5G"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=MjG+3AjydGwgmZVV3J+yfkJXUX3ZSNp6EyuJ0lqik0Wo4V+6coTSMJmTsD3/sHDgnriXa4uz4RKB2N1kgmGML7OLXy0czhirBJXhRQix//plO8Zmx19c/XVZob1/0rtoDm6nxMVmZTmpFGdpDBWteQgNyf63yJaBaCRrIIXzMMXZxjcyvr/3f7mILUxzzkUMr/gwtV7R3zoxWq5eDmcSUgHkjsdohSqoH244Nl73ON3Hgy5uDEOCT2bYGLKl8gSJYGzx86L39yuRtRlHmrZjgA554/2MDSUFyrUTO9QQG+w1jarjA4w4CeVQXrJqXf5+NtVUOWIhcGsJdAGyU0nbSg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=wyxoX3FAE1CQMyFUF6hDwdSs5kpJGUO/aKF67GNvgd0=;
+ b=cLSzSf8fTHO+222ejSSOY4BeGYzwo2e3FFHJ/AMpJw+rV58SJaRubqo1T3o4WGSNslovy9wxLCG2HXsUTchOj1oTPU0ouWNYjzcE45vZh+VVSS3jBv0MLKuFADK9/ZErOC6DNflmttIblNOqQv9VqeYVOEOl5jmRkYMnFM5Vl7KbR0PTnx4nImwfypgys85ASl5zGl7sCSY+AG8prYi1ilgLmh6mAg4V0H/HguHqZIZwf2fIMc3PI9HvALQIi/FXkhfDaof9KblZ+jH1F6V9HOxtF61z9WLh1MSdBOJps4609ei4ncc7AT+tGbm65EdJAbAJLWQNEeZS89LSYGs2yA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wyxoX3FAE1CQMyFUF6hDwdSs5kpJGUO/aKF67GNvgd0=;
+ b=a3IFoy5GCsgY++63XgbjvSf5Hg173h3wpt+ixsjxlq6ZkO7ACc04g8D1IAbhv1aZHVtHSPNZ7a661mEp8Uh5WuU2oRp9SjCP6auEqcECPo8bUfafvGSjjM6s7+47llrI6XxA0sAmHVSeQozXmUm8pXGYZLih/UG6Nynj9ozOQCU=
+Received: from PH7PR17CA0018.namprd17.prod.outlook.com (2603:10b6:510:324::9)
+ by BL3PR12MB6450.namprd12.prod.outlook.com (2603:10b6:208:3b9::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.24; Tue, 6 May
+ 2025 13:25:34 +0000
+Received: from CO1PEPF000044FB.namprd21.prod.outlook.com
+ (2603:10b6:510:324:cafe::e8) by PH7PR17CA0018.outlook.office365.com
+ (2603:10b6:510:324::9) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.20 via Frontend Transport; Tue,
+ 6 May 2025 13:25:34 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
+Received: from SATLEXMB03.amd.com (165.204.84.17) by
+ CO1PEPF000044FB.mail.protection.outlook.com (10.167.241.201) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8746.3 via Frontend Transport; Tue, 6 May 2025 13:25:34 +0000
+Received: from SATLEXMB06.amd.com (10.181.40.147) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 6 May
+ 2025 08:25:33 -0500
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB06.amd.com
+ (10.181.40.147) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 6 May
+ 2025 08:25:33 -0500
+Received: from [172.18.31.235] (10.180.168.240) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Tue, 6 May 2025 08:25:32 -0500
+Message-ID: <63d6ff3c-bed5-4a7f-bd3e-50b99b5a6f4b@amd.com>
+Date: Tue, 6 May 2025 09:25:34 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] xenbus: Allow PVH dom0 a non-local xenstore
+To: Stefano Stabellini <sstabellini@kernel.org>
+CC: Juergen Gross <jgross@suse.com>, Oleksandr Tyshchenko
+	<oleksandr_tyshchenko@epam.com>, <xen-devel@lists.xenproject.org>,
+	<linux-kernel@vger.kernel.org>
+References: <20250503131935.1885-1-jason.andryuk@amd.com>
+ <alpine.DEB.2.22.394.2505051343080.3879245@ubuntu-linux-20-04-desktop>
+Content-Language: en-US
+From: Jason Andryuk <jason.andryuk@amd.com>
+In-Reply-To: <alpine.DEB.2.22.394.2505051343080.3879245@ubuntu-linux-20-04-desktop>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000044FB:EE_|BL3PR12MB6450:EE_
+X-MS-Office365-Filtering-Correlation-Id: 65f4bd14-cf7d-48c0-3a2c-08dd8ca17b69
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|1800799024|376014|82310400026|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?NFc1LytnQWdsRE5MdVJCeUtxd1ltaStpTndRaGtFVC93NjRtaXdWSlVTWFZz?=
+ =?utf-8?B?dVpCaHYvSExmUzgvSUZHWkIwdVNubThFbnM3WkFSQTRNcjhWdVFqM2dkN1o5?=
+ =?utf-8?B?a0hpUG5sNTZGVndEWnZtNDNOUzExV2M2Q1RGVXo4U3R1aS9aemJvMTUvZTlV?=
+ =?utf-8?B?Zkx3V2pMR09pbGdwUFNDQmhjN2l3bkxKZUhxKzVUMUdvRWlSNU10RkRMYkNh?=
+ =?utf-8?B?a0tuQXlsbG11ZkE4Vkt5UVdrL2F3M3RXd0s4VEsvRms2Zk5SNHBlclVBK1Y2?=
+ =?utf-8?B?TkYyN0FRZmhWbVNSRlY4SXZSR2Q4eDBNaHhETTR5Nzd0NmRUV2lPVGNodGV1?=
+ =?utf-8?B?SkVoVGdKMlV6L1F2MFhHa0F2T2pncHVDUWlVVjl1bE9sZ3MwVzcxNFBoOHpL?=
+ =?utf-8?B?T3lNRjRBWWdGQjlHbnM5VjFzdDYvMWZlMWliS1dZNkYrUjdkYUtCSWpRb3lF?=
+ =?utf-8?B?bjRCNUtvL1RNcHhFY0Y1bWIzclZnTENuMjNKbFVDR1BBaEFmSllKM3hIMUZs?=
+ =?utf-8?B?ei8xWVRqTjlPWTVuSkMxemxxakFRQzRCbEd3Vi9PN3lWNXFKbWJTN2hSckF1?=
+ =?utf-8?B?ZXhqK3IzbzhEVUhCYzBTenFDVVM0SG8rL2R4Yll3b3pWc1dLMWFlUFp1RC9k?=
+ =?utf-8?B?QUVubS9RalZUK01aR2xBWGxjUmlaMms2bUZVN3QyRExobU1EMlpnOHdkNmdX?=
+ =?utf-8?B?L2dWZXRFczB0Q3hhRU9hbHhLMjExUG9vUnc0VFdTMHl0QmhjNTlkNktzUXdm?=
+ =?utf-8?B?dHJITFRLSnl5Skpsay9rRzV6WTd1dkk5UnJOY29IdWIrOHVSYnl6eWpNMllM?=
+ =?utf-8?B?U2RyMTFJT1cyQXl0YTJLV093V1hYdkt3Q3JlcHVreTZKWnJrSkNZSXJIQUN1?=
+ =?utf-8?B?S3c1OEhycmhvWHlBaUlSWVUwa0pNRUdUNWZSUmc3K1NLSk0zTS8veGlyQlND?=
+ =?utf-8?B?aVAzQXlXa0drb3dpYjJBeUFuVmRLTklnd2Noay9rRWltclJCL251TDE0Zk1R?=
+ =?utf-8?B?RnUzWDZyeVprU0lvNzk3SElIT1VmRFZHSE9pNDJSbFJGYXlwYjNhb0VqRGNY?=
+ =?utf-8?B?MjBYSnY5T2tCbENuMGJmQTJ1cW96SFBRZFMyNWwxQTMwRyt4RmNIckcyZ1I0?=
+ =?utf-8?B?NUcxcFdtL2thMTE2aDduNW5QQVlnQzVDS1VIOUk3VkxQOCt2ZHJkdG5iaVRt?=
+ =?utf-8?B?TDB2Ui8zTU1acFZ2Y0V2ZG5vSDlxaFRTQjNpL1FxWm5DRW45ZHpoNEQxT0ZO?=
+ =?utf-8?B?Z0p1YTBUb1BUZ3JpQVBTejBBeG1DVzJjbVIrbkpVdVBVd1J5cHZJWFFCQU8z?=
+ =?utf-8?B?ekRLLzV4RkJUUEsyRlVabklIMUY3b1h4VGp3Sy96dWxyeTRCU1MydnE3dG5M?=
+ =?utf-8?B?R3JVVkZ4cDRha0U5b2U3Z3lkS2g3OXNIaWJJbG5GZ3E3dW9jays1VGpaRkJH?=
+ =?utf-8?B?R1JSZlpGVkVBQzRTZjJrbkpSU2k3SkVtVnZ2SUkrNkNzRnNDU3dmRmFRRXB1?=
+ =?utf-8?B?Q2dBcjZYbTdhQVhoTWtOcTczYjhxcDBOOU93RE5vZjBjSTBmYkhZeDJYMTVX?=
+ =?utf-8?B?RDRVUkw2VnIwYUtVTTFaWW96a0U2YnVxZmhMVlRqZTBIK3drTms4RVYwaWZM?=
+ =?utf-8?B?ajdiSEFseG9ZbmQ4aE9uUy9mL093cklENVBwL2lQL1hpa2I2L1R3RjVFMjRu?=
+ =?utf-8?B?ZEsvRi8wTGxLZVFOdG1QbWFHNXdEM3BIQStJbmxQb0ZSeDl0dndGVktzRWti?=
+ =?utf-8?B?cHJIRWtKeDdJbnU0RjdCTnl5T0pjSFRKYVlMMHZSaUF6MGYyUCtUWnU3VEdR?=
+ =?utf-8?B?QkFoTktTd2ZFVGdXdXFjSDRuN044bU9udWxXUUNsNDV6a0ExUDgzYUY1b0lq?=
+ =?utf-8?B?QjlyeEZYbmQ4dHcwN3BJT0paSkppbEwvZ0RJZW9iYTVHdHlxNUkzWmRFMW42?=
+ =?utf-8?B?bnpGOFZvUUM4SHRLQjJLR3ZEUk9qQ3Bwa1VyOW4vdlpVRHBIWHphOUxINXdp?=
+ =?utf-8?B?Qkx6WUtHZEJYeERYR0UzelJzR0M1M2VzSzZqUndmYnVUcGtPbFRwTmdCaVZW?=
+ =?utf-8?Q?yPmxA0?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(376014)(82310400026)(7053199007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 13:25:34.3133
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 65f4bd14-cf7d-48c0-3a2c-08dd8ca17b69
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CO1PEPF000044FB.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR12MB6450
 
-On Sat, 2025-05-03 at 10:19 +0200, Arnout Engelen wrote:
-> On Fri, May 2, 2025, at 15:30, James Bottomley wrote:
-> > On Fri, 2025-05-02 at 08:53 +0200, Thomas Wei=C3=9Fschuh wrote:
-> > > Specifically the output of any party can recreate bit-by-bit
-> > > identical copies of all specified artifacta previous build (the
-> > > public key, module signatures) is not available during the
-> > > rebuild or verification.
-> >=20
-> > You just strip the signatures before verifying reproducibility.
->=20
-> If the goal is: "verify the Linux Kernel is reproducible", that could
-> work. It gets increasingly cumbersome when you're trying to check the
-> reproducibility of some larger artifact that embeds the Linux kernel
-> (and lots of other stuff), like an ISO or disk image, though: you'd
-> have to unpack/mount it, check all its contents individually (perhaps
-> recursively), and strip signatures in 'just the right places'.
+On 2025-05-05 16:44, Stefano Stabellini wrote:
+> On Sat, 3 May 2025, Jason Andryuk wrote:
+>> Make xenbus_init() allow a non-local xenstore for a PVH dom0 - it is
+>> currently forced to XS_LOCAL.  With Hyperlaunch booting dom0 and a
+>> xenstore stubdom, dom0 can be handled as a regular XS_HVM following the
+>> late init path.
+>>
+>> Drop the use of xen_initial_domain() and just check for the event
+>> channel instead.  This matches the PV case where there is no check for
+>> initial domain.
+>>
+>> Check the full 64bit HVM_PARAM_STORE_EVTCHN value to catch the off
+>> chance that high bits are set for the 32bit event channel.
+>>
+>> Signed-off-by: Jason Andryuk <jason.andryuk@amd.com>
+> 
+> Reviewed-by: Stefano Stabellini <sstabellini@kernel.org>
 
-Most GPL/LGPL software requires a build recipe anyway.  Realistically,
-you're just proving you can exercise that in reverse.
+Thanks, Stefano.  But I'm wondering if this might break ARM enhanced 
+no-xenstore.
 
-> Writing such tooling is a chore, but of course feasible: diffoscope
-> already comes a long way (though checking large images may take some
-> resources). The problem is trusting such tooling: instead of 'simply'
-> checking the images are identical, suddenly I now have to convince
-> myself there's no shenanigans possible in the disk image
-> interpretation and other check tooling, which gets nontrivial fast.
+> 
+>> ---
+>>   drivers/xen/xenbus/xenbus_probe.c | 14 ++++++++------
+>>   1 file changed, 8 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/xen/xenbus/xenbus_probe.c b/drivers/xen/xenbus/xenbus_probe.c
+>> index 6d32ffb01136..7604f70ee108 100644
+>> --- a/drivers/xen/xenbus/xenbus_probe.c
+>> +++ b/drivers/xen/xenbus/xenbus_probe.c
+>> @@ -966,9 +966,15 @@ static int __init xenbus_init(void)
+>>   	if (xen_pv_domain())
+>>   		xen_store_domain_type = XS_PV;
+>>   	if (xen_hvm_domain())
+>> +	{
+>>   		xen_store_domain_type = XS_HVM;
 
-I'll repeat the key point again: all modern hermetic build systems come
-with provenance which is usually a signature.  Developing the tooling
-is already a requirement.
+ARM would have everything set to XS_HVM...
 
-Plus, you've got to remember that a signature is a cryptographic
-function of the hash over the build minus the signature.  You can't
-verify a signature unless you know how to get the build minus the
-signature.  So the process is required to be deterministic.
+>> -	if (xen_hvm_domain() && xen_initial_domain())
+>> -		xen_store_domain_type = XS_LOCAL;
 
-> > All current secure build processes (hermetic builds, SLSA and the
-> > like) are requiring output provenance (i.e. signed artifacts).=C2=A0 If
-> > you try to stand like Canute against this tide saying "no signed
-> > builds", you're simply opposing progress for the sake of it
->=20
-> I don't think anyone is saying 'no signed builds', but we'd enjoy
-> being able to keep the signatures as detached metadata instead of
-> having to embed them into the 'actual' artifacts.
+...and only dom0 set to XS_LOCAL.
 
-We had this debate about 15 years ago when Debian first started
-reproducible builds for the kernel.  Their initial approach was
-detached module signatures.  This was the original patch set:
+>> +		err = hvm_get_parameter(HVM_PARAM_STORE_EVTCHN, &v);
+>> +		if (err)
+>> +			goto out_error;
+>> +		xen_store_evtchn = (int)v;
+>> +		if (!v)
+>> +			xen_store_domain_type = XS_LOCAL;
+>> +	}
+>>   	if (xen_pv_domain() && !xen_start_info->store_evtchn)
+>>   		xen_store_domain_type = XS_LOCAL;
+>>   	if (xen_pv_domain() && xen_start_info->store_evtchn)
+>> @@ -987,10 +993,6 @@ static int __init xenbus_init(void)
+>>   		xen_store_interface = gfn_to_virt(xen_store_gfn);
+>>   		break;
+>>   	case XS_HVM:
+>> -		err = hvm_get_parameter(HVM_PARAM_STORE_EVTCHN, &v);
+>> -		if (err)
+>> -			goto out_error;
+>> -		xen_store_evtchn = (int)v;
+>>   		err = hvm_get_parameter(HVM_PARAM_STORE_PFN, &v);
+>>   		if (err)
+>>   			goto out_error;
+                 /*
+                  * Uninitialized hvm_params are zero and return no error.
+                  * Although it is theoretically possible to have
+                  * HVM_PARAM_STORE_PFN set to zero on purpose, in 
+reality it is
+                  * not zero when valid. If zero, it means that Xenstore 
+hasn't
+                  * been properly initialized. Instead of attempting to 
+map a
+                  * wrong guest physical address return error.
+                  *
+                  * Also recognize all bits set as an 
+invalid/uninitialized value.
+                  */
+                 if (!v) {
+                         err = -ENOENT;
+                         goto out_error;
+                 }
 
-https://lore.kernel.org/linux-modules/20160405001611.GJ21187@decadent.org.u=
-k/
-
-And this is the reason why Debian abandoned it:
-
-https://lists.debian.org/debian-kernel/2016/05/msg00384.html
-
-The specific problem is why detached signatures are almost always a
-problem: after a period of time, particularly if the process for
-creating updated artifacts gets repeated often matching the output to
-the right signature becomes increasingly error prone.
-
-Debian was, however, kind enough to attach what they currently do to
-get reproducible builds to the kernel documentation:
-
-https://docs.kernel.org/kbuild/reproducible-builds.html
-
-Although they went for deterministic signing, I will note that it is
-perfectly possible to follow their receipe with an ephemeral
-certificate as well.
-
-However, if you want to detach the module signatures for packaging, so
-the modules can go in a reproducible section and the signatures
-elsewhere, then I think we could accommodate that (the output of the
-build is actually unsigned modules, they just get signed on install).
+IIUC, this !v check is for enhanced no-xenstore to end up in XS_UNKNOWN. 
+  I'll have to re-work to handle that case.
 
 Regards,
+Jason
 
-James
+
+>> -- 
+>> 2.34.1
+>>
 
