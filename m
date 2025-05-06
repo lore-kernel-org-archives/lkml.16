@@ -1,94 +1,160 @@
-Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
+Received: from mail.tkos.co.il (mail.tkos.co.il [84.110.109.230])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF7772FD1B5
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 03:17:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97D262FC0F6;
+	Tue,  6 May 2025 03:16:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.110.109.230
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746501471; cv=none; b=JfiF5cGcKX8l/CqMS/z9kY/h8SbQjXF9saGpMoqE1YMW/t7ZWVyEBgutnUOWzEj+nCZBZRftlMqoSyG+8KmWia4eQuddVOuHtQ+91HMmBGZOWEgMyfeEx33k0bOQ+vI4rHAS8hk9+UMkAYnFQNadu0b46OLO3OTHG/URgi41RdM=
+	t=1746501383; cv=none; b=Wghjj8g648HlwQUwAPsFWhD7/HK1wmSBmavfamYUZa/OTf6nDQV0YJJebvL5JZJX9GGVlNRvY7W1r/cB8WDWRixA9aSi3rnPkpPxdiMbmdc/xeONxQV/mi1dhvnamLCMpbpEWQkHOgXkJqCNN8xbxghS+qxI4OmEI70aoIhbsuQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746501471; c=relaxed/simple;
-	bh=ZYfEe9dfbOlh4TB4RxQM+dfsYnGAY1/9qAXesK03RiA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IBl894XATuuBaVx8lc1+2ILfv2uLFOmfr6AsrhnqnuPInXThiebcjh+AHH+fZc8eU/EQowMHyT9nQP+CyROsPdkHGLGDwhidphC7C8DXsj0Ti+E6PejcWyw/zZTEmCU/gQr2HS/bAROzS34cJ1/Oz0xw2j150KOb7BScrSsZogU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=MXLeBZVU; arc=none smtp.client-ip=91.218.175.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1746501383; c=relaxed/simple;
+	bh=BvOr7NK5R2aGH1ZVeHRXfa7u1FmSfQWOwX4gQOAnSvo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=llnVw/L9TofC0Pd6zmvmMi4seZ+ungcdMn8FpyQbxjDKCMaDQPVejZnm9U5slcX1l63xaWTlT8YZ9GVvzDHGC4vDsUJ/pL+OTtyll7poTl6m6eltr/6G6FtUXZ62zlRRWx4coJ4GnaHgywiqlXVGPa+wUXTLe4HwV3YQWSVMUjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tkos.co.il; spf=pass smtp.mailfrom=tkos.co.il; dkim=pass (2048-bit key) header.d=tkos.co.il header.i=@tkos.co.il header.b=QEzvMZMw; arc=none smtp.client-ip=84.110.109.230
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tkos.co.il
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tkos.co.il
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="MXLeBZVU"
-Message-ID: <cbb2a2d2-0810-4ea7-946f-bb592ba31d18@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1746501456;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4hExdwsduTAZkeZ42lU5nwgYu99F31594YfZgZwFWlw=;
-	b=MXLeBZVUmb3QEbq9zmSZ+JbOGD5oonYBsWLaaShIfJPT+nfTTqoy2J6UyXmrz46pVvp9nc
-	8uOwddQdSDwr//qxV+hVDmRP9CaA2Ii6PU/dbBy/t/bJ12bcY09XcnYtigKWbSAQhSYbRQ
-	eMT2wr2wckXmDb+XXDz1eyVHE0nWO1U=
-Date: Tue, 6 May 2025 11:17:28 +0800
+	dkim=pass (2048-bit key) header.d=tkos.co.il header.i=@tkos.co.il header.b="QEzvMZMw"
+Received: from localhost (unknown [10.0.8.2])
+	by mail.tkos.co.il (Postfix) with ESMTP id 3A59B440EA1;
+	Tue,  6 May 2025 06:16:09 +0300 (IDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tkos.co.il;
+	s=default; t=1746501369;
+	bh=BvOr7NK5R2aGH1ZVeHRXfa7u1FmSfQWOwX4gQOAnSvo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=QEzvMZMw4a6uOv9CxaGuj+i4uu+7yVAVgs3F74nLbhHrichdcXqSdsugr3kFzQ9+6
+	 K3kx5ajkGVv5PvRTcmX39/BLk8zKVJEMvknm/hXXLK8hRVLxWuImC2YC5UZHWKYaej
+	 hHwipghZCzA761JXtMh8W0mRjwTr8/EATBPR/g740s63+b9EUkFg+5Mprv8Q2+c9eN
+	 6zyhk1vm/xSeTaThKNpyQBO05/SwbkG17OqY6J4LFz9SUdnJNbgwdDpRY5NGBfd43D
+	 yNEEh8BeH26y9QtV35Xpd74blUl5Es+zr+rTb2GfKgMZ/fxMg8ZeK+f165JMpzfkAB
+	 q5bZ5X03sbq+g==
+From: Baruch Siach <baruch@tkos.co.il>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>,  Thomas Gleixner
+ <tglx@linutronix.de>,  Krzysztof Kozlowski <krzk+dt@kernel.org>,  Conor
+ Dooley <conor+dt@kernel.org>,  linux-kernel@vger.kernel.org,
+  devicetree@vger.kernel.org,  linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] dt-bindings: timer: Convert cnxt,cx92755-timer to DT
+ schema
+In-Reply-To: <20250506022232.2587186-1-robh@kernel.org> (Rob Herring's message
+	of "Mon, 5 May 2025 21:22:31 -0500")
+References: <20250506022232.2587186-1-robh@kernel.org>
+User-Agent: mu4e 1.12.9; emacs 30.1
+Date: Tue, 06 May 2025 06:16:16 +0300
+Message-ID: <87plgmzawv.fsf@tarshish>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [RFC PATCH bpf-next 2/2] bpf: Get fentry func addr from user when
- BTF info invalid
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
- Alan Maguire <alan.maguire@oracle.com>
-Cc: Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>,
- John Fastabend <john.fastabend@gmail.com>,
- Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
- <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>,
- Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
- KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
- Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
- bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-References: <20250430164608.3790552-1-chen.dylane@linux.dev>
- <20250430164608.3790552-3-chen.dylane@linux.dev>
- <4cabeaa5-0a6f-4be0-89c8-b7d0552b0dd0@oracle.com>
- <CAADnVQKPLH7q2KcJM_Nkgc1z=OZmOPZes-0c8A-5gty1xEOKzA@mail.gmail.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Tao Chen <chen.dylane@linux.dev>
-In-Reply-To: <CAADnVQKPLH7q2KcJM_Nkgc1z=OZmOPZes-0c8A-5gty1xEOKzA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain
 
-在 2025/5/1 06:23, Alexei Starovoitov 写道:
-> On Wed, Apr 30, 2025 at 10:57 AM Alan Maguire <alan.maguire@oracle.com> wrote:
->>> +
->>> +                     if (!addr && (prog->expected_attach_type == BPF_TRACE_FENTRY ||
->>> +                                     prog->expected_attach_type == BPF_TRACE_FEXIT)) {
->>> +                             fname = kallsyms_lookup((unsigned long)prog->aux->fentry_func,
->>> +                                                     NULL, NULL, NULL, trace_symbol);
->>> +                             if (fname)
->>> +                                     addr = (long)prog->aux->fentry_func;
->>
->>
->> We should do some validation that the fname we get back matches the BTF
->> func name prefix (fname "foo.isra.0" matches "foo") I think?
-> 
-> I don't think that will be enough.
-> User space should not be able to pass a random kernel address
-> and convince the kernel that it matches a particular btf_id.
-> As discussed in the other thread matching based on name is
-> breaking apart.
-> pahole does all the safety check to make sure name/addr/btf_id
-> are consistent.
-> We shouldn't be adding workarounds like this because
-> pahole/btf/kernel build is not smart enough.
-> 
+Hi Rob,
 
-Got it thanks for your reply, it is hoped that pahole/btf can have a 
-better way to solve such problems.
+On Mon, May 05 2025, Rob Herring (Arm) wrote:
 
-> pw-bot: cr
+> Convert the Conexant Digicolor SoCs Timer binding to DT schema format.
+> It's a straight-forward conversion.
+>
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 
+Acked-by: Baruch Siach <baruch@tkos.co.il>
+
+Thanks,
+baruch
+
+> ---
+>  .../bindings/timer/cnxt,cx92755-timer.yaml    | 49 +++++++++++++++++++
+>  .../bindings/timer/digicolor-timer.txt        | 18 -------
+>  2 files changed, 49 insertions(+), 18 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/timer/cnxt,cx92755-timer.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/timer/digicolor-timer.txt
+>
+> diff --git a/Documentation/devicetree/bindings/timer/cnxt,cx92755-timer.yaml
+> b/Documentation/devicetree/bindings/timer/cnxt,cx92755-timer.yaml
+> new file mode 100644
+> index 000000000000..8f1a5af32a36
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/timer/cnxt,cx92755-timer.yaml
+> @@ -0,0 +1,49 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/cnxt,cx92755-timer.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Conexant Digicolor SoCs Timer Controller
+> +
+> +maintainers:
+> +  - Baruch Siach <baruch@tkos.co.il>
+> +
+> +properties:
+> +  compatible:
+> +    const: cnxt,cx92755-timer
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    description: Contains 8 interrupts, one for each timer
+> +    items:
+> +      - description: interrupt for timer 0
+> +      - description: interrupt for timer 1
+> +      - description: interrupt for timer 2
+> +      - description: interrupt for timer 3
+> +      - description: interrupt for timer 4
+> +      - description: interrupt for timer 5
+> +      - description: interrupt for timer 6
+> +      - description: interrupt for timer 7
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    timer@f0000fc0 {
+> +      compatible = "cnxt,cx92755-timer";
+> +      reg = <0xf0000fc0 0x40>;
+> +      interrupts = <19>, <31>, <34>, <35>, <52>, <53>, <54>, <55>;
+> +      clocks = <&main_clk>;
+> +    };
+> diff --git a/Documentation/devicetree/bindings/timer/digicolor-timer.txt
+> b/Documentation/devicetree/bindings/timer/digicolor-timer.txt
+> deleted file mode 100644
+> index d1b659bbc29f..000000000000
+> --- a/Documentation/devicetree/bindings/timer/digicolor-timer.txt
+> +++ /dev/null
+> @@ -1,18 +0,0 @@
+> -Conexant Digicolor SoCs Timer Controller
+> -
+> -Required properties:
+> -
+> -- compatible : should be "cnxt,cx92755-timer"
+> -- reg : Specifies base physical address and size of the "Agent Communication"
+> -  timer registers
+> -- interrupts : Contains 8 interrupts, one for each timer
+> -- clocks: phandle to the main clock
+> -
+> -Example:
+> -
+> -	timer@f0000fc0 {
+> -		compatible = "cnxt,cx92755-timer";
+> -		reg = <0xf0000fc0 0x40>;
+> -		interrupts = <19>, <31>, <34>, <35>, <52>, <53>, <54>, <55>;
+> -		clocks = <&main_clk>;
+> -	};
 
 -- 
-Best Regards
-Tao Chen
+                                                     ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
