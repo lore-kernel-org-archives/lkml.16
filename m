@@ -1,194 +1,131 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 076FC277021
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 09:21:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5447A2165E4
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 09:22:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746523263; cv=none; b=j0GeiaGAC2/3v3MKzxdUtBwK4uSQICY/WxCbdM+s4JqmW2YO+fNorV5N4splZTOHpv33RoqZBXW5EfYcL7O6JRSKuZienFvvgY3Zmq9EC68Zu6jF/5vz0Bt1cP7EzCplqmjbnmmZcJYzPWJY7pwZHRjxudmjS6y/RQIKhGgEdo0=
+	t=1746523362; cv=none; b=NsfvBq1Y6zjTa3mSjeUb4QhrpXRRjmhF0fdu8gNpOyt/7RyBZJjdKHbh6qC312P5odI1kQ9pq5yihqnm8ZTwrtQ3BaKqFK9uEs6yrIVyovgT7pVBF3uQb+GbGQyD1rYtF4y0Ze1kdcUCEw5RDAeCj6URoiNd2Le4kAq6Rs/Izvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746523263; c=relaxed/simple;
-	bh=/mCIQwfL51f0bNbnkSPgQhFHZeS0CyvQ6XwDws26Oz0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gV1NRhWB0pOp/ZVOxijwdyjueZx1vA548atXykRicspr/KDPPIXH5sqgxq+RS5+4WurS4/3rFQ5fgzkw87bMNPH1G0lXQlWAcKYWFT4CgH6GjhCdVGj3w+AMtvQyMywYPzksSz49emegS+V05gcUTy8trZtWOAHJ7HzCil8FmNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=KN5RYi3W; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=KN5RYi3W; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1746523362; c=relaxed/simple;
+	bh=IXbem8G2R35AAr+aAT8vVVC/AjXI63AKfjNdsXUs0Sc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PGxiwa4RtUz6r7xBgdZOZvxiwI5V+jC1cUpUMb1tPZsqtwdx23EsIc7eYYM8dovcVU996tqP/pO05MsDzRgcyGkTWI8438I6xfZZOGf4MP/lRRPBKryew9GsQjHxGQtEj48/dV4XlvYlXKwlDuzyzBJ5UrtV9Yi68qUj4xljPJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rRQ2WK6O; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="KN5RYi3W";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="KN5RYi3W"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 76F8D21222;
-	Tue,  6 May 2025 09:20:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1746523258; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3vZ2K2J1ln19F+coajEe0NOzYd5qTlnxqf025hGnVDU=;
-	b=KN5RYi3WKDf5r3VtKmNI3YmBwUzGzvePRrlML95vi4X0xhN9peoD1MOJLbxp5vLh1HRu0k
-	Q+egWSynCrSzt014lYfd2E9PqTjhVD4ppQzcklbbLLGV3D6E8ObFKQGmNx5Nr1Hz9Sfs/q
-	yITmmMV6OT/18+CQ/ixpOIu6S8aXeY8=
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1746523258; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3vZ2K2J1ln19F+coajEe0NOzYd5qTlnxqf025hGnVDU=;
-	b=KN5RYi3WKDf5r3VtKmNI3YmBwUzGzvePRrlML95vi4X0xhN9peoD1MOJLbxp5vLh1HRu0k
-	Q+egWSynCrSzt014lYfd2E9PqTjhVD4ppQzcklbbLLGV3D6E8ObFKQGmNx5Nr1Hz9Sfs/q
-	yITmmMV6OT/18+CQ/ixpOIu6S8aXeY8=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2534F137CF;
-	Tue,  6 May 2025 09:20:58 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Uz6qB3rUGWg4bAAAD6G6ig
-	(envelope-from <jgross@suse.com>); Tue, 06 May 2025 09:20:58 +0000
-From: Juergen Gross <jgross@suse.com>
-To: linux-kernel@vger.kernel.org,
-	x86@kernel.org
-Cc: xin@zytor.com,
-	Juergen Gross <jgross@suse.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	xen-devel@lists.xenproject.org
-Subject: [PATCH 6/6] x86/msr: reduce number of low level MSR access helpers
-Date: Tue,  6 May 2025 11:20:15 +0200
-Message-ID: <20250506092015.1849-7-jgross@suse.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250506092015.1849-1-jgross@suse.com>
-References: <20250506092015.1849-1-jgross@suse.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rRQ2WK6O"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43ef83a6bfaso33935e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 02:22:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746523358; x=1747128158; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=6PKyiTW7t9VlHIC0Fir8qyHkI243/6y/pnmH8hpJckY=;
+        b=rRQ2WK6OdP+KLUAzdynzJJT+jLRA5D9KNnTXCz8TKWT+90igkuIYnFtD3SeuDtG7Sq
+         KGDXNO91CgS/OzSBP8znNh+4EUAT9w4AMWGVGEn9ITxwQoz/PeSgwzV346/GopTfMFZ9
+         EhpnzJtZ4G5z2eNyUIniawRYKQwOfoVlW9MNnyf78taTSxfTrTLv9/yAg+pNyTzqXc5f
+         U3Dvat2jTJSG5H1Qqb3rW8j3EBwQm779r4yDekmE9nhCv0xUxm50/VWTc65g98bPnpqA
+         CnBEQj4mAHwr0/HKnThGglIlWzLMrHFIbmklFmEQv+K0uhyx1iZPu1N4AgcJJpaSU7t/
+         XzyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746523358; x=1747128158;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6PKyiTW7t9VlHIC0Fir8qyHkI243/6y/pnmH8hpJckY=;
+        b=etLPpvmXMaZ2dRgNEJzg2VJYmWJXAKnWb2bgcqA3jHNpPhwVV14utr2tPmHnDokMj4
+         OVsuMH3LJV/seI6tOAa6DRgzh5dDLJrOdxhXZkC6N5t9Ou12qDYn7tN9PePtwIaMIWKe
+         MCknLHoSJyLeUhtun6jkBuPgro+FiyWdZQyHBbGS5LCtpVutPMwBTbdTpMMs/9B//gnr
+         E/QG2qGYYgLBJsfVerqOy1T2CuQ9JFBdIi+QWMPIx1B0adT1DO8N20GytSDUqyRYkKk/
+         gAfDuQzzj94gRBDWLRXBReGanU2hBtWy3aus2zXof0TMXMmWZ/oaSKgucdOFJpNlkakt
+         n8ZQ==
+X-Gm-Message-State: AOJu0Yze4MkqHcBq8UHjDTMhZH11JxxHy1NGrPvkptbhIFE8Mxhz62A4
+	1XOw2twT52DIKJh5JBfcg5r1YAW+SlFX8J6wUpSwdb9pCs3f0E6kY3FenOQUGQ==
+X-Gm-Gg: ASbGncveoHpeHXzNHjnDcSZA4tUtDtF81M2ckz5WG4+9ghFdSfkPgo9p8lIXsaFIuEy
+	P7p7+RQgpo7y47FdVRljbGQjB0Rl8pThioz8AYJlqidaPl/9Y4q9KkhtLdb4AheNiy72/qaVAEl
+	xLsUCKcYvbOGJThBgCbzXwWH0RpzfKhU11nkQwi+rDRL6nBT6014OL+6piSK1A4Hf9dahMBNmXA
+	AC03V7ZNH1IER6lRCAQLkZlliT5edqDdJaKOG8URz/W+mFNUEc8n21frfD2CavnwGMa2jZTN0/9
+	VRpMzXmzCK2J19seGyYsEYZUeaW9YV8LcAuQslTpiZT2f/GnGYmzq1cYxiQBdP7ChZWr+kxh7CV
+	HVyo=
+X-Google-Smtp-Source: AGHT+IHDtwlAgJFzUnwiJ122yccBNhS4YJpQ3qlNsrd7r09OaCmmMYMxQB11yASqxuqK4r8lQg5APg==
+X-Received: by 2002:a7b:c04d:0:b0:43b:bf3f:9664 with SMTP id 5b1f17b1804b1-441d123cfd5mr707515e9.5.1746523358264;
+        Tue, 06 May 2025 02:22:38 -0700 (PDT)
+Received: from google.com (202.88.205.35.bc.googleusercontent.com. [35.205.88.202])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b2b287desm208303605e9.38.2025.05.06.02.22.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 May 2025 02:22:37 -0700 (PDT)
+Date: Tue, 6 May 2025 09:22:33 +0000
+From: Mostafa Saleh <smostafa@google.com>
+To: Marc Zyngier <maz@kernel.org>
+Cc: linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, oliver.upton@linux.dev,
+	joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com,
+	catalin.marinas@arm.com, will@kernel.org, qperret@google.com
+Subject: Re: [PATCH] KVM: arm64: Fix memory check in
+ host_stage2_set_owner_locked()
+Message-ID: <aBnU2aXDvznmGU2l@google.com>
+References: <20250501162450.2784043-1-smostafa@google.com>
+ <86ikmegmw9.wl-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Score: -6.80
-X-Spamd-Result: default: False [-6.80 / 50.00];
-	REPLY(-4.00)[];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_COUNT_TWO(0.00)[2];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	R_RATELIMIT(0.00)[to_ip_from(RLfdszjqhz8kzzb9uwpzdm8png)];
-	RCVD_TLS_ALL(0.00)[]
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <86ikmegmw9.wl-maz@kernel.org>
 
-Some MSR access helpers are redundant now, so remove the no longer
-needed ones.
+On Tue, May 06, 2025 at 09:32:22AM +0100, Marc Zyngier wrote:
+> On Thu, 01 May 2025 17:24:50 +0100,
+> Mostafa Saleh <smostafa@google.com> wrote:
+> > 
+> > I found this simple bug while preparing some patches for pKVM.
+> > AFAICT, it should be harmless (besides crashing the kernel if it
+> > was misbehaving)
+> > 
+> > Fixes: e94a7dea2972 ("KVM: arm64: Move host page ownership tracking to the hyp vmemmap")
+> > Signed-off-by: Mostafa Saleh <smostafa@google.com>
+> > ---
+> >  arch/arm64/kvm/hyp/nvhe/mem_protect.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/arm64/kvm/hyp/nvhe/mem_protect.c b/arch/arm64/kvm/hyp/nvhe/mem_protect.c
+> > index 2a5284f749b4..e80f3ebd3e2a 100644
+> > --- a/arch/arm64/kvm/hyp/nvhe/mem_protect.c
+> > +++ b/arch/arm64/kvm/hyp/nvhe/mem_protect.c
+> > @@ -503,7 +503,7 @@ int host_stage2_set_owner_locked(phys_addr_t addr, u64 size, u8 owner_id)
+> >  {
+> >  	int ret;
+> >  
+> > -	if (!addr_is_memory(addr))
+> > +	if (!range_is_memory(addr, addr + size))
+> >  		return -EPERM;
+> >  
+> >  	ret = host_stage2_try(kvm_pgtable_stage2_set_owner, &host_mmu.pgt,
+> 
+> I vaguely seem to remember that there was an assumption around
+> addr/size representing a single page, and therefore addr_is_memory()
+> was doing the right thing.
+> 
+> Has this assumption changed? Or is this only a figment of my imagination?
 
-At the same time make the native_*_msr_safe() helpers always inline.
+From what I see, this might have size exceeding page size in the
+following cases:
+1- When creating a VM with 4K kernel as the struct pkvm_hyp_vm size
+   is at least 0x1130 (without vCPUs)
+2- When creating a VM and PGD size is bigger than one page (for cases
+   with concatenation as 52 bits and 4K would have 64K PGD)
 
-Signed-off-by: Juergen Gross <jgross@suse.com>
----
- arch/x86/include/asm/msr.h  | 20 ++++----------------
- arch/x86/xen/enlighten_pv.c |  4 ++--
- 2 files changed, 6 insertions(+), 18 deletions(-)
+Thanks,
+Mostafa
 
-diff --git a/arch/x86/include/asm/msr.h b/arch/x86/include/asm/msr.h
-index 3a94cffb6a3e..0e2ed1604015 100644
---- a/arch/x86/include/asm/msr.h
-+++ b/arch/x86/include/asm/msr.h
-@@ -101,12 +101,7 @@ static __always_inline u64 native_rdmsrq(u32 msr)
- #define native_wrmsrq(msr, val)				\
- 	__wrmsrq((msr), (val))
- 
--static inline u64 native_read_msr(u32 msr)
--{
--	return __rdmsr(msr);
--}
--
--static inline int native_read_msr_safe(u32 msr, u64 *p)
-+static __always_inline int native_read_msr_safe(u32 msr, u64 *p)
- {
- 	int err;
- 	EAX_EDX_DECLARE_ARGS(val, low, high);
-@@ -122,14 +117,7 @@ static inline int native_read_msr_safe(u32 msr, u64 *p)
- 	return err;
- }
- 
--/* Can be uninlined because referenced by paravirt */
--static inline void notrace native_write_msr(u32 msr, u64 val)
--{
--	native_wrmsrq(msr, val);
--}
--
--/* Can be uninlined because referenced by paravirt */
--static inline int notrace native_write_msr_safe(u32 msr, u64 val)
-+static __always_inline int notrace native_write_msr_safe(u32 msr, u64 val)
- {
- 	int err;
- 
-@@ -161,7 +149,7 @@ static inline u64 native_read_pmc(int counter)
- #include <linux/errno.h>
- static __always_inline u64 read_msr(u32 msr)
- {
--	return native_read_msr(msr);
-+	return native_rdmsrq(msr);
- }
- 
- static __always_inline int read_msr_safe(u32 msr, u64 *p)
-@@ -171,7 +159,7 @@ static __always_inline int read_msr_safe(u32 msr, u64 *p)
- 
- static __always_inline void write_msr(u32 msr, u64 val)
- {
--	native_write_msr(msr, val);
-+	native_wrmsrq(msr, val);
- }
- 
- static __always_inline int write_msr_safe(u32 msr, u64 val)
-diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
-index c279b2bef7eb..ea3d7d583254 100644
---- a/arch/x86/xen/enlighten_pv.c
-+++ b/arch/x86/xen/enlighten_pv.c
-@@ -1097,7 +1097,7 @@ static u64 xen_do_read_msr(u32 msr, int *err)
- 	if (err)
- 		*err = native_read_msr_safe(msr, &val);
- 	else
--		val = native_read_msr(msr);
-+		val = native_rdmsrq(msr);
- 
- 	switch (msr) {
- 	case MSR_IA32_APICBASE:
-@@ -1156,7 +1156,7 @@ static void xen_do_write_msr(u32 msr, u64 val, int *err)
- 		if (err)
- 			*err = native_write_msr_safe(msr, val);
- 		else
--			native_write_msr(msr, val);
-+			native_wrmsrq(msr, val);
- 	}
- }
- 
--- 
-2.43.0
-
+> 
+> Thanks,
+> 
+> 	M.
+> 
+> -- 
+> Without deviation from the norm, progress is not possible.
