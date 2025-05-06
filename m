@@ -1,105 +1,312 @@
-Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46])
+Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 675042472A6;
-	Tue,  6 May 2025 10:05:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0249A266B44
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 10:05:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746525931; cv=none; b=SYg/zCl/zivteILExmwskvmu3hkbZgi7BiThePfZK4zRkanj66M5oKy6tumFWB+AT4Q8RdQ7qrSNnqiQ4JiFY301ZonyRFVAVI2VSiL5cGIP9c5M0y79WxngqZJ5xlu+YM7q6A54B7zvGjXdP9hpZR8eP4y/Kvrn8gEcHRV1OZE=
+	t=1746525931; cv=none; b=TN3xVgUQNKTQ1qkyHDhmKdkgIqAkVGAGJuvQoH5RYVCa4TgqMJRxaGAwq9bbpamhbXxvz5kxfoPN/mw7mv8GKTEbU3x6l8GsD8XFYQsO2xpLriOAtzJugNHHXKXrK0CflEN7v7fX6zG3G++1UpbHttCbebIGypR0XnpK9eApx1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746525931; c=relaxed/simple;
-	bh=Y/VJEvoHPIW0rBkteoNkuC/NEVPFSr6JkPZiPbFtmyM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LDi3JynWo+6g5Q2oMlXQ+Y2LD8CYylPguZQE7Q07TenJZZKNIW6Ceyyb3YgC6OOiqrWBh02+g7lM2QExfkyNdlR5SnCbb8mFP3Hg8oJ4zs6C06KZhi8DYK5oP+/p9RRNAaW0vzbk7NBBKt1oo5XS1xJMj9tQ8zCjK9q9HJxv7mE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f46.google.com with SMTP id ada2fe7eead31-4c300c82ca8so2492145137.2;
-        Tue, 06 May 2025 03:05:29 -0700 (PDT)
+	bh=mbaqMlGgn0O2m1V1FsJrdner0BCcF8u6WbMVG6mnqXo=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=o7u/VohjmKK9gQtSqG/PZyM1V1lcNC3B5g2SCYUs5mws3Lw5OK61v2aoBjuc5470WTN0rw5Bnj0v79KjUoBahZmpIKzqIUQVfVcPoWEdJYf16edZDp3XqUmLMyJv51wCbR3ipiN2X7Xt6jKhySS8vnr6qVx2Pef6ficCSjVq5DA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3d443811f04so53048425ab.1
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 03:05:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746525928; x=1747130728;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/UG3EfZcOLsg0K2Pj+i+A07ZZOxBtuVqezBnYYw52wU=;
-        b=kRShi6GGW3jg7xoppRUQPWakgqEcFj3RXQ7xKZu+LQzgoVKDxqqLfkFyz4Z0LHLVHt
-         ZbpYOxvVPb/qNQ2+P8Jl15UJELCKUhhwQ/zbZ8fiOtRm3arNVP4/q6U92wb6bBXGY4Jp
-         JZqQevJvtndu+R6Kjr1SwiSgH/cVraKAuuLyZ76lbLyV9ymilJvhFFKCOjzRjRhcIKdt
-         pzGT3yA9nS7aBwS2m4Ou6OmjoIhmC2yB+QX0k24YJf19Nxyc2bx3Ug/2sG1V9snSeTzh
-         Uy2bxDs+gvXIxH4O+vZpLEIxh5K3EY5RbOsrvgoOCyES+wMcQtpntT+fu6h6yBUdJdEC
-         hVGw==
-X-Forwarded-Encrypted: i=1; AJvYcCUlTM8jBYOyFAfncV4aNcABHBf4qO2gLu7P5tfLmZ/J2tvwaO26NiwmTFh6UFw2qZ5YohbtB9IQIRMzbYYXhQx2t4ZJ@vger.kernel.org, AJvYcCW9ReoU28klT72adeI1c3iR2j2gnhcGdvBnrxhI3/2g1SSMGFryfXG8rZMRKjvkyRtjFAIBjK5KU6G7mSBG@vger.kernel.org, AJvYcCWrLasIwvCWj4XAg1licZQ94wU2yJcGB6BLPHPLcTskGcrYW4T05dXbUvou6qUnn5FJ/Gf15k6vvM3jQg==@vger.kernel.org, AJvYcCXOs1KSicseaCzHPyb/u5fnOVyJUAWkXLkU+PrmDvq3VnbDRGfEw+qhJAkHmWOGp1r3J9V0EHv4oT9tow==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyN2nPDBX98jqKDK8yGYPXF3sFdx0QwbfHDqNOjfVPcfRBIfK71
-	XBjEfZIokYhT0vUEGgRVmu+BnoeJ1Y4qLvX4DVdioovs2BB3M/gIAjEVd1wO
-X-Gm-Gg: ASbGncuHPrMEhixnFpzQZDrLPq69UrZYhSb6o7UkSOIKPqPAmeiJbXQsOyHNgr9M6PY
-	mB59JaOJlcP+FTPDx00hjEqE8vJa3mIz99mDNJhucqjObk/2i5ChMeMqF/eVtRJv58lzqBOQx7I
-	HMOJxU6Z35ct204LgImUUViRZdu3YSE5nZYjk3G7uDsMjXrPWuJqXQKBj17WZBm3tM7WuRPxSMs
-	nCZ/M0Zpwhv+tJvtBTQyt4CvOmcZ9yDgDrW6dgEpC591YvYDuBJWkUjLyRw+Py0x9ScuChvlHas
-	L4TNg/+nLs66B4rkscW+MnpoFrUrBfwalJlQgfmC1jpFhoCIcpx7LnQocBiasqOs8dqW96cXkcG
-	1W48=
-X-Google-Smtp-Source: AGHT+IHBxz5YxRzrWKsPUbEAjQTOhgXM8B51fDmfN/v8qSvh8VsaBuNq2xzqM6v5M2reFOB7enLsjA==
-X-Received: by 2002:a05:6102:570e:b0:4bb:d7f0:6e70 with SMTP id ada2fe7eead31-4dc637871dfmr1259086137.5.1746525927881;
-        Tue, 06 May 2025 03:05:27 -0700 (PDT)
-Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com. [209.85.217.53])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-8780b293e9csm1587177241.31.2025.05.06.03.05.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 06 May 2025 03:05:27 -0700 (PDT)
-Received: by mail-vs1-f53.google.com with SMTP id ada2fe7eead31-4c4d8638e07so1566640137.3;
-        Tue, 06 May 2025 03:05:27 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUpsIi94uwQcRCXF3JgKWY97+eqmk5e/Rsi1UmpPaSTONqensyL4WoHj9tXlBa8ARZJJOIO0RN3Q9dTSPYV@vger.kernel.org, AJvYcCVPamFT5dqKDZQH7XU658KcoEX5gGARVg69Jtwd0aKprL8gy2iE9C/3MU+SK4BynfManw4FiIos0sylUpqsShmsnFKW@vger.kernel.org, AJvYcCX9tagiB7/k2W1jkvAt/Z8U6vY9W0t6hvMdB31LdnbUTMtM+ccfxBcoiL4wfYVqQOPBUjmtRvhBfVWPfQ==@vger.kernel.org, AJvYcCXbIJ/HdQf3MjruM9UjjgNUesI7p5eNtVDHkMbIqedbGYZZ6wpr5g+EMWWNvE4Dm+wrKvzlIwtAu3aOVA==@vger.kernel.org
-X-Received: by 2002:a05:6102:80a8:b0:4c1:9780:3830 with SMTP id
- ada2fe7eead31-4dc6394b72bmr1710089137.23.1746525927504; Tue, 06 May 2025
- 03:05:27 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746525929; x=1747130729;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=zAnScUYl7mbKpNFlUShHyzhwIQ4t1swm+4ckWItM8S4=;
+        b=bfKs63Hn5pmseHWZLGnlwKdFU1LjIQSgBAdu1uuBzS6NTMjF6tdxWUZe1vl0aixtLK
+         HGJNbDJvkqBzXzPSKrw1IG4JtiN4kMflQK+H0eiJ9ngPBldF1Ov/7Nlz3wHyzeRQegDq
+         Fk/1aB4ZqL4cbzcasM7lQ+yGdkDeR+N30G9om7JGwQ59G/zsvCpfLgBScbzrheRcPUAl
+         XQNxQRRWETKHce18/N+K2Mt5SymQoJXOIKLtK4TtTQgfffSMoVBDQPs+whNxmoMl0frz
+         MHfgD4SK3ta+O6oEfSnzWacQA+nSvvYcOLLTJg+36it1Lx7TscxcJsIC8H1aeyoK6+2V
+         /Y5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUvpO2UxcOiCkesZDOgsBeUyCaGcCXl8P9R2Unzx5YsP7r1Ht8lk5jBGjhppNLwELTJrMUDY+D8kZROcyI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWemzlpqtM/c8sBu7FewE4VzG+Nd3ouvgHrosdZVsXBUG6SR3V
+	ggUT+Qq7d75lfOcWnQVmC2OSWLhmahehnQEoIXtCUF7UT8WGmIlCeBzpy/tLH90G0Xi7G1awHHG
+	E1Csjdh958ISqCc6J3l0TKICo0l6jVngrslzZESYm+Y+QNwLwLVTwaoY=
+X-Google-Smtp-Source: AGHT+IEukJL442XIymUOtyI4u9zTAa7kkoADVWnoWKwfqZHG7bU1VDsXZykx+E23/MtJeL3A3lEoU+DBQKM1XoPpyJSQC/PPKaYA
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250506192033.77338015@canb.auug.org.au>
-In-Reply-To: <20250506192033.77338015@canb.auug.org.au>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 6 May 2025 12:05:15 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdX_K7EA4kE2mqxv+BkfR_oQmcpek2B3LxiYxMjSMfwjAw@mail.gmail.com>
-X-Gm-Features: ATxdqUF28lBQNyrtXWNX6COscd_3GGsL2n1KwNeSKx4aB74xPjE_auRQsV8ugSQ
-Message-ID: <CAMuHMdX_K7EA4kE2mqxv+BkfR_oQmcpek2B3LxiYxMjSMfwjAw@mail.gmail.com>
-Subject: Re: linux-next: build warnings after merge of the renesas tree
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Next Mailing List <linux-next@vger.kernel.org>, 
-	Devicetree Compiler <devicetree-compiler@vger.kernel.org>, 
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+X-Received: by 2002:a05:6e02:152f:b0:3d0:4e57:bbda with SMTP id
+ e9e14a558f8ab-3da6cdc61a6mr27910065ab.1.1746525929006; Tue, 06 May 2025
+ 03:05:29 -0700 (PDT)
+Date: Tue, 06 May 2025 03:05:28 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6819dee8.050a0220.a19a9.0008.GAE@google.com>
+Subject: [syzbot] [block?] INFO: task hung in blkdev_read_iter
+From: syzbot <syzbot+afa7aef0c237038586e7@syzkaller.appspotmail.com>
+To: axboe@kernel.dk, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
-Hi Stephen,
+Hello,
 
-On Tue, 6 May 2025 at 11:20, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> After merging the renesas tree, today's linux-next build (arm64 defconfig)
-> produced these warnings:
->
-> arch/arm64/boot/dts/renesas/r8a779g0.dtsi:1269.24-1283.5: Warning (spi_bus_bridge): /soc/spi@e6ea0000: incorrect #address-cells for SPI bus
->   also defined at arch/arm64/boot/dts/renesas/r8a779g3-sparrow-hawk.dts:463.9-478.3
-> arch/arm64/boot/dts/renesas/r8a779g0.dtsi:1269.24-1283.5: Warning (spi_bus_bridge): /soc/spi@e6ea0000: incorrect #size-cells for SPI bus
->   also defined at arch/arm64/boot/dts/renesas/r8a779g3-sparrow-hawk.dts:463.9-478.3
-> arch/arm64/boot/dts/renesas/r8a779g3-sparrow-hawk.dtb: Warning (spi_bus_reg): Failed prerequisite 'spi_bus_bridge'
->
-> Introduced by commit
->
->   c29748ccad88 ("arm64: dts: renesas: sparrow-hawk: Add MSIOF Sound support")
+syzbot found the following issue on:
 
-Thanks, this is a known conflict between SPI bus bindings and dtc:
-  - Serial engines that can be SPI controllers must use "spi" as their
-    node names,
-  - Dtc assumes nodes named "spi" are always SPI controllers.
+HEAD commit:    ebd297a2affa Merge tag 'net-6.15-rc5' of git://git.kernel...
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=137ab774580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a9a25b7a36123454
+dashboard link: https://syzkaller.appspot.com/bug?extid=afa7aef0c237038586e7
+compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=177ab774580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14ed0b68580000
 
-Gr{oetje,eeting}s,
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/f2a7906b8354/disk-ebd297a2.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/f84d6953ac72/vmlinux-ebd297a2.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/24673ab81bd7/bzImage-ebd297a2.xz
 
-                        Geert
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+afa7aef0c237038586e7@syzkaller.appspotmail.com
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+INFO: task syz-executor467:5849 blocked for more than 143 seconds.
+      Not tainted 6.15.0-rc4-syzkaller-00147-gebd297a2affa #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:syz-executor467 state:D stack:26936 pid:5849  tgid:5849  ppid:5839   task_flags:0x400040 flags:0x00004006
+Call Trace:
+ <TASK>
+ context_switch kernel/sched/core.c:5382 [inline]
+ __schedule+0x16e2/0x4cd0 kernel/sched/core.c:6767
+ __schedule_loop kernel/sched/core.c:6845 [inline]
+ schedule+0x165/0x360 kernel/sched/core.c:6860
+ schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6917
+ rwsem_down_read_slowpath+0x552/0x880 kernel/locking/rwsem.c:1084
+ __down_read_common kernel/locking/rwsem.c:1248 [inline]
+ __down_read kernel/locking/rwsem.c:1261 [inline]
+ down_read+0x98/0x2e0 kernel/locking/rwsem.c:1526
+ inode_lock_shared include/linux/fs.h:877 [inline]
+ blkdev_read_iter+0x2f8/0x440 block/fops.c:808
+ aio_read+0x30e/0x470 fs/aio.c:1602
+ __io_submit_one fs/aio.c:-1 [inline]
+ io_submit_one+0x6ec/0x1240 fs/aio.c:2052
+ __do_sys_io_submit fs/aio.c:2111 [inline]
+ __se_sys_io_submit+0x185/0x2f0 fs/aio.c:2081
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fbea1957ea9
+RSP: 002b:00007ffe0d65d0f8 EFLAGS: 00000246 ORIG_RAX: 00000000000000d1
+RAX: ffffffffffffffda RBX: 0000200000000080 RCX: 00007fbea1957ea9
+RDX: 00002000000000c0 RSI: 00000000000000ca RDI: 00007fbea1910000
+RBP: 00000000000f4240 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffe0d65d110
+R13: 00007ffe0d65d130 R14: 000000000001a993 R15: 00007ffe0d65d10c
+ </TASK>
+INFO: task syz-executor467:5850 blocked for more than 143 seconds.
+      Not tainted 6.15.0-rc4-syzkaller-00147-gebd297a2affa #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:syz-executor467 state:D stack:26936 pid:5850  tgid:5850  ppid:5841   task_flags:0x400040 flags:0x00004006
+Call Trace:
+ <TASK>
+ context_switch kernel/sched/core.c:5382 [inline]
+ __schedule+0x16e2/0x4cd0 kernel/sched/core.c:6767
+ __schedule_loop kernel/sched/core.c:6845 [inline]
+ schedule+0x165/0x360 kernel/sched/core.c:6860
+ schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6917
+ rwsem_down_read_slowpath+0x552/0x880 kernel/locking/rwsem.c:1084
+ __down_read_common kernel/locking/rwsem.c:1248 [inline]
+ __down_read kernel/locking/rwsem.c:1261 [inline]
+ down_read+0x98/0x2e0 kernel/locking/rwsem.c:1526
+ inode_lock_shared include/linux/fs.h:877 [inline]
+ blkdev_read_iter+0x2f8/0x440 block/fops.c:808
+ aio_read+0x30e/0x470 fs/aio.c:1602
+ __io_submit_one fs/aio.c:-1 [inline]
+ io_submit_one+0x6ec/0x1240 fs/aio.c:2052
+ __do_sys_io_submit fs/aio.c:2111 [inline]
+ __se_sys_io_submit+0x185/0x2f0 fs/aio.c:2081
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fbea1957ea9
+RSP: 002b:00007ffe0d65d0f8 EFLAGS: 00000246 ORIG_RAX: 00000000000000d1
+RAX: ffffffffffffffda RBX: 0000200000000080 RCX: 00007fbea1957ea9
+RDX: 00002000000000c0 RSI: 00000000000000ca RDI: 00007fbea1910000
+RBP: 00000000000f4240 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffe0d65d110
+R13: 00007ffe0d65d130 R14: 000000000001a9ab R15: 00007ffe0d65d10c
+ </TASK>
+INFO: task syz-executor467:5851 blocked for more than 144 seconds.
+      Not tainted 6.15.0-rc4-syzkaller-00147-gebd297a2affa #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:syz-executor467 state:D stack:26936 pid:5851  tgid:5851  ppid:5842   task_flags:0x400040 flags:0x00004006
+Call Trace:
+ <TASK>
+ context_switch kernel/sched/core.c:5382 [inline]
+ __schedule+0x16e2/0x4cd0 kernel/sched/core.c:6767
+ __schedule_loop kernel/sched/core.c:6845 [inline]
+ schedule+0x165/0x360 kernel/sched/core.c:6860
+ schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6917
+ rwsem_down_read_slowpath+0x552/0x880 kernel/locking/rwsem.c:1084
+ __down_read_common kernel/locking/rwsem.c:1248 [inline]
+ __down_read kernel/locking/rwsem.c:1261 [inline]
+ down_read+0x98/0x2e0 kernel/locking/rwsem.c:1526
+ inode_lock_shared include/linux/fs.h:877 [inline]
+ blkdev_read_iter+0x2f8/0x440 block/fops.c:808
+ aio_read+0x30e/0x470 fs/aio.c:1602
+ __io_submit_one fs/aio.c:-1 [inline]
+ io_submit_one+0x6ec/0x1240 fs/aio.c:2052
+ __do_sys_io_submit fs/aio.c:2111 [inline]
+ __se_sys_io_submit+0x185/0x2f0 fs/aio.c:2081
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fbea1957ea9
+RSP: 002b:00007ffe0d65d0f8 EFLAGS: 00000246 ORIG_RAX: 00000000000000d1
+RAX: ffffffffffffffda RBX: 0000200000000080 RCX: 00007fbea1957ea9
+RDX: 00002000000000c0 RSI: 00000000000000ca RDI: 00007fbea1910000
+RBP: 00000000000f4240 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffe0d65d110
+R13: 00007ffe0d65d130 R14: 000000000001a9b9 R15: 00007ffe0d65d10c
+ </TASK>
+INFO: task syz-executor467:5852 blocked for more than 144 seconds.
+      Not tainted 6.15.0-rc4-syzkaller-00147-gebd297a2affa #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:syz-executor467 state:D stack:26936 pid:5852  tgid:5852  ppid:5844   task_flags:0x400040 flags:0x00004006
+Call Trace:
+ <TASK>
+ context_switch kernel/sched/core.c:5382 [inline]
+ __schedule+0x16e2/0x4cd0 kernel/sched/core.c:6767
+ __schedule_loop kernel/sched/core.c:6845 [inline]
+ schedule+0x165/0x360 kernel/sched/core.c:6860
+ schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6917
+ rwsem_down_read_slowpath+0x552/0x880 kernel/locking/rwsem.c:1084
+ __down_read_common kernel/locking/rwsem.c:1248 [inline]
+ __down_read kernel/locking/rwsem.c:1261 [inline]
+ down_read+0x98/0x2e0 kernel/locking/rwsem.c:1526
+ inode_lock_shared include/linux/fs.h:877 [inline]
+ blkdev_read_iter+0x2f8/0x440 block/fops.c:808
+ aio_read+0x30e/0x470 fs/aio.c:1602
+ __io_submit_one fs/aio.c:-1 [inline]
+ io_submit_one+0x6ec/0x1240 fs/aio.c:2052
+ __do_sys_io_submit fs/aio.c:2111 [inline]
+ __se_sys_io_submit+0x185/0x2f0 fs/aio.c:2081
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fbea1957ea9
+RSP: 002b:00007ffe0d65d0f8 EFLAGS: 00000246 ORIG_RAX: 00000000000000d1
+RAX: ffffffffffffffda RBX: 0000200000000080 RCX: 00007fbea1957ea9
+RDX: 00002000000000c0 RSI: 00000000000000ca RDI: 00007fbea1910000
+RBP: 00000000000f4240 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffe0d65d110
+R13: 00007ffe0d65d130 R14: 000000000001a9bf R15: 00007ffe0d65d10c
+ </TASK>
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Showing all locks held in the system:
+1 lock held by khungtaskd/31:
+ #0: ffffffff8df3b860 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire include/linux/rcupdate.h:331 [inline]
+ #0: ffffffff8df3b860 (rcu_read_lock){....}-{1:3}, at: rcu_read_lock include/linux/rcupdate.h:841 [inline]
+ #0: ffffffff8df3b860 (rcu_read_lock){....}-{1:3}, at: debug_show_all_locks+0x2e/0x180 kernel/locking/lockdep.c:6764
+2 locks held by getty/5585:
+ #0: ffff88802ffee0a0 (&tty->ldisc_sem){++++}-{0:0}, at: tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:243
+ #1: ffffc9000333b2f0 (&ldata->atomic_read_lock){+.+.}-{4:4}, at: n_tty_read+0x43e/0x1400 drivers/tty/n_tty.c:2222
+2 locks held by syz-executor467/5848:
+1 lock held by syz-executor467/5849:
+ #0: ffff8880228887a0 (&sb->s_type->i_mutex_key#8){++++}-{4:4}, at: inode_lock_shared include/linux/fs.h:877 [inline]
+ #0: ffff8880228887a0 (&sb->s_type->i_mutex_key#8){++++}-{4:4}, at: blkdev_read_iter+0x2f8/0x440 block/fops.c:808
+1 lock held by syz-executor467/5850:
+ #0: ffff8880228887a0 (&sb->s_type->i_mutex_key#8){++++}-{4:4}, at: inode_lock_shared include/linux/fs.h:877 [inline]
+ #0: ffff8880228887a0 (&sb->s_type->i_mutex_key#8){++++}-{4:4}, at: blkdev_read_iter+0x2f8/0x440 block/fops.c:808
+1 lock held by syz-executor467/5851:
+ #0: ffff8880228887a0 (&sb->s_type->i_mutex_key#8){++++}-{4:4}, at: inode_lock_shared include/linux/fs.h:877 [inline]
+ #0: ffff8880228887a0 (&sb->s_type->i_mutex_key#8){++++}-{4:4}, at: blkdev_read_iter+0x2f8/0x440 block/fops.c:808
+1 lock held by syz-executor467/5852:
+ #0: ffff8880228887a0 (&sb->s_type->i_mutex_key#8){++++}-{4:4}, at: inode_lock_shared include/linux/fs.h:877 [inline]
+ #0: ffff8880228887a0 (&sb->s_type->i_mutex_key#8){++++}-{4:4}, at: blkdev_read_iter+0x2f8/0x440 block/fops.c:808
+
+=============================================
+
+NMI backtrace for cpu 0
+CPU: 0 UID: 0 PID: 31 Comm: khungtaskd Not tainted 6.15.0-rc4-syzkaller-00147-gebd297a2affa #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/19/2025
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
+ nmi_cpu_backtrace+0x39e/0x3d0 lib/nmi_backtrace.c:113
+ nmi_trigger_cpumask_backtrace+0x17a/0x300 lib/nmi_backtrace.c:62
+ trigger_all_cpu_backtrace include/linux/nmi.h:158 [inline]
+ check_hung_uninterruptible_tasks kernel/hung_task.c:274 [inline]
+ watchdog+0xfee/0x1030 kernel/hung_task.c:437
+ kthread+0x70e/0x8a0 kernel/kthread.c:464
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+Sending NMI from CPU 0 to CPUs 1:
+NMI backtrace for cpu 1
+CPU: 1 UID: 0 PID: 13 Comm: kworker/u8:1 Not tainted 6.15.0-rc4-syzkaller-00147-gebd297a2affa #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/19/2025
+Workqueue: events_unbound toggle_allocation_gate
+RIP: 0010:mark_held_locks kernel/locking/lockdep.c:4323 [inline]
+RIP: 0010:__trace_hardirqs_on_caller kernel/locking/lockdep.c:4344 [inline]
+RIP: 0010:lockdep_hardirqs_on_prepare+0x107/0x2a0 kernel/locking/lockdep.c:4411
+Code: f0 0a 00 00 45 31 ff 4d 89 f4 eb 13 49 ff c7 48 63 83 e8 0a 00 00 49 83 c4 28 49 39 c7 7d 44 49 83 ff 31 73 2d 41 8b 44 24 20 <a9> 00 00 04 00 74 db 25 00 00 03 00 83 f8 01 ba 03 00 00 00 83 da
+RSP: 0018:ffffc900001276c0 EFLAGS: 00000087
+RAX: 0000000000050003 RBX: ffff88801c6e0000 RCX: ffffffff931e7578
+RDX: 0000000000000002 RSI: ffff88801c6e0b18 RDI: ffff88801c6e0000
+RBP: ffffc90000127860 R08: ffffffff8f7ed377 R09: 1ffffffff1efda6e
+R10: dffffc0000000000 R11: fffffbfff1efda6f R12: ffff88801c6e0b40
+R13: dffffc0000000000 R14: ffff88801c6e0af0 R15: 0000000000000002
+FS:  0000000000000000(0000) GS:ffff8881261cc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000564f24f42600 CR3: 000000000dd36000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ trace_hardirqs_on+0x28/0x40 kernel/trace/trace_preemptirq.c:78
+ smp_call_function_many_cond+0xac1/0x11c0 kernel/smp.c:877
+ on_each_cpu_cond_mask+0x3f/0x80 kernel/smp.c:1052
+ on_each_cpu include/linux/smp.h:71 [inline]
+ text_poke_sync arch/x86/kernel/alternative.c:2455 [inline]
+ text_poke_bp_batch+0x84d/0x940 arch/x86/kernel/alternative.c:-1
+ text_poke_flush arch/x86/kernel/alternative.c:2856 [inline]
+ text_poke_finish+0x30/0x50 arch/x86/kernel/alternative.c:2863
+ arch_jump_label_transform_apply+0x1c/0x30 arch/x86/kernel/jump_label.c:146
+ static_key_enable_cpuslocked+0x128/0x250 kernel/jump_label.c:210
+ static_key_enable+0x1a/0x20 kernel/jump_label.c:223
+ toggle_allocation_gate+0xad/0x240 mm/kfence/core.c:850
+ process_one_work kernel/workqueue.c:3238 [inline]
+ process_scheduled_works+0xadb/0x17a0 kernel/workqueue.c:3319
+ worker_thread+0x8a0/0xda0 kernel/workqueue.c:3400
+ kthread+0x70e/0x8a0 kernel/kthread.c:464
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
