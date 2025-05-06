@@ -1,107 +1,149 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BF95289354;
-	Tue,  6 May 2025 05:14:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7567823A9A0;
+	Tue,  6 May 2025 05:15:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746508448; cv=none; b=jLNJ1kdSRImIYdp7nRZ2EFp8WB36bJIX+ipq6lt/APUGkoC0f+Sh1L49yHZ4U7mK93VEz+wzjN6YIrraVQwN1Alz1S/ccC2UzBTWJwwss9jze3mxFvFSWU4SEi/2cdedu7VRunQalYUYTtR+PNaYkrFHL6h92j8EtTIuxGucdhk=
+	t=1746508556; cv=none; b=lXsoMUTW6j2RUDlv2vwpG1i9UWjAof/E0PrqNwDgl1hsHdr3aged6bFSF979rkRre2PklD4sgbpIBZYZBQHpDopxLQPcuzR4c5S7T5TzbnL5d4Oh7ia2Nt0Cc94jQfbqjWTS7n2VZHPlt8+VUexY+BmCJ2nzWrUge9cWa5qhz+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746508448; c=relaxed/simple;
-	bh=g/w1LWrilKqP38kQb6pooTCkIt2thHowZ54k63vIR2Y=;
+	s=arc-20240116; t=1746508556; c=relaxed/simple;
+	bh=hSOe7W1i/TDp0yuPqat8xcNLroQ1jLgwAx6EZl69f20=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lHyvPDxTSvD5XEFX0gAjUjsBuo6CUk0Cdq+RWRTErWKu5ucyEIlRsekQwWke+jssPTiejqVGmnY4dQb5B7ZFhZIG6Tb6I3IcN8Lp5PmVzdNuXS9ESzjJPA9jIb9eYWYBIAQvShf4RKbBkRJXuGOMm9F8lUNOi6gUIW1iHuNSZzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G1z5dUuD; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=FNSNqhEJ4nUSp5L3T2YZ5TFVW0+MV7zq5hrEhwpDh/yWvGk1ffZkq9lDiTDNKnVmmdpX4DvNLmwpChv08CosgvlpGxtaCsotQseSZUyCvCjfobG7N5gyH6GntWzkVSbqmAfS3LsLiEL50P/Y1/ofKKsRj4ro9JusEcBF+HfLeow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Dj/WdAve; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G1z5dUuD"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-73c17c770a7so7474459b3a.2;
-        Mon, 05 May 2025 22:14:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746508446; x=1747113246; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pS0iuNnDrfN5JuPKmxY9SUCg0BKAF7oXTwP02sXXN2Q=;
-        b=G1z5dUuDPp1vFrrK4Y+z/CMdeiedNCN01GDN4PBqouTsvYpOiFHxSct5XFqWwqp1UJ
-         C3Tlj43BINfeUkOczVO4GrwKHfENGmIFSK+N1w0VVD/9KHa4Qgd709nbEC2T58q2Xrjs
-         Vas8tLDpXigaz0QqRptTmdYqtj6zipn1YyruM51vzhEy9PBWUYQSzk4tevThQIGnw7kj
-         Se9jN1lOUuATkXC7Hur0MXzCB+I8WnMDxjp6cEkK+l0mmovLvtVl/TkcdrxPIcPmlMMM
-         Vl4QnLr1p2K0A4N/ZgcyEWT4YARSJ7bDgbS3OIF8x2g78NLevqmyVurdFX+nYmKS4UfG
-         qw0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746508446; x=1747113246;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pS0iuNnDrfN5JuPKmxY9SUCg0BKAF7oXTwP02sXXN2Q=;
-        b=BwNAApf5hbnzM4f1SmN1V7/mKI98Mr77TLiBC9tzj8GpcvbK79g1/ByDEvDBP/YAl9
-         zN2dC8PuxXEM673ot+p0y9fXn7rkX8RDgVdlMgC/MzkFSwbKFoKtT435j7cWBjbFbcYA
-         muMPt5rK/LkWaIQu59+8XRBXHG0FsgRdyAp6k4rBTzOcQjuO2MoyGVoKxJzrUQlbaV4k
-         4wgtOevGr3nZozz6/Z2g4OdHyRYdjZr4TA0M1o49t7P+CTkmNvEjdfJHLr070z6qhT1Q
-         mBJmorEpd6lU0VyI26sb3R92s/5XzcjVMHqBpm1xGpoAxrNAocactN7PdBHmoGap7i4k
-         OezA==
-X-Forwarded-Encrypted: i=1; AJvYcCUTwHZ8c84YrhPbVt5lI4bFkv99AAdlavrBWzUE4ItD0iy9K5Ky2fB7nCtG+YCB4GFwvRx10sCMJRzk@vger.kernel.org, AJvYcCUhtCZ7eb4V/vJx/VU4U5WEEWyGIqOfgU6GfnI2EMI0MxQHWMG/mocQ9uRfHwjo+z+vMJPYoDzZh5STSwQ=@vger.kernel.org, AJvYcCUxuLG7Ty6qOJy6WrdvllsRDeAEVS7whLhGTjtIYRJmAHqGh4DQyNe3oiehalrLm+nc02Ygdn9Fh4eA@vger.kernel.org, AJvYcCWjpO8N5f+jGwy2s/QTbmf1bSVzbWNCqfO+P1+nWYdJgkH3ty0UNHLiFcy9gB74W6eMsNAg1to7ze/rBA==@vger.kernel.org, AJvYcCXNbiiEdJAzN4ySCqiS41YWjVt7aZMKaO8KXjk2T6lk06qHjPYTaO3ozsO+L+tlkJQg03rGCxmVuEcwrKZn@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzMHUU7J6R8tHGcKcS+cJ0R7MTJ1YMfCGfIBBlIHOvkXRaQbKr
-	BNIc/hjSvYuz0PBbYtCyxuzB2WG49ht+IYoKIV6stkOqiOF7g3wj
-X-Gm-Gg: ASbGncuVqs5N8lNbjH1TPPoHFTEfSL7mlyPnuzfsk+9kLnIjnwtDa3Og3gRLUHGVR4D
-	w/hPhmYejGscFzAYN7dJwdJudsnngZmxMkd3VZRrSzGvhTn0rnQhYUwT7Qgh5t3hsJnXFUPNN3n
-	JZKFbFEgkB24TJLfKixDNJ9de2sc946SthYJdFbFf57izlzETFhlCA9ylS5RzkecEzbNZ5qjMsq
-	0QjJVybEeXXyenih3LAbeMmzzd0zEXd8KKuPRStbTYgkTsK3IbBHcpAm2GGYu1W1JKsCqYC6B5q
-	k4Jwa9kd5JPRVI9tPZLB/tbLbx6SZx7ukh5iSPP4G+9IemXUqhF2
-X-Google-Smtp-Source: AGHT+IEjUJofINkDZHEFOImlgP4FAtwJXz6KioPdAiI2880/99Nh8quz4k0gej+fzJl4Qyzl3HFAxw==
-X-Received: by 2002:a05:6a00:f0a:b0:737:6fdf:bb69 with SMTP id d2e1a72fcca58-7406f0ebf2amr14738585b3a.13.1746508446572;
-        Mon, 05 May 2025 22:14:06 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:17ab:9e47:29ba:57e6])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74059021483sm8156840b3a.93.2025.05.05.22.14.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 22:14:06 -0700 (PDT)
-Date: Mon, 5 May 2025 22:14:03 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>, 
-	Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Kamel Bouhara <kamel.bouhara@bootlin.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
-	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	=?utf-8?Q?Gr=C3=A9gory?= Clement <gregory.clement@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v7 09/11] input: keyboard: Add support for MAX7360 keypad
-Message-ID: <aggrss4doko5scdlmyzdsujkifryzuzqdnpkh6sd33rg5ibqmm@aiikzv732rkq>
-References: <20250428-mdb-max7360-support-v7-0-4e0608d0a7ff@bootlin.com>
- <20250428-mdb-max7360-support-v7-9-4e0608d0a7ff@bootlin.com>
- <aBSii0rHox72GM5Y@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Dj/WdAve"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746508555; x=1778044555;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=hSOe7W1i/TDp0yuPqat8xcNLroQ1jLgwAx6EZl69f20=;
+  b=Dj/WdAveBqJ/Y6DVAcXFeONt50N22DPvP6+825PBqFij3kitEAaefy2T
+   KjN1W9cg6hrNE6Pv29BUmA3offZbeylZscWu1xu1LDXWZTZ7YWYjHuG+N
+   YX6VzBxHnZ9yKtHjeMORBbbZKh0N7smT5tDUtYjZRZxHKzNaerET4MNGs
+   WQiZplxwpjnG3ygNBLaxWPx9fn7BDT6ALi9QcIJiPZKtbJe0To+QB9hCP
+   bd6dit1c7RW8cYAJUBsn1QCRJvDQQA4lM1w3xpuHKgkW/Oas4mH02V2XY
+   NWlZJdBGllHCjft8UaWSffkRnQet2HR/2u1grhydXGgIEeJDBuIZ9+ML/
+   w==;
+X-CSE-ConnectionGUID: dU0++nSHSyavN5+1cpjGAw==
+X-CSE-MsgGUID: g105mdPGQjKXs8yTu1XpQw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11424"; a="58814889"
+X-IronPort-AV: E=Sophos;i="6.15,265,1739865600"; 
+   d="scan'208";a="58814889"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 22:15:51 -0700
+X-CSE-ConnectionGUID: iwjHzIWVSOmJcGroFQKUrQ==
+X-CSE-MsgGUID: soqB6P+WTWCWmEIRMbS2xw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,265,1739865600"; 
+   d="scan'208";a="135201369"
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 22:15:50 -0700
+Date: Mon, 5 May 2025 22:20:53 -0700
+From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: x86@kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Michael Kelley <mhklinux@outlook.com>, devicetree@vger.kernel.org,
+	Saurabh Sengar <ssengar@linux.microsoft.com>,
+	Chris Oo <cho@microsoft.com>, linux-hyperv@vger.kernel.org,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+	Ricardo Neri <ricardo.neri@intel.com>
+Subject: Re: [PATCH v3 01/13] x86/acpi: Add a helper function to setup the
+ wakeup mailbox
+Message-ID: <20250506052053.GD25533@ranerica-svr.sc.intel.com>
+References: <20250503191515.24041-1-ricardo.neri-calderon@linux.intel.com>
+ <20250503191515.24041-2-ricardo.neri-calderon@linux.intel.com>
+ <CAJZ5v0grwGDrwFSbtXzia6ijd4DTOpU3b6RWR4JPfJmXqz78xQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <aBSii0rHox72GM5Y@smile.fi.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0grwGDrwFSbtXzia6ijd4DTOpU3b6RWR4JPfJmXqz78xQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 
-On Fri, May 02, 2025 at 01:46:35PM +0300, Andy Shevchenko wrote:
-> On Mon, Apr 28, 2025 at 01:57:27PM +0200, Mathieu Dubois-Briand wrote:
-> > +	error = matrix_keypad_build_keymap(&keymap_data, NULL,
-> > +					   max7360_keypad->rows, max7360_keypad->cols,
-> > +					   max7360_keypad->keycodes, max7360_keypad->input);
-> > +
-> > +	return error;
+On Mon, May 05, 2025 at 11:50:08AM +0200, Rafael J. Wysocki wrote:
+> On Sat, May 3, 2025 at 9:10 PM Ricardo Neri
+> <ricardo.neri-calderon@linux.intel.com> wrote:
+> >
+> > In preparation to move the functionality to wake secondary CPUs up out of
+> > the ACPI code, add a helper function that stores the physical address of
+> > the mailbox and updates the wakeup_secondary_cpu_64() APIC callback.
+> >
+> > There is a slight change in behavior: now the APIC callback is updated
+> > before configuring CPU hotplug offline behavior. This is fine as the APIC
+> > callback continues to be updated unconditionally, regardless of the
+> > restriction on CPU offlining.
+> >
+> > The wakeup mailbox is only supported for CONFIG_X86_64 and needed only with
+> > CONFIG_SMP=y.
+> >
+> > Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+> > ---
+> > Changes since v2:
+> >  - Introduced this patch.
+> >
+> > Changes since v1:
+> >  - N/A
+> > ---
+> >  arch/x86/include/asm/smp.h         |  4 ++++
+> >  arch/x86/kernel/acpi/madt_wakeup.c | 10 +++++++---
+> >  2 files changed, 11 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/arch/x86/include/asm/smp.h b/arch/x86/include/asm/smp.h
+> > index 0c1c68039d6f..3622951d2ee0 100644
+> > --- a/arch/x86/include/asm/smp.h
+> > +++ b/arch/x86/include/asm/smp.h
+> > @@ -146,6 +146,10 @@ static inline struct cpumask *cpu_l2c_shared_mask(int cpu)
+> >         return per_cpu(cpu_l2c_shared_map, cpu);
+> >  }
+> >
+> > +#ifdef CONFIG_X86_64
+> > +void setup_mp_wakeup_mailbox(u64 addr);
+> > +#endif
+
+Thank you for your feedback, Rafael!
+
 > 
-> 	return matrix_...(...);
+> The #ifdef is only necessary if you are going to provide an
+> alternative for builds in which the symbol is unset.
 
-Because that function has multiple failure points please
+I see. All callers will be built only with CONFIG_X86_64. I will remove
+this #ifdef.
 
-	if (error)
-		return error; // or return dev_err_probe()
+> 
+> > +
+> >  #else /* !CONFIG_SMP */
+> >  #define wbinvd_on_cpu(cpu)     wbinvd()
+> >  static inline int wbinvd_on_all_cpus(void)
+> > diff --git a/arch/x86/kernel/acpi/madt_wakeup.c b/arch/x86/kernel/acpi/madt_wakeup.c
+> > index f36f28405dcc..04de3db307de 100644
+> > --- a/arch/x86/kernel/acpi/madt_wakeup.c
+> > +++ b/arch/x86/kernel/acpi/madt_wakeup.c
+> > @@ -227,7 +227,7 @@ int __init acpi_parse_mp_wake(union acpi_subtable_headers *header,
+> >
+> >         acpi_table_print_madt_entry(&header->common);
+> >
+> > -       acpi_mp_wake_mailbox_paddr = mp_wake->mailbox_address;
+> > +       setup_mp_wakeup_mailbox(mp_wake->mailbox_address);
+> 
+> I'd prefer acpi_setup_mp_wakeup_mailbox().
 
-	return 0;
+Sure. This looks like a more appropriate name.
 
-Thanks.
-
--- 
-Dmitry
+Thanks and BR,
+Ricardo
