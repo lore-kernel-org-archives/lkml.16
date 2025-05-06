@@ -1,157 +1,128 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ABFF283C94;
-	Tue,  6 May 2025 14:51:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDC0E283FC0;
+	Tue,  6 May 2025 14:52:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746543120; cv=none; b=Q5EPnU2txge/QWPSwRC3QeNcnGb4Dv74ttvRt8KPxToofaNIZc0ewDbDB3oPV1l491/rJdY0dr5b+IEwshLRLfTLW8tJK1U19xccA24pyBzW8pEe3ViOi+xiTfNDg3DXAP/Eweatbli0un84juElxs/Cg7IAy+cor3l8LaCRXrU=
+	t=1746543123; cv=none; b=LWQ9jvRc8vaQ+eowKouBty7Ze92+Whp1pxjVuZ4GIRweDcNNrmtZ6ivBKJ15TPiJ2sI7v7JA+va7oeHM3yxKMkuuMkt0+2rV9uVZwzPwBVFIlsrb6/OU58K5Dx4Uaj4yn/xg877DulXmGgv/ZIdEGHvUUdzW8gH2NSQhveXRFrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746543120; c=relaxed/simple;
-	bh=Hb4Vesw8ac4tapJfkHAXpZUAAz58TBZuC75dUD0W7ZU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gEdB/CMZdavYQCm/TyOiowR6uPThw6fdnZZ6elIpgb6sethHfEfjXwYcobTS3YuntlbbHCRmO+MPWQsT6gYixV82yg0fqgqDE1slrmVKLr11HsaMdcqYt23JigCRfd8KBwLkrdGWjBkDtHuMF0FG91wB2DiLGFFRYarTGhEfZss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ps6v2G2y; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746543123; c=relaxed/simple;
+	bh=K+msrNcjslK8gX9r4hYRpdwGYgkStkMVQt+IJpV0k90=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Sb5AnwafSHMEQBHtvSVeXrcSF34YH3qW/ytA2fB5ZiYga8W/jwPzW3A83g0LftuMUfeqZiXpUroRiWB0bHecxEaWUi5BcUykG/hSMvsmkftjWMg8AjbrK9eOQqvru0IotpBw6lltaXVNnKIcGp9HtTUuCWXRhe7zbeXjAz1Ovyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RVNAFcGx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ps6v2G2y"
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-3054e2d13a7so414175a91.2;
-        Tue, 06 May 2025 07:51:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746543117; x=1747147917; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hrvQLl0wy1XN7F1KXa2GtXnCc3OPj79LA4bOD8IjDg4=;
-        b=Ps6v2G2yBtsq4OrlJ3Brw2haaiS0trd8PNe+/3JuFAuBI9gIF7Qq/YKuYLgiJk6dlX
-         6CCNj5dAZa28ltHXaP04wCDVhbCi8CK48LiDTvItsYE8wWyitx1vMsfhWY+VoUeWbK4R
-         TJ80/EHqDcjLdO9Sa5RS3XetL5EBFU0eCHpaM4PK92Uf9Rg6/QkOWR79zO1h0boEJt8H
-         SsD70XH42xCufP5uHX0XGp8J0jVt5B5KJ7vscyhT/LmKe57shELudfXxSIX2gMeYfjWe
-         C76o/NcbopKNEzJO2rY5l1cJPBSESSPaBBtKY6A5+EQSe9BFIGDRaFYqvpZkRVtSGyDw
-         DmCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746543117; x=1747147917;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hrvQLl0wy1XN7F1KXa2GtXnCc3OPj79LA4bOD8IjDg4=;
-        b=IJfPKl7OfZkb3fc4mfc9etA+jBKUDK9PDbvbRQ5tyMco8pbKdyJOKA47KUOca1ZmE7
-         UTidOb/kMLJYS/wh5pAcuzkVxnU5QG5d7Uy5HlZw3GiRTnCdmhVfdh9y9HP80SVcWPKm
-         kHTVbICTYnfLHusvHzoi8mDmpEyuCTnWAKz7kkgQ/Myxpd81k6YdyEadAFHgdEAaQpRd
-         sNMZKRMUwpBIQOdoxT5LVZkpMhcEgT9nwptrxD0AAV0kfSQq7Vl8U2TWuJrUx3q0M33h
-         p0fTUGYtKAEfTBQI0b34DZfMeb/k/Bnb220sm15TLhwwEmyqxKdpDV18UPjeWprQOGGB
-         WUsw==
-X-Forwarded-Encrypted: i=1; AJvYcCVXe66hEnNT7BuIKsQ9M35LbCoUZA7t+8OSBKiPNOYIKDd7Sws265xeeVXDKfobmk77Uv4E1Jk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhnKy6b9qVpI+Yaka+DQzrX5xUrzvRuSLfnVLFvaQsAJadB6/K
-	is8UQqGZNifsXXlZ98jgo4kOBSi7wz6wEyp7jbboqgjVez9KQuI0ed04+S/W7kUVRSLsWghAUkc
-	xq78Asr8xyABUKUDIb4mQ+zn/NWo=
-X-Gm-Gg: ASbGncsjqw78wtw5vgIISdF53DfAB+FReDZ51xw6Kac3WE1dLNnA98pSJ+fe/8bYddN
-	zpbDTmzWZ78xWem03YYgIE9iwup6OpOjPpat2+dbtF6oD+CUeqBui9NHbZUzX9VovS7BLmPkIrG
-	ucHroYhhFx65fCmIKNra5NyQ==
-X-Google-Smtp-Source: AGHT+IEXSCTDToZhh1jFM95PCZ0I/E206Rg+MKBboqgunyBsE/pFYw40iBWN2ZEpR0s0+75jhOyYC81tR+CvcVK4+P8=
-X-Received: by 2002:a17:90b:1d8b:b0:2ff:7970:d2bd with SMTP id
- 98e67ed59e1d1-30a4e6913e8mr9498552a91.5.1746543116650; Tue, 06 May 2025
- 07:51:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RVNAFcGx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49002C4CEE4;
+	Tue,  6 May 2025 14:52:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746543123;
+	bh=K+msrNcjslK8gX9r4hYRpdwGYgkStkMVQt+IJpV0k90=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=RVNAFcGxw3dHYXOyVRXh5fivxKa/N2jk5eKMAvqLohOS4UebVRQrVGdWVHoZgRJTv
+	 eVq6S9v7qPUlLp7O8jG2nR0PfRuQQZn4IG4n8Ftb4ml38TzmSYyqa4YwBI0wfGTkaC
+	 X4lbuLwA01LMCckukXI1VbLv38F57prx/ajNK0b/ez39T2+d4ZhxYdgq5D1ly9Gmw2
+	 +9IG3wM2dnjxxMFiVrKJhwZcb3ptz9+ga3aMhBTKeFQMhGMbhZMPLoMD4S2LQwJkXq
+	 OAAY4auq4X0QFYWLpPi3+HrDs2nzjIC8sdXdPoM2ehDVO5Asj84WtfcCvz7VfbN5Tx
+	 Sb/tZQ1xVT76g==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uCJeK-00CHhs-JT;
+	Tue, 06 May 2025 15:52:00 +0100
+Date: Tue, 06 May 2025 15:51:59 +0100
+Message-ID: <86cyclhjw0.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Will Deacon <will@kernel.org>
+Cc: =?UTF-8?B?TWlrb8WCYWo=?= Lenczewski <miko.lenczewski@arm.com>,
+	ryan.roberts@arm.com,	suzuki.poulose@arm.com,	yang@os.amperecomputing.com,
+	corbet@lwn.net,	catalin.marinas@arm.com,	jean-philippe@linaro.org,
+	robin.murphy@arm.com,	joro@8bytes.org,	akpm@linux-foundation.org,
+	paulmck@kernel.org,	mark.rutland@arm.com,	joey.gouly@arm.com,
+	james.morse@arm.com,	broonie@kernel.org,	oliver.upton@linux.dev,
+	baohua@kernel.org,	david@redhat.com,	ioworker0@gmail.com,	jgg@ziepe.ca,
+	nicolinc@nvidia.com,	mshavit@google.com,	jsnitsel@redhat.com,
+	smostafa@google.com,	kevin.tian@intel.com,	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,	linux-arm-kernel@lists.infradead.org,
+	iommu@lists.linux.dev
+Subject: Re: [RESEND PATCH v6 1/3] arm64: Add BBM Level 2 cpu feature
+In-Reply-To: <20250506142508.GB1197@willie-the-truck>
+References: <20250428153514.55772-2-miko.lenczewski@arm.com>
+	<20250428153514.55772-4-miko.lenczewski@arm.com>
+	<20250506142508.GB1197@willie-the-truck>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250505221419.2672473-1-sashal@kernel.org> <20250505221419.2672473-483-sashal@kernel.org>
-In-Reply-To: <20250505221419.2672473-483-sashal@kernel.org>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Tue, 6 May 2025 10:51:44 -0400
-X-Gm-Features: ATxdqUHNIz2XY7_fK65CkP4RU9ZYclbCYI52nxG7JH7RRQaFM7OP72dHJwqOZKo
-Message-ID: <CADnq5_MHZSO6aRTKuZ_NJUiDCDfxkUCGQzg9fRwEhcMo5goQww@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 6.14 483/642] drm/amd/display/dc: enable oem i2c
- support for DCE 12.x
-To: Sasha Levin <sashal@kernel.org>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
-	Alex Deucher <alexander.deucher@amd.com>, Harry Wentland <harry.wentland@amd.com>, sunpeng.li@amd.com, 
-	christian.koenig@amd.com, airlied@gmail.com, simona@ffwll.ch, 
-	roman.li@amd.com, srinivasan.shanmugam@amd.com, amd-gfx@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: will@kernel.org, miko.lenczewski@arm.com, ryan.roberts@arm.com, suzuki.poulose@arm.com, yang@os.amperecomputing.com, corbet@lwn.net, catalin.marinas@arm.com, jean-philippe@linaro.org, robin.murphy@arm.com, joro@8bytes.org, akpm@linux-foundation.org, paulmck@kernel.org, mark.rutland@arm.com, joey.gouly@arm.com, james.morse@arm.com, broonie@kernel.org, oliver.upton@linux.dev, baohua@kernel.org, david@redhat.com, ioworker0@gmail.com, jgg@ziepe.ca, nicolinc@nvidia.com, mshavit@google.com, jsnitsel@redhat.com, smostafa@google.com, kevin.tian@intel.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Mon, May 5, 2025 at 6:34=E2=80=AFPM Sasha Levin <sashal@kernel.org> wrot=
-e:
->
-> From: Alex Deucher <alexander.deucher@amd.com>
->
-> [ Upstream commit 2ed83f2cc41e8f7ced1c0610ec2b0821c5522ed5 ]
->
-> Use the value pulled from the vbios just like newer chips.
->
-> Reviewed-by: Harry Wentland <harry.wentland@amd.com>
-> Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+On Tue, 06 May 2025 15:25:09 +0100,
+Will Deacon <will@kernel.org> wrote:
+>=20
+> On Mon, Apr 28, 2025 at 03:35:14PM +0000, Miko=C5=82aj Lenczewski wrote:
+> > The Break-Before-Make cpu feature supports multiple levels (levels 0-2),
+> > and this commit adds a dedicated BBML2 cpufeature to test against
+> > support for, as well as a kernel commandline parameter to optionally
+> > disable BBML2 altogether.
+> >=20
+> > This is a system feature as we might have a big.LITTLE architecture
+> > where some cores support BBML2 and some don't, but we want all cores to
+> > be available and BBM to default to level 0 (as opposed to having cores
+> > without BBML2 not coming online).
+> >=20
+> > To support BBML2 in as wide a range of contexts as we can, we want not
+> > only the architectural guarantees that BBML2 makes, but additionally
+> > want BBML2 to not create TLB conflict aborts. Not causing aborts avoids
+> > us having to prove that no recursive faults can be induced in any path
+> > that uses BBML2, allowing its use for arbitrary kernel mappings.
+> > Support detection of such CPUs.
+> >=20
+> > Signed-off-by: Miko=C5=82aj Lenczewski <miko.lenczewski@arm.com>
+> > Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> > Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
+> > ---
+> >  .../admin-guide/kernel-parameters.txt         |  3 +
+> >  arch/arm64/Kconfig                            | 19 +++++
+> >  arch/arm64/include/asm/cpucaps.h              |  2 +
+> >  arch/arm64/include/asm/cpufeature.h           |  5 ++
+> >  arch/arm64/kernel/cpufeature.c                | 71 +++++++++++++++++++
+> >  arch/arm64/kernel/pi/idreg-override.c         |  2 +
+> >  arch/arm64/tools/cpucaps                      |  1 +
+> >  7 files changed, 103 insertions(+)
+> >=20
+> > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Document=
+ation/admin-guide/kernel-parameters.txt
+> > index d9fd26b95b34..2749c67a4f07 100644
+> > --- a/Documentation/admin-guide/kernel-parameters.txt
+> > +++ b/Documentation/admin-guide/kernel-parameters.txt
+> > @@ -449,6 +449,9 @@
+> >  	arm64.no32bit_el0 [ARM64] Unconditionally disable the execution of
+> >  			32 bit applications.
+> > =20
+> > +	arm64.nobbml2	[ARM64] Unconditionally disable Break-Before-Make Level
+> > +			2 support
+>=20
+> Hmm, I'm not sure we really want this. It opens up the door for folks to
+> pass 'id_aa64mmfr2.bbm=3D2' without updating the allow-list which feels
+> like it's going to make crashes harder to reason about.
 
-This isn't a bug fix.  This is a new feature and depends on other
-changes to actually utilize.
+Passing id_aa64mmfr2.bbm=3D2 shouldn't have any effect if the HW doesn't
+advertise it already, as you can only downgrade features. Trying to
+upgrade features should leave a nastygram in the kernel log.
 
-Alex
+	M.
 
-> ---
->  .../dc/resource/dce120/dce120_resource.c        | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->
-> diff --git a/drivers/gpu/drm/amd/display/dc/resource/dce120/dce120_resour=
-ce.c b/drivers/gpu/drm/amd/display/dc/resource/dce120/dce120_resource.c
-> index c63c596234333..eb1e158d34361 100644
-> --- a/drivers/gpu/drm/amd/display/dc/resource/dce120/dce120_resource.c
-> +++ b/drivers/gpu/drm/amd/display/dc/resource/dce120/dce120_resource.c
-> @@ -67,6 +67,7 @@
->  #include "reg_helper.h"
->
->  #include "dce100/dce100_resource.h"
-> +#include "link.h"
->
->  #ifndef mmDP0_DP_DPHY_INTERNAL_CTRL
->         #define mmDP0_DP_DPHY_INTERNAL_CTRL             0x210f
-> @@ -659,6 +660,12 @@ static void dce120_resource_destruct(struct dce110_r=
-esource_pool *pool)
->
->         if (pool->base.dmcu !=3D NULL)
->                 dce_dmcu_destroy(&pool->base.dmcu);
-> +
-> +       if (pool->base.oem_device !=3D NULL) {
-> +               struct dc *dc =3D pool->base.oem_device->ctx->dc;
-> +
-> +               dc->link_srv->destroy_ddc_service(&pool->base.oem_device)=
-;
-> +       }
->  }
->
->  static void read_dce_straps(
-> @@ -1054,6 +1061,7 @@ static bool dce120_resource_construct(
->         struct dc *dc,
->         struct dce110_resource_pool *pool)
->  {
-> +       struct ddc_service_init_data ddc_init_data =3D {0};
->         unsigned int i;
->         int j;
->         struct dc_context *ctx =3D dc->ctx;
-> @@ -1257,6 +1265,15 @@ static bool dce120_resource_construct(
->
->         bw_calcs_data_update_from_pplib(dc);
->
-> +       if (dc->ctx->dc_bios->fw_info.oem_i2c_present) {
-> +               ddc_init_data.ctx =3D dc->ctx;
-> +               ddc_init_data.link =3D NULL;
-> +               ddc_init_data.id.id =3D dc->ctx->dc_bios->fw_info.oem_i2c=
-_obj_id;
-> +               ddc_init_data.id.enum_id =3D 0;
-> +               ddc_init_data.id.type =3D OBJECT_TYPE_GENERIC;
-> +               pool->base.oem_device =3D dc->link_srv->create_ddc_servic=
-e(&ddc_init_data);
-> +       }
-> +
->         return true;
->
->  irqs_create_fail:
-> --
-> 2.39.5
->
+--=20
+Without deviation from the norm, progress is not possible.
