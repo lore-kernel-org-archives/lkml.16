@@ -1,111 +1,82 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA9ED8F5E;
-	Tue,  6 May 2025 12:55:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D22C527FD5B
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 12:55:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746536117; cv=none; b=Frtozp5nHFaYW+kv/bhO9fcpg6KTUDP76EKpKmrpxobjx+0tqRklUhhVSCDebrmMvDVwHZ6L+S3Y2MWbsXMl8MqcELvV3gz8KaXa/Mp8VtVB5AH4Qv+ZYApvJ4B4xTfsqLYr/M9bvQhppb88Y5mDir+xSyDGnT6jIkYD4JUjeps=
+	t=1746536117; cv=none; b=lTFX4lu7d6/nuAycn1Z+7pnwFDIygjAAN/sTT2jjSvIsM2GLetOIHoHC0Uot92dhT5Moo4rCigaQ24rsrcGnGD34lwfubgDZKaDbn50iGWBYNcYPW5ljlAVSsXQMfaQnS7BaAyun3HPhpwPJUnxC4oy7KUj4UwcSsS5f8JttTgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746536117; c=relaxed/simple;
-	bh=226HvrpzIggRv7+P11Xi1OD0yG8CL9+835GwM5RSIDM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CJcaI2cgWWv54HOd4wk0JlBqggsRSdofc7RPVn7SjKMRtjStdl8Ad0El32U8I4DputiQ3bLC01Uri5ScaEfBsqQWTE9T+VlEdPawfmB99a1tct+zv3DaJqVrDo9UiotTn8Se66ciCYMKDMl50GTbJfpENN2TrgfldDiFd/VuEGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4ZsJJw1gb3zKHMh6;
-	Tue,  6 May 2025 20:55:12 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 090771A0359;
-	Tue,  6 May 2025 20:55:11 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgDnSl+sBhpo8C9vLg--.36407S4;
-	Tue, 06 May 2025 20:55:10 +0800 (CST)
-From: Yu Kuai <yukuai1@huaweicloud.com>
-To: axboe@kernel.dk,
-	agk@redhat.com,
-	song@kernel.org,
-	hch@lst.de,
-	john.g.garry@oracle.com,
-	hare@suse.de,
-	xni@redhat.com,
-	pmenzel@molgen.mpg.de
-Cc: linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	dm-devel@lists.linux.dev,
-	linux-raid@vger.kernel.org,
-	yukuai3@huawei.com,
-	yukuai1@huaweicloud.com,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com,
-	johnny.chenyi@huawei.com
-Subject: [PATCH v3 0/9] md: fix is_mddev_idle()
-Date: Tue,  6 May 2025 20:46:47 +0800
-Message-Id: <20250506124658.2537886-1-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
+	bh=vOfAL/qzO/ycGuh7I27Qepc+xDNQHpOz1aWR0a5fy3g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=peEoiMk000waU6XIWI9cEf+przv8U4RUoQDsJF3zYCc+TQfjx4KjiNnZw09K4OvChwbw06SjfKfGvJut84WCVuhKvoUqnjXzgigDgD8CGjTMuKf+Nyf24ePwu+GFXqWf3APpTSR1Jz8OZwpHin8UjbHl+jIDO/p1kGZfvtLsDiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qplgLNWU; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qplgLNWU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E54AEC4CEE4;
+	Tue,  6 May 2025 12:55:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746536117;
+	bh=vOfAL/qzO/ycGuh7I27Qepc+xDNQHpOz1aWR0a5fy3g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qplgLNWU3kxHo+hpTvNfQtXL8dlXJWYGVMI0pKZakDrjgsPGg8XXS13qLJW8uZESF
+	 asawnBC688YueGJdtlhVY9gK9K3vH5O5jTG0+Hk6MoVOa/ytJ3AF0K0EP2N2lvi50y
+	 0OubBsFvSS8MxBEejedOemQseQ8ukQY8C6e/9rAIHjQCL/0bFT+XnMI43YiQKx6+wT
+	 ZnjBqWiIWp4zPhbSp1QItSJoY+vPD8eJ25x1shAkidlMbqBuD51re50eU2ojNkonfH
+	 cOfidLkNm6WIrv8/II5uLb/ULfp9OuywupFKDGFnedvYPAS08LMFR9Br7ehP1D7HcW
+	 Myy0ZNDqtqNBw==
+Date: Tue, 6 May 2025 14:55:14 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Marco Crivellari <marco.crivellari@suse.com>
+Cc: Tejun Heo <tj@kernel.org>, linux-kernel@vger.kernel.org,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: Re: [PATCH 0/4] Workqueue: rename system workqueue and add WQ_PERCPU
+Message-ID: <aBoGskbRu0RyRXMF@localhost.localdomain>
+References: <20250503082834.49413-1-marco.crivellari@suse.com>
+ <aBlMLQl504ThYbnf@slm.duckdns.org>
+ <CAAofZF60A82utmB2LiVw910cdFDiHd+fPaozUKpQwfXUqv7R_g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgDnSl+sBhpo8C9vLg--.36407S4
-X-Coremail-Antispam: 1UD129KBjvdXoWrtr18Ww1xAFyUJFyDKryUWrg_yoWDKwc_uF
-	WkZFyaqF4xXF13AF90kF13ZrW0krW8X3s8XFySqrZ5Zr93Xr98K398K39Yq398WFW3u3ZY
-	yr18ur48Ar1IqjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUb3AFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
-	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
-	n2kIc2xKxwCY1x0262kKe7AKxVW8ZVWrXwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
-	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
-	67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
-	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1x
-	MIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCT
-	nIWIevJa73UjIFyTuYvjTRNJ5oDUUUU
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+In-Reply-To: <CAAofZF60A82utmB2LiVw910cdFDiHd+fPaozUKpQwfXUqv7R_g@mail.gmail.com>
 
-From: Yu Kuai <yukuai3@huawei.com>
+Le Tue, May 06, 2025 at 12:10:18PM +0200, Marco Crivellari a écrit :
+> Hi,
+> 
+> > Can you please make a summary of the discussion here? Referring to old
+> > thread is useful but it'd be nice to have the rationales laid out in the
+> > patchset - why this is desirable, what is the transition plan and what are
+> > the rationales for it? Also, please include a short summary in the patches.
+> 
+> Sure, thanks for the advice.
+> 
+> > Let's keep the old names for a release or two and trigger printk_once()
+> > warnings about the renames. These are pretty widely used, so I think it
+> > warrants a bit of extra effort.
+> 
+> Good, sounds fine.
+> But I don't understand where printk_once() should be placed.
+> Can you give me some further guidance?
 
-Changes in v3:
- - add review tag for patch 1-5;
- - fix some typo and words;
-Changes in v2:
- - add patch 1-5;
- - add reviewed-by in patch 6,7,9;
- - rename mddev->last_events to mddev->normal_IO_events in patch 8;
+So one possibility to achieve this is to not do a rename of system_wq
+to system_percpu_wq but eventually keep system_wq around and create the
+new system_percpu_wq. Convert all current users of system_wq to system_percpu_wq
+and warn from queue_work() when system_wq is used.
 
-Yu Kuai (9):
-  blk-mq: remove blk_mq_in_flight()
-  block: reuse part_in_flight_rw for part_in_flight
-  block: WARN if bdev inflight counter is negative
-  block: clean up blk_mq_in_flight_rw()
-  block: export API to get the number of bdev inflight IO
-  md: record dm-raid gendisk in mddev
-  md: add a new api sync_io_depth
-  md: fix is_mddev_idle()
-  md: clean up accounting for issued sync IO
+I would personally prefer that we use WARN_ON_ONCE() so that this really
+gets noticed. Tejun what do you think?
 
- block/blk-core.c          |   2 +-
- block/blk-mq.c            |  22 ++---
- block/blk-mq.h            |   5 +-
- block/blk.h               |   1 -
- block/genhd.c             |  69 ++++++++------
- drivers/md/dm-raid.c      |   3 +
- drivers/md/md.c           | 190 ++++++++++++++++++++++++++------------
- drivers/md/md.h           |  18 +---
- drivers/md/raid1.c        |   3 -
- drivers/md/raid10.c       |   9 --
- drivers/md/raid5.c        |   8 --
- include/linux/blkdev.h    |   1 -
- include/linux/part_stat.h |   2 +
- 13 files changed, 191 insertions(+), 142 deletions(-)
+Thanks.
 
 -- 
-2.39.2
-
+Frederic Weisbecker
+SUSE Labs
