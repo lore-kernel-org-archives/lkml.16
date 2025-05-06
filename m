@@ -1,119 +1,195 @@
-Received: from mx.denx.de (mx.denx.de [89.58.32.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A346427AC42;
-	Tue,  6 May 2025 11:30:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B75F27A11D
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 11:30:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746531016; cv=none; b=mkXCGP6M++mrS4MxBKxNHl/f9QcjtM/w+vcZZK+TUG91WW0iPyrtWV9aGFB4fo3NI51wGIqPj8opJWU2BdOlnIfssh+nCySnfezi0JJN+fabsa5RCpr7SU2r9iqj1bQ9bc3ITjToKnpEmcQW7KhAqGFH3vCt+jjJhM79VTTGsYc=
+	t=1746531034; cv=none; b=Z8XMUOh+3RbOxMQf2XK1Q8rTsH4PFRzcyLg3Rg0nj/l3vvN4V4PGplc/l4/AHyaioSri80+62/Ynibi+yM+FW089PXcKJhKogOAu6nXEx7P0mwtG8DguGfAIEO8zR0RNDyWklcT4VmT/GyxtnQoHzas2iCWEmN3exyVyOvnWWds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746531016; c=relaxed/simple;
-	bh=6zvLh1+M1TopLSMEihum0IjZMluVdHS2PGGCBhHCFos=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HwfSYL0lcON6Leofwyi3NduYylMBIisMIF9EavYH3bPV43ffPjHaXWH33wh46TYcJkCzseUPC3Jo5Q05SKN3eVLa9v7U13jd1rlJhb5LbNqxo5Cv7rGHukOCG+3mgDSbvsv/oWRuzpplqJXL+9xsQh4/mibYEEbx0YS+/BRRco8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=W6ahW4Cd; arc=none smtp.client-ip=89.58.32.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1746531034; c=relaxed/simple;
+	bh=4nOPsplIo0HRm+rc/wKow8IH+hJnslEzdHWl70rPsZc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EoRqzenQZpt/y3dHQ0ER5D3+kEBk+9b+Qwn7rvCVnjDz41Zjyj0VvmvzoovfxWyrDlOODOcII4czPJ5yZrMZ6pueE+pQDD/FUlof/fRktcpfpWcGpckpk9iIHST7KMMn0gjol+mKsHWQlTDoiQNii5v4KgmzwIr6CBIjMhu3HgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=xrBK+tDi; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=uOguJXW3; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=xrBK+tDi; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=uOguJXW3; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="W6ahW4Cd"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 9FA101048C2EF;
-	Tue,  6 May 2025 13:30:10 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1746531012; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 in-reply-to:references; bh=j+tjm4josKsxx1XYGwI2ueKPNoEguumH2AgRPhy7ttY=;
-	b=W6ahW4CdKTfVxM95VHuGYdddGdilzhWER2Uybu0fbJV8lhKvmzz6jyldsaXQYo1D6rxQed
-	/IEuy42LWI6CH6yGXVXl7Wc56T/ZLjItA5b/oRsCRX79p4jsPVSyv717zDHqFhi4AHOvBA
-	lwQR/DuRqPbOxCRvz3G8B6k2lI/v7ha/iOgJdQUsh2PpYgzFWu963NQkOtYSMCtdlfelaG
-	a5vUosABWOg9xbYof+5USgGRX39V61UGuVb0W6c4RhH2PXKYkBxeuszey34ueGpLi6vqPW
-	LbN/LUcrygAtvkk0m6fGRYM+QcSNZkZu+yXJoiRQmgQSdRvRSvGrmrcUycL1eA==
-Date: Tue, 6 May 2025 13:30:09 +0200
-From: Lukasz Majewski <lukma@denx.de>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, davem@davemloft.net, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
- <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Richard Cochran
- <richardcochran@gmail.com>, netdev@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, Stefan Wahren
- <wahrenst@gmx.net>, Simon Horman <horms@kernel.org>, Andrew Lunn
- <andrew@lunn.ch>
-Subject: Re: [net-next v10 4/7] net: mtip: The L2 switch driver for imx287
-Message-ID: <20250506133009.3e945546@wsk>
-In-Reply-To: <20250505131611.0c779894@kernel.org>
-References: <20250502074447.2153837-1-lukma@denx.de>
-	<20250502074447.2153837-5-lukma@denx.de>
-	<20250502071328.069d0933@kernel.org>
-	<20250504082811.4893afaa@wsk>
-	<20250505131611.0c779894@kernel.org>
-Organization: denx.de
-X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="xrBK+tDi";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="uOguJXW3";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="xrBK+tDi";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="uOguJXW3"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 75B522120B;
+	Tue,  6 May 2025 11:30:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1746531030; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EUQayq6zhQx2B6zZ54uV6kGLYbK2gmDppDAX2AkQtUg=;
+	b=xrBK+tDi3WVRY0GaHXCbpot46mX8Gloz8sRQIq0BnKsrFH6+VqUnAiGQSYnddTgdODxOvo
+	bXDCMv7b1SAKINmiDUs1AtbJwb5tOUHFBLrPrBCkluQM7gsFhYI1gTxJN0Tv2Fr2ppsvJz
+	T3sM6tE8rT3IXtIu0djFbOzsilVPDWw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1746531030;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EUQayq6zhQx2B6zZ54uV6kGLYbK2gmDppDAX2AkQtUg=;
+	b=uOguJXW3aw2PxIy8TpLJdaEjTzpfVCNk92VdcRe5rnIfxbMYDUKYiL3vu/x3XPduFzrs2o
+	ClWuUI2qbph08FDg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=xrBK+tDi;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=uOguJXW3
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1746531030; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EUQayq6zhQx2B6zZ54uV6kGLYbK2gmDppDAX2AkQtUg=;
+	b=xrBK+tDi3WVRY0GaHXCbpot46mX8Gloz8sRQIq0BnKsrFH6+VqUnAiGQSYnddTgdODxOvo
+	bXDCMv7b1SAKINmiDUs1AtbJwb5tOUHFBLrPrBCkluQM7gsFhYI1gTxJN0Tv2Fr2ppsvJz
+	T3sM6tE8rT3IXtIu0djFbOzsilVPDWw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1746531030;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EUQayq6zhQx2B6zZ54uV6kGLYbK2gmDppDAX2AkQtUg=;
+	b=uOguJXW3aw2PxIy8TpLJdaEjTzpfVCNk92VdcRe5rnIfxbMYDUKYiL3vu/x3XPduFzrs2o
+	ClWuUI2qbph08FDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 66664137CF;
+	Tue,  6 May 2025 11:30:30 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id jH73GNbyGWjGFgAAD6G6ig
+	(envelope-from <jack@suse.cz>); Tue, 06 May 2025 11:30:30 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 1FC04A09BE; Tue,  6 May 2025 13:30:26 +0200 (CEST)
+Date: Tue, 6 May 2025 13:30:26 +0200
+From: Jan Kara <jack@suse.cz>
+To: Zhang Yi <yi.zhang@huaweicloud.com>
+Cc: linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca, jack@suse.cz, 
+	wanghaichi0403@gmail.com, yi.zhang@huawei.com, libaokun1@huawei.com, yukuai3@huawei.com, 
+	yangerkun@huawei.com
+Subject: Re: [PATCH v2 2/4] ext4: fix incorrect punch max_end
+Message-ID: <54ofseazhzubiefimevkqmgslu5dugnambtg5xqqmzcltzooeo@nt7vbsryn42g>
+References: <20250506012009.3896990-1-yi.zhang@huaweicloud.com>
+ <20250506012009.3896990-2-yi.zhang@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/VGhUyR7bm1Y+8Pq6wGW6=0i";
- protocol="application/pgp-signature"; micalg=pgp-sha512
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250506012009.3896990-2-yi.zhang@huaweicloud.com>
+X-Rspamd-Queue-Id: 75B522120B
+X-Spam-Score: -4.01
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[vger.kernel.org,mit.edu,dilger.ca,suse.cz,gmail.com,huawei.com];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DWL_DNSWL_BLOCKED(0.00)[suse.cz:dkim];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.com:email,suse.cz:email,suse.cz:dkim]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
---Sig_/VGhUyR7bm1Y+8Pq6wGW6=0i
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue 06-05-25 09:20:07, Zhang Yi wrote:
+> From: Zhang Yi <yi.zhang@huawei.com>
+> 
+> For the extents based inodes, the maxbytes should be sb->s_maxbytes
+> instead of sbi->s_bitmap_maxbytes. Additionally, for the calculation of
+> max_end, the -sb->s_blocksize operation is necessary only for
+> indirect-block based inodes. Correct the maxbytes and max_end value to
+> correct the behavior of punch hole.
+> 
+> Fixes: 2da376228a24 ("ext4: limit length to bitmap_maxbytes - blocksize in punch_hole")
+> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
 
-Hi Jakub,
+Looks good. Feel free to add:
 
-> On Sun, 4 May 2025 08:28:11 +0200 Lukasz Majewski wrote:
-> > > Now that basic build is green the series has advanced to full
-> > > testing, where coccicheck says:
-> > >=20
-> > > drivers/net/ethernet/freescale/mtipsw/mtipl2sw.c:1961:1-6:
-> > > WARNING: invalid free of devm_ allocated data
-> > > drivers/net/ethernet/freescale/mtipsw/mtipl2sw.c:1237:16-19:
-> > > ERROR: bus is NULL but dereferenced.   =20
-> >=20
-> > I'm sorry for not checking the code with coccinelle.
-> >=20
-> > I do have already used sparse and checkpatch. =20
->=20
-> No worries. Not testing a build W=3D1 is a bit of a faux pas.
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-Yes, I'm fully aware of them - mea culpa.
+								Honza
 
-(at least now by default I will have W=3D1 set :-) )
-
-> But coccinelle is finicky and slow.
-
-
-
-
-Best regards,
-
-Lukasz Majewski
-
---
-
-DENX Software Engineering GmbH,      Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
-
---Sig_/VGhUyR7bm1Y+8Pq6wGW6=0i
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAmgZ8sEACgkQAR8vZIA0
-zr2hpwgA4XcfexGrhhN6LFts0lR95BX5rhktdQBEW5FlLs57vikXMEzNzJqty9n3
-MqEjDsfAcdHJfe9vwMMVgoxBLBDahgnAki/tyn+PrtH78hmXIZ8p4ZOShnGalF11
-13lKMYA8oH/tCLonXLTvspvwR92/S0aUZKszFWwDq4VS8ZBLHRUMtU0TvkA/TZps
-7VrU+3V6SX16CPI73894dh5lkc+tV5bnJJu2PTQ+pMhL+DuLmEMSCkxyhAocLcdq
-bvcb6o3hjhXzQtE70wXbI2HfH5X/x4hEyliOfK8Q+/s/BsjWFjEsxCvtVCb4UCGR
-DQ7kBhb6w1Q4Q5B+D+d8g/R+O/iNbw==
-=4Uhq
------END PGP SIGNATURE-----
-
---Sig_/VGhUyR7bm1Y+8Pq6wGW6=0i--
+> ---
+>  fs/ext4/inode.c | 12 +++++++++---
+>  1 file changed, 9 insertions(+), 3 deletions(-)
+> 
+> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+> index 4ec4a80b6879..5691966a19e1 100644
+> --- a/fs/ext4/inode.c
+> +++ b/fs/ext4/inode.c
+> @@ -4006,7 +4006,7 @@ int ext4_punch_hole(struct file *file, loff_t offset, loff_t length)
+>  	struct inode *inode = file_inode(file);
+>  	struct super_block *sb = inode->i_sb;
+>  	ext4_lblk_t start_lblk, end_lblk;
+> -	loff_t max_end = EXT4_SB(sb)->s_bitmap_maxbytes - sb->s_blocksize;
+> +	loff_t max_end = sb->s_maxbytes;
+>  	loff_t end = offset + length;
+>  	handle_t *handle;
+>  	unsigned int credits;
+> @@ -4015,14 +4015,20 @@ int ext4_punch_hole(struct file *file, loff_t offset, loff_t length)
+>  	trace_ext4_punch_hole(inode, offset, length, 0);
+>  	WARN_ON_ONCE(!inode_is_locked(inode));
+>  
+> +	/*
+> +	 * For indirect-block based inodes, make sure that the hole within
+> +	 * one block before last range.
+> +	 */
+> +	if (!ext4_test_inode_flag(inode, EXT4_INODE_EXTENTS))
+> +		max_end = EXT4_SB(sb)->s_bitmap_maxbytes - sb->s_blocksize;
+> +
+>  	/* No need to punch hole beyond i_size */
+>  	if (offset >= inode->i_size || offset >= max_end)
+>  		return 0;
+>  
+>  	/*
+>  	 * If the hole extends beyond i_size, set the hole to end after
+> -	 * the page that contains i_size, and also make sure that the hole
+> -	 * within one block before last range.
+> +	 * the page that contains i_size.
+>  	 */
+>  	if (end > inode->i_size)
+>  		end = round_up(inode->i_size, PAGE_SIZE);
+> -- 
+> 2.46.1
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
