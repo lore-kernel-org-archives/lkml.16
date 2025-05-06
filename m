@@ -1,218 +1,88 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2079.outbound.protection.outlook.com [40.107.20.79])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47DB61F2C3B;
-	Tue,  6 May 2025 08:26:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.79
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746520011; cv=fail; b=upbR3o5w6exg2wHT5N12+9uQUsoOBpRPgiOg30y2bbSJJuoIIkvTJFSfWHdFQrwUTOm1iWAE4mNM4ThcWGuvM1PNSdzyCireVYD2hwfSR2h4COWLmB+RA2g1h6t3KDq49gxyiXjzr3pLz9sbpSSQli4H9FFnyyj0uaxaBgaSMJ8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746520011; c=relaxed/simple;
-	bh=FzhTZ1bZkxvqjH6KZOKjD7LBNWrfH/MJ2pXHPBoTj6A=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=rbrL4lOjihqranx9JdxqX0VAC/KIJCkri3XBS6qE2UOHErXRBbRd5SaGcQLiJWRZxZ6QHuWxnc87Rcvt0bkrWvIuRe5j8+PeJOlhkurmyYyx0f1H9JjGw0mUV0a5JCpGAgWG3If9wKzhWqwgoUnPSfgzWtGIwRHKognaH53GLiI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=lgVLBYi1; arc=fail smtp.client-ip=40.107.20.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8212824169A;
+	Tue,  6 May 2025 08:26:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746520014; cv=none; b=pDScQtklVF7u5i1tYDrs7GqL9EMrtA405/PMWz/vbaO5L3LJgW3ZCqNIRupNd/tq64z1doQ4UrIBg14znzIFAp5A8oFokHTPvCJheF0gKI2k6KBfRjZVRC5jr9tROlXCcODMxlYvHOrOPndOL8qv43GaeKJ+Hb/sknDpBkWpvSI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746520014; c=relaxed/simple;
+	bh=5/lvtCn4OfSHJYnftDRpHjKKhmJr21mm7IievYxQBb4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=da0A9/t4xBNAdalclYWhPl/1dEs7yoCJj8lxWLzRIvhIA6CSYKex7/2qFd+reU+R+CLvNY91txn+PUKm0e11J9ef3wMRAL8MaPdStTKs74BMhduyhks7sf/7omhO5eY+IJK8+I7lYqz3nZIYJwWkrQGIR1IsCc1Tp8RWZBYNXr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=LLveXn7h; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="lgVLBYi1"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LTIHwZhqm8giOEKHh/XjOvGmjOqbrrwtKiNXEO3sIHrYwj5DnQOsNVT0E3mXxoPJoTr5V+yDN0iyre//TU3VRX9VQI7ZxTUf9OluSudiasoNI2Wx0w1gTb+TWEh6cbDoQEJiYVbO3//D91gDmfCx8exu54yrjzSVLGMPxlsznm7V8XMdsyo8U7hbLwFxMzCMN/8kNYu2aU1G/xHoB40uw1SCvFXVTNXQqXROhx4WqLUQKxd6FTHVZROy5W5DGmp0yF9nDxCa5yC3lkQWzzMGNcF0ipElLpnXmFRammEp2LHOscDxVByGFYGyrFeTuf2AlPqrgR0lz7pji/S5Ya4hUw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zssKaXKfPOtcDGKX1NK6o8nnTs7rAayFHXgJuHOE3zo=;
- b=BmSwYFLZzkwHsVuEpCUJYuPG0T/f+5bMDsMQ5Ff/lCTVomJafbkslkeu4KOZ36nNkwmrJWkqypa4/38OXsJYlizpxLfRket8uXbCWSc1xLwP6fDls/kMvsM38Ymy0ITbdOqKUu4Woat76XSq+c8gX0VATrs89TD06MXk5/ZgI+xSKB1SdbPtGf7DeiEyzimxRou8WL1pAfON9ohfpko5gpENHyLwdgUvq2Jk1eZD+k7PvrEYnmYRIxTSoh1AiQ0nkVsyvL/PB2IheShoxliLAuLd64xDrn0Pmur9fjpTvbsVm9paPM2Yd6YxjH4949/kGiPrCyqHD2niAnuZLI83mg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zssKaXKfPOtcDGKX1NK6o8nnTs7rAayFHXgJuHOE3zo=;
- b=lgVLBYi134+nQMMKTZugNxYE+O+CztZBGglVbI88khGHh899VGOVcpbcnMUroFOoNNhPcMRo8qmKXyCW8BRJq+4yV4Z/M4dlF3eGqkaY2+8k67Ju16zpELUf440134TstzHy4qYlCLx32T4IyUO+mJ5yp4qD9cokrxQFr5cYADANy7tk3gBK4eOS19MhWvAeJRDltmxXrKIbhBPd25G6DVZJcZFIuE0veBz/LFn+GTnYgpnWQRQwPnZtJZcEdlAFPltbpCzvyN+Erjw4Kfh4C01tEOTBso5zZ2OmtLnZc8iBNaEBQKWYUBoZ+yW3Gsg9OdhwhSBkwclmCpmzbU9+oA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB8510.eurprd04.prod.outlook.com (2603:10a6:102:211::7)
- by PA2PR04MB10158.eurprd04.prod.outlook.com (2603:10a6:102:404::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.24; Tue, 6 May
- 2025 08:26:45 +0000
-Received: from PAXPR04MB8510.eurprd04.prod.outlook.com
- ([fe80::a7c2:e2fa:8e04:40db]) by PAXPR04MB8510.eurprd04.prod.outlook.com
- ([fe80::a7c2:e2fa:8e04:40db%4]) with mapi id 15.20.8699.022; Tue, 6 May 2025
- 08:26:45 +0000
-From: Wei Fang <wei.fang@nxp.com>
-To: claudiu.manoil@nxp.com,
-	vladimir.oltean@nxp.com,
-	xiaoning.wang@nxp.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com
-Cc: christophe.leroy@csgroup.eu,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-arm-kernel@lists.infradead.org,
-	timur@kernel.org
-Subject: [PATCH v7 net-next 00/14] Add more features for ENETC v4 - round 2
-Date: Tue,  6 May 2025 16:07:21 +0800
-Message-Id: <20250506080735.3444381-1-wei.fang@nxp.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR06CA0249.apcprd06.prod.outlook.com
- (2603:1096:4:ac::33) To PAXPR04MB8510.eurprd04.prod.outlook.com
- (2603:10a6:102:211::7)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="LLveXn7h"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1746520010;
+	bh=5/lvtCn4OfSHJYnftDRpHjKKhmJr21mm7IievYxQBb4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=LLveXn7h/ttAVVmYwDGRrcsuwvaMPFlND0X+9PymIKVpGY20nEPS/SOtUWocGhMis
+	 7ec5hu4g0fshcIjQPVGzrE0II1HTjZxR6Qe+ppNCOrzSQIub7nB6LuNK46YxGW+V1g
+	 6Gr0sfbALi2/RauvU+s2UKJL5pXFQKItXY+SltPSNK+BJQ7/4FncvJaaRwIww4Abah
+	 RB6dDSSunYddR92XjWVNOTSRdQET3BT+tLlW/a1hZd87yD7AwLE22XP3WbTAkR3RDZ
+	 fwdqJGlEAscui8Rrc9a204xzE8CLP/z/w7Ra/wEHikAfyYkrAbeLEq5W6DiJxh07dD
+	 f2L8HyqDzScJA==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 82DA017E09BE;
+	Tue,  6 May 2025 10:26:49 +0200 (CEST)
+Message-ID: <0fd0c066-d203-437f-940e-ca355100bbc6@collabora.com>
+Date: Tue, 6 May 2025 10:26:48 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB8510:EE_|PA2PR04MB10158:EE_
-X-MS-Office365-Filtering-Correlation-Id: c7553e49-90b4-4af7-c93b-08dd8c77bce4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|52116014|1800799024|7416014|376014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?CJApqH2fr0lbLhB2EKl5buNAvxjRTzQg+f/cPigguEQavfphGn7qJK5jp/Xl?=
- =?us-ascii?Q?uJ3aBsJpbdkDBwjLhL97BvX1MIr+3t019ARkQand+xkj/WfJdscNruXb+8T/?=
- =?us-ascii?Q?SixEfTVhlpwo71FBrbk+0MewrEb2cGeNGBksFZLGEEFeDcrrnIDvtW1+sWVe?=
- =?us-ascii?Q?k6/AvHrTS/fskv0dYTwRUHD9TQHcPA5lmHP8Z5j1+tPxjuT0G8GTratmzDt2?=
- =?us-ascii?Q?yqmxrPNe1/fvZB9SlzgcRKjCgxWuLKKhJKuMPBxfkKQKRT2hq5N2KAEIs3gx?=
- =?us-ascii?Q?1EcV/xiTcgDX5115+Au2/xtfLAEtfh51d1lb2F0XFctNrLXFqC1OTPLkWdy5?=
- =?us-ascii?Q?hQh830rNihtw6Zoe006FAXwqpWz3zBC6FjzBGV8eINO/sMDpFgIXoq0sXboT?=
- =?us-ascii?Q?/t7p9+/Lfwnn1+3IPtpepgHvMyTUZ/lMGjgw2Ie+dErqHKpEx0k9Faos8oEs?=
- =?us-ascii?Q?e3oXXqm+DFwJUdM3e6JdtjsAV8itmybMyU2UpootFT1/VEIo9kFpSXeSLRfN?=
- =?us-ascii?Q?4dCUUhXvBx4KuaUejZBIzueITxl1X5nQ9I97vYQJRhwtYV4+yuwmfTXszaMY?=
- =?us-ascii?Q?ysmO14gds2lLUOAi3S11huQcV+yXaKMn3HIvkWbf5hfh1nGlICXoMsD75ln1?=
- =?us-ascii?Q?bRovi+kS2Eh7E2b3Rr8ULaf3Lpc2jpcKwVbLdRaR02vR5wj39AsoYY1mDY1L?=
- =?us-ascii?Q?cyaRqEnGNYfG9VT+rur6c5z4fB/zD84qLwgOQH+cMY2woXYN7dta/UNcc9mz?=
- =?us-ascii?Q?yONJsTJ1IEyFGfCrghp7JEauB0hdGnaAUKEk5Hj1f9PTibnxk9JazF2r6YFB?=
- =?us-ascii?Q?dL79buLvCq2DVHOjWIdojqIw7XIFFtuzlZPPwxr8MZIDxeXoSqzZFArQEX3c?=
- =?us-ascii?Q?QyiZTPKJPEkyORkyyosY3285syTF4SutHiiTLsKh6Mc3V8KuruIFgGdH4xRL?=
- =?us-ascii?Q?ZcNfI/UCgc4jw5dBrRk6MQSKFKgolHVgwvMHU13dq/jTMdRL87sRDngX7Ojh?=
- =?us-ascii?Q?NeZZPGAc4EjQN/51ATVr7pvPfPbQXDv5nnpbsGZybt+NR4BSW9Ka6swjgswY?=
- =?us-ascii?Q?9kDpSdG/cBlWm5J3P2pOwkVOPJl5QQntZ4WlPxHiDR0AhlE5zbo0Qd30W9Ag?=
- =?us-ascii?Q?WCM28YhwqpRV8/zpVy+SKJ+S3ArrcQubAG0QDbVvxnQkJX3Z78rmYB7ONFMq?=
- =?us-ascii?Q?P+4ZrYN4uqArPftWqeGr/c1JborInf7/cu5waenyDNaL7+wjiwAAWK96ScjE?=
- =?us-ascii?Q?1umzdgbxnuPaYkP8zWyxDzCGMIE4iuJ6jZ8bdEadgjLYfdh1hzshwba0EDBy?=
- =?us-ascii?Q?vgMjgoq3k+/aWTo5YuRZ9penE3PYiSvdvDbuo+/vcCp9PWHXS06s+m8xDeF+?=
- =?us-ascii?Q?Jx6V/N+Yx8O8zUtfha0Ii82YJHdeozPCMEkxf2HVx2bjxdIzqAJAw3kuiSoF?=
- =?us-ascii?Q?Qynf/RpgrDNulB6DqporDF8jXWllU0W0vlHtyrQPAJv7c7JLrRZUvI6vdOFk?=
- =?us-ascii?Q?7y84BwA8AwuK+HM=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8510.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(52116014)(1800799024)(7416014)(376014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?8lnctn+lp4W/zKvNPH0JZPcO2PfesphT2JJ1aX2eGDWkK2SNzAuCqFp/r+Pm?=
- =?us-ascii?Q?npAI7JVYpghGRVCC1cKOlE2rJQnqiKfrxyiTW2OCdwMmkPYIV5RucedBhT+K?=
- =?us-ascii?Q?YDsepDWiMwOU3cZ9HWUggaeRVuIQbNGBpu5xsEsSWCV/XJNkdRV/5Q1YWpDT?=
- =?us-ascii?Q?HgHx0QtpwJFxc8dVuVfK7l5jub0eMRwRSCH5eHGXC8UAHkYQOGJVZ0hR+fCg?=
- =?us-ascii?Q?rKWAIXLxaJpocnn099N1gu2qHiKgpIBuf2/AeQJP29bw48b2YyqoKgMy2U/w?=
- =?us-ascii?Q?XuU02YiugITSOYoM438GwGnrTGkEjeUgZpZi8AmMH7LomuvKA5KloQUgazgt?=
- =?us-ascii?Q?VnZd/aQ4jTpq7ld7YpJLL5QLQ2diV318I3RiHhfUsmLLbFuAXjWLUg8sNdUe?=
- =?us-ascii?Q?4wT5TgSTRvfFnaut62kLWTNHO4xnFqgmtnx/2EV3SRA/Sm2KpAmIqdx6CNw4?=
- =?us-ascii?Q?IPxaooxdE+F95ty/5KyRSO7OSEQ+cfDabtZ40NYQ7dANxIZwJJuwXxEb5XLO?=
- =?us-ascii?Q?YhNDWB5Eug/5Qr3ZRxLCFn9kVI4ufiXxWcNvZButMKTyy3jJN8J9qwqkgAM+?=
- =?us-ascii?Q?D4/5MmXBiRZXYTQ54zLLBILWIXPYxzjAQQ0Pvacnp+5hfrw/xz6VI7ueneMd?=
- =?us-ascii?Q?8vCtUzOykAC8pR6p2bowHktm8C7reyfVBRwjemWu6ivc4BZfUt981ADWTuqm?=
- =?us-ascii?Q?zWYoJB0rutMG/7TMHguuOp5DnZT6MlsNOUfVynlrANbkx6M9QaeaHTc4pQbK?=
- =?us-ascii?Q?CmM6m3KxF7y7XY4w26m8wGCfWsIfTBUDT0lkj52US27BK9vDAZ2W2EKhjmFM?=
- =?us-ascii?Q?H7Xa1B9U2Q+GK39sskAOK+57jq2UKaV6QuMzRni0nVzSvBB8megD9FLAQg1T?=
- =?us-ascii?Q?ISmH/LGGEufK+Vb6ZymmVcOhtdxVCZEDy2axEWDiwl3YBaZCZHYnEY4nNmOq?=
- =?us-ascii?Q?76brgSa0HIS5lg9hDKNx0VoK9xFrwHW1zUp5rdW6NOVGrXUYZ+2OooAJY/O7?=
- =?us-ascii?Q?ngGr6e/KwCAe5b398lOtas/EBqsJcbXWlulKGDFLZ0veqawlF4mO386OKNVe?=
- =?us-ascii?Q?Rxp0EaGz2JC6EnZkvSxub9DP4CJvEatbuP7a/PexRITYG9OeVsd+P8FqJrnp?=
- =?us-ascii?Q?O9rTjiITGIQpDFqs/GyA3da1cdVctCFx5fBGCmKmcUtOhY4xLOGb158T4yqS?=
- =?us-ascii?Q?6OZ2ix2asVzMAQG/DQRL6NJC6qGUz+F1t3CEx+KtDvE7q9MKrgVV9MWkJgQ7?=
- =?us-ascii?Q?it6JkgU3aNJo+Gx9WPRmwk5DzfuOvKLbcY5laEXvSrlgcnZfGezjkf47dabC?=
- =?us-ascii?Q?1kEo3zB4ttjE+61D6lTn+RjRSpnnpVI+hwatEVarHsdjgW6y6h0IutNQ4Rtq?=
- =?us-ascii?Q?41YgbunK9E7BGe5joNhnrswydDaYiE8EyaQH57jZPueu+Km6fKFUm4oCZrda?=
- =?us-ascii?Q?UpFoAKL4+E8H4MW4bx6KjHOS86T1twx5HDCRO1ccDQuZsx/lCsmCPBl9XAzO?=
- =?us-ascii?Q?M/AZ9ANfIGgHoQHvuUuRz8xBHK3m3nNZRgQf1U0kFtODhA6cUQYaQf2vvsiY?=
- =?us-ascii?Q?vVXBH+QlKdMbodwvZA4dsL7dD/WtAmKNQezkgwmf?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c7553e49-90b4-4af7-c93b-08dd8c77bce4
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8510.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 08:26:45.6851
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 205axA5XidHqTbCXLiELaRgRQfy4LcH+kAEvo5s7UK/jL0S1BKSmx+7lBRhKDuADfd0c/zjAdv25tyf3TVB7/Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA2PR04MB10158
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] arm64: dts: mediatek: mt8365: Describe infracfg-nao
+ as a pure syscon
+To: =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>,
+ Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
+ Alexandre Mergnat <amergnat@baylibre.com>,
+ Amjad Ouled-Ameur <aouledameur@baylibre.com>,
+ =?UTF-8?Q?Bernhard_Rosenkr=C3=A4nzer?= <bero@baylibre.com>,
+ Fabien Parent <fparent@baylibre.com>
+Cc: kernel@collabora.com, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org
+References: <20250502-mt8365-infracfg-nao-compatible-v1-0-e40394573f98@collabora.com>
+ <20250502-mt8365-infracfg-nao-compatible-v1-2-e40394573f98@collabora.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20250502-mt8365-infracfg-nao-compatible-v1-2-e40394573f98@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-This patch set adds the following features.
-1. Compared with ENETC v1, the formats of tables and command BD of ENETC
-v4 have changed significantly, and the two are not compatible. Therefore,
-in order to support the NETC Table Management Protocol (NTMP) v2.0, we
-introduced the netc-lib driver and added support for MAC address filter
-table and RSS table.
-2. Add MAC filter and VLAN filter support for i.MX95 ENETC PF.
-3. Add RSS support for i.MX95 ENETC PF.
-4. Add loopback support for i.MX95 ENETC PF.
+Il 02/05/25 18:43, Nícolas F. R. A. Prado ha scritto:
+> The infracfg-nao register space at 0x1020e000 has different registers
+> than the infracfg space at 0x10001000, and most importantly, doesn't
+> contain any clock controls. Therefore it shouldn't use the same
+> compatible used for the mt8365 infracfg clocks driver:
+> mediatek,mt8365-infracfg. Since it currently does, probe errors are
+> reported in the kernel logs:
+> 
+>    [    0.245959] Failed to register clk ifr_pmic_tmr: -EEXIST
+>    [    0.245998] clk-mt8365 1020e000.infracfg: probe with driver clk-mt8365 failed with error -17
+> 
+> This register space is used only as a syscon for bus control by the
+> power domain controller, so in order to properly describe it and fix the
+> errors, set its compatible to a distinct compatible used exclusively as
+> a syscon, drop the clock-cells, and while at it rename the node to
+> 'syscon' following the naming convention.
+> 
+> Fixes: 6ff945376556 ("arm64: dts: mediatek: Initial mt8365-evk support")
+> Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
 
----
-v1 Link: https://lore.kernel.org/imx/20250103060610.2233908-1-wei.fang@nxp.com/
-v2 Link: https://lore.kernel.org/imx/20250113082245.2332775-1-wei.fang@nxp.com/
-v3 Link: https://lore.kernel.org/imx/20250304072201.1332603-1-wei.fang@nxp.com/
-v4 Link: https://lore.kernel.org/imx/20250311053830.1516523-1-wei.fang@nxp.com/
-v5 Link: https://lore.kernel.org/imx/20250411095752.3072696-1-wei.fang@nxp.com/
-v6 Link: https://lore.kernel.org/imx/20250428105657.3283130-1-wei.fang@nxp.com/ 
-v7 changes:
-1. Replace debugfs_remove_recursive() with debugfs_remove()
-2. Collect tags
----
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
-Wei Fang (14):
-  net: enetc: add initial netc-lib driver to support NTMP
-  net: enetc: add command BD ring support for i.MX95 ENETC
-  net: enetc: move generic MAC filtering interfaces to enetc-core
-  net: enetc: add MAC filtering for i.MX95 ENETC PF
-  net: enetc: add debugfs interface to dump MAC filter
-  net: enetc: add set/get_rss_table() hooks to enetc_si_ops
-  net: enetc: make enetc_set_rss_key() reusable
-  net: enetc: add RSS support for i.MX95 ENETC PF
-  net: enetc: change enetc_set_rss() to void type
-  net: enetc: enable RSS feature by default
-  net: enetc: extract enetc_refresh_vlan_ht_filter()
-  net: enetc: move generic VLAN hash filter functions to
-    enetc_pf_common.c
-  net: enetc: add VLAN filtering support for i.MX95 ENETC PF
-  net: enetc: add loopback support for i.MX95 ENETC PF
-
- MAINTAINERS                                   |   1 +
- drivers/net/ethernet/freescale/enetc/Kconfig  |   8 +
- drivers/net/ethernet/freescale/enetc/Makefile |   4 +
- drivers/net/ethernet/freescale/enetc/enetc.c  |  76 ++-
- drivers/net/ethernet/freescale/enetc/enetc.h  |  45 +-
- .../ethernet/freescale/enetc/enetc4_debugfs.c |  90 ++++
- .../ethernet/freescale/enetc/enetc4_debugfs.h |  20 +
- .../net/ethernet/freescale/enetc/enetc4_hw.h  |  12 +
- .../net/ethernet/freescale/enetc/enetc4_pf.c  | 368 +++++++++++++-
- .../net/ethernet/freescale/enetc/enetc_cbdr.c |  50 ++
- .../ethernet/freescale/enetc/enetc_ethtool.c  |  74 ++-
- .../net/ethernet/freescale/enetc/enetc_pf.c   | 105 +---
- .../net/ethernet/freescale/enetc/enetc_pf.h   |  14 +-
- .../freescale/enetc/enetc_pf_common.c         |  93 +++-
- .../freescale/enetc/enetc_pf_common.h         |   3 +
- .../net/ethernet/freescale/enetc/enetc_vf.c   |  10 +-
- drivers/net/ethernet/freescale/enetc/ntmp.c   | 462 ++++++++++++++++++
- .../ethernet/freescale/enetc/ntmp_private.h   | 103 ++++
- include/linux/fsl/ntmp.h                      | 121 +++++
- 19 files changed, 1485 insertions(+), 174 deletions(-)
- create mode 100644 drivers/net/ethernet/freescale/enetc/enetc4_debugfs.c
- create mode 100644 drivers/net/ethernet/freescale/enetc/enetc4_debugfs.h
- create mode 100644 drivers/net/ethernet/freescale/enetc/ntmp.c
- create mode 100644 drivers/net/ethernet/freescale/enetc/ntmp_private.h
- create mode 100644 include/linux/fsl/ntmp.h
-
--- 
-2.34.1
 
