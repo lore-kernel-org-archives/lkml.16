@@ -1,151 +1,105 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D92EF283FE8
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 17:03:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8D702222D5;
+	Tue,  6 May 2025 17:04:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746551018; cv=none; b=ur0KYnJIURAoGu8vHgPZAeeY5Yii8CE5AaKOHsxtTkdkQaYpWo1kuX8iB4nw14NahI+twjtp61Ip4PrzfznIpCb1t4a+c4nBhMe4Gh8Bm2Z65HC3y6iy30iHGw9NJBUyDI0BhooO0SSqWupdfquXIpfnFmWKaCW6inITcGV6OXM=
+	t=1746551080; cv=none; b=Q/fqTnHWy7vrBA1lJT0BkfXZQBlYKzWG64BObJFKolWs9Oej1KfOGtPRKmeN7Z+BEHQb1dbWd2uXQJ7lEJ3o0ALxUJIoYZH6fi61+kKkpriX45bzFWn3SFPlhtbrTWEAP4NpKR11lvRF5tVwuglKBzSvNRQ6dPkj6qc76PtyXP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746551018; c=relaxed/simple;
-	bh=S36e/AfvMii+zYLLY4uuHcRj6uHTGDzxO9akAzlMCEA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qnnBQcBNB7ryVXbSaItdQeXdIauiwKyZ6irAIWmyd3oW2+IL9qgQd7MzOInxuG39PyolmnNbWR0cU48Odb+lKKANmE+AqnlWUt00SjOrrg1GgUM/nbp707Tcf/j72Cm60orqvyR2fA0/zPkhqIVSMlk6JO7KY4PWwhHcQUqxs8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=TGxcufOI; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1746551080; c=relaxed/simple;
+	bh=NTLZprBk8WjLy0eoklCp7F0D3ryeFo+5bfQpOu4stxQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=XvFwjrGu5GGtiDL0HmVV0a6JromIDdP2oH2xgUhcCZ4u7vdhYdbKYBsBEwXJSMXZOZppLx7dCYXziD1oNNWDBpb9/Cmmb1KR3kx2U6ewKFWzbTL9cLJAXU35/JUsXuAtDGCK0GumpHrnWjoHtqUxE70DblI4crzIJrdLiPv0EPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f+hnPZj5; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="TGxcufOI"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ac2902f7c2aso937610466b.1
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 10:03:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f+hnPZj5"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-39efc1365e4so2866306f8f.1;
+        Tue, 06 May 2025 10:04:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1746551014; x=1747155814; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=9tsrXetGcHXhlhDD75jAH1r6uQJobxHanpR51VAuyMw=;
-        b=TGxcufOIFLu0AI7Xg65mcYE0TOk8/HYSHJ6PuTKz3jPDBghs62fZypxYZcym2ynFuQ
-         geQs4D+zyrDWXPYQqrC4+8kugxI7Vld5otIEsnisnXfVhdhsPAGEUf2j4LrgkPSmJCy8
-         nLbdc6XligG0LXkLfWc/iwAYSb6nz7WTuyJFA=
+        d=gmail.com; s=20230601; t=1746551077; x=1747155877; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=jQWhiv0DTzqaPZaBIOGTarBM4HQ98nU1bKdfrUKqucA=;
+        b=f+hnPZj5F3xhN0XMGCLO6W+/MEXtHJ5VIJF8TLVGIABdwY+W/FDDeOUb5AJ2tjTy7i
+         KuZjzlSlOEffeum+U1v2APTiIyQFcf7zmkfW5iyIpBZIWzWyAP8m7saLJrDdcEaV81/R
+         aBNrm1r9i1hjFD5J+WHg5P89NVvjGYJXLSv8qAg2zPdXYr/q1Un80Pl5PofWTz9z+Noe
+         et7qdp365Wz2G7VTS0iP+ILePQOthR/Jq+r3PsdQnHyD5rxyldCk2c05UiCgKwWNYe0t
+         vLTXimq7EOsR6joRb+S3nMhcHjnIw66XpJRb9rvJm1o5Mksxr6Ag8zvCN4Xm03X1tqlf
+         tfPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746551014; x=1747155814;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1746551077; x=1747155877;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=9tsrXetGcHXhlhDD75jAH1r6uQJobxHanpR51VAuyMw=;
-        b=nxaDDmxIxkqX7wMmF0A/+HEY811Ypx4fZRvX5yuGqDkAAwaD6cWtsEc27rEsyC8uQa
-         1MyIJjiR+2QoJmcHZXayOpV7TuOJ4/90BEtIoYNpSOaV+DPeLLYhbvsA8T+j1LfIAAZ0
-         yTgCptw7kooacI/OHrQNCrjPSIplHA8xzYuJYOZa4KzzP/Z5aayrXZwGYzmmSeaq0Sks
-         aDEXPJhRJkmh7MQJzEYxf5xrtv8mkwLR4JhXqkmMEav3BSgcQm131LiY9pUTou8kyxwx
-         20+lio7iCN2P0EBzmirUryvell2NSKDx3TBtA1fnQYx1Fqh2wwaIEkTsDW0ntDs0YCpf
-         PFBw==
-X-Forwarded-Encrypted: i=1; AJvYcCVnhZfQLbxOOxjSDp6/XS6o4TBHlJgtyWVVuImS3LZ8yEHqEapTx8Ac1ISILOR+zhfzCxl6ZcVpBfd2Ihg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyT+Inm/nA4Ouy4SOpoqvhXHWiU5Dj7/vLpr88qkOy9aAAe9uL8
-	57hXoUz3rshaWa9m0pWfIBDUkKClbcDS1cjny5Y+Y3Zq0cpKXBTnyTtDMVtxWipXKv51COnLIkA
-	Ph/Y=
-X-Gm-Gg: ASbGnctgN3GTtgzQL4XoppVBHxjiSxoHU9gfmwJyEtLuzlRvx12cXAwZSJcx9fPrWwb
-	67lFrlPGDsGWOBkeMYHnBs69ZMWTfV2cFhP5rZ41EmUUTAI+jznvQZELiEmSLobzIVLb2tGwJOL
-	w3EujGGhY2dvlyoTugwB/LwAKG48HR+CEVlRxikW61yH/KYA2QyIwwv5/+X0xSPGlkqhGcGGGna
-	1TdveiNR/mr1V/RBsenpTYqcc6t0talVEHZAxZOP2ASfP6iFGCSImomKcOX4erYnlx6pOzXSVb4
-	ZOx2VtnmSGQazsOW3R8tQcA7mwzRbKrv7UcawXFLPjv7xnYZcNBBNp7iofLQFwX2RWNQPIKfEAq
-	QiRAUOMlCNW9GttMtQWewfEVi0w==
-X-Google-Smtp-Source: AGHT+IHZeIn3M0qVUoOcEY4wQg34jzIBzbFf6CIdav704+eg2jdwa3X94HFVPXlGN46HOTZX6hEgOw==
-X-Received: by 2002:a17:907:3f92:b0:ac2:6910:a12f with SMTP id a640c23a62f3a-ad1e8cd6ab6mr23745966b.46.1746551013699;
-        Tue, 06 May 2025 10:03:33 -0700 (PDT)
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com. [209.85.218.42])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1894c024asm722439066b.117.2025.05.06.10.03.33
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 06 May 2025 10:03:33 -0700 (PDT)
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ac2902f7c2aso937604566b.1
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 10:03:33 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWVQdbFdxxv2M3WD4OV2GHQJkzWss9/tLE/UekXZSSXPPjj9Jf10trpJwf8GFh4SqzG9ZPFLJ/ohiqY8DQ=@vger.kernel.org
-X-Received: by 2002:a17:906:ba90:b0:acb:63a4:e8e5 with SMTP id
- a640c23a62f3a-ad1e8b92457mr27316766b.6.1746551012621; Tue, 06 May 2025
- 10:03:32 -0700 (PDT)
+        bh=jQWhiv0DTzqaPZaBIOGTarBM4HQ98nU1bKdfrUKqucA=;
+        b=E4YOQVi00EMeaIKntyY/KoSiuIWdYHPERg1H/FU83mc0xJ9lIe1QhHwU53HlJfBYWq
+         cbhxvpU2LODb7/q+0djorFOKtoTKDF82/T0zTLZHcgw0ntzlaQu++KNmQE5i9xjPPDSI
+         3XTGRiAOLJs6HdJSy1RjvkgpS30o0nyfKpywdxUeN3RnCZhls0ea9CqThG0wIOUADOvI
+         SLQ9pfi1Lq0Q6EDtgz712tGD2YGw6IjMjQAv0htElB7C5XM7DSMeH3tEj43fvQNhYr7M
+         KzqCT4nldxGfOww8utTGnE8E/YNevqe+qdqDvb742aGhx7TwsA86DxXrd6J0KE/ruP7J
+         qk5g==
+X-Forwarded-Encrypted: i=1; AJvYcCW4THdKnQJ2qA1vzDwG7stzLOAp8HCOusQFo5riYpYEzs3XaNY81q8tOzBa18iJnKooz6jEuT4XFWQT+sw=@vger.kernel.org, AJvYcCXPkwMYnRqfakC1ek/ZgTtcGTEleuKYXkT/Ku5ehxfslfJFHq5q/ppzvRL2HkDciXFGUXKnib6XZvKqS8vZcwwlEha859HT@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6xBgtvnDKlvgP6ELPR5JeAGAPbga18qo20RX46+eipVgK86ZM
+	yZ+gfaKS0V1lO8G4WbncGGp7kXoTvn0b1+CNlC4MwfXj1p4/m9Ks
+X-Gm-Gg: ASbGnctyt139KJnoNirE18DRUmYGtHQkYT870knpn3SIyCi+3TpEqrOwclq7LD0MQV9
+	en7mWyu4ZiyT4Z+hPdAZ1AKuAeEQbCWyIs0tXHYStWGCuzJwQkiIMd0aRWKTA9Xy0joyXx5wOHw
+	8tGGMcpzvlyrVWN3gKTxhuUk1DJjjHipHeb70qcl6shGLNCRDFUJj/kMqqON8+KAc+f7fcWl84L
+	l8Gxnb3wnFEWCJ7k2YjF5L9k68eFaOhMmVWcm0tXSowXJIfoaGgN53bC+J687sqDjKhZS/T9uNF
+	NvqHlINhUKUhlLzj9lleLxoTzKXePznBFM2r63jiXw==
+X-Google-Smtp-Source: AGHT+IESL1kCWs4E6tOCvkozKB9xowA7eobWpZSDmFdHYxe69d+ICgCkdYKqEpcClD1YAk5OprcpxQ==
+X-Received: by 2002:a05:6000:2483:b0:3a0:9705:eb13 with SMTP id ffacd0b85a97d-3a0b4a3ede3mr146964f8f.43.1746551076952;
+        Tue, 06 May 2025 10:04:36 -0700 (PDT)
+Received: from localhost ([194.120.133.25])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a099ae3ccdsm14411110f8f.38.2025.05.06.10.04.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 May 2025 10:04:36 -0700 (PDT)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: John Johansen <john.johansen@canonical.com>,
+	Paul Moore <paul@paul-moore.com>,
+	James Morris <jmorris@namei.org>,
+	"Serge E . Hallyn" <serge@hallyn.com>,
+	apparmor@lists.ubuntu.com,
+	linux-security-module@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] apparmor: Fix incorrect profile->signal range check
+Date: Tue,  6 May 2025 18:04:25 +0100
+Message-ID: <20250506170425.152177-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250506154532.1281909-5-ardb+git@google.com> <20250506154532.1281909-8-ardb+git@google.com>
- <CAHk-=whrcutH0LcMmaeJxxMeYpw2R5T80yoQAXbrRHNSTCB0Pw@mail.gmail.com> <CAMj1kXFSae=stazUv8doka-zLOnDdXXR4ASxHKe5f97ikg3V2A@mail.gmail.com>
-In-Reply-To: <CAMj1kXFSae=stazUv8doka-zLOnDdXXR4ASxHKe5f97ikg3V2A@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 6 May 2025 10:03:16 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whxP5Ywpv-U=2NPFhk929VHB9_kdp10+HFJQ4VxEGdX9A@mail.gmail.com>
-X-Gm-Features: ATxdqUEevwtOmN_Ygu0D9Ha17vaJcrOoRxli3ahIdE2x69cQoMke62jq9Birbdk
-Message-ID: <CAHk-=whxP5Ywpv-U=2NPFhk929VHB9_kdp10+HFJQ4VxEGdX9A@mail.gmail.com>
-Subject: Re: [RFC PATCH 3/3] x86/boot: Use alternatives based selector for
- 5-level paging constants
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
-	Ingo Molnar <mingo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, 6 May 2025 at 09:35, Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> I think the first two patches are important, though, as they are about
-> robustness/consistency rather than optimization.
+The check on profile->signal is always false, the value can never be
+less than 1 *and* greater than MAXMAPPED_SIG. Fix this by replacing
+the logical operator && with ||.
 
-That first patch already has another copy of that insane inline asm
-optimization.
+Fixes: 84c455decf27 ("apparmor: add support for profiles to define the kill signal")
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ security/apparmor/policy_unpack.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Let's fix this properly, not this disgusting way.
+diff --git a/security/apparmor/policy_unpack.c b/security/apparmor/policy_unpack.c
+index 73139189df0f..e643514a3d92 100644
+--- a/security/apparmor/policy_unpack.c
++++ b/security/apparmor/policy_unpack.c
+@@ -919,7 +919,7 @@ static struct aa_profile *unpack_profile(struct aa_ext *e, char **ns_name)
+ 
+ 	/* optional */
+ 	(void) aa_unpack_u32(e, &profile->signal, "kill");
+-	if (profile->signal < 1 && profile->signal > MAXMAPPED_SIG) {
++	if (profile->signal < 1 || profile->signal > MAXMAPPED_SIG) {
+ 		info = "profile kill.signal invalid value";
+ 		goto fail;
+ 	}
+-- 
+2.49.0
 
-Let's get rid of that USE_EARLY_PGTABLE_L5 crazy case entirely, and
-fix the few places where it is currently used.
-
-That code is bogus *anyway*, because your argument for these patches
-is "one single truth", but the fact is, there's at least *SIX*
-different values that get set depending on this value: pgdir_shift,
-ptrs_per_p4d, vmalloc_base, etc. All of those change depending on
-whether we do 5-level page tables or not, so the whole argument that
-"pgtable_l5_enabled() is special" is just wrong to begin with.
-
-Any code that makes pgtable_l5_enabled() will fundamentally then just
-have *another* inconsistency, namely the inconsistency between that
-"is_enabled" and all the other values that L5 paging actually
-modifies.
-
-So I don't think your patches even fix anything. They only paper over
-one very particular issue.
-
-For example, as far as I can tell, the only real reason for it in
-arch/x86/kernel/cpu/common.c is *one* single use where we do that
-
-        if (!pgtable_l5_enabled())
-                setup_clear_cpu_cap(X86_FEATURE_LA57);
-
-in early_identify_cpu().
-
-And then we have __early_make_pgtable(), but that's the SAME FILE that
-has all the magical special __pgtable_l5_enabled logic anyway. So that
-damn well could just write out the actual real logic, instead of using
-that "is L5 enabled" helper function THAT IT IS ITSELF INITIALIZING.
-
-So I reall ythink this whole issue goes much deeper, and is much more
-broken than your patches imply. And I think your patches in many ways
-make it *worse*, because they may make that pgtable_l5_enabled() be
-set up early, but that just hides all the *other* issues that aren't.,
-
-As a very real example of that, just look at what happens in
-arch/x86/mm/mem_encrypt_identity.c
-
-It does all that page table setup, but if __pgtable_l5_enabled hassn't
-been set up yet, then all those *othger* values that go with it also
-haven't been set up yet, so now it uses the *wrong* value for
-ptrs_per_p4d etc.
-
-And I just checked: that code very much does use ptrs_per_p4d,
-although it's hidden by
-
-                memset(p4d, 0, sizeof(*p4d) * PTRS_PER_P4D);
-
-so I really think this is all papering over things. That code CANNOT
-WORK before __pgtable_l5_enabled hass been initialized in its
-*current* location.
-
-IOW, I think your patches only make things *less* consistent, not more.
-
-               Linus
