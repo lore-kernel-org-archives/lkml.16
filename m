@@ -1,82 +1,79 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E7F728151F;
-	Tue,  6 May 2025 16:14:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14E3C2820CE;
+	Tue,  6 May 2025 16:14:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746548069; cv=none; b=ThojGW5Rcp6MBtjE4YJ8c+ChPoeq1o+ea0qwkF6/pz37KUQjcruKjE6q8Vw4wB1Qbn6F88+SCAtef8AUl4ESYDNk18fNtj4PZR1B/94Nf1SM6ZIOVZe9jBjFAAe/ZKRrAKPcrvIfWRE6THvIoXfYmOdRp3C0ZD33xl6RIZS5OFU=
+	t=1746548080; cv=none; b=KYRV4WTM/t77SsrEubAHzsC2kPUbgxbasigWnCeaNFr/QOdIdjS76h0BQNCfycB/ijs0UzFP5yuNG/a3y3uvnWh1fuftfK007Gi2+JirqprEaDPmAJ8UPmWoM10cHWCwNH7uhvUA7tbtQRvxCo5En8vVWQ069MFxoY/wvHO8vvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746548069; c=relaxed/simple;
-	bh=uKeih0v5/syKJIXcgCW25FrBXvDbJP4+dA9svf+9muY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=kGIm33PUAzjp5bJPMPb8gPkIUg1TUm2Ioqix10u5VYEDUhxVOeqNN6enrZTx3PWyqpmwnkoKtu9kkv2Dg1RsjA4Psc6uzPyJT13TL8aVqXBfMGVV8s+BFfXx48DV7UqTeeErt4VPldokDBrWFWAUUNi+P80tCC+aumoi9VIS7Jg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ifHw/brk; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1746548080; c=relaxed/simple;
+	bh=1ypU94/spMRuuaW8oUslWrYwTwesWHuCxWvGpHpQRE4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sRO7UDFiHkbH12+0FLCNwVXxsFUIoBDb5rrC69aWpw9b9lekcOmW08JAad3b6Ds98NHJdfSXix15A3gXFGLPYH6MpqY82OUQb0qcb8cd+GRYBQVBQE3+IWpV48m0bgQA8FN29Z7/q8eanG/v8TH/3oumeXxJAORcUO5axJldZDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PVusvau3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ifHw/brk"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 546GED2D545964
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 6 May 2025 11:14:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1746548053;
-	bh=vUQnO4ez7esgr9cZ1pZ2DYqYoTJgtaWVk2k59yNUhiw=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=ifHw/brkuXzBNwEKSwgb2Su7whGELtX6EQp1SQl72QstWGcMn/YHFpxr/0qJTy75k
-	 7sKmqrOyOYyV8UXl/ipogXBj1kijlar5VUtNcfFfUUHCYevXzBGLsiVF2ZW0U8J0+A
-	 spdfc9ONmpiKUnDoJVmNFLn144xfnjZxXfTKUK3A=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 546GEDwV116531
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 6 May 2025 11:14:13 -0500
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 6
- May 2025 11:14:13 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 6 May 2025 11:14:12 -0500
-Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 546GECH7051184;
-	Tue, 6 May 2025 11:14:12 -0500
-Message-ID: <4a7e7f19-68ee-4ec6-aa9c-832238be040d@ti.com>
-Date: Tue, 6 May 2025 11:14:12 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PVusvau3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34A75C4CEE4;
+	Tue,  6 May 2025 16:14:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746548079;
+	bh=1ypU94/spMRuuaW8oUslWrYwTwesWHuCxWvGpHpQRE4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PVusvau3SFraqt+t3mhXCGUNHZNXuR8YT1Blj/uHtNCgOPPzKoJVfXJc6RMj2k1Uj
+	 LGLZRcoOlXxUdx5HBUKSOL8hr/QRS6D0CKJPEIlUIbCW+u6gygJlUSn2HOzQkponZT
+	 crySLupoTkG2s2SJnC+mnn39i/3EvwQN2otljBn6qbyXoOus9GpQsPyWlzkdNDEOpM
+	 yi5rdgHSiEnAYM49pNKpGWJvWSCZgLqbjpuOqNvjTe7UM8mb1id22qqH04p2wOnMVV
+	 9jsdq+djbJk0uQA7WLtZWJv2+wlILDuuc0KrZB3QLzDSd2Uo3Ge0jbxha48DlsMnVh
+	 ZJ2aT39tzrggw==
+Date: Tue, 6 May 2025 17:14:35 +0100
+From: Conor Dooley <conor@kernel.org>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: clock: Drop st,stm32h7-rcc.txt
+Message-ID: <20250506-pavilion-untitled-4fe58ac3ea8d@spud>
+References: <20250505161933.1432791-1-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/4] {am62,am62a}-phycore-som: Add R5F and C7xv device
- nodes
-To: Daniel Schultz <d.schultz@phytec.de>, <nm@ti.com>
-CC: <upstream@lists.phytec.de>, <vigneshr@ti.com>, <kristo@kernel.org>,
-        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <20250506115502.3515599-1-d.schultz@phytec.de>
-Content-Language: en-US
-From: Judith Mendez <jm@ti.com>
-In-Reply-To: <20250506115502.3515599-1-d.schultz@phytec.de>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="CYQGms6AKNaAAgzh"
+Content-Disposition: inline
+In-Reply-To: <20250505161933.1432791-1-robh@kernel.org>
 
-Hello Daniel,
 
-On 5/6/25 6:54 AM, Daniel Schultz wrote:
-> This patch series is based on [1] and adds these R5F and C7xv device nodes
-> to the am62- and am62a-phycore-som device-trees. It also reserves main_timer2
-> as well as main_rti4 for the C7 DSP firmware.
-> 
-> 1: https://lore.kernel.org/linux-arm-kernel/20250502220325.3230653-1-jm@ti.com/T/#t
-> 
+--CYQGms6AKNaAAgzh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-For the series,
+On Mon, May 05, 2025 at 11:19:32AM -0500, Rob Herring (Arm) wrote:
+> The binding is already covered by st,stm32-rcc.yaml.
+>=20
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 
-Reviewed-by: Judith Mendez <jm@ti.com>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
+--CYQGms6AKNaAAgzh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaBo1agAKCRB4tDGHoIJi
+0jxWAP9pzilu/jY6IaMdihNS0DPg0F+ztLgSX7uvqQmKhjOleAD+NeE9OmJMCM0r
++rVYYYXrjSJM8i8/MtW3R9duxH03fww=
+=JA1k
+-----END PGP SIGNATURE-----
+
+--CYQGms6AKNaAAgzh--
