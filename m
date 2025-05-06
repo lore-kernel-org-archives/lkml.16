@@ -1,99 +1,98 @@
-Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0071D22C35E;
-	Tue,  6 May 2025 04:58:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C94422F771;
+	Tue,  6 May 2025 04:58:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746507538; cv=none; b=WbyhBA6O4RqcsYDBavzPuLtu27SUAyKg1T/ku5wu4+bh9qcldRk7YST7eGBDofuTrmSnKYf/A9wRna/Gyz/nDjoIb2dbmxjzIDgB8j0xhtLTIJpONKv/uvkBa884VCP/9FqI2ZRIToNGQkziu3vFlSEAAuNHHxFK19hOwmZrPkM=
+	t=1746507540; cv=none; b=ojScNyNyN3Qi6BI81Lq552B9G51l7ecEzMQGrkq19I5qI6BgXhwFKHS40svBQIGO2RujL5bkdEbTCaHHV8yTwhBVPbVxsIXOeLJ7TsvAhKD9WePzY5CAPvz3CIB3W97eaOri5BP/hsuiynTMexaN2W99lyNCxqgTPmISjinEZZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746507538; c=relaxed/simple;
-	bh=2rKTDohoIZTv364VBRei4ErD52RBTQMB1Pfa9/nE7Qk=;
+	s=arc-20240116; t=1746507540; c=relaxed/simple;
+	bh=m7vxYgUh8ULPptGn2nd3MYeUmYgn13h75xWsCTIcIOc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=hbs5PXQFd5I5DXoUJRcdcyJGSYcXRy4HvMIF28/9bmvdPqUDegeysPStuzeL5F5gDjyMeroPeGNnym3x8bEFg8AKqzUy8VSxzExU4MBx4LTU0OCDQG3y+hvXRNIm70uH65G2gIIrKWr8+UlO9knHvusQJ/tZK4BnyoXwKXPlrH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cHL0p6R2; arc=none smtp.client-ip=209.85.219.42
+	 MIME-Version; b=PYD8DcjmEFfRqqf2ka/E2U/g1k5pP9FBZ91W61PRF152LcIFIozyBT7Fam0AcDWlc/qJFAJKHweR2NfYPj3wy0LlpJAX3Avg/QSSsFgZhy9hBmhJbxBvsqtPTPbDB2rVqorS/o1NMsePoj1BemMCjjAgXDdtyH2iB3reynXlPG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CU68XglP; arc=none smtp.client-ip=209.85.222.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cHL0p6R2"
-Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6e900a7ce55so92792166d6.3;
-        Mon, 05 May 2025 21:58:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CU68XglP"
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7c5e2fe5f17so581739985a.3;
+        Mon, 05 May 2025 21:58:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746507536; x=1747112336; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1746507537; x=1747112337; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:feedback-id:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=VOzgpOO8eORRFq8I92/Pf3cpq9kLRkLkWGI5a9WKGkQ=;
-        b=cHL0p6R2zQrFo3AU19ijnyifJ/t41l6wu3BlnWIN/OsTgEzmPd+Ndl7ZOxa+OfVitu
-         xPQts8XU9qX5HLBWpaXfu36FaqxHphQNydBvDprPdVZzoeQtAcGlnhN7BY6niRHbDWY7
-         Iwc+0KgLYNYy9OwHdcBPWU2Xc9GvoMifkWkHUczYkOiyFec7UdVSBEFaY5Sln09KJFTq
-         NFqk+lGo5dS5Eh36tWwmyjuygj5er9FZxDKjC1bo/vPDe2HIOMxJzP2Aw4miH+nY5DGO
-         DgoBzglUpcD7wfmeDbYWxiQnJeK5wi0T0C77M5e9tKk62h87iPQdTKeyKYYaRnYnkgLi
-         8Cyg==
+        bh=1g9tUIclVmuH2ZaBusryyZl8QxSs3+aGqPstryRtHAo=;
+        b=CU68XglPmwFo7hvY09XSuELSgLMFb2F2BwYu/9foGkH+QcL7PxTAnIIFAV+YiveL82
+         zGFPXa3z2bnhl3FhdHnR0uZTY+BpS9DHCZGHcDX0bn1cNvjn/176iSsUvD8zT5h2ys54
+         hBoRqy2jQ4dTx4Vn4rUXsH9hbFDgFx1H1UYAvW9GqhNlojYkKGxF7K8uhNrdiHmfzBli
+         YdCzLgQR1gJqO1qKt+OxosQgN/8iwtWWxIHDi0PQshvY0YNi41psL1cbmf4KABRitsQr
+         nadMUY0IYJ+XiC8ECB46aGJKqCgyx+w8nTSqohcHHIp0V1xe0CBVhniHExPrLQ+PJv5o
+         Cb9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746507536; x=1747112336;
+        d=1e100.net; s=20230601; t=1746507537; x=1747112337;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:feedback-id:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=VOzgpOO8eORRFq8I92/Pf3cpq9kLRkLkWGI5a9WKGkQ=;
-        b=QkRg27I6P/cadhoYdmxT2wq4I+vXL5Gm995+iIijTgzt809CvEL37VFISey4+bnrkp
-         Bkt6v96ZIvwPV7ndRm6q721VKwXDmqrroEJMn0BuGjPv16ttr/juD+ra0AmSgZq4lFdb
-         jiXh2gYrz99VDLzUv0h65NkjEIhDltKeLT4g2Tia3E6aVSlckDl/255lE0OG1aFlzEj4
-         SjCvoO5y3j3seS67pdJvuljH9Rj38KorQyItawdk6JgLw5oDT7dPMjATuU+Uvga5Ubu+
-         GcEPDVjV1LNEbrhjFK30olnJWB+LYes3IkaW5VGqeW7iI4+v0PWUddXFV0Ch0pLWI+Pe
-         1Hhw==
-X-Forwarded-Encrypted: i=1; AJvYcCWCVoBclFneqoRo1p8m0IE5NZYhpvLKSXQ+A9JTPdg1kku6uAn+hk/jIz+KpRsCbwZmH2jcXg3SZD1G/c5bfTg=@vger.kernel.org, AJvYcCWsV2cm1ybzMFNhEsx4+W/iwdzDvf3IAZPWovolTGBqIe2IxTZIarMdzxgGwah9NJd41iL7chRnbHadFU4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9yELVGeXrCSpT6Xuuz8622TOMMkP/oy0ljSGDmo6kSTUxB4Pm
-	Oj97v5goHMJv6O2xwDvXOHzZeuhbwYEcsoGlULJ7I29p0IEP/ske
-X-Gm-Gg: ASbGncsd8P6wSIXfIGWJ+7uioI6uyE8qkW78njj4xv8PLngXd+o06GcIFuuhZoSstwV
-	+Cq7hcNUIPSdBmLmKAPcqyyG7uFPSQ3dm/AjslebWNVDLFLdsODaq159Cyxfq8SzRjV7977Ou/4
-	tZMYY0lmJijwTRnF1yI/SaKHByS77FWNw96Ev3VOBVGZRCUpjgK2Wr/BFB5TDcUGAMzZ/6MKNQt
-	RyJP9pGflD+TK6YPcHrTUxfJp3eOBXkdqPATY+fSU8HhA+PgHuwSRrZvAUw17wZ5RBjyLgXQ+F7
-	8rAPYyo64v2XUCpHips+ADHpPMrtJkrpDfU57zW8PbjZMfNEo52T/9cv/hZ+ff7/G/Bvdc2Kwgl
-	53q/zW+G/PMYU9T17Af7zhYwQYXRSgdE=
-X-Google-Smtp-Source: AGHT+IFQN30BafUiqDdeBzYv8NLBc7OgLuq4IV6Uz/0rbVOFp3cLcOixfIhpiNw/jdY6LbD/sLR14w==
-X-Received: by 2002:a05:6214:3001:b0:6f5:d21:cf90 with SMTP id 6a1803df08f44-6f528cecc37mr141978996d6.29.1746507535854;
-        Mon, 05 May 2025 21:58:55 -0700 (PDT)
+        bh=1g9tUIclVmuH2ZaBusryyZl8QxSs3+aGqPstryRtHAo=;
+        b=ZVJJbnNU/pd0HZMwLB/2GTxPTuW8Dn7ENfJxWML8RUtRPpQk9l5kakBovP8nf0OiVi
+         4xSMVTh+ql3OkevtK/+Dyp9waANfY/Qqt5/VeIBkN15aDSAIL+KgDBioAy5P1b2wXH4G
+         CrVPYn7F67YS0RNpcRvfk2YgoHBPqYnn3xXCYIPdk6mMifh1hdV7DzbnNLnr0FZEWiPT
+         VfuCOlHo3XbsmVP1/GXzHoJdZU7w9om5t4l6bFMCKIv45MIwTyevQaYQlcalhmis0wNJ
+         MZgkLBFSobmH3/B+8UVNXtuhFes2q5XAdGN+R7mITFlJux/Akwz33T3rl7R5hq34vENn
+         29Xg==
+X-Forwarded-Encrypted: i=1; AJvYcCVHjRudYIg06uWdDkYEPeih3MpDqCxuRB+OP6Rx6nPkOltSiNIc21M8OGkGvDRykXC3sMgGIoOwssja8BEWZ/0=@vger.kernel.org, AJvYcCXEpgg97dS2h3SHVe2zV74FBqmPL4xjsYr69UkCNKgZ8jPi3lLTCOzAmgpEYpOJ75p3aokj7BjplFbZ0V0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyaxbQ0/xwqmeL/3IwWy97TIuj+S4EMs2h0Ryge41d2AS9sd0V0
+	w4DS8n25tqvJIM00zPTqKuSmhnOwzju764edwnjcC21hz7y0Ftf8
+X-Gm-Gg: ASbGnctIOsRMn2fimODfVqNoHR4xJIzXuOru5RQrLf7CwVCqroN7nwIC5ev7Wf5FdLM
+	zhXkYzzI/qJxwhHwniaye6cdffiHCFxjTZ6PGQ7UTJukr+Mi0+zH3IhTTmjPk1Xd8nd9F46Nb7o
+	qu5HphqDGA9Y1fNd0MwWcVyapZizxkP0i7X21ka8Sqhd1QP36RnDrbB3c/iLDbvkmTKc0gyI6RO
+	1HojHBddRxuU/I8rrsSjSguQegKlVds2vUyILVOwmuK4jnWTpHt+7iNszGon57COGuVGp5yaeVN
+	H8GU3XsGO1Z5fGpamswGC5u0ilcsU4QWTNevpeDrYhCfqU2OCZllLIV0rrFETFVOuWta3X/Tsig
+	L/YYxohqNo3mvCrgg/DRC6R5X0aVnMiY=
+X-Google-Smtp-Source: AGHT+IEmn0U41CRqbdqAxigdPC3H0OSYylwKvqCa/ahyGHbsGpn1EVqOpBvXXjgh2ak2ogbN4Y5aZg==
+X-Received: by 2002:a05:6214:124a:b0:6e4:2dd7:5c88 with SMTP id 6a1803df08f44-6f5358ede5emr31398286d6.38.1746507537275;
+        Mon, 05 May 2025 21:58:57 -0700 (PDT)
 Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f50f3c4492sm65288086d6.35.2025.05.05.21.58.54
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f50f3d35e5sm65095526d6.67.2025.05.05.21.58.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 21:58:55 -0700 (PDT)
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 89FBC1200066;
-	Tue,  6 May 2025 00:58:54 -0400 (EDT)
+        Mon, 05 May 2025 21:58:56 -0700 (PDT)
+Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 16B831200068;
+	Tue,  6 May 2025 00:58:56 -0400 (EDT)
 Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-05.internal (MEProxy); Tue, 06 May 2025 00:58:54 -0400
-X-ME-Sender: <xms:DpcZaC9W0dFvJHLPuybwzJk71bbhv-khnsoDrZqGoljyNIXsUVaz1g>
-    <xme:DpcZaCsI2uacXWbL8KBOq0zdSuibMlDCpndYc7YViJBcF9fUCmkIbPlGzKRfcLDpI
-    hK-umI-f5QSXTJ3Tw>
-X-ME-Received: <xmr:DpcZaIB0MPdvsNr3NblFoJ7mL4PFfZUBpS8nfQPCvqgA3_WmZUaUcDHC>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeeftdelucetufdoteggodetrf
+  by phl-compute-01.internal (MEProxy); Tue, 06 May 2025 00:58:56 -0400
+X-ME-Sender: <xms:EJcZaIfMCBtg_zqqxLxTNzByW-Os9gNQoNnTq_1ZElherufZgY-ESQ>
+    <xme:EJcZaKN76lA0P1qmkcKERFRRmAgAZiknGJem2f-9a0IKEecBM6xjOcdgzGJ7R6W9z
+    vqRv6_0Yh4P0r_ihQ>
+X-ME-Received: <xmr:EJcZaJhuj2p7zB5KoFc3g3QVrqp6-qMTEz4YmzQqcV5KAVcfZAvRY6g0>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeeftdekucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
     pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
     gvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredt
     tdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
-    hlrdgtohhmqeenucggtffrrghtthgvrhhnpeekteetjeegudeikedujeefvddvtdeigfei
-    ffffleejfeeiheeiffefvdeffffgteenucffohhmrghinhepghhithhhuhgsrdgtohhmpd
-    hkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgr
-    ihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqd
-    eiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhl
-    rdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepfeeipdhmohguvgepsh
-    hmthhpohhuthdprhgtphhtthhopehmihhnghhosehkvghrnhgvlhdrohhrghdprhgtphht
-    thhopehpvghtvghriiesihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehmihhngh
-    hosehrvgguhhgrthdrtghomhdprhgtphhtthhopehjuhhrihdrlhgvlhhlihesrhgvughh
-    rghtrdgtohhmpdhrtghpthhtohepvhhinhgtvghnthdrghhuihhtthhotheslhhinhgrrh
-    hordhorhhgpdhrtghpthhtohepughivghtmhgrrhdrvghgghgvmhgrnhhnsegrrhhmrdgt
-    ohhmpdhrtghpthhtoheprhhoshhtvgguthesghhoohgumhhishdrohhrghdprhgtphhtth
-    hopegsshgvghgrlhhlsehgohhoghhlvgdrtghomhdprhgtphhtthhopehmghhorhhmrghn
-    sehsuhhsvgdruggv
-X-ME-Proxy: <xmx:DpcZaKcGMHOKUZDLoEiVuAqP-CYB79w64Tylz42UzlYX1GUw3cQ4iA>
-    <xmx:DpcZaHOjpGG_h_HXdhXZz42oEVrg3qX7jJrDJPboLXP5Ki45mHxz5A>
-    <xmx:DpcZaEmG3WbpXjOFQm8FTCCKAboaHaUAEnXlszoonlu3oXNS_2G0fg>
-    <xmx:DpcZaJtU4V4IBBX3yFmaY5HdzzWLBjb0ZGw2SCCLjphUnyoSV08U7A>
-    <xmx:DpcZaNsUiUl_GAScjWuxJAEAoovHbbzEh17qypMV_J4JgHcw5gDn0qTf>
+    hlrdgtohhmqeenucggtffrrghtthgvrhhnpefghfffvefhhfdvgfejgfekvdelgfekgeev
+    ueehlefhiedvgeffjefgteeugfehieenucffohhmrghinhepkhgvrhhnvghlrdhorhhgne
+    cuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhu
+    nhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqdduje
+    ejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdr
+    nhgrmhgvpdhnsggprhgtphhtthhopeefhedpmhhouggvpehsmhhtphhouhhtpdhrtghpth
+    htohepmhhinhhgoheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgvthgvrhiisehi
+    nhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepmhhinhhgohesrhgvughhrghtrdgtoh
+    hmpdhrtghpthhtohepjhhurhhirdhlvghllhhisehrvgguhhgrthdrtghomhdprhgtphht
+    thhopehvihhntggvnhhtrdhguhhithhtohhtsehlihhnrghrohdrohhrghdprhgtphhtth
+    hopeguihgvthhmrghrrdgvghhgvghmrghnnhesrghrmhdrtghomhdprhgtphhtthhopehr
+    ohhsthgvughtsehgohhoughmihhsrdhorhhgpdhrtghpthhtohepsghsvghgrghllhesgh
+    hoohhglhgvrdgtohhmpdhrtghpthhtohepmhhgohhrmhgrnhesshhushgvrdguvg
+X-ME-Proxy: <xmx:EJcZaN8SckWPBgUoUFQ4XyKHLlTBqnxM5GjnM1FY8tCQIr56hXDCNw>
+    <xmx:EJcZaEsnXhIf_r3CXgI-2xiJWIPaiJ4E1vbv1ymS6u5G4IyPil5XCg>
+    <xmx:EJcZaEG5bi1O6UeW9mqtX5gT0t9_REB7jYMO6wkk2s32CREWQssd_g>
+    <xmx:EJcZaDPYHmuqwAoXy3TNk2Ng-YF3DMXraJ2J7dJFDoNVRiknVPdUnA>
+    <xmx:EJcZaJOsFOThIGpLP9lWmfsEDivE6On5JUVrNdpcWzB1_prkxwBDFYGJ>
 Feedback-ID: iad51458e:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 6 May 2025 00:58:53 -0400 (EDT)
+ 6 May 2025 00:58:55 -0400 (EDT)
 From: Boqun Feng <boqun.feng@gmail.com>
 To: Ingo Molnar <mingo@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>
@@ -119,11 +118,10 @@ Cc: Ingo Molnar <mingo@redhat.com>,	Juri Lelli <juri.lelli@redhat.com>,
 	Borys Tyran <borys.tyran@protonmail.com>,
 	Christian Brauner <brauner@kernel.org>,
 	Panagiotis Foliadis <pfoliadis@posteo.net>,	linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,	llvm@lists.linux.dev,
-	Daniel Almeida <daniel.almeida@collabora.com>
-Subject: [PATCH 4/5] sched/core: Add __might_sleep_precision()
-Date: Mon,  5 May 2025 21:58:42 -0700
-Message-Id: <20250506045843.51258-5-boqun.feng@gmail.com>
+	rust-for-linux@vger.kernel.org,	llvm@lists.linux.dev
+Subject: [PATCH 5/5] rust: task: Add Rust version of might_sleep()
+Date: Mon,  5 May 2025 21:58:43 -0700
+Message-Id: <20250506045843.51258-6-boqun.feng@gmail.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 In-Reply-To: <20250506045843.51258-1-boqun.feng@gmail.com>
 References: <20250506045843.51258-1-boqun.feng@gmail.com>
@@ -137,155 +135,76 @@ Content-Transfer-Encoding: 8bit
 
 From: FUJITA Tomonori <fujita.tomonori@gmail.com>
 
-Add __might_sleep_precision(), Rust friendly version of
-__might_sleep(), which takes a pointer to a string with the length
-instead of a null-terminated string.
+Add a helper function equivalent to the C's might_sleep(), which
+serves as a debugging aid and a potential scheduling point.
 
-Rust's core::panic::Location::file(), which gives the file name of a
-caller, doesn't provide a null-terminated
-string. __might_sleep_precision() uses a precision specifier in the
-printk format, which specifies the length of a string; a string
-doesn't need to be a null-terminated.
+Note that this function can only be used in a nonatomic context.
 
-Modify __might_sleep() to call __might_sleep_precision() but the
-impact should be negligible. When printing the error (sleeping
-function called from invalid context), the precision string format is
-used instead of the simple string format; the precision specifies the
-the maximum length of the displayed string.
+This will be used by Rust version of read_poll_timeout().
 
-Note that Location::file() providing a null-terminated string for
-better C interoperability is under discussion [1].
-
-[1]: https://github.com/rust-lang/libs-team/issues/466
-
-Tested-by: Daniel Almeida <daniel.almeida@collabora.com>
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-Co-developed-by: Boqun Feng <boqun.feng@gmail.com>
-Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
 Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
 Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-Link: https://lore.kernel.org/r/20250410225623.152616-2-fujita.tomonori@gmail.com
+Link: https://lore.kernel.org/r/20250410225623.152616-3-fujita.tomonori@gmail.com
 ---
- include/linux/kernel.h |  2 ++
- kernel/sched/core.c    | 62 ++++++++++++++++++++++++++++--------------
- 2 files changed, 43 insertions(+), 21 deletions(-)
+ rust/helpers/task.c |  6 ++++++
+ rust/kernel/task.rs | 28 ++++++++++++++++++++++++++++
+ 2 files changed, 34 insertions(+)
 
-diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-index be2e8c0a187e..086ee1dc447e 100644
---- a/include/linux/kernel.h
-+++ b/include/linux/kernel.h
-@@ -87,6 +87,7 @@ extern int dynamic_might_resched(void);
- #ifdef CONFIG_DEBUG_ATOMIC_SLEEP
- extern void __might_resched(const char *file, int line, unsigned int offsets);
- extern void __might_sleep(const char *file, int line);
-+extern void __might_sleep_precision(const char *file, int len, int line);
- extern void __cant_sleep(const char *file, int line, int preempt_offset);
- extern void __cant_migrate(const char *file, int line);
+diff --git a/rust/helpers/task.c b/rust/helpers/task.c
+index 31c33ea2dce6..2c85bbc2727e 100644
+--- a/rust/helpers/task.c
++++ b/rust/helpers/task.c
+@@ -1,7 +1,13 @@
+ // SPDX-License-Identifier: GPL-2.0
  
-@@ -145,6 +146,7 @@ extern void __cant_migrate(const char *file, int line);
-   static inline void __might_resched(const char *file, int line,
- 				     unsigned int offsets) { }
- static inline void __might_sleep(const char *file, int line) { }
-+static inline void __might_sleep_precision(const char *file, int len, int line) { }
- # define might_sleep() do { might_resched(); } while (0)
- # define cant_sleep() do { } while (0)
- # define cant_migrate()		do { } while (0)
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 79692f85643f..496bd462d29e 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -8732,24 +8732,6 @@ void __init sched_init(void)
++#include <linux/kernel.h>
+ #include <linux/sched/task.h>
  
- #ifdef CONFIG_DEBUG_ATOMIC_SLEEP
- 
--void __might_sleep(const char *file, int line)
--{
--	unsigned int state = get_current_state();
--	/*
--	 * Blocking primitives will set (and therefore destroy) current->state,
--	 * since we will exit with TASK_RUNNING make sure we enter with it,
--	 * otherwise we will destroy state.
--	 */
--	WARN_ONCE(state != TASK_RUNNING && current->task_state_change,
--			"do not call blocking ops when !TASK_RUNNING; "
--			"state=%x set at [<%p>] %pS\n", state,
--			(void *)current->task_state_change,
--			(void *)current->task_state_change);
--
--	__might_resched(file, line, 0);
--}
--EXPORT_SYMBOL(__might_sleep);
--
- static void print_preempt_disable_ip(int preempt_offset, unsigned long ip)
++void rust_helper_might_resched(void)
++{
++	might_resched();
++}
++
+ struct task_struct *rust_helper_get_current(void)
  {
- 	if (!IS_ENABLED(CONFIG_DEBUG_PREEMPT))
-@@ -8771,7 +8753,8 @@ static inline bool resched_offsets_ok(unsigned int offsets)
- 	return nested == offsets;
+ 	return current;
+diff --git a/rust/kernel/task.rs b/rust/kernel/task.rs
+index 0bf5fdf75c37..067546754939 100644
+--- a/rust/kernel/task.rs
++++ b/rust/kernel/task.rs
+@@ -390,3 +390,31 @@ fn eq(&self, other: &Kuid) -> bool {
  }
  
--void __might_resched(const char *file, int line, unsigned int offsets)
-+static void __might_resched_precision(const char *file, int file_len, int line,
-+				      unsigned int offsets)
- {
- 	/* Ratelimiting timestamp: */
- 	static unsigned long prev_jiffy;
-@@ -8794,8 +8777,8 @@ void __might_resched(const char *file, int line, unsigned int offsets)
- 	/* Save this before calling printk(), since that will clobber it: */
- 	preempt_disable_ip = get_preempt_disable_ip(current);
- 
--	pr_err("BUG: sleeping function called from invalid context at %s:%d\n",
--	       file, line);
-+	pr_err("BUG: sleeping function called from invalid context at %.*s:%d\n",
-+	       file_len, file, line);
- 	pr_err("in_atomic(): %d, irqs_disabled(): %d, non_block: %d, pid: %d, name: %s\n",
- 	       in_atomic(), irqs_disabled(), current->non_block_count,
- 	       current->pid, current->comm);
-@@ -8820,8 +8803,45 @@ void __might_resched(const char *file, int line, unsigned int offsets)
- 	dump_stack();
- 	add_taint(TAINT_WARN, LOCKDEP_STILL_OK);
- }
+ impl Eq for Kuid {}
 +
-+/*
-+ * The precision in vsnprintf() specifies the maximum length of the
-+ * displayed string. The precision needs to be larger than the actual
-+ * length of the string, so a sufficiently large value should be used
-+ * for the filename length.
-+ */
-+#define MAX_FILENAME_LEN (1<<14)
++/// Annotation for functions that can sleep.
++///
++/// Equivalent to the C side [`might_sleep()`], this function serves as
++/// a debugging aid and a potential scheduling point.
++///
++/// This function can only be used in a nonatomic context.
++#[track_caller]
++#[inline]
++pub fn might_sleep() {
++    #[cfg(CONFIG_DEBUG_ATOMIC_SLEEP)]
++    {
++        let loc = core::panic::Location::caller();
++        let file = loc.file();
 +
-+void __might_resched(const char *file, int line, unsigned int offsets)
-+{
-+	__might_resched_precision(file, MAX_FILENAME_LEN, line, offsets);
++        // SAFETY: `file.as_ptr()` is valid for reading for `file.len()` bytes.
++        unsafe {
++            crate::bindings::__might_sleep_precision(
++                file.as_ptr().cast(),
++                file.len() as i32,
++                loc.line() as i32,
++            )
++        }
++    }
++
++    // SAFETY: Always safe to call.
++    unsafe { crate::bindings::might_resched() }
 +}
- EXPORT_SYMBOL(__might_resched);
- 
-+void __might_sleep_precision(const char *file, int len, int line)
-+{
-+	unsigned int state = get_current_state();
-+	/*
-+	 * Blocking primitives will set (and therefore destroy) current->state,
-+	 * since we will exit with TASK_RUNNING make sure we enter with it,
-+	 * otherwise we will destroy state.
-+	 */
-+	WARN_ONCE(state != TASK_RUNNING && current->task_state_change,
-+			"do not call blocking ops when !TASK_RUNNING; "
-+			"state=%x set at [<%p>] %pS\n", state,
-+			(void *)current->task_state_change,
-+			(void *)current->task_state_change);
-+
-+	__might_resched_precision(file, len, line, 0);
-+}
-+EXPORT_SYMBOL_GPL(__might_sleep_precision);
-+
-+void __might_sleep(const char *file, int line)
-+{
-+	__might_sleep_precision(file, MAX_FILENAME_LEN, line);
-+}
-+EXPORT_SYMBOL(__might_sleep);
-+
- void __cant_sleep(const char *file, int line, int preempt_offset)
- {
- 	static unsigned long prev_jiffy;
 -- 
 2.39.5 (Apple Git-154)
 
