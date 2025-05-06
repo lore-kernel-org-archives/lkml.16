@@ -1,598 +1,332 @@
-Received: from AM0PR02CU008.outbound.protection.outlook.com (mail-westeuropeazon11013059.outbound.protection.outlook.com [52.101.72.59])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 726B328137A
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 14:14:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.72.59
-ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746540868; cv=fail; b=t+KXfg0DsdLqhiswKBx4eVqAMuwe4iPT0udENjxI3GmxwU0bgYQB9J1cGhkk2vRXBkzpr9pKVmE20hYmYinC6mW/qlC4CZ6/ph3X3ZUZK1jEOdte6/biFZvjQz0fsj5ArObJEwSn841uvehq7a1ePyue57bi8h5VIayRlkSVdEI=
-ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746540868; c=relaxed/simple;
-	bh=3b2jBNPhH4POOuSxNFydVhXD60Q/YPZcrj364wWIO9s=;
-	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=p/hP8n7V3H4wsV+HvwtyPqewFeynlw6xv1DubLESngAO6tT5i6F1/poT3GOvefZs+Ey3STjUQKmirxQJQ/4W9pr/Tq45EA1vSqPJRh3YmmR4e+sXuw08vJmnYuko/opcEjfGvDYONHDp3xklh+S14CrVVVxrCE6MUBEDiC5CH7g=
-ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=ccGABQcb; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=ccGABQcb; arc=fail smtp.client-ip=52.101.72.59
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 208B52820BC
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 14:15:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746540918; cv=fail; b=eIDGO3JG0XU2EK2j4DZOHVb/+QwuBr/be/F3HWWyibDNL6KDftetQ6cLVS3cUym2FRcTIZ0X1AMyU+4pnEkaQfIWNwP4qJ6k+GS0CWUNzPvKNW3gudDY7VhPr6K2AMe3oPSQDoJ2v3yEUB4FWYHAMsc16eKvPPfS8lDaouT62iw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746540918; c=relaxed/simple;
+	bh=13PrUoJNIXeHOe19OiAclfRI6DLcizk552t/RjlUqt8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=k9tpBsfQRVP2X49026ZZIX6Ub49C9lzzrwWnVLIWaF3v+kI1btzybTPAP8vkr9OIYldyEZiioNBU8NWp/pNGvEmoswroXQ2zTvSBiWCZAgLLOEfjBtRK4crEquYdAttzZMCUywO9aiI2HF0B4WEXUkGxiSWnirlD5qaFAVtKXRo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=qUu8ITOa; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=c8xjYMC6; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="ccGABQcb";
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="ccGABQcb"
-ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
- b=U5pBuQNArz7IcnEzf71TBWxNvDmql0Qoo4AYmF1oC+ARoEiaVUv4yrU0SMx6M0ht7zyGWoRPdtWrjoj9cWr8sTUDAXVOKtU9UzW86l6Sud9Y8wh67tYmNUgLt3FFgK8hpJw4wDJd8xgFFLG6zW2KYx/aiKZn82DwbjVNJblQBtOT709ZYqxSBMYM6R8U0GMuFniMD9eB5kpFd0xtHMRwAAAdpty3fk2bdBfNju2haRmqWGOlvd7hMXRNfpJOk0J6+jkixnyABuNHYs8oYW27YRgkAkICGiMpvH3N5oQkfsMCztTXK17TlAnvZx5SLU9WdwHgR5AxTbXLvQCPPBpN6A==
-ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=utQWdcshthkCVmNdjkQLerB9CwzLjHuCq4W86ArNOxg=;
- b=sgl1g285R8SGPYESFDEoMd8sIr7gGrqzq6YyX+2TMhlTyYmu41sc4Ri1wga2JrEr5PXVSKdjowxr0X+5ehCKHa1oaOIpZmsqkG8HiZtzP0LTKdifggJuusK5uI8PRTT5JXdM0NaBbxB9EgcWUnUZInLOImeh5+6MN9HKn54snIAJPcRirP1pf0Rjw3ACvtK/XIkRmDvGP7I5wABH2hjcZtJNYwocW/PYXZ8K4Kk4/Jy6ZJSCf082YM4eOmjlqNJuUx82N+8EMnxLyV/5cID3j83f5xnugFecorGwEba56w/DUJOXUfglP6BMPm0vnPtuifjB4kiMMmdlDcldxfHhUA==
-ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
- 4.158.2.129) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=arm.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=arm.com;
- dkim=pass (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
- spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
- dmarc=[1,1,header.from=arm.com])
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=utQWdcshthkCVmNdjkQLerB9CwzLjHuCq4W86ArNOxg=;
- b=ccGABQcbDRCt9G8rgNcaGFtqTk7/1paQ1SyH9ff89rNgeErcO+qT7OHU3a/43FnnRCUjZNKra6q0GsF1/eZYPJdQtowvx7lpKxan5tp/fRtc+1206o3Y/yAzeQwo1bH3Ua4V2sPwnvNEj+e7pgezw0kr6fBKIzRxbTfSoB+h5ss=
-Received: from AM9P193CA0030.EURP193.PROD.OUTLOOK.COM (2603:10a6:20b:21e::35)
- by GV2PR08MB7932.eurprd08.prod.outlook.com (2603:10a6:150:7f::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.19; Tue, 6 May
- 2025 14:14:20 +0000
-Received: from AMS0EPF0000019E.eurprd05.prod.outlook.com
- (2603:10a6:20b:21e:cafe::ef) by AM9P193CA0030.outlook.office365.com
- (2603:10a6:20b:21e::35) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.20 via Frontend Transport; Tue,
- 6 May 2025 14:14:20 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
- smtp.mailfrom=arm.com; dkim=pass (signature was verified)
- header.d=arm.com;dmarc=pass action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
- client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
-Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
- AMS0EPF0000019E.mail.protection.outlook.com (10.167.16.250) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.18
- via Frontend Transport; Tue, 6 May 2025 14:14:18 +0000
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qUu8ITOa";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="c8xjYMC6"
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 546DMdMe026102;
+	Tue, 6 May 2025 14:14:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2025-04-25; bh=wu7i4xyAjuWx24UpmG
+	5E6wDKvu2gw3nOYRvM1qEWR+I=; b=qUu8ITOakDr4c3MMlIaqm34pMon5gXgIAP
+	uM+HQf60mv90flAyhXWcubijfSYB97ZXvp1y2y96x644yU1XaQvEtDZjUc5ckLz+
+	9B5oVTRDByZXYlgntkBtFTsRHdaABD2tBqdAr88BH7jvaCtu1F5EQWnCvVem8oPo
+	ck2ZbyzDCO1ol3wc2FeBAFBoR08yLrPr0dTNQ7Iy7d4pYDxYWOk9qmTTFNSj6v8r
+	7sfVN1O40zvevda1nW+mTNDwW2WSAPF3ebmE/1eAtM7bpjtGnKSS90Hdk9sPM3So
+	NI4VwtIVlcICMa9+vk+qLEmJz8qTCtOeUaCJUqCQRbLxfF7wGUXg==
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46fk8bg4ww-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 06 May 2025 14:14:33 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 546DeCXP024474;
+	Tue, 6 May 2025 14:14:32 GMT
+Received: from bn1pr04cu002.outbound.protection.outlook.com (mail-eastus2azlp17010023.outbound.protection.outlook.com [40.93.12.23])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 46d9kfafws-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 06 May 2025 14:14:32 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ssPZzur1xDiFIlgW1aImZEjuacHn/phidcgibr6+Wd0yuTUCc28GXQlc0za++Cx2KMkp6AOe1b8vHeiM8qVVSyu9dVkdO2u7Vu2K+uScc8VPBdgahn4RFIaSF5mwTTuNJ8Ve3qri06mZMV39RRzatf1aOac3MdqAD9J+UDUUi9O+VN0GX52ALgO0RPKx6YllyhxgclUr35d4aw4UHW/0Jvg23uY2h+tw00us076XjpDzuKo1dPx2xC8SwpR8hc7e48lYRPBNMK9LF2QowdqMwrMHGEDyQXwxTpGuDLu03wUA1vzgSObx9eIQL2yaRq9K282mF3LoGcLVD7L+/cBi9g==
+ b=ilyLdCvfyKBngOQLDCgi46Ijux9CSfM8XctJPLvha3mwqH22hcgji9lfQgLPbRAUouC2YrXCa8x+tVNDb1/ExHMFTTX1AqZ5OqJ8U4r82rsrtpy5OVMhO6ZELQfsHuuGjLzdXkKEj0SUbcgNGY/3njp4UzbdxNdafzNSLsuH4FsmDRi/neWz5vPENeDnuGJ7Pmtwf7u4ajiS7Qp9iSF5+iakrsHh00oo9zxg9EogsHLl/HHQ2g8knGEzsVDD981da3Wt6d0ABOqRkhka/7WvHzZrPhu+F5bH8GeGjFr6qkHfCA3ZAhMoAgPv+mDFfiO4qXgE85cv4b47f2itLhPUTw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=utQWdcshthkCVmNdjkQLerB9CwzLjHuCq4W86ArNOxg=;
- b=xCEB5TiDJVeBbWYFyQpu8qdoQsixuw4y6joIYZ1/Wz2cSFQAsH9CYkIH5+fpeM2z/JufKhTCM4Ax7tttecKk8qIbn0ergo1zXgSJgDkqK2tV2fwHP4IU0XSBQKRwhaQdWfboHuDfOJDkfWvry5Kqwvyv7BLJR7PPj0ku5oJ19nvB27wKTycKeLEXrFuiMqXtvgPvnOjU1jR1SdLG6fe+3iK9lLEW8fEYhwBBVTER9iNR9YENVYDNHexI01/sKO2g3KXhj/RTCclZMZiJ3soJDNBcPG2vfRtKomlWODCHqkpu+/+1Tw9TdrCPysE+2GfUdrRIF97uCeodtLvYGE6BXw==
+ bh=wu7i4xyAjuWx24UpmG5E6wDKvu2gw3nOYRvM1qEWR+I=;
+ b=dm5Bk617fzLyKSr2lpsXUKNp63z3upRdhU8t0CkorLOl7oVb2L3NE8zvR7pbS87duKzrwvbdpZicru/6FF0KjPTVHIQQTM7F85MYQonioVs2UPQZn5mJD/BGRmnNTNSsmcLFUl1Xwj+Imv3N8ivWAa9puXdQnPIkeibMKuqBb6zp8rBzvijxy8SGMxs+ZNjJrGBhTyKUAwxqeFNmfpTSmrJ0sgFkx6HuXzPtNOzllfqKMQYSOCY4mO2Xz31CdIlyePs4zoyiFuedmoEggjMKKsODIn4mklFLw/0uhAV8JLOmp8C/BqwqmDQsCLZcUzBpHsPE3rMPyoBHIn03rs9iRg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=utQWdcshthkCVmNdjkQLerB9CwzLjHuCq4W86ArNOxg=;
- b=ccGABQcbDRCt9G8rgNcaGFtqTk7/1paQ1SyH9ff89rNgeErcO+qT7OHU3a/43FnnRCUjZNKra6q0GsF1/eZYPJdQtowvx7lpKxan5tp/fRtc+1206o3Y/yAzeQwo1bH3Ua4V2sPwnvNEj+e7pgezw0kr6fBKIzRxbTfSoB+h5ss=
-Authentication-Results-Original: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-Received: from PR3PR08MB5852.eurprd08.prod.outlook.com (2603:10a6:102:8e::21)
- by AS8PR08MB5992.eurprd08.prod.outlook.com (2603:10a6:20b:292::20) with
+ bh=wu7i4xyAjuWx24UpmG5E6wDKvu2gw3nOYRvM1qEWR+I=;
+ b=c8xjYMC6stdoBdyn92PvQ3l7cp3aR+R4+PfA0OXdphDYDAvqYCka+lP15J7pDoDUGKai1LJIrVzrmQCgEmHB5RzZdjBNgjAGGmPM3ofvehSODJzTPz2s258fegbtmu1wAtyMBzdZf7BYiA08sU4eABG4OfY9HTXMly2wp7i6L1I=
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
+ by DM3PR10MB7969.namprd10.prod.outlook.com (2603:10b6:0:45::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.26; Tue, 6 May
- 2025 14:13:45 +0000
-Received: from PR3PR08MB5852.eurprd08.prod.outlook.com
- ([fe80::f44:d113:1c29:825d]) by PR3PR08MB5852.eurprd08.prod.outlook.com
- ([fe80::f44:d113:1c29:825d%3]) with mapi id 15.20.8699.026; Tue, 6 May 2025
- 14:13:44 +0000
-Message-ID: <1214790d-5f2a-4bc0-bf9a-ac1688174f21@arm.com>
-Date: Tue, 6 May 2025 15:13:43 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] sched/events: Improving scheduler debugging/testing
- tracing interfaces
-From: Luis Machado <luis.machado@arm.com>
-To: linux-kernel@vger.kernel.org, peterz@infradead.org,
- dietmar.eggemann@arm.com
-Cc: mingo@redhat.com, juri.lelli@redhat.com, vincent.guittot@linaro.org,
- rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de, vschneid@redhat.com
-References: <20250409151338.1046335-1-luis.machado@arm.com>
-Content-Language: en-US
-In-Reply-To: <20250409151338.1046335-1-luis.machado@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: LO2P123CA0093.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:139::8) To PR3PR08MB5852.eurprd08.prod.outlook.com
- (2603:10a6:102:8e::21)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.24; Tue, 6 May
+ 2025 14:14:24 +0000
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2%5]) with mapi id 15.20.8699.022; Tue, 6 May 2025
+ 14:14:23 +0000
+Date: Tue, 6 May 2025 15:14:21 +0100
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: Dev Jain <dev.jain@arm.com>
+Cc: akpm@linux-foundation.org, Liam.Howlett@oracle.com, vbabka@suse.cz,
+        jannh@google.com, pfalcato@suse.de, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, david@redhat.com, peterx@redhat.com,
+        ryan.roberts@arm.com, mingo@kernel.org, libang.li@antgroup.com,
+        maobibo@loongson.cn, zhengqi.arch@bytedance.com, baohua@kernel.org,
+        anshuman.khandual@arm.com, willy@infradead.org, ioworker0@gmail.com,
+        yang@os.amperecomputing.com
+Subject: Re: [PATCH 3/3] mm: Optimize mremap() by PTE batching
+Message-ID: <84defcd3-0e52-42e8-951d-6301713f344f@lucifer.local>
+References: <20250506050056.59250-1-dev.jain@arm.com>
+ <20250506050056.59250-4-dev.jain@arm.com>
+ <7c6e61fa-2437-4c99-b1d3-97af5e2b37a3@lucifer.local>
+ <9c2844c9-5c1a-4250-a89a-0c4d01d47d5e@arm.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9c2844c9-5c1a-4250-a89a-0c4d01d47d5e@arm.com>
+X-ClientProxiedBy: LO3P265CA0022.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:387::13) To DM4PR10MB8218.namprd10.prod.outlook.com
+ (2603:10b6:8:1cc::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-TrafficTypeDiagnostic:
-	PR3PR08MB5852:EE_|AS8PR08MB5992:EE_|AMS0EPF0000019E:EE_|GV2PR08MB7932:EE_
-X-MS-Office365-Filtering-Correlation-Id: c5628abf-f36e-4b8b-7725-08dd8ca84a3e
-x-checkrecipientrouted: true
-NoDisclaimer: true
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|DM3PR10MB7969:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7502289d-167e-401d-3386-08dd8ca84d38
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info-Original:
- =?utf-8?B?MjArVVNxakdDay9vMk1nSy80U1loMUVDQ3NFNDE3bVlFa2FrVDhENWZWMUFs?=
- =?utf-8?B?dXhiTlE2VVdxZmVpR2RpbVI4eGptOWFQWEhIZDhKS2ZIQVJDZmNqSVpXUFR3?=
- =?utf-8?B?TXVsRGNTSGZ6Y2JFOURpTHMzM25FNTRaVzRmM2ZYaU5JVHVwdU1pRDJhc0wx?=
- =?utf-8?B?U3NnNjRqVzhWbzRHUWZ0NG4wUjdlRGlqbDdOVjdzWDZGU0ZtYStkZWduYXo4?=
- =?utf-8?B?dG1lSzlsaVNVblE4UHMxSmJqNWEwdk1rTEl0MG1YSklYR3hBN3pHMzZBQUR0?=
- =?utf-8?B?d3hHZWdDano0TUZKdmFLNDNVc0RnZWJxbG9nNFFPQkhkc2FpS2pDYXBpV0pV?=
- =?utf-8?B?aVdHVkIwNmZ4S0krMjhkSkxqRGkvK3RjQzhKUk8xamtNbnpjM01QTlZJL1Yw?=
- =?utf-8?B?NDgveUg5bENQSEdJaVRGNkplQ1dzWEV0WHpudTUvS1o5L1pnaWZ5WU16R0hI?=
- =?utf-8?B?OFBoUWVsS2VJMXh5MFBQMFAxUjA1U3dhUm0rdDRvbVdUaHdUdThXbk1DRnhx?=
- =?utf-8?B?TnJFaldaOVF6OElkTlN3WEVWSnlMd0ZYajk0N3llbytEVi9LcnJsODA3U2Yv?=
- =?utf-8?B?WjZmRjlwUVpkMk45T0J0b2ZVUUpuQzVCVUd4UmMvak0zaFZIMi9vUllkRU1N?=
- =?utf-8?B?eHNTRE5tZzB5ZW93WHdIZjRxQWdyZWdrSGpZeHkwajR1YkZBdUNQeVdidnM4?=
- =?utf-8?B?WERvcEwxR1RKQlpWVFo5WmFpZTVVWEtwSDN3RFkzUTkrMzVUY1ZxM1FuWUVh?=
- =?utf-8?B?UnZyR3ZtWERsVUwvNlZOTXZoMjdFcE9sMTdkcFdXRE1UU0tIdGNYYVJOd2FP?=
- =?utf-8?B?Y3VRMzN5SndkM2NEd1RvVE12KzBnZGdBbDA5V0Eyd3dXQjY0NStOOEVmTkxQ?=
- =?utf-8?B?Qkt5dkRYdFdocXUvSEc0VHVkN09DWk9OdDNJQUI4WXh1aGxYOHQwajlhUnl6?=
- =?utf-8?B?ZXF5ZjUzeVBjWkpJTFB3UitraEhKNDdRalBBZlEzQXdXYWRQNW1GQmRuMGxF?=
- =?utf-8?B?dGFKejBiSW9BOFBKYU5TRHBDSGJBdStpT00wK1RuUFhMSkI0NVdrVWVMU1Zz?=
- =?utf-8?B?TWh0Z2M3eS9ZOUhaOEpXd3pWRGErblVMeVIyY3RkQVNEeGtVUTlLOWZFenFJ?=
- =?utf-8?B?VXl2aDYvaWk1aGNhZFZTMDkwZTJ3d3FyaFlCR0VweGw5Rmg5S2Y4TnFrU25L?=
- =?utf-8?B?Q1Z6cHRnNFpxL1FXNGZ2WEZyN0NDeTh1Qm1jQmlnSEZlUjBGWEZXVlJGbHZE?=
- =?utf-8?B?eDRmandoZFp4cFRDZy9xWVgxRTNkYm1XaG1ucC8wYzE0UmF5ZXhZMXAxVXhM?=
- =?utf-8?B?cVQvM1JrdXBzeS9TVllLMFVvM0UvVGd3UWNUNWdhV3paTFVpQ05raGYvZXB1?=
- =?utf-8?B?Z2o2czRRS2hldmlCc2NRVW03enY3REloSDYvQVlzQ1AvUzZRWXA5S2FJV0pC?=
- =?utf-8?B?cU1ScU9MQzlPcmYyYWk1T1c4c2pKeDAyUm5WaFBqWmp1bTVXVnlrS29HTVBx?=
- =?utf-8?B?VXM3d2lGMmd3WEhFRk0wSG5nZ0F3a0srY0VrWlhsYUpmWGdSa2NjQ29iYzcy?=
- =?utf-8?B?OWliVHdvWnpTNVd5L3RKQkc0UXREQnl0azVhMjBsTWtzbEpyS1RFcEZiYU1a?=
- =?utf-8?B?VklXWW9zL2UvL2kyZnNUSGRTOEt2V2J1ZDRLNVN4YkdCaDNLOFpRNzRTVVZ0?=
- =?utf-8?B?MUNOUU5qbTZ5aUlkVjN3bXJHZW5wVEwwZXI1THZUQUVxTGF4dzNHNzgrTDJI?=
- =?utf-8?B?WjcyT3RlZVo3c2JhbEkzdSs0QyttcHAzQkRFZlZsVmZBR2grUEg0STgybHRX?=
- =?utf-8?B?NUxuOStILzJoakxBcGUyQWh2ejFOdlpQcklrSVNVenIxcGhCK0lGeUtjRGww?=
- =?utf-8?B?ZW5FN1NFNXBpT2dsSW5mRTBsZUJ2U2RKQ3A1b0tzUnppeGdOSlJYeEV3UnNE?=
- =?utf-8?Q?AMl0xpn3kf8=3D?=
-X-Forefront-Antispam-Report-Untrusted:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PR3PR08MB5852.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR08MB5992
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped:
- AMS0EPF0000019E.eurprd05.prod.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs:
-	fb67daac-84fe-48c3-32ff-08dd8ca83604
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|35042699022|1800799024|82310400026|376014|14060799003;
+	BCL:0;ARA:13230040|1800799024|366016|7416014|376014|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?VU9DUExNSmhKV1NibDJpYUR5TDlTTmp5UHNGaFhKUFh6cmprUmVGMHZnSTU3?=
- =?utf-8?B?alFYOUVJSC9iSUI4MzRMMTFmOWlTMmJqVmVmMDhsRktDZjJVbmV3TU82eDlw?=
- =?utf-8?B?bGZFYk1Qd0FYLzlhMDExS292TWRrbllXZVBHeUp0ZmVTMG1yVG5BbHQzS1Zv?=
- =?utf-8?B?VGdPTnJ2U1FaM0xQOHE2TEMrZHR5L3hjT01FL1Uxb1R1V3FabkJrMEExZEgz?=
- =?utf-8?B?ZU9sdDNkand3cXNLNEFBVURTb3lFOEZjWVdUMkpxL1lzcm5VSFJEVU0xNVo5?=
- =?utf-8?B?OURLNjcxSXNVYmZlbUdVbUJNTDZySFE1QTN0R0o0elh1Z04xbi83SjYrNTRm?=
- =?utf-8?B?ZWRjYisraVN4cmIyWHhhSjNJR1RiSWJORWZ1M0VmZi9hMnk3bm5BNjB5WG05?=
- =?utf-8?B?eDZFdG5mdDVybWNSZFZoQ2V5cUhCdDlWV0dPQWpGNWpWRWtVMkdIVDZxR3hP?=
- =?utf-8?B?OGVRNWVCMlEyT0FjdHVtWFRvcFJXUVl5TmVkNG1Ld0pYaDZIWUs2cDE5ZG9s?=
- =?utf-8?B?RzAzSDRHS1RqYXQxVlY2QUV3RUtzNUJ0OWxvWmlPZXg4VmplOVo0RWJIeitG?=
- =?utf-8?B?dGdkemd5b3Vrem5PVUJINTJaNFBFcTZkbUVCRVY1KzhCOGNVcTg0Wlc0czB6?=
- =?utf-8?B?aWNtMXl6VVYrWGtBSWlCZ09STEdydVFGVWZhVDlLaEdLdEhxemVDYlI1TjJO?=
- =?utf-8?B?OWZwZC8zTmlUby9YUW0rc25nS1VPMGZLQ2RiU3o3K2Q0KzBuRWpRbzR5aHNa?=
- =?utf-8?B?U2I5Z0c4cWtINGxRRjZDMmtycFVmd2YwTWNvL05KVnFFNlpWeVVmNTZ3c1dq?=
- =?utf-8?B?b1BEYmp6VTVYSnh6TEpIR0JxcXgvOXYxMlRydjNubTNpczNJZk9RRXBsOHlN?=
- =?utf-8?B?RDhDN2hjQW9DZTRpOVRhRHlsVnZ4NDg2SXFGSWN6akpsejM2cFVRZDZ1ekpi?=
- =?utf-8?B?K1l5LzJTb1pmajliNlRwT0c5d3BNV1BQSlpvNGUydTcxcnNNY2t4V2Z1NWlT?=
- =?utf-8?B?T0xDaWtXMlhzVGRkbjZ3WGhsWlNvZFhJZ280VEF1M1pjY0ZQekpYcUhyVEhD?=
- =?utf-8?B?RDExaTlVV1FudDYzeWphY1BiZHB4WWx2QWRDWWYxT3FRQUFwcVVzZjZjeStY?=
- =?utf-8?B?c2s5Nzh2UHovMGY1SmNPN0lLN0NHYUVuY1FGUG9lNElUWkpYK2g2SFNOTUVv?=
- =?utf-8?B?WmczdnczRkFGS042dlZSbGp6ejFjME0rQkJxRWFlMFkvVUJOclBXRVozUGE2?=
- =?utf-8?B?UGxrcDZWOTZjcFNYRmVIbHJIOE9lamlyS3JvZzJMUkVxOWcwaWNMYVFDVUs3?=
- =?utf-8?B?TVoxY1NiMVNLWnVmdnZUaHhYbjZQZU5WVytzY2xtU2NuSTBKS2toVnBneEhK?=
- =?utf-8?B?UlVxdHFRd2pqNzE0MVJkM1JHdk91Z1ptRmhnTEdVd2YzdEFJd2VWL3dwTU1n?=
- =?utf-8?B?MzhTZXRveFB3Qm9Ka1lrQ3F6WjZhMjRCUUxvSll1MXljNUhCSktXeTg4SW40?=
- =?utf-8?B?QmNKcXdDOHd1Y2ZXTFJiOVhTUTJPTm0rV2VXb1hUT2x6QnVHS3JHQmVGVC92?=
- =?utf-8?B?cWkzQ2dYNGFraks0NGpIWjBCdzZ0TVpmNkw4dlVzZG9XMWtDcGZaWGlwZUFM?=
- =?utf-8?B?OFpSRjBJQ1dZYXI5alEyejRidWVPQ1dsbWxUUng4SnBxOVg4aEhoeXZkdTll?=
- =?utf-8?B?bGNPTVgrb0I0OHJmUlN3Q2dQSWh3cUUxaDhBRnhEcjRPRWMrU1J2R01Kd0ov?=
- =?utf-8?B?Smsxd0x5L3RLVnd2NEtMdFJtd1gxNEF2eE1SN2FzZStFWmp6SzlCaXhpTjc0?=
- =?utf-8?B?Y0RFVUNFWCtRVXh1a0FpNXV2aGtvQlpqT0VsZEtnbW1MQmM0c2RrQnhaS0gv?=
- =?utf-8?B?U1Jzak9xZHlYcW94cEZHRW1hR0Z2dHRiYUFzZUsvRlZjOGFJM05GdSs4UFlv?=
- =?utf-8?B?TjFwbnhONVB6dm0rQmJyVnAxMzA5YkwrR29xRlMwWjI2QzBqUnNRV3dVTTJT?=
- =?utf-8?B?dUE2Wmx0RWsvQllQOVZrK2o5ZGsyT3Y3MVJteTBlcjNNNmJQY0wvTmpCYTBw?=
- =?utf-8?B?a3FEcFZRT3ZiM0ZPc1o4cWhmZTlyRDZwWWJhUT09?=
+	=?us-ascii?Q?3w3RDXuFlZGV6zuPG2toLStAyw9Hj9SCO/ODFC18AZGBkh4aWjeaeAo7F2T7?=
+ =?us-ascii?Q?wRkHFd3L5buKG0XLgCeyuOiwot+9x2l28uocDyXO0QdE0HwNxtiLG/lDpkeV?=
+ =?us-ascii?Q?Phih1Z85XYd9Z4dzDy6/frwIaotHzwkDT7Gg71oFX/glVtFTGY71L48I2Tj7?=
+ =?us-ascii?Q?6WVPvoh4AEiQmm2TD88TxTUweO9tt9YTJEJElyjYmcXdSXO582FmrLdfbMnt?=
+ =?us-ascii?Q?/8dx5tH2gztJi8hcr7idT/wSJYRN3u9YVMhgdjmUZRcr35rk1YNZVoIpl0gc?=
+ =?us-ascii?Q?3aL/YJbdhVcxdS5zSoZDdN/umRmkI93zSJeP2HvqaDSyWy5NEVXzYMufkzWJ?=
+ =?us-ascii?Q?MxArfDlLYHa4ZVr9PnuRF2KtPc5R+WxbDfWoLnEdeNRRwjwQfOZ+EC/t9GPo?=
+ =?us-ascii?Q?hAjJF8jsDDPqn4tpH7xyLzC4YGY2pwAGbnP/bVUNkv09H1o+TMiLKL+yKEj3?=
+ =?us-ascii?Q?EHGcAR2AWr5auqGjnGrc/VmtitMFIGFXRRmqUyqnoOapafYRGWe5RPkgD+QB?=
+ =?us-ascii?Q?EvU7IUXOtdyfAQPaytILiZ2680auiQLEUpnnnA/0v2cGTUKxBj+KEEdEIjyw?=
+ =?us-ascii?Q?ZRAVukngZ4wTqdDb4vGK5xn7c1nY+9LDVUsQEnUdwfXl+kCNAj898TYoWjNh?=
+ =?us-ascii?Q?ts+/uiB7i7JYLdykAkufTWKGexpRqfN73/EPeslYK/4EU3Ew2FuuJXmmeGCU?=
+ =?us-ascii?Q?JzwqldC3sB4CMp4KrL8maHSVunZK0uSLlMHu18QeKfknVQFyKPxN6HiuQBri?=
+ =?us-ascii?Q?YwLxqadgts+lvN6Bf+M+DGs/DMMo90kykoKw2ZqX/6sAhMJaS0YURB+zag6p?=
+ =?us-ascii?Q?440M9L3CU23pcdjoeqW+ptJ8qbjvdj7cik0xdDzv3FHF7B2wWx4H/vxRYZDa?=
+ =?us-ascii?Q?lWR7VErNixf8lbwWRCVwIs59b2N8RlvgNuSMYX1XYEMQaKdB5VhOHxk99z0p?=
+ =?us-ascii?Q?gvHrwlTT68CrfdPYnVcg+L8IimM0Rk7Lgy69Uu+r0KIaFiEuZuAEpff2jp8V?=
+ =?us-ascii?Q?/IGa8c4jQxEUmE+JG1JQ+1PhVs21x5JVKBtMIbDYuDEonwSFcPbNCZjkaAip?=
+ =?us-ascii?Q?kiFknymyQykJ5oMiTzHSRP1yHNs7mA3FNFLPqjuOeOAwTGq1jlOEtRigMotK?=
+ =?us-ascii?Q?nGaRy4cljG7f61jYT98hl6QxIG8uuhOj4cYaw6ZtEqPW6hRrO8mYuh2M/TDF?=
+ =?us-ascii?Q?cpzuoFFNW2bO1tLDPveZVvdWxvJ1tc84P35IXSSiISgd9gA72ZPcdmvktVyJ?=
+ =?us-ascii?Q?JkNnkFJCGbU9ulLlcUUlrEBzUeveHJ0Ywqh5HoMFt57bWVlyVZp7oZ6w19sF?=
+ =?us-ascii?Q?aB6TXXqmZbLvNyFfXPmjktFjy2vDBR02zo6ANml7PSxRlOqxwJfQcXOSRTqz?=
+ =?us-ascii?Q?mYuk8sd5DUqTfV/33eFzo/VWi0AIMb8EbRWiGtarTA5my7cxvQ=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(35042699022)(1800799024)(82310400026)(376014)(14060799003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 14:14:18.3461
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?K761bU+mxKhGjuL9GHL5cjYKVgIeDXGPCX5qL3ceZkzsF40iRA2CpOX1xtLP?=
+ =?us-ascii?Q?nzzcSexrrjkiSGVjeijR5GQjvIN0T0JNek4ptgmirVhqJmdqRtQXSDbNwSq5?=
+ =?us-ascii?Q?FYBBylghu96JbeUb92qHOor2GA2J+UOsauIsPQcXr6GbRc2Zka1eUum/M1fv?=
+ =?us-ascii?Q?7g7M2Zhdckl4LMBkLmdn+0xTf7JhgXkSRaJkR/oLvwL2epWLvwpe3CJXxFnM?=
+ =?us-ascii?Q?9TMhYLXLyl/pTNplrHh/n5OGpjo5MTme4bzNHNv7D5mIDvNbh+gaSmgaFjMH?=
+ =?us-ascii?Q?mrbr0m0vxrL+WX9pjv2vhGHrY3SDEU93L/NzfnfhPlc4atmvljtFCEMk2YeM?=
+ =?us-ascii?Q?K7hE5/TVO7fDL5kKpw8zyopQSVkF8f1UUqQNDt1wpGrBavQXG4AjQfAe3EV3?=
+ =?us-ascii?Q?AYEsfBByEgYT23VGoNBtY51MIBaV5rPv6PpXck1NcZ8Q76ZkoRp3pOfwoTyU?=
+ =?us-ascii?Q?Jez/IBIMw8Sd+sW5hjJHoBr8o1n8x6YOnh83H+6/s0NFXNOPjhJVrMkzsGIk?=
+ =?us-ascii?Q?GAFH0UUV49lW6YxJIxkXAB22+tvfybMymcH4Vt1LVjvSHiIovyi96knDXXcg?=
+ =?us-ascii?Q?OyO79bMmdW99kI2e6sMUjSNgnH5RZvqakAwc04x1NwKLur7LAjSiyjnHI8Np?=
+ =?us-ascii?Q?x9b/Tl4e0C6camnJN3HPnnnfv/uLQEMwO+cEZA1V0wizvSb9lInPO1fh9gdm?=
+ =?us-ascii?Q?GGw/15Exr/ghaR2McJuHKXYq4NzkQD54QEuLYlgsy9YnmQ+I5tjOc/nY/AvE?=
+ =?us-ascii?Q?wAfMLCxadEmg6qVqiz8nWghb1bXtB/vo547SdmHM8d+C6kwgljBdg6X43ymL?=
+ =?us-ascii?Q?0Ntl20JhhRk90cRBZhBIRTLmjdpeNm282fDoL+ddMUciYKHB+xuYTMyFTCpM?=
+ =?us-ascii?Q?WYhywOr27nyT+2ibmZb/uek3LUR+qimX2xZ5TOMTngcLTPQ45HVtL+0LDuTH?=
+ =?us-ascii?Q?s298jIKQuXclTf7xICGeT3h0wOLTBuyFkcoZJWGxqN+ky+9BufyxdNBVGi/e?=
+ =?us-ascii?Q?4M6c3jkucPaD1qV3k3jeiWwMT2zZI/WCQqHuLStRai1mMWYPCs5l9Dgd2FHa?=
+ =?us-ascii?Q?oTkKjdPBIFxDLFA2RVxsbJjFbAE2mPDIXT41NgdwSONx17lQCDIAYz3Nlgg0?=
+ =?us-ascii?Q?80iJqI1AzfUSSTJXHIpazavuHBStl0r4Xig/xHxPxUBruaE385C1BCfQwqf+?=
+ =?us-ascii?Q?dlCrEbsaDdvZxkj4IJ7ELrgqNl1EZWIudAg1J+N57UGfBoRHCT1erCThHo9J?=
+ =?us-ascii?Q?TvRi0xpkIxpl8UAUH7dpogdQbwbMocZGc+9AmfLqgwc750WiOiPCHNkOcTS+?=
+ =?us-ascii?Q?uq/DpbOC+k+dRNCVmds9gCXrXghaAPyFYVUAtlwNPiXAFhWW4BxrEwH94hWs?=
+ =?us-ascii?Q?LuQz3ZvwBQMSNct+VMDJ/qy0yqGr6FCTyqJ8xSVnuU6+79cbYBF06luDaqm0?=
+ =?us-ascii?Q?9+h2nDYGhEx6ZOMxKBF8hbxIoQcYpXwCKB5jFy8qSvjLuxduKUL2iarDzsKU?=
+ =?us-ascii?Q?Gh0ELO4C6mW7JqM03hE9HFsxYhyPAkq9aRGD6FmF8oDmrGE6jDrXy9qowVea?=
+ =?us-ascii?Q?3TqyV6fWoemw6AEuUMOSQ4suxSVtdtLN11bQuTgRy74lKDzsI3E2OF/y0Uxl?=
+ =?us-ascii?Q?TQ=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	LttDKjhXn+piDGMVNaEXLZRbEqzy2jC9pMYZJBwJKXuqTgYl7jsuOswWxOfhIOpxLMot0KX5sTvlIxU309vUmgiJZnsSIsrDpzH3xMB1pAVe/cJW58NK/5qXX2J/r7mr8sbCSQhldJmCkowEGWZfDW8/n4CpG1FYgyqho3jKecyy/6kzCkZeuB2Xh2dzvjpUdJAyprO9hXGlP9ONfquhG1NO2ZEEdhAczUQeHYbBWFgYpJ1OPLmLa18VBpPQG9WW9AnGkRI+/c9vexWzuw0IBBcHkzdjxHgKbu8/Anc6W9D0NAXtZ0QvoeUG/DFS7/lMmWUvlV5Ut//e8ROqMYhF9JeHn1r/+iB4Gh5n8jO0wzxJwFB+BXUBNmY2CmahGv0gaVVgND0RcmIzWDhPvrdiXAMw5JZFm7gDziztYQN/WAYnupRrlBOaahUARdHUcUzExEHKwQWs2sCKSGPkyfK/ThO0J0bT6xzH65e/qKpecI8zDbrFHl9RM6R9lB0M0ubA4pHTydJEI6i7nvj1iHl3GzF2c07RgmAMHZwTWLsovhFrlg7mTKbVRvMCV83PIJIvQlMlpZu5+G4QONkgFNXxBPBbs6S+a7kNUYaaR/rnMFw=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7502289d-167e-401d-3386-08dd8ca84d38
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 14:14:23.5223
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c5628abf-f36e-4b8b-7725-08dd8ca84a3e
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	AMS0EPF0000019E.eurprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV2PR08MB7932
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5IHRtFfe/j4nhk66i1eflaSeYqpQ46xCqUuD/MQJGT8c75jprY7TU5nMMWEQN33VgqpDbW8I5jkUYkaiUpfMFh2yRLkwXrG9/6i89ttr/wk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PR10MB7969
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-06_06,2025-05-05_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0 phishscore=0
+ malwarescore=0 mlxlogscore=999 mlxscore=0 spamscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2504070000
+ definitions=main-2505060137
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA2MDEzNyBTYWx0ZWRfXwSchkSeIJLHX CIK4MXGCODXiYMx1c7xUnmxokPNRCajyZrJFRQ284F7Sn54MJxwcJGh19KHloEpwBV2UinS04Zw DFCCWNNGKhFsFdSdZ4RaUp8wRPdIhwGtnh15NR3tTUt29+UM/EcKDo8kHAhvqxKxen9UOPIwjFN
+ OIg2xU+nkHJa0nQ0QmyQCEJ5YtMOdQZZ4mh/DeW7kA8cYU5hrb5T7tCB4Hl/q/lReagQunrGiVB epSdDsgRQVwW9Ajy+yrEEPWSMwqb3OLpvj77DN5vpgkkq0XKfv3os6MoVIR5XsF//mOGBb2oWQk T8oCKSTDlfR4Hw7VcIZS74fUGEIMvd9+tFZZwC8F5d1GmWMbuHcYRntgBi/+cI8eoHd/uIr9are
+ CT6nkAotXvPfsWyfcBlFvyJPnBWPdIYSfBbyoFejJHbsJ63U+7J6FOSj49sRqfIyRZGi/1Yt
+X-Proofpoint-GUID: 8-Bmd0dmDc3ztr0Nt5W_tCQLwo-nufgF
+X-Authority-Analysis: v=2.4 cv=crmbk04i c=1 sm=1 tr=0 ts=681a1949 b=1 cx=c_pps a=zPCbziy225d3KhSqZt3L1A==:117 a=zPCbziy225d3KhSqZt3L1A==:17 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19
+ a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=GoEa3M9JfhUA:10 a=7CQSdrXTAAAA:8 a=7A4OcXqbft8wN_Ln7yEA:9 a=CjuIK1q_8ugA:10 a=a-qgeE7W1pNrGK8U0ZQC:22 cc=ntf awl=host:13129
+X-Proofpoint-ORIG-GUID: 8-Bmd0dmDc3ztr0Nt5W_tCQLwo-nufgF
 
-Ping?
+On Tue, May 06, 2025 at 07:40:49PM +0530, Dev Jain wrote:
+>
+>
+> On 06/05/25 7:19 pm, Lorenzo Stoakes wrote:
+> > On Tue, May 06, 2025 at 10:30:56AM +0530, Dev Jain wrote:
+> > > Use folio_pte_batch() to optimize move_ptes(). Use get_and_clear_full_ptes()
+> > > so as to elide TLBIs on each contig block, which was previously done by
+> > > ptep_get_and_clear().
+> >
+> > No mention of large folios
+> >
+> > >
+> > > Signed-off-by: Dev Jain <dev.jain@arm.com>
+> > > ---
+> > >   mm/mremap.c | 24 +++++++++++++++++++-----
+> > >   1 file changed, 19 insertions(+), 5 deletions(-)
+> > >
+> > > diff --git a/mm/mremap.c b/mm/mremap.c
+> > > index 1a08a7c3b92f..3621c07d8eea 100644
+> > > --- a/mm/mremap.c
+> > > +++ b/mm/mremap.c
+> > > @@ -176,7 +176,7 @@ static int move_ptes(struct pagetable_move_control *pmc,
+> > >   	struct vm_area_struct *vma = pmc->old;
+> > >   	bool need_clear_uffd_wp = vma_has_uffd_without_event_remap(vma);
+> > >   	struct mm_struct *mm = vma->vm_mm;
+> > > -	pte_t *old_ptep, *new_ptep, pte;
+> > > +	pte_t *old_ptep, *new_ptep, old_pte, pte;
+> >
+> > Obviously given previous comment you know what I'm going to say here :) let's
+> > put old_pte, pte in a new decl.
+> >
+> > >   	pmd_t dummy_pmdval;
+> > >   	spinlock_t *old_ptl, *new_ptl;
+> > >   	bool force_flush = false;
+> > > @@ -185,6 +185,7 @@ static int move_ptes(struct pagetable_move_control *pmc,
+> > >   	unsigned long old_end = old_addr + extent;
+> > >   	unsigned long len = old_end - old_addr;
+> > >   	int err = 0;
+> > > +	int nr;
+> > >
+> > >   	/*
+> > >   	 * When need_rmap_locks is true, we take the i_mmap_rwsem and anon_vma
+> > > @@ -237,10 +238,14 @@ static int move_ptes(struct pagetable_move_control *pmc,
+> > >
+> > >   	for (; old_addr < old_end; old_ptep++, old_addr += PAGE_SIZE,
+> > >   				   new_ptep++, new_addr += PAGE_SIZE) {
+> >
+> > Hm this just seems wrong, even if we're dealing with a large folio we're still
+> > offsetting by PAGE_SIZE each time and iterating through further sub-pages?
+> >
+> > Shouldn't we be doing something like += nr and += PAGE_SIZE * nr?
+>
+> This is embarrassing *facepalm* . The crazy part is that I didn't even
+> notice this because I got an optimization due to get_and_clear_full_ptes ->
+> the number of TLB flushes reduced, and the loop continued due to pte_none().
 
-On 4/9/25 16:13, Luis Machado wrote:
-> This patch is primarily a proposal aimed at improving the observability of the
-> scheduler, especially in the context of energy-aware scheduling, without
-> introducing long-term maintenance burdens such as a stable userspace ABI. I’m
-> seeking feedback from the community on whether this approach seems viable, or
-> if there are suggestions for making it more robust or maintainable.
-> 
-> Today, validating that a set of scheduler changes behaves sanely and doesn’t
-> regress performance or energy metrics can be time-consuming. On the
-> energy-aware side in particular, this often requires significant manual
-> intervention to collect, post-process, and analyze data.
-> 
-> Another challenge is the limited availability of platforms that can run a
-> mainline kernel while still exposing the detailed data we need. While we do
-> have some options, most devices running upstream kernels don’t provide as
-> much — or as precise — information as we’d like. The most data-rich devices
-> tend to be phones or Android-based systems, which typically run slightly
-> older or patched kernels, adding yet another layer of complexity.
-> 
-> As a result, going from reviewing a patch series on LKML to having a concrete
-> good/bad/neutral result often involves several intermediate steps and tooling
-> hurdles.
-> 
-> Our current data collection relies heavily on existing kernel tracepoints and
-> trace events. However, adding new trace events is increasingly discouraged,
-> since these are often treated as part of a de facto userspace ABI — something
-> we want to avoid maintaining long-term. So extending the trace events set isn’t
-> a viable option.
-> 
-> To work around this, we use a kernel module (LISA) that defines its own trace
-> events based on existing scheduler tracepoints. This approach gives us
-> flexibility in creating events without modifying the kernel’s core trace
-> infrastructure or establishing any new userspace ABI.
-> 
-> For the past few years, tracepoint definitions for the scheduler have been
-> exposed in include/trace/events/sched.h. These definitions are not always
-> made available via tracefs, and are documented as being for testing and
-> debugging purposes — which aligns well with our use case.
-> 
-> However, this approach has limitations. One issue is the visibility of
-> tracepoint argument types. If a tracepoint uses a public type defined in a
-> public header, we can dereference members directly to extract data. But if
-> the type is internal or opaque — such as struct rq — we can’t access its
-> contents, which prevents us from retrieving useful values like the CPU number.
-> 
-> One workaround is to duplicate the kernel’s internal struct definitions in
-> the module, but this is not good: it’s error-prone due to alignment issues and
-> requires constant tracking of kernel changes to avoid mismatches.
-> 
-> A better approach, which we currently use, is to rely on BTF (BPF Type
-> Format) to reconstruct type information. BTF allows us to access internal
-> kernel types without having to maintain duplicate struct definitions. As long
-> as BTF info is available, we can introspect data structures even if they’re
-> not publicly defined.
-> 
-> Using this, our module can define trace events and dereference internal types
-> to extract data — but it’s not without friction:
-> 
-> Struct members are often nested deeply within BTF type trees, which can make
-> it awkward to navigate and extract data.
-> 
-> BTF describes data types, but not semantics. For example, sched_avg.util_est
-> appears to be a numeric value, but in reality it encodes a flag alongside the
-> actual utilization value. The kernel uses the following helper to extract the
-> actual data:
-> 
-> static inline unsigned long _task_util_est(struct task_struct *p)
-> {
->     return READ_ONCE(p->se.avg.util_est) & ~UTIL_AVG_UNCHANGED;
-> }
-> 
-> There is no way to infer from BTF alone that this masking is needed. And even
-> when such helpers exist in the kernel, they’re often inlined or unavailable
-> to modules, so we’d have to reimplement them — again reintroducing
-> maintenance overhead.
-> 
-> To address these challenges and reduce duplication, we propose adding an
-> extra argument to certain scheduler tracepoints: a pointer to a struct of
-> function pointers (callbacks). These callbacks would act as "getters" that
-> the module could use to fetch internal data in a safe, forward-compatible
-> way.
-> 
-> For example, to extract the CPU capacity from a struct rq (which is opaque to
-> the module), the module could call a getter function via the callback struct.
-> These functions would reside inside the kernel, and could leverage internal
-> knowledge, including inlined helpers and static data.
-> 
-> Here's an example of the proposed callback structure:
-> 
-> struct sched_tp_callbacks {
->     /* Fetches the util_est from a cfs_rq. */
->     unsigned int (*cfs_rq_util_est)(struct cfs_rq *cfs_rq);
-> 
->     /* Fetches the util_est from a sched_entity. */
->     unsigned int (*se_util_est)(struct sched_entity *se);
-> 
->     /* Fetches the current CPU capacity from an rq. */
->     unsigned long (*rq_cpu_current_capacity)(struct rq *rq);
-> };
-> 
-> The idea is simple: given a base type (e.g. rq, cfs_rq, sched_entity), the
-> module calls a getter function that returns the data it needs. These getters
-> encapsulate internal kernel logic and remove the need for the module to
-> replicate or guess how to access scheduler internals.
-> 
-> Since these additions would be part of tracepoints used for
-> testing/debugging, they are not considered stable ABI and can evolve as the
-> kernel changes. It would be up to the module to adapt to changes in available
-> hooks, types, or fields — something we already do today using BTF for
-> disappearing types (e.g. struct util_est becoming a raw integer).
-> 
-> While this approach would require some extra code in the kernel to define the
-> callback struct and register the functions, we believe it would significantly
-> improve testability and maintainability of tooling like LISA. It could even
-> be extended to support non-energy-aware scheduler debugging scenarios as
-> well.
-> 
-> Our current testing pipeline already makes heavy use of LISA [1], which
-> automates test execution and data analysis. It also integrates with rt-app
-> [2] to generate configurable workloads.
-> 
-> The attached proof-of-concept patch adds three such callback functions as a
-> demonstration. We’ve tested this against a modified version of our module
-> that uses the callbacks to fetch scheduler internals.
-> 
-> We’d appreciate any feedback on whether this general direction makes sense
-> and how it might be refined.
-> 
-> [1] https://tooling.sites.arm.com/lisa/latest/
-> [2] https://github.com/scheduler-tools/rt-app
-> 
-> Signed-off-by: Luis Machado <luis.machado@arm.com>
-> 
-> ---
-> 
-> v2:
-> 
-> - Fix build failures related to unavailable cfs_rq avg field and lack
->   of arch-specific capacity and frequency variables.
-> 
-> ---
->  include/trace/events/sched.h | 27 +++++++++++++++++----------
->  kernel/sched/core.c          | 30 ++++++++++++++++++++++++++++++
->  kernel/sched/fair.c          | 16 ++++++++--------
->  kernel/sched/pelt.c          |  6 +++---
->  kernel/sched/sched.h         | 13 +++++++++++++
->  5 files changed, 71 insertions(+), 21 deletions(-)
-> 
-> diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-> index 3bec9fb73a3..ac45fb9b1f5 100644
-> --- a/include/trace/events/sched.h
-> +++ b/include/trace/events/sched.h
-> @@ -793,6 +793,13 @@ TRACE_EVENT(sched_wake_idle_without_ipi,
->  	TP_printk("cpu=%d", __entry->cpu)
->  );
->  
-> +/* This struct is declared here so the tracepoints below can pass
-> + * these types as parameter.
-> + * This is only used for testing and debugging, so tracepoint probes can
-> + * use the callbacks to fetch the data they need.
-> + */
-> +struct sched_tp_callbacks;
-> +
->  /*
->   * Following tracepoints are not exported in tracefs and provide hooking
->   * mechanisms only for testing and debugging purposes.
-> @@ -800,8 +807,8 @@ TRACE_EVENT(sched_wake_idle_without_ipi,
->   * Postfixed with _tp to make them easily identifiable in the code.
->   */
->  DECLARE_TRACE(pelt_cfs_tp,
-> -	TP_PROTO(struct cfs_rq *cfs_rq),
-> -	TP_ARGS(cfs_rq));
-> +	TP_PROTO(struct cfs_rq *cfs_rq, struct sched_tp_callbacks *sched_tp_callbacks),
-> +	TP_ARGS(cfs_rq, sched_tp_callbacks));
->  
->  DECLARE_TRACE(pelt_rt_tp,
->  	TP_PROTO(struct rq *rq),
-> @@ -820,24 +827,24 @@ DECLARE_TRACE(pelt_irq_tp,
->  	TP_ARGS(rq));
->  
->  DECLARE_TRACE(pelt_se_tp,
-> -	TP_PROTO(struct sched_entity *se),
-> -	TP_ARGS(se));
-> +	TP_PROTO(struct sched_entity *se, struct sched_tp_callbacks *sched_tp_callbacks),
-> +	TP_ARGS(se, sched_tp_callbacks));
->  
->  DECLARE_TRACE(sched_cpu_capacity_tp,
-> -	TP_PROTO(struct rq *rq),
-> -	TP_ARGS(rq));
-> +	TP_PROTO(struct rq *rq, struct sched_tp_callbacks *sched_tp_callbacks),
-> +	TP_ARGS(rq, sched_tp_callbacks));
->  
->  DECLARE_TRACE(sched_overutilized_tp,
->  	TP_PROTO(struct root_domain *rd, bool overutilized),
->  	TP_ARGS(rd, overutilized));
->  
->  DECLARE_TRACE(sched_util_est_cfs_tp,
-> -	TP_PROTO(struct cfs_rq *cfs_rq),
-> -	TP_ARGS(cfs_rq));
-> +	TP_PROTO(struct cfs_rq *cfs_rq, struct sched_tp_callbacks *sched_tp_callbacks),
-> +	TP_ARGS(cfs_rq, sched_tp_callbacks));
->  
->  DECLARE_TRACE(sched_util_est_se_tp,
-> -	TP_PROTO(struct sched_entity *se),
-> -	TP_ARGS(se));
-> +	TP_PROTO(struct sched_entity *se, struct sched_tp_callbacks *sched_tp_callbacks),
-> +	TP_ARGS(se, sched_tp_callbacks));
->  
->  DECLARE_TRACE(sched_update_nr_running_tp,
->  	TP_PROTO(struct rq *rq, int change),
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index 79692f85643..d4b4646f984 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -99,6 +99,28 @@
->  EXPORT_TRACEPOINT_SYMBOL_GPL(ipi_send_cpu);
->  EXPORT_TRACEPOINT_SYMBOL_GPL(ipi_send_cpumask);
->  
-> +#ifdef CONFIG_SMP
-> +static unsigned int cfs_rq_util_est(struct cfs_rq *cfs_rq)
-> +{
-> +	return cfs_rq ? cfs_rq->avg.util_est: 0;
-> +}
-> +
-> +static unsigned int se_util_est(struct sched_entity *se)
-> +{
-> +	return se ? se->avg.util_est & ~UTIL_AVG_UNCHANGED : 0;
-> +}
-> +#endif /* CONFIG_SMP */
-> +
-> +static unsigned long rq_cpu_current_capacity(struct rq *rq)
-> +{
-> +	if (rq == NULL)
-> +		return 0;
-> +
-> +        unsigned long capacity_orig = arch_scale_cpu_capacity(cpu_of(rq));
-> +	unsigned long scale_freq = arch_scale_freq_capacity(cpu_of(rq));
-> +	return cap_scale(capacity_orig, scale_freq);
-> +}
-> +
->  /*
->   * Export tracepoints that act as a bare tracehook (ie: have no trace event
->   * associated with them) to allow external modules to probe them.
-> @@ -8526,11 +8548,19 @@ LIST_HEAD(task_groups);
->  static struct kmem_cache *task_group_cache __ro_after_init;
->  #endif
->  
-> +struct sched_tp_callbacks sched_tp_callbacks;
-> +
->  void __init sched_init(void)
->  {
->  	unsigned long ptr = 0;
->  	int i;
->  
-> +#ifdef CONFIG_SMP
-> +	sched_tp_callbacks.cfs_rq_util_est = cfs_rq_util_est;
-> +	sched_tp_callbacks.se_util_est = se_util_est;
-> +#endif /* CONFIG_SMP */
-> +	sched_tp_callbacks.rq_cpu_current_capacity = rq_cpu_current_capacity;
-> +
->  	/* Make sure the linker didn't screw up */
->  #ifdef CONFIG_SMP
->  	BUG_ON(!sched_class_above(&stop_sched_class, &dl_sched_class));
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 0c19459c804..e0ccc763ef9 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -4433,8 +4433,8 @@ static inline int propagate_entity_load_avg(struct sched_entity *se)
->  	update_tg_cfs_runnable(cfs_rq, se, gcfs_rq);
->  	update_tg_cfs_load(cfs_rq, se, gcfs_rq);
->  
-> -	trace_pelt_cfs_tp(cfs_rq);
-> -	trace_pelt_se_tp(se);
-> +	trace_pelt_cfs_tp(cfs_rq, &sched_tp_callbacks);
-> +	trace_pelt_se_tp(se, &sched_tp_callbacks);
->  
->  	return 1;
->  }
-> @@ -4698,7 +4698,7 @@ static void attach_entity_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *s
->  
->  	cfs_rq_util_change(cfs_rq, 0);
->  
-> -	trace_pelt_cfs_tp(cfs_rq);
-> +	trace_pelt_cfs_tp(cfs_rq, &sched_tp_callbacks);
->  }
->  
->  /**
-> @@ -4728,7 +4728,7 @@ static void detach_entity_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *s
->  
->  	cfs_rq_util_change(cfs_rq, 0);
->  
-> -	trace_pelt_cfs_tp(cfs_rq);
-> +	trace_pelt_cfs_tp(cfs_rq, &sched_tp_callbacks);
->  }
->  
->  /*
-> @@ -4865,7 +4865,7 @@ static inline void util_est_enqueue(struct cfs_rq *cfs_rq,
->  	enqueued += _task_util_est(p);
->  	WRITE_ONCE(cfs_rq->avg.util_est, enqueued);
->  
-> -	trace_sched_util_est_cfs_tp(cfs_rq);
-> +	trace_sched_util_est_cfs_tp(cfs_rq, &sched_tp_callbacks);
->  }
->  
->  static inline void util_est_dequeue(struct cfs_rq *cfs_rq,
-> @@ -4881,7 +4881,7 @@ static inline void util_est_dequeue(struct cfs_rq *cfs_rq,
->  	enqueued -= min_t(unsigned int, enqueued, _task_util_est(p));
->  	WRITE_ONCE(cfs_rq->avg.util_est, enqueued);
->  
-> -	trace_sched_util_est_cfs_tp(cfs_rq);
-> +	trace_sched_util_est_cfs_tp(cfs_rq, &sched_tp_callbacks);
->  }
->  
->  #define UTIL_EST_MARGIN (SCHED_CAPACITY_SCALE / 100)
-> @@ -4963,7 +4963,7 @@ static inline void util_est_update(struct cfs_rq *cfs_rq,
->  	ewma |= UTIL_AVG_UNCHANGED;
->  	WRITE_ONCE(p->se.avg.util_est, ewma);
->  
-> -	trace_sched_util_est_se_tp(&p->se);
-> +	trace_sched_util_est_se_tp(&p->se, &sched_tp_callbacks);
->  }
->  
->  static inline unsigned long get_actual_cpu_capacity(int cpu)
-> @@ -10002,7 +10002,7 @@ static void update_cpu_capacity(struct sched_domain *sd, int cpu)
->  		capacity = 1;
->  
->  	cpu_rq(cpu)->cpu_capacity = capacity;
-> -	trace_sched_cpu_capacity_tp(cpu_rq(cpu));
-> +	trace_sched_cpu_capacity_tp(cpu_rq(cpu), &sched_tp_callbacks);
->  
->  	sdg->sgc->capacity = capacity;
->  	sdg->sgc->min_capacity = capacity;
-> diff --git a/kernel/sched/pelt.c b/kernel/sched/pelt.c
-> index 7a8534a2def..7ca37abf46b 100644
-> --- a/kernel/sched/pelt.c
-> +++ b/kernel/sched/pelt.c
-> @@ -296,7 +296,7 @@ int __update_load_avg_blocked_se(u64 now, struct sched_entity *se)
->  {
->  	if (___update_load_sum(now, &se->avg, 0, 0, 0)) {
->  		___update_load_avg(&se->avg, se_weight(se));
-> -		trace_pelt_se_tp(se);
-> +		trace_pelt_se_tp(se, &sched_tp_callbacks);
->  		return 1;
->  	}
->  
-> @@ -310,7 +310,7 @@ int __update_load_avg_se(u64 now, struct cfs_rq *cfs_rq, struct sched_entity *se
->  
->  		___update_load_avg(&se->avg, se_weight(se));
->  		cfs_se_util_change(&se->avg);
-> -		trace_pelt_se_tp(se);
-> +		trace_pelt_se_tp(se, &sched_tp_callbacks);
->  		return 1;
->  	}
->  
-> @@ -325,7 +325,7 @@ int __update_load_avg_cfs_rq(u64 now, struct cfs_rq *cfs_rq)
->  				cfs_rq->curr != NULL)) {
->  
->  		___update_load_avg(&cfs_rq->avg, 1);
-> -		trace_pelt_cfs_tp(cfs_rq);
-> +		trace_pelt_cfs_tp(cfs_rq, &sched_tp_callbacks);
->  		return 1;
->  	}
->  
-> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-> index c5a6a503eb6..2519da0c920 100644
-> --- a/kernel/sched/sched.h
-> +++ b/kernel/sched/sched.h
-> @@ -182,6 +182,19 @@ extern struct list_head asym_cap_list;
->   */
->  #define RUNTIME_INF		((u64)~0ULL)
->  
-> +struct sched_tp_callbacks {
-> +#ifdef CONFIG_SMP
-> +	/* Fetches the util_est from a cfs_rq. */
-> +	unsigned int (*cfs_rq_util_est)(struct cfs_rq *cfs_rq);
-> +	/* Fetches the util_est from a sched_entity. */
-> +	unsigned int (*se_util_est)(struct sched_entity *se);
-> +#endif /* CONFIG_SMP */
-> +	/* Fetches the current cpu capacity out of a rq. */
-> +	unsigned long (*rq_cpu_current_capacity)(struct rq *rq);
-> +};
-> +
-> +extern struct sched_tp_callbacks sched_tp_callbacks;
-> +
->  static inline int idle_policy(int policy)
->  {
->  	return policy == SCHED_IDLE;
+Haha don't worry, we've all missed things like this in the past (I know I
+have...), this is what code review is for :>)
 
+>
+> >
+> > Then it'd make sense to initialise nr to 1.
+> >
+> > Honestly I'd prefer us though to refactor move_ptes() to something like:
+> >
+> > 	for (; old_addr < old_end; old_ptep++, old_addr += PAGE_SIZE,
+> > 				   new_ptep++, new_addr += PAGE_SIZE) {
+> > 		pte_t old_pte = ptep_get(old_ptep);
+> >
+> > 		if (pte_none(old_pte))
+> > 			continue;
+> >
+> > 		move_pte(pmc, vma, old_ptep, old_pte);
+> > 	}
+> >
+> > Declaring this new move_pte() where you can put the rest of the stuff.
+> >
+> > I'd much rather we do this than add to the mess as-is.
+> >
+> >
+> >
+> > > -		if (pte_none(ptep_get(old_ptep)))
+> > > +		const fpb_t fpb_flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
+> > > +		int max_nr = (old_end - old_addr) >> PAGE_SHIFT;
+> > > +
+> > > +		nr = 1;
+> > > +		old_pte = ptep_get(old_ptep);
+> >
+> > You can declare this in the for loop, no need for us to contaminate whole
+> > function scope with it.
+> >
+> > Same with 'nr' in this implementation (though I'd rather you changed it up, see
+> > above).
+> >
+> > > +		if (pte_none(old_pte))
+> > >   			continue;
+> > >
+> > > -		pte = ptep_get_and_clear(mm, old_addr, old_ptep);
+> > >   		/*
+> > >   		 * If we are remapping a valid PTE, make sure
+> > >   		 * to flush TLB before we drop the PTL for the
+> > > @@ -252,8 +257,17 @@ static int move_ptes(struct pagetable_move_control *pmc,
+> > >   		 * the TLB entry for the old mapping has been
+> > >   		 * flushed.
+> > >   		 */
+> > > -		if (pte_present(pte))
+> > > +		if (pte_present(old_pte)) {
+> > > +			if ((max_nr != 1) && maybe_contiguous_pte_pfns(old_ptep, old_pte)) {
+> > > +				struct folio *folio = vm_normal_folio(vma, old_addr, old_pte);
+> > > +
+> > > +				if (folio && folio_test_large(folio))
+> > > +					nr = folio_pte_batch(folio, old_addr, old_ptep,
+> > > +					old_pte, max_nr, fpb_flags, NULL, NULL, NULL);
+> >
+> > Indentation seems completely broken here? I also hate that we're nesting to this
+> > degree? Can we please find a way not to?
+> >
+> > This function is already a bit of a clogged mess, I'd rather we clean up then
+> > add to it.
+> >
+> > (See above again :)
+> >
+> >
+> > > +			}
+> > >   			force_flush = true;
+> > > +		}
+> > > +		pte = get_and_clear_full_ptes(mm, old_addr, old_ptep, nr, 0);
+> > >   		pte = move_pte(pte, old_addr, new_addr);
+> > >   		pte = move_soft_dirty_pte(pte);
+> > >
+> > > @@ -266,7 +280,7 @@ static int move_ptes(struct pagetable_move_control *pmc,
+> > >   				else if (is_swap_pte(pte))
+> > >   					pte = pte_swp_clear_uffd_wp(pte);
+> > >   			}
+> > > -			set_pte_at(mm, new_addr, new_ptep, pte);
+> > > +			set_ptes(mm, new_addr, new_ptep, pte, nr);
+> > >   		}
+> > >   	}
+> > >
+> > > --
+> > > 2.30.2
+> > >
+> >
+> > Cheers, Lorenzo
+>
