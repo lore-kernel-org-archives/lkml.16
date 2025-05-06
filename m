@@ -1,45 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC41921CA02;
-	Tue,  6 May 2025 22:00:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0052219EB6;
+	Tue,  6 May 2025 22:01:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746568851; cv=none; b=tWUJ+6YBIUG46gNXY376fOR0Cd1MF6eBEGzob+WU+LoZwwegpXUjjUvfbe7XHbJ/EUUD7285tRnRfqOyL9FBFIXhWaI03pyVQIIa46pvTQKRDAs6czBcGczYVxyfqPkTe4kJi+1i6tqXP+jWeSoMQ/rED6NmjAr3bqMexMrbLIg=
+	t=1746568862; cv=none; b=Lzdla03UFuSsQaO1NEYVXeIw9bc8vLRQ2iHHy/hyLLGXK0zGeFUInDCgUBIzqFoQGsFeo8wAiq+pWIoCv1WnR9OKMRfL0RSPFy0OC3u0jMfuvRFOOK7EI/MWHtW3nFChyya6sY1p9xxkdtxV8MFhBdIP2wXhMZ77oIrVNxTJh6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746568851; c=relaxed/simple;
-	bh=eM85/T2zv3JvHnzRMBYb0t05nCijCfpQv0/4QmBfOpU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rQ+S1fEfCgSFU1NktKg/CgeotyVFYOQZgsO2KzxwhHtnz6ohOBPRxzBi2ZVGBkzHhnqhYWVyAAI6y+2NP/VT0XRFHhtHWseUWWwkXJRBttcHpFlpgabsZUJ5holSKEv/ALkDbzq6s+OUSaMIAE/GeHGrzyhRqRUeAX6uecdYErg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H86Y0XIF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746568862; c=relaxed/simple;
+	bh=LV0ruNcHRpMJi2vfvfpRfLtobecYu0JIoRgAf4DBbYU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eMZBiQnyPggh1FVPUbKFTM5sdmM4F1IjH3LnCFDVxfzN1dLb6kr8VScyRsD5UoNcXVc3P2QwXrB5CtjmjA4vO5a19zW6Lw+D05CP/AvA7crut45XoexdAZQcPonT5mFFmxDTIHSK/F6k143z35XDwUMiKnX6TejpMCV0iqCrQUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OkkVivCL; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H86Y0XIF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E3C5C4CEE4;
-	Tue,  6 May 2025 22:00:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746568851;
-	bh=eM85/T2zv3JvHnzRMBYb0t05nCijCfpQv0/4QmBfOpU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=H86Y0XIFCJqx57Bxaf6FZO4W92RJ0izJRVnhHyT5uvDBvdSLEDr+nfd35Kyf93bjo
-	 rjuPsBvItXlxr7yc5mseXmLONJMxDkGAIQGdVI4J8q7JVmaZXmoX5P89zkode8sLdh
-	 UMADIAARzm3tECBIGV4AhBmC/IBQBKQXJHNtte67QQ6mjOinWzE1ohPp7BUNZjqC8k
-	 q//wvYcdk6i5Sa2aYSoJBd2aje+8GSu8PR0fDDNKEzJGlTslv1GasDV9Ob1jI3ga/G
-	 QZT2FKQLgB3YkKORFvalxSc1tk5HAOB0ajroDeFAzNdjgsp0HbS9msc/d41KTbPF8P
-	 g5zdyKYGGeEwA==
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Vladimir Zapolskiy <vz@mleia.com>,
-	Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
-Cc: linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] dt-bindings: serial: Convert nxp,lpc3220-hsuart to DT schema
-Date: Tue,  6 May 2025 17:00:47 -0500
-Message-ID: <20250506220048.2546915-1-robh@kernel.org>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OkkVivCL"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-22e4db05fe8so11072595ad.0;
+        Tue, 06 May 2025 15:01:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746568860; x=1747173660; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+rDcZ92GkQmefn+4rDVGL9lHZUyx4g109kWVrq63bKg=;
+        b=OkkVivCLY0i5AqV+/Cg9TYSPg0MVC2BsseD5YsQ3CGgGNJ7vGKStuOlGW38CWA+Wyw
+         OKu9p2+Htb0YPuconR+hDzXobRmTmUBx+bw7yVbJkOOYV3zDMmOxG6X3wQlrT5DUEJ7A
+         ft1Sz2S5DyyVarAB8enXq8KKH0DW31UHq2uD0R54rBOHl+jXbj4t44v88vT7ZhwgPkS8
+         W4O3Hl4RN/1rgvUtirbozHwdf6VKaBq/lozs2zPSefcq+JGUVzPKazZi17h54vo0W00b
+         CDvQCsyeYn1GJwJwAI9ztcagvC6LAK/Q+tttwWg4pVd6gEGVm0kNMnmxZGysARmIOXwA
+         Yjug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746568860; x=1747173660;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+rDcZ92GkQmefn+4rDVGL9lHZUyx4g109kWVrq63bKg=;
+        b=frU+thAFOHGo8I52jlxUfmSxaPPH8nHibWSd3mdiIVqBkovooJpeqZX5ou+apKED4c
+         3JbicnM2FCyxNFBKbg3zxgPwj2GbBtB+yjBtZFZscNJSYbFyh7lVFy+66N8Mie3HwzwD
+         9+yntWzBzTBk5pDRqlMokaY8bZBg1XPojFJcalCGBLTehUt5HvX3cM2xzM6Le7V/Bdd0
+         3cBTAIUcqjS0k6MQZb07Hzx+Vn9ZLvCvKnj9wWDPy+IaBqIiuAT/C1sD7WZEp7j2W3zF
+         edsLd6pKwZ7O+YDfCtdEiXxyXyiK/DavW1mMhrD+d0jifprO0iwvimB7aBV3zujXU9IT
+         Tl2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVC2bhpn3waLTC1pWR6QOsbhcG/LZqKR9S4m/mmqmJJaNIFkNDPltLG8Gjoy0k8L9FuSicrEtrIGWqLje0=@vger.kernel.org, AJvYcCVmfomg1w2j4Lt7fkirhu8pXrW0ck+VF/xaSZO/OmCgEv9d6fpXz5B6k0LOMb1ieTovUmzg7q4/Jcc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCzZUC9q4pPHCOu54vtmmZBKkoNjzt2tyYly9kDO3xouC6r/BG
+	ee9tJyueEUVCbdyY5GILlVqqj6FZYQDFn2bvrqIqf62t97cXHrjU
+X-Gm-Gg: ASbGncu5bZ8cQLo2Rg6cHv0mzY0ANXbU3trzKuHidT7BcC1MeGmsPwoz09FEKwsqYhg
+	FZRSC11Ki07l8tSyr9EloDo2GQ1oNWAYZwhefM5mWa0bZV1Abz4vnl6oz/jb+u04bxL5E3JbeyG
+	Y9twMk+9uYMlLk4mNj883QpR6UH9wwKSYcAF1FD7M9FWqzL7jZamZ9DB48wW4xvZSIlxTwBqEUO
+	f3y4GcjLMTjhYEGWxsYk+ynTereh2E5ZC7A7ohywdQNovlAjDvC4LY26Jz1SnfJG0IoroUb1HR2
+	1A/Ua2Z2mgoFYgxQ3kAxBPiNcLT0H8AgJznjxDlK4jv4NB3sNXpZsFuXxdHUvyt3iy8BJ1RP5Mb
+	goNspzoCeGbkuPw3Abxwcnszi0vfNWv0/lxk=
+X-Google-Smtp-Source: AGHT+IENa9/kGarw9mxc/t5RKacJDRPAwdfKQlLEIUah+OKX/huZhyAfxQFY94dTpj+9W/i6cXNtxw==
+X-Received: by 2002:a17:902:e743:b0:21f:61a9:be7d with SMTP id d9443c01a7336-22e5edfa34bmr10893105ad.49.1746568859875;
+        Tue, 06 May 2025 15:00:59 -0700 (PDT)
+Received: from server-kernel.moonheelee.internal (d173-180-147-14.bchsia.telus.net. [173.180.147.14])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e1521fb3esm78746415ad.121.2025.05.06.15.00.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 May 2025 15:00:59 -0700 (PDT)
+From: Moon Hee Lee <moonhee.lee.ca@gmail.com>
+To: lukasz.luba@arm.com,
+	rafael@kernel.org
+Cc: len.brown@intel.com,
+	pavel@kernel.org,
+	linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linux.dev,
+	Moon Hee Lee <moonhee.lee.ca@gmail.com>
+Subject: [PATCH v2] docs: fix typo in energy-model.rst
+Date: Tue,  6 May 2025 15:00:57 -0700
+Message-ID: <20250506220057.5589-1-moonhee.lee.ca@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,82 +78,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Convert the NXP LPC3220 HS UART binding to DT schema. It is a
-straight-forward conversion.
+Fixes a grammar issue ("than" -> "then") and changes "re-use" to
+"reuse" for consistency with modern spelling.
 
-Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+Changes since v1:
+- Limited scope to .rst files excluding translations, using:
+  find Documentation/ \
+    -path Documentation/translations -prune -o \
+    -name '*.rst' -print | xargs codespell
+
+Signed-off-by: Moon Hee Lee <moonhee.lee.ca@gmail.com>
 ---
- .../bindings/serial/nxp,lpc3220-hsuart.yaml   | 39 +++++++++++++++++++
- .../bindings/serial/nxp-lpc32xx-hsuart.txt    | 14 -------
- 2 files changed, 39 insertions(+), 14 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/serial/nxp,lpc3220-hsuart.yaml
- delete mode 100644 Documentation/devicetree/bindings/serial/nxp-lpc32xx-hsuart.txt
+ Documentation/power/energy-model.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/serial/nxp,lpc3220-hsuart.yaml b/Documentation/devicetree/bindings/serial/nxp,lpc3220-hsuart.yaml
-new file mode 100644
-index 000000000000..ffa2ea59f256
---- /dev/null
-+++ b/Documentation/devicetree/bindings/serial/nxp,lpc3220-hsuart.yaml
-@@ -0,0 +1,39 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/serial/nxp,lpc3220-hsuart.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: NXP LPC32xx SoC High Speed UART
-+
-+maintainers:
-+  - Vladimir Zapolskiy <vz@mleia.com>
-+  - Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
-+
-+allOf:
-+  - $ref: /schemas/serial/serial.yaml#
-+
-+properties:
-+  compatible:
-+    const: nxp,lpc3220-hsuart
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    serial@40014000 {
-+        compatible = "nxp,lpc3220-hsuart";
-+        reg = <0x40014000 0x1000>;
-+        interrupts = <26 0>;
-+    };
-diff --git a/Documentation/devicetree/bindings/serial/nxp-lpc32xx-hsuart.txt b/Documentation/devicetree/bindings/serial/nxp-lpc32xx-hsuart.txt
-deleted file mode 100644
-index 0d439dfc1aa5..000000000000
---- a/Documentation/devicetree/bindings/serial/nxp-lpc32xx-hsuart.txt
-+++ /dev/null
-@@ -1,14 +0,0 @@
--* NXP LPC32xx SoC High Speed UART
--
--Required properties:
--- compatible: Should be "nxp,lpc3220-hsuart"
--- reg: Should contain registers location and length
--- interrupts: Should contain interrupt
--
--Example:
--
--	uart1: serial@40014000 {
--		compatible = "nxp,lpc3220-hsuart";
--		reg = <0x40014000 0x1000>;
--		interrupts = <26 0>;
--	};
+diff --git a/Documentation/power/energy-model.rst b/Documentation/power/energy-model.rst
+index ada4938c37e5..490ddd483f46 100644
+--- a/Documentation/power/energy-model.rst
++++ b/Documentation/power/energy-model.rst
+@@ -230,7 +230,7 @@ Drivers must provide a pointer to the allocated and initialized new EM
+ and will be visible to other sub-systems in the kernel (thermal, powercap).
+ The main design goal for this API is to be fast and avoid extra calculations
+ or memory allocations at runtime. When pre-computed EMs are available in the
+-device driver, than it should be possible to simply re-use them with low
++device driver, then it should be possible to simply reuse them with low
+ performance overhead.
+ 
+ In order to free the EM, provided earlier by the driver (e.g. when the module
 -- 
-2.47.2
+2.43.0
 
