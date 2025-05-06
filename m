@@ -1,137 +1,286 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7971D286410
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 15:49:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2F8A2853ED
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 15:49:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746546548; cv=none; b=SRr0zlOhTV8vyd3izqyqiZNIBk7RmnlnDNmrY7VO/0a2VHvRF4KnBDyzLZ+KQXcg8vzKqEKP3rogsmwo1GGmNia2s3vkIZGrAwHsVLV46yfsMN+P/66QunAzEE8Y9j20gjqTa62sDgKBuRoLFVB+fpJ8WUNGiqHx2e86m4bMeuw=
+	t=1746546547; cv=none; b=BxntdT2QXbehoD1PbHFghwJLTtbsFUKTq6P5XgCoqcIjd3de+9FwU9iwFdQJaIWZ0jfGwi3Qu0SogyC+1/jL67Feoqp5z4GzNNNrS0uT3SBAFVp1xDd/bWeOwG0S3b2VjnG/Z33DtKcZdaMk7LAaaiDbv+K6vj6tKeek01owyDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746546548; c=relaxed/simple;
-	bh=Yfa8LfJUqX0nGl+TeNHAer8ejcrj24FyRlRcXtmXu8E=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=rOHMyNa/b91SaLKm2CKDAlyc3RJ5YzwkasrWAOiVwnbw2kyp/JzdGXIE+K4XliMK7h9Le80sjpaoDwIW8MkzazS+zePeeu40z7jk840hN23BAGdkIEpG+iYBAmCKpG6QkBY5GqPsMASv0JbWe35mX+N2jMFTAf/AhgD236fAEr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HrClG6n2; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746546547; c=relaxed/simple;
+	bh=5FLQksRYxIIEgXvt5dxKOv/P/ympY2aNPNmlglbj4S4=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=RDeFA7x5ZE0Vs4Dv87IXC47poxHtMjzRcwDXxEpR6xQPm9WBim341kQ8IR/vUl4/o72mTSPkMzYWbVnow8NSv7y79Tx8+DeLAdTl1yMjAg7xqPiMpXI+Si2lWymROF907ULXyVdHwLhwfu6idJ9z1cN5gavjc7dxuHh8Qief4D8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TwYqx3AH; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HrClG6n2"
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-af91fc1fa90so5275618a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 08:49:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TwYqx3AH"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-441c96c1977so18036645e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 08:49:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746546545; x=1747151345; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mlujadKcoeKmC/n1ImzL34cvC3TJH9wSs5Ab3nngFQk=;
-        b=HrClG6n24LVUvEOlVFMPK7Dl6tgOD//XhZ/pvIjy9vyDkZeCLk+uzYvevexaC6bqya
-         LCypHlHm8tWXlAXq3JgJylzMH6dqjr2042+tUpcyDU5oQc6BDmkAQO2+E7cjVprSrpim
-         l8jfsygUeczvUmdXM96FJ8exwNyeHgPkL2J+JuzzJOkdti6hQB1BIVJNflZMEQJJRtFH
-         7Qz+TYUoG9vOv+8fw8psdi/IvFYWws3WXl7qD3sXtjCy9l5Qzu4KJLsxG6QxNcjRJoiF
-         DxOqAnTEh54zSqUBMdK/z1a2ARTeeIAf/Ogv6T6W+TIT/ZGU4L5/tLdqmBFJOib2abSH
-         sUKw==
+        d=google.com; s=20230601; t=1746546544; x=1747151344; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=rXF4lSq4pEH5WEeWrXsCjVhC4xi+x1v4jlvmj9R+uac=;
+        b=TwYqx3AHw0+wZqhtcgQn/IObRFYcwSIgIPVnMJQ1eCQwRniVMS6YGH9z1ih8oAXhkk
+         kgMvIrF9JuHb0ajlEWUCkjeUXDiGSj3tao1F1/RjWMJVH9qEuSJgYRtrMqSFjKAB5rQq
+         M/SLnEz5WuLrkgAIFpJYpHL0Ecz0IiE4PA1+uiJG6d10AKqRMPQfAlqj/cFwZvX6TZwb
+         PmMLUsUVXjLQyut/8SGuyYKiS74BF77AyNdnNudq3IFqPbC+OXWsDh83k03OPtYyHzkM
+         n2V2RWMwDq/afvYQzl9snKsaR8OaeHYrrmnXLmvmmrcRfd0p5rkCnYbOdPoIlM6D6cug
+         lnbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746546545; x=1747151345;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mlujadKcoeKmC/n1ImzL34cvC3TJH9wSs5Ab3nngFQk=;
-        b=OGyWQcEeNM5FnfpAMbpB2bmBDb72vDpY31MrpxU7LlWYEuD85YMSX7mCvB8U/3gk8Z
-         oF2HbHXbH6tB8c1rh7bGaN4gs/e0sw2RDDoIYeD4wARyHn1ACmrQj/n0a6Eg+XM8GXlU
-         CKZZrEF3L/t6MWgtZ7EFcxP7hQgz5wDpNgZNOw1oPGWqDVqjQG1ugGaedGAj6XrkA44P
-         DF2xOzXRz1lLHs/7El8JaNCLWdR8EH9ac3+Ee4pgjuqjOb881wkhjjVYtSmcfgJvHBHz
-         rBGJonOpcHRqS+rZgsrNVXwoaj27zC/s1fw6ri+sg2bIbDa9X5wCpO/QOnlL91/PEi2a
-         oAMw==
-X-Forwarded-Encrypted: i=1; AJvYcCWzO5bBIIrJ9H7nrlXmPVWPOp0cwomFIRkPwE7BoSmqJ8yK3RcdGRW33Ldj+g9yV+cSVHVFN9/7LfbcInc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzuO+PpuK20Wbc5vDKzzcCMdojdYFIuQM2Mp33tmJhgWi3deQ9r
-	mZNSTeI6x86IgD57StZM03IQ6fZrTCUQodWoZ6Wh10+V+vMKoRku3B+hygW236Y=
-X-Gm-Gg: ASbGncuRfkNZdlC0ylrCKWb+XJQ3jNxvPNqnqs77BXI0ElZyGaVTlou74fS34b4wFxs
-	O+jWQlxMNyTWUSagNvvz9ucLRyco12nOYalewp7Y1kEGGdSx4mgqB+qhLmIpglXI/buV4ee1/Zo
-	Ph+0PT2Z1eK8MvMeQJpLTcZvSxNEh28rqkfCi+ovpg2cuCX1ru2BZOEIHV9JXj8urnZxLDD1Fde
-	jnSOp2q0S0p0A6TEtoVec4z4EJaLV6nXczVqS7dUQkE9Z5RV0Ypctz9ugYQagCA0ofu45MUjD5G
-	AZo3ua3XyswhtLZ6My7Qa4hDbltsbMx4d22lYg==
-X-Google-Smtp-Source: AGHT+IFS6FZoJuDcTCvjasKd96JWhWXD/99BvVru50V8guYaaSYjpZZUDkxGXVJl5z1Bx8ea/lqMTQ==
-X-Received: by 2002:a17:90b:3909:b0:309:eb54:9ea2 with SMTP id 98e67ed59e1d1-30a7e1af162mr4218720a91.20.1746546545635;
-        Tue, 06 May 2025 08:49:05 -0700 (PDT)
-Received: from [127.0.1.1] ([112.65.12.170])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30a4748e83bsm11495999a91.22.2025.05.06.08.48.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 08:49:05 -0700 (PDT)
-From: Jun Nie <jun.nie@linaro.org>
-Date: Tue, 06 May 2025 23:47:40 +0800
-Subject: [PATCH v9 10/14] drm/msm/dpu: Use dedicated WB number definition
+        d=1e100.net; s=20230601; t=1746546544; x=1747151344;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rXF4lSq4pEH5WEeWrXsCjVhC4xi+x1v4jlvmj9R+uac=;
+        b=OiyLLnWmYJCgXwMn0qQlGDQ4lml/xy4D5vMVzmHpJiNEw34K+W7NxTfOK6YnyYK1iu
+         /NPfhCV8EkHRIlrEPjgU71Xhh8eiT+U4Iy/PaPH9QtjWj/nzcypuRqDCezL6l9PD44eG
+         NKf+D1YSAembrAI6bP4KmYLWH/C+FKEgj0MWwvMyZlSqGYCXxtcCfMAxEYXWNZhUMeIg
+         b0IgEYOhS1Pt4fqyJFBTvEUHB6vg1125qBdnVMMZpS77WYOcC+1dQIeUk1dC69gk4Apv
+         FNzyCXFs4uFPxrhO2KeR/5xviZkonanik9lQRgD21pmzjkicziuFgPJF4YiamOmvIaU+
+         kioQ==
+X-Gm-Message-State: AOJu0Yz11Ku1MHhFr4nxsXbTorEmc/qwkJCl994Q+fdnx0ZTP4ZV+Ilx
+	m8hqm7uWmqspOrCzHsXXT75Vq5dZDM7nIpI8srVr4UjxWbPDXenImF0dOVZB1/vl1eYLMEekC6D
+	xllaxfdgua+wPzhRcPzDWKYDfuRXB4g44QyAJnPNFrQdE7k4hpAzJ9BJ5aAkbOB8dK2s7vBycj4
+	3KXBTKnrMZDGMCViyGXFLzYtsJpheLKg==
+X-Google-Smtp-Source: AGHT+IGhRWf4IrC+peWhhLkChuzm1fS8AAwbvzj5rCnpHD4gn8/Y9h8DypG2zuCqKD3tOQI31MsQrKX2
+X-Received: from wmbfk13.prod.google.com ([2002:a05:600c:ccd:b0:43c:f6c0:3375])
+ (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6000:2905:b0:3a0:82d4:ba90
+ with SMTP id ffacd0b85a97d-3a0b4888e94mr19463f8f.21.1746546544019; Tue, 06
+ May 2025 08:49:04 -0700 (PDT)
+Date: Tue,  6 May 2025 17:45:34 +0200
+In-Reply-To: <20250506154532.1281909-5-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250506-quad-pipe-upstream-v9-10-f7b273a8cc80@linaro.org>
-References: <20250506-quad-pipe-upstream-v9-0-f7b273a8cc80@linaro.org>
-In-Reply-To: <20250506-quad-pipe-upstream-v9-0-f7b273a8cc80@linaro.org>
-To: Rob Clark <robdclark@gmail.com>, 
- Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
- Marijn Suijten <marijn.suijten@somainline.org>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Jessica Zhang <quic_jesszhan@quicinc.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- Dmitry Baryshkov <lumag@kernel.org>, Dmitry Baryshkov <lumag@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- Jun Nie <jun.nie@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746546456; l=1599;
- i=jun.nie@linaro.org; s=20240403; h=from:subject:message-id;
- bh=Yfa8LfJUqX0nGl+TeNHAer8ejcrj24FyRlRcXtmXu8E=;
- b=68OG/s/ha4iwdzGf/813VdpaYg/VDV1Y7XAOiTDn9rs/YFaOBSRRGyeV7PRqMDvSaSTWjbIOC
- mZADjlPu+Q+DcWqr1m/ArwQt4pYpEZKx8Idi4hVzDMNBARl6PXUIDEo
-X-Developer-Key: i=jun.nie@linaro.org; a=ed25519;
- pk=MNiBt/faLPvo+iJoP1hodyY2x6ozVXL8QMptmsKg3cc=
+Mime-Version: 1.0
+References: <20250506154532.1281909-5-ardb+git@google.com>
+X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7382; i=ardb@kernel.org;
+ h=from:subject; bh=GMIIanHrqEMp7uk3UiKd+WhQc2Cc8mbf4u6A/So+Zjs=;
+ b=owGbwMvMwCFmkMcZplerG8N4Wi2JIUNKb97e6wJuu6or9ny/9L1WWFLyi+hDV9VzM7pEjk83W
+ cm+9vaHjlIWBjEOBlkxRRaB2X/f7Tw9UarWeZYszBxWJpAhDFycAjCRz+kM/8PTCrc/Y/324Ylx
+ 8g/emochTvGn338TmVy9+x3f0sjrr00ZGSafcFq5ek396u79D/iXuUy+p7jzys4jRRdyxONy7di Lq/kA
+X-Mailer: git-send-email 2.49.0.987.g0cc8ee98dc-goog
+Message-ID: <20250506154532.1281909-6-ardb+git@google.com>
+Subject: [RFC PATCH 1/3] x86/boot: Use a single source of truth for pgtable_l5_enabled()
+From: Ard Biesheuvel <ardb+git@google.com>
+To: linux-kernel@vger.kernel.org
+Cc: x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
+	Linus Torvalds <torvalds@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Currently MAX_CHANNELS_PER_ENC is defined as 2, because 2 channels are
-supported at most in one encoder. The case of 4 channels per encoder is
-to be added. To avoid breaking current WB usage case, use dedicated WB
-definition before 4 WB usage case is supported in future.
+From: Ard Biesheuvel <ardb@kernel.org>
 
-Signed-off-by: Jun Nie <jun.nie@linaro.org>
+There are two versions of pgtable_l5_enabled(): an early one based on a
+global variable that is set by the startup code, and a late on that is
+based on the LA57 CPU capability.
+
+Some objects opt into the early version if they contain code that may
+run before CPU capabilities are determined, and will therefore always
+use the early alternative, even if some of the code is still in use at
+runtime.
+
+Having two sources of truth also creates transient problems with KASAN,
+as KASAN_SHADOW_START is defined in terms of pgtable_l5_enabled(), and
+may therefore assume different values depending on the source file and
+the moment during boot that it gets evaluated.
+
+Fix this by collapsing the two into a single definition that always
+produces the correct value, and can be used by all source files. Use
+alternatives patching so that the runtime cost of it is identical to the
+old implementation based on cpu_feature_enabled().
+
+This also removes the need to temporarily disable KASAN when patching
+alternatives.
+
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/x86/boot/compressed/misc.h         |  3 ---
+ arch/x86/boot/compressed/vmlinux.lds.S  |  2 ++
+ arch/x86/boot/startup/sme.c             |  9 -------
+ arch/x86/include/asm/pgtable_64_types.h | 26 ++++++++++++--------
+ arch/x86/kernel/alternative.c           | 12 ---------
+ arch/x86/kernel/cpu/common.c            |  2 --
+ arch/x86/kernel/head64.c                |  5 +---
+ arch/x86/mm/kasan_init_64.c             |  3 ---
+ 8 files changed, 19 insertions(+), 43 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-index 3e4ff345bd6d9c0e2a08274874fac40690409cf0..a125a477404fdafee6495f6d3778160f14a01a96 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-@@ -56,6 +56,7 @@
- 	(MAX_H_TILES_PER_DISPLAY * NUM_PHYS_ENCODER_TYPES)
+diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
+index db1048621ea2..9c3d2da8f86c 100644
+--- a/arch/x86/boot/compressed/misc.h
++++ b/arch/x86/boot/compressed/misc.h
+@@ -16,9 +16,6 @@
  
- #define MAX_CHANNELS_PER_ENC 2
-+#define MAX_CWB_PER_ENC 2
+ #define __NO_FORTIFY
  
- #define IDLE_SHORT_TIMEOUT	1
+-/* cpu_feature_enabled() cannot be used this early */
+-#define USE_EARLY_PGTABLE_L5
+-
+ /*
+  * Boot stub deals with identity mappings, physical and virtual addresses are
+  * the same, so override these defines.
+diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
+index 3b2bc61c9408..32a1ee4e5681 100644
+--- a/arch/x86/boot/compressed/vmlinux.lds.S
++++ b/arch/x86/boot/compressed/vmlinux.lds.S
+@@ -35,6 +35,7 @@ SECTIONS
+ 		*(.text)
+ 		*(.text.*)
+ 		*(.noinstr.text)
++		*(.altinstr_aux)
+ 		_etext = . ;
+ 	}
+ 	.rodata : {
+@@ -81,6 +82,7 @@ SECTIONS
+ 		*(.dynamic) *(.dynsym) *(.dynstr) *(.dynbss)
+ 		*(.hash) *(.gnu.hash)
+ 		*(.note.*)
++		*(.altinstructions .altinstr_replacement)
+ 	}
  
-@@ -182,7 +183,7 @@ struct dpu_encoder_virt {
- 	struct dpu_encoder_phys *cur_master;
- 	struct dpu_encoder_phys *cur_slave;
- 	struct dpu_hw_pingpong *hw_pp[MAX_CHANNELS_PER_ENC];
--	struct dpu_hw_cwb *hw_cwb[MAX_CHANNELS_PER_ENC];
-+	struct dpu_hw_cwb *hw_cwb[MAX_CWB_PER_ENC];
- 	struct dpu_hw_dsc *hw_dsc[MAX_CHANNELS_PER_ENC];
+ 	.got.plt (INFO) : {
+diff --git a/arch/x86/boot/startup/sme.c b/arch/x86/boot/startup/sme.c
+index 753cd2094080..c791f6b8a92f 100644
+--- a/arch/x86/boot/startup/sme.c
++++ b/arch/x86/boot/startup/sme.c
+@@ -25,15 +25,6 @@
+ #undef CONFIG_PARAVIRT_XXL
+ #undef CONFIG_PARAVIRT_SPINLOCKS
  
- 	unsigned int dsc_mask;
-@@ -2372,7 +2373,7 @@ void dpu_encoder_helper_phys_setup_cwb(struct dpu_encoder_phys *phys_enc,
- 	 */
- 	cwb_cfg.input = INPUT_MODE_LM_OUT;
+-/*
+- * This code runs before CPU feature bits are set. By default, the
+- * pgtable_l5_enabled() function uses bit X86_FEATURE_LA57 to determine if
+- * 5-level paging is active, so that won't work here. USE_EARLY_PGTABLE_L5
+- * is provided to handle this situation and, instead, use a variable that
+- * has been set by the early boot code.
+- */
+-#define USE_EARLY_PGTABLE_L5
+-
+ #include <linux/kernel.h>
+ #include <linux/mm.h>
+ #include <linux/mem_encrypt.h>
+diff --git a/arch/x86/include/asm/pgtable_64_types.h b/arch/x86/include/asm/pgtable_64_types.h
+index 5bb782d856f2..2ca568f56660 100644
+--- a/arch/x86/include/asm/pgtable_64_types.h
++++ b/arch/x86/include/asm/pgtable_64_types.h
+@@ -24,19 +24,25 @@ typedef struct { pmdval_t pmd; } pmd_t;
+ extern unsigned int __pgtable_l5_enabled;
  
--	for (int i = 0; i < MAX_CHANNELS_PER_ENC; i++) {
-+	for (int i = 0; i < MAX_CWB_PER_ENC; i++) {
- 		hw_cwb = dpu_enc->hw_cwb[i];
- 		if (!hw_cwb)
- 			continue;
-
+ #ifdef CONFIG_X86_5LEVEL
+-#ifdef USE_EARLY_PGTABLE_L5
+-/*
+- * cpu_feature_enabled() is not available in early boot code.
+- * Use variable instead.
+- */
++#include <asm/alternative.h>
++#include <asm/cpufeatures.h>
++
+ static inline bool pgtable_l5_enabled(void)
+ {
+-	return __pgtable_l5_enabled;
++	asm goto(ALTERNATIVE_TERNARY("jmp 6f", %c[feat], "", "jmp %l[t_no]")
++		"	.pushsection .altinstr_aux,\"ax\"	\n"
++		"6:	testb	$1, %a[l5en]			\n"
++		"	jnz	%l[t_yes]			\n"
++		"	jmp	%l[t_no]			\n"
++		"	.popsection				\n"
++		: : [feat] "i" (X86_FEATURE_LA57),
++		    [l5en] "i" (&__pgtable_l5_enabled)
++		: : t_yes, t_no);
++t_yes:
++	return true;
++t_no:
++	return false;
+ }
+-#else
+-#define pgtable_l5_enabled() cpu_feature_enabled(X86_FEATURE_LA57)
+-#endif /* USE_EARLY_PGTABLE_L5 */
+-
+ #else
+ #define pgtable_l5_enabled() 0
+ #endif /* CONFIG_X86_5LEVEL */
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index bf82c6f7d690..f4a8b81aac43 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -456,16 +456,6 @@ void __init_or_module noinline apply_alternatives(struct alt_instr *start,
+ 
+ 	DPRINTK(ALT, "alt table %px, -> %px", start, end);
+ 
+-	/*
+-	 * In the case CONFIG_X86_5LEVEL=y, KASAN_SHADOW_START is defined using
+-	 * cpu_feature_enabled(X86_FEATURE_LA57) and is therefore patched here.
+-	 * During the process, KASAN becomes confused seeing partial LA57
+-	 * conversion and triggers a false-positive out-of-bound report.
+-	 *
+-	 * Disable KASAN until the patching is complete.
+-	 */
+-	kasan_disable_current();
+-
+ 	/*
+ 	 * The scan order should be from start to end. A later scanned
+ 	 * alternative code can overwrite previously scanned alternative code.
+@@ -533,8 +523,6 @@ void __init_or_module noinline apply_alternatives(struct alt_instr *start,
+ 
+ 		text_poke_early(instr, insn_buff, insn_buff_sz);
+ 	}
+-
+-	kasan_enable_current();
+ }
+ 
+ static inline bool is_jcc32(struct insn *insn)
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index f0f85482a73b..7b8753224f3e 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -1,6 +1,4 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+-/* cpu_feature_enabled() cannot be used this early */
+-#define USE_EARLY_PGTABLE_L5
+ 
+ #include <linux/memblock.h>
+ #include <linux/linkage.h>
+diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
+index 510fb41f55fc..498b9d6bdf2f 100644
+--- a/arch/x86/kernel/head64.c
++++ b/arch/x86/kernel/head64.c
+@@ -5,9 +5,6 @@
+  *  Copyright (C) 2000 Andrea Arcangeli <andrea@suse.de> SuSE
+  */
+ 
+-/* cpu_feature_enabled() cannot be used this early */
+-#define USE_EARLY_PGTABLE_L5
+-
+ #include <linux/init.h>
+ #include <linux/linkage.h>
+ #include <linux/types.h>
+@@ -52,7 +49,7 @@ SYM_PIC_ALIAS(next_early_pgt);
+ pmdval_t early_pmd_flags = __PAGE_KERNEL_LARGE & ~(_PAGE_GLOBAL | _PAGE_NX);
+ 
+ #ifdef CONFIG_X86_5LEVEL
+-unsigned int __pgtable_l5_enabled __ro_after_init;
++unsigned int __pgtable_l5_enabled __initdata;
+ unsigned int pgdir_shift __ro_after_init = 39;
+ EXPORT_SYMBOL(pgdir_shift);
+ unsigned int ptrs_per_p4d __ro_after_init = 1;
+diff --git a/arch/x86/mm/kasan_init_64.c b/arch/x86/mm/kasan_init_64.c
+index 0539efd0d216..7c4fafbd52cc 100644
+--- a/arch/x86/mm/kasan_init_64.c
++++ b/arch/x86/mm/kasan_init_64.c
+@@ -1,9 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #define pr_fmt(fmt) "kasan: " fmt
+ 
+-/* cpu_feature_enabled() cannot be used this early */
+-#define USE_EARLY_PGTABLE_L5
+-
+ #include <linux/memblock.h>
+ #include <linux/kasan.h>
+ #include <linux/kdebug.h>
 -- 
-2.34.1
+2.49.0.987.g0cc8ee98dc-goog
 
