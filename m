@@ -1,109 +1,67 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3376C12E7F;
-	Tue,  6 May 2025 19:32:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEE111DED60
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 19:36:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746559975; cv=none; b=hJKWN0G0tqD7EElKxlPpkIZ88SQarQwa84Q4B3S7N/WF3VWR0H1nxyM89lfGtGMZbZ80xGCZqf/u0bc2nM1VlOACr99vjxwdaOtIINzuGQsS9WrzRMKBXNm4Cn6f4N0bR+cnReb1cocvNjXj3Esconos1hlgTP+aQHJWAH636ps=
+	t=1746560199; cv=none; b=FAW9zA3zG1wFlM7SnjZisPd3VhrV0XHDwlCZfO3pjffPFt/usKXMYKltxqvNZpBIt7bWAkEi15/+gl5g5GVGQc3clPFtx8nhZoGtLRyxHkX6RiZb+hlDe9hQfrAGySixpzh9uD2K4xnUqk91R7F5dK96QaOfXjjcoMnBnxTYeSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746559975; c=relaxed/simple;
-	bh=r8DvrKG8gn3dN787r2tmNGHcO7PIkHUQ3Z4vU/nW5Fw=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=KgSy1jhhJg0YVhv3buuNLo9jwHTWgZkEU+JbR7tjq48yg7gUg2G1gfIexIBDMINGF/qrOD2YO3ehT7ARL6fJQC3fqBCHCeRTkXu3LxXF2YDb7h8uzcpA4lWDGUW4SppHqLGH0dUrnEUmxGsMbIZtIMWQlqpZAitNvFbX+TlvA0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=koB+y26a; arc=none smtp.client-ip=209.85.160.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746560199; c=relaxed/simple;
+	bh=fCIgv/N8yoMzwcOqZ41EnHJ4VxpjhwghJMt+YehsdPA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BzqTdvDAyA791JiJJ88vY/hyYYevmbfrbfYbTGiF+1kBN0JXoRgtoMPk4GWMibs22iux4VSHH60I5B6x+yZw3/n1Q+snqzVqPMCSXYtdJSfyRSZi7Rq8+prrX9LpePz08GVW21ApiwipW9vPmRTohuAz7yaqBwR8o0Su51zKEEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Tby9ETG8; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="koB+y26a"
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-476b89782c3so73460121cf.1;
-        Tue, 06 May 2025 12:32:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746559973; x=1747164773; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Cs71N6GnYmn4MqaZvHsKWMqNJF0JCifRIWX9ZIs1JKY=;
-        b=koB+y26aHDPzVA+5dalo/Yu+Dh2yTR364aIY5KwM6edj8u1qNWTWAGu/MV58s68aA2
-         H7AqXAJ8PbwhIJkYpTokYPGkzIdG0cbn4dpjJ38QN7dp6AMzlX0R6L+D3hWjrk66DpDN
-         AAU0mVw4OHHuLM1xbkkn0D+Z+33kT1W3EQBDgR+ajQYSNNweNP7mkvRmpxPqtxkQZayV
-         uqiyueYbSI7fPjWU7NYvRBLWZ09+sh1vwY8LUD6bnBIAooS4xfp2upZ6JC4vT8/COWjY
-         L78VTNZpntuTuCsCsRi4A56y6t/ZewH2T3MqbIBgjo18QdndvB/Bk3WtvdPa2sILzCy9
-         OTRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746559973; x=1747164773;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Cs71N6GnYmn4MqaZvHsKWMqNJF0JCifRIWX9ZIs1JKY=;
-        b=OW4zp3X8NY8Zqy+lNtkhqlSIZBYtpHYz938QGlk4pUo1St4cswe/xq8PTt76EB/dw5
-         G5Xl5N6RXdvI4vF+tTBzbzQpozLLKmAhNk2Jm3FWDsq9OXkzXI5xWUEQg7ypxwHwWZ3D
-         mZ4x70uj9c6Ug7cDgiwBO8+LXYRr3ocX02+uMp0Yopxdtw/KKjJmLQ7PCtihzkt0OwZ6
-         zY+3UpmE5X5uMZ9qzpsQiwm1f1LcmHkCAGNNJ++6QZoBXJ52s/a/JcduF42lTfD6w0JN
-         50om7AhFi3lelPBapwMoUvN36qhbGMunP1IsHrb/bE3Wu3TMVI1vscrcPCk+QBfPohZG
-         TTQw==
-X-Forwarded-Encrypted: i=1; AJvYcCVK5FhD3JuzI0+F0sHqB+JEXs7T7nKBETXqgQRZjTxjy5dNLTHCHcIGnBmKskR3XIWU2PifGKu4y8XR1OQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOcYq6QqcgDiRzLYzjUXxgd3oOj1Nz6chjvDoRWMGNsS+16M9O
-	mtBhhpClCR0pJxKzU2eMPFuBTsyYbuPS2Nfphb9yssXYA4HPBtou
-X-Gm-Gg: ASbGncvy3wthhNqr7dougndyCBj4YyQEO/JQz7I/ZD4Olyj/Y7OuPsfYVmHccoJKOI1
-	tWoNl0CfRaA7TKLLcDNducQyJgK4P4UGnAzcZ7yJkpC8hXnS2DNuWiCIhD+f+QmZzRN0CraNlK2
-	estSnO/AcvX66h4X930siE/8APD+vWjFAoV8E//+1lSIjUXf9UfKb41Oot0WeMm3cA8CPSJCZxC
-	1Z70GB3ZNsRksW0nH4B4bTn7gKELWjLQALuhiIAkioJ/NPXhofAvul3eCZkNu7eA+PtGeQIIfbI
-	1TGJBYTL7czZu82hvHUBptiPlJO1copqdsQsiAFpzQaYC3OFLMVf+9L55M9dbMzkw8EcpJ7Z937
-	FqF047oFdU/t7JdH/8nYA
-X-Google-Smtp-Source: AGHT+IFofjG6nPXVtzMt5Y0CsWO/tGj669+qkVznvVfA7OuWByxfPQxw3OZ6XxR3s7vjxwVyUdwSSg==
-X-Received: by 2002:a05:622a:4c12:b0:48d:d1fb:3eee with SMTP id d75a77b69052e-4922620b317mr6475081cf.23.1746559972627;
-        Tue, 06 May 2025 12:32:52 -0700 (PDT)
-Received: from localhost (141.139.145.34.bc.googleusercontent.com. [34.145.139.141])
-        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-4922174b4casm1609311cf.36.2025.05.06.12.32.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 12:32:52 -0700 (PDT)
-Date: Tue, 06 May 2025 15:32:51 -0400
-From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-To: Jacob Keller <jacob.e.keller@intel.com>, 
- Andrew Lunn <andrew@lunn.ch>, 
- Alexander Shalimov <alex-shalimov@yandex-team.ru>
-Cc: netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- willemdebruijn.kernel@gmail.com, 
- jasowang@redhat.com, 
- davem@davemloft.net, 
- edumazet@google.com, 
- kuba@kernel.org, 
- pabeni@redhat.com
-Message-ID: <681a63e3c1a6c_18e44b2949d@willemb.c.googlers.com.notmuch>
-In-Reply-To: <24a121fd-aa4d-43db-8c8c-477bca99a7ae@intel.com>
-References: <20250506154117.10651-1-alex-shalimov@yandex-team.ru>
- <c02e519b-8b7d-414c-b602-5575c9382101@lunn.ch>
- <24a121fd-aa4d-43db-8c8c-477bca99a7ae@intel.com>
-Subject: Re: [PATCH] net/tun: expose queue utilization stats via ethtool
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Tby9ETG8"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=uZd/E8aqEp6rcmE1csr2nKssU+4+ZJwoZz4uwg8GaWA=; b=Tby9ETG8OfXXSnMJRqXdSPxyEV
+	wHNau/XLfsERq/UfOPVVCI1jWTAzztcbOkZzJsKm55yaW0R6S+MKj6991QLiLb9JdSw7djIksjlFe
+	vGuDpOopwCUiAQIkqaSz/gRMlUiKq/tFkS6nepD1sQsNYOwlB5Yw6jlfLe9dxRfhL52jIS2Vu0C3M
+	WLsMlRSBvQ1HVg6qlR44Ff3m6vRef70Kyhwn29jgU4/FURRaozGw59/v5kDuJkHdo2WgqiDzrNUf5
+	pLnxmsBKNB+AIpnrw/DtALSU3Nz8nGOZeQsgLp5R5KzLhRn0gIa0nvT6Gc/fwD6A7U6duK3EvvERU
+	bpv+/sKA==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uCO4i-0000000ADJ5-1QO8;
+	Tue, 06 May 2025 19:35:32 +0000
+Date: Tue, 6 May 2025 20:35:32 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Fan Ni <nifan.cxl@gmail.com>
+Cc: muchun.song@linux.dev, osalvador@suse.de, mcgrof@kernel.org,
+	a.manzanares@samsung.com, dave@stgolabs.net,
+	akpm@linux-foundation.org, david@redhat.com, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC 0/1] Convert is_migrate_isolate_page() to
+ is_migrate_isolate_folio()
+Message-ID: <aBpkhGBp40pUPqms@casper.infradead.org>
+References: <20250506184155.587070-1-nifan.cxl@gmail.com>
+ <aBpeR5E6XoneDcEj@casper.infradead.org>
+ <aBpho6pICFz-0Mbw@lg>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aBpho6pICFz-0Mbw@lg>
 
-Jacob Keller wrote:
+On Tue, May 06, 2025 at 12:23:15PM -0700, Fan Ni wrote:
+> We have a free_frozen_pages(page, order), which have two types of users
+> 1) head page and order directly from a struct folio; or
+> 2) page pointer that does not neccesarily be the head page of a
+> folio and order that may not be directly related to a folio;
 > 
-> 
-> On 5/6/2025 9:07 AM, Andrew Lunn wrote:
-> > On Tue, May 06, 2025 at 06:41:17PM +0300, Alexander Shalimov wrote:
-> >> This patch exposes per-queue utilization statistics via ethtool -S,
-> >> allowing on-demand inspection of queue fill levels. Utilization metrics are
-> >> captured at the time of the ethtool invocation, providing a snapshot useful
-> >> for correlation with guest and host behavior.
-> > 
-> > This does not fit the usual statistics pattern, which are simple
-> > incremental counters. Are there any other drivers doing anything like
-> > this?
-> I don't recall ever seeing anything like this. If there are, I feel it
-> is a mistake regardless, and we shouldn't repeat it without good reason.
-> 
-> +1 to looking at another option for reporting.
+> Does it make sense to introduce a dedicate function like
+> free_frozen_folio(struct folio *folio) to handle case 1)?
 
-Perhaps bpftrace with a kfunc at a suitable function entry point to
-get access to these ring structures.
+No.  free_frozen_pages() will eventually be just free_pages()
+when struct page has lost its refcount (as the refcount will have moved
+into the memdescs which need it).  It's premature to do anything to it
+now, we have many steps to go.
