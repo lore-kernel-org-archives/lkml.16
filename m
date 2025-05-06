@@ -1,216 +1,218 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2079.outbound.protection.outlook.com [40.107.20.79])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3EF015575C
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 08:25:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746519937; cv=none; b=pJXeL/wqmloWy/VDko770pz+MCEY9+jnvRh2qEz8qSNEWwoCy0PujafG1ok/Rh0NSOrkogsU9vwazfwfs1UDKBcltTeQ6/brkr/LcDj0ToNgagJgsrKw8T4dBVmYGbtK79Sn1UESzy6+V6Y6Dd4VRACb+Q68oX+hPbbzdcw2Ip4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746519937; c=relaxed/simple;
-	bh=I1P8tPM/iuy3ZNgzDHuDSRma6a/vqKGPF3HLeCtKKSM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BJugSjfwQgq+tyjOCoO6f3rNN5rwB0nSIJddymTm/cJYdu1rxXn8XVt1ZsXoTew8tGtS6AHca0F0oozJBL4Mn/4wuWb5xuRP5hfT07thynIzSUxmpWm43o04IMU9n3OAtjE7AoWEfRrPXO3wyP2hev4drWRLgA5He8dc95bmi7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iaWtLX1I; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47DB61F2C3B;
+	Tue,  6 May 2025 08:26:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.79
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746520011; cv=fail; b=upbR3o5w6exg2wHT5N12+9uQUsoOBpRPgiOg30y2bbSJJuoIIkvTJFSfWHdFQrwUTOm1iWAE4mNM4ThcWGuvM1PNSdzyCireVYD2hwfSR2h4COWLmB+RA2g1h6t3KDq49gxyiXjzr3pLz9sbpSSQli4H9FFnyyj0uaxaBgaSMJ8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746520011; c=relaxed/simple;
+	bh=FzhTZ1bZkxvqjH6KZOKjD7LBNWrfH/MJ2pXHPBoTj6A=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=rbrL4lOjihqranx9JdxqX0VAC/KIJCkri3XBS6qE2UOHErXRBbRd5SaGcQLiJWRZxZ6QHuWxnc87Rcvt0bkrWvIuRe5j8+PeJOlhkurmyYyx0f1H9JjGw0mUV0a5JCpGAgWG3If9wKzhWqwgoUnPSfgzWtGIwRHKognaH53GLiI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=lgVLBYi1; arc=fail smtp.client-ip=40.107.20.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iaWtLX1I"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-736c277331eso5804266b3a.1
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 01:25:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746519935; x=1747124735; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=TFFttdtCDEZCyNTJvWqYSjw8T9NidMPynxT2P6ADGEY=;
-        b=iaWtLX1Itq+G7YDWEwKa/EgWASNziIZlVHpO2tBwGJs6km2S5x+PUFRt2NKKqtCfR/
-         8VgH7rChdBM5QSriJj9Pb9i8ykjXRfLdQrLgkc0rDtVqC8tueQxhwVf7rkCwco5nEu6H
-         SLR3OiahP/x2gObctZh+cct+nA6+aDtPEWRKRKJfx1U5+uGiLfgwD6qXTFi94w8lyNGN
-         nZQPhxcYcP0eEFTPDXKQFm7vHILXlLjtOsA9Chdet3Rn3KuK97KloARzk5BPrnJc4O0N
-         4Pz7xw6iSDw3/w5xxmqhspW9Za0Y+U6n9L+xMmWbIJtNPFGNVMkPMXf7qdPAlFaEzIGT
-         4pSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746519935; x=1747124735;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TFFttdtCDEZCyNTJvWqYSjw8T9NidMPynxT2P6ADGEY=;
-        b=ehnt5w1Sk1U6IsQCNuLToE+gS60BjUeZg6fD0K5d/KEVFiPeGnuJN+gpNY77cDztF1
-         QVhuA/4f6sqXOV60aD9gGlSh0f00aYjJwkZtg5IclHpRnIQrUmTjas+nv+0plcTf3oX2
-         FKFXsvzmMWWC42d9BGHhPAFKbLZq9cGAK5TW8EpmXPiXz0qy8MfGcVuOueHYjeU50hMs
-         G2vgTlFW7U5LVNq3qhR6+dKjTW5Z6WMUR4cwIV1VlnXroZcTcYTQbNJo5RhJ0BK7CEbM
-         J+Bkdg9kP49vf/PJlHCT7GotzizG0iCsReO8tcj52ZRjnou5FgZ17pW8MS5SWWU8ZDh6
-         cMKg==
-X-Forwarded-Encrypted: i=1; AJvYcCW8lJucYZL88Zkbnb6tsZhWqPyEl4GOHnU4938so6XPqGJXJbTMFzSqU2K6q/z+Az4EaC+glQaL6CU1ezc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9stiV7Gj0zfgCchgo18hVLFdWwSWl2Ld4pl6w/TraUSEdvqj0
-	Sw8P3ro+0b+jJZdWcIAQGCXtdSr1KsKemd5KKGYZouGkebxQs16V
-X-Gm-Gg: ASbGnctv4strXqpP0N3Fuelm3+xid77hk4EBSsT8If2RR2UVrDIA5n94Gh4WonMjw9Z
-	fElMXu5vEpDHXOYbZkUFrju8EJQovbs5v+jyNoifY8uCsK6hjkZit/rNazgYg9y/i5k+okFtu58
-	v8ZUDCaRVvcs/VSkDm90TPwm4QzHfcKzOmuX/T2IjiOsajbShjnP+xwVxwM6Kmc++kbLub0sCoz
-	AUdZFSpTXFDs5Srq9dBR6RhXxjTEu31Csc2I3NAgOL0Ov5qQ7hMmPCQirlFcK71hpNp2mhRJAmq
-	ebjUIMqAU4iy4O8zPxpQIOsJls+ig1+f+tzVSud0ASWbyjHzKuZ8yuC7jGtza0InE8ANtQ==
-X-Google-Smtp-Source: AGHT+IFqpuETaQnwTGTEmS5W7RR74OY3ecaKXVFMfCX78LqX+oJkQ8BmrW1I6LpLRP6E5qbObcC5dg==
-X-Received: by 2002:a05:6a21:6da3:b0:1f3:323e:3743 with SMTP id adf61e73a8af0-2116fa3a73bmr3548319637.12.1746519934852;
-        Tue, 06 May 2025 01:25:34 -0700 (PDT)
-Received: from localhost.localdomain ([121.185.186.233])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b1fb3920f6dsm6904412a12.10.2025.05.06.01.25.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 01:25:34 -0700 (PDT)
-From: Jeongjun Park <aha310510@gmail.com>
-To: akpm@linux-foundation.org
-Cc: urezki@gmail.com,
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="lgVLBYi1"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=LTIHwZhqm8giOEKHh/XjOvGmjOqbrrwtKiNXEO3sIHrYwj5DnQOsNVT0E3mXxoPJoTr5V+yDN0iyre//TU3VRX9VQI7ZxTUf9OluSudiasoNI2Wx0w1gTb+TWEh6cbDoQEJiYVbO3//D91gDmfCx8exu54yrjzSVLGMPxlsznm7V8XMdsyo8U7hbLwFxMzCMN/8kNYu2aU1G/xHoB40uw1SCvFXVTNXQqXROhx4WqLUQKxd6FTHVZROy5W5DGmp0yF9nDxCa5yC3lkQWzzMGNcF0ipElLpnXmFRammEp2LHOscDxVByGFYGyrFeTuf2AlPqrgR0lz7pji/S5Ya4hUw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=zssKaXKfPOtcDGKX1NK6o8nnTs7rAayFHXgJuHOE3zo=;
+ b=BmSwYFLZzkwHsVuEpCUJYuPG0T/f+5bMDsMQ5Ff/lCTVomJafbkslkeu4KOZ36nNkwmrJWkqypa4/38OXsJYlizpxLfRket8uXbCWSc1xLwP6fDls/kMvsM38Ymy0ITbdOqKUu4Woat76XSq+c8gX0VATrs89TD06MXk5/ZgI+xSKB1SdbPtGf7DeiEyzimxRou8WL1pAfON9ohfpko5gpENHyLwdgUvq2Jk1eZD+k7PvrEYnmYRIxTSoh1AiQ0nkVsyvL/PB2IheShoxliLAuLd64xDrn0Pmur9fjpTvbsVm9paPM2Yd6YxjH4949/kGiPrCyqHD2niAnuZLI83mg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zssKaXKfPOtcDGKX1NK6o8nnTs7rAayFHXgJuHOE3zo=;
+ b=lgVLBYi134+nQMMKTZugNxYE+O+CztZBGglVbI88khGHh899VGOVcpbcnMUroFOoNNhPcMRo8qmKXyCW8BRJq+4yV4Z/M4dlF3eGqkaY2+8k67Ju16zpELUf440134TstzHy4qYlCLx32T4IyUO+mJ5yp4qD9cokrxQFr5cYADANy7tk3gBK4eOS19MhWvAeJRDltmxXrKIbhBPd25G6DVZJcZFIuE0veBz/LFn+GTnYgpnWQRQwPnZtJZcEdlAFPltbpCzvyN+Erjw4Kfh4C01tEOTBso5zZ2OmtLnZc8iBNaEBQKWYUBoZ+yW3Gsg9OdhwhSBkwclmCpmzbU9+oA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB8510.eurprd04.prod.outlook.com (2603:10a6:102:211::7)
+ by PA2PR04MB10158.eurprd04.prod.outlook.com (2603:10a6:102:404::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.24; Tue, 6 May
+ 2025 08:26:45 +0000
+Received: from PAXPR04MB8510.eurprd04.prod.outlook.com
+ ([fe80::a7c2:e2fa:8e04:40db]) by PAXPR04MB8510.eurprd04.prod.outlook.com
+ ([fe80::a7c2:e2fa:8e04:40db%4]) with mapi id 15.20.8699.022; Tue, 6 May 2025
+ 08:26:45 +0000
+From: Wei Fang <wei.fang@nxp.com>
+To: claudiu.manoil@nxp.com,
+	vladimir.oltean@nxp.com,
+	xiaoning.wang@nxp.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
 	edumazet@google.com,
-	linux-mm@kvack.org,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: christophe.leroy@csgroup.eu,
+	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Jeongjun Park <aha310510@gmail.com>
-Subject: [PATCH v2] mm/vmalloc: fix data race in show_numa_info()
-Date: Tue,  6 May 2025 17:25:19 +0900
-Message-ID: <20250506082520.84153-1-aha310510@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	imx@lists.linux.dev,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-arm-kernel@lists.infradead.org,
+	timur@kernel.org
+Subject: [PATCH v7 net-next 00/14] Add more features for ENETC v4 - round 2
+Date: Tue,  6 May 2025 16:07:21 +0800
+Message-Id: <20250506080735.3444381-1-wei.fang@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR06CA0249.apcprd06.prod.outlook.com
+ (2603:1096:4:ac::33) To PAXPR04MB8510.eurprd04.prod.outlook.com
+ (2603:10a6:102:211::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB8510:EE_|PA2PR04MB10158:EE_
+X-MS-Office365-Filtering-Correlation-Id: c7553e49-90b4-4af7-c93b-08dd8c77bce4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|52116014|1800799024|7416014|376014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?CJApqH2fr0lbLhB2EKl5buNAvxjRTzQg+f/cPigguEQavfphGn7qJK5jp/Xl?=
+ =?us-ascii?Q?uJ3aBsJpbdkDBwjLhL97BvX1MIr+3t019ARkQand+xkj/WfJdscNruXb+8T/?=
+ =?us-ascii?Q?SixEfTVhlpwo71FBrbk+0MewrEb2cGeNGBksFZLGEEFeDcrrnIDvtW1+sWVe?=
+ =?us-ascii?Q?k6/AvHrTS/fskv0dYTwRUHD9TQHcPA5lmHP8Z5j1+tPxjuT0G8GTratmzDt2?=
+ =?us-ascii?Q?yqmxrPNe1/fvZB9SlzgcRKjCgxWuLKKhJKuMPBxfkKQKRT2hq5N2KAEIs3gx?=
+ =?us-ascii?Q?1EcV/xiTcgDX5115+Au2/xtfLAEtfh51d1lb2F0XFctNrLXFqC1OTPLkWdy5?=
+ =?us-ascii?Q?hQh830rNihtw6Zoe006FAXwqpWz3zBC6FjzBGV8eINO/sMDpFgIXoq0sXboT?=
+ =?us-ascii?Q?/t7p9+/Lfwnn1+3IPtpepgHvMyTUZ/lMGjgw2Ie+dErqHKpEx0k9Faos8oEs?=
+ =?us-ascii?Q?e3oXXqm+DFwJUdM3e6JdtjsAV8itmybMyU2UpootFT1/VEIo9kFpSXeSLRfN?=
+ =?us-ascii?Q?4dCUUhXvBx4KuaUejZBIzueITxl1X5nQ9I97vYQJRhwtYV4+yuwmfTXszaMY?=
+ =?us-ascii?Q?ysmO14gds2lLUOAi3S11huQcV+yXaKMn3HIvkWbf5hfh1nGlICXoMsD75ln1?=
+ =?us-ascii?Q?bRovi+kS2Eh7E2b3Rr8ULaf3Lpc2jpcKwVbLdRaR02vR5wj39AsoYY1mDY1L?=
+ =?us-ascii?Q?cyaRqEnGNYfG9VT+rur6c5z4fB/zD84qLwgOQH+cMY2woXYN7dta/UNcc9mz?=
+ =?us-ascii?Q?yONJsTJ1IEyFGfCrghp7JEauB0hdGnaAUKEk5Hj1f9PTibnxk9JazF2r6YFB?=
+ =?us-ascii?Q?dL79buLvCq2DVHOjWIdojqIw7XIFFtuzlZPPwxr8MZIDxeXoSqzZFArQEX3c?=
+ =?us-ascii?Q?QyiZTPKJPEkyORkyyosY3285syTF4SutHiiTLsKh6Mc3V8KuruIFgGdH4xRL?=
+ =?us-ascii?Q?ZcNfI/UCgc4jw5dBrRk6MQSKFKgolHVgwvMHU13dq/jTMdRL87sRDngX7Ojh?=
+ =?us-ascii?Q?NeZZPGAc4EjQN/51ATVr7pvPfPbQXDv5nnpbsGZybt+NR4BSW9Ka6swjgswY?=
+ =?us-ascii?Q?9kDpSdG/cBlWm5J3P2pOwkVOPJl5QQntZ4WlPxHiDR0AhlE5zbo0Qd30W9Ag?=
+ =?us-ascii?Q?WCM28YhwqpRV8/zpVy+SKJ+S3ArrcQubAG0QDbVvxnQkJX3Z78rmYB7ONFMq?=
+ =?us-ascii?Q?P+4ZrYN4uqArPftWqeGr/c1JborInf7/cu5waenyDNaL7+wjiwAAWK96ScjE?=
+ =?us-ascii?Q?1umzdgbxnuPaYkP8zWyxDzCGMIE4iuJ6jZ8bdEadgjLYfdh1hzshwba0EDBy?=
+ =?us-ascii?Q?vgMjgoq3k+/aWTo5YuRZ9penE3PYiSvdvDbuo+/vcCp9PWHXS06s+m8xDeF+?=
+ =?us-ascii?Q?Jx6V/N+Yx8O8zUtfha0Ii82YJHdeozPCMEkxf2HVx2bjxdIzqAJAw3kuiSoF?=
+ =?us-ascii?Q?Qynf/RpgrDNulB6DqporDF8jXWllU0W0vlHtyrQPAJv7c7JLrRZUvI6vdOFk?=
+ =?us-ascii?Q?7y84BwA8AwuK+HM=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8510.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(52116014)(1800799024)(7416014)(376014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?8lnctn+lp4W/zKvNPH0JZPcO2PfesphT2JJ1aX2eGDWkK2SNzAuCqFp/r+Pm?=
+ =?us-ascii?Q?npAI7JVYpghGRVCC1cKOlE2rJQnqiKfrxyiTW2OCdwMmkPYIV5RucedBhT+K?=
+ =?us-ascii?Q?YDsepDWiMwOU3cZ9HWUggaeRVuIQbNGBpu5xsEsSWCV/XJNkdRV/5Q1YWpDT?=
+ =?us-ascii?Q?HgHx0QtpwJFxc8dVuVfK7l5jub0eMRwRSCH5eHGXC8UAHkYQOGJVZ0hR+fCg?=
+ =?us-ascii?Q?rKWAIXLxaJpocnn099N1gu2qHiKgpIBuf2/AeQJP29bw48b2YyqoKgMy2U/w?=
+ =?us-ascii?Q?XuU02YiugITSOYoM438GwGnrTGkEjeUgZpZi8AmMH7LomuvKA5KloQUgazgt?=
+ =?us-ascii?Q?VnZd/aQ4jTpq7ld7YpJLL5QLQ2diV318I3RiHhfUsmLLbFuAXjWLUg8sNdUe?=
+ =?us-ascii?Q?4wT5TgSTRvfFnaut62kLWTNHO4xnFqgmtnx/2EV3SRA/Sm2KpAmIqdx6CNw4?=
+ =?us-ascii?Q?IPxaooxdE+F95ty/5KyRSO7OSEQ+cfDabtZ40NYQ7dANxIZwJJuwXxEb5XLO?=
+ =?us-ascii?Q?YhNDWB5Eug/5Qr3ZRxLCFn9kVI4ufiXxWcNvZButMKTyy3jJN8J9qwqkgAM+?=
+ =?us-ascii?Q?D4/5MmXBiRZXYTQ54zLLBILWIXPYxzjAQQ0Pvacnp+5hfrw/xz6VI7ueneMd?=
+ =?us-ascii?Q?8vCtUzOykAC8pR6p2bowHktm8C7reyfVBRwjemWu6ivc4BZfUt981ADWTuqm?=
+ =?us-ascii?Q?zWYoJB0rutMG/7TMHguuOp5DnZT6MlsNOUfVynlrANbkx6M9QaeaHTc4pQbK?=
+ =?us-ascii?Q?CmM6m3KxF7y7XY4w26m8wGCfWsIfTBUDT0lkj52US27BK9vDAZ2W2EKhjmFM?=
+ =?us-ascii?Q?H7Xa1B9U2Q+GK39sskAOK+57jq2UKaV6QuMzRni0nVzSvBB8megD9FLAQg1T?=
+ =?us-ascii?Q?ISmH/LGGEufK+Vb6ZymmVcOhtdxVCZEDy2axEWDiwl3YBaZCZHYnEY4nNmOq?=
+ =?us-ascii?Q?76brgSa0HIS5lg9hDKNx0VoK9xFrwHW1zUp5rdW6NOVGrXUYZ+2OooAJY/O7?=
+ =?us-ascii?Q?ngGr6e/KwCAe5b398lOtas/EBqsJcbXWlulKGDFLZ0veqawlF4mO386OKNVe?=
+ =?us-ascii?Q?Rxp0EaGz2JC6EnZkvSxub9DP4CJvEatbuP7a/PexRITYG9OeVsd+P8FqJrnp?=
+ =?us-ascii?Q?O9rTjiITGIQpDFqs/GyA3da1cdVctCFx5fBGCmKmcUtOhY4xLOGb158T4yqS?=
+ =?us-ascii?Q?6OZ2ix2asVzMAQG/DQRL6NJC6qGUz+F1t3CEx+KtDvE7q9MKrgVV9MWkJgQ7?=
+ =?us-ascii?Q?it6JkgU3aNJo+Gx9WPRmwk5DzfuOvKLbcY5laEXvSrlgcnZfGezjkf47dabC?=
+ =?us-ascii?Q?1kEo3zB4ttjE+61D6lTn+RjRSpnnpVI+hwatEVarHsdjgW6y6h0IutNQ4Rtq?=
+ =?us-ascii?Q?41YgbunK9E7BGe5joNhnrswydDaYiE8EyaQH57jZPueu+Km6fKFUm4oCZrda?=
+ =?us-ascii?Q?UpFoAKL4+E8H4MW4bx6KjHOS86T1twx5HDCRO1ccDQuZsx/lCsmCPBl9XAzO?=
+ =?us-ascii?Q?M/AZ9ANfIGgHoQHvuUuRz8xBHK3m3nNZRgQf1U0kFtODhA6cUQYaQf2vvsiY?=
+ =?us-ascii?Q?vVXBH+QlKdMbodwvZA4dsL7dD/WtAmKNQezkgwmf?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c7553e49-90b4-4af7-c93b-08dd8c77bce4
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8510.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 08:26:45.6851
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 205axA5XidHqTbCXLiELaRgRQfy4LcH+kAEvo5s7UK/jL0S1BKSmx+7lBRhKDuADfd0c/zjAdv25tyf3TVB7/Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA2PR04MB10158
 
-The following data-race was found in show_numa_info():
+This patch set adds the following features.
+1. Compared with ENETC v1, the formats of tables and command BD of ENETC
+v4 have changed significantly, and the two are not compatible. Therefore,
+in order to support the NETC Table Management Protocol (NTMP) v2.0, we
+introduced the netc-lib driver and added support for MAC address filter
+table and RSS table.
+2. Add MAC filter and VLAN filter support for i.MX95 ENETC PF.
+3. Add RSS support for i.MX95 ENETC PF.
+4. Add loopback support for i.MX95 ENETC PF.
 
-==================================================================
-BUG: KCSAN: data-race in vmalloc_info_show / vmalloc_info_show
-
-read to 0xffff88800971fe30 of 4 bytes by task 8289 on cpu 0:
- show_numa_info mm/vmalloc.c:4936 [inline]
- vmalloc_info_show+0x5a8/0x7e0 mm/vmalloc.c:5016
- seq_read_iter+0x373/0xb40 fs/seq_file.c:230
- proc_reg_read_iter+0x11e/0x170 fs/proc/inode.c:299
- new_sync_read fs/read_write.c:489 [inline]
- vfs_read+0x5b4/0x740 fs/read_write.c:570
- ksys_read+0xbe/0x190 fs/read_write.c:713
- __do_sys_read fs/read_write.c:722 [inline]
- __se_sys_read fs/read_write.c:720 [inline]
- __x64_sys_read+0x41/0x50 fs/read_write.c:720
- x64_sys_call+0x1729/0x1fd0 arch/x86/include/generated/asm/syscalls_64.h:1
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xa6/0x1b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-write to 0xffff88800971fe30 of 4 bytes by task 8287 on cpu 1:
- show_numa_info mm/vmalloc.c:4934 [inline]
- vmalloc_info_show+0x38f/0x7e0 mm/vmalloc.c:5016
- seq_read_iter+0x373/0xb40 fs/seq_file.c:230
- proc_reg_read_iter+0x11e/0x170 fs/proc/inode.c:299
- new_sync_read fs/read_write.c:489 [inline]
- vfs_read+0x5b4/0x740 fs/read_write.c:570
- ksys_read+0xbe/0x190 fs/read_write.c:713
- __do_sys_read fs/read_write.c:722 [inline]
- __se_sys_read fs/read_write.c:720 [inline]
- __x64_sys_read+0x41/0x50 fs/read_write.c:720
- x64_sys_call+0x1729/0x1fd0 arch/x86/include/generated/asm/syscalls_64.h:1
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xa6/0x1b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-value changed: 0x0000008f -> 0x00000000
-==================================================================
-
-According to this report, there is a read/write data-race because m->private
-is accessible to multiple CPUs. To fix this, instead of allocating the heap
-in proc_vmalloc_init() and passing the heap address to m->private,
-show_numa_info() should allocate the heap.
-
-One thing to note is that show_numa_info() is called in a critical section
-of a spinlock, so it must be allocated on the heap with GFP_ATOMIC flag.
-
-Fixes: a47a126ad5ea ("vmallocinfo: add NUMA information")
-Suggested-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: Jeongjun Park <aha310510@gmail.com>
 ---
-v2: Refactoring some functions and fix patch as per Eric Dumazet suggestion
-- Link to v1: https://lore.kernel.org/all/20250505171948.24410-1-aha310510@gmail.com/
+v1 Link: https://lore.kernel.org/imx/20250103060610.2233908-1-wei.fang@nxp.com/
+v2 Link: https://lore.kernel.org/imx/20250113082245.2332775-1-wei.fang@nxp.com/
+v3 Link: https://lore.kernel.org/imx/20250304072201.1332603-1-wei.fang@nxp.com/
+v4 Link: https://lore.kernel.org/imx/20250311053830.1516523-1-wei.fang@nxp.com/
+v5 Link: https://lore.kernel.org/imx/20250411095752.3072696-1-wei.fang@nxp.com/
+v6 Link: https://lore.kernel.org/imx/20250428105657.3283130-1-wei.fang@nxp.com/ 
+v7 changes:
+1. Replace debugfs_remove_recursive() with debugfs_remove()
+2. Collect tags
 ---
- mm/vmalloc.c | 50 +++++++++++++++++++++++++-------------------------
- 1 file changed, 25 insertions(+), 25 deletions(-)
 
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 3ed720a787ec..a5e795346141 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -4914,28 +4914,32 @@ bool vmalloc_dump_obj(void *object)
- #endif
- 
- #ifdef CONFIG_PROC_FS
-+
-+/*
-+ * Print number of pages allocated on each memory node.
-+ *
-+ * This function can only be called if CONFIG_NUMA is enabled
-+ * and VM_UNINITIALIZED bit in v->flags is disabled.
-+ */
- static void show_numa_info(struct seq_file *m, struct vm_struct *v)
- {
--	if (IS_ENABLED(CONFIG_NUMA)) {
--		unsigned int nr, *counters = m->private;
--		unsigned int step = 1U << vm_area_page_order(v);
-+	unsigned int nr, *counters;
-+	unsigned int step = 1U << vm_area_page_order(v);
- 
--		if (!counters)
--			return;
-+	counters = kcalloc(nr_node_ids, sizeof(unsigned int), GFP_ATOMIC);
-+	if (!counters)
-+		return;
- 
--		if (v->flags & VM_UNINITIALIZED)
--			return;
--		/* Pair with smp_wmb() in clear_vm_uninitialized_flag() */
--		smp_rmb();
-+	/* Pair with smp_wmb() in clear_vm_uninitialized_flag() */
-+	smp_rmb();
- 
--		memset(counters, 0, nr_node_ids * sizeof(unsigned int));
-+	for (nr = 0; nr < v->nr_pages; nr += step)
-+		counters[page_to_nid(v->pages[nr])] += step;
-+	for_each_node_state(nr, N_HIGH_MEMORY)
-+		if (counters[nr])
-+			seq_printf(m, " N%u=%u", nr, counters[nr]);
- 
--		for (nr = 0; nr < v->nr_pages; nr += step)
--			counters[page_to_nid(v->pages[nr])] += step;
--		for_each_node_state(nr, N_HIGH_MEMORY)
--			if (counters[nr])
--				seq_printf(m, " N%u=%u", nr, counters[nr]);
--	}
-+	kfree(counters);
- }
- 
- static void show_purge_info(struct seq_file *m)
-@@ -5013,7 +5017,10 @@ static int vmalloc_info_show(struct seq_file *m, void *p)
- 			if (is_vmalloc_addr(v->pages))
- 				seq_puts(m, " vpages");
- 
--			show_numa_info(m, v);
-+			if (!(v->flags & VM_UNINITIALIZED) &&
-+						IS_ENABLED(CONFIG_NUMA))
-+				show_numa_info(m, v);
-+
- 			seq_putc(m, '\n');
- 		}
- 		spin_unlock(&vn->busy.lock);
-@@ -5028,14 +5035,7 @@ static int vmalloc_info_show(struct seq_file *m, void *p)
- 
- static int __init proc_vmalloc_init(void)
- {
--	void *priv_data = NULL;
--
--	if (IS_ENABLED(CONFIG_NUMA))
--		priv_data = kmalloc(nr_node_ids * sizeof(unsigned int), GFP_KERNEL);
--
--	proc_create_single_data("vmallocinfo",
--		0400, NULL, vmalloc_info_show, priv_data);
--
-+	proc_create_single("vmallocinfo", 0400, NULL, vmalloc_info_show);
- 	return 0;
- }
- module_init(proc_vmalloc_init);
---
+Wei Fang (14):
+  net: enetc: add initial netc-lib driver to support NTMP
+  net: enetc: add command BD ring support for i.MX95 ENETC
+  net: enetc: move generic MAC filtering interfaces to enetc-core
+  net: enetc: add MAC filtering for i.MX95 ENETC PF
+  net: enetc: add debugfs interface to dump MAC filter
+  net: enetc: add set/get_rss_table() hooks to enetc_si_ops
+  net: enetc: make enetc_set_rss_key() reusable
+  net: enetc: add RSS support for i.MX95 ENETC PF
+  net: enetc: change enetc_set_rss() to void type
+  net: enetc: enable RSS feature by default
+  net: enetc: extract enetc_refresh_vlan_ht_filter()
+  net: enetc: move generic VLAN hash filter functions to
+    enetc_pf_common.c
+  net: enetc: add VLAN filtering support for i.MX95 ENETC PF
+  net: enetc: add loopback support for i.MX95 ENETC PF
+
+ MAINTAINERS                                   |   1 +
+ drivers/net/ethernet/freescale/enetc/Kconfig  |   8 +
+ drivers/net/ethernet/freescale/enetc/Makefile |   4 +
+ drivers/net/ethernet/freescale/enetc/enetc.c  |  76 ++-
+ drivers/net/ethernet/freescale/enetc/enetc.h  |  45 +-
+ .../ethernet/freescale/enetc/enetc4_debugfs.c |  90 ++++
+ .../ethernet/freescale/enetc/enetc4_debugfs.h |  20 +
+ .../net/ethernet/freescale/enetc/enetc4_hw.h  |  12 +
+ .../net/ethernet/freescale/enetc/enetc4_pf.c  | 368 +++++++++++++-
+ .../net/ethernet/freescale/enetc/enetc_cbdr.c |  50 ++
+ .../ethernet/freescale/enetc/enetc_ethtool.c  |  74 ++-
+ .../net/ethernet/freescale/enetc/enetc_pf.c   | 105 +---
+ .../net/ethernet/freescale/enetc/enetc_pf.h   |  14 +-
+ .../freescale/enetc/enetc_pf_common.c         |  93 +++-
+ .../freescale/enetc/enetc_pf_common.h         |   3 +
+ .../net/ethernet/freescale/enetc/enetc_vf.c   |  10 +-
+ drivers/net/ethernet/freescale/enetc/ntmp.c   | 462 ++++++++++++++++++
+ .../ethernet/freescale/enetc/ntmp_private.h   | 103 ++++
+ include/linux/fsl/ntmp.h                      | 121 +++++
+ 19 files changed, 1485 insertions(+), 174 deletions(-)
+ create mode 100644 drivers/net/ethernet/freescale/enetc/enetc4_debugfs.c
+ create mode 100644 drivers/net/ethernet/freescale/enetc/enetc4_debugfs.h
+ create mode 100644 drivers/net/ethernet/freescale/enetc/ntmp.c
+ create mode 100644 drivers/net/ethernet/freescale/enetc/ntmp_private.h
+ create mode 100644 include/linux/fsl/ntmp.h
+
+-- 
+2.34.1
+
