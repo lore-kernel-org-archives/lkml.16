@@ -1,96 +1,148 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5726A26FD81
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 10:26:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9185238C25;
+	Tue,  6 May 2025 10:29:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746527210; cv=none; b=KDw0zfayM9qNvQeBWq30FW6Weo/W8lUIhSNB+Gjt7rg/BJ2dl8bJGmvPWUY4BIuqrAwb1V+80VlbHOU3jGVIuE3UNlL0nk6cFsDwdCo65qbsU1Kl8dz4P6w4sjifLlH9lZRvzRuif2+BnZZX6vM5/b78zufajbdZ09pmtrvgHaE=
+	t=1746527348; cv=none; b=jwHJXJ/qEZamY5tX3tJaxftUmUzvyuOC3JAiasOKWF569MPs3UJZWn+GChnpmjyYwxDM8D0JO7aUhXtskVeikJPI3YhHcKMnkz7UrE77SCL8x0bNfkOoYW0Cb6zFeREQ06udbM0W3sSWrIMmrq89OR0CNCBCSuH+CGSIz8ftq5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746527210; c=relaxed/simple;
-	bh=1Ivtt5aDW1FFmaK6JlMxYyI8tpl1f+b9vgZYtmbilvE=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=BSX5LrpehckmQDXobnOfFi561FuZca+FNTGplnlwdnlTJ/9vZsLGfnxxgBsK6NJK5JNoX9FgcpaH4chR8EnE6dNTPlpr14ZDx96OiDPhAkmxZXNdhq58nOZykisQhZOvs62xypvUibUlMTl5Uek3T/VXMhpEUrHdfnWYpMOI8gM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Q4IahJjG; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q4IahJjG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746527207;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ldh2ZjQIYGdGGzK49enEKH+FzA5Hf8dgiRrydZ2YEkY=;
-	b=Q4IahJjGpQ7aVNpC3p2vdx7NBsw5bZ01ri2yl5Y3I0phL30hOAWQjnaDLfgyj6YDbiYXUA
-	0yOuI1J3RuxCuvdVANha0+DVRoFA5J0fE7VL47jGpKf51vizcayBbHSTOsoKZABys8dTT5
-	EsRUTZjW2rdHfWlfyOY5mW/eZQJS9gE=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-402-Owsc9BgwOOK2xVtAbikYmA-1; Tue,
- 06 May 2025 06:26:44 -0400
-X-MC-Unique: Owsc9BgwOOK2xVtAbikYmA-1
-X-Mimecast-MFC-AGG-ID: Owsc9BgwOOK2xVtAbikYmA_1746527202
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AF1EB1955D52;
-	Tue,  6 May 2025 10:26:41 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.188])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 15C0519560AF;
-	Tue,  6 May 2025 10:26:36 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <20250505-erproben-zeltlager-4c16f07b96ae@brauner>
-References: <20250505-erproben-zeltlager-4c16f07b96ae@brauner> <433928.1745944651@warthog.procyon.org.uk>
-To: Christian Brauner <brauner@kernel.org>
-Cc: dhowells@redhat.com, Alexander Viro <viro@zeniv.linux.org.uk>,
-    Etienne Champetier <champetier.etienne@gmail.com>,
-    Marc Dionne <marc.dionne@auristor.com>,
-    Jeffrey Altman <jaltman@auristor.com>,
-    Chet Ramey <chet.ramey@case.edu>, Steve French <sfrench@samba.org>,
-    linux-afs@lists.infradead.org, openafs-devel@openafs.org,
-    linux-cifs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-    linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] afs, bash: Fix open(O_CREAT) on an extant AFS file in a sticky dir
+	s=arc-20240116; t=1746527348; c=relaxed/simple;
+	bh=RvVgQRuS1ioTG27+rPn4EgtU4kcWSyIYqIhT8KufxXs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XOHEN84q81fRdzuhuqQ7Wwm9C0yim0Rg0/d8liAVl6Uxp/E5gRfpMkZkG4MbHy03iCWMtK4t+SpdmZd7eEI+HOr/5AVBqxAUZNBeiAq8HDDYiPrJgr57q8uVOwOl71FS8lIlWbdMKxooO8Cl71bjqpjgbWWITZehFsFHWzJzurc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1012FC4CEE4;
+	Tue,  6 May 2025 10:29:04 +0000 (UTC)
+Date: Tue, 6 May 2025 11:29:02 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Ard Biesheuvel <ardb@kernel.org>, Yeoreum Yun <yeoreum.yun@arm.com>,
+	will@kernel.org, nathan@kernel.org, nick.desaulniers+lkml@gmail.com,
+	morbo@google.com, justinstitt@google.com, broonie@kernel.org,
+	maz@kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com,
+	shameerali.kolothum.thodi@huawei.com, james.morse@arm.com,
+	hardevsinh.palaniya@siliconsignals.io,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev, stable@vger.kernel.org
+Subject: Re: [PATCH v2] arm64/cpufeature: annotate arm64_use_ng_mappings with
+ ro_after_init to prevent wrong idmap generation
+Message-ID: <aBnkbkVMEAQsYIpJ@arm.com>
+References: <20250502180412.3774883-1-yeoreum.yun@arm.com>
+ <174626735218.2189871.10298017577558632540.b4-ty@arm.com>
+ <aBYkGJmfWDZHBEzp@arm.com>
+ <aBZ7P3/dUfSjB0oV@e129823.arm.com>
+ <aBkL-zUpbg7_gCEp@arm.com>
+ <aBnDqvY5c6a3qQ4H@e129823.arm.com>
+ <fbfded61-cfe2-4416-9098-ef39ef3e2b62@arm.com>
+ <CAMj1kXFAYDeCgtPspQubkY688tcqwCMzCD+jEXb6Ea=9mBcdcQ@mail.gmail.com>
+ <aBnhwZKInFEiPkhz@arm.com>
+ <3cfcd0c5-79a2-45de-8497-fb95ef834dc1@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1209710.1746527190.1@warthog.procyon.org.uk>
-Date: Tue, 06 May 2025 11:26:30 +0100
-Message-ID: <1209711.1746527190@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3cfcd0c5-79a2-45de-8497-fb95ef834dc1@arm.com>
 
-Christian Brauner <brauner@kernel.org> wrote:
-
-> > However, the bash work around is going to be removed:
+On Tue, May 06, 2025 at 11:22:47AM +0100, Ryan Roberts wrote:
+> On 06/05/2025 11:17, Catalin Marinas wrote:
+> > On Tue, May 06, 2025 at 11:41:05AM +0200, Ard Biesheuvel wrote:
+> >> On Tue, 6 May 2025 at 10:16, Ryan Roberts <ryan.roberts@arm.com> wrote:
+> >>> On 06/05/2025 09:09, Yeoreum Yun wrote:
+> >>>>> On Sat, May 03, 2025 at 09:23:27PM +0100, Yeoreum Yun wrote:
+> >>>>>>> On Sat, May 03, 2025 at 11:16:12AM +0100, Catalin Marinas wrote:
+> >>>>>>>> On Fri, 02 May 2025 19:04:12 +0100, Yeoreum Yun wrote:
+> >>>>>>>>> create_init_idmap() could be called before .bss section initialization
+> >>>>>>>>> which is done in early_map_kernel().
+> >>>>>>>>> Therefore, data/test_prot could be set incorrectly by PTE_MAYBE_NG macro.
+> >>>>>>>>>
+> >>>>>>>>> PTE_MAYBE_NG macro set NG bit according to value of "arm64_use_ng_mappings".
+> >>>>>>>>> and this variable places in .bss section.
+> >>>>>>>>>
+> >>>>>>>>> [...]
+> >>>>>>>>
+> >>>>>>>> Applied to arm64 (for-next/fixes), with some slight tweaking of the
+> >>>>>>>> comment, thanks!
+> >>>>>>>>
+> >>>>>>>> [1/1] arm64/cpufeature: annotate arm64_use_ng_mappings with ro_after_init to prevent wrong idmap generation
+> >>>>>>>>       https://git.kernel.org/arm64/c/12657bcd1835
+> >>>>>>>
+> >>>>>>> I'm going to drop this for now. The kernel compiled with a clang 19.1.5
+> >>>>>>> version I have around (Debian sid) fails to boot, gets stuck early on:
+> >>>>>>>
+> >>>>>>> $ clang --version
+> >>>>>>> Debian clang version 19.1.5 (1)
+> >>>>>>> Target: aarch64-unknown-linux-gnu
+> >>>>>>> Thread model: posix
+> >>>>>>> InstalledDir: /usr/lib/llvm-19/bin
+> >>>>>>>
+> >>>>>>> I didn't have time to investigate, disassemble etc. I'll have a look
+> >>>>>>> next week.
+> >>>>>>
+> >>>>>> Just for your information.
+> >>>>>> When I see the debian package, clang 19.1.5-1 doesn't supply anymore:
+> >>>>>>  - https://ftp.debian.org/debian/pool/main/l/llvm-toolchain-19/
+> >>>>>>
+> >>>>>> and the default version for sid is below:
+> >>>>>>
+> >>>>>> $ clang-19 --version
+> >>>>>> Debian clang version 19.1.7 (3)
+> >>>>>> Target: aarch64-unknown-linux-gnu
+> >>>>>> Thread model: posix
+> >>>>>> InstalledDir: /usr/lib/llvm-19/bin
+> >>>>>>
+> >>>>>> When I tested with above version with arm64-linux's for-next/fixes
+> >>>>>> including this patch. it works well.
+> >>>>>
+> >>>>> It doesn't seem to be toolchain related. It fails with gcc as well from
+> >>>>> Debian stable but you'd need some older CPU (even if emulated, e.g.
+> >>>>> qemu). It fails with Cortex-A72 (guest on Raspberry Pi 4) but not
+> >>>>> Neoverse-N2. Also changing the annotation from __ro_after_init to
+> >>>>> __read_mostly also works.
+> >>>
+> >>> I think this is likely because __ro_after_init is also "ro before init" - i.e.
+> >>> if you try to write to it in the PI code an exception is generated due to it
+> >>> being mapped RO. Looks like early_map_kernel() is writiing to it.
+> >>
+> >> Indeed.
+> >>
+> >>> I've noticed a similar problem in the past and it would be nice to fix it so
+> >>> that PI code maps __ro_after_init RW.
+> >>
+> >> The issue is that the store occurs via the ID map, which only consists
+> >> of one R-X and one RW- section. I'm not convinced that it's worth the
+> >> hassle to relax this.
+> >>
+> >> If moving the variable to .data works, then let's just do that.
+> > 
+> > Good to know there's no other more serious issue. I'll move this
+> > variable to __read_mostly.
+> > 
+> > It seems to fail in early_map_kernel() if RANDOMIZE_BASE is enabled.
 > 
-> Why is it removed? That's a very strange comment:
+> Ahh that explains why Yeoreum Yun can't see the issue:
+> 
+> 	if (IS_ENABLED(CONFIG_RANDOMIZE_BASE)) {
+> 		u64 kaslr_seed = kaslr_early_init(fdt, chosen);
+> 
+> 		if (kaslr_seed && kaslr_requires_kpti())
+> 			arm64_use_ng_mappings = true;
+> 
+> 		kaslr_offset |= kaslr_seed & ~(MIN_KIMG_ALIGN - 1);
+> 	}
 
-Because it makes bash output redirection work differently to other programs, I
-would guess.  It's actually a simple security check to work around (just retry
-the open() with O_CREAT dropped) - however, it does expose an... error, I
-suppose, in the Linux kernel: namely that the VFS itself is treating foreign
-files as if they had local system ownership.
+Yeah, you may need this as well for qemu:
 
-We have the ->permission() inode op for this reason (I presume) - but that
-only applies to certain checks.  The VFS must not assume that it can interpret
-i_uid and i_gid on an inode and must not assume that it can compare them to
-current->fsuid and current->fs_gid.
+	-object rng-random,filename=/dev/urandom,id=rng0 \
+	-device virtio-rng-pci,rng=rng0 \
 
-Now, in my patch, I added two inode ops because they VFS code involved makes
-two distinct evaluations and so I made an op for each and, as such, those
-evaluations may be applicable elsewhere, but I could make a combined op that
-handles that specific situation instead.
+BTW, some architectures have RO_DATA immediately after _sdata but for us
+it messes up some of the contig mappings, so the safest is to move the
+variable to the .data section.
 
-David
-
+-- 
+Catalin
