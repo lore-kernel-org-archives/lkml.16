@@ -1,150 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40FDF1DE3BB;
-	Tue,  6 May 2025 19:46:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C587C72634
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 19:47:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746560798; cv=none; b=PRVegGy7okUaRHBkFMNRwbZyOyV9r54yFTGgLRNh+BIclKDSB8eh4886DjTli3sDm9dRH/u4M7om+jm7EkZAAjkZiKYMmxUUEqYmBLZcHBGaptqPvCmy+td9Ypf4MxhdURAMmrZCbEG8+YUaCcrHfR3vypIPV0guyD9bonz+7wE=
+	t=1746560833; cv=none; b=dJZqaU22jprEg05x9Kda1HXH0VFwdEOqbf07vSng1ciJp0O+ysap7+pCDUFjAzSctAtfQg5J79lChrFEpP+dvBLeXbmTBSSpYpRhE5DtEz9nBGvhSBCKtCZ3qmt7g7HfTs8JA8P9PtvYh+LiaGJkTJaczTRhB96XkQ4L2xL9qNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746560798; c=relaxed/simple;
-	bh=D5/4BigWPz9BglOJiAiQj7LfSv7VYWCIRc4N44WMdJs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YE1GGUGTh+ZqlGTxDZZwaKq/4eNWd+yHr/lBUgBQ2mtw+KDVlHHSxCOgzQNeLH9kGl2pb71EjYXWDqI68RLnBpjRMng+aBySAe/pQuxR4ycivYjKIJaFi/TaMvW0rwlGuf/fTkDXt/F+rdeyvN3Mgg6MiCMTN/VBbM2LM1YzbV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iWWSZcFb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746560833; c=relaxed/simple;
+	bh=TDw9phRmXi3xVcDWD/Dodi/SegUbRaaI4gpyeqzoYfo=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=CzE6ZAePA/UydnVArchGJtEVhuRKoAU57tg6RYVoeDbSto9Fc0wS5KRcqbdAwMan4b8ZVZyvgE4LSeERKznnf51tZ6XZ/BXienjxhAGN9GFBshRnFyNhy3/U/kavbK0T9ANqxa2+R0Io/oGjcuLT6WgO9CEQYabWGbip15pCFBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=zXp5RD0C; arc=none smtp.client-ip=209.85.166.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iWWSZcFb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B283BC4CEF3;
-	Tue,  6 May 2025 19:46:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746560797;
-	bh=D5/4BigWPz9BglOJiAiQj7LfSv7VYWCIRc4N44WMdJs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=iWWSZcFbriF1s8UD5jPepUW5jD16vLwS6wybMCk1r03dh1eY7vkqeBYbpWTHmZ13V
-	 mvB5TZchhLf0zvEEzS/EI2xO1RTTzHLWU/e3HeIO4D6/c1n42HNvQYf5ETIj1lj1ir
-	 RmA1zvIyBOwCatk44nZ28oDm5Ysh36J+AE/LbE54aRgNEdq+kSEc7XWjZShSBE2NVT
-	 7Hh8LB6tlQrmoRcubK3Wb1E5va3ZKUuFcfQ+iD5HRT00E3K30XKzhJRJ/xPMdCL8R/
-	 LrS+cTciwjvz3PbEyECvi9LhZ9o6+X7fINJZuX5wwqeW9JpHnMaOMRH4Dkj6KvaytT
-	 aS4fzqVKHpgkw==
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-7376e311086so8764737b3a.3;
-        Tue, 06 May 2025 12:46:37 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUGb0+ADaeSr2Wpn51D8Bg9KvcvX28QmG64LF6ZJdOPPjLxLgIYqlSZbW8eTFO+pcsjN6A1+f93alg=@vger.kernel.org, AJvYcCUnM6nlIPJWSRVucw2YmjD+nTu9r09XEmMgvF1V5EMG+jCYKascBUKODzqzl9nm33z/MdOMJGB6x1y7Khs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyj/FmTd28zyUdKW7mfHzSJ03jnWO0Jg7S/akwsG5ewrXQNag27
-	QNAXCPAgwHi5DnVvdEly/Snm71CquROGlXJBaqBpw3+ByaimOhg6ceySgeBfnIN3DofLIdwjJ75
-	cL+AKRgNYsH3/0PrAcN08rdd6i4g=
-X-Google-Smtp-Source: AGHT+IEMrGifCd6r/lmGcJKGIUFBrAJcb296B/ZNI+T9laifC7QMV3tnRRZKDPMYfPY/mmULzzuBQtAozE6A1YEXsCg=
-X-Received: by 2002:a05:6870:4593:b0:2c1:6948:d57c with SMTP id
- 586e51a60fabf-2db5c0d1fc8mr339058fac.28.1746560786792; Tue, 06 May 2025
- 12:46:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="zXp5RD0C"
+Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3d8e9f26b96so53672635ab.1
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 12:47:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1746560831; x=1747165631; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zkX3c5/GMMV4oRJ74gAOyvqF/rDoibhnZNI5+zww/CI=;
+        b=zXp5RD0CvoGRePRcOL4aPuGAm6rY6GtFDO2FmhYj6WtOV5LjhXAmYKnpic+M1JPxW3
+         mAn8wCVtpEzcZoh9lFemqmhFU78ocZ6T0ERtJsUHH8SMQnBkRN54+x4RKRQuVW81Pw3S
+         S9kQxidx68sp27ee4P1pB11fHrZItesXvZkjK2T9nXr9MnMc5+lQz9IqSEjivdAzBrV9
+         TzjGO/imSf7+lCxIYgHnZOMgcrgeqidyE8/gSNj9WZJhXcl7QOZX4M6cgzYHmGSMnauH
+         rwErfvjYhcOVVnISEmDUNDvKVvpnDjGUuINZLOU+UPlC9RKb+aP7rtIusNkQjIepwBZL
+         tb3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746560831; x=1747165631;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zkX3c5/GMMV4oRJ74gAOyvqF/rDoibhnZNI5+zww/CI=;
+        b=MzzC6nMeEZOP43nblzvQfEqTfjq0D/DOIhfWvFXVYqnxIrSu0nfC4EjQ7D3tfbHabL
+         Ll3nSn4OkD4dvQl+2+dyibYJM33S+q42Awzg9J+rGIqm4lHO9fQ3axxpfDaBu2SLwlRb
+         5BxMmet1kkOmEtQTolQZtBzcMiG8d61698PBKZU5uYlW6Pdk19DEUNiSc0oOmE/duU1W
+         T9q6uAbW94hSLodBSGp/H5GryJa4mzrGIZYjk9e1C3vgnjirHB43ozgpIiNePXzA/vAR
+         Z0jW6oj6LtX4NTMUUdZ5Pl7jSIGr2T/92qhb6T6Ljrud5LWou9SLq+uOxu+dbey6g5BH
+         89Bg==
+X-Forwarded-Encrypted: i=1; AJvYcCU1mDvBFFaGJSmbQ3rlJMB3817RQ/5DN3smpwPGC5zNb+BcHRiZ3h/qI+IK4mjaqt1qm4pila+MM8LTXZw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyR6X3L1kmvCTAtQUkB74OlRLXOHTmVVVmcW97TaJENZrMoK8lI
+	4Vugx+WabE9IbnL7JNyLnnqtjT5SdIo0IW2RA5C4B9AGlXXYx6Hazel3N9/V5ok=
+X-Gm-Gg: ASbGncu2D+cFR99K3vtIqRAJRO7QTc8JqhHO+kmCTCst/wU+AJeeHR4DYOmmTp2hVqB
+	JdkvGqMkk/v+p8DFz3N1Y6DfknLix/zYfxHm0J/bWb90pyXPWrhn2ryf8hvFULor3+OeUVxSKg1
+	q2ub6xwjWIUwIPIA4VnFWZpGYgEYHEnajKT8v9XzkQujbkFgA/hAexZl9NsmF+KsRP3jjdM2hit
+	6ECrSwsbv0BOaRM/Iv5FrDP3VjwdvYzFt1AoPBSUQdGf+ywtZavv713H58ugrP4Uj32I/SL5vbS
+	Fn0X2fRKeSxCxt2ZtCiZa0t4UoEa1vE=
+X-Google-Smtp-Source: AGHT+IEy+u0t14HIzWKrfb4cSWqt6yNDK8lOEUGmHQp0wvCPWclPXGAJTOLeWBXuCnkVFmOaq5G2Jw==
+X-Received: by 2002:a05:6e02:398b:b0:3d9:3a09:415e with SMTP id e9e14a558f8ab-3da73933cdfmr4603155ab.19.1746560830842;
+        Tue, 06 May 2025 12:47:10 -0700 (PDT)
+Received: from [127.0.0.1] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d975f58f36sm25962075ab.51.2025.05.06.12.47.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 May 2025 12:47:10 -0700 (PDT)
+From: Jens Axboe <axboe@kernel.dk>
+To: Kanchan Joshi <joshi.k@samsung.com>, Keith Busch <kbusch@kernel.org>, 
+ Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, 
+ Caleb Sander Mateos <csander@purestorage.com>
+Cc: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250506175413.1936110-1-csander@purestorage.com>
+References: <20250506175413.1936110-1-csander@purestorage.com>
+Subject: Re: [PATCH] nvme: fix write_stream_granularity initialization
+Message-Id: <174656083001.1636559.2161433067551641939.b4-ty@kernel.dk>
+Date: Tue, 06 May 2025 13:47:10 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <3344336.aeNJFYEL58@rjwysocki.net> <2649447.Lt9SDvczpP@rjwysocki.net>
- <61cd69f5-6790-4480-8fe7-77ef763ed82b@arm.com> <CAJZ5v0h=wR464YqDEesnm3QscJ4UBy8CX0ixZV6QsY0DS22E8A@mail.gmail.com>
- <c3eda6eb-3e01-4d9c-bcbc-348e5f5552cc@arm.com>
-In-Reply-To: <c3eda6eb-3e01-4d9c-bcbc-348e5f5552cc@arm.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 6 May 2025 21:46:15 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0jrnF+k81nCHEKvHa-SQp8J_iUkvW+jFo8ZHsj3AcG2vg@mail.gmail.com>
-X-Gm-Features: ATxdqUFmcDfm9yUUGIkJvLiYZlbrTCfYu0uJYy7InsgHXE4HR3wSXeok4L_zM18
-Message-ID: <CAJZ5v0jrnF+k81nCHEKvHa-SQp8J_iUkvW+jFo8ZHsj3AcG2vg@mail.gmail.com>
-Subject: Re: [RFT][PATCH v1 5/8] PM: EM: Introduce em_adjust_cpu_capacity()
-To: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, 
-	Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	Lukasz Luba <lukasz.luba@arm.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
-	Morten Rasmussen <morten.rasmussen@arm.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>, 
-	Pierre Gondois <pierre.gondois@arm.com>, Christian Loehle <christian.loehle@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.3-dev-7b9b9
 
-On Thu, May 1, 2025 at 2:30=E2=80=AFPM Dietmar Eggemann
-<dietmar.eggemann@arm.com> wrote:
->
-> On 30/04/2025 21:23, Rafael J. Wysocki wrote:
-> > On Sun, Apr 27, 2025 at 4:07=E2=80=AFPM Dietmar Eggemann
-> > <dietmar.eggemann@arm.com> wrote:
-> >>
-> >> On 16/04/2025 20:06, Rafael J. Wysocki wrote:
-> >>> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->
+
+On Tue, 06 May 2025 11:54:12 -0600, Caleb Sander Mateos wrote:
+> write_stream_granularity is set to max(info->runs, U32_MAX), which means
+> that any RUNS value less than 2 ** 32 becomes U32_MAX, and any larger
+> value is silently truncated to an unsigned int.
+> 
+> Use min() instead to provide the correct semantics, capping RUNS values
+> at U32_MAX.
+> 
 > [...]
->
-> >>> +     if (!(pd->flags & EM_PERF_DOMAIN_ARTIFICIAL)) {
-> >>
-> >> This looks weird to me. How can an artificial EM ever have a non-ZERO
-> >> em_data_callback here?
-> >>
-> >> There is already EM_PERF_DOMAIN_ARTIFICIAL specific handling in
-> >> em_compute_costs(). Which probably works well for the
-> >> em_create_perf_table() call-site.
-> >
-> > Yes, but that one doesn't pass a NULL cb pointer to it.
-> >
-> >> Will there be cases for Hybrid CPU EM's in which 'em_max_perf !=3D
-> >> cpu_capacity':
-> >
-> > When the capacity is updated, the EM needs to be updated accordingly,
-> > which is why the new function is being added.
-> >
-> >> em_adjust_new_capacity()
-> >>
-> >>   if (em_max_perf =3D=3D cpu_capacity)
-> >>     return
-> >>
-> >>   em_recalc_and_update()
-> >>     em_compute_costs()
-> >>
-> >> so that em_compute_costs() might be called?
-> >>
-> >> Maybe:
-> >>
-> >> @@ -233,11 +237,17 @@ static int em_compute_costs(struct device *dev,
-> >> struct em_perf_state *table,
-> >>         unsigned long prev_cost =3D ULONG_MAX;
-> >>         int i, ret;
-> >>
-> >> +       if (!cb && (flags & EM_PERF_DOMAIN_ARTIFICIAL))
-> >> +               return 0;
-> >>
-> >> is somehow clearer in this case?
-> >
-> > This would work, but I prefer my version because it does one check
-> > less and it does the check directly in em_recalc_and_update(), so it
-> > is clear that this doesn't call em_compute_costs() for artificial PDs
-> > at all.
->
-> OK, but checking it inside em_compute_costs() would also avoid this 'cb
-> =3D NULL' crash for an artificial EM in:
->
-> int em_dev_compute_costs(struct device *dev, struct em_perf_state
->                          *table, int nr_states)
-> {
->         return em_compute_costs(dev, table, NULL, nr_states, 0);
-> }
 
-This is unused currently, so no worries, but you have a point.  It
-should return -EINVAL for artificial perf domains.
+Applied, thanks!
 
->
-> BTW, there is this:
->
-> #define em_is_artificial(em) ((em)->flags & EM_PERF_DOMAIN_ARTIFICIAL)
->
-> (I guess s/em/pd ?) which lets you check this when you have the perf
-> domain. So far it's used in dtpm, cpu- and devfreq cooling.
+[1/1] nvme: fix write_stream_granularity initialization
+      commit: 86b6e0bd1a69efd0ed408997e0adfb85df96a0c7
 
-Thanks for letting me know about it, I'll use it in that check.
+Best regards,
+-- 
+Jens Axboe
 
-> Anyway, you can add my:
->
-> Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
->
-> for the entire set.
 
-Thank you!
+
