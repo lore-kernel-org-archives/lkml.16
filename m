@@ -1,65 +1,44 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FC7714A639;
-	Tue,  6 May 2025 08:22:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FA4F4B1E79;
+	Tue,  6 May 2025 08:23:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746519723; cv=none; b=CJQUahHR/vBWgLuk6j8DCUKv60VPazngaJF1C8xnPUVQUrZ68LVLug3aoqWgE+z33N7qeE3ZMaw20XcpeDQH0OXPGJS0J1qoZVafxxY/tGa424yNLDBdG3w4GGS7OhA8yHcNKd0DBxqFWM0X1dR3Xp1x/9Ljld/vYEQmD4G0j0w=
+	t=1746519823; cv=none; b=h2rAyE0YdkGwECAOLxnFBieKYPF0BWNk8yAf1jToOFt4nrBZlFHP2eAQ4BcnM6T0hywqNmaB38hTV6MXZ9WeptKW4WV21mRAsUumfU6h4t2hjiTOmIAMgtHfRNRdvFbSVLkQMWwyb9/dq5GVcSzzvnNyCFC2tDFrfY3pH8y03SM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746519723; c=relaxed/simple;
-	bh=j/1IV7tCIQmBeZPRH9vvJKUGS/RAT+fb8WT9/9p4OUw=;
+	s=arc-20240116; t=1746519823; c=relaxed/simple;
+	bh=5nK7BajdHwS9NuSso7bF4GMIkFqFDbBwB6yQ17hogaI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tfj0cnjsGYh22zMhOIyxUASfDKNmMrJnIJGwNEdOEEJKKTqtSyVQxkbKarGKfJfIhnj9CA06wzJq4UMAhina4fflCZalU2N9kUt9k0rkWgBamKylKbaOa2s3bX3fcPPb848DXGhFi/LDOR+9zqcIBtJIAVT+cX139q9yAr3dtmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d0enN5CT; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=lpl6JQv2OcLbtomCKYQNLSOvlYVFQPrj3rZgOrojIqRjhvq8y4Shvs3Y+n5r7jQgS93ezzzKPZVLBAmSYUbdeTYxZsSLsTW7Gjn5LF7ggEyqUA40YBbEHNWX2VIVT8Lh3n6dSzYrW/HMrpaX/NXzwuc3W+BBoodKRLbaE0q8lC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BzE977nM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d0enN5CT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746519722; x=1778055722;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=j/1IV7tCIQmBeZPRH9vvJKUGS/RAT+fb8WT9/9p4OUw=;
-  b=d0enN5CT5eMjsXaDr5PnDk3rD8kB4qgL47cEcCi3oQqqWs7B7IpmGYmQ
-   X9I6K/gMYb9PXDzt1CyGSS3wrb2R3UHeHvTkyJbprVn3/5sUdN5BzwzrI
-   8U+QKRM7LM72HNzJ0UERq+q7hSfbtTz8NEqRu2POTkHjBxyQyLvJRbzxX
-   po9qXdjlYcJyrbuABtF7/PCbqXxkASX9AExtrkgDlncHcol3gKJShXtVQ
-   EUEwgo+PrEqqzSwziF3Jl9tL1RLOMIdKE5c+G8uDkyyKkn1dOqLPSL5rH
-   kd/+alwrZkqDgorpoj/euuia168ytVW8Fsf7sQVswAyATREYf9FOp3pF2
-   A==;
-X-CSE-ConnectionGUID: bfpxp5elScuwSBnS+AHxMQ==
-X-CSE-MsgGUID: J+cxqZUgSbyKcM1WpPsseA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11424"; a="58801461"
-X-IronPort-AV: E=Sophos;i="6.15,265,1739865600"; 
-   d="scan'208";a="58801461"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 01:22:01 -0700
-X-CSE-ConnectionGUID: P94EiA+ET1e9JqFtksDmlQ==
-X-CSE-MsgGUID: VI67xs1PQqqGJbunBsfhxw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,265,1739865600"; 
-   d="scan'208";a="140665739"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 06 May 2025 01:21:57 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uCDYo-0006Oh-0O;
-	Tue, 06 May 2025 08:21:54 +0000
-Date: Tue, 6 May 2025 16:21:29 +0800
-From: kernel test robot <lkp@intel.com>
-To: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Paul Gazzillo <paul@pgazz.com>,
-	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
-	oe-kbuild-all@lists.linux.dev, jic23@kernel.org, lars@metafoo.de,
-	Michael.Hennerich@analog.com, dlechner@baylibre.com,
-	nuno.sa@analog.com, andy@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, marcelo.schmitt1@gmail.com
-Subject: Re: [PATCH v2 4/7] iio: adc: ad4170: Add clock provider support
-Message-ID: <202505061552.mYM50gr5-lkp@intel.com>
-References: <bede8227189637568f9425cd6848e21be33c2fd2.1745841276.git.marcelo.schmitt@analog.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BzE977nM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C78DC4CEE4;
+	Tue,  6 May 2025 08:23:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746519822;
+	bh=5nK7BajdHwS9NuSso7bF4GMIkFqFDbBwB6yQ17hogaI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BzE977nMEDAoV/uyts0v4WkeFiybW1zz6ty1qpnXu62QiSnH3bgeILvv23p5UGHZG
+	 K2AzyKMXvMoxRfG6aZKa25SzD3KrkvB9XfZ9rXa1vVYljyMrGWFSrvLchWMRuQuKvd
+	 98Kokpbd4orrfr6vz0FYXP0AZqhgKV6DwmU4frdJg/Nbdu2E9sVp4STQfOvnLyWEYq
+	 Zuoh+Oru/uq/d68qdJEbFd190RWM8gkid5QdyMIpFKQ7CbI2e+Z+7KrsNNamfZ6IPp
+	 vSkU1oQHGtBVr6Pq/UmZy0nYvbMYCi1dZtA0be3LuOo9moWd8YM4bibToM05lccYTJ
+	 9mT1hEccYFZ7Q==
+Date: Tue, 6 May 2025 10:23:37 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: "Ahmed S. Darwish" <darwi@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	John Ogness <john.ogness@linutronix.de>, x86@kernel.org,
+	x86-cpuid@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 00/26] x86: Introduce centralized CPUID model
+Message-ID: <aBnHCbo4OaWpM392@gmail.com>
+References: <20250506050437.10264-1-darwi@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,33 +47,53 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <bede8227189637568f9425cd6848e21be33c2fd2.1745841276.git.marcelo.schmitt@analog.com>
+In-Reply-To: <20250506050437.10264-1-darwi@linutronix.de>
 
-Hi Marcelo,
 
-kernel test robot noticed the following build warnings:
+* Ahmed S. Darwish <darwi@linutronix.de> wrote:
 
-[auto build test WARNING on 1c2409fe38d5c19015d69851d15ba543d1911932]
+> Ahmed S. Darwish (26):
+>   tools/x86/kcpuid: Update bitfields to x86-cpuid-db v2.4
+>   x86/cpu: Sanitize CPUID(0x80000000) output
+>   x86/cpuid: Introduce <asm/cpuid/leaves.h>
+>   x86/cpuid: Introduce centralized CPUID data
+>   x86/cpuid: Introduce CPUID scanner
+>   x86/cpuid: Scan CPUID(0x80000000)
+>   x86/cpuid: Introduce debugfs 'x86/scanned_cpuid/[0-ncpus]'
+>   x86/cpuid: Introduce external CPUID table accessors
+>   x86/cpu: Use scanned CPUID(0x0)
+>   x86/cpu: Use scanned CPUID(0x80000001)
+>   x86/lib: Add CPUID(0x1) CPU family and model calculation
+>   x86/cpu: Use scanned CPUID(0x1)
+>   x86/cpuid: Scan CPUID(0x2)
+>   x86/cpuid: Introduce scanned CPUID(0x2) API
+>   x86/cpu: Use scanned CPUID(0x2)
+>   x86/cacheinfo: Use scanned CPUID(0x2)
+>   x86/cpuid: Remove direct CPUID(0x2) query API
+>   x86/cpuid: Scan deterministic cache params CPUID leaves
+>   x86/cacheinfo: Use scanned CPUID(0x4)
+>   x86/cacheinfo: Use scanned CPUID(0x8000001d)
+>   x86/cpuid: Scan CPUID(0x80000005) and CPUID(0x80000006)
+>   x86/cacheinfo: Use auto-generated data types
+>   x86/cacheinfo: Use scanned CPUID(0x80000005) and CPUID(0x80000006)
+>   x86/cpuid: scanner: Add CPUID table rescan support
+>   x86/cpu: Rescan CPUID table after PSN disable
+>   x86/cpu: Rescan CPUID table after unlocking the full CPUID range
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Marcelo-Schmitt/dt-bindings-iio-adc-Add-AD4170/20250428-222010
-base:   1c2409fe38d5c19015d69851d15ba543d1911932
-patch link:    https://lore.kernel.org/r/bede8227189637568f9425cd6848e21be33c2fd2.1745841276.git.marcelo.schmitt%40analog.com
-patch subject: [PATCH v2 4/7] iio: adc: ad4170: Add clock provider support
-config: sh-kismet-CONFIG_COMMON_CLK-CONFIG_AD4170-0-0 (https://download.01.org/0day-ci/archive/20250506/202505061552.mYM50gr5-lkp@intel.com/config)
-reproduce: (https://download.01.org/0day-ci/archive/20250506/202505061552.mYM50gr5-lkp@intel.com/reproduce)
+Overall namespace suggestion: could you please use 'parse_' verbiage, 
+instead of 'scan_'? Even if a lot of the scan_ uses in this series are 
+a temporary back and forth that goes away after the conversion, but 
+still, some of it remains.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505061552.mYM50gr5-lkp@intel.com/
+Today 'scan' is not really used in this context, in the kernel at 
+least, and I don't think it's a particularly good fit. 'Scanning' 
+suggests searching for something or looking for something, which we 
+don't really do: we parse the entire CPUID tree in essence, during 
+bootstrap, and re-parse it when something changes about it on the 
+hardware side. We don't really scan for anything in particular.
 
-kismet warnings: (new ones prefixed by >>)
->> kismet: WARNING: unmet direct dependencies detected for COMMON_CLK when selected by AD4170
-   WARNING: unmet direct dependencies detected for COMMON_CLK
-     Depends on [n]: !HAVE_LEGACY_CLK [=y]
-     Selected by [y]:
-     - AD4170 [=y] && IIO [=y] && SPI [=y]
+Does this make sense?
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks,
+
+	Ingo
