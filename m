@@ -1,106 +1,88 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5498424E4A1
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 09:46:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB7C41E1DE2
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 09:48:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746524794; cv=none; b=WhTgIn46cffGbkXbfMaTI6AQ4dv2lkD6jf7gF4wOEgbBNQBx++zi7eIoCFRtYfVj2ZCZFE/jWLSVyfe9KgdeEfxScU4h/D44enS3j7L08bsFwIyVIQodekQaPc4foGRc+EBgXgyNR5shecOj+JmjxjALJveZFyH6Hk8rzJ2YaQM=
+	t=1746524925; cv=none; b=kbQUpkazyq8X3Rn249/ILs5lGlec5DUW4c29OIuVJpMgJSGRijoByjWTtZJupYkl+P9/Ss2EQ1CcX7hhs9jEIYwEYgEjCXb+DS2MBptVhmp9BXFdAOOwhfYVOsHyvLJrv7Km1o8w9rCJxKjbxi+GUYEiLYXfy1ivU2dXbiKWXkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746524794; c=relaxed/simple;
-	bh=tA6N3YnyAi4SY4a6Jf1gNb1Di0YDjYwF9O0IKocrk4Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uMM++kx8uAaogxkjoqmUtNTlHiAEM16qXeQq4un9u0CUwXQcG8bAR/8sglyO/2ZHxHt3f+OWACQ0sF9ftqiT4LmeUhtCay5sSaUTNuuxcg/aOdyriKqykcnonjaY212f+BETVt3JWusrTTHR9AfYlHfRQGapsDuAUkqej4NWGO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Q5Z4txiE; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1746524925; c=relaxed/simple;
+	bh=yARVJ3xJ3JgrRQ2uEW2EIYoT+XDNijkk4+OGd3BX42I=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=M/Q/AWw0/tH+8HazkEmM/TvNmyWzVgoVg9F2sfKdRrJ1PVFZrMbv5dPz8xUT0B/VWqpsZsE/7IFfn06JXXQQTR5qgd08AM4o/zBMOe/j0OL8LnNOtmsYgqezJKwt3iJt1p9PoxozQfj/QLKw2iOJd6VaPM7bYCxaA1T9oiS8B8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=IrCHrp50; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q5Z4txiE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746524791;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tA6N3YnyAi4SY4a6Jf1gNb1Di0YDjYwF9O0IKocrk4Y=;
-	b=Q5Z4txiE6zU5A1wtsG9LwyaJI9hrpzNCXjlw0QmLvRdaIaA0lmHLUW6v0JvR6xGUnjkQOq
-	VvvR9EbW2pKx/FBROOAEkpcXzH6Cx1PPCg/Lln452ifcO+0Rv+D7cv78hlPOac5yghEieC
-	WLGJHsg/swCtoc3hXYd42ZUhlpO1fCY=
-Received: from mail-yw1-f199.google.com (mail-yw1-f199.google.com
- [209.85.128.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-575-rmWMbRlxO8y2ftzwWymDhA-1; Tue, 06 May 2025 05:46:30 -0400
-X-MC-Unique: rmWMbRlxO8y2ftzwWymDhA-1
-X-Mimecast-MFC-AGG-ID: rmWMbRlxO8y2ftzwWymDhA_1746524789
-Received: by mail-yw1-f199.google.com with SMTP id 00721157ae682-7082e59b9b6so79697677b3.1
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 02:46:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746524789; x=1747129589;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tA6N3YnyAi4SY4a6Jf1gNb1Di0YDjYwF9O0IKocrk4Y=;
-        b=xT0hMB6PaB9Pr7AJJdXOEix+9hHqOEbKTIyTn+DhEcs/hMDapsprGl9naD+/g1po+q
-         mwhpuD36eW8JVFXbKoL8bUtFlcea9V9/+Dq2f2cczTOP/lpZXOWHuVCBLMUjXIOdHNnM
-         Sbv3Ip/bY3icnsx/LgQCABL3RTzqLY1Ru/0zxetGfrQfb2A/aC/40CbPB+8weqi/fX55
-         usSjLypwPKplwiwjq0v+/hPYU47A5peBOx6sn1+1yLrFzsAzmmTZOyDXjwDUJfrHwPDX
-         uDPOMB6Apeuf511qSavApkSL2wtM0Yi2L/q35TXbaRRkId08Gxay1DZQNwaLXzw95jj4
-         lL7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUkF6q1BGtzXHWqCtLrmFZldrb7j5rizEioqxCM4NPkZvxXIVclD3j3tp+DZM1sL4TIRA7rPgdHKmWWPys=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywykecuu5B4mPG8kyS0QvnUZKP7oPJWxVbKwl/oyl4ucMV7ubj3
-	OqUNPoCv6Vj3wB4VsgjW26XuY9qpYD9NT3olEB/+Z/MswraYDuH2Wd/a62CH3E316y0XKHK2Ye3
-	CxXJHUaByr0i9p7pX2yRzYn1U7HWh++QtIR+R+8USH7NWWxgdFPoo1fglh5+AtrWBTicdSkpixN
-	6T+uiSlFMxH7Wc5hsXmryKkRiaFt+vR25WLIHb
-X-Gm-Gg: ASbGncvCcSm7ZRqdbTF3AOrrrtnFUEMMlNDtn4mbvsEuxEF7Dxnk8IJP32IJkGzeGSv
-	k5jU/mGq34oEUQ8QG7hG0DXCATET0JOmbFfVQUYY3fyrH9CCgkG7gNlf+2MwP8241rvUlBjQ=
-X-Received: by 2002:a05:690c:881:b0:708:b7c4:89d9 with SMTP id 00721157ae682-708eaed228dmr161341777b3.11.1746524789548;
-        Tue, 06 May 2025 02:46:29 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF8SnKlOiGYxAIgFjpIz/3a6Amq4RJJRae2tHMUWHhFAEAWBZQzJ97jvAOQKqp6vtJokq7tr543XXcIaZE89NQ=
-X-Received: by 2002:a05:690c:881:b0:708:b7c4:89d9 with SMTP id
- 00721157ae682-708eaed228dmr161341627b3.11.1746524789214; Tue, 06 May 2025
- 02:46:29 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="IrCHrp50"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=Wx3gy
+	NU/yA0NxmdhOD2r8ZlEsWhxsPF9Y05S/IbtjvU=; b=IrCHrp50xjLBv8SYchE9p
+	wCDv+iD0DukM5BY3ujh8ZedWghiyCU6Ia3U+Jos8yqtpH4jURlOLapMtVV2jkiZM
+	difcBOo3PJ7FegAmK6mkxlg0VQbOaz5QjAKdyeGbvwosD7C/BIFZ8VvUbAwEqply
+	iYsB+lS/D2Fv29sGhz5qO0=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-0 (Coremail) with SMTP id _____wAHzmK_2hloI9kMFA--.14234S4;
+	Tue, 06 May 2025 17:47:48 +0800 (CST)
+From: oushixiong1025@163.com
+To: =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Sean Paul <sean@poorly.run>,
+	Jocelyn Falempe <jfalempe@redhat.com>,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Shixiong Ou <oushixiong@kylinos.cn>
+Subject: [PATCH v2 3/3] drm/udl: use DRM_GEM_SHMEM_SIMPLE_DRIVER_OPS
+Date: Tue,  6 May 2025 17:47:40 +0800
+Message-Id: <20250506094740.621420-3-oushixiong1025@163.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250506094740.621420-1-oushixiong1025@163.com>
+References: <20250506094740.621420-1-oushixiong1025@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250501-vsock-linger-v4-0-beabbd8a0847@rbox.co>
- <20250501-vsock-linger-v4-3-beabbd8a0847@rbox.co> <g5wemyogxthe43rkigufv7p5wrkegbdxbleujlsrk45dmbmm4l@qdynsbqfjwbk>
-In-Reply-To: <g5wemyogxthe43rkigufv7p5wrkegbdxbleujlsrk45dmbmm4l@qdynsbqfjwbk>
-From: Stefano Garzarella <sgarzare@redhat.com>
-Date: Tue, 6 May 2025 11:46:17 +0200
-X-Gm-Features: ATxdqUGB2JgQGBx1SBATpWkN34LfUWNEz6bg2h7UGX2v3-s9HEuTp1ypMzGQ-9I
-Message-ID: <CAGxU2F59O7QK2Q7TeaP6GU9wHrDMTpcO94TKz72UQndXfgNLVA@mail.gmail.com>
-Subject: Re: [PATCH net-next v4 3/3] vsock/test: Expand linger test to ensure
- close() does not misbehave
-To: Michal Luczaj <mhal@rbox.co>
-Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	"Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
-	Stefan Hajnoczi <stefanha@redhat.com>, virtualization@lists.linux.dev, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wAHzmK_2hloI9kMFA--.14234S4
+X-Coremail-Antispam: 1Uf129KBjvdXoWrZFWDtrWrArykJF13Xw4fZrb_yoW3tFX_GF
+	4ftwsrWFZ8uw4Dur1xAFW5Aryj934ruF48WF1Uta4Syw4xJw1Uury2vryvv3WUKF45AF9x
+	J3yDXFsxAr4kCjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU8YsjUUUUUU==
+X-CM-SenderInfo: xrxvxxx0lr0wirqskqqrwthudrp/xtbBYwlFD2gZ2bcW-gACsV
 
-On Tue, 6 May 2025 at 11:43, Stefano Garzarella <sgarzare@redhat.com> wrote:
->
-> On Thu, May 01, 2025 at 10:05:24AM +0200, Michal Luczaj wrote:
-> >There was an issue with SO_LINGER: instead of blocking until all queued
-> >messages for the socket have been successfully sent (or the linger timeout
-> >has been reached), close() would block until packets were handled by the
-> >peer.
->
-> This is a new behaviour that only new kernels will follow, so I think
-> it is better to add a new test instead of extending a pre-existing test
-> that we described as "SOCK_STREAM SO_LINGER null-ptr-deref".
->
-> The old test should continue to check the null-ptr-deref also for old
-> kernels, while the new test will check the new behaviour, so we can skip
-> the new test while testing an old kernel.
+From: Shixiong Ou <oushixiong@kylinos.cn>
 
-I also saw that we don't have any test to verify that actually the
-lingering is working, should we add it since we are touching it?
+Import dmabuf without mapping its sg_table to avoid issues likes:
+   udl 2-1.4:1.0: swiotlb buffer is full (sz: 2097152 bytes), total 65536 (slots), used 1 (slots)
 
-Thanks,
-Stefano
+Signed-off-by: Shixiong Ou <oushixiong@kylinos.cn>
+---
+v1->v2:
+        patch rebase.
+
+ drivers/gpu/drm/udl/udl_drv.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/udl/udl_drv.c b/drivers/gpu/drm/udl/udl_drv.c
+index 1922988625eb..b5fa5854c051 100644
+--- a/drivers/gpu/drm/udl/udl_drv.c
++++ b/drivers/gpu/drm/udl/udl_drv.c
+@@ -57,7 +57,7 @@ static const struct drm_driver driver = {
+ 
+ 	/* GEM hooks */
+ 	.fops = &udl_driver_fops,
+-	DRM_GEM_SHMEM_DRIVER_OPS,
++	DRM_GEM_SHMEM_SIMPLE_DRIVER_OPS,
+ 	DRM_FBDEV_SHMEM_DRIVER_OPS,
+ 
+ 	.name = DRIVER_NAME,
+-- 
+2.17.1
 
