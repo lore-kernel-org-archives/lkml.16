@@ -1,236 +1,196 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C55E198A08;
-	Tue,  6 May 2025 15:00:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 583EC198A08;
+	Tue,  6 May 2025 15:01:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746543635; cv=none; b=nZELeP/W9ZeXSIkXAxqTGXmV8C1Ssm+U8ZM0iOnrW45vOe6kTkAy9ZVwpPc75x6P+SX1lnFKvrB/SQVDVophUlnydsIlwcO778YerSFYEAFm7kMdzZBH+cCLAA/cntOEL1cIRvDQ2ZTzTCzXyHu7IDUPNjCH3+gd7Ci/N52omYY=
+	t=1746543672; cv=none; b=s/vsclcmLqKckiAp1eILwVT6E7DYk5alVJVDiWtLfbcNX9jXslR44pfMrRmIFVtbeQe96DMbR0bYjlLoIsgytfYXYnpE4ZIlqnO6erUa9pUmItr7HrEYUObtRVbTA/tJb8alO/DX9+knkOrHzuXmisMN5hcgW0J9ORrWajMU6KQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746543635; c=relaxed/simple;
-	bh=xuC83YMU8A+0LiB/NfAWrspi379z447UqFIkXwgiDG0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=BI+SmnBOKpUy6PIkW1y8rZV5jGpXXRmI/Jy1naBWz24bEaAvY3sg11605ZKHNw0+QBZrzn5yxmhWjp0gfByY8DWqpUpCo212jnmOLOwTmhmEdKfowLOYbgFBtyms30fPOnOwROpak44VowndvyrhktO1czR9VMkmTinSa64DF9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wErMUTUO; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NfZe5z1P; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1746543672; c=relaxed/simple;
+	bh=cIhzrche21SSHcHQtDiGUHmnbrguz1Vy9Llj2ZQxSec=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=K7664ffmvTcZ/mjIjW74Mig9r9pTXrwSU0svXRmlD4O1rsAhoBfeXGPVegi8YYjVUuRgsJbq4OO4r47pJbQBWqxh4T8K6/OLf6E5q33d47CsexNMg8rhfu6+uQj0kryE6vVXiaDnn7zRuPTSQsbq+5W4eCk/OCIzu+VIqU0rRwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ANSI84vE; arc=none smtp.client-ip=209.85.215.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wErMUTUO";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NfZe5z1P"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746543632;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tcg1uck+PJdLT3sfZ0kHBMDtN1dwi+oG323b6C8H4LM=;
-	b=wErMUTUO5NR5ggh9k6XOtaNCd9S3uaR575AuJbrW2Og5poFHFJtivt4rBmb58ZZq4mXocU
-	WU17vsStGuVa9ZJr5Lo9mxt9blely8iC6AEtnd6lhwupVCekMMVKC4rZiijRCVDvX41zkm
-	Iw4Qjji0WWsjjnLeC/v2/G0Dqyt5DfoV1XvG+YGwoKP7/q7sTVi0Wqz4NzfqnyNHxyXtNQ
-	uzi3WxoEeLqlu5eicthtmS/DrsSYGdVXWfSq4/l/AdPUWGpOc2HvWofEQBlUyY1EmqvlZw
-	KtDYiqYsXX4dBGbN3I51yvizTTqk9b7564Ak/AwrbgndfKaom3RmLd+eiFIpYw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746543632;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tcg1uck+PJdLT3sfZ0kHBMDtN1dwi+oG323b6C8H4LM=;
-	b=NfZe5z1PQoP7Ys2YaavSKFguw/oOm7wjhpMrPBiGjky5CiaXi63jL3dwtmVMPBc7IPz031
-	EdtBoeXFKRrblBDA==
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>, Marc Zyngier
- <maz@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Catalin Marinas
- <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Sascha Bischoff
- <sascha.bischoff@arm.com>, Timothy Hayes <timothy.hayes@arm.com>, "Liam R.
- Howlett" <Liam.Howlett@oracle.com>, Mark Rutland <mark.rutland@arm.com>,
- Jiri Slaby <jirislaby@kernel.org>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Lorenzo
- Pieralisi <lpieralisi@kernel.org>
-Subject: Re: [PATCH v3 20/25] irqchip/gic-v5: Add GICv5 PPI support
-In-Reply-To: <20250506-gicv5-host-v3-20-6edd5a92fd09@kernel.org>
-References: <20250506-gicv5-host-v3-0-6edd5a92fd09@kernel.org>
- <20250506-gicv5-host-v3-20-6edd5a92fd09@kernel.org>
-Date: Tue, 06 May 2025 17:00:31 +0200
-Message-ID: <87zffpn5rk.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ANSI84vE"
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-b078bb16607so485992a12.2;
+        Tue, 06 May 2025 08:01:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746543670; x=1747148470; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5mOdQp0wsCHU79iCTDRAUvjMOiTe90lfOsmNG4A4mz4=;
+        b=ANSI84vEDfU+fiBnSFgLAee2TUaHp16/kYRVZ6Oti4Xv1DBVukRXT+ZYPWNQsEf4pv
+         cxHkxWn3ZFirwZszCwW2YP0jIQ+HfmT5WfTtHnFDtYK2eErCgxqF+94nq+b6Yzam9T3N
+         wHSKKc3h//8EuaPb2x4YPBdseR3gAf1U9v0ONasDcHgvkXDWJgrHFvzEUoaV4qVbZLlZ
+         6Bo2IcqgUD9ZgCD5tgKIR+TkzztMB6Ge8jf3gccgRatXBJqU5bDflUOivw+JcyJvKAZs
+         8q4DCxGTaR/N9lcvpxQj4o1kbzIlmbwnKmAgkFqWXypU0DrV5h6x5LQi4V7/e9OjnlRM
+         qTaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746543670; x=1747148470;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5mOdQp0wsCHU79iCTDRAUvjMOiTe90lfOsmNG4A4mz4=;
+        b=IRczvaaYfWkoVJodDiJm+h9ZUwEcx7QsyBZEVnlVjBcBCJo1PYoFkpjco7OFzTLFy8
+         Bfao2KvY4VV85rh8k1cGQrMAgou+dYmvy835wnZuauc2YskaTNPMOT7Lqb9IABPrA97P
+         bHPUVAqtWcMABKdug70wg/jQHEZV1GB/vE0J8vPQme+lJLw+3j8hvOSi/9K9p+OGc/gL
+         rYetcAmtUbcJ1tmce2RX4UsFYXCoZkXzeeWLxCUo3Rjx86kC33DKq7VjtzKZKosZ7CqI
+         oosVtn3NAndSt8YsNfado4wybXHnXI9fqzuDW73nYLDX3xJcR2aPciPne2kDuwj45wqX
+         FBZg==
+X-Forwarded-Encrypted: i=1; AJvYcCUHVi9cVDO6vrBL4sFnL6XdW6zCmbOn7mRG5+T1vzZmaEqjOKpyj4RSeFd4N64FOAuOGp9FkH8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxs3a/GXLIxWMvTLimiaREDEQ2R+NHZUP76m11xNnPK/Bhxz9fb
+	lghtXqmmbp1ZhCmG3evV/eFNQnRxpAmZxCRXVIlbAXOW8Ho9kcKUv53vkRD+s1rDVQBHcqbwyJu
+	ssGHSkTdSliqK5Q5mVAoDj9zr7tA=
+X-Gm-Gg: ASbGncuUkn85Rkrcc+bVI+ed6UJklT0K9LQd4EvHZMLhH6GRYvCdMGP9n2u9lElzyQk
+	YR4LNPGhm4cqvj5BV/PdLdOmVjQKifP377IRccHK7aKPJelT9O/1M93H6NlnD/DV+KmM3evvPob
+	gz3Nq67+UkpFAEQE38GJOZag==
+X-Google-Smtp-Source: AGHT+IFVzRQ9UHQ5cn2Pxm1YIqwU9Dn3xpyopqomdm4pOWuYp9SjbtmmdN+nT7CoJWYPnkxPUGfHaPfCYdcX8LUAgv0=
+X-Received: by 2002:a17:90b:3006:b0:30a:80bc:ad5 with SMTP id
+ 98e67ed59e1d1-30a80bc0ba4mr1160943a91.3.1746543670240; Tue, 06 May 2025
+ 08:01:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20250505231320.2695319-1-sashal@kernel.org> <20250505231320.2695319-90-sashal@kernel.org>
+In-Reply-To: <20250505231320.2695319-90-sashal@kernel.org>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Tue, 6 May 2025 11:00:58 -0400
+X-Gm-Features: ATxdqUGnQpDdB6_AHelJ7NBXUmErUFKTDHQ2k01aYe9xnBMqKDQqW4AzW3PlTMY
+Message-ID: <CADnq5_NhYbp2SMivbG2pvB8oZNie5LBxS_ME5nMofX-2syQHrw@mail.gmail.com>
+Subject: Re: [PATCH AUTOSEL 5.15 090/153] drm/amd/display: fix dcn4x init failed
+To: Sasha Levin <sashal@kernel.org>
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
+	Charlene Liu <Charlene.Liu@amd.com>, Alvin Lee <alvin.lee2@amd.com>, 
+	Zaeem Mohamed <zaeem.mohamed@amd.com>, Daniel Wheeler <daniel.wheeler@amd.com>, 
+	Alex Deucher <alexander.deucher@amd.com>, harry.wentland@amd.com, sunpeng.li@amd.com, 
+	christian.koenig@amd.com, airlied@gmail.com, simona@ffwll.ch, 
+	hamzamahfooz@linux.microsoft.com, Daniel.Sa@amd.com, alex.hung@amd.com, 
+	rostrows@amd.com, Wayne.Lin@amd.com, Syed.Hassan@amd.com, 
+	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 06 2025 at 14:23, Lorenzo Pieralisi wrote:
-> +
-> +static u8 pri_bits = 5;
+On Mon, May 5, 2025 at 7:16=E2=80=AFPM Sasha Levin <sashal@kernel.org> wrot=
+e:
+>
+> From: Charlene Liu <Charlene.Liu@amd.com>
+>
+> [ Upstream commit 23ef388a84c72b0614a6c10f866ffeac7e807719 ]
+>
+> [why]
+> failed due to cmdtable not created.
+> switch atombios cmdtable as default.
+>
+> Reviewed-by: Alvin Lee <alvin.lee2@amd.com>
+> Signed-off-by: Charlene Liu <Charlene.Liu@amd.com>
+> Signed-off-by: Zaeem Mohamed <zaeem.mohamed@amd.com>
+> Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
+> Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-__ro_after_init ?
+Support for DCN 4 was added in 6.11 I think so there is no need to
+backport DCN 4.x fixes to kernels older than 6.11.
 
-> +#define GICV5_IRQ_PRI_MASK 0x1f
+Alex
 
-Please put a new line before the #define and use a TAB between the
-symbol and the value.
-
-> +#define GICV5_IRQ_PRI_MI \
-> +		(GICV5_IRQ_PRI_MASK & GENMASK(4, 5 - pri_bits))
-
-No line break required. You have 100 characters
-
-> +#define READ_PPI_REG(irq, reg)							\
-> +	({									\
-> +		u64 __ppi_val;							\
-> +										\
-> +		if (irq < 64)							\
-> +			__ppi_val = read_sysreg_s(SYS_ICC_PPI_##reg##R0_EL1);	\
-> +		else								\
-> +			__ppi_val = read_sysreg_s(SYS_ICC_PPI_##reg##R1_EL1);	\
-> +		__ppi_val;							\
-> +	})
-> +
-> +#define WRITE_PPI_REG(set, irq, bit, reg)					\
-> +	do {									\
-> +		if (set) {							\
-> +			if (irq < 64)						\
-> +				write_sysreg_s(bit, SYS_ICC_PPI_S##reg##R0_EL1);\
-> +			else							\
-> +				write_sysreg_s(bit, SYS_ICC_PPI_S##reg##R1_EL1);\
-> +		} else {							\
-> +			if (irq < 64)						\
-> +				write_sysreg_s(bit, SYS_ICC_PPI_C##reg##R0_EL1);\
-> +			else							\
-> +				write_sysreg_s(bit, SYS_ICC_PPI_C##reg##R1_EL1);\
-> +		}								\
-> +	} while (0)
-
-I'm not convinced that these need to be macros.
-
-static __always_inline u64 read_ppi_sysreg_s(unsigned int irq, const unsigned int which)
-{
-        switch (which) {
-        case PPI_HM:
-        	return irq < 64 ? read_sysreg_s(SYS_ICC_PPI_HM_R0_EL1) :
-                		  read_sysreg_s(SYS_ICC_PPI_HM_R1_EL1;
-        case ....:
-
-        default:
-                BUILD_BUG_ON(1);
-        }
-}
-
-static __always_inline void write_ppi_sysreg_s(unsigned int irq, bool set, const unsigned int which)
-{
-	u64 bit = BIT_ULL(irq % 64);
-
-        switch (which) {  
-        case PPI_HM:
-        	if (irq < 64)
-                	write_sysreg_s(bit, SYS_ICC_PPI_HM_R0_EL1);
-                else
-                	write_sysreg_s(bit, SYS_ICC_PPI_HM_R1_EL1;
-                return;
-        case ....:
-
-        default:
-                BUILD_BUG_ON(1);
-        }
-}
-
-Or something like that.
-
-> +static int gicv5_ppi_set_type(struct irq_data *d, unsigned int type)
-> +{
-> +	/*
-> +	 * The PPI trigger mode is not configurable at runtime,
-> +	 * therefore this function simply confirms that the `type`
-> +	 * parameter matches what is present.
-> +	 */
-> +	u64 hmr = READ_PPI_REG(d->hwirq, HM);
-> +
-> +	switch (type) {
-> +	case IRQ_TYPE_LEVEL_HIGH:
-> +	case IRQ_TYPE_LEVEL_LOW:
-> +		if (((hmr >> (d->hwirq % 64)) & 0x1) != GICV5_PPI_HM_LEVEL)
-> +			return -EINVAL;
-
-Blink!
-
-How does this test distinguish between LEVEL_LOW and LEVEL_HIGH? It only
-tests for level, no? So the test is interesting at best ...
-
-Secondly this comparison is confusing at best especially given that you
-mask with a hex constant (0x1) first.
-
-     		if (hmr & BIT_UL(d->hwirq % 64))
-                	return -EINVAL;
-
-Aside of that why do you have a set_type() function if there is no way
-to set the type?
-
-> +
-> +static int gicv5_ppi_irq_get_irqchip_state(struct irq_data *d,
-> +					   enum irqchip_irq_state which,
-> +					   bool *val)
-> +{
-> +	u64 pendr, activer, hwirq_id_bit = BIT_ULL(d->hwirq % 64);
-> +
-> +	switch (which) {
-> +	case IRQCHIP_STATE_PENDING:
-> +		pendr = READ_PPI_REG(d->hwirq, SPEND);
-> +
-> +		*val = !!(pendr & hwirq_id_bit);
-> +
-> +		return 0;
-
-		*val = !!(read_ppi_reg(d->hwirq, PPI_SPEND) & bit);
-                return 0;
-
-would take up less space and be readable.
-
-> +	case IRQCHIP_STATE_ACTIVE:
-> +		activer = READ_PPI_REG(d->hwirq, SACTIVE);
-> +
-> +		*val = !!(activer & hwirq_id_bit);
-> +
-> +		return 0;
-> +	default:
-> +		pr_debug("Unexpected PPI irqchip state\n");
-> +	}
-> +
-> +	return -EINVAL;
-
-Move the return into the default case.
-
-> +static int __init gicv5_init_domains(struct fwnode_handle *handle)
-> +{
-> +	struct irq_domain *d;
-> +
-> +	d = irq_domain_create_linear(handle, PPI_NR, &gicv5_irq_ppi_domain_ops,
-> +				     NULL);
-
-Please use the full 100 charactes all over the place.
-
-> +	if (!d)
-> +		return -ENOMEM;
-> +
-> +	irq_domain_update_bus_token(d, DOMAIN_BUS_WIRED);
-> +	gicv5_global_data.ppi_domain = d;
-> +
-> +	gicv5_global_data.fwnode = handle;
-
-The random choices of seperating code with new lines are really
-amazing.
-
-> +static int __init gicv5_of_init(struct device_node *node, struct device_node *parent)
-> +{
-> +	int ret;
-> +
-> +	ret = gicv5_init_domains(&node->fwnode);
-
-        int ret = ....;
-
-> +	if (ret)
-
-Thanks,
-
-        tglx
+> ---
+>  drivers/gpu/drm/amd/display/dc/bios/command_table2.c     | 9 ---------
+>  .../gpu/drm/amd/display/dc/bios/command_table_helper2.c  | 3 +--
+>  2 files changed, 1 insertion(+), 11 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/amd/display/dc/bios/command_table2.c b/drive=
+rs/gpu/drm/amd/display/dc/bios/command_table2.c
+> index f1f672a997d7d..d822cc948bdf2 100644
+> --- a/drivers/gpu/drm/amd/display/dc/bios/command_table2.c
+> +++ b/drivers/gpu/drm/amd/display/dc/bios/command_table2.c
+> @@ -103,7 +103,6 @@ static void init_dig_encoder_control(struct bios_pars=
+er *bp)
+>                 bp->cmd_tbl.dig_encoder_control =3D encoder_control_digx_=
+v1_5;
+>                 break;
+>         default:
+> -               dm_output_to_console("Don't have dig_encoder_control for =
+v%d\n", version);
+>                 bp->cmd_tbl.dig_encoder_control =3D encoder_control_fallb=
+ack;
+>                 break;
+>         }
+> @@ -241,7 +240,6 @@ static void init_transmitter_control(struct bios_pars=
+er *bp)
+>                 bp->cmd_tbl.transmitter_control =3D transmitter_control_v=
+1_7;
+>                 break;
+>         default:
+> -               dm_output_to_console("Don't have transmitter_control for =
+v%d\n", crev);
+>                 bp->cmd_tbl.transmitter_control =3D transmitter_control_f=
+allback;
+>                 break;
+>         }
+> @@ -409,8 +407,6 @@ static void init_set_pixel_clock(struct bios_parser *=
+bp)
+>                 bp->cmd_tbl.set_pixel_clock =3D set_pixel_clock_v7;
+>                 break;
+>         default:
+> -               dm_output_to_console("Don't have set_pixel_clock for v%d\=
+n",
+> -                        BIOS_CMD_TABLE_PARA_REVISION(setpixelclock));
+>                 bp->cmd_tbl.set_pixel_clock =3D set_pixel_clock_fallback;
+>                 break;
+>         }
+> @@ -557,7 +553,6 @@ static void init_set_crtc_timing(struct bios_parser *=
+bp)
+>                         set_crtc_using_dtd_timing_v3;
+>                 break;
+>         default:
+> -               dm_output_to_console("Don't have set_crtc_timing for v%d\=
+n", dtd_version);
+>                 bp->cmd_tbl.set_crtc_timing =3D NULL;
+>                 break;
+>         }
+> @@ -674,8 +669,6 @@ static void init_enable_crtc(struct bios_parser *bp)
+>                 bp->cmd_tbl.enable_crtc =3D enable_crtc_v1;
+>                 break;
+>         default:
+> -               dm_output_to_console("Don't have enable_crtc for v%d\n",
+> -                        BIOS_CMD_TABLE_PARA_REVISION(enablecrtc));
+>                 bp->cmd_tbl.enable_crtc =3D NULL;
+>                 break;
+>         }
+> @@ -869,8 +862,6 @@ static void init_set_dce_clock(struct bios_parser *bp=
+)
+>                 bp->cmd_tbl.set_dce_clock =3D set_dce_clock_v2_1;
+>                 break;
+>         default:
+> -               dm_output_to_console("Don't have set_dce_clock for v%d\n"=
+,
+> -                        BIOS_CMD_TABLE_PARA_REVISION(setdceclock));
+>                 bp->cmd_tbl.set_dce_clock =3D NULL;
+>                 break;
+>         }
+> diff --git a/drivers/gpu/drm/amd/display/dc/bios/command_table_helper2.c =
+b/drivers/gpu/drm/amd/display/dc/bios/command_table_helper2.c
+> index cb3fd44cb1edf..e0231660f69da 100644
+> --- a/drivers/gpu/drm/amd/display/dc/bios/command_table_helper2.c
+> +++ b/drivers/gpu/drm/amd/display/dc/bios/command_table_helper2.c
+> @@ -79,8 +79,7 @@ bool dal_bios_parser_init_cmd_tbl_helper2(
+>                 return true;
+>  #endif
+>         default:
+> -               /* Unsupported DCE */
+> -               BREAK_TO_DEBUGGER();
+> +               *h =3D dal_cmd_tbl_helper_dce112_get_table2();
+>                 return false;
+>         }
+>  }
+> --
+> 2.39.5
+>
