@@ -1,72 +1,70 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 482552882BC
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 02:13:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A599C295DBD
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 02:20:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746497614; cv=none; b=ERl7cdsZR0goEEn/moKh8T523yhWEIh6xCJnVRUgRWqNIDrXq97URxgmPhL4fRSxpSUwJC41Y1vrFPznELtogzXDlqqDPGPiXd5zofY+qyI5bYS8Q6Pn3A7RPeDfvIijj9vfu7tygIBMmfaRBu/lg9MP2ugffQXcZ89cNQSke+M=
+	t=1746498044; cv=none; b=P/NKwntUJkVRaNnAe4g+8xP1rU7QKpT9Kfo1Utgm/PL6VSLM9+U6D2Bk3P5upUlxjdNCRPFdyLuF2MXu0m6k23EsuNVmO4WiYG9Qg9dmLOdZ4/V9CqeRoguYZ054SbjAZYRO2hcStyHoviebjcnj3EkZDf/rYVOmb+4bDRQFLs4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746497614; c=relaxed/simple;
-	bh=TjKaamys5tfj1/y8Wbp8cDjnbPajut/oz/96KewBhDQ=;
+	s=arc-20240116; t=1746498044; c=relaxed/simple;
+	bh=pB/2z9gfgk2QzpmlM92q8FYnfovHFOn4LHn8HHtn3ZY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rsVDzFaAHBjq7zY+SRusTAprXbzGUn9QpgWAGcTOMjBHrt14Vp4GUd1VIKOxmwjqoiEjElET3/3P54LzvSyKk5ytOcVHn1BTv9ah7C2k1Ok0BvAdwcgVGeWGKVuPzYozNfZMN8Z/gpWLSsgBrHnik1JKhZcVQ6bSPPhl4fw0ZKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=dlollNxf; arc=none smtp.client-ip=209.85.210.179
+	 Content-Type:Content-Disposition:In-Reply-To; b=eGO5VOrLg5m+RxI0ff4ymtVBhha+kyc12duCulC58TafErFg4VcV6q0uQuCYyQX1xJAkErv8uj56GCT5Y+MaHOWuDaurLi5hz7aKpHTVkkaansalwX9V2hXenCkfDROr2EuDf7tfy2bvMep90JZ+CXgMK5c0ZzyP3tY+BX9xXRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=gfrsILBB; arc=none smtp.client-ip=209.85.210.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dlollNxf"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-74068f95d9fso2278174b3a.0
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 19:13:33 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gfrsILBB"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-736b0c68092so4473825b3a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 19:20:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1746497612; x=1747102412; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1746498041; x=1747102841; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xMLIEqGfOzm0YYGILU4uDjHdyt5U0kB2OQhIe5Xv/tI=;
-        b=dlollNxfQkjSZ+HnzaPunWFhFmF4iP/Nq8dq/OQsbeqoi8HgKPuZEKaHyUP6t79AuL
-         oyW7v7UX9dZwHHWZm2hlqkAtpRk7MERRLA/CQuDpsTaYPYEZsIhRXtEBagU0MFyOLwWd
-         nO+BHZFOMzia25AUprFuNsXaBmSXJVgsFo71I=
+        bh=YCRivcMyKZAjTDZHcc+7HA18fyk8T4lAA8XlsxUQKdQ=;
+        b=gfrsILBBHx+up9yBXju5DXqKwSz/MMQeUd6C6UtCfmtCvjzCRf1VWLut1v644DXEvB
+         hRSALIMzGS1Uyo5IQMx+omHlKfLuyEzx0K7XfxXFnR/jq+EU0oeNPchAKky5gSm8REAA
+         J04iZKRcGiPPibX9D260oqUxvVQsxbZo4hR6o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746497612; x=1747102412;
+        d=1e100.net; s=20230601; t=1746498041; x=1747102841;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=xMLIEqGfOzm0YYGILU4uDjHdyt5U0kB2OQhIe5Xv/tI=;
-        b=P/DUjLPyx21Cye1FSLbhfgfyIEyYyNKr1e4+m8oCkheVult+PxyQ3H7L9PqEBAJFQV
-         PTXwJj7Na4OXTRyEpnczQQrT2dWtN7TsQ07dArzZlWxF3tAOpt//ok0RbbvJVKsEDtJH
-         1fbcDCavJb6JsYPGT0oisFuIZx/QeSyEY4APFOrERo94j7TxjgNCR6ECbFyI++hdA2VT
-         /WzVc8BaQZi67+BFz/t9XFjOpWiAQrKf6rE7Hkc0uAn3ZFJcYSxSLiU++4RvP/obsgA/
-         p64nWXfgXIX+vcD15dQfpM686/JSHT32RWBfhwyo0bD/gWYazNzIei9iUbp8oapnLrgA
-         di/A==
-X-Forwarded-Encrypted: i=1; AJvYcCXB+NXY2KnzFbEA0GGR1map3cvwchwmdAiFSZPZAo4eN8WOldYNil/IlxG2/5kQA0EtdvLIVEldBX0wfmM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxtlVcZB/8pa3z42JugDVP17Fkp7odz96dlWYPfHS/59YWlM9fo
-	p/3/A7yhiQrcXdh7dUd/ldbf+0zPMg5MuSAhBnPSK85XklaUoH5PH0P/8pz8Rg==
-X-Gm-Gg: ASbGnctUHL10bQQFgjvz0szpFJKWk2XNjPEzxtOTKKr1L85v0dSJ2Rza+6E+GVfHlc6
-	3TBDWNXigViC3zlp7SPddDVRiY4J5f1nHM0LSGi6KexoYDQw2Mv+t9Sau1z9zl8lZFLcQLQSfZD
-	dsEGDN5HTSOOmXv50gJHVDimcgsutbSB3yP/wp2X55A4A/BeWjdp6eU4T9UENgz0CmDbH3gFEin
-	RJiCHN37JiEcgfXzk+J8OcR+YS+kXJFgTfDKd6fQoA3uhCdc9B6TzrDgX30ECJrEHJl4EvXDrrC
-	6x3eMtLRnWnScYKd2dqoOOY9ITLTSyU36LUwNj1maKX/
-X-Google-Smtp-Source: AGHT+IEQVeqqIQDZUu+Q1GCjvpvnxvMpU92zElefblNq0IFwm5LHHiti0J7zMIKFuwG93HIrp+UUwA==
-X-Received: by 2002:a17:90b:3a05:b0:30a:255c:9d10 with SMTP id 98e67ed59e1d1-30a7c0806demr2416920a91.8.1746497612367;
-        Mon, 05 May 2025 19:13:32 -0700 (PDT)
+        bh=YCRivcMyKZAjTDZHcc+7HA18fyk8T4lAA8XlsxUQKdQ=;
+        b=Gy4DX7yTKcjbBe38iKHJomncIPVkvIyLR8EPufLWiiAcJsvN9kQlurxa+iT78+tJ4o
+         GfW32T/B358pOk4fPdPHgoD5Ahtc8fc1HhoBH70kCtZG67gFTOpP0J8ihoN6OA7Y2TM6
+         JuyUAzpWB9TWOV3xTn6/qG2y6zkWtxHhJsauffhX7hEVROTNtZA24TsD7jZnWDGtwsKx
+         EwU3NBBEgckZi3Uaa+iB8wSietMhFNhXjgZ2p/Pg+ESG07//Bvgu8Vtcsr0y9EwUrFEJ
+         mf993/KGRIS9EZ1GZVu+umEpLqaPd67BfcMf23WDwXuNqqZtKaoX4Tlh8R2AfmMT/adb
+         3TqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW+IoPsBJA/qV2TDDcFVJ9enOUr8TNNJj62d9ehD+zTiMCZnrMFsBNEozMbhvdgux4yzL11od2+GE4JGng=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxDGMprpYcq76359uSnKeerV30gYS5OG3AQc9OIY8WXk25/ZfT
+	jCC7Lbz/mHwBBP/qMbVj7OP+aYuSn68W+0N0QbE3Q117F/PUMgdDJ19rUv9Cug==
+X-Gm-Gg: ASbGncvfsG3wl1C3lBndRPNQneC2GSMa7WqRV7H5rpk8P/hkiwOLm4m+HaECKa5GDru
+	WpVG0T9vk8LU80vh+XX7VWWbAWQaCQWamXGcqnFEiDSMm6JOhur/JVQkOHFi+/IdD2EDNu3xySt
+	hUjuK+Vx/n0JIc+ySOmwc2t+h5p99e6Q1c67hE0t9FcWQuGZ4dU+vNbUEfRcdpyi4g5OidGe8qU
+	YEVgT5hF5LT3W9a0A2eV1Jz74g7XvjCqc8CYbV3wbOxwytnE1nB4zqtIpVO+tt5yR4U1NyjWTuy
+	4DFzC7Fr+68j4r/BtFvf+1Q9Qqv/Oare5Cl048b4XgZk
+X-Google-Smtp-Source: AGHT+IGh1OnULhXn2xtFUOqy1BCdiiwtDwGquTntDY3zBj6xTjRCCRtPqb5UQgHUOHJ7rl2HYeeMFQ==
+X-Received: by 2002:a05:6a20:2452:b0:1ee:b8bc:3d2e with SMTP id adf61e73a8af0-20cde373ebbmr24382308637.8.1746498040820;
+        Mon, 05 May 2025 19:20:40 -0700 (PDT)
 Received: from google.com ([2401:fa00:8f:203:4dd5:88f9:86cd:18ef])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30a3471effasm12638224a91.10.2025.05.05.19.13.28
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b1fb3c3bfabsm6327470a12.62.2025.05.05.19.20.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 19:13:31 -0700 (PDT)
-Date: Tue, 6 May 2025 11:13:25 +0900
+        Mon, 05 May 2025 19:20:40 -0700 (PDT)
+Date: Tue, 6 May 2025 11:20:35 +0900
 From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Vitaly Wool <vitaly.wool@konsulko.se>, 
-	Igor Belousov <igor.b@beldev.am>, linux-mm@kvack.org, akpm@linux-foundation.org, 
-	linux-kernel@vger.kernel.org, Nhat Pham <nphamcs@gmail.com>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Yosry Ahmed <yosry.ahmed@linux.dev>, 
-	Minchan Kim <minchan@kernel.org>, Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: Re: [PATCH] mm/zblock: use vmalloc for page allocations
-Message-ID: <itnqbldahxd46zzwh5gq2iijcfrgyubp626bmr4jezpu43rkui@wal7n6ti6jq7>
-References: <20250502080156.1672957-1-vitaly.wool@konsulko.se>
- <fddf0457275576c890d16921465cf473@beldev.am>
- <83CB359A-955E-48B6-B0D9-DD4F2E1146D4@konsulko.se>
- <20250505140812.GA30814@cmpxchg.org>
+To: Kumar Kartikeya Dwivedi <memxor@gmail.com>, Song Liu <song@kernel.org>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	John Fastabend <john.fastabend@gmail.com>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] bpf: add bpf_msleep_interruptible()
+Message-ID: <6g5d4y7ahyjcrlixjkzwgn473klmdhib376q5vvvfp2kelkk6t@yz6sipuhe2lt>
+References: <20250505063918.3320164-1-senozhatsky@chromium.org>
+ <CAPhsuW7-jkU+KiunvZw9-NsxT+7ohcHQtJ6JSXNU4aDPxJLWwQ@mail.gmail.com>
+ <CAP01T74_fCpuqwPpqs0tVWAUwO3rm6D-PRC0MZjiGyqf=oXRPQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,36 +73,17 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250505140812.GA30814@cmpxchg.org>
+In-Reply-To: <CAP01T74_fCpuqwPpqs0tVWAUwO3rm6D-PRC0MZjiGyqf=oXRPQ@mail.gmail.com>
 
-On (25/05/05 10:08), Johannes Weiner wrote:
-> I've been using zsmalloc with 16k pages just fine for ~a year,
-> currently running it on 6.14.2-asahi. This machine sees a lot of
-> memory pressure, too.
-> 
-> Could this be a more recent regression, maybe in the new obj_write()?
+On (25/05/05 21:30), Kumar Kartikeya Dwivedi wrote:
+> On Mon, 5 May 2025 at 21:07, Song Liu <song@kernel.org> wrote:
+> > Please keep in mind that BPF programs run in not sleepable
+> > contexts, including NMIs. Maybe udelay() is a better option?
 
-This looks like a recent regression.  In the old code we'd something like
+If we want to timeout various SCSI operations, for instance, I think
+we need to sleep for seconds.  udelay() won't probably work for that.
 
-	__zs_map_object(area, zpdescs, off, class->size)
+> Or mark the kfunc KF_SLEEPABLE, IIUC the intention is to use it from
+> hooks which are sleepable.
 
-which would use class->size for all memcpy() calculations:
-
-       sizes[0] = PAGE_SIZE - off;
-       sizes[1] = size - sizes[0];
-
-       /* copy object to per-cpu buffer */
-       memcpy_from_page(buf, zpdesc_page(zpdescs[0]), off, sizes[0]);
-       memcpy_from_page(buf + sizes[0], zpdesc_page(zpdescs[1]), 0, sizes[1]);
-
-So we sometimes would memcpy() more than the actual payload (object size
-can be smaller than class->size), which would work because compressed
-buffer is huge enough.  In the new code we use object size, only for
-write() tho.
-
-read_begin()/end() still use class->size, so  I think in some cases we
-can "unnecessarily" go into
-	"object spans two pages, memcpy() from both pages a local copy"
-even if the actual object fits on one page.  We may also want to pass the
-object size (which we know) to read_begin()/end(), this potentially can
-save some memcpy() calls.
+I think it is already marked as KF_SLEEPABLE.
