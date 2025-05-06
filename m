@@ -1,622 +1,264 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2084.outbound.protection.outlook.com [40.107.223.84])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AE6225949A;
-	Tue,  6 May 2025 16:27:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.84
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746548839; cv=fail; b=kZal5BOh3/q22/MxC5aW4u/GDmaa24/FtZZrir//6Ta5kvhFSq78XuEvfthY3XfibKeWllkyzsnHISWFXksDRcaZ/o7JvdBDgTjrSwgxMt4p26PO4q4TmpqoB9XX6GXJxhi0Yrg4tTCP+EbMc/2mHMMqqWFlNcpmykaCFa0tvpw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746548839; c=relaxed/simple;
-	bh=lQLu3jzRygMrTQO0fJm4OY2QQqzsd4bj1QPrbAXb4eg=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=S9N+ZJh5LPvMwMbc4xHKa1i870h9SEX5OljV2wVwTXHJFh8mk7ahcWMHw05TbTG0y7+tAM4R4ERlVJM2zdUom1MPHmks9sFmMz2qD9XVsEkbSUGFVlA8kybbta1wYM9s6xIXGeIEJxIOrumVAXWRfMsXJCewN6dqAOkJL5oDjh4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ufsp1Ihm; arc=fail smtp.client-ip=40.107.223.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4E06284B35;
+	Tue,  6 May 2025 16:27:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746548859; cv=none; b=Ege1KSeJAfFVdmpuWnLqhp9eLayh5uT8HITf/1nDMyO0l4rhd10ZsgNVZWZFG9WFo01vb05XqhGipcbVQ6nU35p/vVZYzx7sfC1K3Y5IZrZq2fbIc0HyhWV5Ni7QJi447fP2tXd6xIhuR5ndDxQ2j/dzwP8CBdySASma+nu29XU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746548859; c=relaxed/simple;
+	bh=t77JjOWF983S2yo+S8BpF99d6mDZ6QTQoysmlKYRh1I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gQ1jcoZZQ/ylZDYQwkPKqEt4xb3HANm6JFytt5u3ScSPeuBRvqNAOyNg6snSU14nOoKuJ0he/TkexDM70y2qRz5v4rjOHuAgDfWHtVK+7txC8g+a0Dy/OlyQvcIki5lqoSZFGejwKdaTN72jqNPqlt3ZqhMQsUwDMKSfxMqo2gM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XbOWMO8V; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ufsp1Ihm"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Me12iBm73YtDkx69ojl+swZtuvnXiymfXFnEQJZwQH4AFP/P47o16CPst23ggOYSI6ev2UNcu2/gK52v6VdaR8is+6w4z7oOngtceXbs7M9GmppAYXk3RZoR3UE6HKaAfmZjk4mi3leLQpxPzOszOvJHcwa6qIl95Mm5SX1Td8+r9O6vu7p5yxSZtYD2mmXVKFJfQyDNxiBxQZZOEjqac3sHUiZx8ZZw3fnOl7xphyNuBJJaAKGdY/G31u+dVatktE7GpKkL6JEv8PgPma4tNednne/ox1yCYccITTL4RUjY/1rzbd44pdiFnfT9uB86ajU3OIYlUW488yC4D3j0Gg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=C1b8J5gx/sNG19XS1PrMEkLl+F7C/y7jZZ1W/WCfAaQ=;
- b=xOf/j5MfC/m2FBilK377goxotCl6UNs+BZ24G1U2cBFSumVRYsCU+LAphbXY0IN/+SR1by4cSJVxdlS4QxhuI0qE/cRqirYaYaiUUucPQ7vbB0dQdqLkQPt8MK7yPQHUMQ0nwHSW3l0naW7EMnAQzen88EP2+H4Iz/28dMw27YJw10yBxVVIBa9PswYE4BclIcw4YSteWPoLNFDB628AEVl3Tl+jCWtvWAxiuNhDRcGoIxNrHHF+i62O2A3LAWgVS1hMSmcKbTjVghUF8MU8obCwDSMgXv6D9Le2dE0urE8W4g/LFgjsQz3b2HtpwHW0uUDNp1G6EVvGZzZoQOK+1g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=lists.freedesktop.org
- smtp.mailfrom=nvidia.com; dmarc=pass (p=reject sp=reject pct=100) action=none
- header.from=nvidia.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=C1b8J5gx/sNG19XS1PrMEkLl+F7C/y7jZZ1W/WCfAaQ=;
- b=ufsp1IhmA+8/dFA4ThQJpBdOd0A17u+3CSX1BtopQPt7abkJaJZD5QXeI90p57qHza59JSOa7mRGkfXIFvvztToKNPpWWy3GlsCZpfv8JAy+W+wis9rLDnc6sjAR4rf/ERHKXUPad3IU1WyPaaHDswrw+/4loIHiXQAfC4viCiugNput5Di0R0irCsuSBUpiIDPNSl2qLiLNkJbe4cvQEt2W1Zto9BSVgUeJH+11Zh92DukcPCafGlp0LI6XhBGLY42Qz6/FaTXy29Xj9n2OlUgvDM2DJHqoqu3dmS0nMmn/od9CTIJUA+XX1VrIeMg2HmcsKUtFQSrHGCQp6WyqiQ==
-Received: from BLAPR03CA0152.namprd03.prod.outlook.com (2603:10b6:208:32f::16)
- by SN7PR12MB6929.namprd12.prod.outlook.com (2603:10b6:806:263::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.20; Tue, 6 May
- 2025 16:27:04 +0000
-Received: from BN1PEPF00004681.namprd03.prod.outlook.com
- (2603:10b6:208:32f:cafe::b4) by BLAPR03CA0152.outlook.office365.com
- (2603:10b6:208:32f::16) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8699.32 via Frontend Transport; Tue,
- 6 May 2025 16:27:04 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- BN1PEPF00004681.mail.protection.outlook.com (10.167.243.87) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8722.18 via Frontend Transport; Tue, 6 May 2025 16:27:03 +0000
-Received: from rnnvmail202.nvidia.com (10.129.68.7) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 6 May 2025
- 09:26:54 -0700
-Received: from rnnvmail205.nvidia.com (10.129.68.10) by rnnvmail202.nvidia.com
- (10.129.68.7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Tue, 6 May
- 2025 09:26:46 -0700
-Received: from inno-thin-client (10.127.8.12) by mail.nvidia.com
- (10.129.68.10) with Microsoft SMTP Server id 15.2.1544.14 via Frontend
- Transport; Tue, 6 May 2025 09:26:42 -0700
-Date: Tue, 6 May 2025 19:26:41 +0300
-From: Zhi Wang <zhiw@nvidia.com>
-To: Joel Fernandes <joelagnelf@nvidia.com>
-CC: <linux-kernel@vger.kernel.org>, Danilo Krummrich <dakr@kernel.org>, "David
- Airlie" <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, "Maarten
- Lankhorst" <maarten.lankhorst@linux.intel.com>, Maxime Ripard
-	<mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, "Jonathan
- Corbet" <corbet@lwn.net>, <nouveau@lists.freedesktop.org>,
-	<dri-devel@lists.freedesktop.org>, Alexandre Courbot <acourbot@nvidia.com>,
-	John Hubbard <jhubbard@nvidia.com>, Shirish Baskaran <sbaskaran@nvidia.com>,
-	Alistair Popple <apopple@nvidia.com>, Timur Tabi <ttabi@nvidia.com>, "Ben
- Skeggs" <bskeggs@nvidia.com>, <rust-for-linux@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>
-Subject: Re: [PATCH v2 4/7] nova-core: docs: Document fwsec operation and
- layout
-Message-ID: <20250506192641.7872cbd0@inno-thin-client>
-In-Reply-To: <20250503040802.1411285-5-joelagnelf@nvidia.com>
-References: <20250503040802.1411285-1-joelagnelf@nvidia.com>
-	<20250503040802.1411285-5-joelagnelf@nvidia.com>
-Organization: NVIDIA
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XbOWMO8V"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-73bf5aa95e7so5649445b3a.1;
+        Tue, 06 May 2025 09:27:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746548857; x=1747153657; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=W4+aHBG7Ux1e18DCnuuxjWF5KTqADzL62NiKzmfieec=;
+        b=XbOWMO8VqRtOD37SeSyOOgzbA39v8U1OvzQYjzK2htxOoPnObeP2VfzfWEs7IgNLor
+         Uj4v8CQTDyh5ZeBDq6w2UNAUaTLrDdO/xyrOGdjd0B+S4xP2WFbe6hpeMvAAmnfMxcql
+         VufPMR5QAsZ93qwNCSVl8SZ8zwUr6nB5gmOk+g7qI+E3C/XB2z81J0ZUCWPuTnB2GFbh
+         4Mw6X1QIc0clYPk1/9VdgMdFtl9Vw1RT0qRWwnf2zq+Mxw9ZtJ0RCXrrgvDA0rhlX/4Z
+         dTrYV3Eoso0JExe0N3pswZ55Ov6mOU46A+MRZp6TjGQn6GZJ1DQERrRBuPOuE6nOjrra
+         Z7nA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746548857; x=1747153657;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=W4+aHBG7Ux1e18DCnuuxjWF5KTqADzL62NiKzmfieec=;
+        b=iRwXx92iOpWr/u9GkF5pOttwSFRVs4r2AOtdd7twtI60fYq6B9+m+1HfBbweQFUTpk
+         e7hYlwgVwxPwL+1BIfhdzjxcjSuAF7SgF4FvPnMqacwIR4iYQnwzNHt3G8dfPnQ4Z13j
+         UeLeP3VlRhhOmJqYi4M4KQLaNciDE9Zj2AA265HI28I5yYTWcgpxYGweugAQ9LCjVlv2
+         Yz2oQ/8ScqsWxOh4cU6vnFP5nu8BvzhQQJLeBirIUgEck7bcdehJPHlutG48RYWiqIX6
+         h1FglMMmwNi9+Xm2a0f0y8sc4Bjgt5MOzXiWeClAsaHZ2N6tT/3MBdHJsKZh+YK/WBXt
+         NCLw==
+X-Forwarded-Encrypted: i=1; AJvYcCU42cGTgdNToaqJOB2o2+FMGdoAC6ue6rhy9qqIYiEB2PorBnLnX0H013HhKXc8RgzBXOEKQW52AbgA8+Cvqqn9@vger.kernel.org, AJvYcCUJECdANx2+tkmUz4Js0ImmVOBmCyzmi34v6ESKxHMnyJ4Y3uqV/HOFNLhYmAK+UvmJ4tSVsPBNRHSUvY9o@vger.kernel.org, AJvYcCXSkhDtqA7TmiZS6EqTIhdBNAryDjIBpbC0hf1RspVYrBlcpJZBbLHCnAlu3v0u3kIqXPXqURHN@vger.kernel.org, AJvYcCXhpAEfrnkAo/G1mAoJOQcxz739I0u07MRzqzvcRND3Ah46N8FcYH/izL2kRdJ3EinYz4c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXKEqxyVCzhXv3cIK86ENNApnecUax9jCSjVUGfevQ3puUbhiT
+	8dSvEdJaqMZeLYGZYcW32yYbab7H/Ae4FyhrfmBvFKe49lVmg5yp
+X-Gm-Gg: ASbGnctmK/QwFUtfkXU1dPEM2XMhu06iQLdX+u51HN+9t3XC+vaDae0MPkgWe9w5EIo
+	OWPqhFBxpWHMs5p/ycKV0NpXHueWDtFzwaVn0YEVpbTKvVS9uTVK3ktw1Fp7OekWfnyw9l1ZM3T
+	fyDpMGyJ8hzOFXeGkLEbSyfZctvVHNBXvauG4w3x50gilUx8L+dpYXBppIJdpazS14tQCweXPmP
+	xDuEyujAB2v487Prs5s7/VEfdgvJwypJXBU942mBPbkJe1A3TPWimWHMTQzc9jXo8XKa96PdPxC
+	rNFZophd1Fb5OY3YTPSDeNTtpyfk8UDllPFI17phYUMebwby8GcQG2JiNKJ7
+X-Google-Smtp-Source: AGHT+IEzs0bjLB5zkw9j/S1/ceDqOSJy2CsPvvNJ4wRJWTHVZg0AVYcMnjXylpOZE8J6qEnvZtIuyQ==
+X-Received: by 2002:a05:6a00:4c0e:b0:736:2a73:675b with SMTP id d2e1a72fcca58-7406f17a282mr16246702b3a.19.1746548856927;
+        Tue, 06 May 2025 09:27:36 -0700 (PDT)
+Received: from devbig793.prn5.facebook.com ([2a03:2880:ff:c::])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7405905d16asm9083656b3a.127.2025.05.06.09.27.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 May 2025 09:27:36 -0700 (PDT)
+Date: Tue, 6 May 2025 09:27:34 -0700
+From: Bobby Eshleman <bobbyeshleman@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: Stefano Garzarella <sgarzare@redhat.com>,
+	Stefan Hajnoczi <stefanha@redhat.com>,
+	Shuah Khan <shuah@kernel.org>, kvm@vger.kernel.org,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>,
+	linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
+	netdev@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH net-next v3] selftests/vsock: add initial vmtest.sh for
+ vsock
+Message-ID: <aBo4dievUeVxP7dk@devbig793.prn5.facebook.com>
+References: <20250428-vsock-vmtest-v3-1-181af6163f3e@gmail.com>
+ <3e3eea6b-10a6-4a32-aa12-ef6fdf2eeeb8@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN1PEPF00004681:EE_|SN7PR12MB6929:EE_
-X-MS-Office365-Filtering-Correlation-Id: 31866a20-ef2a-48c4-b4f0-08dd8cbad5fd
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|36860700013|7416014|376014|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Z21LcnQrSXNxQm1EbTZyWnNCeHBxUDF3UER1N01hMDN5QW5TaG42bjdmRXhq?=
- =?utf-8?B?NFlkS29VdnJyRlBHWlRqc0Mzd29qd2E2eUtSbHpITWF1c3cweTcwTnA2VlRv?=
- =?utf-8?B?Qkpob1FEd2UxaUJUQnFBSFBXMnlwMHRkOHo2VU5EUUVPU2R0R3EvV1M4bFYz?=
- =?utf-8?B?TDB6aGFlek9MYTNwMlVmQkY3dXpieURoVjg1Z29Qb0c3aldwMXZ3bkNQRzR6?=
- =?utf-8?B?a2w2ZU5NLy9lUVcxbXVZa3p6eWVreUN3RThMUVhwNmtjY2FkRVNUZjc1NHZB?=
- =?utf-8?B?WFVQSVVQRENnTjc1ZGphU0xJK0d0OTZYOG5xYXdEN09IMmxYR1IzWjhvY1FK?=
- =?utf-8?B?a25PQjc2Sks1akVJSUo1bUR6czh5WkdEWHNwVE5RSFdWZGp6bTdSZWFjT0Vw?=
- =?utf-8?B?MlFxa0dMK1ordHpkYlk5MHlkbzdiYTNFT0lvUjdRVnBrMkZjTEV5MEhvZ0dM?=
- =?utf-8?B?S0dlQkZ1ZmY0Nzl0VVUzUG9iNUE1N3dGR2NzVUU0SnVObkd0Q0ZBaUs0N29L?=
- =?utf-8?B?cGpjalNmeUl5a2FEOGVvdE1Qc3BPMTJyaWxKQ0dHdnhxM2QveHhXV0s0dXFL?=
- =?utf-8?B?TlpWNG1ncmp3VzgzOGJiT3J2dUpPTU1vMFBRcnJMNHF2QkhSSEZjQjkxbEFt?=
- =?utf-8?B?V0lySm5WdDc0NU01ajVNZkNYbFZLWGgxZEFubHNmMVd6WEUwZmE0NnhEWmtV?=
- =?utf-8?B?VTBiSk9oQ1RGS0tnWXpYOFBPdkwwZUhxZFlDMFZiaHgxbWJVSWswbjlDbWE0?=
- =?utf-8?B?aE1yVkQ3alNJYVdtYllmOFBRdlBZa2Fwd1lkaEM5TnoydFdtYUFnbWxjaFVl?=
- =?utf-8?B?MUxnNFlxdmJqTHlXdCtUbXF1bFY0cU10NU5NeERFMTU4YU1XM1FXcHVrc2Jm?=
- =?utf-8?B?NHllUDZ6Ri9VTHZvSU9iZFJndmdlOWZtSzlPSzV4b1BOeEN1NmlOU05ZRGZD?=
- =?utf-8?B?N2c5U3lDRFRFemdDTUJ3a0hLT3RsRlNGMThqcXFTUDhGRVh2TnlSRTlKU0t6?=
- =?utf-8?B?ZnNELzJ5bEY4eE50MXEra2EvbUtPR2daTDc1LzF6VldOajZ6cS9VOVVKeDA1?=
- =?utf-8?B?eXMrNDFBNC82M1BMeHVFbXdkS3M1L3JQcFdPR3duWHZyc1BXUmQ3WWVlZkFl?=
- =?utf-8?B?WmdibHVHb3dzampWY2pmTjhEam5yVTIzMjJqUFFJQWllVUVCbUhNZU1KUFFt?=
- =?utf-8?B?V3Q4eW5MaFczMFhob2VYU0dnMWI5OS9tNlRsYSt3bFNBZW05dXNWWit0MkNW?=
- =?utf-8?B?cXZFNGFTNzJFdnFpeElZVDlhSCtaRURNb2JQSkN6SWlUVGVCUGV0bGtwMEFM?=
- =?utf-8?B?NFZ3UzY5Mm5OOGlYaU1tWmxsQWlCNW9RMU1UbTIxQ1kzWmdEYm1ZT054YVNZ?=
- =?utf-8?B?UGhteExLUlRVZS8vN0FrbGdYOU5pS2R2eGUwTjBFeXMwdUdHWk9PRTF4S1RI?=
- =?utf-8?B?YmZLSkVwdGQrbWkzbjJJMThYZFNvRSswaUM1RlhieWduTVB1WDNnTXpIczZC?=
- =?utf-8?B?NTlsZk9BcjIzZEVaUFBwTW02dzVoTHgyT0FlM2NGTlN5RkMzNUplczhsUk10?=
- =?utf-8?B?MTh1U3UyYzh5ak5DWTdrczIyYXJCYVpMaVd3Z1JmejBCOUEvc2ZIZjVJbXVX?=
- =?utf-8?B?bHZpcTEzZ3hNbUNlUWxRbE4rMERyQy9HamlQb2piOVZrT0EyWStTRXZ5TlF3?=
- =?utf-8?B?Z0F6K3R0aVhObVZWeTk3bHJBQ2ZjVUVsOWN1clhBWEZBVENkd2IvVTU1cVph?=
- =?utf-8?B?SW9OWi9QcXlic3BKV21ueTVaeXhWZ3M0SFEydFdtaTcyM2FFc2JJQkdFcWJQ?=
- =?utf-8?B?aWhhOUNwajNHYkNxbVVTM0Q5WmQ1RFhwcGw1UVV0NzJ6d0tJOC9mc2pybWpz?=
- =?utf-8?B?TDcxV1czWjZoUE1GZDR0UEJRR0xaTlU3RG5WS29YMDV6Y0Faand5T1J4R0JC?=
- =?utf-8?B?SVhOcWhUT2JxQXFTOFdtYXZKNWt6TjRXSDB0dXRPTHJ4UHhaNzltM1R5dmdJ?=
- =?utf-8?B?Q3ozOUlDS3B6S1NESU9hb0RaeFZXeEZmeGpQY0VkM3k2dkRodU1YMU54d2pr?=
- =?utf-8?Q?bNceT0?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(7416014)(376014)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 16:27:03.6413
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 31866a20-ef2a-48c4-b4f0-08dd8cbad5fd
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN1PEPF00004681.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB6929
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3e3eea6b-10a6-4a32-aa12-ef6fdf2eeeb8@redhat.com>
 
-On Sat,  3 May 2025 00:07:56 -0400
-Joel Fernandes <joelagnelf@nvidia.com> wrote:
+On Fri, May 02, 2025 at 12:22:46PM +0200, Paolo Abeni wrote:
+> On 4/29/25 1:48 AM, Bobby Eshleman wrote:
+> > This commit introduces a new vmtest.sh runner for vsock.
+> > 
+> > It uses virtme-ng/qemu to run tests in a VM. The tests validate G2H,
+> > H2G, and loopback. The testing tools from tools/testing/vsock/ are
+> > reused. Currently, only vsock_test is used.
+> > 
+> > VMCI and hyperv support is automatically built, though not used.
+> > 
+> > Only tested on x86.
+> > 
+> > To run:
+> > 
+> >   $ tools/testing/selftests/vsock/vmtest.sh
+> > 
+> > or
+> > 
+> >   $ make -C tools/testing/selftests TARGETS=vsock run_tests
+> > 
+> > Results:
+> > 	# linux/tools/testing/selftests/vsock/vmtest.log
+> > 	setup:  Building kernel and tests
+> > 	setup:  Booting up VM
+> > 	setup:  VM booted up
+> > 	test:vm_server_host_client:guest:       Control socket listening on 0.0.0.0:51000
+> > 	test:vm_server_host_client:guest:       Control socket connection accepted...
+> > 	[...]
+> > 	test:vm_loopback:guest: 30 - SOCK_STREAM retry failed connect()...ok
+> > 	test:vm_loopback:guest: 31 - SOCK_STREAM SO_LINGER null-ptr-deref...ok
+> > 	test:vm_loopback:guest: 31 - SOCK_STREAM SO_LINGER null-ptr-deref...ok
+> > 
+> > Future work can include vsock_diag_test.
+> > 
+> > vmtest.sh is loosely based off of tools/testing/selftests/net/pmtu.sh,
+> > which was picked out of the bag of tests I knew to work with NIPA.
+> > 
+> > Because vsock requires a VM to test anything other than loopback, this
+> > patch adds vmtest.sh as a kselftest itself. This is different than other
+> > systems that have a "vmtest.sh", where it is used as a utility script to
+> > spin up a VM to run the selftests as a guest (but isn't hooked into
+> > kselftest). This aspect is worth review, as I'm not aware of all of the
+> > enviroments where this would run.
+> 
+> I think this approach is interesting, but I think it will need some
+> additional more work, see below...
+> 
+> [...]
+> 
+> > diff --git a/tools/testing/selftests/vsock/settings b/tools/testing/selftests/vsock/settings
+> > new file mode 100644
+> > index 0000000000000000000000000000000000000000..e7b9417537fbc4626153b72e8f295ab4594c844b
+> > --- /dev/null
+> > +++ b/tools/testing/selftests/vsock/settings
+> > @@ -0,0 +1 @@
+> > +timeout=0
+> 
+> We need a reasonable, bounded runtime for nipa integration.
+> 
+> > diff --git a/tools/testing/selftests/vsock/vmtest.sh b/tools/testing/selftests/vsock/vmtest.sh
+> > new file mode 100755
+> > index 0000000000000000000000000000000000000000..d70b9446e531d6d20beb24ddeda2cf0a9f7e9a39
+> > --- /dev/null
+> > +++ b/tools/testing/selftests/vsock/vmtest.sh
+> > @@ -0,0 +1,354 @@
+> > +#!/bin/bash
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +#
+> > +# Copyright (c) 2025 Meta Platforms, Inc. and affiliates
+> > +#
+> > +# Dependencies:
+> > +#		* virtme-ng
+> > +#		* busybox-static (used by virtme-ng)
+> > +#		* qemu	(used by virtme-ng)
+> 
+> You should probably check for such tools presence and bail out with skip
+> otherwise.
+> 
+> > +
+> > +SCRIPT_DIR="$(cd -P -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
+> > +KERNEL_CHECKOUT=$(realpath ${SCRIPT_DIR}/../../../..)
+> 
+> This is not going to work if/when the self-tests are installed in their
+> own directory via `make install` in the tools/testing/selftests/
+> directory, and that use case is supposed to work.
+> 
+> At very least you should check for the expected layout and skip otherwise.
+> 
+> > +QEMU=$(command -v qemu-system-$(uname -m))
+> > +VERBOSE=0
+> > +SKIP_BUILD=0
+> > +VSOCK_TEST=${KERNEL_CHECKOUT}/tools/testing/vsock/vsock_test
+> > +
+> > +TEST_GUEST_PORT=51000
+> > +TEST_HOST_PORT=50000
+> > +TEST_HOST_PORT_LISTENER=50001
+> > +SSH_GUEST_PORT=22
+> > +SSH_HOST_PORT=2222
+> > +VSOCK_CID=1234
+> > +WAIT_PERIOD=3
+> > +WAIT_PERIOD_MAX=20
+> > +
+> > +QEMU_PIDFILE=/tmp/qemu.pid
+> > +
+> > +# virtme-ng offers a netdev for ssh when using "--ssh", but we also need a
+> > +# control port forwarded for vsock_test.  Because virtme-ng doesn't support
+> > +# adding an additional port to forward to the device created from "--ssh" and
+> > +# virtme-init mistakenly sets identical IPs to the ssh device and additional
+> > +# devices, we instead opt out of using --ssh, add the device manually, and also
+> > +# add the kernel cmdline options that virtme-init uses to setup the interface.
+> > +QEMU_OPTS=""
+> > +QEMU_OPTS="${QEMU_OPTS} -netdev user,id=n0,hostfwd=tcp::${TEST_HOST_PORT}-:${TEST_GUEST_PORT}"
+> > +QEMU_OPTS="${QEMU_OPTS},hostfwd=tcp::${SSH_HOST_PORT}-:${SSH_GUEST_PORT}"
+> > +QEMU_OPTS="${QEMU_OPTS} -device virtio-net-pci,netdev=n0"
+> > +QEMU_OPTS="${QEMU_OPTS} -device vhost-vsock-pci,guest-cid=${VSOCK_CID}"
+> > +QEMU_OPTS="${QEMU_OPTS} --pidfile ${QEMU_PIDFILE}"
+> > +KERNEL_CMDLINE="virtme.dhcp net.ifnames=0 biosdevname=0 virtme.ssh virtme_ssh_user=$USER"
+> > +
+> > +LOG=${SCRIPT_DIR}/vmtest.log
+> > +
+> > +#		Name				Description
+> > +avail_tests="
+> > +	vm_server_host_client	Run vsock_test in server mode on the VM and in client mode on the host.	
+> > +	vm_client_host_server	Run vsock_test in client mode on the VM and in server mode on the host.	
+> > +	vm_loopback		Run vsock_test using the loopback transport in the VM.	
+> > +"
+> > +
+> > +usage() {
+> > +	echo
+> > +	echo "$0 [OPTIONS] [TEST]..."
+> > +	echo "If no TEST argument is given, all tests will be run."
+> > +	echo
+> > +	echo "Options"
+> > +	echo "  -v: verbose output"
+> > +	echo "  -s: skip build"
+> > +	echo
+> > +	echo "Available tests${avail_tests}"
+> > +	exit 1
+> > +}
+> > +
+> > +die() {
+> > +	echo "$*" >&2
+> > +	exit 1
+> > +}
+> > +
+> > +vm_ssh() {
+> > +	ssh -q -o UserKnownHostsFile=/dev/null -p 2222 localhost $*
+> > +	return $?
+> > +}
+> > +
+> > +cleanup() {
+> > +	if [[ -f "${QEMU_PIDFILE}" ]]; then
+> > +		pkill -SIGTERM -F ${QEMU_PIDFILE} 2>&1 >/dev/null
+> > +	fi
+> > +}
+> > +
+> > +build() {
+> > +	log_setup "Building kernel and tests"
+> > +
+> > +	pushd ${KERNEL_CHECKOUT} >/dev/null
+> > +	vng \
+> > +		--kconfig \
+> > +		--config ${KERNEL_CHECKOUT}/tools/testing/selftests/vsock/config.vsock
+> > +	make -j$(nproc)
+> > +	make -C ${KERNEL_CHECKOUT}/tools/testing/vsock
+> > +	popd >/dev/null
+> 
+> I think it would be better to avoid the kernel rebuild. A possible
+> alternative could be including in 'config' the needed knobs for vng's
+> sake and re-use the running kernel.
+> 
+> Cheers,
+> 
+> Paolo
+> 
 
-> Add explanation of fwsec with diagrams. This helps clarify how the
-> nova-core falcon boot works.
->=20
-> Signed-off-by: Joel Fernandes <joelagnelf@nvidia.com>
-> ---
->  Documentation/gpu/nova/core/fwsec.rst | 180
-> ++++++++++++++++++++++++++ Documentation/gpu/nova/index.rst      |
-> 1 + 2 files changed, 181 insertions(+)
->  create mode 100644 Documentation/gpu/nova/core/fwsec.rst
->=20
-> diff --git a/Documentation/gpu/nova/core/fwsec.rst
-> b/Documentation/gpu/nova/core/fwsec.rst new file mode 100644
-> index 000000000000..bed941ac3f2b
-> --- /dev/null
-> +++ b/Documentation/gpu/nova/core/fwsec.rst
-> @@ -0,0 +1,180 @@
-> +.. SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D
-> +FWSEC (Firmware Security)
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D
-> +This document briefly/conceptually describes the FWSEC (Firmware
-> Security) image +and its role in the GPU boot sequence. As such, this
-> information is subject to +change in the future and is only current
-> as of the Ampere GPU family. However, +hopefully the concepts
-> described will be useful for understanding the kernel code +that
-> deals with it. All the information is derived from publicly available
-> +sources such as public drivers and documentation. +
-> +The role of FWSEC to provide secure boot, it is running in
-> Heavy-secure mode. It does +firmware verification after GPU reset and
-> load various ucode images on to the other +microcontrollers on the
-> GPU such as the PMU and GSP. +
-> +FWSEC itself is an application stored in the VBIOS ROM in the FWSEC
-> partition of +ROM (see vbios.rst for more details). It contains
-> different commands like FRTS +(Firmware Runtime Services) and SB
-> (Secure Booting other microcontrollers after +reset and loading them
-> with other non-FWSEC ucode). The kernel driver only needs to +to do
-> FRTS, since SB is already already after reset by the time the kernel
-> driver +is loaded. +
-> +The FRTS command carves out the WPR2 region (Write protected region)
-> which contains +data data required for power management. Once setup,
-repetitive word "data" ^
+Thanks Paolo, I'll incorporate your feedback in the next rev!
 
-> only HS mode ucode can +access it (see falcon.rst for privilege
-> levels). +
-> +The FWSEC image is located in the VBIOS ROM in the partition of the
-> ROM that contains +various ucode images (also known as applications)
-> -- one of them being FWSEC. For how +it is extracted, see vbios.rst
-> and the vbios.rs source code. +
-> +The Falcon data for each ucode images (including the FWSEC image) is
-> a combination +of headers, data sections (DMEM) and instruction code
-> sections (IMEM). All these +ucode images are stored in the same ROM
-> partition and the PMU table is used to look +up the application to
-> load it based on its application ID (see vbios.rs). +
-> +For the purposes of nova-core driver, the FWSEC contains an
-> 'application interface' +called DMEMMAPPER which is used to the
-> "FWSEC-FRTS" command (among other commands it +is capable of
-> executing). For Ampere, FWSEC is running on the GSP in Heavy-secure
-> +mode and runs FRTS. +
-> +FWSEC Memory Layout
-> +-------------------
-> +The memory layout of the FWSEC image is as follows (this is using an
-> GA-102 +Ampere GPU as an example and could vary for future GPUs and
-> is subject to change +completely, it is just provided as an example):
-> +
-> +Here is a block diagram of the FWSEC memory layout::
-> + =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90
-> + =E2=94=82                         FWSEC ROM image (type 0xE0)          =
- =E2=94=82
-> + =E2=94=82                                                              =
- =E2=94=82
-> + =E2=94=82  =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=90                          =E2=94=82
-> + =E2=94=82  =E2=94=82     PMU Falcon Ucode Table      =E2=94=82         =
-                 =E2=94=82
-> + =E2=94=82  =E2=94=82     (PmuLookupTable)            =E2=94=82         =
-                 =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90    =E2=94=82                 =
-         =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 Table Header            =E2=94=82    =
-=E2=94=82                          =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 - version: 0x01         =E2=94=82    =
-=E2=94=82                          =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 - header_size: 6        =E2=94=82    =
-=E2=94=82                          =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 - entry_size: 6         =E2=94=82    =
-=E2=94=82                          =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 - entry_count: N        =E2=94=82    =
-=E2=94=82                          =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 - desc_version:3(unused)=E2=94=82    =
-=E2=94=82                          =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98    =E2=94=82                 =
-         =E2=94=82
-> + =E2=94=82  =E2=94=82         ...                     =E2=94=82         =
-                 =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90    =E2=94=82                 =
-         =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 Entry for FWSEC (0x85)  =E2=94=82    =
-=E2=94=82                          =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 (PmuLookupTableEntry)   =E2=94=82    =
-=E2=94=82                          =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 - app_id: 0x85 (FWSEC)  =E2=94=82 =E2=
-=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=90                     =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 - target_id: 0x01 (PMU) =E2=94=82    =
-=E2=94=82    =E2=94=82                     =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 - data: offset =E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=BC=E2=94=80=E2=94=80=E2=94=80=E2=94=90 look up FWSEC   =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98    =E2=94=82    =E2=94=82   =
-=E2=94=82 application.    =E2=94=82
-> + =E2=94=82  =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=98    =E2=94=82   =E2=94=82                 =E2=
-=94=82
-> + =E2=94=82                                         =E2=94=82   =E2=94=82=
-                 =E2=94=82
-> + =E2=94=82                                         =E2=94=82   =E2=94=82=
-                 =E2=94=82
-> + =E2=94=82  =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=90    =E2=94=82   =E2=94=82                 =E2=
-=94=82
-> + =E2=94=82  =E2=94=82     FWSEC Ucode Component       =E2=94=82<=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=98   =E2=94=82                 =E2=94=82
-> + =E2=94=82  =E2=94=82     (aka Falcon data)           =E2=94=82        =
-=E2=94=82                 =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90    =E2=94=82        =E2=94=82=
-                 =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 FalconUCodeDescV3       =E2=94=82<=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98                 =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 - hdr                   =E2=94=82    =
-=E2=94=82                          =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 - stored_size           =E2=94=82    =
-=E2=94=82                          =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 - pkc_data_offset       =E2=94=82    =
-=E2=94=82                          =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 - interface_offset =E2=94=80=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=BC=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=90         =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 - imem_phys_base        =E2=94=82    =
-=E2=94=82                =E2=94=82         =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 - imem_load_size        =E2=94=82    =
-=E2=94=82                =E2=94=82         =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 - imem_virt_base        =E2=94=82    =
-=E2=94=82                =E2=94=82         =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 - dmem_phys_base        =E2=94=82    =
-=E2=94=82                =E2=94=82         =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 - dmem_load_size        =E2=94=82    =
-=E2=94=82                =E2=94=82         =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 - engine_id_mask        =E2=94=82    =
-=E2=94=82                =E2=94=82         =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 - ucode_id              =E2=94=82    =
-=E2=94=82                =E2=94=82         =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 - signature_count       =E2=94=82    =
-=E2=94=82    look up sig =E2=94=82         =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 - signature_versions --------------+   =
-       =E2=94=82         =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98    =E2=94=82     =E2=94=82   =
-       =E2=94=82         =E2=94=82
-> + =E2=94=82  =E2=94=82         (no gap)                =E2=94=82     =E2=
-=94=82          =E2=94=82         =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90    =E2=94=82     =E2=94=82   =
-       =E2=94=82         =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 Signatures Section      =E2=94=82<=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=98          =E2=94=82         =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 (384 bytes per sig)     =E2=94=82    =
-=E2=94=82                =E2=94=82         =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 - RSA-3K Signature 1    =E2=94=82    =
-=E2=94=82                =E2=94=82         =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 - RSA-3K Signature 2    =E2=94=82    =
-=E2=94=82                =E2=94=82         =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82   ...                   =E2=94=82    =
-=E2=94=82                =E2=94=82         =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98    =E2=94=82                =
-=E2=94=82         =E2=94=82
-> + =E2=94=82  =E2=94=82                                 =E2=94=82         =
-       =E2=94=82         =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90    =E2=94=82                =
-=E2=94=82         =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 IMEM Section (Code)     =E2=94=82    =
-=E2=94=82                =E2=94=82         =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82                         =E2=94=82    =
-=E2=94=82                =E2=94=82         =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 Contains instruction    =E2=94=82    =
-=E2=94=82                =E2=94=82         =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 code etc.               =E2=94=82    =
-=E2=94=82                =E2=94=82         =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98    =E2=94=82                =
-=E2=94=82         =E2=94=82
-> + =E2=94=82  =E2=94=82                                 =E2=94=82         =
-       =E2=94=82         =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90    =E2=94=82                =
-=E2=94=82         =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 DMEM Section (Data)     =E2=94=82    =
-=E2=94=82                =E2=94=82         =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82                         =E2=94=82    =
-=E2=94=82                =E2=94=82         =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=90 =E2=94=82    =E2=94=82                =E2=94=82         =
-=E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=82 Application         =E2=94=82=
- =E2=94=82<=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98         =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=82 Interface Table     =E2=94=82=
- =E2=94=82    =E2=94=82                          =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=82 (FalconAppifHdrV1)  =E2=94=82=
- =E2=94=82    =E2=94=82                          =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=82 Header:             =E2=94=82=
- =E2=94=82    =E2=94=82                          =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=82 - version: 0x01     =E2=94=82=
- =E2=94=82    =E2=94=82                          =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=82 - header_size: 4    =E2=94=82=
- =E2=94=82    =E2=94=82                          =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=82 - entry_size: 8     =E2=94=82=
- =E2=94=82    =E2=94=82                          =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=82 - entry_count: N    =E2=94=82=
- =E2=94=82    =E2=94=82                          =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=82                     =E2=94=82=
- =E2=94=82    =E2=94=82                          =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=82 Entries:            =E2=94=82=
- =E2=94=82    =E2=94=82                          =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=82 =E2=94=8C=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90 =E2=
-=94=82 =E2=94=82    =E2=94=82                          =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=82 =E2=94=82 DEVINIT (ID 1)  =E2=
-=94=82 =E2=94=82 =E2=94=82    =E2=94=82                          =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=82 =E2=94=82 - id: 0x01      =E2=
-=94=82 =E2=94=82 =E2=94=82    =E2=94=82                          =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=82 =E2=94=82 - dmemOffset X =E2=
-=94=80=E2=94=BC=E2=94=80=E2=94=BC=E2=94=80=E2=94=BC=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=90                          =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=82 =E2=94=94=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98 =E2=
-=94=82 =E2=94=82    =E2=94=82                          =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=82 =E2=94=8C=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90 =E2=
-=94=82 =E2=94=82    =E2=94=82                          =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=82 =E2=94=82 DMEMMAPPER(ID 4)=E2=
-=94=82 =E2=94=82 =E2=94=82    =E2=94=82                          =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=82 =E2=94=82 - id: 0x04      =E2=
-=94=82 =E2=94=82 =E2=94=82    =E2=94=82 Used only for DevInit    =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=82 =E2=94=82  (NVFW_FALCON_  =E2=
-=94=82 =E2=94=82 =E2=94=82    =E2=94=82 application (not FWSEC)  =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=82 =E2=94=82   APPIF_ID_DMEMMAPP=
-ER)   =E2=94=82                          =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=82 =E2=94=82 - dmemOffset Y =E2=
-=94=80=E2=94=BC=E2=94=80=E2=94=BC=E2=94=80=E2=94=BC=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=BC=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90=
-                    =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=82 =E2=94=94=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98 =E2=
-=94=82 =E2=94=82    =E2=94=82     =E2=94=82                    =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=98 =E2=94=82    =E2=94=82     =E2=94=82                    =
-=E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82                         =E2=94=82    =
-=E2=94=82     =E2=94=82                    =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=90 =E2=94=82    =E2=94=82     =E2=94=82                    =
-=E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=82 DEVINIT Engine      =E2=94=82=
-<=E2=94=BC=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98     =E2=94=82 Used =
-by FWSEC      =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=82 Interface           =E2=94=82=
- =E2=94=82    =E2=94=82     =E2=94=82         app.       =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=98 =E2=94=82    =E2=94=82     =E2=94=82                    =
-=E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82                         =E2=94=82    =
-=E2=94=82     =E2=94=82                    =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=90 =E2=94=82    =E2=94=82     =E2=94=82                    =
-=E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=82 DMEM Mapper (ID 4)  =E2=94=82=
-<=E2=94=BC=E2=94=80=E2=94=80=E2=94=80=E2=94=80+=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=98                    =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=82 (FalconAppifDmemmapperV3)  =
-=E2=94=82                          =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=82 - signature: "DMAP" =E2=94=82=
- =E2=94=82    =E2=94=82                          =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=82 - version: 0x0003   =E2=94=82=
- =E2=94=82    =E2=94=82                          =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=82 - Size: 64 bytes    =E2=94=82=
- =E2=94=82    =E2=94=82                          =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=82 - cmd_in_buffer_off =E2=94=82=
- =E2=94=82=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=90             =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=82 - cmd_in_buffer_size=E2=94=82=
- =E2=94=82    =E2=94=82            =E2=94=82             =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=82 - cmd_out_buffer_off=E2=94=82=
- =E2=94=82=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=90       =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=82 - cmd_out_buffer_sz =E2=94=82=
- =E2=94=82    =E2=94=82            =E2=94=82     =E2=94=82       =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=82 - init_cmd          =E2=94=82=
- =E2=94=82    =E2=94=82            =E2=94=82     =E2=94=82       =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=82 - features          =E2=94=82=
- =E2=94=82    =E2=94=82            =E2=94=82     =E2=94=82       =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=82 - cmd_mask0/1       =E2=94=82=
- =E2=94=82    =E2=94=82            =E2=94=82     =E2=94=82       =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=98 =E2=94=82    =E2=94=82            =E2=94=82     =E2=94=
-=82       =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82                         =E2=94=82    =
-=E2=94=82            =E2=94=82     =E2=94=82       =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=90 =E2=94=82    =E2=94=82            =E2=94=82     =E2=94=
-=82       =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=82 Command Input Buffer=E2=94=82=
-<=E2=94=BC=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=98     =E2=94=82       =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=82 - Command data      =E2=94=82=
- =E2=94=82    =E2=94=82                  =E2=94=82       =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=82 - Arguments         =E2=94=82=
- =E2=94=82    =E2=94=82                  =E2=94=82       =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=98 =E2=94=82    =E2=94=82                  =E2=94=82       =
-=E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82                         =E2=94=82    =
-=E2=94=82                  =E2=94=82       =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=90 =E2=94=82    =E2=94=82                  =E2=94=82       =
-=E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=82 Command Output      =E2=94=82=
-<=E2=94=BC=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=98       =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=82 Buffer              =E2=94=82=
- =E2=94=82    =E2=94=82                          =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=82 - Results           =E2=94=82=
- =E2=94=82    =E2=94=82                          =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=82 - Status            =E2=94=82=
- =E2=94=82    =E2=94=82                          =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=82 =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=98 =E2=94=82    =E2=94=82                          =E2=94=82
-> + =E2=94=82  =E2=94=82  =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98    =E2=94=82                 =
-         =E2=94=82
-> + =E2=94=82  =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=98                          =E2=94=82
-> + =E2=94=82                                                              =
- =E2=94=82
-> + =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98
-> +
-> +.. note::
-> +   The FWSEC image also plays a role in memory scrubbing (ECC
-> initialization) and VPR
-> +   (Video Protected Region) initialization as well. Before the
-> nova-core driver is even
-> +   loaded, the FWSEC image is running on the GSP in heavy-secure
-> mode. After the devinit
-> +   sequence completes, it does VRAM memory scrubbing (ECC
-> initialization). On consumer
-> +   GPUs, it scrubs only part of memory and then initiates 'async
-> scrubbing'. Before this
-> +   async scrubbing completes, the unscrubbed VRAM cannot be used for
-> allocation (thus DRM
-> +   memory allocators need to wait for this scrubbing to complete).
-> \ No newline at end of file
-> diff --git a/Documentation/gpu/nova/index.rst
-> b/Documentation/gpu/nova/index.rst index 91cc802ed94f..22e5712ac6b0
-> 100644 --- a/Documentation/gpu/nova/index.rst
-> +++ b/Documentation/gpu/nova/index.rst
-> @@ -28,4 +28,5 @@ vGPU manager VFIO driver and the nova-drm driver.
-> =20
->     core/guidelines
->     core/vbios
-> +   core/fwsec
->     core/todo
-
+Best,
+Bobby
