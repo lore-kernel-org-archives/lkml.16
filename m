@@ -1,96 +1,145 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F40A23D2B7;
-	Tue,  6 May 2025 06:22:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+Received: from sgoci-sdnproxy-4.icoremail.net (sgoci-sdnproxy-4.icoremail.net [129.150.39.64])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC99119342F;
+	Tue,  6 May 2025 06:23:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.150.39.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746512537; cv=none; b=J/iGp55rq/5jQ5t5zYs5YWYXGcbNgDnoE01hLt5YJcFoG8v6uyEg9g8qA9bBr6ai4A9bZb67JfU6C3HIUH3m4Te1ijfY0IZHuSqeDt63HtlKs9cnT1JlaKJNBx2ytZ8qJjUcJC75aDOpX+QMgYZJjD36/qRxcH5855Oy57+DkaU=
+	t=1746512608; cv=none; b=XPay8iXQLKVTIgLKtwsGz5+Z21XFXefv4HDtr9TgOI7H3RtX9St1oVPtLPvawuudMLeW6A4dhwL+RPxZHADb4r8NubxCiazRcse/m7C7hLCmxX72V43wBxVgncAllwiJz6FKZcspENEG8C5TZ/XruWaaEq47y5SpM8zIkaQojac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746512537; c=relaxed/simple;
-	bh=bVW0yWoo7Cy8L7af25rANEL41vXAv3yJuQx+e90o7SY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=t5X7np03WiXckA55PHfi2eBLuXCxSxwxa0Y3xvmv8E08TzjyC2Qn1fX9YuFaJFbJWLtMte7nia1DTEPs+FrG3VzCZ/1DTmfS2OcsnbZvzH5oH6/lqVgDGfBQAF48NhbTNjokzmJHTgdfDgS92+GJFiEN0lXFGkoa+HDY30G9HoQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=snruClU0; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="snruClU0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1746512531;
-	bh=xiiJ4HgmgUy/Q2z4qx9pS1/GtAjQ68UkIyXdDJOZ5Nk=;
-	h=Date:From:To:Cc:Subject:From;
-	b=snruClU0WCjBsEv11zTjRE7FPtQLnf9Bl7zWPqFn/nQCyhrkRjRlYgCYzvWZ/13p1
-	 fZT7nNQnw/hP0XLqgAfyHCiAiqC1wfKAZlYQ518oAIuyEzreTURhUMy7Gxqoia8d1b
-	 5q+Utok2o012hiFc366MR2NZY+tvnVVQ/LFSE8DfTql7DSJRwAgoFPJzE6+FyFRJ8F
-	 ZebrWTJ6wgx4JilfV8VHxsWi/vMe1brYaAGHhe1vX7iQXWdk3Y2L/k/aLjlO75eBF8
-	 FQHsrq8RpQZbm3QFWwMlJD53AA+mMAVxmUa+OCiilYc9CCNFnG+g3Yo1dPHCQw9Jas
-	 KjmTMo9ujzUwA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Zs7bR0PcHz4x0L;
-	Tue,  6 May 2025 16:22:10 +1000 (AEST)
-Date: Tue, 6 May 2025 16:22:10 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: Svyatoslav Ryhel <clamor95@gmail.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: build failure after merge of the extcon tree
-Message-ID: <20250506162210.4a0b0139@canb.auug.org.au>
+	s=arc-20240116; t=1746512608; c=relaxed/simple;
+	bh=RIkJJP+RXcI6vPURQiIkAusnMMfRzBhxynerb81vkFY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gh2jdc+R0ZLTYVaUXEqrxWWjXc8eJRV1kHnmc4Qw626lGV4EA9ISNZlmABi+egs3bXNe8X/uCW3lZN2NWCxHT13vbatrTqjcg9vYrFjDoF/jxh0CgixXzgxkLB1SB13Qm0kaEfUdM+XX5g8rnhjvZTNgNslNNItfh5w9NQbSG2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=129.150.39.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
+Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
+	by hzbj-icmmx-6 (Coremail) with SMTP id AQAAfwBXXmrVqhlonb+oAg--.27522S2;
+	Tue, 06 May 2025 14:23:17 +0800 (CST)
+Received: from phytium.com.cn (unknown [123.150.8.50])
+	by mail (Coremail) with SMTP id AQAAfwA3yyTJqhloDVAUAA--.24S3;
+	Tue, 06 May 2025 14:23:06 +0800 (CST)
+From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+To: Jonathan.Cameron@huawei.com,
+	dan.j.williams@intel.com,
+	rppt@kernel.org,
+	rafael@kernel.org,
+	lenb@kernel.org,
+	akpm@linux-foundation.org,
+	alison.schofield@intel.com,
+	rrichter@amd.com,
+	bfaccini@nvidia.com,
+	haibo1.xu@intel.com,
+	david@redhat.com,
+	chenhuacai@kernel.org
+Cc: linux-cxl@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	chenbaozi@phytium.com.cn,
+	loongarch@lists.linux.dev,
+	Yuquan Wang <wangyuquan1236@phytium.com.cn>
+Subject: [PATCH v2] mm: numa_memblks: introduce numa_add_reserved_memblk
+Date: Tue,  6 May 2025 14:22:45 +0800
+Message-Id: <20250506062245.3816791-1-wangyuquan1236@phytium.com.cn>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/sgEOaJh0hOXU7OV.5r6.aux";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAfwA3yyTJqhloDVAUAA--.24S3
+X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQAQAWgRLLwIYwBJsb
+Authentication-Results: hzbj-icmmx-6; spf=neutral smtp.mail=wangyuquan
+	1236@phytium.com.cn;
+X-Coremail-Antispam: 1Uk129KBjvJXoWxXFW7Ar4xuF4DCry5trWrKrg_yoW5uFyrpa
+	yUG3Z8XF4xGw1xGw1xuryj9w1S93WrKr1DJFZrGr43ZF4rWry2vr4UtFsxZF1DtrW7Zr1r
+	Wr4vyw15uw1rAF7anT9S1TB71UUUUjDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
+	UUUUU
 
---Sig_/sgEOaJh0hOXU7OV.5r6.aux
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+acpi_parse_cfmws() currently adds empty CFMWS ranges to numa_meminfo
+with the expectation that numa_cleanup_meminfo moves them to
+numa_reserved_meminfo. There is no need for that indirection when it is
+known in advance that these unpopulated ranges are meant for
+numa_reserved_meminfo in support of future hotplug / CXL provisioning.
 
-Hi all,
+Introduce and use numa_add_reserved_memblk() to add the empty CFMWS
+ranges directly.
 
-After merging the extcon tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
+Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+---
 
-drivers/extcon/extcon-max14526.c: In function 'max14526_probe':
-drivers/extcon/extcon-max14526.c:252:74: error: conversion from 'long unsig=
-ned int' to 'unsigned int' changes value from '18446744073709551614' to '42=
-94967294' [-Werror=3Doverflow]
-  252 |         regmap_write_bits(priv->regmap, MAX14526_CONTROL_2, USB_DET=
-_DIS, ~USB_DET_DIS);
-cc1: all warnings being treated as errors
+Changes in v2 (Thanks to Dan & Alison):
+- Use numa_add_reserved_memblk() to replace numa_add_memblk() in acpi_parse_cfmws()
+- Add comments to describe the usage of numa_add_reserved_memblk()
+- Updating the commit message to clarify the purpose of the patch
 
-Caused by commit
+By the way, "LoongArch: Introduce the numa_memblks conversion" is in linux-next.
 
-  0367e6929cf6 ("extcon: Add basic support for Maxim MAX14526 MUIC")
+ drivers/acpi/numa/srat.c     |  2 +-
+ include/linux/numa_memblks.h |  1 +
+ mm/numa_memblks.c            | 22 ++++++++++++++++++++++
+ 3 files changed, 24 insertions(+), 1 deletion(-)
 
-18446744073709551614 is 0xFFFFFFFFFFFFFFFE.
+diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
+index 0a725e46d017..751774f0b4e5 100644
+--- a/drivers/acpi/numa/srat.c
++++ b/drivers/acpi/numa/srat.c
+@@ -453,7 +453,7 @@ static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
+ 		return -EINVAL;
+ 	}
+ 
+-	if (numa_add_memblk(node, start, end) < 0) {
++	if (numa_add_reserved_memblk(node, start, end) < 0) {
+ 		/* CXL driver must handle the NUMA_NO_NODE case */
+ 		pr_warn("ACPI NUMA: Failed to add memblk for CFMWS node %d [mem %#llx-%#llx]\n",
+ 			node, start, end);
+diff --git a/include/linux/numa_memblks.h b/include/linux/numa_memblks.h
+index dd85613cdd86..991076cba7c5 100644
+--- a/include/linux/numa_memblks.h
++++ b/include/linux/numa_memblks.h
+@@ -22,6 +22,7 @@ struct numa_meminfo {
+ };
+ 
+ int __init numa_add_memblk(int nodeid, u64 start, u64 end);
++int __init numa_add_reserved_memblk(int nid, u64 start, u64 end);
+ void __init numa_remove_memblk_from(int idx, struct numa_meminfo *mi);
+ 
+ int __init numa_cleanup_meminfo(struct numa_meminfo *mi);
+diff --git a/mm/numa_memblks.c b/mm/numa_memblks.c
+index ff4054f4334d..541a99c4071a 100644
+--- a/mm/numa_memblks.c
++++ b/mm/numa_memblks.c
+@@ -200,6 +200,28 @@ int __init numa_add_memblk(int nid, u64 start, u64 end)
+ 	return numa_add_memblk_to(nid, start, end, &numa_meminfo);
+ }
+ 
++/**
++ * numa_add_reserved_memblk - Add one numa_memblk to numa_reserved_meminfo
++ * @nid: NUMA node ID of the new memblk
++ * @start: Start address of the new memblk
++ * @end: End address of the new memblk
++ *
++ * Add a new memblk to the numa_reserved_meminfo.
++ *
++ * Usage Case: numa_cleanup_meminfo() reconciles all numa_memblk instances
++ * against memblock_type information and moves any that intersect reserved
++ * ranges to numa_reserved_meminfo. However, when that information is known
++ * ahead of time, we use numa_add_reserved_memblk() to add the numa_memblk
++ * to numa_reserved_meminfo directly.
++ *
++ * RETURNS:
++ * 0 on success, -errno on failure.
++ */
++int __init numa_add_reserved_memblk(int nid, u64 start, u64 end)
++{
++	return numa_add_memblk_to(nid, start, end, &numa_reserved_meminfo);
++}
++
+ /**
+  * numa_cleanup_meminfo - Cleanup a numa_meminfo
+  * @mi: numa_meminfo to clean up
+-- 
+2.34.1
 
-I have used the extcon tree from next-20250505 for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/sgEOaJh0hOXU7OV.5r6.aux
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgZqpIACgkQAVBC80lX
-0GyV9Af+IPx/LicfhmbAP124YUrRFrYWr2ZFcnK5CuPTpeGRUHA/aDUuBwfjzLJ/
-MB7zbcUbsivT9i4fSCcJe8uX+WJfzkfzmGxM5nvy88S7ouI+lI9kK2Q7pEISHne8
-j/pIWTPRvl9JwPUB6hnSswmh4wzLWt1BpLiiNDyVLz2hPiRgWnpzWpr/siZ8Gm0b
-U3BqH+wc413BB12MQ616wkyRAHPeelD1dyR6N2/laUB7q7c06FC4BnVl9szWIpiS
-4Sy/iCXF74TK9TJqJ4c5TZNt1qm9XAN8a8rGgqgGlRiuYUyoSz5fVQWML9Zositl
-WanjWD33gcya6fJ3m+gBXOpfOibmPA==
-=XkcJ
------END PGP SIGNATURE-----
-
---Sig_/sgEOaJh0hOXU7OV.5r6.aux--
