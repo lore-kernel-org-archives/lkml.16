@@ -1,133 +1,88 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46665201270
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 10:10:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E35B7275117
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 10:11:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746526257; cv=none; b=XS0RjjS0MWxLO2h2HQte/3ObBNDtP/Bt/XjXxq68cBakwzXFgPrbALvJqqmkk4JHInHxcmgEq5HTLQH0/d4w0L6dxrj8j6+EYhNw8lRcYXaq57N+F0l/rSb+bhbNhGUKEhcLGBqkqTmkZ29qyBnbrYA7e2RSp6YY0YRxWBocQ/0=
+	t=1746526296; cv=none; b=WJx3fKl/zVe4Sa9ka+UIvpgvWnvROitm/CCaCwJiV1dDYcn+hhKzQqLlXcADsYQU8KFPeFLs+lYLbtDCFtWc8y7p8YZtK58KQMlh5ILv+N/GW35caSnRr5C6Y0FJtCBysdtWb6DF33ZXILF0zI+7bfkFKuqBlJErFl0/RVN6PLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746526257; c=relaxed/simple;
-	bh=ngpPPqPmSUtxwjz/4sB2Ojab/DbrjWjgZ9X6H9z1WTc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IMdhE/ZprXe+70gnl7By0BBzsNeGLC53K85L05THYiXaEi2Y81JXe66wQRR8ikFzz+oa5cC+3DiTStK39sKxS+xabz0QdtLz5J0Nx3Q1HXwYUudf6BFv2Gs/WD2u2V2q79X5k7DMM1lO9x5TuP1+Lq0LzHANNLqmur7JXjXUwDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AC3C8113E;
-	Tue,  6 May 2025 03:10:44 -0700 (PDT)
-Received: from [10.163.53.181] (unknown [10.163.53.181])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DBDCC3F5A1;
-	Tue,  6 May 2025 03:10:44 -0700 (PDT)
-Message-ID: <e430344b-76b9-43be-b497-0152a8910faf@arm.com>
-Date: Tue, 6 May 2025 15:40:32 +0530
+	s=arc-20240116; t=1746526296; c=relaxed/simple;
+	bh=/14muUSnjrguA3XDoHQcGk3OKFUssHvmhKsZnJ4M/DM=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=JwaGEK9JlQU18CR8bZjc7mdWwjNflOCmElFgMouo0gfUIAnjFoDyEc2dSwOmc/VFPBGD2qfoN87beXDv4TOcbsu9FWKkzluPy0Ww+a1ZckwR+9P4pRUem3lyG5Ib02mGsd3ky8C6szDHVp+/dLveuwjjxkstYcElP1hUUxKuHkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1uCFGh-0002Dd-2d; Tue, 06 May 2025 12:11:19 +0200
+Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1uCFGg-001NTB-1n;
+	Tue, 06 May 2025 12:11:18 +0200
+Received: from pza by lupine with local (Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1uCFGg-0005kT-1X;
+	Tue, 06 May 2025 12:11:18 +0200
+Message-ID: <bce05a662787134194d20951b8de7f6defb4f9bb.camel@pengutronix.de>
+Subject: Re: [PATCH 1/4] dt-bindings: i2c: Specify reset as optional
+From: Philipp Zabel <p.zabel@pengutronix.de>
+To: Akhil R <akhilrajeev@nvidia.com>, andi.shyti@kernel.org,
+ robh@kernel.org,  krzk+dt@kernel.org, onor+dt@kernel.org,
+ thierry.reding@gmail.com,  jonathanh@nvidia.com, ldewangan@nvidia.com,
+ digetx@gmail.com,  linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Tue, 06 May 2025 12:11:18 +0200
+In-Reply-To: <20250506095936.10687-1-akhilrajeev@nvidia.com>
+References: <20250506095936.10687-1-akhilrajeev@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] mm: Optimize mremap() by PTE batching
-To: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org
-Cc: Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, vbabka@suse.cz,
- jannh@google.com, pfalcato@suse.de, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, david@redhat.com, peterx@redhat.com,
- ryan.roberts@arm.com, mingo@kernel.org, libang.li@antgroup.com,
- maobibo@loongson.cn, zhengqi.arch@bytedance.com, baohua@kernel.org,
- willy@infradead.org, ioworker0@gmail.com, yang@os.amperecomputing.com
-References: <20250506050056.59250-1-dev.jain@arm.com>
- <20250506050056.59250-4-dev.jain@arm.com>
-Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20250506050056.59250-4-dev.jain@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On 5/6/25 10:30, Dev Jain wrote:
-> Use folio_pte_batch() to optimize move_ptes(). Use get_and_clear_full_ptes()
-> so as to elide TLBIs on each contig block, which was previously done by
-> ptep_get_and_clear().
-> 
-> Signed-off-by: Dev Jain <dev.jain@arm.com>
+On Di, 2025-05-06 at 15:29 +0530, Akhil R wrote:
+> Specify reset as optional in the description for controllers that has an
+> internal software reset available
+>=20
+> Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
 > ---
->  mm/mremap.c | 24 +++++++++++++++++++-----
->  1 file changed, 19 insertions(+), 5 deletions(-)
-> 
-> diff --git a/mm/mremap.c b/mm/mremap.c
-> index 1a08a7c3b92f..3621c07d8eea 100644
-> --- a/mm/mremap.c
-> +++ b/mm/mremap.c
-> @@ -176,7 +176,7 @@ static int move_ptes(struct pagetable_move_control *pmc,
->  	struct vm_area_struct *vma = pmc->old;
->  	bool need_clear_uffd_wp = vma_has_uffd_without_event_remap(vma);
->  	struct mm_struct *mm = vma->vm_mm;
-> -	pte_t *old_ptep, *new_ptep, pte;
-> +	pte_t *old_ptep, *new_ptep, old_pte, pte;
->  	pmd_t dummy_pmdval;
->  	spinlock_t *old_ptl, *new_ptl;
->  	bool force_flush = false;
-> @@ -185,6 +185,7 @@ static int move_ptes(struct pagetable_move_control *pmc,
->  	unsigned long old_end = old_addr + extent;
->  	unsigned long len = old_end - old_addr;
->  	int err = 0;
-> +	int nr;
->  
->  	/*
->  	 * When need_rmap_locks is true, we take the i_mmap_rwsem and anon_vma
-> @@ -237,10 +238,14 @@ static int move_ptes(struct pagetable_move_control *pmc,
->  
->  	for (; old_addr < old_end; old_ptep++, old_addr += PAGE_SIZE,
->  				   new_ptep++, new_addr += PAGE_SIZE) {
-> -		if (pte_none(ptep_get(old_ptep)))
-> +		const fpb_t fpb_flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
-> +		int max_nr = (old_end - old_addr) >> PAGE_SHIFT;
-> +
-> +		nr = 1;
-> +		old_pte = ptep_get(old_ptep);
-> +		if (pte_none(old_pte))
->  			continue;
->  
-> -		pte = ptep_get_and_clear(mm, old_addr, old_ptep);
->  		/*
->  		 * If we are remapping a valid PTE, make sure
->  		 * to flush TLB before we drop the PTL for the
-> @@ -252,8 +257,17 @@ static int move_ptes(struct pagetable_move_control *pmc,
->  		 * the TLB entry for the old mapping has been
->  		 * flushed.
->  		 */
-> -		if (pte_present(pte))
-> +		if (pte_present(old_pte)) {
-> +			if ((max_nr != 1) && maybe_contiguous_pte_pfns(old_ptep, old_pte)) {
+>  Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.yaml | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.yam=
+l b/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.yaml
+> index b57ae6963e62..19aefc022c8b 100644
+> --- a/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.yaml
+> +++ b/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.yaml
+> @@ -97,7 +97,9 @@ properties:
+> =20
+>    resets:
+>      items:
+> -      - description: module reset
+> +      - description: |
+> +          Module reset. This property is optional for controllers in Teg=
+ra194 and later
+> +          chips where an internal software reset is available as an alte=
+rnative.
 
-maybe_contiguous_pte_pfns() cost will be applicable for memory
-areas greater than a single PAGE_SIZE (i.e max_nr != 1) ? This
-helper extracts an additional consecutive pte, ensures that it
-is valid mapped and extracts pfn before comparing for the span.
+If the module reset was not optional before, shouldn't the resets
+property have been marked as required? Then, instead of the comment,
+you could conditionally remove the required status for nvidia,tegra194-
+i2c.
 
-There is some cost associated with the above code sequence which
-looks justified for sequential access of memory buffers that has
-consecutive physical memory backing. But what happens when such
-buffers are less probable, will those buffers take a performance
-hit for all the comparisons that just turn out to be negative ?
-
-> +				struct folio *folio = vm_normal_folio(vma, old_addr, old_pte);
-> +
-> +				if (folio && folio_test_large(folio))
-> +					nr = folio_pte_batch(folio, old_addr, old_ptep,
-> +					old_pte, max_nr, fpb_flags, NULL, NULL, NULL);
-> +			}
->  			force_flush = true;
-> +		}
-> +		pte = get_and_clear_full_ptes(mm, old_addr, old_ptep, nr, 0);
->  		pte = move_pte(pte, old_addr, new_addr);
->  		pte = move_soft_dirty_pte(pte);
->  
-> @@ -266,7 +280,7 @@ static int move_ptes(struct pagetable_move_control *pmc,
->  				else if (is_swap_pte(pte))
->  					pte = pte_swp_clear_uffd_wp(pte);
->  			}
-> -			set_pte_at(mm, new_addr, new_ptep, pte);
-> +			set_ptes(mm, new_addr, new_ptep, pte, nr);
->  		}
->  	}
->  
+regards
+Philipp
