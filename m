@@ -1,185 +1,267 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EB4E2D4B68
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 02:49:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B96E72D29A4
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 02:48:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746499785; cv=none; b=Htp0evWft2Sp+wq3UOE0coaKtwJnncVEw3kjSPjZEHzmc8QiDnDyXJq4Wa1gX1uVgx7Sef1iGlZcnMr5cqu+znp9BxuWjuJG5xqZ/67qyIfUqfaV6DCGvfxgNI6x3wDFu7xWK8inBdJEOb7s3rYHeK6ARM7LMVuRNAnMqJ4jxIY=
+	t=1746499717; cv=none; b=aaKbZoBgIx/d5ch8cKSZloKs1rrt+k7dDTwCMNdF9qBoOgPW1pUUweJv1SOQZWZyDlTAFVIbE9goIktDrxdDGAx6M3ZTIqI5iRi988FPkjXR4yfBgOGTXEaXP44g81PksPg3Eg46ZnOPdBfbJq0HevYBZY/nxG48aLG8F5Klouk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746499785; c=relaxed/simple;
-	bh=BVcS6y/RkytdfYbg6aiFphNw4k53SlFmqyW2ahlf+8Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ufzjUcwhQpmXQHR1LvyCzCXalyuGKVtx0hhD3hkCBN+cSVEcEvvKRUnP+nmxD4EaBTiByo/oJC0kfIErg22JTr/vm/VumJjyjOKUlAiDa0ApNtoXU28E7jkUoX3Nc03PKxd0HK/YQvLj7i7jcwRB83ja0QQlOYpsGEeYUUx9XA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=KTjtg1OE; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1746499717; c=relaxed/simple;
+	bh=wpG2NshjV02nFvy4dXQW2otXZ1IoWUq8+zAg8SsRscg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=J/2l1o6NjjCU6MrNE5R1pCPoR4mWlbgRGsVQ1gelb0xonAsXGfqOAem9Vx4+Lq7pGMfYIYJoMTWOKW2BHJiBrR6Nv9OQXFEGb6xfDMEjDH2g1BRnb9xbNKaIJKmH6bWRzOjbj7L+ltCSsXUwVQRJOC8HaAThv/8hUKVf4aXuduU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=SbNJVeDb; arc=none smtp.client-ip=185.125.188.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KTjtg1OE"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-736c1cf75e4so4599527b3a.2
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 19:49:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1746499782; x=1747104582; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=q0+JSDpYT5BNX3k6gPTP+QpNOml9kj6YJgCfvY0JCRs=;
-        b=KTjtg1OEHaijcvjo+g0DgZpMEWvryOFq4uOnmLvDSZPE3l2KjSX2P4zaX2XVZosm+J
-         NyeEkECA21eh5/ct5hV+99+fu76Oymt6THZe40hSXSO9eYiCB6okRSEZjhNzUZr5TVt/
-         +ZllpcB7MgSLRdW0LAbb9J5lLI90bV2245AYY=
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="SbNJVeDb"
+Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com [209.85.215.199])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 603433F290
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 02:48:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1746499707;
+	bh=ponU8MTyH0aCn11QB2SNP989sAX4rVPkn2tWaOm/YIc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version;
+	b=SbNJVeDbEva/Rj5iAZdd/x035gVQrv3DJ8Obd5HXTxF7DL8i0KO8N/57+5AA8E1rd
+	 0tZjgauMoGHHQvZWQ3UDE8LQt+OHf67j+xqKwxAD9fLj9D3CY67RijnQ+KuCyt2YqN
+	 iuIK3bQSgd1y+NmYtWci1fMf1HBFQbTdTVsqWFklTQZQiFm1hq1dj96mbKqZET109T
+	 AW/haEe4uF90LbqXAkHCWR7WuSfOsWod+vZ4bk6XT+GG1hVWmRPcqfrt0Yciavf2RE
+	 seXfVWg2BBlusGKyIDxil+32V+3s2VQlogMucwNdAX8fAn1js/orImuGF6ujCptHq0
+	 A+PJY78V5Tuvw==
+Received: by mail-pg1-f199.google.com with SMTP id 41be03b00d2f7-b115fb801bcso5400302a12.3
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 19:48:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746499782; x=1747104582;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=q0+JSDpYT5BNX3k6gPTP+QpNOml9kj6YJgCfvY0JCRs=;
-        b=nUkitu7d105rYO2bjDHNwviPy/LdkxRHSp7KDINVzVI9sZv4EeDwlC4G/v4KY4ZPr1
-         oh0LlKbwAFyPzq/YK7B35nhhaIjAEhQQ5W2t0sKeK4dkqCke9AB1RJR2a6JFicJAv1QF
-         KH96+8vDkflhy9XcFG1/K3TFO71Dj+5SoOv3D8UK3SlZBWzJK+UoxSbJEYSosc1BtGxK
-         ajMLjLr048F7u2DymYnKus9NaBLBOMeXQ+/VReoCk4ScJqgRUiLm4jy3IOarlkyRjPn1
-         ZRf2TZ6d/O0t/1gIRk6+2x5ouhCmzbBltmv9m+LLdDzpkzi7qma5Vz5Tjy70bRdlMj+k
-         f34Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVEe/aKNBI8HT4uu+T0OInlqftUes+/12NOB5Mk6dYb7g5cFqeMfVyPRV3F9AVhGL27Xpd0jmDiwTKe2co=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyN+/tTlFT2i89qb5IQMKfsiOiiSO06u+/a5aZiA6xArSeVSkfu
-	KfBu1YXRJaqq9wbTDhE0BRqPdZrzUUhNl14rbGtgQTyQaAQ7/tYxOVwQqV1NRg==
-X-Gm-Gg: ASbGncs/tKTWvfARypqL7Hbt4PjK0Q6KQGk2OexPEcYMEfN8Xl2w51pusEMmUm04Rdl
-	kbXxodVSriHvZIVYcRol/jDPRxtyh4I9lkGyImaAWPEmdmcKczyxzH/9WpiQfVkBZ9U+i2VeEnz
-	uPr0QcDt7xvPBl8Cx9OlFmKi8TrSR2QUpUBFb+CXHldCI24wJOD9i71eNFYKiqFUINYmhMSwKBm
-	sAtRmVZPQYthcUl3kwMNv4AiaLZUMP18fawsKBEVnuVuBH/K1o8nbXahb0zjwCXIW/O2kIP1s7L
-	tG6qTQOE/JUC2tprR77bDmo0X6LZIqrSrQ==
-X-Google-Smtp-Source: AGHT+IEEZ1PfoCNd1C1LjNnH37ZRF5k8qCVtLcVSMSDNAUIZcoEsuzle0aPuWxV/v0FJ4LrYSFQ+Ew==
-X-Received: by 2002:a05:6a20:2d2b:b0:1f5:619a:8f75 with SMTP id adf61e73a8af0-20e96108b51mr15452923637.2.1746499782489;
-        Mon, 05 May 2025 19:49:42 -0700 (PDT)
-Received: from google.com ([2401:fa00:1:10:d4bd:e7e5:608:dbd7])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b1fb3c6b6d8sm6384494a12.69.2025.05.05.19.49.40
+        d=1e100.net; s=20230601; t=1746499706; x=1747104506;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ponU8MTyH0aCn11QB2SNP989sAX4rVPkn2tWaOm/YIc=;
+        b=ir1tUrAiYHC1JQv15UgWUhpm10p/RtxgK/QFBzzxwo1yF3YFyznwG4+ARVOoa3BgxW
+         PkLyoedETgyMy45DaosQLK7XO4D5G3tjoaJ3zljO0RAkp+ePKHWnCEuMnqf+DaI6WNHW
+         yW478Yqasn8cYLMyRqe0yBd2+/soksf+ceglqwL+EAiTlHTqQ9CVnR/jKPbMqhTq7m85
+         8vidQCIiPjcs8uvtswkQOuW9jCZCP1TkwImXZWvbOfjRyEXbBLpH4YTGYYZxQvW6HLrw
+         ikeesKVFZkZgkt66wdfTJvRtJJI8ukMJtN/J8UZJfrZ3CoCH+y1O3uB0gcB2crEJe7XU
+         LAsA==
+X-Forwarded-Encrypted: i=1; AJvYcCVNfCZKway7LhErcWBgcnC8P3cgZYcaHW8X8zedL4xe1SiyphMFUMDSLbgoWKgrqJj9wGiAlRrW7bOf6Q4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHstBFIykvi6VPJzeChPKkN/A+oli9dVv9eiTNfi97CeCOPJ7i
+	stpYYAo1DHdwBNycNnNFz7LDXvbRJJHWmN/+/7FrnFWB6urDOHdjx3y7lVZo70N9qsIRdbDiGlU
+	xurXeBJCvnLUmVo0/Lhkjl28XwPSRwAK4jg1gRan2REUeOzLWwQ8chUV0F7gPUTQDL0/4hUGn2y
+	wngQ==
+X-Gm-Gg: ASbGncsfVQzN8gY81P/LdehL4UCpUPrbMd/g+B9vQSUSx3Szd9fYApOHrvfYx8Gf2e6
+	eHMHKENuWF3qe1Fd0nIJvhoOsNE9uXtphMclSzs7fJEBFhzOui6s/+mWaqOUJcbxMJ2TTAt7sO4
+	RNDvu/HKj2e/B7d7tW5WAahbdsQn4gCvk16OyQ1dZjxCH30J4zzt0K014quGviVqBOftgu04Ovn
+	0FsEG+3n8YcDJuA7Guhwnb8e8iebTCiR65KrFYPvjPFDoumjbieaw4Ika0GqNwKm5cBFvjLlqvD
+	soKeWSg10FGZ81R7wqZwoOjc5jQx78UuiipZ/zNv3J83oSDvkMsqrWI9SnudtGXl0rpBvzeZUJ3
+	LpknKypGYUCMEmw==
+X-Received: by 2002:a17:90b:4f42:b0:308:65d4:9dda with SMTP id 98e67ed59e1d1-30a7e0b5b60mr1630948a91.16.1746499705919;
+        Mon, 05 May 2025 19:48:25 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEAO/bISkF4fqgNxPNRTZRMePQKzo7kPZhLRy3q28sg5/TTHBFLBkPeRfc1GAaq/IZZojhrdA==
+X-Received: by 2002:a17:90b:4f42:b0:308:65d4:9dda with SMTP id 98e67ed59e1d1-30a7e0b5b60mr1630930a91.16.1746499705583;
+        Mon, 05 May 2025 19:48:25 -0700 (PDT)
+Received: from rickywu0421-ThinkPad-X1-Carbon-Gen-11.. (118-163-61-247.hinet-ip.hinet.net. [118.163.61.247])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30a4745f92csm9905801a91.6.2025.05.05.19.48.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 19:49:42 -0700 (PDT)
-Date: Tue, 6 May 2025 10:49:37 +0800
-From: Sung-Chi Li <lschyi@chromium.org>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
-Cc: Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>,
-	Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Jonathan Corbet <corbet@lwn.net>, chrome-platform@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] hwmon: (cros_ec) register fans into thermal
- framework cooling devices
-Message-ID: <aBl4wcX889otz_ms@google.com>
-References: <20250502-cros_ec_fan-v2-0-4d588504a01f@chromium.org>
- <20250502-cros_ec_fan-v2-3-4d588504a01f@chromium.org>
- <b2432c5c-2589-4cfe-821f-47e5128af2d0@t-8ch.de>
+        Mon, 05 May 2025 19:48:25 -0700 (PDT)
+From: En-Wei Wu <en-wei.wu@canonical.com>
+To: marcel@holtmann.org,
+	luiz.dentz@gmail.com,
+	linux-bluetooth@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	pmenzel@molgen.mpg.de
+Cc: quic_tjiang@quicinc.com
+Subject: [PATCH] Bluetooth: btusb: use skb_pull to avoid unsafe access in QCA dump handling
+Date: Tue,  6 May 2025 10:48:22 +0800
+Message-ID: <20250506024822.327776-1-en-wei.wu@canonical.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <b2432c5c-2589-4cfe-821f-47e5128af2d0@t-8ch.de>
 
-On Sat, May 03, 2025 at 09:27:18AM +0200, Thomas Weißschuh wrote:
-> On 2025-05-02 13:34:47+0800, Sung-Chi Li via B4 Relay wrote:
-> > From: Sung-Chi Li <lschyi@chromium.org>
-> > 
-> > Register fans connected under EC as thermal cooling devices as well, so
-> > these fans can then work with the thermal framework.
-> > 
-> > During the driver probing phase, we will also try to register each fan
-> > as a thermal cooling device based on previous probe result (whether the
-> > there are fans connected on that channel, and whether EC supports fan
-> > control). The basic get max state, get current state, and set current
-> > state methods are then implemented as well.
-> > 
-> > Signed-off-by: Sung-Chi Li <lschyi@chromium.org>
-> > ---
-> >  Documentation/hwmon/cros_ec_hwmon.rst |  2 ++
-> >  drivers/hwmon/cros_ec_hwmon.c         | 66 +++++++++++++++++++++++++++++++++++
-> >  2 files changed, 68 insertions(+)
-> > 
-> > diff --git a/Documentation/hwmon/cros_ec_hwmon.rst b/Documentation/hwmon/cros_ec_hwmon.rst
-> > index 5b802be120438732529c3d25b1afa8b4ee353305..82c75bdaf912a116eaafa3149dc1252b3f7007d2 100644
-> > --- a/Documentation/hwmon/cros_ec_hwmon.rst
-> > +++ b/Documentation/hwmon/cros_ec_hwmon.rst
-> > @@ -27,3 +27,5 @@ Fan and temperature readings are supported. PWM fan control is also supported if
-> >  the EC also supports setting fan PWM values and fan mode. Note that EC will
-> >  switch fan control mode back to auto when suspended. This driver will restore
-> >  the fan state before suspended.
-> > +If a fan is controllable, this driver will register that fan as a cooling device
-> > +in the thermal framework as well.
-> > diff --git a/drivers/hwmon/cros_ec_hwmon.c b/drivers/hwmon/cros_ec_hwmon.c
-> > index c5e42e2a03a0c8c68d3f8afbb2bb45b93a58b955..abfcf44fb7505189124e78c651b0eb1e0533b4e8 100644
-> > --- a/drivers/hwmon/cros_ec_hwmon.c
-> > +++ b/drivers/hwmon/cros_ec_hwmon.c
-> > @@ -13,6 +13,7 @@
-> >  #include <linux/platform_device.h>
-> >  #include <linux/platform_data/cros_ec_commands.h>
-> >  #include <linux/platform_data/cros_ec_proto.h>
-> > +#include <linux/thermal.h>
-> 
-> Needs a dependency on CONFIG_THERMAL.
-> 
+Use skb_pull() and skb_pull_data() to safely parse QCA dump packets.
 
-I think adding the `if (!IS_ENABLED(CONFIG_THERMAL))` you suggested is
-sufficient, and turning on or off CONFIG_THERMAL both can compile, so I'll only
-add the guarding statement in the `cros_ec_hwmon_register_fan_cooling_devices`.
+This avoids direct pointer math on skb->data, which could lead to
+invalid access if the packet is shorter than expected.
 
-> > +
-> > +	if (!priv->fan_control_supported)
-> > +		return;
-> > +
-> > +	for (i = 0; i < EC_FAN_SPEED_ENTRIES; i++) {
-> > +		if (!(priv->usable_fans & BIT(i)))
-> > +			continue;
-> > +
-> > +		cpriv = devm_kzalloc(dev, sizeof(*cpriv), GFP_KERNEL);
-> > +		if (!cpriv)
-> > +			return;
-> > +
-> > +		cpriv->hwmon_priv = priv;
-> > +		cpriv->index = i;
-> > +		devm_thermal_of_cooling_device_register(
-> > +			dev, NULL, devm_kasprintf(dev, GFP_KERNEL, "cros-ec-fan%zu", i), cpriv,
-> 
-> What happens for multiple/chained ECs? If both provide sensors the
-> thermal device names will collide.
-> 
+Signed-off-by: En-Wei Wu <en-wei.wu@canonical.com>
+---
+ drivers/bluetooth/btusb.c | 99 ++++++++++++++++-----------------------
+ 1 file changed, 41 insertions(+), 58 deletions(-)
 
-How about changing the "cros-ec-fan%zu" to "%s-fan%zu", which prefixes the
-`dev_name()`? Here is an example from a device: cros-ec-hwmon.12.auto-fan0.
+diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+index 357b18dae8de..17136924a278 100644
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -2979,9 +2979,8 @@ static void btusb_coredump_qca(struct hci_dev *hdev)
+ static int handle_dump_pkt_qca(struct hci_dev *hdev, struct sk_buff *skb)
+ {
+ 	int ret = 0;
++	int skip = 0;
+ 	u8 pkt_type;
+-	u8 *sk_ptr;
+-	unsigned int sk_len;
+ 	u16 seqno;
+ 	u32 dump_size;
+ 
+@@ -2990,18 +2989,14 @@ static int handle_dump_pkt_qca(struct hci_dev *hdev, struct sk_buff *skb)
+ 	struct usb_device *udev = btdata->udev;
+ 
+ 	pkt_type = hci_skb_pkt_type(skb);
+-	sk_ptr = skb->data;
+-	sk_len = skb->len;
+-
+-	if (pkt_type == HCI_ACLDATA_PKT) {
+-		sk_ptr += HCI_ACL_HDR_SIZE;
+-		sk_len -= HCI_ACL_HDR_SIZE;
+-	}
++	if (pkt_type == HCI_ACLDATA_PKT)
++		skip = sizeof(struct hci_acl_hdr) + sizeof(struct hci_event_hdr);
++	else
++		skip = sizeof(struct hci_event_hdr);
+ 
+-	sk_ptr += HCI_EVENT_HDR_SIZE;
+-	sk_len -= HCI_EVENT_HDR_SIZE;
++	skb_pull(skb, skip);
++	dump_hdr = (struct qca_dump_hdr *)skb->data;
+ 
+-	dump_hdr = (struct qca_dump_hdr *)sk_ptr;
+ 	seqno = le16_to_cpu(dump_hdr->seqno);
+ 	if (seqno == 0) {
+ 		set_bit(BTUSB_HW_SSR_ACTIVE, &btdata->flags);
+@@ -3021,16 +3016,15 @@ static int handle_dump_pkt_qca(struct hci_dev *hdev, struct sk_buff *skb)
+ 
+ 		btdata->qca_dump.ram_dump_size = dump_size;
+ 		btdata->qca_dump.ram_dump_seqno = 0;
+-		sk_ptr += offsetof(struct qca_dump_hdr, data0);
+-		sk_len -= offsetof(struct qca_dump_hdr, data0);
++
++		skb_pull(skb, offsetof(struct qca_dump_hdr, data0));
+ 
+ 		usb_disable_autosuspend(udev);
+ 		bt_dev_info(hdev, "%s memdump size(%u)\n",
+ 			    (pkt_type == HCI_ACLDATA_PKT) ? "ACL" : "event",
+ 			    dump_size);
+ 	} else {
+-		sk_ptr += offsetof(struct qca_dump_hdr, data);
+-		sk_len -= offsetof(struct qca_dump_hdr, data);
++		skb_pull(skb, offsetof(struct qca_dump_hdr, data));
+ 	}
+ 
+ 	if (!btdata->qca_dump.ram_dump_size) {
+@@ -3050,7 +3044,6 @@ static int handle_dump_pkt_qca(struct hci_dev *hdev, struct sk_buff *skb)
+ 		return ret;
+ 	}
+ 
+-	skb_pull(skb, skb->len - sk_len);
+ 	hci_devcd_append(hdev, skb);
+ 	btdata->qca_dump.ram_dump_seqno++;
+ 	if (seqno == QCA_LAST_SEQUENCE_NUM) {
+@@ -3078,68 +3071,58 @@ static int handle_dump_pkt_qca(struct hci_dev *hdev, struct sk_buff *skb)
+ /* Return: true if the ACL packet is a dump packet, false otherwise. */
+ static bool acl_pkt_is_dump_qca(struct hci_dev *hdev, struct sk_buff *skb)
+ {
+-	u8 *sk_ptr;
+-	unsigned int sk_len;
+-
+ 	struct hci_event_hdr *event_hdr;
+ 	struct hci_acl_hdr *acl_hdr;
+ 	struct qca_dump_hdr *dump_hdr;
++	struct sk_buff *clone = skb_clone(skb, GFP_ATOMIC);
++	bool is_dump = false;
+ 
+-	sk_ptr = skb->data;
+-	sk_len = skb->len;
+-
+-	acl_hdr = hci_acl_hdr(skb);
+-	if (le16_to_cpu(acl_hdr->handle) != QCA_MEMDUMP_ACL_HANDLE)
++	if (!clone)
+ 		return false;
+ 
+-	sk_ptr += HCI_ACL_HDR_SIZE;
+-	sk_len -= HCI_ACL_HDR_SIZE;
+-	event_hdr = (struct hci_event_hdr *)sk_ptr;
+-
+-	if ((event_hdr->evt != HCI_VENDOR_PKT) ||
+-	    (event_hdr->plen != (sk_len - HCI_EVENT_HDR_SIZE)))
+-		return false;
++	acl_hdr = skb_pull_data(clone, sizeof(*acl_hdr));
++	if (!acl_hdr || (le16_to_cpu(acl_hdr->handle) != QCA_MEMDUMP_ACL_HANDLE))
++		goto out;
+ 
+-	sk_ptr += HCI_EVENT_HDR_SIZE;
+-	sk_len -= HCI_EVENT_HDR_SIZE;
++	event_hdr = skb_pull_data(clone, sizeof(*event_hdr));
++	if (!event_hdr || (event_hdr->evt != HCI_VENDOR_PKT))
++		goto out;
+ 
+-	dump_hdr = (struct qca_dump_hdr *)sk_ptr;
+-	if ((sk_len < offsetof(struct qca_dump_hdr, data)) ||
+-	    (dump_hdr->vse_class != QCA_MEMDUMP_VSE_CLASS) ||
+-	    (dump_hdr->msg_type != QCA_MEMDUMP_MSG_TYPE))
+-		return false;
++	dump_hdr = skb_pull_data(clone, sizeof(*dump_hdr));
++	if (!dump_hdr || (dump_hdr->vse_class != QCA_MEMDUMP_VSE_CLASS) ||
++	   (dump_hdr->msg_type != QCA_MEMDUMP_MSG_TYPE))
++		goto out;
+ 
+-	return true;
++	is_dump = true;
++out:
++	consume_skb(clone);
++	return is_dump;
+ }
+ 
+ /* Return: true if the event packet is a dump packet, false otherwise. */
+ static bool evt_pkt_is_dump_qca(struct hci_dev *hdev, struct sk_buff *skb)
+ {
+-	u8 *sk_ptr;
+-	unsigned int sk_len;
+-
+ 	struct hci_event_hdr *event_hdr;
+ 	struct qca_dump_hdr *dump_hdr;
++	struct sk_buff *clone = skb_clone(skb, GFP_ATOMIC);
++	bool is_dump = false;
+ 
+-	sk_ptr = skb->data;
+-	sk_len = skb->len;
+-
+-	event_hdr = hci_event_hdr(skb);
+-
+-	if ((event_hdr->evt != HCI_VENDOR_PKT)
+-	    || (event_hdr->plen != (sk_len - HCI_EVENT_HDR_SIZE)))
++	if (!clone)
+ 		return false;
+ 
+-	sk_ptr += HCI_EVENT_HDR_SIZE;
+-	sk_len -= HCI_EVENT_HDR_SIZE;
++	event_hdr = skb_pull_data(clone, sizeof(*event_hdr));
++	if (!event_hdr || (event_hdr->evt != HCI_VENDOR_PKT))
++		goto out;
+ 
+-	dump_hdr = (struct qca_dump_hdr *)sk_ptr;
+-	if ((sk_len < offsetof(struct qca_dump_hdr, data)) ||
+-	    (dump_hdr->vse_class != QCA_MEMDUMP_VSE_CLASS) ||
+-	    (dump_hdr->msg_type != QCA_MEMDUMP_MSG_TYPE))
+-		return false;
++	dump_hdr = skb_pull_data(clone, sizeof(*dump_hdr));
++	if (!dump_hdr || (dump_hdr->vse_class != QCA_MEMDUMP_VSE_CLASS) ||
++	   (dump_hdr->msg_type != QCA_MEMDUMP_MSG_TYPE))
++		goto out;
+ 
+-	return true;
++	is_dump = true;
++out:
++	consume_skb(clone);
++	return is_dump;
+ }
+ 
+ static int btusb_recv_acl_qca(struct hci_dev *hdev, struct sk_buff *skb)
+-- 
+2.43.0
 
-> Error handling for devm_kasprintf() is missing.
-> 
-
-Thank you for catching this, I will skip registering that device if the
-devm_kasprintf() fails.
-
-> > +			&cros_ec_thermal_cooling_ops);
-> 
-> Error handling for devm_thermal_of_cooling_device_register() is missing.
-> 
-
-I think we should continue registering other fans, so maybe we add a warning
-here if the registration fails?
-
-> > +	}
-> > +}
-> > +
-> >  static int cros_ec_hwmon_probe(struct platform_device *pdev)
-> >  {
-> >  	struct device *dev = &pdev->dev;
-> > @@ -402,6 +467,7 @@ static int cros_ec_hwmon_probe(struct platform_device *pdev)
-> >  	cros_ec_hwmon_probe_fans(priv);
-> >  	priv->fan_control_supported =
-> >  		cros_ec_hwmon_probe_fan_control_supported(priv->cros_ec);
-> > +	cros_ec_hwmon_register_fan_cooling_devices(dev, priv);
-> >  
-> >  	hwmon_dev = devm_hwmon_device_register_with_info(dev, "cros_ec", priv,
-> >  							 &cros_ec_hwmon_chip_info, NULL);
-> > 
-> > -- 
-> > 2.49.0.906.g1f30a19c02-goog
-> > 
-> > 
