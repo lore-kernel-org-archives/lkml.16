@@ -1,91 +1,93 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 752E321CA05
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 09:11:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4DDF269B08;
+	Tue,  6 May 2025 09:11:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746522662; cv=none; b=Z3ONfuRy+01/i7fMKsh+FnZc9EScTaWSe0n5ypy4zDv+11lO1Fy/IlDHfHAab/hTAaUIb8hS1PORcjoSbVHvt3OFMDJSip4tSck+/fFYPyfUgcd11ciySysP7GbpXjDTh0/qNw4oQ46VtYwjlNCgXl7YyQHzdKOdtz0BCjJF9QM=
+	t=1746522685; cv=none; b=GyaBJB/LuEtCbgTPJhrdxXXjw6XwY4TrBJJeIKSqWOMzOIzNYjEAV4pzepcC2DUd7O+Ohn89wfk5U91qr5u8WDPI6JUx4UadsLOlrZzCfR6KYszXuQk0EpC1PQqasWgWfPdKvuDnlnKElsQtitnuHoQ/sf5E8qYrMUAAEjTfnyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746522662; c=relaxed/simple;
-	bh=/uIAYW5ti1w9nVLiO7DKGul+p7+eEMse2IJbhsA44b4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=h92LXItGNTex+oxXZ7Sm2diAgnHUHGwzyRL+UqgIHHSIeNDWjr5t9+90RgrBqdSXyaAGka2O6JBO8fueXrn5VPoxmtynKEp01iWE9w7W/mU+zBvp9qaJiJJ24cvmBm24ojaIi89plA8JtZ6faEAezPZL5v9viWdsBXuiLfJkTdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D13B6113E;
-	Tue,  6 May 2025 02:10:49 -0700 (PDT)
-Received: from [10.163.54.208] (unknown [10.163.54.208])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A5C7F3F5A1;
-	Tue,  6 May 2025 02:10:50 -0700 (PDT)
-Message-ID: <f960f7c2-465f-4b18-b0b6-3db4a12104d2@arm.com>
-Date: Tue, 6 May 2025 14:40:44 +0530
+	s=arc-20240116; t=1746522685; c=relaxed/simple;
+	bh=xWCBXfZXchEREz413z0ufZfBuYmDssLsk+IROdV/hZU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=A4SQSxQm4lXkDeztKECUqZfpKGdBgmMLFPfj2D8TSMfPgBc1b4xMp6GyWWoqiinSfXYk6MtMr5VmLwN/p/nCvDU1UaxxaX8qB9E17Pvrr1BUtzWWPcNQ4RJA3zF9XRFwdQFTT6JiDBZL3i1ZXXa14913J07sZdeBnpEdtfyKwxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=Zmzz+fch; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Zmzz+fch"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1746522677;
+	bh=2OrIKvQnwifqLz45NIG2Uk6cBVnTx26dfgxe8rVv4BY=;
+	h=Date:From:To:Cc:Subject:From;
+	b=Zmzz+fchmUp2kNmwGun/zD85bJzTC1bTRmcihypqPsTL/rrvj4ZwVBr5aPzKDIFH3
+	 yYlYcdKnxgYzAU4hNoGPZ/a8Fqa/5rabjJ/7EYPM/f9k4fZK5Q1P3P8hNAVNSe1C3l
+	 27Y4nI9QDp+09F4RJZKVAamAlt+OpSiGBS9vNzJ3033V8AYgreZOIvw2yV6wTEU3LL
+	 3E2iqtNCMUIa8Sw2Be7jegee4tvxnNldy2ugsgD1DhOGoztlho5K/7Q0XDuqfVcWAs
+	 kwHcqPkvVAztXlf+TZItFtiUliSC8GsthMZQSWyq6II5yjoo9VP6ovX7VbkspBjklT
+	 qh+vwgl4qIVIg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZsCLX73tnz4x8f;
+	Tue,  6 May 2025 19:11:16 +1000 (AEST)
+Date: Tue, 6 May 2025 19:11:14 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Andi Shyti <andi.shyti@kernel.org>
+Cc: "Yo-Jung (Leo) Lin" <leo.lin@canonical.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: build failure after merge of the i2c-host tree
+Message-ID: <20250506191114.1809d6ba@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] mm: Add generic helper to hint a large folio
-To: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org
-Cc: Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, vbabka@suse.cz,
- jannh@google.com, pfalcato@suse.de, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, david@redhat.com, peterx@redhat.com,
- ryan.roberts@arm.com, mingo@kernel.org, libang.li@antgroup.com,
- maobibo@loongson.cn, zhengqi.arch@bytedance.com, baohua@kernel.org,
- willy@infradead.org, ioworker0@gmail.com, yang@os.amperecomputing.com
-References: <20250506050056.59250-1-dev.jain@arm.com>
- <20250506050056.59250-3-dev.jain@arm.com>
-Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20250506050056.59250-3-dev.jain@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/Ei/rubxB65Qyctt.=RJhlI+";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On 5/6/25 10:30, Dev Jain wrote:
-> To use PTE batching, we want to determine whether the folio mapped by
-> the PTE is large, thus requiring the use of vm_normal_folio(). We want
-> to avoid the cost of vm_normal_folio() if the code path doesn't already
-> require the folio. For arm64, pte_batch_hint() does the job. To generalize
-> this hint, add a helper which will determine whether two consecutive PTEs
-> point to consecutive PFNs, in which case there is a high probability that
-> the underlying folio is large.
-> 
-> Signed-off-by: Dev Jain <dev.jain@arm.com>
-> ---
->  include/linux/pgtable.h | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> 
-> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-> index b50447ef1c92..28e21fcc7837 100644
-> --- a/include/linux/pgtable.h
-> +++ b/include/linux/pgtable.h
-> @@ -369,6 +369,22 @@ static inline pgd_t pgdp_get(pgd_t *pgdp)
->  }
->  #endif
->  
-> +/* Caller must ensure that ptep + 1 exists */
-> +static inline bool maybe_contiguous_pte_pfns(pte_t *ptep, pte_t pte)
-> +{
-> +	pte_t *next_ptep, next_pte;
-> +
-> +	if (pte_batch_hint(ptep, pte) != 1)
-> +		return true;
-> +
-> +	next_ptep = ptep + 1;
-> +	next_pte = ptep_get(next_ptep);
-> +	if (!pte_present(next_pte))
-> +		return false;
-> +
-> +	return unlikely(pte_pfn(next_pte) - pte_pfn(pte) == PAGE_SIZE);
-> +}
-> +
->  #ifndef __HAVE_ARCH_PTEP_TEST_AND_CLEAR_YOUNG
->  static inline int ptep_test_and_clear_young(struct vm_area_struct *vma,
->  					    unsigned long address,
+--Sig_/Ei/rubxB65Qyctt.=RJhlI+
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-As mentioned earlier, this new helper maybe_contiguous_pte_pfns() does not
-have a proposed caller. Hence please do consider folding this forward with
-the next patch where move_ptes() starts using the helper. Besides, it is
-also difficult to review this patch without a proper caller context.
+Hi all,
+
+After merging the i2c-host tree, today's linux-next build (i386 defconfig)
+failed like this:
+
+drivers/i2c/busses/i2c-i801.c: In function 'i801_probe_optional_targets':
+drivers/i2c/busses/i2c-i801.c:1180:54: error: 'struct i801_priv' has no mem=
+ber named 'mux_pdev'
+ 1180 |         if (!IS_ENABLED(CONFIG_I2C_I801_MUX) || !priv->mux_pdev) {
+      |                                                      ^~
+
+Caused by commit
+
+  27f4a0d6938a ("i2c: i801: don't instantiate spd5118 under SPD Write Disab=
+le")
+
+I have reverted that commit for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/Ei/rubxB65Qyctt.=RJhlI+
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgZ0jIACgkQAVBC80lX
+0GwazAf/Y7g/QeciJBcsQwQ80bHzyaL/ULLiaSi63eiGOgxu8+s9fNSsMzOBu3dK
+AXz4N8i1aIZH1G+WTGoRIZrkUSESFk8BDcwhSKmTJmoodeDMQQof92ApYLxEqees
+E7x2mMUQ5vzN606qkZaUfydoAObbE17i070uJZhtiVn/333ZINbDOLn3rak6r6j0
+i0xCvyUTZqawj27GWY2uR+ym38t22LZF6EKIbgPfskbQ6FSMgVXD4PLv9oFGU+xK
+L5OMc82N+Fz4CodG5d/XEQXT/jMBFpoQADiZwbr7ZwK/9MVwhJ2RghFivowoAwcy
+ynyppmPQIYt7Qhl0YIEYF3c8lI10fA==
+=zWZb
+-----END PGP SIGNATURE-----
+
+--Sig_/Ei/rubxB65Qyctt.=RJhlI+--
