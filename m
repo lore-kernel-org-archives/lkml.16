@@ -1,92 +1,75 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0C2619F115;
-	Tue,  6 May 2025 09:03:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ADA126B2C5
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 09:04:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746522234; cv=none; b=PBl8BQcMHdgURS1HHdGzTgVfBoOFhaYCUbsONbKoHRPlCkwUF1I11ihGh3EP2DyybSECx2VW/3xdK30XthFvaLuSyWDRQd+pkqzBdJGjesQIqeXyL9KgD3MBvQ8CmN4gC0vcYfjj0PoAckexzViq9D12H4fP7BgYbhUNQg6v2u8=
+	t=1746522243; cv=none; b=PGhErSqID7hZaxynqhYxftQu0mas0HtAC+jb4viqeQXjNwzvZpL54OjO2O40CDIF/evoa8rCAlp79fxjiu+lxNCvAEjMdlGR9UMtAF5evHHHIYtjHJ10/GrIUbfQeHKFGSatiDcGi8an48Alsnl7tL/npVhFFoGSSGm+uHBFSPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746522234; c=relaxed/simple;
-	bh=gyIx0Ki5AOaReJxfeZj63dyjx9FKVMsihfA3i8+mBGg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E/7XB7HF+/syMYrbXtMSyC9tNpx6XDWR9KwtnnU0zbCv2YWTWqTKf/un2c6tWniBM1KZ77GK+R3Rv0wDG+R6tYDV3JTV676Rs0JOpCI/A8Py1sevJxwoc2m3UcdIrLJeX7e9TiL6Ec1yncqLdNnt9gnZnCLL+xCSrdoaue5698A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RRDdcouL; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746522243; c=relaxed/simple;
+	bh=CYrUYd8mpt/pd4KD6BaMlj8hw459WQl4N1Iww3g2R8k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XXoYXR3Gq7rAy7wjgZiskYsOjuxE/brSkashBR3FkizyPQdwwh6fs928h6G1n+VlLTywQlhnZky/mYm78B1lY0KpyqaSY+n+6dKbv4859iqdBus4o1G6Op1PVx3fMHIDD6xCo2KWcGp8oss7YI4onGRg93bqU8fCIvMyIyf7lsc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=jBoj0p6R; arc=none smtp.client-ip=95.215.58.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RRDdcouL"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-39c1ef4acf2so4214937f8f.0;
-        Tue, 06 May 2025 02:03:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746522231; x=1747127031; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=gyIx0Ki5AOaReJxfeZj63dyjx9FKVMsihfA3i8+mBGg=;
-        b=RRDdcouLItgszsRPvJD/IrtKTbR8ipn3WlJETa4xoP0mCoo+eZDgIYTe21b3d90Lwz
-         7PgcJoz1w9qhX64X4sBroY3bdPCAT94SKN6dbjPY7ogtREqUfUJokmOaX2orNeg+Ui+L
-         o/qnOLRn9UorOLmhvJox8lD1SVRnvwGtFeiMayQTRVvwznyH16FlN8chIc+aYp297vRU
-         KR3v+tFMglkMW5xns9kh4AEhtwfiiegbAze/xqCx5G0/AHSLGnMaXSB9scm2CtCeRJPO
-         J0sRomX8540b+O9vVv0iLmXWsF/kfnQ5lmst/d8PjdJ13kZENOGi7JNngR45yW7mqWDg
-         svBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746522231; x=1747127031;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gyIx0Ki5AOaReJxfeZj63dyjx9FKVMsihfA3i8+mBGg=;
-        b=Zss3A832HR5XBdyXwM7IDqlB9gXkUrDaa4g7B2UaUWIEglrVykiCXP7Y8bL1VXsdy/
-         KEJdK1xqebS2uLwAi5xMrvGvmMtLUr6RSlZ8yIOYC/ZMP9PPT3bIxttQ3eOZ+J9J+82C
-         NzL498GAiftR1sFrq333KYAGjziT5vXX6R6q0jdeOBg0EUN/eMLZ6ZKvVRec+w1gnST8
-         aoNP95pyKic0Kgn/VzJfd6ti+SFJ8nysKXynsoFdRgFTi0G1QlFZYKmrHY9/Xypd7AdZ
-         wEvVkkUsoVxF73ahPGJfq7ZqntUukdpgFeus2CDuDoZfJIcsRlbsBwkgs3+mz0Y8pR2/
-         qFZg==
-X-Forwarded-Encrypted: i=1; AJvYcCUfj9MNAA+gIrJCLKXy9m6KJNKZJ14IjvBzo2tOS7ew0SP27mFjH8QLQriOK9Iesppy3r9c2vgyqOAf@vger.kernel.org, AJvYcCVFvTlEAxBPzghqjVfJ6nl7W6q7wKORM980aFPpvb6lk03r0kn2oil0NUNdyRdtk0p/WMR9jKLt5ZQl@vger.kernel.org, AJvYcCWu57m8T0tTlyOOicUvJIyHLAAOrwU7zHWDPJEv7RJ7Hyk0Pulqod4FJtgRBLKPVKzmrzOUOU1HC5IGwJ2i@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6eR2q12417gjznhBTmctRMXNQLgnGKZ4lIwcH2lv71TUyzmM8
-	SX5F8ysxPZp3tKkf24AVQafjrVAxLlea5WtZ+1po/eOgzQ/uhALw
-X-Gm-Gg: ASbGncuAkagXx8brAJpKrJ1kPrk6xsBoZFm51sdx9Kq5zvBHKVlUPQCU6hI0sxdM0k6
-	G2SteTENzLvcsnyR73xxrBUg1DBoMEtFBhSzIoDq27dijWCCdqEE5/DnvVjKf42O5vxHEbg86WK
-	lQgJhD9kYllKFyzx6KnwnisPznX9+EEDZgd1G0eCA55fuDmm4cUOWJwR/ZflaXMVxJW7APfecEG
-	u2pHBmUFFVMiB+2/hzc6dfCzAWuwXO2QX/QMy15Dd7ORRXM3nMckqfcsP234JdPpFGdhRSVUMKj
-	+Kb3g2SqVyavZNrSK+CA/YiwoNrDJMN0xFjHl4sOJS4PfYdhIhMfdAnY/z6fF08kK3AMGReqgKQ
-	=
-X-Google-Smtp-Source: AGHT+IHRYQv7gbtTFV1OT21EShfpi94fTR1K/sawhJ6BR+I4eHDDjPZQutWAPs2LuuqvlF8J7eUroQ==
-X-Received: by 2002:a05:6000:2489:b0:3a0:9f24:774d with SMTP id ffacd0b85a97d-3a09fdbc96emr7653085f8f.45.1746522230986;
-        Tue, 06 May 2025 02:03:50 -0700 (PDT)
-Received: from ubuntu2204 (207-pool1.nat.godollo.uni-mate.hu. [192.188.242.207])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099ae3441sm12755409f8f.26.2025.05.06.02.03.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 02:03:50 -0700 (PDT)
-Date: Tue, 6 May 2025 11:03:48 +0200
-From: =?utf-8?B?VMOzdGggSsOhbm9z?= <gomba007@gmail.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Jonathan Cameron <jic23@kernel.org>, 
-	Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/2] Add support for the DFRobot SEN0322 oxygen sensor
-Message-ID: <3bpvrmrrlv75snba3o4nvnb33b2ibxskakkip2ukpxvfgezwj6@sqnmmtgi3rcl>
-References: <20250506-iio-chemical-sen0322-v3-0-d6aa4acd00e0@gmail.com>
- <4ef1f428-d580-4263-9190-d187d1fd0e53@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="jBoj0p6R"
+Message-ID: <a03b4963-55aa-4a75-b795-1e8f0db7ec89@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1746522239;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6KFTuaLCT064dVhFWKhMxEVyhB0wfcxXovNDaHCOdCI=;
+	b=jBoj0p6RQohY/jOz2Jnac4g2pw8xHPcE7ZeD3UI9EOi4ZhbYlOfqGKcM3g2CHK9pAHH/V4
+	el66Ih158FXEHz04+wN+9a+V+khnD2Yt9XM8jJ82w28UlfPpBDWbQ45nFqmyNhUBIyykl7
+	58H/8Hv2bYWGCyrJH75t1cbButhGDuo=
+Date: Tue, 6 May 2025 17:03:50 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Subject: Re: [PATCH v9 5/5] MAINTAINERS: Add tpm_loongson.c to LOONGSON CRYPTO
+ DRIVER entry
+To: Qunqin Zhao <zhaoqunqin@loongson.cn>, lee@kernel.org,
+ herbert@gondor.apana.org.au, davem@davemloft.net, peterhuewe@gmx.de,
+ jarkko@kernel.org
+Cc: linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-crypto@vger.kernel.org, jgg@ziepe.ca, linux-integrity@vger.kernel.org,
+ pmenzel@molgen.mpg.de, Huacai Chen <chenhuacai@loongson.cn>
+References: <20250506032053.11147-1-zhaoqunqin@loongson.cn>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yanteng Si <si.yanteng@linux.dev>
+In-Reply-To: <20250506032053.11147-1-zhaoqunqin@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <4ef1f428-d580-4263-9190-d187d1fd0e53@kernel.org>
+X-Migadu-Flow: FLOW_OUT
 
-Hi!
+在 5/6/25 11:20 AM, Qunqin Zhao 写道:
+> Changes to Loongson TPM driver would be best reviewed by the Loongson
+> crypto driver maintainers.
+> 
+> Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
+> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+> Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+> ---
+> v8-v9: None
+> v7: Added tag from Jarkko and Huacai
+> v6: "tpm_lsse.c" -> "tpm_loongson"
+> v4-v5: None
+> 
+>   MAINTAINERS | 1 +
+>   1 file changed, 1 insertion(+)
+I'm just curious. Why is this patch kept outside the tmp_loongson patch 
+set?
 
-> What exactly changed? I do not see any changes in the binding but you
-> decided to drop my review tag.
+<https://lore.kernel.org/loongarch/20250506031947.11130-1-zhaoqunqin@loongson.cn/T/#mf09225c286a8e2b92a677720afafb9e20be57a18>
 
-Sorry, my bad. I've fixed it in v4.
-
-Regards,
-J�nos
-
+Thanks,
+Yanteng
