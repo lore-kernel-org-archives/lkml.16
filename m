@@ -1,117 +1,112 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 741DC4B1E60;
-	Tue,  6 May 2025 22:19:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7926A4B1E60
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 22:20:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746569966; cv=none; b=piPhkBp7rFC4vHCsbcYauNo4R1zupoRiQo4ce8/zecsFPuBA47gpRa9ac5F+VTAHyWk3f5l6vH8WwNF9p1UKg6mhM1jJXq8r3FD7CLo4ptuirNckvVfZXU9mtlAbHpIFoenBl1H4N0m50gtWWYksafc/WcDdk8kc6/dT63kQQms=
+	t=1746570043; cv=none; b=Y1RzhB4/WQ2D5TGpgUp6JsL5OoXtv0X9nSjaEwrB/FPdBXWyhYmX7ynZYelTBzq/DfSySvhmZNwt8B9ZSu+/IbVID8rpo7z1ruGtfT5wp1JetuLIqlTzOOEaIDMLI9aIlXEIl8CUqCi2seh5md0mDCvfZ5ILzAz36wx0PwS0D+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746569966; c=relaxed/simple;
-	bh=msYraZeG23tMmnyNeSplinYDOrlE8I2UiaVU3Kpkbg0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MQv3uonasK4ffybxLC+2p94RKrOIWrLswWu3yPxNf4p8zNqJQr3niEOFLZh/rVliz2jpQBWKoZ4mKWPyX0EGu/CYPqHNuuqBHm+2PNC+cWU3ycnSO68tGiYxdl6DnfJj+j25EYrhTRheIRizn1AYwNdchOEJGAwc9P3aoqN1VcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NdOM2thd; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746570043; c=relaxed/simple;
+	bh=0PO8GZA/VK1cO3v9qAu67hAW6oAhrGbHQcodV3efN8M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Gsg48pygrwUuVk3jNUptCB2+TndaFZb6KXc6HtEPtJry4ETrSoWftidSQyaOIncqwAufHpb2oO/psGN9TOWikW10fn6cELvUqrSmMDvImkpDleNleMHLH5YblGGBNLzmPAsPmam46XhnlJ2Dd2c820a0CzBDwbVwuRwL28FuV1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=iC6ahTgn; arc=none smtp.client-ip=95.215.58.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NdOM2thd"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-308218fed40so545608a91.0;
-        Tue, 06 May 2025 15:19:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746569965; x=1747174765; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3ffzXsESE06QaADA4Dec3evlw7VYt4gDexnnRqODOEU=;
-        b=NdOM2thdx6609E7+6UB+BV9kWSm4uB7cGxqjlUPESvwMztuJt5DnohWCIMXtpRFuN/
-         bIk1GIphBYE6SA7Iws/Nf1OeKiMNzfptrV3Za6TLFSjeNiYrnEShaV1my4iLiUJ6tkTy
-         vKaOSRQoH2QeQQgt3nmZ83VI/5d44jfsjIEGtgGQp9LixAkDIMow3/uHlVdTRf2TU3na
-         XB4RWK8IRSqGjkNmc5aaYPlnb9slcWV72u7n6sLx9qQ1JIweutiakVPiup3t9YpMa0lw
-         50gzFoCyAabZZ5ZX/RpT0CZi7jMl96UyvPTA4xHn7CkoEsKxOC3TYqVYOiVxlXh8Pc8x
-         sdZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746569965; x=1747174765;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3ffzXsESE06QaADA4Dec3evlw7VYt4gDexnnRqODOEU=;
-        b=LKD+gGNGr9L05Ohfvb5Z+1pB6CnmM3dLdk4jW7WAk5U48JV6AYGl0k2RofkSnTA2wK
-         9zwJyJ93cwJS7C8lZQozLB7jqKyzKZbQLkTUkshoT5fmekhsq1lYFC4Ffp+WObEWe/+/
-         /JHMQU0egMRq28/+fxsf3IK5Ka2Oqh3q6eF02jf4kaagCTh64z04yQPgm+M9RNSYHnbQ
-         rw3GISx3CQPRwYIhirJIT0pc9ZFfUqVU12O8pdnRdDoIYmzIiLM7ndqt3NTazTvPPJLf
-         u7pHJCjtArN1dpNiY1xvG9Vij749eOzUJPYzsQmsQ6vaaDn+cOBdwpZh90xixRP8w81+
-         nTDw==
-X-Forwarded-Encrypted: i=1; AJvYcCVEDRIEUNBRhQH/S0IohFdPfaM7tVbidS4u2BzJltSXNt0wtNEEq9c4kLdYNbogIQKeyOj1kCRc4L2Hfoxr/YI=@vger.kernel.org, AJvYcCXiZNlml+WCJmyuFv2nE5kH35eYPmKGYe9iedi8LgDTqPStSgjPflkNn7ndl1Y6ujGIH4IHeVrQgBTZZT8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0ibCEPqbScHYYIU8xhRPvlqGSWKsmlvo+iZ8f3CGY4T/1oyxS
-	csQ/trWrUdLrXem8lO3lmzKSzAWaxqcDZajQa+knqAqabRFVv64tnbnT9dFMl2cHL1bzmzaJUKh
-	8y4bF1w09DEg9o4GZKVEy8wdZLRM=
-X-Gm-Gg: ASbGncslRofj2lvW0rYtBLSBE3mVNMfWf5FPeHUzFVNrfc/cwZWVmhig0SMVDVlEk9n
-	jBPPifj7cntybFYp54CVUIpLLYzb8Fn4dn7eedE9Cc0eV4h3wVuNGobijX+ssI9BfaZMtosfLrD
-	i4mOoDJ9pzokKNZ9FAXzD+rw==
-X-Google-Smtp-Source: AGHT+IH6OAVnyTKPBGyvXJCewyHrwDaRh2ZdRNAUiXZJqFKsDPNMI2SjiTwPdL53oi26rGrzQe/dbUc6nKixiFccVpM=
-X-Received: by 2002:a17:90b:4a05:b0:2ff:4b7a:f0a4 with SMTP id
- 98e67ed59e1d1-30aac1f82dbmr634458a91.3.1746569964608; Tue, 06 May 2025
- 15:19:24 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="iC6ahTgn"
+Message-ID: <d66ac48c-8fe3-4782-9b36-8506bb1da779@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1746570039;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=K0qLWtRCotlgnWD+RmktCT42JGMuJBbGtZU0H3V1TGs=;
+	b=iC6ahTgnsI8BQYQ0QontZXFG+FkCpuqrW1IMIyCKt6Wh3CZkOphNtbcGq0FQflBpCl4Ono
+	nb6GlDLWeMs1ta8Y/zxnEhpE0YZ7TOhFxNrdsm6GuZsaB0P9zDphiy4ByPBgDUDylcPFnX
+	8yJyAeR84IdeEqSWyNDZLk6ZhKHGcwc=
+Date: Tue, 6 May 2025 18:20:32 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250410124526.GB9833@noisy.programming.kicks-ass.net>
- <20250410130944.GA9003@noisy.programming.kicks-ass.net> <CANiq72=k+tZ3ACEB5k9qwJ8ZYu-dXkA3=Lisg1b8ze-2D0STog@mail.gmail.com>
- <20250410132649.GE9833@noisy.programming.kicks-ass.net> <CANiq72=Q_Z8KfV+n4z9wWVJsZwVevag=Vh3URe71XkUuWuqEDg@mail.gmail.com>
- <20250410133446.GF9833@noisy.programming.kicks-ass.net> <CAH5fLghrcqSYwkqbC4SSp6oYCny0riMRGA6W+oqQ69aA=NwYWw@mail.gmail.com>
- <CANiq72k0AM3v9JZe=8mDN6T1ToiAt1-1e1zJ3z0Oh6ZWfchzag@mail.gmail.com>
- <20250416202040.GD38216@noisy.programming.kicks-ass.net> <202504161442.66CE2596@keescook>
- <20250417081818.GJ38216@noisy.programming.kicks-ass.net> <CANiq72kjDM0cKALVy4POEzhfdT4nO7tqz0Pm7xM+3=_0+L1t=A@mail.gmail.com>
-In-Reply-To: <CANiq72kjDM0cKALVy4POEzhfdT4nO7tqz0Pm7xM+3=_0+L1t=A@mail.gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Wed, 7 May 2025 00:19:11 +0200
-X-Gm-Features: ATxdqUGuoPWZ90y4coUWjP0w6j_-l1DRzzJ20zkE3IhO-pUDHeT4XIdswuIaWMk
-Message-ID: <CANiq72muSS+NNs5fxp4GPKWWhyXT95spvbGsZz6AJnK8RerUqQ@mail.gmail.com>
-Subject: Re: [PATCH] x86/Kconfig: make CFI_AUTO_DEFAULT depend on !RUST
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Kees Cook <kees@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	=?UTF-8?Q?Pawe=C5=82_Anikiel?= <panikiel@google.com>, 
-	Sami Tolvanen <samitolvanen@google.com>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	Ingo Molnar <mingo@redhat.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Masahiro Yamada <masahiroy@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Nathan Chancellor <nathan@kernel.org>, x86@kernel.org, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	Matthew Maurer <mmaurer@google.com>, Ramon de C Valle <rcvalle@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [net-next PATCH v3 05/11] net: pcs: lynx: Convert to an MDIO
+ driver
+To: Vladimir Oltean <vladimir.oltean@nxp.com>
+Cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>,
+ upstream@airoha.com, Christian Marangi <ansuelsmth@gmail.com>,
+ linux-kernel@vger.kernel.org, Kory Maincent <kory.maincent@bootlin.com>,
+ Heiner Kallweit <hkallweit1@gmail.com>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Clark Wang <xiaoning.wang@nxp.com>, Claudiu Manoil <claudiu.manoil@nxp.com>,
+ Ioana Ciornei <ioana.ciornei@nxp.com>, Joyce Ooi <joyce.ooi@intel.com>,
+ Madalin Bucur <madalin.bucur@nxp.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>, UNGLinuxDriver@microchip.com,
+ Wei Fang <wei.fang@nxp.com>, imx@lists.linux.dev,
+ linux-stm32@st-md-mailman.stormreply.com
+References: <20250415193323.2794214-6-sean.anderson@linux.dev>
+ <20250415193323.2794214-6-sean.anderson@linux.dev>
+ <20250506215841.54rnxy3wqtlywxgb@skbuf>
+ <20250415193323.2794214-1-sean.anderson@linux.dev>
+ <20250415193323.2794214-1-sean.anderson@linux.dev>
+ <20250415193323.2794214-6-sean.anderson@linux.dev>
+ <20250415193323.2794214-6-sean.anderson@linux.dev>
+ <20250506215841.54rnxy3wqtlywxgb@skbuf>
+ <50e809ea-62a4-413d-af63-7900929c3247@linux.dev>
+ <50e809ea-62a4-413d-af63-7900929c3247@linux.dev>
+ <20250506221834.uw5ijjeyinehdm3x@skbuf>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+In-Reply-To: <20250506221834.uw5ijjeyinehdm3x@skbuf>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, Apr 17, 2025 at 8:40=E2=80=AFPM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
->
-> Thanks Peter (and Kees for clarifying) -- not sure how you/others
-> prefer to route this patch or if you expect a v2, but I got the
-> following (attached). I converted your Ack.
+On 5/6/25 18:18, Vladimir Oltean wrote:
+> On Tue, May 06, 2025 at 06:03:35PM -0400, Sean Anderson wrote:
+>> On 5/6/25 17:58, Vladimir Oltean wrote:
+>> > Hello Sean,
+>> > 
+>> > On Tue, Apr 15, 2025 at 03:33:17PM -0400, Sean Anderson wrote:
+>> >> diff --git a/drivers/net/pcs/pcs-lynx.c b/drivers/net/pcs/pcs-lynx.c
+>> >> index 23b40e9eacbb..bacba1dd52e2 100644
+>> >> --- a/drivers/net/pcs/pcs-lynx.c
+>> >> +++ b/drivers/net/pcs/pcs-lynx.c
+>> >> @@ -1,11 +1,15 @@
+>> >> -// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
+>> >> -/* Copyright 2020 NXP
+>> >> +// SPDX-License-Identifier: GPL-2.0+
+>> >> +/* Copyright (C) 2022 Sean Anderson <seanga2@gmail.com>
+>> >> + * Copyright 2020 NXP
+>> >>   * Lynx PCS MDIO helpers
+>> >>   */
+>> >>  
+>> >> -MODULE_DESCRIPTION("NXP Lynx PCS phylink library");
+>> >> -MODULE_LICENSE("Dual BSD/GPL");
+>> >> +MODULE_DESCRIPTION("NXP Lynx PCS phylink driver");
+>> >> +MODULE_LICENSE("GPL");
+>> > 
+>> > What's the idea with the license change for this code?
+>> 
+>> I would like to license my contributions under the GPL in order to
+>> ensure that they remain free software.
+>> 
+>> --Sean
+> 
+> But in the process, you are relicensing code which is not yours.
+> Do you have agreement from the copyright owners of this file that the
+> license can be changed?
 
-Applied to `rust-fixes` -- thanks everyone!
+I'm not relicensing anything. It's already (GPL OR BSD-3-Clause). I'm
+just choosing not to license my contributions under BSD-3-Clause.
 
-(If someone else prefers to carry it, please shout)
-
-    [ Rust 1.88.0 (scheduled for 2025-06-26) should have this fixed [1],
-      and thus we relaxed the condition with Rust >=3D 1.88.
-
-      When `objtool` lands checking for this with e.g. [2], the plan is
-      to ideally run that in upstream Rust's CI to prevent regressions
-      early [3], since we do not control `core`'s source code.
-
-      Alice tested the Rust PR backported to an older compiler.
-
-      Peter would like that Rust provides a stable `core` which can be
-      pulled into the kernel: "Relying on that much out of tree code is
-      'unfortunate'".
-
-        - Miguel ]
-
-    [ Reduced splat. - Miguel ]
-
-Cheers,
-Miguel
+--Sean
