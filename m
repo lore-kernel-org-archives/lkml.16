@@ -1,120 +1,107 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CBB9280A4F;
-	Tue,  6 May 2025 13:07:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E20A3280003
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 13:07:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746536842; cv=none; b=eluKcYx94xTgEumBsz2/Db+kA7Dy+BhYkWDr1F3XcS+dCVeQGK1AqBcXq+b5uJlU/EfLJ3wRhG5GOkmsfV8XXrBBFys1PkEklmqXrrt0zHTLei6Sm4eqK/jG7Tt7Xz2yLK8K3Bm7OylfSJcsDoxnTKqPxWEq/t9PhvpfEXmYDFg=
+	t=1746536877; cv=none; b=mIEzf3Sat2/KQcVvcu4r5Y6QYbYMOiBIs2/9S0EVT0bW3InoyuxY0/UdDElMV462j3ilMISRTFetGY/aE+ibeM9O8zpdYCMAZ5WGFSw6UC9Wk90KmjkFLJWDffnO96a0Prit7e3jP+LLWm4FLp/uPzc3tv/qTeg+tIm7BoUjQzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746536842; c=relaxed/simple;
-	bh=43zFPN2YH34gSpQ47hlCG9do+SmRZva27HgZB8F7cbA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mtCLTkdtVDlkm1md8eQvQcfVSM7wQ/8mYiWL2kjQ49GyyEA9dLkNeXPq1lm3mL60S6QwY68Dy58isAP6A363y31IChAAu9po5iLAuAyNteYjGtlDDJp2JLZvNnyT1skNROnyliWuF9+4yGV+CHokve8A1esmSTcggq1PnsOUC6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bvv3F026; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746536877; c=relaxed/simple;
+	bh=ocRdYkZa/AEaB8l+44CaI3rppCL62EkJBYznCdzgJVc=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=R4Nrhy1j8VKzYHPLIN8cS+F7jfYIjDsSVLDZH4EvJ1JvIaCrUS2ngJYB7LIO7HfAGUsUaBkdxsF6zZfEheiMauhlV+3b8LFbvn+kql2mPTL91E0ZcEhgv1hBGHyr4YpLgqr+uNcad00bBwAvTdgWVYczhF8m4aGkWgFmhqMcpC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=KRcGYiQ0; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bvv3F026"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-22e4db05fe8so3326635ad.0;
-        Tue, 06 May 2025 06:07:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746536840; x=1747141640; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NeJFv9JXOt7lctHtAYTSNLDvkMIl535mzc33ZiJ8Rac=;
-        b=bvv3F026E6YTseTuqR8ZPIqkRGb3PxdFnGLb5Z/U2YUkFbGIBBTsryPnfM3zjdiu06
-         Y637K2q0BYzDoCWnPkmTKfulwh3owBH2F8v5eUvaw2pOdlPAZFEY5BOAvEFdIAZo+Ke3
-         /8IiZNRs81rRH8kVzNjOTj1PfK3jsTlUvfIPwh03yEFKeisPNsTIWO4xO/12tlXOltch
-         ML/uo+u7JIcR3R42U7CJSrEXFn2cFjU2ung6Xtu437DEVpypvXxHA3+VrjcwCCDdB+of
-         0ujPyJxildXUZVAXg4Vmnx/rAPesjvzKr78Oe8eAUmf1Sk+9v9xqTfVS48/bnzDuNKwB
-         0rlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746536840; x=1747141640;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NeJFv9JXOt7lctHtAYTSNLDvkMIl535mzc33ZiJ8Rac=;
-        b=F7aetce/12Y+BEpCUT//zDbCZ32/0HuWY10B0XmDvkE2EiDIBexv2YbwU0Oj1iGBaf
-         YH0nlmS4aMgXifDplxC7F8UWYfD+qYbEiy8Pg5dGdYquylBgew4XJcRFnEx/Y1xmZZTs
-         mJSxE9HEx6yR8Z7Ty9qIDQMGegdiCCXbowr4nnICtkwyoHgiuQ8DBtGLOQQF6VNZej2A
-         XisBJkKYM/FmsAstWJL9Y3m9zaeUbci1V2ta6AwPxyypmIxcPA06/lc/5cflt/sdlzYj
-         Ueem+nwzWm2k//x+OeHlr42kPPPRD8iPMMT2ZMUDNV+pI3tRFZHYuMwlrhJsou7NWJM8
-         TDsA==
-X-Forwarded-Encrypted: i=1; AJvYcCXqYdTtT7hfGWhY1jnwlqrDfK6AhMvvYPmAkifYBAXac24KmrkHuEzsU7GPZLpz4GqgnPzpZJ3e16NBwc0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxVW1pysFdykHobgGgrM4R4Fd9QScINabk/q91wDE8i2pHYJ7AE
-	L5dlRxc4gqIlOBRH+gX4dxhCQUCtMxnl2DQn6vH3O8h1JymmBCVJ
-X-Gm-Gg: ASbGncuET9A0Ek84/ZUeLN5NH2t4geCYs3Mg/5vdJX4dFsbSURp6Ox3v5O2almIQvuz
-	FDdLRxiniNo4+GqsAb3cE2pwrRQmG2429jwGe2ddyqtFxYjg3azwOpg0PhHVwSIxQaQBageEn+c
-	d8CTiCkxokInsO1YjQbOQrzeiEd7X+jfqJlGKnpK7VVK4BC0PZ0Xmjb49PPjEf4EjhwtOfW/bKh
-	twcz3UpMGN6mJ12KTvBmjqmSDR99bSc5hgtlQyBnR2OmUbh/u9Yd2y1Da7GpvoNEF7LU3Bi2tkb
-	Ym+zYGwrCAVmr2SBkSBx7MIcBJq3/7pnrJKOQ9jXLsr1qqDa1GR98dfQf1AK4GgleFxVJjZJqWr
-	az9sBdg==
-X-Google-Smtp-Source: AGHT+IHUy407AXP/D1ROO/LmdxtWq+o+s0QUTPE5kQwX8VwZkbgB5x8WGekrc1Twdd8caKcUaR8xug==
-X-Received: by 2002:a17:902:f551:b0:21f:5cd8:c67 with SMTP id d9443c01a7336-22e1eab7501mr168935695ad.31.1746536840311;
-        Tue, 06 May 2025 06:07:20 -0700 (PDT)
-Received: from ubuntu-Virtual-Machine.corp.microsoft.com ([2001:4898:80e8:72:2835:d413:5ee2:7e6a])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e15229384sm72628275ad.206.2025.05.06.06.07.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 06:07:19 -0700 (PDT)
-From: Tianyu Lan <ltykernel@gmail.com>
-To: kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	hpa@zytor.com,
-	Neeraj.Upadhyay@amd.com,
-	yuehaibing@huawei.com,
-	kvijayab@amd.com,
-	jacob.jun.pan@linux.intel.com,
-	jpoimboe@kernel.org,
-	tiala@microsoft.com
-Cc: linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 6/6] x86/x2apic-savic: Not set APIC backing page if Secure AVIC is not enabled.
-Date: Tue,  6 May 2025 09:07:11 -0400
-Message-Id: <20250506130712.156583-7-ltykernel@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250506130712.156583-1-ltykernel@gmail.com>
-References: <20250506130712.156583-1-ltykernel@gmail.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KRcGYiQ0"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 546D7Yj3508643
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 6 May 2025 08:07:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1746536854;
+	bh=3XNUZZEX+n4bAI/bF/pNMWXFZAZ9u0fFl4dFgytGVws=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=KRcGYiQ0D1G6wH505V6emFZIs99cO2D8mfQbhnc8p79Ax2o60c+4R11qZB/hzaTXQ
+	 qxpW0ZpEacMLhkUThZKvsg6xDrtg2kumEd4I1aYhYItxjsgjLb2hqNQIqFV1OrYc/a
+	 iGSMwP3nluPgkmML/Bt4MAq6v7MxXzQlohAwLWRw=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 546D7Y8S101942
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 6 May 2025 08:07:34 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 6
+ May 2025 08:07:33 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 6 May 2025 08:07:33 -0500
+Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 546D7XOu012170;
+	Tue, 6 May 2025 08:07:33 -0500
+From: Nishanth Menon <nm@ti.com>
+To: <kristo@kernel.org>, <ssantosh@kernel.org>, <d-gole@ti.com>,
+        Kendall
+ Willis <k-willis@ti.com>
+CC: Nishanth Menon <nm@ti.com>, <khilman@baylibre.com>, <msp@baylibre.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] firmware: ti_sci: Convert CPU latency constraint from us to ms
+Date: Tue, 6 May 2025 08:07:31 -0500
+Message-ID: <174653683694.692511.6512121885048153662.b4-ty@ti.com>
+X-Mailer: git-send-email 2.47.0
+In-Reply-To: <20250428205336.2947118-1-k-willis@ti.com>
+References: <20250428205336.2947118-1-k-willis@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-From: Tianyu Lan <tiala@microsoft.com>
+Hi Kendall Willis,
 
-When Secure AVIC is not enabled, init_apic_page()
-should return directly.
+On Mon, 28 Apr 2025 15:53:36 -0500, Kendall Willis wrote:
+> Fix CPU resume latency constraint units sent to device manager through the
+> TI SCI API. The device manager expects CPU resume latency to be in msecs
+> which is passed in with the TI SCI API [1]. CPU latency constraints are
+> set in userspace using the PM QoS framework which uses usecs as the unit.
+> Since PM QoS uses usecs for units and the device manager expects msecs as
+> the unit, TI SCI needs to convert from usecs to msecs before passing to
+> device manager.
+> 
+> [...]
 
-Signed-off-by: Tianyu Lan <tiala@microsoft.com>
----
- arch/x86/kernel/apic/x2apic_savic.c | 3 +++
- 1 file changed, 3 insertions(+)
+I have applied the following to branch ti-drivers-soc-next on [1].
+Thank you!
 
-diff --git a/arch/x86/kernel/apic/x2apic_savic.c b/arch/x86/kernel/apic/x2apic_savic.c
-index 0dd7e39931b0..fb09c0f9e276 100644
---- a/arch/x86/kernel/apic/x2apic_savic.c
-+++ b/arch/x86/kernel/apic/x2apic_savic.c
-@@ -333,6 +333,9 @@ static void init_apic_page(void)
- {
- 	u32 apic_id;
- 
-+	if (!cc_platform_has(CC_ATTR_SNP_SECURE_AVIC))
-+		return;
-+
- 	/*
- 	 * Before Secure AVIC is enabled, APIC msr reads are intercepted.
- 	 * APIC_ID msr read returns the value from the Hypervisor.
+[1/1] firmware: ti_sci: Convert CPU latency constraint from us to ms
+      commit: 9b808f7f395ae375a26e32046b680cf898dacc21
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent up the chain during
+the next merge window (or sooner if it is a relevant bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/ti/linux.git
 -- 
-2.25.1
+Regards,
+Nishanth Menon
+Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
 
