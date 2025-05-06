@@ -1,142 +1,141 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00DDF3002BE;
-	Tue,  6 May 2025 02:22:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1AFE335204;
+	Tue,  6 May 2025 02:22:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746498150; cv=none; b=DFA3a6PBovByedIy7i4lWXawQ3QhCRct+8LQMiwk21MpKPO0fm0T2DsTvn38wv7/O1v14SrbsQ27AJZTDlf2rbLvV9llendcODgXFSUtbeGjIwlF2X18uRdC4erihkONBQ1sJRqT64anIZM98CxeudrORKcNRXzDaSYV6SKxsOw=
+	t=1746498155; cv=none; b=i4JrjJCg/kSw0cuEFZ6Ux0ugx2hPE6ewGtcX21ddINddaB65v5N1pLEcQgpgjo2/prlZGqbjs/L3pOGZQS/HgeVChVX0pxO1v/QawBd3f7/2PuLV7p1vgTEuyIA9eK7cBhFYA27G5yChKOjSgHTiC9THjRUQQXVfR3j1PRP4GLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746498150; c=relaxed/simple;
-	bh=ISoOrhO6ZcvDNVxFY75Ue3gOfPZtfLJNwCTvo+6IKCY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=nQ3M183NJjPB11Jwzk8ODTTTZb+VwcycRkOCraXiEUyEjU2StfBL9GmT2JBBtYUOuhkPJCjAzBJMurD1gYzbbA7oi6xFxY6kub7akI/mKoNT6LhEvy+NvdKBVS9la4zV2+uasjVadOJlIX5qJPeGxn3VC4bC8bfN5E26YYExGsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=QKNCGEE5; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1746498155; c=relaxed/simple;
+	bh=EMvHJm6AlZw7vnabYT6ymwxOGXfXeVxYv1w37tTq9J0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Yhv5ztl3ipNMK9y8c+T8ON7PVk96PMrjZvfNHueFWmp2iq1bKFBccirUnFPiUJahU3aD2zLsWRXRDev9ycelJ4NhLJi9akWVlLkLvzSayBqdcz8VS3RERYMyk1tIXni00cfLiglfcoQT8P7zWt4Xn2IYEwEBvCwhJT3wYmJ9CNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EUcpS5c6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="QKNCGEE5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1746498143;
-	bh=v+uGUtGJ32z0FgIlZfhka6lWrnQk6smEFdDaYfbWoH8=;
-	h=Date:From:To:Cc:Subject:From;
-	b=QKNCGEE5fbWsEPrRdOMjiE/wjz+7Z4Z/lhBRWDuN8ogsHL9zdVXLS4F3Qp8yagddJ
-	 e5ZHn5jthJnzIJC+ik/sZgtzbXqj72IpIglLhpgICyZ7el2RuQ77QXWqb5bIcdibNq
-	 LCpXSr4zwv2mrttduH9iXe+3yrpylGeSmsv9Vkj00tk6eiySknhbMIChiqdAcG/vdU
-	 3KClsGBbqzENvTCr0BRE0DW3m/iOBRsQYzq2ssln4roaUAueIhvRjS9jtxPJ+KZEiF
-	 WTVu7J6P86HjXDSzmN2vEJ2NIcW+tPC5R/6erowG4pjI81AIWsltwui/egn+79nVjd
-	 xndpmWxr6u+wQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Zs2Gl47pBz4wcD;
-	Tue,  6 May 2025 12:22:23 +1000 (AEST)
-Date: Tue, 6 May 2025 12:22:22 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Linux Crypto List <linux-crypto@vger.kernel.org>, Linux Kernel Mailing
- List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: build failure after merge of the crypto tree
-Message-ID: <20250506122222.2a910820@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EUcpS5c6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02DB0C4CEE9;
+	Tue,  6 May 2025 02:22:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746498155;
+	bh=EMvHJm6AlZw7vnabYT6ymwxOGXfXeVxYv1w37tTq9J0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=EUcpS5c6eg3gU0f+X9VzsnwVt0utXOzG5yD7Cap00EXM+Bl7sgzcXdaAxiPdtjiDJ
+	 WVUfEAntQSmaylLM/ydMklMceDgX2n/kYSHdsNoNYJrkAGrlSeqpm/A5Pqgm3x2xY6
+	 WA+lGR15Psucq5Ucf6MnGDUkE98Gd9rmEWqXUU+ozJ5TlKA//rPVbCYo3T0T2jVeB4
+	 T1ztMsvZY5NSPWaSiRHV2lbxodLevHHZbD/G4wcSkBuK54ColdVVxVJKA+rAuaBn2G
+	 LU7rlIleXIY+ru3cGZJd6cLlarT18QNina/fReoRucIXHEch0o07LSYscC4kWmE9IK
+	 JrhgrsJdV2AoA==
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Baruch Siach <baruch@tkos.co.il>
+Cc: linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] dt-bindings: timer: Convert cnxt,cx92755-timer to DT schema
+Date: Mon,  5 May 2025 21:22:31 -0500
+Message-ID: <20250506022232.2587186-1-robh@kernel.org>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/non9b/L3zyiXLRua3DSV_Sr";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 
---Sig_/non9b/L3zyiXLRua3DSV_Sr
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Convert the Conexant Digicolor SoCs Timer binding to DT schema format.
+It's a straight-forward conversion.
 
-Hi all,
+Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+---
+ .../bindings/timer/cnxt,cx92755-timer.yaml    | 49 +++++++++++++++++++
+ .../bindings/timer/digicolor-timer.txt        | 18 -------
+ 2 files changed, 49 insertions(+), 18 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/timer/cnxt,cx92755-timer.yaml
+ delete mode 100644 Documentation/devicetree/bindings/timer/digicolor-timer.txt
 
-After merging the crypto tree, today's linux-next build (x86_64
-allmocdonfig) failed like this:
+diff --git a/Documentation/devicetree/bindings/timer/cnxt,cx92755-timer.yaml b/Documentation/devicetree/bindings/timer/cnxt,cx92755-timer.yaml
+new file mode 100644
+index 000000000000..8f1a5af32a36
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/cnxt,cx92755-timer.yaml
+@@ -0,0 +1,49 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/cnxt,cx92755-timer.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Conexant Digicolor SoCs Timer Controller
++
++maintainers:
++  - Baruch Siach <baruch@tkos.co.il>
++
++properties:
++  compatible:
++    const: cnxt,cx92755-timer
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    description: Contains 8 interrupts, one for each timer
++    items:
++      - description: interrupt for timer 0
++      - description: interrupt for timer 1
++      - description: interrupt for timer 2
++      - description: interrupt for timer 3
++      - description: interrupt for timer 4
++      - description: interrupt for timer 5
++      - description: interrupt for timer 6
++      - description: interrupt for timer 7
++
++  clocks:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++
++additionalProperties: false
++
++examples:
++  - |
++    timer@f0000fc0 {
++      compatible = "cnxt,cx92755-timer";
++      reg = <0xf0000fc0 0x40>;
++      interrupts = <19>, <31>, <34>, <35>, <52>, <53>, <54>, <55>;
++      clocks = <&main_clk>;
++    };
+diff --git a/Documentation/devicetree/bindings/timer/digicolor-timer.txt b/Documentation/devicetree/bindings/timer/digicolor-timer.txt
+deleted file mode 100644
+index d1b659bbc29f..000000000000
+--- a/Documentation/devicetree/bindings/timer/digicolor-timer.txt
++++ /dev/null
+@@ -1,18 +0,0 @@
+-Conexant Digicolor SoCs Timer Controller
+-
+-Required properties:
+-
+-- compatible : should be "cnxt,cx92755-timer"
+-- reg : Specifies base physical address and size of the "Agent Communication"
+-  timer registers
+-- interrupts : Contains 8 interrupts, one for each timer
+-- clocks: phandle to the main clock
+-
+-Example:
+-
+-	timer@f0000fc0 {
+-		compatible = "cnxt,cx92755-timer";
+-		reg = <0xf0000fc0 0x40>;
+-		interrupts = <19>, <31>, <34>, <35>, <52>, <53>, <54>, <55>;
+-		clocks = <&main_clk>;
+-	};
+-- 
+2.47.2
 
-x86_64-linux-gnu-ld: vmlinux.o: in function `__chacha20poly1305_encrypt':
-chacha20poly1305.c:(.text+0x1a690e1): undefined reference to `poly1305_init'
-x86_64-linux-gnu-ld: chacha20poly1305.c:(.text+0x1a690f1): undefined refere=
-nce to `poly1305_update'
-x86_64-linux-gnu-ld: chacha20poly1305.c:(.text+0x1a69145): undefined refere=
-nce to `poly1305_update'
-x86_64-linux-gnu-ld: chacha20poly1305.c:(.text+0x1a69182): undefined refere=
-nce to `poly1305_update'
-x86_64-linux-gnu-ld: chacha20poly1305.c:(.text+0x1a69192): undefined refere=
-nce to `poly1305_final'
-x86_64-linux-gnu-ld: chacha20poly1305.c:(.text+0x1a6922d): undefined refere=
-nce to `poly1305_update'
-x86_64-linux-gnu-ld: chacha20poly1305.c:(.text+0x1a69246): undefined refere=
-nce to `poly1305_update'
-x86_64-linux-gnu-ld: vmlinux.o: in function `__chacha20poly1305_decrypt':
-chacha20poly1305.c:(.text+0x1a69480): undefined reference to `poly1305_init'
-x86_64-linux-gnu-ld: chacha20poly1305.c:(.text+0x1a69490): undefined refere=
-nce to `poly1305_update'
-x86_64-linux-gnu-ld: chacha20poly1305.c:(.text+0x1a694c8): undefined refere=
-nce to `poly1305_update'
-x86_64-linux-gnu-ld: chacha20poly1305.c:(.text+0x1a69505): undefined refere=
-nce to `poly1305_update'
-x86_64-linux-gnu-ld: chacha20poly1305.c:(.text+0x1a69510): undefined refere=
-nce to `poly1305_final'
-x86_64-linux-gnu-ld: chacha20poly1305.c:(.text+0x1a695eb): undefined refere=
-nce to `poly1305_update'
-x86_64-linux-gnu-ld: chacha20poly1305.c:(.text+0x1a69604): undefined refere=
-nce to `poly1305_update'
-x86_64-linux-gnu-ld: vmlinux.o: in function `chacha20poly1305_crypt_sg_inpl=
-ace':
-chacha20poly1305.c:(.text+0x1a6c3f6): undefined reference to `poly1305_init'
-x86_64-linux-gnu-ld: chacha20poly1305.c:(.text+0x1a6c555): undefined refere=
-nce to `poly1305_update'
-x86_64-linux-gnu-ld: chacha20poly1305.c:(.text+0x1a6c576): undefined refere=
-nce to `poly1305_update'
-x86_64-linux-gnu-ld: chacha20poly1305.c:(.text+0x1a6c5af): undefined refere=
-nce to `poly1305_update'
-x86_64-linux-gnu-ld: chacha20poly1305.c:(.text+0x1a6c5d8): undefined refere=
-nce to `poly1305_update'
-x86_64-linux-gnu-ld: chacha20poly1305.c:(.text+0x1a6c617): undefined refere=
-nce to `poly1305_final'
-x86_64-linux-gnu-ld: chacha20poly1305.c:(.text+0x1a6c7c6): undefined refere=
-nce to `poly1305_final'
-x86_64-linux-gnu-ld: chacha20poly1305.c:(.text+0x1a6c7f9): undefined refere=
-nce to `poly1305_update'
-x86_64-linux-gnu-ld: chacha20poly1305.c:(.text+0x1a6c822): undefined refere=
-nce to `poly1305_update'
-x86_64-linux-gnu-ld: chacha20poly1305.c:(.text+0x1a6c854): undefined refere=
-nce to `poly1305_update'
-x86_64-linux-gnu-ld: chacha20poly1305.c:(.text+0x1a6c888): undefined refere=
-nce to `poly1305_final'
-
-Caused by commit
-
-  10a6d72ea355 ("crypto: lib/poly1305 - Use block-only interface")
-
-and maybe
-
-  a298765e28ad ("crypto: chacha20poly1305 - Use lib/crypto poly1305")
-
-I have used the crypto tree from next-20250505 for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/non9b/L3zyiXLRua3DSV_Sr
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgZcl4ACgkQAVBC80lX
-0GxexwgAjqdJDJ/bEJ2Jeg4q2RHlaTHwHhYqF5q2nqYUQV4HYjSdU+iq8VOp+O0Y
-95SzLLL3dhF4hlHFgbEXQbSeye/SCoz7rWvhdMYf2UrNuEciw1/BCFWM8+yUrmNR
-q/RG81Vsmt28al5eH9Tzrhwqokykro7WMVSkp/b0tl3/eDqYGs72qPm/CzpucNNV
-wn9R+4+5z4ZPzuWmUj/UKaxSjsmWZ/qxxFdORWC/pHNqRJC8ppnlnKKf1gG4Zsm5
-fpLEHC94te2tMvy70vvu/mTISenUFBE0cgw4OOEt+CX7djoxR6lAy9XGsf8OrNlq
-xtSWIcYIMLJbjMuSdUZ8mUpPDMc2WA==
-=iKS9
------END PGP SIGNATURE-----
-
---Sig_/non9b/L3zyiXLRua3DSV_Sr--
