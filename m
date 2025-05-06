@@ -1,134 +1,111 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D48311865E3;
-	Tue,  6 May 2025 07:47:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65C2526AEC
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 07:50:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746517680; cv=none; b=kRz4OGqXFIME/HWRmYrCnLimSQr+h9ws7NCCNQ3vAPNfUUWMNeD3xuAvFd8xjfmxy+ZQcpPhTTbgdSW13Lrh/mnuyTHd8eOAnxCE26Q9is8zfZGspTXxx0SouLEaI0W+fWfUxIgQGxj1O1Hau0t+6t1ELhdaHLhtlwsC0O83c48=
+	t=1746517807; cv=none; b=Ele38rTDt3nilnX621Qj/UHmpaIfbZuhWJllpeZcHNJ3HjuG5lTF3GkCCWLN/zk7XNOvmcIxWpO4v4cmJxBDItZnQoYF2Bv6MuzKk+W695xxkXw2Ktw9NAQfqXiCMgcOR79QyW0Dhe5/vEiOrAeL2j5wQ1nyJ3mHce2OO6WDCQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746517680; c=relaxed/simple;
-	bh=p7pvOZB2NRNvGY3O257XuxFkgiCcQz8KrGDhaUE1jeM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=OmGgwQ2E3HCu0EjAsjkCWyVBIpDJtKWY+Lh3KNqyIsq/eOeG2/wojn2b/mu9+PviSNzzkQnR+tFxdiRM8GTO2Mk9VFWWVDeU4rEPb4KgmyucJb72yQQyETfAbJ8KIa2wp6urYRQBjUzI2fVEa15MfB5En92wK0F8258ir6Rlgk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FcrvVufE; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FcrvVufE"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43cfebc343dso35031775e9.2;
-        Tue, 06 May 2025 00:47:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746517677; x=1747122477; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=cP0pNdBoaxygoFAdiEmhS7Skmfb1gZrZwVoFfqQfonA=;
-        b=FcrvVufEuwppPtCTbIosdQu9c3e0sjkwqNPJ1bOSQ5zd1sssbH2bo/rcqSpVQ9rgor
-         xjRJjnODdWt3RYF09ZDC0qr8/MAWPzNW5sOAUBVpNMMs7Zleu7u6SKDvzFZKIsJpfqec
-         ECfeShkgdnE0/j3ESHWMOBL68Zs23kg8H8+2ZsgyJYbKh81wRXspBdeCpLcLK/k4JXXd
-         9KRmTue2aTGksptkVBFCYovjmUCkfMrstgXisSxys0sn5m792LCxxERvVtuq4FdRR2ti
-         jlt5VGxCHsbA0a94/OAK0Gxpu5oBG93yi7CmeKKgRx5JfMdY8Q4t9Ed42CfX2KPXS9lG
-         psLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746517677; x=1747122477;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=cP0pNdBoaxygoFAdiEmhS7Skmfb1gZrZwVoFfqQfonA=;
-        b=vbzxbs4bgOfyiT5jvGJOHO/btMr0qHdPFZAgzkzdTTWsgXx7qll4MmrIvCiFy1uQz4
-         5w1xUq0vAlTLMoRyOXK5+doAmDxyAKd4tIgwojSJJqmJAOfE/a6vMlEkNxi/ug7VscNU
-         j0G8j+I9VsJpLBMy768hH74Xn4BjptKQNWYjh3RekQ5BSM8sL1hslt4F7ntVHaGMCrEd
-         rW79Eaw3r1xTVXuOkhSsXPY1osXDpyJ+Lf9BPCJ9awDv3Hb9fdzz9QZ+JZmZr4vd9v+s
-         uKntk1s4V4/lKatjoNxAkdadXatkiBemG+pwvJ5P/pZx3yIdRlMTZ+eGbmyuW07NoXCV
-         vkWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVW92RZ65kBpDzJXtTZ4CbBlg7vGnyzTor5wqA+2/eMSGuZLa89WSjcL26YsRUAH5n53IqX2Zk3qK0=@vger.kernel.org, AJvYcCXd9F66/Ni7cHzXBsos9HqI9stMFDo+HbXq9P4BqeT2ioT5YXWLpT4v2Z45V4/yZ0ZEXCt1QBfRT/zb8+hb@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQXFe00+TgFva57eM6w10qlc1XUT3X9hI4p/GXDAECjIxNhgLj
-	sVSlCjJh6oiv4noTSeKiZvChXbDHAaroPIUMJLam2FXOSrRZLUmIT7l1ZGKk
-X-Gm-Gg: ASbGnctfKnNG5OnXTCgfhIZioSBLA2nrfv6qCt1Go2Nk8alyav8vvrsHX9jE6GSbiXh
-	rcbISaqG7ZXozD0kOjQWwYCP1OBiWbpKYcXDsHiiA1NYrsH4x06NyMaRRZNIwwPvvFWjRPmZoeE
-	kBZOYx2CQeKAxdTpOBow1chx9vzu/8TX3ksFKE+RBETXk2Rjw1Hdrmh2XE3KeKtMorJO/38V/A2
-	3h/qqEn93HyeJC3cS3AEIdc9Rm/KUI00irNQBfiO67GH/u8UFf9xkU7Qkrq2A41U8pmHGW4pO6E
-	jTr8fbjjlue+sCSkbajgU68oYnt/nJejbjzh3r/2vJiFFs1T7e4H3XGDSTubHWgdrSo04DRcM4Y
-	yjrUc2Jx08hqQn1eAivIL8ZDTnA==
-X-Google-Smtp-Source: AGHT+IGM/ONloZ3cXEEt7TBduShHNzqs0myDIHa0Xt1OqT9XaAYxmOg1/XJiS7mExmrFrJsw9Fuh5g==
-X-Received: by 2002:a05:600c:1c91:b0:43c:fe90:1282 with SMTP id 5b1f17b1804b1-441bbea0cdamr113462375e9.7.1746517676785;
-        Tue, 06 May 2025 00:47:56 -0700 (PDT)
-Received: from ?IPv6:2001:818:ea56:d000:56e0:ceba:7da4:6673? ([2001:818:ea56:d000:56e0:ceba:7da4:6673])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099ae7a46sm12535159f8f.44.2025.05.06.00.47.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 00:47:56 -0700 (PDT)
-Message-ID: <bf75a685e8e94a90a84123122994592a505b8d02.camel@gmail.com>
-Subject: Re: [PATCH v3] iio: backend: fix out-of-bound write
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Markus Burri <markus.burri@mt.com>, linux-kernel@vger.kernel.org
-Cc: Nuno Sa <nuno.sa@analog.com>, Olivier Moysan
- <olivier.moysan@foss.st.com>,  Jonathan Cameron <jic23@kernel.org>,
- Lars-Peter Clausen <lars@metafoo.de>,  linux-iio@vger.kernel.org, Markus
- Burri <markus.burri@bbv.ch>
-Date: Tue, 06 May 2025 07:48:20 +0100
-In-Reply-To: <20250505203830.5117-1-markus.burri@mt.com>
-References: <20250505203830.5117-1-markus.burri@mt.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	s=arc-20240116; t=1746517807; c=relaxed/simple;
+	bh=Tsv8HLmROnKwY1//B4jmslP8r2buTeYlf1eAWRUOm+E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YCDGvCatlPoAE8JSHKqEj/in0barG60BsnNdXE0d/LZVUyxP+0nzcH1riQHv2SRk9uedbJSkzGmuDAd1aOc1/NMWfiEWnEJchvcBULwI3yZBsClJ+dsb8e2ubGjBHfJLJv34QSpp12KOcJlyU5euCUQm9fNrbeFY/eG2JOu0xlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: b5578d002a4e11f0b29709d653e92f7d-20250506
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:cb29c965-2077-4190-aee9-9240cac32254,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:6493067,CLOUDID:ea5e65c498a5b89f7f91986f7daa7aa2,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102,TC:nil,Content:0|50,EDM:
+	-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,
+	AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: b5578d002a4e11f0b29709d653e92f7d-20250506
+Received: from node2.com.cn [(10.44.16.197)] by mailgw.kylinos.cn
+	(envelope-from <huangbing@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 521657902; Tue, 06 May 2025 15:49:58 +0800
+Received: from node2.com.cn (localhost [127.0.0.1])
+	by node2.com.cn (NSMail) with SMTP id 71D19B804EBD;
+	Tue,  6 May 2025 15:49:58 +0800 (CST)
+X-ns-mid: postfix-6819BF26-379280122
+Received: from [10.42.12.196] (unknown [10.42.12.196])
+	by node2.com.cn (NSMail) with ESMTPA id DA6B4B80758A;
+	Tue,  6 May 2025 07:49:57 +0000 (UTC)
+Message-ID: <20cf7a95-68c0-4e18-ab24-9112b07a2697@kylinos.cn>
+Date: Tue, 6 May 2025 15:49:57 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] tools/sched_ext: Fix errors when running make mrproper
+To: Andrea Righi <arighi@nvidia.com>
+Cc: tj@kernel.org, void@manifault.com, changwoo@igalia.com,
+ joshdon@google.com, brho@google.com, haoluo@google.com,
+ linux-kernel@vger.kernel.org
+References: <20250506073432.2291120-1-huangbing@kylinos.cn>
+ <aBm8ksy5IQAbhga1@gpd3>
+Content-Language: en-US
+From: Bing Huang <huangbing@kylinos.cn>
+In-Reply-To: <aBm8ksy5IQAbhga1@gpd3>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, 2025-05-05 at 22:38 +0200, Markus Burri wrote:
-> The buffer is set to 80 character. If a caller write more characters,
-> count is truncated to the max available space in "simple_write_to_buffer"=
-.
-> But afterwards a string terminator is written to the buffer at offset cou=
-nt
-> without boundary check. The zero termination is written OUT-OF-BOUND.
->=20
-> Add a check that the given buffer is smaller then the buffer to prevent.
->=20
-> Fixes: 035b4989211d ("iio: backend: make sure to NULL terminate stack buf=
-fer")
-> Signed-off-by: Markus Burri <markus.burri@mt.com>
-> ---
 
-LGTM
-
-Reviewed-by: Nuno S=C3=A1 <nuno.sa@analog.com>
-
-> =C2=A0drivers/iio/industrialio-backend.c | 5 ++++-
-> =C2=A01 file changed, 4 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/iio/industrialio-backend.c b/drivers/iio/industriali=
-o-
-> backend.c
-> index a43c8d1bb3d0..4a364e038449 100644
-> --- a/drivers/iio/industrialio-backend.c
-> +++ b/drivers/iio/industrialio-backend.c
-> @@ -155,11 +155,14 @@ static ssize_t iio_backend_debugfs_write_reg(struct=
- file
-> *file,
-> =C2=A0	ssize_t rc;
-> =C2=A0	int ret;
-> =C2=A0
-> +	if (count >=3D sizeof(buf) - 1)
-> +		return -ENOSPC;
-> +
-> =C2=A0	rc =3D simple_write_to_buffer(buf, sizeof(buf) - 1, ppos, userbuf,=
- count);
-> =C2=A0	if (rc < 0)
-> =C2=A0		return rc;
-> =C2=A0
-> -	buf[count] =3D '\0';
-> +	buf[rc] =3D '\0';
-
-you could have mentioned this change in the commit message...
-
->=20
-> =C2=A0	ret =3D sscanf(buf, "%i %i", &back->cached_reg_addr, &val);
-> =C2=A0
->=20
-> base-commit: b4432656b36e5cc1d50a1f2dc15357543add530e
-
+On 5/6/25 15:38, Andrea Righi wrote:
+> On Tue, May 06, 2025 at 03:34:32PM +0800, Bing Huang wrote:
+>> If the system environment used to compile the kernel code does not
+>> have the BTF feature enabled, running make mrproper will result in
+>> errors similar to the following:
+>>
+>> Makefile:84: *** Cannot find a vmlinux for VMLINUX_BTF at any of "  ../../vmlinux /sys/kernel/btf/vmlinux /boot/vmlinux-4.4.131-20190505.kylin.server-generic".  Stop.
+>> make[2]: *** [Makefile:192: sched_ext_clean] Error 2
+>> make[1]: *** [/home/huangbing/klinux/Makefile:1374: sched_ext] Error 2
+>> make: *** [Makefile:236: __sub-make] Error 2
+>>
+>> Signed-off-by: Bing Huang <huangbing@kylinos.cn>
+>> Signed-off-by: Andrea Righi <arighi@nvidia.com>
+> You can just add Suggested-by here, no need to add my SoB line. Apart than
+> that, looks good to me.
+>
+> Reviewed-by: Andrea Righi <arighi@nvidia.com>
+>
+> Thanks,
+> -Andrea
+>
+OK. Thanks! v3 will sent.
+>> ---
+>>
+>> v1->v2: Sort MAKECMDGOALS and check for clean target
+>>
+>>   tools/sched_ext/Makefile | 2 ++
+>>   1 file changed, 2 insertions(+)
+>>
+>> diff --git a/tools/sched_ext/Makefile b/tools/sched_ext/Makefile
+>> index ca3815e572d8..212717aa78af 100644
+>> --- a/tools/sched_ext/Makefile
+>> +++ b/tools/sched_ext/Makefile
+>> @@ -79,9 +79,11 @@ VMLINUX_BTF_PATHS ?= $(if $(O),$(O)/vmlinux)					\
+>>   		     /sys/kernel/btf/vmlinux					\
+>>   		     /boot/vmlinux-$(shell uname -r)
+>>   VMLINUX_BTF ?= $(abspath $(firstword $(wildcard $(VMLINUX_BTF_PATHS))))
+>> +ifneq ($(sort $(MAKECMDGOALS)),clean)
+>>   ifeq ($(VMLINUX_BTF),)
+>>   $(error Cannot find a vmlinux for VMLINUX_BTF at any of "$(VMLINUX_BTF_PATHS)")
+>>   endif
+>> +endif
+>>   
+>>   BPFTOOL ?= $(DEFAULT_BPFTOOL)
+>>   
+>> -- 
+>> 2.25.1
+>>
