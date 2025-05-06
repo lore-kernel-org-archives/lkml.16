@@ -1,242 +1,182 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11AE54B1E6D;
-	Tue,  6 May 2025 20:18:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C00D372;
+	Tue,  6 May 2025 20:23:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746562685; cv=none; b=gmCV5mFMXbI10S3WJB+r6XAjfWLcCyHnVH2On7yP3S74SdDEDT73j52XzD5lCS2bkgOEjFd2rpkn2Sc5eOmTZUAlkWJ8azxgA/acnbwAxOVsZfCZWvejPms6DULXFtu+XVYJ6e3V+cQiRNPRyWH2xo6K8EBu1NTiEaulBrZ6lq0=
+	t=1746563004; cv=none; b=Jxqp8ZTK79txLXxeHC0RYSRTJGzLad/g8gRws9l/3cQ+WR34RyYKqjxbXcA/zIuY91YiYHSCgelKpx8ErUCysTSyqx5r8Z0vVXecMRNVupY3oZEuncyV8ToYzlPaT2gPlAJ+wLKb7pBDhiZEJj/pYCNeEy8ocvlJLXnRenyuDTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746562685; c=relaxed/simple;
-	bh=jMJosw9hZXCTi7Wr9id5YVeiCBRHKhharw17GPJkFP4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=N943859Ndr8GCHhU9Nn914behTKY0MDF55DUy5a9toaGQDLB4roh+l/tkZ7ub/NFGz0KxtQJgq5Y1JpNcm8ZVGE6EVmw5/J4Ow6sTY+racOgIysiYyE1XPfuTMq8LYCHSnbpXGXWyxkveimgE6eMdYJmeoYPvD/qWZF+Vvgwf8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aUkU0EFp; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ISTqBmHf; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1746563004; c=relaxed/simple;
+	bh=JZoS77bwlb3qo0vjs7rkqCS4ofr7Fru3B+rU59+jDAQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SEuvrVDm5G+dKrHYyT2dEaG9f2JISYQI2WMoR3sWFK5pTG0f3TWtOud0042edNbdpKA28zUHyOvd5k3Pc5kLtQ7NwkEaA9i6yRV0FOvn7w7OZdtWHJM6Hu80QZFzAVIKmfOhjiIIjknFO8Z3ai8UwexKvy7936JAMvN7FRi+XHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a8v7+Z63; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aUkU0EFp";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ISTqBmHf"
-From: Nam Cao <namcao@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746562680;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=JL3KJECzkhV/qvzTbpNQakf8HDmxnrdG6VFLv0G/Yhs=;
-	b=aUkU0EFpALSvYtaPELyXgLD9eiLYltdKXUYsXtn2Hjj7y0cBwyrAqj6CQw/W95tk30NxFA
-	3fY4DzE3PgVUTsUjJI8Wc6EuBZit4uZAdohzfaY4asalDv+2Orx6W44OW9qs/XxXRyPCa/
-	Gq9NwHkfTtdyx9mfAJQJJ0pf2xIveuz7lgYsWSm5Jz4Q0FUVPYB+BtHz5ddOJx5XdaYPtt
-	uTQYChI2SMNI5vIy5toFVg+uSB0kpA/V6DykHegnQp1NHMGAkuNXFNfjF7/AAcd5zU+Raa
-	5BlkmvonCVHpQCmgTReoGtUaH6CtTCPm/T7bel1tLvsSPFkVPtmR9qRKvJSkXQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746562680;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=JL3KJECzkhV/qvzTbpNQakf8HDmxnrdG6VFLv0G/Yhs=;
-	b=ISTqBmHfkw0nuQ6Ti7cf04Qt+m5Hevz5/81ZA22DDowMHZgue8Ig2w2rnbpc0FfAs420BP
-	Blzxi4Q1mmyZgTDQ==
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	stable@vger.kernel.org
-Cc: Kai Zhang <zhangkai@iscas.ac.cn>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Samuel Holland <samuel.holland@sifive.com>,
-	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@rivosinc.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Palmer Dabbelt <palmer@rivosinc.com>,
-	Nam Cao <namcao@linutronix.de>
-Subject: [PATCH stable v6.6] riscv: Pass patch_text() the length in bytes
-Date: Tue,  6 May 2025 22:17:52 +0200
-Message-Id: <20250506201752.1915639-1-namcao@linutronix.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a8v7+Z63"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF1EFC4CEE4;
+	Tue,  6 May 2025 20:23:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746563003;
+	bh=JZoS77bwlb3qo0vjs7rkqCS4ofr7Fru3B+rU59+jDAQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=a8v7+Z63AUZmTM6mHNpAl6ots9EDK1X4LCKQZVEdhnbgzLPe0A5TKE0HwPQXdyyNZ
+	 kTRkriSKyQpB344LDzQKbzCXjZcyq2t5vLVNVvraJriFQA4KF1FaA2qZ0dlwHqojHb
+	 cQEVYtTguGIzCjkM+93OzT4a46AYW9pVsyjuKiCyfmWzMxuSOSwaFx4Ak9Q9Nux/vK
+	 zS18CyoDrdHMtCHCkITnbks4LJcHLQIfLK82aNLZEPpN/+g2esQYo+4f18nMRuHEqO
+	 VpXxjBmybGBjvZzvCIgVkd6sROWjVDPPMSvqPq53sgbkD3A6pO8zPh4maFX7oXhnRP
+	 HfHRfZmzA9elQ==
+Date: Tue, 6 May 2025 13:23:21 -0700
+From: Bjorn Andersson <andersson@kernel.org>
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
+	neil.armstrong@linaro.org, Konrad Dybcio <konradybcio@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] arm64: dts: qcom: sm8650: add iris DT node
+Message-ID: <4lmt5cgg2tanrughooxw73h2brwyyc6ifqgo3ju6iz4enkvkic@umeijjk4ijxg>
+References: <20250424-topic-sm8x50-upstream-iris-8650-dt-v2-1-dd9108bf587f@linaro.org>
+ <3498cfda-a738-449d-9d9f-754bbc8125c2@oss.qualcomm.com>
+ <db91a526-e2f8-48f8-a071-f3fcc75235be@linaro.org>
+ <CAO9ioeWaPKXHgNGPx5q34+RP59PMLD+EVK5fQsN89KC9A1ca-Q@mail.gmail.com>
+ <d79790e5-52c9-4135-8f3c-af797145fa2d@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d79790e5-52c9-4135-8f3c-af797145fa2d@oss.qualcomm.com>
 
-From: Samuel Holland <samuel.holland@sifive.com>
+On Mon, Apr 28, 2025 at 11:14:18PM +0200, Konrad Dybcio wrote:
+> On 4/28/25 12:48 PM, Dmitry Baryshkov wrote:
+> > On Mon, 28 Apr 2025 at 11:18, Neil Armstrong <neil.armstrong@linaro.org> wrote:
+> >>
+> >> Hi,
+> >>
+> >> On 25/04/2025 23:49, Konrad Dybcio wrote:
+> >>> On 4/24/25 6:32 PM, Neil Armstrong wrote:
+> >>>> Add DT entries for the sm8650 iris decoder.
+> >>>>
+> >>>> Since the firmware is required to be signed, only enable
+> >>>> on Qualcomm development boards where the firmware is
+> >>>> available.
+> >>>>
+> >>>> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> >>>> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+> >>>> ---
+> >>>> Changes in v2:
+> >>>> - removed useless firmware-name
+> >>>> - Link to v1: https://lore.kernel.org/r/20250418-topic-sm8x50-upstream-iris-8650-dt-v1-1-80a6ae50bf10@linaro.org
+> >>>> ---
+> >>>
+> >>> [...]
+> >>>
+> >>>> +            iris: video-codec@aa00000 {
+> >>>> +                    compatible = "qcom,sm8650-iris";
+> >>>> +                    reg = <0 0x0aa00000 0 0xf0000>;
+> >>>> +
+> >>>> +                    interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH 0>;
+> >>>> +
+> >>>> +                    power-domains = <&videocc VIDEO_CC_MVS0C_GDSC>,
+> >>>> +                                    <&videocc VIDEO_CC_MVS0_GDSC>,
+> >>>> +                                    <&rpmhpd RPMHPD_MXC>,
+> >>>> +                                    <&rpmhpd RPMHPD_MMCX>;
+> >>>> +                    power-domain-names = "venus",
+> >>>> +                                         "vcodec0",
+> >>>> +                                         "mxc",
+> >>>> +                                         "mmcx";
+> >>>> +
+> >>>> +                    operating-points-v2 = <&iris_opp_table>;
+> >>>> +
+> >>>> +                    clocks = <&gcc GCC_VIDEO_AXI0_CLK>,
+> >>>> +                             <&videocc VIDEO_CC_MVS0C_CLK>,
+> >>>> +                             <&videocc VIDEO_CC_MVS0_CLK>;
+> >>>> +                    clock-names = "iface",
+> >>>> +                                  "core",
+> >>>> +                                  "vcodec0_core";
+> >>>> +
+> >>>> +                    interconnects = <&gem_noc MASTER_APPSS_PROC QCOM_ICC_TAG_ACTIVE_ONLY
+> >>>> +                                     &config_noc SLAVE_VENUS_CFG QCOM_ICC_TAG_ACTIVE_ONLY>,
+> >>>> +                                    <&mmss_noc MASTER_VIDEO QCOM_ICC_TAG_ALWAYS
+> >>>> +                                     &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>;
+> >>>> +                    interconnect-names = "cpu-cfg",
+> >>>> +                                         "video-mem";
+> >>>> +
+> >>>> +                    /* FW load region */
+> >>>
+> >>> I don't think this comment brings value
+> >>
+> >> Right
+> >>
+> >>>
+> >>>> +                    memory-region = <&video_mem>;
+> >>>> +
+> >>>> +                    resets = <&gcc GCC_VIDEO_AXI0_CLK_ARES>,
+> >>>> +                             <&videocc VIDEO_CC_XO_CLK_ARES>,
+> >>>> +                             <&videocc VIDEO_CC_MVS0C_CLK_ARES>;
+> >>>> +                    reset-names = "bus",
+> >>>> +                                  "xo",
+> >>>> +                                  "core";
+> >>>> +
+> >>>> +                    iommus = <&apps_smmu 0x1940 0>,
+> >>>> +                             <&apps_smmu 0x1947 0>;
+> >>>
+> >>> I think you may also need 0x1942 0x0 (please also make the second value / SMR
+> >>> mask hex)> +
+> >>
+> >> I don't see 0x1942 in the downstream DT, and which mask should I set ? 0x1 ?
+> 
+> I saw it in docs only, maybe Vikash or Dikshita can chime in whether it's
+> necessary. It would have mask 0x0 if so.
+> 
+> >>
+> >>>> +                    dma-coherent;
+> >>>> +
+> >>>> +                    /*
+> >>>> +                     * IRIS firmware is signed by vendors, only
+> >>>> +                     * enable in boards where the proper signed firmware
+> >>>> +                     * is available.
+> >>>> +                     */
+> >>>
+> >>> Here's to another angry media article :(
+> >>>
+> >>> Please keep Iris enabled.. Vikash reassured me this is not an
+> >>> issue until the user attempts to use the decoder [1], and reading
+> >>> the code myself I come to the same conclusion (though I haven't given
+> >>> it a smoke test - please do that yourself, as you seem to have a better
+> >>> set up with these platforms).
+> >>>
+> >>> If the userland is sane, it should throw an error and defer to CPU
+> >>> decoding.
+> >>>
+> >>> This is >>unlike venus<< which if lacking firmware at probe (i.e. boot)
+> >>> would prevent .sync_state
+> >>
+> >> Well sync with Bjorn who asked me to only enable on board with available firmware ;-)
+> > 
+> > I'd second him here: if there is no firmware, don't enable the device.
+> > It's better than the users having cryptic messages in the dmesg,
+> > trying to understand why the driver errors out.
+> 
+> I don't agree.. the firmware may appear later at boot (e.g. user installs a
+> small rootfs and manually pulls in linux-firmware). Plus without the firmware,
+> we can still power on and off the IP block, particularly achieve sync_state
+> regardless of it
+> 
 
-[ Upstream commit 51781ce8f4486c3738a6c85175b599ad1be71f89 ]
+Not "available during boot", but rather "available for a particular
+board".
 
-patch_text_nosync() already handles an arbitrary length of code, so this
-removes a superfluous loop and reduces the number of icache flushes.
+We generally avoid enabling device_nodes that depend on vendor-signed
+firmware until someone has tested the device on such board and specified
+the proper path to the vendor-specific firmware.
 
-Reviewed-by: Bj=C3=B6rn T=C3=B6pel <bjorn@rivosinc.com>
-Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-Link: https://lore.kernel.org/r/20240327160520.791322-6-samuel.holland@sifi=
-ve.com
-Signed-off-by: Palmer Dabbelt <palmer@rivosinc.com>
-[apply to v6.6]
-Signed-off-by: Nam Cao <namcao@linutronix.de>
----
-this patch fixes a bug introduced by commit b1756750a397 ("riscv: kprobes: =
-Use
-patch_text_nosync() for insn slots"), which replaced patch_text() with
-patch_text_nosync(). That is broken, because patch_text() and
-patch_text_nosync() takes different parameters (number of instruction vs
-patched length in bytes).
+Are you suggesting that we should leave this enabled on all boards for
+some reason (perhaps to ensure that resources are adequately managed)?
 
-This bug was reported in:
-https://lore.kernel.org/stable/c7e463c0-8cad-4f4e-addd-195c06b7b6de@iscas.a=
-c.cn/
----
- arch/riscv/include/asm/patch.h     |  2 +-
- arch/riscv/kernel/patch.c          | 14 +++++---------
- arch/riscv/kernel/probes/kprobes.c | 18 ++++++++++--------
- arch/riscv/net/bpf_jit_comp64.c    |  7 ++++---
- 4 files changed, 20 insertions(+), 21 deletions(-)
-
-diff --git a/arch/riscv/include/asm/patch.h b/arch/riscv/include/asm/patch.h
-index 9f5d6e14c405..7228e266b9a1 100644
---- a/arch/riscv/include/asm/patch.h
-+++ b/arch/riscv/include/asm/patch.h
-@@ -9,7 +9,7 @@
- int patch_insn_write(void *addr, const void *insn, size_t len);
- int patch_text_nosync(void *addr, const void *insns, size_t len);
- int patch_text_set_nosync(void *addr, u8 c, size_t len);
--int patch_text(void *addr, u32 *insns, int ninsns);
-+int patch_text(void *addr, u32 *insns, size_t len);
-=20
- extern int riscv_patch_in_stop_machine;
-=20
-diff --git a/arch/riscv/kernel/patch.c b/arch/riscv/kernel/patch.c
-index 78387d843aa5..aeda87240dbc 100644
---- a/arch/riscv/kernel/patch.c
-+++ b/arch/riscv/kernel/patch.c
-@@ -19,7 +19,7 @@
- struct patch_insn {
- 	void *addr;
- 	u32 *insns;
--	int ninsns;
-+	size_t len;
- 	atomic_t cpu_count;
- };
-=20
-@@ -234,14 +234,10 @@ NOKPROBE_SYMBOL(patch_text_nosync);
- static int patch_text_cb(void *data)
- {
- 	struct patch_insn *patch =3D data;
--	unsigned long len;
--	int i, ret =3D 0;
-+	int ret =3D 0;
-=20
- 	if (atomic_inc_return(&patch->cpu_count) =3D=3D num_online_cpus()) {
--		for (i =3D 0; ret =3D=3D 0 && i < patch->ninsns; i++) {
--			len =3D GET_INSN_LENGTH(patch->insns[i]);
--			ret =3D patch_insn_write(patch->addr + i * len, &patch->insns[i], len);
--		}
-+		ret =3D patch_insn_write(patch->addr, patch->insns, patch->len);
- 		/*
- 		 * Make sure the patching store is effective *before* we
- 		 * increment the counter which releases all waiting CPUs
-@@ -262,13 +258,13 @@ static int patch_text_cb(void *data)
- }
- NOKPROBE_SYMBOL(patch_text_cb);
-=20
--int patch_text(void *addr, u32 *insns, int ninsns)
-+int patch_text(void *addr, u32 *insns, size_t len)
- {
- 	int ret;
- 	struct patch_insn patch =3D {
- 		.addr =3D addr,
- 		.insns =3D insns,
--		.ninsns =3D ninsns,
-+		.len =3D len,
- 		.cpu_count =3D ATOMIC_INIT(0),
- 	};
-=20
-diff --git a/arch/riscv/kernel/probes/kprobes.c b/arch/riscv/kernel/probes/=
-kprobes.c
-index 4fbc70e823f0..297427ffc4e0 100644
---- a/arch/riscv/kernel/probes/kprobes.c
-+++ b/arch/riscv/kernel/probes/kprobes.c
-@@ -23,13 +23,13 @@ post_kprobe_handler(struct kprobe *, struct kprobe_ctlb=
-lk *, struct pt_regs *);
-=20
- static void __kprobes arch_prepare_ss_slot(struct kprobe *p)
- {
-+	size_t len =3D GET_INSN_LENGTH(p->opcode);
- 	u32 insn =3D __BUG_INSN_32;
--	unsigned long offset =3D GET_INSN_LENGTH(p->opcode);
-=20
--	p->ainsn.api.restore =3D (unsigned long)p->addr + offset;
-+	p->ainsn.api.restore =3D (unsigned long)p->addr + len;
-=20
--	patch_text_nosync(p->ainsn.api.insn, &p->opcode, 1);
--	patch_text_nosync((void *)p->ainsn.api.insn + offset, &insn, 1);
-+	patch_text_nosync(p->ainsn.api.insn, &p->opcode, len);
-+	patch_text_nosync((void *)p->ainsn.api.insn + len, &insn, GET_INSN_LENGTH=
-(insn));
- }
-=20
- static void __kprobes arch_prepare_simulate(struct kprobe *p)
-@@ -116,16 +116,18 @@ void *alloc_insn_page(void)
- /* install breakpoint in text */
- void __kprobes arch_arm_kprobe(struct kprobe *p)
- {
--	u32 insn =3D (p->opcode & __INSN_LENGTH_MASK) =3D=3D __INSN_LENGTH_32 ?
--		   __BUG_INSN_32 : __BUG_INSN_16;
-+	size_t len =3D GET_INSN_LENGTH(p->opcode);
-+	u32 insn =3D len =3D=3D 4 ? __BUG_INSN_32 : __BUG_INSN_16;
-=20
--	patch_text(p->addr, &insn, 1);
-+	patch_text(p->addr, &insn, len);
- }
-=20
- /* remove breakpoint from text */
- void __kprobes arch_disarm_kprobe(struct kprobe *p)
- {
--	patch_text(p->addr, &p->opcode, 1);
-+	size_t len =3D GET_INSN_LENGTH(p->opcode);
-+
-+	patch_text(p->addr, &p->opcode, len);
- }
-=20
- void __kprobes arch_remove_kprobe(struct kprobe *p)
-diff --git a/arch/riscv/net/bpf_jit_comp64.c b/arch/riscv/net/bpf_jit_comp6=
-4.c
-index 26eeb3973631..16eb4cd11cbd 100644
---- a/arch/riscv/net/bpf_jit_comp64.c
-+++ b/arch/riscv/net/bpf_jit_comp64.c
-@@ -14,6 +14,7 @@
- #include "bpf_jit.h"
-=20
- #define RV_FENTRY_NINSNS 2
-+#define RV_FENTRY_NBYTES (RV_FENTRY_NINSNS * 4)
-=20
- #define RV_REG_TCC RV_REG_A6
- #define RV_REG_TCC_SAVED RV_REG_S6 /* Store A6 in S6 if program do calls */
-@@ -681,7 +682,7 @@ int bpf_arch_text_poke(void *ip, enum bpf_text_poke_typ=
-e poke_type,
- 	if (ret)
- 		return ret;
-=20
--	if (memcmp(ip, old_insns, RV_FENTRY_NINSNS * 4))
-+	if (memcmp(ip, old_insns, RV_FENTRY_NBYTES))
- 		return -EFAULT;
-=20
- 	ret =3D gen_jump_or_nops(new_addr, ip, new_insns, is_call);
-@@ -690,8 +691,8 @@ int bpf_arch_text_poke(void *ip, enum bpf_text_poke_typ=
-e poke_type,
-=20
- 	cpus_read_lock();
- 	mutex_lock(&text_mutex);
--	if (memcmp(ip, new_insns, RV_FENTRY_NINSNS * 4))
--		ret =3D patch_text(ip, new_insns, RV_FENTRY_NINSNS);
-+	if (memcmp(ip, new_insns, RV_FENTRY_NBYTES))
-+		ret =3D patch_text(ip, new_insns, RV_FENTRY_NBYTES);
- 	mutex_unlock(&text_mutex);
- 	cpus_read_unlock();
-=20
---=20
-2.39.5
-
+Regards,
+Bjorn
