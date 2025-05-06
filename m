@@ -1,110 +1,192 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2069.outbound.protection.outlook.com [40.107.92.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F0FCF9D6;
-	Tue,  6 May 2025 20:33:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746563608; cv=none; b=Bmp7Q9K5WAhNnKZ70OoJChqsRO6vCJwBqs//bC/d0u2hxJ0RknAoW3tteip8ho73hONzUpiOQxqltlWgff2WvAIMp3R1+/rytCIrOlyi6zHnVKv1Xbdy/d7Bld6Pb1pg+iqUfRaD4Mu/+srnuUFP4p85H0i+PcmEf/6JxVzt5K8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746563608; c=relaxed/simple;
-	bh=GU/0QWzYrVSXft65qatATHb9UdRCKocqAo8RojTRjHU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O4vEnIHtwBckMJVjMwJqo0SjnPjsNDs+vDwQAnTYz4IvpLuluWeH6hS9h1qFzsJUNHt+BxEupZiHyjMQHmfP1JZXrEZgWAtLkGs990DrRMDdr4m/QF5VyAeXlt43/hGvNxA7+73Va8RHnlDOi3qBZuqJ6Db9rLTDBakm6EoduOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Tp/MS5JM; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 159BB1388
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 20:44:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.69
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746564302; cv=fail; b=TAXELTPPmeYR5HLIXB8YNy/SoULdMuCGh6LjJrATJ0uXFXSmaGeNie+K4wWjXJdr/KCSVcnwwOWj8roD8O5f2lK0exF72+4kHf9NiY3Z7O5LsuJrcLmQ7UB+QtcZ95SKPbQ7x5cjeiH0zd0ehUSfNeJ7mnV8oDpj80sStT85BWY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746564302; c=relaxed/simple;
+	bh=J1t1liO7kP+15jMmg9yDvyVhy54zAdMoquULSicjm7c=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lrQ5UmiQiDFuPPAif49xJKizqj6cX5B2Fyqv1+ybgbqU5/9mC2fMW9pGe8NfiALGroi6qIgsspzOI04KRgxMd0BcO9gTh/rFMGR8MvZqddaoyq3my+KsOrMWrX5NbXcU3Sx6G2GGauKiwtNNRI9ytpqH4Y0frRRZkLj/a+7IkgM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=D56GcaL0; arc=fail smtp.client-ip=40.107.92.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tp/MS5JM"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac28e66c0e1so708148366b.0;
-        Tue, 06 May 2025 13:33:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746563605; x=1747168405; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=zgHemNWtqa8k4AyF6DtlkqCjI8OhMDy1+rer4Kv1t4w=;
-        b=Tp/MS5JMppH7tRQuSHcwGnO+5SqCroaE4xUZ71iDZ9B9o+CnNACoLgBvID5+R8tuPG
-         xAJ0gSpSp7AMJ37B8FcY0D4+0G3SSEMGUGDxzpwoaTCRzjOlHWdIKiPxq9Ny2z68gVQn
-         IfsCwZi48YWtclukgV5kAqXpsI29nGu5XZfSIyZCcoJEIO0s6aEWxg/Aoeqa/dkTULwr
-         iNgGsKJZUdkWLY8jnLsjYZPAbH9mlJpJjbIsIz7UiOPRChEhdzPYGoqp18qSfKgvBs+u
-         S0ZqcSL86xVhcCcgnFl6CkqtTRwOmHdpsZs0An0MFi7+rPRoGA0qPbMwAN84S3zQaltc
-         I6/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746563605; x=1747168405;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zgHemNWtqa8k4AyF6DtlkqCjI8OhMDy1+rer4Kv1t4w=;
-        b=f2xjQHVXgR3T6nbHTV1NHw0sdbO6NX+b+eTc+U40raldO5pVp0w2q/+KSRnPIONs6M
-         ZTMabCmxSoF4yPjaYaa8VC3b8DMg9HOptLaX7z/0uE6CePeAtvpdqWIcxdE2a7AuAJPO
-         GAafJaAkM0WyDd72fdwVoMzGC45qO4O9mjD4pi9FOeZurrtuN+ViveXvcb9rad61kf+i
-         F/+hIj0RiqeJ9UC2jNGMk15tqTqSlrIY2sJ5ulAQjuc7+sRlYOOV+2sHDB//Lu2FnZG0
-         oo+vAYILpGChsCYXn5eKxUwi0XDE2VH0Dgp8G8IATNaKgmFa3HIO7M4szEpnWvTEHvEL
-         LKDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXmTcAGMoEP5bNLc/qxSfWjkiM7XpBFpYtSHrTN6gvZn7gMrSnBsuQuu2I1O6fjMqwCNDuSw/izVms+@vger.kernel.org, AJvYcCXxjHVIET21IQGjpQ+lP7Dzit1C184hIHz+qDroxkOs+jgX9TaGQfX6Jj6UA8hHuPfxTh7OwcPTVRNeva86@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFdz3YCgDLQfhqh+67sXz6SRaVlsIQC5IR14+NO34F2UCJPC7f
-	eHebHljHyqMF6yNL/NjC6PM79BFfAub5qGcnS0NkaV4NTWPmKDWOIMSHrg==
-X-Gm-Gg: ASbGncuBZk5pPcXO9sXZtETQY3cQM5ZzwxCnkdVgSlgvmLFG1SLzS7fMA43Vo2Ya6BR
-	+Bdnz80bKY4kAvBzG84j8mEzHy+hcGTEwnReNJMa7oHiRs/zgI5ep6MM1EpuVJdLqdBR0jKZ7uR
-	2/Ngu1WhSfmaD9geuRkHaWEEHLRvacOM01C3jRr6Qn95AGlLiuqWU3DS2LJ4NdIx0eKPmhQqV3z
-	aY9bErwgomJ9J+6zCy/Osxz3eDwFj+XiQEjREzJ5q2xIRWd1MahQMi2p9DqF/CGesgG3+Zzl/zo
-	qhL4UPz4FQEs3PM1/5P1cRhrrLVr9NhSxD2gStyecNKuVQJJN915FO2u2LNckQaL6VP10eqTLpJ
-	AaMuL
-X-Google-Smtp-Source: AGHT+IHQmjfRpINHsgz9ShdGUI4kDJEPSLEEfjV+MOKkEjV1f+crGBhCrNB3BbnYjWe8s6Rm/a27nw==
-X-Received: by 2002:a17:907:7207:b0:acb:32c5:43ff with SMTP id a640c23a62f3a-ad1e89f8dc3mr78243466b.0.1746563604672;
-        Tue, 06 May 2025 13:33:24 -0700 (PDT)
-Received: from standask-GA-A55M-S2HP (lu-nat-113-247.ehs.sk. [188.123.113.247])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad189540da0sm759259366b.165.2025.05.06.13.33.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 13:33:24 -0700 (PDT)
-Date: Tue, 6 May 2025 22:33:22 +0200
-From: Stanislav Jakubek <stano.jakubek@gmail.com>
-To: Artur Weber <aweber.kernel@gmail.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	~postmarketos/upstreaming@lists.sr.ht
-Subject: Re: [PATCH v8 0/9] mfd: bcm590xx: Add support for BCM59054
-Message-ID: <aBpyEo8SHFq7SDf4@standask-GA-A55M-S2HP>
-References: <20250430-bcm59054-v8-0-e4cf638169a4@gmail.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="D56GcaL0"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=aJrjXxWuuq2A59bZ72Tqu9LmeZ43/Z0oSpEvzYPa7rmKkThK3XP/epGQPR24U1XxLMw3rrsadA4lRA3L0xqd7p2LArdx7scK6Z7nN/qLoeGgZuqcIZMlipmw97X/HBK7YGkhysfYvk4acHC4KooVGzg+saKan21adhDQu4IwCGqO8qUuD4jnmONUyXT0K5XFi1ryewHgK+reNu3sD2WUolDETNHI1PDXjXabebVVhEqEnGUVmb5vEO0mIKSDFDr/lYWsbMsWHlOg3IXaevEiDjXgaxtGL4pq0feq6G1kqfSJKmT599hoAISOWQ4Q4hspeZFTRxIYrDkaReYJR1CFyw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5tH2aBzTLtGyOv5D7f7OeME/gvHNM1uvC6mzTtLdJQE=;
+ b=CpyV7sroFdumwDXSmtPHzBSHmm7DwplpqEaBwWs54ed8ykyG3XCYy6U0TIn0ZFlsJPZ6DmZn9oZcl5nD0r8lgpJvDLVmhbhpMJpcEehOZHx5FmL9Kb9B6PCdka02GjKXJlE7+6tVZmf/ACkUm83SzL/nOMQn7+3wh8tzhWWqER4QWxn25l4hbKy/42/+UHagD0TqMt5tk8SbcV0Mfa6IFEYZlrxxjHZmNf26TgF04VWagKoY/IYOBGn262V9HaiRFewTto8HWTuh/llDHCSCC3efVdoq16mwrsEjD4D+jW6PFplDB4YHDV+HDtzFnhJOjt2tSp3KU4FIs1vevcXPVA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=suse.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5tH2aBzTLtGyOv5D7f7OeME/gvHNM1uvC6mzTtLdJQE=;
+ b=D56GcaL05AACcrNACB521xL6fWRlmqSAfX7krICDSHO8grFn0hR3KSach5heMMriZdAI8F23OZrGkHnOIVj95U0gTzcN0e3+7fWuluSR3seP8aMmaLYSyiYlpGyAHsX0NBkUrbG5/jc3R8oefHMGTEUjPCCN+vjr25Lzz4R+uZA=
+Received: from BLAPR03CA0086.namprd03.prod.outlook.com (2603:10b6:208:329::31)
+ by CY5PR12MB6036.namprd12.prod.outlook.com (2603:10b6:930:2c::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.24; Tue, 6 May
+ 2025 20:44:52 +0000
+Received: from BN3PEPF0000B076.namprd04.prod.outlook.com
+ (2603:10b6:208:329:cafe::41) by BLAPR03CA0086.outlook.office365.com
+ (2603:10b6:208:329::31) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8699.30 via Frontend Transport; Tue,
+ 6 May 2025 20:44:52 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
+Received: from SATLEXMB03.amd.com (165.204.84.17) by
+ BN3PEPF0000B076.mail.protection.outlook.com (10.167.243.121) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8722.18 via Frontend Transport; Tue, 6 May 2025 20:44:51 +0000
+Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 6 May
+ 2025 15:44:51 -0500
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB05.amd.com
+ (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 6 May
+ 2025 15:44:51 -0500
+Received: from amd-BIRMANPLUS.mshome.net (10.180.168.240) by
+ SATLEXMB03.amd.com (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39
+ via Frontend Transport; Tue, 6 May 2025 15:44:50 -0500
+From: Jason Andryuk <jason.andryuk@amd.com>
+To: Juergen Gross <jgross@suse.com>, Stefano Stabellini
+	<sstabellini@kernel.org>, Oleksandr Tyshchenko
+	<oleksandr_tyshchenko@epam.com>
+CC: Jason Andryuk <jason.andryuk@amd.com>, <xen-devel@lists.xenproject.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH v2] xenbus: Allow PVH dom0 a non-local xenstore
+Date: Tue, 6 May 2025 16:44:56 -0400
+Message-ID: <20250506204456.5220-1-jason.andryuk@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250430-bcm59054-v8-0-e4cf638169a4@gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+Received-SPF: None (SATLEXMB05.amd.com: jason.andryuk@amd.com does not
+ designate permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN3PEPF0000B076:EE_|CY5PR12MB6036:EE_
+X-MS-Office365-Filtering-Correlation-Id: 054fefcc-122c-473c-6933-08dd8cded9b0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|36860700013|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?kq7VJbIXgT0QVpxbz4uqZUDZPrzqKCRkf3HWW0vaFIlRkUNwhI00rKYNOAWZ?=
+ =?us-ascii?Q?hCqTyf6mOiUn4uuQ0zkP5DziDGCjltqwjL54ZCnnvaTkHl/KEwnaV9VM8fHT?=
+ =?us-ascii?Q?rwdXNCyY+7RI4z0CJXTeU3PsnNSt9gFwXm7llnBZF9esRsKO96pPyKOM4LNu?=
+ =?us-ascii?Q?bv9zEX/Hw5/oMgnp4oPz8ys4D5ZrmQ/Azj4x4ep/FIgZrg2vAjwfZUGclJl5?=
+ =?us-ascii?Q?H8MGlLOftrBNnoWfSPP48+NS7yci8SwWL/2+7mOoJa+fH7uQq+9YQavQ3RZ7?=
+ =?us-ascii?Q?nnsaxjxhg/6tgO+EdXWPf9uKcEfNTDnMrerXuwmueLxLngYOgml2wp6RTu4q?=
+ =?us-ascii?Q?TlJA5JMQ2ohH+y4GulHaVw7/VwYey/5o6UPty78zdf1ANzemYrDiC6v9nakV?=
+ =?us-ascii?Q?n86Tq07kyYDMPMLOuGe7+lz0/SqpZxoaJoRbOlhLFC/qj+mjst97jJjrS/xl?=
+ =?us-ascii?Q?CaEpR/TYOtK9R//cV9yyMYHxhBpRCRwESBL9xBqox/vtK9lfsOJk77ePsYwk?=
+ =?us-ascii?Q?IULzCzXZk8uUhrQPuinLmcBXM6FxxNkVYQ5JhbASqPn7n04iabX+KPglaKpg?=
+ =?us-ascii?Q?6SCaVJZNGe0qXO7w+mlAxdfssTWOsgt4QjzXRwBytmp+yOkcyclyGwJMncky?=
+ =?us-ascii?Q?ZNsDFwMnhSGJNFDwCR47VJm+1BLsIf3aUlzSrOCxXtmgEfLP/LObx0qRkMGq?=
+ =?us-ascii?Q?Po4TP2CHGfBr944HtEvkQEjNrOkA4aNRajorLvDCzjZcVlnBmRuIfKMGBsY0?=
+ =?us-ascii?Q?uIL/J06m3vKA+K+JF+nq8MQQZ2mAx4RW090zSjAbkmdC2tk0GUCaf6FwyZ/i?=
+ =?us-ascii?Q?zWeQRQVkh6Wu/Kmy0SFquTYsFdZAghuUabASxN76hbU6u/iRl+uESPf1sZsn?=
+ =?us-ascii?Q?LHrTZdYc225RU3LieR2DxIpHFQ+W4jZ+W5WZO2iZyiSh3Ow9s0m70d8mt6YY?=
+ =?us-ascii?Q?AxWLUeCHhskOPHenomR6Pxe5czH0Y7o9SMFri9WOkmSvr267Dzp58wrNrBnV?=
+ =?us-ascii?Q?Jb4u1XhS2u0GeowFxdvSQ9oadazb9FAbCXAqO146n3IZqCYrDLD9mxVzsNFw?=
+ =?us-ascii?Q?l5LgNiWPmHOSOdnYJZY+KJtf4gZUZq6Jwuw/VFrW5kM9wSLZ2TE3c8roRuZm?=
+ =?us-ascii?Q?FmfMkMJEBY1a3vXfXqZIuMV5I/fuUuZZL9OS61pVoFjJQXVvYMmdXMRDVz91?=
+ =?us-ascii?Q?2GEb5eKQYgfPHgCc7R3uKCVuonhXLa/FOqwcy930LXJxVGG/eIq5bFg/mvi9?=
+ =?us-ascii?Q?Cm4kaDLlVAs+PmNp7U/JydPmaTdFSzsmYNFATZN+hKrYuNots7n0ZUTeef1w?=
+ =?us-ascii?Q?l0WD4KuN8qtFIjBr8wmFBLfSjEpbMpD0S3o1SDY0sEIGDZer4dLjAEUb7vaX?=
+ =?us-ascii?Q?MvE7yW4TYa/6dr7S8GnQMdC4F0dbXn510YLDl8lfMUDly/Xyh/LH57xJz06V?=
+ =?us-ascii?Q?zP94PL/0SvA4RgNYL0Gvmlmy4znpt+DYoJS9ypWdzExwpn2QIgLfjE/FZYWD?=
+ =?us-ascii?Q?5SLRz5zt1izzkGo/+XRxl2CJZux1NewJbAJK?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 20:44:51.8897
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 054fefcc-122c-473c-6933-08dd8cded9b0
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN3PEPF0000B076.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6036
 
-On Wed, Apr 30, 2025 at 09:07:04AM +0200, Artur Weber wrote:
-> Add support for the BCM59054 MFD to the bcm590xx driver (mfd and
-> regulator) and fix a couple of small bugs in it that also affected
-> the already supported BCM59056.
-> 
-> While we're at it - convert the devicetree bindings to YAML format
-> and drop the bcm59056 DTS in favor of describing the PMU in users'
-> DTS files, as is done for most other MFDs.
-> 
-> The BCM59054 is fairly similar to the BCM59056, with the primary
-> difference being the different number and layout of regulators.
-> It is primarily used in devices using the BCM21664 and BCM23550
-> chipsets.
-> 
-> This patchset has been tested on a Samsung Galaxy Grand Neo
-> (baffinlite rev02; DTS not in mainline yet) with a BCM59054 PMIC.
-> Testing on a BCM59056 would be appreciated.
-> 
-> Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
-> ---
+Make xenbus_init() allow a non-local xenstore for a PVH dom0 - it is
+currently forced to XS_LOCAL.  With Hyperlaunch booting dom0 and a
+xenstore stubdom, dom0 can be handled as a regular XS_HVM following the
+late init path.
 
-Other than the already applied patch 3, the whole series is
+Ideally we'd drop the use of xen_initial_domain() and just check for the
+event channel instead.  However, ARM has a xen,enhanced no-xenstore
+mode, where the event channel and PFN would both be 0.  Retain the
+xen_initial_domain() check, and use that for an additional check when
+the event channel is 0.
 
-Reviewed-by: Stanislav Jakubek <stano.jakubek@gmail.com>
+Check the full 64bit HVM_PARAM_STORE_EVTCHN value to catch the off
+chance that high bits are set for the 32bit event channel.
+
+Signed-off-by: Jason Andryuk <jason.andryuk@amd.com>
+Change-Id: I5506da42e4c6b8e85079fefb2f193c8de17c7437
+---
+v2:
+Re-add xen_initial_domain() check to avoid breaking ARM's xen,enhanced
+no-xenstore mode where event channel and PFN are both 0.
+
+ drivers/xen/xenbus/xenbus_probe.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/xen/xenbus/xenbus_probe.c b/drivers/xen/xenbus/xenbus_probe.c
+index 22d3f90ee205..b12cbd9663e3 100644
+--- a/drivers/xen/xenbus/xenbus_probe.c
++++ b/drivers/xen/xenbus/xenbus_probe.c
+@@ -969,9 +969,15 @@ static int __init xenbus_init(void)
+ 	if (xen_pv_domain())
+ 		xen_store_domain_type = XS_PV;
+ 	if (xen_hvm_domain())
++	{
+ 		xen_store_domain_type = XS_HVM;
+-	if (xen_hvm_domain() && xen_initial_domain())
+-		xen_store_domain_type = XS_LOCAL;
++		err = hvm_get_parameter(HVM_PARAM_STORE_EVTCHN, &v);
++		if (err)
++			goto out_error;
++		xen_store_evtchn = (int)v;
++		if (!v && xen_initial_domain())
++			xen_store_domain_type = XS_LOCAL;
++	}
+ 	if (xen_pv_domain() && !xen_start_info->store_evtchn)
+ 		xen_store_domain_type = XS_LOCAL;
+ 	if (xen_pv_domain() && xen_start_info->store_evtchn)
+@@ -990,10 +996,6 @@ static int __init xenbus_init(void)
+ 		xen_store_interface = gfn_to_virt(xen_store_gfn);
+ 		break;
+ 	case XS_HVM:
+-		err = hvm_get_parameter(HVM_PARAM_STORE_EVTCHN, &v);
+-		if (err)
+-			goto out_error;
+-		xen_store_evtchn = (int)v;
+ 		err = hvm_get_parameter(HVM_PARAM_STORE_PFN, &v);
+ 		if (err)
+ 			goto out_error;
+-- 
+2.34.1
+
