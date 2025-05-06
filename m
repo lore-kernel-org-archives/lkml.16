@@ -1,135 +1,160 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2058.outbound.protection.outlook.com [40.107.100.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7790427EC91
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 12:08:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746533303; cv=none; b=kGje9IqvPyU8NhjXM9eNNxcFatf2hsJuA7xNE9vAOsSPA5k/QqGDnrqwtcAcES41FP1/7oJUTPKbS4o4yh14X3J8VIlSjs/6jrON1hpe46v7wDprA/fWJkkUfbwlNImdhmVYTNT94W2gzIF95BY2okK/0CY/h2tDa3QsuJkYx2Q=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746533303; c=relaxed/simple;
-	bh=DdbmmhonCetUBZsFTlekD4aubGPPFIJ9ItkmtXG5bpg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d9EyWwC54lUwvRISgnJS6071X7S/3cPqHZ+O6SwvHlxRzUDBhhEpSu/nus014/yrhWGEQoQ3a+4oNtGwM1nCa3H30b9PATGFQJgvyMUWkV/JHuCGrZxcaMz+tbRCssQFbQtnvFMoI+IBvJSIemQk8eS8dBtfiEu4wSetU+HaIfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=E3J1lOd7; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77BFA27F160;
+	Tue,  6 May 2025 12:08:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.58
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746533330; cv=fail; b=BR00TD/oK86f/c37o4k9+mjdfCHZ13d64saprhSFxe1hfUMuVia4pFD3QWKY8NZzo7Qew/j4cBjFUvs6OU9UD4wsKvXWitt4pdUmgInyk9+64sOt4apTk+j8DBmG/yxgfubBvzZ7ttDOfm76sbmQ+rbtmzm6Byeysoqw+YW/lFQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746533330; c=relaxed/simple;
+	bh=fcpiLCuu0BdAH8f5Enc/2RCxoVKdwU0i3PWkQv7MRTY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=W1+wEOFhoy3Sr1r/drOkp9UnanGI8eZBe0dp8Kn16QGX7+nZ0+E3HpJMqKBj9gvQqJTLrXo9NberoV2WQJMli2ZpJtOJlnXY8SbM3DsF5U7TDdoMHwzdK9pmAPNrR5joKDdTKpccnYluEOsmBn6P40N8YgO7zX/49dcKcnWnXp0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=0mLb1Cet; arc=fail smtp.client-ip=40.107.100.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="E3J1lOd7"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54690i1G002690
-	for <linux-kernel@vger.kernel.org>; Tue, 6 May 2025 12:08:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=GD4lMZs5a3pKzd5cggQ3wq6Y
-	VdqPYIs1t4O/gynZcKE=; b=E3J1lOd7/umRoIoyHPXx+HWv+BhAjFG2wgSGRs3h
-	4REjvf6kVGrZ4z/9aFucBCebJg+hkZWhWeKtJ/pvf+eXKNYW8Mz+Hn3TVzzCPHVr
-	GpAiYsTReVbH0TfZbMWJ79HPUWDamy+npijq06Fp5wgSIAVsSq6mriISUQUf0wxh
-	FAbhD38u1N9kQRyH1+3iWKXX8pau6ucut1uB5RlTSn4ARqo4fSLlpfn7HFPpdpzz
-	LGTFLLo+ghwWRLGOLbyHoktz6neYZZJ4G3o/ZGxEy5OYD8PShvIehuJJkEBe/smm
-	Qeg54HJborZn1OskGXcRmpjNSxsuhHjqpLVx+sXsCKbWiA==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46f5w3a4ve-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 12:08:21 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c5d608e6f5so1434968185a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 05:08:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746533300; x=1747138100;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GD4lMZs5a3pKzd5cggQ3wq6YVdqPYIs1t4O/gynZcKE=;
-        b=h6maistFFLoSo85T5Nl3vgrvWw8Vxe/W4/YYUTq1IhQqFjSMt8ie/i0NP/4G2b7Sev
-         l/+WONCpyBS82eY2AwyBjzsnLeR/jF7VNgVEe8rDAXuFMmvsG8WJQ8crLERQLYq2+ZsA
-         CUpJdQ9HdHLRBpTcwCM1xdO6+58p3MYb+BZe8i2zLJHJpfBjksYCxvMT0WbVdcZglpXB
-         Rc1APgz1wAXsy0TUCfJtohPDhvuS8arKOeVcHn+svM7sakvRAMWO7Cc5U/w9IfAqz2tr
-         dXh8kxdQyQ0AEPstENBHE5OAdMTYySBT2ylZo6gtADQ4rbq6zUL9eUzlywQotQ8v+jxQ
-         yzYw==
-X-Forwarded-Encrypted: i=1; AJvYcCWfiDJ5PF9CXWCqIylV63c62juxo5dWGrzWhyDkskmnkaC1pdtocM52ze9colPki2OA2HZZ/pWL2pY+htE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzu5Q56PFmMByxg+E2nTWJSu1epNDz87oLnbifRS55LW2HVS3N+
-	ipGzgIOh1SATOg/zbE9ch7OdWOMt7dkYRAByB6ixEt9W0HFSd1Aux3uoLM6X921z3trbD7KV9zc
-	D8R2TL+1lx54CgvK4yUrnOQqy5E2Bpb0Po+Wq3+v6JZEPYsiUnKHUKhHNOVsfeaI=
-X-Gm-Gg: ASbGncuncFAh9rTlRRxt1sIOMz+9Qa86oPtGa7N6yw1K3FnAXgSAg8FgcvvPcd/US6M
-	vyAaTbLspoopyue/+NSbHnDCyUzSfstl0m9Nuvgytcn9SpUaU2VlcmAV5+a3cV29VQ4bF+OKtYR
-	bmGmZs8tpkhMi+TRZfmKWp950qMJWIghCc6dahAlMMzt24VJBhCayiwJ0FZcH/eV8blVRRR+0QL
-	NhVrUYg2YV4o7b5oautWZfUYcnfUDW5ndgIv70Ey/5xFhF12PTLzOKZ7X9z8KBExOXTjM9UDCEq
-	RYke97C63tDyleVx7sB4S1W81Kc63BCIaXyy2p0S0cgrzJgdSeQZx/Def2qrljp2XwqZ+I1B7FA
-	=
-X-Received: by 2002:a05:620a:4629:b0:7ca:df98:2f6 with SMTP id af79cd13be357-7caf09bf07emr524577685a.43.1746533300208;
-        Tue, 06 May 2025 05:08:20 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGz6fgxkf8GCZyugOKLOyYO6nxMMiDaVer/gkboErci2Inurno93UgLLdfrFIxkKoZ4FWDdkg==
-X-Received: by 2002:a05:620a:4629:b0:7ca:df98:2f6 with SMTP id af79cd13be357-7caf09bf07emr524572085a.43.1746533299797;
-        Tue, 06 May 2025 05:08:19 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32028b38e2csm19391601fa.13.2025.05.06.05.08.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 05:08:18 -0700 (PDT)
-Date: Tue, 6 May 2025 15:08:17 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Wasim Nazir <quic_wasimn@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@quicinc.com, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH v5 4/6] arm64: dts: qcom: Add support for QCS9075 RB8
-Message-ID: <vr3q2c47ht5iebf7nvy3qywoxlquwma3p2tffswrefpmxqy24h@wrfecu6mcqcn>
-References: <20241229152332.3068172-1-quic_wasimn@quicinc.com>
- <20241229152332.3068172-5-quic_wasimn@quicinc.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="0mLb1Cet"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=LG8OQNNzj/3TOgEOhe4hDlgtiKGCo5g0mOvUfagvZjogwQRl99H7B6N4pq5CA3A22D/h0Srnq2oGlnrrze6XeEQ4Kh1KEGmJ8/npbtFcYsy6aBNgxOmZ6d5YH6tzZIq5kUmICL7m/WAg8joiXll8z6l9ZhMhM1HouLaTrTQMOyRtMZt3rlx6P8p8quAr+fZk+DxnqCQs1D7AKVQIsNT0JO55s1FovnxqY5kYUYcr/D2s+2NEaxNEQvPHKwoHInrGBRiJo+bSTZ8IDXOHUEdisTKR6BN5ZG7lQavaom25sxzuqNbuU4fVj1pjK+US5pq2ai1zChdWx7hLTaxbx4K8lw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=uCJX/TqYaAGpcCEhnuUkKbGhdTdBr7ryb3GY7ZSVT/s=;
+ b=yLT/dt29lnxFSullNqFhnJCnkoSVq+QhqcGEdPwTaX5iWRZz3hqDDPXaKfEZFAUSwu8pdH7D5/xhSk9/rT0oNOU/3HWAg/iaXDc/LfDVRaOsrerZlprVDFU5ilzqk4JGEfZp8FKAZM55kM/MdcZ0r6+WSAhabhK8cEmt2ojwygdFvUWPrnt9NIZtG3NJqVY3hsqTEYgMbgUEdF4oJbkeYWe5zXuEzq43iSOfdnRQ1GmvZIBGRC2uyFEYMmstFYyKCAdDqAUxTiouM1yqjMzVDk+GnWkOPP43ymXHrc9ttUqsp46qipuTGM0hAP1JTGNIXd9ywM6DoxaloTYLwsPfzA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uCJX/TqYaAGpcCEhnuUkKbGhdTdBr7ryb3GY7ZSVT/s=;
+ b=0mLb1CetHC3i7oHcWJWus6y3SEYC9EmuJF/Ar6vboQzyvDvK6O0GHiRRFJkzcpvJ3jfME/yGfIBHv4Apq8AEl2u/0cw/1g15G46MLwZFYJeFMk8nB1fGaMtWUs8dVb2QjK1mB08hNso6ZngLTnyuQFyCYQq0yBid+A1vvaL1c+Y=
+Received: from MW4PR03CA0282.namprd03.prod.outlook.com (2603:10b6:303:b5::17)
+ by CY5PR12MB6178.namprd12.prod.outlook.com (2603:10b6:930:25::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.22; Tue, 6 May
+ 2025 12:08:40 +0000
+Received: from CO1PEPF000075F1.namprd03.prod.outlook.com
+ (2603:10b6:303:b5:cafe::17) by MW4PR03CA0282.outlook.office365.com
+ (2603:10b6:303:b5::17) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8699.30 via Frontend Transport; Tue,
+ 6 May 2025 12:08:39 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1PEPF000075F1.mail.protection.outlook.com (10.167.249.40) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8722.18 via Frontend Transport; Tue, 6 May 2025 12:08:39 +0000
+Received: from vijendar-linux.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 6 May
+ 2025 07:08:34 -0500
+From: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
+To: <broonie@kernel.org>
+CC: <alsa-devel@alsa-project.org>, <lgirdwood@gmail.com>, <perex@perex.cz>,
+	<tiwai@suse.com>, <yung-chuan.liao@linux.intel.com>,
+	<ranjani.sridharan@linux.intel.com>, <pierre-louis.bossart@linux.dev>,
+	<Basavaraj.Hiregoudar@amd.com>, <Sunil-kumar.Dommati@amd.com>,
+	<venkataprasad.potturu@amd.com>, <Mario.Limonciello@amd.com>,
+	<linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Vijendar
+ Mukunda" <Vijendar.Mukunda@amd.com>, <stable@vger.kernel.org>
+Subject: [PATCH 1/3] ASoC: amd: amd_sdw: Fix unlikely uninitialized variable use in create_sdw_dailinks()
+Date: Tue, 6 May 2025 17:37:22 +0530
+Message-ID: <20250506120823.3621604-1-Vijendar.Mukunda@amd.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241229152332.3068172-5-quic_wasimn@quicinc.com>
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA2MDExNyBTYWx0ZWRfX6gnjMs9ZYTOD
- BQ6l/qhcXlVMB5NPfmeoJOjbQl7+lflrWt1PqC3y+HUH29Mv7boEiKD31n9ykU9DotrATEGeGDe
- LZTCqXkl0BRLnD3ESTBejjApVMzJtuIg8eovAggpmMB8PlHnoPVJZMUHLEouKVAc8u76H8Oiztj
- xQ5IvqnnwjrBYhMmqjBowC9802dcHyG+EoDAlsvNZ1DACwV4ggeG+H3AfMIVnOwcovA6U7MqKA5
- vjh7qTpUKeNEaSSbgBoWUrBe8DRcJEjeHsIyuuO2Rb7iFRNXQpFxjwsairrnCrHBxz1z4A4X3kI
- X3eiTZK4Zgif8+avpF0AA/hPbKhBCY6f0lYRoqGV/qvYkyKaN4IQEnKBIhNffWevK4mSmurLxR4
- o4hnbjJGLuGJSycx5wEOuKiiqAVbRkooiFLhlYpo9pntSZlBwRAxxI7xKrqvGLOMUXUaazNq
-X-Proofpoint-GUID: AK-Ojzn5SHrqGPeegxXMAUYiIK88klbR
-X-Proofpoint-ORIG-GUID: AK-Ojzn5SHrqGPeegxXMAUYiIK88klbR
-X-Authority-Analysis: v=2.4 cv=W+s4VQWk c=1 sm=1 tr=0 ts=6819fbb5 cx=c_pps
- a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=dt9VzEwgFbYA:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=COk6AnOGAAAA:8
- a=q-whWVftEaYGax-JpAIA:9 a=CjuIK1q_8ugA:10 a=NFOGd7dJGGMPyQGDc5-O:22
- a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-06_05,2025-05-05_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 impostorscore=0 clxscore=1015 adultscore=0 phishscore=0
- mlxlogscore=800 spamscore=0 bulkscore=0 mlxscore=0 malwarescore=0
- lowpriorityscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2504070000 definitions=main-2505060117
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000075F1:EE_|CY5PR12MB6178:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3f87ed55-99be-4a0c-07b4-08dd8c96bcd1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|36860700013|82310400026|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?sXry+cZIyEmViLdqtThJReDMsRxKKWDJbQ8Uu3+y2bObXrZDqJkfjyHtEPxP?=
+ =?us-ascii?Q?nP6NiEBPKOeOelDREjOir5SV4W3InAJGZLlbr4CQwgbzwyT1eRKogAKoEEKr?=
+ =?us-ascii?Q?yJ9hBQNjhRznSxg0wdZXMnjzSlLGmLoCTrd2otgkEFx7n+IHMcl/YCuvxOBm?=
+ =?us-ascii?Q?Mk6RlI/01TYF67vyEONuO8EVdelmHBxzph4OZM4bWHg6fKJGH5/e72SLEb+J?=
+ =?us-ascii?Q?4Xg+uPJIPIOMP5pn/KZwsNCOcwvWuo08YMmg2X3amP7OYuVfY4/xOTzXwG/6?=
+ =?us-ascii?Q?NicbduFLrLIVWfgvLMYIWbajdLUVJsaIEDeMTFqY58aIAScArGgahtwrsOhz?=
+ =?us-ascii?Q?mVMf2zUeRSoXpfMU7KVeZ1v+AuqCl51PtPbgR70kzckmD6KSmd4lP83XCaOi?=
+ =?us-ascii?Q?Btoewd0laXJkto1kS1cmb4ZpDc3XhxW45rk17Tt6B/2DaMT2nMdeE4BXA7r4?=
+ =?us-ascii?Q?UL+to4JDWDmyZPIF3rx/OCg5lirDYMJODsNHI4eyXIgo3/gCOKC+tYApUNrp?=
+ =?us-ascii?Q?K0tpKMIBdtHY0DelCvmVV7uweNsfgRK2ouNgdjTYniN1vNrs6joFu9C2Pzc3?=
+ =?us-ascii?Q?9MkBKcaCmN5WXIKFbQ21TvS2/+Fx1PE8WHJBpGxPyq6G8S4d1QW84CmQ7kGH?=
+ =?us-ascii?Q?ivw75NrsxKTR7HHwDVjbO2YuKhChbfOAtZfKpLUbnGijSBzUhPlEB+Qi0v47?=
+ =?us-ascii?Q?sjTnwHhU3TrsdeuaSPBfwNnowdEcmqZl+MdEOYtC9t7XYEUHwE8uzKL4LKrr?=
+ =?us-ascii?Q?TuMHc6sEfzfalW2dnU7AWuivlhdXIACiI6C/vk9xDUyP7ppsdhM8wgpYRCYY?=
+ =?us-ascii?Q?IbJ5ma71cmpS2lAw3+tA0qRxDOezX3Hf93y1p31PWWKy5/aksB5wd52ppdjm?=
+ =?us-ascii?Q?JBQuQIUXS1AiUuUXXdQorMC5IULeqgKaT5yF4QRCgsVfS7+yLRLg6G2/hTUT?=
+ =?us-ascii?Q?OOc1ME2IQZsu4RHDhBJFDxB8TKESuaB4NQpXcTAvzK7sz08UnDYRsyiUOQnx?=
+ =?us-ascii?Q?spcsp22LNwPtuBQcM3tBCuTJaHXbyoFUsZqKE4sJjga8/Q4pUeJ/xw2DBUP6?=
+ =?us-ascii?Q?THIefeMM8zhPVSZUXn0zazMA/icsRwGA/MymxjySvbXPfyzD5Y2M7+s9X35Q?=
+ =?us-ascii?Q?mXSGp8Stj30kJkFq9r5rBgTHKJ0u3kf3It3gKcm2QCMW98JvAc6S+eeNX2OK?=
+ =?us-ascii?Q?qkoJlB+HI7DPOdk6Mg+IZlfWZ3cO83Sqaqs+e1qgVRYTOq/MAdmpOVcX6+0r?=
+ =?us-ascii?Q?4LSD8xvdpojSwncZVcw7RbVuSLmKt6eQ+OyDEJra1WeZkwXnQKJy7EePiJwE?=
+ =?us-ascii?Q?o5zogrWpUSgFw2Em1mN6qV3ip8SoOAsoX2y0amhJNYn7mp8AeNVIzzY9rhYq?=
+ =?us-ascii?Q?o8EhiiZroiDZsa1wZ1Duy0uODnTHFlvl8IlV9rWpxwiH7UW93wrxdQ4Ezpvk?=
+ =?us-ascii?Q?d+nd2s4SIIVwD+xGYQ+p79EL+ygVqqTy9duS3ETyTJFUpKY+aR9A1xw2px31?=
+ =?us-ascii?Q?BIPlHG1IP9BNDfILWifEOoTmZ8WKbgz7pRKv?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(36860700013)(82310400026)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 12:08:39.5823
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3f87ed55-99be-4a0c-07b4-08dd8c96bcd1
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CO1PEPF000075F1.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6178
 
-On Sun, Dec 29, 2024 at 08:53:30PM +0530, Wasim Nazir wrote:
-> Add initial device tree support for the RB8 board
-> based on Qualcomm's QCS9075 SoC.
-> 
-> Basic changes are supported for boot to shell.
-> 
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> Signed-off-by: Wasim Nazir <quic_wasimn@quicinc.com>
-> ---
->  arch/arm64/boot/dts/qcom/Makefile        |   1 +
->  arch/arm64/boot/dts/qcom/qcs9075-rb8.dts | 281 +++++++++++++++++++++++
->  2 files changed, 282 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/qcom/qcs9075-rb8.dts
-> 
+Initialize current_be_id to 0 in AMD legacy stack(NO DSP enabled) SoundWire
+generic machine driver code to handle the unlikely case when there are no
+devices connected to a DAI.
 
-For the next submission please include at least the UFS support. The
-board is pretty useless without the actual storage support.
+In this case create_sdw_dailink() would return without touching the passed
+pointer to current_be_id.
 
+Found by gcc -fanalyzer
+
+Cc: stable@vger.kernel.org
+Fixes: 2981d9b0789c4 ("ASoC: amd: acp: add soundwire machine driver for legacy stack")
+Signed-off-by: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
+---
+ sound/soc/amd/acp/acp-sdw-legacy-mach.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/sound/soc/amd/acp/acp-sdw-legacy-mach.c b/sound/soc/amd/acp/acp-sdw-legacy-mach.c
+index 2020c5cfb3d5..582c68aee6e5 100644
+--- a/sound/soc/amd/acp/acp-sdw-legacy-mach.c
++++ b/sound/soc/amd/acp/acp-sdw-legacy-mach.c
+@@ -272,7 +272,7 @@ static int create_sdw_dailinks(struct snd_soc_card *card,
+ 
+ 	/* generate DAI links by each sdw link */
+ 	while (soc_dais->initialised) {
+-		int current_be_id;
++		int current_be_id = 0;
+ 
+ 		ret = create_sdw_dailink(card, soc_dais, dai_links,
+ 					 &current_be_id, codec_conf, sdw_platform_component);
 -- 
-With best wishes
-Dmitry
+2.45.2
+
