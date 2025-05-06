@@ -1,157 +1,76 @@
-Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1EA5277036;
-	Tue,  6 May 2025 10:15:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.171
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8791C195811
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 10:16:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746526512; cv=none; b=qDvxu9CCcoHXg5kpTnWeZRBr24W4YLavDeWKTqklc+2IVs1RQM9m85khE4+I08xFRUwmsguXQcCZSLENUJtkSpWycByr6pNJD+LA7TGe0D78M+Ujmh2UMmZ3wuxWtWNWlE9KlOn1VoxPF5X7mlvxRkFJKicHDljiHANl6DzpnUc=
+	t=1746526571; cv=none; b=Fa8laIfzdaP60npQ4vrZ8p1vBS4MTnk/ytaDBMgDZw+k53YXm13n+EmkGRCiD0Xv/zNWs0Bq/j3fpASMfEIzxkg7j0OOvMrfkRGG3BiEcUYx754E5HcJwf3njqhW/JOqWjb6D0yLxWIfbGB3dMn3faKVHfix/vl+VZr/oe5Ea9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746526512; c=relaxed/simple;
-	bh=H3fLQxygZC6XKdNmeZEZ2FzeMvkZHRYPXqX08psAQ6s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=N4l5A2vPQU2mVg6LWyQxH/3HOvfnvhu3bc1bzBAkNKREZuUQEJQsqgNZ8HDVG5W7GUtZL8teCWnbRIA8F2oeTll1Z30RFP5j/ZrIoFmd4K+CPVQHTAt6LQCgFHQ8Y8Su9SzTpsBnQh7MF9bW49irGpqw4fLRkZTtrY8LJzZB0JI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CY6oH42E; arc=none smtp.client-ip=209.85.167.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CY6oH42E"
-Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-40337dd3847so2996774b6e.0;
-        Tue, 06 May 2025 03:15:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746526508; x=1747131308; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xKR53B3qPFijXew46vboZyZL5TEINx3Tkrkttdk5rDA=;
-        b=CY6oH42E+cITuANaDNBxhcIp6x0aB9LX9HvhOf2zCx/nIKrLwMQIMGUWew89Cmn2T3
-         hYK/OpK/fZgadoX0d4m+fGGb71oFv4q/SNOT/cqCTrOGYmvIAkIa+Qrsi3CKV5CBz8rR
-         1mwCP9iqcyTMKvz9h0KaPuohQ3K5qurTvJR35/e750VHpC2x55vEMFFOkhLl8hTTymUt
-         rGjBdk242WCwkc5HS7EdEJmWOU18MNlZKMSAAajV4Pgw77NXp7D0I2F15/IJNQfPJQ7E
-         IHSpof3Ot+LkErh8Y10v1IxmzOAxGEqMwLDuEo44FrH0dEewEPjMTSG3MxNL5ze0JD6a
-         jRQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746526508; x=1747131308;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xKR53B3qPFijXew46vboZyZL5TEINx3Tkrkttdk5rDA=;
-        b=kOUS2XQCT0helJ5Omwl9xbu4xgQCOtVvsEzSYsFvDZUwESd9vKj1Quqh6Hpxv8DQoa
-         4AefvFjCor10dYmke9SdJQ2K41XfZLMuW1UrqjofVZzJ0KYBxIjwnUagu5CZAv1WjpXy
-         Kf+azi1Ayzdu3mCIek51eJyZFaZXKYQLI0H4JrATl5e+LJsUHu09yinJ0YpRvX8m9uD1
-         h2r7vVA7xnJIKf+2RPthNnPLpb2ROa2RKhediaZdPhmr9QCdKLaVlqoZiUJhdlVYmb7U
-         S8DrRZoOl4PIJ3tz7EVUjJ9XPMAVJZRTqmXGFTmsPNR9t+42NAtCH4dJDHOhEwEFHGAb
-         nzeg==
-X-Forwarded-Encrypted: i=1; AJvYcCU88Ic4rrMDiesPPdufJgMEA5tKsDgFQ1LxPMa4AQmw9qHzqc7PfLg7f9SavObtWYRY4ZvMA+aeX8Y=@vger.kernel.org, AJvYcCVfI5aFptHrDF/EX6VCoOo1pObYRsWLCwqUDCWGwkBt65IqtV1ln1rDCpS8qSfJTER1xuNPUrh7knXZKZGn@vger.kernel.org, AJvYcCVrXxvlf7WrLlnIg0yklX1TZQY2dceNDbFxaf3Qr9kgo5rpCVHJIbvimyKjt5rowiOsNGjNXCV5kOA=@vger.kernel.org, AJvYcCXIszgkY4l/dUX01NSnUDeUMDgFsotMMtJDzXc1jLh7GDupoWPmCOwUjdFSjYXztJ8KqpkB1n6Woy5liv7zcCA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywrbh+Jn73X5hiZ8WiWdMQl1PcaqcLZiFI+2CMzgN+02wpr8OKp
-	9o0cFZp+w1uo1AECeHW1j+Apz1DRzGdkGSHETsqPEnUwoMM3D8nW
-X-Gm-Gg: ASbGnctUJVUzmm+F225uwsO3dRUBsINAyOdDxw6m41PrDrvaT5BNi4JmolQDsnUDsYX
-	Xxz3Bo5cHHtrpSDEeAcvmzaWl13H/1b9cAbT7DQRGDtOIi7PixUg+7EMHW0MRFR5Uyc6xZsYCY/
-	YKs3gjYGCXXbX9sZvDo0s6wUar9Y9e0avfM5mAZo0fwDMqLFdBY+eNaeDMesYNX2iZMMgNLYbE/
-	TnG0/tiL+jC+5VdvtQyl70VPJb79KSewbEd758/MvfQQeXZvbNo1b1SEpjh+DyNFzzTCX4GKcSX
-	noy862e42bu15QSkQ8LfLrCUeThCvzn9ywWXqYOfRW+PAwB9pT7VWjy12FNom14ZCKgESceJIOv
-	er9lTPmpCZGKtKQd7Xc2KM10=
-X-Google-Smtp-Source: AGHT+IHE8caFW7rhcABhjbpxTvjrWJ3oASf6F/4xoBjVlsPODe2HL2MtdDc5iad7lX+dv3sdRNkD1g==
-X-Received: by 2002:a05:6808:3008:b0:3f9:36ec:dab3 with SMTP id 5614622812f47-40368ca72d7mr1345277b6e.14.1746526508421;
-        Tue, 06 May 2025 03:15:08 -0700 (PDT)
-Received: from my-computer.lan (c-73-76-29-249.hsd1.tx.comcast.net. [73.76.29.249])
-        by smtp.googlemail.com with ESMTPSA id 5614622812f47-4033dae726dsm2390904b6e.30.2025.05.06.03.14.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 03:15:07 -0700 (PDT)
-From: Andrew Ballance <andrewjballance@gmail.com>
-To: viresh.kumar@linaro.org
-Cc: a.hindborg@kernel.org,
-	alex.bennee@linaro.org,
-	alex.gaynor@gmail.com,
-	aliceryhl@google.com,
-	anisse@astier.eu,
-	benno.lossin@proton.me,
-	bjorn3_gh@protonmail.com,
-	boqun.feng@gmail.com,
-	bqe@google.com,
-	dakr@kernel.org,
-	dakr@redhat.com,
-	daniel.almeida@collabora.com,
-	gary@garyguo.net,
-	joakim.bech@linaro.org,
-	linux-clk@vger.kernel.org,
+	s=arc-20240116; t=1746526571; c=relaxed/simple;
+	bh=IyZEhMVWVT852h6Gywv+LtuvUch45I4VEFK0rvlW7nI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y+u/CqeHc4OwG6tslFOwC8JtWHM1W788TgXoCNFC4fjrUnGNBgGM7vVwfo4pDfM2xLzIR3oyNDK6ravXiepGHLwFEGTnOXFBVfHNmwbA1lc+7IRlCpJFqP7gGx0ZadMYQ/i9ZdiFq0jJOd3p7lPQqOZrVN6f+iDRbHVcJOteR/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 353BF113E;
+	Tue,  6 May 2025 03:16:00 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7B1003F5A1;
+	Tue,  6 May 2025 03:16:09 -0700 (PDT)
+Date: Tue, 6 May 2025 11:16:04 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	James Clark <james.clark@linaro.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	linux@armlinux.org.uk,
-	linux@rasmusvillemoes.dk,
-	manos.pitsidianakis@linaro.org,
-	miguel.ojeda.sandonis@gmail.com,
-	mturquette@baylibre.com,
-	nm@ti.com,
-	ojeda@kernel.org,
-	peterz@infradead.org,
-	rafael@kernel.org,
-	robh@kernel.org,
-	rust-for-linux@vger.kernel.org,
-	sboyd@kernel.org,
-	tglx@linutronix.de,
-	tmgross@umich.edu,
-	vincent.guittot@linaro.org,
-	vireshk@kernel.org,
-	yury.norov@gmail.com
-Subject: Re: [PATCH V11 00/15] Rust abstractions for clk, cpumask, cpufreq, OPP
-Date: Tue,  6 May 2025 05:13:11 -0500
-Message-ID: <20250506101311.142475-1-andrewjballance@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250502070109.inpes2ou3rxx2fxp@vireshk-i7>
-References: <20250502070109.inpes2ou3rxx2fxp@vireshk-i7>
+	linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH v2 9/9] coresight: Refactor runtime PM
+Message-ID: <20250506101604.GD177796@e132581.arm.com>
+References: <20250423151726.372561-1-leo.yan@arm.com>
+ <20250423151726.372561-10-leo.yan@arm.com>
+ <0ebbc509-9e17-4b93-9a72-b9e7cc03637e@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0ebbc509-9e17-4b93-9a72-b9e7cc03637e@arm.com>
 
-On Fri, May 02, 2025 at 12:31:09PM +0530, Viresh Kumar wrote:
-> Applied to the cpufreq tree few days back and is now included in
-> linux-next:
+On Fri, May 02, 2025 at 02:15:49PM +0530, Anshuman Khandual wrote:
 > 
-> https://git.kernel.org/pub/scm/linux/kernel/git/vireshk/pm.git/log/?h=cpufreq/arm/linux-next
+> On 4/23/25 20:47, Leo Yan wrote:
+> > The validation for driver data pointers and clock pointers are redundant
+> > in the runtime PM callbacks.  After a driver's probing, its driver data
+> > and clocks have been initialized successfully, this ensures it is safe
+> > to access driver data and clocks in the runtime PM callbacks.  A corner
+> > case is a clock pointer is NULL, in this case, the clock core layer can
+> > handle it properly.  So remove these redundant checking.
+> > 
+> > In runtime resume, respect values returned from clock function and add
+> > error handling.
 > 
-> Will send it for v6.16-rc1 (unless there are any objections).
-> 
-> -- 
-> viresh
+> Although not checking drvdata and drvdata->apb_clk does make sense, but
+> why change the semantics on the resume paths as well, which now returns
+> stored error value from clk_prepare_enable().
 
-Hi,
+Let us assume if a clock fails to enable during the resume flow, with
+current code, we miss a chance to detect issues in the first place.
 
-I have tried building the latest linux-next and I think that this
-patch series causes a build error with the defconfig for x86_64.
+I understand the clock enabling failures are rare, but propagating an
+error in the resume callbacks would help identify potential issues.
 
-commit: 407f60a151df3c44397e5afc0111eb9b026c38d3
+It seems to me that this patch does not change the semantics of the
+resume paths.  It enhances the resume flow for early error reporting.
 
-steps to reproduce:
-    make LLVM=1 defconfig
-    make LLVM=1 rust.config
-    make LLVM=1
-
-build error message:
-    error[E0432]: unresolved import `crate::clk`
-      --> rust/kernel/cpufreq.rs:12:5
-       |
-    12 |     clk::{Clk, Hertz},
-       |     ^^^ could not find `clk` in the crate root
-       |
-    note: found an item that was configured out
-      --> rust/kernel/lib.rs:48:9
-       |
-    48 | pub mod clk;
-       |         ^^^
-    note: the item is gated here
-      --> rust/kernel/lib.rs:47:1
-       |
-    47 | #[cfg(CONFIG_COMMON_CLK)]
-       | ^^^^^^^^^^^^^^^^^^^^^^^^^
-
-    error: aborting due to 1 previous error
-
-it looks like this occurs when CONFIG_COMMON_CLK=n and CONFIG_CPU_FREQ=y.
-
-Best regards,
-Andrew Ballance
+Thanks,
+Leo
