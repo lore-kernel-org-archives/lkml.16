@@ -1,121 +1,108 @@
-Received: from zg8tmja5ljk3lje4ms43mwaa.icoremail.net (zg8tmja5ljk3lje4ms43mwaa.icoremail.net [209.97.181.73])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CDFDE198823
-	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 01:22:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.97.181.73
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B9B72356D2;
+	Tue,  6 May 2025 01:23:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746494541; cv=none; b=ZFTjcQtIC/LFDpVv5SMzzELa4NB6bNoJlY+3gBaoUrTXndyO2QT0orRZzsL9Ko8hqx1w9WBlns9DMvjpg2dC48G0fds4uRqgiE5WjJmsVBq7bhdSe0ShY2fYr/s4MN5atofOceXbAjaZF18AbM+h6lGB38ZlnM0PE++B5duF0XI=
+	t=1746494634; cv=none; b=ESPbiTjvecSuWU4sDq5lMIrbFWCQdIqRjOkzAnwumtLy4kvTMtjYyU6kCY4ygl76snERbdOBevOEocDAtBN3P8oNWsX1Nd8PyqBvMImUfIOPWp7Jyz/c9Ldui5MbMJZNtnDrLh3R5IECgeyN+xb2P2LiBtKv76VwxwUs41Qm7Pg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746494541; c=relaxed/simple;
-	bh=JfbMqOgKa807whHUusnnPM1sxQC4+hvuDSEV5c4e/QU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AbC9mfDL0D0S8HPtFtSwRL0PJVcGbSivYqU77Qc/kxUbU8GtFMCSG7b5W0XjpzpsAlht1cJWciqpgyUuyOi0vIhbSRVeQDWjt+37C6f1sAVl2sWfwlUBpjtNkx/ylVh/0I7PEKtrmgC2r4TQrz4KfCfilXT1YelmDjDjciHK4lw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=209.97.181.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
-Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
-	by hzbj-icmmx-6 (Coremail) with SMTP id AQAAfwBXXXk6ZBlozYyiAg--.12934S2;
-	Tue, 06 May 2025 09:22:02 +0800 (CST)
-Received: from localhost (unknown [123.150.8.50])
-	by mail (Coremail) with SMTP id AQAAfwD3iyU4ZBlozLoTAA--.13091S2;
-	Tue, 06 May 2025 09:22:01 +0800 (CST)
-Date: Tue, 6 May 2025 09:22:00 +0800
-From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Mike Rapoport <rppt@kernel.org>, Huacai Chen <chenhuacai@loongson.cn>,
-	loongarch@lists.linux.dev, Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org,
-	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: Re: [PATCH V2] LoongArch: Introduce the numa_memblks conversion
-Message-ID: <aBlkOBwIjvUDE0hY@phytium.com.cn>
-References: <20250415072118.3774454-1-chenhuacai@loongson.cn>
- <aANVMaepni3KeABI@kernel.org>
- <CAAhV-H65jh29ccYzcaJf1=QpDuV5xZfBd-1Kr0=in_nk-Z4h7Q@mail.gmail.com>
+	s=arc-20240116; t=1746494634; c=relaxed/simple;
+	bh=ZMOTkC6P71qPe4BzgMQMENfuFisNKiG1ouPs/kk/x/I=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kGJagZX9E4wreGgrLa8ovsmE8qx1gbwRcPhJBZq+qROWohoo7FImxQmWmSOISLFR0QLG4ijeOdZirvYTF2fX+coa8MLzd5o5aF99PUwyOovwN8PMEcKbDITqx/1xc5DDFxNF9kyDDFxxnnXmlYEufHwW1GPwnuQNaVQhcYQtuNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4Zs0zB5f9FzYQtwH;
+	Tue,  6 May 2025 09:23:50 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 2BD441A07BB;
+	Tue,  6 May 2025 09:23:50 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP4 (Coremail) with SMTP id gCh0CgD3Wl+lZBlouX4_Lg--.26089S4;
+	Tue, 06 May 2025 09:23:49 +0800 (CST)
+From: Zizhi Wo <wozizhi@huaweicloud.com>
+To: chandan.babu@oracle.com,
+	djwong@kernel.org,
+	dchinner@redhat.com,
+	osandov@fb.com,
+	john.g.garry@oracle.com
+Cc: linux-xfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	wozizhi@huawei.com,
+	yangerkun@huawei.com,
+	leo.lilong@huawei.com
+Subject: [PATCH] xfs: Remove deprecated xfs_bufd sysctl parameters
+Date: Tue,  6 May 2025 09:15:40 +0800
+Message-Id: <20250506011540.285147-1-wozizhi@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAhV-H65jh29ccYzcaJf1=QpDuV5xZfBd-1Kr0=in_nk-Z4h7Q@mail.gmail.com>
-X-CM-TRANSID:AQAAfwD3iyU4ZBlozLoTAA--.13091S2
-X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQAQAWgRLLwIYwBFsX
-Authentication-Results: hzbj-icmmx-6; spf=neutral smtp.mail=wangyuquan
-	1236@phytium.com.cn;
-X-Coremail-Antispam: 1Uk129KBjvJXoW7CrWDGrWUZr1DXr1xtF4ktFb_yoW5Jr4kpF
-	WS9a1DCF48CrWrA3Z2v34UWryYvwn7GrnFqFnxKry09ry2v345Zr40qwsY9FyDX3y8JFy0
-	vFn8J3ZxW3WUAFDanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
-	UUUUU
+X-CM-TRANSID:gCh0CgD3Wl+lZBlouX4_Lg--.26089S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7Ww45KFWUKF1UWryxWry7trb_yoW8AF1Dpr
+	s7Gw12kr1DGry8ZFn3JF4UKa1FvryIkF409rs7ArsrXwn7Ar9rWF10krWfAayYvwsIvr4f
+	Wr1DGry8XwsxJFDanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0E
+	n4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I
+	0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWU
+	tVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcV
+	CY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAF
+	wI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa
+	7IU10PfPUUUUU==
+X-CM-SenderInfo: pzr2x6tkl6x35dzhxuhorxvhhfrp/
 
-On Sat, Apr 19, 2025 at 03:57:16PM +0800, Huacai Chen wrote:
-> Hi, Mike,
-> 
-> On Sat, Apr 19, 2025 at 3:48 PM Mike Rapoport <rppt@kernel.org> wrote:
-> >
-> > Hi Huacai,
-> >
-> > On Tue, Apr 15, 2025 at 03:21:18PM +0800, Huacai Chen wrote:
-> > > Commit 87482708210ff3333a ("mm: introduce numa_memblks") has moved
-> > > numa_memblks from x86 to the generic code, but LoongArch was left out
-> > > of this conversion.
-> > >
-> > > This patch introduces the generic numa_memblks for LoongArch.
-> > >
-> > > In detail:
-> > > 1. Enable NUMA_MEMBLKS (but disable NUMA_EMU) in Kconfig;
-> > > 2. Use generic definition for numa_memblk and numa_meminfo;
-> > > 3. Use generic implementation for numa_add_memblk() and its friends;
-> > > 4. Use generic implementation for numa_set_distance() and its friends;
-> > > 5. Use generic implementation for memory_add_physaddr_to_nid() and its
-> > >    friends.
-> > >
-> > > Note: Disable NUMA_EMU because it needs more efforts and no obvious
-> > > demand now.
-> > >
-> > > Tested-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> > > Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-> > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > > ---
-> > >  arch/loongarch/Kconfig                 |   1 +
-> > >  arch/loongarch/include/asm/numa.h      |  14 ----
-> > >  arch/loongarch/include/asm/sparsemem.h |   5 --
-> > >  arch/loongarch/include/asm/topology.h  |   7 +-
-> > >  arch/loongarch/kernel/acpi.c           |  11 ---
-> > >  arch/loongarch/kernel/numa.c           | 108 +++----------------------
-> > >  arch/loongarch/mm/init.c               |   8 --
-> > >  mm/Kconfig                             |   1 +
-> > >  8 files changed, 16 insertions(+), 139 deletions(-)
-> >
-> > This is really cool simplification!
-> >
-> > I wonder if maybe we can take a step or two further and make loongarch to
-> > share more code with other architectures.
-> >
-> > Is there a strong reason not to call numa_memblks_init() from
-> > init_numa_memory()?
-> > And more broadly, maybe loongarch can be even switched to arch_numa?
-> This is a minimal change for Yuquan, I will make it in linux-next as
-> soon as possible so Yuquan can continue his work.
-> 
-Hi, Huacai & Mike
+From: Zizhi Wo <wozizhi@huawei.com>
 
-Where could I know this has been merged in linux-next? After that, should I
-re-push my commit "introduce numa_add_reserved_memblk"?
+Commit 64af7a6ea5a4 ("xfs: remove deprecated sysctls") removed the
+deprecated xfsbufd-related sysctl interface, but forgot to delete the
+corresponding parameters: "xfs_buf_timer" and "xfs_buf_age".
 
-Sorry for my unfamiliarity with the community rules.
+This patch removes those parameters and makes no other changes.
 
-Yuquan
-> Switching to numa_memblks_init() or arch_numa will be done in future,
-> but need some time because some machines seem to need some hacks.
-> 
-> Huacai
-> 
-> >
-> > --
-> > Sincerely yours,
-> > Mike.
+Signed-off-by: Zizhi Wo <wozizhi@huawei.com>
+---
+ fs/xfs/xfs_globals.c | 2 --
+ fs/xfs/xfs_sysctl.h  | 2 --
+ 2 files changed, 4 deletions(-)
+
+diff --git a/fs/xfs/xfs_globals.c b/fs/xfs/xfs_globals.c
+index f18fec0adf66..f6f628c01feb 100644
+--- a/fs/xfs/xfs_globals.c
++++ b/fs/xfs/xfs_globals.c
+@@ -23,8 +23,6 @@ xfs_param_t xfs_params = {
+ 	.inherit_sync	= {	0,		1,		1	},
+ 	.inherit_nodump	= {	0,		1,		1	},
+ 	.inherit_noatim = {	0,		1,		1	},
+-	.xfs_buf_timer	= {	100/2,		1*100,		30*100	},
+-	.xfs_buf_age	= {	1*100,		15*100,		7200*100},
+ 	.inherit_nosym	= {	0,		0,		1	},
+ 	.rotorstep	= {	1,		1,		255	},
+ 	.inherit_nodfrg	= {	0,		1,		1	},
+diff --git a/fs/xfs/xfs_sysctl.h b/fs/xfs/xfs_sysctl.h
+index 276696a07040..51646f066c4f 100644
+--- a/fs/xfs/xfs_sysctl.h
++++ b/fs/xfs/xfs_sysctl.h
+@@ -29,8 +29,6 @@ typedef struct xfs_param {
+ 	xfs_sysctl_val_t inherit_sync;	/* Inherit the "sync" inode flag. */
+ 	xfs_sysctl_val_t inherit_nodump;/* Inherit the "nodump" inode flag. */
+ 	xfs_sysctl_val_t inherit_noatim;/* Inherit the "noatime" inode flag. */
+-	xfs_sysctl_val_t xfs_buf_timer;	/* Interval between xfsbufd wakeups. */
+-	xfs_sysctl_val_t xfs_buf_age;	/* Metadata buffer age before flush. */
+ 	xfs_sysctl_val_t inherit_nosym;	/* Inherit the "nosymlinks" flag. */
+ 	xfs_sysctl_val_t rotorstep;	/* inode32 AG rotoring control knob */
+ 	xfs_sysctl_val_t inherit_nodfrg;/* Inherit the "nodefrag" inode flag. */
+-- 
+2.39.2
 
