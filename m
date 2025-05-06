@@ -1,30 +1,71 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2BEF4B1E6B;
-	Tue,  6 May 2025 07:51:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8EB74B1E6B
+	for <linux-kernel@vger.kernel.org>; Tue,  6 May 2025 07:51:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746517883; cv=none; b=BaxwbXjyh7CAKHPtpfrT1CZdxEIkftbfOMmkXqWq4lmb5bRTKNMzfZo8pzKBZkM8S3L514z5A4px/vdmFGqQceD5XU1rhVHBfqRp2rpfel+1s0pdiNdf+8t4MUifZRZAIOOWLZikG0RLR8kXjg0UMfGNBUFOnGDmWT4kP3S4x1M=
+	t=1746517903; cv=none; b=vBjVfOP8UOp2HY/mo1/OWnEo4T6bxvppGKcirte+22u3vmpsjoZHTicA9ffL+o0PUfhC/fI4fmQ9v9LOQ0Q1IOYEAPHWd4+uMKHENHVGSrpQ+GIF/Wv1VDJTCewcUQwQ8WigBK5g1LFCNGgT+c4Z52VPzm7U+xzuKX+WBT+TCdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746517883; c=relaxed/simple;
-	bh=1CX/lfJBBRj/7Bkzs8EaPt98CGd3E61b+7bPWFKLsdI=;
+	s=arc-20240116; t=1746517903; c=relaxed/simple;
+	bh=pl5OPutyKsg+Z1sBcUP+StmoSWV1JUI7XfC+CTyUjxo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bTgHqQpo8kNbM5mWksZVCQbMA6JYrQIfL4tymVgN9LgtYWjjIE+Aq2ThtsJAff2dbYf7OKjlcfSd9hR6a7xKYqnprjqibEXRPyy7u6DcxkJ9zYknf2+Itd8sj1oyhlnv5VBp17xrlYhwYMbWgoGU6Kbp3RIKSrzcwvPvn8dylKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Zs9Ym0TKjz4f3jXs;
-	Tue,  6 May 2025 15:50:52 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 798ED1A1C5E;
-	Tue,  6 May 2025 15:51:16 +0800 (CST)
-Received: from [10.174.179.80] (unknown [10.174.179.80])
-	by APP4 (Coremail) with SMTP id gCh0CgAXe19yvxlod1paLg--.34192S3;
-	Tue, 06 May 2025 15:51:16 +0800 (CST)
-Message-ID: <52c1dd13-1a04-4d9a-b687-639ed348474e@huaweicloud.com>
-Date: Tue, 6 May 2025 15:51:13 +0800
+	 In-Reply-To:Content-Type; b=e0moWqJUm2U6B09iKJAB6a4WcJ4peCcfwkJpd++rt3shhCPVtkIZwiDEyOfYxjNL8m1wNApXhuan57r4gQqtAiG7seDvsV1pIGSJ6jnq1IYljBzshO6EYCYjj1fI+rpLVDZvYweklbiC1L8c+MnxAU8posyyzu4ZC3gyqKiPEps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ug8zVkKs; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ug8zVkKs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746517899;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5HBVspWdQ+Fl1RGFmbNa4oPmFUDDRVe4VvohOGLQ5VY=;
+	b=Ug8zVkKsXLnMafOEn0EFu0KGQLjLX2Iz+ZDCwjHvQ+uFTzJudVla0GPW5uQ2D1x+axJlbr
+	ncso5wO2ZrOL+xbRcy1Wq/7/K52CYQPAHfySHUMJOEfD1GocQClz1Xk5lkFzMLs3vUmlX7
+	+/puUI8TXmxjTxof9TD7tgJnmYf0TOk=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-216-hiCLPCAxPdmOOH1hP5nNVw-1; Tue, 06 May 2025 03:51:38 -0400
+X-MC-Unique: hiCLPCAxPdmOOH1hP5nNVw-1
+X-Mimecast-MFC-AGG-ID: hiCLPCAxPdmOOH1hP5nNVw_1746517897
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43d00017e9dso27803505e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 00:51:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746517897; x=1747122697;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5HBVspWdQ+Fl1RGFmbNa4oPmFUDDRVe4VvohOGLQ5VY=;
+        b=nvmWjdwyXQRyPYW5qzfeYpFtQ3g9WlO00CaDHvdAXvguhEMQtJKVFLAsMRFPQhq6sy
+         YSU1HbNeSwUtJLn4ZTXJ5LSvZ8N7i0TSUwY8358A3xFQBGbS3VO4kvDl9H90Rjd2wUDo
+         tBZ2B90oId3DNE+MMR68cH+y/Ri+6PQL0yZtOOK52g7SXyVLRY4E8HsCUaTyOZAq4m38
+         BCgNxasZWDP7HsOrM5QjX3MhkXiRSUleHSv+s5/8gfhbhRVxr9kMfye4XlKJHY8a1A6O
+         PhM4f0wJM6LvJHolJ7+Wfb6TxXWmTqZujGLqKjT+K4Rm0ZJIF/wspN3Q2ghfA2gOxp7Q
+         TmBA==
+X-Forwarded-Encrypted: i=1; AJvYcCX3BI9c6h8hmsiHlkBO91ZN/FGlCqOJ8K10x4iEPeHLrirRV/BuOpPsWu/bj4Ie8AhOJQyd4FXOUK2d9WY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyhAEvTAOGlL3PzBC/oXyc2PBSXmJN9DOAK5oPnbQV//Ck70cOn
+	vQK7dRERbt6cYL9OVPltRTDfHCW3+tKkM+rDfrRgnCW2/SPftl6WbIDvh9hc4dAe3m6ojXSMAMO
+	t7o3YlNTqTMb871RkjeANeeYUcBCMi7RLJG0MlWNwRFMjNUEw0CAc2qk7MLIVlQ==
+X-Gm-Gg: ASbGnct9XkW+RUnO78F+d1H3kzKigNbeAajskpBDt2X/K7z/0tYr30IqdSct6KLrZyI
+	dSa0BI7QvRTHMc6Qs2+wdvwxxP+MpMUsf17BpBg7S74IZ/xXed3sMJInw6fI07mp7/6tTIwgsyE
+	vFCBUVfjU0ON2O4hGYWHJFnmBjaRcXYKnM6zpd0o2fD4Ybkuix9fAZ9WyCNJ42GCSxbvZYAWG6/
+	g8bYTq8+aEWiVtHT8aQ9sg+NlMA3HZlbyAzsUmThYsrRkGoUIZVFn/FAQ1XGx3ppgdpPpvUNE9u
+	uZROy/EQDKNn/NNoU2QUQ8759yILXyg1443aZdfQYCq+bUJtATDe8cNwuvE=
+X-Received: by 2002:a05:600c:1da6:b0:43d:209:21fd with SMTP id 5b1f17b1804b1-441d101530emr16668405e9.30.1746517897141;
+        Tue, 06 May 2025 00:51:37 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH4JCCBzyq6jjjPZ85Ct7gO4cXiSXJScVK2314x0EXxLsegTrsV4ue0Tzlfjo9FY9dHlO703g==
+X-Received: by 2002:a05:600c:1da6:b0:43d:209:21fd with SMTP id 5b1f17b1804b1-441d101530emr16668135e9.30.1746517896823;
+        Tue, 06 May 2025 00:51:36 -0700 (PDT)
+Received: from ?IPV6:2a0d:3344:2706:e010:b099:aac6:4e70:6198? ([2a0d:3344:2706:e010:b099:aac6:4e70:6198])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b2b28045sm202937545e9.35.2025.05.06.00.51.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 06 May 2025 00:51:36 -0700 (PDT)
+Message-ID: <89c05b7f-cc3b-4274-a983-0cd867239ae1@redhat.com>
+Date: Tue, 6 May 2025 09:51:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -32,106 +73,86 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v4 01/11] block: introduce BLK_FEAT_WRITE_ZEROES_UNMAP
- to queue limits features
-To: "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
- linux-block@vger.kernel.org, dm-devel@lists.linux.dev,
- linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
- linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org, hch@lst.de,
- tytso@mit.edu, djwong@kernel.org, john.g.garry@oracle.com,
- bmarzins@redhat.com, chaitanyak@nvidia.com, shinichiro.kawasaki@wdc.com,
- brauner@kernel.org, yi.zhang@huawei.com, chengzhihao1@huawei.com,
- yukuai3@huawei.com, yangerkun@huawei.com
-References: <20250421021509.2366003-1-yi.zhang@huaweicloud.com>
- <20250421021509.2366003-2-yi.zhang@huaweicloud.com>
- <yq18qnav4zj.fsf@ca-mkp.ca.oracle.com>
+Subject: Re: [PATCH net 09/11] net: dsa: b53: fix toggling vlan_filtering
+To: Jonas Gorski <jonas.gorski@gmail.com>,
+ Florian Fainelli <florian.fainelli@broadcom.com>,
+ Andrew Lunn <andrew@lunn.ch>, Vladimir Oltean <olteanv@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Russell King <linux@armlinux.org.uk>,
+ Kurt Kanzenbach <kurt@linutronix.de>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250429201710.330937-1-jonas.gorski@gmail.com>
+ <20250429201710.330937-10-jonas.gorski@gmail.com>
 Content-Language: en-US
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-In-Reply-To: <yq18qnav4zj.fsf@ca-mkp.ca.oracle.com>
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <20250429201710.330937-10-jonas.gorski@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:gCh0CgAXe19yvxlod1paLg--.34192S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxWF4rtF4kur4rCryrKF15Arb_yoW5AF1rp3
-	yjv3W8tr9xGF17uw1kZw1vqry5uws3CFW3Gw48X3s09ws8XF1xtFySqFyYg3yxGr1fGa4j
-	vFWvqa47Aan8AFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
-	14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWr
-	XwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
-	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
-	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0
-	s2-5UUUUU==
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-Hi, Martin!
+On 4/29/25 10:17 PM, Jonas Gorski wrote:
+> @@ -789,26 +805,39 @@ int b53_configure_vlan(struct dsa_switch *ds)
+>  	 * entry. Do this only when the tagging protocol is not
+>  	 * DSA_TAG_PROTO_NONE
+>  	 */
+> +	v = &dev->vlans[def_vid];
+>  	b53_for_each_port(dev, i) {
+> -		v = &dev->vlans[def_vid];
+> -		v->members |= BIT(i);
+> +		if (!b53_vlan_port_may_join_untagged(ds, i))
+> +			continue;
+> +
+> +		vl.members |= BIT(i);
+>  		if (!b53_vlan_port_needs_forced_tagged(ds, i))
+> -			v->untag = v->members;
+> -		b53_write16(dev, B53_VLAN_PAGE,
+> -			    B53_VLAN_PORT_DEF_TAG(i), def_vid);
+> +			vl.untag = vl.members;
+> +		b53_write16(dev, B53_VLAN_PAGE, B53_VLAN_PORT_DEF_TAG(i),
+> +			    def_vid);
+>  	}
+> +	b53_set_vlan_entry(dev, def_vid, &vl);
+>  
+> -	/* Upon initial call we have not set-up any VLANs, but upon
+> -	 * system resume, we need to restore all VLAN entries.
+> -	 */
+> -	for (vid = def_vid; vid < dev->num_vlans; vid++) {
+> -		v = &dev->vlans[vid];
+> +	if (dev->vlan_filtering) {
+> +		/* Upon initial call we have not set-up any VLANs, but upon
+> +		 * system resume, we need to restore all VLAN entries.
+> +		 */
+> +		for (vid = def_vid + 1; vid < dev->num_vlans; vid++) {
+> +			v = &dev->vlans[vid];
+>  
+> -		if (!v->members)
+> -			continue;
+> +			if (!v->members)
+> +				continue;
+> +
+> +			b53_set_vlan_entry(dev, vid, v);
+> +			b53_fast_age_vlan(dev, vid);
+> +		}
+>  
+> -		b53_set_vlan_entry(dev, vid, v);
+> -		b53_fast_age_vlan(dev, vid);
+> +		b53_for_each_port(dev, i) {
+> +			if (!dsa_is_cpu_port(ds, i))
+> +				b53_write16(dev, B53_VLAN_PAGE,
+> +					    B53_VLAN_PORT_DEF_TAG(i),
+> +					    dev->ports[i].pvid);
 
-On 2025/5/6 12:21, Martin K. Petersen wrote:
-> 
-> Hi Zhang!
-> 
->> +		[RO] Devices that explicitly support the unmap write zeroes
->> +		operation in which a single write zeroes request with the unmap
->> +		bit set to zero out the range of contiguous blocks on storage
->> +		by freeing blocks, rather than writing physical zeroes to the
->> +		media. If the write_zeroes_unmap is set to 1, this indicates
->> +		that the device explicitly supports the write zero command.
->> +		However, this may be a best-effort optimization rather than a
->> +		mandatory requirement, some devices may partially fall back to
->> +		writing physical zeroes due to factors such as receiving
->> +		unaligned commands. If the parameter is set to 0, the device
->> +		either does not support this operation, or its support status is
->> +		unknown.
-> 
-> I am not so keen on mixing Write Zeroes (which is NVMe-speak) and Unmap
-> (which is SCSI). Also, Deallocate and Unmap reflect block provisioning
-> state on the device but don't really convey what is semantically
-> important for your proposed change (zeroing speed and/or media wear
-> reduction).
-> 
+Just if you have to repost for other reasons:
+			if (dsa_is_cpu_port(ds, i))
+				continue;
 
-Since this flag doesn't strictly guarantee zeroing speed or media wear
-reduction optimizations, but rather reflects typical optimization
-behavior across most supported devices and cases. Therefore, I propose
-using a name that accurately indicates the function of the block device.
-However, also can't think of a better name either. Using the name
-WRITE_ZEROES_UNMAP seems appropriate to convey that the block device
-supports this type of Deallocate and Unmap state.
+			b53_write16(dev, B53_VLAN_PAGE, //...
 
-> That said, I'm having a hard time coming up with a better term.
-> WRITE_ZEROES_OPTIMIZED, maybe? Naming is hard...
+should probably be more readable.
 
-Using WRITE_ZEROES_OPTIMIZED feels somewhat too generic to me, and
-users may not fully grasp the specific optimizations it entails based
-on the name.
-
-> 
-> For the description, perhaps something like the following which tries to
-> focus on the block layer semantics without using protocol-specific
-> terminology?
-> 
-> [RO] This parameter indicates whether a device supports zeroing data in
-> a specified block range without incurring the cost of physically writing
-> zeroes to media for each individual block. This operation is a
-> best-effort optimization, a device may fall back to physically writing
-> zeroes to media due to other factors such as misalignment or being asked
-> to clear a block range smaller than the device's internal allocation
-> unit. If write_zeroes_unmap is set to 1, the device implements a zeroing
-> operation which opportunistically avoids writing zeroes to media while
-> still guaranteeing that subsequent reads from the specified block range
-> will return zeroed data. If write_zeroes_unmap is set to 0, the device
-> may have to write each logical block media during a zeroing operation.
-> 
-
-Thank you for optimizing the description, it looks good to me. I'd like
-to this one in my next iteration. :)
+BTW, @Florian: any deadline for testing feedback on this?
 
 Thanks,
-Yi.
+
+Paolo
 
