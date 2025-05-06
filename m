@@ -1,40 +1,40 @@
-Received: from SEYPR02CU001.outbound.protection.outlook.com (mail-koreacentralazon11023135.outbound.protection.outlook.com [40.107.44.135])
+Received: from OS8PR02CU002.outbound.protection.outlook.com (mail-japanwestazon11022082.outbound.protection.outlook.com [40.107.75.82])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84E58274FF9;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FFE527586F;
 	Tue,  6 May 2025 09:07:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.44.135
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.75.82
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746522481; cv=fail; b=ndkYpTqY+3WcZbdZ2NqhsQSnkbF/Yrc6Mr173sQeW6DWlyE3xgmwyxAK6ELT8DLZMOi6zudINqKy7QoCVSICiEq2gnH0cYwSAncnCBHv4Wmu3CML3Axq+VluNw0cpeyreuiGNdivuA/1zFIplJVMuf75fMBoNJnjxJfhkbBU9CQ=
+	t=1746522482; cv=fail; b=V6zb+4Iia80IR5dGcjsobs8x5Fo+UnW6pzF9mXfZ5hmEEvk2pJwmcXyYDDtqPLmBrgG+aHl2GuHssCnNw0l9UEW7TL1lfVc865IHySIyLHYPWgbUBcpQUOYgqgtYeHi9zrDDEcslpHCkk4U62FEbV7jccakaHrm4r8clrBrVhrM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746522481; c=relaxed/simple;
-	bh=UKsmwzZe26YEwRW0MepEcATvSDXCq77/xB1KZNvKQco=;
+	s=arc-20240116; t=1746522482; c=relaxed/simple;
+	bh=Tx0CeK12rw8fNnV+a43EhPsd3vEgR7B3QwBn0narui0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=W8VTNLxJsnuya21wbdzek7lNzC5ttWC7aU8buzd7B4I1HMx3JGsxVyKAXF6m6L+4KnWcdKbXscMLfl2cADqUE3KO5LgIrjYiyeZMBpfBpdlyyquPx8budQekpLbojZEvfVguMoKe14Rf9xHYC+hsDTi0LKIRsHGTR2e1pMwFK6M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=40.107.44.135
+	 MIME-Version:Content-Type; b=k/Q3VmgwqXYfjDAJwoFLn1y1Xc+qa4dlaGPU7STJy5hrpiNASyQxBDoL4TdSuRTFivt/tSxFme2E1Dv12kdXRKiJyvuj/+usSBohpr8La4XwvMWzd9yGRswmUCHS4Is6t2XIz/dDwbEChUkGWUud3xDaInrOoGkOgtrBbMx//gA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=40.107.75.82
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qKT/qx6LC3Y8wObMsv+KS8473l13P+CiWkmX4RLMrAmTvtzn+pfGaHAMLnj4yEOODlGLhD3ZlMIpPns6nIZmP+nfUxyd/Jzt1h7t39qztrumzAgyabX4CB9hoh7oKvDIXCaYmbF5KLAX5a9Qhe2SEflndQB26DC1WugYVQ2AZbUOaMU7x+p7b97NsaeflxfmZe63MGGlm74w7COWWi6XOI3ugipaYVHyz5E9fnUotRltUG/cKSKwAOY3lCjCcuAhbrgSDX1djeL8WXBQ95Ipgz/2syniQF72Bx/hwAZjR/Ik9//LtR9Z3nBJ9tW85qlXPA8XBxJBdisF759t1Fd9kg==
+ b=r7ZJs442NyBlyBlSX44ev+1W6xBz1Za9V3q8ANXRfDO2ZgEgBqOIV2LZsUe8bhKR13WTySfUvpSpoo0wfV0bTZpi5d7uOkk3Gg0oZ+r9kljecwC6GX5hN7mqOgG9NqoFduYuIly6051/YrW+0/HJJyyB3aKYw4bgw4Lv0gDq1BQd6fBqF/+1wgLsDyqLEV3fBqxjZcg4r6a9YUVW8V/z/tlRvRvB5CW/DsO0jLAqVMKCzMOk/7P7JxkfdE+FU0wsgbJchD6EUHwwysZ77xDSYpECdulm6Gwe5rVhhTjIPIpKFCUetqcAJHSsodlnAGIw1EqrmZWd69xFOl36ZwdcfA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Qkp6gQi94U/2WPGbuHu4BvuDRcR+scHugkw+FjX9z/o=;
- b=sGmzH+gsPf5SQHSMbxznPapPhxB/KbwPf/cdC3QWBXTMgG3CEfNXEU3xzY+g/wO5qBkq3b0tezJHGTreNFIU28BqnpJ14Jmkz5ogTefQI0eKnW2IfdcHre2P9Z4uGkxqpoQeR+PKIpSwiZ5PgesCp46s2Hg9wOTHyeopTyjg5TcvGQLw0uORUJgg26oYbxrn/i45byNeY9a2FngMQ/BvW+a1fDw0vItKx9juFOMwsZb46T3UUsTRIblDtpkMUBpT75BHiFXxHUjNZScELvW8FsuEMC1Veq+bHorm042XSM+TdQolN1v4ninrJSTWqZQHPaavJ47oXXLNN4Utv2UTOg==
+ bh=pheMVA4F2yQ/mZAq2Tm3+5kIP/DPHkXoE3b5n9yj7P4=;
+ b=bU8fXAsjLWGvllVftK80ypbxLq3WjjpHcoZd/tf7WPPKH/sP/IGxX773D6jv7SL7e9e39ghzPk/Kv+Gf1pSjRrMMBf8Fs2p7ZGPzj/DBRpSweh22j7LYWLUdP4b9OLswVZjMfnDXmHXT4sxqKBA+0Ymz9sYdpggYLOse4kLze8XYdLdIu38bS4r+xB+9/J4WK52yWqHndwN/lFNH+BLyk40+0XvXu/LTuUY24qzH0RM+YIqhPXEU9aMWrUcYvXbgNMrD1MrS/F8ZX9Qu16/j5X4Ocfect908bkY2hFd3NZb9gWw9UUY3VsLM6EAm0YYm5KjAKKtTmbhRFlLfzh44Yw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  222.71.101.198) smtp.rcpttodomain=arm.com smtp.mailfrom=cixtech.com;
  dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
  not signed); arc=none (0)
-Received: from PS2PR01CA0067.apcprd01.prod.exchangelabs.com
- (2603:1096:300:57::31) by SEZPR06MB6717.apcprd06.prod.outlook.com
- (2603:1096:101:17b::14) with Microsoft SMTP Server (version=TLS1_2,
+Received: from TYAPR01CA0117.jpnprd01.prod.outlook.com (2603:1096:404:2a::33)
+ by TYSPR06MB7019.apcprd06.prod.outlook.com (2603:1096:400:46a::6) with
+ Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.20; Tue, 6 May
- 2025 09:07:54 +0000
-Received: from OSA0EPF000000C7.apcprd02.prod.outlook.com
- (2603:1096:300:57:cafe::dd) by PS2PR01CA0067.outlook.office365.com
- (2603:1096:300:57::31) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.43 via Frontend Transport; Tue,
- 6 May 2025 09:07:54 +0000
+ 2025 09:07:56 +0000
+Received: from TY2PEPF0000AB87.apcprd03.prod.outlook.com
+ (2603:1096:404:2a:cafe::d2) by TYAPR01CA0117.outlook.office365.com
+ (2603:1096:404:2a::33) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8699.31 via Frontend Transport; Tue,
+ 6 May 2025 09:07:56 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
  smtp.mailfrom=cixtech.com; dkim=none (message not signed)
  header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
@@ -42,11 +42,11 @@ Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
  222.71.101.198 as permitted sender) receiver=protection.outlook.com;
  client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
 Received: from smtprelay.cixcomputing.com (222.71.101.198) by
- OSA0EPF000000C7.mail.protection.outlook.com (10.167.240.53) with Microsoft
+ TY2PEPF0000AB87.mail.protection.outlook.com (10.167.253.6) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8722.18 via Frontend Transport; Tue, 6 May 2025 09:07:53 +0000
+ 15.20.8722.18 via Frontend Transport; Tue, 6 May 2025 09:07:56 +0000
 Received: from localhost.localdomain (unknown [172.16.64.25])
-	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 704004160CA6;
+	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id B6EFB4160CAB;
 	Tue,  6 May 2025 17:07:52 +0800 (CST)
 From: Peter Chen <peter.chen@cixtech.com>
 To: robh@kernel.org,
@@ -63,13 +63,11 @@ Cc: linux-arm-kernel@lists.infradead.org,
 	kajetan.puchalski@arm.com,
 	sudeep.holla@arm.com,
 	eballetb@redhat.com,
-	Guomin Chen <Guomin.Chen@cixtech.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
 	Peter Chen <peter.chen@cixtech.com>,
-	Lihua Liu <Lihua.Liu@cixtech.com>
-Subject: [PATCH v7 4/9] dt-bindings: mailbox: add cix,sky1-mbox
-Date: Tue,  6 May 2025 17:07:47 +0800
-Message-Id: <20250506090752.3695666-5-peter.chen@cixtech.com>
+	Fugang Duan <fugang.duan@cixtech.com>
+Subject: [PATCH v7 9/9] MAINTAINERS: Add CIX SoC maintainer entry
+Date: Tue,  6 May 2025 17:07:52 +0800
+Message-Id: <20250506090752.3695666-10-peter.chen@cixtech.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20250506090752.3695666-1-peter.chen@cixtech.com>
 References: <20250506090752.3695666-1-peter.chen@cixtech.com>
@@ -82,151 +80,83 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: OSA0EPF000000C7:EE_|SEZPR06MB6717:EE_
+X-MS-TrafficTypeDiagnostic: TY2PEPF0000AB87:EE_|TYSPR06MB7019:EE_
 Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: abdd0196-6dc6-434c-aee0-08dd8c7d7c10
+X-MS-Office365-Filtering-Correlation-Id: 9befca50-3083-4cb0-d7ef-08dd8c7d7db6
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|36860700013|376014|1800799024;
+	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Do5c3fUWuUZqA9z9ZsjC4Tn9fqEZ7jriTiK67x0heEu9auCNxe8gT7MW+Pe+?=
- =?us-ascii?Q?CQ76DgNspC1BteXBUKgrQ5NO76HSEhIcR2BEn/I5yecr/M2v8dLz2Uh9DFB9?=
- =?us-ascii?Q?Z5Xh2Bo/MZeRwD02b7H6JHOz3dTmg6Vz8NTynq7bCq1d/gGQUqESYfB/bWmu?=
- =?us-ascii?Q?tRlPDumVuePQSVUlJ3/LZhOZknWJhfyT+8+6gYjT51Ms4SrULpPiEiXCAh7d?=
- =?us-ascii?Q?+ljoGY/5PQuMYLct2tA/u0I2azTahjv4QnE1QwVD/HUpQcdWKuhdWOSemCxp?=
- =?us-ascii?Q?0HdNb5Uc3dQjPdkC8l5ys6A44mXp8Aeb9B3+tJGRQGUh9RvamPXBy7O+g8bP?=
- =?us-ascii?Q?yi4yLoJ6+gHXfXtI1onmlWOWKQ1I8iDd/4lugqdt59rL7TKFzCkOkKUNphyQ?=
- =?us-ascii?Q?VVacZb3AqzHWuj8TuOgRJhryCR+aC/GZVgw0mQBvX5UR5S53apQwaAsWNmPo?=
- =?us-ascii?Q?optGZoL5quGLKyqJ44zMUuBJql3oML/FAOo1KI/9MDa+Gz71jQ7e90V3ogPd?=
- =?us-ascii?Q?/EH2DX4mRF79XUwnzkTYaDWbnCJCTYWLoriMMuOhAuRVP+xKXwgzRd0b6mX4?=
- =?us-ascii?Q?rIX7jxJhSsu12747U+hKe5r22rZ7IgrxEmy5OHtX3CsKqqp/ZE4V1q9QZwAx?=
- =?us-ascii?Q?eqDylXuAPFlyjKCR19yZBtz9r2tLZx6Lmg9ADQlq9EB0K9BXjd/XUx9Gf+w9?=
- =?us-ascii?Q?FzuYYmpvuD97mZRpyG3Z//2NT1NAza1NZgDkkNZThN3SerjELO/HiWrcXXba?=
- =?us-ascii?Q?Uim2Owa08jce0y0nWIwH/VPYGxBgTLrHfB+ywUh/+hwxaRKFUM+V3WBqQgXu?=
- =?us-ascii?Q?iR0Hhz8iALeIm9Th0X6vugmirlOIEBVStrCE1/xMe1tPgF5rdG12bz9vhHZd?=
- =?us-ascii?Q?5weJBZUREkaumUpbq6jGXrPRZIlzFzCeHBM/a1UQuFbmvSiWG7J7PcWTrFpS?=
- =?us-ascii?Q?Qj0eWfsygH5tnDrnfYZQWzrQjN9vuxR1g/rUpTuNQ6M1fzg376MwHN5Bcjpw?=
- =?us-ascii?Q?xJ5AbYmL3rwKSR8JmDj9ktm2C6P0XWlGQOrTOlnW6aImfSK1ZDUWQ+isrjLP?=
- =?us-ascii?Q?K4WagKVwQrFGa1T/sOxpoS/1bN5CcsUasMajk+L1WWgYqQKi7WLfpRXLVsNL?=
- =?us-ascii?Q?YRUPHidd4+D8uHzTptUZJ2q9CqI2SIQ7S7+90c9PCUcAXAX3BgFSbY8DbDFA?=
- =?us-ascii?Q?FIzdW+pD/y8FPqdKxJ5RTaU1Kh4+Y84fFpcCEOtVUPt60FGpA22sdgC3chWm?=
- =?us-ascii?Q?dddOXmX1K8Qta6gyYfhLX0z21yzeLMd043Uyp3P3q586T+iRHnpFc2+nuWOg?=
- =?us-ascii?Q?3eXbA4fMAFMFaLMSokxkll9OyP3sCLmJR72rnXMh606e/azsKICwcItYB/Wv?=
- =?us-ascii?Q?yL1Z77I/2AKtyFERIOVBoUFbJgxS/7HaU/e0eiB4WgJW7TlLgFfE8e+3F+pc?=
- =?us-ascii?Q?TaQ1QPKzUDPht6UiHkwTXOoWJD1KbWljRHDeHz9CavyTQQB6zqoBpntRbLiK?=
- =?us-ascii?Q?GoA9r4CKI9iozE0=3D?=
+	=?us-ascii?Q?fiqxMjlvo1mkChGwzSrnltnavujS4ASfw+INNgrZbhweumkxILK+PSLFUCcr?=
+ =?us-ascii?Q?ZM5FGN5gAheEdchTMqJc/6+euUjH0ni4NexigKs9GMZWT6Eoku4N/H/GJ33E?=
+ =?us-ascii?Q?ZTSmg7u24+jvila9J3AjCvbO4qbnrVTvxB7DUblanj1Nr89svdfPSJF8GDK6?=
+ =?us-ascii?Q?q1kz9j+PxbegKdPwCz8Tna0MK0Z87BP9UHGSxbOHP1A8EttgSrNN0ZztlrkR?=
+ =?us-ascii?Q?ZYp6QzZk2f1kBwtO07wMYG7i19HlFsQo46xbe5lyikobVlP5gvujGJIur8KF?=
+ =?us-ascii?Q?cMBSoD33qUgkff4YltM9I6MotnyMtLXjx11A2ix17LV9rzhaE0DuCxXZPthB?=
+ =?us-ascii?Q?jA4JeHZlvO2JH1fxaDnWDeRO1Cf3iw5cGDyTIkwmzHkJzPvPIruogj/T/rpe?=
+ =?us-ascii?Q?+llbd0IMCqh6I6Veqz07e3QRb5hb+UW692sXkgKKzh7YeWFz2hS3FwMYFuSO?=
+ =?us-ascii?Q?mDNHoyyNWnJBLSNlVnI79bphTOHxkPHCWZ24rgMYvDXSc7cu8mnct+l6bPmM?=
+ =?us-ascii?Q?VTzNX9ohBBX+mbI6O7/flD3kPOhsba4wIW70udiKWKLXRHAxsQFbjz1luzAP?=
+ =?us-ascii?Q?F1+a9wy9nuhx/vADdIT9NoGcjd3Rz8L40KI9tbIKmib1IkjV6+AkdkCSFYBp?=
+ =?us-ascii?Q?AuG4KDXApK2IAQl7q+npFP9806ZnHGMBf5B7oDqRzlqyrS/LMng3IfxKtNFH?=
+ =?us-ascii?Q?T9Ai3c0jy1HMEPSEwuPiaTEwExXV+78Z0WqNj/n56mkteilDYWhDlsLRx5vA?=
+ =?us-ascii?Q?IUUnqqVjE6SNtOu1yW9t8QmnlWQYW/k5QB8z0uxyinLnqYwUDoJkQ21VhQJ3?=
+ =?us-ascii?Q?gG6b8YXg4/Vcp5krmYuibqRTA1ve8SXK6yuU4ztBnu8SHR+jYmvNrrgKHRsw?=
+ =?us-ascii?Q?YZrEa/ZM3mR4G4gKSgEQEvovgmO9H8WihFFxogDMRiPj+NHLd56T0Uf8ti8T?=
+ =?us-ascii?Q?moV1Tw5/nh+Ei8qvbg/QxrfHLjs5otTYkC1UzU+wobJbKD1R63cCIzbcYRAk?=
+ =?us-ascii?Q?lP8WXdtBvmhI2x2IRE/z/6Yfl+j831dnn7E8K7pBasZ6nquN7VEuuncf9pIw?=
+ =?us-ascii?Q?kW2nY2BA0u9JnfbOEontCOVVrobqQn++rOmzQxVOTsiQgSHYrtt8GvRj05CE?=
+ =?us-ascii?Q?RDG4EH79LH+pgn87JVf1DlHpkexZNlAORt/eXZ1Zz8y2YjRMmIurHIiicDmg?=
+ =?us-ascii?Q?RaCQYYlkzQDi9Oe6X2+3IhOQKHLapSPnRlKuVJjSY8XxEZWUIN50LoxceD3e?=
+ =?us-ascii?Q?VqELEyAVULqmTTtlaqSfWyf5ze/d5sXS0rl//M2wR5FXME8d+5QXli9TCrgC?=
+ =?us-ascii?Q?HsbeLStA0vZ+A7TLBHeVefr5DxNVAzMHSNfJ4I/NPJ+LzQT5yPdL34PlCgjS?=
+ =?us-ascii?Q?MuQqgqkj75G4E08JAUYAkbvPwkn7tbZc3L/jXafT71vixEiIjZ19QDgOC5oh?=
+ =?us-ascii?Q?EAn68epN/phGOn9rvzFSVLkVn1ymW0ubFMNzeJ8+jG05M+iHE0QoU9P87C7M?=
+ =?us-ascii?Q?QgMm1cH0otAHKFjsn23Ro52Edv1vaeZ3m6n5?=
 X-Forefront-Antispam-Report:
-	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(376014)(1800799024);DIR:OUT;SFP:1102;
+	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(376014);DIR:OUT;SFP:1102;
 X-OriginatorOrg: cixtech.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 09:07:53.4266
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 09:07:56.2305
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: abdd0196-6dc6-434c-aee0-08dd8c7d7c10
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9befca50-3083-4cb0-d7ef-08dd8c7d7db6
 X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
-X-MS-Exchange-CrossTenant-AuthSource: OSA0EPF000000C7.apcprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: TY2PEPF0000AB87.apcprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR06MB6717
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYSPR06MB7019
 
-From: Guomin Chen <Guomin.Chen@cixtech.com>
+Using this entry as the maintainers information for CIX SoCs.
 
-Add a dt-binding for the Cixtech Mailbox Controller.
-
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Reviewed-by: Peter Chen <peter.chen@cixtech.com>
-Signed-off-by: Guomin Chen <Guomin.Chen@cixtech.com>
-Signed-off-by: Lihua Liu <Lihua.Liu@cixtech.com>
+Acked-by: Fugang Duan <fugang.duan@cixtech.com>
 Signed-off-by: Peter Chen <peter.chen@cixtech.com>
 ---
-Changes for v7:
-- Add Krzysztof Kozlowski Reviewed-by tag
-- Add my Sob tag
+ MAINTAINERS | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-Changes for v3:
-- Replace the direction attribute of the mailbox with the strings "rx" and "tx"
-
- .../bindings/mailbox/cix,sky1-mbox.yaml       | 71 +++++++++++++++++++
- 1 file changed, 71 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mailbox/cix,sky1-mbox.yaml
-
-diff --git a/Documentation/devicetree/bindings/mailbox/cix,sky1-mbox.yaml b/Documentation/devicetree/bindings/mailbox/cix,sky1-mbox.yaml
-new file mode 100644
-index 000000000000..216186f7cc4d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mailbox/cix,sky1-mbox.yaml
-@@ -0,0 +1,71 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mailbox/cix,sky1-mbox.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/MAINTAINERS b/MAINTAINERS
+index c59316109e3f..169b89eabea3 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2404,6 +2404,17 @@ F:	arch/arm/boot/compressed/misc-ep93xx.h
+ F:	arch/arm/mach-ep93xx/
+ F:	drivers/iio/adc/ep93xx_adc.c
+ 
++ARM/CIX SOC SUPPORT
++M:	Peter Chen <peter.chen@cixtech.com>
++M:	Fugang Duan <fugang.duan@cixtech.com>
++R:	CIX Linux Kernel Upstream Group <cix-kernel-upstream@cixtech.com>
++L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
++S:	Maintained
++T:	git git://git.kernel.org/pub/scm/linux/kernel/git/peter.chen/cix.git
++F:	Documentation/devicetree/bindings/arm/cix.yaml
++F:	arch/arm64/boot/dts/cix/
++K:	\bcix\b
 +
-+title: Cixtech mailbox controller
-+
-+maintainers:
-+  - Guomin Chen <Guomin.Chen@cixtech.com>
-+
-+description:
-+  The Cixtech mailbox controller, used in the Cixtech Sky1 SoC,
-+  is used for message transmission between multiple processors
-+  within the SoC, such as the AP, PM, audio DSP, SensorHub MCU,
-+  and others
-+
-+  Each Cixtech mailbox controller is unidirectional, so they are
-+  typically used in pairs-one for receiving and one for transmitting.
-+
-+  Each Cixtech mailbox supports 11 channels with different transmission modes
-+    channel 0-7 - Fast channel with 32bit transmit register and IRQ support
-+    channel 8   - Doorbell mode,using the mailbox as an interrupt-generating
-+                   mechanism.
-+    channel 9   - Fifo based channel with 32*32bit depth fifo and IRQ support
-+    channel 10  - Reg based channel with 32*32bit transmit register and
-+                   Doorbell+transmit acknowledgment IRQ support
-+
-+properties:
-+  compatible:
-+    const: cix,sky1-mbox
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  "#mbox-cells":
-+    const: 1
-+
-+  cix,mbox-dir:
-+    $ref: /schemas/types.yaml#/definitions/string
-+    description: Direction of the mailbox relative to the AP
-+    enum: [tx, rx]
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - "#mbox-cells"
-+  - cix,mbox-dir
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    soc {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+
-+        mbox_ap2pm: mailbox@30000000 {
-+            compatible = "cix,sky1-mbox";
-+            reg = <0 0x30000000 0 0x10000>;
-+            interrupts = <GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH 0>;
-+            #mbox-cells = <1>;
-+            cix,mbox-dir = "tx";
-+        };
-+    };
+ ARM/CLKDEV SUPPORT
+ M:	Russell King <linux@armlinux.org.uk>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
 -- 
 2.25.1
 
