@@ -1,160 +1,128 @@
-Received: from mail.tkos.co.il (mail.tkos.co.il [84.110.109.230])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97D262FC0F6;
-	Tue,  6 May 2025 03:16:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.110.109.230
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1164B35EBA6;
+	Tue,  6 May 2025 03:18:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746501383; cv=none; b=Wghjj8g648HlwQUwAPsFWhD7/HK1wmSBmavfamYUZa/OTf6nDQV0YJJebvL5JZJX9GGVlNRvY7W1r/cB8WDWRixA9aSi3rnPkpPxdiMbmdc/xeONxQV/mi1dhvnamLCMpbpEWQkHOgXkJqCNN8xbxghS+qxI4OmEI70aoIhbsuQ=
+	t=1746501537; cv=none; b=C4ZwTaUhydG55Nj3pLXxLk5h57dhgEZnP4euD8npPSmwFF/iLxhdaKZyXR8Rb6+n7Zw9NJvETpBCnPxJCCTJdX1qbonvB9/Gp6HlY1Wd7xUXGNmPbEeIwvHbDVHWpqJHdE+jYNjREkZEqrFi7GZRsgIbyp16l3KXhqsC4N96IfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746501383; c=relaxed/simple;
-	bh=BvOr7NK5R2aGH1ZVeHRXfa7u1FmSfQWOwX4gQOAnSvo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=llnVw/L9TofC0Pd6zmvmMi4seZ+ungcdMn8FpyQbxjDKCMaDQPVejZnm9U5slcX1l63xaWTlT8YZ9GVvzDHGC4vDsUJ/pL+OTtyll7poTl6m6eltr/6G6FtUXZ62zlRRWx4coJ4GnaHgywiqlXVGPa+wUXTLe4HwV3YQWSVMUjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tkos.co.il; spf=pass smtp.mailfrom=tkos.co.il; dkim=pass (2048-bit key) header.d=tkos.co.il header.i=@tkos.co.il header.b=QEzvMZMw; arc=none smtp.client-ip=84.110.109.230
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tkos.co.il
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tkos.co.il
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tkos.co.il header.i=@tkos.co.il header.b="QEzvMZMw"
-Received: from localhost (unknown [10.0.8.2])
-	by mail.tkos.co.il (Postfix) with ESMTP id 3A59B440EA1;
-	Tue,  6 May 2025 06:16:09 +0300 (IDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tkos.co.il;
-	s=default; t=1746501369;
-	bh=BvOr7NK5R2aGH1ZVeHRXfa7u1FmSfQWOwX4gQOAnSvo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=QEzvMZMw4a6uOv9CxaGuj+i4uu+7yVAVgs3F74nLbhHrichdcXqSdsugr3kFzQ9+6
-	 K3kx5ajkGVv5PvRTcmX39/BLk8zKVJEMvknm/hXXLK8hRVLxWuImC2YC5UZHWKYaej
-	 hHwipghZCzA761JXtMh8W0mRjwTr8/EATBPR/g740s63+b9EUkFg+5Mprv8Q2+c9eN
-	 6zyhk1vm/xSeTaThKNpyQBO05/SwbkG17OqY6J4LFz9SUdnJNbgwdDpRY5NGBfd43D
-	 yNEEh8BeH26y9QtV35Xpd74blUl5Es+zr+rTb2GfKgMZ/fxMg8ZeK+f165JMpzfkAB
-	 q5bZ5X03sbq+g==
-From: Baruch Siach <baruch@tkos.co.il>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>,  Thomas Gleixner
- <tglx@linutronix.de>,  Krzysztof Kozlowski <krzk+dt@kernel.org>,  Conor
- Dooley <conor+dt@kernel.org>,  linux-kernel@vger.kernel.org,
-  devicetree@vger.kernel.org,  linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] dt-bindings: timer: Convert cnxt,cx92755-timer to DT
- schema
-In-Reply-To: <20250506022232.2587186-1-robh@kernel.org> (Rob Herring's message
-	of "Mon, 5 May 2025 21:22:31 -0500")
-References: <20250506022232.2587186-1-robh@kernel.org>
-User-Agent: mu4e 1.12.9; emacs 30.1
-Date: Tue, 06 May 2025 06:16:16 +0300
-Message-ID: <87plgmzawv.fsf@tarshish>
+	s=arc-20240116; t=1746501537; c=relaxed/simple;
+	bh=2A6JQf6nMBe59h6dBlVjCIOa4LyO+MYa8F434CoNhJA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=D92vtpxMKXLTk0RB1hOo0aVyUfWmowQsYMzjjQWIXuUyoVRUTFVL0hit2D4bOnvaSIaGrv4S/cK7ebzIAS2B+skO8CeL3IIIR67X/x02KenrIEf76GbwEKWwa/3LFcUR/EBwpMhQDZR7uKt3FwG7dsYSiCoOncCJo5oz+HRZryA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.40.54.178])
+	by gateway (Coremail) with SMTP id _____8CxvOKUfxloj0rWAA--.25898S3;
+	Tue, 06 May 2025 11:18:44 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.40.54.178])
+	by front1 (Coremail) with SMTP id qMiowMCx7MSPfxloqre1AA--.770S2;
+	Tue, 06 May 2025 11:18:39 +0800 (CST)
+From: Qunqin Zhao <zhaoqunqin@loongson.cn>
+To: lee@kernel.org,
+	herbert@gondor.apana.org.au,
+	davem@davemloft.net,
+	peterhuewe@gmx.de,
+	jarkko@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-crypto@vger.kernel.org,
+	jgg@ziepe.ca,
+	linux-integrity@vger.kernel.org,
+	pmenzel@molgen.mpg.de,
+	Qunqin Zhao <zhaoqunqin@loongson.cn>
+Subject: [PATCH v9 0/5] Add Loongson Security Engine chip driver
+Date: Tue,  6 May 2025 11:19:42 +0800
+Message-ID: <20250506031947.11130-1-zhaoqunqin@loongson.cn>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMCx7MSPfxloqre1AA--.770S2
+X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxCr43XFy5WrW7try5tF43urX_yoW5GFWrpF
+	45C3yfCr4UJr47Cr93J34UCFy3Z3s3Jr9Iga9rXw15ur9rAa4xXrWakFyUAF47AFn3Jry2
+	vFWkCF4UCF1UJacCm3ZEXasCq-sJn29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1D
+	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
+	1lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_
+	Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
+	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
+	cVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI
+	8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v2
+	6r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j5o7tUUUUU=
 
-Hi Rob,
+The Loongson Security Engine chip supports RNG, SM2, SM3 and SM4
+accelerator engines. Each engine have its own DMA buffer provided
+by the controller. The kernel cannot directly send commands to the
+engine and must first send them to the controller, which will
+forward them to the corresponding engine. Based on these engines,
+TPM2 have been implemented in the chip, then let's treat TPM2 itself
+as an engine.
 
-On Mon, May 05 2025, Rob Herring (Arm) wrote:
+v9: Moved the base driver back to drivers/mfd. Cleanned up coding style.
 
-> Convert the Conexant Digicolor SoCs Timer binding to DT schema format.
-> It's a straight-forward conversion.
->
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+v8: Like Lee said, the base driver goes beyond MFD scope. Since these
+    are all encryption related drivers and SM2, SM3, and SM4 drivers
+    will be added to the crypto subsystem in the future, the base driver
+    need to be changed when adding these drivers. Therefore, it may be
+    more appropriate to place the base driver within the crypto
+    subsystem.
 
-Acked-by: Baruch Siach <baruch@tkos.co.il>
+    Removed complete callback in all drivers. Removed the concepts of
+    "channel", "msg" and "request" as they may be confusing. Used the
+    concepts of "egnine" and "command" may be better.
 
-Thanks,
-baruch
+v7: Addressed Huacai's comments.
 
-> ---
->  .../bindings/timer/cnxt,cx92755-timer.yaml    | 49 +++++++++++++++++++
->  .../bindings/timer/digicolor-timer.txt        | 18 -------
->  2 files changed, 49 insertions(+), 18 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/timer/cnxt,cx92755-timer.yaml
->  delete mode 100644 Documentation/devicetree/bindings/timer/digicolor-timer.txt
->
-> diff --git a/Documentation/devicetree/bindings/timer/cnxt,cx92755-timer.yaml
-> b/Documentation/devicetree/bindings/timer/cnxt,cx92755-timer.yaml
-> new file mode 100644
-> index 000000000000..8f1a5af32a36
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/timer/cnxt,cx92755-timer.yaml
-> @@ -0,0 +1,49 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/cnxt,cx92755-timer.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Conexant Digicolor SoCs Timer Controller
-> +
-> +maintainers:
-> +  - Baruch Siach <baruch@tkos.co.il>
-> +
-> +properties:
-> +  compatible:
-> +    const: cnxt,cx92755-timer
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    description: Contains 8 interrupts, one for each timer
-> +    items:
-> +      - description: interrupt for timer 0
-> +      - description: interrupt for timer 1
-> +      - description: interrupt for timer 2
-> +      - description: interrupt for timer 3
-> +      - description: interrupt for timer 4
-> +      - description: interrupt for timer 5
-> +      - description: interrupt for timer 6
-> +      - description: interrupt for timer 7
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    timer@f0000fc0 {
-> +      compatible = "cnxt,cx92755-timer";
-> +      reg = <0xf0000fc0 0x40>;
-> +      interrupts = <19>, <31>, <34>, <35>, <52>, <53>, <54>, <55>;
-> +      clocks = <&main_clk>;
-> +    };
-> diff --git a/Documentation/devicetree/bindings/timer/digicolor-timer.txt
-> b/Documentation/devicetree/bindings/timer/digicolor-timer.txt
-> deleted file mode 100644
-> index d1b659bbc29f..000000000000
-> --- a/Documentation/devicetree/bindings/timer/digicolor-timer.txt
-> +++ /dev/null
-> @@ -1,18 +0,0 @@
-> -Conexant Digicolor SoCs Timer Controller
-> -
-> -Required properties:
-> -
-> -- compatible : should be "cnxt,cx92755-timer"
-> -- reg : Specifies base physical address and size of the "Agent Communication"
-> -  timer registers
-> -- interrupts : Contains 8 interrupts, one for each timer
-> -- clocks: phandle to the main clock
-> -
-> -Example:
-> -
-> -	timer@f0000fc0 {
-> -		compatible = "cnxt,cx92755-timer";
-> -		reg = <0xf0000fc0 0x40>;
-> -		interrupts = <19>, <31>, <34>, <35>, <52>, <53>, <54>, <55>;
-> -		clocks = <&main_clk>;
-> -	};
+v6: mfd :MFD_LS6000SE -> MFD_LOONGSON_SE,  ls6000se.c -> loongson-se.c
 
+    crypto :CRYPTO_DEV_LS6000SE_RNG -> CRYPTO_DEV_LOONGSON_RNG,
+    ls6000se-rng.c ->loongson-rng.c
+
+    tpm: TCG_LSSE -> TCG_LOONGSON, tpm_lsse.c ->tpm_loongson.c
+
+v5: Registered "ls6000se-rng" device in mfd driver
+
+Qunqin Zhao (5):
+  mfd: Add support for Loongson Security Engine chip controller
+  crypto: loongson - add Loongson RNG driver support
+  MAINTAINERS: Add entry for Loongson crypto driver
+  tpm: Add a driver for Loongson TPM device
+  MAINTAINERS: Add tpm_loongson.c to LOONGSON CRYPTO DRIVER entry
+
+ MAINTAINERS                            |   9 +
+ drivers/char/tpm/Kconfig               |   9 +
+ drivers/char/tpm/Makefile              |   1 +
+ drivers/char/tpm/tpm_loongson.c        |  78 ++++++++
+ drivers/crypto/Kconfig                 |   1 +
+ drivers/crypto/Makefile                |   1 +
+ drivers/crypto/loongson/Kconfig        |   5 +
+ drivers/crypto/loongson/Makefile       |   1 +
+ drivers/crypto/loongson/loongson-rng.c | 197 +++++++++++++++++++++
+ drivers/mfd/Kconfig                    |  11 ++
+ drivers/mfd/Makefile                   |   2 +
+ drivers/mfd/loongson-se.c              | 235 +++++++++++++++++++++++++
+ include/linux/mfd/loongson-se.h        |  52 ++++++
+ 13 files changed, 602 insertions(+)
+ create mode 100644 drivers/char/tpm/tpm_loongson.c
+ create mode 100644 drivers/crypto/loongson/Kconfig
+ create mode 100644 drivers/crypto/loongson/Makefile
+ create mode 100644 drivers/crypto/loongson/loongson-rng.c
+ create mode 100644 drivers/mfd/loongson-se.c
+ create mode 100644 include/linux/mfd/loongson-se.h
+
+
+base-commit: 92a09c47464d040866cf2b4cd052bc60555185fb
 -- 
-                                                     ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
+2.45.2
+
