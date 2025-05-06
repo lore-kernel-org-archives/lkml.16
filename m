@@ -1,159 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F03C321D3C9;
-	Tue,  6 May 2025 08:06:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 178981FF5F9;
+	Tue,  6 May 2025 08:06:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746518795; cv=none; b=srPuEjqJGPjSK8bwHkJu2ApleERyRUx7eWQuAl1EArhA3kOsCW3fux1aVoGh1VDNC9ZdtItqgdS6PV5bKIiQR+N7oq4PmorFLRBNjPFtc6Wq1K89tsbK8nEErN2d5E4Rn8k63SR23zvREWmwSh+I24zDUyDlNna0+RyJRfdIDRk=
+	t=1746518805; cv=none; b=hYuX3WJCrFXBU2OzM0rkcXYcOCDNggDtZHhPZA8M3pbYAUmzrOItf22h4gPYFKWjeYIkff7rWBQIzcWFOFqHXT+HL+y5dgJ3GSy8GdUIw+N1gZhHPj/D3g5mclvREOeG56kF5wAiWkJgJRFo/onUUNy255kE+5nmg5UDCaBwgEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746518795; c=relaxed/simple;
-	bh=xBVf+USjaN2b46y+i8ZxNLUPXMEkl18B42uMt5ZF8Mg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T2rsF8hzvIoct9aSoQxDdyTklCgpJBWbf73Elh/cC9hi5xISesFAafXhc+kTxkIKowo19GkVu6WVdFRcjq3sgeyr5AS0kT2DnLHWcGecPbPsiG+3QTyOnIAhBktxhPV0x1iX+IheWdFNhdNF6i6EXQ/L4sJl7wIhC9TU1p6lJiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EylYSC+V; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746518805; c=relaxed/simple;
+	bh=gf76L72s2BkIXwrh9chxmnlaUfMXDTDPRP2B6Y+/hlk=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=G7szBHOs3YpM1di/dmcpKBLeuvQr/O6GzQB0BvmcGx1VG68JzCuIL/7EbVUxnMT+Q+b3etEpKLjn2wn7MNbf//ZZ42EN+PNegGkVw+oa9VVOzRu9xamAfRGisDA8r6PpGEyMrwm133QHZ3BFSyc7n4Lw0OlGwwRmYubFFwRa2mA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=N7SylMC5; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ol+dYOjK; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EylYSC+V"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01620C4CEE4;
-	Tue,  6 May 2025 08:06:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746518794;
-	bh=xBVf+USjaN2b46y+i8ZxNLUPXMEkl18B42uMt5ZF8Mg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EylYSC+V8AWbshXqQqYtWI2wZCpFaPqMY0n3ALUAAWccDAiLeiB41bAfldq+XJFrE
-	 FDzN0dGVB2gTFYKblVQsSmEg4SMZeQ37BVzEG0lymYgQKXOWTfW3/62o7dZ78SZPkR
-	 5ZD/0ahDIeCQGKRSzfBTwTeQ1Tcko2+SAENZc4dxJcGV6d9UR30fVjOe6vvzybYKXh
-	 IMY1VfckZ7w6GyMG5rjKGqDPltkbb6NXc22Y6zzqgLUG+nsNPfAco1MrZThALl+UPm
-	 WWh0eI4vRIlJ7whfduueC5Am75ScxesnLyBmbfuIpUl8NoZ2AX1V/OV6nKbXN7FJus
-	 umTUcrP5Zi2GA==
-Date: Tue, 6 May 2025 10:06:27 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Jann Horn <jannh@google.com>, Kuniyuki Iwashima <kuniyu@amazon.com>
-Cc: alexander@mihalicyn.com, bluca@debian.org, daan.j.demeyer@gmail.com, 
-	davem@davemloft.net, david@readahead.eu, edumazet@google.com, horms@kernel.org, 
-	jack@suse.cz, kuba@kernel.org, lennart@poettering.net, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, me@yhndnzj.com, 
-	netdev@vger.kernel.org, oleg@redhat.com, pabeni@redhat.com, viro@zeniv.linux.org.uk, 
-	zbyszek@in.waw.pl
-Subject: Re: [PATCH RFC v3 08/10] net, pidfs, coredump: only allow
- coredumping tasks to connect to coredump socket
-Message-ID: <20250506-zugabe-bezog-f688fbec72d3@brauner>
-References: <20250505-dompteur-hinhalten-204b1e16bd02@brauner>
- <20250505184136.14852-1-kuniyu@amazon.com>
- <CAG48ez35FN6ka4QtrNQ6aKEycQBOpJKy=VyhQDzKTwey+4KOMg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="N7SylMC5";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ol+dYOjK"
+Date: Tue, 06 May 2025 08:06:41 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1746518802;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0MNqXpQ+w9eLKzeEr7MQo+lHmwyZ0Y4e+2IJSZVYgVw=;
+	b=N7SylMC5q+7mADnzpAWobXLbkavf1kmbSCLCN4x1lMrlJnwm69A4ZGvZyMoqyPnGvTsbyF
+	IW+lakDaUC8NZvjsp2AsH343Y3VEt51RCeiIMjjxhBDe2mFPzhZpSkxo2mnFp4TzMT3f88
+	x+AsnHfKgqpT0Cr5HoZ4z8rksbwZxhDFTJD13cWHlqXF/zqz57LUe1SAIHl+7p/QVwa28h
+	QBnVAcI5uvzt/hvMA7fGdnAcNFfdbCY/MsZfQGiA4ayFxxUdduu+TQJBwHz73l4WHgrVFM
+	s3QgRCERKaLXBlMLnz09eJGXwSie03XZZ9SLye7KRzNRLmgKSmDCARh3Hh2Fig==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1746518802;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0MNqXpQ+w9eLKzeEr7MQo+lHmwyZ0Y4e+2IJSZVYgVw=;
+	b=ol+dYOjKoqWDbTetdVd1fHsQMuqULEtU0BIZULeKA0mmGH4Y1FreTScx+5DQwaNwjLTm+p
+	1sVbhDaYbrNm4DCQ==
+From: "tip-bot2 for Ahmed S. Darwish" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: x86/cpu] tools/x86/kcpuid: Update bitfields to x86-cpuid-db v2.4
+Cc: "Ahmed S. Darwish" <darwi@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
+ Andrew Cooper <andrew.cooper3@citrix.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ John Ogness <john.ogness@linutronix.de>, x86-cpuid@lists.linux.dev,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250506050437.10264-2-darwi@linutronix.de>
+References: <20250506050437.10264-2-darwi@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAG48ez35FN6ka4QtrNQ6aKEycQBOpJKy=VyhQDzKTwey+4KOMg@mail.gmail.com>
+Message-ID: <174651880117.406.13932723282713907887.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Mon, May 05, 2025 at 09:10:28PM +0200, Jann Horn wrote:
-> On Mon, May 5, 2025 at 8:41 PM Kuniyuki Iwashima <kuniyu@amazon.com> wrote:
-> > From: Christian Brauner <brauner@kernel.org>
-> > Date: Mon, 5 May 2025 16:06:40 +0200
-> > > On Mon, May 05, 2025 at 03:08:07PM +0200, Jann Horn wrote:
-> > > > On Mon, May 5, 2025 at 1:14 PM Christian Brauner <brauner@kernel.org> wrote:
-> > > > > Make sure that only tasks that actually coredumped may connect to the
-> > > > > coredump socket. This restriction may be loosened later in case
-> > > > > userspace processes would like to use it to generate their own
-> > > > > coredumps. Though it'd be wiser if userspace just exposed a separate
-> > > > > socket for that.
-> > > >
-> > > > This implementation kinda feels a bit fragile to me... I wonder if we
-> > > > could instead have a flag inside the af_unix client socket that says
-> > > > "this is a special client socket for coredumping".
-> > >
-> > > Should be easily doable with a sock_flag().
-> >
-> > This restriction should be applied by BPF LSM.
-> 
-> I think we shouldn't allow random userspace processes to connect to
-> the core dump handling service and provide bogus inputs; that
-> unnecessarily increases the risk that a crafted coredump can be used
-> to exploit a bug in the service. So I think it makes sense to enforce
-> this restriction in the kernel.
-> 
-> My understanding is that BPF LSM creates fairly tight coupling between
-> userspace and the kernel implementation, and it is kind of unwieldy
-> for userspace. (I imagine the "man 5 core" manpage would get a bit
-> longer and describe more kernel implementation detail if you tried to
-> show how to write a BPF LSM that is capable of detecting unix domain
-> socket connections to a specific address that are not initiated by
-> core dumping.) I would like to keep it possible to implement core
-> userspace functionality in a best-practice way without needing eBPF.
-> 
-> > It's hard to loosen such a default restriction as someone might
-> > argue that's unexpected and regression.
-> 
-> If userspace wants to allow other processes to connect to the core
-> dumping service, that's easy to implement - userspace can listen on a
-> separate address that is not subject to these restrictions.
+The following commit has been merged into the x86/cpu branch of tip:
 
-I think Kuniyuki's point is defensible. And I did discuss this with
-Lennart when I wrote the patch and he didn't see a point in preventing
-other processes from connecting to the core dump socket. He actually
-would like this to be possible because there's some userspace programs
-out there that generate their own coredumps (Python?) and he wanted them
-to use the general coredump socket to send them to.
+Commit-ID:     49394b5af45cc368c587371592a7c5f71834557e
+Gitweb:        https://git.kernel.org/tip/49394b5af45cc368c587371592a7c5f71834557e
+Author:        Ahmed S. Darwish <darwi@linutronix.de>
+AuthorDate:    Tue, 06 May 2025 07:04:12 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Tue, 06 May 2025 10:01:57 +02:00
 
-I just found it more elegant to simply guarantee that only connections
-are made to that socket come from coredumping tasks.
+tools/x86/kcpuid: Update bitfields to x86-cpuid-db v2.4
 
-But I should note there are two ways to cleanly handle this in
-userspace. I had already mentioned the bpf LSM in the contect of
-rate-limiting in an earlier posting:
+Update kcpuid's CSV file to version 2.4, as generated by x86-cpuid-db.
 
-(1) complex:
+Summary of the v2.4 changes:
 
-    Use a bpf LSM to intercept the connection request via
-    security_unix_stream_connect() in unix_stream_connect().
+* Mark CPUID(0x80000001) EDX:23 bit, 'e_mmx', as not exclusive to
+  Transmeta since it is supported by AMD as well.
 
-    The bpf program can simply check:
+Signed-off-by: Ahmed S. Darwish <darwi@linutronix.de>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Andrew Cooper <andrew.cooper3@citrix.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: John Ogness <john.ogness@linutronix.de>
+Cc: x86-cpuid@lists.linux.dev
+Link: https://gitlab.com/x86-cpuid.org/x86-cpuid-db/-/blob/v2.4/CHANGELOG.rst
+Link: https://lore.kernel.org/r/20250506050437.10264-2-darwi@linutronix.de
+---
+ tools/arch/x86/kcpuid/cpuid.csv | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-    current->signal->core_state
-
-    and reject any connection if it isn't set to NULL.
-
-    The big downside is that bpf (and security) need to be enabled.
-    Neither is guaranteed and there's quite a few users out there that
-    don't enable bpf.
-
-(2) simple (and supported in this series):
-
-    Userspace accepts a connection. It has to get SO_PEERPIDFD anyway.
-    It then needs to verify:
-
-    struct pidfd_info info = {
-            info.mask = PIDFD_INFO_EXIT | PIDFD_INFO_COREDUMP,
-    };
-
-    ioctl(pidfd, PIDFD_GET_INFO, &info);
-    if (!(info.mask & PIDFD_INFO_COREDUMP)) {
-            // Can't be from a coredumping task so we can close the
-	    // connection without reading.
-	    close(coredump_client_fd);
-	    return;
-    }
-
-    /* This has to be set and is only settable by do_coredump(). */
-    if (!(info.coredump_mask & PIDFD_COREDUMPED)) {
-            // Can't be from a coredumping task so we can close the
-	    // connection without reading.
-	    close(coredump_client_fd);
-	    return;
-    }
-
-    // Ok, this is a connection from a task that has coredumped, let's
-    // handle it.
-
-    The crux is that the series guarantees that by the time the
-    connection is made the info whether the task/thread-group did
-    coredump is guaranteed to be available via the pidfd.
+diff --git a/tools/arch/x86/kcpuid/cpuid.csv b/tools/arch/x86/kcpuid/cpuid.csv
+index 8d25b0b..8d925ce 100644
+--- a/tools/arch/x86/kcpuid/cpuid.csv
++++ b/tools/arch/x86/kcpuid/cpuid.csv
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: CC0-1.0
+-# Generator: x86-cpuid-db v2.3
++# Generator: x86-cpuid-db v2.4
  
-I think if we document that most coredump servers have to do (2) then
-this is fine. But I wouldn't mind a nod from Jann on this.
+ #
+ # Auto-generated file.
+@@ -689,7 +689,7 @@
+ 0x80000001,         0,  edx,      19,    mp                     , Out-of-spec AMD Multiprocessing bit
+ 0x80000001,         0,  edx,      20,    nx                     , No-execute page protection
+ 0x80000001,         0,  edx,      22,    mmxext                 , AMD MMX extensions
+-0x80000001,         0,  edx,      23,    e_mmx                  , MMX instructions (Transmeta)
++0x80000001,         0,  edx,      23,    e_mmx                  , MMX instructions
+ 0x80000001,         0,  edx,      24,    e_fxsr                 , FXSAVE and FXRSTOR instructions
+ 0x80000001,         0,  edx,      25,    fxsr_opt               , FXSAVE and FXRSTOR optimizations
+ 0x80000001,         0,  edx,      26,    pdpe1gb                , 1-GB large page support
