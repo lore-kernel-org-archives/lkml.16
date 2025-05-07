@@ -1,141 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43C2F23F40F;
-	Wed,  7 May 2025 09:15:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52A0A242D8A;
+	Wed,  7 May 2025 09:15:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746609338; cv=none; b=TwdH3lTySK1uzjENcwP32Z23JvuIi1D3vVh3gKTAoy3SWSlBUj5NZCGba/sEBM59uglF0HTGpQLfEzow8CGGDC2yZkjOWZdVUCZpe6ambgHaOGFrkJicU3/rvtzBDBoo9Njlya4KZfbQSMpCM7PzuKDHLNYpU7zE/7LzVi8XKqw=
+	t=1746609345; cv=none; b=XxXejnCoWNzMTCKYMEQX3NmLKG+MeNPs9mtyi4Vi11TvC3jIMX/8XvgtxJklQzANFXy3SMlcVcOgPS5pfGAg3LE303imoISIBqesJGArNm1byUP7s8qI7+9JIHrmtbphqGfNIsFjsesTrKo5YgE1OMUmIC1EQ5VBMkzt9KfI3i4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746609338; c=relaxed/simple;
-	bh=9z++eVUjo5Nt6P9zv3aLaT+qA0f6xjadJ4gnXukQoHQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=BrTNSL29qXUO0tnyIi0adq5yWIbjQqlNAlKb3wcaYxMIaxrrz4ziuYPt8GhJG2HzSO0rcPWh8jU2PYhbzFIR72/rauKNIwfYJfR/n7uy9bbS2buCQ/umPM59ZVgV3WlRlRr2jd1Mrwzw3f82FLlMZZ5tMr6L7rvwqVfWCYkPg+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tyrPsxfX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746609345; c=relaxed/simple;
+	bh=Gdc73QPww2eaaTVo/yUAMen6YurJl2N5v8iST27Yngs=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=mdOtlCUPp2RCIhr3K8FNuBNRzalnL4gsR6Y3TVSqbAr28G9+zWfwcPbWKcupZ2e4Yu4urdtGMW3ULLAG9JOv5t9Pbw4B/GdLQtZFFFH3ul3UVBaWpusEwcEd+zplzTXH78kseX0p0f+hmtPBEurzWwPPY5Z+mRHkSgyYI2Jojvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4uiT9OlG; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LccdkoYe; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tyrPsxfX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07FF4C4CEEE;
-	Wed,  7 May 2025 09:15:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746609337;
-	bh=9z++eVUjo5Nt6P9zv3aLaT+qA0f6xjadJ4gnXukQoHQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=tyrPsxfXjyHj3ItkcRhJIoeIeE8vRiwZxU+LKjOJf4zVEECLepFyq91CH867FCzVw
-	 NGLgRR6eAlMBpH2nOp21RUrBUuCsW0V0oh95BWZT6TnqSaE9qFBTCvjGefvaBT6SZK
-	 WSbV5tj1gJwhj9NZtFI34Pegg70mtePnLWD1rwctfzmns4V6LgcFVY33OqLNC20a3R
-	 6nMJaEyEw2ftHtx+A/JfuVO9yXjNEA1QEFr9e9L3RwxqFn5mX2yJTZN5vuWIJ3Aa8S
-	 UZkafOw8f6DD+QRNVH8GqEZR0O2eNAzxo6rzN0n4EJcCqlnVumDxj5rykWzRi8c4gk
-	 llS6pFyj/eyZg==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Benno Lossin" <lossin@kernel.org>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
- <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
- <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,  "Benno
- Lossin" <benno.lossin@proton.me>,  "Alice Ryhl" <aliceryhl@google.com>,
-  "Masahiro Yamada" <masahiroy@kernel.org>,  "Nathan Chancellor"
- <nathan@kernel.org>,  "Luis Chamberlain" <mcgrof@kernel.org>,  "Danilo
- Krummrich" <dakr@kernel.org>,  "Nicolas Schier"
- <nicolas.schier@linux.dev>,  "Trevor Gross" <tmgross@umich.edu>,  "Adam
- Bratschi-Kaye" <ark.email@gmail.com>,  <rust-for-linux@vger.kernel.org>,
-  <linux-kernel@vger.kernel.org>,  <linux-kbuild@vger.kernel.org>,  "Petr
- Pavlu" <petr.pavlu@suse.com>,  "Sami Tolvanen" <samitolvanen@google.com>,
-  "Daniel Gomez" <da.gomez@samsung.com>,  "Simona Vetter"
- <simona.vetter@ffwll.ch>,  "Greg KH" <gregkh@linuxfoundation.org>,  "Fiona
- Behrens" <me@kloenk.dev>,  "Daniel Almeida"
- <daniel.almeida@collabora.com>,  <linux-modules@vger.kernel.org>
-Subject: Re: [PATCH v12 1/3] rust: str: add radix prefixed integer parsing
- functions
-In-Reply-To: <D9PSYQMCW74W.39JB3NDCWB2H3@kernel.org> (Benno Lossin's message
-	of "Wed, 07 May 2025 10:58:08 +0200")
-References: <20250506-module-params-v3-v12-0-c04d80c8a2b1@kernel.org>
-	<20250506-module-params-v3-v12-1-c04d80c8a2b1@kernel.org>
-	<UfD3pllWu8O_qAKsi04IMH1WGszkDe31KpLs7oMvDsUC-tryEbrYKmtDAPj5w-BO2CyZ8_S_G5lWBE2Ud72n8w==@protonmail.internalid>
-	<D9PSYQMCW74W.39JB3NDCWB2H3@kernel.org>
-User-Agent: mu4e 1.12.7; emacs 30.1
-Date: Wed, 07 May 2025 11:15:19 +0200
-Message-ID: <87ldr8pys8.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4uiT9OlG";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LccdkoYe"
+Date: Wed, 07 May 2025 09:15:41 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1746609342;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gSbHAP6myb/lvwCsvli/C7L3x86muzLYoyywPNFb690=;
+	b=4uiT9OlG9MOhI9hZD+EDGL2AH8cPFgd84wG/IIN+3X4Ak04gFdl2M3bP02z+JHxeUrsFDT
+	Bn9npQXTUL3tCplyPCyG3IUOEeVjZ8ndXKNPbBXQrsAkH4SXtmvZiO3zsMulAtrrH+laz0
+	vjzihdkwwtCgQWU+GLNyaS5XxOsMQhXa9AybA1WncTEj3dLZzW1RpBAC0mggP1JngWdKCK
+	IKerPRw6nmvLxcYg9tVTSmTM0nUvBwgil7jgwU/w0PTLlQLB5dNp9SQIZ40LIV7j3SBulE
+	FvWjg3wBgB4Zea84NxOc8YfonI/4aOv0RQoHaE7QARQwfZa9c6KCIs8LG1tzZg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1746609342;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gSbHAP6myb/lvwCsvli/C7L3x86muzLYoyywPNFb690=;
+	b=LccdkoYe6e5qoyTbKt11C++Wf1JaJyuLrR4zVlqPd0YehYThP09ssbzhXVghNZjQA1XFrT
+	W2PLIckpKird9gAQ==
+From: "tip-bot2 for Charlie Jenkins" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: core/entry] LoongArch: entry: Fix include order
+Cc: Charlie Jenkins <charlie@rivosinc.com>,
+ Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250507-loongarch_include_order-v1-1-e8aada6a3da8@rivosinc.com>
+References: <20250507-loongarch_include_order-v1-1-e8aada6a3da8@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Message-ID: <174660934159.406.10042368786930832922.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-"Benno Lossin" <lossin@kernel.org> writes:
+The following commit has been merged into the core/entry branch of tip:
 
-> On Tue May 6, 2025 at 3:02 PM CEST, Andreas Hindborg wrote:
->> diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
->> index 878111cb77bc..174e70397305 100644
->> --- a/rust/kernel/str.rs
->> +++ b/rust/kernel/str.rs
->> @@ -573,7 +573,6 @@ macro_rules! c_str {
->>  }
->>
->>  #[cfg(test)]
->> -#[expect(clippy::items_after_test_module)]
->>  mod tests {
->>      use super::*;
->>
->> @@ -946,3 +945,174 @@ fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
->>  macro_rules! fmt {
->>      ($($f:tt)*) => ( core::format_args!($($f)*) )
->>  }
->> +
->> +/// Integer parsing functions for parsing signed and unsigned integers
->> +/// potentially prefixed with `0x`, `0o`, or `0b`.
->> +pub mod parse_int {
->
-> Why not make this its own file? It's 172 lines long already.
+Commit-ID:     8278fd6006a02e3352d5230927c4576f53fb3b06
+Gitweb:        https://git.kernel.org/tip/8278fd6006a02e3352d5230927c4576f53fb3b06
+Author:        Charlie Jenkins <charlie@rivosinc.com>
+AuthorDate:    Wed, 07 May 2025 00:11:30 -07:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Wed, 07 May 2025 11:05:57 +02:00
 
-Sure. I'm really hoping to land this series for this cycle though, so if
-it's OK I would move the code next cycle.
+LoongArch: entry: Fix include order
 
->
->> +    pub trait ParseInt: private::FromStrRadix + TryFrom<u64> {
->> +        /// Parse a string according to the description in [`Self`].
->> +        fn from_str(src: &BStr) -> Result<Self> {
->> +            match src.deref() {
->> +                [b'-', rest @ ..] => {
->> +                    let (radix, digits) = strip_radix(rest.as_ref());
->> +                    // 2's complement values range from -2^(b-1) to 2^(b-1)-1.
->> +                    // So if we want to parse negative numbers as positive and
->> +                    // later multiply by -1, we have to parse into a larger
->> +                    // integer. We choose `u64` as sufficiently large.
->> +                    //
->> +                    // NOTE: 128 bit integers are not available on all
->> +                    // platforms, hence the choice of 64 bits.
->> +                    let val = u64::from_str_radix(
->> +                        core::str::from_utf8(digits).map_err(|_| EINVAL)?,
->> +                        radix,
->> +                    )
->> +                    .map_err(|_| EINVAL)?;
->> +
->> +                    if val > Self::abs_min() {
->> +                        return Err(EINVAL);
->> +                    }
->> +
->> +                    if val == Self::abs_min() {
->> +                        return Ok(Self::MIN);
->> +                    }
->> +
->> +                    // SAFETY: We checked that `val` will fit in `Self` above.
->> +                    let val: Self = unsafe { val.try_into().unwrap_unchecked() };
->> +
->> +                    Ok(val.complement())
->
-> You're allowing to parse `u32` with a leading `-`? I'd expect an error
-> in that case. Maybe `complement` should be named `negate` and return a
-> `Result`?
+Reorder some introduced include headers to keep alphabetical order.
 
-You would get `Err(EINVAL)` in that case, hitting this:
+Fixes: 7ace1602abf2 ("LoongArch: entry: Migrate ret_from_fork() to C")
+Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/all/20250507-loongarch_include_order-v1-1-e8aada6a3da8@rivosinc.com
+---
+ arch/loongarch/kernel/process.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-  if val > Self::abs_min() {
-      return Err(EINVAL);
-  }
-
-
-Best regards,
-Andreas Hindborg
-
+diff --git a/arch/loongarch/kernel/process.c b/arch/loongarch/kernel/process.c
+index 98bc60d..3582f59 100644
+--- a/arch/loongarch/kernel/process.c
++++ b/arch/loongarch/kernel/process.c
+@@ -13,8 +13,8 @@
+ #include <linux/cpu.h>
+ #include <linux/init.h>
+ #include <linux/kernel.h>
+-#include <linux/errno.h>
+ #include <linux/entry-common.h>
++#include <linux/errno.h>
+ #include <linux/sched.h>
+ #include <linux/sched/debug.h>
+ #include <linux/sched/task.h>
+@@ -34,8 +34,8 @@
+ #include <linux/prctl.h>
+ #include <linux/nmi.h>
+ 
+-#include <asm/asm-prototypes.h>
+ #include <asm/asm.h>
++#include <asm/asm-prototypes.h>
+ #include <asm/bootinfo.h>
+ #include <asm/cpu.h>
+ #include <asm/elf.h>
