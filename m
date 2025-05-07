@@ -1,288 +1,114 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from smtpbgbr1.qq.com (smtpbgbr1.qq.com [54.207.19.206])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AD66239E96
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 09:14:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E078239E90;
+	Wed,  7 May 2025 09:14:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.19.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746609294; cv=none; b=GLUjz/46dP7XiTCzdE0K+HaawgNqSKhZ7/XaqWdpVkXcaOoj/P0xXN6TKMQbrVdueS2Pjx7p15kUL9KucNAOKhmcjKMj/nL1Eh5CGqfuvMNi5SGauaWgKReK3f2oPKs2N0LGJwmJzyYEVO247bwKceEpMT/SvQygGPcth2NWVyo=
+	t=1746609298; cv=none; b=V20AQHPKDALtsoKMWNXUh8QtucU18yBFNmh/WrM//RCRV1XYJYPun7K22cb8ZL0fW/e7/y9t5GZC7OCVfPStpFaaiMRPhaVO+4ztB76XSN5gZg/y87fDpPCjAtKSbmPyqDzcIR/cJUQQYqjEaB7njOI9VZOrEQxVkqteWLoesGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746609294; c=relaxed/simple;
-	bh=ILju9IWF+HLUzQbAqYkzUNiVqYwQ/8n9JZEQhbn15zw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=YI0wagoLTatHyuyj1XNqOleJet/xjOivyKROl57qmngAR/MGx8gBfaqP/uHuw89D+FOBNGdW/cQQASkbtoLUSHG8sNXGR8xBwJUWTSTfvwydTMoEAJNfmEJ1Zrgn8SLvA73/RH4pAqmsR9naJa6TcTVsTBDQsteFSrJ7DAlim44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4ZsqLg52nPz1d10k;
-	Wed,  7 May 2025 17:13:31 +0800 (CST)
-Received: from kwepemj200003.china.huawei.com (unknown [7.202.194.15])
-	by mail.maildlp.com (Postfix) with ESMTPS id A94021800B2;
-	Wed,  7 May 2025 17:14:48 +0800 (CST)
-Received: from [10.67.120.170] (10.67.120.170) by
- kwepemj200003.china.huawei.com (7.202.194.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 7 May 2025 17:14:48 +0800
-Message-ID: <2f6b9715-b25a-47e3-b2d1-6852ba1038d2@huawei.com>
-Date: Wed, 7 May 2025 17:14:47 +0800
+	s=arc-20240116; t=1746609298; c=relaxed/simple;
+	bh=MwgFJKN7l7kFdYNY6suwGldRZuE0owjh8S7GL/kNLcQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Lr3IWDJXYWRoprA8AJt8yl3Kil1h5zYi2HaXmOJmGgaPCYvaPJHSEwjxXPqhWsyW3ev79DrVLkYgq9RWTA68DePqWFppNtjWb+I/Fr3uRAgQrp1j5fCA+7j9KH3pmbS6yc/sqUhngk1js1JLLDVierotY6mBmxF9F2vGKS/gBo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=R6Oht6xM; arc=none smtp.client-ip=54.207.19.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="R6Oht6xM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1746609244;
+	bh=TmJE6Xzc8x7k0lHbsb8PJi+nXReCRhz9/VASnE1oJO0=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=R6Oht6xMeZ0HP2auyNRlqHFur4zyU0+3CG4LJnz+t5Nrhw1E8RHZRYYvf02UZCSKT
+	 PzHrDj5RkZ974fF/SnjCCoaHi1EeR1BFzh6sNHPMa+dgykTOg2xMw6QEHO4NzARRsZ
+	 5Uc/ZvIJP5OgDvj6PZWLhfK+BfpE+udBEGvmSbas=
+X-QQ-mid: zesmtpip2t1746609232t4ca7945c
+X-QQ-Originating-IP: npKWDtNpgAvnhADZiJ4Q8/K/84jJsngOlV8SX2izEwk=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Wed, 07 May 2025 17:13:50 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 7718231128625625772
+EX-QQ-RecipientCnt: 10
+From: WangYuli <wangyuli@uniontech.com>
+To: masahiroy@kernel.org,
+	nathan@kernel.org,
+	nicolas.schier@linux.dev
+Cc: linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	m.seyfarth@gmail.com,
+	zhanjun@uniontech.com,
+	niecheng1@uniontech.com,
+	guanwentao@uniontech.com,
+	WangYuli <wangyuli@uniontech.com>
+Subject: [PATCH] kbuild: Disable -Wdefault-const-init-var-unsafe
+Date: Wed,  7 May 2025 17:13:40 +0800
+Message-ID: <7331A23DB8786121+20250507091340.276092-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/4] dma mapping benchmark: modify the framework to
- adapt to more map modes
-To: Barry Song <21cnbao@gmail.com>
-CC: <yangyicong@huawei.com>, <hch@lst.de>, <iommu@lists.linux.dev>,
-	<jonathan.cameron@huawei.com>, <prime.zeng@huawei.com>,
-	<fanghao11@huawei.com>, <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
-References: <20250506030100.394376-1-xiaqinxin@huawei.com>
- <20250506030100.394376-3-xiaqinxin@huawei.com>
- <CAGsJ_4wgxgXs6pyYUTNFmNmqHSWtPbKSUnMCzf8=rvOdhgJ04Q@mail.gmail.com>
-From: Qinxin Xia <xiaqinxin@huawei.com>
-In-Reply-To: <CAGsJ_4wgxgXs6pyYUTNFmNmqHSWtPbKSUnMCzf8=rvOdhgJ04Q@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemj200003.china.huawei.com (7.202.194.15)
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: NGX5+lQVxpC+4pTvz3/eN6omZ4UFI4WqwtTK9sHvLj+ldY0PR1+wWZh5
+	PmG6811Tle7rlSt7UNpsBJK5Z4quW+Ha4/0eRJ036uHvvHy/BWewr3b0+RiVKGqocdSlN96
+	sMmLw+EUNuHFnhRavUBLClq5Sb7mVNCJcWSA7dvFUkHJhmN1zsIGe/TKENh00WpOpD//rSA
+	AA/ccUSGgSFOuWPMPxF1/Pi6xXUbx+z1VF8VP2PqYJi4CL9Pm2CQ2EQQ3Jzz7vcnRufPw3h
+	+owfsBkxfppIZvFDJOnTqnYIIrHJdtt/EvU3dQe9qFskY1AedS981R9fJZKg6d1NZWFACAy
+	tTUOkeKEVyHrWE23b5Dot0vX6PTIT8kJ5RMqs+LqeKxwLVsprEO8NoHEdUrHn4TLV/eThiB
+	ZECES5jMrQ+MJsblV3LLtN16Sd1Hr9MbQlFPvULeZ7OzB7VYfs44YH13J9Jha6YNbltMPoI
+	RxsbTSmzcnbpKgKarXvwiB3jrQ+Rg7KQamiNv2ofa8KsmX6WvGsmEjfjTqNoVAS/8fjyXXs
+	yYH0tQD3CNltjC4yw+CNdsPn2NX71JEb2U9ZMbZgcRff8O5dQy2QZN20UVrkheTX32yn5Pf
+	bEOChw/G/JwVTcAvqvS0XWIFNGeehdWnlNVC3g8oCOH8odB5VBee9h+aTn86eQSYnYD/2RC
+	hgoNYyZ7gjmgMarEP6Zf4zRgz4HcbgANnhJoQg6x9ZS2AXeTXTf3bILgjaSarLh8pN8o+Pl
+	vfoyN/sfJ1wz0tKpP7Am+SMtXMREIMKlF7Gs4kV3hso+2s5WGkmgvEB67SXnIwt0cwiLIR4
+	ysQuMrrZSnPeyp23thqRQr7hHnZGnnfbIVBjGTKaIEZB8VAymozwK+VwDYsYEbdaBaTP2/f
+	+BsJPgtOCe5oGViMMWF5SPbxzw69nF8WDjahppgL3XwCCHxdALPl70vjysBaiA1pORozjEN
+	PwIKesn8AMFWWiXEt6+DYA3wBAGh+mwY02jLUQMAwTsjKF0uKC7Vr2hWFW3U4hPVxtFTO2B
+	lE4E3OxN+q299tUZjFhs6lTq0sshqucxPknieRFg==
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+X-QQ-RECHKSPAM: 0
 
+Similar to ("kbuild: Disable -Wdefault-const-init-field-unsafe")
+from list, -Wdefault-const-init-var-unsafe need to be disabled too.
 
-在 2025/5/7 10:30, Barry Song 写道:
-> On Tue, May 6, 2025 at 3:01 PM Qinxin Xia <xiaqinxin@huawei.com> wrote:
->> In this patch map_benchmark abstract in four interface: prepare, unprepare,
->> do_map, do_unmap. When there's a new mode to add, need four steps:
->> 1) Add the mode in map_benchmark.h
->> 2) Defines the mode param, like struct dma_xxx_map_param, and this object
->>     will be return in prepare and as input parameter in other ops;
->> 3) Defines the ops functions:prepare, unprepare, do_map, do_unmap.
->> 4) Add the new mode in dma_map_benchmark_ops.
-> There are too many irrelevant details.
->
-> We're more interested in the reasoning behind this change than just the change
-> itself. There should be some explanation of the purpose.
-Okay, I'm going to add some purposeful commit information.
->> Signed-off-by: Qinxin Xia <xiaqinxin@huawei.com>
->> ---
->>   include/linux/map_benchmark.h |   8 ++-
->>   kernel/dma/map_benchmark.c    | 120 +++++++++++++++++++++++++++-------
->>   2 files changed, 104 insertions(+), 24 deletions(-)
->>
->> diff --git a/include/linux/map_benchmark.h b/include/linux/map_benchmark.h
->> index 2ac2fe52f248..5294dfd1870f 100644
->> --- a/include/linux/map_benchmark.h
->> +++ b/include/linux/map_benchmark.h
->> @@ -15,6 +15,11 @@
->>   #define DMA_MAP_TO_DEVICE       1
->>   #define DMA_MAP_FROM_DEVICE     2
->>
->> +enum {
->> +       DMA_MAP_SINGLE_MODE,
->> +       DMA_MAP_MODE_MAX
->> +};
->> +
->>   struct map_benchmark {
->>          __u64 avg_map_100ns; /* average map latency in 100ns */
->>          __u64 map_stddev; /* standard deviation of map latency */
->> @@ -27,6 +32,7 @@ struct map_benchmark {
->>          __u32 dma_dir; /* DMA data direction */
->>          __u32 dma_trans_ns; /* time for DMA transmission in ns */
->>          __u32 granule;  /* how many PAGE_SIZE will do map/unmap once a time */
->> -       __u8 expansion[76];     /* For future use */
->> +       __u8  map_mode; /* the mode of dma map */
->> +       __u8 expansion[75];     /* For future use */
->>   };
->>   #endif /* _KERNEL_DMA_BENCHMARK_H */
->> diff --git a/kernel/dma/map_benchmark.c b/kernel/dma/map_benchmark.c
->> index cc19a3efea89..f04973eba1d8 100644
->> --- a/kernel/dma/map_benchmark.c
->> +++ b/kernel/dma/map_benchmark.c
->> @@ -5,6 +5,7 @@
->>
->>   #define pr_fmt(fmt)    KBUILD_MODNAME ": " fmt
->>
->> +#include <linux/cleanup.h>
->>   #include <linux/debugfs.h>
->>   #include <linux/delay.h>
->>   #include <linux/device.h>
->> @@ -31,17 +32,97 @@ struct map_benchmark_data {
->>          atomic64_t loops;
->>   };
->>
->> +struct map_benchmark_ops {
->> +       void *(*prepare)(struct map_benchmark_data *map);
->> +       void (*unprepare)(void *arg);
->> +       int (*do_map)(void *arg);
->> +       void (*do_unmap)(void *arg);
->> +};
->> +
->> +struct dma_single_map_param {
->> +       struct device *dev;
->> +       dma_addr_t addr;
->> +       void *xbuf;
->> +       u32 npages;
->> +       u32 dma_dir;
->> +};
->> +
->> +static void *dma_single_map_benchmark_prepare(struct map_benchmark_data *map)
->> +{
->> +       struct dma_single_map_param *mparam __free(kfree) = kzalloc(sizeof(*mparam),
->> +                                                                   GFP_KERNEL);
->> +       if (!mparam)
->> +               return NULL;
->> +
->> +       mparam->npages = map->bparam.granule;
->> +       mparam->dma_dir = map->bparam.dma_dir;
->> +       mparam->dev = map->dev;
->> +       mparam->xbuf = alloc_pages_exact(mparam->npages * PAGE_SIZE, GFP_KERNEL);
->> +       if (!mparam->xbuf)
->> +               return NULL;
->> +
->> +       /*
->> +        * for a non-coherent device, if we don't stain them in the
->> +        * cache, this will give an underestimate of the real-world
->> +        * overhead of BIDIRECTIONAL or TO_DEVICE mappings;
->> +        * 66 means evertything goes well! 66 is lucky.
->> +        */
->> +       if (mparam->dma_dir != DMA_FROM_DEVICE)
->> +               memset(mparam->xbuf, 0x66, mparam->npages * PAGE_SIZE);
->> +
->> +       return_ptr(mparam);
->> +}
->> +
->> +static void dma_single_map_benchmark_unprepare(void *arg)
->> +{
->> +       struct dma_single_map_param *mparam = arg;
->> +
->> +       free_pages_exact(mparam->xbuf, mparam->npages * PAGE_SIZE);
->> +       kfree(mparam);
->> +}
->> +
->> +static int dma_single_map_benchmark_do_map(void *arg)
->> +{
->> +       struct dma_single_map_param *mparam = arg;
->> +
->> +       mparam->addr = dma_map_single(mparam->dev, mparam->xbuf,
->> +                                     mparam->npages * PAGE_SIZE, mparam->dma_dir);
->> +       if (unlikely(dma_mapping_error(mparam->dev, mparam->addr))) {
->> +               pr_err("dma_map_single failed on %s\n", dev_name(mparam->dev));
->> +               return -ENOMEM;
->> +       }
->> +
->> +       return 0;
->> +}
->> +
->> +static void dma_single_map_benchmark_do_unmap(void *arg)
->> +{
->> +       struct dma_single_map_param *mparam = arg;
->> +
->> +       dma_unmap_single(mparam->dev, mparam->addr,
->> +                        mparam->npages * PAGE_SIZE, mparam->dma_dir);
->> +}
->> +
->> +static struct map_benchmark_ops dma_single_map_benchmark_ops = {
->> +       .prepare = dma_single_map_benchmark_prepare,
->> +       .unprepare = dma_single_map_benchmark_unprepare,
->> +       .do_map = dma_single_map_benchmark_do_map,
->> +       .do_unmap = dma_single_map_benchmark_do_unmap,
->> +};
->> +
->> +static struct map_benchmark_ops *dma_map_benchmark_ops[DMA_MAP_MODE_MAX] = {
->> +       [DMA_MAP_SINGLE_MODE] = &dma_single_map_benchmark_ops,
->> +};
->> +
->>   static int map_benchmark_thread(void *data)
->>   {
->> -       void *buf;
->> -       dma_addr_t dma_addr;
->>          struct map_benchmark_data *map = data;
->> -       int npages = map->bparam.granule;
->> -       u64 size = npages * PAGE_SIZE;
->> +       __u8 map_mode = map->bparam.map_mode;
->>          int ret = 0;
->>
->> -       buf = alloc_pages_exact(size, GFP_KERNEL);
->> -       if (!buf)
->> +       void *arg = dma_map_benchmark_ops[map_mode]->prepare(map);
-> It's a bit awkward. Let's try something like this instead:
->
-> struct map_benchmark_ops *mb_ops = &dma_map_benchmark_ops[map_mode];
->
-> then
-> mb_ops->prepare()/map/unmap/unprepare etc.
->
-> And can you find a better name than "arg" which is meaningless, mparam?
+While I haven't found this warning triggered in the kernel code
+itself (my testing covers just a tiny fraction), it's clearly
+something that should be disabled for the same reason.
 
-OK, I'll change it in the next version according to your suggestion.
+Additionally, because dkms uses kernel compile parameters, some
+out-of-tree modules might also hit this warning, like the Mucse
+network driver.
 
-Thanks!
+Fix follow error with -Werror:
+  drivers/net/ethernet/mucse/rnpgbe/rnpgbe_main.c:6126:11: error: default initialization of an object of type 'const u8[6]' (aka 'const unsigned char[6]') leaves the object uninitialized and is incompatible with C++ [-Werror,-Wdefault-const-init-var-unsafe]
+   6126 |         const u8 target_addr[ETH_ALEN];
+        |                  ^
+  1 error generated.
 
->> +
->> +       if (!arg)
->>                  return -ENOMEM;
->>
->>          while (!kthread_should_stop())  {
->> @@ -49,23 +130,10 @@ static int map_benchmark_thread(void *data)
->>                  ktime_t map_stime, map_etime, unmap_stime, unmap_etime;
->>                  ktime_t map_delta, unmap_delta;
->>
->> -               /*
->> -                * for a non-coherent device, if we don't stain them in the
->> -                * cache, this will give an underestimate of the real-world
->> -                * overhead of BIDIRECTIONAL or TO_DEVICE mappings;
->> -                * 66 means evertything goes well! 66 is lucky.
->> -                */
->> -               if (map->dir != DMA_FROM_DEVICE)
->> -                       memset(buf, 0x66, size);
->> -
->>                  map_stime = ktime_get();
->> -               dma_addr = dma_map_single(map->dev, buf, size, map->dir);
->> -               if (unlikely(dma_mapping_error(map->dev, dma_addr))) {
->> -                       pr_err("dma_map_single failed on %s\n",
->> -                               dev_name(map->dev));
->> -                       ret = -ENOMEM;
->> +               ret = dma_map_benchmark_ops[map_mode]->do_map(arg);
->> +               if (ret)
->>                          goto out;
->> -               }
->>                  map_etime = ktime_get();
->>                  map_delta = ktime_sub(map_etime, map_stime);
->>
->> @@ -73,7 +141,8 @@ static int map_benchmark_thread(void *data)
->>                  ndelay(map->bparam.dma_trans_ns);
->>
->>                  unmap_stime = ktime_get();
->> -               dma_unmap_single(map->dev, dma_addr, size, map->dir);
->> +               dma_map_benchmark_ops[map_mode]->do_unmap(arg);
->> +
->>                  unmap_etime = ktime_get();
->>                  unmap_delta = ktime_sub(unmap_etime, unmap_stime);
->>
->> @@ -108,7 +177,7 @@ static int map_benchmark_thread(void *data)
->>          }
->>
->>   out:
->> -       free_pages_exact(buf, size);
->> +       dma_map_benchmark_ops[map_mode]->unprepare(arg);
->>          return ret;
->>   }
->>
->> @@ -209,6 +278,11 @@ static long map_benchmark_ioctl(struct file *file, unsigned int cmd,
->>
->>          switch (cmd) {
->>          case DMA_MAP_BENCHMARK:
->> +               if (map->bparam.map_mode >= DMA_MAP_MODE_MAX) {
->> +                       pr_err("invalid map mode\n");
->> +                       return -EINVAL;
->> +               }
->> +
->>                  if (map->bparam.threads == 0 ||
->>                      map->bparam.threads > DMA_MAP_MAX_THREADS) {
->>                          pr_err("invalid thread number\n");
->> --
->> 2.33.0
->>
-> Thanks
-> Barry
+Link: https://lore.kernel.org/all/20250501-default-const-init-clang-v1-0-3d2c6c185dbb@kernel.org/
+Signed-off-by: WangYuli <wangyuli@uniontech.com>
+---
+ scripts/Makefile.extrawarn | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
+index a7b680df5b24..14e22310fbbf 100644
+--- a/scripts/Makefile.extrawarn
++++ b/scripts/Makefile.extrawarn
+@@ -44,6 +44,7 @@ KBUILD_CFLAGS += $(call cc-disable-warning, format-truncation-non-kprintf)
+ # the field is within a union with other non-const members, or the containing
+ # object is not const so the field can be modified via memcpy() / memset().
+ KBUILD_CFLAGS += $(call cc-disable-warning, default-const-init-field-unsafe)
++KBUILD_CFLAGS += $(call cc-disable-warning, default-const-init-var-unsafe)
+ else
+ 
+ # gcc inanely warns about local variables called 'main'
+-- 
+2.49.0
+
