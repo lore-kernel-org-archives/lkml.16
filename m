@@ -1,119 +1,185 @@
-Received: from www522.your-server.de (www522.your-server.de [195.201.215.122])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D36AE72628;
-	Wed,  7 May 2025 11:10:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.201.215.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDA01215F58;
+	Wed,  7 May 2025 11:11:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746616259; cv=none; b=QPEFiShUc8qRA9MxSO5wF3i90Lyvl5P4Ub7ZJLMHjQ5rhUEiFCqk3HYIAjLV/mzgCyUq4LCvtM4rp1K2pIZ6vJo8xIENr6xZwusQhJiKo78g3kSGOIUvUHmYmrVf5HBeKZj8dVewUMwJdTy9KiecV5CDzuJWRNiHCTo9p5oOejE=
+	t=1746616279; cv=none; b=d/ZUi4DWCm1BEmlIRhuzRcNtiEBeYgg3fqFMYe/+/UTWOlz7V9eqrVzcyAgz2ssQCwrP469Qa16mtEGnqjZ6eQa+AwkfLp10iXP3NTXcEh8lY4npHhrabIwT32epbflk1i1pGjaH7O5IrQn/yodf97AD6a7+xOMw1wIWf6n0RGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746616259; c=relaxed/simple;
-	bh=vmSGuFzk/EifdADajz7/SqsZwIclBftrNbOHkm1ysk4=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
-	 References:In-Reply-To; b=pbfxEZwee2LlaEwzjhdaJlpxbZgFSFGEJxHkqViJpHd1CeCvtvWR0pEeDbkJjXh0ivMp7cb1coZbN2j3sWExvYFdaFcGVzjlueumEbr1VMAg999WFLvd0e8R8RPkjh14T8fFDHWuTNoiUhPvMof9peysd4feWrap7M2VHIPe9Os=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=folker-schwesinger.de; spf=pass smtp.mailfrom=folker-schwesinger.de; dkim=pass (2048-bit key) header.d=folker-schwesinger.de header.i=@folker-schwesinger.de header.b=SmQ0f5v8; arc=none smtp.client-ip=195.201.215.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=folker-schwesinger.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=folker-schwesinger.de
+	s=arc-20240116; t=1746616279; c=relaxed/simple;
+	bh=ZntyQpw2zi5iOaOV9k2HOzNU8KHguQzDjhm53vtJw5s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=P26zHFgK05nn/dCr3A02YWv4LMadZQrvNDOUFsBv8z3H8+gjukaxH+wdqiIqVH0h3OH8qAOR0hSbrXQtIRyk1vClX9EvSDeDUCIa9JQkNG6t5KFNAnnVQCAT8E/b4YIGZTw2AZ03mnU7diGMLUko+NPsdgTa2cpzkRvedgGyT2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=KutWJ/g1; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=folker-schwesinger.de header.i=@folker-schwesinger.de header.b="SmQ0f5v8"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=folker-schwesinger.de; s=default2212; h=In-Reply-To:References:To:From:Cc:
-	Subject:Message-Id:Date:Content-Type:Content-Transfer-Encoding:Mime-Version:
-	Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=Tx722LLBcDX85Nl+UVjthb6rDb0/f2vKG6KsAYhSJ3Q=; b=SmQ0f5v84BGP/Ko44iFlRqfT+2
-	HqFax0psOtD+BSW8Or6pV5mrEHnzrN/aETO49l4ydOpKEuC97pzM3z6R5Chs1tK8ex4fEp7SO/m1H
-	JU0e+0gAz8Xa8+6nY3P1HS/OfYv0ofAJJigMMNM12t8Js9K6CtEaH8HM7R4IjYqSvTW3nd0trtvi5
-	Hic5UdV/LPIm4niQh7Jx0bikG4aOmRzBlo7Z/wIzkULy795yqV7YcSPZ6CAcNUDlWOgq4QWkEivJO
-	teZxajMdYy4jGeRn9MuD2AKFzEEt0nUY0IvRdybcSOIfY4Oe9sQHvgzFqHtFKP3iCWWUZxN3ca7J4
-	G3yBSvsw==;
-Received: from sslproxy07.your-server.de ([78.47.199.104])
-	by www522.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96.2)
-	(envelope-from <dev@folker-schwesinger.de>)
-	id 1uCcIv-000Al9-0y;
-	Wed, 07 May 2025 12:47:09 +0200
-Received: from [141.24.82.26] (helo=localhost)
-	by sslproxy07.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <dev@folker-schwesinger.de>)
-	id 1uCcIu-000Dr9-37;
-	Wed, 07 May 2025 12:47:08 +0200
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="KutWJ/g1"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 547A8WUS009115;
+	Wed, 7 May 2025 11:10:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	uA25O6r9wDpkNxGF6Ry+LoJMfYqYXfcqAr/9W7fDnIw=; b=KutWJ/g1BpPBlKHq
+	KSbVyDM0pWsutBvxtipM9QV63jddzbuSK0SChD0LtY2Q+9qyR/RHuGknIoG/K9lF
+	n0zM2b9MKEqFiE9ySEXmPpvSGuC7Xfl/kWelt2Id7emxd2wzKT03aCpgUsTbSCew
+	PYkC7cYgjLVxR1FBCj8m6Ii7hECf0Fi8VZ/O1zGDKifgXfC86S8zN2EF3qEtM1/0
+	JAEGEmV5S0iSN9YHWQF1I4sxGjyMpiJcEElYN3QnI6tTZ7BfEFgZwakWY42YOuQH
+	dTHLqrzMasmDqzWDLh3orvqbGhi05dl756vgeZsDWBfiSC24AvT+qeoHi6/INBzT
+	MsNBVQ==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46g5gh85cy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 07 May 2025 11:10:55 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 547BAsIu003195
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 7 May 2025 11:10:54 GMT
+Received: from [10.216.37.183] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 7 May 2025
+ 04:10:48 -0700
+Message-ID: <1a83e239-7cd7-4230-7117-54c9d97f1ed3@quicinc.com>
+Date: Wed, 7 May 2025 16:40:45 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 07 May 2025 10:47:08 +0000
-Message-Id: <D9PVA78TMQNH.H3AZTEVZ8SV@folker-schwesinger.de>
-Subject: Re: [PATCH] dmaengine: xilinx_dma: Set dma_device directions
-Cc: "Vinod Koul" <vkoul@kernel.org>, "Simek, Michal" <michal.simek@amd.com>,
- "Marek Vasut" <marex@denx.de>, =?utf-8?q?Uwe_Kleine-K=C3=B6nig?=
- <u.kleine-koenig@baylibre.com>, "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "Katakam, Harini" <harini.katakam@amd.com>,
- "Gupta, Suraj" <Suraj.Gupta2@amd.com>
-From: "Folker Schwesinger" <dev@folker-schwesinger.de>
-To: "Pandey, Radhey Shyam" <radhey.shyam.pandey@amd.com>, "Thomas Gessler"
- <thomas.gessler@brueckmann-gmbh.de>, "dmaengine@vger.kernel.org"
- <dmaengine@vger.kernel.org>
-X-Mailer: aerc 0.20.1-71-gcaf717fc3044
-References: <20250314134849.703819-1-thomas.gessler@brueckmann-gmbh.de>
- <MN0PR12MB59531CAA16616476F2E09EFBB7DF2@MN0PR12MB5953.namprd12.prod.outlook.com> <MN0PR12MB5953C8800220724906360D54B788A@MN0PR12MB5953.namprd12.prod.outlook.com>
-In-Reply-To: <MN0PR12MB5953C8800220724906360D54B788A@MN0PR12MB5953.namprd12.prod.outlook.com>
-X-Authenticated-Sender: dev@folker-schwesinger.de
-X-Virus-Scanned: Clear (ClamAV 1.0.7/27630/Tue May  6 11:43:15 2025)
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH] PCI: dwc: Chain the set IRQ affinity request back to the
+ parent
+Content-Language: en-US
+To: Tsai Sung-Fu <danielsftsai@google.com>
+CC: Jingoo Han <jingoohan1@gmail.com>,
+        Manivannan Sadhasivam
+	<manivannan.sadhasivam@linaro.org>,
+        Lorenzo Pieralisi
+	<lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?=
+	<kw@linux.com>,
+        Rob Herring <robh@kernel.org>, Bjorn Helgaas
+	<bhelgaas@google.com>,
+        Andrew Chant <achant@google.com>,
+        Brian Norris
+	<briannorris@google.com>,
+        Sajid Dalvi <sdalvi@google.com>, Mark Cheng
+	<markcheng@google.com>,
+        Ben Cheng <bccheng@google.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Thomas Gleixner
+	<tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>
+References: <20250303070501.2740392-1-danielsftsai@google.com>
+ <87a5a2cwer.ffs@tglx>
+ <CAK7fddD4Y5CJ3hKQvppGB2Bof4ibYDX4mBK3N1y8qt-NVoBb7w@mail.gmail.com>
+ <87eczd6scg.ffs@tglx>
+ <CAK7fddAqDPw1CuvBDUsQApbs1ZSE_ruyTAdsp+c4116C0ZjvVw@mail.gmail.com>
+ <878qpi61sk.ffs@tglx>
+ <CAK7fddCG6-Q0s-jh5GE7LG+Kf6nON8u9BS4Ame9Xa7VF1=ujiw@mail.gmail.com>
+ <878qpg4o4t.ffs@tglx>
+ <CAK7fddBSJk61h2t73Ly9gxNX22cGAF46kAP+A2T5BU8VKENceQ@mail.gmail.com>
+ <874izz1x42.ffs@tglx>
+ <CAK7fddBidt90Yjh=fjj=w8uovjEyes6Qe1U0m7k5XWGYZm+GHA@mail.gmail.com>
+From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+In-Reply-To: <CAK7fddBidt90Yjh=fjj=w8uovjEyes6Qe1U0m7k5XWGYZm+GHA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 76dWRpRUk8RBuH2Ouo3XaVN9F_2LJn9D
+X-Authority-Analysis: v=2.4 cv=TqPmhCXh c=1 sm=1 tr=0 ts=681b3fbf cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=AMFphiw-AAAA:8
+ a=wQ3t4f8JpbTjhMOd9qAA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=2bb41rcl4DbygUh6CoKr:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA3MDEwNCBTYWx0ZWRfX96SS2ppmYpc4
+ rIiDV1wvb4eWN26/6GbfAgsuEShLxXAixEgMuPb7vIS6Qu10+RCcpn0+DqgeF4PNqvBPUdc4D9/
+ ZnjT6TUlnxV86sT2FXTH7aOK7kfxtJ8aTCcFpdSsa6uc2JMYue+UZ4N9y8ZvpdEGqiqLZPKkYiM
+ We1BJgDOU9iIvShTLENpIwDTkLtPN3CZ3ORcDucOy9XeL1BGMj64JuN+qt3UQK95DKhejdhBb40
+ EetCzJ4p4cpkwgIuhEeS5iSvcnWxwUD8hBRFe/0jUQOZiCbvIZm9YGRxjeiC8C01k1WqHyqD/aH
+ TByaV34utTNP/lCKEECgDSqfm5sVlngLgeGrjuWO6t1MbTX6mgdTiLINhv6igQ2jn84DnRvZhqq
+ Awk7BOSNCNBG7DeE8F+JKKTrWgEhhWFr62udUs0zh60txZxGGH66CjkP04cUNJkuYViGRpkj
+X-Proofpoint-ORIG-GUID: 76dWRpRUk8RBuH2Ouo3XaVN9F_2LJn9D
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-07_03,2025-05-06_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 adultscore=0 mlxscore=0 mlxlogscore=999 spamscore=0
+ priorityscore=1501 phishscore=0 suspectscore=0 impostorscore=0 clxscore=1011
+ lowpriorityscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505070104
 
-On Wed May 7, 2025 at 12:20 PM CEST, Radhey Shyam Pandey wrote:
-> [snip]
->> > Subject: [PATCH] dmaengine: xilinx_dma: Set dma_device directions
->> >
->> > Coalesce the direction bits from the enabled TX and/or RX channels
->> > into the directions bit mask of dma_device. Without this mask set,
->> > dma_get_slave_caps() in the DMAEngine fails, which prevents the driver
->> > from being used with an IIO DMAEngine buffer.
->> >
->> > Signed-off-by: Thomas Gessler <thomas.gessler@brueckmann-gmbh.de>
+
+
+On 3/25/2025 12:08 PM, Tsai Sung-Fu wrote:
+> On Tue, Mar 11, 2025 at 10:05 PM Thomas Gleixner <tglx@linutronix.de> wrote:
 >>
->> Reviewed-by: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
->> Thanks!
+>> On Tue, Mar 11 2025 at 17:52, Tsai Sung-Fu wrote:
 >>
->> > ---
->> >  drivers/dma/xilinx/xilinx_dma.c | 4 ++++
->> >  1 file changed, 4 insertions(+)
->> >
->> > diff --git a/drivers/dma/xilinx/xilinx_dma.c
->> > b/drivers/dma/xilinx/xilinx_dma.c index 108a7287f4cd..641aaf0c0f1c
->> > 100644
->> > --- a/drivers/dma/xilinx/xilinx_dma.c
->> > +++ b/drivers/dma/xilinx/xilinx_dma.c
->> > @@ -3205,6 +3205,10 @@ static int xilinx_dma_probe(struct
->> > platform_device
->> > *pdev)
->> >             }
->> >     }
->> >
->> > +   for (i =3D 0; i < xdev->dma_config->max_channels; i++)
->> > +           if (xdev->chan[i])
->> > +                   xdev->common.directions |=3D xdev->chan[i]->direct=
-ion;
->> > +
->
-> Suraj also worked on this patch internally and he did set direction in ch=
-an_probe().
-> So, I think we can switch to below implementation ?
->
-> --- a/drivers/dma/xilinx/xilinx_dma.c
-> +++ b/drivers/dma/xilinx/xilinx_dma.c
-> @@ -2909,6 +2909,7 @@ static int xilinx_dma_chan_probe(struct xilinx_dma_=
-device *xdev,
->                 return -EINVAL;
->         }
->
-> +       xdev->common.directions |=3D chan->direction;
+>> Please do not top-post and trim your replies.
+>>
+>>> Running some basic tests with this patch (
+>>> https://tglx.de/~tglx/patches.tar ) applied on my device, at first
+>>> glance, the affinity feature is working.
+>>>
+>>> I didn't run stress test to test the stability, and the Kernel version
+>>> we used is a bit old, so I only applied change in this 2 patches
+>>
+>> I don't care about old kernels and what you can apply or not. Kernel
+>> development happens against upstream and not against randomly chosen
+>> private kernel versions.
+>>
+>>> And adding if check on irq_chip_redirect_set_affinity() and
+>>> irq_set_redirect_target() to avoid cpumask_first() return nr_cpu_ids
+>>
+>> I assume you know how diff works.
+>>
+>>> May I ask, would this patch be officially added to the 6.14 kernel ?
+>>
+>> You may ask. But you should know the answer already, no?
+>>
+>> The merge window for 6.14 closed on February 2nd with the release of
+>> 6.14-rc1. Anything which goes into Linus tree between rc1 and the final
+>> release is fixes only.
+>>
+>> This is new infrastructure, which has neither been posted nor reviewed
+>> nor properly tested. There are also no numbers about the overhead and
+>> no analysis whether that overhead causes regressions on existing setups.
+>>
+>> These changes want to be:
+>>
+>>     1) Put into a series with proper change logs
+>>
+>>     2) Posted on the relevant mailing list
+>>
+>>     3) Tested and proper numbers provided
+>>
+>> So they are not even close to be ready for the 6.15 merge window, simply
+>> because the irq tree is going to freeze at 6.14-rc7, i.e. by the end of
+>> this week.
+>>
+>> I'm not planning to work on them. Feel free to take the PoC patches,
+>> polish them up and post them according to the documented process.
+>>
+> I really appreciate the patches from you, I am quite new to the
+> upstream and IRQ framework. So would you help to share
+> some experiences on how this kind of new infrastructure of IRQ
+> framework should be tested if you don't mind ?
+QCOM is also interested in this feature, if you need any help
+we can support it. Please let us know the status of this
+patch to take it forward.
 
-Looks good to me.
-
+- Krishna Chaitanya.
+>> Thanks,
+>>
+>>          tglx
+> 
+> Thanks
+> 
