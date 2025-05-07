@@ -1,84 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77F4C1E8348
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 06:22:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72A511D63C0;
+	Wed,  7 May 2025 06:23:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746598968; cv=none; b=pPRhnmpwHHiaVKOSai7opmsX8krmmjCAyOdZb2dOu0BiexWydDi6EJx59+YUvKPXMY+f3qkzrIYXgZM4ShFZGKZrd6529eMmwH47ZGadOnyV02ymuE28kxZQeztLtCTurplMwW4aUcZipvrBVTTe2aqPh2oDyfaV+CLQu+bl/es=
+	t=1746599015; cv=none; b=lWQ/4zeXqgY/0S8g0APhlp6iRSpv6pt4jjkVn+8zIUbvfegEzvU5qsP+GNx1uZr5TFfJSa/eH5J5vBBUsbRbKoFdbAbwNoXt9E8FrTesQ3suEY+ZhwUe+3rB/3/ufWtgZOoY9JBDbgDGU/ypXjGOQX9/FXGfMMZB1zIstgfNAMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746598968; c=relaxed/simple;
-	bh=TK7PwC5Hm/B/85gtiDIvAmTdM3kA4hXR+iWnqJqIdSQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T9Q/CQg9Hwut84yoqEn+Bt7Ypdjlx++yNlRJxnvx2HG8VIhCYlU/0WPVzR1IoZ9sOkmyb4hVQlpJIj2BRkSAaX+rtkCFs/0bJtiEDTJUzjhhCaoifMsUh4UoG4asqGq7sOv3q9OSZHt2Uz7QnqBz7qy9k3BPtgNhpbjcn8Qx2aA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gFLyl9fF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746599015; c=relaxed/simple;
+	bh=cIkyL809DpNZFCoH/QArUP8VFEysAc72R2o6zAotn8s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uuZJ+T0d2MNEWeBqPHJXX4IDI9w00FEGIVZolCEiMXb2Ck/zvPQnN4lbWR3pxU6K+mPJZFbNU3IuVR+2ei4oqjD8HBJLwbr16hdXZnytYldhUUo1BJixqmXw/JLio4cegzV3j7Xg2zwwKpt2ny4/OsZJziDu721Cyw7LBCSgHZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IHmW9loA; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gFLyl9fF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 547C2C4CEE7;
-	Wed,  7 May 2025 06:22:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746598968;
-	bh=TK7PwC5Hm/B/85gtiDIvAmTdM3kA4hXR+iWnqJqIdSQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gFLyl9fF6IrNq9IZhC9W/dILKh/hqfpwjZhA8aAQFNBu87yHPmwvIFWvNL0QzMkY8
-	 rOhIt2qk8cwq1iV5cKooqQleFPppR0Fq0dGFspTch1IuEpa/0LrWAbi5tv/nrHuioN
-	 Qw04t3tNqeeF4gm6EAVlGcZBI2WbJWsP0SWmqKy2ir8Fbcjsc/kUZ336WABJ+nm0On
-	 iaxq/Mf4O8YSnJZJIbnrX/dsB6us6LI0pu10uR0cB5fY/BtUeL9IMwUrPt4OAUCkcg
-	 gPRJ9QbBpRmiTiTp46OgBTcXCezn0uZmH3kz3aENt0h62XQk464CEh6um2tl/XcQUQ
-	 0i6v/jHwst8lw==
-Date: Wed, 7 May 2025 08:22:42 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	Masahiro Yamada <yamada.masahiro@socionext.com>,
-	Michal Marek <michal.lkml@markovi.net>
-Subject: Re: [PATCH 01/15] x86/kconfig/64: Refresh defconfig
-Message-ID: <aBr8MgC7l4efb_kw@gmail.com>
-References: <20250506170924.3513161-1-mingo@kernel.org>
- <20250506170924.3513161-2-mingo@kernel.org>
- <5700be74-71e3-41bd-97e2-ac0c33b1c83c@app.fastmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IHmW9loA"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ad1d1f57a01so419767166b.2;
+        Tue, 06 May 2025 23:23:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746599012; x=1747203812; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cIkyL809DpNZFCoH/QArUP8VFEysAc72R2o6zAotn8s=;
+        b=IHmW9loAirkl3kuj2uM15X3GAeB3qNvFNLOqeqtrydtkjj1s0jCsAeSLdUA/XO1Ezy
+         vZASGze3rUIYVt4JNs5u0neLRHoBVk5EwgdAETcy2oAn/zlTGG0HdKKeTacWWsisNe8n
+         Z+M4ajG6vqiKSp/YRcVSBllFRhS6opNY6zUbAMCyy277PnJcp4AK2xJNwJvqgKpGCnfO
+         FC5pS4Xte1w0Gn+9Ak/Nc9ahBl3No9YmE6HVwhiQ1yL01zSRSRYsEsuwLpzMjpl9PmMg
+         A0783YV2aHGaIsgEnoMeAcEzXGRD7XyMlwhEO6o7NrweKEHzFV1x89jgrX+L4AQateN2
+         mKRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746599012; x=1747203812;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cIkyL809DpNZFCoH/QArUP8VFEysAc72R2o6zAotn8s=;
+        b=O3a+3I9Opr7+NG03zVoAzSB1J73oF4ipNg7ERTH8aVhRYavwppnz9P/NWyQhp06Od7
+         4hBzaE3Wt1UP+Ivv4i1JxLcZpOZMom1cXWPn8GPB2m97Zm2yopqHfUMFPFE28xBNJiQv
+         skr8cvXiVKXQr2QKD2Jpe0cWZ5m8nkkD+l7mkoWS4k+5aVehCtSXFjc24/BNLEMxSiyl
+         5X40Uxy7A95Gdme4eP3nIwip/TBrG6DLZ3GBOfS61H0aKMSh/DZMJvfNH4bPXjmqrf50
+         ZP+lLbtSvJJ7zIwUbwb3C0nGOcy9yO4ne0SaAdIKDD6VGa0GOLIRap4Nn6gfuxdFwvLr
+         DoSg==
+X-Forwarded-Encrypted: i=1; AJvYcCUm6G+B7ZhLK3AEGPa4jeWETo2VUCsDJLsskOkOui4+cRSQWfcoZYBkULYJFkWj6diH7m3d0X+OKuIk8toC@vger.kernel.org, AJvYcCVtWJixfuBxMo1AGfjpNJQqOU/uO9vQ/bf0m+alqlyumn8TcbVroc7HgjQAZj6edrSDfNvjny4aqcQlIrKYugnd@vger.kernel.org, AJvYcCXuLOrzfBOPhhSgzvuvFBsFGcmSQUXp2MVC0/QVLbiCjhFlkBYCNghWwlv4in6Sg9De80xQblZ8CmXN@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIenmZBFe5vlQQbkNO4O07oKelZA52SP3W34vQSFNitt2CYxoa
+	3XrfuHw2pwp6fVirglGlop+VzPrx9HL12B1v+gj9uRPXKZYPxPlMqX/IGPzzaUvK3wdTlvjek7b
+	2AhpNFa3rYn+ugGmP2E+1iZXv7UE=
+X-Gm-Gg: ASbGncs6BYuY9/sG2uhGBvvdCZ0QhJKL5yHR4l/CGmyUrrQ9rtlzleyXdalORDthmkk
+	yxKfdPJV6LeSVzdEEP5yDN9hzqVtzcTm5lVpCVV3Op0pJB7qG+TEnRAKOcR8vBQdkGkLDHv9vrf
+	Bd2kzQ+GHjO8xAfKDFhpIkbg==
+X-Google-Smtp-Source: AGHT+IEOGnsBXsP4uvUcozOu4S5D2FFOy6vv8NUZdedB2gn4SM7bNNUaJ9f60KXPkDRjbmTcR5X12bulyU1oZ8EfsTI=
+X-Received: by 2002:a17:907:9d04:b0:ace:d68c:2f88 with SMTP id
+ a640c23a62f3a-ad1e8bc8da8mr203523866b.20.1746599011480; Tue, 06 May 2025
+ 23:23:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5700be74-71e3-41bd-97e2-ac0c33b1c83c@app.fastmail.com>
+References: <20250506-aaeon-up-board-pinctrl-support-v5-0-3906529757d2@bootlin.com>
+ <20250506-aaeon-up-board-pinctrl-support-v5-5-3906529757d2@bootlin.com>
+In-Reply-To: <20250506-aaeon-up-board-pinctrl-support-v5-5-3906529757d2@bootlin.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Wed, 7 May 2025 09:22:55 +0300
+X-Gm-Features: ATxdqUEB0Md25wpJdoWOv7e1-MgQeQTcFgtpoWyKkdk3fObqVYQHhhernqFlHnM
+Message-ID: <CAHp75Vdk5Tqykqpg_G3FZpjKjz3yBjz9dNdTu_0R4KRtLMN7=Q@mail.gmail.com>
+Subject: Re: [PATCH v5 05/12] gpio: aggregator: refactor the code to add GPIO
+ desc in the forwarder
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>, 
+	Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, May 6, 2025 at 6:21=E2=80=AFPM Thomas Richard
+<thomas.richard@bootlin.com> wrote:
+>
+> Create a dedicated function to add a GPIO desc in the forwarder. Instead =
+of
+> passing an array of GPIO descs, now the GPIO descs are passed on by one t=
+o
+> the forwarder.
 
-* Arnd Bergmann <arnd@arndb.de> wrote:
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
 
-> On Tue, May 6, 2025, at 19:09, Ingo Molnar wrote:
-> > @@ -63,9 +62,7 @@ CONFIG_BINFMT_MISC=y
-> >  # CONFIG_COMPAT_BRK is not set
-> >  CONFIG_NET=y
-> >  CONFIG_PACKET=y
-> > -CONFIG_UNIX=y
-> >  CONFIG_XFRM_USER=y
-> > -CONFIG_INET=y
-> >  CONFIG_IP_MULTICAST=y
-> >  CONFIG_IP_ADVANCED_ROUTER=y
-> >  CONFIG_IP_MULTIPLE_TABLES=y
-> 
-> Any idea what happened here? I don't see anything selecting UNIX
-> and INET, and leaving them at the default-off state seems like a
-> bad idea.
-
-I think this is a side effect of having NET_9P support enabled, which 
-option comes with:
-
-        imply INET
-        imply UNIX
-
-Thanks,
-
-	Ingo
+--=20
+With Best Regards,
+Andy Shevchenko
