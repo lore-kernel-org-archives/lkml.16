@@ -1,114 +1,92 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94D944B1E4B;
-	Wed,  7 May 2025 16:33:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CFD6156237
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 16:35:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746635602; cv=none; b=AlJ0HfJYGaJ2+1kcSwAr5jD/AteD3Ihh/mhASMQol8opFrvdIWbUKUe1T5CWxr/DHwlo1bDvRoBO5zsTIE1KIkQ+mGYV3dxXe+V9CbD6oI6jwfKjQTM41NCJLN2Dzk9cvIj5yn1wQEKGHQEyT0Nvdvfc624zLaMn1eXku6aLYQ0=
+	t=1746635704; cv=none; b=CVvly3ZBxSqODO6s1eNqTcEWf3l13pdZXwpUPMHoYQ6J/I9vpwTzYl/zjCu/601a+F6H+QZdpy+JQMnUCsCUInGv9yF8o7bLPEycz0AUhBrGSSm1HzsZdlqDBQJP1DvikSxUzMOCYgYIdo3o46QfbthLAYyiGwB8xMai9PoqCkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746635602; c=relaxed/simple;
-	bh=5PNsaUkEGcwl6bLcWpVgvynTWCnJdydaJWuyO6roJWo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jzxG9il6SNaP0tv8br6e5gDqkv2iAoXESCad2vT4gDzMVr5vLUIvtgvyUAem9gelXO71a/xh4yBWVc59FtZSp9OS1i3kMgH5pD9FPyRzsOQMOXGMlAnRvOjYUinECjWoh5A4nC6090pWQtKjjj/ZZtqC5dbDNyqObu1R47Uogvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PNeuv9i4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746635704; c=relaxed/simple;
+	bh=kad3jINNZ0osjkDMFkqfo9JLDhhK/YCCvNjLOOfIsUs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MlSUZPopnvZvSbrwgSIdGxE4bJiNunZidv01SBH0puLqP4ksRwXPCANczikNKyBQNwucN77eWvPMI2FYxtKs17rlvqyjgh1/60KYpGUC5ziV0DvLS4HKYAtgHt7VN380RBpwUGqOqJVcfWkoU0Hxemyp2CahY3jZZvBjbvUDw3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sZSeTLFk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PNeuv9i4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16B81C4CEE2;
-	Wed,  7 May 2025 16:33:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sZSeTLFk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F0A6C4CEE2;
+	Wed,  7 May 2025 16:35:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746635602;
-	bh=5PNsaUkEGcwl6bLcWpVgvynTWCnJdydaJWuyO6roJWo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=PNeuv9i4FW68lrdYEIH+OvkPUun2GCl+X5bZ8d6QTCI93nFrsrCwxh50EN+kCBmlw
-	 mQCq5hjGlkHBeSI/DtB4qkLOeRO6XJEnBCDQvYV5SU9yHWchq0W1/WcjzwqjQQmeoM
-	 gReuu6roxmtjr4SJPq+7+HX7Z/x9vBn6MR1xA8uZZS53z8Xiu4Ak+JGc+xCXXLgpAz
-	 gy37jLwfjq4Iuko8jbQzuMcjfKUINz1h1pOmNM5Ueg9bEAktFG+36wnGDJJQ++BP/a
-	 d25WpFMg67fiNJ+EXaPmzC3Pv+UmvEzoB0n8ZKTyOfZD602hSMnPcXtViyJZfYJLQH
-	 6DzoXXb70/yeA==
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ac2902f7c2aso821066b.1;
-        Wed, 07 May 2025 09:33:22 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUzvxunn98yAPU19+qjcjVXAEGAAMoVNAZeY74V7rS26ADxX/ZCmWvjQhl6TYmrggTIaLi2F20eKGMGbnpC@vger.kernel.org, AJvYcCV3/2/OzhEds31GPIi55Bg4AZH7H4F181OLxtx6tJQbgYzYMoFq0WZjVW52Gtf/lmMnOl/qQjXm5cHCBGi7@vger.kernel.org, AJvYcCWpARgmEPAskhFfOU6ZPDVGt0TQi5pdZNB93mbn4DDA4F1ItcqU1qvf6XF/MC7hnCgXzu9/R70++Eqr@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFavzO37A3rtjEqEZ0h7gbR8UN9V021ZkkOo5g2HRKL10uWXYV
-	dhyXr5CI2ASyaiE6hOBncdO34Rvj1NFIrTWIslvbIKqir5p1j18XwwiDJYoNRoPt4t7vovRewq/
-	FZqUR6R86ZYGjoQ0PjiAtKGFNqA==
-X-Google-Smtp-Source: AGHT+IFbXKkluOPn99/o7gDALkGZlj3EQIAiAnWfyaoAaMejb4qqqHeuVh2Qnro+FLlcAyfNU+PnEPf3FfamJcZhNoQ=
-X-Received: by 2002:a17:907:3e21:b0:ac7:f00d:52ec with SMTP id
- a640c23a62f3a-ad1e8d0db1bmr336967966b.58.1746635600709; Wed, 07 May 2025
- 09:33:20 -0700 (PDT)
+	s=k20201202; t=1746635703;
+	bh=kad3jINNZ0osjkDMFkqfo9JLDhhK/YCCvNjLOOfIsUs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sZSeTLFkyGwKwCd31moc58PtGiSuEiUcNGorc82opu4eu3COTP8vQABhNlA4R/pJT
+	 y/KMTBi1PEF6ZscUlrdZlgNj7fLyPFVKoYBGkSRpbv5zIQrkABLBQw8mbSHuhS3ZdW
+	 /CFHIOzCRFm5wjpaRr4LO+uqFdZaUczUuqthQbe1ofBTJxfda8HM/h6q+qrUbFOfn1
+	 LmJZ/VnbjckNhBp0t1ys37LdxRJn2XJ0TfOsSZSzQuKCaBe6PRv9OsTuM8zJDjr69a
+	 AgTHnr8Lnyrp4wckZaMCWAtBGfiKERiMp9KiDOuiprmn3I/WsiKU5O4PMJFTSQI6hW
+	 nLWq8x7OFKFRw==
+Date: Wed, 7 May 2025 06:35:02 -1000
+From: Tejun Heo <tj@kernel.org>
+To: David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>,
+	Changwoo Min <changwoo@igalia.com>
+Cc: linux-kernel@vger.kernel.org
+Subject: Re: [PATCH sched_ext/for-6.15-fixes] sched_ext:
+ bpf_iter_scx_dsq_new() should always initialize iterator
+Message-ID: <aBuLtjMM9LHLkreU@slm.duckdns.org>
+References: <aBkt_4tEZATxf6-Q@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250506220016.2545637-1-robh@kernel.org> <20250507165447.7e340d47@donnerap.manchester.arm.com>
-In-Reply-To: <20250507165447.7e340d47@donnerap.manchester.arm.com>
-From: Rob Herring <robh@kernel.org>
-Date: Wed, 7 May 2025 11:33:09 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKve4hXiR31ApMADEz3NqD_futjETWrPKEWz3tADsX7gA@mail.gmail.com>
-X-Gm-Features: ATxdqUFg1sT4pwdyybWgm-K9_ztHsP0q9-QRdWfCP7CwDJwHRKdVQ4NBVzTsuSU
-Message-ID: <CAL_JsqKve4hXiR31ApMADEz3NqD_futjETWrPKEWz3tADsX7gA@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: serial: Convert arm,sbsa-uart to DT schema
-To: Andre Przywara <andre.przywara@arm.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-serial@vger.kernel.org, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aBkt_4tEZATxf6-Q@slm.duckdns.org>
 
-On Wed, May 7, 2025 at 10:54=E2=80=AFAM Andre Przywara <andre.przywara@arm.=
-com> wrote:
->
-> On Tue,  6 May 2025 17:00:15 -0500
-> "Rob Herring (Arm)" <robh@kernel.org> wrote:
->
-> > Convert the Arm SBSA UART binding to DT schema. It is a straight-forwar=
-d
-> > conversion.
-> >
-> > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> >
-> > ---
-> >  .../bindings/serial/arm,sbsa-uart.yaml        | 38 +++++++++++++++++++
-> >  .../bindings/serial/arm_sbsa_uart.txt         | 10 -----
-> >  2 files changed, 38 insertions(+), 10 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/serial/arm,sbsa-u=
-art.yaml
-> >  delete mode 100644 Documentation/devicetree/bindings/serial/arm_sbsa_u=
-art.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/serial/arm,sbsa-uart.yam=
-l b/Documentation/devicetree/bindings/serial/arm,sbsa-uart.yaml
-> > new file mode 100644
-> > index 000000000000..68e3fd64b1d8
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/serial/arm,sbsa-uart.yaml
-> > @@ -0,0 +1,38 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +---
-> > +$id: http://devicetree.org/schemas/serial/arm,sbsa-uart.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: ARM SBSA UART
-> > +
-> > +maintainers:
-> > +  - Andre Przywara <andre.przywara@arm.com>
-> > +
-> > +description:
-> > +  This UART uses a subset of the PL011 registers and consequently live=
-s in the
-> > +  PL011 driver. It's baudrate and other communication parameters canno=
-t be
->
-> He said "driver" in a binding document!! ;-) I think you can remove that
-> part, or maybe rephrase it to say it could be supported by the same drive=
-r
-> that supports a PL011.
+Applied to sched_ext/for-6.15-fixes with a small update to commit message as
+suggested by Andrea.
 
-I know that's 'the rule', but I kind of think that's relevant in this
-case. If we're looking for improvements, defining SBSA here might be
-the place to start... But I'm not really as this is 1 of 1100
-remaining I've had chatgpt to convert and then I fix all the issues.
+------ 8< ------
+From 428dc9fc0873989d73918d4a9cc22745b7bbc799 Mon Sep 17 00:00:00 2001
+From: Tejun Heo <tj@kernel.org>
+Date: Mon, 5 May 2025 11:30:39 -1000
+Subject: [PATCH] sched_ext: bpf_iter_scx_dsq_new() should always initialize
+ iterator
 
-Rob
+BPF programs may call next() and destroy() on BPF iterators even after new()
+returns an error value (e.g. bpf_for_each() macro ignores error returns from
+new()). bpf_iter_scx_dsq_new() could leave the iterator in an uninitialized
+state after an error return causing bpf_iter_scx_dsq_next() to dereference
+garbage data. Make bpf_iter_scx_dsq_new() always clear $kit->dsq so that
+next() and destroy() become noops.
+
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Fixes: 650ba21b131e ("sched_ext: Implement DSQ iterator")
+Cc: stable@vger.kernel.org # v6.12+
+Acked-by: Andrea Righi <arighi@nvidia.com>
+---
+ kernel/sched/ext.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
+index 4e37b40ce280..f5133249fd4d 100644
+--- a/kernel/sched/ext.c
++++ b/kernel/sched/ext.c
+@@ -6827,6 +6827,12 @@ __bpf_kfunc int bpf_iter_scx_dsq_new(struct bpf_iter_scx_dsq *it, u64 dsq_id,
+ 	BUILD_BUG_ON(__alignof__(struct bpf_iter_scx_dsq_kern) !=
+ 		     __alignof__(struct bpf_iter_scx_dsq));
+ 
++	/*
++	 * next() and destroy() will be called regardless of the return value.
++	 * Always clear $kit->dsq.
++	 */
++	kit->dsq = NULL;
++
+ 	if (flags & ~__SCX_DSQ_ITER_USER_FLAGS)
+ 		return -EINVAL;
+ 
+-- 
+2.49.0
+
