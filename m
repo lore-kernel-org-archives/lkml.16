@@ -1,247 +1,180 @@
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7FD228A73F
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 16:38:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEB6F1917FB;
+	Wed,  7 May 2025 16:38:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746635903; cv=none; b=aIfmTi2AEYvVXmcehw+ucGwNTM6I/w7n+DPW5Ovhkd65mAVXvbRlau/lMH5pxT9R+YEVmuDEbyUCBXKjbiR3M699kSvP7S1tL8om7KxhDAiLo+8pEjv0woaUwL6iDruelIfPQiqk5NCe6WuraRu5yAJ7IbcGVCTjCzF3yNTXucY=
+	t=1746635914; cv=none; b=jFykYXXNoxHB7bN8U2sNqV+xM0ZgyleMlf71ul891B3MwyVemWC216s2N1AkS68qonWQk4/CCerqU7OwE6msrOsJRLwXBVJj2cW43+s5QjxG+iKUqvy6uXWQOAY6qv/SygjFa1oqmp1GKRlcx8bu+IqaFaj7O1EDGpqh816iU1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746635903; c=relaxed/simple;
-	bh=Pjs80y8eHu5bjBIh65bwbOhNCtjNmJR7kP6EndofUzA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ns/V56GauuFVtvns71tT8J3bz1qslXF//HasJkvRu3u7ZBBT2X+z6y+ntrAYgdpionEgQbUPm4UGXc5VdYHMGciU9qDvHHfjfEXzaoZdaDjW2sz+5bSgU23pBR2kGWBfg1kKgCeBTAVyL4m5H9QTOJmtS2RWEIJD596LtY3OjVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=aNUubDDJ; arc=none smtp.client-ip=209.85.222.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="aNUubDDJ"
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7c559b3eb0bso3775785a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 09:38:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1746635901; x=1747240701; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FNwnXaMBa9hDs8yRXt3IkZX2NwxNzCzlBs/R2yeu/pc=;
-        b=aNUubDDJEaeYr82EseATTD0fiGIH1nopOS7mLkeA5Jh2dQ9KvOtRFfRQLE9yK0wzbx
-         ANktdUA3CSC6L++L9C8b9uggtSK0nHoZKykikhhsZ9gmOqAtKOXXYLnQAEXDxNWblGuD
-         t2SiojHv9qsM+SMpiznoCsr9vqsSaDTuHqhqZ1Tyc7OFX6lStT0SW0EmTgFnHbpCwo/s
-         xx7gBiw6ttfPwx2Y3UrHCGKER49aBOjtdOb7GZErkAxC31t5AExD/knUsUqEyky5A+tM
-         jION/haVKHDgQUqUVp9Jqu56+JmxJl/PdU7FrJTrZM6VZFrDSACCLSBwS2IqDeZBJPmO
-         k+Pg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746635901; x=1747240701;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FNwnXaMBa9hDs8yRXt3IkZX2NwxNzCzlBs/R2yeu/pc=;
-        b=bYo+U0W2BLhWIsp1EuTbIinf8hZBfmjZxZbIk2ygOBUhpqUI3ZmSEaJDDJwFvuz7Qa
-         B6khL6BVUr75jmqxXzHARFD0SeswLKwR0n++fsJAcZ3mZaChB7TvvWL1S7jSe7hTIb0n
-         6illVlzMNM/1pAnoLVQvn80vwZRH+6G5p9zm+1LGZGqEx+qIiuUevuFl5vffuUEZM0i+
-         tHQOoXy4kmtJ+cMDJUfpi4C/l+hmbTXQl3JJoqFk5o2Qdz1LSln2xZSPY6C5UD4wWC9d
-         ZYqmRek4vc3yxO3s0Hx3pyn0+QWVMHrKN2elJBbLNFU4VEaGt/a7gcwc8ou5z5XT0IU1
-         GTxw==
-X-Forwarded-Encrypted: i=1; AJvYcCV1tPoWTawOdx94RiVHd4sT+itzrDAE85LHR/HiWCdmOfMBpzY6JuF7LZVGjKsdvmbTgZlKbQbEce6zCaE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/3zLeeUC7ouf+D2MsCehQEAjlnkNcj0UClAuxYjsbRvP8vzAH
-	lFg5+E9c0X6tzvDb4Azid7vME+RMjKA3JuD/ehb3tQOw9mJA1cxtFw8ZN0mcrcs=
-X-Gm-Gg: ASbGncs2RWfEuWBNumxL8Dl7hyhmA/k1eu3uI4tSPBURj3TUBl7wH6VVeRb0V/Bt9/Z
-	8R10zrTjDcb58mtSes888S7k44r6bboFEvmtaKMOsW5WMjCiVAfvepfvLfjKdTB12RHNuXCq8Of
-	eUEpyYQBYdT+Yf4GsjpBy6yW1bWpmJByx4p5gFFhotLXlqV+f6Tot7gGYIbvmobgv9TSpmnqGmx
-	XPUidQxRiap1q363Qrj8MV+xTBT1mGYd8czzP9IentGRH0Sa9wS3QLvq0uH0FPRVOLQkRVXpI5c
-	EWnvrCoQYDBfKUVJtgBrDnDyl7Ru1gZwGxbNhvYNsW/pj/Vv0sVB3XsJ55/k3zSmcHZvoH7JInF
-	JFQgiPkt/JloPe1+a75Av
-X-Google-Smtp-Source: AGHT+IF0xHUJtr97towfcTvdfSOQ4JyJPdVT4WVEd27PBR1E81nlMSzfNE409MAkSdrttE1G0v49TQ==
-X-Received: by 2002:a05:620a:4621:b0:7c7:a5c9:d109 with SMTP id af79cd13be357-7caf74188e8mr542999885a.50.1746635900579;
-        Wed, 07 May 2025 09:38:20 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-42.washdc.ftas.verizon.net. [96.255.20.42])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7caf75b8841sm171484285a.69.2025.05.07.09.38.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 09:38:20 -0700 (PDT)
-Date: Wed, 7 May 2025 12:38:18 -0400
-From: Gregory Price <gourry@gourry.net>
-To: rakie.kim@sk.com
-Cc: joshua.hahnjy@gmail.com, akpm@linux-foundation.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-	dan.j.williams@intel.com, ying.huang@linux.alibaba.com,
-	kernel_team@skhynix.com, honggyu.kim@sk.com, yunjeong.mun@sk.com
-Subject: Re: [RFC] Add per-socket weight support for multi-socket systems in
- weighted interleave
-Message-ID: <aBuMet_S1ONS1pOT@gourry-fedora-PF4VCD3F>
-References: <20250507093517.184-1-rakie.kim@sk.com>
+	s=arc-20240116; t=1746635914; c=relaxed/simple;
+	bh=pPRh0xmgP+OZka+vsxhg1EUacKsXWMQf1hLtzjiubm0=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=fmw8tzE1NFxx8YwxWoTmvkc/Eg/lDt4EYhoFwXvkoO4/tDh/frCfLtkB5udtnPGaoQNt5IbEXdxyY0T3v+hw+ofoZ1eVJfmjFS3795J9dE2lcxVn22y2OFT5ZVSVoCr3H8H74bEdJUWZrWfxouYEN7jDjzNi5lwT2uaaQndS+KU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 055B216F2;
+	Wed,  7 May 2025 09:38:22 -0700 (PDT)
+Received: from [192.168.20.57] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D0D163F58B;
+	Wed,  7 May 2025 09:38:29 -0700 (PDT)
+Message-ID: <fb2e3c60-1171-4f5c-852d-a5bfdc4f9c2a@arm.com>
+Date: Wed, 7 May 2025 11:38:27 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250507093517.184-1-rakie.kim@sk.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ACPI/PPTT: fix off-by-one error
+From: Jeremy Linton <jeremy.linton@arm.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: "Heyne, Maximilian" <mheyne@amazon.de>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>,
+ Len Brown <lenb@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>,
+ Ard Biesheuvel <ardb@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20250506-draco-taped-15f475cd@mheyne-amazon>
+ <214c2a2d-e0ea-4ec6-9925-05e39319e813@arm.com>
+ <CAJZ5v0jvWXDQQ++4wmWJ+i=jds+MZ68bRB9+26WM4tAPHFxALw@mail.gmail.com>
+ <1911d3b6-f328-40a6-aa03-cde3d79554de@arm.com>
+ <CAJZ5v0ii9HLfqfgcp=1qRRX6M1yThf7ZPNkSLVc5GGFhv=N-Lg@mail.gmail.com>
+ <ad04d07b-d610-4355-bd47-1d2fb49711f3@arm.com>
+Content-Language: en-US
+In-Reply-To: <ad04d07b-d610-4355-bd47-1d2fb49711f3@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 07, 2025 at 06:35:16PM +0900, rakie.kim@sk.com wrote:
-> Hi Gregory, Joshua,
+On 5/7/25 11:31 AM, Jeremy Linton wrote:
+> On 5/7/25 11:12 AM, Rafael J. Wysocki wrote:
+>> On Wed, May 7, 2025 at 5:51 PM Jeremy Linton <jeremy.linton@arm.com> 
+>> wrote:
+>>>
+>>> On 5/7/25 10:42 AM, Rafael J. Wysocki wrote:
+>>>> On Wed, May 7, 2025 at 5:25 PM Jeremy Linton <jeremy.linton@arm.com> 
+>>>> wrote:
+>>>>>
+>>>>> Hi,
+>>>>>
+>>>>> On 5/6/25 8:13 AM, Heyne, Maximilian wrote:
+>>>>>> Commit 7ab4f0e37a0f ("ACPI PPTT: Fix coding mistakes in a couple of
+>>>>>> sizeof() calls") corrects the processer entry size but unmasked a 
+>>>>>> longer
+>>>>>> standing bug where the last entry in the structure can get skipped 
+>>>>>> due
+>>>>>> to an off-by-one mistake if the last entry ends exactly at the end of
+>>>>>> the ACPI subtable.
+>>>>>>
+>>>>>> The error manifests for instance on EC2 Graviton Metal instances with
+>>>>>>
+>>>>>>      ACPI PPTT: PPTT table found, but unable to locate core 63 (63)
+>>>>>>      [...]
+>>>>>>      ACPI: SPE must be homogeneous
+>>>>>>
+>>>>>> Fixes: 2bd00bcd73e5 ("ACPI/PPTT: Add Processor Properties Topology 
+>>>>>> Table parsing")
+>>>>>> Cc: stable@vger.kernel.org
+>>>>>> Signed-off-by: Maximilian Heyne <mheyne@amazon.de>
+>>>>>> ---
+>>>>>>     drivers/acpi/pptt.c | 4 ++--
+>>>>>>     1 file changed, 2 insertions(+), 2 deletions(-)
+>>>>>>
+>>>>>> diff --git a/drivers/acpi/pptt.c b/drivers/acpi/pptt.c
+>>>>>> index f73ce6e13065d..4364da90902e5 100644
+>>>>>> --- a/drivers/acpi/pptt.c
+>>>>>> +++ b/drivers/acpi/pptt.c
+>>>>>> @@ -231,7 +231,7 @@ static int acpi_pptt_leaf_node(struct 
+>>>>>> acpi_table_header *table_hdr,
+>>>>>>                              sizeof(struct acpi_table_pptt));
+>>>>>>         proc_sz = sizeof(struct acpi_pptt_processor);
+>>>>>
+>>>>> This isn't really right, it should be struct acpi_subtable_header, 
+>>>>> then
+>>>>> once the header is safe, pull the length from it.
+>>>>>
+>>>>> But then, really if we are trying to fix the original bug that the 
+>>>>> table
+>>>>> could be shorter than the data in it suggests, the struct
+>>>>> acpi_pptt_processor length plus its resources needs to be checked once
+>>>>> the subtype is known to be a processor node.
+>>>>>
+>>>>> Otherwise the original sizeof * change isn't really fixing anything.
+>>>>
+>>>> Sorry, what sense did it make to do
+>>>>
+>>>> proc_sz = sizeof(struct acpi_pptt_processor *);
+>>>>
+>>>> here?  As much as proc_sz = 0 I suppose?
+>>>
+>>> No, I agree, I think the original checks were simplified along the way
+>>> to that. It wasn't 'right' either.
+>>>
+>>> The problem is that there are three subtypes of which processor is only
+>>> one, and that struct acpi_pptt_processor doesn't necessarily reflect the
+>>> actual size of the processor structure in the table because it has
+>>> optional private resources tagged onto the end.
+>>
+>> Right.
+>>
+>>> So if the bug being fixed is that the length check is validating that
+>>> the table length is less than the data in the table, that's still a
+>>> problem because its only validating the processor node without 
+>>> resources.
+>>
+>> Admittedly, it is not my code, but I understand this check as a
+>> termination condition for the loop: If there's not enough space in the
+>> table to hold a thing that I'm looking for, I may as well bail out.
+>>
+>>> AKA the return is still potentially returning a pointer to a structure
+>>> which may not be entirely contained in the table.
+>>
+>> Right, but this check should be made anyway before comparing
+>> cpu_node->parent to node_entry, when it is known to be a CPU entry
+>> because otherwise why bother.
 > 
-> I hope this message finds you well. I'm writing to discuss a feature I
-> believe would enhance the flexibility of the weighted interleave policy:
-> support for per-socket weighting in multi-socket systems.
+> Right, but then there is a clarity because really its walking the 
+> table+subtypes looking for the cpu node. Exiting early because its not 
+> big enough for a cpu node makes sense but you still need the cpu node 
+> check to avoid a variation on the original bug.
 > 
-> ---
 > 
-> <Background and prior design context>
 > 
-> While reviewing the early versions of the weighted interleave patches,
-> I noticed that a source-aware weighting structure was included in v1:
+>>
+>> Roughly something like this:
+>>
+>> proc_sz = sizeof(struct acpi_pptt_processor);
+>>
+>> while ((unsigned long)entry + entry->length <= table_end) {
 > 
->   https://lore.kernel.org/all/20231207002759.51418-1-gregory.price@memverge.com/
+> Here your reading the entry, without knowing its long enough. For the 
+> leaf check just using struct acpi_pptt_processor is fine, but for the 
+> acpi_find_processor_node():
 > 
-> However, this structure was removed in a later version:
-> 
->   https://lore.kernel.org/all/20231209065931.3458-1-gregory.price@memverge.com/
-> 
-> Unfortunately, I was unable to participate in the discussion at that
-> time, and I sincerely apologize for missing it.
-> 
-> From what I understand, there may have been valid reasons for removing
-> the source-relative design, including:
-> 
-> 1. Increased complexity in mempolicy internals. Adding source awareness
->    introduces challenges around dynamic nodemask changes, task policy
->    sharing during fork(), mbind(), rebind(), etc.
-> 
-> 2. A lack of concrete, motivating use cases. At that stage, it might
->    have been more pragmatic to focus on a 1D flat weight array.
-> 
-> If there were additional reasons, I would be grateful to learn them.
->
+> proc_sz = sizeof(struct acpi_subtable_type);
 
-x. task local weights would have required additional syscalls, and there
-   was insufficient active users to warrant the extra complexity.
+Although, maybe I just wrote code that justifies using 
+acpi_pptt_processor here because the entry->num_of_priv_resources length 
+check isn't being made without it. So ok, use proc_sz = sizeof(struct 
+acpi_subtable_type) and assume that we don't care if the subtable type 
+is less than proc_sz.
 
-y. numa interfaces don't capture cross-socket interconnect information,
-   and as a result actually hides "True" bandwidth values from the
-   perspective of a given socket.
-
-As a result, mempolicy just isn't well positioned to deal with this
-as-designed, and introducing the per-task weights w/ the additional
-extensions just was a bridge too far.  Global weights are sufficient
-if you combine cpusets/core-pinning and a nodemask that excludes
-cross-socket nodes (i.e.: Don't use cross-socket memory).
-
-For workloads that do scale up to use both sockets and both devices,
-you either want to spread it out according to global weights or use
-region-specific (mbind) weighted interleave anyway.
-
-> ---
-> 
-> Scenario 1: Adapt weighting based on the task's execution node
-> 
-> Many applications can achieve reasonable performance just by using the
-> CXL memory on their local socket. However, most workloads do not pin
-> tasks to a specific CPU node, and the current implementation does not
-> adjust weights based on where the task is running.
-> 
-
-"Most workloads don't..." - but they can, and fairly cleanly via
-cgroups/cpusets.
-
-> If per-source-node weighting were available, the following matrix could
-> be used:
-> 
->          0     1     2     3
->      0   3     0     1     0
->      1   0     3     0     1
->
-> This flexibility is currently not possible with a single flat weight
-> array.
-
-This can be done with a mempolicy that omits undesired nodes from the
-nodemask - without requiring any changes.
 
 > 
-> Scenario 2: Reflect relative memory access performance
+> while ((unsigned long)entry + proc_sz <= table_end) {
+>   if (entry->type == ACPI_PPTT_TYPE_PROCESSOR &&
+>   entry->length == sizeof(struct acpi_pptt_processor) +
+>      entry->number_of_priv_resources * sizeof(u32) &&
+>   entry + entry->length <= table_end &&
+>   acpi_pptt_leaf_node(...))
+>      return (...)entry;
 > 
-> Remote memory access (e.g., from node0 to node3) incurs a real bandwidth
-> penalty. Ideally, weights should reflect this. For example:
 > 
-> Bandwidth-based matrix:
+> Although at this point the while loops entry + proc_sz could just be < 
+> table_end under the assumption that entry->length will be > 0 but 
+> whichever makes more sense.
 > 
->          0     1     2     3
->      0   6     3     2     1
->      1   3     6     1     2
 > 
-> Or DRAM + local CXL only:
-> 
->          0     1     2     3
->      0   6     0     2     1
->      1   0     6     1     2
-> 
-> While scenario 1 is probably more common in practice, both can be
-> expressed within the same design if per-socket weights are supported.
-> 
-
-The core issue here is actually that NUMA doesn't have a good way to
-represent the cross-socket interconnect bandwidth - and the fact that it
-abstracts all devices behind it (both DRAM and CXL).
-
-So reasoning about this problem in terms of NUMA is trying to fit a
-square peg in a round hole.  I think it's the wrong tool - maybe we need
-a new one.  I don't know what this looks like.
-
-> ---
-> 
-> <Proposed approach>
-> 
-> Instead of removing the current sysfs interface or flat weight logic, I
-> propose introducing an optional "multi" mode for per-socket weights.
-> This would allow users to opt into source-aware behavior.
-> (The name 'multi' is just an example and should be changed to a more
-> appropriate name in the future.)
-> 
-> Draft sysfs layout:
-> 
->   /sys/kernel/mm/mempolicy/weighted_interleave/
->     +-- multi         (bool: enable per-socket mode)
->     +-- node0         (flat weight for legacy/default mode)
->     +-- node_groups/
->         +-- node0_group/
->         |   +-- node0  (weight of node0 when running on node0)
->         |   +-- node1
->         +-- node1_group/
->             +-- node0
->             +-- node1
 > 
 
-This is starting to look like memory-tiers.c, which is largely useless
-at the moment.  Maybe we implement such logic in memory-tiers, and then 
-extend mempolicy to have a MPOL_MEMORY_TIER or MPOL_F_MEMORY_TIER?
-
-That would give us better flexibility to design the mempolicy interface
-without having to be bound by the NUMA infrastructure it presently
-depends on.  We can figure out how to collect cross-socket interconnect
-information in memory-tiers, and see what issues we'll have with
-engaging that information from the mempolicy/page allocator path.
-
-You'll see in very very early versions of weighted interleave I
-originally implemented it via memory-tiers.  You might look there for
-inspiration.
-
-> <Additional implementation considerations>
-> 
-> 1. Compatibility: The proposal avoids breaking the current interface or
->    behavior and remains backward-compatible.
-> 
-> 2. Auto-tuning: Scenario 1 (local CXL + DRAM) likely works with minimal
->    change. Scenario 2 (bandwidth-aware tuning) would require more
->    development, and I would welcome Joshua's input on this.
-> 
-> 3. Zero weights: Currently the minimum weight is 1. We may want to allow
->    zero to fully support asymmetric exclusion.
->
-
-I think we need to explore different changes here - it's become fairly
-clear when discussing tiering at LSFMM that NUMA is a dated abstraction
-that is showing its limits here.  Lets ask what information we want and
-how to structure/interact with it first, before designing the sysfs
-interface for it.
-
-~Gregory
