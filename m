@@ -1,114 +1,148 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A32E118B46E
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 16:23:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28B9B28980B;
+	Wed,  7 May 2025 16:24:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746635030; cv=none; b=uI8e6vJ6gZNdTtYBzSAWVezZ9pKoUUSHtiU/MD23DL62e3qT0ZO/3rXqlrokLh4sFLCBvZ59xbK+YgfPWIJDeFzqfpG2d4B2Tklz42ap7xqIZHJ9mL8uHD7rAG9jywMxBoX4Q+F3jM7meDYp6ci3mzx+fEPhdMyRv0uwwspiODc=
+	t=1746635086; cv=none; b=reJqCCsE6Q9DidFv3i59Ms/1j8EC3zuWpKxvvD64etc5fBppFFri7DX1FLrTL4y4InEUdMGDR72lnl45WMgxZJoC9w/zcHEZlEAuOD5ySZvu32xh4u81g+F4MK80lqf71X5NPrzb/zLu26bc7RIX5NgWbI+0FZT6K6wCNIiGxB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746635030; c=relaxed/simple;
-	bh=GVDVeBab869aYBvCQlDw416oEjXOoR2zkFp+c7adIZk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=knwP/7ZamPUrMXGCSsckizLPyPC1k4aFvYgjlXqRH25wCQIO3rRUyNnzusXG3oZPeCqm1soUShhZLNjgoeRdMAKr1yjUFSx+ggMpEoaJmGzYSWgqisls7awU2V2S6QyKxpPraP4d7X3IsMc4+fRWGkDnwbaTKx/r/K75n4tZSgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QKQjP0u7; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QKQjP0u7"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43cf05f0c3eso649945e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 09:23:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746635027; x=1747239827; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NdgRnYflnPlN6KlJOaYP1q0InGmD8pNNwfuxpkTXEio=;
-        b=QKQjP0u7j6tV0U62Bbj/W89PJ8hwqtbNlR8DMr8z2ONWvT1O0/64dta2QE7V7FuqyI
-         uDHgMDgT8xPZS8BIJnrN/Y1Ua/QGjY+hhyPWMJGv9aCP9ZTvrNkRCuVyjHYvcB8pv5QW
-         niB7ougtqQmCmuoNC2jYr1/P87vE1STe8RUlhNez8VQ+ECG+61a4z29ltD0B6GtPC8uj
-         XqZMBCF1ijGJVds1W4vsIuHV6BlzAjfAW2RT/MHxW40Y9C4tuuPJm4PRR5FmfTQ4Zv06
-         qKp36Kl99XH01i0N0DRo8e/emXChWby2Z9U6GnVOjPk5TA5ceTEMqzLmFgUadQsNXhJz
-         3VSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746635027; x=1747239827;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NdgRnYflnPlN6KlJOaYP1q0InGmD8pNNwfuxpkTXEio=;
-        b=oCmTVMZReeS73mQULK57DtGwf7MpjB2j1TUYulctr2tbThKnlMjWZpmwvK3pie+V1G
-         NinCel4P/RTxMTzWvKM92D75znHho9Eb7Y9Mzkr8Ewa/8ch9/Il6nz1v/h+EcQgGC7sp
-         cF1lE+jaK58EO3GInfWaIVItJ0WPFdjI5HFF2mE7dgd3FGCohXLCG71Cq/MuEUDb4W2O
-         /BYkzJVh3xaO6077FA/Z3IvRGHRxOBhV/4gTfO51/jBvNOBvzex9OIcZfAQHPji/PY07
-         CU7Pss9osJx6IOr0nRE9sLSa7a5GlbiMK8L2TpUVaFx2OLkp2p5VZUAJp+cHhs4ej0D2
-         caZA==
-X-Forwarded-Encrypted: i=1; AJvYcCXtJ6bo4BVDkb2Pfv7diRrVRZFlLs6a/BZU8D2Rnt92ZLzAW2+H9ISL5AIk0OJr0arV6DLQKwzFFdItdxA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxqzIuqwz1g6eSJNTkw3M5DD3BeXzrOUoa6U6Kv8Ob11vLiw16T
-	fWFh4xZhCns6ow+KNgM/+pOgEeSo52Japz574cJxLEPk8IhKQ7kOfKEe3OqNAGg=
-X-Gm-Gg: ASbGncud6n8UMrBR0/jE1h+KJgKYign8bQXI0DDIh+XhGOX7rEafV1fcbjjD+67gPh9
-	cW8wGdo6YW+q17HrbHbvAOkzTiI3MexhK2QUYdYeiXrO22csxVmA7Gr4aVGmXeb5kwzBW/vxsPv
-	xsv1Mxoh/QrEWt2raNlRIJn5T483ohuXEC7dBj3XPzTFfI9ELiupUa8LO9qN7jQUi1Z+3zb2l5w
-	kT4FKHMTzLOC10UuzHFBVee0XSVNRzkagWl4Fh9cVT2rc7ejwCisw+XxwqBGiurTl6KKwWurUHZ
-	pl17GaJJR51P9UCPgGUrx47xSiZJpPDYrJNtXhlYFvWovQ==
-X-Google-Smtp-Source: AGHT+IE6y0LlIV4IlIooPu6OJTNcYKnkqYqnx0WCylTRROLNd4cSZyHpQkJmtgiFMm+bT9j1cn2H6g==
-X-Received: by 2002:a05:600c:4e47:b0:43d:36c:f24 with SMTP id 5b1f17b1804b1-442d02ed455mr1853855e9.13.1746635026951;
-        Wed, 07 May 2025 09:23:46 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-442cd32f0easm5943165e9.12.2025.05.07.09.23.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 09:23:46 -0700 (PDT)
-Date: Wed, 7 May 2025 19:23:43 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Saravana Kannan <saravanak@google.com>, Stephen Boyd <sboyd@kernel.org>,
-	linux-pm@vger.kernel.org, "Rafael J . Wysocki" <rafael@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Michael Grzeschik <m.grzeschik@pengutronix.de>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Abel Vesa <abel.vesa@linaro.org>,
-	Devarsh Thakkar <devarsht@lewv0571a.ent.ti.com>,
-	Peng Fan <peng.fan@oss.nxp.com>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Johan Hovold <johan@kernel.org>,
-	Maulik Shah <maulik.shah@oss.qualcomm.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 07/11] pmdomain: core: Export a common ->sync_state()
- helper for genpd providers
-Message-ID: <aBuJD1izaMqKUJ_s@stanley.mountain>
-References: <20250417142513.312939-1-ulf.hansson@linaro.org>
- <20250417142513.312939-8-ulf.hansson@linaro.org>
+	s=arc-20240116; t=1746635086; c=relaxed/simple;
+	bh=oBYNTIRvr0qn3RLc15igFSD5nLZ7U8eh2ms4fvyrDJQ=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UksrhAmFr8/NbIWlf52VZX1lKiHfD3suEOACc6ZZNhSyJcnigRhfqlqukEEIr96pFplDd97KAug1c7fpfrF3fg6ND8VEYPAAu7wDC9i1qgxO49LCTgHoJvDv3k/a3TBTQOMSYAa0xZX0qnmL0QBPNdHTmGi7YsBKZe8PU+ujwAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Zt0pv0HkCz6M4d4;
+	Thu,  8 May 2025 00:20:07 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 50B6C140518;
+	Thu,  8 May 2025 00:24:38 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 7 May
+ 2025 18:24:37 +0200
+Date: Wed, 7 May 2025 17:24:36 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+CC: <dan.j.williams@intel.com>, <rppt@kernel.org>, <rafael@kernel.org>,
+	<lenb@kernel.org>, <akpm@linux-foundation.org>, <alison.schofield@intel.com>,
+	<rrichter@amd.com>, <bfaccini@nvidia.com>, <haibo1.xu@intel.com>,
+	<david@redhat.com>, <chenhuacai@kernel.org>, <linux-cxl@vger.kernel.org>,
+	<linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-mm@kvack.org>, <chenbaozi@phytium.com.cn>, <loongarch@lists.linux.dev>
+Subject: Re: [PATCH v2] mm: numa_memblks: introduce numa_add_reserved_memblk
+Message-ID: <20250507172436.00003888@huawei.com>
+In-Reply-To: <20250506062245.3816791-1-wangyuquan1236@phytium.com.cn>
+References: <20250506062245.3816791-1-wangyuquan1236@phytium.com.cn>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250417142513.312939-8-ulf.hansson@linaro.org>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500010.china.huawei.com (7.191.174.240) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Thu, Apr 17, 2025 at 04:25:05PM +0200, Ulf Hansson wrote:
-> +void of_genpd_sync_state(struct device *dev)
+On Tue, 6 May 2025 14:22:45 +0800
+Yuquan Wang <wangyuquan1236@phytium.com.cn> wrote:
+
+> acpi_parse_cfmws() currently adds empty CFMWS ranges to numa_meminfo
+> with the expectation that numa_cleanup_meminfo moves them to
+> numa_reserved_meminfo. There is no need for that indirection when it is
+> known in advance that these unpopulated ranges are meant for
+> numa_reserved_meminfo in support of future hotplug / CXL provisioning.
+> 
+> Introduce and use numa_add_reserved_memblk() to add the empty CFMWS
+> ranges directly.
+> 
+> Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+This is v2 take 2.  There were tags on the previous version (pre longarch
+change).
+
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+(Also Dan Williams).
+
+Easiest option when this happens is spin a v3 with a change log to
+say the loongarch issue is resolved and you picked up tags.
+
+
+> ---
+> 
+> Changes in v2 (Thanks to Dan & Alison):
+> - Use numa_add_reserved_memblk() to replace numa_add_memblk() in acpi_parse_cfmws()
+> - Add comments to describe the usage of numa_add_reserved_memblk()
+> - Updating the commit message to clarify the purpose of the patch
+> 
+> By the way, "LoongArch: Introduce the numa_memblks conversion" is in linux-next.
+> 
+>  drivers/acpi/numa/srat.c     |  2 +-
+>  include/linux/numa_memblks.h |  1 +
+>  mm/numa_memblks.c            | 22 ++++++++++++++++++++++
+>  3 files changed, 24 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
+> index 0a725e46d017..751774f0b4e5 100644
+> --- a/drivers/acpi/numa/srat.c
+> +++ b/drivers/acpi/numa/srat.c
+> @@ -453,7 +453,7 @@ static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
+>  		return -EINVAL;
+>  	}
+>  
+> -	if (numa_add_memblk(node, start, end) < 0) {
+> +	if (numa_add_reserved_memblk(node, start, end) < 0) {
+>  		/* CXL driver must handle the NUMA_NO_NODE case */
+>  		pr_warn("ACPI NUMA: Failed to add memblk for CFMWS node %d [mem %#llx-%#llx]\n",
+>  			node, start, end);
+> diff --git a/include/linux/numa_memblks.h b/include/linux/numa_memblks.h
+> index dd85613cdd86..991076cba7c5 100644
+> --- a/include/linux/numa_memblks.h
+> +++ b/include/linux/numa_memblks.h
+> @@ -22,6 +22,7 @@ struct numa_meminfo {
+>  };
+>  
+>  int __init numa_add_memblk(int nodeid, u64 start, u64 end);
+> +int __init numa_add_reserved_memblk(int nid, u64 start, u64 end);
+>  void __init numa_remove_memblk_from(int idx, struct numa_meminfo *mi);
+>  
+>  int __init numa_cleanup_meminfo(struct numa_meminfo *mi);
+> diff --git a/mm/numa_memblks.c b/mm/numa_memblks.c
+> index ff4054f4334d..541a99c4071a 100644
+> --- a/mm/numa_memblks.c
+> +++ b/mm/numa_memblks.c
+> @@ -200,6 +200,28 @@ int __init numa_add_memblk(int nid, u64 start, u64 end)
+>  	return numa_add_memblk_to(nid, start, end, &numa_meminfo);
+>  }
+>  
+> +/**
+> + * numa_add_reserved_memblk - Add one numa_memblk to numa_reserved_meminfo
+> + * @nid: NUMA node ID of the new memblk
+> + * @start: Start address of the new memblk
+> + * @end: End address of the new memblk
+> + *
+> + * Add a new memblk to the numa_reserved_meminfo.
+> + *
+> + * Usage Case: numa_cleanup_meminfo() reconciles all numa_memblk instances
+> + * against memblock_type information and moves any that intersect reserved
+> + * ranges to numa_reserved_meminfo. However, when that information is known
+> + * ahead of time, we use numa_add_reserved_memblk() to add the numa_memblk
+> + * to numa_reserved_meminfo directly.
+> + *
+> + * RETURNS:
+> + * 0 on success, -errno on failure.
+> + */
+> +int __init numa_add_reserved_memblk(int nid, u64 start, u64 end)
 > +{
-> +	struct device_node *np = dev->of_node;
-> +	struct generic_pm_domain *genpd;
-> +
-> +	if (!np)
-> +		return;
-> +
-> +	mutex_lock(&gpd_list_lock);
-> +	list_for_each_entry(genpd, &gpd_list, gpd_list_node) {
-> +		if (genpd->provider == &np->fwnode) {
-
-Presumably this would be "== of_fwnode_handle(np)) {" as well...
-
-regards,
-dan carpenter
-
-> +			genpd_lock(genpd);
-> +			genpd_power_off(genpd, false, 0);
-> +			genpd_unlock(genpd);
-> +		}
-> +	}
-> +	mutex_unlock(&gpd_list_lock);
+> +	return numa_add_memblk_to(nid, start, end, &numa_reserved_meminfo);
 > +}
+> +
+>  /**
+>   * numa_cleanup_meminfo - Cleanup a numa_meminfo
+>   * @mi: numa_meminfo to clean up
 
