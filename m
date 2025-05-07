@@ -1,123 +1,130 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89B67223DEA
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 07:55:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72740221288
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 07:55:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746604531; cv=none; b=dWyZ8Oy3MRemX1hRDWT+1NzbCOAca0GldkcCPS4i4uXfsVoCLKcJbp8Zhx2gVR94hLK/8Dg8cV5K4EHgfq8SSPwd+jrU3Em77I+7UTy5yqvO0ehS1PKwCb1NlzMxNHQZrCSMZ6KB2HNEQtlsG5KYEIn9CSBHF7ai0HMuq3k21x8=
+	t=1746604548; cv=none; b=qyDzRttdsQbEi9GxwTWxZX3a+ZP7f4Q2dtF4KoLpzprbPrStQtCerYMJZ92OLkO4bbsI1TBvr0D1SC17PsBh4bO3n/w3/ejHrf7vekuYp7AmIEZhh8JDtN8d4TxpLYSz/6UYAmzbfJ5i+BVnGvmQAgrxuxuXKdRO7DwrZMCkzrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746604531; c=relaxed/simple;
-	bh=q6pNPs0UuN6WlRKaJkUjx2xsLLW66yNqWqj7oq0oEBw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qYqsDlCwt3ezqQvh4lhvG6+UZZy+5P7Yx2b0vBhj+kwgXNkcC0SNWfIo/QVzlqe638JPqMMJYEspZPRQVRjCt8G3svQxwJGsdyC/FJr7jg3K046oZ97Z6NXj5oOR+xe7lNSEntOpwK+SDXcVXggtOrWQOpbi0SYFXcP3IpyaPk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XAsyMpah; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746604548; c=relaxed/simple;
+	bh=nUCozoVC1hnj5B0vNnvL5jlbAz4pGVeFMzC5DNJMI9o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=L4E7u6yl+JeWNM3vsg2xWpl8iM/x5KNJl/EAZCHS1LsxsZkAvR8285+B8HpcjyEFLDoBCDJLxVq2+dQIqMHhxjEU7RYbNugnNByN0W/JDP+Sat/bDEy6dq6EWUU9OVN3u5ltHWod8DY602F6ZBuxtKQyT/HZ5MLGtIOqbG2bqUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hhhWy9pX; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XAsyMpah"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-39ee623fe64so6775262f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 00:55:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746604528; x=1747209328; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=TBL3qIVf81e3PhkRqu3EdoePuATSbIziAx1f5bGu5+Q=;
-        b=XAsyMpahI3Avjef5C/FsbxPfog4HQ/ERRThKWUgHnt+W2OYpbx//L5RhqESqyNdKz3
-         aXG4Kt4Q+V0jPt9ILrMCvlBvkHgjwP4/hB229sSGatcJIZOsijzxZMtjRArqpHzab8ZA
-         4A7j0Z9X/KBfvkmhRta1gzno5aymrIZzrSGuavC4288sBQMV+YaPxaWIkL395XGtjyAL
-         gDPA+IydTOp9MlXzngQHRu0AtRf3sLA8pn0CUwoxKPZqBhANsSjFlTUYgY8Y11ZFACFD
-         ZsYZ2M0jFNdHM5slxcWOHS2cOh55iLuT9cjvVA4sXa3NkMSrjKPTcAZkPx9v2VyS2aD/
-         caPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746604528; x=1747209328;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TBL3qIVf81e3PhkRqu3EdoePuATSbIziAx1f5bGu5+Q=;
-        b=pbQYoOthEduXc6S/jZurYxsrlCgLVHzFPCSOLQUKeXUcdqGGpB67fn2G7r0fWxdc0L
-         QwnFMlY3zw0nw6Rvx9/LCd6HXOh/Wya9Edwaii3jwjOKHAPpkBCzDT2Gk5iMsRwm5vhO
-         J1De5vpSq2x2CoAkcq7pRkx7F+6aaIvBXKmyS7zOD04PLRdTxcoL1FIi7K4Hu4+bfMrZ
-         cBH8HkblUsR/YPbmM4mFfwbSb2A60kVLWgkSunfNIFwa5z0kKo36bpol5R65Tn0DdORe
-         AF/PJV7B3Qj/7+uP8oa58fAI6gB0FqUVAQw72bsZgG6HIn0i5WdZFMEoztJzaA6S2Aiy
-         eaZw==
-X-Forwarded-Encrypted: i=1; AJvYcCXJIXhGr1DZDeyGKaukH5XEQCUZ7Y7MymE2/j1LuQwBnYZRre9bVewPi6WbaPIZZx+fU3r1WvHqkMUJ5jY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPGItodVjiQYp40DfH3z9bleXx9m6p9nU97HHy0ow7okFJVVJy
-	xbrqcOnn7ymLIg1RxDlx2aiUH89dwC/jFl6hJNWNxImM+9PLhHCdPPplMXa1lKA=
-X-Gm-Gg: ASbGncvxPzf3A0WZRx5U13e0O2YUd7VnvWIsFq+3Bj4tKKt3+Om7U9hjHXGXdLyJlFV
-	Pb8Obp7jH2K7sIj57k94ReoRIjuT7Umd7gZ7nTQijwPIrODR/7dwiK5kPne4Lk5oo8cHxFK/uFN
-	MfDYYnj8yYhGbBlJP3FGw5WtJQFsjdkROJNa1SZoktzLQSAEE39E0b5AB6Lg4TJw8Hvioaodrtu
-	5C5GJ6E0wAldQ3A4ARP3lyviAymzToWnjke+KQBlubvXKzC2TNBwed27o/LDTgmM6uBGdtVWf0h
-	6yAo+t//rBdL8R5m2EjbkX2gf8sGcBZENJf6LdbMPa1xvmEPro319+cUvNoxDO6okT52v5nInC5
-	dtbM=
-X-Google-Smtp-Source: AGHT+IHSub+w3i180SBYtmH4xnfpAxz/7R8NINsxJdekQwKRKRmtdqdbqRAvzeMDt6WyEG1Omh+Khw==
-X-Received: by 2002:a5d:47c7:0:b0:3a0:a3f3:5034 with SMTP id ffacd0b85a97d-3a0b49d26bemr2060932f8f.34.1746604527781;
-        Wed, 07 May 2025 00:55:27 -0700 (PDT)
-Received: from mai.linaro.org (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a0ad54f105sm4491875f8f.85.2025.05.07.00.55.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 00:55:27 -0700 (PDT)
-Date: Wed, 7 May 2025 09:55:25 +0200
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-To: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
-Cc: lee@kernel.org, alexandre.torgue@foss.st.com, tglx@linutronix.de,
-	ukleinek@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	jic23@kernel.org, robh@kernel.org, catalin.marinas@arm.com,
-	will@kernel.org, devicetree@vger.kernel.org, wbg@kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org,
-	olivier.moysan@foss.st.com
-Subject: Re: [PATCH v6 3/7] clocksource: stm32-lptimer: add support for
- stm32mp25
-Message-ID: <aBsR7W15mPQiTjCc@mai.linaro.org>
-References: <20250429125133.1574167-1-fabrice.gasnier@foss.st.com>
- <20250429125133.1574167-4-fabrice.gasnier@foss.st.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hhhWy9pX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746604545;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=JQX/5m+jQ3v0Hngdb0F2esP3jDYn3gk1n+QUBzrPG4A=;
+	b=hhhWy9pXmeOopmi3LGm+mx3o2QZ+Mh6/EklPwsX5cIJbB+pQ+SOXEQiBXdhti/QkPsdaXR
+	mfIBIJ4535ChCgRxLbGZhrWmTGn15OkPj2tVbrVviZVS/6j5EJnFGQ0j2h7g8q/hNlYYWZ
+	XqYMXPsL2kckGS2ufLLruacSWV10qW8=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-283-TxKFw1hAPPmQqrYRWraNSg-1; Wed,
+ 07 May 2025 03:55:42 -0400
+X-MC-Unique: TxKFw1hAPPmQqrYRWraNSg-1
+X-Mimecast-MFC-AGG-ID: TxKFw1hAPPmQqrYRWraNSg_1746604540
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 043D51800370;
+	Wed,  7 May 2025 07:55:40 +0000 (UTC)
+Received: from hydra.redhat.com (unknown [10.45.226.157])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A04531953B82;
+	Wed,  7 May 2025 07:55:35 +0000 (UTC)
+From: Jocelyn Falempe <jfalempe@redhat.com>
+To: Thomas Zimmermann <tzimmermann@suse.de>,
+	Javier Martinez Canillas <javierm@redhat.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	jani.nikula@linux.intel.com,
+	dri-devel@lists.freedesktop.org,
+	rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Jocelyn Falempe <jfalempe@redhat.com>
+Subject: [PATCH v2] MAINTAINERS: Add entries for drm_panic, drm_panic_qr_code and drm_log
+Date: Wed,  7 May 2025 09:51:47 +0200
+Message-ID: <20250507075529.263355-1-jfalempe@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250429125133.1574167-4-fabrice.gasnier@foss.st.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On Tue, Apr 29, 2025 at 02:51:29PM +0200, Fabrice Gasnier wrote:
-> On stm32mp25, DIER (former IER) must only be modified when the lptimer
-> is enabled. On earlier SoCs, it must be only be modified when it is
-> disabled. There's also a new DIEROK flag, to ensure register access
-> has completed.
-> Add a new "set_evt" routine to be used on stm32mp25, called depending
-> on the version register, read by the MFD core (LPTIM_VERR).
-> 
-> Signed-off-by: Patrick Delaunay <patrick.delaunay@foss.st.com>
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
-> ---
-> Changes in V6:
-> - Fixed warning reported by kernel test robot in
->   https://lore.kernel.org/oe-kbuild-all/202504261456.aCATBoYN-lkp@intel.com/
->   use FIELD_GET() macro
-> Changes in V5:
-> - Added a delay after timer enable, it needs two clock cycles.
-> Changes in V4:
-> - Daniel suggests to encapsulate IER write into a separate function
->   that manages the enabling/disabling of the LP timer. In addition,
->   DIEROK and ARROK flags checks have been added. So adopt a new routine
->   to set the event into ARR register and enable the interrupt.
-> Changes in V2:
-> - rely on fallback compatible as no specific .data is associated to the
->   driver. Use version data from MFD core.
-> - Added interrupt enable register access update in (missed in V1)
-> ---
+Add myself and Javier as maintainer for drm_panic, drm_panic_qr_code
+and drm_log.
 
-Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
+Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
+---
+
+v2:
+ * move DRM LOG to keep the entries sorted (Jani Nikula)
+ 
+ MAINTAINERS | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 38df6b159a3b..1ecb04e0ddfd 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8166,6 +8166,14 @@ T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
+ F:	drivers/gpu/drm/scheduler/
+ F:	include/drm/gpu_scheduler.h
+ 
++DRM LOG
++M:	Jocelyn Falempe <jfalempe@redhat.com>
++M:	Javier Martinez Canillas <javierm@redhat.com>
++L:	dri-devel@lists.freedesktop.org
++S:	Supported
++T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
++F:	drivers/gpu/drm/clients/drm_log.c
++
+ DRM PANEL DRIVERS
+ M:	Neil Armstrong <neil.armstrong@linaro.org>
+ R:	Jessica Zhang <quic_jesszhan@quicinc.com>
+@@ -8177,6 +8185,26 @@ F:	drivers/gpu/drm/drm_panel.c
+ F:	drivers/gpu/drm/panel/
+ F:	include/drm/drm_panel.h
+ 
++DRM PANIC
++M:	Jocelyn Falempe <jfalempe@redhat.com>
++M:	Javier Martinez Canillas <javierm@redhat.com>
++L:	dri-devel@lists.freedesktop.org
++S:	Supported
++T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
++F:	drivers/gpu/drm/drm_draw.c
++F:	drivers/gpu/drm/drm_draw_internal.h
++F:	drivers/gpu/drm/drm_panic*.c
++F:	include/drm/drm_panic*
++
++DRM PANIC QR CODE
++M:	Jocelyn Falempe <jfalempe@redhat.com>
++M:	Javier Martinez Canillas <javierm@redhat.com>
++L:	dri-devel@lists.freedesktop.org
++L:	rust-for-linux@vger.kernel.org
++S:	Supported
++T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
++F:	drivers/gpu/drm/drm_panic_qr.rs
++
+ DRM PRIVACY-SCREEN CLASS
+ M:	Hans de Goede <hdegoede@redhat.com>
+ L:	dri-devel@lists.freedesktop.org
+
+base-commit: 258aebf100540d36aba910f545d4d5ddf4ecaf0b
 -- 
+2.49.0
 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
