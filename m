@@ -1,137 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C4A5236A73;
-	Wed,  7 May 2025 09:11:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06C0D231A3B
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 09:14:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746609110; cv=none; b=kGEARRxIEGxy4Vnp2Fd4ap9ADiCJ2PIGOkdxhggwu2wyoja1iiK1dqR9eL/ifwHgfjaygDMnSEJaE6Sv32GEGcc5ObW4GFlyM5gN264pxN0lmhvr1L/CmnUGR7/ivsz4u2VA7mjMm0/gXhgg1QEgh4UBO3halidasETcoDD6W2Q=
+	t=1746609256; cv=none; b=oFxrmvhD3mpvYeoHs+UV4UuhoupE/sQp3AsiPLg0fRQoP2ahBq26Qi0XH3I34Gy3cEgsq3FYC/z5uoMX0BofNeDbTfdjP78303URqxjz2GHbt1rq2vixzeFQqK302Q3PrSMyJXYOn2HkFWGxrrbg5JNjNN9JADsUUrLNpDKw1hA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746609110; c=relaxed/simple;
-	bh=ruOPmaR3kq6WkNEpmIlLEkIQx5iMRlPXDJqT7pUWy1A=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=GIZA7aczb3+9NG3Rrs9kV4i0QikclbByMK0oWMaLs7RtqfZPUZKMctTDOXwZQ2/v/8vU8IePPtskBBWT+zq6hMzGZPP72jP/gJmYCL4NVjHs0JrpL0yQz0q3ctyiHmvN25eD0keZTM0i/6JYaW6WcGsP8+7o4hJi8px5y4qzzck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BeJdwO0j; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746609256; c=relaxed/simple;
+	bh=5I48oKIcAHh2GX/ijoBH8labwdpNZfuRysT+WXcajI8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Za3bImDanhrNDj5Q/Jl40dOVOt/Tyl9UFMyfR+ge4pz026DfsRGZCoCfhJ9wom51EKZqfgH1JqBiP5zPRXS9K3TbzV0QwIqls7bPmUsQ2OQkR9lTaisTkT3zCwTDG7tkrth/V4o3X4qmEq7avEtr8RxUejlcblbesEtIROYeWPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=isovalent.com; spf=pass smtp.mailfrom=isovalent.com; dkim=pass (2048-bit key) header.d=isovalent.com header.i=@isovalent.com header.b=NbjeaoSq; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=isovalent.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=isovalent.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BeJdwO0j"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6B6EAC4CEE7;
-	Wed,  7 May 2025 09:11:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746609109;
-	bh=ruOPmaR3kq6WkNEpmIlLEkIQx5iMRlPXDJqT7pUWy1A=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=BeJdwO0jzY3YVOG8vT7lLaMqjxDvOWOEFuBBQEqnpKqBZkIRo01mThdSqhhUEWcio
-	 beD+4EyszAifl7/k8knkVSUrBkGBq1AXKsyDmVolxi/u4Idm2JYkyyVaO4wfwCv3nc
-	 zM3vLqtNOhN1jjgWymJhZKS8C+6uJyh87qGemKzZJ8T74YoBpf4ByAtLXVro+lNiJf
-	 HCKAUj+QzPjEXUaihpHnnRi+2P+0ErAUGsfkfCTSrvh7eIDWCeCvzsMWCD6/r3AeZh
-	 VVOk7ZWOxbD5pAslD1y8WyVKtdAw2LI7FB3iTG6xXdkjkBSY+5dO5K2TwbD3PFgvnE
-	 3fXyFUkQ8/OKw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 574B2C3ABC5;
-	Wed,  7 May 2025 09:11:49 +0000 (UTC)
-From: Ignacio Moreno Gonzalez via B4 Relay <devnull+Ignacio.MorenoGonzalez.kuka.com@kernel.org>
-Date: Wed, 07 May 2025 11:11:48 +0200
-Subject: [PATCH v3] mm: mmap: map MAP_STACK to VM_NOHUGEPAGE only if THP is
- enabled
+	dkim=pass (2048-bit key) header.d=isovalent.com header.i=@isovalent.com header.b="NbjeaoSq"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a0b308856fso744321f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 02:14:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=isovalent.com; s=google; t=1746609253; x=1747214053; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ENAdlxNQCNsPp1Cx5U8ECxKNHpix70L4dcI8KPfbfOg=;
+        b=NbjeaoSqEClPkNMCmliMvm9U3cL8CMVHTSSTKQfp4idXY9xotgO2RsiLjHNLDQ5d7z
+         mXByncE4JOiTRaqSyyc8Oj5nmGxVxa7Atcwc/gbj3+NidFUeAr8SLD9Th+FB8sjC1oeY
+         qepsYXxQLAj9tD2cdshlzHldZTRZBeEbcTHiFnHzhoJmKjH4rAKQNaIscblBBy0Gi0xj
+         MbLwb0Bnfxg2ThfYemtwhJ999YePEaQEj6P4kPVLpxHCjgyww5oB8h4qs2pX8FfAScWe
+         frJWKIXVBvIIkzL/zB5Uyz7sgEZyjXxcO+aR74KJWczcsrRhpkimnPZQ2ArpFwIqUMXN
+         RnYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746609253; x=1747214053;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ENAdlxNQCNsPp1Cx5U8ECxKNHpix70L4dcI8KPfbfOg=;
+        b=tqOpcM1PcsERekjEuWUKO1YoU9LwsBwMTNvIiwyhS2DBvn7etFXiGBiPrJW5EWpR4P
+         x05/KZSXqJKDpnkI+hEWRy131UEZfULRpGiapZ3KVUOErhTQ8o1RwWAGL+LwAMVsMymG
+         YYe1Ny86EEDEqWczC0hPUiCl/GQnsicJ0iMAA+LDK1aVwsxdOIWdpzJAqhBcsXYHHEM2
+         IkHeEOJNqaRBgqkOZecsS8ioR0FxxDPtsfmjqaghp6DRMYUBiTMkjOWz04RGjkGQ8BjX
+         3p53FZo0t3j+y/WkkBpYTOyrGYoISkVxMm76hUpZAVVR9yQWn2WfZVkwFqRp/TT1Pii1
+         tMpA==
+X-Forwarded-Encrypted: i=1; AJvYcCU6OYtJL6JhynIDsCo28hUy8rVnpoAZjB39iP+BRIh3A8qcLPsSQqHoEFv1C2YDhty0SngGo04hspkGS1s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRdgUiD0ZmWquhyjotaJF9QGoOdSsLTlktNGZ78fwlG3u0wa0C
+	Gx8AtXDl6sjQ8OmbHVWfzBmdNUPb4REVbcqN/TrIfTcF+6Ul3OoLiUx5woFY7rFzBwDRfphHNJi
+	4oZhtqMa+eYOBWQnM9AsZ2V4sl6Z1HIYFuf8UFg==
+X-Gm-Gg: ASbGnctzKoVPyoEYMEJl5EJouz/1L6yMb9WT1+ixx7Sqqy0WH4xV/X8W0xuyNfKiewC
+	iRD34qjIdwGLe1G7X8NuQo0WxPAZOpaGrsjn4TXCGtA2sgPLAU0m4f1dXuiD9PfQrGw6hDCHncM
+	fQBn+/K8ZFgtDNaJiGQdulqJTK961rMcPNN+A=
+X-Google-Smtp-Source: AGHT+IG55r4ND4dVvtN1+EUD95gs+uLnOj8rk8ZPFKEZxOHPG2ZvKCFr/wsjoTjPwlfHjBOMB6jQXJeqBT+RbwDRfOw=
+X-Received: by 2002:a5d:64e8:0:b0:39c:1257:ccae with SMTP id
+ ffacd0b85a97d-3a0b4a1c722mr1959843f8f.57.1746609253168; Wed, 07 May 2025
+ 02:14:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250507-map-map_stack-to-vm_nohugepage-only-if-thp-is-enabled-v3-1-80929f30df7f@kuka.com>
-X-B4-Tracking: v=1; b=H4sIANMjG2gC/53OwQ6CMAwG4FcxO1uzjYHiyfcwhsytkwXYCINFQ
- nh3B148m6aHv2n6dSEBB4uBXA8LGTDaYL1LITseiKqleyFYnTLhlOdU8At0st+6CqNUDYweYlc
- 5X08v7GXa9q6dwRoY6x5sAHTy2aIGhYJKppGWuSbpdj+gse/dvT9Srm0Y/TDvb0S2Tb9iTvmfY
- mSQimVKFZlQOme3ZmrkSfmObGDkv0jxL8KBgmHMUHUuxeXMf5B1XT9iL/yTXgEAAA==
-X-Change-ID: 20250428-map-map_stack-to-vm_nohugepage-only-if-thp-is-enabled-ce40a1de095d
-To: lorenzo.stoakes@oracle.com
-Cc: Liam.Howlett@oracle.com, akpm@linux-foundation.org, 
- yang@os.amperecomputing.com, linux-mm@kvack.org, 
- linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
- Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746609108; l=3053;
- i=Ignacio.MorenoGonzalez@kuka.com; s=20220915; h=from:subject:message-id;
- bh=/MtKRql7ItkYcZxcaRWd5jbyLrdw5wLAjEr52LPM+gk=;
- b=QGykkmGizMl/Qs3eTfiT7sngvK4B8FBhNaATEoCQbvxX6Nuvwk5NPySUYzBi0gxfIqG0hYTr1
- AOf+mrM9ExTDqPXoFHTEP4x+UunC8r3hoqB7IKDj3P3snYN864keY91
-X-Developer-Key: i=Ignacio.MorenoGonzalez@kuka.com; a=ed25519;
- pk=j7nClQnc5Q1IDuT4eS/rYkcLHXzxszu2jziMcJaFdBQ=
-X-Endpoint-Received: by B4 Relay for
- Ignacio.MorenoGonzalez@kuka.com/20220915 with auth_id=391
-X-Original-From: Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>
-Reply-To: Ignacio.MorenoGonzalez@kuka.com
+References: <20250505-vmlinux-mmap-v3-0-5d53afa060e8@isovalent.com>
+ <20250505-vmlinux-mmap-v3-2-5d53afa060e8@isovalent.com> <CAEf4BzboH-au2bNCWYk1nYbQ61kGbUXuvTxftDPAEGF1Pc=TLw@mail.gmail.com>
+In-Reply-To: <CAEf4BzboH-au2bNCWYk1nYbQ61kGbUXuvTxftDPAEGF1Pc=TLw@mail.gmail.com>
+From: Lorenz Bauer <lmb@isovalent.com>
+Date: Wed, 7 May 2025 10:14:02 +0100
+X-Gm-Features: ATxdqUE4g8lO60eqVT-NBjEfrxMu9rtdzVq9hr1BOEdsu4jEty7BLc1dL2Y9oKc
+Message-ID: <CAN+4W8gcquJRkZw+Knt=vqwR4YM8w5RbRNO-XyfE+DAyiEWANw@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v3 2/3] selftests: bpf: add a test for mmapable
+ vmlinux BTF
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
+	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>
+On Tue, May 6, 2025 at 10:39=E2=80=AFPM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
 
-commit c4608d1bf7c6 ("mm: mmap: map MAP_STACK to VM_NOHUGEPAGE") maps
-the mmap option MAP_STACK to VM_NOHUGEPAGE. This is also done if
-CONFIG_TRANSPARENT_HUGETABLES is not defined. But in that case, the
-VM_NOHUGEPAGE does not make sense.
+> > +       raw_data =3D mmap(NULL, end, PROT_READ, MAP_PRIVATE, fd, 0);
+> > +       if (!ASSERT_NEQ(raw_data, MAP_FAILED, "mmap_btf"))
+>
+> ASSERT_OK_PTR()?
 
-Fixes: c4608d1bf7c6 ("mm: mmap: map MAP_STACK to VM_NOHUGEPAGE")
-Cc: stable@vger.kernel.org
-Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Reviewed-by: Yang Shi <yang@os.amperecomputing.com>
-Reviewed-by: Liam R. Howlett <Liam.Howlett@oracle.com>
-Signed-off-by: Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>
----
-I discovered this issue when trying to use the tool CRIU to checkpoint
-and restore a container. Our running kernel is compiled without
-CONFIG_TRANSPARENT_HUGETABLES. CRIU parses the output of
-/proc/<pid>/smaps and saves the "nh" flag. When trying to restore the
-container, CRIU fails to restore the "nh" mappings, since madvise()
-MADV_NOHUGEPAGE always returns an error because
-CONFIG_TRANSPARENT_HUGETABLES is not defined.
+Don't think that mmap follows libbpf_get_error conventions? I'd keep
+it as it is.
 
-The mapping MAP_STACK -> VM_NOHUGEPAGE was introduced by commit
-c4608d1bf7c6 ("mm: mmap: map MAP_STACK to VM_NOHUGEPAGE") in order to
-fix a regression introduced by commit efa7df3e3bb5 ("mm: align larger
-anonymous mappings on THP boundaries"). The change introducing the
-regression (efa7df3e3bb5) was limited to THP kernels, but its fix
-(c4608d1bf7c6) is applied without checking if THP is set.
+> > +       btf =3D btf__new_split(raw_data, btf_size, base);
+> > +       if (!ASSERT_NEQ(btf, NULL, "parse_btf"))
+>
+> ASSERT_OK_PTR()
 
-The mapping MAP_STACK -> VM_NOHUGEPAGE should only be applied if THP is
-enabled.
----
-Changes in v3:
-- Exclude non-stable patch (for huge_mm.h) from this series to avoid mixing stable and non-stable patches, as suggested by Andrew.
-- Extend description in cover letter.
-- Link to v2: https://lore.kernel.org/r/20250506-map-map_stack-to-vm_nohugepage-only-if-thp-is-enabled-v2-0-f11f0c794872@kuka.com
+Ack.
 
-Changes in v2:
-- [Patch 1/2] Use '#ifdef' instead of '#if defined(...)'
-- [Patch 1/2] Add 'Fixes: c4608d1bf7c6...'
-- Create [Patch 2/2]
+> Do you intend to add more subtests? if not, why even using a subtest stru=
+cture
 
-- Link to v1: https://lore.kernel.org/r/20250502-map-map_stack-to-vm_nohugepage-only-if-thp-is-enabled-v1-1-113cc634cd51@kuka.com
----
- include/linux/mman.h | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/include/linux/mman.h b/include/linux/mman.h
-index bce214fece16b9af3791a2baaecd6063d0481938..f4c6346a8fcd29b08d43f7cd9158c3eddc3383e1 100644
---- a/include/linux/mman.h
-+++ b/include/linux/mman.h
-@@ -155,7 +155,9 @@ calc_vm_flag_bits(struct file *file, unsigned long flags)
- 	return _calc_vm_trans(flags, MAP_GROWSDOWN,  VM_GROWSDOWN ) |
- 	       _calc_vm_trans(flags, MAP_LOCKED,     VM_LOCKED    ) |
- 	       _calc_vm_trans(flags, MAP_SYNC,	     VM_SYNC      ) |
-+#ifdef CONFIG_TRANSPARENT_HUGEPAGE
- 	       _calc_vm_trans(flags, MAP_STACK,	     VM_NOHUGEPAGE) |
-+#endif
- 	       arch_calc_vm_flag_bits(file, flags);
- }
- 
-
----
-base-commit: fc96b232f8e7c0a6c282f47726b2ff6a5fb341d2
-change-id: 20250428-map-map_stack-to-vm_nohugepage-only-if-thp-is-enabled-ce40a1de095d
-
-Best regards,
--- 
-Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>
-
-
+The original intention was to add kmod support, but that didn't pan
+out, see my discussion with Alexei. I can drop the subtest if you
+want, but I'd probably keep the helper as it is.
