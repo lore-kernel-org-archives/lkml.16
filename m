@@ -1,130 +1,145 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17DA321504D;
-	Wed,  7 May 2025 15:44:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32F9E19D092;
+	Wed,  7 May 2025 15:45:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746632702; cv=none; b=nmZiIeZln9BAPIr0ZCrheIJfRl08iCruxkDKKWPH9J1eybaZCR3boUDGzMwz4CfCrdunaR6EChLiVb3OTH/tlSyLCARBTek9wFdMGORCA+XLJegT8CI6dszwD63QwC1vhOpmcLst/1Rgm1J0o+ldJx8vzSjSs30QZdvpnCySiaI=
+	t=1746632747; cv=none; b=UN73I/DhIsEUaE5ux32PsIRT0q3pS9w7939AFZtg/wm6dYj58Y7Ss90/YIBLzYIw3PL6lIkjfrKNSSC43muOhjZ+0A8dKRPTORoKbhKrdffrf1rNbyd8MdIchGy/RtBrTwv83LfiaODLJ+C7njLGCQhYgOOEVrpd4gG47F6yYHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746632702; c=relaxed/simple;
-	bh=IpPwe4sDGsovYZM0+/DOIiNIo5tp1kutwmQemRZEX3c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=czOAiPWIBpVMdt3f67C3+MiJ3PVM9keuMzzheYmVsUHwtpz8NT2m/4UahBwGn9/ZtdROhu2W/v8anF1NOEzEMCxVvhzlU4cKb0iaXblV7WUc+QIdhKvHJj1Ao9pF8enAVuGYOlXrs1dTLM5Ide2rCEdhUVw1wlii44cSJ66q4qQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bUZww/XZ; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1746632747; c=relaxed/simple;
+	bh=snxIgqDfv9AzTPRASeTgnmdONS2s/uweYA4rLFpghpE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=J9mtRYxpTenpQwfV0Ogbye9XTN9nmkunHLzenGhp6gCL2OW6ACUA7rlc6LJIfSLAUfxAuJy4aC4G+NHpC1/LCQaE/iwDN+Ods2vE2yNcq84e0TxX4SKoNVnRwJeRnfYVzs5vY1LOCuCIkkX5K7x08OOvRF7LfFWFSFYui8/rtW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bUZww/XZ"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-39c266c1389so15086f8f.1;
-        Wed, 07 May 2025 08:44:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746632698; x=1747237498; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=byHNTAzoVmJ12jHVr8chWlceaJLIIt4EKT+rNT09G+c=;
-        b=bUZww/XZResdVSLjRlv+1T+oa1FL0vpKuLM6Utrlk/l0hz/4Nz4+NVeskx3/TFJKrM
-         df0lUiXEXIsghD6IAIGu/5DAlmWJAWcxvX79sbdwIcS8qniR4aXxdJYbPs0dnbgp0+xI
-         Ik1TNJZA7rsEs/AnnflvhwB0Q6ZRD5hL5l9psYQKVz8TYcAlH401I/QfPfElht1jyQga
-         pRKLvE3yzbvfidg6rOg81k4wb0qTnecQY/6xoT82znw95IsMrsKsKUqf5nC/WXx3/Zvh
-         tMJgrabvq1pWUppE55R36V74WpzAiYGMaEw1QLJ95rNyevBz3jMarRFM5dyGjvyJwykd
-         h4Dw==
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-54e7967cf67so5370e87.0;
+        Wed, 07 May 2025 08:45:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746632698; x=1747237498;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=byHNTAzoVmJ12jHVr8chWlceaJLIIt4EKT+rNT09G+c=;
-        b=chpfTpVIf1pwfHwQmGIkVGb0V9foBeQnf2QEEC0IRXSbEVIvugucMA9fcLMmUW/MZj
-         ofsfjBVn/RkCloslyfsbXcBYjAI4VZ92t46r0IS7setUoKL0CBVyVa0mfREf9crqeCH0
-         IdmORXfC5iSucKETk+h1TLyO+w5IJDTXl+oCGcDU7yT1cRVTRmkjRsZQ7ilrfhSN971n
-         bMbt952rS3sUiGcY9VbzSAqhxqehpgt7c1qWRcNhO8AOfudtBdo14X7rckS3iBdAb/Af
-         ueXpj7g+tLYmTWnnhdR12xWF8Rw8mzNT346NRxX+byHiR3NldCgWheEErjgNFJVB3MI2
-         7P4g==
-X-Forwarded-Encrypted: i=1; AJvYcCV6a2k5uVMXfXxi+y1abx7aHWhCvSBxxy5wMdiqsWiynFesy/4u1X+E+woifCfRaDTcnybufS9BdrWr7zU=@vger.kernel.org, AJvYcCVHuLyD5w3b2n1crcd34WLpqwhIFVu/rQCwsI9c1DG5QHl3/Snc4JOy0vcu7/B0lwuNCyAEX8tkgTm+1PQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3izatg9L9U8Cc7y55cLV/k61gByLuGYHpklURteBQsACNdpoH
-	DsL56z3sj0fq2jvy454S1UYd5WScHhcxrS+CCKs679lVaxh0U+6r
-X-Gm-Gg: ASbGncvqAgI6+AVrWjrHMvAAZeRKs0WnfOSmYm2rg88tkHnqa+ddpXMQBsm1wyc8niv
-	tSDvX31j1zhLJaLeyNNKLXgY+dnN/adTZ0/0trWKECTQt5SHIvD2/at74JhZjArqSL5XzbodS4Z
-	r0gcW+G3VhSUWBbRiR5kdBGI++Rbp883bZKSaMQMYFyeKwdQg3np1d8ZvkcbxKJFMWn89CrW+Xv
-	vaUsHVCDPBEsuk8DxsrghGjodAWOROxiA560Yz381r4YLtjL0FZLG1h/RdvpVuihgVry07stfXK
-	+0Y3GEON1Ips2mVzJ9iGJL/vrhdTfD4qYaoGSvXUdXIsXO4yazZGBrq7M5ns+npnkmfK76V9h+m
-	lOihavcwWJn+yfR5dv3XePUwn7+U=
-X-Google-Smtp-Source: AGHT+IHfJJG0cs4abjEiWvnxwVTISrHAZEF9OSHQcqWVHkiT4B5VkyD3vvSWb6GVCRi9QWsDxzrI4Q==
-X-Received: by 2002:a05:6000:420a:b0:390:e8d4:6517 with SMTP id ffacd0b85a97d-3a0b49bee22mr2812986f8f.21.1746632698276;
-        Wed, 07 May 2025 08:44:58 -0700 (PDT)
-Received: from orome (p200300e41f281b00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f28:1b00:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a0ad54f105sm5672659f8f.85.2025.05.07.08.44.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 08:44:57 -0700 (PDT)
-Date: Wed, 7 May 2025 17:44:55 +0200
-From: Thierry Reding <thierry.reding@gmail.com>
-To: shao.mingyin@zte.com.cn
-Cc: laurent.pinchart@ideasonboard.com, mperttunen@nvidia.com, 
-	airlied@gmail.com, simona@ffwll.ch, jonathanh@nvidia.com, 
-	dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	tomi.valkeinen@ideasonboard.com, maarten.lankhorst@linux.intel.com, mripard@kernel.org, 
-	tzimmermann@suse.de, michal.simek@amd.com, linux-arm-kernel@lists.infradead.org, 
-	yang.yang29@zte.com.cn, xu.xin16@zte.com.cn, ye.xingchen@zte.com.cn, 
-	zhang.enpei@zte.com.cn
-Subject: Re: [PATCH linux-next 1/2] gpu: drm: tegra: dpaux: Use
- dev_err_probe()
-Message-ID: <lihaxdejm7rvuurpoj43hf5zcvrfqlztdwxqs6p443jt73noqt@iipbc2udbgo5>
-References: <20250402193656279azy9TKahAE5TQ5-i4XCQT@zte.com.cn>
- <20250402193758365XauggSF2EWBYY-e_jgNch@zte.com.cn>
+        d=1e100.net; s=20230601; t=1746632743; x=1747237543;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :reply-to:in-reply-to:references:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=hUchLAT2CvoC+0spmKn93ymH4pNN6dMT06ZJPIMdE5s=;
+        b=w6HhOYKk+UN+FGVFpBVLFdHnvr4E+PmKQW0WIvRxTH7gYZ6dWPFhKPCnbHi0HJZWG1
+         WJNg/zbHBybwbQU2XBS4BexI2SuZ1tjHzvFt4kt6TpCuPZalamaE2hL7xd+VCyzu2dCE
+         F74EIykoGzxr0CGjqmqt2l356olnnI0Qm6zFg0snADx9TZHIYYed/ev39JnHpxZfOOKj
+         CnKe32qbCiego6cWayp0JMIeWpT/MjxV7h/6f10NtFzKQDvniBCFRLdnZqTx6wbwFKIp
+         cpxxtZ0Aca94BG8gfIZVD/SM1Zcq/ElTUpFEgCC2nM1QWdvJKgcfP2iiT+SaQZvR2yyZ
+         rD3A==
+X-Forwarded-Encrypted: i=1; AJvYcCW7XXwwSFcKTdcGCwTA8ZssqNZgLuu/SqhaswcYNBvyabTiz6bvP800gseLYoccf3ZJG3vzSJ/ha3RTtmRd@vger.kernel.org, AJvYcCXCKB1nprcaYcCx1+L5N1QByiiC7BlV6nu42z2N6zdscHRkjhhkjUSyZrI2zCJQEjiBqU4IygpIlPOM@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwcP3TuJuUjvCKdNZB4mdiZoiFBKUXVx+8xS+wRJ2uMnsZuF5A
+	cbUYuwZesv3xtEstjLv6qqIia4rW55B6cxyZaPSmRjwYfLRALx0S96zwdEXU
+X-Gm-Gg: ASbGncsmvJ2ZjKgZVZEezq/b9EaG53JGByzJzjWQQolwaGVbAipzzm06IkbZeo4OqZo
+	7es9HwkY9OUOtYDrud8Gn/D1MhM2eyjaEau2Y+k6QTwDVmKTNJp6VhGQR5TWN1mtBDGqifteiJQ
+	2Cv8rQlXSCuUmxztFUUALwxuwKE9uD3Y0IBR4QiUMIwaVcYCCdanrVFhu3ViidX+qZKHt2MNM+j
+	g2uYKIa6ZVbqN91xczuwzFKUcJUwxSalQux5JhJTLfTBocCMx1Wo0BOfz8CHNDhG+Tru8bPY/o1
+	hZsdXf2POgLP+9BZvhuXmX0+I18XinwiJC6wloPoiiwkmi1jf5VyHeAfbaN3hOObFSM9SQ6mtg=
+	=
+X-Google-Smtp-Source: AGHT+IGUtAzwPgtOkcNndnaFBO5XyKYfXW2FtKeY8TaXIyE0oH6rVJDuEkxV5qGfzK0WIzx5RS0izQ==
+X-Received: by 2002:a05:6512:1195:b0:549:78bd:6b9f with SMTP id 2adb3069b0e04-54fb9296120mr1521118e87.30.1746632742577;
+        Wed, 07 May 2025 08:45:42 -0700 (PDT)
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ea94f6d9dsm2354228e87.255.2025.05.07.08.45.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 07 May 2025 08:45:41 -0700 (PDT)
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-30f30200b51so72366081fa.3;
+        Wed, 07 May 2025 08:45:41 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV49qSOADHb1U5Uk9f8RIfVLKRqDvJV1n1E8IjApCaCI1l4pvwmQIhSoEMKW4Kj9a88W5OumGex88j6TksZ@vger.kernel.org, AJvYcCXtVKLNnLsvgY+1AQE9QlAFz+oVVxZQigbhV7YVjFdnLV+73VA5G5yS4qR7Tzsa3/p/Cp+z+cqrWFBY@vger.kernel.org
+X-Received: by 2002:a2e:ab1a:0:b0:308:eb58:6591 with SMTP id
+ 38308e7fff4ca-326ad33bc90mr16246971fa.25.1746632741134; Wed, 07 May 2025
+ 08:45:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="rt7ige55tnphtzlx"
-Content-Disposition: inline
-In-Reply-To: <20250402193758365XauggSF2EWBYY-e_jgNch@zte.com.cn>
-
-
---rt7ige55tnphtzlx
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
+References: <20250506195524.601268-1-michael@fossekall.de>
+In-Reply-To: <20250506195524.601268-1-michael@fossekall.de>
+Reply-To: wens@csie.org
+From: Chen-Yu Tsai <wens@csie.org>
+Date: Thu, 8 May 2025 00:45:28 +0900
+X-Gmail-Original-Message-ID: <CAGb2v671wD7y6n6n20BrhH-pcTGD8RzPp25gCWUtnFmRhh=naw@mail.gmail.com>
+X-Gm-Features: ATxdqUGxuy4nk1up7F0wkRPqSR-2r-DSURGKLc-zVrNDcFGAmDsshfUtzZKSfic
+Message-ID: <CAGb2v671wD7y6n6n20BrhH-pcTGD8RzPp25gCWUtnFmRhh=naw@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: bananapi: add support for PHY LEDs
+To: Michael Klein <michael@fossekall.de>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Samuel Holland <samuel@sholland.org>, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH linux-next 1/2] gpu: drm: tegra: dpaux: Use
- dev_err_probe()
-MIME-Version: 1.0
 
-On Wed, Apr 02, 2025 at 07:37:58PM +0800, shao.mingyin@zte.com.cn wrote:
-> From: Zhang Enpei <zhang.enpei@zte.com.cn>
->=20
-> Replace the open-code with dev_err_probe() to simplify the code.
->=20
-> Signed-off-by: Zhang Enpei <zhang.enpei@zte.com.cn>
-> Signed-off-by: Shao Mingyin <shao.mingyin@zte.com.cn>
+On Wed, May 7, 2025 at 4:56=E2=80=AFAM Michael Klein <michael@fossekall.de>=
+ wrote:
+>
+> The Bananapi M1 has three LEDs connected to the RTL8211E ethernet PHY.
+> Add the corresponding nodes to the device tree.
+
+I see from old emails that this was supposed to be updated? And if you
+didn't, then his patch should be marked as a "RESEND", so tooling doesn't
+get confused and ignore it.
+
+I'll wait a couple days in case anyone else wants to take a look.
+
+ChenYu
+
+> Signed-off-by: Michael Klein <michael@fossekall.de>
 > ---
->  drivers/gpu/drm/tegra/dpaux.c | 11 +++--------
->  1 file changed, 3 insertions(+), 8 deletions(-)
-
-Applied, thanks.
-
-Thierry
-
---rt7ige55tnphtzlx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmgbf/YACgkQ3SOs138+
-s6H2ZBAArFAuCN0WTxbq9wpDNT3hPLUMpHA6Sdh2TFEGIklk5Hj+oHTcSPS5AV9q
-uvfJynPiWqjRY4dTAs0J+6IH1R7eo/Qm71jvnoPS37oAteCO3hQqHeRVGgWN8PoH
-vWwKaO4T/ipB8rcUfqv8TH/b74FIchpMB3/K5oaalRKjPlYEs7rahimhPq0utf7u
-GELGnbPiXftDKLXxXkeQ+sXdVcvIINIikGobmY2khF9oxb43kN0JlRqxnnNF0lHh
-0+j2q2TMEGQRr/V8+avobslZXYkqyuBOa/RaWNN7W3Y4kBOEXNxOn3GoN3hkaaol
-WrXzjMX2k6OVU+MLYxR5+G+OWNRVXg/GK6KbzE4O1zJcJ5zhWssqThv61Nt3cqgz
-nby8EIlFfV+/Yjus8iTVKE2HcntU2vbi0PCB2HHdzkVGwyha9nx9lprcq83N4HJ5
-rKg3m+FP2tnrT5/JBg39FN5OftZgjN7q63WZwaly3P90pP9OhGKKDGE8+HGpzOea
-mxVEb+8MwHag8/vNh8LHLxMLTTvNb4mn/pbmTmtFU4v/sDnsFtS0zcTAcDiY7tsL
-0n/8gjh/ELimcnCQMWe4v4RGb2bCxSIFupwn2o01Shq3RgppcL+yEng2D9cJ+NVV
-TdDxber+/HIqgTWDWoMkq0D2FUZG0pN3DPMF0FXUIQDGQAy17Qs=
-=2Zbo
------END PGP SIGNATURE-----
-
---rt7ige55tnphtzlx--
+>  .../boot/dts/allwinner/sun7i-a20-bananapi.dts | 27 +++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/allwinner/sun7i-a20-bananapi.dts b/arch/ar=
+m/boot/dts/allwinner/sun7i-a20-bananapi.dts
+> index 46ecf9db2324..d8b362c9661a 100644
+> --- a/arch/arm/boot/dts/allwinner/sun7i-a20-bananapi.dts
+> +++ b/arch/arm/boot/dts/allwinner/sun7i-a20-bananapi.dts
+> @@ -48,6 +48,7 @@
+>
+>  #include <dt-bindings/gpio/gpio.h>
+>  #include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/leds/common.h>
+>
+>  / {
+>         model =3D "LeMaker Banana Pi";
+> @@ -169,6 +170,32 @@ &ir0 {
+>  &gmac_mdio {
+>         phy1: ethernet-phy@1 {
+>                 reg =3D <1>;
+> +
+> +               leds {
+> +                       #address-cells =3D <1>;
+> +                       #size-cells =3D <0>;
+> +
+> +                       led@0 {
+> +                               reg =3D <0>;
+> +                               color =3D <LED_COLOR_ID_GREEN>;
+> +                               function =3D LED_FUNCTION_LAN;
+> +                               linux,default-trigger =3D "netdev";
+> +                       };
+> +
+> +                       led@1 {
+> +                               reg =3D <1>;
+> +                               color =3D <LED_COLOR_ID_AMBER>;
+> +                               function =3D LED_FUNCTION_LAN;
+> +                               linux,default-trigger =3D "netdev";
+> +                       };
+> +
+> +                       led@2 {
+> +                               reg =3D <2>;
+> +                               color =3D <LED_COLOR_ID_BLUE>;
+> +                               function =3D LED_FUNCTION_LAN;
+> +                               linux,default-trigger =3D "netdev";
+> +                       };
+> +               };
+>         };
+>  };
+>
+> --
+> 2.39.5
+>
+>
