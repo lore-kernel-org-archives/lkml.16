@@ -1,258 +1,125 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA7C51CB31D;
-	Wed,  7 May 2025 17:35:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E32828CF44;
+	Wed,  7 May 2025 17:35:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746639331; cv=none; b=aAby4VKLA5sEsS7xC3jOKqrVuVmzCp87m54rq6UQuNQnk4Vea1QDzZIK1jIxmBaRFoOKitnP9z6hCeGlIaTtpPIppPdw24hIFI3QeeTCtZJG1SYAxuefGD3wWGRBunO6y6vQpU2AeNxnIB2ixaJtbGaz0f786+npmPWMS+3M/9Q=
+	t=1746639361; cv=none; b=MDvz5Vh38k2+UmUuIC390GjNr8bAFaxYvje4rYCvqfrjbvg/FC+mTg+aUDA4QnXD836Xz8e4TSKnDz0R1iTgtpuL4RfGekR6x6X7GHoDHMzzREecRlOMk+QH7NXxEsMEkusmCksOAvCr9GBW2zUKzjfzIzFA+kgXYRcLmaedSEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746639331; c=relaxed/simple;
-	bh=bHRZnDvoba48QEk+AGKqlWJgnwd6e1BgBARKcQYLIIs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gFpVc96tcwYLOssC+shsl4DrL6W/Y0UrWFZ7hLzNB37X1wRG6WIvg3mobhBePHjNgEXB0gIWOWI2qFChDGnqsSBQ6y1eEQ2tVltBHCF4ijrtKpyGbufMFT01sEHjQAzr4R+VZJpZiP6qBOinrREdZUCW9zsrGuJng2NYvLzQZHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 953C016F2;
-	Wed,  7 May 2025 10:35:18 -0700 (PDT)
-Received: from [192.168.20.57] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 874213F5A1;
-	Wed,  7 May 2025 10:35:26 -0700 (PDT)
-Message-ID: <4d449d83-8b86-4933-8584-bdcbd4db88e8@arm.com>
-Date: Wed, 7 May 2025 12:35:24 -0500
+	s=arc-20240116; t=1746639361; c=relaxed/simple;
+	bh=c2ITjaoi4y/32y406ufleR0jKcFxlSQQI9/5RMCUp54=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ILzIgeCm3l8VpYSj+cJI/DuqwE9EfSAXpPxsvQviMzkYVE14LdiUOzUm/ZNcTiigre4L7s3fOA22s/VDWk97V9SYE1ME6AV+Y7tMuVUT6Zx1vmB6btFZ+7/llAOg17ZFg5tS/x92aesBNJBmKOtvw6LhGXrmNTk473X8enxj78k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mGyn7Gyg; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mGyn7Gyg"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-39c31e4c3e5so105958f8f.0;
+        Wed, 07 May 2025 10:35:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746639357; x=1747244157; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=B8fzoKFRxHrnQE/JG/vAropqBJ0/DVLBuAo0naIFD4s=;
+        b=mGyn7GygYqCWS3SCxcSLDfdeZDpOSL3lDx8qJqQ1bmgRCilKahTG8IAJw7VS32KCAR
+         8o88BF4tEBBgA3hMfUSNhUMG50gqifi+y2qwGspRZ+gc+UX9EVw4CdZURCfMIWdfEIlf
+         GpL+/PDnnq3NCaNwdJh92nPbwEDi9hE++IrOrRxk9TwjFrfIK7HYcyigQdjNJoHbNPSJ
+         2ZLKXtOnl6AfWQygriA/WktqowAlfgW14BaS8rbbSgW9FE64l9SZnbXcifPqqYmnbrhr
+         POfSghHNUs6GCbvwc4keUZwBW1VLRrRn+MyvxKUxO+C9R66437K1Yn3KXLjvtcJtW5E6
+         Kasw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746639357; x=1747244157;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=B8fzoKFRxHrnQE/JG/vAropqBJ0/DVLBuAo0naIFD4s=;
+        b=fu75qra58uDDH5llVJ/EJ/rNK7x+QmOw6HosMdrit0drnyBZz7Pe9sc8kI6hB6oh3u
+         KOOTO9RN33BphFVv1XvwVcsqLVA1uhb3HU7PpeA2Niffdr8CzPzEDW+r5cVBG1J6b/Nz
+         cawOG8Q5DVCQc9ScSyqnDxy2vkkp89e0p3wuK9dUrhhhkRmYb+P8uA7YlwI6FG+fTZNl
+         pCU0dCcGiC8LrH9TG+2h+cMqAElXofXEpFgatdT3hlHIpjgsZ7TmVB8rYeM2hSJq3+Nm
+         LotnFdw1y/8OvaqEwHdRBTxac1OXSUqTDMiQduydvIGMjl8Luu4wGcMMqjGBBbgMI56J
+         pPag==
+X-Forwarded-Encrypted: i=1; AJvYcCUyoNwgCYLFYMO6jSMDNPR2ZH+T67sJqYH65ANDx83yaBkeW0zi8ydmuwBZ9vSHr/ijUzz84QXgplIu65zo@vger.kernel.org, AJvYcCX6YG5N/RcLLskirkNVRdE5RuRC/UXoBfLah2FxCM3N1s0P9hssnliNhzKr9jCsjincME70gj+U/IL0@vger.kernel.org, AJvYcCXbiLEtkSOUh0BiZrdp/HTlIhI45KTOoe+k1U44El7zOq4A23lg/eJlmEkexb7HJI5SvJcgi+UWG4b8y3QnZkO8wOc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLaqSR3UfVW27I619/BBh7UHravBTGLvu5xkiuVAbx9qoYy+M2
+	62//7fQ6TlGXdaYVe5/KJCoPknlwSLtPhwaFIZW1qD8IcmnBTKak
+X-Gm-Gg: ASbGncsg1cGyBldAs/0OnvjnHpLNaoPHrfFkqNf31fBMq/OVtcDUhwNjAclTuyC2XY9
+	5IT8C0V1QrEM4hMChA/LAv7WEEtBYrXSIq98AN3+qgnqh2daOAUB6I7lFh+CTn4s5O5OZ6jpi4X
+	eSod2/sNaLvPBuQmeCzXdC5DF3ji/CRrIPBqjY8FteBqtBxikEnUjW7qn4Y+b89qkRY9zgJE/vq
+	vgw6g8y+UUgcrZUvdFkGq3VJPk30RFldDqkOQr3lhsfHOeiA9CzR6cXHBnxTSElo2J2Hp/mV78t
+	evChs/oafQY2z7llV1x/JqgtqEX+dcz4059uEqzaURJpdLUTaJ9qsIM7VoqokRNeozK54XaPzA=
+	=
+X-Google-Smtp-Source: AGHT+IHJVgnGCHmje37RoGJbHVlOZy0cJJZ5JHLe9pV9lbIp7XqZR/JsVQTP913wHvAw6Cy3+JwSPQ==
+X-Received: by 2002:a5d:64ac:0:b0:3a0:ad15:440f with SMTP id ffacd0b85a97d-3a0b4a03705mr3258354f8f.8.1746639357307;
+        Wed, 07 May 2025 10:35:57 -0700 (PDT)
+Received: from iku.example.org ([2a06:5906:61b:2d00:2b0e:e807:48d:720a])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a0b7e44397sm1140401f8f.49.2025.05.07.10.35.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 10:35:56 -0700 (PDT)
+From: Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>
+Cc: netdev@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH net-next] dt-bindings: net: renesas-gbeth: Add support for RZ/V2N (R9A09G056) SoC
+Date: Wed,  7 May 2025 18:35:50 +0100
+Message-ID: <20250507173551.100280-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ACPI/PPTT: fix off-by-one error
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: "Heyne, Maximilian" <mheyne@amazon.de>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>,
- Len Brown <lenb@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>,
- Ard Biesheuvel <ardb@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20250506-draco-taped-15f475cd@mheyne-amazon>
- <214c2a2d-e0ea-4ec6-9925-05e39319e813@arm.com>
- <CAJZ5v0jvWXDQQ++4wmWJ+i=jds+MZ68bRB9+26WM4tAPHFxALw@mail.gmail.com>
- <1911d3b6-f328-40a6-aa03-cde3d79554de@arm.com>
- <CAJZ5v0ii9HLfqfgcp=1qRRX6M1yThf7ZPNkSLVc5GGFhv=N-Lg@mail.gmail.com>
- <ad04d07b-d610-4355-bd47-1d2fb49711f3@arm.com>
- <fb2e3c60-1171-4f5c-852d-a5bfdc4f9c2a@arm.com>
- <25aa77b9-0077-4021-b55c-e94327b7847b@arm.com>
- <CAJZ5v0hTiJSp9q4iWu_EHB47X3Bf9LFY+ZZoqm7aN0cD8Jnjvg@mail.gmail.com>
-Content-Language: en-US
-From: Jeremy Linton <jeremy.linton@arm.com>
-In-Reply-To: <CAJZ5v0hTiJSp9q4iWu_EHB47X3Bf9LFY+ZZoqm7aN0cD8Jnjvg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-On 5/7/25 12:01 PM, Rafael J. Wysocki wrote:
-> On Wed, May 7, 2025 at 6:41 PM Jeremy Linton <jeremy.linton@arm.com> wrote:
->>
->> On 5/7/25 11:38 AM, Jeremy Linton wrote:
->>> On 5/7/25 11:31 AM, Jeremy Linton wrote:
->>>> On 5/7/25 11:12 AM, Rafael J. Wysocki wrote:
->>>>> On Wed, May 7, 2025 at 5:51 PM Jeremy Linton <jeremy.linton@arm.com>
->>>>> wrote:
->>>>>>
->>>>>> On 5/7/25 10:42 AM, Rafael J. Wysocki wrote:
->>>>>>> On Wed, May 7, 2025 at 5:25 PM Jeremy Linton
->>>>>>> <jeremy.linton@arm.com> wrote:
->>>>>>>>
->>>>>>>> Hi,
->>>>>>>>
->>>>>>>> On 5/6/25 8:13 AM, Heyne, Maximilian wrote:
->>>>>>>>> Commit 7ab4f0e37a0f ("ACPI PPTT: Fix coding mistakes in a couple of
->>>>>>>>> sizeof() calls") corrects the processer entry size but unmasked a
->>>>>>>>> longer
->>>>>>>>> standing bug where the last entry in the structure can get
->>>>>>>>> skipped due
->>>>>>>>> to an off-by-one mistake if the last entry ends exactly at the
->>>>>>>>> end of
->>>>>>>>> the ACPI subtable.
->>>>>>>>>
->>>>>>>>> The error manifests for instance on EC2 Graviton Metal instances
->>>>>>>>> with
->>>>>>>>>
->>>>>>>>>       ACPI PPTT: PPTT table found, but unable to locate core 63 (63)
->>>>>>>>>       [...]
->>>>>>>>>       ACPI: SPE must be homogeneous
->>>>>>>>>
->>>>>>>>> Fixes: 2bd00bcd73e5 ("ACPI/PPTT: Add Processor Properties
->>>>>>>>> Topology Table parsing")
->>>>>>>>> Cc: stable@vger.kernel.org
->>>>>>>>> Signed-off-by: Maximilian Heyne <mheyne@amazon.de>
->>>>>>>>> ---
->>>>>>>>>      drivers/acpi/pptt.c | 4 ++--
->>>>>>>>>      1 file changed, 2 insertions(+), 2 deletions(-)
->>>>>>>>>
->>>>>>>>> diff --git a/drivers/acpi/pptt.c b/drivers/acpi/pptt.c
->>>>>>>>> index f73ce6e13065d..4364da90902e5 100644
->>>>>>>>> --- a/drivers/acpi/pptt.c
->>>>>>>>> +++ b/drivers/acpi/pptt.c
->>>>>>>>> @@ -231,7 +231,7 @@ static int acpi_pptt_leaf_node(struct
->>>>>>>>> acpi_table_header *table_hdr,
->>>>>>>>>                               sizeof(struct acpi_table_pptt));
->>>>>>>>>          proc_sz = sizeof(struct acpi_pptt_processor);
->>>>>>>>
->>>>>>>> This isn't really right, it should be struct acpi_subtable_header,
->>>>>>>> then
->>>>>>>> once the header is safe, pull the length from it.
->>>>>>>>
->>>>>>>> But then, really if we are trying to fix the original bug that the
->>>>>>>> table
->>>>>>>> could be shorter than the data in it suggests, the struct
->>>>>>>> acpi_pptt_processor length plus its resources needs to be checked
->>>>>>>> once
->>>>>>>> the subtype is known to be a processor node.
->>>>>>>>
->>>>>>>> Otherwise the original sizeof * change isn't really fixing anything.
->>>>>>>
->>>>>>> Sorry, what sense did it make to do
->>>>>>>
->>>>>>> proc_sz = sizeof(struct acpi_pptt_processor *);
->>>>>>>
->>>>>>> here?  As much as proc_sz = 0 I suppose?
->>>>>>
->>>>>> No, I agree, I think the original checks were simplified along the way
->>>>>> to that. It wasn't 'right' either.
->>>>>>
->>>>>> The problem is that there are three subtypes of which processor is only
->>>>>> one, and that struct acpi_pptt_processor doesn't necessarily reflect
->>>>>> the
->>>>>> actual size of the processor structure in the table because it has
->>>>>> optional private resources tagged onto the end.
->>>>>
->>>>> Right.
->>>>>
->>>>>> So if the bug being fixed is that the length check is validating that
->>>>>> the table length is less than the data in the table, that's still a
->>>>>> problem because its only validating the processor node without
->>>>>> resources.
->>>>>
->>>>> Admittedly, it is not my code, but I understand this check as a
->>>>> termination condition for the loop: If there's not enough space in the
->>>>> table to hold a thing that I'm looking for, I may as well bail out.
->>>>>
->>>>>> AKA the return is still potentially returning a pointer to a structure
->>>>>> which may not be entirely contained in the table.
->>>>>
->>>>> Right, but this check should be made anyway before comparing
->>>>> cpu_node->parent to node_entry, when it is known to be a CPU entry
->>>>> because otherwise why bother.
->>>>
->>>> Right, but then there is a clarity because really its walking the
->>>> table+subtypes looking for the cpu node. Exiting early because its not
->>>> big enough for a cpu node makes sense but you still need the cpu node
->>>> check to avoid a variation on the original bug.
->>>>
->>>>
->>>>
->>>>>
->>>>> Roughly something like this:
->>>>>
->>>>> proc_sz = sizeof(struct acpi_pptt_processor);
->>>>>
->>>>> while ((unsigned long)entry + entry->length <= table_end) {
->>>>
->>>> Here your reading the entry, without knowing its long enough. For the
->>>> leaf check just using struct acpi_pptt_processor is fine, but for the
->>>> acpi_find_processor_node():
->>>>
->>>> proc_sz = sizeof(struct acpi_subtable_type);
->>>
->>> Although, maybe I just wrote code that justifies using
->>> acpi_pptt_processor here because the entry->num_of_priv_resources length
->>> check isn't being made without it. So ok, use proc_sz = sizeof(struct
->>> acpi_subtable_type) and assume that we don't care if the subtable type
->>> is less than proc_sz.
->>
->> Sorry for the noise, scratch that, a better solution is just to swap the
->> length checking in the 'if' statement. Then its clear its iterating
->> subtable types not processor nodes.
-> 
-> Do you mean something like this (modulo GMail-induced whitespace damage):
-> 
-> --- a/drivers/acpi/pptt.c
-> +++ b/drivers/acpi/pptt.c
-> @@ -231,16 +231,22 @@
->                    sizeof(struct acpi_table_pptt));
->       proc_sz = sizeof(struct acpi_pptt_processor);
-> 
-> -    while ((unsigned long)entry + proc_sz < table_end) {
-> -        cpu_node = (struct acpi_pptt_processor *)entry;
-> -        if (entry->type == ACPI_PPTT_TYPE_PROCESSOR &&
-> -            cpu_node->parent == node_entry)
-> -            return 0;
-> +    while ((unsigned long)entry + proc_sz <= table_end) {
-> +        if ((unsigned long)entry + entry->length <= table_end &&
-> +            entry->type == ACPI_PPTT_TYPE_PROCESSOR &&
-> +            entry->length == proc_sz +
-> +                    entry->number_of_priv_resources * sizeof(u32)) {
-> +            cpu_node = (struct acpi_pptt_processor *)entry;
-> +
-> +            if (cpu_node->parent == node_entry)
-> +                return 0;
-> +        }
-> +
->           if (entry->length == 0)
->               return 0;
-> +
->           entry = ACPI_ADD_PTR(struct acpi_subtable_header, entry,
->                        entry->length);
-> -
->       }
->       return 1;
->   }
-> 
+Document support for the GBETH IP found on the Renesas RZ/V2N (R9A09G056)
+SoC. The GBETH controller on the RZ/V2N SoC is functionally identical to
+the one found on the RZ/V2H(P) (R9A09G057) SoC, so `renesas,rzv2h-gbeth`
+will be used as a fallback compatible.
 
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+---
+ .../devicetree/bindings/net/renesas,r9a09g057-gbeth.yaml        | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Right, I think we are largely on the same page, I flipflopped around 
-about using subtable vs processor but the processor size assumption does 
-remove an extra check. The version that compiles that I was about to 
-test (and this will take me hours) looks like:
-
-
-@@ -231,7 +231,8 @@ static int acpi_pptt_leaf_node(struct 
-acpi_table_header *table_hdr,
-                              sizeof(struct acpi_table_pptt));
-         proc_sz = sizeof(struct acpi_pptt_processor);
-
--       while ((unsigned long)entry + proc_sz < table_end) {
-+       /* ignore sub-table types that are smaller than a processor node */
-+       while ((unsigned long)entry + proc_sz <= table_end) {
-                 cpu_node = (struct acpi_pptt_processor *)entry;
-                 if (entry->type == ACPI_PPTT_TYPE_PROCESSOR &&
-                     cpu_node->parent == node_entry)
-@@ -273,15 +274,18 @@ static struct acpi_pptt_processor 
-*acpi_find_processor_node(struct acpi_table_he
-         proc_sz = sizeof(struct acpi_pptt_processor);
-
-         /* find the processor structure associated with this cpuid */
--       while ((unsigned long)entry + proc_sz < table_end) {
-+       while ((unsigned long)entry + proc_sz <= table_end) {
-                 cpu_node = (struct acpi_pptt_processor *)entry;
-
-                 if (entry->length == 0) {
-                         pr_warn("Invalid zero length subtable\n");
-                         break;
-                 }
-+               /* entry->length may not equal proc_sz, revalidate the 
-processor structure length */
-                 if (entry->type == ACPI_PPTT_TYPE_PROCESSOR &&
-                     acpi_cpu_id == cpu_node->acpi_processor_id &&
-+                   (unsigned long)entry + entry->length <= table_end &&
-+                   entry->length == proc_sz + 
-cpu_node->acpi_processor_id * sizeof(u32) &&
-                      acpi_pptt_leaf_node(table_hdr, cpu_node)) {
-                         return (struct acpi_pptt_processor *)entry;
-                 }
-
-
+diff --git a/Documentation/devicetree/bindings/net/renesas,r9a09g057-gbeth.yaml b/Documentation/devicetree/bindings/net/renesas,r9a09g057-gbeth.yaml
+index 02a6793c26f5..c498a9999289 100644
+--- a/Documentation/devicetree/bindings/net/renesas,r9a09g057-gbeth.yaml
++++ b/Documentation/devicetree/bindings/net/renesas,r9a09g057-gbeth.yaml
+@@ -14,6 +14,7 @@ select:
+     compatible:
+       contains:
+         enum:
++          - renesas,r9a09g056-gbeth
+           - renesas,r9a09g057-gbeth
+           - renesas,rzv2h-gbeth
+   required:
+@@ -23,6 +24,7 @@ properties:
+   compatible:
+     items:
+       - enum:
++          - renesas,r9a09g056-gbeth # RZ/V2N
+           - renesas,r9a09g057-gbeth # RZ/V2H(P)
+       - const: renesas,rzv2h-gbeth
+       - const: snps,dwmac-5.20
+-- 
+2.49.0
 
