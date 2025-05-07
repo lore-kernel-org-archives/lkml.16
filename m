@@ -1,104 +1,148 @@
-Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
+Received: from smtp-fw-52002.amazon.com (smtp-fw-52002.amazon.com [52.119.213.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4179222576;
-	Wed,  7 May 2025 11:54:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 712A9221F13;
+	Wed,  7 May 2025 11:56:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746618844; cv=none; b=ENFI4v4bPWY8/DryWmRGMjP24wkwzknF1fr9oRF9phR9l2sHEvtDR+bGqBVGLbW6MxrfTajuhIP4ARl/fjCjSWOoPD6dStneOFpVntMzKM675jilyvcRDG9fAY4Ml8BKupVeDmLs/sPqVl3GEzhd7BMY+aK5OUU/OO3ZYeGRGYc=
+	t=1746619015; cv=none; b=RutPVWK1J0jmibInHpA5pohhjVTEDwjS9ru39xSuwRfAGnf+4tlr4TPb8b3Ta/cWL9Wit9HSAsigsOHTyHOv5aPd7ymtXLh+ZTPXQpySyAS6ho23DQ98JJ5Hwd1ev1ry/V99ljEDAEVREP5+VdReCE/454x3NQlSP1URwRTLCRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746618844; c=relaxed/simple;
-	bh=FyBHsf0CBqcSNgBthgDITgy59CPDiJqQeKjMNVNDAG4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f1GDB5G2PAo5bWMKDZM+wvADYANXqRLXOT78XGixBeI7dALVBiQoK8xoU6TtLoPE1MCWGSX9FkVR41sc5nsHpmgdIaqenLnJuXGq9pg2jDBCtrnUxeco2AfptOv6SLaC75UCc3fhobRC9GBDHZGKoGqZlHqXFH3oB3nStLoM8vQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=av6sO1XQ; arc=none smtp.client-ip=46.255.230.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
+	s=arc-20240116; t=1746619015; c=relaxed/simple;
+	bh=ZA9Y1wsrZnknMkYvzVK+ptndnHoMfaLcC9neNJrDucc=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=ZTLc7Ic2zoNW24wz+rj1SfnvuylgFSwm4lo7eSf/wN+TGhYJc136W9LUPMdRTmMrnkqDsdblY+WGv8uCxz7ujf8vU3OXBGDY2COqoET78wKaB/IWzVXGPj7mU6rnVtbVqWYyf4oOT/e1tR2KW/PAiQBIGI9e89w9rj5UkMcBs6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.de; dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b=HCe/yMub; arc=none smtp.client-ip=52.119.213.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="av6sO1XQ"
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-	id ADC361C009E; Wed,  7 May 2025 13:53:59 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
-	t=1746618839;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5J5xnY0EPi15hqHPaWeFE5R9mbwtf10YeBUsROx/HR0=;
-	b=av6sO1XQSJoBBCuroSNC9tnsYboYzW1r8Pxzpb742PP3T9swfPX6d1BIxv40bHCtelxPBL
-	ILUC/161+BOt9MKIi4Pv8Dd4rMz5GeIahdfaZinZNF/7+ynMNHNTQ2YAcI12ReJfmxU12x
-	l9Lg6j5qm6As7dPlJafO2INWqvkEJKk=
-Date: Wed, 7 May 2025 13:53:59 +0200
-From: Pavel Machek <pavel@ucw.cz>
-To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, bentiss@kernel.org,
-	Werner Sembach <wse@tuxedocomputers.com>,
-	linux-input@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-	platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v9 0/1] platform/x86/tuxedo: Add virtual LampArray for
- TUXEDO NB04 devices
-Message-ID: <aBtJ1+gdmGkJKUrK@duo.ucw.cz>
-References: <20250425210043.342288-1-wse@tuxedocomputers.com>
- <174645314692.23202.56309255974182976.b4-ty@linux.intel.com>
- <aBtFDy+Qu3RvAHur@duo.ucw.cz>
- <56a927e8-b6c6-d07b-df34-1a73cdef8528@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b="HCe/yMub"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazoncorp2;
+  t=1746619013; x=1778155013;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:mime-version:
+   content-transfer-encoding;
+  bh=7O10eEM9ON4MC+FIalneB31SAD6y2mZuippPzSFTtFg=;
+  b=HCe/yMub8ISek11LuSKY7depGrCcNwDiuwd91O5cT7Zx2q58dNHUAIpq
+   XH6GQDusG4Oqt2PhWkst1ehGE2FlHMjijnaQFQyHhXa4HahKhJKy5Rtz+
+   oIL4QIY9QJGEAXBpSbvJsngcPVLQRWtRZIUf7y4b6DkDHlI5XXhH5rvQ9
+   Z+ybciHGUFhT6yLG3UKBRZyRYiLO9MYvCKPFJZeToERXkuNvEY1MpvoOE
+   kz8sP1TumBo/ADm+1dWMbeLxkgeW6KPU/nWajYaq7JnRYnJJpXhEv2MmU
+   VAHJk6zKzgnMRLjXdO+D4WdB5+MAWnjx2e82pOKHqjth2ERnA8T4ywH44
+   w==;
+X-IronPort-AV: E=Sophos;i="6.15,269,1739836800"; 
+   d="scan'208";a="720515120"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-52002.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 11:56:50 +0000
+Received: from EX19MTAEUC002.ant.amazon.com [10.0.17.79:13774]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.25.138:2525] with esmtp (Farcaster)
+ id e91dea9c-6454-43c3-b96a-6007bf520f3f; Wed, 7 May 2025 11:56:49 +0000 (UTC)
+X-Farcaster-Flow-ID: e91dea9c-6454-43c3-b96a-6007bf520f3f
+Received: from EX19D008EUC004.ant.amazon.com (10.252.51.148) by
+ EX19MTAEUC002.ant.amazon.com (10.252.51.181) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Wed, 7 May 2025 11:56:49 +0000
+Received: from EX19D008EUC001.ant.amazon.com (10.252.51.165) by
+ EX19D008EUC004.ant.amazon.com (10.252.51.148) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Wed, 7 May 2025 11:56:48 +0000
+Received: from EX19D008EUC001.ant.amazon.com ([fe80::9611:c62b:a7ba:aee1]) by
+ EX19D008EUC001.ant.amazon.com ([fe80::9611:c62b:a7ba:aee1%3]) with mapi id
+ 15.02.1544.014; Wed, 7 May 2025 11:56:48 +0000
+From: "Heyne, Maximilian" <mheyne@amazon.de>
+To: Sudeep Holla <sudeep.holla@arm.com>
+CC: "stable@vger.kernel.org" <stable@vger.kernel.org>, "Rafael J. Wysocki"
+	<rafael@kernel.org>, Len Brown <lenb@kernel.org>, Ard Biesheuvel
+	<ardb@kernel.org>, Jeremy Linton <jeremy.linton@arm.com>, Catalin Marinas
+	<catalin.marinas@arm.com>, "linux-acpi@vger.kernel.org"
+	<linux-acpi@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ACPI/PPTT: fix off-by-one error
+Thread-Topic: [PATCH] ACPI/PPTT: fix off-by-one error
+Thread-Index: AQHbv0ccbCDfJtLNeEeomi2x2IfgyQ==
+Date: Wed, 7 May 2025 11:56:48 +0000
+Message-ID: <20250507-blend-revel-3d94099b@mheyne-amazon>
+References: <20250506-draco-taped-15f475cd@mheyne-amazon>
+ <20250506-shapeless-merciful-inchworm-7bfdb4@sudeepholla>
+ <20250506-dialog-57th-c4e70064@mheyne-amazon>
+ <20250507-mysterious-emu-of-fertility-951c69@sudeepholla>
+In-Reply-To: <20250507-mysterious-emu-of-fertility-951c69@sudeepholla>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <E4B6600F44D354419EF59D2EF5CB70C8@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="fefvjMh9N0dESyqs"
-Content-Disposition: inline
-In-Reply-To: <56a927e8-b6c6-d07b-df34-1a73cdef8528@linux.intel.com>
-
-
---fefvjMh9N0dESyqs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi!
+On Wed, May 07, 2025 at 12:52:18PM +0100, Sudeep Holla wrote:
+> On Tue, May 06, 2025 at 08:08:47PM +0000, Heyne, Maximilian wrote:
+> > On Tue, May 06, 2025 at 02:43:39PM +0100, Sudeep Holla wrote:
+> > > On Tue, May 06, 2025 at 01:13:02PM +0000, Heyne, Maximilian wrote:
+> > > > Commit 7ab4f0e37a0f ("ACPI PPTT: Fix coding mistakes in a couple of
+> > > > sizeof() calls") corrects the processer entry size but unmasked a l=
+onger
+> > > > standing bug where the last entry in the structure can get skipped =
+due
+> > > > to an off-by-one mistake if the last entry ends exactly at the end =
+of
+> > > > the ACPI subtable.
+> > > >
+> > > =
 
-> > > Thank you for your contribution, it has been applied to my local
-> > > review-ilpo-next branch. Note it will show up in the public
-> > > platform-drivers-x86/review-ilpo-next branch only once I've pushed my
-> > > local branch there, which might take a while.
-> >=20
-> > Can I ask you to Cc me with the pull request when you'll send the
-> > patch upstream?
->=20
-> Hi Pavel,
->=20
-> To not forget your request, I've temporarily added you to the Cc list of=
-=20
-> any PRs I'm sending towards Linus.
->=20
-> This means you'll be Cc'ed the unrelated fixes PRs too but there shouldn'=
-t=20
-> be that many of those until the next merge window (I'm sorry about the=20
-> extra noise but I'd likely forget it otherwise). And if I forget to remov=
-e=20
-> you afterwards the CC list and you keep getting PRs Cc'ed, please just=20
-> sent me a note then.
+> > > Unless the firmware has populated an incorrect value for the header l=
+ength, I
+> > > don't see how this is possible. The table_end should point to the add=
+ress
+> > > immediately following the last byte of the table. None of the headers=
+ are only
+> > > one byte long, so what am I missing that could explain this apparent
+> > > off-by-one issue?.
+> > > =
 
-That works for me. Thank you!
+> > > -- =
 
-Best regards,
-									Pavel
+> > > Regards,
+> > > Sudeep
+> > =
 
---=20
-I don't work for Nazis and criminals, and neither should you.
-Boycott Putin, Trump, and Musk!
+> > Maybe calling it off-by-one is not very exact. You're right table_end
+> > points to the address following the last byte *but*
+> >   (unsigned long)entry + proc_sz
+> > also points to this very byte if it's the last entry. And in this case
+> > the while condition is not taken which means we're ignoring the last
+> > processor node.
+> > =
 
---fefvjMh9N0dESyqs
-Content-Type: application/pgp-signature; name="signature.asc"
+> > For example, in our specific case the table has a length of 0xCBE and
+> > the last processor node entry is at 0xCAA with a length of 0x14 fitting
+> > exactly into the table but 0xCAA + 0x14 =3D=3D 0xCBE which turns the
+> > condition false.
+> > =
 
------BEGIN PGP SIGNATURE-----
+> =
 
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCaBtJ1wAKCRAw5/Bqldv6
-8tENAJ9hcsG/9Q9NAUHveO6DruKIlwVQxwCffs4d+lrY8xFisorFTCdmVsTnWCA=
-=eyqx
------END PGP SIGNATURE-----
+> Just to understand, this node is absolutely processor node with no
+> private resources ? I find it hard to trust this as most of the CPUs
+> do have L1 I&D caches. If they were present the table can't abruptly end
+> like this.
 
---fefvjMh9N0dESyqs--
+Yes looks like it. In our case the ACPI subtable has length 0x14 which is
+exactly sizeof(acpi_pptt_processor).
+
+
+
+Amazon Web Services Development Center Germany GmbH
+Tamara-Danz-Str. 13
+10243 Berlin
+Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
+Eingetragen am Amtsgericht Charlottenburg unter HRB 257764 B
+Sitz: Berlin
+Ust-ID: DE 365 538 597
+
