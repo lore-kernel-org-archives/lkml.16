@@ -1,68 +1,134 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCADE10E9
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 00:16:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ABF1EEBA;
+	Wed,  7 May 2025 00:16:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746576969; cv=none; b=Y0MdHH9dmvYCWo1Wz4msed+GowI32NWp03Zkj7swUMjtQbQBBEY/ZP3AJXzDivNZYbpX9wrMNw8BvGcAgld5/bceI6F3niAho0oR1LlQfo28G7ooD8q3ohXq/lt44ZpVVM+iXeWh8J1F3WGq2sQx3s3N1N9LqXfcYVkjxwCSxNU=
+	t=1746577003; cv=none; b=FfIujGr58DMnJRNal0a4fyIfUWK1mp7dKMEi6STCPgvUwG5R/pW+Yw9I3qRK2B6/sdrQ3y5qGnzA/N63SlkRnkxtRPjZTDy79qdb7oowy9b0UTjJG6M765UMipjSfxQPi5KB8zz5RWz7blJBnqd0Fl3Y5DI0l3AXX3KlrvinEmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746576969; c=relaxed/simple;
-	bh=7be0/2LE++Ckek26lvbdY7EmcP9hl10SUMNHHpogdAY=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=qL9mmQKwPT3+UPYSN4KyXyFn40f/CvLvZzCI7YNtTSOrKUJWdhBtrXvTjtjMYJ1hlqvO6TMSRtubGjqDxIeJPoimJ3Ql76j5UhXglrZKILMjAJPIOlNefZghEP+KvsuR35RcVf7XIjrGO5W7RnnbPB6KGTin10OlACMcJ/03ZyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rg/k8MZ7; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1746577003; c=relaxed/simple;
+	bh=WIblESYxXagNVxFzdusv4dclpEA4QpzqQV7zQARweF0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aKbCr+2agNl6lJP5VwLEGM4qdbM5XeyFKORC/XKuxVbHVfcSgZNjatpWXrUNuN89duN6p/+x719Ck5/tQYeGCZRpjowvfSp8n+mF6ahqPnwvsff8K7OjGk/Kfl/6jtlXHWrkuwADc67KgPelnNbrexqBlPMIHJ0ig56Q4zfQYmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YvKdCbXV; arc=none smtp.client-ip=209.85.166.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rg/k8MZ7"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2241e7e3addso55808535ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 17:16:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YvKdCbXV"
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3da739653b2so974835ab.0;
+        Tue, 06 May 2025 17:16:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746576967; x=1747181767; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vEfRZPC7A6O+MNC8gvc2UAGXPdHnkovUWHJGbcAaarU=;
-        b=rg/k8MZ7CECjIQLhMHS9mSae5THKFADYEuLyeuTJLiZFhVP+TBt5zyUO+wJwvxYPLS
-         1pRvfKbliUuDOaPcD3pOTcBIVavY89C4+vwJhLL39ZGpzeEqX8BbTwdJO+YlN1YIosrI
-         xc3v0a5FQIVcTnLz/Ubyg1WA6x1HXJEd1346adSBZ9w6N60KFLGX46jzCJJsH/ok/ycj
-         4S523iH8/eClT23qKoZlz2EZrdaTwMymQcxZ6K3xPWtPWm98KNnVWn8wDxouxmkpVyte
-         h93JoUH7hXxYOkDlMCgoOb09WPn+rBm5RL+7ugTiFdjwBKc3EE7ih0t3x3STu72xC3bd
-         ri1Q==
+        d=gmail.com; s=20230601; t=1746577001; x=1747181801; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ERN4tZBNNxWUBbXOxBBa/C7QnG/J+3w3a9uKSXFs/2E=;
+        b=YvKdCbXV2NwAOiz7xKTYqU5wUDecj0eh6okGZgsqt+tfB3g4pJbPMs9JHRpG0jls34
+         ltFa4zPf8yyGskqzbCNUm0NDKB9qWGovicrsPSK1pNBxWCOMcHlKymMnbJNHUtzueBRK
+         43wN32MEtk+Hyutev11OA3fo71PxPAxVVCZiAp29ShcGay+KA0Ko591f50LHwzLRUw5d
+         6yMsDeJ/h2ElGxu67W6fY0hGK7r0z50LSPpiX1TmyE6fUKRyik8GwKmiSzmkjroE1P1f
+         ZVFo2benA1GPJXlDQVUEYIUX9KYSom61M7LBfQEw/AoRcYkSAcOhXR3KGB/FAFaUxgpM
+         8Llg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746576967; x=1747181767;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vEfRZPC7A6O+MNC8gvc2UAGXPdHnkovUWHJGbcAaarU=;
-        b=HxyxueC1iqgWADkLu0VO31cyqFUv+x1exMAbJ7/FMgbcc0wLc+0DPTBETTY4+lJTMA
-         iJCcvSb1/kpP8Y1+pJe3STx6r3v+a6WDwDmXlDsyMS5+WjlX8sqt1w3U9NhOYDbRjqaN
-         YeI7eDUxzC18tnooONyF2ZWGAlUhtPcVMv47HMW9CGuNm7MpMaqsf7vv7bTOVwFoTo6s
-         W8z35FhpiRuvjYQAjpX5NuKiKTAwNa/WDaIdPmVO5S3Ha9Jhidc6Pyhh7xMCmT6fWgmA
-         lzdkSv2dzPEmLWIrAHEKcMsxz3VdWLzSBBrRWdkn2M3XAaAE1AQSCFtrkdAtixzoeQB5
-         XieQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVp7s93sX+PhBXS/DevOnbbvHJRkwTbbpyP4rmV8ty39kC9oP9d7jImnNjkkCxfWG/Gbm578RG27ypVxW4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxAWhEBpIGV9vMumXdkDgRezgCerV4X75dguI0egg9IPckU5fMh
-	bTA7n60kHx4RFnAmTo96oGtEp64JHs5hk/+nJHwRNO+wU8FoHbJcLDoFA+ud3r2OuYcU0h234Sc
-	eGQ==
-X-Google-Smtp-Source: AGHT+IF8JF04aIaURb+TMdlY2QffSZ0v5To8N2ID4w81qBfaHvIcmyhuSKw9WurVeHu2raGCu51Dk0mMk44=
-X-Received: from plbjd9.prod.google.com ([2002:a17:903:2609:b0:224:efa:ef21])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:f54c:b0:224:13a4:d62e
- with SMTP id d9443c01a7336-22e5ece3e71mr17636175ad.35.1746576966995; Tue, 06
- May 2025 17:16:06 -0700 (PDT)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Tue,  6 May 2025 17:16:04 -0700
+        d=1e100.net; s=20230601; t=1746577001; x=1747181801;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ERN4tZBNNxWUBbXOxBBa/C7QnG/J+3w3a9uKSXFs/2E=;
+        b=PBtryJ5QneWurcagCN3PamnjZePtvlZ985xGdS/3kdzjPGalppL30p3JiXDM5SbzyS
+         sFqEhQUlAqL4gIrF47QsHEglk7pLL7xCqwBCXtB2mLtGEOUt0G5qGWnreQ19Cmsp0j2V
+         Me8eMHuwSnSn/GUvNIUHJJ6DQ6GMfRpxroOFd5pw+Z7olofd6UwFSVuBVCX5KSBNDmXf
+         G6M2kN0WNf/ysdH1Tcohp8TJYFhdugxEAUcna5EVPCWjo17QPL13ycUk23A0SM1O0tdN
+         zCjE01PISNGQG4mDUebKqnT488kFntIy6n7pMwkwDR0nswaUmqJioALMMU/I1fzd+rCB
+         9hwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUSV/ElePCSCiUDLD3NcrITVjDAj+R/NaV8qMRl4ilFZr3QRBfiNO+H89TwL9LXyricXlroHHJ1ug6HR04=@vger.kernel.org, AJvYcCVaTGPNt92RMXxY4jyrZaq3p6EF7ofcKZv54pT5WhG/ZjcBUCvx5Z4vETyK/6yABGnbcVVZrzDqdEcFPQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQKZCz3sNaPhseBCHasAvSRletU5VqLeFv9XBm15VgHPruHzHQ
+	KOg64etxJGJBbNoKIUZEBcEHB8JHwUIGry2ZRI4/BW/u5hTza2IIrFNjm7UFSH+Lvog6mz+Ctk9
+	6Z762TfyU49n6FqqC7t/rtEEJHq0=
+X-Gm-Gg: ASbGncs084bYV/TbcwOFtzeNHVvvegjWpXOSDvN6TAtLiSXhwAeb/S84HO8cLX47QzK
+	cP83QLxunw0ZfH5y+oQCSSr0QvFHdUldrmQlZyikDu/k9KKJHizCAd2GN5A2FTnM3x5nh5av3VU
+	v9hbFjiWz1lZVOvTZzCmyv6Q==
+X-Google-Smtp-Source: AGHT+IF+RYfQnJXX2wiCv2f8FgLw9KAqzSO3hRhozP+0qGjgOmXPg5RSE0/cNow9QHK8qnUlcemlOTjy+nWSCQxf124=
+X-Received: by 2002:a05:6e02:1d92:b0:3d3:f27a:9103 with SMTP id
+ e9e14a558f8ab-3da738ed799mr12884645ab.1.1746577001455; Tue, 06 May 2025
+ 17:16:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.967.g6a0df3ecc3-goog
-Message-ID: <20250507001604.1254877-1-seanjc@google.com>
-Subject: [ANNOUNCE] PUCK Agenda - 2025.05.07 - No Topic
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+MIME-Version: 1.0
+References: <20250506215508.3611977-1-stfomichev@gmail.com>
+In-Reply-To: <20250506215508.3611977-1-stfomichev@gmail.com>
+From: Jason Xing <kerneljasonxing@gmail.com>
+Date: Wed, 7 May 2025 08:16:05 +0800
+X-Gm-Features: ATxdqUHZDuiLA7f7witp6xXHQswch3oKUZrSiSSAzpg7yLhrFN5x-dJ8eqivnlA
+Message-ID: <CAL+tcoCUofwE7zNf95KO75tkiVJkcJ3O4ybu07aYFo-wbV13JA@mail.gmail.com>
+Subject: Re: [PATCH net-next] net/mlx5: support software TX timestamp
+To: Stanislav Fomichev <stfomichev@gmail.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com, 
+	kuba@kernel.org, pabeni@redhat.com, saeedm@nvidia.com, tariqt@nvidia.com, 
+	andrew+netdev@lunn.ch, linux-rdma@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, leon@kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-No topic for tomorrow, but I'll be online.  The tentatively planned guest_memfd
-conversation was taken care of in the guest_memfd call.
+On Wed, May 7, 2025 at 5:57=E2=80=AFAM Stanislav Fomichev <stfomichev@gmail=
+.com> wrote:
+>
+> Having a software timestamp (along with existing hardware one) is
+> useful to trace how the packets flow through the stack.
+> mlx5e_tx_skb_update_hwts_flags is called from tx paths
+> to setup HW timestamp; extend it to add software one as well.
+>
+> Signed-off-by: Stanislav Fomichev <stfomichev@gmail.com>
+
+Reviewed-by: Jason Xing <kerneljasonxing@gmail.com>
+
+Only one nit as below.
+
+> ---
+>  drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c | 1 +
+>  drivers/net/ethernet/mellanox/mlx5/core/en_tx.c      | 1 +
+>  2 files changed, 2 insertions(+)
+>
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c b/drive=
+rs/net/ethernet/mellanox/mlx5/core/en_ethtool.c
+> index fdf9e9bb99ac..e399d7a3d6cb 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
+> @@ -1689,6 +1689,7 @@ int mlx5e_ethtool_get_ts_info(struct mlx5e_priv *pr=
+iv,
+>                 return 0;
+>
+>         info->so_timestamping =3D SOF_TIMESTAMPING_TX_HARDWARE |
+> +                               SOF_TIMESTAMPING_TX_SOFTWARE |
+>                                 SOF_TIMESTAMPING_RX_HARDWARE |
+>                                 SOF_TIMESTAMPING_RAW_HARDWARE;
+>
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c b/drivers/ne=
+t/ethernet/mellanox/mlx5/core/en_tx.c
+> index 4fd853d19e31..f6dd26ad29e5 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
+> @@ -341,6 +341,7 @@ static void mlx5e_tx_skb_update_hwts_flags(struct sk_=
+buff *skb)
+
+nit: the function name including 'hwts' doesn't reflect the following
+software behavior.
+
+Thanks,
+Jason
+
+>  {
+>         if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP))
+>                 skb_shinfo(skb)->tx_flags |=3D SKBTX_IN_PROGRESS;
+> +       skb_tx_timestamp(skb);
+>  }
+>
+>  static void mlx5e_tx_check_stop(struct mlx5e_txqsq *sq)
+> --
+> 2.49.0
+>
+>
