@@ -1,194 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C3CB20CCED;
-	Wed,  7 May 2025 11:21:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8698D20CCED
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 11:22:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746616896; cv=none; b=PkgCa2Jjy58Ai4+Zpo3KfPjy2ABN1c9sCdRRaQGG58PMTqSWe4uJ4VAjTABY4XbDw6Z6WezfBmHIkjHYIwRa5KS2gCEGPbtm28YxCLd0ZcH/zFf0fjvrrEZmAC+4VB4/IStl4qQsiaxBZxo3PhXtE1wZqDzh9cfhydcBGDnjx3g=
+	t=1746616929; cv=none; b=Wuu8DN5GjA+7dVu36akhnO1U9+1pZYE2zsC7pGALwDz6Jh+dNOu2oqpFvY3PFIAofImfQY6e1DvIYpNjQIlaXQMjXoklNFEbOeu9Ixco0j1AkASXtSNwBfkiSEO2lC1t5yYZ6OxVlQjVw0LjmgZCOTpMRzVHdolH2S26fxHibqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746616896; c=relaxed/simple;
-	bh=3+2fK82d17kLNGEgZ7nbWq+wHF7vu5P36SkVG/tLjvg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RXlUUp7KCDSVnWjskdJl1GCsA91M4Hwba2s0TVIK19PjOzVmEXFZLoP3HmN6kdtlU7ys1/RNaE2O7kaGgnoKcfJf9t27/aRizcy4WpyCyEiRgf8Ur20NzIq+3gTc5BCqJBfk9tEcPvJanuehSe91+suYX8MmKRWcY7ljV0zx1AM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=chRTb8fO; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="chRTb8fO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1D51C4AF09;
-	Wed,  7 May 2025 11:21:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746616895;
-	bh=3+2fK82d17kLNGEgZ7nbWq+wHF7vu5P36SkVG/tLjvg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=chRTb8fOWggK0N7iiuNQ/v1Rvck/fbugnUfhr4M6/j9UtoMyPx+8j0i6TVpKUhZaf
-	 cqw7Q/eS7CESUAz2fYTZoaf37BJfCXzwpEk/1nTAm0521fQ7QBGGVBwROsIIrQli2+
-	 sYTH/Kr//ZUuR7R3QBDCflR44wEOJfWvDLeU9h2E7ECFYCg2ajeCOz+tNraBySXDRf
-	 rZDoeNDoGbWf1eIIbSH94LMtVmbriNwpNBoP0KcUHzUl5qkXY1JjBca6eR6JFevYdm
-	 kjyoS5VMMygbXa3g0asBl3aDcjuPKAPlXNfB/RssGCNqCweSbu0npJVaaIPpdsQShk
-	 ciXqvn7OieqbA==
-Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-72ecb4d9a10so4594496a34.3;
-        Wed, 07 May 2025 04:21:35 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCX+G/CSzIDpcfPuel2fx5PaJ5Gh4vEHQ1P1Sv3ffqmAde0MFr6Nvw7obZa7XHu/3GxGlIsQ17XiGTFHmd1x@vger.kernel.org, AJvYcCX56GDkXilqG1femu2bwcAXsUcmNeSLEZTEWZpO2Z/oWXR7RhUbYa6ohZ3xpffULnunsBhrqFzXDoav@vger.kernel.org
-X-Gm-Message-State: AOJu0YykyX39rnYjr7tXbof//cVZhZEPR3yi0Xt4oAdvGKghKBOD8IHF
-	mAdMLTGapjA8tqdVOhG0CGRP4P0nN9M1b5/ELYuxVsmRs1K4K/iBNY/uaucgf2JTzqJ4FAXOTUm
-	rDUQuC0NX3iBw9wbla+tn35GtRA4=
-X-Google-Smtp-Source: AGHT+IHx5aU2gpgR8Hogb7kdz6O2xA5Mgv0dsRK/eORWotywyugm1yRIQFc9U6FAqZ5lkKfQHqoxiY49fdrLDJye6a0=
-X-Received: by 2002:a05:6870:7181:b0:29e:559b:d694 with SMTP id
- 586e51a60fabf-2db5c126f5amr1748992fac.32.1746616895114; Wed, 07 May 2025
- 04:21:35 -0700 (PDT)
+	s=arc-20240116; t=1746616929; c=relaxed/simple;
+	bh=NNo8O3O7I8xKI9r4pwRS0x6i00//1Wj7e63uNSkMrU4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cxDnlUZKHSiFKuGgFBAUJuIZjPUdCT5+3G1bplJIYvGafQRYf6/ksV36zuIKXm8xmZlVh0EQ5G84D267d+42vhuF7K9+r96vQIArFNqTBcazRG07sinsVjTewWkxNF8qUyMy23WdaXVC0+SMCypuv+9oULU1OEdi/ZkLoEQnm84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43cf58eea0fso30862385e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 04:22:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746616925; x=1747221725;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZWC9bs3J+fotQKN+Pvu1nWrnqjUtpAFHf8gyq7Cydsg=;
+        b=W5kleO2+HESCyZlc97EtZgi7pcf+QRvwGvOlc0Fc3z7sjOr1Uii/t/WP19b6QZEc6m
+         WRGVh6faK99UBtu5dfHULHazHZWj6IrbqdTq+G0Iu2VGtAyUN6DbEZ7mqxphAUn7r0gY
+         FkS84TXhQSsHFxjEY0QDRUCeB1q/oswB+zj3YJouq0BPm1rd5z+DwWI6SZJSyp1BFb6S
+         BZ+o1vBZ3RThq7uZ3z5RaT2Ddtm3U2DCy5MWiDQ7HcspMBKF+/B8D6bHr1ikEIM8S4rX
+         E86UAuWnQlQZCvWib1KaVdpmSiHtmjX1vD/2Sse8eC2tel2k2/8m38z+fdYeAR0RBaFT
+         DDuA==
+X-Gm-Message-State: AOJu0Yyv2lU6vGINtVa3MbWjY14OpbbRx7k6gLwIoXIJsmNpU9aHs59X
+	qORAu5aPdrlUeYI9fR/rE6gE9nh3y3NoTLgCnaJ5vBkQnzOGwZeu2QB5HQ==
+X-Gm-Gg: ASbGnctH9hdGWtYtzQsYTVxgmHtKwXY/AWen0BkbBeToDPH5Oqp+S04m2c55P1JPDTk
+	n0tHcypwa8EBjNF6GBS5Y3sG2p/HLH1THP6J75RBGRFfXl2Hn/+zi+lIlVyBVPIzN7Xkanmomk0
+	V8GUrc5oRdfRY0le0BcrNJ5eAsCd4s5wKFQjkHQPUo4ba32KGN1fCQ0xpwWwU9NZf5i1+AhaEJK
+	5Io5y5jy8qHB1opIg1k2lJ6e1XdnTZuA8o2NM3YUoq2IomGks8fBLgRv5UlpeReSNGDMirV1aKH
+	PLSeUrErzW46WSNHsnu53YeB/l5np/zIWKPWG/5qMMFZSmRjR0aYFD2+FIyrwyNZ1rhdJG3s3Sn
+	vFg==
+X-Google-Smtp-Source: AGHT+IGRWvY8rXW6dhn155ZAXsXvmGuf7LheNdjj6dzmGatIJg0UzjRGoVu2EsyA9CH4JuUihSF83g==
+X-Received: by 2002:a05:600c:35cf:b0:43b:cc42:c54f with SMTP id 5b1f17b1804b1-441d44c4642mr21809675e9.14.1746616924512;
+        Wed, 07 May 2025 04:22:04 -0700 (PDT)
+Received: from ramallet.home (cst-prg-46-162.cust.vodafone.cz. [46.135.46.162])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441d43a802csm28373955e9.39.2025.05.07.04.22.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 04:22:04 -0700 (PDT)
+From: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+To: linux-kernel@vger.kernel.org
+Cc: Tomeu Vizoso <tomeu@tomeuvizoso.net>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Russell King <linux+etnaviv@armlinux.org.uk>,
+	Christian Gmeiner <christian.gmeiner@gmail.com>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	etnaviv@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH] drm/etnaviv: Fix flush sequence logic
+Date: Wed,  7 May 2025 13:21:30 +0200
+Message-ID: <20250507112131.3686966-1-tomeu@tomeuvizoso.net>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250507045757.2658795-1-quic_hyiwei@quicinc.com>
-In-Reply-To: <20250507045757.2658795-1-quic_hyiwei@quicinc.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 7 May 2025 13:21:23 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0g7NX_deRHqxS3BXVKzLU9xt9TADZwynhVw5soNtXXjvQ@mail.gmail.com>
-X-Gm-Features: ATxdqUH1_GxH74KxLFis64TfYjpSjmwmTxfnHuyjOZKRF4hFfO_-aKBP95sIa0Q
-Message-ID: <CAJZ5v0g7NX_deRHqxS3BXVKzLU9xt9TADZwynhVw5soNtXXjvQ@mail.gmail.com>
-Subject: Re: [PATCH v2] firmware: SDEI: Allow sdei initialization without ACPI_APEI_GHES
-To: Huang Yiwei <quic_hyiwei@quicinc.com>
-Cc: will@kernel.org, rafael@kernel.org, lenb@kernel.org, james.morse@arm.com, 
-	tony.luck@intel.com, bp@alien8.de, xueshuai@linux.alibaba.com, 
-	quic_aiquny@quicinc.com, quic_satyap@quicinc.com, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	kernel@quicinc.com, kernel@oss.qualcomm.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 7, 2025 at 6:58=E2=80=AFAM Huang Yiwei <quic_hyiwei@quicinc.com=
-> wrote:
->
-> SDEI usually initialize with the ACPI table, but on platforms where
-> ACPI is not used, the SDEI feature can still be used to handle
-> specific firmware calls or other customized purposes. Therefore, it
-> is not necessary for ARM_SDE_INTERFACE to depend on ACPI_APEI_GHES.
->
-> In commit dc4e8c07e9e2 ("ACPI: APEI: explicit init of HEST and GHES
-> in acpi_init()"), to make APEI ready earlier, sdei_init was moved
-> into acpi_ghes_init instead of being a standalone initcall, adding
-> ACPI_APEI_GHES dependency to ARM_SDE_INTERFACE. This restricts the
-> flexibility and usability of SDEI.
->
-> This patch corrects the dependency in Kconfig and splits sdei_init()
-> into two separate functions: sdei_init() and acpi_sdei_init().
-> sdei_init() will be called by arch_initcall and will only initialize
-> the platform driver, while acpi_sdei_init() will initialize the
-> device from acpi_ghes_init() when ACPI is ready. This allows the
-> initialization of SDEI without ACPI_APEI_GHES enabled.
->
-> Fixes: dc4e8c07e9e2 ("ACPI: APEI: explicit init of HEST and GHES in apci_=
-init()")
-> Cc: Shuai Xue <xueshuai@linux.alibaba.com>
-> Signed-off-by: Huang Yiwei <quic_hyiwei@quicinc.com>
+We should be comparing the last submitted sequence number with that of
+the address space we may be switching to.
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+And we should be using the latter as the last submitted sequence number
+afterwards.
 
-for the ACPI bits and please route this through ARM.
+Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+---
+ drivers/gpu/drm/etnaviv/etnaviv_buffer.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Thanks!
+diff --git a/drivers/gpu/drm/etnaviv/etnaviv_buffer.c b/drivers/gpu/drm/etnaviv/etnaviv_buffer.c
+index b13a17276d07..865b07b14b38 100644
+--- a/drivers/gpu/drm/etnaviv/etnaviv_buffer.c
++++ b/drivers/gpu/drm/etnaviv/etnaviv_buffer.c
+@@ -347,7 +347,7 @@ void etnaviv_buffer_queue(struct etnaviv_gpu *gpu, u32 exec_state,
+ 	u32 link_target, link_dwords;
+ 	bool switch_context = gpu->exec_state != exec_state;
+ 	bool switch_mmu_context = gpu->mmu_context != mmu_context;
+-	unsigned int new_flush_seq = READ_ONCE(gpu->mmu_context->flush_seq);
++	unsigned int new_flush_seq = READ_ONCE(mmu_context->flush_seq);
+ 	bool need_flush = switch_mmu_context || gpu->flush_seq != new_flush_seq;
+ 	bool has_blt = !!(gpu->identity.minor_features5 &
+ 			  chipMinorFeatures5_BLT_ENGINE);
+@@ -399,6 +399,7 @@ void etnaviv_buffer_queue(struct etnaviv_gpu *gpu, u32 exec_state,
+ 			struct etnaviv_iommu_context *old_context = gpu->mmu_context;
+ 
+ 			gpu->mmu_context = etnaviv_iommu_context_get(mmu_context);
++			gpu->flush_seq = new_flush_seq;
+ 			etnaviv_iommu_context_put(old_context);
+ 		}
+ 
+-- 
+2.49.0
 
-> ---
->  drivers/acpi/apei/Kconfig   |  1 +
->  drivers/acpi/apei/ghes.c    |  2 +-
->  drivers/firmware/Kconfig    |  1 -
->  drivers/firmware/arm_sdei.c | 11 ++++++++---
->  include/linux/arm_sdei.h    |  4 ++--
->  5 files changed, 12 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/acpi/apei/Kconfig b/drivers/acpi/apei/Kconfig
-> index 3cfe7e7475f2..070c07d68dfb 100644
-> --- a/drivers/acpi/apei/Kconfig
-> +++ b/drivers/acpi/apei/Kconfig
-> @@ -23,6 +23,7 @@ config ACPI_APEI_GHES
->         select ACPI_HED
->         select IRQ_WORK
->         select GENERIC_ALLOCATOR
-> +       select ARM_SDE_INTERFACE if ARM64
->         help
->           Generic Hardware Error Source provides a way to report
->           platform hardware errors (such as that from chipset). It
-> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-> index 289e365f84b2..0f3c663c1b0a 100644
-> --- a/drivers/acpi/apei/ghes.c
-> +++ b/drivers/acpi/apei/ghes.c
-> @@ -1715,7 +1715,7 @@ void __init acpi_ghes_init(void)
->  {
->         int rc;
->
-> -       sdei_init();
-> +       acpi_sdei_init();
->
->         if (acpi_disabled)
->                 return;
-> diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
-> index aadc395ee168..7df19d82aa68 100644
-> --- a/drivers/firmware/Kconfig
-> +++ b/drivers/firmware/Kconfig
-> @@ -31,7 +31,6 @@ config ARM_SCPI_PROTOCOL
->  config ARM_SDE_INTERFACE
->         bool "ARM Software Delegated Exception Interface (SDEI)"
->         depends on ARM64
-> -       depends on ACPI_APEI_GHES
->         help
->           The Software Delegated Exception Interface (SDEI) is an ARM
->           standard for registering callbacks from the platform firmware
-> diff --git a/drivers/firmware/arm_sdei.c b/drivers/firmware/arm_sdei.c
-> index 3e8051fe8296..71e2a9a89f6a 100644
-> --- a/drivers/firmware/arm_sdei.c
-> +++ b/drivers/firmware/arm_sdei.c
-> @@ -1062,13 +1062,12 @@ static bool __init sdei_present_acpi(void)
->         return true;
->  }
->
-> -void __init sdei_init(void)
-> +void __init acpi_sdei_init(void)
->  {
->         struct platform_device *pdev;
->         int ret;
->
-> -       ret =3D platform_driver_register(&sdei_driver);
-> -       if (ret || !sdei_present_acpi())
-> +       if (!sdei_present_acpi())
->                 return;
->
->         pdev =3D platform_device_register_simple(sdei_driver.driver.name,
-> @@ -1081,6 +1080,12 @@ void __init sdei_init(void)
->         }
->  }
->
-> +static int __init sdei_init(void)
-> +{
-> +       return platform_driver_register(&sdei_driver);
-> +}
-> +arch_initcall(sdei_init);
-> +
->  int sdei_event_handler(struct pt_regs *regs,
->                        struct sdei_registered_event *arg)
->  {
-> diff --git a/include/linux/arm_sdei.h b/include/linux/arm_sdei.h
-> index 255701e1251b..f652a5028b59 100644
-> --- a/include/linux/arm_sdei.h
-> +++ b/include/linux/arm_sdei.h
-> @@ -46,12 +46,12 @@ int sdei_unregister_ghes(struct ghes *ghes);
->  /* For use by arch code when CPU hotplug notifiers are not appropriate. =
-*/
->  int sdei_mask_local_cpu(void);
->  int sdei_unmask_local_cpu(void);
-> -void __init sdei_init(void);
-> +void __init acpi_sdei_init(void);
->  void sdei_handler_abort(void);
->  #else
->  static inline int sdei_mask_local_cpu(void) { return 0; }
->  static inline int sdei_unmask_local_cpu(void) { return 0; }
-> -static inline void sdei_init(void) { }
-> +static inline void acpi_sdei_init(void) { }
->  static inline void sdei_handler_abort(void) { }
->  #endif /* CONFIG_ARM_SDE_INTERFACE */
->
-> --
-> 2.25.1
->
