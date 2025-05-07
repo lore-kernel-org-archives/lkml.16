@@ -1,126 +1,126 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 178AB2594B7
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 12:13:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22764259CAA
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 12:14:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746620023; cv=none; b=H+aY+SEAYVFVf2dLPptHrymgYrxC9X4CojLUACvb69gJiHeN7sfxtdLrrCkMgX/SDzg13WULh8wgeL2E0mZX6lzK6N1sI2c0Jg+9dNj/+0C6th5lvxRDhaOyDxlTCIj20y1TTcONwe9cCmXax8LtPZ9C6COVTMmW1es7uKdHSNo=
+	t=1746620091; cv=none; b=Ux9YMP6DjQGFfdu45YwflDb3dEysh+OQyTe6e1EXBiHkhiC77UhmfRoCSl9xnaJwO8znl3eoKsiq45dEPHKczp7JGvE/P9QI/c9eTpLNGTxv00aYVi09nS1DcQr3AZSWW0qUVapG1roJRw2zebC6JL0L5g+eyAjcPGPNi6zhMPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746620023; c=relaxed/simple;
-	bh=u3YGbEuFNryf6SNWwXAZAEVAEqJ9fVFoDM0PMM9rdH8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ueWzyudFJSxAvDyeE68woGC+78PgRvpGipEkGtP+2idM2XFe8kS2/y1CS/2kTwChQnmHwWLYR6wFBZVIIjQV0iD/Ppq9qnGkyp2sthrLa+nLjgJoPu5lX7SKQqHsr92gPWlmS2wuNlHzKzkri2vRHNyDNs3wBcFboRYZ4qp72/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=XzKgwmCr; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="XzKgwmCr"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5e5e63162a0so10366994a12.3
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 05:13:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1746620020; x=1747224820; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=sAeRVsznyaBFX32tf0NMNXsCTB91G1fsVj/Eu7YcKtM=;
-        b=XzKgwmCr5eP4SnDRYbZ+ORSsN+XQDM5E7ofz2+1e/Nb872dQea2i812h3Y2qYYAX4u
-         00Z+1iIXsua0+v54l4j2rMZrhQuJRQMzYjZZjl8q0hAMmK0n/poLRKvrVh1FDQErc0xa
-         Rl3+/D7v6uZtXpDE4qoUCxtJyRuSF4EnlO/vU3NSGbIiku+zmqYq1xHtHuraiflHoNqu
-         L3GrwvM2uGx5/cg0CuYRnGkXs+ndDIpVgk1tqKn65xt99kjnOFLEKJQ1A4Zs2Hmj8sMQ
-         WmMLtSP3lGugkrqlCjdASWR97Ww3eqiQwBx9GMlhTigvVhFNWS4RJZHxEFjEKUNnLwWa
-         1pEw==
+	s=arc-20240116; t=1746620091; c=relaxed/simple;
+	bh=99ar2hiSFE1FYK0IBzA4cryB2kytRUvN/AFQ7Vg6Kus=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=qpXKCqOxwk0Ygkk1X0XCVdB7OCZYKroUTJIpCdNcFXGKl6PQt+DrHUdYzArk0yVv6pPl8p+8nfR9c+22e7r/CL8msQQGCKk5PBJ5027OQ7BKE4FOx1x3ONVh9KxTVEvTuz2VLqexNlnoF5hk+sdWIeTMgNAkidWn2V5/ug95bqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3d90a7e86f7so160473965ab.2
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 05:14:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746620020; x=1747224820;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1746620089; x=1747224889;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sAeRVsznyaBFX32tf0NMNXsCTB91G1fsVj/Eu7YcKtM=;
-        b=jmGI0sSrtjZS17I63xiBBCyJpU7lDR5A9Eco6D4Qt0y8JoUfxa05Y8+cPBH3Gzv+v8
-         RLIAH+96csQpRC2CKaFP+jEWUcvqW8Ysjnoh6FfLKj17Ab1kDPq4J1j3r+RK/TgyY7J9
-         GWMUbxXEujxDO2PyfVP65fnbnlxTzicpQVg0AQMMj/6tTzI9hCZqWUxLfvnE6AG4usOc
-         bTwa+VGvgdycs0LWbuuPi4zHtSMWA9Z7Yo+w695tyiPRaoyZUI5TnwKeEpGPP7z4AbNf
-         XmtbjffNz/y0Z11hwx4yLxPIPYwIQmbcPo+SZSypgJEU8Xw2Thcc2NzoXSpffZR0hOI3
-         vK+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVpmkVrU3YdCkwitRBaWPVZLk5VCte0Z95FgPwuE5eFiti5rMHvO+zpTlDhwli1dO5VgHB3ExKqFrQE1XI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YymNMjd9rpN9fVtu6sbcf1ZmZkEZaarPOObajemL2TnEzuZnFpj
-	m3YLWd1JEoYC/1+4jPUHvi5ZCYT3FSD4qz1fZfjF5uW5sZygBX+cVcn2nrttBvM=
-X-Gm-Gg: ASbGncsKP7dV4zOdT2svL1O6czSBuuYWXxTA354pWpL0882zrCEdOLQ+e7vamJle4XW
-	MCUHqlF/YE+RpTz+Zz/AnYAfp/Hj18tIHAm/Gtga0fmg7IwG7n/7m68UK7gfhUEGV+Je67o8oxe
-	Tw9E359ORtpnXnMjzuqO9kR8oUvKajjFKAJOerW4GldtRuwrEqMrM3tPPKmFerf0p70q1Rcb6p6
-	/YQh8frSyKnSqOIWjTSPY1T2EoEgCfSoF3kKkS9+xvR3sAkl4dex357u9cvh5XslxRQliTMVQXa
-	HJQlpOFb6GpyeKRPko7xN+VajKLAzygA3yLo4NRnNB5FU/jTPw==
-X-Google-Smtp-Source: AGHT+IFVO28GoFjiM4/MmBFYIj2KWMjVMmnj6kvNFljtWXD9DM7W466QdZ6gW2Hfuwox4fn3w5Zq6w==
-X-Received: by 2002:a05:6402:2689:b0:5f8:afab:9e14 with SMTP id 4fb4d7f45d1cf-5fbe9fa810amr2639140a12.28.1746620020038;
-        Wed, 07 May 2025 05:13:40 -0700 (PDT)
-Received: from [192.168.50.4] ([82.78.167.147])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fafa166aebsm6000541a12.17.2025.05.07.05.13.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 07 May 2025 05:13:39 -0700 (PDT)
-Message-ID: <410d8930-02d8-4c30-843b-7c964a5e08d7@tuxon.dev>
-Date: Wed, 7 May 2025 15:13:38 +0300
+        bh=/rLfIe2cejsjjf4/WX/8dRCe0zcEB5QgvR8jfpBeFZE=;
+        b=FYwI7XPs7KRnaJCJlE4s7B5Ty3OH+NsKQkqGvF34+58CrUBIPCm883fm4Zv1zk1TYV
+         3+r4IfTb4dl03PUjbmNscbd4x+BdUnSLsCaX8ys1zAIGg82+lJmqvfeIpL3EkKnz/PA8
+         RW2BPWMTflK/0DM75EB4bYOgskYVjmI+8GQR+rOapp2EKwFKEytrBzL1O9qJ5SruPloo
+         KKzpb/6HyA1sStxjkAS8zOpGDw4MamnYGGFbO4DrtQw4ikgCGnFS4/iXGaWNabW74PNu
+         l6yjen+ZrdQvS7XoK0jYWMBgvWRqvlOCfn0nLgPHTf3ePURfLvR5nW/38aVk7TUzsD2M
+         vHvg==
+X-Forwarded-Encrypted: i=1; AJvYcCXuXZbYEYFYlAxku7c3JtL6QOF5Pch6kpqRLfkPpk5DQC4T+Osr2MXBfc1vcc0KRb7OtXRxQnw89cgh3FM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzflmo/2mAsz6GlAuwhb2HUstc6EnhCIeGSZY2V81WToK0RuNE3
+	q3ulmd3VBvveXuOD1szj+GRdepo3pilaLHlziIox+JEhx7X7McgEI1HUf6ps0AvDcNJKS/yfyF+
+	7RcUWZ5uLO5u9vjPD4xXmOkk1wMrkfZCVDNd3zlmsHU9S6tKKE0qxvdU=
+X-Google-Smtp-Source: AGHT+IHAtmJvNVOpiltndBywucnawuMmrw3aeOzBTNyTpFfa4ZImJWJjijYnWqOyYjQzaEOFZwuv4kNlTdV7EIm17s4i9UbBw2PF
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/7] clk: renesas: rzg2l-cpg: Move pointers at the
- beginning of struct
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, magnus.damm@gmail.com,
- linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-References: <20250410140628.4124896-1-claudiu.beznea.uj@bp.renesas.com>
- <20250410140628.4124896-3-claudiu.beznea.uj@bp.renesas.com>
- <CAMuHMdW0eKTfh6QsznWvCEeK5w9W-Zw4ORQ8yaevbYgh6+Ub3A@mail.gmail.com>
-From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Content-Language: en-US
-In-Reply-To: <CAMuHMdW0eKTfh6QsznWvCEeK5w9W-Zw4ORQ8yaevbYgh6+Ub3A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:1489:b0:3d8:1b25:cc2 with SMTP id
+ e9e14a558f8ab-3da738f8468mr34427185ab.8.1746620078201; Wed, 07 May 2025
+ 05:14:38 -0700 (PDT)
+Date: Wed, 07 May 2025 05:14:38 -0700
+In-Reply-To: <680328c1.050a0220.243d89.0024.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <681b4eae.050a0220.37980e.0404.GAE@google.com>
+Subject: Re: [syzbot] [hfs?] WARNING in check_flush_dependency (4)
+From: syzbot <syzbot+09455b3f0a89d685a9d3@syzkaller.appspotmail.com>
+To: frank.li@vivo.com, glaubitz@physik.fu-berlin.de, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	slava@dubeyko.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi, Geert,
+syzbot has found a reproducer for the following issue on:
 
-On 05.05.2025 18:53, Geert Uytterhoeven wrote:
-> Hi Claudiu,
-> 
-> On Thu, 10 Apr 2025 at 16:06, Claudiu <claudiu.beznea@tuxon.dev> wrote:
->> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->>
->> Move pointers at the beginning of structure definition to avoid padding,
->> if any.
->>
->> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> 
-> Thanks for your patch!
-> 
->> --- a/drivers/clk/renesas/rzg2l-cpg.c
->> +++ b/drivers/clk/renesas/rzg2l-cpg.c
->> @@ -1183,20 +1183,20 @@ rzg2l_cpg_register_core_clk(const struct cpg_core_clk *core,
->>  /**
->>   * struct mstp_clock - MSTP gating clock
->>   *
->> + * @priv: CPG/MSTP private data
->> + * @sibling: pointer to the other coupled clock
->>   * @hw: handle between common and hardware-specific interfaces
->>   * @off: register offset
->>   * @bit: ON/MON bit
->>   * @enabled: soft state of the clock, if it is coupled with another clock
->> - * @priv: CPG/MSTP private data
->> - * @sibling: pointer to the other coupled clock
->>   */
->>  struct mstp_clock {
->> +       struct rzg2l_cpg_priv *priv;
->> +       struct mstp_clock *sibling;
-> 
-> I would move them below hw (which contains only pointers), so
-> to_mod_clock() needs no calculations.
+HEAD commit:    e0f4c8dd9d2d Merge branch 'for-next/core' into for-kernelci
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
+console output: https://syzkaller.appspot.com/x/log.txt?x=107e84f4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=868079b7b8989c3c
+dashboard link: https://syzkaller.appspot.com/bug?extid=09455b3f0a89d685a9d3
+compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
+userspace arch: arm64
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=166538f4580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1028339b980000
 
-OK, I'll change it like this.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/463c704c2ee6/disk-e0f4c8dd.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/1bb99dd967d9/vmlinux-e0f4c8dd.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/505fe552b9a8/Image-e0f4c8dd.gz.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/9018fb7fad71/mount_0.gz
 
-Thank you for your review,
-Claudiu
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+09455b3f0a89d685a9d3@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+workqueue: WQ_MEM_RECLAIM dio/loop0:dio_aio_complete_work is flushing !WQ_MEM_RECLAIM events_long:flush_mdb
+WARNING: CPU: 1 PID: 1786 at kernel/workqueue.c:3721 check_flush_dependency+0x288/0x33c kernel/workqueue.c:3717
+Modules linked in:
+CPU: 1 UID: 0 PID: 1786 Comm: kworker/1:2 Not tainted 6.15.0-rc4-syzkaller-ge0f4c8dd9d2d #0 PREEMPT 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+Workqueue: dio/loop0 dio_aio_complete_work
+pstate: 604000c5 (nZCv daIF +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+pc : check_flush_dependency+0x288/0x33c kernel/workqueue.c:3717
+lr : check_flush_dependency+0x288/0x33c kernel/workqueue.c:3717
+sp : ffff80009f0f7730
+x29: ffff80009f0f7740 x28: dfff800000000000 x27: ffff700013e1eef4
+x26: ffff0000c1081408 x25: 0000000000000000 x24: ffff0000d7e64000
+x23: dfff800000000000 x22: ffff8000812ac698 x21: ffff800092804000
+x20: ffff0000cae4c218 x19: ffff0000c0029400 x18: 00000000ffffffff
+x17: ffff800092f13000 x16: ffff80008ada5d6c x15: 0000000000000001
+x14: 1fffe00036711ae2 x13: 0000000000000000 x12: 0000000000000000
+x11: ffff600036711ae3 x10: 0000000000ff0100 x9 : 88d2378845d08000
+x8 : 88d2378845d08000 x7 : 0000000000000001 x6 : 0000000000000001
+x5 : ffff80009f0f7078 x4 : ffff80008f3f4fa0 x3 : ffff8000807ab99c
+x2 : 0000000000000001 x1 : 0000000100000001 x0 : 0000000000000000
+Call trace:
+ check_flush_dependency+0x288/0x33c kernel/workqueue.c:3717 (P)
+ start_flush_work kernel/workqueue.c:4171 [inline]
+ __flush_work+0x220/0x8c0 kernel/workqueue.c:4208
+ flush_work kernel/workqueue.c:4265 [inline]
+ flush_delayed_work+0xcc/0xf8 kernel/workqueue.c:4287
+ hfs_file_fsync+0xe8/0x144 fs/hfs/inode.c:680
+ vfs_fsync_range+0x160/0x19c fs/sync.c:187
+ generic_write_sync include/linux/fs.h:2976 [inline]
+ dio_complete+0x510/0x6bc fs/direct-io.c:313
+ dio_aio_complete_work+0x28/0x38 fs/direct-io.c:325
+ process_one_work+0x7e8/0x156c kernel/workqueue.c:3238
+ process_scheduled_works kernel/workqueue.c:3319 [inline]
+ worker_thread+0x958/0xed8 kernel/workqueue.c:3400
+ kthread+0x5fc/0x75c kernel/kthread.c:464
+ ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:862
+irq event stamp: 27154
+hardirqs last  enabled at (27153): [<ffff800080415058>] flush_delayed_work+0xac/0xf8 kernel/workqueue.c:4286
+hardirqs last disabled at (27154): [<ffff80008adc663c>] __raw_spin_lock_irq include/linux/spinlock_api_smp.h:117 [inline]
+hardirqs last disabled at (27154): [<ffff80008adc663c>] _raw_spin_lock_irq+0x28/0x70 kernel/locking/spinlock.c:170
+softirqs last  enabled at (27092): [<ffff80008978635c>] local_bh_enable+0x10/0x34 include/linux/bottom_half.h:32
+softirqs last disabled at (27090): [<ffff800089786328>] local_bh_disable+0x10/0x34 include/linux/bottom_half.h:19
+---[ end trace 0000000000000000 ]---
+
+
+---
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
