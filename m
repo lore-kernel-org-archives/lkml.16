@@ -1,157 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE228189B8C
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 11:24:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 867DB189B8C
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 11:24:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746617075; cv=none; b=RmcALlJPnCK0TE4lpXJ9xZUzlgg1ytTjtFzq5BCkiOBF836EEPqnzHLoeX7uyLt374rP1+lFvz0XY6sbx6LxTORKaNjpoa6IrMTux+LOkUv93DmIecGAMBxi8wNSEYT/53aXXqQO1rbf7UQ3AkoynR6kYguNSEfz9RCdSG+KDAc=
+	t=1746617098; cv=none; b=CDBqGGKRzFnbafgqDAyTemVqX9Fa1PSF/1PgQH+edOwPSsoQQwuihIbAP3hh7AgL9nrUU0rREfIRJJx0/obsWey0Q1ZVX6En409rpiQiEMGtF3jBQC87njM/LrL7+R8FCuZRxN0Gu2sWBGq2Cgsm7MxmAkXruJZZ8KMEGzFH3q0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746617075; c=relaxed/simple;
-	bh=G1OpaFH341mKUya6UEBR/eabLctftXEu94N55ZxeP7M=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HYerNZ79/jQqo5s+V5fsI6V3w1E3tOo0BLE+2iG1XpBUNv1DRUBMTfLopL9nw/RldfFOA2aGSD1SF3f5v9O/ZgyyWC/1SRo6dPih9er0QtCtD7/yfnVyhoPARLXgnesN/vyFrF+jViZ9xodiXjM0IJKiCo/WJ0+0VkfgiPRgJT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qU7YTo40; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746617098; c=relaxed/simple;
+	bh=oar+Bhsai/tc/GaUVtDvAbqWQLjDSDc4YeBGhvA8YjQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gQzCiKEpuTYKjCJnbTir5A/R4s4kKzPhEgg0gt2BCYP2v+nvDk8E2VGkBIWV0F2KDQN471kE0wICJp00wOwqh9iwQmMN8qr+qKd53wpTaTVAOq/R5cIqWTZkJ9FRIshRaXP/Zb7K85F3GToeirt7cHG7sYiU+RB6vIgUbQmWQ3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rhLvF6oD; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qU7YTo40"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FDBDC4CEE7;
-	Wed,  7 May 2025 11:24:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746617075;
-	bh=G1OpaFH341mKUya6UEBR/eabLctftXEu94N55ZxeP7M=;
-	h=From:To:Cc:Subject:Date:From;
-	b=qU7YTo40uZpmbj+qAGAFSGVxiBARtad3AgWpiPQvhAozDP5+JrrczOupNRlpp8hKE
-	 HnYsGCoYLXF7hYg48Co5nh5Q9LdVflSCIDZqeCYYSfnLXno7vgROV9DabsuayAzv4q
-	 QSlxvotEGWWB7tVvDTuqy8E46zg32uJ7Ft9AoMWdJHTIHRHiRg9ky5+2z1WUXZKOX1
-	 A0G/qAdyuTZ3/DU9dTeN00Ror1O9DhSCSguBj1UikUlp1iqHO01AfRZ/g5vNnxA3hL
-	 QB2Yj7FMsqvwVDNMK7ijzPYHb6gQFWmUc2B7/Ol5WtV404rzpqQZqj44/2FPrQa+PA
-	 kP+C/sk3UTojg==
-From: Chao Yu <chao@kernel.org>
-To: jaegeuk@kernel.org
-Cc: linux-f2fs-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org,
-	Chao Yu <chao@kernel.org>
-Subject: [PATCH] f2fs: use unsigned int type for severial mount option variables
-Date: Wed,  7 May 2025 19:24:25 +0800
-Message-ID: <20250507112425.939246-1-chao@kernel.org>
-X-Mailer: git-send-email 2.49.0.967.g6a0df3ecc3-goog
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rhLvF6oD"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43cfba466b2so58163285e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 04:24:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746617095; x=1747221895; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ar3opOrcf8YKrqt/F9Ouy5r6VUjzl1KJIEQkTj2liqA=;
+        b=rhLvF6oDbqh0gYyjfbr/FV7NIIuiMv0lFE5VhyX/PCrKfwZJlSj08vrUE7JpssNcZv
+         8qqH/qGL9TIlehgEuhARgoFaoPJsByblwSfQASph3rRzXlLaK0Ho2GD4OCrDre34ZISJ
+         qX++foIMZRbw885wauNzCRSwL6wgGV3KOvXyFX/IUk1t8RJZl0JyzqU35+LVqKaWDE/S
+         FkcdzKRXb+zBhUOoPSBIFPyA+5/XjYc0uzaV6fDhGb+EEoBHp6uM9Qv9w0TttBVmAQqb
+         2+R2F3bn2hChnyV8GMnQ7jNNhX4uI+o2EFx/yeT5/6p28abmVx14faH14snyZ5TGl4Kh
+         oVOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746617095; x=1747221895;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ar3opOrcf8YKrqt/F9Ouy5r6VUjzl1KJIEQkTj2liqA=;
+        b=RuIKs/553981sOmwr8NUq09Dr+qyaKN1cV4V5ufSwnMmQuo5wg7t7dWar4NbWR0+AJ
+         /WYgPKjkinh9DlGtmJ/tr/8n/WAtY2X6hzkS/dr0ZM31v4eCs69s2/iuj1kmOYxnHnsX
+         JpqZUVDiGNy/T8JEoiVvQiUtwIjf8Sq+rR3IILh7WbrcZbyojkhcGEUVzRmPZdwlsfX7
+         +eOB7HqsISt3Yj0wsL0JaZjgPVuEa7Tf7XlI62VDZBF4ruk/3C4rrY0GlbTl/D9MguNn
+         25pSnnYeX0gNXxVmhAmDGtSaA8bsXNexN3/IsucVRJOpL+/OaHPbFVERBdy0wzW5wpN0
+         +jCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVkd4aDdQzQran82W3+H/EzCBXi/bV8soSTTkaubUtZheFwSIaGWHeiWLM0kkqBZGUzq9XeYECLltjh5Y8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYdX720SEMtzpQM1RYWhLFAxELWlB7UNMV8SPGI0bObATGmcMW
+	uuYN8Vn0NTbhW/2/FaXTpmFvUOsKsMblzI/ri4yvjjbQh3aab6ofnL2Ov+Kzdq0=
+X-Gm-Gg: ASbGnctixZr77wnVh7BMCMBBJGGj8DI3b/RRB6MkKiZDwS1Tvoi7Z/SQMamVdU73wIk
+	BA5XHSYAyVS9vvTnb2pYkuYJoPcKmsI2I8GLwvmvFgDoktLorzcBnukOqCutbuiOGXAQWon2YZS
+	4AfzievsjFgJ6ZQyrUvVzexsOCeZ8JvWfMRh0YoQl+NCCjwbj8ygqCcn7gkQV0Vh6hEtAmyAOLS
+	XblbESsaL0Hn+DqwPrLqy1N+ho70CygvJimziXpt4zNFkngiXGQR50k2T89kc8acrS4wA6kfHpt
+	pkUgImlwz2U/xMRY/FOIJHy9eNSDaKnxEzTVA5RIF4eFeA==
+X-Google-Smtp-Source: AGHT+IHyJ94/xudBhc2hVks1GmnieE9BCHBaAQyYklBR/tJ0BTUQtnhG2e9qWqy0ux6mdoFrnCGZhQ==
+X-Received: by 2002:a05:600c:46c8:b0:43c:fcbc:968c with SMTP id 5b1f17b1804b1-441d44bd46fmr26000975e9.7.1746617094808;
+        Wed, 07 May 2025 04:24:54 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-441d4346542sm29214775e9.11.2025.05.07.04.24.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 04:24:54 -0700 (PDT)
+Date: Wed, 7 May 2025 14:24:43 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Rujra Bhatt <braker.noob.kernel@gmail.com>
+Cc: dpenkler@gmail.com, gregkh@linuxfoundation.org,
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 RESEND] staging : gpib : agilent_82350b :
+ agilent_82350b.c re-checked the sizeof structure, also checkpatch.pl has
+ shown wrong error, hence now applied the right option and commited the
+ changes, this will be PATCH V2. earlier have applied void pointer only so it
+ will take only 8 bytes, and not the whole structure size.
+Message-ID: <aBtC-78bNYtlNHPe@stanley.mountain>
+References: <aBs5MeEdCCwiGE0B@brak3rDesk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aBs5MeEdCCwiGE0B@brak3rDesk>
 
-active_logs, inline_xattr_size, f2fs_fault_info.inject_rate in struct
-f2fs_mount_info should never be negative, change its type from int to
-unsigned int.
+I think you sent an incorrect patch earlier and you're trying to revert
+that patch now?  We never applied the patch so there is no need.
 
-Signed-off-by: Chao Yu <chao@kernel.org>
----
- fs/f2fs/f2fs.h  | 12 ++++++------
- fs/f2fs/inode.c |  2 +-
- fs/f2fs/super.c |  8 ++++----
- 3 files changed, 11 insertions(+), 11 deletions(-)
+regards,
+dan carpenter
 
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 6fa900600826..85d1c92aa6c7 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -77,7 +77,7 @@ enum fault_option {
- #ifdef CONFIG_F2FS_FAULT_INJECTION
- struct f2fs_fault_info {
- 	atomic_t inject_ops;
--	int inject_rate;
-+	unsigned int inject_rate;
- 	unsigned int inject_type;
- 	/* Used to account total count of injection for each type */
- 	unsigned int inject_count[FAULT_MAX];
-@@ -173,8 +173,8 @@ struct f2fs_mount_info {
- 	block_t root_reserved_blocks;	/* root reserved blocks */
- 	kuid_t s_resuid;		/* reserved blocks for uid */
- 	kgid_t s_resgid;		/* reserved blocks for gid */
--	int active_logs;		/* # of active logs */
--	int inline_xattr_size;		/* inline xattr size */
-+	unsigned int active_logs;	/* # of active logs */
-+	unsigned int inline_xattr_size;	/* inline xattr size */
- #ifdef CONFIG_F2FS_FAULT_INJECTION
- 	struct f2fs_fault_info fault_info;	/* For fault injection */
- #endif
-@@ -498,7 +498,7 @@ static inline bool __has_cursum_space(struct f2fs_journal *journal,
- /* for inline stuff */
- #define DEF_INLINE_RESERVED_SIZE	1
- static inline int get_extra_isize(struct inode *inode);
--static inline int get_inline_xattr_addrs(struct inode *inode);
-+static inline unsigned int get_inline_xattr_addrs(struct inode *inode);
- #define MAX_INLINE_DATA(inode)	(sizeof(__le32) *			\
- 				(CUR_ADDRS_PER_INODE(inode) -		\
- 				get_inline_xattr_addrs(inode) -	\
-@@ -890,7 +890,7 @@ struct f2fs_inode_info {
- 
- 	int i_extra_isize;		/* size of extra space located in i_addr */
- 	kprojid_t i_projid;		/* id for project quota */
--	int i_inline_xattr_size;	/* inline xattr size */
-+	unsigned int i_inline_xattr_size;/* inline xattr size */
- 	struct timespec64 i_crtime;	/* inode creation time */
- 	struct timespec64 i_disk_time[3];/* inode disk times */
- 
-@@ -3552,7 +3552,7 @@ static inline int get_extra_isize(struct inode *inode)
- 	return F2FS_I(inode)->i_extra_isize / sizeof(__le32);
- }
- 
--static inline int get_inline_xattr_addrs(struct inode *inode)
-+static inline unsigned int get_inline_xattr_addrs(struct inode *inode)
- {
- 	return F2FS_I(inode)->i_inline_xattr_size;
- }
-diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
-index 747857a5b143..137e1458bbef 100644
---- a/fs/f2fs/inode.c
-+++ b/fs/f2fs/inode.c
-@@ -321,7 +321,7 @@ static bool sanity_check_inode(struct inode *inode, struct page *node_page)
- 		f2fs_has_inline_xattr(inode) &&
- 		(fi->i_inline_xattr_size < MIN_INLINE_XATTR_SIZE ||
- 		fi->i_inline_xattr_size > MAX_INLINE_XATTR_SIZE)) {
--		f2fs_warn(sbi, "%s: inode (ino=%lx) has corrupted i_inline_xattr_size: %d, min: %zu, max: %lu",
-+		f2fs_warn(sbi, "%s: inode (ino=%lx) has corrupted i_inline_xattr_size: %u, min: %zu, max: %lu",
- 			  __func__, inode->i_ino, fi->i_inline_xattr_size,
- 			  MIN_INLINE_XATTR_SIZE, MAX_INLINE_XATTR_SIZE);
- 		return false;
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index b86e42b43ef1..ec296d5d0fd7 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -79,10 +79,10 @@ int f2fs_build_fault_attr(struct f2fs_sb_info *sbi, unsigned long rate,
- 	}
- 
- 	if (fo & FAULT_RATE) {
--		if (rate > INT_MAX)
-+		if (rate > UINT_MAX)
- 			return -EINVAL;
- 		atomic_set(&ffi->inject_ops, 0);
--		ffi->inject_rate = (int)rate;
-+		ffi->inject_rate = (unsigned int)rate;
- 		f2fs_info(sbi, "build fault injection rate: %lu", rate);
- 	}
- 
-@@ -1379,7 +1379,7 @@ static int f2fs_default_check(struct f2fs_sb_info *sbi)
- #endif
- 
- 	if (test_opt(sbi, INLINE_XATTR_SIZE)) {
--		int min_size, max_size;
-+		unsigned int min_size, max_size;
- 
- 		if (!f2fs_sb_has_extra_attr(sbi) ||
- 			!f2fs_sb_has_flexible_inline_xattr(sbi)) {
-@@ -1396,7 +1396,7 @@ static int f2fs_default_check(struct f2fs_sb_info *sbi)
- 
- 		if (F2FS_OPTION(sbi).inline_xattr_size < min_size ||
- 				F2FS_OPTION(sbi).inline_xattr_size > max_size) {
--			f2fs_err(sbi, "inline xattr size is out of range: %d ~ %d",
-+			f2fs_err(sbi, "inline xattr size is out of range: %u ~ %u",
- 				 min_size, max_size);
- 			return -EINVAL;
- 		}
--- 
-2.49.0
 
