@@ -1,164 +1,110 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AEE3213E99;
-	Wed,  7 May 2025 11:35:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC7BD1553AA;
+	Wed,  7 May 2025 11:35:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746617715; cv=none; b=kpN6JDIJgyeZEBPvPv0EUdsM3NzDbdxxJupWvoDUR8q7buWvIiDCYTVQ5GIclchigudlCPzQN4STTtB77tLoWAiFTYhZPLNsa2E7RZM0ISmBQlhpUcnwDto1qIamXQCD3WTvQW+Mu6ChfgwlSwTWIyu7R2b1C6iso4bEH0WUJT4=
+	t=1746617750; cv=none; b=H3pvZokaCJc1zdEJpqFReepeiut9aENp8wKY8L2INjHqRW89umBI2Rjf/K1OaAFt+3UuinCSzXOVyQq5hqHX8HueILK81yvM7+yDZCp1apNzVkf8W/hWp4G8rwH4HykMCAkhurVD2ajq06B0PtiTdTY3zZJ1zGmJZYJQCa/IJnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746617715; c=relaxed/simple;
-	bh=Bia5pMdePjytLko+tRK5Sv9EEfnx1da7vCY/S3XH60E=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dAUZ1h73kUYowWLb747iUHhEAleshGISYuFlTQ7uzsSQhJWEueRhm/loL4NMJ6tTMzqDdcut5UGh1/WqjByuTU9rgWfC/GMjkgiv5Cm/WOtNj2VqTTlBfe/8tPmSCeaWgkl/N+F+xV/aIuF0yKFmO2hLyH4FEhZF9y6tpMQHmYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=YNqmXnx6; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1746617750; c=relaxed/simple;
+	bh=Vbmo9rJYXSxU4WKj0+cuP9qxT3anE73Uwwtl6Hx+hqs=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
+	 References:In-Reply-To; b=i7HjzFt4su6ULDO47AyUos4f7ytWvikmbNHAXuoOfUBhIVOH3fwtxfQSO/9x02ABcwgZTTOUEIOwBVoA7UVaVRaxDis7HI4et1bXCZ2esDXzV+bqkOVk//qlsmUK+ai5ULwi9PTmDs3BPq0ZYBcZhBMf6M7K3brd4/NZZ1Imqiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZonX/odS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="YNqmXnx6"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 49A111FCED;
-	Wed,  7 May 2025 11:35:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1746617705;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6MSE+eVszmhNdpPjpe2nSaOQmxzMdKmvHwgXnaWWTl8=;
-	b=YNqmXnx6C+sI3i61bKhaXglR4/kx973n6ku8Vh97Fnv+1Y7ixaW3lnUdNsoRpZUv6VpD4n
-	6RiiVW/yvGNRBhC8uQkmHvVsVKp47InE8dbegKu2b0wbixt5WBODI0Mwa6JXtbWwrKxntb
-	/taTa8qnuiaJdLCat0i048dWAI3KaMCxl5/r/Bw0wAY1RB8xpUAAa0P18TOlRYSNwhjMX/
-	YSjU/PIf7ArUrgSND8ibs3r8LptoWf3mxHy42IvdUPy4Lv7p4jpR7kzllfcGza9qLFwiSp
-	oRen+CuFWKU80YfaaBTaYze8yJ42yCbGlFmie7Yc7m9gG8cykEUCOi4M8FwZiw==
-Date: Wed, 7 May 2025 15:32:36 +0200
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Andrew Lunn
- <andrew@lunn.ch>, Woojung Huh <woojung.huh@microchip.com>, Vladimir Oltean
- <olteanv@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
- Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Dmitry
- Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [BUG] Stuck key syndrome (was: Re: [PATCH net-next v2] net:
- dsa: microchip: Add SGMII port support to KSZ9477 switch)
-Message-ID: <20250507153236.5303be86@fedora.home>
-In-Reply-To: <aBsu-WBlPQy5g-Jn@shell.armlinux.org.uk>
-References: <20250507000911.14825-1-Tristram.Ha@microchip.com>
-	<20250507094449.60885752@fedora.home>
-	<aBsadO2IB_je91Jx@shell.armlinux.org.uk>
-	<20250507105457.25a3b9cb@fedora.home>
-	<aBsmhfI45zMltjcy@shell.armlinux.org.uk>
-	<aBsu-WBlPQy5g-Jn@shell.armlinux.org.uk>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZonX/odS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 598EFC4CEE7;
+	Wed,  7 May 2025 11:35:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746617749;
+	bh=Vbmo9rJYXSxU4WKj0+cuP9qxT3anE73Uwwtl6Hx+hqs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZonX/odS33vfyIFQxXFAzIg7kOpbkTJPeUqpm/PLyaOJ9gi7D8ScT/CyGuiW/JJC1
+	 rT6Sjj/erQ+kYrAwKeHG5GEp6xvm9uNQBYEcSqHeZTllRmaP847SIGJSjWsMFURjbI
+	 3JeELcaD7i7Q+HzfGrDbEwmc5Qjnrm9pO/YcboZSeS2QpY47xIuYnK4QUL0vtisbQ4
+	 MqzK+QsEPc/BcqHSol3Xv/QRrAFgTe4clXR6dnrmRtDYcr4MjbX1ELkyRdkLJZO9ia
+	 vehNnO+n3ZUNVVOu50QKFD1E5Co9mn9wQjFdlsu07tcewoZoA0zq8pkt9t7v8FjfMh
+	 xdAFQzA368UBw==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeeijeehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeevledtvdevueehhfevhfelhfekveeftdfgiedufeffieeltddtgfefuefhueeknecukfhppedvrgdtvdemkeeggedtmehfhedtsgemfedvheemrgeigeefmedufheiugemfhgvrgegmeegsgduieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtvdemkeeggedtmehfhedtsgemfedvheemrgeigeefmedufheiugemfhgvrgegmeegsgduiedphhgvlhhopehfvgguohhrrgdrhhhomhgvpdhmrghilhhfrhhomhepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudefpdhrtghpthhtoheplhhinhhugiesrghrmhhlihhnuhigrdhorhhgrdhukhdprhgtphhtthhopehtohhrvhgrlhgusheslhhinhhugidqfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheprghnughrvgifsehluhhnn
- hdrtghhpdhrtghpthhtohepfihoohhjuhhnghdrhhhuhhesmhhitghrohgthhhiphdrtghomhdprhgtphhtthhopeholhhtvggrnhhvsehgmhgrihhlrdgtohhmpdhrtghpthhtohephhhkrghllhifvghithdusehgmhgrihhlrdgtohhmpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhm
-X-GND-Sasl: maxime.chevallier@bootlin.com
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 07 May 2025 13:35:46 +0200
+Message-Id: <D9PWBFMQRL0P.1UGCE5V5SSBLZ@kernel.org>
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Alice Ryhl" <aliceryhl@google.com>, "Danilo Krummrich"
+ <dakr@kernel.org>
+Cc: "Matthew Maurer" <mmaurer@google.com>, <rust-for-linux@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 3/7] rust: alloc: add Vec::push_within_capacity
+X-Mailer: aerc 0.20.1
+References: <20250502-vec-methods-v5-0-06d20ad9366f@google.com>
+ <20250502-vec-methods-v5-3-06d20ad9366f@google.com>
+In-Reply-To: <20250502-vec-methods-v5-3-06d20ad9366f@google.com>
 
-Hi Russell,
-
-On Wed, 7 May 2025 10:59:21 +0100
-"Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
-
-> On Wed, May 07, 2025 at 10:23:17AM +0100, Russell King (Oracle) wrote:
-> > [Sorry for going off topic here - changed the Cc list, added Linus,
-> > changed the subject.]
-> > 
-> > On Wed, May 07, 2025 at 10:54:57AM +0200, Maxime Chevallier wrote:  
-> > > On Wed, 7 May 2025 09:31:48 +0100
-> > > "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:  
-> > > > [rest of the email got deleted because Linux / X11 / KDE got confused
-> > > > about the state the backspace key and decided it was going to be
-> > > > continuously pressed and doing nothing except shutting the laptop
-> > > > down would stop it.]  
-> > > 
-> > > Funny how I have the same exact issue on my laptop as well...   
-> > 
-> > I've had the "stuck key" behaviour with the HP Pavilion 15-au185sa
-> > laptop I had previously (normally with ctrl-F keys). However, hitting
-> > ctrl/shift/alt would stop it.
-> > 
-> > This is the first time I've seen the behaviour with the Carbon X1
-> > laptop, but this was way more severe. No key would stop it. Trying to
-> > move the focus using the trackpad/nipple had any effect. Meanwhile
-> > the email was being deleted one character at a time. So I shut the
-> > laptop lid causing it to suspend, and wondered what to do... on
-> > re-opening the laptop, it didn't restart and is back to normal.
-> > 
-> > This suggests that the entire input subsystem in the software stack
-> > collapsed just after the backspace key was pressed, and Xorg never
-> > saw the key-release event. So Xorg duitifully did its key-repeat
-> > processing, causing the email to be deleted one character at a time.
-> > 
-> > The problem is, not only did this destroy the email reply, but it
-> > also destroyed my train of thought for the reply as well through
-> > the panic of trying to stop the entire email being deleted.
-> > 
-> > I don't think this is a hardware issue - I think there's a problem
-> > in the input handling somewhere in the stack of kernel, Xorg,
-> > whatever multiple input libraries make up modern systems, and KDE.
-> > 
-> > I did check the logs. Nothing in the kernel messages that suggests
-> > a problem. Nothing in Xorg's logs (which are difficult to tie up
-> > because it doesn't use real timestamps that one can relate to real
-> > time.) There's no longer any ~/.xsession-errors logfile for logging
-> > the stuff below Xorg.
-> > 
-> > I'm running Debian Stable here - kernel 6.1.0-34-amd64, X.Org X Server
-> > 1.21.1.7, KDE Plasma (5.27.5, frameworks 5.103.0, QT 5.15.8).  
-> 
-> I'll also add that The Carbon X1, being a laptop, its built-in keyboard
-> uses the i8042:
-> 
-> [    1.698156] i8042: PNP: PS/2 Controller [PNP0303:KBD,PNP0f13:MOU] at 0x60,0x64 irq 1,12
-> [    1.698543] i8042: Warning: Keylock active
-> [    1.700170] serio: i8042 KBD port at 0x60,0x64 irq 1
-> [    1.700174] serio: i8042 AUX port at 0x60,0x64 irq 12
-> [    1.700271] mousedev: PS/2 mouse device common for all mice
-> [    1.702951] input: AT Translated Set 2 keyboard as /devices/platform/i8042/serio0/input/input0
-> 
-> I don't have the HP laptop with me to check what that was using.
-> 
-> The mysterious thing is "Keylock active" - clearly it isn't because I
-> can write this email typing on that very keyboard. However, I wonder
-> if it needs i8042_unlock=1 to set I8042_CTR_IGNKEYLOCK.
-> 
-> Unfortunately, it's probably going to take a year on the Carbon X1
-> to work out if this makes any difference.
+On Fri May 2, 2025 at 3:19 PM CEST, Alice Ryhl wrote:
+> This introduces a new method called `push_within_capacity` for appending
+> to a vector without attempting to allocate if the capacity is full. Rust
+> Binder will use this in various places to safely push to a vector while
+> holding a spinlock.
 >
-> > Anyone else seeing this kind of behaviour - if so, what are you
-> > using?
+> The implementation is moved to a push_within_capacity_unchecked method.
+> This is preferred over having push() call push_within_capacity()
+> followed by an unwrap_unchecked() for simpler unsafe.
+>
+> Panics in the kernel are best avoided when possible, so an error is
+> returned if the vector does not have sufficient capacity. An error type
+> is used rather than just returning Result<(),T> to make it more
+> convenient for callers (i.e. they can use ? or unwrap).
+>
+> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 
-It just happened to me as I was typing this very email (key 'd' got
-stuck, nothing could un-stick it, couldn't move the mouse cursor but
-mouse-click events did work, had to suspend/resume the laptop to fix
-that)
+One small nit below, with or without:
 
-Got the same "Keylock active" warning at boot :
+Reviewed-by: Benno Lossin <lossin@kernel.org>
 
-[    0.916750] i8042: PNP: PS/2 Controller [PNP0303:PS2K,PNP0f13:PS2M] at 0x60,0x64 irq 1,12
-[    0.917210] i8042: Warning: Keylock active
-[    0.920087] serio: i8042 KBD port at 0x60,0x64 irq 1
-[    0.920090] serio: i8042 AUX port at 0x60,0x64 irq 12
+[...]
 
-Nothing in the kernel logs when the key got stuck.
+> +    /// Appends an element to the back of the [`Vec`] instance without r=
+eallocating.
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// The length must be less than the capacity.
 
-Laptop is a Dell XPS 15 9510, Running Fedora 41 but I saw this issue
-before, kernel 6.14.4-200.fc41.x86_64, Wayland-based, Gnome 47.
+I would have written:
 
-Hopefully this helps a bit narrowing this down, I have a fairly
-different userspace stack and kernel version, but we do have the same
-driver involved and same keylock warning...
+    - `self.len() < self.capacity()`
 
-Maxime
+---
+Cheers,
+Benno
+
+> +    pub unsafe fn push_within_capacity_unchecked(&mut self, v: T) {
+>          let spare =3D self.spare_capacity_mut();
+> =20
+> -        // SAFETY: The call to `reserve` was successful so the spare cap=
+acity is at least 1.
+> +        // SAFETY: By the safety requirements, `spare` is non-empty.
+>          unsafe { spare.get_unchecked_mut(0) }.write(v);
+> =20
+>          // SAFETY: We just initialised the first spare entry, so it is s=
+afe to increase the length
+> -        // by 1. We also know that the new length is <=3D capacity becau=
+se of the previous call to
+> -        // `reserve` above.
+> +        // by 1. We also know that the new length is <=3D capacity becau=
+se the caller guarantees that
+> +        // the length is less than the capacity at the beginning of this=
+ function.
+>          unsafe { self.inc_len(1) };
+> -        Ok(())
+>      }
+> =20
+>      /// Removes the last element from a vector and returns it, or `None`=
+ if it is empty.
