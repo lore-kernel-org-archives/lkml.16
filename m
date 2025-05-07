@@ -1,110 +1,102 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06260289E38
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 13:52:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04AE9289E2F;
+	Wed,  7 May 2025 13:52:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746625925; cv=none; b=axSoqrYKUeFo7i+zo7Gvs8V0D1j2aLPLUrkKiRQsoiNRGC2TdnUgm/i4so/XFdyOssoWbnntn8gvWzEEMomA+qBkiIYYq/Opns3Nt/KuBsjubisbBSWmMakcSms7H3aAESye0V5t6nlAFcRAQzG9VGtrYeiQpMmh0deAv680e6Q=
+	t=1746625942; cv=none; b=Lr7uYogqJZtfRoEHv10Hhh6g7fyCP/4C4gbxwtORRNtMNi6fi8pVokAAV5UMNKaGrRakpYhusHg1012SsChczkYwOqsjM/+ByXtec0gY9JoyN8tcWdotr+niCfVziF9vpJU9MHgkLfPMdsfEyF4snv/eHm7s+nLgEiymABxqnxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746625925; c=relaxed/simple;
-	bh=5LLKe8a++xD2c3tJVJ8drGjnk/736Tl6kXc3j0/ObLg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ncExgUTNhZ6QEE+Xosyss9xYNhxRgBvdj2U4gkUWy4yNf0kRi2eXLyjE4waczbo4nP0wThibOR8KiNslhADBfDoqoTp77e4qoy7x7eYTQJkoIeTuF7DXEDHfL3eWX7QRA4mJZFRGJjW8Sax/63RDxgJ8si64TRB+3KDJH3SFpBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=lFAhvrr/; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
+	s=arc-20240116; t=1746625942; c=relaxed/simple;
+	bh=AszsYS9kaQlqOkqCKKYjZV2HbCdXbS7+C+6V2dMqN4I=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XeMrHpCLqpCYpiHZop90DnPsJSA458v0z6fnat14sr18r7TWbjx0KCjXnfZIX+xQonpuIRW54UmVGDUApLSdGd3I8j9wjaccJs7G3+an8YddY+wJCygKFC/YuiKQrOnt7xa8jtJ1vOEiYRtq5u5Ve8zXStADjgpGPN/zhqoV5/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d1JraCFI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="lFAhvrr/"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ac25520a289so1176304466b.3
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 06:52:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google; t=1746625922; x=1747230722; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7GeKwUyzeFoIF4XHNI7B0gCteSiC3k5ZfaiHzje0KNY=;
-        b=lFAhvrr/x2lCs9AaM/SYfyToFSb5i2OyrG4DEJm4NkxKfoRAsd3erSklk/W8AJ1JMM
-         mUJqPvjfLN0DXTjKTDqhuenAUbGp6bEPixhKMk/TCst8b0MCfBrTVhElgkJAVv4WEkQ3
-         ACgZmU6p5+YtfDKuJpo0xQg/imF8f8l7hezmk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746625922; x=1747230722;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7GeKwUyzeFoIF4XHNI7B0gCteSiC3k5ZfaiHzje0KNY=;
-        b=qmerAxW7+8aUEYZFTN9Wb+QMzhiWpvGfpDhTUZsdmrLBX+A3/ReopUk1pUBPnX313I
-         D5BrXQo7YG3dN4LPkxahZ/d8XpVmtLrUdvX+CmoVsK6UH93dxxlnv+KSGZMTSuayLyb4
-         Bo3aTEiLj6ZfSWLQzUkGUosJMuXBBQlUhqJ+Vtw7YlNJyCWCi/QSpsyuG4BNCqgBrlj1
-         sO78f6ybIIPLlmuRDrZ1cD0GwyCzfyHHg+xFGCUGoi93ibtiNa9FRwMm9Rl6YFKc8lom
-         GhZEENA0+VPv9Ox1zCzNNAQvvJvIR1EuXxK5cFL0dBEFArH1lpb+b8CFavdsZwf/WesE
-         EqpQ==
-X-Gm-Message-State: AOJu0Yx4KRkRfqjaMVC6fIqGKxjnMGkE81Kn1RkHyYJqZ/2zYQK/OrEN
-	c1QxOsWys3sydkcfmkxC6CC+TZkgZT53YWGBgHarjufdidUh1FX0eUtFMm6EnQzRb7jpw8wcgmS
-	2
-X-Gm-Gg: ASbGnctfRIGcc6wTZ7AqqUCXxX+UPKPCHi+/7tIf0KwOcltOOY5CdP1D5LlAB2UjVsu
-	YEzAiKTah4BBLdok30/ewaCtOIs1dzH3s6w/tRavLd+DZjRqnT1yIrZT2HhJtnmBpd25GVFGfRR
-	nzT/1pJp+lKMuX8kYh3xUUmATue7jcXYYckWS6Le9uzl+/wjHGaj28xQAnY/Vb/LuTya2aP+Ojo
-	9mOp2+AUZ2vEx9efe14j9BiT+poQ5tKKHWxA9+90W1tz/YPwHQsLzjnBDtsTd1dKqOQY5eePCI3
-	c5zEjblzIISwPPrCF9iVOoV3aNz8ReMxJU/OreHSPFVERvH70JCe4QtBMvIu+XwXy7CqOTa6WFc
-	eHhQ1CDUolKUNcE1RtNAOrkFZBkIUCA==
-X-Google-Smtp-Source: AGHT+IF8nFh7Jj3E3ztZAdeC2ct0kjtnQ1x6LvMRae+EEiYHTrZbN6TQQ4YbOvTXqTUEGvOdOJzFVA==
-X-Received: by 2002:a17:906:bf47:b0:ace:6a18:595c with SMTP id a640c23a62f3a-ad1e8ce4c1emr334611466b.16.1746625922122;
-        Wed, 07 May 2025 06:52:02 -0700 (PDT)
-Received: from dario-ThinkPad-T14s-Gen-2i.amarulasolutions.com ([2.196.43.82])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1891a6873sm920845266b.61.2025.05.07.06.52.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 06:52:01 -0700 (PDT)
-From: Dario Binacchi <dario.binacchi@amarulasolutions.com>
-To: linux-kernel@vger.kernel.org
-Cc: Dario Binacchi <dario.binacchi@amarulasolutions.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jonathan Cameron <jic23@kernel.org>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d1JraCFI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61A13C4CEE8;
+	Wed,  7 May 2025 13:52:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746625941;
+	bh=AszsYS9kaQlqOkqCKKYjZV2HbCdXbS7+C+6V2dMqN4I=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=d1JraCFIABLuS/JIViKSBy+OkhfJeroT4EcMxnK4kQWUEJmgHhqbqxQErYISuot0e
+	 YUrLHJCzC76ootLFumDzT1JYqN1Uss7FfYSl6kmSuOqwFRj6AGAoYgCu1rhb+pmSJs
+	 AYurs4bPZ3DE7ZB9c4VjViMRbFWD297pX9+DUExzHoEBKiO1mEsyercnBB1oEDOZBV
+	 Dnx5R9Mgnh6pwqF4Dgr2DbGe9/c4CMOVT71e8m4Y9t5+vvRL1njVMrN0jqt4SIW5cK
+	 0TI/Nfa5zZIcRhHkkrl+/ZI3dRTZAmSgBEh0mccUc6kB9hfdBNTZfBGaOsuMogqCkV
+	 UE9NkJhBdC5tQ==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uCfC7-00CdCe-8k;
+	Wed, 07 May 2025 14:52:19 +0100
+Date: Wed, 07 May 2025 14:52:18 +0100
+Message-ID: <867c2sh6jx.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Rob Herring
+ <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Mikael Gonella-Bolduc <m.gonella.bolduc@gmail.com>,
-	Rob Herring <robh@kernel.org>,
-	devicetree@vger.kernel.org,
-	linux-iio@vger.kernel.org
-Subject: [PATCH] dt-bindings: iio: light: apds9160: add missing type definition
-Date: Wed,  7 May 2025 15:51:38 +0200
-Message-ID: <20250507135147.1328639-1-dario.binacchi@amarulasolutions.com>
-X-Mailer: git-send-email 2.43.0
+	Conor Dooley
+ <conor+dt@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will
+ Deacon <will@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Sascha Bischoff
+ <sascha.bischoff@arm.com>,
+	Timothy Hayes <timothy.hayes@arm.com>,
+	"Liam R.\
+ Howlett" <Liam.Howlett@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 20/25] irqchip/gic-v5: Add GICv5 PPI support
+In-Reply-To: <87ecx0mt9p.ffs@tglx>
+References: <20250506-gicv5-host-v3-0-6edd5a92fd09@kernel.org>
+	<20250506-gicv5-host-v3-20-6edd5a92fd09@kernel.org>
+	<87zffpn5rk.ffs@tglx>
+	<86a57ohjey.wl-maz@kernel.org>
+	<87ecx0mt9p.ffs@tglx>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: tglx@linutronix.de, lpieralisi@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de, sascha.bischoff@arm.com, timothy.hayes@arm.com, Liam.Howlett@oracle.com, mark.rutland@arm.com, jirislaby@kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-Fix the following warning:
+On Wed, 07 May 2025 14:42:42 +0100,
+Thomas Gleixner <tglx@linutronix.de> wrote:
+> 
+> On Wed, May 07 2025 at 10:14, Marc Zyngier wrote:
+> > On Tue, 06 May 2025 16:00:31 +0100,
+> > Thomas Gleixner <tglx@linutronix.de> wrote:
+> >> 
+> >> How does this test distinguish between LEVEL_LOW and LEVEL_HIGH? It only
+> >> tests for level, no? So the test is interesting at best ...
+> >
+> > There is no distinction between HIGH and LOW, RISING and FALLING, in
+> > any revision of the GIC architecture.
+> 
+> Then pretending that there is a set_type() functionality is pretty daft
 
- Documentation/devicetree/bindings/iio/light/brcm,apds9160.yaml: ps-cancellation-current-picoamp: missing type definition
+You still need to distinguish between level and edge when this is
+programmable (which is the case for a subset of the PPIs).
 
-raised by command:
+	M.
 
- make dt_binding_check  DT_SCHEMA_FILES=fsl.yaml
-
-Fixes: be464661e7532 ("dt-bindings: iio: light: Add APDS9160 binding")
-Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
----
-
- Documentation/devicetree/bindings/iio/light/brcm,apds9160.yaml | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/iio/light/brcm,apds9160.yaml b/Documentation/devicetree/bindings/iio/light/brcm,apds9160.yaml
-index bb1cc4404a55..f9c35c29fe04 100644
---- a/Documentation/devicetree/bindings/iio/light/brcm,apds9160.yaml
-+++ b/Documentation/devicetree/bindings/iio/light/brcm,apds9160.yaml
-@@ -37,6 +37,7 @@ properties:
-     maximum: 63
- 
-   ps-cancellation-current-picoamp:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-     description:
-       Proximity sensor crosstalk cancellation current in picoampere.
-       This parameter adjusts the current in steps of 2400 pA up to 276000 pA.
 -- 
-2.43.0
-
-base-commit: 0d8d44db295ccad20052d6301ef49ff01fb8ae2d
-branch: fix-brcm,apds9160.yaml
+Without deviation from the norm, progress is not possible.
