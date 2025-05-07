@@ -1,85 +1,89 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C4201AF0B4;
-	Wed,  7 May 2025 03:22:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F43D1B2186;
+	Wed,  7 May 2025 03:22:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746588159; cv=none; b=TcAtymeF6rhrZBOwAfoLPwFP+GMRu1FXyQU5KnRUbCOVjLTiNlAGFNRBahEoG1YgcOOwUFdyH1H9rmhT2IZ0J2o0rDs48MA0FYPDTEpbr0gzkda0YFlZTzKdEKP9eqvGwU5ym/FW0Rj+yFCJt5GMmrO269JHHt/D50unBBUCbBk=
+	t=1746588174; cv=none; b=r0uVhJ+UJuWa9PDXaq0VD/6ezzn2Rww+kpHbj03p8JNzBMydKlrUgAF1Rz5LilJxVb0GTholH0ZBscgyRNfrg/g1QDbhkJnOUo/NVvFXfYq5wp5qTRQ1oRWnQZw7mC1/jq72omoraH5bVAoK3P+tQGbVbbQK+8N6VWcykyqTnOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746588159; c=relaxed/simple;
-	bh=LxwMWPg+PFWNBv6WML1H6Mcw4NIhuvm/FTM1bIYofF8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=qcfHViZGtE9XARs+Al5/nr9F8HbuqjqQor6b1RllRxYmWT3/dRUnhDzfHk2CoHK/yqFuXDrSZ8irPLTGQiqFwKXlhb4d5pO+KhToX/TB8wZSU2XZ2ySe6i+LxVvHB2MMLWhOpayeE4wG/2eumxpep85VT/R2Vud73K9YI349qGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hisilicon.com; spf=pass smtp.mailfrom=hisilicon.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hisilicon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hisilicon.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4ZsgX72k43z1d023;
-	Wed,  7 May 2025 11:21:11 +0800 (CST)
-Received: from kwepemf100018.china.huawei.com (unknown [7.202.181.17])
-	by mail.maildlp.com (Postfix) with ESMTPS id 0B244180B43;
-	Wed,  7 May 2025 11:22:28 +0800 (CST)
-Received: from [10.67.120.168] (10.67.120.168) by
- kwepemf100018.china.huawei.com (7.202.181.17) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 7 May 2025 11:22:27 +0800
-Message-ID: <8a16ca96-8624-358d-39d8-e17fbf60a1b1@hisilicon.com>
-Date: Wed, 7 May 2025 11:22:26 +0800
+	s=arc-20240116; t=1746588174; c=relaxed/simple;
+	bh=Qe44C1hO1Dlz+QljxSDs/x+tpr6AeSvmXU53b6tgHuU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=onf2k6ht/6vxNfPVcgMclws/Qt48/alZBLKH/G5ng2JG3kOQoywJn0DZB69fjL5wD1v/44Kjt2cOEYHNJcxXLeiq7O25XNtQDTnGbv+6VIUE0n+l34oM3PJwXJepxRuI/xEpTImZudtTheq5Mvsjf6xeWUqpDuwfmLnekS4eypE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=OeFxs6Sf; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="OeFxs6Sf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1746588169;
+	bh=6+LdfxC5RdXId8MeCoah2zhCj8ioo3EpL/mIC9q/ayo=;
+	h=Date:From:To:Cc:Subject:From;
+	b=OeFxs6SfZWx7dYYwcg4md4FqsNCgjAoKpkfNWasxLucr9At97zRLcr+V/afysgBwn
+	 7xSPgTv7y1/txi6ZMgZAJLjz639mOm689iF/SSWIZIlc0Gfv+wfipy50lIKG7mk6uy
+	 521yZuFHcTnYDi7sO+W8Yv90G+9coF2YszvQTEi6iBJU5Igj7cdyMTfztZUxYQumHu
+	 2cG6Sm8s0C5k5TII9uhcfvPldjy54TZiK6KycIRiBPq9SWEM5wPusXHLR2HKVqf6GF
+	 gCXheokuoReoFDB9vAPqcYbtRV7S+TQENojhZ8ih7JV8xUSTho4wF9IOTaBXSaG08Y
+	 0eb4CnDbb00aw==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZsgZ044pNz4w2H;
+	Wed,  7 May 2025 13:22:48 +1000 (AEST)
+Date: Wed, 7 May 2025 13:22:47 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
+ "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
+ Richard Weinberger <richard@nod.at>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: duplicate patch in the tip tree
+Message-ID: <20250507132247.3e3076e3@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH] RDMA/hns: fix trace TRACE_INCLUDE_PATH
-Content-Language: en-US
-To: Huiwen He <hehuiwen@kylinos.cn>, <tangchengchang@huawei.com>
-CC: <jgg@ziepe.ca>, <leon@kernel.org>, <linux-rdma@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-References: <20250507030433.599021-1-hehuiwen@kylinos.cn>
-From: Junxian Huang <huangjunxian6@hisilicon.com>
-In-Reply-To: <20250507030433.599021-1-hehuiwen@kylinos.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemf100018.china.huawei.com (7.202.181.17)
+Content-Type: multipart/signed; boundary="Sig_/_N6MCupcUKe1ZPJ.nIa5OE7";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
+--Sig_/_N6MCupcUKe1ZPJ.nIa5OE7
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On 2025/5/7 11:04, Huiwen He wrote:
-> TRACE_INCLUDE_PATH should be a path relative to define_trace.h, not the
-> file including it. (See the comment in include/trace/define_trace.h.)
-> 
-> Fixes build error found with CONFIG_INFINIBAND_HNS_HIP08=m:
->   CC [M]  drivers/infiniband/hw/hns/hns_roce_hw_v2.o
-> In file included from drivers/infiniband/hw/hns/hns_roce_trace.h:213,
->                  from drivers/infiniband/hw/hns/hns_roce_hw_v2.c:53:
-> ./include/trace/define_trace.h:110:42: fatal error: ./hns_roce_trace.h: No such file or directory
->   110 | #include TRACE_INCLUDE(TRACE_INCLUDE_FILE)
-> 
-> Signed-off-by: Huiwen He <hehuiwen@kylinos.cn>
-> ---
->  drivers/infiniband/hw/hns/hns_roce_trace.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/infiniband/hw/hns/hns_roce_trace.h b/drivers/infiniband/hw/hns/hns_roce_trace.h
-> index 23cbdbaeffaa..19bd3c0eec47 100644
-> --- a/drivers/infiniband/hw/hns/hns_roce_trace.h
-> +++ b/drivers/infiniband/hw/hns/hns_roce_trace.h
-> @@ -209,5 +209,5 @@ DEFINE_EVENT(cmdq, hns_cmdq_resp,
->  #undef TRACE_INCLUDE_FILE
->  #define TRACE_INCLUDE_FILE hns_roce_trace
->  #undef TRACE_INCLUDE_PATH
-> -#define TRACE_INCLUDE_PATH .
-> +#define TRACE_INCLUDE_PATH ../../drivers/infiniband/hw/hns
->  #include <trace/define_trace.h>
+The following commit is also in the uml tree as a different commit
+(but the same patch):
 
-We've found this bug and decided to fix it by modifying Makefile, please see:
-https://lore.kernel.org/linux-next/b7dd4dda-37d8-47e4-8d78-b6585be21cfd@paulmck-laptop/T/#t
+  48199713a6a8 ("um: Use irq_domain_create_linear() helper")
 
-Thanks anyway!
+This is commit
 
-Junxian
+  7633b8b1e793 ("irqdomain: um: use irq_domain_create_linear() helper")
+
+in the uml tree.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/_N6MCupcUKe1ZPJ.nIa5OE7
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmga0ggACgkQAVBC80lX
+0Gx0LQf/ZWR+efCwg4BX9JMArEQvNLr335hWrELqWdW70btQVNer/Wq97JczzOC1
+vkgVOnWZjoZt5HVCmZOntF2GCrAKzk6+CrgjXkgiFagQa87dE8PCPHR2G9ezwPgT
+vjxw5GO5ekGhDYl9t3ySIvwXjMlDot4tRk2Krvswc2/GDBGU/W9M9jFE7KKS1nad
+hHZJHiZ2qKaLTzqATX13vrCkZBmr4/D22L6+ixIA9fhd/fApoVoa4cdKp7vk4Lgx
+uEAwP9J9t2mKQ1JWJjBk07x7hQC3pk/t3uZeyMFnVeZM10/AqGyjz1plCneJpAov
+I2gxHLfMcy1Snpy8TucfL4gRX8tAGA==
+=2Mvj
+-----END PGP SIGNATURE-----
+
+--Sig_/_N6MCupcUKe1ZPJ.nIa5OE7--
