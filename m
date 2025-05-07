@@ -1,149 +1,117 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED053273F9;
-	Wed,  7 May 2025 08:22:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EC6B221287;
+	Wed,  7 May 2025 08:23:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746606163; cv=none; b=QluZ4P1QKVQ5FYGDkABnEYTI2qe+NBgWSLmyKS6VlgsVPSnCjUYjM3dKD7YVAWbRvrXIkMw1/L70pZACk5TfzySvIJSD6XhyNJTpXK2oSZXV7XultoahwFpVmBvrQZKpL4dKnlk4kN8vNhJuv+iTOJcOjDN1y6TymF+krYuN0m4=
+	t=1746606195; cv=none; b=KzFhqhaSUrqQMJoK/r1qxQ2VTpc/Fi8RDxhHqJqkCClH+QDVNONXTdMUQYnBRJH0/ns0i9+MVJQw/lzIWJehppvnYA3PBLkk6tSf2cVAhk8p5Zdby7wLHIDORnjQwMJmhC2K42vJ2mzwgRdiKYqTCSEDo2sLnOCX1xXAt6lHFmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746606163; c=relaxed/simple;
-	bh=pm/x4yL4ynHqji5f94ZWEII9oNZb9GpYQx4Qg6pHT/0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M42wWx6SmkQyl35tJ2nAaJjq7nhB7IF1ra6yjPxDMOMABetY7DZd/GJ5g+QELh4FQT7SXhKFtjB20QtwzAhxKqzEnOK5U3jkVo2mX+8nbh98229f+dgTdvYuaw+LjBEoZb80RAaQ7+mJ+gLdS3V2mGW8EZsstqRWGoTvmtQFxig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=WvRWxpmd; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WvRWxpmd"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=dZYqAlHezITuF/Jo/pYWYXAIRG3sFn0xWBaAQsF1gug=; b=WvRWxpmdFQwb7Y8W2h0NSxfsEL
-	UWuCjylwSxWE4S3uF5d6bftzRw9LMfYxyHMpa193wXJzmLv11yd5cu3T9W3gWFU36XJCXsL0kJnmM
-	NKBCnHY2NZcfgRStd2Zk7dw/1FTdNnJIficcCFz7ESA7R5+XkXBd62b8sxRW2LLOMBpeZDpa2s5aQ
-	2TRD+MGG+Kpu2RE5jFIUVqIHWkYlSbq3jID2qJLRrLB2ELd53QFo0T9wnAHMM94n+4vFSR4UTQBo3
-	D5viJw6wGtHnBXYwer75H2S+OiOSrmVT74MogNJ309Kt60Cq3FtWwxTVPo3ELXFaZ4b9D4ilPw+kU
-	LZupus0Q==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1uCa2i-0000000FoF4-3Rza;
-	Wed, 07 May 2025 08:22:17 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 66035300780; Wed,  7 May 2025 10:22:16 +0200 (CEST)
-Date: Wed, 7 May 2025 10:22:16 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Sohil Mehta <sohil.mehta@intel.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, Xin Li <xin@zytor.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Brian Gerst <brgerst@gmail.com>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-	Jacob Pan <jacob.pan@linux.microsoft.com>,
-	Andi Kleen <ak@linux.intel.com>, Kai Huang <kai.huang@intel.com>,
-	Nikolay Borisov <nik.borisov@suse.com>,
-	linux-perf-users@vger.kernel.org, linux-edac@vger.kernel.org,
-	kvm@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 4/9] x86/nmi: Assign and register NMI-source vectors
-Message-ID: <20250507082216.GA4439@noisy.programming.kicks-ass.net>
-References: <20250507012145.2998143-1-sohil.mehta@intel.com>
- <20250507012145.2998143-5-sohil.mehta@intel.com>
+	s=arc-20240116; t=1746606195; c=relaxed/simple;
+	bh=dKQSYssCqjab+VThR2A6t9EL5/fdsI5w0NftenKqgO8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ibWIb95PO3EaJJ/ByiG3lHgsKX15j1qGqKZaC6Dc4LKEDm/jpb38ip7Lkg/HFIzkJ0LX9mApPhyOL4ZVg3PloSyxrne0uuvQKjJaLcEEaom6lCYY1wQjBO+attNr0xXVFuOZrC4byyMXm1Zm86HoDCfW6j7r2CewVNK0dMfY4MU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4ZspD501PTz4f3jXv;
+	Wed,  7 May 2025 16:22:44 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 7419B1A018C;
+	Wed,  7 May 2025 16:23:09 +0800 (CST)
+Received: from [10.174.179.80] (unknown [10.174.179.80])
+	by APP1 (Coremail) with SMTP id cCh0CgAXfHxqGBto+dv_LQ--.31348S3;
+	Wed, 07 May 2025 16:23:08 +0800 (CST)
+Message-ID: <6fc62631-fb6f-4207-badb-1964b20fa89a@huaweicloud.com>
+Date: Wed, 7 May 2025 16:23:06 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250507012145.2998143-5-sohil.mehta@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v4 07/11] fs: statx add write zeroes unmap attribute
+To: "Darrick J. Wong" <djwong@kernel.org>, Christoph Hellwig <hch@lst.de>
+Cc: dhowells@redhat.com, brauner@kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-ext4@vger.kernel.org, linux-block@vger.kernel.org,
+ dm-devel@lists.linux.dev, linux-nvme@lists.infradead.org,
+ linux-scsi@vger.kernel.org, linux-xfs@vger.kernel.org,
+ linux-kernel@vger.kernel.org, tytso@mit.edu, john.g.garry@oracle.com,
+ bmarzins@redhat.com, chaitanyak@nvidia.com, shinichiro.kawasaki@wdc.com,
+ yi.zhang@huawei.com, chengzhihao1@huawei.com, yukuai3@huawei.com,
+ yangerkun@huawei.com
+References: <20250421021509.2366003-1-yi.zhang@huaweicloud.com>
+ <20250421021509.2366003-8-yi.zhang@huaweicloud.com>
+ <20250505132208.GA22182@lst.de> <20250505142945.GJ1035866@frogsfrogsfrogs>
+ <20250506050239.GA27687@lst.de> <20250506053654.GA25700@frogsfrogsfrogs>
+ <20250506054722.GA28781@lst.de>
+ <c3105509-9d63-4fa2-afaf-5b508ddeeaca@huaweicloud.com>
+ <20250506121012.GA21705@lst.de> <20250506155515.GL1035866@frogsfrogsfrogs>
+Content-Language: en-US
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+In-Reply-To: <20250506155515.GL1035866@frogsfrogsfrogs>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:cCh0CgAXfHxqGBto+dv_LQ--.31348S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7uw1ktr18Gr17CFy8Kw48Zwb_yoW8CFWDpF
+	WjgF4UGFWUKry3Jw1kuw1Igr15ZFn5GFy3C39Ykr18Zws0qr1kKF95W3ZYkF9ruryrAa1U
+	ta9xK3sxWws3A37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
+	14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWr
+	XwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
+	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0
+	s2-5UUUUU==
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-On Tue, May 06, 2025 at 06:21:40PM -0700, Sohil Mehta wrote:
+On 2025/5/6 23:55, Darrick J. Wong wrote:
+> On Tue, May 06, 2025 at 02:10:12PM +0200, Christoph Hellwig wrote:
+>> On Tue, May 06, 2025 at 07:25:06PM +0800, Zhang Yi wrote:
+>>> +       if (request_mask & STATX_WRITE_ZEROES_UNMAP &&
+>>> +           bdev_write_zeroes_unmap(bdev))
+>>> +               stat->result_mask |= STATX_WRITE_ZEROES_UNMAP;
+>>
+>> That would be my expectation.  But then again this area seems to
+>> confuse me a lot, so maybe we'll get Christian or Dave to chim in.
+> 
+> Um... does STATX_WRITE_ZEROES_UNMAP protect a field somewhere?
+> It might be nice to expose the request alignment granularity/max
+> size/etc.
 
-> diff --git a/arch/x86/include/asm/nmi.h b/arch/x86/include/asm/nmi.h
-> index f0a577bf7bba..b9beb216f2d0 100644
-> --- a/arch/x86/include/asm/nmi.h
-> +++ b/arch/x86/include/asm/nmi.h
-> @@ -57,6 +57,38 @@ struct nmiaction {
->  	u8			source_vector;
->  };
->  
-> +/**
-> + * NMI-source vectors are used to identify the origin of an NMI and to
-> + * route the NMI directly to the appropriate handler.
-> + *
-> + * On CPUs that support NMI-source reporting with FRED, receiving an NMI
-> + * with a valid vector sets the corresponding bit in the NMI-source
-> + * bitmap. The bitmap is delivered as FRED event data on the stack.
-> + * Multiple NMIs are coalesced in the NMI-source bitmap until the next
-> + * NMI delivery.
-> + *
-> + * If an NMI is received without a vector or beyond the defined range,
-> + * the CPU sets bit 0 of the NMI-source bitmap.
-> + *
-> + * Vector 2 is reserved for external NMIs related to the Local APIC -
-> + * LINT1. Some third-party chipsets may send NMI messages with a
-> + * hardcoded vector of 2, which would result in bit 2 being set in the
-> + * NMI-source bitmap.
-> + *
-> + * The vectors are in no particular priority order. Add new vector
-> + * assignments sequentially in the list below.
-> + */
-> +#define NMIS_VECTOR_NONE	0	/* Reserved - Set for all unidentified sources */
-> +#define NMIS_VECTOR_TEST	1	/* NMI selftest */
-> +#define NMIS_VECTOR_EXTERNAL	2	/* Reserved - Match External NMI vector 2 */
-> +#define NMIS_VECTOR_SMP_STOP	3	/* Panic stop CPU */
-> +#define NMIS_VECTOR_BT		4	/* CPU backtrace */
-> +#define NMIS_VECTOR_KGDB	5	/* Kernel debugger */
-> +#define NMIS_VECTOR_MCE		6	/* MCE injection */
-> +#define NMIS_VECTOR_PMI		7	/* PerfMon counters */
-> +
-> +#define NMIS_VECTORS_MAX	16	/* Maximum number of NMI-source vectors */
+I think that simply returning the support state is sufficient at the
+moment. __blkdev_issue_write_zeroes() will send write zeroes through
+multiple iterations, and there are no specific restrictions on the
+parameters provided by users.
 
-Are these really independent NMI vectors, or simply NMI source reporting bits?
+> Or does this flag exist solely to support discovering that
+> FALLOC_FL_WRITE_ZEROES is supported?  In which case, why not discover
+> its existence by calling fallocate(fd, WRITE_ZEROES, 0, 0) like the
+> other modes?
+> 
 
-Because if they are not NMI vectors, naming them such is confusing.
+Current STATX_WRITE_ZEROES_UNMAP and FALLOC_FL_WRITE_ZEROES are
+inconsistent, we allow users to call fallocate(FALLOC_FL_WRITE_ZEROES) on
+files that STATX_WRITE_ZEROES_UNMAP is not set. Users can check whether
+the device supports unmap write zeroes through STATX_WRITE_ZEROES_UNMAP
+and then decide to call fallocate(FALLOC_FL_WRITE_ZEROES) if it is
+supported. Please see this explanation for details.
 
-Specifically, is there a latch per source?
+  https://lore.kernel.org/linux-fsdevel/20250421021509.2366003-1-yi.zhang@huaweicloud.com/T/#mc1618822bc27d486296216fc1643d5531fee03e1
 
-> diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
-> index be93ec7255bf..a1d672dcb6f0 100644
-> --- a/arch/x86/kernel/nmi.c
-> +++ b/arch/x86/kernel/nmi.c
-> @@ -184,6 +184,11 @@ int __register_nmi_handler(unsigned int type, struct nmiaction *action)
->  
->  	raw_spin_lock_irqsave(&desc->lock, flags);
->  
-> +	WARN_ON_ONCE(action->source_vector >= NMIS_VECTORS_MAX);
-> +
-> +	if (!cpu_feature_enabled(X86_FEATURE_NMI_SOURCE) || type != NMI_LOCAL)
-> +		action->source_vector = 0;
+However, removing STATX_WRITE_ZEROES_UNMAP also seems good to me(Perhaps
+it would be better.).It means we do not allow to call
+fallocate(FALLOC_FL_WRITE_ZEROES) if the device does not explicitly
+support unmap write zeroes.
 
-How about:
+Thanks,
+Yi.
 
-	WARN_ON_ONCE(type != NMI_LOCAL && action->source_vector);
-
-instead?
