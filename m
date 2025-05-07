@@ -1,183 +1,229 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4B27289837;
-	Wed,  7 May 2025 15:47:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B434528C2DE;
+	Wed,  7 May 2025 15:47:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746632848; cv=none; b=KxKi+hAjxnnCdH2bf5ALBH5xdN3SPUzLlXROs/Ip1Y1cL3V+STbQssSzHsYDZDndw+kAYGNbvFsSy2Gt2gvpnDwClE3sEMmL7B1yGCmqzafB9A9BsRya1FiUy/AuoUADKAGBqxYexBxEYBtKDxXkcRS+Z3qR7Z48ggUEVu44738=
+	t=1746632849; cv=none; b=puXLaPgSwenB3TfbjeqgVkz8YrfYwkg5X1Fb6VMRnDT57kX5k4U5oIjuCH5jm6KYCuCTfz9eD84HDw9fgaU0IwxSWgOy+iA9SdYZeX+6AFo70/UUirq4cDQrm5U2aVg/gtc6s6s2ieDtWFtJbY94q8u5nwYzngYDvAZDDpzJ6ow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746632848; c=relaxed/simple;
-	bh=XJP3ksP+po7wqMMJKXn4rgDgRNdO3D3MPvv47yMTjsk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bkbJ3Pou2ex/qrb/bZCT2/D83YLnvYnlpZEva/tee+EEOSPBXX+f4kjEK6svxNreXP4ZJMBTXECSfUZATskZKSQXYnXumKzHswOt5LeXKaSunMq4WBTP9aX/DlZTMstkjpGNd1tVxNAOcDnvNWUAQjjz8slfHB0GM+oHsT8sijY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DN2Xp91c; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746632849; c=relaxed/simple;
+	bh=WXI0SNppGx3CN4e/YPICg3MD2GaSica0+CejvhbhP2w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FaIwj4k/mpNpn/9SHsRYGxXky695bslCfhRuwUbWS0VR+hiA9hI4O6df7iksFqroF9vw1/NUMXXaJd84nrHZaHU8Z+xh/D/zunXXd1W/SRqjTRML8cr1JqP3r6pxX3BeScT87F86jWWJLOYtNZPQYWoc2QUc4KJ6czTu69bI0CE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nPufcLux; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DN2Xp91c"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-72d3b48d2ffso78028b3a.2;
-        Wed, 07 May 2025 08:47:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746632846; x=1747237646; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=LmkbRzm6/L2ISgCL3Ow+dZj/hCqoVpb93sMpickKofs=;
-        b=DN2Xp91c8ar5ctiEjxFlX3ZSga1DfqiPk7VUjs3E176jVfZpB/bK+4QOw0MqAJstwd
-         Fmz2t9O6f1gX7ZBt/GrPGghiPGnJ/gT9FTAkxsILXfKU9kz2yzeph/Q2VbfHRKvZ6PFn
-         I13ZaQ9va2DUpLaqOjvo/F9dLMJulltDu7WpWzZPq2PJ0RIwyJl8c10+/FXcSTq6Zs86
-         smf0FhFX4731jzkMxa/ATabHluZjVLr5x8K3X+qjP4lwDnJ/aqHj8xHchVApW/J0AJqV
-         v8D34f2H4DKL05EXJqvce5lLqejO3f0hZ6siFlT0A5+cU7D1X+sXBgNQXLrd5XPb04D1
-         QkGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746632846; x=1747237646;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LmkbRzm6/L2ISgCL3Ow+dZj/hCqoVpb93sMpickKofs=;
-        b=u8ihhveMV66Oci5d7uXa+vMEkY+8ju/tZDCh40iyMpnQnQeWApHJL9FhpsPUkMK39B
-         HDcdwIcrMjE2NdIVzoeImeW9uh1529vu9CGmpw40w8JOJ2l7VVi4nwnJrwG7mm5/eBM1
-         PU4aVEfY75qYTy7VF0pQ/Y2p5pZE+YRZIgv2Rye+hl9YogP0Vu7FRK1TvkOhx7OlQgeT
-         WVtVhCCfwScHWAnTUdqkTQvfvITCMnQ1jgrF7tZ/UebJmSXiL0xHpLn+vB4xe3LJ4klU
-         e02GT4+5djPpw1PIq4Xet2KKil9DmK2N1yYKI1+OqKvwTyPBiU50j93EvbAtLSAcht59
-         AWAg==
-X-Forwarded-Encrypted: i=1; AJvYcCUE8nUMpAveEXJuIZzrjf19mqnA6SklygvnLgZv9eCjyMHu4mMVGv241Gk25iD5TeTOaOUjPL/fhKC6ZJL+@vger.kernel.org, AJvYcCVgoG09wJbZzn1IO3NFzvFlTHljtOKqg7kuKcM6xY7L2ofGOD6kzQ9wkUBEDlBodoTGLwrZwAprBI/S01zv@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBZ4z07WjJbjZMyu7SYhWNaaLAYRfI6k+Yr8PmiZ3PkHcKCIfl
-	BGoRMX6hJygEQZfQJ6t4QDUSWFk+z60IB9mm5c5d2XwN8H+8KTyC
-X-Gm-Gg: ASbGnctwOtfzkC1lTQcwx3EKyqmspqZxjESYAq30TNVt/U8ibpSbZR2N8tHBgoJktPY
-	fsHV1PTr8mUQRSAOQvWq/s9mUZH+9+ZFT6Gmn5EExaqpu++HD+cV7lN7J8qFft3p/a0b1e0XRXi
-	hsUqoyjcjipqOOXvziQw0WWc7emgRzmBH9IN08jI5i8KP7IUAVBEUlmlOL1WExusBW0p8EZkxSM
-	nUYkVZV/lTrXfzmHAdszzoj//cWY4PmsWTbVCscQRjE5p4RGZs1wOl2Smie9FZkDAChUwREtdeh
-	1y8Ujue0vfMdFfAcbYo7kQ6roGf1wLHvQOqqu18agJPyclgJ0Ufa1BIzUmfPNs7ql9qq0sZMrH+
-	ijwbVMIf4ax9T3XI=
-X-Google-Smtp-Source: AGHT+IEjee61+V1bhnajLB99NRDjF86bj6+oLpOJxzBD/kzEvFWRPqLSBK91CgrPhNzavqWjuXF4TA==
-X-Received: by 2002:a05:6a21:3944:b0:201:8a13:f392 with SMTP id adf61e73a8af0-2148c0f634bmr5732814637.20.1746632846056;
-        Wed, 07 May 2025 08:47:26 -0700 (PDT)
-Received: from localhost ([2a00:79e0:3e00:2601:3afc:446b:f0df:eadc])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74058d7ad7asm11852752b3a.11.2025.05.07.08.47.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 08:47:25 -0700 (PDT)
-From: Rob Clark <robdclark@gmail.com>
-To: dri-devel@lists.freedesktop.org
-Cc: freedreno@lists.freedesktop.org,
-	linux-arm-msm@vger.kernel.org,
-	Rob Clark <robdclark@chromium.org>,
-	Rob Clark <robdclark@gmail.com>,
-	Sean Paul <sean@poorly.run>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Abhinav Kumar <quic_abhinavk@quicinc.com>,
-	Dmitry Baryshkov <lumag@kernel.org>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] drm/msm/adreno: Remove MODULE_FIRMWARE()'s
-Date: Wed,  7 May 2025 08:47:22 -0700
-Message-ID: <20250507154723.275987-1-robdclark@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nPufcLux"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3ACFCC4CEEE;
+	Wed,  7 May 2025 15:47:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746632849;
+	bh=WXI0SNppGx3CN4e/YPICg3MD2GaSica0+CejvhbhP2w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nPufcLuxU3+y1KrclByxH5uRimPfKnvmCtCerOUp//wSrfgIbRRX9jyST0BaPFjfa
+	 7+5JXzvJkxZ4NpPGN5gZ4n2mEv7l9GE4edcei366kxKtgx7541zcWPc0fJv2SJQAxm
+	 p09QOqEx/nC8ypCsaRHpD7JOeTD5mV21YnK21A9Cb1I2nYSEuJoPh6ieR9PAt0U85t
+	 J1tw/uvDzgOO1TQqMHmEb6N7v8Unip5nLetXcpOgOnWF7tmQKdWGJlbGPzsp9A8JlM
+	 NFX89P89ibVD61ZWzJT4mhbavu+k2RufZbQyPkHO4L1hB5p0qa9nYlNbwaRDYvNwrJ
+	 gsif6mc5mUgsw==
+Date: Wed, 7 May 2025 12:47:26 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Dmitry Vyukov <dvyukov@google.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
+Subject: Re: [RFC/PATCH] perf report: Support latency profiling in
+ system-wide mode
+Message-ID: <aBuAjt5PyBsN65R9@x1>
+References: <20250503003620.45072-1-namhyung@kernel.org>
+ <aBcjwoINtWRWKMIJ@gmail.com>
+ <aBfFlT0l05yBbZBj@google.com>
+ <CACT4Y+YvWYFBkZ9jQ2kuTOHb6pZQwWXc9sOJ5Km0Wr1fLi-94A@mail.gmail.com>
+ <aBojTzsa5mSAGziP@x1>
+ <aBo_z8Q87gflYyuX@x1>
+ <CACT4Y+YG61CUPG1WRSGWgv00eP9aPYLELvDVmjK9ULJwNiiMgw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACT4Y+YG61CUPG1WRSGWgv00eP9aPYLELvDVmjK9ULJwNiiMgw@mail.gmail.com>
 
-From: Rob Clark <robdclark@chromium.org>
+On Wed, May 07, 2025 at 11:58:10AM +0200, Dmitry Vyukov wrote:
+> On Tue, 6 May 2025 at 18:58, Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> > > So maybe when we notice that cycles was used 'perf report/top' should
+> > > use the term 'wall-clock' for the column name?
 
-The driver handles the case where gpu fw is not in the initrd.  OTOH it
-doesn't always handle the case where _some_ fw is in the initrd, but
-others are not.  In particular the zap fw tends to be signed with an OEM
-specific key, so the paths/names differ across devices with the same
-SoC/GPU, so we cannot sanely list them with MODULE_FIRMWARE().
+> > > So instead of having a --latency we could have a hint that would tell
+> > > the user that if this knob was set:
 
-So MODULE_FIRMWARE() just ends up causing problems without actually
-solving anything.  Remove them!
-
-Signed-off-by: Rob Clark <robdclark@chromium.org>
----
- drivers/gpu/drm/msm/adreno/a2xx_catalog.c |  5 -----
- drivers/gpu/drm/msm/adreno/a3xx_catalog.c |  5 -----
- drivers/gpu/drm/msm/adreno/a4xx_catalog.c |  3 ---
- drivers/gpu/drm/msm/adreno/a5xx_catalog.c |  9 ---------
- drivers/gpu/drm/msm/adreno/a6xx_catalog.c | 11 -----------
- 5 files changed, 33 deletions(-)
-
-diff --git a/drivers/gpu/drm/msm/adreno/a2xx_catalog.c b/drivers/gpu/drm/msm/adreno/a2xx_catalog.c
-index 9ddb7b31fd98..5ddd015f930d 100644
---- a/drivers/gpu/drm/msm/adreno/a2xx_catalog.c
-+++ b/drivers/gpu/drm/msm/adreno/a2xx_catalog.c
-@@ -45,8 +45,3 @@ static const struct adreno_info a2xx_gpus[] = {
- 	}
- };
- DECLARE_ADRENO_GPULIST(a2xx);
--
--MODULE_FIRMWARE("qcom/leia_pfp_470.fw");
--MODULE_FIRMWARE("qcom/leia_pm4_470.fw");
--MODULE_FIRMWARE("qcom/yamato_pfp.fw");
--MODULE_FIRMWARE("qcom/yamato_pm4.fw");
-diff --git a/drivers/gpu/drm/msm/adreno/a3xx_catalog.c b/drivers/gpu/drm/msm/adreno/a3xx_catalog.c
-index 2eb6c3e93748..1498e6532f62 100644
---- a/drivers/gpu/drm/msm/adreno/a3xx_catalog.c
-+++ b/drivers/gpu/drm/msm/adreno/a3xx_catalog.c
-@@ -85,8 +85,3 @@ static const struct adreno_info a3xx_gpus[] = {
- 	}
- };
- DECLARE_ADRENO_GPULIST(a3xx);
--
--MODULE_FIRMWARE("qcom/a300_pm4.fw");
--MODULE_FIRMWARE("qcom/a300_pfp.fw");
--MODULE_FIRMWARE("qcom/a330_pm4.fw");
--MODULE_FIRMWARE("qcom/a330_pfp.fw");
-diff --git a/drivers/gpu/drm/msm/adreno/a4xx_catalog.c b/drivers/gpu/drm/msm/adreno/a4xx_catalog.c
-index 93519f807f87..09f9f228b75e 100644
---- a/drivers/gpu/drm/msm/adreno/a4xx_catalog.c
-+++ b/drivers/gpu/drm/msm/adreno/a4xx_catalog.c
-@@ -45,6 +45,3 @@ static const struct adreno_info a4xx_gpus[] = {
- 	}
- };
- DECLARE_ADRENO_GPULIST(a4xx);
--
--MODULE_FIRMWARE("qcom/a420_pm4.fw");
--MODULE_FIRMWARE("qcom/a420_pfp.fw");
-diff --git a/drivers/gpu/drm/msm/adreno/a5xx_catalog.c b/drivers/gpu/drm/msm/adreno/a5xx_catalog.c
-index 633f31539162..b48a636d8237 100644
---- a/drivers/gpu/drm/msm/adreno/a5xx_catalog.c
-+++ b/drivers/gpu/drm/msm/adreno/a5xx_catalog.c
-@@ -150,12 +150,3 @@ static const struct adreno_info a5xx_gpus[] = {
- 	}
- };
- DECLARE_ADRENO_GPULIST(a5xx);
--
--MODULE_FIRMWARE("qcom/a530_pm4.fw");
--MODULE_FIRMWARE("qcom/a530_pfp.fw");
--MODULE_FIRMWARE("qcom/a530v3_gpmu.fw2");
--MODULE_FIRMWARE("qcom/a530_zap.mdt");
--MODULE_FIRMWARE("qcom/a530_zap.b00");
--MODULE_FIRMWARE("qcom/a530_zap.b01");
--MODULE_FIRMWARE("qcom/a530_zap.b02");
--MODULE_FIRMWARE("qcom/a540_gpmu.fw2");
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_catalog.c b/drivers/gpu/drm/msm/adreno/a6xx_catalog.c
-index 3b996837b178..bc8e6f621b70 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_catalog.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_catalog.c
-@@ -1092,17 +1092,6 @@ static const struct adreno_info a6xx_gpus[] = {
- };
- DECLARE_ADRENO_GPULIST(a6xx);
+> > >   $ perf config report.wall-clock=true
  
--MODULE_FIRMWARE("qcom/a615_zap.mbn");
--MODULE_FIRMWARE("qcom/a619_gmu.bin");
--MODULE_FIRMWARE("qcom/a630_sqe.fw");
--MODULE_FIRMWARE("qcom/a630_gmu.bin");
--MODULE_FIRMWARE("qcom/a630_zap.mbn");
--MODULE_FIRMWARE("qcom/a640_gmu.bin");
--MODULE_FIRMWARE("qcom/a650_gmu.bin");
--MODULE_FIRMWARE("qcom/a650_sqe.fw");
--MODULE_FIRMWARE("qcom/a660_gmu.bin");
--MODULE_FIRMWARE("qcom/a660_sqe.fw");
--
- static const struct adreno_reglist a702_hwcg[] = {
- 	{ REG_A6XX_RBBM_CLOCK_CNTL_SP0, 0x22222222 },
- 	{ REG_A6XX_RBBM_CLOCK_CNTL2_SP0, 0x02222220 },
--- 
-2.49.0
+> I am not sure it can be as simple as a single global knob.
 
+> First, record needs to collect additional info and that may be
+> somewhat expensive.
+ 
+> Second, report now has several modes:
+>  - it can show latency, but order by the current overhead
+>  - it can also show latency, and order by latency
+> A user wants one or another depending on what they are optimizing
+> (possibly looking at both).
+ 
+> I also feel that global config switches are even less discoverable by
+> median users (read -- ~nobody will know about that). If these things
+> are normal flags with a help description, then some users may
+> eventually discover them.
+
+So, the addition of:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=e9cbc854d8b148e3491291fb615e94261970fb54
+
+  perf config: Add a function to set one variable in .perfconfig
+
+  To allow for setting a variable from some other tool, like with the
+  "wallclock" patchset needs to allow the user to opt-in to having
+  that key in the sort order for 'perf report'.
+
+  Cc: Dmitriy Vyukov <dvyukov@google.com>
+
+
+Was to tell the user about the new possibilities of profiling, once,
+with something like:
+
+root@number:~# perf report
+             ┌─────────────────────────────────────────────────────┐
+             │Do you want to use latency mode?                     │
+             │That will add a 'Latency' column that would mean     │
+             │'wall-clock' time when used with cycles, for instance│
+             │                                                     │
+             │                                                     │
+             │Enter: Yes, ESC: No                                  │
+             └─────────────────────────────────────────────────────┘
+ 
+The working should inform if the current perf.data has what is needed
+and thus this would take immediate effect, and if not, inform that as
+well and what is needed to be able to use that, things like you
+described above:
+
+> First, record needs to collect additional info and that may be
+> somewhat expensive.
+
+If the user says that the feature is desired by pressing Enter, follow
+up questions can be asked as well, like you described:
+
+> Second, report now has several modes:
+
+>  - it can show latency, but order by the current overhead
+>  - it can also show latency, and order by latency
+
+> A user wants one or another depending on what they are optimizing
+> (possibly looking at both).
+
+Once these are answered, the questions goes away, as they are now
+recorded in the user's ~/.perfconfig file and will be used when what is
+needed is present in perf.data file.
+
+The user should also be informed that to change that knob, 'perf config'
+is your friend.
+
+Additionally some hotkey could be made available to change that
+behaviour, on the fly, with the option of turning the new mode the new
+default, again writing to ~/.perfconfig.
+
+Sometimes this "on the fly" needs reprocessing of the whole perf.data
+file, sometimes it may be a matter of just showing extra available
+fields, like the 'V' key now, that goes on bumping the verbosity in the
+'perf report' and 'perf top' browsers (they share the hists browser), or
+'j' that toogles showing the lines from jump sources to jump targets in
+the annotate browser, 'J' to show how many jumps target a particular
+jump target, also in the annotate browser, etc.
+
+This could help experimenting with the various modes of doing profiling,
+interactively, to see the problem from different angles, without having
+to restart the whole process by exiting the 'perf report' to add new
+command line options, then restart, etc, reusing computation sometimes
+when switching views, etc.
+
+To get default behaviour its just a matter of renaming ~/.perfconfig to
+~/.perfconfig.some_suitabe_name_for_later_use.
+
+This way interesting new features like this don't get buried behind
+either command line options nor man pages, giving the user at least an
+opportunity to be informed about it.
+
+That is what the patch below barely starts sketching, not doing all I
+just described.
+
+- Arnaldo
+
+> > > Then if 'cycles' is present we would have:
+
+> > Something along the lines of the patch below, but there are several
+> > details to take into account with what is in the current codebase, only
+> > if what is needed for doing the latency/wall-clock time is present in
+> > the perf.data being used is present that knob would be used or suggested
+> > to the user, so some refactorings are needed, I'll try to folow on it.
+
+> > But just for reference:
+
+> > diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+> > index f0299c7ee0254a37..20874800d967ffb5 100644
+> > --- a/tools/perf/builtin-report.c
+> > +++ b/tools/perf/builtin-report.c
+> > @@ -51,6 +51,7 @@
+> >  #include "util/util.h" // perf_tip()
+> >  #include "ui/ui.h"
+> >  #include "ui/progress.h"
+> > +#include "ui/util.h"
+> >  #include "util/block-info.h"
+> >
+> >  #include <dlfcn.h>
+> > @@ -127,6 +128,11 @@ static int report__config(const char *var, const char *value, void *cb)
+> >  {
+> >         struct report *rep = cb;
+> >
+> > +       if (!strcmp(var, "report.prefer_latency")) {
+> > +               symbol_conf.prefer_latency = perf_config_bool(var, value);
+> > +               symbol_conf.prefer_latency_set = true;
+> > +               return 0;
+> > +       }
+> >         if (!strcmp(var, "report.group")) {
+> >                 symbol_conf.event_group = perf_config_bool(var, value);
+> >                 return 0;
+> > @@ -1734,6 +1740,15 @@ int cmd_report(int argc, const char **argv)
+> >                 symbol_conf.annotate_data_sample = true;
+> >         }
+> >
+> > +       if (!symbol_conf.prefer_latency) {
+> > +               if (ui__dialog_yesno("Do you want to use latency mode?\n"
+> > +                                    "That will add a 'Latency' column that would mean\n"
+> > +                                    "'wall-clock' time when used with cycles, for instance\n")) {
+> > +                       symbol_conf.prefer_latency = symbol_conf.prefer_latency_set = true;
+> > +                       perf_config__set_variable("report.prefer_latency", "yes");
+> > +               }
+> > +       }
+> > +
+> >         symbol_conf.enable_latency = true;
+> >         if (report.disable_order || !perf_session__has_switch_events(session)) {
+> >                 if (symbol_conf.parallelism_list_str ||
+> > diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.h
+> > index cd9aa82c7d5ad941..f87071f5dedd94ca 100644
+> > --- a/tools/perf/util/symbol_conf.h
+> > +++ b/tools/perf/util/symbol_conf.h
+> > @@ -51,6 +51,7 @@ struct symbol_conf {
+> >                         annotate_data_sample,
+> >                         skip_empty,
+> >                         enable_latency,
+> > +                       prefer_latency_set,
+> >                         prefer_latency;
+> >         const char      *vmlinux_name,
+> >                         *kallsyms_name,
