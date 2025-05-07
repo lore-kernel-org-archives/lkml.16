@@ -1,220 +1,197 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74D3528AB0C;
-	Wed,  7 May 2025 13:08:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746623295; cv=pass; b=G418T4YqKst8O4JX07kqWj1as5YPWNd295gA95BVcw4JPIwQb3JCmOM+g0lxYLCOlaXRx2YYmrYRSATXwRXEQ3Y2sFxTjHVQboYkF6nJdY7qqtkDrfWFlnKke3iqfru5AyZ0aqqlvQjxU0GDKOElM9VEUyFKnYzqVReBAevmXNE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746623295; c=relaxed/simple;
-	bh=VW4aB7Eci+66CKEdrWizM7NfU5WhMJaGMzLxapw8WDg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=HforumwY2zM+Nu3n4C1Jc22G8lgCwOYnz96YOx50XzYAcHQeexI57rtUpMZzHncnikI1L5UCvfuKirfaRgw2YJSd1RoMhL8qoDUfKhM/h81ley8SR8jDco5MYTTLbDUPH9pGY1w7Ewr9gIQSXEtvOD8fm/EDaRGkWu+0CsPQ3MQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=JMlYb0/Z; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 150C9286436
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 13:09:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746623353; cv=none; b=rwNx0bCZbG5pl/4xtPqkVSzykjP7C2shIsJmtL8yzDfsRmtXcLpJUDIqfPHL128lSZOUoxlZTyU1w9Wr5x6Vzn1WyA/ix21P0+rycOdCa5NrK+f0/l00LFTss5p/W1P+L0ZTi1FkzFLvqg2uVdVYeCgU5sYichk0HPYTMGWMjnM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746623353; c=relaxed/simple;
+	bh=PCMX2Cr+uQWKx3vKDgl51jkFcRXqKV/9DGQU2RgRS9o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VirFCh/zzPyB/nWsSUZF81oeNP3XcRXfZfwWtC3BCHiP9hpk4ti8mwh3VF3IW40io2Nyug/paw9WlpXHRMlIadLbce/qqt4mHTAJbyZwfhaenlS3uTNqn5VaNe3gQy4mubgv19bahjMtToC6jz1c3S05ivhBh2Qh/Mi/ek07aV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=H2krJcc5; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="JMlYb0/Z"
-ARC-Seal: i=1; a=rsa-sha256; t=1746623266; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Wis9voALlCGx1G3zRE6fd7kgqLT1nRdkT2lhV3GCXwb7q52/sxWJSnJYZPrRe8emZHEcGkoCl9VsHw+nGhhVXEZyHMqcO0aL2CJCAcYa2ay2wziB+umk2ppPDNLJTFUKmWiG9PNWycZSaZ836XOqm8/sR9zwkXg64Oit1QR7zJs=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1746623266; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=JTB3v+x8w/FUL8jly8m0hmcJty/2pFiwNyr1NhvSBfc=; 
-	b=P+Vg/Ic03Hdxv6xu4C6BrXO3noHQqsiUP4oG4249maL/tdEj2Wyy14TtiHsuAYHap1+yYeNRACbkgjolkWF/tIwT/Pzb/Txh1soKFeEiQQ7pGeSuA3PYQnE1awSYwnPpL9rORpoCIZxUUsuzyXFtQm87/3NCrjo9DztOACa1bJ4=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
-	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1746623266;
-	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
-	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=JTB3v+x8w/FUL8jly8m0hmcJty/2pFiwNyr1NhvSBfc=;
-	b=JMlYb0/ZPABoXpa8LTtqCfcotGKCLxCZO/LCzyfs8IqBsWA/WyEfdAIWkZ7XgrYR
-	nIRVbg7rRV3Dg2HJXPonVVE8T+1yvarx57m6T6r2mTkueS29LQTxx1PFBDJSqO2H13n
-	PoeW8K5ssMMPBMftVt+LBwSUbP6SBZr9jTq7aFaU=
-Received: by mx.zohomail.com with SMTPS id 1746623264940513.8779431523127;
-	Wed, 7 May 2025 06:07:44 -0700 (PDT)
-From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Date: Wed, 07 May 2025 15:07:23 +0200
-Subject: [PATCH v3 3/4] phy: rockchip: usbdp: reset USB3 and reinit on
- orientation switch
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H2krJcc5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746623349;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qAtnwiXcU1op8DM9QOzo0SnMVizQr1PVYLn+9+GejxY=;
+	b=H2krJcc5xywjlExB/x0euKpZmhMsLz0yz58YwpuVq+9xM3lu1THWbfmZK3gkmVMpMuHhKq
+	CSnpBafNb3hxIBGx/BWt1kRjr5dPeq4KN2MMbSRh2w9tnqOgkZ4gs7n9iWNeLORAFrGeZF
+	ZCDdBrkJUTYW550cINdd3qxP6bgUgdY=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-507-CUDmlVM-NZOCgz_deznrwQ-1; Wed, 07 May 2025 09:09:08 -0400
+X-MC-Unique: CUDmlVM-NZOCgz_deznrwQ-1
+X-Mimecast-MFC-AGG-ID: CUDmlVM-NZOCgz_deznrwQ_1746623347
+Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-5fbf5fce18dso608523a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 06:09:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746623347; x=1747228147;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qAtnwiXcU1op8DM9QOzo0SnMVizQr1PVYLn+9+GejxY=;
+        b=ILJmQHUvkl9UerLVRZ6j+gPJ+I/JJ2sJEGpTRrey6MzK8zgPDbdGUkEmZtD3HaQ07c
+         UdU0+I3RR4ep8OmvWMPkPFMZ4wZoO1wgM22wLUZCczc7Gq2lXUPNOHheYfjImeC0OX2x
+         RDq59MZjgNpn38f73PzGxrv8n5qmbUn10sZwNXci9t2ukYhQ3LSdb2nl6RokJEslPAZw
+         ytkldj10B6PZU0LuBvZDjaKu9f0NTWCRsTDKYyhjYdf00qpDWKh0Zzxwe04n8qLlMXgy
+         81t1zq8bUZD7v8ZjJK6j5tIGjUoPh13YaY7iPkA5T4jDfCh8ky2/nMyUVEGw83bwi53C
+         MR+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU69q2V0aJ2h8v4xxJ5xIQdcNKymW7zf4ZOg9+h0vcQYheNrWts3HF67TLHQ5NpTDQLc2/Q5ITrQh+062E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3ZZpxDEG3vVTqTToKv4lRG2cmL6c6bB6SNX8OpU8sDpNHaidI
+	Ds2pbMPa6UiFpQag2JXOk21+7Zb/04KNQZMODdEBnxfoXs7gsRlK7kLwCkoPoHcXyQWUA6/MA3K
+	yu9nbSn4QcLMkGJYdjpf7FKLbLg6oow6L8XxaSoeMN6U7aUEXk0Yd5qXxRXKg30zFEfvfFw==
+X-Gm-Gg: ASbGncvvHo6yfMsTWW69dlrDvOLiFKDoNqcZoFMFP2VKfHJ6v/YCQy34K7t1tW1VB+w
+	kl0Ul3NxF03CmQR4F3gZQ/+1PxgHmQ1SsJqvBQgWdPAj71wbBTC2Yoil0zcsMGn6OQqeYVhVJL3
+	Di9DQ4jKT7NooigdnTfMcRudAf+vyssnkX8rGR07ynuFDk4+pjKpAxXOppm2jbpNN2YilNxoFr2
+	6lXM2gxmwHPM5in2BmTyp3GqQ3odtjxZ0hedx1x+EznZcm5doI3mDXEQlpWgpWOznSoWQZ/ZT8R
+	KVAYAHSAnKtpUue+
+X-Received: by 2002:a05:6402:34c5:b0:5e5:d9e5:c4d7 with SMTP id 4fb4d7f45d1cf-5fbe9fa7f9amr3011103a12.28.1746623336493;
+        Wed, 07 May 2025 06:08:56 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEwA872SvBWeTpMMj+/e7mYjU25+jDDfjv4mDrfoJ39gjkjiqHaiiL4tGqlCQGwX9860akxCA==
+X-Received: by 2002:a05:6402:35c4:b0:5f4:9017:c6a1 with SMTP id 4fb4d7f45d1cf-5fbe9f46c84mr3009014a12.25.1746623324960;
+        Wed, 07 May 2025 06:08:44 -0700 (PDT)
+Received: from sgarzare-redhat ([193.207.183.85])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fa77b914b4sm9371316a12.51.2025.05.07.06.08.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 06:08:43 -0700 (PDT)
+Date: Wed, 7 May 2025 15:08:22 +0200
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Konstantin Shkolnyy <kshk@linux.ibm.com>
+Cc: virtualization@lists.linux.dev, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, mjrosato@linux.ibm.com
+Subject: Re: [PATCH net] vsock/test: Fix occasional failure in SIOCOUTQ tests
+Message-ID: <sqee4iqviojcht4s42dke3mnsq4f4si6oislu77bm3nqwlowim@oz6voimaqw4m>
+References: <20250507114833.2503676-1-kshk@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250507-rk3576-sige5-usb-v3-3-89bf5a614ccf@collabora.com>
-References: <20250507-rk3576-sige5-usb-v3-0-89bf5a614ccf@collabora.com>
-In-Reply-To: <20250507-rk3576-sige5-usb-v3-0-89bf5a614ccf@collabora.com>
-To: Vinod Koul <vkoul@kernel.org>, 
- Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
- Kever Yang <kever.yang@rock-chips.com>, 
- Frank Wang <frank.wang@rock-chips.com>
-Cc: Sebastian Reichel <sebastian.reichel@collabora.com>, 
- kernel@collabora.com, linux-phy@lists.infradead.org, 
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20250507114833.2503676-1-kshk@linux.ibm.com>
 
-Until now, super speed on Type-C only worked in one orientation. This is
-because on an orientation switch, the UDPHY was never reinitialised.
+On Wed, May 07, 2025 at 06:48:33AM -0500, Konstantin Shkolnyy wrote:
+>These tests:
+>    "SOCK_STREAM ioctl(SIOCOUTQ) 0 unsent bytes"
+>    "SOCK_SEQPACKET ioctl(SIOCOUTQ) 0 unsent bytes"
+>output: "Unexpected 'SIOCOUTQ' value, expected 0, got 64 (CLIENT)".
+>
+>They test that the SIOCOUTQ ioctl reports 0 unsent bytes after the data
+>have been received by the other side. However, sometimes there is a delay
+>in updating this "unsent bytes" counter, and the test fails even though
+>the counter properly goes to 0 several milliseconds later.
+>
+>The delay occurs in the kernel because the used buffer notification
+>callback virtio_vsock_tx_done(), called upon receipt of the data by the
+>other side, doesn't update the counter itself. It delegates that to
+>a kernel thread (via vsock->tx_work). Sometimes that thread is delayed
+>more than the test expects.
+>
+>Change the test to try SIOCOUTQ several times with small delays in between.
+>
+>Signed-off-by: Konstantin Shkolnyy <kshk@linux.ibm.com>
+>---
+> tools/testing/vsock/vsock_test.c | 26 ++++++++++++++++----------
+> 1 file changed, 16 insertions(+), 10 deletions(-)
+>
+>diff --git a/tools/testing/vsock/vsock_test.c b/tools/testing/vsock/vsock_test.c
+>index d0f6d253ac72..143f1cba2d18 100644
+>--- a/tools/testing/vsock/vsock_test.c
+>+++ b/tools/testing/vsock/vsock_test.c
+>@@ -1264,21 +1264,27 @@ static void test_unsent_bytes_client(const struct test_opts *opts, int type)
+> 	send_buf(fd, buf, sizeof(buf), 0, sizeof(buf));
+> 	control_expectln("RECEIVED");
+>
+>-	ret = ioctl(fd, SIOCOUTQ, &sock_bytes_unsent);
+>-	if (ret < 0) {
+>-		if (errno == EOPNOTSUPP) {
+>-			fprintf(stderr, "Test skipped, SIOCOUTQ not supported.\n");
+>-		} else {
+>+	/* SIOCOUTQ isn't guaranteed to instantly track sent data */
+>+	for (int i = 0; i < 10; i++) {
+>+		ret = ioctl(fd, SIOCOUTQ, &sock_bytes_unsent);
+>+		if (ret == 0 && sock_bytes_unsent == 0)
+>+			goto success;
+>+
+>+		if (ret < 0) {
+>+			if (errno == EOPNOTSUPP) {
+>+				fprintf(stderr, "Test skipped, SIOCOUTQ not supported.\n");
+>+				goto success;
+>+			}
+> 			perror("ioctl");
+> 			exit(EXIT_FAILURE);
+> 		}
+>-	} else if (ret == 0 && sock_bytes_unsent != 0) {
+>-		fprintf(stderr,
+>-			"Unexpected 'SIOCOUTQ' value, expected 0, got %i\n",
+>-			sock_bytes_unsent);
+>-		exit(EXIT_FAILURE);
+>+		usleep(10 * 1000);
+> 	}
+>
+>+	fprintf(stderr, "Unexpected 'SIOCOUTQ' value, expected 0, got %i\n",
+>+		sock_bytes_unsent);
+>+	exit(EXIT_FAILURE);
+>+success:
+> 	close(fd);
 
-Heiko presented a patch to do this[1], but there were concerns over the
-correctness of it[2]. Experimentally using Heiko's patch on RK3576 did
-make me run into issues, though they seemed to be related to the
-orientation switch actually happening while a clock driving a GRF
-register was disabled.
+I worked on something similar but I didn't yet send it.
 
-The key issue is that the hardware wants the USB 3 controller to be held
-in reset while the PHY is being reconfigured, otherwise we may run into
-hard-to-catch race conditions.
+I like the delay you put, but I prefer to use the timeout stuff we have
+to retry, like I did here:
 
-Either way, this patch implements the required ordering in a somewhat
-unpleasant way: we get the USB 3 controller from the DT, and use runtime
-power management to forcibly suspend it while the UDPHY is being
-reconfigured, and then forcibly resume it later. As an added pain in the
-rear, the suspend/resume of the USB 3 controller also tries fiddling
-with the USB 3 PHY part of the UDPHY, which means we introduce an atomic
-flag to skip suspending/resuming the UDPHY if we're resetting the USB 3
-controller. We may just need to skip trying to acquire the mutex again,
-but both ways work for me in practice.
+@@ -1264,20 +1270,25 @@ static void test_unsent_bytes_client(const struct test_opts *op
+ts, int type)
+         send_buf(fd, buf, sizeof(buf), 0, sizeof(buf));
+         control_expectln("RECEIVED");
 
-This solution may in fact be complete rubbish, but it works to get USB 3
-Super Speed working in both cable orientations on my board.
+-       ret = ioctl(fd, SIOCOUTQ, &sock_bytes_unsent);
+-       if (ret < 0) {
+-               if (errno == EOPNOTSUPP) {
+-                       fprintf(stderr, "Test skipped, SIOCOUTQ not supported.\n");
+-               } else {
+-                       perror("ioctl");
+-                       exit(EXIT_FAILURE);
++       /* Although we have a control message, we are not sure that the vsock
++        * transport has sent us notification that the buffer has been copied
++        * and cleared, so in some cases we may still see unsent bytes.
++        * Better to do a few iterations to be sure.
++        */
++       timeout_begin(TIMEOUT);
++       do {
++               ret = ioctl(fd, SIOCOUTQ, &sock_bytes_unsent);
++               if (ret < 0) {
++                       if (errno == EOPNOTSUPP) {
++                               fprintf(stderr, "Test skipped, SIOCOUTQ not supported.\n");
++                               break;
++                       } else {
++                               perror("ioctl");
++                               exit(EXIT_FAILURE);
++                       }
+                 }
+-       } else if (ret == 0 && sock_bytes_unsent != 0) {
+-               fprintf(stderr,
+-                       "Unexpected 'SIOCOUTQ' value, expected 0, got %i\n",
+-                       sock_bytes_unsent);
+-               exit(EXIT_FAILURE);
+-       }
++       } while (sock_bytes_unsent != 0);
++       timeout_end();
 
-Link: https://lore.kernel.org/all/20250226103810.3746018-3-heiko@sntech.de/ [1]
-Link: https://lore.kernel.org/linux-rockchip/h57ok2hw6os7bcafqkrqknfvm7hnu25m2oe54qmrsuzdwqlos3@m4och2fcdm7s/ [2]
-Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
----
- drivers/phy/rockchip/phy-rockchip-usbdp.c | 54 +++++++++++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
 
-diff --git a/drivers/phy/rockchip/phy-rockchip-usbdp.c b/drivers/phy/rockchip/phy-rockchip-usbdp.c
-index fff54900feea601c8fe6bf4c7123dfebc5661a15..5cd6bbc367f69bca15c2a94a07e72f850b381ae3 100644
---- a/drivers/phy/rockchip/phy-rockchip-usbdp.c
-+++ b/drivers/phy/rockchip/phy-rockchip-usbdp.c
-@@ -200,6 +200,10 @@ struct rk_udphy {
- 	/* PHY devices */
- 	struct phy *phy_dp;
- 	struct phy *phy_u3;
-+
-+	/* USB 3 controller device */
-+	struct device *ctrl_u3;
-+	atomic_t ctrl_resetting;
- };
- 
- static const struct rk_udphy_dp_tx_drv_ctrl rk3588_dp_tx_drv_ctrl_rbr_hbr[4][4] = {
-@@ -1255,6 +1259,9 @@ static int rk_udphy_usb3_phy_init(struct phy *phy)
- 	struct rk_udphy *udphy = phy_get_drvdata(phy);
- 	int ret = 0;
- 
-+	if (atomic_read(&udphy->ctrl_resetting))
-+		return 0;
-+
- 	mutex_lock(&udphy->mutex);
- 	/* DP only or high-speed, disable U3 port */
- 	if (!(udphy->mode & UDPHY_MODE_USB) || udphy->hs) {
-@@ -1273,6 +1280,9 @@ static int rk_udphy_usb3_phy_exit(struct phy *phy)
- {
- 	struct rk_udphy *udphy = phy_get_drvdata(phy);
- 
-+	if (atomic_read(&udphy->ctrl_resetting))
-+		return 0;
-+
- 	mutex_lock(&udphy->mutex);
- 	/* DP only or high-speed */
- 	if (!(udphy->mode & UDPHY_MODE_USB) || udphy->hs)
-@@ -1401,10 +1411,31 @@ static struct phy *rk_udphy_phy_xlate(struct device *dev, const struct of_phandl
- 	return ERR_PTR(-EINVAL);
- }
- 
-+static struct device_node *rk_udphy_to_controller(struct rk_udphy *udphy)
-+{
-+	struct device_node *np;
-+
-+	for_each_node_with_property(np, "phys") {
-+		struct of_phandle_iterator it;
-+		int ret;
-+
-+		of_for_each_phandle(&it, ret, np, "phys", NULL, 0) {
-+			if (it.node != udphy->dev->of_node)
-+				continue;
-+
-+			of_node_put(it.node);
-+			return np;
-+		}
-+	}
-+
-+	return NULL;
-+}
-+
- static int rk_udphy_orien_sw_set(struct typec_switch_dev *sw,
- 				 enum typec_orientation orien)
- {
- 	struct rk_udphy *udphy = typec_switch_get_drvdata(sw);
-+	int ret;
- 
- 	mutex_lock(&udphy->mutex);
- 
-@@ -1420,6 +1451,18 @@ static int rk_udphy_orien_sw_set(struct typec_switch_dev *sw,
- 	rk_udphy_set_typec_default_mapping(udphy);
- 	rk_udphy_usb_bvalid_enable(udphy, true);
- 
-+	if (udphy->status != UDPHY_MODE_NONE && udphy->ctrl_u3) {
-+		atomic_set(&udphy->ctrl_resetting, 1);
-+		pm_runtime_force_suspend(udphy->ctrl_u3);
-+
-+		ret = rk_udphy_setup(udphy);
-+		if (!ret)
-+			clk_bulk_disable_unprepare(udphy->num_clks, udphy->clks);
-+
-+		pm_runtime_force_resume(udphy->ctrl_u3);
-+		atomic_set(&udphy->ctrl_resetting, 0);
-+	}
-+
- unlock_ret:
- 	mutex_unlock(&udphy->mutex);
- 	return 0;
-@@ -1430,12 +1473,22 @@ static void rk_udphy_orien_switch_unregister(void *data)
- 	struct rk_udphy *udphy = data;
- 
- 	typec_switch_unregister(udphy->sw);
-+	put_device(udphy->ctrl_u3);
- }
- 
- static int rk_udphy_setup_orien_switch(struct rk_udphy *udphy)
- {
-+	struct device_node *ctrl = rk_udphy_to_controller(udphy);
- 	struct typec_switch_desc sw_desc = { };
- 
-+	if (ctrl) {
-+		udphy->ctrl_u3 = bus_find_device_by_of_node(udphy->dev->bus, ctrl);
-+		of_node_put(ctrl);
-+	}
-+
-+	if (!udphy->ctrl_u3)
-+		dev_info(udphy->dev, "couldn't find this PHY's USB3 controller\n");
-+
- 	sw_desc.drvdata = udphy;
- 	sw_desc.fwnode = dev_fwnode(udphy->dev);
- 	sw_desc.set = rk_udphy_orien_sw_set;
-@@ -1499,6 +1552,7 @@ static int rk_udphy_probe(struct platform_device *pdev)
- 		return ret;
- 
- 	mutex_init(&udphy->mutex);
-+	atomic_set(&udphy->ctrl_resetting, 0);
- 	platform_set_drvdata(pdev, udphy);
- 
- 	if (device_property_present(dev, "orientation-switch")) {
+What about combining the two?
 
--- 
-2.49.0
+Thanks,
+Stefano
 
