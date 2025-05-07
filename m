@@ -1,100 +1,158 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28B3B289806;
-	Wed,  7 May 2025 15:09:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 098DF2147F6;
+	Wed,  7 May 2025 15:10:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746630598; cv=none; b=n0v1nVyYeOcIId/Vwphu/d9Dv3U31y5drozSve5nrYq2QUDBLNZihEAq7+FlhcktUJVjQfKmD/kf0Af8kPi3ojE4wlL1VC2/tA2ZS9iyBAvYtTmNYHfZcoeJoFEFNgzfpsJb2HPkBfGlsfJ3BvKL0HfQP1pejb8QFhg4AjwjS28=
+	t=1746630636; cv=none; b=oaJDgPfX4cvDhJOTQzqzvKtwB3Z7jZ8cPxCH3/hT2TxN0REeIjj/mvTdNVAIBgjuJYob8uGAqTwjIln8aHJ+9hebIRGY6AeW3fL3lS1Okm7t5+NyHVe1lCm+Fkdpg1T0HovnRUZVw4cz+7fV1z9B0hWDhieQP/cot1yTq+Bpgjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746630598; c=relaxed/simple;
-	bh=hx26bMO+Cl+2FZ8rWOwKKXC9e8Uj3DCL+IbCY1vsf60=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iSQtP5MOqNahaH5f+GA9KYssqxVRbmJphwd1Gs02lV7JRItTtONlcP1eUohZzm4Xwa+wnebUM4Rhuiat6plQCWoEcopd7bvA+22mxLi0bBE225WFasyFGyPTchqBrdoW+0EiqS924zraTS8K24Hn2NUw2KKhDSjqb6YQpEZJKSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 47416339;
-	Wed,  7 May 2025 08:09:45 -0700 (PDT)
-Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8EAD23F778;
-	Wed,  7 May 2025 08:09:48 -0700 (PDT)
-Message-ID: <8965ec0a-97d4-423b-97b9-7848454045d0@arm.com>
-Date: Wed, 7 May 2025 16:09:47 +0100
+	s=arc-20240116; t=1746630636; c=relaxed/simple;
+	bh=L+bC89EYpLM/+civW4bVuTh6OrQ/4kJO7ajkneH0L+w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Q3vF/TAZvoa693gcwhcBlYRAe1Kim/qUy7YP5EEzBB+Tqn1F4BGwnL5oaxWUf3LACysJUbK+oLNh1oGlLQrz3xBl8v6uNtLAAHOO0ifDrsAo5z+e2IHzFV42Vwnfdj6bEz5WCPz+rn67fNV6la+tMLmSMl8TNoW0HSw4DF2B6+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tavianator.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tavianator.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-47688ae873fso83005641cf.0;
+        Wed, 07 May 2025 08:10:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746630634; x=1747235434;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5zApGRQuB9FDDIEaOysudBGgRRMqSXczwPgXCIZrBYU=;
+        b=RDzw0ZpBz3dZdqkgRM54emn71F4qS3PezneakuQnzclj9DB+HwHdxgClQPzmR86QZD
+         +j6XiyqFfDG/9i3Gma7+WRj1hbXVaJQspS3Xm0d6imtbRdHuUhs9AZ3RdFf80i2yUrby
+         rygYPPWW6bDqWQqvQNIt3Yku4W3pECq37FG8QrQIU2L+FvLTI54o0oRDmAc4GmZTCM29
+         dthYnAk+WW4KTMYHlesiEJD5HgqD25AkveOYOGQzyHfumC2pqi2hYw7mMbiuTegEE5+s
+         FRg2sUd+SegJ2OysJS93ehsuVGBWMNYSLn1cK2KbF83qiTAaVoVM5o2EG/Z50norRkrf
+         6rJg==
+X-Forwarded-Encrypted: i=1; AJvYcCUoVaM+/glAJntDchr6pyXdjVftK5uLDjk6CTlipdk+STWVPWgxunquxMGa42m6tB8NF8uAzISnh4mfjkU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwPYzH9CCYSt6cErTko2yU/CJCjiVaEsV1iZXxYpgKyiKxDZz+4
+	6JEejuDh+Wqz/cOcHyQi10TwIkJph7gq4wS2ejpnJARXT+Nzfr0YdHec388G0/E=
+X-Gm-Gg: ASbGnctW/rzbpmrPDsG7WMoRYHIG+lgNyNFi5b6oOEWn5NtuYxmuxdK5fyXjpYC1N9+
+	ohUcUT1CH1Y4FdspsvImqFqia8NvhRdEitR85LuzTdzK7gV0xOXysiuonrpcTNlj8kauft/8Isx
+	pnLJhoHNogAezGQRIcAqjc4OFFPEsdCAyAtgGoes527XL6Vpt7igjsat+aejWe7XB7heiS68Ar7
+	Wi8BExvb7DmJMJ9K3la0ESqSDLVtXQEPS5aINTOHtZttGXgMaDc1MV8CrOFUFKE5TD23LoiwgNq
+	r199F+dTDDqGsS5TnZm+PsjigfOPrUD6gbYpO5Lfbj6HiphiK1uNJ9Wl1wVpqtGEQ9WOJxS466J
+	7fw==
+X-Google-Smtp-Source: AGHT+IHzU1cmdblS919MD/oE1I8vV96yqaXyoy/67GgW2BpgoNA+MAQe4AxcDWibc/g1QG8XmX3vxw==
+X-Received: by 2002:a05:622a:156:b0:476:aa7a:2f78 with SMTP id d75a77b69052e-4922803c6c5mr58195221cf.49.1746630633415;
+        Wed, 07 May 2025 08:10:33 -0700 (PDT)
+Received: from tachyon.tail92c87.ts.net ([192.159.180.233])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-49222e95e5asm14936531cf.60.2025.05.07.08.10.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 08:10:32 -0700 (PDT)
+From: Tavian Barnes <tavianator@tavianator.com>
+To: linux-sound@vger.kernel.org
+Cc: Tavian Barnes <tavianator@tavianator.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
+	Bard Liao <yung-chuan.liao@linux.intel.com>,
+	Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+	Daniel Baluta <daniel.baluta@nxp.com>,
+	Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
+	Mark Brown <broonie@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	sound-open-firmware@alsa-project.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3] ASoC: SOF: Intel: hda: Fix UAF when reloading module
+Date: Wed,  7 May 2025 11:10:24 -0400
+Message-ID: <fb47a18bdea9e9f86d6fccf1d881434cda3cd5f0.1746627007.git.tavianator@tavianator.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] iommu/io-pgtable-arm: Add quirk to quiet WARN_ON()
-To: Jason Gunthorpe <jgg@ziepe.ca>, Rob Clark <robdclark@gmail.com>
-Cc: iommu@lists.linux.dev, linux-arm-msm@vger.kernel.org,
- freedreno@lists.freedesktop.org, Rob Clark <robdclark@chromium.org>,
- Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>,
- Kevin Tian <kevin.tian@intel.com>, Nicolin Chen <nicolinc@nvidia.com>,
- Joao Martins <joao.m.martins@oracle.com>,
- "moderated list:ARM SMMU DRIVERS" <linux-arm-kernel@lists.infradead.org>,
- open list <linux-kernel@vger.kernel.org>
-References: <20250507142953.269300-1-robdclark@gmail.com>
- <20250507144038.GC33739@ziepe.ca>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20250507144038.GC33739@ziepe.ca>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 07/05/2025 3:40 pm, Jason Gunthorpe wrote:
-> On Wed, May 07, 2025 at 07:29:51AM -0700, Rob Clark wrote:
->> From: Rob Clark <robdclark@chromium.org>
->>
->> In situations where mapping/unmapping sequence can be controlled by
->> userspace, attempting to map over a region that has not yet been
->> unmapped is an error.  But not something that should spam dmesg.
->>
->> Now that there is a quirk, we can also drop the selftest_running
->> flag, and use the quirk instead for selftests.
->>
->> Signed-off-by: Rob Clark <robdclark@chromium.org>
->> ---
->> Sending v2 stand-alone, since I'm not quite ready to send a new
->> iteration of the full VM_BIND series.  And with selftest_running
->> removed, I think this patch stands on it's own.  (And maybe there
->> is still time to sneak this in for v6.16, removing an iommu dep
->> for the VM_BIND series in v6.17?)
-> 
-> You should just remove the warn on completely, no other driver does this.
+hda_generic_machine_select() appends -idisp to the tplg filename by
+allocating a new string with devm_kasprintf(), then stores the string
+right back into the global variable snd_soc_acpi_intel_hda_machines.
+When the module is unloaded, this memory is freed, resulting in a global
+variable pointing to freed memory.  Reloading the module then triggers
+a use-after-free:
 
-What do you mean "no other driver"?
+BUG: KFENCE: use-after-free read in string+0x48/0xe0
 
- From a quick look, these IOMMU drivers have some sort of visible 
-warning related to the state of an existing PTE during map/unmap:
+Use-after-free read at 0x00000000967e0109 (in kfence-#99):
+ string+0x48/0xe0
+ vsnprintf+0x329/0x6e0
+ devm_kvasprintf+0x54/0xb0
+ devm_kasprintf+0x58/0x80
+ hda_machine_select.cold+0x198/0x17a2 [snd_sof_intel_hda_generic]
+ sof_probe_work+0x7f/0x600 [snd_sof]
+ process_one_work+0x17b/0x330
+ worker_thread+0x2ce/0x3f0
+ kthread+0xcf/0x100
+ ret_from_fork+0x31/0x50
+ ret_from_fork_asm+0x1a/0x30
 
-apple-dart
-arm-smmu
-arm-smmu-v3
-arm-smmu-qcom
-exynos-iommu
-ipmmu_vmsa
-msm_iommu
-mtk_iommu
-rockchip-iommu
-s390-iommu
-sun50i-iommu
-qcom_iommu
+kfence-#99: 0x00000000198a940f-0x00000000ace47d9d, size=64, cache=kmalloc-64
 
-while these IOMMU drivers do not:
+allocated by task 333 on cpu 8 at 17.798069s (130.453553s ago):
+ devm_kmalloc+0x52/0x120
+ devm_kvasprintf+0x66/0xb0
+ devm_kasprintf+0x58/0x80
+ hda_machine_select.cold+0x198/0x17a2 [snd_sof_intel_hda_generic]
+ sof_probe_work+0x7f/0x600 [snd_sof]
+ process_one_work+0x17b/0x330
+ worker_thread+0x2ce/0x3f0
+ kthread+0xcf/0x100
+ ret_from_fork+0x31/0x50
+ ret_from_fork_asm+0x1a/0x30
 
-amd
-intel
-mtk_iommu_v1
-omap-iommu
-riscv
-sprd-iommu
-tegra-smmu
-virtio-iommu
+freed by task 1543 on cpu 4 at 141.586686s (6.665010s ago):
+ release_nodes+0x43/0xb0
+ devres_release_all+0x90/0xf0
+ device_unbind_cleanup+0xe/0x70
+ device_release_driver_internal+0x1c1/0x200
+ driver_detach+0x48/0x90
+ bus_remove_driver+0x6d/0xf0
+ pci_unregister_driver+0x42/0xb0
+ __do_sys_delete_module+0x1d1/0x310
+ do_syscall_64+0x82/0x190
+ entry_SYSCALL_64_after_hwframe+0x76/0x7e
 
-By driver count, warning is literally the majority behaviour :/
+Fix it by copying the machine with devm_kmemdup() before we modify it.
 
-Thanks,
-Robin.
+Fixes: 5458411d7594 ("ASoC: SOF: Intel: hda: refactoring topology name fixup for HDA mach")
+Suggested-by: Péter Ujfalusi" <peter.ujfalusi@linux.intel.com>
+Signed-off-by: Tavian Barnes <tavianator@tavianator.com>
+---
+v3: Copy the whole machine struct instead so we can safely modify it
+    (instead of storing the name in pdata->tplg_filename, breaking other
+    fixups).  The problem with v2 was pointed out by Bard Liao, with the
+    alternative fix suggested by Péter Ujfalusi.
+
+ sound/soc/sof/intel/hda.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/sound/soc/sof/intel/hda.c b/sound/soc/sof/intel/hda.c
+index b34e5fdf10f1..cbf96b342005 100644
+--- a/sound/soc/sof/intel/hda.c
++++ b/sound/soc/sof/intel/hda.c
+@@ -1049,7 +1049,13 @@ static void hda_generic_machine_select(struct snd_sof_dev *sdev,
+ 		if (!*mach && codec_num <= 2) {
+ 			bool tplg_fixup = false;
+ 
+-			hda_mach = snd_soc_acpi_intel_hda_machines;
++			/* make a copy so we can modify it below */
++			hda_mach = devm_kmemdup(sdev->dev,
++						snd_soc_acpi_intel_hda_machines,
++						sizeof(*hda_mach),
++						GFP_KERNEL);
++			if (!hda_mach)
++				return;
+ 
+ 			dev_info(bus->dev, "using HDA machine driver %s now\n",
+ 				 hda_mach->drv_name);
+-- 
+2.49.0
+
