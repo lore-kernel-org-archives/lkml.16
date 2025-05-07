@@ -1,48 +1,31 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 229FF230BC6;
-	Wed,  7 May 2025 09:10:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51C4B2309B9
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 09:10:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746609005; cv=none; b=ofjp2DB100JC3/nxTga8kwcGSHoskQIOTa8sh58wrrvEePyD6mbXjouiwoe+uiv/6XfRozA77ztOKVQGHq86i9HVZWEfsubSNHLoodIv3m8KPImzau3WMcLk/+gx4/M7tgXzYRwhDyFT80//GL1I1dI86Uh6NbOgk3MAT/HmBuE=
+	t=1746609022; cv=none; b=YN6igFhp3fxHkT+fWzJx9hsnHTaISC/S5KY8jCM3AE3Q4Rfut9EabG6FLIysIDJ/7RRpkVu4ai7h1AlqarIPKICfYs884XrAeNzkv6S/t+ark+XpkNRysR3yXF28x2yVTBIT3UhOe+EOX2oDV3BNfT9KEsZQLhsr+7kQTSmSyG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746609005; c=relaxed/simple;
-	bh=oTEADaGhvVSEuaNFFV/TJPPDcsL5kQa8qkcI9R9Kmmo=;
+	s=arc-20240116; t=1746609022; c=relaxed/simple;
+	bh=IyixUg/lsFyrvjt0sM7ct7uXKaFuYiSCGYEqiC9kvhY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=JeefMUoDt+dQn2TW3crh3vnWtVqehaKx0clThVSYUW5lnhsCUpPmbnUso1rcKohOwpJhfpnRgbYAz8/tHd1Iw7c1B7x+zH95HSuNRK3/xsmlR8Ilhe3cVc6/xAvlHtE7uV8LdhUe551+Vyt7oE6arUlX5xCQfSDkkRkeQjGNcpw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=dAK32Fdk; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="dAK32Fdk"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5471HAoq018451;
-	Wed, 7 May 2025 09:09:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	bBM8S074TwN2BfpJ9BPb0qos34gDmKjOr1NIAB/G5Dg=; b=dAK32Fdkln/BffKS
-	3Bj4brnRaQFZPLjPTPi9gVo7LQOffPC4OjRzcCVWZ61QFTULNWgRUcj4VHLYwdDt
-	IQYNsrMf2HjXP310v6Hy/2Js7XUfNbVKyCNku8xcUye3Q5BU9VN7oYUIOMMeOGtS
-	q9+2KFAKoWB1KjUeZQRephB4ExspfY5vADkGPJWdPKi/afq/s+mGyqcqm7wtsZNu
-	u+qJgNg3159q1dJlChyQ1DF8qGoL/M6l4mXFUWNgi7R1fIFqgKESPEc8s518iBNK
-	wplOaguUemzxvlZwPt6fVGYVnJMi1KINopUlHCm7HhZY61lti/Bh3CVhPvo6B+aw
-	xlezKg==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46f5tbd3qm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 07 May 2025 09:09:37 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54799aEI029229
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 7 May 2025 09:09:36 GMT
-Received: from [10.239.155.136] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 7 May 2025
- 02:09:31 -0700
-Message-ID: <7c74a395-a8b8-4a12-9ddb-691f28c90885@quicinc.com>
-Date: Wed, 7 May 2025 17:09:28 +0800
+	 In-Reply-To:Content-Type; b=cgW2U1+aYsXw2XMFtCEyYhToMSYyO4je+8wuvLn53SjI7J53VAigZFvgFbgBvHPWF+w52kAMOff9pJ4/NXCBadc+obDqH623EvQsPmb1EY2sFOaKynutAmQvMekuwuKx61z+kyBgSyihsWHCYKUjOudGbVQ0Erqr2yYjZf0tRE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.194])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4ZsqBn70zCz12LXL;
+	Wed,  7 May 2025 17:06:41 +0800 (CST)
+Received: from kwepemj200003.china.huawei.com (unknown [7.202.194.15])
+	by mail.maildlp.com (Postfix) with ESMTPS id D10951402C7;
+	Wed,  7 May 2025 17:10:17 +0800 (CST)
+Received: from [10.67.120.170] (10.67.120.170) by
+ kwepemj200003.china.huawei.com (7.202.194.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Wed, 7 May 2025 17:10:17 +0800
+Message-ID: <4bac8132-db37-47a2-ad5a-22bde865b8e8@huawei.com>
+Date: Wed, 7 May 2025 17:10:16 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,116 +33,67 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] scsi: ufs: qcom: Map devfreq OPP freq to UniPro
- Core Clock freq
-To: Luca Weiss <luca.weiss@fairphone.com>, <quic_cang@quicinc.com>,
-        <bvanassche@acm.org>, <mani@kernel.org>, <beanhuo@micron.com>,
-        <avri.altman@wdc.com>, <junwoo80.lee@samsung.com>,
-        <martin.petersen@oracle.com>, <quic_nguyenb@quicinc.com>,
-        <quic_nitirawa@quicinc.com>, <quic_rampraka@quicinc.com>,
-        <neil.armstrong@linaro.org>, <konrad.dybcio@oss.qualcomm.com>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        "Manivannan
- Sadhasivam" <manivannan.sadhasivam@linaro.org>,
-        "James E.J. Bottomley"
-	<James.Bottomley@hansenpartnership.com>,
-        open list
-	<linux-kernel@vger.kernel.org>
-References: <20250507074415.2451940-1-quic_ziqichen@quicinc.com>
- <20250507074415.2451940-3-quic_ziqichen@quicinc.com>
- <D9PS51XVRKLP.1AHMCRH9CZFWU@fairphone.com>
-Content-Language: en-US
-From: Ziqi Chen <quic_ziqichen@quicinc.com>
-In-Reply-To: <D9PS51XVRKLP.1AHMCRH9CZFWU@fairphone.com>
+Subject: Re: [PATCH v2 1/4] dma-mapping: benchmark: Add padding to ensure uABI
+ remained consistent
+To: Barry Song <21cnbao@gmail.com>
+CC: <yangyicong@huawei.com>, <hch@lst.de>, <iommu@lists.linux.dev>,
+	<jonathan.cameron@huawei.com>, <prime.zeng@huawei.com>,
+	<fanghao11@huawei.com>, <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
+References: <20250506030100.394376-1-xiaqinxin@huawei.com>
+ <20250506030100.394376-2-xiaqinxin@huawei.com>
+ <CAGsJ_4zBz0oZGpP3dTzsjmw0oJbWm=vkKRS_kjBso7cvKJGjuQ@mail.gmail.com>
+ <CAGsJ_4yEmSGGKFxCT_wioEOaLxAzxNiryR42_hW9-vbu8WgBUg@mail.gmail.com>
+From: Qinxin Xia <xiaqinxin@huawei.com>
+In-Reply-To: <CAGsJ_4yEmSGGKFxCT_wioEOaLxAzxNiryR42_hW9-vbu8WgBUg@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: gThEX7PQEC7rWMK1RSZtcS4KZZzRalq5
-X-Proofpoint-GUID: gThEX7PQEC7rWMK1RSZtcS4KZZzRalq5
-X-Authority-Analysis: v=2.4 cv=doXbC0g4 c=1 sm=1 tr=0 ts=681b2351 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
- a=1rUPmw_PEH3y1UJVBgkA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA3MDA4NCBTYWx0ZWRfX31cra2OJhJEU
- 8kTMHt73z33wJQfJH6bSCTb5ZkElo7U3ie9mgeuyHWSWIU+kbptXQ+ByvRIq2qpccY/ZE1PKoRa
- 1X0jPw0kM67P6W4U8aY8sV1f30GiavRNahwoJj8b+CYTAckmtO+YWpXn5zpGcgjomA0s/z8mxuW
- xI3dTyUlJBQ6XyYWkt98lzua/0MqJL3HiE++2x2wlDhyH3Mz1bqpAc5HR5G/2VGDifsYzMhXgD9
- eHfby5phBBSNFxmTwEJ030OmPQH/G1vES8UU5kGM8W694UyJWGg1o9Z/UJJ3v394CNq4GrE52uY
- Qh4NSLyNmCraUMu0CgXQs3MC3e4my9TtVTWIXUB31euLFAwAm58zJ1p5tRYmm7MF686ksTqFRHJ
- zzuIP2iNJrmuJudKCBJ9ioG/kITiZZ6plXewjm3cwHqO4ib/PoTZpELVVJbyV/Ci9rLsYKi2
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-07_03,2025-05-06_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 bulkscore=0 adultscore=0 malwarescore=0 phishscore=0
- mlxlogscore=999 impostorscore=0 clxscore=1015 mlxscore=0 priorityscore=1501
- spamscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505070084
-
-Hi Luca,
-
-On 5/7/2025 4:19 PM, Luca Weiss wrote:
-> Hi Ziqi,
-> 
-> On Wed May 7, 2025 at 9:44 AM CEST, Ziqi Chen wrote:
->> From: Can Guo <quic_cang@quicinc.com>
->>
->> On some platforms, the devfreq OPP freq may be different than the unipro
->> core clock freq. Implement ufs_qcom_opp_freq_to_clk_freq() and use it to
->> find the unipro core clk freq.
->>
->> Signed-off-by: Can Guo <quic_cang@quicinc.com>
->> Co-developed-by: Ziqi Chen <quic_ziqichen@quicinc.com>
->> Signed-off-by: Ziqi Chen <quic_ziqichen@quicinc.com>
->> ---
->>   drivers/ufs/host/ufs-qcom.c | 81 ++++++++++++++++++++++++++++++++-----
->>   1 file changed, 71 insertions(+), 10 deletions(-)
->>
->> diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
->> index 7f10926100a5..804c8ccd8d03 100644
->> --- a/drivers/ufs/host/ufs-qcom.c
->> +++ b/drivers/ufs/host/ufs-qcom.c
->>   
->> +static unsigned long ufs_qcom_opp_freq_to_clk_freq(struct ufs_hba *hba,
->> +												   unsigned long freq, char *name)
->> +{
->> +	struct ufs_clk_info *clki;
->> +	struct dev_pm_opp *opp;
->> +	unsigned long clk_freq;
->> +	int idx = 0;
->> +	bool found = false;
->> +
->> +	opp = dev_pm_opp_find_freq_exact_indexed(hba->dev, freq, 0, true);
->> +	if (IS_ERR(opp)) {
->> +		dev_err(hba->dev, "Failed to find OPP for exact frequency %lu\n", freq);
-> 
-> I'm hitting this print on bootup:
-> 
-> [    0.512515] ufshcd-qcom 1d84000.ufshc: Failed to find OPP for exact frequency 18446744073709551615
-> [    0.512571] ufshcd-qcom 1d84000.ufshc: Failed to find OPP for exact frequency 18446744073709551615
-> 
-> Doesn't look like it's intended? The number is (2^64 - 1)
-> 
-Yes, this is expected. During link startup, the frequency
-ULONG_MAX will be passed to ufs_qcom_set_core_clk_ctrl() and
-ufs_qcom_cfg_timer(). This frequency cannot be found through the API
-dev_pm_opp_find_freq_exact_indexed(). Therefore, we handle the
-frequency ULONG_MAX separately within Ufs_qcom_set_core_clk_ctrl()
-and ufs_qcom_cfg_timer().
-
-This print only be print twice during link startup. If you think print
-such print during bootup is not make sense, I can improve the code and
-update a new vwesion.
-
-BRs.
-Ziqi
-
-> Regards
-> Luca
-> 
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemj200003.china.huawei.com (7.202.194.15)
 
 
+在 2025/5/7 10:08, Barry Song 写道:
+> On Wed, May 7, 2025 at 1:52 PM Barry Song <21cnbao@gmail.com> wrote:
+>> On Tue, May 6, 2025 at 3:01 PM Qinxin Xia <xiaqinxin@huawei.com> wrote:
+>>> Fix a problem about commit (8ddde07a3d285a0f3cec, "dma-mapping:benchmark:
+>>> extract a common header file for map_benchmark definition") accidentally
+>>> removed that padding, which has completely broken the ABIs.
+>>>
+>>> Signed-off-by: Qinxin Xia <xiaqinxin@huawei.com>
+>> Please add Fixes tags and cc stable.
+> We are *NOT* adding any field.
+>
+> Also, the subject and changelog are not appropriate. They should be something
+> like the following:
+>
+> Previously, we had a padding field in this structure to allow for future
+> extension without breaking compatibility with user-space shared data
+> structures. In other words, the padding was reserved to maintain a stable
+> interface for potential new fields.
+>
+> However, in one of the commits, tiantao accidentally removed this padding,
+> which could lead to incompatibility issues between user space and the
+> kernel.
+>
+> This patch restores the padding to bring back the original structure layout
+> and ensure compatibility is preserved.
+Okay, thank you for your advice.
+>>> ---
+>>>   include/linux/map_benchmark.h | 1 +
+>>>   1 file changed, 1 insertion(+)
+>>>
+>>> diff --git a/include/linux/map_benchmark.h b/include/linux/map_benchmark.h
+>>> index 62674c83bde4..2ac2fe52f248 100644
+>>> --- a/include/linux/map_benchmark.h
+>>> +++ b/include/linux/map_benchmark.h
+>>> @@ -27,5 +27,6 @@ struct map_benchmark {
+>>>          __u32 dma_dir; /* DMA data direction */
+>>>          __u32 dma_trans_ns; /* time for DMA transmission in ns */
+>>>          __u32 granule;  /* how many PAGE_SIZE will do map/unmap once a time */
+>>> +       __u8 expansion[76];     /* For future use */
+>>>   };
+>>>   #endif /* _KERNEL_DMA_BENCHMARK_H */
+>>> --
+>>> 2.33.0
+>>>
+> Thanks
+> Barry
