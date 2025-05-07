@@ -1,164 +1,184 @@
-Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECB3C28B3F1
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 14:18:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEDC828B3FA;
+	Wed,  7 May 2025 14:18:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746627492; cv=none; b=qke1Tbt8fHg3AenteSQTvHZdgBX6099aRubtitxRlh6gdauya76Q++paFQXhu085GUe2c2hOU7MxjNd6B6IdQXblHqCj3565mKCCl5kJTXKPKBdoEcIm+FxzN7CzKZxt4Aj/yYGY/GqwhoQBnX6mskC0CQEUB+RB6qgC6YDWo/o=
+	t=1746627493; cv=none; b=ZQkozgDADvW1kHZNPh62+2CYaiPxI9pQvYf9qs5P679riTCvKFZ9UoPp5NFvPzbhYjnDaHQOi3/UlEm8IgoqBpGr9uWH+FWKantmbxcqyiN7/kSWjKceFnsqE85owjxqehvWN85yCRp2jvCGbUUBjHt0eTv0TitckOYtRq4i8hE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746627492; c=relaxed/simple;
-	bh=ESo7iDaJAfPe/uBEPuqUF1iZxkZFSdCkeKF/JoR1OH8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Yi2ZSSGly+wRMdfcai9H8G/nDVUsdyuGctMK74oEHyH+JULGkwJ8UOjh1E/ZpTc+3WQmKo03Xrym9eRYlbYoSVmNh/EmuatzDuftIkvJGfDzRFO1XP5VJ40G/sW/cPJp8ChtaxTldhs4Ngeuddi62UiA7QruV2ybReO0gv+bEkM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=VYa6cKov; arc=none smtp.client-ip=91.218.175.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1746627493; c=relaxed/simple;
+	bh=RhzIpbYDl8eyELJNnv6wzq/l+1FmLCElb3y7Y9HVaUY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=AzI8QYOpREze4zLezNIb8ZpNwJp9a97E4jSTMrfYy0QFjOqh5XJO1/LyvVcu/Q9H6zAUgQnx/32WZgVs/zYRP8dPOZnUk7riqhkNCSgTZGDG7IWZBKAlji3UPcokg1Gb76F6RpKgaiaZj4BmKT9dDTaguxSE7lYRO67Xc/Dxxpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D7RyfflU; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="VYa6cKov"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1746627477;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5XA4cBMCc6hXDEbOdpbv2HCjfE08Kr4EfGU5g1MTW+k=;
-	b=VYa6cKovFPnIyJEnb6eeyM66XXylyPZ3mtL++y6MnsuA5A+meAWDYiVglyBhvT+2KseKam
-	BJdQiqSKgGldoVrMqwl9Xq+F0qhFQOfTw0owkr6sV/DF/zDv0M38pFR/Ar4rGn3aMdgLm0
-	vuUDFFfxlESs6Mrf1w4wt70L0b08OTQ=
-From: Dawei Li <dawei.li@linux.dev>
-To: andersson@kernel.org,
-	mathieu.poirier@linaro.org
-Cc: linux-remoteproc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	dawei.li@linux.dev,
-	set_pte_at@outlook.com
-Subject: [PATCH 2/3] rpmsg: char: Implement eptdev based on anon inode
-Date: Wed,  7 May 2025 22:17:11 +0800
-Message-Id: <20250507141712.4276-3-dawei.li@linux.dev>
-In-Reply-To: <20250507141712.4276-1-dawei.li@linux.dev>
-References: <20250507141712.4276-1-dawei.li@linux.dev>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D7RyfflU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746627492; x=1778163492;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=RhzIpbYDl8eyELJNnv6wzq/l+1FmLCElb3y7Y9HVaUY=;
+  b=D7RyfflU4b4SxdXTd+d+sHQ8aIRrqz0U7hr1peLWGzydnfSrGjeWDS10
+   l+0k2iHLEbc6lIX4FU/aV2OaQyQjWVvYTTwvZl0xho9DP8NlGdW5tWGwi
+   +HmREzC3f3XezsY2oWJfa0+MoeHFyHbLRoEWCvJ44FFzZrUclorDpCyyi
+   bZA/TTO8qvc3R0md89WuxYRWMx/VkuHLbMnJO/ixNRt37pri7iWPTBFna
+   JUZBgXmdFtRNcyYqgUiNT5oRpyAeRE4XI/rVo9j1ramatOhVLw95ZQtBG
+   GOiWFoU+B7XmOZD/K1lm0ec1n1bBIjzcnXzjrlf2X7mRjW9hsH3YAw2tk
+   g==;
+X-CSE-ConnectionGUID: xz49VLD3SA++xV2nI5v2/Q==
+X-CSE-MsgGUID: veBGodXST3O50P8k1r37uw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="48263815"
+X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
+   d="scan'208";a="48263815"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 07:17:57 -0700
+X-CSE-ConnectionGUID: ZxOHtIKiQYS+qT5Z5hQaTg==
+X-CSE-MsgGUID: RLjhfDswR9m5aDVQ8JS4xQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
+   d="scan'208";a="136492492"
+Received: from spandruv-desk1.amr.corp.intel.com ([10.125.111.226])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 07:17:57 -0700
+Message-ID: <06d57c763f54082c01ab7f1ced896910b0e8a680.camel@linux.intel.com>
+Subject: Re: [PATCH v2 1/5] platform/x86/intel-uncore-freq: Add attributes
+ to show agent types
+From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+ platform-driver-x86@vger.kernel.org,  LKML <linux-kernel@vger.kernel.org>
+Date: Wed, 07 May 2025 07:17:56 -0700
+In-Reply-To: <d80e1c91-64c4-8942-921a-91c78b6cbf05@linux.intel.com>
+References: <20250428170316.231353-1-srinivas.pandruvada@linux.intel.com>
+	 <20250428170316.231353-2-srinivas.pandruvada@linux.intel.com>
+	 <d80e1c91-64c4-8942-921a-91c78b6cbf05@linux.intel.com>
+Autocrypt: addr=srinivas.pandruvada@linux.intel.com; prefer-encrypt=mutual;
+ keydata=mQGNBGYHNAsBDAC7tv5u9cIsSDvdgBBEDG0/a/nTaC1GXOx5MFNEDL0LWia2p8Asl7igx
+ YrB68fyfPNLSIgtCmps0EbRUkPtoN5/HTbAEZeJUTL8Xdoe6sTywf8/6/DMheEUzprE4Qyjt0HheW
+ y1JGvdOA0f1lkxCnPXeiiDY4FUqQHr3U6X4FPqfrfGlrMmGvntpKzOTutlQl8eSAprtgZ+zm0Jiwq
+ NSiSBOt2SlbkGu9bBYx7mTsrGv+x7x4Ca6/BO9o5dIvwJOcfK/cXC/yxEkr1ajbIUYZFEzQyZQXrT
+ GUGn8j3/cXQgVvMYxrh3pGCq9Q0Q6PAwQYhm97ipXa86GcTpP5B2ip9xclPtDW99sihiL8euTWRfS
+ TUsEI+1YzCyz5DU32w3WiXr3ITicaMV090tMg9phIZsjfFbnR8hY03n0kRNWWFXi/ch2MsZCCqXIB
+ oY/SruNH9Y6mnFKW8HSH762C7On8GXBYJzH6giLGeSsbvis2ZmV/r+LmswwZ6ACcOKLlvvIukAEQE
+ AAbQ5U3Jpbml2YXMgUGFuZHJ1dmFkYSA8c3Jpbml2YXMucGFuZHJ1dmFkYUBsaW51eC5pbnRlbC5j
+ b20+iQHRBBMBCAA7FiEEdki2SeUi0wlk2xcjOqtdDMJyisMFAmYHNAsCGwMFCwkIBwICIgIGFQoJC
+ AsCBBYCAwECHgcCF4AACgkQOqtdDMJyisMobAv+LLYUSKNuWhRN3wS7WocRPCi3tWeBml+qivCwyv
+ oZbmE2LcxYFnkcj6YNoS4N1CHJCr7vwefWTzoKTTDYqz3Ma0D0SbR1p/dH0nDgN34y41HpIHf0tx0
+ UxGMgOWJAInq3A7/mNkoLQQ3D5siG39X3bh9Ecg0LhMpYwP/AYsd8X1ypCWgo8SE0J/6XX/HXop2a
+ ivimve15VklMhyuu2dNWDIyF2cWz6urHV4jmxT/wUGBdq5j87vrJhLXeosueRjGJb8/xzl34iYv08
+ wOB0fP+Ox5m0t9N5yZCbcaQug3hSlgp9hittYRgIK4GwZtNO11bOzeCEMk+xFYUoa5V8JWK9/vxrx
+ NZEn58vMJ/nxoJzkb++iV7KBtsqErbs5iDwFln/TRJAQDYrtHJKLLFB9BGUDuaBOmFummR70Rbo55
+ J9fvUHc2O70qteKOt5A0zv7G8uUdIaaUHrT+VOS7o+MrbPQcSk+bl81L2R7TfWViCmKQ60sD3M90Y
+ oOfCQxricddC
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-Introduce new eptdev abstraction based on anon inode. The new API is
-exactly same with legacy one except:
+On Wed, 2025-05-07 at 16:02 +0300, Ilpo J=C3=A4rvinen wrote:
+> On Mon, 28 Apr 2025, Srinivas Pandruvada wrote:
+>=20
+> > Currently, users need detailed hardware information to understand
+> > the
+> > scope of controls within each uncore domain. Uncore frequency
+> > controls
+> > manage subsystems such as core, cache, memory, and I/O. The UFS
+> > TPMI
+> > provides this information, which can be used to present the scope
+> > more
+> > clearly.
+> >=20
+> > Each uncore domain consists of one or more agent types, with each
+> > agent
+> > type controlling one or more uncore hardware subsystems. For
+> > example, a
+> > single agent might control both the core and cache.
+> >=20
+> > Introduce a new attribute called "agent_types." This attribute
+> > displays
+> > a list of agents, separated by space character.
+> >=20
+> > The string representations for agent types are as follows:
+> > 	For core agent: core
+> > 	For cache agent: cache
+> > 	For memory agent: memory
+> > 	For I/O agent: io
+> >=20
+> > These agent types are read during probe time for each cluster and
+> > stored
+> > as part of the struct uncore_data.
+> >=20
+> > Signed-off-by: Srinivas Pandruvada
+> > <srinivas.pandruvada@linux.intel.com>
+> > ---
+> > v2:
+> > No change
+> >=20
+> > =C2=A0.../uncore-frequency-common.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 24
+> > ++++++++++++++++
+> > =C2=A0.../uncore-frequency-common.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 17 +++++++++=
++-
+> > =C2=A0.../uncore-frequency/uncore-frequency-tpmi.c=C2=A0 | 28
+> > +++++++++++++++++++
+> > =C2=A03 files changed, 68 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-
+> > frequency-common.c b/drivers/platform/x86/intel/uncore-
+> > frequency/uncore-frequency-common.c
+> > index 4e2c6a2d7e6e..cfa3039a0e39 100644
+> > --- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-
+> > common.c
+> > +++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-
+> > common.c
+> > @@ -43,6 +43,28 @@ static ssize_t show_package_id(struct kobject
+> > *kobj, struct kobj_attribute *attr
+> > =C2=A0	return sprintf(buf, "%u\n", data->package_id);
+> > =C2=A0}
+> > =C2=A0
+> > +static ssize_t show_agent_types(struct kobject *kobj, struct
+> > kobj_attribute *attr, char *buf)
+> > +{
+> > +	struct uncore_data *data =3D container_of(attr, struct
+> > uncore_data, agent_types_kobj_attr);
+> > +	int length =3D 0;
+> > +
+> > +	if (data->agent_type_mask & AGENT_TYPE_CORE)
+> > +		length +=3D sysfs_emit_at(buf, length, "core ");
+> > +
+> > +	if (data->agent_type_mask & AGENT_TYPE_CACHE)
+> > +		length +=3D sysfs_emit_at(buf, length, "cache ");
+> > +
+> > +	if (data->agent_type_mask & AGENT_TYPE_MEMORY)
+> > +		length +=3D sysfs_emit_at(buf, length, "memory ");
+> > +
+> > +	if (data->agent_type_mask & AGENT_TYPE_IO)
+> > +		length +=3D sysfs_emit_at(buf, length, "io ");
+>=20
+> Is this set going to get expanded soon?
 
-- It's anonymous and devnode/path free.
-- Its fops->open() is empty.
+Unlikely, as this list is adding every frequency scaled subsystem.
 
-Signed-off-by: Dawei Li <dawei.li@linux.dev>
----
- drivers/rpmsg/rpmsg_char.c | 44 ++++++++++++++++++++++++++++++++++++++
- drivers/rpmsg/rpmsg_char.h | 19 ++++++++++++++++
- 2 files changed, 63 insertions(+)
+But I will try to change to loop. No issue.
 
-diff --git a/drivers/rpmsg/rpmsg_char.c b/drivers/rpmsg/rpmsg_char.c
-index 5b2a883d6236..b0ec05f88013 100644
---- a/drivers/rpmsg/rpmsg_char.c
-+++ b/drivers/rpmsg/rpmsg_char.c
-@@ -13,6 +13,7 @@
- 
- #define pr_fmt(fmt)	KBUILD_MODNAME ": " fmt
- 
-+#include <linux/anon_inodes.h>
- #include <linux/cdev.h>
- #include <linux/device.h>
- #include <linux/fs.h>
-@@ -517,6 +518,49 @@ int rpmsg_chrdev_eptdev_create(struct rpmsg_device *rpdev, struct device *parent
- }
- EXPORT_SYMBOL(rpmsg_chrdev_eptdev_create);
- 
-+static const struct file_operations rpmsg_eptdev_anon_fops = {
-+	.owner = THIS_MODULE,
-+	.release = rpmsg_eptdev_release,
-+	.read_iter = rpmsg_eptdev_read_iter,
-+	.write_iter = rpmsg_eptdev_write_iter,
-+	.poll = rpmsg_eptdev_poll,
-+	.unlocked_ioctl = rpmsg_eptdev_ioctl,
-+	.compat_ioctl = compat_ptr_ioctl,
-+};
-+
-+int rpmsg_eptdev_create(struct rpmsg_device *rpdev, struct device *parent,
-+			struct rpmsg_channel_info chinfo, int *pfd)
-+{
-+	struct rpmsg_eptdev *eptdev;
-+	int ret, fd;
-+
-+	eptdev = __rpmsg_chrdev_eptdev_alloc(rpdev, parent, false);
-+	if (IS_ERR(eptdev))
-+		return PTR_ERR(eptdev);
-+
-+	ret =  __rpmsg_chrdev_eptdev_add(eptdev, chinfo, false);
-+	if (ret) {
-+		dev_err(&eptdev->dev, "failed to add %s\n", eptdev->chinfo.name);
-+		return ret;
-+	}
-+
-+	fd = anon_inode_getfd("rpmsg-eptdev", &rpmsg_eptdev_anon_fops, eptdev, O_RDWR | O_CLOEXEC);
-+	if (fd < 0) {
-+		put_device(&eptdev->dev);
-+		return fd;
-+	}
-+
-+	mutex_lock(&eptdev->ept_lock);
-+	ret = __rpmsg_eptdev_open(eptdev);
-+	mutex_unlock(&eptdev->ept_lock);
-+
-+	if (!ret)
-+		*pfd = fd;
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL(rpmsg_eptdev_create);
-+
- static int rpmsg_chrdev_probe(struct rpmsg_device *rpdev)
- {
- 	struct rpmsg_channel_info chinfo;
-diff --git a/drivers/rpmsg/rpmsg_char.h b/drivers/rpmsg/rpmsg_char.h
-index 117d9cbc52f0..eb8a3b24f9fb 100644
---- a/drivers/rpmsg/rpmsg_char.h
-+++ b/drivers/rpmsg/rpmsg_char.h
-@@ -19,6 +19,19 @@
- int rpmsg_chrdev_eptdev_create(struct rpmsg_device *rpdev, struct device *parent,
- 			       struct rpmsg_channel_info chinfo);
- 
-+/**
-+ * rpmsg_eptdev_create() - register ep device and its associated fd based on an endpoint
-+ * @rpdev:  prepared rpdev to be used for creating endpoints
-+ * @parent: parent device
-+ * @chinfo: associated endpoint channel information.
-+ * @pfd: fd in represent of endpoint device
-+ *
-+ * This function create a new rpmsg endpoint device and its associated fd to instantiate a new
-+ * endpoint based on chinfo information.
-+ */
-+int rpmsg_eptdev_create(struct rpmsg_device *rpdev, struct device *parent,
-+			struct rpmsg_channel_info chinfo, int *pfd);
-+
- /**
-  * rpmsg_chrdev_eptdev_destroy() - destroy created char device endpoint.
-  * @data: private data associated to the endpoint device
-@@ -36,6 +49,12 @@ static inline int rpmsg_chrdev_eptdev_create(struct rpmsg_device *rpdev, struct
- 	return -ENXIO;
- }
- 
-+static inline int rpmsg_eptdev_create(struct rpmsg_device *rpdev, struct device *parent,
-+				      struct rpmsg_channel_info chinfo, int *pfd);
-+{
-+	return -ENXIO;
-+}
-+
- static inline int rpmsg_chrdev_eptdev_destroy(struct device *dev, void *data)
- {
- 	return -ENXIO;
--- 
-2.25.1
+Thanks,
+Srinivas
+
+
+>  It would feel more future proof to
+> do this mapping using a loop and array. You also chose the quick and
+> dirty=20
+> approach wrt. trailing spaces as getting rid of the extra space is a
+> bit=20
+> tedious when open coding the mapping like that ;-).
+>=20
 
