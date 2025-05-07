@@ -1,213 +1,133 @@
-Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A1312586C8
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 12:01:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF6974B1E45;
+	Wed,  7 May 2025 12:02:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746619307; cv=none; b=Xko7ID8T95QOu+ySs48j3n9g7siIm6tXlcKib45llmhQ+tIK3nNfGWavyohuDoQBACTqwfMAdLWWdIc65dO4DhOI+Lo4Sa/9bW3MegtKv6B19SfwENw/pEB2SIlAuUbFlTkn/nlr2O2f8kk4bFqMJ2qvF4Siu7AHdDsjZYEVa6o=
+	t=1746619332; cv=none; b=pN1GAKLrWuZVE+Smdzt0fhRkcoR7qngbJQDswtcXHnON9aDTtWcgIgzGss61/ht9HbVpSypHvzEXxwiMAcRb/bZS9q1IzseDSj72U9V0pJGnP+9LbcbQtJkpNqggXITVsinxeRzZDPO8kJPVt6ARwv/in3HJw3+qtWSJpi67chs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746619307; c=relaxed/simple;
-	bh=6rv4ezCEsP2xR4MP5LGsgg8AteN/ZReqLsGo7bUMZuw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LEoOdFdlE8Y+Vbf4DiiexGHIrrNpASs7QXIwluGt3bGeggECXbyC6b3TpVGA0mmR35IiIc5iRTmheJ065pRxnbVV6/o0AFI/7am5yamSw7ERb+dZl4M4CJ+Mw0i6SAD5oZ47ki2HSEHxgMxSz6oJ8HmYanh8GrJ8xsmC8WBrXXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=Tf1F06iL; arc=none smtp.client-ip=209.85.166.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
+	s=arc-20240116; t=1746619332; c=relaxed/simple;
+	bh=G+gGUFnonfHfqvLJtT3/rMFE4bMTKjw81qinxKZTkP8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Bxs98oysZA1BzwhaL9UB2xO9BfQcNrjhls2nkVfpaPJW5APMSgGG95jE0tXJHn4SMxgPDr5y7mLv0nuB8pmWTVCtmXNVsQb1sAQIOsG+oUb7jAWDwWDgD2AHLqtEak9bRLguFRSDOojmUESUm0poSJ65YC0JBDRk5uKa/9K4We4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HdpZlfgo; arc=none smtp.client-ip=209.85.219.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="Tf1F06iL"
-Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-85e46f5c50fso621023039f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 05:01:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HdpZlfgo"
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6f0c30a1cf8so99166046d6.2;
+        Wed, 07 May 2025 05:02:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1746619305; x=1747224105; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MfksTJphxL8/tqIZbEC1vmhshvxVbtCcWFaJZOmGc+c=;
-        b=Tf1F06iLu5P6Ar8J3Rwwnc1jS8mZw0kXv+tUkX9vc987zsexeSdus+u4QAZyu7dQVM
-         yp3+j5/UZyzAU0rQYGLCkHhrh1yxyYmbPzUDnYPuBlOnf3kvolgtTTPCfR0SVwuf2fOE
-         n1K/SIIQbsXd3DwFy14uGI2u8+mCDmmilCaMztlDRHrGFl9L+OEMilceSrPYgWYdUSUj
-         8fGC4b6MRrE9+z2+cJrh2X6f0GRdbIShb/JbcRaTDk2P55Js6us3MeykZJTvBNOGdFST
-         DMR9jsP8qfzXWrstrlOAQ15sTcpOJOMuUyX8U2eyA9L4UTZLZuZPBlUkmrzuEklXjba8
-         iszQ==
+        d=gmail.com; s=20230601; t=1746619329; x=1747224129; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=cB9Vli3Xxo4KwEG4QM0VC4PHMgHe2AYxc+yOmxy2QWQ=;
+        b=HdpZlfgoaRPcb4fTwldKsQn1aw2IexvtV5C5OCzyM6eWMpFuDU4XSENi40xorORDiw
+         8D7xGaG28rqAFkRThJjVVxNZ9jm4pJ4uKGju8ODLQcN8kT2bcxmhynvsed82049DduoZ
+         TlinWhpn1Ts5CCE+D1L0khVh1HqpUYQVoEmzUGxD9+auTSRbImAaDlPOreg1Yh37R/98
+         44JQEcVjHfxo/cVPseI395WeILZAEluqsdBaqcWM85dj1rYkTu4q1RW/038ddg954d9R
+         1uc8VDjSv+Drt0xZ+1irf7PkrNB072drp1vqfeQa9r3uVgS0twCO2Kdc6nme1BdqKpXj
+         BnvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746619305; x=1747224105;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MfksTJphxL8/tqIZbEC1vmhshvxVbtCcWFaJZOmGc+c=;
-        b=ipIkGKNxGDjUHnk8K9LkPlsAVET8cADzfJ/BgSWQjPekHcpzxJL1viVtBNFCI79jmt
-         WTrHwCuuQA4yZH0V1UI0S8Mw4P/YGtIqcqkjCsR9FwrEj/82Wy8Sly6MwXCjfwD751m/
-         h1ah9H5NDQg0b4BFkleIs3ZMlDZ26AibLo9TMO8sRHDlC6tVreLhBYYwUyUMnfTlkvIt
-         K0T6lYRi97GzdYccWa+wtWxVJJIXfW2zQdWz1woGGb2w3/Dgbv3fwGfKWcFI9JFRV8I1
-         LnlNQSd5/kRpb88SIft77W2I3IRpSEWIRzB3wHhoro4DYAoxu4rFTGvN5aZnW1x+LM5W
-         Tk2w==
-X-Forwarded-Encrypted: i=1; AJvYcCUuoLBHiuFsa42eJndb/62kX9d01H3tlwUb6zR52gMU1/dB9Cxjki+QETXNPq89fmtNPeyx0sjgdA0v9N0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxvTTqY3CPaAAMG2I0jzRFYimIlopV+9+9HStiDrM0fiB5g4N+p
-	HnM34uRM0Cs28bI+EoAq4XvUpfDBIG/uQP1r9CN2RtgwM6ATHxeyfWq4dvp/KAfS0t7kV3lKrbJ
-	rMiTQBUKnO187y1aOYIvx1zN+l4PJ+hwF9Kr6Iw==
-X-Gm-Gg: ASbGncsmGz3fBp25g/eHkxnrut5DEeo6n8sidw83m91F1955GU7sI3xtz3T9spz+HCL
-	3nguJLlT59uN0YJvoxqOSmEmQCYkLKQb5oEqW6I508fFH+S+97wp+V2WN46lXplCrBZaf3Apkrx
-	oZQ18K8oSiqELAzR9Fvur4qrs=
-X-Google-Smtp-Source: AGHT+IFkZGdbLqqYtnBIxPNoB/AAAkKnYxcbV3TvXGHWR/dk3f5HpfrkqVg/svBXEFNqgSJQ1iCWCi8Uf95FPmM7zQQ=
-X-Received: by 2002:a05:6e02:1c2c:b0:3d8:1d7c:e192 with SMTP id
- e9e14a558f8ab-3da738f849emr29139475ab.7.1746619304812; Wed, 07 May 2025
- 05:01:44 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746619329; x=1747224129;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cB9Vli3Xxo4KwEG4QM0VC4PHMgHe2AYxc+yOmxy2QWQ=;
+        b=kyIY4ojPueMi/N3w2yCRKJG8UZtJ9orZdStG4gExbK8BhFZpANPqDz+zWtovlfdQUZ
+         L9oeJDzXMF2moULEViHxdvLDryZMWMPAc7KoLu2sDkcgQDK/ar71yPfsAXuvciLGea2F
+         yQQygvYQ4GZGktxNZxJv0iaHc/wURiRK6UHEzXrR7MC3ItQKZBNI5L9S/oQNSZdYV8ER
+         NlFLy4JYoR1B7V5cNIeIUok66bhHJJgkYYjWajdxLia227JoRcPzfTZuD4Dk5kNhbRL6
+         LGv21T64xTvhsyNJCFX5ZOGdfxNpuHlgoxNYQNn1GDHUcr7BI649NGrIuVRXXjK3rNkF
+         nJZA==
+X-Forwarded-Encrypted: i=1; AJvYcCV22aigdEs8QKbAUXmAVFZZZK3GdvGVY7uvhEyT3NDJvr1oeD2TkzJiyzcSIMQuQsgYUvmYM+ZhyY6f92qJ@vger.kernel.org, AJvYcCVQl9KMXlA2JdhUiMF83B/bKnek8vmQK7BNl5RuHwpuAzJe1QStYEHcB/EDHKnpuBxs/HkiGE9A@vger.kernel.org, AJvYcCVhM93NyFKycSbFNoSJqecsDZvGmioI5mT6NV1PNKkKb19AEriG6jiVC+I9KTvF3lTZMCh1KyCh+GwB@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKK9KkM6qBvu12j7156KwY566r0Llru4Lbx4X2iZ1iEEnOu+00
+	Xv0Uzi7PQOm/gVBGg6jiK11BS4rRL5xlhtPrvIlwWA2XR+dqDSBSuMePtQ==
+X-Gm-Gg: ASbGncvDDiJFrXs9fOXv1hJqDFQn+SxAHXLLAGQpdi8qBWG07o69QE+UGmJS7ECTQsY
+	8uZGS1VJyoqLPaZW4+RTUyD4gMj7ODUqhSSPiaaFIlkHyCbbQ+H8p8WPfPOcM6uSDnw5HgaedkQ
+	pp3KEgBqPFR6ZMBxR6sSl5k+z9POa6f/TOdCJE6Qt2vsDs5PlXgjFczatfOS/NPqZLbeeKy8Sek
+	8MDJ8M6nHnR1IF+xfXItxMDrGlfENkIE8KSBgZw5r5HUQQKMybF0NZ6lnBURlvjiekgGlhCl7qg
+	WEtHdYg0YowqJR+w
+X-Google-Smtp-Source: AGHT+IGRl9BUi1WrHprzmvGHRtZmly2KUBbHCnPcITRG9+w3NMHRJoWIA8I9LxLmf29VDGt76SQFqg==
+X-Received: by 2002:ad4:5dc3:0:b0:6e8:ede1:237 with SMTP id 6a1803df08f44-6f542b31434mr45097126d6.43.1746619317492;
+        Wed, 07 May 2025 05:01:57 -0700 (PDT)
+Received: from localhost ([2001:da8:7001:11::cb])
+        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6f542647e03sm13464756d6.29.2025.05.07.05.01.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 05:01:56 -0700 (PDT)
+Date: Wed, 7 May 2025 20:01:29 +0800
+From: Inochi Amaoto <inochiama@gmail.com>
+To: Andrew Lunn <andrew@lunn.ch>, Inochi Amaoto <inochiama@gmail.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Chen Wang <unicorn_wang@outlook.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+	Alexandre Torgue <alexandre.torgue@foss.st.com>, Richard Cochran <richardcochran@gmail.com>, 
+	Guo Ren <guoren@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>, "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>, 
+	Romain Gantois <romain.gantois@bootlin.com>, Joe Hattori <joe@pf.is.s.u-tokyo.ac.jp>, 
+	Lothar Rubusch <l.rubusch@gmail.com>, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	Giuseppe Cavallaro <peppe.cavallaro@st.com>, Jose Abreu <joabreu@synopsys.com>, netdev@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, sophgo@lists.linux.dev, 
+	linux-riscv@lists.infradead.org, linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org, Yixun Lan <dlan@gentoo.org>, Longbin Li <looong.bin@gmail.com>
+Subject: Re: [PATCH net-next 0/4] riscv: sophgo: Add ethernet support for
+ SG2042
+Message-ID: <2tu2mvwsnqdezjei5h43ko24vfave4c3ek2fjoatwsg72p6lpz@3vbtpmm7l73z>
+References: <20250506093256.1107770-1-inochiama@gmail.com>
+ <c7a8185e-07b7-4a62-b39b-7d1e6eec64d6@lunn.ch>
+ <fgao5qnim6o3gvixzl7lnftgsish6uajlia5okylxskn3nrexe@gyvgrp72jvj6>
+ <ffa044e2-ee9e-4a34-af6a-2e45294144f7@lunn.ch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250403112522.1566629-3-rkrcmar@ventanamicro.com> <20250403112522.1566629-5-rkrcmar@ventanamicro.com>
-In-Reply-To: <20250403112522.1566629-5-rkrcmar@ventanamicro.com>
-From: Anup Patel <anup@brainfault.org>
-Date: Wed, 7 May 2025 17:31:33 +0530
-X-Gm-Features: ATxdqUEfXOKoC0fyIHGD5l9Qjl_U-GZBULEO3hLfdZKgXeyi62xCroqXS1Rt6jw
-Message-ID: <CAAhSdy0v7Cw+aGF8DDWh1gjTBXA23=H01KRK8R2LTQHLRHo5Kw@mail.gmail.com>
-Subject: Re: [PATCH 2/5] KVM: RISC-V: refactor sbi reset request
-To: =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>
-Cc: kvm-riscv@lists.infradead.org, kvm@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Atish Patra <atishp@atishpatra.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, Andrew Jones <ajones@ventanamicro.com>, 
-	Mayuresh Chitale <mchitale@ventanamicro.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ffa044e2-ee9e-4a34-af6a-2e45294144f7@lunn.ch>
 
-On Thu, Apr 3, 2025 at 5:02=E2=80=AFPM Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar=
-@ventanamicro.com> wrote:
->
-> The same code is used twice and SBI reset sets only two variables.
->
-> Signed-off-by: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@ventanamicro.com>
-> ---
->  arch/riscv/include/asm/kvm_vcpu_sbi.h |  2 ++
->  arch/riscv/kvm/vcpu_sbi.c             | 12 ++++++++++++
->  arch/riscv/kvm/vcpu_sbi_hsm.c         | 13 +------------
->  arch/riscv/kvm/vcpu_sbi_system.c      | 10 +---------
->  4 files changed, 16 insertions(+), 21 deletions(-)
->
-> diff --git a/arch/riscv/include/asm/kvm_vcpu_sbi.h b/arch/riscv/include/a=
-sm/kvm_vcpu_sbi.h
-> index 4ed6203cdd30..aaaa81355276 100644
-> --- a/arch/riscv/include/asm/kvm_vcpu_sbi.h
-> +++ b/arch/riscv/include/asm/kvm_vcpu_sbi.h
-> @@ -55,6 +55,8 @@ void kvm_riscv_vcpu_sbi_forward(struct kvm_vcpu *vcpu, =
-struct kvm_run *run);
->  void kvm_riscv_vcpu_sbi_system_reset(struct kvm_vcpu *vcpu,
->                                      struct kvm_run *run,
->                                      u32 type, u64 flags);
-> +void kvm_riscv_vcpu_sbi_request_reset(struct kvm_vcpu *vcpu,
-> +                                      unsigned long pc, unsigned long a1=
-);
+On Wed, May 07, 2025 at 02:10:48AM +0200, Andrew Lunn wrote:
+> On Wed, May 07, 2025 at 06:24:29AM +0800, Inochi Amaoto wrote:
+> > On Tue, May 06, 2025 at 02:03:18PM +0200, Andrew Lunn wrote:
+> > > On Tue, May 06, 2025 at 05:32:50PM +0800, Inochi Amaoto wrote:
+> > > > The ethernet controller of SG2042 is Synopsys DesignWare IP with
+> > > > tx clock. Add device id for it.
+> > > > 
+> > > > This patch can only be tested on a SG2042 x4 evb board, as pioneer
+> > > > does not expose this device.
+> > > 
+> > > Do you have a patch for this EVB board? Ideally there should be a user
+> > > added at the same time as support for a device.
+> > > 
+> > > 	Andrew
+> > 
+> > Yes, I have one for this device. And Han Gao told me that he will send
+> > the board patch for the evb board. So I only send the driver.
+> > And the fragment for the evb board is likes below, I think it is kind
+> > of trivial:
+> > 
+> > &gmac0 {
+> > 	phy-handle = <&phy0>;
+> > 	phy-mode = "rgmii-txid";
+> 
+> And this is why i ask, because this is broken. For more information,
+> please see:
+> 
+> https://patchwork.kernel.org/project/netdevbpf/patch/20250430-v6-15-rc3-net-rgmii-delays-v2-1-099ae651d5e5@lunn.ch/
+> 
+> 	Andrew
 
-Use tabs for alignment instead of spaces.
+You are right, the right phy-mode is "rgmii-id", the delay is not
+added by the PCB. It seems to be better to ask for the vendor about
+the hardware design before copying params for vendor dts. Anyway,
+thanks for reviewing this.
 
->  int kvm_riscv_vcpu_sbi_return(struct kvm_vcpu *vcpu, struct kvm_run *run=
-);
->  int kvm_riscv_vcpu_set_reg_sbi_ext(struct kvm_vcpu *vcpu,
->                                    const struct kvm_one_reg *reg);
-> diff --git a/arch/riscv/kvm/vcpu_sbi.c b/arch/riscv/kvm/vcpu_sbi.c
-> index d1c83a77735e..f58368f7df1d 100644
-> --- a/arch/riscv/kvm/vcpu_sbi.c
-> +++ b/arch/riscv/kvm/vcpu_sbi.c
-> @@ -156,6 +156,18 @@ void kvm_riscv_vcpu_sbi_system_reset(struct kvm_vcpu=
- *vcpu,
->         run->exit_reason =3D KVM_EXIT_SYSTEM_EVENT;
->  }
->
-> +void kvm_riscv_vcpu_sbi_request_reset(struct kvm_vcpu *vcpu,
-> +                                      unsigned long pc, unsigned long a1=
-)
-> +{
-> +       spin_lock(&vcpu->arch.reset_cntx_lock);
-> +       vcpu->arch.guest_reset_context.sepc =3D pc;
-> +       vcpu->arch.guest_reset_context.a0 =3D vcpu->vcpu_id;
-> +       vcpu->arch.guest_reset_context.a1 =3D a1;
-> +       spin_unlock(&vcpu->arch.reset_cntx_lock);
-> +
-> +       kvm_make_request(KVM_REQ_VCPU_RESET, vcpu);
-> +}
-> +
->  int kvm_riscv_vcpu_sbi_return(struct kvm_vcpu *vcpu, struct kvm_run *run=
-)
->  {
->         struct kvm_cpu_context *cp =3D &vcpu->arch.guest_context;
-> diff --git a/arch/riscv/kvm/vcpu_sbi_hsm.c b/arch/riscv/kvm/vcpu_sbi_hsm.=
-c
-> index 3070bb31745d..f26207f84bab 100644
-> --- a/arch/riscv/kvm/vcpu_sbi_hsm.c
-> +++ b/arch/riscv/kvm/vcpu_sbi_hsm.c
-> @@ -15,7 +15,6 @@
->
->  static int kvm_sbi_hsm_vcpu_start(struct kvm_vcpu *vcpu)
->  {
-> -       struct kvm_cpu_context *reset_cntx;
->         struct kvm_cpu_context *cp =3D &vcpu->arch.guest_context;
->         struct kvm_vcpu *target_vcpu;
->         unsigned long target_vcpuid =3D cp->a0;
-> @@ -32,17 +31,7 @@ static int kvm_sbi_hsm_vcpu_start(struct kvm_vcpu *vcp=
-u)
->                 goto out;
->         }
->
-> -       spin_lock(&target_vcpu->arch.reset_cntx_lock);
-> -       reset_cntx =3D &target_vcpu->arch.guest_reset_context;
-> -       /* start address */
-> -       reset_cntx->sepc =3D cp->a1;
-> -       /* target vcpu id to start */
-> -       reset_cntx->a0 =3D target_vcpuid;
-> -       /* private data passed from kernel */
-> -       reset_cntx->a1 =3D cp->a2;
-> -       spin_unlock(&target_vcpu->arch.reset_cntx_lock);
-> -
-> -       kvm_make_request(KVM_REQ_VCPU_RESET, target_vcpu);
-> +       kvm_riscv_vcpu_sbi_request_reset(target_vcpu, cp->a1, cp->a2);
->
->         __kvm_riscv_vcpu_power_on(target_vcpu);
->
-> diff --git a/arch/riscv/kvm/vcpu_sbi_system.c b/arch/riscv/kvm/vcpu_sbi_s=
-ystem.c
-> index bc0ebba89003..359be90b0fc5 100644
-> --- a/arch/riscv/kvm/vcpu_sbi_system.c
-> +++ b/arch/riscv/kvm/vcpu_sbi_system.c
-> @@ -13,7 +13,6 @@ static int kvm_sbi_ext_susp_handler(struct kvm_vcpu *vc=
-pu, struct kvm_run *run,
->                                     struct kvm_vcpu_sbi_return *retdata)
->  {
->         struct kvm_cpu_context *cp =3D &vcpu->arch.guest_context;
-> -       struct kvm_cpu_context *reset_cntx;
->         unsigned long funcid =3D cp->a6;
->         unsigned long hva, i;
->         struct kvm_vcpu *tmp;
-> @@ -45,14 +44,7 @@ static int kvm_sbi_ext_susp_handler(struct kvm_vcpu *v=
-cpu, struct kvm_run *run,
->                         }
->                 }
->
-> -               spin_lock(&vcpu->arch.reset_cntx_lock);
-> -               reset_cntx =3D &vcpu->arch.guest_reset_context;
-> -               reset_cntx->sepc =3D cp->a1;
-> -               reset_cntx->a0 =3D vcpu->vcpu_id;
-> -               reset_cntx->a1 =3D cp->a2;
-> -               spin_unlock(&vcpu->arch.reset_cntx_lock);
-> -
-> -               kvm_make_request(KVM_REQ_VCPU_RESET, vcpu);
-> +               kvm_riscv_vcpu_sbi_request_reset(vcpu, cp->a1, cp->a2);
->
->                 /* userspace provides the suspend implementation */
->                 kvm_riscv_vcpu_sbi_forward(vcpu, run);
-> --
-> 2.48.1
->
+Regards,
+Inochi
 
-Otherwise, it looks good to me.
-I have taken care of the above comment at the time
-of merging this patch.
-
-Queued this patch for Linux-6.16
-
-Thanks,
-Anup
