@@ -1,104 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E5232C9D;
-	Wed,  7 May 2025 00:53:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1582B2AE90;
+	Wed,  7 May 2025 00:54:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746579201; cv=none; b=BtmGa86E8a2IH+AbacxraDLyDda1fvWIFJ0aFyQjJhNkOoZrf3VYE2rdgUC74dDwW2yDB2HbLciV5LrUfPmKoZpOwnaYd9ERe8GP1bK4yzLTcj1weZfaoGE9VIzc+UjgjdWwEUNsPFk07BS8z/xWivQxz3sPcKWELYoyH/FnNXQ=
+	t=1746579244; cv=none; b=SC98fbwWxVib+JyYy5G9MwTDWGjGWhIuQ+0BvBHKXCI+1Cxha3shgMlPSqO6Y6HdoLEprWazCWJTzYL2OPzF85GMgJ/7OIuy2HclXDwaF4wN5a2Y/XfkQk6kiJ4I2zWvdc39KNSbZruaXS+zQ6dOa2SDvz7Vtjn3bPIeLdhr+7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746579201; c=relaxed/simple;
-	bh=JwkdJHtqnzvr9ic2vjKO3jhMa3Gd1ozvG9IU1T7YEhg=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=ApVGp8+JcAE45CPwZfrRFlRxdVaFROTIZM6R4HAQ6x31VP/2yyZ3oWNC3fO8K2SipmGBsRrN2mPDuOUnSDUpWavB1bvII703Ychbamn7lsHS1Q6hduurYfnbfWNm8335nKfXMBYSB/PuVLZEML6IOyFHyanlK14GgyneTosHVAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=CkQtGhw/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746579244; c=relaxed/simple;
+	bh=yzfCPq/Ea+XrfZ+ASW4eXQTefCsJ1DxMN8WM7TXS6Jg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QeBsjLSCwAN94BA40cxxoVtnmU7pYCAYauER7HjJbOmejIgcmqrvDqqBKcBdJwpocJaAzHx+mAJfAEaCcfVJxKqNgMWjFSwftLcb5/R64K81GXnSJ+PA+2zhyye81DvKdj1Roxxh7O1PBfiqMOq73MGAIxLuZKXcOqDOE4hImws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=HdqA9uuT; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="CkQtGhw/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D53F1C4CEE4;
-	Wed,  7 May 2025 00:53:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1746579197;
-	bh=JwkdJHtqnzvr9ic2vjKO3jhMa3Gd1ozvG9IU1T7YEhg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=CkQtGhw/Yd9EkUf7MUO1G7J3nDCeeAlvtshzPKG5RPDaGLCAv5ipdLxRpGQN64lFS
-	 S4t9XscXFAttV98w3NZsr2iIroFrSMbxknG1qvzju6HNRXZXQ3y8QhypNC1KDpSbbU
-	 SwtMVkmbjHcUjisQaJ2Ac/JoguSKXTG8xHqtE5mw=
-Date: Tue, 6 May 2025 17:53:16 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
- Roman Gushchin <roman.gushchin@linux.dev>, Muchun Song
- <muchun.song@linux.dev>, linux-mm@kvack.org, cgroups@vger.kernel.org,
- linux-kernel@vger.kernel.org, Meta kernel team <kernel-team@meta.com>, Greg
- Thelen <gthelen@google.com>, Michal =?ISO-8859-1?Q?Koutn=FD?=
- <mkoutny@suse.com>, Tejun Heo <tj@kernel.org>, Yosry Ahmed
- <yosry.ahmed@linux.dev>, Christian Brauner <brauner@kernel.org>
-Subject: Re: [PATCH v3] memcg: introduce non-blocking limit setting option
-Message-Id: <20250506175316.1ca96d3aab2a28086fffa33a@linux-foundation.org>
-In-Reply-To: <20250506232833.3109790-1-shakeel.butt@linux.dev>
-References: <20250506232833.3109790-1-shakeel.butt@linux.dev>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="HdqA9uuT"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=0+Av79XTudTREbKPCka69/drhNtVkapL3EfXHKAHlkA=; b=HdqA9uuTb96fPwW/8K/1cdOG6R
+	b08wjkMpC3/PIWcPuSaOBgyFZQIePirN8qB2BoQ11YAXDIwqTe/VSMJbCVI/PtWPQHrshFvpsMp09
+	AcwqjRhrk80rB01caZz8yOYt2UwHnrYkgg73HfH7/4Ap4/TOG9S6vFESOx/EIg9+Mmsx4+csh+lkm
+	6TMEzGhZKKVH2DA68LE3+WYHG+9qua5ILOK5wKtSczY1TwJXlO9BX3mVh7J3MFld23kx8cK2sQUqU
+	D7KHBg05+jM5qDpnSefQOmrf46wp/NGsq0KqpAjLe/0GlchMspGoD5aqmD4FCZwpaNcRU65bZbGJ6
+	3K4/QB0w==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1uCT2q-0046KK-1q;
+	Wed, 07 May 2025 08:53:57 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 07 May 2025 08:53:56 +0800
+Date: Wed, 7 May 2025 08:53:56 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Ryan Wanner <ryan.wanner@microchip.com>
+Cc: linux-crypto@vger.kernel.org, open list <linux-kernel@vger.kernel.org>
+Subject: Re: crypto self-test errors kernel 6.12.4
+Message-ID: <aBqvJJdXMcBpp9mC@gondor.apana.org.au>
+References: <468a8e17-d564-441d-9893-72b0ed48d8bb@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <468a8e17-d564-441d-9893-72b0ed48d8bb@microchip.com>
 
-Thanks, I queued this as a -fix:
+On Tue, May 06, 2025 at 01:12:31PM -0700, Ryan Wanner wrote:
+> Hello,
+> 
+> I upgraded my ARM kernel from v6.6.9 to v6.12.4 and I am seeing some
+> crypto self test errors that I did not see before. Shown below. These
+> errors are different every boot and I did not see them on 6.6.9 kernel.
+> I did notice that when I compile the crypto HW acceleration drivers as
+> modules like this:
+> CONFIG_CRYPTO_DEV_ATMEL_AES [=m]
+> CONFIG_CRYPTO_DEV_ATMEL_TDES [=m]
+> CONFIG_CRYPTO_DEV_ATMEL_SHA [=m]
+> 
+> and have them loaded by systemd at boot I do not get errors and all the
+> self tests pass.
+> 
+> Is there a race condition I am not aware of? Or is the new asynchronous
+> crypto tests creating bugs in the HW acceleration drivers.
 
+Yes that's entirely possible as I think it was around that time
+when the self-tests became concurrent.
 
---- a/Documentation/admin-guide/cgroup-v2.rst~memcg-introduce-non-blocking-limit-setting-option-v3
-+++ a/Documentation/admin-guide/cgroup-v2.rst
-@@ -1299,12 +1299,17 @@ PAGE_SIZE multiple when read back.
- 	monitors the limited cgroup to alleviate heavy reclaim
- 	pressure.
- 
--        If memory.high is opened with O_NONBLOCK then the synchronous
--        reclaim is bypassed. This is useful for admin processes that
--        need to dynamically adjust the job's memory limits without
--        expending their own CPU resources on memory reclamation. The
--        job will trigger the reclaim and/or get throttled on its
--        next charge request.
-+	If memory.high is opened with O_NONBLOCK then the synchronous
-+	reclaim is bypassed. This is useful for admin processes that
-+	need to dynamically adjust the job's memory limits without
-+	expending their own CPU resources on memory reclamation. The
-+	job will trigger the reclaim and/or get throttled on its
-+	next charge request.
-+
-+	Please note that with O_NONBLOCK, there is a chance that the
-+	target memory cgroup may take indefinite amount of time to
-+	reduce usage below the limit due to delayed charge request or
-+	busy-hitting its memory to slow down reclaim.
- 
-   memory.max
- 	A read-write single value file which exists on non-root
-@@ -1323,12 +1328,17 @@ PAGE_SIZE multiple when read back.
- 	Caller could retry them differently, return into userspace
- 	as -ENOMEM or silently ignore in cases like disk readahead.
- 
--        If memory.max is opened with O_NONBLOCK, then the synchronous
--        reclaim and oom-kill are bypassed. This is useful for admin
--        processes that need to dynamically adjust the job's memory limits
--        without expending their own CPU resources on memory reclamation.
--        The job will trigger the reclaim and/or oom-kill on its next
--        charge request.
-+	If memory.max is opened with O_NONBLOCK, then the synchronous
-+	reclaim and oom-kill are bypassed. This is useful for admin
-+	processes that need to dynamically adjust the job's memory limits
-+	without expending their own CPU resources on memory reclamation.
-+	The job will trigger the reclaim and/or oom-kill on its next
-+	charge request.
-+
-+	Please note that with O_NONBLOCK, there is a chance that the
-+	target memory cgroup may take indefinite amount of time to
-+	reduce usage below the limit due to delayed charge request or
-+	busy-hitting its memory to slow down reclaim.
- 
-   memory.reclaim
- 	A write-only nested-keyed file which exists for all cgroups.
-_
+> DRBG: could not allocate digest TFM handle: hmac(sha512)
+> alg: drbg: Failed to reset rng
+> alg: drbg: Test 0 failed for drbg_nopr_hmac_sha512
+> alg: self-tests for stdrng using drbg_nopr_hmac_sha512 failed (rc=-22)
+> ------------[ cut here ]------------
+> WARNING: CPU: 0 PID: 90 at crypto/testmgr.c:5928 0xc0397fd0
+> alg: self-tests for stdrng using drbg_nopr_hmac_sha512 failed (rc=-22)
+> 
+> alg: hash: error allocating hmac(sha512-generic) (generic impl of
+> hmac(sha512)): -17
+> alg: self-tests for hmac(sha512) using atmel-hmac-sha512 failed (rc=-17)
+> ------------[ cut here ]------------
+> WARNING: CPU: 0 PID: 53 at crypto/testmgr.c:5928 0xc0397fd0
+> alg: self-tests for hmac(sha512) using atmel-hmac-sha512 failed (rc=-17)
 
+17 is EEXIST, that may actually point to a bug in the Crypto API
+itself.
+
+Could you please test the current mainline kernel and send me the
+complete bootup messages and kconfig file?
+
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
