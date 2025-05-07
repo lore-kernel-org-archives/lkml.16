@@ -1,108 +1,125 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8882328A3EF;
-	Wed,  7 May 2025 13:58:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 941D828936E;
+	Wed,  7 May 2025 13:58:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746626301; cv=none; b=PM9KdJ3tp2c0tBI5ISB600dGgKeHaAAr2CzaF7SATHvSiM9PNHfpWIxSih2CfU3/YBLac2QgrE1vmsM43uMpHaqQc/BYtf2571kk2Xl0P/GMD8XVkl+m2R05AYqTBoQ0xTDmJWLBPUhHtIhbsN9rSn+FaYvVkdmyr5WUO5utoVE=
+	t=1746626307; cv=none; b=dFDMY3lKqMcuYOWvqtMaMd5IeWMWk3NT+zoLkIsYJuUl0HjBH7RHtyAdqxARMc81J9QYIWjGGb+sZ8vdQBpkQkpJjO7NGH2mQ5rbAQj5+aQ/YJUpOmSDvzxXYfcT5SykMGHTYKLupu90DVisJO/M5lRdMge5dSL5ixsi5rksGW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746626301; c=relaxed/simple;
-	bh=/0Q/u6Uimv2ZxNumXH8o5ajq0edxS5+j8L2aCHsi8D0=;
+	s=arc-20240116; t=1746626307; c=relaxed/simple;
+	bh=WFer8e0bFikfukjmXwGyg1ZGpzNoXKUjdhtAJDp1nzE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SS+kMMJL7kC2zpDiTEtGkmJNj5EvyzyxBa5ZMqThh67Yajwr9ap85VrAn8qJCVkoLDLH2l8IBTcFJH4SkWA4z5DigXVIR4pK2oDNQUYS1VqCXIgj3h4NNgAYThRt0LX7G5IPT8qGVa5r2Etuwn1kY1i7Jk92C9odP45yRvfafyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jDImqiNJ; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=i3xcH0rmGedYOdXoJ8b5RXQqkEuC7x+q//CxIGLJ5JPP67I/cQxwsppWGVl9tVZw11Dpn5tzr8+364+11nayvt6z4Jh1K9IcrrgUmGAqTQd3dpV9gOSG+UbOV/rd3R/IDTdPhrO9jQQJZ0IcnqVrrkCKKsQ2qaUx1D8ZXPDRpKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=magUTuRh; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jDImqiNJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746626299; x=1778162299;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=/0Q/u6Uimv2ZxNumXH8o5ajq0edxS5+j8L2aCHsi8D0=;
-  b=jDImqiNJdnO4ePwY5bb/rtYDrbUTN7U6FNGehtD+tEg4Ki/VW+Kr5MQl
-   eR+MpZ5HBAcsp4WuSBn8fNZc6rn8jpIgsowrGhb1FKYflRDEQTsDyJ2o3
-   05uSVq4akC6ppd+f3qr0r9NaVy1YEHkAL6bpBTWjSHoiB8Y6jReEt/aYf
-   lc7bnKR/gz4T3gz69nPVAUcvy/PUVH4lE8Rs3FMsm0w+9a8iTBGhbmy4Z
-   OugemXHZdjpPCgdbaZuE2bxkj8U62TyrnMgP3WYpgASudLSBt+9iVYfLp
-   MfL55/HdO4sazfxmogj/ue7dCmXstQ32OuJ3S93SYHIrsqrRrl8uQ/iEC
-   Q==;
-X-CSE-ConnectionGUID: 5NKCv8ceS3G9NofLWRtuZQ==
-X-CSE-MsgGUID: GpFFbxJgQUaC6dO2rt+NSw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="47613044"
-X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
-   d="scan'208";a="47613044"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 06:58:18 -0700
-X-CSE-ConnectionGUID: vnx8wscpTRCgNzf2C2Pp5w==
-X-CSE-MsgGUID: K1Ux9pV0TFuSEc0nzuSVgg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
-   d="scan'208";a="140011265"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 07 May 2025 06:58:15 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uCfHo-0007vN-2T;
-	Wed, 07 May 2025 13:58:12 +0000
-Date: Wed, 7 May 2025 21:58:03 +0800
-From: kernel test robot <lkp@intel.com>
-To: Maxime =?iso-8859-1?Q?B=E9lair?= <maxime.belair@canonical.com>,
-	linux-security-module@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	john.johansen@canonical.com, paul@paul-moore.com, jmorris@namei.org,
-	serge@hallyn.com, mic@digikod.net, kees@kernel.org,
-	stephen.smalley.work@gmail.com, casey@schaufler-ca.com,
-	takedakn@nttdata.co.jp, penguin-kernel@i-love.sakura.ne.jp,
-	linux-api@vger.kernel.org, apparmor@lists.ubuntu.com,
-	linux-kernel@vger.kernel.org,
-	Maxime =?iso-8859-1?Q?B=E9lair?= <maxime.belair@canonical.com>
-Subject: Re: [PATCH 1/3] Wire up the lsm_manage_policy syscall
-Message-ID: <202505072131.ogtsaLPI-lkp@intel.com>
-References: <20250506143254.718647-2-maxime.belair@canonical.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="magUTuRh"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a0adcc3e54so1165534f8f.1;
+        Wed, 07 May 2025 06:58:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746626304; x=1747231104; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=dpBOaKV+yyjzqRs1dDOpKMagpR3gaIT9d9jJ3WjXu5k=;
+        b=magUTuRhaKRZOIKmjnpB2+R4/r1vVZvmGwDb3/n6PBv40LLzvtpMJj/72Uy02m4lau
+         qjGr8dixZq3b3+7u4lxIbrYoCk+Nk/soBYzFF2d68HGBpRnMUa21fedgz7fHBbS6fjjT
+         Uc9TP5kXnznAPjZ1FM8DSkaZ8Kh5NHRInHFLfPtMozFpUQ8KCAJTdQi6tfimxbs9fqqL
+         4I8XU74fL6UdvZ449XQzbKQzzTuKs6mU2z1jdf4nMRi1L6sTHNzOzFaHA1kDENqL3RFe
+         FUvZI45yASEmuWfbS5f43H+2i7bwtxhjiVQag9hBz0L0zzY4r24IIk2CYeT94uL6PgST
+         E35Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746626304; x=1747231104;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dpBOaKV+yyjzqRs1dDOpKMagpR3gaIT9d9jJ3WjXu5k=;
+        b=mgFVn6VNglOpzW7Z/5PKQh2xh4ORYwiwDiYIsfn32NrcxUusyLxHGzyBtDwq3cqacV
+         ra8alNzKgU4rL3KmZGqdkBn9zvmx8KD0NAixytakDPEwwX9CXZGoHNSo9zBVBNhi2JDy
+         vODSwf5d5w4dbJmG56AL39dkbYASeh6g46ObhiEme1i5HS/QoOBjI9Hz72QzY+bBRBS7
+         yMAAgNkMHyd8ESJ9y0PQf3uj5F5oWSCXBNJelzS5GxMMhwSLP8obiVci79RnkBQA/Fy9
+         SrYC28k3J11JeqQlMJ1GE8nPNtudErmy1rqm2WnUQY5V//FNBDw3rOoqkRO/DPnFjRS4
+         vMJA==
+X-Forwarded-Encrypted: i=1; AJvYcCV8byfJ+pQw4L6L3DMpg0EeIR1vTU2cVI2duQSelZ1hUDG5EYhQrN8ZnKQl84+MEN93BgFuvzgxk46IDPm1@vger.kernel.org, AJvYcCX7nIyiBW5yyMtTrnejwJqz0I53Hd5HniT7Agp6FVbR3uQvHvo5NKqDVSjlIvvITYI5XuFejlTxoDEXxTZB@vger.kernel.org, AJvYcCXzzWCWzdRXNeajeznbbaXvXaX1d2lCVexC01QcRREiCLQBKJVIlU5yNlTdUQKZPRDoWmwFhDM/t/3x@vger.kernel.org
+X-Gm-Message-State: AOJu0YyehlFYVwBvJO1kAPo5nXIvDl6nBxdILZd1JuAdhI9OCUDFCFBr
+	tUj+nXdtAeV0HHNKraAYDjmGW7FQcdzKa7j0WhC4GPD20oR13juuaixDaw==
+X-Gm-Gg: ASbGnctAX9d6tCOn197CeqI9Q4v8aBhIzD8NkMrZBgZBzoNv6bmxLU7y1C3C8xTDeFf
+	Ywn/VYvRq58kTd8ZZtys4/EnD0MicyOz/YYg3ET2t1Epp+yyviCy548ExHGYSMp2Bv/cFp+Dv4Q
+	ChnpJzmMxoyieY4xjLOZ8nqjD+TSfn8Mlz3ye51DePfDqm6a3Sl77j5LspSg0AKBgCqJhf4/PJS
+	9WehrKjC2LeDuPuVbkd0Dji0DCViU8zQcrZrWM+mPf9T3mn7iZ1UVMveCcH7z2uRmvMS8Mn1DBR
+	ciafl3UGicqkLr7ifdOCf7IJH0DUJjToi7LJ9AduvD9AV8ShwKJRNv8ig50b/5oMU0WSA+uLO/v
+	o0Se7qcTGyr/flXJ6vv+ajZfYIDQ=
+X-Google-Smtp-Source: AGHT+IEE73NhNkRPDgIrsa2zntE0urmbFH7L73hnMkdy1TBZb0kNJDjkn9LP+dpojQJT9A7UbLLGFw==
+X-Received: by 2002:a05:6000:1367:b0:3a0:b4f0:c84d with SMTP id ffacd0b85a97d-3a0b4f0c867mr2423476f8f.0.1746626303703;
+        Wed, 07 May 2025 06:58:23 -0700 (PDT)
+Received: from orome (p200300e41f281b00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f28:1b00:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099ae0bb5sm16722021f8f.7.2025.05.07.06.58.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 06:58:22 -0700 (PDT)
+Date: Wed, 7 May 2025 15:58:20 +0200
+From: Thierry Reding <thierry.reding@gmail.com>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jiri Slaby <jirislaby@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-serial@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: serial: Convert altr,juart-1.0 to DT schema
+Message-ID: <q7lacaplecj6kjbatxiwh6sjhby5mhxzoowwhr6feza7iownt7@sej7agtylc7o>
+References: <20250506215959.2544931-1-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="f4b6bbsdc4dsnfyf"
 Content-Disposition: inline
-In-Reply-To: <20250506143254.718647-2-maxime.belair@canonical.com>
+In-Reply-To: <20250506215959.2544931-1-robh@kernel.org>
 
-Hi Maxime,
 
-kernel test robot noticed the following build warnings:
+--f4b6bbsdc4dsnfyf
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] dt-bindings: serial: Convert altr,juart-1.0 to DT schema
+MIME-Version: 1.0
 
-[auto build test WARNING on 9c32cda43eb78f78c73aee4aa344b777714e259b]
+On Tue, May 06, 2025 at 04:59:58PM -0500, Rob Herring (Arm) wrote:
+> Convert the Altera JTAG UART binding to DT schema. The "ALTR,juart-1.0"
+> compatible has long been deprecated, so drop it.
+>=20
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> ---
+>  .../bindings/serial/altera_jtaguart.txt       |  5 -----
+>  .../bindings/serial/altr,juart-1.0.yaml       | 19 +++++++++++++++++++
+>  2 files changed, 19 insertions(+), 5 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/serial/altera_jtagu=
+art.txt
+>  create mode 100644 Documentation/devicetree/bindings/serial/altr,juart-1=
+=2E0.yaml
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Maxime-B-lair/Wire-up-the-lsm_manage_policy-syscall/20250506-224212
-base:   9c32cda43eb78f78c73aee4aa344b777714e259b
-patch link:    https://lore.kernel.org/r/20250506143254.718647-2-maxime.belair%40canonical.com
-patch subject: [PATCH 1/3] Wire up the lsm_manage_policy syscall
-config: s390-allnoconfig (https://download.01.org/0day-ci/archive/20250507/202505072131.ogtsaLPI-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250507/202505072131.ogtsaLPI-lkp@intel.com/reproduce)
+Reviewed-by: Thierry Reding <treding@nvidia.com>
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505072131.ogtsaLPI-lkp@intel.com/
+--f4b6bbsdc4dsnfyf
+Content-Type: application/pgp-signature; name="signature.asc"
 
-All warnings (new ones prefixed by >>):
+-----BEGIN PGP SIGNATURE-----
 
->> <stdin>:1618:2: warning: syscall lsm_manage_policy not implemented [-W#warnings]
-    1618 | #warning syscall lsm_manage_policy not implemented
-         |  ^
-   1 warning generated.
---
->> <stdin>:1618:2: warning: syscall lsm_manage_policy not implemented [-W#warnings]
-    1618 | #warning syscall lsm_manage_policy not implemented
-         |  ^
-   1 warning generated.
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmgbZvwACgkQ3SOs138+
+s6EaUw/+PFpKm217yyGnEEtkwhARJq1ODAIXlAzA9oOlrGF4OtXsfMxD1nbJYeL7
+HPjJZUwaymepSChyDvLUxw3gCx0hYnNFkoPrywBvkawvOtrmIf33DBNfDyD8lZZM
+LnwQQCS6UmSDX+lzFbLOI12qw+bnApMTTDIcbvZwSOY//OPXpGg8oejxViHm59h0
+KNP1Ry6FTA+tLVRwsUWwW6wxizXXhX+7+LbnF2u5w8zdsJCbgklB/QZe+cbr+02s
+Q1UAQRDYQ5EmGwWHCjrlgX8XSxJhThpXS2qP1t8z0b4FvG6eXtU3jvOQim4NMKqf
+REMFWd2JPNF2PjoETb4QFfANPxyZJttWkhAC1zwmKwecvAf73PnmF/kKs6WBHivk
+OHus2lttXKLoEFebPPFsHcq+Bfk1nmfyPaiOVReSeAQ8adYdVBu3Y4s/dn4N8ASp
+x5iYnb9zRI6h+vWpz/UGpiAywfrRNWe7rDLypMoFtwG+o6VH6oxLpMoZObMk3WZF
+a3meBfJgSLNG0P2xT8DmF9xvIxVKs4bdRWZ/nAMsHE0Y794VfG61pE7TWQ6wwEq/
+FoiBsoEFJq/ZLbYC/r5sqO4Mv0ZPnEJv3VOisAS4cNuoSiVPcGRFn9XjTJU5sEE4
+JGaSYV5EwqQj9bcwD7MU0NfKbZ2zcQTDYHpldmF0wj4JvxaWe0A=
+=lzjv
+-----END PGP SIGNATURE-----
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+--f4b6bbsdc4dsnfyf--
