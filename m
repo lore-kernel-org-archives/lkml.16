@@ -1,82 +1,94 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AB6D433D9;
-	Wed,  7 May 2025 15:03:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CE8A28A1D3
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 15:03:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746630205; cv=none; b=C2FtHtTFRjLonM/HaMB85zQNgdIPGPTNVitHc0eAM3UnxK07DiUsJegMlXELX2DW1TPMgIiRYdBv4kjv/T3qlJI4P3VEwJE+V00ysPQpasITtAoQ6VEuQS2+KTBGuCpCiXbzbn6Bl7vyGPrYe62M+uqtM1KgCKm6ODwYB3RzygU=
+	t=1746630215; cv=none; b=ivcDaGSWUW91L48dnI1w6nKUIsOl+KJbk+F5373rIu10/hvs6EQ4BqAoGjvAHnh0cfripJdpzV3hl27nBfM3TW9cxWIBJ+qR4hKUVmM4s8Y4DaHE68Hwe4Y+beJqzpAFsM09TWIOldGl1k8TJghUQWD+kBnFG1RUDp4c1W8Cyr4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746630205; c=relaxed/simple;
-	bh=BxVNvXmX3G7YqiFJjCXO2/8wx0H+3R188qUBHuj112U=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=AyvgPe+4Y25fCHYcNw2perFnDaxzQW94tPWAAge1H3EiyJ4N6kTTobVXazcIR4fI9Pqyvb/PJmWUlAWwcHyRrhUc5l4PSqDTc0Eo50t62clX6+1V1bTqyoyxIoRpoVlSBYefPuxyAmX/ESwwD7e26w1QcIKlKRTaHNkPIXd2FtE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bLRmj+zU; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VL09x8MT; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1746630215; c=relaxed/simple;
+	bh=9TaEzQgVFWAXgW4Tf6JaIlQNRUaSUe4zd6IVPH3fzco=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HVGaxd1ogaJeTcwwR1Zjo/phAgGTN7cNPKu87s0r9+1WcjqUY3QXdtEz+/+uP6sJvBmeOaw3zsi59bMfAeqVMuiG1Ci66zc5baznaiXGfwEIO8uihFXI2KLbUi3pA8LLk71he3fJS8ecP7Ijra75aF0OUW63W1xmDHyebByckR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=NmodMS12; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bLRmj+zU";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VL09x8MT"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746630201;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BxVNvXmX3G7YqiFJjCXO2/8wx0H+3R188qUBHuj112U=;
-	b=bLRmj+zUZntLyvQFMmKu0xbGmpTv8TCeHzGUjOiqfU3GRjgMHMwROeus+qjM6exXcSf9tA
-	odzG/WvwRfHj3mP/2S1UrxTNr6VXnxilsxIrGhcVyXqV2ZQp9ekT95592eZCBquktC+zTw
-	KAi3JKfng/myFWcbLCd8JTlV0Yyqz51aegALDoGQoFdoAMXu0N76yVdUsoczP7oRSlP5Kx
-	fMKE1DCVcdAQ0ikDmk3JVMfelrFARUnTgybwj9XMZDLB69io6LLTN6vlCTx5Ok30bl1YQi
-	Zrg0I+S8jbdJFqUxKNCFH+Wge89qiYqg4oRUBXroorLa5xD/ccgpRSoWQd5+5w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746630201;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BxVNvXmX3G7YqiFJjCXO2/8wx0H+3R188qUBHuj112U=;
-	b=VL09x8MT8p3aOzBp9Ybavyc/IFho5MstQvQR/Lq6igZtH/K5HdZHOKFW9+mIyFQ3PVMlEv
-	VIMnwVcLpyyIDGBw==
-To: Frank Li <Frank.Li@nxp.com>, Kishon Vijay Abraham I <kishon@kernel.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Anup Patel
- <apatel@ventanamicro.com>, Kishon Vijay Abraham I <kishon@kernel.org>,
- Marc Zyngier <maz@kernel.org>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Danilo Krummrich <dakr@kernel.org>, Manivannan Sadhasivam
- <manivannan.sadhasivam@linaro.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
- <kw@linux.com>,
- Kishon Vijay Abraham I <kishon@kernel.org>, Bjorn Helgaas
- <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Shuah Khan
- <shuah@kernel.org>, Richard Zhu <hongxing.zhu@nxp.com>, Lucas Stach
- <l.stach@pengutronix.de>, Lorenzo Pieralisi <lpieralisi@kernel.org>, Rob
- Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
- <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: Niklas Cassel <cassel@kernel.org>, dlemoal@kernel.org, jdmason@kudzu.us,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-pci@vger.kernel.org, linux-kselftest@vger.kernel.org,
- imx@lists.linux.dev, devicetree@vger.kernel.org, Frank Li
- <Frank.Li@nxp.com>
-Subject: Re: [PATCH v18 08/15] PCI: endpoint: pci-ep-msi: Add MSI
- address/data pair mutable check
-In-Reply-To: <20250414-ep-msi-v18-8-f69b49917464@nxp.com>
-References: <20250414-ep-msi-v18-0-f69b49917464@nxp.com>
- <20250414-ep-msi-v18-8-f69b49917464@nxp.com>
-Date: Wed, 07 May 2025 17:03:21 +0200
-Message-ID: <871pt0mpja.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="NmodMS12"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-22e696bbc85so967845ad.2
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 08:03:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1746630213; x=1747235013; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1s8LxSgdpw/QFNWhayU6GhU6VvikEqRstbNbkkV5cHs=;
+        b=NmodMS12ENTNSiz6w4DDJmdQa/PfVpd0JjfT7278eJpOlPIYZedvsWOBJTJxrRwitW
+         0vsRRWpovDVniHjt/oYSM82UuHs0DygQaH6dUMjUr9o9c8igCR57NMeFWwERDfWXm9D/
+         CMtfmPAjZ0H0fBAaB53QB3j7EJRADAEuBoLpuTpWu3+OYA3HtkHzIAhiyyrkDwridptN
+         L9JoNpmbCDNPad+wrZnTt3Ntf9hrleK0K7KHZ3OOh2HNgwCFx/DvyLv+tcNW9thoMR4p
+         C/+/uow3qmz27aNzo6BE2QnkrR17KeBUzYlj0HJynj3Wm/vfVq3tx+tYs5uDLbOnG6g5
+         JFQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746630213; x=1747235013;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1s8LxSgdpw/QFNWhayU6GhU6VvikEqRstbNbkkV5cHs=;
+        b=iRQixiWMXDpCtzlzpu6wjSgpwd/Z0EUypXA4YzKOl5aAbvQThlKwCfzeerPj4Si8LK
+         GdWV82yJ/63x7U0wkNn0pMbT9g2GagG70kz+e34TfljRPUXUQQuT6u4XovzzQlnqlAQD
+         2FJVCFUnFbhoB0HfGJKZLaryWtsPn6rcBm2CdVL+vn91EX6BdLZGCccdHrVPKdxSDAS+
+         8j5nziRvfkb39xPL1m3YmMtE2jIAivcKFmBSfVxD6a6q2BNCNm9Ml3+TB7/uRRlGUIcF
+         +WYySDzukGWJc4Bm5X96SRmHpI1H+m0Ney7a2M3atTlLjVd90f1yJ78RpN/SfcS4H6/e
+         elSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU0IseEMVU9r6amctculKuVI6k8E1w3PMNb3tokpzoo1x+Z3mzdFZ/d3LoW3L6vdlR19BY3dd65vM4anjk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCBJ7K0dx0IvjjnH6dAchcnV5Ijn5TTRu6VlBF8ZGAAiCtSjEb
+	t2Dg95mkiItnk2uFKL0lStq0JPfWLy1cpwyVZd2R/gBrf0nddwKb6ftUtP74J81lCRuts2ZKHrt
+	bD12d5bvRL1zaplwQ03rsBhiY3Cc+8mL6gldMzA==
+X-Gm-Gg: ASbGnctM0FnTs6NCrfbYz5eP1OWkF6SBiXRPQ40ZZLBl1U94XrNmaBPHiqrWJd8g2lx
+	KDKAWoklhBMhIVhQb8EVrr/C4mFdG8V6aem40uNmZpoTiQ0643EUWbZhjV5hykdSSubic53nVCM
+	XIPXGoOYZ3ts3cDFUdA/tC
+X-Google-Smtp-Source: AGHT+IGVRdVpmD42Zl1K9/CFzNk9/9fbzp0SeC722EZPTJKMkP3YbezVcTCIZOjRu3Yyi3o0XRR2Kv7U8ekDo75qkiA=
+X-Received: by 2002:a17:903:990:b0:223:28a8:610b with SMTP id
+ d9443c01a7336-22e5ee1cb10mr16787145ad.14.1746630212740; Wed, 07 May 2025
+ 08:03:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20250426020636.34355-1-csander@purestorage.com>
+ <20250426020636.34355-3-csander@purestorage.com> <20250507071610.GB1413@lst.de>
+In-Reply-To: <20250507071610.GB1413@lst.de>
+From: Caleb Sander Mateos <csander@purestorage.com>
+Date: Wed, 7 May 2025 08:03:20 -0700
+X-Gm-Features: ATxdqUG1uu45_rIP1595jmow33H5jf2cu-Lb4HqU3C1enyWziA9-fbza28d3E8s
+Message-ID: <CADUfDZo+WKATQ4+ZpYvvNWrqBqP7pkBhzfBxyMWQomeLR-qtJw@mail.gmail.com>
+Subject: Re: [PATCH v6 2/3] nvme/pci: factor out nvme_init_hctx() helper
+To: Christoph Hellwig <hch@lst.de>
+Cc: Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>, Sagi Grimberg <sagi@grimberg.me>, 
+	Andrew Morton <akpm@linux-foundation.org>, Kanchan Joshi <joshi.k@samsung.com>, 
+	linux-nvme@lists.infradead.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 14 2025 at 14:31, Frank Li wrote:
-> Some MSI controller change address/data pair when irq_set_affinity().
-> Current PCI endpoint can't support this type MSI controller. So add flag
-> MSI_FLAG_MUTABLE in include/linux/msi.h and check it when allocate
-> doorbell.
+On Wed, May 7, 2025 at 12:16=E2=80=AFAM Christoph Hellwig <hch@lst.de> wrot=
+e:
+>
+> > -     .init_hctx      =3D nvme_init_hctx,
+> > +     .init_hctx      =3D nvme_io_init_hctx,
+>
+> Without an overall rename of the methods I'd rather avoid the _io
+> here and pick a _common name for the common helper.
 
-This changelog has no relation to the patch.
+Sure, that's fine too.
+
+Best,
+Caleb
+
+>
+> I can fix that up when applying, no need to resend.
+>
