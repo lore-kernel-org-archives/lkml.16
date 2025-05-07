@@ -1,90 +1,66 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3035E18C31;
-	Wed,  7 May 2025 03:04:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B32718FC92;
+	Wed,  7 May 2025 03:09:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746587088; cv=none; b=og3bpLh6g8QPqUbIzOOc+g83pu1WtNFs7etUs5ALB5/k+rvwvG2qAB8crkJOfOrzQvCjiX7qAbWdBbFcbnXLJGm+45XmW433ZS9wl/UC8gwNhLzuiQshgVP7XbfIFEJy6c69NBHxeEHg7AmgyBQfPlnf7Dvjxsf1z4dzG8vDPuM=
+	t=1746587353; cv=none; b=RHas7gxIQnaL+Hj6zdAc8Lo+QhshOm3rqUIdkWxbWSYN7hZtdlYiJAjPYsX7ilJB7rYgzFezbbZxPNlzFeUGz82eVX6NLWL7V5lrf9N7Fg+8BD7Y8v0BQwjlrb3jG38fcROQD4jTxRfZEFuVp+gkdhBYZ2RYdH8xx/DqALogMfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746587088; c=relaxed/simple;
-	bh=QwIKkKxpNb7iwHp9WW3P27A3tZtJzLdwiQneLX2HKs8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VIW2KJLx+WXKpDW8Xv4fcVreocee8UjX3JMJuOxcUrRhn5fqfGTRlm0rc3zhC78kdIU0D+4htrS+BSFfBxNZk0vFi2g7Ume7cQXrnydFhJSx1S9lpdNikXzfPfxz5d2aTs/2x/tofnPWTZgNSVhev3B/27XWkFUjCjWWwDs34U0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 02df348c2af011f0b29709d653e92f7d-20250507
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:d7deef24-acd2-4a9a-86d8-db3bb7a87288,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:6493067,CLOUDID:eba71daf2742749ccda461fe3bf9477b,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:nil,UR
-	L:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,S
-	PR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 02df348c2af011f0b29709d653e92f7d-20250507
-Received: from node2.com.cn [(10.44.16.197)] by mailgw.kylinos.cn
-	(envelope-from <hehuiwen@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 1610368035; Wed, 07 May 2025 11:04:37 +0800
-Received: from node2.com.cn (localhost [127.0.0.1])
-	by node2.com.cn (NSMail) with SMTP id 6E096B804EBC;
-	Wed,  7 May 2025 11:04:37 +0800 (CST)
-X-ns-mid: postfix-681ACDC5-199025431
-Received: from localhost.localdomain (unknown [10.42.12.16])
-	by node2.com.cn (NSMail) with ESMTPA id 87482B80758A;
-	Wed,  7 May 2025 03:04:36 +0000 (UTC)
-From: Huiwen He <hehuiwen@kylinos.cn>
-To: tangchengchang@huawei.com
-Cc: huangjunxian6@hisilicon.com,
-	jgg@ziepe.ca,
-	leon@kernel.org,
-	linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Huiwen He <hehuiwen@kylinos.cn>
-Subject: [PATCH] RDMA/hns: fix trace TRACE_INCLUDE_PATH
-Date: Wed,  7 May 2025 11:04:33 +0800
-Message-Id: <20250507030433.599021-1-hehuiwen@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1746587353; c=relaxed/simple;
+	bh=VKKg9ZoCZOBSNwA6LB5Lj247+Y6SdSDe5etsTBIdTOc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C+6nCSeN6bTftudMClA2sDAXQ+xqEBTKxJE4OyZslDcB13GD95m2crzQBZmE6HmExcYdZeEoDuXC9YpNUl6S/PZeQDe0JMw0mYys4HMKWNQ6Gx0MR7R3RyCu+wDT7EubB/9MWkgVaXaodEpy5dGD7xTgVJnwKUX1oUYedBudGlc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AaQRQo98; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AaQRQo98"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD97DC4CEE4;
+	Wed,  7 May 2025 03:09:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746587352;
+	bh=VKKg9ZoCZOBSNwA6LB5Lj247+Y6SdSDe5etsTBIdTOc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AaQRQo98cW9QcWYxfvI+NkQgpLIltR/ScTcBparMjFuaQJA+h7s8BuBcjnRPZCCS9
+	 aUkwHkJXeK5IuzXew5BIty+yhXThaEqteyf7uSMyXGLdHVyNp75jj34FTMT0sLJwDI
+	 0AW4JPmzrVwAM8Y/f6vNd3lReQtRG7v2+/VvLZdtk1He7+BqkqFDca+K6d4M1MLd0J
+	 dv7Vrg/oDqSulrsjeOGWLK8a//n1x3LMeWSx9IacFCkxzCNFhlZu0GHXqtdBoebCLx
+	 mRQMlA1zJY5GjGKTJSIRlqVfyVa/DpvcUTZdSE5dZ6CuIy1wTRZu5Rij9lzA+4eXX0
+	 X/LU5jL3oBXVg==
+Date: Wed, 7 May 2025 03:09:09 +0000
+From: Tzung-Bi Shih <tzungbi@kernel.org>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>,
+	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] platform/chrome: Avoid
+ -Wflex-array-member-not-at-end
+Message-ID: <aBrO1X0F1ZOz66Ot@google.com>
+References: <aBp7mZ8kj9w4CKkl@kspp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aBp7mZ8kj9w4CKkl@kspp>
 
-TRACE_INCLUDE_PATH should be a path relative to define_trace.h, not the
-file including it. (See the comment in include/trace/define_trace.h.)
+On Tue, May 06, 2025 at 03:14:01PM -0600, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
+> 
+> Move the conflicting declaration to the end of the structure. Notice
+> that `struct cros_ec_command` is a flexible structure --a structure
+> that contains a flexible-array member.
+> 
+> [...]
 
-Fixes build error found with CONFIG_INFINIBAND_HNS_HIP08=3Dm:
-  CC [M]  drivers/infiniband/hw/hns/hns_roce_hw_v2.o
-In file included from drivers/infiniband/hw/hns/hns_roce_trace.h:213,
-                 from drivers/infiniband/hw/hns/hns_roce_hw_v2.c:53:
-./include/trace/define_trace.h:110:42: fatal error: ./hns_roce_trace.h: N=
-o such file or directory
-  110 | #include TRACE_INCLUDE(TRACE_INCLUDE_FILE)
+Applied to
 
-Signed-off-by: Huiwen He <hehuiwen@kylinos.cn>
----
- drivers/infiniband/hw/hns/hns_roce_trace.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+    https://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git for-next
 
-diff --git a/drivers/infiniband/hw/hns/hns_roce_trace.h b/drivers/infinib=
-and/hw/hns/hns_roce_trace.h
-index 23cbdbaeffaa..19bd3c0eec47 100644
---- a/drivers/infiniband/hw/hns/hns_roce_trace.h
-+++ b/drivers/infiniband/hw/hns/hns_roce_trace.h
-@@ -209,5 +209,5 @@ DEFINE_EVENT(cmdq, hns_cmdq_resp,
- #undef TRACE_INCLUDE_FILE
- #define TRACE_INCLUDE_FILE hns_roce_trace
- #undef TRACE_INCLUDE_PATH
--#define TRACE_INCLUDE_PATH .
-+#define TRACE_INCLUDE_PATH ../../drivers/infiniband/hw/hns
- #include <trace/define_trace.h>
---=20
-2.25.1
+[1/1] platform/chrome: Avoid -Wflex-array-member-not-at-end
+      commit: 3e552ccf405c0dea6339988202a564357249c437
 
+Thanks!
