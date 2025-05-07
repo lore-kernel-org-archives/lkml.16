@@ -1,139 +1,80 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A1CC28A70A
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 13:59:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DB72289807;
+	Wed,  7 May 2025 14:00:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746626383; cv=none; b=kKzT6OSqkyGPNY6RaC6vvEVUFL/yNgRT1/dzXjrWCUFKi1HS3libSts+Z/JOnBW7z6dpyHE2s8Ldccy2RPZvMYBakQT33dvTnqpHdLtgYFHPZpE1indK/NVDLPs0LsA2dGpnTO+pQ5aGn/xiQPzMa9tAH7zmmTKZLZtF+J1aOC0=
+	t=1746626409; cv=none; b=lzfo6LyX9UdLrjgCSLSe2L+effZ+7tVxLAKRe0/UKDShbmUHnw/WEHhjZpces0R5jUj7MOw8OF01+tBeCtxGn20zn7LyybsaVqepGQ+YeiLsgf9Qql9CxlqC4PYfptQpShvxm+EIaRQGUSJHsSl4PWkmj0hjbBT/btwHQqSjBPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746626383; c=relaxed/simple;
-	bh=LT/8qL8AnBvwTlaIWe/cKjnGfvio8al1/i6/usjQHb8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SKJAZ9eDlPZv44dyZ3DiVthW+fvGMj7wUVYxGlCc3EjBgCro2XLmWy4yfDsfh4LUiWFrIyk6kDL7fyNtRpfOxXe/tnSiyexHq3QwPFElj3rm9hJ1IrUULzdRq6nHGJ/rHQtP7PXQB2ox10dPDLmgD99HJwsmsQ9U3X2r+rln/zA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=LRV1yyss; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=LjXUk3qh; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=LRV1yyss; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=LjXUk3qh; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1746626409; c=relaxed/simple;
+	bh=LAHAYJ3ixLhijJlARnRfaoChG9KkxwNfeGvOAjZD1TE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=cQXLJV5kgHFlRxgGjsr0TLH86wNFjAKacOKAQD3dnDc9FD1B0/Pm9B9JX8DZjkG5tIfcfzUTNULiIRS7BrQ46lJk9y9EKCbHt6oEisrHchm0fgWpAcuDJBfg2PNNH9UbgvqPB4bSehoJ2TwlSPHehq/Cp6kTtjug9Z/pKbI4yxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=d5n4/A/d; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KkUW54WS; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="LRV1yyss";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="LjXUk3qh";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="LRV1yyss";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="LjXUk3qh"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 5FA811F395;
-	Wed,  7 May 2025 13:59:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1746626379; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="d5n4/A/d";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KkUW54WS"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1746626406;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=CmeTg3rjXN4MkuoVZrPEg6WRNv22XhbV9ixjF1dT3f0=;
-	b=LRV1yysshpXdAx6c9h5CeFT6lTzSqNbmC7gOoG+LwE+XxBZvzkH60SPw8hb3diWx9vkFvs
-	OpEakw7YHZNpD7kvDSC3FHeaQZi+RGPsrPkgU6dTmdBev6+JhBWxQ+0t+9xiaAA00rWZnB
-	Z0H+9UhCysTZdz8P6fYnPGyDRC+wj+k=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1746626379;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	bh=FzPFAIcop0UTJe1qVc592uXA0Wh/CJSHyqSxwp8faKo=;
+	b=d5n4/A/d/4ebDft+yBBM2Ynm80MabiaVnjjt/r00WxXyF78/0tHOBOeSo/lfAweDeS5UJS
+	fwOQKilJIrUpijGxSN8v/8RCbzsndPQIYtoRWX1sP4t6/3WiEhz+VCIBXbrFomYyu55JCZ
+	TNi9Hb91+qw6K2vjrsY3GREYMe7cFk0cg4cY7ORSHeBzDP9+epArbOl/F3IMVcTfomL7H5
+	BY2ERvUxmlnJxBuHRpNuVvUqZq0JfTFmzAZqhTQApBBB2p0f3SMovsfZlhyEs4uD7R2BSW
+	9/Nhi36MIhO/lvPLr/1WtyEKbd1hbB4cYLHodEq7jTJtlO+juk+YGxBUVYBV7w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1746626406;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=CmeTg3rjXN4MkuoVZrPEg6WRNv22XhbV9ixjF1dT3f0=;
-	b=LjXUk3qhq8BhA3N4iw7wucf374BjUoVPRRPlg/a86HfZHV1Ku4MsH4RoKIcXhyRl56kvmG
-	5Ij2tK1/f25UH4AA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1746626379; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CmeTg3rjXN4MkuoVZrPEg6WRNv22XhbV9ixjF1dT3f0=;
-	b=LRV1yysshpXdAx6c9h5CeFT6lTzSqNbmC7gOoG+LwE+XxBZvzkH60SPw8hb3diWx9vkFvs
-	OpEakw7YHZNpD7kvDSC3FHeaQZi+RGPsrPkgU6dTmdBev6+JhBWxQ+0t+9xiaAA00rWZnB
-	Z0H+9UhCysTZdz8P6fYnPGyDRC+wj+k=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1746626379;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CmeTg3rjXN4MkuoVZrPEg6WRNv22XhbV9ixjF1dT3f0=;
-	b=LjXUk3qhq8BhA3N4iw7wucf374BjUoVPRRPlg/a86HfZHV1Ku4MsH4RoKIcXhyRl56kvmG
-	5Ij2tK1/f25UH4AA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3C0E8139D9;
-	Wed,  7 May 2025 13:59:39 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id H0gADktnG2h9TgAAD6G6ig
-	(envelope-from <hare@suse.de>); Wed, 07 May 2025 13:59:39 +0000
-Message-ID: <8d418b1b-a2bb-46ec-9469-c67bb59be089@suse.de>
-Date: Wed, 7 May 2025 15:59:38 +0200
+	bh=FzPFAIcop0UTJe1qVc592uXA0Wh/CJSHyqSxwp8faKo=;
+	b=KkUW54WSLCGDnC+r+/t8wQhOCxwLUf0G4wSB1JHIe9a3UBvug1YPAGbUEdqZ42vpmBEVps
+	/c9N270asqIvY8Aw==
+To: Zijiang Huang <huangzjsmile@gmail.com>, lukas@wunner.de
+Cc: bhelgaas@google.com, flyingpeng@tencent.com, huangzjsmile@gmail.com,
+ kerayhuang@tencent.com, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI: Using lockless config space accessors based on
+In-Reply-To: <20250507090407.2146324-1-kerayhuang@tencent.com>
+References: <aBsRXO6Us_wsdhji@wunner.de>
+ <20250507090407.2146324-1-kerayhuang@tencent.com>
+Date: Wed, 07 May 2025 16:00:06 +0200
+Message-ID: <877c2smsgp.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 10/14] nvmet-fcloop: don't wait for lport cleanup
-To: Daniel Wagner <wagi@kernel.org>, James Smart <james.smart@broadcom.com>,
- Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
- Chaitanya Kulkarni <kch@nvidia.com>
-Cc: Keith Busch <kbusch@kernel.org>, linux-nvme@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20250507-nvmet-fcloop-v6-0-ca02e16fb018@kernel.org>
- <20250507-nvmet-fcloop-v6-10-ca02e16fb018@kernel.org>
-Content-Language: en-US
-From: Hannes Reinecke <hare@suse.de>
-In-Reply-To: <20250507-nvmet-fcloop-v6-10-ca02e16fb018@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Flag: NO
-X-Spam-Score: -3.30
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_SHORT(-0.20)[-0.995];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:mid]
+Content-Type: text/plain
 
-On 5/7/25 14:23, Daniel Wagner wrote:
-> The lifetime of the fcloop_lsreq is not tight to the lifetime of the
-> host or target port, thus there is no need anymore to synchronize the
-> cleanup path anymore.
-> 
-> Signed-off-by: Daniel Wagner <wagi@kernel.org>
-> ---
->   drivers/nvme/target/fcloop.c | 21 ++++-----------------
->   1 file changed, 4 insertions(+), 17 deletions(-)
-> 
-Reviewed-by: Hannes Reinecke <hare@kernel.org>
+On Wed, May 07 2025 at 17:04, Zijiang Huang wrote:
+> I think it's safe to make this change for user-space accessors as well,
+> since user-space only reads from proc files.
 
-Cheers,
+Again. See pci_cfg_access_lock()
 
-Hannes
--- 
-Dr. Hannes Reinecke                  Kernel Storage Architect
-hare@suse.de                                +49 911 74053 688
-SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
-HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
+>> Why is performance of the user space accessors important?
+>> Perhaps because of vfio?
+>
+> During stability testing on large-scale machines (384+ CPUs), we always                                             > observed that heavy concurrent user-space access to PCI config space triggers 
+> kernel softlockups.
+>  
+> Reproduction method: stress-ng --pci 384 
+
+This is not really interesting as stress-ng is not a real world work
+load.
+
+What's the actual real world use case which uses those interfaces so
+that the lock becomes an issue?
+
+Thanks,
+
+        tglx
