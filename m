@@ -1,127 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D8FC18B46E;
-	Wed,  7 May 2025 16:25:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 880D7289821;
+	Wed,  7 May 2025 16:27:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746635153; cv=none; b=SNJtf2g8yDBT9r3istGlxvmUjFdgNMg+YYcdnnYfs4lVzLRDNMGXeUS1jJnnJyoXxq8k4v+dV7VRDAoCVvgXmszoTjUWHxxeY6KYXddTLjV59iVZCLFpG5KsiLsmOsoqrvU6emjCfbnuP6AIEmnyC0KbLn67eeDtGnBctyxNaYs=
+	t=1746635233; cv=none; b=pHYKY9q9NH/CxSLZED+ip4oDY8GD6cUdTlSfoRGTI4qhByUktWFtCDfvTIJPp2i1TO1goWrFFzR5682MBpVVJ0X5cNkdkfuM0ME57zb9m61AbVg8PJa0Kgh4xlvzFC1vQO8Mcdl8aMgUDZD8dO7rnMzLT9D2Fbj8e+J52W6MU64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746635153; c=relaxed/simple;
-	bh=ynMohAvFYk2a5ygZVW3OYUWpvl86XtI1iFnTixant7k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IHqbDMI32AKO5V2F4CChuEvp724QvmWd2KyGDWu9Ssn3XpjaHsG8Hobgh5mgNVXe72jpVh8DOBakv0Q+U+xZrnxkGWDJiNa5jIA7XavZzk34/hx3mqSAJxXWfQRoyhU9B+Dwh7WNbLamN0/10V9HrAwJ5hbls12VLjChLUG8Iy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MkRPRQ3s; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746635233; c=relaxed/simple;
+	bh=/bkp1+ndxM6IUZavIiudg3yZ6BIozijVYfvBG//IBwU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JLF4YWzJ9fp5J1Vo9uKSa6NSY0lAunYV6s/4pBSi4O3rDhx0nm3NVt2t3VKsaIe4HBwGDl9mVr4I9+xFv4VJpNRtP8wW37ovVleZmgJlKOezavUaXCXpnxJt5x7hLNW6EhuJ5LBcdHav1WrMGX//CQBRoVhy87czwIaP1oLuoAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BXKpjqzr; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MkRPRQ3s"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 966EFC4CEE2;
-	Wed,  7 May 2025 16:25:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746635153;
-	bh=ynMohAvFYk2a5ygZVW3OYUWpvl86XtI1iFnTixant7k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MkRPRQ3swJOUGLYg3Du7Hv3kyyX8yET1shHYF5OJJLwK64MGlOMVyXAC19n3iWTs+
-	 cUNuyL24H378vN/emgkWbZQBahmBDXbVn4hYr98SVq1m+3qCYpSCgPow6P9PtSnPrV
-	 OGIKA2jigC5KIaPCL6rMfU6vz2wmIbTCcr1e2SCqh4YSXygJAQmxPc3drlP4kZkeWU
-	 eq7yF2V4NSWLpcGuJdDyKyG4F3572HJPi3+Mi2EjaecwNkRWw8meEotAfjOFnRs0Iu
-	 7YOSElhOspecMXPSrXbUoZVd060gMPGmIenVO/2Z6fuSNo07QtqumtKKD6ZA8c3S7n
-	 ZByEltWWPPiAQ==
-Date: Wed, 7 May 2025 18:25:47 +0200
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Zqiang <qiang.zhang1211@gmail.com>
-Cc: paulmck@kernel.org, neeraj.upadhyay@kernel.org, joel@joelfernandes.org,
-	urezki@gmail.com, boqun.feng@gmail.com, rcu@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] rcu/nocb: Add Safe checks for access offloaded rdp
-Message-ID: <aBuJi3jhcp4dCbSY@localhost.localdomain>
-References: <20250507112605.20910-1-qiang.zhang1211@gmail.com>
- <20250507112605.20910-2-qiang.zhang1211@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BXKpjqzr"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-326b683ac3aso1036151fa.0;
+        Wed, 07 May 2025 09:27:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746635228; x=1747240028; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/bkp1+ndxM6IUZavIiudg3yZ6BIozijVYfvBG//IBwU=;
+        b=BXKpjqzrZU/aK6BeKwUiNeBVcVsuvFwRaX8r2rvIf/c7nZfeDNwrvCETuR4C9Hh/fz
+         YEerQ0DqjXofVkKtV49lE7dMAmakQIu/gmpBad9AkL8uC/0aDENWAv54+4EOMbZIm7A2
+         zLl+HPhtfNdJaA+wrZI1ZhxjQTxfMJVc48LuNclgfCFgqG1afhN40Rz8Xavp4IoW2rEa
+         2vpr5XeCpzfFULpSTa8Sd5LAfAJnP8S7niCr8nSxQV2mndAr9ZM2NYwgAUZixihMlUlq
+         U/1ScTlRGXdcphSNpM9rck3jyXIwlnCrzaKfO/ToUlfrMphnctTcXXWJqeJmlUtrO27n
+         1xbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746635228; x=1747240028;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/bkp1+ndxM6IUZavIiudg3yZ6BIozijVYfvBG//IBwU=;
+        b=go/H1gshU1GgRdcQKZNjLLVECW8p1uEFwiL0p1rjwoSm8sAn9JoQJR0R4TZPPE7ykB
+         CyVWlGidfrsy7oHOY0Hj7mHuhPu0C8og/JTXWAybwbxj9JEi7ln5yr2cVH4d2bF34pCs
+         T12iNQC7PJDkAMHnQjR/ms+smY7TuhjwtFZgKKScqBCjV1PEj00JmRTVdD/y6LyBptwC
+         RhUXGrIFxpPcnPEIK13jwRZyOP/eMnGIeF6g3GLgzLSBsTEfOdH6SBJA/eAlybTsO1mB
+         4c75pszLO/W5iPK251zyjJ1E+UfrseIU5gPExLVydEXwz7CIWEQhuTBoE0WwQ7Y8V8mR
+         LIzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUFP80x14djxj9zsAJ23t17AgFkH1iVpF64tQCQk9yxdNR04SdEoyKcxcF0eC/pU7+NQ5vrXDdRvM2OLPU=@vger.kernel.org, AJvYcCUSoqq/xX34+Q2UtEL2f1S5Dkldc2xkalKzHcZtWMjt/gldi/pgp/BZggjT/ivNMyHRgIG6Y2zp/XH2@vger.kernel.org, AJvYcCWJUnBFcv/gDCW/N+0aGu+B15/kPvYigQf5jJo4XY6ExOMR//qWR0Vyyva7roChG2z31Qjr7MlNcSKXERgg@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7QShvRKOrOAlL+HHmmTmbIs4FMfZ/tKmFRrPB6sfyvb1GF8Qi
+	JHk+gOAae7Cc2GOgy7/7+rOz4m55fZSXyXOBz0woD3izKRbP7HONPFWfa6oNhwLPTafNjuZTty/
+	7sjrKo1hzv5Hrd95Qvz3EaAEAr4c=
+X-Gm-Gg: ASbGncvpSwCkxVaU3MPnTKkGUX3+UFhpF0+/S1xOAwfaRb+mpQvLez47Tktz0bSqa1H
+	XkRR85Nq2T5yhJQ4f+xM0/R1wpJM3c+2+EwF2vl7P9q5Rt4UMVDeV50A35jSiI6nJxVAqqvaVpp
+	s+JfIjIcA+Xz6Rz30hPxFKowtwV22K56oRUg==
+X-Google-Smtp-Source: AGHT+IHOrELlfrPc4U6o94ZfK4oHdb0EgEpd9D53TLeAXQjPNrwN+J+jfBObUTEvdKwpYzy9vRNel+cJiNf8YN9WrPA=
+X-Received: by 2002:a2e:bc94:0:b0:30d:6270:a3b4 with SMTP id
+ 38308e7fff4ca-326b764f0bcmr720101fa.15.1746635228251; Wed, 07 May 2025
+ 09:27:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250507112605.20910-2-qiang.zhang1211@gmail.com>
+References: <20250419-tegra186-host1x-addr-size-v1-1-a7493882248d@gmail.com> <vegicz45jspxecpaitgju6ivvrefwoufg5yrzlvxudjatno7cr@rnvnqrmqofsk>
+In-Reply-To: <vegicz45jspxecpaitgju6ivvrefwoufg5yrzlvxudjatno7cr@rnvnqrmqofsk>
+From: Aaron Kling <webgeek1234@gmail.com>
+Date: Wed, 7 May 2025 11:26:57 -0500
+X-Gm-Features: ATxdqUHPCKEwfrljQ_Y3mZLOd5OdP80bfGHGqvB8s0eKCloQAxHcEsxq3hWZt1Q
+Message-ID: <CALHNRZ8N=NnirL_vBYjsUt_w8hSXzu5z7H7ditFQTjuHH2Zs2A@mail.gmail.com>
+Subject: Re: [PATCH] arm64: tegra: Bump #address-cells and #size-cells on Tegra186
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Jonathan Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org, 
+	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Le Wed, May 07, 2025 at 07:26:04PM +0800, Zqiang a écrit :
-> For built with CONFIG_PROVE_RCU=y and CONFIG_PREEMPT_RT=y kernels,
-> Disable BH does not change the SOFTIRQ corresponding bits in
-> preempt_count(), but change current->softirq_disable_cnt, this
-> resulted in the following splat:
-> 
-> WARNING: suspicious RCU usage
-> kernel/rcu/tree_plugin.h:36 Unsafe read of RCU_NOCB offloaded state!
-> stack backtrace:
-> CPU: 0 UID: 0 PID: 22 Comm: rcuc/0
-> Call Trace:
-> [    0.407907]  <TASK>
-> [    0.407910]  dump_stack_lvl+0xbb/0xd0
-> [    0.407917]  dump_stack+0x14/0x20
-> [    0.407920]  lockdep_rcu_suspicious+0x133/0x210
-> [    0.407932]  rcu_rdp_is_offloaded+0x1c3/0x270
-> [    0.407939]  rcu_core+0x471/0x900
-> [    0.407942]  ? lockdep_hardirqs_on+0xd5/0x160
-> [    0.407954]  rcu_cpu_kthread+0x25f/0x870
-> [    0.407959]  ? __pfx_rcu_cpu_kthread+0x10/0x10
-> [    0.407966]  smpboot_thread_fn+0x34c/0xa50
-> [    0.407970]  ? trace_preempt_on+0x54/0x120
-> [    0.407977]  ? __pfx_smpboot_thread_fn+0x10/0x10
-> [    0.407982]  kthread+0x40e/0x840
-> [    0.407990]  ? __pfx_kthread+0x10/0x10
-> [    0.407994]  ? rt_spin_unlock+0x4e/0xb0
-> [    0.407997]  ? rt_spin_unlock+0x4e/0xb0
-> [    0.408000]  ? __pfx_kthread+0x10/0x10
-> [    0.408006]  ? __pfx_kthread+0x10/0x10
-> [    0.408011]  ret_from_fork+0x40/0x70
-> [    0.408013]  ? __pfx_kthread+0x10/0x10
-> [    0.408018]  ret_from_fork_asm+0x1a/0x30
-> [    0.408042]  </TASK>
-> 
-> Currently, triggering an rdp offloaded state change need the
-> corresponding rdp's CPU goes offline, and at this time the rcuc
-> kthreads has already in parking state. this means the corresponding
-> rcuc kthreads can safely read offloaded state of rdp while it's
-> corresponding cpu is online.
-> 
-> This commit therefore add softirq_count() check for
-> Preempt-RT kernels.
-> 
-> Suggested-by: Joel Fernandes <joelagnelf@nvidia.com>
-> Signed-off-by: Zqiang <qiang.zhang1211@gmail.com>
-> ---
->  kernel/rcu/tree_plugin.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-> index 003e549f6514..a91b2322a0cd 100644
-> --- a/kernel/rcu/tree_plugin.h
-> +++ b/kernel/rcu/tree_plugin.h
-> @@ -29,7 +29,7 @@ static bool rcu_rdp_is_offloaded(struct rcu_data *rdp)
->  		  (IS_ENABLED(CONFIG_HOTPLUG_CPU) && lockdep_is_cpus_held()) ||
->  		  lockdep_is_held(&rdp->nocb_lock) ||
->  		  lockdep_is_held(&rcu_state.nocb_mutex) ||
-> -		  (!(IS_ENABLED(CONFIG_PREEMPT_COUNT) && preemptible()) &&
-> +		  ((!(IS_ENABLED(CONFIG_PREEMPT_COUNT) && preemptible()) || softirq_count()) &&
->  		   rdp == this_cpu_ptr(&rcu_data)) ||
+On Wed, May 7, 2025 at 10:37=E2=80=AFAM Thierry Reding <thierry.reding@gmai=
+l.com> wrote:
+>
+> On Sat, Apr 19, 2025 at 10:30:31PM -0500, Aaron Kling via B4 Relay wrote:
+> > From: Aaron Kling <webgeek1234@gmail.com>
+> >
+> > This was done for Tegra194 and Tegra234 in 2838cfd, but Tegra186 was no=
+t
+> > part of that change. The same reasoning for that commit also applies to
+> > Tegra186, plus keeping the archs as close to each other as possible mak=
+es
+> > it easier to compare between them and support features concurrently.
+>
+> As explained in the commit that you referenced, the reason for making
+> these changes for Tegra194 and Tegra234 was so that the PCI and GPU
+> nodes could move back into the bus@0 node. This doesn't exist on
+> Tegra186, and the top-level already has #address-cells =3D <2> and
+> #size-cells =3D <2>.
 
-On a second thought, isn't "rdp == this_cpu_ptr(&rcu_data)" enough?
-The offloaded state can only change if the CPU is completely offline.
-But if the current CPU is looking at the local rdp, it means it is online
-and the rdp can't be concurrently [de]offloaded, right?
+This isn't recursive, though. I had thought it was, but kept having
+issues. Then I found docs that say:
 
-Thanks.
+The #address-cells and #size-cells properties are not inherited from
+ancestors in the devicetree. They shall be explicitly defined. [0]
 
->  		  rcu_current_is_nocb_kthread(rdp)),
->  		"Unsafe read of RCU_NOCB offloaded state"
-> -- 
-> 2.17.1
-> 
-> 
+> Does this actually fix a bug? Just making this look more similar to
+> Tegra194/234 doesn't seem like the best of justifications for bloating
+> the DT.
 
--- 
-Frederic Weisbecker
-SUSE Labs
+Tegra132 and Tegra210 also have size 2 on all these nodes. I probably
+should have mentioned that in the message too. But having Tegra186 as
+the only odd out tegra arm64 arch is confusing and makes for extra
+work when trying to implement things across all archs.
+
+What made me sit down and and type all this out was an attempt to get
+simplefb working for seamless display handoff. And I could not get the
+reserved-memory nodes and iommu-addresses and all to line up. Not
+until I made everything connected to that have #address-cells =3D <2>
+and #size-cells =3D <2>. Which happened to line up with every arm64
+tegra arch except t186, so I submitted this.
+
+Sincerely,
+Aaron Kling
+
+[0] https://devicetree-specification.readthedocs.io/en/stable/devicetree-ba=
+sics.html#address-cells-and-size-cells
