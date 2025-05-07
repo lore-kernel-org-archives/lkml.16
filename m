@@ -1,212 +1,191 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAB771B87D5
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 09:50:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B79576410;
+	Wed,  7 May 2025 09:51:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746611425; cv=none; b=cxRnA5sJBYAaZoEfiXxyjDCB5PKxiowITDucXVF43AqiAARYkBcONM3k+9xe4svQgrosTDdbVRzukLWJ5YhUZVL+LrHh8rolqzJOh+ovl71rkNiifAFtTbygRSBut2BKgEH9waA7BQPccWF0/jWCECyAl0WGeZj+84abF9KOBR4=
+	t=1746611502; cv=none; b=Zno64al5qw/GyHXyev6AWeOrdxhEcDGjHg9Un5MDlwQs0DfZjEfA9euSVo7nN2hoQ1rRevgOCcFDy/Tw9sCcoPCZYNtgm0Gci9V/z8VT3MwCFMmDFJjKgFzNjpVih4wXsnt5Ox9vV5Bllt94CHy0yeXjtkwURfWWVYT5sbZIIxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746611425; c=relaxed/simple;
-	bh=Ocq0P3HOIZlDwZjP6yOr1+JTI+qxP/IRYm7s7N1B3e8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=p8Ujd/m2HNpV1pWPD9vOH42lL88E7cEUyCTxUcK01z5D0yoeYi1U+DKnH1IAdxDSgpHcaBYMorx+ph763yg5lu9EBxw/U3BqnJRoA1/Hg6bpOypgFJc4khbO8lwAZPPoDfpWfSG/oRIYqpcUPzWxAfU+DGfQfOFriwG/hwa0FF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GVrtC8Ux; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1746611502; c=relaxed/simple;
+	bh=lkDEAQnNpFikfSxH7maKRI098GHsz70sWCLPsBCkgdw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=gXlv/nCrooY/83gL5sczdHORWcCM4zCPQ/PwlR02Jcdee2at4eMDy+P4/USdUsgc4ID9dAFuwSrsSjqJplWgbEZkFBssU8BzDSfPP+6iBaLTeA1RK8yNqSX3d0lolFe/r5m5c0020QBd6EZyDm/Xe3jcwq+OVOU0lKo64r0jYBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=byrTMmjq; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=hrgzO0Cz reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GVrtC8Ux"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746611422;
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="byrTMmjq";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="hrgzO0Cz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1746611499; x=1778147499;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=F/i9Jm7x0sU9sxHf9FawPOb71EGh2v9Y58NkBsYaux4=;
+  b=byrTMmjqhGmhma5cs7iqeHPgRH/lbB6wJicVkPeZfZOFaF9enUB8mNQi
+   GQRKsF/XmaBWg+ChFN5hcaXtBqbUiSIMJ8qSdNRYcXMlxcbUNrRG1pfe5
+   uncR5d7xtlK1AoHb9q3Ed9nl/lgQzeln68W4+ARWq4F6jRU2Kvj6ODVyJ
+   xcl8ndoEZWNxVuB9coO2+zgWGOON6okuWvV8g92VX3lijmW69hfaexF+b
+   8K9RmGwGZlbgEfxqLdErT3ylceUnKlU9ZMabGwtCBu0iuLR00RC80APlW
+   iMG6I1nc+/PaDjox9yEG47EWXVwH7mCtSkNgElQKrQ9YfeLbMTsyz1dmF
+   g==;
+X-CSE-ConnectionGUID: xQanc9akTUOCfAyriMNxVA==
+X-CSE-MsgGUID: qB0IcNYRTKigede2IsGhTQ==
+X-IronPort-AV: E=Sophos;i="6.15,269,1739833200"; 
+   d="scan'208";a="43931540"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 07 May 2025 11:51:34 +0200
+X-CheckPoint: {681B2D26-1B-45F3AE15-E90F7DFA}
+X-MAIL-CPID: 2C825C19DDFDF09B778A43311167F0AF_5
+X-Control-Analysis: str=0001.0A006396.681B2D27.00A1,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 36290161474;
+	Wed,  7 May 2025 11:51:26 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1746611490;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=WVKm+prTo91mCK4sWi9nK8ro46xY5ZiQCNeKWZ2n6iY=;
-	b=GVrtC8UxVXNpmlz+3QXUO9gp5EkjdSNVeB8k+7ReFua5nwZZ0vKPB7qrI1ZMZsy6Oyk3AZ
-	5NgOcm4kWLu2oGI81OVy3XM4vAIW4SEVeVM31JtbNHjHVX5l55OKRSo1NA3JRGqHQ/0ADX
-	rDptin1DeCgh5TAH97lMsGUS+yL6Hgo=
-Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com
- [209.85.210.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-48-tqFBaRg_PxCHYZqm6uoM7A-1; Wed, 07 May 2025 05:50:21 -0400
-X-MC-Unique: tqFBaRg_PxCHYZqm6uoM7A-1
-X-Mimecast-MFC-AGG-ID: tqFBaRg_PxCHYZqm6uoM7A_1746611420
-Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-740270e168aso5019717b3a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 02:50:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746611420; x=1747216220;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=WVKm+prTo91mCK4sWi9nK8ro46xY5ZiQCNeKWZ2n6iY=;
-        b=BID0agNqeh1Eek3T11cX5kEiOWADR5WOzH3l+brB196Mx3Fk87Q+cAQYzmsMawhJaP
-         VdnjjMftIYf7L85WrkmjKr3kX064jwNKeq8QRd+bOtSBNcaMZILsSqb9FeoT9D6R7v8W
-         jIM7DrmPCKG0AsH/HPNfF+Y7cPl4CQj/Luyqqo3C2P2y9hMQu8BqRZdJ7EaXGR0up3UG
-         pxpFkBWoDxxFAIDL3uPEFoUqXiyzBqiePvJZkc9LsTWfDngYaXO/ddR6I6evbhXvCdKX
-         OGmWXpn8giTKo+xpggw+/Fb4UWrN7Go00QxFSLzosdPk+zs5NLxAjvcisLQPNG311vbQ
-         mxmw==
-X-Forwarded-Encrypted: i=1; AJvYcCVjWafq5etfDopG/CCoiU0PP3ocBjr6MCxEvj0VgC5/7cUePue0UaSD3mizYnKBw5UkCW1NmfDqKIcaEOI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxADaM7sgA4y7P+aQfoqogVf4xQsW8v4XiEL10htMCt5X04zxus
-	U/FPNka4F/8fK2jf96APPHPzNWAD8O8Qv0yN1x6imnRONrxe/R9tw0PEMb61fTRqIoUCAjqLJpY
-	Goi2bXE21bk81O1/jC0DbmuTiif6nVumnOoFrvzNuS7/WfTV2Cc/Fa0LCF4GNv8sPhMdoTw==
-X-Gm-Gg: ASbGncub/uoeu2GblaB3/JxzHojapDMqHRUE7IcFryb7sfypynHYz2ZCaeELWCvdre/
-	OTBe4otIMfaFNIWqZNrGnfVBkxwKEl1OjCSl+fc2U+1NzUpTVyttCfvqKoQXUwNXoFvGST8SUOt
-	6TeOgad9JRmNTmvKNhMpQbSpld/myXUlgvfi9LkcUM76Y64JiPav80OZn10T49tMLTlmtnmoF6u
-	J8Fy3oFmRLV0e4m9ovinefMYgQvhz2vnX4ZVerwRUDhOH9ED3D+qix3FvNH/GeCnAujPE8WK8Aq
-	t4/tCAxDiIbcyg5UU+/8Kh228QVZpfAGDaSgFD2zFU2LtnCiEzxoYM7CygJxJNJ+1ztRRpBb6/l
-	FaKkVMAlmI1thHj5fMX4f6PQKqkaL0kYTAWxvyI4=
-X-Received: by 2002:a05:6a00:2a06:b0:73e:2dc5:a93c with SMTP id d2e1a72fcca58-7409cf0f945mr3319252b3a.11.1746611420400;
-        Wed, 07 May 2025 02:50:20 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHVA37Uyq+XuIDleGXUMxF5Rlx1CmJawsIQUf6ZGk0Jxt0AkI56K7rfY3hb7Ni+UPjopi5iAA==
-X-Received: by 2002:a05:6a00:2a06:b0:73e:2dc5:a93c with SMTP id d2e1a72fcca58-7409cf0f945mr3319224b3a.11.1746611419983;
-        Wed, 07 May 2025 02:50:19 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f12:d400:ed3c:fb0c:1ec0:c628? (p200300d82f12d400ed3cfb0c1ec0c628.dip0.t-ipconnect.de. [2003:d8:2f12:d400:ed3c:fb0c:1ec0:c628])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74058db8befsm10590578b3a.40.2025.05.07.02.50.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 07 May 2025 02:50:19 -0700 (PDT)
-Message-ID: <0ec57b2e-0a1c-443f-89e1-608d5bccbf26@redhat.com>
-Date: Wed, 7 May 2025 11:50:15 +0200
+	 in-reply-to:in-reply-to:references:references;
+	bh=F/i9Jm7x0sU9sxHf9FawPOb71EGh2v9Y58NkBsYaux4=;
+	b=hrgzO0Cz+7eH2reXwH2XD31ZpLjhmSq/x9ISo7PGeW52JetAaTh9qN7ZM1+YF/TqCxD87z
+	QqwZegexR1DOExJowI7nqxEKLyR7ji9lI1AGa24Y+I54oYplOyrJroxr3b5/s+pKiWPt+c
+	h4ZShjpGZYBY3KKmRJeluziCP+T6CkBDFMFNeXJsAmxY74iihCd1xidC18hFX02On9amw7
+	FDd1vpvLpX5pB1ZA17G/2h/fUKxepZLUl26ZFsHryzqyAkinRovOqBxZgj/GdQn1lSW55E
+	X+SHnmoQW7CilT7u+//OOu+/42Q6ugouqbaLD4U2sr/MmTl3XZVFEfJd+TGLfA==
+Message-ID: <6e4d3127af2e2ace3fcec73eb8903c12ebcdda38.camel@ew.tq-group.com>
+Subject: Re: [PATCH net-next 2/4] dt-bindings: net: ti: k3-am654-cpsw-nuss:
+ update phy-mode in example
+From: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To: Roger Quadros <rogerq@kernel.org>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>,  Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+ <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Andy Whitcroft <apw@canonical.com>, "mike .."
+ <wingman205@gmx.com>, Dwaipayan Ray <dwaipayanray1@gmail.com>, Lukas
+ Bulwahn <lukas.bulwahn@gmail.com>, Joe Perches <joe@perches.com>, Jonathan
+ Corbet <corbet@lwn.net>, Nishanth Menon <nm@ti.com>, Vignesh Raghavendra
+ <vigneshr@ti.com>, Siddharth Vadapalli <s-vadapalli@ti.com>, Tero Kristo
+ <kristo@kernel.org>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org,  netdev@vger.kernel.org,
+ devicetree@vger.kernel.org,  linux-arm-kernel@lists.infradead.org,
+ linux@ew.tq-group.com
+Date: Wed, 07 May 2025 11:51:25 +0200
+In-Reply-To: <06268dcb-4a49-468e-8ebd-d9366a2cf0c2@kernel.org>
+References: <cover.1744710099.git.matthias.schiffer@ew.tq-group.com>
+	 <4216050f7b33ce4e5ce54f32023ec6ce093bd83c.1744710099.git.matthias.schiffer@ew.tq-group.com>
+	 <06268dcb-4a49-468e-8ebd-d9366a2cf0c2@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] mm: mmap: map MAP_STACK to VM_NOHUGEPAGE only if THP
- is enabled
-To: Ignacio.MorenoGonzalez@kuka.com, lorenzo.stoakes@oracle.com
-Cc: Liam.Howlett@oracle.com, akpm@linux-foundation.org,
- yang@os.amperecomputing.com, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20250507-map-map_stack-to-vm_nohugepage-only-if-thp-is-enabled-v3-1-80929f30df7f@kuka.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250507-map-map_stack-to-vm_nohugepage-only-if-thp-is-enabled-v3-1-80929f30df7f@kuka.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-On 07.05.25 11:11, Ignacio Moreno Gonzalez via B4 Relay wrote:
-> From: Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>
-> 
-> commit c4608d1bf7c6 ("mm: mmap: map MAP_STACK to VM_NOHUGEPAGE") maps
-> the mmap option MAP_STACK to VM_NOHUGEPAGE. This is also done if
-> CONFIG_TRANSPARENT_HUGETABLES is not defined. But in that case, the
-> VM_NOHUGEPAGE does not make sense.
-> 
-> Fixes: c4608d1bf7c6 ("mm: mmap: map MAP_STACK to VM_NOHUGEPAGE")
-> Cc: stable@vger.kernel.org
-> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> Reviewed-by: Yang Shi <yang@os.amperecomputing.com>
-> Reviewed-by: Liam R. Howlett <Liam.Howlett@oracle.com>
-> Signed-off-by: Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>
-> ---
-> I discovered this issue when trying to use the tool CRIU to checkpoint
-> and restore a container. Our running kernel is compiled without
-> CONFIG_TRANSPARENT_HUGETABLES. CRIU parses the output of
+On Wed, 2025-04-30 at 17:22 +0300, Roger Quadros wrote:
+>=20
+> Hi Matthias,
+>=20
+> On 15/04/2025 13:18, Matthias Schiffer wrote:
+> > k3-am65-cpsw-nuss controllers have a fixed internal TX delay, so RXID
+> > mode is not actually possible and will result in a warning from the
+> > driver going forward.
+> >=20
+> > Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+> > ---
+> >  .../devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml          | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nus=
+s.yaml b/Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml
+> > index b11894fbaec47..c8128b8ca74fb 100644
+> > --- a/Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml
+> > +++ b/Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml
+> > @@ -282,7 +282,7 @@ examples:
+> >                      ti,syscon-efuse =3D <&mcu_conf 0x200>;
+> >                      phys =3D <&phy_gmii_sel 1>;
+> > =20
+> > -                    phy-mode =3D "rgmii-rxid";
+> > +                    phy-mode =3D "rgmii-id";
+> >                      phy-handle =3D <&phy0>;
+> >                  };
+> >              };
+>=20
+> FYI the following TI boards using this driver are using "rgmii-rxid".
+> Will you be sending fixes to the device trees files?
 
-I'm sure you mean CONFIG_TRANSPARENT_HUGEPAGE ?
 
-> /proc/<pid>/smaps and saves the "nh" flag. When trying to restore the
-> container, CRIU fails to restore the "nh" mappings, since madvise()
-> MADV_NOHUGEPAGE always returns an error because
-> CONFIG_TRANSPARENT_HUGETABLES is not defined.
+Hi Roger,
 
-This should go into the patch description; it explains how this is 
-actually causing issues.
+as written in the cover letter, I haven't fixed any DTS for now, so project=
+s
+consuming Linux's Device Tree sources (like U-Boot) have some time to updat=
+e
+their driver first (as fixing the Device Trees without updating the driver =
+would
+break Ethernet).
 
-> 
-> The mapping MAP_STACK -> VM_NOHUGEPAGE was introduced by commit
-> c4608d1bf7c6 ("mm: mmap: map MAP_STACK to VM_NOHUGEPAGE") in order to
-> fix a regression introduced by commit efa7df3e3bb5 ("mm: align larger
-> anonymous mappings on THP boundaries"). The change introducing the
-> regression (efa7df3e3bb5) was limited to THP kernels, but its fix
-> (c4608d1bf7c6) is applied without checking if THP is set.
-> 
-> The mapping MAP_STACK -> VM_NOHUGEPAGE should only be applied if THP is
-> enabled.
-> ---
-> Changes in v3:
-> - Exclude non-stable patch (for huge_mm.h) from this series to avoid mixing stable and non-stable patches, as suggested by Andrew.
-> - Extend description in cover letter.
-> - Link to v2: https://lore.kernel.org/r/20250506-map-map_stack-to-vm_nohugepage-only-if-thp-is-enabled-v2-0-f11f0c794872@kuka.com
-> 
-> Changes in v2:
-> - [Patch 1/2] Use '#ifdef' instead of '#if defined(...)'
-> - [Patch 1/2] Add 'Fixes: c4608d1bf7c6...'
-> - Create [Patch 2/2]
-> 
-> - Link to v1: https://lore.kernel.org/r/20250502-map-map_stack-to-vm_nohugepage-only-if-thp-is-enabled-v1-1-113cc634cd51@kuka.com
-> ---
->   include/linux/mman.h | 2 ++
->   1 file changed, 2 insertions(+)
-> 
-> diff --git a/include/linux/mman.h b/include/linux/mman.h
-> index bce214fece16b9af3791a2baaecd6063d0481938..f4c6346a8fcd29b08d43f7cd9158c3eddc3383e1 100644
-> --- a/include/linux/mman.h
-> +++ b/include/linux/mman.h
-> @@ -155,7 +155,9 @@ calc_vm_flag_bits(struct file *file, unsigned long flags)
->   	return _calc_vm_trans(flags, MAP_GROWSDOWN,  VM_GROWSDOWN ) |
->   	       _calc_vm_trans(flags, MAP_LOCKED,     VM_LOCKED    ) |
->   	       _calc_vm_trans(flags, MAP_SYNC,	     VM_SYNC      ) |
-> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
->   	       _calc_vm_trans(flags, MAP_STACK,	     VM_NOHUGEPAGE) |
-> +#endif
->   	       arch_calc_vm_flag_bits(file, flags);
->   }
+Once a fix has been accepted in U-Boot (and preferably after we've come to =
+an
+agreement on the open questions...) I can also send a patch to update these
+files.
 
-LGTM. I'm surprise we even have VM_NOHUGEPAGE on kernels ... without 
-THP. I mean, as you say, even setting MADV_NOHUGEPAGE does not wrok.
+Best,
+Matthias
 
--- 
-Cheers,
 
-David / dhildenb
 
+>=20
+> arch/arm64/boot/dts/ti
+> k3-am625-beagleplay.dts:	phy-mode =3D "rgmii-rxid";
+> k3-am625-sk.dts:	phy-mode =3D "rgmii-rxid";
+> k3-am625-sk.dts.orig:	phy-mode =3D "rgmii-rxid";
+> k3-am62a7-sk.dts:	phy-mode =3D "rgmii-rxid";
+> k3-am62a-phycore-som.dtsi:	phy-mode =3D "rgmii-rxid";
+> k3-am62p5-sk.dts:	phy-mode =3D "rgmii-rxid";
+> k3-am62p5-sk.dts:	phy-mode =3D "rgmii-rxid";
+> k3-am62-phycore-som.dtsi:	phy-mode =3D "rgmii-rxid";
+> k3-am62-verdin-dev.dtsi:	phy-mode =3D "rgmii-rxid";
+> k3-am62-verdin.dtsi:	phy-mode =3D "rgmii-rxid";
+> k3-am62-verdin-ivy.dtsi:	phy-mode =3D "rgmii-rxid";
+> k3-am62x-phyboard-lyra.dtsi:	phy-mode =3D "rgmii-rxid";
+> k3-am62x-sk-common.dtsi:	phy-mode =3D "rgmii-rxid";
+> k3-am642-evm.dts:	phy-mode =3D "rgmii-rxid";
+> k3-am642-evm.dts:	phy-mode =3D "rgmii-rxid";
+> k3-am642-sk.dts:	phy-mode =3D "rgmii-rxid";
+> k3-am642-sk.dts:	phy-mode =3D "rgmii-rxid";
+> k3-am642-tqma64xxl-mbax4xxl.dts:	phy-mode =3D "rgmii-rxid";
+> k3-am642-tqma64xxl-mbax4xxl.dts:	/* phy-mode is fixed up to rgmii-rxid by=
+ prueth driver to account for
+> k3-am64-phycore-som.dtsi:	phy-mode =3D "rgmii-rxid";
+> k3-am654-base-board.dts:	phy-mode =3D "rgmii-rxid";
+> k3-am67a-beagley-ai.dts:	phy-mode =3D "rgmii-rxid";
+> k3-am68-sk-base-board.dts:	phy-mode =3D "rgmii-rxid";
+> k3-am69-sk.dts:	phy-mode =3D "rgmii-rxid";
+> k3-j7200-common-proc-board.dts:	phy-mode =3D "rgmii-rxid";
+> k3-j721e-beagleboneai64.dts:	phy-mode =3D "rgmii-rxid";
+> k3-j721e-common-proc-board.dts:	phy-mode =3D "rgmii-rxid";
+> k3-j721e-evm-gesi-exp-board.dtso:	phy-mode =3D "rgmii-rxid";
+> k3-j721e-evm-gesi-exp-board.dtso:	phy-mode =3D "rgmii-rxid";
+> k3-j721e-evm-gesi-exp-board.dtso:	phy-mode =3D "rgmii-rxid";
+> k3-j721e-evm-gesi-exp-board.dtso:	phy-mode =3D "rgmii-rxid";
+> k3-j721e-sk.dts:	phy-mode =3D "rgmii-rxid";
+> k3-j721s2-common-proc-board.dts:	phy-mode =3D "rgmii-rxid";
+> k3-j721s2-evm-gesi-exp-board.dtso:	phy-mode =3D "rgmii-rxid";
+> k3-j722s-evm.dts:	phy-mode =3D "rgmii-rxid";
+> k3-j784s4-j742s2-evm-common.dtsi:	phy-mode =3D "rgmii-rxid";
+> k3-j784s4-j742s2-evm-common.dtsi:	phy-mode =3D "rgmii-rxid";
+>=20
+
+--=20
+TQ-Systems GmbH | M=C3=BChlstra=C3=9Fe 2, Gut Delling | 82229 Seefeld, Germ=
+any
+Amtsgericht M=C3=BCnchen, HRB 105018
+Gesch=C3=A4ftsf=C3=BChrer: Detlef Schneider, R=C3=BCdiger Stahl, Stefan Sch=
+neider
+https://www.tq-group.com/
