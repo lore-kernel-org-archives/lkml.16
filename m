@@ -1,55 +1,55 @@
 Received: from mail-ed1-f74.google.com (mail-ed1-f74.google.com [209.85.208.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DC9528C2B5
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 16:00:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1968D28C01A
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 16:00:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746633625; cv=none; b=OyzTD6p4VDEIihQcCFIwsU2Pwi9FHSuSW6z+8+R/1RYJnMIi4yR8bFlHWB/HVe/jX/Gk1F5LRJ/ljWJbAWPjW6FTA9jo2dOXdxaGwYJhtUQFnQGhnfNTmdFiXpKVoUUpfUCev2zDU5uV9ktf/xc7kNMPVzhpL3Fm8KoJ0a9oBAM=
+	t=1746633627; cv=none; b=RfoRebuQucdnUxoSLOJXYSnHmbYYK1QTwHul0lo4yBr0opX5kfIe6YkfnoaGXyUewbob93MQL+a73jVzhstGCPH44Bq49Dwpi6QdnTyRV18/WE9o+f3iMhBlbHIeqxKJEFHbCJ1SlMD9zQadqGCfVOsZTjdm3BlCN1Bo1/e4pzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746633625; c=relaxed/simple;
-	bh=Y/mhuvCecsqejneEVrknKH6BBV5XgR0N2ByP0o2/GPQ=;
+	s=arc-20240116; t=1746633627; c=relaxed/simple;
+	bh=ZirRFWqbfC7llLAh79dS/ySeAIeVdC2IlNT2+zUkFJs=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=TpeB4qY4sntHdHNj5dCfeaSKYe11Z4tiF5rbA/ckR9GU7I2afzT7ZYtAKGHYq2vUS/56hBo9vlGzAEuFScDurZgoramSVHJ7eAtP+aKTNgnMahzhN9dysgehrL49c2TSzhdEbSCSUCjryn84fkSYh1YLEOsu9oyA9GOlOt/h8jM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--glider.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=O3sqzBOA; arc=none smtp.client-ip=209.85.208.74
+	 To:Cc:Content-Type; b=rMUIm/5tte9AAmNLXWhHFETkKq8ewHPEKlbb7lloAL1iky53504GG5hg1GBGJJFOmOLFXmKwUw3VP/llun7y2xEV6bUhb/pmbb9XjBNwSph5ezh5CTvSw0V3/Ea2tQdd2GY6Kn+JUEWJd1B/gSnZRcTYNPdVGbJ6JgRRzpMIk+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--glider.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=P5Jk1dMK; arc=none smtp.client-ip=209.85.208.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--glider.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="O3sqzBOA"
-Received: by mail-ed1-f74.google.com with SMTP id 4fb4d7f45d1cf-5fc1796ff88so179846a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 09:00:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="P5Jk1dMK"
+Received: by mail-ed1-f74.google.com with SMTP id 4fb4d7f45d1cf-5fbf91153c5so827343a12.3
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 09:00:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746633622; x=1747238422; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1746633624; x=1747238424; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=sPR0SEzdksw+QARijEF+8H2O/syRn+ur/NtvRkf+UuQ=;
-        b=O3sqzBOARPSIlKdDnD1yO1gTi1txMLW9rMSpyfV6cvTKNltbKzcke0KC5xx8Nbn9VI
-         2m2glr01VM8oBQdjqm5ccZfjxKfHCuv+BIGRkYjfP1lCq8cJtdEpX9trnPMyCiKhJY8P
-         1hzg7mJPN9sRO8+MdSjypy1M+YrJ8t0UxnWhvdCjTcbRrOG3INSIZUYt29YcrwyHDYy9
-         n4wDxnFh24Eh9f6w+6wFcH1de2Nl+msZyhkO8nrVTvkclebfOwr/stDkQpL5TdfYCcqY
-         LPFPPEoduk+CrR1iIrO22C5nwFjBzI/sDS3Nh14Yo0OoQ0pJjq+PsGuz5N+iUl6OmSRv
-         90Sg==
+        bh=/HD+2FNI5wfvoRdutnU1OJmD0qGDP/bCL3lQrffpAd0=;
+        b=P5Jk1dMKURh2EZ5RoDfpivJz0GQO1qn1yqpvpieKebNJ8/yOT1+g+NSHxpB8X83hBW
+         Dph9fxWoPGahL9NdwhirOG0kU+DYJNAkJKZEB2HdBEBoEkEDv164zoo4qF+u072zK/FP
+         BvaqPKN4n3wg+puL4YIEHlRz0UhsdscOvTiP6AP550Up5UBESahWbvQbMzaZEE+LA5Y5
+         ZUxd0AdXPDdi/HKKvAMDBrT1S7r+LPRACrXHqFMsI8Qf5HeGlTPEBLyyC9ZDwT3ZKNtS
+         XWistZVh6yiF5I8MejtMCDv65BzraCmF0ejve4t5i29l5Ml+HiG6DviacZRrLnSqwU1Y
+         gEcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746633622; x=1747238422;
+        d=1e100.net; s=20230601; t=1746633624; x=1747238424;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sPR0SEzdksw+QARijEF+8H2O/syRn+ur/NtvRkf+UuQ=;
-        b=nJdAuYBG1LRX2Ue0J7eVsZ0lSFTE4N8FJVh+2x2Lkg261zLRsR2HGBeNr1A8zSqQ+T
-         S6odhss5Ttpw/h6LK0qCK7Ma6O0jv7DJW6RdY6bVjTtQYhE2dHZLNBuyRLxAxOhHHSSy
-         NgMTQpgwetKoohy9xBwKM9ortfFvv7ydIV/7pKaGuM3kv4yFU55mwpA6oadyjNrieZ0N
-         vmgNlvYVvULrWheOJW0ICcJPh1Zykt3VmwnJGXufo0itrfykTj3ELMDKi/1zYYEAvnEV
-         F/hYA6KccUuVo8ZZ17UzPILscCD9czV03kHJx3XAelePUIr8i4ePo2Pn7emFuhxvT0JE
-         y8eA==
-X-Forwarded-Encrypted: i=1; AJvYcCXGeENlHcsowUIQMmhqx+uIJl1IAIto5a8fcU7lSyUjmHAkXsKOxi2DqalKuVEKWGXqKx7bjxDadUz9QuQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzU8tPykzzSwz+17JE81u1sYIogzk3CHh3e+Qmi9lXKTkuhaX/J
-	LZHEdXUfomMdt9G3+FjPq7nhD4MJVU0/4u++0jLOsrha0hID5aTTGaB6Idgqa6zuVJH0xw8X85l
-	rLg==
-X-Google-Smtp-Source: AGHT+IHQX+IUbHAPL3YWJZE1CLzx6Dp5YQzDNePen25Z4MCL94G3lLRUxhaPC0VmdhzxfcSUsNM6e/GkHJk=
-X-Received: from ejda5.prod.google.com ([2002:a17:906:2745:b0:ad1:83e8:4210])
- (user=glider job=prod-delivery.src-stubby-dispatcher) by 2002:a17:907:7fa8:b0:ad1:e587:9387
- with SMTP id a640c23a62f3a-ad1e8c50524mr400870066b.21.1746633621858; Wed, 07
- May 2025 09:00:21 -0700 (PDT)
-Date: Wed,  7 May 2025 18:00:10 +0200
+        bh=/HD+2FNI5wfvoRdutnU1OJmD0qGDP/bCL3lQrffpAd0=;
+        b=UqWh2LrHNSmqCkOaMmg/Upe3NMNOgl/IJAAc6omyOP2DYc0ICI+5u4imOkBcHd2RmA
+         aipKvKjZHIE3XaOP6iyFuOclCPZHavfjfxVq2MDoDqGqnQcjBRP9Tnx55U8AZUyNycyX
+         t9yH2LomYn1KBREqgA8zAOi/eqekBlZDaYIB7B5Ed496u7hAr7fOJq8WxFFjAaAXKTxl
+         AFbRT5DBkZSXTZ8jNmO1c9Vvm9cCxOiyuCmyCbXZifIW7CchpbL4ibbgVbbZ8ETT1eOe
+         yCmtRjk6IcViK1+h1lmpHjO1e+VdfxwG2oK9KBmDd0uZuSI5i6emhONoSOqnflopnp0q
+         K1JA==
+X-Forwarded-Encrypted: i=1; AJvYcCUUCd4a/2+iY5c3Mhf/VImvNPjQoFkAx/AXx0OGwxlbvAnkicwwB9JNFZiOWbE6rNjQqwUK1BYPMnit/sM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzpbD5DFI5cmnDXiapAFBJ/5opVwzyfIz7r1Qj+rd+DNFnfLARV
+	73ycVoqwNR7Lr8/zpzX0Dh/V+oM6W/xbCBbVDCv7RiiIHQoC9RF8jhB8e7apgCaHl6LIO++DA1v
+	oEA==
+X-Google-Smtp-Source: AGHT+IGi3302wjsXgRUTwe7QHWU0vidGzxHKIW7/ZCRHRJvwoV5ASRVkUgDbHdZXSQWb2ESuUs74/5eBRk4=
+X-Received: from edbig14.prod.google.com ([2002:a05:6402:458e:b0:5fb:c088:893a])
+ (user=glider job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:51cb:b0:5fb:a146:8600
+ with SMTP id 4fb4d7f45d1cf-5fbe9f46c17mr3577975a12.25.1746633624482; Wed, 07
+ May 2025 09:00:24 -0700 (PDT)
+Date: Wed,  7 May 2025 18:00:11 +0200
 In-Reply-To: <20250507160012.3311104-1-glider@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250507160012.3311104-1-glider@google.com>
 X-Mailer: git-send-email 2.49.0.967.g6a0df3ecc3-goog
-Message-ID: <20250507160012.3311104-3-glider@google.com>
-Subject: [PATCH 3/5] kmsan: drop the declaration of kmsan_save_stack()
+Message-ID: <20250507160012.3311104-4-glider@google.com>
+Subject: [PATCH 4/5] kmsan: enter the runtime around kmsan_internal_memmove_metadata()
+ call
 From: Alexander Potapenko <glider@google.com>
 To: glider@google.com
 Cc: elver@google.com, dvyukov@google.com, bvanassche@acm.org, 
@@ -68,25 +69,36 @@ Cc: elver@google.com, dvyukov@google.com, bvanassche@acm.org,
 	linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
-This function is not defined anywhere.
+kmsan_internal_memmove_metadata() transitively calls stack_depot_save()
+(via kmsan_internal_chain_origin() and kmsan_save_stack_with_flags()),
+which may allocate memory. Guard it with kmsan_enter_runtime() and
+kmsan_leave_runtime() to avoid recursion.
 
+This bug was spotted by CONFIG_WARN_CAPABILITY_ANALYSIS=y
+
+Cc: Marco Elver <elver@google.com>
+Cc: Bart Van Assche <bvanassche@acm.org>
+Cc: Kent Overstreet <kent.overstreet@linux.dev>
 Signed-off-by: Alexander Potapenko <glider@google.com>
 ---
- mm/kmsan/kmsan.h | 1 -
- 1 file changed, 1 deletion(-)
+ mm/kmsan/hooks.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/mm/kmsan/kmsan.h b/mm/kmsan/kmsan.h
-index 29555a8bc3153..bc3d1810f352c 100644
---- a/mm/kmsan/kmsan.h
-+++ b/mm/kmsan/kmsan.h
-@@ -121,7 +121,6 @@ static __always_inline void kmsan_leave_runtime(void)
- 	KMSAN_WARN_ON(--ctx->kmsan_in_runtime);
+diff --git a/mm/kmsan/hooks.c b/mm/kmsan/hooks.c
+index 05f2faa540545..97de3d6194f07 100644
+--- a/mm/kmsan/hooks.c
++++ b/mm/kmsan/hooks.c
+@@ -275,8 +275,10 @@ void kmsan_copy_to_user(void __user *to, const void *from, size_t to_copy,
+ 		 * Don't check anything, just copy the shadow of the copied
+ 		 * bytes.
+ 		 */
++		kmsan_enter_runtime();
+ 		kmsan_internal_memmove_metadata((void *)to, (void *)from,
+ 						to_copy - left);
++		kmsan_leave_runtime();
+ 	}
+ 	user_access_restore(ua_flags);
  }
- 
--depot_stack_handle_t kmsan_save_stack(void);
- depot_stack_handle_t kmsan_save_stack_with_flags(gfp_t flags,
- 						 unsigned int extra_bits);
- 
 -- 
 2.49.0.967.g6a0df3ecc3-goog
 
