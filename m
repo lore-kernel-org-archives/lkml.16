@@ -1,270 +1,146 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8839E28934A
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 14:56:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43F20286D7A;
+	Wed,  7 May 2025 14:56:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746629784; cv=none; b=D5SIYqPRqYKLD+dqvabbY+7fKOpSdGwiNtUSwC/C5D3Gpvs7e5ybMuv81T5sw5nKvalojnT9VFI5KJRqd3d7fICtu6/V1DnzPbaMbx16CPs2lHxU/oCTD7bU3Pg0EAtAyuBpqZF2WXl+HOQdbWSd5LmY588tB9YXTCzGUeSYlM0=
+	t=1746629796; cv=none; b=SlAozlG9C2HdRPe+OproKxvceiR59A2P6hBpS0D+RD+yj5Dt3JyWHM3WWC/eiiAX4kKwJF3gMG/X0bwAJqgfRXfV5Fi5XtPfsCJURsnFHWCdRLk/4rH7b9VluS/VBxoeTW5hxEyvpfNuFpqsoOlGzc8jgVoi29PpphC4KVHSiKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746629784; c=relaxed/simple;
-	bh=K27oAefXMcxovF/muz2h6aBidpXaWFBVFXHHG1YFnk4=;
+	s=arc-20240116; t=1746629796; c=relaxed/simple;
+	bh=iR3+pPyHy41ZeZVnOn5rv4RaR3wxqUlhFY2EECiUbXk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uHVGyDubGWZvp+u/C5OhRw4j6Ia9fTmRZRJa0EDJg8mlyFElMyytdeVbAP1Vw2Buqhgpia+0Z/kKsdQf7viJHvX3nWrPdQ/oSa3ISxjMwrk9vYevc0LvSUrfiIykQFk12/crpQS2MX6mZ5ZjdSbEEWGBF87TBtzDkfq6RpCOhgI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DO25z3Pv; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=h7xkyd195SH+W4IbWIBQEvJThPXXSve+j6GaaC+YWoQvg3qQqtm/qaed/X+PL5OBvorqRbNqkgMXjTrIHG9fQy4DNjEOVfDcF8dbupHm9fVgP/TOa+SJ0dDFrnf3lWOU3b0OWGJtl7hvKJKYg2o7qm7XtheKkAyeFA0uP3+uVIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jU6dTXEI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DO25z3Pv"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-22e39fbad5fso170515ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 07:56:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746629782; x=1747234582; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=K27oAefXMcxovF/muz2h6aBidpXaWFBVFXHHG1YFnk4=;
-        b=DO25z3PvRCDuvUGAq1TuWZdbEx1HrKJyIhGD0IH/TaLZdLK+rJztBs+ts0lKYA0XxS
-         7yiigAb2PNXozcO3KoGHUdJWDsjKGpIkbpgehPbj0HjXd8zEBpDCNlMbqr14pipBdw2B
-         GKHwSWURwGttpCyllmlvQqc/YMjudcAVgvUDfjl+RL+w87jFFMVzKkEBVFvUWLz7KlbV
-         iC2eohaIVxOtjDfHNlptSDz3J9WIkXpAnqakXFyc1DqWUCvREPehpj2cqJE7IWx1jtIw
-         DTzHdmVD4WHFnwuS1YKxPcSzFqIsoPhsULOTnrPyNS+uR4xKDIWnCYACk3lzDXnTi7fd
-         GGIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746629782; x=1747234582;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=K27oAefXMcxovF/muz2h6aBidpXaWFBVFXHHG1YFnk4=;
-        b=C97hggJCYcdnwrfA1hIfZsIUp/SRAuvBUH2P/Ujrte+ooTDZOztN7W2UetZ8mJzYQQ
-         bNjmLi6T8f4jnB4Z3SYPnm1lkwA55ftMtpxnatrNOvzNb6d+8zbNELzmj7F+wpwr+ngO
-         7tlrHcv/TaFtVHY5Lbv1TIFidwYw3TqN9F+AtjN0a/QxGA1v5UApEuiqz8RqLvYJ4Rbp
-         F0N9Hkv/3kgpgKkVmQ23XMdWM9X1MTUWKxrBR/bfIuwkjZjGlO9NfWvMW4+pvuwxiQxi
-         dJxBzmFUsmUiFMHHSzUhD40LUAHzF0ENVVJb1KONsi3mWhrhMdcMAzq7ffkuSqkNaN3b
-         ihVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUAibdHYmA51EnYR6874S+dG10+UN2DvbaY8MiC9FJu70imDHQrp71HeNsCOAqvZ9uvvQIe547yd48KbNY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6STn23UhVBD7R9W1+E0sQyDgLhV861ypqP+zgolJ20LzI6G/b
-	ku6MgPVlGrH8UVhZO4eh+060IxcTwhJ8DarkSMMmxgI7J7EAigIEBwGCYIwb4gqLmh/7gymBnkw
-	/HCM9uDPLIKbf5ZyxGyumNS8SMCfjjcqUQeYN
-X-Gm-Gg: ASbGncux1rkDJ3YCZPM4eaGMpY1WK9cY2N8cEsrtpQ8zKGNIerfmx/1k7xeIAWozsY0
-	1SCmnGfqAJq8eB1P3bVwl4df3ObWuB3fT2+S3UKKuzQHSiEiFoevbM00cgMmo2idgQiYI2smbC7
-	JtotVngNOWHnj1za1D6psIc0LxpTMNQzoZ1uH+46HTqKUGvopBtp1S1PA=
-X-Google-Smtp-Source: AGHT+IFUU4yzvy+tJUcjxTcjBUFWePAje5whBo7gqMHLyMsjuVgDeBEqOGRf5+tCoh6FoJpeOfgbXCVhk4Zvschc6ao=
-X-Received: by 2002:a17:903:181:b0:216:7aaa:4c5f with SMTP id
- d9443c01a7336-22e629b88a2mr2321595ad.3.1746629781200; Wed, 07 May 2025
- 07:56:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jU6dTXEI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAEB3C4CEEE;
+	Wed,  7 May 2025 14:56:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746629795;
+	bh=iR3+pPyHy41ZeZVnOn5rv4RaR3wxqUlhFY2EECiUbXk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=jU6dTXEIQVMc827z7kgqKuav90ToTqf60EvIpnBOzK/Mc9a73bykC1jr+DICq+B2P
+	 E62D3RgiUplBrdI73FXc84QgECM0JBQO9Axut+LN2vKQGpbw147sm3CkVqZM80etxo
+	 NifP+AwCidiFt5k2ZnLoNs9Dn+UxccgOF8wtKCYX18/2A4fesPpruAvu5ucgMnhXZW
+	 Jo7+gNAAjTTmPfsvi81PY2tixj6FZSjs8E9/5siTsF3R44QiEIgu34LNQPbxtpnHlM
+	 pJBJAHCmfS/B4OmGHY5x0eyTWyJCGU1hLPm/YUlN95iiyCIu8AmkFWUCBl8uqNGbcP
+	 SWADUfed6dGcQ==
+Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-2c2ada8264aso5667323fac.2;
+        Wed, 07 May 2025 07:56:35 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUDUcpeQL7RRY2hUHVDaw6nQApnZKx7Rq/6y2NF/6NBBLDZ2MMU7WWsvgXJBCN/PGN285g8Szgaaaj9Rh0=@vger.kernel.org, AJvYcCUPT1LxTu3RJAuKV9RUXOFHGcYWFLVb0Q8kUiBEoHdTnHFwHtTztLHMVicpoXU2iIqphu/FPP/vHs4=@vger.kernel.org, AJvYcCV/6kkRluMfkKfEiMQWYLFzCZB/flSA/GeTF1KzICMVZEOKAXuT6cmXKMeTx+ywrxchBS3YR3F+/auEd0g=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywa3Igk1LgHsvCe5cQU2uzO3AimqjZ4Gnb9C2GQ8oYKzN875UM7
+	3MKUcn3LY8Q1T+BmuxRIpTAz+zVuPKL13t2T0tFQh41x+IR5VD1CuH0/jzlxX6Gh5j9vGINjXn8
+	sPDTtlHAkChhaYOwMG/qsF8H0df0=
+X-Google-Smtp-Source: AGHT+IGudK8BYiwNYGu4ohVqJM5tiVLI5ldUeTtWGQTiAMjmIpjqWC1GYXLvzHMYY9hWCYIOoKyMW5g4wmc2N+ZJ3gg=
+X-Received: by 2002:a05:6870:1590:b0:2d4:d9d6:c8d2 with SMTP id
+ 586e51a60fabf-2db5c16ad18mr2234594fac.35.1746629794947; Wed, 07 May 2025
+ 07:56:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250424030033.32635-1-yan.y.zhao@intel.com> <20250424030603.329-1-yan.y.zhao@intel.com>
- <CAGtprH9_McMDepbuvWMLRvHooPdtE4RHog=Dgr_zFXT5s49nXA@mail.gmail.com>
- <aBAiCBmON0g0Qro1@yzhao56-desk.sh.intel.com> <CAGtprH_ggm8N-R9QbV1f8mo8-cQkqyEta3W=h2jry-NRD7_6OA@mail.gmail.com>
- <aBldhnTK93+eKcMq@yzhao56-desk.sh.intel.com> <CAGtprH9wi6zHJ5JeuAnjZThMAzxxibJGo=XN1G1Nx8txZRg8_w@mail.gmail.com>
- <aBmmirBzOZfmMOJj@yzhao56-desk.sh.intel.com> <CAGtprH9fDMiuk3JGSS12M-wFoqRj+sjdtEHJFS_5QfKX7aGkRQ@mail.gmail.com>
- <aBsNsZsWuVl4uo0j@yzhao56-desk.sh.intel.com>
-In-Reply-To: <aBsNsZsWuVl4uo0j@yzhao56-desk.sh.intel.com>
-From: Vishal Annapurve <vannapurve@google.com>
-Date: Wed, 7 May 2025 07:56:08 -0700
-X-Gm-Features: ATxdqUHU0nZLAD5PmXeD87cInGxxOkrVQuKswPEoCIsWOPO_kTikScUha6SsdjY
-Message-ID: <CAGtprH-+Bo4hFxL+THiMgF5V4imdVVb0OmRhx2Uc0eom9=3JPA@mail.gmail.com>
-Subject: Re: [RFC PATCH 08/21] KVM: TDX: Increase/decrease folio ref for huge pages
-To: Yan Zhao <yan.y.zhao@intel.com>
-Cc: pbonzini@redhat.com, seanjc@google.com, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org, x86@kernel.org, rick.p.edgecombe@intel.com, 
-	dave.hansen@intel.com, kirill.shutemov@intel.com, tabba@google.com, 
-	ackerleytng@google.com, quic_eberman@quicinc.com, michael.roth@amd.com, 
-	david@redhat.com, vbabka@suse.cz, jroedel@suse.de, thomas.lendacky@amd.com, 
-	pgonda@google.com, zhiquan1.li@intel.com, fan.du@intel.com, 
-	jun.miao@intel.com, ira.weiny@intel.com, isaku.yamahata@intel.com, 
-	xiaoyao.li@intel.com, binbin.wu@linux.intel.com, chao.p.peng@intel.com
+References: <10629535.nUPlyArG6x@rjwysocki.net> <22630663.EfDdHjke4D@rjwysocki.net>
+ <c6cd714b-b0eb-42fc-b9b5-4f5f396fb4ec@nvidia.com> <CAJZ5v0jWTtaQEcx0p+onU3eujgAJpF_V57wzZCuYv2NVnEb7VQ@mail.gmail.com>
+ <7c970b02-7b58-4d15-b5f6-18bbfd883ccd@nvidia.com> <CAJZ5v0jcWQ3QKx=2nzDpnYPyGuYfT4TModwdAreWZu4d0hXmoA@mail.gmail.com>
+ <CAJZ5v0jG+54uKiY-uSc6B+8JuA6eU1j8tGM5d=XsrT0EmabMeQ@mail.gmail.com> <563657c5-5529-45fd-96fa-bab68ca992a9@nvidia.com>
+In-Reply-To: <563657c5-5529-45fd-96fa-bab68ca992a9@nvidia.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 7 May 2025 16:56:23 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0jVOG_u=F36aOVh=qu4Ef-5QFAmC+5-fmF_mU8NSr_LnA@mail.gmail.com>
+X-Gm-Features: ATxdqUEcOF86Nme0hytRK5-B0QGEeP-m3_CkCwqx73YWJM7ZH8pajY7lMxQxKns
+Message-ID: <CAJZ5v0jVOG_u=F36aOVh=qu4Ef-5QFAmC+5-fmF_mU8NSr_LnA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/5] PM: sleep: Resume children after resuming the parent
+To: Jon Hunter <jonathanh@nvidia.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, 
+	Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Alan Stern <stern@rowland.harvard.edu>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	Johan Hovold <johan@kernel.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Saravana Kannan <saravanak@google.com>, 
+	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 7, 2025 at 12:39=E2=80=AFAM Yan Zhao <yan.y.zhao@intel.com> wro=
-te:
+On Wed, May 7, 2025 at 4:39=E2=80=AFPM Jon Hunter <jonathanh@nvidia.com> wr=
+ote:
 >
-> On Tue, May 06, 2025 at 06:18:55AM -0700, Vishal Annapurve wrote:
-> > On Mon, May 5, 2025 at 11:07=E2=80=AFPM Yan Zhao <yan.y.zhao@intel.com>=
- wrote:
-> > >
-> > > On Mon, May 05, 2025 at 10:08:24PM -0700, Vishal Annapurve wrote:
-> > > > On Mon, May 5, 2025 at 5:56=E2=80=AFPM Yan Zhao <yan.y.zhao@intel.c=
-om> wrote:
-> > > > >
-> > > > > Sorry for the late reply, I was on leave last week.
-> > > > >
-> > > > > On Tue, Apr 29, 2025 at 06:46:59AM -0700, Vishal Annapurve wrote:
-> > > > > > On Mon, Apr 28, 2025 at 5:52=E2=80=AFPM Yan Zhao <yan.y.zhao@in=
-tel.com> wrote:
-> > > > > > > So, we plan to remove folio_ref_add()/folio_put_refs() in fut=
-ure, only invoking
-> > > > > > > folio_ref_add() in the event of a removal failure.
-> > > > > >
-> > > > > > In my opinion, the above scheme can be deployed with this serie=
-s
-> > > > > > itself. guest_memfd will not take away memory from TDX VMs with=
-out an
-> > > > > I initially intended to add a separate patch at the end of this s=
-eries to
-> > > > > implement invoking folio_ref_add() only upon a removal failure. H=
-owever, I
-> > > > > decided against it since it's not a must before guest_memfd suppo=
-rts in-place
-> > > > > conversion.
-> > > > >
-> > > > > We can include it in the next version If you think it's better.
-> > > >
-> > > > Ackerley is planning to send out a series for 1G Hugetlb support wi=
-th
-> > > > guest memfd soon, hopefully this week. Plus I don't see any reason =
-to
-> > > > hold extra refcounts in TDX stack so it would be good to clean up t=
-his
-> > > > logic.
-> > > >
-> > > > >
-> > > > > > invalidation. folio_ref_add() will not work for memory not back=
-ed by
-> > > > > > page structs, but that problem can be solved in future possibly=
- by
-> > > > > With current TDX code, all memory must be backed by a page struct=
-.
-> > > > > Both tdh_mem_page_add() and tdh_mem_page_aug() require a "struct =
-page *" rather
-> > > > > than a pfn.
-> > > > >
-> > > > > > notifying guest_memfd of certain ranges being in use even after
-> > > > > > invalidation completes.
-> > > > > A curious question:
-> > > > > To support memory not backed by page structs in future, is there =
-any counterpart
-> > > > > to the page struct to hold ref count and map count?
-> > > > >
-> > > >
-> > > > I imagine the needed support will match similar semantics as VM_PFN=
-MAP
-> > > > [1] memory. No need to maintain refcounts/map counts for such physi=
-cal
-> > > > memory ranges as all users will be notified when mappings are
-> > > > changed/removed.
-> > > So, it's possible to map such memory in both shared and private EPT
-> > > simultaneously?
+>
+> On 07/05/2025 15:25, Rafael J. Wysocki wrote:
+>
+> ...
+>
+> >>>> So are the devices in question "async"?  To check this, please see t=
+he
+> >>>> "async" attribute in the "power" subdirectory of the sysfs device
+> >>>> directory for each of them.
+> >>>
+> >>> I checked for both the I2C controller and ina3221 and don't see any
+> >>> 'async' files ...
+> >>>
+> >>> $ ls /sys/class/i2c-dev/i2c-2/device/2-0040/power/
+> >>> autosuspend_delay_ms  runtime_active_time  runtime_suspended_time
+> >>> control               runtime_status
+> >>> $ ls /sys/class/i2c-dev/i2c-2/device/2-0041/power/
+> >>> autosuspend_delay_ms  runtime_active_time  runtime_suspended_time
+> >>> control               runtime_status
+> >>> $ ls /sys/class/i2c-dev/i2c-2/power/
+> >>> autosuspend_delay_ms  runtime_active_time  runtime_suspended_time
+> >>> control               runtime_status
+> >>
+> >> You need to set CONFIG_PM_ADVANCED_DEBUG to see those (and other debug
+> >> attributes).
+> >>
+> >>>> If they are "async", you can write "disable" to this attribute to tu=
+rn
+> >>>> them into "sync" devices.  I'd do this and see what happens.
+> >>
+> >> You may also turn off async suspend altogether:
+> >>
+> >> # echo 0 > /sys/power/pm_async
+> >>
+> >> and see if this helps.
+>
+> This does indeed help!
+>
+> >>>> Overall, it looks like some dependencies aren't properly represented
+> >>>> by device links on this platform.
+> >>>
+> >>> Yes that would appear to be the case, but at the moment, I don't see
+> >>> what it is. The ina3221 devices appear to suspend fine AFAICT, but ha=
+ngs
+> >>> when suspending I2C controller. Exactly where is still a mystery.
 > >
-> > No, guest_memfd will still ensure that userspace can only fault in
-> > shared memory regions in order to support CoCo VM usecases.
-> Before guest_memfd converts a PFN from shared to private, how does it ens=
-ure
-> there are no shared mappings? e.g., in [1], it uses the folio reference c=
-ount
-> to ensure that.
+> > I checked in the meantime and found that the i2c subsystem enables
+> > async suspend/resume for all devices, clients and controllers, so the
+> > devices in question are "async" AFAICS.
 >
-> Or do you believe that by eliminating the struct page, there would be no
-> GUP, thereby ensuring no shared mappings by requiring all mappers to unma=
-p in
-> response to a guest_memfd invalidation notification?
+> So that would make sense given that the above works.
+>
+> When it fails it appears to hang in dpm_wait_for_subordinate() when
+> calling dpm_wait_for_children() from what I can tell.
 
-Yes.
+So apparently one of the children has not been suspended yet when this
+happens.  That's fine because it should be suspended at one point and
+the parent suspend should be unblocked, so it looks like the child
+suspend doesn't complete for some reason.
 
->
-> As in Documentation/core-api/pin_user_pages.rst, long-term pinning users =
-have
-> no need to register mmu notifier. So why users like VFIO must register
-> guest_memfd invalidation notification?
+> I will enable the PM_ADVANCED_DEBUG and confirm that making the I2C
+> itself non-async works.
 
-VM_PFNMAP'd memory can't be long term pinned, so users of such memory
-ranges will have to adopt mechanisms to get notified. I think it would
-be easy to pursue new users of guest_memfd to follow this scheme.
-Irrespective of whether VM_PFNMAP'd support lands, guest_memfd
-hugepage support already needs the stance of: "Guest memfd owns all
-long-term refcounts on private memory" as discussed at LPC [1].
+What probably happens is that after the "PM: sleep: Suspend async
+parents after suspending children" , the i2c clients are suspended
+upfront (because they have no children) and when one of them has
+suspended, it triggers a parent suspend.  The parent suspend then
+waits for the other client to complete suspending, but that cannot
+make progress for some reason.
 
-[1] https://lpc.events/event/18/contributions/1764/attachments/1409/3182/LP=
-C%202024_%201G%20page%20support%20for%20guest_memfd.pdf
-(slide 12)
+Before that patch, the i2c clients would have suspended only after all
+of the "sync" devices following them in dpm_list had been suspended
+(the list is processed in the reverse order during suspend), so it
+looks like there is a hidden dependency between one of the i2c clients
+and a "sync" device.
 
->
-> Besides, how would guest_memfd handle potential unmap failures? e.g. what
-> happens to prevent converting a private PFN to shared if there are errors=
- when
-> TDX unmaps a private PFN or if a device refuses to stop DMAing to a PFN.
-
-Users will have to signal such failures via the invalidation callback
-results or other appropriate mechanisms. guest_memfd can relay the
-failures up the call chain to the userspace.
-
->
-> Currently, guest_memfd can rely on page ref count to avoid re-assigning a=
- PFN
-> that fails to be unmapped.
->
->
-> [1] https://lore.kernel.org/all/20250328153133.3504118-5-tabba@google.com=
-/
->
->
-> > >
-> > >
-> > > > Any guest_memfd range updates will result in invalidations/updates =
-of
-> > > > userspace, guest, IOMMU or any other page tables referring to
-> > > > guest_memfd backed pfns. This story will become clearer once the
-> > > > support for PFN range allocator for backing guest_memfd starts gett=
-ing
-> > > > discussed.
-> > > Ok. It is indeed unclear right now to support such kind of memory.
-> > >
-> > > Up to now, we don't anticipate TDX will allow any mapping of VM_PFNMA=
-P memory
-> > > into private EPT until TDX connect.
-> >
-> > There is a plan to use VM_PFNMAP memory for all of guest_memfd
-> > shared/private ranges orthogonal to TDX connect usecase. With TDX
-> > connect/Sev TIO, major difference would be that guest_memfd private
-> > ranges will be mapped into IOMMU page tables.
-> >
-> > Irrespective of whether/when VM_PFNMAP memory support lands, there
-> > have been discussions on not using page structs for private memory
-> > ranges altogether [1] even with hugetlb allocator, which will simplify
-> > seamless merge/split story for private hugepages to support memory
-> > conversion. So I think the general direction we should head towards is
-> > not relying on refcounts for guest_memfd private ranges and/or page
-> > structs altogether.
-> It's fine to use PFN, but I wonder if there're counterparts of struct pag=
-e to
-> keep all necessary info.
->
-
-Story will become clearer once VM_PFNMAP'd memory support starts
-getting discussed. In case of guest_memfd, there is flexibility to
-store metadata for physical ranges within guest_memfd just like
-shareability tracking.
-
->
-> > I think the series [2] to work better with PFNMAP'd physical memory in
-> > KVM is in the very right direction of not assuming page struct backed
-> > memory ranges for guest_memfd as well.
-> Note: Currently, VM_PFNMAP is usually used together with flag VM_IO. in K=
-VM
-> hva_to_pfn_remapped() only applies to "vma->vm_flags & (VM_IO | VM_PFNMAP=
-)".
->
->
-> > [1] https://lore.kernel.org/all/CAGtprH8akKUF=3D8+RkX_QMjp35C0bU1zxGi4v=
-1Zm5AWCw=3D8V8AQ@mail.gmail.com/
-> > [2] https://lore.kernel.org/linux-arm-kernel/20241010182427.1434605-1-s=
-eanjc@google.com/
-> >
-> > > And even in that scenario, the memory is only for private MMIO, so th=
-e backend
-> > > driver is VFIO pci driver rather than guest_memfd.
-> >
-> > Not necessary. As I mentioned above guest_memfd ranges will be backed
-> > by VM_PFNMAP memory.
-> >
-> > >
-> > >
-> > > > [1] https://elixir.bootlin.com/linux/v6.14.5/source/mm/memory.c#L65=
-43
+If the above supposition is right, flagging the i2c client as "sync"
+will make the problem go away.
