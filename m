@@ -1,89 +1,96 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69B8278F2B;
-	Wed,  7 May 2025 13:05:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C6F8205ABA;
+	Wed,  7 May 2025 13:05:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746623113; cv=none; b=uC4B6hLg/KehbdiKLosDfXQo3hN/nsDobNxAi2Rzw1EXU4+hSLzdZ7gRIgIP7r8I4pmuKJVBnHtkQiqlIwFfJu0GdTbWdycmwwpl62SYsO+Zv+Mr2N48tmar8TzZ8xS274g0L7EYYnFiQ40d7xtRTdoEokETPpZ7zWMN6UXx5lg=
+	t=1746623125; cv=none; b=WV3d1sgu4RUkSQoqotXOHGGWnQ7w/alKFzfxDxgm20xdhGDzCKK2jRPICBb7MFRsaLLiYxt84LYtqS5vZljdxTxdlaBm76aCw4T8+4OQV+6a7b4n+tJO+ZOEKZ9MDOqtWy1FmhkLTxMjEXQOkVM0lfPugFIsLiGKnKLADFUbtlw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746623113; c=relaxed/simple;
-	bh=cOphO8kdIIdjDJfxtzOIl/hmgUWGRqUT9UT27a8b/EE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GMaDT5P3ANW+BYXivQzcr86+m0YUcN8Cyo4Y4+pN3To1aV0nfGD5uqFiIufD5O551fFQXAY+GHYxgF/gPwlLXgQN5Bstybidy4HujpVQbohu1Xzf+jv+r6Qd9mI59Bm3lGSDQELU1GZaSfUiQ2CGa7wLaI9GxQRbS7yWOAAUFHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uatWKlfe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746623125; c=relaxed/simple;
+	bh=IjdASnf0P/3DHSY41RODYZYYITbHGHJgGhvIKy0pPT8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=G0+YF4QGLkhsDqOIGl0Hh0bR/+VGe39w9dQPRApNYRMETeKRgOzIpX/eDbhjvz8SNfmVtDBAZ0/K9lX2Aa7Ag+QjQhscib2LmkXOCWQKa1lC9zMq1m6Aom/t11k+FNSE8S7Pyz/RBGO6cpPpLDn1/RqsfvgdWFHGK8GohdJY6M8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QWyegGz8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uatWKlfe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DA24C4CEE7;
-	Wed,  7 May 2025 13:05:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QWyegGz8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51D6CC4CEEE;
+	Wed,  7 May 2025 13:05:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746623112;
-	bh=cOphO8kdIIdjDJfxtzOIl/hmgUWGRqUT9UT27a8b/EE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uatWKlfenxOYO4eAFxV9xnzAZqD7v38oUoRy++yzo2iZcwvmcwFUVYDPdsfw2lyZH
-	 8FDJJxHGP5FVcjaZrNDHBDX6+dFGcMGi3ap85yRyVZjVspJe0MvmtoBCCSs2u2yd5D
-	 f6N6Trmhb3Wpe1wfDYpvLIeulX+XS2XYOqi2HC8KD36hnSqtDz40QvPt9laljO8sF5
-	 vz4F1PbarwAVh/tH/5MeYTa6xJRwNw0ksEHeLQ4W3qv9bwX6PHeljLpkOEdv29WZXF
-	 RUxPX1XvuB0Yne8z8ZWe4EwKm+PvtH5KD3eQsrhFDcPlZj5g4AIQ69B85Itj1kLUYB
-	 ilD7NjcAbOkjw==
-Date: Wed, 7 May 2025 15:05:07 +0200
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Jani Nikula <jani.nikula@linux.intel.com>, 
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-	Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Matt Roper <matthew.d.roper@intel.com>, 
-	Gustavo Sousa <gustavo.sousa@intel.com>, Andi Shyti <andi.shyti@linux.intel.com>, 
-	Lucas De Marchi <lucas.demarchi@intel.com>, intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-	Gnattu OC <gnattuoc@me.com>, Nitin Gote <nitin.r.gote@intel.com>, 
-	Ranu Maurya <ranu.maurya@intel.com>, Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>, 
-	Angus Chen <angus.chen@intel.com>, Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>, 
-	Yu Jiaoliang <yujiaoliang@vivo.com>, Dnyaneshwar Bhadane <dnyaneshwar.bhadane@intel.com>, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] drm/i915/gt: Remove const from struct i915_wa list
- allocation
-Message-ID: <yafhn4afqcwki3mbcozixqa2xqcd5d7crbn6guyb5zlxt3z7h6@riboytoxpcp4>
-References: <20250426061357.work.749-kees@kernel.org>
- <874iy8y0nz.fsf@intel.com>
- <202504301356.CB1EEC719@keescook>
+	s=k20201202; t=1746623125;
+	bh=IjdASnf0P/3DHSY41RODYZYYITbHGHJgGhvIKy0pPT8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=QWyegGz89X5jZ51rYT3wl2t/EpNI8TV6qPgqu7Ag4/hw0vZbgsCiOIWyNe5mS3taJ
+	 Pk2UnR5APEzYRzN8jGZh9sHFKGAxD6W3xAZURMUWogNJOituz6E3DmInwVExbCyVGK
+	 JGSrcuQbsou0jOMfVGMhkdrpU4QuGAnUnjfwkNfFi65ep/UVGNpie29T5E+sbto/H5
+	 UXf5qG+IhHbOey9OQ39u4HcJ7YrRnQRYq5+PWUNNOJcKvngX0BByM7dey/ZUxDQ8nu
+	 sEsv6tlsMTVe5h5Bn9Yy8OYJOz3YABNTyWNblvQ9PCCNH5k2qekivk7hv1OKgCvsY5
+	 LwYCysIWz8/fg==
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5f4d28d9fd8so9354032a12.3;
+        Wed, 07 May 2025 06:05:25 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUTyd3r/+NVl4nvmXejii6pmJ1tBnw2e7hNGx8GL+jsBcxce5JoMbsAU55xqF8gxi1QnV1QvCd8m24QIw==@vger.kernel.org, AJvYcCWlh2j7yc4+teXDlkBLuGTbclYTWXX1I086YAOmHTl1XZP21Q3xyLjDzBxzETS+vF6TuFMlfTXwJB/G4Cnz@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzc7M+zhAgkq8yCRyYZhY+DZbZlMnSremwJr4R9AlzXG0zsP+B7
+	7yDoysO44SwDaYoKgqBLUxYfDbdjC7OKfxomaeHiWTR3g5Yp1kKMwlA5KFqrCSP5fgtGKhCULO6
+	6rVQt6OjYrk1zLmZK4+fPAnx4ytk=
+X-Google-Smtp-Source: AGHT+IEJ/CaibXN6mzdK18KZL+vw3DGBUuRON4oUk/6Aj/iyvTAHbQ9DWHAfTSecBW+anB4utFQiqDadOX46QXFdPQU=
+X-Received: by 2002:a17:907:868f:b0:ad1:d063:f326 with SMTP id
+ a640c23a62f3a-ad1e8c91302mr333121466b.29.1746623123820; Wed, 07 May 2025
+ 06:05:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202504301356.CB1EEC719@keescook>
+References: <0B1A34F5-2EEB-491E-9DD0-FC128B0D9E07@linux.ibm.com>
+In-Reply-To: <0B1A34F5-2EEB-491E-9DD0-FC128B0D9E07@linux.ibm.com>
+From: Filipe Manana <fdmanana@kernel.org>
+Date: Wed, 7 May 2025 14:04:47 +0100
+X-Gmail-Original-Message-ID: <CAL3q7H7PqVRnDuooSr6OhvUQ3G5V2gq6VEDpqTqNX9jHmq97aw@mail.gmail.com>
+X-Gm-Features: ATxdqUHY_FiOpTMf6FgP45M2NeW-CWyjYlECDizMemJa-649cnX3uHFZ9HE6m_A
+Message-ID: <CAL3q7H7PqVRnDuooSr6OhvUQ3G5V2gq6VEDpqTqNX9jHmq97aw@mail.gmail.com>
+Subject: Re: [linux-next-20250320][btrfs] Kernel OOPs while running btrfs/108
+To: Venkat <venkat88@linux.ibm.com>
+Cc: quwenruo.btrfs@gmx.com, linux-btrfs@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org, 
+	maddy@linux.ibm.com, ritesh.list@gmail.com, disgoel@linux.ibm.com, 
+	David Sterba <dsterba@suse.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Wed, May 7, 2025 at 10:02=E2=80=AFAM Venkat <venkat88@linux.ibm.com> wro=
+te:
+>
+> +Disha,
+>
+> Hello Qu,
+>
+> I still see this failure on next-20250505.
+>
+> May I know, when will this be fixed.
 
-On Wed, Apr 30, 2025 at 01:56:51PM -0700, Kees Cook wrote:
-> On Mon, Apr 28, 2025 at 02:40:16PM +0300, Jani Nikula wrote:
-> > On Fri, 25 Apr 2025, Kees Cook <kees@kernel.org> wrote:
-> > > In preparation for making the kmalloc family of allocators type aware,
-> > > we need to make sure that the returned type from the allocation matches
-> > > the type of the variable being assigned. (Before, the allocator would
-> > > always return "void *", which can be implicitly cast to any pointer type.)
-> > >
-> > > The assigned type is "struct i915_wa *". The returned type, while
-> > > technically matching, will be const qualified. As there is no general
-> > > way to remove const qualifiers, adjust the allocation type to match
-> > > the assignment.
-> > >
-> > > Signed-off-by: Kees Cook <kees@kernel.org>
+The two patches pointed out before by Qu are still being added to linux-nex=
+t.
+Qu reported this on the thread for the patches:
 
-Reviewed-by: Andi Shyti <andi.shyti@linux.intel.com>
+https://lore.kernel.org/linux-btrfs/0146825e-a1b1-4789-b4f5-a0894347babe@gm=
+x.com/
 
-...
+There was no reply from the author and David added them again to
+for-next/linux-next.
 
-> > for merging via whichever tree you find best; please let us know if you
-> > want us to pick this up via drm-intel.
-> 
-> I was figuring each subsystem would want these individually, so please
-> take this via drm-intel. (Or I can take it if you'd rather not.)
+David, can you drop them out from for-next? Why are they being added
+again when there were no changes since last time?
 
-Because I don't see this patch applied anywhere, and, given the
-file changed, I am merging it in drm-intel-gt-next.
 
-Andi
+
+>
+> Same traces are seen, while running other Tests also.
+>
+> Disha,
+>
+> Can you please share the details of Test and the traces.
+>
+> Regards,
+> Venkat.
+>
