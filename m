@@ -1,65 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DEA419AD5C;
-	Wed,  7 May 2025 16:50:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C95319AD5C
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 16:51:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746636604; cv=none; b=aUcL2rlyMVJ65drMPGk16lDlt6ftDn10Cx2d1tdXAm8BxPXzusHACXjNK0/pATV7dFRwwzd6xjOSEWQ6wBxc5KRvcQU109WqXZUysYzxFEH5/VqcOK9QFjv/BeXHmsJ8csscLCWsqk/v0DmIaB1nUD2Mjd1vci+hz7CXqLb/gsA=
+	t=1746636683; cv=none; b=MscIwHDl+/2cvsKxbWtAkYWYEdTjQCmkK0I/lvbT0NtRnxPgMFke1WHfmB2GYiTV9dAJULmNs1/o42V3v1tiNpQqNi8vdSgvKGecuylXDnODe3y0QE5UWuqppoYaTkdrHhORxaI2qdDvVoLIB94eqQjdr0tahdn/LeA2akUO3m4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746636604; c=relaxed/simple;
-	bh=/oXJz7lHNCcO6QSyQPg/+wzooEDY12xe0sDBwqd+x+Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nY8ywMqiO1pLbPeeVvLOouV8pvHMKk78Db2d3Vp768448xzBk7P178ViPmEUaVlBm6dYWdWHT4+Lw+zH7N0R8+gU7UAZxpKB4Cwqd8tVx+akm0jPX24xykTHRuQISSGgVsfMzEtygEcdkAt0A0shR5GwsdT4MppSa+XXGFdBsSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=grt7Qm+h; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="grt7Qm+h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48BB6C4CEE2;
-	Wed,  7 May 2025 16:49:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746636603;
-	bh=/oXJz7lHNCcO6QSyQPg/+wzooEDY12xe0sDBwqd+x+Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=grt7Qm+h+eg2TEauf/o/ARQOsc+004Kbs/Ul5A16zlPE5Vt95Sxbcli0oP3TH8T7S
-	 lq2ATznhVtbaaGLEM0nfkY2eG5XZnzRyj1w0Kp/npfrzAA7wSHztzHKFu8Z36UmfAJ
-	 uUazk9++fHVNk1jqBzwz6PIuBVJlxkpfKZvYtqYF2usQ/Vh4cfbJzKH+dRMWe07+zr
-	 NchqpJGJcKNIzzJ0fSMXAxV62w3Y4yXBzUQq7Pt+GUnepdf7KZvUYiDMmYf3lPt1LS
-	 dvV/moOrRb571H5Ib9LY00uoFopJDeofFXSvFLnMGQzBlzupcz5N17xw8UXuMzF4j7
-	 dgtAqXDlb8BpQ==
-Date: Wed, 7 May 2025 18:49:55 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Matthew Maurer <mmaurer@google.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Timur Tabi <ttabi@nvidia.com>, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v5 0/4] rust: DebugFS Bindings
-Message-ID: <aBuPM6FJvfSl-xog@polis>
-References: <20250505-debugfs-rust-v5-0-3e93ce7bb76e@google.com>
+	s=arc-20240116; t=1746636683; c=relaxed/simple;
+	bh=AhS7skW69JrErTmvxNkCPnTEII81RuMnY6oo6mEw8S8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DDEl7Q5oqW8vsGq4+GRBMYI1oSRB/pjQOotghUtQkNQbC61Nt91HE9evICZEQSo680n5Thu0Fl+rGAxqT5IfqWts6znWY1QoFMPej9IrCQ0FhY9hL+I8EItwB0+5vXwK/72a76oWrLZy1MD6jjzfnaXZ/97nEi4nK9ikn/srqaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A2B5716F2;
+	Wed,  7 May 2025 09:51:11 -0700 (PDT)
+Received: from [10.1.197.43] (eglon.cambridge.arm.com [10.1.197.43])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 57A913F58B;
+	Wed,  7 May 2025 09:51:18 -0700 (PDT)
+Message-ID: <0c526e05-8e51-4cca-a4a0-5dd330328209@arm.com>
+Date: Wed, 7 May 2025 17:51:16 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250505-debugfs-rust-v5-0-3e93ce7bb76e@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 00/27] x86/resctrl: Move the resctrl filesystem code to
+ /fs/resctrl
+To: "Shaopeng Tan (Fujitsu)" <tan.shaopeng@fujitsu.com>,
+ "x86@kernel.org" <x86@kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Reinette Chatre <reinette.chatre@intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
+ Babu Moger <Babu.Moger@amd.com>,
+ "shameerali.kolothum.thodi@huawei.com"
+ <shameerali.kolothum.thodi@huawei.com>,
+ D Scott Phillips OS <scott@os.amperecomputing.com>,
+ "carl@os.amperecomputing.com" <carl@os.amperecomputing.com>,
+ "lcherian@marvell.com" <lcherian@marvell.com>,
+ "bobo.shaobowang@huawei.com" <bobo.shaobowang@huawei.com>,
+ "baolin.wang@linux.alibaba.com" <baolin.wang@linux.alibaba.com>,
+ Jamie Iles <quic_jiles@quicinc.com>, Xin Hao <xhao@linux.alibaba.com>,
+ "peternewman@google.com" <peternewman@google.com>,
+ "dfustini@baylibre.com" <dfustini@baylibre.com>,
+ "amitsinght@marvell.com" <amitsinght@marvell.com>,
+ David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>,
+ Dave Martin <dave.martin@arm.com>, Koba Ko <kobak@nvidia.com>,
+ Shanker Donthineni <sdonthineni@nvidia.com>,
+ "fenghuay@nvidia.com" <fenghuay@nvidia.com>
+References: <20250425173809.5529-1-james.morse@arm.com>
+ <OSZPR01MB87982E5190AF6B1C8B35D3988B88A@OSZPR01MB8798.jpnprd01.prod.outlook.com>
+Content-Language: en-GB
+From: James Morse <james.morse@arm.com>
+In-Reply-To: <OSZPR01MB87982E5190AF6B1C8B35D3988B88A@OSZPR01MB8798.jpnprd01.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, May 05, 2025 at 11:51:33PM +0000, Matthew Maurer wrote:
-> Changes in v5:
-> - Made Dir + File wrappers around Entry
-> - All functions return owning handles. To discard without drop, use
->   `forget`. To keep a handle without drop, use `ManuallyDrop`.
-> - Fixed bugs around `not(CONFIG_DEBUG_FS)`
-> - Removed unnecessary `addr_of!`
-> - Link to v4: https://lore.kernel.org/r/20250502-debugfs-rust-v4-0-788a9c6c2e77@google.com
+Hello Shaopeng Tan,
 
-I will go through v5 latest by beginning of next week, thanks!
+On 07/05/2025 13:00, Shaopeng Tan (Fujitsu) wrote:
+> I ran tools/tests/selftests/resctrl with the following patch on AMD EPYC 9454P 48-Core Processor, it looks good.
+> https://lore.kernel.org/lkml/cover.1717626661.git.babu.moger@amd.com/#r
+> 
+> 
+>>> https://lore.kernel.org/lkml/96d276c11e69cfb1e29d50a12c8043555c06b404.1718144237.git.babu.moger@amd.com/#r
+>>
+>> It is strange that you needed to add this since it can be found in v6.10 and up.
+> Sorry, I made a mistake. This patch is in v6.10 and up.
+> 
+> Tested-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
+
+Thanks for re-testing this!
+
+James
