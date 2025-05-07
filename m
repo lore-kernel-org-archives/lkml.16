@@ -1,54 +1,53 @@
 Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2071.outbound.protection.outlook.com [40.107.244.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9B1128BA96;
-	Wed,  7 May 2025 13:53:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C394128BA9D;
+	Wed,  7 May 2025 13:53:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.71
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746625989; cv=fail; b=YuhVrTHQV56/BQ5W7zCz79+pawkhE5AQscyMAmftzusAhCYqa7KeBTGACvlvqZbksdjq/Om8ABEr5B9aftdoUu3sJnayPrVj73srbIf+0zj4sMpfFVnc2p+j8RbqRrZcawqpIF2o+3jmOeolO1ULKxKJfeIs0hNrpzAW46uKT7Y=
+	t=1746625994; cv=fail; b=ltFXooc13q3PuheXRoR28xTMwLqmrTkoVQPo47u43rZUyYuLr4UHhEH6WkinDJ5IjS2vilxXrTxj+WWCQlUyC0KzI1pfIc46djvRQSoXlp+5FNaj5XOLey8J8Pb+ZKL6ZGFi3gd4SlE9Ltq/cPuJfwoMSUk+dhgX6XijARWDSSI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746625989; c=relaxed/simple;
-	bh=PjrRfctPYbm1g0tyP55JP3XQcdRJO6bt31vneuROfIk=;
+	s=arc-20240116; t=1746625994; c=relaxed/simple;
+	bh=bGoeOu0lyNFKHh/sMIfjXKtdCIJXKbLTGDWacbQOe94=;
 	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=l3kqr/SbOvTA2hZJI9htaCzbMAKKcnOrt82LpmY9kIbbuAEOTuvtOrRttYuK4ls/hye8gpBl/3UTmasr9wTS9u9zEt28hW5Qc6NUi+IYvNYRAz+lsOhQtvsgKM2VM8lLJFeLDdsOA2tay8mu2r3TO/KssBmJ4T4JkmwHNFjxuyI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=obFf4NJU; arc=fail smtp.client-ip=40.107.244.71
+	 To:Cc:MIME-Version; b=Lf+Se73ZbLEItaoJ/jr+xVigz/FqJxyYCuqhtjn31NNS5jp68nmPvtven7QfOhorN5eMo2M868KzhUDS5ED3q15I8y+JZhEXQz7AC9EgQOBsdtPudeK+lBX/ICtT2kHhwqfASZmIm0qd3uP9rTRtVeEd1i1cmwy8dP8RXy2f4Zg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=c9y4arTI; arc=fail smtp.client-ip=40.107.244.71
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="obFf4NJU"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="c9y4arTI"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=BRn1tujab+IQ7B9TeVHLLLHoderCkznSPqwB/6Lk/xYOmzZ7YJDuQ4h6ZfnV2Byr0fpCrRhNv6eAQ3CzBQ7TrUqTBud/i2YgxMtyXrbw0A0/ggMnf+xtomU2yKN91ItoXhKwzVor6L+vqeE3qM+ksvprF918hmqcphLuem5dj94K5slLyoLPzB0Fpylqj1r1OIwZixVA/gRGCwIZqj/b7qgDCcmSY+WZHupqKIDpNRRDj19bzgFjq+zdZr6e/3xdn1JrnFYLNqj2nEYRGlBeYSdTJwZjRP9RovRVL7ZL35j6oFDCrJ4urnxAjAGdyz01FygQDaA5cLCSMaIb7x92Xw==
+ b=NXxg4hvV9pPf2wXnlMhkABCOY5tTpbTUXFNCGK9Gx8EgAPsodwflSBmbHkAnjGlaqJYBEg/QtoB1+cu8NzAtMfzPs2NGyBTZB+cwilbU8kYico3su7e4jPQAoH9f/HK+S0WQAVmWoktgKcs4Tn61BCJkrtoWRYs72PP+YUGD3Yxi278AYr+a3dG+KSUd2yeQboO1xmyeZXqT88aGl5hSXBiqbrqdYBhgI38nRq+eQFPT3cPnF40gyjdm8o5LGPdrPL5R2D6LNsWO0hf/4eJ98pyFDjpuK5YHTWqV+7vlCi6ETYMduox1cRyqRsNs5bs8ES5uJrW+UgmJYYrV9EI8UQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vTX4wK5VpcgqJoFp6ud9ZaPieQFH0IOUpxCq20BWy1Y=;
- b=w9Pn/BWmE7yYPdeuVux9wfb+W6/AaWHtQfVb92sZDRAcvJ52BK0eTjRx+KaxQwHbPqTf+3SCZm92PCJduMOhjBxEfN0E9O3KZNxPUhMZV89EHDokywYsUBboGFQnqFW8TWvcr0tHcyoEahQ2No48JOz3dJjz9Loehriq2U0gsOsQODfUH8KMKaUBR/vO5vHf3cYcOlQ7AtlEIBF/1tvCLG0daRRQKfJC5YzJ5+JL1aCEFyppA32uHadMYCPEOuk+FcDb5ztzn3xv23sJ5wmDXiOsQ/utIZuSgxbOfmBwlIpeX/ESyrIqqv4DNMVl3mQZ2SPICqs8NIXodduwpQZKSw==
+ bh=tLAS6IjsFBPjI/dL78R1Bxllo1Gu52UEaPOdhb7eHEs=;
+ b=s/vlLuLU0lTVbzau1BgU1D/LOIpKcYZw0t97UIttHzIZ1Bp5Chv3zVKxKfVVeBZneNrGPARaFGS9sedJB2mtz8khSeusLXDaojniIp7iYTOCgDT1VzjeBYJs+xBZx6p9R0PXrwBa7TlGiPO3b4MbOnkwJ7/VeZ3oiR2rQuYM+2/+1TSx/SycqE7vp2fnrix5w9uzb3ebEfe3QLBagoh5B4JgREMfUw//i7PYqSA83EpA0leByioW76FGLeZMIfMJtTS8yLImJ9GJ+VPmIH5gOgrNkwGOOYQ9Esh9QHNJZVmIVKoFrvctQicDhAIh9nUfQZgSID6e5c9KKUZsZQWIkQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vTX4wK5VpcgqJoFp6ud9ZaPieQFH0IOUpxCq20BWy1Y=;
- b=obFf4NJU535jBGWMlE255e0t6DygmHwWeReOQSt+O/+DNA5jp7XuAp4GGjP6kRapKxo7s8TKXNbBPLPPjkXfh9cMIm+UctcaH29+qF5yHvmvpvVlL0G9yC87LgGIA6hagsvoN94SPM9XbqNJ3uCaOU4ii/ljWsX4gAFV8j1/913iMOf+83lPgFwMK7TVhJw35WQdOaCuHkpZuS7nZ6xW4FccjXJ1csj2bbTDhy1sj2L4vgYNf9OBQkNGQvnC5ATyz07/wBe35rxENc68auDOlD4T0pbTPKkX7vJJE+hN6D5ZYoVrX7dV7ALCOpWRHSZnvRz5VSFE3KRGYvxHRvRBEg==
+ bh=tLAS6IjsFBPjI/dL78R1Bxllo1Gu52UEaPOdhb7eHEs=;
+ b=c9y4arTIjc44YBiB4f3XP8kxQOZV9U/M8g6MHM2IAwEyU7XRBlQXuIvvK5J/V87ylGUvmLhcd41rA5Idf/PfANV+wa0Z87ZJ6oPllxYFlwDh7NeMa/bayxOJKMyw1vx3IRhLMelgqxRcZmhCbm5PymLnt6WUna9lPiKgU0AOaTUsc1exChb6sO+FISKhpH98wCvMtBH6SfSIdoMXtAi3fumVK3bs4rFRRb96iMekH37O3kk8l8hLWOChPEL9/CwSwOE+NBwgtgMbBDSHYYP8cIFXi5eo59scYHdZNT9Xp2YsYPY7+jWQ4IkU0u1aSEv3GZVvkS5FV436Fbq8c/SQ2w==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nvidia.com;
 Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
  by PH7PR12MB6761.namprd12.prod.outlook.com (2603:10b6:510:1ab::22) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.26; Wed, 7 May
- 2025 13:52:59 +0000
+ 2025 13:53:05 +0000
 Received: from CH2PR12MB3990.namprd12.prod.outlook.com
  ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
  ([fe80::6e37:569f:82ee:3f99%4]) with mapi id 15.20.8699.026; Wed, 7 May 2025
- 13:52:59 +0000
+ 13:53:05 +0000
 From: Alexandre Courbot <acourbot@nvidia.com>
-Date: Wed, 07 May 2025 22:52:32 +0900
-Subject: [PATCH v3 05/19] gpu: nova-core: define registers layout using
- helper macro
+Date: Wed, 07 May 2025 22:52:34 +0900
+Subject: [PATCH v3 07/19] gpu: nova-core: move Firmware to firmware module
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250507-nova-frts-v3-5-fcb02749754d@nvidia.com>
+Message-Id: <20250507-nova-frts-v3-7-fcb02749754d@nvidia.com>
 References: <20250507-nova-frts-v3-0-fcb02749754d@nvidia.com>
 In-Reply-To: <20250507-nova-frts-v3-0-fcb02749754d@nvidia.com>
 To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
@@ -67,8 +66,8 @@ Cc: John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>,
  rust-for-linux@vger.kernel.org, nouveau@lists.freedesktop.org, 
  dri-devel@lists.freedesktop.org, Alexandre Courbot <acourbot@nvidia.com>
 X-Mailer: b4 0.14.2
-X-ClientProxiedBy: TYAPR01CA0087.jpnprd01.prod.outlook.com
- (2603:1096:404:2c::27) To CH2PR12MB3990.namprd12.prod.outlook.com
+X-ClientProxiedBy: OS0P286CA0110.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:604:169::17) To CH2PR12MB3990.namprd12.prod.outlook.com
  (2603:10b6:610:28::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -78,628 +77,230 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|PH7PR12MB6761:EE_
-X-MS-Office365-Filtering-Correlation-Id: 208228ca-5df9-46c2-0c72-08dd8d6e7a24
+X-MS-Office365-Filtering-Correlation-Id: a3e30ca5-e828-41a1-d424-08dd8d6e7df5
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|366016|10070799003|376014|7416014|1800799024|921020;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?aUtkSTY3Z1YvQ05tSmZSQURDYVBpRFo5RS9sc1JsR1pzVlNzcmZZbzVXNDVX?=
- =?utf-8?B?MmNwQ0JBYlBqU09Bamt2MERIY251eWV2YVdTQU1PZVZWem1qUzRnWWpWand3?=
- =?utf-8?B?MWI3MFNkM0xKUC9YTFhlaHRaY1RRVmNvUmhYOHJ4L3hlMXRUUWx5SzZXKytw?=
- =?utf-8?B?V2RNVVNUY0w5U0RhekUrYW9nZzl1N01uZFRuRCtOaW5VSVJnL1RXcXEvYVRP?=
- =?utf-8?B?QjNCMm1GbXNFWGQzRmFmaDladS9uNmFVVm9wZG93UXNqTjN1NnpCQ2ZqeVhj?=
- =?utf-8?B?Sm02QUhYdDVvRUhsQlA5R3k2VUFjWERIUUE1NFNJdDFYeHd4SGJidDBGOVI5?=
- =?utf-8?B?bEN1MFRRZ0hrVGJ1MmVFTXVIYkVwSnQrclJFaTFuZlRNTVZGQ1dLRXJYeDc1?=
- =?utf-8?B?YlFLbWFiemU4MkxpLytVRkk1MXJGb3BJTzRETHlHN09PbTZ6N0NhVGZpMXBE?=
- =?utf-8?B?Rk5mQVJOWFVPOGxIaHJGNmk2eTkvK3lEQU9OYy9QeHJmVkpNN2tZT0VwVkZT?=
- =?utf-8?B?b1F6MGtKNld6Ylh2OEFteGh1aVlhVmRjTFd4S0JFMEw5aHhSQ0w1cndtcFJ4?=
- =?utf-8?B?RVZWSXZnNHFMZlcyT1EwMk9hbUZVRXJ3UFdQTEk2N1A1dDFMRkY1YkFjTTlC?=
- =?utf-8?B?NW1rUzJsbVF1bUNlbFdjaGtYRW9WcGZUUkpueUg2TXRmbkhtaVlwaGgwZUJI?=
- =?utf-8?B?WktvL29TY1U4V202R05uSWNRb1VjcmtyYS9Pcm5namUxcWk5OTZDRzNNek85?=
- =?utf-8?B?cTdkd2RSYWhCMTlDc0NvM1daOUZEWjgvNW9BQ1NTRzF4LzVFcGxGdXdlVTIy?=
- =?utf-8?B?dEo2b2Yzb1FDQkRFcEFoRVd0OUNrUFlhaGFHYlY2WnFnYUs4aU9aeFlndmtR?=
- =?utf-8?B?THlWUVZOcjhPUUFNODZTWjN0eUdGNzgyelpvOGxFOXN1UFArR25jcUppTkFE?=
- =?utf-8?B?UGRndklXc3A3Y0YwSE04QzdWT0w5OWtTZytKZEtZWkR5bmVreTk3eEN0RFQ5?=
- =?utf-8?B?bEdhdEU2TTZzMi82d0dHdHl5d1h0MnlNYUpMdU1Mayt2YjBrazZIR3lydU9i?=
- =?utf-8?B?QWFQWnBhWCtKUG92WDdRNzRQai9KSDR3ang0WFd0bXd0ZzVoUm5ZNWs5b2Ix?=
- =?utf-8?B?dGhsb0JRbUQ5RUUwTitIQnZTRm5wYmM5Y1V6UmxKTi9ZTEQwenJoOVJSdHhr?=
- =?utf-8?B?NjJucks1MlM3dnRvRjVkU1hnUGdQZm9GZno3MFZFZFUyaUFYTkRkcVZ4YU8x?=
- =?utf-8?B?MktzMENsbWMwYWZFSmRVNko4ZExnQ2Z5eWpGT0R2T3VoZk9GQSthUG1OYU5E?=
- =?utf-8?B?VjdNdnJrMjJvRzBGeGU5dlpCNDlDNUJkUkI1Z1FCNFplcDRYRGhsc3JqcE9G?=
- =?utf-8?B?VUE3MnhBS05QMWJMeU4zTTdGU29yTmozYm5UckN4TURHNUoxaG1TQ1d3Z1F5?=
- =?utf-8?B?ZDlIdzYxMHBSdndZSk9jaFMvRzZaSGJZdHFFVjdySE9VbjdEQ0I0bFVDSm1x?=
- =?utf-8?B?V0lzTytoSVhTRHNkWldHWk5UMWxlbDYyMDlSa2ZHMG9qaVVWL0ZQRTIrNFpq?=
- =?utf-8?B?Q2NDMno3MGF0ZG93cnF2YTBsZlg5eHYzUXl0ZUVBQmVLTkdXdjZSVDNmd01G?=
- =?utf-8?B?b3EzTUFoQkVRZjZvQlBYUGE3RjJwYTJDcjUzblhaMCtTS1ZURE1zcndNd1Bw?=
- =?utf-8?B?MDdOeThuWFJqTUw3VTU2b2FMazN4dmkrYVRHa1NrZjBJZE9pd25JUDBIbDFZ?=
- =?utf-8?B?U0t3Wko3K2NEbUhZQlN5QUEvZVlPRDZUaWpFSFlNenFhSU12SktaTnF5SlE1?=
- =?utf-8?B?enNod2lyQzBmL2VSZHBCbFp6ZjdsV2xUWFlNaFQrZkp1UTRCSkl4Q2hZQlJL?=
- =?utf-8?B?b1l3MnZIK2xWSnBRVjdCSFVrN3VUbXduaksyRUtWT0NlU0ZjQU1GVGM5OFVQ?=
- =?utf-8?B?NENJazNZQUwyallXQkZ5OUlaRjZycS9qb3pHanZFYlM1NzYvamxLMVhjNVVs?=
- =?utf-8?B?UlRucVNPV1F3PT0=?=
+	=?utf-8?B?cEpYUGtubFdqWFg4VVlOWjZnREJIbTAyandoeXJnUGQyUmIxZU13bHNSU3A4?=
+ =?utf-8?B?a2NZOGEyN1o1MDBQbTJHbmxqSmFEQmJoZGpETjl4M0ZMK29vZlBrWVlkL1hZ?=
+ =?utf-8?B?M0UzWmtrdFZYcDluNUVvTVVQNWhNcVREclZiL3BDUGVzOTVxYXk3U09nRk8r?=
+ =?utf-8?B?NU9DdlQ4Vlk5ZlpWajdCVGJPVmQ1U1orQ0EwUkpvUlVOR1M2SW1aUzU4OTVN?=
+ =?utf-8?B?OFNKSWJVaDdRLzdSYjg3MWhWRlRFa3o3RW5SeC9RaUhyVE9HdHJyWm1iQzI3?=
+ =?utf-8?B?NVRsVGxYU2xvOE5IcWdwVzQvM3FBNTE2VkY0NnVYWlliSEpjK3ZmdWlMella?=
+ =?utf-8?B?NXROYjIzRXBqTHN3TEVXUW1GcVFoTXRucHErV0JtdkJPR0xQZmE2QlZZN0d6?=
+ =?utf-8?B?cjJPMUJiUlpZTExtQStzbGdFYUpGWHEzQVVmTE9PQVl5bnlKYXlSSmJMRWRR?=
+ =?utf-8?B?eHhGdFhKSWQ3WGs0NjVUYVFjemJOTDhPLzNjdFg2dU81MGZKODY4QTRxUGJj?=
+ =?utf-8?B?RkdZV2tLNEJuczhqVGdITHY0V3NCNmUrMWtHUWVpbmlXN2l5Zy8wR3ZJbkhP?=
+ =?utf-8?B?TFkwZVljcmUwNXBLTzJBa09vTW9IR1lMck1tc2c3U2RCNFlFWHdETDlWazhG?=
+ =?utf-8?B?L0Zlc3ptbGFhQkFqQmZNamtOY1pkdk82QVE0U1MraGdhZkhPc25WeFhWT051?=
+ =?utf-8?B?ZjhFeWtaUGFaZXQwV3RaMXR1Z3NQZ01FaDZxRXhML2JkVDBVZWlZTzRPcnM4?=
+ =?utf-8?B?cGI3VmFPV1c1dEpoTEVaNThmNjZFS3cyck9OSmNmNkpZZWtCQTdrdTQwb3JY?=
+ =?utf-8?B?dFB1cUhPZHJRMmxzbEtQaFRvVm53UzltM2wzYm1ET0FVWWI3Uzg5bnN2akRn?=
+ =?utf-8?B?RlBUMXFKUW04QjFOZzV0WTc0UjZudEVMcGV3b01aVjFVZ1RpSmNmQlg3Umwz?=
+ =?utf-8?B?alNHRXlEMFdpek9SejF2NjZTUENVUHFtR3VUMzZiRE1CcUk4aENOSThLQkhI?=
+ =?utf-8?B?cGthekViM3Z3dlVZMTdrSmxYRU85SFduSlQrUFFDUTF6bkhJY0Y1ZCtRUHFa?=
+ =?utf-8?B?OEgraEZWREplMkcwSXZCTWNIQWZsOWRteVVHZ3hDVE8zZENHNlhzNzlLbDc3?=
+ =?utf-8?B?S25LWE56S2I2WXB2cjIwdHpnbGtBUEpyS3hXTjZtZ09tSmtxTEdQYTdlcU5y?=
+ =?utf-8?B?UDBlbGNtNGdEVHpOZFZJSHRsOUFXSlp1VGpsMU1ldjY1ZCtkSm02bVg0bW1C?=
+ =?utf-8?B?U3V3SllJaVM4QUIwdngyMXQ4OTVxN0twVnl4QlM1MHdQOHhSYkZjVjZCOXVN?=
+ =?utf-8?B?OHF4MG4wcXM3OWN4MVgwK0VJUC9KNTVFd0ZBWnY3Mi8yOXg0dWdTR2tIVndI?=
+ =?utf-8?B?enlwbm5ZZWZnRWxoVzNoMDNYdGhzVnBJZlg0REhQVXR6VHJLU3NxOVZqQlND?=
+ =?utf-8?B?Z3lLMmQ0UldIL2JLZlBqUkVkdEhIa1E1bUVOdURKMGpha3pUMXYwQ21QNGJK?=
+ =?utf-8?B?QUZGdGNtWGhBOHRUcjNyVm9KZTVRYWRFOE4wV3hKd0kyWDZoMlhwVVlpdk1E?=
+ =?utf-8?B?MW1mN1hvMnFkVFhINEhUVEkyQVFvcjZsWVhHVkRqOVdVU0JIUXpCeFplR1ZQ?=
+ =?utf-8?B?NldHTW9ic05sU2ZTOVh6UkQzaHI5YjNXSXF4Z0owQ1ZxVExCRi9DN2F1SXJH?=
+ =?utf-8?B?YzVGMDJEUWxNSU5zcGxnQVRpcXoyaVB6TldGeERjSW9LakR3anI0a3k5Y1cw?=
+ =?utf-8?B?SHNPcFpRQU5KUkhhOW5xMHQ5WWhkMWtScWtqTnRxQjk5QjJQQXNFb08xV0ZD?=
+ =?utf-8?B?ODJYVmlNVVpvbVpiTzhnUFVrUnVUcEtjemtwcWFsTjEzYTZ0RFhxTU1pNWNj?=
+ =?utf-8?B?MjRKbWd0RWw3MG9CZXhGeTVHMk55cTVXcVA5MEtSbjlMU2MvdmgrakhrQnRl?=
+ =?utf-8?B?Q2djTHh3TmpQYjRRUHYvUWtTSHFTL0c2eU5neHVRaDcvVHROd3pHSGh3TGM5?=
+ =?utf-8?B?a2xXNXdsZS93PT0=?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(10070799003)(376014)(7416014)(1800799024)(921020);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TlhiRnVWbmJiUXlURDFxZ2N6ZiswamlGN3VkSjlvbExvVWFhcmk5dXI3aXZO?=
- =?utf-8?B?SDdnRlYwTEVnQWh5b1QvRDlBbWRzaG5rTDY1a3c3RXowSEF0NjBwQ2Fva0JD?=
- =?utf-8?B?bGxoN1BoUmJwdVEwZ3kzbEJFMmtidkwyaDBGY1VZSFc1WEVuMXJrMU9FdFNI?=
- =?utf-8?B?dFFFc1g2RHZ3d1Q5dTl1anlobDVsWWZmMitaYWM0YnYrVmdmektTdUhNeWFv?=
- =?utf-8?B?V3FON0tWVStFYVN1ZTNublRyT0FaYWNlS3JNREQ3cFBFejNIdlluRi9mU0ly?=
- =?utf-8?B?TmJOMWNDVFlOTXFwUlgyenJDMUg4T0R2S0pXN3Rhc25BZlNXczlCaEYwWG5o?=
- =?utf-8?B?TGFJN25hRS9nY09aY1QyNWxmenB5TzV2bGZuNzB4WjM1alBKUmtheVF2ZEQz?=
- =?utf-8?B?bEdCQUhGMGloMjN5eERsdmhDcTIwbEVsTkNFbFhJVTRiRk9Wc3I5ZWVmczBh?=
- =?utf-8?B?QUFDOWVMeFpWN2dNbGo1ZzAwWHBOSlRwblVzRDZJbm9yaldOUmVpSnN2bDU1?=
- =?utf-8?B?L3hscnNlOGlQK3RLSVhHYTVCMUlrVGVtZE5CR3EwenRTYlJNTG1sanJqZCtN?=
- =?utf-8?B?azRYWFFMUGM5ck05SDVnSDExbEd3Z0ZvWEtyb1ZFcjJ4ZHp0N05id1ozSFYr?=
- =?utf-8?B?UzVqZWJxTTFjdWRXWE1ZS01FcDBQR21IS2ROQzBZZDZqNGxPZ1pKNVg4eEpV?=
- =?utf-8?B?cy9TSTFZMUlWL005bVVJVzRQaEJPUG1rL1h1VGg4dDdNa0V3OW02Uk9taGNZ?=
- =?utf-8?B?dkpQL1dINWcyQkRRaUxibHZ5OStRQWRFYjRYajd4SEp5c3lVanNGbUR1dnl3?=
- =?utf-8?B?V25jZkxlMzRPWk5uZ3plamNLT3pOMW1GMXF2SU9CdkhhQUF1ajRTTTgxaVo0?=
- =?utf-8?B?Y050VWVvckg0L25VRitnMGRmTkpGMWtuYzRpRVVsOXI5VndJUTFXeXdkbkRa?=
- =?utf-8?B?dDdmUk9JdlZWU2pxemt0YWdDZzh1S2VHdmIyeHNsVTZpRjN4eFlSWXp3aTN5?=
- =?utf-8?B?WWFTVlY5dUxvREZLckdwNnk2RVBIbWFhTWxnSUZsbklvcDAvN29TTjVMc1ZW?=
- =?utf-8?B?dUFXQ1RRK1dYS21sOExqSmtLVTVYdWIwSUtCbGhvVWZrVStEVnVWN21BQklj?=
- =?utf-8?B?TDBaVWNrNVd1TUp4cXFsZ282cHMxZExFS1N3NGFXa3pZY1hOZGhiWkxmbVR6?=
- =?utf-8?B?bXZkQTBRUXdDYkQwNnhZdmFvemZWM0xCMDY5c0NhaEw2NEh6SHdhMEl2QjUy?=
- =?utf-8?B?OTQ3RGtEejdDWWlhSXhtZk1sUWpkc3QzemF1Z3JaOGVSaDBFb2FWZkVRNXQ4?=
- =?utf-8?B?ellPY25IbFNZWkFNejJibll2U2hCdnlwVVZpZHZJdG1RS01TTHN5bHJDdHJT?=
- =?utf-8?B?enpHcG5hUEU5b0VoTWpwYkhVQ3drOEhmWFpjMzFrM1oySjd1SXNVMWpvaG1y?=
- =?utf-8?B?VGJkMUo0Y0V5K214KzY3THUyREw3WVNuRmc0THpRN3d5VndpUnRGUzdMcjE3?=
- =?utf-8?B?QVovd3BJT0RvOTBBMDU2aldBazFYcU5rSE1pcG9PczIzVWJ0TEplNTlpcW4y?=
- =?utf-8?B?RkNtMW15TjdqeUV2UXdKd3dOWWo4TjhValFicTM4a0V1bXFjYzFxTkpYaVYv?=
- =?utf-8?B?dytGcHRZSEg5TDBQWXdvWmRxN1grK3MvSmtIUmVlZzhBNTRHUzNsTFVNaW5n?=
- =?utf-8?B?L2x5dDk5MUxzbFJwbTFyUllwY3RnVUFkMHlmQkdvbStlcVc2MlNsdk5TZWZv?=
- =?utf-8?B?UDhqVmU1UFVSSERTeHVycER3cURVbFR6YUMvaE5JRmVIajVwdXdHckxzZEd4?=
- =?utf-8?B?MU5vbFl0TDdRQ3NrcE1RM3lxSDl6Ykg4MWs0MlQxa0N4WFF3dlZBTUFmWlJ4?=
- =?utf-8?B?RE9rSDAyVlNOSVZ3V243bTFMdWVhOFBKeEE4NHZIbE8yWE5tMUdxM1lZYnV3?=
- =?utf-8?B?Q1ZvblBnTStlVk9PYXBGMlhubGRjQzVGVE8rcVlPTGk5Y0JITm1qeGRDOTN1?=
- =?utf-8?B?NVVDd3BqK1dJaEdBMHlGeEZ2aUxUNVlxenBDK1BLSkM3MlJHTG5vRU9IakFW?=
- =?utf-8?B?QVc3NnZJU2VGOS8yeXN4TkJzUHlBOW1reXdHbHppL2hWOTlPNjRxWkRTUmc3?=
- =?utf-8?B?eTl2VGZlbS91b0drdldPQ3hJOUFlaVRaMDdacWJXTHI1ZFUxdjVEU0syaHAz?=
- =?utf-8?Q?kHGhrZD7NIZpvN2ikOFq68wpAA4uAQ4Nu3PZIOZhYLSj?=
+	=?utf-8?B?U2lwOTFIeXYzOEd3VW5iOEVxczJRV0FZbno2V1VBNjdpaEZrMEpZbDFmWGlQ?=
+ =?utf-8?B?ZkFxa0dNUE9aaW0wb1duRVUxRjM1MEhyQWY1bWttT0hEZWkyb1VNZk1PVmUw?=
+ =?utf-8?B?azl5dXExQXFJazkrTDJqMzgrblkwMVpybE9NOG1BY0RLajFmamhKYzJZNUMx?=
+ =?utf-8?B?NlR3SmZDdWl2MS9KZTY3T2o1TVZYb2MzeEozM2ZjZG1zTVpoWEMrRTBkQkZx?=
+ =?utf-8?B?OThIT1ZWK1B4YmJVamkrKzc5TVJ4LzlhckoyblhxWjNaOGtjdms0STRZZkJp?=
+ =?utf-8?B?WXJtT3BVTVFPSVcraEh5QlgyMUZycnVEN3o3NmZIeWdFaWI3NjZsdVluQTBq?=
+ =?utf-8?B?Y0NUckg3dlg5bXJKMjBhTGRveXNWcEdSL0NwT3hhUVJHMmVVNzliQkNiWGNI?=
+ =?utf-8?B?elpQU0hJRDVxU291UDNCUUV3NXZzZGF2WUd0aGJmQkN6ZGhtMGZHbi9Yc3RT?=
+ =?utf-8?B?ZWV6QlNhOEo5UE5GMFpsQm1QTU1MZ3daZHZmaWdxYUlCazFnUlAxR1VSUERu?=
+ =?utf-8?B?SE5BRm5OMlkrQ01WWXRKNzQyQWtJUWlBMzBmM1p2TkhqOVJwR0EvaU8vc1gz?=
+ =?utf-8?B?RTJQWGdkVmRBc05Cak5mWnIwL2FLMFpONVk0b1VWb1M3U3dyUll3SGNMZm9i?=
+ =?utf-8?B?VmJmYmhSYmhYckNNZlFMTnNiQlh3RWV1bVFOdGlqREtMNldoN2tpYnI1M28v?=
+ =?utf-8?B?NVJqWU42L3piODFtcmJRd2RSSms4MUhtdHN5aTNqbnZacnV5ZmYwWGh6bTdK?=
+ =?utf-8?B?UTFqbHMzN1l6MGI3aTNiN1ZQNkxJY01DYnZaVzdYVkYvQThHdVd3WXpxbWdh?=
+ =?utf-8?B?YkczU056OFlaUzhzTzdnSHRtUEZEYjlOd0ZRV1pSd0x6Q0tQay84TnJkZTFV?=
+ =?utf-8?B?bzd0ZTNTL0x0S0xZRzAvQTVIL2NNbHh5c2cremVhWDRZZXNFK3ozRFg3ZVdX?=
+ =?utf-8?B?Z0Q3RlhoTGN4QWJnaXlNRkJvOGNyNkhxY0R0QTB1aTU4Zlg4ZVR1dDFaNTcr?=
+ =?utf-8?B?SVhSdGQrblJrWW1IeVlFaHM2aFU4UkVvaG5wdnJtWHl5UE8rM1hkVWJZckFT?=
+ =?utf-8?B?ZmwrQ1IvOXhuWEo0OXBWY0FKeTdwaWF5WkdKZDVLQ2xscGpvdGRiOWVOSjhh?=
+ =?utf-8?B?YW42SWo4Qk4valB0aGpkT2hrZXdIWkM1OU0xTy9lMnNJaXFmYUZUZlJyeWxU?=
+ =?utf-8?B?TmptaXVtckxYaXJONnhOWk5oVVZ2YkswWHJFV01lU3dEMVVWNXV1UW5CWWRZ?=
+ =?utf-8?B?VWlGbEFYVkRVN0dDWUJWem13ZHMzUE1TSEVpeTl1RUVodGRCZGtKamU3Y0pY?=
+ =?utf-8?B?RGVFdHZSUXkxd1RNaDRKRFliR1R1c0NNSGxuUEdKS25vem1kcGZ1QjRUb2k2?=
+ =?utf-8?B?UFdxNGdJUzZNV3M5RFRzRlVzeVVpLzNteGFHMkZ5c3hidmlkTHVEenk2SEpn?=
+ =?utf-8?B?Zk9ydW1qZERqZzZUbjY1UkRzdU1HTWtHWjI1V3RmUzJlR1pMdnd4a0Y4Mzh3?=
+ =?utf-8?B?TDRFM203bnE3MkthNEM1Y0FvM2JaV2pxbERpcEdxZEhrRUNVd0QwNHlZbkpi?=
+ =?utf-8?B?SzBlQ3ZqTloyWmF4Wk1rTXdwSnhqMDFZYmZsdW85M3VUTmpMaGUwelZiZXA5?=
+ =?utf-8?B?NWRmbC9wdzBZVGZWV2JPaElaY2RJWGFHUHplWDhDUjcrL0l6b1dMUisvNGhE?=
+ =?utf-8?B?STJzcjJoMUxSSWl0cm5SZ1JGNitTMVZOQXJUd2R6U3ZwRE10eW4rNG9IeUZN?=
+ =?utf-8?B?Z1hyZS9TQnI0b1JOcmlhR3NqU0Q1RDNVMlgxTXZQT1pOY2htMk1ta0ZMSm1i?=
+ =?utf-8?B?bm1Ja2N1Tyt0anlhNjc0M21nQ2pwVnhpUkVoU3ZRZUgrWHVBZFovcUV3UTYr?=
+ =?utf-8?B?djNKODJ1dmdJV1lLN2YrUnZZdHE1VFQrSGdWZHNRWXY5UUkyTERxNnlrUEtk?=
+ =?utf-8?B?TFcwWFZNNm85Znh6MllkYTRmbXAzUTZBWWlJVDhqV0p0VzBaYWFNREIzTTkx?=
+ =?utf-8?B?NzIrdkR1RitoRUV2WHAyRFkvOVBLSE9iaVBDMWRkSDdtekFPSlJ1VEV0WC9S?=
+ =?utf-8?B?ZWdNOW9ibzBITlVJWjgvcnhIRnJYVkVSRnpsdUV0cjBEc1FWQUxQbzlsRXFB?=
+ =?utf-8?B?RkpzVzh3QmorOUk5eXppSURRSW0yMU1jRWkvWXhsTDZsZHdzUXBrY05ZWkVo?=
+ =?utf-8?Q?rmbM0dPTKIb7lb5wz/KZPO1iqvCcmp/10w6ZnQ9KFIGN?=
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 208228ca-5df9-46c2-0c72-08dd8d6e7a24
+X-MS-Exchange-CrossTenant-Network-Message-Id: a3e30ca5-e828-41a1-d424-08dd8d6e7df5
 X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2025 13:52:59.2965
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2025 13:53:05.6842
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6IkTkpEIos2pjCzFMRcMkGvZU6j+QxK0Ac39Ac94t1s8O40zq7y3Lx9J45YZ7L2KL/d5decr50GkSMTH4QzZRw==
+X-MS-Exchange-CrossTenant-UserPrincipalName: f+VSug2ppJadQJCK6x6QNWq1njebF1M4oP5RfHM3/sw4X4KgDL5BS9s+cKmuSeO/URDaTkoREW7y7Im0lVgnyw==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6761
 
-Add the register!() macro, which defines a given register's layout and
-provide bit-field accessors with a way to convert them to a given type.
-This macro will allow us to make clear definitions of the registers and
-manipulate their fields safely.
+We will extend the firmware methods, so move it to its own module
+instead to keep gpu.rs focused.
 
-The long-term goal is to eventually move it to the kernel crate so it
-can be used my other drivers as well, but it was agreed to first land it
-into nova-core and make it mature there.
-
-To illustrate its usage, use it to define the layout for the Boot0
-(renamed to NV_PMC_BOOT_0 to match OpenRM's naming scheme) and take
-advantage of its accessors.
-
-Suggested-by: Danilo Krummrich <dakr@kernel.org>
 Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
 ---
- Documentation/gpu/nova/core/todo.rst |   6 +
- drivers/gpu/nova-core/gpu.rs         |  10 +-
- drivers/gpu/nova-core/regs.rs        |  61 ++----
- drivers/gpu/nova-core/regs/macros.rs | 380 +++++++++++++++++++++++++++++++++++
- 4 files changed, 403 insertions(+), 54 deletions(-)
+ drivers/gpu/nova-core/firmware.rs | 46 +++++++++++++++++++++++++++++++++++++--
+ drivers/gpu/nova-core/gpu.rs      | 35 +++--------------------------
+ 2 files changed, 47 insertions(+), 34 deletions(-)
 
-diff --git a/Documentation/gpu/nova/core/todo.rst b/Documentation/gpu/nova/core/todo.rst
-index 234d753d3eacc709b928b1ccbfc9750ef36ec4ed..8a459fc088121f770bfcda5dfb4ef51c712793ce 100644
---- a/Documentation/gpu/nova/core/todo.rst
-+++ b/Documentation/gpu/nova/core/todo.rst
-@@ -102,7 +102,13 @@ Usage:
- 	let boot0 = Boot0::read(&bar);
- 	pr_info!("Revision: {}\n", boot0.revision());
- 
-+Note: a work-in-progress implementation currently resides in
-+`drivers/gpu/nova-core/regs/macros.rs` and is used in nova-core. It would be
-+nice to improve it (possibly using proc macros) and move it to the `kernel`
-+crate so it can be used by other components as well.
-+
- | Complexity: Advanced
-+| Contact: Alexandre Courbot
- 
- Delay / Sleep abstractions
- --------------------------
-diff --git a/drivers/gpu/nova-core/gpu.rs b/drivers/gpu/nova-core/gpu.rs
-index a64a306e0ec87f96e7aab47cfe00a5c280c95a64..43139b527fac35f5f33facbc0be50b9715044245 100644
---- a/drivers/gpu/nova-core/gpu.rs
-+++ b/drivers/gpu/nova-core/gpu.rs
-@@ -112,10 +112,10 @@ pub(crate) struct Revision {
- }
- 
- impl Revision {
--    fn from_boot0(boot0: regs::Boot0) -> Self {
-+    fn from_boot0(boot0: regs::NV_PMC_BOOT_0) -> Self {
-         Self {
--            major: boot0.major_rev(),
--            minor: boot0.minor_rev(),
-+            major: boot0.major_revision(),
-+            minor: boot0.minor_revision(),
-         }
-     }
- }
-@@ -135,10 +135,10 @@ pub(crate) struct Spec {
- 
- impl Spec {
-     fn new(bar: &Bar0) -> Result<Spec> {
--        let boot0 = regs::Boot0::read(bar);
-+        let boot0 = regs::NV_PMC_BOOT_0::read(bar);
- 
-         Ok(Self {
--            chipset: boot0.chipset().try_into()?,
-+            chipset: boot0.chipset()?,
-             revision: Revision::from_boot0(boot0),
-         })
-     }
-diff --git a/drivers/gpu/nova-core/regs.rs b/drivers/gpu/nova-core/regs.rs
-index b1a25b86ef17a6710e6236d5e7f1f26cd4407ce3..498fefb52f33bf01518f19d32287962f1fdc3224 100644
---- a/drivers/gpu/nova-core/regs.rs
-+++ b/drivers/gpu/nova-core/regs.rs
-@@ -1,55 +1,18 @@
+diff --git a/drivers/gpu/nova-core/firmware.rs b/drivers/gpu/nova-core/firmware.rs
+index 6e6361c59ca1ae9a52185e66e850ba1db93eb8ce..cb79d039948858e657c9a23a62ed27ff780ac169 100644
+--- a/drivers/gpu/nova-core/firmware.rs
++++ b/drivers/gpu/nova-core/firmware.rs
+@@ -1,12 +1,54 @@
  // SPDX-License-Identifier: GPL-2.0
  
--use crate::driver::Bar0;
-+// Required to retain the original register names used by OpenRM, which are all capital snake case
-+// but are mapped to types.
-+#![allow(non_camel_case_types)]
- 
--// TODO
--//
--// Create register definitions via generic macros. See task "Generic register
--// abstraction" in Documentation/gpu/nova/core/todo.rst.
-+#[macro_use]
-+mod macros;
- 
--const BOOT0_OFFSET: usize = 0x00000000;
+-use crate::gpu;
++//! Contains structures and functions dedicated to the parsing, building and patching of firmwares
++//! to be loaded into a given execution unit.
++
++use kernel::device;
+ use kernel::firmware;
++use kernel::prelude::*;
++use kernel::str::CString;
++
++use crate::gpu;
 +use crate::gpu::Chipset;
++
++pub(crate) const FIRMWARE_VERSION: &str = "535.113.01";
++
++/// Structure encapsulating the firmware blobs required for the GPU to operate.
++#[expect(dead_code)]
++pub(crate) struct Firmware {
++    pub booter_load: firmware::Firmware,
++    pub booter_unload: firmware::Firmware,
++    pub bootloader: firmware::Firmware,
++    pub gsp: firmware::Firmware,
++}
++
++impl Firmware {
++    pub(crate) fn new(
++        dev: &device::Device<device::Bound>,
++        chipset: Chipset,
++        ver: &str,
++    ) -> Result<Firmware> {
++        let mut chip_name = CString::try_from_fmt(fmt!("{}", chipset))?;
++        chip_name.make_ascii_lowercase();
++
++        let request = |name_| {
++            CString::try_from_fmt(fmt!("nvidia/{}/gsp/{}-{}.bin", &*chip_name, name_, ver))
++                .and_then(|path| firmware::Firmware::request(&path, dev))
++        };
++
++        Ok(Firmware {
++            booter_load: request("booter_load")?,
++            booter_unload: request("booter_unload")?,
++            bootloader: request("bootloader")?,
++            gsp: request("gsp")?,
++        })
++    }
++}
  
--// 3:0 - chipset minor revision
--const BOOT0_MINOR_REV_SHIFT: u8 = 0;
--const BOOT0_MINOR_REV_MASK: u32 = 0x0000000f;
-+/* PMC */
+ pub(crate) struct ModInfoBuilder<const N: usize>(firmware::ModInfoBuilder<N>);
  
--// 7:4 - chipset major revision
--const BOOT0_MAJOR_REV_SHIFT: u8 = 4;
--const BOOT0_MAJOR_REV_MASK: u32 = 0x000000f0;
+ impl<const N: usize> ModInfoBuilder<N> {
+-    const VERSION: &'static str = "535.113.01";
++    const VERSION: &'static str = FIRMWARE_VERSION;
+ 
+     const fn make_entry_file(self, chipset: &str, fw: &str) -> Self {
+         ModInfoBuilder(
+diff --git a/drivers/gpu/nova-core/gpu.rs b/drivers/gpu/nova-core/gpu.rs
+index 29db6726a1f5196bd2d1778117313c987ccf343b..9c6a9270ffa374bd386af352f6ad9b857f9c5f8d 100644
+--- a/drivers/gpu/nova-core/gpu.rs
++++ b/drivers/gpu/nova-core/gpu.rs
+@@ -1,10 +1,9 @@
+ // SPDX-License-Identifier: GPL-2.0
+ 
+-use kernel::{
+-    device, devres::Devres, error::code::*, firmware, fmt, pci, prelude::*, str::CString,
+-};
++use kernel::{device, devres::Devres, error::code::*, pci, prelude::*};
+ 
+ use crate::driver::Bar0;
++use crate::firmware::Firmware;
+ use crate::regs;
+ use crate::util;
+ use core::fmt;
+@@ -157,34 +156,6 @@ fn new(bar: &Bar0) -> Result<Spec> {
+     }
+ }
+ 
+-/// Structure encapsulating the firmware blobs required for the GPU to operate.
+-#[expect(dead_code)]
+-pub(crate) struct Firmware {
+-    booter_load: firmware::Firmware,
+-    booter_unload: firmware::Firmware,
+-    bootloader: firmware::Firmware,
+-    gsp: firmware::Firmware,
+-}
 -
--// 23:20 - chipset implementation Identifier (depends on architecture)
--const BOOT0_IMPL_SHIFT: u8 = 20;
--const BOOT0_IMPL_MASK: u32 = 0x00f00000;
+-impl Firmware {
+-    fn new(dev: &device::Device, spec: &Spec, ver: &str) -> Result<Firmware> {
+-        let mut chip_name = CString::try_from_fmt(fmt!("{}", spec.chipset))?;
+-        chip_name.make_ascii_lowercase();
 -
--// 28:24 - chipset architecture identifier
--const BOOT0_ARCH_MASK: u32 = 0x1f000000;
+-        let request = |name_| {
+-            CString::try_from_fmt(fmt!("nvidia/{}/gsp/{}-{}.bin", &*chip_name, name_, ver))
+-                .and_then(|path| firmware::Firmware::request(&path, dev))
+-        };
 -
--// 28:20 - chipset identifier (virtual register field combining BOOT0_IMPL and
--//         BOOT0_ARCH)
--const BOOT0_CHIPSET_SHIFT: u8 = BOOT0_IMPL_SHIFT;
--const BOOT0_CHIPSET_MASK: u32 = BOOT0_IMPL_MASK | BOOT0_ARCH_MASK;
--
--#[derive(Copy, Clone)]
--pub(crate) struct Boot0(u32);
--
--impl Boot0 {
--    #[inline]
--    pub(crate) fn read(bar: &Bar0) -> Self {
--        Self(bar.read32(BOOT0_OFFSET))
--    }
--
--    #[inline]
--    pub(crate) fn chipset(&self) -> u32 {
--        (self.0 & BOOT0_CHIPSET_MASK) >> BOOT0_CHIPSET_SHIFT
--    }
--
--    #[inline]
--    pub(crate) fn minor_rev(&self) -> u8 {
--        ((self.0 & BOOT0_MINOR_REV_MASK) >> BOOT0_MINOR_REV_SHIFT) as u8
--    }
--
--    #[inline]
--    pub(crate) fn major_rev(&self) -> u8 {
--        ((self.0 & BOOT0_MAJOR_REV_MASK) >> BOOT0_MAJOR_REV_SHIFT) as u8
+-        Ok(Firmware {
+-            booter_load: request("booter_load")?,
+-            booter_unload: request("booter_unload")?,
+-            bootloader: request("bootloader")?,
+-            gsp: request("gsp")?,
+-        })
 -    }
 -}
-+register!(NV_PMC_BOOT_0 @ 0x00000000, "Basic revision information about the GPU" {
-+    3:0     minor_revision as u8, "Minor revision of the chip";
-+    7:4     major_revision as u8, "Major revision of the chip";
-+    28:20   chipset as u32 ?=> Chipset, "Chipset model";
-+});
-diff --git a/drivers/gpu/nova-core/regs/macros.rs b/drivers/gpu/nova-core/regs/macros.rs
-new file mode 100644
-index 0000000000000000000000000000000000000000..7ecc70efb3cd723b673cd72915e72b8a4a009f06
---- /dev/null
-+++ b/drivers/gpu/nova-core/regs/macros.rs
-@@ -0,0 +1,380 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+//! Macro to define register layout and accessors.
-+//!
-+//! A single register typically includes several fields, which are accessed through a combination
-+//! of bit-shift and mask operations that introduce a class of potential mistakes, notably because
-+//! not all possible field values are necessarily valid.
-+//!
-+//! The macro in this module allow to define, using an intruitive and readable syntax, a dedicated
-+//! type for each register with its own field accessors that can return an error is a field's value
-+//! is invalid.
-+
-+/// Defines a dedicated type for a register with an absolute offset, alongside with getter and
-+/// setter methods for its fields and methods to read and write it from an `Io` region.
-+///
-+/// Example:
-+///
-+/// ```no_run
-+/// register!(BOOT_0 @ 0x00000100, "Basic revision information about the GPU" {
-+///    3:0     minor_revision as u8, "Minor revision of the chip";
-+///    7:4     major_revision as u8, "Major revision of the chip";
-+///    28:20   chipset as u32 ?=> Chipset, "Chipset model";
-+/// });
-+/// ```
-+///
-+/// This defines a `BOOT_0` type which can be read or written from offset `0x100` of an `Io`
-+/// region. It is composed of 3 fields, for instance `minor_revision` is made of the 4 less
-+/// significant bits of the register. Each field can be accessed and modified using accessor
-+/// methods:
-+///
-+/// ```no_run
-+/// // Read from the register's defined offset (0x100).
-+/// let boot0 = BOOT_0::read(&bar);
-+/// pr_info!("chip revision: {}.{}", boot0.major_revision(), boot0.minor_revision());
-+///
-+/// // `Chipset::try_from` will be called with the value of the field and returns an error if the
-+/// // value is invalid.
-+/// let chipset = boot0.chipset()?;
-+///
-+/// // Update some fields and write the value back.
-+/// boot0.set_major_revision(3).set_minor_revision(10).write(&bar);
-+///
-+/// // Or just read and update the register in a single step:
-+/// BOOT_0::alter(&bar, |r| r.set_major_revision(3).set_minor_revision(10));
-+/// ```
-+///
-+/// Fields can be defined as follows:
-+///
-+/// - `as <type>` simply returns the field value casted as the requested integer type, typically
-+///   `u32`, `u16`, `u8` or `bool`. Note that `bool` fields must have a range of 1 bit.
-+/// - `as <type> => <into_type>` calls `<into_type>`'s `From::<<type>>` implementation and returns
-+///   the result.
-+/// - `as <type> ?=> <try_into_type>` calls `<try_into_type>`'s `TryFrom::<<type>>` implementation
-+///   and returns the result. This is useful on fields for which not all values are value.
-+///
-+/// The documentation strings are optional. If present, they will be added to the type's
-+/// definition, or the field getter and setter methods they are attached to.
-+///
-+/// Putting a `+` before the address of the register makes it relative to a base: the `read` and
-+/// `write` methods take a `base` argument that is added to the specified address before access,
-+/// and `try_read` and `try_write` methods are also created, allowing access with offsets unknown
-+/// at compile-time:
-+///
-+/// ```no_run
-+/// register!(CPU_CTL @ +0x0000010, "CPU core control" {
-+///    0:0     start as bool, "Start the CPU core";
-+/// });
-+///
-+/// // Flip the `start` switch for the CPU core which base address is at `CPU_BASE`.
-+/// let cpuctl = CPU_CTL::read(&bar, CPU_BASE);
-+/// pr_info!("CPU CTL: {:#x}", cpuctl);
-+/// cpuctl.set_start(true).write(&bar, CPU_BASE);
-+/// ```
-+macro_rules! register {
-+    // Creates a register at a fixed offset of the MMIO space.
-+    (
-+        $name:ident @ $offset:literal $(, $comment:literal)? {
-+            $($fields:tt)*
-+        }
-+    ) => {
-+        register!(@common $name $(, $comment)?);
-+        register!(@field_accessors $name { $($fields)* });
-+        register!(@io $name @ $offset);
-+    };
-+
-+    // Creates a register at a relative offset from a base address.
-+    (
-+        $name:ident @ + $offset:literal $(, $comment:literal)? {
-+            $($fields:tt)*
-+        }
-+    ) => {
-+        register!(@common $name $(, $comment)?);
-+        register!(@field_accessors $name { $($fields)* });
-+        register!(@io$name @ + $offset);
-+    };
-+
-+    // Defines the wrapper `$name` type, as well as its relevant implementations (`Debug`, `BitOr`,
-+    // and conversion to regular `u32`).
-+    (@common $name:ident $(, $comment:literal)?) => {
-+        $(
-+        #[doc=$comment]
-+        )?
-+        #[repr(transparent)]
-+        #[derive(Clone, Copy, Default)]
-+        pub(crate) struct $name(u32);
-+
-+        // TODO: display the raw hex value, then the value of all the fields. This requires
-+        // matching the fields, which will complexify the syntax considerably...
-+        impl ::core::fmt::Debug for $name {
-+            fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-+                f.debug_tuple(stringify!($name))
-+                    .field(&format_args!("0x{0:x}", &self.0))
-+                    .finish()
-+            }
-+        }
-+
-+        impl core::ops::BitOr for $name {
-+            type Output = Self;
-+
-+            fn bitor(self, rhs: Self) -> Self::Output {
-+                Self(self.0 | rhs.0)
-+            }
-+        }
-+
-+        impl ::core::convert::From<$name> for u32 {
-+            fn from(reg: $name) -> u32 {
-+                reg.0
-+            }
-+        }
-+    };
-+
-+    // Defines all the field getter/methods methods for `$name`.
-+    (
-+        @field_accessors $name:ident {
-+        $($hi:tt:$lo:tt $field:ident as $type:tt
-+            $(?=> $try_into_type:ty)?
-+            $(=> $into_type:ty)?
-+            $(, $comment:literal)?
-+        ;
-+        )*
-+        }
-+    ) => {
-+        $(
-+            register!(@check_field_bounds $hi:$lo $field as $type);
-+        )*
-+
-+        #[allow(dead_code)]
-+        impl $name {
-+            $(
-+            register!(@field_accessor $name $hi:$lo $field as $type
-+                $(?=> $try_into_type)?
-+                $(=> $into_type)?
-+                $(, $comment)?
-+                ;
-+            );
-+            )*
-+        }
-+    };
-+
-+    // Boolean fields must have `$hi == $lo`.
-+    (@check_field_bounds $hi:tt:$lo:tt $field:ident as bool) => {
-+        #[allow(clippy::eq_op)]
-+        const _: () = {
-+            kernel::build_assert!(
-+                $hi == $lo,
-+                concat!("boolean field `", stringify!($field), "` covers more than one bit")
-+            );
-+        };
-+    };
-+
-+    // Non-boolean fields must have `$hi >= $lo`.
-+    (@check_field_bounds $hi:tt:$lo:tt $field:ident as $type:tt) => {
-+        #[allow(clippy::eq_op)]
-+        const _: () = {
-+            kernel::build_assert!(
-+                $hi >= $lo,
-+                concat!("field `", stringify!($field), "`'s MSB is smaller than its LSB")
-+            );
-+        };
-+    };
-+
-+    // Catches fields defined as `bool` and convert them into a boolean value.
-+    (
-+        @field_accessor $name:ident $hi:tt:$lo:tt $field:ident as bool => $into_type:ty
-+            $(, $comment:literal)?;
-+    ) => {
-+        register!(
-+            @leaf_accessor $name $hi:$lo $field as bool
-+            { |f| <$into_type>::from(if f != 0 { true } else { false }) }
-+            $into_type => $into_type $(, $comment)?;
-+        );
-+    };
-+
-+    // Shortcut for fields defined as `bool` without the `=>` syntax.
-+    (
-+        @field_accessor $name:ident $hi:tt:$lo:tt $field:ident as bool $(, $comment:literal)?;
-+    ) => {
-+        register!(@field_accessor $name $hi:$lo $field as bool => bool $(, $comment)?;);
-+    };
-+
-+    // Catches the `?=>` syntax for non-boolean fields.
-+    (
-+        @field_accessor $name:ident $hi:tt:$lo:tt $field:ident as $type:tt ?=> $try_into_type:ty
-+            $(, $comment:literal)?;
-+    ) => {
-+        register!(@leaf_accessor $name $hi:$lo $field as $type
-+            { |f| <$try_into_type>::try_from(f as $type) } $try_into_type =>
-+            ::core::result::Result<
-+                $try_into_type,
-+                <$try_into_type as ::core::convert::TryFrom<$type>>::Error
-+            >
-+            $(, $comment)?;);
-+    };
-+
-+    // Catches the `=>` syntax for non-boolean fields.
-+    (
-+        @field_accessor $name:ident $hi:tt:$lo:tt $field:ident as $type:tt => $into_type:ty
-+            $(, $comment:literal)?;
-+    ) => {
-+        register!(@leaf_accessor $name $hi:$lo $field as $type
-+            { |f| <$into_type>::from(f as $type) } $into_type => $into_type $(, $comment)?;);
-+    };
-+
-+    // Shortcut for fields defined as non-`bool` without the `=>` or `?=>` syntax.
-+    (
-+        @field_accessor $name:ident $hi:tt:$lo:tt $field:ident as $type:tt
-+            $(, $comment:literal)?;
-+    ) => {
-+        register!(@field_accessor $name $hi:$lo $field as $type => $type $(, $comment)?;);
-+    };
-+
-+    // Generates the accessor methods for a single field.
-+    (
-+        @leaf_accessor $name:ident $hi:tt:$lo:tt $field:ident as $type:ty
-+            { $process:expr } $to_type:ty => $res_type:ty $(, $comment:literal)?;
-+    ) => {
-+        kernel::macros::paste!(
-+        const [<$field:upper>]: ::core::ops::RangeInclusive<u8> = $lo..=$hi;
-+        const [<$field:upper _MASK>]: u32 = ((((1 << $hi) - 1) << 1) + 1) - ((1 << $lo) - 1);
-+        const [<$field:upper _SHIFT>]: u32 = Self::[<$field:upper _MASK>].trailing_zeros();
-+        );
-+
-+        $(
-+        #[doc="Returns the value of this field:"]
-+        #[doc=$comment]
-+        )?
-+        #[inline]
-+        pub(crate) fn $field(self) -> $res_type {
-+            kernel::macros::paste!(
-+            const MASK: u32 = $name::[<$field:upper _MASK>];
-+            const SHIFT: u32 = $name::[<$field:upper _SHIFT>];
-+            );
-+            let field = ((self.0 & MASK) >> SHIFT);
-+
-+            $process(field)
-+        }
-+
-+        kernel::macros::paste!(
-+        $(
-+        #[doc="Sets the value of this field:"]
-+        #[doc=$comment]
-+        )?
-+        #[inline]
-+        pub(crate) fn [<set_ $field>](mut self, value: $to_type) -> Self {
-+            const MASK: u32 = $name::[<$field:upper _MASK>];
-+            const SHIFT: u32 = $name::[<$field:upper _SHIFT>];
-+            let value = ((value as u32) << SHIFT) & MASK;
-+            self.0 = (self.0 & !MASK) | value;
-+
-+            self
-+        }
-+        );
-+    };
-+
-+    // Creates the IO accessors for a fixed offset register.
-+    (@io $name:ident @ $offset:literal) => {
-+        #[allow(dead_code)]
-+        impl $name {
-+            #[inline]
-+            pub(crate) fn read<const SIZE: usize, T>(io: &T) -> Self where
-+                T: ::core::ops::Deref<Target = ::kernel::io::Io<SIZE>>,
-+            {
-+                Self(io.read32($offset))
-+            }
-+
-+            #[inline]
-+            pub(crate) fn write<const SIZE: usize, T>(self, io: &T) where
-+                T: ::core::ops::Deref<Target = ::kernel::io::Io<SIZE>>,
-+            {
-+                io.write32(self.0, $offset)
-+            }
-+
-+            #[inline]
-+            pub(crate) fn alter<const SIZE: usize, T, F>(
-+                io: &T,
-+                f: F,
-+            ) where
-+                T: ::core::ops::Deref<Target = ::kernel::io::Io<SIZE>>,
-+                F: ::core::ops::FnOnce(Self) -> Self,
-+            {
-+                let reg = f(Self::read(io));
-+                reg.write(io);
-+            }
-+        }
-+    };
-+
-+    // Create the IO accessors for a relative offset register.
-+    (@io $name:ident @ + $offset:literal) => {
-+        #[allow(dead_code)]
-+        impl $name {
-+            #[inline]
-+            pub(crate) fn read<const SIZE: usize, T>(
-+                io: &T,
-+                base: usize,
-+            ) -> Self where
-+                T: ::core::ops::Deref<Target = ::kernel::io::Io<SIZE>>,
-+            {
-+                Self(io.read32(base + $offset))
-+            }
-+
-+            #[inline]
-+            pub(crate) fn write<const SIZE: usize, T>(
-+                self,
-+                io: &T,
-+                base: usize,
-+            ) where
-+                T: ::core::ops::Deref<Target = ::kernel::io::Io<SIZE>>,
-+            {
-+                io.write32(self.0, base + $offset)
-+            }
-+
-+            #[inline]
-+            pub(crate) fn alter<const SIZE: usize, T, F>(
-+                io: &T,
-+                base: usize,
-+                f: F,
-+            ) where
-+                T: ::core::ops::Deref<Target = ::kernel::io::Io<SIZE>>,
-+                F: ::core::ops::FnOnce(Self) -> Self,
-+            {
-+                let reg = f(Self::read(io, base));
-+                reg.write(io, base);
-+            }
-+
-+            #[inline]
-+            pub(crate) fn try_read<const SIZE: usize, T>(
-+                io: &T,
-+                base: usize,
-+            ) -> ::kernel::error::Result<Self> where
-+                T: ::core::ops::Deref<Target = ::kernel::io::Io<SIZE>>,
-+            {
-+                io.try_read32(base + $offset).map(Self)
-+            }
-+
-+            #[inline]
-+            pub(crate) fn try_write<const SIZE: usize, T>(
-+                self,
-+                io: &T,
-+                base: usize,
-+            ) -> ::kernel::error::Result<()> where
-+                T: ::core::ops::Deref<Target = ::kernel::io::Io<SIZE>>,
-+            {
-+                io.try_write32(self.0, base + $offset)
-+            }
-+
-+            #[inline]
-+            pub(crate) fn try_alter<const SIZE: usize, T, F>(
-+                io: &T,
-+                base: usize,
-+                f: F,
-+            ) -> ::kernel::error::Result<()> where
-+                T: ::core::ops::Deref<Target = ::kernel::io::Io<SIZE>>,
-+                F: ::core::ops::FnOnce(Self) -> Self,
-+            {
-+                let reg = f(Self::try_read(io, base)?);
-+                reg.try_write(io, base)
-+            }
-+        }
-+    };
-+}
+-
+ /// Structure holding the resources required to operate the GPU.
+ #[pin_data]
+ pub(crate) struct Gpu {
+@@ -201,7 +172,7 @@ pub(crate) fn new(
+     ) -> Result<impl PinInit<Self>> {
+         let bar = devres_bar.access(pdev.as_ref())?;
+         let spec = Spec::new(bar)?;
+-        let fw = Firmware::new(pdev.as_ref(), &spec, "535.113.01")?;
++        let fw = Firmware::new(pdev.as_ref(), spec.chipset, "535.113.01")?;
+ 
+         dev_info!(
+             pdev.as_ref(),
 
 -- 
 2.49.0
