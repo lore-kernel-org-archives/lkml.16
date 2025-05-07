@@ -1,156 +1,135 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84F0D2147F8
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 17:23:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38D6628C870;
+	Wed,  7 May 2025 17:23:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746638620; cv=none; b=iSx0k5hoZApq0cats+M7I4GFkJen0DpeLqW1Ts27EqVXCi2ZWCWg+nmwtUXMN4vzjH2B9dsRvceBhUEH2PXBkfrVTqCY0CIYeWSA2CS/uepv1u08BV3cMK3kBzbjKfu0EwB1BvQNZo7sZPKHWSzzUgbB+B+7cGBLlXVVDx46Zx0=
+	t=1746638623; cv=none; b=VStOQYZnRcUHu4rMYz9MQ1I88OAxjVQzuZfxSW4sfZaaFcycKLFFX3WWGj6eWOHKg6HHsl9LTbY1023VQFbNPcrXLQ/Ur3kDWUr5q6EvFzyqu2p1w3daJqrMBGwCnFnZESy8eQeOLRVglW4Uzs37Qq7GjtnHVBgwAp6IUJptDNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746638620; c=relaxed/simple;
-	bh=ewlV+sRszF9muSFOX7hfJtjSreVRo33zhmUq1+5wQOI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SF2Cyogw4azAiWl8mgOYmT28qgzeJTHCmE5eQGGZeU0kTx/WVH2cP31s1WxEVglyObtLJmHWbqXi4Jzg03TYhbzLmF1Z+rZ5Vv2QZfl/gchEq3nvAo+2Z+N4BtwM9js1C40t4c9SXjaHcedFpGDxSabyEj2EwRzHAHfl7y2s+no=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PKGsGhv1; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746638623; c=relaxed/simple;
+	bh=CZIM53V/CACdXHwWvwrn5G/fpdtqWdsu0oHSclRY/Pw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X76GDIMhkt3hb1oBegW29FDN+TQteSZt65cP4ezk0SvOEz0pD5kWI8dByKmEt/k/nOCEwdoGT20EsV/RSFCXxFfTwPe7iiItuOeEFwQuiI+zk3SAiJpOiLSox85WTu7BWc9F1PBbuaX78wkNJ7ZfrWge0muSodIne7PDQXIABHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KEc0Qnke; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PKGsGhv1"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5fbee929e83so72453a12.3
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 10:23:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KEc0Qnke"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-22e70a9c6bdso2333515ad.3;
+        Wed, 07 May 2025 10:23:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746638617; x=1747243417; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZY+h6X2XedSZi20l91/QA51b9ryXVScf2CPooruo8DE=;
-        b=PKGsGhv1AClwXcr7KW0FtJA7JSW15uu20tCrRbcTIF7g1+GScXhQ58noRQ6kL0Ssxb
-         OlKg/uAhOSzI5X2VDJM9JS7acPs/w+cE/YwZ3LzeI06riSGAph+vhkiV6N6+Y5NEyQ4V
-         8AMh5SW2CI10KyAJV69wuNaCv6FhpbwfWCGKtZaVwrPfAq/u+3CNMWxvvkTXbSVpPaUl
-         CPYASNGHf22UMXkwiXFVjVAnkrm0ROENEjb5CVIsfxpY9fooi6n9tFthzC3tjQPN7gvB
-         6p17FPpAP2/E7ZsXW3+W+CRCnCwM96kZtESShYrlHOBfmVc3E7guFfi0Qt4NUD4vhVBF
-         62dQ==
+        d=gmail.com; s=20230601; t=1746638621; x=1747243421; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=M5Ji+uuxnEpYG8OVr9njO8BnRx81MlfNR+SP9L9ula8=;
+        b=KEc0QnkeYH53LEi206iC4Y30QuKnHTWWb5O9kV0S+KKxtgHudHGaFwKWJxbvpx7gyl
+         e1CZgLdUXXucc6S624R9rK5GT4MUCet2fIB9ofL6apE2pbzFcb1Ow1QftwfOElnXrug2
+         TLlp+r0P4P8bBe5aLRrDT0fVXBu1YHJDegjFR/R8EpbmT4nEWJph590zXq4qyGuHhWDg
+         3za8rR1lniQOTzKQ/zYaDJuEJNYnl67zhTTkpLX+WvcBLtF6rDv9oTCfVtsLifuIjMzr
+         8DB6YlXLvTidkfVM2MoToMfSZK4+0o80ZRBZSAW974VDqujlxp5BG1OtjlDMt5Jj+ZGP
+         L8jA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746638617; x=1747243417;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZY+h6X2XedSZi20l91/QA51b9ryXVScf2CPooruo8DE=;
-        b=cTZZzVNmntzYrRJy0olmM3zkIfyq879rSU0+1xYMzyJWG1/nb7gEkEqecsZn+9m4Es
-         SvBmZFQGhxt4RzOraeMbwrQtRdKuWDeSnY7k+qsKQv5Y7s8zOE5KxM0ZYAw6uydDPKOY
-         fmvzH+P3wiGJ3tA4z6YfyHZvy9rSc5Cou/SxSKswdzIzoYufJyNaBmSr9LDqEU9G+3Fp
-         yFPxo11x8MLVpwzQnhhUwLy/gG+slJtajtF0jc4qgDmUXGP53iqfgLoIrxsm+W58u/jY
-         8AlpX7N6WO4vgKlf9x/l8gYUEHY5WhW/iqDqiYfAa8LYc+Ia9L2HmpBWnrEcyVgAsgu1
-         MQCg==
-X-Forwarded-Encrypted: i=1; AJvYcCU25NcLMQpmCal+kXDanlpDKRNaJKuCMZ4pF87I1mN2Ef7Mi5QjcDe/V/cfdzu5x6Zv/CsNFmpbxjIZVII=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWYpHP7AduiUnn0mg/gFfNzdnkmmSkWoabsvjGRWv00kNEYeYm
-	p2gwEbt7IMsbrY3uQpc7L3ToEvURefjjSIkgICmT+rgGaleN1AQ9u5hY12IFbb4gfsV2ILO3nso
-	6w7T4DMYQPBO2d0dY/pQBMCumryFmzWFImW9m
-X-Gm-Gg: ASbGncvbuH9tOlVPTGleYuDlKR64pgbYsV7t832Z4hKkkCvFeXxwYQ/sbb+/YHs+er8
-	DKdtC7+WCGh7Tm9k0zAAoYk94iaKaIte5MSARTwjIrd2p/XUOilDRK+WG5HAaF+Pj9AbQvSEt1H
-	hmyvIpkU2T+mO8ZVMuHUZav+zjCRwG+P2T7rK/ANNpA0djb28WvQ==
-X-Google-Smtp-Source: AGHT+IF0pJTKi36N0DAA0O9JgGyEtGDnfSk8P/Zj5vvwMQ+L6BFmKylLNPDtOHBsd9fX8CQa3qUfPG5Tl2Sv0KGaShg=
-X-Received: by 2002:a17:907:d046:b0:ace:c180:e3b with SMTP id
- a640c23a62f3a-ad1fe6f6113mr2941566b.31.1746638616671; Wed, 07 May 2025
- 10:23:36 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746638621; x=1747243421;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=M5Ji+uuxnEpYG8OVr9njO8BnRx81MlfNR+SP9L9ula8=;
+        b=itvYxpJjuHZdigAMvRURZjG3ncxK5rDKUEffS1RUk+0UyAilpg97emuCOJUNu6fFrl
+         rzT62jpf7e8WtPBuf6vCVklANSL489T8cJEIh6qCXo/Gt3thWzvpa/DZg1aWqc4VY5/C
+         /XoVPKvy8MYKdBrwwbBIsYHla11D1WIeCVEADXIdyYrs7CeZNpNEpT/ggYsx9h0qKsSC
+         Id2CVS6rgHanKWyQjw7HB/XBuTDDLKkfppxBsRldGay3hRhaV++hHNGl2XPWnJDobBZJ
+         WP0ME8FU7mR3l9WLH1gfqucM3Nx4tOq45W2NPrZBsrynQzyo1kKt+aL2Jc2x237cyL75
+         6CUw==
+X-Forwarded-Encrypted: i=1; AJvYcCVdDl0eGFm2qee38bSprbi6IwcoFeu2vttmR6hzUqLG1wyyzCWGMhic0juan4zFiOLN0vPNzGeC87bOVA==@vger.kernel.org, AJvYcCWPbxKsLsnFm4fN6aQsNMijffeYvuxgUBfoV1dh4ZPV9Nfl90vaUJQKLMN7vwy2G5yCbNFvrI0iRV/Pe15+@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyr2bL2tOPnJXfS8BHBsv1+ivQ4jTzXmlvngT5utDGnUXBNaSgz
+	ZHy4PwJJIiioEuQQ0+2d7iF9GNwo3uxfKnTFw2lJ4P4dcUzYmLZO
+X-Gm-Gg: ASbGnctlaLzgr95xVoGd1H9NRnU06udzswJfGI4eVGc3VW5anOi3o6S0aQAI0HUpdIK
+	GfHOxm5w+4sfkAI5g/lRwId2pwCP9a18ffUeAdhhTgpPnkZjevh2qCBXAOHc8dnZ1S9PlBIlfA7
+	R+AwYpkJKn8mEPSpQYYZktym1045h0NgxjTFf4QsxpifOKQQXdTQVIEH4bas0TqciTDR0HBIS/K
+	tdooJYehT4BlKlTuIsE5JKMDD7RJlo4/MQ9qit1dMRvdSC2kZPQ8PISoEhFHKVvlygIUbPbHNql
+	VPeDFpnXwzRdyzYU1whUYFipALdPvahxv47advJB
+X-Google-Smtp-Source: AGHT+IFGGcC8gJZOJrW9zJod6Xu84e7M4v0QbiHjX7vT8FG0WI6hIpkTKSh2B0g5annuZNKE4+pLrA==
+X-Received: by 2002:a17:902:e888:b0:22e:5e70:b2d3 with SMTP id d9443c01a7336-22e5ea42275mr62946885ad.1.1746638621285;
+        Wed, 07 May 2025 10:23:41 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:fe5b:f2b0:d1f:f5ac])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e6612e8e1sm17328025ad.132.2025.05.07.10.23.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 10:23:40 -0700 (PDT)
+Date: Wed, 7 May 2025 10:23:37 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>, 
+	"Russell King (Oracle)" <linux@armlinux.org.uk>, Andrew Lunn <andrew@lunn.ch>, 
+	Woojung Huh <woojung.huh@microchip.com>, Vladimir Oltean <olteanv@gmail.com>, 
+	Heiner Kallweit <hkallweit1@gmail.com>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [BUG] Stuck key syndrome (was: Re: [PATCH net-next v2] net: dsa:
+ microchip: Add SGMII port support to KSZ9477 switch)
+Message-ID: <im4cvmgjmdztjsvhorxt77t43o4a7rixoqyawp67jwijsg4vpn@jdl7m75ts2pc>
+References: <20250507000911.14825-1-Tristram.Ha@microchip.com>
+ <20250507094449.60885752@fedora.home>
+ <aBsadO2IB_je91Jx@shell.armlinux.org.uk>
+ <20250507105457.25a3b9cb@fedora.home>
+ <aBsmhfI45zMltjcy@shell.armlinux.org.uk>
+ <aBsu-WBlPQy5g-Jn@shell.armlinux.org.uk>
+ <20250507153236.5303be86@fedora.home>
+ <aBtHmNGRTVP9SttE@shell.armlinux.org.uk>
+ <20250507135126.7d34d18f@fedora.home>
+ <CAHk-=wipkOP939yPWroH_u+CQGsJQRSa_BHsg4cLNPRPq86sAQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250506183533.1917459-1-xii@google.com> <aBqmmtST-_9oM9rF@slm.duckdns.org>
- <CAOBoifh4BY1f4B3EfDvqWCxNSV8zwmJPNoR3bLOA7YO11uGBCQ@mail.gmail.com> <aBtp98E9q37FLeMv@localhost.localdomain>
-In-Reply-To: <aBtp98E9q37FLeMv@localhost.localdomain>
-From: Xi Wang <xii@google.com>
-Date: Wed, 7 May 2025 10:23:24 -0700
-X-Gm-Features: ATxdqUEiwuZBXPQM5AxuYr3cRC8Jy0fmaTsk7TiDCQLyU3wbnCFO16CEVv3w2rQ
-Message-ID: <CAOBoifgp=oEC9SSgFC+4_fYgDgSH_Z_TMgwhOxxaNZmyD-ijig@mail.gmail.com>
-Subject: Re: [RFC/PATCH] sched: Support moving kthreads into cpuset cgroups
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: Tejun Heo <tj@kernel.org>, linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, 
-	Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Ben Segall <bsegall@google.com>, David Rientjes <rientjes@google.com>, Mel Gorman <mgorman@suse.de>, 
-	Valentin Schneider <vschneid@redhat.com>, Waiman Long <longman@redhat.com>, 
-	Johannes Weiner <hannes@cmpxchg.org>, =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, Dan Carpenter <dan.carpenter@linaro.org>, Chen Yu <yu.c.chen@intel.com>, 
-	Kees Cook <kees@kernel.org>, Yu-Chun Lin <eleanor15x@gmail.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
-	jiangshanlai@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wipkOP939yPWroH_u+CQGsJQRSa_BHsg4cLNPRPq86sAQ@mail.gmail.com>
 
-On Wed, May 7, 2025 at 7:11=E2=80=AFAM Frederic Weisbecker <frederic@kernel=
-.org> wrote:
->
-> Le Tue, May 06, 2025 at 08:43:57PM -0700, Xi Wang a =C3=A9crit :
-> > On Tue, May 6, 2025 at 5:17=E2=80=AFPM Tejun Heo <tj@kernel.org> wrote:
-> > For the use cases, there are two major requirements at the moment:
+On Wed, May 07, 2025 at 07:46:03AM -0700, Linus Torvalds wrote:
+> On Wed, 7 May 2025 at 04:51, Maxime Chevallier
+> <maxime.chevallier@bootlin.com> wrote:
 > >
-> > Dynamic cpu affinity based isolation: CPUs running latency sensitive th=
-reads
-> > (vcpu threads) can change over time. We'd like to configure kernel thre=
-ad
-> > affinity at run time too.
->
-> I would expect such latency sensitive application to run on isolated
-> partitions. And those already don't pull unbound kthreads.
->
-> > Changing cpu affinity at run time requires cpumask
-> > calculations and thread migrations. Sharing cpuset code would be nice.
->
-> There is already some (recent) affinity management in the kthread subsyst=
-em.
-> A list of kthreads having a preferred affinity (but !PF_NO_SETAFFINITY)
-> is maintained and automatically handled against hotplug events and housek=
-eeping
-> state.
->
-> >
-> > Support numa based memory daemon affinity: We'd like to restrict kernel=
- memory
-> > daemons but maintain their numa affinity at the same time. cgroup hiera=
-rchies
-> > can be helpful, e.g. create kernel, kernel/node0 and kernel/node1 and m=
-ove the
-> > daemons to the right cgroup.
->
-> The kthread subsystem also handles node affinity. See kswapd / kcompactd.=
- And it
-> takes care of that while still honouring isolated / isolcpus partitions:
->
->       d1a89197589c ("kthread: Default affine kthread to its preferred NUM=
-A node")
->
-> >
-> > Workqueue coverage is optional. kworker threads can use their separate
-> > mechanisms too.
-> >
-> > Since the goal is isolation, we'd like to restrict as many kthreads as =
-possible,
-> > even the ones that don't directly interact with user applications.
-> >
-> > The kthreadd case is handled - a new kthread can be forked inside a non=
- root
-> > cgroup, but based on flags it can move itself to the root cgroup before=
- threadfn
-> > is called.
->
-> kthreadd and other kthreads that don't have a preferred affinity are also
-> affine outside isolcpus/nohz_full. And since isolated cpuset partitions
-> create NULL domains, those kthreads won't run there either.
->
-> What am I missing?
+> > So, same as you, it'll take a long time for me to say with some amount
+> > of certainty that 'i8042_unlock=1' has a beneficial effect, of
+> > course unless I see the problem happen again in the meantime.
+> 
+> Christ. You'd expect that any i8042 issues had been fixed long ago,
+> but the problem is that the chip doesn't necessarily even exist in
+> modern platforms, and everybody just fakes it.
 
-Overall I think your arguments depend on kernel and application threads are
-significantly different for cpu affinity management, but there isn't enough
-evidence for it. If cpuset is a bad idea for kernel threads it's probably n=
-ot
-a good idea for user threads either. Maybe we should just remove cpuset fro=
-m
-kernel and let applications threads go with boot time global variables and
-set their own cpu affinities.
+It has not existed as a real chip for more than 20 years I believe. It's
+all faked in firmware and embedded controllers that fake it in their
+firmwares.
 
--Xi
+And newer firmware tend to implement less and less of it, just what OS
+that devices that ship with it needs.
+
+> 
+> So the platform presumably still has hardware support for it, but it's
+> mostly in the form of "take a trap when accessing the legacy keyboard
+> ports, and fake it in firmware".
+> 
+> Although it doesn't help that there are literally decades of clone
+> chips and hacky real hardware that extended on the i8042 in various
+> more-or-less compatible ways.
+> 
+> Which makes all of these things almost entirely undebuggable.
+> 
+> I'm surprised the XPS9510 would be particularly troublesome - I've had
+> an XPS for years (older version, obviously) with no issues outside of
+> WiFi sometimes acting up. But random firmware...
+> 
+> I doubt it's "keylock active", but who knows. I get that on my xps
+> too, it's a random bit that doesn't really mean much. But - because of
+> all the reasons above - who knows...
+
+It is typically harmless and whats more trying to "unlock" 8042 when it
+reports being locked might confuse 8042 emulation.
+
+Thanks.
+
+-- 
+Dmitry
