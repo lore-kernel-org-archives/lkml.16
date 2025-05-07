@@ -1,227 +1,127 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DA9121A45D
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 13:54:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14291289E0F;
+	Wed,  7 May 2025 13:55:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746626098; cv=none; b=BxJspx2ppoJ8FVUb2V9rm3RKVT/EaOHaE3NgVC2UBbAlE0l9AJdTY3bsYpPaA0vu2HdrbIRCnucsGlFTnVjlkEP4AHw7ChWa9MhOG5N3SQAt3hKEwpdqBqQO0oe0oyh3NL8IJOlJH/vZ3WvEmLM/h+uLo9aNOjsIF8UeHlRgB3o=
+	t=1746626111; cv=none; b=k1B9FP41jfIdtX25yytiMBeq4gmf2C3KXLdxRJiWsw0FO/NS3zMAp1fds1478Ecug5qp+yu6658b0Yv29qOzcTHOESDLqSk6vPdr8oXTFuWklR5iJ2b2PfBh7OktMGK7QutQjgnz0lqlZdFEXYla3QKiTJNj3zoHvhr6AjO+MrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746626098; c=relaxed/simple;
-	bh=mget9A7HVaZW5gwOaONn0lHraNo+Pe3tfA8h7YGoa4o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hFlpbAFBEq+rMTyn6r+CMEb8S3GCuFWFKv3MBuMFkiIc3apy3tsnEd/yT2mvCbgka/Jo9xfHORIm/ykacORZplWvpt/qPR2v35DHjpDxEK7noMrjFE/zgvhN+pi1fd11DOMrOM3H1I3wO/VmWKvEx53bRsRupDNmgW/Y6GvbVKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V9DM2M5i; arc=none smtp.client-ip=209.85.128.44
+	s=arc-20240116; t=1746626111; c=relaxed/simple;
+	bh=O3lK9O8MOlFJ22S3bVWYOt57Oo1oTISBPFrYqr8v6Qw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rlLirb8R4MFyj+OVv6toidmSmMKYU3bVKGYscrBOMCs064xe8xVOq2eObMTqqe9KUPzh05DdvaupS4TMgTMLqLyGxgCxjrv6uH8CanYQI6vzobUpFF4EGclzHmMzUI5YG5cwo6jox5PclODXL737/chhdEbuN4tN3x58q09MsPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Fp3WBv+n; arc=none smtp.client-ip=209.85.128.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V9DM2M5i"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43ce71582e9so47554655e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 06:54:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fp3WBv+n"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43d0618746bso50499465e9.2;
+        Wed, 07 May 2025 06:55:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746626095; x=1747230895; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CWH4UBR5sUqGo9LtpqRAJPm/Evlyrb/fSWQLAWS3kVY=;
-        b=V9DM2M5i9NZeZvh22flibgTWvxZ/f0oDnKRQusO0/f7TyINwVFqaoX42yGnUusIv2j
-         jaPHizN6lHxzoIjW60RtU6AV2DmE7hkp1MRHWXfeYHyFGKvtE4UUhlUg6UHjFas5jzkj
-         T4T4YY+x5AsG8kuvvSt3q2/3U6diz+7sko6l5xrbs9eBDHCBUpkmcKf6iM7HTzOX9k6N
-         foISoND0CAymBxjv9OjvHSS+pEKtuJdACGblo5nVTk5dENkR/apRCoIzWvRPdCOQ/nTT
-         xiEET3MoArTswT35NNLfImN39BPjAjU7abMla3RggxidzoYtfE7fyz4SMFYQJEv0rU7V
-         Qg4Q==
+        d=gmail.com; s=20230601; t=1746626108; x=1747230908; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=WnTHQiWLUMQGeqv2NTcj6QDK3soHu+sTbr9U/eBZ7WI=;
+        b=Fp3WBv+nRbIqIL44f+NIzZXi2hs9xo/bMqIhJzZWb04jp5Z5ME5YYtNOy5n3WM/D/u
+         lqI3CDC8wz0tuzQ3Mm/T7bdObvQrsMk75yBgqJKCIbJQh3dq5Ao4AkmbvKeqn7URXOXD
+         8klOlv6TXnyD06tXMjcEB+Tup9C4uK6UVFjyVVL3ri015V2zEkrOnlhAWy5Kpvplk8AE
+         Gy/QQ5eQ3lcHHWgGSLYA5BdGxEWzTxURcH/eVbqglhwxjBS/E8Mdx4RpgBd68+QpL8Uo
+         drmKgaUhvrbiYkeDnMR5m7/ADKnoH2ezl2YhaAY6K90u38VA4cPmVs+WgphVLSESQS5H
+         Df0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746626095; x=1747230895;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CWH4UBR5sUqGo9LtpqRAJPm/Evlyrb/fSWQLAWS3kVY=;
-        b=ugttFejICiliyRcoDdsqBX8KMFLW1AzSwtlV9l1bRjv1UGRIvCwxtnZ1RRvoBCjB2U
-         dsHKiNmZevM3I+NwwxEMukX9FwxQzCKdBj4CmQz8cZ0HrpGrcuEFvY2X6LhVwNb/tNDF
-         EVJI4d5OFzeIN/dPuCBsS/2pqCZ/TbHuQHVhNmSBUx3R0oD1dNYsXTpRRHlmbbK+ce5e
-         9fDSSIodn76LxHJeUO5iVpCpW31f/mYlpzhCjokCL3RtZ9qPr9hMLSUxv/WYAgnw4zEe
-         o/KG3BL4pNgBOL1xG1GHsfp2rqIn/VpY4nzj0ugEvt5Ji6k/APypQj2X5XxJGR5TfNng
-         Zc1A==
-X-Forwarded-Encrypted: i=1; AJvYcCUUjhiT3lPVpgJGV9B8t5OVy//3MHJn+/jc9lUOo+do686AOqEG7H00RgS7gOwyiIUM6DqVK3m6+QNC9vE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYx1SDVlMTuMarHocexPZXZJstfM/kklLfI7wZKBXFZrSJLHSt
-	L10PFEU0nwINCiZLJNLXU3BDe50DZPBiyqYU0ZcMTseNNq05csG6
-X-Gm-Gg: ASbGncvIf9aXnRi7EpMekKczh9bc+EHBaAVMuqRaN2tc485cCqeeiZkcDNjIDpxSeuy
-	HzqZJgec4Eadc8zrbScRNovgIFFM60/U0kv/fdepkxNmNZXtCRs/I2SloS6PRSLx43SzUete26W
-	FWFqOXYU5chqhYjq+ug3DgjjtkDw2luEgD69Px4HZJezDPCvQ1wZaFRDfr2/ELHMe0dWwK7eSCx
-	To6PO4tiiJRIucGUxDQNARdpCqu40KFBnvgqbgvWQmQjqm1lidjRkq/z1osbU97DBUGbMEW1KvC
-	C9zKECZH1qWVtdDrKXSbgIRb19r7qH2WgbnurBZ4+A==
-X-Google-Smtp-Source: AGHT+IF80fmLVPbtDN3yjIpualYTNgWYYcwvkaJ7VTuW/EM6ksm+G1Qlmrwr48Na58FQ8fjTwc/qvg==
-X-Received: by 2002:a05:600c:5307:b0:43d:585f:ebf5 with SMTP id 5b1f17b1804b1-441d44bc56emr27403975e9.1.1746626094564;
-        Wed, 07 May 2025 06:54:54 -0700 (PDT)
-Received: from fedora.. ([94.73.35.165])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd32f1eesm1894295e9.9.2025.05.07.06.54.53
+        d=1e100.net; s=20230601; t=1746626108; x=1747230908;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WnTHQiWLUMQGeqv2NTcj6QDK3soHu+sTbr9U/eBZ7WI=;
+        b=bao5Z5hAKW2oKeRWH3luJ3ijpYNe8IqkGrz2OwnZHMRVed+ZmTRHDnQ87bE7c1lM1b
+         fDv7oPTNyom88E55/Hu/zcYvnOBUNbkPCLgEKcq2vcHGnsm++YzIaZVDiJ8a1MwKhXTx
+         BKNFh01Fu9UQjOUWdX5IIIiNPYqTfmRhXuhAyGgNDjNRBkE2szfS+hERuo7O2qg48nIw
+         RbPae9WkSIiYx5k6JS1qEJP+MPVPfQsuocYznjRGpYLeENIsN7dZW6umG7dR6f/F0g+w
+         tpqEc8vT9ZvtcPLkrZ7dXXDH1vcam7tU0+AIX0kRGMXNf9X4SpGv8Xn+ZaXME5yYeVfk
+         +oGw==
+X-Forwarded-Encrypted: i=1; AJvYcCUR/ID0Z02pSc+i8nC+rh9CeCprzU/Q8BCDsP0+9yvXdjsRCblm483vMVk3qPWxR+zUoqCDiW7lwJS5DUiU@vger.kernel.org, AJvYcCURvIVDwUeOvk+hv9lk/L73e98DaunHPt11Y6TJRnDwhbBW23vDbtxCU5UXlvYVQvqSrs7YQpxQ5MNS@vger.kernel.org, AJvYcCVzwB+ihvXeydkolXPfT9hReBIfgArS/eIn30FQc+1Bi+y3CrCRiSEUiWT46aYIMXSIgK+yZwBy8kP42J3z@vger.kernel.org
+X-Gm-Message-State: AOJu0YzaMx5Xf9purJgHDfOaGRvXIhVcGb9YrsRMDZipgg8M18A/C3wG
+	Px+TBnJUYkPlXm/btJrYME7RweJAJ4L/fvLBzG1uIcRzLRHozq2I
+X-Gm-Gg: ASbGncvF2jAwdfmLx6flDSw4t0ViFRECZmniUAWS5ojrccx1RM8FPYqL+Vy1QehG5bA
+	/+2GcEgW7GdcgQZmWsWhTqej+sBYMUv1NVC8rwlOLZvMHHnV/o1RUO4kKGrv73vQc6ABWex7B/N
+	JXT+YT2yhVKXy/RaPopvLdJpJ0khTYQZmJXyx9CDufglsXEqKXbuPUABVhtUuGrnMds22lY7wAG
+	EnFxU+UEvddRBo5DOXk0eAw2thbnStTTPEYtF6hBJkvimLNsfCrJP08dpwrhMjAhi0qWRgIqf2w
+	RCbGs6Ttra7lSpTDvdWwyxBfSe9hb3Nlnve0pQEk2c7XYn0REczYkP4ARvfrUrMsWtZ6ntAVSOQ
+	n/06Evq7uTrJr+BAq+B+Ds7JfkG0=
+X-Google-Smtp-Source: AGHT+IEb3s5r0tzt4J13SHuTnyrUEEoizYd/G0Q4fUW6CsFjqN+mxH2wI6fI3XlsrrrqYAMtkKGuOw==
+X-Received: by 2002:a05:600d:1b:b0:43d:47e:3205 with SMTP id 5b1f17b1804b1-442459df273mr20612315e9.11.1746626108099;
+        Wed, 07 May 2025 06:55:08 -0700 (PDT)
+Received: from orome (p200300e41f281b00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f28:1b00:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd35fb49sm1820095e9.28.2025.05.07.06.55.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 06:54:53 -0700 (PDT)
-From: =?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>
-To: louis.chauvet@bootlin.com
-Cc: hamohammed.sa@gmail.com,
-	simona@ffwll.ch,
-	melissa.srw@gmail.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	=?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>
-Subject: [PATCH v5 16/16] drm/vkms: Allow to configure connector status via configfs
-Date: Wed,  7 May 2025 15:54:31 +0200
-Message-ID: <20250507135431.53907-17-jose.exposito89@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250507135431.53907-1-jose.exposito89@gmail.com>
-References: <20250507135431.53907-1-jose.exposito89@gmail.com>
+        Wed, 07 May 2025 06:55:07 -0700 (PDT)
+Date: Wed, 7 May 2025 15:55:05 +0200
+From: Thierry Reding <thierry.reding@gmail.com>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jiri Slaby <jirislaby@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, John Crispin <john@phrozen.org>, 
+	Songjun Wu <songjun.wu@linux.intel.com>, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, 
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: serial: Convert lantiq,asc to DT schema
+Message-ID: <tr4jy53i53iiyzdznhtczy62vcqdrqhz5ncyw2rozwvdh4gs2h@yls6ovvkpqf2>
+References: <20250506220029.2546179-1-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="dlvhedjs2xvby25t"
+Content-Disposition: inline
+In-Reply-To: <20250506220029.2546179-1-robh@kernel.org>
 
-When a connector is created, add a `status` file to allow to update the
-connector status to:
 
- - 1 connector_status_connected
- - 2 connector_status_disconnected
- - 3 connector_status_unknown
+--dlvhedjs2xvby25t
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] dt-bindings: serial: Convert lantiq,asc to DT schema
+MIME-Version: 1.0
 
-If the device is enabled, updating the status hot-plug or unplugs the
-connector.
+On Tue, May 06, 2025 at 05:00:28PM -0500, Rob Herring (Arm) wrote:
+> Convert the Lantiq SoC ASC UART binding to DT schema. There are no such
+> clock identifier defines nor a user with clocks, so drop the example
+> with clocks.
+>=20
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> ---
+>  .../bindings/serial/lantiq,asc.yaml           | 56 +++++++++++++++++++
+>  .../devicetree/bindings/serial/lantiq_asc.txt | 31 ----------
+>  2 files changed, 56 insertions(+), 31 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/serial/lantiq,asc.y=
+aml
+>  delete mode 100644 Documentation/devicetree/bindings/serial/lantiq_asc.t=
+xt
 
-Reviewed-by: Louis Chauvet <louis.chauvet@bootlin.com>
-Signed-off-by: José Expósito <jose.exposito89@gmail.com>
----
- Documentation/gpu/vkms.rst            |  5 +++
- drivers/gpu/drm/vkms/vkms_configfs.c  | 48 +++++++++++++++++++++++++++
- drivers/gpu/drm/vkms/vkms_connector.c |  7 ++++
- drivers/gpu/drm/vkms/vkms_connector.h |  6 ++++
- 4 files changed, 66 insertions(+)
+Reviewed-by: Thierry Reding <treding@nvidia.com>
 
-diff --git a/Documentation/gpu/vkms.rst b/Documentation/gpu/vkms.rst
-index c551241fe873..7c54099b1dc6 100644
---- a/Documentation/gpu/vkms.rst
-+++ b/Documentation/gpu/vkms.rst
-@@ -108,6 +108,11 @@ Last but not least, create one or more connectors::
- 
-   sudo mkdir /config/vkms/my-vkms/connectors/connector0
- 
-+Connectors have 1 configurable attribute:
-+
-+- status: Connection status: 1 connected, 2 disconnected, 3 unknown (same values
-+  as those exposed by the "status" property of a connector)
-+
- To finish the configuration, link the different pipeline items::
- 
-   sudo ln -s /config/vkms/my-vkms/crtcs/crtc0 /config/vkms/my-vkms/planes/plane0/possible_crtcs
-diff --git a/drivers/gpu/drm/vkms/vkms_configfs.c b/drivers/gpu/drm/vkms/vkms_configfs.c
-index 8e90acbebd6a..07ab794e1052 100644
---- a/drivers/gpu/drm/vkms/vkms_configfs.c
-+++ b/drivers/gpu/drm/vkms/vkms_configfs.c
-@@ -7,6 +7,7 @@
- #include "vkms_drv.h"
- #include "vkms_config.h"
- #include "vkms_configfs.h"
-+#include "vkms_connector.h"
- 
- /* To avoid registering configfs more than once or unregistering on error */
- static bool is_configfs_registered;
-@@ -512,6 +513,52 @@ static const struct config_item_type encoder_group_type = {
- 	.ct_owner	= THIS_MODULE,
- };
- 
-+static ssize_t connector_status_show(struct config_item *item, char *page)
-+{
-+	struct vkms_configfs_connector *connector;
-+	enum drm_connector_status status;
-+
-+	connector = connector_item_to_vkms_configfs_connector(item);
-+
-+	scoped_guard(mutex, &connector->dev->lock)
-+		status = vkms_config_connector_get_status(connector->config);
-+
-+	return sprintf(page, "%u", status);
-+}
-+
-+static ssize_t connector_status_store(struct config_item *item,
-+				      const char *page, size_t count)
-+{
-+	struct vkms_configfs_connector *connector;
-+	enum drm_connector_status status;
-+
-+	connector = connector_item_to_vkms_configfs_connector(item);
-+
-+	if (kstrtouint(page, 10, &status))
-+		return -EINVAL;
-+
-+	if (status != connector_status_connected &&
-+	    status != connector_status_disconnected &&
-+	    status != connector_status_unknown)
-+		return -EINVAL;
-+
-+	scoped_guard(mutex, &connector->dev->lock) {
-+		vkms_config_connector_set_status(connector->config, status);
-+
-+		if (connector->dev->enabled)
-+			vkms_trigger_connector_hotplug(connector->dev->config->dev);
-+	}
-+
-+	return (ssize_t)count;
-+}
-+
-+CONFIGFS_ATTR(connector_, status);
-+
-+static struct configfs_attribute *connector_item_attrs[] = {
-+	&connector_attr_status,
-+	NULL,
-+};
-+
- static void connector_release(struct config_item *item)
- {
- 	struct vkms_configfs_connector *connector;
-@@ -531,6 +578,7 @@ static struct configfs_item_operations connector_item_operations = {
- };
- 
- static const struct config_item_type connector_item_type = {
-+	.ct_attrs	= connector_item_attrs,
- 	.ct_item_ops	= &connector_item_operations,
- 	.ct_owner	= THIS_MODULE,
- };
-diff --git a/drivers/gpu/drm/vkms/vkms_connector.c b/drivers/gpu/drm/vkms/vkms_connector.c
-index 89fa8d9d739b..b0a6b212d3f4 100644
---- a/drivers/gpu/drm/vkms/vkms_connector.c
-+++ b/drivers/gpu/drm/vkms/vkms_connector.c
-@@ -87,3 +87,10 @@ struct vkms_connector *vkms_connector_init(struct vkms_device *vkmsdev)
- 
- 	return connector;
- }
-+
-+void vkms_trigger_connector_hotplug(struct vkms_device *vkmsdev)
-+{
-+	struct drm_device *dev = &vkmsdev->drm;
-+
-+	drm_kms_helper_hotplug_event(dev);
-+}
-diff --git a/drivers/gpu/drm/vkms/vkms_connector.h b/drivers/gpu/drm/vkms/vkms_connector.h
-index 90f835f70b3b..35f2adf97e32 100644
---- a/drivers/gpu/drm/vkms/vkms_connector.h
-+++ b/drivers/gpu/drm/vkms/vkms_connector.h
-@@ -26,4 +26,10 @@ struct vkms_connector {
-  */
- struct vkms_connector *vkms_connector_init(struct vkms_device *vkmsdev);
- 
-+/**
-+ * struct vkms_device *vkmsdev() - Update the device's connectors status
-+ * @vkmsdev: VKMS device to update
-+ */
-+void vkms_trigger_connector_hotplug(struct vkms_device *vkmsdev);
-+
- #endif /* _VKMS_CONNECTOR_H_ */
--- 
-2.49.0
+--dlvhedjs2xvby25t
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmgbZjkACgkQ3SOs138+
+s6FdGw//V8g7aZGNkt/SaLaEDGkgANm+T6HBw7ktIC/ewVKIe8aeZsPtMTUf8nwb
+o5oZXCbcqiGdGw06UnNyVOBOd+2PIkJTs5rOMz5ZhLZ7rcqQi1OmK45FegKj64Im
+RphFC816ZznMZaW0u7NsFpRdFJnse20Y/nPGywZ8BlotVpC19HqG7zZz+iG5eMaE
+hozF54uidBXDzB8BvUdu1ug80vcmk8MfgQiI/S5/Ec2Ih1C4GFNO79j0PcuxAm99
+eTQ0REUSmdKuEFnp1GAkq6rIIva6KdSNF4S1gL3sveD6UAhCGEoN+QvBfrLreJt9
+hsjOqOyu2ia9eML0KSn2zMy7+SoU5OcNylqAeYC30PZsL8uOeN8Jw2RYeN9dHJQN
+SMZikkWSOszba4pUjk+5b9t6G6vTChd5Gwk6Lf3lBHJ1lPUAW5hbVaHs7iGM84RN
+PVU7u1nXjhpdppj4+cdnMatF+td/jHDcd1VGFgcph9N6aAwgGTt9gC/FRnHLBzKF
+jsG2ZdyJaAVM3Mm6cMa9XF6q5EMdm7ns+OBfMVyf3SlYw/zFFZO1lSHDrGIr7KaT
+PokYEQMAo9Mg56xAUlbH6ZSSvGOUJYPkXBlmcpyuLecW1hfD6voaEQJ5z0KplPD3
+mgrnfLuClahfcMWrGthhZCFLZmQfh8IVwalujrczCLIVfdJEEGs=
+=7lG2
+-----END PGP SIGNATURE-----
+
+--dlvhedjs2xvby25t--
