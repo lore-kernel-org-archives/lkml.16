@@ -1,174 +1,147 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDC1B20CCC9
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 09:59:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66F4820CCED;
+	Wed,  7 May 2025 09:59:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746611966; cv=none; b=ochAKDfm5327hVxS4GrTENz7weG0pzl0CwDuZBs6c4UdA4xAQg94nE1Wcz6M4t0gScnn7EKrwxsj5vam9MrSTOg0CdX+GTrZMpawttemzubQHRMVIGhwApY4+xA7SNps+13h9jT0bhkEislWaeVxQERkolwrCzyM19SpuY3gcwQ=
+	t=1746611980; cv=none; b=dgJRQtql+M85QdlfQvvp+1nS8sfLo1nlODZ17DiHp0oE/MaKTiRqz1d+MQEKwmmxGbWBzipQb59wVVOWYWaCFyM/n+9kd8LIRbsMdOQZOlmEJYJKkOHa2jeKLKuly/mi3oHG+yuyRFBN7GbRWbw2bXbIcJK7aQH58dNKMobPODA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746611966; c=relaxed/simple;
-	bh=CVOjiks63kN4nyx81zcnv5yZgTHTFsD0uSpOBIumpbQ=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=QJqdmVQQ//Uu1qwkM0Rb3167tbftxnkcCpqpRZgO7dAchEKRv/dupCp2THPfIBrGUl2u9fBwJn86XnjesbUVIWS2Ph3pt7UXMHGPzU9SRfd6WWiwTdYWNpLhqvhjX+IQE85+ynvTm+/cpgInRsXrPuvseAs7V7e8U5IiEafvAq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=nMYfWa+6; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
+	s=arc-20240116; t=1746611980; c=relaxed/simple;
+	bh=gkxsxk4kIRbZS/RFb2DMdp2h9xVzKhVdu8Vr0OBvkvw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UqnzVI4PTNnzfN1WgLNL9x3Pn/ikC7K8fMz9mAy0PY/xqY/OXSeQKVUphqvRdltHQpsKXWDc6a0hNbCqPXuqTzUY6S7c2hKOXg25n/A6m92M4hZYomPKj/gsJWTBhGx3JgZsjTHg6fmJ6ypkkQmfdyBJ0i0lFu0DGX652lzHhS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=zz9OuMHw; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="nMYfWa+6"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ad1b94382b8so617481866b.0
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 02:59:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fairphone.com; s=fair; t=1746611961; x=1747216761; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gRBnlzG3csY3q59CrD+HieNRPhlOZlDO/35hP9x7Gow=;
-        b=nMYfWa+6GVUJ2BdwZE1phw3EIG0XJ+Q9ZKMBbk9RA6BptuZZhd8r7gPWbRJzFqZ1j0
-         ahRnaAH+Uc/dVroauVBs2nJnIYFCDGrM2YU85os6stQB8ieKGKmXTvUJJug1iMX724dp
-         WcgzjWHs4NxO58j+ffCnfuWQHEGX+rkEIcO54FE0s6tiXD+gIjNU1mzMlbzsIpKKl49i
-         GoW+ljFiwkK558SmCGrs9r3ZNz694BWHIWCbaX5mNCWbYWe5rJQmSO+HsRoNVjfLBE8x
-         YYka+lDq8VXpG5QuNdZTLZ2TYQ2qMPQD2CpLPg+dbkJ096T9naQAO+Z19YWDRb89psBj
-         QTLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746611961; x=1747216761;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=gRBnlzG3csY3q59CrD+HieNRPhlOZlDO/35hP9x7Gow=;
-        b=QomcUjEtKOAZ8QeF5jvoQTBLxEQp4jNKXxBa7Qs91R5toTjvRvawUu6j2f3553xMUJ
-         Sj2sLHu3xUFJV5aSpV1StdrK+4AtMSVXPDTI98P8OBLfwg9Lp05Yji2vUYxGLKBKIhae
-         W817WRuwUnR7aS5u6vn++1U/7vCmKZHqkn+146Rx2m/6gTUKZ0ptn+JTh/0oSHx/B9Gh
-         5uHpQ+QPIxhjrpepV/h5EsykL3JW3cMlENvJEF57BlYv+g0J53ejy8T10bS7A2sw+59L
-         /JsZiv5bcLWJLJq4OGklMG010yzGCJDHRhifyfHzeSIEyMxWloFaQVeeecwte39mJlkk
-         GZvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWC5aEr+Rb+2/HZSPODnBq8r9pguljYS4VrpKUNrgRHaTcUlmbl5IIDXpyVMy3p/AgzhN3ahd4U6klApD8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNBILN80h5SYlzlLzCf8CS3LP4j7sZ+u8az+TU8WhV7MuVrV1h
-	RBo2vWxakELdAhjnaR49G5ApTAh16B0+IC0fQXnHiIbiOdASzQQlN2mnT9k++sc=
-X-Gm-Gg: ASbGncuKwj8RN+tbj8GZbczg33GOOwvHo/FRKehdm19tLoI00oEZS0YQ1vLAwhsY9lT
-	1cqt5B0v2CsX4HkdVCVFRCzr19UDqQTW2mbvWicnAxRHKR25PHDmFcYsIfxOSrBqslqqtugbMT6
-	1ZVP3YgO+iyRfzJe5a9w2+U9lXypLP72EIVJBlVAtfRjkDKi/V2iHrxm4icqDtG1DupVUJszOPN
-	SnOLmBgy8Q+sUOvzUVBN5v4hxpIZhQvCa4w13YkVIz1LsZEklg0oXEahS5J2o/pnO6lafqNjGeD
-	hzwUmTH5Y2xQr8K5TuaXCErY1jviTmKBV2DSGmDTl6T7o+qhpywFO96Eip6pP0xksAFDK+x4yzm
-	M32yvdIt2fA==
-X-Google-Smtp-Source: AGHT+IETi13rF9ppf4Lq9nZexKfgosA14aFfsxFA6IPZoLnGnfZ4smw0IgYrqh4falCvDOZVHa7FtA==
-X-Received: by 2002:a17:907:9814:b0:ad1:8dde:5b7a with SMTP id a640c23a62f3a-ad1e8d055a7mr240311766b.43.1746611961036;
-        Wed, 07 May 2025 02:59:21 -0700 (PDT)
-Received: from localhost (144-178-202-138.static.ef-service.nl. [144.178.202.138])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1891490afsm874478866b.23.2025.05.07.02.59.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 07 May 2025 02:59:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="zz9OuMHw"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=cTmfRg21cWI2PwDlotQQ7qSHEOYsN+Bp4SVGVhQiy+4=; b=zz9OuMHwoF4QyEfMGd5qz+Z6nx
+	Z/Z+d+tpBKlO8x/IlA13dgdFw7m12H1R9SSccDLUtQ4C9/9R1Y13qQCASjgeCNFAYrsh0reTr49sl
+	/luEIrx4TDi/sbxVjhXmAq+aoJ2YUc68uy8uhwjUdvyURpDs2pXHlWotWqlLnflRbQnm666xAr8dE
+	wNGyV+befkKSy5DlTh2osaQ8Niwz/tx0XxX9ZIaGDRTY5Vud4qoDN32ej488rnqMnjipy5cNoElf1
+	st1FeCsbkEnMMoVus/t3Ht3cLCI82IIndlPIG+54mtSs2OGkXk92pqZwbWegQFz+QS1+hIs41fKfW
+	o2LpDKkA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:37248)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1uCbYj-0007LH-2Q;
+	Wed, 07 May 2025 10:59:25 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1uCbYf-0005gZ-21;
+	Wed, 07 May 2025 10:59:21 +0100
+Date: Wed, 7 May 2025 10:59:21 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Woojung Huh <woojung.huh@microchip.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [BUG] Stuck key syndrome (was: Re: [PATCH net-next v2] net: dsa:
+ microchip: Add SGMII port support to KSZ9477 switch)
+Message-ID: <aBsu-WBlPQy5g-Jn@shell.armlinux.org.uk>
+References: <20250507000911.14825-1-Tristram.Ha@microchip.com>
+ <20250507094449.60885752@fedora.home>
+ <aBsadO2IB_je91Jx@shell.armlinux.org.uk>
+ <20250507105457.25a3b9cb@fedora.home>
+ <aBsmhfI45zMltjcy@shell.armlinux.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 07 May 2025 11:59:19 +0200
-Message-Id: <D9PU9LEA7CLT.37IBLZRP90E9S@fairphone.com>
-Cc: <linux-arm-msm@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
- "Manivannan Sadhasivam" <manivannan.sadhasivam@linaro.org>, "James E.J.
- Bottomley" <James.Bottomley@hansenpartnership.com>, "open list"
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/3] scsi: ufs: qcom: Map devfreq OPP freq to UniPro
- Core Clock freq
-From: "Luca Weiss" <luca.weiss@fairphone.com>
-To: "Ziqi Chen" <quic_ziqichen@quicinc.com>, <quic_cang@quicinc.com>,
- <bvanassche@acm.org>, <mani@kernel.org>, <beanhuo@micron.com>,
- <avri.altman@wdc.com>, <junwoo80.lee@samsung.com>,
- <martin.petersen@oracle.com>, <quic_nguyenb@quicinc.com>,
- <quic_nitirawa@quicinc.com>, <quic_rampraka@quicinc.com>,
- <neil.armstrong@linaro.org>, <konrad.dybcio@oss.qualcomm.com>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250507074415.2451940-1-quic_ziqichen@quicinc.com>
- <20250507074415.2451940-3-quic_ziqichen@quicinc.com>
- <D9PS51XVRKLP.1AHMCRH9CZFWU@fairphone.com>
- <7c74a395-a8b8-4a12-9ddb-691f28c90885@quicinc.com>
-In-Reply-To: <7c74a395-a8b8-4a12-9ddb-691f28c90885@quicinc.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aBsmhfI45zMltjcy@shell.armlinux.org.uk>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Wed May 7, 2025 at 11:09 AM CEST, Ziqi Chen wrote:
-> Hi Luca,
->
-> On 5/7/2025 4:19 PM, Luca Weiss wrote:
->> Hi Ziqi,
->>=20
->> On Wed May 7, 2025 at 9:44 AM CEST, Ziqi Chen wrote:
->>> From: Can Guo <quic_cang@quicinc.com>
->>>
->>> On some platforms, the devfreq OPP freq may be different than the unipr=
-o
->>> core clock freq. Implement ufs_qcom_opp_freq_to_clk_freq() and use it t=
-o
->>> find the unipro core clk freq.
->>>
->>> Signed-off-by: Can Guo <quic_cang@quicinc.com>
->>> Co-developed-by: Ziqi Chen <quic_ziqichen@quicinc.com>
->>> Signed-off-by: Ziqi Chen <quic_ziqichen@quicinc.com>
->>> ---
->>>   drivers/ufs/host/ufs-qcom.c | 81 ++++++++++++++++++++++++++++++++----=
--
->>>   1 file changed, 71 insertions(+), 10 deletions(-)
->>>
->>> diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
->>> index 7f10926100a5..804c8ccd8d03 100644
->>> --- a/drivers/ufs/host/ufs-qcom.c
->>> +++ b/drivers/ufs/host/ufs-qcom.c
->>>  =20
->>> +static unsigned long ufs_qcom_opp_freq_to_clk_freq(struct ufs_hba *hba=
-,
->>> +												   unsigned long freq, char *name)
->>> +{
->>> +	struct ufs_clk_info *clki;
->>> +	struct dev_pm_opp *opp;
->>> +	unsigned long clk_freq;
->>> +	int idx =3D 0;
->>> +	bool found =3D false;
->>> +
->>> +	opp =3D dev_pm_opp_find_freq_exact_indexed(hba->dev, freq, 0, true);
->>> +	if (IS_ERR(opp)) {
->>> +		dev_err(hba->dev, "Failed to find OPP for exact frequency %lu\n", fr=
-eq);
->>=20
->> I'm hitting this print on bootup:
->>=20
->> [    0.512515] ufshcd-qcom 1d84000.ufshc: Failed to find OPP for exact f=
-requency 18446744073709551615
->> [    0.512571] ufshcd-qcom 1d84000.ufshc: Failed to find OPP for exact f=
-requency 18446744073709551615
->>=20
->> Doesn't look like it's intended? The number is (2^64 - 1)
->>=20
-> Yes, this is expected. During link startup, the frequency
-> ULONG_MAX will be passed to ufs_qcom_set_core_clk_ctrl() and
-> ufs_qcom_cfg_timer(). This frequency cannot be found through the API
-> dev_pm_opp_find_freq_exact_indexed(). Therefore, we handle the
-> frequency ULONG_MAX separately within Ufs_qcom_set_core_clk_ctrl()
-> and ufs_qcom_cfg_timer().
->
-> This print only be print twice during link startup. If you think print
-> such print during bootup is not make sense, I can improve the code and
-> update a new vwesion.
+On Wed, May 07, 2025 at 10:23:17AM +0100, Russell King (Oracle) wrote:
+> [Sorry for going off topic here - changed the Cc list, added Linus,
+> changed the subject.]
+> 
+> On Wed, May 07, 2025 at 10:54:57AM +0200, Maxime Chevallier wrote:
+> > On Wed, 7 May 2025 09:31:48 +0100
+> > "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
+> > > [rest of the email got deleted because Linux / X11 / KDE got confused
+> > > about the state the backspace key and decided it was going to be
+> > > continuously pressed and doing nothing except shutting the laptop
+> > > down would stop it.]
+> > 
+> > Funny how I have the same exact issue on my laptop as well... 
+> 
+> I've had the "stuck key" behaviour with the HP Pavilion 15-au185sa
+> laptop I had previously (normally with ctrl-F keys). However, hitting
+> ctrl/shift/alt would stop it.
+> 
+> This is the first time I've seen the behaviour with the Carbon X1
+> laptop, but this was way more severe. No key would stop it. Trying to
+> move the focus using the trackpad/nipple had any effect. Meanwhile
+> the email was being deleted one character at a time. So I shut the
+> laptop lid causing it to suspend, and wondered what to do... on
+> re-opening the laptop, it didn't restart and is back to normal.
+> 
+> This suggests that the entire input subsystem in the software stack
+> collapsed just after the backspace key was pressed, and Xorg never
+> saw the key-release event. So Xorg duitifully did its key-repeat
+> processing, causing the email to be deleted one character at a time.
+> 
+> The problem is, not only did this destroy the email reply, but it
+> also destroyed my train of thought for the reply as well through
+> the panic of trying to stop the entire email being deleted.
+> 
+> I don't think this is a hardware issue - I think there's a problem
+> in the input handling somewhere in the stack of kernel, Xorg,
+> whatever multiple input libraries make up modern systems, and KDE.
+> 
+> I did check the logs. Nothing in the kernel messages that suggests
+> a problem. Nothing in Xorg's logs (which are difficult to tie up
+> because it doesn't use real timestamps that one can relate to real
+> time.) There's no longer any ~/.xsession-errors logfile for logging
+> the stuff below Xorg.
+> 
+> I'm running Debian Stable here - kernel 6.1.0-34-amd64, X.Org X Server
+> 1.21.1.7, KDE Plasma (5.27.5, frameworks 5.103.0, QT 5.15.8).
 
-I'll let others comment on what should happen but certainly this large
-number looks more like a mistake, like an integer overflow, if you don't
-dig into what this number is supposed to represent.
+I'll also add that The Carbon X1, being a laptop, its built-in keyboard
+uses the i8042:
 
-Perhaps an idea could be to just skip the print (or even more code) for
-ULONG_MAX since an opp for that is not supposed to exist anyways?
+[    1.698156] i8042: PNP: PS/2 Controller [PNP0303:KBD,PNP0f13:MOU] at 0x60,0x64 irq 1,12
+[    1.698543] i8042: Warning: Keylock active
+[    1.700170] serio: i8042 KBD port at 0x60,0x64 irq 1
+[    1.700174] serio: i8042 AUX port at 0x60,0x64 irq 12
+[    1.700271] mousedev: PS/2 mouse device common for all mice
+[    1.702951] input: AT Translated Set 2 keyboard as /devices/platform/i8042/serio0/input/input0
 
-I didn't check the code now but for other frequencies this would be an
-actual error I imagine where it should be visible.
+I don't have the HP laptop with me to check what that was using.
 
-Regards
-Luca
+The mysterious thing is "Keylock active" - clearly it isn't because I
+can write this email typing on that very keyboard. However, I wonder
+if it needs i8042_unlock=1 to set I8042_CTR_IGNKEYLOCK.
 
->
-> BRs.
-> Ziqi
->
->> Regards
->> Luca
->>=20
+Unfortunately, it's probably going to take a year on the Carbon X1
+to work out if this makes any difference.
 
+> Anyone else seeing this kind of behaviour - if so, what are you
+> using?
+> 
+> -- 
+> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+> FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
