@@ -1,33 +1,31 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C431A72607;
-	Wed,  7 May 2025 10:03:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A009B1F91C5
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 10:03:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746612201; cv=none; b=Cr5XopGov7cQPg/iiUs3EyvL5FVnJnT9f2gL0fSh81HaW5X3eyZkzLR/MlT1IcgxT3waZzVfy3zSSqBXl7TyZuDq8vPo1JyIAGoTt+HIbXLBr4wrkG9f0yXto+6ohjFnM2jVukHKDSbfl72D+brMfrnrAnuEj3K/JE6+P6ADAkY=
+	t=1746612227; cv=none; b=q4b+T9eWdH06kMgrP4KC2bjW3i25/+Usibgfm4gXc0YAv3aPhU5rJohqZ/liEXMcCEr8yjk/8p/acf4/nwAtc2J89ArhpC1hyhpPspMQGUQK+wdr98g5a/3iVFqEvnzVsfiJGtGCY3aNSHIZF9XIy3I3RmVDdKaDHTaxSFZusr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746612201; c=relaxed/simple;
-	bh=Vja99RwKaWd86Bne8CVxoLF7hXa1qZ2hU2qWEbh3rTM=;
+	s=arc-20240116; t=1746612227; c=relaxed/simple;
+	bh=JPqB85uGz5OWzFqLAvlB+Xmhgew3sJv2rTxhQ7cBYIQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DKQjl73VUtcdy/gDxY97kEQXJoTVQJppdcPqWx0lcH9sGa4bobIXds+8ds+7z+RxbM2blH37UJOe+10iPbQJpTHKfu/OzbilomBo9LyDjI1IyrkQYuAa8/GAElcvTs+YZajS5OmsuXmefuGPEMYmqu++fLxseAE8fv9SvrkEAm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qiYVkYgs; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=O0fz8aZJkCpDEb2bAJE7epBD6Bwu2y6wRAvJcsp4UcqwMQ2OGGUdBDmQ5NWdWpbhh4N2C6y2ERXNWmuo0wzncVyQ5ZoayETfbZSUsirh7NJKWGq1WAv7p6PrnZpgd445Aa/UXAdVi315EDk7AXAiqFMiy1DaF0WEvG3U59cnGIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=sgxIqJAZ; arc=none smtp.client-ip=115.124.30.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qiYVkYgs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44473C4CEEB;
-	Wed,  7 May 2025 10:03:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746612201;
-	bh=Vja99RwKaWd86Bne8CVxoLF7hXa1qZ2hU2qWEbh3rTM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qiYVkYgsZJk1ojH2gUT0LuMkPaET6AsYf/tKwE/0NkUB43kU6qBoxjNwN00fGIvxT
-	 BDsNWC76g4TZw8L/HgeNyguw1F5vnOrFHOquk+1x5scGvDlx+PLRojlR8fOFLRl9uj
-	 ITq1FNep+ghls2iq7ojFYqD2EXPqBsM7FRADhnmYjdVhDUGkAZYamO1q9qXk+caIdL
-	 ZiCampwGUpIpbncLJsUrNJxgSQSIfFspt+5Goztwy8f6tbF65j8EMsSWXsanfyzP6Z
-	 iSN47YE511HkrBnFBRnmyccIxXsrYVO8w6j67aBFIRdmkxxATlvW8NjoIpF3+4d5ry
-	 6IP5gkty3xcIA==
-Message-ID: <574a67b7-bd57-4cf4-9ecb-cdcefafeb791@kernel.org>
-Date: Wed, 7 May 2025 12:03:14 +0200
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="sgxIqJAZ"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1746612220; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=EWQps3oaNtZZ7GNbFF8Y5bHARbDvabiLn4K5Tv65RZI=;
+	b=sgxIqJAZ85b4SoNGEzv3rsVZEwfQhCWs/piDav3mOLvhhW4iYarE8IK1I/lTJkaKyYTtr6QIWytISEJJRKj0cZK76U0YEgNiJ6WAGbh4Qh1I9dxVd+YfhW00WZD1Ea/OFh1N7y3z5k1g833fFJWEY4ohEB+XM33XMkCWqYZUPd0=
+Received: from 30.74.144.111(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WZpIPoD_1746612218 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 07 May 2025 18:03:39 +0800
+Message-ID: <c0b2221f-2686-49a7-a1bd-97f5181065e0@linux.alibaba.com>
+Date: Wed, 7 May 2025 18:03:37 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,138 +33,125 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/6] dt-bindings: PCI: qcom,pcie-sa8775p: document
- qcs8300
-To: Qiang Yu <quic_qianyu@quicinc.com>,
- Ziyue Zhang <quic_ziyuzhan@quicinc.com>
-Cc: vkoul@kernel.org, kishon@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, dmitry.baryshkov@linaro.org, neil.armstrong@linaro.org,
- abel.vesa@linaro.org, manivannan.sadhasivam@linaro.org,
- lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
- andersson@kernel.org, konradybcio@kernel.org, linux-phy@lists.infradead.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
- quic_krichai@quicinc.com, quic_vbadigan@quicinc.com
-References: <20250507031019.4080541-1-quic_ziyuzhan@quicinc.com>
- <20250507031019.4080541-3-quic_ziyuzhan@quicinc.com>
- <20250507-quixotic-handsome-wallaby-4560e3@kuoka>
- <8fef4573-0527-44d8-a481-f3271d9ffa33@quicinc.com>
- <01b06e36-823c-4f28-8db5-dc0ee0b4c063@kernel.org>
- <c91c5357-464b-4ecc-96a5-c617048f73e5@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <c91c5357-464b-4ecc-96a5-c617048f73e5@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH 2/2] mm: mincore: use folio_pte_batch() to batch process
+ large folios
+To: David Hildenbrand <david@redhat.com>, Dev Jain <dev.jain@arm.com>,
+ akpm@linux-foundation.org, hughd@google.com
+Cc: willy@infradead.org, 21cnbao@gmail.com, ryan.roberts@arm.com,
+ ziy@nvidia.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <cover.1742960003.git.baolin.wang@linux.alibaba.com>
+ <7ad05bc9299de5d954fb21a2da57f46dd6ec59d0.1742960003.git.baolin.wang@linux.alibaba.com>
+ <17289428-894a-4397-9d61-c8500d032b28@arm.com>
+ <6a8418ba-dbd1-489f-929b-e31831bea0cf@linux.alibaba.com>
+ <fc883e4c-41cb-4f05-a5ef-3b756c689da3@redhat.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <fc883e4c-41cb-4f05-a5ef-3b756c689da3@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 07/05/2025 11:56, Qiang Yu wrote:
-> 
-> On 5/7/2025 4:25 PM, Krzysztof Kozlowski wrote:
->> On 07/05/2025 10:19, Ziyue Zhang wrote:
->>> On 5/7/2025 1:10 PM, Krzysztof Kozlowski wrote:
->>>> On Wed, May 07, 2025 at 11:10:15AM GMT, Ziyue Zhang wrote:
->>>>> Add compatible for qcs8300 platform, with sa8775p as the fallback.
->>>>>
->>>>> Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
->>>>> ---
->>>>>    .../bindings/pci/qcom,pcie-sa8775p.yaml       | 26 ++++++++++++++-----
->>>>>    1 file changed, 19 insertions(+), 7 deletions(-)
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml
->>>>> index efde49d1bef8..154bb60be402 100644
->>>>> --- a/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml
->>>>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml
->>>>> @@ -16,7 +16,12 @@ description:
->>>>>    
->>>>>    properties:
->>>>>      compatible:
->>>>> -    const: qcom,pcie-sa8775p
->>>>> +    oneOf:
->>>>> +      - const: qcom,pcie-sa8775p
->>>>> +      - items:
->>>>> +          - enum:
->>>>> +              - qcom,pcie-qcs8300
->>>>> +          - const: qcom,pcie-sa8775p
->>>>>    
->>>>>      reg:
->>>>>        minItems: 6
->>>>> @@ -45,7 +50,7 @@ properties:
->>>>>    
->>>>>      interrupts:
->>>>>        minItems: 8
->>>>> -    maxItems: 8
->>>>> +    maxItems: 9
->>>> I don't understand why this is flexible for sa8775p. I assume this
->>>> wasn't tested or finished, just like your previous patch suggested.
->>>>
->>>> Please send complete bindings once you finish them or explain what
->>>> exactly changed in the meantime.
->>>>
->>>> Best regards,
->>>> Krzysztof
->>> Hi Krzysztof
->>> Global interrupt is optional in the PCIe driver. It is not present in
->>> the SA8775p PCIe device tree node, but it is required for the QCS8300
->> And hardware?
-> 
-> The PCIe controller on the SA8775p is also capable of generating a global
-> interrupt.
->>> I did the DTBs and yaml checks before pushing this patch. This is how
->>> I became aware that `maxItem` needed to be changed to 9.
->> If it is required for QCS8300, then you are supposed to make it required
->> in the binding for this device. Look at other bindings.
-> 
-> The global interrupt is not mandatory. The PCIe driver can still function
-> without this interrupt, but it will offer a better user experience when
-> the device is plugged in or removed. On other platforms, the global
-> interrupt is also optional, and `minItems` and `maxItems` are set to 8 and
-> 9 respectively. Please refer to `qcom,pcie - sm8550.yaml`,
-> `qcom,pcie - sm8450.yaml`, and `qcom,pcie - x1e80100.yaml`.
-I don't know what does it prove. You cannot add requirement of global
-interrupt to existing devices because it would be an ABI break.
 
-Best regards,
-Krzysztof
+
+On 2025/5/7 17:54, David Hildenbrand wrote:
+> On 07.05.25 11:48, Baolin Wang wrote:
+>>
+>>
+>> On 2025/5/7 13:12, Dev Jain wrote:
+>>>
+>>>
+>>> On 26/03/25 9:08 am, Baolin Wang wrote:
+>>>> When I tested the mincore() syscall, I observed that it takes longer 
+>>>> with
+>>>> 64K mTHP enabled on my Arm64 server. The reason is the
+>>>> mincore_pte_range()
+>>>> still checks each PTE individually, even when the PTEs are contiguous,
+>>>> which is not efficient.
+>>>>
+>>>> Thus we can use folio_pte_batch() to get the batch number of the 
+>>>> present
+>>>> contiguous PTEs, which can improve the performance. I tested the
+>>>> mincore()
+>>>> syscall with 1G anonymous memory populated with 64K mTHP, and 
+>>>> observed an
+>>>> obvious performance improvement:
+>>>>
+>>>> w/o patch        w/ patch        changes
+>>>> 6022us            1115us            +81%
+>>>>
+>>>> Moreover, I also tested mincore() with disabling mTHP/THP, and did not
+>>>> see any obvious regression.
+>>>>
+>>>> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+>>>> ---
+>>>>    mm/mincore.c | 27 ++++++++++++++++++++++-----
+>>>>    1 file changed, 22 insertions(+), 5 deletions(-)
+>>>>
+>>>> diff --git a/mm/mincore.c b/mm/mincore.c
+>>>> index 832f29f46767..88be180b5550 100644
+>>>> --- a/mm/mincore.c
+>>>> +++ b/mm/mincore.c
+>>>> @@ -21,6 +21,7 @@
+>>>>    #include <linux/uaccess.h>
+>>>>    #include "swap.h"
+>>>> +#include "internal.h"
+>>>>    static int mincore_hugetlb(pte_t *pte, unsigned long hmask, unsigned
+>>>> long addr,
+>>>>                unsigned long end, struct mm_walk *walk)
+>>>> @@ -105,6 +106,7 @@ static int mincore_pte_range(pmd_t *pmd, unsigned
+>>>> long addr, unsigned long end,
+>>>>        pte_t *ptep;
+>>>>        unsigned char *vec = walk->private;
+>>>>        int nr = (end - addr) >> PAGE_SHIFT;
+>>>> +    int step, i;
+>>>>        ptl = pmd_trans_huge_lock(pmd, vma);
+>>>>        if (ptl) {
+>>>> @@ -118,16 +120,31 @@ static int mincore_pte_range(pmd_t *pmd,
+>>>> unsigned long addr, unsigned long end,
+>>>>            walk->action = ACTION_AGAIN;
+>>>>            return 0;
+>>>>        }
+>>>> -    for (; addr != end; ptep++, addr += PAGE_SIZE) {
+>>>> +    for (; addr != end; ptep += step, addr += step * PAGE_SIZE) {
+>>>>            pte_t pte = ptep_get(ptep);
+>>>> +        step = 1;
+>>>>            /* We need to do cache lookup too for pte markers */
+>>>>            if (pte_none_mostly(pte))
+>>>>                __mincore_unmapped_range(addr, addr + PAGE_SIZE,
+>>>>                             vma, vec);
+>>>> -        else if (pte_present(pte))
+>>>> -            *vec = 1;
+>>>> -        else { /* pte is a swap entry */
+>>>> +        else if (pte_present(pte)) {
+>>>> +            if (pte_batch_hint(ptep, pte) > 1) {
+>>>> +                struct folio *folio = vm_normal_folio(vma, addr, pte);
+>>>> +
+>>>> +                if (folio && folio_test_large(folio)) {
+>>>> +                    const fpb_t fpb_flags = FPB_IGNORE_DIRTY |
+>>>> +                                FPB_IGNORE_SOFT_DIRTY;
+>>>> +                    int max_nr = (end - addr) / PAGE_SIZE;
+>>>> +
+>>>> +                    step = folio_pte_batch(folio, addr, ptep, pte,
+>>>> +                            max_nr, fpb_flags, NULL, NULL, NULL);
+>>>> +                }
+>>>> +            }
+>>>
+>>> Can we go ahead with this along with [1], that will help us generalize
+>>> for all arches.
+>>>
+>>> [1] https://lore.kernel.org/all/20250506050056.59250-3-dev.jain@arm.com/
+>>> (Please replace PAGE_SIZE with 1)
+>>
+>> As discussed with Ryan, we don’t need to call folio_pte_batch()
+>> (something like the code below), so your patch seems unnecessarily
+>> complicated. However, David is unhappy about the open-coded
+>> pte_batch_hint().
+> 
+> I can live with the below :)
+> 
+> Having something more universal does maybe not make sense here. Any form 
+> of patching contiguous PTEs (contiguous PFNs) -- whether with folios or 
+> not -- is not required here as we really only want to
+> 
+> (a) Identify pte_present() PTEs
+> (b) Avoid the cost of repeated ptep_get() with cont-pte.
+
+Good. I will change the patch and resend it. Thanks.
