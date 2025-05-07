@@ -1,169 +1,155 @@
-Received: from mail.tkos.co.il (golan.tkos.co.il [84.110.109.230])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 474C81B422A;
-	Wed,  7 May 2025 03:43:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.110.109.230
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C446F1BC07A;
+	Wed,  7 May 2025 03:43:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746589424; cv=none; b=c5EuSE6lV60Ho5QmV1Zpb9rI9xRUHbhGIzHDt9Qm+0FKZK6ohKf+uukXazD5PzgP7ESNgRbv7bwjkOLC8bhHpjXNqpPB28vibERK5qNuRg62PRhy1vKloDmagX5Bz2BSEg4z6zohD73y3O2pTQ0r+e9YeFmu/s11RNpzDIhwpdY=
+	t=1746589437; cv=none; b=MXJefBHI+Sh2vYloqKrVi3M7HWOy7AV4AZQYM0+1FaKlb6O103EZAoXmwxX87olkmvpab+jbQa+X88ohongrj9T9z9WTgVI0kF2OFSasgfI97ChYZmgWchSONrPI7Y/WJQ8hECwCu5scvzbPgVr2GT5olkZRvh02TLKsfJZyk/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746589424; c=relaxed/simple;
-	bh=Aed/X3ndFGxW3Cv/Mmx0GvVxagOhwtAd9qDxrnSW1W4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=BdVImOzTIWSBDhjngv+gkBO0XTuoBh/2KV9EGY0Ko87GsInlOFJEEilPEVynW0Z0piu7//Ij/vSZd8LJy4f9oEyBwzuztPYhWaqeyONPNyn/u/tDzYv2q1XJzAiwZcPJz1WcNOoSOuFE5PEuQIml913zecefdM4yBPRNmBmuWX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tkos.co.il; spf=pass smtp.mailfrom=tkos.co.il; dkim=pass (2048-bit key) header.d=tkos.co.il header.i=@tkos.co.il header.b=JA9vqH9d; arc=none smtp.client-ip=84.110.109.230
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tkos.co.il
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tkos.co.il
+	s=arc-20240116; t=1746589437; c=relaxed/simple;
+	bh=1/TV6tMl2gNlog8KxmmJQ9ScMhNwTlfXsz6pi42aGTk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TYhOLNyhuDCt8614pCJZKbADTxE9ZlFbOkAZd1wZEN0N317wQroKHmIq8ehHH5eQcD/t7YGplv4CN+N5pONHjW93jritzx9RRPllVEAR6a7nuRcxHsx17qw+650cuafCqwYk/CxtR3Wj8E7k08GBtqiuKpG0LeCVWrRvPtI9pH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MAPrLagE; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tkos.co.il header.i=@tkos.co.il header.b="JA9vqH9d"
-Received: from localhost (unknown [10.0.8.2])
-	by mail.tkos.co.il (Postfix) with ESMTP id 0599A440758;
-	Wed,  7 May 2025 06:43:23 +0300 (IDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tkos.co.il;
-	s=default; t=1746589403;
-	bh=Aed/X3ndFGxW3Cv/Mmx0GvVxagOhwtAd9qDxrnSW1W4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=JA9vqH9dNiRJAb04g3xMN2FZ5MlRAPpYW6VFuRa1wUgBJsIkmEXj0eLdnPxVBKmOD
-	 rVHf0doxKFbF5OWm6tEOkwE8/ey9MbR0WSTG2+OGwG+CrImazH4hP04lIl/qqJcDaR
-	 DiU3EhDlo/7ffReeP8FQ+8Uq1jds6Pidv3tBZcQr5RkqinKG67BZC8Wn/zjNpmHN1U
-	 OiqPtp4Os8IB1GYbDnsciGtCfv8tvKzoGV1OWr216MDbExxKfi5qesQrUnZ/cZyJ98
-	 4L8d+ikEwi3aWxGmA20iJBPKVRddYoJ7XYHeIRri9Iz2mfKbnR/Jn5vGYNKw5q+Ewe
-	 8vcHZUlVfoy4Q==
-From: Baruch Siach <baruch@tkos.co.il>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,  Jiri Slaby
- <jirislaby@kernel.org>,  Krzysztof Kozlowski <krzk+dt@kernel.org>,  Conor
- Dooley <conor+dt@kernel.org>,  linux-kernel@vger.kernel.org,
-  linux-serial@vger.kernel.org,  devicetree@vger.kernel.org,
-  linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] dt-bindings: serial: Convert cnxt,cx92755-usart to DT
- schema
-In-Reply-To: <20250506220025.2545995-1-robh@kernel.org> (Rob Herring's message
-	of "Tue, 6 May 2025 17:00:24 -0500")
-References: <20250506220025.2545995-1-robh@kernel.org>
-User-Agent: mu4e 1.12.9; emacs 30.1
-Date: Wed, 07 May 2025 06:43:30 +0300
-Message-ID: <878qn9ytjx.fsf@tarshish>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MAPrLagE"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-441ab63a415so63816045e9.3;
+        Tue, 06 May 2025 20:43:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746589434; x=1747194234; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EKjjpWzv48U9LX3EX2sY4j22d7QCieaYoLqSyYGhmYE=;
+        b=MAPrLagEqcyWEV7L8kkenHgxQfXOSr6ZrSWQThVkNLdze8dC3EVQ1Y/y7x04FRO710
+         oMZxFrtI5sc0STAjdgpKSsUXpBi7hFkNKOoZ3lOrTFUf8r9q4w7Hr+sZdubJj81/S6fN
+         tXAgeUM79mg4lSsRqunPubQdR7HYnC5lTwLxT+BNS40uNcYUpH4YCFsWH9pXQJ7sZQ7S
+         H0BJU9HjtW57XH1MF5NRe+i3cGtQitGkj3wZ5FuqZg0uisnMpczTeyhUgSSYCD/mTCyE
+         jP0OwFI25OcOnLmH+Ez0uJAPyhTBEafO1iuVKfHtJXoi+fOmQ8MhDdR4X4z7Tq+OwiVX
+         rgIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746589434; x=1747194234;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EKjjpWzv48U9LX3EX2sY4j22d7QCieaYoLqSyYGhmYE=;
+        b=A6xmXgKJHNgyd4AdL6HmI6D4zExZaMezh/Dy8YCrMJTMEeXeXNPQeV5FvFr8LofOcB
+         NZOjfFyrKOx+95jdiRP+UpAPamSrFd015KerHacaO+KDw9ACgCGaPovVBJ2roN7sq9+o
+         HXqerhyDn6t0PPQHaOJEoj4iljEfeTgqY86ST74qjXlb5s+k5flIL5UaCvymk46cJnyK
+         0sbopWNy7Y3PS3ar8tN48OqVUwMoEy1PUT5wxW6gA/P71YATjXaGrlSDYPV7b3VC6S/o
+         IZwG1YGo/8smBKZPoGPyNlGrbbZXOekcBIITXMCoV87K1X/KHT52x4pBsIUnNntTMkfC
+         t07A==
+X-Forwarded-Encrypted: i=1; AJvYcCUfNO3Up6J4/RSFna8EcKDSOxwgPUVMR0hRlo15riSK8IGISsonLKLIoglXeS3TQgjvW37c4XFt38gizj3U@vger.kernel.org, AJvYcCUwW3pQ3fWU4duwj/8c8J1pMUQKeOuR3wJVkE5Z/MHYpQDFwXMYySyEn062Br0T6UHn6mMWjrGe@vger.kernel.org, AJvYcCVjIjzf4J8WGZO2G1R/f3Q3CrJg76Mp3OWpyVPdXsBLVMqRVKlAJDlv+5DxrfPWgk/PVls=@vger.kernel.org, AJvYcCXR34x1TQByDKF6FxBH2Vc1Uvc+OmwV1ah3rRA1HivSTl6/4OdsaIik1ymKarELf+pdcYdM3WGE3WKUIx8BTPqi9DXH@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7j5W1o/CgCRM1H4hhNtYIGY7vvscjvzpJAJhiwzotXBWlrS2u
+	Y9Jn9JNzW8GAmr2xAJr/hDHDLFQCI9gs7aeJky7f6lEJPJHGlP8Y+2YrLldH3xDqtxuC64J+H+Y
+	Fh69juD9YQffiJQEMT/Bj7jthiOE=
+X-Gm-Gg: ASbGncvjFufBKdqKqKSeGMdyXLFPfrShfmW1t0I/O5hEylb9aAv9PokszcFw1/FJ6Uo
+	nvOViq/sW0QimeB3C5AifKoMeJSs4zJo3rBijbSSr0sMYpuBAtHYB6EM+1iNHMFb63MaQ0LCwt0
+	mARZMevYOj0Z2ExF93m1KPTyp3UcQ0bC1B6oTx+uKptPzVnrB3qg==
+X-Google-Smtp-Source: AGHT+IGEG3zUsL0Hq6HZDsiJfGiMiVQhydWmd7Hclu84WAzBoZfmF3OvFbXv3SSqQyG4o6d2sB5Gmpt0wlD2gHsBZ3w=
+X-Received: by 2002:a05:6000:1a8b:b0:3a0:9de8:8a45 with SMTP id
+ ffacd0b85a97d-3a0b49d2755mr1212225f8f.32.1746589433881; Tue, 06 May 2025
+ 20:43:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20250506025131.136929-1-jiayuan.chen@linux.dev>
+ <b776fa07-de4b-44be-ae68-8bc8c362ea81@linux.dev> <9c311d9944fa57cec75e06cde94496d782fe4980@linux.dev>
+In-Reply-To: <9c311d9944fa57cec75e06cde94496d782fe4980@linux.dev>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Tue, 6 May 2025 20:43:43 -0700
+X-Gm-Features: ATxdqUFaoJtwVj0z2KLyes9UtmvTMsURQNshsCTGx3BUOtVxeWC_uBDz5fClPus
+Message-ID: <CAADnVQKK87UV9rH_YviePfUmOO3mGXQmYfN-Q9Ax5AYv+xE8zw@mail.gmail.com>
+Subject: Re: [RESEND PATCH bpf-next v4 1/2] bpf, sockmap: Introduce tracing
+ capability for sockmap
+To: Jiayuan Chen <jiayuan.chen@linux.dev>
+Cc: Martin KaFai Lau <martin.lau@linux.dev>, Jakub Sitnicki <jakub@cloudflare.com>, 
+	John Fastabend <john.fastabend@gmail.com>, Cong Wang <xiyou.wangcong@gmail.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Jesper Dangaard Brouer <hawk@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	bpf <bpf@vger.kernel.org>, Network Development <netdev@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Rob,
-
-On Tue, May 06 2025, Rob Herring (Arm) wrote:
-
-> Convert the Conexant Digicolor USART binding to DT schema. It is a
-> straight-forward conversion.
+On Tue, May 6, 2025 at 8:37=E2=80=AFPM Jiayuan Chen <jiayuan.chen@linux.dev=
+> wrote:
 >
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-
-Acked-by: Baruch Siach <baruch@tkos.co.il>
-
-Thanks,
-baruch
-
-> ---
->  .../bindings/serial/cnxt,cx92755-usart.yaml   | 48 +++++++++++++++++++
->  .../bindings/serial/digicolor-usart.txt       | 27 -----------
->  2 files changed, 48 insertions(+), 27 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/serial/cnxt,cx92755-usart.yaml
->  delete mode 100644 Documentation/devicetree/bindings/serial/digicolor-usart.txt
+> May 7, 2025 at 04:24, "Martin KaFai Lau" <martin.lau@linux.dev> wrote:
 >
-> diff --git a/Documentation/devicetree/bindings/serial/cnxt,cx92755-usart.yaml
-> b/Documentation/devicetree/bindings/serial/cnxt,cx92755-usart.yaml
-> new file mode 100644
-> index 000000000000..720229455330
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/serial/cnxt,cx92755-usart.yaml
-> @@ -0,0 +1,48 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/serial/cnxt,cx92755-usart.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Conexant Digicolor USART
-> +
-> +maintainers:
-> +  - Baruch Siach <baruch@tkos.co.il>
-> +
-> +description: >
-> +  Note: this binding is only applicable for using the USART peripheral as UART.
-> +  USART also support synchronous serial protocols like SPI and I2S.
-> +  Use the binding that matches the wiring of your system.
-> +
-> +allOf:
-> +  - $ref: /schemas/serial/serial.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    const: cnxt,cx92755-usart
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - interrupts
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    serial@f0000740 {
-> +        compatible = "cnxt,cx92755-usart";
-> +        reg = <0xf0000740 0x20>;
-> +        clocks = <&main_clk>;
-> +        interrupts = <44>;
-> +    };
-> diff --git a/Documentation/devicetree/bindings/serial/digicolor-usart.txt
-> b/Documentation/devicetree/bindings/serial/digicolor-usart.txt
-> deleted file mode 100644
-> index 2d3ede66889d..000000000000
-> --- a/Documentation/devicetree/bindings/serial/digicolor-usart.txt
-> +++ /dev/null
-> @@ -1,27 +0,0 @@
-> -Binding for Conexant Digicolor USART
-> -
-> -Note: this binding is only applicable for using the USART peripheral as
-> -UART. USART also support synchronous serial protocols like SPI and I2S. Use
-> -the binding that matches the wiring of your system.
-> -
-> -Required properties:
-> -- compatible : should be "cnxt,cx92755-usart".
-> -- reg: Should contain USART controller registers location and length.
-> -- interrupts: Should contain a single USART controller interrupt.
-> -- clocks: Must contain phandles to the USART clock
-> -  See ../clocks/clock-bindings.txt for details.
-> -
-> -Note: Each UART port should have an alias correctly numbered
-> -in "aliases" node.
-> -
-> -Example:
-> -	aliases {
-> -		serial0 = &uart0;
-> -	};
-> -
-> -	uart0: uart@f0000740 {
-> -		compatible = "cnxt,cx92755-usart";
-> -		reg = <0xf0000740 0x20>;
-> -		clocks = <&main_clk>;
-> -		interrupts = <44>;
-> -	};
+> >
+> > On 5/5/25 7:51 PM, Jiayuan Chen wrote:
+> >
+> > >
+> > > Sockmap has the same high-performance forwarding capability as XDP, b=
+ut
+> > >
+> > >  operates at Layer 7.
+> > >
+> > >  Introduce tracing capability for sockmap, to trace the execution res=
+ults
+> > >
+> > >  of BPF programs without modifying the programs themselves, similar t=
+o
+> > >
+> > >  the existing trace_xdp_redirect{_map}.
+> > >
+> >
+> > There were advancements in bpf tracing since the trace_xdp_xxx addition=
+s.
+> >
+> > Have you considered the fexit bpf prog and why it is not sufficient ?
+> >
+>
+> 1.This patchset prints a large amount of information (e.g. inode ID, etc.=
+),
+> some of which require kernel-internal helpers to access. These helpers ar=
+e
+> not currently available as kfuncs, making it difficult to implement
+> equivalent functionality with fentry/fexit.
+>
+> 2. skb->_sk_redir implicitly stores both a redir action and the socket ad=
+dress
+> in a single field. Decoding this structure in fentry/fexit would require
+> duplicating kernel-internal logic in BPF programs. This creates maintenan=
+ce
+> risks, as any future changes to the kernel's internal representation woul=
+d
+> necessitate corresponding updates to the BPF programs.
+>
+> 3. Similar to the debate between using built-in tracepoints vs kprobes/fe=
+ntry,
+> each approach has its tradeoffs. The key advantage of a built-in tracepoi=
+nt is
+> seamless integration with existing tools like perf and bpftrace, which na=
+tively
+> support tracepoint-based tracing. For example, simply executing
+> 'perf trace -e 'sockmap:*' ./producer' could provide sufficient visibilit=
+y
+> without custom BPF programs.
 
--- 
-                                                     ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
+Similar to Martin I don't buy these excuses.
+For your own debugging you can write bpftrace prog that will
+print exact same stats and numbers without adding any kernel code.
+
+We add tracepoints when they're in the path that is hard to get to
+with tracing tools. Like functions are partially inlined.
+Here it's not the case.
+You want to add a tracepoint right after your own bpf prog
+finished. All these debugging could have been part of your
+skmsg program.
+
+pw-bot: cr
