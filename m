@@ -1,134 +1,143 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E864A21019C
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 10:04:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 415A1213E66
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 10:04:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746612251; cv=none; b=ZDDwXtAtQyAQnEKEziygZRzdLV4iag02iIPZ37smC2SbZy2vSidnfKDWA3R9QGi/vAtddbjanug3Ag+4xmLLSORk0edo13sJnDbKa+i07fu4IxgWhfkR/Hgdb5gK5Vqa+g2f+u8pqUGQ2Of/3O98JzeqJXL2rtWdLU+fCmXpL90=
+	t=1746612253; cv=none; b=TeVGLTxbQmTGHb5xAPJ3EGD4avZTkXmeCv0EJTr+cVoloEplrjWF47GrBytY2JE71iQ9c82/BLDlOkFc19Omse2cCSyqqs1Rafeya15lSj/l4X1frviQ9+dFlBOrR80owbtlnxllj5W8eL1oObOmX+CLgg4HCAQvOoSloJRtjg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746612251; c=relaxed/simple;
-	bh=+5OdA0oEnVokN1rpaxGvi2C+sVk9jnywPeQTetGSAjs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HyTf/TUrFvZ3uKEmDVCi/lfRLTguawtxiSP1TiV57aNewFoor5FN4WCjUPLp4ajBHZkAcKqrSqpbTZd//7b6wDYVxoSbl0enYkRijsA3lwDwCIh7nzijmwALqIAFgw3jQa3wMyx4BtFj4LGa38TdCWO0Vtn2/JPqyN+WKLVGR7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=FBHGeRui; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1746612253; c=relaxed/simple;
+	bh=KKDPdf+RYih2MpxRJbdswI13umMtHPKoTSKbUwdg2SQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=OkzUECpGeHpCT89wLdRZL/5J7218aLIJeLcqBT7fLkwIUlTZm553B0SljNk9NGpDB+fZmxOsRhrGqS9ZzP9vYhb7kQ4z70LUPKnooBTRTEqpnrWJ1jKIM1SaweiC9AgT33rYtpfdB24Blwn2NWStHe/ABS8vG+xu1Bvpi7GBdjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=JkPLRVWu; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="FBHGeRui"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-39c1efbefc6so4942118f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 03:04:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746612247; x=1747217047; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=o4drvJJUgYEZxCfccWRhpTUQplm3nJwkaeKuYVaNajo=;
-        b=FBHGeRuiP/D5ULFDX4C8tJN50BJFtLetYxx3xI3Ym3Lq1O2sZSHPTyEDoo2uLNs2tJ
-         x3phYgvnPlIniqPl4b132a33+qNykw9umaiz75PKaIqprOGaI2MkJRk7h0IUd4mco5aQ
-         qECR3O7YxPTewhqrGPzYsBilX+zUy5MnEMG8rXjFe+hCk/2KloiSoPLKzZ54JLtW5ehW
-         wzI08cZi4JxsBNLxz1w00rxRUrXsIP0lhNmZFrHb9GvUp7LCmmv03wTbtSZlb75hUISp
-         wtypzjvPQFuBzFXWjJ9tGvflPtnraZcQJvPTA57GAEoLrGJ9zl5VL6EV1GebgbHgEzGS
-         P45A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746612247; x=1747217047;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=o4drvJJUgYEZxCfccWRhpTUQplm3nJwkaeKuYVaNajo=;
-        b=RYPNJdPjx+PIDw7yZlbmTrjz7I5tec0T+C2HvJtsxvt+ya5R0bvB9c7jVOnnvMz+bd
-         3vSgzQiHMcPl7P5oqp1m0L1ZCpF5DV+BVtrqunY5VZX8AguG266o1cBtK+GDMCHGKUUr
-         5LSZvWBo6CFYiFVs0mlKXj0lRDbFXgg412OMLgF2Y36NmLKwP5B0eUBNQ0UD+V9P1ivI
-         gHIDiRVN2nEx4v4ZC77oc04hbdBqP0UsmAqfCySzj1sNkAXUiR1D2SEo+XEoUQ3VAyka
-         064yl13O1HNghqZwNi5hlaKQOHw4DIli+JqNL16u3fJ4YiYcRUdiNgWjEU2NKL/HogIN
-         uIKw==
-X-Forwarded-Encrypted: i=1; AJvYcCV0r6wE2iJmWbizO4IpFn+rf+f9RjcZZ7y8R2uiS2ahZgjCKfrL5dDfh8CsOCuEXVJFZmYcjSXCgIZMplA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxeQ7HG03KqGlVxMjE5riXTehFLAfNtGgwuogH8c1lOqn3CpYWt
-	/LpHPodEWKNoU6H5n9TFlD80dlQpdURbLr2aFB0j27HH2XIi1/ZPrUCk3JivpO8=
-X-Gm-Gg: ASbGncudS7gCLMHjJ6gsWNE/noDU0iG+6W+/Dl5KEGcM1c5N9UIhsNQDioa9dgO1VX8
-	bYrvKzyZPUmtOhVIhxtjXUn5+3BI4B0EWCP24Ksb7cOWTEjILf4HIZMNPclFpAguvDylxKAbmoz
-	e+9HWZt4ymRWHmL87J6sKkwElassAfJafn95+gA1crFyddAGieeB+aMk6VQbNkR0VUVVwe49gNh
-	jhI7vQrMGUKWZy+1N43m0dvNreq+JrvKjDVpRWKu3Q7LIqHAU1ccqG0E8bQ3+KDmWqtUrMQFuVK
-	4aDyGC0gMhvMTA2NVydVU+wlq4m1FKncbYLfvu/jo9LtqspfJ2FXhJMsqs+l9qOw1iCBB6HPsga
-	XaGJP45M=
-X-Google-Smtp-Source: AGHT+IEaSN+8g1NFKyP/wiEuCt2qNtlAySEQ9Eluq9F9UG0pScqdYhwwvlQsl1TiQ3pW5g9bViorNA==
-X-Received: by 2002:a5d:53ce:0:b0:3a0:b72a:b36 with SMTP id ffacd0b85a97d-3a0b72a0ce2mr649663f8f.36.1746612247148;
-        Wed, 07 May 2025 03:04:07 -0700 (PDT)
-Received: from localhost (p200300f65f00780800000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f00:7808::1b9])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a099ae7cc6sm16743937f8f.55.2025.05.07.03.04.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 03:04:06 -0700 (PDT)
-Date: Wed, 7 May 2025 12:04:04 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: linux-pwm@vger.kernel.org
-Cc: David Lechner <dlechner@baylibre.com>, 
-	Kent Gibson <warthog618@gmail.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 0/4] pwm: userspace support
-Message-ID: <yvpdeff577l72zxbtz2a2pwghzk3app4dfntjfgijdultauvea@dqkaek7tbbos>
-References: <cover.1746010245.git.u.kleine-koenig@baylibre.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="JkPLRVWu"
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250507100403euoutp01612ba194b53756c58ff997548e8a6885~9NpT5d5eT1175611756euoutp01J
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 10:04:03 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250507100403euoutp01612ba194b53756c58ff997548e8a6885~9NpT5d5eT1175611756euoutp01J
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1746612243;
+	bh=N32TfHVqNTkje4PcTK07rh/HIsJBsQBWcN1H8kWn9js=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=JkPLRVWuHBDbxns/R/3DK8w87IPCtNOg2sGMoqr4GavTq/yF0viOnzZnBTs8ZrWI6
+	 lYvhnCAFyq59EGWlnhGYpCXwQzDsHeXwqOD/orpLzP+waygrJJjzqYthmqoUeCMMKg
+	 PCaedNImP5Y/Dbgr/zZOR/RRE7Oq68itdkMfRpGQ=
+Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250507100403eucas1p1c31cf23f55512589a7663132f9f50778~9NpTWWOeV1269412694eucas1p11;
+	Wed,  7 May 2025 10:04:03 +0000 (GMT)
+Received: from [192.168.1.44] (unknown [106.210.136.40]) by
+	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250507100402eusmtip2f16f3da88a0473dad88a4f960a19539c~9NpSR_l2o2857428574eusmtip2I;
+	Wed,  7 May 2025 10:04:02 +0000 (GMT)
+Message-ID: <91ecca14-2102-4c29-9252-025ce6b6a07f@samsung.com>
+Date: Wed, 7 May 2025 12:04:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="2rfq35pycrfzygjr"
-Content-Disposition: inline
-In-Reply-To: <cover.1746010245.git.u.kleine-koenig@baylibre.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 3/3] riscv: dts: thead: Add device tree VO clock
+ controller
+To: Stephen Boyd <sboyd@kernel.org>, Drew Fustini <drew@pdp7.com>
+Cc: mturquette@baylibre.com, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, guoren@kernel.org, wefu@redhat.com,
+	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+	alex@ghiti.fr, jszhang@kernel.org, p.zabel@pengutronix.de,
+	m.szyprowski@samsung.com, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Content-Language: en-US
+From: Michal Wilczynski <m.wilczynski@samsung.com>
+In-Reply-To: <c46de621e098b7873a00c1af4ca550a1@kernel.org>
+Content-Transfer-Encoding: 8bit
+X-CMS-MailID: 20250507100403eucas1p1c31cf23f55512589a7663132f9f50778
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250403094433eucas1p2da03e00ef674c1f5aa8d41f2a7371319
+X-EPHeader: CA
+X-CMS-RootMailID: 20250403094433eucas1p2da03e00ef674c1f5aa8d41f2a7371319
+References: <20250403094425.876981-1-m.wilczynski@samsung.com>
+	<CGME20250403094433eucas1p2da03e00ef674c1f5aa8d41f2a7371319@eucas1p2.samsung.com>
+	<20250403094425.876981-4-m.wilczynski@samsung.com> <Z/BoQIXKEhL3/q50@x1>
+	<17d69810-9d1c-4dd9-bf8a-408196668d7b@samsung.com>
+	<9ce45e7c1769a25ea1abfaeac9aefcfb@kernel.org>
+	<475c9a27-e1e8-4245-9ca0-74c9ed663920@samsung.com>
+	<c46de621e098b7873a00c1af4ca550a1@kernel.org>
 
 
---2rfq35pycrfzygjr
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v7 0/4] pwm: userspace support
-MIME-Version: 1.0
 
-Hello,
+On 5/6/25 23:30, Stephen Boyd wrote:
+> Quoting Michal Wilczynski (2025-04-30 00:52:29)
+>>
+>> In the v2 version of the patchset, there was no reset controller yet, so
+>> I thought your comment was made referring to that earlier version.
+>> This representation clearly describes the hardware correctly, which is
+>> the requirement for the Device Tree.
+>>
+>> The manual, in section 5.4.1.6 VO_SUBSYS, describes the reset registers
+>> starting at 0xFF_EF52_8000:
+>>
+>> GPU_RST_CFG             0x00
+>> DPU_RST_CFG             0x04
+>> MIPI_DSI0_RST_CFG       0x8
+>> MIPI_DSI1_RST_CFG       0xc
+>> HDMI_RST_CFG            0x14
+>> AXI4_VO_DW_AXI          0x18
+>> X2H_X4_VOSYS_DW_AXI_X2H 0x20
+>>
+>> And the clock registers for VO_SUBSYS, manual section 4.4.1.6 start at offset 0x50:
+>> VOSYS_CLK_GATE          0x50
+>> VOSYS_CLK_GATE1         0x54
+>> VOSYS_DPU_CCLK_CFG0     0x64
+>> TEST_CLK_FREQ_STAT      0xc4
+>> TEST_CLK_CFG            0xc8
+>>
+>> So I considered this back then and thought it was appropriate to divide
+>> it into two nodes, as the reset node wasn't being considered at that
+>> time.
+>>
+>> When looking for the reference [1], I didn't notice if you corrected
+>> yourself later, but I do remember considering the single-node approach
+>> at the time.
+>>
+> 
+> If the two register ranges don't overlap then this is probably OK. I
+> imagine this is one device shipped by the hardware engineer, VO_SUBSYS,
+> which happens to be a clock and reset controller. This is quite common,
+> and we usually have one node with both #clock-cells and #reset-cells in
+> it. Then we use the auxiliary bus to create the reset device from the
+> clk driver with the same node. This helps match the device in the
+> datasheet to the node and compatible in DT without making the compatible
+> provider specific (clk or reset postfix).
+> 
+> That's another reason why we usually have one node. DT doesn't describe
+> software, i.e. the split between clk and reset frameworks may not exist
+> in other operating systems. We don't want to put the software design
+> decisions into the DT.
+> 
+> It may also be that a device like this consumes shared power resources
+> like clks or regulators that need to be enabled to drive the device, or
+> an IOMMU is used to translate the register mappings. We wouldn't want to
+> split the device in DT in that case so we can easily manage the power
+> resources or memory mappings for the device.
+> 
+> TL;DR: This is probably OK, but I'd be careful to not make it a thing.
 
-On Wed, Apr 30, 2025 at 01:55:57PM +0200, Uwe Kleine-K=F6nig wrote:
-> after the feedback I got from David on v7[1] and some internal
-> discussion here comes a new version of the patch.
->=20
-> Apart from rebasing to a newer base (current pwm/for-next) the only
-> change in the relevant patch #4 about return values from the
-> PWM_IOCTL_SETEXACTWF ioctl. Instead of returning 1 if the request failed
-> to apply exactly, return -EDOM.
->=20
-> The earlier patches in this series prepare that and implement a
-> similar change in pwm_set_waveform_might_sleep() to simplify also other
-> users of this function. Patch #3 is only a documentation update that is
-> not strictly related to the userspace chardev, but reflects the changes
-> in patches #1 and #2.
->=20
-> Feedback welcome.
+Thank you very much for the comprehensive explanation. Because the
+registers don’t overlap, it’s fine in this case. Since Drew also seem to
+agree, we can probably push these patches forward, while keeping in mind
+that for future SoCs it would be better to use a single node.
 
-I hope that no feedback is good feedback and pushed that series. The
-first three patches to
+> 
 
-	https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for=
--next
-
-as v6.16-rc1 material. The last patch only to pwm/for-nexxt which I will
-push to next after v6.16-rc1 to give that a long time in next before
-going into a release.
-
-Best regards
-Uwe
-
---2rfq35pycrfzygjr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmgbMBEACgkQj4D7WH0S
-/k43Kwf+MCeLEQtaqRQp3PKuwsCxXrVgqiIWBtSxhmcZpHfDOqHkAYPzfe5mHgaU
-r4HpXdFemnQ5KcQFqbjSkhwO7pxWewfO4MOjXgL0TdKUKwsKE7yoB+Cd4wM219AD
-cLeRtxR97DUCM8eH4mludOJ9ooD+HdnMXKskRlUik4yPmaqU3eNFVjHsndqOo43B
-jqGkB1/MiDv+NupH1VWeRD4ruZ19yGXup1/JGaNmnG3Gz++jxGMZ5SpsPaHS5Ej/
-/rnP5ihOWSpUUCx6VFibZwukq2TcI8nDjzm27IxdOZB/K182Kbqb5ZIaKzXZGVv7
-ctJjAnZoDNrXZyA751C9WBE8kYlgQQ==
-=FhI5
------END PGP SIGNATURE-----
-
---2rfq35pycrfzygjr--
+Best regards,
+-- 
+Michal Wilczynski <m.wilczynski@samsung.com>
