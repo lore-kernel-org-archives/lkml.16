@@ -1,164 +1,130 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1F791D61BC
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 07:11:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 070702144CC
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 07:11:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746601900; cv=none; b=L7+KF7j9nIKKTopcFgsmnrqRR00br69HLCzM1jmGDbSihDO/K5uDACGHVhy4/FcBnc/Hd3FUy3axc/gNn7LKr8I7gP54i8QZaB2KkKWWIknLSYHQ6wmr3YyeDpuLfLifnWiWQPlXDF1PsxpdjNIkCt2HlhhPDVJpYk5NAT/1omw=
+	t=1746601912; cv=none; b=aKs6EANQdZpS5ixPuA7VgTjYQi2ubMQ0dmPVJbjCA3X7S8Nz3B2YOHtTCVCg69d2T7d1DRq4P6hFpRZyBxTsBQ2ssu5ch8RFbZTEuD0MWA3I0P+wJZYwMTP/R+bkn4hlUA53PIsnmzSefANNhEjmRTBOJFj0/deiXojbgdc1slg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746601900; c=relaxed/simple;
-	bh=yal5n+E6MfJzczAecY/V6J/dQHZV/cy27bFUQs8nwzA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=f+4vavyjNG97BKzFk3asrnCh1VBieGCiwoDqsv8niQQH6BcZmcx5QCLDwzAN+vYMEppF4hTj6BiA4IyMuSuUMs1cHjxTCj1dGOJJ/R6SuU3LmkpYcSxPQRHpiOpoHkfR8+OlVTU/jSN5LBpTE2HN/qGycBnAcSGhr8jVR5UO23Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=c5m79T6Z; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1746601912; c=relaxed/simple;
+	bh=8fnvLCB4q9di2/shpRoPyvOXBtQy10A9RXLh9Ei52Do=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Gt5WjFF1Fod2maTqFdVLmglQWOmAxftOD9Cly584mJFLetVet5D6PX/+ckKswH7iW/bp+kDkJIeNnCb0TReUWXBZsvHMYEEdLcHWHBeP/agmEkIi+WGQtY+DbumrX+yuHSB1AQHPo1sAHs/RMEr/7ltTfkrSVuvwNTuOCOX+xrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=rOX5LKZy; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="c5m79T6Z"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-736c1cf75e4so5862080b3a.2
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 00:11:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="rOX5LKZy"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-22e4db05fe8so14171195ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 00:11:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1746601898; x=1747206698; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W2sXebmCObPffjp+8cHq+ZdvnbCodI4A+STbiNXb5Tw=;
-        b=c5m79T6Zz6mhTwMgA0j8kz1syMR2DXi/LxaMcAPbsJ2U+z7b0KxMeP1wSRkE8pJ13n
-         wvB+6mm7t5oLgKpOT6UtUazjERrHwEXr7pHwaPMiq/9qEWQOLmWJ7od9H2h7f3u3kjVp
-         J6/71E1S/ZLlhblJlGpRbI50UV/up7jU83kSaOXfhgYFVa2wSQXQxMkXX3s/r3cH9sws
-         Hv99DvojnFWav3zB3ahclMJJfwv/SPUx/f5HEyu4BPmNQ1KM37Sfoci1UZJHxz/KuoJe
-         YdTlFQrh+S4iAhaaVBZEFSo6pkenbIXKkQOhcBLrUdQDq51+w4VkK0RoiNHWKMZwHay+
-         HxvA==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1746601909; x=1747206709; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5lzn4RZmbI4fRSaKNfr+/7WaMGj6wGPqEtsSxdD8HoE=;
+        b=rOX5LKZyj3kYef9LfyH2XxV7N+JgL3GLrDFTSNHBqAxVAF45jtRc9r77VB6qK5Z40B
+         5Sadc1LXuRjUDDsMm88wSCu/Lod0BF3MTMxTJgJcsdHnTbi1305PqZ33DHK9xP5Z/oRE
+         eJC2PjsPHbXWcOfI3Sjq7OS06tNmvAGIMx6Iq1gdR2tYwLn4QpSgh5/kqoa0HTtlj9Nc
+         x7oexSsGYHOs+GAjb+eIQ0l+B0ke6j0d4VKJ2wat2uPUNqk8dCMPMcp1vaoC5b7/2JPT
+         AXpD2ctSn4K8O+RvuOQNztk5x6ZQkMApJBqEH5IIGEVesphW7neSBsPF4DOhGC50ElXX
+         dWjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746601898; x=1747206698;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=W2sXebmCObPffjp+8cHq+ZdvnbCodI4A+STbiNXb5Tw=;
-        b=akF80VkatyD/pv7fnoZhZ7x+1DtrQ0zqAts4HixvquWIlIBZSncdGyWFrkN1PhlAnB
-         RU7nFAo1PZ2Rea1/SDGm2tvfvNz5NWQOVUvh8VSL+5Rk5jLdviz8UXFUuPgLVqBwoP/J
-         sObNi1H4B7+WwXH2YMaYxkouUVqfsWSWag54pBJcIlpRFBrn1JtduUkx/Q8STPJrjeCm
-         9hgblbEaJupgM+i2ZNH89/joQxLCgK6rwNxI9Y3zhG5VBZ0Wm5/tW4Ci4b6tvK/RZlOD
-         l3JIZY51GYMTtEzPpTqFKH3kE0qBBGbilMusRWguiwOuhA5TQ1iRmEVwc7gcDwEZYH33
-         UIag==
-X-Forwarded-Encrypted: i=1; AJvYcCU9nftuNJtkMT0X7W1st91zN/Ou+bjBqryquQn1bhnkZNCRWaeiZn+7y1Ka5hWWC551jHu6Y8MnorEitG0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxcAb0W1IwSpM+5Pd2o0rXTALPmSRfcBRFfqWiSzbEk8y/KuCMI
-	b43F7uhele2suurTRSZuVxywhNoCo93r4ZTWPscfgoBW2C1DafpGXUz39uNxFF4=
-X-Gm-Gg: ASbGncuyveuP1CFe+hXBta36Kvr6R7AMalo1HpDzb9af4DezSyf2WEoqe4D3xcwcoPx
-	PAyEh/b3zc880jIAM3hM5SgZvK2Is/cAAgk19KFctPi/+22Kos9OWC+OgapZOyyosWD1onkdU4B
-	s2OLMGcqCesQrYWPUy5++c2GPgOZn/LVpcJBCff5eCkeICwpgkc9IGUhuO1bG/7hwFWFjB/9nQb
-	8zYildKPEZxwd6OULsgfZ85Z+TiN9WNm75ucUWOWou08eB92zxZ/igMmgP21QVUUWwpb+9LK0hx
-	baCXxvnVHH+MS1wXOeka9Q+px4C/HmOrJt3NvSIBdXUNKWsd0womEAS8+iLqkG9FVw==
-X-Google-Smtp-Source: AGHT+IExFLJCG57fqwaPZBut003qAu68CPdGTZxKMH6TqQwBSJbCBf5bcIGoqQcNRoXcFwoPKkAKYg==
-X-Received: by 2002:a05:6a00:21c5:b0:740:a023:5d60 with SMTP id d2e1a72fcca58-740a0235d74mr1451883b3a.19.1746601897755;
-        Wed, 07 May 2025 00:11:37 -0700 (PDT)
-Received: from n37-069-081.byted.org ([115.190.40.12])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7405906372fsm10741274b3a.148.2025.05.07.00.11.32
+        d=1e100.net; s=20230601; t=1746601909; x=1747206709;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5lzn4RZmbI4fRSaKNfr+/7WaMGj6wGPqEtsSxdD8HoE=;
+        b=YweXRj7sgDHvvMDzhllELRAJCnKeDy+SeRMpOdnof8lT7zYkvq2r8tI2Je7oUcPA0I
+         dmpKEzv1+7IsXM6e7s/E2jB9t6waxs8amlZn+2Txm2ZIHhPtG3DltkqF9+Uu5mmYFSvS
+         HhtWmyh55dLkdn2nNuggS32yRVzSdIb4mTwaZkMOJ5fMkDwM6E16lA5zO3ELq6XDku9q
+         OfqbblGjqm6GiQkRbtnbE+F0V6vfb3FYQ09v3ujBpAeUW0oMQvNgknyvoUsU3NLBLJ7e
+         9ePam58hMv9dHqTD8Ht3dPk+HHSRRS6+/MhNPdNwbNSXYCU5JLESQFAIMb9brL5OwwNt
+         8RDg==
+X-Forwarded-Encrypted: i=1; AJvYcCW1FqGHGeUogSX22ELY9X+EkQwMUxWq6A88tbTwDgV06oZ/vr4M+RgUfwvjYrOsEtxPIk9Lpl4M2K1VyFk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSY/gn2kSg0kNv/U+XFev9jougEeBUCZ7M0nVHoZ6+n7LkR083
+	J6ldE9cAmgddSNZpRCT6iIg6Y46eJuv2Gm/zohJOhR8g2UDiETczk74lnO4xXKkziK0F515CiSc
+	n
+X-Gm-Gg: ASbGnctkNhDG2Y6oPrBRwrctAhblUvx8IymM2kUlpi/4s4gsMBDVdpBo+VyXyQPGdtn
+	vbuL+JWrtkM4H4oS6EAw7eAdnTts4M4AGZCRADeDJRiAh53NhoZZOfPQbs5Yp4Iafq4Hns2GRs+
+	Q7I07wJ1awIBHCI25btggJmUQOkGHgGtG1Pbl33QLP9Z050CWhPsKZKnIj025DwUxiu9p6MlJpE
+	mBtDbDUg/+4QFL21aeJw+HuAhKJLRSV25M8aIFpQRt1muf8t1zUCrE+8+t2ELtrnWIQK2PwJG7n
+	6kavdlhA3cY5auP/1zcj/k5m6Bvn1+kDGXtzohN2wTHEgUOf33UGk2Nl
+X-Google-Smtp-Source: AGHT+IEe8gp8laZ9M94uel6cyR5zf5BuwHLhDVIoev8vvFvIWWHAWfIW/cCahX6Po9V4t8k//8gPZg==
+X-Received: by 2002:a17:902:dad2:b0:220:d909:1734 with SMTP id d9443c01a7336-22e5ea385d9mr35488805ad.14.1746601908970;
+        Wed, 07 May 2025 00:11:48 -0700 (PDT)
+Received: from charlie.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e1521fb3esm86085475ad.121.2025.05.07.00.11.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 00:11:37 -0700 (PDT)
-From: Zhongkun He <hezhongkun.hzk@bytedance.com>
-To: akpm@linux-foundation.org
-Cc: hannes@cmpxchg.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	mhocko@suse.com,
-	muchun.song@linux.dev,
-	yosry.ahmed@linux.dev,
-	yuzhao@google.com,
-	dan.carpenter@linaro.org,
-	Zhongkun He <hezhongkun.hzk@bytedance.com>
-Subject: [PATCH update] mm: add max swappiness arg to lru_gen for anonymous memory only
-Date: Wed,  7 May 2025 15:10:57 +0800
-Message-Id: <20250507071057.3184240-1-hezhongkun.hzk@bytedance.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <65181f7745d657d664d833c26d8a94cae40538b9.1745225696.git.hezhongkun.hzk@bytedance.com>
-References: <65181f7745d657d664d833c26d8a94cae40538b9.1745225696.git.hezhongkun.hzk@bytedance.com>
+        Wed, 07 May 2025 00:11:48 -0700 (PDT)
+From: Charlie Jenkins <charlie@rivosinc.com>
+Date: Wed, 07 May 2025 00:11:30 -0700
+Subject: [PATCH core/entry] LoongArch: Fix include order
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250507-loongarch_include_order-v1-1-e8aada6a3da8@rivosinc.com>
+X-B4-Tracking: v=1; b=H4sIAKEHG2gC/x3M0QqDMAxA0V+RPK9YhQ70V2RITVMNSDLSOTbEf
+ 1/Z43m494RCxlRgbE4wenNhlYru1gBuUVZynKqh933wwd/driprNNxmFtyPRLNaInPLkoMfcsT
+ YBaj10yjz53+eANWoJXnZFx7X9QN59SuldQAAAA==
+X-Change-ID: 20250506-loongarch_include_order-bbf509faca15
+To: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+ Thomas Gleixner <tglx@linutronix.de>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+ Charlie Jenkins <charlie@rivosinc.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1291; i=charlie@rivosinc.com;
+ h=from:subject:message-id; bh=8fnvLCB4q9di2/shpRoPyvOXBtQy10A9RXLh9Ei52Do=;
+ b=owGbwMvMwCXWx5hUnlvL8Y3xtFoSQ4Y0+9Kfk5iXskfPnn2td45QyxcD14kLex8u1Z212//0q
+ 4eVihZaHaUsDGJcDLJiiiw81xqYW+/olx0VLZsAM4eVCWQIAxenAEwkqZKRYe+JeF/2yrOb3zVk
+ Lfn381HWrgUPp8xr3XKyYY1NurGL5CuGv5IfrR4+uXhwSr22TJSIptACvsfhW7r+Bygcm57RIrL
+ 8BCcA
+X-Developer-Key: i=charlie@rivosinc.com; a=openpgp;
+ fpr=7D834FF11B1D8387E61C776FFB10D1F27D6B1354
 
-The MGLRU already supports reclaiming only from anonymous memory
-via the /sys/kernel/debug/lru_gen interface. Now, memory.reclaim
-also supports the swappiness=max parameter to enable reclaiming
-solely from anonymous memory. To unify the semantics of proactive
-reclaiming from anonymous folios, the max parameter is introduced.
+Reorder some introduced include headers to keep alphabetical order.
 
-Signed-off-by: Zhongkun He <hezhongkun.hzk@bytedance.com>
+Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+Fixes: 7ace1602abf2 ("LoongArch: entry: Migrate ret_from_fork() to C")
 ---
-update:
- 1) use strcmp instead of strncmp from Dan Carpenter
-https://lore.kernel.org/all/aBHYT27M1tRxNLRj@stanley.mountain/
- 2) If swappiness is not set, use the default value.
+This is a very minor fix to a patch previously applied to the core/entry
+tip.
+---
+ arch/loongarch/kernel/process.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
- Documentation/admin-guide/mm/multigen_lru.rst |  5 +++--
- mm/vmscan.c                                   | 19 +++++++++++++++----
- 2 files changed, 18 insertions(+), 6 deletions(-)
+diff --git a/arch/loongarch/kernel/process.c b/arch/loongarch/kernel/process.c
+index 98bc60d7c550fcc0225e8452f81a7d6cd7888015..3582f591bab286c30127e715c47d485f74d5e2ca 100644
+--- a/arch/loongarch/kernel/process.c
++++ b/arch/loongarch/kernel/process.c
+@@ -13,8 +13,8 @@
+ #include <linux/cpu.h>
+ #include <linux/init.h>
+ #include <linux/kernel.h>
+-#include <linux/errno.h>
+ #include <linux/entry-common.h>
++#include <linux/errno.h>
+ #include <linux/sched.h>
+ #include <linux/sched/debug.h>
+ #include <linux/sched/task.h>
+@@ -34,8 +34,8 @@
+ #include <linux/prctl.h>
+ #include <linux/nmi.h>
+ 
+-#include <asm/asm-prototypes.h>
+ #include <asm/asm.h>
++#include <asm/asm-prototypes.h>
+ #include <asm/bootinfo.h>
+ #include <asm/cpu.h>
+ #include <asm/elf.h>
 
-diff --git a/Documentation/admin-guide/mm/multigen_lru.rst b/Documentation/admin-guide/mm/multigen_lru.rst
-index 33e068830497..9cb54b4ff5d9 100644
---- a/Documentation/admin-guide/mm/multigen_lru.rst
-+++ b/Documentation/admin-guide/mm/multigen_lru.rst
-@@ -151,8 +151,9 @@ generations less than or equal to ``min_gen_nr``.
- ``min_gen_nr`` should be less than ``max_gen_nr-1``, since
- ``max_gen_nr`` and ``max_gen_nr-1`` are not fully aged (equivalent to
- the active list) and therefore cannot be evicted. ``swappiness``
--overrides the default value in ``/proc/sys/vm/swappiness``.
--``nr_to_reclaim`` limits the number of pages to evict.
-+overrides the default value in ``/proc/sys/vm/swappiness`` and the valid
-+range is [0-200, max], with max being exclusively used for the reclamation
-+of anonymous memory. ``nr_to_reclaim`` limits the number of pages to evict.
- 
- A typical use case is that a job scheduler runs this command before it
- tries to land a new job on a server. If it fails to materialize enough
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 49eb2a4e490d..31142acdcedc 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -5581,24 +5581,35 @@ static ssize_t lru_gen_seq_write(struct file *file, const char __user *src,
- 	while ((cur = strsep(&next, ",;\n"))) {
- 		int n;
- 		int end;
--		char cmd;
-+		char cmd, swap_string[5];
- 		unsigned int memcg_id;
- 		unsigned int nid;
- 		unsigned long seq;
--		unsigned int swappiness = -1;
-+		unsigned int swappiness;
- 		unsigned long opt = -1;
- 
- 		cur = skip_spaces(cur);
- 		if (!*cur)
- 			continue;
- 
--		n = sscanf(cur, "%c %u %u %lu %n %u %n %lu %n", &cmd, &memcg_id, &nid,
--			   &seq, &end, &swappiness, &end, &opt, &end);
-+		n = sscanf(cur, "%c %u %u %lu %n %4s %n %lu %n", &cmd, &memcg_id, &nid,
-+			   &seq, &end, swap_string, &end, &opt, &end);
- 		if (n < 4 || cur[end]) {
- 			err = -EINVAL;
- 			break;
- 		}
- 
-+		if (n == 4)
-+			swappiness = -1;
-+		else if (!strcmp("max", swap_string)) {
-+			/* set by userspace for anonymous memory only */
-+			swappiness = SWAPPINESS_ANON_ONLY;
-+		} else {
-+			err = kstrtouint(swap_string, 0, &swappiness);
-+			if (err)
-+				break;
-+		}
-+
- 		err = run_cmd(cmd, memcg_id, nid, seq, &sc, swappiness, opt);
- 		if (err)
- 			break;
+---
+base-commit: e43b8bb56e537bfc8d9076793091e7679020fc9c
+change-id: 20250506-loongarch_include_order-bbf509faca15
 -- 
-2.39.5
+- Charlie
 
