@@ -1,187 +1,289 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8945A2144CF;
-	Wed,  7 May 2025 07:38:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746603529; cv=none; b=UiN1SOdkhu/Yub8nCtX3MnV3GARlLPa1CgG1aTWGYKWc41DyDgpiSq2wL4YGgg9Lmo9S8wFUI64y1mmQIuMHayc9QAnijwASjWUUmvw0Gsy6zze05oea6gZjQMjgQ3BABRKuGup1GYUS+3XaKGu41v2sZtgE0wIhk5GOn3P4gVM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 448A37E1;
+	Wed,  7 May 2025 07:38:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746603529; cv=fail; b=iq67BxS3kFMQkSd0O5mjjDixU+T/0TlbtummBpG+JnV0iaAg2gfG4jqMzpajQjtSjXfq5GR5Op0nyKM5IZFIibOjkibE13oq/p2BfzpkHTD3aHdB5dGskchpPkWdxyUp+uT1KjnIVtq9ytiWe3Yeh6+nulSBemihTQpvu83jHIg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746603529; c=relaxed/simple;
-	bh=LUbeHMzIFsOzUSMB2htO29hpRr03KwAvpfp2sAuDens=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=SaZ88yI1Lkyb01lMMjLBDyCWOYhEdn9NVRcxLwR17nA6FI2d6SOtQXq5gN55MfnKwrUGff/Vq7CM383hD+/y5zy2vQ06UrUCG1AGOTyxaXuA+JanEkjBKMPe3TB/E/l657I72wrRAGjrKG441bsi+ozcxOQtDLo6SzBMCbQdxNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m794G3VT; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=h/TGEiRYbhhrJ78tnDGOG0UV93TbZPy3gXVNx2MZckc=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=dkaPPyk5QY7Kw8aDRCe0U6S2yquCgr9p6GlCejhx+8BOIO01H9arIQ60TnkrAIoLxxFujtrlcFhpleyDRVYirt640POmt+gbhJvZauE4AnGjOl8SQ56+rYHZbwrjvShnCfitzxpnwCOXmU/NKn/u/sT7f8N1Dgy/AvzIa2xLBP8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fxZEZCGY; arc=fail smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m794G3VT"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a0b6aa08e5so106601f8f.1;
-        Wed, 07 May 2025 00:38:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746603524; x=1747208324; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=LUbeHMzIFsOzUSMB2htO29hpRr03KwAvpfp2sAuDens=;
-        b=m794G3VTeuhMlKp8TdId3looqhtQiyGgYcAx5KjDR3+jxVx5fqHJxM4frZT9SXULq9
-         n05Q0+/GAAoQEPu/GnImg4eF3jGy3n4oCr77MZAvp+F7DdyNzw1lk4fh9PLX4fBGG0ki
-         NmCg4qVOMlPFBzZjscxd/LPdkJN1kbUNHDuBcBcv5IHzaWHBDZdKpyVNZ4qteEYCQXDm
-         py3p0AFSiGBSToDOk+Ews7cMrzYSXgDHeEoUnyjHSvVYKT2rql1txA/xNVbfLBiXRdoy
-         yZt09FBi4Dw98Mh1MQaW76u+im9SZUC2KpcenqaBYsezBbwO/WiCSu0/KYpVNSeh1Ytn
-         WHFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746603524; x=1747208324;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=LUbeHMzIFsOzUSMB2htO29hpRr03KwAvpfp2sAuDens=;
-        b=rMOXXrjSZQ7OgVQAuIQRuK4B9SSwEdn1djeHvU9wS3mJ+OC3KiAZg5ZBt2YP/zolYj
-         bFPL4rvI+u5YrxhbaXrG6bUnHUWiEOzge19ori/81/s9Nt7yg/l4BMlKEGVwfhU4mclY
-         jveUug+9aXiR0doPNKGqXOtutfw58dtZSpgNkoKWBwkT23sO1MRpAZkVt4M+D+ahSJl2
-         T5bP/uhXOOgj2d782yZ3EXmpUogSy1t2UbA2VI+DHnh1gbRpltCDkE8O03ahzwhUX6va
-         NrKpoAj7Q2Rb1FgzR5HYPDiy/H8mTJfftOffSAtc73dP1nJQkfqP0TlMQKYNZIuDieHe
-         6ujg==
-X-Forwarded-Encrypted: i=1; AJvYcCVIVniUtIduXOhzNeK9SbOKZ0KXbq6i+fA1PqRJJKiDUkWA6zfw2qFY92qh9T0xAqMONhqmtLcX30WIbB0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyiM6S0qiqFTrr+GV3Q/sineoL/ntdYTZrMDxw9YQhOCXhXp1kj
-	Gp57ZfIHH6jMl0dvwn/u0mEoK3hWH0XeSrU26gRPTmAOxXCUb3qR
-X-Gm-Gg: ASbGnctrbxZdo8QsymSM9ld2CrCqo7wp8LTbxr1A0CyNZxmj3tBVMmFE9QocssCq06U
-	5h3pjgO5QcaxZsfCGF37ehWqzHIoPOZjePYWOKYAReumMCKXKNP+OFAM/f5TiloeCGmUPZvqinS
-	SjYg9oaR3v5uuL3DtfsCd1oB/GXHUkxqBrN/7KMCTilaK+ifCGtSEUeSSuc6OlRTrqVTy09tjDc
-	sUcYb7YkIWq6qsh/0xBG3l1Twise1dHFkXAA1mvfkgJhhmFspMRQ4UP+7EKfDaF70hlEEjXwNrk
-	PFy+lQj29WG7iJ1uGeKSk7LrFugXnROFhQ0pVOrX7i4r5PtIlsgfmoItuAia+LdfQP8jQRNZmog
-	hUer6jceir97TXgc=
-X-Google-Smtp-Source: AGHT+IFcrfJVgjIHTQQ2WPmB67RGJPQ8xi7u9h/v5miFvmeP2RpN+ZcyLqGtFi9WsQS7CkgsL5VSLw==
-X-Received: by 2002:a5d:64ad:0:b0:39e:cbca:74cf with SMTP id ffacd0b85a97d-3a0b53a06bfmr1636435f8f.6.1746603523625;
-        Wed, 07 May 2025 00:38:43 -0700 (PDT)
-Received: from ?IPv6:2001:818:ea56:d000:56e0:ceba:7da4:6673? ([2001:818:ea56:d000:56e0:ceba:7da4:6673])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099b17748sm15851404f8f.100.2025.05.07.00.38.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 00:38:43 -0700 (PDT)
-Message-ID: <ec7c00c640b0b359bfd98d460d067aee64ca069f.camel@gmail.com>
-Subject: Re: [PATCH v5 0/7] iio: introduce IIO_DECLARE_BUFFER_WITH_TS
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: David Lechner <dlechner@baylibre.com>, Jonathan Cameron
- <jic23@kernel.org>,  Nuno =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>, Andy
- Shevchenko <andy@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Michael
- Hennerich <Michael.Hennerich@analog.com>, Eugen Hristev
- <eugen.hristev@linaro.org>, Nicolas Ferre <nicolas.ferre@microchip.com>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea
- <claudiu.beznea@tuxon.dev>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, Trevor Gamblin <tgamblin@baylibre.com>
-Date: Wed, 07 May 2025 07:39:07 +0100
-In-Reply-To: <20250505-iio-introduce-iio_declare_buffer_with_ts-v5-0-814b72b1cae3@baylibre.com>
-References: 
-	<20250505-iio-introduce-iio_declare_buffer_with_ts-v5-0-814b72b1cae3@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fxZEZCGY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746603527; x=1778139527;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=h/TGEiRYbhhrJ78tnDGOG0UV93TbZPy3gXVNx2MZckc=;
+  b=fxZEZCGYog74QoM85kAmEppGdjAFzsS1eNn1NuTigXerTDbd8HSxMYZx
+   rzEzCjwh7agYLEpJGAR64XzOoIu7qkIMJwMpXjNXBKo7uY9akDFIPhNoi
+   LS+d1cc2RrTsYKnftNhNIyxT2SG+pmSc/KZyrganr+nPRO8Mwn9gRipIY
+   kxEjYUaIahE8Z1k9W5ns900Gk8WaPqk0Fb2c3OdeFyqg4+ppTiIkK5FsN
+   zfTZsJU1UNNhwR9RqauAN0om5wYPro0n09DZMtaS6V4snHtJKXGrvGMB9
+   a4NYMKHp5X8lrswngus/Do7b5jqm1cR5TwS4XDC0cbYte+cbLpsjZO6CF
+   w==;
+X-CSE-ConnectionGUID: padOcJBqTcyjmIDsmH/BUQ==
+X-CSE-MsgGUID: FJDJhAgAT7qMRYqkR5YQmA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="52132164"
+X-IronPort-AV: E=Sophos;i="6.15,268,1739865600"; 
+   d="scan'208";a="52132164"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 00:38:46 -0700
+X-CSE-ConnectionGUID: 2LcGFmiLS8qNUhxAowEetA==
+X-CSE-MsgGUID: 5ITNLyHLRAiEsZIEWea6Pg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,268,1739865600"; 
+   d="scan'208";a="135872267"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 00:38:45 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Wed, 7 May 2025 00:38:43 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Wed, 7 May 2025 00:38:43 -0700
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.57.41) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Wed, 7 May 2025 00:38:42 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=xeLLh89i+M1M1WZhHh/sFOohKeyHGMrAM389hvcOQyPvvKOK9pBv1HHxaYhU5Ka6thMi3Y5O7OAhKshXQQTk0zQ1FwVpp3mndiZAt7lC9Ll+5g9lOGOqQt0h5Ev8xakUMP6m1tn8D1RfDNNlYxAIX+O08mtIpCgMo5Va+NFalrH531AAWAvqPx5PyC+2mChddmmFkavS2Vp1q6oqk4SJLSYWMfV/qGB2j2Ko/ijlHJU77/YBxNb1qktfIcWoI4SqJwE1mY/yokRZg8uyEK0O+nI6KhRpk98zTuNjoKbE+4hTaTO4ZRBraqqub1EoryeNlygO0h0zREQSTkLHSF6EpQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Hj8eR8gupDjuy8V66Vw/nQbkANSP5Y/oblQVJa+Xcmc=;
+ b=PWQZXNfq3uUKqeR7TTRCVv0JgcNYsGD1ksr+rubPDHOUtV58in+M+7YwPdzyOaEtt08JPaZU7V4XgbtNq2WEEm0Yb6CobaIa12s7kz0bOYAT7y3DmY/9BZtlgOWUhRm4xznnupT/pn2tlamyt7hsJQWNscEomwVn8zXWxJwIfhfsi6t2ncWnRPnTjNVIXbAisZDW7LDuJI8v7z6g+hOYPCMKBjanfwm9lZeL56JJIYVU9fMhj8IDa3gjGFejLOVK/zq3d3viRgDAc7oFR34uU4kjly+cxrIZERN0vrf7mOrGxYgR2vhzjdjvMlUo9Ocp+guDyyvicAJsRFF0HzIOHw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from CH3PR11MB8660.namprd11.prod.outlook.com (2603:10b6:610:1ce::13)
+ by CY8PR11MB7748.namprd11.prod.outlook.com (2603:10b6:930:87::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.26; Wed, 7 May
+ 2025 07:37:55 +0000
+Received: from CH3PR11MB8660.namprd11.prod.outlook.com
+ ([fe80::cfad:add4:daad:fb9b]) by CH3PR11MB8660.namprd11.prod.outlook.com
+ ([fe80::cfad:add4:daad:fb9b%4]) with mapi id 15.20.8699.019; Wed, 7 May 2025
+ 07:37:55 +0000
+Date: Wed, 7 May 2025 15:37:42 +0800
+From: Chao Gao <chao.gao@intel.com>
+To: Sean Christopherson <seanjc@google.com>
+CC: <x86@kernel.org>, <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
+	<tglx@linutronix.de>, <dave.hansen@intel.com>, <pbonzini@redhat.com>,
+	<peterz@infradead.org>, <rick.p.edgecombe@intel.com>,
+	<weijiang.yang@intel.com>, <john.allen@amd.com>, <bp@alien8.de>,
+	<chang.seok.bae@intel.com>, <xin3.li@intel.com>, Ingo Molnar
+	<mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter
+ Anvin" <hpa@zytor.com>, Oleg Nesterov <oleg@redhat.com>, Eric Biggers
+	<ebiggers@google.com>, Stanislav Spassov <stanspas@amazon.de>, Kees Cook
+	<kees@kernel.org>
+Subject: Re: [PATCH v6 5/7] x86/fpu: Initialize guest fpstate and FPU pseudo
+ container from guest defaults
+Message-ID: <aBsNxmHE7UO03iCs@intel.com>
+References: <20250506093740.2864458-1-chao.gao@intel.com>
+ <20250506093740.2864458-6-chao.gao@intel.com>
+ <aBpFvyITMc0WhlX4@google.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <aBpFvyITMc0WhlX4@google.com>
+X-ClientProxiedBy: SI2PR06CA0007.apcprd06.prod.outlook.com
+ (2603:1096:4:186::9) To CH3PR11MB8660.namprd11.prod.outlook.com
+ (2603:10b6:610:1ce::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR11MB8660:EE_|CY8PR11MB7748:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6c967c29-4182-4c2d-5806-08dd8d3a14a3
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?kRZMabdkS5wEYixjg912mFeHrw6Z2a+WTxuBSbFx33cvDMMMxgUgvNKjRo4V?=
+ =?us-ascii?Q?XlHpcyRyHyaTPibP9l0wXxEQriSiGNTjNazIUSFNSlaQzKpHnJNyPMFkVHpw?=
+ =?us-ascii?Q?3UYlaWWeuiwn0MZdF/aVQj94Z6QqRUMeUzwUGeS1iUgY/Z+2YFiuIscGTtTW?=
+ =?us-ascii?Q?HMNy/1ljUGQC4omCwb+z92vH9XV46IFPMoNjeDohsM7Ykn3FzBRFqIRJoHVB?=
+ =?us-ascii?Q?bltOls7DLFLUzVAAZdjYh6ofmj7TfVSMxoQeQrv/jK+HpldV8mpoxeY7U8b6?=
+ =?us-ascii?Q?2xVIWF+aGnQnWdgWWggP7KkTA39BmCSz20sAJZcMBA2E57ahtffuakyZkA4e?=
+ =?us-ascii?Q?YjfT2/THg9IdNf1TGd8EfZnUS0AE6rGZnuFYauwkDooEdKjchAt6gBazhdi6?=
+ =?us-ascii?Q?ZHHwQnxgrwUYSSBsBL9Rr8q8PPzCcJGKQu8CgGKb5ZRCdRv60vcqW7tom5+g?=
+ =?us-ascii?Q?VnT0uE5VK/OdRL1cJuMPyyNh8uT4fIAZN4858T3ZwdX7rAHx4iORRMeG81cz?=
+ =?us-ascii?Q?3Q1M6/Y249GpAqRPKqpUZzsdrERyzBZQNjbsmtPKThZQN69HmA1PYGUtbwBU?=
+ =?us-ascii?Q?XnZ1K4O+z/oozLeYbHUiWHvE27iyocwMLPg+nsSx11uG7ybPI+Y7U2LLy5Gj?=
+ =?us-ascii?Q?d3PpQ9vOpZftj8LJt++KuN7PeHLy85XijcrY7P1UUaaKmnaXVbvPOmIRCTpd?=
+ =?us-ascii?Q?VUrsY+lkCAAPWfhgmCvBMuflmp5XDPnJvUtPfcA/Ww/Fd3nRtANBsAz9CGxj?=
+ =?us-ascii?Q?yi7FbI13P1qLCW98HQCsGZ//Hd8cSobVYpUsn37m0jnsktGDiJSa9mEB9kwK?=
+ =?us-ascii?Q?EnLWZn846e0SsaUQav3nhaIvyfacZ4YWklBUJiTt/bkxjZxRg1ZcKS0uQjKv?=
+ =?us-ascii?Q?RM/jYd5anCB3sjiHnWAL07IIdVI3ElTehof7gsRK5MmGiDwXdSJueNryXTKa?=
+ =?us-ascii?Q?l9dvcSJP2AH2VPRv0nPkj/AhxsACVpT61EXEtCWYx+SYRMCGTV+ZNIr+dPB/?=
+ =?us-ascii?Q?6zRDOHNbqPPAgkJuMyUq/JfNv8o/O5Y64/7XaMidESDXYGiXZZQizb0+pzYt?=
+ =?us-ascii?Q?0ywqSLr9eGUdYFrQfQ/8uPmkgmxlbC5OuiuBdPTa65Vb0eEoQl/AAe8/Z4Q5?=
+ =?us-ascii?Q?iYkZc4JfwDWMoG9ZTWMOGckG3+lvuD6YNuaBs1+SM1a9BI+1f44rMlc3KtyJ?=
+ =?us-ascii?Q?ezrZRUBJkg8jqNexsdKd5SyXr741PsL9P2wK7twK9ouKszrJj3DMXsjyKvwR?=
+ =?us-ascii?Q?5C0bMpmEn8lfMq6oRnn2D5+Q8J59iU7MyEA7vIr3CfHCIPavQo/w5lBf6eDA?=
+ =?us-ascii?Q?EbsPD0Ie64m1N2+TdVN4CnhAcaTwU5poKq2jv481PfFFBz636uvBJmdVaIIP?=
+ =?us-ascii?Q?HJDTJhm9AR86EV4xV2cdAGOcdhuDrShtvhuYsAPCO3ERV3bBzleR0gGu+ny6?=
+ =?us-ascii?Q?TW9GAL+xPsQ=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR11MB8660.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?9/GfSxqP4U/YkJz9Q5D39JnPH7vt7Eu8fMidMMuLCQHWfumRN7cLmkbrtGrI?=
+ =?us-ascii?Q?pvkPjpTh33k08iP+SC9253zexNkSsQJuzHNmE9AFvsapj7eRIrVBg2HVdDkr?=
+ =?us-ascii?Q?mb8/ujArtrkcd8+NHVKIPg54OMnvvEVYWc4JUUL0oVP+siqI5KnOarGnx6d8?=
+ =?us-ascii?Q?22/speGbsZU45OoCoHPlQGrGpHhwZJ5slMrH8UfuJGMqzValn/XI58UIErIJ?=
+ =?us-ascii?Q?MwWwTjeBf2r3yYP1jkYsWzzfDla3RvRpgHgCR0NbJJM4NWqZ7ZjmjZKeYJ6s?=
+ =?us-ascii?Q?YTqCORyhbh2evWH5DNfzZOlUF6VVG+AY/1MhtSKAYA//ADrxFyGrurJj/at5?=
+ =?us-ascii?Q?PR7xBpRnEvgpML526DPSivQiu0DpXGYa4ZOvVJcMe5UeivtXEJu3Y+/E04m1?=
+ =?us-ascii?Q?Nz2f8JQdOyiwqkU6RnV5WkkKQe5cngXy/0drRHAhqLm54Pa2SAKT2clSBRXO?=
+ =?us-ascii?Q?D46JAI646CIUE088MPN3Moguf12wBgxQKiVFTm/jdzYNSJpU7dTCxUpsrlRR?=
+ =?us-ascii?Q?VNqKnjWbYZalNlXIzuXc9Q+Yje1yHS6zEmn0mzJAS7BFYOpRxSwPVHfFTRHB?=
+ =?us-ascii?Q?1ULQ4vQXxsf3qZMShGlR24t5LjBMVdvAyzdGJxPLlS1FO0ZVNLGiy5rdOPfV?=
+ =?us-ascii?Q?dEfoWiw6J7C2utj4Zrs97+Do+nJoGMh4UrXeEMsPxqo0g0fL3/jE7JMWiheS?=
+ =?us-ascii?Q?LYqOZHu0oJ8lVAIl9eEAr0c4lWyUB9nJbnzvsaRvSYWxjdi+KtN0XBRCmsTP?=
+ =?us-ascii?Q?VHhKh8CL16fXwfGPe3vAdLdXXXBUvcLKOyT927P3TcRKXCvLGlfA+LjoygrX?=
+ =?us-ascii?Q?MkUVMJGHpDl3pXWrI+wLQ+ifqc+kvqKYBGzvUbRO2MNfO9pNGu2yb9Qi9pDe?=
+ =?us-ascii?Q?XZOlvWdSMgg/AmFqah2p1SWmLdSFPpba+r98lDYoGcD5kmP4wII0tdXSKQji?=
+ =?us-ascii?Q?eG2vGL0kUb0ywX7sgBDOXHDfsydOxplyDlB9m1GRiSCgND4k9n0gTNhotCXZ?=
+ =?us-ascii?Q?05CNYPFxKCXtLSY/ciIl5M4dWJgOG5K62y4cPiHcqm0HDhDnnyC/zrUMnCQd?=
+ =?us-ascii?Q?DweDx38DQXg5HIUSKS7w49oUOnOKyJUOplLNFBGpqv3anebAUcPufUrk4OQi?=
+ =?us-ascii?Q?Q7lg9IXY3VVDvAEzhprT0ta2f1ddHkqa6Usbr4f58+jznlzDPAtS4+2LwTt+?=
+ =?us-ascii?Q?gnZNEafHFOVLhufHdXDst6+cMulWr4B6iQ7i/ax+H0NVzFMG/Htvo7sE9aQB?=
+ =?us-ascii?Q?gGmypKgRU2ophfLWjxko+2WR7T9AD3+CcttmdAY2G+J1psyQeHQTLY1ce+fD?=
+ =?us-ascii?Q?BDYOLt+ipvKKh432zRajykllSLp/NRtmLER9VO4MkFvf1XgqMVPWmonrdi8E?=
+ =?us-ascii?Q?VHWrzHVOax2MR1CmaZ+8NnR7dWeyD57zJ3+vMk+2P+AOPbiZ72qhqwOfGOdw?=
+ =?us-ascii?Q?UjwV3k5tXnbMOxiFSo4JyyikhI6aS+ZCGmBvKTaMHT69HVYgLVbJSdnvYm/4?=
+ =?us-ascii?Q?nfeVcIc4WjlOjGHgzmY2yE1PGnnrcHU+KMxnT/J79SxBoPPRvF+1CnVe2xqX?=
+ =?us-ascii?Q?FKXIaId9QfOw0iOJ3EeM0DlgK5oDt/xVp2MJdsd+?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6c967c29-4182-4c2d-5806-08dd8d3a14a3
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR11MB8660.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2025 07:37:55.1954
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 20AFozTEFgezesM7ZurvmKG/OC4JcpD4bAPeijWB+o0LKDWrkTcqCbph9lf6Xogie6QjxQiuMgWAT8ZLwmOvYQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR11MB7748
+X-OriginatorOrg: intel.com
 
-On Mon, 2025-05-05 at 11:31 -0500, David Lechner wrote:
-> Creating a buffer of the proper size and correct alignment for use with
-> iio_push_to_buffers_with_ts() is commonly used and not easy to get
-> right (as seen by a number of recent fixes on the mailing list).
->=20
-> In general, we prefer to use this pattern for creating such buffers:
->=20
-> struct {
-> =C2=A0=C2=A0=C2=A0 u16 data[2];
-> =C2=A0=C2=A0=C2=A0 aligned_s64 timestamp;
-> } buffer;
->=20
-> However, there are many cases where a driver may have a large number of
-> channels that can be optionally enabled or disabled in a scan or the
-> driver might support a range of chips that have different numbers of
-> channels or different storage sizes for the data. In these cases, the
-> timestamp may not always be at the same place relative to the data. To
-> handle these, we allocate a buffer large enough for the largest possible
-> case and don't care exactly where the timestamp ends up in the buffer.
->=20
-> For these cases, we propose to introduce new macros to make it easier
-> it easier for both the authors to get it right and for readers of the
-> code to not have to do all of the math to verify that it is correct.
->=20
-> I have just included a few examples of drivers that can make use of this
-> new macro, but there are dozens more.
->=20
-> ---
+>>  static void fpu_lock_guest_permissions(void)
+>>  {
+>> @@ -236,19 +253,18 @@ bool fpu_alloc_guest_fpstate(struct fpu_guest *gfpu)
+>>  	struct fpstate *fpstate;
+>>  	unsigned int size;
+>>  
+>> -	size = fpu_kernel_cfg.default_size + ALIGN(offsetof(struct fpstate, regs), 64);
+>> +	size = guest_default_cfg.size + ALIGN(offsetof(struct fpstate, regs), 64);
+>> +
+>>  	fpstate = vzalloc(size);
+>>  	if (!fpstate)
+>>  		return false;
+>>  
+>>  	/* Leave xfd to 0 (the reset value defined by spec) */
+>> -	__fpstate_reset(fpstate, 0);
+>> +	__guest_fpstate_reset(fpstate, 0);
+>
+>Given that there is a single caller for each of __fpstate_reset() and
+>__guest_fpstate_reset(), keeping the helpers does more harm than good IMO.
 
-LGTM
+Seems Dave strongly dislikes inlining the helpers
 
-Reviewed-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+https://lore.kernel.org/kvm/98dda94f-b805-4e0e-871a-085eb2f6ff20@intel.com/
 
-> Changes in v5:
-> - Add new patch to set minimum alignment to 8 for IIO_DMA_MINALIGN.
-> - Adjust IIO_DECLARE_DMA_BUFFER_WITH_TS() macro for above change.
-> - Drop one ad4695 patch that was already applied.
-> - Link to v4:
-> https://lore.kernel.org/r/20250428-iio-introduce-iio_declare_buffer_with_=
-ts-v4-0-6f7f6126f1cb@baylibre.com
->=20
-> Changes in v4:
-> - Dropped static_assert()s from the first patch.
-> - Handle case when IIO_DMA_MINALIGN < sizeof(timestamp).
-> - Added one more patch for ad4695 to rename a confusing macro.
-> - Link to v3:
-> https://lore.kernel.org/r/20250425-iio-introduce-iio_declare_buffer_with_=
-ts-v3-0-f12df1bff248@baylibre.com
->=20
-> Changes in v3:
-> - Fixed a few mistakes, style issues and incorporate other feedback (see
-> =C2=A0 individual commit message changelogs for details).
-> - Link to v2:
-> https://lore.kernel.org/r/20250422-iio-introduce-iio_declare_buffer_with_=
-ts-v2-0-3fd36475c706@baylibre.com
->=20
-> Changes in v2:
-> - Add 2nd macro for case where we need DMA alignment.
-> - Add new patch for ad4695 to convert buffer from u8 to u16 before
-> =C2=A0 making use of the new macro.
-> - Drop the bmp280 patch since it was determined to have a better
-> =C2=A0 alternative not using these macros.
-> - Add a few more examples to show the non-DMA case, both in a struct and
-> =C2=A0 stack allocated.
-> - Link to v1:
-> https://lore.kernel.org/r/20250418-iio-introduce-iio_declare_buffer_with_=
-ts-v1-0-ee0c62a33a0f@baylibre.com
->=20
-> ---
-> David Lechner (7):
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: make IIO_DMA_MINALIGN minimum of 8 by=
-tes
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: introduce IIO_DECLARE_BUFFER_WITH_TS =
-macros
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: adc: ad4695: use IIO_DECLARE_DMA_BUFF=
-ER_WITH_TS
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: adc: ad4695: rename AD4695_MAX_VIN_CH=
-ANNELS
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: adc: ad7380: use IIO_DECLARE_DMA_BUFF=
-ER_WITH_TS
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: accel: sca3300: use IIO_DECLARE_BUFFE=
-R_WITH_TS
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: adc: at91-sama5d2: use IIO_DECLARE_BU=
-FFER_WITH_TS
->=20
-> =C2=A0drivers/iio/accel/sca3300.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 | 18 ++--------------
-> =C2=A0drivers/iio/adc/ad4695.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 | 11 +++++-----
-> =C2=A0drivers/iio/adc/ad7380.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 |=C2=A0 3 +--
-> =C2=A0drivers/iio/adc/at91-sama5d2_adc.c | 13 ++----------
-> =C2=A0include/linux/iio/iio.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 | 42 ++++++++++++++++++++++++++++++++++++++
-> =C2=A05 files changed, 52 insertions(+), 35 deletions(-)
-> ---
-> base-commit: 7e9a82ab5b861d3c33c99a22c1245a5b262ee502
-> change-id: 20250418-iio-introduce-iio_declare_buffer_with_ts-2f8773f7dad6
->=20
-> Best regards,
+>Passing in '0' and setting xfd in __guest_fpstate_reset() is especially pointless.
 
+Agreed.
+
+Giving Dave's feedback, how about tweaking __fpstate_reset() for guest FPUs:
+
+From 13eddc8a0ecbd9e2a59dc1caacc7dbf198277a24 Mon Sep 17 00:00:00 2001
+From: Chao Gao <chao.gao@intel.com>
+Date: Fri, 31 May 2024 02:03:30 -0700
+Subject: [PATCH] x86/fpu: Initialize guest fpstate and FPU pseudo container
+ from guest defaults
+
+fpu_alloc_guest_fpstate() currently uses host defaults to initialize guest
+fpstate and pseudo containers. Guest defaults were introduced to
+differentiate the features and sizes of host and guest FPUs. Switch to
+using guest defaults instead.
+
+Adjust __fpstate_reset() to handle different defaults for host and guest
+FPUs. And to distinguish between the types of FPUs, move the initialization
+of indicators (is_guest and is_valloc) before the reset.
+
+Suggested-by: Chang S. Bae <chang.seok.bae@intel.com>
+Signed-off-by: Chao Gao <chao.gao@intel.com>
+---
+ arch/x86/kernel/fpu/core.c | 27 ++++++++++++++++++++-------
+ 1 file changed, 20 insertions(+), 7 deletions(-)
+
+diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
+index 444e517a8648..0d501bd25d79 100644
+--- a/arch/x86/kernel/fpu/core.c
++++ b/arch/x86/kernel/fpu/core.c
+@@ -236,19 +236,22 @@ bool fpu_alloc_guest_fpstate(struct fpu_guest *gfpu)
+ 	struct fpstate *fpstate;
+ 	unsigned int size;
+ 
+-	size = fpu_kernel_cfg.default_size + ALIGN(offsetof(struct fpstate, regs), 64);
++	size = guest_default_cfg.size + ALIGN(offsetof(struct fpstate, regs), 64);
++
+ 	fpstate = vzalloc(size);
+ 	if (!fpstate)
+ 		return false;
+ 
++	/* Initialize indicators to reflect properties of the fpstate */
++	fpstate->is_valloc	= true;
++	fpstate->is_guest	= true;
++
+ 	/* Leave xfd to 0 (the reset value defined by spec) */
+ 	__fpstate_reset(fpstate, 0);
+ 	fpstate_init_user(fpstate);
+-	fpstate->is_valloc	= true;
+-	fpstate->is_guest	= true;
+ 
+ 	gfpu->fpstate		= fpstate;
+-	gfpu->xfeatures		= fpu_kernel_cfg.default_features;
++	gfpu->xfeatures		= guest_default_cfg.features;
+ 
+ 	/*
+ 	 * KVM sets the FP+SSE bits in the XSAVE header when copying FPU state
+@@ -535,10 +538,20 @@ void fpstate_init_user(struct fpstate *fpstate)
+ 
+ static void __fpstate_reset(struct fpstate *fpstate, u64 xfd)
+ {
+-	/* Initialize sizes and feature masks */
+-	fpstate->size		= fpu_kernel_cfg.default_size;
++	/*
++	 * Initialize sizes and feature masks. Supervisor features and
++	 * sizes may diverge between guest FPUs and host FPUs, whereas
++	 * user features and sizes are always identical the same.
++	 */
++	if (fpstate->is_guest) {
++		fpstate->size		= guest_default_cfg.size;
++		fpstate->xfeatures	= guest_default_cfg.features;
++	} else {
++		fpstate->size		= fpu_kernel_cfg.default_size;
++		fpstate->xfeatures	= fpu_kernel_cfg.default_features;
++	}
++
+ 	fpstate->user_size	= fpu_user_cfg.default_size;
+-	fpstate->xfeatures	= fpu_kernel_cfg.default_features;
+ 	fpstate->user_xfeatures	= fpu_user_cfg.default_features;
+ 	fpstate->xfd		= xfd;
+ }
+-- 
+2.47.1
