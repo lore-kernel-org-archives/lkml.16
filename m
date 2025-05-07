@@ -1,70 +1,74 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72D2C2116E9
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 18:53:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 029F51482F5
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 18:57:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746644021; cv=none; b=F+1+ot6pD7oGLLzjK+rP43Mo7CiDEwHrPAQBx/D0icEVHIwm9XlOOgeb3kWod1c7bh7EAZX2ba5pt+3nX2bXZ7nDCemcBSlPlO+Znhqm6fs8yKV1h/xQKKdL6H7u91k+lPYs/BNeGIEDD0hmdOex9Cd9ECYKZAZ97enIvA/BrvI=
+	t=1746644222; cv=none; b=g1SSopSOpaA6nx+6bKLOnBb2IvHhdXL6EVujNq9mtYOFCst++VlLBqdknbT4QH6S8063uZAs+5N5jkxOs2GaSiaDG/2fJyW3SHxGTcuOxUl4S3utBZFq+XPakTjheAPSVrtTa6za/UrlDQ3pQSGKM74hAZQHv2wogXBe9mhXEJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746644021; c=relaxed/simple;
-	bh=4vKFr7qe4vZRrtcDl0MgUKtLS085rq+jZEdMX5rs7hs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K+JkEIy/x1Ww3yjhsMnUsUkQAH8AwPEALtYkmu5DThmwe0quCScr2goU6f275BdhUPS3I+u6+36ZUu73UDVpUsLpnug5gzPWVCwGP/r1UzttV4ZFZCvCPDIpqdqMaFOoItmyu0HIjqypxnB2Mqr4xUvwsBHZ8OkgA8F0uPO2jXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zW7ccNI4; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746644222; c=relaxed/simple;
+	bh=pe3tyzUnuTHHV9wY+pcDILJl9icjd/4bGQ8VCrn/BHA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=XPxeHmeG7fpC3huzFL/g/UN0QNzNcFcEJMsuWHdlxkKJJngJSgmoSIIyXmbzFgU5UNVXHdE49wNHvhJvwLDnZjxvA4HH3hZ64T7xwhzF9462XH+ZzT0zIcpm2HhDCVzXoIbrTjt8nqpxup63lS74rtneUqbU8C9pT/5cbtuGn5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com; spf=none smtp.mailfrom=pdp7.com; dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b=byBmq9J0; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=pdp7.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zW7ccNI4"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a0b135d18eso119925f8f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 11:53:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b="byBmq9J0"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-736c3e7b390so292457b3a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 11:57:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746644018; x=1747248818; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1fN0IMnzWBFaY2VN7IEwty5K6yq3NVqO0kz2Muvh8c0=;
-        b=zW7ccNI44l8RwiOkFcwECg2pYgOpR+pOzuU3cXO1YV4YV79RWQMueRDY3RcHSFomHr
-         QIyjqBIGNh17yehm0Zlr2tE+ZVQVVWpaDqhn3tNKUUfB0hgd1k73fRhXKlBOgtkhSz/C
-         ujbvmtmN/zlOLwF+E/tJqYz9cF5THr3llGQAOi/V3A9irej28WihDyiDsBsbU4og+NX7
-         fTUmnC8J+QSsqkZaUm9CSVDiFKxtgMF3gcTKRmmEEoxQW6F7NF2Nz67EEm64LvpCVyWH
-         bvFYuamI0mZXIaxW2SC6VeHlvGUVJY8FCUja2gYz2PjmKilU6xb9/camijDjRBYB5tgp
-         134Q==
+        d=pdp7-com.20230601.gappssmtp.com; s=20230601; t=1746644220; x=1747249020; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0D7Z3FNBB3xDX5RO0FZQrmLI3qnCJ7UO3XkdhJ32m+0=;
+        b=byBmq9J0BMzGUW2oBf42qoORUcDgUlFE3wFaB8cqTPOUaKk2DtgfSZnUduQX+NxQXi
+         JaZJpaTqPH+ePjESJDw/tC7aI4xmkXxR4pykLReKqndmUo3INRJfyHHRLO7ccJo7ksRp
+         OgUqzkXnTg/tov4QyM1nisO1uvMUQVf/SMeB76Vp0R94DHmRp5kmXtpFxtRaJxLZHOVB
+         IFTCFduzGAuDaLpeNJwD0LnKc6bt8cfWE7DDQuS3F8FmaPiHrP2UDQ3dAPSH+zKbIG33
+         te9rj1aksaleiDWPAKY2Bn5ITFoFY8tGTIGLhvLpaiyb9AatvtPioMCy496dKXbVOfif
+         jaHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746644018; x=1747248818;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1fN0IMnzWBFaY2VN7IEwty5K6yq3NVqO0kz2Muvh8c0=;
-        b=vy2PF9EaFnLxRaMSN8f8T2VNl7hsIagWkpWmumYns1JZI65pEzmj1rg9pPF0DpRhTU
-         VvryFAOkpBS/RXh3U0tMOktY7RuI7w+Zv1IQcaZK6GwscG+SuS1OZ+FhjgSzFa0kjJbn
-         UJxGaA32SnQjCn1vFT/ObU9mhRJue2ZIoZAnqEiJPt264TaY8dzSHjt0mIBPup7pLIG8
-         EXeD8EAVLCv5WMEE0IEV61TMpr3GomdcB/LUJpj8iH2B3c/Fd2WObekahAIaFNPi2Jt9
-         S2bLhxLHBvXpngXPkT5KjORFKnEIb0AYc1AagtwXTkYhNa6ZHdlu6NuaHC+Ye1AlkQC+
-         fOcg==
-X-Forwarded-Encrypted: i=1; AJvYcCXAM36NsCpfaA8W9P6Tqla95yR+OORln6NN5VJf1nfPSwGGNp+K2UFktkbyqXD7fjeGYCwkrU0B4RtywUo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxvnQth2tx0rXa6GuCldO5/3AMv4M92h4+evMMgIzfCnxcq9W6g
-	q8YLLscDsafQGk8KRyqzJrtA53RUI2JkT5D54VEjmNNtg5kfcSwncmNlu16HLXc=
-X-Gm-Gg: ASbGnct6V9TxwwqF3EhD0Bo25BklFiH4XAWKs+cAQmarcX+oQUtNa/S82QhkwdvOlgU
-	j8f/3xPMJcYiQsMTFBkPEoLa+g479UXlBvGYICVxebXT+nlWJMcnNMhL8pBMA4c1SNnOcEIeW2F
-	SnGzpZY7poY3kS8IRbqw+FWgu1V3ui56uHr7/LoOsXOZHWY44CxM5v2qazn4+b0tKZKpwqw2bwH
-	JZ30dGaatNp06p79zn2/1CFJGI6hrgiFl5KsVlCd2Hi9P6v+juA6AXFTXcuM73BJ66c7E4lQ+2Y
-	vgjyGQKkbjRdIXerrBOtTzhwkFpXKXFZjyqfTHtgx+gryA==
-X-Google-Smtp-Source: AGHT+IGbXFXl7/yZ2iz0z8i5yTYKtsZVTWA2mRb1dQUNrexl1xahP0QPQA2Qyb99RIZzlQKi8epSew==
-X-Received: by 2002:a05:6000:1a87:b0:3a0:9dfb:b001 with SMTP id ffacd0b85a97d-3a0b4a41ad9mr3680514f8f.58.1746644017747;
-        Wed, 07 May 2025 11:53:37 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a0ba23e334sm103209f8f.85.2025.05.07.11.53.36
+        d=1e100.net; s=20230601; t=1746644220; x=1747249020;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0D7Z3FNBB3xDX5RO0FZQrmLI3qnCJ7UO3XkdhJ32m+0=;
+        b=aLLGVXDsZFFwnSEETAi21Bjit9Qhb5aDoLlCNMIzvtdcRTbs+Egk/QGVpNVvbzdhad
+         yIGrQ1QkXtzwU4CDTEor/X6SUkCcCfxdq+b8fiod2NNT/O4++oSVjOSKNk3OTc5+skeE
+         Zi0rpUKEZFDEAyZggxOQDrlUF9lT1VlWlAOfdwQXLf5Ws6PIraIWSlZdjji2XyBy+420
+         tUORjIUftWupD9jk/UxXu19sUxhzSZbfKr7+VG+K/Qgfq/71wbC6LimfGIC9E1nyurp6
+         LsD/Tj0wJNt8xxEbDN7B0RszDtAZW/sny1cm45lNpZEvf1SH9CG1UCeelzlqorQxh3Vn
+         rjnA==
+X-Forwarded-Encrypted: i=1; AJvYcCWfM+GoUnkQDxmibuFg2yT1jw7TcZh++pPFlYsBw8RqnwqOeagjZaWYFYjL/ML9A/tHQtaDEE70B8yo7Io=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPgdPBY8CRHn7h1x7pu4Qf3anEFZAeCmOucO+7QQkSfeYHWXGA
+	lOzuxvF3wfZrPj8f1AFmdBQmJ9WpHG/ohYnb4vSG/1LD7MusS/ADC0sbio8dnDk=
+X-Gm-Gg: ASbGncsC2UGBxxPZQwIKj1G2FX4o7VkW2AdL0SG4ufxbyl6t0dWKesiitefwMyUR1md
+	RIjYBIXnYbejG40zuNl7f/aQ9XqDLzdCY+W9ikNPy0Ood2E5KlIWzUsm1HuM11XRyeJKtl1tBfl
+	9Tn5QQimC1wQ4xQZadlP/q3D91t2CCQB6g2rAAUu2p8+cidv69/VQZL/5QL4jAd+9TY7alqGvnj
+	InoIjoAnGDVIafX9L1BEmCPLDss25/vQRmusb1+p7QFWHQvnESWAx2eTeQZZpvMjzCpkxVdbLpu
+	11Gk4FnVToy7d0zDGXF7Oq9aJYES91MIP5UvuON261sqPnk=
+X-Google-Smtp-Source: AGHT+IEdnDHavMVVsk2ZTJfyzX7ew+kWTOFVAkNqTxlCa/8qxYi15T/lhuGRhufPsi1FCD90sh72qQ==
+X-Received: by 2002:a05:6a00:e0b:b0:736:32d2:aa93 with SMTP id d2e1a72fcca58-740a9a91092mr595573b3a.20.1746644220028;
+        Wed, 07 May 2025 11:57:00 -0700 (PDT)
+Received: from x1 (97-120-122-6.ptld.qwest.net. [97.120.122.6])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-740590a2735sm12068773b3a.176.2025.05.07.11.56.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 11:53:37 -0700 (PDT)
-Date: Wed, 7 May 2025 21:53:33 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: rujra <braker.noob.kernel@gmail.com>
-Cc: Dave Penkler <dpenkler@gmail.com>, Greg KH <gregkh@linuxfoundation.org>,
-	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [FIRST-PATCH] staging: gpib : gpio : gpib_bitbang.c : fixed
- parentheses error.
-Message-ID: <aBusLVDVchI-mHrN@stanley.mountain>
-References: <CAG+54Da+jDEXRQMgmXGyCD2EHjNFjA9nS9=ShdJPrC3EKjUgBg@mail.gmail.com>
+        Wed, 07 May 2025 11:56:59 -0700 (PDT)
+Date: Wed, 7 May 2025 11:56:57 -0700
+From: Drew Fustini <drew@pdp7.com>
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+	Michael Turquette <mturquette@baylibre.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Rob Herring <robh@kernel.org>, Fu Wei <wefu@redhat.com>,
+	Guo Ren <guoren@kernel.org>, Jisheng Zhang <jszhang@kernel.org>,
+	Palmer Dabbelt <palmer@rivosinc.com>,
+	Michal Wilczynski <m.wilczynski@samsung.com>
+Subject: [GIT PULL] clk: thead: Updates for v6.16
+Message-ID: <aBus+Yc7kf/H2HE5@x1>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,14 +77,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAG+54Da+jDEXRQMgmXGyCD2EHjNFjA9nS9=ShdJPrC3EKjUgBg@mail.gmail.com>
 
-On Wed, May 07, 2025 at 10:48:45PM +0530, rujra wrote:
-> To pass it as one parameter, wrapped the entire macro expansion in parentheses.
-> and build it successfully.
-     ^^^^^^^^^^^^^^^^^^^^^^
-No, it doesn't build.
+The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
 
-regards,
-dan carpenter
+  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
 
+are available in the Git repository at:
+
+  git@github.com:pdp7/linux.git tags/thead-clk-for-v6.16
+
+for you to fetch changes up to 50d4b157fa96bfeb4f383d7dad80f8bdef0d1d2a:
+
+  clk: thead: Add clock support for VO subsystem in T-HEAD TH1520 SoC (2025-05-07 10:09:28 -0700)
+
+----------------------------------------------------------------
+T-HEAD clock changes for v6.16
+
+Add clock support for the Video Output (VO) subsystem in the T-HEAD
+TH1520 SoC. This includes the device tree bindings for the VO clock
+controller as well as extending the TH1520 clk driver to provide
+clock functionality for the VO subsystem.
+
+Signed-off-by: Drew Fustini <drew@pdp7.com>
+
+----------------------------------------------------------------
+Michal Wilczynski (2):
+      dt-bindings: clock: thead: Add TH1520 VO clock controller
+      clk: thead: Add clock support for VO subsystem in T-HEAD TH1520 SoC
+
+ .../bindings/clock/thead,th1520-clk-ap.yaml        |  17 +-
+ drivers/clk/thead/clk-th1520-ap.c                  | 196 ++++++++++++++++++---
+ include/dt-bindings/clock/thead,th1520-clk-ap.h    |  34 ++++
+ 3 files changed, 216 insertions(+), 31 deletions(-)
