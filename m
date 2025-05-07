@@ -1,74 +1,105 @@
-Received: from mail.itouring.de (mail.itouring.de [85.10.202.141])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 018A128E61B;
-	Wed,  7 May 2025 20:46:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.10.202.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0623B28FA9A;
+	Wed,  7 May 2025 20:47:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746650809; cv=none; b=phjM+9wUvuXhMkjQ1Q3qAK5Y8ZrLLRTZlhV3dla3jSztM+qL6GFpHwQBxOcAhfepwTJdlf0SUzrL0tvhsg59/QFYemL35eMtO2QKtiEe39a0CyoLjvWdA1KM6Q0RWIJbJmwUcKTquJlV0Sc2B9nYgzBhn/b+YAeCXYOC4vzapHo=
+	t=1746650876; cv=none; b=YQ64Pmbw9Ot1yAdoh+nsgnQrBOQTeg+acr+sbA1pXNt5ginPe8DSZRlij0bMwXZNDwoTThZuJ46BfWk9AWCNUBfBiPAkes8Ne5FOj74y4wxwub22Ca/iVlV4KX9WquOlzk/5/Tu1O4YCnHuX54AaGDo/iFa5aOPThGIYZF2hJ14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746650809; c=relaxed/simple;
-	bh=i9XJXWNBqY6LXCdgZALQdU6bXpFNhljt/OADu+vfXzU=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=f/sbYjbikBXsDdx9O7JMFKnUfdyslLRuvjSrC0KaFZoLnhAFbAl2HsvsSpnpPr4KCqr+fvMn0WqNhu3a71ILfrjDsMUqF55R/O08zgDY0mTeLhgCpUT2VUz6l5bmA6eGPXJXbEtEbezbAlYxt35Ij/bE1IqqCH9ql9yVnAygHOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=applied-asynchrony.com; spf=pass smtp.mailfrom=applied-asynchrony.com; arc=none smtp.client-ip=85.10.202.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=applied-asynchrony.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=applied-asynchrony.com
-Received: from tux.applied-asynchrony.com (p5b07e9b7.dip0.t-ipconnect.de [91.7.233.183])
-	by mail.itouring.de (Postfix) with ESMTPSA id E289A103765;
-	Wed, 07 May 2025 22:46:35 +0200 (CEST)
-Received: from [192.168.100.221] (hho.applied-asynchrony.com [192.168.100.221])
-	by tux.applied-asynchrony.com (Postfix) with ESMTP id 9007360187F0A;
-	Wed, 07 May 2025 22:46:35 +0200 (CEST)
-Subject: Re: [BUG] Stuck key syndrome
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>,
- Maxime Chevallier <maxime.chevallier@bootlin.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
- Andrew Lunn <andrew@lunn.ch>, Woojung Huh <woojung.huh@microchip.com>,
- Vladimir Oltean <olteanv@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250507000911.14825-1-Tristram.Ha@microchip.com>
- <20250507094449.60885752@fedora.home>
- <aBsadO2IB_je91Jx@shell.armlinux.org.uk>
- <20250507105457.25a3b9cb@fedora.home>
- <aBsmhfI45zMltjcy@shell.armlinux.org.uk>
- <aBsu-WBlPQy5g-Jn@shell.armlinux.org.uk>
- <20250507153236.5303be86@fedora.home>
- <aBtHmNGRTVP9SttE@shell.armlinux.org.uk>
-From: =?UTF-8?Q?Holger_Hoffst=c3=a4tte?= <holger@applied-asynchrony.com>
-Organization: Applied Asynchrony, Inc.
-Message-ID: <859b32ca-acd5-43fd-0577-a76559ba3a9e@applied-asynchrony.com>
-Date: Wed, 7 May 2025 22:46:35 +0200
+	s=arc-20240116; t=1746650876; c=relaxed/simple;
+	bh=ErbIIg8tFdaFpJqMqrCwmVzq5QfpdM9matIuxyQO7IU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=HuslQsrBQnzxbUjoQ6TmF/siqeHJH+ijmU3rO0m0sD3egjJMuGUlhjtWSaTVAAT0msE38Ic2yKUiu9hNetpRsUuo3rTc8LhguBYOpTIRoJxKa6lVKZu19EnTiRQswd0HcsQ/VDfa+Bx8smKy3Db3zK7lmU2FgMt4hPynYDYItHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SmO5wMf2; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SmO5wMf2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF80AC4CEE7;
+	Wed,  7 May 2025 20:47:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746650875;
+	bh=ErbIIg8tFdaFpJqMqrCwmVzq5QfpdM9matIuxyQO7IU=;
+	h=From:Date:Subject:To:Cc:From;
+	b=SmO5wMf20L521OhV4fbfgBID3lGNlu/rTKRiN574Gcs4ADnbwRsoScZzUzZYPMSMp
+	 AY2M2tfmSxIzFLr5qJywqkNxlDGFWVU4UG8/TUT/ucqH4JzP/1GUbVN5aGFewKXJh9
+	 uVBbTlfopPuDuGz66M86xbGonMjd9qdKjk+A320+g49z98cIbNzH3gcp40Knkb0+dd
+	 9XfmBdEvwJRqgYclSMLrG6SHpUh/dWoXlxlQeqwQ1Z52J60avek9xWn4ZTyTxuK9yK
+	 +kBN/VfW6PDtD2Ep0CGKRAnY8bVlDXqCOSu9upGis0sm+5WuHl/QDASQjZoIfkmU+j
+	 08uWc7+cI5+4Q==
+From: Nathan Chancellor <nathan@kernel.org>
+Date: Wed, 07 May 2025 21:47:45 +0100
+Subject: [PATCH net] net: qede: Initialize qede_ll_ops with designated
+ initializer
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <aBtHmNGRTVP9SttE@shell.armlinux.org.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250507-qede-fix-clang-randstruct-v1-1-5ccc15626fba@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAPDGG2gC/x2MQQqEMAxFryJZT6AqRcerDLPQNGpAOk5aRRDvb
+ nD5+O+/ExKrcIKuOEF5lyS/aFC+CqC5jxOjBGOoXOWddw3+OTCOciAtNqP2MaSsG2Us69CSf9c
+ 0+Bbsvyqb97Q/EDnD97puhzeF7XAAAAA=
+X-Change-ID: 20250507-qede-fix-clang-randstruct-13d8c593cb58
+To: Manish Chopra <manishc@marvell.com>, 
+ Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Kees Cook <kees@kernel.org>
+Cc: Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
+ stable@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1518; i=nathan@kernel.org;
+ h=from:subject:message-id; bh=ErbIIg8tFdaFpJqMqrCwmVzq5QfpdM9matIuxyQO7IU=;
+ b=owGbwMvMwCUmm602sfCA1DTG02pJDBnSx35cjmb/GXoui+vDpzDlY38mXClU/MsUuricIWrb5
+ riFzVvfdZSyMIhxMciKKbJUP1Y9bmg45yzjjVOTYOawMoEMYeDiFICJGM9mZNjy6vqtDRNKinha
+ dkvdOpSbkMEdV2X7RPZiWrb68YLp8XEM/1MWz7FdWPH987GdF9u33eAtTZVbVvrBeIbFI09WnZh
+ n7/gB
+X-Developer-Key: i=nathan@kernel.org; a=openpgp;
+ fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
 
-On 2025-05-07 13:44, Russell King (Oracle) wrote:
-> Could you try booting with i8042_unlock=1 and see whether that makes any
-> difference please?
+After a recent change [1] in clang's randstruct implementation to
+randomize structures that only contain function pointers, there is an
+error because qede_ll_ops get randomized but does not use a designated
+initializer for the first member:
 
-It did not help - just had another runaway event with that setting,
-on my ca. 2021 Thinkpad L14. Had the symptom for as long as I have
-had this machine.
+  drivers/net/ethernet/qlogic/qede/qede_main.c:206:2: error: a randomized struct can only be initialized with a designated initializer
+    206 |         {
+        |         ^
 
-We've been tracking this problem in Gentoo since late 2022, see
-https://bugs.gentoo.org/873163 and none of the suggested options
-for i8042 really make a difference. In my case I almost always get
-the stuck key events when using the cursor keys for scrolling in a
-web browser. Sometimes once a month, sometimes twice a day.
+Explicitly initialize the common member using a designated initializer
+to fix the build.
 
-Fwiw it's not necessary to reboot; suspend/resume fixes it,
-as in close/reopen the lid if you have that configured.
+Cc: stable@vger.kernel.org
+Fixes: 035f7f87b729 ("randstruct: Enable Clang support")
+Link: https://github.com/llvm/llvm-project/commit/04364fb888eea6db9811510607bed4b200bcb082 [1]
+Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+---
+ drivers/net/ethernet/qlogic/qede/qede_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-thanks
-Holger
+diff --git a/drivers/net/ethernet/qlogic/qede/qede_main.c b/drivers/net/ethernet/qlogic/qede/qede_main.c
+index 99df00c30b8c..b5d744d2586f 100644
+--- a/drivers/net/ethernet/qlogic/qede/qede_main.c
++++ b/drivers/net/ethernet/qlogic/qede/qede_main.c
+@@ -203,7 +203,7 @@ static struct pci_driver qede_pci_driver = {
+ };
+ 
+ static struct qed_eth_cb_ops qede_ll_ops = {
+-	{
++	.common = {
+ #ifdef CONFIG_RFS_ACCEL
+ 		.arfs_filter_op = qede_arfs_filter_op,
+ #endif
+
+---
+base-commit: 9540984da649d46f699c47f28c68bbd3c9d99e4c
+change-id: 20250507-qede-fix-clang-randstruct-13d8c593cb58
+
+Best regards,
+-- 
+Nathan Chancellor <nathan@kernel.org>
+
