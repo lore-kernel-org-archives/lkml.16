@@ -1,230 +1,202 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 172021C84D6;
-	Wed,  7 May 2025 07:31:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AB41211A11;
+	Wed,  7 May 2025 07:32:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746603111; cv=none; b=gtV4sPCIAuroxt3kQeKgjtpoxffUHCbWLYSTQLFXfZMAwhTx90hO8Ef3/Nm5uE4GxFz1jd0JCRzzZJRP5xoQxJhpIAYggQzGFBQiQlEq56nLz7KHaKJRN5z+xmyTLCLY+WC0NerQVGl3Wn+kjZcOkN90ENX5g1lOjQqCesQwDSY=
+	t=1746603142; cv=none; b=EZXLZB/5OopStyLjU/lMBwe4dAf6FAVrEmqPLHEjrg1IihmU37GCPR2zcN9YEtaFunhIhIS8G0dtYj6vPpi4aVC57VwPSeVk5B+bfnZPGWVbADy+UgSKEO+ElWH4Bf/v/B2dM+gpbmToSD8SJiORm5NBkS7Hnsvf04bC4DibKU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746603111; c=relaxed/simple;
-	bh=0cur8ilifh2WKjNlVxEGKdLdHBX8xWsGsKF2bcY55+U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iWiQKdLze1ehMbN/r0u0T2DqPl7fDgC0DzxxNb1afkba3ufPawtBd2XTPSjM64UnnIubVi0SGZS4I2POJzC5jlAeIOkBdHZoFy8lfT5AftCt+FJXyEjDknAsTctLyzFbLsn7BihiLV3t3SzP4zcrAfMNZosrW3bNZQEs8nL8iks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F+Jioq5z; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1746603142; c=relaxed/simple;
+	bh=FoWncUHZ05ggnRvOTTMYwbUhcFb3cRvPVojt8az5VkQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SzpsXTyjZAsHcqwnGNj7zEjhOLA7o4d4FzNWqNcyq7sd5n27W73X3ikpEIjGhOUCqM2/ghrivZjeYZK75dKUgD5npsTnzS9NsYK0J+opuxcPq/vYVjfKpN7D2lTgDzy0MHp0mbpCSKiac4dUtyQGpdUG+asha+fGcI54rMEav1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JePko0pa; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F+Jioq5z"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JePko0pa"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746603110; x=1778139110;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=0cur8ilifh2WKjNlVxEGKdLdHBX8xWsGsKF2bcY55+U=;
-  b=F+Jioq5zr7qQewoZ3a1JJxXWmsMvMFXeOn6IIW2n0JualFSHEC9jbbuw
-   F58CT8rMBtiu29HDqmL1hXqe5RXFi4sOpxcttU1VGwtp/hui24i3qjqzk
-   8vn1Wu03W8mzu4S/rLZYg/Pt2DfX7iI2US/WC+rSJwhm9dZqThK1MRlqN
-   YHZOy/t6uWFUT11YmsiCHa2aBx5Wu1npt3xD+3DAQO7tVdz3rvKNSZqb7
-   w0daGjkXbGcS2LkTySKIxO9QX6kCHQ4i/NZ0AFHgQhuzSOLM4DjkmVOxK
-   bWwh76z/71YY/KtGBnpmq61w+5szRA0FJzdXO/tqg2UVU2M1LXPGl5YpQ
-   Q==;
-X-CSE-ConnectionGUID: 8EKWOhpFRL2/vYrDmYehzg==
-X-CSE-MsgGUID: rn/heQAzSIa8letC0iLNYA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="35944827"
+  t=1746603140; x=1778139140;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=FoWncUHZ05ggnRvOTTMYwbUhcFb3cRvPVojt8az5VkQ=;
+  b=JePko0pa/BNTW4HGNI+wTk4owA5Hn4D/r+2F/qyBmmF0v9TmxhGEHPvo
+   +RrDMwP6QaMlUoJW8qLCEL9xQwaxsNc1iL5PxZFjCPgHTRN/bQbaGevFZ
+   y6VzGx3w0oD4qgU/O3duM5F8lWPi08Vg4+k48VsOsiB+YNNbGpZtJYjRn
+   xU58LGFe/EQKmIeg7amAaMKjbb+uygrMkrvoWZOaHLSP0M2ImBYS7cnp8
+   0zrz5CajDxLzHVvtwceML0uD2+qk7CerOZi+2YzrZBRC6BnT2VVxp6kQ5
+   bp0k7k+1dZqGoqTQVTTyrnD3qrpisQ+kKKf1qaVNal02m9+flM0+WlExn
+   g==;
+X-CSE-ConnectionGUID: ktyWbuqvRkmxYahimm5TDw==
+X-CSE-MsgGUID: 3urvVEQgSCan+Bl5hnKV6A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="35944853"
 X-IronPort-AV: E=Sophos;i="6.15,268,1739865600"; 
-   d="scan'208";a="35944827"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 00:31:44 -0700
-X-CSE-ConnectionGUID: RSlEYW6FRciUmNy6dTwI/Q==
-X-CSE-MsgGUID: FDmAR+czTniIup4AsqAqUw==
+   d="scan'208";a="35944853"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 00:32:19 -0700
+X-CSE-ConnectionGUID: IjxHa7UHQ9W23yHUUIx55Q==
+X-CSE-MsgGUID: kd0RLDwdRjuguPFI3EEgHQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,268,1739865600"; 
-   d="scan'208";a="173064110"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 07 May 2025 00:31:40 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uCZFi-0007JR-10;
-	Wed, 07 May 2025 07:31:38 +0000
-Date: Wed, 7 May 2025 15:31:14 +0800
-From: kernel test robot <lkp@intel.com>
-To: Sai Sree Kartheek Adivi <s-adivi@ti.com>, peter.ujfalusi@gmail.com,
-	vkoul@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, nm@ti.com, ssantosh@kernel.org,
-	dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	praneeth@ti.com, vigneshr@ti.com, u-kumar1@ti.com, a-chavda@ti.com
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH 6/8] dmaengine: ti: New driver for K3 BCDMA_V2
-Message-ID: <202505071527.yZZNwWXf-lkp@intel.com>
-References: <20250428072032.946008-7-s-adivi@ti.com>
+   d="scan'208";a="136271270"
+Received: from shalevit-mobl1.ger.corp.intel.com (HELO [10.245.250.18]) ([10.245.250.18])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 00:32:14 -0700
+Message-ID: <7637e816-8c63-4e95-98fc-aea6a4843391@linux.intel.com>
+Date: Wed, 7 May 2025 10:33:15 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250428072032.946008-7-s-adivi@ti.com>
-
-Hi Sai,
-
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on vkoul-dmaengine/next]
-[also build test WARNING on linus/master v6.15-rc5]
-[cannot apply to next-20250506]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Sai-Sree-Kartheek-Adivi/dt-bindings-dma-ti-Add-document-for-K3-BCDMA-V2/20250428-152616
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git next
-patch link:    https://lore.kernel.org/r/20250428072032.946008-7-s-adivi%40ti.com
-patch subject: [PATCH 6/8] dmaengine: ti: New driver for K3 BCDMA_V2
-config: arm64-allmodconfig (https://download.01.org/0day-ci/archive/20250507/202505071527.yZZNwWXf-lkp@intel.com/config)
-compiler: clang version 19.1.7 (https://github.com/llvm/llvm-project cd708029e0b2869e80abe31ddb175f7c35361f90)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250507/202505071527.yZZNwWXf-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505071527.yZZNwWXf-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/dma/ti/k3-udma-v2.c:147:14: warning: variable 'ret' set but not used [-Wunused-but-set-variable]
-     147 |         int status, ret;
-         |                     ^
->> drivers/dma/ti/k3-udma-v2.c:1042:6: warning: variable 'cap2' set but not used [-Wunused-but-set-variable]
-    1042 |         u32 cap2, cap3;
-         |             ^
->> drivers/dma/ti/k3-udma-v2.c:1042:12: warning: variable 'cap3' set but not used [-Wunused-but-set-variable]
-    1042 |         u32 cap2, cap3;
-         |                   ^
-   3 warnings generated.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RESEND v2] ASoC: SOF: Intel: hda: Fix UAF when reloading
+ module
+To: Tavian Barnes <tavianator@tavianator.com>, linux-sound@vger.kernel.org
+Cc: Liam Girdwood <lgirdwood@gmail.com>,
+ Bard Liao <yung-chuan.liao@linux.intel.com>,
+ Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+ Daniel Baluta <daniel.baluta@nxp.com>,
+ Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+ Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
+ Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, Brent Lu <brent.lu@intel.com>,
+ Peter Zijlstra <peterz@infradead.org>, sound-open-firmware@alsa-project.org,
+ linux-kernel@vger.kernel.org
+References: <5aaee9fdfe8437ef2566b200bea45e4baaba3fcb.1745426811.git.tavianator@tavianator.com>
+Content-Language: en-US
+From: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@linux.intel.com>
+In-Reply-To: <5aaee9fdfe8437ef2566b200bea45e4baaba3fcb.1745426811.git.tavianator@tavianator.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 
-vim +/ret +147 drivers/dma/ti/k3-udma-v2.c
 
-   142	
-   143	static int udma_v2_start(struct udma_chan *uc)
-   144	{
-   145		struct virt_dma_desc *vd = vchan_next_desc(&uc->vc);
-   146		struct udma_dev *ud = uc->ud;
- > 147		int status, ret;
-   148	
-   149		if (!vd) {
-   150			uc->desc = NULL;
-   151			return -ENOENT;
-   152		}
-   153	
-   154		list_del(&vd->node);
-   155	
-   156		uc->desc = to_udma_desc(&vd->tx);
-   157	
-   158		/* Channel is already running and does not need reconfiguration */
-   159		if (udma_is_chan_running(uc) && !udma_chan_needs_reconfiguration(uc)) {
-   160			udma_start_desc(uc);
-   161			goto out;
-   162		}
-   163	
-   164		/* Make sure that we clear the teardown bit, if it is set */
-   165		ud->udma_reset_chan(uc, false);
-   166	
-   167		/* Push descriptors before we start the channel */
-   168		udma_start_desc(uc);
-   169	
-   170		switch (uc->desc->dir) {
-   171		case DMA_DEV_TO_MEM:
-   172			/* Config remote TR */
-   173			if (uc->config.ep_type == PSIL_EP_PDMA_XY) {
-   174				u32 val = PDMA_STATIC_TR_Y(uc->desc->static_tr.elcnt) |
-   175					  PDMA_STATIC_TR_X(uc->desc->static_tr.elsize);
-   176				const struct udma_match_data *match_data =
-   177								uc->ud->match_data;
-   178	
-   179				if (uc->config.enable_acc32)
-   180					val |= PDMA_STATIC_TR_XY_ACC32;
-   181				if (uc->config.enable_burst)
-   182					val |= PDMA_STATIC_TR_XY_BURST;
-   183	
-   184				udma_chanrt_write(uc,
-   185						   UDMA_CHAN_RT_STATIC_TR_XY_REG,
-   186						   val);
-   187	
-   188				udma_chanrt_write(uc,
-   189					UDMA_CHAN_RT_STATIC_TR_Z_REG,
-   190					PDMA_STATIC_TR_Z(uc->desc->static_tr.bstcnt,
-   191							 match_data->statictr_z_mask));
-   192	
-   193				/* save the current staticTR configuration */
-   194				memcpy(&uc->static_tr, &uc->desc->static_tr,
-   195				       sizeof(uc->static_tr));
-   196			}
-   197	
-   198			udma_chanrt_write(uc, UDMA_CHAN_RT_CTL_REG,
-   199					UDMA_CHAN_RT_CTL_EN | UDMA_CHAN_RT_CTL_AUTOPAIR);
-   200	
-   201			/* Poll for autopair completion */
-   202			ret = read_poll_timeout_atomic(udma_v2_check_chan_autopair_completion,
-   203					status, status != 0, 100, 500, false, uc);
-   204	
-   205			if (status <= 0)
-   206				return -ETIMEDOUT;
-   207	
-   208			break;
-   209		case DMA_MEM_TO_DEV:
-   210			/* Config remote TR */
-   211			if (uc->config.ep_type == PSIL_EP_PDMA_XY) {
-   212				u32 val = PDMA_STATIC_TR_Y(uc->desc->static_tr.elcnt) |
-   213					  PDMA_STATIC_TR_X(uc->desc->static_tr.elsize);
-   214	
-   215				if (uc->config.enable_acc32)
-   216					val |= PDMA_STATIC_TR_XY_ACC32;
-   217				if (uc->config.enable_burst)
-   218					val |= PDMA_STATIC_TR_XY_BURST;
-   219	
-   220				udma_chanrt_write(uc,
-   221						   UDMA_CHAN_RT_STATIC_TR_XY_REG,
-   222						   val);
-   223	
-   224				/* save the current staticTR configuration */
-   225				memcpy(&uc->static_tr, &uc->desc->static_tr,
-   226				       sizeof(uc->static_tr));
-   227			}
-   228	
-   229			udma_chanrt_write(uc, UDMA_CHAN_RT_CTL_REG,
-   230					UDMA_CHAN_RT_CTL_EN | UDMA_CHAN_RT_CTL_AUTOPAIR);
-   231	
-   232			/* Poll for autopair completion */
-   233			ret = read_poll_timeout_atomic(udma_v2_check_chan_autopair_completion,
-   234					status, status != 0, 100, 500, false, uc);
-   235	
-   236			if (status <= 0)
-   237				return -ETIMEDOUT;
-   238	
-   239			break;
-   240		case DMA_MEM_TO_MEM:
-   241			udma_bchanrt_write(uc, UDMA_CHAN_RT_CTL_REG,
-   242					   UDMA_CHAN_RT_CTL_EN);
-   243			udma_bchanrt_write(uc, UDMA_CHAN_RT_CTL_REG,
-   244					   UDMA_CHAN_RT_CTL_EN);
-   245	
-   246			break;
-   247		default:
-   248			return -EINVAL;
-   249		}
-   250	
-   251		uc->state = UDMA_CHAN_IS_ACTIVE;
-   252	out:
-   253	
-   254		return 0;
-   255	}
-   256	
+On 06/05/2025 18:12, Tavian Barnes wrote:
+> hda_generic_machine_select() appends -idisp to the tplg filename by
+> allocating a new string with devm_kasprintf(), then stores the string
+> right back into the global variable snd_soc_acpi_intel_hda_machines.
+> When the module is unloaded, this memory is freed, resulting in a global
+> variable pointing to freed memory.  Reloading the modules then triggers
+> a use-after-free:
+> 
+> BUG: KFENCE: use-after-free read in string+0x48/0xe0
+> 
+> Use-after-free read at 0x00000000967e0109 (in kfence-#99):
+>  string+0x48/0xe0
+>  vsnprintf+0x329/0x6e0
+>  devm_kvasprintf+0x54/0xb0
+>  devm_kasprintf+0x58/0x80
+>  hda_machine_select.cold+0x198/0x17a2 [snd_sof_intel_hda_generic]
+>  sof_probe_work+0x7f/0x600 [snd_sof]
+>  process_one_work+0x17b/0x330
+>  worker_thread+0x2ce/0x3f0
+>  kthread+0xcf/0x100
+>  ret_from_fork+0x31/0x50
+>  ret_from_fork_asm+0x1a/0x30
+> 
+> kfence-#99: 0x00000000198a940f-0x00000000ace47d9d, size=64, cache=kmalloc-64
+> 
+> allocated by task 333 on cpu 8 at 17.798069s (130.453553s ago):
+>  devm_kmalloc+0x52/0x120
+>  devm_kvasprintf+0x66/0xb0
+>  devm_kasprintf+0x58/0x80
+>  hda_machine_select.cold+0x198/0x17a2 [snd_sof_intel_hda_generic]
+>  sof_probe_work+0x7f/0x600 [snd_sof]
+>  process_one_work+0x17b/0x330
+>  worker_thread+0x2ce/0x3f0
+>  kthread+0xcf/0x100
+>  ret_from_fork+0x31/0x50
+>  ret_from_fork_asm+0x1a/0x30
+> 
+> freed by task 1543 on cpu 4 at 141.586686s (6.665010s ago):
+>  release_nodes+0x43/0xb0
+>  devres_release_all+0x90/0xf0
+>  device_unbind_cleanup+0xe/0x70
+>  device_release_driver_internal+0x1c1/0x200
+>  driver_detach+0x48/0x90
+>  bus_remove_driver+0x6d/0xf0
+>  pci_unregister_driver+0x42/0xb0
+>  __do_sys_delete_module+0x1d1/0x310
+>  do_syscall_64+0x82/0x190
+>  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> 
+> Fix it by saving the filename in pdata->tplg_filename instead, just like
+> every other code path that appends to the tplg filename.
+> 
+> Fixes: 5458411d7594 ("ASoC: SOF: Intel: hda: refactoring topology name fixup for HDA mach")
+> Signed-off-by: Tavian Barnes <tavianator@tavianator.com>
+> ---
+> v2: Fix typo
+> 
+>  sound/soc/sof/intel/hda.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/sound/soc/sof/intel/hda.c b/sound/soc/sof/intel/hda.c
+> index b34e5fdf10f1..1767977e7cff 100644
+> --- a/sound/soc/sof/intel/hda.c
+> +++ b/sound/soc/sof/intel/hda.c
+> @@ -1069,7 +1069,7 @@ static void hda_generic_machine_select(struct snd_sof_dev *sdev,
+>  				if (!tplg_filename)
+>  					return;
+>  
+> -				hda_mach->sof_tplg_filename = tplg_filename;
+> +				pdata->tplg_filename = tplg_filename;
+>  			}
+>  
+>  			if (codec_num == 2 ||
+
+I think the correct way would be to make a local copy of the
+snd_soc_acpi_intel_hda_machines array as we might be modifying it:
+
+
+/*
+ * make a local copy of the match array since we might
+ * be modifying it
+ */
+hda_mach = devm_kmemdup_array(sdev->dev,
+		snd_soc_acpi_intel_hda_machines,
+		2 /* we have one entry + sentinel in the array */,
+		sizeof(snd_soc_acpi_intel_hda_machines[0]),
+		GFP_KERNEL);
+if (!hda_mach) {
+	dev_err(bus->dev,
+		"%s: Failed to duplicate the HDA match table\n",
+		__func__);
+	return;
+}
+
+or if the "2" is not satisfactory (we _know_ that the array size is 2
+for this and will not change):
+include/sound/soc-acpi-intel-match.h
++extern size_t snd_soc_acpi_num_intel_hda_machines;
+
+sound/soc/intel/common/soc-acpi-intel-hda-match.c
++size_t snd_soc_acpi_num_intel_hda_machines =
+ARRAY_SIZE(snd_soc_acpi_intel_hda_machines);
++EXPORT_SYMBOL_GPL(snd_soc_acpi_num_intel_hda_machines);
+
+and:
+/*
+ * make a local copy of the match array since we might
+ * be modifying it
+ */
+hda_mach = devm_kmemdup_array(sdev->dev,
+		snd_soc_acpi_intel_hda_machines,
+		snd_soc_acpi_num_intel_hda_machines,
+		sizeof(snd_soc_acpi_intel_hda_machines[0]),
+		GFP_KERNEL);
+if (!hda_mach) {
+	dev_err(bus->dev,
+		"%s: Failed to duplicate the HDA match table\n",
+		__func__);
+	return;
+}
+
+
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Péter
+
