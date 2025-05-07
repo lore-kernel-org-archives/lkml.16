@@ -1,50 +1,25 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6CD81E3DFD;
-	Wed,  7 May 2025 08:51:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B13C81AC8;
+	Wed,  7 May 2025 08:52:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746607903; cv=none; b=BwY1B6FARMapoeeJJgQhBO5t/pScNcRPZBDUOivvs2e32kVXwAXrnJ5CYq4XhMJAU/bPvqHObYRDlIyUj/C3Fcub4Xim8RgTfqO4wcaiYK3ryAqD0VHICc+hD4mQ5+nS1hPmUkvWG9gzyxS3aFaytoS+t6zL6zyKfJbkjogPGwI=
+	t=1746607927; cv=none; b=msy9u9GqlBVg+lE4VyLkGEo4mVYzWDpH7JT5St+QYpe8ZdeWQQ8naEqR4E/9tLjPj1KCIpp12eSo6a6DrV1M8jM1rSlFdH7oL32fEcIG5/81dmSzVCRF8RslPCrWWwfckKHy3GsjCSxeXESMcFcnFRIf+Swh7IqgHIQzXIQUJ5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746607903; c=relaxed/simple;
-	bh=ZRGbU16EbvLnN1mbcnVMGiKhfTvveYDWrA+XdW/F9ag=;
+	s=arc-20240116; t=1746607927; c=relaxed/simple;
+	bh=MgC7MChP2fK6enVEFZ69XfxJRlM6m0+mU3GHSR5+Bbc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EG1Lqqk/kr5i4eoAREq9PCBQ0/6HvIZcEaH5M0eQWHawld1McYHlPpTMNluO0K/cYxoubZNqu3WUzg9Y1JfcbRr6lyFQmScT4mgBsqwNeXqmfZyZaHl/Zu9euhls2TZlfMY6fm0pO5ceuzfLmQVeLxDNrNDKkmqeCmKTVj0xtjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZZux7i0V; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZZux7i0V"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746607902; x=1778143902;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ZRGbU16EbvLnN1mbcnVMGiKhfTvveYDWrA+XdW/F9ag=;
-  b=ZZux7i0V4caVjSoAGZbGly6568nQcIuklKPUoZpqUNChrx8ULFLvm2td
-   xQlskQSS/CHozvQdgFxugLud7X5BmxncbC9xf1Jo/pqxS/rewBhc15ng2
-   Q9SooLhncYX30szHXY9GTGF3G+qWiYTb2UUtcXzE/j0krOotEuaOirBDx
-   8QDKegDwBVhXPip9ITWOmkj0pxvMB41m4jCT1U9ZkQJxXmskaHUSAsU5+
-   bhRA2sPyMef2N400G428G/arn9ZyNOc5Ho4OL0dj/eqcloDy5OMiX18bN
-   7R4UTWexZQVkUxatGyNxvE8LtVLwuHAd5ZWxDeFZj2qYLjUNtqTexEeE4
-   A==;
-X-CSE-ConnectionGUID: EE5cua3SQ16CMAgr86aIIg==
-X-CSE-MsgGUID: QznCW1lnQ/Gj5k0liUG7ZQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="48458801"
-X-IronPort-AV: E=Sophos;i="6.15,268,1739865600"; 
-   d="scan'208";a="48458801"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 01:51:41 -0700
-X-CSE-ConnectionGUID: EtXsSu9LQe6T33TJsof/7g==
-X-CSE-MsgGUID: UT0T4aFTS862wyvBzJ35Xg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,268,1739865600"; 
-   d="scan'208";a="135611044"
-Received: from yungchua-mobl2.ccr.corp.intel.com (HELO [10.246.105.120]) ([10.246.105.120])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 01:51:38 -0700
-Message-ID: <eff651df-bc2a-45bf-a629-5adb4f8f398c@linux.intel.com>
-Date: Wed, 7 May 2025 16:51:35 +0800
+	 In-Reply-To:Content-Type; b=AQ6vvvAwsjvf5tXClrgZJ+4ENSH0ZSJHk4qPZS5kSY2AYQVw6G32xv2ewoAqBX+7E1G4UF3AR7JE+ankAJA8jox+/W8E3uIa94IgeB9cd0CLK4qZdV4fDA5+RBrIcNRZiqvXDlVMyEOqme+50nJYR3D4fNm3piMzUsaSudvlHyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 478962B;
+	Wed,  7 May 2025 01:51:55 -0700 (PDT)
+Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A89853F673;
+	Wed,  7 May 2025 01:52:03 -0700 (PDT)
+Message-ID: <069e920c-7023-4a6d-b1c6-dc87ac9d2360@arm.com>
+Date: Wed, 7 May 2025 09:52:02 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,49 +27,109 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] soundwire: intel_auxdevice: Fix system suspend/resume
- handling
-To: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
- "Rafael J. Wysocki" <rjw@rjwysocki.net>, Vinod Koul <vkoul@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>,
- Sanyog Kale <sanyog.r.kale@intel.com>, linux-sound@vger.kernel.org,
- bard.liao@intel.com
-References: <5891540.DvuYhMxLoT@rjwysocki.net>
- <30acf520-c137-4b49-8b69-08e35a7c5969@linux.dev>
+Subject: Re: [PATCH v3 2/2] coresight: add coresight Trace Network On Chip
+ driver
+To: Yuanfang Zhang <quic_yuanfang@quicinc.com>,
+ Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: kernel@oss.qualcomm.com, linux-arm-msm@vger.kernel.org,
+ coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250411-trace-noc-v3-0-1f19ddf7699b@quicinc.com>
+ <20250411-trace-noc-v3-2-1f19ddf7699b@quicinc.com>
+ <23d02991-3bc6-41e2-bb8b-a38786071c43@arm.com>
+ <257fb0a5-7bf7-4a04-9f8d-d8759351584c@quicinc.com>
+ <9b75b9d1-a9ed-46c9-9dba-8e3eb261dcc0@arm.com>
+ <4a6a8bad-e5d9-4613-a839-5a21491ef7c4@quicinc.com>
 Content-Language: en-US
-From: "Liao, Bard" <yung-chuan.liao@linux.intel.com>
-In-Reply-To: <30acf520-c137-4b49-8b69-08e35a7c5969@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <4a6a8bad-e5d9-4613-a839-5a21491ef7c4@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-
-
-On 4/26/2025 1:12 AM, Pierre-Louis Bossart wrote:
-> On 4/24/25 20:13, Rafael J. Wysocki wrote:
->> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On 07/05/2025 05:26, Yuanfang Zhang wrote:
+> 
+> 
+> On 5/6/2025 7:20 PM, Suzuki K Poulose wrote:
+>> On 14/04/2025 10:16, Yuanfang Zhang wrote:
+>>>
+>>>
+>>> On 4/11/2025 5:59 PM, Suzuki K Poulose wrote:
+>>>> On 11/04/2025 09:57, Yuanfang Zhang wrote:
+>>>>> Add a driver to support Coresight device Trace Network On Chip (TNOC),
+>>>>> which is an integration hierarchy integrating functionalities of TPDA
+>>>>> and funnels. It aggregates the trace and transports to coresight trace
+>>>>> bus.
+>>>>>
+>>>>> Compared to current configuration, it has the following advantages:
+>>>>> 1. Reduce wires between subsystems.
+>>>>> 2. Continue cleaning the infrastructure.
+>>>>> 3. Reduce Data overhead by transporting raw data from source to target.
+>>>>>
+>>>>>      +------------------------+                +-------------------------+
+>>>>>      | Video Subsystem        |                |Video Subsystem          |
+>>>>>      |       +-------------+  |                |       +------------+    |
+>>>>>      |       | Video TPDM  |  |                |       | Video TPDM |    |
+>>>>>      |       +-------------+  |                |       +------------+    |
+>>>>>      |            |           |                |              |          |
+>>>>>      |            v           |                |              v          |
+>>>>>      |   +---------------+    |                |        +-----------+    |
+>>>>>      |   | Video funnel  |    |                |        |Video TNOC |    |
+>>>>>      |   +---------------+    |                |        +-----------+    |
+>>>>>      +------------|-----------+                +------------|------------+
+>>>>>                   |                                         |
+>>>>>                   v-----+                                   |
+>>>>> +--------------------|---------+                         |
+>>>>> |  Multimedia        v         |                         |
+>>>>> |  Subsystem   +--------+      |                         |
+>>>>> |              |  TPDA  |      |                         v
+>>>>> |              +----|---+      |              +---------------------+
+>>>>> |                   |          |              |    Aggregator TNOC  |
+>>>>> |                   |          |              +----------|----------+
+>>>>> |                   +--        |                         |
+>>>>> |                     |        |                         |
+>>>>> |                     |        |                         |
+>>>>> |              +------v-----+  |                         |
+>>>>> |              |  Funnel    |  |                         |
+>>>>> |              +------------+  |                         |
+>>>>> +----------------|-------------+                         |
+>>>>>                     |                                       |
+>>>>>                     v                                       v
+>>>>>          +--------------------+                    +------------------+
+>>>>>          |   Coresight Sink   |                    |  Coresight Sink  |
+>>>>>          +--------------------+                    +------------------+
+>>>>
+>>>> If each NOC has TraceID, how do you reliably decode the trace ?
+>>>> Is there a single NOC/TPDA in the path from Source to sink ?
+>>>
+>>> Not each TNOC has TraceID, there is only one TNOC has TraceID for one path
+>>> from Source to sink. In the example, only the aggregator TNOC has traceID.
+>>> Decode trace relying on TraceID + Inport number.
+>>> It can has mutiple TNOC/TPDA in one path.
 >>
->> The code in intel_suspend() and intel_resume() needs to be properly
->> synchronized with runtime PM which is not the case currently, so fix
->> it.
+>> So do we only describe the TNOCs that need traceId in the DT ? (e.g., Aggregator TNOC above ?) How about Video TNOC ? Don't we allocate a
+>> trace id for it by default, when it is described ?
 >>
->> First of all, prevent runtime PM from triggering after intel_suspend()
->> has started because the changes made by it to the device might be
->> undone by a runtime resume of the device.  For this purpose, add a
->> pm_runtime_disable() call to intel_suspend().
-> 
-> Allow me to push back on this, because we have to be very careful with a hidden state transition that needs to happen.
-> 
-> If a controller was suspended by pm_runtime, it will enter the clock stop mode.
-> 
-> If the system needs to suspend, the controller has to be forced to exit the clock stop mode and the bus has to restart before we can suspend it, and that's why we had those pm_runtime_resume().
-> 
-> Disabling pm_runtime when entering system suspend would be problematic for Intel hardware, it's a known can of worms.
-> 
-> It's quite possible that some of the code in intel_suspend() is no longer required because the .prepare will resume the bus properly, but I wanted to make sure this state transition out of clock-stop is known and taken into consideration.
-> 
-> Bard, is this a configuration you've tested?
+>> Suzuki
+>>
+> yes, now only describe the TNOCs which need traceID, Video TNOC is another type, it is interconnect TNOC which collects trace from subsystems
+> and transfers Aggr TNOC, it doesn't have ATID. Its driver is different from this patch, I want to describe it when upstream its driver.
+
+Thanks! Please could you make sure to describe all of this when sending
+out a patch in the cover letter ?
+
+Cheers
+Suzuki
 
 
-Sorry for the late reply. Yes, I tested jack detection in runtime
-suspended. Also, the CI test is passed.
+> 
+> Yuanfang
+> 
+> 
+> 
+> 
+> 
+> 
 
