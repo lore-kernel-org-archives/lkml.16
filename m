@@ -1,89 +1,143 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F43D1B2186;
-	Wed,  7 May 2025 03:22:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2CB519343B;
+	Wed,  7 May 2025 03:26:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746588174; cv=none; b=r0uVhJ+UJuWa9PDXaq0VD/6ezzn2Rww+kpHbj03p8JNzBMydKlrUgAF1Rz5LilJxVb0GTholH0ZBscgyRNfrg/g1QDbhkJnOUo/NVvFXfYq5wp5qTRQ1oRWnQZw7mC1/jq72omoraH5bVAoK3P+tQGbVbbQK+8N6VWcykyqTnOs=
+	t=1746588383; cv=none; b=QxWShZlAWEOHUsq3qcnX/etNCKxe0Z2g9lLTi77dQjcb3bXI2XRMDr//DeFSq3PUOOnebyu2xbzrVvUM58mCVA+fSkzjf/JQyhKb7pzxglZ8INTW67kU+2hvaZ7E3rHGi+oIA4MPW1TwIJMo/BXqsL1Lisd5N1PEgBgTgS+uf50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746588174; c=relaxed/simple;
-	bh=Qe44C1hO1Dlz+QljxSDs/x+tpr6AeSvmXU53b6tgHuU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=onf2k6ht/6vxNfPVcgMclws/Qt48/alZBLKH/G5ng2JG3kOQoywJn0DZB69fjL5wD1v/44Kjt2cOEYHNJcxXLeiq7O25XNtQDTnGbv+6VIUE0n+l34oM3PJwXJepxRuI/xEpTImZudtTheq5Mvsjf6xeWUqpDuwfmLnekS4eypE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=OeFxs6Sf; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1746588383; c=relaxed/simple;
+	bh=Y5vJizc5brmYQWZglKQyfCEypI/+K7GGslyxSRM5v9w=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=k7uonKqv5uhduJbY5upW6IKq+F2f9REXSrpXOE/XcSRTblvtaZ4aYTHtivA+RvbYS6P3uGCYjvPQt4SLHeHCpo/KpLJOp7qEgMJO5C1rJcEpkKUKybsJPomi/MpNmf1f3Lw8nb8TQivwOsevlHbtExCQoM8mn8hIi/K6eTzeCaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=S0WQfe7a; arc=none smtp.client-ip=203.29.241.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="OeFxs6Sf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1746588169;
-	bh=6+LdfxC5RdXId8MeCoah2zhCj8ioo3EpL/mIC9q/ayo=;
-	h=Date:From:To:Cc:Subject:From;
-	b=OeFxs6SfZWx7dYYwcg4md4FqsNCgjAoKpkfNWasxLucr9At97zRLcr+V/afysgBwn
-	 7xSPgTv7y1/txi6ZMgZAJLjz639mOm689iF/SSWIZIlc0Gfv+wfipy50lIKG7mk6uy
-	 521yZuFHcTnYDi7sO+W8Yv90G+9coF2YszvQTEi6iBJU5Igj7cdyMTfztZUxYQumHu
-	 2cG6Sm8s0C5k5TII9uhcfvPldjy54TZiK6KycIRiBPq9SWEM5wPusXHLR2HKVqf6GF
-	 gCXheokuoReoFDB9vAPqcYbtRV7S+TQENojhZ8ih7JV8xUSTho4wF9IOTaBXSaG08Y
-	 0eb4CnDbb00aw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZsgZ044pNz4w2H;
-	Wed,  7 May 2025 13:22:48 +1000 (AEST)
-Date: Wed, 7 May 2025 13:22:47 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
- "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
- Richard Weinberger <richard@nod.at>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: duplicate patch in the tip tree
-Message-ID: <20250507132247.3e3076e3@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="S0WQfe7a"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=codeconstruct.com.au; s=2022a; t=1746588375;
+	bh=Y5vJizc5brmYQWZglKQyfCEypI/+K7GGslyxSRM5v9w=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=S0WQfe7apXJG8hwyq3uESs+ijRgSJZYkei7bb1ps7R4osyWkuQdCzmr8t5D3WtmrT
+	 VAdu1RiHr0RnoztCCC8hd75R9bWqzol3Ecy35lG4sgdcDKsTVdDEjvtes/Y8RCSKJS
+	 0/8aIBAG0HpSvDe16wPBAoiba1+DxtEM5T4S1Qq1NvCnbxMySlW69zW7fWRi5k8eeF
+	 kHqo7V9SJwXxCBBa76OpGfJ4OOg/8UW25Oi/AbxL1yFATohbX35A0K2mOvIuKrY7Y5
+	 ZZBy8VrB24c+mI0DGa0IMDxOIDiw4ujugExef8LWo9jXzSQ0mYWVE2clnhyvX/jw80
+	 6RpI8ESTMLo4Q==
+Received: from [192.168.68.112] (unknown [180.150.112.225])
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 9952764473;
+	Wed,  7 May 2025 11:26:14 +0800 (AWST)
+Message-ID: <34dcdbd4fb15a988f15e812faa566b32506a2f2f.camel@codeconstruct.com.au>
+Subject: Re: [PATCH] dt-bindings: interrupt-controller: Convert
+ aspeed,ast2xxx-scu-ic to DT schema
+From: Andrew Jeffery <andrew@codeconstruct.com.au>
+To: "Rob Herring (Arm)" <robh@kernel.org>, Eddie James
+ <eajames@linux.ibm.com>,  Thomas Gleixner <tglx@linutronix.de>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,  Joel
+ Stanley <joel@jms.id.au>, Lee Jones <lee@kernel.org>
+Cc: Andrew Jeffery <andrew@aj.id.au>, linux-aspeed@lists.ozlabs.org, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org
+Date: Wed, 07 May 2025 12:56:14 +0930
+In-Reply-To: <20250505144613.1287360-1-robh@kernel.org>
+References: <20250505144613.1287360-1-robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/_N6MCupcUKe1ZPJ.nIa5OE7";
- protocol="application/pgp-signature"; micalg=pgp-sha256
 
---Sig_/_N6MCupcUKe1ZPJ.nIa5OE7
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+SGkgUm9iLAoKVGhhbmtzIGZvciB0aGUgY29udmVyc2lvbi4gT25lIGNvbW1lbnQgYmVsb3c6CgpP
+biBNb24sIDIwMjUtMDUtMDUgYXQgMDk6NDYgLTA1MDAsIFJvYiBIZXJyaW5nIChBcm0pIHdyb3Rl
+Ogo+IENvbnZlcnQgdGhlIEFzcGVlZCBTQ1UgaW50ZXJydXB0IGNvbnRyb2xsZXIgYmluZGluZyB0
+byBzY2hlbWEgZm9ybWF0Lgo+IEl0J3MgYSBzdHJhaWdodC1mb3J3YXJkIGNvbnZlcnNpb24gb2Yg
+dGhlIHR5cGljYWwgaW50ZXJydXB0Cj4gY29udHJvbGxlci4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBS
+b2IgSGVycmluZyAoQXJtKSA8cm9iaEBrZXJuZWwub3JnPgo+IC0tLQo+IMKgLi4uL2FzcGVlZCxh
+c3QyNTAwLXNjdS1pYy55YW1swqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHwgNDgKPiAr
+KysrKysrKysrKysrKysrKysrCj4gwqAuLi4vYXNwZWVkLGFzdDJ4eHgtc2N1LWljLnR4dMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHwgMjMgLS0tLS0tLS0tCj4gwqAuLi4vYmluZGlu
+Z3MvbWZkL2FzcGVlZCxhc3QyeDAwLXNjdS55YW1swqDCoMKgwqDCoCB8wqAgOSArKystCj4gwqBN
+QUlOVEFJTkVSU8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgIHzCoCAyICstCj4gwqA0IGZpbGVzIGNoYW5nZWQsIDU3IGlu
+c2VydGlvbnMoKyksIDI1IGRlbGV0aW9ucygtKQo+IMKgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnRlcnJ1cHQtCj4gY29udHJvbGxlci9hc3Bl
+ZWQsYXN0MjUwMC1zY3UtaWMueWFtbAo+IMKgZGVsZXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnRlcnJ1cHQtCj4gY29udHJvbGxlci9hc3BlZWQsYXN0
+Mnh4eC1zY3UtaWMudHh0Cj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9pbnRlcnJ1cHQtCj4gY29udHJvbGxlci9hc3BlZWQsYXN0MjUwMC1zY3UtaWMu
+eWFtbAo+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2ludGVycnVwdC0KPiBj
+b250cm9sbGVyL2FzcGVlZCxhc3QyNTAwLXNjdS1pYy55YW1sCj4gbmV3IGZpbGUgbW9kZSAxMDA2
+NDQKPiBpbmRleCAwMDAwMDAwMDAwMDAuLmQ1Mjg3YTJiZjg2Ngo+IC0tLSAvZGV2L251bGwKPiAr
+KysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaW50ZXJydXB0LQo+IGNvbnRy
+b2xsZXIvYXNwZWVkLGFzdDI1MDAtc2N1LWljLnlhbWwKPiBAQCAtMCwwICsxLDQ4IEBACj4gKyMg
+U1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IChHUEwtMi4wLW9ubHkgT1IgQlNELTItQ2xhdXNlKQo+
+ICsjIENvcHlyaWdodCAyMDI1IEVkZGllIEphbWVzCj4gKyVZQU1MIDEuMgo+ICstLS0KPiArJGlk
+Ogo+IGh0dHA6Ly9kZXZpY2V0cmVlLm9yZy9zY2hlbWFzL2ludGVycnVwdC1jb250cm9sbGVyL2Fz
+cGVlZCxhc3QyNTAwLXNjdS1pYy55YW1sIwo+ICskc2NoZW1hOiBodHRwOi8vZGV2aWNldHJlZS5v
+cmcvbWV0YS1zY2hlbWFzL2NvcmUueWFtbCMKPiArCj4gK3RpdGxlOiBBc3BlZWQgQVNUMjVYWCBh
+bmQgQVNUMjZYWCBTQ1UgSW50ZXJydXB0IENvbnRyb2xsZXIKPiArCj4gK21haW50YWluZXJzOgo+
+ICvCoCAtIEVkZGllIEphbWVzIDxlYWphbWVzQGxpbnV4LmlibS5jb20+Cj4gKwo+ICtwcm9wZXJ0
+aWVzOgo+ICvCoCBjb21wYXRpYmxlOgo+ICvCoMKgwqAgZW51bToKPiArwqDCoMKgwqDCoCAtIGFz
+cGVlZCxhc3QyNTAwLXNjdS1pYwo+ICvCoMKgwqDCoMKgIC0gYXNwZWVkLGFzdDI2MDAtc2N1LWlj
+MAo+ICvCoMKgwqDCoMKgIC0gYXNwZWVkLGFzdDI2MDAtc2N1LWljMQo+ICsKPiArwqAgcmVnOgo+
+ICvCoMKgwqAgbWF4SXRlbXM6IDEKPiArCj4gK8KgICcjaW50ZXJydXB0LWNlbGxzJzoKPiArwqDC
+oMKgIGNvbnN0OiAxCj4gKwo+ICvCoCBpbnRlcnJ1cHRzOgo+ICvCoMKgwqAgbWF4SXRlbXM6IDEK
+PiArCj4gK8KgIGludGVycnVwdC1jb250cm9sbGVyOiB0cnVlCj4gKwo+ICtyZXF1aXJlZDoKPiAr
+wqAgLSBjb21wYXRpYmxlCj4gK8KgIC0gcmVnCj4gK8KgIC0gJyNpbnRlcnJ1cHQtY2VsbHMnCj4g
+K8KgIC0gaW50ZXJydXB0cwo+ICvCoCAtIGludGVycnVwdC1jb250cm9sbGVyCj4gKwo+ICthZGRp
+dGlvbmFsUHJvcGVydGllczogZmFsc2UKPiArCj4gK2V4YW1wbGVzOgo+ICvCoCAtIHwKPiArwqDC
+oMKgIGludGVycnVwdC1jb250cm9sbGVyQDE4IHsKPiArwqDCoMKgwqDCoMKgwqAgY29tcGF0aWJs
+ZSA9ICJhc3BlZWQsYXN0MjUwMC1zY3UtaWMiOwo+ICvCoMKgwqDCoMKgwqDCoCByZWcgPSA8MHgx
+OCAweDQ+Owo+ICvCoMKgwqDCoMKgwqDCoCAjaW50ZXJydXB0LWNlbGxzID0gPDE+Owo+ICvCoMKg
+wqDCoMKgwqDCoCBpbnRlcnJ1cHRzID0gPDIxPjsKPiArwqDCoMKgwqDCoMKgwqAgaW50ZXJydXB0
+LWNvbnRyb2xsZXI7Cj4gK8KgwqDCoCB9Owo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvaW50ZXJydXB0LQo+IGNvbnRyb2xsZXIvYXNwZWVkLGFzdDJ4eHgt
+c2N1LWljLnR4dAo+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2ludGVycnVw
+dC0KPiBjb250cm9sbGVyL2FzcGVlZCxhc3QyeHh4LXNjdS1pYy50eHQKPiBkZWxldGVkIGZpbGUg
+bW9kZSAxMDA2NDQKPiBpbmRleCAyNTFlZDQ0MTcxZGIuLjAwMDAwMDAwMDAwMAo+IC0tLSBhL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnRlcnJ1cHQtCj4gY29udHJvbGxlci9h
+c3BlZWQsYXN0Mnh4eC1zY3UtaWMudHh0Cj4gKysrIC9kZXYvbnVsbAo+IEBAIC0xLDIzICswLDAg
+QEAKPiAtQXNwZWVkIEFTVDI1WFggYW5kIEFTVDI2WFggU0NVIEludGVycnVwdCBDb250cm9sbGVy
+Cj4gLQo+IC1SZXF1aXJlZCBQcm9wZXJ0aWVzOgo+IC0gLSAjaW50ZXJydXB0LWNlbGxzwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgOiBtdXN0IGJlIDEKPiAtIC0gY29tcGF0aWJsZcKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoDogbXVzdCBiZSAiYXNwZWVkLGFzdDI1MDAtc2N1LWlj
+IiwKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoCAiYXNwZWVkLGFzdDI2MDAtc2N1LWljMCIgb3IKPiAtwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAiYXNw
+ZWVkLGFzdDI2MDAtc2N1LWljMSIKPiAtIC0gaW50ZXJydXB0c8KgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoDogaW50ZXJydXB0IGZyb20gdGhlIHBhcmVudAo+IGNvbnRyb2xsZXIK
+PiAtIC0gaW50ZXJydXB0LWNvbnRyb2xsZXLCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oDogaW5kaWNhdGVzIHRoYXQgdGhlCj4gY29udHJvbGxlciByZWNlaXZlcyBhbmQKPiAtwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oCBmaXJlcyBuZXcgaW50ZXJydXB0cyBmb3IgY2hpbGQKPiBidXNzZXMKPiAtCj4gLUV4YW1wbGU6
+Cj4gLQo+IC3CoMKgwqAgc3lzY29uQDFlNmUyMDAwIHsKPiAtwqDCoMKgwqDCoMKgwqAgcmFuZ2Vz
+ID0gPDAgMHgxZTZlMjAwMCAweDFhOD47Cj4gLQo+IC3CoMKgwqDCoMKgwqDCoCBzY3VfaWM6IGlu
+dGVycnVwdC1jb250cm9sbGVyQDE4IHsKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAjaW50ZXJy
+dXB0LWNlbGxzID0gPDE+Owo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGNvbXBhdGlibGUgPSAi
+YXNwZWVkLGFzdDI1MDAtc2N1LWljIjsKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBpbnRlcnJ1
+cHRzID0gPDIxPjsKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBpbnRlcnJ1cHQtY29udHJvbGxl
+cjsKPiAtwqDCoMKgwqDCoMKgwqAgfTsKPiAtwqDCoMKgIH07Cj4gZGlmZiAtLWdpdCBhL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQvYXNwZWVkLGFzdDJ4MDAtCj4gc2N1Lnlh
+bWwgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL2FzcGVlZCxhc3QyeDAw
+LQo+IHNjdS55YW1sCj4gaW5kZXggYzgwMGQ1ZTUzYjY1Li4xMjk4NmViZTdlYzcgMTAwNjQ0Cj4g
+LS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9hc3BlZWQsYXN0Mngw
+MC1zY3UueWFtbAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQv
+YXNwZWVkLGFzdDJ4MDAtc2N1LnlhbWwKPiBAQCAtNDgsOCArNDgsMTUgQEAgcHJvcGVydGllczoK
+PiDCoAo+IMKgcGF0dGVyblByb3BlcnRpZXM6Cj4gwqDCoCAnXnAyYS1jb250cm9sQFswLTlhLWZd
+KyQnOgo+IC3CoMKgwqAgZGVzY3JpcHRpb246IFNlZSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvbWlzYy9hc3BlZWQtCj4gcDJhLWN0cmwudHh0Cj4gwqDCoMKgwqAgdHlwZTogb2Jq
+ZWN0Cj4gK8KgwqDCoCBhZGRpdGlvbmFsUHJvcGVydGllczogdHJ1ZQo+ICvCoMKgwqAgcHJvcGVy
+dGllczoKPiArwqDCoMKgwqDCoCBjb21wYXRpYmxlOgo+ICvCoMKgwqDCoMKgwqDCoCBjb250YWlu
+czoKPiArwqDCoMKgwqDCoMKgwqDCoMKgIGVudW06Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
+LSBhc3BlZWQsYXN0MjUwMC1zY3UtaWMKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAtIGFzcGVl
+ZCxhc3QyNjAwLXNjdS1pYzAKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAtIGFzcGVlZCxhc3Qy
+NjAwLXNjdS1pYzEKClRoaXMgY2hhbmdlIHNob3VsZCBiZSBkb25lIG9uIHRoZSBpbnRlcnJ1cHQt
+Y29udHJvbGxlciBwYXR0ZXJuIHByb3BlcnR5Cm5vZGUgcmF0aGVyIHRoYW4gdGhlIHAyYS1jb250
+cm9sbGVyIG5vZGUuCgpBbmRyZXcK
 
-Hi all,
-
-The following commit is also in the uml tree as a different commit
-(but the same patch):
-
-  48199713a6a8 ("um: Use irq_domain_create_linear() helper")
-
-This is commit
-
-  7633b8b1e793 ("irqdomain: um: use irq_domain_create_linear() helper")
-
-in the uml tree.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/_N6MCupcUKe1ZPJ.nIa5OE7
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmga0ggACgkQAVBC80lX
-0Gx0LQf/ZWR+efCwg4BX9JMArEQvNLr335hWrELqWdW70btQVNer/Wq97JczzOC1
-vkgVOnWZjoZt5HVCmZOntF2GCrAKzk6+CrgjXkgiFagQa87dE8PCPHR2G9ezwPgT
-vjxw5GO5ekGhDYl9t3ySIvwXjMlDot4tRk2Krvswc2/GDBGU/W9M9jFE7KKS1nad
-hHZJHiZ2qKaLTzqATX13vrCkZBmr4/D22L6+ixIA9fhd/fApoVoa4cdKp7vk4Lgx
-uEAwP9J9t2mKQ1JWJjBk07x7hQC3pk/t3uZeyMFnVeZM10/AqGyjz1plCneJpAov
-I2gxHLfMcy1Snpy8TucfL4gRX8tAGA==
-=2Mvj
------END PGP SIGNATURE-----
-
---Sig_/_N6MCupcUKe1ZPJ.nIa5OE7--
