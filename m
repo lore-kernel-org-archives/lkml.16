@@ -1,103 +1,134 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cpanel.siel.si (cpanel.siel.si [46.19.9.99])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD4661BD01D
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 06:15:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 140B04A00;
+	Wed,  7 May 2025 06:17:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.19.9.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746598506; cv=none; b=k0bIaQTYKWzTMhsNQSFUGOEktIqD3IZVUnFvI/pNPReCFLgIo+E7d61gAQFoFvWwFVdlUgrz76oOfith90eztrv+NHNEoJa8ESE+UqFfAewM+2mV999FIR6XfIMVU8j0Hj/amRlPA6OMIiF6pgosRAlX3WPJW88vyZplYOgUn7U=
+	t=1746598645; cv=none; b=iY7YjEa87dltlkV3pu5euzMAWIdGybqKfWO+3keTDLzpyByyidSyDN6uCA4s3vsIGFoUW+j2SIiGoacdAGMZULEeTu1TJj3bjtRSggt+zdN03DtpHXcQLMepGVLlDlGiAiR5LiO0aGsjl5sCwzg4QYDEDp4ukfse3URwnhzUOHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746598506; c=relaxed/simple;
-	bh=vSJ3hzFFhyk+/JSg4qzlSqae6qCpEEs7wyzUJ92o3nk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SPGdOveUXzrS625WZoZTQWlQgxqak7Qf3aL7DBimIY6PiVWWbz/H8s20zI9P1dpKQ+UuCtKKUW+KC3i7bq5kRS8D4/KT7XNpZXpyxDSo0DfahmtEtSBqdhu//ZA/orCtmiW8kgT9fIX6ou7RPmIz+vn6PdLJ6DwQcQd5zDKfcQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=hp5Ft0v0; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1746598645; c=relaxed/simple;
+	bh=LbFcmTU0oLEvKfeHgwgqNH8KwKRNgulhFk31/S5N1a4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qKMdf5YII8YpoKQsUQhFjAwAonBbp/ncMMOZIYW38APX4Zf7rYxwkXGQJ5asYCp3ePRRdWU2dQDfWBniMQw9ljqXOIKdRD1JWu3S7wBHLGbSQ/k7QaKXn01fNea0QSlL+g6NKLq2jmGfmvyhPjaCD+tL8wWRGTy+mV7BIHLaJbg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com; spf=pass smtp.mailfrom=norik.com; dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b=mvZTWjDo; arc=none smtp.client-ip=46.19.9.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=norik.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hp5Ft0v0"
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2ff784dc055so5888447a91.1
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 23:15:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1746598504; x=1747203304; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7hA73hgBO4nqj41CFJ+0WVG+4WFvvFaJgFRfbQga+uE=;
-        b=hp5Ft0v07nn/QUR0QmMJS5AgujLjnnj0oQejy+ghide/gG+1yw0PqI+VYvZBfbcMxz
-         P8cEa9JrA93r/QImuFPnmstqOiEXTifJfbRN3sP2hncXHpOdcAPDqjsQZ4BVo8OCem3U
-         Dnt8pLguADz2bWbtSD0N+FVxCqMu7RSxwhrOI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746598504; x=1747203304;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7hA73hgBO4nqj41CFJ+0WVG+4WFvvFaJgFRfbQga+uE=;
-        b=RxOyBNLjH0/LYa7KPg/8HDDV6ZoLUgK0UOKvkSo5Zaj5eNHqZ0I1Eno4L7g18f9Y0T
-         2q0imwYdgy+Zno/eopPtkA8dfdvUry51FCI+u+T+7UZFTTbDVEQ4JX/nOlpIjH5aebIQ
-         KU4Px68kLUUqHRZr88ojmw9UAMNvGw9kiHpSkpxWalPH5SRNXGptbY6z4SfFWt8Siyoq
-         lvo3uVsHQYBD9xROAaewVAweCOFeUVRAzIbcWX/3LozoR2VjqmiHb6fzbWrmILxnubch
-         d6yrh/tSbgB8tzLmoBPoyVXhB0wwdF+xVNJWBAktT5yqieIzQCQUVvtEcFJWySWImhed
-         SieQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXW2WF1zzJbBpilHqd9lEIjYx+lEH+xKlWZO6RbuZ0jOJ5J38Duj8i0Wsy0yULC2/eekZSoyqKUMzkctmY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxbMMIAm9qMS9FvoEELrqVQN0lVxyph2WBml8HGg8gNQQXsSt5R
-	Tt4Ae3DdWa7NIaO9gtCv4Aa/Izcb8THNdtB8cOqj3XP3AiLhD3jCQTCfi1W6RTlAl4wKfiKswhO
-	mHw==
-X-Gm-Gg: ASbGncuFMKWEi8yPCfpQ90d8gSeSchNWLWcAl0CBCMpMAAXcbZmOsaeNugvmcCBfRbB
-	K1UTmjurthLlttN9/0WfC5iaJ6eR3c+NFCgba16l4CduwfAjVhEp1JIaiZUET4x5wg2rK1/YhnU
-	Jw0RWUnjU4RDe0eTlildW6mSt+DfgkrE3Cy/fKQ9Fa4gG1oxL8RRXQCuGp6uewWQoHNxpSL5uxN
-	4mb8CMk9rPQp4Ltkw8hWWfA8dZane2/3oSXfPRtP3tWwV6UWAP7/hF6Y6wdWNexwoNTha2jwEbu
-	1ie3qPX3ny2loJeKpmgQIHOMv+BVe/RJtOguK7Toh26v
-X-Google-Smtp-Source: AGHT+IFt8mxFg2hYeSdOmmKvC1muDMtlAuLWggPsSZO3O0YnP2AnJEZfGHzWefvQFgQU+wsbULnGPQ==
-X-Received: by 2002:a17:90b:350b:b0:2ff:7ad4:77af with SMTP id 98e67ed59e1d1-30aac1be4d2mr3373826a91.20.1746598503912;
-        Tue, 06 May 2025 23:15:03 -0700 (PDT)
-Received: from google.com ([2401:fa00:8f:203:284f:37bc:f484:cbc6])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30aae525d8esm1084822a91.23.2025.05.06.23.15.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 23:15:03 -0700 (PDT)
-Date: Wed, 7 May 2025 15:14:58 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: Yosry Ahmed <yosry.ahmed@linux.dev>, 
-	Vitaly Wool <vitaly.wool@konsulko.se>, linux-mm@kvack.org, akpm@linux-foundation.org, 
-	linux-kernel@vger.kernel.org, Nhat Pham <nphamcs@gmail.com>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Minchan Kim <minchan@kernel.org>, Igor Belousov <igor.b@beldev.am>, 
-	Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH] mm/zblock: use vmalloc for page allocations
-Message-ID: <jzbcscg45stzhkbqyldzecmmu34h3yorxkulgowcya4t2x2ccc@3hiz3kkqxnxa>
-References: <20250502080156.1672957-1-vitaly.wool@konsulko.se>
- <aBoK7f7rtfbPFGap@google.com>
- <m2dmxnhtvxano6lye7lr3saiobn4ygpln55xntlstfo4zwws5g@qpq7aagx3xwq>
- <b42gpp5qsa4j22ai2v4rwwkjhvfbcbf3lcnjoccz7xeidae5c7@ot2ocric3qzs>
+	dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b="mvZTWjDo"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=norik.com;
+	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=0bMEqoVOsJr7MfvJQhzu+XLSD8SzCSYsJRMGf5xDRNo=; b=mvZTWjDo2RgXLgOQ5CFc26+qwK
+	mfqVkQk/4nw6UTLssKNjXNy1L3bb1TU9xmZyLpWXoJBLRRZtfHltA/oMIcM3Bvoi+EUkzpbpxT3px
+	0lbNPD8cr+fNwKL+4+NS/1WAsc+fVnbi0iRIybla7HYGCTIrrzk3xo1XMR4AQFI/HotKeGNndns9z
+	5j4+fpKbRNv2ZyQWJsMR2ybD9Swrqipb9iwyCW+hjTnMV1JTndvjnHcRJC+EAYd2o2qcwc7Lx5AHx
+	05dShjQN2U7DHo109hDfSnhc5lkVVJh6B662Cnxj+B1V5h3PaRcF5VTRvTIwcFifJrRwarYFMSPVR
+	a7Leiv0g==;
+Received: from [89.212.21.243] (port=59440 helo=[192.168.69.116])
+	by cpanel.siel.si with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <primoz.fiser@norik.com>)
+	id 1uCY5j-001nkt-2Z;
+	Wed, 07 May 2025 08:17:15 +0200
+Message-ID: <4b8d4232-0e7f-4dc6-a76e-705bdc952db7@norik.com>
+Date: Wed, 7 May 2025 08:17:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b42gpp5qsa4j22ai2v4rwwkjhvfbcbf3lcnjoccz7xeidae5c7@ot2ocric3qzs>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Upstream] [PATCH 4/4] arm64: dts: ti: k3-am62a7-*: Specify
+ Temperature Grade
+To: Daniel Schultz <d.schultz@phytec.de>, nm@ti.com, vigneshr@ti.com,
+ kristo@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, robertcnelson@gmail.com,
+ francesco.dolcini@toradex.com
+Cc: upstream@lists.phytec.de
+References: <20250507050847.912756-1-d.schultz@phytec.de>
+ <20250507050847.912756-4-d.schultz@phytec.de>
+Content-Language: en-US
+From: Primoz Fiser <primoz.fiser@norik.com>
+Autocrypt: addr=primoz.fiser@norik.com; keydata=
+ xjMEZrROOxYJKwYBBAHaRw8BAQdAADVOb5tiLVTUAC9nu/FUl4gj/+4fDLqbc3mk0Vz8riTN
+ JVByaW1veiBGaXNlciA8cHJpbW96LmZpc2VyQG5vcmlrLmNvbT7CiQQTFggAMRYhBK2YFSAH
+ ExsBZLCwJGoLbQEHbnBPBQJmtE47AhsDBAsJCAcFFQgJCgsFFgIDAQAACgkQagttAQducE+T
+ gAD+K4fKlIuvH75fAFwGYG/HT3F9mN64majvqJqvp3gTB9YBAL12gu+cm11m9JMyOyN0l6Os
+ jStsQFghPkzBSDWSDN0NzjgEZrROPBIKKwYBBAGXVQEFAQEHQP2xtEOhbgA+rfzvvcFkV1zK
+ 6ym3/c/OUQObCp50BocdAwEIB8J4BBgWCAAgFiEErZgVIAcTGwFksLAkagttAQducE8FAma0
+ TjwCGwwACgkQagttAQducE8ucAD9F1sXtQD4iA7Qu+SwNUAp/9x7Cqr37CSb2p6hbRmPJP8B
+ AMYR91JYlFmOJ+ScPhQ8/MgFO+V6pa7K2ebk5xYqsCgA
+Organization: Norik systems d.o.o.
+In-Reply-To: <20250507050847.912756-4-d.schultz@phytec.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - cpanel.siel.si
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - norik.com
+X-Get-Message-Sender-Via: cpanel.siel.si: authenticated_id: primoz.fiser@norik.com
+X-Authenticated-Sender: cpanel.siel.si: primoz.fiser@norik.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 
-On (25/05/07 15:08), Sergey Senozhatsky wrote:
-> On (25/05/07 14:57), Sergey Senozhatsky wrote:
-> > On (25/05/06 13:13), Yosry Ahmed wrote:
-> > > If we can use vmalloc for zblock, then we can probably also use vmalloc
-> > > in zsmalloc and get rid of the chaining logic completely. This would
-> > > make zsmalloc simpler and closer to zblock in that regard.
-> > > 
-> > > Sergey, WDYT?
-> > 
-> > This sounds interesting.  We might get rid of lots of memcpy()
-> > in object read/write paths, and so on.  I don't know if 0-order
-> > chaining was the only option for zsmalloc, or just happened to
-> > be the first one.
+Hi Daniel,
+
+On 7. 05. 25 07:08, Daniel Schultz wrote:
+> Specify the temperature grade in the base device tree to ensure
+> correct trip points are applied for each board.
 > 
-> I assume we might have problems with zspage release path.  vfree()
-> should break .swap_slot_free_notify, as far as I can see.
-> .swap_slot_free_notify is called under swap-cluster spin-lock,
-> so if we free the last object in the zspage we cannot immediately
-> free that zspage, because vfree() might_sleep().
+> Signed-off-by: Daniel Schultz <d.schultz@phytec.de>
+> ---
+>  arch/arm64/boot/dts/ti/k3-am62a7-phyboard-lyra-rdk.dts | 1 +
+>  arch/arm64/boot/dts/ti/k3-am62a7-sk.dts                | 1 +
+>  2 files changed, 2 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/ti/k3-am62a7-phyboard-lyra-rdk.dts b/arch/arm64/boot/dts/ti/k3-am62a7-phyboard-lyra-rdk.dts
+> index 77e5fef618ba..7d2e4694ed8e 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am62a7-phyboard-lyra-rdk.dts
+> +++ b/arch/arm64/boot/dts/ti/k3-am62a7-phyboard-lyra-rdk.dts
+> @@ -10,6 +10,7 @@
+>  #include "k3-am62a7.dtsi"
+>  #include "k3-am62a-phycore-som.dtsi"
+>  #include "k3-am62x-phyboard-lyra.dtsi"
+> +#include "k3-am62a-thermal-industrial.dtsi"
+>  
+>  / {
+>  	compatible = "phytec,am62a7-phyboard-lyra-rdk",
+> diff --git a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
+> index 1c9d95696c83..125e812fbb86 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
+> +++ b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
+> @@ -11,6 +11,7 @@
+>  #include <dt-bindings/gpio/gpio.h>
+>  #include <dt-bindings/net/ti-dp83867.h>
+>  #include "k3-am62a7.dtsi"
+> +#include "k3-am62a-thermal-automative.dtsi"
 
-... but there is a deferred zspage free already, we can switch
-to it entirely, I assume.
+You have a typo here... should be *automotive*.
+
+BR,
+Primoz
+
+>  
+>  / {
+>  	compatible = "ti,am62a7-sk", "ti,am62a7";
+
+-- 
+Primoz Fiser
+phone: +386-41-390-545
+email: primoz.fiser@norik.com
+--
+Norik systems d.o.o.
+Your embedded software partner
+Slovenia, EU
+phone: +386-41-540-545
+email: info@norik.com
