@@ -1,65 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B68351C84BF;
-	Wed,  7 May 2025 05:55:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 599FE1E7C3B
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 05:55:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746597334; cv=none; b=H3hea5WZBG9iM3i1HXaFmGQw2raeV/qZftrrw0Rv4psbfdWOfHZicg6OGXyHNt4i9vpPngcM6OKt6JQApKBNYc7ddG3i17CvJkLwkMJlU+MrU70E5thsKqxjEmjPTKvpPDdLx3KXSsQErkNdrsjP5bDZ3rYB/aqTIGJ3RrIsGPs=
+	t=1746597356; cv=none; b=kq94uHFtFKG43YIDVKEy2vuTuot/QIiDMAnkLzT6vgM0tmXMJSgk/ZUGRSVpI9JFEEot2Usps4hSY3DoB4Qszhul7g04+NDMTNe1yULJ0+QpWy4g7JK24hp4vg/vImaOI+cDIl1Wkcux1avP7HCjmKtI1hLkHo4Va8lqNwRsFRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746597334; c=relaxed/simple;
-	bh=c4CC6V9Grz+vwsqhkE8/eAXGhDDEiWIUvw+08z+578c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EX9Dw6oHvuPQqHsRxSPT2s+fueTlXHE6WeJgH2S6ZtVJHN+8EwWRdppShVmFsF3POETS4kjUevC3PBhrlxt2X25A7U7mtapHcRn910EkV0veVfdqfgr8qkWcAWUELgiXOa9bJLuY8FyDpNEaPJ8iTfBfecEh7VrAgK7iYuEIENQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hqUjdo1q; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hqUjdo1q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20619C4CEE7;
-	Wed,  7 May 2025 05:55:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746597334;
-	bh=c4CC6V9Grz+vwsqhkE8/eAXGhDDEiWIUvw+08z+578c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hqUjdo1qTUWhDSCMMnoR+//QvT+AD9SDt9KvXS6o2cPixrOg7E62Ie2xy9AthxQNa
-	 y/2FDZCiR+59WlQj6Lt6iaWr+nNEDf0gY3d96TQifcTjqzs904K9JnwnJpAQlLgCCS
-	 Kwy3E/Ixl12ODLEfdD+bDwNL0oeZ97DSdSbcYe+xhsZmXOYwmfK33X0pniCDb1Kfaq
-	 FxZBgtpSloN7tTdNXQ0HW/6B27y14LifK6slMj88nxIbjU3knK65SfO/dpVmG3Pp9b
-	 o/npecIhv7y47oZYKd5PkI3yF4G6ZZfv6N2wuxKEhxQTGxU875DlOWfEHC806lae9d
-	 ftUBSyY1KJ/iQ==
-Date: Tue, 6 May 2025 22:55:31 -0700
-From: Kees Cook <kees@kernel.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Keith Busch <kbusch@kernel.org>, kernel test robot <lkp@intel.com>,
-	Jens Axboe <axboe@kernel.dk>, Sagi Grimberg <sagi@grimberg.me>,
-	linux-nvme@lists.infradead.org, Chaitanya Kulkarni <kch@nvidia.com>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] nvme-pci: Make nvme_pci_npages_prp() __always_inline
-Message-ID: <202505062255.130383D3B7@keescook>
-References: <20250507033536.work.088-kees@kernel.org>
- <20250507044754.GC28402@lst.de>
+	s=arc-20240116; t=1746597356; c=relaxed/simple;
+	bh=XuiAf506Fax0XyampY/Ivi4BEdeVl6Y6hgJ58wAbgvc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XMrtdsq1PjlZnTETSsVUaKFrFBKDm6dq9AmIZ2DrTZNhcDFnNFXjNDUtcBWxdGLgs+UCoji/KEJ/7kq/yosm1U/U0kCTwE6Oq1axAtfLh+6s2zSACU3uBkFiP7yBfTLzEeXkWgKRUGUfD3wBe+rl4hJ4nCdOoZGRNfFA0e1CSxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 72D9A2F;
+	Tue,  6 May 2025 22:55:40 -0700 (PDT)
+Received: from [192.168.0.12] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9C4983F5A1;
+	Tue,  6 May 2025 22:55:45 -0700 (PDT)
+Message-ID: <eee538cf-d1ce-4444-97f4-450e4604f1ff@arm.com>
+Date: Wed, 7 May 2025 11:25:42 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250507044754.GC28402@lst.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 6/9] coresight: Avoid enable programming clock
+ duplicately
+To: Leo Yan <leo.yan@arm.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, coresight@lists.linaro.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com
+References: <20250423151726.372561-1-leo.yan@arm.com>
+ <20250423151726.372561-7-leo.yan@arm.com>
+ <063577a4-1530-4658-9838-934b0606e8e0@arm.com>
+ <20250506091841.GA177796@e132581.arm.com>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20250506091841.GA177796@e132581.arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 07, 2025 at 06:47:54AM +0200, Christoph Hellwig wrote:
-> On Tue, May 06, 2025 at 08:35:40PM -0700, Kees Cook wrote:
-> > The only reason nvme_pci_npages_prp() could be used as a compile-time
-> > known result in BUILD_BUG_ON() is because the compiler was always choosing
-> > to inline the function. Under special circumstances (sanitizer coverage
-> > functions disabled for __init functions on ARCH=um), the compiler decided
-> > to stop inlining it:
+On 5/6/25 14:48, Leo Yan wrote:
+> Hi Anshuman,
 > 
-> Can we place just fix um to still force inlining inline functions instead
-> of needing these workarounds?
+> On Fri, May 02, 2025 at 12:08:55PM +0530, Anshuman Khandual wrote:
+>> On 4/23/25 20:47, Leo Yan wrote:
+>>> The programming clock is enabled by AMBA bus driver before a dynamic
+>>> probe.  As a result, a CoreSight driver may redundantly enable the same
+>>> clock.
+>>
+>> Are you sure AMBA bus driver always enables such clocks in all scenarios ?
+> 
+> Yes.  I confirmed that AMBA bus driver enables the programming clock
+> prior to calling CoreSight device's probes (see amba_probe()).
+> 
+> I checked other AMBA device drivers (e.g., drivers/dma/amba-pl08x.c)
+> never touch APB programming clock and the clock by default is covered
+> by AMAB bus driver.
 
-Oh, I don't have the history here. Is there something about UM and
-forcing off inlining?
+Alright.
 
--- 
-Kees Cook
+> 
+>> Even if that is true - why cannot coresight_get_enable_apb_pclk() ensured
+>> to be called only for the platform drivers cases via code re-organization,
+>> rather than changing the coresight_get_enable_apb_pclk() helper itself.
+> 
+> The purpose is to unify the clock enabling for both static probe and
+> dynamic (AMBA) probe.
+> 
+> Let us take funnel driver as an example.  With the change in this patch,
+> the clock operations will be consolidated in a central place
+> (e.g., funnel_probe()).  Therefore, we can avoid to spread the drvdata
+> allocation and clock operations into dynamic probe and static (platform)
+> probe separately.
+> 
+>   funnel_probe()
+>   {
+>       drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
+> 
+>       drvdata->pclk = coresight_get_enable_apb_pclk();
+>   }
+> 
+>   dynamic_funnel_probe()
+>   {
+>       funnel_probe();
+>   }
+> 
+>   funnel_platform_probe()
+>   {
+>       funnel_probe();
+>   }
+
+Makes sense.
+
+> 
+> Thanks,
+> Leo
+> 
+>>> To avoid this, add a check for device type and skip enabling the
+>>> programming clock for AMBA devices.  The returned NULL pointer will be
+>>> tolerated by the drivers.
+>>>
+>>> Fixes: 73d779a03a76 ("coresight: etm4x: Change etm4_platform_driver driver for MMIO devices")
+>>> Signed-off-by: Leo Yan <leo.yan@arm.com>
+>>> ---
+>>>  include/linux/coresight.h | 11 +++++++----
+>>>  1 file changed, 7 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/include/linux/coresight.h b/include/linux/coresight.h
+>>> index b888f6ed59b2..26eb4a61b992 100644
+>>> --- a/include/linux/coresight.h
+>>> +++ b/include/linux/coresight.h
+>>> @@ -476,15 +476,18 @@ static inline bool is_coresight_device(void __iomem *base)
+>>>   * Returns:
+>>>   *
+>>>   * clk   - Clock is found and enabled
+>>> + * NULL  - Clock is not needed as it is managed by the AMBA bus driver
+>>>   * ERROR - Clock is found but failed to enable
+>>>   */
+>>>  static inline struct clk *coresight_get_enable_apb_pclk(struct device *dev)
+>>>  {
+>>> -	struct clk *pclk;
+>>> +	struct clk *pclk = NULL;
+>>>  
+>>> -	pclk = devm_clk_get_enabled(dev, "apb_pclk");
+>>> -	if (IS_ERR(pclk))
+>>> -		pclk = devm_clk_get_enabled(dev, "apb");
+>>> +	if (!dev_is_amba(dev)) {
+>>> +		pclk = devm_clk_get_enabled(dev, "apb_pclk");
+>>> +		if (IS_ERR(pclk))
+>>> +			pclk = devm_clk_get_enabled(dev, "apb");
+>>> +	}
+>>>  
+>>>  	return pclk;
+>>>  }
