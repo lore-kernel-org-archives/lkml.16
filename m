@@ -1,51 +1,52 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB4E52153CB;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F195D215F7E;
 	Wed,  7 May 2025 07:28:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746602884; cv=none; b=FK9ODe8SwcHW7eSUxGeRhxXk5dtgeh9l6yfKGECKex+O+JERKK3UGXX36GahSdNpnnBD3PG4/fkU6eGiAzcVV5IDP2VZAK/dfVM/vfwERycxhg3F06C320XmVQSTNjWgPvD4KwlZrrS8Q2DcCyKyt/dDu7DPQp3eHJfZU+ptpt0=
+	t=1746602885; cv=none; b=kPtkFxJyo8tsYI3d7SA9kfUXGoSZ34K8nuL/D7w3G5458UMBmaCa7NGRI+KROVWrt7kFg1OEscG+K8pdufyqg4QqyNp3A5G3s/h2ugV9Zz9FiYTbSb8ZiuPw3TA3x+ajBDVoORO+cCLvYLYTMnDnEY7K8fwkxWulWfPmUqnDQp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746602884; c=relaxed/simple;
-	bh=Uxr/S7I0305h1Vy3mJmKvk5INQ0mKoXTnKd+l5Ez5wI=;
+	s=arc-20240116; t=1746602885; c=relaxed/simple;
+	bh=Qp3waWXnZNeiib80C7SH4AHEY7KYDUl8d8nTGop8bG4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=oGjZfPkPxrDrrwFjXXxXNsCEGX+Q7qKFWi5H5LhJt/dRHAY2eaIom8/vv5tPUkzGegokGh69Q7BpYlcgF7nkLCoGKkk/9Isqx/lFMxTTQ6EipQOvO0KHg5iG9G0BgU0wtf3ulOolNqqnlZNqWnNY6ZX5TKisq+P7iIrs9Rmuz1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=Hs3+pgg8; arc=none smtp.client-ip=91.207.212.93
+	 In-Reply-To:To:CC; b=qHgC7uTKn4r1Bc7smSnuhTR/s3LzFnrm1Jko96WoLeAOqixq7h2t6IyiZwqay9P6g9cevi3j1MCor5OWJZnLd+AlC1YGb2f9nXEdLu2355v4O5NEiBAxX9Fu1w3nl9HDs1q3FmtlJiyKmU7kJr6gmI+l9cXf8n50Hr/V+HhPH7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=CRJ747TX; arc=none smtp.client-ip=91.207.212.93
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="Hs3+pgg8"
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5475tPOD018103;
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="CRJ747TX"
+Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54779UN2021799;
 	Wed, 7 May 2025 09:27:47 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	z2Wz+02biPobkFgq4687ds23RCGZHo5ebYaXPazcgac=; b=Hs3+pgg8FusUda+P
-	uxcmX7XGetPt2IKMSb6nYiOSmwJwe39Qs+rU3AbHk98vY8sLq0Ecvbx9oD4SUKM/
-	0rkFT/co2QkWcbctVRnhvSptIjpglNVeMI6iw04QMdbjOd+HlGEa0rjV36Zd60/d
-	kxEvzgF9VOfmp+LUXae9OBTuZ6jmji4VNQ/huCM5h7OZUtWdUYvkdsbkPT6fuqFj
-	aVikcnmCd96hOzk8zIdxTx020B/tZut3xlDI9DFwS2sNt0bs74chdFlu61ioLk19
-	anMeeE37k50lhak9fc3s0oqwIi+/ji5JO/8MohaNtzxKPe1KnAr2zVQa41/MJaAP
-	8CVSmQ==
+	mb7szTxe+O4/YlWD5eNPv4K70cyMKU44+b4hZfrYsbU=; b=CRJ747TXyRmGwxxG
+	GBTaAOahO7HoWVwb9Zd6+n92a0LepasLvhUut1EBi8lx17KPLz12fdROL3QXPM+n
+	LRd2BMrnALWUTfK8U+OkW2CikbB3hnyy4a+XjVolGOsJL1hy2dlThmey2ARKjVzd
+	RETIt+2tkPlZ14m+lehMq1Tsx2rt7B4XT/pHa5dyV4kDZVq9jUc6Hw+2Wuw+Bl57
+	WgQku+5jarXBX5uvU0W5Nt/txTFQj/r79YXfz6jsIccdflONeWPSchfSanIzfEmJ
+	VfBDzg8grUwhxsMjB4D26wPnj5O0LCZm8F3vrif8ZUs3stWcCGpVYqK7CicsOt3/
+	oOqJ9Q==
 Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46g1sx8cdh-1
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46dx3mct89-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Wed, 07 May 2025 09:27:47 +0200 (MEST)
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 2EBBD4005B;
-	Wed,  7 May 2025 09:26:50 +0200 (CEST)
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 1F1134005A;
+	Wed,  7 May 2025 09:26:46 +0200 (CEST)
 Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1142BACBA60;
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C5B77ACB657;
 	Wed,  7 May 2025 09:25:17 +0200 (CEST)
 Received: from localhost (10.48.87.62) by SHFDAG1NODE1.st.com (10.75.129.69)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 7 May
- 2025 09:25:16 +0200
+ 2025 09:25:17 +0200
 From: Patrice Chotard <patrice.chotard@foss.st.com>
-Date: Wed, 7 May 2025 09:25:14 +0200
-Subject: [PATCH v13 1/4] firewall: Always expose firewall prototype
+Date: Wed, 7 May 2025 09:25:15 +0200
+Subject: [PATCH v13 2/4] dt-bindings: memory-controllers: Add STM32 Octo
+ Memory Manager controller
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,8 +54,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-ID: <20250507-upstream_ospi_v6-v13-1-32290b21419a@foss.st.com>
+Content-Transfer-Encoding: 7bit
+Message-ID: <20250507-upstream_ospi_v6-v13-2-32290b21419a@foss.st.com>
 References: <20250507-upstream_ospi_v6-v13-0-32290b21419a@foss.st.com>
 In-Reply-To: <20250507-upstream_ospi_v6-v13-0-32290b21419a@foss.st.com>
 To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>,
@@ -74,8 +75,7 @@ CC: <christophe.kerello@foss.st.com>, <linux-kernel@vger.kernel.org>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         <linux-arm-kernel@lists.infradead.org>,
         Patrice Chotard
-	<patrice.chotard@foss.st.com>,
-        <stable@vger.kernel.org>
+	<patrice.chotard@foss.st.com>
 X-Mailer: b4 0.14.2
 X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
  (10.75.129.69)
@@ -83,74 +83,259 @@ X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-05-07_02,2025-05-06_01,2025-02-21_01
 
-In case CONFIG_STM32_FIREWALL is not set, prototype are not visible
-which leads to following errors when enabling, for example, COMPILE_TEST
-and STM32_OMM:
+Add bindings for STM32 Octo Memory Manager (OMM) controller.
 
-stm32_firewall_device.h:117:5: error: no previous prototype for
-‘stm32_firewall_get_firewall’ [-Werror=missing-prototypes]
-  117 | int stm32_firewall_get_firewall(struct device_node *np, struct
-stm32_firewall *firewall,
-      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-include/linux/bus/stm32_firewall_device.h:123:5:
-error: no previous prototype for ‘stm32_firewall_grant_access’
-[-Werror=missing-prototypes]
-  123 | int stm32_firewall_grant_access(struct stm32_firewall *firewall)
-      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-include/linux/bus/stm32_firewall_device.h:128:6:
-error: no previous prototype for ‘stm32_firewall_release_access’
-[-Werror=missing-prototypes]
-  128 | void stm32_firewall_release_access(struct stm32_firewall *firewall)
-      |      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-include/linux/bus/stm32_firewall_device.h:132:5:
-error: no previous prototype for ‘stm32_firewall_grant_access_by_id’
-[-Werror=missing-prototypes]
-  132 | int stm32_firewall_grant_access_by_id(struct stm32_firewall *firewall, u32 subsystem_id)
-      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-include/linux/bus/stm32_firewall_device.h:137:6:
-error: no previous prototype for ‘stm32_firewall_release_access_by_id’
-[-Werror=missing-prototypes]
-  137 | void stm32_firewall_release_access_by_id(struct stm32_firewall *firewall, u32 subsystem_id)
-      |      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Make prototypes always exposed to fix this issue.
-
-Cc: <stable@vger.kernel.org>
-Fixes: 5c9668cfc6d7 ("firewall: introduce stm32_firewall framework")
+OMM manages:
+  - the muxing between 2 OSPI busses and 2 output ports.
+    There are 4 possible muxing configurations:
+      - direct mode (no multiplexing): OSPI1 output is on port 1 and OSPI2
+        output is on port 2
+      - OSPI1 and OSPI2 are multiplexed over the same output port 1
+      - swapped mode (no multiplexing), OSPI1 output is on port 2,
+        OSPI2 output is on port 1
+      - OSPI1 and OSPI2 are multiplexed over the same output port 2
+  - the split of the memory area shared between the 2 OSPI instances.
+  - chip select selection override.
+  - the time between 2 transactions in multiplexed mode.
 
 Signed-off-by: Patrice Chotard <patrice.chotard@foss.st.com>
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- include/linux/bus/stm32_firewall_device.h | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ .../memory-controllers/st,stm32mp25-omm.yaml       | 226 +++++++++++++++++++++
+ 1 file changed, 226 insertions(+)
 
-diff --git a/include/linux/bus/stm32_firewall_device.h b/include/linux/bus/stm32_firewall_device.h
-index 5178b72bc920986bb6c55887453d146f382a8e77..ba6ef4468a0a8dfeb3e146ec90502e2f35172edc 100644
---- a/include/linux/bus/stm32_firewall_device.h
-+++ b/include/linux/bus/stm32_firewall_device.h
-@@ -35,7 +35,6 @@ struct stm32_firewall {
- 	u32 firewall_id;
- };
- 
--#if IS_ENABLED(CONFIG_STM32_FIREWALL)
- /**
-  * stm32_firewall_get_firewall - Get the firewall(s) associated to given device.
-  *				 The firewall controller reference is always the first argument
-@@ -112,6 +111,15 @@ int stm32_firewall_grant_access_by_id(struct stm32_firewall *firewall, u32 subsy
-  */
- void stm32_firewall_release_access_by_id(struct stm32_firewall *firewall, u32 subsystem_id);
- 
-+#if IS_ENABLED(CONFIG_STM32_FIREWALL)
+diff --git a/Documentation/devicetree/bindings/memory-controllers/st,stm32mp25-omm.yaml b/Documentation/devicetree/bindings/memory-controllers/st,stm32mp25-omm.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..344878db88188f5df5f9ee426335bed38a8fac5c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/memory-controllers/st,stm32mp25-omm.yaml
+@@ -0,0 +1,226 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/memory-controllers/st,stm32mp25-omm.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+extern int stm32_firewall_get_firewall(struct device_node *np, struct stm32_firewall *firewall,
-+				unsigned int nb_firewall);
-+extern int stm32_firewall_grant_access(struct stm32_firewall *firewall);
-+extern void stm32_firewall_release_access(struct stm32_firewall *firewall);
-+extern int stm32_firewall_grant_access_by_id(struct stm32_firewall *firewall, u32 subsystem_id);
-+extern void stm32_firewall_release_access_by_id(struct stm32_firewall *firewall, u32 subsystem_id);
++title: STM32 Octo Memory Manager (OMM)
 +
- #else /* CONFIG_STM32_FIREWALL */
- 
- int stm32_firewall_get_firewall(struct device_node *np, struct stm32_firewall *firewall,
++maintainers:
++  - Patrice Chotard <patrice.chotard@foss.st.com>
++
++description: |
++  The STM32 Octo Memory Manager is a low-level interface that enables an
++  efficient OCTOSPI pin assignment with a full I/O matrix (before alternate
++  function map) and multiplex of single/dual/quad/octal SPI interfaces over
++  the same bus. It Supports up to:
++    - Two single/dual/quad/octal SPI interfaces
++    - Two ports for pin assignment
++
++properties:
++  compatible:
++    const: st,stm32mp25-omm
++
++  "#address-cells":
++    const: 2
++
++  "#size-cells":
++    const: 1
++
++  ranges:
++    description: |
++      Reflects the memory layout per OSPI instance.
++      Format:
++      <chip-select> 0 <registers base address> <size>
++    minItems: 2
++    maxItems: 2
++
++  reg:
++    items:
++      - description: OMM registers
++      - description: OMM memory map area
++
++  reg-names:
++    items:
++      - const: regs
++      - const: memory_map
++
++  memory-region:
++    description:
++      Memory region shared between the 2 OCTOSPI instance.
++      One or two phandle to a node describing a memory mapped region
++      depending of child number.
++    minItems: 1
++    maxItems: 2
++
++  memory-region-names:
++    description:
++      Identify to which OSPI instance the memory region belongs to.
++    items:
++      enum: [ospi1, ospi2]
++    minItems: 1
++    maxItems: 2
++
++  clocks:
++    maxItems: 3
++
++  clock-names:
++    items:
++      - const: omm
++      - const: ospi1
++      - const: ospi2
++
++  resets:
++    maxItems: 3
++
++  reset-names:
++    items:
++      - const: omm
++      - const: ospi1
++      - const: ospi2
++
++  access-controllers:
++    maxItems: 1
++
++  power-domains:
++    maxItems: 1
++
++  st,syscfg-amcr:
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    description: |
++      The Address Mapping Control Register (AMCR) is used to split the 256MB
++      memory map area shared between the 2 OSPI instance. The Octo Memory
++      Manager sets the AMCR depending of the memory-region configuration.
++      The memory split bitmask description is:
++        - 000: OCTOSPI1 (256 Mbytes), OCTOSPI2 unmapped
++        - 001: OCTOSPI1 (192 Mbytes), OCTOSPI2 (64 Mbytes)
++        - 010: OCTOSPI1 (128 Mbytes), OCTOSPI2 (128 Mbytes)
++        - 011: OCTOSPI1 (64 Mbytes), OCTOSPI2 (192 Mbytes)
++        - 1xx: OCTOSPI1 unmapped, OCTOSPI2 (256 Mbytes)
++    items:
++      - items:
++          - description: phandle to syscfg
++          - description: register offset within syscfg
++          - description: register bitmask for memory split
++
++  st,omm-req2ack-ns:
++    description:
++      In multiplexed mode (MUXEN = 1), this field defines the time in
++      nanoseconds between two transactions.
++    default: 0
++
++  st,omm-cssel-ovr:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: |
++      Configure the chip select selector override for the 2 OCTOSPIs.
++      - 0: OCTOSPI1 chip select send to NCS1 OCTOSPI2 chip select send to NCS1
++      - 1: OCTOSPI1 chip select send to NCS2 OCTOSPI2 chip select send to NCS1
++      - 2: OCTOSPI1 chip select send to NCS1 OCTOSPI2 chip select send to NCS2
++      - 3: OCTOSPI1 chip select send to NCS2 OCTOSPI2 chip select send to NCS2
++    minimum: 0
++    maximum: 3
++    default: 0
++
++  st,omm-mux:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: |
++      Configure the muxing between the 2 OCTOSPIs busses and the 2 output ports.
++      - 0: direct mode
++      - 1: mux OCTOSPI1 and OCTOSPI2 to port 1
++      - 2: swapped mode
++      - 3: mux OCTOSPI1 and OCTOSPI2 to port 2
++    minimum: 0
++    maximum: 3
++    default: 0
++
++patternProperties:
++  ^spi@[0-9]:
++    type: object
++    $ref: /schemas/spi/st,stm32mp25-ospi.yaml#
++    description: Required spi child node
++
++required:
++  - compatible
++  - reg
++  - "#address-cells"
++  - "#size-cells"
++  - clocks
++  - clock-names
++  - resets
++  - reset-names
++  - st,syscfg-amcr
++  - ranges
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/st,stm32mp25-rcc.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/reset/st,stm32mp25-rcc.h>
++    ommanager@40500000 {
++      compatible = "st,stm32mp25-omm";
++      reg = <0x40500000 0x400>, <0x60000000 0x10000000>;
++      reg-names = "regs", "memory_map";
++      ranges = <0 0 0x40430000 0x400>,
++               <1 0 0x40440000 0x400>;
++      memory-region = <&mm_ospi1>, <&mm_ospi2>;
++      memory-region-names = "ospi1", "ospi2";
++      pinctrl-0 = <&ospi_port1_clk_pins_a
++                   &ospi_port1_io03_pins_a
++                   &ospi_port1_cs0_pins_a>;
++      pinctrl-1 = <&ospi_port1_clk_sleep_pins_a
++                   &ospi_port1_io03_sleep_pins_a
++                   &ospi_port1_cs0_sleep_pins_a>;
++      pinctrl-names = "default", "sleep";
++      clocks = <&rcc CK_BUS_OSPIIOM>,
++               <&scmi_clk CK_SCMI_OSPI1>,
++               <&scmi_clk CK_SCMI_OSPI2>;
++      clock-names = "omm", "ospi1", "ospi2";
++      resets = <&rcc OSPIIOM_R>,
++               <&scmi_reset RST_SCMI_OSPI1>,
++               <&scmi_reset RST_SCMI_OSPI2>;
++      reset-names = "omm", "ospi1", "ospi2";
++      access-controllers = <&rifsc 111>;
++      power-domains = <&CLUSTER_PD>;
++      #address-cells = <2>;
++      #size-cells = <1>;
++      st,syscfg-amcr = <&syscfg 0x2c00 0x7>;
++      st,omm-req2ack-ns = <0>;
++      st,omm-mux = <0>;
++      st,omm-cssel-ovr = <0>;
++
++      spi@0 {
++        compatible = "st,stm32mp25-ospi";
++        reg = <0 0 0x400>;
++        memory-region = <&mm_ospi1>;
++        interrupts = <GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>;
++        dmas = <&hpdma 2 0x62 0x00003121 0x0>,
++               <&hpdma 2 0x42 0x00003112 0x0>;
++        dma-names = "tx", "rx";
++        clocks = <&scmi_clk CK_SCMI_OSPI1>;
++        resets = <&scmi_reset RST_SCMI_OSPI1>, <&scmi_reset RST_SCMI_OSPI1DLL>;
++        access-controllers = <&rifsc 74>;
++        power-domains = <&CLUSTER_PD>;
++        #address-cells = <1>;
++        #size-cells = <0>;
++        st,syscfg-dlyb = <&syscfg 0x1000>;
++      };
++
++      spi@1 {
++        compatible = "st,stm32mp25-ospi";
++        reg = <1 0 0x400>;
++        memory-region = <&mm_ospi1>;
++        interrupts = <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>;
++        dmas = <&hpdma 3 0x62 0x00003121 0x0>,
++               <&hpdma 3 0x42 0x00003112 0x0>;
++        dma-names = "tx", "rx";
++        clocks = <&scmi_clk CK_KER_OSPI2>;
++        resets = <&scmi_reset RST_SCMI_OSPI2>, <&scmi_reset RST_SCMI_OSPI1DLL>;
++        access-controllers = <&rifsc 75>;
++        power-domains = <&CLUSTER_PD>;
++        #address-cells = <1>;
++        #size-cells = <0>;
++        st,syscfg-dlyb = <&syscfg 0x1000>;
++      };
++    };
 
 -- 
 2.25.1
