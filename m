@@ -1,91 +1,105 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbgbr2.qq.com (smtpbgbr2.qq.com [54.207.22.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9357F28C5A0
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 17:02:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 017862147EE;
+	Wed,  7 May 2025 17:03:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.22.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746637347; cv=none; b=nVqVkaBkBTrNpVA320zM/gQnezOEpYPmgkYMEahLp0vDB+w/8qwlFwkQ1tZSSwv9J06LUlg0RlAxNFF9ba3r/wGuTe1K6Idv0wrH0iJooOFAmHHqsg1C6H/FvpTD5jNq+fzIXiSC4uD4dJzPYYOWz1qIGLPrDQT0dgRD0W+K7ao=
+	t=1746637420; cv=none; b=jCW6y+yIVDmqi/ax2ofaa7NiZBwltrxyz3NfOUI2yu9Ft2mqteaMbX5L//GctvSwxrhmgjnN0MA07sxC4sQx43lw2gDQxqxW2dGWazgSYp7qHgvvsulV+x0Zi5sRf8s8/HfDFYiIBFm3o9THSkMq5ABR2lWNS51aDgISY/gZels=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746637347; c=relaxed/simple;
-	bh=nbaGA1DNhqBfyJfgBXEjnvt0arktQioD/6JAQjlU1BY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VnCQ1wpoXT2sP8Bka5Xg2ra7k6NYKap1Wg2Jeabubq2kshX5z5qoAU1q0uPMOeW/CL8A1Uj2kYRmzadC4mIC7tLY2bTHTxg++6Xrl3NkqxZPwyOybxwxGAzG242h2bLT2lY+ZYz0QtC8YMgOY5uPBv263DrR1uPU9wnwZ78Zixo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id DB7211F441;
-	Wed,  7 May 2025 17:02:23 +0000 (UTC)
-Authentication-Results: smtp-out2.suse.de;
-	none
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B48FA13882;
-	Wed,  7 May 2025 17:02:23 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 3ZzPKx+SG2h4AwAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Wed, 07 May 2025 17:02:23 +0000
-Date: Wed, 7 May 2025 19:02:22 +0200
-From: David Sterba <dsterba@suse.cz>
-To: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-	linux-btrfs@vger.kernel.org, riteshh@linux.ibm.com,
-	Qu Wenruo <quwenruo.btrfs@gmx.com>, disgoel@linux.vnet.ibm.com
-Subject: Re: [next-20250506][btrfs] Kernel OOPS while btrfs/001 TC
-Message-ID: <20250507170222.GJ9140@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-References: <75b94ef2-752b-4018-9b2a-148ecda5e8f4@linux.ibm.com>
+	s=arc-20240116; t=1746637420; c=relaxed/simple;
+	bh=5TAhFObYg7zZDMui/hMZM8JDbT69wYaipxEKQMXqeUs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=igWPreJroSvvKparFxGSYrn6MGWTNiM5ty8UH+W00h6vvttGa7YD7tk715JL+4jVuYaqD6RHwAMYNYfL9B1ooiopxtOE0SKWoCwRrx4xfNs65xiwSQUmXNlNwnEC1PMsjBnSa+11Med9taANdJRLTQNW8WbulhbIup22LxdI2bY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=PyRPQmvK; arc=none smtp.client-ip=54.207.22.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="PyRPQmvK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1746637407;
+	bh=5TAhFObYg7zZDMui/hMZM8JDbT69wYaipxEKQMXqeUs=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To;
+	b=PyRPQmvKBvLdOJiUQRZ1h7X+PFHT6n4snimB0ekkFwh4NW5dpVhAN6vPNNXj6hqMh
+	 i6kZKAhx+1akWDoTTPydJs2nuS9SoRx15W/O38pTfHS0XQBz/3vqz6hOGEWjwQ7R3a
+	 9vwGbX2TyanK3Sc8InZzyw8f/xLoooMuTRYJf/yI=
+X-QQ-mid: esmtpgz14t1746637404t6f1d7e20
+X-QQ-Originating-IP: wHEFxwwMZcx8373H9xGyhJ2zpWqxA8Dkd5gvKEGsg6k=
+Received: from mail-yw1-f181.google.com ( [209.85.128.181])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Thu, 08 May 2025 01:03:22 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 7374583256002677600
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-7053f85f059so593487b3.2;
+        Wed, 07 May 2025 10:03:23 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW+8/kPsqfKfgm7n9fdAvhXFucdID1tqou3lrmWvJ5umVKQ7DEglAw2t1cQL4bx1d7RJTRAbZ90Uun1Wnaj@vger.kernel.org, AJvYcCXjMAX8hprhXJ3FL9hTwM+fgtSuzZhzWt8w8u4HSnh4B5t5ZrtlzaUP/b1nwkmGF4c+qURDQJ2MypYSTCQz@vger.kernel.org
+X-Gm-Message-State: AOJu0YynDVGqElS9DZwkNpIEH/GpkrIdznZi56LurhmOl8g5QNX2E01S
+	51tJMp+TRhu2N59x4uboChe1PD88fWPNpC4jcXQpy+Lee4WgTjMK6tyeNW01niUCe6cEe6QoJA6
+	YnFk19ZVwvCElZcOQdW28tlLhnAY=
+X-Google-Smtp-Source: AGHT+IEB01ceoUeRdveS4boU89jBoptUVv0fs/vajQv4IpiFz42jTRAQsh6IhFh1tBJYKgn08X+p6yNbuG9bfjFod1A=
+X-Received: by 2002:a05:690c:3749:b0:709:176d:2b5 with SMTP id
+ 00721157ae682-70a2ce86309mr3461347b3.2.1746637402104; Wed, 07 May 2025
+ 10:03:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <75b94ef2-752b-4018-9b2a-148ecda5e8f4@linux.ibm.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Spam-Flag: NO
-X-Spam-Score: -4.00
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	REPLY(-4.00)[];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: DB7211F441
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Rspamd-Action: no action
+References: <20250507032926.377076-2-chenlinxuan@uniontech.com>
+ <CAOQ4uxjKFXOKQxPpxtS6G_nR0tpw95w0GiO68UcWg_OBhmSY=Q@mail.gmail.com>
+ <CAC1kPDP4oO29B_TM-2wvzt1+Gc6hWTDGMfHSJhOax4_Cg2dEkg@mail.gmail.com> <CAOQ4uxgS3OUy9tpphAJKCQFRAn2zTERXXa0QN_KvP6ZOe2KVBw@mail.gmail.com>
+In-Reply-To: <CAOQ4uxgS3OUy9tpphAJKCQFRAn2zTERXXa0QN_KvP6ZOe2KVBw@mail.gmail.com>
+From: Chen Linxuan <chenlinxuan@uniontech.com>
+Date: Thu, 8 May 2025 01:03:08 +0800
+X-Gmail-Original-Message-ID: <792479EEC274B193+CAC1kPDPY=qpGNRO3CH6_jSMKh6RyfHPFw71gCcpBZ-ogG41psA@mail.gmail.com>
+X-Gm-Features: ATxdqUEnZjnlcVOxnEDi_RdK47R8Vtl6mCVCgMItBEKveTQPCEKYTRG2lP9l4oo
+Message-ID: <CAC1kPDPY=qpGNRO3CH6_jSMKh6RyfHPFw71gCcpBZ-ogG41psA@mail.gmail.com>
+Subject: Re: [RFC PATCH] fs: fuse: add backing_files control file
+To: Amir Goldstein <amir73il@gmail.com>
+Cc: Chen Linxuan <chenlinxuan@uniontech.com>, Miklos Szeredi <miklos@szeredi.hu>, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-QQ-SENDSIZE: 520
+Feedback-ID: esmtpgz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-1
+X-QQ-XMAILINFO: OStqjMFNanKnuIfUx9301bN4eKlmdiUbBcs54cHnm9NuFBI+9U3X4uCv
+	Vs5+CaSAWKmV+pcjqeFFvtwHEP3S7ZIi48Lh2ceZ65FyNFMKDBrSUdJ/SnbsMHbJ+kX7BG4
+	RGEAafEus1JUU1Aw9Htxyf6Oe5lEovOoqBgjQOsGQFNOfnxxMXZ4OLSYC0xVMl8GYaLbPmZ
+	macbaU9phAq3YBED4XPIM/v5kbmTnGLQ9qfAeHRAbQl0Lxq3TtKbZ/6TFoSgqshAmUKX/Ll
+	iSITsppyLkA8NAefKRZfddw2IYlgry585GU4gT/TbGndVw9BznUw6JdMANfjuo5qfqnPaVE
+	bJxyvEdPNmDImaiJoUz3deJITygdPhzUK4nIo3qMnboeZ66uxRYYIf+R8W1MtFOFfYmYq6L
+	bS3FGEp0dmvxPnZZIu52uth8eDNfa/9/Rw/IRWBlSkbr3eXXccAnHMamCeq+rXuz6r52Cgi
+	W2alYB7T+N+oQU0TNnIfqCYmsKzV9ZTu2qEam089jrPVfkpaSEBXFXnwG3sFl+tNpVcA2Li
+	vgE40/igYx9Fi8jqyRZP+nJBIqOlbJClt6ad+jWy5njgWuW7v5LZwfxQiscaqhs81tX5Rud
+	OBWW7fL8EyhZ3G4ZbyVB5eWvhwBUxmJXKpD4NhxXQr0lgLFCaGgX/9bqQBuY1RHD05gIY+j
+	At47639TicgRitiTTrayAUOAw+JBIFXzrGQJTdsb7ThOvKFQVrKust4pyqFbZxmDXNoueQm
+	r/kFefTNjO0adSgUtARmkw8CcAvpq/kAFLcdoqP2Iu3zSm/kCgFPB0UbwfAztGOepsnjPHO
+	8JA7nA2CmFLUVJvOsLBY5TESL4wZmqBVVxfCyFKbzfReh5vjEZin2UnkjXsM3nb6oXWCzTK
+	xLyP4TBJSQSNR4v2/XM06156qLpyEMMMDBSbhlOFzB/G1X6ErR4p9djkfVKu6P7rJMqF1NC
+	UqlzGdDH/twQBCKqLUCNH9COgPIllT2bjb6mkc0bAFmVwCKxWGBD/y7W1jFAvYQCsqbvjG8
+	1oZkRzztzo4TUgESFuQjPGr8Rx9HhNtc3SKOJJhphKF8EZJ8yD
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+X-QQ-RECHKSPAM: 0
 
-On Wed, May 07, 2025 at 02:14:34PM +0530, Venkat Rao Bagalkote wrote:
-> Hello,
-> 
-> 
-> I am observing kernel OOPS, while running btrfs/001 TC, from xfstests suite.
-> 
-> 
-> This issue is introduced in next-20250506. This issue is not seen on 
-> next-20250505 kernel.
+On Thu, May 8, 2025 at 12:57=E2=80=AFAM Amir Goldstein <amir73il@gmail.com>=
+ wrote:
 
-Thanks for the report, the patch has been removed from linux-next.
+> It means everything to userspace.
+> backing ids are part of the userspace UAPI - you have documented it yours=
+elf.
+> The fuse server used backing ids to manage access to backing files
+> https://github.com/libfuse/libfuse/blob/master/example/passthrough_hp.cc#=
+L855
 
-> [  968.074163] NIP [c00800000f7fb5e0] btrfs_get_tree_subvol+0x32c/0x544 > [btrfs]
-> [  968.074205] LR [c00800000f7fb3b4] btrfs_get_tree_subvol+0x100/0x544 > [btrfs]
-> [  968.074241] Call Trace:
-> [  968.074244] [c000000154747bc0] [c00800000f7fb3b4] > btrfs_get_tree_subvol+0x100/0x544 [btrfs] (unreliable)
+Oh, I see.
 
-This was the open coded fc_mount(), v3 is in the mailinglist,
-https://lore.kernel.org/linux-btrfs/20250506195826.GU2023217@ZenIV/T/#u
+> This is extra and nice to have.
+> It can show admin which files are using fuse passthrough.
+> It cannot replace displaying all backing ids under connection
+> because server can register backing ids without using them to open files
+> and most importantly server can leak backing ids, which is a good
+> reason to kill it.
+
+I will have a try later.
