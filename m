@@ -1,184 +1,140 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from relay5.mymailcheap.com (relay5.mymailcheap.com [159.100.248.207])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94E2620B1F4;
-	Wed,  7 May 2025 10:04:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21E30748D;
+	Wed,  7 May 2025 10:04:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.100.248.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746612254; cv=none; b=ayN5UTCAUp7bCmclS/2rtOxaRz9ll2KL1pdYTXr1f0XQjUE7Gz36+jpLug08/WYr4ZbYq0nwseOLqHsS5z5Qqiuwusx4Uf78wvStgppfPpMYIH710mogiUIP0LEr4mKCf+ou1lO8hIRZuf3zWXhJPIH4QalQ1bDuVXZpmf7c5IM=
+	t=1746612288; cv=none; b=W37YJjHvPkWzAGcgGHxhdungEkDALxx2evCsfh8pqwSxCZvUScDVk4j6UtANTM/6rDCX/Q+SSRRpRHS4RDkuOICx1uSDeXMNbfNz8t/LeVoba7JxXDnXjv5wFeT4PAGU7CdBF2JCp37jR+iCXexeqw3n2gHEFpW1ri3YCTS+O5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746612254; c=relaxed/simple;
-	bh=iUuS42Uclw9FLIubzIFhbyfjGtzW0hUtKf7lNPTgtgs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kj3hqkifYpwdpU6H5SS1Q4H4hdG01Q0edivVTK7AhIp07iCfWwHfL963kVtd3mIlCuJ+JPpXTHWljDn4x7593eHX4KbIGKStlEqAeCNEr9cKOVJwdiARxghngo1wg0OqZ93H6bZyWUsIoPWfLlNgCc+yHvOaiFEHLhsuTtj0O8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cEX+Oco9; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1746612288; c=relaxed/simple;
+	bh=mmFmsqM7Nq7w8TVg8U3Rogh4VyZckeHRwu9Hsc96wPQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Qp57OErttkW1i+WmjSr517pt1+cAwyTXMFmZjExayUcz6sS3yApo5YOHmWxyNRFqHpr90uAJjXiR4FrU54GsjkSimfC4eTW2w+KT6wWTk9ZPIOrh0RUVkoSnqldHFbKyo5BxHff7keSm+InqMyMUX98PK1owN/wimIUAm7EPn+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=mxAeDq6Q; arc=none smtp.client-ip=159.100.248.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cEX+Oco9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746612252; x=1778148252;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=iUuS42Uclw9FLIubzIFhbyfjGtzW0hUtKf7lNPTgtgs=;
-  b=cEX+Oco9cAt1sLOmTSsKIGRae9wpLW02sliWiEoV0FvVB+1RJw3xyO47
-   fojwDsdtKBOSlY/EcUFqxiHjERVw0VAuqZnFhfUCYgrVi+KlIZRMrunPF
-   z6DEVBvEgQggjdDDxRa9z5r8oBzWrLvcjc7/+XdXSU2iq9bNXrFYdaJVL
-   MR/m02iFGd29sooUul15pEftpCTGQvl83pz5RwwuENq4sATxnOcX7ARLu
-   uZxhZqDtAv4e+fYfdsrHo7e4AnYE0gWoBRyeRNWQRlhtmvPw4EU8lafGb
-   /Z09YUfpC6aR2v3EYtY+6fJ3r6/bxtLt4L8sEpG2kJcDcCIX5yGEzxYOq
-   A==;
-X-CSE-ConnectionGUID: tTVUZIHfRAqkW+UxodhgmA==
-X-CSE-MsgGUID: Pu7PSK5sR92TviCHg3unjA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="59730221"
-X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
-   d="scan'208";a="59730221"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 03:04:11 -0700
-X-CSE-ConnectionGUID: PSOJ5DJ7R72t6hsb+akvyA==
-X-CSE-MsgGUID: OSW7vIWNT0+TQ5dev9D0YA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
-   d="scan'208";a="135816401"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 07 May 2025 03:04:05 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uCbdC-0007Ys-1g;
-	Wed, 07 May 2025 10:04:02 +0000
-Date: Wed, 7 May 2025 18:03:45 +0800
-From: kernel test robot <lkp@intel.com>
-To: Tanmay Jagdale <tanmay@marvell.com>, bbrezillon@kernel.org,
-	arno@natisbad.org, schalla@marvell.com, herbert@gondor.apana.org.au,
-	davem@davemloft.net, sgoutham@marvell.com, lcherian@marvell.com,
-	gakula@marvell.com, jerinj@marvell.com, hkelam@marvell.com,
-	sbhatta@marvell.com, andrew+netdev@lunn.ch, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, bbhushan2@marvell.com,
-	bhelgaas@google.com, pstanner@redhat.com,
-	gregkh@linuxfoundation.org, peterz@infradead.org, linux@treblig.org,
-	krzysztof.kozlowski@linaro.org, giovanni.cabiddu@intel.com
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, rkannoth@marvell.com, sumang@marvell.com,
-	gcherian@marvell.com, Tanmay Jagdale <tanmay@marvell.com>
-Subject: Re: [net-next PATCH v1 10/15] octeontx2-pf: ipsec: Setup NIX HW
- resources for inbound flows
-Message-ID: <202505071739.xTGCCtUx-lkp@intel.com>
-References: <20250502132005.611698-11-tanmay@marvell.com>
+	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="mxAeDq6Q"
+Received: from relay1.mymailcheap.com (relay1.mymailcheap.com [149.56.97.132])
+	by relay5.mymailcheap.com (Postfix) with ESMTPS id C9E6A2634A;
+	Wed,  7 May 2025 10:04:43 +0000 (UTC)
+Received: from nf1.mymailcheap.com (nf1.mymailcheap.com [51.75.14.91])
+	by relay1.mymailcheap.com (Postfix) with ESMTPS id 363933EBDC;
+	Wed,  7 May 2025 10:04:36 +0000 (UTC)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+	by nf1.mymailcheap.com (Postfix) with ESMTPSA id 40101400CD;
+	Wed,  7 May 2025 10:04:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
+	t=1746612275; bh=mmFmsqM7Nq7w8TVg8U3Rogh4VyZckeHRwu9Hsc96wPQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=mxAeDq6QxdoymKp2Jk5R5qeSYKbrNDAoqW/k9L6ABkSfPd/EQb/RjNne0hUHqDstk
+	 n1OzJmRdXny2UfrV0wjEn4XGiIyd2z6GBUWtJPpO7/LpoFQ/F5lTKfzX4raxNWBDyn
+	 ke/CtQdMOtS6bA2AEPIscYxPrEfO2o5gh7g3Ek80=
+Received: from hrh-ofice.wok.cipunited.com (unknown [60.247.127.212])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail20.mymailcheap.com (Postfix) with ESMTPSA id 35131409D2;
+	Wed,  7 May 2025 10:04:30 +0000 (UTC)
+From: Runhua He <hua@aosc.io>
+To: platform-driver-x86@vger.kernel.org
+Cc: Mario Limonciello <mario.limonciello@amd.com>,
+	Rong Zhang <i@rong.moe>,
+	Mingcong Bai <jeffbai@aosc.io>,
+	Kexy Biscuit <kexybiscuit@aosc.io>,
+	Runhua He <hua@aosc.io>,
+	Xinhui Yang <cyan@cyano.uk>,
+	Yemu Lu <prcups@krgm.moe>,
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] platform/x86/amd/pmc: Declare quirk_spurious_8042 for MECHREVO Wujie 14XA (GX4HRXL)
+Date: Wed,  7 May 2025 18:01:03 +0800
+Message-ID: <20250507100103.995395-1-hua@aosc.io>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250502132005.611698-11-tanmay@marvell.com>
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Server: nf1.mymailcheap.com
+X-Rspamd-Queue-Id: 40101400CD
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [1.50 / 10.00];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	MIME_GOOD(-0.10)[text/plain];
+	SUBJECT_RANDOM_CHARS_1(0.10)[];
+	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_ONE(0.00)[1];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	SPFBL_URIBL_EMAIL_FAIL(0.00)[prcups.krgm.moe:server fail,cyan.cyano.uk:server fail,i.rong.moe:server fail,jeffbai.aosc.io:server fail,hua.aosc.io:server fail,mario.limonciello.amd.com:server fail];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[]
 
-Hi Tanmay,
+MECHREVO Wujie 14XA (GX4HRXL) wakes up immediately after s2idle entry.
+This happens regardless of whether the laptop is plugged into AC power,
+or whether any peripheral is plugged into the laptop.
 
-kernel test robot noticed the following build warnings:
+Similar to commit a55bdad5dfd1 ("platform/x86/amd/pmc: Disable keyboard
+wakeup on AMD Framework 13"), the MECHREVO Wujie 14XA wakes up almost
+instantly after s2idle suspend entry (IRQ1 is the keyboard):
 
-[auto build test WARNING on net-next/main]
+2025-04-18 17:23:57,588 DEBUG:  PM: Triggering wakeup from IRQ 9
+2025-04-18 17:23:57,588 DEBUG:  PM: Triggering wakeup from IRQ 1
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Tanmay-Jagdale/crypto-octeontx2-Share-engine-group-info-with-AF-driver/20250502-213203
-base:   net-next/main
-patch link:    https://lore.kernel.org/r/20250502132005.611698-11-tanmay%40marvell.com
-patch subject: [net-next PATCH v1 10/15] octeontx2-pf: ipsec: Setup NIX HW resources for inbound flows
-config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20250507/202505071739.xTGCCtUx-lkp@intel.com/config)
-compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250507/202505071739.xTGCCtUx-lkp@intel.com/reproduce)
+Add this model to the spurious_8042 quirk to workaround this.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505071739.xTGCCtUx-lkp@intel.com/
+This patch does not affect the wake-up function of the built-in keyboard.
+Because the firmware of this machine adds an insurance for keyboard
+wake-up events, as it always triggers an additional IRQ 9 to wake up the
+system.
 
-All warnings (new ones prefixed by >>):
+Suggested-by: Mingcong Bai <jeffbai@aosc.io>
+Suggested-by: Xinhui Yang <cyan@cyano.uk>
+Suggested-by: Rong Zhang <i@rong.moe>
+Fixes: a55bdad5dfd1 ("platform/x86/amd/pmc: Disable keyboard wakeup on AMD Framework 13")
+Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/4166
+Cc: Mario Limonciello <mario.limonciello@amd.com>
+Link: https://zhuanldan.zhihu.com/p/730538041
+Tested-by: Yemu Lu <prcups@krgm.moe>
+Signed-off-by: Runhua He <hua@aosc.io>
 
->> drivers/net/ethernet/marvell/octeontx2/nic/cn10k_ipsec.c:488:6: warning: variable 'pool' is used uninitialized whenever 'if' condition is true [-Wsometimes-uninitialized]
-     488 |         if (err)
-         |             ^~~
-   drivers/net/ethernet/marvell/octeontx2/nic/cn10k_ipsec.c:512:23: note: uninitialized use occurs here
-     512 |         qmem_free(pfvf->dev, pool->stack);
-         |                              ^~~~
-   drivers/net/ethernet/marvell/octeontx2/nic/cn10k_ipsec.c:488:2: note: remove the 'if' if its condition is always false
-     488 |         if (err)
-         |         ^~~~~~~~
-     489 |                 goto pool_fail;
-         |                 ~~~~~~~~~~~~~~
-   drivers/net/ethernet/marvell/octeontx2/nic/cn10k_ipsec.c:466:24: note: initialize the variable 'pool' to silence this warning
-     466 |         struct otx2_pool *pool;
-         |                               ^
-         |                                = NULL
-   1 warning generated.
+---
+Changes in v2:
+- Match quirk to precise motherboard models to avoid false positives.
+---
+ drivers/platform/x86/amd/pmc/pmc-quirks.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-
-vim +488 drivers/net/ethernet/marvell/octeontx2/nic/cn10k_ipsec.c
-
-   461	
-   462	static int cn10k_ipsec_setup_nix_rx_hw_resources(struct otx2_nic *pfvf)
-   463	{
-   464		struct otx2_hw *hw = &pfvf->hw;
-   465		int stack_pages, pool_id;
-   466		struct otx2_pool *pool;
-   467		int err, ptr, num_ptrs;
-   468		dma_addr_t bufptr;
-   469	
-   470		num_ptrs = 256;
-   471		pool_id = pfvf->ipsec.inb_ipsec_pool;
-   472		stack_pages = (num_ptrs + hw->stack_pg_ptrs - 1) / hw->stack_pg_ptrs;
-   473	
-   474		mutex_lock(&pfvf->mbox.lock);
-   475	
-   476		/* Initialize aura context */
-   477		err = cn10k_ipsec_ingress_aura_init(pfvf, pool_id, pool_id, num_ptrs);
-   478		if (err)
-   479			goto fail;
-   480	
-   481		/* Initialize pool */
-   482		err = otx2_pool_init(pfvf, pool_id, stack_pages, num_ptrs, pfvf->rbsize, AURA_NIX_RQ);
-   483		if (err)
-   484			goto fail;
-   485	
-   486		/* Flush accumulated messages */
-   487		err = otx2_sync_mbox_msg(&pfvf->mbox);
- > 488		if (err)
-   489			goto pool_fail;
-   490	
-   491		/* Allocate pointers and free them to aura/pool */
-   492		pool = &pfvf->qset.pool[pool_id];
-   493		for (ptr = 0; ptr < num_ptrs; ptr++) {
-   494			err = otx2_alloc_rbuf(pfvf, pool, &bufptr, pool_id, ptr);
-   495			if (err) {
-   496				err = -ENOMEM;
-   497				goto pool_fail;
-   498			}
-   499			pfvf->hw_ops->aura_freeptr(pfvf, pool_id, bufptr + OTX2_HEAD_ROOM);
-   500		}
-   501	
-   502		/* Initialize RQ and map buffers from pool_id */
-   503		err = cn10k_ipsec_ingress_rq_init(pfvf, pfvf->ipsec.inb_ipsec_rq, pool_id);
-   504		if (err)
-   505			goto pool_fail;
-   506	
-   507		mutex_unlock(&pfvf->mbox.lock);
-   508		return 0;
-   509	
-   510	pool_fail:
-   511		mutex_unlock(&pfvf->mbox.lock);
-   512		qmem_free(pfvf->dev, pool->stack);
-   513		qmem_free(pfvf->dev, pool->fc_addr);
-   514		page_pool_destroy(pool->page_pool);
-   515		devm_kfree(pfvf->dev, pool->xdp);
-   516		pool->xsk_pool = NULL;
-   517	fail:
-   518		otx2_mbox_reset(&pfvf->mbox.mbox, 0);
-   519		return err;
-   520	}
-   521	
-
+diff --git a/drivers/platform/x86/amd/pmc/pmc-quirks.c b/drivers/platform/x86/amd/pmc/pmc-quirks.c
+index b4f49720c87f..2e3f6fc67c56 100644
+--- a/drivers/platform/x86/amd/pmc/pmc-quirks.c
++++ b/drivers/platform/x86/amd/pmc/pmc-quirks.c
+@@ -217,6 +217,13 @@ static const struct dmi_system_id fwbug_list[] = {
+ 			DMI_MATCH(DMI_BIOS_VERSION, "03.05"),
+ 		}
+ 	},
++	{
++		.ident = "MECHREVO Wujie 14X (GX4HRXL)",
++		.driver_data = &quirk_spurious_8042,
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "WUJIE14-GX4HRXL"),
++		}
++	},
+ 	{}
+ };
+ 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.49.0
+
