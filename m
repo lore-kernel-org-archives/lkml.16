@@ -1,395 +1,183 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2056.outbound.protection.outlook.com [40.107.220.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3903128C2D2;
-	Wed,  7 May 2025 16:14:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746634477; cv=none; b=jnCcl2wghm6I75d8JELT+Z8l2cccm6EmxQYe6d63c4jYWQiUoutdKi11dCUkNaxgrkpZQFXZLqUwtGUd3PKD/+n+0OuREQLd/tPrnETwKRGiAdVtGZYm881oPYaBJm/XbovG02trHFDjaUa1kE4cywSedFeiYiLxXlmNs2L447M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746634477; c=relaxed/simple;
-	bh=mMQMwLxi2MCFyRld7ql6OOPUv4ZPktnYFa2FfvFYeVA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=o8giI3/SC8/99UnuueudPj6VixY/z4ilH6Opg/at8NtUxzBeere/y0fIV7LuZzhw/nFLyXnSPQy2g6vyLwJIyeJdO+Ah7VhTOVlor0CdG/gm9moHOKdGjYobyWaEIcVSjdL7dDOT4WXpA3Gmbk1za5df0ueu+Gn47VrsUFTQvdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lv9u8LxM; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 859E628C2D2
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 16:15:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.56
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746634515; cv=fail; b=QTKIobMLu2IaDaQ/OrDbzagIlTUOY3+BKRdGDOUvj0QWmUMYNlrtND9sRX6UDSgXEvmdY4WogkU6c7KV7TRBAscu88OJp78tuzxVxKarrc21gzYUOV2yBiy+NWHT1qN9r1JOLSec5Vcy78obMb0sNBjJTfnE2BTi8pSagxfKScs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746634515; c=relaxed/simple;
+	bh=CZVlUN9ovUIWCrYYf8BGHIEnNDy7LxnzUXEuI5u7L6E=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=L3gzLeP8srNfsbkjQzyZqoyybsiK0kqBNFT3tYd8Cdn0M/Dm+P9bvUuJA2q6Y3oM2xADRNbkeFq8h73SGScbUT5FVtr46SbIhTwXQaYBaCgQ87lBQu8qtfUwFdCvoE8gTrg1Apfp5Pi4Mo/Oj2JfvBRUyPykrmIKFLvRdp/7NQY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=4NEqO1x1; arc=fail smtp.client-ip=40.107.220.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lv9u8LxM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EE70C4CEE2;
-	Wed,  7 May 2025 16:14:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746634476;
-	bh=mMQMwLxi2MCFyRld7ql6OOPUv4ZPktnYFa2FfvFYeVA=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=lv9u8LxMkKUcqbP+6wfitDelliIHX6l+NpKakqtT6CWKYqmMuHDE1z+5eCX3b1qHB
-	 p8wkA8sjyZ+YJuvX9juivSdIUpky43LcjQC4cR6UIyj43jtJ/DwrfD2BK7+wbb6Wio
-	 jIucYMirqzEaECmfck1t8HWA2yxZ/UhuCHMUG96okp01+fAo/w/zflR75hUmQDnXDk
-	 /a1FAS+ur8rzXnksfDbeXc+A7g79qFaBjzCHgC/XbvJBxPmmobCuM/WiYtbPL1MqUW
-	 s11UZfBTMKQxaYKox2FKi/LReWnJePshNSdyGa3DyEG4a6AMKj6+HifEtA/NKNb6Nb
-	 2nZqg7S5VpUxA==
-From: Christian Brauner <brauner@kernel.org>
-Date: Wed, 07 May 2025 18:13:44 +0200
-Subject: [PATCH v4 11/11] selftests/coredump: add tests for AF_UNIX
- coredumps
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="4NEqO1x1"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=NLZR2vFspxeLqRqQDYA2o6Mbh8955PKEX18Q2apYI0JCcMrkfRsz2/t6d92HJub+vOkc3fRuYQpWXPMcaokMjNx1Hnbjjz4gWSKUPhZIsg4hX78OZ/4V8Z1gvvFp9x4xSicTxFwNHpgjOC45RddlX8ypzyRqI7ichRZF4IBlTYFhR0Y9zjuqsYEkjNs2sJceLtiTOUS/3Y5lbKvNtrldOsDD7SvvO8LyI+kbozgDbxm//EsKqwdC8N1QwvrSmjfqYcnUPjesVNCKpBF5zpsSMwJqi9GUJbner1lTQCo3rGqnrgFWhfndrbZvmd5jYjkBnYGqLJgT0nNLSXGY7MwdQg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=r+RtdtV45O4u79mPxv0VzLDF8nbC11mt7k40eShmkG8=;
+ b=tiJ33ILGnhU2DljbePDL9o0sjH06kxXRcINzQm1PGgrZ3PtonxAgH/o7ByEnTTgqZYrWAYOjwVJil8J+e/DqBprW5o0nx6C7dazcr4da8yBS3HX3uQeP7nyQgji0R9T+ii5nlkjsx2FmPaazSrqU+5gX0lu1DqB5uPLR7D9EpLSE8lX6A+MLqQFCoTDHdD3y+C0gzKjSYEnr0SSSBDEApM/hTGRHqvWVazlopBTHbiYv4aI+dlo9RKDQxEhrPwwK9K1r0W/S3J+Je+T4EMu7ct3O3VARoyIIwlrBSebjHgYFliX0b8iR9k8rxEs793crb3zFGCIpSLx4GA3zODTvPg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=r+RtdtV45O4u79mPxv0VzLDF8nbC11mt7k40eShmkG8=;
+ b=4NEqO1x1CNIew6Baj5LdKCU4BkdkOnDcPbCWc3EfCAK8vq0P/afAq421Bb0mDVAAhDBDpmyzYW0ffCug+2hXH/cQChj75NZfgrohgNE3j78VGRYZFOmWIv9NjrGkaZ1AfsazoxZ6Anuz8EM/iA/+Cdptr+Pfe+l0JUGw3BGYnQk=
+Received: from SJ0PR05CA0134.namprd05.prod.outlook.com (2603:10b6:a03:33d::19)
+ by CY5PR12MB6525.namprd12.prod.outlook.com (2603:10b6:930:32::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.32; Wed, 7 May
+ 2025 16:15:07 +0000
+Received: from SJ5PEPF0000020A.namprd05.prod.outlook.com
+ (2603:10b6:a03:33d:cafe::5e) by SJ0PR05CA0134.outlook.office365.com
+ (2603:10b6:a03:33d::19) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8699.24 via Frontend Transport; Wed,
+ 7 May 2025 16:15:07 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SJ5PEPF0000020A.mail.protection.outlook.com (10.167.244.43) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8722.18 via Frontend Transport; Wed, 7 May 2025 16:15:05 +0000
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 7 May
+ 2025 11:15:05 -0500
+Received: from xsjlizhih51.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Wed, 7 May 2025 11:15:04 -0500
+From: Lizhi Hou <lizhi.hou@amd.com>
+To: <ogabbay@kernel.org>, <quic_jhugo@quicinc.com>,
+	<jacek.lawrynowicz@linux.intel.com>, <dri-devel@lists.freedesktop.org>
+CC: Lizhi Hou <lizhi.hou@amd.com>, <linux-kernel@vger.kernel.org>,
+	<min.ma@amd.com>, <max.zhen@amd.com>, <sonal.santan@amd.com>,
+	<king.tam@amd.com>, <mario.limonciello@amd.com>
+Subject: [PATCH V1] accel/amdxdna: Support submit commands without arguments
+Date: Wed, 7 May 2025 09:15:00 -0700
+Message-ID: <20250507161500.2339701-1-lizhi.hou@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250507-work-coredump-socket-v4-11-af0ef317b2d0@kernel.org>
-References: <20250507-work-coredump-socket-v4-0-af0ef317b2d0@kernel.org>
-In-Reply-To: <20250507-work-coredump-socket-v4-0-af0ef317b2d0@kernel.org>
-To: Kuniyuki Iwashima <kuniyu@amazon.com>, linux-fsdevel@vger.kernel.org, 
- Jann Horn <jannh@google.com>
-Cc: Eric Dumazet <edumazet@google.com>, Oleg Nesterov <oleg@redhat.com>, 
- "David S. Miller" <davem@davemloft.net>, 
- Alexander Viro <viro@zeniv.linux.org.uk>, 
- Daan De Meyer <daan.j.demeyer@gmail.com>, 
- David Rheinsberg <david@readahead.eu>, Jakub Kicinski <kuba@kernel.org>, 
- Jan Kara <jack@suse.cz>, Lennart Poettering <lennart@poettering.net>, 
- Luca Boccassi <bluca@debian.org>, Mike Yuan <me@yhndnzj.com>, 
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
- =?utf-8?q?Zbigniew_J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>, 
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
- Christian Brauner <brauner@kernel.org>, 
- Alexander Mikhalitsyn <alexander@mihalicyn.com>
-X-Mailer: b4 0.15-dev-c25d1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=9262; i=brauner@kernel.org;
- h=from:subject:message-id; bh=mMQMwLxi2MCFyRld7ql6OOPUv4ZPktnYFa2FfvFYeVA=;
- b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWRIt219NXVSxeau3O3e+61X9izbf1SF63yvf7UV09J+L
- omC32/2dZSyMIhxMciKKbI4tJuEyy3nqdhslKkBM4eVCWQIAxenAEykYg4jw+6j//+9cdxsvWjb
- xDbuUo4T71XUDWPd067lG59kTJa1z2X4K3jy0bG2iX5VcY92v5E1Yzr6Zf6W2WHWLKKVuzkyUmS
- FuQE=
-X-Developer-Key: i=brauner@kernel.org; a=openpgp;
- fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+Received-SPF: None (SATLEXMB04.amd.com: lizhi.hou@amd.com does not designate
+ permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ5PEPF0000020A:EE_|CY5PR12MB6525:EE_
+X-MS-Office365-Filtering-Correlation-Id: 439388e2-93f9-4057-c525-08dd8d825484
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|82310400026|36860700013|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?9/DyiNhh9oqX6krfjGttfGRzTAQL8IXbv83F4vbPxvexbDbhvSSyCffeGFyH?=
+ =?us-ascii?Q?TCOwCqDJyrl9bFpYkA5NgKgTPrYmENBbaJxq6ckmQB9gGjhsM6WGpd2mX8Yg?=
+ =?us-ascii?Q?rh2uQrRQKyS042AkuJY85XbruNKzacCRXLZrkBCa7yO3I1xyqbTL1K0qAGGY?=
+ =?us-ascii?Q?BCXyoY++JKNXi2sMScslRYVyYwxG/PHGX4pJ3Eb1Gj+bceVCFi9hLtHviN5v?=
+ =?us-ascii?Q?wKkjInL4QtgE4J90T60xwY80a3gJ2c+8xmqd/d76tP1Fh5rH1iBJ3oP031z0?=
+ =?us-ascii?Q?njC9cIMg+vqNfdB8laXGuydiVe7075alp4HHuqoGcVZxvHpkFnIOYpn/QhaK?=
+ =?us-ascii?Q?e5c17RCz29kOkHZYbdqS2+HvEc0rWkXXWDJL9KB0vRFN3n+D2KusW6jCAGDz?=
+ =?us-ascii?Q?q/V4hL9utX1pf9IEcR9iwKq4O+xrmmAfZVPORxJDsPEv+gqPPKEh4FWyhGMD?=
+ =?us-ascii?Q?xM7MWWoRnmQbjpuLmC/KYWmqrfcXjXoj+fUP+m6JyldX1gAXJ9zy5NRH/+3Y?=
+ =?us-ascii?Q?CXFstil7G+QQ2ezh8MiKf+wll3GfhMdR96iQPi7G8tjoUmJUGE1lOQG2QhUE?=
+ =?us-ascii?Q?kzt5369fMRuChoA5WWI+OXQhMx/HTFgx3KOE/lkjBbVcZrojc+ZvGXlOat/b?=
+ =?us-ascii?Q?jBhU2nBTszun1/xhWqLhMmOxyhei/tTNkqw05wH96IQW+TcMluHOPoZTyhon?=
+ =?us-ascii?Q?6FutiFJeiWdfg/cBsh0mVDwSNKir7yOo6g6dc8dQR3RrqaDOeFIimmeIFBuk?=
+ =?us-ascii?Q?lbLvKmiRYxg6YTZymlXu4UWL/GleET96deOTZXZAaQRUQ3U8E82AZ6ZKbL/p?=
+ =?us-ascii?Q?6MAWzCvxIDexM+YxhkHh35tFGR287Auy5D2ZB0U66vDvUwskcErr/zgkRLR4?=
+ =?us-ascii?Q?bFjvmh7jgXioPpCL3AuAFSGx1i5KaVTFCkxic0FDGk4tazHdtXYIFNuTVU/x?=
+ =?us-ascii?Q?uz+NmYGnTSzKHLKziOIcRlue57MTtlbkrU3blEuO5SL7JLa/jP3NfO2b7uPP?=
+ =?us-ascii?Q?BShzhLWF5fTiBJq81oma3QJHzCEwmcWY5D8ifC86upmyzvb6HBcdIgrA4zWi?=
+ =?us-ascii?Q?uZjbPhZe/56ApDYAZzi72ig0bG0EeVPnKii7nqaRw2rPT9NnX+jWcUBe3a0S?=
+ =?us-ascii?Q?d8jecfzfBh+KibuoFJ298ZrPuXvRQtWPpDHAx29eOkNLDDNmCm67X2Y6RTvq?=
+ =?us-ascii?Q?POJiRQii2F9rW9oSCSv0C23lA4s/bDWYrGVUqQRT1d8zY4S8j82mhdQvs7+x?=
+ =?us-ascii?Q?g/sDFRs+LfZDm9GhTUW+aI98XtWaVrKSGq0VrufsnRS08R93O7qaV1n+s24S?=
+ =?us-ascii?Q?m7FkkCqFvG3BXRyKgC/78xaRDO59VrOtKdGufoTM1bLC8qjgqo4mW6k6S5xu?=
+ =?us-ascii?Q?9PhXH3L8YotVDAn7o1AOoKxHUCQ/nROb4AheGTrzi2WGdd6sMLea9KIR6kP/?=
+ =?us-ascii?Q?HnixsCk4JAfvQ26bNyhEkIpSNNOD0MAP2ffIN/QtqhpHt5aNqbCJPJ9F1cXO?=
+ =?us-ascii?Q?ltOXxzwkTiWu0KizCmWClfKzab/fX4IZ14TU?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(36860700013)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2025 16:15:05.8929
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 439388e2-93f9-4057-c525-08dd8d825484
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ5PEPF0000020A.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6525
 
-Add a simple test for generating coredumps via AF_UNIX sockets.
+The latest userspace runtime allows generating commands which do not
+have any argument. Remove the corresponding check in driver IOCTL to
+enable this use case.
 
-Signed-off-by: Christian Brauner <brauner@kernel.org>
+Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
 ---
- tools/testing/selftests/coredump/stackdump_test.c | 273 +++++++++++++++++++++-
- 1 file changed, 272 insertions(+), 1 deletion(-)
+ drivers/accel/amdxdna/amdxdna_ctx.c | 22 ++++++++++++----------
+ 1 file changed, 12 insertions(+), 10 deletions(-)
 
-diff --git a/tools/testing/selftests/coredump/stackdump_test.c b/tools/testing/selftests/coredump/stackdump_test.c
-index fe3c728cd6be..a86f4ba0a367 100644
---- a/tools/testing/selftests/coredump/stackdump_test.c
-+++ b/tools/testing/selftests/coredump/stackdump_test.c
-@@ -5,10 +5,15 @@
- #include <linux/limits.h>
- #include <pthread.h>
- #include <string.h>
-+#include <sys/mount.h>
- #include <sys/resource.h>
-+#include <sys/stat.h>
-+#include <sys/socket.h>
-+#include <sys/un.h>
- #include <unistd.h>
- 
- #include "../kselftest_harness.h"
-+#include "../pidfd/pidfd.h"
- 
- #define STACKDUMP_FILE "stack_values"
- #define STACKDUMP_SCRIPT "stackdump"
-@@ -35,6 +40,7 @@ static void crashing_child(void)
- FIXTURE(coredump)
+diff --git a/drivers/accel/amdxdna/amdxdna_ctx.c b/drivers/accel/amdxdna/amdxdna_ctx.c
+index 43442b9e273b..be073224bd69 100644
+--- a/drivers/accel/amdxdna/amdxdna_ctx.c
++++ b/drivers/accel/amdxdna/amdxdna_ctx.c
+@@ -496,11 +496,11 @@ static int amdxdna_drm_submit_execbuf(struct amdxdna_client *client,
+ 				      struct amdxdna_drm_exec_cmd *args)
  {
- 	char original_core_pattern[256];
-+	pid_t pid_coredump_server;
- };
- 
- FIXTURE_SETUP(coredump)
-@@ -44,6 +50,7 @@ FIXTURE_SETUP(coredump)
- 	char *dir;
+ 	struct amdxdna_dev *xdna = client->xdna;
+-	u32 *arg_bo_hdls;
++	u32 *arg_bo_hdls = NULL;
+ 	u32 cmd_bo_hdl;
  	int ret;
  
-+	self->pid_coredump_server = -ESRCH;
- 	file = fopen("/proc/sys/kernel/core_pattern", "r");
- 	ASSERT_NE(NULL, file);
+-	if (!args->arg_count || args->arg_count > MAX_ARG_COUNT) {
++	if (args->arg_count > MAX_ARG_COUNT) {
+ 		XDNA_ERR(xdna, "Invalid arg bo count %d", args->arg_count);
+ 		return -EINVAL;
+ 	}
+@@ -512,14 +512,16 @@ static int amdxdna_drm_submit_execbuf(struct amdxdna_client *client,
+ 	}
  
-@@ -61,10 +68,15 @@ FIXTURE_TEARDOWN(coredump)
- {
- 	const char *reason;
- 	FILE *file;
--	int ret;
-+	int ret, status;
+ 	cmd_bo_hdl = (u32)args->cmd_handles;
+-	arg_bo_hdls = kcalloc(args->arg_count, sizeof(u32), GFP_KERNEL);
+-	if (!arg_bo_hdls)
+-		return -ENOMEM;
+-	ret = copy_from_user(arg_bo_hdls, u64_to_user_ptr(args->args),
+-			     args->arg_count * sizeof(u32));
+-	if (ret) {
+-		ret = -EFAULT;
+-		goto free_cmd_bo_hdls;
++	if (args->arg_count) {
++		arg_bo_hdls = kcalloc(args->arg_count, sizeof(u32), GFP_KERNEL);
++		if (!arg_bo_hdls)
++			return -ENOMEM;
++		ret = copy_from_user(arg_bo_hdls, u64_to_user_ptr(args->args),
++				     args->arg_count * sizeof(u32));
++		if (ret) {
++			ret = -EFAULT;
++			goto free_cmd_bo_hdls;
++		}
+ 	}
  
- 	unlink(STACKDUMP_FILE);
- 
-+	if (self->pid_coredump_server > 0) {
-+		kill(self->pid_coredump_server, SIGTERM);
-+		waitpid(self->pid_coredump_server, &status, 0);
-+	}
-+
- 	file = fopen("/proc/sys/kernel/core_pattern", "w");
- 	if (!file) {
- 		reason = "Unable to open core_pattern";
-@@ -154,4 +166,263 @@ TEST_F_TIMEOUT(coredump, stackdump, 120)
- 	fclose(file);
- }
- 
-+TEST_F(coredump, socket)
-+{
-+	int fd, pidfd, ret, status;
-+	FILE *file;
-+	pid_t pid, pid_coredump_server;
-+	struct stat st;
-+	char core_file[PATH_MAX];
-+	struct pidfd_info info = {};
-+	int ipc_sockets[2];
-+	char c;
-+
-+	ASSERT_EQ(unshare(CLONE_NEWNS), 0);
-+	ASSERT_EQ(mount(NULL, "/", NULL, MS_PRIVATE | MS_REC, NULL), 0);
-+	ASSERT_EQ(mount(NULL, "/tmp", "tmpfs", 0, NULL), 0);
-+
-+	file = fopen("/proc/sys/kernel/core_pattern", "w");
-+	ASSERT_NE(NULL, file);
-+
-+	ret = fprintf(file, "@linuxafsk/coredump.socket");
-+	ASSERT_EQ(ret, strlen("@linuxafsk/coredump.socket"));
-+	ASSERT_EQ(fclose(file), 0);
-+
-+	ret = socketpair(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0, ipc_sockets);
-+	ASSERT_EQ(ret, 0);
-+
-+	pid_coredump_server = fork();
-+	ASSERT_GE(pid_coredump_server, 0);
-+	if (pid_coredump_server == 0) {
-+		int fd_socket, fd_coredump, fd_peer_pidfd, fd_core_file;
-+		__u64 peer_cookie;
-+		socklen_t fd_peer_pidfd_len, peer_cookie_len;
-+		static const struct sockaddr_un coredump_sk = {
-+			.sun_family = AF_UNIX,
-+			.sun_path = "\0linuxafsk/coredump.socket",
-+		};
-+		static const size_t coredump_sk_len =
-+			offsetof(struct sockaddr_un, sun_path) +
-+			sizeof("linuxafsk/coredump.socket"); /* +1 for leading NUL */
-+
-+		close(ipc_sockets[0]);
-+
-+		fd_socket = socket(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0);
-+		if (fd_socket < 0)
-+			_exit(EXIT_FAILURE);
-+
-+		ret = bind(fd_socket, (const struct sockaddr *)&coredump_sk, coredump_sk_len);
-+		if (ret < 0) {
-+			fprintf(stderr, "Failed to bind coredump socket\n");
-+			close(fd_socket);
-+			close(ipc_sockets[1]);
-+			_exit(EXIT_FAILURE);
-+		}
-+
-+		ret = listen(fd_socket, 1);
-+		if (ret < 0) {
-+			fprintf(stderr, "Failed to listen on coredump socket\n");
-+			close(fd_socket);
-+			close(ipc_sockets[1]);
-+			_exit(EXIT_FAILURE);
-+		}
-+
-+		if (write_nointr(ipc_sockets[1], "1", 1) < 0) {
-+			close(fd_socket);
-+			close(ipc_sockets[1]);
-+			_exit(EXIT_FAILURE);
-+		}
-+
-+		close(ipc_sockets[1]);
-+
-+		fd_coredump = accept4(fd_socket, NULL, NULL, SOCK_CLOEXEC);
-+		if (fd_coredump < 0) {
-+			fprintf(stderr, "Failed to accept coredump socket connection\n");
-+			close(fd_socket);
-+			_exit(EXIT_FAILURE);
-+		}
-+
-+		peer_cookie_len = sizeof(peer_cookie);
-+		ret = getsockopt(fd_coredump, SOL_SOCKET, SO_COOKIE,
-+				 &peer_cookie, &peer_cookie_len);
-+		if (ret < 0) {
-+			fprintf(stderr, "%m - Failed to retrieve cookie for coredump socket connection\n");
-+			close(fd_coredump);
-+			close(fd_socket);
-+			_exit(EXIT_FAILURE);
-+		}
-+
-+		fd_peer_pidfd_len = sizeof(fd_peer_pidfd);
-+		ret = getsockopt(fd_coredump, SOL_SOCKET, SO_PEERPIDFD,
-+				 &fd_peer_pidfd, &fd_peer_pidfd_len);
-+		if (ret < 0) {
-+			fprintf(stderr, "%m - Failed to retrieve peer pidfd for coredump socket connection\n");
-+			close(fd_coredump);
-+			close(fd_socket);
-+			_exit(EXIT_FAILURE);
-+		}
-+
-+		memset(&info, 0, sizeof(info));
-+		info.mask = PIDFD_INFO_EXIT | PIDFD_INFO_COREDUMP;
-+		ret = ioctl(fd_peer_pidfd, PIDFD_GET_INFO, &info);
-+		if (ret < 0) {
-+			fprintf(stderr, "Failed to retrieve pidfd info from peer pidfd for coredump socket connection\n");
-+			close(fd_coredump);
-+			close(fd_socket);
-+			close(fd_peer_pidfd);
-+			_exit(EXIT_FAILURE);
-+		}
-+
-+		if (!(info.mask & PIDFD_INFO_COREDUMP)) {
-+			fprintf(stderr, "Missing coredump information from coredumping task\n");
-+			close(fd_coredump);
-+			close(fd_socket);
-+			close(fd_peer_pidfd);
-+			_exit(EXIT_FAILURE);
-+		}
-+
-+		if (!(info.coredump_mask & PIDFD_COREDUMPED)) {
-+			fprintf(stderr, "Received connection from non-coredumping task\n");
-+			close(fd_coredump);
-+			close(fd_socket);
-+			close(fd_peer_pidfd);
-+			_exit(EXIT_FAILURE);
-+		}
-+
-+		if (!info.coredump_cookie) {
-+			fprintf(stderr, "Missing coredump cookie\n");
-+			close(fd_coredump);
-+			close(fd_socket);
-+			close(fd_peer_pidfd);
-+			_exit(EXIT_FAILURE);
-+		}
-+
-+		if (info.coredump_cookie != peer_cookie) {
-+			fprintf(stderr, "Mismatching coredump cookies\n");
-+			close(fd_coredump);
-+			close(fd_socket);
-+			close(fd_peer_pidfd);
-+			_exit(EXIT_FAILURE);
-+		}
-+
-+		fd_core_file = creat("/tmp/coredump.file", 0644);
-+		if (fd_core_file < 0) {
-+			fprintf(stderr, "Failed to create coredump file\n");
-+			close(fd_coredump);
-+			close(fd_socket);
-+			close(fd_peer_pidfd);
-+			_exit(EXIT_FAILURE);
-+		}
-+
-+		for (;;) {
-+			char buffer[4096];
-+			ssize_t bytes_read, bytes_write;
-+
-+			bytes_read = read(fd_coredump, buffer, sizeof(buffer));
-+			if (bytes_read < 0) {
-+				close(fd_coredump);
-+				close(fd_socket);
-+				close(fd_peer_pidfd);
-+				close(fd_core_file);
-+				_exit(EXIT_FAILURE);
-+			}
-+
-+			if (bytes_read == 0)
-+				break;
-+
-+			bytes_write = write(fd_core_file, buffer, bytes_read);
-+			if (bytes_read != bytes_write) {
-+				close(fd_coredump);
-+				close(fd_socket);
-+				close(fd_peer_pidfd);
-+				close(fd_core_file);
-+				_exit(EXIT_FAILURE);
-+			}
-+		}
-+
-+		close(fd_coredump);
-+		close(fd_socket);
-+		close(fd_peer_pidfd);
-+		close(fd_core_file);
-+		_exit(EXIT_SUCCESS);
-+	}
-+	self->pid_coredump_server = pid_coredump_server;
-+
-+	EXPECT_EQ(close(ipc_sockets[1]), 0);
-+	ASSERT_EQ(read_nointr(ipc_sockets[0], &c, 1), 1);
-+	EXPECT_EQ(close(ipc_sockets[0]), 0);
-+
-+	pid = fork();
-+	ASSERT_GE(pid, 0);
-+	if (pid == 0)
-+		crashing_child();
-+
-+	pidfd = sys_pidfd_open(pid, 0);
-+	ASSERT_GE(pidfd, 0);
-+
-+	waitpid(pid, &status, 0);
-+	ASSERT_TRUE(WIFSIGNALED(status));
-+	ASSERT_TRUE(WCOREDUMP(status));
-+
-+	info.mask = PIDFD_INFO_EXIT | PIDFD_INFO_COREDUMP;
-+	ASSERT_EQ(ioctl(pidfd, PIDFD_GET_INFO, &info), 0);
-+	ASSERT_GT((info.mask & PIDFD_INFO_COREDUMP), 0);
-+	ASSERT_GT((info.coredump_mask & PIDFD_COREDUMPED), 0);
-+
-+	waitpid(pid_coredump_server, &status, 0);
-+	self->pid_coredump_server = -ESRCH;
-+	ASSERT_TRUE(WIFEXITED(status));
-+	ASSERT_EQ(WEXITSTATUS(status), 0);
-+
-+	ASSERT_EQ(stat("/tmp/coredump.file", &st), 0);
-+	ASSERT_GT(st.st_size, 0);
-+	/*
-+	 * We should somehow validate the produced core file.
-+	 * For now just allow for visual inspection
-+	 */
-+	system("file /tmp/coredump.file");
-+}
-+
-+TEST_F(coredump, socket_econnrefused)
-+{
-+	int fd_socket;
-+	static const struct sockaddr_un linuxafsk = {
-+		.sun_family = AF_UNIX,
-+		.sun_path = "\0linuxafsk/",
-+	};
-+	static const size_t linuxafsk_len =
-+		offsetof(struct sockaddr_un, sun_path) +
-+		sizeof("linuxafsk/"); /* +1 for leading NUL */
-+
-+	fd_socket = socket(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0);
-+	ASSERT_GT(fd_socket, 0);
-+
-+	ASSERT_NE(bind(fd_socket, (const struct sockaddr *)&linuxafsk, linuxafsk_len), 0);
-+	ASSERT_EQ(errno, ECONNREFUSED);
-+	EXPECT_EQ(close(fd_socket), 0);
-+}
-+
-+TEST_F(coredump, socket_econnrefused_privilege)
-+{
-+	int fd_socket;
-+	static const struct sockaddr_un linuxafsk = {
-+		.sun_family = AF_UNIX,
-+		.sun_path = "\0linuxafsk/nope",
-+	};
-+	static const size_t linuxafsk_len =
-+		offsetof(struct sockaddr_un, sun_path) +
-+		sizeof("linuxafsk/nope"); /* +1 for leading NUL */
-+
-+	ASSERT_EQ(seteuid(1234), 0);
-+
-+	fd_socket = socket(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0);
-+	ASSERT_GT(fd_socket, 0);
-+
-+	ASSERT_NE(bind(fd_socket, (const struct sockaddr *)&linuxafsk, linuxafsk_len), 0);
-+	ASSERT_EQ(errno, ECONNREFUSED);
-+	EXPECT_EQ(close(fd_socket), 0);
-+
-+	ASSERT_EQ(seteuid(0), 0);
-+}
-+
- TEST_HARNESS_MAIN
-
+ 	ret = amdxdna_cmd_submit(client, cmd_bo_hdl, arg_bo_hdls,
 -- 
-2.47.2
+2.34.1
 
