@@ -1,63 +1,220 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2059.outbound.protection.outlook.com [40.107.243.59])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBA371C84AA
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 17:30:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746639054; cv=none; b=FcPi6akRxH4iJyKu/Bf3CF6d20OC3EY1Rozp57HDbHi8ydbU2j7KJBYt3k8qIz3I3XJjwm6L4nu0l5lgcXs/+uq3t3edJZyDGG4mQLip4zyrahpeXCN0Z7eFyZVPA6FJGrHwF8A6jjBBAWudui+Wb609dde4IlxoHRVBsXl5Jvs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746639054; c=relaxed/simple;
-	bh=vDoLSsEGBqiwZ4UyTZJM831Y9USsC+8B3Lf5FH/G3PA=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=CJwUL6DCEr9MYPOskvUJfjOni7vKKvitxoIGvnvZaeIX5T+Q1WOgbTNp/TLsM8V3EeyPVFxXc10qMJYiupOki1INL+1TECd1vJLTrihsHXxuAHzFN848af7R5OT5tXTiBPldKUw11NWkK7nk4XSRJNorGai72sIgyFS+b7GT5Jc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n0PivgCe; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACFAE153BED
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 17:31:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.59
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746639093; cv=fail; b=a629REzT1aMgrixu9uTfSJSpBoqydq/TcouWMrjsYRgKhogcSnJpyGmhyncjfz/2a344b2VWUmY8tctoTG+UQyf1S3E3lwOUZOpGukbQ93CfXOIRAT1i+h6MZ4FsKc+fn6rj1daB0YX97WSrh66NN3dOl97JnqESughqcRRBIl8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746639093; c=relaxed/simple;
+	bh=0VqtLYkueWBdg2nmFQXIsjpo9T2GXFowHVu2DkRvCHE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=rYXnzYxno3MVtupZLMC+7ZwolBJ3kRYYZjJziJ2GJCOXdRWAbRKeZ+Fk587hgg/mP7CNcQTNXnKMFnqv5SgiZG1sQsZuayeAGFh/j0JAlq/R8gNUGC6JM6o699m0OqXLUGi8vSTLfxxWwRMkV3ngjKyibaC6hM2c4+xg8Tos74I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=SIRMPJvo; arc=fail smtp.client-ip=40.107.243.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n0PivgCe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DC6DC4CEE2;
-	Wed,  7 May 2025 17:30:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746639054;
-	bh=vDoLSsEGBqiwZ4UyTZJM831Y9USsC+8B3Lf5FH/G3PA=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=n0PivgCeozcKwBKR35SQ2Ev5F9Ww1+JLBANUurjLf0akbpLPkjfaAOV/eTJ37kYGb
-	 9TaIzHJ/bDhvi3mivBFVIThKiLXKJ/+fDVxqT/YFd+HTjt5LRjXmBEOYvIW6xNgmUw
-	 nNVDXIAA8FOLXDMJ/9/q32z13S3IXS5j5e4lLqPXv6w750oYcTojnTtEzmxxAMnvXy
-	 Y3AVBVsKmR10qyqSvQM+eX1u0oR3QF7t9taGl4fGIozdg748HKClgsacnBjV8nv8+V
-	 5lixAkY/pS4tldF5AyG/v8vrA1moKYWQt3NR1Xzh2B+J16DM/3vg+N0Q7+xdKs1Udr
-	 Y9CP88O0XIWFg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 710E8380AA70;
-	Wed,  7 May 2025 17:31:34 +0000 (UTC)
-Subject: Re: [GIT PULL] erofs fixes for 6.15-rc6
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <aBuUXWt2bnmMBR1B@debian>
-References: <aBuUXWt2bnmMBR1B@debian>
-X-PR-Tracked-List-Id: <linux-erofs.lists.ozlabs.org>
-X-PR-Tracked-Message-Id: <aBuUXWt2bnmMBR1B@debian>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.15-rc6-fixes
-X-PR-Tracked-Commit-Id: 35076d2223c731f7be75af61e67f90807384d030
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: d76bb1ebb5587f66b0f8b8099bfbb44722bc08b3
-Message-Id: <174663909308.2310785.16255285179931253199.pr-tracker-bot@kernel.org>
-Date: Wed, 07 May 2025 17:31:33 +0000
-To: Gao Xiang <xiang@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>, Hongbo Li <lihongbo22@huawei.com>, Max Kellermann <max.kellermann@ionos.com>, Chao Yu <chao@kernel.org>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="SIRMPJvo"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=f9c2fr8R6ujd1UFkSv5pcHsYkJHZE3gCeNufJHyn9ggpYWWEfIUgeXuDKnJ57WC3GcQXUAjNumqBnxWXt5STA5qF/FjnD558iQ+yIZazCrBwdYrgMyvD+mVC3mkS7fuHGxC1aQy00FSFXG9i+lVUo+Fy5LVD75yGRGbmIAiKMWLkxJuW97l6sAl2WLOy6u5G+Esfo4cp8K3ByaqV7dcBXYgQKvs3eza6Hg7mYc30+tU4zPK0KlLOed20qqjoPoaXU8xJI6FFI8I53YyS+R6HMm8yR/udnGwe4oLzcSDrg5zL2+Na4FVgJ7oanAlfUe7nJATa+V3rFauGqQVQGO2tHw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=pRs26b5E6Cprvwfo9X6jOpSqOY2M1mtpYVVuwZBCGyc=;
+ b=pC4O1uCSsH6PJHqirl5bqjSOGxabCYGiJrXgoeFuNMr3QiIWElYmxw+y+VeW1nm8Fzo4s2GeHH13MtQoV1Ql+SsBtfANRVuIQ7KZPpf0wdhnktZWM0SG5jZPly6fbusP76c55u33SN0pvQsPMn3HHBSP5I+/d+K4NBMohy13JjJMI9/FWSJdky182bs3CIq9ZTaB8bCx83/HtlBMWtHJ0s3UWokhos8UW9VFZvJe5M9YaCZWaQ/0xPvtAzb9XFo8fA+5OSK+hmLBdMl7SL4BDX1TjGyjx1X/PLqlOg/fBVSMf8kkUiox9nOgjOoir93J1dP87pxzlRSVD1pf0Xufgg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pRs26b5E6Cprvwfo9X6jOpSqOY2M1mtpYVVuwZBCGyc=;
+ b=SIRMPJvoH3N6cdeeuhgNwUOYzFHfRlkowPEMiLu7XKOpGD2jwlEsBtEO9qVQyPztY2nUTDB+gqj61+f0scR+pwYhtETjgFIdidKX5+d5E0fgWqpr69j6S1ASN7vlXpa0i3ZGXFiMMyQMWcVTeJOk7862ojuVx97N5dtXi80Tcm8=
+Received: from CY5PR14CA0021.namprd14.prod.outlook.com (2603:10b6:930:2::28)
+ by DM6PR12MB4385.namprd12.prod.outlook.com (2603:10b6:5:2a6::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.26; Wed, 7 May
+ 2025 17:31:28 +0000
+Received: from CY4PEPF0000FCC2.namprd03.prod.outlook.com
+ (2603:10b6:930:2:cafe::5f) by CY5PR14CA0021.outlook.office365.com
+ (2603:10b6:930:2::28) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8699.30 via Frontend Transport; Wed,
+ 7 May 2025 17:31:27 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CY4PEPF0000FCC2.mail.protection.outlook.com (10.167.242.104) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8722.18 via Frontend Transport; Wed, 7 May 2025 17:31:27 +0000
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 7 May
+ 2025 12:31:26 -0500
+Received: from [172.19.71.207] (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Wed, 7 May 2025 12:31:25 -0500
+Message-ID: <670ccea1-5315-bbe5-995f-10aefabf9c28@amd.com>
+Date: Wed, 7 May 2025 10:31:25 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH V1] accel/amdxdna: Support submit commands without
+ arguments
+Content-Language: en-US
+To: Mario Limonciello <mario.limonciello@amd.com>, <ogabbay@kernel.org>,
+	<quic_jhugo@quicinc.com>, <jacek.lawrynowicz@linux.intel.com>,
+	<dri-devel@lists.freedesktop.org>
+CC: <linux-kernel@vger.kernel.org>, <min.ma@amd.com>, <max.zhen@amd.com>,
+	<sonal.santan@amd.com>, <king.tam@amd.com>
+References: <20250507161500.2339701-1-lizhi.hou@amd.com>
+ <4534597b-70a0-4c6b-9ff5-950e69ca7b37@amd.com>
+From: Lizhi Hou <lizhi.hou@amd.com>
+In-Reply-To: <4534597b-70a0-4c6b-9ff5-950e69ca7b37@amd.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Received-SPF: None (SATLEXMB04.amd.com: lizhi.hou@amd.com does not designate
+ permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000FCC2:EE_|DM6PR12MB4385:EE_
+X-MS-Office365-Filtering-Correlation-Id: 12255bc0-3927-4aed-5311-08dd8d8cff78
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|1800799024|376014|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?dGs0cmtOMVJ6QzRDSE9Ib2hwci9aK2tySzl5OURmMDV0VGYvSFpZRXZ5WVhT?=
+ =?utf-8?B?Zm5uM1ljR1grVlMxb2FDQ2VpeFdUQU5hY1lWSCszSk5yZkx1eExLTzBrTUwr?=
+ =?utf-8?B?RFlWQnZYSXNRaGhkM0k5QTkxQXMvOUI0U25yY3JTNm53dGRiMHhXSStrYVcr?=
+ =?utf-8?B?YVhhaTA4QlBWVGp2a0s5TFprMXdya3Q2QUZPQ08yVlJ2V3dYWHk5bExmdUVM?=
+ =?utf-8?B?U1BVbHVqTkk4YVhhYlZEeGxqdTJPREJpK2FyTVdHdjREM1ZBMGNJZEZSam9T?=
+ =?utf-8?B?VUo5UllRbUtiY2haUDlPaDB2WnRHRWU0NS9qTE1NTHpuL2dIakRIUGp0VHlh?=
+ =?utf-8?B?azJ4SlZXd01obEtZMkF1eVE4SkxPWS9OV2NZN2RhSmoxM0FmdTVPNElESFVS?=
+ =?utf-8?B?Sk1IeHgzQ0tJNlNkSzEwSEV3Z3JEWVhLd2JHTUU4MEVpaTQ0eXh1QVBqbHJD?=
+ =?utf-8?B?blVKOFBhcFpwZ2RURWV6RXpQODl1YURDdXJSOUtHSzRTcW1vcWt5NEhYK0RM?=
+ =?utf-8?B?dzhrek1JRklaY1ZvcHZwOGl5Y2dmdXFiUHY3OWZOV054NGU4Rnd6V245ZzVn?=
+ =?utf-8?B?VlJVR2FHeXlybnFucG01eWd5UHRHcDUvTUEvNDNtTUROMmc4U2VEWjViMVFo?=
+ =?utf-8?B?eGRXeXoweUVXQXpwekdNME9OMUJjQ2Z5L2hITFJkbDcrTW9DeVdaUUFvTU5E?=
+ =?utf-8?B?OVR1TjdlWmJIbWplbTFLdkRCQlQxS3FvTlZ3eFR5NFdjMjNGRmUrS2M1a3RZ?=
+ =?utf-8?B?eEJGZXFXY1p1NW9JWjA0dUdvMU1CRFdWeTVlL3NPQ1hReVJhNU9TQlhkV1I0?=
+ =?utf-8?B?Q1RQWUtHS1Bqd08xSmpmdFVmZWhWdFpmU3NQYWZaTm54RWtsY1g1L0swVHNQ?=
+ =?utf-8?B?RjlibTV0bFRaZXdRSlNCbW5vTVBqWVpoUkRvazBFKzduTlFLK012OGZSTkJs?=
+ =?utf-8?B?ZUpXU1pxODVxY2VDZXo1SnRZSVRnY0c3dU5lUUFlS2ZvVlRUQ2RtNXpXTUJm?=
+ =?utf-8?B?YjZWclUreGtEMmNYZllQMG85YTZLMUdsbm92RTlDa0hTK1JIM3ptc0ZlTHhN?=
+ =?utf-8?B?RGZjK1UwNEZ0aDk4aWY5emh4S3duYXpVc3V5N2cxT1dxNWY1M09XYk1BWlZi?=
+ =?utf-8?B?QkRsaVlrZ1VLaVBXTUZVdklQVU9tcE9WR2xCRDRTNGFlRDZyUXBBV1hLWlcr?=
+ =?utf-8?B?Yi9xeFFRNzZsV0tWZHBxS3BQMlJGazJOK0FJQXlNdUQ0QmVSN2VaYWZvb3pI?=
+ =?utf-8?B?VFpKMEo3RUhhcCtQcDlhUzh6dGh0b2pkcUExWGxkeE9rK3d6ci9SMlZkY29I?=
+ =?utf-8?B?RHkxdERWK0FGY1NYbmxCTXRmZVlCK3NPanpGRFJiTmtEOWdobzFGN29OaUxS?=
+ =?utf-8?B?cWhvaEFKd2RwTi9oZFA5Zy9EUWRTZzlzd0NrVFdITDVPSG9wUGptakdidTRR?=
+ =?utf-8?B?bkFUMkd1blhlVlI3Tkd2dWljU2l3bVZEb0x0bGcwaUVvQXYyYkZlcGhZMGYw?=
+ =?utf-8?B?K1FOay9ITi9SM3Foc1VMRGJNc3Z0QTdrbXhwNkh3TlpDQXFXc2pkMFlNWk1B?=
+ =?utf-8?B?Wk1BTHA0OWNsdUZsNHR5NHkraHlmV3BIclpIdGR3MlZUdDhjeDVIWEZYT29E?=
+ =?utf-8?B?VkRLd2FJMFMwSEN6SjdTK3l3VkZQbHA5eUh4N0FOUFZvYjNJcUMxYk53aUpO?=
+ =?utf-8?B?NGkwVGRRMjVhTElPeDRkT1R0RWdRalhna1BjQ0Q5NHNoanl4dFNXTnNIaEYv?=
+ =?utf-8?B?Tjg3djg4a1BVYWZ2QmNSdWdwSXRzWkZGSFZzbk81RlJ6NFhsSFA1Wis1M1RB?=
+ =?utf-8?B?dTZzVkdRTkZNTUpkYU9PTHU1TzRQVTB3eGsvKzNFSElDdi9lNTlxRlRBOWZE?=
+ =?utf-8?B?azl1K2plamhGNnVZc0xSaWx2aFVuQmZoOHhnakVYN2s0UkxwVCtla3BXRXpQ?=
+ =?utf-8?B?dGdwQ0FKRlVkZFozSWNaZy95bFA2Q1BMdm9GTWpSV2xwYlVZd256d3Q3cTJR?=
+ =?utf-8?B?WDF1Q29ZZ3RVR29VUlJibitSM1pQOURDMnZVSXplczdQU2pLR2FGZktzcHVL?=
+ =?utf-8?Q?nZnNEY?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(376014)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2025 17:31:27.6047
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 12255bc0-3927-4aed-5311-08dd8d8cff78
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CY4PEPF0000FCC2.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4385
 
-The pull request you sent on Thu, 8 May 2025 01:11:57 +0800:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.15-rc6-fixes
+On 5/7/25 09:29, Mario Limonciello wrote:
+> On 5/7/2025 11:15 AM, Lizhi Hou wrote:
+>> The latest userspace runtime allows generating commands which do not
+>> have any argument. Remove the corresponding check in driver IOCTL to
+>> enable this use case.
+>>
+>> Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
+>
+> Can the userspace handle discovery of the difference?  Or does this 
+> need any sort of ABI discovery command introduced too?
+>
+> The code change itself below looks good to me though.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/d76bb1ebb5587f66b0f8b8099bfbb44722bc08b3
+Runtime will capture and handle the error with current driver.
 
-Thank you!
+Even if runtime have a way to explicitly discovery the different, it 
+will just report an error and fail the case.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+
+Thanks,
+
+Lizhi
+
+>
+> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+>
+>> ---
+>>   drivers/accel/amdxdna/amdxdna_ctx.c | 22 ++++++++++++----------
+>>   1 file changed, 12 insertions(+), 10 deletions(-)
+>>
+>> diff --git a/drivers/accel/amdxdna/amdxdna_ctx.c 
+>> b/drivers/accel/amdxdna/amdxdna_ctx.c
+>> index 43442b9e273b..be073224bd69 100644
+>> --- a/drivers/accel/amdxdna/amdxdna_ctx.c
+>> +++ b/drivers/accel/amdxdna/amdxdna_ctx.c
+>> @@ -496,11 +496,11 @@ static int amdxdna_drm_submit_execbuf(struct 
+>> amdxdna_client *client,
+>>                         struct amdxdna_drm_exec_cmd *args)
+>>   {
+>>       struct amdxdna_dev *xdna = client->xdna;
+>> -    u32 *arg_bo_hdls;
+>> +    u32 *arg_bo_hdls = NULL;
+>>       u32 cmd_bo_hdl;
+>>       int ret;
+>>   -    if (!args->arg_count || args->arg_count > MAX_ARG_COUNT) {
+>> +    if (args->arg_count > MAX_ARG_COUNT) {
+>>           XDNA_ERR(xdna, "Invalid arg bo count %d", args->arg_count);
+>>           return -EINVAL;
+>>       }
+>> @@ -512,14 +512,16 @@ static int amdxdna_drm_submit_execbuf(struct 
+>> amdxdna_client *client,
+>>       }
+>>         cmd_bo_hdl = (u32)args->cmd_handles;
+>> -    arg_bo_hdls = kcalloc(args->arg_count, sizeof(u32), GFP_KERNEL);
+>> -    if (!arg_bo_hdls)
+>> -        return -ENOMEM;
+>> -    ret = copy_from_user(arg_bo_hdls, u64_to_user_ptr(args->args),
+>> -                 args->arg_count * sizeof(u32));
+>> -    if (ret) {
+>> -        ret = -EFAULT;
+>> -        goto free_cmd_bo_hdls;
+>> +    if (args->arg_count) {
+>> +        arg_bo_hdls = kcalloc(args->arg_count, sizeof(u32), 
+>> GFP_KERNEL);
+>> +        if (!arg_bo_hdls)
+>> +            return -ENOMEM;
+>> +        ret = copy_from_user(arg_bo_hdls, u64_to_user_ptr(args->args),
+>> +                     args->arg_count * sizeof(u32));
+>> +        if (ret) {
+>> +            ret = -EFAULT;
+>> +            goto free_cmd_bo_hdls;
+>> +        }
+>>       }
+>>         ret = amdxdna_cmd_submit(client, cmd_bo_hdl, arg_bo_hdls,
+>
