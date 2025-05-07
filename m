@@ -1,311 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out203-205-221-190.mail.qq.com (out203-205-221-190.mail.qq.com [203.205.221.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EF3E23315A;
-	Wed,  7 May 2025 11:39:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B35921CC45
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 11:39:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746617943; cv=none; b=AFCC5ik8yZgYHhde1S3FlNqLcjA60qFT3YAPOFQJMn6gHqGz7uYhB9ju16yieVf/tH2Ei461wez5sLOLAwK19gwM9g37ObswQy/kQHM7CC95pdgorEncexrUDxe4vpu5da6gcnoXySHYtll0BFNuP1lOtj8LHipZ8/Jwdp3GMHw=
+	t=1746617945; cv=none; b=WyBoT5l8YgSv4j/vR3h5ByXv5Ic6E1xssCevW0NBtCoZGezf8+PJ/UUEqoX75Vy3bXqeMAMCXj9e8L2OflgE8/gGMLUpPj7ojT7rHMM/T5QhtELkQT/2UDfq8KhyNwVZn0y8Sp8awYaQjHAwkKBjfttriUj89jQpj0MKUZUt9vQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746617943; c=relaxed/simple;
-	bh=Hg6l6V9O/4wtXYDdTgCPzwnNnEBa8OCBsehc8OvrrqA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CXzCDYjokVgbe4o1f0qEtgJiOIDJdvpauMCyiY2cboMN1900TZIGL+yGdNUyFzx9yZ0FiLUImcDh7fCmIOIJA97ludKxHmK7D3GuNbum/QQHQVoTfoSzkB7InDrgs3wEaE/T67NBR6v39K1VwlKo37rSSSgw3nEpBvtTLO1rmcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DxcCDH8q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746617945; c=relaxed/simple;
+	bh=oRAa5mnOrowLtFslmNlY4yDQXQYBw9BfKvTiAtzpUMA=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=mKZTj31aSaHjxH+9EMQjXsdD1kA4fKHQ7gKfi16AlidkFfNjZUv87crreP2gVHy6BXQ/OrBGMz6UiKdq3ZuPoQ3R+kkjlubhmUxHq2qY/diHe0dKnyP1rVX48GiGsNbkvmBXbhkuKPmqiKdUL1xMDuLjjgHVZ4i9xBQ/omOBzhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=bn00OwN1; arc=none smtp.client-ip=203.205.221.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DxcCDH8q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0709C4AF0B;
-	Wed,  7 May 2025 11:39:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746617942;
-	bh=Hg6l6V9O/4wtXYDdTgCPzwnNnEBa8OCBsehc8OvrrqA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=DxcCDH8qx/q6v1LR8JboomoBFDhoa1gA+AZYhADwXOQoAShTQMj3Ox8tMI+/RxeJA
-	 OI6EqRypC18VcI8R0AsLAA6YhQSjprYEfBUQfiEkuBRcb0zk6hPyBIOp7I1fqxaR/G
-	 J80oA9b3ek2D2P2OBhDSPTxTU9fZbeUT17yh8bAUcwskixojQljCuDTu06bGf8LODZ
-	 sJVMv9JvzDbKwzU76CLgnle18qHBhvxmc1A68+VVU/B7YabbKrOVTl7lIfhgZcwyYJ
-	 prSEy0Bu0uZ6l8444DVysssxEGG81hwWIhctQtwWLrtORx2oNC6R9AvYGvg8Rt9j4r
-	 3rM7gYMqXzMZA==
-Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-2c76a1b574cso2125320fac.2;
-        Wed, 07 May 2025 04:39:02 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUAkXtVde/Xko/zEr7rLeO1iHnozLF/He3Bi7PD+nQVGn34Bekv/SSzjwybYZl+r5W7P7wd35FmnEzdZ+jg@vger.kernel.org, AJvYcCXpZzml6u725UKquCCfy4fGlb5+wXxZ6urqZbin4BZBHIe979MptovBjRgkYgu1VsfmWBpLSzuXlzd1@vger.kernel.org
-X-Gm-Message-State: AOJu0YxV17pmmZH8oWkBdrZEsQveHkbt5B909Ek4kPtKBrKiogsB4usp
-	OhF42dIFvf7tBj6h5WKLxL0C03Ymtu8OtVPcBRk7eFG4k9TDE5gqz/jsJtA2gYb7e6iyykPOxnY
-	pmeBWeRrHHP2Za/1Y8sgTHMpArKQ=
-X-Google-Smtp-Source: AGHT+IFaSvdYyurc08EQzE/f5lxzhMMtC8SjK5DkN1Oux0A085DrUh3IgQugzwZfSDEB0LFsg/5XTZkvMW78zYzqS4k=
-X-Received: by 2002:a05:6870:95a0:b0:2c1:650b:fc86 with SMTP id
- 586e51a60fabf-2db5bd5c524mr1481924fac.1.1746617941915; Wed, 07 May 2025
- 04:39:01 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="bn00OwN1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1746617933; bh=Ch1JB0gV+OI9f2n8oy7YDjOdh6rDxEJQw7f3tYeima8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=bn00OwN1kwSnTFyfZL5v1ZyhZgJ2lpGwoG7vS7cpM+quHPRgmvFwUan0RuEwbgYu4
+	 1k0DrIokVe8kZkWvq0kh0Ltc5yQ0KjuJwBsXOJvy4Ai1kBmMFqoIzGWvms7f7F2XWa
+	 HRD6EacCCZwps+MRytruqsNc7HBUOcdkIJMgaGWs=
+Received: from pek-lxu-l1.wrs.com ([114.244.56.254])
+	by newxmesmtplogicsvrszb21-0.qq.com (NewEsmtp) with SMTP
+	id 79F908FB; Wed, 07 May 2025 19:30:31 +0800
+X-QQ-mid: xmsmtpt1746617431ta5bzkia6
+Message-ID: <tencent_06AC9518E9DAEE02CC847A366C002D4D6C0A@qq.com>
+X-QQ-XMAILINFO: MTl9YqPIt7/7P1fYDcitxioCnVxmJiurzwb1WhbbjSrGpUSDzVm7djq8EhRwXu
+	 o80PFGGmRV1DpZaMOt6zpPD0mTURker4KWhRnEKCnblbI8EAodLGMZioCF3iYrrIwhzkZL/Lm281
+	 Mk2seKjaYSjoO4tVbSfT+j0R6s95JrZyhU+4k+Mz5eLH+u+TIwJ2yuBNfMFkPzaNg1jE3r1xxNtL
+	 /gtnVw5PjUrH98MAoOS9nYPQimIKwoWPcykx9EzUQ5EHOaDTpmftF7EOzX3AYB9DQYVx/V1vZXi7
+	 sx58vzts3dRHzmjMu4aUUcewIuhDpp50ZQVxQS+q2ylG8PMaBAJNjlvVqzm6E7CrRrQoL6jcZF7L
+	 AyKU1oZ/S4JeB6rlcfkibcPUbLhmewXKu7ndZuelgxm8gQYdz9e82fLtDntFUZeIEKywvcjY6Wa0
+	 mgvDeGC8fniqkbinDtZ/DhRCiqxRqtIlFArXZW2PWNbmK/h2Btb348rMahWWp1PT+YfZfk3ic0kB
+	 HjmaNCn+9n3bTC4608GrhcdwU70nDhOt24BH7MCUlvpSH9SNwuZhRv8n8htmaV6Q0bnI1t39RNaK
+	 ICbH0mL1r52jeegfze7WK49M1Y1gQn/CHwsW9AYlvGmOiK5F4r6E4/7PlwfMiEwcKPRWlws04hFj
+	 e+bCPmeg/vbQx92RCgle6Q1pFPHZcBuWff1Ikyv3MQicX5RPk6HH6JTwKje7K5ZAL4avk/X30XmS
+	 bBefrzM6ZCV44yQEU0N6GV2f9/eNlX5QdsalGO8Dxr2LaaDX0FOBAdP8eskRkslP8JhvIEObItvp
+	 Oo73YfAYbbo5qgmeIGfcEcyxCDPnje1HErePTLStcnpKhVPg9IkZivTGz1XaJEp5ZmZHNdIVop8R
+	 Ld1W+FfkP4gpboN6keUHvvsDUILqWv/i7wlGClQYxUrREM1s4vF/X1DN31yPBBgQ==
+X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+4bcdddd48bb6f0be0da1@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [wireless?] UBSAN: array-index-out-of-bounds in ieee80211_request_ibss_scan
+Date: Wed,  7 May 2025 19:30:32 +0800
+X-OQ-MSGID: <20250507113031.3246094-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <680fd171.050a0220.2b69d1.045e.GAE@google.com>
+References: <680fd171.050a0220.2b69d1.045e.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250506213814.2365788-1-zaidal@os.amperecomputing.com> <20250506213814.2365788-6-zaidal@os.amperecomputing.com>
-In-Reply-To: <20250506213814.2365788-6-zaidal@os.amperecomputing.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 7 May 2025 13:38:50 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0hr74LKfz+8EzAeR59_2RYKCNAxh0_MSRvfA+nJakyfHw@mail.gmail.com>
-X-Gm-Features: ATxdqUF_NwJ81TANR2N1xhJiUnotNJZzTryt9AripfXwdoa0owKuov1zAn95eDc
-Message-ID: <CAJZ5v0hr74LKfz+8EzAeR59_2RYKCNAxh0_MSRvfA+nJakyfHw@mail.gmail.com>
-Subject: Re: [PATCH v7 5/9] ACPI: APEI: EINJ: Enable the discovery of EINJv2 capabilities
-To: Zaid Alali <zaidal@os.amperecomputing.com>
-Cc: rafael@kernel.org, lenb@kernel.org, james.morse@arm.com, 
-	tony.luck@intel.com, bp@alien8.de, robert.moore@intel.com, 
-	Jonathan.Cameron@huawei.com, ira.weiny@intel.com, Benjamin.Cheatham@amd.com, 
-	dan.j.williams@intel.com, arnd@arndb.de, Avadhut.Naik@amd.com, 
-	u.kleine-koenig@pengutronix.de, john.allen@amd.com, 
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	acpica-devel@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 6, 2025 at 11:38=E2=80=AFPM Zaid Alali
-<zaidal@os.amperecomputing.com> wrote:
->
-> Enable the driver to show all supported error injections for EINJ
-> and EINJv2 at the same time. EINJv2 capabilities can be discovered
-> by checking the return value of get_error_type, where bit 30 set
-> indicates EINJv2 support.
->
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Zaid Alali <zaidal@os.amperecomputing.com>
+#syz test
 
-While the tag provided by Jonathan is appreciated, patches [5-9/9]
-need to be reviewed by one of the reviewers listed in the APEI entry
-in MAINTAINERS.
+diff --git a/net/mac80211/main.c b/net/mac80211/main.c
+index 741e6c7edcb7..6842c3011a99 100644
+--- a/net/mac80211/main.c
++++ b/net/mac80211/main.c
+@@ -1353,6 +1353,8 @@ int ieee80211_register_hw(struct ieee80211_hw *hw)
+ 	hw->wiphy->interface_modes |= BIT(NL80211_IFTYPE_MONITOR);
+ 	hw->wiphy->software_iftypes |= BIT(NL80211_IFTYPE_MONITOR);
+ 
++	if (!channels)
++		return -EINVAL;
+ 
+ 	local->int_scan_req = kzalloc(sizeof(*local->int_scan_req) +
+ 				      sizeof(void *) * channels, GFP_KERNEL);
 
-> ---
->  drivers/acpi/apei/apei-internal.h |  2 +-
->  drivers/acpi/apei/einj-core.c     | 75 +++++++++++++++++++++++++------
->  drivers/acpi/apei/einj-cxl.c      |  2 +-
->  3 files changed, 63 insertions(+), 16 deletions(-)
->
-> diff --git a/drivers/acpi/apei/apei-internal.h b/drivers/acpi/apei/apei-i=
-nternal.h
-> index cd2766c69d78..77c10a7a7a9f 100644
-> --- a/drivers/acpi/apei/apei-internal.h
-> +++ b/drivers/acpi/apei/apei-internal.h
-> @@ -131,7 +131,7 @@ static inline u32 cper_estatus_len(struct acpi_hest_g=
-eneric_status *estatus)
->
->  int apei_osc_setup(void);
->
-> -int einj_get_available_error_type(u32 *type);
-> +int einj_get_available_error_type(u32 *type, int einj_action);
->  int einj_error_inject(u32 type, u32 flags, u64 param1, u64 param2, u64 p=
-aram3,
->                       u64 param4);
->  int einj_cxl_rch_error_inject(u32 type, u32 flags, u64 param1, u64 param=
-2,
-> diff --git a/drivers/acpi/apei/einj-core.c b/drivers/acpi/apei/einj-core.=
-c
-> index ada1d7026af5..ee26df0398fc 100644
-> --- a/drivers/acpi/apei/einj-core.c
-> +++ b/drivers/acpi/apei/einj-core.c
-> @@ -33,6 +33,7 @@
->  #define SLEEP_UNIT_MAX         5000                    /* 5ms */
->  /* Firmware should respond within 1 seconds */
->  #define FIRMWARE_TIMEOUT       (1 * USEC_PER_SEC)
-> +#define ACPI65_EINJV2_SUPP     BIT(30)
->  #define ACPI5_VENDOR_BIT       BIT(31)
->  #define MEM_ERROR_MASK         (ACPI_EINJ_MEMORY_CORRECTABLE | \
->                                 ACPI_EINJ_MEMORY_UNCORRECTABLE | \
-> @@ -84,6 +85,7 @@ static struct debugfs_blob_wrapper vendor_errors;
->  static char vendor_dev[64];
->
->  static u32 available_error_type;
-> +static u32 available_error_type_v2;
->
->  /*
->   * Some BIOSes allow parameters to the SET_ERROR_TYPE entries in the
-> @@ -159,13 +161,13 @@ static void einj_exec_ctx_init(struct apei_exec_con=
-text *ctx)
->                            EINJ_TAB_ENTRY(einj_tab), einj_tab->entries);
->  }
->
-> -static int __einj_get_available_error_type(u32 *type)
-> +static int __einj_get_available_error_type(u32 *type, int einj_action)
->  {
->         struct apei_exec_context ctx;
->         int rc;
->
->         einj_exec_ctx_init(&ctx);
-> -       rc =3D apei_exec_run(&ctx, ACPI_EINJ_GET_ERROR_TYPE);
-> +       rc =3D apei_exec_run(&ctx, einj_action);
->         if (rc)
->                 return rc;
->         *type =3D apei_exec_ctx_get_output(&ctx);
-> @@ -174,17 +176,34 @@ static int __einj_get_available_error_type(u32 *typ=
-e)
->  }
->
->  /* Get error injection capabilities of the platform */
-> -int einj_get_available_error_type(u32 *type)
-> +int einj_get_available_error_type(u32 *type, int einj_action)
->  {
->         int rc;
->
->         mutex_lock(&einj_mutex);
-> -       rc =3D __einj_get_available_error_type(type);
-> +       rc =3D __einj_get_available_error_type(type, einj_action);
->         mutex_unlock(&einj_mutex);
->
->         return rc;
->  }
->
-> +static int einj_get_available_error_types(u32 *type1, u32 *type2)
-> +{
-> +       int rc;
-> +
-> +       rc =3D einj_get_available_error_type(type1, ACPI_EINJ_GET_ERROR_T=
-YPE);
-> +       if (rc)
-> +               return rc;
-> +       if (*type1 & ACPI65_EINJV2_SUPP) {
-> +               rc =3D einj_get_available_error_type(type2,
-> +                                                  ACPI_EINJV2_GET_ERROR_=
-TYPE);
-> +               if (rc)
-> +                       return rc;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
->  static int einj_timedout(u64 *t)
->  {
->         if ((s64)*t < SLEEP_UNIT_MIN) {
-> @@ -646,6 +665,7 @@ static u64 error_param2;
->  static u64 error_param3;
->  static u64 error_param4;
->  static struct dentry *einj_debug_dir;
-> +static char einj_buf[32];
->  static struct { u32 mask; const char *str; } const einj_error_type_strin=
-g[] =3D {
->         { BIT(0), "Processor Correctable" },
->         { BIT(1), "Processor Uncorrectable non-fatal" },
-> @@ -662,6 +682,12 @@ static struct { u32 mask; const char *str; } const e=
-inj_error_type_string[] =3D {
->         { BIT(31), "Vendor Defined Error Types" },
->  };
->
-> +static struct { u32 mask; const char *str; } const einjv2_error_type_str=
-ing[] =3D {
-> +       { BIT(0), "EINJV2 Processor Error" },
-> +       { BIT(1), "EINJV2 Memory Error" },
-> +       { BIT(2), "EINJV2 PCI Express Error" },
-> +};
-> +
->  static int available_error_type_show(struct seq_file *m, void *v)
->  {
->
-> @@ -669,17 +695,22 @@ static int available_error_type_show(struct seq_fil=
-e *m, void *v)
->                 if (available_error_type & einj_error_type_string[pos].ma=
-sk)
->                         seq_printf(m, "0x%08x\t%s\n", einj_error_type_str=
-ing[pos].mask,
->                                    einj_error_type_string[pos].str);
-> -
-> +       if (available_error_type & ACPI65_EINJV2_SUPP) {
-> +               for (int pos =3D 0; pos < ARRAY_SIZE(einjv2_error_type_st=
-ring); pos++) {
-> +                       if (available_error_type_v2 & einjv2_error_type_s=
-tring[pos].mask)
-> +                               seq_printf(m, "V2_0x%08x\t%s\n", einjv2_e=
-rror_type_string[pos].mask,
-> +                                          einjv2_error_type_string[pos].=
-str);
-> +               }
-> +       }
->         return 0;
->  }
->
->  DEFINE_SHOW_ATTRIBUTE(available_error_type);
->
-> -static int error_type_get(void *data, u64 *val)
-> +static ssize_t error_type_get(struct file *file, char __user *buf,
-> +                               size_t count, loff_t *ppos)
->  {
-> -       *val =3D error_type;
-> -
-> -       return 0;
-> +       return simple_read_from_buffer(buf, count, ppos, einj_buf, strlen=
-(einj_buf));
->  }
->
->  bool einj_is_cxl_error_type(u64 type)
-> @@ -712,9 +743,23 @@ int einj_validate_error_type(u64 type)
->         return 0;
->  }
->
-> -static int error_type_set(void *data, u64 val)
-> +static ssize_t error_type_set(struct file *file, const char __user *buf,
-> +                               size_t count, loff_t *ppos)
->  {
->         int rc;
-> +       u64 val;
-> +
-> +       memset(einj_buf, 0, sizeof(einj_buf));
-> +       if (copy_from_user(einj_buf, buf, count))
-> +               return -EFAULT;
-> +
-> +       if (strncmp(einj_buf, "V2_", 3) =3D=3D 0) {
-> +               if (!sscanf(einj_buf, "V2_%llx", &val))
-> +                       return -EINVAL;
-> +       } else {
-> +               if (!sscanf(einj_buf, "%llx", &val))
-> +                       return -EINVAL;
-> +       }
->
->         rc =3D einj_validate_error_type(val);
->         if (rc)
-> @@ -722,11 +767,13 @@ static int error_type_set(void *data, u64 val)
->
->         error_type =3D val;
->
-> -       return 0;
-> +       return count;
->  }
->
-> -DEFINE_DEBUGFS_ATTRIBUTE(error_type_fops, error_type_get, error_type_set=
-,
-> -                        "0x%llx\n");
-> +static const struct file_operations error_type_fops =3D {
-> +       .read           =3D error_type_get,
-> +       .write          =3D error_type_set,
-> +};
->
->  static int error_inject_set(void *data, u64 val)
->  {
-> @@ -783,7 +830,7 @@ static int __init einj_probe(struct platform_device *=
-pdev)
->                 goto err_put_table;
->         }
->
-> -       rc =3D einj_get_available_error_type(&available_error_type);
-> +       rc =3D einj_get_available_error_types(&available_error_type, &ava=
-ilable_error_type_v2);
->         if (rc)
->                 return rc;
->
-> diff --git a/drivers/acpi/apei/einj-cxl.c b/drivers/acpi/apei/einj-cxl.c
-> index 78da9ae543a2..e70a416ec925 100644
-> --- a/drivers/acpi/apei/einj-cxl.c
-> +++ b/drivers/acpi/apei/einj-cxl.c
-> @@ -30,7 +30,7 @@ int einj_cxl_available_error_type_show(struct seq_file =
-*m, void *v)
->         int cxl_err, rc;
->         u32 available_error_type =3D 0;
->
-> -       rc =3D einj_get_available_error_type(&available_error_type);
-> +       rc =3D einj_get_available_error_type(&available_error_type, ACPI_=
-EINJ_GET_ERROR_TYPE);
->         if (rc)
->                 return rc;
->
-> --
-> 2.43.0
->
