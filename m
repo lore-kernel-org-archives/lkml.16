@@ -1,92 +1,150 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CBF728980A
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 22:59:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B3A535957;
+	Wed,  7 May 2025 23:01:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746658749; cv=none; b=P6J4yA4PPozPxKByWuRLv0FelcpPTTf/9mK9Cjprp8FwgwpoDN24cDgya2AoDkaiY4s4lF8RFxZ7TpfrN9PgvF7RSAlWCp+Sf11sLZVyGjH7LUjm9VMxhlPDo5OVC7TDfMX1LxNwPT58AzcJMVp8yNnQhsSgwoXT+f43MUNJYFQ=
+	t=1746658884; cv=none; b=fOBzVFagidcYVr5ZhJABBiGz0nIc9u5G4KFJYVoq4blygJ4W2I3/wgwX8utIByTVCnxJm1ydfHEcGnukNrD0EFQlUJ/t1Q7VIrYKpcdOrG7MSL/uG/7bB2vwoh+QA4J626YDLR6AZUrjN+M9jbSkw93Bkwq61U4EgodWSzcCaeg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746658749; c=relaxed/simple;
-	bh=4qznrIQd9heCD85pUFAjDNFme4Ro9HM6p9y3geLJfT8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MEQzPRqtThfLMZGD3mPmD1KSw+p1ravywgbGpvfHaViG3IX0AblY5Cl7vnNuR8UdWpIVKHmas6Ktttl2JKFzyGfrhznMrd64zbgi2QGisXFOrP6v/nLEG4sLul15XSPGw/p1qLMwb4OBH0NQPOs2SOJM+vO4WDllVVbfVURH1zA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sugdTwtC; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746658884; c=relaxed/simple;
+	bh=IJGD8WjSwE0pEbGjAHMxWpU5Ipj2/WSn14WYwHmI8Sk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=an1a5ourzGbs/ZI6C3JlNO2XYO/XSvKWEC6ma3Y9aSbyQqGIpJndxodimdhNHP2qo2c4xjjfzKuczyVpOJS6ITcWEl3hE4LkNV2LAk0zNsXpTbqzGZ9/vHyVKlBUR8K6/xlk5AUTCpe221lAt4xLeYB+PA+WhO1fEEBYyULRkyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e/xMjO/M; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sugdTwtC"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5fab85c582fso4478a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 15:59:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e/xMjO/M"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5fc3f0a5506so649654a12.0;
+        Wed, 07 May 2025 16:01:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746658746; x=1747263546; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1746658880; x=1747263680; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4qznrIQd9heCD85pUFAjDNFme4Ro9HM6p9y3geLJfT8=;
-        b=sugdTwtCFYvGjVFdweSDSrE0kpQ09IL+Jip36nQTXjB0TdLKr/tZJIlN7jt8ukf2DY
-         w5SO2yNGzy7Q4cVWIoqnlLt/nAwaSgVFsKijS2XZ8MFyTKTZvkSX5hm9qVvpmzJ6l38q
-         tVrBuI13GAl/r2paHdv1EaskwPtkqV5GUMdcoitnQ7YNAH0+V/u9R7akJQwpV+dRHlwE
-         qpeStstt3hwxwfGfcjBu+yAEOlRFfmAUcKDLNJzA06JHw7OGCF6GQM4Eyn+9huMvoL7d
-         Ff1Va48luWQMwjfeOJJfDP3eCLkFedKXU72xcNr4DvlzCKuPO5PFfbcgbzl0gvlLFEWT
-         aQgA==
+        bh=d29g+oKQGWaixqIeAK1Ckbfb+nM3h9Ahj4fH0G4rL1g=;
+        b=e/xMjO/M0xNtioFM6ry5/33ecjWeykmkNzZcGvNKRD7QH/X2rnYnn4GfkBKhMlw4/i
+         oBkKytOR+FDAZIBWt6AF45EAfQFdcdjshw/qsfrRAjsYvvl9mJGWPsfDwtiUWKqa/0o8
+         H39/or0r190Q1yjkNoQyDsAeC5aMsKLLxekI21MucFbNl4m4WF5aDTYYfCFK5J6imdyq
+         3IDW8IsUHeZXlUUo8KJxJnXX83YBLznrTIKwESpQnLl47Qg4TSprG6Ic4LFMAmUkNSis
+         mZW9SutpOkKq+cYMf58mP1SKkAqR8qs2tr8U63mb+6XAWNpcYLKySOuQgLK0ksFxfp1I
+         8S9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746658746; x=1747263546;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1746658880; x=1747263680;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4qznrIQd9heCD85pUFAjDNFme4Ro9HM6p9y3geLJfT8=;
-        b=qiufZNWB6gghf1/in+4cfmYxHj/Ytm0nuPXrhcQNAL9cHbC3MpE4jOZAv1fbi3mI5j
-         klSIBdn0PN0aB2JgGWtZP81fjgmbxglKgBkIjiiWU9wisTpPhmkLZ5ia5P65pzyT5ZdU
-         +4a9N7ovlXwfUlJ5WCky7Ja0sljoL1F+SQEISBSJPqXl/VIGxowyTDOBpJclsgKwYaG9
-         E9tN1WqBA+vp/4kbpjuuwrAQ/WqhmZ0v1NYhGA24llOY1BGAz29BZN5zCROxlZYSAPCE
-         /Oz/dnnHTOFRYQ2/GLW8a2a1zKqQj2zuHQE3NTNH13KbyXzmVwpk+sPKRBLAMYaudd1M
-         IpOw==
-X-Forwarded-Encrypted: i=1; AJvYcCXky46CGFm/wHXRhEjoTvoQ+PqSp3UwJNL6jHBR0KvzciR04b46fz0PohNsOmP3h7ycxV7BCSfOIXmqmxs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGifeldubYBHmGpktEUPBbzGWJ/5jWhLyjVNA7S5LAelnp+dy/
-	s2dTm/BP0JVJQeyT38YPff7qAGKcqpOMbcfM+mrrWDO9qp3NyJclKnT+SSjSPxhmYlFgb6MUuMR
-	wRB6lNQXNrPpveT3lI1Bx2bikt1O3txjPdLWA
-X-Gm-Gg: ASbGncsNL3JmWh47ptFEORhVuCkh/e/gy9pGoGbz9tSI4V3HlKnAx9DfP9Y3oB3xxNC
-	Ckdd7A59hye5xjdGddVVZyZ1zYCqHwrXRsKRdv4/x5DnHGMAG1uVfh03vS4iu+WCA2WdwyzJEBm
-	rQEmbxXRZSQ277MBrA/NU5GwCfaU6ac+dTpVM/3jX14np0hcrZJw==
-X-Google-Smtp-Source: AGHT+IG5UM76A79+IbRtPyKJbFmyzXpMUKCWJ9hqDVsiMGpyhjFhDGSChhn6i9wySXk6B9CqU0BGHm8UgBUgVRm87Zg=
-X-Received: by 2002:a05:6402:1a27:b0:5fb:ee5d:b5a2 with SMTP id
- 4fb4d7f45d1cf-5fc6d4d522dmr15802a12.3.1746658746142; Wed, 07 May 2025
- 15:59:06 -0700 (PDT)
+        bh=d29g+oKQGWaixqIeAK1Ckbfb+nM3h9Ahj4fH0G4rL1g=;
+        b=oBE2PDw+txWK6G1T/rPgIaDPX142jJQxDQmN48101mwWsavp0cFgc1m5VxklZH7XpM
+         5+17Js2mdFZqNl4tlb9fW6w8OFkS3Ho/3LTqTIoxd1A9yNtH8FecrB9cNKM3tz5GNgxl
+         ybyFnG4pJOFy8u5UTzBh/WjO8BcqY3VwbHiOMJra0NcDU/id3KDfQQMOks2c4xqhgdgR
+         Njx6PwSiY5SkPJ8mfk+jjJrC6nsJ8PDWz9JICCZq1LhbCuEtxY9Qy4YmNnPB2pTmPZFO
+         k5SyWVAYx1yXVvvvK78EvD+RyYhhwg8bozSrumc9I8nhslktDut7Qjg3YFzDFLBit186
+         9viw==
+X-Forwarded-Encrypted: i=1; AJvYcCUkFQHkJZo9bJVwEM+fC/UVENqHh1ldMOOS5RBnwDEv+6VkQgdCPQED5jU9Ta7pwGjDqzYP+JdvRtpPeL1N@vger.kernel.org, AJvYcCVcyW4AzNXOBZjhF+LwtM1VcAISZND0KhAeKCKvYtyQ835gRaw+77d5St+RvU1BTZEC+qBaC2uiroRY61HD@vger.kernel.org
+X-Gm-Message-State: AOJu0YzyAIkRa95UJVCHEfHDtRlnjV6IsKrpCIJOMFArUR4KX77Yy7e3
+	xTsHR0BWNmG/xXqw+A+jvsq/b0wK4gzV09SnVc4atclBf2Lohvo=
+X-Gm-Gg: ASbGncs3CIRfPYas3pEsa5cTAw9DOV+sD2FFs2d33xkLk3FnzAt+fkQVa/KZdFNEf6Z
+	3hQBafqaFbtik9qcBAaYhWE5VcMW1QMXvSLQFD/xMxDzp1mRvP8Ujf5q8qLmoLWZ6/O2buWrk8R
+	8KAjijeEWy3RLqXlrpmXCdbv04ehdMk/HcB81q7pJMqWx1M9DhbDxsezEKfSsVAeUfq3XAeV9kd
+	PHuBkc6T3U/HPlUFCEiJBqzUcwMa6aoU4wwDzg7fg/xa2jSN9J3eDdd4Nqj0uSoZ3fP4eMXras9
+	6oktU5RXhAMZMlv/SPIcKIP5T8kwWehfbR8KrdSPmF5r1xVQkTg9TOvI
+X-Google-Smtp-Source: AGHT+IEIfm5RN/LToCmwcsXr0u+32oBo8dQ4kyit6fh9zoBiJPeVih3IpeDTTICh9ZavlCdXci5edA==
+X-Received: by 2002:a05:6402:5c8:b0:5fa:a635:481c with SMTP id 4fb4d7f45d1cf-5fbe9e51d2dmr4345754a12.17.1746658880134;
+        Wed, 07 May 2025 16:01:20 -0700 (PDT)
+Received: from alex-x1.lan ([84.226.118.249])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fa777c8b12sm10507906a12.24.2025.05.07.16.01.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 16:01:18 -0700 (PDT)
+From: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+To: Abhinav Kumar <quic_abhinavk@quicinc.com>,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	linux-arm-msm@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	freedreno@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Cc: Rob Clark <robdclark@gmail.com>,
+	Sean Paul <sean@poorly.run>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	laurentiu.tudor1@dell.com,
+	abel.vesa@linaro.org,
+	johan@kernel.org,
+	Aleksandrs Vinarskis <alex.vinarskis@gmail.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+	Jessica Zhang <quic_jesszhan@quicinc.com>,
+	Johan Hovold <johan+linaro@kernel.org>
+Subject: [PATCH v5 1/4] drm/msm/dp: Fix support of LTTPR initialization
+Date: Thu,  8 May 2025 00:58:59 +0200
+Message-ID: <20250507230113.14270-2-alex.vinarskis@gmail.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250507230113.14270-1-alex.vinarskis@gmail.com>
+References: <20250507230113.14270-1-alex.vinarskis@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250505212401.3379699-6-samitolvanen@google.com>
- <20250505212401.3379699-10-samitolvanen@google.com> <CAK7LNAS0Obe-ye1ba06EfZ+mgmc6ter+xMa+mKCw6aRM14L35Q@mail.gmail.com>
-In-Reply-To: <CAK7LNAS0Obe-ye1ba06EfZ+mgmc6ter+xMa+mKCw6aRM14L35Q@mail.gmail.com>
-From: Sami Tolvanen <samitolvanen@google.com>
-Date: Wed, 7 May 2025 22:58:28 +0000
-X-Gm-Features: ATxdqUH75sjGKquTsxZiAfvNfjaDztMLHXgmmKdCV2-0xtfGeIwBKHIdY6DuK4s
-Message-ID: <CABCJKueJ2+TpUyJsLOuy3_Q324iOhmKm50vf4UvRot51Hbi87A@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] Documentation/kbuild: Add new gendwarfksyms kABI rules
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, 
-	Daniel Gomez <da.gomez@samsung.com>, linux-modules@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Masahiro,
+Initialize LTTPR before msm_dp_panel_read_sink_caps, as DPTX shall
+(re)read DPRX caps after LTTPR detection, as required by DP 2.1a,
+Section 3.6.7.6.1.
 
-On Wed, May 7, 2025 at 12:28=E2=80=AFPM Masahiro Yamada <masahiroy@kernel.o=
-rg> wrote:
->
-> Hmm, renumbering is annoying.
->
-> Maybe, better to stop managing section numbers?
->
-> For example, see this commit
-> 1a4c1c9df72ec266f94631edc59f9f2a9dc5aa8c
+Fixes: 72d0af4accd9 ("drm/msm/dp: Add support for LTTPR handling")
 
-Agreed, that looks much better. I'll send v3 that drops the section numbers=
-.
+Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Signed-off-by: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+Tested-by: Jessica Zhang <quic_jesszhan@quicinc.com> # SA8775P
+Tested-by: Johan Hovold <johan+linaro@kernel.org>
+Tested-by: Rob Clark <robdclark@gmail.com>
+---
+ drivers/gpu/drm/msm/dp/dp_display.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-Sami
+diff --git a/drivers/gpu/drm/msm/dp/dp_display.c b/drivers/gpu/drm/msm/dp/dp_display.c
+index bbc47d86ae9e..fc07cce68382 100644
+--- a/drivers/gpu/drm/msm/dp/dp_display.c
++++ b/drivers/gpu/drm/msm/dp/dp_display.c
+@@ -367,12 +367,12 @@ static int msm_dp_display_send_hpd_notification(struct msm_dp_display_private *d
+ 	return 0;
+ }
+ 
+-static void msm_dp_display_lttpr_init(struct msm_dp_display_private *dp)
++static void msm_dp_display_lttpr_init(struct msm_dp_display_private *dp, u8 *dpcd)
+ {
+ 	u8 lttpr_caps[DP_LTTPR_COMMON_CAP_SIZE];
+ 	int rc;
+ 
+-	if (drm_dp_read_lttpr_common_caps(dp->aux, dp->panel->dpcd, lttpr_caps))
++	if (drm_dp_read_lttpr_common_caps(dp->aux, dpcd, lttpr_caps))
+ 		return;
+ 
+ 	rc = drm_dp_lttpr_init(dp->aux, drm_dp_lttpr_count(lttpr_caps));
+@@ -385,12 +385,17 @@ static int msm_dp_display_process_hpd_high(struct msm_dp_display_private *dp)
+ 	struct drm_connector *connector = dp->msm_dp_display.connector;
+ 	const struct drm_display_info *info = &connector->display_info;
+ 	int rc = 0;
++	u8 dpcd[DP_RECEIVER_CAP_SIZE];
+ 
+-	rc = msm_dp_panel_read_sink_caps(dp->panel, connector);
++	rc = drm_dp_read_dpcd_caps(dp->aux, dpcd);
+ 	if (rc)
+ 		goto end;
+ 
+-	msm_dp_display_lttpr_init(dp);
++	msm_dp_display_lttpr_init(dp, dpcd);
++
++	rc = msm_dp_panel_read_sink_caps(dp->panel, connector);
++	if (rc)
++		goto end;
+ 
+ 	msm_dp_link_process_request(dp->link);
+ 
+-- 
+2.45.2
+
