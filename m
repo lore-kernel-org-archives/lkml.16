@@ -1,187 +1,119 @@
-Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.8])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36C5878F5D;
-	Wed,  7 May 2025 01:17:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.8
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E329F78F5D;
+	Wed,  7 May 2025 01:18:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746580678; cv=none; b=ZVDVj+WqetCDyzrUN+PcjHmDXwHbFAZqnl8TK6P0lmbRCMmccuOiqWCX8g3/sE+5DTWN9KCE1p+eLR5i1qtU6jaOtb3FG4J9Z8okUgfIKgdgneEiSUOlaBxCbNsv7izx+88iZ9wy6nBNdwn5m1Ls/MJ/3Os676feuUSaaxQBSzE=
+	t=1746580686; cv=none; b=Hv4RNUTJQDmbOVXqhP5LEWXJeCTOzjsWSO1z1vG4F7aIz9vL8+kfjvLuWROLFpJtyz0dz5+cbx1W3m6i04jdgBL1og4D7FNWxox8Ag+Rdp2TWDghe3K2ZkuSP+3b33GncHTnns0IxQ43A9bwzLfypZHnQP0CIvLAvkLh8TjUXLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746580678; c=relaxed/simple;
-	bh=sRTYYXi+q6YFmn2CM84PAr5Xq+GZZ+uf1kwrPa8hsxQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qr5QcBLFxR5QF4GKLu1MdXBBSFdDPpqzDi6tIkm2WgLSnrqOQZqbqEw6bdtZjQgTSgVroXiPLZquXpQ1FbsedHIj0XBxXWOtcPVHdI6cCDa7jfcwxOIlTAUDzU0ge8vu/enZSmQDyR921cA97qs8i5yqOWurJXFiizVSppuNPKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=BwjSrewc; arc=none smtp.client-ip=220.197.31.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="BwjSrewc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=dfDAl
-	NI7Mtaa7Np1mFi7q1dvflRvIlHpBBi3IZLBURw=; b=BwjSrewc35f/WCXjZKAg/
-	iHn2LToVJW6fdPOUw1ijtdxCl4pS3E+1oMZDM0JyY9M6QqG4PU82CioSyI82+2Lo
-	Xad0avGIBAoq6vlT2JNJD3RKEn36uWaJECQhoPab+9HZiWiC5sHr9276AreI/3mu
-	Cgw2lxPkN1vIXQjJl6yyvc=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-3 (Coremail) with SMTP id _____wD3P8x2tBpocz5dBw--.62210S3;
-	Wed, 07 May 2025 09:16:41 +0800 (CST)
-From: Honglei Wang <jameshongleiwang@126.com>
-To: tj@kernel.org,
-	void@manifault.com,
-	arighi@nvidia.com,
-	changwoo@igalia.com
-Cc: mingo@redhat.com,
-	peterz@infradead.org,
-	juri.lelli@redhat.com,
-	vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com,
-	rostedt@goodmis.org,
-	bsegall@google.com,
-	mgorman@suse.de,
-	vschneid@redhat.com,
-	joshdon@google.com,
-	brho@google.com,
-	linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org,
-	jameshongleiwang@126.com
-Subject: [RESEND PATCH v2 1/2] sched_ext: change the variable name for slice refill event
-Date: Wed,  7 May 2025 09:16:36 +0800
-Message-Id: <20250507011637.77589-2-jameshongleiwang@126.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <20250507011637.77589-1-jameshongleiwang@126.com>
-References: <20250507011637.77589-1-jameshongleiwang@126.com>
+	s=arc-20240116; t=1746580686; c=relaxed/simple;
+	bh=rFhOLa7secTqn+P4t7t8+f2ee5Kpo7+MvTrFGIUwZ6o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=TWrGqYNerzs0ShtVYzzEF0W1vjd7O+HWpxtP+jzlTpQ3EtqcPNAj3ht5aBRLK7WuPU/zCUE8hq7oa6ZV1VZ1rxe/jmqg5uEX1JeMs5sEXgRR8Rjmcz/Sj+Tiqh0v6Klj9+jbO252FINjhgyfuPkCjxH8QXG7I2TsvFShyL3SqGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.186])
+	by gateway (Coremail) with SMTP id _____8AxWXHGtBpoxYrXAA--.26169S3;
+	Wed, 07 May 2025 09:17:58 +0800 (CST)
+Received: from chenhuacai$loongson.cn ( [223.64.68.186] ) by
+ ajax-webmail-front1 (Coremail) ; Wed, 7 May 2025 09:17:39 +0800 (GMT+08:00)
+Date: Wed, 7 May 2025 09:17:39 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From: =?UTF-8?B?6ZmI5Y2O5omN?= <chenhuacai@loongson.cn>
+To: kan.liang@linux.intel.com
+Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
+	irogers@google.com, mark.rutland@arm.com,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	eranian@google.com, ctshao@google.com, tmricht@linux.ibm.com,
+	"Bibo Mao" <maobibo@loongson.cn>, loongarch@lists.linux.dev
+Subject: Re: [RFC PATCH 12/15] loongarch/perf: Remove driver-specific
+ throttle support
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version 2024.1-cmXT6 build
+ 20240729(6d2960c6) Copyright (c) 2002-2025 www.mailtech.cn loongson
+In-Reply-To: <20250506164740.1317237-13-kan.liang@linux.intel.com>
+References: <20250506164740.1317237-1-kan.liang@linux.intel.com>
+ <20250506164740.1317237-13-kan.liang@linux.intel.com>
+Content-Transfer-Encoding: base64
+X-CM-CTRLDATA: ZTMfMGZvb3Rlcl90eHQ9MTg1MTo2MTg=
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3P8x2tBpocz5dBw--.62210S3
-X-Coremail-Antispam: 1Uf129KBjvJXoW3Gr4DXrW8Aw4Dtw4fAF1rtFb_yoW7Zr45p3
-	W5G345tr48t3y2vrWFqF4ku3WaqrWFqw1qkF95W393ZF1jgwnYyFyYyr4aqFyYgrsYkF1S
-	kw4UKF43ArZY9rDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UjYLkUUUUU=
-X-CM-SenderInfo: 5mdpv2pkrqwzphlzt0bj6rjloofrz/1tbiYBVGrWgatD0D8gAEsQ
+Message-ID: <6777794d.1b9e4.196a851ddc0.Coremail.chenhuacai@loongson.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:qMiowMDxTseztBpo+7m4AA--.14982W
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/1tbiAgEPBmgal+cBAAABsI
+X-Coremail-Antispam: 1Uk129KBj93XoW7Zr4DuryUKF15uFykXw1rZrc_yoW8ur1kpr
+	WDCr98KrWrKFn7XwsxCr15ua4UXwn7WrZag3WDt3WrArZxZ3ykXF1kXwn8WF90qw1rGFW0
+	qw4vqF4Iga4UJacCm3ZEXasCq-sJn29KB7ZKAUJUUUUD529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUl0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1ln4kS14v26r126r1DM2vj6VCEFcxC0VAYjxAxZF0EFcxC0VAYjxAxZF0Ew4CEw7
+	xC0VCjxxvEa2IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xAC
+	xx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87
+	Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lFcxC0VAY
+	jxAxZF0Ew4CEw7xC0wACY4xI67k04243AVC20s07MxkF7I0En4kS14v26r1q6r43MxAIw2
+	8IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I
+	3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxV
+	WUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8I
+	cVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aV
+	AFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8Jr1l6VACY4xI67k04243AbIY
+	CTnIWIevJa73UjIFyTuYvjxUeqXHDUUUU
 
-SCX_EV_ENQ_SLICE_DFL gives the impression that the event only occurs
-when the tasks were enqueued, which seems not accurate. What it actually
-means is the refilling with defalt slice, and this can occur either when
-enqueue or pick_task. Let's change the variable to
-SCX_EV_REFILL_SLICE_DFL.
-
-Signed-off-by: Honglei Wang <jameshongleiwang@126.com>
----
-v2:
-- refine the comments base on Andrea's suggestion.
----
- kernel/sched/ext.c             | 22 +++++++++++-----------
- tools/sched_ext/scx_qmap.bpf.c |  4 ++--
- 2 files changed, 13 insertions(+), 13 deletions(-)
-
-diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
-index 66bcd40a28ca..2a091ea23328 100644
---- a/kernel/sched/ext.c
-+++ b/kernel/sched/ext.c
-@@ -1517,10 +1517,10 @@ struct scx_event_stats {
- 	s64		SCX_EV_ENQ_SKIP_MIGRATION_DISABLED;
- 
- 	/*
--	 * The total number of tasks enqueued (or pick_task-ed) with a
--	 * default time slice (SCX_SLICE_DFL).
-+	 * Total number of times a task's time slice was refilled with the
-+	 * default value (SCX_SLICE_DFL).
- 	 */
--	s64		SCX_EV_ENQ_SLICE_DFL;
-+	s64		SCX_EV_REFILL_SLICE_DFL;
- 
- 	/*
- 	 * The total duration of bypass modes in nanoseconds.
-@@ -2197,7 +2197,7 @@ static void do_enqueue_task(struct rq *rq, struct task_struct *p, u64 enq_flags,
- 	 */
- 	touch_core_sched(rq, p);
- 	p->scx.slice = SCX_SLICE_DFL;
--	__scx_add_event(SCX_EV_ENQ_SLICE_DFL, 1);
-+	__scx_add_event(SCX_EV_REFILL_SLICE_DFL, 1);
- local_norefill:
- 	dispatch_enqueue(&rq->scx.local_dsq, p, enq_flags);
- 	return;
-@@ -2205,7 +2205,7 @@ static void do_enqueue_task(struct rq *rq, struct task_struct *p, u64 enq_flags,
- global:
- 	touch_core_sched(rq, p);	/* see the comment in local: */
- 	p->scx.slice = SCX_SLICE_DFL;
--	__scx_add_event(SCX_EV_ENQ_SLICE_DFL, 1);
-+	__scx_add_event(SCX_EV_REFILL_SLICE_DFL, 1);
- 	dispatch_enqueue(find_global_dsq(p), p, enq_flags);
- }
- 
-@@ -3296,7 +3296,7 @@ static struct task_struct *pick_task_scx(struct rq *rq)
- 		p = prev;
- 		if (!p->scx.slice) {
- 			p->scx.slice = SCX_SLICE_DFL;
--			__scx_add_event(SCX_EV_ENQ_SLICE_DFL, 1);
-+			__scx_add_event(SCX_EV_REFILL_SLICE_DFL, 1);
- 		}
- 	} else {
- 		p = first_local_task(rq);
-@@ -3313,7 +3313,7 @@ static struct task_struct *pick_task_scx(struct rq *rq)
- 				scx_warned_zero_slice = true;
- 			}
- 			p->scx.slice = SCX_SLICE_DFL;
--			__scx_add_event(SCX_EV_ENQ_SLICE_DFL, 1);
-+			__scx_add_event(SCX_EV_REFILL_SLICE_DFL, 1);
- 		}
- 	}
- 
-@@ -3399,7 +3399,7 @@ static int select_task_rq_scx(struct task_struct *p, int prev_cpu, int wake_flag
- 		if (cpu >= 0) {
- 			p->scx.slice = SCX_SLICE_DFL;
- 			p->scx.ddsp_dsq_id = SCX_DSQ_LOCAL;
--			__scx_add_event(SCX_EV_ENQ_SLICE_DFL, 1);
-+			__scx_add_event(SCX_EV_REFILL_SLICE_DFL, 1);
- 		} else {
- 			cpu = prev_cpu;
- 		}
-@@ -4413,7 +4413,7 @@ static ssize_t scx_attr_events_show(struct kobject *kobj,
- 	at += scx_attr_event_show(buf, at, &events, SCX_EV_DISPATCH_KEEP_LAST);
- 	at += scx_attr_event_show(buf, at, &events, SCX_EV_ENQ_SKIP_EXITING);
- 	at += scx_attr_event_show(buf, at, &events, SCX_EV_ENQ_SKIP_MIGRATION_DISABLED);
--	at += scx_attr_event_show(buf, at, &events, SCX_EV_ENQ_SLICE_DFL);
-+	at += scx_attr_event_show(buf, at, &events, SCX_EV_REFILL_SLICE_DFL);
- 	at += scx_attr_event_show(buf, at, &events, SCX_EV_BYPASS_DURATION);
- 	at += scx_attr_event_show(buf, at, &events, SCX_EV_BYPASS_DISPATCH);
- 	at += scx_attr_event_show(buf, at, &events, SCX_EV_BYPASS_ACTIVATE);
-@@ -5148,7 +5148,7 @@ static void scx_dump_state(struct scx_exit_info *ei, size_t dump_len)
- 	scx_dump_event(s, &events, SCX_EV_DISPATCH_KEEP_LAST);
- 	scx_dump_event(s, &events, SCX_EV_ENQ_SKIP_EXITING);
- 	scx_dump_event(s, &events, SCX_EV_ENQ_SKIP_MIGRATION_DISABLED);
--	scx_dump_event(s, &events, SCX_EV_ENQ_SLICE_DFL);
-+	scx_dump_event(s, &events, SCX_EV_REFILL_SLICE_DFL);
- 	scx_dump_event(s, &events, SCX_EV_BYPASS_DURATION);
- 	scx_dump_event(s, &events, SCX_EV_BYPASS_DISPATCH);
- 	scx_dump_event(s, &events, SCX_EV_BYPASS_ACTIVATE);
-@@ -7313,7 +7313,7 @@ __bpf_kfunc void scx_bpf_events(struct scx_event_stats *events,
- 		scx_agg_event(&e_sys, e_cpu, SCX_EV_DISPATCH_KEEP_LAST);
- 		scx_agg_event(&e_sys, e_cpu, SCX_EV_ENQ_SKIP_EXITING);
- 		scx_agg_event(&e_sys, e_cpu, SCX_EV_ENQ_SKIP_MIGRATION_DISABLED);
--		scx_agg_event(&e_sys, e_cpu, SCX_EV_ENQ_SLICE_DFL);
-+		scx_agg_event(&e_sys, e_cpu, SCX_EV_REFILL_SLICE_DFL);
- 		scx_agg_event(&e_sys, e_cpu, SCX_EV_BYPASS_DURATION);
- 		scx_agg_event(&e_sys, e_cpu, SCX_EV_BYPASS_DISPATCH);
- 		scx_agg_event(&e_sys, e_cpu, SCX_EV_BYPASS_ACTIVATE);
-diff --git a/tools/sched_ext/scx_qmap.bpf.c b/tools/sched_ext/scx_qmap.bpf.c
-index 26c40ca4f36c..c3cd9a17d48e 100644
---- a/tools/sched_ext/scx_qmap.bpf.c
-+++ b/tools/sched_ext/scx_qmap.bpf.c
-@@ -784,8 +784,8 @@ static int monitor_timerfn(void *map, int *key, struct bpf_timer *timer)
- 		   scx_read_event(&events, SCX_EV_DISPATCH_KEEP_LAST));
- 	bpf_printk("%35s: %lld", "SCX_EV_ENQ_SKIP_EXITING",
- 		   scx_read_event(&events, SCX_EV_ENQ_SKIP_EXITING));
--	bpf_printk("%35s: %lld", "SCX_EV_ENQ_SLICE_DFL",
--		   scx_read_event(&events, SCX_EV_ENQ_SLICE_DFL));
-+	bpf_printk("%35s: %lld", "SCX_EV_REFILL_SLICE_DFL",
-+		   scx_read_event(&events, SCX_EV_REFILL_SLICE_DFL));
- 	bpf_printk("%35s: %lld", "SCX_EV_BYPASS_DURATION",
- 		   scx_read_event(&events, SCX_EV_BYPASS_DURATION));
- 	bpf_printk("%35s: %lld", "SCX_EV_BYPASS_DISPATCH",
--- 
-2.45.2
+SGksIExpYW5nLAoKU2luY2Ugd2hpY2ggdmVyc2lvbiB3ZSBuZWVkIHRoaXMgcGF0Y2g/IEkgbWVh
+biB3aGljaCB2ZXJzaW9ucyB0aGlzIHBhdGNoIHNob3VsZCBiZSBiYWNrcG9ydGVkLgpBbmQgeW91
+IG5lZWQgdG8gQ0MgbG9vbmdhcmNoQGxpc3RzLmxpbnV4LmRldi4KCkh1YWNhaQoKCj4gLS0tLS3l
+jp/lp4vpgq7ku7YtLS0tLQo+IOWPkeS7tuS6ujoga2FuLmxpYW5nQGxpbnV4LmludGVsLmNvbQo+
+IOWPkemAgeaXtumXtDoyMDI1LTA1LTA3IDAwOjQ3OjM3ICjmmJ/mnJ/kuIkpCj4g5pS25Lu25Lq6
+OiBwZXRlcnpAaW5mcmFkZWFkLm9yZywgbWluZ29AcmVkaGF0LmNvbSwgbmFtaHl1bmdAa2VybmVs
+Lm9yZywgaXJvZ2Vyc0Bnb29nbGUuY29tLCBtYXJrLnJ1dGxhbmRAYXJtLmNvbSwgbGludXgta2Vy
+bmVsQHZnZXIua2VybmVsLm9yZywgbGludXgtcGVyZi11c2Vyc0B2Z2VyLmtlcm5lbC5vcmcKPiDm
+ioTpgIE6IGVyYW5pYW5AZ29vZ2xlLmNvbSwgY3RzaGFvQGdvb2dsZS5jb20sIHRtcmljaHRAbGlu
+dXguaWJtLmNvbSwgIkthbiBMaWFuZyIgPGthbi5saWFuZ0BsaW51eC5pbnRlbC5jb20+LCAiQmli
+byBNYW8iIDxtYW9iaWJvQGxvb25nc29uLmNuPiwgIkh1YWNhaSBDaGVuIiA8Y2hlbmh1YWNhaUBs
+b29uZ3Nvbi5jbj4KPiDkuLvpopg6IFtSRkMgUEFUQ0ggMTIvMTVdIGxvb25nYXJjaC9wZXJmOiBS
+ZW1vdmUgZHJpdmVyLXNwZWNpZmljIHRocm90dGxlIHN1cHBvcnQKPiAKPiBGcm9tOiBLYW4gTGlh
+bmcgPGthbi5saWFuZ0BsaW51eC5pbnRlbC5jb20+Cj4gCj4gVGhlIHRocm90dGxlIHN1cHBvcnQg
+aGFzIGJlZW4gYWRkZWQgaW4gdGhlIGdlbmVyaWMgY29kZS4gUmVtb3ZlCj4gdGhlIGRyaXZlci1z
+cGVjaWZpYyB0aHJvdHRsZSBzdXBwb3J0Lgo+IAo+IEJlc2lkZXMgdGhlIHRocm90dGxlLCBwZXJm
+X2V2ZW50X292ZXJmbG93IG1heSByZXR1cm4gdHJ1ZSBiZWNhdXNlIG9mCj4gZXZlbnRfbGltaXQu
+IEl0IGFscmVhZHkgZG9lcyBhbiBpbmF0b21pYyBldmVudCBkaXNhYmxlLiBUaGUgcG11LT5zdG9w
+Cj4gaXMgbm90IHJlcXVpcmVkIGVpdGhlci4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBLYW4gTGlhbmcg
+PGthbi5saWFuZ0BsaW51eC5pbnRlbC5jb20+Cj4gQ2M6IEJpYm8gTWFvIDxtYW9iaWJvQGxvb25n
+c29uLmNuPgo+IENjOiBIdWFjYWkgQ2hlbiA8Y2hlbmh1YWNhaUBsb29uZ3Nvbi5jbj4KPiAtLS0K
+PiAgYXJjaC9sb29uZ2FyY2gva2VybmVsL3BlcmZfZXZlbnQuYyB8IDMgKy0tCj4gIDEgZmlsZSBj
+aGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMiBkZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEv
+YXJjaC9sb29uZ2FyY2gva2VybmVsL3BlcmZfZXZlbnQuYyBiL2FyY2gvbG9vbmdhcmNoL2tlcm5l
+bC9wZXJmX2V2ZW50LmMKPiBpbmRleCBmODZhNGI4MzhkZDcuLjhhZDA5ODcwMzQ4OCAxMDA2NDQK
+PiAtLS0gYS9hcmNoL2xvb25nYXJjaC9rZXJuZWwvcGVyZl9ldmVudC5jCj4gKysrIGIvYXJjaC9s
+b29uZ2FyY2gva2VybmVsL3BlcmZfZXZlbnQuYwo+IEBAIC00NzksOCArNDc5LDcgQEAgc3RhdGlj
+IHZvaWQgaGFuZGxlX2Fzc29jaWF0ZWRfZXZlbnQoc3RydWN0IGNwdV9od19ldmVudHMgKmNwdWMs
+IGludCBpZHgsCj4gIAlpZiAoIWxvb25nYXJjaF9wbXVfZXZlbnRfc2V0X3BlcmlvZChldmVudCwg
+aHdjLCBpZHgpKQo+ICAJCXJldHVybjsKPiAgCj4gLQlpZiAocGVyZl9ldmVudF9vdmVyZmxvdyhl
+dmVudCwgZGF0YSwgcmVncykpCj4gLQkJbG9vbmdhcmNoX3BtdV9kaXNhYmxlX2V2ZW50KGlkeCk7
+Cj4gKwlwZXJmX2V2ZW50X292ZXJmbG93KGV2ZW50LCBkYXRhLCByZWdzKTsKPiAgfQo+ICAKPiAg
+c3RhdGljIGlycXJldHVybl90IHBtdV9oYW5kbGVfaXJxKGludCBpcnEsIHZvaWQgKmRldikKPiAt
+LSAKPiAyLjM4LjEKDQoNCuacrOmCruS7tuWPiuWFtumZhOS7tuWQq+aciem+meiKr+S4reenkeea
+hOWVhuS4muenmOWvhuS/oeaBr++8jOS7hemZkOS6juWPkemAgee7meS4iumdouWcsOWdgOS4reWI
+l+WHuueahOS4quS6uuaIlue+pOe7hOOAguemgeatouS7u+S9leWFtuS7luS6uuS7peS7u+S9leW9
+ouW8j+S9v+eUqO+8iOWMheaLrOS9huS4jemZkOS6juWFqOmDqOaIlumDqOWIhuWcsOazhOmcsuOA
+geWkjeWItuaIluaVo+WPke+8ieacrOmCruS7tuWPiuWFtumZhOS7tuS4reeahOS/oeaBr+OAguWm
+guaenOaCqOmUmeaUtuacrOmCruS7tu+8jOivt+aCqOeri+WNs+eUteivneaIlumCruS7tumAmuef
+peWPkeS7tuS6uuW5tuWIoOmZpOacrOmCruS7tuOAgiANClRoaXMgZW1haWwgYW5kIGl0cyBhdHRh
+Y2htZW50cyBjb250YWluIGNvbmZpZGVudGlhbCBpbmZvcm1hdGlvbiBmcm9tIExvb25nc29uIFRl
+Y2hub2xvZ3kgLCB3aGljaCBpcyBpbnRlbmRlZCBvbmx5IGZvciB0aGUgcGVyc29uIG9yIGVudGl0
+eSB3aG9zZSBhZGRyZXNzIGlzIGxpc3RlZCBhYm92ZS4gQW55IHVzZSBvZiB0aGUgaW5mb3JtYXRp
+b24gY29udGFpbmVkIGhlcmVpbiBpbiBhbnkgd2F5IChpbmNsdWRpbmcsIGJ1dCBub3QgbGltaXRl
+ZCB0bywgdG90YWwgb3IgcGFydGlhbCBkaXNjbG9zdXJlLCByZXByb2R1Y3Rpb24gb3IgZGlzc2Vt
+aW5hdGlvbikgYnkgcGVyc29ucyBvdGhlciB0aGFuIHRoZSBpbnRlbmRlZCByZWNpcGllbnQocykg
+aXMgcHJvaGliaXRlZC4gSWYgeW91IHJlY2VpdmUgdGhpcyBlbWFpbCBpbiBlcnJvciwgcGxlYXNl
+IG5vdGlmeSB0aGUgc2VuZGVyIGJ5IHBob25lIG9yIGVtYWlsIGltbWVkaWF0ZWx5IGFuZCBkZWxl
+dGUgaXQuIA0KDQoNCg==
 
