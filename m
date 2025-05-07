@@ -1,31 +1,26 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from mail-m3285.qiye.163.com (mail-m3285.qiye.163.com [220.197.32.85])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7953C18C03F
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 02:13:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F50EBA38;
+	Wed,  7 May 2025 02:17:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.85
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746584002; cv=none; b=EK2W6A0wM8wMhZEIMRiR4HyS/hqIr1ysnTAvLIzQfmGTMTmYWIWFIa9Z+0gNnq5fypi7X8r2PjxpHZKs8872dRymvB6OkzBKnCaC98vVOK8UedOABlkKEWZ0BQYyFaDET4eJkjeOKdv9ykWpCUWikiPGlYiYupdT4+wYq9QiPXM=
+	t=1746584267; cv=none; b=crnwIpdUx7C41lGf86ulM+wzfgNoCiFriOwGenOBSeQ/9P7joZeQUD0V47J6C6nTdbdYJ/hbM9qaN3OTUX8jhXYRyZ8Fm+GqfQ6FYLTHMWpcMo4LOp5i+qsRcW7J2NLjMKR7KHAHvejBOjuraduRABPwEuNM02ilVmJqwD/ZDCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746584002; c=relaxed/simple;
-	bh=8MmtaHjE1m9L6Pi0UOXnqnz6Er30JaPgtpmX4plA46o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=BHTrmGugsJ42p05SowcqNuyZCh6ANMJWtPlqaEZxbaxnebepXofS04Fe61B6/C80LJlimAhkCl4YSZVpUlBt5C17tivZU4szwSAFVWvIIPg3N4Qx4kIHERz9NWCV5vunfP0lz2R5bXyFuuHz/p9I5v6kzcXBXQV5llt+fGkNa5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4ZsdYM0z0xz13KbK;
-	Wed,  7 May 2025 09:52:07 +0800 (CST)
-Received: from kwepemo500009.china.huawei.com (unknown [7.202.194.199])
-	by mail.maildlp.com (Postfix) with ESMTPS id D1DFD180B5A;
-	Wed,  7 May 2025 09:53:23 +0800 (CST)
-Received: from [10.67.111.104] (10.67.111.104) by
- kwepemo500009.china.huawei.com (7.202.194.199) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 7 May 2025 09:53:23 +0800
-Message-ID: <3e068311-9223-4c1b-9091-15eb2d867ede@huawei.com>
-Date: Wed, 7 May 2025 09:53:22 +0800
+	s=arc-20240116; t=1746584267; c=relaxed/simple;
+	bh=yEDtcuagXBE3WpNM9QEf7srqAr2BZBmw0w+sUPDns4M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KemD5BYjdZXgqdegVNQCKknmZln/JkhkNbYjP5Zkr3y5DEv0I316u1SPKtXKm4FahpyB9Qd24l7CsFETgVLmnT91corxtpRc+jzk0aMDxZ/KJC+mQqpdAfuL/z3vjVI4lV0Lo6qG+OHodAdx+kYrRjqrpm4doQVuUyETa2Mq1zU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=Otzecflp; arc=none smtp.client-ip=220.197.32.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="Otzecflp"
+Received: from [192.168.60.65] (unknown [103.29.142.67])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 142d62da9;
+	Wed, 7 May 2025 10:02:14 +0800 (GMT+08:00)
+Message-ID: <a5da2a81-6944-4d4e-a582-a24f8340efc5@rock-chips.com>
+Date: Wed, 7 May 2025 10:02:12 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,173 +28,164 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] erofs: fix file handle encoding for 64-bit NIDs
+Subject: Re: [PATCH v5 0/6] rockchip: Add rk3562 SoC and evb support
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: heiko@sntech.de, linux-kernel@vger.kernel.org,
+ Jonas Karlman <jonas@kwiboo.se>,
+ Detlev Casanova <detlev.casanova@collabora.com>,
+ Dragan Simic <dsimic@manjaro.org>, Yao Zi <ziyao@disroot.org>,
+ Junhao Xie <bigfoot@classfun.cn>, devicetree@vger.kernel.org,
+ Elaine Zhang <zhangqing@rock-chips.com>,
+ Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+ Jamie Iles <jamie@jamieiles.com>, Guenter Roeck <linux@roeck-us.net>,
+ Frank Wang <frank.wang@rock-chips.com>, linux-rockchip@lists.infradead.org,
+ linux-watchdog@vger.kernel.org, Jimmy Hon <honyuenkwun@gmail.com>,
+ Wim Van Sebroeck <wim@linux-watchdog.org>,
+ linux-arm-kernel@lists.infradead.org,
+ Finley Xiao <finley.xiao@rock-chips.com>,
+ Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+ FUKAUMI Naoki <naoki@radxa.com>, Diederik de Haas <didi.debian@cknow.org>,
+ Shresth Prasad <shresthprasad7@gmail.com>,
+ Quentin Schulz <quentin.schulz@cherry.de>, Johan Jonker <jbx6244@gmail.com>,
+ Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>
+References: <20250506025715.33595-1-kever.yang@rock-chips.com>
+ <174655575165.2171034.16453137338500014976.robh@kernel.org>
 Content-Language: en-US
-To: Gao Xiang <hsiangkao@linux.alibaba.com>, <xiang@kernel.org>,
-	<chao@kernel.org>, <zbestahu@gmail.com>, <jefflexu@linux.alibaba.com>
-CC: <dhavale@google.com>, <linux-erofs@lists.ozlabs.org>,
-	<linux-kernel@vger.kernel.org>
-References: <20250429134257.690176-1-lihongbo22@huawei.com>
- <18d272ce-6a80-4fdc-b67b-ddc2ffa522d4@linux.alibaba.com>
-From: Hongbo Li <lihongbo22@huawei.com>
-In-Reply-To: <18d272ce-6a80-4fdc-b67b-ddc2ffa522d4@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemo500009.china.huawei.com (7.202.194.199)
+From: Kever Yang <kever.yang@rock-chips.com>
+In-Reply-To: <174655575165.2171034.16453137338500014976.robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDHxhJVkhLTE5PS0IdSBlJTlYVFAkWGhdVEwETFh
+	oSFyQUDg9ZV1kYEgtZQVlKS0hVSUJVSk9JVU1MWVdZFhoPEhUdFFlBWU9LSFVKS0lIQktDVUpLS1
+	VKQlkG
+X-HM-Tid: 0a96a87aadb103afkunm142d62da9
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Ogg6Sxw*DjJLThVONSMKMjhL
+	CzMaFDJVSlVKTE9NTkNISEhMT09OVTMWGhIXVRAeDR4JVQIaFRw7CRQYEFYYExILCFUYFBZFWVdZ
+	EgtZQVlKS0hVSUJVSk9JVU1MWVdZCAFZQU5DSkw3Bg++
+DKIM-Signature:a=rsa-sha256;
+	b=OtzecflpZnKWD8Lhk8YvqQFaFozPhpcL1pqbDiGpgC9A0ZDXFmuvh+VcYpV8dUal9T4xeNviwwGdxZ1idVC02A3wz5eHeYeDzO+YJ0vE5KOvgIsr+GLtwQRxbsc8LujSNLYBAJ2FeVNUIvCo8GcLng88Kqx8G+yVuzEPSt8FDv4=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=1zFclqcGuYPNryGvnI+na4Nb66ye8cJcL9CEUWPikAg=;
+	h=date:mime-version:subject:message-id:from;
 
 
+On 2025/5/7 02:23, Rob Herring (Arm) wrote:
+> On Tue, 06 May 2025 10:57:09 +0800, Kever Yang wrote:
+>> Patch series V5 remove [v4 1/7] which had taken by Manivannan, and move
+>> scmi-shmem from soc node to reserved memory.
+>>
+>> Patch series V4 remove patches already landed, and remove dts nodes for
+>> modules still under review.
+>>
+>> This patch set adds rk3562 SoC and its evb support.
+>>
+>> I have split out patches need driver change for different subsystem.
+>> And all the modules with dt-binding document update in this patch set
+>> do not need any driver change. I put them together to make it clear we
+>> have a new SoC and board to use the new compatible. Please pick up the
+>> patch for your subsystem, or please let me know if the patch has to
+>> send separate.
+>>
+>> Test with USB, PCIe, EMMC, SD Card.
+>>
+>> This patch set is base on the patch set for rk3576 evb1 support.
+>>
+>> V3:
+>> https://lore.kernel.org/linux-rockchip/20250227111913.2344207-1-kever.yang@rock-chips.com/
+>> V2:
+>> https://lore.kernel.org/linux-rockchip/b4df8a73-58a2-4765-a9e4-3513cb2bc720@rock-chips.com/T/
+>>
+>>
+>> Changes in v5:
+>> - Collect review tag
+>> - Update scmi-shmem from soc to reserved memory
+>>
+>> Changes in v4:
+>> - Collect ack tag
+>> - Collect ack tag
+>> - Collect ack tag
+>> - remove gmac and otp nodes
+>> - remove gmac nodes
+>>
+>> Changes in v3:
+>> - Collect reveiw tag
+>> - Collect the Acked-by tag
+>> - remove i2c/serial/spi alias
+>> - add soc node
+>>
+>> Changes in v2:
+>> - Update in sort order
+>> - remove grf in cru
+>> - Update some properties order
+>>
+>> Finley Xiao (2):
+>>    arm64: dts: rockchip: add core dtsi for RK3562 Soc
+>>    arm64: dts: rockchip: Add RK3562 evb2 devicetree
+>>
+>> Kever Yang (4):
+>>    dt-bindings: watchdog: Add rk3562 compatible
+>>    dt-bindings: rockchip: pmu: Add rk3562 compatible
+>>    dt-bindings: soc: rockchip: Add rk3562 syscon compatibles
+>>    dt-bindings: arm: rockchip: Add rk3562 evb2 board
+>>
+>>   .../devicetree/bindings/arm/rockchip.yaml     |    5 +
+>>   .../devicetree/bindings/arm/rockchip/pmu.yaml |    2 +
+>>   .../devicetree/bindings/soc/rockchip/grf.yaml |    7 +
+>>   .../bindings/watchdog/snps,dw-wdt.yaml        |    1 +
+>>   arch/arm64/boot/dts/rockchip/Makefile         |    1 +
+>>   .../boot/dts/rockchip/rk3562-evb2-v10.dts     |  488 ++++
+>>   .../boot/dts/rockchip/rk3562-pinctrl.dtsi     | 2352 +++++++++++++++++
+>>   arch/arm64/boot/dts/rockchip/rk3562.dtsi      | 1270 +++++++++
+>>   8 files changed, 4126 insertions(+)
+>>   create mode 100644 arch/arm64/boot/dts/rockchip/rk3562-evb2-v10.dts
+>>   create mode 100644 arch/arm64/boot/dts/rockchip/rk3562-pinctrl.dtsi
+>>   create mode 100644 arch/arm64/boot/dts/rockchip/rk3562.dtsi
+>>
+>> --
+>> 2.25.1
+>>
+>>
+>>
+>
+> My bot found new DTB warnings on the .dts files added or changed in this
+> series.
+>
+> Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+> are fixed by another series. Ultimately, it is up to the platform
+> maintainer whether these warnings are acceptable or not. No need to reply
+> unless the platform maintainer has comments.
+>
+> If you already ran DT checks and didn't see these error(s), then
+> make sure dt-schema is up to date:
+>
+>    pip3 install dtschema --upgrade
+>
+>
+> This patch series was applied (using b4) to base:
+>   Base: attempting to guess base-commit...
+>   Base: tags/next-20250506 (exact match)
+>
+> If this is not the correct base, please add 'base-commit' tag
+> (or use b4 which does this automatically)
+>
+> New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/rockchip/' for 20250506025715.33595-1-kever.yang@rock-chips.com:
+>
+> arch/arm64/boot/dts/rockchip/rk3562-evb2-v10.dtb: /soc/usb2-phy@ff740000: failed to match any schema with compatible: ['rockchip,rk3562-usb2phy']
 
-On 2025/5/6 23:10, Gao Xiang wrote:
-> Hi Hongbo,
-> 
-> On 2025/4/29 21:42, Hongbo Li wrote:
->> In erofs, the inode number has the location information of
->> files. The default encode_fh uses the ino32, this will lack
->> of some information when the file is too big. So we need
->> the internal helpers to encode filehandle.
-> 
-> EROFS uses NID to indicate the on-disk inode offset, which can
-> exceed 32 bits. However, the default encode_fh uses the ino32,
-> thus it doesn't work if the image is large than 128GiB.
-> 
-Thanks for helping me correct my description.
+The usb2-phy patch set[1] has send and got reviewed tag from Heiko for a 
+long time, what should I do for that patch?
 
-Here, an image larger than 128GiB won't trigger NID reversal. It 
-requires a 128GiB file inside, and the NID of the second file may exceed 
-U32 during formatting. So here can we change it to "However, the default 
-encode_fh uses the ino32, thus it may not work if there exist a file 
-which is large than 128GiB." ?
 
 Thanks,
-Hongbo
+- Kever
 
-> Let's introduce our own helpers to encode file handles.
-> 
->>
->> It is easy to reproduce test:
-> 
-> It's easy to reproduce:
-> 
->>    1. prepare an erofs image with nid bigger than UINT_MAX
-> 
->       1. Prepare an EROFS image with NIDs larger than U32_MAX
-> 
->>    2. mount -t erofs foo.img /mnt/erofs
->>    3. set exportfs with configuration: /mnt/erofs *(rw,sync,
->>       no_root_squash)
->>    4. mount -t nfs $IP:/mnt/erofs /mnt/nfs
->>    5. md5sum /mnt/nfs/foo # foo is the file which nid bigger
->>       than UINT_MAX.
->> For overlayfs case, the under filesystem's file handle is
->> encoded in ovl_fb.fid, it is same as NFS's case.
->>
->> Fixes: 3e917cc305c6 ("erofs: make filesystem exportable")
->> Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
->> ---
->> v2: 
->> https://lore.kernel.org/all/20250429074109.689075-1-lihongbo22@huawei.com/
->>    - Assign parent nid with correct value.
->>
->> v1: 
->> https://lore.kernel.org/all/20250429011139.686847-1-lihongbo22@huawei.com/
->>     - Encode generation into file handle and minor clean code.
->>     - Update the commiti's title.
->> ---
->>   fs/erofs/super.c | 54 +++++++++++++++++++++++++++++++++++++++++-------
->>   1 file changed, 46 insertions(+), 8 deletions(-)
->>
->> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
->> index cadec6b1b554..28b3701165cc 100644
->> --- a/fs/erofs/super.c
->> +++ b/fs/erofs/super.c
->> @@ -511,24 +511,62 @@ static int erofs_fc_parse_param(struct 
->> fs_context *fc,
->>       return 0;
->>   }
->> -static struct inode *erofs_nfs_get_inode(struct super_block *sb,
->> -                     u64 ino, u32 generation)
->> +static int erofs_encode_fh(struct inode *inode, u32 *fh, int *max_len,
->> +               struct inode *parent)
->>   {
->> -    return erofs_iget(sb, ino);
->> +    int len = parent ? 6 : 3;
->> +    erofs_nid_t nid;
-> 
-> Just `erofs_nid_t nid = EROFS_I(inode)->nid;`?
-> 
-> I think the compiler will optimize out `if (*max_len < len)`.
-> 
->> +    u32 generation;
-> 
-> It seems it's unnecessary to introduce `generation` variable here?
-> 
->> +
->> +    if (*max_len < len) {
->> +        *max_len = len;
->> +        return FILEID_INVALID;
->> +    }
->> +
->> +    nid = EROFS_I(inode)->nid;
->> +    generation = inode->i_generation;
-> 
-> So drop these two lines.
-> 
->> +    fh[0] = (u32)(nid >> 32);
->> +    fh[1] = (u32)(nid & 0xffffffff);
->> +    fh[2] = generation;
->> +
->> +    if (parent) {
->> +        nid = EROFS_I(parent)->nid;
->> +        generation = parent->i_generation;
->> +
->> +        fh[3] = (u32)(nid >> 32);
->> +        fh[4] = (u32)(nid & 0xffffffff);
->> +        fh[5] = generation;
-> 
->          fh[5] = parent->i_generation;
-> 
->> +    }
->> +
->> +    *max_len = len;
->> +    return parent ? FILEID_INO64_GEN_PARENT : FILEID_INO64_GEN;
->>   }
->>   static struct dentry *erofs_fh_to_dentry(struct super_block *sb,
->>           struct fid *fid, int fh_len, int fh_type)
->>   {
->> -    return generic_fh_to_dentry(sb, fid, fh_len, fh_type,
->> -                    erofs_nfs_get_inode);
->> +    erofs_nid_t nid;
->> +
->> +    if ((fh_type != FILEID_INO64_GEN &&
->> +         fh_type != FILEID_INO64_GEN_PARENT) || fh_len < 3)
->> +        return NULL;
->> +
->> +    nid = (u64) fid->raw[0] << 32;
->> +    nid |= (u64) fid->raw[1];
-> 
-> Unnecessary nid variable.
-> 
->> +    return d_obtain_alias(erofs_iget(sb, nid));
-> 
->      return d_obtain_alias(erofs_iget(sb,
->              ((u64)fid->raw[0] << 32) | fid->raw[1]));
-> 
->>   }
->>   static struct dentry *erofs_fh_to_parent(struct super_block *sb,
->>           struct fid *fid, int fh_len, int fh_type)
->>   {
->> -    return generic_fh_to_parent(sb, fid, fh_len, fh_type,
->> -                    erofs_nfs_get_inode);
->> +    erofs_nid_t nid;
->> +
->> +    if (fh_type != FILEID_INO64_GEN_PARENT || fh_len < 6)
->> +        return NULL;
->> +
->> +    nid = (u64) fid->raw[3] << 32;
->> +    nid |= (u64) fid->raw[4];
-> 
-> Same here.
-> 
-> Thanks,
-> Gao Xiang
+[1] 
+https://patchwork.kernel.org/project/linux-phy/patch/20250415050005.52773-2-kever.yang@rock-chips.com/
+
+>
+>
+>
+>
+>
+>
