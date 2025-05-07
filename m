@@ -1,146 +1,174 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F0841F4CB0
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 09:32:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ACD11DB34C;
+	Wed,  7 May 2025 09:33:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746610357; cv=none; b=KGBfLMiyGm5/H4BHBB0WsP9WOKiKUawfAfTY5ITYoiHrpsYCUIz/sDgfo+gmbuvYMDTXsSLU9+s28875DPqm6IGK2OmPaxnxV4vACAnXc6JDo1fKu72s3qxQiNaP+780YBcrqSkgmCRz+ZBi4A1apZzU3Z1kiN9XuL9XyDMlXI8=
+	t=1746610435; cv=none; b=dyErj7b/REWoEOgkY0UZWOy9AlPcaU6rPzTU3jhn8TJ9/gEh5gFjiQkgojJi3lRiz7wnet5yH48biNDG80PDrQFak19dykvAY4U780E9nF9pjSyHoDjYeFf6uRq5KZCNiZ8Vf+i6eeidZTnL3HwBGBpXmmC9CeVOWRVmcdEfdA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746610357; c=relaxed/simple;
-	bh=+dcoGM/MPnQ7gR2bwDmEC4W4glqMT6D4Z27/zHMAu6c=;
+	s=arc-20240116; t=1746610435; c=relaxed/simple;
+	bh=7uKxlcm8hF+GP/lEs3hwwcpIItjW1KwqPILWv/W+BAU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mbnPGWmG9SvZianCQeKXZIIa2ABk5xFoArlYAbCbsQnNW5Oou6ZVIr6V9MFYrrVA0OtCKn7ztizBCZ1zQZYYUxaHCFazj3RPzwO8yaXK6hYKgD1kCjaKvUuzxCfAk/x+nbPRhVEHeZzQb1ZNzZEV/4SP+UrcQUh9mszmQDrC4zU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EAVaGMkW; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Eqj+RGUlMS9meMiPutvtgU61De8iRQBnFFJUvFaWpdGVSgsTJTAO7jfUeU/oXDiYorbdWQIK1nI8dESQzb23scETVfWqr79PyTRRFkDPa46ednRGYXCP6KYBjhxK7+O3QjvvMGPs9fwM/RPn/Pv7MaNsDZcfZooNDuT/ZETSsDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=KmfDcXEk; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EAVaGMkW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746610354;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=89g+uUbAmI4s1rHApPcoGavOskeIK/6Orkxfvy6zQ+0=;
-	b=EAVaGMkWRfNyHu+JNCLBg5grhE+9T9x6WnYJIdHxj8mluF+ovs2uLMEqwL/CASWY9SLBn3
-	aAevD6ev+hfInM9/1VgWpBq5zUQqZ+iwIB8dBNtpWUI68bNhLore8sRr32WAmm+HpT7LEK
-	fMpVbnLQ0c696uD6CAm8LZY6156y0hQ=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-324-Qv26vmtvPQOFmP_m5T87Rg-1; Wed, 07 May 2025 05:32:32 -0400
-X-MC-Unique: Qv26vmtvPQOFmP_m5T87Rg-1
-X-Mimecast-MFC-AGG-ID: Qv26vmtvPQOFmP_m5T87Rg_1746610351
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-ac25852291cso602274666b.2
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 02:32:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746610351; x=1747215151;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=89g+uUbAmI4s1rHApPcoGavOskeIK/6Orkxfvy6zQ+0=;
-        b=oa7X8x/1Ie4fiFxNpnI5RbOmejnFD9mGGhg+FoO37uSTocbFeFMlht4kuMMECJUbQe
-         Onbe4Tc7FN00SjdbTtJpbnPaOt3kujDi8C2biKSZTcE7q9FVvqCpHzscF7W1yiSu9PFV
-         DGKK18jQgNZPny6ehNDeDO5cUufLD1kiHJFb45tbtmvkv9NME1dQUTNCwZLPxdQNZ9C+
-         MKmvzc33F8BU5HTUIw41b6gOzUODc5/GM3XgaPijL+f4riGwMgxl/AA3myqaFNWzjLhH
-         j9Al0918n5NzEIhetJfCnf9fn7XG+ALhG0/S+6DCLT//BNXrDXA7K+Etq9Lv8hItxVxN
-         +soQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUOSMfNx6xeROWjl7Ob4hrmbiMxz4tfBHDB07QmUrv9NKqc+x1btKTazlsMUAtcV28vDGswSTKstKpphKg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzO2FtgV/8v80eU2weIeYscchNYs9cVMmGwIZQ4lRPL/8VGpuYO
-	wYVLlv8VzXG6oa/oCn4Lj2WT40Dvm4thCA5wCRAgrW/1RCbVqHoy8mHIKWk2VUaRiUFIKDfwKyF
-	RVl640+s7RWGhbesK1Mb5wOizPV+A3K0szBi535L08K9Et5kGxFvvl2Dcdo55Qw==
-X-Gm-Gg: ASbGnctdKIYWN6lsqyrmn9J5jOGBTav7DixPvcRaKEjxjklO0A0Kh0oLiwGJXFfX5l0
-	wXgjxrOcFtZdpjxX/c1yPJYAuDvRm/l56v1x68fTwq9pdkdwBS8QYAaF9a4laSqY26fv63lrBwK
-	oARmE01kahbTvCe2sFttTUP9/Mb4HAhABKtMK32V5enL2Lubprt19xooaa0eTRk3gX1uXrZJwTK
-	hpcUGwsRevUe7gxijIwqHWDB0I7k7eHI8XHeIeTKPE4Wl3gOPESliDbFWQp+AI3H76+fRzzUDN4
-	YuO23nYt6UyDVf5K
-X-Received: by 2002:a17:906:d54d:b0:aca:9615:3c90 with SMTP id a640c23a62f3a-ad1e8d0ba2bmr267000866b.52.1746610350919;
-        Wed, 07 May 2025 02:32:30 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFB9GITuMuYoSYN8HyavQFo2/J56H0NB7QS0JaWBQv+IFH3p+ygglDzNeMYFn+SDDKrajLukA==
-X-Received: by 2002:a17:906:d54d:b0:aca:9615:3c90 with SMTP id a640c23a62f3a-ad1e8d0ba2bmr266997766b.52.1746610350328;
-        Wed, 07 May 2025 02:32:30 -0700 (PDT)
-Received: from sgarzare-redhat ([193.207.165.32])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad189147329sm869562066b.1.2025.05.07.02.32.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 02:32:29 -0700 (PDT)
-Date: Wed, 7 May 2025 11:32:10 +0200
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Qunqin Zhao <zhaoqunqin@loongson.cn>
-Cc: lee@kernel.org, herbert@gondor.apana.org.au, davem@davemloft.net, 
-	peterhuewe@gmx.de, jarkko@kernel.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-crypto@vger.kernel.org, jgg@ziepe.ca, 
-	linux-integrity@vger.kernel.org, pmenzel@molgen.mpg.de, Yinggang Gu <guyinggang@loongson.cn>, 
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: Re: [PATCH v9 4/5] tpm: Add a driver for Loongson TPM device
-Message-ID: <CAGxU2F6m2=+07sUoy4PKVs1vMR6Yr--pgkOG3SEGg8gi=HRf+g@mail.gmail.com>
-References: <20250506031947.11130-1-zhaoqunqin@loongson.cn>
- <20250506031947.11130-5-zhaoqunqin@loongson.cn>
- <2nuadbg5awe6gvagxg7t5ewvxsbmiq4qrcrycvnrmt2etzq2ke@6oyzavctwrma>
- <0b148f09-d20d-b6be-d31b-6c8a553658c9@loongson.cn>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KmfDcXEk"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=wO8Ep5r+eRGIpCVFMRHl1DMMom/dtctroBqJhWEPXaQ=; b=KmfDcXEkKRg6PZxU6j06s6suBc
+	WFCUcuSH91BNvCKSx9Qryq9k5krbIzRxS7l+VBFPhO+ZfC2Ot+HKOQnKzr/Q8eCgumO0rXR3uq514
+	x990MkoNt7YPBAE1T6c0BrDXYclgunvGHVmnOibHnTnyzilt0+qXNyu0G40JqJJIcH2KH80OFtN+0
+	xeMDfkgEQ5xqji1x4qLeLi0mt2lONVnBCfYvoDq9ysExRbZpBilDHGbglNE3eru6UuM9cyp/OzJNm
+	d0Q+W1JHl2tCxSHd8+ZhcKm8d1zLiqFfJ2HlIpjvfCQXyQDwyqGm0oLXe1SYPTFUNrRsCk+8HUlsg
+	ph3+lGCg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uCb8n-00000002PXR-0iqz;
+	Wed, 07 May 2025 09:32:38 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id E1FE6300780; Wed,  7 May 2025 11:32:24 +0200 (CEST)
+Date: Wed, 7 May 2025 11:32:24 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+	David Lechner <dlechner@baylibre.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	"Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>
+Subject: Re: [PATCH 1/7] cleanup: Introduce DEFINE_ACQUIRE() a CLASS() for
+ conditional locking
+Message-ID: <20250507093224.GD4439@noisy.programming.kicks-ass.net>
+References: <20250507072145.3614298-1-dan.j.williams@intel.com>
+ <20250507072145.3614298-2-dan.j.williams@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0b148f09-d20d-b6be-d31b-6c8a553658c9@loongson.cn>
+In-Reply-To: <20250507072145.3614298-2-dan.j.williams@intel.com>
 
-On Wed, 7 May 2025 at 03:35, Qunqin Zhao <zhaoqunqin@loongson.cn> wrote:
->
->
-> 在 2025/5/6 下午10:13, Stefano Garzarella 写道:
-> > On Tue, May 06, 2025 at 11:19:46AM +0800, Qunqin Zhao wrote:
-> >> Loongson Security Engine supports random number generation, hash,
-> >> symmetric encryption and asymmetric encryption. Based on these
-> >> encryption functions, TPM2 have been implemented in the Loongson
-> >> Security Engine firmware. This driver is responsible for copying data
-> >> into the memory visible to the firmware and receiving data from the
-> >> firmware.
-> >>
-> >> Co-developed-by: Yinggang Gu <guyinggang@loongson.cn>
-> >> Signed-off-by: Yinggang Gu <guyinggang@loongson.cn>
-> >> Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
-> >> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
-> >> Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
-> >> ---
-> >> v9: "tpm_loongson_driver" --> "tpm_loongson"
-> >>    "depends on CRYPTO_DEV_LOONGSON_SE" --> "depends on MFD_LOONGSON_SE"
-> >>
-> ...
-> >> +static int tpm_loongson_recv(struct tpm_chip *chip, u8 *buf, size_t
-> >> count)
-> >> +{
-> >> +    struct loongson_se_engine *tpm_engine =
-> >> dev_get_drvdata(&chip->dev);
-> >> +    struct tpm_loongson_cmd *cmd_ret = tpm_engine->command_ret;
-> >> +
-> >> +    memcpy(buf, tpm_engine->data_buffer, cmd_ret->data_len);
-> >
-> > Should we limit the memcpy to `count`?
-> >
-> > I mean, can happen that `count` is less than `cmd_ret->data_len`?
->
-> Hi, Stefan, thanks for your comment.
->
-> Firmware ensures "cmd_ret->data_len" will be less than TPM_BUFSIZE,  so
-> this would never happen.
+On Wed, May 07, 2025 at 12:21:39AM -0700, Dan Williams wrote:
+> The scoped_cond_guard() helper has two problems. First, with "convert to
+> cleanup" style patches, it results in messy diffs that re-indent large
+> swaths of code. Second, it swallows return values from interruptible /
+> killable locks, i.e. the return value of those is not always -EINTR.
+> 
+> The last attempt at improving this situation, if_not_guard() [1], was
+> reverted with a suggestion:
+> 
+>     "I really think the basic issue is that 'cond_guard' itself is a pretty
+>      broken concept. It simply doesn't work very well in the C syntax."
+> 
+> However, the observation is that just exposing the CLASS() to callers
+> solves: the safety concern (compiler enforced "expected expression"
+> checks), conveying the conditional acquisition state of the lock, and
+> avoiding re-indentation caused by scoped_cond_guard(). See the commit below
+> for the analysis of the revert.
+> 
+> Commit b4d83c8323b0 ("headers/cleanup.h: Remove the if_not_guard() facility")
+> 
+> The DEFINE_ACQUIRE() macro wraps a lock type like 'struct mutex' into a
+> 'struct mutex_acquire' type that can only be acquired and automatically
+> released by scope-based helpers. E.g.:
+> 
+>     [scoped_]guard(mutex_acquire)(...)
+>     CLASS(mutex_intr_acquire, ...)
+>     CLASS(mutex_try_acquire, ...)
+> 
+> Use DEFINE_ACQUIRE to create the new classes above and use
+> mutex_intr_acquire in the CXL subsystem to demonstrate the conversion.
+> 
 
-I see, but I meant the opposite, if `count` (size of `buf`) is less than 
-`cmd_ret->data_len`.
+> +#define DEFINE_ACQUIRE(_name, _locktype, _unlock, _cond_lock)                \
+> +	DEFINE_CLASS(_name, struct _locktype##_acquire *,                    \
+> +		     if (!IS_ERR_OR_NULL(_T)) _unlock(&_T->_locktype), ({    \
+> +			     struct _locktype##_acquire *lock_result;        \
+> +			     int ret = _cond_lock(&to_lock->_locktype);      \
+> +                                                                             \
+> +			     if (ret)                                        \
+> +				     lock_result = ERR_PTR(ret);             \
+> +			     else                                            \
+> +				     lock_result =                           \
+> +					     (struct _locktype##_acquire     \
+> +						      *)&to_lock->_locktype; \
+> +			     lock_result;                                    \
+> +		     }),                                                     \
+> +		     struct _locktype##_acquire *to_lock)
+>  
+>  #endif /* _LINUX_CLEANUP_H */
+> diff --git a/include/linux/mutex.h b/include/linux/mutex.h
+> index 2143d05116be..283111f43b0f 100644
+> --- a/include/linux/mutex.h
+> +++ b/include/linux/mutex.h
+> @@ -64,6 +64,8 @@ do {									\
+>  	__mutex_init((mutex), #mutex, &__key);				\
+>  } while (0)
+>  
+> +#define mutex_acquire_init(lock) mutex_init(&(lock)->mutex)
+> +
+>  /**
+>   * mutex_init_with_key - initialize a mutex with a given lockdep key
+>   * @mutex: the mutex to be initialized
+> @@ -202,6 +204,28 @@ DEFINE_GUARD(mutex, struct mutex *, mutex_lock(_T), mutex_unlock(_T))
+>  DEFINE_GUARD_COND(mutex, _try, mutex_trylock(_T))
+>  DEFINE_GUARD_COND(mutex, _intr, mutex_lock_interruptible(_T) == 0)
+>  
+> +/* mutex type that only implements scope-based unlock */
+> +struct mutex_acquire {
+> +	/* private: */
+> +	struct mutex mutex;
+> +};
+> +DEFINE_GUARD(mutex_acquire, struct mutex_acquire *, mutex_lock(&_T->mutex),
+> +	     mutex_unlock(&_T->mutex))
+> +DEFINE_GUARD_COND(mutex_acquire, _try, mutex_trylock(&_T->mutex))
+> +DEFINE_GUARD_COND(mutex_acquire, _intr, mutex_lock_interruptible(&_T->mutex) == 0)
+> +DEFINE_ACQUIRE(mutex_intr_acquire, mutex, mutex_unlock,
+> +	       mutex_lock_interruptible)
+> +
+> +static inline int mutex_try_or_busy(struct mutex *lock)
+> +{
+> +	int ret[] = { -EBUSY, 0 };
+> +
+> +	return ret[mutex_trylock(lock)];
+> +}
+> +
+> +DEFINE_ACQUIRE(mutex_try_acquire, mutex, mutex_unlock,
+> +	       mutex_try_or_busy)
+> +
+>  extern unsigned long mutex_get_owner(struct mutex *lock);
+>  
+>  #endif /* __LINUX_MUTEX_H */
 
-I mean, should we add something like this:
+I'm terribly confused...
 
-	if (count < cmd_ret->data_len) {
-		return -EIO;
-	}
+What's wrong with:
 
-I see we do this in other drivers as well (e.g. crb, ftpm), so I'm 
-trying to understand why here is not the case.
+	CLASS(mutex_intr, lock)(&foo);
+	if (IS_ERR(__guard_ptr(mutex_intr)(lock)))
+		return __guard_ptr(mutex_intr)(lock);
 
-Thanks,
-Stefano
+I mean, yeah __guard_ptr(mutex_intr) doesn't really roll of the tongue,
+but if that is the whole objection, surely we can try and fix that bit
+instead of building an entire parallel set of primitives.
+
+
+Notably, you're going to be running into trouble the moment you want to
+use your acquire stuff on things like raw_spin_trylock_irqsave(),
+because all that already wraps the return type, in order to hide the
+flags thing etc.
+
 
