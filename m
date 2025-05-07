@@ -1,67 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 479D71FBCAD
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 22:51:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CBF728980A
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 22:59:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746658285; cv=none; b=LTjSoYFzzecoG4nyWIy0ZfTOOLUuSy8mM9p9qzGZs7SrZZiT9SToZNJt8bXMwgCfSEfSHq1b0sL3/rKAuar/M8ndhI5pokeHd4nIkKuyEKlvjmY6FCX/B2hGJhOZF9QUlAJWiU4dgUQv4dINnw0F3LdIpcrJXNi+hDh/k+BsOkE=
+	t=1746658749; cv=none; b=P6J4yA4PPozPxKByWuRLv0FelcpPTTf/9mK9Cjprp8FwgwpoDN24cDgya2AoDkaiY4s4lF8RFxZ7TpfrN9PgvF7RSAlWCp+Sf11sLZVyGjH7LUjm9VMxhlPDo5OVC7TDfMX1LxNwPT58AzcJMVp8yNnQhsSgwoXT+f43MUNJYFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746658285; c=relaxed/simple;
-	bh=Bctlw/1fOsJIta1eRL7h91jxm0osjK1lAY09a063p5c=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=tJbFcSVqS428XR/lYHAb1qdg0U5aCviNe+MeSK4Y6VPlQ4XB91ujSNMCJ9fwQShCrBtlcSzF2dM1XuV/6YW6wQilycxQx0K64uOOCBAWce/JE/yW5tlGchJFN6/dKMxd4yMDbKsKtmyxJz2SlsYXJNNznAlcsbQc1KO6vULK9QY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=A+UhL3sV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746658749; c=relaxed/simple;
+	bh=4qznrIQd9heCD85pUFAjDNFme4Ro9HM6p9y3geLJfT8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MEQzPRqtThfLMZGD3mPmD1KSw+p1ravywgbGpvfHaViG3IX0AblY5Cl7vnNuR8UdWpIVKHmas6Ktttl2JKFzyGfrhznMrd64zbgi2QGisXFOrP6v/nLEG4sLul15XSPGw/p1qLMwb4OBH0NQPOs2SOJM+vO4WDllVVbfVURH1zA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sugdTwtC; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="A+UhL3sV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE8F8C4CEE2;
-	Wed,  7 May 2025 22:51:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1746658284;
-	bh=Bctlw/1fOsJIta1eRL7h91jxm0osjK1lAY09a063p5c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=A+UhL3sVc5gIJB7Tb/fyR+1oqmCAcyc7DqKW8AC++39/5gLz6Zxq5Hlb3zZeZm0Kb
-	 gd9ZOzKBSArNuwDTo1B15ZVeP5lRr/yGP2YCCo65lvrhWPhuz3+IpEgUXUFbDbznO4
-	 SFhgXJ3vDLWAs4AP3YYtuBD89dMDH+jGL1h3jwoU=
-Date: Wed, 7 May 2025 15:51:23 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Florent Revest <revest@chromium.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, catalin.marinas@arm.com, will@kernel.org,
- tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
- broonie@kernel.org, thiago.bauermann@linaro.org, jackmanb@google.com
-Subject: Re: [PATCH v2 0/4] mm: Avoid sharing high VMA flag bits
-Message-Id: <20250507155123.6ae8ee544182dc9cf1137a05@linux-foundation.org>
-In-Reply-To: <20250507131000.1204175-1-revest@chromium.org>
-References: <20250507131000.1204175-1-revest@chromium.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sugdTwtC"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5fab85c582fso4478a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 15:59:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746658746; x=1747263546; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4qznrIQd9heCD85pUFAjDNFme4Ro9HM6p9y3geLJfT8=;
+        b=sugdTwtCFYvGjVFdweSDSrE0kpQ09IL+Jip36nQTXjB0TdLKr/tZJIlN7jt8ukf2DY
+         w5SO2yNGzy7Q4cVWIoqnlLt/nAwaSgVFsKijS2XZ8MFyTKTZvkSX5hm9qVvpmzJ6l38q
+         tVrBuI13GAl/r2paHdv1EaskwPtkqV5GUMdcoitnQ7YNAH0+V/u9R7akJQwpV+dRHlwE
+         qpeStstt3hwxwfGfcjBu+yAEOlRFfmAUcKDLNJzA06JHw7OGCF6GQM4Eyn+9huMvoL7d
+         Ff1Va48luWQMwjfeOJJfDP3eCLkFedKXU72xcNr4DvlzCKuPO5PFfbcgbzl0gvlLFEWT
+         aQgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746658746; x=1747263546;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4qznrIQd9heCD85pUFAjDNFme4Ro9HM6p9y3geLJfT8=;
+        b=qiufZNWB6gghf1/in+4cfmYxHj/Ytm0nuPXrhcQNAL9cHbC3MpE4jOZAv1fbi3mI5j
+         klSIBdn0PN0aB2JgGWtZP81fjgmbxglKgBkIjiiWU9wisTpPhmkLZ5ia5P65pzyT5ZdU
+         +4a9N7ovlXwfUlJ5WCky7Ja0sljoL1F+SQEISBSJPqXl/VIGxowyTDOBpJclsgKwYaG9
+         E9tN1WqBA+vp/4kbpjuuwrAQ/WqhmZ0v1NYhGA24llOY1BGAz29BZN5zCROxlZYSAPCE
+         /Oz/dnnHTOFRYQ2/GLW8a2a1zKqQj2zuHQE3NTNH13KbyXzmVwpk+sPKRBLAMYaudd1M
+         IpOw==
+X-Forwarded-Encrypted: i=1; AJvYcCXky46CGFm/wHXRhEjoTvoQ+PqSp3UwJNL6jHBR0KvzciR04b46fz0PohNsOmP3h7ycxV7BCSfOIXmqmxs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGifeldubYBHmGpktEUPBbzGWJ/5jWhLyjVNA7S5LAelnp+dy/
+	s2dTm/BP0JVJQeyT38YPff7qAGKcqpOMbcfM+mrrWDO9qp3NyJclKnT+SSjSPxhmYlFgb6MUuMR
+	wRB6lNQXNrPpveT3lI1Bx2bikt1O3txjPdLWA
+X-Gm-Gg: ASbGncsNL3JmWh47ptFEORhVuCkh/e/gy9pGoGbz9tSI4V3HlKnAx9DfP9Y3oB3xxNC
+	Ckdd7A59hye5xjdGddVVZyZ1zYCqHwrXRsKRdv4/x5DnHGMAG1uVfh03vS4iu+WCA2WdwyzJEBm
+	rQEmbxXRZSQ277MBrA/NU5GwCfaU6ac+dTpVM/3jX14np0hcrZJw==
+X-Google-Smtp-Source: AGHT+IG5UM76A79+IbRtPyKJbFmyzXpMUKCWJ9hqDVsiMGpyhjFhDGSChhn6i9wySXk6B9CqU0BGHm8UgBUgVRm87Zg=
+X-Received: by 2002:a05:6402:1a27:b0:5fb:ee5d:b5a2 with SMTP id
+ 4fb4d7f45d1cf-5fc6d4d522dmr15802a12.3.1746658746142; Wed, 07 May 2025
+ 15:59:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20250505212401.3379699-6-samitolvanen@google.com>
+ <20250505212401.3379699-10-samitolvanen@google.com> <CAK7LNAS0Obe-ye1ba06EfZ+mgmc6ter+xMa+mKCw6aRM14L35Q@mail.gmail.com>
+In-Reply-To: <CAK7LNAS0Obe-ye1ba06EfZ+mgmc6ter+xMa+mKCw6aRM14L35Q@mail.gmail.com>
+From: Sami Tolvanen <samitolvanen@google.com>
+Date: Wed, 7 May 2025 22:58:28 +0000
+X-Gm-Features: ATxdqUH75sjGKquTsxZiAfvNfjaDztMLHXgmmKdCV2-0xtfGeIwBKHIdY6DuK4s
+Message-ID: <CABCJKueJ2+TpUyJsLOuy3_Q324iOhmKm50vf4UvRot51Hbi87A@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] Documentation/kbuild: Add new gendwarfksyms kABI rules
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, 
+	Daniel Gomez <da.gomez@samsung.com>, linux-modules@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed,  7 May 2025 15:09:56 +0200 Florent Revest <revest@chromium.org> wrote:
+Hi Masahiro,
 
-> The first patch of this series is a straightforward attempt at fixing this
-> specific bug by changing the bit used by VM_UFFD_MINOR. I cc-ed stable on that
-> one and I expect it to not be all too controversial.
-> 
-> The rest of the series however is a more zealous refactoring and likely to be
-> more contentious... :) Since this bug looks like a near miss which could have
-> been quite severe in terms of security, I think it's worth trying to simplify
-> the high VMA flag bits code. I tried to consolidate around the current usage of
-> VM_HIGH_ARCH_* macros but I'm not sure if this is the preferred approach here. I
-> really don't feel strongly about those refactorings so this is more of a
-> platform for discussion for people with more mm background, I'll be more than
-> happy to respin a v2!
+On Wed, May 7, 2025 at 12:28=E2=80=AFPM Masahiro Yamada <masahiroy@kernel.o=
+rg> wrote:
+>
+> Hmm, renumbering is annoying.
+>
+> Maybe, better to stop managing section numbers?
+>
+> For example, see this commit
+> 1a4c1c9df72ec266f94631edc59f9f2a9dc5aa8c
 
-It's best to avoid combining backportable bugfixes with regular
-development patches, please.  These two categories differ a lot in
-their timing and version-targeting.
+Agreed, that looks much better. I'll send v3 that drops the section numbers=
+.
 
-I'll queue the [1/N] bugfix targeted at 6.15 and -stable, thanks.
+Sami
