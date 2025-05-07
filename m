@@ -1,70 +1,73 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBC871ACEC8;
-	Wed,  7 May 2025 23:11:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7E7C1B422A
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 23:13:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746659502; cv=none; b=ZxpOYfRKouaSOFcFrN/lo0XCbdmDi3QASX8QumjjDVDWWhMxYVaJt5n5EkMvM3TpHP/25ecpnY8IRtS0V3+JwEfs6Y+VSdYrkCK2GR2s7NP5g3eYAW/CuP3yUZ28fmrnMrSlrd69bXPkYQukjQQV2UpfWN14kaVo7811vr8LyTY=
+	t=1746659587; cv=none; b=OcUcl0EJzc7V2I0hvLSgiQgwwZ9iNiRFusk1Q8Kxa4TeM9nRGZpDdtp5laQDxewc2OhrH/O0+mtUvqoHtppEbuQqn8e7Gm6ueWjaiFTlxKTke7vArzeo1bMOGR9112XbQPRtarNELG8huNWapDD9w8m+ZsPsy9jb+IOTgEIihis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746659502; c=relaxed/simple;
-	bh=RGS6xqwf+eAFdkFQCJRyKL1JWrMRM7+MAR2zJd5Lnyw=;
+	s=arc-20240116; t=1746659587; c=relaxed/simple;
+	bh=VpRYCxbgwTqyjkzN/WuYkouF17B9EPHH8+zr5YUI1SQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nuyjMIMXHIUZysZ0Qxym8/omqBmgiNLX4qXUvv6z8ey0zF7hU3QS1f4D6ZaaN+EEHa+CsF6NkpASes7cOF6B/l90orNgYtXvwwscZCvzR+CGvtYALSNbMQwYEaKbl2s/L9ZvRC4c1FqSO7wzeviQcRlhUgI8CHvaKYV38pMBj5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Lr6U282C; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=DwfBiH75J2sYrxO7aPYzL2D45vh1vftSTWXScnoc1V1nDas0VAbBKpY7vnhGCKLAhLLh0kOa9HZWVIdLNRoaZxsxLpKrcaXjWxQJ3BApTw+htvyvYZJwgN98M88ieIExPQ8iFPGRq28sV/bVT2RJ/3Zjc3321SfhMCN3DRgP/hs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=osandov.com; spf=none smtp.mailfrom=osandov.com; dkim=pass (2048-bit key) header.d=osandov-com.20230601.gappssmtp.com header.i=@osandov-com.20230601.gappssmtp.com header.b=P8X/6VT/; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=osandov.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=osandov.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Lr6U282C"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746659502; x=1778195502;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=RGS6xqwf+eAFdkFQCJRyKL1JWrMRM7+MAR2zJd5Lnyw=;
-  b=Lr6U282Cl5q18ymFBHgPqR/bb2ExnxDV+pjgkWlMyhJ+ESQ49vzmfTAo
-   ApXLQ9H1OXu5qbWaRA5kWOKzsjfWNtyCvInSWonCdBhHzCkjFConu/SVk
-   BSJqa32Pwmsf0AjI2hoA0WqX3a3smOeCsBqd8SMPLhe5IEXZAXEZsuXKv
-   z1cCNDc47OXvlUJq1+1Xn2dgAK8Jt6C+BccHHwNL6ohye+C1QyRs/qhWE
-   9mFsHQAU/JQ7rcANSf+9vrSLlUc5hQVyNWjsY/tD35oTfdgZ3pIP1Q4CV
-   Syg36cG5hMXe8mPIClsoax4IzqSNiIE+79NctEcd5H3o/1oDxSp7NMea+
-   A==;
-X-CSE-ConnectionGUID: 9cGpP0jrS+KNldGkpP5KhQ==
-X-CSE-MsgGUID: 2IoEb77HRE6Ryy6YmEVCsA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="52073731"
-X-IronPort-AV: E=Sophos;i="6.15,270,1739865600"; 
-   d="scan'208";a="52073731"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 16:11:40 -0700
-X-CSE-ConnectionGUID: n53kvqjfRue9GsXfCUf8fg==
-X-CSE-MsgGUID: A89NqrmXRgahO1BXhRqWfw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,270,1739865600"; 
-   d="scan'208";a="136042291"
-Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 16:11:38 -0700
-Date: Wed, 7 May 2025 16:16:45 -0700
-From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: x86@kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Michael Kelley <mhklinux@outlook.com>, devicetree@vger.kernel.org,
-	Saurabh Sengar <ssengar@linux.microsoft.com>,
-	Chris Oo <cho@microsoft.com>, linux-hyperv@vger.kernel.org,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-	Ricardo Neri <ricardo.neri@intel.com>
-Subject: Re: [PATCH v3 04/13] dt-bindings: x86: Add CPU bindings for x86
-Message-ID: <20250507231644.GB28763@ranerica-svr.sc.intel.com>
-References: <20250503191515.24041-1-ricardo.neri-calderon@linux.intel.com>
- <20250503191515.24041-5-ricardo.neri-calderon@linux.intel.com>
- <20250504-happy-spoonbill-of-radiance-3b9fec@kuoka>
- <20250506045235.GB25533@ranerica-svr.sc.intel.com>
- <20250506-alluring-beaver-of-modernism-65ff8a@kuoka>
+	dkim=pass (2048-bit key) header.d=osandov-com.20230601.gappssmtp.com header.i=@osandov-com.20230601.gappssmtp.com header.b="P8X/6VT/"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-309e54e469cso57456a91.1
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 16:13:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=osandov-com.20230601.gappssmtp.com; s=20230601; t=1746659585; x=1747264385; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=bze+nlRK9GdebdTiqCcyHrSNtG9GFSGfKrcCqT38XaI=;
+        b=P8X/6VT/bH+DNaO2+oHs867bT2Z/O9Wr3sVgbS0Yk0/qu5GsyU3S13zK6kBGdmYQRq
+         eHZUhBEkZaZwhSCl44wfEjpwi8mKJMtWKI8v8lLBEw4PLAhPwykLFh/UMZ7twDTkHKp/
+         Kg87QcW6dVdopQ1rGp/DT3MXq/1K8OWrUbDDH+aKTxmjMBH1DPLewWXxIsYwaoLWQpWO
+         OKNHalSLGpGFWTmwNLwkRMctryJEr9hQP5qIkhaaciVh/qtWPmJuEeQUnQB//2DByd8I
+         BcMXLJtmQ+eQuk6Zmf78xLCZalerB+bo4w1dDAUOg7nc1SmcAM3UbuRcaI8LIK3WodkN
+         pH8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746659585; x=1747264385;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bze+nlRK9GdebdTiqCcyHrSNtG9GFSGfKrcCqT38XaI=;
+        b=GTi1wJBI+7/1BKH3ywM8vBPduJ2eRxQtMJdA5HRozxp/mk/jWS6qeCA26G5e/7edYA
+         1ZhVxuSyh2atAuRA9XiGeJ2Q8PEU1FeFG3rsXdNfgxRETjT9e0e+rRv1kws+tJwyD1b9
+         gGGXxESUN/lvIQWgMQs5ulGxnwdyG3x5pTiymyJKvKXVn6X4GYnI7H94aSsLyVAeyFXL
+         KW8wl+IJa+hggWH/5UEO1ZzKlOmwiEPOC62MplppZb/NwJI3r1XAdq0rt9O8R1lkmPQl
+         KLu14Qw2R6rhP7HZT0jnZp0/vDULKeRrcmw9Op+NeKi4lIVMns9AzbJk+Ib4kVcyZ3di
+         oS/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVPx9MTgyd5sEpxWKrEYkLrEXYNc+EMiH/mX5Wiw5PVny6eZEiK6WUpDab6rJdeVqmRKfUi13tSTzcEJxs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxMiteiJWnBS/45oheBvUlMv867ir/ACU/FKkaCx9AAj2rrOrLY
+	oiUHT1Kiq92RWcLiRwTBRvhTy9c1nNzpVH8qGrW+/t3qChix5k1lAuMaiVDAGis=
+X-Gm-Gg: ASbGncuoRwsiUHtkR9LbrEhFkvzhLbXZNLC+sYF4z3xkyL4kNUcZQ6F2P6l+TFf+zoq
+	vf0eUhJqL61p1V2hv63cfxtzS0r3SF9FUkSrZvI0F8kR6QXEbvRt2hX0e8r82nPizzQ//AeJ8U7
+	6YLnXNhN2VDmVve5+0TczLG3Xe5hBgYJ2PDELagMb0WFlQC09kl5PQuCC/SI1om4LO7Wj3PmnzJ
+	F/kKz02f8g5jbPSeFXu8s5Q5/zGRGcuqvohqXetNAstfUM68t2nM4+f0UklsSfYSW/W1BFiaTS6
+	jUkna6S84UGfba4dPpho8SE=
+X-Google-Smtp-Source: AGHT+IHXf2uaAFydOllzDh6nhZaOcR5ywT2UaACaV2lmI5F+DIMWgpuh5HCG0Ql/E9CoWvoaXWr8HA==
+X-Received: by 2002:a17:90b:3e83:b0:30a:80bc:ad5 with SMTP id 98e67ed59e1d1-30aac1f1bd8mr3014058a91.3.1746659584720;
+        Wed, 07 May 2025 16:13:04 -0700 (PDT)
+Received: from telecaster ([2601:602:8980:9170::71f1])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e152204desm100243565ad.140.2025.05.07.16.13.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 16:13:04 -0700 (PDT)
+Date: Wed, 7 May 2025 16:13:03 -0700
+From: Omar Sandoval <osandov@osandov.com>
+To: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Stephen Brennan <stephen.s.brennan@oracle.com>,
+	Christian Brauner <brauner@kernel.org>,
+	Mateusz Guzik <mjguzik@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-debuggers@vger.kernel.org,
+	Sentaro Onizuka <sentaro@amazon.com>
+Subject: Re: [PATCH] fs: convert mount flags to enum
+Message-ID: <aBvo_-Ee7QQtd3YU@telecaster>
+References: <20250507223402.2795029-1-stephen.s.brennan@oracle.com>
+ <20250507230511.GA2023217@ZenIV>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,107 +76,38 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250506-alluring-beaver-of-modernism-65ff8a@kuoka>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20250507230511.GA2023217@ZenIV>
 
-On Tue, May 06, 2025 at 09:25:59AM +0200, Krzysztof Kozlowski wrote:
-> On Mon, May 05, 2025 at 09:52:35PM GMT, Ricardo Neri wrote:
-> > On Sun, May 04, 2025 at 06:45:59PM +0200, Krzysztof Kozlowski wrote:
-> > > On Sat, May 03, 2025 at 12:15:06PM GMT, Ricardo Neri wrote:
-> > > > Add bindings for CPUs in x86 architecture. Start by defining the `reg` and
-> > > 
-> > > What for?
+On Thu, May 08, 2025 at 12:05:11AM +0100, Al Viro wrote:
+> On Wed, May 07, 2025 at 03:34:01PM -0700, Stephen Brennan wrote:
+> > In prior kernel versions (5.8-6.8), commit 9f6c61f96f2d9 ("proc/mounts:
+> > add cursor") introduced MNT_CURSOR, a flag used by readers from
+> > /proc/mounts to keep their place while reading the file. Later, commit
+> > 2eea9ce4310d8 ("mounts: keep list of mounts in an rbtree") removed this
+> > flag and its value has since been repurposed.
 > > 
-> > Thank you for your quick feedback, Krzysztof!
-> > 
-> > Do you mean for what reason I want to start bindings for x86 CPUs? Or only
+> > For debuggers iterating over the list of mounts, cursors should be
+> > skipped as they are irrelevant. Detecting whether an element is a cursor
+> > can be difficult. Since the MNT_CURSOR flag is a preprocessor constant,
+> > it's not present in debuginfo, and since its value is repurposed, we
+> > cannot hard-code it. For this specific issue, cursors are possible to
+> > detect in other ways, but ideally, we would be able to read the mount
+> > flag definitions out of the debuginfo. For that reason, convert the
+> > mount flags to an enum.
 > 
-> Yes. For which devices, what purpose.
-
-Sure, I could expand on this.
-
+> Just a warning - there's a bunch of pending changes in that area,
+> so debuggers are going to be in trouble anyway.
 > 
-> > the `reg` property? If the former, it is to add an enable-method property to
-> > x86 CPUs. If the latter, is to show the relationship between APIC and `reg`.
-> > 
-> > > 
-> > > > `enable-method` properties and their relationship to x86 APIC ID and the
-> > > > available mechanisms to boot secondary CPUs.
-> > > > 
-> > > > Start defining bindings for Intel processors. Bindings for other vendors
-> > > > can be added later as needed.
-> > > > 
-> > > > Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-> > > > ---
-> > > 
-> > > Not really tested so only limited review follows.
-> > 
-> > Sorry, I ran make dt_binding_check but only on this schema. I missed the
-> > reported error.
-> > 
-> > > 
-> > > >  .../devicetree/bindings/x86/cpus.yaml         | 80 +++++++++++++++++++
-> > > >  1 file changed, 80 insertions(+)
-> > > >  create mode 100644 Documentation/devicetree/bindings/x86/cpus.yaml
-> > > > 
-> > > > diff --git a/Documentation/devicetree/bindings/x86/cpus.yaml b/Documentation/devicetree/bindings/x86/cpus.yaml
-> > > > new file mode 100644
-> > > > index 000000000000..108b3ad64aea
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/x86/cpus.yaml
-> > > > @@ -0,0 +1,80 @@
-> > > > +# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
-> > > > +%YAML 1.2
-> > > > +---
-> > > > +$id: http://devicetree.org/schemas/x86/cpus.yaml#
-> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > > +
-> > > > +title: x86 CPUs
-> > > > +
-> > > > +maintainers:
-> > > > +  - Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-> > > > +
-> > > > +description: |
-> > > > +  Description of x86 CPUs in a system through the "cpus" node.
-> > > > +
-> > > > +  Detailed information about the CPU architecture can be found in the Intel
-> > > > +  Software Developer's Manual:
-> > > > +    https://intel.com/sdm
-> > > > +
-> > > > +properties:
-> > > > +  compatible:
-> > > > +    enum:
-> > > > +      - intel,x86
-> > > 
-> > > That's architecture, not a CPU. CPUs are like 80286, 80386, so that's
-> > > not even specific instruction set. I don't get what you need it for.
-> > 
-> > Am I to understand the the `compatible` property is not needed if the
-> > bindings apply to any x86 CPU?
+> Folks, VFS data structures do *NOT* come with any stability warranties.
+> Especially if the object in question is not even defined in include/*/*...
 > 
-> Every device needs compatible. Its meaning is explained:
-> https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#compatible
-> 
-> If you add here a device representing CPU, then look at existing
-> bindings for CPUs how they do it.
-> 
-> It again feels like you add DT for platform which is not a real thing.
+> _Anything_ that tries to play with these objects must be version-dependent
+> and be ready to be broken by changes in underlying code at zero notice.
 
-That is correct. I struggle to enumerate specific CPUs because the `intel,
-wakeup-mailbox` enable method is implemented in the platform firmware and
-is not tied to a given processor model as required by the rules of the
-`compatible` property.
-
-> If you use DT, you do not get different rules, therefore read all
-> standard guides and tutorials (there were many, quite comprehensive).
-
-I went through various materials. Perhaps I needed to understand the rules
-better.
-
-I realize now the DeviceTree is about describing hardware not firmware and
-DT bindings are a suitable vehicle for this.
-
-Thanks for the time you spent reviewing this patchset!
-
-BR,
-Ricardo
+That's totally fine, we can deal with breakages as long as we can
+reliably detect what version we're dealing with. We can see changed enum
+values, renamed/removed structure members, etc., so that's why those are
+preferable. Macros are invisible at the debug info level (since no one
+compiles with -g3), so those are no good for us. We also avoid version
+checks as much as possible because backports in RHEL and co. make
+version numbers mostly meaningless.
