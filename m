@@ -1,129 +1,320 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7DBE288CB1;
-	Wed,  7 May 2025 14:34:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1A84288C11;
+	Wed,  7 May 2025 14:34:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746628493; cv=none; b=JDepUfgw0OMVupZFEHaDqCPbVJCo3LDxizaDMRfOKNwl8os5TXv2PfpQgHOZggsKikBVmu1PDYUTd6B84VN/AOdtpkCfiwrD4uaXOoqT5KFmUUFyrM0ky2gQrJXh5Bhf2f4a3yCleEKiaPt/FWxJdTW84oVNdJGY6GR6qoybi6c=
+	t=1746628499; cv=none; b=pU9/Ofja+dpg+ln9wNcnTTQjsu6SLD4fLKx1zsWW+LPrYlmVFB3K6iGqdP4ezJnJDg24zuUZ+axY0gLztBDO/z75DMdg5Gl7sWbIbbMLz3T/VMP+EyJXQplC+xHnJcthuLdVBzBf2un9qRPAXP6mNYSulh8h23u3Ha5dTd8iVjc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746628493; c=relaxed/simple;
-	bh=/Hx1z+1ShhlvPsydFhhJ+nng1N5AbWeiJYvwRQSPip4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bv1Kw/UeCvWDBhL+2tnKyYsGtw66gZbpZcWUJQFCynEKKD5K0DDPPRx2cWEcVa6DbHOG4zwbMdkZJFtxvkFzdHbLNUG5gJXWacwrjUvQvgNojG4y4zBfil7HhSszTqcorzw+IUfN5VfklLYMD+3FhUf3PauUdCc9FOybU+fw+n8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=tpb14Ivd; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1746628499; c=relaxed/simple;
+	bh=mEsR2cZO9AiWi61lNkQNjf5K/OnZM0tZW88eEGGvSxA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WmaCTXjIcE49ztSalOeCtujfrJD5VivrwDlYII+yTY/aJpJexP7KIVfGRL30Zf9+PVk4PdxcC9E5nl/iMbgeKGP50aBQxIKJPEUQZ7zUNP96C3A7CRkoR28Appy2CkNkc5BPQOBjM4I5XLRgyVmRKVxlmLvm5wFX6rD4s14pQtI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YtjN36Vf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="tpb14Ivd"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=ZuS4uT/ExLWpAEhw6TwLCuePFcMmqQyy8F2XFijBTIk=; b=tpb14IvdwO69wLvs7jQK1HHWkZ
-	7uU6bcsl1mf8hZWETl28j88o04IOCY1J9Fylg69aXIXcoUp+6fyKElONrqHFUerGQ0f2xo8EQjHEC
-	0tCy98NMaezyHRN6uVDJwDvE7RC8eBi2EjaA6wdLEiugOJRq5qNuqTjQ/I29g3nA7Pg8RT9iktnK/
-	aM+PDCPfUsx448r3qiBzAQfknnPpogXGoGgXtS3MC9Ro/1SMsPDmNTFA9OuBz5uD1eMaRFEAJ7swO
-	USNRzJ2WciNbdu48T0x9sKw1jfQfliEwYb37sxjblvc4LpMF+RTqd/lbjiO5cwuvUeCQ07EJ0Jv45
-	btb4TVdA==;
-Received: from i53875a1d.versanet.de ([83.135.90.29] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1uCfqc-0002mD-S2; Wed, 07 May 2025 16:34:10 +0200
-From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
-To: Arnd Bergmann <arnd@arndb.de>, Andrzej Hajda <andrzej.hajda@intel.com>,
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Dave Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Nathan Chancellor <nathan@kernel.org>,
- Heiko Stuebner <heiko.stuebner@cherry.de>,
- Andy Yan <andy.yan@rock-chips.com>, dri-devel@lists.freedesktop.org
-Cc: "laurent.pinchart" <Laurent.pinchart@ideasonboard.com>,
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Dmitry Baryshkov <lumag@kernel.org>, Doug Anderson <dianders@chromium.org>,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- llvm@lists.linux.dev, Arnd Bergmann <arnd@kernel.org>
-Subject: Re: [PATCH] drm/bridge/synopsys: avoid field overflow warning
-Date: Wed, 07 May 2025 16:34:09 +0200
-Message-ID: <3355346.44csPzL39Z@diego>
-In-Reply-To: <220ed0fb-1ccb-4371-9b5a-a99dfdc84984@app.fastmail.com>
-References:
- <20250408175116.1770876-1-arnd@kernel.org>
- <30e22523-216f-41a9-b931-e90136a45378@app.fastmail.com>
- <220ed0fb-1ccb-4371-9b5a-a99dfdc84984@app.fastmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YtjN36Vf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 394F5C4CEEE;
+	Wed,  7 May 2025 14:34:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746628499;
+	bh=mEsR2cZO9AiWi61lNkQNjf5K/OnZM0tZW88eEGGvSxA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=YtjN36VfqAbfeMZEmmEfU/s5YU2fvo/hY4N16PC4z5fK+4FBlx0md9+KgPJb3lw3x
+	 J/cUaEjWo4tlyHHbWl/I8NBen98IIl2DKOP3UEw5Rgim6uwh6yUQZzfeKdJBEJt/FM
+	 mwqwUt6r3qm1HD4ZcIjNhHWdWxTl3eYvMPLappEDwzh1xNarr9Puh3aWVZ7vxPDXb1
+	 C6pzN/7E8FOXF+2s1CEF95LGcLAs2a/PdcQ9vq3mmICBOg5WjY3RF5tHFzNg1Iyn8k
+	 MLZfdgx8nvRKZWTYztkXzgXGfL9dNaBDqLMtsYSFb/iHZyKSItt8Mw53tBKHNAKI/3
+	 DnvNG0BFGdlrQ==
+Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-6063462098eso4072010eaf.0;
+        Wed, 07 May 2025 07:34:59 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVrHTuY2I5NvGFrOAklVAAxIvn7umZ93Gz0S0sd8Awqvvbyx2TkzSBHkW+aCh/QhxLYjwV2OeJKqV+iFr0=@vger.kernel.org, AJvYcCWoTVi6Lwxt+1RSOc6CWKiLo63sugujR2Q4rDrWxXQAwe/u8ZLWeZ3XnDSRJXy8njfhifPJxYaMxYg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzrNRdIviM5iuRB+UNXR5OgUXs6l6DWIHpO3HgUbtpFHLIOYYfw
+	S9JmoXHiB00dyNIs0fYaJ4bypE/E3IEoe0SxxJLIPdxMxqZbrDf14uSVqQrEPG769L+0uskiODN
+	dAVxVxzFRqCoNCCZLMvSLLdvurFs=
+X-Google-Smtp-Source: AGHT+IGOOsb4VvGGVXaFygBQ3XIl60Eg4mXneoZqPsC/O4PI6PMYI1WJg1Ouhpky3oGY0md68kP5VoCa64R2pwbVmBs=
+X-Received: by 2002:a05:6870:1792:b0:2b8:fab0:33c with SMTP id
+ 586e51a60fabf-2db5bec5d5fmr1903378fac.23.1746628498533; Wed, 07 May 2025
+ 07:34:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250507031941.2812701-1-zhenglifeng1@huawei.com>
+In-Reply-To: <20250507031941.2812701-1-zhenglifeng1@huawei.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 7 May 2025 16:34:46 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0jYfK_+CnT3jv+=jAp=r29nT2hQLb5zU48zpHZFzCRpNQ@mail.gmail.com>
+X-Gm-Features: ATxdqUGaXmCPDrmlLX3mroKiNJdamJJO-49OSSgxhjKgMZyC649EKzHT6gUncDw
+Message-ID: <CAJZ5v0jYfK_+CnT3jv+=jAp=r29nT2hQLb5zU48zpHZFzCRpNQ@mail.gmail.com>
+Subject: Re: [PATCH] cpufreq: CPPC: Support for autonomous selection in cppc_cpufreq
+To: Lifeng Zheng <zhenglifeng1@huawei.com>
+Cc: rafael@kernel.org, viresh.kumar@linaro.org, pierre.gondois@arm.com, 
+	sumitg@nvidia.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
+	linuxarm@huawei.com, mario.limonciello@amd.com, yumpusamongus@gmail.com, 
+	srinivas.pandruvada@linux.intel.com, jonathan.cameron@huawei.com, 
+	zhanjie9@hisilicon.com, lihuisong@huawei.com, cenxinghai@h-partners.com, 
+	yubowen8@huawei.com, hepeng68@huawei.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
 
-Am Donnerstag, 10. April 2025, 14:36:45 Mitteleurop=C3=A4ische Sommerzeit s=
-chrieb Arnd Bergmann:
-> On Wed, Apr 9, 2025, at 09:07, Arnd Bergmann wrote:
-> > On Tue, Apr 8, 2025, at 19:51, Arnd Bergmann wrote:
-> >> From: Arnd Bergmann <arnd@arndb.de>
-> >>
-> >> clang-16 and earlier complain about what it thinks might be an out of
-> >> range number:
-> >>
-> >> drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi2.c:348:8: error: call to=20
-> >> __compiletime_assert_579 declared with 'error' attribute: FIELD_PREP:=
-=20
-> >> value too large for the field
-> >>                      PHY_SYS_RATIO(tmp));
-> >>                      ^
-> >> drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi2.c:90:27: note: expanded=20
-> >> from macro 'PHY_SYS_RATIO'
-> >>  #define PHY_SYS_RATIO(x)                FIELD_PREP(GENMASK(16, 0), x)
-> >>
-> >
-> > I still see the same build failure in some other configurations even
-> > with this patch. Please disregard this version, I'll try to come
-> > up with a better one.
->=20
-> I couldn't come up with anything that actually worked, other than
-> the hack below, which just works around the compiletime error
-> in FIELD_PREP(), but doesn't look like a proper fix.
->=20
-> If anyone else has any ideas, I can test their patch.
->=20
->        Arnd
->=20
-> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi2.c b/drivers/gpu=
-/drm/bridge/synopsys/dw-mipi-dsi2.c
-> index c76f5f2e74d1..8ba528462ede 100644
-> --- a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi2.c
-> +++ b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi2.c
-> @@ -344,7 +344,7 @@ static void dw_mipi_dsi2_phy_ratio_cfg(struct dw_mipi=
-_dsi2 *dsi2)
->          */
->         tmp =3D DIV_ROUND_CLOSEST_ULL(phy_hsclk << 16, sys_clk);
->         regmap_write(dsi2->regmap, DSI2_PHY_SYS_RATIO_MAN_CFG,
-> -                    PHY_SYS_RATIO(tmp));
-> +                    PHY_SYS_RATIO(tmp & GENMASK(16, 0)));
+On Wed, May 7, 2025 at 5:19=E2=80=AFAM Lifeng Zheng <zhenglifeng1@huawei.co=
+m> wrote:
+>
+> Add sysfs interfaces for CPPC autonomous selection in the cppc_cpufreq
+> driver.
+>
+> Signed-off-by: Lifeng Zheng <zhenglifeng1@huawei.com>
+> ---
+> Hi Rafael,
+>
+> This patch is the 8th patch in [1]. After the discussion in [2], Sumit
+> is OK with adding sysfs entries under cpufreq sysfs node, so I resend
+> this patch. He will later send his updated patch after.
+>
+> Any comments appreciated!
+>
+> Lifeng
+>
+> [1] https://lore.kernel.org/all/20250206131428.3261578-1-zhenglifeng1@hua=
+wei.com/
+> [2] https://lore.kernel.org/all/20250211103737.447704-1-sumitg@nvidia.com=
+/
 
-so should we take this one for the time being?
+This is for Viresh and when all of the ACPI CPPC patches settle down.
+I think that it would be better to get back to it after the 6.16 merge
+window.
 
-While FIELD_PREP does _some_ type checking for mask and value, they are
-"only" build-time checks for when the value is a builtin constant.
-
-It doesn't do checks at runtime, so it seems this check would fall into
-the submitting code's realm?
-
-
+>
+>  .../ABI/testing/sysfs-devices-system-cpu      |  54 +++++++++
+>  drivers/cpufreq/cppc_cpufreq.c                | 109 ++++++++++++++++++
+>  2 files changed, 163 insertions(+)
+>
+> diff --git a/Documentation/ABI/testing/sysfs-devices-system-cpu b/Documen=
+tation/ABI/testing/sysfs-devices-system-cpu
+> index 206079d3bd5b..37065e1b8ebc 100644
+> --- a/Documentation/ABI/testing/sysfs-devices-system-cpu
+> +++ b/Documentation/ABI/testing/sysfs-devices-system-cpu
+> @@ -268,6 +268,60 @@ Description:       Discover CPUs in the same CPU fre=
+quency coordination domain
+>                 This file is only present if the acpi-cpufreq or the cppc=
+-cpufreq
+>                 drivers are in use.
+>
+> +What:          /sys/devices/system/cpu/cpuX/cpufreq/auto_select
+> +Date:          May 2025
+> +Contact:       linux-pm@vger.kernel.org
+> +Description:   Autonomous selection enable
+> +
+> +               Read/write interface to control autonomous selection enab=
+le
+> +                       Read returns autonomous selection status:
+> +                               0: autonomous selection is disabled
+> +                               1: autonomous selection is enabled
+> +
+> +                       Write 'y' or '1' or 'on' to enable autonomous sel=
+ection.
+> +                       Write 'n' or '0' or 'off' to disable autonomous s=
+election.
+> +
+> +               This file is only present if the cppc-cpufreq driver is i=
+n use.
+> +
+> +What:          /sys/devices/system/cpu/cpuX/cpufreq/auto_act_window
+> +Date:          May 2025
+> +Contact:       linux-pm@vger.kernel.org
+> +Description:   Autonomous activity window
+> +
+> +               This file indicates a moving utilization sensitivity wind=
+ow to
+> +               the platform's autonomous selection policy.
+> +
+> +               Read/write an integer represents autonomous activity wind=
+ow (in
+> +               microseconds) from/to this file. The max value to write i=
+s
+> +               1270000000 but the max significand is 127. This means tha=
+t if 128
+> +               is written to this file, 127 will be stored. If the value=
+ is
+> +               greater than 130, only the first two digits will be saved=
+ as
+> +               significand.
+> +
+> +               Writing a zero value to this file enable the platform to
+> +               determine an appropriate Activity Window depending on the=
+ workload.
+> +
+> +               Writing to this file only has meaning when Autonomous Sel=
+ection is
+> +               enabled.
+> +
+> +               This file is only present if the cppc-cpufreq driver is i=
+n use.
+> +
+> +What:          /sys/devices/system/cpu/cpuX/cpufreq/energy_performance_p=
+reference_val
+> +Date:          May 2025
+> +Contact:       linux-pm@vger.kernel.org
+> +Description:   Energy performance preference
+> +
+> +               Read/write an 8-bit integer from/to this file. This file
+> +               represents a range of values from 0 (performance preferen=
+ce) to
+> +               0xFF (energy efficiency preference) that influences the r=
+ate of
+> +               performance increase/decrease and the result of the hardw=
+are's
+> +               energy efficiency and performance optimization policies.
+> +
+> +               Writing to this file only has meaning when Autonomous Sel=
+ection is
+> +               enabled.
+> +
+> +               This file is only present if the cppc-cpufreq driver is i=
+n use.
+> +
+>
+>  What:          /sys/devices/system/cpu/cpu*/cache/index3/cache_disable_{=
+0,1}
+>  Date:          August 2008
+> diff --git a/drivers/cpufreq/cppc_cpufreq.c b/drivers/cpufreq/cppc_cpufre=
+q.c
+> index b3d74f9adcf0..3c3d00cec298 100644
+> --- a/drivers/cpufreq/cppc_cpufreq.c
+> +++ b/drivers/cpufreq/cppc_cpufreq.c
+> @@ -808,10 +808,119 @@ static ssize_t show_freqdomain_cpus(struct cpufreq=
+_policy *policy, char *buf)
+>
+>         return cpufreq_show_cpus(cpu_data->shared_cpu_map, buf);
 >  }
-> =20
->  static void dw_mipi_dsi2_lp2hs_or_hs2lp_cfg(struct dw_mipi_dsi2 *dsi2)
->=20
-
-
-
-
+> +
+> +static ssize_t show_auto_select(struct cpufreq_policy *policy, char *buf=
+)
+> +{
+> +       bool val;
+> +       int ret;
+> +
+> +       ret =3D cppc_get_auto_sel(policy->cpu, &val);
+> +
+> +       /* show "<unsupported>" when this register is not supported by cp=
+c */
+> +       if (ret =3D=3D -EOPNOTSUPP)
+> +               return sysfs_emit(buf, "<unsupported>\n");
+> +
+> +       if (ret)
+> +               return ret;
+> +
+> +       return sysfs_emit(buf, "%d\n", val);
+> +}
+> +
+> +static ssize_t store_auto_select(struct cpufreq_policy *policy,
+> +                                const char *buf, size_t count)
+> +{
+> +       bool val;
+> +       int ret;
+> +
+> +       ret =3D kstrtobool(buf, &val);
+> +       if (ret)
+> +               return ret;
+> +
+> +       ret =3D cppc_set_auto_sel(policy->cpu, val);
+> +       if (ret)
+> +               return ret;
+> +
+> +       return count;
+> +}
+> +
+> +static ssize_t show_auto_act_window(struct cpufreq_policy *policy, char =
+*buf)
+> +{
+> +       u64 val;
+> +       int ret;
+> +
+> +       ret =3D cppc_get_auto_act_window(policy->cpu, &val);
+> +
+> +       /* show "<unsupported>" when this register is not supported by cp=
+c */
+> +       if (ret =3D=3D -EOPNOTSUPP)
+> +               return sysfs_emit(buf, "<unsupported>\n");
+> +
+> +       if (ret)
+> +               return ret;
+> +
+> +       return sysfs_emit(buf, "%llu\n", val);
+> +}
+> +
+> +static ssize_t store_auto_act_window(struct cpufreq_policy *policy,
+> +                                    const char *buf, size_t count)
+> +{
+> +       u64 usec;
+> +       int ret;
+> +
+> +       ret =3D kstrtou64(buf, 0, &usec);
+> +       if (ret)
+> +               return ret;
+> +
+> +       ret =3D cppc_set_auto_act_window(policy->cpu, usec);
+> +       if (ret)
+> +               return ret;
+> +
+> +       return count;
+> +}
+> +
+> +static ssize_t show_energy_performance_preference_val(struct cpufreq_pol=
+icy *policy, char *buf)
+> +{
+> +       u64 val;
+> +       int ret;
+> +
+> +       ret =3D cppc_get_epp_perf(policy->cpu, &val);
+> +
+> +       /* show "<unsupported>" when this register is not supported by cp=
+c */
+> +       if (ret =3D=3D -EOPNOTSUPP)
+> +               return sysfs_emit(buf, "<unsupported>\n");
+> +
+> +       if (ret)
+> +               return ret;
+> +
+> +       return sysfs_emit(buf, "%llu\n", val);
+> +}
+> +
+> +static ssize_t store_energy_performance_preference_val(struct cpufreq_po=
+licy *policy,
+> +                                                      const char *buf, s=
+ize_t count)
+> +{
+> +       u64 val;
+> +       int ret;
+> +
+> +       ret =3D kstrtou64(buf, 0, &val);
+> +       if (ret)
+> +               return ret;
+> +
+> +       ret =3D cppc_set_epp(policy->cpu, val);
+> +       if (ret)
+> +               return ret;
+> +
+> +       return count;
+> +}
+> +
+>  cpufreq_freq_attr_ro(freqdomain_cpus);
+> +cpufreq_freq_attr_rw(auto_select);
+> +cpufreq_freq_attr_rw(auto_act_window);
+> +cpufreq_freq_attr_rw(energy_performance_preference_val);
+>
+>  static struct freq_attr *cppc_cpufreq_attr[] =3D {
+>         &freqdomain_cpus,
+> +       &auto_select,
+> +       &auto_act_window,
+> +       &energy_performance_preference_val,
+>         NULL,
+>  };
+>
+> --
+> 2.33.0
+>
+>
