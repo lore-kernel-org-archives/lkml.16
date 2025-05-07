@@ -1,162 +1,112 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5782328B3FC;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 157FF28B410;
 	Wed,  7 May 2025 13:44:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746625460; cv=none; b=pt9cgIwZKWvNKLy0vVwnEJ9Rg/Gwiyo2GPCJjIIBjeVYY07B7Gdq4Dk/ii0wdIWX5DvleBgZ7iqipzSi1L91fyz+iJWcpu4IJ+NqEIV8O4UR8fkX6Itwd6VXYwi8gOqOpJpayEHs1guJDujO7+XrVVdvFemYfVNIwE2hS00F0XM=
+	t=1746625461; cv=none; b=iGdwaq6iWg/YTKWlWveqaCaEr6odgzLobCLKa2ywKz4h1Zzld53f8Fzv40qbcIE0AStddgM87zoswEwq7jje4RvOS7rVcHwd6Ior+kAPF5ct7LHJ6dzT74dMYldeWXByYXPS0ytPOksjhQ6kaJ+9nEawRLAq04m3qvggYKI+4s4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746625460; c=relaxed/simple;
-	bh=msWW7g1lBrPjToaUd1rIxOTgXRdzU/RV3luH6C3dN+Y=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=hvYfIEx/fQS/e1kSWNf1LlLm/BHzYtrlwgZ3INaKU5RRm60ecziWQhwTol3hy/Gz0dTuwseEZbipS4Q8RDjK2ceEXEDnlj6iRHltfpoD8iDTx14PFJno2DmqvRD6ivKcfBdGmch27Nq/2Sgz0/VQLBWt3pSyg/NB/Lb/NlCFIvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FdGa4163; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=idXX0bVC; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1746625461; c=relaxed/simple;
+	bh=rSpURVrjit/mrzrwpNmEyjo2cuH8soOOQFNb9VBvgGc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WFJpWS8nLCxDwWyChLyJXvkGMRoo+45tYrRZY7TETl0CESsFzZ5wuVWK9nqIiF/53DewTBZEnrq9YGKOjITThWPn5z3aB8CPiI8A47/6t13fXeoQ0ecUlJ+zvxPDxCL5Qfv9IqUq90EhC9Gc7ryz4iJB7xiAibYCvJztWpOvXFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gmvpqyfj; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FdGa4163";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="idXX0bVC"
-Date: Wed, 07 May 2025 13:44:16 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746625457;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WU/Rr5GlK23KWBYVGrTsd/7j7Fw3gHG4u7sCHY9j6Po=;
-	b=FdGa4163mzH0Ih31+fdlFB1oPSZ5ah6pMoPDjwoOKP+FhWCG0DxE2aVJkNEZ4NPq3vU/jc
-	yp+Ny9/JayZduwOq5MBgbNfAYR6yZvO3vov5fZAKai5OFIragPb+edi9s/WAxmE9VZamC9
-	NF2d0Eg+bWyM3En/5906JluGrKRmcr2/1daWPsbZJ8p+D/5LyDJtZKxdnJ6udJGl6/+QUC
-	WdiGvW5pMfw+dKBJfvbIeJGa8O+th8ZMJHmPNG19DOLk6ruoAZZOdps1R0dioeRF/xckqM
-	NpUyb79Sui5kDNNslNgYRFm0yrnD/0/38QuuPANyWmkUCc/sENxCmW7a/IEE5A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746625457;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WU/Rr5GlK23KWBYVGrTsd/7j7Fw3gHG4u7sCHY9j6Po=;
-	b=idXX0bVCWo+slduyTr3EDz/m18tmh6diEslKj5vy3/ItnuVu27y14P39qalOKhTv7ZAHpI
-	BFoyc+Xja+9ONUDg==
-From: "tip-bot2 for Jiri Slaby (SUSE)" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/cleanups] sh: Switch to irq_domain_create_*()
-Cc: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250319092951.37667-34-jirislaby@kernel.org>
-References: <20250319092951.37667-34-jirislaby@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gmvpqyfj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746625459; x=1778161459;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=rSpURVrjit/mrzrwpNmEyjo2cuH8soOOQFNb9VBvgGc=;
+  b=gmvpqyfjsBqbTYA4e1HAQ9kwmRAUwJchjJLnTkZ9OK7IUL5bjCLCXRhS
+   OSPzLupdukAWA/voUtnP7uEIUtNGUW1Wh5d3DfpcfSvcbdFL64La5Ewga
+   nFvtYFe90IyPutmG0EKCCn6TtSU0t6Namm1zjJ8/Ktx7RF4ycPg9L8+gy
+   NNBcrHY+SAIfil1nSylRkpWgbc/Z6Zr30Ubb8Cd2GM+BifXVN5aIPm/mS
+   md4bSRUnHrAajKALeXvRafEFTa9PSe0yC0PJ4PwvGGTDE4Wl+nZDAY59o
+   osk+fWEa1iJ4RLvtDc0mfVh7my8RAjf1lm2AFMPHnZJgVa2/gLTv8f7Mq
+   A==;
+X-CSE-ConnectionGUID: tbKPqzJ6SE6IHi9rs+InfA==
+X-CSE-MsgGUID: qFWHwrqMR9WPnDyTccTK8A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="48435696"
+X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
+   d="scan'208";a="48435696"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 06:44:18 -0700
+X-CSE-ConnectionGUID: s43Q+yhGTJykE/94v+uJpQ==
+X-CSE-MsgGUID: 9GJaQoJrRRK3YdsAg7QJ9w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
+   d="scan'208";a="141159330"
+Received: from smile.fi.intel.com ([10.237.72.55])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 06:44:13 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uCf4D-00000003kDn-3fUr;
+	Wed, 07 May 2025 16:44:09 +0300
+Date: Wed, 7 May 2025 16:44:09 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Eason Yang <j2anfernee@gmail.com>
+Cc: jic23@kernel.org, lars@metafoo.de, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com,
+	javier.carrasco.cruz@gmail.com, alisadariana@gmail.com,
+	olivier.moysan@foss.st.com, tgamblin@baylibre.com,
+	eblanc@baylibre.com, antoniu.miclaus@analog.com,
+	gstols@baylibre.com, ramona.nechita@analog.com,
+	matteomartelli3@gmail.com, marcelo.schmitt@analog.com,
+	chanh@os.amperecomputing.com, KWLIU@nuvoton.com,
+	yhyang2@nuvoton.com, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 2/2] iio: adc: add support for Nuvoton NCT7201
+Message-ID: <aBtjqYNTJ_kFGd2a@smile.fi.intel.com>
+References: <20250505092600.962675-1-j2anfernee@gmail.com>
+ <20250505092600.962675-3-j2anfernee@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174662545625.406.17011618054695595318.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250505092600.962675-3-j2anfernee@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-The following commit has been merged into the irq/cleanups branch of tip:
+On Mon, May 05, 2025 at 05:26:00PM +0800, Eason Yang wrote:
+> Add Nuvoton NCT7201/NCT7202 system voltage monitor 12-bit ADC driver
+> 
+> NCT7201/NCT7202 supports up to 12 analog voltage monitor inputs and up
+> to 4 SMBus addresses by ADDR pin. Meanwhile, ALERT# hardware event pins
+> for independent alarm signals, and all the threshold values could be set
+> for system protection without any timing delay. It also supports reset
+> input RSTIN# to recover system from a fault condition.
+> 
+> Currently, only single-edge mode conversion and threshold events are
+> supported.
 
-Commit-ID:     2e38bfc2ca8c8d1796a5d1bf6cddfb88cf291334
-Gitweb:        https://git.kernel.org/tip/2e38bfc2ca8c8d1796a5d1bf6cddfb88cf291334
-Author:        Jiri Slaby (SUSE) <jirislaby@kernel.org>
-AuthorDate:    Wed, 19 Mar 2025 10:29:26 +01:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Wed, 07 May 2025 15:39:40 +02:00
+...
 
-sh: Switch to irq_domain_create_*()
+> +#include <linux/array_size.h>
+> +#include <linux/bitfield.h>
+> +#include <linux/bits.h>
+> +#include <linux/delay.h>
+> +#include <linux/dev_printk.h>
+> +#include <linux/err.h>
+> +#include <linux/i2c.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/module.h>
+> +#include <linux/regmap.h>
 
-irq_domain_add_*() interfaces are going away as being obsolete now.
-Switch to the preferred irq_domain_create_*() ones. Those differ in the
-node parameter: They take more generic struct fwnode_handle instead of
-struct device_node. Therefore, of_fwnode_handle() is added around the
-original parameter.
++ time.h
 
-Note some of the users can likely use dev->fwnode directly instead of
-indirect of_fwnode_handle(dev->of_node). But dev->fwnode is not
-guaranteed to be set for all, so this has to be investigated on case to
-case basis (by people who can actually test with the HW).
+> +#include <linux/types.h>
+> +#include <linux/unaligned.h>
 
-[ tglx: Fix up subject prefix ]
-
-Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/all/20250319092951.37667-34-jirislaby@kernel.org
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
----
- arch/sh/boards/mach-se/7343/irq.c  | 5 +++--
- arch/sh/boards/mach-se/7722/irq.c  | 2 +-
- arch/sh/boards/mach-x3proto/gpio.c | 2 +-
- drivers/sh/intc/irqdomain.c        | 5 ++---
- 4 files changed, 7 insertions(+), 7 deletions(-)
-
-diff --git a/arch/sh/boards/mach-se/7343/irq.c b/arch/sh/boards/mach-se/7343/irq.c
-index f9f3b14..8241bde 100644
---- a/arch/sh/boards/mach-se/7343/irq.c
-+++ b/arch/sh/boards/mach-se/7343/irq.c
-@@ -47,8 +47,9 @@ static void __init se7343_domain_init(void)
- {
- 	int i;
- 
--	se7343_irq_domain = irq_domain_add_linear(NULL, SE7343_FPGA_IRQ_NR,
--						  &irq_domain_simple_ops, NULL);
-+	se7343_irq_domain = irq_domain_create_linear(NULL, SE7343_FPGA_IRQ_NR,
-+						     &irq_domain_simple_ops,
-+						     NULL);
- 	if (unlikely(!se7343_irq_domain)) {
- 		printk("Failed to get IRQ domain\n");
- 		return;
-diff --git a/arch/sh/boards/mach-se/7722/irq.c b/arch/sh/boards/mach-se/7722/irq.c
-index efa96ed..9a460a8 100644
---- a/arch/sh/boards/mach-se/7722/irq.c
-+++ b/arch/sh/boards/mach-se/7722/irq.c
-@@ -46,7 +46,7 @@ static void __init se7722_domain_init(void)
- {
- 	int i;
- 
--	se7722_irq_domain = irq_domain_add_linear(NULL, SE7722_FPGA_IRQ_NR,
-+	se7722_irq_domain = irq_domain_create_linear(NULL, SE7722_FPGA_IRQ_NR,
- 						  &irq_domain_simple_ops, NULL);
- 	if (unlikely(!se7722_irq_domain)) {
- 		printk("Failed to get IRQ domain\n");
-diff --git a/arch/sh/boards/mach-x3proto/gpio.c b/arch/sh/boards/mach-x3proto/gpio.c
-index f82d3a6..c13d51b 100644
---- a/arch/sh/boards/mach-x3proto/gpio.c
-+++ b/arch/sh/boards/mach-x3proto/gpio.c
-@@ -108,7 +108,7 @@ int __init x3proto_gpio_setup(void)
- 	if (unlikely(ret))
- 		goto err_gpio;
- 
--	x3proto_irq_domain = irq_domain_add_linear(NULL, NR_BASEBOARD_GPIOS,
-+	x3proto_irq_domain = irq_domain_create_linear(NULL, NR_BASEBOARD_GPIOS,
- 						   &x3proto_gpio_irq_ops, NULL);
- 	if (unlikely(!x3proto_irq_domain))
- 		goto err_irq;
-diff --git a/drivers/sh/intc/irqdomain.c b/drivers/sh/intc/irqdomain.c
-index 3968f1c..ed7a570 100644
---- a/drivers/sh/intc/irqdomain.c
-+++ b/drivers/sh/intc/irqdomain.c
-@@ -59,10 +59,9 @@ void __init intc_irq_domain_init(struct intc_desc_int *d,
- 	 * tree penalty for linear cases with non-zero hwirq bases.
- 	 */
- 	if (irq_base == 0 && irq_end == (irq_base + hw->nr_vectors - 1))
--		d->domain = irq_domain_add_linear(NULL, hw->nr_vectors,
--						  &intc_evt_ops, NULL);
-+		d->domain = irq_domain_create_linear(NULL, hw->nr_vectors, &intc_evt_ops, NULL);
- 	else
--		d->domain = irq_domain_add_tree(NULL, &intc_evt_ops, NULL);
-+		d->domain = irq_domain_create_tree(NULL, &intc_evt_ops, NULL);
- 
- 	BUG_ON(!d->domain);
- }
