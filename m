@@ -1,272 +1,73 @@
-Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47E692820A6
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 14:17:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E869289839;
+	Wed,  7 May 2025 14:17:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746627455; cv=none; b=WLBB4N3liwjLu1eUYJbpK4EBDVBjtELHQdAa0xFFostrNaZgMa4xWWrdSNFGLqGowbaNVH5c5YvhWl1AUtfeUVZrZzMCzj1G3xO8Tk23lM2iqpMgWR4R4jmAdWcTDGWweHPDfbpdM+WmNTSayis/UqQ5jwIDeD87C+3b3pcb28A=
+	t=1746627464; cv=none; b=azjWyjwGrGEUfF9VTZiKBteoR2SsY197zuQfe0TSdZ3KarDgGlzVYnX0d1lSPcxeJkr2VFO3eY8Gq9VuDkayPIskJubaeuEdCuRiqWz8403mI7W51xeDY+AJfEFCrqvtcwG1P39RLzmhSy/j3jO+pLnwJYWtSxD8N7mSnlJL42A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746627455; c=relaxed/simple;
-	bh=IxupcJPlYRhD2UqkmorA3DMzhd32rJ1yoT6/PHsqJoU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=q7clgCy7gSsxEIliMIcNnrVPFwyjMJGuERNjd6uOkeILyT2ETf+dWu19w0uesDJDSpjs2RBlXORFrJtFf2Tlr5UWWUJQuemrOpRuBJ4C0rimnaStUxbsn7jNd/qhzFTACX0mjkPLn8eO4a3vDGuFfK+5dfjvyyI1rV27LOrxSnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=iSCSiHbF; arc=none smtp.client-ip=95.215.58.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1746627464; c=relaxed/simple;
+	bh=PtB5Usi8xLaJmNGDACycIzyHJbkLqaznxmbCpeinUIk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O+c4ulPne4CBL5wCTCLKKrux7cetiJXtSkYMnSKBCEObU0Pd/3OXVo8isVMwrwQwco47LHbsIA3DG1+ZEcbJluN5vo5eJQkf7RHC5ap4xfgGnURGXSRKCiJwZM4/9tDLl72FuyYt4IZQWtvlHlE+Ykf5Jr51KneifxzILAyUNqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=lkIbSxKq; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="iSCSiHbF"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1746627449;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=pH7UmPvS4rp26O6yU59fxdXGcFqjDChPqNvKXLI8EQU=;
-	b=iSCSiHbFUehvqLfQa0NoeuKVcsAi8xvPf1wG6uFk+LxnoSW6V7ecBgD0xAqgzvfZMb9Sw2
-	jalSpqCLDKxjyJ1Sd7CYf9c3EhDay7ygvNrEKny9/PDuybVoxIo5upbrosz0lqxOPPFrRS
-	c6CfRUqEUZUiKK6KNaeTMQH8zKMfG8k=
-From: Dawei Li <dawei.li@linux.dev>
-To: andersson@kernel.org,
-	mathieu.poirier@linaro.org
-Cc: linux-remoteproc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	dawei.li@linux.dev,
-	set_pte_at@outlook.com
-Subject: [PATCH 0/3] rpmsg: Introduce RPMSG_CREATE_EPT_FD_IOCTL uAPI
-Date: Wed,  7 May 2025 22:17:09 +0800
-Message-Id: <20250507141712.4276-1-dawei.li@linux.dev>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="lkIbSxKq"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=riPhI6Eapns1oW9Gn4OqspYK1Wq/yqbnDVBWZAn6+N8=; b=lkIbSxKqLABQ9AeH01kNU+Ma68
+	D2Qc2irMyCeY79HtU6uyKbwy9YC2uBNN6XuJkfxzXiF7IXvaz7ddDFy4VlqK9JaYSN7o/mA9LEiM0
+	JO6jfOniUqp8quI+9Z7OjGhmrJgow+qL/essHLdqatkcyaSOh/DLqaGSqaMfs1waDT08=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uCfac-00BtMw-8e; Wed, 07 May 2025 16:17:38 +0200
+Date: Wed, 7 May 2025 16:17:38 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Wasim Nazir <quic_wasimn@quicinc.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Richard Cochran <richardcochran@gmail.com>,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	kernel@quicinc.com, kernel@oss.qualcomm.com
+Subject: Re: [PATCH 0/8] qcom: Refactor sa8775p/qcs9100 based ride boards
+Message-ID: <d87d203c-cd81-43c6-8731-00ff564bbf2f@lunn.ch>
+References: <20250507065116.353114-1-quic_wasimn@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250507065116.353114-1-quic_wasimn@quicinc.com>
 
-Hi,
+> Ethernet card:
+>   - There are two variants of ethernet card each with different capabilities:
+>     - [Ethernet-v1] card contains:
+>       - 2x 1G RGMII phy, 2x 1G SGMII phy(enabled currently)
+>       - Total 4 phy supported, only 2 phy are enabled and it is used in ride.
+>     - [Ethernet-v2] card contains:
+>       - 2x 1G RGMII phy, 2x 2.5G HSGMII(enabled currently) & 10G PCIe
+>         based MAC+PHY controller
+>       - Total 5 phy supported, only 2 phy are enabled and it is used
+>         in ride-r3.
+>   - Either [Ethernet-v1] or [Ethernet-v2] is connected to backplain
+>     board via B2B connector.
 
-This series introduce new uAPI(RPMSG_CREATE_EPT_FD_IOCTL) for rpmsg
-subsystem.
+Is it possible to identify the card, e.g. does it have an I2C EEPROM,
+or some strapping resistors on the B2B bus?
 
-Current uAPI implementation for rpmsg ctrl & char device manipulation is
-abstracted in procedures below:
-- fd = open("/dev/rpmsg_ctrlX")
-- ioctl(fd, RPMSG_CREATE_EPT_IOCTL, &info); /dev/rpmsgY devnode is
-  generated.
-- fd_ep = open("/dev/rpmsgY", O_RDWR) 
-- operations on fd_ep(write, read, poll ioctl)
-- ioctl(fd_ep, RPMSG_DESTROY_EPT_IOCTL)
-- close(fd_ep)
-- close(fd)
+I'm just wondering if DT overlays would be a better solution.
 
-This /dev/rpmsgY abstraction is less favorable for:
-- Performance issue: It's time consuming for some operations are
-invovled:
-  - Device node creation.
-    Depends on specific config, especially CONFIG_DEVTMPFS, the overall
-    overhead is based on coordination between DEVTMPFS and userspace
-    tools such as udev and mdev.
-
-  - Extra kernel-space switch cost.
-
-  - Other major costs brought by heavy-weight logic like device_add().
-
-- /dev/rpmsgY node can be opened only once. It doesn't make much sense
-    that a dynamically created device node can be opened only once.
-
-- For some container application such as docker, a client can't access
-  host's dev unless specified explicitly. But in case of /dev/rpmsgY, which
-  is generated dynamically and whose existence is unknown for clients in
-  advance, this uAPI based on device node doesn't fit well.
-
-An anon inode based approach is introduced to address the issues above.
-Rather than generating device node and opening it, rpmsg code just make
-a anon inode representing eptdev and return the fd to userspace.
-
-# Performance demo
-
-An simple C application is tested to verify performance of new uAPI.
-
-$ cat test.c
-
-#include <linux/rpmsg.h>
-
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/ioctl.h>
-#include <fcntl.h>
-#include <string.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <errno.h>
-#include <sys/time.h>
-
-#define N (1 << 20)
-
-int main(int argc, char *argv[])
-{
-	int ret, fd, ep_fd, loop;
-	struct rpmsg_endpoint_info info; 
-	struct rpmsg_endpoint_fd_info fd_info; 
-	struct timeval start, end;
-	int i = 0;
-	double t1, t2;
-
-	fd = -1;
-	ep_fd = -1;
-	loop = N;
-
-	if (argc == 1) {
-		loop = N;
-	} else if (argc > 1) {
-		loop = atoi(argv[1]);
-	}
-
-	printf("loop[%d]\n", loop);
-
-	strcpy(info.name, "epx");
-	info.src = -1;
-	info.dst = -1;
-
-	strcpy(fd_info.name, "epx");
-	fd_info.src = -1;
-	fd_info.dst = -1;
-	fd_info.fd = -1;
-
-	while (fd < 0) {
-		fd = open("/dev/rpmsg_ctrl0", O_RDWR);
-		if (fd < 0) {
-			printf("open rpmsg_ctrl0 failed, fd[%d]\n", fd);
-		}
-	}
-
-	gettimeofday(&start, NULL);
-
-	while (loop--) {
-		ret = ioctl(fd, RPMSG_CREATE_EPT_IOCTL, &info);
-		if (ret < 0) {
-			printf("ioctl[RPMSG_CREATE_EPT_IOCTL] failed, ret[%d]\n", ret);
-		}
-
-		ep_fd = -1;
-		i = 0;
-
-		while (ep_fd < 0) {
-			ep_fd = open("/dev/rpmsg0", O_RDWR);
-			if (ep_fd < 0) {
-				i++;
-				printf("open rpmsg0 failed, epfd[%d]\n", ep_fd);
-			}
-		}
-
-		//printf("Number of open failed[%d]\n", i);
-
-		ret = ioctl(ep_fd, RPMSG_DESTROY_EPT_IOCTL, &info);
-		if (ret < 0) {
-			printf("old ioctl[RPMSG_DESTROY_EPT_IOCTL] failed, ret[%d], errno[%d]\n",
-				ret, errno);
-		}
-
-		close(ep_fd);
-	}
-	
-	gettimeofday(&end, NULL);
-
-	printf("time for old way: [%ld] us\n", 1000000 * (end.tv_sec - start.tv_sec) + end.tv_usec - start.tv_usec);
-	t1 = 1000000 * (end.tv_sec - start.tv_sec) + end.tv_usec - start.tv_usec;
-
-	if (argc == 1) {
-		loop = N;
-	} else if (argc > 1) {
-		loop = atoi(argv[1]);
-	}
-
-	printf("loop[%d]\n", loop);
-
-	gettimeofday(&start, NULL);
-
-	while (loop--) {
-		fd_info.fd = -1;
-		ret = ioctl(fd, RPMSG_CREATE_EPT_FD_IOCTL, &fd_info);
-		if (ret < 0 || fd_info.fd < 0) {
-			printf("ioctl[RPMSG_CREATE_EPT_FD_IOCTL] failed, ret[%d]\n", ret);
-		}
-
-		ret = ioctl(fd_info.fd, RPMSG_DESTROY_EPT_IOCTL, &info);
-		if (ret < 0) {
-			printf("new ioctl[RPMSG_DESTROY_EPT_IOCTL] failed, ret[%d]\n", ret);
-		}
-
-		close(fd_info.fd);
-	}
-	
-	gettimeofday(&end, NULL);
-
-	printf("time for new way: [%ld] us\n", 1000000 * (end.tv_sec - start.tv_sec) + end.tv_usec - start.tv_usec);
-	t2 = 1000000 * (end.tv_sec - start.tv_sec) + end.tv_usec - start.tv_usec;
-
-	printf("t1(old) / t2(new) = %f\n", t1 / t2);
-
-	close(fd);
-}
-
-# Performance benchmark 
-
-- Legacy means benchmark based on old uAPI
-- New means benchmark based on new uAPI(the one this series introduce)
-- Time are in units of us(10^-6 s)
-
-Test	loops	Total time(legacy)	Total time(new)	legacy/new	
-1	1000	203227			2533		80.2	
-2	1000	196501			2384		82.4
-3	1000	213619			2518		84.8
-4	1000	215898			2515		85.8
-5	1000	211340			2417		87.4
-6	1000	217008			2545		85.2
-7	1000	213591			2478		86.1
-8	1000	214618			2351		91.2
-9	1000	208021			2505		83.0
-10	1000	217092			2716		79.9	
-11	10000	2040802			26765		76.2
-12	10000	2027708			26867		75.4
-13	10000	1986117			27151		73.1
-14	10000	1992956			26301		75.7
-15	10000	1980262			25808		76.7
-16	10000	1925883			27926		68.9	
-17	10000	1957518			27100		72.2
-18	10000	1980626			28020		70.6
-19	10000	1990349			27351		72.7
-20	10000	1979087			27563		71.8
-21	100000	20266414		256170		79.1
-22	100000	19732259		259883		75.9
-23	100000	19878399		253710		78.3	
-24	100000	19788886		257199		76.9
-25	100000	19937663		258865		77.0
-26	100000	19602512		256771		76.3
-27	100000	19599214		257088		76.2
-28	100000	19795920		261488		75.7
-29	100000	19719341		263299		74.8
-30	100000	19871390		258465		76.8
-
-Dawei Li (3):
-  rpmsg: char: Reuse eptdev logic for anon device
-  rpmsg: char: Implement eptdev based on anon inode
-  rpmsg: ctrl: Introduce RPMSG_CREATE_EPT_FD_IOCTL uAPI
-
- drivers/rpmsg/rpmsg_char.c | 124 ++++++++++++++++++++++++++++++-------
- drivers/rpmsg/rpmsg_char.h |  19 ++++++
- drivers/rpmsg/rpmsg_ctrl.c |  37 ++++++++---
- include/uapi/linux/rpmsg.h |  19 ++++++
- 4 files changed, 167 insertions(+), 32 deletions(-)
-
----
-base-commit: 92a09c47464d040866cf2b4cd052bc60555185fb
-
-Thanks,
-
-	Dawei
--- 
-2.25.1
-
+	Andrew
