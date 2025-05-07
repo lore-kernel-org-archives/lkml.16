@@ -1,134 +1,269 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C960021E08A;
-	Wed,  7 May 2025 07:14:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9A7F21FF20;
+	Wed,  7 May 2025 07:14:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746602064; cv=none; b=BRnep5CzghDo4kLlQTtOIrZGBKFMlK61AOo16rndx2yRdkW+nxVC4UhUG0nkdUkkMXukipaRwjjpIVyy4YXpWBD6u3fphGHOKMla0bY2Id/7muyAghl1F65zkYDSNj4QsDyME2nCrqZlhvHGC5kRS6J3csPas8Gj78kDB0X5hsk=
+	t=1746602075; cv=none; b=tQ3mfKP2KFHgrBQT58Jos9yfsLTn3O/qwl1DAIF1RDqNf3O8BwkzEatr0llRlTncPdKDDcVq6+CIl3KgV2fbnFCZXhiPU18wAL9n9pk7SWmnoMeF9fBFku94rIgJt5M83Binh4K/GEau/rFofQ3z22SvFm/a3iTQ2+4PTErQnyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746602064; c=relaxed/simple;
-	bh=m32P3P8yoZbO34TYyCfuEwWM7GITyrnS/+rupX3o64s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=thWqbL56GPd77R2Mt9edfaoRgwmfwTW0c2WuBK10OuPv/efCEuNi9no2jnNIOSxM9rl46Yjvnq9C4UC7yaDhRjuNbyj6KAEvp7AhSe+EEmOxreDOFCc73+EN5z5/kaTwC3GKS91T4/IqzuFYkbbozAY8F76doKU/jyDx8EmxA9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=AgBqcVK4; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1746602075; c=relaxed/simple;
+	bh=8DZu+CVrNlQyC6E7OM9zW9eqU6hui/E49M6tRuuZs38=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=pozm0w4/3SHCSIxBb1Sdb2wVlulkr8jk31ufyF+dr4CWelB+vWjJQvO99TGnJ7cOJrdmMjExdZryrzPml9jeDlMF8JTiebAM6xzGuKFK9OCfGt3WH6KPqUN/DrflxaR0ohsqFPsH3XsIohWh7UMrNlqz3rqf+ZGndAgjz/SP1v0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HFmyDLzJ; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="AgBqcVK4"
-Received: by mail.gandi.net (Postfix) with ESMTPA id AC31B43B5C;
-	Wed,  7 May 2025 07:14:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1746602060;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rUuEp6/RXwwfhHO1bxz8fNlN6MHr1GgMNOFNkceKlJg=;
-	b=AgBqcVK4n2af9AD6jUKIkuhdfDbPlWNhVDwp+Ify0ney9hSd62OKBbKajq9Zymbr2m7Qog
-	eVfi0klq+of6fc9G1QQ6PVt6cdmdlIM165NOD8EyUpo3wVg/XV18S564KA2wMTHgy2EH3J
-	JhiCtANS8kc9oUm979A3Vp8VwhonNDnCqXEIcgVHAtb9y09Hq0V/6GsOHXsFPqT3W/U6Aw
-	qGI0PL3B+ejaOUlo1G3CVZ2fjGO8eHLBV9rVV0iYH56FfuOzRQMvHj8nofgUbFjJx+FD2L
-	Se/6hrje/GIZpj+g7UUUrmHpCUshS4pAjYoldLSDWsSQ+OsogW+ucb+GcbuDQA==
-From: Herve Codina <herve.codina@bootlin.com>
-To: Andrew Lunn <andrew@lunn.ch>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Peter Rosin <peda@axentia.se>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mark Brown <broonie@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Wolfram Sang <wsa@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-clk@vger.kernel.org,
-	linux-i2c@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-spi@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH v2 26/26] misc: lan966x_pci: Add drivers needed to support SFPs in Kconfig help
-Date: Wed,  7 May 2025 09:13:08 +0200
-Message-ID: <20250507071315.394857-27-herve.codina@bootlin.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250507071315.394857-1-herve.codina@bootlin.com>
-References: <20250507071315.394857-1-herve.codina@bootlin.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HFmyDLzJ"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43d0782d787so41202325e9.0;
+        Wed, 07 May 2025 00:14:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746602072; x=1747206872; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=WdzGG901viVjb88sEKqQvjvWyI+7evUPLJXxwNVitw4=;
+        b=HFmyDLzJwP4/pYqqltG1mMmFijX4MlZCnOS2OcFru7ustCY7fg2Q0qXgp6sojyE8QN
+         LQpRhEXIi9uaUsVRZg7P283/VVzxIIFO0fwsKNp5u6qM3wSm9x/g+XgQ2HSV3uveKH6g
+         n96FeGpx/va8DHAMs2fjcqUAIxzkMCx+w2mxyXIarwd2wWZqKHyCGxLJoij0QIxIu4sM
+         iqAg+FlS9WNoOFpSTSeCwTC2YWitm5z8OBuuueYW6r6FNlp/UT2CdNrV8/qxOMPmm6Tl
+         JmaCRlchC0ysQ8o3iws7P53AdshDOs0vsZ1+v0OIpJE6FLHKo+a0qnVfyDdjQfR6b7Pe
+         TIVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746602072; x=1747206872;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WdzGG901viVjb88sEKqQvjvWyI+7evUPLJXxwNVitw4=;
+        b=XxVbqKED00vjF8KqkFfKBnFeUQJ+oFrsKXv2mL1d47GHmySWVY30NmXAjAe3pE0Jfv
+         PSAyC1rmTWkcJUMnXtvLC7ONqyKQso6XgOLTBvFFdeZ5Z/0eupN5AqOujh4ujKNcrqp7
+         UjsR68D6bfOTI/8Gay8kQTgab3nHuvJV1qYbQBL3ueQfKVkWQba49hvlNR8idQKEz1FE
+         GWapxzuflxsMSR3ZumYKBfXxebOt2UfNQ6jPby5gJnA/oAItEUQ24X+fMYOsbA384hUM
+         Bqtb51CtWOQKnL+xTCy0YG5XzQ5yU6JHbbSsT+IIwgDJNrK+l6S6N1xk848F3R0U8jL/
+         qf6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXGV5Lsk0FyWEvd4asMI6gL92WN4Qs4i0wGkPPnsfkFT2VLIxDUzzv2RjLDOS2byK+WmAlW4z+HaKPPWBPd@vger.kernel.org, AJvYcCXqvyTKGeq9wn0hKpnPxytkqQyZie7GdX5EShTa3t2NMraiTTqA+kv2C9jgqq54AmEtdZnoQMiJep+G@vger.kernel.org
+X-Gm-Message-State: AOJu0YyBbsGPlDsGQxi6TtSxMofHET+sRZbhaWvcPhCenMsWW0E6HuVk
+	WVxgZ/jc9rFygb0ZLha4+XrkQPVJQ0RyEQ7FY2bRyj+5RByIUBSaTAaOdzcvTEk=
+X-Gm-Gg: ASbGncvUfKXjUyySS+KVteH7KlB8q/321TYXM7/s/3WLuE23vVpYa+djY1pkLiShqb2
+	CHQRcYaBaVoGlutCFNVvcyfusi+Dr1eK1jcQUI3FzjuKsxOuh9B2jIOrNF+5Ns9Rqgg9mlBC/cf
+	k8o9TXhaRZ2vuk+UN8NJAPfTH8ldkXpMAGVzRplih8xmDZRvhMLnnce98Sp0gqYUAUqg8WJfTY+
+	gIxWL1WHc01j2UffPQFuL11F03bPz3PirzSWaYGmY55iiZ26nKsyCwYdVhblELQR2l+ZgziCuKw
+	vJhk2ufjgCf7fmcJeQthuPQkVI/NO1dCDCgK5wz2koUnsyr6uOBuMvNFiir2xX8U9v0LwY/+BpU
+	FqV++bs/Uau+pgv4=
+X-Google-Smtp-Source: AGHT+IG0f21nMpug0H9uYtk3jXDdCPiWQnEsLWKOgVecub29JtWAFAClqY9cvgAxUgipGNLU0oehqA==
+X-Received: by 2002:adf:ce8f:0:b0:3a0:b4ca:474 with SMTP id ffacd0b85a97d-3a0b4ca06a4mr1364319f8f.31.1746602071905;
+        Wed, 07 May 2025 00:14:31 -0700 (PDT)
+Received: from ?IPv6:2001:818:ea56:d000:56e0:ceba:7da4:6673? ([2001:818:ea56:d000:56e0:ceba:7da4:6673])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099b10083sm16087711f8f.62.2025.05.07.00.14.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 00:14:31 -0700 (PDT)
+Message-ID: <c999800bb5f6c1f2687ff9b257079dcf719dd084.camel@gmail.com>
+Subject: Re: [PATCH v3 5/5] iio: adc: ad7606: add gain calibration support
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Angelo Dureghello <adureghello@baylibre.com>, Jonathan Cameron
+ <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, Nuno
+ =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>, Andy Shevchenko
+ <andy@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
+ <Michael.Hennerich@analog.com>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org
+Date: Wed, 07 May 2025 07:14:56 +0100
+In-Reply-To: <20250506-wip-bl-ad7606-calibration-v3-5-6eb7b6e72307@baylibre.com>
+References: 
+	<20250506-wip-bl-ad7606-calibration-v3-0-6eb7b6e72307@baylibre.com>
+	 <20250506-wip-bl-ad7606-calibration-v3-5-6eb7b6e72307@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeeivdefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpefjvghrvhgvucevohguihhnrgcuoehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepheffiefgjeeuleeuueffleeufefglefhjefhheeigedukeetieeltddthfffkeffnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgepudeknecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhotggrlhhhohhsthdrlhhotggrlhguohhmrghinhdpmhgrihhlfhhrohhmpehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepgedvpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshhhrgifnhhguhhosehkvghrnhgvlhdrohhrghdprhgtphhtthhopehsr
- dhhrghuvghrsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopehkvghrnhgvlhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtohepfhgvshhtvghvrghmsehgmhgrihhlrdgtohhm
-X-GND-Sasl: herve.codina@bootlin.com
 
-Recently, new device-tree nodes were added in the overlay to add support
-for SFPs on LAN966x PCI device.
+On Tue, 2025-05-06 at 23:03 +0200, Angelo Dureghello wrote:
+> From: Angelo Dureghello <adureghello@baylibre.com>
+>=20
+> Add gain calibration support, using resistor values set on devicetree,
+> values to be set accordingly with ADC external RFilter, as explained in
+> the ad7606c-16 datasheet, rev0, page 37.
+>=20
+> Usage example in the fdt yaml documentation.
+>=20
+> Tested-by: David Lechner <dlechner@baylibre.com>
+> Reviewed-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+> Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
+> ---
+> =C2=A0drivers/iio/adc/ad7606.c | 56 +++++++++++++++++++++++++++++++++++++=
++++++++++++
+> =C2=A0drivers/iio/adc/ad7606.h |=C2=A0 4 ++++
+> =C2=A02 files changed, 60 insertions(+)
+>=20
+> diff --git a/drivers/iio/adc/ad7606.c b/drivers/iio/adc/ad7606.c
+> index
+> a986eb1284106da4980ac36cb0b5990e4e3bd948..049fd8616769d32778aa238b348b2fb=
+82fa83745
+> 100644
+> --- a/drivers/iio/adc/ad7606.c
+> +++ b/drivers/iio/adc/ad7606.c
+> @@ -33,6 +33,10 @@
+> =C2=A0
+> =C2=A0#include "ad7606.h"
+> =C2=A0
+> +#define AD7606_CALIB_GAIN_MIN	0
+> +#define AD7606_CALIB_GAIN_STEP	1024
+> +#define AD7606_CALIB_GAIN_MAX	(63 * AD7606_CALIB_GAIN_STEP)
+> +
+> =C2=A0/*
+> =C2=A0 * Scales are computed as 5000/32768 and 10000/32768 respectively,
+> =C2=A0 * so that when applied to the raw values they provide mV values.
+> @@ -125,6 +129,8 @@ static int ad7609_chan_scale_setup(struct iio_dev *in=
+dio_dev,
+> =C2=A0				=C2=A0=C2=A0 struct iio_chan_spec *chan);
+> =C2=A0static int ad7616_sw_mode_setup(struct iio_dev *indio_dev);
+> =C2=A0static int ad7606b_sw_mode_setup(struct iio_dev *indio_dev);
+> +static int ad7606_chan_calib_gain_setup(struct iio_dev *indio_dev,
+> +					struct iio_chan_spec *chan);
+> =C2=A0
+> =C2=A0const struct ad7606_chip_info ad7605_4_info =3D {
+> =C2=A0	.max_samplerate =3D 300 * KILO,
+> @@ -180,6 +186,7 @@ const struct ad7606_chip_info ad7606b_info =3D {
+> =C2=A0	.scale_setup_cb =3D ad7606_16bit_chan_scale_setup,
+> =C2=A0	.sw_setup_cb =3D ad7606b_sw_mode_setup,
+> =C2=A0	.offload_storagebits =3D 32,
+> +	.calib_gain_setup_cb =3D ad7606_chan_calib_gain_setup,
+> =C2=A0	.calib_offset_avail =3D ad7606_calib_offset_avail,
+> =C2=A0	.calib_phase_avail =3D ad7606b_calib_phase_avail,
+> =C2=A0};
+> @@ -195,6 +202,7 @@ const struct ad7606_chip_info ad7606c_16_info =3D {
+> =C2=A0	.scale_setup_cb =3D ad7606c_16bit_chan_scale_setup,
+> =C2=A0	.sw_setup_cb =3D ad7606b_sw_mode_setup,
+> =C2=A0	.offload_storagebits =3D 32,
+> +	.calib_gain_setup_cb =3D ad7606_chan_calib_gain_setup,
+> =C2=A0	.calib_offset_avail =3D ad7606_calib_offset_avail,
+> =C2=A0	.calib_phase_avail =3D ad7606c_calib_phase_avail,
+> =C2=A0};
+> @@ -246,6 +254,7 @@ const struct ad7606_chip_info ad7606c_18_info =3D {
+> =C2=A0	.scale_setup_cb =3D ad7606c_18bit_chan_scale_setup,
+> =C2=A0	.sw_setup_cb =3D ad7606b_sw_mode_setup,
+> =C2=A0	.offload_storagebits =3D 32,
+> +	.calib_gain_setup_cb =3D ad7606_chan_calib_gain_setup,
+> =C2=A0	.calib_offset_avail =3D ad7606c_18bit_calib_offset_avail,
+> =C2=A0	.calib_phase_avail =3D ad7606c_calib_phase_avail,
+> =C2=A0};
+> @@ -357,6 +366,49 @@ static int ad7606_get_chan_config(struct iio_dev *in=
+dio_dev,
+> int ch,
+> =C2=A0	return 0;
+> =C2=A0}
+> =C2=A0
+> +static int ad7606_chan_calib_gain_setup(struct iio_dev *indio_dev,
+> +					struct iio_chan_spec *chan)
+> +{
+> +	struct ad7606_state *st =3D iio_priv(indio_dev);
+> +	unsigned int num_channels =3D st->chip_info->num_adc_channels;
+> +	struct device *dev =3D st->dev;
+> +	int ret;
+> +
+> +	device_for_each_child_node_scoped(dev, child) {
+> +		u32 reg, r_gain;
+> +
+> +		ret =3D fwnode_property_read_u32(child, "reg", &reg);
+> +		if (ret)
+> +			return ret;
+> +
+> +		/* channel number (here) is from 1 to num_channels */
+> +		if (reg < 1 || reg > num_channels) {
+> +			dev_warn(dev, "wrong ch number (ignoring): %d\n", reg);
+> +			continue;
+> +		}
+> +
 
-The LAN966X Kconfig help section mentions drivers related to devices
-added based on the overlay description.
+Sorry Angelo, just realized this now. Any reason for not treating the above=
+ as a real
+invalid argument? It's minor and not a big deal but odd enough...
 
-Add drivers related to devices described by those new nodes in the
-already existing driver list.
+- Nuno S=C3=A1
 
-Signed-off-by: Herve Codina <herve.codina@bootlin.com>
----
- drivers/misc/Kconfig | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-index 469044b2256b..93f7b2e92e60 100644
---- a/drivers/misc/Kconfig
-+++ b/drivers/misc/Kconfig
-@@ -624,13 +624,18 @@ config MCHP_LAN966X_PCI
- 	  Even if this driver does not depend on those other drivers, in order
- 	  to have a fully functional board, the following drivers are needed:
- 	    - fixed-clock (COMMON_CLK)
-+	    - i2c-mux-pinctrl (I2C_MUX_PINCTRL)
- 	    - lan966x-cpu-syscon (MFD_SYSCON)
-+	    - lan966x-gck (COMMON_CLK_LAN966X)
- 	    - lan966x-miim (MDIO_MSCC_MIIM)
- 	    - lan966x-oic (LAN966X_OIC)
- 	    - lan966x-pinctrl (PINCTRL_OCELOT)
- 	    - lan966x-serdes (PHY_LAN966X_SERDES)
- 	    - lan966x-switch (LAN966X_SWITCH)
- 	    - lan966x-switch-reset (RESET_MCHP_SPARX5)
-+	    - sam9x60-i2c (I2C_AT91)
-+	    - sama5d2-flexcom (MFD_ATMEL_FLEXCOM)
-+	    - sfp (SFP)
- 
- source "drivers/misc/c2port/Kconfig"
- source "drivers/misc/eeprom/Kconfig"
--- 
-2.49.0
+> +		ret =3D fwnode_property_read_u32(child, "adi,rfilter-ohms",
+> +					=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 &r_gain);
+> +		if (ret =3D=3D -EINVAL)
+> +			/* Keep the default register value. */
+> +			continue;
+> +		if (ret)
+> +			return ret;
+> +
+> +		if (r_gain > AD7606_CALIB_GAIN_MAX)
+> +			return dev_err_probe(st->dev, -EINVAL,
+> +					=C2=A0=C2=A0=C2=A0=C2=A0 "wrong gain calibration value.");
+> +
+> +		/* Chan reg is 1-based index. */
+> +		ret =3D st->bops->reg_write(st, AD7606_CALIB_GAIN(reg - 1),
+> +			DIV_ROUND_CLOSEST(r_gain, AD7606_CALIB_GAIN_STEP));
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> =C2=A0static int ad7606c_18bit_chan_scale_setup(struct iio_dev *indio_dev=
+,
+> =C2=A0					=C2=A0 struct iio_chan_spec *chan)
+> =C2=A0{
+> @@ -1410,6 +1462,10 @@ static int ad7606_probe_channels(struct iio_dev *i=
+ndio_dev)
+> =C2=A0				chan->info_mask_separate_available |=3D
+> =C2=A0					BIT(IIO_CHAN_INFO_CALIBBIAS) |
+> =C2=A0					BIT(IIO_CHAN_INFO_CONVDELAY);
+> +				ret =3D st->chip_info->calib_gain_setup_cb(
+> +					indio_dev, chan);
+> +				if (ret)
+> +					return ret;
+> =C2=A0			}
+> =C2=A0
+> =C2=A0			/*
+> diff --git a/drivers/iio/adc/ad7606.h b/drivers/iio/adc/ad7606.h
+> index
+> f613583a7fa4095115b0b28e3f8e51cd32b93524..94165d217b69d54cbce9109b8c0f9dc=
+0237cf304
+> 100644
+> --- a/drivers/iio/adc/ad7606.h
+> +++ b/drivers/iio/adc/ad7606.h
+> @@ -50,6 +50,8 @@ struct ad7606_state;
+> =C2=A0typedef int (*ad7606_scale_setup_cb_t)(struct iio_dev *indio_dev,
+> =C2=A0				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct iio_chan_spec *chan=
+);
+> =C2=A0typedef int (*ad7606_sw_setup_cb_t)(struct iio_dev *indio_dev);
+> +typedef int (*ad7606_calib_gain_setup_cb_t)(struct iio_dev *indio_dev,
+> +					=C2=A0=C2=A0=C2=A0 struct iio_chan_spec *chan);
+> =C2=A0
+> =C2=A0/**
+> =C2=A0 * struct ad7606_chip_info - chip specific information
+> @@ -66,6 +68,7 @@ typedef int (*ad7606_sw_setup_cb_t)(struct iio_dev *ind=
+io_dev);
+> =C2=A0 * @init_delay_ms:	required delay in milliseconds for initializatio=
+n
+> =C2=A0 *			after a restart
+> =C2=A0 * @offload_storagebits: storage bits used by the offload hw implem=
+entation
+> + * @calib_gain_setup_cb: callback to setup of gain calibration for each =
+channel
+> =C2=A0 * @calib_offset_avail: pointer to offset calibration range/limits =
+array
+> =C2=A0 * @calib_phase_avail:=C2=A0 pointer to phase calibration range/lim=
+its array
+> =C2=A0 */
+> @@ -81,6 +84,7 @@ struct ad7606_chip_info {
+> =C2=A0	bool				os_req_reset;
+> =C2=A0	unsigned long			init_delay_ms;
+> =C2=A0	u8				offload_storagebits;
+> +	ad7606_calib_gain_setup_cb_t	calib_gain_setup_cb;
+> =C2=A0	const int			*calib_offset_avail;
+> =C2=A0	const int			(*calib_phase_avail)[2];
+> =C2=A0};
+>=20
 
