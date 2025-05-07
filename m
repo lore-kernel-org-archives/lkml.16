@@ -1,75 +1,58 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B372E28A3F3
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 15:22:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A469C28A406
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 15:23:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746631368; cv=none; b=PXRHaIaGEn+3KVxY7kzIR1sjDyTuIeLT4iGB7rjOWA2gJvTuer/gle0Nu7sVzOxTvWjKWU9goTb0P4UKhLDt0x8bnaSo68hAYPer6XjXCyMD9u+zF25lYmkw4xqKaT5aRMXHyTj/F9KM5UC+PBDyoY1SLNRRn5A0A7IygrWf2LY=
+	t=1746631385; cv=none; b=qRX0A2dLXJNoXxh30iNIHTG4SJo7HeLi5JWkFfisc0hNh6RNRg+TRv2X6SvHB0jmcwOvV0vfDcVojt3H3pXRwd8Lw7Ioh8roi5isVu+704YuYRIhTdtkQg/2zsqXbCQ4VsSN+CTUXe4EoaTtVFkIKjkWa3USrUZlM9MXfGcqfmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746631368; c=relaxed/simple;
-	bh=KsXBCAzYAm7pVlD0gbTLEZssWdGKKtfQ2zkhoFDxo/U=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Soxr5y236tGEARERy8kMXi5H8kLDpQdsY1OSJVxDFgzsJyr6FXNIEtCjXokQBklBs5fYI1sBHd+dN/ICccAUxnG2zgnkNlktJpPjJIJP1haf6sJ9YxniCshLqb2qTned0vhFDf4MMgg5VZe8Td2VPoT0wCqPPMCpJc2oCqGETq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P+dgEpUD; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746631385; c=relaxed/simple;
+	bh=Zgmr6iJd8g+KzK5o4rT/ELhK01dSOYofk9zzH8Ey8ic=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=ol/A7W5ljpJP38M1P52DqK4miR+UH64BkxH3stPgSGbtjxXJEgqvhDZCuXkHWYclc+6DCeYB7lsbgr6slc+CGNNMws2vKxHjeyfm9VCRXfPlSbdVOjP4vPQrRtc3Stwm8nme1HtaqmrTVNfOJ2AVmbiNBQyXp6pYCH0KF81tlrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fOciCNrz; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P+dgEpUD"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-549b159c84cso7937569e87.3
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 08:22:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746631365; x=1747236165; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=LBdHNH+wijP0uK7dXxU2Rf8QEIBUEILv5ndDAujqTqs=;
-        b=P+dgEpUD3uWgjwdxsiXDRxxvMrqbF8NlUq60DAG2v0x3ilnsNURDKbWgcAaJ3rRSNP
-         v/o4ukrDKrd1KqC/sdMWHIaHl5Hh6z1eTmdVma3VV4+zKH4L4ZT+/hs5gCABArfi0YPE
-         8sgw+FIzOz8LQjCFOwQJzqibl35kzsLMh/UofGuUMlaUOPRXeuw/kxS8BfmOIRobIPgj
-         +9AsEABhCLldtCm3zij+q9frQF8c8ZAgM+SP7D2hM9qBbIFpJbrqGL2whVfd5a01Duy+
-         tyA6Dm5lreFDkL+S/LWnZUrxXoUt7MEYamtHWG3Tjt5mPmMDRj+aJbrcjefQYG8baqjx
-         s9vg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746631365; x=1747236165;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LBdHNH+wijP0uK7dXxU2Rf8QEIBUEILv5ndDAujqTqs=;
-        b=XvcEn1OqV9FSqiGBnHFhVQEAkhJo74yCv/X7yDZjJAgGsNu0Rbgx07vY4sX4+BSM28
-         15FJ1hqwLqc8RESvFyWeN+L4NPPHvqws+SmhyTBlb/aypG+F9eJ+rRycugq/izi1AlJA
-         3hBjI6u3GPDzro75phe+jCz36w7EpjYdvWbebNkw98Q8fnK91XgN4y7p/TNmQaxF5PwP
-         c+WQEyIF/1dc7OZZCgNjymsmDesCOSRJbanEkeKSWPwx9/2RUDpUHCdD1ex5qJwKH6Ps
-         mI/c/Sk4hyiVytHNY+SVRmdIVEEEKhSYXgPBz38ui1B4DBClVubhpV2bDSbxIkBqRYzp
-         kfXw==
-X-Forwarded-Encrypted: i=1; AJvYcCUmRB0D7Qfa+MLxOT37CkSUs0bLYigZPMm0Qy1AwNy+SBrf8ClT+OuAatKhXEjmFrh0DtH4/knbDvmtljg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWGxHpec/vZN2+LNnRpZiRhGi1y0r5lsQQLOkemRVGvVvqFat7
-	SD1wy5X2Uj3qZ/AqYLzrbw8Ev497BfdswEOHqStYxVbvgsnWtRKh
-X-Gm-Gg: ASbGncuFLBzohBd4SlJ0CAo1SLPTUaSn5//H2SniiD9JoMMcga2CFkLSxmoWoKPJqaa
-	1VSqxtzMS2NZ3wN1KNhN3cdCA8kpI0FkLUhGUUUgH6Sb4cr4p14sUAm2pW+8jWljF5X+8SPjyTk
-	MJpqHUE7xEsFsfIS9qwvIxEw47Y9iRB3yucBaAC3OwHx5QQiA0B0BcOZaSjxzcHriIklZirjbsr
-	Ns2FsIBDObjjh05GljZ6Z+T3f48JRw7VhAV9lSqXGwH0KHAvUy2YGqPducoilmFrK9po3M7UT0R
-	rY1XKdbZ6m42B+nLj3mhWKz1M6MMTgBmRmjdI3u4aAAJo+wYIZy7WgALUqBlHwesQle7
-X-Google-Smtp-Source: AGHT+IFYCONGk6yUZbJnMblegVh62d9CkAE7qLluLxjADFGfOZMr0lygyWdyLCwlzCLb0YOIu4j2OA==
-X-Received: by 2002:a05:6512:3e1e:b0:54e:a2f8:73da with SMTP id 2adb3069b0e04-54fb95fb807mr1369658e87.18.1746631364462;
-        Wed, 07 May 2025 08:22:44 -0700 (PDT)
-Received: from pc636 (host-95-203-26-253.mobileonline.telia.com. [95.203.26.253])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ea94ee121sm2360264e87.131.2025.05.07.08.22.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 08:22:43 -0700 (PDT)
-From: Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date: Wed, 7 May 2025 17:22:41 +0200
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	David Hildenbrand <david@redhat.com>, Baoquan He <bhe@redhat.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>
-Subject: Re: [PATCH] MAINTAINERS: Add myself as vmalloc co-maintainer
-Message-ID: <aBt6wSI_kwwrjjzy@pc636>
-References: <20250507150257.61485-1-urezki@gmail.com>
- <08c24a55-ef7a-462f-9296-f3b0374d885a@lucifer.local>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fOciCNrz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746631383; x=1778167383;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=Zgmr6iJd8g+KzK5o4rT/ELhK01dSOYofk9zzH8Ey8ic=;
+  b=fOciCNrzxvFsfxd1i6RnGDnVtougFqKahW7D34Kwj06Zek8rlvwN/a2F
+   DmdW4TO5n/rc97QiDs/7FjRBJBaPN+0UZo+x0bqUhh1d1n8tW0pBZJOFf
+   oj0WSIo58+0nLaP2JkUp9U4lH4YPMZsbaE/EMkXTwbauROm3K1atAL5Ss
+   Ipb5z2BmwHqvRbvt37LE2idCcWnbomyflVu7gBZsFeDjVEdvA4oMOAoND
+   j8ZmpCYFeQza50/2KHZweB2otaD5Z6K8JtWzOB1lzuEpI6Yp3nwCG2RDC
+   zeDm74iU2ndKsAXiYdsQIV+nttNAOYu22NXqLOrgKuHKAru+vCpJaZxLv
+   A==;
+X-CSE-ConnectionGUID: 74uG4hwARLynV10MAX5OMg==
+X-CSE-MsgGUID: yXoGOgV+Q3yIHadaiMaAjA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="52186926"
+X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
+   d="scan'208";a="52186926"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 08:23:03 -0700
+X-CSE-ConnectionGUID: SQZhonD9SmSnwxX7tMw4lQ==
+X-CSE-MsgGUID: iJ5SNU+pR9exN/yj1i6iTA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
+   d="scan'208";a="173179086"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa001.jf.intel.com with ESMTP; 07 May 2025 08:23:01 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uCgbr-00084H-2k;
+	Wed, 07 May 2025 15:22:59 +0000
+Date: Wed, 7 May 2025 23:22:32 +0800
+From: kernel test robot <lkp@intel.com>
+To: Palmer Dabbelt <palmer@rivosinc.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: ld.lld: error: insufficient padding bytes for R_RISCV_ALIGN: 4 bytes
+ available for requested alignment of 8 bytes
+Message-ID: <202505072328.Xo8JNSdv-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,24 +61,27 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <08c24a55-ef7a-462f-9296-f3b0374d885a@lucifer.local>
 
-On Wed, May 07, 2025 at 04:06:04PM +0100, Lorenzo Stoakes wrote:
-> On Wed, May 07, 2025 at 05:02:57PM +0200, Uladzislau Rezki (Sony) wrote:
-> > I have been working on the vmalloc code for several years,
-> > contributing to improvements and fixes. Add myself as
-> > co-maintainer ("M") alongside Andrew Morton.
-> 
-> Thanks for your great work there :)
-> 
-Thanks :)
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   0d8d44db295ccad20052d6301ef49ff01fb8ae2d
+commit: d4b500cceb0e09ae22722d41454df6012848062b Merge patch series "riscv: 64-bit NOMMU fixes and enhancements"
+date:   1 year ago
+config: riscv-randconfig-r113-20250428 (https://download.01.org/0day-ci/archive/20250507/202505072328.Xo8JNSdv-lkp@intel.com/config)
+compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
+reproduce: (https://download.01.org/0day-ci/archive/20250507/202505072328.Xo8JNSdv-lkp@intel.com/reproduce)
 
-> >
-> > Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
-> 
-> Acked-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> 
-Thank you!
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505072328.Xo8JNSdv-lkp@intel.com/
 
---
-Uladzislau Rezki
+All errors (new ones prefixed by >>):
+
+>> ld.lld: error: insufficient padding bytes for R_RISCV_ALIGN: 4 bytes available for requested alignment of 8 bytes
+>> ld.lld: error: insufficient padding bytes for R_RISCV_ALIGN: 4 bytes available for requested alignment of 8 bytes
+>> ld.lld: error: insufficient padding bytes for R_RISCV_ALIGN: 4 bytes available for requested alignment of 8 bytes
+>> ld.lld: error: insufficient padding bytes for R_RISCV_ALIGN: 4 bytes available for requested alignment of 8 bytes
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
