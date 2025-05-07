@@ -1,147 +1,155 @@
-Received: from fhigh-b1-smtp.messagingengine.com (fhigh-b1-smtp.messagingengine.com [202.12.124.152])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F340428C005;
-	Wed,  7 May 2025 17:11:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13B0528C2D9;
+	Wed,  7 May 2025 17:11:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746637882; cv=none; b=as2kvohVP7lJwSzNfGOvdpK/N8hGQQad1C/qKDr0tfCE67eMr1uA0WlmEjIbAOFJrqoUkttlR4R93UnpJtGd4Kb3qlTsI+xSt6/PYV3Hz5P4a3WcGhQ8ZQ8LmJKn8zBZ0pvWc5e2RjJd1S0oyfNdrMs8bV70cMA/W/VWs85gNYE=
+	t=1746637911; cv=none; b=fduqz343XWfHHWpzD/Rwpg8jNfbJdETHU7j3XqjwAucfczIPs/P0MgjHWs5SWQCvkNz+5xd79J7po+OyAP3m5c/9dkm2ahXqIm3B0xKG6SC3Nn3yakg7kKd6lS/Y0dmdgo/DkxihsSWMRv4YuGgtW3HNmiMnhpUveKjQzeHCtZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746637882; c=relaxed/simple;
-	bh=PtOzak8p1izoQ8d/3FjSq3y4ospvl2h2KBvgXERvZGQ=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=rxFEiTLQTDuioj8s3jwMW3lJo736OLrsT8wNDDvbii0RQvh0z2hKce/H0TQ0gizLx33qo1HzaT92gdkWgRpSz4dwejtGgvaBEHwKW6NN2k60tlhxYjYsEMgp97Dc8J1x5tesJrfo2GQkgYWtaq5ERRGk28OS2KRiHRYqOL4tKw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=TD8MeoFX; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=pV1thzWp; arc=none smtp.client-ip=202.12.124.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1746637911; c=relaxed/simple;
+	bh=01g0vR5Y37xAGx08Fr4VE89WVCzfi2VfUVm/Hs0vfvY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=Z3WFHbbmn8fG23QNENrVURBQJ/mI7E7UWolIwqpWzozeuvSMTXVEK8REQJtorR/c4xaiokYQIEcrQRhE7bmVTqpqJcsUDOSC6ylGEVO2jTn7cQs2XGWM4zgnJtfLH0iijw18GQKY6p3kdrjAN2mEgIgb23GsOhAMRlIk/IipAmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=M4BY5g45; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="TD8MeoFX";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="pV1thzWp"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 8BF492540051;
-	Wed,  7 May 2025 13:11:16 -0400 (EDT)
-Received: from phl-imap-12 ([10.202.2.86])
-  by phl-compute-05.internal (MEProxy); Wed, 07 May 2025 13:11:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1746637876;
-	 x=1746724276; bh=CxmqSZ1AK7yBB5MUSaTIQdTYBYRu6YuDz5DPNt9zgX8=; b=
-	TD8MeoFXIn00Al80JI5XHSktYNRxRkcus3vLgbmGgVz/giA9jWsvGiRPlTSCF62R
-	SPRPCKSZRQlHnqrghPxoXESn/AHD/YE1gUnSm0TPa+hl9YnQr9TMlpylF5vWEZX8
-	70qpjziLPxUlyAzY1B5J7wvSqNRwFbYdweccbt3XJn+9+k1P+lobGddJVYmLa1vz
-	f5DTv6Fg1fntIA9WvjDC6PUZD+CEpnca1iqH/BUoUWhv8QSbtrEzzplIbgRl0+SY
-	ii7Q3/z5vPrWEJoBXeHPzdAg3A11bUV1Zd2RoBpsZy1b204Vy6Xc3zb1FDbPjTpH
-	96TCuaqbNvBJSrppI+aHZA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1746637876; x=
-	1746724276; bh=CxmqSZ1AK7yBB5MUSaTIQdTYBYRu6YuDz5DPNt9zgX8=; b=p
-	V1thzWp7eesDXNbedrvkD1iAzNrHo/OXQuyk/CTNDbUB+BHkdY3atJMJwoSezu02
-	O4pnKco6LMh9FNLV7pk18A4UOAnpAY1mtF3VnIlrqJo5RH6Xgj+sgXxcxvkCQVHI
-	byWwyEArtM+8aRcyavpO8F1LmkYQ3yZqRXURUYvTkEP9MnQkNqaOmCnsd2ZNi0sk
-	9m4Gylxw3oUWGoxvaLnzD/NTje+gr23mwgyYsu1vOmrV134NBWjavDveRBY2WMtT
-	4BMGlou69/KJYdDRuWwrCwjc33W2rSSdXsZgxviuKgGy388ml3+dNHxlMjirIsJ0
-	DfR+Nmbaemm9s+ZVK6slg==
-X-ME-Sender: <xms:M5QbaPsMwqf-pS3_653FHCGaoz9P_YagO9WpOIr_TpM7OBMshiq_TQ>
-    <xme:M5QbaAclo64on0zQsOgWsim3nNFSsWsbwLz5rO_ZRdznEhjkpTdGFzmYF4OGFS7o5
-    jMDYxSHyYiXwfBdq00>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeejgedvucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtqhertder
-    tdejnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
-    gsrdguvgeqnecuggftrfgrthhtvghrnhepkedvuefhiedtueeijeevtdeiieejfeelveff
-    feelkeeiteejffdvkefgteeuhffgnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenuc
-    evlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnuges
-    rghrnhgusgdruggvpdhnsggprhgtphhtthhopedugedpmhhouggvpehsmhhtphhouhhtpd
-    hrtghpthhtoheprghmvghrghhnrghtsegsrgihlhhisghrvgdrtghomhdprhgtphhtthho
-    pegrnhhgvghlohhgihhorggttghhihhnohdruggvlhhrvghgnhhosegtohhllhgrsghorh
-    grrdgtohhmpdhrtghpthhtohepnhhfrhgrphhrrgguohestgholhhlrggsohhrrgdrtgho
-    mhdprhgtphhtthhopehlghhirhgufihoohgusehgmhgrihhlrdgtohhmpdhrtghpthhtoh
-    epmhgrthhthhhirghsrdgsghhgsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghrnhgu
-    sehkvghrnhgvlhdrohhrghdprhgtphhtthhopegsrhhoohhnihgvsehkvghrnhgvlhdroh
-    hrghdprhgtphhtthhopehlihhnuhigqdgrrhhmqdhkvghrnhgvlheslhhishhtshdrihhn
-    fhhrrgguvggrugdrohhrghdprhgtphhtthhopehlihhnuhigqdhmvgguihgrthgvkheslh
-    hishhtshdrihhnfhhrrgguvggrugdrohhrgh
-X-ME-Proxy: <xmx:M5QbaCxmjxrDE9yrJxbt3PHNCP8k3VIrNux4v48ofmIojq2f1xZpTA>
-    <xmx:M5QbaON0TcKXLcysSxt8BPSKohLTEKYCDL-UG7QhOOUFuV0kJJ8CPQ>
-    <xmx:M5QbaP96hilH0TkMGS83WQ_pdM_Cx1a2PteS4DivZVflYIq3ug8fdQ>
-    <xmx:M5QbaOUUvoZp3p8jSEdBS3unBjEDzBoQ7uGr-oRHGh87eakDVvUgaQ>
-    <xmx:NJQbaLcnpQ6jhKJ4Hm6Hmzq6JnU4oeNA91IBLkIWJGTncBLWZdNMWR6l>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id F40F51C20067; Wed,  7 May 2025 13:11:14 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="M4BY5g45"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 547BVQAX018441;
+	Wed, 7 May 2025 17:11:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=agrYSTseFHfSuTEK3ZGWQ2
+	w7ZU8sPNQ9rkfI2JzqG+k=; b=M4BY5g45pVgSRzsCYjlQxXfaT50i9hxCC+p3fK
+	IKLbQHyaOYGuUY+ew8IKNhMi0oos0pqhZ2k2/iu4UdhFxiTIGXXGt+ZV0rQMEhJO
+	3WYDJVTOAs46oYk1h1Gloo/YKPtY/SR+grIQ+mFMjoOP5nbpWiDnhtRcD4HVmbup
+	Mz+t8i0vl7xKAllLglkX4ViFhMS1uWMYHuwJBJ3rGFkFtX/uwx3xsFcpa9NlVu64
+	Uvnon6dJ5a2qIrzNXg16YooPH4E0oUgCdzvZVbW08FWWW9WROX87F8X3JOVHIK2L
+	eWqmyyQdejYGDraXBqlseFzn9HKLmWx9qnBBG43JwQAQ6hzw==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46f5tbehc4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 07 May 2025 17:11:35 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 547HBYS9012616
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 7 May 2025 17:11:34 GMT
+Received: from hu-rajkbhag-blr.qualcomm.com (10.80.80.8) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Wed, 7 May 2025 10:11:31 -0700
+From: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
+Date: Wed, 7 May 2025 22:41:19 +0530
+Subject: [PATCH ath-next] wifi: ath12k: fix memory leak in WMI firmware
+ stats
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T2abdfe4f2fd01522
-Date: Wed, 07 May 2025 19:10:54 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: =?UTF-8?Q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>,
- "Arnd Bergmann" <arnd@kernel.org>
-Cc: "Mark Brown" <broonie@kernel.org>, "Liam Girdwood" <lgirdwood@gmail.com>,
- "Jaroslav Kysela" <perex@perex.cz>, "Takashi Iwai" <tiwai@suse.com>,
- "Matthias Brugger" <matthias.bgg@gmail.com>,
- "AngeloGioacchino Del Regno" <angelogioacchino.delregno@collabora.com>,
- "Alexandre Mergnat" <amergnat@baylibre.com>,
- "Zoran Zhan" <zoran.zhan@mediatek.com>, linux-sound@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-Message-Id: <86a3a0ab-be37-4b4d-a5a5-32d09c1a75ce@app.fastmail.com>
-In-Reply-To: <d9642581-3fed-47d8-9661-4335ec1e9c27@notapiano>
-References: <20250505052106.1811802-1-arnd@kernel.org>
- <d9642581-3fed-47d8-9661-4335ec1e9c27@notapiano>
-Subject: Re: [PATCH] ASoC: mediatek: mt8188-mt6359: select CONFIG_SND_SOC_MT6359_ACCDET
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20250507-fw-stats-mem-leak-v1-1-8d4d1d8ec0e8@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIADaUG2gC/x3MQQrCMBBA0auUWTsQa2OCV5Eu0nRqBm2UzGADp
+ Xc3uHyL/3cQKkwCt26HQl8WfueG86mDmEJ+EPLcDL3prbHG4bKhaFDBlVZ8UXhi9G66XvxgrI3
+ Quk+hhev/eYegCTNVhfE4fifaDq1tAAAA
+X-Change-ID: 20250507-fw-stats-mem-leak-c87b6384055c
+To: Jeff Johnson <jjohnson@kernel.org>,
+        Aditya Kumar Singh
+	<aditya.kumar.singh@oss.qualcomm.com>,
+        Rameshkumar Sundaram
+	<rameshkumar.sundaram@oss.qualcomm.com>,
+        Mahendran P <quic_mahep@quicinc.com>
+CC: Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+        <linux-wireless@vger.kernel.org>, <ath12k@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        P Praneesh <praneesh.p@oss.qualcomm.com>,
+        "Raj Kumar Bhagat" <quic_rajkbhag@quicinc.com>
+X-Mailer: b4 0.14.2
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: Z0OaoMYWLP7ZoUJGSl0mouhhNMhQqjDG
+X-Proofpoint-GUID: Z0OaoMYWLP7ZoUJGSl0mouhhNMhQqjDG
+X-Authority-Analysis: v=2.4 cv=doXbC0g4 c=1 sm=1 tr=0 ts=681b9447 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8
+ a=COk6AnOGAAAA:8 a=owKwsHGNvYRs9xEUnEQA:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA3MDE1OSBTYWx0ZWRfX2jRu4vIzDDP+
+ Jt5w0Y+Wk8vkZzEJAPjdihuGhuiZCRoXpM0imtMyJsGCkp4N7RwkX3zmaWKDTUhKvFo4UmfwNYt
+ yZhdVDDxAjnQoQEModd2T3Q7MgHlVEleZbRnPZFYCFHmSde+I1x+yX3Xokr7NUwfL2MS/vZGS7o
+ 5CzHi+NtyG+xR9TLEuyR3dECoOAnDBkY/i/inRgv42rwYyVA+If1sg4+HYzt2R15v575QDztcSA
+ V7Etd5qsqrzM8wqDlI9Zyin4+q+H9HqbburWoc0d+Rc1unmZDlGv7AGQ3Ioel33gQ4x7RRKlRZ+
+ F7xKruxgZJ6xFgynIL2FQqfCdkmUn8NjF4itiGuRzzcsx7oruWpcLpPemB6R69A+cV4kwdo4a/C
+ V0M6U9hkrOXspYLIUnSKXKWM+hdk7aEn/kMvTbTPQyVINIMZWNogFxpN87oLCw9VUpT/zQQ1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-07_05,2025-05-06_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 bulkscore=0 adultscore=0 malwarescore=0 phishscore=0
+ mlxlogscore=999 impostorscore=0 clxscore=1015 mlxscore=0 priorityscore=1501
+ spamscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505070159
 
-On Wed, May 7, 2025, at 18:41, N=C3=ADcolas F. R. A. Prado wrote:
-> On Mon, May 05, 2025 at 07:20:52AM +0200, Arnd Bergmann wrote:
->> From: Arnd Bergmann <arnd@arndb.de>
->>=20
->> The driver support was added without selecting the codec, which leads=
- to
->> a link failure:
->>=20
->> aarch64-linux-ld: sound/soc/mediatek/mt8188/mt8188-mt6359.o: in funct=
-ion `mt8188_mt6359_init':
->> mt8188-mt6359.c:(.text+0x19f0): undefined reference to `mt6359_accdet=
-_enable_jack_detect'
->
-> Hm, I cannot seem to reproduce this. I just tried to build on today's =
-next with
-> CONFIG_SND_SOC_MT6359_ACCDET disabled and have tried
-> CONFIG_SND_SOC_MT8188_MT6359 both =3Dm and =3Dy, but in both cases it =
-compiles fine.
+From: P Praneesh <praneesh.p@oss.qualcomm.com>
 
-The config that failed for me had CONFIG_SND_SOC_MT6359_ACCDET.
+Memory allocated for firmware pdev, vdev and beacon statistics
+are not released during rmmod. Below kmemleak trace is seen for this
+memory leak:
 
-> I wonder if somehow your tree was missing "ASoC: mediatek: mt6359: Add=
- stub for
-> mt6359_accdet_enable_jack_detect" [1]
+unreferenced object 0xffff8e76aebdfa00 (size 256):
+  comm "softirq", pid 0, jiffies 4299272453
+  hex dump (first 32 bytes):
+    28 19 71 c3 76 8e ff ff 28 19 71 c3 76 8e ff ff  (.q.v...(.q.v...
+    9f ff ff ff f4 d4 03 00 aa 88 09 00 bd 40 23 00  .............@#.
+  backtrace (crc dfe1b440):
+    __kmalloc_cache_noprof+0x2b0/0x370
+    ath12k_wmi_tlv_fw_stats_data_parse.isra.0+0x44e/0x730 [ath12k]
+    ath12k_wmi_tlv_iter+0x5e/0x140 [ath12k]
+    ath12k_update_stats_event+0x85/0x300 [ath12k]
+    ath12k_wmi_op_rx+0x624/0xd70 [ath12k]
+    ath12k_htc_rx_completion_handler+0x1f4/0x330 [ath12k]
+    ath12k_ce_recv_process_cb+0x218/0x300 [ath12k]
+    ath12k_pci_ce_workqueue+0x1b/0x30 [ath12k]
+    process_one_work+0x219/0x680
+    bh_worker+0x198/0x1f0
+    tasklet_action+0x13/0x30
+    handle_softirqs+0xca/0x460
+    __irq_exit_rcu+0xbe/0x110
+    irq_exit_rcu+0x9/0x30
+    common_interrupt+0xa7/0xc0
+    asm_common_interrupt+0x26/0x40
 
-> https://lore.kernel.org/all/20250306-mt8188-accdet-v3-3-7828e835ff4b@c=
-ollabora.com/
+Fix this by calling ath12k_fw_stats_reset() before hardware unregister.
 
-I had not seen that patch, but with that applied, my patch needs to
-be revised as well. If the idea is that CONFIG_SND_SOC_MT8188_MT6359
-can work correctly without CONFIG_SND_SOC_MT6359_ACCDET, it should be
+Tested-on: QCN9274 hw2.0 PCI WLAN.WBE.1.4.1-00199-QCAHKSWPL_SILICONZ-1
 
-      depends on SND_SOC_MT6359_ACCDET || !SND_SOC_MT6359_ACCDET
+Fixes: b8a0d83fe4c7 ("wifi: ath12k: move firmware stats out of debugfs")
+Signed-off-by: P Praneesh <praneesh.p@oss.qualcomm.com>
+Signed-off-by: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
+---
+ drivers/net/wireless/ath/ath12k/mac.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-in order to force SND_SOC_MT8188_MT6359=3Dm if the ACCDET portion
-is in a loadable module.
+diff --git a/drivers/net/wireless/ath/ath12k/mac.c b/drivers/net/wireless/ath/ath12k/mac.c
+index 4dae941c9615cf19e6cc2ed1bd72a6bf1cb812ca..5a14e4241e25d40173a7315f4407826ec412fe59 100644
+--- a/drivers/net/wireless/ath/ath12k/mac.c
++++ b/drivers/net/wireless/ath/ath12k/mac.c
+@@ -11374,6 +11374,7 @@ static void ath12k_mac_hw_unregister(struct ath12k_hw *ah)
+ 	for_each_ar(ah, ar, i) {
+ 		cancel_work_sync(&ar->regd_update_work);
+ 		ath12k_debugfs_unregister(ar);
++		ath12k_fw_stats_reset(ar);
+ 	}
+ 
+ 	ieee80211_unregister_hw(hw);
 
-If SND_SOC_MT8188_MT6359 requires SND_SOC_MT6359_ACCDET to work
-correctly, then my original patch is still needed and yours
-should be reverted.
+---
+base-commit: 21346cd925c2567d5f56cdb1421c94815ac10221
+change-id: 20250507-fw-stats-mem-leak-c87b6384055c
 
-     Arnd
