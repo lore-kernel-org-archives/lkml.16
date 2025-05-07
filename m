@@ -1,250 +1,118 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA753288C86
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 13:42:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72F2B1519B4
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 13:44:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746625380; cv=none; b=OmtbqiMrG3I9LX7h74UKjjkumhs+C81+nKBQK5X79K5Co6ZZJBGiKU2TYKYKb/u0GRSwWcyVu+K2UvCuhfJARasNUPtIJ0qFE2P0b+zsA3dxjDAvvrImBisbuuuOFViEzdXd18bHlSqtAbhoWW9tZdcnF9Urx3VgyXWbSAUOeRk=
+	t=1746625445; cv=none; b=KT2AIWGUvUbZ8Irzl3SHngxM9b6MfB9GBGT7Im0lLFxjinjdPw869Xk8BuR8d//cUwsVcriZeE7+S+7EP3uJ84+xYf/BSH5amDKJfLnCYXPpeM+NZDpx8OMQ0CFOwQ+OyC8n8zs4DMQAuALj14jKaR49ZmGPeoU18MiRNgTLgXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746625380; c=relaxed/simple;
-	bh=gfPEo3NWV+W3SYgvOno1DoPJozINMpxeXLT70lEApEQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DlKZ1iW6LhJFvS5WxPUMArEKYj8BnWjqZlTTKmq+9D3zHQHxi0IlI2wpZZZh6MllHRFC7md5FA5Dami37i3S2SX2lNwljvKqX75pi0werb9WWyjVnruQmImNBMwVfBL9FVKwZevhPFqvJaeV2H9DTFjZqpOEE574rpiehmOtvxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UCuTsq7u; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UCuTsq7u"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2295d78b45cso89352695ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 06:42:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746625378; x=1747230178; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=yEzvyaIeUWfNh53adg2EagZhMh381tDgk6SX1hFdB3s=;
-        b=UCuTsq7uyzUXnNg45kvwVzwBi0ZuGWMKWXELsrAWwTZIg9GLbgnOkkf4DZ4qkd21us
-         5+igOHx35kNlAFa0wXG+kG0YDvVP6tyaryohMNNRbHdzGh+ec96BUIKuBYokgfHR+ujc
-         PIkvKKJrwB2ncTLEKor1O6XFfihm+HWoBchIu+FIN9/Nx2qhNWxVr5NDZg1YW1kgJoUH
-         QwKab62fiMz5svIZnhoml9upDxrXKLcbyBwRjq6UsasioGHL8D7jhXliNcB1G1Szoq3J
-         50BuTfHDyKeTsDg9c00PfmXMqut1/nhdmsB4P6L67lvaNZZZnrGv62LE+2cdwLJEMIc2
-         /WDw==
+	s=arc-20240116; t=1746625445; c=relaxed/simple;
+	bh=bU6M64ozOuHXh4rzHPfcADY+m10TphbPzKq2+bK8xbQ=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=V3y1NbOwMhpoqHsQk033Io53Vzbo8fY+JYq/+7S/devx+Co6OSwgpkb76aTnjpY/Rlpm0d0RuJp1ncMoEcy0bS4NN3hVpLIX1k4ERb/iLaKo3JhpEuTZqKv12f7f1W1xX7SMwEa/wMksu8DY6rp/luB+dcAMh5Pmmx5McbXlb6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3d81820d5b3so129208355ab.3
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 06:44:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746625378; x=1747230178;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yEzvyaIeUWfNh53adg2EagZhMh381tDgk6SX1hFdB3s=;
-        b=mcHKHFlDK5Qd7k9D3gxFntRCgqoVz3852kEUfagBUmwyqUvmuAiGBfwVXrWs2OYXVz
-         EqvZDyVZEtS4j4nS13LXAgQ4CKdMXnh7QIUm+jpEkV25dWB8n5V8aYue0YMW27oKDM9T
-         9qJKewRDnoAJLNGTaWZCsoKBkmtyT88LQfS807Inx7IL/ea+2AMxvbDdzlN+GgZ6tluV
-         C+vcwZ4T20ItXWTCWHW6Wxe2vjLRrVgnIg03q4TOC0H4eDdP5TBkJHdY9H87BvX/Mk4u
-         TjRUjJyhvntFVRl3uNA8JW8qkiyDrYYlNlnA+SlnLZGy9S5VmuXMcDh47WJ9EYcQ6qx1
-         wP3A==
-X-Gm-Message-State: AOJu0Yy9gf7+9GllAl4wzkDv6ezNUXIlAWnQ9JGGgQXGMzM1tK99xfB0
-	cYlwE1FHrFzocJUFR/zVZ+H5qNf2P097cJnl7Adn7XVjriF4iaP1
-X-Gm-Gg: ASbGncs5CM7/k4cXSHPuBvDFH1WFKTFWkXHasURzKQAy+lWUbRcp5RMoOH3BA9F8ISn
-	1f7vkOxZopGBGlrd7ea8aM4t7+hQpxFXv+Spr8xRT07DwVeLsh/lwjDszHaeoqodt+6sAmiJTOi
-	5eo/VlAvG0VTcGFw8/4j5foA/1pH17PomqqFQ5B5yDzsQ2zjwQQOH9u0/PixVq1MKJ3kPP7e4co
-	gB+h8eXo6Dzdg3j6ygDSwWlzef/RxtBegHidsVmlR2rjT8LQ80Jz8Gb/zF174OyDJbTZASyPoDi
-	Vi//M8n9LaRgnoEQrU/5cmgcFq/WrMkDszYiUtaoCa95OGoc2EJIT2W9I+PxA4jAaWWYy2l55O+
-	yrA4=
-X-Google-Smtp-Source: AGHT+IEtopYEefji9CmKqJVqq5f/UbbRIeFFfRk5+aAht1G3nCJXbk0iUS2A6pAUVDK6e5pGv1om8g==
-X-Received: by 2002:a17:903:1095:b0:22e:6791:1b9a with SMTP id d9443c01a7336-22e67912081mr23644605ad.0.1746625377856;
-        Wed, 07 May 2025 06:42:57 -0700 (PDT)
-Received: from KERNELXING-MC1.tencent.com ([114.253.36.190])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e5d633ccesm19404405ad.228.2025.05.07.06.42.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 06:42:57 -0700 (PDT)
-From: Jason Xing <kerneljasonxing@gmail.com>
-To: johannes@sipsolutions.net,
-	joonas.lahtinen@linux.intel.com,
-	rodrigo.vivi@intel.com,
-	tursulin@ursulin.net,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	m.chetan.kumar@intel.com,
-	loic.poulain@oss.qualcomm.com,
-	ryazanov.s.a@gmail.com,
-	axboe@kernel.dk,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	viro@zeniv.linux.org.uk,
-	akpm@linux-foundation.org,
-	zanussi@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Jason Xing <kernelxing@tencent.com>,
-	Yushan Zhou <katrinzhou@tencent.com>
-Subject: [PATCH] relayfs: abolish prev_padding
-Date: Wed,  7 May 2025 21:42:25 +0800
-Message-Id: <20250507134225.63248-1-kerneljasonxing@gmail.com>
-X-Mailer: git-send-email 2.33.0
+        d=1e100.net; s=20230601; t=1746625442; x=1747230242;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=iDa93ES83plZpL7tb6k2OHPH5S1SQ+Bz65S5AwwmaB4=;
+        b=ieQSwq1RN8ksvo5sg+tkYHzVDpaiZyZXk5Q0Hm6BuecpzKLhyKba/hhsrNHL0T4qxr
+         qfYe8OjVjpsl4fjrlkMtp6rbI20inRdbff5xhN2cgp3nwXbf6h3WipyEgum3uZ/CoXPO
+         y/aUXnAjVoMAabKNGH3fkGGNkkPWYw865PpQ5qDnPqrhl1uVGpRwJNF6vwr3aNLJjXWx
+         7GiBaMfr44rDV49gXNBunl/r9MsEtYX8M+BK0meh6L/wA0Tv6GGt/RKKM8KU4U3uQQ98
+         3ETeaMFH5isB7XGn6R1z+Sr2pla7L9N20Zyu/6mVVFWpFjTR9KUxu7z47CU/IOqKhCcX
+         LOOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWDcibWXYjmQjhrn93lT+jt1B4Z3t+AUZzV1UbezNIrk1M28CVjMBuxzJd4FhFPSKf4A+wJO6Azj/JGP00=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxcnWNVS9czMf053LOOfr7z2GYwU+NVbNmR/GA83xR1vs/WPxeG
+	GHrUrnWh1NhLVEm3QXFHnBgBE7DRQaMzaSZOkRjE6/P6l5augl2v6yUIm40iCP/DBK6WkHNcL71
+	Noi8UbJreyqY8D+4Tr9qczuU1ayQt4U+UKzU+0zlJt4hUMmt3bMXWBJ8=
+X-Google-Smtp-Source: AGHT+IG0QsNl8GqWWKtOKaV2g1S4lDM/OBbuYY9h9Npkr0TqZ/4CCoBU6/ffn6MunDHRUwLdvmDYSAxtdJ13ywbtIlwvcYBxjTmv
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:258e:b0:3d9:6c9a:f363 with SMTP id
+ e9e14a558f8ab-3da738f9654mr28445295ab.6.1746625442548; Wed, 07 May 2025
+ 06:44:02 -0700 (PDT)
+Date: Wed, 07 May 2025 06:44:02 -0700
+In-Reply-To: <tencent_E9E91EEE86CD84787A6EF82C196CD494640A@qq.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <681b63a2.050a0220.a19a9.0021.GAE@google.com>
+Subject: Re: [syzbot] [wireless?] UBSAN: array-index-out-of-bounds in ieee80211_request_ibss_scan
+From: syzbot <syzbot+4bcdddd48bb6f0be0da1@syzkaller.appspotmail.com>
+To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-From: Jason Xing <kernelxing@tencent.com>
+Hello,
 
-prev_padding represents the unused space of certain subbuffer. If the
-content of a call of relay_write() exceeds the limit of the remainder of
-this subbuffer, it will skip storing in the rest space and record the
-start point as buf->prev_padding in relay_switch_subbuf(). Since the buf
-is a per-cpu big buffer, the point of prev_padding as a global value for
-the whole buffer instead of a single subbuffer (whose padding info is
-stored in buf->padding[]) seems meaningless from the real use cases, so
-we don't bother to record it any more.
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+UBSAN: array-index-out-of-bounds in ieee80211_request_ibss_scan
 
-Reviewed-by: Yushan Zhou <katrinzhou@tencent.com>
-Signed-off-by: Jason Xing <kernelxing@tencent.com>
----
- drivers/gpu/drm/i915/gt/uc/intel_guc_log.c |  3 +--
- drivers/net/wwan/iosm/iosm_ipc_trace.c     |  3 +--
- drivers/net/wwan/t7xx/t7xx_port_trace.c    |  2 +-
- include/linux/relay.h                      |  5 +----
- kernel/relay.c                             | 14 ++++++++------
- kernel/trace/blktrace.c                    |  2 +-
- 6 files changed, 13 insertions(+), 16 deletions(-)
+wlan1: Trigger new scan to find an IBSS to join
+------------[ cut here ]------------
+UBSAN: array-index-out-of-bounds in net/mac80211/scan.c:1214:5
+index 0 is out of range for type 'struct ieee80211_channel *[] __counted_by(n_channels)' (aka 'struct ieee80211_channel *[]')
+CPU: 0 UID: 0 PID: 47 Comm: kworker/u4:3 Not tainted 6.15.0-rc5-syzkaller-00032-g0d8d44db295c-dirty #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+Workqueue: events_unbound cfg80211_wiphy_work
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
+ ubsan_epilogue+0xa/0x40 lib/ubsan.c:231
+ __ubsan_handle_out_of_bounds+0xe9/0xf0 lib/ubsan.c:453
+ ieee80211_request_ibss_scan+0x600/0x8b0 net/mac80211/scan.c:1214
+ ieee80211_sta_find_ibss net/mac80211/ibss.c:-1 [inline]
+ ieee80211_ibss_work+0xde7/0x1060 net/mac80211/ibss.c:1670
+ cfg80211_wiphy_work+0x2dc/0x460 net/wireless/core.c:435
+ process_one_work kernel/workqueue.c:3238 [inline]
+ process_scheduled_works+0xadb/0x17a0 kernel/workqueue.c:3319
+ worker_thread+0x8a0/0xda0 kernel/workqueue.c:3400
+ kthread+0x70e/0x8a0 kernel/kthread.c:464
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+---[ end trace ]---
+Kernel panic - not syncing: UBSAN: panic_on_warn set ...
+CPU: 0 UID: 0 PID: 47 Comm: kworker/u4:3 Not tainted 6.15.0-rc5-syzkaller-00032-g0d8d44db295c-dirty #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+Workqueue: events_unbound cfg80211_wiphy_work
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x99/0x250 lib/dump_stack.c:120
+ panic+0x2db/0x790 kernel/panic.c:354
+ check_panic_on_warn+0x89/0xb0 kernel/panic.c:243
+ __ubsan_handle_out_of_bounds+0xe9/0xf0 lib/ubsan.c:453
+ ieee80211_request_ibss_scan+0x600/0x8b0 net/mac80211/scan.c:1214
+ ieee80211_sta_find_ibss net/mac80211/ibss.c:-1 [inline]
+ ieee80211_ibss_work+0xde7/0x1060 net/mac80211/ibss.c:1670
+ cfg80211_wiphy_work+0x2dc/0x460 net/wireless/core.c:435
+ process_one_work kernel/workqueue.c:3238 [inline]
+ process_scheduled_works+0xadb/0x17a0 kernel/workqueue.c:3319
+ worker_thread+0x8a0/0xda0 kernel/workqueue.c:3400
+ kthread+0x70e/0x8a0 kernel/kthread.c:464
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
-diff --git a/drivers/gpu/drm/i915/gt/uc/intel_guc_log.c b/drivers/gpu/drm/i915/gt/uc/intel_guc_log.c
-index e8a04e476c57..09a64f224c49 100644
---- a/drivers/gpu/drm/i915/gt/uc/intel_guc_log.c
-+++ b/drivers/gpu/drm/i915/gt/uc/intel_guc_log.c
-@@ -220,8 +220,7 @@ static int guc_action_control_log(struct intel_guc *guc, bool enable,
-  */
- static int subbuf_start_callback(struct rchan_buf *buf,
- 				 void *subbuf,
--				 void *prev_subbuf,
--				 size_t prev_padding)
-+				 void *prev_subbuf)
- {
- 	/*
- 	 * Use no-overwrite mode by default, where relay will stop accepting
-diff --git a/drivers/net/wwan/iosm/iosm_ipc_trace.c b/drivers/net/wwan/iosm/iosm_ipc_trace.c
-index eeecfa3d10c5..9656254c1c6c 100644
---- a/drivers/net/wwan/iosm/iosm_ipc_trace.c
-+++ b/drivers/net/wwan/iosm/iosm_ipc_trace.c
-@@ -51,8 +51,7 @@ static int ipc_trace_remove_buf_file_handler(struct dentry *dentry)
- }
- 
- static int ipc_trace_subbuf_start_handler(struct rchan_buf *buf, void *subbuf,
--					  void *prev_subbuf,
--					  size_t prev_padding)
-+					  void *prev_subbuf)
- {
- 	if (relay_buf_full(buf)) {
- 		pr_err_ratelimited("Relay_buf full dropping traces");
-diff --git a/drivers/net/wwan/t7xx/t7xx_port_trace.c b/drivers/net/wwan/t7xx/t7xx_port_trace.c
-index 4ed8b4e29bf1..f16d3b01302c 100644
---- a/drivers/net/wwan/t7xx/t7xx_port_trace.c
-+++ b/drivers/net/wwan/t7xx/t7xx_port_trace.c
-@@ -33,7 +33,7 @@ static int t7xx_trace_remove_buf_file_handler(struct dentry *dentry)
- }
- 
- static int t7xx_trace_subbuf_start_handler(struct rchan_buf *buf, void *subbuf,
--					   void *prev_subbuf, size_t prev_padding)
-+					   void *prev_subbuf)
- {
- 	if (relay_buf_full(buf)) {
- 		pr_err_ratelimited("Relay_buf full dropping traces");
-diff --git a/include/linux/relay.h b/include/linux/relay.h
-index 72b876dd5cb8..f80b0eb1e905 100644
---- a/include/linux/relay.h
-+++ b/include/linux/relay.h
-@@ -47,7 +47,6 @@ struct rchan_buf
- 	unsigned int page_count;	/* number of current buffer pages */
- 	unsigned int finalized;		/* buffer has been finalized */
- 	size_t *padding;		/* padding counts per sub-buffer */
--	size_t prev_padding;		/* temporary variable */
- 	size_t bytes_consumed;		/* bytes consumed in cur read subbuf */
- 	size_t early_bytes;		/* bytes consumed before VFS inited */
- 	unsigned int cpu;		/* this buf's cpu */
-@@ -84,7 +83,6 @@ struct rchan_callbacks
- 	 * @buf: the channel buffer containing the new sub-buffer
- 	 * @subbuf: the start of the new sub-buffer
- 	 * @prev_subbuf: the start of the previous sub-buffer
--	 * @prev_padding: unused space at the end of previous sub-buffer
- 	 *
- 	 * The client should return 1 to continue logging, 0 to stop
- 	 * logging.
-@@ -100,8 +98,7 @@ struct rchan_callbacks
- 	 */
- 	int (*subbuf_start) (struct rchan_buf *buf,
- 			     void *subbuf,
--			     void *prev_subbuf,
--			     size_t prev_padding);
-+			     void *prev_subbuf);
- 
- 	/*
- 	 * create_buf_file - create file to represent a relay channel buffer
-diff --git a/kernel/relay.c b/kernel/relay.c
-index 5ac7e711e4b6..5aeb9226e238 100644
---- a/kernel/relay.c
-+++ b/kernel/relay.c
-@@ -250,13 +250,13 @@ EXPORT_SYMBOL_GPL(relay_buf_full);
-  */
- 
- static int relay_subbuf_start(struct rchan_buf *buf, void *subbuf,
--			      void *prev_subbuf, size_t prev_padding)
-+			      void *prev_subbuf)
- {
- 	if (!buf->chan->cb->subbuf_start)
- 		return !relay_buf_full(buf);
- 
- 	return buf->chan->cb->subbuf_start(buf, subbuf,
--					   prev_subbuf, prev_padding);
-+					   prev_subbuf);
- }
- 
- /**
-@@ -302,7 +302,7 @@ static void __relay_reset(struct rchan_buf *buf, unsigned int init)
- 	for (i = 0; i < buf->chan->n_subbufs; i++)
- 		buf->padding[i] = 0;
- 
--	relay_subbuf_start(buf, buf->data, NULL, 0);
-+	relay_subbuf_start(buf, buf->data, NULL);
- }
- 
- /**
-@@ -664,9 +664,11 @@ size_t relay_switch_subbuf(struct rchan_buf *buf, size_t length)
- 		goto toobig;
- 
- 	if (buf->offset != buf->chan->subbuf_size + 1) {
--		buf->prev_padding = buf->chan->subbuf_size - buf->offset;
-+		size_t prev_padding;
-+
-+		prev_padding = buf->chan->subbuf_size - buf->offset;
- 		old_subbuf = buf->subbufs_produced % buf->chan->n_subbufs;
--		buf->padding[old_subbuf] = buf->prev_padding;
-+		buf->padding[old_subbuf] = prev_padding;
- 		buf->subbufs_produced++;
- 		if (buf->dentry)
- 			d_inode(buf->dentry)->i_size +=
-@@ -691,7 +693,7 @@ size_t relay_switch_subbuf(struct rchan_buf *buf, size_t length)
- 	new_subbuf = buf->subbufs_produced % buf->chan->n_subbufs;
- 	new = buf->start + new_subbuf * buf->chan->subbuf_size;
- 	buf->offset = 0;
--	if (!relay_subbuf_start(buf, new, old, buf->prev_padding)) {
-+	if (!relay_subbuf_start(buf, new, old)) {
- 		buf->offset = buf->chan->subbuf_size + 1;
- 		return 0;
- 	}
-diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index 3679a6d18934..d1a89714e805 100644
---- a/kernel/trace/blktrace.c
-+++ b/kernel/trace/blktrace.c
-@@ -461,7 +461,7 @@ static const struct file_operations blk_msg_fops = {
-  * the user space app in telling how many lost events there were.
-  */
- static int blk_subbuf_start_callback(struct rchan_buf *buf, void *subbuf,
--				     void *prev_subbuf, size_t prev_padding)
-+				     void *prev_subbuf)
- {
- 	struct blk_trace *bt;
- 
--- 
-2.43.5
+
+Tested on:
+
+commit:         0d8d44db Merge tag 'for-6.15-rc5-tag' of git://git.ker..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1177282f980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=923d9ad0afad47e5
+dashboard link: https://syzkaller.appspot.com/bug?extid=4bcdddd48bb6f0be0da1
+compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=14f918f4580000
 
