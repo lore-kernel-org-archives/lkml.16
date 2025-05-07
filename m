@@ -1,215 +1,215 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11011000.outbound.protection.outlook.com [52.101.70.0])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 235DB433AC;
-	Wed,  7 May 2025 07:31:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746603067; cv=none; b=CrB9Ax0OWCgDJWRWDk47WrDX3chLhwn4vG067qnPza+HxIowh/KHYMzVK6gXUT9yNFY1i1y+K5Az0EXiamRP0sB544udw9zmM+kzQJ3YIBWPZpRgunAQwusctwbn49caGGX99I/y9OsbLPJuU1nWXqiijmz/pkHi7AkIS9onV8w=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746603067; c=relaxed/simple;
-	bh=CNwo6sgM8seHI8n/SXMyFDVnsXuHqa9n0DeHJia/QcM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=gBtVkWXWgdolzYeStJJhiy0hjZKe+iO+FfxPJ+38ea9yAbL6RrVDDnsyrYtdBADNhCULk+Pd/TfNhLw/i8oH62e04Twk4kPiaF65vFKxsXVdD/9xfaSbnf5jlupRwBywUlzKzSMdYrIgawM3Fjxj4/SPGqf+b+cl3gN2wDBjFaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VY8iJaVC; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 406441A9B53;
+	Wed,  7 May 2025 07:31:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.0
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746603069; cv=fail; b=CpULupuxD644pezYeU41L8ietvprRh6wPI7ZpHsTFaMLqek1mpLXruCEW2srNws9zqx+JfBopiaBbY2hSHnisZe/nmPhcRpcTzsUuJvWNJcTgJP1L2bY9kFvKHwUTrT7vKaBeEjGBbVl10ccCFRr8U5cWhrgOvOeq7ot3MBLhtc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746603069; c=relaxed/simple;
+	bh=cykKM++N7Ttmq3ukYFSEoWq+NhPW8db3E4xyCfrdNUk=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=J57sIzLO9NUsiIwrjZsNUndNgBQN8IYqsru+zoH9ULk3bi0VqgRFiDRHXXTTl9EekhyQWz8jyRaSFPjPxKKoySsl+rPW+SZYlrKEcL4A5UVbhzs4zp1VxqudDpYy8oXgpuaSWeXOqrgZiMdX5Ah88p0pBd07vg5Tye3PRQ1yhXs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=Ll2r1LwP; arc=fail smtp.client-ip=52.101.70.0
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VY8iJaVC"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 8F4F3C4CEE7;
-	Wed,  7 May 2025 07:31:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746603065;
-	bh=CNwo6sgM8seHI8n/SXMyFDVnsXuHqa9n0DeHJia/QcM=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=VY8iJaVC/khgHH0zn3kYqJJ/YxQFTTBLcmbGsgxOI1PQ+V6gRw/JIzqOB5MHfPGam
-	 ibY6/ykuFbjpoI3Z31J5i6nWfI+lIGAo5JUYPl6keHEkCm9QYpG7b/wfmkXYNGwOD0
-	 YJ2bMxBflN8DYal/xXdTXV/G94a+tFA07xgeM1CLyrM4fvFUjgN8WfQRnVBJIVhXdC
-	 24a7HwIY7z3qwc3jjzr1688xAyqeOafAv4o9w79AEhd6CC9Xa+yi/N7mn/0sTkldMg
-	 +0/lbx1fU3j2Zw8eOETova1KCIg2abdsxHrN+e/GOF9C9maN9Obu3hXOaKMiuVh74z
-	 vXB0GnWyOy4hQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85835C3ABB6;
-	Wed,  7 May 2025 07:31:05 +0000 (UTC)
-From: Yang Li via B4 Relay <devnull+yang.li.amlogic.com@kernel.org>
-Date: Wed, 07 May 2025 15:30:56 +0800
-Subject: [PATCH] Bluetooth: fix socket matching ambiguity between BIS and
- CIS
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="Ll2r1LwP"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=MtPh1zEE1lcFJmUHyn0sweh6+/BAbWd5L8hwcyTos6SxV/pGkQ7X4M4NFahpMY3XZg/VedqNMIoE6TtITLDhTyoN1XeOoIcvPW3Hy3HuLv+JwxYibHx3iZFZ5tSk3h9cfawJuMG0AwsLvtbijCjn9DigRbSbYr3bvTp7pCTH80corTDloK1gb/nmPaIc7Ak9WD6qhp7TGKHsWI4EtzMfNnjbnSB9sFN286tpCEiBBMP66JungzrUlQMI3AFCAt16alsrHq0bf1oB8KUrCjESc/yhQK9nJ2jhPhdKqJxmjTn4Bj7Tqb+xSTejwhTD9E8MsybCeljLD5ggwXu0sXk1gQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=NGbLxZ8EhTAK70ThQ1nQhNeC0hgX/SeK9N1oN2gffBE=;
+ b=aN0IfZq+oeyHoNb67TweAXfwsZUxmbPCGM33w2l25KkRjCHsbNeSldKU6YkFsx0enUdcnr0ZVVklBdJtx/D76RpKXjlG2iIVzD+CAGA4Mn5D2SdnlybmZKW6lcf2csgZGEjgjTck1BXpmchSzcPotvRv5jlIjxP35OoOCbEe4RuTmpNIK6pbjqLNyNQRdGIKNGLi5gcG4zEkGBCf2nZ6nb737N7eS4ZU/IRxxUDMTKFo7hAl2/eTGAXg9XId1X27ueziLrhxOhTafw8WejxwRXPxgS3xiV7HhgThm+3/CoI3mx0+5yrzBfNPxbgsnWzsU7MIC06KL0DoE9WmM7ngbA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NGbLxZ8EhTAK70ThQ1nQhNeC0hgX/SeK9N1oN2gffBE=;
+ b=Ll2r1LwPak7OjtDjHTKiS74xlhLBbgfQTqIOUu7QYbhPcj55eB9DYLbGJ3pUhRdX/LRNlY9rYGRRfNeZ1Qz/GEubj3yp7kRyxm/nxx3Em7IobE3hA2/CbRxPA/kUpFuEyjeULIQZUXUx88xKBjorFR8QPU3ezJSYOJdJHHfZ0CrghogihUIgbxuMD6InrD5EgFoaMjq0+mIAD4HyBvCfLgksuabr3MAF7Tvu85spMMnpQWOhVk94+zb9wucvP7NpVAOBpV4gpLJd2VhVNMqlqRCQ8BR+wBotc/fvAl51dhlGZTaGf2uHmrVyz07oOo6KVwuBE9RHvGbMg7KCuvY2UQ==
+Received: from AM0PR04MB6515.eurprd04.prod.outlook.com (2603:10a6:208:16f::10)
+ by PA4PR04MB7854.eurprd04.prod.outlook.com (2603:10a6:102:c2::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.26; Wed, 7 May
+ 2025 07:31:04 +0000
+Received: from AM0PR04MB6515.eurprd04.prod.outlook.com
+ ([fe80::ca11:63b8:aeea:8043]) by AM0PR04MB6515.eurprd04.prod.outlook.com
+ ([fe80::ca11:63b8:aeea:8043%5]) with mapi id 15.20.8699.024; Wed, 7 May 2025
+ 07:31:04 +0000
+From: Pankit Garg <pankit.garg@nxp.com>
+To: Conor Dooley <conor@kernel.org>
+CC: "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>, "robh@kernel.org"
+	<robh@kernel.org>, "alexandre.belloni@bootlin.com"
+	<alexandre.belloni@bootlin.com>, Vikash Bansal <vikash.bansal@nxp.com>,
+	Priyanka Jain <priyanka.jain@nxp.com>, Daniel Aguirre
+	<daniel.aguirre@nxp.com>, Shashank Rebbapragada
+	<shashank.rebbapragada@nxp.com>, Aman Kumar Pandey <aman.kumarpandey@nxp.com>
+Subject: RE: [EXT] Re: [PATCH v2 1/2] dt-bindings: rtc: Add pcf85053a support
+Thread-Topic: [EXT] Re: [PATCH v2 1/2] dt-bindings: rtc: Add pcf85053a support
+Thread-Index: AQHbvmwEyq44ngbwY0OGh1sJZwWSkbPFv9cAgAEGdbA=
+Date: Wed, 7 May 2025 07:31:03 +0000
+Message-ID:
+ <AM0PR04MB65156BE2EE9C7EF14991892CE788A@AM0PR04MB6515.eurprd04.prod.outlook.com>
+References: <20250506094815.3765598-1-pankit.garg@nxp.com>
+ <20250506-durable-cryptic-24119a6e7dbd@spud>
+In-Reply-To: <20250506-durable-cryptic-24119a6e7dbd@spud>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: AM0PR04MB6515:EE_|PA4PR04MB7854:EE_
+x-ms-office365-filtering-correlation-id: 46ce92b5-d6a1-4b2e-ade4-08dd8d391fb8
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|376014|366016|1800799024|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?drjRmyKl4tqgg9KXcsponZYWgZl+/05/cWqS14QyyaDh8/qCDT109IsREy6G?=
+ =?us-ascii?Q?6GoHDk7b9ycPzxDsHH4mCYkc929cJW070AnQ48zxf5Mv9XnUeQHCP0zpXyik?=
+ =?us-ascii?Q?wEV9YXswLcGn+/TcdFlJ0+PoRjz1n6qqcggJUA4mhCo0W342IlRKUfSwu+mO?=
+ =?us-ascii?Q?BCswhzY5jFg2M2kDos3eGP+pE+1cv8y6rl1BXimpInnf0aUMZFxvEtT7f1lV?=
+ =?us-ascii?Q?DvQJ3jbhSjeQY/OOyKndLS1bQAsfCmAMyY3b89cj6e/3ApY1jeSAjLwkF5vq?=
+ =?us-ascii?Q?myQMGX/m6wutzKctggbnqvkY80/Idjo4QK2UdYpkNCPcmV9OBvgQAj6FOdpB?=
+ =?us-ascii?Q?Sa6qtPkti+J1gkSd5ASpL1M0ZhJ2aji5kXGufwSWv84EPGAN5KtbaYvloTJo?=
+ =?us-ascii?Q?npDGTaXXYS0v7Cgpdy7fii8CLqizJ2/3LVXcmS1nvTbIhqcGHk/ebAyEFK4x?=
+ =?us-ascii?Q?KJHzdZ+xk4K55PBaKhbdEF+SZcDD9zZ/aGwaWk6WBQn0T83Ro0mFlB+aQtJR?=
+ =?us-ascii?Q?oOoRjzBDK4TAqRgUeqU+sprBhps53f+kyzQiIz4CEjDfIX4HB7W0U4fow1Qo?=
+ =?us-ascii?Q?jSyd7FIyIJxpZ3nlDpxCpriMbonSjGBaxZzaHX91dZR9kduz+qBJoj96w1Cc?=
+ =?us-ascii?Q?1R7ZokgjvSmNkCyhrCM44mFizt8IHBa39xDvEUPdEePPr8SOjJs2Ue4pTZZ6?=
+ =?us-ascii?Q?3scU76SvpDDUfistltAJ4zP3zVLOFMYjfY6m5ip4XOp1aq0MssbYOftlGxy8?=
+ =?us-ascii?Q?kcefpNTlxqd4xbDLcaK3Rx3zQNX/UnjeJX28jn2Bo6I7cIpRhkAgGSIc8wJZ?=
+ =?us-ascii?Q?l8GHon854B+tVljAhNcPRRh5MkmUXhPyTOKoYlKuVPtko1zj73SqWWqzYlRK?=
+ =?us-ascii?Q?+XXwaTPmVquZZxlSpkJn+QgX/6BKx3AmdT5x+VyMmE4WT9IJkqVBXjAYPsty?=
+ =?us-ascii?Q?+xz9/9Up4ZQU5p/oC9p6JZGxhBozvQMPmVa2yYjezXXutZxcz9yzfwZ1p8LM?=
+ =?us-ascii?Q?ailqj2173pfeqxijAA2oNeMJUYuldWCUmLMAEhnOX9itxfZvF2vdOVQ326NC?=
+ =?us-ascii?Q?6r3N2gNCRp1JfOxi3d38y6OWCO5syiMut8p3rofIu/h7J2gAS0tOeViMIsAz?=
+ =?us-ascii?Q?59xMqz+XzP1favcse9X+LEJc/yN8XPsEa4jwc0VXPUNID5NVJd0Maj/eZg4t?=
+ =?us-ascii?Q?5vH8PT/MdIPKJ1ievdN1VpN3iOkWcaJrP+aqicW2Vzpe7ghSW4azQ3YHsaEC?=
+ =?us-ascii?Q?QFVWA9JSt9SgSaIuKa1Vp0ny5ZZsiJJBAsSuaMKlsIoP4zijH0DKfGLZRJbD?=
+ =?us-ascii?Q?wnNiXkF5Kf9MZX7g+eGpCcjfJf6ctKXlON/FO5V47JQRDuOLuN7S6d2uMyvy?=
+ =?us-ascii?Q?o5BPcyK31ixfpiiT87Ed1UB5IGmj064+BX/9wAxoYyE6rYlMFctdp3ksBAkU?=
+ =?us-ascii?Q?1ByA6MFcaqen1XikZVMZp6dYbsuM6zPt9pNLQGuX+hyNZfbekSyv5mB8gJYn?=
+ =?us-ascii?Q?ER4Hkk7c/8MU5Rg=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB6515.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?9SNLuFJwPHq5v2Cf8XfSsskMbUFGJUG3BFzwhuSsdEwrDNGM/Y0M6XJSuDWv?=
+ =?us-ascii?Q?5eHksH3kayfJay7GllX+CCJFp5R1QS8345s2UnRv+yCrJ0190dTLrZ3H0i9H?=
+ =?us-ascii?Q?685CYZS8NAMkwYA/wjTmynq00y/ifompNumzwT16dDE/Y7Ca7GLcFzzzK5K9?=
+ =?us-ascii?Q?BLxfJxilvfVr8c48Ve72d1oqYaR0ypRnjWX0K/Q60mcHmn/5c+ntJj2k4RAz?=
+ =?us-ascii?Q?laAY/0pAYF6JWZv4QRH/ppZQHonQE59tEVypm1isQ/UmRSP4s39GQBZoRGDu?=
+ =?us-ascii?Q?W9ra/5WLzvCnWwci+9Uy6QDndjFAjtYG1FCQosVB5xxTaoVGv0f+KakMYusU?=
+ =?us-ascii?Q?F43fNgB2jKnDWLOmLTVXIMwcU+RwHaQFVvSmYZ0DgdmQJQh2SRF8DVuvSOdR?=
+ =?us-ascii?Q?B/5HhlNOwh6hoeOEAaz3VonJau7O1HdGSItIXwkt3rfK00W9BGYNbRraB5jC?=
+ =?us-ascii?Q?WSKufHj1zX+hulNvXodG8Vw2koyvhOqJSfv8p5CypJapGCy+NZfVRW61/27A?=
+ =?us-ascii?Q?D8yoOsArCFiyOi40aBfcfXJVrgr4OncVh3z+Iy2QdHxKJ92QM9CL70trXk/o?=
+ =?us-ascii?Q?CWQ0FMuE5uqxy9SrEXaHCj6hDYWX62TzjpUPhEgdIEN07EJVhdvcLX3KfLD5?=
+ =?us-ascii?Q?eIQ+9NfEKxrVu12OniFoOcu36WBpFT8Idnq7ABJGwZoyVLBBDcRPYgdyNsuD?=
+ =?us-ascii?Q?7npGgYJRoVQfRA7Oa+BnVUM+dbzqwUKhUXsBQjf2O3xFq12pKiUocVcMZBuy?=
+ =?us-ascii?Q?JPKLECwujkW8ZjTjf8nLVq4s9T/Q2NVNvpOEV81n3Ovfw05rNYLBW3R8kpSq?=
+ =?us-ascii?Q?TZkuNGa5eBtqgXxRzuhTvNiotZozlxyypCwKxtgQplsuZwnlAsnf8I/UEV+s?=
+ =?us-ascii?Q?FsJWogcuHd3xQxCL0iNEm+DrP+T3ArxF4SqpqNB7JoY2dp4nbWhduzRtB9Me?=
+ =?us-ascii?Q?peZKNoOHzIz1LJe28z0tLm9bcXDMLgGzMEu9kFq29AUwciGmiBlXqDTE2Cfq?=
+ =?us-ascii?Q?0p1rAk8tvXODuBFc7k2cUwFpt9FRbf/l2LC1QJyVjoOiy6RnOqynSTnkmgua?=
+ =?us-ascii?Q?bYGr0I/eajaUDfkpShrw/tZbr7ln4Z2xgcke7C9UofzdzLRvkdplIP5lGVhV?=
+ =?us-ascii?Q?5MooDwhqlh73cFHnOQ8Yf3XrbRdbeJnjPoz7JRX5OLPMOzJtPzQDgdwQFcvI?=
+ =?us-ascii?Q?ujI/tppgmvMo6Ota5h7qjmDp4Ykng0+U0NXTSWhYTx1APM1sXoBsmurOIR5e?=
+ =?us-ascii?Q?g9NlbfjV9CuHr24Z5lOBMh1pJvTxst4lm6/Ik1vDBKwlqae+TltnXRy2EuqM?=
+ =?us-ascii?Q?MLxKejRCh0US54UYlOenu8w5aNmNdr5hU1yA0IvKIk1SZHJ0F8ALLERFMsnF?=
+ =?us-ascii?Q?I2Nx2CL+122WLuZ2ykDpXOp8Fie9BZY3bEjHnyAmZnpgG7LLZzRqTK8Vga+Z?=
+ =?us-ascii?Q?AcfNpYUYBUgmaJzYAbwZwQg2Kp9JBJWvW3sf97LoXuOXZAu9/5FsNomTQRX9?=
+ =?us-ascii?Q?1ZGH1KRYiQ8MK/mougi99lhQG7ba28Mw90oQBqvOvjHXmhCS7yt8N6+LGG7r?=
+ =?us-ascii?Q?2xDeS78ReEO2z/cK90M/vgnF/bv9ofTKDrAxQMrL?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250507-iso-v1-1-6f60d243e037@amlogic.com>
-X-B4-Tracking: v=1; b=H4sIAC8MG2gC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDUwMz3czifF0zU0NTC0vjJNOkJGMloMqCotS0zAqwKdGxtbUAg+V1wVU
- AAAA=
-To: Marcel Holtmann <marcel@holtmann.org>, 
- Johan Hedberg <johan.hedberg@gmail.com>, 
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Cc: linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Yang Li <yang.li@amlogic.com>
-X-Mailer: b4 0.13-dev-f0463
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746603064; l=4561;
- i=yang.li@amlogic.com; s=20240418; h=from:subject:message-id;
- bh=F5kAD2zHyjtSPLX9UO5WP1fJNupB7Q6k0ku1w7r+7fY=;
- b=ZrtT5WhZSkJVo95q/O4ABo2SS8pUZLvw9p+1Fa4MU4TBf3F9aiFzakWs7Wd54axY3F3Gq56uw
- RNj6p0I4UyGAINbidfcV0sIZJgljxoN1J40X3G2Xc3pxWgCA5BAd6gI
-X-Developer-Key: i=yang.li@amlogic.com; a=ed25519;
- pk=86OaNWMr3XECW9HGNhkJ4HdR2eYA5SEAegQ3td2UCCs=
-X-Endpoint-Received: by B4 Relay for yang.li@amlogic.com/20240418 with
- auth_id=180
-X-Original-From: Yang Li <yang.li@amlogic.com>
-Reply-To: yang.li@amlogic.com
-
-From: Yang Li <yang.li@amlogic.com>
-
-The iso_get_sock function adds dst address matching to
-distinguish BIS and CIS sockets.
-
-Link: https://github.com/bluez/bluez/issues/1224
-
-Signed-off-by: Yang Li <yang.li@amlogic.com>
----
- net/bluetooth/hci_event.c | 35 ++++++++++++++++++++---------------
- net/bluetooth/iso.c       | 12 +++++++++---
- 2 files changed, 29 insertions(+), 18 deletions(-)
-
-diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-index 66052d6aaa1d..c1f32e98ef8a 100644
---- a/net/bluetooth/hci_event.c
-+++ b/net/bluetooth/hci_event.c
-@@ -6413,6 +6413,8 @@ static void hci_le_pa_sync_estabilished_evt(struct hci_dev *hdev, void *data,
- 
- 	conn->sync_handle = le16_to_cpu(ev->handle);
- 	conn->sid = HCI_SID_INVALID;
-+	conn->dst = ev->bdaddr;
-+	conn->dst_type = ev->bdaddr_type;
- 
- 	mask |= hci_proto_connect_ind(hdev, &ev->bdaddr, BIS_LINK,
- 				      &flags);
-@@ -6425,7 +6427,8 @@ static void hci_le_pa_sync_estabilished_evt(struct hci_dev *hdev, void *data,
- 		goto unlock;
- 
- 	/* Add connection to indicate PA sync event */
--	pa_sync = hci_conn_add_unset(hdev, BIS_LINK, BDADDR_ANY,
-+
-+	pa_sync = hci_conn_add_unset(hdev, BIS_LINK, &ev->bdaddr,
- 				     HCI_ROLE_SLAVE);
- 
- 	if (IS_ERR(pa_sync))
-@@ -6456,13 +6459,6 @@ static void hci_le_per_adv_report_evt(struct hci_dev *hdev, void *data,
- 
- 	hci_dev_lock(hdev);
- 
--	mask |= hci_proto_connect_ind(hdev, BDADDR_ANY, BIS_LINK, &flags);
--	if (!(mask & HCI_LM_ACCEPT))
--		goto unlock;
--
--	if (!(flags & HCI_PROTO_DEFER))
--		goto unlock;
--
- 	pa_sync = hci_conn_hash_lookup_pa_sync_handle
- 			(hdev,
- 			le16_to_cpu(ev->sync_handle));
-@@ -6470,6 +6466,13 @@ static void hci_le_per_adv_report_evt(struct hci_dev *hdev, void *data,
- 	if (!pa_sync)
- 		goto unlock;
- 
-+	mask |= hci_proto_connect_ind(hdev, &pa_sync->dst, ISO_LINK, &flags);
-+	if (!(mask & HCI_LM_ACCEPT))
-+		goto unlock;
-+
-+	if (!(flags & HCI_PROTO_DEFER))
-+		goto unlock;
-+
- 	if (ev->data_status == LE_PA_DATA_COMPLETE &&
- 	    !test_and_set_bit(HCI_CONN_PA_SYNC, &pa_sync->flags)) {
- 		/* Notify iso layer */
-@@ -6993,6 +6996,8 @@ static void hci_le_big_sync_established_evt(struct hci_dev *hdev, void *data,
- 			set_bit(HCI_CONN_PA_SYNC, &bis->flags);
- 
- 		bis->sync_handle = conn->sync_handle;
-+		bis->dst = conn->dst;
-+		bis->dst_type = conn->dst_type;
- 		bis->iso_qos.bcast.big = ev->handle;
- 		memset(&interval, 0, sizeof(interval));
- 		memcpy(&interval, ev->latency, sizeof(ev->latency));
-@@ -7038,13 +7043,6 @@ static void hci_le_big_info_adv_report_evt(struct hci_dev *hdev, void *data,
- 
- 	hci_dev_lock(hdev);
- 
--	mask |= hci_proto_connect_ind(hdev, BDADDR_ANY, BIS_LINK, &flags);
--	if (!(mask & HCI_LM_ACCEPT))
--		goto unlock;
--
--	if (!(flags & HCI_PROTO_DEFER))
--		goto unlock;
--
- 	pa_sync = hci_conn_hash_lookup_pa_sync_handle
- 			(hdev,
- 			le16_to_cpu(ev->sync_handle));
-@@ -7054,6 +7052,13 @@ static void hci_le_big_info_adv_report_evt(struct hci_dev *hdev, void *data,
- 
- 	pa_sync->iso_qos.bcast.encryption = ev->encryption;
- 
-+	mask |= hci_proto_connect_ind(hdev, &pa_sync->dst, ISO_LINK, &flags);
-+	if (!(mask & HCI_LM_ACCEPT))
-+		goto unlock;
-+
-+	if (!(flags & HCI_PROTO_DEFER))
-+		goto unlock;
-+
- 	/* Notify iso layer */
- 	hci_connect_cfm(pa_sync, 0);
- 
-diff --git a/net/bluetooth/iso.c b/net/bluetooth/iso.c
-index 6e2c752aaa8f..1dc233f04dbe 100644
---- a/net/bluetooth/iso.c
-+++ b/net/bluetooth/iso.c
-@@ -641,11 +641,12 @@ static struct sock *iso_get_sock(bdaddr_t *src, bdaddr_t *dst,
- 			continue;
- 
- 		/* Exact match. */
--		if (!bacmp(&iso_pi(sk)->src, src)) {
-+		if (!bacmp(&iso_pi(sk)->src, src)
-+		     && !bacmp(&iso_pi(sk)->dst, dst)
-+			){
- 			sock_hold(sk);
- 			break;
- 		}
--
- 		/* Closest match */
- 		if (!bacmp(&iso_pi(sk)->src, BDADDR_ANY)) {
- 			if (sk1)
-@@ -1962,7 +1963,7 @@ static void iso_conn_ready(struct iso_conn *conn)
- 		}
- 
- 		if (!parent)
--			parent = iso_get_sock(&hcon->src, BDADDR_ANY,
-+			parent = iso_get_sock(&hcon->src, &hcon->dst,
- 					      BT_LISTEN, NULL, NULL);
- 
- 		if (!parent)
-@@ -2203,6 +2204,11 @@ int iso_connect_ind(struct hci_dev *hdev, bdaddr_t *bdaddr, __u8 *flags)
- 	} else {
- 		sk = iso_get_sock(&hdev->bdaddr, BDADDR_ANY,
- 				  BT_LISTEN, NULL, NULL);
-+		if (!sk)
-+			sk = iso_get_sock(&hdev->bdaddr, bdaddr,
-+					  BT_LISTEN, NULL, NULL);
-+		else
-+			iso_pi(sk)->dst = *bdaddr;
- 	}
- 
- done:
-
----
-base-commit: f3daca9b490154fbb0459848cc2ed61e8367bddc
-change-id: 20250506-iso-6515893b5bb3
-
-Best regards,
--- 
-Yang Li <yang.li@amlogic.com>
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AM0PR04MB6515.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 46ce92b5-d6a1-4b2e-ade4-08dd8d391fb8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 May 2025 07:31:04.0864
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: cZ09XNHt6lZe9I/N7Ebj7Pdz+DZk4o4eNVxeeRCfyk88GVgsWsy57FHJFFdgGzlAlv4NLSM4Ag3+PsT19Dt2zg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB7854
 
 
+
+> -----Original Message-----
+> From: Conor Dooley <conor@kernel.org>
+> Sent: Tuesday, May 6, 2025 9:19 PM
+> To: Pankit Garg <pankit.garg@nxp.com>
+> Cc: linux-rtc@vger.kernel.org; devicetree@vger.kernel.org; linux-
+> kernel@vger.kernel.org; conor+dt@kernel.org; robh@kernel.org;
+> alexandre.belloni@bootlin.com; Vikash Bansal <vikash.bansal@nxp.com>;
+> Priyanka Jain <priyanka.jain@nxp.com>; Daniel Aguirre
+> <daniel.aguirre@nxp.com>; Shashank Rebbapragada
+> <shashank.rebbapragada@nxp.com>; Aman Kumar Pandey
+> <aman.kumarpandey@nxp.com>
+> Subject: [EXT] Re: [PATCH v2 1/2] dt-bindings: rtc: Add pcf85053a support
+>=20
+> On Tue, May 06, 2025 at 03:18:14PM +0530, Pankit Garg wrote:
+> > Add device tree bindings for NXP PCF85053a RTC chip.
+> >
+> > Signed-off-by: Pankit Garg <pankit.garg@nxp.com>
+> > ---
+> > V1 -> V2: Handled dt-bindings by trivial-rtc.yaml
+> >
+> > ---
+> >  Documentation/devicetree/bindings/rtc/trivial-rtc.yaml | 2 ++
+> >  MAINTAINERS                                            | 5 +++++
+> >  2 files changed, 7 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/rtc/trivial-rtc.yaml
+> > b/Documentation/devicetree/bindings/rtc/trivial-rtc.yaml
+> > index 7330a7200831..47be7bbbfedd 100644
+> > --- a/Documentation/devicetree/bindings/rtc/trivial-rtc.yaml
+> > +++ b/Documentation/devicetree/bindings/rtc/trivial-rtc.yaml
+> > @@ -65,6 +65,8 @@ properties:
+> >        - microcrystal,rv8523
+> >        # NXP LPC32xx SoC Real-time Clock
+> >        - nxp,lpc3220-rtc
+> > +      # NXP PCF85053A Real Time Clock Module with I2C-Bus
+> > +      - nxp,pcf85053a
+>=20
+> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+>=20
+> >        # I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
+> >        - ricoh,r2025sd
+> >        # I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
+>=20
+> > diff --git a/MAINTAINERS b/MAINTAINERS index
+> > 0737dcb2e411..d39fc05c6454 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -17782,6 +17782,11 @@ S:	Maintained
+> >  F:	Documentation/devicetree/bindings/sound/nxp,tfa989x.yaml
+> >  F:	sound/soc/codecs/tfa989x.c
+> >
+> > +NXP RTC PCF85053A DRIVER
+> > +M:	Pankit Garg<pankit.garg@nxp.com>
+> > +L:	linux-kernel@vger.kernel.org
+> > +S:	Maintained
+>=20
+> This looks like a hang-over from your v1 and should really be moved to th=
+e
+> patch adding the driver.
+
+Thanks for reviewing the patch. I have pushed v3, in which I have handled t=
+his thing.
