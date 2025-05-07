@@ -1,112 +1,118 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f195.google.com (mail-pl1-f195.google.com [209.85.214.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E05428F947;
-	Wed,  7 May 2025 20:36:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE9E928F940;
+	Wed,  7 May 2025 20:37:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746650202; cv=none; b=awvPOuO5rNtzvbEI+L9kWXzd86IbbfpSPBP7h7F0PSwL3Br5meu/bGdyynvO3XwZqCsPs5pyuK14aXm+G7S63g14FBVirJS12AtRv/ilst3WkqOpY23rsc6Su17adZ7v4s6KVFIEu//5KeqvkSzWFJ/QWVaof8WxY9uKfkACbeY=
+	t=1746650262; cv=none; b=CegK/aB/56R6bFVRbMXRUrt/BCv4kLg3+HQqgp1QS4hoMSRKb8+qpMCYf21kIAJfByv7Z1SZTtE7Qx3vf+Xj+DtZcHt0j/Y4GjE345zEHphUx9URyT7f22eazW91pXjCX0AcPWj3WZAUWE4mlUabNYrRwWk6hNjAGqqUFPOTtCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746650202; c=relaxed/simple;
-	bh=ZGjelMgCgPH2Il8Xw+hIVNfck/csGvaiR7SmK/llZ1w=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=HcLv9nvWxi0V8btj06zFzbaIvRZvHl1OGHzsM2zcWz9YGIEF8byJgV/nelsEV+aUDhShU7VPp11JqDMqhIvJERFbwRGUKnO9frsX7AzW9rZYUbx4WZKHOt7EN22wFCIbbctoWym9sX4HMGS7rkg96LuePtYL0LE+YCzkM3XuCLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=N2imGAPo; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1746650262; c=relaxed/simple;
+	bh=UpxWey3Bw04ZuvPug91OW+SV9bDGVrjm7kInnn7Ugp0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tqefDrKy8i02ax8+96Y8k5EqMtZEHE0C8WCB8CEtp7CfPoxV2d5ZDZageDDZC39fB2H5uwhMevBbk+Cb6n621d9yrQ7Efi6ePNxVJxe4grrfzQXT3n23KBxQTB1MHjGVsTN+Dx4xIIVFzuv94ajb2q86e8MKK68G/BKE2HLOWnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iumttYGI; arc=none smtp.client-ip=209.85.214.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="N2imGAPo"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=Ebkk7je51it2yTRu26KTlGS0o/RB79MYisu9ONfqvPs=;
-	t=1746650200; x=1747859800; b=N2imGAPoM0ABEkuh+powcmnzE7Ousc05Hqx2Qw+J3/LDYBx
-	debF4Q4syrYJye6ylNVg9i5E8wu8ydyvz2/Mpy48s/hS5sy7/sKMyJkjVbeYwYYiwP/uMYjFRLMXv
-	gapwvY/fPA8a8vr+z7NkyxkDvlw2+ycWGIlzBsqI2VZgvrsnkXfgs9WAquC2mVmjFiai507FlJi55
-	6r5hPZ1NvUZWIuDQ4Yjd3p9sFrYilBTSxEdtM0ozy1mPNeRyneguoOTmKMqrLPwr8INKZorbZOjiA
-	594hC6Smntj88TJASNgYq4Mif59AKvyX6QqqroFKx21NVgqaZJ8aW7oM8NnqhF/A==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98.1)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1uClVH-00000008YNN-1Tjh;
-	Wed, 07 May 2025 22:36:31 +0200
-Message-ID: <007a7132d1396912b1381e96cc4401a10071ed24.camel@sipsolutions.net>
-Subject: Re: [tip: x86/msr] um: Add UML version of <asm/tsc.h> to define
- rdtsc()
-From: Johannes Berg <johannes@sipsolutions.net>
-To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
- "linux-tip-commits@vger.kernel.org"
-	 <linux-tip-commits@vger.kernel.org>
-Cc: lkp <lkp@intel.com>, Ingo Molnar <mingo@kernel.org>, "x86@kernel.org"
-	 <x86@kernel.org>, linux-um@lists.infradead.org
-Date: Wed, 07 May 2025 22:36:30 +0200
-In-Reply-To: <174664324585.406.10812098910624084030.tip-bot2@tip-bot2>
-References: <202505080003.0t7ewxGp-lkp@intel.com>
-	 <174664324585.406.10812098910624084030.tip-bot2@tip-bot2>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iumttYGI"
+Received: by mail-pl1-f195.google.com with SMTP id d9443c01a7336-22c33677183so3391895ad.2;
+        Wed, 07 May 2025 13:37:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746650259; x=1747255059; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=s1+zN4Yxyjl4lmJrdouerVL0ZdLm1z+cSeAbjCfaYnY=;
+        b=iumttYGIpUij5WwCeF+RuqV/wpaLgDoChSH+pLLBh8RTI04b0zt+n7OqHNeysD0kYc
+         xM3v7QzV5AJOCvxSyLmexVnjkJNvSPU3gOMVzYLEMryFo/ehWAq+/lj5gsfDnlEFQxMd
+         f62X+IVZqk6q3WxkI85GAjqG+AZZzcP2onoWUzYhn6SC0KXvt4PoGehbU6XFex6IVwd1
+         EkFdefIZUPR6qgVEc4RIYGKzGHvHIDPPQDIGqKmrqzEZoHosld1LIPA1XlkPba1TbjI8
+         K5eJNTIcx6tYACJyBozJKOU/ZBdgqfyZwDxJ9qVoD9rOxsyQw/+Z2ywne4PdnUMtRF0H
+         jZkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746650259; x=1747255059;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=s1+zN4Yxyjl4lmJrdouerVL0ZdLm1z+cSeAbjCfaYnY=;
+        b=LbpsE/3EZjO3Umrxp7BaR1uqcI/wO31nLeOxJdpL+GSgSDU1CxrXdqHjFGWz+UaBXi
+         i7zPao7WVfXmBCjALvqQOXHjbLetXKklRA7YQGdnZs61KCrrPuJCs+vq1UWrmB8zXW0x
+         gh3PzpgAcj1mjyUyQ58Lsf0MRggxLGJ0wfeNbClk8Zvh6lWggY6ZDdQq9QZLhTdDQ18J
+         NewmdMMxS6acE0ll1aiF3qHcOYLnH/7+oAz43T6UX7Zi4oX2dlIIMnCccXkrVu+gtGMJ
+         piZ6DYe46pu0Dvr3hU35Jb9Vi3solB0PQ7S9F/VFacc7+q82BQbBucH2vlVZXKGhz+Sl
+         dtlQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUDVugObgk1eUX7p15ELlJwmpUcvkYawfS8MxO996ewDqmf0eFasiRxyuTgxYiNXV6x4J31HfrAm8ovPEs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzG/P4+RiBC6HNcuFJM+XfZYMobB46VGjvh/j5dY8FriaBAMoNf
+	mO6YhgvBrrMqKkudUaBH3u6oSbQ7jAPlZduKF7NEEye9Y+lLGbUv
+X-Gm-Gg: ASbGncuj5f4+4Efv3Yg4A7loOZzamEZA1gsqb//yUt/bFw6g7ErUrBTL3Nb4n+t4l0W
+	D/k23iiz/LuqLyiek2JBUwf8jcqteyGZrD5hzBM9KZXna3sfxjH5rFe8i7ZJhnSH/7jrmbWowdI
+	jtBojD+sxGcdRxMyjGDmFYPSZ2/USXePftBpL9AfV63K0WOom5H0LFhh/UVla+nW6tEBwf37iQW
+	Oh7kttgYr0Q815jl2WzFzPOrqprJ7Ep2+dFjU3DP7TkmzB2rvwr8fJ/5WP++MUsk2CU0zNHaqmA
+	TTRk3nARydpJUibqYPE8nQe+8aH2XIrG76As+xNSExb9elzo2gQSyOAeruw=
+X-Google-Smtp-Source: AGHT+IHCh/GQgllGZkJ6rLLeRRGN+OTcp4gpIRwI6kl2YE70Sn8rCja8TtxtQAAUAvKV+Xh6HcPOnA==
+X-Received: by 2002:a17:903:fa4:b0:22d:e57a:2795 with SMTP id d9443c01a7336-22e5edea81bmr71012345ad.47.1746650259078;
+        Wed, 07 May 2025 13:37:39 -0700 (PDT)
+Received: from sid-Inspiron-15-3525.. ([106.222.229.91])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e62ce540fsm20193525ad.160.2025.05.07.13.37.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 13:37:38 -0700 (PDT)
+From: Siddarth Gundu <siddarthsgml@gmail.com>
+To: andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	skhan@linuxfoundation.org,
+	Siddarth Gundu <siddarthsgml@gmail.com>
+Subject: [PATCH net v2] fddi: skfp: fix null pointer deferenece in smt.c
+Date: Thu,  8 May 2025 02:07:06 +0530
+Message-ID: <20250507203706.42785-1-siddarthsgml@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Content-Transfer-Encoding: 8bit
 
-+linux-um
+In smt_string_swap(), when a closing bracket ']' is encountered
+before any opening bracket '[' open_paren would be NULL,
+and assigning it to format would lead to a null pointer being
+dereferenced in the format++ statement.
 
-On Wed, 2025-05-07 at 18:40 +0000, tip-bot2 for Ingo Molnar wrote:
->=20
-> To resolve these kinds of problems and to allow <asm/tsc.h> to be include=
-d on UML,
-> add a simplified version of <asm/tsc.h>, which only adds the rdtsc() defi=
-nition.
+Add a check to verify open_paren is non-NULL before assigning
+it to format
 
-OK, weird, why would that be needed - UM isn't really X86.
+This issue was reported by Coverity Scan.
 
->  arch/um/include/asm/tsc.h | 25 +++++++++++++++++++++++++
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Siddarth Gundu <siddarthsgml@gmail.com>
+---
+v2:
+ - fix commit message
+ - Add mention of Coverity Scan
+ - Update Fixes tag to reference initial commit
+v1: https://lore.kernel.org/all/20250505091025.27368-1-siddarthsgml@gmail.com/
 
-Feels that should be in arch/x86/um/asm/ instead, which I believe is
-also included but then at least pretends to keep the notion that UML
-could be ported to other architectures ;-)
+ drivers/net/fddi/skfp/smt.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> +static __always_inline u64 rdtsc(void)
-> +{
-> +       EAX_EDX_DECLARE_ARGS(val, low, high);
-> +
-> +       asm volatile("rdtsc" : EAX_EDX_RET(val, low, high));
-> +
-> +       return EAX_EDX_VAL(val, low, high);
-> +}
+diff --git a/drivers/net/fddi/skfp/smt.c b/drivers/net/fddi/skfp/smt.c
+index dd15af4e98c2..174f279b89ac 100644
+--- a/drivers/net/fddi/skfp/smt.c
++++ b/drivers/net/fddi/skfp/smt.c
+@@ -1857,7 +1857,8 @@ static void smt_string_swap(char *data, const char *format, int len)
+ 			open_paren = format ;
+ 			break ;
+ 		case ']' :
+-			format = open_paren ;
++			if (open_paren)
++				format = open_paren ;
+ 			break ;
+ 		case '1' :
+ 		case '2' :
+-- 
+2.43.0
 
-Though I also wonder where this is called at all that would be relevant
-for UML? If it's not then perhaps we should just make using it
-unbuildable, a la
-
-u64 __um_has_no_rdtsc(void);
-#define rdtsc() __um_has_no_rdtsc()
-
-or something like that... (and then of course keep it in the current
-location). But looking at the 0-day report that'd probably break
-building the driver on UML; while the driver doesn't seem important we
-wouldn't really want that...
-
-Actually, that's just because of the stupid quirk in UML/X86:
-
-config DRM_ACCEL_HABANALABS
-        tristate "HabanaLabs AI accelerators"
-        depends on DRM_ACCEL
-        depends on X86_64
-
-that last line should almost certainly be "depends on X86 && X86_64"
-because ARCH=3Dum will set UM and X86_64, but not X86 since the arch
-Kconfig symbols are X86 and UM respectively, but the UML subarch still
-selects X86_64 ...
-
-
-I dunno. I guess we can put rdtsc() into UML on x86 as I suggested about
-the file placement, or we can also just fix the Kconfig there.
-
-johannes
