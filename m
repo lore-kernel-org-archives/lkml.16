@@ -1,68 +1,68 @@
-Received: from BN8PR05CU002.outbound.protection.outlook.com (mail-eastus2azon11021101.outbound.protection.outlook.com [52.101.57.101])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2081.outbound.protection.outlook.com [40.107.93.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3540319D092
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 15:57:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.57.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E531728B7D8
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 15:57:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.81
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746633440; cv=fail; b=L6y9ZInMVtPfJJ7MhVOvedDQZSi12trHvu6kYii3AjrUb/GRTH2iM/4I3EjOQP91kg4Fyl5kAKI51acpPjHD5ghBdfjG1CdEFqkpSMA64hZhoG1ZEdBq4L3eOKrGg3E/J+MpQ3nDl6tTNxj6ZiRvsjtGnyu6zFDp6soMEwx+8lc=
+	t=1746633443; cv=fail; b=Rwz4YVHGGrPSx/SeU1ZL8WOvgfB29vtbw4mr/2jVY8sHpIOLPG86clePFDpuqn6DH9Vbk5+xD5p0+DYJV7qR5vPi7fMJEeCz7gxW2nOnbKFaRVcL4LY1xRAAyHO456KGAw+G0YYrZ5c081nn4UnXNtOzlhbMMAtNquQp2LGLi8I=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746633440; c=relaxed/simple;
-	bh=8imoQIJ9yQjD2HuE/f5W/0e5V1JlCqgvePObeW7Vx5Y=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=KlKvvxttv+Rbdf6LFJ/kd1isTeuBT0M0IhOE8MLixH3SPFciXUfhHoYDrV5k4x7AM1dTF+TXhktWafwJ7yMF/EW4YO4Kqls6Xh7O+lAN5cBOYU+NzT+d6ZzfjcmZrYiu+1tpckpUPPTP45KDjSW8CGJvk1HfHGx1GBPgDPxjxq0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=gtuTNTUL; arc=fail smtp.client-ip=52.101.57.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
+	s=arc-20240116; t=1746633443; c=relaxed/simple;
+	bh=QfvtkasnG9aQLYUdwXecrxjFmTRTfEiIGwwqyfk5jGA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Haa/3KTcxCqM8FDVSPfvufXCSYArKcN5HwyAVbngn87nyn/K0oIaZluE9awQlNUai7/vTu0hdIMEmJ8DBBwVgj8SOlCtkA6HRdX+aR2Th4BmRELv42nxTMd/zK6DDbjwLfLkDADGFKPaF+KMRuKAK61mrY8b3JnzxWvyv7DBKpY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=SNl46Eh7; arc=fail smtp.client-ip=40.107.93.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="gtuTNTUL"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="SNl46Eh7"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=zBep52ZrsEoxcUzGgzlQ3uzCumI5TT1//w/0oun6/HERq8rVX8NvgNugcddA0Kozwzmprdk0Y+NSx5/fRCZOSqx0Z8j+wolrwX59saYwlrEXs4puL/ofeGGr9J4MuRMZc2pQJz+2oQJFbWLSvHZQoIItOqGVrrLOe/ar9bso9gh3+E7fcaTyMFOArIG04oQACIpnzO4oiL3m7/XjAFz7BEGKP5clWZHnMykDeFeMGD7Ku+UqT14LsC0plS79l3MWSxugWieWf8TxG1YieWlZmYa3lBESPBS/SiX14wsEaL4kkFB3ka8b5vMqgNQJcra7W704w7nUF7wxkD3mVpBJ+Q==
+ b=aUtc7zUhD1VXkuLrEODVW22N2rjcMV3Wf8apbqM+x4zamXQeov9kWp0l6GP20qAV1UMwhyd4jGydqlm04LWyw7BYSPG5X7avCy0qgFDMKCwc0nfCZBYLrmzJrrF2tgrJcLY3tveCdDyazEd7YQ++KuNcYwGX79bZ6rZZ0gc4HOVWH4LBedUVwmf3elTSxSE/a4doELULtcbSn1Lf1m3rQQAG1NmaLLP8PvJLN13e0JeVt86SbjNBmkqBp30CYMqpRKJusGe9caDq1h2LfUORVQzX0eLd5v0P3pi0Q/5NgUGGIacY1UxOE3EWky/qy4+rxtKliXdQsNSEp0KM068aDg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Tt1vE3y/ugB5rTOZGohS4RXLmRRhCwCIJIE3kFm6aKY=;
- b=PCHZJoH9SRVFcPT8Ls1qye0KvtUL0XteUa87m7Y4/fRU4SEVBV8jFX7rcFG2v/LI0edkpqUFL6BPt7tL1VhlQ8MzoUXzA5VuLGpfQd+e3vyDK2u3Dgo30JNinKnLDl6k/yg/vA/1CLhOKVkhTVY09Pz4r0HyM4CtKORVVVMAndGkUhAvB3ZROo0tJDl4U/cUC2Oc+iQnE8W+kUAzEh1JJFkNsEjuBvnJyAgRWXoWwboEt2LMOnhFk8JxBxgDHLkru/aMiIvNqYviMorC/YTr1iyL25xRc4UWYBVJXwMS9ycZhftwvOvEt7VR1GTark5I3TPk9UeUo5pv/z7lWln9mA==
+ bh=sICmJx8w+PQdTkniZRbY2eqd2K6CBILgOV0JvgvYu1o=;
+ b=hSbOsSin7JfIxhfDt7jQK+CS4pZZD2h1wLqzUDKC7ioT/7LkZQpdkAdZAE/w7DHs/4BgLdbqd1Y0ZTSnixpMItlUA0wnCsm9J1ZZ1eFWqNDUipLQITzVHsq3wxg0JMQXsmvNYDMjXKzQeb/7gK5Dk1WegKna/Fnn09j/8m6nTndeIs7tuUDqWHGk1HHoqogkQ0ztJmRpzscrAQWydeOrEBS4jfM/BOwwzjTV77mtI4lesO48+55SbySdlqSUBhB4QDsUbbJyqq1fAM8x0V1IJagy/XW5PFDLl9DrGDVpI7WhBzp/vKfQSn4Rsiw3KcBcLnMkbzUn3t1c9hLvD8/VTg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
- header.from=os.amperecomputing.com; dkim=pass
- header.d=os.amperecomputing.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=os.amperecomputing.com; s=selector2;
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Tt1vE3y/ugB5rTOZGohS4RXLmRRhCwCIJIE3kFm6aKY=;
- b=gtuTNTULn0AuJ7wNVYeH7GlagHDtqgJ0b6Yd28zQWuu4/xwDqjfd1uzdfSH7Iy98IIR/JKe44VweSewMtNd9id7wJ3dIee7CG1R+v8zQyV/0fkWSFDAVGO8ZKdhwqP854GRSA1GdJvLGBbrs+wpal1rmqKjc0uso8QXjibetKlY=
+ bh=sICmJx8w+PQdTkniZRbY2eqd2K6CBILgOV0JvgvYu1o=;
+ b=SNl46Eh7uLPvps0DzctZ2asAwltTUL/e9KZkvKaPPLypSZvm1z5FjP67HsbQwMoj4Ve7gAnceMWZyCe9RdEwa9/FKhPZavjSQQ2N4hic+/AIEKQwFM4qNsLLpIZ8ylCwdCTlACEG/t/Gi//LYijs8nY7pwDf9IctzC3tjce7mOhKxPj0Zxgnr9YvMlKfDXoeCTH5tp0NMLnV/38EprDRuZO+7jDv0rtIoX4GjgmkFHNwchyD6A6CpkKk20gy6Q52MyLFJvR6s9UBLfZZ17z9k0GgcMvl3T9L8/l2qja0wJwjOS7mB0DAvtAvwJgRqi7pDgsFW/rhVbXZRTwj6JWTdQ==
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
-Received: from CH0PR01MB6873.prod.exchangelabs.com (2603:10b6:610:112::22) by
- MN0PR01MB7588.prod.exchangelabs.com (2603:10b6:208:373::19) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8699.20; Wed, 7 May 2025 15:57:10 +0000
-Received: from CH0PR01MB6873.prod.exchangelabs.com
- ([fe80::3850:9112:f3bf:6460]) by CH0PR01MB6873.prod.exchangelabs.com
- ([fe80::3850:9112:f3bf:6460%6]) with mapi id 15.20.8722.020; Wed, 7 May 2025
- 15:57:10 +0000
-Message-ID: <0856412f-048e-4698-bd9d-83393fe93ec5@os.amperecomputing.com>
-Date: Wed, 7 May 2025 08:57:07 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] mm: madvise: no-op for MADV_NOHUGEPAGE if THP is
- disabled
-To: Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, Matthew Wilcox <willy@infradead.org>
-References: <20250506-map-map_stack-to-vm_nohugepage-only-if-thp-is-enabled-v2-0-f11f0c794872@kuka.com>
- <20250506-map-map_stack-to-vm_nohugepage-only-if-thp-is-enabled-v2-2-f11f0c794872@kuka.com>
- <20250506164004.e80e635a28dabb89b7257820@linux-foundation.org>
- <968a59cb-2d10-444a-bdcf-55525159f1ba@kuka.com>
-Content-Language: en-US
-From: Yang Shi <yang@os.amperecomputing.com>
-In-Reply-To: <968a59cb-2d10-444a-bdcf-55525159f1ba@kuka.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: CH2PR17CA0019.namprd17.prod.outlook.com
- (2603:10b6:610:53::29) To CH0PR01MB6873.prod.exchangelabs.com
- (2603:10b6:610:112::22)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
+ CH1PR12MB9623.namprd12.prod.outlook.com (2603:10b6:610:2b3::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.23; Wed, 7 May
+ 2025 15:57:12 +0000
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a%5]) with mapi id 15.20.8722.020; Wed, 7 May 2025
+ 15:57:12 +0000
+From: Zi Yan <ziy@nvidia.com>
+To: Usama Arif <usamaarif642@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, david@redhat.com,
+ linux-mm@kvack.org, hannes@cmpxchg.org, shakeel.butt@linux.dev,
+ riel@surriel.com, baolin.wang@linux.alibaba.com, lorenzo.stoakes@oracle.com,
+ Liam.Howlett@oracle.com, npache@redhat.com, ryan.roberts@arm.com,
+ linux-kernel@vger.kernel.org, kernel-team@meta.com,
+ Yafang Shao <laoar.shao@gmail.com>
+Subject: Re: [PATCH 0/1] prctl: allow overriding system THP policy to always
+Date: Wed, 07 May 2025 11:57:08 -0400
+X-Mailer: MailMate (2.0r6255)
+Message-ID: <8E3EC5A4-4387-4839-926F-3655188C20F4@nvidia.com>
+In-Reply-To: <96eccc48-b632-40b7-9797-1b0780ea59cd@gmail.com>
+References: <20250507141132.2773275-1-usamaarif642@gmail.com>
+ <293530AA-1AB7-4FA0-AF40-3A8464DC0198@nvidia.com>
+ <96eccc48-b632-40b7-9797-1b0780ea59cd@gmail.com>
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: BN1PR12CA0003.namprd12.prod.outlook.com
+ (2603:10b6:408:e1::8) To DS7PR12MB9473.namprd12.prod.outlook.com
+ (2603:10b6:8:252::5)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,129 +70,257 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH0PR01MB6873:EE_|MN0PR01MB7588:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2c09c6e4-9fd1-4ad4-a166-08dd8d7fd328
+X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|CH1PR12MB9623:EE_
+X-MS-Office365-Filtering-Correlation-Id: bbd7ce80-9c19-40b4-91c6-08dd8d7fd4b9
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?aXYrakg5U1JwZkVHUmNOSjhjYnZlVTNGQ0xIWVlJUUo3Vml1andjMVdiaVdt?=
- =?utf-8?B?cWFvM2J4RnltZWZlY1NxaHl1L25jQTVsdEdHNVhKU3lFMzI0YWVMMDExN1lX?=
- =?utf-8?B?Rm8wczRTS2s5dGlBaFJhNVcxQktEbUwyeWZyam1OZ0FwKzh1bkVKaHNqOWJW?=
- =?utf-8?B?UksvMlhDMC91SnBiYkU4cFB5N2Q5U1FGVTdLSnlrVVptNHJ1czVqbkEyampZ?=
- =?utf-8?B?cit6QnErQWpkWGtyVFFKVlBEQ3JmcEsxMmFzb1phUENIMUdKanVnK3VHODM2?=
- =?utf-8?B?WTlHdllvN0RwN0piUUNrdDRJMnJiTzJjTDJuSzFhUHBpNGl3eU9nd0ZPbDdH?=
- =?utf-8?B?RUlZZk5xMXlLbTZGdVM0QWgvSGJaaCtjRzhvNGJOTkhjOFhsQlhCYjZ5VjhR?=
- =?utf-8?B?K1VPaUprTkRkV1ZUdFRZU0VwNk5nK2UvTDBGVlppUDhOd0hXVzFEc3N4c3VI?=
- =?utf-8?B?UWZUdS9veWVRb0tyeGFHSGhwZEhPMFVDTEUyNC9ZVW9hUlBYV0xEckgvWEFS?=
- =?utf-8?B?bzVQM25iN1lFUkIwa2c2R3RITkxMWkFhb29nbEo5cVQvTTFzUWluN3NXN0lI?=
- =?utf-8?B?aVF5MTdXMVBRVTlqM2d5RjlLNzU5Z0lLSHRuMFdvNGpWa1lPSW1zbVp0SWpL?=
- =?utf-8?B?d0QyN2hUcWp6Nk91bFpDVDhzUk1BNTlpNlNZL09CczVCZTZPSFJaVE9Vam9E?=
- =?utf-8?B?WVMyRmNKRHQ5bVl1bmFYY1JkUWxjUDJsQXZlcDMvbU5kbXUvR2l3S3I5Yms1?=
- =?utf-8?B?QXh4WmpPVkdrVVpSRld0Zm8rZVFGeTJPekNEVVFkOEN4NmErY3hCczZMU05T?=
- =?utf-8?B?a1RRZ3lkSDlYVXhuQUNDT2hNUnI4SFlhVEg0Wm1sdXJLNnNocGZKOEFjaURE?=
- =?utf-8?B?dVRScnhiWDIyL2xXWFBvQ20zYkFIdzJZUVM5TEFyano1ME9BZFdBclp6ZUdB?=
- =?utf-8?B?S21LOWw2QjN1S3ZyM1dCVFV5WjVqS3Q5RDMvbW1jenFYRkk4dzYzTlM4U3RR?=
- =?utf-8?B?M0lpcng5K0lvRnl3V1QvZWVMT2FlS05DNUVrTkxLUlVpbFRWeFNNZXhEUnRC?=
- =?utf-8?B?SnZ6WW1Xai9IR3V3NlNGQUtwWEZiNEpYSHplNUZuL2xlbklEd2JmMVdLeVB6?=
- =?utf-8?B?STJTOWZuNkVGcHgvM0t6bElweDNObnhrdk1ROTJ2bkovS0xIekx4WG51Q0tx?=
- =?utf-8?B?TGtrN2ovZHptaW9abE1VUjhMd0FiUEVjUzEzNkJZdkNCTmowZnF4RVFXMXhG?=
- =?utf-8?B?WVE4cEdCZUJtRVl1NDFuNFFqOWNmWEJqeVhjYVRSK0Fsc0JacXBNTXVKVGJY?=
- =?utf-8?B?YUtqOG1HZy9ydWdKRTU3djJKN3A2RlF6Q2VLZEk5SlFWS1g0NDQvdXJ5U3F4?=
- =?utf-8?B?cU9TSzlHWG16WkJjL1hzeXFiSEE5Y2ZLc1lFbDVGMTNabjBNZXJ3enFwNG9E?=
- =?utf-8?B?ak0ydGRMWDVxenJqcWsrUGpJUXcxYVBNR1I4bW96aTU5WDhaWVdnaEhBY3Zi?=
- =?utf-8?B?bTJ5VGFJUG5kVFNSQnJCVlJORzl0V0dNZFlRNDI1d1NkTnpuU280RUtad3J5?=
- =?utf-8?B?dzM0UTFTbFZYNTJHOGtTRXUwaHNpamhQOEZrYjg4MGNRNUd6SE8ySGlHR0VB?=
- =?utf-8?B?TEM5cVd0VXBvWVViY09reWtNdmJWdWVIdzJoaUZJN2pwMCtCWElKM0hvbWpk?=
- =?utf-8?B?UEttQXZJd2pBYVladTdpd2lsd2JtQzEwNDAxR0F1OVkyOERFRmpGME1YYldu?=
- =?utf-8?B?b1BtTnQyUk9xRC9IK3RvVEl6bmNqenlUbWp4NTdmeXpIeGhmd0pLdng0WU1S?=
- =?utf-8?B?djIvMWlMUVc0MzdIVnlXcGc2Y3BZU0FidE5DRXdUUHNXMnExZkFHRHFVMk5V?=
- =?utf-8?B?K3JXaHFTR1U0K0lKb1FOdGxRcG1mWThoZU1za2Fwdk1uc0lzLzVCN0pRVDhJ?=
- =?utf-8?Q?yn71xUU6nRA=3D?=
+	=?us-ascii?Q?MxWJm4ErtW4dgPGxtLS2aMpmcKVvbrADKInN432TLeTcBud8/qrL4y37aiL+?=
+ =?us-ascii?Q?FRvfRXBMUwfKBGOdh1+UkEfzPvdm2p8lTrd9Fjeli/gtbLWlQomSFRvjBBKk?=
+ =?us-ascii?Q?Z+2/r8b4ZLXVQJqVltoMEF2yvinIe224wW0pkle3OFa1vTwh9LX7hFyXE5bl?=
+ =?us-ascii?Q?dBbW0WqeSK1l/eHWA6ZQyHBjOmPurA/Lyl42W09OHNy87Ecfl31fP6iVM6HX?=
+ =?us-ascii?Q?OYtIFrXR6VC+uxdq+I96/aRroS4YgHvOsned4ypzupC/6rA4S1sKCA1mjjw1?=
+ =?us-ascii?Q?dGrkv9xKt+JvYIp7AinbO05cWm6Gp7BdPJCYmQypI/s11kZg9mKhF/k7oPAz?=
+ =?us-ascii?Q?ghCiccEOc+v8WnO+NOzPPV78ZdX61sjfQ1/wUyWsvE3LfFx1UpIklAzdZrWT?=
+ =?us-ascii?Q?bqzoWV3ieTFTB0Q9KELyN9UPuoRzvxnQaUazwNjRIEJKSF835w9Cs4Ff/GR3?=
+ =?us-ascii?Q?q7/6fZ8sYVW4ZhLYa9zF6jtdDhyPTOJe6rqn6V8iQAUmziOAGZox6gp06lB0?=
+ =?us-ascii?Q?FGhDpT1YiLuHqZIhkvrjyJVLPJ2mE4x4BanpZOkCSm/YSf5ol56O15q5yurL?=
+ =?us-ascii?Q?/GdYFRsK8qb+6ytUQraSQjxHU0bxfSu8RvijRQyQNmsc5OWMu9QlgrMMg4L2?=
+ =?us-ascii?Q?MQ2jlfB6RlxsBljT3mHoHi35m+i6WB/4J/E86qxRN6Eov5X5tq1YoQRsI0JC?=
+ =?us-ascii?Q?iyGBaDwjKsyHXq/RCCDxTyRnl1ahG1Zs0RuiZni8QaVVwTg1trw6XdEC1CSS?=
+ =?us-ascii?Q?kpPFbCo1cTgANrAGyb8UW0xcATtOAFLo1MlfMKVXFfDJiU2BOGQBVRnVYlpR?=
+ =?us-ascii?Q?T8afPkBCOL0lyWJjxqbCJep+18+ut1VtWUMA5uCtMK+BIti5PMngpl7iA/3C?=
+ =?us-ascii?Q?rkvInMLKLsHPrRLx+jk6t07t3nC6GGSv2Ysm72TniTfDw2OV8+VJ8gbSe07d?=
+ =?us-ascii?Q?F1xovvtSlWh+83h1n8RqZH9f95ExyfpIPenj3cxeNk50vYJLelwTttujBsRx?=
+ =?us-ascii?Q?L0bUMI1sDG8rC9TYNRRVFexQDAUzSE1hQMm6LwMv6h6Rck5MnyZ5nYYN9p5i?=
+ =?us-ascii?Q?1nLyCXbtkAZPIj2iIw7EQodAVPNPS1BZVBU0++dkYafs2dtxz7lUkzntMieH?=
+ =?us-ascii?Q?Iopiytn1+rkaqgCUIDO+ZNvx63PCPNj5hPQILrd7L9pL2S2+P9+XCexjXMGb?=
+ =?us-ascii?Q?EfsxMmmarSIzI3KNwjKcKEUsgdV6chiEK/pvSCJ9tmbPgUG7s2ft5HD82h7+?=
+ =?us-ascii?Q?P24SrsHLuwqRVp3Rl96/h1FhxPDpyqko/cim/fySPQl0yrKzJNfK0hLEdRAy?=
+ =?us-ascii?Q?CICndYMWc+THmqe4RV2zh4LwPq3EifmrNo+HB4mTJE9kk7ziIilBLsRcH2yq?=
+ =?us-ascii?Q?K+nYuqPXynpjVaqf5pyDO83V7/XaWAgcmCT0cSbIFSp/oyhGNxd9ap40wURf?=
+ =?us-ascii?Q?0Vupu/h0HwY=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR01MB6873.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?SWE4RjlYNjJLMlRrSlFJWGVlWDI3MThrM2ZHbmEvUzcrUGxrZXRTdTlvbXJM?=
- =?utf-8?B?aXBDZXExb0Z6d3h6Q0wxa2t2R2lkcGFkbENIOUNSbWM2MzREUDkxNnNicHFW?=
- =?utf-8?B?NnZ3SkxuOHJyOUpMNnVGZjJrK2thWndTYXBaTXlVUThnNis5UFpKL1hyR2lQ?=
- =?utf-8?B?RXhZNzZJTUR2YUpUZVF3dVk0MG1BRU45eTFYZ2I0VXM2MGJtbERJbnJud3or?=
- =?utf-8?B?Vnd5SmwxZ3NoTkMzd2xQYlltRFpVQ1RaU2t6VmtxWTFpQjgyektUWHBGRUgx?=
- =?utf-8?B?RlAvRG9Lb1BMRVh1ckhnbzVrbEplME1MTXAxUmlPLzNwWDQyTUswRkg3UnQz?=
- =?utf-8?B?aWd2Q1dPd3k2QlFidjNYblFSa2w4Z0lBVW5iSHJaL1R2Y0EzVGFGYnFFR3Za?=
- =?utf-8?B?NjRGbTNYd0tQNitKSmZ4QWJ6QitDZGVELzZUdGlQY0VMbHdDNFZJcG5zbzZE?=
- =?utf-8?B?ekpMMENBd3duS3k0cFRIYjZRT01pNENQa1NyRHMwaVZGa3NLUjhrU1VQTzY2?=
- =?utf-8?B?cGJ2a3RUdjhtdm0rSHNrNjd6UCtmR2ZWWTM5bTRicnRFclN4c2tCeXFqaTlt?=
- =?utf-8?B?UGtqQStzMEwvaklKZVpFamMxWk95MWhTeXRRZVVsU280eXFreHJ5dUthaytL?=
- =?utf-8?B?c0RrWFhXSTR6bWFURmN0TldoZWNFVE8rcnZjWmJxQUZYQncydk93bk5DdFFX?=
- =?utf-8?B?WUlUZWRNT1NRZ2ZOMEIyYjN6akVkVXc4ZGo0bENvQTF4cjFMOWZkN1JKREtH?=
- =?utf-8?B?NFd3RllnSTFGVWRpeDVjSElSVUR1cXRsd3hCWmJmdVJ1Q0pPS1ZENlo3czlM?=
- =?utf-8?B?NVBxUC9xaUhNdjdZdHA2N3ZUS2xZYzBVVEx2R3A3MkZsdDJpQVFKSjBxeVJ3?=
- =?utf-8?B?cnRTRVk1K2V2Ylg4T3lnbnI0SEpEYjM5elhtUEdJZzJQeHdFTkV2eU9yZTUz?=
- =?utf-8?B?UE1CMHFpdFFwZEJ6K3pzeEJqQXN5d1hRRkZ3WGdiL3pIZTFGK3VrMVJyMUtM?=
- =?utf-8?B?bVBVN2xGSE05ZzkzckE1NWZ2cUJkNnk4VVU0Qlp3ajJwVnVBd3gxcjRiTExk?=
- =?utf-8?B?bk1MTmRBU0RweldYZVlIK25DakVWOGFFOXh6RVM1WDRiSUpzdzgvWUdtc09U?=
- =?utf-8?B?T1pKdU5GNDB1ZlJINWUwOTE0VFNSdnRKY2pldFRjYmM3ZzdXaHptLzcveElO?=
- =?utf-8?B?Z3YvaXgzOUZ2dmZZWlpQWlU3TmhRRlFZYWtlQVFtdE15cjZySkpRT3h5RVRy?=
- =?utf-8?B?V2orWDJKYk1XaU13WjNPRXJTRVZXTjlSMVVURk02V2VQZXRCd2xYM1hiUStr?=
- =?utf-8?B?cGRwQUtONDVrQy9vZ0NrMXpjTXQwc3Z2a0hDcHNOSlhGVXl6TGltK3JUSFR1?=
- =?utf-8?B?ZVRjd1lEUEJSRjdJQnFiMlpESzJjdWhUMVZpSG42NmR1MnBVRi9qdXBMbDdF?=
- =?utf-8?B?TnYzczJ6Y1VXZnVPRWcvTlFKaGE4dmtwS3FmVXhKNUR0bElTUUJWa2YvTXVC?=
- =?utf-8?B?eEl6cjlnMW1EQmZuKzE0SnFHSEZmY2lNMVdxSWhqdG41R2ZvTE5ic0xOdWk5?=
- =?utf-8?B?Y2lwTlU3MjUydzJXSXhRVFltUjhLcEZ0b1UrUWM1UnFMRWV0M3A1R0VLZ1Bl?=
- =?utf-8?B?SUJlRGR3LzNnTlNCRm9Obk9XU0E3ZFFYMjZYVzZ5WjY0SExUL0ZKdklmNHhI?=
- =?utf-8?B?dnh1M1VNaUhPa3ArMWxYMFJHN2VHeXcvK0l1MDEvcWdieC9BRVZ6RTRJQW8y?=
- =?utf-8?B?WWRJb2lQd3ZJT0Q5bCtkaGJGcHZKakwvZjJpUmlIVCt6WExtZmFKaGFTRkRu?=
- =?utf-8?B?UWxIc0l0cklrczRVWXB5Um9tMjdrMEI2QTh2cG9MVGJZMVFYa2VNZG1Ha0pK?=
- =?utf-8?B?aTBzQ2V0bEpkb2UwL3BNbkFKZFlvT1pnMTYwMWVGNVI2aHFic1hZL3d2YUtJ?=
- =?utf-8?B?Ulg3RmFFbWtUbTMwZEN6eDhKcDVyamQzQUFtbUNxc1hqT2NkVnA5dWt2cGRK?=
- =?utf-8?B?c1U5NEFrMCtub0dJYm5mbGpmaTkvR05JMWxlbmpXZEN6VEx0UUxWQXM2dGRH?=
- =?utf-8?B?dXJidXl5L0VtbzJOcVU5b1BqTXBYNW9mWE9jUDB0aFNwWEFIZE5tWGZqdWpN?=
- =?utf-8?B?eEdCcXk3a3dVYkh2NjhIS2oydjl1TzBOeHI4bmlWYWJvSG1xSG9xem45VFdY?=
- =?utf-8?B?d2c9PQ==?=
-X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2c09c6e4-9fd1-4ad4-a166-08dd8d7fd328
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR01MB6873.prod.exchangelabs.com
+	=?us-ascii?Q?JZiGc6+Q9scg2NQGtowtA5Bhg2KGc7vamCSCyyF0wfyKJGn1JNjv5IlhwXuW?=
+ =?us-ascii?Q?lS2NZgOSs07Wbh8tVdXgj+VOfxvsfxKNdLhGQHZbC0pij0zSXcC6Y405Y0Zj?=
+ =?us-ascii?Q?tQvYN7dyZOyLkV/gW5ilxY0jNBMgANF7VtDFYaJdCZlOJduPFzIrGzhdfcgB?=
+ =?us-ascii?Q?3JJew/qJVRuA0VTTzsYQ5rf1OkQ5ERkkpMBeOePvCqb3wYiJmOQbOiENLsK4?=
+ =?us-ascii?Q?rL1w+y0sW0eD6UB18r99RrilGAjCU4Z1MmeZIHcOKazck2FyxLTPJu9W4bPI?=
+ =?us-ascii?Q?Y9XNZ3mVVXIbHOQ2FaA/rsNAuToxrrq5SkruwFdT4Ltv3vTUWT/uSDmO82Lf?=
+ =?us-ascii?Q?Wwk5fCpn3WJfg5C3+kCZP7DMu9ERQ+q92RNGxkoGkI27UTbAmcNc9MX+w+ma?=
+ =?us-ascii?Q?vlOIsVFR8hMN75cJqXcigcWBVL/UNRKGy1RWKhy5/rVs5+D2NJoMKVVncaY/?=
+ =?us-ascii?Q?eHqZ2j14+RcpU6jSrOGwyOPXogwSsb+Ogp6kFIVxFEtLoHsr6SQZfQZ0+s1M?=
+ =?us-ascii?Q?u018Q372TCl22tTY45jgL1LNAfZwqgWxeoPXEDdM6PnUXJcQSm1V8Fd2mcv1?=
+ =?us-ascii?Q?tYAS1KUdOAZkZOr2pWw8FvG3ZUxgsjt2ldNHHYIXTnqWC2wwdOA1/EORn6oK?=
+ =?us-ascii?Q?qAV87M4jNaGp3lmugVPw5Ksheu5XyQ8ZDyp4mA0PTpf2W1u0Rkoai/T3POC9?=
+ =?us-ascii?Q?07weKvgs7SjzQvVS4dKXq9n9ofNnRzN7C9YZ/RoDrshBmXfW/0TMZbfmtEUw?=
+ =?us-ascii?Q?86IgmvQ3i6qlxebZ0p3gZIjN4OvLta7kD71WJJ4RgMSDpj01E38EZwR0WR/G?=
+ =?us-ascii?Q?hnBf6groujclqvEYuFWbZPdnOGZGSgGyzdTaXrojfKqH4bB2ZvhmQBjA0MV5?=
+ =?us-ascii?Q?GBcubyx6xot2QFoGXBGoXmVgaiBjTifm2DYzSPZWqaXUWpYTfx8R3rus5nzx?=
+ =?us-ascii?Q?LgvJgTCZTJw3aRCfRveFMpxrl3jPVnYH+J5hgdteUOhaRJ4Ld70b0ZDeRLd5?=
+ =?us-ascii?Q?9WiyOLA2BwhC1WlcWb9SfFRvdYMzd5ql1Rys+5yxWcWfReFs4rQWjnJf7SxI?=
+ =?us-ascii?Q?iP4923VsYYde85RIt8XfRjv6DR/I8v4gSO3ihVOwTKwuV3TgT+azyz4tLt7s?=
+ =?us-ascii?Q?UsCIs1wyjIgvg1GEbmkC6SeXGK77l1FMdW3dqwLzXHHNHO3+wb92NO8MB6Ut?=
+ =?us-ascii?Q?qa0ALx84p5RtF7HWQQ2nlX99mLlYHpFTfskWkNUgCeP449W8s0y6WGF4Rx6j?=
+ =?us-ascii?Q?wBJmYff8uNRMfwYxfDqRT1YiT76wgXfUiU88E6/bHwoMrdOhztvviTHxMpxN?=
+ =?us-ascii?Q?PHhHDwE/yzYeEdlPnn0G2br0CH8rYz13IlIz1IFweKjR1pew95yEvb0ykQCi?=
+ =?us-ascii?Q?WQuswlrM/Hjbkg7/SP32zqCLYAqoYQ4gDPoV0GWDwIfDTLSkeRQbwaNMxmhm?=
+ =?us-ascii?Q?xTBx16Sy56MteIJ+4tPeCulSkEpVvPG88ITcYc7jeEAaOvqJC+TV7QdDHFmw?=
+ =?us-ascii?Q?I/00OGPpMZ1sYGWLVKJqMYGE657wP2ka3t7O425cMFlBDES4s11QEUAdXI3g?=
+ =?us-ascii?Q?o9D1hxqUWytKPPqhFnJN6q3oLXG5tSPewbxN5Dg9?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bbd7ce80-9c19-40b4-91c6-08dd8d7fd4b9
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2025 15:57:10.0896
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2025 15:57:12.6861
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: MhmhERCOhKFGdLESeLU4mrIBImXpd45VWgi9yofxbe2bLyCTHtQGF4gHEwfRhy0Uts17kv8P45NltPpeaWCmV88iPbb+ySvHHd+1WyytiG8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR01MB7588
+X-MS-Exchange-CrossTenant-UserPrincipalName: +cyNE2x4aH0oYG+psuk4jB8HivKM/1YO5Tdrm9KG+8Ft16waMxooAM5Gwh1JpE/7
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH1PR12MB9623
 
+On 7 May 2025, at 11:12, Usama Arif wrote:
 
+> On 07/05/2025 15:57, Zi Yan wrote:
+>> +Yafang, who is also looking at changing THP config at cgroup/containe=
+r level.
+>>
+>> On 7 May 2025, at 10:00, Usama Arif wrote:
+>>
+>>> Allowing override of global THP policy per process allows workloads
+>>> that have shown to benefit from hugepages to do so, without regressin=
+g
+>>> workloads that wouldn't benefit. This will allow such types of
+>>> workloads to be run/stacked on the same machine.
+>>>
+>>> It also helps in rolling out hugepages in hyperscaler configurations
+>>> for workloads that benefit from them, where a single THP policy is
+>>> likely to be used across the entire fleet, and prctl will help overri=
+de it.
+>>>
+>>> An advantage of doing it via prctl vs creating a cgroup specific
+>>> option (like /sys/fs/cgroup/test/memory.transparent_hugepage.enabled)=
+ is
+>>> that this will work even when there are no cgroups present, and my
+>>> understanding is there is a strong preference of cgroups controls bei=
+ng
+>>> hierarchical which usually means them having a numerical value.
+>>
+>> Hi Usama,
+>>
+>> Do you mind giving an example on how to change THP policy for a set of=
 
-On 5/7/25 4:44 AM, Ignacio Moreno Gonzalez wrote:
-> This patch resulted from the discussion on [0]. The issue I described there consisted of two aspects:
+>> processes running in a container (under a cgroup)?
 >
->    - CRIU saw a memory mapping containing the "nh" flag on a !THP kernel. This was addressed by my submission.
->    - CRIU tried to set the "nh" flag with madvise(), which resulted on -EINVAL.
+> Hi Zi,
 >
-> The issue is actually solved with the patch I submitted. But it was also discussed that calling madvise() with VM_NOHUGEPAGE should be a no-op and should not fail. That's why this patch was created.
+> In our case, we create the processes in the cgroup via systemd. The way=
+ we will enable THP=3Dalways
+> for processes in a cgroup is in the same way we enable KSM for the cgro=
+up.
+> The change in systemd would be very similar to the line in [1], where w=
+e would set prctl PR_SET_THP_ALWAYS
+> in exec-invoke.
+> This is at the start of the process, but you would already know at the =
+start of the process
+> whether you want THP=3Dalways for it or not.
 >
-> On 5/7/2025 1:40 AM, Andrew Morton wrote:
->>> +#ifndef CONFIG_TRANSPARENT_HUGEPAGE
->>> +#include <uapi/asm-generic/mman-common.h>
->>> +#endif
->> Why is the #ifndef here?
-> Because this is only included for the definition of VM_NOHUGEPAGE, which is only needed for the !THP case.
+> [1] https://github.com/systemd/systemd/blob/2e72d3efafa88c1cb4d9b28dd4a=
+de7c6ab7be29a/src/core/exec-invoke.c#L5045
 
-Can you just simply include <linux/mman.h> ?
+You also need to add a new systemd.directives, e.g., MemoryTHP, to
+pass the THP enablement or disablement info from a systemd config file.
+And if you find those processes do not benefit from using THPs,
+you can just change the new "MemoryTHP" config and restart the processes.=
 
-Thanks,
-Yang
 
->> This is the only file under include/linux which directly includes
->> something from uapi/asm-generic.  Indicates that we're doing something
->> wrong.
-> If we want to differentiate the behavior of hugepage_madvise() depending on the advice, then we need the definitions for the different advices... Maybe this is not the correct place to do this? We could also do that differentiation in madvise.c.
->
->> If this hunk is truly the correct approach then I think we need a
->> comment here fully explaining what is going on.   Because it looks odd!
-> To me, differentiating the behaviour of madvise() for MADV_HUGEPAGE and MADV_NOHUGEPAGE seems ok, and that was also the consensus on [0]. However, I lack the expertise to determine if this is the best place in the code to implement this change. Perhaps Lorenzo or Matthew can provide feedback here.
->
->
-> [0]: https://lore.kernel.org/linux-mm/20250502-map-map_stack-to-vm_nohugepage-only-if-thp-is-enabled-v1-1-113cc634cd51@kuka.com/
+Am I getting it? Thanks.
 
+>>
+>> Yafang mentioned that the prctl approach would require restarting all =
+running
+>> services[1] and other inflexiblities, so he proposed to use BPF to cha=
+nge THP
+>> policy[2]. I wonder if Yafang's issues also apply to your case and if =
+you
+>> have a solution to them.
+>>
+>> Thanks.
+>>
+>> [1] https://lore.kernel.org/linux-mm/CALOAHbCXMi2GaZdHJaNLXxGsJf-hkDTr=
+ztsQiceaBcJ8d8p3cA@mail.gmail.com/
+>> [2] https://lore.kernel.org/linux-mm/20250429024139.34365-1-laoar.shao=
+@gmail.com/
+>>>
+>>>
+>>> The output and code of test program is below:
+>>>
+>>> [root@vm4 vmuser]# echo madvise > /sys/kernel/mm/transparent_hugepage=
+/enabled
+>>> [root@vm4 vmuser]# echo inherit > /sys/kernel/mm/transparent_hugepage=
+/hugepages-2048kB/enabled
+>>> [root@vm4 vmuser]# ./a.out
+>>> Default THP setting:
+>>> THP is not set to 'always'.
+>>> PR_SET_THP_ALWAYS =3D 1
+>>> THP is set to 'always'.
+>>> PR_SET_THP_ALWAYS =3D 0
+>>> THP is not set to 'always'.
+>>>
+>>>
+>>> #include <stdio.h>
+>>> #include <stdlib.h>
+>>> #include <string.h>
+>>> #include <unistd.h>
+>>> #include <sys/mman.h>
+>>> #include <sys/prctl.h>
+>>>
+>>> #define PR_SET_THP_ALWAYS 78
+>>> #define SIZE 12 * (2 * 1024 * 1024) // 24 MB
+>>>
+>>> void check_smaps(void) {
+>>>     FILE *file =3D fopen("/proc/self/smaps", "r");
+>>>     if (!file) {
+>>>         perror("fopen");
+>>>         return;
+>>>     }
+>>>
+>>>     char line[256];
+>>>     int is_hugepage =3D 0;
+>>>     while (fgets(line, sizeof(line), file)) {
+>>>         // if (strstr(line, "AnonHugePages:"))
+>>>         //     printf("%s\n", line);
+>>>         if (strstr(line, "AnonHugePages:") && strstr(line, "24576 kB"=
+))
+>>> {
+>>>             // printf("%s\n", line);
+>>>             is_hugepage =3D 1;
+>>>             break;
+>>>         }
+>>>     }
+>>>     fclose(file);
+>>>     if (is_hugepage) {
+>>>         printf("THP is set to 'always'.\n");
+>>>     } else {
+>>>         printf("THP is not set to 'always'.\n");
+>>>     }
+>>> }
+>>>
+>>> void test_mmap_thp(void) {
+>>>     char *buffer =3D (char *)mmap(NULL, SIZE, PROT_READ | PROT_WRITE,=
+
+>>>                                 MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+>>>     if (buffer =3D=3D MAP_FAILED) {
+>>>         perror("mmap");
+>>>         return;
+>>>     }
+>>>     // Touch the memory to ensure it's allocated
+>>>     memset(buffer, 0, SIZE);
+>>>     check_smaps();
+>>>     munmap(buffer, SIZE);
+>>> }
+>>>
+>>> int main() {
+>>>     printf("Default THP setting: \n");
+>>>     test_mmap_thp();
+>>>     printf("PR_SET_THP_ALWAYS =3D 1 \n");
+>>>     prctl(PR_SET_THP_ALWAYS, 1, NULL, NULL, NULL);
+>>>     test_mmap_thp();
+>>>     printf("PR_SET_THP_ALWAYS =3D 0 \n");
+>>>     prctl(PR_SET_THP_ALWAYS, 0, NULL, NULL, NULL);
+>>>     test_mmap_thp();
+>>>
+>>>     return 0;
+>>> }
+>>>
+>>>
+>>> Usama Arif (1):
+>>>   prctl: allow overriding system THP policy to always per process
+>>>
+>>>  include/linux/huge_mm.h                          |  3 ++-
+>>>  include/linux/mm_types.h                         |  7 ++-----
+>>>  include/uapi/linux/prctl.h                       |  3 +++
+>>>  kernel/sys.c                                     | 16 ++++++++++++++=
+++
+>>>  tools/include/uapi/linux/prctl.h                 |  3 +++
+>>>  .../perf/trace/beauty/include/uapi/linux/prctl.h |  3 +++
+>>>  6 files changed, 29 insertions(+), 6 deletions(-)
+>>>
+>>> -- =
+
+>>> 2.47.1
+>>
+>>
+>> --
+>> Best Regards,
+>> Yan, Zi
+
+
+--
+Best Regards,
+Yan, Zi
