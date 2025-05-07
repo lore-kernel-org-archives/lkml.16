@@ -1,115 +1,150 @@
-Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BED8C139579
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 06:38:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF082139579;
+	Wed,  7 May 2025 06:38:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746599915; cv=none; b=GMIsPwqLgx0TgwxUPIB2F3bBRtRMS6kvGrUb9OeRD/AZIxJ56yNTubBeJYpnYqpAI18a1RqacSQfvScBYFLmCzRJmYNQmNer9USDEBpKBYikjAMzS00RzWWyxlzh8srGZl7cYKV+Rj67LT3GhatQbW1TShIrYzBAQ5CxV638eeI=
+	t=1746599921; cv=none; b=G1vRAKyzYoRLPvt6eKKIoxkcj874B3bOwVRyMUsv9JnnyuUNPg6DhJteQvx5cFEDw0pdCNoQKGbXjqOHtyZMvr9MHVdAWNOyZD41mVsQ9NZGUxa/aaPowIXeSg2QcDiGs0W0SRtlYjbA1TjewKgh6OvjZ24pBIfA6hDXqkdhZFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746599915; c=relaxed/simple;
-	bh=FMz0xL1Cwnszn0V3OnOQdvE86LJBrAEHmyJ8pPb9gko=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aJ2yKX0S9wgkvMxgi68biTnC3mDNvAcEWsc01PTn8CFDN7Jq9iJ7tnQV4SpB4h8wzIft9uXDKRZbVM4zBlNNlkEnJHG8Mku17ImBQUOXjtnJFWJXyoyX7sdseYphCJpRet60Ps7j8SASiCZi4kChFdiT+Vo6dW3sDY27jOHs9Tw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=tw13pxsB; arc=none smtp.client-ip=209.85.166.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
+	s=arc-20240116; t=1746599921; c=relaxed/simple;
+	bh=zoPVNfQfngSR07iIP+gMGPRpdmcR+TKOkCqpe3dtipE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=QDJX1TqK1pTX5ckti/3NOgVAVYlo4KXqD+wcyz2W9VOMl/LGR0+AuBtpC9KaL+i9wdI5VTlSYmPrTD5laREOkl0GrmSOXeVd0UOkFJFsbd5nmtAl+IwsJQATBxFIZc4tb4n5fbJ2cHCxWIHH1kmOUzcBEU8FVjeh+a3R+TcIP5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=UwoD3P+7; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="tw13pxsB"
-Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-3d4436ba324so57578315ab.2
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 23:38:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1746599913; x=1747204713; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SLSCTSvU1Pu3KZzXKgSBgnw1+cmm1sdq2UzaECQAViA=;
-        b=tw13pxsBDZFlG2oOiQZjyah41ZFT4uuuUUBkuVgBXTR/MycERvyapnQnUuW/wtjw/k
-         OABCRMCq1tf5rdOqmu68OXQaNzZfIEp/UY5HTjymD6VNuFTi9SL8eLvCspc6TWhd52MJ
-         Zgkp/ksmZTI/knVqvr38DfMxMsm3ZvtpP6dItf39Th3ROKv9qv9SZ7egg738reIKQdH1
-         s73DYQljbAcMCV8ZUawvRDk1NyJeagKpXsYGnMOLm0AVLdvDX1KFYosBKGxr+SjtSvb0
-         gwWd2c1ID9q2K3zGBTTI1VyHNS9efbIAagHxuUh0J1DmUNm5GabTExjdOJz19yo9ZjFE
-         QVag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746599913; x=1747204713;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SLSCTSvU1Pu3KZzXKgSBgnw1+cmm1sdq2UzaECQAViA=;
-        b=JbIwaiwcvUPEPWPYPjshbtTJKr8gS/dOFeTfsXfeyds+fjyBy1dam+g5Odm2x11Vap
-         m21ALJSimO6lVJu66eV0oefIivFj1MxRDpzBjXpuYvy/1FSADKsvG/QxFvYqHBe0d+EW
-         2wvFD6OPYSElxfh5bcvzmICbyJ84deWL1oARyU1RhjdkZS5vV/gUzbxpgMATKo5rioXR
-         DEweC8m4+UE10BsQdf9f325JufadAt0EwaR1oO8/Bvh5UnBECuvL9uGdMofwhqynrSIP
-         kxe0s6YVaKDYdxabq3fHDdXWOielf5vFcmW6xRukwx6gHSfw1UckQ2+TICVhvyt5tiFx
-         YpEw==
-X-Forwarded-Encrypted: i=1; AJvYcCX0MXpKc5A3ePRyGxYQXLPBld2476BgHTSBQZfOipAhynWcqLsM7Z0+cqa5deRAXvQhHZm6GLf4MVN9Pl8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2/FO+qqIo3IBJqTwWqrWbY6WhPbCBr8Fwaamt1UM4MI4HIe1d
-	BSoEcJr2iUHz17vALcQ4PCC/2e7shZoRMh7XQo+KK9N2PacLhWOWnBzc1rJtOD5DRwK/P9JxXrj
-	Ek3FdvR02jDqTFfDT19FPcZCt/Z/4rSfwXboAvQ==
-X-Gm-Gg: ASbGnct2n+qN3lEfud9pJl6YrXcKJ2mWyr+0KB9LRDqc9mQTHy9ymTlfAxMljFPjs13
-	/rMh4ZencNQj0sJvvbPU3OEMldB+w1DB72lhzv+as2w66GBK8KdxUjjKxILzmfIczll4TkPfkTO
-	Qw7CCQ+/ft/eSi+DsbP8ij
-X-Google-Smtp-Source: AGHT+IHf27rispqj66mqizfYO/3jAKoO4k+nD2tMDDWQ6j9J0hfCfqo5ejjOrQE39XLxzrAH6W+8xBqOHYZ/XCR2Qq0=
-X-Received: by 2002:a05:6e02:3d83:b0:3d9:2ca8:dda0 with SMTP id
- e9e14a558f8ab-3da7393603amr23647845ab.22.1746599912818; Tue, 06 May 2025
- 23:38:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="UwoD3P+7"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5471HmAb017086;
+	Wed, 7 May 2025 06:38:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	dYgH+XlFKDus3frugKdFHUJb0KxUeDoyMriUEOT3RUo=; b=UwoD3P+7OVQH/63H
+	29Bx8LKdbrsaCjW6cOwF15eNoy8O+TekI6gWRZvgMx/1LyZD2XFWbsmbxqDJcJ9X
+	u48jDiNzmn/DzFy2qL3jHwKW6NZ6S9wfopXl+/sit/OozLiaKADnxwe843i0z45g
+	kLHjHi1dvnLR4iLIQedMrYgdxnQy9kC8KkO8vZwCfgSV0UJnxf/lE9/grTb/UnGI
+	8bT/VkIEaH2aeO4VH9TTs83IIl59Ao6UY0FvWBtkQU3DZjRSkUtLwrwo1bvsvbM0
+	l7C8UTzFUM1VcR6alqXkFsYhz9IFamKHMQHxxyRtK5aSdV4R+p/LbXwL4RoRZmvo
+	h1eHXQ==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46f5u44r3w-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 07 May 2025 06:38:36 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5476cZIE017059
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 7 May 2025 06:38:35 GMT
+Received: from [10.216.63.157] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 6 May 2025
+ 23:38:31 -0700
+Message-ID: <b7e630de-07f9-4b21-9055-e9b387627564@quicinc.com>
+Date: Wed, 7 May 2025 12:08:21 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250505-kvm_tag_change-v1-1-6dbf6af240af@rivosinc.com>
-In-Reply-To: <20250505-kvm_tag_change-v1-1-6dbf6af240af@rivosinc.com>
-From: Anup Patel <anup@brainfault.org>
-Date: Wed, 7 May 2025 12:08:22 +0530
-X-Gm-Features: ATxdqUEEO9ElPqopLSdn1cGhHTcD6oP-eNKU_g5Vu-IabLPJnfhIVALu0OXu3ns
-Message-ID: <CAAhSdy0pdqnUa-GWiGHG3H_J9=J2yGXcRLfzsZgDzaZv+6r=jQ@mail.gmail.com>
-Subject: Re: [PATCH] RISC-V: KVM: Remove experimental tag for RISC-V
-To: Atish Patra <atishp@rivosinc.com>
-Cc: Atish Patra <atishp@atishpatra.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>, kvm@vger.kernel.org, 
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6] clk: qcom: Add support for Camera Clock Controller on
+ QCS8300
+To: Bjorn Andersson <andersson@kernel.org>,
+        Michael Turquette
+	<mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+CC: Ajit Pandey <quic_ajipan@quicinc.com>, Taniya Das <quic_tdas@quicinc.com>,
+        Jagadeesh Kona <quic_jkona@quicinc.com>,
+        Satya Priya Kakitapalli
+	<quic_skakitap@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Dmitry Baryshkov
+	<lumag@kernel.org>
+References: <20250327-qcs8300-mm-patches-v6-1-b3fbde2820a6@quicinc.com>
+Content-Language: en-US
+From: Imran Shaik <quic_imrashai@quicinc.com>
+In-Reply-To: <20250327-qcs8300-mm-patches-v6-1-b3fbde2820a6@quicinc.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=KcfSsRYD c=1 sm=1 tr=0 ts=681affec cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8
+ a=COk6AnOGAAAA:8 a=KKAkSRfTAAAA:8 a=k8wuuItXO5eEtyapRm4A:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-GUID: zCIemlL0gdt5rO_L-xoqI0QSGiRmL84D
+X-Proofpoint-ORIG-GUID: zCIemlL0gdt5rO_L-xoqI0QSGiRmL84D
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA3MDA2MCBTYWx0ZWRfXyHPKY1U6nePd
+ 96lypzFwuVwtJbLkUwHq3syxzrgfGiEJmDsbOtRbxSmF5UPLhcMAlvO1WDJHBV+u+w56zc5o9+f
+ 2+IkYa/u9OhwHxULEyABeRjJ9hfhkqQ3JTonayq/tNCB5GnHDicEb529dp1N4E2bR3rF5PlMgat
+ FqE0y6a9jMfg3bIAH5ZPzcSS4ERxi7oKJjr1sYbZZ+KvP/8wi4bwSHUgSKO9rp4+6lxWEpTQ0D9
+ tawU7uKRMqV6pwbmLrGvQM/UkxHBAyTJeNAB8ksdTXk4DqZdz2C4deuZ4dq5OFBWwQ6KOm3uu8S
+ 4ud3vi1kIpZUWAwHS7USyj0Ndp9850+AYOoYLoqLj2lWrcU5svnLj5qnninR7aaThGtWmLmE2G1
+ FiEtfJwgi75bHFMRszIOKaqP5pbLEA5FWlZ+ynQLrpLkMzDPbEcgO1pTdtJ/wYhLqn6XGrUy
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-07_02,2025-05-06_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 spamscore=0 suspectscore=0 bulkscore=0 mlxlogscore=999
+ phishscore=0 impostorscore=0 priorityscore=1501 malwarescore=0 adultscore=0
+ clxscore=1015 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505070060
 
-On Tue, May 6, 2025 at 1:17=E2=80=AFAM Atish Patra <atishp@rivosinc.com> wr=
-ote:
->
-> RISC-V KVM port is no longer experimental. Let's remove it to avoid
-> confusion.
->
-> Signed-off-by: Atish Patra <atishp@rivosinc.com>
+
+
+On 3/27/2025 3:32 PM, Imran Shaik wrote:
+> The QCS8300 Camera clock controller is a derivative of SA8775P, but has
+> few additional clocks and offset differences. Hence, add support for
+> QCS8300 Camera clock controller by extending the SA8775P CamCC.
+> 
+> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> Signed-off-by: Imran Shaik <quic_imrashai@quicinc.com>
 > ---
->  arch/riscv/kvm/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> This patch series add support for GPUCC, CAMCC and VIDEOCC on Qualcomm
+> QCS8300 platform.
+> 
+> Changes in v6:
+> - Use device_is_compatible() as per Stephen's review comment.
+> - Link to v5: https://lore.kernel.org/r/20250321-qcs8300-mm-patches-v5-1-9d751d7e49ef@quicinc.com
+> 
+> Changes in v5:
+> - Subset of this patch series is alreday applied, but CamCC driver patch
+> is not picked yet. Hence resend the CamCC driver patch.
+> - Link to v4: https://lore.kernel.org/all/20250109-qcs8300-mm-patches-new-v4-0-63e8ac268b02@quicinc.com/
+> 
+> Changes in v4:
+> - Updated the commit text as per the comment from Bjorn.
+> - Fixed the CamCC QDSS clock offset.
+> - Link to v3: https://lore.kernel.org/all/20241106-qcs8300-mm-patches-v3-0-f611a8f87f15@quicinc.com/
+> 
+> Changes in v3:
+> - Added new GPUCC and CAMCC binding headers for QCS8300 as per the review comments
+> - Updated the new bindings header files for GPUCC and CAMCC drivers.
+> - Added the R-By tags received in v2.
+> - Link to v2: https://lore.kernel.org/r/20241024-qcs8300-mm-patches-v2-0-76c905060d0a@quicinc.com
+> 
+> Changes in v2:
+> - Updated commit text details in bindings patches as per the review comments.
+> - Sorted the compatible order and updated comment in VideoCC driver patch as per the review comments.
+> - Added the R-By tags received in V1.
+> - Link to v1: https://lore.kernel.org/r/20241018-qcs8300-mm-patches-v1-0-859095e0776c@quicinc.com
+> ---
+>  drivers/clk/qcom/camcc-sa8775p.c | 103 +++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 98 insertions(+), 5 deletions(-)
+> 
 
-Queued for Linux-6.16
+Hi Bjorn,
+
+Could you please help pick this CamCC driver patch? The DT and bindings patches are picked already from this series, expect for this one.
+
+Please let me know if anything is required from my end.
 
 Thanks,
-Anup
-
->
-> diff --git a/arch/riscv/kvm/Kconfig b/arch/riscv/kvm/Kconfig
-> index 0c3cbb0915ff..704c2899197e 100644
-> --- a/arch/riscv/kvm/Kconfig
-> +++ b/arch/riscv/kvm/Kconfig
-> @@ -18,7 +18,7 @@ menuconfig VIRTUALIZATION
->  if VIRTUALIZATION
->
->  config KVM
-> -       tristate "Kernel-based Virtual Machine (KVM) support (EXPERIMENTA=
-L)"
-> +       tristate "Kernel-based Virtual Machine (KVM) support"
->         depends on RISCV_SBI && MMU
->         select HAVE_KVM_IRQCHIP
->         select HAVE_KVM_IRQ_ROUTING
->
-> ---
-> base-commit: f15d97df5afae16f40ecef942031235d1c6ba14f
-> change-id: 20250505-kvm_tag_change-dea24351a355
-> --
-> Regards,
-> Atish patra
->
+Imran
