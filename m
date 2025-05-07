@@ -1,49 +1,51 @@
-Received: from smtpbgbr1.qq.com (smtpbgbr1.qq.com [54.207.19.206])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED5E53209;
-	Wed,  7 May 2025 06:01:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.19.206
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C587182D2
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 06:03:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746597697; cv=none; b=QY13DkEj6rrc6uADajLCcGafFzA8FVNJrv9gSrDLTfKrVUzcSXBlrMBbUyvxoJyP72k84z092k4Y0XfdiBkhW+6iOGdDGY5Fve+dANqW0PjCcZ/gbJFcajD/RTYflH/wuBNXQDH8emf5BGDM8j+uLjbcq1Gm5q+Jf5YJGCw80mc=
+	t=1746597794; cv=none; b=bLpjOueDEuYFWIiOV3ADTDYPDFNFPc5ldHxVIm8ZZyLd6VdBPnTznaLzDk7RWl32AicP9SyQnouXT13HO6jrKzcmmnxHAeRrILrZvi25pRzpCWOEnSXtAwX3gC/VW66uBYdkHTSaebIolr820Bg1y+wga9Tlz7+LB4IwJKGXCA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746597697; c=relaxed/simple;
-	bh=owyLMd8hX1as4LmAee3vfHdMVtC6rPHCe4jax9TXDog=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NS4aQkTBiM4JqwebBvsDIureB80pDm/StMOI2RGZAk+GcZ97mgg6wv74QaIt7ACZkobv//3NQ9I5IRc+N7bNqSMyWeZWVgiVBVGbZkZ1FzsOPcfhhqL/ufkLTQqEYnxGSjHCR8jlXAGZeIULxKmRuKTuUHVHBQcN6l1lTopu+6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=izJXrBrp; arc=none smtp.client-ip=54.207.19.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="izJXrBrp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1746597661;
-	bh=YFMp6fwp6umPvxQeSd6J+Ddieu7ttoj12+2zhkifFpg=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=izJXrBrpQ/nQwr9dkjZAATfnLCu1Rla96LVU4J1mrh6V/GvTDk6TCahVPkGHosVDB
-	 Kz2Ng+yabjAbRT9217YXa4TE+LqHlHUZwbRmkQTiYU2A1F0F2BPvRaHsSQvFLuOMKW
-	 l1BZ2z2pi7l0uDyPCy5bfC1x8cLfPeABRv14sDpI=
-X-QQ-mid: zesmtpip4t1746597621t17870780
-X-QQ-Originating-IP: KjohCj6doj2ziNglKdDLK7u0qW0soYoxYWzSznlG6vg=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 07 May 2025 14:00:20 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 11213127213891153055
-EX-QQ-RecipientCnt: 8
-From: WangYuli <wangyuli@uniontech.com>
-To: richard.henderson@linaro.org,
-	mattst88@gmail.com,
-	wangyuli@uniontech.com
-Cc: linux-alpha@vger.kernel.org,
+	s=arc-20240116; t=1746597794; c=relaxed/simple;
+	bh=NcYvpxKMwUslW+64Y+PeTXJkCOiKsSGqom4YpqThU0g=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JFlz2KWhS/20rGoTJEVLRSi8b/ttnHhj653NYXY82uii6Dku+Ol9c5/tVpCG6WZQ8moGcduJfwmJw/iOC8d+wR8JRnKatqLrWwjnYaIcepwO97h/pCHIv4dokTbRJZL2A489YnmmwPpYmooM99HgiRCk5hkN7QLQngUP+mh2CbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3825F2F;
+	Tue,  6 May 2025 23:03:02 -0700 (PDT)
+Received: from K4MQJ0H1H2.emea.arm.com (K4MQJ0H1H2.blr.arm.com [10.162.43.22])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9893D3F5A1;
+	Tue,  6 May 2025 23:03:04 -0700 (PDT)
+From: Dev Jain <dev.jain@arm.com>
+To: akpm@linux-foundation.org
+Cc: Liam.Howlett@oracle.com,
+	lorenzo.stoakes@oracle.com,
+	vbabka@suse.cz,
+	jannh@google.com,
+	pfalcato@suse.de,
+	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
-	zhanjun@uniontech.com,
-	niecheng1@uniontech.com,
-	guanwentao@uniontech.com
-Subject: [RESEND PATCH] alpha/boot: Ignore vmlinux
-Date: Wed,  7 May 2025 14:00:12 +0800
-Message-ID: <47F75842218B0DDC+20250507060012.1203990-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.49.0
+	david@redhat.com,
+	peterx@redhat.com,
+	ryan.roberts@arm.com,
+	mingo@kernel.org,
+	libang.li@antgroup.com,
+	maobibo@loongson.cn,
+	zhengqi.arch@bytedance.com,
+	baohua@kernel.org,
+	anshuman.khandual@arm.com,
+	willy@infradead.org,
+	ioworker0@gmail.com,
+	yang@os.amperecomputing.com,
+	baolin.wang@linux.alibaba.com,
+	ziy@nvidia.com,
+	hughd@google.com,
+	Dev Jain <dev.jain@arm.com>
+Subject: [PATCH v2 0/2] Optimize mremap() for large folios
+Date: Wed,  7 May 2025 11:32:54 +0530
+Message-Id: <20250507060256.78278-1-dev.jain@arm.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,45 +53,68 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: ONJthgsgJlmJPy97owjLVYlHGkmgkKumyluC1ZenO0y9ITX2V/0mzrUA
-	0jK+BSq3Wyv0BQQ/wwb3wtGyzlDIjPZtfgUf5Y38A0r0M8obF2RvLfxlCNUQTrd4H137Vrs
-	6D+va6IRMxKnSJ0MxTjVOQi6ZTviVRMywJMxfpY8K+CJUTDY9aF0iVUZDiorks+6QwWU5Kq
-	c7dh0EhFnjMGEkaKWwipCc+vCi1vORr1vSaUFp3NeMGxh+7cZ9ZAvm3yOskElemIc+3do1l
-	FJI8FARJ7gxck6JTwf/m3pj5djOSvrkzKqjzisXXVgga92ETQMBoCq4mVEz9q1ZIg5Xh1To
-	dcbAuJHBwtENs2V7n/ll+2m0o8kb3h/qLN02l3ddbb5U/orjLrhp8OXLo/3wawLdG6adxLy
-	hyGXzDUXOomQcAUR8pivH0Rw0qy2l5m8RUWotzjRb4DYsMA2FMs0w2sB23mXZdWaAwh+ocE
-	gs0XGIXJyoy0xORxaZsQyQaKJ/o7nLV11pTXiiH/JG+OCKHYkeFsWnZc0be91N8f+8pSg+r
-	nsmNPkok2JsP3KfG/fODiifIRzkjOBy1cevzIEJBGtZcm8Wi+woPchWBBTjOpYAuI3SfXpl
-	D45lYoG22CKPtJoMKbBQqmILNMg8iF0gQDMUMQiIuf1jxUZ6vp7Z1rz8DRVmlh09WWAXcke
-	lazJnwFfDNdu96tc16bncHQNT51cx0GyiDD1cABJcvxkuVgwBQkwtmpiJW/NFZpCIfz+Udl
-	u6g/XFER22HuZpFledZo+s999emOqH6QTbqwszSnqUoJm2Aro+UaZf4F3aDr1ADCqxM5shI
-	WfKt4rKfgrjyn0+bNajO3hyHFUQIQ50gP44K6if/vmw2Y/T4AgnsH2w+KdKucBc1l6yl+S6
-	qSLKrK1dZtG0GJi9JmAolVx6n4kv7K/CH6DPbG7aiPg3EOwMcBqRgh+zmzzcvr+o1ElJwBG
-	uw26/p5vx/UNyyvgB/GbOdaBZYLzLwdbIf75g4EGLjBRdFUtXtO1SNOFetBd802QWXy6I0k
-	uAddM+pn4v2Wg5jBCObdh5dRvjDdQC7eZ9WWQ+7Q==
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-X-QQ-RECHKSPAM: 0
 
-The vmlinux file would be generated when building kernel.
+Currently move_ptes() iterates through ptes one by one. If the underlying
+folio mapped by the ptes is large, we can process those ptes in a batch
+using folio_pte_batch(), thus clearing and setting the PTEs in one go.
+For arm64 specifically, this results in a 16x reduction in the number of
+ptep_get() calls (since on a contig block, ptep_get() on arm64 will iterate
+through all 16 entries to collect a/d bits), and we also elide extra TLBIs
+through get_and_clear_full_ptes, replacing ptep_get_and_clear.
 
-Add it to .gitignore to ensure Git does not track it.
+Mapping 512K of memory, memsetting it, remapping it to src + 512K, and
+munmapping it 10,000 times, the average execution time reduces from 1.9 to
+1.2 seconds, giving a 37% performance optimization, on Apple M3 (arm64).
 
-Signed-off-by: WangYuli <wangyuli@uniontech.com>
----
- arch/alpha/boot/.gitignore | 2 ++
- 1 file changed, 2 insertions(+)
- create mode 100644 arch/alpha/boot/.gitignore
+Test program for reference:
 
-diff --git a/arch/alpha/boot/.gitignore b/arch/alpha/boot/.gitignore
-new file mode 100644
-index 000000000000..c85710c597e7
---- /dev/null
-+++ b/arch/alpha/boot/.gitignore
-@@ -0,0 +1,2 @@
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+vmlinux
+#define _GNU_SOURCE
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/mman.h>
+#include <string.h>
+#include <errno.h>
+
+#define SIZE (1UL << 20) // 512 KB
+
+int main(void) {
+    void *new_addr, *addr;
+
+    for (int i = 0; i < 10000; ++i) {
+        addr = mmap((void *)(1UL << 30), SIZE, PROT_READ | PROT_WRITE,
+                    MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+        if (addr == MAP_FAILED) {
+                perror("mmap");
+                return 1;
+        }
+        memset(addr, 0xAA, SIZE);
+
+        new_addr = mremap(addr, SIZE, SIZE, MREMAP_MAYMOVE | MREMAP_FIXED, addr + SIZE);
+        if (new_addr != (addr + SIZE)) {
+                perror("mremap");
+                return 1;
+        }
+        munmap(new_addr, SIZE);
+    }
+
+}
+
+v1->v2:
+ - Expand patch descriptions, move pte declarations to a new line,
+   reduce indentation in patch 2 by introducing mremap_folio_pte_batch(),
+   fix loop iteration (Lorenzo)
+ - Merge patch 2 and 3 (Anshuman, Lorenzo)
+ - Fix maybe_contiguous_pte_pfns (Willy)
+
+Dev Jain (2):
+  mm: Call pointers to ptes as ptep
+  mm: Optimize mremap() by PTE batching
+
+ include/linux/pgtable.h | 29 ++++++++++++++++++++++
+ mm/mremap.c             | 54 +++++++++++++++++++++++++++++------------
+ 2 files changed, 68 insertions(+), 15 deletions(-)
+
 -- 
-2.49.0
+2.30.2
 
