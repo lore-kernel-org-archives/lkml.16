@@ -1,274 +1,168 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26CEB28A40A;
-	Wed,  7 May 2025 17:59:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39C141EA7DD
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 18:01:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746640777; cv=none; b=hpDCalbHNJebB53IsMSv/ZQga4TQfSbJsed2mQXYBNcyolGiZfK5xDub1Vrt8ToaD/zrtF0cuxXDX8lH5Gxc7Vhc+ssPb0nY4Rq2FWAhz7CkSJ+XkTX1jOOWoCwlUohjGZuDfaFxrg6qK5Vr9lwl9oX1G485hlgrVFjA3EA+/sw=
+	t=1746640883; cv=none; b=mtHrIk2ABfjtfswWu0eFX72+QERLvP2Dt6Q3eN8TN+mQN8smB6vVnivA5JV03RikTVrldu7x0BYMT8e4mcYZbpzSZ2KhHdRKqyrtVH5mjXGTEekiwjG/50VXxRsbUOEqeLwPOGLdpAFtG09dNiGCfWMw/NurTa6fVdpBeh8wsXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746640777; c=relaxed/simple;
-	bh=wX6INNBRrr2KfnOIS/teo1Q4349z3OUlylBu9eFj/iE=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=ll/N9iEgbXLl2Kil8i0z0oQ0oKDDm2LMOOl4XQttPNgniM4VL3guEyPE+7XUBZsVjxBy2DYLGpo8O8HPAce7Gt+MuCtgSvX3LifNn1gdvrVNFT0fw7CbAQ0PGtmauhdvSBl2KFXvzdXc2UzER+wp91cZ642r18FM3Re+4cMCtnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 36EFD16F2;
-	Wed,  7 May 2025 10:59:24 -0700 (PDT)
-Received: from [192.168.20.57] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 86CA83F5A1;
-	Wed,  7 May 2025 10:59:32 -0700 (PDT)
-Message-ID: <89d1df2f-29d7-4442-9d92-9c29e7276b08@arm.com>
-Date: Wed, 7 May 2025 12:59:30 -0500
+	s=arc-20240116; t=1746640883; c=relaxed/simple;
+	bh=26Zb7LiBJSl3gQZzW3a8HzAfTQc562cMCy6AuDfWssI=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=FNn0ElXIcIAyrj+o2HsJGHZKOH544AoYb8ETr8y7i0T2aBHl7VjQeW+viTfckXBwvc0uYMCdUv7mrvg36nQPPz8mhHuvBMw5vkLOQKB/yC4s5lF4h0AvnIQfPQO20fFLbQXYMfz+JzoVYv0T3i/pB1tw+ibcqBC2M5TPPJ7OjFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Kv0G2HrY; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Kv0G2HrY"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-af534e796baso25167a12.3
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 11:01:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746640881; x=1747245681; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=FbajxzigzwfB6KYWyyGtLYt8OcNqKAvCe8D0yhsQfcc=;
+        b=Kv0G2HrY9qAgSd8eRvjxJAABOFB5W2JhoUYOizCb6BznTq3hWvud6UF440GgE/8uvK
+         oEg1a4uIS68bqihONhGoxFd8uIpyTDnhUOKIK6CMtOzu4SM4AmFfYqHLIQDox+4VIA5s
+         y+HsGMUuA0fmC+KZ7Heh4XAeOvKAxLcYjiHQgRZaZ5qkAWSq32en+Ic3d075fUcNyFNw
+         o3XXtlZK4SqrcbLg5a6pt3W25tpQ1ijEJSfjpc2LqOKdkF6CLdNr/fIQds2QQQPE/+4n
+         5lAzSL66QYG1YuJIqVwAtCzk/Ch/IsgO/tXr/KJG+VP7rZkrWA+DuOgsngCob0N1Q/rF
+         68MQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746640881; x=1747245681;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FbajxzigzwfB6KYWyyGtLYt8OcNqKAvCe8D0yhsQfcc=;
+        b=Z145OKFqB25PgQzIqJpVmkkT+c2NV+3Bi9MbER7GQMq0eD6x7sMiH6n7mF5XOpZBnY
+         abgyAn5HB6kL7Ezmwk4sWLKC2vO1MLqEONYgklHgra2wKtDD3VbIq5KnB3JNgs6wcy//
+         2Ydxt5gYRp8JblR1bT9ft8AUNrkWqnTWUMfv8Dmuuz587Syk6DLwfkGsFynvvOinPRCT
+         YC0GV4SMQILZvCEw823kpv8HWTk6r2xo3Pg+NdtE+jU+cKTpJEQ2NJ5Sen4JgzivwYYb
+         IWYwUZL92PuOhj73y1Xl6L1UVV6TTuHDZXaoWnPEu0/78OYb83tyR2mkAWBviflaQL4J
+         euFw==
+X-Forwarded-Encrypted: i=1; AJvYcCWTHDTBq33z7GA0ftIgHNUuppbiXWloq+yfLANkaQCtXPHduKFKvl0Yd8LjjCH417OA7kF7eHPdGi7v3Qk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxmUgjp5+Jqmrtrm3/9bbUSaD0GADmovqcSYXp74TR4r8x5a9R
+	4c4D+h09MVIe+rEa/fpHOz9NTX2/4g1sOXRPro6sr1S0OpZxDPH6mVY8tw4lF/YebuuXILTt7as
+	qqg==
+X-Google-Smtp-Source: AGHT+IFAAB1cRX2ShIDeBVkV9/+IDWgDLmDry9yYG7heeYgF6kyohsv+w+LtJtnvKy1ws16F4ufVFsvvfC8=
+X-Received: from pjbpm5.prod.google.com ([2002:a17:90b:3c45:b0:2ef:d136:17fc])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3d02:b0:30a:255c:9c89
+ with SMTP id 98e67ed59e1d1-30b3a6634a4mr119512a91.19.1746640881483; Wed, 07
+ May 2025 11:01:21 -0700 (PDT)
+Date: Wed, 7 May 2025 11:01:19 -0700
+In-Reply-To: <aBsNxmHE7UO03iCs@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ACPI/PPTT: fix off-by-one error
-From: Jeremy Linton <jeremy.linton@arm.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: "Heyne, Maximilian" <mheyne@amazon.de>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>,
- Len Brown <lenb@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>,
- Ard Biesheuvel <ardb@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20250506-draco-taped-15f475cd@mheyne-amazon>
- <214c2a2d-e0ea-4ec6-9925-05e39319e813@arm.com>
- <CAJZ5v0jvWXDQQ++4wmWJ+i=jds+MZ68bRB9+26WM4tAPHFxALw@mail.gmail.com>
- <1911d3b6-f328-40a6-aa03-cde3d79554de@arm.com>
- <CAJZ5v0ii9HLfqfgcp=1qRRX6M1yThf7ZPNkSLVc5GGFhv=N-Lg@mail.gmail.com>
- <ad04d07b-d610-4355-bd47-1d2fb49711f3@arm.com>
- <fb2e3c60-1171-4f5c-852d-a5bfdc4f9c2a@arm.com>
- <25aa77b9-0077-4021-b55c-e94327b7847b@arm.com>
- <CAJZ5v0hTiJSp9q4iWu_EHB47X3Bf9LFY+ZZoqm7aN0cD8Jnjvg@mail.gmail.com>
- <4d449d83-8b86-4933-8584-bdcbd4db88e8@arm.com>
-Content-Language: en-US
-In-Reply-To: <4d449d83-8b86-4933-8584-bdcbd4db88e8@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250506093740.2864458-1-chao.gao@intel.com> <20250506093740.2864458-6-chao.gao@intel.com>
+ <aBpFvyITMc0WhlX4@google.com> <aBsNxmHE7UO03iCs@intel.com>
+Message-ID: <aBuf7wiiDT0Wflhk@google.com>
+Subject: Re: [PATCH v6 5/7] x86/fpu: Initialize guest fpstate and FPU pseudo
+ container from guest defaults
+From: Sean Christopherson <seanjc@google.com>
+To: Chao Gao <chao.gao@intel.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	tglx@linutronix.de, dave.hansen@intel.com, pbonzini@redhat.com, 
+	peterz@infradead.org, rick.p.edgecombe@intel.com, weijiang.yang@intel.com, 
+	john.allen@amd.com, bp@alien8.de, chang.seok.bae@intel.com, xin3.li@intel.com, 
+	Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	"H. Peter Anvin" <hpa@zytor.com>, Oleg Nesterov <oleg@redhat.com>, Eric Biggers <ebiggers@google.com>, 
+	Stanislav Spassov <stanspas@amazon.de>, Kees Cook <kees@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
 
-On 5/7/25 12:35 PM, Jeremy Linton wrote:
-> Hi,
+On Wed, May 07, 2025, Chao Gao wrote:
+> From: Chao Gao <chao.gao@intel.com>
+> Date: Fri, 31 May 2024 02:03:30 -0700
+> Subject: [PATCH] x86/fpu: Initialize guest fpstate and FPU pseudo container
+>  from guest defaults
 > 
-> On 5/7/25 12:01 PM, Rafael J. Wysocki wrote:
->> On Wed, May 7, 2025 at 6:41 PM Jeremy Linton <jeremy.linton@arm.com> 
->> wrote:
->>>
->>> On 5/7/25 11:38 AM, Jeremy Linton wrote:
->>>> On 5/7/25 11:31 AM, Jeremy Linton wrote:
->>>>> On 5/7/25 11:12 AM, Rafael J. Wysocki wrote:
->>>>>> On Wed, May 7, 2025 at 5:51 PM Jeremy Linton <jeremy.linton@arm.com>
->>>>>> wrote:
->>>>>>>
->>>>>>> On 5/7/25 10:42 AM, Rafael J. Wysocki wrote:
->>>>>>>> On Wed, May 7, 2025 at 5:25 PM Jeremy Linton
->>>>>>>> <jeremy.linton@arm.com> wrote:
->>>>>>>>>
->>>>>>>>> Hi,
->>>>>>>>>
->>>>>>>>> On 5/6/25 8:13 AM, Heyne, Maximilian wrote:
->>>>>>>>>> Commit 7ab4f0e37a0f ("ACPI PPTT: Fix coding mistakes in a 
->>>>>>>>>> couple of
->>>>>>>>>> sizeof() calls") corrects the processer entry size but unmasked a
->>>>>>>>>> longer
->>>>>>>>>> standing bug where the last entry in the structure can get
->>>>>>>>>> skipped due
->>>>>>>>>> to an off-by-one mistake if the last entry ends exactly at the
->>>>>>>>>> end of
->>>>>>>>>> the ACPI subtable.
->>>>>>>>>>
->>>>>>>>>> The error manifests for instance on EC2 Graviton Metal instances
->>>>>>>>>> with
->>>>>>>>>>
->>>>>>>>>>       ACPI PPTT: PPTT table found, but unable to locate core 
->>>>>>>>>> 63 (63)
->>>>>>>>>>       [...]
->>>>>>>>>>       ACPI: SPE must be homogeneous
->>>>>>>>>>
->>>>>>>>>> Fixes: 2bd00bcd73e5 ("ACPI/PPTT: Add Processor Properties
->>>>>>>>>> Topology Table parsing")
->>>>>>>>>> Cc: stable@vger.kernel.org
->>>>>>>>>> Signed-off-by: Maximilian Heyne <mheyne@amazon.de>
->>>>>>>>>> ---
->>>>>>>>>>      drivers/acpi/pptt.c | 4 ++--
->>>>>>>>>>      1 file changed, 2 insertions(+), 2 deletions(-)
->>>>>>>>>>
->>>>>>>>>> diff --git a/drivers/acpi/pptt.c b/drivers/acpi/pptt.c
->>>>>>>>>> index f73ce6e13065d..4364da90902e5 100644
->>>>>>>>>> --- a/drivers/acpi/pptt.c
->>>>>>>>>> +++ b/drivers/acpi/pptt.c
->>>>>>>>>> @@ -231,7 +231,7 @@ static int acpi_pptt_leaf_node(struct
->>>>>>>>>> acpi_table_header *table_hdr,
->>>>>>>>>>                               sizeof(struct acpi_table_pptt));
->>>>>>>>>>          proc_sz = sizeof(struct acpi_pptt_processor);
->>>>>>>>>
->>>>>>>>> This isn't really right, it should be struct acpi_subtable_header,
->>>>>>>>> then
->>>>>>>>> once the header is safe, pull the length from it.
->>>>>>>>>
->>>>>>>>> But then, really if we are trying to fix the original bug that the
->>>>>>>>> table
->>>>>>>>> could be shorter than the data in it suggests, the struct
->>>>>>>>> acpi_pptt_processor length plus its resources needs to be checked
->>>>>>>>> once
->>>>>>>>> the subtype is known to be a processor node.
->>>>>>>>>
->>>>>>>>> Otherwise the original sizeof * change isn't really fixing 
->>>>>>>>> anything.
->>>>>>>>
->>>>>>>> Sorry, what sense did it make to do
->>>>>>>>
->>>>>>>> proc_sz = sizeof(struct acpi_pptt_processor *);
->>>>>>>>
->>>>>>>> here?  As much as proc_sz = 0 I suppose?
->>>>>>>
->>>>>>> No, I agree, I think the original checks were simplified along 
->>>>>>> the way
->>>>>>> to that. It wasn't 'right' either.
->>>>>>>
->>>>>>> The problem is that there are three subtypes of which processor 
->>>>>>> is only
->>>>>>> one, and that struct acpi_pptt_processor doesn't necessarily reflect
->>>>>>> the
->>>>>>> actual size of the processor structure in the table because it has
->>>>>>> optional private resources tagged onto the end.
->>>>>>
->>>>>> Right.
->>>>>>
->>>>>>> So if the bug being fixed is that the length check is validating 
->>>>>>> that
->>>>>>> the table length is less than the data in the table, that's still a
->>>>>>> problem because its only validating the processor node without
->>>>>>> resources.
->>>>>>
->>>>>> Admittedly, it is not my code, but I understand this check as a
->>>>>> termination condition for the loop: If there's not enough space in 
->>>>>> the
->>>>>> table to hold a thing that I'm looking for, I may as well bail out.
->>>>>>
->>>>>>> AKA the return is still potentially returning a pointer to a 
->>>>>>> structure
->>>>>>> which may not be entirely contained in the table.
->>>>>>
->>>>>> Right, but this check should be made anyway before comparing
->>>>>> cpu_node->parent to node_entry, when it is known to be a CPU entry
->>>>>> because otherwise why bother.
->>>>>
->>>>> Right, but then there is a clarity because really its walking the
->>>>> table+subtypes looking for the cpu node. Exiting early because its not
->>>>> big enough for a cpu node makes sense but you still need the cpu node
->>>>> check to avoid a variation on the original bug.
->>>>>
->>>>>
->>>>>
->>>>>>
->>>>>> Roughly something like this:
->>>>>>
->>>>>> proc_sz = sizeof(struct acpi_pptt_processor);
->>>>>>
->>>>>> while ((unsigned long)entry + entry->length <= table_end) {
->>>>>
->>>>> Here your reading the entry, without knowing its long enough. For the
->>>>> leaf check just using struct acpi_pptt_processor is fine, but for the
->>>>> acpi_find_processor_node():
->>>>>
->>>>> proc_sz = sizeof(struct acpi_subtable_type);
->>>>
->>>> Although, maybe I just wrote code that justifies using
->>>> acpi_pptt_processor here because the entry->num_of_priv_resources 
->>>> length
->>>> check isn't being made without it. So ok, use proc_sz = sizeof(struct
->>>> acpi_subtable_type) and assume that we don't care if the subtable type
->>>> is less than proc_sz.
->>>
->>> Sorry for the noise, scratch that, a better solution is just to swap the
->>> length checking in the 'if' statement. Then its clear its iterating
->>> subtable types not processor nodes.
->>
->> Do you mean something like this (modulo GMail-induced whitespace damage):
->>
->> --- a/drivers/acpi/pptt.c
->> +++ b/drivers/acpi/pptt.c
->> @@ -231,16 +231,22 @@
->>                    sizeof(struct acpi_table_pptt));
->>       proc_sz = sizeof(struct acpi_pptt_processor);
->>
->> -    while ((unsigned long)entry + proc_sz < table_end) {
->> -        cpu_node = (struct acpi_pptt_processor *)entry;
->> -        if (entry->type == ACPI_PPTT_TYPE_PROCESSOR &&
->> -            cpu_node->parent == node_entry)
->> -            return 0;
->> +    while ((unsigned long)entry + proc_sz <= table_end) {
->> +        if ((unsigned long)entry + entry->length <= table_end &&
->> +            entry->type == ACPI_PPTT_TYPE_PROCESSOR &&
->> +            entry->length == proc_sz +
->> +                    entry->number_of_priv_resources * sizeof(u32)) {
->> +            cpu_node = (struct acpi_pptt_processor *)entry;
->> +
->> +            if (cpu_node->parent == node_entry)
->> +                return 0;
->> +        }
->> +
->>           if (entry->length == 0)
->>               return 0;
->> +
->>           entry = ACPI_ADD_PTR(struct acpi_subtable_header, entry,
->>                        entry->length);
->> -
->>       }
->>       return 1;
->>   }
->>
+> fpu_alloc_guest_fpstate() currently uses host defaults to initialize guest
+> fpstate and pseudo containers. Guest defaults were introduced to
+> differentiate the features and sizes of host and guest FPUs. Switch to
+> using guest defaults instead.
 > 
+> Adjust __fpstate_reset() to handle different defaults for host and guest
+> FPUs. And to distinguish between the types of FPUs, move the initialization
+> of indicators (is_guest and is_valloc) before the reset.
 > 
-> Right, I think we are largely on the same page, I flipflopped around 
-> about using subtable vs processor but the processor size assumption does 
-> remove an extra check. The version that compiles that I was about to 
-> test (and this will take me hours) looks like:
+> Suggested-by: Chang S. Bae <chang.seok.bae@intel.com>
+> Signed-off-by: Chao Gao <chao.gao@intel.com>
+> ---
+>  arch/x86/kernel/fpu/core.c | 27 ++++++++++++++++++++-------
+>  1 file changed, 20 insertions(+), 7 deletions(-)
 > 
-> 
-> @@ -231,7 +231,8 @@ static int acpi_pptt_leaf_node(struct 
-> acpi_table_header *table_hdr,
->                               sizeof(struct acpi_table_pptt));
->          proc_sz = sizeof(struct acpi_pptt_processor);
-> 
-> -       while ((unsigned long)entry + proc_sz < table_end) {
-> +       /* ignore sub-table types that are smaller than a processor node */
-> +       while ((unsigned long)entry + proc_sz <= table_end) {
->                  cpu_node = (struct acpi_pptt_processor *)entry;
->                  if (entry->type == ACPI_PPTT_TYPE_PROCESSOR &&
->                      cpu_node->parent == node_entry)
-> @@ -273,15 +274,18 @@ static struct acpi_pptt_processor 
-> *acpi_find_processor_node(struct acpi_table_he
->          proc_sz = sizeof(struct acpi_pptt_processor);
-> 
->          /* find the processor structure associated with this cpuid */
-> -       while ((unsigned long)entry + proc_sz < table_end) {
-> +       while ((unsigned long)entry + proc_sz <= table_end) {
->                  cpu_node = (struct acpi_pptt_processor *)entry;
-> 
->                  if (entry->length == 0) {
->                          pr_warn("Invalid zero length subtable\n");
->                          break;
->                  }
-> +               /* entry->length may not equal proc_sz, revalidate the 
-> processor structure length */
->                  if (entry->type == ACPI_PPTT_TYPE_PROCESSOR &&
->                      acpi_cpu_id == cpu_node->acpi_processor_id &&
-> +                   (unsigned long)entry + entry->length <= table_end &&
-> +                   entry->length == proc_sz + cpu_node- 
->  >acpi_processor_id * sizeof(u32) &&
+> diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
+> index 444e517a8648..0d501bd25d79 100644
+> --- a/arch/x86/kernel/fpu/core.c
+> +++ b/arch/x86/kernel/fpu/core.c
+> @@ -236,19 +236,22 @@ bool fpu_alloc_guest_fpstate(struct fpu_guest *gfpu)
+>  	struct fpstate *fpstate;
+>  	unsigned int size;
+>  
+> -	size = fpu_kernel_cfg.default_size + ALIGN(offsetof(struct fpstate, regs), 64);
+> +	size = guest_default_cfg.size + ALIGN(offsetof(struct fpstate, regs), 64);
+> +
+>  	fpstate = vzalloc(size);
+>  	if (!fpstate)
+>  		return false;
+>  
+> +	/* Initialize indicators to reflect properties of the fpstate */
+> +	fpstate->is_valloc	= true;
+> +	fpstate->is_guest	= true;
+> +
+>  	/* Leave xfd to 0 (the reset value defined by spec) */
+>  	__fpstate_reset(fpstate, 0);
+>  	fpstate_init_user(fpstate);
+> -	fpstate->is_valloc	= true;
+> -	fpstate->is_guest	= true;
+>  
+>  	gfpu->fpstate		= fpstate;
+> -	gfpu->xfeatures		= fpu_kernel_cfg.default_features;
+> +	gfpu->xfeatures		= guest_default_cfg.features;
+>  
+>  	/*
+>  	 * KVM sets the FP+SSE bits in the XSAVE header when copying FPU state
+> @@ -535,10 +538,20 @@ void fpstate_init_user(struct fpstate *fpstate)
+>  
+>  static void __fpstate_reset(struct fpstate *fpstate, u64 xfd)
+>  {
+> -	/* Initialize sizes and feature masks */
+> -	fpstate->size		= fpu_kernel_cfg.default_size;
+> +	/*
+> +	 * Initialize sizes and feature masks. Supervisor features and
+> +	 * sizes may diverge between guest FPUs and host FPUs, whereas
+> +	 * user features and sizes are always identical the same.
+> +	 */
+> +	if (fpstate->is_guest) {
+> +		fpstate->size		= guest_default_cfg.size;
+> +		fpstate->xfeatures	= guest_default_cfg.features;
+> +	} else {
+> +		fpstate->size		= fpu_kernel_cfg.default_size;
+> +		fpstate->xfeatures	= fpu_kernel_cfg.default_features;
+> +	}
 
-s/acpi_processor_id/number_of_priv_resources.
+Nice!  I like this idea.
 
->                       acpi_pptt_leaf_node(table_hdr, cpu_node)) {
->                          return (struct acpi_pptt_processor *)entry;
->                  }
-> 
-> 
-> 
+> +
+>  	fpstate->user_size	= fpu_user_cfg.default_size;
+> -	fpstate->xfeatures	= fpu_kernel_cfg.default_features;
+>  	fpstate->user_xfeatures	= fpu_user_cfg.default_features;
+>  	fpstate->xfd		= xfd;
 
+And then a follow-up patch (or same patch?) to do this?
+
+	if (fpstate->is_guest) {
+		fpstate->size           = guest_default_cfg.size;
+		fpstate->xfeatures      = guest_default_cfg.features;
+		fpstate->xfd		= 0;
+	} else {
+		fpstate->size           = fpu_kernel_cfg.default_size;
+		fpstate->xfeatures      = fpu_kernel_cfg.default_features;
+		fpstate->xfd		= init_fpstate.xfd;
+	}
+>  }
+> -- 
+> 2.47.1
