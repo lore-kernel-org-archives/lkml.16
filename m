@@ -1,93 +1,122 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DB4D28003F;
-	Wed,  7 May 2025 12:48:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 060F628136B;
+	Wed,  7 May 2025 12:48:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746622082; cv=none; b=nuEYB4cWZTBBECam7Bo10B8yBQvApjMvW1SzzfrzwhLsTrqHlB8bU5oirB7twhcJk+uzK3aDDIN7MyLrt1nDZ/ujhWtV5toQmF9Y5KOCi1k0ohkOpCopQkTkY014AhViBDKWHFBk138xH7uHVDlrPOiqc/X+4Vz2R9CQVqGrh5w=
+	t=1746622096; cv=none; b=jV2U+i7eboxL8bK0ksTVW/Ctjnhr/1EmoX93gvD2b2FbH98pDOb7X5GJb2lMC/B9XgtFuS/k8Qeiz9tS2a1mxH5Y2HLnYnjqwnXwIRZfqC5oOwWo+m68S4Ef9FAbPXjQjZbcNIkBjTtk0VTvigWQFY1kSBDnpW1bYBQrPv1WNJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746622082; c=relaxed/simple;
-	bh=wn38EI640D1g24fRAEMevwzesmAqXU7j7c0FMEpe4tk=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=JD0RVwUECcFD7aeHOXv0+EIbBvWC7hF0msvIuM/Ujs3fAPLzIY7R1E0uEKysIyw63kFQwY5UQGAKH+EpS9oTEb9yqUbBWigZiR9BRxR5f8GzRBX1dr+0a3ffvjZpTywYiKtuc8XZKlvx/ByN5Dr9egOfYmHdbx9udy5ly07u/Qg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c04mtJgE; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1746622096; c=relaxed/simple;
+	bh=GCsE80ARZWHPnDXsrOwvca/8zaXprzOlGBiWhv0oI0w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=K09DlV9MHN8dLIuLWgSX2+C1fjtPl+IiERsW/CZ/ZYmKgOvCdePcr+oGuUF0oiYm0aSEoQ/loEn8XXYLqNzjWs65XUb2PFyRGziaLpX+Jlb9Me6mktuFZmcE0/kFJy5c66HgN80IrD3T+3N2RwKIFL4sMr+ZwKq6flMsQqKWVvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=rNbcqNXR; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c04mtJgE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746622080; x=1778158080;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=wn38EI640D1g24fRAEMevwzesmAqXU7j7c0FMEpe4tk=;
-  b=c04mtJgErdOxeCrOzARslZjUeY1jWmm1M9k8iTS2zSasoRuXg3IbS5MH
-   hK1+5oBppil1kfcUKnwP3oTas6Dez/5tfpaVVuT56kpE8tRahYbyENYhm
-   VCFozQIm+MlGgu5vrDMDaH5Gi2GWE+VJe/Mmi8iYDwxUPeEw0+W9tPj8/
-   aK4bbolEbFFocXNuP/qGOdfFpN7jOpYv/doFJt4PH6AWOKniLNqme8WwZ
-   ij/0okkEqj1nC05MHR9t2fZ8wO1V/z1jBEMreaIwbJdfQDFyYv1zZ7NNR
-   2ciwubwc1ZopEVs5h48rIh4dw5ZcAjxfC42RqBfMuZu8Jr6mBDLm7bGFo
-   A==;
-X-CSE-ConnectionGUID: e7jM+qz3SbGFV2RQJ+mnKg==
-X-CSE-MsgGUID: yNqaVxWlTI25iPc+C+WnWA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="65879978"
-X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
-   d="scan'208";a="65879978"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 05:48:00 -0700
-X-CSE-ConnectionGUID: t31yEBd6Suq0xzj3yTia+A==
-X-CSE-MsgGUID: wTo+M8k9QRuCZr1Bqc59ug==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
-   d="scan'208";a="139995101"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.30])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 05:47:56 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: platform-driver-x86@vger.kernel.org, Runhua He <hua@aosc.io>
-Cc: Mario Limonciello <mario.limonciello@amd.com>, Rong Zhang <i@rong.moe>, 
- Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>, 
- Xinhui Yang <cyan@cyano.uk>, Yemu Lu <prcups@krgm.moe>, 
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
- Hans de Goede <hdegoede@redhat.com>, linux-kernel@vger.kernel.org
-In-Reply-To: <20250507100103.995395-1-hua@aosc.io>
-References: <20250507100103.995395-1-hua@aosc.io>
-Subject: Re: [PATCH v2] platform/x86/amd/pmc: Declare quirk_spurious_8042
- for MECHREVO Wujie 14XA (GX4HRXL)
-Message-Id: <174662207156.8998.15057018004940201223.b4-ty@linux.intel.com>
-Date: Wed, 07 May 2025 15:47:51 +0300
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="rNbcqNXR"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 547A4FjN012177;
+	Wed, 7 May 2025 12:48:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=0bF/6bqbsMkdjnuADJ5ycDEUAyKEb1tjELJNpbapA
+	fU=; b=rNbcqNXRDQ2HpA147RYxWjnVKWiUi4ukpgohuGUhLQq2XYswvulA2qczH
+	GQri6IRSJ8s9cPPrxTMCb0UbJNbFLRXi8nHpnodtmACRm8MnrVYqJCztgD6j4S3k
+	KhrK5oBI0oo2K2SpxiJ1EFJVoQjdMyFJrZ5f33m8Xf5090ommFv2c6IpHpkaHXMm
+	e5QaxEPXZitNY4+x+ZabWioHq7ASotQZoBeJFkhPUk3cjtYQMJNdzqMCDHwRs7lj
+	LrYVjikzQFQ8qjTZrLt+GxPreRuxAbL3leo2lX//N04hVMZ5bWBZTJGK59n1XYsh
+	v4GFvbmwlihlkspUqZ9O5va4jWb4w==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46g5ejrquv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 07 May 2025 12:48:06 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 547ChJjD002761;
+	Wed, 7 May 2025 12:48:06 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46g5ejrqus-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 07 May 2025 12:48:06 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 547B08MH013765;
+	Wed, 7 May 2025 12:48:05 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 46e062ga98-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 07 May 2025 12:48:05 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 547Cm3ER55378276
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 7 May 2025 12:48:03 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A03CC2004E;
+	Wed,  7 May 2025 12:48:03 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8CCF620043;
+	Wed,  7 May 2025 12:48:03 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed,  7 May 2025 12:48:03 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55669)
+	id 370F5E0610; Wed, 07 May 2025 14:48:03 +0200 (CEST)
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+        Daniel Axtens <dja@axtens.net>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        kasan-dev@googlegroups.com, linux-s390@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: [PATCH v5 0/1] kasan: Avoid sleepable page allocation from atomic context
+Date: Wed,  7 May 2025 14:48:02 +0200
+Message-ID: <cover.1746604607.git.agordeev@linux.ibm.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=SvuQ6OO0 c=1 sm=1 tr=0 ts=681b5687 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=dt9VzEwgFbYA:10 a=RptFD5b0m2ehXSuSLUwA:9 a=zZCYzV9kfG8A:10
+X-Proofpoint-GUID: ls0CSTEdIVroqRAPQ4MRaJy_bGIyuZkh
+X-Proofpoint-ORIG-GUID: w76n1Ot5A2NfAgFq8dUBreGB-wgkHpPu
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA3MDExOSBTYWx0ZWRfX8fftuVRzpHmz C9OXZDcMi45ugFCLH5H7G6/lJZsCvwZDupHonClR8qSdrvG0sBJbqM0F/OrcCod5exx+Q8Md9Lw 5kSuOTzLLR/ulJfXkDqEhOMoDr6oJy4QlL3eQ67PM2fPPu7Ry0JSXH0e9gtBPkKknCfnchdYQyT
+ sNEaur/fRmK0VjRgQ49JYDrZyPS2Hl+ImVWP5YKGeI0khECPbvOpSE6LZy/NWpygtwUSSdwSsTI ce35Cf76owiXIFPhrfZcfJAHPNDYfvI8dNyiBM92S62IqXWp9cgFOKo1TrLmAEsxQVcOSiTHHHr klmf5Rt4SwNECdv/XL6bF7tcpiJ7kZuFrOKOHJLsmfmlxl4rTqn4u3UMzMFrdYvFws4TyHwZuRK
+ 1jEI5U9u9Dh5OCQrtWcuCNp2T4b9khOaBlbBrfGI1KyVQl8Ry6PGob7dTc5u0B7vVqqLXEXy
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-07_04,2025-05-06_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ impostorscore=0 malwarescore=0 bulkscore=0 mlxlogscore=555 phishscore=0
+ adultscore=0 priorityscore=1501 spamscore=0 mlxscore=0 suspectscore=0
+ clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505070119
 
-On Wed, 07 May 2025 18:01:03 +0800, Runhua He wrote:
+Hi All,
 
-> MECHREVO Wujie 14XA (GX4HRXL) wakes up immediately after s2idle entry.
-> This happens regardless of whether the laptop is plugged into AC power,
-> or whether any peripheral is plugged into the laptop.
-> 
-> Similar to commit a55bdad5dfd1 ("platform/x86/amd/pmc: Disable keyboard
-> wakeup on AMD Framework 13"), the MECHREVO Wujie 14XA wakes up almost
-> instantly after s2idle suspend entry (IRQ1 is the keyboard):
-> 
-> [...]
+Chages since v4:
+- unused pages leak is avoided
 
+Chages since v3:
+- pfn_to_virt() changed to page_to_virt() due to compile error
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-fixes branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
-local branch there, which might take a while.
+Chages since v2:
+- page allocation moved out of the atomic context
 
-The list of commits applied:
-[1/1] platform/x86/amd/pmc: Declare quirk_spurious_8042 for MECHREVO Wujie 14XA (GX4HRXL)
-      commit: 0887817e4953885fbd6a5c1bec2fdd339261eb19
+Chages since v1:
+- Fixes: and -stable tags added to the patch description
 
---
- i.
+Thanks!
+
+Alexander Gordeev (1):
+  kasan: Avoid sleepable page allocation from atomic context
+
+ mm/kasan/shadow.c | 77 ++++++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 63 insertions(+), 14 deletions(-)
+
+-- 
+2.45.2
 
