@@ -1,100 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-190a.mail.infomaniak.ch (smtp-190a.mail.infomaniak.ch [185.125.25.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61481233145;
-	Wed,  7 May 2025 11:49:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13052233145
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 11:50:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746618572; cv=none; b=uVP272xiNuqPtfLbj6LV8I+LRS8zHEWCRANl7sQTPP1T00VjqAZrx5dx+cXXHC80i1U7BWZnPNNLQsV/gvh/NuNaLPX4OnkYzkftxUBHuA6e4mtZA04YdgkYQbb0brGF3PyP1goiu7KPtr+GL9Gcn3HWEEAEui/deIBeE+iT/qg=
+	t=1746618643; cv=none; b=dBOVHo3+aaJAcssgpXBVt9ZU+WRbqdpVCFncnaE+vd4/85nC/s6m8PzCdH8nyOfwkT1xCfxJjmkr3xupH3Vry8aiwn7PCAegYt8CZCcruPg/eT76BpFyCaSc+WCccZ3MbzlQ6ktkOiU/7pkHYbjjZfFJ/HacvdDZdjR7le9JtYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746618572; c=relaxed/simple;
-	bh=Q4o0fFmfThH09sb0d8R9/UT4Ki/dcycKtlq2v1Yg8cs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sF0DPkvNgSMLkdONW/rSmW8BESHSFOOv4bZSZm89Cd32kyT/6T3zVhmu6JANp/LBo17JAMJpFAA9EV8Ua0F2IdtRRjQe+7Z1fIn7lWigAzAtInilEsmNBTeGi1SQIJDy6Jbfl9apg9JwA+IxMmx1Apow22QlcF3c+tQ0mbKSYu0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DSO14H+I; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746618643; c=relaxed/simple;
+	bh=uEzum5nF+PqoNqWvpTR6AVRrPhNnN62R1oXqODBSJjk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fD3a2Ti4CfHjmoRlATiWKzF74BGHCrwUjh4LiOjXnOsvrSHKHGWYvSoWOh81YEiczOutgTcZ6kETMnrvmdFnJpPMqATF/uo3IfPERJYEXkmgPkzl2tL9XK4FhV0puwM2l90bqyoq7uqY0ES3xMa9JP5Z6eeR80RxwZqBmxyrWJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=LuVxiMyu; arc=none smtp.client-ip=185.125.25.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DSO14H+I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC4A7C4CEE7;
-	Wed,  7 May 2025 11:49:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746618571;
-	bh=Q4o0fFmfThH09sb0d8R9/UT4Ki/dcycKtlq2v1Yg8cs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=DSO14H+IpsNgJc1JF6TVkBOno/ZTvSaGvXOtI8F7caSC1Su6hQJIESypVzBcmOpZT
-	 1h3wbKEF/FtbWkPY/pBUD/suEXaAQmE72Se+Y+OGqvSN9vJy/qUEuwA8oas+ha9u5K
-	 cnTXFlZ9pfKlBGccaSf8Narri4djKLI2y7sZcuwzmyTVdTmU3sAF1vniOrWoW2Kt3r
-	 b1GcaY9aTB3CKFnGxpb9FbW/dLJZnPcmJL8YlcgBImuUKro1fWXST8nQ+/4sJ3PJZ2
-	 7kBRzXWAUuGagevFJVQVQPTCTvKFrlmxoLdk4pmI3pNxcY9E5CaGXHXnqujqpWkhNJ
-	 Nkqko6CufPaKA==
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30bf5d7d107so54994301fa.2;
-        Wed, 07 May 2025 04:49:31 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWkjwUsYwf+lFVi5kvz+pOqg/atqRzUve/Mv+pP7FnG4KTRmd13508MV15PVtQt8SB41asDR6vWXtwRaxEm@vger.kernel.org, AJvYcCWzP3l+IC6J9PzgZO/FiT/G9WKzzMfBy+bjlNr3XYb32rVGTbJmZd9YUERLgMkeK6EEj7O3RVpSIu0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLQ9ET5+as/63W20ggXXs4JRYa+koNkm5iX0Hp1mpRwxWz8Vnm
-	dxLbTnltru8ubDHCuI9rhKrw1MBLZ15lrapEDVGcIVX5YFlgvEeYUvq61GxeuOXvIn/Q8PFvR6e
-	kc5WxWhsIV84pYwG5NET6hZsutt0=
-X-Google-Smtp-Source: AGHT+IGyuczRVoIfKOuvSe4gWmNKzJpVRRL6/4X0pW0V0I6ErEGy9VFfhIR3MsuIm3dmJf3Yo1p5j6Gkk/7fcY8NYxg=
-X-Received: by 2002:a2e:b891:0:b0:30c:f60:6c6 with SMTP id 38308e7fff4ca-326ad15318fmr10546881fa.6.1746618570255;
- Wed, 07 May 2025 04:49:30 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="LuVxiMyu"
+Received: from smtp-3-0001.mail.infomaniak.ch (smtp-3-0001.mail.infomaniak.ch [10.4.36.108])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4Zstqq3mW7zZdQ;
+	Wed,  7 May 2025 13:50:31 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
+	s=20191114; t=1746618631;
+	bh=6bNZjWeXM1bJfsmZDx17ViRiBQiCQa2YXEftr1jlh/0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LuVxiMyuDShtoyGX/ntkRyXvVvBSrY9NULDxOYqcY7rlMWOtrKbVbC/rE8DiFFXuM
+	 YauOCY1zCOna9NmCgIXqs+69CmHLLjzlJedZmWmfc0GSaUNOv53fvP2eLyTvOFVmYP
+	 7IwZYXuZ3KmPyxR61j4FNbNuV9spXEEYzN4FbL00=
+Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4Zstqn3hkjzZWb;
+	Wed,  7 May 2025 13:50:29 +0200 (CEST)
+Date: Wed, 7 May 2025 13:50:28 +0200
+From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+To: Jann Horn <jannh@google.com>
+Cc: Christian Brauner <brauner@kernel.org>, 
+	Kuniyuki Iwashima <kuniyu@amazon.com>, alexander@mihalicyn.com, bluca@debian.org, 
+	daan.j.demeyer@gmail.com, davem@davemloft.net, david@readahead.eu, edumazet@google.com, 
+	horms@kernel.org, jack@suse.cz, kuba@kernel.org, lennart@poettering.net, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, me@yhndnzj.com, 
+	netdev@vger.kernel.org, oleg@redhat.com, pabeni@redhat.com, viro@zeniv.linux.org.uk, 
+	zbyszek@in.waw.pl
+Subject: Re: [PATCH RFC v3 08/10] net, pidfs, coredump: only allow
+ coredumping tasks to connect to coredump socket
+Message-ID: <20250507.phoyeu7Ao9ja@digikod.net>
+References: <20250505193828.21759-1-kuniyu@amazon.com>
+ <20250505194451.22723-1-kuniyu@amazon.com>
+ <CAG48ez2YRJxDmAZEOSWVvCyz0fkHN2NaC=_mLzcLibVKVOWqHw@mail.gmail.com>
+ <20250506-zertifikat-teint-d866c715291a@brauner>
+ <CAG48ez25gm3kgrS_q3jPiN0k6+-AMbNG4p9MPAD4E1WByc=VBA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250504095230.2932860-25-ardb+git@google.com>
- <20250504095230.2932860-30-ardb+git@google.com> <20250507095801.GNaBsuqd7m15z0kHji@fat_crate.local>
-In-Reply-To: <20250507095801.GNaBsuqd7m15z0kHji@fat_crate.local>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Wed, 7 May 2025 13:49:19 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXEpO3bip+Zyi9x4WN_=qy+oBQ+PpJRw-Je=roQcRt3KsA@mail.gmail.com>
-X-Gm-Features: ATxdqUH9fH7i7x1fH01oa-ejsPddPFo25J-cW4bGdzm04ZYbdzUayU21u3lgbvA
-Message-ID: <CAMj1kXEpO3bip+Zyi9x4WN_=qy+oBQ+PpJRw-Je=roQcRt3KsA@mail.gmail.com>
-Subject: Re: [RFT PATCH v2 05/23] x86/sev: Move instruction decoder into
- separate source file
-To: Borislav Petkov <bp@alien8.de>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, 
-	linux-efi@vger.kernel.org, x86@kernel.org, Ingo Molnar <mingo@kernel.org>, 
-	Dionna Amalie Glaze <dionnaglaze@google.com>, Kevin Loughlin <kevinloughlin@google.com>, 
-	Tom Lendacky <thomas.lendacky@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAG48ez25gm3kgrS_q3jPiN0k6+-AMbNG4p9MPAD4E1WByc=VBA@mail.gmail.com>
+X-Infomaniak-Routing: alpha
 
-On Wed, 7 May 2025 at 11:58, Borislav Petkov <bp@alien8.de> wrote:
->
-> On Sun, May 04, 2025 at 11:52:35AM +0200, Ard Biesheuvel wrote:
-> > From: Ard Biesheuvel <ardb@kernel.org>
+On Tue, May 06, 2025 at 04:51:25PM +0200, Jann Horn wrote:
+> On Tue, May 6, 2025 at 9:39 AM Christian Brauner <brauner@kernel.org> wrote:
+> > > ("a kernel socket" is not necessarily the same as "a kernel socket
+> > > intended for core dumping")
 > >
-> > As a first step towards disentangling the SEV #VC handling code -which
-> > is shared between the decompressor and the core kernel- from the SEV
-> > startup code, move the decompressor's copy of the instruction decoder
-> > into a separate source file.
->
-> Why?
->
-> I'm still unclear why that happens.
->
-> I'd like to read some blurb in those commit messages which explains the big
-> picture: the insn decoder bits are going to be in the bla mapping because...
-> , and because... and this is wonderful because ...
->
+> > Indeed. The usermodehelper is a kernel protocol. Here it's the task with
+> > its own credentials that's connecting to a userspace socket. Which makes
+> > this very elegant because it's just userspace IPC. No one is running
+> > around with kernel credentials anywhere.
+> 
+> To be clear: I think your current patch is using special kernel
+> privileges in one regard, because kernel_connect() bypasses the
+> security_socket_connect() security hook. I think it is a good thing
+> that it bypasses security hooks in this way; I think we wouldn't want
+> LSMs to get in the way of this special connect(), since the task in
+> whose context the connect() call happens is not in control of this
+> connection; the system administrator is the one who decided that this
+> connect() should happen on core dumps. It is kind of inconsistent
+> though that that separate security_unix_stream_connect() LSM hook will
+> still be invoked in this case, and we might have to watch out to make
+> sure that LSMs won't end up blocking such connections... which I think
+> is related to what Mickael was saying on the other thread.
 
-Sure, I can add some more prose. I'll add something along the lines of
+Right
 
-"Some of the SEV code that is shared between the decompressor and the
-kernel proper runs very early in the latter, and therefore needs to be
-built in a special way. This does not apply to all of that shared
-code, though - some is used both by the decompressor, and by the
-kernel proper but at a much later stage. That code can be built as
-ordinary, position dependent code with instrumentations enabled etc
-etc.
+> Landlock
+> currently doesn't filter abstract connections at that hook, so for now
 
-The #VC handling machinery and the associated instruction decoder are
-conceptually separate from the SEV initialization code, and are never
-used on the early startup path in the core kernel. So start separating
-it from the SEV startup code, by moving the decompressor's copy of the
-instruction decoder to a separate source file. In a subsequent patch,
-the shared #VC handling code will be moved into a separate shared
-source file, which will be included here too and no longer into sev.c.
-That way, it no longer gets included into the early SEV startup code,
-and can be built in the ordinary way."
+Landlock implements this hook since Linux 6.12 and can deny connections
+from a sandboxed process to a peer outside the sandbox:
+https://docs.kernel.org/userspace-api/landlock.html#ipc-scoping
+I was worried that security_unix_stream_connect() would be called with
+the task's credential, which would block coredumps from sandboxed tasks.
+This would also apply to other LSMs.
 
-Does that help?
+> this would only be relevant for SELinux and Smack. I guess those are
+> maybe less problematic in this regard because they work on full-system
+> policies rather than app-specific policies; but still, with the
+> current implementation, SELinux/Smack policies would need to be
+> designed to allow processes to connect to the core dumping socket to
+> make core dumping work.
