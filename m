@@ -1,65 +1,76 @@
-Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EAB11DD877
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 22:04:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21C561DD877;
+	Wed,  7 May 2025 22:04:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746655494; cv=none; b=dWJ7Xape7zhyrYdAGar5mWs7Zfs4QOTILai6rQWbQXVeDDeAZlIIfTcKUUl9uNG8wEjuRXgEHBMlRXudmAiyoOTgy2YnpDEBHEfc7pTs/UHuRu+pR1+/k3tUnx8X4zm7S01P1hDrOipZrd1L6XUOUMaw0a0bmkMWUcLLVI04b5U=
+	t=1746655498; cv=none; b=E8jjexzpqZ0P66r770nBomryeHbOjnB0qnAk5SE5g1UHrAuZOKTwToBxwBRZGhOk5OU0fq+Bek6+vnhajsXCwJ098yRBgAPbwPtf/v7OWpnZ8LkzUx9yknmBWhP4QqudHsbXmGqW7+EUGUyQxm6g74xLTnVllq0mWw45O+q/o0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746655494; c=relaxed/simple;
-	bh=9nNef3XERP856vyAgJ5hUWqmqVl1tSG9gYUQaJ2yHWQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k85Lk6AtDOb8YLl0PImSy5nMbyFWjlSf1aWhYup7nWH/sghSDMzUbRqnawBA32OA/EY+x/kE43IvQy/eo6lbt4sjxapkaaODwnl7OPotvbIGXgvxOeh5erCcwzI6EPfQyGWZniocQcCPkJYVlMrWhbJF9yK+gqvlqBWF9rncZk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
-Received: from www262.sakura.ne.jp (localhost [127.0.0.1])
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 547M4na7045537;
-	Thu, 8 May 2025 07:04:49 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-	(authenticated bits=0)
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 547M4nL6045534
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
-	Thu, 8 May 2025 07:04:49 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Message-ID: <470689f0-223e-4d26-a919-8d48f383883b@I-love.SAKURA.ne.jp>
-Date: Thu, 8 May 2025 07:04:46 +0900
+	s=arc-20240116; t=1746655498; c=relaxed/simple;
+	bh=+x7Cr9dClfkALRI1rM+EMxxZ9XnY/VO8mCUEw6mL6mE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=WzhhHrZVIXrnEvYcQrwf4BYU+qnbCUveWoYeluheCsEVnJMnwREwL2gX2Cqof+WCDWKp5spUfuFFCWL93pj4RJUJNg9OyjAEWPDBa8zSZ9PWlEZGe7Bm6pfl3tzcGQ9kOIYB9fE6ZoKfaJzvaxdqKmJC73ZAK/p/gmQBFgRwVuw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IK+8Ex8K; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IK+8Ex8K"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BD0DC4CEE2;
+	Wed,  7 May 2025 22:04:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746655497;
+	bh=+x7Cr9dClfkALRI1rM+EMxxZ9XnY/VO8mCUEw6mL6mE=;
+	h=Date:From:To:Cc:Subject:Reply-To:From;
+	b=IK+8Ex8Kkjw5Jjn6ssw2RBxqj1nNkoiBG2C0qcLSP+H6hDHPVmMDQjqGPimLCvLun
+	 E7jvwJ1pD4+GOCiZz2zJ7kPsET0q6Rfzhihv+3kLYuoUsbbsHPA9MDAG6jh7IhqWrT
+	 /LpkDtksS8eRL59zCrCbPUYnUCaUDndT61CmD0NDFNLyJg+Wrl1O0e5uaEvKf+kVoo
+	 dAFvoUVntrlPQIX800F8K+52QsOewlVTVF5oOEE3XZHLCSJV1JOlLvMKFk8UgxcprO
+	 DFIzA9j2T7j4/Quh51Egkdt56kWv+JwMhN8maCnfIG3eJRC93uwcwIPnV90I3lAdfv
+	 X+NTDVuxiQwWQ==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 265D8CE0D1D; Wed,  7 May 2025 15:04:57 -0700 (PDT)
+Date: Wed, 7 May 2025 15:04:57 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: ilpo.jarvinen@linux.intel.com
+Cc: bhelgaas@google.com, linux-pci@vger.kernel.org, kernel-team@meta.com,
+	linux-kernel@vger.kernel.org, sfr@canb.auug.org.au,
+	linux-next@vger.kernel.org
+Subject: [PATCH] PCI/bwctrl: Remove unused pcie_bwctrl_lbms_rwsem
+Message-ID: <3840f086-91cf-4fec-8004-b272a21d86cf@paulmck-laptop>
+Reply-To: paulmck@kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] Wire up the lsm_manage_policy syscall
-To: =?UTF-8?Q?Maxime_B=C3=A9lair?= <maxime.belair@canonical.com>,
-        Song Liu <song@kernel.org>
-Cc: linux-security-module@vger.kernel.org, john.johansen@canonical.com,
-        paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com,
-        mic@digikod.net, kees@kernel.org, stephen.smalley.work@gmail.com,
-        casey@schaufler-ca.com, takedakn@nttdata.co.jp,
-        linux-api@vger.kernel.org, apparmor@lists.ubuntu.com,
-        linux-kernel@vger.kernel.org
-References: <20250506143254.718647-1-maxime.belair@canonical.com>
- <20250506143254.718647-2-maxime.belair@canonical.com>
- <CAPhsuW4qY9B3KdhqrUOZoNBWQmO_RDwbH46my314WxrFwxbwkQ@mail.gmail.com>
- <aa3c41f9-6b25-4871-a4be-e08430e59730@canonical.com>
-Content-Language: en-US
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-In-Reply-To: <aa3c41f9-6b25-4871-a4be-e08430e59730@canonical.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Anti-Virus-Server: fsav202.rs.sakura.ne.jp
-X-Virus-Status: clean
 
-On 2025/05/08 0:37, Maxime Bélair wrote:
-> Again, each module decides which operations to expose through this syscall. In many cases
-> the operation will still require CAP_SYS_ADMIN or a similar capability, so environments
-> that choose this interface remain secure while gaining its advantages.
+PCI/bwctrl: Remove unused pcie_bwctrl_lbms_rwsem
 
-If the interpretation of "flags" argument varies across LSMs, it sounds like ioctl()'s
-"cmd" argument. Also, there is prctl() which can already carry string-ish parameters
-without involving open(). Why can't we use prctl() instead of lsm_manage_policy() ?
+Builds with CONFIG_PREEMPT_RT=y get the following build error:
 
+drivers/pci/pcie/bwctrl.c:56:22: error: ‘pcie_bwctrl_lbms_rwsem’ defined but not used [-Werror=unused-variable]
+
+Therefore, remove this unused variable.  Perhaps this should be folded
+into the commit shown below.
+
+Fixes: 0238f352a63a ("PCI/bwctrl: Replace lbms_count with PCI_LINK_LBMS_SEEN flag")
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Cc: "Ilpo Järvinen" <ilpo.jarvinen@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: <linux-pci@vger.kernel.org>
+
+diff --git a/drivers/pci/pcie/bwctrl.c b/drivers/pci/pcie/bwctrl.c
+index fdafa20e4587d..841ab8725aff7 100644
+--- a/drivers/pci/pcie/bwctrl.c
++++ b/drivers/pci/pcie/bwctrl.c
+@@ -53,7 +53,6 @@ struct pcie_bwctrl_data {
+  * (using just one rwsem triggers "possible recursive locking detected"
+  * warning).
+  */
+-static DECLARE_RWSEM(pcie_bwctrl_lbms_rwsem);
+ static DECLARE_RWSEM(pcie_bwctrl_setspeed_rwsem);
+ 
+ static bool pcie_valid_speed(enum pci_bus_speed speed)
