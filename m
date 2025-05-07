@@ -1,166 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71B4228A3F5;
-	Wed,  7 May 2025 13:46:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3649A202C26
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 13:49:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746625588; cv=none; b=ast8aXGZwiZY/Acj9KLZPubohX64w12qB0d/0Ud9iLFvW5H0aALmmIBm1B9uht4t7v2lfuTfJC5sL142zz89TjwKcfNfSqjGN7bFDqKXUq8vQoRZ+MhWAgzXI0VxEBR6sY9v//NELiw4jOOIOET0ysWO5nqxRG2QXzgsKdpO5FI=
+	t=1746625790; cv=none; b=Uepvtg3lanQ5o1PcZc1KsbH/FSCDgs2MUXIJID83bhBx69ia12+dWN8h7zxUg2ecXew4mREDJmJkiXBAzOmsAULzFlwFjJM4/ckzuaiYBlkyjqvvGZTwnVaVeM6oCsmZk5BHMq89sD7/HLKyrs1BjvJfzi+eBltjF6q235cJirs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746625588; c=relaxed/simple;
-	bh=hEESpH98vETQIZ0+XWffGzM7BGYfcwRdDsaQ4wEquqc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CjPi5nEQF3+SVcIu5fleWSed0Y6y1Fo8cf7I/bgsGfP3DaauTWk79+37KnKubaB+qLx1sl07C4rYt82739ZJOGjIdb2ABWHnboJ8FxGKuek/CdPle3C7a+5ML1npiXGNtIGE80dkdgtdJyEm0If2MyK8KPDsX3uR0v01w4nACns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U23XjGTC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746625790; c=relaxed/simple;
+	bh=w9dJJZAfLFUz4sepGZ4yAHD92WyyzbYRQNOBLcVmWcs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=c0Ch8qaAvoz+z+hflW204wxrW+T0zhIpxgKSb6evyaPfmjnv5hbEQaVp/8KApcNyf6Veim6s15WsmXduGUIoNs47ro0sIMl80la1M6WjTJ+CpPpU20Hh3DKzVAIYTNjkiCyReWT5DRzYkMvfZOFOcpIVoUgbTANI3b+Nrdxs1cY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=xMOwG7NA; arc=none smtp.client-ip=209.85.167.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U23XjGTC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3B11C4CEE7;
-	Wed,  7 May 2025 13:46:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746625587;
-	bh=hEESpH98vETQIZ0+XWffGzM7BGYfcwRdDsaQ4wEquqc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=U23XjGTCYK3gILMz2e+THb15dqmeOQYrj8DFI6aRtrdZ/3v0LvTzpK69PdnaYokfJ
-	 zKw4hTdJ6W/vVkXZCh45Iuj8yV7QqKa12C3QUJtmLL1gvpXv7qvG5/tstFyJrLFzZZ
-	 zpBy/xFgyUplNZ1MCUCw8LDmTfn9H2z9NPHzPMMiWnR6JaJikH3KxrfrWOWZeb3EEU
-	 sgOtWpT8UG9trtkVBkV0NmMJEnEerrcTAEbzOPsWh2dGueQMUoYxbMq6DaWJ+vZ78s
-	 vXdfAoJ9atJEdatSHVOAtR8ErUMRL8e8mVNsCPTKR/cEABikNuy0+cRUQe12mIzXHf
-	 jsi8KfgGfDr5A==
-Date: Wed, 7 May 2025 14:46:20 +0100
-From: Simon Horman <horms@kernel.org>
-To: Tanmay Jagdale <tanmay@marvell.com>
-Cc: bbrezillon@kernel.org, arno@natisbad.org, schalla@marvell.com,
-	herbert@gondor.apana.org.au, davem@davemloft.net,
-	sgoutham@marvell.com, lcherian@marvell.com, gakula@marvell.com,
-	jerinj@marvell.com, hkelam@marvell.com, sbhatta@marvell.com,
-	andrew+netdev@lunn.ch, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, bbhushan2@marvell.com, bhelgaas@google.com,
-	pstanner@redhat.com, gregkh@linuxfoundation.org,
-	peterz@infradead.org, linux@treblig.org,
-	krzysztof.kozlowski@linaro.org, giovanni.cabiddu@intel.com,
-	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, rkannoth@marvell.com, sumang@marvell.com,
-	gcherian@marvell.com
-Subject: Re: [net-next PATCH v1 10/15] octeontx2-pf: ipsec: Setup NIX HW
- resources for inbound flows
-Message-ID: <20250507134620.GE3339421@horms.kernel.org>
-References: <20250502132005.611698-1-tanmay@marvell.com>
- <20250502132005.611698-11-tanmay@marvell.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="xMOwG7NA"
+Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-401f6513cb2so524379b6e.0
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 06:49:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746625787; x=1747230587; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=N2E3azbVaCRVDrY4UnTVOScgZIlfU9ExUYdpv0XY9P0=;
+        b=xMOwG7NAiSA4M9iwSSzzquNz/WWG7vxM4jBE+hXIPioIrtEFMqxV7FD9O57Pdc6SZO
+         gOLxTBFvr/Ficn3HfyB+izDOblNKOtc64bzwzSjlqlXSXMZwe4+UsjZP8THsXj6x5gOs
+         vwsyrdnV9IrD/S84OtsH49vuaUeBaEPb5TWiAE7IVVahjO99L/oqd1DYYiamucXtfKal
+         enjJyHLZJ9OvnnWkpJE5bD0eg3Po120jv14zqsWw9zlkZfQsm6QCEcqPVxmFQJqY+AL6
+         VHXrTkqCpGfsxiKXlHnWMrGUhRw8vv9tIhIuhzn8qO8s99MRV4V1179SvO0llEH1Wx18
+         B/kA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746625787; x=1747230587;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=N2E3azbVaCRVDrY4UnTVOScgZIlfU9ExUYdpv0XY9P0=;
+        b=K8/tGJ9aY4LioPe56Z89w9zWtWvII1aRk960gkFJGMmtm7P9KNlFRu8iFSH3nkLi8u
+         DzhXLaoddIF/CbBWo/2/48CEru0A7oWLS+JICBojYPVMx3b0UMcH3098WDIs+suuWwC2
+         RhnCdQOIWaJbXyQdLAX7YkmRuRQ112R9IkV6ttRRgMEeHwOFR7hlWuJiHR5IYLzzPx/o
+         /fYGY380cNLahg+6YEeDw2nENyQ3Tg5jZ6h+EukK5w/X4nSzuIipjPt6DOo1ycyKnYmR
+         2RPEd5rqxXt3gJwMnMirGV0/uANAVOffrGEkVAAxhSzwYsmYd2U3tn3bxDP3cdGgxMT0
+         TG3A==
+X-Forwarded-Encrypted: i=1; AJvYcCWuGiaz0PYMxhlz/k9gg4HdSzrjTo9KWL7dtWh33XvLYiOXzCowLgsTwHkmsoPKhxi8EaumjeraN2GjB+s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTcxmydN8/2L+LOS2/oBDLhjzxWc50VT2zqU5d8BY+iLrHvCGZ
+	wM5IPskbv4KgkXHGJgWY1aIaG/tyzJnxCO9dwyE5D+Oda9a80HSdKELZ49uNEXs=
+X-Gm-Gg: ASbGncsLGT3Jm9HYeILy9ZOz7YwmI+J/SNqoeoXwj0CfyoDlobTqjSPZh4+tAUi9akf
+	UU2Dk3G9GBtZGHODXhLAbkdj0eKqifSepTvjuqbbKN0xxKWNXIMp7uewCA5C8Tl2In7hcomi8wo
+	KX0/hGafTZ/bh6rmSb2MMHMzJlUybMZFOb0ryaYNSis+7HC4OqctlHH+73qpjx6qKdPf09e8HdZ
+	t5ZmojU8QNgo9IUFLaA8gbyCnAwGJBGw49+OoA8v9b2BZhmu7YhSyQT54Ew+t3HiuI2aOGupoRG
+	XJWXCnhJRacBbRhqyFjNZHgCdx+huAmVH3OW1QC47fssgDKqS+LHidxJDuvUJqDhLIMyfdlwfGK
+	Sb9aJQ/yHSJeukd8=
+X-Google-Smtp-Source: AGHT+IEkqfDH15pjFTL4cZA58InYNRqoavGNSUddgSHwMO1Pw7iWYqyvF5hpJ5MLza2jpw+neoIdHg==
+X-Received: by 2002:a05:6808:178c:b0:3f6:ab0d:8db1 with SMTP id 5614622812f47-4036ea41ecamr2103982b6e.3.1746625787217;
+        Wed, 07 May 2025 06:49:47 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:3356:f6f6:bf76:a32? ([2600:8803:e7e4:1d00:3356:f6f6:bf76:a32])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-607e7fe84a8sm2683429eaf.36.2025.05.07.06.49.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 07 May 2025 06:49:46 -0700 (PDT)
+Message-ID: <fbf6c7ef-3680-40ec-8c90-121e6a635b8d@baylibre.com>
+Date: Wed, 7 May 2025 08:49:46 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250502132005.611698-11-tanmay@marvell.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] iio: admv1013: replace redundant ternary operator
+ with just len
+To: Colin Ian King <colin.i.king@gmail.com>,
+ Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Antoniu Miclaus <antoniu.miclaus@analog.com>,
+ Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
+ linux-iio@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250507134502.254736-1-colin.i.king@gmail.com>
+From: David Lechner <dlechner@baylibre.com>
+Content-Language: en-US
+In-Reply-To: <20250507134502.254736-1-colin.i.king@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 02, 2025 at 06:49:51PM +0530, Tanmay Jagdale wrote:
-> A incoming encrypted IPsec packet in the RVU NIX hardware needs
-> to be classified for inline fastpath processing and then assinged
-
-nit: assigned
-
-     checkpatch.pl --codespell is your friend
-
-> a RQ and Aura pool before sending to CPT for decryption.
+On 5/7/25 8:45 AM, Colin Ian King wrote:
+> The variable ret is being assigned a return value and non-zero error
+> return paths are taken at all stages. At the end of the function ret
+> is always zero, so the ternary operator checking for zero ret is
+> redundant and can be replaced with just len instead.
 > 
-> Create a dedicated RQ, Aura and Pool with the following setup
-> specifically for IPsec flows:
->  - Set ipsech_en, ipsecd_drop_en in RQ context to enable hardware
->    fastpath processing for IPsec flows.
->  - Configure the dedicated Aura to raise an interrupt when
->    it's buffer count drops below a threshold value so that the
->    buffers can be replenished from the CPU.
-> 
-> The RQ, Aura and Pool contexts are initialized only when esp-hw-offload
-> feature is enabled via ethtool.
-> 
-> Also, move some of the RQ context macro definitions to otx2_common.h
-> so that they can be used in the IPsec driver as well.
-> 
-> Signed-off-by: Tanmay Jagdale <tanmay@marvell.com>
+> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+> ---
 
-...
+Reviewed-by: David Lechner <dlechner@baylibre.com>
 
-> diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/cn10k_ipsec.c b/drivers/net/ethernet/marvell/octeontx2/nic/cn10k_ipsec.c
-
-...
-
-> +static int cn10k_ipsec_setup_nix_rx_hw_resources(struct otx2_nic *pfvf)
-> +{
-> +	struct otx2_hw *hw = &pfvf->hw;
-> +	int stack_pages, pool_id;
-> +	struct otx2_pool *pool;
-> +	int err, ptr, num_ptrs;
-> +	dma_addr_t bufptr;
-> +
-> +	num_ptrs = 256;
-> +	pool_id = pfvf->ipsec.inb_ipsec_pool;
-> +	stack_pages = (num_ptrs + hw->stack_pg_ptrs - 1) / hw->stack_pg_ptrs;
-> +
-> +	mutex_lock(&pfvf->mbox.lock);
-> +
-> +	/* Initialize aura context */
-> +	err = cn10k_ipsec_ingress_aura_init(pfvf, pool_id, pool_id, num_ptrs);
-> +	if (err)
-> +		goto fail;
-> +
-> +	/* Initialize pool */
-> +	err = otx2_pool_init(pfvf, pool_id, stack_pages, num_ptrs, pfvf->rbsize, AURA_NIX_RQ);
-> +	if (err)
-
-This appears to leak pool->fc_addr.
-
-> +		goto fail;
-> +
-> +	/* Flush accumulated messages */
-> +	err = otx2_sync_mbox_msg(&pfvf->mbox);
-> +	if (err)
-> +		goto pool_fail;
-> +
-> +	/* Allocate pointers and free them to aura/pool */
-> +	pool = &pfvf->qset.pool[pool_id];
-> +	for (ptr = 0; ptr < num_ptrs; ptr++) {
-> +		err = otx2_alloc_rbuf(pfvf, pool, &bufptr, pool_id, ptr);
-> +		if (err) {
-> +			err = -ENOMEM;
-> +			goto pool_fail;
-> +		}
-> +		pfvf->hw_ops->aura_freeptr(pfvf, pool_id, bufptr + OTX2_HEAD_ROOM);
-> +	}
-> +
-> +	/* Initialize RQ and map buffers from pool_id */
-> +	err = cn10k_ipsec_ingress_rq_init(pfvf, pfvf->ipsec.inb_ipsec_rq, pool_id);
-> +	if (err)
-> +		goto pool_fail;
-> +
-> +	mutex_unlock(&pfvf->mbox.lock);
-> +	return 0;
-> +
-> +pool_fail:
-> +	mutex_unlock(&pfvf->mbox.lock);
-> +	qmem_free(pfvf->dev, pool->stack);
-> +	qmem_free(pfvf->dev, pool->fc_addr);
-> +	page_pool_destroy(pool->page_pool);
-> +	devm_kfree(pfvf->dev, pool->xdp);
-
-It is not clear to me why devm_kfree() is being called here.
-I didn't look deeply. But I think it is likely that
-either pool->xdp should be freed when the device is released.
-Or pool->xdp should not be allocated (and freed) using devm functions.
-
-> +	pool->xsk_pool = NULL;
-
-The clean-up of pool->stack, pool->page_pool), pool->xdp, and
-pool->xsk_pool, all seem to unwind initialisation performed by
-otx2_pool_init(). And appear to be duplicated elsewhere.
-I would suggest adding a helper for that.
-
-> +fail:
-> +	otx2_mbox_reset(&pfvf->mbox.mbox, 0);
-> +	return err;
-> +}
-
-...
