@@ -1,135 +1,114 @@
-Received: from fhigh-a7-smtp.messagingengine.com (fhigh-a7-smtp.messagingengine.com [103.168.172.158])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2707114884C
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 05:44:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12B1C1EE7BE;
+	Wed,  7 May 2025 05:44:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746596671; cv=none; b=SWMkJjYb1TA1zCWEFxY0JCRO0g/6x73k+iqnEP7CGBlSGf0/MUFbxa6XDmNigWNeMyrxAE07S4la3wn3QXqRRhyXWugmLpqT5FhrZzBNN4tFzvhRvExSw1AUT5/kWo05amBss19UK66/k/VLcocAbdQF1RmZJI54lwPp/ep44TQ=
+	t=1746596692; cv=none; b=O9djkFBl+NFfWFWaYzKaoVUdphgeCOSc9pj7Fun81y9YtubfB8v8rYVr0r6XJR4ZK3mYxd412btdcHTD3qhxiKyI2Mck8nt/w7LrdLQa5b4TXrDwCBAVcLSQMHzljg2/LXAPLnaEgYVYVYdUdMOb8WBC1UCcX1Uy7PXbRZvk4OY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746596671; c=relaxed/simple;
-	bh=KPBoQL0ylIAnLG0wRYS21DXL8j+LIo3GFqd0/PZ2T2U=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=FawQrV+3tVKnLC2KraSez1nwFC4rfL7PpsHNQXT6xdYuAVEQKtPllc89EeGcfI/G7inkbgJGqLjOvmHJ6t8c1ZTCBv7YGksSlKeqx5oOCF7UqlWa54voCJl+bsBq+gtgPk14hpCNUVAoULJLGXGRe3P0EgELrLDQVsRMHI3sejk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=or9V5GoJ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=WvjP0AnB; arc=none smtp.client-ip=103.168.172.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1746596692; c=relaxed/simple;
+	bh=JQX+pNi+rd47yrsUf9LzXxL1bR3OCMpgA5gg847AdJU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UhEZpFpH/ZjWSPZPUdAJ2vMqSK/Ri4ONBplvnuVbTdq8Xmo5Aw3zezylvPcbXZ682/H7a1JnnQkZWFJPYDOlemYuwAnYx8PfbNkpdgQhViqdctKF+FhHMooOLmnOUbGFiw10cZio9+rlEJPKk7/rMgstVpUf2DmyAOKXUAYT+ss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MK6IJYal; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="or9V5GoJ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="WvjP0AnB"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 05A0511401D4;
-	Wed,  7 May 2025 01:44:29 -0400 (EDT)
-Received: from phl-imap-12 ([10.202.2.86])
-  by phl-compute-05.internal (MEProxy); Wed, 07 May 2025 01:44:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1746596669;
-	 x=1746683069; bh=LKBIs/dRAt14qDvy0dxUZojjV4ghFeutXbz3h4nTrKE=; b=
-	or9V5GoJc0Z6S6oxIWoJakZSoQSPhkg552t2/QAYvZUytGoDOB4q5up7sALJDjSu
-	t810N784i2Sk1eDq7yprZcrnBF7wV8qengH+GUHGS588yH+qkG/t8zp11odFh6tZ
-	GTacQKt/j+iIN1ySRZ5zYWvhUrVF8lBLMY/E2kF4K1QHQ1utRT5vefsDYU/sPIYo
-	XXcZ8pX92fznG1jLAXsgzwRsmuDg7vPyhWEavSCoUu4/yrPcB+AtwiQKwVGyp1hi
-	JsSfLDomWeLgfdwAa8eLK8lMiPnRYJYs/93KXhnKHS41burxmSx/4I3wdYKF9eJP
-	sFCjomZBGHpHbN0YSEGdfA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1746596669; x=
-	1746683069; bh=LKBIs/dRAt14qDvy0dxUZojjV4ghFeutXbz3h4nTrKE=; b=W
-	vjP0AnBCLSX9vyvKfmv1oaRaaYYx90zhfR77wxemtKWBjREOa3nIXi28DZo7MV5H
-	mXZCrkld/iuoRVnDzTKcgh/irt9azaCxfGYtdMgubfkiylYKU4y9qorPWGU6++JH
-	/Yuis9ETLzsv6iw/GKPFQDIpXxSimWo+eyCOAjQV7PfylPbHombPtk4xUNrpwlkX
-	UsO7b8fFP3Iqr/7tPCiZ9rNScose7znuNnC2PF6eoErFAFu6rBlUXuUwC1hK3kqR
-	x8LppJV0Zze3E+Lj3CxTsBsf6QLnfzJPtVeo35Cb7rsWH4Uh0P47uNMQuRbC5QBU
-	2L6B9uuAd+pzH0irCSVjA==
-X-ME-Sender: <xms:PPMaaIs_O6ZRZtYKp4EvPYM2IkayejYsPuBizLCV5XID6N5uXA-Fnw>
-    <xme:PPMaaFcMa2iQt7Oc0hZ7qqnuhveNCTjSG2y_NhIXJyDmLEVmVRjca3X16Q1J-U3WF
-    oxMShDC-lpEWlj3sI8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeeitdehucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
-    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
-    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
-    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
-    uddvpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegsphesrghlihgvnhekrdguvg
-    dprhgtphhtthhopegufihmfiesrghmrgiiohhnrdgtohdruhhkpdhrtghpthhtohepphgv
-    thgvrhiisehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheprghruggssehkvghrnh
-    gvlhdrohhrghdprhgtphhtthhopehmihhnghhosehkvghrnhgvlhdrohhrghdprhgtphht
-    thhopehtghhlgieslhhinhhuthhrohhnihigrdguvgdprhgtphhtthhopehtohhrvhgrlh
-    gusheslhhinhhugidqfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtohepmhhitghh
-    rghlrdhlkhhmlhesmhgrrhhkohhvihdrnhgvthdprhgtphhtthhopehvkhhuiihnvghtsh
-    esrhgvughhrghtrdgtohhm
-X-ME-Proxy: <xmx:PPMaaDzDPmx2h-aCJSg6UyglHEZiqsFPoEwgyqOZN92ZFqqUDbFgYw>
-    <xmx:PPMaaLN0VMJ7SlnfouQgYQLVNHcwuygzMgeY_zLXM6t7jcPIVA4ywg>
-    <xmx:PPMaaI9GFqrkSGTXXN98fqvSkOiPnVg7thfWMq2xCLGx2NE0_eXOuw>
-    <xmx:PPMaaDUhm_2p4W5aqFAYvtYz9dVA5GWSSbEcApQSK5flvU1W-hQOUA>
-    <xmx:PPMaaOXIRnKzkqB82ZO-1vGmFSI8fjXj9drw3E8J6gLlvJtghL-fDJnU>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 99C3D1C20067; Wed,  7 May 2025 01:44:28 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MK6IJYal"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746596690; x=1778132690;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=JQX+pNi+rd47yrsUf9LzXxL1bR3OCMpgA5gg847AdJU=;
+  b=MK6IJYalkhLgDuZa2sGeIx0Rd0kXh4XubKcOw6OfbaIIGm9abJZWIACe
+   /KUBBoy1ZhEv2iF8/VRW7cFI/Ub+3jegyiEElIOpn/sd0dIEyzrYfrKgM
+   niZw9zLzD0/eA/72NxZMhEVBbwWRU7oVQOgakK4vSc8poFSJhcRVuDNkF
+   YJFBjxHg7RB90b6d1st2vBArnbD8rnwfs4XXi3pqWzynWAbi3dDE4vRHA
+   uRb0Yz7wuPTT8I/L/GJYYxcglpOB1y6XSM6pHgaSHEBpEpODPMgNU4Cdj
+   qer9K+eUvOWEaqyWyt6AWE/zsrjQUPDBnqeO4bsTG4i1efefgMwdrodNK
+   A==;
+X-CSE-ConnectionGUID: GzO16g5DTF6yO5ZFZ+iT7g==
+X-CSE-MsgGUID: 2GN5LkD1RPuSFNQQ1vYnaQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="48202530"
+X-IronPort-AV: E=Sophos;i="6.15,268,1739865600"; 
+   d="scan'208";a="48202530"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2025 22:44:49 -0700
+X-CSE-ConnectionGUID: h2ssVtyISB66sQtFkP2/BA==
+X-CSE-MsgGUID: 1ljMQRoCQ7G7X1gly5+u1Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,268,1739865600"; 
+   d="scan'208";a="135844091"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 06 May 2025 22:44:45 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uCXaF-00076C-1W;
+	Wed, 07 May 2025 05:44:43 +0000
+Date: Wed, 7 May 2025 13:44:35 +0800
+From: kernel test robot <lkp@intel.com>
+To: Ashish Kalra <Ashish.Kalra@amd.com>, seanjc@google.com,
+	pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com,
+	bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+	herbert@gondor.apana.org.au
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, x86@kernel.org,
+	john.allen@amd.com, davem@davemloft.net, thomas.lendacky@amd.com,
+	michael.roth@amd.com, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
+Subject: Re: [PATCH v3 3/4] crypto: ccp: Add support to enable
+ CipherTextHiding on SNP_INIT_EX
+Message-ID: <202505071309.cJl7zfy2-lkp@intel.com>
+References: <94ffa7595fca67cfdcd2352354791bdb6ac00499.1745279916.git.ashish.kalra@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T29c54119c216f9b9
-Date: Wed, 07 May 2025 07:44:06 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Ingo Molnar" <mingo@kernel.org>, linux-kernel@vger.kernel.org
-Cc: "H. Peter Anvin" <hpa@zytor.com>,
- "Linus Torvalds" <torvalds@linux-foundation.org>,
- "Peter Zijlstra" <peterz@infradead.org>, "Borislav Petkov" <bp@alien8.de>,
- "Thomas Gleixner" <tglx@linutronix.de>,
- "Vitaly Kuznetsov" <vkuznets@redhat.com>, "Ard Biesheuvel" <ardb@kernel.org>,
- "David Woodhouse" <dwmw@amazon.co.uk>,
- "Masahiro Yamada" <yamada.masahiro@socionext.com>,
- "Michal Marek" <michal.lkml@markovi.net>
-Message-Id: <cd541739-4ec5-4772-9cef-e3527fc69e26@app.fastmail.com>
-In-Reply-To: <20250506170924.3513161-5-mingo@kernel.org>
-References: <20250506170924.3513161-1-mingo@kernel.org>
- <20250506170924.3513161-5-mingo@kernel.org>
-Subject: Re: [PATCH 04/15] x86/kbuild: Introduce the 'x86_32' subarchitecture
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <94ffa7595fca67cfdcd2352354791bdb6ac00499.1745279916.git.ashish.kalra@amd.com>
 
-On Tue, May 6, 2025, at 19:09, Ingo Molnar wrote:
-> 
->  # Additional ARCH settings for x86
-> -ifeq ($(ARCH),i386)
-> +ifeq ($(ARCH),x86_64)
->          SRCARCH := x86
->  endif
-> -ifeq ($(ARCH),x86_64)
-> +ifeq ($(ARCH),x86_32)
-> +        SRCARCH := x86
-> +endif
-> +ifeq ($(ARCH),i386)
->          SRCARCH := x86
->  endif
+Hi Ashish,
 
-Would it be possible to just remove the entire SRCARCH hack
-for x86? It's not clear from the changelog what the intention
-was in 2007 when it was added, but my impression was that
-this should be a temporary workaround to users doing
-'make defconfig' on i386 would still get a 32-bit config
-by default and didn't have to change there scripts.
+kernel test robot noticed the following build errors:
 
-I would guess that even in a 'setarch --32bit' environment,
-most users today would want to build a 64-bit kernel, having
-the special case for that seems to add more confusion that
-it avoids.
+[auto build test ERROR on next-20250417]
+[cannot apply to herbert-cryptodev-2.6/master herbert-crypto-2.6/master kvm/queue kvm/next linus/master kvm/linux-next v6.15-rc3 v6.15-rc2 v6.15-rc1 v6.15-rc5]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Also, I don't think there are any systems that return
-'x86_32' from 'uname -m', so your added special case
-would never be used by default, only when cross-compiling
-from some other architecture.
+url:    https://github.com/intel-lab-lkp/linux/commits/Ashish-Kalra/crypto-ccp-New-bit-field-definitions-for-SNP_PLATFORM_STATUS-command/20250422-082725
+base:   next-20250417
+patch link:    https://lore.kernel.org/r/94ffa7595fca67cfdcd2352354791bdb6ac00499.1745279916.git.ashish.kalra%40amd.com
+patch subject: [PATCH v3 3/4] crypto: ccp: Add support to enable CipherTextHiding on SNP_INIT_EX
+config: i386-buildonly-randconfig-002-20250422 (https://download.01.org/0day-ci/archive/20250507/202505071309.cJl7zfy2-lkp@intel.com/config)
+compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250507/202505071309.cJl7zfy2-lkp@intel.com/reproduce)
 
-      Arnd
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505071309.cJl7zfy2-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from arch/x86/kvm/svm/svm.c:24:
+>> include/linux/psp-sev.h:1035:74: error: use of undeclared identifier 'FALSE'
+    1035 | static inline bool is_sev_snp_ciphertext_hiding_supported(void) { return FALSE; }
+         |                                                                          ^
+   1 error generated.
+
+
+vim +/FALSE +1035 include/linux/psp-sev.h
+
+  1034	
+> 1035	static inline bool is_sev_snp_ciphertext_hiding_supported(void) { return FALSE; }
+  1036	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
