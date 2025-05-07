@@ -1,211 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12181289E37;
-	Wed,  7 May 2025 18:16:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 211687263D;
+	Wed,  7 May 2025 18:18:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746641814; cv=none; b=FDRShwz9UFHjiKhZTMo6fO1GACa6Skfo1g5VlUgcYRlErg/oAcpcY+g4ZyK3dg9Nlxj62xSiMqNqM9tQnYagPW9gt2z6hRuXotf24ORKRXP27IPLbDQWPrATTt+yOUNUZrXFcHDRPp1mvvRzd0OvhIbPiYw2RJgsJOzt4bLC5mE=
+	t=1746641916; cv=none; b=XE6QTurLnqTY6GQ6mXZ7m4QTvmvGCa4O3/pw5S/xTPWicyPoi1jBkQTO5mjNtVhH9SQZeCDNu5sG6IVO8mlHa3btRNHG/V1ubolfFYCLafoHDDITaMmbLvtBfN/eThClzMmoW4UCCoQSij1Et25sDwdYyn+eSTV1i5dT4RVCnuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746641814; c=relaxed/simple;
-	bh=iT5b4gP/fALQSydyw3Jbwc+B4ZvC2tSd8zd2qFQUEiI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l/V90/aGOdO6CvOSuIEuyy2ojzUMV1+ds+dfSNaYVi1j9DJGci3QGh/phKlMkFoPGo3zhC1Z9vq92xfGRFNkstkZxGQRQebYAkA579IJnPv3N8phuYqOl8OXbCf7Vnw9LQZS61zwHyL3Bi4JHRnPa1NZJ9oIuPHWKRSeVc6Rigg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=poiNSaX0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746641916; c=relaxed/simple;
+	bh=KMYWzqgC8ALedbSK7njrAUiFbyvgeOiiKXcBjlb8zD8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rwis+/xyQVsiowmf7PuFKjHYJP1vY3WlRMwPRuLsM3ixc1kAyqnLX8/ULqqp1JZ7O6JarNRXm8ScULc7lQ7uEftznCTYCsdI6aiHBnjYdkqMPqaM2oA64uepcdYZVc9Cp2JZJMOyDKlKKftFvkzEZV90Yvo7x2sPahMrR6NvWcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fbRtG7Q2; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="poiNSaX0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29114C4CEE2;
-	Wed,  7 May 2025 18:16:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746641813;
-	bh=iT5b4gP/fALQSydyw3Jbwc+B4ZvC2tSd8zd2qFQUEiI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=poiNSaX0NwuISHO5UOosm+EkfsbReKS5OJmVMqPn3UETLBmuQvV+kHfyXFGY5hpzE
-	 v4ZJiuiAa4IJ6dizqC40xQls6PwFYVEIzRLZUysaA7EpTbnHiGEba94L782Jz5iWtJ
-	 kdDyTXxaWfYZFlQDcP5Wn/qawxQkEE0WUv9a1DGyMgW4i+njb6D2zlqNLSjiz3MqjJ
-	 lxKsxiXVuw/hoZw2KdMnqFfk/CpB2S+Xkb+c73AHo+tYUWLy2kBAEzA1ybhbHl3Uue
-	 O2kWgEYdoR4qKLjn0BSUyVHWLRKJPp3auUbElX0hODbFGZ+hCK+VuKv2qvh8PcCPHV
-	 BJMGGdDP2IhFQ==
-Date: Wed, 7 May 2025 20:16:44 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Matthew Maurer <mmaurer@google.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Timur Tabi <ttabi@nvidia.com>, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH WIP 1/2] rust: debugfs: Add interface to build debugfs
- off pinned objects
-Message-ID: <aBujjJN9nz6Ib_lt@polis>
-References: <20250503-debugfs-rust-attach-v1-0-dc37081fbfbc@google.com>
- <20250503-debugfs-rust-attach-v1-1-dc37081fbfbc@google.com>
- <aBectw_2jridu43O@polis>
- <CAGSQo03sHhUX-Eo31cMmeNMaNnzWxU0c-ObTkr7Z1CJ2uQ6c4g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fbRtG7Q2"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-736aaeed234so245732b3a.0;
+        Wed, 07 May 2025 11:18:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746641914; x=1747246714; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Y/b9kLOJyNOOgXTAvMvRZx+q9I+LG3sxWJKTuz4qb4Y=;
+        b=fbRtG7Q2oQIcCWGOsk6hf1VvLVp80Pr+FHl6vZkUII44UghULt2O2i6HsZpLrxsEV9
+         O6cgtTSqtPmkPconeVYr3i+nw1JKZBErZye82IEdxHpMinUTpt0Tc2WD0Okm5G1wyDKX
+         d/aJM2oJkT3thODK6OcWzpIPvUk3xLFEdOzJfZJTEkCnirBFEqR1ytCOQdgmcZRU0ucY
+         UxQpr/CpCEdMFKjGY2tTzlkWu3nhaiRZmbRT2noUHvxKXIWcG5UVlLhShLXF3HXrG6id
+         bK8JpmVydqu1+mIW69nres1W2Kv/aKOdwdotEbtpKC5rZqNd0RiAnLy9+MSl6KuIh+mM
+         8nXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746641914; x=1747246714;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Y/b9kLOJyNOOgXTAvMvRZx+q9I+LG3sxWJKTuz4qb4Y=;
+        b=p9GWRRI3onIailsiXd5djRXxZIZr0+lM3R1lnoeQ6JBYBQNxKsG+FnEf9r+1ybh7q1
+         ut5RNR6kd+3kzn14cSb6WE6g6nfxBnHrfwqvTslCa1AslWCcTvwn8UHUMx/l5vqdQkOJ
+         N5YazeiJ/h0YY0cM+uhUx6AJoh4+hhyk2f9gV0Uxn8JF11KwkbIxBVn0vds6rXwJ/Z5p
+         UNVveYn2oGsWqGWSxxLxu4+XDQsr3uNQRlu62zDojvHEak9nVYA/WxRhDefcq/A4nZLl
+         6J57KPxscF+BmKfgeN0vAdjsjb83uNELaAZfIo3ESiF2M/P/g4uUwnpk3D1iR0KkmOZh
+         gh9A==
+X-Forwarded-Encrypted: i=1; AJvYcCUTo+Z1+zh2pvqCxrEc3DgYBzd9MbFmhItUR4UsexFLTW/bueeFrdwh9ZAl5jsc6QWjkJ8=@vger.kernel.org, AJvYcCV9Db6OvNaWKr4P53xUDcwtUpWhE649cj/eYy1pWyb4yfGWIeNmj/FgE12dEB33G3doPbqPA4x8lYeFb7K4mliq@vger.kernel.org, AJvYcCWK3ejLdzjd8G3a1qsIab5rRqIZvNIDdDBuHEDx4QRxltxEDrKHOalnV7FWzY2P+LvTm7RYzQxjspFKpg==@vger.kernel.org, AJvYcCWYYRPOmzi4lzYEVYaPP+Kn7afE1ZyPiMiq/o81mvOd07Nssdt3NnP2kj3ePe36gn7Q7Zr+J9ErxxOhcbgK@vger.kernel.org
+X-Gm-Message-State: AOJu0YztFnW6QWM6NjOkmJowxeSAmtvN1SWz2pOTO1wWIYiJmIhePH6c
+	jtCGLsXvkDhqE2mUBurAYPY2uxRyj23ZFuNUkN2+G/mqkMbL+irydlaPQhtGptBA6+F3vTEQZyE
+	OUZPDwIHWdbvCd6xvQLpsOog0bKE=
+X-Gm-Gg: ASbGncvMyWe9ofj7unepjYOmwibk+dptpSuYga+w7AaHUgt+WHuOqlqJHy/RnF8LLVn
+	fE5fodTXYvHCBvEhNNEADY2Y92xJyfedrQORKSRvS6Qz2fs0Cv6zM26zaf5wOWu0HRIeDIW3Xvb
+	bbq89lLjVN8I6qmTtEHAdvBYvXTOQ3MvE5p+ZSzxYkykGSjuRY
+X-Google-Smtp-Source: AGHT+IErQi2Er7r17YhBc/+o6xGPrWkIlSLUIKchIAzkOkxgoMQkvfSEziYBzRgcNHcxELm+ZTC0AxHxR340ziV44Pc=
+X-Received: by 2002:a05:6a20:c706:b0:1f5:87a0:60ed with SMTP id
+ adf61e73a8af0-2159af9c759mr321957637.19.1746641914136; Wed, 07 May 2025
+ 11:18:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGSQo03sHhUX-Eo31cMmeNMaNnzWxU0c-ObTkr7Z1CJ2uQ6c4g@mail.gmail.com>
+References: <20250505-vmlinux-mmap-v3-0-5d53afa060e8@isovalent.com>
+ <20250505-vmlinux-mmap-v3-2-5d53afa060e8@isovalent.com> <CAEf4BzboH-au2bNCWYk1nYbQ61kGbUXuvTxftDPAEGF1Pc=TLw@mail.gmail.com>
+ <CAN+4W8gcquJRkZw+Knt=vqwR4YM8w5RbRNO-XyfE+DAyiEWANw@mail.gmail.com>
+In-Reply-To: <CAN+4W8gcquJRkZw+Knt=vqwR4YM8w5RbRNO-XyfE+DAyiEWANw@mail.gmail.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Wed, 7 May 2025 11:18:20 -0700
+X-Gm-Features: ATxdqUHkJPgp2jd7mdL1fCg-FDYV5M7we5uV-H2O4mH6XB9PR-oIz2Kv8LBAT2o
+Message-ID: <CAEf4BzZ85DyEj2ey7y46tRHd=kP4xvqn5z8H3NO3bRTXZ2Mbaw@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v3 2/3] selftests: bpf: add a test for mmapable
+ vmlinux BTF
+To: Lorenz Bauer <lmb@isovalent.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
+	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 05, 2025 at 10:32:39AM -0700, Matthew Maurer wrote:
-> On Sun, May 4, 2025 at 9:58 AM Danilo Krummrich <dakr@kernel.org> wrote:
+On Wed, May 7, 2025 at 2:14=E2=80=AFAM Lorenz Bauer <lmb@isovalent.com> wro=
+te:
+>
+> On Tue, May 6, 2025 at 10:39=E2=80=AFPM Andrii Nakryiko
+> <andrii.nakryiko@gmail.com> wrote:
+>
+> > > +       raw_data =3D mmap(NULL, end, PROT_READ, MAP_PRIVATE, fd, 0);
+> > > +       if (!ASSERT_NEQ(raw_data, MAP_FAILED, "mmap_btf"))
 > >
-> > On Sat, May 03, 2025 at 12:43:59AM +0000, Matthew Maurer wrote:
-> > > +/// A DebugFS directory combined with a backing store for data to implement it.
-> > > +#[pin_data]
-> > > +pub struct Values<T> {
-> > > +    dir: Dir<'static, false>,
-> > > +    // The order here is load-bearing - `dir` must be dropped before `backing`, as files under
-> > > +    // `dir` may point into `backing`.
-> > > +    #[pin]
-> > > +    backing: T,
-> > > +    // Since the files present under our directory may point into `backing`, we are `!Unpin`.
-> > > +    #[pin]
-> > > +    _pin: PhantomPinned,
-> > > +}
+> > ASSERT_OK_PTR()?
+>
+> Don't think that mmap follows libbpf_get_error conventions? I'd keep
+> it as it is.
+
+ASSERT_OK_PTR() isn't libbpf specific (and libbpf is actually
+returning a NULL or valid pointer for all public APIs, since libbpf
+1.0). But if you look at the implementation, "an OK" pointer is a
+non-NULL pointer that is also not a small negative value. NULL is a
+bad pointer, -1 (MAP_FAILED) is a bad pointer, and so on. So it's a
+pretty universal check for anything pointer-related. Please do use
+OK_PTR, it's semantically better in tests
+
+>
+> > > +       btf =3D btf__new_split(raw_data, btf_size, base);
+> > > +       if (!ASSERT_NEQ(btf, NULL, "parse_btf"))
 > >
-> > This only ever allows attaching data to the root directory, correct? What if I
-> > want to remove (or replace) a file or a subdir? Then I'd be left with the data
-> > for this specific file (or subdir) until the root is finally removed.
-> 
-> The intended way to deal with this is that your debugfs root has
-> structures or handles that let you compute what all your debugfs files
-> should see, not necessarily fully populated if you want something
-> dynamic. For example, one of your entries could be
-> `Arc<Mutex<Vec<Record>>>`, and this could get updated elsewhere
-> without thinking about DebugFS - you just need to know the shape of
-> all the handles DebugFS will need.
+> > ASSERT_OK_PTR()
+>
+> Ack.
+>
+> > Do you intend to add more subtests? if not, why even using a subtest st=
+ructure
+>
+> The original intention was to add kmod support, but that didn't pan
+> out, see my discussion with Alexei. I can drop the subtest if you
+> want, but I'd probably keep the helper as it is.
 
-Well sure, but what if we can't initialize them (yet) at the time we create the
-debugfs root?
-
-Also, what if the data that should be exposed through a file in debugfs is not
-supposed to live for the full lifetime of the debugfs root (which might be
-forever)?
-
-> It'd be pretty easy for me to relax this to allow attachments to
-> subtrees. I'd just need to do `Values<'a, T>` and `Dir<'a,  false>`.
-> It'd also make the argument for the safety of the builder interface
-> slightly more complicated (things that statically outlive the lifetime
-> of the dir would also be usable in the builder, which is safe, but
-> trickier to argue for).
-> 
-> You wouldn't be able to do nested attachments, but you could do
-> attachments starting with any subtree. So for example, you could do:
-> ```
-> let root = Dir::new(c_str!("foo"));
-> let foo = root.subdir(c_str!("bar")).owning();
-> let bar = root.subdir(c_str!("baz")).owning();
-> let foo_values = Values::attach(foo_data, foo);
-> let bar_values = Values::attach(bar_data, foo);
-> ```
-> 
-> The tricky business here (and why I didn't do it in my initial draft)
-> is that because `foo_values` and `bar_values` are restricted to live
-> no longer than `root` (since they will be invalidated if `root` is
-> dropped), it is hard to store these objects in a module context or
-> similar object, which would make it tricky to use. Attaching to a root
-> directory on the other hand is not tricky, because their lifecycle
-> isn't dependent on some other object.
-> 
-> A legal way of using this kind of scoped interface (but not
-> immediately obvious to me how to design the safe interface to let
-> users build it) might look like
-> 
-> ```
-> struct MyDebugFsInfo<T> {
->   // RawValues is a fictitious type that would be like `Values`, but
-> with the actual lifetime parameter erased.
->   subdirs: Vec<RawValues<T>>,
->   // Order matters, root must be released last because earlier values
-> are borrows
->   root: Dir<'static, false>,
-> }
-> 
-> impl<T> MyDebugFsInfo<T> {
->   fn new_subdir(&mut self, name: &CStr, value: T) {
->     let subdir = self.root.subdir(name);
->     // SAFETY: We don't allow the root to be destroyed before our structure, so
->     let val = unsafe { RawValues::attach(value, self.root.subdir(name)) };
->     self.subdirs.push(val)
->   }
->   fn get<'a>(&'a self, idx: usize) -> &Values<'a, T> {
->      let x = self.subdirs[idx];
->      // SAFETY: We know all our subdirs are children of the root we
-> own, so if we have a read-only reference to ourselves, that's an upper
-> bound on how long the value struct can live
->      unsafe { RawValues::ascribe(x) }
->   }
-> }
-> ```
-
-Yes, I'm aware of this possibility and its complexity. That's why I think per
-file would suit better.
-
-> If I wanted to do better than this in terms of ergonomics, I think I'd
-> need some kind of refcounted wrapper where holding a subdir prevents
-> the parent dir from being cleaned up, which I could add, but would be
-> a Rust abstraction layer on top of the C one.
-
-I don't think something like that is desirable.
-
-> >
-> > It would also require Option<V> (where V is the type of a field in T), if I
-> > don't have an instance of V yet, when the root directory is created.
-> 
-> `Option<V>` won't actually save you - once you create a `Values<T>`,
-> you are intentionally unable to mutate `T` anymore, because it may be
-> read at any point in time after that by someone reading a debugfs
-> file, so you can't do a potentially racing mutation. If you wanted a
-> value to be attached to a debugfs, but didn't have one, you'd need to
-> do `Mutex<Option<V>>`.
-
-Sure, or some other kind of synchronization. I left that aside, since it's not
-relevant for the point I wanted to make. Which is that with the per root data
-approach we'd need to work with Option types when the data isn't yet known when
-the root directory is created and if we want to be able to free the data before
-the root directory is removed (which might be never).
-
-> >
-> > I think we should store the data per file, rather than per root directory.
-> 
-> This doesn't match what at least seems to be a common usage of
-> debugfs, where a debugfs directory is used to represent an object with
-> each file in the directory representing one of the properties on the
-> object.
-
-Why not treat File as container, i.e. make the property of an object a File<T>
-with T being the property?
-
-> This also means that we need to store N handles in a Rust driver (one
-> per live file) compared to 1 handle in a C driver.
-
-I can't follow what you mean here. Files in a C driver do need a handle to the
-data they expose too, no?
-
-> 
-> ===
-> 
-> I do think that the normal idiomatic way of doing this in Rust would
-> be to attach refcounted handles (e.g. similar to `ForeignOwnable`) to
-> inodes, and when the inode is destroyed, have that refcount be
-> deleted, but we don't currently have any `release` implementation for
-> a DebugFS inode afaict, so everything has to be externally scoped via
-> this attached pinned data setup I've been producing.
-
-Why do you think that this would be "the normal idimatic way" of doing this?
-
-Does this imply that you think tying the lifetime of the object exposing a value
-to the value itself wouldn't be idiomatic for Rust?
+yeah, let's drop the subtest, it's a bit easier to work with
+non-subtest tests, IMO
