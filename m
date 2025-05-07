@@ -1,48 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 732341FBEA2;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4409200B8A;
 	Wed,  7 May 2025 05:18:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746595096; cv=none; b=rZHCMoTOiKnNfGYCN/tTUIRfavdbpFGfvURENmH9IgaCJYjKwQrok85XWOg8qRX+wflPIGme2NCCLhnMzJKD8UtNEDKUvvnDgPPa5fdfG1NPXYo0+iLPsQXSXqDA/5XmSy/YzdHyT45HpPp1OJ9SMKRQAbMjvRTHKlEI1oBDTJ8=
+	t=1746595097; cv=none; b=BoiUT25prjB4z7newvjTI7meTMSizhRGZgn/5jsng3mdJ1v2GrpkI7W+XXV+gfAEH1eb+mKOAdTMyRzuU5NcR8dTjBlSPMiSXUY5U0YHsNZnAzTp6O90lujOpxDVtk03848Tqg2Dam3nHulqoCczPnr3xm16naJttE8piFPiYIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746595096; c=relaxed/simple;
-	bh=ZPOxIsXW2ulElosS/A2SFgXjzaSyKVtJssVnwDk+pJA=;
+	s=arc-20240116; t=1746595097; c=relaxed/simple;
+	bh=ffOPiBau0+EyffFvKHb5tpbbgY+TtfVIq2PljSWlPmU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VwOb3+NZ+NFK90QrBm5MbSUGMmb+ooPaU7iDBMSR4azTSqLNf1LIv5O5N88QLMH86aO2WuUpsBKhXJ/tRia25dC+h5w4nM6DwBAq2g24DkG5X2Xb35qcdEw89govdglrGX62bPzlyT4MB0ETDfSiY+9SIMaUJWckTPjmSfQ0U1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PgQ6JpYb; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=nDyjPFc9cWoKvsxWXGfVPZFKVQlmxTlVM+VqByNGZhhppz4+2zvKO+Bui4WmZRqy8jtyCff5qhOzojfPQCC+IvR1UpUpOaftlH2XLnjdly13doEYzNNWdBa4YW2WJTDUKPM37qTEbKxq2CguqqvXa/FUetPOFoIjDAeNE24oKCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MloJxYdB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PgQ6JpYb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43996C4CEF6;
-	Wed,  7 May 2025 05:18:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MloJxYdB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F157C4CEEF;
+	Wed,  7 May 2025 05:18:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746595095;
-	bh=ZPOxIsXW2ulElosS/A2SFgXjzaSyKVtJssVnwDk+pJA=;
+	s=k20201202; t=1746595096;
+	bh=ffOPiBau0+EyffFvKHb5tpbbgY+TtfVIq2PljSWlPmU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PgQ6JpYbVu2dYADvYed7Ume3WZeliQhfB24Ejx+a9uKhCGZKwdtqW/OzjhH+nUVXf
-	 Knl0kXwoxqufQ+rXavVZcWK4obB+PjH7K4a5GOPjN4GjlX6g4aFjvO9WwVSTBXSrqf
-	 m5c/0fDCm409Y3JQibN/TbT4jV1EWs9hKInTzszGSo8duUgrbDVfIN8EF7AvSS2v2/
-	 kLzdmv1jQ3DxtB0gaN6uOAubWrM385fl5bQlAu6KuBpGcnGSjEuzGOSK1umOyNUKwB
-	 oAXpxomzZr1C7hKEt0RFwqwF9v10YMpY/BOVNE90Qr3KmQsAzkQvwa6BHydoBQiYcb
-	 2JeHNQbW8szyQ==
+	b=MloJxYdB11RDhEb/Lgqy5436c/hz2eLDnBRp6+t+poClJs0d9yPDhp/t4NmyEImCq
+	 LrZ37ZttDRcw6Ztbx5mSIcATzmXU1v7t6lfOvbfDk+jqJ/ZQ23TCN/WcXBgT/ksfW/
+	 ddyHgPzmOF4hepZIpEBY2xB8MVouXTr2yESPF8799cwzfbOfivGgLEcKWZChi302cG
+	 YFPqxkbotnjUKUQJS530T/9Kr1XUDsSoBH3EDQp+MC3vlglrdP0yDvP+T1qN+1brAo
+	 v1FowNB9qTeyG78udWhChfveuZ2DwdzJFAQqgy62KGFoM/Xs4Q3ylVKIq3dsEd3Zi9
+	 Z2btv0xW0+Nmw==
 From: Bjorn Andersson <andersson@kernel.org>
-To: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>,
-	Luca Weiss <luca.weiss@fairphone.com>
-Cc: ~postmarketos/upstreaming@lists.sr.ht,
-	phone-devel@vger.kernel.org,
+To: Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Imran Shaik <quic_imrashai@quicinc.com>
+Cc: Ajit Pandey <quic_ajipan@quicinc.com>,
+	Taniya Das <quic_tdas@quicinc.com>,
+	Jagadeesh Kona <quic_jkona@quicinc.com>,
+	Satya Priya Kakitapalli <quic_skakitap@quicinc.com>,
 	linux-arm-msm@vger.kernel.org,
-	linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/4] Add *_wait_val values for GDSCs in all SM6350 clock drivers
-Date: Tue,  6 May 2025 22:18:08 -0700
-Message-ID: <174659505814.5380.17400921825631529392.b4-ty@kernel.org>
+Subject: Re: [PATCH v2] arm64: dts: qcom: qcs8300: Add cpufreq scaling node
+Date: Tue,  6 May 2025 22:18:10 -0700
+Message-ID: <174659505808.5380.2408209642183590288.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250425-sm6350-gdsc-val-v1-0-1f252d9c5e4e@fairphone.com>
-References: <20250425-sm6350-gdsc-val-v1-0-1f252d9c5e4e@fairphone.com>
+In-Reply-To: <20250430-qcs8300-cpufreq-scaling-v2-1-ee41566b8c56@quicinc.com>
+References: <20250430-qcs8300-cpufreq-scaling-v2-1-ee41566b8c56@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,37 +55,15 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
 
-On Fri, 25 Apr 2025 14:12:54 +0200, Luca Weiss wrote:
-> As described in the commit messages, keep the GDSC configs aligned with
-> the downstream kernel.
+On Wed, 30 Apr 2025 10:29:12 +0530, Imran Shaik wrote:
+> Add cpufreq-hw node to support cpufreq scaling on QCS8300.
 > 
-> For reference, this was checked using the following code:
 > 
-> To: Bjorn Andersson <andersson@kernel.org>
-> To: Michael Turquette <mturquette@baylibre.com>
-> To: Stephen Boyd <sboyd@kernel.org>
-> To: Konrad Dybcio <konradybcio@kernel.org>
-> To: AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>
-> Cc: ~postmarketos/upstreaming@lists.sr.ht
-> Cc: phone-devel@vger.kernel.org
-> Cc: linux-arm-msm@vger.kernel.org
-> Cc: linux-clk@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> 
-> [...]
 
 Applied, thanks!
 
-[0/4] Add *_wait_val values for GDSCs in all SM6350 clock drivers
-      (no commit info)
-[1/4] clk: qcom: camcc-sm6350: Add *_wait_val values for GDSCs
-      commit: e7b1c13280ad866f3b935f6c658713c41db61635
-[2/4] clk: qcom: dispcc-sm6350: Add *_wait_val values for GDSCs
-      commit: 673989d27123618afab56df1143a75454178b4ae
-[3/4] clk: qcom: gcc-sm6350: Add *_wait_val values for GDSCs
-      commit: afdfd829a99e467869e3ca1955fb6c6e337c340a
-[4/4] clk: qcom: gpucc-sm6350: Add *_wait_val values for GDSCs
-      commit: d988b0b866c2aeb23aa74022b5bbd463165a7a33
+[1/1] arm64: dts: qcom: qcs8300: Add cpufreq scaling node
+      commit: 2ed8ee662660577a701e92917dbc65ca3553507c
 
 Best regards,
 -- 
