@@ -1,127 +1,162 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2047.outbound.protection.outlook.com [40.107.95.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3B54204090;
-	Wed,  7 May 2025 10:50:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746615044; cv=none; b=F9ZmeAjz1jKQePhRc10BX29ipZus1B3Og8ODGnrLW++v61mWU95qYfSo3ZaMU/9+sfd+ivruFuhDg1+lTIv9e8/g8quLPQVL8hycgmHQPOBdr5VXR/yuXgGW5naxkrut+PYph+0Pw/vDJzduMyOQf24xV9PUouaMSqC5WBFZucE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746615044; c=relaxed/simple;
-	bh=Ldo6Lsq6qpoBcAcvoEf/YxqJ9k7zFw7OaJuRkMKgvnA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=C6OeFKprYbg25gcaSAr4G2m7mxLPRHWNZMSQlsxhE36xi1fOoMfSj5nj6Qj1IF/zFotm3TVJToBbrPhIm0X2pi/IrNGiaGq0h/LTfEGM0aBTgL42GO7I7PqBmAdt4J2odFA+MIcUZkrsd896kcil1+ZQvPTYdMQMigVcaEwsSHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=oFYAFE6t; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77F6E204090
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 10:52:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746615132; cv=fail; b=cyU6o/REn+rChJpSy3m9qoBPtQcd/tNUy8P17a3NNyyELJrx9DZiXaM13Uz8zKDkrmWT2/3rOr3/5nLA3j0kLWinSePw/PSp7qMuInjGjmMqNRULoqIzeU9/eXaVNlcSZdZtoqqrXOJlLlLYsF58ko6U6W+k1yvDmbG+8WzFBP8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746615132; c=relaxed/simple;
+	bh=HlhFmZ8fk8AACTCaZkZx7pXp1Hdpb3v6/Kf4Lk4QPeQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=G9iNEFDoBwAbUSBRLpzqEEGi6snXFDksGDKYL32Sszd8GtjnhoeR+dB9+wVqfho1iXSvCfwyFEAi1MjKZQ1zVRUZyJ6oUITKvbFKsHQGdINFVcuwYDH7Csqeto1PQKYwnZOrkc1OYJbyiBXFZzfvq6pwAePR5NNsUzMwNLJVp2E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=DuJSlkVs; arc=fail smtp.client-ip=40.107.95.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="oFYAFE6t"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=AZvKfY2LfIvMiSyDUwvUiIzUFutdLak7XJbXHzgyZo4=; t=1746615042;
-	x=1747047042; b=oFYAFE6t9GKduDFWNdyyfj8R+dg3pIJwrKXMsDZlV31C1NoyS548fTUPkAZAe
-	Tg0XUeYFqxWKQgugQ6f8dFjNyRrq1XxSuzrTgytd0OgrTE5WnNzBxcyZkXMQMF7DLlz87OtcGFMhH
-	mCr+Pbf9+FxFwwvw2pfNvSQ/b2S1zIaC4C8wI1fvgZ3CNGSXgJZYaBdWsI1lARzE38rAfeOYgabLN
-	S+uPZ+V4rAklizMUj49KLKPF5crIvOvgUl+RvlDjyIw6Ew8TCsAOtxm3/vd3l8vwqPuc3K5EbzZS6
-	BusktWu9hUCSqVlnaCwD7rnl1mr939RYztICexUTVMJn6pU69w==;
-Received: from [2a02:8108:8984:1d00:a0cf:1912:4be:477f]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
-	id 1uCcMK-000e19-0X;
-	Wed, 07 May 2025 12:50:40 +0200
-Message-ID: <fe4c8f86-17d9-4e00-96e9-9f24c22c58a2@leemhuis.info>
-Date: Wed, 7 May 2025 12:50:39 +0200
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="DuJSlkVs"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=mkwC4ZfNl+1fXBp6XEtm8+pWqNJh7MRiS72uyI8aLjh+EE0dKURS8LGNxShpaxeTWjRwM/Y3iIA++4BuSfml5ae4oeD72Fxu/wc3d2f1H4gWIahYkDdRd3YNLCQWYtAhv+4OINBk0P5sH7sJUYdEcl0roAxzgjD8UMUzTDuJXx3mpEpkIhBTRkxivQ3w/HkF66fbYqEV+xfYxem5NxcekZpZCIpmd5ok3/G1HiVi2Otz+L2S+jpXoYBvp9bIaQuMfL4QtbJ5tSBWb4C8zeGLC4JFqNDSb8QxnjuJjgzyzVWtmn/LXU1PyKnH3DU3FysVFDLvWPEcBP2h7RKXT+4Emg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=wOuORt/Vv8K8nWQTwGiow4M7sh+WcOsb01x0Pu0lO34=;
+ b=H2JOzrtzu7nirzhXjhBhgrOiNwZrFA3slKPIQDwL+LQJgnVAQjD9Nwv+766qiOp9v54C93hZOLeBr7GAm069oeZZPfWThPmQcj/DhF1qdtZsvottZRuVBaqNDbdO02mYF+Gvw6qj5pLzyVmGj82MKP+KIaZpINn4raCX7RTr8WaenM0JUxrdTRrc5tHHKt9gxF/k1beN6Afgsm8tqjEoqW6P5ye5LGAuH/TnxEhRVCxQTi9dy1kD3HTUEL46GqtvLMZJe1BHoLCKrNF4sG8yMicEuRd3OWk41Ls1ghjiOpgIuDlcfvjt1bv+93hY5B3wBqUyQzqp6Fiy4COfsybulA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=lists.linux.dev smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wOuORt/Vv8K8nWQTwGiow4M7sh+WcOsb01x0Pu0lO34=;
+ b=DuJSlkVsoR7vZXxoGSFlgDUmZ4Tkz2thvR8u0o8N5H61TEINdj+GgQpoTQdTT8xlo1MMhnFzuAMWfQNJ7fmIBR/t0m6A9UM8oF7p5nQ/pHwhpWOkGSuWRacUZDyiFKq5JMlW+32Lt/fI0NZam8mfmk4EX9n1twPi5djlPGqAdq4=
+Received: from CH0PR13CA0013.namprd13.prod.outlook.com (2603:10b6:610:b1::18)
+ by CYXPR12MB9443.namprd12.prod.outlook.com (2603:10b6:930:db::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.26; Wed, 7 May
+ 2025 10:52:07 +0000
+Received: from CH3PEPF0000000A.namprd04.prod.outlook.com
+ (2603:10b6:610:b1:cafe::ac) by CH0PR13CA0013.outlook.office365.com
+ (2603:10b6:610:b1::18) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.16 via Frontend Transport; Wed,
+ 7 May 2025 10:52:07 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CH3PEPF0000000A.mail.protection.outlook.com (10.167.244.37) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8722.18 via Frontend Transport; Wed, 7 May 2025 10:52:06 +0000
+Received: from BLRANKISONI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 7 May
+ 2025 05:52:02 -0500
+From: Ankit Soni <Ankit.Soni@amd.com>
+To: <iommu@lists.linux.dev>
+CC: <suravee.suthikulpanit@amd.com>, <vasant.hegde@amd.com>,
+	<joro@8bytes.org>, <will@kernel.org>, <robin.murphy@arm.com>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 0/2] iommu/amd: Support for HATdis and HATS features
+Date: Wed, 7 May 2025 10:51:46 +0000
+Message-ID: <cover.1746613368.git.Ankit.Soni@amd.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [ebiggers:sha256-lib-v4 4/13] /tmp/ccoCWqTC.s: Error: local label
- `"3" (instance number 1 of a fb label)' is not defined
-To: kernel test robot <lkp@intel.com>, Eric Biggers <ebiggers@google.com>
-Cc: oe-kbuild-all@lists.linux.dev, Ard Biesheuvel <ardb@kernel.org>,
- LKML <linux-kernel@vger.kernel.org>,
- Linux Next Mailing List <linux-next@vger.kernel.org>
-References: <202505071811.yYpLUbav-lkp@intel.com>
-From: Thorsten Leemhuis <linux@leemhuis.info>
-Content-Language: de-DE, en-US
-Autocrypt: addr=linux@leemhuis.info; keydata=
- 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 n7RI
-In-Reply-To: <202505071811.yYpLUbav-lkp@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1746615042;ad617d13;
-X-HE-SMSGID: 1uCcMK-000e19-0X
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PEPF0000000A:EE_|CYXPR12MB9443:EE_
+X-MS-Office365-Filtering-Correlation-Id: b32404b2-ce88-4a44-979c-08dd8d5535ad
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|36860700013|376014|1800799024|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?k5j2R0kxWM6dxl9pAQ2d0B6osw9AvHXd9GQFLFwaqq4J+UiESkeN6/WaVqgM?=
+ =?us-ascii?Q?8gECWWRe41Wo2CJIDl0pLzgmPbSuYIozaJJbg27Mi88jiVB62QU+SvwVOtsj?=
+ =?us-ascii?Q?IGSRcFcDlH/7ODqZBl60TXuSQ/h4ZdT6xsROwtGWjBfmdAET+HMg4Y6YqOrV?=
+ =?us-ascii?Q?AKKKGKEyvlcdfGMFYXvhCnPCUuPpOD/qyH9M4Cu2S8fw4Pk+VZoiVmq41EHX?=
+ =?us-ascii?Q?Fz0Z9trNp9G7joTef2SxEhRVWjnk+7FlmzAGa5I4fZgrA+8EdTyvgOrGivbR?=
+ =?us-ascii?Q?wEtuOIYGYmGaoQ0sw+yKXz7U6nyjOcumJ+1PXL9Z/Wpptq9GLr70Wr7UIvJB?=
+ =?us-ascii?Q?Of7fKFZkvMqLT/kEqATzv1gx8utkoz1wUu9suAAFfnst8uZAOQWw/BIwTfmx?=
+ =?us-ascii?Q?HpSIild5+klSy65lucNLZYKpqUsGlWbGW2jt/xPF/r/+KLxGy8/kQUiRmYJK?=
+ =?us-ascii?Q?arBnb0MclfywFRiPfBtMffe/PeJpPkpuMwvM7OEiA/bNuWoCnSOvrVP1ucHF?=
+ =?us-ascii?Q?bMRR1b+STbHEr68l7E/laliVt1A8L4W4WKqZzR6umCcSFYgQyNnq3sXa56NZ?=
+ =?us-ascii?Q?5YTQv+RSfWTlIedbV/+DJ8Ztex4Ar4rTuyteFga/+76QxlTFoYGI3H5yYKmO?=
+ =?us-ascii?Q?xjYYdlHhs63ZGgq+s8lK2xGGZ8Je7X4vXDb5i8es4LAJnP4loPZ8KTJtf9l5?=
+ =?us-ascii?Q?ay94+wCgxh3ofoAHUOIEDCT68OAR5GEuBc6jM1ZcNkqPCnFDcP+PirowX8xN?=
+ =?us-ascii?Q?26uCqxIf7BbgOu8oJQGzvBTV9mAvAS6Wrz2AVwEJxYZOadLA5OfiXL+tlVtB?=
+ =?us-ascii?Q?50mxxX3hdAzNVaXsWssLqCRg9PPras/0Xk1FkpHfwWGcLYeJW0xQ4qLpbk1o?=
+ =?us-ascii?Q?1W1o80RWuJyc5WgL8cBNAb9shcUfT3Q0DBTEiuKNAjdzeqmECB8wLQc6XKSq?=
+ =?us-ascii?Q?toTlXH2aBlrQ8WT9z/UuFEB8+ewbwPn8cVB/e20+0savsykpPnbMb9EN/z0R?=
+ =?us-ascii?Q?ewxKOKQ1CuTg+luwugJVSOnDKNZ93YMmYM+h5QNiz34senUum8Y+OZppWPo4?=
+ =?us-ascii?Q?8WzETpBJETcbhv4bF4aszF68ReMP4edTUpOi1ElrQ34EF/ABbKXqFiTJOpsN?=
+ =?us-ascii?Q?AItsrYGTzwu5qzDhl839zZdLxE71G5GEX8gg9iblQr0YalqBQGJGRouTyCPY?=
+ =?us-ascii?Q?nyznMFGQKll5aRWOQy25iwYjcErzE6HSSSAg9QdNXFtd6rsrnWqBiihtSpST?=
+ =?us-ascii?Q?cUqECAvGXwhFqmjg44/HdorchCQI93ZeqxoO8tjw+ULNVDqEo7jHOt8sfyvE?=
+ =?us-ascii?Q?OjfOEIp2KzMSSqY7+Wp/Q/dKoIPZfnx4awDdg6nImCx6uysat2sx6L6CRerY?=
+ =?us-ascii?Q?QXOrV4iJqM+hNRABXnLsvOaG0T44H7tixHvGx+5xzlzHKKfcvpgorFpXoVWh?=
+ =?us-ascii?Q?fUg6MWD+++NP9wJ2+c9bDcllI27sz+7OzWsVa+uo8rJ1UyGyunzpiA=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(376014)(1800799024)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2025 10:52:06.8122
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b32404b2-ce88-4a44-979c-08dd8d5535ad
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH3PEPF0000000A.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYXPR12MB9443
 
-On 07.05.25 12:25, kernel test robot wrote:
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git sha256-lib-v4
-> head:   849682242c36727c23430b6cfed12e4422313931
-> commit: 9f2dd94847c914bb716be744e12cb02f175638db [4/13] crypto: arm64/sha256 - implement library instead of shash
-> config: arm64-randconfig-003-20250429 (https://download.01.org/0day-ci/archive/20250507/202505071811.yYpLUbav-lkp@intel.com/config)
-> compiler: aarch64-linux-gcc (GCC) 9.5.0
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250507/202505071811.yYpLUbav-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202505071811.yYpLUbav-lkp@intel.com/
-> 
-> All errors (new ones prefixed by >>):
-> 
->    /tmp/ccoCWqTC.s: Assembler messages:
->>> /tmp/ccoCWqTC.s: Error: local label `"3" (instance number 1 of a fb label)' is not defined
+This series comprises two features:
 
-I ran into the same problem today when building -next rpms for arm64
-Fedora using the approach and configuration used to build the kernel
-rpms shipped in Fedora rawhide.
+HATDis: When host address translation is not supported by the IOMMU,
+the IVHD->attr[HATDis] bit is set. For instance, QEMU emulated vIOMMU
+does not support DMA translation for VFIO passthrough device.
+Support has been added to check this bit and switch to guest page table 
+mode, if supported. This feature is useful for cases where only interrupt
+remapping is required.
 
-Full build log:
+EFR[HATS]: These bits indicate the maximum level supported for host page table
+by the IOMMU. Modifications have been made to adjust the maximum host page table
+level, starting with level 4. If these bits are set to 11b, the driver will
+attempt to use the guest page table.
 
-https://download.copr.fedorainfracloud.org/results/@kernel-vanilla/next/fedora-rawhide-aarch64/09006679-next-next-all/builder-live.log.gz
+If guest page table mode is not supported, the driver will fail to probe
+devices for DMA translations.
+The interrupt remapping will continue to be supported.
 
-Ciao, Thorsten
+---
+Changes since v1:
+- Addressed comments from Vasant:
+	- Added/Modified comments and logs.
+	- Removed v1 page table assignment hunk.
+- Link: https://lore.kernel.org/linux-iommu/cover.1745389415.git.Ankit.Soni@amd.com/T/#t
+
+Ankit Soni (2):
+  iommu/amd: Add HATDis feature support
+  iommu/amd: Add efr[HATS] max v1 page table level
+
+ drivers/iommu/amd/amd_iommu.h       |  2 ++
+ drivers/iommu/amd/amd_iommu_types.h |  7 +++++-
+ drivers/iommu/amd/init.c            | 37 ++++++++++++++++++++++++++++-
+ drivers/iommu/amd/io_pgtable.c      |  4 ++--
+ drivers/iommu/amd/iommu.c           | 15 +++++++++++-
+ 5 files changed, 60 insertions(+), 5 deletions(-)
+
+-- 
+2.43.0
+
