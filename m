@@ -1,133 +1,120 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F89D1DF270;
-	Wed,  7 May 2025 11:26:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29E52189B8C;
+	Wed,  7 May 2025 11:28:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746617217; cv=none; b=WTXur2yJ50hBkeDCjdNZ3oeFneML6TksEtkVFh9014H/Ujx+TDLGcnnrD21woaiH/ucB8MsNXbVfsfIsEeeTOzcmsbex2LvgCb/SlsTUP7HlEuaj9YQ5i+MMMVeNN5GvnzhpsiZI3q65BHInKUINmMQrkD0+FVVndQy+dKaq1E4=
+	t=1746617287; cv=none; b=Kj7a+OQe8IHutWnqTN6NnxZxU37YhrmfKUNy4LB5qpBiCyyOvhbBYnZ43pIiZ0rbrNuv12J/7KYNubqGXSCeMQjzA761LfZ6DSyzbWiKbI6XMQIbDhbGFRRWsNFIw5i6NLrC7Muzxi5Yj4bovBxlE8umz1FplcZgg0xXHEbCGYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746617217; c=relaxed/simple;
-	bh=3OP80T1TUr1RcBZZRe44AoSvO1VcM/ywxxkRLXR8834=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=HtZxMQNfErbfZb42KzbB1rLzB2GFVpLPMghfUxa3dwq4xncAXuAxN3CWugVi+dxtNJDBKCVheYvR7AWssNtzOFx9Jt4H/VLYeytoOKWG1a53/wM4SrqpLIdBza7sAg9SVzSEOFGB6xzVGKq/2LXG0n/Dqy6ESeThKH6Z6n503FA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q38L8S9S; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746617287; c=relaxed/simple;
+	bh=+myiwgE5IaBaXJzmpEL8CqSZA8uzkotePvS5m/azOWI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AehfhQnq9nCydWCalbTeJqsmBRIe3XsRafo2MwCcUdLo+tvQLWt8rmgVIAhPhBE9EV+DrHYownjKwZ1how4HI21ytunbqZLfzilC4AI0Eo8VNcX8GKWGzjmn4kVJNibjvfRMcsw/dCoJliPK2ViAaW8+f3C5XjFKJpEnT8oqLjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H9g7Uo3K; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q38L8S9S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C6F9C4CEE7;
-	Wed,  7 May 2025 11:26:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H9g7Uo3K"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16050C4CEE7;
+	Wed,  7 May 2025 11:28:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746617216;
-	bh=3OP80T1TUr1RcBZZRe44AoSvO1VcM/ywxxkRLXR8834=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=q38L8S9S+wve2b5pG+K/5t5A5qxlxyLzXDtbSG1idYmWYm7B0pa5wJvoq+Sx7WkfM
-	 DkWdl/PgZJd1eTXt8RmLRO2hCbOAJHofDUPV8WcZ8Z69LHyAn7ccFde/96RC3pM9ys
-	 ozeckDk2e2JwX5DZnAWfD/CB16GMF4tHahQqezTig1dfwpNMgFoivSAQePFckF36rE
-	 uuUj/DJvZUagpGDN4bmba5CxkWzeB54sRO4skiR17n9y+9rlG12C5+KFS690vkTgiS
-	 OT0Yfzv8PaWwJ9e1bZ+HDtJ9kvabW4KWNkMiUTlPYi3u4H128FshaW5U5XiL9b2gxf
-	 1UwrMyGl1ahvA==
+	s=k20201202; t=1746617286;
+	bh=+myiwgE5IaBaXJzmpEL8CqSZA8uzkotePvS5m/azOWI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=H9g7Uo3KF3gdhcH2ZEMV9V3wNqXA8tWVr4h+XSChpAk8ADpc3AiALZ4luZs+qiP11
+	 Z/MMgQA+W8firplqY6wsfvaRlyKDnu2GwFBPbbSs260wPnfiIZNYS/X+7RgVASh77m
+	 RpC/hLSnA/nsP75LVgIyB2iQqMj3uUQrguNMZM870ct6AHpi0KrvjkwwfISkMW7V3a
+	 YOPAoo049AzlkO+K5zbADyxXnj6XpUO50IDuoOngkJTqfSy9VuxxdFuvsHaky5egwP
+	 KzvfbiAMDQAUjIzdffkOIksa2UyWdR9eJyQ0Y56Uy3z2fvqMFG3OeJNxR8UwUZLFBh
+	 Co6k62Ve2SILg==
+Date: Wed, 7 May 2025 20:28:03 +0900
+From: Mark Brown <broonie@kernel.org>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Andrew Lunn <andrew@lunn.ch>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Peter Rosin <peda@axentia.se>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, Len Brown <lenb@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Wolfram Sang <wsa@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	Steen Hegelund <steen.hegelund@microchip.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v2 01/26] Revert "treewide: Fix probing of devices in DT
+ overlays"
+Message-ID: <aBtDw-qXUCH9U-7l@finisterre.sirena.org.uk>
+References: <20250507071315.394857-1-herve.codina@bootlin.com>
+ <20250507071315.394857-2-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="oe+RepqPNVL4+bmX"
+Content-Disposition: inline
+In-Reply-To: <20250507071315.394857-2-herve.codina@bootlin.com>
+X-Cookie: Well begun is half done.
+
+
+--oe+RepqPNVL4+bmX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 07 May 2025 13:26:52 +0200
-Message-Id: <D9PW4M8X6TMK.33M9WF0S42KI4@kernel.org>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
- <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
- <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
- "Trevor Gross" <tmgross@umich.edu>, "Danilo Krummrich" <dakr@kernel.org>,
- "Oliver Mangold" <oliver.mangold@pm.me>, <rust-for-linux@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] rust: elaborate safety requirements for
- `AlwaysReferenceCounted`
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
- <aliceryhl@google.com>
-X-Mailer: aerc 0.20.1
-References: <20250506-aref-from-raw-v2-1-5a35e47f4ec2@kernel.org>
- <D9PSH8MJ48JO.3OOA3Z3NSBGC9@kernel.org>
- <P0Vs61xa67BWtC_H9sCVioTN9Eb9G0N6w23IVMhek_I0QzvNsTQYYs269Ud_VBv72bWdMab3i8z8YsOeYkCEvA==@protonmail.internalid> <aBscvBwCD1o0OC_v@google.com> <87frhgpym0.fsf@kernel.org>
-In-Reply-To: <87frhgpym0.fsf@kernel.org>
 
-On Wed May 7, 2025 at 11:19 AM CEST, Andreas Hindborg wrote:
-> "Alice Ryhl" <aliceryhl@google.com> writes:
->> On Wed, May 07, 2025 at 10:35:16AM +0200, Benno Lossin wrote:
->>> On Tue May 6, 2025 at 10:29 AM CEST, Andreas Hindborg wrote:
->>> > diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
->>> > index 9d0471afc964..52683d686c8a 100644
->>> > --- a/rust/kernel/types.rs
->>> > +++ b/rust/kernel/types.rs
->>> > @@ -409,6 +409,10 @@ pub const fn raw_get(this: *const Self) -> *mut =
-T {
->>> >  /// Implementers must also ensure that all instances are reference-c=
-ounted. (Otherwise they
->>> >  /// won't be able to honour the requirement that [`AlwaysRefCounted:=
-:inc_ref`] keep the object
->>> >  /// alive.)
->>> > +///
->>> > +/// Implementers of this trait must ensure that values of types impl=
-ementing this trait can never be
->>> > +/// owned by value. Instead, values must be owned and used through a=
- pointer type. That is, a type
->>> > +/// that implements [`Deref`].
->>>
->>> I don't think this covers every case, if I modify your example above
->>> with Alice's suggestion and using `Box` instead of the stack, I get the
->>> same problem:
->>>
->>>     struct Empty {}
->>>
->>>     unsafe impl AlwaysRefCounted for Empty {
->>>         fn inc_ref(&self) {}
->>>         unsafe fn dec_ref(_obj: NonNull<Self>) {}
->>>     }
->>>
->>>     fn unsound() -> ARef<Empty> {
->>>         use kernel::types::{ARef, RefCounted};
->>>
->>>         let data =3D Box::new(Empty {});
->>>         let aref =3D ARef::from(&data);
->>>
->>>         aref
->>>     }
->>>
->>> The same should be true if one uses `Arc` instead of `Box`. So, even
->>> though we store it in a "pointer type that implements `Deref`", it is
->>> unsound.
->>>
->>> I think that types that implement `AlwaysRefCounted` must only be store
->>> inside of `ARef<T>`. So something like "Values of this trait must only
->>> be exposed as `ARef<Self>` or `&Self`." I'm not satisfied with the
->>> wording 'exposed', maybe you have a better word or can expand the
->>> sentence.
->>
->> I mean, in some sense the problem is that Empty violates the existing
->> requirement:
->>
->> Implementers must also ensure that all instances are reference-counted.
->> (Otherwise they won't be able to honour the requirement that
->> [`AlwaysRefCounted::inc_ref`] keep the object alive.)
->
-> The example holds, even if you implement `inc_ref`/`dec_ref` properly,
-> right?
+On Wed, May 07, 2025 at 09:12:43AM +0200, Herve Codina wrote:
+> From: Saravana Kannan <saravanak@google.com>
+>=20
+> This reverts commit 1a50d9403fb90cbe4dea0ec9fd0351d2ecbd8924.
 
-Yes.
+> While the commit fixed fw_devlink overlay handling for one case, it
+> broke it for another case. So revert it and redo the fix in a separate
+> patch.
 
-Although one could interpret the part that Alice quoted above to mean
-the same thing as I suggested (only giving access to `ARef<Self>`, as
-any other smart pointer isn't aware of the inner refcounting of the
-value).
+Acked-by: Mark Brown <broonie@kernel.org>
 
-With that interpretation, we could argue that there is nothing wrong
-with the safety requirements. But I'd say that we should definitely
-mention that one is only allowed to use `ARef<Self>`/`&Self` and not
-hand out any other ways to access `Self`.
+Please include human readable descriptions of things like commits and
+issues being discussed in e-mail in your mails, this makes them much
+easier for humans to read especially when they have no internet access.
+I do frequently catch up on my mail on flights or while otherwise
+travelling so this is even more pressing for me than just being about
+making things a bit easier to read.
 
----
-Cheers,
-Benno
+--oe+RepqPNVL4+bmX
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgbQ8MACgkQJNaLcl1U
+h9A3/wf8D6c+36MLT2mhvh2zxesAYWfdL1e5vpcKQk0H/bkk+8KQLEBRl9w9syn2
+MFtk87xXOIdfli0pvEnP2cUrCHKDrD2ehLcNFcur8Vq6IOjjX2Gs3Iboe5CfqnoS
+tPRSxFS31DY3g7DhUGmQ7fUUlPYGwpYIK1QgXrfiR+uhEbooIq6yN1/hcKL2rFS4
+Y21v0te/hUxHTpeTMlcOkXqqu/1UExRszOly4m0YB9mZoswASG024vcrx4paZFjF
+sJ6hXYEyI/PDpMSVthVLe0jK7jyBsiVGSSVDRcimNQj6nAokmye1VeKejWhV3Flv
+7epg7YG5YuZjEXoQ3CaQaDdESm7PnA==
+=5SSZ
+-----END PGP SIGNATURE-----
+
+--oe+RepqPNVL4+bmX--
