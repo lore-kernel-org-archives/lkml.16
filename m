@@ -1,132 +1,115 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D87413AA3E;
-	Wed,  7 May 2025 06:37:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BED8C139579
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 06:38:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746599870; cv=none; b=dj81rUdR6Bgjny0/g/NTXwV26taPnXgjt6Ka14DDVZixm9luCYYkPwY/6YVnbVmRI+kDoP4SW74Ii20gNpNdyaSv4fXcpI6VPk/N/N6uYGuH/60K/fWZQuffNSBwgspF5LfQatS/veT09+/HUbEZS2r/xOWi/uiZNFMn7niPlyc=
+	t=1746599915; cv=none; b=GMIsPwqLgx0TgwxUPIB2F3bBRtRMS6kvGrUb9OeRD/AZIxJ56yNTubBeJYpnYqpAI18a1RqacSQfvScBYFLmCzRJmYNQmNer9USDEBpKBYikjAMzS00RzWWyxlzh8srGZl7cYKV+Rj67LT3GhatQbW1TShIrYzBAQ5CxV638eeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746599870; c=relaxed/simple;
-	bh=iAJ7LV3fUkX+l59adPf/ghUY2G26V+OK5mBCqKZooqU=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Lgwo4bwzEBWi5ZF9/VKxuhOst79t7prpnvZFvXem1wnx0f7NsX+mZsHERCxQP3tCU8IyoSxmjqETuqUeOVdHsuyS2sQKvkpuSiu+S7mSrjWHgpTSY/Rr/TsFAJhqRcDH5iuQkZtJUf4idNOiUPVYyB3mhQrCi37tm3/81xipv98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=je1iH+Ar; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1746599915; c=relaxed/simple;
+	bh=FMz0xL1Cwnszn0V3OnOQdvE86LJBrAEHmyJ8pPb9gko=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aJ2yKX0S9wgkvMxgi68biTnC3mDNvAcEWsc01PTn8CFDN7Jq9iJ7tnQV4SpB4h8wzIft9uXDKRZbVM4zBlNNlkEnJHG8Mku17ImBQUOXjtnJFWJXyoyX7sdseYphCJpRet60Ps7j8SASiCZi4kChFdiT+Vo6dW3sDY27jOHs9Tw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=tw13pxsB; arc=none smtp.client-ip=209.85.166.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="je1iH+Ar"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5471Gm5R020191;
-	Wed, 7 May 2025 06:37:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=8s6zgpzMhqDnLBMGCbmZv3
-	IRmVux3wLiekXXgV1bFKM=; b=je1iH+ArY6sJiJgcb9Hn93xIzNjmCxhYDjYm7b
-	bp47KNd5uttodcddrcci9c4Nxi4w/yaszfg9zhvjbYE4p/ORPDiLCkMh2Qn/EUfi
-	4uyjT5zBparnaUF+2E4LV3H9Q3Nft/r3BFRyeEB5a7U1s3sVAR/l86V3/Yomvu5f
-	kPBjCh3y+QyQFFKgX/+CEZKHKKwI8kksn+s58XlWykIpKnCsIUTQTB1tbu5mj2qk
-	wetY31IGVnQS6anrc8vpPFtXDsp5jdxJv27q2fA6LKMtts7u0HCMYoflbt8KL2fs
-	w/rT7y7U56K1qTKH04sPDLzd1STK+6bxy2p7WwpceUT7alJA==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46d9epa5ja-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 07 May 2025 06:37:29 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5476bSAa005099
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 7 May 2025 06:37:28 GMT
-Received: from hu-jinlmao-lv.qualcomm.com (10.49.16.6) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 6 May 2025 23:37:28 -0700
-From: Mao Jinlong <quic_jinlmao@quicinc.com>
-To: Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach
-	<mike.leach@linaro.org>,
-        James Clark <james.clark@linaro.org>,
-        "Alexander
- Shishkin" <alexander.shishkin@linux.intel.com>,
-        Yabin Cui <yabinc@google.com>
-CC: Mao Jinlong <quic_jinlmao@quicinc.com>, <coresight@lists.linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>,
-        Yuanfang Zhang <quic_yuanfang@quicinc.com>
-Subject: [PATCH v2] coresight: tmc: fix failure to disable/enable ETF after reading
-Date: Tue, 6 May 2025 23:37:16 -0700
-Message-ID: <20250507063716.1945213-1-quic_jinlmao@quicinc.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="tw13pxsB"
+Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-3d4436ba324so57578315ab.2
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 23:38:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1746599913; x=1747204713; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SLSCTSvU1Pu3KZzXKgSBgnw1+cmm1sdq2UzaECQAViA=;
+        b=tw13pxsBDZFlG2oOiQZjyah41ZFT4uuuUUBkuVgBXTR/MycERvyapnQnUuW/wtjw/k
+         OABCRMCq1tf5rdOqmu68OXQaNzZfIEp/UY5HTjymD6VNuFTi9SL8eLvCspc6TWhd52MJ
+         Zgkp/ksmZTI/knVqvr38DfMxMsm3ZvtpP6dItf39Th3ROKv9qv9SZ7egg738reIKQdH1
+         s73DYQljbAcMCV8ZUawvRDk1NyJeagKpXsYGnMOLm0AVLdvDX1KFYosBKGxr+SjtSvb0
+         gwWd2c1ID9q2K3zGBTTI1VyHNS9efbIAagHxuUh0J1DmUNm5GabTExjdOJz19yo9ZjFE
+         QVag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746599913; x=1747204713;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SLSCTSvU1Pu3KZzXKgSBgnw1+cmm1sdq2UzaECQAViA=;
+        b=JbIwaiwcvUPEPWPYPjshbtTJKr8gS/dOFeTfsXfeyds+fjyBy1dam+g5Odm2x11Vap
+         m21ALJSimO6lVJu66eV0oefIivFj1MxRDpzBjXpuYvy/1FSADKsvG/QxFvYqHBe0d+EW
+         2wvFD6OPYSElxfh5bcvzmICbyJ84deWL1oARyU1RhjdkZS5vV/gUzbxpgMATKo5rioXR
+         DEweC8m4+UE10BsQdf9f325JufadAt0EwaR1oO8/Bvh5UnBECuvL9uGdMofwhqynrSIP
+         kxe0s6YVaKDYdxabq3fHDdXWOielf5vFcmW6xRukwx6gHSfw1UckQ2+TICVhvyt5tiFx
+         YpEw==
+X-Forwarded-Encrypted: i=1; AJvYcCX0MXpKc5A3ePRyGxYQXLPBld2476BgHTSBQZfOipAhynWcqLsM7Z0+cqa5deRAXvQhHZm6GLf4MVN9Pl8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2/FO+qqIo3IBJqTwWqrWbY6WhPbCBr8Fwaamt1UM4MI4HIe1d
+	BSoEcJr2iUHz17vALcQ4PCC/2e7shZoRMh7XQo+KK9N2PacLhWOWnBzc1rJtOD5DRwK/P9JxXrj
+	Ek3FdvR02jDqTFfDT19FPcZCt/Z/4rSfwXboAvQ==
+X-Gm-Gg: ASbGnct2n+qN3lEfud9pJl6YrXcKJ2mWyr+0KB9LRDqc9mQTHy9ymTlfAxMljFPjs13
+	/rMh4ZencNQj0sJvvbPU3OEMldB+w1DB72lhzv+as2w66GBK8KdxUjjKxILzmfIczll4TkPfkTO
+	Qw7CCQ+/ft/eSi+DsbP8ij
+X-Google-Smtp-Source: AGHT+IHf27rispqj66mqizfYO/3jAKoO4k+nD2tMDDWQ6j9J0hfCfqo5ejjOrQE39XLxzrAH6W+8xBqOHYZ/XCR2Qq0=
+X-Received: by 2002:a05:6e02:3d83:b0:3d9:2ca8:dda0 with SMTP id
+ e9e14a558f8ab-3da7393603amr23647845ab.22.1746599912818; Tue, 06 May 2025
+ 23:38:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=EOUG00ZC c=1 sm=1 tr=0 ts=681affa9 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=3H110R4YSZwA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=oqbhczGDPXGwOEN-XdEA:9
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: X2iSuHKEDtop_EhCju52Q-1Khqya7BNA
-X-Proofpoint-GUID: X2iSuHKEDtop_EhCju52Q-1Khqya7BNA
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA3MDA1OSBTYWx0ZWRfXx7qWBQxuYO3X
- 4Xk8E+kEoQRdDwHTFaD8sW+rI9XZUiAgCM+EfdSds/02GBuW1guREOeGIxNnBb+a8ZGODFV+qJX
- OG5f2gk57djmSSXlhD6LkKgXh31qP05uce952dZbH8VhDq2XxBNA6s9wBEwH9ZgqVEf1ycmhLvC
- ir46h1hR0NEo/Rf7yZ22u6svvRZm0fNk9YpbvQ530kE4nJuoWPNsKjzMu3lnVZKCZDPVctmj6WB
- ivYFuoXQYBLtXHWQWMT8w6+TGf/w/+evV8mmHh/MYEbb1vuCJmjeNW2pxORaYkkdsZFgnb760qI
- I7x7+rmNYchWTvdRz48OoCFyhGS9BaZTVA75rOYAPLKIkxYtrXvE927lyydauwlK3FhuTb7D9uu
- MluBh/bVDr9puB31jPoWakrODdEuMSHIc4W4cPsxBpY8HWOkHzx5+c7EVbJS+7TgZV6WLByp
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-07_02,2025-05-06_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 clxscore=1011 impostorscore=0 spamscore=0 lowpriorityscore=0
- bulkscore=0 phishscore=0 suspectscore=0 mlxlogscore=534 mlxscore=0
- priorityscore=1501 malwarescore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2504070000 definitions=main-2505070059
+References: <20250505-kvm_tag_change-v1-1-6dbf6af240af@rivosinc.com>
+In-Reply-To: <20250505-kvm_tag_change-v1-1-6dbf6af240af@rivosinc.com>
+From: Anup Patel <anup@brainfault.org>
+Date: Wed, 7 May 2025 12:08:22 +0530
+X-Gm-Features: ATxdqUEEO9ElPqopLSdn1cGhHTcD6oP-eNKU_g5Vu-IabLPJnfhIVALu0OXu3ns
+Message-ID: <CAAhSdy0pdqnUa-GWiGHG3H_J9=J2yGXcRLfzsZgDzaZv+6r=jQ@mail.gmail.com>
+Subject: Re: [PATCH] RISC-V: KVM: Remove experimental tag for RISC-V
+To: Atish Patra <atishp@rivosinc.com>
+Cc: Atish Patra <atishp@atishpatra.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>, kvm@vger.kernel.org, 
+	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-ETF may fail to re-enable after reading, and driver->reading will
-not be set to false, this will cause failure to enable/disable to ETF.
-This change set driver->reading to false even if re-enabling fail.
+On Tue, May 6, 2025 at 1:17=E2=80=AFAM Atish Patra <atishp@rivosinc.com> wr=
+ote:
+>
+> RISC-V KVM port is no longer experimental. Let's remove it to avoid
+> confusion.
+>
+> Signed-off-by: Atish Patra <atishp@rivosinc.com>
+> ---
+>  arch/riscv/kvm/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Fixes: 669c4614236a ("coresight: tmc: Don't enable TMC when it's not ready.")
-Co-developed-by: Yuanfang Zhang <quic_yuanfang@quicinc.com>
-Signed-off-by: Yuanfang Zhang <quic_yuanfang@quicinc.com>
-Signed-off-by: Mao Jinlong <quic_jinlmao@quicinc.com>
----
- drivers/hwtracing/coresight/coresight-tmc-etf.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+Queued for Linux-6.16
 
-diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c b/drivers/hwtracing/coresight/coresight-tmc-etf.c
-index d858740001c2..c9e2d95ae295 100644
---- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
-+++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
-@@ -747,7 +747,6 @@ int tmc_read_unprepare_etb(struct tmc_drvdata *drvdata)
- 	char *buf = NULL;
- 	enum tmc_mode mode;
- 	unsigned long flags;
--	int rc = 0;
- 
- 	/* config types are set a boot time and never change */
- 	if (WARN_ON_ONCE(drvdata->config_type != TMC_CONFIG_TYPE_ETB &&
-@@ -773,11 +772,7 @@ int tmc_read_unprepare_etb(struct tmc_drvdata *drvdata)
- 		 * can't be NULL.
- 		 */
- 		memset(drvdata->buf, 0, drvdata->size);
--		rc = __tmc_etb_enable_hw(drvdata);
--		if (rc) {
--			raw_spin_unlock_irqrestore(&drvdata->spinlock, flags);
--			return rc;
--		}
-+		__tmc_etb_enable_hw(drvdata);
- 	} else {
- 		/*
- 		 * The ETB/ETF is not tracing and the buffer was just read.
--- 
-2.25.1
+Thanks,
+Anup
 
+>
+> diff --git a/arch/riscv/kvm/Kconfig b/arch/riscv/kvm/Kconfig
+> index 0c3cbb0915ff..704c2899197e 100644
+> --- a/arch/riscv/kvm/Kconfig
+> +++ b/arch/riscv/kvm/Kconfig
+> @@ -18,7 +18,7 @@ menuconfig VIRTUALIZATION
+>  if VIRTUALIZATION
+>
+>  config KVM
+> -       tristate "Kernel-based Virtual Machine (KVM) support (EXPERIMENTA=
+L)"
+> +       tristate "Kernel-based Virtual Machine (KVM) support"
+>         depends on RISCV_SBI && MMU
+>         select HAVE_KVM_IRQCHIP
+>         select HAVE_KVM_IRQ_ROUTING
+>
+> ---
+> base-commit: f15d97df5afae16f40ecef942031235d1c6ba14f
+> change-id: 20250505-kvm_tag_change-dea24351a355
+> --
+> Regards,
+> Atish patra
+>
