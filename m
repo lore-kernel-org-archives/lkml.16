@@ -1,119 +1,70 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65783233144;
-	Wed,  7 May 2025 11:37:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 781B01553AA;
+	Wed,  7 May 2025 11:37:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746617833; cv=none; b=Sq4bG1mQ2nb8WXA2pBjsfQt8HzwGoVzLOmfk1WPbxqKrbCAVTsSP08KsutatJfLZa4O82eZpYtx6V5P+YlJzkpRljY3W0GcWy43Z99ho3aQ3WTXh4mxxpxNVJkj7zbaFQUeM6COA3bgFl+je6+ImBT7c3XWMZ6Xb8BG6GIXffYk=
+	t=1746617877; cv=none; b=RLYL8ucnex3+avrpPsCJKPMsvsDI6N57FG9Qr5NOY32vdiD8gwT8kD/i++7E5NyoIz/8CugJerowIv0kLmxHojMwdH0fOCHhIQUAaapPXqGvkUqaTcFtYqgOctlIg3bIiz52dXWXuD6p4iih2ytE9Z9gBfQ/I8Rk9CFnphB/+sM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746617833; c=relaxed/simple;
-	bh=6h+ZTQPoJN30Q060+PwymlwcLiNpLn9kEEje8Ef7FF0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ntGzfZX4CjZFFkSiSXfT6XLcARXevwuypnBetsSeOLitZH0V8ZOX5zYEqs1Ztb7HIHRwE7Gfa9iHW7jonztN19Kf7YLBex2hd502V5YzK3HHNMkMLjLCOYKr6viVwVRiwe4owes3JnvwbDDfvfBYPXfCKEV/SwBleZbeL3w8PMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=jYoPhi4M; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1746617877; c=relaxed/simple;
+	bh=btVRiThXFQDNMGo1xwZjxj17jJUQAThMgxZxOxdTXNU=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=FvubLILcEesPgDCoU/XOCYUgf7AWOupO5kAy7+LhVcua19S/G13ud66y2TKNrRIr0gfXAQTS0jdrzQnI1nkVFDjk4EidV5L1WRZcGbL8Fcb5IV7RfPDYINW358cvWnQqZFaQHqrcF/86xFewuEiXWuMM+veENZaV3Z7QDU++FcM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dtNzlUkG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="jYoPhi4M"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=/HjQ5opUQ8DgLaTKvoPghlC7CgdE1R518qdzpUrZYXw=; b=jYoPhi4M5crOGTqtMTf1iIuprz
-	+3skXLog9PEnz27fYR4eck2nd4Se0jA43N7LDULFNal1adko9UlIrVqZiiQrnTe8oC3a4Ih3nNA6J
-	bNxioFAwONhKe06xBmL3wWJ810vQm7BPCArHo7prQQWV8F102sg4zOjNdnxc8OsNUJC88txci76nH
-	pFvteqPas4tBh0/Viatpdn+U1tJq9qju/pn/6M82zRIKgvSSSoHh4YHMaSwLjHdHIb4kK+0MN4n1F
-	GNSrUs/mQrvjNEICcS+YkWFo8fUi3exUwF9cxbKFMVzoIe0bnCQBNvoL0uF7TI//uuuJak/+ywxey
-	fKmvDPGQ==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uCd58-004F90-2F;
-	Wed, 07 May 2025 19:36:59 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 07 May 2025 19:36:58 +0800
-Date: Wed, 7 May 2025 19:36:58 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Thorsten Leemhuis <linux@leemhuis.info>
-Cc: Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: [PATCH] crypto: powerpc/poly1305 - Add missing poly1305_emit_arch
-Message-ID: <aBtF2jVZQwxGiHVk@gondor.apana.org.au>
-References: <cover.1745815528.git.herbert@gondor.apana.org.au>
- <915c874caf5451d560bf26ff59f58177aa8b7c17.1745815528.git.herbert@gondor.apana.org.au>
- <242ebbf1-4ef0-41c3-83cb-a055c262ba4a@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dtNzlUkG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3567C4CEE7;
+	Wed,  7 May 2025 11:37:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746617876;
+	bh=btVRiThXFQDNMGo1xwZjxj17jJUQAThMgxZxOxdTXNU=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=dtNzlUkG3nNNytw1glxcIx1Bywa0rowCS4mIf6t+d/oVJTgvIk+RYb28w944JrJoh
+	 /PdDkwXKZjbN0rHsbXH72fRTeqxCMZs5hBZHfLiPX/tHp69aEUtWSrA5krJNk1xpjn
+	 dzRv4ONzmuBIV4b0W/2zJSURK6ELL3M7RWvkmeRxuTHOe1DWSgrcvduO6J50xzk+kU
+	 Ll/JtFg6mqK5j28B6faLOReLskFaUxGmWLdfelYMhAR3butjm1tE8mBYUpkylQkU7H
+	 UknCEig9EZalCiPKU8NuFS6Jb4OcgKFTA5smmi1lNA9mOFMvVV5FO6PCDLLcgd9il1
+	 fI4QxULNIcJfg==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <242ebbf1-4ef0-41c3-83cb-a055c262ba4a@leemhuis.info>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 07 May 2025 13:37:54 +0200
+Message-Id: <D9PWD2EJFDZN.5LYMLZZQ4QCF@kernel.org>
+Subject: Re: [PATCH v5 4/7] rust: alloc: add Vec::drain_all
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Alice Ryhl" <aliceryhl@google.com>, "Danilo Krummrich"
+ <dakr@kernel.org>
+Cc: "Matthew Maurer" <mmaurer@google.com>, <rust-for-linux@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>
+X-Mailer: aerc 0.20.1
+References: <20250502-vec-methods-v5-0-06d20ad9366f@google.com>
+ <20250502-vec-methods-v5-4-06d20ad9366f@google.com>
+In-Reply-To: <20250502-vec-methods-v5-4-06d20ad9366f@google.com>
 
-On Wed, May 07, 2025 at 01:03:06PM +0200, Thorsten Leemhuis wrote:
+On Fri May 2, 2025 at 3:19 PM CEST, Alice Ryhl wrote:
+> This is like the stdlib method drain, except that it's hard-coded to use
+> the entire vector's range. Rust Binder uses it in the range allocator to
+> take ownership of everything in a vector in a case where reusing the
+> vector is desirable.
 >
-> """
-> ld: warning: discarding dynamic section .glink
-> ld: warning: discarding dynamic section .plt
-> ld: linkage table error against `poly1305_emit_arch'
-> ld: stubs don't match calculated size
-> ld: can not build stubs: bad value
-> ld: lib/crypto/poly1305.o: in function `poly1305_final':
-> /builddir/build/BUILD/kernel-6.15.0-build/kernel-next-20250507/linux-6.15.0-0.0.next.20250507.443.vanilla.fc43.ppc64le/lib/crypto/poly1305.c:65:(.text+0x2dc): undefined reference to `poly1305_emit_arch'
-> ld: /builddir/build/BUILD/kernel-6.15.0-build/kernel-next-20250507/linux-6.15.0-0.0.next.20250507.443.vanilla.fc43.ppc64le/lib/crypto/poly1305.c:65:(.text+0x378): undefined reference to `poly1305_emit_arch'
-> make[2]: *** [scripts/Makefile.vmlinux:91: vmlinux] Error 1
-> make[1]: *** [/builddir/build/BUILD/kernel-6.15.0-build/kernel-next-20250507/linux-6.15.0-0.0.next.20250507.443.vanilla.fc43.ppc64le/Makefile:1250: vmlinux] Error 2
-> """
+> Implementing `DrainAll` in terms of `slice::IterMut` lets us reuse some
+> nice optimizations in core for the case where T is a ZST.
+>
+> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 
-Oops, the powerpc patch was missing the assembly part:
+Reviewed-by: Benno Lossin <lossin@kernel.org>
 
----8<---
-Rename poly1305_emit_64 to poly1305_emit_arch to conform with
-the expectation of the poly1305 library.
+---
+Cheers,
+Benno
 
-Reported-by: Thorsten Leemhuis <linux@leemhuis.info>
-Fixes: 14d31979145d ("crypto: powerpc/poly1305 - Add block-only interface")
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-
-diff --git a/arch/powerpc/lib/crypto/poly1305-p10-glue.c b/arch/powerpc/lib/crypto/poly1305-p10-glue.c
-index 16c2a8316696..7cea0ebcc6bc 100644
---- a/arch/powerpc/lib/crypto/poly1305-p10-glue.c
-+++ b/arch/powerpc/lib/crypto/poly1305-p10-glue.c
-@@ -17,6 +17,7 @@ asmlinkage void poly1305_64s(struct poly1305_block_state *state, const u8 *m, u3
- asmlinkage void poly1305_emit_arch(const struct poly1305_state *state,
- 				   u8 digest[POLY1305_DIGEST_SIZE],
- 				   const u32 nonce[4]);
-+EXPORT_SYMBOL_GPL(poly1305_emit_arch);
- 
- static __ro_after_init DEFINE_STATIC_KEY_FALSE(have_p10);
- 
-diff --git a/arch/powerpc/lib/crypto/poly1305-p10le_64.S b/arch/powerpc/lib/crypto/poly1305-p10le_64.S
-index a3c1987f1ecd..2ba2911b8038 100644
---- a/arch/powerpc/lib/crypto/poly1305-p10le_64.S
-+++ b/arch/powerpc/lib/crypto/poly1305-p10le_64.S
-@@ -1030,7 +1030,7 @@ SYM_FUNC_END(poly1305_64s)
- # Input: r3 = h, r4 = s, r5 = mac
- # mac = h + s
- #
--SYM_FUNC_START(poly1305_emit_64)
-+SYM_FUNC_START(poly1305_emit_arch)
- 	ld	10, 0(3)
- 	ld	11, 8(3)
- 	ld	12, 16(3)
-@@ -1060,7 +1060,7 @@ Skip_h64:
- 	std	10, 0(5)
- 	std	11, 8(5)
- 	blr
--SYM_FUNC_END(poly1305_emit_64)
-+SYM_FUNC_END(poly1305_emit_arch)
- 
- SYM_DATA_START_LOCAL(RMASK)
- .align 5
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+> ---
+>  rust/kernel/alloc/kvec.rs | 59 +++++++++++++++++++++++++++++++++++++++++=
+++++++
+>  1 file changed, 59 insertions(+)
