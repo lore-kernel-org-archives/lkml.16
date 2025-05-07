@@ -1,304 +1,258 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44BA41DE8A0;
-	Wed,  7 May 2025 17:34:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA7C51CB31D;
+	Wed,  7 May 2025 17:35:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746639291; cv=none; b=ZO65RrKbKUPlBTyxEN5ZnQ8U7FKuKD8trdl+OjB6jwiLwKrOHJK4EHLX3Ifp9sdBRD8sozpnLjKGPnaTYaA2dI+gOoEWpwiyiZT35+HvbmsdgWvk6fKf9gyQhYmNr9nMHAtzr/iL4RCUfPsq/jpXHP3Zfy1q1FGiMof0uLcRo2w=
+	t=1746639331; cv=none; b=aAby4VKLA5sEsS7xC3jOKqrVuVmzCp87m54rq6UQuNQnk4Vea1QDzZIK1jIxmBaRFoOKitnP9z6hCeGlIaTtpPIppPdw24hIFI3QeeTCtZJG1SYAxuefGD3wWGRBunO6y6vQpU2AeNxnIB2ixaJtbGaz0f786+npmPWMS+3M/9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746639291; c=relaxed/simple;
-	bh=bvfTT/c7PtSh5mfjONtRBKUwBzWauHatYMl5dd7rveI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=kseYFD9EMAjJH2QpRhPTLCgZwxSIDrNshCKZNw28u8Mdx8YCP2QPhj662LZW1CO3kJPRtCRwFqR0x+aTp+opPCdp23G7Z+89t7BbnonVkFqVpewJDMArhY26jvjVU9iUiKS7IourV54isxC1WSKvx0keWLzOhH457aE+A4et76w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E26BC4CEE2;
-	Wed,  7 May 2025 17:34:48 +0000 (UTC)
-Date: Wed, 7 May 2025 13:34:58 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Bhupesh <bhupesh@igalia.com>, Andrew
- Morton <akpm@linux-foundation.org>, Linus Torvalds
- <torvalds@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Thomas Gleixner
- <tglx@linutronix.de>, bpf@vger.kernel.org,
- linux-perf-users@vger.kernel.org, arnaldo.melo@gmail.com, Juri Lelli
- <juri.lelli@redhat.com>
-Subject: [RFC][PATCH] tracing/sched: Use __string() instead of fixed lengths
- for task->comm
-Message-ID: <20250507133458.51bafd95@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1746639331; c=relaxed/simple;
+	bh=bHRZnDvoba48QEk+AGKqlWJgnwd6e1BgBARKcQYLIIs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gFpVc96tcwYLOssC+shsl4DrL6W/Y0UrWFZ7hLzNB37X1wRG6WIvg3mobhBePHjNgEXB0gIWOWI2qFChDGnqsSBQ6y1eEQ2tVltBHCF4ijrtKpyGbufMFT01sEHjQAzr4R+VZJpZiP6qBOinrREdZUCW9zsrGuJng2NYvLzQZHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 953C016F2;
+	Wed,  7 May 2025 10:35:18 -0700 (PDT)
+Received: from [192.168.20.57] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 874213F5A1;
+	Wed,  7 May 2025 10:35:26 -0700 (PDT)
+Message-ID: <4d449d83-8b86-4933-8584-bdcbd4db88e8@arm.com>
+Date: Wed, 7 May 2025 12:35:24 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ACPI/PPTT: fix off-by-one error
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: "Heyne, Maximilian" <mheyne@amazon.de>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>,
+ Len Brown <lenb@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>,
+ Ard Biesheuvel <ardb@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20250506-draco-taped-15f475cd@mheyne-amazon>
+ <214c2a2d-e0ea-4ec6-9925-05e39319e813@arm.com>
+ <CAJZ5v0jvWXDQQ++4wmWJ+i=jds+MZ68bRB9+26WM4tAPHFxALw@mail.gmail.com>
+ <1911d3b6-f328-40a6-aa03-cde3d79554de@arm.com>
+ <CAJZ5v0ii9HLfqfgcp=1qRRX6M1yThf7ZPNkSLVc5GGFhv=N-Lg@mail.gmail.com>
+ <ad04d07b-d610-4355-bd47-1d2fb49711f3@arm.com>
+ <fb2e3c60-1171-4f5c-852d-a5bfdc4f9c2a@arm.com>
+ <25aa77b9-0077-4021-b55c-e94327b7847b@arm.com>
+ <CAJZ5v0hTiJSp9q4iWu_EHB47X3Bf9LFY+ZZoqm7aN0cD8Jnjvg@mail.gmail.com>
+Content-Language: en-US
+From: Jeremy Linton <jeremy.linton@arm.com>
+In-Reply-To: <CAJZ5v0hTiJSp9q4iWu_EHB47X3Bf9LFY+ZZoqm7aN0cD8Jnjvg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-From: Steven Rostedt <rostedt@goodmis.org>
+Hi,
 
-The sched_switch and sched_waking events hardcoded the length of the comm
-it recorded because these events were created before the dynamic strings
-were implemented. Unfortunately, several other events copied this method.
+On 5/7/25 12:01 PM, Rafael J. Wysocki wrote:
+> On Wed, May 7, 2025 at 6:41 PM Jeremy Linton <jeremy.linton@arm.com> wrote:
+>>
+>> On 5/7/25 11:38 AM, Jeremy Linton wrote:
+>>> On 5/7/25 11:31 AM, Jeremy Linton wrote:
+>>>> On 5/7/25 11:12 AM, Rafael J. Wysocki wrote:
+>>>>> On Wed, May 7, 2025 at 5:51 PM Jeremy Linton <jeremy.linton@arm.com>
+>>>>> wrote:
+>>>>>>
+>>>>>> On 5/7/25 10:42 AM, Rafael J. Wysocki wrote:
+>>>>>>> On Wed, May 7, 2025 at 5:25 PM Jeremy Linton
+>>>>>>> <jeremy.linton@arm.com> wrote:
+>>>>>>>>
+>>>>>>>> Hi,
+>>>>>>>>
+>>>>>>>> On 5/6/25 8:13 AM, Heyne, Maximilian wrote:
+>>>>>>>>> Commit 7ab4f0e37a0f ("ACPI PPTT: Fix coding mistakes in a couple of
+>>>>>>>>> sizeof() calls") corrects the processer entry size but unmasked a
+>>>>>>>>> longer
+>>>>>>>>> standing bug where the last entry in the structure can get
+>>>>>>>>> skipped due
+>>>>>>>>> to an off-by-one mistake if the last entry ends exactly at the
+>>>>>>>>> end of
+>>>>>>>>> the ACPI subtable.
+>>>>>>>>>
+>>>>>>>>> The error manifests for instance on EC2 Graviton Metal instances
+>>>>>>>>> with
+>>>>>>>>>
+>>>>>>>>>       ACPI PPTT: PPTT table found, but unable to locate core 63 (63)
+>>>>>>>>>       [...]
+>>>>>>>>>       ACPI: SPE must be homogeneous
+>>>>>>>>>
+>>>>>>>>> Fixes: 2bd00bcd73e5 ("ACPI/PPTT: Add Processor Properties
+>>>>>>>>> Topology Table parsing")
+>>>>>>>>> Cc: stable@vger.kernel.org
+>>>>>>>>> Signed-off-by: Maximilian Heyne <mheyne@amazon.de>
+>>>>>>>>> ---
+>>>>>>>>>      drivers/acpi/pptt.c | 4 ++--
+>>>>>>>>>      1 file changed, 2 insertions(+), 2 deletions(-)
+>>>>>>>>>
+>>>>>>>>> diff --git a/drivers/acpi/pptt.c b/drivers/acpi/pptt.c
+>>>>>>>>> index f73ce6e13065d..4364da90902e5 100644
+>>>>>>>>> --- a/drivers/acpi/pptt.c
+>>>>>>>>> +++ b/drivers/acpi/pptt.c
+>>>>>>>>> @@ -231,7 +231,7 @@ static int acpi_pptt_leaf_node(struct
+>>>>>>>>> acpi_table_header *table_hdr,
+>>>>>>>>>                               sizeof(struct acpi_table_pptt));
+>>>>>>>>>          proc_sz = sizeof(struct acpi_pptt_processor);
+>>>>>>>>
+>>>>>>>> This isn't really right, it should be struct acpi_subtable_header,
+>>>>>>>> then
+>>>>>>>> once the header is safe, pull the length from it.
+>>>>>>>>
+>>>>>>>> But then, really if we are trying to fix the original bug that the
+>>>>>>>> table
+>>>>>>>> could be shorter than the data in it suggests, the struct
+>>>>>>>> acpi_pptt_processor length plus its resources needs to be checked
+>>>>>>>> once
+>>>>>>>> the subtype is known to be a processor node.
+>>>>>>>>
+>>>>>>>> Otherwise the original sizeof * change isn't really fixing anything.
+>>>>>>>
+>>>>>>> Sorry, what sense did it make to do
+>>>>>>>
+>>>>>>> proc_sz = sizeof(struct acpi_pptt_processor *);
+>>>>>>>
+>>>>>>> here?  As much as proc_sz = 0 I suppose?
+>>>>>>
+>>>>>> No, I agree, I think the original checks were simplified along the way
+>>>>>> to that. It wasn't 'right' either.
+>>>>>>
+>>>>>> The problem is that there are three subtypes of which processor is only
+>>>>>> one, and that struct acpi_pptt_processor doesn't necessarily reflect
+>>>>>> the
+>>>>>> actual size of the processor structure in the table because it has
+>>>>>> optional private resources tagged onto the end.
+>>>>>
+>>>>> Right.
+>>>>>
+>>>>>> So if the bug being fixed is that the length check is validating that
+>>>>>> the table length is less than the data in the table, that's still a
+>>>>>> problem because its only validating the processor node without
+>>>>>> resources.
+>>>>>
+>>>>> Admittedly, it is not my code, but I understand this check as a
+>>>>> termination condition for the loop: If there's not enough space in the
+>>>>> table to hold a thing that I'm looking for, I may as well bail out.
+>>>>>
+>>>>>> AKA the return is still potentially returning a pointer to a structure
+>>>>>> which may not be entirely contained in the table.
+>>>>>
+>>>>> Right, but this check should be made anyway before comparing
+>>>>> cpu_node->parent to node_entry, when it is known to be a CPU entry
+>>>>> because otherwise why bother.
+>>>>
+>>>> Right, but then there is a clarity because really its walking the
+>>>> table+subtypes looking for the cpu node. Exiting early because its not
+>>>> big enough for a cpu node makes sense but you still need the cpu node
+>>>> check to avoid a variation on the original bug.
+>>>>
+>>>>
+>>>>
+>>>>>
+>>>>> Roughly something like this:
+>>>>>
+>>>>> proc_sz = sizeof(struct acpi_pptt_processor);
+>>>>>
+>>>>> while ((unsigned long)entry + entry->length <= table_end) {
+>>>>
+>>>> Here your reading the entry, without knowing its long enough. For the
+>>>> leaf check just using struct acpi_pptt_processor is fine, but for the
+>>>> acpi_find_processor_node():
+>>>>
+>>>> proc_sz = sizeof(struct acpi_subtable_type);
+>>>
+>>> Although, maybe I just wrote code that justifies using
+>>> acpi_pptt_processor here because the entry->num_of_priv_resources length
+>>> check isn't being made without it. So ok, use proc_sz = sizeof(struct
+>>> acpi_subtable_type) and assume that we don't care if the subtable type
+>>> is less than proc_sz.
+>>
+>> Sorry for the noise, scratch that, a better solution is just to swap the
+>> length checking in the 'if' statement. Then its clear its iterating
+>> subtable types not processor nodes.
+> 
+> Do you mean something like this (modulo GMail-induced whitespace damage):
+> 
+> --- a/drivers/acpi/pptt.c
+> +++ b/drivers/acpi/pptt.c
+> @@ -231,16 +231,22 @@
+>                    sizeof(struct acpi_table_pptt));
+>       proc_sz = sizeof(struct acpi_pptt_processor);
+> 
+> -    while ((unsigned long)entry + proc_sz < table_end) {
+> -        cpu_node = (struct acpi_pptt_processor *)entry;
+> -        if (entry->type == ACPI_PPTT_TYPE_PROCESSOR &&
+> -            cpu_node->parent == node_entry)
+> -            return 0;
+> +    while ((unsigned long)entry + proc_sz <= table_end) {
+> +        if ((unsigned long)entry + entry->length <= table_end &&
+> +            entry->type == ACPI_PPTT_TYPE_PROCESSOR &&
+> +            entry->length == proc_sz +
+> +                    entry->number_of_priv_resources * sizeof(u32)) {
+> +            cpu_node = (struct acpi_pptt_processor *)entry;
+> +
+> +            if (cpu_node->parent == node_entry)
+> +                return 0;
+> +        }
+> +
+>           if (entry->length == 0)
+>               return 0;
+> +
+>           entry = ACPI_ADD_PTR(struct acpi_subtable_header, entry,
+>                        entry->length);
+> -
+>       }
+>       return 1;
+>   }
+> 
 
-As the size of the comm may change in the future, make the string dynamic.
-The dynamic string requires a 4 byte meta data to hold the size and offset
-of the string. The amount stored in the ring buffer will then be the
-strlen(comm) + 5 (for the \n), and aligned to 4 bytes if there's no other
-strings. This means that a task comm can have up to 10 characters before it
-requires another 4 bytes in the ring buffer. Most tasks are usually less
-than that, so this should not be a problem, and it also allows the name to
-be extended over the TASK_COMM_LEN [1]
 
-Note, sched_switch and the sched_waking trace events still hardcode the
-length, as there is tooling that still requires that. An effort to update
-the tooling will be made to allow this to change in the future.
+Right, I think we are largely on the same page, I flipflopped around 
+about using subtable vs processor but the processor size assumption does 
+remove an extra check. The version that compiles that I was about to 
+test (and this will take me hours) looks like:
 
-[1] https://lore.kernel.org/all/20250507110444.963779-1-bhupesh@igalia.com/
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- include/trace/events/sched.h | 94 ++++++++++++++++++------------------
- 1 file changed, 47 insertions(+), 47 deletions(-)
+@@ -231,7 +231,8 @@ static int acpi_pptt_leaf_node(struct 
+acpi_table_header *table_hdr,
+                              sizeof(struct acpi_table_pptt));
+         proc_sz = sizeof(struct acpi_pptt_processor);
 
-diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-index 8994e97d86c1..d9bc808f4d2a 100644
---- a/include/trace/events/sched.h
-+++ b/include/trace/events/sched.h
-@@ -20,16 +20,16 @@ TRACE_EVENT(sched_kthread_stop,
- 	TP_ARGS(t),
- 
- 	TP_STRUCT__entry(
--		__array(	char,	comm,	TASK_COMM_LEN	)
--		__field(	pid_t,	pid			)
-+		__string(	comm,	t->comm		)
-+		__field(	pid_t,	pid		)
- 	),
- 
- 	TP_fast_assign(
--		memcpy(__entry->comm, t->comm, TASK_COMM_LEN);
-+		__assign_str(comm);
- 		__entry->pid	= t->pid;
- 	),
- 
--	TP_printk("comm=%s pid=%d", __entry->comm, __entry->pid)
-+	TP_printk("comm=%s pid=%d", __get_str(comm), __entry->pid)
- );
- 
- /*
-@@ -276,15 +276,15 @@ TRACE_EVENT(sched_migrate_task,
- 	TP_ARGS(p, dest_cpu),
- 
- 	TP_STRUCT__entry(
--		__array(	char,	comm,	TASK_COMM_LEN	)
--		__field(	pid_t,	pid			)
--		__field(	int,	prio			)
--		__field(	int,	orig_cpu		)
--		__field(	int,	dest_cpu		)
-+		__string(	comm,	p->comm		)
-+		__field(	pid_t,	pid		)
-+		__field(	int,	prio		)
-+		__field(	int,	orig_cpu	)
-+		__field(	int,	dest_cpu	)
- 	),
- 
- 	TP_fast_assign(
--		memcpy(__entry->comm, p->comm, TASK_COMM_LEN);
-+		__assign_str(comm);
- 		__entry->pid		= p->pid;
- 		__entry->prio		= p->prio; /* XXX SCHED_DEADLINE */
- 		__entry->orig_cpu	= task_cpu(p);
-@@ -292,7 +292,7 @@ TRACE_EVENT(sched_migrate_task,
- 	),
- 
- 	TP_printk("comm=%s pid=%d prio=%d orig_cpu=%d dest_cpu=%d",
--		  __entry->comm, __entry->pid, __entry->prio,
-+		  __get_str(comm), __entry->pid, __entry->prio,
- 		  __entry->orig_cpu, __entry->dest_cpu)
- );
- 
-@@ -303,19 +303,19 @@ DECLARE_EVENT_CLASS(sched_process_template,
- 	TP_ARGS(p),
- 
- 	TP_STRUCT__entry(
--		__array(	char,	comm,	TASK_COMM_LEN	)
--		__field(	pid_t,	pid			)
--		__field(	int,	prio			)
-+		__string(	comm,	p->comm		)
-+		__field(	pid_t,	pid		)
-+		__field(	int,	prio		)
- 	),
- 
- 	TP_fast_assign(
--		memcpy(__entry->comm, p->comm, TASK_COMM_LEN);
-+		__assign_str(comm);
- 		__entry->pid		= p->pid;
- 		__entry->prio		= p->prio; /* XXX SCHED_DEADLINE */
- 	),
- 
- 	TP_printk("comm=%s pid=%d prio=%d",
--		  __entry->comm, __entry->pid, __entry->prio)
-+		  __get_str(comm), __entry->pid, __entry->prio)
- );
- 
- /*
-@@ -349,19 +349,19 @@ TRACE_EVENT(sched_process_wait,
- 	TP_ARGS(pid),
- 
- 	TP_STRUCT__entry(
--		__array(	char,	comm,	TASK_COMM_LEN	)
-+		__string(	comm,	current->comm		)
- 		__field(	pid_t,	pid			)
- 		__field(	int,	prio			)
- 	),
- 
- 	TP_fast_assign(
--		memcpy(__entry->comm, current->comm, TASK_COMM_LEN);
-+		__assign_str(comm);
- 		__entry->pid		= pid_nr(pid);
- 		__entry->prio		= current->prio; /* XXX SCHED_DEADLINE */
- 	),
- 
- 	TP_printk("comm=%s pid=%d prio=%d",
--		  __entry->comm, __entry->pid, __entry->prio)
-+		  __get_str(comm), __entry->pid, __entry->prio)
- );
- 
- /*
-@@ -374,22 +374,22 @@ TRACE_EVENT(sched_process_fork,
- 	TP_ARGS(parent, child),
- 
- 	TP_STRUCT__entry(
--		__array(	char,	parent_comm,	TASK_COMM_LEN	)
--		__field(	pid_t,	parent_pid			)
--		__array(	char,	child_comm,	TASK_COMM_LEN	)
--		__field(	pid_t,	child_pid			)
-+		__string(	parent_comm,	parent->comm	)
-+		__field(	pid_t,		parent_pid	)
-+		__string(	child_comm,	child->comm	)
-+		__field(	pid_t,		child_pid	)
- 	),
- 
- 	TP_fast_assign(
--		memcpy(__entry->parent_comm, parent->comm, TASK_COMM_LEN);
-+		__assign_str(parent_comm);
- 		__entry->parent_pid	= parent->pid;
--		memcpy(__entry->child_comm, child->comm, TASK_COMM_LEN);
-+		__assign_str(child_comm);
- 		__entry->child_pid	= child->pid;
- 	),
- 
- 	TP_printk("comm=%s pid=%d child_comm=%s child_pid=%d",
--		__entry->parent_comm, __entry->parent_pid,
--		__entry->child_comm, __entry->child_pid)
-+		__get_str(parent_comm), __entry->parent_pid,
-+		__get_str(child_comm), __entry->child_pid)
- );
- 
- /*
-@@ -473,19 +473,19 @@ DECLARE_EVENT_CLASS_SCHEDSTAT(sched_stat_template,
- 	TP_ARGS(__perf_task(tsk), __perf_count(delay)),
- 
- 	TP_STRUCT__entry(
--		__array( char,	comm,	TASK_COMM_LEN	)
--		__field( pid_t,	pid			)
--		__field( u64,	delay			)
-+		__string( comm,	tsk->comm	)
-+		__field(  pid_t,	pid	)
-+		__field(  u64,		delay	)
- 	),
- 
- 	TP_fast_assign(
--		memcpy(__entry->comm, tsk->comm, TASK_COMM_LEN);
-+		__assign_str(comm);
- 		__entry->pid	= tsk->pid;
- 		__entry->delay	= delay;
- 	),
- 
- 	TP_printk("comm=%s pid=%d delay=%Lu [ns]",
--			__entry->comm, __entry->pid,
-+			__get_str(comm), __entry->pid,
- 			(unsigned long long)__entry->delay)
- );
- 
-@@ -531,19 +531,19 @@ DECLARE_EVENT_CLASS(sched_stat_runtime,
- 	TP_ARGS(tsk, __perf_count(runtime)),
- 
- 	TP_STRUCT__entry(
--		__array( char,	comm,	TASK_COMM_LEN	)
--		__field( pid_t,	pid			)
--		__field( u64,	runtime			)
-+		__string( comm,		tsk->comm	)
-+		__field(  pid_t,	pid		)
-+		__field(  u64,		runtime		)
- 	),
- 
- 	TP_fast_assign(
--		memcpy(__entry->comm, tsk->comm, TASK_COMM_LEN);
-+		__assign_str(comm);
- 		__entry->pid		= tsk->pid;
- 		__entry->runtime	= runtime;
- 	),
- 
- 	TP_printk("comm=%s pid=%d runtime=%Lu [ns]",
--			__entry->comm, __entry->pid,
-+			__get_str(comm), __entry->pid,
- 			(unsigned long long)__entry->runtime)
- );
- 
-@@ -562,14 +562,14 @@ TRACE_EVENT(sched_pi_setprio,
- 	TP_ARGS(tsk, pi_task),
- 
- 	TP_STRUCT__entry(
--		__array( char,	comm,	TASK_COMM_LEN	)
--		__field( pid_t,	pid			)
--		__field( int,	oldprio			)
--		__field( int,	newprio			)
-+		__string( comm,		tsk->comm	)
-+		__field(  pid_t,	pid		)
-+		__field(  int,		oldprio		)
-+		__field(  int,		newprio		)
- 	),
- 
- 	TP_fast_assign(
--		memcpy(__entry->comm, tsk->comm, TASK_COMM_LEN);
-+		__assign_str(comm);
- 		__entry->pid		= tsk->pid;
- 		__entry->oldprio	= tsk->prio;
- 		__entry->newprio	= pi_task ?
-@@ -579,7 +579,7 @@ TRACE_EVENT(sched_pi_setprio,
- 	),
- 
- 	TP_printk("comm=%s pid=%d oldprio=%d newprio=%d",
--			__entry->comm, __entry->pid,
-+			__get_str(comm), __entry->pid,
- 			__entry->oldprio, __entry->newprio)
- );
- 
-@@ -589,16 +589,16 @@ TRACE_EVENT(sched_process_hang,
- 	TP_ARGS(tsk),
- 
- 	TP_STRUCT__entry(
--		__array( char,	comm,	TASK_COMM_LEN	)
--		__field( pid_t,	pid			)
-+		__string( comm,		tsk->comm	)
-+		__field(  pid_t,	pid		)
- 	),
- 
- 	TP_fast_assign(
--		memcpy(__entry->comm, tsk->comm, TASK_COMM_LEN);
-+		__assign_str(comm);
- 		__entry->pid = tsk->pid;
- 	),
- 
--	TP_printk("comm=%s pid=%d", __entry->comm, __entry->pid)
-+	TP_printk("comm=%s pid=%d", __get_str(comm), __entry->pid)
- );
- #endif /* CONFIG_DETECT_HUNG_TASK */
- 
--- 
-2.47.2
+-       while ((unsigned long)entry + proc_sz < table_end) {
++       /* ignore sub-table types that are smaller than a processor node */
++       while ((unsigned long)entry + proc_sz <= table_end) {
+                 cpu_node = (struct acpi_pptt_processor *)entry;
+                 if (entry->type == ACPI_PPTT_TYPE_PROCESSOR &&
+                     cpu_node->parent == node_entry)
+@@ -273,15 +274,18 @@ static struct acpi_pptt_processor 
+*acpi_find_processor_node(struct acpi_table_he
+         proc_sz = sizeof(struct acpi_pptt_processor);
+
+         /* find the processor structure associated with this cpuid */
+-       while ((unsigned long)entry + proc_sz < table_end) {
++       while ((unsigned long)entry + proc_sz <= table_end) {
+                 cpu_node = (struct acpi_pptt_processor *)entry;
+
+                 if (entry->length == 0) {
+                         pr_warn("Invalid zero length subtable\n");
+                         break;
+                 }
++               /* entry->length may not equal proc_sz, revalidate the 
+processor structure length */
+                 if (entry->type == ACPI_PPTT_TYPE_PROCESSOR &&
+                     acpi_cpu_id == cpu_node->acpi_processor_id &&
++                   (unsigned long)entry + entry->length <= table_end &&
++                   entry->length == proc_sz + 
+cpu_node->acpi_processor_id * sizeof(u32) &&
+                      acpi_pptt_leaf_node(table_hdr, cpu_node)) {
+                         return (struct acpi_pptt_processor *)entry;
+                 }
+
+
 
