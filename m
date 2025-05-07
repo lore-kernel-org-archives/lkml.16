@@ -1,55 +1,55 @@
 Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEB7828DF5B
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 23:14:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F57429189B
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 23:14:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746659656; cv=none; b=V0HnLllhPkXXLVpVTUJPXlOVQiVXK4Q90IkPN2QjQvmiStBvYKhDRjXtFl8WDTO0exwSrZKO6LGGENPVS8ITtq6N5Y3qq4dKGM6ARL+u/9ULSqKk2L4yh/FfxHzKln0MOK+TDaaOtnNPU51yjpGKCsLP/5MmkHWhr1KyFL8II5o=
+	t=1746659658; cv=none; b=EvQMn4il++D9gS5UTE8+qWBO83qDUGT8N44h23e+g7W8oqft14nQgZUxPtjl7cll9HEt7AvwsOgp5fSkwsRb6LgGmQ48v8hxhXe3EZDBxsX9v94we4DWRN+1lz1PM6X8qhqV6H2PDMLUGzK/9xaRVvdM0+cySfSK5zk3HICB5z0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746659656; c=relaxed/simple;
-	bh=HgP0jMlO7dsRTimd8uO+TSE4jHCfEpiuqBa4mSyAxIA=;
+	s=arc-20240116; t=1746659658; c=relaxed/simple;
+	bh=NtbmgkTzn8IARgcBDEgG4o5/FRCG0S2cxfpg5vDT+z4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=O88Bbsaq2r3ylt4xftS8hi/mF94CwRvHGAR6356B6MAc7kJAKU7bOjyMKwPV7iqbnTe3y0/9TWi0PfYNlp+6hM/LLg6bp9EXfKW8rFmkQE2KVlAXm3badSk364vjr+wioWxgEPv9/orCedVAhJvm0Y6vUTn41npYRgN3zYind9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--samitolvanen.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FMxsWVxO; arc=none smtp.client-ip=209.85.210.202
+	 To:Cc:Content-Type; b=fj8oHUgTF5+mByzJAXHI8XPsI+FkcGML1t63HxBfH+dqz06clIWB5Qo3BQSaFOJZGWyE0bX+n2EQYVZXXyL6Xv8sGDBtQ1Ik6Dwn4JLmrR169pBoIZrg8UtjKJ4zCHWReS0MmpKeT8qM+yChyGo+DoWM1rPJcXrPhncSRl8W2WU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--samitolvanen.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HZ4AWLe4; arc=none smtp.client-ip=209.85.210.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--samitolvanen.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FMxsWVxO"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-74041404f8dso282624b3a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 16:14:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HZ4AWLe4"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-739764217ecso379441b3a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 16:14:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746659653; x=1747264453; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1746659656; x=1747264456; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=d3FXF6C55XaC+/8qPK9kYbCADSFXqvOZhar+nxLyTg4=;
-        b=FMxsWVxObjjKgVjOrQDfKUniaRF8igkdyCvabXKS4lAYmH7bxqasEnnZjmpgHRpB7F
-         fFFfUCLQN1HY4CvdfJOIR5yNwtUCoizWTOH6D/7+b5vEFCViuUd+oFh0qf1fDmTtCzsv
-         zvUBE4kR+AqKfyHDrT9p57F3vav7wOI58DBoIpBw9coFntIaXAUJfM2xIyQz3qFSCWod
-         JjrsCNEwS+BlcO2n32v5ZN96QCQaffmAB4Vt9sjUbuBqUBTZwXWrIJke6wgQWMSi6ePg
-         8l6limzFzmEGKuKZXyreDz/BlWMmnfefFDrihczGcusZbiexlLYuxy2vyhq1bZkWExoI
-         ClcQ==
+        bh=m7RpuWxwyysfef14AtI+lh3dKsD8m3KYFqA48Pzjpeo=;
+        b=HZ4AWLe4WMVpDYZraWjzSdBHJEi6jG9WbGHDOsF2+LocypTB7NvcGm2cAT+QcA5xUq
+         3EhHZeEF/ECECzjzSZnXTs1FXaD97n5Mt4BtdXtUz+x8taszoz+7lqLyeswqYfZdsUNa
+         MTh8z/4ue334yyK9o3sWAA3+Xcz33hwnoDADB3gOqpeEFOZUTroYzC78vs/qIAg3jggU
+         05alJWF5q83GIt1WSGo0UEErt0N700fbJRFOPygEmylDd7pqjUiX4vr7BYX+HHFsQiXy
+         50ci9QG1xvLtme7ob39X6159IBFRoGI8cHGU4dUp4ueyYPOD5Lutcku2gCt7ChU+0soP
+         o1Lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746659653; x=1747264453;
+        d=1e100.net; s=20230601; t=1746659656; x=1747264456;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=d3FXF6C55XaC+/8qPK9kYbCADSFXqvOZhar+nxLyTg4=;
-        b=i1aHqF80qrwZD2cIWSP3URUzbK1Y5YWSNBNCwpWx3oZ3wr/CydiCG0Q5MHWYZJ8L/8
-         dg1n3QQMhggY5sVnqmKjsg+kmRqKf/54H8TzV0F5AVaJyW01KzRrzsBxEWude8rvapnr
-         eZjeWziM9PmImogCeLXmuLnfI4gXNzBebKaRKfpwUzs3yQu/NNgATX7DlpXut8Ykr8d4
-         X1PKJrdv7c0k29uVS3IPBpq5aJ9F5VCJj+f44tBqfwChask/UOvSj8zPEDYgiLRTLf+f
-         wptpBUhB+6uT7RR7KlZ9SC2Qj3J+T6CACiQYn9+9KWQfeG2JApma9ZEjQ8+kocxE3MBR
-         3I0g==
-X-Forwarded-Encrypted: i=1; AJvYcCUBaChr74VQyTgSCYVMyVq0RRRN0BgAfoKsYNF8idxufCtCDjNSJRtLmnvvlf81nn8KPzA/CvaZS8teQJc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8ThPWKxA88n1mJv0R5CuDomfmzJ+rsUmKcxVUMicDASMl7OUD
-	MixqjjSznJhrSDLjRR3eE2ORN52rY0dJYkptJgsOD5qq++CeN6wj+tPTa6+hgS3bmVsbxwN3Dru
-	B7NTlwFpgKFnrj3455vwiYHZSgQ==
-X-Google-Smtp-Source: AGHT+IF3ZGlTveayJhKo5vhsFU98n/GWEz2r0LKJmBHPOc+IldJXAMZWxkwTENRItS5Z39RtE5JtYm54Q1LwDXbIPLY=
-X-Received: from pfx51.prod.google.com ([2002:a05:6a00:a473:b0:730:796b:a54a])
+        bh=m7RpuWxwyysfef14AtI+lh3dKsD8m3KYFqA48Pzjpeo=;
+        b=BLD4XzVTmFQM+DYLiIDSk3ybflUEbbAH09oIAZpxh7gwzA9EzMZZ0FWQnPXT1xOubL
+         /pX5ceNwI28OnOYJcNu6Y+AnVYi8Kc4J7msxqkUaAOOy8KwheEjtacIgga5qMG4sBb6t
+         075pN526aAq4ATrb9Tv9ODiEmgrfE2sZCcH+szbQDSnNIfuVR7tvoA/2uY5KWt31s3i5
+         FTancN/cteh3W4tawyST24GGQhTPcaKD+RZ137GACRP64MnBww2aZTdf4wxT1Ww5StZe
+         eGhfj8o43tqxfq0ueiktucBtmJJz6POQ7DsRrxAh+7PoXNgwKl2LaGej092EjF/xFGap
+         3trA==
+X-Forwarded-Encrypted: i=1; AJvYcCUnEDoujahY3Lx1L7lewrJdobqCAsnTrpesXY5j4tC3UDY1vvEZIbwec6b3BkYlwCl6rgNRl56pg1I0bLE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzaPekPfDnPkhmd7EDy06TSBbCSWlO7zhQry1ZRhUaDjD07vS4h
+	39j9jupxGu9S+YhrJ2XsIpg6q5BDWHuTO/xlfpWQvriIV8imOygVki0b7nuYX6hI5GI7Q3hPHCa
+	fRlbyDo3mVdi4O6g5x0uQdCbCqA==
+X-Google-Smtp-Source: AGHT+IErf0bIdsCp80jvIgvn+0MFxfMOafuctLvyIXmHAjlWQ0hZisvPYYkFCiDDgnc6Hu7el4zHrf5zvCTzlE/10Q4=
+X-Received: from pfmx22.prod.google.com ([2002:a62:fb16:0:b0:740:813:f7bb])
  (user=samitolvanen job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a00:410c:b0:736:a540:c9ad with SMTP id d2e1a72fcca58-7409cfdbdddmr7229190b3a.20.1746659653063;
- Wed, 07 May 2025 16:14:13 -0700 (PDT)
-Date: Wed,  7 May 2025 23:14:06 +0000
+ 2002:a05:6a00:1b4c:b0:732:706c:c4ff with SMTP id d2e1a72fcca58-740a94e60d7mr1497047b3a.7.1746659656344;
+ Wed, 07 May 2025 16:14:16 -0700 (PDT)
+Date: Wed,  7 May 2025 23:14:08 +0000
 In-Reply-To: <20250507231403.377725-7-samitolvanen@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,14 +59,14 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250507231403.377725-7-samitolvanen@google.com>
 X-Developer-Key: i=samitolvanen@google.com; a=openpgp; fpr=35CCFB63B283D6D3AEB783944CB5F6848BBC56EE
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7598; i=samitolvanen@google.com;
- h=from:subject; bh=HgP0jMlO7dsRTimd8uO+TSE4jHCfEpiuqBa4mSyAxIA=;
- b=owGbwMvMwCEWxa662nLh8irG02pJDBnSL22uCPrkq/502c3883ekm9e/6qN64dwaki/+OPQsD
- f/ildDcUcrCIMbBICumyNLydfXW3d+dUl99LpKAmcPKBDKEgYtTACbSeZPhJ2OtuxfDpnP9jpzZ
- P9axfdpaJaHKyLpkVsTnJZYTs1rVZzAynP+eaMWpMDVIoV6pQc3ijcjiQI81Pad5vS9bb36SsG4 qDwA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5212; i=samitolvanen@google.com;
+ h=from:subject; bh=NtbmgkTzn8IARgcBDEgG4o5/FRCG0S2cxfpg5vDT+z4=;
+ b=owGbwMvMwCEWxa662nLh8irG02pJDBnSL22f2qe/rvGS5Mnt3bl4/q9fUxMuOLv8fHu+868jY
+ 4DOnG1iHaUsDGIcDLJiiiwtX1dv3f3dKfXV5yIJmDmsTCBDGLg4BWAib6oY/tmtfmzreLiHyf8h
+ r3/AvtU73LbqNpt6KFT5TD6iOGPRcVZGhl/bs68sPXQvI0T2YPrzgMU3l1jpV/xhEwhkKVPnlqp 05gMA
 X-Mailer: git-send-email 2.49.0.987.g0cc8ee98dc-goog
-Message-ID: <20250507231403.377725-9-samitolvanen@google.com>
-Subject: [PATCH v3 2/5] gendwarfksyms: Add a kABI rule to override byte_size attributes
+Message-ID: <20250507231403.377725-11-samitolvanen@google.com>
+Subject: [PATCH v3 4/5] Documentation/kbuild: Drop section numbers
 From: Sami Tolvanen <samitolvanen@google.com>
 To: Masahiro Yamada <masahiroy@kernel.org>
 Cc: Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, 
@@ -75,233 +75,141 @@ Cc: Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>,
 	Sami Tolvanen <samitolvanen@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-A data structure can be partially opaque to modules if its
-allocation is handled by the core kernel, and modules only need
-to access some of its members. In this situation, it's possible
-to append new members to the structure without breaking the ABI,
-as long as the layout for the original members remains unchanged.
-For example, consider the following struct:
+Change the gendwarfksyms documentation to use proper chapter,
+section, and subsection adornments instead of fragile section
+numbers.
 
-  struct s {
-          unsigned long a;
-          void *p;
-  };
-
-gendwarfksyms --stable --dump-dies produces the following type
-expansion:
-
-  variable structure_type s {
-    member base_type long unsigned int byte_size(8) encoding(7) a
-      data_member_location(0) ,
-    member pointer_type {
-      base_type void
-    } byte_size(8) p data_member_location(8)
-  } byte_size(16)
-
-To append new members, we can use the KABI_IGNORE() macro to
-hide them from gendwarfksyms --stable:
-
-  struct s {
-          /* old members with unchanged layout */
-          unsigned long a;
-          void *p;
-
-          /* new members not accessed by modules */
-          KABI_IGNORE(0, unsigned long n);
-  };
-
-However, we can't hide the fact that adding new members changes
-the struct size, as seen in the updated type string:
-
-  variable structure_type s {
-    member base_type long unsigned int byte_size(8) encoding(7) a
-      data_member_location(0) ,
-    member pointer_type {
-      base_type void
-    } byte_size(8) p data_member_location(8)
-  } byte_size(24)
-
-In order to support this use case, add a kABI rule that makes it
-possible to override the byte_size attribute for types:
-
-  /*
-   * struct s allocation is handled by the kernel, so
-   * appending new members without changing the original
-   * layout won't break the ABI.
-   */
-  KABI_BYTE_SIZE(s, 16);
-
-This results in a type string that's unchanged from the original
-and therefore, won't change versions for symbols that reference
-the changed structure.
-
+Suggested-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Reviewed-by: Petr Pavlu <petr.pavlu@suse.com>
 ---
- scripts/gendwarfksyms/dwarf.c            | 14 ++++++++++++-
- scripts/gendwarfksyms/examples/kabi.h    |  7 +++++++
- scripts/gendwarfksyms/examples/kabi_ex.c |  2 ++
- scripts/gendwarfksyms/examples/kabi_ex.h | 22 +++++++++++++++++++++
- scripts/gendwarfksyms/gendwarfksyms.h    |  1 +
- scripts/gendwarfksyms/kabi.c             | 25 ++++++++++++++++++++++++
- 6 files changed, 70 insertions(+), 1 deletion(-)
+ Documentation/kbuild/gendwarfksyms.rst | 44 +++++++++++++-------------
+ 1 file changed, 22 insertions(+), 22 deletions(-)
 
-diff --git a/scripts/gendwarfksyms/dwarf.c b/scripts/gendwarfksyms/dwarf.c
-index eed247d8abfc..13ea7bf1ae7d 100644
---- a/scripts/gendwarfksyms/dwarf.c
-+++ b/scripts/gendwarfksyms/dwarf.c
-@@ -228,12 +228,24 @@ static void process_fqn(struct die *cache, Dwarf_Die *die)
- DEFINE_PROCESS_UDATA_ATTRIBUTE(accessibility)
- DEFINE_PROCESS_UDATA_ATTRIBUTE(alignment)
- DEFINE_PROCESS_UDATA_ATTRIBUTE(bit_size)
--DEFINE_PROCESS_UDATA_ATTRIBUTE(byte_size)
- DEFINE_PROCESS_UDATA_ATTRIBUTE(encoding)
- DEFINE_PROCESS_UDATA_ATTRIBUTE(data_bit_offset)
- DEFINE_PROCESS_UDATA_ATTRIBUTE(data_member_location)
- DEFINE_PROCESS_UDATA_ATTRIBUTE(discr_value)
+diff --git a/Documentation/kbuild/gendwarfksyms.rst b/Documentation/kbuild/gendwarfksyms.rst
+index e4beaae7e456..9694ec99d190 100644
+--- a/Documentation/kbuild/gendwarfksyms.rst
++++ b/Documentation/kbuild/gendwarfksyms.rst
+@@ -2,8 +2,8 @@
+ DWARF module versioning
+ =======================
  
-+static void process_byte_size_attr(struct die *cache, Dwarf_Die *die)
-+{
-+	Dwarf_Word value;
-+	unsigned long override;
-+
-+	if (get_udata_attr(die, DW_AT_byte_size, &value)) {
-+		if (stable && kabi_get_byte_size(cache->fqn, &override))
-+			value = override;
-+
-+		process_fmt(cache, " byte_size(%" PRIu64 ")", value);
-+	}
-+}
-+
- /* Match functions -- die_match_callback_t */
- #define DEFINE_MATCH(type)                                     \
- 	static bool match_##type##_type(Dwarf_Die *die)        \
-diff --git a/scripts/gendwarfksyms/examples/kabi.h b/scripts/gendwarfksyms/examples/kabi.h
-index 97a5669b083d..86f4428e0479 100644
---- a/scripts/gendwarfksyms/examples/kabi.h
-+++ b/scripts/gendwarfksyms/examples/kabi.h
-@@ -89,6 +89,13 @@
- #define KABI_ENUMERATOR_VALUE(fqn, field, value) \
- 	__KABI_RULE(enumerator_value, fqn field, value)
+-1. Introduction
+-===============
++Introduction
++============
  
-+/*
-+ * KABI_BYTE_SIZE(fqn, value)
-+ *   Set the byte_size attribute for the struct/union/enum fqn to
-+ *   value bytes.
-+ */
-+#define KABI_BYTE_SIZE(fqn, value) __KABI_RULE(byte_size, fqn, value)
-+
- /*
-  * KABI_RESERVE
-  *   Reserve some "padding" in a structure for use by LTS backports.
-diff --git a/scripts/gendwarfksyms/examples/kabi_ex.c b/scripts/gendwarfksyms/examples/kabi_ex.c
-index 0b7ffd830541..b73ee5399a59 100644
---- a/scripts/gendwarfksyms/examples/kabi_ex.c
-+++ b/scripts/gendwarfksyms/examples/kabi_ex.c
-@@ -28,3 +28,5 @@ struct ex2c ex2c;
- struct ex3a ex3a;
- struct ex3b ex3b;
- struct ex3c ex3c;
-+
-+struct ex4a ex4a;
-diff --git a/scripts/gendwarfksyms/examples/kabi_ex.h b/scripts/gendwarfksyms/examples/kabi_ex.h
-index 1736e0f65208..092c8cb7bcd7 100644
---- a/scripts/gendwarfksyms/examples/kabi_ex.h
-+++ b/scripts/gendwarfksyms/examples/kabi_ex.h
-@@ -260,4 +260,26 @@ _Static_assert(sizeof(struct ex3a) == sizeof(struct ex3c), "ex3a size doesn't ma
-  * STABLE-NEXT: } byte_size(16)
-  */
+ When CONFIG_MODVERSIONS is enabled, symbol versions for modules
+ are typically calculated from preprocessed source code using the
+@@ -14,8 +14,8 @@ selected, **gendwarfksyms** is used instead to calculate symbol versions
+ from the DWARF debugging information, which contains the necessary
+ details about the final module ABI.
  
-+/*
-+ * Example: An ignored field added to an end of a partially opaque struct,
-+ * while keeping the byte_size attribute unchanged.
-+ */
-+
-+struct ex4a {
-+	unsigned long a;
-+	KABI_IGNORE(0, unsigned long b);
-+};
-+
-+/*
-+ * This may be safe if the structure allocation is managed by the core kernel
-+ * and the layout remains unchanged except for appended new members.
-+ */
-+KABI_BYTE_SIZE(ex4a, 8);
-+
-+/*
-+ * STABLE:      variable structure_type ex4a {
-+ * STABLE-NEXT:   member base_type [[ULONG]] byte_size(8) encoding(7) a data_member_location(0)
-+ * STABLE-NEXT: } byte_size(8)
-+ */
-+
- #endif /* __KABI_EX_H__ */
-diff --git a/scripts/gendwarfksyms/gendwarfksyms.h b/scripts/gendwarfksyms/gendwarfksyms.h
-index 2feec168bf73..2db49c2ad50e 100644
---- a/scripts/gendwarfksyms/gendwarfksyms.h
-+++ b/scripts/gendwarfksyms/gendwarfksyms.h
-@@ -287,6 +287,7 @@ void generate_symtypes_and_versions(FILE *file);
-  * kabi.c
-  */
+-1.1. Usage
+-==========
++Usage
++-----
  
-+bool kabi_get_byte_size(const char *fqn, unsigned long *value);
- bool kabi_is_enumerator_ignored(const char *fqn, const char *field);
- bool kabi_get_enumerator_value(const char *fqn, const char *field,
- 			       unsigned long *value);
-diff --git a/scripts/gendwarfksyms/kabi.c b/scripts/gendwarfksyms/kabi.c
-index badf8d46b154..61620ff647bd 100644
---- a/scripts/gendwarfksyms/kabi.c
-+++ b/scripts/gendwarfksyms/kabi.c
-@@ -54,11 +54,19 @@
-  */
- #define KABI_RULE_TAG_ENUMERATOR_VALUE "enumerator_value"
+ gendwarfksyms accepts a list of object files on the command line, and a
+ list of symbol names (one per line) in standard input::
+@@ -33,8 +33,8 @@ list of symbol names (one per line) in standard input::
+           -h, --help           Print this message
  
-+/*
-+ * Rule: byte_size
-+ * - For the fqn_field in the target field, set the byte_size
-+ *   attribute to the value in the value field.
-+ */
-+#define KABI_RULE_TAG_BYTE_SIZE "byte_size"
-+
- enum kabi_rule_type {
- 	KABI_RULE_TYPE_UNKNOWN,
- 	KABI_RULE_TYPE_DECLONLY,
- 	KABI_RULE_TYPE_ENUMERATOR_IGNORE,
- 	KABI_RULE_TYPE_ENUMERATOR_VALUE,
-+	KABI_RULE_TYPE_BYTE_SIZE,
- };
  
- #define RULE_HASH_BITS 7
-@@ -127,6 +135,10 @@ void kabi_read_rules(int fd)
- 			.type = KABI_RULE_TYPE_ENUMERATOR_VALUE,
- 			.tag = KABI_RULE_TAG_ENUMERATOR_VALUE,
- 		},
-+		{
-+			.type = KABI_RULE_TYPE_BYTE_SIZE,
-+			.tag = KABI_RULE_TAG_BYTE_SIZE,
-+		},
- 	};
+-2. Type information availability
+-================================
++Type information availability
++=============================
  
- 	if (!stable)
-@@ -308,6 +320,19 @@ bool kabi_get_enumerator_value(const char *fqn, const char *field,
- 	return false;
- }
+ While symbols are typically exported in the same translation unit (TU)
+ where they're defined, it's also perfectly fine for a TU to export
+@@ -56,8 +56,8 @@ type for calculating symbol versions even if the symbol is defined
+ elsewhere. The name of the symbol pointer is expected to start with
+ `__gendwarfksyms_ptr_`, followed by the name of the exported symbol.
  
-+bool kabi_get_byte_size(const char *fqn, unsigned long *value)
-+{
-+	struct rule *rule;
-+
-+	rule = find_rule(KABI_RULE_TYPE_BYTE_SIZE, fqn);
-+	if (rule) {
-+		*value = get_ulong_value(rule->value);
-+		return true;
-+	}
-+
-+	return false;
-+}
-+
- void kabi_free(void)
- {
- 	struct hlist_node *tmp;
+-3. Symtypes output format
+-=========================
++Symtypes output format
++======================
+ 
+ Similarly to genksyms, gendwarfksyms supports writing a symtypes
+ file for each processed object that contain types for exported
+@@ -85,8 +85,8 @@ produces C-style type strings, gendwarfksyms uses the same simple parsed
+ DWARF format produced by **--dump-dies**, but with type references
+ instead of fully expanded strings.
+ 
+-4. Maintaining a stable kABI
+-============================
++Maintaining a stable kABI
++=========================
+ 
+ Distribution maintainers often need the ability to make ABI compatible
+ changes to kernel data structures due to LTS updates or backports. Using
+@@ -104,8 +104,8 @@ for source code annotation. Note that as these features are only used to
+ transform the inputs for symbol versioning, the user is responsible for
+ ensuring that their changes actually won't break the ABI.
+ 
+-4.1. kABI rules
+-===============
++kABI rules
++----------
+ 
+ kABI rules allow distributions to fine-tune certain parts
+ of gendwarfksyms output and thus control how symbol
+@@ -139,8 +139,8 @@ Currently, only the rules discussed in this section are supported, but
+ the format is extensible enough to allow further rules to be added as
+ need arises.
+ 
+-4.1.1. Managing definition visibility
+-=====================================
++Managing definition visibility
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 
+ A declaration can change into a full definition when additional includes
+ are pulled into the translation unit. This changes the versions of any
+@@ -168,8 +168,8 @@ Example usage::
+ 
+ 	KABI_DECLONLY(s);
+ 
+-4.1.2. Adding enumerators
+-=========================
++Adding enumerators
++~~~~~~~~~~~~~~~~~~
+ 
+ For enums, all enumerators and their values are included in calculating
+ symbol versions, which becomes a problem if we later need to add more
+@@ -223,8 +223,8 @@ Example usage::
+ 	KABI_ENUMERATOR_IGNORE(e, C);
+ 	KABI_ENUMERATOR_VALUE(e, LAST, 2);
+ 
+-4.3. Adding structure members
+-=============================
++Adding structure members
++------------------------
+ 
+ Perhaps the most common ABI compatible change is adding a member to a
+ kernel data structure. When changes to a structure are anticipated,
+@@ -237,8 +237,8 @@ natural method. This section describes gendwarfksyms support for using
+ reserved space in data structures and hiding members that don't change
+ the ABI when calculating symbol versions.
+ 
+-4.3.1. Reserving space and replacing members
+-============================================
++Reserving space and replacing members
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 
+ Space is typically reserved for later use by appending integer types, or
+ arrays, to the end of the data structure, but any type can be used. Each
+@@ -276,8 +276,8 @@ The examples include `KABI_(RESERVE|USE|REPLACE)*` macros that help
+ simplify the process and also ensure the replacement member is correctly
+ aligned and its size won't exceed the reserved space.
+ 
+-4.3.2. Hiding members
+-=====================
++Hiding members
++~~~~~~~~~~~~~~
+ 
+ Predicting which structures will require changes during the support
+ timeframe isn't always possible, in which case one might have to resort
 -- 
 2.49.0.987.g0cc8ee98dc-goog
 
