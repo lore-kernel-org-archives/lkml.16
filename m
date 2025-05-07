@@ -1,213 +1,304 @@
-Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 073EB1CB31D;
-	Wed,  7 May 2025 17:34:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746639267; cv=pass; b=uJlOdvkME95KYbka8ZKDd11huKtQzZqm1er1BRxAkJowVydH2SOOupFxbXeEXapmtN77RrINLKddGoXgGr95MzNNGTVBD1dtpfPwEZDX1nY85c4A1q+WoBu3ucIEJHkp43f3T39Ge/h1qOkXwSNqx+ITQCuTvylwKMbhPgblSA4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746639267; c=relaxed/simple;
-	bh=S8q4UiwPqcvKxQLg90uq250hhpXySBZdd3JUmw5Zp+Q=;
-	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
-	 Date:MIME-Version; b=e5uDtrDTvPHArEhmodDvSUwkRX/BA3JXMYxeV5wn6dBPF2R+LDSFsEOBED2IOA+axdUGqdxhssC4D3uZr2qrXRQnITSnxIPZLfxYmS4WhchEOco6wgHv9RTbnXlFz6KXHb13Xj7eRTadzt4E05KGoOfyUdu9GgxjkNs6X0YDRg4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (1024-bit key) header.d=rong.moe header.i=i@rong.moe header.b=kz78liqv; arc=pass smtp.client-ip=136.143.188.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rong.moe header.i=i@rong.moe header.b="kz78liqv"
-ARC-Seal: i=1; a=rsa-sha256; t=1746639254; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=h8L6DW8OjyP/I23YelMtauHcguuxgiAofiMSebynEvAVRhqe2WnmPxY1IIVObUEncUDdK7vu/BGczG1ElfW+vERveNAdmyZPltQTT/AKjPcd/rHKPB/Cumyfwkl71Us9nqSwQ4dnDBUCexHuja2Yb3uRNGtLMubYZ7lfAX/A7nw=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1746639254; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=vBB7k01+w0e/J/ltKUX3Zy1yr/hnRL85oqJmKvCcIjQ=; 
-	b=eBu3KzwspCcDsL+sO+2Oxf2ptCUbzxIXbRtmHyhBYllXq7xFd5b3Rv7nX9Ep3FQ+ETs2aY8Em13jXCc0dAwYkki7yEbFdJxTfC3obG6QmOFsVpPYclTwZFKj4NQovY91Hil9fVSp0O9amtz+i4QX3xUeGJPYQqlsYW6xkh9dfNQ=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=rong.moe;
-	spf=pass  smtp.mailfrom=i@rong.moe;
-	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1746639254;
-	s=zmail; d=rong.moe; i=i@rong.moe;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:Date:MIME-Version:Message-Id:Reply-To;
-	bh=vBB7k01+w0e/J/ltKUX3Zy1yr/hnRL85oqJmKvCcIjQ=;
-	b=kz78liqvhKTU2+tvJODNu8ENBDIOCMqd/GTuCH+pt/YhyP5QWU5F+EnR2i7ELrTV
-	e3TdmZbVgxtklfWe7nYoV5bCrIhdESUBm4CVsApnatz+VV3eRGBIDeMLv+r8mqZrxqN
-	fVFzzIp5QFmgs2P7sOil/eUJoJPqPVlKPHAyPRJk=
-Received: by mx.zohomail.com with SMTPS id 1746639251879306.155127117759;
-	Wed, 7 May 2025 10:34:11 -0700 (PDT)
-Message-ID: <8932507d2a35d26a1eca2eab2b35fd385d3570d9.camel@rong.moe>
-Subject: Re: [Bug 220083] New: [REGRESSION, BISECTED] x86 ASM changes make
- dispatch_hid_bpf_output_report access not-present page
-From: Rong Zhang <i@rong.moe>
-To: Benjamin Tissoires <bentiss@kernel.org>
-Cc: bugzilla-daemon@kernel.org, Jiri Kosina <jikos@kernel.org>, 
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, Borislav Petkov
-	 <bp@alien8.de>
-In-Reply-To: <6b4fe1ae87c717c70708e7a3f5bd6d9c8c7bfcd5.camel@rong.moe>
-References: <bug-220083-6385@https.bugzilla.kernel.org/>
-						 <20250506145548.GGaBoi9Jzp3aeJizTR@fat_crate.local>
-						 <umqaxyqrrvle34haa3n3iohs5akos652ytbs5sef32xmc7gaz7@edyihsd4yokq>
-	 <6b4fe1ae87c717c70708e7a3f5bd6d9c8c7bfcd5.camel@rong.moe>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 08 May 2025 01:33:06 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44BA41DE8A0;
+	Wed,  7 May 2025 17:34:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746639291; cv=none; b=ZO65RrKbKUPlBTyxEN5ZnQ8U7FKuKD8trdl+OjB6jwiLwKrOHJK4EHLX3Ifp9sdBRD8sozpnLjKGPnaTYaA2dI+gOoEWpwiyiZT35+HvbmsdgWvk6fKf9gyQhYmNr9nMHAtzr/iL4RCUfPsq/jpXHP3Zfy1q1FGiMof0uLcRo2w=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746639291; c=relaxed/simple;
+	bh=bvfTT/c7PtSh5mfjONtRBKUwBzWauHatYMl5dd7rveI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=kseYFD9EMAjJH2QpRhPTLCgZwxSIDrNshCKZNw28u8Mdx8YCP2QPhj662LZW1CO3kJPRtCRwFqR0x+aTp+opPCdp23G7Z+89t7BbnonVkFqVpewJDMArhY26jvjVU9iUiKS7IourV54isxC1WSKvx0keWLzOhH457aE+A4et76w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E26BC4CEE2;
+	Wed,  7 May 2025 17:34:48 +0000 (UTC)
+Date: Wed, 7 May 2025 13:34:58 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Bhupesh <bhupesh@igalia.com>, Andrew
+ Morton <akpm@linux-foundation.org>, Linus Torvalds
+ <torvalds@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Thomas Gleixner
+ <tglx@linutronix.de>, bpf@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, arnaldo.melo@gmail.com, Juri Lelli
+ <juri.lelli@redhat.com>
+Subject: [RFC][PATCH] tracing/sched: Use __string() instead of fixed lengths
+ for task->comm
+Message-ID: <20250507133458.51bafd95@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Evolution 3.56.1-1 
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Benjamin,
+From: Steven Rostedt <rostedt@goodmis.org>
 
-On Wed, 2025-05-07 at 19:03 +0800, Rong Zhang wrote:
-> Hi Benjamin,
->=20
-> On Tue, 2025-05-06 at 17:35 +0200, Benjamin Tissoires wrote:
-> > Hi Boris,
-> >=20
-> > On May 06 2025, Borislav Petkov wrote:
-> > > Switching to mail.
-> > >=20
-> > > Hi Benjamin,
-> > >=20
-> > > take a look at the below pls.
-> > >=20
-> > > The RIP points to:
-> > >=20
-> > >   22:   48 c1 e6 04             shl    $0x4,%rsi
-> > >   26:   48 03 77 08             add    0x8(%rdi),%rsi
-> > >   2a:*  65 48 ff 46 08          incq   %gs:0x8(%rsi)            <-- t=
-rapping instruction
-> > >   2f:   c3                      ret
-> > >=20
-> > > which really is a %gs-based access and the reporter has bisected this=
- to
-> > >=20
-> > >   9d7de2aa8b41 ("x86/percpu/64: Use relative percpu offsets")
-> > >=20
-> > > which looks related.
-> > >=20
-> > > My silly guess would be some bpf program does per-cpu accesses but it=
- doesn't
-> > > know about this change so it tramples over registers. I mean, my fix =
-would be
-> > > to disable BPF but you young kids love to play with that...
+The sched_switch and sched_waking events hardcoded the length of the comm
+it recorded because these events were created before the dynamic strings
+were implemented. Unfortunately, several other events copied this method.
 
-[...]
+As the size of the comm may change in the future, make the string dynamic.
+The dynamic string requires a 4 byte meta data to hold the size and offset
+of the string. The amount stored in the ring buffer will then be the
+strlen(comm) + 5 (for the \n), and aligned to 4 bytes if there's no other
+strings. This means that a task comm can have up to 10 characters before it
+requires another 4 bytes in the ring buffer. Most tasks are usually less
+than that, so this should not be a problem, and it also allows the name to
+be extended over the TASK_COMM_LEN [1]
 
-> > However, the fact that this happens in an unplug event makes me think
-> > that there may be a race here at play.
-> >=20
-> > Another option is that I completely missed the use of srcu, but it was
-> > working fine previously, so I have no ideas :)
->=20
-> Yes, this is weird.
->=20
-> I also tried uinput and some other HID devices (randomly borrowed from
-> my friends). They all worked fine.
->=20
-> I have a Logitech Bolt receiver, too. Will find and try it out.
+Note, sched_switch and the sched_waking trace events still hardcode the
+length, as there is tooling that still requires that. An effort to update
+the tooling will be made to allow this to change in the future.
 
-The good news is it always works fine.
+[1] https://lore.kernel.org/all/20250507110444.963779-1-bhupesh@igalia.com/
 
-> > Anyway, we need to wait for the reporter to tell us if there were any
-> > HID-BPF program first because this will likely give us a hint on where
-> > the issue is.
->=20
-> In another clean boot, I triggered the bug and dumped the hdev struct
-> at fentry (fexit will never hit because of the PF) via bpftrace.
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ include/trace/events/sched.h | 94 ++++++++++++++++++------------------
+ 1 file changed, 47 insertions(+), 47 deletions(-)
 
-[...]
+diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+index 8994e97d86c1..d9bc808f4d2a 100644
+--- a/include/trace/events/sched.h
++++ b/include/trace/events/sched.h
+@@ -20,16 +20,16 @@ TRACE_EVENT(sched_kthread_stop,
+ 	TP_ARGS(t),
+ 
+ 	TP_STRUCT__entry(
+-		__array(	char,	comm,	TASK_COMM_LEN	)
+-		__field(	pid_t,	pid			)
++		__string(	comm,	t->comm		)
++		__field(	pid_t,	pid		)
+ 	),
+ 
+ 	TP_fast_assign(
+-		memcpy(__entry->comm, t->comm, TASK_COMM_LEN);
++		__assign_str(comm);
+ 		__entry->pid	= t->pid;
+ 	),
+ 
+-	TP_printk("comm=%s pid=%d", __entry->comm, __entry->pid)
++	TP_printk("comm=%s pid=%d", __get_str(comm), __entry->pid)
+ );
+ 
+ /*
+@@ -276,15 +276,15 @@ TRACE_EVENT(sched_migrate_task,
+ 	TP_ARGS(p, dest_cpu),
+ 
+ 	TP_STRUCT__entry(
+-		__array(	char,	comm,	TASK_COMM_LEN	)
+-		__field(	pid_t,	pid			)
+-		__field(	int,	prio			)
+-		__field(	int,	orig_cpu		)
+-		__field(	int,	dest_cpu		)
++		__string(	comm,	p->comm		)
++		__field(	pid_t,	pid		)
++		__field(	int,	prio		)
++		__field(	int,	orig_cpu	)
++		__field(	int,	dest_cpu	)
+ 	),
+ 
+ 	TP_fast_assign(
+-		memcpy(__entry->comm, p->comm, TASK_COMM_LEN);
++		__assign_str(comm);
+ 		__entry->pid		= p->pid;
+ 		__entry->prio		= p->prio; /* XXX SCHED_DEADLINE */
+ 		__entry->orig_cpu	= task_cpu(p);
+@@ -292,7 +292,7 @@ TRACE_EVENT(sched_migrate_task,
+ 	),
+ 
+ 	TP_printk("comm=%s pid=%d prio=%d orig_cpu=%d dest_cpu=%d",
+-		  __entry->comm, __entry->pid, __entry->prio,
++		  __get_str(comm), __entry->pid, __entry->prio,
+ 		  __entry->orig_cpu, __entry->dest_cpu)
+ );
+ 
+@@ -303,19 +303,19 @@ DECLARE_EVENT_CLASS(sched_process_template,
+ 	TP_ARGS(p),
+ 
+ 	TP_STRUCT__entry(
+-		__array(	char,	comm,	TASK_COMM_LEN	)
+-		__field(	pid_t,	pid			)
+-		__field(	int,	prio			)
++		__string(	comm,	p->comm		)
++		__field(	pid_t,	pid		)
++		__field(	int,	prio		)
+ 	),
+ 
+ 	TP_fast_assign(
+-		memcpy(__entry->comm, p->comm, TASK_COMM_LEN);
++		__assign_str(comm);
+ 		__entry->pid		= p->pid;
+ 		__entry->prio		= p->prio; /* XXX SCHED_DEADLINE */
+ 	),
+ 
+ 	TP_printk("comm=%s pid=%d prio=%d",
+-		  __entry->comm, __entry->pid, __entry->prio)
++		  __get_str(comm), __entry->pid, __entry->prio)
+ );
+ 
+ /*
+@@ -349,19 +349,19 @@ TRACE_EVENT(sched_process_wait,
+ 	TP_ARGS(pid),
+ 
+ 	TP_STRUCT__entry(
+-		__array(	char,	comm,	TASK_COMM_LEN	)
++		__string(	comm,	current->comm		)
+ 		__field(	pid_t,	pid			)
+ 		__field(	int,	prio			)
+ 	),
+ 
+ 	TP_fast_assign(
+-		memcpy(__entry->comm, current->comm, TASK_COMM_LEN);
++		__assign_str(comm);
+ 		__entry->pid		= pid_nr(pid);
+ 		__entry->prio		= current->prio; /* XXX SCHED_DEADLINE */
+ 	),
+ 
+ 	TP_printk("comm=%s pid=%d prio=%d",
+-		  __entry->comm, __entry->pid, __entry->prio)
++		  __get_str(comm), __entry->pid, __entry->prio)
+ );
+ 
+ /*
+@@ -374,22 +374,22 @@ TRACE_EVENT(sched_process_fork,
+ 	TP_ARGS(parent, child),
+ 
+ 	TP_STRUCT__entry(
+-		__array(	char,	parent_comm,	TASK_COMM_LEN	)
+-		__field(	pid_t,	parent_pid			)
+-		__array(	char,	child_comm,	TASK_COMM_LEN	)
+-		__field(	pid_t,	child_pid			)
++		__string(	parent_comm,	parent->comm	)
++		__field(	pid_t,		parent_pid	)
++		__string(	child_comm,	child->comm	)
++		__field(	pid_t,		child_pid	)
+ 	),
+ 
+ 	TP_fast_assign(
+-		memcpy(__entry->parent_comm, parent->comm, TASK_COMM_LEN);
++		__assign_str(parent_comm);
+ 		__entry->parent_pid	= parent->pid;
+-		memcpy(__entry->child_comm, child->comm, TASK_COMM_LEN);
++		__assign_str(child_comm);
+ 		__entry->child_pid	= child->pid;
+ 	),
+ 
+ 	TP_printk("comm=%s pid=%d child_comm=%s child_pid=%d",
+-		__entry->parent_comm, __entry->parent_pid,
+-		__entry->child_comm, __entry->child_pid)
++		__get_str(parent_comm), __entry->parent_pid,
++		__get_str(child_comm), __entry->child_pid)
+ );
+ 
+ /*
+@@ -473,19 +473,19 @@ DECLARE_EVENT_CLASS_SCHEDSTAT(sched_stat_template,
+ 	TP_ARGS(__perf_task(tsk), __perf_count(delay)),
+ 
+ 	TP_STRUCT__entry(
+-		__array( char,	comm,	TASK_COMM_LEN	)
+-		__field( pid_t,	pid			)
+-		__field( u64,	delay			)
++		__string( comm,	tsk->comm	)
++		__field(  pid_t,	pid	)
++		__field(  u64,		delay	)
+ 	),
+ 
+ 	TP_fast_assign(
+-		memcpy(__entry->comm, tsk->comm, TASK_COMM_LEN);
++		__assign_str(comm);
+ 		__entry->pid	= tsk->pid;
+ 		__entry->delay	= delay;
+ 	),
+ 
+ 	TP_printk("comm=%s pid=%d delay=%Lu [ns]",
+-			__entry->comm, __entry->pid,
++			__get_str(comm), __entry->pid,
+ 			(unsigned long long)__entry->delay)
+ );
+ 
+@@ -531,19 +531,19 @@ DECLARE_EVENT_CLASS(sched_stat_runtime,
+ 	TP_ARGS(tsk, __perf_count(runtime)),
+ 
+ 	TP_STRUCT__entry(
+-		__array( char,	comm,	TASK_COMM_LEN	)
+-		__field( pid_t,	pid			)
+-		__field( u64,	runtime			)
++		__string( comm,		tsk->comm	)
++		__field(  pid_t,	pid		)
++		__field(  u64,		runtime		)
+ 	),
+ 
+ 	TP_fast_assign(
+-		memcpy(__entry->comm, tsk->comm, TASK_COMM_LEN);
++		__assign_str(comm);
+ 		__entry->pid		= tsk->pid;
+ 		__entry->runtime	= runtime;
+ 	),
+ 
+ 	TP_printk("comm=%s pid=%d runtime=%Lu [ns]",
+-			__entry->comm, __entry->pid,
++			__get_str(comm), __entry->pid,
+ 			(unsigned long long)__entry->runtime)
+ );
+ 
+@@ -562,14 +562,14 @@ TRACE_EVENT(sched_pi_setprio,
+ 	TP_ARGS(tsk, pi_task),
+ 
+ 	TP_STRUCT__entry(
+-		__array( char,	comm,	TASK_COMM_LEN	)
+-		__field( pid_t,	pid			)
+-		__field( int,	oldprio			)
+-		__field( int,	newprio			)
++		__string( comm,		tsk->comm	)
++		__field(  pid_t,	pid		)
++		__field(  int,		oldprio		)
++		__field(  int,		newprio		)
+ 	),
+ 
+ 	TP_fast_assign(
+-		memcpy(__entry->comm, tsk->comm, TASK_COMM_LEN);
++		__assign_str(comm);
+ 		__entry->pid		= tsk->pid;
+ 		__entry->oldprio	= tsk->prio;
+ 		__entry->newprio	= pi_task ?
+@@ -579,7 +579,7 @@ TRACE_EVENT(sched_pi_setprio,
+ 	),
+ 
+ 	TP_printk("comm=%s pid=%d oldprio=%d newprio=%d",
+-			__entry->comm, __entry->pid,
++			__get_str(comm), __entry->pid,
+ 			__entry->oldprio, __entry->newprio)
+ );
+ 
+@@ -589,16 +589,16 @@ TRACE_EVENT(sched_process_hang,
+ 	TP_ARGS(tsk),
+ 
+ 	TP_STRUCT__entry(
+-		__array( char,	comm,	TASK_COMM_LEN	)
+-		__field( pid_t,	pid			)
++		__string( comm,		tsk->comm	)
++		__field(  pid_t,	pid		)
+ 	),
+ 
+ 	TP_fast_assign(
+-		memcpy(__entry->comm, tsk->comm, TASK_COMM_LEN);
++		__assign_str(comm);
+ 		__entry->pid = tsk->pid;
+ 	),
+ 
+-	TP_printk("comm=%s pid=%d", __entry->comm, __entry->pid)
++	TP_printk("comm=%s pid=%d", __get_str(comm), __entry->pid)
+ );
+ #endif /* CONFIG_DETECT_HUNG_TASK */
+ 
+-- 
+2.47.2
 
-> See attachments for its output (warning: contains an extremely long
-> line) and the decoded dmesg while tracing.
->=20
-> In another clean boot (again), I played around retsnoop to capture the
-> Last Branch Records (type: any_return, ind_call) from
-> dispatch_hid_bpf_output_report. This time I didn't trigger the issue,
-> or else nothing would be captured due to the PF as mentioned above.
-> Instead, I pressed Caps Lock on a keyboard under the same receiver
-> several times to trigger hidinput_led_worker. I always got:
->=20
-> [#15] kprobe_multi_link_handler+0x5d      (kernel/trace/bpf_trace.c:2843)=
-           ->  fprobe_entry+0xe6                   (kernel/trace/fprobe.c:3=
-21)
->                                                                          =
-               . __fprobe_handler                  (kernel/trace/fprobe.c:2=
-24)
-> [#14] fprobe_entry+0x21c                  (kernel/trace/fprobe.c:336)    =
-           ->  function_graph_enter_regs+0x15d     (kernel/trace/fgraph.c:6=
-76)
-> [#13] function_graph_enter_regs+0x1cd     (kernel/trace/fgraph.c:718)    =
-           ->  ftrace_graph_func+0x3c              (arch/x86/kernel/ftrace.=
-c:659)
-> [#12] ftrace_graph_func+0x4c              (arch/x86/kernel/ftrace.c:661) =
-           ->  ftrace_trampoline+0x83
-> [#11] ftrace_trampoline+0xc2                                             =
-           ->  dispatch_hid_bpf_output_report+0x9  (drivers/hid/bpf/hid_bpf=
-_dispatch.c:120)
-> [#10] __srcu_read_lock+0x20               (kernel/rcu/srcutree.c:757)    =
-           ->  dispatch_hid_bpf_output_report+0x73 (drivers/hid/bpf/hid_bpf=
-_dispatch.c:133)
->                                                                          =
-               . srcu_read_lock                    (include/linux/srcu.h:25=
-2)
-> [#09] __srcu_read_unlock+0x1f             (kernel/rcu/srcutree.c:769)    =
-           ->  dispatch_hid_bpf_output_report+0xc5 (drivers/hid/bpf/hid_bpf=
-_dispatch.c:148)
-> [#08] dispatch_hid_bpf_output_report+0xe6 (drivers/hid/bpf/hid_bpf_dispat=
-ch.c:148)  ->  return_to_handler+0x0               (arch/x86/kernel/ftrace_=
-64.S:358)
->=20
-> !    6us [0]  dispatch_hid_bpf_output_report
->=20
-> Thus, there is indeed no BPF program being called.
-
-Since the Bolt receiver is mine, I also played around bpftrace and
-retsnoop. Surprisingly, dispatch_hid_bpf_output_report was never called
-when I unplugged the Bolt receiver or pressed Caps Lock on a keyboard
-under it, but hidinput_led_worker was indeed called in both cases.
-
-I am completely unfamiliar with HID stuff, so I traced
-hidinput_get_led_field and revealed that hid->ll_driver->request was
-pointed to usbhid_request, resulting in hidinput_led_worker returning
-via a happy path. So the divergence is merely due to different driver
-implementation.
-
-This information may explain why the impact of the bug was limited to
-certain types of devices. Besides, most Logitech Unifying receivers
-reside on users' PCs and never been unplugged, so the bug can hardly be
-triggered in their setup. In my case, I have a Unifying receiver
-residing on a dock, so the first time I encountered the bug was when I
-used the dock for a while and unplugged it (ouch!).
-
-My rough guess is: the bug previously existed somewhere but had no
-destructive effect. The per-cpu change isn't the bug itself, but turned
-the bug to be destructive.
-
-> Feel free to ask for more experiments :)
->=20
-> > Cheers,
-> > Benjamin
->=20
-> Thanks,
-> Rong
->=20
-> > >=20
-> > > :-)
-> > >=20
-> > > Thx.
-> > >=20
-> > > On Sat, May 03, 2025 at 06:40:41PM +0000, bugzilla-daemon@kernel.org =
-wrote:
-> > >=20
-> > >=20
-
-[...]
-
-Thanks,
-Rong
