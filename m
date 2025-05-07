@@ -1,146 +1,115 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69220186E2E
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 15:02:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C185F186E2E;
+	Wed,  7 May 2025 15:02:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746630171; cv=none; b=gPMvZW2Jr91Tb7g5ZgusblhmikhVy3qSbNfYe4zn+Yr3g2g2AYRnJ8FcnIkH2TH5ORuuh4GvmgKgwSLffG2gfSrSFma4kz/E/mUfjC2Ce4NHTAuR7J7MQsFLCfX23wrg/LVRYD1T7bpoJkd1RvLY5JvtF5sZbYML3wdMVRjTA7Q=
+	t=1746630176; cv=none; b=hDj2AqwRhNlv6D3eBCp/NmxThWN4GK1L3hFB+gSTOw3IvxqWy85HJRQfIUkC1ncsyZ5B23jCmjZJXEKoLEEpXk/n9Xrx+lML67D611mmV6UcjfCMresgS79omm1HT/hVFAZcNZAOysr+8L/hZYVxEUjVLaAqdIBY4RozpcjdYYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746630171; c=relaxed/simple;
-	bh=VE+aLPjfOksXk4O266e8PqL8QT1UL6xWrwQS7bEc86o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Pz9JTiUX47KmJtRPTvlaMtt3ljQ0oISsbttrEEtjamFBqIFUTvkvXZkI41wlVHWE3e7hN7Oif7GS6PDP6prN+OdtL5805iTYaP+CuZ2okNmnC/IfAjhLx4yuEh1Pv56AP6AsAuZ6Romr0HWaEbKTqTPJ2KXByF9mSrMeaZvXaGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ToKH7x1r; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746630176; c=relaxed/simple;
+	bh=vtUHYngmcvy8/hID4LtvlRBZCfZROB/R+TjQOTME2Bg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vkg3oZlzc1nezsRxZTGcClrBE9qPCB+zFe3mELv1G0dMfbFV1sZO55ekzRCa/If34VtYuj2Omu8S9Fr+q4QdQky4uUOYdyWWPuaTh4GxnuO26Onzs5K1IVC1h5poo3A8RTvvINlK/e3SulWpBdl309ee50zyanlr2+0/lh1MiV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pt0ektGr; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ToKH7x1r"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ad1e8e2ad6bso216678866b.0
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 08:02:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746630168; x=1747234968; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PvCQsEtnh2TDP3TsTaRREibOrpi3QlqsGJ0VRdAePO8=;
-        b=ToKH7x1rhSmRdNePMUY765IRIId/dcc18wno8pCi3gDxhFJKGojYJGDfhd/Jd3AmXv
-         IfGr/6vHCXTxH7SpRjtZQokO55Zyjv4nzYTkQ/J2ql6OnDyF8RUlQAshtfe1xH4gtQU5
-         gYJyBSrnt6iDTIkANbbGG7CtEZDrmHjT2sDGyAKizE1gp92XgQpNc7qj75obHKaE2xDg
-         nQHgJ6eh1TIq8TxBaIOlNCBqOcajIwypsAeadWulIatHdTeH38QTaPgMHqIvILzOpZKt
-         OB0REDXnQZpP/7SahGcWR0RRhB97geAIwZinidqffVOs8svl4HY+jguKlvIrsPTOAVHo
-         +txw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746630168; x=1747234968;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PvCQsEtnh2TDP3TsTaRREibOrpi3QlqsGJ0VRdAePO8=;
-        b=g3D4Yc73c1Q8Nh5KTMufajCz+BAIO6tkwL5aJW4Oh2dacyYsznOqnsGZj55hxfgF4X
-         YapIZQx6xkWfH2xCtnofBbiV9IsEsKJ+x7jUh3KZkJ9PXkgdIKRG9Kp13wcVzqUCielC
-         VNa84zMloNCthLow6DqVvPGe5KAvxmNtm1GIDRyKO6V6VSC7A1TtBYev3EqjedIYneXS
-         7RYzuCm/vrqxMd/XXJNLG3h9iXoA8vCPfOBvPe9VQtRN2YVcY0JLTBDzaSjFNyJzN0A2
-         jN+/iSO8GOyGU0XSJxXr5YuMjauXYCCK7QOw9BFKz2RiTRhRGb1niomqTQj0rAAcT9UW
-         /NcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV3Rb3LBI7XD/LDf/Jvy+RUvCh+eBanhQRHL9CYsHLTXPVDBITUjvNQuPGYiS3WNBnW5HPKbGQIDpreFDI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzfV/Lg0cp2JUxuGIQ2PxjYbIPAoiBXHqDyiVo5mzVZXhn/uz75
-	MnV1hl0bkKSXpnQWUqCbIVrqw7eU1BZoaBcwacgbISX52q/5+tOp
-X-Gm-Gg: ASbGnctBsrunAdpZbPnNkSNsezkqKkSwO32yWu7Ut329Fcjk6NSOg/qDS7XBBL1ycAd
-	56tYF36bFplc+eu4kntLGd4JCKCudzClA20i5FIe8QTJBTyjOvklcM/H3AKH60i7gxJERitb1Jn
-	IgHLW6rSe4SVdD5x+vTWj084MBXlKDdUA2inkMYFfoiJTsgAOIYKvcjBx98EVP0zXDHycMbTo+Y
-	13qi7fano0XKFNoPe1gaCFC1fAL9ROGxlPtWuLBdPeAXplaiDbdeI5w2Qh9X0DiGFh0nb3u3V6M
-	JlSVNYyGvDkkVl5W+YknKSy9uypuGnWt2UqBypHG0cbRasmjsA1bYOvYDA6gkUdsd+ul+5EvZci
-	1SE/b4kid2vz8XaUPqLM=
-X-Google-Smtp-Source: AGHT+IGplFhlmPdENtVOHblHI4Aifx/JZlKRDKVxCGNuhfO/rD2149FEo3+r3YoKDpHZypP8PzzeIg==
-X-Received: by 2002:a17:906:99d3:b0:ace:3f00:25f5 with SMTP id a640c23a62f3a-ad1e8c8c0bemr391262166b.2.1746630167072;
-        Wed, 07 May 2025 08:02:47 -0700 (PDT)
-Received: from ?IPV6:2a03:83e0:1126:4:14f7:eab6:23d5:4cab? ([2620:10d:c092:500::7:6396])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1894c0346sm926483766b.96.2025.05.07.08.02.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 07 May 2025 08:02:46 -0700 (PDT)
-Message-ID: <ea5b3a3f-9eaa-4335-b0ad-fb1a66a3149b@gmail.com>
-Date: Wed, 7 May 2025 16:02:44 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pt0ektGr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746630176; x=1778166176;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=vtUHYngmcvy8/hID4LtvlRBZCfZROB/R+TjQOTME2Bg=;
+  b=Pt0ektGrfPj6ZfwLbEZkwSR/s3GRM+E05yt7VclqGI18VRg6tsvzO8c7
+   DdbazJHoeY1zLPqpHNlsJT3ate2YSd5/HHODVk5L003Wa6oJk0Ue+wWob
+   b5iSfhc/Lmlmuve3LTUcmKghoup+V0Cy+iVfUz/b4MpsqdmJih60TSLCF
+   3dzHwWtS5ewueyu49T/yvW6/OveOCpB42Ig4oJnnD6AnQrHy+KsaXLd7o
+   0N3AbXBMbf8CG/T7K6EkqtqyTS6TXg8JO2QFVenrZ+dZV3TQ7dMRl/bbR
+   kul+zrpeqU+xr57MEeYxB3h32EgTnf+dujhUztCqpds8zBvkGU6V42se/
+   A==;
+X-CSE-ConnectionGUID: zqveaGftRW+KRVdI0y87Ow==
+X-CSE-MsgGUID: xTD69FyQSu6g7chF6SkdnQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="52020383"
+X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
+   d="scan'208";a="52020383"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 08:02:54 -0700
+X-CSE-ConnectionGUID: lRvf7inWQZi1tpGGkpwiJA==
+X-CSE-MsgGUID: n7eeEJ6hSiWvPOaKwLixag==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
+   d="scan'208";a="166908528"
+Received: from smile.fi.intel.com ([10.237.72.55])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 08:02:45 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uCgID-00000003lNr-0NGr;
+	Wed, 07 May 2025 18:02:41 +0300
+Date: Wed, 7 May 2025 18:02:40 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Andrew Lunn <andrew@lunn.ch>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Peter Rosin <peda@axentia.se>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Wolfram Sang <wsa@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	Steen Hegelund <steen.hegelund@microchip.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v2 06/26] driver core: fw_devlink: Introduce
+ fw_devlink_set_device()
+Message-ID: <aBt2EHYf6j6Ulthb@smile.fi.intel.com>
+References: <20250507071315.394857-1-herve.codina@bootlin.com>
+ <20250507071315.394857-7-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] prctl: allow overriding system THP policy to always
- per process
-To: Andrew Morton <akpm@linux-foundation.org>, david@redhat.com,
- linux-mm@kvack.org
-Cc: hannes@cmpxchg.org, shakeel.butt@linux.dev, riel@surriel.com,
- ziy@nvidia.com, baolin.wang@linux.alibaba.com, lorenzo.stoakes@oracle.com,
- Liam.Howlett@oracle.com, npache@redhat.com, ryan.roberts@arm.com,
- linux-kernel@vger.kernel.org, kernel-team@meta.com
-References: <20250507141132.2773275-1-usamaarif642@gmail.com>
- <20250507141132.2773275-2-usamaarif642@gmail.com>
-Content-Language: en-US
-From: Usama Arif <usamaarif642@gmail.com>
-In-Reply-To: <20250507141132.2773275-2-usamaarif642@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250507071315.394857-7-herve.codina@bootlin.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-
-
-On 07/05/2025 15:00, Usama Arif wrote:
-> Allowing override of global THP policy per process allows workloads
-> that have shown to benefit from hugepages to do so, without regressing
-> workloads that wouldn't benefit. This will allow such types of workloads
-> to be run/stacked on the same machine.
+On Wed, May 07, 2025 at 09:12:48AM +0200, Herve Codina wrote:
+> Setting fwnode->dev is specific to fw_devlink.
 > 
-> It also helps in rolling out hugepages in hyperscaler configurations
-> for workloads that benefit from them, where a single THP policy is likely
-> to be used across the entire fleet, and prctl will help override it.
-> 
-> Signed-off-by: Usama Arif <usamaarif642@gmail.com>
-> ---
->  include/linux/huge_mm.h                          |  3 ++-
->  include/linux/mm_types.h                         |  7 ++-----
->  include/uapi/linux/prctl.h                       |  3 +++
->  kernel/sys.c                                     | 16 ++++++++++++++++
->  tools/include/uapi/linux/prctl.h                 |  3 +++
->  .../perf/trace/beauty/include/uapi/linux/prctl.h |  3 +++
->  6 files changed, 29 insertions(+), 6 deletions(-)
-> 
+> In order to avoid having a direct 'fwnode->dev = dev;' in several
+> place in the kernel, introduce fw_devlink_set_device() helper to perform
+> this operation.
 
+Makes sense, can you also mark that field as __private? So sparse can catch
+the abusers up.
 
-I forgot to include the change for non-anon VMA, which Johannes pointed out (Thanks!)
-
-The patch will require the below fixlet on top of it:
-
-From b719cd28ae78de699c0f801a4283449f6ac767ad Mon Sep 17 00:00:00 2001
-From: Usama Arif <usamaarif642@gmail.com>
-Date: Wed, 7 May 2025 15:58:39 +0100
-Subject: [PATCH] prctl: Allowing override of global THP policy per process
-
-This is a fixlet for doing it for non-anon VMAs as well.
-
-Signed-off-by: Usama Arif <usamaarif642@gmail.com>
----
- mm/huge_memory.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 2780a12b25f0..c4bf8eae420c 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -177,7 +177,8 @@ unsigned long __thp_vma_allowable_orders(struct vm_area_struct *vma,
- 		 */
- 		if (enforce_sysfs &&
- 		    (!hugepage_global_enabled() || (!(vm_flags & VM_HUGEPAGE) &&
--						    !hugepage_global_always())))
-+						    !hugepage_global_always()) ||
-+		     test_bit(MMF_THP_ALWAYS, &vma->vm_mm->flags)))
- 			return 0;
- 
- 		/*
 -- 
-2.47.1
-
-
-
+With Best Regards,
+Andy Shevchenko
 
 
