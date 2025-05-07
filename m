@@ -1,92 +1,167 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1CD529188C;
-	Wed,  7 May 2025 23:07:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33DBB1ACEC8;
+	Wed,  7 May 2025 23:09:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746659235; cv=none; b=VQkhsTKRLM2Y/cnFvahgiGB98nalTI1l99568peAOPp0uhX2vWLNIrPiiVo0cDHg2wZjvtKrRX/3KOJJhgF5AVrsCNVK+ZUiPGcp3F4o5CsozHhzy2arailDBXjEn12WFKqq2/NP+FseU8hL6IpzlEfAEsiyfpiDlC74Oxc52uc=
+	t=1746659359; cv=none; b=gvExzpBVbw4xRTrAKdwR9tx0sK98x9AItAOpCPUGPKMR5Ub6fbET2ToxQuA7jujXdL2GpCgf3saPuQUtUYH0Y8z9ZP5NvWZh77Qk5KybJAYTj0UVmRVK3ldZK62GKEGsKeZY5wOtdcjD5AcnfOuFKJvpkD91OrJgTDZi80fwass=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746659235; c=relaxed/simple;
-	bh=Tj+CpAv5Rlb15mBsouZqKDGarni4Uxcs5ytEL68aR8w=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=abNji3dqezs0sk/UC9vrdBwvSdcppIzRYID80ycqMm5aVGUYK+zanSs3R+MUERuwTjP4npNn0Rl4aFLVj4x15aXL9tQtR5M7FaZ/O2RDdLQEaz2F3R3rECe32/p9zhoqb/bjyaTMOxTEpRT0N93GKzMMqRArAEJf9+cDddlAQT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=teQm3MgY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746659359; c=relaxed/simple;
+	bh=if38SdnC0AJjNobF5sj+Z+diQFRQsDZaQWTmcM3J0z0=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=R36SoJwxghaJNxV9TCRsXK/cFUiD46/d5p4S9YVlDASq3QXM8ifAfW/P0cBaWPmvxtkwCfAhrtue+IVzWTmwXaL0KTy7/W4zmKIAmmcLVwC9uXp0NUYmLWJAhU6R2uUKI4FzxaV2cY4YcK9GXIPC6remPbRPOPH7N5DlCIKgRGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bVUT35wF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="teQm3MgY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 007F1C4CEE2;
-	Wed,  7 May 2025 23:07:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bVUT35wF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4150CC4CEE2;
+	Wed,  7 May 2025 23:09:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746659234;
-	bh=Tj+CpAv5Rlb15mBsouZqKDGarni4Uxcs5ytEL68aR8w=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=teQm3MgY/JIOJmtEzPcr940QQslHKja74ESjbeSSXw2N1lQ2wpNV+KNvY+ZsRY35y
-	 ckTdJoVtTkVnebvVJQAj7dfVo5RSrarAFX1px/KQ/G+V0y+vBSTRT1AewGiQkhmPaQ
-	 9Ez1/qKN28APvlNqNFPHQosGOdAXxTgD/H9j+IcQliIOXyCME8yesdmN5y93BfaDRA
-	 CWEHcKrFWRzLj85HUMxxSQ3lUMcBUUrseNYsQrMDubILNoFSjydlFaZKG92zokp4XJ
-	 +OU2IVV6nQrlyeoCAdkh/oayg5J94HVmjagDeYgc19OFzgSkLIItgzf+euof0aMAUw
-	 zXiG4YkmOt5PQ==
-Date: Wed, 07 May 2025 18:07:12 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=k20201202; t=1746659358;
+	bh=if38SdnC0AJjNobF5sj+Z+diQFRQsDZaQWTmcM3J0z0=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=bVUT35wFQvPLtu0LytwChJj8OCMGL50uKSUkAw/N299dum2gMqiUCpyl5S06wAMwP
+	 LCEdm1qGVJNMvc0xia9kjE1XilBbXfDOpHCsU+MT0fvQXnKV30xtuGljLYyec6KmdU
+	 oULJXb2Q7uBOQcET4vHAELvnYz0czULBYVtQ6q33A3B4HtESvwX2yIvtSGq/aN99sv
+	 nupLajSjMLfm3Xb5VyTkcRwbKAkT+w97QNGWS/Nsk9lDPzNTbaXKMCQbpExRU3KOvb
+	 aFIvTIa68tC4XysVp57S5ddzdoZm1eOBI+/yvxN/Snhy0o+j9u8OrcZTJ8DARIVDKk
+	 8PdOrgh3+9ShA==
+Date: Wed, 7 May 2025 16:09:15 -0700 (PDT)
+From: Stefano Stabellini <sstabellini@kernel.org>
+X-X-Sender: sstabellini@ubuntu-linux-20-04-desktop
+To: John Ernberg <john.ernberg@actia.se>
+cc: Stefano Stabellini <sstabellini@kernel.org>, 
+    Juergen Gross <jgross@suse.com>, 
+    Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>, 
+    Catalin Marinas <catalin.marinas@arm.com>, 
+    Andrew Morton <akpm@linux-foundation.org>, 
+    "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>, 
+    "iommu@lists.linux.dev" <iommu@lists.linux.dev>, 
+    "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+    "imx@lists.linux.dev" <imx@lists.linux.dev>, 
+    Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH 2/2] xen: swiotlb: Implement map_resource callback
+In-Reply-To: <75266eb7-66a4-4477-ae8a-cbd1ebbee8db@actia.se>
+Message-ID: <alpine.DEB.2.22.394.2505071602570.3879245@ubuntu-linux-20-04-desktop>
+References: <20250502114043.1968976-1-john.ernberg@actia.se> <20250502114043.1968976-3-john.ernberg@actia.se> <alpine.DEB.2.22.394.2505021007460.3879245@ubuntu-linux-20-04-desktop> <75266eb7-66a4-4477-ae8a-cbd1ebbee8db@actia.se>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
- Dmitry Baryshkov <lumag@kernel.org>, Rob Clark <robdclark@gmail.com>, 
- devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
- linux-kernel@vger.kernel.org, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
- Sean Paul <sean@poorly.run>, David Airlie <airlied@gmail.com>, 
- Simona Vetter <simona@ffwll.ch>, Maxime Ripard <mripard@kernel.org>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, dri-devel@lists.freedesktop.org, 
- freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
- Thomas Zimmermann <tzimmermann@suse.de>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-In-Reply-To: <20250507215912.2748964-1-robh@kernel.org>
-References: <20250507215912.2748964-1-robh@kernel.org>
-Message-Id: <174665922903.2893840.15913516766743050523.robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: display/msm: hdmi: Fix constraints on
- additional 'port' properties
+Content-Type: text/plain; charset=US-ASCII
 
-
-On Wed, 07 May 2025 16:59:12 -0500, Rob Herring (Arm) wrote:
-> The MSM HDMI port nodes are missing any restrictions on additional
-> properties. The $ref should be to "/properties/port" rather than
-> "/$defs/port-base" as there are not additional properties in the nodes
-> to define.
+On Tue, 6 May 2025, John Ernberg wrote:
+> Hi Stefano,
 > 
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
->  Documentation/devicetree/bindings/display/msm/hdmi.yaml | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> On 5/2/25 7:20 PM, Stefano Stabellini wrote:
+> > +Christoph
+> > 
+> > On Fri, 2 May 2025, John Ernberg wrote:
+> >> Needed by the eDMA v3 DMA engine found in iommu-less SoCs such as iMX8QXP
+> >> to be able to perform DMA operations as a Xen Hardware Domain, which needs
+> >> to be able to do DMA in MMIO space.
 > 
+> Self-note: The above part of the commit message is a disaster and should 
+> read something like.
+> 
+> Needed by SoCs without an iommu (such as the iMX8QXP and it's eDMA v3 
+> engine) that need to be able to perform DMA operations in MMIO space.
+> 
+> >>
+> >> The callback implementation is basically the same as the one for direct
+> >> mapping of resources, except this also takes into account Xen page
+> >> mappings.
+> >>
+> >> There is nothing to do for unmap, just like with direct, so the unmap
+> >> callback is not needed.
+> >>
+> >> Signed-off-by: John Ernberg <john.ernberg@actia.se>
+> >>
+> >> ---
+> >>
+> >> I originally exported dma_direct_map_resource() and used that which
+> >> appeared to work, but it felt like not checking Xen page mappings wasn't
+> >> fully correct and I went with this. But if dma_direct_map_resource() is
+> >> the correct approach here then I can submit that isntead.
+> >> ---
+> >>   drivers/xen/swiotlb-xen.c | 15 +++++++++++++++
+> >>   1 file changed, 15 insertions(+)
+> >>
+> >> diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
+> >> index ef56a2500ed6..0f02fdd9128d 100644
+> >> --- a/drivers/xen/swiotlb-xen.c
+> >> +++ b/drivers/xen/swiotlb-xen.c
+> >> @@ -285,6 +285,20 @@ static void xen_swiotlb_unmap_page(struct device *hwdev, dma_addr_t dev_addr,
+> >>                                           attrs, pool);
+> >>   }
+> >>
+> >> +static dma_addr_t xen_swiotlb_map_resource(struct device *dev, phys_addr_t phys,
+> >> +                                        size_t size, enum dma_data_direction dir,
+> >> +                                        unsigned long attrs)
+> >> +{
+> >> +     dma_addr_t dev_addr = xen_phys_to_dma(dev, phys);
+> > 
+> > Yes, we need the xen_phys_to_dma call here. This is one of the reasons I
+> > don't think we can use dma_direct_map_resource() to implement
+> > map_resource
+> > 
+> > 
+> >> +     BUG_ON(dir == DMA_NONE);
+> >> +
+> >> +     if (!dma_capable(dev, dev_addr, size, false))
+> >> +             return DMA_MAPPING_ERROR;
+> > 
+> > But here you also need to check that phys+size doesn't cross a page
+> > boundary. You need to call range_straddles_page_boundary, like we do at
+> > the beginning of xen_swiotlb_map_page.
+> > 
+> > If it is possible to cross a page boundary, then we need to basically to
+> > do the same thing here as we do in xen_swiotlb_map_page where we check
+> > for:
+> > 
+> >          if (dma_capable(dev, dev_addr, size, true) &&
+> >              !range_straddles_page_boundary(phys, size) &&
+> >                  !xen_arch_need_swiotlb(dev, phys, dev_addr) &&
+> >                  !is_swiotlb_force_bounce(dev))
+> >                  goto done;
+> > 
+> > if all is well, we go with the native path, otherwise we bounce on
+> > swiotlb-xen.
+> > 
+> 
+> I'll preface this with that it's my first deep dive in DMA, so the 
+> following may entirely be me being stupid:
+> 
+> I'm not sure a straddles page boundary path makes sense.
+> 
+> This mapping is not for a RAM backed address. In the eDMA case for the 
+> iMX8QXP the `phys` coming in here is the address of a register.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Ok, this information is important :-)
 
-yamllint warnings/errors:
+I am not certain whether the map_resource interface can only be called
+for MMIO addresses or if it can also be called for RAM-backed addresses
+with a size > PAGE_SIZE. In the latter case, we could run into the issue
+I was describing.
 
-dtschema/dtc warnings/errors:
 
+> I cannot see how a swiotlb bounce would fix anything if you end up
+> straddling a page boundary. At most I can see a WARN_ON with a
+> DMA_MAPPING_ERROR return if such a check would yield true.
+> 
+> Let's say you want to do a DEV_TO_MEM and a check decides you need to 
+> bounce it you'd bounce an RX register address. I cannot see how that DMA 
+> would ever end up doing the expected thing.
+> 
+> The eDMA engine will manage the RX/TX registers for an IP block and move 
+> the data between them and RAM, where the RAM memory is mapped separately 
+> by dma_map_page (and family). And these can be swiotlb bounced via the 
+> map page callback with no problem.
 
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250507215912.2748964-1-robh@kernel.org
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+OK thanks for the explanation. Like I wrote above, if we are guaranteed
+that map_resource cannot be called for RAM-backed addresses or size is
+less than PAGE_SIZE, then your patch is good as-is. If there are no such
+guarantees, then we'll have to think a bit more about it.
