@@ -1,37 +1,50 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85DE572610
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 08:33:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C82672610;
+	Wed,  7 May 2025 08:34:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746606808; cv=none; b=GPwpo0HvRphh3Wx4wnfAw23pt5wUizqX5wW9764+/GfDKLYHzELDpMJhaHlMgnyuZmdcxMLgp7bW/bTHPdEuci1rZr/mzgsPGL3xOtjo+7z5LVLQll885SNqrnBwcmk2CqCFAxXwuOzJ/PmI6NwXELCjmJFYNVpuEK7nZLHkJjY=
+	t=1746606863; cv=none; b=M9Yw217JAnwifJtAMhRJTLQxE0DQayZosffw/GIIdMOFn30QVc6DjqsQFIewe2UpVGezdLuGYjQxu7hZhewXe3tFQKN3OiNK9LrRC6ELpjnp+Rn6rOv1pC/zD8EyrUZIv8kpyfsFGiA2dnhif/dKCMfXwmuornUeS2NhkS7hUvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746606808; c=relaxed/simple;
-	bh=3p8DiI2AwLwSFTYcEk6gXc3gH2jAD8suAVndNuxXnrE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jJWodCgiX9BbHYy89goM/fCZSq7G3pIfMB3ZWXwq93Fy6PKSk9gmKhmX7HR1vQcOIKt2Xx65xjBiYTmaXHcCWGwKEBlp3VNMG1jZiazQfGbC6cQLWgPryIqENjteOJCwSIcgFuwxg6A/XZU+McVS43xeAoQrlYmE8y8KtjTH7V8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=iKDZmBdO; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1746606863; c=relaxed/simple;
+	bh=0FWqR19wfOftK5g1sJOw3dmhqkvDKk62ALOtseN0Tzw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=n//QWhmvvzIRF0FLsJx8zVYqaYA093Z41iQPrJWBAEJ16+QFTQLeTTCQXUIysoan0WeTAkAxbKYUaMzaFBdDip12LVlaC24MRgyWryDlGrQayu/5OmYEs/P4Jn8hS313lgbjrCp1i1aNmhM8aPMyNPkN6V21W/gGEh1+Mp6vFQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=fN2iQhvG; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="iKDZmBdO"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 4AF984321C;
-	Wed,  7 May 2025 08:33:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1746606803;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7YwmEGmhO475by3aRh6mI2nEJY15xlJqyvsiEFrhC6I=;
-	b=iKDZmBdO2gMPE+hKvQyVCpof5isnym71xrdB65D+2bBHpZBksGHh0C1sj48tQF+xS+UXaU
-	+fnrnfdcfluvB2OyAniaozMS2SuQ71xhJqvIwRhQ51BV8dHioZ5Wh3wPaKtqbImdn1L/zg
-	0CGZWZoLDrL3VqRLHk1qLQp5KmPY0vdOKPfv2dgZjHiCoKDYiD7Ro0ahTz2Yppbh+zlfNv
-	i5ZsEDoOl4qHLkUJv2c4FUU/QglBZJjmgSdb7qxUQkLZHBJ7Pz25rN4k2mqvEU8zs9KPV+
-	hTl3pea9pbg/giMpq0iIEmHESMTD+KmyZ0bfcG9RT/Pn3SNI1dOzuCiAaGnwIA==
-Message-ID: <c65c01b0-f407-4479-a6ad-6969c5cab06e@bootlin.com>
-Date: Wed, 7 May 2025 10:33:22 +0200
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="fN2iQhvG"
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5473dDaX032682;
+	Wed, 7 May 2025 10:33:51 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	A6cChK4mVXO0RSZQI0gFGItxCWM0e4VaK27NpIU1GvA=; b=fN2iQhvG8a5fm6y/
+	PUmlxMIL5LsXakclNUJXC7NMVqw0GyKIvoGmFz24j0FmPm9KJf7b6hihMDmiLaX/
+	wCd2kRxVQb5xiGSWnWzum8y9antqrkUSSOI7xlRQEAduJshB7IrLwVftV9XqG30B
+	fLGx6hWYbq2fePmXZwntC5AuVlAsNiIy2GXp0HbX/OY5f+LYGKFxxYgFH2jYbg+m
+	1AoE+GrU4aAUs7YhjuSEYTxyHDiZxXAvTNcT+K/D+iz6bWkekvmDDhwb+HJ55FWs
+	6XYE2e8L9UflALBq/iwm/HQUxRrNgFoJEU5FfVGVzKiMHjUefgHsSomEd/d6zwx6
+	w6LyZg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46dvq45g07-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 07 May 2025 10:33:51 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id A007640053;
+	Wed,  7 May 2025 10:32:40 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2F09CA23DB2;
+	Wed,  7 May 2025 10:31:46 +0200 (CEST)
+Received: from [10.48.87.62] (10.48.87.62) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 7 May
+ 2025 10:31:45 +0200
+Message-ID: <956c6921-35f1-4238-9e8e-7f335f33d2f3@foss.st.com>
+Date: Wed, 7 May 2025 10:31:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,38 +52,71 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RESEND v3] mux: mmio: Add suspend and resume support
-To: Peter Rosin <peda@axentia.se>, Greg KH <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org, gregory.clement@bootlin.com,
- richard.genoud@bootlin.com, u-kumar1@ti.com,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Davis <afd@ti.com>
-References: <20250407-mux-mmio-resume-support-v3-1-cb88abc04db7@bootlin.com>
+Subject: Re: [PATCH v13 0/4] Add STM32MP25 SPI NOR support
+To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon
+	<will@kernel.org>,
+        Gatien Chevallier <gatien.chevallier@foss.st.com>
+CC: <christophe.kerello@foss.st.com>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <stable@vger.kernel.org>
+References: <20250507-upstream_ospi_v6-v13-0-32290b21419a@foss.st.com>
+ <1f7760c6-0fdf-48b0-9c13-85fa5e01cddd@kernel.org>
 Content-Language: en-US
-From: Thomas Richard <thomas.richard@bootlin.com>
-In-Reply-To: <20250407-mux-mmio-resume-support-v3-1-cb88abc04db7@bootlin.com>
-Content-Type: text/plain; charset=UTF-8
+From: Patrice CHOTARD <patrice.chotard@foss.st.com>
+In-Reply-To: <1f7760c6-0fdf-48b0-9c13-85fa5e01cddd@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeeifeelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomhepvfhhohhmrghsucftihgthhgrrhguuceothhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeegteekfeevudduvdduveehgeejuefgieeitdeuvdekgfdvgefhjedtffdufeegheenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrpdhhvghloheplgfkrfggieemvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrngdpmhgrihhlfhhrohhmpehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepledprhgtphhtthhopehpvggurgesrgigvghnthhirgdrshgvpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpt
- hhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepghhrvghgohhrhidrtghlvghmvghnthessghoohhtlhhinhdrtghomhdprhgtphhtthhopehrihgthhgrrhgurdhgvghnohhuugessghoohhtlhhinhdrtghomhdprhgtphhtthhopehuqdhkuhhmrghrudesthhirdgtohhmpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtoheprghfugesthhirdgtohhm
-X-GND-Sasl: thomas.richard@bootlin.com
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-07_03,2025-05-06_01,2025-02-21_01
 
-On 4/7/25 15:06, Thomas Richard wrote:
-> The status of each mux is read during suspend and stored in the private
-> memory of the mux_chip.
-> Then the state is restored during the resume.
+
+
+On 5/7/25 10:28, Krzysztof Kozlowski wrote:
+> On 07/05/2025 09:25, Patrice Chotard wrote:
+>> This series adds SPI NOR support for STM32MP25 SoCs from STMicroelectronics.
+>>
+>> On STM32MP25 SoCs family, an Octo Memory Manager block manages the muxing,
+>> the memory area split, the chip select override and the time constraint
+>> between its 2 Octo SPI children.
+>>
+>> Due to these depedencies, this series adds support for:
+>>   - Octo Memory Manager driver.
+>>   - Octo SPI driver.
+>>   - yaml schema for Octo Memory Manager and Octo SPI drivers.
+>>
+>> The device tree files adds Octo Memory Manager and its 2 associated Octo
+>> SPI chidren in stm32mp251.dtsi and adds SPI NOR support in stm32mp257f-ev1
+>> board.
+>>     
+>> Signed-off-by: Patrice Chotard <patrice.chotard@foss.st.com>
+>>
+>> Changes in v13:
+>> - Make firewall prototypes always exposed.
 > 
-> Reviewed-by: Andrew Davis <afd@ti.com>
-> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+> 
+> I do not see any changes here.
+> 
+> b4 diff suggests this is the same as v11 so I expect the same failures.
+Hi Krzysztof,
 
-Hi Greg,
+In this series there is an additional patch vs previous one : "[PATCH v13 1/4] firewall: Always expose firewall prototype"
 
-I apologize for involving you, but Peter is not responding anymore. I
-pinged him several times, resent the patch but no news.
+Patrice
 
-Could you please review and apply this patch directly?
 
-Best Regards,
-
-Thomas
+> 
+> Best regards,
+> Krzysztof
