@@ -1,100 +1,65 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7FF128C2B5
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 16:49:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DEA419AD5C;
+	Wed,  7 May 2025 16:50:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746636565; cv=none; b=k37YX+tNDjJ4vZbVGyAzDllIBrqZQqyvTOVlDMb8lgROr3vo3Ytei9KGRZ162v1vvo9e2o81Y8v3cTBNGwlprkj0ba7Eq+xQZYUxfRBb9AFvqWLm+lm6bLbev1gaRLY2RUbONGAUuHnP+OXS69LRbli7ovcio7ECBBmNGouqJmQ=
+	t=1746636604; cv=none; b=aUcL2rlyMVJ65drMPGk16lDlt6ftDn10Cx2d1tdXAm8BxPXzusHACXjNK0/pATV7dFRwwzd6xjOSEWQ6wBxc5KRvcQU109WqXZUysYzxFEH5/VqcOK9QFjv/BeXHmsJ8csscLCWsqk/v0DmIaB1nUD2Mjd1vci+hz7CXqLb/gsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746636565; c=relaxed/simple;
-	bh=xapBwpQd3lw7O24kTMMdKUqbDWhVMZlF9fotjLNppJk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fCD7qW+gD7s6XOpo0z6z9XeQXTQT2mKiMAJ6yZg6WmdUir62w+OszphXvnYYi95S5DSPoTSG+GpsFlzvvkCXO/Ol+GZUEEvPlHsEnKFZUocbe29VxSFwykvjpvSwdn5ckuBR83AdCDI2eJfKw/+kIGJX0waK4PxZmaapRsN3A0I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D2ED316F2;
-	Wed,  7 May 2025 09:49:12 -0700 (PDT)
-Received: from [10.1.197.43] (eglon.cambridge.arm.com [10.1.197.43])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6C07A3F58B;
-	Wed,  7 May 2025 09:49:16 -0700 (PDT)
-Message-ID: <4176222a-3583-4a4b-8968-0cabeba6008f@arm.com>
-Date: Wed, 7 May 2025 17:49:16 +0100
+	s=arc-20240116; t=1746636604; c=relaxed/simple;
+	bh=/oXJz7lHNCcO6QSyQPg/+wzooEDY12xe0sDBwqd+x+Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nY8ywMqiO1pLbPeeVvLOouV8pvHMKk78Db2d3Vp768448xzBk7P178ViPmEUaVlBm6dYWdWHT4+Lw+zH7N0R8+gU7UAZxpKB4Cwqd8tVx+akm0jPX24xykTHRuQISSGgVsfMzEtygEcdkAt0A0shR5GwsdT4MppSa+XXGFdBsSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=grt7Qm+h; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="grt7Qm+h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48BB6C4CEE2;
+	Wed,  7 May 2025 16:49:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746636603;
+	bh=/oXJz7lHNCcO6QSyQPg/+wzooEDY12xe0sDBwqd+x+Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=grt7Qm+h+eg2TEauf/o/ARQOsc+004Kbs/Ul5A16zlPE5Vt95Sxbcli0oP3TH8T7S
+	 lq2ATznhVtbaaGLEM0nfkY2eG5XZnzRyj1w0Kp/npfrzAA7wSHztzHKFu8Z36UmfAJ
+	 uUazk9++fHVNk1jqBzwz6PIuBVJlxkpfKZvYtqYF2usQ/Vh4cfbJzKH+dRMWe07+zr
+	 NchqpJGJcKNIzzJ0fSMXAxV62w3Y4yXBzUQq7Pt+GUnepdf7KZvUYiDMmYf3lPt1LS
+	 dvV/moOrRb571H5Ib9LY00uoFopJDeofFXSvFLnMGQzBlzupcz5N17xw8UXuMzF4j7
+	 dgtAqXDlb8BpQ==
+Date: Wed, 7 May 2025 18:49:55 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Matthew Maurer <mmaurer@google.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Timur Tabi <ttabi@nvidia.com>, linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v5 0/4] rust: DebugFS Bindings
+Message-ID: <aBuPM6FJvfSl-xog@polis>
+References: <20250505-debugfs-rust-v5-0-3e93ce7bb76e@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 00/27] x86/resctrl: Move the resctrl filesystem code to
- /fs/resctrl
-To: babu.moger@amd.com, Reinette Chatre <reinette.chatre@intel.com>,
- x86@kernel.org, linux-kernel@vger.kernel.org,
- Dave Martin <dave.martin@arm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
- shameerali.kolothum.thodi@huawei.com,
- D Scott Phillips OS <scott@os.amperecomputing.com>,
- carl@os.amperecomputing.com, lcherian@marvell.com,
- bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
- baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
- Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
- dfustini@baylibre.com, amitsinght@marvell.com,
- David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>,
- Koba Ko <kobak@nvidia.com>, Shanker Donthineni <sdonthineni@nvidia.com>,
- fenghuay@nvidia.com
-References: <20250425173809.5529-1-james.morse@arm.com>
- <76b16ef7-2f37-4c30-97af-1d372b7fb251@amd.com>
- <f8bf0815-4013-4485-9ed0-a5b5ffab9f26@intel.com>
- <c88ebda2-8506-466d-9687-07566b7432cb@amd.com>
-Content-Language: en-GB
-From: James Morse <james.morse@arm.com>
-In-Reply-To: <c88ebda2-8506-466d-9687-07566b7432cb@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250505-debugfs-rust-v5-0-3e93ce7bb76e@google.com>
 
-Hi Babu, Reinette,
+On Mon, May 05, 2025 at 11:51:33PM +0000, Matthew Maurer wrote:
+> Changes in v5:
+> - Made Dir + File wrappers around Entry
+> - All functions return owning handles. To discard without drop, use
+>   `forget`. To keep a handle without drop, use `ManuallyDrop`.
+> - Fixed bugs around `not(CONFIG_DEBUG_FS)`
+> - Removed unnecessary `addr_of!`
+> - Link to v4: https://lore.kernel.org/r/20250502-debugfs-rust-v4-0-788a9c6c2e77@google.com
 
-On 02/05/2025 17:45, Moger, Babu wrote:
-> On 5/2/25 11:30, Reinette Chatre wrote:
->> On 5/2/25 9:04 AM, Moger, Babu wrote:
->>>
->>> I retested the patches on a couple of AMD systems, and everything looks good.
->>>
->>> Tested-by: Babu Moger babu.moger@amd.com
-> 
-> Correction:
-> 
-> Tested-by: Babu Moger <babu.moger@amd.com>
-
-Thanks for re-testing it!
-
-
->> Thank you very much.
->>
->>>
->>> It's very likely that these patches will be merged before my ABMC series [1].
->>>
->>> I'm currently working on v13 of the ABMC series and considering rebasing
->>> it on top of James' v9. That could potentially eliminate one review cycle
->>> during the merge process.
->>>
->>> What are your thoughts on this approach?
->>
->> Thanks for considering this. From my viewpoint this sounds like a good plan.
-> 
-> Welcome.
-> 
->> I do not have insight into James's schedule to support this but from what I
->> can tell this work is close to being ready for inclusion.
-> 
-> Sure. Lets wait for James or Martin's response.
-
-I've got a v9 to post, rebased on top of the cpumask changes. My only question is whether
-to post it with the tail end of patches squashed together - to save Boris having to do it.
-
-
-Thanks,
-
-James
+I will go through v5 latest by beginning of next week, thanks!
