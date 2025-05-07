@@ -1,81 +1,49 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A892325E815
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 12:29:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E8BC182;
+	Wed,  7 May 2025 12:30:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746620992; cv=none; b=STsrAF2R6AK9xuHGL32IgNMAfNeIFcoZI00BCnIYx2xDorJjToxD/ZF/p+lvSwDzL8HIdZt6Gyd9wVhe8tUg7kzRjsixIgCsC0kYw8xvgLgolhxUimVO8G9M/O5bCZnkA5ZfGRx5e0bV4Un7EuaulHoohCi1vq7VvYFpq94Q6Y0=
+	t=1746621052; cv=none; b=R+4CsNH3qE42P8r8XgZJ7sexRUVrBfeMvVMxvYrFS9gEP+RZ2qm7iJb79BUr81OlyfFFVDtIAFgI/tXgVy9koX3z3j4izyTKuZxYMdtRkFJ3jdYqhCejwq4HyaHQVBHomsoSCKb5RQhYIARlD9ujmWYjvoEQHI1ckpOh3GspPd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746620992; c=relaxed/simple;
-	bh=Mqaui1F9/bOT/JMKClMuGVkx2vOY4zGOZ5ph/2yYf6I=;
+	s=arc-20240116; t=1746621052; c=relaxed/simple;
+	bh=Vxx0ACGp24sVEd5SknbWJ5uvARr7Cg9cs0xZD85ZQPI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gHoeTPiHC01phrCJ1rRgSnF8pakaE+vqotTMnnlPYC1X0rHXCCLbYACQoHHbEdMcil9mGhd+hso5TPC0evs3yz+mXVjfQ9Z1Qm//0L74RUZCG2PvZlRMfoCKvy5XB98tPa0d5/GoiscmoChM7xwnVuZOtgAf2FSNScWxPNpkoYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=PEwP1aAD; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=TOlOzuYVew+ue/AuoPgMSMqp+o18ftxZ+1t5LH//17CJCk0jQNMEAzbrauAexxNpEHp5cg9UYHpKHqMT87kL4cdjTN4te7XlxuUcZrM6SIZCdnv9B02HlBQSNrXjdXwO2vgv7J6OFy6Cli9ztDOwvFeB6wJk+tzssVA3ioEiJcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=Y8MMpzSD; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="PEwP1aAD"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5fbfa0a7d2cso590754a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 05:29:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1746620989; x=1747225789; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZW0x6+aPcBTGf4RTVQ8qhVtJhNXiKy2eXwn1Y4GghS4=;
-        b=PEwP1aADFuIaRTSntQhykyjqBYcV858AXTJdBoF0vhOJ2NnxgFwT9S8QzO6/8u3TOX
-         YXD4/bPwrqnTmZFsKlA4nGKofy/QJj+cfTLQw1hh07Z5sRfHM9GQJ8dB2iQWcv6i2sBT
-         W8oHd1QIsuQLaDNOIwpDO23SjAVdeUkshwbyrFQQtSpmpwKyP9yW87HHOgfyxnPDRyYq
-         j/nMHNJEUi2sVU/dP35gqIDKdsfWlFqWzCL/z9PLr8f1IcYkwoZTfJ2zatcIA3DU9S93
-         ySS9oacZGkqQ8a3yXGmVdRyv9rOHoZLziVQEbEVr8eeeM7XdJ+iv3Uy3OFJSXJ8ZpqGO
-         yqBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746620989; x=1747225789;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZW0x6+aPcBTGf4RTVQ8qhVtJhNXiKy2eXwn1Y4GghS4=;
-        b=WSNHrUy8UQ0IYSeKri4+AXFVPW5DXx9jnPcIbvbfVIwFpAoJ+OdZ/VttgBN7hKNdLn
-         NRJhfqx5C7RoDc0tb1egMpuJNuIo0cK8/gDGJjSVqElyg4K/vJ+sryMNQeHD8CvS0bId
-         dBcHR1sgmJLpBcsI2bmQkiOZMvBnS70oZyS3m8lYzO86pCpryAqjlsSpMDhrM3IhqudG
-         jyoiM5UvTpTO4T9+w5BQupxBfwmIrL3APolrcJ8aLq7inNYF6oeyp0dOc8B9hf/xB6LB
-         wbglqwOAqvjU1+lWX4XIy/BE7AznRIAEUDgSlFM3X6ECWZXqw27blD3sXyv69YLP5XVn
-         0BmA==
-X-Forwarded-Encrypted: i=1; AJvYcCVo8/ZulfLZl6kP8MTVYa3y5luj4uuEO+9SS8IehPX+7+5r7doWFpAav1QZnGdVXTGU9onaYeWlPjeKcws=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQvUKWq5dWhYfxt6MuvPeuZ95Qd4IAIBHQcKtC0AoBIMBhDTEx
-	3dpc5HMP2eMcTjWsASMgI9zlxqMVB+365zw9wTRiQi8KvhKn3kznb1TXDS63EU4=
-X-Gm-Gg: ASbGnctq2Vhgo/y1QWs3+/1hHSREq4yKUu4InQ+v8GjehJ6kA9fSVbe3itXQUXAm+gp
-	PwPZ2b/qmQt2vyyNqglflkaVEt9OjVtw0pIEObjna5x30ZIzPU8/9SRGtaqcvUvToBIJ2lsM04r
-	rdBZmSv9tJI39dWOECoGlMrS3e/jWKi82umcHOSSyTYGNge/U9NHXK5bQU+99CJa+tU8orOnVon
-	uwBIdRqQX+sr6tqH5MzUN1JSdsNP6O6gDEqPHqUMHVT6Ps+dy67YfdGPugO1VhPg+MaWdC+lhLh
-	jKBwV69UCOo6Dmw8VBOMvVxodM1+fUhuynFoLzrn
-X-Google-Smtp-Source: AGHT+IFcaF2HbosKXMSG7ssx4/Idj9ECcUf+SjKCY6flcCBO1BJAIS54Xv8b1MSnCIFm4q1ZvQeSUQ==
-X-Received: by 2002:a05:6402:2804:b0:5fa:aa28:b10 with SMTP id 4fb4d7f45d1cf-5fbe9dcd645mr2810548a12.13.1746620988876;
-        Wed, 07 May 2025 05:29:48 -0700 (PDT)
-Received: from pathway.suse.cz ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fa777c5c3asm9429175a12.21.2025.05.07.05.29.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 05:29:48 -0700 (PDT)
-Date: Wed, 7 May 2025 14:29:46 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: Bhupesh <bhupesh@igalia.com>
-Cc: akpm@linux-foundation.org, kernel-dev@igalia.com,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com,
-	laoar.shao@gmail.com, rostedt@goodmis.org,
-	mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com,
-	alexei.starovoitov@gmail.com, andrii.nakryiko@gmail.com,
-	mirq-linux@rere.qmqm.pl, peterz@infradead.org, willy@infradead.org,
-	david@redhat.com, viro@zeniv.linux.org.uk, keescook@chromium.org,
-	ebiederm@xmission.com, brauner@kernel.org, jack@suse.cz,
-	mingo@redhat.com, juri.lelli@redhat.com, bsegall@google.com,
-	mgorman@suse.de, vschneid@redhat.com
-Subject: Re: [PATCH v3 2/3] treewide: Switch memcpy() users of 'task->comm'
- to a more safer implementation
-Message-ID: <aBtSK5dFmtFXUaOE@pathway.suse.cz>
-References: <20250507110444.963779-1-bhupesh@igalia.com>
- <20250507110444.963779-3-bhupesh@igalia.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Y8MMpzSD"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=cPP8m0+ZommNldXRYZax/cEqIRhtEpGo2CITzC/JUH0=; b=Y8MMpzSDzRMbLUu84SadJnxduB
+	ePjoEcOS7thXdPHJO5F65rZWdmdbWL2Y0gNkcRXc7o4LOSANkwZ0zevQJ3ih9RSpDYIOJoZfiNJzo
+	Z4M66AORgEhpb3VAxghF4mOgk+oXGSPMrhxwGblYTLg3242EOaupHg/keO/wM686Swn8=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uCdv8-00BsVe-50; Wed, 07 May 2025 14:30:42 +0200
+Date: Wed, 7 May 2025 14:30:42 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Heiner Kallweit <hkallweit1@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	Sander Vanheule <sander@svanheule.net>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] regmap: remove MDIO support
+Message-ID: <f4221c9a-751a-4ab2-8544-7d90b2f320fb@lunn.ch>
+References: <c5452c26-f947-4b0c-928d-13ba8d133a43@gmail.com>
+ <aBquZCvu4v1yoVWD@finisterre.sirena.org.uk>
+ <59109ac3-808d-4d65-baf6-40199124db3b@gmail.com>
+ <aBr70GkoQEpe0sOt@finisterre.sirena.org.uk>
+ <a975df3f-45a7-426d-8e29-f3b3e2f3f9e7@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -84,72 +52,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250507110444.963779-3-bhupesh@igalia.com>
+In-Reply-To: <a975df3f-45a7-426d-8e29-f3b3e2f3f9e7@gmail.com>
 
-On Wed 2025-05-07 16:34:43, Bhupesh wrote:
-> As Linus mentioned in [1], currently we have several memcpy() use-cases
-> which use 'current->comm' to copy the task name over to local copies.
-> For an example:
-> 
->  ...
->  char comm[TASK_COMM_LEN];
->  memcpy(comm, current->comm, TASK_COMM_LEN);
->  ...
-> 
-> These should be modified so that we can later implement approaches
-> to handle the task->comm's 16-byte length limitation (TASK_COMM_LEN)
-> is a more modular way (follow-up patches do the same):
-> 
->  ...
->  char comm[TASK_COMM_LEN];
->  memcpy(comm, current->comm, TASK_COMM_LEN);
->  comm[TASK_COMM_LEN - 1] = 0;
->  ...
-> 
-> The relevant 'memcpy()' users were identified using the following search
-> pattern:
->  $ git grep 'memcpy.*->comm\>'
-> 
-> [1]. https://lore.kernel.org/all/CAHk-=wjAmmHUg6vho1KjzQi2=psR30+CogFd4aXrThr2gsiS4g@mail.gmail.com/
-> 
-> --- a/include/linux/coredump.h
-> +++ b/include/linux/coredump.h
-> @@ -53,7 +53,8 @@ extern void do_coredump(const kernel_siginfo_t *siginfo);
->  	do {	\
->  		char comm[TASK_COMM_LEN];	\
->  		/* This will always be NUL terminated. */ \
-> -		memcpy(comm, current->comm, sizeof(comm)); \
-> +		memcpy(comm, current->comm, TASK_COMM_LEN); \
-> +		comm[TASK_COMM_LEN] = '\0'; \
+On Wed, May 07, 2025 at 08:49:15AM +0200, Heiner Kallweit wrote:
+> On 07.05.2025 08:21, Mark Brown wrote:
+> > On Wed, May 07, 2025 at 08:09:27AM +0200, Heiner Kallweit wrote:
+> >> On 07.05.2025 02:50, Mark Brown wrote:
+> >>> On Tue, May 06, 2025 at 10:06:00PM +0200, Heiner Kallweit wrote:
+> > 
+> >>>> MDIO regmap support was added with 1f89d2fe1607 as only patch from a
+> >>>> series. The rest of the series wasn't applied. Therefore MDIO regmap
+> >>>> has never had a user.
+> > 
+> >>> Is it causing trouble, or is this just a cleanup?
+> > 
+> >> It's merely a cleanup. The only thing that otherwise would need
+> > 
+> > If it's not getting in the way I'd rather leave it there in case someone
+> > wants it, that way I don't need to get CCed into some other series
+> > again.
+> > 
+> Understood. On the other hand is has been sitting idle for 4 yrs now.
 
-I would expect that we replace this with a helper function/macro
-which would do the right thing.
+It is something that a PCS driver could use. They are sometimes memory
+mapped rather than being on an MDIO bus. Using a regmap could hide
+that difference.
 
-Why is get_task_comm() not used here, please?
-
->  		printk_ratelimited(Level "coredump: %d(%*pE): " Format "\n",	\
-
-Also the name seems to be used for printing a debug information.
-I would expect that we could use the bigger buffer here and print
-the "full" name. Is this planed, please?
-
->  			task_tgid_vnr(current), (int)strlen(comm), comm, ##__VA_ARGS__);	\
->  	} while (0)	\
-> diff --git a/include/trace/events/block.h b/include/trace/events/block.h
-> index bd0ea07338eb..94a941ac2034 100644
-> --- a/include/trace/events/block.h
-> +++ b/include/trace/events/block.h
-> @@ -214,6 +214,7 @@ DECLARE_EVENT_CLASS(block_rq,
->  		blk_fill_rwbs(__entry->rwbs, rq->cmd_flags);
->  		__get_str(cmd)[0] = '\0';
->  		memcpy(__entry->comm, current->comm, TASK_COMM_LEN);
-> +		__entry->comm[TASK_COMM_LEN - 1] = '\0';
-
-Same for all other callers.
-
-That said, I am not sure if the larger buffer is save in all situations.
-
->  	),
-
-Best Regards,
-Petr
+     Andrew
