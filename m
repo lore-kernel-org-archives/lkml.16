@@ -1,160 +1,137 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 610D8288C1F;
-	Wed,  7 May 2025 16:31:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D19CE28B7CD;
+	Wed,  7 May 2025 16:31:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746635479; cv=none; b=A3wqrSpqwr/br7ZEi34lmR8uOmInMQrEstPLVfvX5dLQBodmM35Hp8pBQUkeoLPI95T7u184ac1Am8nJZvH7mdzb+HM1Xcd8At3HLLgX6JVvm/vTBVUJelCX2saOVNNuebZsZzNuldZ/YjUU+POSK/7uLVNm6d84m5dmMdWCgGg=
+	t=1746635486; cv=none; b=rcf0YOb2waemIdIHHYo1VHetF2LLmKldMTVq0dvLPfD6IJf2y4mgDYEK6k6r4xE3iqfmFvbm7F2G0FEK7SaGxV2ygXqLPUl3JII/EhYRUSTfSIRWeXkTd+aiQat+8qltdxL1wk4cyEJ5NksjWqM99+dNSbJfdENrshWiRO+m648=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746635479; c=relaxed/simple;
-	bh=HabOnCQBLnpv5Yf+g3zdMMzLgZaM+8vEkzGLQ8QWZjg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QeXzC4bBtpfjxzJex+cj9OJadUznY0mCpoqifhpBxCMtIjunihIa9GYEYOL2lDwYjTKJmMU9LUP1H0zBM/MqAEGPT1mfkcf4RKQVV0yYJgfaizSIU7c7/OkKnRlXIBzFVtJW/fMsZz324+2DQnMK+2zXqXPfPTDpU3m0Din7owM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8583316F2;
-	Wed,  7 May 2025 09:31:06 -0700 (PDT)
-Received: from [192.168.20.57] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 872113F58B;
-	Wed,  7 May 2025 09:31:14 -0700 (PDT)
-Message-ID: <ad04d07b-d610-4355-bd47-1d2fb49711f3@arm.com>
-Date: Wed, 7 May 2025 11:31:12 -0500
+	s=arc-20240116; t=1746635486; c=relaxed/simple;
+	bh=TlSIndUGwwBydlnSwSdtYNA0hIlK9V8Mv94OepnzT4E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ih/Olz5B749c9yHLdPfcEbUR/kPTkIDtqIFNX2qEc9hALMB6xLw4IdihC1PJfRz0pBfH3KDlvh/vfANrN88ElF63Mgnz2EOkROUDAZ+LwwwN+IakhyZxQ29NkXQbpAokTXP9mM545B9+YLFB8AohenBpKZ9oVmmfSC45d/3C6ko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lpi0Hlbk; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lpi0Hlbk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0C5EC4CEE2;
+	Wed,  7 May 2025 16:31:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746635486;
+	bh=TlSIndUGwwBydlnSwSdtYNA0hIlK9V8Mv94OepnzT4E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Lpi0HlbkI5FAe47DHdgMIifQpEKjewdjKr16jROVTBsCh93c3pYDTq2aHielItXXy
+	 FlwPPfNAd3yqmd6cho17HyeJJ7e3KM0B+IJzsIBI9O51Fp4/9PVTJBnWmanPr4XKb9
+	 Owjh63RGAX12S2tDHmbxt2HJPYL/lYP5xkpPk5zhcJOzbaqeFHtwaJ6TX8RseDHpJs
+	 btw0C5U0ZT27sEVSDMw1Bp7Xuj7F6zOHgGE67ZYxTkYvwzdzFC43V7ot99KDpILxs1
+	 Uy1f9PZI4fLOOV1sQ4KXhu9nbvqVYNPExGZhceTU/2nZuJEcx7bgq4QJtXkTDgEEvL
+	 IhneeKJszWYIA==
+Date: Wed, 7 May 2025 18:31:23 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Joel Fernandes <joelagnelf@nvidia.com>
+Cc: Zqiang <qiang.zhang1211@gmail.com>, paulmck@kernel.org,
+	neeraj.upadhyay@kernel.org, joel@joelfernandes.org,
+	urezki@gmail.com, boqun.feng@gmail.com, rcu@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] rcu/nocb: Add Safe checks for access offloaded rdp
+Message-ID: <aBuK29q6nuhTgHIq@localhost.localdomain>
+References: <20250507112605.20910-1-qiang.zhang1211@gmail.com>
+ <20250507112605.20910-2-qiang.zhang1211@gmail.com>
+ <b242ab38-c488-450c-9735-11e1b666106c@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ACPI/PPTT: fix off-by-one error
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: "Heyne, Maximilian" <mheyne@amazon.de>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>,
- Len Brown <lenb@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>,
- Ard Biesheuvel <ardb@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20250506-draco-taped-15f475cd@mheyne-amazon>
- <214c2a2d-e0ea-4ec6-9925-05e39319e813@arm.com>
- <CAJZ5v0jvWXDQQ++4wmWJ+i=jds+MZ68bRB9+26WM4tAPHFxALw@mail.gmail.com>
- <1911d3b6-f328-40a6-aa03-cde3d79554de@arm.com>
- <CAJZ5v0ii9HLfqfgcp=1qRRX6M1yThf7ZPNkSLVc5GGFhv=N-Lg@mail.gmail.com>
-Content-Language: en-US
-From: Jeremy Linton <jeremy.linton@arm.com>
-In-Reply-To: <CAJZ5v0ii9HLfqfgcp=1qRRX6M1yThf7ZPNkSLVc5GGFhv=N-Lg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <b242ab38-c488-450c-9735-11e1b666106c@nvidia.com>
 
-On 5/7/25 11:12 AM, Rafael J. Wysocki wrote:
-> On Wed, May 7, 2025 at 5:51 PM Jeremy Linton <jeremy.linton@arm.com> wrote:
->>
->> On 5/7/25 10:42 AM, Rafael J. Wysocki wrote:
->>> On Wed, May 7, 2025 at 5:25 PM Jeremy Linton <jeremy.linton@arm.com> wrote:
->>>>
->>>> Hi,
->>>>
->>>> On 5/6/25 8:13 AM, Heyne, Maximilian wrote:
->>>>> Commit 7ab4f0e37a0f ("ACPI PPTT: Fix coding mistakes in a couple of
->>>>> sizeof() calls") corrects the processer entry size but unmasked a longer
->>>>> standing bug where the last entry in the structure can get skipped due
->>>>> to an off-by-one mistake if the last entry ends exactly at the end of
->>>>> the ACPI subtable.
->>>>>
->>>>> The error manifests for instance on EC2 Graviton Metal instances with
->>>>>
->>>>>      ACPI PPTT: PPTT table found, but unable to locate core 63 (63)
->>>>>      [...]
->>>>>      ACPI: SPE must be homogeneous
->>>>>
->>>>> Fixes: 2bd00bcd73e5 ("ACPI/PPTT: Add Processor Properties Topology Table parsing")
->>>>> Cc: stable@vger.kernel.org
->>>>> Signed-off-by: Maximilian Heyne <mheyne@amazon.de>
->>>>> ---
->>>>>     drivers/acpi/pptt.c | 4 ++--
->>>>>     1 file changed, 2 insertions(+), 2 deletions(-)
->>>>>
->>>>> diff --git a/drivers/acpi/pptt.c b/drivers/acpi/pptt.c
->>>>> index f73ce6e13065d..4364da90902e5 100644
->>>>> --- a/drivers/acpi/pptt.c
->>>>> +++ b/drivers/acpi/pptt.c
->>>>> @@ -231,7 +231,7 @@ static int acpi_pptt_leaf_node(struct acpi_table_header *table_hdr,
->>>>>                              sizeof(struct acpi_table_pptt));
->>>>>         proc_sz = sizeof(struct acpi_pptt_processor);
->>>>
->>>> This isn't really right, it should be struct acpi_subtable_header, then
->>>> once the header is safe, pull the length from it.
->>>>
->>>> But then, really if we are trying to fix the original bug that the table
->>>> could be shorter than the data in it suggests, the struct
->>>> acpi_pptt_processor length plus its resources needs to be checked once
->>>> the subtype is known to be a processor node.
->>>>
->>>> Otherwise the original sizeof * change isn't really fixing anything.
->>>
->>> Sorry, what sense did it make to do
->>>
->>> proc_sz = sizeof(struct acpi_pptt_processor *);
->>>
->>> here?  As much as proc_sz = 0 I suppose?
->>
->> No, I agree, I think the original checks were simplified along the way
->> to that. It wasn't 'right' either.
->>
->> The problem is that there are three subtypes of which processor is only
->> one, and that struct acpi_pptt_processor doesn't necessarily reflect the
->> actual size of the processor structure in the table because it has
->> optional private resources tagged onto the end.
+Le Wed, May 07, 2025 at 12:06:29PM -0400, Joel Fernandes a �crit :
 > 
-> Right.
 > 
->> So if the bug being fixed is that the length check is validating that
->> the table length is less than the data in the table, that's still a
->> problem because its only validating the processor node without resources.
+> On 5/7/2025 7:26 AM, Zqiang wrote:
+> > For built with CONFIG_PROVE_RCU=y and CONFIG_PREEMPT_RT=y kernels,
+> > Disable BH does not change the SOFTIRQ corresponding bits in
+> > preempt_count(), but change current->softirq_disable_cnt, this
+> > resulted in the following splat:
+> > 
+> > WARNING: suspicious RCU usage
+> > kernel/rcu/tree_plugin.h:36 Unsafe read of RCU_NOCB offloaded state!
+> > stack backtrace:
+> > CPU: 0 UID: 0 PID: 22 Comm: rcuc/0
+> > Call Trace:
+> > [    0.407907]  <TASK>
+> > [    0.407910]  dump_stack_lvl+0xbb/0xd0
+> > [    0.407917]  dump_stack+0x14/0x20
+> > [    0.407920]  lockdep_rcu_suspicious+0x133/0x210
+> > [    0.407932]  rcu_rdp_is_offloaded+0x1c3/0x270
+> > [    0.407939]  rcu_core+0x471/0x900
+> > [    0.407942]  ? lockdep_hardirqs_on+0xd5/0x160
+> > [    0.407954]  rcu_cpu_kthread+0x25f/0x870
+> > [    0.407959]  ? __pfx_rcu_cpu_kthread+0x10/0x10
+> > [    0.407966]  smpboot_thread_fn+0x34c/0xa50
+> > [    0.407970]  ? trace_preempt_on+0x54/0x120
+> > [    0.407977]  ? __pfx_smpboot_thread_fn+0x10/0x10
+> > [    0.407982]  kthread+0x40e/0x840
+> > [    0.407990]  ? __pfx_kthread+0x10/0x10
+> > [    0.407994]  ? rt_spin_unlock+0x4e/0xb0
+> > [    0.407997]  ? rt_spin_unlock+0x4e/0xb0
+> > [    0.408000]  ? __pfx_kthread+0x10/0x10
+> > [    0.408006]  ? __pfx_kthread+0x10/0x10
+> > [    0.408011]  ret_from_fork+0x40/0x70
+> > [    0.408013]  ? __pfx_kthread+0x10/0x10
+> > [    0.408018]  ret_from_fork_asm+0x1a/0x30
+> > [    0.408042]  </TASK>
+> > 
+> > Currently, triggering an rdp offloaded state change need the
+> > corresponding rdp's CPU goes offline, and at this time the rcuc
+> > kthreads has already in parking state. this means the corresponding
+> > rcuc kthreads can safely read offloaded state of rdp while it's
+> > corresponding cpu is online.
+> > 
+> > This commit therefore add softirq_count() check for
+> > Preempt-RT kernels.
+> > 
+> > Suggested-by: Joel Fernandes <joelagnelf@nvidia.com>
+> > Signed-off-by: Zqiang <qiang.zhang1211@gmail.com>
+> > ---
+> >  kernel/rcu/tree_plugin.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+> > index 003e549f6514..a91b2322a0cd 100644
+> > --- a/kernel/rcu/tree_plugin.h
+> > +++ b/kernel/rcu/tree_plugin.h
+> > @@ -29,7 +29,7 @@ static bool rcu_rdp_is_offloaded(struct rcu_data *rdp)
+> >  		  (IS_ENABLED(CONFIG_HOTPLUG_CPU) && lockdep_is_cpus_held()) ||
+> >  		  lockdep_is_held(&rdp->nocb_lock) ||
+> >  		  lockdep_is_held(&rcu_state.nocb_mutex) ||
+> > -		  (!(IS_ENABLED(CONFIG_PREEMPT_COUNT) && preemptible()) &&
+> > +		  ((!(IS_ENABLED(CONFIG_PREEMPT_COUNT) && preemptible()) || softirq_count()) &&
+> >  		   rdp == this_cpu_ptr(&rcu_data)) ||
+> This looks good to me. Frederic told me he'll further review and give final
+> green signal. Then I'll pull this particular one.
 > 
-> Admittedly, it is not my code, but I understand this check as a
-> termination condition for the loop: If there's not enough space in the
-> table to hold a thing that I'm looking for, I may as well bail out.
+> One thing I was wondering -- it would be really nice if preemptible() itself
+> checked for softirq_count() by default. Or adding something like a
+> really_preemptible() which checks for both CONFIG_PREEMPT_COUNT and
+> softirq_count() along with preemptible().  I feel like this always comes back to
+> bite us in different ways, and not knowing atomicity complicates various code paths.
 > 
->> AKA the return is still potentially returning a pointer to a structure
->> which may not be entirely contained in the table.
-> 
-> Right, but this check should be made anyway before comparing
-> cpu_node->parent to node_entry, when it is known to be a CPU entry
-> because otherwise why bother.
+> Maybe a summer holidays project? ;)
 
-Right, but then there is a clarity because really its walking the 
-table+subtypes looking for the cpu node. Exiting early because its not 
-big enough for a cpu node makes sense but you still need the cpu node 
-check to avoid a variation on the original bug.
+I thought about that too but I think this is semantically incorrect.
+In PREEMPT_RT, softirqs are actually preemptible.
 
-
+Thanks.
 
 > 
-> Roughly something like this:
+>  - Joel
 > 
-> proc_sz = sizeof(struct acpi_pptt_processor);
-> 
-> while ((unsigned long)entry + entry->length <= table_end) {
 
-Here your reading the entry, without knowing its long enough. For the 
-leaf check just using struct acpi_pptt_processor is fine, but for the 
-acpi_find_processor_node():
-
-proc_sz = sizeof(struct acpi_subtable_type);
-
-while ((unsigned long)entry + proc_sz <= table_end) {
-  if (entry->type == ACPI_PPTT_TYPE_PROCESSOR &&
-  entry->length == sizeof(struct acpi_pptt_processor) +
-	entry->number_of_priv_resources * sizeof(u32) &&
-  entry + entry->length <= table_end &&
-  acpi_pptt_leaf_node(...))
-	return (...)entry;
-
-
-Although at this point the while loops entry + proc_sz could just be < 
-table_end under the assumption that entry->length will be > 0 but 
-whichever makes more sense.
-
-
-
+-- 
+Frederic Weisbecker
+SUSE Labs
