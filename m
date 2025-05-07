@@ -1,252 +1,101 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3149A13C82E;
-	Wed,  7 May 2025 08:44:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C7F4A31
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 08:46:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746607486; cv=none; b=fymxELGCfu7uHu6wieO346pmGAwypqFx/S6J/hP8oph4fddrlzYd8gEP/9AtPutiQ2RvEyOa0sbuWDeQzlr4+QsLzJkU2ssH/JFUy/pUeATOO74592Ey1cKwS8R6Kt6fZv/SFSBG6IgaS5aci0BZt4/dwJJ42ud8FvVUpNlbC10=
+	t=1746607562; cv=none; b=U7xw8oI4EEyuqLqRbUDpSjVwRkuKYkSPRTEmau4sRJz6praEkFAABmE3KIpkrbndzhdvYT4EzXOHa9XbtkXNb6mUVppEES6yjA84TmzuumSqiilex5W5mw7AW/3bJmtml4i0Mprb+IImUXyCv77HKv8w2UqmH9UJE+O1+xz/BOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746607486; c=relaxed/simple;
-	bh=iLPeWQJKnKT3E7jvJ1Lx4bS19Z6med6/ZvzdD94ZngQ=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=fi9JpwcMYSYo1MUS2FF+Dpx5qVH2YVFcXeFomkyEGjPxJ2EpmAI+gCS92iIhV25X3qKhQMxfngc472PXRViDlJfoKtXlwb/Ed0yrbltaqBENxrLePVUILX/Z2yRiROEapGDIkBFJJJk5+lZdYRKyotk09fHRRO0m/18xlNl5IgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=iQIYEICk; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1746607562; c=relaxed/simple;
+	bh=+QPr7RaUjoHLOEF4Gepw0QlxQEmy5lYmdLlOUghg5E4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XX9Nr9D9lbv7qHblekIySz4G/Ha9METMpMr6gB0MiEaxHrn+9J7vXUO6jg7iYADDkjh9HwL4m0nDTTFoJYGaR9WeBWzSBnrW9RfySZAPPPwqopnxSNwYt3s2EHt6yBHFpHO3HtS9LUtJwVOVJnEK6LYlIulxFGHmAzauO1YA39Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YYswT0RH; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xTZkwOGx; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="iQIYEICk"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5475Ij2f010427;
-	Wed, 7 May 2025 08:44:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=pp1; bh=FO0fjrYVKp8xGIN/2Gqnbgr69KrW
-	HFR/beTQuzDyhBY=; b=iQIYEICk59Wutt7kEO9PpERcRMlZOculkpuYYN49Wq1/
-	dZDDRMUyuACsZ5Op+2591XF6yLTzAwPFLkEiB7EWrNCf+VxHoRAf+AYBwwDrlGyj
-	HlYSzEnwYi+ymNTizgfUETIAX4bzSaMVA2OCiX770k+emtT63JZuGw/5otFoy+I4
-	IVEdr7CdkbiS6yaQXbny5Um0/bPe+LlQN3d0YbYerNlnVt9UGFslqgrb6iQZicTw
-	fe3YSO/kTkAo8uaM/+6OhKfx8c2AXBojUJTLZrtasQzh+/rQAWRL5es25XLHwlwm
-	UzlIS2MUQUYF7p1dP+DoKDToI4YCGgl29WMIjvaaeg==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46fgbjdm2k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 07 May 2025 08:44:40 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 5478QTfl026578;
-	Wed, 7 May 2025 08:44:40 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46fgbjdm2f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 07 May 2025 08:44:40 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5476WFr8013770;
-	Wed, 7 May 2025 08:44:39 GMT
-Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 46e062fehx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 07 May 2025 08:44:39 +0000
-Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
-	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5478iccG23593280
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 7 May 2025 08:44:38 GMT
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5DD6F58055;
-	Wed,  7 May 2025 08:44:38 +0000 (GMT)
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4DC815804B;
-	Wed,  7 May 2025 08:44:36 +0000 (GMT)
-Received: from [9.204.204.179] (unknown [9.204.204.179])
-	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  7 May 2025 08:44:35 +0000 (GMT)
-Message-ID: <75b94ef2-752b-4018-9b2a-148ecda5e8f4@linux.ibm.com>
-Date: Wed, 7 May 2025 14:14:34 +0530
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YYswT0RH";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xTZkwOGx"
+Date: Wed, 7 May 2025 10:45:57 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1746607558;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QUvmZJnbkehSlXGem4uoy4mmmQt0h01eJ+sDuhrRNf4=;
+	b=YYswT0RHJIdQ7YeomY30lG3e84nfFHaIJMhS5a3ElZVQUUysxTsGKdpzIty9TY71zAjbA+
+	lOIDksWxaIFCgcqBaHuDVwDgxDdWpllPOaTC4VJWuxq9I6wrW6TB1ut9Gzo83YbEkAKGGX
+	h0/nVIMubh0i2UQFltWEeXxjdhSuZrb7MqB8WPyLCutSmatepZT47swrc/PapG1eiBs1dm
+	HN+2UokOYWs5uMpxONxeEetoXlRJG/5KPs1Mz+keoZyXfYcnBUf18K4rXT+kIeHsOE9RLn
+	HOFDmTrIJe1kIcWLnPF2xteLnEcfVn0T4LserghnVvYoNeSueqd0ERIIF/qhsA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1746607558;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QUvmZJnbkehSlXGem4uoy4mmmQt0h01eJ+sDuhrRNf4=;
+	b=xTZkwOGxINvS0jib1v44fV6UGfrIsoW1PqZ94cQb2A/XOGtdpclg7YwDNnN7P9LAYHtcMF
+	wVTib68zvQku8XCQ==
+From: "Ahmed S. Darwish" <darwi@linutronix.de>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	John Ogness <john.ogness@linutronix.de>, x86@kernel.org,
+	x86-cpuid@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 00/26] x86: Introduce centralized CPUID model
+Message-ID: <aBsdxY-OLw_bSuTC@lx-t490>
+References: <20250506050437.10264-1-darwi@linutronix.de>
+ <aBnSgu_JyEi8fvog@gmail.com>
+ <aBsbTiBuWmUC3QaP@lx-t490>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-GB
-To: LKML <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-btrfs@vger.kernel.org, riteshh@linux.ibm.com,
-        Qu Wenruo <quwenruo.btrfs@gmx.com>, disgoel@linux.vnet.ibm.com
-From: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-Subject: [next-20250506][btrfs] Kernel OOPS while btrfs/001 TC
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: NmLre71nuBKqpkRRyNXeHHYzCJKbKSmm
-X-Proofpoint-GUID: Pt44Bp16xx9yccZZJROR44K9cdhvcQyb
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA3MDA3OSBTYWx0ZWRfX81a4ZT0S0PSv Y4t5UQCBOS8r2qqMKE8Qs1NHtmIh9wDvryUx+jH5qh/cLrUZVyzsaIilvUNcgpqB4wthqQmFbpO Qri+cJ8rvHbR24Tbl//90Ta/6OJs7/JStVhKY5D9FDT4/cIe76OVkyyVHWFTpybHXG3/JVVlytp
- vkjWT/gZItBIWXlTrYtS9+/EOO0dea6aw5hXhf/mDJ9fZjfoY4TOOuq4RpS4tH2l+S6prejTn3k thAsGFW6sElBZeyGzJpn3WcXB50FCTG7Z6F/qSMj+6NnyxXG+jnNYzVrs1ZiuUzmKnIasHP3fQP GFoXiUrzA6G/mq/+HJs3E+ap0MvestszpHmmHlShxKI0sy7hTM/AM5/TkaBAWorwgxpVhmXJ5mc
- itrdAxMFGIPbDWTf2YIRpyyntLq6SWZegrJHxsyKRDSgFEDlR9xJl9wG3iZu2e39dXXX3xF9
-X-Authority-Analysis: v=2.4 cv=FJcbx/os c=1 sm=1 tr=0 ts=681b1d78 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=UIzWbI13G1sJYqkSAR8A:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-07_03,2025-05-06_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- mlxlogscore=812 phishscore=0 impostorscore=0 suspectscore=0 mlxscore=0
- malwarescore=0 lowpriorityscore=0 clxscore=1015 bulkscore=0 adultscore=0
- spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505070079
+In-Reply-To: <aBsbTiBuWmUC3QaP@lx-t490>
 
-Hello,
+On Wed, 07 May 2025, Ahmed S. Darwish wrote:
+>
+> On Tue, 06 May, Ingo Molnar wrote:
+> >
+...
+> >
+> >  - Please just use a single central API header: <asm/cpuid/api.h>, and
+> >    remove <asm/cpuid.h>. It's confusing to have both <asm/cpuid.h> and
+> >    a proper <asm/cpuid/> header hierarchy.
+> >
+...
+>
+> Would you be OK with at least having:
+>
+>     asm/cpuid/
+>     ├── raw.h		Raw CPUID ops; what is now <asm/cpuid/api.h>
+>     ├── api.h		Everything else (CPUID model API, CPUID(0x2) API, ..)
+>     ├── leaf_types.h
+>     └── types.h
+>
+> because if I merge raw.h and api.h, the new CPUID APIs (which people
+> should be encouraged to use) would be so deep in the new merged header it
+> will be no longer visible.
+>
 
+Now that I've looked more at it, the above will be confusing for the call
+sites, so I'll stick to what you suggested:
 
-I am observing kernel OOPS, while running btrfs/001 TC, from xfstests suite.
+    asm/cpuid/
+    ├── api.h
+    ├── leaf_types.h
+    └── types.h
 
-
-This issue is introduced in next-20250506. This issue is not seen on 
-next-20250505 kernel.
-
-
-Steps to repro:
-
-
-1. git clone git://git.kernel.org/pub/scm/fs/xfs/xfstests-dev.git
-2. cd xfstests-dev/
-3. mkdir /mnt/loop-device /mnt/test /mnt/scratch
-4. for i in $(seq 0 5); do fallocate -o 0 -l 5GiB 
-/mnt/loop-device/file-$i.img; done
-5. for i in $(seq 0 5); do losetup /dev/loop$i 
-/mnt/loop-device/file-$i.img; done
-6. mkfs.btrfs -f -s 65536 -n 65536 /dev/loop0; mkfs.btrfs -f /dev/loop1; 
-mkfs.btrfs -f /dev/loop2; mkfs.btrfs -f /dev/loop3; mkfs.btrfs -f 
-/dev/loop4; mkfs.btrfs -f /dev/loop5
-8. vi local.config
-9. make
-10. ./check tools/btrfs/001
-
-
-local.config contents:
-
-
-export RECREATE_TEST_DEV=true
-export TEST_DEV=/dev/loop0
-export TEST_DIR=/mnt/test
-export SCRATCH_DEV_POOL="/dev/loop1 /dev/loop2 /dev/loop3 /dev/loop4 
-/dev/loop5"
-export SCRATCH_MNT=/mnt/scratch
-export MKFS_OPTIONS="-f -s 4096 -n 4096"
-export FSTYP=btrfs
-export MOUNT_OPTIONS=""
-
-
-Crash:
-
-
-[  953.799060] Btrfs loaded, zoned=yes, fsverity=no
-[  968.070858] BTRFS: device fsid 3813dc53-a2f3-4342-b44e-c9349f17f991 
-devid 1 transid 8 /dev/loop0 (7:0) scanned by mount (25422)
-[  968.072561] BTRFS info (device loop0): first mount of filesystem 
-3813dc53-a2f3-4342-b44e-c9349f17f991
-[  968.072584] BTRFS info (device loop0): using crc32c (crc32c-powerpc) 
-checksum algorithm
-[  968.072594] BTRFS info (device loop0): forcing free space tree for 
-sector size 4096 with page size 65536
-[  968.072599] BTRFS info (device loop0): using free-space-tree
-[  968.073867] BTRFS info (device loop0): checking UUID tree
-[  968.074000] Kernel attempted to read user page (68) - exploit 
-attempt? (uid: 0)
-[  968.074009] BUG: Kernel NULL pointer dereference on read at 0x00000068
-[  968.074013] Faulting instruction address: 0xc00800000f7fb5e0
-[  968.074019] Oops: Kernel access of bad area, sig: 11 [#1]
-[  968.074022] LE PAGE_SIZE=64K MMU=Radix  SMP NR_CPUS=8192 NUMA pSeries
-[  968.074028] Modules linked in: btrfs blake2b_generic xor raid6_pq 
-zstd_compress loop dm_mod nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib 
-nft_reject_inet nf_reject_ipv4 nf_reject_ipv6 nft_reject nft_ct sunrpc 
-nft_chain_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 bonding 
-tls rfkill ip_set nf_tables nfnetlink pseries_rng vmx_crypto fuse ext4 
-crc16 mbcache jbd2 sd_mod sg ibmvscsi scsi_transport_srp ibmveth
-[  968.074074] CPU: 0 UID: 0 PID: 25422 Comm: mount Kdump: loaded Not 
-tainted 6.15.0-rc5-next-20250506 #1 VOLUNTARY
-
-[  968.074087] NIP:  c00800000f7fb5e0 LR: c00800000f7fb3b4 CTR: 
-c00000000047862c
-[  968.074091] REGS: c000000154747920 TRAP: 0300   Not tainted 
-(6.15.0-rc5-next-20250506)
-[  968.074096] MSR:  800000000280b033 <SF,VEC,VSX,EE,FP,ME,IR,DR,RI,LE>  
-CR: 24022882  XER: 00000000
-[  968.074109] CFAR: c00800000f7fb650 DAR: 0000000000000068 DSISR: 
-40000000 IRQMASK: 0
-[  968.074109] GPR00: c00800000f7fb3b4 c000000154747bc0 c0080000099da600 
-0000000000000000
-[  968.074109] GPR04: c000000008570c20 7fffffffffffffff 0000000000000000 
-c0000000068e3a00
-[  968.074109] GPR08: 0000000000000000 0000000000000000 c0000000068e3a00 
-0000000000002000
-[  968.074109] GPR12: c00000000047862c c000000003020000 0000000000000000 
-0000000000000000
-[  968.074109] GPR16: 0000000000000000 0000000000000000 0000000000000000 
-0000000000000000
-[  968.074109] GPR20: 0000000000000000 0000000000000000 0000000000000000 
-0000000000000000
-[  968.074109] GPR24: 0000000000000000 c000000015b00000 c00000007a38ac00 
-0000000000000020
-[  968.074109] GPR28: c000000008560a00 c00000006b1784c0 0000000000000000 
-c000000063147980
-[  968.074163] NIP [c00800000f7fb5e0] btrfs_get_tree_subvol+0x32c/0x544 
-[btrfs]
-[  968.074205] LR [c00800000f7fb3b4] btrfs_get_tree_subvol+0x100/0x544 
-[btrfs]
-[  968.074241] Call Trace:
-[  968.074244] [c000000154747bc0] [c00800000f7fb3b4] 
-btrfs_get_tree_subvol+0x100/0x544 [btrfs] (unreliable)
-[  968.074282] [c000000154747cb0] [c000000000630da4] vfs_get_tree+0x48/0x15c
-[  968.074291] [c000000154747d30] [c00000000067675c] 
-do_new_mount+0x234/0x438
-[  968.074297] [c000000154747da0] [c000000000678298] sys_mount+0x164/0x1b0
-[  968.074303] [c000000154747e10] [c000000000033338] 
-system_call_exception+0x138/0x330
-[  968.074311] [c000000154747e50] [c00000000000d05c] 
-system_call_vectored_common+0x15c/0x2ec
-[  968.074319] ---- interrupt: 3000 at 0x7fff89d4edf4
-[  968.074323] NIP:  00007fff89d4edf4 LR: 00007fff89d4edf4 CTR: 
-0000000000000000
-[  968.074328] REGS: c000000154747e80 TRAP: 3000   Not tainted 
-(6.15.0-rc5-next-20250506)
-[  968.074333] MSR:  800000000280f033 
-<SF,VEC,VSX,EE,PR,FP,ME,IR,DR,RI,LE>  CR: 44022804  XER: 00000000
-[  968.074345] IRQMASK: 0
-[  968.074345] GPR00: 0000000000000015 00007fffc25e41b0 00007fff89e37d00 
-000000015e810710
-[  968.074345] GPR04: 000000015e810730 000000015e8106f0 0000000000000000 
-000000015e810690
-[  968.074345] GPR08: 000000015e8106f0 0000000000000000 0000000000000000 
-0000000000000000
-[  968.074345] GPR12: 0000000000000000 00007fff8a03c140 0000000000000000 
-0000000000000000
-[  968.074345] GPR16: 0000000000000000 0000000000000000 0000000000000000 
-0000000125d1f298
-[  968.074345] GPR20: 0000000000000000 0000000000000000 000000015e810530 
-000000015e810730
-[  968.074345] GPR24: 00007fff89f38e68 00007fff89f38e78 00007fff89f3dfe8 
-00007fff89f60240
-[  968.074345] GPR28: 000000015e8106f0 0000000000000000 000000015e810710 
-0000000000100000
-[  968.074396] NIP [00007fff89d4edf4] 0x7fff89d4edf4
-[  968.074399] LR [00007fff89d4edf4] 0x7fff89d4edf4
-[  968.074403] ---- interrupt: 3000
-[  968.074406] Code: 4bffeffd 3920f000 7c234840 7c7e1b78 41810144 
-7c7a1b78 4bfffe30 60000000 813f0088 71290001 41820068 e93d0040 
-<e8690068> 38630070 481416e1 e8410018
-[  968.074425] ---[ end trace 0000000000000000 ]---
-[  968.076694] pstore: backend (nvram) writing error (-1)
-[  968.076698]
-
-
-
-If you happent to fix this, please add below tag.
-
-
-Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-
-
-Regards,
-
-Venkat.
-
+Thanks!
+Ahmed
