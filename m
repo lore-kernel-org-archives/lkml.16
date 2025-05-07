@@ -1,134 +1,108 @@
-Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ABF1EEBA;
-	Wed,  7 May 2025 00:16:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05E3AA94A;
+	Wed,  7 May 2025 00:17:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746577003; cv=none; b=FfIujGr58DMnJRNal0a4fyIfUWK1mp7dKMEi6STCPgvUwG5R/pW+Yw9I3qRK2B6/sdrQ3y5qGnzA/N63SlkRnkxtRPjZTDy79qdb7oowy9b0UTjJG6M765UMipjSfxQPi5KB8zz5RWz7blJBnqd0Fl3Y5DI0l3AXX3KlrvinEmU=
+	t=1746577052; cv=none; b=WU1PE9UjTzXrfNNI+0e1kF+M/CY57mK/SU96It3bKBGDoseVzkW1RLMFHfK7I/X166dRE8aiY8WCH+Jl9UjtCdLQvjXCiJE7ps+oScJgMFBU3bK2OqeUflUQFL7SQAiIEixIIfIIX1ih1MZllTzchteycFg4qUHwjWcUu0DSsyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746577003; c=relaxed/simple;
-	bh=WIblESYxXagNVxFzdusv4dclpEA4QpzqQV7zQARweF0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aKbCr+2agNl6lJP5VwLEGM4qdbM5XeyFKORC/XKuxVbHVfcSgZNjatpWXrUNuN89duN6p/+x719Ck5/tQYeGCZRpjowvfSp8n+mF6ahqPnwvsff8K7OjGk/Kfl/6jtlXHWrkuwADc67KgPelnNbrexqBlPMIHJ0ig56Q4zfQYmc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YvKdCbXV; arc=none smtp.client-ip=209.85.166.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746577052; c=relaxed/simple;
+	bh=MakT+WYmxK41bmc2ErA6nAOXCn5sVq4HGRU81gTqA6Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZzIR0gtQTi5lMRusidWoDN7c0ASyMiUVCnpM9SmZ7796+AcOwMyw9Aj39xOBkr6mKKSpeylhiSeb4p8OoMap4ciqXvTFalz7+k6P8GsZjaL3wkCnEOL5WpRsHUE1w0cIX48csgXMdGUJZe4UCUUO/D+i/tery+HwZvPyS68nyCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cRcjwgGe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YvKdCbXV"
-Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3da739653b2so974835ab.0;
-        Tue, 06 May 2025 17:16:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746577001; x=1747181801; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ERN4tZBNNxWUBbXOxBBa/C7QnG/J+3w3a9uKSXFs/2E=;
-        b=YvKdCbXV2NwAOiz7xKTYqU5wUDecj0eh6okGZgsqt+tfB3g4pJbPMs9JHRpG0jls34
-         ltFa4zPf8yyGskqzbCNUm0NDKB9qWGovicrsPSK1pNBxWCOMcHlKymMnbJNHUtzueBRK
-         43wN32MEtk+Hyutev11OA3fo71PxPAxVVCZiAp29ShcGay+KA0Ko591f50LHwzLRUw5d
-         6yMsDeJ/h2ElGxu67W6fY0hGK7r0z50LSPpiX1TmyE6fUKRyik8GwKmiSzmkjroE1P1f
-         ZVFo2benA1GPJXlDQVUEYIUX9KYSom61M7LBfQEw/AoRcYkSAcOhXR3KGB/FAFaUxgpM
-         8Llg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746577001; x=1747181801;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ERN4tZBNNxWUBbXOxBBa/C7QnG/J+3w3a9uKSXFs/2E=;
-        b=PBtryJ5QneWurcagCN3PamnjZePtvlZ985xGdS/3kdzjPGalppL30p3JiXDM5SbzyS
-         sFqEhQUlAqL4gIrF47QsHEglk7pLL7xCqwBCXtB2mLtGEOUt0G5qGWnreQ19Cmsp0j2V
-         Me8eMHuwSnSn/GUvNIUHJJ6DQ6GMfRpxroOFd5pw+Z7olofd6UwFSVuBVCX5KSBNDmXf
-         G6M2kN0WNf/ysdH1Tcohp8TJYFhdugxEAUcna5EVPCWjo17QPL13ycUk23A0SM1O0tdN
-         zCjE01PISNGQG4mDUebKqnT488kFntIy6n7pMwkwDR0nswaUmqJioALMMU/I1fzd+rCB
-         9hwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUSV/ElePCSCiUDLD3NcrITVjDAj+R/NaV8qMRl4ilFZr3QRBfiNO+H89TwL9LXyricXlroHHJ1ug6HR04=@vger.kernel.org, AJvYcCVaTGPNt92RMXxY4jyrZaq3p6EF7ofcKZv54pT5WhG/ZjcBUCvx5Z4vETyK/6yABGnbcVVZrzDqdEcFPQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQKZCz3sNaPhseBCHasAvSRletU5VqLeFv9XBm15VgHPruHzHQ
-	KOg64etxJGJBbNoKIUZEBcEHB8JHwUIGry2ZRI4/BW/u5hTza2IIrFNjm7UFSH+Lvog6mz+Ctk9
-	6Z762TfyU49n6FqqC7t/rtEEJHq0=
-X-Gm-Gg: ASbGncs084bYV/TbcwOFtzeNHVvvegjWpXOSDvN6TAtLiSXhwAeb/S84HO8cLX47QzK
-	cP83QLxunw0ZfH5y+oQCSSr0QvFHdUldrmQlZyikDu/k9KKJHizCAd2GN5A2FTnM3x5nh5av3VU
-	v9hbFjiWz1lZVOvTZzCmyv6Q==
-X-Google-Smtp-Source: AGHT+IF+RYfQnJXX2wiCv2f8FgLw9KAqzSO3hRhozP+0qGjgOmXPg5RSE0/cNow9QHK8qnUlcemlOTjy+nWSCQxf124=
-X-Received: by 2002:a05:6e02:1d92:b0:3d3:f27a:9103 with SMTP id
- e9e14a558f8ab-3da738ed799mr12884645ab.1.1746577001455; Tue, 06 May 2025
- 17:16:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cRcjwgGe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F276C4CEEE;
+	Wed,  7 May 2025 00:17:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746577051;
+	bh=MakT+WYmxK41bmc2ErA6nAOXCn5sVq4HGRU81gTqA6Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cRcjwgGebtyFUZ46LrW76G6InKntPpJqUapu6xKxZnjpIlLUnoxiDLKvkCDX9gFnd
+	 hUFYdKHCM0h9+nvZZOgQfb7HymIig7Rk6+ICXiBBgHHXtJg9UzNL9kbaTR70TYs2bn
+	 wUzFlp1omC49+s635X2G28BMVp8sYqsaeWOQ5hJE1UvFlT5Z9mpcSE5i1f4QHDYa1t
+	 JODxovu/KhYHQYW8to0sJM8Qu1PL9vaHEJ7D+L0fdg9D2C4OpU3Pw3qjKCbbsYseoq
+	 mN7VcugPNARcIQAnhVEJ7Smlssnrncl+Ol5ViPKxxR6h1pF4806J1gkRHtrUDaupkP
+	 9uAYJZOd/BV0g==
+Date: Tue, 6 May 2025 14:17:30 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Xi Wang <xii@google.com>
+Cc: linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>,
+	David Rientjes <rientjes@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Waiman Long <longman@redhat.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com1>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Chen Yu <yu.c.chen@intel.com>, Kees Cook <kees@kernel.org>,
+	Yu-Chun Lin <eleanor15x@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	=?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
+Subject: Re: [RFC/PATCH] sched: Support moving kthreads into cpuset cgroups
+Message-ID: <aBqmmtST-_9oM9rF@slm.duckdns.org>
+References: <20250506183533.1917459-1-xii@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250506215508.3611977-1-stfomichev@gmail.com>
-In-Reply-To: <20250506215508.3611977-1-stfomichev@gmail.com>
-From: Jason Xing <kerneljasonxing@gmail.com>
-Date: Wed, 7 May 2025 08:16:05 +0800
-X-Gm-Features: ATxdqUHZDuiLA7f7witp6xXHQswch3oKUZrSiSSAzpg7yLhrFN5x-dJ8eqivnlA
-Message-ID: <CAL+tcoCUofwE7zNf95KO75tkiVJkcJ3O4ybu07aYFo-wbV13JA@mail.gmail.com>
-Subject: Re: [PATCH net-next] net/mlx5: support software TX timestamp
-To: Stanislav Fomichev <stfomichev@gmail.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com, 
-	kuba@kernel.org, pabeni@redhat.com, saeedm@nvidia.com, tariqt@nvidia.com, 
-	andrew+netdev@lunn.ch, linux-rdma@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, leon@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250506183533.1917459-1-xii@google.com>
 
-On Wed, May 7, 2025 at 5:57=E2=80=AFAM Stanislav Fomichev <stfomichev@gmail=
-.com> wrote:
->
-> Having a software timestamp (along with existing hardware one) is
-> useful to trace how the packets flow through the stack.
-> mlx5e_tx_skb_update_hwts_flags is called from tx paths
-> to setup HW timestamp; extend it to add software one as well.
->
-> Signed-off-by: Stanislav Fomichev <stfomichev@gmail.com>
+Hello,
 
-Reviewed-by: Jason Xing <kerneljasonxing@gmail.com>
+On Tue, May 06, 2025 at 11:35:32AM -0700, Xi Wang wrote:
+> In theory we should be able to manage kernel tasks with cpuset
+> cgroups just like user tasks, would be a flexible way to limit
+> interferences to real-time and other sensitive workloads. This is
+> however not supported today: When setting cpu affinity for kthreads,
+> kernel code uses a simpler control path that directly lead to
+> __set_cpus_allowed_ptr or __ktread_bind_mask. Neither honors cpuset
+> restrictions.
+> 
+> This patch adds cpuset support for kernel tasks by merging userspace
+> and kernel cpu affinity control paths and applying the same
+> restrictions to kthreads.
+> 
+> The PF_NO_SETAFFINITY flag is still supported for tasks that have to
+> run with certain cpu affinities. Kernel ensures kthreads with this
+> flag have their affinities locked and they stay in the root cpuset:
+> 
+> If userspace moves kthreadd out of the root cpuset (see example
+> below), a newly forked kthread will be in a non root cgroup as well.
+> If PF_NO_SETAFFINITY is detected for the kthread, it will move itself
+> into the root cpuset before the threadfn is called. This does depend
+> on the kthread create -> kthread bind -> wake up sequence.
 
-Only one nit as below.
+Can you describe the use cases in detail? This is not in line with the
+overall direction. e.g. We're making cpuset work with housekeeping mechanism
+and tell workqueue which CPUs can be used for unbound execution and kthreads
+which are closely tied to userspace activities are spawned into the same
+cgroups as the user thread and subject to usual resource control.
 
-> ---
->  drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c | 1 +
->  drivers/net/ethernet/mellanox/mlx5/core/en_tx.c      | 1 +
->  2 files changed, 2 insertions(+)
->
-> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c b/drive=
-rs/net/ethernet/mellanox/mlx5/core/en_ethtool.c
-> index fdf9e9bb99ac..e399d7a3d6cb 100644
-> --- a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
-> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
-> @@ -1689,6 +1689,7 @@ int mlx5e_ethtool_get_ts_info(struct mlx5e_priv *pr=
-iv,
->                 return 0;
->
->         info->so_timestamping =3D SOF_TIMESTAMPING_TX_HARDWARE |
-> +                               SOF_TIMESTAMPING_TX_SOFTWARE |
->                                 SOF_TIMESTAMPING_RX_HARDWARE |
->                                 SOF_TIMESTAMPING_RAW_HARDWARE;
->
-> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c b/drivers/ne=
-t/ethernet/mellanox/mlx5/core/en_tx.c
-> index 4fd853d19e31..f6dd26ad29e5 100644
-> --- a/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
-> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
-> @@ -341,6 +341,7 @@ static void mlx5e_tx_skb_update_hwts_flags(struct sk_=
-buff *skb)
+There are a lot of risks in subjecting arbitrary kthreads to all cgroup
+resource controls and just allowing cpuset doesn't seem like a great idea.
+Integration through housekeeping makes a lot more sense to me. Note that
+even for just cpuset thread level control doesn't really work that well. All
+kthreads are forked by kthreadd. If you move the kthreadd into a cgroup, all
+kthreads includling kworkers for all workqueues will be spawned there. The
+granularity of control isn't much better than going through housekeeping.
 
-nit: the function name including 'hwts' doesn't reflect the following
-software behavior.
+Thanks.
 
-Thanks,
-Jason
-
->  {
->         if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP))
->                 skb_shinfo(skb)->tx_flags |=3D SKBTX_IN_PROGRESS;
-> +       skb_tx_timestamp(skb);
->  }
->
->  static void mlx5e_tx_check_stop(struct mlx5e_txqsq *sq)
-> --
-> 2.49.0
->
->
+-- 
+tejun
