@@ -1,126 +1,175 @@
-Received: from server.wki.vra.mybluehostin.me (server.wki.vra.mybluehostin.me [162.240.238.73])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5619972635;
-	Wed,  7 May 2025 12:56:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.240.238.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EEAF72635;
+	Wed,  7 May 2025 12:56:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746622586; cv=none; b=ulF17THrlaO5LAL+l0aFXyaATJUhWgW5amh4LAXGSRb547StBq565G+AFRip+cqaC1Ob9CHfGA0nvgWGUfDfIH08Oxd51OJABFdt4nH1yJ3KyPPYNzr4QBIin+w57vyZCDdc7aOggEVr7ZctYyTaSkJUYaxxlOtqpFvxXcj819g=
+	t=1746622593; cv=none; b=E0eoJXu+p8SwnOEJKCQ37K03cuEKhhS1H7QHfZNSpbjvg7cDekXRlPrENTQp/3xxvMt3H1n2HqSJ0jtBJsZk5WfUbbKNqSOwnZcOdAOv8Ppsz4o3FJgGhXtEZC7HsbTiXVPzQ7RAW0SJkbhYPBev0pIWNrg/3K/CPfeLHEBI5Oo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746622586; c=relaxed/simple;
-	bh=e+KbzQH4g+FY0XrajAnoZjNDb6VWzk8lnDHWDRvx1tM=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=camcCnANmOkXc9jqC87UDLXWfquoViixkUZ0u/cD9D6en24YfE1PaVHE1ABYYLK0yf57AWAKndbhI2pL1RL83mUa5z7OnPA2GC/TfUI122WyFgGq9H+Z1tngLT//VCCbFK53T370TxmWqTaBRq/5nwTUc+7hORXsnDq7MWhf3QI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=couthit.com; spf=pass smtp.mailfrom=couthit.com; dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b=SZQ/qUqG; arc=none smtp.client-ip=162.240.238.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=couthit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=couthit.com
+	s=arc-20240116; t=1746622593; c=relaxed/simple;
+	bh=ETKPy7cscEkxT1hCjZsF04t03LagtJT/ZxD8Xi5As1c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YZf88/se1D/T3eRp1uEc7pNOStduOEu7TeX71ONGZD2wm5ZI9V/cE0yxdk0diTCbNB0SnTbjlohaaoLC9rMS/mcweo9wvL7Jtw7DkEuIhSGtVFSCiJVpSDgACOnOd3cllTnl6JP7Iipvii7Qjo70eceOQDHJ3CRVS2yo2ZRvD1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y+xQIuO2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b="SZQ/qUqG"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=couthit.com
-	; s=default; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:
-	References:In-Reply-To:Message-ID:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=2gTucvQbJ8GVWGtpPTGszF2AAa2auKQNBW/SjILr374=; b=SZQ/qUqGsxZiV8NAzLkeiIQ29O
-	iiJq0WqtLc873MoKOpRjCjvc4DCbrrDAbP+odpVPOcMcr8ATV43UROcDdv4vwyrFv7s01iqvVGvl4
-	Fi+XWO4ihOEMpukM6PVjzlkJ0CYwDCv0ea3FD/k1DG7kx7dDezzT2ALnTmmpMS04AJExDeXU+NyBD
-	kUxSfkmpbd/UPbKxhhkafl7G4LHzj76WRdEEDSbdC+ldavKkvXQC3RGnpG9phS769vcbpC1UwM4Vc
-	qxTdapSgTM3csySTqflmlXFuGrhbN2Ln0Ry8rYkttmGiRJMuQSV8puvrD3t3I5FrswFmSWLIdnFkt
-	dDFYl6DQ==;
-Received: from [122.175.9.182] (port=34909 helo=zimbra.couthit.local)
-	by server.wki.vra.mybluehostin.me with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.1)
-	(envelope-from <parvathi@couthit.com>)
-	id 1uCeJl-000000000Vk-1tYs;
-	Wed, 07 May 2025 18:26:09 +0530
-Received: from zimbra.couthit.local (localhost [127.0.0.1])
-	by zimbra.couthit.local (Postfix) with ESMTPS id 9F3661784153;
-	Wed,  7 May 2025 18:26:02 +0530 (IST)
-Received: from localhost (localhost [127.0.0.1])
-	by zimbra.couthit.local (Postfix) with ESMTP id 7A93317820EC;
-	Wed,  7 May 2025 18:26:02 +0530 (IST)
-Received: from zimbra.couthit.local ([127.0.0.1])
-	by localhost (zimbra.couthit.local [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id O1H80hbzATvn; Wed,  7 May 2025 18:26:02 +0530 (IST)
-Received: from zimbra.couthit.local (zimbra.couthit.local [10.10.10.103])
-	by zimbra.couthit.local (Postfix) with ESMTP id 196861784150;
-	Wed,  7 May 2025 18:26:02 +0530 (IST)
-Date: Wed, 7 May 2025 18:26:01 +0530 (IST)
-From: Parvathi Pudi <parvathi@couthit.com>
-To: pabeni <pabeni@redhat.com>
-Cc: danishanwar <danishanwar@ti.com>, rogerq <rogerq@kernel.org>, 
-	andrew+netdev <andrew+netdev@lunn.ch>, davem <davem@davemloft.net>, 
-	edumazet <edumazet@google.com>, kuba <kuba@kernel.org>, 
-	robh <robh@kernel.org>, krzk+dt <krzk+dt@kernel.org>, 
-	conor+dt <conor+dt@kernel.org>, ssantosh <ssantosh@kernel.org>, 
-	tony <tony@atomide.com>, richardcochran <richardcochran@gmail.com>, 
-	glaroque <glaroque@baylibre.com>, schnelle <schnelle@linux.ibm.com>, 
-	m-karicheri2 <m-karicheri2@ti.com>, s hauer <s.hauer@pengutronix.de>, 
-	rdunlap <rdunlap@infradead.org>, diogo ivo <diogo.ivo@siemens.com>, 
-	basharath <basharath@couthit.com>, horms <horms@kernel.org>, 
-	jacob e keller <jacob.e.keller@intel.com>, 
-	m-malladi <m-malladi@ti.com>, 
-	javier carrasco cruz <javier.carrasco.cruz@gmail.com>, 
-	afd <afd@ti.com>, s-anna <s-anna@ti.com>, 
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, 
-	netdev <netdev@vger.kernel.org>, 
-	devicetree <devicetree@vger.kernel.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, 
-	pratheesh <pratheesh@ti.com>, Prajith Jayarajan <prajith@ti.com>, 
-	Vignesh Raghavendra <vigneshr@ti.com>, praneeth <praneeth@ti.com>, 
-	srk <srk@ti.com>, rogerq <rogerq@ti.com>, 
-	krishna <krishna@couthit.com>, pmohan <pmohan@couthit.com>, 
-	parvathi <parvathi@couthit.com>, mohan <mohan@couthit.com>
-Message-ID: <139244603.1233564.1746622561934.JavaMail.zimbra@couthit.local>
-In-Reply-To: <19f4f38b-9962-41d6-97b7-e254db3c6dee@redhat.com>
-References: <20250503121107.1973888-1-parvathi@couthit.com> <20250503121107.1973888-4-parvathi@couthit.com> <19f4f38b-9962-41d6-97b7-e254db3c6dee@redhat.com>
-Subject: Re: [PATCH net-next v7 03/11] net: ti: prueth: Adds PRUETH HW and
- SW configuration
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y+xQIuO2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9560DC4CEF0;
+	Wed,  7 May 2025 12:56:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746622592;
+	bh=ETKPy7cscEkxT1hCjZsF04t03LagtJT/ZxD8Xi5As1c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Y+xQIuO2q5l0LtuVPuQY0qcRWd4Ed6207mKUG5AmU2olxGhuHQoH48tfjDGyburUA
+	 OZNTdVowOXuPl9fuQVujjYoDH8jc1XbLOrRkYZRY6HCS59qOY4rss7AQ+8SebZ/7an
+	 8wjstxtgfO4JwtgnyYOnUiiO4gXw/PqzIKG2YmsYoQla4t2dcQV8MEnuWD2Z7hLeCX
+	 hhH8bLqWMTpNhyxtmbd8DnZJmRvke6iyku3t3b2VOaYIMiOdjxIBdxkbegAcjWuON9
+	 0+3yI3SyW/gTX/dtpjReRUe73WF246qEbmX4mzVXbqKIKaXQvXwfQV3ga3+H8ymoOp
+	 zl3pupL0oH5Pg==
+Date: Wed, 7 May 2025 13:56:25 +0100
+From: Simon Horman <horms@kernel.org>
+To: Tanmay Jagdale <tanmay@marvell.com>
+Cc: bbrezillon@kernel.org, arno@natisbad.org, schalla@marvell.com,
+	herbert@gondor.apana.org.au, davem@davemloft.net,
+	sgoutham@marvell.com, lcherian@marvell.com, gakula@marvell.com,
+	jerinj@marvell.com, hkelam@marvell.com, sbhatta@marvell.com,
+	andrew+netdev@lunn.ch, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, bbhushan2@marvell.com, bhelgaas@google.com,
+	pstanner@redhat.com, gregkh@linuxfoundation.org,
+	peterz@infradead.org, linux@treblig.org,
+	krzysztof.kozlowski@linaro.org, giovanni.cabiddu@intel.com,
+	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, rkannoth@marvell.com, sumang@marvell.com,
+	gcherian@marvell.com
+Subject: Re: [net-next PATCH v1 09/15] octeontx2-pf: ipsec: Allocate Ingress
+ SA table
+Message-ID: <20250507125625.GD3339421@horms.kernel.org>
+References: <20250502132005.611698-1-tanmay@marvell.com>
+ <20250502132005.611698-10-tanmay@marvell.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Mailer: Zimbra 8.8.15_GA_3968 (ZimbraWebClient - GC135 (Mac)/8.8.15_GA_3968)
-Thread-Topic: prueth: Adds PRUETH HW and SW configuration
-Thread-Index: AosoBOCbs5p6H60d7E7sxq4c13PHCQ==
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - server.wki.vra.mybluehostin.me
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - couthit.com
-X-Get-Message-Sender-Via: server.wki.vra.mybluehostin.me: authenticated_id: smtp@couthit.com
-X-Authenticated-Sender: server.wki.vra.mybluehostin.me: smtp@couthit.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250502132005.611698-10-tanmay@marvell.com>
 
-Hi,
-
-> On 5/3/25 2:10 PM, Parvathi Pudi wrote:
->> +static int icssm_prueth_emac_config(struct prueth_emac *emac)
->> +{
->> +	struct prueth *prueth = emac->prueth;
->> +
->> +	/* PRU needs local shared RAM address for C28 */
->> +	u32 sharedramaddr = ICSS_LOCAL_SHARED_RAM;
->> +
->> +	/* PRU needs real global OCMC address for C30*/
->> +	u32 ocmcaddr = (u32)prueth->mem[PRUETH_MEM_OCMC].pa;
->> +	void __iomem *dram_base;
->> +	void __iomem *mac_addr;
->> +	void __iomem *dram;
+On Fri, May 02, 2025 at 06:49:50PM +0530, Tanmay Jagdale wrote:
+> Every NIX LF has the facility to maintain a contiguous SA table that
+> is used by NIX RX to find the exact SA context pointer associated with
+> a particular flow. Allocate a 128-entry SA table where each entry is of
+> 2048 bytes which is enough to hold the complete inbound SA context.
 > 
-> Minor nit: please respect the reverse christmas tree order above.
+> Add the structure definitions for SA context (cn10k_rx_sa_s) and
+> SA bookkeeping information (ctx_inb_ctx_info).
 > 
-> /P
+> Also, initialize the inb_sw_ctx_list to track all the SA's and their
+> associated NPC rules and hash table related data.
+> 
+> Signed-off-by: Tanmay Jagdale <tanmay@marvell.com>
 
-We will address this in the next version.
+...
 
+> diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/cn10k_ipsec.h b/drivers/net/ethernet/marvell/octeontx2/nic/cn10k_ipsec.h
 
-Thanks and Regards,
-Parvathi.
+...
+
+> @@ -146,6 +169,76 @@ struct cn10k_tx_sa_s {
+>  	u64 hw_ctx[6];		/* W31 - W36 */
+>  };
+>  
+> +struct cn10k_rx_sa_s {
+> +	u64 inb_ar_win_sz	: 3; /* W0 */
+> +	u64 hard_life_dec	: 1;
+> +	u64 soft_life_dec	: 1;
+> +	u64 count_glb_octets	: 1;
+> +	u64 count_glb_pkts	: 1;
+> +	u64 count_mib_bytes	: 1;
+> +	u64 count_mib_pkts	: 1;
+> +	u64 hw_ctx_off		: 7;
+> +	u64 ctx_id		: 16;
+> +	u64 orig_pkt_fabs	: 1;
+> +	u64 orig_pkt_free	: 1;
+> +	u64 pkind		: 6;
+> +	u64 rsvd_w0_40		: 1;
+> +	u64 eth_ovrwr		: 1;
+> +	u64 pkt_output		: 2;
+> +	u64 pkt_format		: 1;
+> +	u64 defrag_opt		: 2;
+> +	u64 x2p_dst		: 1;
+> +	u64 ctx_push_size	: 7;
+> +	u64 rsvd_w0_55		: 1;
+> +	u64 ctx_hdr_size	: 2;
+> +	u64 aop_valid		: 1;
+> +	u64 rsvd_w0_59		: 1;
+> +	u64 ctx_size		: 4;
+> +
+> +	u64 rsvd_w1_31_0	: 32; /* W1 */
+> +	u64 cookie		: 32;
+> +
+> +	u64 sa_valid		: 1; /* W2 Control Word */
+> +	u64 sa_dir		: 1;
+> +	u64 rsvd_w2_2_3		: 2;
+> +	u64 ipsec_mode		: 1;
+> +	u64 ipsec_protocol	: 1;
+> +	u64 aes_key_len		: 2;
+> +	u64 enc_type		: 3;
+> +	u64 life_unit		: 1;
+> +	u64 auth_type		: 4;
+> +	u64 encap_type		: 2;
+> +	u64 et_ovrwr_ddr_en	: 1;
+> +	u64 esn_en		: 1;
+> +	u64 tport_l4_incr_csum	: 1;
+> +	u64 iphdr_verify	: 2;
+> +	u64 udp_ports_verify	: 1;
+> +	u64 l2_l3_hdr_on_error	: 1;
+> +	u64 rsvd_w25_31		: 7;
+> +	u64 spi			: 32;
+
+As I understand it, this driver is only intended to run on arm64 systems.
+While it is also possible, with COMPILE_TEST test, to compile the driver
+on for 64-bit systems.
+
+So, given the first point above, this may be moot. But the above
+assumes that the byte order of the host is the same as the device.
+Or perhaps more to the point, it has been written for a little-endian
+host and the device is expecting the data in that byte order.
+
+But u64 is supposed to represent host byte order.  And, in my understanding
+of things, this is the kind of problem that FIELD_PREP and FIELD_GET are
+intended to avoid, when combined on endian-specific integer types (in this
+case __le64 seems appropriate).
+
+I do hesitate in bringing this up, as the above very likely works on
+all systems on which this code is intended to run. But I do so
+because it is not correct on all systems for which this code can be
+compiled. And thus seems somehow misleading.
+
+> +
+> +	u64 w3;			/* W3 */
+> +
+> +	u8 cipher_key[32];	/* W4 - W7 */
+> +	u32 rsvd_w8_0_31;	/* W8 : IV */
+> +	u32 iv_gcm_salt;
+> +	u64 rsvd_w9;		/* W9 */
+> +	u64 rsvd_w10;		/* W10 : UDP Encap */
+> +	u32 dest_ipaddr;	/* W11 - Tunnel mode: outer src and dest ipaddr */
+> +	u32 src_ipaddr;
+> +	u64 rsvd_w12_w30[19];	/* W12 - W30 */
+> +
+> +	u64 ar_base;		/* W31 */
+> +	u64 ar_valid_mask;	/* W32 */
+> +	u64 hard_sa_life;	/* W33 */
+> +	u64 soft_sa_life;	/* W34 */
+> +	u64 mib_octs;		/* W35 */
+> +	u64 mib_pkts;		/* W36 */
+> +	u64 ar_winbits;		/* W37 */
+> +
+> +	u64 rsvd_w38_w100[63];
+> +};
+> +
+>  /* CPT instruction parameter-1 */
+>  #define CN10K_IPSEC_INST_PARAM1_DIS_L4_CSUM		0x1
+>  #define CN10K_IPSEC_INST_PARAM1_DIS_L3_CSUM		0x2
