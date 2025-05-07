@@ -1,102 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 556BB2153E2;
-	Wed,  7 May 2025 07:54:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C07D223714;
+	Wed,  7 May 2025 07:55:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746604491; cv=none; b=K6YjMxA02J33TdBA2eoAyWGQbgfrg+g3HWf1qFuovOzeY9QhUnc9hs6NrlZVFrKcaQtvA//6ljbKLB3s9N0ePob1J+bUZXMkDReQnS9vXvaWYhljV2SZvEpYL3sPY3Yb2ZoMkL4iqahsWmsQixRuCxLfHqiS3scn7sn/SgClaY4=
+	t=1746604516; cv=none; b=MEZvOC2Hf+5RCVKdmIGsBFKi5ljKTUpZG/ku/1eksX/H8BP7ubvRa/7CksREU+4CZRJkxiJmVEPSACMWkeIeuDWthGrxYoDsagytq7mQ9OltnyXK0WYvVZd2GiAxGaNVPDjDKlECGW+35LFZjOiozXwMCDTJYlWDT5kvTvlcPfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746604491; c=relaxed/simple;
-	bh=RvNzjk0M4mARQxnDPb6DusUcGQ12+LWoRjehzoQ9+0k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JTt0wQZxRvNNyKdy1UniHEVVsO6O3zn+uevFoUM0ekRSczZexXdi/3PmaKrS1fJKeQiYiFJn0xy0aDHs94gKkt8wP1erT+t0Z0uq15HAm6sA0f8ABAVPnlrFhsk8oVLEbbizH2x/onFQPvTdBvXxPmUZxDg7BSyAu+oGFZGa4NI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YYPP9URb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746604516; c=relaxed/simple;
+	bh=j4zwaV988Qe6aMB5L8k6UmCsLbXX3a72FZD72kZs3xc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=JkryB8jP+N8x2uyFaS+DAAcnn1vzCd9KLZsL94BdBamFTUGvYEBh8jM2zsQJ8L1ByMciuQAjKcVQ7+juQrfwUajy2VSg80+EEYuDhFNmyP4V7Oo5tqe1autXo7rn6yPGAQEuQ2WF9VQhO/paW3pE++Nok6sbh1awWzKwd03MXBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ReNxx6uj; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JiGqIm1O; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YYPP9URb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE4CCC4CEEE;
-	Wed,  7 May 2025 07:54:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746604490;
-	bh=RvNzjk0M4mARQxnDPb6DusUcGQ12+LWoRjehzoQ9+0k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YYPP9URbYPC+uecaNokMl21TG6IAS8eM6KFsa+k+ziuulMc/0YPMlkBc/6xBJ7oVX
-	 2sQc4TQbzH7QDarjCEITyBG5jt1yqyaImSlsaKopA5Ul9y6gl7ntQDYkdF/OMJq/eZ
-	 kcjgqeqTVApPxZQCQY1RKJMpbKdbifLFwlJZCq7HdvKw5Ci8B7CgwwuaY8OShZ6qQO
-	 t2K2mNgsjVtjpg6IDPp96LiaJzpC77DdRBjlOT/r/u90RgstR6oTLYKWQ9E2sRro0P
-	 J6jgmSDJLGUEw063QNzeMCOyg7S82M48kvrZ+TUB/UGNhgUYDZqH9IJh2WreR5lg9c
-	 V4m6pM62CzCIg==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1uCZc5-000000005me-3rfW;
-	Wed, 07 May 2025 09:54:46 +0200
-Date: Wed, 7 May 2025 09:54:45 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Bjorn Andersson <andersson@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	linux-arm-msm@vger.kernel.org, linux-rtc@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/4] rtc: pm8xxx: fix uefi offset lookup
-Message-ID: <aBsRxbBb91e_sQn3@hovoldconsulting.com>
-References: <20250423075143.11157-1-johan+linaro@kernel.org>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ReNxx6uj";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JiGqIm1O"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1746604506;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8WhJFG8YVaecQP8RT69+qhbWoUEjiVbQ8B+rAiila9c=;
+	b=ReNxx6ujSZ730BscGanYilr/KFZhpoyzzysJVoq7uXj5e4qOaIy2x7NGsQeNEpkokUydrH
+	JWBlDV7MR6bKel3hAfXroex6zomLxqDRStVuxG93UkVjeWwX3nISGpWT7elwy7wno+0fIB
+	d+q6oot4d/4DLofiihX+WPOG0L2PuLhH+HWil62McdcHKY6akOvXpTG9DcIXz6Q5TCjAvg
+	GDtDa3AE5JKn2yEknsUbtlvxFQA065jJiZwHTmRWEAn6zNs+y6QguQGPne4bEYxFnEG0ny
+	YtuDOrj82hjx5zBRTn5RtXCMg5wCdXg5FRbiDWURuekXXYz1Wb+O436tRZLS3w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1746604506;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8WhJFG8YVaecQP8RT69+qhbWoUEjiVbQ8B+rAiila9c=;
+	b=JiGqIm1OuN/oixW7CxtGDrmANlpPhfswybK5sFeshWlD1W7UJXo969d3AwYJcmySqgnb5F
+	C5GXg03A6yGPAnAw==
+To: Stephen Rothwell <sfr@canb.auug.org.au>, Ingo Molnar <mingo@kernel.org>,
+ "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
+ Richard Weinberger <richard@nod.at>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: duplicate patch in the tip tree
+In-Reply-To: <20250507132247.3e3076e3@canb.auug.org.au>
+References: <20250507132247.3e3076e3@canb.auug.org.au>
+Date: Wed, 07 May 2025 09:55:06 +0200
+Message-ID: <87tt5wn9d1.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250423075143.11157-1-johan+linaro@kernel.org>
+Content-Type: text/plain
 
-Hi Alexandre and Bjorn,
+On Wed, May 07 2025 at 13:22, Stephen Rothwell wrote:
+> The following commit is also in the uml tree as a different commit
+> (but the same patch):
+>
+>   48199713a6a8 ("um: Use irq_domain_create_linear() helper")
+>
+> This is commit
+>
+>   7633b8b1e793 ("irqdomain: um: use irq_domain_create_linear() helper")
+>
+> in the uml tree.
 
-On Wed, Apr 23, 2025 at 09:51:39AM +0200, Johan Hovold wrote:
-> On many Qualcomm platforms the PMIC RTC control and time registers are
-> read-only so that the RTC time can not be updated. Instead an offset
-> needs be stored in some machine-specific non-volatile memory, which a
-> driver can take into account.
-> 
-> On platforms where the offset is stored in a Qualcomm specific UEFI
-> variable the variables are also accessed in a non-standard way, which
-> means that the OS cannot assume that the variable service is available
-> by the time the driver probes.
-> 
-> This series adds a 'qcom,uefi-rtc-info' boolean DT property to indicate
-> that the RTC offset is stored in a Qualcomm specific UEFI variable so
-> that the OS can determine whether to wait for it to become available.
-> 
-> I used such a property in v1 of the series adding support for the UEFI
-> offset [1], but mistakenly convinced myself that it was not needed given
-> that the efivars driver would need to remain built in. As Rob Clark
-> noticed, this is however not sufficient and the driver can currently
-> fail to look up the offset if the RTC driver is built in or if a
-> dependency of the efivars driver is built as a module. [2]
-> 
-> As with the rest of this driver, hopefully all of this goes away (for
-> future platforms) once Qualcomm fix their UEFI implementation so that
-> the time service can be used directly.
-> 
-> Preferably the binding and driver fix can be merged for 6.15-rc by
-> Alexandre, while Bjorn takes the DT changes through the branch which has
-> the DT patches from v2 (which unfortunately missed 6.15 but may possibly
-> be sent as hw enablement fixups). [3]
+I zapped it from the irq/cleanups branch, which is the sink for all
+irqdomain cleanup patches which have not shown up in next.
 
-It seems we won't have RTC support in 6.15, but could you please pick
-these up for 6.16 to make sure that the RTC works also when the driver
-is built in?
+Thanks,
 
-> [1] https://lore.kernel.org/all/20250120144152.11949-1-johan+linaro@kernel.org/
-> [2] https://lore.kernel.org/all/aAecIkgmTTlThKEZ@hovoldconsulting.com/
-> [3] https://lore.kernel.org/lkml/20250219134118.31017-1-johan+linaro@kernel.org/
-> 
-> Johan Hovold (4):
->   dt-bindings: rtc: qcom-pm8xxx: add uefi-variable offset
->   rtc: pm8xxx: fix uefi offset lookup
->   arm64: dts: qcom: sc8280xp-x13s: describe uefi rtc offset
->   arm64: dts: qcom: x1e80100: describe uefi rtc offset
-
-Johan
+        tglx
