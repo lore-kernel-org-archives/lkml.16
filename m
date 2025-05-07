@@ -1,55 +1,51 @@
-Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEED4205E3B
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 06:52:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF381211479
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 06:54:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746600767; cv=none; b=DWBflb2sp3ZPRbQgA9DNi5Qonr23HAU05ZMK85n5o7DSmYpnhA5A2UEjGanWpY/8Hnv64XSSUhGTh9Iw0SICuppUIHzPdL3GwDV0EPav1eD47RUc1S+m2BSqTV0aDC5pS5yUYgaWhIr6kMvoiAqEg/6gLXyfdp1+lP/HK4c07tY=
+	t=1746600855; cv=none; b=MB1FF0+rNMSmo9ApNzqm+7rdmsq/Df9kgt+CqkWoqfHt48HH7bty0o1h8VMNLRshfdzpHR4AE5Bqy2R6+ucNEop7yEtNiDGe2e+VJEvU3WFNRpWnz+c3t9OMRzW3bsv03Pb1XpxycroNED8Jon4RfDNR6DVOshCWSloEdagwNAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746600767; c=relaxed/simple;
-	bh=/l7P4tozCWj40CYTAeBqIlKaSg2GndEAVKo+n8Ixd7E=;
+	s=arc-20240116; t=1746600855; c=relaxed/simple;
+	bh=PtNzqmp20p/hblDiVAQTV2nsHx22vPusBRDkLdyzsvw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ghlpib1luQgP0Uhv/gw88D4KHGRHP0DZw/9YLDGptp6M2e2Qf95/hvyRM4G7DmqTPMzmOpJj7Vejt0Ahneql4YgHvsrBV56f0VAPzPmIrHQr6v7DYmKH3I9pGyAMOVHD5Tk4s/ZUCH+eWl28w8M1DdJmU2zgmA8rQwDEKFTVQdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=HKKiYY1Q; arc=none smtp.client-ip=95.215.58.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vb1dTNgCl+0hs9KqMUZ0X+6MbUDgqkgKLO6PlkpK5tjvWIXCOgLaM/OJeEUVKvnpqZHFwxf4a0JvyaYuJqYHK8fbemAL62GKiPKxtUxy0YMf3N1l5R938wSJzpWufVvP5PqNPKhgnIIoEsWufzHkPl59FZzdL1BWJ5YUUox48J4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=W0gADbho; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="HKKiYY1Q"
-Date: Wed, 7 May 2025 06:52:35 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1746600762;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8HaiMZiXg2nwNYj42sWaIow6hUDCogkFMm2uGLi8rdk=;
-	b=HKKiYY1QDJwP06WEgxcLyYYpnmbEJ7z0MJcFfAWzsdS23MQU3W3NcE4urZkrZ3tihR0DAv
-	U3634YnEd2hT0crdvSEErHvZ5102hKmry0wewqS0J8fFluONG/Xcg/zDShYWVd5Y7pnkGU
-	5uSxAK/4Mkdm0cr2atbVratS2wiB/9k=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yosry Ahmed <yosry.ahmed@linux.dev>
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: Tejun Heo <tj@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
-	Alexei Starovoitov <ast@kernel.org>,
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="W0gADbho"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=nmQLpf+AM+jFKpY32ZXiygXe9j4W/ZtuRVuOcJgme7U=; b=W0gADbhoZtP7n3LRtRmLU6FmEO
+	4RUCFYXZKQnLHJKT3kOT1Gi1RESLVr3GNz27jAjWkMvMQPAUoJgoEdfb41EjR07nSN5xCWGZR/GJo
+	og2VaibyqpEED6YPR/s4oJufqNMHqboZbExzTFgydLdDAYMqzOLHkRuuqo75gcEup0q5LYy3c5coX
+	coHS7/KOCjw0KaqOOqT+H80xaq64jr88seYmeb4AqHgAiPWgnsp57ybndG8YRN/qfiEdSVuTyBBuF
+	Ojn7FQtFq4fz6Pu5SHGNbIFvcEbH7T2q/Iqg8fnKQRi0LbOvvT8VGIsnBP2emMdreI1puF2LaAN1g
+	2KW+vI1A==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uCYfP-0000000ER09-34Tq;
+	Wed, 07 May 2025 06:54:07 +0000
+Date: Tue, 6 May 2025 23:54:07 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: Yosry Ahmed <yosry.ahmed@linux.dev>,
+	Vitaly Wool <vitaly.wool@konsulko.se>, linux-mm@kvack.org,
+	akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+	Nhat Pham <nphamcs@gmail.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
 	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	JP Kobryn <inwardvessel@gmail.com>, bpf@vger.kernel.org,
-	linux-mm@kvack.org, cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Meta kernel team <kernel-team@meta.com>
-Subject: Re: [RFC PATCH 3/3] cgroup: make css_rstat_updated nmi safe
-Message-ID: <aBsDM6aa4u50xgnj@google.com>
-References: <20250429061211.1295443-1-shakeel.butt@linux.dev>
- <20250429061211.1295443-4-shakeel.butt@linux.dev>
- <aBIiNMXIl6vyaNQ6@Asmaa.>
- <6u7ccequ5ye3e4iqblcdeqsigindo3xjpsvkdb6hyaw7cpjddc@u2ujv7ymlxc6>
- <aBnZMBJ-OOEXvpUa@google.com>
- <mie6pn3q4epjgfm4kdilqmx55d6zowpmf7tfjm6a3bxuilza7y@nmt7xr3vctbu>
+	Minchan Kim <minchan@kernel.org>, Igor Belousov <igor.b@beldev.am>,
+	Herbert Xu <herbert@gondor.apana.org.au>
+Subject: Re: [PATCH] mm/zblock: use vmalloc for page allocations
+Message-ID: <aBsDj0IGQBJC_JMj@infradead.org>
+References: <20250502080156.1672957-1-vitaly.wool@konsulko.se>
+ <aBoK7f7rtfbPFGap@google.com>
+ <m2dmxnhtvxano6lye7lr3saiobn4ygpln55xntlstfo4zwws5g@qpq7aagx3xwq>
+ <b42gpp5qsa4j22ai2v4rwwkjhvfbcbf3lcnjoccz7xeidae5c7@ot2ocric3qzs>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,79 +54,22 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <mie6pn3q4epjgfm4kdilqmx55d6zowpmf7tfjm6a3bxuilza7y@nmt7xr3vctbu>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <b42gpp5qsa4j22ai2v4rwwkjhvfbcbf3lcnjoccz7xeidae5c7@ot2ocric3qzs>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Tue, May 06, 2025 at 12:30:18PM -0700, Shakeel Butt wrote:
-> On Tue, May 06, 2025 at 09:41:04AM +0000, Yosry Ahmed wrote:
-> > On Thu, May 01, 2025 at 03:10:20PM -0700, Shakeel Butt wrote:
-> > > On Wed, Apr 30, 2025 at 06:14:28AM -0700, Yosry Ahmed wrote:
-> > > [...]
-> > > > > +
-> > > > > +	if (!_css_rstat_cpu_trylock(css, cpu, &flags)) {
-> > > > 
-> > > > 
-> > > > IIUC this trylock will only fail if a BPF program runs in NMI context
-> > > > and tries to update cgroup stats, interrupting a context that is already
-> > > > holding the lock (i.e. updating or flushing stats).
-> > > > 
-> > > 
-> > > Correct (though note that flushing side can be on a different CPU).
-> > > 
-> > > > How often does this happen in practice tho? Is it worth the complexity?
-> > > 
-> > > This is about correctness, so even a chance of occurance need the
-> > > solution.
-> > 
-> > Right, my question was more about the need to special case NMIs, see
-> > below.
-> > 
-> > > 
-> > > > 
-> > > > I wonder if it's better if we make css_rstat_updated() inherently
-> > > > lockless instead.
-> > > > 
-> > > > What if css_rstat_updated() always just adds to a lockless tree,
-> > > 
-> > > Here I assume you meant lockless list instead of tree.
-> > 
-> > Yeah, in a sense. I meant using lockless lists to implement the rstat
-> > tree instead of normal linked lists.
-> > 
-> > > 
-> > > > and we
-> > > > defer constructing the proper tree to the flushing side? This should
-> > > > make updates generally faster and avoids locking or disabling interrupts
-> > > > in the fast path. We essentially push more work to the flushing side.
-> > > > 
-> > > > We may be able to consolidate some of the code too if all the logic
-> > > > manipulating the tree is on the flushing side.
-> > > > 
-> > > > WDYT? Am I missing something here?
-> > > > 
-> > > 
-> > > Yes this can be done but I don't think we need to tie that to current
-> > > series. I think we can start with lockless in the nmi context and then
-> > > iteratively make css_rstat_updated() lockless for all contexts.
-> > 
-> > My question is basically whether it would be simpler to actually make it
-> > all lockless than special casing NMIs. With this patch we have two
-> > different paths and a deferred list that we process at a later point. I
-> > think it may be simpler if we just make it all lockless to begin with.
-> > Then we would have a single path and no special deferred processing.
-> > 
-> > WDYT?
+On Wed, May 07, 2025 at 03:08:08PM +0900, Sergey Senozhatsky wrote:
+> > This sounds interesting.  We might get rid of lots of memcpy()
+> > in object read/write paths, and so on.  I don't know if 0-order
+> > chaining was the only option for zsmalloc, or just happened to
+> > be the first one.
 > 
-> So, in the update side, always add to the lockless list (if not already)
-> and on the flush side, built the udpate tree from the lockless list and
-> flush it.
+> I assume we might have problems with zspage release path.  vfree()
+> should break .swap_slot_free_notify, as far as I can see.
+> .swap_slot_free_notify is called under swap-cluster spin-lock,
+> so if we free the last object in the zspage we cannot immediately
+> free that zspage, because vfree() might_sleep().
 
-Exactly, yes.
+Note that swap_slot_free_notify really needs to go away in favor
+of just sending a discard bio.  Having special block ops for a
+single user bypassing the proper block interface is not sustainable.
 
-> Hopefully this tree building and flushing can be done in a
-> more optimized way. Is this what you are suggesting?
-
-Yes, but this latter part can be a follow up if it's not straight
-forward. For now we can just add use a lockless list on the update side
-and move updating the tree (i.e updated_next and updated_children) to
-the flush side.
