@@ -1,124 +1,172 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31E41233145;
-	Wed,  7 May 2025 11:59:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B402C221F13;
+	Wed,  7 May 2025 11:59:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746619164; cv=none; b=cYEK9qEn+1cqpnRcsXjiL3lfSOQAy27TpX53mlHwkVR1yJZHBCa0+TzxoCGPvgUNTtcX+ef0xP96+V5lFJ76a7T+2m2Q4RSCxdeRFClDIySkYx1RowZVEmJ49e/zbSVKM8kAGzGH61HJsF4n0iPr/q5JHEyoJursHptRzZnjNTU=
+	t=1746619179; cv=none; b=Cu0qVAdhye1Vw69xTkEpmqnJQP2+ZhZZYNBZsLlduskY2VbXxDeDI6I6NZKskKD7D8F22Ggk9QERrREbNyGhzBtVMFHV1gcc6fep/2eixhVrXVBUIISrcXHUGrQ2LtNxjPXdD01kZ1goGlZLBXLvQzapnyz59MnVNm2we/+pfMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746619164; c=relaxed/simple;
-	bh=rMNcVWyizpvr9pCeVtXrkYPIJwohU5epjZ6h8slHQlg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fsYYnyyOsBx7sFHw0hNnIxiGyaj4rz0xZJ2Ymcq1u7Oe6RfLtGGF6y/2BAHAFcVLJsL+gzy7dMrLXnZLjNAn+q0cKDRWmZB6cW5ks689a/gujgqJ9vlDVCfQdzjrSLcem1xdTM+STwqbqF0iGeyyrXdbhDexJK5OilxcMVBr7NU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=plzHwW51; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="plzHwW51"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93638C4CEE7;
-	Wed,  7 May 2025 11:59:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746619163;
-	bh=rMNcVWyizpvr9pCeVtXrkYPIJwohU5epjZ6h8slHQlg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=plzHwW510uASisGKfCbRnZKXKusT8SHLLGS9YeXw4M3VTEhaxn3RiGs40p63OJK84
-	 iQ3uB9M5zq80QtE7cOHFqKSnvY2GWHikroKbWZF4yb3KhdnbbzQY1YN+WP/uc1mMyl
-	 HgnWQbo9Zf1BLue8P8dSMjg/HnX88Kmg42EVZmyGNPCAstWt4/Ny22HsTID3qgqYmq
-	 FIzeTFc8gSwiwA9R8mB/P5/uAhVXBw9yKKLo/JS6Q25d3Jwe0gfyEO72PxEKgTaTXD
-	 CKGIjKTbv6hk7TwA8ENgizR4fO7HX37QjJYmeChZw02uKwZh6wB+EvcRk1C/a0eOb8
-	 Z20Z92MXpiEJQ==
-Received: by mail-ot1-f42.google.com with SMTP id 46e09a7af769-72ec58e45baso4398994a34.2;
-        Wed, 07 May 2025 04:59:23 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUSKYDr//huQ+hh3EmgrT8FRt7pztaul/i3B5xmgKti+wun1pwMVloi0PtlXApwuqvV2UR9b7OOq6oFo0cU@vger.kernel.org, AJvYcCV9htlBgbC1iqptGYzm4R5zJ5XPC1N7jQFdP6U6ADqJfhPLqKhrBHmGhh/lgj6r5ny4ydDVoTAgqAb9@vger.kernel.org, AJvYcCWueQMzv44ayK91Jc+xMjNLf1kFyYbP3KXSDY//E+SfV7Lox3knIk09OTeDROeP19qfE6Epikyk@vger.kernel.org
-X-Gm-Message-State: AOJu0YzEziWclOkdqvJwOOB2ppCDPcZUcLZmU8gMvv/hpUaaFKdPSATJ
-	A8m7UrQK1UJgwPItk0cejuJ1lRTS/YS7J3jYPA9C8UvhSJ8McrOygu9/LAhfIhcQUcelj7qWNcQ
-	z6cEEN9/u9TWsiuPmpLIUSQKNFc8=
-X-Google-Smtp-Source: AGHT+IFQ0rnuQoFb844+kgJStSDvA/qPO+oOSqmCxZhuZGNi8wWvpNim0B2eq1+jsmFt7rTsMyHN73YANujP8kYHYWs=
-X-Received: by 2002:a05:6870:46aa:b0:29e:65ed:5c70 with SMTP id
- 586e51a60fabf-2db5c08281bmr1892495fac.30.1746619162927; Wed, 07 May 2025
- 04:59:22 -0700 (PDT)
+	s=arc-20240116; t=1746619179; c=relaxed/simple;
+	bh=AI1HsAKecU9VCI5dP/B+WfjaQBA4Oer2ejuRed1fboI=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=HoEAfldLJVgQA79o6We7H5X89z0zLyab0D+54LCK86ntbuBqBVZdwY+Ve99xBI7QvgCwG059AdIsVLYgCRVCi3dpo8qwlBeSRW3A6gK9q07p+IOIjGkOW/aeQ9rN9WMGaQ5UPGrLnHK1L3Aecll+gm98UsIBwGf97BoeHdTAk1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AC905339;
+	Wed,  7 May 2025 04:59:26 -0700 (PDT)
+Received: from [10.1.30.69] (Suzukis-MBP.cambridge.arm.com [10.1.30.69])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id BC54B3F5A1;
+	Wed,  7 May 2025 04:59:34 -0700 (PDT)
+Message-ID: <f4db016a-0c57-4213-8eca-75a090d7aabb@arm.com>
+Date: Wed, 7 May 2025 12:59:33 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250506-draco-taped-15f475cd@mheyne-amazon> <20250506-shapeless-merciful-inchworm-7bfdb4@sudeepholla>
- <35895e57-bbe2-4ff9-b1d4-4b70e28ed8a1@arm.com> <20250507-argue-rant-9f48ba38@mheyne-amazon>
-In-Reply-To: <20250507-argue-rant-9f48ba38@mheyne-amazon>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 7 May 2025 13:59:12 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0gTRcivKKVOx8YhrPyfXJBwL0x+zay9wXrWeod4Lf_Kwg@mail.gmail.com>
-X-Gm-Features: ATxdqUGtNzluXM9CbDzPKfcLxiAeEkWEA0mvdrc4rPN-g20JpiBsi9_eupPU8jU
-Message-ID: <CAJZ5v0gTRcivKKVOx8YhrPyfXJBwL0x+zay9wXrWeod4Lf_Kwg@mail.gmail.com>
-Subject: Re: [PATCH] ACPI/PPTT: fix off-by-one error
-To: "Heyne, Maximilian" <mheyne@amazon.de>
-Cc: Jeremy Linton <jeremy.linton@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, 
-	"stable@vger.kernel.org" <stable@vger.kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
-	Ard Biesheuvel <ardb@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/2] coresight: add coresight Trace Network On Chip
+ driver
+Content-Language: en-GB
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+To: Yuanfang Zhang <quic_yuanfang@quicinc.com>,
+ Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: kernel@oss.qualcomm.com, linux-arm-msm@vger.kernel.org,
+ coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250411-trace-noc-v3-0-1f19ddf7699b@quicinc.com>
+ <20250411-trace-noc-v3-2-1f19ddf7699b@quicinc.com>
+ <23d02991-3bc6-41e2-bb8b-a38786071c43@arm.com>
+ <257fb0a5-7bf7-4a04-9f8d-d8759351584c@quicinc.com>
+ <9b75b9d1-a9ed-46c9-9dba-8e3eb261dcc0@arm.com>
+ <4a6a8bad-e5d9-4613-a839-5a21491ef7c4@quicinc.com>
+ <069e920c-7023-4a6d-b1c6-dc87ac9d2360@arm.com>
+In-Reply-To: <069e920c-7023-4a6d-b1c6-dc87ac9d2360@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 7, 2025 at 1:53=E2=80=AFPM Heyne, Maximilian <mheyne@amazon.de>=
- wrote:
->
-> On Tue, May 06, 2025 at 03:11:20PM -0500, Jeremy Linton wrote:
-> > Hi,
-> >
-> > On 5/6/25 8:43 AM, Sudeep Holla wrote:
-> > > On Tue, May 06, 2025 at 01:13:02PM +0000, Heyne, Maximilian wrote:
-> > > > Commit 7ab4f0e37a0f ("ACPI PPTT: Fix coding mistakes in a couple of
-> > > > sizeof() calls") corrects the processer entry size but unmasked a l=
-onger
-> > > > standing bug where the last entry in the structure can get skipped =
-due
-> > > > to an off-by-one mistake if the last entry ends exactly at the end =
-of
-> > > > the ACPI subtable.
-> > > >
-> > >
-> > > Unless the firmware has populated an incorrect value for the header l=
-ength, I
-> > > don't see how this is possible. The table_end should point to the add=
-ress
-> > > immediately following the last byte of the table. None of the headers=
- are only
-> > > one byte long, so what am I missing that could explain this apparent
-> > > off-by-one issue?.
-> >
-> > More likely its because the sizeof() fix was merged without proper revi=
-ew
-> > and is wrong because the type isn't actually known on the object until =
-the
-> > header is checked.
->
-> I agree that the type might not be known at this point but the condition
->
->         proc_sz =3D sizeof(struct acpi_pptt_processor);
->           while((unsigned long)entry + proc_sz <=3D table_end)
->
-> would make sure that there could potentially be a node of type
-> acpi_pptt_processor because there is at least space for it. If the entry
-> can't be of that size because it would go over table_end then it can't
-> be an acpi_pptt_processor.
+On 07/05/2025 09:52, Suzuki K Poulose wrote:
+> On 07/05/2025 05:26, Yuanfang Zhang wrote:
+>>
+>>
+>> On 5/6/2025 7:20 PM, Suzuki K Poulose wrote:
+>>> On 14/04/2025 10:16, Yuanfang Zhang wrote:
+>>>>
+>>>>
+>>>> On 4/11/2025 5:59 PM, Suzuki K Poulose wrote:
+>>>>> On 11/04/2025 09:57, Yuanfang Zhang wrote:
+>>>>>> Add a driver to support Coresight device Trace Network On Chip 
+>>>>>> (TNOC),
+>>>>>> which is an integration hierarchy integrating functionalities of TPDA
+>>>>>> and funnels. It aggregates the trace and transports to coresight 
+>>>>>> trace
+>>>>>> bus.
+>>>>>>
+>>>>>> Compared to current configuration, it has the following advantages:
+>>>>>> 1. Reduce wires between subsystems.
+>>>>>> 2. Continue cleaning the infrastructure.
+>>>>>> 3. Reduce Data overhead by transporting raw data from source to 
+>>>>>> target.
+>>>>>>
+>>>>>>      +------------------------+                
+>>>>>> +-------------------------+
+>>>>>>      | Video Subsystem        |                |Video 
+>>>>>> Subsystem          |
+>>>>>>      |       +-------------+  |                |       
+>>>>>> +------------+    |
+>>>>>>      |       | Video TPDM  |  |                |       | Video 
+>>>>>> TPDM |    |
+>>>>>>      |       +-------------+  |                |       
+>>>>>> +------------+    |
+>>>>>>      |            |           |                |              | 
+>>>>>>           |
+>>>>>>      |            v           |                |              
+>>>>>> v          |
+>>>>>>      |   +---------------+    |                |        
+>>>>>> +-----------+    |
+>>>>>>      |   | Video funnel  |    |                |        |Video 
+>>>>>> TNOC |    |
+>>>>>>      |   +---------------+    |                |        
+>>>>>> +-----------+    |
+>>>>>>      +------------|-----------+                
+>>>>>> +------------|------------+
+>>>>>>                   |                                         |
+>>>>>>                   v-----+                                   |
+>>>>>> +--------------------|---------+                         |
+>>>>>> |  Multimedia        v         |                         |
+>>>>>> |  Subsystem   +--------+      |                         |
+>>>>>> |              |  TPDA  |      |                         v
+>>>>>> |              +----|---+      |              +---------------------+
+>>>>>> |                   |          |              |    Aggregator TNOC  |
+>>>>>> |                   |          |              +----------|----------+
+>>>>>> |                   +--        |                         |
+>>>>>> |                     |        |                         |
+>>>>>> |                     |        |                         |
+>>>>>> |              +------v-----+  |                         |
+>>>>>> |              |  Funnel    |  |                         |
+>>>>>> |              +------------+  |                         |
+>>>>>> +----------------|-------------+                         |
+>>>>>>                     |                                       |
+>>>>>>                     v                                       v
+>>>>>>          +--------------------+                    
+>>>>>> +------------------+
+>>>>>>          |   Coresight Sink   |                    |  Coresight 
+>>>>>> Sink  |
+>>>>>>          +--------------------+                    
+>>>>>> +------------------+
+>>>>>
+>>>>> If each NOC has TraceID, how do you reliably decode the trace ?
+>>>>> Is there a single NOC/TPDA in the path from Source to sink ?
+>>>>
+>>>> Not each TNOC has TraceID, there is only one TNOC has TraceID for 
+>>>> one path
+>>>> from Source to sink. In the example, only the aggregator TNOC has 
+>>>> traceID.
+>>>> Decode trace relying on TraceID + Inport number.
+>>>> It can has mutiple TNOC/TPDA in one path.
+>>>
+>>> So do we only describe the TNOCs that need traceId in the DT ? (e.g., 
+>>> Aggregator TNOC above ?) How about Video TNOC ? Don't we allocate a
+>>> trace id for it by default, when it is described ?
+>>>
+>>> Suzuki
+>>>
+>> yes, now only describe the TNOCs which need traceID, Video TNOC is 
+>> another type, it is interconnect TNOC which collects trace from 
+>> subsystems
+>> and transfers Aggr TNOC, it doesn't have ATID. Its driver is different 
+>> from this patch, I want to describe it when upstream its driver.
 
-I don't follow.
+So, if both are TNOC and there different types of them, how do you plan
+to identify, which is what ?
 
-If it is an acpi_pptt_processor entry, the original condition would be
-sufficient (assuming the correctness of the table header), wouldn't
-it?
+And we also have a dt-bindings which simply says "coresight-tnoc". Isn't 
+too generic if it is meant to be "aggregator" ?
 
-> Therefore, I don't think the sizeof() fix is that wrong but we just need
-> to adjust the while condition.
+Suzuki
 
-The sizeof() fix is correct, it makes the code work as designed.
 
-> Alternatively, we could at least make sure that we can safely access
-> (without crossing table_end) the acpi_subtable_header to check the type.
 
-Yes.
+> 
+> Thanks! Please could you make sure to describe all of this when sending
+> out a patch in the cover letter ?
+> 
+> Cheers
+> Suzuki
+> 
+> 
+>>
+>> Yuanfang
+>>
+>>
+>>
+>>
+>>
+>>
+> 
 
-> But the current approach seems cleaner to me.
-
-Why do you think so?
