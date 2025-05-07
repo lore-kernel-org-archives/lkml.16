@@ -1,62 +1,62 @@
-Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
+Received: from fhigh-a4-smtp.messagingengine.com (fhigh-a4-smtp.messagingengine.com [103.168.172.155])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1D4672637;
-	Wed,  7 May 2025 14:15:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56350154BF5;
+	Wed,  7 May 2025 14:15:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746627345; cv=none; b=Ej7FOXSvotUeuxv4gE/rdcUEYgXaxeQ2lyNxgzqy6xN6ksludPiggTbfDXR5uMTEjzfbk1C+QJ3W7bZ5zA4tIAt6rdOTZRWw8fpwlhDXxj3EtEwLL67F36qikUO0nOnRdn1DihQbsZcCYEPOOX9ZSu8bhEdEF/VOy9EhtFL2coE=
+	t=1746627346; cv=none; b=cvvVYhmT9IwdKPb4baxg3NWfcTscGFDaawPZ/QGnwIRDWEtpSkpR2k9znDStKVN/d5VYFO62GcZm+GhjeEuNvumLW1mYKJKMWJu3Xv5zYhScwI3bODOV4WiU7Non7AtmPhZxz9EdkJjgLDWts92AWDHx5AZ94nTNiNSYIZkI4N0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746627345; c=relaxed/simple;
-	bh=bI1sK8XMug1YgtyLkPeWDjQEoEo2Mj2X0dqd0ULkoac=;
+	s=arc-20240116; t=1746627346; c=relaxed/simple;
+	bh=fOydz4y/drJAKR93N8GFIJaT0o5lVRI0cMA3Qph5onc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=G96F2fVGoIczBWhy3ZN/qIUQ6zSk7tP5o6ZSCih6HlWGw6ymO1IXE6tW95tCU+MHP1esq6zdzSwDhyvyku0qN3kIsMIq+/yT/cUHvnd2ceTCwcCzPOMcf8E9jUVo1GlNAqW+f1BAFYFZucX2bKm5DXi5HfGhKXm6m6Z0J3595yQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net; spf=pass smtp.mailfrom=fluxnic.net; dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b=BmCncZrn; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ovTkNvM2; arc=none smtp.client-ip=103.168.172.145
+	 MIME-Version; b=VaCPYX9JzGcFusTkJnhf6gwIPL7B8ujG30rHrBaMwlX3LY+YJbiObmBRYs748D263uanZseSz9VkzhF0+uVejFL8Nifsb/jmVqjs8XqTGhbuLh+1IdqDnbVAcu6NZcZAvX/JSlSSsBIpfuWUFA/JleNdsq3tKQPa+NLoEVJ1gRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net; spf=pass smtp.mailfrom=fluxnic.net; dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b=WHMglofU; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=QQxI3y3Y; arc=none smtp.client-ip=103.168.172.155
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fluxnic.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="BmCncZrn";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ovTkNvM2"
-Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
-	by mailfout.phl.internal (Postfix) with ESMTP id B7CF213801F4;
-	Wed,  7 May 2025 10:15:42 -0400 (EDT)
+	dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="WHMglofU";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="QQxI3y3Y"
+Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 4BDEE114017C;
+	Wed,  7 May 2025 10:15:43 -0400 (EDT)
 Received: from phl-frontend-02 ([10.202.2.161])
-  by phl-compute-06.internal (MEProxy); Wed, 07 May 2025 10:15:42 -0400
+  by phl-compute-01.internal (MEProxy); Wed, 07 May 2025 10:15:43 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fluxnic.net; h=
 	cc:cc:content-transfer-encoding:content-type:date:date:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm3; t=1746627342; x=
-	1746713742; bh=II0FV8lIQGnLCFCBAKSVPcW42zDW/Eux7qlFDWL5iyg=; b=B
-	mCncZrnp7Z9ItUHcrhcWtZR1yHYEJh4x/16TkBkeUcJ9zS8tyMqngAvCsYzqZhX9
-	j/2mPY9K/9qy3VC4tF/OBdYfjGiN9BkK1PdP9RP1oUrCozim0D7h307FSJd2An2H
-	PwxJEtW829MtNK33S9ug8WsQljGYhHeagmrjefjfvuuoXBtCxGwVsMzWu1b5gjph
-	4CGoayYEy14LIgAGt+ve/x0sKwaM2cKD0VEHERLIEbMjKObs2wFom4l6zClF20JW
-	+i7MxVUgZRC6yjuZfxz0948sAcxAUM9Zrqr8roUCWQOLPDHq6rsKS4muwcaRoNoR
-	JP4ddTroj0uBSuVHcQmNA==
+	:reply-to:subject:subject:to:to; s=fm3; t=1746627343; x=
+	1746713743; bh=Py0Va1HDiIsGqDWWb5pBWUG7kvw0GVMTGbRUvoizj3Q=; b=W
+	HMglofUAwSeNBM2l8zXPrGUmQGNGi57xBOjbm+kiaT8ZJYzAwuuh4k1b+V+vSQUX
+	Okrx8GvQlH8U7qYMUJ638dWu/0ZAc4yLEDBFkKnW7GjfuC7OR8M8f4oVFxNnGD38
+	PVSEc9RaQkT7IuQGiifG2PSZY5HmLRWEyu7WafEEF0m6o9AtJJzIACwB772sHbgq
+	nR07F46iDYnpXe5GmFyPJ/w0l9eYUbiMYm+aeFN3aw/HjrBG4sxV4yE/Cwb8Dg4o
+	jfhULA0eoCObE5cXzuIaKySP/p8RriDcLBqyIKZQ/bpXMp/fdeCCwIUUFakZt6Np
+	kDc+m8J8cqNJD2757tqKQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:date:date:feedback-id:feedback-id:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
 	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm3; t=1746627342; x=1746713742; bh=I
-	I0FV8lIQGnLCFCBAKSVPcW42zDW/Eux7qlFDWL5iyg=; b=ovTkNvM2ZO4TZ7iQb
-	mpnbdlmCkWeJT24Qdbwj9Qg7wdIhu+HBEDM5D5rM5kg1PxFTxr2NA1ds30d1Qr2k
-	yzfw16ZeFaTM5uVUGXkWmfcgFU0/CIfXECSwv/oYrC3fhOV0rdU3w1LAHb5PkRLL
-	RSWun1kCVunmzoC34JOdubweBHrfXDAHW3MRfW3cP6Vn97AEedUOZsWEgdTI4e+g
-	DQgbR8WX72LeovoGdpVSB0iYHZgc4pMsmDqzi2WQeYGNUJh8NTKgsP7qo+or7e9s
-	L+/OzLhw5mm/qdZDFToH8AX3HVLFgj8H/4LVtY2piOsHfSRymWoUuHPMDQp6xN+B
-	tfYiA==
-X-ME-Sender: <xms:DmsbaPRlXYEBzT2b73MCZtVHAnzBHmcKwVADgloz7IA3ZWCFB5uwRQ>
-    <xme:DmsbaAy9Q9sD-xGCJKEtbve3HnRfmDTNfAR1Vg4tgLURsreaUowZyFaAKBT0YFARd
-    I3dUsDLt4-TDGNByWA>
-X-ME-Received: <xmr:DmsbaE2eIN68Y3aOr-UdO-qIH5wwki_jnLs9tq5yFxXBWAdVzYPz2rG77sVZG10jirC_tOWTFWMX5_CDKrg9X9YJ0mheizek0mGpZMTvPjtyVwelxg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeejtdekucetufdoteggodetrf
+	:x-me-sender:x-sasl-enc; s=fm3; t=1746627343; x=1746713743; bh=P
+	y0Va1HDiIsGqDWWb5pBWUG7kvw0GVMTGbRUvoizj3Q=; b=QQxI3y3YdBRIcRrPn
+	jFa7duJhMtcOfe0y2DcmXiqTS02imsJ2ygUxAdJlLk9u3BXAEbpX3EnsttN56FzZ
+	UqhUFb4D9Jas0D/3opatpkEdzPyGTDQqsuK9XMU9ppNkcr1mlJ8KOgqiCtBVWRo2
+	CYyJdgOqnYE2Cgck9AemXtAngMe1w+VJna1x8sLIAlAg8BsDyyHK8MrmgR0AaKME
+	zJWPwUzhgsbRgfSt9DdMYSx7F7aZK2KMC64SAPmuTfbg1s7HF6zuzF5hOJ5tVUK/
+	ijB/5bhyqkYsL8y9hngJJC86zaD8M2jIhx/mkURZXFqo+mnlIzxNo3Mv6u5xUyDa
+	MM5wA==
+X-ME-Sender: <xms:D2sbaAYbzDn4wagFdICIRzO6KhcaLUJHJ1kHwDAJ5-2MmckJHtuywQ>
+    <xme:D2sbaLYBrWEItdJiwBkbdkv9P-k067SriSSG3czipRudves79ihLFz9m7FgzmsKtC
+    J7saEujf5sTcaEFTh8>
+X-ME-Received: <xmr:D2sbaK-WW2U0dzI-ccoUYB7_log_FzQL6H3pArvK9PxL3KnyilWG8suwqmeEv85kIVBBgYfNu4XySDatukpIiwLoD5vbEGDnLZ_sCSpl5QSKanb6jQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeejtdejucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
     pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
     gvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredt
     tdenucfhrhhomheppfhitgholhgrshcurfhithhrvgcuoehnihgtohesfhhluhignhhitg
     drnhgvtheqnecuggftrfgrthhtvghrnheptdejueeiieehieeuffduvdffleehkeelgeek
-    udekfeffhfduffdugedvteeihfetnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    udekfeffhfduffdugedvteeihfetnecuvehluhhsthgvrhfuihiivgepudenucfrrghrrg
     hmpehmrghilhhfrhhomhepnhhitghosehflhhugihnihgtrdhnvghtpdhnsggprhgtphht
     thhopeehpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehnphhithhrvgessggrhi
     hlihgsrhgvrdgtohhmpdhrtghpthhtohepjhhirhhishhlrggshieskhgvrhhnvghlrdho
@@ -64,26 +64,26 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeejtdekucetufdote
     hgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdho
     rhhgpdhrtghpthhtoheplhhinhhugidqshgvrhhirghlsehvghgvrhdrkhgvrhhnvghlrd
     horhhg
-X-ME-Proxy: <xmx:DmsbaPAA_Ns2o0EcH23wsbG4kHgeuOotsmDxirFCDgVGCYBJ9_fpKA>
-    <xmx:DmsbaIjKp0wa792qToD0Mq1VjzR8Q94USJbzr__ah1JRUXPt_A_qtQ>
-    <xmx:DmsbaDoIron3KHKC4XLT7fbkWahgPzwbl5R-II4VF4aOPDXo5ZZd3w>
-    <xmx:DmsbaDguk06LIDKpr2iXStgQ7HcUikU_bqiZ7kcltQ83ifTgwp4etQ>
-    <xmx:DmsbaITudrqbvEi8B0RwNc-FU33P2wFe80X2mu8VQvfuJKYdyOKgf7gl>
+X-ME-Proxy: <xmx:D2sbaKrOl2GI4U7y_4o_UUfNOfWPE1c06SUIhkeTcVnuzkYjG7juHg>
+    <xmx:D2sbaLp-Sx5Atdm_bXWV6hsXiBUTsR8xxWOc1nAusk_0UCGyeXKmKQ>
+    <xmx:D2sbaIStXlrWQEAJjK1TmVatlrIFi9YbO-EJ0ENw6qbhqV0UeDkQ-w>
+    <xmx:D2sbaLoKgmqbJaTduorsp_Zwecpoxfc1nLw3Vlf6CQrXa7xdIc-EWw>
+    <xmx:D2sbaM5a0iCASPD4u66oFEJU12fOr2iPTvZxRxV1mBg1grlTLXT1vx9V>
 Feedback-ID: i58514971:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
  7 May 2025 10:15:42 -0400 (EDT)
 Received: from xanadu.lan (OpenWrt.lan [192.168.1.1])
-	by yoda.fluxnic.net (Postfix) with ESMTPSA id DF5BE1189EA3;
-	Wed, 07 May 2025 10:15:41 -0400 (EDT)
+	by yoda.fluxnic.net (Postfix) with ESMTPSA id 6A7C51189EA8;
+	Wed, 07 May 2025 10:15:42 -0400 (EDT)
 From: Nicolas Pitre <nico@fluxnic.net>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Jiri Slaby <jirislaby@kernel.org>
 Cc: Nicolas Pitre <npitre@baylibre.com>,
 	linux-serial@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/8] vt: move glyph determination to a separate function
-Date: Wed,  7 May 2025 10:13:18 -0400
-Message-ID: <20250507141535.40655-4-nico@fluxnic.net>
+Subject: [PATCH v2 6/8] vt: add ucs_get_fallback()
+Date: Wed,  7 May 2025 10:13:21 -0400
+Message-ID: <20250507141535.40655-7-nico@fluxnic.net>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250507141535.40655-1-nico@fluxnic.net>
 References: <20250507141535.40655-1-nico@fluxnic.net>
@@ -97,115 +97,145 @@ Content-Transfer-Encoding: 8bit
 
 From: Nicolas Pitre <npitre@baylibre.com>
 
-No logical changes. Make it easier for enhancements to come.
+This is the code querying the newly introduced tables.
 
 Signed-off-by: Nicolas Pitre <npitre@baylibre.com>
 ---
- drivers/tty/vt/vt.c | 71 ++++++++++++++++++++++++---------------------
- 1 file changed, 38 insertions(+), 33 deletions(-)
+ drivers/tty/vt/Makefile    |  3 +-
+ drivers/tty/vt/ucs.c       | 84 ++++++++++++++++++++++++++++++++++++++
+ include/linux/consolemap.h |  6 +++
+ 3 files changed, 92 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-index 58fa1b285f22..556af82a9231 100644
---- a/drivers/tty/vt/vt.c
-+++ b/drivers/tty/vt/vt.c
-@@ -2925,6 +2925,7 @@ static void vc_con_rewind(struct vc_data *vc)
+diff --git a/drivers/tty/vt/Makefile b/drivers/tty/vt/Makefile
+index 509362a3e11e..ae746dcdeec8 100644
+--- a/drivers/tty/vt/Makefile
++++ b/drivers/tty/vt/Makefile
+@@ -36,7 +36,8 @@ $(obj)/defkeymap.c: $(obj)/%.c: $(src)/%.map
  
- #define UCS_ZWS		0x200b	/* Zero Width Space */
- #define UCS_VS16	0xfe0f	/* Variation Selector 16 */
-+#define UCS_REPLACEMENT	0xfffd	/* Replacement Character */
+ endif
  
- static int vc_process_ucs(struct vc_data *vc, int *c, int *tc)
- {
-@@ -2984,12 +2985,38 @@ static int vc_process_ucs(struct vc_data *vc, int *c, int *tc)
- 	return 0;
+-$(obj)/ucs.o: $(src)/ucs.c $(obj)/ucs_width_table.h $(obj)/ucs_recompose_table.h
++$(obj)/ucs.o:	$(src)/ucs.c $(obj)/ucs_width_table.h \
++		$(obj)/ucs_recompose_table.h $(obj)/ucs_fallback_table.h
+ 
+ # You may uncomment one of those to have the UCS tables be regenerated
+ # during the build process. By default the _shipped versions are used.
+diff --git a/drivers/tty/vt/ucs.c b/drivers/tty/vt/ucs.c
+index b0b23830170d..6c15c5deda5b 100644
+--- a/drivers/tty/vt/ucs.c
++++ b/drivers/tty/vt/ucs.c
+@@ -157,3 +157,87 @@ u32 ucs_recompose(u32 base, u32 mark)
+ 
+ 	return result ? result->recomposed : 0;
  }
- 
-+static int vc_get_glyph(struct vc_data *vc, int tc)
++
++/*
++ * The fallback table structures implement a 2-level lookup.
++ */
++
++struct ucs_page_desc {
++	u8 page;	/* Page index (high byte of code points) */
++	u8 count;	/* Number of entries in this page */
++	u16 start;	/* Start index in entries array */
++};
++
++struct ucs_page_entry {
++	u8 offset;	/* Offset within page (0-255) */
++	u8 fallback;	/* Fallback character or range start marker */
++};
++
++#include "ucs_fallback_table.h"
++
++static int ucs_page_desc_cmp(const void *key, const void *element)
 +{
-+	int glyph = conv_uni_to_pc(vc, tc);
-+	u16 charmask = vc->vc_hi_font_mask ? 0x1ff : 0xff;
++	u8 page = *(u8 *)key;
++	const struct ucs_page_desc *entry = element;
 +
-+	if (!(glyph & ~charmask))
-+		return glyph;
-+
-+	if (glyph == -1)
-+		return -1; /* nothing to display */
-+
-+	/* Glyph not found */
-+	if ((!vc->vc_utf || vc->vc_disp_ctrl || tc < 128) && !(tc & ~charmask)) {
-+		/*
-+		 * In legacy mode use the glyph we get by a 1:1 mapping.
-+		 * This would make absolutely no sense with Unicode in mind, but do this for
-+		 * ASCII characters since a font may lack Unicode mapping info and we don't
-+		 * want to end up with having question marks only.
-+		 */
-+		return tc;
-+	}
-+
-+	/* Display U+FFFD (Unicode Replacement Character). */
-+	return conv_uni_to_pc(vc, UCS_REPLACEMENT);
++	if (page < entry->page)
++		return -1;
++	if (page > entry->page)
++		return 1;
++	return 0;
 +}
 +
- static int vc_con_write_normal(struct vc_data *vc, int tc, int c,
- 		struct vc_draw_region *draw)
++static int ucs_page_entry_cmp(const void *key, const void *element)
++{
++	u8 offset = *(u8 *)key;
++	const struct ucs_page_entry *entry = element;
++
++	if (offset < entry->offset)
++		return -1;
++	if (entry->fallback == UCS_PAGE_ENTRY_RANGE_MARKER) {
++		if (offset > entry[1].offset)
++			return 1;
++	} else {
++		if (offset > entry->offset)
++			return 1;
++	}
++	return 0;
++}
++
++/**
++ * ucs_get_fallback() - Get a substitution for the provided Unicode character
++ * @base: Base Unicode code point (UCS-4)
++ *
++ * Get a simpler fallback character for the provided Unicode character.
++ * This is used for terminal display when corresponding glyph is unavailable.
++ * The substitution may not be as good as the actual glyph for the original
++ * character but still way more helpful than a squared question mark.
++ *
++ * Return: Fallback Unicode code point, or 0 if none is available
++ */
++u32 ucs_get_fallback(u32 cp)
++{
++	const struct ucs_page_desc *page;
++	const struct ucs_page_entry *entry;
++	u8 page_idx = cp >> 8, offset = cp;
++
++	if (!UCS_IS_BMP(cp))
++		return 0;
++
++	page = __inline_bsearch(&page_idx, ucs_fallback_pages,
++				ARRAY_SIZE(ucs_fallback_pages),
++				sizeof(*ucs_fallback_pages),
++				ucs_page_desc_cmp);
++	if (!page)
++		return 0;
++
++	entry = __inline_bsearch(&offset, ucs_fallback_entries + page->start,
++				 page->count, sizeof(*ucs_fallback_entries),
++				 ucs_page_entry_cmp);
++	if (!entry)
++		return 0;
++
++	if (entry->fallback == UCS_PAGE_ENTRY_RANGE_MARKER)
++		entry++;
++	return entry->fallback;
++}
+diff --git a/include/linux/consolemap.h b/include/linux/consolemap.h
+index 8167494229db..6180b803795c 100644
+--- a/include/linux/consolemap.h
++++ b/include/linux/consolemap.h
+@@ -31,6 +31,7 @@ void console_map_init(void);
+ bool ucs_is_double_width(uint32_t cp);
+ bool ucs_is_zero_width(uint32_t cp);
+ u32 ucs_recompose(u32 base, u32 mark);
++u32 ucs_get_fallback(u32 cp);
+ #else
+ static inline u16 inverse_translate(const struct vc_data *conp, u16 glyph,
+ 		bool use_unicode)
+@@ -75,6 +76,11 @@ static inline u32 ucs_recompose(u32 base, u32 mark)
  {
- 	int next_c;
- 	unsigned char vc_attr = vc->vc_attr;
--	u16 himask = vc->vc_hi_font_mask, charmask = himask ? 0x1ff : 0xff;
-+	u16 himask = vc->vc_hi_font_mask;
- 	u8 width = 1;
- 	bool inverse = false;
+ 	return 0;
+ }
++
++static inline u32 ucs_get_fallback(u32 cp)
++{
++	return 0;
++}
+ #endif /* CONFIG_CONSOLE_TRANSLATIONS */
  
-@@ -3000,39 +3027,17 @@ static int vc_con_write_normal(struct vc_data *vc, int tc, int c,
- 	}
- 
- 	/* Now try to find out how to display it */
--	tc = conv_uni_to_pc(vc, tc);
--	if (tc & ~charmask) {
--		if (tc == -1)
--			return -1; /* nothing to display */
-+	tc = vc_get_glyph(vc, tc);
-+	if (tc == -1)
-+		return -1; /* nothing to display */
-+	if (tc < 0) {
-+		inverse = true;
-+		tc = conv_uni_to_pc(vc, '?');
-+		if (tc < 0)
-+			tc = '?';
- 
--		/* Glyph not found */
--		if ((!vc->vc_utf || vc->vc_disp_ctrl || c < 128) &&
--				!(c & ~charmask)) {
--			/*
--			 * In legacy mode use the glyph we get by a 1:1
--			 * mapping.
--			 * This would make absolutely no sense with Unicode in
--			 * mind, but do this for ASCII characters since a font
--			 * may lack Unicode mapping info and we don't want to
--			 * end up with having question marks only.
--			 */
--			tc = c;
--		} else {
--			/*
--			 * Display U+FFFD. If it's not found, display an inverse
--			 * question mark.
--			 */
--			tc = conv_uni_to_pc(vc, 0xfffd);
--			if (tc < 0) {
--				inverse = true;
--				tc = conv_uni_to_pc(vc, '?');
--				if (tc < 0)
--					tc = '?';
--
--				vc_attr = vc_invert_attr(vc);
--				con_flush(vc, draw);
--			}
--		}
-+		vc_attr = vc_invert_attr(vc);
-+		con_flush(vc, draw);
- 	}
- 
- 	next_c = c;
+ #endif /* __LINUX_CONSOLEMAP_H__ */
 -- 
 2.49.0
 
