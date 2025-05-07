@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4468E28E57E
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 17:54:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8597F28DEED
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 17:54:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746640443; cv=none; b=VL5kDOkgi+lytIMVkuw9ZUfCQ80nMXatH+MqzLEiYqDsN+mNcgi6au4+83xpIjyKpiuU91f3QvAN7KpEv97d8X6joZJyKvlH9n0U/WZJ7Hq2o7BmSaW9wV7K1yIwbWJlxqgKYK/XhPtZUeS0LqSeEv7HzDibOt/4MM+BXoapz5M=
+	t=1746640445; cv=none; b=ra5wwKfqPG9cITh+s6AxG7S7UtFG7lVpgIjz4I0+th8VK+O9MuZzK7JHX7IQCK5zDerV2lf8xW1fYgJv+T0zfIMT4XjEXElLD0LSeEu807c3SXaYYvVanKOoewlvrx013EzkVYsST7D4eqedS0t12CpK/3LiLkjybtEb8Le6tF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746640443; c=relaxed/simple;
-	bh=oG+fQEPQ4WfT1raR1kMyUBIFkGs+bNkQPBuqPQUuGqY=;
+	s=arc-20240116; t=1746640445; c=relaxed/simple;
+	bh=Z/QKS2DGupsrMUJ0jAlYbhY8vfB8wvUQH5GzbvK0ZeY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oRNphipWZJRtsXHBgDRm0NSeduvbWyE7Sl3Ow0Vsqjt6jHRya8RNk1LtgaqxsV4LYm9DJ9O0n394f75+7oFBhEbXVqpSEfvKRAElWaWbXfltPozf0OXWw5U8jCBhWOGaliD082YeBJdlmF9x3KcLG3U4Ry9FDLFPWVqByAhbGUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AUDxj830; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=q3AyiXFBCWVY+oGi9J1XcBisuvdi05gW2T0wv30TbpMd62Fqr91HiWifX0leNXZKuuMDuCC+YGhiWcaMG0h/iYYFsPN7nxiaVFjEJK9wHvnkDtB1ZTeAsH4RPuKXSFrwddUAJsZdblQZFiwNGMvR15UDrX3M3kNtegPQPlMyUqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mygd1S50; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AUDxj830"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6357DC4CEE9;
-	Wed,  7 May 2025 17:54:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mygd1S50"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F21BC4CEE2;
+	Wed,  7 May 2025 17:54:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746640443;
-	bh=oG+fQEPQ4WfT1raR1kMyUBIFkGs+bNkQPBuqPQUuGqY=;
+	s=k20201202; t=1746640445;
+	bh=Z/QKS2DGupsrMUJ0jAlYbhY8vfB8wvUQH5GzbvK0ZeY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=AUDxj830jhhnZ3jthXlcDBSfzXc75sptImMkYZDA7ub7am++7vUJBibopIhNQDaa9
-	 7Uj4lFD6/NaY4rJbJ8pgTZOupzrCqpr0UTcnibxA2kqJ0RxDrHfrbB4g7/M2LAdWE4
-	 rEe0OMhuXb8uMElUpNfuJnNIK6f/j33GKZnZ8dtBEhtwVla5ZMH/hcahTDq6f3qO/o
-	 4r7EDPB8ypCSzFFN7uGO29y6i4Ah6vdOu/e9jgIODQSVzq/pHpVq2lJgEQkJYexDG0
-	 7T4r81nJ3M7CCvBgWOPj8CKiNiw2hxBkbPtagPY0am056wxf4ezq7Kpe4WTIApP3k6
-	 vZqJ/hEzgwwBw==
+	b=Mygd1S50AnOuP4j0OUW9gD3DGLJhelrFeiF7kl3JPKz6rJFUJ1vpN7Z9CZze71DZh
+	 ZGpw6bmV8M9Ws9Wc80YzALP7KlB5esbCHvMq6pZB5RKmMT+9ChA1ekoDyL8WoQQxSf
+	 JU/zolDDUqbT5W0Gf1Fzj5lDQZYnvm+jWdbyIDtjn2BH79uZht0hv3Q3VAzCMhQM7T
+	 MbSalLhzGg5RV19akWO5OHrCGFdqsFo3Vckl0n3bBs/SJb5fLyaoH5faj7oSPkig20
+	 iFbMJwFt78cpf25Szx4nYypoUUpBgJReM2rxgzYrITtP4t69W74Ld2OYiywCUMO9TQ
+	 AIr5CUqttvnLQ==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Thomas Gleixner <tglx@linutronix.de>,
@@ -34,9 +34,9 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	Linus Torvalds <torvalds@linux-foundation.org>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 08/10] treewide, timers: Rename try_to_del_timer_sync() => timer_delete_sync_try()
-Date: Wed,  7 May 2025 19:53:36 +0200
-Message-ID: <20250507175338.672442-9-mingo@kernel.org>
+Subject: [PATCH 09/10] treewide, timers: Rename destroy_timer_on_stack() => timer_destroy_on_stack()
+Date: Wed,  7 May 2025 19:53:37 +0200
+Message-ID: <20250507175338.672442-10-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250507175338.672442-1-mingo@kernel.org>
 References: <20250507175338.672442-1-mingo@kernel.org>
@@ -52,186 +52,333 @@ Move this API to the canonical timer_*() namespace.
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/x86/kernel/apic/vector.c           |  2 +-
- drivers/char/random.c                   |  4 ++--
- drivers/irqchip/irq-riscv-imsic-state.c |  2 +-
- include/linux/timer.h                   |  2 +-
- kernel/time/timer.c                     |  6 +++---
- net/bridge/br_multicast.c               | 16 ++++++++--------
- sound/pci/ctxfi/cttimer.c               |  2 +-
- 7 files changed, 17 insertions(+), 17 deletions(-)
+ drivers/base/power/main.c                     | 2 +-
+ drivers/char/random.c                         | 2 +-
+ drivers/dma-buf/st-dma-fence.c                | 2 +-
+ drivers/firewire/core-transaction.c           | 2 +-
+ drivers/firmware/psci/psci_checker.c          | 2 +-
+ drivers/gpu/drm/gud/gud_pipe.c                | 2 +-
+ drivers/gpu/drm/i915/gt/selftest_migrate.c    | 2 +-
+ drivers/gpu/drm/i915/selftests/lib_sw_fence.c | 2 +-
+ drivers/gpu/drm/ttm/tests/ttm_bo_test.c       | 2 +-
+ drivers/media/usb/pvrusb2/pvrusb2-hdw.c       | 2 +-
+ drivers/scsi/megaraid/megaraid_mbox.c         | 2 +-
+ drivers/scsi/megaraid/megaraid_mm.c           | 2 +-
+ drivers/staging/gpib/common/iblib.c           | 2 +-
+ drivers/usb/atm/cxacru.c                      | 2 +-
+ drivers/usb/misc/usbtest.c                    | 2 +-
+ fs/bcachefs/clock.c                           | 2 +-
+ include/linux/timer.h                         | 6 +++---
+ kernel/kcsan/kcsan_test.c                     | 2 +-
+ kernel/rcu/rcutorture.c                       | 2 +-
+ kernel/time/sleep_timeout.c                   | 2 +-
+ kernel/time/timer.c                           | 4 ++--
+ kernel/workqueue.c                            | 2 +-
+ 22 files changed, 25 insertions(+), 25 deletions(-)
 
-diff --git a/arch/x86/kernel/apic/vector.c b/arch/x86/kernel/apic/vector.c
-index fee42a73d64a..93069b13d3af 100644
---- a/arch/x86/kernel/apic/vector.c
-+++ b/arch/x86/kernel/apic/vector.c
-@@ -864,7 +864,7 @@ void lapic_offline(void)
- 	__vector_cleanup(cl, false);
+diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
+index c8b0a9e29ed8..95f51a7174c7 100644
+--- a/drivers/base/power/main.c
++++ b/drivers/base/power/main.c
+@@ -560,7 +560,7 @@ static void dpm_watchdog_clear(struct dpm_watchdog *wd)
+ 	struct timer_list *timer = &wd->timer;
  
- 	irq_matrix_offline(vector_matrix);
--	WARN_ON_ONCE(try_to_del_timer_sync(&cl->timer) < 0);
-+	WARN_ON_ONCE(timer_delete_sync_try(&cl->timer) < 0);
- 	WARN_ON_ONCE(!hlist_empty(&cl->head));
- 
- 	unlock_vector_lock();
+ 	timer_delete_sync(timer);
+-	destroy_timer_on_stack(timer);
++	timer_destroy_on_stack(timer);
+ }
+ #else
+ #define DECLARE_DPM_WATCHDOG_ON_STACK(wd)
 diff --git a/drivers/char/random.c b/drivers/char/random.c
-index 38f2fab29c56..4ea4dccc7c46 100644
+index 4ea4dccc7c46..e53033133bb3 100644
 --- a/drivers/char/random.c
 +++ b/drivers/char/random.c
-@@ -1311,9 +1311,9 @@ static void __cold try_to_generate_entropy(void)
- 	while (!crng_ready() && !signal_pending(current)) {
- 		/*
- 		 * Check !timer_pending() and then ensure that any previous callback has finished
--		 * executing by checking try_to_del_timer_sync(), before queueing the next one.
-+		 * executing by checking timer_delete_sync_try(), before queueing the next one.
- 		 */
--		if (!timer_pending(&stack->timer) && try_to_del_timer_sync(&stack->timer) >= 0) {
-+		if (!timer_pending(&stack->timer) && timer_delete_sync_try(&stack->timer) >= 0) {
- 			struct cpumask timer_cpus;
- 			unsigned int num_cpus;
+@@ -1353,7 +1353,7 @@ static void __cold try_to_generate_entropy(void)
+ 	mix_pool_bytes(&stack->entropy, sizeof(stack->entropy));
  
-diff --git a/drivers/irqchip/irq-riscv-imsic-state.c b/drivers/irqchip/irq-riscv-imsic-state.c
-index bdf5cd2037f2..c39e573825d4 100644
---- a/drivers/irqchip/irq-riscv-imsic-state.c
-+++ b/drivers/irqchip/irq-riscv-imsic-state.c
-@@ -564,7 +564,7 @@ void imsic_state_offline(void)
- 	struct imsic_local_priv *lpriv = this_cpu_ptr(imsic->lpriv);
- 
- 	raw_spin_lock_irqsave(&lpriv->lock, flags);
--	WARN_ON_ONCE(try_to_del_timer_sync(&lpriv->timer) < 0);
-+	WARN_ON_ONCE(timer_delete_sync_try(&lpriv->timer) < 0);
- 	raw_spin_unlock_irqrestore(&lpriv->lock, flags);
- #endif
+ 	timer_delete_sync(&stack->timer);
+-	destroy_timer_on_stack(&stack->timer);
++	timer_destroy_on_stack(&stack->timer);
  }
+ 
+ 
+diff --git a/drivers/dma-buf/st-dma-fence.c b/drivers/dma-buf/st-dma-fence.c
+index 9f80a45498f0..261b38816226 100644
+--- a/drivers/dma-buf/st-dma-fence.c
++++ b/drivers/dma-buf/st-dma-fence.c
+@@ -413,7 +413,7 @@ static int test_wait_timeout(void *arg)
+ 	err = 0;
+ err_free:
+ 	timer_delete_sync(&wt.timer);
+-	destroy_timer_on_stack(&wt.timer);
++	timer_destroy_on_stack(&wt.timer);
+ 	dma_fence_signal(wt.f);
+ 	dma_fence_put(wt.f);
+ 	return err;
+diff --git a/drivers/firewire/core-transaction.c b/drivers/firewire/core-transaction.c
+index b0f9ef6ac6df..18cacb9edbbc 100644
+--- a/drivers/firewire/core-transaction.c
++++ b/drivers/firewire/core-transaction.c
+@@ -431,7 +431,7 @@ int fw_run_transaction(struct fw_card *card, int tcode, int destination_id,
+ 	fw_send_request(card, &t, tcode, destination_id, generation, speed,
+ 			offset, payload, length, transaction_callback, &d);
+ 	wait_for_completion(&d.done);
+-	destroy_timer_on_stack(&t.split_timeout_timer);
++	timer_destroy_on_stack(&t.split_timeout_timer);
+ 
+ 	return d.rcode;
+ }
+diff --git a/drivers/firmware/psci/psci_checker.c b/drivers/firmware/psci/psci_checker.c
+index b662b7e28b80..df02a4ec3398 100644
+--- a/drivers/firmware/psci/psci_checker.c
++++ b/drivers/firmware/psci/psci_checker.c
+@@ -343,7 +343,7 @@ static int suspend_test_thread(void *arg)
+ 	 * later.
+ 	 */
+ 	timer_delete(&wakeup_timer);
+-	destroy_timer_on_stack(&wakeup_timer);
++	timer_destroy_on_stack(&wakeup_timer);
+ 
+ 	if (atomic_dec_return_relaxed(&nb_active_threads) == 0)
+ 		complete(&suspend_threads_done);
+diff --git a/drivers/gpu/drm/gud/gud_pipe.c b/drivers/gpu/drm/gud/gud_pipe.c
+index 77cfcf37ddd2..feff73cc0005 100644
+--- a/drivers/gpu/drm/gud/gud_pipe.c
++++ b/drivers/gpu/drm/gud/gud_pipe.c
+@@ -261,7 +261,7 @@ static int gud_usb_bulk(struct gud_device *gdrm, size_t len)
+ 	else if (ctx.sgr.bytes != len)
+ 		ret = -EIO;
+ 
+-	destroy_timer_on_stack(&ctx.timer);
++	timer_destroy_on_stack(&ctx.timer);
+ 
+ 	return ret;
+ }
+diff --git a/drivers/gpu/drm/i915/gt/selftest_migrate.c b/drivers/gpu/drm/i915/gt/selftest_migrate.c
+index 401bee030dbc..32c762eb79ed 100644
+--- a/drivers/gpu/drm/i915/gt/selftest_migrate.c
++++ b/drivers/gpu/drm/i915/gt/selftest_migrate.c
+@@ -661,7 +661,7 @@ static int live_emit_pte_full_ring(void *arg)
+ out_rq:
+ 	i915_request_add(rq); /* GEM_BUG_ON(rq->reserved_space > ring->space)? */
+ 	timer_delete_sync(&st.timer);
+-	destroy_timer_on_stack(&st.timer);
++	timer_destroy_on_stack(&st.timer);
+ out_unpin:
+ 	intel_context_unpin(ce);
+ out_put:
+diff --git a/drivers/gpu/drm/i915/selftests/lib_sw_fence.c b/drivers/gpu/drm/i915/selftests/lib_sw_fence.c
+index d5ecc68155da..522ad49406ce 100644
+--- a/drivers/gpu/drm/i915/selftests/lib_sw_fence.c
++++ b/drivers/gpu/drm/i915/selftests/lib_sw_fence.c
+@@ -77,7 +77,7 @@ void timed_fence_fini(struct timed_fence *tf)
+ 	if (timer_delete_sync(&tf->timer))
+ 		i915_sw_fence_commit(&tf->fence);
+ 
+-	destroy_timer_on_stack(&tf->timer);
++	timer_destroy_on_stack(&tf->timer);
+ 	i915_sw_fence_fini(&tf->fence);
+ }
+ 
+diff --git a/drivers/gpu/drm/ttm/tests/ttm_bo_test.c b/drivers/gpu/drm/ttm/tests/ttm_bo_test.c
+index f8f20d2f6174..f24866823d95 100644
+--- a/drivers/gpu/drm/ttm/tests/ttm_bo_test.c
++++ b/drivers/gpu/drm/ttm/tests/ttm_bo_test.c
+@@ -201,7 +201,7 @@ static int threaded_ttm_bo_reserve(void *arg)
+ 	err = ttm_bo_reserve(bo, interruptible, no_wait, &ctx);
+ 
+ 	timer_delete_sync(&s_timer.timer);
+-	destroy_timer_on_stack(&s_timer.timer);
++	timer_destroy_on_stack(&s_timer.timer);
+ 
+ 	ww_acquire_fini(&ctx);
+ 
+diff --git a/drivers/media/usb/pvrusb2/pvrusb2-hdw.c b/drivers/media/usb/pvrusb2/pvrusb2-hdw.c
+index 9a583eeaa329..e23b0de1e0aa 100644
+--- a/drivers/media/usb/pvrusb2/pvrusb2-hdw.c
++++ b/drivers/media/usb/pvrusb2/pvrusb2-hdw.c
+@@ -3806,7 +3806,7 @@ status);
+ 	if ((status < 0) && (!probe_fl)) {
+ 		pvr2_hdw_render_useless(hdw);
+ 	}
+-	destroy_timer_on_stack(&timer.timer);
++	timer_destroy_on_stack(&timer.timer);
+ 
+ 	return status;
+ }
+diff --git a/drivers/scsi/megaraid/megaraid_mbox.c b/drivers/scsi/megaraid/megaraid_mbox.c
+index d533a8aa72cc..b75f46c30759 100644
+--- a/drivers/scsi/megaraid/megaraid_mbox.c
++++ b/drivers/scsi/megaraid/megaraid_mbox.c
+@@ -3952,7 +3952,7 @@ megaraid_sysfs_get_ldmap(adapter_t *adapter)
+ 
+ 
+ 	timer_delete_sync(&timeout.timer);
+-	destroy_timer_on_stack(&timeout.timer);
++	timer_destroy_on_stack(&timeout.timer);
+ 
+ 	mutex_unlock(&raid_dev->sysfs_mtx);
+ 
+diff --git a/drivers/scsi/megaraid/megaraid_mm.c b/drivers/scsi/megaraid/megaraid_mm.c
+index 1f2cd15e3361..fd7fa7640a5e 100644
+--- a/drivers/scsi/megaraid/megaraid_mm.c
++++ b/drivers/scsi/megaraid/megaraid_mm.c
+@@ -704,7 +704,7 @@ lld_ioctl(mraid_mmadp_t *adp, uioc_t *kioc)
+ 	wait_event(wait_q, (kioc->status != -ENODATA));
+ 	if (timeout.timer.function) {
+ 		timer_delete_sync(&timeout.timer);
+-		destroy_timer_on_stack(&timeout.timer);
++		timer_destroy_on_stack(&timeout.timer);
+ 	}
+ 
+ 	/*
+diff --git a/drivers/staging/gpib/common/iblib.c b/drivers/staging/gpib/common/iblib.c
+index b297261818f2..432540e1bc9a 100644
+--- a/drivers/staging/gpib/common/iblib.c
++++ b/drivers/staging/gpib/common/iblib.c
+@@ -611,7 +611,7 @@ static void start_wait_timer(struct wait_info *winfo)
+ static void remove_wait_timer(struct wait_info *winfo)
+ {
+ 	timer_delete_sync(&winfo->timer);
+-	destroy_timer_on_stack(&winfo->timer);
++	timer_destroy_on_stack(&winfo->timer);
+ }
+ 
+ /*
+diff --git a/drivers/usb/atm/cxacru.c b/drivers/usb/atm/cxacru.c
+index c6b9ad12e8fe..b7f940486414 100644
+--- a/drivers/usb/atm/cxacru.c
++++ b/drivers/usb/atm/cxacru.c
+@@ -598,7 +598,7 @@ static int cxacru_start_wait_urb(struct urb *urb, struct completion *done,
+ 	mod_timer(&timer.timer, jiffies + msecs_to_jiffies(CMD_TIMEOUT));
+ 	wait_for_completion(done);
+ 	timer_delete_sync(&timer.timer);
+-	destroy_timer_on_stack(&timer.timer);
++	timer_destroy_on_stack(&timer.timer);
+ 
+ 	if (actual_length)
+ 		*actual_length = urb->actual_length;
+diff --git a/drivers/usb/misc/usbtest.c b/drivers/usb/misc/usbtest.c
+index 853a5f082a70..7c2041f61cde 100644
+--- a/drivers/usb/misc/usbtest.c
++++ b/drivers/usb/misc/usbtest.c
+@@ -630,7 +630,7 @@ static int perform_sglist(
+ 			retval = -ETIMEDOUT;
+ 		else
+ 			retval = req->status;
+-		destroy_timer_on_stack(&timeout.timer);
++		timer_destroy_on_stack(&timeout.timer);
+ 
+ 		/* FIXME check resulting data pattern */
+ 
+diff --git a/fs/bcachefs/clock.c b/fs/bcachefs/clock.c
+index d6dd12d74d4f..f57f9f4774e6 100644
+--- a/fs/bcachefs/clock.c
++++ b/fs/bcachefs/clock.c
+@@ -122,7 +122,7 @@ void bch2_kthread_io_clock_wait(struct io_clock *clock,
+ 
+ 	__set_current_state(TASK_RUNNING);
+ 	timer_delete_sync(&wait.cpu_timer);
+-	destroy_timer_on_stack(&wait.cpu_timer);
++	timer_destroy_on_stack(&wait.cpu_timer);
+ 	bch2_io_timer_del(clock, &wait.io_timer);
+ }
+ 
 diff --git a/include/linux/timer.h b/include/linux/timer.h
-index 153d07dad3cd..5b6ff90fcf81 100644
+index 5b6ff90fcf81..7b53043a2d25 100644
 --- a/include/linux/timer.h
 +++ b/include/linux/timer.h
-@@ -162,7 +162,7 @@ extern void add_timer(struct timer_list *timer);
- extern void add_timer_local(struct timer_list *timer);
- extern void add_timer_global(struct timer_list *timer);
+@@ -115,7 +115,7 @@ static inline void timer_init_key_on_stack(struct timer_list *timer,
+  *
+  * Regular timer initialization should use either DEFINE_TIMER() above,
+  * or timer_setup(). For timers on the stack, timer_setup_on_stack() must
+- * be used and must be balanced with a call to destroy_timer_on_stack().
++ * be used and must be balanced with a call to timer_destroy_on_stack().
+  */
+ #define timer_setup(timer, callback, flags)			\
+ 	__timer_init((timer), (callback), (flags))
+@@ -124,9 +124,9 @@ static inline void timer_init_key_on_stack(struct timer_list *timer,
+ 	__timer_init_on_stack((timer), (callback), (flags))
  
--extern int try_to_del_timer_sync(struct timer_list *timer);
-+extern int timer_delete_sync_try(struct timer_list *timer);
- extern int timer_delete_sync(struct timer_list *timer);
- extern int timer_delete(struct timer_list *timer);
- extern int timer_shutdown_sync(struct timer_list *timer);
+ #ifdef CONFIG_DEBUG_OBJECTS_TIMERS
+-extern void destroy_timer_on_stack(struct timer_list *timer);
++extern void timer_destroy_on_stack(struct timer_list *timer);
+ #else
+-static inline void destroy_timer_on_stack(struct timer_list *timer) { }
++static inline void timer_destroy_on_stack(struct timer_list *timer) { }
+ #endif
+ 
+ #define from_timer(var, callback_timer, timer_fieldname) \
+diff --git a/kernel/kcsan/kcsan_test.c b/kernel/kcsan/kcsan_test.c
+index 6ce73cceaf53..c2871180edcc 100644
+--- a/kernel/kcsan/kcsan_test.c
++++ b/kernel/kcsan/kcsan_test.c
+@@ -1501,7 +1501,7 @@ static int access_thread(void *arg)
+ 		}
+ 	} while (!torture_must_stop());
+ 	timer_delete_sync(&timer);
+-	destroy_timer_on_stack(&timer);
++	timer_destroy_on_stack(&timer);
+ 
+ 	torture_kthread_stopping("access_thread");
+ 	return 0;
+diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
+index 4fa7772be183..f3f1bc86fbea 100644
+--- a/kernel/rcu/rcutorture.c
++++ b/kernel/rcu/rcutorture.c
+@@ -2325,7 +2325,7 @@ rcu_torture_reader(void *arg)
+ 	} while (!torture_must_stop());
+ 	if (irqreader && cur_ops->irq_capable) {
+ 		timer_delete_sync(&t);
+-		destroy_timer_on_stack(&t);
++		timer_destroy_on_stack(&t);
+ 	}
+ 	tick_dep_clear_task(current, TICK_DEP_BIT_RCU);
+ 	torture_kthread_stopping("rcu_torture_reader");
+diff --git a/kernel/time/sleep_timeout.c b/kernel/time/sleep_timeout.c
+index c0e960a5de39..5aa38b2cf40a 100644
+--- a/kernel/time/sleep_timeout.c
++++ b/kernel/time/sleep_timeout.c
+@@ -100,7 +100,7 @@ signed long __sched schedule_timeout(signed long timeout)
+ 	timer_delete_sync(&timer.timer);
+ 
+ 	/* Remove the timer from the object tracker */
+-	destroy_timer_on_stack(&timer.timer);
++	timer_destroy_on_stack(&timer.timer);
+ 
+ 	timeout = expire - jiffies;
+ 
 diff --git a/kernel/time/timer.c b/kernel/time/timer.c
-index 012b9190e859..836ba00690bb 100644
+index 836ba00690bb..007b30fc383b 100644
 --- a/kernel/time/timer.c
 +++ b/kernel/time/timer.c
-@@ -1511,7 +1511,7 @@ static int __try_to_del_timer_sync(struct timer_list *timer, bool shutdown)
+@@ -860,11 +860,11 @@ void timer_init_key_on_stack(struct timer_list *timer,
  }
+ EXPORT_SYMBOL_GPL(timer_init_key_on_stack);
  
- /**
-- * try_to_del_timer_sync - Try to deactivate a timer
-+ * timer_delete_sync_try - Try to deactivate a timer
-  * @timer:	Timer to deactivate
-  *
-  * This function tries to deactivate a timer. On success the timer is not
-@@ -1526,11 +1526,11 @@ static int __try_to_del_timer_sync(struct timer_list *timer, bool shutdown)
-  * * %1  - The timer was pending and deactivated
-  * * %-1 - The timer callback function is running on a different CPU
-  */
--int try_to_del_timer_sync(struct timer_list *timer)
-+int timer_delete_sync_try(struct timer_list *timer)
+-void destroy_timer_on_stack(struct timer_list *timer)
++void timer_destroy_on_stack(struct timer_list *timer)
  {
- 	return __try_to_del_timer_sync(timer, false);
+ 	debug_object_free(timer, &timer_debug_descr);
  }
--EXPORT_SYMBOL(try_to_del_timer_sync);
-+EXPORT_SYMBOL(timer_delete_sync_try);
+-EXPORT_SYMBOL_GPL(destroy_timer_on_stack);
++EXPORT_SYMBOL_GPL(timer_destroy_on_stack);
  
- #ifdef CONFIG_PREEMPT_RT
- static __init void timer_base_init_expiry_lock(struct timer_base *base)
-diff --git a/net/bridge/br_multicast.c b/net/bridge/br_multicast.c
-index dcbf058de1e3..dc331b59b965 100644
---- a/net/bridge/br_multicast.c
-+++ b/net/bridge/br_multicast.c
-@@ -2061,7 +2061,7 @@ static void br_multicast_enable(struct bridge_mcast_own_query *query)
+ #else
+ static inline void debug_timer_init(struct timer_list *timer) { }
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index cf6203282737..9e6cf45f0972 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -686,7 +686,7 @@ EXPORT_SYMBOL_GPL(destroy_work_on_stack);
+ 
+ void destroy_delayed_work_on_stack(struct delayed_work *work)
  {
- 	query->startup_sent = 0;
- 
--	if (try_to_del_timer_sync(&query->timer) >= 0 ||
-+	if (timer_delete_sync_try(&query->timer) >= 0 ||
- 	    timer_delete(&query->timer))
- 		mod_timer(&query->timer, jiffies);
+-	destroy_timer_on_stack(&work->timer);
++	timer_destroy_on_stack(&work->timer);
+ 	debug_object_free(&work->work, &work_debug_descr);
  }
-@@ -3480,7 +3480,7 @@ static void br_ip4_multicast_query(struct net_bridge_mcast *brmctx,
- 	if (mp->host_joined &&
- 	    (timer_pending(&mp->timer) ?
- 	     time_after(mp->timer.expires, now + max_delay) :
--	     try_to_del_timer_sync(&mp->timer) >= 0))
-+	     timer_delete_sync_try(&mp->timer) >= 0))
- 		mod_timer(&mp->timer, now + max_delay);
- 
- 	for (pp = &mp->ports;
-@@ -3488,7 +3488,7 @@ static void br_ip4_multicast_query(struct net_bridge_mcast *brmctx,
- 	     pp = &p->next) {
- 		if (timer_pending(&p->timer) ?
- 		    time_after(p->timer.expires, now + max_delay) :
--		    try_to_del_timer_sync(&p->timer) >= 0 &&
-+		    timer_delete_sync_try(&p->timer) >= 0 &&
- 		    (brmctx->multicast_igmp_version == 2 ||
- 		     p->filter_mode == MCAST_EXCLUDE))
- 			mod_timer(&p->timer, now + max_delay);
-@@ -3569,7 +3569,7 @@ static int br_ip6_multicast_query(struct net_bridge_mcast *brmctx,
- 	if (mp->host_joined &&
- 	    (timer_pending(&mp->timer) ?
- 	     time_after(mp->timer.expires, now + max_delay) :
--	     try_to_del_timer_sync(&mp->timer) >= 0))
-+	     timer_delete_sync_try(&mp->timer) >= 0))
- 		mod_timer(&mp->timer, now + max_delay);
- 
- 	for (pp = &mp->ports;
-@@ -3577,7 +3577,7 @@ static int br_ip6_multicast_query(struct net_bridge_mcast *brmctx,
- 	     pp = &p->next) {
- 		if (timer_pending(&p->timer) ?
- 		    time_after(p->timer.expires, now + max_delay) :
--		    try_to_del_timer_sync(&p->timer) >= 0 &&
-+		    timer_delete_sync_try(&p->timer) >= 0 &&
- 		    (brmctx->multicast_mld_version == 1 ||
- 		     p->filter_mode == MCAST_EXCLUDE))
- 			mod_timer(&p->timer, now + max_delay);
-@@ -3649,7 +3649,7 @@ br_multicast_leave_group(struct net_bridge_mcast *brmctx,
- 			if (!hlist_unhashed(&p->mglist) &&
- 			    (timer_pending(&p->timer) ?
- 			     time_after(p->timer.expires, time) :
--			     try_to_del_timer_sync(&p->timer) >= 0)) {
-+			     timer_delete_sync_try(&p->timer) >= 0)) {
- 				mod_timer(&p->timer, time);
- 			}
- 
-@@ -3665,7 +3665,7 @@ br_multicast_leave_group(struct net_bridge_mcast *brmctx,
- 		if (mp->host_joined &&
- 		    (timer_pending(&mp->timer) ?
- 		     time_after(mp->timer.expires, time) :
--		     try_to_del_timer_sync(&mp->timer) >= 0)) {
-+		     timer_delete_sync_try(&mp->timer) >= 0)) {
- 			mod_timer(&mp->timer, time);
- 		}
- 
-@@ -3681,7 +3681,7 @@ br_multicast_leave_group(struct net_bridge_mcast *brmctx,
- 		if (!hlist_unhashed(&p->mglist) &&
- 		    (timer_pending(&p->timer) ?
- 		     time_after(p->timer.expires, time) :
--		     try_to_del_timer_sync(&p->timer) >= 0)) {
-+		     timer_delete_sync_try(&p->timer) >= 0)) {
- 			mod_timer(&p->timer, time);
- 		}
- 
-diff --git a/sound/pci/ctxfi/cttimer.c b/sound/pci/ctxfi/cttimer.c
-index 89e47fa14f70..aa179644b5c9 100644
---- a/sound/pci/ctxfi/cttimer.c
-+++ b/sound/pci/ctxfi/cttimer.c
-@@ -119,7 +119,7 @@ static void ct_systimer_stop(struct ct_timer_instance *ti)
- static void ct_systimer_prepare(struct ct_timer_instance *ti)
- {
- 	ct_systimer_stop(ti);
--	try_to_del_timer_sync(&ti->timer);
-+	timer_delete_sync_try(&ti->timer);
- }
- 
- #define ct_systimer_free	ct_systimer_prepare
+ EXPORT_SYMBOL_GPL(destroy_delayed_work_on_stack);
 -- 
 2.45.2
 
