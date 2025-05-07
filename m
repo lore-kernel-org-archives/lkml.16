@@ -1,433 +1,286 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8768291893;
-	Wed,  7 May 2025 23:01:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34BC720FAB4
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 23:03:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746658889; cv=none; b=VOJwdGjcpifmEDbmvu+i04TnBd/0Go1yMaUNylFNDJBUY+5UYRhQQowYifS7VGptKhhxBzYwz1w0Gge3OewtryyNlJjFVnmO1JVzgvZXiVRlOr8K/ukjA/h59CLY9ulXCU0RQIcqujpIjL9OS9Y6BevMLQCJqfG3tboGN7cuFyY=
+	t=1746659018; cv=none; b=dVgJhW357vkYs0St4N4kiy2/OgOU2Ncp5EzZAxKS5BhG7RE2PhQlUe1WWB7KAzKSnLIXw31XpL/g/RnoHhMjoMG3GO/QbSMbaPX0DMGbfvmTP+JHDL6Mv/kLOb4hvcFqtRWRybaxLZpRPttem2GxwilLMre6/aym5WHDAFuMQs4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746658889; c=relaxed/simple;
-	bh=BC/pT7+dNFQTyFJU7rdevnzP3IxD2GIkgQiwuZgznF0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MrYOv/YClfrIsHmUQdqyeMEaY43bPoIlSvOqE1/yj08iYHkY48d1I1oJmBfzlmdJ5V18KGutbMsQcgmi9QdbJUGW4dPkrQ5h3LzJ8IxmpXrFtq29EdGM7v/syGgG8L5YBg7bQTioUZAayNNwdKEVfZZqtO28anJSQQOnLqYat1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IC5EE9kS; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746659018; c=relaxed/simple;
+	bh=2XmKf4r7PMI/+F7HCnW1whR1EZIc9+PIVrLSuf10zLg=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=XJXOCDlrfFYxmlKcDpm3/J0pSomHdcKLacxypkUC7xVo6m+o74E4MxXCojuOz9qXHitEu1z5tvduCddE4e9MJLfBYvE8etahSdNpFA2rzgqyZi3P3uihfYMsXg3eNDzd2hv6ye/p8gpYMM9tXS/62K2NpHWsfUXWooSfOGl5wa8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RL4q8DCU; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IC5EE9kS"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5fc5bc05f99so355749a12.3;
-        Wed, 07 May 2025 16:01:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RL4q8DCU"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-306b51e30ffso356328a91.1
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 16:03:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746658886; x=1747263686; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PVpb7+CUL0xlsyVNYrdBfV2De+Kf2gFS5RjhAJ27WRo=;
-        b=IC5EE9kSVbJ4gVLVAZ8sbbCFtLY8V1ywYfcb/3vm3O6N6t8iVy80RFkC0vIs+G4hlR
-         apgW3IN8pDL9C3Nb3kP6I2U3QUISb9gmYQiNSaf3X9xv8a6h4B1XMTDlCUw1xNEpPhGq
-         G0NSoIGT4t7XaI9WJH5G9pDZQ1CiibDIm+T7wXuCn/F85HQ5X2UZES7k9XCoJa2lRswb
-         xbLZTj3fCq7tC1x0sGMAmhjnkxkiCzBfFBLP2OOBOl9ETopO5XEJKE89h7xFFS+ftWF2
-         0nSbzgUIF03ObmpusTXLFB31/sLK3nUsHTx7xY2XKXCNnMVfW33icvmJhAulhLUa7NeG
-         llXA==
+        d=google.com; s=20230601; t=1746659016; x=1747263816; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Qq49Dart3v0WlvGRUo03jrUoC30OnK8nNG5A8WXCnUA=;
+        b=RL4q8DCU2mrJB6GqiSrdmEZevzvoOlIcvzfk5BLQQi6eQyvZKYyUw4CIN/rb4UxGLK
+         JK156ocbFzwGywLoaKvqzcXMyjydcuwNLbrjHB/lRbVsUKl4xQBw6hxicsRgPBZLKbrH
+         lUyoi/Zh+OEsaneK0qiCTv0tP8nZ0kKajbUC7fuVL8vnf3TIf8t2MwrIat+sS5L0B7Yw
+         KlHCPGxD/L+dfBqfBAVGEt4FphreATdtgFhbZQCH8he/rs0mvnhaAJFAorZllMrpU35f
+         qRh0gD4Rbr62VlCKQe6UeqKf0A2/afxZkghCJ9w+EHDwdAET4Gl0xs4keN2dUTjdh1kG
+         m6EQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746658886; x=1747263686;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PVpb7+CUL0xlsyVNYrdBfV2De+Kf2gFS5RjhAJ27WRo=;
-        b=vEjo1ZZPMmBsyeFCeNCCob7dFo0LlmSE4YdXdHjaRMpEznLImCvOAGT8iVB11v9Y27
-         yp1vc3A1vT0ihhi0+UtMVGzWaWef7ULabM16XG1gg37xnFrJeElN8tCVhKJZWFYr5EP1
-         SKnXza5XsM7DJpGLX65PygJphtY6BPge73/MDrNtDOW+oTj/GjTpZBbsZLyvkT9OWdZ4
-         f1iTmp1kJ8+XQzmo4H/YHwYxwrqzLeH0AAun1X02EbP4y1GM5dI5ltIOWhoxM5mqy9G8
-         wxPtDybAlj/kMReZBKECKtu5ES3iGSiIS0Jf818x5FtcIsK5ncQAW+WmbYJgOEJlnB4E
-         GVUw==
-X-Forwarded-Encrypted: i=1; AJvYcCUoly+DgBTwRr73hn+qYtQP0qDeSCz8fI/+A0IaXMbO7JZoIGGA7tAfFocBEzH0J/Sasdpcw9M6hF8N7+Px@vger.kernel.org, AJvYcCVksSj8b1NIywwIhxtWNzM4KlPIMubpjVfk8yinK6gT3i1FK+BMJOYQb5E+lr+7mB62wI3Z/sjyvJtliiqK@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCIQydJvHn2Y1T3tG7sjw8sbGr/FZcLvCMz++TjDzv+MH/yXnh
-	8eWKhjWogfxAEAmyOmNMqKkgZ9uUaK0ALLytSYXHy6ok7RzPXfy7vdv/ZILzFw==
-X-Gm-Gg: ASbGncsLK4UNFU4J+bQ88OATF6VJi5eqyVZzT0Sfqs97rmAAR+ofCdAhD3fJYh8PEYK
-	MeNL0NVc7lPg5+gmtHyyt0PR7aP7S1/SVsU3AW8+0PR/7/S1SgLyJRNV875FoGP874r3T+xCj+J
-	vDl9tQqTQANyOImoqXSdY0rnoVhW22ewnrE27cItuWCCfuYmPynwqS0ffxi3CmEJTTO3Y0FahBE
-	jYt9kbKrrwxP3zZv1J9ZfOeFICqQ+ZzVmkW3QGt7tsSatuRiTJbc3Mi0xf+7nTqIgeobulw8K83
-	FmD83NBJ1Aq+bkXzQ+55qIINOXfK0BfHpytXUlPXZIw80g==
-X-Google-Smtp-Source: AGHT+IEjwSurPUUJmicmXJh9IZH04pLXCjBbDPL14W8ZKg0fSQTlEKOgSEwPGjyuHAyHPng+4en8rA==
-X-Received: by 2002:a05:6402:2689:b0:5f8:afab:9e14 with SMTP id 4fb4d7f45d1cf-5fbe9fa810amr4628252a12.28.1746658885593;
-        Wed, 07 May 2025 16:01:25 -0700 (PDT)
-Received: from alex-x1.lan ([84.226.118.249])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fa777c8b12sm10507906a12.24.2025.05.07.16.01.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 16:01:24 -0700 (PDT)
-From: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
-To: Abhinav Kumar <quic_abhinavk@quicinc.com>,
-	Dmitry Baryshkov <lumag@kernel.org>,
-	linux-arm-msm@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	freedreno@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Cc: Rob Clark <robdclark@gmail.com>,
-	Sean Paul <sean@poorly.run>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	laurentiu.tudor1@dell.com,
-	abel.vesa@linaro.org,
-	johan@kernel.org,
-	Aleksandrs Vinarskis <alex.vinarskis@gmail.com>,
-	Jessica Zhang <quic_jesszhan@quicinc.com>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Stefan Schmidt <stefan.schmidt@linaro.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Subject: [PATCH v5 4/4] drm/msm/dp: Introduce link training per-segment for LTTPRs
-Date: Thu,  8 May 2025 00:59:02 +0200
-Message-ID: <20250507230113.14270-5-alex.vinarskis@gmail.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250507230113.14270-1-alex.vinarskis@gmail.com>
-References: <20250507230113.14270-1-alex.vinarskis@gmail.com>
+        d=1e100.net; s=20230601; t=1746659016; x=1747263816;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Qq49Dart3v0WlvGRUo03jrUoC30OnK8nNG5A8WXCnUA=;
+        b=vSBriuRkcYmvtXQSHVAKE02gO7yAXdEMvbAipmjJ681i2DuSJheexgmbd/5XvnM2Xe
+         RWvqiIKkVhMnhnJKGJoUtL0vPSxPQ/outjl2YlYz/JJGmZoqbvCR/AFHViXsv0wozyaO
+         Twc9sVbQ8wNZbzQodBcsdb5WE0/AsVQ3dRIOQJF5FFmPleIMjjKnM9VxfHjQBDZCTGtb
+         7gJqotokx3obhLsFj5BUejceiD2xrt+Taq/fmdVwJ3Ywq3MCZRbf4WEX+2bCi6Wcsgco
+         ah2BCiSr6+ILxueNh16DBhlc1bT25Jx4FcWCMNySFFr3CSjwUpJ1D2v5srT4/Y4mbXGK
+         CzcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXEsUhcjDT1biDFdUoQMnz7fezGN6qPyk1KPuLWdyJhWGxhRIjrRYWpqbwTHy5eEfIG5sO8RNkyOru/wz4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFNKYj/2mT3b2TQfdEuBkfoGc+pGYCO2pwWGooOhUQs0aIwOOs
+	Vtc0yHJeTaNjOG0teFBsqMMbQe5ydUgsFbyCQQjziahZCkezc12Gt8i54M325Sy4DReUibv6xAJ
+	cjQ==
+X-Google-Smtp-Source: AGHT+IGf7GrnMA0ECrA5Cc+xFBVRuZ0noNkL8FCy7GwGt33Tt3DR9TcVbBH2Tlv+OXVWcHLSD3Da30W7ftU=
+X-Received: from pjbst8.prod.google.com ([2002:a17:90b:1fc8:b0:2fc:13d6:b4cb])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:38c5:b0:2fe:80cb:ac05
+ with SMTP id 98e67ed59e1d1-30b32a5612emr1426077a91.9.1746659016471; Wed, 07
+ May 2025 16:03:36 -0700 (PDT)
+Date: Wed, 7 May 2025 16:03:34 -0700
+In-Reply-To: <71af8435d2085b3f969cb3e73cff5bfacd243819.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250416002546.3300893-1-mlevitsk@redhat.com> <20250416002546.3300893-4-mlevitsk@redhat.com>
+ <aAgpD_5BI6ZcCN29@google.com> <2b1ec570a37992cdfa2edad325e53e0592d696c8.camel@redhat.com>
+ <71af8435d2085b3f969cb3e73cff5bfacd243819.camel@redhat.com>
+Message-ID: <aBvmxjxUrXEBa3sc@google.com>
+Subject: Re: [PATCH 3/3] x86: KVM: VMX: preserve host's DEBUGCTLMSR_FREEZE_IN_SMM
+ while in the guest mode
+From: Sean Christopherson <seanjc@google.com>
+To: mlevitsk@redhat.com
+Cc: kvm@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
+	Paolo Bonzini <pbonzini@redhat.com>, x86@kernel.org, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, 
+	linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-DisplayPort requires per-segment link training when LTTPR are switched
-to non-transparent mode, starting with LTTPR closest to the source.
-Only when each segment is trained individually, source can link train
-to sink.
+On Thu, May 01, 2025, mlevitsk@redhat.com wrote:
+> On Thu, 2025-05-01 at 16:41 -0400, mlevitsk@redhat.com wrote:
+> > On Tue, 2025-04-22 at 16:41 -0700, Sean Christopherson wrote:
+> > > On Tue, Apr 15, 2025, Maxim Levitsky wrote:
+> > > > Pass through the host's DEBUGCTL.DEBUGCTLMSR_FREEZE_IN_SMM to the g=
+uest
+> > > > GUEST_IA32_DEBUGCTL without the guest seeing this value.
+> > > >=20
+> > > > Note that in the future we might allow the guest to set this bit as=
+ well,
+> > > > when we implement PMU freezing on VM own, virtual SMM entry.
+> > > >=20
+> > > > Since the value of the host DEBUGCTL can in theory change between V=
+M runs,
+> > > > check if has changed, and if yes, then reload the GUEST_IA32_DEBUGC=
+TL with
+> > > > the new value of the host portion of it (currently only the
+> > > > DEBUGCTLMSR_FREEZE_IN_SMM bit)
+> > >=20
+> > > No, it can't.=C2=A0 DEBUGCTLMSR_FREEZE_IN_SMM can be toggled via IPI =
+callback, but
+> > > IRQs are disabled for the entirety of the inner run loop.=C2=A0 And i=
+f I'm somehow
+> > > wrong, this change movement absolutely belongs in a separate patch.
+>=20
+>=20
+> Hi,
+>=20
+> You are right here - reading MSR_IA32_DEBUGCTLMSR in the inner loop is a
+> performance regression.
+>=20
+> Any ideas on how to solve this then? Since currently its the common code =
+that
+> reads the current value of the MSR_IA32_DEBUGCTLMSR and it doesn't leave =
+any
+> indication about if it changed I can do either
+>=20
+> 1. store old value as well, something like 'vcpu->arch.host_debugctl_old'=
+ Ugly IMHO.
+>=20
+> 2. add DEBUG_CTL to the set of the 'dirty' registers, e.g add new bit for=
+ kvm_register_mark_dirty
+> It looks a bit overkill to me
+>=20
+> 3. Add new x86 callback for something like .sync_debugctl(). I vote for t=
+his option.
+>=20
+> What do you think/prefer?
 
-Implement per-segment link traning when LTTPR(s) are detected, to
-support external docking stations. On higher level, changes are:
+I was going to say #3 as well, but I think I have a better idea.
 
-* Pass phy being trained down to all required helpers
-* Run CR, EQ link training per phy
-* Set voltage swing, pre-emphasis levels per phy
+DR6 has a similar problem; the guest's value needs to be loaded into hardwa=
+re,
+but only somewhat rarely, and more importantly, never on a fastpath reentry=
+.
 
-Since at least some LTTPRs (eg. Parade PS8830) do not correctly report
-voltage-swing, pre-emphasis level 3 support, always assume level 3 is
-supported. This is permitted under DP 2.1(a) section 3.6.7.2 stating
-that LTTPR shall set its transmitter levels as close as possible to
-those requested by the DPTX, if the DPTX sets the voltage swing or
-pre-emphasis to a level that the LTTPR does not support. It shall be
-noted that LTTPR’s level choosing is implementation-specific.
+Forced immediate exits also have a similar need: some control logic in comm=
+on x86
+needs instruct kvm_x86_ops.vcpu_run() to do something.
 
-This ensures successful link training both when connected directly to
-the monitor (single LTTPR onboard most X1E laptops) and via the docking
-station (at least two LTTPRs).
+Unless I've misread the DEBUGCTLMSR situation, in all cases, common x86 onl=
+y needs
+to a single flag to tell vendor code to do something.  The payload for that=
+ action
+is already available.
 
-Fixes: 72d0af4accd9 ("drm/msm/dp: Add support for LTTPR handling")
+So rather than add a bunch of kvm_x86_ops hooks that are only called immedi=
+ately
+before kvm_x86_ops.vcpu_run(), expand @req_immediate_exit into a bitmap of =
+flags
+to communicate what works needs to be done, without having to resort to a f=
+ield
+in kvm_vcpu_arch that isn't actually persistent.
 
-Tested-by: Jessica Zhang <quic_jesszhan@quicinc.com> # SA8775P
-Tested-by: Johan Hovold <johan+linaro@kernel.org>
-Tested-by: Rob Clark <robdclark@gmail.com>
-Tested-by: Stefan Schmidt <stefan.schmidt@linaro.org>
-Signed-off-by: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
-Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
-Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
----
- drivers/gpu/drm/msm/dp/dp_ctrl.c | 126 ++++++++++++++++++++++---------
- 1 file changed, 89 insertions(+), 37 deletions(-)
+The attached patches are relatively lightly tested, but the DR6 tests from =
+the
+recent bug[*] pass, so hopefully they're correct?
 
-diff --git a/drivers/gpu/drm/msm/dp/dp_ctrl.c b/drivers/gpu/drm/msm/dp/dp_ctrl.c
-index d8633a596f8d..35b28c2fcd64 100644
---- a/drivers/gpu/drm/msm/dp/dp_ctrl.c
-+++ b/drivers/gpu/drm/msm/dp/dp_ctrl.c
-@@ -1034,10 +1034,12 @@ static int msm_dp_ctrl_set_vx_px(struct msm_dp_ctrl_private *ctrl,
- 	return 0;
- }
- 
--static int msm_dp_ctrl_update_vx_px(struct msm_dp_ctrl_private *ctrl)
-+static int msm_dp_ctrl_update_phy_vx_px(struct msm_dp_ctrl_private *ctrl,
-+					enum drm_dp_phy dp_phy)
- {
- 	struct msm_dp_link *link = ctrl->link;
--	int ret = 0, lane, lane_cnt;
-+	int lane, lane_cnt, reg;
-+	int ret = 0;
- 	u8 buf[4];
- 	u32 max_level_reached = 0;
- 	u32 voltage_swing_level = link->phy_params.v_level;
-@@ -1075,8 +1077,13 @@ static int msm_dp_ctrl_update_vx_px(struct msm_dp_ctrl_private *ctrl)
- 
- 	drm_dbg_dp(ctrl->drm_dev, "sink: p|v=0x%x\n",
- 			voltage_swing_level | pre_emphasis_level);
--	ret = drm_dp_dpcd_write(ctrl->aux, DP_TRAINING_LANE0_SET,
--					buf, lane_cnt);
-+
-+	if (dp_phy == DP_PHY_DPRX)
-+		reg = DP_TRAINING_LANE0_SET;
-+	else
-+		reg = DP_TRAINING_LANE0_SET_PHY_REPEATER(dp_phy);
-+
-+	ret = drm_dp_dpcd_write(ctrl->aux, reg, buf, lane_cnt);
- 	if (ret == lane_cnt)
- 		ret = 0;
- 
-@@ -1084,9 +1091,10 @@ static int msm_dp_ctrl_update_vx_px(struct msm_dp_ctrl_private *ctrl)
- }
- 
- static bool msm_dp_ctrl_train_pattern_set(struct msm_dp_ctrl_private *ctrl,
--		u8 pattern)
-+		u8 pattern, enum drm_dp_phy dp_phy)
- {
- 	u8 buf;
-+	int reg;
- 	int ret = 0;
- 
- 	drm_dbg_dp(ctrl->drm_dev, "sink: pattern=%x\n", pattern);
-@@ -1096,7 +1104,12 @@ static bool msm_dp_ctrl_train_pattern_set(struct msm_dp_ctrl_private *ctrl,
- 	if (pattern && pattern != DP_TRAINING_PATTERN_4)
- 		buf |= DP_LINK_SCRAMBLING_DISABLE;
- 
--	ret = drm_dp_dpcd_writeb(ctrl->aux, DP_TRAINING_PATTERN_SET, buf);
-+	if (dp_phy == DP_PHY_DPRX)
-+		reg = DP_TRAINING_PATTERN_SET;
-+	else
-+		reg = DP_TRAINING_PATTERN_SET_PHY_REPEATER(dp_phy);
-+
-+	ret = drm_dp_dpcd_writeb(ctrl->aux, reg, buf);
- 	return ret == 1;
- }
- 
-@@ -1115,12 +1128,16 @@ static int msm_dp_ctrl_read_link_status(struct msm_dp_ctrl_private *ctrl,
- }
- 
- static int msm_dp_ctrl_link_train_1(struct msm_dp_ctrl_private *ctrl,
--			int *training_step)
-+			int *training_step, enum drm_dp_phy dp_phy)
- {
-+	int delay_us;
- 	int tries, old_v_level, ret = 0;
- 	u8 link_status[DP_LINK_STATUS_SIZE];
- 	int const maximum_retries = 4;
- 
-+	delay_us = drm_dp_read_clock_recovery_delay(ctrl->aux,
-+						    ctrl->panel->dpcd, dp_phy, false);
-+
- 	msm_dp_catalog_ctrl_state_ctrl(ctrl->catalog, 0);
- 
- 	*training_step = DP_TRAINING_1;
-@@ -1129,18 +1146,19 @@ static int msm_dp_ctrl_link_train_1(struct msm_dp_ctrl_private *ctrl,
- 	if (ret)
- 		return ret;
- 	msm_dp_ctrl_train_pattern_set(ctrl, DP_TRAINING_PATTERN_1 |
--		DP_LINK_SCRAMBLING_DISABLE);
-+		DP_LINK_SCRAMBLING_DISABLE, dp_phy);
- 
--	ret = msm_dp_ctrl_update_vx_px(ctrl);
-+	msm_dp_link_reset_phy_params_vx_px(ctrl->link);
-+	ret = msm_dp_ctrl_update_phy_vx_px(ctrl, dp_phy);
- 	if (ret)
- 		return ret;
- 
- 	tries = 0;
- 	old_v_level = ctrl->link->phy_params.v_level;
- 	for (tries = 0; tries < maximum_retries; tries++) {
--		drm_dp_link_train_clock_recovery_delay(ctrl->aux, ctrl->panel->dpcd);
-+		fsleep(delay_us);
- 
--		ret = msm_dp_ctrl_read_link_status(ctrl, link_status);
-+		ret = drm_dp_dpcd_read_phy_link_status(ctrl->aux, dp_phy, link_status);
- 		if (ret)
- 			return ret;
- 
-@@ -1161,7 +1179,7 @@ static int msm_dp_ctrl_link_train_1(struct msm_dp_ctrl_private *ctrl,
- 		}
- 
- 		msm_dp_link_adjust_levels(ctrl->link, link_status);
--		ret = msm_dp_ctrl_update_vx_px(ctrl);
-+		ret = msm_dp_ctrl_update_phy_vx_px(ctrl, dp_phy);
- 		if (ret)
- 			return ret;
- 	}
-@@ -1213,21 +1231,31 @@ static int msm_dp_ctrl_link_lane_down_shift(struct msm_dp_ctrl_private *ctrl)
- 	return 0;
- }
- 
--static void msm_dp_ctrl_clear_training_pattern(struct msm_dp_ctrl_private *ctrl)
-+static void msm_dp_ctrl_clear_training_pattern(struct msm_dp_ctrl_private *ctrl,
-+					       enum drm_dp_phy dp_phy)
- {
--	msm_dp_ctrl_train_pattern_set(ctrl, DP_TRAINING_PATTERN_DISABLE);
--	drm_dp_link_train_channel_eq_delay(ctrl->aux, ctrl->panel->dpcd);
-+	int delay_us;
-+
-+	msm_dp_ctrl_train_pattern_set(ctrl, DP_TRAINING_PATTERN_DISABLE, dp_phy);
-+
-+	delay_us = drm_dp_read_channel_eq_delay(ctrl->aux,
-+						ctrl->panel->dpcd, dp_phy, false);
-+	fsleep(delay_us);
- }
- 
- static int msm_dp_ctrl_link_train_2(struct msm_dp_ctrl_private *ctrl,
--			int *training_step)
-+			int *training_step, enum drm_dp_phy dp_phy)
- {
-+	int delay_us;
- 	int tries = 0, ret = 0;
- 	u8 pattern;
- 	u32 state_ctrl_bit;
- 	int const maximum_retries = 5;
- 	u8 link_status[DP_LINK_STATUS_SIZE];
- 
-+	delay_us = drm_dp_read_channel_eq_delay(ctrl->aux,
-+						ctrl->panel->dpcd, dp_phy, false);
-+
- 	msm_dp_catalog_ctrl_state_ctrl(ctrl->catalog, 0);
- 
- 	*training_step = DP_TRAINING_2;
-@@ -1247,12 +1275,12 @@ static int msm_dp_ctrl_link_train_2(struct msm_dp_ctrl_private *ctrl,
- 	if (ret)
- 		return ret;
- 
--	msm_dp_ctrl_train_pattern_set(ctrl, pattern);
-+	msm_dp_ctrl_train_pattern_set(ctrl, pattern, dp_phy);
- 
- 	for (tries = 0; tries <= maximum_retries; tries++) {
--		drm_dp_link_train_channel_eq_delay(ctrl->aux, ctrl->panel->dpcd);
-+		fsleep(delay_us);
- 
--		ret = msm_dp_ctrl_read_link_status(ctrl, link_status);
-+		ret = drm_dp_dpcd_read_phy_link_status(ctrl->aux, dp_phy, link_status);
- 		if (ret)
- 			return ret;
- 
-@@ -1262,7 +1290,7 @@ static int msm_dp_ctrl_link_train_2(struct msm_dp_ctrl_private *ctrl,
- 		}
- 
- 		msm_dp_link_adjust_levels(ctrl->link, link_status);
--		ret = msm_dp_ctrl_update_vx_px(ctrl);
-+		ret = msm_dp_ctrl_update_phy_vx_px(ctrl, dp_phy);
- 		if (ret)
- 			return ret;
- 
-@@ -1271,9 +1299,32 @@ static int msm_dp_ctrl_link_train_2(struct msm_dp_ctrl_private *ctrl,
- 	return -ETIMEDOUT;
- }
- 
-+static int msm_dp_ctrl_link_train_1_2(struct msm_dp_ctrl_private *ctrl,
-+				      int *training_step, enum drm_dp_phy dp_phy)
-+{
-+	int ret;
-+
-+	ret = msm_dp_ctrl_link_train_1(ctrl, training_step, dp_phy);
-+	if (ret) {
-+		DRM_ERROR("link training #1 on phy %d failed. ret=%d\n", dp_phy, ret);
-+		return ret;
-+	}
-+	drm_dbg_dp(ctrl->drm_dev, "link training #1 on phy %d successful\n", dp_phy);
-+
-+	ret = msm_dp_ctrl_link_train_2(ctrl, training_step, dp_phy);
-+	if (ret) {
-+		DRM_ERROR("link training #2 on phy %d failed. ret=%d\n", dp_phy, ret);
-+		return ret;
-+	}
-+	drm_dbg_dp(ctrl->drm_dev, "link training #2 on phy %d successful\n", dp_phy);
-+
-+	return 0;
-+}
-+
- static int msm_dp_ctrl_link_train(struct msm_dp_ctrl_private *ctrl,
- 			int *training_step)
- {
-+	int i;
- 	int ret = 0;
- 	const u8 *dpcd = ctrl->panel->dpcd;
- 	u8 encoding[] = { 0, DP_SET_ANSI_8B10B };
-@@ -1286,8 +1337,6 @@ static int msm_dp_ctrl_link_train(struct msm_dp_ctrl_private *ctrl,
- 	link_info.rate = ctrl->link->link_params.rate;
- 	link_info.capabilities = DP_LINK_CAP_ENHANCED_FRAMING;
- 
--	msm_dp_link_reset_phy_params_vx_px(ctrl->link);
--
- 	msm_dp_aux_link_configure(ctrl->aux, &link_info);
- 
- 	if (drm_dp_max_downspread(dpcd))
-@@ -1302,24 +1351,27 @@ static int msm_dp_ctrl_link_train(struct msm_dp_ctrl_private *ctrl,
- 				&assr, 1);
- 	}
- 
--	ret = msm_dp_ctrl_link_train_1(ctrl, training_step);
-+	for (i = ctrl->link->lttpr_count - 1; i >= 0; i--) {
-+		enum drm_dp_phy dp_phy = DP_PHY_LTTPR(i);
-+
-+		ret = msm_dp_ctrl_link_train_1_2(ctrl, training_step, dp_phy);
-+		msm_dp_ctrl_clear_training_pattern(ctrl, dp_phy);
-+
-+		if (ret)
-+			break;
-+	}
-+
- 	if (ret) {
--		DRM_ERROR("link training #1 failed. ret=%d\n", ret);
-+		DRM_ERROR("link training of LTTPR(s) failed. ret=%d\n", ret);
- 		goto end;
- 	}
- 
--	/* print success info as this is a result of user initiated action */
--	drm_dbg_dp(ctrl->drm_dev, "link training #1 successful\n");
--
--	ret = msm_dp_ctrl_link_train_2(ctrl, training_step);
-+	ret = msm_dp_ctrl_link_train_1_2(ctrl, training_step, DP_PHY_DPRX);
- 	if (ret) {
--		DRM_ERROR("link training #2 failed. ret=%d\n", ret);
-+		DRM_ERROR("link training on sink failed. ret=%d\n", ret);
- 		goto end;
- 	}
- 
--	/* print success info as this is a result of user initiated action */
--	drm_dbg_dp(ctrl->drm_dev, "link training #2 successful\n");
--
- end:
- 	msm_dp_catalog_ctrl_state_ctrl(ctrl->catalog, 0);
- 
-@@ -1636,7 +1688,7 @@ static int msm_dp_ctrl_link_maintenance(struct msm_dp_ctrl_private *ctrl)
- 	if (ret)
- 		goto end;
- 
--	msm_dp_ctrl_clear_training_pattern(ctrl);
-+	msm_dp_ctrl_clear_training_pattern(ctrl, DP_PHY_DPRX);
- 
- 	msm_dp_catalog_ctrl_state_ctrl(ctrl->catalog, DP_STATE_CTRL_SEND_VIDEO);
- 
-@@ -1660,7 +1712,7 @@ static bool msm_dp_ctrl_send_phy_test_pattern(struct msm_dp_ctrl_private *ctrl)
- 		return false;
- 	}
- 	msm_dp_catalog_ctrl_send_phy_pattern(ctrl->catalog, pattern_requested);
--	msm_dp_ctrl_update_vx_px(ctrl);
-+	msm_dp_ctrl_update_phy_vx_px(ctrl, DP_PHY_DPRX);
- 	msm_dp_link_send_test_response(ctrl->link);
- 
- 	pattern_sent = msm_dp_catalog_ctrl_read_phy_pattern(ctrl->catalog);
-@@ -1902,7 +1954,7 @@ int msm_dp_ctrl_on_link(struct msm_dp_ctrl *msm_dp_ctrl)
- 			}
- 
- 			/* stop link training before start re training  */
--			msm_dp_ctrl_clear_training_pattern(ctrl);
-+			msm_dp_ctrl_clear_training_pattern(ctrl, DP_PHY_DPRX);
- 		}
- 
- 		rc = msm_dp_ctrl_reinitialize_mainlink(ctrl);
-@@ -1926,7 +1978,7 @@ int msm_dp_ctrl_on_link(struct msm_dp_ctrl *msm_dp_ctrl)
- 		 * link training failed
- 		 * end txing train pattern here
- 		 */
--		msm_dp_ctrl_clear_training_pattern(ctrl);
-+		msm_dp_ctrl_clear_training_pattern(ctrl, DP_PHY_DPRX);
- 
- 		msm_dp_ctrl_deinitialize_mainlink(ctrl);
- 		rc = -ECONNRESET;
-@@ -1997,7 +2049,7 @@ int msm_dp_ctrl_on_stream(struct msm_dp_ctrl *msm_dp_ctrl, bool force_link_train
- 		msm_dp_ctrl_link_retrain(ctrl);
- 
- 	/* stop txing train pattern to end link training */
--	msm_dp_ctrl_clear_training_pattern(ctrl);
-+	msm_dp_ctrl_clear_training_pattern(ctrl, DP_PHY_DPRX);
- 
- 	/*
- 	 * Set up transfer unit values and set controller state to send
--- 
-2.45.2
+The downside with this approach is that it would be difficult to backport t=
+o LTS
+kernels, but given how long this has been a problem, I'm not super concerne=
+d about
+optimizing for backports.
 
+If they look ok, feel free to include them in the next version.  Or I can p=
+ost
+them separately if you want.
+
+> > > > +		__vmx_set_guest_debugctl(vcpu, vmx->msr_ia32_debugctl);
+> > >=20
+> > > I would rather have a helper that explicitly writes the VMCS field, n=
+ot one that
+> > > sets the guest value *and* writes the VMCS field.
+> >=20
+> > >=20
+> > > The usage in init_vmcs() doesn't need to write vmx->msr_ia32_debugctl=
+ because the
+> > > vCPU is zero allocated, and this usage doesn't change vmx->msr_ia32_d=
+ebugctl.
+> > > So the only path that actually needs to modify vmx->msr_ia32_debugctl=
+ is
+> > > vmx_set_guest_debugctl().
+> >=20
+> > But what about nested entry? nested entry pretty much sets the MSR to a
+> > value given by the guest.
+> >=20
+> > Also technically the intel_pmu_legacy_freezing_lbrs_on_pmi also changes=
+ the
+> > guest value by emulating what the real hardware does.
+
+Drat, sorry, my feedback was way too terse.  What I was trying to say is th=
+at if
+we cache the guest's msr_ia32_debugctl, then I would rather have this:
+
+--
+static void vmx_guest_debugctl_write(struct kvm_vcpu *vcpu)
+{
+	u64 val =3D vmx->msr_ia32_debugctl |
+		  vcpu->arch.host_debugctl & DEBUGCTLMSR_FREEZE_IN_SMM);
+
+	vmcs_write64(GUEST_IA32_DEBUGCTL, val);
+}
+
+int vmx_set_debugctl(struct kvm_vcpu *vcpu, u64 data, bool host_initiated)
+{
+	u64 invalid =3D data & ~vmx_get_supported_debugctl(vcpu, host_initiated);
+
+	if (invalid & (DEBUGCTLMSR_BTF|DEBUGCTLMSR_LBR)) {
+		kvm_pr_unimpl_wrmsr(vcpu, MSR_IA32_DEBUGCTLMSR, data);
+		data &=3D ~(DEBUGCTLMSR_BTF|DEBUGCTLMSR_LBR);
+		invalid &=3D ~(DEBUGCTLMSR_BTF|DEBUGCTLMSR_LBR);
+	}
+
+	if (invalid)
+		return 1;
+
+	if (is_guest_mode(vcpu) && (get_vmcs12(vcpu)->vm_exit_controls &
+					VM_EXIT_SAVE_DEBUG_CONTROLS))
+		get_vmcs12(vcpu)->guest_ia32_debugctl =3D data;
+
+	if (intel_pmu_lbr_is_enabled(vcpu) && !to_vmx(vcpu)->lbr_desc.event &&
+	    (data & DEBUGCTLMSR_LBR))
+		intel_pmu_create_guest_lbr_event(vcpu);
+
+	vmx->msr_ia32_debugctl =3D data;
+	vmx_guest_debugctl_write(vcpu);
+	return 0;
+}
+--
+
+So that the path that refreshes vmcs.GUEST_IA32_DEBUGCTL on VM-Entry doesn'=
+t have
+to feed in vmx->msr_ia32_debugctl, because the only value that is ever writ=
+ten to
+hardware is vmx->msr_ia32_debugctl.
+
+However, I'm not entirely convinced that we need to cache the guest value,
+because toggling DEBUGCTLMSR_FREEZE_IN_SMM should be extremely rare.  So so=
+mething
+like this?
+
+--
+static void vmx_guest_debugctl_write(struct kvm_vcpu *vcpu, u64 val)
+{
+	val |=3D vcpu->arch.host_debugctl & DEBUGCTLMSR_FREEZE_IN_SMM);
+
+	vmcs_write64(GUEST_IA32_DEBUGCTL, val);
+}
+
+int vmx_set_debugctl(struct kvm_vcpu *vcpu, u64 data, bool host_initiated)
+{
+	u64 invalid =3D data & ~vmx_get_supported_debugctl(vcpu, host_initiated);
+
+	if (invalid & (DEBUGCTLMSR_BTF|DEBUGCTLMSR_LBR)) {
+		kvm_pr_unimpl_wrmsr(vcpu, MSR_IA32_DEBUGCTLMSR, data);
+		data &=3D ~(DEBUGCTLMSR_BTF|DEBUGCTLMSR_LBR);
+		invalid &=3D ~(DEBUGCTLMSR_BTF|DEBUGCTLMSR_LBR);
+	}
+
+	if (invalid)
+		return 1;
+
+	if (is_guest_mode(vcpu) && (get_vmcs12(vcpu)->vm_exit_controls &
+					VM_EXIT_SAVE_DEBUG_CONTROLS))
+		get_vmcs12(vcpu)->guest_ia32_debugctl =3D data;
+
+	if (intel_pmu_lbr_is_enabled(vcpu) && !to_vmx(vcpu)->lbr_desc.event &&
+	    (data & DEBUGCTLMSR_LBR))
+		intel_pmu_create_guest_lbr_event(vcpu);
+
+	vmx_guest_debugctl_write(vcpu, data);
+	return 0;
+}
+--
+
+And then when DEBUGCTLMSR_FREEZE_IN_SMM changes:
+
+	if (<is DEBUGCTLMSR_FREEZE_IN_SMM toggled>)
+		vmx_guest_debugctl_write(vmcs_read64(GUEST_IA32_DEBUGCTL) &
+					 ~DEBUGCTLMSR_FREEZE_IN_SMM);
+
+And the LBR crud doesn't need to call into the "full" vmx_set_debugctl() (o=
+r we
+don't even need that helper?).
+
+Side topic, we really should be able to drop @host_initiated, because KVM's=
+ ABI
+is effectively that CPUID must be set before MSRs, i.e. allowing the host t=
+o stuff
+unsupported bits isn't necessary.  But that's a future problem.
