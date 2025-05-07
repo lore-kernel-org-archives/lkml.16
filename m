@@ -1,23 +1,23 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E141148832;
-	Wed,  7 May 2025 09:07:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03A4B22128B;
+	Wed,  7 May 2025 09:07:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746608842; cv=none; b=T+ES+BX3G7FRRUPb+XQ1rOvWSvFHegkgzCAmbpwKE62J0+sKlSvFVJHs+3w0AwVHKcLoqv3pMeGKfcxdLJ1m0zpr2GZWRPFeA6pwYD55DZJ7qOp82Y7qLfpr4/EPBpso8ncwZeuYyqKAHZFoRJSgZlsj+Mhz08RJXa5NVBkUTg0=
+	t=1746608843; cv=none; b=QN2PopvFgU4XEn1MWfeLr7yQYxz6aYSb3AjWHVKupBt9vUHhwSe4BqnAh1wyY2YgphPqMsXMhnqfo1b19hUtlzK5wkpH5+QqpPKSwQicz1FUKqN8dhDYvt180A5EABTslHr8WtbNjpcsBxKMPn5F+quE4e/KFuJsMmuC0aQ++fE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746608842; c=relaxed/simple;
-	bh=/2JGXCg2iXnM4IwdNWOVz0dAcm8hk2gvn5PV0dLs/zE=;
+	s=arc-20240116; t=1746608843; c=relaxed/simple;
+	bh=d/Zn6c6jIMHaTKqWDpP4LvNSH+e2IlpTkIlNn8eWTLg=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=P2jnkV8AxqogQgFOSALk8/WaAUVJVzgmT/5WZ2aIGYgFHQmxpGnveZG5EyWm1n6g4/2kus0b8Go9E6ddk0Q523Z2Fkyjgn+9ilBPYYK50cHf0RMqcS5OkC6GxdEXhY3hGA3qQoy9Se+mEuFK+NZFJ/v81YGMgpKaFCXJ/BZ7iDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=27qnk8Bl; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BER8zzrd; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=bhrywcfhb98OFxfb04cYRHTCTI2s0qRj4YBBk14Wz0R4duRbrBDbj7/UqlIeC2iUhpLvUWmjmtd1VsdPJCMZyORIT5LFUhanTW1yRdvduKvxbjiHuyklVGiJKkFkAamXpeLH+75NZCZeLRzqbpm5118bdx0HDYQQskb2Gg28r5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=boEzdwFi; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1Wuu5TEu; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="27qnk8Bl";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BER8zzrd"
-Date: Wed, 07 May 2025 09:07:18 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="boEzdwFi";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1Wuu5TEu"
+Date: Wed, 07 May 2025 09:07:19 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1746608839;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -25,12 +25,12 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=tancZG+ppQnGwiLpkvbOVs0/l7HyydebuKkEu8nPHac=;
-	b=27qnk8BlHtlwLzTYUDC9ftQh8eh8ulTgr3WBWNzGcEwVsKtbK3AFm08g2CG3Yn2xcGsFdo
-	EYrRpkUm+xm4tyb1fVl/szidqRuC3gUaL+YQt4ZYhG1OcDvfZTDgLGaggLpLqx3CdYCmbX
-	nXGWXlzryk5RUjiKpP2oDd46HCdL2sLMgJWOmtn0oxJ3SSCkCvdD5KVMkdaE6/YNN24SUb
-	ds4jKdoebw23q+aZb3cHFoGA9x0vPzDxDQWIhr6epE5YCfTd7NN1Dooo0ue7+5UXBevIvo
-	IyqDzgQr3Tex32KYsEdBZZ1cr8J6lmp+QjUsP5NBm+SB19u207YG6UahzfzR+g==
+	bh=cv+9TkXSn8D8b015guVorv/lzm1J62pAfUN2RABw5VU=;
+	b=boEzdwFiDOGtow4XuE8dHx+J5xzX6T96BDy4qwNStOxfFAU5USlWshU63YMFpyfksKBttM
+	pC0CeY0frCGVydEHlNqJFhk3VdBPdWBEuBiOfDUenvCR4ZnqM32H5debRR++m7pr1mTE7O
+	jzNgDPDpCJeO83sPjtHsJC2ZRweL8S9KLtcmkTirzuu544yZjjkOaKGl4XtV0KPXqbtD/H
+	CgK3pv9DY41R4UkROed8FC9xu8NjghPvEpkE+vRa3AZn8glZIwocuXpawA9zZLahJC0VBX
+	jtUZD7Z2QfCQlNiQUQhb7+Cc0TDOoSAiPi4fdSiXwyeXcfw5XVpTgTUdqpgqUA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1746608839;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -38,26 +38,26 @@ DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=tancZG+ppQnGwiLpkvbOVs0/l7HyydebuKkEu8nPHac=;
-	b=BER8zzrdmlcartqzdkd987UyZMcSkcyisAN6Q+dM0I50NY9Uzc6ylf5xOd0Cv+kiyF2Ww5
-	HLp2pcMHBCK6rZDQ==
+	bh=cv+9TkXSn8D8b015guVorv/lzm1J62pAfUN2RABw5VU=;
+	b=1Wuu5TEu6aEgalQPhGhYYaRntQ5oIh8kYfP/FYlVKmvMiMJcxWf8OWw3uUSeuGNZ9lq5Io
+	reNbyX3B+yBjwjBw==
 From: "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/core] genirq: Remove irq_[get|put]_desc*()
+Subject: [tip: irq/core] genirq/manage: Rework irq_set_irqchip_state()
 Cc: Thomas Gleixner <tglx@linutronix.de>,
  "Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org, maz@kernel.org
-In-Reply-To: <20250429065422.729586582@linutronix.de>
-References: <20250429065422.729586582@linutronix.de>
+In-Reply-To: <20250429065422.670808288@linutronix.de>
+References: <20250429065422.670808288@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174660883834.406.9096907142350031159.tip-bot2@tip-bot2>
+Message-ID: <174660883905.406.10226361856648195028.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -67,58 +67,85 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the irq/core branch of tip:
 
-Commit-ID:     104361217c2a2ab7d6a9de756952814af0a8a5ad
-Gitweb:        https://git.kernel.org/tip/104361217c2a2ab7d6a9de756952814af0a8a5ad
+Commit-ID:     193879e28be7bb26abc795e6b5096ef9fe3131cf
+Gitweb:        https://git.kernel.org/tip/193879e28be7bb26abc795e6b5096ef9fe3131cf
 Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Tue, 29 Apr 2025 08:55:54 +02:00
+AuthorDate:    Tue, 29 Apr 2025 08:55:53 +02:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Wed, 07 May 2025 09:08:17 +02:00
+CommitterDate: Wed, 07 May 2025 09:08:16 +02:00
 
-genirq: Remove irq_[get|put]_desc*()
+genirq/manage: Rework irq_set_irqchip_state()
 
-All users are converted to the guards. Remove the helpers.
+Use the new guards to get and lock the interrupt descriptor and tidy up the
+code.
+
+No functional change.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lore.kernel.org/all/20250429065422.729586582@linutronix.de
+Link: https://lore.kernel.org/all/20250429065422.670808288@linutronix.de
 
 
 ---
- kernel/irq/internals.h | 24 ------------------------
- 1 file changed, 24 deletions(-)
+ kernel/irq/manage.c | 43 +++++++++++++++----------------------------
+ 1 file changed, 15 insertions(+), 28 deletions(-)
 
-diff --git a/kernel/irq/internals.h b/kernel/irq/internals.h
-index 44d3a67..bd2db6e 100644
---- a/kernel/irq/internals.h
-+++ b/kernel/irq/internals.h
-@@ -191,30 +191,6 @@ static inline class_irqdesc_lock_t class_irqdesc_lock_constructor(unsigned int i
+diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
+index 1783c52..827edc8 100644
+--- a/kernel/irq/manage.c
++++ b/kernel/irq/manage.c
+@@ -2703,39 +2703,26 @@ EXPORT_SYMBOL_GPL(irq_get_irqchip_state);
+  */
+ int irq_set_irqchip_state(unsigned int irq, enum irqchip_irq_state which, bool val)
+ {
+-	struct irq_desc *desc;
+-	struct irq_data *data;
+-	struct irq_chip *chip;
+-	unsigned long flags;
+-	int err = -EINVAL;
++	scoped_irqdesc_get_and_buslock(irq, 0) {
++		struct irq_data *data = irq_desc_get_irq_data(scoped_irqdesc);
++		struct irq_chip *chip;
  
- #define scoped_irqdesc		((struct irq_desc *)(__guard_ptr(irqdesc_lock)(&scope)))
+-	desc = irq_get_desc_buslock(irq, &flags, 0);
+-	if (!desc)
+-		return err;
++		do {
++			chip = irq_data_get_irq_chip(data);
  
--static inline struct irq_desc *
--irq_get_desc_buslock(unsigned int irq, unsigned long *flags, unsigned int check)
--{
--	return __irq_get_desc_lock(irq, flags, true, check);
--}
--
--static inline void
--irq_put_desc_busunlock(struct irq_desc *desc, unsigned long flags)
--{
--	__irq_put_desc_unlock(desc, flags, true);
--}
--
--static inline struct irq_desc *
--irq_get_desc_lock(unsigned int irq, unsigned long *flags, unsigned int check)
--{
--	return __irq_get_desc_lock(irq, flags, false, check);
--}
--
--static inline void
--irq_put_desc_unlock(struct irq_desc *desc, unsigned long flags)
--{
--	__irq_put_desc_unlock(desc, flags, false);
--}
--
- #define __irqd_to_state(d) ACCESS_PRIVATE((d)->common, state_use_accessors)
+-	data = irq_desc_get_irq_data(desc);
++			if (WARN_ON_ONCE(!chip))
++				return -ENODEV;
  
- static inline unsigned int irqd_get(struct irq_data *d)
+-	do {
+-		chip = irq_data_get_irq_chip(data);
+-		if (WARN_ON_ONCE(!chip)) {
+-			err = -ENODEV;
+-			goto out_unlock;
+-		}
+-		if (chip->irq_set_irqchip_state)
+-			break;
+-#ifdef CONFIG_IRQ_DOMAIN_HIERARCHY
+-		data = data->parent_data;
+-#else
+-		data = NULL;
+-#endif
+-	} while (data);
++			if (chip->irq_set_irqchip_state)
++				break;
+ 
+-	if (data)
+-		err = chip->irq_set_irqchip_state(data, which, val);
++			data = irqd_get_parent_data(data);
++		} while (data);
+ 
+-out_unlock:
+-	irq_put_desc_busunlock(desc, flags);
+-	return err;
++		if (data)
++			return chip->irq_set_irqchip_state(data, which, val);
++	}
++	return -EINVAL;
+ }
+ EXPORT_SYMBOL_GPL(irq_set_irqchip_state);
+ 
