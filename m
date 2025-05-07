@@ -1,63 +1,50 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65FB620B1F5
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 08:50:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6CD81E3DFD;
+	Wed,  7 May 2025 08:51:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746607853; cv=none; b=O36ANhruR+OW5RiWTDJcsj4hqs8AdgSXG4NDgD3PylCw9S2dzJKmWaFOZuS0nS5hkt8Z1PAhREAe5hDoAlSQJ8lm84Q1aDT3ttR4nFOEXPyxO3iD6N41TheJJw+uFbCtaVPlxqjbKzHm5cK8QeEPOslzkjQYh9NtN3BOwpnRiSU=
+	t=1746607903; cv=none; b=BwY1B6FARMapoeeJJgQhBO5t/pScNcRPZBDUOivvs2e32kVXwAXrnJ5CYq4XhMJAU/bPvqHObYRDlIyUj/C3Fcub4Xim8RgTfqO4wcaiYK3ryAqD0VHICc+hD4mQ5+nS1hPmUkvWG9gzyxS3aFaytoS+t6zL6zyKfJbkjogPGwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746607853; c=relaxed/simple;
-	bh=mybXQgzHz8kROBrPRKYErCQsmosxck2ounviyFfliF4=;
+	s=arc-20240116; t=1746607903; c=relaxed/simple;
+	bh=ZRGbU16EbvLnN1mbcnVMGiKhfTvveYDWrA+XdW/F9ag=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=acN5vxNOV2qAzmEF4X5RfyT5DQGTqL/NfR4rp0f/fD+bNHngeXS8mmfRbvjnbTTmgliLNsqUleLeFQOe+arWVcevJqnenXxu6GRR/PejEWH3x4WTxxpmMAo64ncPw/SnQ6XQsEQvH105elUR8wDBaMsvWqQQ2SGBT9UicQ1fC8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=jJ/yHaJj; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
+	 In-Reply-To:Content-Type; b=EG1Lqqk/kr5i4eoAREq9PCBQ0/6HvIZcEaH5M0eQWHawld1McYHlPpTMNluO0K/cYxoubZNqu3WUzg9Y1JfcbRr6lyFQmScT4mgBsqwNeXqmfZyZaHl/Zu9euhls2TZlfMY6fm0pO5ceuzfLmQVeLxDNrNDKkmqeCmKTVj0xtjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZZux7i0V; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="jJ/yHaJj"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-441ab63a415so66284395e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 01:50:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=citrix.com; s=google; t=1746607850; x=1747212650; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=3dWRbDpfOQc9VG9II13qarp6JnuKGD1XvHGR672drsA=;
-        b=jJ/yHaJjv1qtEyoSqZbFqiJb+G6IPm3LAtvgnGNEaxrnOG7YQgV5bAMatRO109D8nM
-         rnjMsoPShK32bZ13vXsZ94bk++MC0/c/iQCy53oGV6qpJuFNidBfkw/zx3sDNR5MruQE
-         EeQSdRCANTTX6jAM8p51rbROHhx9NLkmuD+1Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746607850; x=1747212650;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3dWRbDpfOQc9VG9II13qarp6JnuKGD1XvHGR672drsA=;
-        b=Yyk9ULWclH9MpQXmW6q7kY/v1XCyqyFcqEl6PRHYKIeJ5BCPYQFTnqCjsvhHOAPV7f
-         kxxEKF8OYN+kz39wsJdV29TcHr2+WeATXnTpOeyQ+ywcAng7Y68mY0MI+TP6DJ32CFXr
-         qePfiNW86ggbr/I+99J4Rw18irh8mCDho9CRq/F8jPWwKdQ7agL/313dJ4aWmRxS3fxZ
-         1K7824fNiShEQGXDCNKPCAh+Gxhk4PY4R8YUX7yzSLd6vynUnVIq2gjQby4Bgijti0cA
-         g7P/LgJ8brp1dWskY9aBQ/+Jjs6OlMTUajqjmHHeqO78rMLYWxXZhNp0gCbWw/HbFpze
-         rTlg==
-X-Forwarded-Encrypted: i=1; AJvYcCWFw1+BuOM3pZnaHBPirB2aM9ZEu1sWAFez1h/hMHfw3biu4k4yn7g/VLr/2fMKCQEXCtw91e08AIieK50=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCkxkuSikukz9xHDHLMKfYbjP080cNfKfrtTszDU6RWYmT8bBv
-	KrYZbnFDnPCAPJrAXuGRQxxs+ZWi2QQB1aLVqeCWpkUx50BWUQiXpFQB/pnXLx8=
-X-Gm-Gg: ASbGncs4CQPSIRgCJcH0eDuMRCRh3pE5hApy1ytCMJ1BdpV6WmP9Ob4114OkolaWeRr
-	TCvEvkZfObHslGGSFGm5KUv1qjNMWIRQ0ITyLBAsTss3IqilrpWMhflGkLGdwIn918HC/cyEtx6
-	PyDhOp5S9pt5u0DeSJfzJAXXPdZRrtYWMfSzMuiwpHTWonLDrS7SKaVzosnCRWMEnZY9b50qegZ
-	2fMevvzdO1cK9Cqei9a48c5SMZfGra9gG02XI6KsZozqNJH11CoZ2i5kuB4eczedRX4zz9xpw59
-	60G+0dvVkmGjdvdUqYuvRuyzSvmO/aKNAQ2G6M/XLSQoTqbfSw9qrrRzhoFQrLTD0EH+uLIUuUa
-	P/7WyVA==
-X-Google-Smtp-Source: AGHT+IEW590bSYpslV/nqN30U2PebcR+bm4TVT3XzDprAJtC3P2u/FG+Sa2YFsKEJpH49B6aQNpzpQ==
-X-Received: by 2002:a05:600c:1c97:b0:43c:ec0a:ddfd with SMTP id 5b1f17b1804b1-441d44bbfb1mr15956565e9.6.1746607849667;
-        Wed, 07 May 2025 01:50:49 -0700 (PDT)
-Received: from [192.168.1.183] (host-92-26-98-202.as13285.net. [92.26.98.202])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099b16ec6sm15822494f8f.83.2025.05.07.01.50.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 07 May 2025 01:50:49 -0700 (PDT)
-Message-ID: <6b0c87e0-d98d-4394-85bd-8abf556ebf0f@citrix.com>
-Date: Wed, 7 May 2025 09:50:48 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZZux7i0V"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746607902; x=1778143902;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ZRGbU16EbvLnN1mbcnVMGiKhfTvveYDWrA+XdW/F9ag=;
+  b=ZZux7i0V4caVjSoAGZbGly6568nQcIuklKPUoZpqUNChrx8ULFLvm2td
+   xQlskQSS/CHozvQdgFxugLud7X5BmxncbC9xf1Jo/pqxS/rewBhc15ng2
+   Q9SooLhncYX30szHXY9GTGF3G+qWiYTb2UUtcXzE/j0krOotEuaOirBDx
+   8QDKegDwBVhXPip9ITWOmkj0pxvMB41m4jCT1U9ZkQJxXmskaHUSAsU5+
+   bhRA2sPyMef2N400G428G/arn9ZyNOc5Ho4OL0dj/eqcloDy5OMiX18bN
+   7R4UTWexZQVkUxatGyNxvE8LtVLwuHAd5ZWxDeFZj2qYLjUNtqTexEeE4
+   A==;
+X-CSE-ConnectionGUID: EE5cua3SQ16CMAgr86aIIg==
+X-CSE-MsgGUID: QznCW1lnQ/Gj5k0liUG7ZQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="48458801"
+X-IronPort-AV: E=Sophos;i="6.15,268,1739865600"; 
+   d="scan'208";a="48458801"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 01:51:41 -0700
+X-CSE-ConnectionGUID: EtXsSu9LQe6T33TJsof/7g==
+X-CSE-MsgGUID: UT0T4aFTS862wyvBzJ35Xg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,268,1739865600"; 
+   d="scan'208";a="135611044"
+Received: from yungchua-mobl2.ccr.corp.intel.com (HELO [10.246.105.120]) ([10.246.105.120])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 01:51:38 -0700
+Message-ID: <eff651df-bc2a-45bf-a629-5adb4f8f398c@linux.intel.com>
+Date: Wed, 7 May 2025 16:51:35 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,68 +52,49 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 02/26] x86/cpu: Sanitize CPUID(0x80000000) output
-To: "Ahmed S. Darwish" <darwi@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, "H. Peter Anvin" <hpa@zytor.com>,
- John Ogness <john.ogness@linutronix.de>, x86@kernel.org,
- x86-cpuid@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
-References: <20250506050437.10264-1-darwi@linutronix.de>
- <20250506050437.10264-3-darwi@linutronix.de>
-Content-Language: en-GB
-From: Andrew Cooper <andrew.cooper3@citrix.com>
-Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
- 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
- 6+ahAA==
-In-Reply-To: <20250506050437.10264-3-darwi@linutronix.de>
+Subject: Re: [PATCH v1] soundwire: intel_auxdevice: Fix system suspend/resume
+ handling
+To: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
+ "Rafael J. Wysocki" <rjw@rjwysocki.net>, Vinod Koul <vkoul@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>,
+ Sanyog Kale <sanyog.r.kale@intel.com>, linux-sound@vger.kernel.org,
+ bard.liao@intel.com
+References: <5891540.DvuYhMxLoT@rjwysocki.net>
+ <30acf520-c137-4b49-8b69-08e35a7c5969@linux.dev>
+Content-Language: en-US
+From: "Liao, Bard" <yung-chuan.liao@linux.intel.com>
+In-Reply-To: <30acf520-c137-4b49-8b69-08e35a7c5969@linux.dev>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 06/05/2025 6:04 am, Ahmed S. Darwish wrote:
-> CPUID(0x80000000).EAX returns the max extended CPUID leaf available.  On
-> x86-32 machines
 
-How certain are you that it's all 32bit CPUs?  AIUI, it's an Intel
-specific behaviour, not shared by other x86 vendors of the same era.
 
-~Andrew
+On 4/26/2025 1:12 AM, Pierre-Louis Bossart wrote:
+> On 4/24/25 20:13, Rafael J. Wysocki wrote:
+>> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>>
+>> The code in intel_suspend() and intel_resume() needs to be properly
+>> synchronized with runtime PM which is not the case currently, so fix
+>> it.
+>>
+>> First of all, prevent runtime PM from triggering after intel_suspend()
+>> has started because the changes made by it to the device might be
+>> undone by a runtime resume of the device.  For this purpose, add a
+>> pm_runtime_disable() call to intel_suspend().
+> 
+> Allow me to push back on this, because we have to be very careful with a hidden state transition that needs to happen.
+> 
+> If a controller was suspended by pm_runtime, it will enter the clock stop mode.
+> 
+> If the system needs to suspend, the controller has to be forced to exit the clock stop mode and the bus has to restart before we can suspend it, and that's why we had those pm_runtime_resume().
+> 
+> Disabling pm_runtime when entering system suspend would be problematic for Intel hardware, it's a known can of worms.
+> 
+> It's quite possible that some of the code in intel_suspend() is no longer required because the .prepare will resume the bus properly, but I wanted to make sure this state transition out of clock-stop is known and taken into consideration.
+> 
+> Bard, is this a configuration you've tested?
+
+
+Sorry for the late reply. Yes, I tested jack detection in runtime
+suspended. Also, the CI test is passed.
+
