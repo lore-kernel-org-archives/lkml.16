@@ -1,106 +1,123 @@
-Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 789A624B28
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 09:31:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D52039ACF
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 09:32:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746610301; cv=none; b=H16IUxcQ4Ip3gnz0LG5LSpWK73lq8J+oNFnuccgHdNgMJexkit2xqMbLXm8tYWZb9XTIEaKs4sqm/5dF2G9nCoAPD2K7WAp18j+pv4paODDP6OfJoWgYOFE4cjWtR8k5C0spkYZ0WA7ah09cRSGTJ+put4rUF2/OS6Yd8oXH3Io=
+	t=1746610356; cv=none; b=ZtMwJ8SFtFKGlP/tzEN17ORF9+GadO3rwkUwtCxedgg5Yb4003R8dnmdgw5eBJYYkjwgL0I1Ep/KdGffJ9ksxIrOWt+jYXsQct8RiCmk0+b2yJXaxSmO33AilfQQ5ER3qMtyefBBhKniNB1NgUOvviUkQV01uY0cp04RpzegZa4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746610301; c=relaxed/simple;
-	bh=K9X9Nn/7fufwUGnClucrIwI28bxVDHFEpQ+W4zTrDek=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Gy7UnsyFs2SBxtpFwX8BqFFyBLwMOpUeWMO0IK8vmhd8mZ0/WwVdxBeYVDSXOVjFpM12E3dW6JGI/EX2cVWDNnGTulcEzcmIyrFsk6JTiEzz5Npu+H04vgaGXw+TBGpEtmC2IY6FGFpv2pVCXY95ZDRh05EaRCo2AnYjr/t/mWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=VtYv1Tn+; arc=none smtp.client-ip=115.124.30.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1746610356; c=relaxed/simple;
+	bh=J2R93UzTVb7CbyhVllcTkTkUf/7r32WFKlNat9suHEE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=msmTJmaUt7TIVQFx0VNmAPeFdKuklSbxtz5OnEgRA2HRL+j91HA4gcYI4+Eomiy5lWhGEuybOhtEDVC9SOpmNGA/6DHgnlLCiGlr4H0nn+HyJdvot9eJC+hv2RYWKQb5GeN+OrRQsd1J0/OjEFuaSdH2u+ihYYiDoxN0Wxuky7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YM+qO1S7; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bX0s/o+8; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="VtYv1Tn+"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1746610295; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=XmgMg6STtlyinvSAL5WS1Sr98izqTtA9oefqvb3PDJw=;
-	b=VtYv1Tn+xj27V3HA/bTINb5xGD/kYwuRJtWBHUcGB2X1Ot1P99eTvORe3twKSTcdklPuY3NQSQxyTi8X9+Pf7BGrhPpCcYE87T3finWyQTGzz1z2RZHZsyO3JBHxNMhvMrCGlx5WEylrFzqVfAd6q2kRN2VXGnQYQExaS+XXKi0=
-Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WZpDwwa_1746609976 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 07 May 2025 17:26:17 +0800
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-To: akpm@linux-foundation.org,
-	willy@infradead.org,
-	david@redhat.com
-Cc: hannes@cmpxchg.org,
-	lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com,
-	npache@redhat.com,
-	ryan.roberts@arm.com,
-	dev.jain@arm.com,
-	ziy@nvidia.com,
-	vbabka@suse.cz,
-	rppt@kernel.org,
-	surenb@google.com,
-	mhocko@suse.com,
-	baolin.wang@linux.alibaba.com,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] mm: khugepaged: convert set_huge_pmd() to take a folio
-Date: Wed,  7 May 2025 17:26:12 +0800
-Message-ID: <8e33c8a65b46170dfd8ba6715d2115856a55b8f6.1746609191.git.baolin.wang@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YM+qO1S7";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bX0s/o+8"
+Date: Wed, 7 May 2025 11:32:31 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1746610353;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hJU9gUSyqy/IDG+zmBgqBXltz9wtMMR6YwuF4WrvREY=;
+	b=YM+qO1S7y8UcIAx7/Yr9PTPVU3sw88wBpiXsAFLXI/ZfZQ63rWJ0Y1PNBA+gMh+qX4WAMc
+	gleLRCAxt+EfdhP5Q/QmqH7ygNRCxZ0OQcQcca0ZSpruDcNjGLlEdmi/a457DSltbzlMCi
+	1iVnIIOiXfc0mCALyY7ZbJWHd4gfiQ0OWoRSZy4Ie8AzWwzasdXCEoPTxBqN2zS9DaeCLo
+	qKsx9Q6dhZWuiCO1BPD7uUoJLuzpYRCEhbCAVSW3KDX4toG+U06hvQT9HWiHqScDWtAbzb
+	GOJMgOzYhTV8KUS8OVSGm9oWmE6XtJpWfQDx27JUG+0vcX4xtvdn3j6JTZXkNw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1746610353;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hJU9gUSyqy/IDG+zmBgqBXltz9wtMMR6YwuF4WrvREY=;
+	b=bX0s/o+8UhuakGN82OFZ27mfHRTwrYekQ4boP8E4+ncWGk9ztlOyFwuJ58UhVWszX1dPEv
+	OxnHfnLp/jawboBQ==
+From: "Ahmed S. Darwish" <darwi@linutronix.de>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	John Ogness <john.ogness@linutronix.de>, x86@kernel.org,
+	x86-cpuid@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 00/26] x86: Introduce centralized CPUID model
+Message-ID: <aBsor3iOb0SJsLSQ@lx-t490>
+References: <20250506050437.10264-1-darwi@linutronix.de>
+ <aBnSgu_JyEi8fvog@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aBnSgu_JyEi8fvog@gmail.com>
 
-We've already gotten the stable locked folio in collapse_pte_mapped_thp(),
-so just use folio for set_huge_pmd() to set the PMD entry, which is more
-straightforward.
+On Tue, 06 May, Ingo Molnar wrote:
+>
+> Wrt. <asm/cpuid/api.h>, we'll need a few followup cleanups there too
+> I think, such as migrating to the cpuid_*() namespace:
+>
 
-Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
----
- mm/khugepaged.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Perfect, then I'll move ahead and do a "CPUID headers cleanup" patch
+queue /before/ moving into a v2 of this series.
 
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index b04b6a770afe..0215ef6095d9 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -1467,7 +1467,7 @@ static void collect_mm_slot(struct khugepaged_mm_slot *mm_slot)
- #ifdef CONFIG_SHMEM
- /* hpage must be locked, and mmap_lock must be held */
- static int set_huge_pmd(struct vm_area_struct *vma, unsigned long addr,
--			pmd_t *pmdp, struct page *hpage)
-+			pmd_t *pmdp, struct folio *folio)
- {
- 	struct vm_fault vmf = {
- 		.vma = vma,
-@@ -1476,13 +1476,13 @@ static int set_huge_pmd(struct vm_area_struct *vma, unsigned long addr,
- 		.pmd = pmdp,
- 	};
- 
--	VM_BUG_ON(!PageTransHuge(hpage));
-+	VM_BUG_ON(!folio_test_large(folio));
- 	mmap_assert_locked(vma->vm_mm);
- 
--	if (do_set_pmd(&vmf, hpage))
-+	if (do_set_pmd(&vmf, &folio->page))
- 		return SCAN_FAIL;
- 
--	get_page(hpage);
-+	folio_get(folio);
- 	return SCAN_SUCCEED;
- }
- 
-@@ -1689,7 +1689,7 @@ int collapse_pte_mapped_thp(struct mm_struct *mm, unsigned long addr,
- maybe_install_pmd:
- 	/* step 5: install pmd entry */
- 	result = install_pmd
--			? set_huge_pmd(vma, haddr, pmd, &folio->page)
-+			? set_huge_pmd(vma, haddr, pmd, folio)
- 			: SCAN_SUCCEED;
- 	goto drop_folio;
- abort:
--- 
-2.43.5
+Any other wishes in that domain?
 
+> Rename have_cpuid_p() to cpuid_feature() or so.
+
+ACK.
+
+> I find the cpudata_cpuid_ namespace a bit confusing:
+>
+>	__cpudata_cpuid_subleaf_idx(__table, __leaf, __subleaf, __idx)
+>	__cpudata_cpuid_subleaf(__table, __leaf, __subleaf)
+>	cpudata_cpuid_subleaf(_cpuinfo, _leaf, _subleaf)
+>	cpudata_cpuid(_cpuinfo, _leaf)
+>	cpudata_cpuid_nr_entries(_cpuinfo, _leaf)
+>	cpudata_cpuid_index(_cpuinfo, _leaf, _idx)
+>	cpudata_cpuid_regs(_cpuinfo, _leaf)
+>	cpudata_cpuid_index_regs(_cpuinfo, _leaf, _idx)
+>
+
+> All of CPUID processing is related to 'data', and we don't
+> really have any 'cpudata' primitives, so the cpudata_ prefix is
+> confusing to me.
+>
+> It's particularly confusing for methods like cpudata_cpuid(),
+> which sounds like a generic method, while in reality it accesses
+> subleaf 0, right? Why not name it cpuid_subleaf_0() or so?
+>
+> My suggestion would be to use a structure like this:
+>
+>	__cpuid_subleaf_idx(__table, __leaf, __subleaf, __idx)
+>	__cpuid_subleaf(__table, __leaf, __subleaf)
+>	cpuid_subleaf(_cpuinfo, _leaf, _subleaf)
+>	cpuid_subleaf_0(_cpuinfo, _leaf)
+>	cpuid_leaf_nr_entries(_cpuinfo, _leaf)
+>	cpuid_leaf_index(_cpuinfo, _leaf, _idx)
+>	cpuid_leaf_regs(_cpuinfo, _leaf)
+>	cpuid_leaf_index_regs(_cpuinfo, _leaf, _idx)
+>
+> Or so?
+
+Yeah, that's honestly much much better.
+
+(cpuid_subleaf() is already a raw CPUID OP at <asm/cpuid/api.h> now, but
+ luckily it has one external call site, so it'll be easy to rename.)
+
+> In my book it's a nice bonus that they thus become part of the overall
+> cpuid_*() API family. Note how these accessors still are all still
+> either cpuid_leaf_ or cpuid_subleaf_ prefixed.
+
+Yeah, now a single <asm/cpuid/api.h> makes full sense as well :)
+
+Thanks!
+Ahmed
