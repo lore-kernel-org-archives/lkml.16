@@ -1,195 +1,222 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2063.outbound.protection.outlook.com [40.107.236.63])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B04125D536;
-	Wed,  7 May 2025 12:28:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.63
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746620893; cv=fail; b=sypiUF9QVkKYhw2XdnfnlXqfGCAqDMB61vo/COXiIvlTTMNCLS8jSnm50inCRPFv7+3g04djoLtlOQ+ABBeRZAwn3/vMBGdoVe4vMUBVxtR+msE9U0pMAmLlWTdm0z7By7HuDHwPyYr8I2gkoE5uGh8E1ToBcx5aGFe+Ewo9c+I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746620893; c=relaxed/simple;
-	bh=ZrdUSHuauLWNHE4LW6l5CG7X6cBmg3/L3KfTA9g6xSM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Pwsh1vP6dZ1iaN3nGD84cYHwXBEBKvY+QKLUEMie/3cMm0cp1wOg2CBCZqOMgecFNmYEB7zFwlO1wn68fWJuv2gWZmJpgDgl2hpb4drtrZDWwoGwU8IrYQUCVw+bzXCLHq/NrUtBEfnOM5qhFeQ+2jBa85IZbPmGj1aFcHEt7o4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=k4/JifEN; arc=fail smtp.client-ip=40.107.236.63
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5214425E81D;
+	Wed,  7 May 2025 12:28:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746620904; cv=none; b=DYaycjWIHhkr8Lsad52tGA2rJg/lrZWl/sAPLfvwi3rFHkrt81kk5ZinFL9zImt+mI9rhWI+cA9k63ZWSI4j+l5xWQFVgwiSGzKFgqg48Vu6bz1LxeWLAcvKqNirqCerDBOCtRI4Mr2LRTDUcmdxr4buICZj8eJAxtPS+AJ2f1Y=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746620904; c=relaxed/simple;
+	bh=OE8r8roK96uAKw4vsaj4b8alMxGkuxoqdOjfYJDmboo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aM/gOG8ZIrc4/kAXvEgdHfM5LJGTQSKslW7I/X4HDIqz1uDL7W/0I4bvLJotbFgfTul7ebWW9zjcMoc9u1LdO/lorYJ7RNJ5do2Vwl4awphA21xvD1T2qfUnZ0qbNno/0B0FQZl9omCFRDgbxkkgXxrUQNbKE9xrnIKK6ymzjac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lbPwGefw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="k4/JifEN"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=RNfgYMfqAp+hlPH918JcSUnSSytDpI/IkCZbEdWYiCbk7yZaQFVPYG9ewLqz5Rs3j1oOT1jnzn5vAoObr+Tv3OFJ201FmtS86dEpMtBL7TmvankwsWzUPI6ofutbpOC+nLFtLXzrKBheOhcBrlLUlvrWguZKSbV63le8aRqKN3gL5RU4GjNonrWJJ+r2vn9n19qYWrUlxb9YUysIAAK/So5lHJBi6xIJzutX9toDvXXK8i2I2UM96O82DqLmjkbh+Outi73ib+lKWt6LNiIjWFg8b82NjiZBkjUv+Ed12XL7xkCeguXSuNhDYGXYEHGxQU7ebkQDRVxwBfXkK8K1Aw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=80/h2RP6EngN2e6EQilRLitCpoIFclyqvTaIoPBFJJ8=;
- b=pJ3Ut0ttzd3LMtCx0QAEXL1fhlmUPUN/e6HLr4MU/R/PYlZbuHL/1a2cAcljUjrMbI+lW0r3eG5gznIMVpV77Yl5GT1bLEWJZ4WiJkJngzoFZmwj93IcoKjS9KTdCXx2N1FR7iA4geL+Gpnqa0RoBnJdI44CrTz/f48HAoE/EOtnr1FenRXCBWnwwNqGjlguNekdC0CUq1vWrI0fqKlanP+OUW2Q03h5ttJMeFkTICg9+QFr2E6wzm3Dka7eRvjYBZiMJVRJNyIIObGLDJCpPoTTYMoLbLhZPclVpUcRluQV3Eqf8M31eCwew4u/3KmDqCZ4o+PnfKcHFrvCDlB7KA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=80/h2RP6EngN2e6EQilRLitCpoIFclyqvTaIoPBFJJ8=;
- b=k4/JifENkKbjoh6Tv6SMdh/FjNqYJdAPFUEYUCSW2j+vaqV6BrvmQOAcjrMRe9DHGSAjvsgoq30Q396CE6ZSPWg9G/7ygI6WvmEOcb6hezVCouPacwI9w5BBURPoVtvUlzGHCqoJAin3eq4kGLpReloFmo+fpZq7Yawl59/F7FDKalMu/CEe/5/mEDQeLHLUxWMExvs35kyAvTJc0dPteJMk9D9KRAE4DjZYMs8JisKkCewzQoUB4WP6LqwDbMOGbHZCkPEX8PNrcVwZ2NyhrKQgN3m6/9rgTArIUIOrZ9kb39WLITp0wVtDqIRMbyllt3i3CHnc/YBgSKGWVvWJLw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
- by DM6PR12MB4316.namprd12.prod.outlook.com (2603:10b6:5:21a::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.26; Wed, 7 May
- 2025 12:28:04 +0000
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732%6]) with mapi id 15.20.8699.026; Wed, 7 May 2025
- 12:28:04 +0000
-Date: Wed, 7 May 2025 09:28:02 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: Alexey Kardashevskiy <aik@amd.com>, kevin.tian@intel.com,
-	will@kernel.org, joro@8bytes.org, suravee.suthikulpanit@amd.com,
-	robin.murphy@arm.com, dwmw2@infradead.org, baolu.lu@linux.intel.com,
-	shuah@kernel.org, linux-kernel@vger.kernel.org,
-	iommu@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kselftest@vger.kernel.org, eric.auger@redhat.com,
-	jean-philippe@linaro.org, mdf@kernel.org, mshavit@google.com,
-	shameerali.kolothum.thodi@huawei.com, smostafa@google.com,
-	yi.l.liu@intel.com
-Subject: Re: [PATCH v2 06/19] iommufd/viommu: Add
- IOMMU_VIOMMU_SET/UNSET_VDEV_ID ioctl
-Message-ID: <20250507122802.GB90261@nvidia.com>
-References: <cover.1724776335.git.nicolinc@nvidia.com>
- <6348cc7a72ce9f2ac0e9caf9737e70177a01eb74.1724776335.git.nicolinc@nvidia.com>
- <35701c5e-030a-4f52-b6f6-ed18368fb2cd@amd.com>
- <20241004114147.GF1365916@nvidia.com>
- <95ab62fa-bb1c-4e4a-a210-b0bdba0d4ad2@amd.com>
- <aBHYN39FcH+NG5Ab@Asurada-Nvidia>
- <20250505170807.GP2260709@nvidia.com>
- <aBl5uLOFCntuIYYz@nvidia.com>
- <20250506125847.GA2260709@nvidia.com>
- <aBppFi7eKngFipps@nvidia.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aBppFi7eKngFipps@nvidia.com>
-X-ClientProxiedBy: MN2PR16CA0062.namprd16.prod.outlook.com
- (2603:10b6:208:234::31) To CH3PR12MB8659.namprd12.prod.outlook.com
- (2603:10b6:610:17c::13)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lbPwGefw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7CBEC4AF09;
+	Wed,  7 May 2025 12:28:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746620903;
+	bh=OE8r8roK96uAKw4vsaj4b8alMxGkuxoqdOjfYJDmboo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=lbPwGefwScSp3VnPzsm/H7G4nK1Cxh6ErTBjyEXijHU8jovXlTeHyJc5+1vYJg3Vn
+	 SL0fBqcrRjJg6pQA7CEKy6lvM90lmKZ6yw6Li5gYosGTn0oi37/VVaLgQbN9FVRnne
+	 uSO7CVFWQRkAu46xVlt+qLsk9wtgMpBZM68/qsxbG7uYVZRWhsdVyf/Prq5G7Sus5E
+	 aF9rDkQZvxcGl5icc+v5DkPzHcS5UMdjDZsdacPcKTPGcYJXgTMwg/u5AKq3c4OLqi
+	 Q+WS7u8zkn7tS+1JMC4TFRb2XcRckgUO/Lnv/XB2nlBEe2dI1DNP54+f8T5Ya6RrQ+
+	 KNfKcfsc7ZP8Q==
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-549963b5551so7799026e87.2;
+        Wed, 07 May 2025 05:28:23 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU97jSthxWuAyaLBkUDvsTb2BqN2TsZQxTN2TmCeH5Vyu1caoVgYE0+OdMDP4b11C7gge7ufNkU09+UUpf55A==@vger.kernel.org, AJvYcCW4MbwGmVQ1FhMW7eh2iCjZNKmSON71+2y17+cYoJGHR4xbuY6RFkvY9NqO0C9gGUlgqfqypSQKb8o4XUmQ@vger.kernel.org, AJvYcCWZU6u94AwyYKcmBuWaDigP6wjQiCKnbk+9yUT3Cujj+7rWo5Q+YjQOE84umLi1x4FIHcKlf5fqaXsgB2o=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxk4vLGhRpzgTx4GAz+GcpzEtuiWsoT4AlxQUneSYqLluhoc4jR
+	QYdzS7nTMSet46zCSCGPXmueeUNFINPeJ5srG73pFcWCiF+7tZP0UoMcnAizaF8X2TYcSxJanoh
+	QX/G1DA5VRCCWYg+kMIma/c0kd3g=
+X-Google-Smtp-Source: AGHT+IFgMAPq+hiKKe/7C3leO+9eXxhUQDBh3X5JkXUdD4isQhZxNaAVJ+XOOXQwgmx3BaKv6yQgC8QDsNaeXD/c5Ig=
+X-Received: by 2002:a05:6512:10cc:b0:549:8db6:b2dd with SMTP id
+ 2adb3069b0e04-54fb92a3ac8mr1207849e87.31.1746620902419; Wed, 07 May 2025
+ 05:28:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|DM6PR12MB4316:EE_
-X-MS-Office365-Filtering-Correlation-Id: f3531727-2a16-4c59-5025-08dd8d629d0a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?BtxHUTd+TSGBHKsAPqMvVpH4v6Ds2T1dEvhTjWbaBqV4elK4DF8YBIxeqG1r?=
- =?us-ascii?Q?O4YB8QJf3MtpU3UkwLR3MunJ/EceKQs7UPQvc8a2r3fJqx6GkVw5biMY8+3W?=
- =?us-ascii?Q?VFLhjbz21rVu2OwHZE0mimdYdTBaENGAJoAc6NN4W6hGNg/eLkPd2Bez5BGF?=
- =?us-ascii?Q?uj+kQSJ5GCHrWk9RgfEdenW5O4pgwbB7Nm1kx0N53g1TsGOBsYkqvHF3JahH?=
- =?us-ascii?Q?bAKyDxES8kN5xUl+i5eiT2KpdsJun/VJ0SjOEVqUs+VHY6t6UiBwBOwZff6c?=
- =?us-ascii?Q?wH8/2hXknWNvAd7nUfKOjabHct+jUo/uSl3yav1Wn8amx2vjFzWnsHDSNlpj?=
- =?us-ascii?Q?IXwTVVPLstHcxnLIaTZc5akyb2edkq7jJIfLu0PJL22R6pn/13w9mrIREQH7?=
- =?us-ascii?Q?NOnKYb8a1bmgK/y0mRu0gUak8EQOgIYzTLtGBTbbtIDtJUJXyBJD0fCy4+e6?=
- =?us-ascii?Q?i2NdptL11laNadgLs45r9MPujqdWRsSU3DKooGusLz+qzPWyh63Izw2eo8iY?=
- =?us-ascii?Q?3NR70w2oAr5eHnQkGwsRV8DDvcnlpmA5iS48nl4xM1JJlJLXRiggs7o/GvmP?=
- =?us-ascii?Q?EbUZ/vyQueYbj0RO/qSMRZmJlInOIBAOBrDSxscnixCrsj/KQCBJP4BISIPW?=
- =?us-ascii?Q?Sd0uvoZlRvhqxkJsnKIBnGBE9yTk7Ds2pmJ9Jy6HWDx3c2kECDISuUpv61vN?=
- =?us-ascii?Q?E1XNSSYsbas7DCHzlGOrSUvdhZTCzmkUQA8tL2t8x6OkFBfce33BsrumCChx?=
- =?us-ascii?Q?tLsYACQ8ORHvBWj+Tkh++SuMf0ngDJgEIgv2FPXkntnNg/+UZH2Jl8VGAE9h?=
- =?us-ascii?Q?+CNCThMv1H3ysD/zq55MUxohXBXsCX1Yc1m8RRHLcnFEVx2BQHtDRgmySXcW?=
- =?us-ascii?Q?8wAmP8ItDbKA9OYgVaCC9fIQbo15UXEQHiMQTRN9fkueRtYEvH7GLryaFiNo?=
- =?us-ascii?Q?KAjo08GRh4uAz2G6sWmCdtewgEHgq5UCH8yTo1XEThRiQAWAookn3XjTKQXO?=
- =?us-ascii?Q?wIAXwrPzRotHsAfS98KFZ6at/x4yWpMJkIsHS2eKplQ5VBjdTbXG7eTQIb5M?=
- =?us-ascii?Q?Y9pC1e10+n1x6fqS/0pYarWALPpzbiOWrMVLfchTvMeIk2KtWeK90YQaOPG5?=
- =?us-ascii?Q?//Hw664qA4kKGxe+HGxZjtDH01cDBlc1kpQk2xBtYt+qYUpJU/o6Q/v32w7W?=
- =?us-ascii?Q?I2hYldKGhvNyPJ6kg7Y1jbJJpqxhNatjRXkpyj45TnVmfYVtzx+MQJ2n1ffe?=
- =?us-ascii?Q?559Gng50Tndta9prwmN2x2KD52Ve5mPbrfpf6+8D+Furv4UF0W3uch8ifqwn?=
- =?us-ascii?Q?hqV56jI+bQojPFyzorA2IpX6PJJ1x8KHL8WTn9QMPg9/h3vneBmFg5lqbUwq?=
- =?us-ascii?Q?VLMVA76+rHDcoZi7zAO1H/oQHoAekcK6382iHEKF186Y1vHxWuzKr0BRTwUA?=
- =?us-ascii?Q?zuLEdjuilVU=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?8ZnHPRy6LpOpi4B2dkXeCkENv17FewPej/5qzHANFkm5Q9P6StM8Bl4y2NPh?=
- =?us-ascii?Q?xxuhgPm0NLmRsgGo6QN5sHtdC9+YNzkDIUBFil9LMjAdfUptFeJyhekhnNmG?=
- =?us-ascii?Q?242N4kEaf87HoAZcFRNd+5ja0J1EndYgO7nyWyPaM+C5+eymXexOEVAXxj07?=
- =?us-ascii?Q?DvO9mRfSEJMbb8nAJP4JlSlfVG5wNpy1A3HG6+HsXoF0qksABJib9vVaBANb?=
- =?us-ascii?Q?82bE4DiysaffoZFs8EWMiWDlKBtz0W7fEhUMSWNMjr7MiOq9+KTIPZkTbaR1?=
- =?us-ascii?Q?9UfrCP8BiCu5onkGZ+heJD1DPQusI0LR9n5HU3ZMT2782Jl7OuOFlgt5bgkr?=
- =?us-ascii?Q?rgtQyXdDimZVWU6X/7prRM9TNDDVEhyx3+bhjl0C0u8/gQg9nEfndzyqTi1r?=
- =?us-ascii?Q?hXMrpUhKaBkrctYvbMMuv2P5zjj5Q5BtMEzx978KsP2VAcZ+C6LGcbAAFad+?=
- =?us-ascii?Q?qCvqscBeRIH9mCTbSaCHAhoI2RY7ntvrBWrLpPbSd2VO8zMj+ChLU3gQbWwd?=
- =?us-ascii?Q?wAroqGv6gV5ubQtlNG/YXbi4Yhq+6n+Z6mymbtHWJGKNH6bxwHRC9w2ulHzB?=
- =?us-ascii?Q?AyP5rFXocm7eQyAgz3GBh7kc/WfJG/ucx9RPRx+ewMBKn22es+BthSy/eKvW?=
- =?us-ascii?Q?E7BPHhXo3PYxpkWr34ObTut8OqcLdPTWvZDpE8h9xitGJe8P8Av4Bj2Ny5ur?=
- =?us-ascii?Q?JsN0GIrG9T2eDAVXFHoo59NRRSeDJTzntJekHnS7UOB1DanP6VcSyCW19En4?=
- =?us-ascii?Q?qGVx20owy3tuQKsYDbawG4+JyVA84/LmIaddPB7SATH1nX0YcQCVPh65PY7x?=
- =?us-ascii?Q?eweqdQ+BOEJXd8T9mYgrBtsJu6if8X4JmMCYNhjREBQFbRqz5JMrL0MF69NA?=
- =?us-ascii?Q?UYkLyRDRMEPRfCvxGoUfLqEXgzZf/gRTVMOvOFpSPWGpTh0r2oxTIbHfoWbe?=
- =?us-ascii?Q?pHen8fIVSV21tb7xOe+0zWfyrYBWnsD0C/GJOHF8lctw9vXF1Np0+LPBJARm?=
- =?us-ascii?Q?JT2P0/uYCHADW3SDfriFwITovR/SF40VLzf4F2kBQzhV+iPrzVgkgT25hQJ4?=
- =?us-ascii?Q?FfD0PZC4Hn031UVjfmNQDqzghMSXi9V9DIKhGleAVM4cwBxw0oDX+5DJCjWX?=
- =?us-ascii?Q?5yEfdtOdsH3UgJNmyM4mG/ZcvhsfqxgXLyteSUcoEor/90IzMyQ7cNjHYwbT?=
- =?us-ascii?Q?cj93HzcYtG78NJSaT91P/oxrNfRqrZ4V/Dck+OAFmNwVyyKdt1na2vXf6tq9?=
- =?us-ascii?Q?A2e9yo6VVnFErXAFGFmbbZsHix93BGzB39CMIdJMhlA0uCZSOlHII+x9C6sB?=
- =?us-ascii?Q?FA/BTv11ocdsKOdywCeGMDaEmu3Xw3CupRWzyHvDsPh1YKwIZTrN9VtFj9hA?=
- =?us-ascii?Q?gIBteSFiBwoDElXXbq3qK4EI0EVAFeKE/D4zhiBzLXNZPxoHjutmxKd419nI?=
- =?us-ascii?Q?ZWQPmEROSVDGZLXVKb+UEn3fYDG+CZqahrh6sQgR+KI9jF42p8pJ7ig8Qh5R?=
- =?us-ascii?Q?JkcSuQbN2uqCvUjxJN9Tq7enQMab4kMU7XW5Hjl71+Lak6U+Wpf8l2l6H3XA?=
- =?us-ascii?Q?qHSzCQWOU9cxQuzACfxLtF2Qfs5F4sbkV04g9SEx?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f3531727-2a16-4c59-5025-08dd8d629d0a
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2025 12:28:03.9125
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: bhkn/N/S2roNwvA1+CyDok3wMRzMr2ACd/YTeJYNothwOn6b2HQLsvHwmL0XYkl2
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4316
+References: <20250505212401.3379699-6-samitolvanen@google.com> <20250505212401.3379699-10-samitolvanen@google.com>
+In-Reply-To: <20250505212401.3379699-10-samitolvanen@google.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Wed, 7 May 2025 21:27:46 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAS0Obe-ye1ba06EfZ+mgmc6ter+xMa+mKCw6aRM14L35Q@mail.gmail.com>
+X-Gm-Features: ATxdqUFN1YL8B_40y52RHamgoHz9_0Jw0cmMFy9Iiio91M2klLicBkuQDsXFblc
+Message-ID: <CAK7LNAS0Obe-ye1ba06EfZ+mgmc6ter+xMa+mKCw6aRM14L35Q@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] Documentation/kbuild: Add new gendwarfksyms kABI rules
+To: Sami Tolvanen <samitolvanen@google.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, 
+	Daniel Gomez <da.gomez@samsung.com>, linux-modules@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 06, 2025 at 12:55:02PM -0700, Nicolin Chen wrote:
-> On Tue, May 06, 2025 at 09:58:47AM -0300, Jason Gunthorpe wrote:
-> > On Mon, May 05, 2025 at 07:53:44PM -0700, Nicolin Chen wrote:
-> > > On Mon, May 05, 2025 at 02:08:07PM -0300, Jason Gunthorpe wrote:
-> > > > On Wed, Apr 30, 2025 at 12:58:47AM -0700, Nicolin Chen wrote:
-> > > > The bus numbers can be reassigned at any time on the fly by the guest
-> > > > by reprogramming the PCI hierarchy.
-> > > 
-> > > Yes. If we take some aggressive use case into account, where its
-> > > BDF number could change multiple times, I think it's natural for
-> > > VMM to simply destroy the previous vDEVICE and allocate a new one
-> > > with a new BDF number, right?
-> > 
-> > We should not destroy the vdevice for something like that. In a CC
-> > case that would unplug it from the VM which is not right.
-> 
-> CC needs BDF to allocate a VDEV in the CC world. So, it cannot
-> allocate a VDEV with BDF=0 firstly, which is what Alex reported.
+On Tue, May 6, 2025 at 6:24=E2=80=AFAM Sami Tolvanen <samitolvanen@google.c=
+om> wrote:
+>
+> Document byte_size and type_string kABI stability rules. Also fix
+> the section numbers while we're at it.
+>
+> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> ---
+>  Documentation/kbuild/gendwarfksyms.rst | 103 +++++++++++++++++++++++--
+>  1 file changed, 95 insertions(+), 8 deletions(-)
+>
+> diff --git a/Documentation/kbuild/gendwarfksyms.rst b/Documentation/kbuil=
+d/gendwarfksyms.rst
+> index e4beaae7e456..8b0d7ebbb084 100644
+> --- a/Documentation/kbuild/gendwarfksyms.rst
+> +++ b/Documentation/kbuild/gendwarfksyms.rst
+> @@ -125,14 +125,17 @@ the rules. The fields are as follows:
+>    qualified name of the DWARF Debugging Information Entry (DIE).
+>  - `value`: Provides rule-specific data.
+>
+> -The following helper macro, for example, can be used to specify rules
+> +The following helper macros, for example, can be used to specify rules
+>  in the source code::
+>
+> -       #define __KABI_RULE(hint, target, value)                         =
+    \
+> -               static const char __PASTE(__gendwarfksyms_rule_,         =
+    \
+> +       #define ___KABI_RULE(hint, target, value)                        =
+   \
+> +               static const char __PASTE(__gendwarfksyms_rule_,         =
+    \
+>                                           __COUNTER__)[] __used __aligned=
+(1) \
+>                         __section(".discard.gendwarfksyms.kabi_rules") =
+=3D     \
+> -                               "1\0" #hint "\0" #target "\0" #value
+> +                               "1\0" #hint "\0" target "\0" value
+> +
+> +       #define __KABI_RULE(hint, target, value) \
+> +               ___KABI_RULE(hint, #target, #value)
+>
+>
+>  Currently, only the rules discussed in this section are supported, but
+> @@ -223,7 +226,88 @@ Example usage::
+>         KABI_ENUMERATOR_IGNORE(e, C);
+>         KABI_ENUMERATOR_VALUE(e, LAST, 2);
+>
+> -4.3. Adding structure members
+> +4.1.3. Managing structure size changes
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +A data structure can be partially opaque to modules if its allocation is
+> +handled by the core kernel, and modules only need to access some of its
+> +members. In this situation, it's possible to append new members to the
+> +structure without breaking the ABI, as long as the layout for the origin=
+al
+> +members remains unchanged.
+> +
+> +To append new members, we can hide them from symbol versioning as
+> +described in section :ref:`Hiding members <hiding_members>`, but we can'=
+t
+> +hide the increase in structure size. The `byte_size` rule allows us to
+> +override the structure size used for symbol versioning.
+> +
+> +The rule fields are expected to be as follows:
+> +
+> +- `type`: "byte_size"
+> +- `target`: The fully qualified name of the target data structure
+> +  (as shown in **--dump-dies** output).
+> +- `value`: A positive decimal number indicating the structure size
+> +  in bytes.
+> +
+> +Using the `__KABI_RULE` macro, this rule can be defined as::
+> +
+> +        #define KABI_BYTE_SIZE(fqn, value) \
+> +                __KABI_RULE(byte_size, fqn, value)
+> +
+> +Example usage::
+> +
+> +       struct s {
+> +                /* Unchanged original members */
+> +               unsigned long a;
+> +                void *p;
+> +
+> +                /* Appended new members */
+> +                KABI_IGNORE(0, unsigned long n);
+> +       };
+> +
+> +       KABI_BYTE_SIZE(s, 16);
+> +
+> +4.1.4. Overriding type strings
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D
+> +
+> +In rare situations where distributions must make significant changes to
+> +otherwise opaque data structures that have inadvertently been included
+> +in the published ABI, keeping symbol versions stable using the more
+> +targeted kABI rules can become tedious. The `type_string` rule allows us
+> +to override the full type string for a type or a symbol, and even add
+> +types for versioning that no longer exist in the kernel.
+> +
+> +The rule fields are expected to be as follows:
+> +
+> +- `type`: "type_string"
+> +- `target`: The fully qualified name of the target data structure
+> +  (as shown in **--dump-dies** output) or symbol.
+> +- `value`: A valid type string (as shown in **--symtypes**) output)
+> +  to use instead of the real type.
+> +
+> +Using the `__KABI_RULE` macro, this rule can be defined as::
+> +
+> +       #define KABI_TYPE_STRING(type, str) \
+> +               ___KABI_RULE("type_string", type, str)
+> +
+> +Example usage::
+> +
+> +       /* Override type for a structure */
+> +       KABI_TYPE_STRING("s#s",
+> +               "structure_type s { "
+> +                       "member base_type int byte_size(4) "
+> +                               "encoding(5) n "
+> +                       "data_member_location(0) "
+> +               "} byte_size(8)");
+> +
+> +       /* Override type for a symbol */
+> +       KABI_TYPE_STRING("my_symbol", "variable s#s");
+> +
+> +The `type_string` rule should be used only as a last resort if maintaini=
+ng
+> +a stable symbol versions cannot be reasonably achieved using other
+> +means. Overriding a type string increases the risk of actual ABI breakag=
+es
+> +going unnoticed as it hides all changes to the type.
+> +
+> +4.2. Adding structure members
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+>
+>  Perhaps the most common ABI compatible change is adding a member to a
+> @@ -237,7 +321,7 @@ natural method. This section describes gendwarfksyms =
+support for using
+>  reserved space in data structures and hiding members that don't change
+>  the ABI when calculating symbol versions.
+>
+> -4.3.1. Reserving space and replacing members
+> +4.2.1. Reserving space and replacing members
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 
-I don't know that should be true. Since the BDF is under guest
-control it can change at run time, is CC intending to somehow disable
-that? If not then the BDF is dynamic. You could start with a non-zero
-bus numebr by default but it isn't fixed.
+Hmm, renumbering is annoying.
 
-> And even for a normal case that the device is migrating between
-> PCI buses, CC might not be able to update the BDF (which can be
-> a part of CC_VDEV_ALLOC instruction), even if iommufd supports
-> an update ioctl. So, the underlying handler for an update ioctl
-> is still to first destroy the VDEV and re-allocate a new one?
+Maybe, better to stop managing section numbers?
 
-I think CC has to or it somehow has to disable bus number changing in
-the VM as unsupported.
+For example, see this commit
+1a4c1c9df72ec266f94631edc59f9f2a9dc5aa8c
 
-But I would not do destroy/reallocate of the vPCI device in a CC
-world, that is completely wrong response for the VM changing a bus
-number. Either the bus number does not change somehow or there is a
-modify operation.
 
-Jason
+
+--=20
+Best Regards
+Masahiro Yamada
