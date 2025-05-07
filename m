@@ -1,93 +1,72 @@
-Received: from mxout37.expurgate.net (mxout37.expurgate.net [194.37.255.37])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A380D28D846;
-	Wed,  7 May 2025 18:21:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.37.255.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDEF128B7F0;
+	Wed,  7 May 2025 18:22:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746642106; cv=none; b=Qv+3gBJcXC8OlphZusLFbpEpqHbk2KD21NCdhInA6bZleJkI5CluVMXg1MZqnaZxPNi5gDpyZySZhpc0CsosdLlkiC7e9LD5J0natlHFAfflY9BWVklKMj6drDUwJ1I3eXjUN/yl/sdiykTs2qFJ8UiorXZJX9PZv2FYAVkk0KE=
+	t=1746642148; cv=none; b=FwVHuCOV7Hj5PcdBWsG/WgtYapEOL83WoFqMEkvhT5PHFRRLbwMzfPr0N/7yiFk4YqJpCp/ZOIdj/f0WZieyY5kUxN4SaCw13nZzh6B5Zv3kClFrKlZv5zxZYHWQ/lS1D7Mab8GqN4PpW0OKN3a/CkvTern2jvvhDg07hYlGB2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746642106; c=relaxed/simple;
-	bh=n90AbWhkxSIUXM9JviyGZUSG0v9mcDVD+LyKYob5t8Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Evdw/jvO+WkwxAN2whKjyEGF4MVWGMZ7vDZ8vCKkNGli7hdhq50QJKRCmnrJ816cTBNakSzh1H64ozmgCB5iq6K9LkBIzxA24Owyc06/2Q1xqdtgdP4AKXXNwUCduV6RT4qjbCfn7ltwOP4CjeeNQx42VcvrYwBwMj3MGpXy5NQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=brueckmann-gmbh.de; spf=pass smtp.mailfrom=brueckmann-gmbh.de; arc=none smtp.client-ip=194.37.255.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=brueckmann-gmbh.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=brueckmann-gmbh.de
-Received: from [194.37.255.9] (helo=mxout.expurgate.net)
-	by relay.expurgate.net with smtp (Exim 4.92)
-	(envelope-from <thomas.gessler@brueckmann-gmbh.de>)
-	id 1uCjOc-002WP0-AF; Wed, 07 May 2025 20:21:30 +0200
-Received: from [217.239.223.202] (helo=zimbra.brueckmann-gmbh.de)
-	by relay.expurgate.net with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <thomas.gessler@brueckmann-gmbh.de>)
-	id 1uCjOb-002Q3U-8p; Wed, 07 May 2025 20:21:29 +0200
-Received: from zimbra.brueckmann-gmbh.de (localhost [127.0.0.1])
-	by zimbra.brueckmann-gmbh.de (Postfix) with ESMTPS id F1027CA0310;
-	Wed,  7 May 2025 20:21:27 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by zimbra.brueckmann-gmbh.de (Postfix) with ESMTP id E0C2ECA04D8;
-	Wed,  7 May 2025 20:21:27 +0200 (CEST)
-Received: from zimbra.brueckmann-gmbh.de ([127.0.0.1])
- by localhost (zimbra.brueckmann-gmbh.de [127.0.0.1]) (amavis, port 10026)
- with ESMTP id wCZj7PF64PHc; Wed,  7 May 2025 20:21:27 +0200 (CEST)
-Received: from ew-linux.ew (unknown [10.0.11.14])
-	by zimbra.brueckmann-gmbh.de (Postfix) with ESMTPSA id C1437CA0310;
-	Wed,  7 May 2025 20:21:27 +0200 (CEST)
-From: Thomas Gessler <thomas.gessler@brueckmann-gmbh.de>
-To: dmaengine@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Vinod Koul <vkoul@kernel.org>,
-	Michal Simek <michal.simek@amd.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
-	Thomas Gessler <thomas.gessler@brueckmann-gmbh.de>,
-	Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Marek Vasut <marex@denx.de>,
-	linux-arm-kernel@lists.infradead.org,
-	Suraj Gupta <Suraj.Gupta2@amd.com>,
-	Harini Katakam <harini.katakam@amd.com>
-Subject: [PATCH v2] dmaengine: xilinx_dma: Set dma_device directions
-Date: Wed,  7 May 2025 20:21:01 +0200
-Message-ID: <20250507182101.909010-1-thomas.gessler@brueckmann-gmbh.de>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1746642148; c=relaxed/simple;
+	bh=YMcr7kQ9TGaTP6WhqfZiDNaymUksVxM7RBsyZue/exk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PZysm5zbaCya86x2ZX1+gWWl4QlzqtzfGb+tynBy4bNSZMkOo2dH0jRZaLtM8vvYIYrtuT+SBr1olsZTGyHNlM3vwezfCNUHx2UvLNnASlQqPapgC1kO89ijsm7/17DNQtCIXNZdjzIdK7aVDgczZI2NtbQFuV3lPYzw4amq1YY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kArIe70s; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kArIe70s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BDE8C4CEE2;
+	Wed,  7 May 2025 18:22:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746642147;
+	bh=YMcr7kQ9TGaTP6WhqfZiDNaymUksVxM7RBsyZue/exk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kArIe70suXHlXZo0TV+JN/3u2UOxD+7Wnj5//RanirT8XGGST48Cq2TG35hw0Z7Fr
+	 UWNR5TDLpwEXsfC33lcbuzTDQ5f+O8bD4Gn6w3Jr7YaUIwSJbQOnJtxUocmVtFxNVE
+	 aGFiRZTyZMpNd4jGQ8kI7pxc7mQl2pXAnSMeBC1cuqrgDCb4JAP1cdDy3JpM43jACf
+	 BKpvKrUq9hDaiqZVf5uNcwhpLrXdarNIGqD7pouUa9gW0iKYyxFgeHW5Tf8aNXVgZF
+	 1gAz0R8tZedOmkHmd2KIOUhjmzVIorHzuYLnK5oe7p42v2BpEpmlsIQCM356k+k3RT
+	 /Hti7w7Bm9udg==
+Date: Wed, 7 May 2025 12:22:22 -0600
+From: Keith Busch <kbusch@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, kernel test robot <lkp@intel.com>,
+	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>, linux-nvme@lists.infradead.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Marco Elver <elver@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org,
+	x86@kernel.org, kasan-dev@googlegroups.com,
+	linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-efi@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, sparclinux@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [PATCH 1/8] nvme-pci: Make nvme_pci_npages_prp() __always_inline
+Message-ID: <aBuk3nBDOv_6wFCT@kbusch-mbp.dhcp.thefacebook.com>
+References: <20250507180852.work.231-kees@kernel.org>
+ <20250507181615.1947159-1-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-purgate-ID: 151534::1746642090-96E4C21F-1C64AD5C/0/0
-X-purgate: clean
-X-purgate-type: clean
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250507181615.1947159-1-kees@kernel.org>
 
-Coalesce the direction bits from the enabled TX and/or RX channels into
-the directions bit mask of dma_device. Without this mask set,
-dma_get_slave_caps() in the DMAEngine fails, which prevents the driver
-from being used with an IIO DMAEngine buffer.
+On Wed, May 07, 2025 at 11:16:07AM -0700, Kees Cook wrote:
+> Force it to be __always_inline to make sure it is always available for
+> use with BUILD_BUG_ON().
 
-Signed-off-by: Thomas Gessler <thomas.gessler@brueckmann-gmbh.de>
----
-Changes in v2:
-  - Change to Suraj's simpler version as per Radhey's request
-
- drivers/dma/xilinx/xilinx_dma.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_=
-dma.c
-index 3ad44afd0e74..8f26b6eff3f3 100644
---- a/drivers/dma/xilinx/xilinx_dma.c
-+++ b/drivers/dma/xilinx/xilinx_dma.c
-@@ -2909,6 +2909,8 @@ static int xilinx_dma_chan_probe(struct xilinx_dma_=
-device *xdev,
- 		return -EINVAL;
- 	}
-=20
-+	xdev->common.directions |=3D chan->direction;
-+
- 	/* Request the interrupt */
- 	chan->irq =3D of_irq_get(node, chan->tdest);
- 	if (chan->irq < 0)
+Reviewed-by: Keith Busch <kbusch@kernel.org>
