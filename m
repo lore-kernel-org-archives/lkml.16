@@ -1,260 +1,152 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D23321A8F84;
-	Wed,  7 May 2025 03:10:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF2E41DE2BA
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 03:10:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746587448; cv=none; b=mBbafXZ1UZX/3oMoqoNOalP2sW6+913gCYxBixwQJdcC67PlziBCv2xGta6EsICSqMBfyPe1EENJPYN2tYbZq2cjU8Y6m8wKYsxGFcmER5jUZCPjgiGuGqdkXZyfSJXR/PaSipLB8p3qTNMOZ8BRstjEcZZWkrO1yzjHphinbrU=
+	t=1746587449; cv=none; b=br/w4mW0BzBaZvVevVMHAUYTdSqXCupGMeRklgw23vHRDh8pdSpFVUB4TyVlrWPbKMML7mCPaAfKokvBvNnQleX7aSFmegTBoMi+aGCB4SJ7waQpDl2YtIsiIhlqRX7JnpFtSHPMRYtdynbNjDB5MTNMuKf5e2C7pDVC/Z5QfV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746587448; c=relaxed/simple;
-	bh=Xas1TqBSp3sLR4Q33gdMHfib9AK+HNcnGk56gdmLOtk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Y8rFECp6PgraYnjAwC+elq5Yog/c3enZbDH/POcUilpHvygtev/7tl3m403AWrqObZnu8rytakv7UzNReXqOJJ6Foe3nwFIsyMAJI+m0v8eUykHCWDFQV5Kzr5nHnldBD17acCnBO+phlEXJJHUjGu/q8Ero3TKGeGCrQUiNODA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Y8XKVozh; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	s=arc-20240116; t=1746587449; c=relaxed/simple;
+	bh=Gg21LHsk2DA/gAZ+3TgrOAdIP9cGG3SLUbHO658YwX8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vf6Uj2seA9+Sw/mXghiK/r/xsFZuCkpo0HJcdvuWXamcouc4LN4tgnOVRlKvmnzYy+pgJ0ymIOjTkKHU4Xnyr002Hly3SbpuSTiCSko2rdXMLtaGTEP8dEOC4+96mU0JBY+Q3UjQOzRSyVK2xyyq7KVYO3fKZ7qrN0IZ4+oLhKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OY0lCZNq; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Y8XKVozh"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5471GkxX027701;
-	Wed, 7 May 2025 03:10:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=1ceo3I2dyTF
-	7ExIH2FRPYuugH282toGnaS+cJ37MT+Q=; b=Y8XKVozhmFAD2prFg1R6gyPIkne
-	4EsNNQr1V+GGpIHH8iGxxoo6aNp6x4/MlGMNOlvCPD8HJsAG5X8fYwYIu2wOSgff
-	YYCK3TEFRvgHSvLxioI608o/Is2rgMIu36yBF64kG7r8K01OPwZxgP4aOE9nDWU4
-	VJKIVr2CMxAR9NHu5x092oSqPnlY6fsRd0sQ0RdUuewR2cvaQZ/LqOs/I5mv4g1U
-	5RwWGi04Qpj0dBGE7VL4EjzD+DdHpTVgQKNnkT9g2fvHh8Nzp+fsWRbMogiTGJiA
-	TSkZHGpyEZcm9fsPqrGvgmd8xeaR3JX5sR9O/SbEcFoAVc4pVIsPLO6LjwA==
-Received: from aptaippmta02.qualcomm.com (tpe-colo-wan-fw-bordernet.qualcomm.com [103.229.16.4])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46fguujd6n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 07 May 2025 03:10:28 +0000 (GMT)
-Received: from pps.filterd (APTAIPPMTA02.qualcomm.com [127.0.0.1])
-	by APTAIPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 5473AQXw006170;
-	Wed, 7 May 2025 03:10:26 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APTAIPPMTA02.qualcomm.com (PPS) with ESMTPS id 46dc7m5yt2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 07 May 2025 03:10:26 +0000
-Received: from APTAIPPMTA02.qualcomm.com (APTAIPPMTA02.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 5473AQw1006156;
-	Wed, 7 May 2025 03:10:26 GMT
-Received: from cse-cd02-lnx.ap.qualcomm.com (cse-cd02-lnx.qualcomm.com [10.64.75.246])
-	by APTAIPPMTA02.qualcomm.com (PPS) with ESMTPS id 5473AQT0006155
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 07 May 2025 03:10:26 +0000
-Received: by cse-cd02-lnx.ap.qualcomm.com (Postfix, from userid 4438065)
-	id 256252F3F; Wed,  7 May 2025 11:10:25 +0800 (CST)
-From: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
-To: vkoul@kernel.org, kishon@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-        conor+dt@kernel.org, dmitry.baryshkov@linaro.org,
-        neil.armstrong@linaro.org, abel.vesa@linaro.org,
-        manivannan.sadhasivam@linaro.org, lpieralisi@kernel.org, kw@linux.com,
-        bhelgaas@google.com, andersson@kernel.org, konradybcio@kernel.org
-Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, quic_qianyu@quicinc.com,
-        quic_krichai@quicinc.com, quic_vbadigan@quicinc.com,
-        Ziyue Zhang <quic_ziyuzhan@quicinc.com>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: [PATCH v5 5/6] arm64: dts: qcom: qcs8300: enable pcie1
-Date: Wed,  7 May 2025 11:10:18 +0800
-Message-Id: <20250507031019.4080541-6-quic_ziyuzhan@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250507031019.4080541-1-quic_ziyuzhan@quicinc.com>
-References: <20250507031019.4080541-1-quic_ziyuzhan@quicinc.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OY0lCZNq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746587445;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zDP5SJyu1HM2jy5Jk+I9deDo8NdSHT65dpnO1OhhUms=;
+	b=OY0lCZNqH4gFdgWxhwePg1l3Il4NuSu9znjaUFUDW3BMv3sA918PVVT9eJjbOeNCNMvmQC
+	L2HThMvpI/8cHu/p8yo9DWMOajlMkrg4zqBe22t2wzukl7dhz4QtJeS8JOEMDu3Rfn9MqQ
+	Xhxs+TlEBY1zxrca0ery+K4dAqdKFN4=
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com
+ [209.85.214.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-163-y-7KwQbcMeeI1HwSkXyskg-1; Tue, 06 May 2025 23:10:40 -0400
+X-MC-Unique: y-7KwQbcMeeI1HwSkXyskg-1
+X-Mimecast-MFC-AGG-ID: y-7KwQbcMeeI1HwSkXyskg_1746587440
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-22e3abea7e8so14698225ad.2
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 20:10:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746587440; x=1747192240;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zDP5SJyu1HM2jy5Jk+I9deDo8NdSHT65dpnO1OhhUms=;
+        b=gWThVbCbnVeDihjUW09zyCFajC1GuMzhsjV7jQnrDeXLuQyPcWSOe2uwjrt+Lry3gD
+         8mNvO2jMHaRjYOnFbVQZ+xE3Za52ho/9qY3gWm6wK+myXU0iT3lqYN9G1mLoz8AS3sFI
+         GQGHG7vM2dDWUuetTKQ9HaYYWFmZDDChJrsPgbIqjhdaOG0YWRxmQyJY6n+tPsdvY7CG
+         64zT+rA89gO0+OqXGEUA/lVvgr9mobfUsPWwhIynSIa3k8lyM0sOgsQg6ePeKONm1PY5
+         244C5DZrywJwnlrBut5/00rNjSUKU6F6/mVUfyYNgESuiJykp1GeEUu8C8ITg6WlAg4j
+         WbJw==
+X-Forwarded-Encrypted: i=1; AJvYcCUhOwYcDDHNivk9VdrJvn1j9+hZHSJ4W1ABpAvcee1GNveGJWPeK0hAA9IoXugUpY/BZckcVRx9gl89IVY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJAd8JaY+Y5IFm9V3NVSQYv7zy4aWu01a1I4QZ0aLrgfYLHNyk
+	9WFLR5z8lcHs2EURiWXc5o1Oz7rLKpG3aHmjBKcW+138+J1GgTIbuAzO/ga9CtMPe2JKGynR+Cv
+	xLJFW/8K6/LGSMY/7ocNuqSmda5DZ3EV2hqPCNc5VSQOorzClFIo0AHE7B6yvpA==
+X-Gm-Gg: ASbGncvB2SzQBUu6YsHjjmtQKqHMgTW01pyrYkgeD0M1UsP9Nv9WkgozHFWijfTcx5J
+	2H+LGXLLmmzH5GdD2kxur0K2ZHfwYvx0hLK8vw14I5xOVJy0VnZ2Uo8tIqhYgcgDPvCLXIE9r64
+	pd0WoZE/VhnZF7So5Kdo5p3+di+CcXZGnMr21MC795ANXVRJwXuCb52OCidbYQCvdPhBGkOb1cL
+	Yywf0XhXjtDta9yLFnE6ytXRHw1jA9UTt7aafYdfsh4U2z3cS1xwrR7eZ4Z89kAHSX4OsM7PiSp
+	bC8=
+X-Received: by 2002:a17:902:f789:b0:224:1001:6787 with SMTP id d9443c01a7336-22e5ea2e466mr24846955ad.4.1746587439739;
+        Tue, 06 May 2025 20:10:39 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH0UfEi+55Sr/HmVL17k/pyRle1Z4csFmmJpk2KYXZvLlD0HVZ1oUcDI55EPbEuyt069E4aHg==
+X-Received: by 2002:a17:902:f789:b0:224:1001:6787 with SMTP id d9443c01a7336-22e5ea2e466mr24846475ad.4.1746587439348;
+        Tue, 06 May 2025 20:10:39 -0700 (PDT)
+Received: from localhost ([209.132.188.88])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e151e98d0sm82766195ad.80.2025.05.06.20.10.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 May 2025 20:10:39 -0700 (PDT)
+Date: Wed, 7 May 2025 11:05:27 +0800
+From: Coiby Xu <coxu@redhat.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>, 
+	Milan Broz <gmazyland@gmail.com>, Thomas Staudt <tstaudt@de.ibm.com>, 
+	Daniel P =?utf-8?B?LiBCZXJyYW5nw6k=?= <berrange@redhat.com>, Kairui Song <ryncsn@gmail.com>, 
+	Pingfan Liu <kernelfans@gmail.com>, Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, 
+	linux-kernel@vger.kernel.org, x86@kernel.org, Dave Hansen <dave.hansen@intel.com>, 
+	Vitaly Kuznetsov <vkuznets@redhat.com>, Arnaud Lefebvre <arnaud.lefebvre@clever-cloud.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v9 6/8] Revert "x86/mm: Remove unused __set_memory_prot()"
+Message-ID: <idxxt5vwxx65n73rau2pr72bnw4nopyxi67otivqdzrlnt6tnn@7uygzqael66u>
+References: <20250502011246.99238-1-coxu@redhat.com>
+ <20250502011246.99238-7-coxu@redhat.com>
+ <20250503234605.94d954b6ca70ea09c0aa8004@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=UJPdHDfy c=1 sm=1 tr=0 ts=681acf25 cx=c_pps
- a=nuhDOHQX5FNHPW3J6Bj6AA==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17
- a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8
- a=K7kricVwaqq8vgrxYV0A:9 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: bTiS3bnM6mQs-Eyjg550wekGKW1kip0P
-X-Proofpoint-GUID: bTiS3bnM6mQs-Eyjg550wekGKW1kip0P
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA3MDAyNyBTYWx0ZWRfX6f2iQgIGAqmj
- aW1WaDvICv4mTvYpDcf9lfUYZ0JQc4EdaaMZyfsJYzCY2Tl6J+xey5VEymrxIhzpNd10k69cZ26
- zNN05YJPp7L+kLZ5komQwZ4DL3Fz4pM5s1UqM9cFhdNND4pRAKRzAcPX5+rptdldzopKguB0j1R
- AhJCxCtupEacgdPVrCpblWMaQuvoUeb3I7KeWdsTYwTwE3NehiH3RbKmlUi17mYCZUUerrtX9yp
- aAx03/t7apFaYqkdlQekiC1TLlAJcQUf2SbtGBd+d+i33jGhzdJtRcGofe6Nw/qslsXj8C8Y7Gp
- b+gIBdyniqg6iM6eZt3LN8rzsU0BOS/ITQF0o192mIpyT+9CyiOkDoCuY0H6dNgKDHA2RhnX3EW
- PIVXU8EERp9V9vfmQa3cZdC22bCQznSPx/QjkMtki0E2d/v+uBVcEuZlNqVOmxW11f0Ll8Du
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-07_01,2025-05-06_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 adultscore=0 clxscore=1015 phishscore=0 spamscore=0
- impostorscore=0 mlxlogscore=999 mlxscore=0 lowpriorityscore=0 bulkscore=0
- malwarescore=0 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2504070000 definitions=main-2505070027
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20250503234605.94d954b6ca70ea09c0aa8004@linux-foundation.org>
 
-Add configurations in devicetree for PCIe1, including registers, clocks,
-interrupts and phy setting sequence.
+On Sat, May 03, 2025 at 11:46:05PM -0700, Andrew Morton wrote:
+>On Fri,  2 May 2025 09:12:40 +0800 Coiby Xu <coxu@redhat.com> wrote:
+>
+>> This reverts commit 693bbf2a50447353c6a47961e6a7240a823ace02 as kdump
+>> LUKS support (CONFIG_CRASH_DM_CRYPT) depends on __set_memory_prot.
+>>
+>
+>x86_64 allmodconfig:
+>
+>In file included from drivers/gpu/drm/i915/gt/intel_ggtt.c:6:
+>./arch/x86/include/asm/set_memory.h:40:57: error: unknown type name 'pgprot_t'
+>   40 | int __set_memory_prot(unsigned long addr, int numpages, pgprot_t prot);
+>      |                                                         ^~~~~~~~
+>
+>I did this:
+>
+>
+>From: Andrew Morton <akpm@linux-foundation.org>
+>Subject: revert-x86-mm-remove-unused-__set_memory_prot-fix
+>Date: Sat May  3 11:38:32 PM PDT 2025
+>
+>x86 set_memory.h needs pgtable_types.h for pgprot_t.  Obtain it via the
+>higher-level pgtable.h.
+>
+>Cc: Baoquan He <bhe@redhat.com>
+>Cc: Coiby Xu <coxu@redhat.com>
+>Cc: "Daniel P. Berrange" <berrange@redhat.com>
+>Cc: Dave Hansen <dave.hansen@intel.com>
+>Cc: Dave Young <dyoung@redhat.com>
+>Cc: Jan Pazdziora <jpazdziora@redhat.com>
+>Cc: Liu Pingfan <kernelfans@gmail.com>
+>Cc: Milan Broz <gmazyland@gmail.com>
+>Cc: Ondrej Kozina <okozina@redhat.com>
+>Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+>Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+>---
+>
+> arch/x86/include/asm/set_memory.h |    1 +
+> 1 file changed, 1 insertion(+)
+>
+>--- a/arch/x86/include/asm/set_memory.h~revert-x86-mm-remove-unused-__set_memory_prot-fix
+>+++ a/arch/x86/include/asm/set_memory.h
+>@@ -4,6 +4,7 @@
+>
+> #include <asm/page.h>
+> #include <asm-generic/set_memory.h>
+>+#include <asm/pgtable.h>
+>
+> #define set_memory_rox set_memory_rox
+> int set_memory_rox(unsigned long addr, int numpages);
+>_
 
-Add PCIe lane equalization preset properties for 8 GT/s and 16GT/s.
+Thanks for catching this issue and providing a clean fix! I'll make sure
+future patches pass allmodconfig. And also thanks for pulling the patch
+set into -mm tree!
 
-Acked-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
----
- arch/arm64/boot/dts/qcom/qcs8300.dtsi | 125 +++++++++++++++++++++++++-
- 1 file changed, 124 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/qcs8300.dtsi b/arch/arm64/boot/dts/qcom/qcs8300.dtsi
-index b2d4fe59b03d..9917b98f6b6d 100644
---- a/arch/arm64/boot/dts/qcom/qcs8300.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs8300.dtsi
-@@ -602,7 +602,7 @@ gcc: clock-controller@100000 {
- 			clocks = <&rpmhcc RPMH_CXO_CLK>,
- 				 <&sleep_clk>,
- 				 <&pcie0_phy>,
--				 <0>,
-+				 <&pcie1_phy>,
- 				 <0>,
- 				 <0>,
- 				 <0>,
-@@ -881,6 +881,129 @@ pcie0_phy: phy@1c04000 {
- 			status = "disabled";
- 		};
- 
-+		pcie1: pci@1c10000 {
-+			device_type = "pci";
-+			compatible = "qcom,pcie-qcs8300", "qcom,pcie-sa8775p";
-+			reg = <0x0 0x01c10000 0x0 0x3000>,
-+			      <0x0 0x60000000 0x0 0xf20>,
-+			      <0x0 0x60000f20 0x0 0xa8>,
-+			      <0x0 0x60001000 0x0 0x4000>,
-+			      <0x0 0x60100000 0x0 0x100000>,
-+			      <0x0 0x01c13000 0x0 0x1000>;
-+			reg-names = "parf",
-+				    "dbi",
-+				    "elbi",
-+				    "atu",
-+				    "config",
-+				    "mhi";
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			ranges = <0x01000000 0x0 0x00000000 0x0 0x60200000 0x0 0x100000>,
-+				 <0x02000000 0x0 0x60300000 0x0 0x60300000 0x0 0x1fd00000>;
-+			bus-range = <0x00 0xff>;
-+
-+			dma-coherent;
-+
-+			linux,pci-domain = <1>;
-+			num-lanes = <4>;
-+
-+			interrupts = <GIC_SPI 519 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 140 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 518 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "msi0",
-+					  "msi1",
-+					  "msi2",
-+					  "msi3",
-+					  "msi4",
-+					  "msi5",
-+					  "msi6",
-+					  "msi7",
-+					  "global";
-+			#interrupt-cells = <1>;
-+			interrupt-map-mask = <0 0 0 0x7>;
-+			interrupt-map = <0 0 0 1 &intc GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
-+					<0 0 0 2 &intc GIC_SPI 149 IRQ_TYPE_LEVEL_HIGH>,
-+					<0 0 0 3 &intc GIC_SPI 150 IRQ_TYPE_LEVEL_HIGH>,
-+					<0 0 0 4 &intc GIC_SPI 151 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			clocks = <&gcc GCC_PCIE_1_AUX_CLK>,
-+				 <&gcc GCC_PCIE_1_CFG_AHB_CLK>,
-+				 <&gcc GCC_PCIE_1_MSTR_AXI_CLK>,
-+				 <&gcc GCC_PCIE_1_SLV_AXI_CLK>,
-+				 <&gcc GCC_PCIE_1_SLV_Q2A_AXI_CLK>;
-+			clock-names = "aux",
-+				      "cfg",
-+				      "bus_master",
-+				      "bus_slave",
-+				      "slave_q2a";
-+
-+			assigned-clocks = <&gcc GCC_PCIE_1_AUX_CLK>;
-+			assigned-clock-rates = <19200000>;
-+
-+			interconnects = <&pcie_anoc MASTER_PCIE_1 QCOM_ICC_TAG_ALWAYS
-+					 &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
-+					<&gem_noc MASTER_APPSS_PROC QCOM_ICC_TAG_ACTIVE_ONLY
-+					 &config_noc SLAVE_PCIE_1 QCOM_ICC_TAG_ACTIVE_ONLY>;
-+			interconnect-names = "pcie-mem", "cpu-pcie";
-+
-+			iommu-map = <0x0 &pcie_smmu 0x0080 0x1>,
-+				    <0x100 &pcie_smmu 0x0081 0x1>;
-+
-+			resets = <&gcc GCC_PCIE_1_BCR>,
-+				 <&gcc GCC_PCIE_1_LINK_DOWN_BCR>;
-+			reset-names = "pci",
-+				      "link_down";
-+
-+			power-domains = <&gcc GCC_PCIE_1_GDSC>;
-+
-+			phys = <&pcie1_phy>;
-+			phy-names = "pciephy";
-+
-+			eq-presets-8gts = /bits/ 16 <0x5555 0x5555 0x5555 0x5555
-+					  0x5555 0x5555 0x5555 0x5555>;
-+			eq-presets-16gts = /bits/ 8 <0x55 0x55 0x55 0x55 0x55 0x55 0x55 0x55>;
-+
-+			status = "disabled";
-+		};
-+
-+		pcie1_phy: phy@1c14000 {
-+			compatible = "qcom,sa8775p-qmp-gen4x4-pcie-phy";
-+			reg = <0x0 0x01c14000 0x0 0x4000>;
-+
-+			clocks = <&gcc GCC_PCIE_1_PHY_AUX_CLK>,
-+				 <&gcc GCC_PCIE_1_CFG_AHB_CLK>,
-+				 <&gcc GCC_PCIE_CLKREF_EN>,
-+				 <&gcc GCC_PCIE_1_PHY_RCHNG_CLK>,
-+				 <&gcc GCC_PCIE_1_PIPE_CLK>,
-+				 <&gcc GCC_PCIE_1_PIPEDIV2_CLK>,
-+				 <&gcc GCC_PCIE_1_PHY_AUX_CLK>;
-+			clock-names = "aux",
-+				      "cfg_ahb",
-+				      "ref",
-+				      "rchng",
-+				      "pipe",
-+				      "pipediv2";
-+
-+			assigned-clocks = <&gcc GCC_PCIE_1_PHY_RCHNG_CLK>;
-+			assigned-clock-rates = <100000000>;
-+
-+			resets = <&gcc GCC_PCIE_1_PHY_BCR>;
-+			reset-names = "phy";
-+
-+			#clock-cells = <0>;
-+			clock-output-names = "pcie_1_pipe_clk";
-+
-+			#phy-cells = <0>;
-+
-+			status = "disabled";
-+		};
-+
- 		ufs_mem_hc: ufs@1d84000 {
- 			compatible = "qcom,qcs8300-ufshc", "qcom,ufshc", "jedec,ufs-2.0";
- 			reg = <0x0 0x01d84000 0x0 0x3000>;
 -- 
-2.34.1
+Best regards,
+Coiby
 
