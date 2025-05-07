@@ -1,55 +1,55 @@
-Received: from mail-ej1-f74.google.com (mail-ej1-f74.google.com [209.85.218.74])
+Received: from mail-ed1-f74.google.com (mail-ed1-f74.google.com [209.85.208.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8B2628C02F
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 16:00:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DC9528C2B5
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 16:00:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746633622; cv=none; b=GBSkQCO2hm6F3gAraJHv7CIRpAzlttsBYOt8sM/7gPvFtMddnP2xCuklf5cm6TRzxoh5Hu8vc04QQrDlc2HCzWWEEYOCBHyARIAwb7msgyMzdHGmK/wlR8gLV6dOeKiW7tX6Q+VWluBCjNqrxINm+cWEye495EC5LXV5Xpp4roE=
+	t=1746633625; cv=none; b=OyzTD6p4VDEIihQcCFIwsU2Pwi9FHSuSW6z+8+R/1RYJnMIi4yR8bFlHWB/HVe/jX/Gk1F5LRJ/ljWJbAWPjW6FTA9jo2dOXdxaGwYJhtUQFnQGhnfNTmdFiXpKVoUUpfUCev2zDU5uV9ktf/xc7kNMPVzhpL3Fm8KoJ0a9oBAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746633622; c=relaxed/simple;
-	bh=pAyN6A46nn56GR0YPDnjGLfQezwwzH+g6/Irv45zKWw=;
+	s=arc-20240116; t=1746633625; c=relaxed/simple;
+	bh=Y/mhuvCecsqejneEVrknKH6BBV5XgR0N2ByP0o2/GPQ=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=RvSXFR9/BuP6TbS8r1rtV6zIlE3yBumZfRC9sI/WC/6OY1kknYvQ2T2V0EmUZpQRJHf3j85UwIS+BKQMuLpiYnjHKuCyh5xCC8yJcNGx/qdSVakxTvON4v7jdoRAxW4heEWIa1Mauv8uj4CY32F4ONOseeb0g+WDVvfNOYN4P+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--glider.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kjHf2Tod; arc=none smtp.client-ip=209.85.218.74
+	 To:Cc:Content-Type; b=TpeB4qY4sntHdHNj5dCfeaSKYe11Z4tiF5rbA/ckR9GU7I2afzT7ZYtAKGHYq2vUS/56hBo9vlGzAEuFScDurZgoramSVHJ7eAtP+aKTNgnMahzhN9dysgehrL49c2TSzhdEbSCSUCjryn84fkSYh1YLEOsu9oyA9GOlOt/h8jM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--glider.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=O3sqzBOA; arc=none smtp.client-ip=209.85.208.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--glider.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kjHf2Tod"
-Received: by mail-ej1-f74.google.com with SMTP id a640c23a62f3a-ac79e4764e5so56063266b.0
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 09:00:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="O3sqzBOA"
+Received: by mail-ed1-f74.google.com with SMTP id 4fb4d7f45d1cf-5fc1796ff88so179846a12.2
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 09:00:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746633619; x=1747238419; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1746633622; x=1747238422; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5rEhFIo2GHvtRIdrC/41qErpe5+c1Mj4STAx/upI2S4=;
-        b=kjHf2TodYGIELTwn7+I11Zdpy0dmvJoKnpX1lxuUyLOdr9tczGvk5ZSLGEgcElEJXf
-         uFLvChTcXF5KYSey2hXsD437TsETCL5Grp7sboq4+PJkkxp7uZ3Ib985eRuav7Vn1ro8
-         d3UL9Mo5waxeR6YqfZOjIBnLtKAbC8kJrXYP6oTlltgykJCczpRJIN6n7vCuIaer0BVv
-         9L0NzAUY2/MMcQhfQ1C9AULDzvRIpErm53x/BtScdvM/XBouCXOkSntU7/mjDGcEAGyC
-         QULN/GcuUli9h3YeOSdsNWgjfY0o/JVOpsjaDTFW6tBEHt4cefwBy0VgOjMa+UXYIgXc
-         9o7g==
+        bh=sPR0SEzdksw+QARijEF+8H2O/syRn+ur/NtvRkf+UuQ=;
+        b=O3sqzBOARPSIlKdDnD1yO1gTi1txMLW9rMSpyfV6cvTKNltbKzcke0KC5xx8Nbn9VI
+         2m2glr01VM8oBQdjqm5ccZfjxKfHCuv+BIGRkYjfP1lCq8cJtdEpX9trnPMyCiKhJY8P
+         1hzg7mJPN9sRO8+MdSjypy1M+YrJ8t0UxnWhvdCjTcbRrOG3INSIZUYt29YcrwyHDYy9
+         n4wDxnFh24Eh9f6w+6wFcH1de2Nl+msZyhkO8nrVTvkclebfOwr/stDkQpL5TdfYCcqY
+         LPFPPEoduk+CrR1iIrO22C5nwFjBzI/sDS3Nh14Yo0OoQ0pJjq+PsGuz5N+iUl6OmSRv
+         90Sg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746633619; x=1747238419;
+        d=1e100.net; s=20230601; t=1746633622; x=1747238422;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5rEhFIo2GHvtRIdrC/41qErpe5+c1Mj4STAx/upI2S4=;
-        b=RWJpEZh/FD+3gY0OihDCp+t0I9IFNLg2BgzopW2Vg8PavBTFgQicoE0v51JkXgwcOY
-         FmeQzYpsTtuSESo5WU2yf8V7rxZ1zCRsBKpqGZPRbP0p0GIqGv7Pyn7MWQMGEZcKH2nV
-         e2XgLXiu5HULqY70kwPzUyX6oFzMwO+e8OKRto++vG1jOjeEmCzylnlvHEPc0noH2nMc
-         itwNtTU630RjaanqbB3uBbD3sSsiYTmanszpr1G1Zc+P9aKHoA+HFRl4eLyExmKOek7w
-         KCyrPBeaFMQuoPDOcJ49hC8gnACS2YtGVFUMmMlyQvRh1F7Vg1SwtRHUSLBiRm3o8SJH
-         V/Jw==
-X-Forwarded-Encrypted: i=1; AJvYcCWwTPXplSjFxaGq1VSK6LQv2kk+kbq++Jrc/4ZEQVSHCi49L63/Ik925S0NVPjay9xVc4dqJRyx3ksAQKY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxeL6ThHhXoR/Irq0XVv3HtuYkqsjbIUhjlavqwj/OFIAV6sPSs
-	/S3z0khc9J4DJYXu+lLMwXoVynBilizfJOQ8qn2vd5fgkFslGcQPR5Pds2iIwPiCbo3jwM4iLvS
-	rxg==
-X-Google-Smtp-Source: AGHT+IEUZuXSYGh4XwCwdKgkZN9PicutiymyKjysBo2mHc/328vjUI7Wo3qodJLVv5RiKUa/xkhYSjIfdgk=
-X-Received: from ejcji21.prod.google.com ([2002:a17:907:9815:b0:ad1:ec98:13d8])
- (user=glider job=prod-delivery.src-stubby-dispatcher) by 2002:a17:907:d14:b0:acf:c:22ca
- with SMTP id a640c23a62f3a-ad1e8c8cb88mr411905466b.1.1746633619050; Wed, 07
- May 2025 09:00:19 -0700 (PDT)
-Date: Wed,  7 May 2025 18:00:09 +0200
+        bh=sPR0SEzdksw+QARijEF+8H2O/syRn+ur/NtvRkf+UuQ=;
+        b=nJdAuYBG1LRX2Ue0J7eVsZ0lSFTE4N8FJVh+2x2Lkg261zLRsR2HGBeNr1A8zSqQ+T
+         S6odhss5Ttpw/h6LK0qCK7Ma6O0jv7DJW6RdY6bVjTtQYhE2dHZLNBuyRLxAxOhHHSSy
+         NgMTQpgwetKoohy9xBwKM9ortfFvv7ydIV/7pKaGuM3kv4yFU55mwpA6oadyjNrieZ0N
+         vmgNlvYVvULrWheOJW0ICcJPh1Zykt3VmwnJGXufo0itrfykTj3ELMDKi/1zYYEAvnEV
+         F/hYA6KccUuVo8ZZ17UzPILscCD9czV03kHJx3XAelePUIr8i4ePo2Pn7emFuhxvT0JE
+         y8eA==
+X-Forwarded-Encrypted: i=1; AJvYcCXGeENlHcsowUIQMmhqx+uIJl1IAIto5a8fcU7lSyUjmHAkXsKOxi2DqalKuVEKWGXqKx7bjxDadUz9QuQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzU8tPykzzSwz+17JE81u1sYIogzk3CHh3e+Qmi9lXKTkuhaX/J
+	LZHEdXUfomMdt9G3+FjPq7nhD4MJVU0/4u++0jLOsrha0hID5aTTGaB6Idgqa6zuVJH0xw8X85l
+	rLg==
+X-Google-Smtp-Source: AGHT+IHQX+IUbHAPL3YWJZE1CLzx6Dp5YQzDNePen25Z4MCL94G3lLRUxhaPC0VmdhzxfcSUsNM6e/GkHJk=
+X-Received: from ejda5.prod.google.com ([2002:a17:906:2745:b0:ad1:83e8:4210])
+ (user=glider job=prod-delivery.src-stubby-dispatcher) by 2002:a17:907:7fa8:b0:ad1:e587:9387
+ with SMTP id a640c23a62f3a-ad1e8c50524mr400870066b.21.1746633621858; Wed, 07
+ May 2025 09:00:21 -0700 (PDT)
+Date: Wed,  7 May 2025 18:00:10 +0200
 In-Reply-To: <20250507160012.3311104-1-glider@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250507160012.3311104-1-glider@google.com>
 X-Mailer: git-send-email 2.49.0.967.g6a0df3ecc3-goog
-Message-ID: <20250507160012.3311104-2-glider@google.com>
-Subject: [PATCH 2/5] kmsan: fix usage of kmsan_enter_runtime() in kmsan_vmap_pages_range_noflush()
+Message-ID: <20250507160012.3311104-3-glider@google.com>
+Subject: [PATCH 3/5] kmsan: drop the declaration of kmsan_save_stack()
 From: Alexander Potapenko <glider@google.com>
 To: glider@google.com
 Cc: elver@google.com, dvyukov@google.com, bvanassche@acm.org, 
@@ -68,44 +68,25 @@ Cc: elver@google.com, dvyukov@google.com, bvanassche@acm.org,
 	linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
-Only enter the runtime to call __vmap_pages_range_noflush(), so that error
-handling does not skip kmsan_leave_runtime().
+This function is not defined anywhere.
 
-This bug was spotted by CONFIG_WARN_CAPABILITY_ANALYSIS=y
-
-Cc: Marco Elver <elver@google.com>
-Cc: Bart Van Assche <bvanassche@acm.org>
-Cc: Kent Overstreet <kent.overstreet@linux.dev>
 Signed-off-by: Alexander Potapenko <glider@google.com>
 ---
- mm/kmsan/shadow.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ mm/kmsan/kmsan.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/mm/kmsan/shadow.c b/mm/kmsan/shadow.c
-index 6d32bfc18d6a2..54f3c3c962f07 100644
---- a/mm/kmsan/shadow.c
-+++ b/mm/kmsan/shadow.c
-@@ -247,17 +247,19 @@ int kmsan_vmap_pages_range_noflush(unsigned long start, unsigned long end,
- 	kmsan_enter_runtime();
- 	mapped = __vmap_pages_range_noflush(shadow_start, shadow_end, prot,
- 					    s_pages, page_shift);
-+	kmsan_leave_runtime();
- 	if (mapped) {
- 		err = mapped;
- 		goto ret;
- 	}
-+	kmsan_enter_runtime();
- 	mapped = __vmap_pages_range_noflush(origin_start, origin_end, prot,
- 					    o_pages, page_shift);
-+	kmsan_leave_runtime();
- 	if (mapped) {
- 		err = mapped;
- 		goto ret;
- 	}
--	kmsan_leave_runtime();
- 	flush_tlb_kernel_range(shadow_start, shadow_end);
- 	flush_tlb_kernel_range(origin_start, origin_end);
- 	flush_cache_vmap(shadow_start, shadow_end);
+diff --git a/mm/kmsan/kmsan.h b/mm/kmsan/kmsan.h
+index 29555a8bc3153..bc3d1810f352c 100644
+--- a/mm/kmsan/kmsan.h
++++ b/mm/kmsan/kmsan.h
+@@ -121,7 +121,6 @@ static __always_inline void kmsan_leave_runtime(void)
+ 	KMSAN_WARN_ON(--ctx->kmsan_in_runtime);
+ }
+ 
+-depot_stack_handle_t kmsan_save_stack(void);
+ depot_stack_handle_t kmsan_save_stack_with_flags(gfp_t flags,
+ 						 unsigned int extra_bits);
+ 
 -- 
 2.49.0.967.g6a0df3ecc3-goog
 
