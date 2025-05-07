@@ -1,103 +1,229 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47FFB28AB03;
-	Wed,  7 May 2025 15:25:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C370928A41F
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 15:25:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746631531; cv=none; b=Mv0t4nMnbHCdFkpqi8Cvexme+gVxcDAeRNMmdTMn0Cf5V3mGvzMkSwzgNs4O8QWV33S9w9L3vmGXwOeMKK0yqrXO9gZpJyl9jkvV9mJvDiV+TMfvkKlMRZiTos+uf9/urBxOgd1pDL4hf4eRunlGob3rMpWYnsxYHiExGvkm6I8=
+	t=1746631533; cv=none; b=ITDVO5p+iT4Lv/ZkQYAja+wFsoKEPpbdd4/aasd4RO0jjHoy+IoGf8EBIvalJQHw9m1gv1QeTOiDZrulv0STT3SxxgaTxzVULQ5xlKSJdDxNpSP51csWQXnwlpw5FuFYtbF6yAp/ZWnkXsao3w2PpTvXxBZZWoEo53G/2gLPXvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746631531; c=relaxed/simple;
-	bh=CLGuly61z6pxnXMpY7OtXp7nCpQcfXJ9VrfOuwL8JdM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HSyTl1pNq2xKXjgj0fDW3vqNS5BfYQFGEhwyFMO6SaYBmfyB128Ul/gGdiICeK1I3IKGSIN1xPS3/3zxM3IT27LBznFbI3jZ6BizqH2zR5XEslAjLo8qMf7/UpWTqHQNMuLAyXCUib7saeLDsnj74z8xrYAOX10p9gHdWtxEgkY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8166D339;
-	Wed,  7 May 2025 08:25:19 -0700 (PDT)
-Received: from [192.168.20.57] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3AA5D3F58B;
-	Wed,  7 May 2025 08:25:27 -0700 (PDT)
-Message-ID: <214c2a2d-e0ea-4ec6-9925-05e39319e813@arm.com>
-Date: Wed, 7 May 2025 10:25:25 -0500
+	s=arc-20240116; t=1746631533; c=relaxed/simple;
+	bh=9u6IHhv8aHONgw76RB598JScZwyi11QmGPcXkfNBq9s=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Zvi+i4kibi5wBdfqLa20XK/n1VU3aZvBA0Qebkx8pIsl78WrM+TAZpiCtJ0lXZyeDN8hVd2xWCoXpvm1w4E8zxvkPoQSrxZPhyFbPOqlZZcgnOY1CBqJpEvk0H0UmU8gNUVRNn3q1cIBu8mHHbPPjUqmBS2FaZwvGozvSdMvk1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AMZxXC1H; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AMZxXC1H"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746631530;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ovtx7INMeXT1dDPekL+W5322Ce1R1P/2rCdJ/PxWOKU=;
+	b=AMZxXC1HRDJgX16jypvPhHcRBPbeUfHY7SoA7O8iOjllYWTgpyqZFW2JQ/NYwgIs4rIjKy
+	fhQ2c6haj5GD9mtyxl2veG/ejJvvnUHDDq2uDPrUJafaKMCEy8JHEHEnzAbGkYHsB0HPty
+	Cq8+pYC62ms/7xzwzhDNpJlva9iZpdE=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-304-SKT8nFoOOuy5tNQvPWYILQ-1; Wed,
+ 07 May 2025 11:25:27 -0400
+X-MC-Unique: SKT8nFoOOuy5tNQvPWYILQ-1
+X-Mimecast-MFC-AGG-ID: SKT8nFoOOuy5tNQvPWYILQ_1746631525
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1B019180056F;
+	Wed,  7 May 2025 15:25:25 +0000 (UTC)
+Received: from p16v.luc.cera.cz (unknown [10.44.33.91])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 56A6C30001A1;
+	Wed,  7 May 2025 15:25:19 +0000 (UTC)
+From: Ivan Vecera <ivecera@redhat.com>
+To: netdev@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+	Jiri Pirko <jiri@resnulli.us>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Prathosh Satish <Prathosh.Satish@microchip.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Lee Jones <lee@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Michal Schmidt <mschmidt@redhat.com>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: [PATCH net-next v8 2/8] dt-bindings: dpll: Add support for Microchip Azurite chip family
+Date: Wed,  7 May 2025 17:24:58 +0200
+Message-ID: <20250507152504.85341-3-ivecera@redhat.com>
+In-Reply-To: <20250507152504.85341-1-ivecera@redhat.com>
+References: <20250507152504.85341-1-ivecera@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ACPI/PPTT: fix off-by-one error
-To: "Heyne, Maximilian" <mheyne@amazon.de>
-Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
- Sudeep Holla <sudeep.holla@arm.com>, Ard Biesheuvel <ardb@kernel.org>,
- Catalin Marinas <catalin.marinas@arm.com>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20250506-draco-taped-15f475cd@mheyne-amazon>
-Content-Language: en-US
-From: Jeremy Linton <jeremy.linton@arm.com>
-In-Reply-To: <20250506-draco-taped-15f475cd@mheyne-amazon>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-Hi,
+Add DT bindings for Microchip Azurite DPLL chip family. These chips
+provide up to 5 independent DPLL channels, 10 differential or
+single-ended inputs and 10 differential or 20 single-ended outputs.
+They can be connected via I2C or SPI busses.
 
-On 5/6/25 8:13 AM, Heyne, Maximilian wrote:
-> Commit 7ab4f0e37a0f ("ACPI PPTT: Fix coding mistakes in a couple of
-> sizeof() calls") corrects the processer entry size but unmasked a longer
-> standing bug where the last entry in the structure can get skipped due
-> to an off-by-one mistake if the last entry ends exactly at the end of
-> the ACPI subtable.
-> 
-> The error manifests for instance on EC2 Graviton Metal instances with
-> 
->    ACPI PPTT: PPTT table found, but unable to locate core 63 (63)
->    [...]
->    ACPI: SPE must be homogeneous
-> 
-> Fixes: 2bd00bcd73e5 ("ACPI/PPTT: Add Processor Properties Topology Table parsing")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Maximilian Heyne <mheyne@amazon.de>
-> ---
->   drivers/acpi/pptt.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/acpi/pptt.c b/drivers/acpi/pptt.c
-> index f73ce6e13065d..4364da90902e5 100644
-> --- a/drivers/acpi/pptt.c
-> +++ b/drivers/acpi/pptt.c
-> @@ -231,7 +231,7 @@ static int acpi_pptt_leaf_node(struct acpi_table_header *table_hdr,
->   			     sizeof(struct acpi_table_pptt));
->   	proc_sz = sizeof(struct acpi_pptt_processor);
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Ivan Vecera <ivecera@redhat.com>
+---
+v7->v8:
+* no change
+v6->v7:
+* no change
+v5->v6:
+* no change
+v4->v5:
+* removed compilation output from the description
+v3->v4:
+* fixed $Id
+* dpll-pin type property renamed to connection type
+v1->v3:
+* single file for both i2c & spi
+* 5 compatibles for all supported chips from the family
+---
+ .../bindings/dpll/microchip,zl30731.yaml      | 115 ++++++++++++++++++
+ 1 file changed, 115 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dpll/microchip,zl30731.yaml
 
-This isn't really right, it should be struct acpi_subtable_header, then 
-once the header is safe, pull the length from it.
-
-But then, really if we are trying to fix the original bug that the table 
-could be shorter than the data in it suggests, the struct 
-acpi_pptt_processor length plus its resources needs to be checked once 
-the subtype is known to be a processor node.
-
-Otherwise the original sizeof * change isn't really fixing anything.
-
-
-
-
->   
-> -	while ((unsigned long)entry + proc_sz < table_end) {
-> +	while ((unsigned long)entry + proc_sz <= table_end) {
->   		cpu_node = (struct acpi_pptt_processor *)entry;
->   		if (entry->type == ACPI_PPTT_TYPE_PROCESSOR &&
->   		    cpu_node->parent == node_entry)
-> @@ -273,7 +273,7 @@ static struct acpi_pptt_processor *acpi_find_processor_node(struct acpi_table_he
->   	proc_sz = sizeof(struct acpi_pptt_processor);
->   
->   	/* find the processor structure associated with this cpuid */
-> -	while ((unsigned long)entry + proc_sz < table_end) {
-> +	while ((unsigned long)entry + proc_sz <= table_end) {
->   		cpu_node = (struct acpi_pptt_processor *)entry;
->   
->   		if (entry->length == 0) {
+diff --git a/Documentation/devicetree/bindings/dpll/microchip,zl30731.yaml b/Documentation/devicetree/bindings/dpll/microchip,zl30731.yaml
+new file mode 100644
+index 000000000000..17747f754b84
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dpll/microchip,zl30731.yaml
+@@ -0,0 +1,115 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dpll/microchip,zl30731.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Microchip Azurite DPLL device
++
++maintainers:
++  - Ivan Vecera <ivecera@redhat.com>
++
++description:
++  Microchip Azurite DPLL (ZL3073x) is a family of DPLL devices that
++  provides up to 5 independent DPLL channels, up to 10 differential or
++  single-ended inputs and 10 differential or 20 single-ended outputs.
++  These devices support both I2C and SPI interfaces.
++
++properties:
++  compatible:
++    enum:
++      - microchip,zl30731
++      - microchip,zl30732
++      - microchip,zl30733
++      - microchip,zl30734
++      - microchip,zl30735
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++allOf:
++  - $ref: /schemas/dpll/dpll-device.yaml#
++  - $ref: /schemas/spi/spi-peripheral-props.yaml#
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    i2c {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      dpll@70 {
++        compatible = "microchip,zl30732";
++        reg = <0x70>;
++        dpll-types = "pps", "eec";
++
++        input-pins {
++          #address-cells = <1>;
++          #size-cells = <0>;
++
++          pin@0 { /* REF0P */
++            reg = <0>;
++            connection-type = "ext";
++            label = "Input 0";
++            supported-frequencies-hz = /bits/ 64 <1 1000>;
++          };
++        };
++
++        output-pins {
++          #address-cells = <1>;
++          #size-cells = <0>;
++
++          pin@3 { /* OUT1N */
++            reg = <3>;
++            connection-type = "gnss";
++            esync-control;
++            label = "Output 1";
++            supported-frequencies-hz = /bits/ 64 <1 10000>;
++          };
++        };
++      };
++    };
++  - |
++    spi {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      dpll@70 {
++        compatible = "microchip,zl30731";
++        reg = <0x70>;
++        spi-max-frequency = <12500000>;
++
++        dpll-types = "pps";
++
++        input-pins {
++          #address-cells = <1>;
++          #size-cells = <0>;
++
++          pin@0 { /* REF0P */
++            reg = <0>;
++            connection-type = "ext";
++            label = "Input 0";
++            supported-frequencies-hz = /bits/ 64 <1 1000>;
++          };
++        };
++
++        output-pins {
++          #address-cells = <1>;
++          #size-cells = <0>;
++
++          pin@3 { /* OUT1N */
++            reg = <3>;
++            connection-type = "gnss";
++            esync-control;
++            label = "Output 1";
++            supported-frequencies-hz = /bits/ 64 <1 10000>;
++          };
++        };
++      };
++    };
++...
+-- 
+2.49.0
 
