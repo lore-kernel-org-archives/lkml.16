@@ -1,155 +1,148 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AF1E29372D
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 23:43:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 342DA2951AD;
+	Wed,  7 May 2025 23:43:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746661390; cv=none; b=qie2+h88q5oAepBW/eqY5MouJPsdznpB2DJ+yJOSz0soXPcJ726kMVhgtqVQY4tGI4emjaY7dtsA7m6YmnoCu3rZxG7mD+sI0tRxit7ARk3irOxbkCB6gowOtqL+/4j6TGnLD3hCrln1sMox+vGri7U/DUFlPgvl5bd2q+GpaVw=
+	t=1746661400; cv=none; b=deiisyegaLef350J6VdjkmYhGxIRDUAzbTW8cndAVVYidxTvmeRvjgeSZDprOGC8Dxde55HzTh7uqyw7rF9L8AoDnOPIUjVsP0xNJYCcbAd4xKmXc9+48G1YhnUck39j7vAkguaWsNvVmH44Opjb++hVEhVwKSoLjrEKsSVR8yM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746661390; c=relaxed/simple;
-	bh=yLgelrkF1e6C9L0S+6DkcUN6DOlOWMVM8fzVsEGlJ2s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XM82MvaoYTfoB7MaosS+Zsb72GspXF4ecaoGTZoInTF7RCKv0NgwzeySZ0mGaG+2pjAec3toC9EsUUEStah2oRGxYw/yQbxKlUrRNXpM4HPvNhdOVUNj+rBbdxW/VzXATOUbKglcbz+KIaHvencwtB0QtmfsYrXgroerThL1AHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=P15o4zAU; arc=none smtp.client-ip=209.85.160.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746661400; c=relaxed/simple;
+	bh=/BsSG3FylJbUfjpoVJ9Pn20AQV560RtWljBbtWQ5oVQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nhklmKEVoOh/ck3pRXOBSH4pE7fswdDmnLG2+Pm9SYB99HmIjJTfbyu5J4tRWavNpA4jyXBvdYIfywmqmhM5Kcror+4gWZcalR/WjfLfSyYxS9SufNjDEXfeQUYy38Reyk6/5Vm1CngfKTbNyPpGm+Tq8PNChV+3Pd0wEPc/aac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YJmgu/6Q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="P15o4zAU"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-47666573242so153261cf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 16:43:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746661388; x=1747266188; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BOVx+mbstwSQjksfievzVLRvxXrcGWGDr3j4n+GjP74=;
-        b=P15o4zAUWXgHVdh7fcUPIGYL7i8Cz77IsvM368F+smjehYyXVhve1oEJAL2YOXbxZa
-         8u7YbU666yiNHFt74fw955KhkGae/uZxqzR6O7zjnpb0GDz4jA+VmI/DWK5lZN18dtCy
-         LompD2NBnioe1DcWa8zcJB/w6ur8fjdTl29nm6CK64TrVAAtwpJPmCOTJIUG3JFhfliX
-         9rpYwf5Rf38+y9juqNsOnqOJxtapPZaHLCEcFoumtBCblipSiQQNAhpeZUtLhy9do3nz
-         OSRWAnQsixApXgK3x7dCD5F1tRJn1hu3XIR6jWa6QMauo7PHbZ0pySpLFkvNZ8VxARN8
-         VTVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746661388; x=1747266188;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BOVx+mbstwSQjksfievzVLRvxXrcGWGDr3j4n+GjP74=;
-        b=NjPX5CUlbOM6pN9ZhdwuO/fWQG5wyC4yl+mVt8CziMsRVNB4noYuzthAYi2I6RbU3o
-         NMGXmwriwvcmoZk+kWXd++FjeLVL5YhuzPhvmamlAl7OlC8Uee+FH06TCE5NVKY2S+Hk
-         0iZ8OlzRfnz+9CRwfODZW3TziHbpWXU7XQ4sof7RqO5V+vUlPwUSngDjevD4TyRTqcyK
-         hRWHnuq0s/AXdjjF/dINZMRvfCcwD3v3yQWR6aVFQAe0EQYetNZDr0nPvlyXzzwPhA/2
-         4t7HQPrHHy1SnJ9+zGtzuY2pLqbjG5v/VCnOrlJVgv3hhmmg2U+2Uf+brV3zeCzmYhKh
-         B/CQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXqH4fhq937mcjis0I/38tNOPhgCaEQ0Dor0QcRy7OyI6YTw1ohMxcB6uXTY8QOXaUCMb08VKaIFQ7ku4Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzkxPYXZiRZjXxjHcyl8mIW+aamF2/qfWHbg9YUZJAC+2QamWVf
-	xb9OTEqelpcmUNV+h43rxCxx8WJOPqybXjYK8LGlZl9pYfzhUG/IX20FBp2TKjHqlqhiOXMp0+j
-	WexLuZx+xRaagIb7NjNpexc2GJOKfTF/sf1wy
-X-Gm-Gg: ASbGnctOStl9mDjBh2Mc53g9oz8XeQGjob1rjLS4rUgzsJR0PlnwGMPBLkYZXZxQP2M
-	PN2nTbopyhtTYkCuxHLEhCgA7RK++hhUiZWM39NfMbzyBy8oRH1RbgeVJ+hS2w6Sb9ytngxUqmd
-	MwtEsb76yo0PeI05MOchZlSCBsmo9ZUq/DMPK2+yDks5hdxzI9dg==
-X-Google-Smtp-Source: AGHT+IEnxv7pwvatRQSs8Dxg5JQ2zMgAZEyFH5tmwq3M93x2nXKq48Crs0+g1Bps3Sn4Yd7zXe9Xs3PEmxp6zldctLY=
-X-Received: by 2002:a05:622a:44:b0:48a:ba32:370 with SMTP id
- d75a77b69052e-4944998bbe6mr1780981cf.10.1746661387700; Wed, 07 May 2025
- 16:43:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YJmgu/6Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DBCFC4CEE2;
+	Wed,  7 May 2025 23:43:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746661398;
+	bh=/BsSG3FylJbUfjpoVJ9Pn20AQV560RtWljBbtWQ5oVQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YJmgu/6Qe22gk5ptBs+Q2Hrl3IaHGAakG+libRwjz5JVAaPrK2LQGUU9N5E3Oxcqx
+	 0l2vLZqD2709yYc3iLACJkyyffPp1QdiZu2yX+fGWQLOz8mUG6asVd88eAPqJj2a52
+	 kwNoI88Chpq5KvF71AzjGWMKf0k7Z0x1QWVR9Yfs1s5rvBQIAsLGy8MDKvqQEIfr3f
+	 g9egfDqupNTW4E105+HSnI0Dbd5WxHpFUGNIl67FB/ZINSqa114MRuJ1VZxa0ImPpV
+	 sBq4vtMA9E244B0BKVWtPzhDL17ekiwJpugS4/lNYD/NJ82zmmd/Ptv/zGJNC9TE7Y
+	 PEQamyre2nAuA==
+Date: Wed, 7 May 2025 16:43:16 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Dmitry Vyukov <dvyukov@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
+Subject: Re: [RFC/PATCH] perf report: Support latency profiling in
+ system-wide mode
+Message-ID: <aBvwFPRwA2LVQJkO@google.com>
+References: <20250503003620.45072-1-namhyung@kernel.org>
+ <CACT4Y+Yr7vffLYG+YmyB=9Vn_oxdQqR_6U4d-_WeQoOtPXZ6iw@mail.gmail.com>
+ <aBmei7cMf-MzzX5W@google.com>
+ <CACT4Y+ameQFd3n=u+bjd+vKR6svShp3NNQzjsUo_UUBCZPzrBw@mail.gmail.com>
+ <aBmvmmRKpeVd6aT3@google.com>
+ <CACT4Y+bm4gCO_sGvEkxLQfw8JyrWvCzqV_H5h+oebt8kk1_Hwg@mail.gmail.com>
+ <aBm1x2as1fraHXHz@google.com>
+ <CACT4Y+aiU-dHVgTKEpyJtn=RUUyYJp8U5BjyWSOHm6b2ODp9cA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250507175500.204569-1-00107082@163.com> <a0ebf2e.b422.196abf97373.Coremail.00107082@163.com>
-In-Reply-To: <a0ebf2e.b422.196abf97373.Coremail.00107082@163.com>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Wed, 7 May 2025 23:42:56 +0000
-X-Gm-Features: ATxdqUFoIFtfWlpUAbTer2b5WtCX9D4SM56f9Q1caVD8GzpXX_rm8TYOzuLRYsI
-Message-ID: <CAJuCfpFAUdqqvFPfe_OLR76c0bX_ngwG=JKC42pVB+WAeX4w0w@mail.gmail.com>
-Subject: Re: [PATCH] alloc_tag: avoid mem alloc and iter reset when reading allocinfo
-To: David Wang <00107082@163.com>
-Cc: kent.overstreet@linux.dev, akpm@linux-foundation.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CACT4Y+aiU-dHVgTKEpyJtn=RUUyYJp8U5BjyWSOHm6b2ODp9cA@mail.gmail.com>
 
-On Wed, May 7, 2025 at 6:19=E2=80=AFPM David Wang <00107082@163.com> wrote:
->
-> Hi,
-> Just want to share how I notice those memory allocation behaivors: the cu=
-mulative counters~!
->
-> With cumulative counters, I can identify which module keeps alloc/free me=
-mory, by the ratio between
->  cumulative calls and remaining calls, and maybe an optimization could be=
- applied.
-> Following is top16 I got on my system:
->
-> +-----------------------------------------+-------+------------------+---=
------------------+
-> |                  alloc                  | calls | cumulative calls |   =
-    ratio        |
-> +-----------------------------------------+-------+------------------+---=
------------------+
-> |            fs/seq_file.c:584            |   2   |     18064825     |   =
-  9032412.5      |
-> |             fs/seq_file.c:38            |   5   |     18148288     |   =
-  3629657.6      |
-> |             fs/seq_file.c:63            |   15  |     18153271     | 12=
-10218.0666666667 |
-> |          net/core/skbuff.c:577          |   9   |     10679975     | 11=
-86663.888888889  |
-> |          net/core/skbuff.c:658          |   21  |     11013437     |  5=
-24449.380952381  |
-> |             fs/select.c:168             |   7   |     2831226      | 40=
-4460.85714285716 |
-> |            lib/alloc_tag.c:51           |   1   |      340649      |   =
-   340649.0      |  <--- Here I started
-> |           kernel/signal.c:455           |   1   |      300730      |   =
-   300730.0      |
-> | fs/notify/inotify/inotify_fsnotify.c:96 |   1   |      249831      |   =
-   249831.0      |
-> |            fs/ext4/dir.c:675            |   3   |      519734      | 17=
-3244.66666666666 |
-> |       drivers/usb/host/xhci.c:1555      |   4   |      126402      |   =
-   31600.5       |
-> |              fs/locks.c:275             |   36  |      986957      | 27=
-415.472222222223 |
-> |           fs/proc/inode.c:502           |   3   |      63753       |   =
-   21251.0       |
-> |              fs/pipe.c:125              |  123  |     2143378      | 17=
-425.837398373984 |
-> |            net/core/scm.c:84            |   3   |      43267       | 14=
-422.333333333334 |
-> |         fs/kernel_read_file.c:80        |   2   |      26910       |   =
-   13455.0       |
-> +-----------------------------------------+-------+------------------+---=
------------------+
->
-> I think this is another "good" usage for cumulative counters: if a module=
- just keeps alloc/free memory,
-> maybe it is good to move the memory alloc/free to somewhere less frequent=
-.
->
-> In the case of this patch, a memory allocation for each read-calls, can b=
-e moved to opan-calls.
->
-> If interested, I can re-send the patch for cumulative counters for furthe=
-r discussions.
+On Tue, May 06, 2025 at 09:40:52AM +0200, Dmitry Vyukov wrote:
+> On Tue, 6 May 2025 at 09:10, Namhyung Kim <namhyung@kernel.org> wrote:
+> > > > > Where does the patch check that this mode is used only for system-wide profiles?
+> > > > > Is it that PERF_SAMPLE_CPU present only for system-wide profiles?
+> > > >
+> > > > Basically yes, but you can use --sample-cpu to add it.
+> > >
+> > > Are you sure? --sample-cpu seems to work for non-system-wide profiles too.
+> >
+> > Yep, that's why I said "Basically".  So it's not 100% guarantee.
+> >
+> > We may disable latency column by default in this case and show warning
+> > if it's requested.  Or we may add a new attribute to emit sched-switch
+> > records only for idle tasks and enable the latency report only if the
+> > data has sched-switch records.
+> >
+> > What do you think?
+> 
+> Depends on what problem we are trying to solve:
+> 
+> 1. Enabling latency profiling for system-wide mode.
+> 
+> 2. Switch events bloating trace too much.
+> 
+> 3. Lost switch events lead to imprecise accounting.
+> 
+> The patch mentions all 3 :)
+> But I think 2 and 3 are not really specific to system-wide mode.
+> An active single process profile can emit more samples than a
+> system-wide profile on a lightly loaded system.
 
-Yeah, my issue with cumulative counters is that while they might be
-useful for some analyses, most usecases would probably not benefit
-from them while sharing the performance overhead. OTOH making it
-optional with a separate CONFIG that affects the content of the
-/proc/allocinfo seems like a bad idea to me. Userspace parsers now
-would have to check not only the file version but also whether this
-kernel config is enabled, or handle a possibility of an additional
-column in the output. Does not seem like a good solution to me.
+True.  But we don't need to care about lightly loaded systems as they
+won't cause problems.
 
-All that said, I'm open to suggestions if there is a way to
-incorporate cumulative counters that would not tax all other usecases
-that do not need them.
 
->
->
-> FYI
-> David
+> Similarly, if we rely on switch events for system-wide mode, then it's
+> equally subject to the lost events problem.
+
+Right, but I'm afraid practically it'll increase the chance of lost
+in system-wide mode.  The default size of the sample for system-wide
+is 56 byte and the size of the switch is 48 byte.  And the default
+sample frequency is 4000 Hz but it cannot control the rate of the
+switch.  I saw around 10000 Hz of switches per CPU on my work env.
+
+> 
+> For problem 1: we can just permit --latency for system wide mode and
+> fully rely on switch events.
+> It's not any worse than we do now (wrt both profile size and lost events).
+
+This can be an option and it'd work well on lightly loaded systems.
+Maybe we can just try it first.  But I think it's better to have an
+option to make it work on heavily loaded systems.
+
+> 
+> For problem 2: yes, we could emit only switches to idle tasks. Or
+> maybe just a fake CPU sample for an idle task? That's effectively what
+> we want, then your current accounting code will work w/o any changes.
+> This should help wrt trace size only for system-wide mode (provided
+> that user already enables CPU accounting for other reasons, otherwise
+> it's unclear what's better -- attaching CPU to each sample, or writing
+> switch events).
+
+I'm not sure how we can add the fake samples.  The switch events will be
+from the kernel and we may add the condition in the attribute.
+
+And PERF_SAMPLE_CPU is on by default in system-wide mode.
+
+> 
+> For problem 3: switches to idle task won't really help. There can be
+> lots of them, and missing any will lead to wrong accounting.
+
+I don't know how severe the situation will be.  On heavily loaded
+systems, the idle task won't run much and data size won't increase.
+On lightly loaded systems, increased data will likely be handled well.
+
+
+> A principled approach would be to attach a per-thread scheduler
+> quantum sequence number to each CPU sample. The sequence number would
+> be incremented on every context switch. Then any subset of CPU should
+> be enough to understand when a task was scheduled in and out
+> (scheduled in on the first CPU sample with sequence number N, and
+> switched out on the last sample with sequence number N).
+
+I'm not sure how it can help.  We don't need the switch info itself.
+What's needed is when the CPU was idle, right?
+
+Thanks,
+Namhyung
+
