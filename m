@@ -1,76 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21C561DD877;
-	Wed,  7 May 2025 22:04:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C0171DD877;
+	Wed,  7 May 2025 22:07:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746655498; cv=none; b=E8jjexzpqZ0P66r770nBomryeHbOjnB0qnAk5SE5g1UHrAuZOKTwToBxwBRZGhOk5OU0fq+Bek6+vnhajsXCwJ098yRBgAPbwPtf/v7OWpnZ8LkzUx9yknmBWhP4QqudHsbXmGqW7+EUGUyQxm6g74xLTnVllq0mWw45O+q/o0Y=
+	t=1746655635; cv=none; b=upYOlDVr8NDMN1yan+LW3WOX108Lw4J1uUcbfrZCKZ88T/1JvXiAg6Bjk4QhCflWMrSg91RNUrPtIWcTyOett6tyrBglOr4xor6Y2u7FbfnlUOxiFvxcAFlQiGnqHBEDmMjjtjHzHT9IYYP+y7BrtCBXIn2bqVD4D8WWJ+WrJs8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746655498; c=relaxed/simple;
-	bh=+x7Cr9dClfkALRI1rM+EMxxZ9XnY/VO8mCUEw6mL6mE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=WzhhHrZVIXrnEvYcQrwf4BYU+qnbCUveWoYeluheCsEVnJMnwREwL2gX2Cqof+WCDWKp5spUfuFFCWL93pj4RJUJNg9OyjAEWPDBa8zSZ9PWlEZGe7Bm6pfl3tzcGQ9kOIYB9fE6ZoKfaJzvaxdqKmJC73ZAK/p/gmQBFgRwVuw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IK+8Ex8K; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746655635; c=relaxed/simple;
+	bh=vIxEEIRICokF33YBS+BcCzpwa911E4JyQvnArQI2jlE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W4SEVrthtJet7EHXXGxvh4P/8OZ/Nn7ZNCu2433wufG+P5nbClAlBCQV1kZ0V9EokGN3JL0nTT+SLB3VRKJLcaPB9zOY3t050RtYzQUTLfOO6wbSjbTIkrmV61N1Vsdkpml5HMcHRoY6MIUhG82SDeBjgd5dPxkPHsE+jBChnLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=jjquYRkD; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IK+8Ex8K"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BD0DC4CEE2;
-	Wed,  7 May 2025 22:04:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746655497;
-	bh=+x7Cr9dClfkALRI1rM+EMxxZ9XnY/VO8mCUEw6mL6mE=;
-	h=Date:From:To:Cc:Subject:Reply-To:From;
-	b=IK+8Ex8Kkjw5Jjn6ssw2RBxqj1nNkoiBG2C0qcLSP+H6hDHPVmMDQjqGPimLCvLun
-	 E7jvwJ1pD4+GOCiZz2zJ7kPsET0q6Rfzhihv+3kLYuoUsbbsHPA9MDAG6jh7IhqWrT
-	 /LpkDtksS8eRL59zCrCbPUYnUCaUDndT61CmD0NDFNLyJg+Wrl1O0e5uaEvKf+kVoo
-	 dAFvoUVntrlPQIX800F8K+52QsOewlVTVF5oOEE3XZHLCSJV1JOlLvMKFk8UgxcprO
-	 DFIzA9j2T7j4/Quh51Egkdt56kWv+JwMhN8maCnfIG3eJRC93uwcwIPnV90I3lAdfv
-	 X+NTDVuxiQwWQ==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 265D8CE0D1D; Wed,  7 May 2025 15:04:57 -0700 (PDT)
-Date: Wed, 7 May 2025 15:04:57 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: ilpo.jarvinen@linux.intel.com
-Cc: bhelgaas@google.com, linux-pci@vger.kernel.org, kernel-team@meta.com,
-	linux-kernel@vger.kernel.org, sfr@canb.auug.org.au,
-	linux-next@vger.kernel.org
-Subject: [PATCH] PCI/bwctrl: Remove unused pcie_bwctrl_lbms_rwsem
-Message-ID: <3840f086-91cf-4fec-8004-b272a21d86cf@paulmck-laptop>
-Reply-To: paulmck@kernel.org
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="jjquYRkD"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=i/a0Nsunve2Hy/HkJJsAqbzROyIl/VOYWXiJOwtQYJ8=; b=jjquYRkDcq+oGztsCVUBn3gcHQ
+	gyjeInGoRI7WtZCDIpjEQzmeC8/uO9MjdKoZSAebhUGtV9js5SssxEwsvXyZbbNCx7LxgOxBxuqZh
+	BqLCv7jZqW3Opdcnpe07ZMCxd49SXI5J3sjAzyXqPCIC1gmGG4KY7GgJPyiV6aaMk4oFvE4S1jVGI
+	goLkfeCzjo79SlS5V6kQ/Uxiqqygf+L0CNWJUNua8FwYFZWVJ33+ag8GMRhaTu57uFgIcl76lDGB+
+	YnM0uTMV7aja/xniKOckMie7/MgVH/gDRcOM0rEj+SR0Xpasb3kDRK/a9/x0jpLwKW41OUeamP73M
+	XeHISJHQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:48560)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1uCmut-00088Z-09;
+	Wed, 07 May 2025 23:07:03 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1uCmuo-00068S-21;
+	Wed, 07 May 2025 23:06:58 +0100
+Date: Wed, 7 May 2025 23:06:58 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Holger =?iso-8859-1?Q?Hoffst=E4tte?= <holger@applied-asynchrony.com>
+Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Woojung Huh <woojung.huh@microchip.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [BUG] Stuck key syndrome
+Message-ID: <aBvZgk4HFakkw_c4@shell.armlinux.org.uk>
+References: <20250507000911.14825-1-Tristram.Ha@microchip.com>
+ <20250507094449.60885752@fedora.home>
+ <aBsadO2IB_je91Jx@shell.armlinux.org.uk>
+ <20250507105457.25a3b9cb@fedora.home>
+ <aBsmhfI45zMltjcy@shell.armlinux.org.uk>
+ <aBsu-WBlPQy5g-Jn@shell.armlinux.org.uk>
+ <20250507153236.5303be86@fedora.home>
+ <aBtHmNGRTVP9SttE@shell.armlinux.org.uk>
+ <859b32ca-acd5-43fd-0577-a76559ba3a9e@applied-asynchrony.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <859b32ca-acd5-43fd-0577-a76559ba3a9e@applied-asynchrony.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-PCI/bwctrl: Remove unused pcie_bwctrl_lbms_rwsem
+On Wed, May 07, 2025 at 10:46:35PM +0200, Holger Hoffst�tte wrote:
+> On 2025-05-07 13:44, Russell King (Oracle) wrote:
+> > Could you try booting with i8042_unlock=1 and see whether that makes any
+> > difference please?
+> 
+> It did not help - just had another runaway event with that setting,
+> on my ca. 2021 Thinkpad L14. Had the symptom for as long as I have
+> had this machine.
+> 
+> We've been tracking this problem in Gentoo since late 2022, see
+> https://bugs.gentoo.org/873163 and none of the suggested options
+> for i8042 really make a difference. In my case I almost always get
+> the stuck key events when using the cursor keys for scrolling in a
+> web browser. Sometimes once a month, sometimes twice a day.
+> 
+> Fwiw it's not necessary to reboot; suspend/resume fixes it,
+> as in close/reopen the lid if you have that configured.
 
-Builds with CONFIG_PREEMPT_RT=y get the following build error:
+Thanks - it's good to know that I'm not alone with this problem!
+I wonder how common it is, I think we're now up to four people.
 
-drivers/pci/pcie/bwctrl.c:56:22: error: ‘pcie_bwctrl_lbms_rwsem’ defined but not used [-Werror=unused-variable]
+So it's interesting that Finn's system is AMD vs mine which have
+both been Intel based systems, and we seem to have exactly the same
+problem. Is it possible that both are using the same firmware for
+emulating an i8042?
 
-Therefore, remove this unused variable.  Perhaps this should be folded
-into the commit shown below.
+Also what seems to be interesting is that it afflicts specific keys.
+On my old HP Pavilion, it was always Ctrl-F3 which would get stuck
+down (which I use to switch to virtual desktop 3 which has my Konsoles
+on.) In this case, pressing all of ctrl-shift-alt would clear it.
 
-Fixes: 0238f352a63a ("PCI/bwctrl: Replace lbms_count with PCI_LINK_LBMS_SEEN flag")
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Cc: "Ilpo Järvinen" <ilpo.jarvinen@linux.intel.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: <linux-pci@vger.kernel.org>
+I've only had it once on the Lenovo Carbon X1 so far, so can't comment
+if it's going to be the backspace key every time - there is an Intel ME
+firmware update pending (it didn't get installed at the last reboot -
+I'd accidentally left the laptop with sleep disabled but no external
+power, so it drained the battery and shut itself down which probably
+prevented the firmware update being installed.) I believe the Intel ME
+deals with the keyboard.
 
-diff --git a/drivers/pci/pcie/bwctrl.c b/drivers/pci/pcie/bwctrl.c
-index fdafa20e4587d..841ab8725aff7 100644
---- a/drivers/pci/pcie/bwctrl.c
-+++ b/drivers/pci/pcie/bwctrl.c
-@@ -53,7 +53,6 @@ struct pcie_bwctrl_data {
-  * (using just one rwsem triggers "possible recursive locking detected"
-  * warning).
-  */
--static DECLARE_RWSEM(pcie_bwctrl_lbms_rwsem);
- static DECLARE_RWSEM(pcie_bwctrl_setspeed_rwsem);
- 
- static bool pcie_valid_speed(enum pci_bus_speed speed)
+Thanks for adding comment 24... I assume from what you've said above
+that comment 23 has proven not to solve it completely, but has it
+reduced the frequency at all for you?
+
+What also crosses my mind is that if the i8042 is now emulated by
+firmware, is there a replacement interface that the kernel should
+instead be using? Surely if the i8042 emulation is as bad as this,
+then e.g. under Windows these laptops would be getting very poor
+write-ups due to keyboard problems afflicting Windows as well.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
