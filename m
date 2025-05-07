@@ -1,131 +1,133 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5207F23370A;
-	Wed,  7 May 2025 11:26:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F89D1DF270;
+	Wed,  7 May 2025 11:26:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746617185; cv=none; b=R5KvOerMlXpY5qWsE1ORqziy7xCvrNXfgeUMWqQmA1ZFJQVdI/MHzC9/0D0WhxXEn5riSwESgswwQ3tVGgJIgqbULyMlUUiPqs51DtBkuF11dgKIty/ydjyH19N7Ci9Hkuou/W3L4Guh8UnJiuBhIEotjY0eKDTEtT2lg3AhhAI=
+	t=1746617217; cv=none; b=WTXur2yJ50hBkeDCjdNZ3oeFneML6TksEtkVFh9014H/Ujx+TDLGcnnrD21woaiH/ucB8MsNXbVfsfIsEeeTOzcmsbex2LvgCb/SlsTUP7HlEuaj9YQ5i+MMMVeNN5GvnzhpsiZI3q65BHInKUINmMQrkD0+FVVndQy+dKaq1E4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746617185; c=relaxed/simple;
-	bh=Rg++7QAp1aiqx0WuxF07uC25E9a3F78je1UmaJeV6co=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=M971mS7He9uTggVkgujT6LBAD2v7dUbWwuin9N7kbnfu8PsJfK5JAInzsfO6TL1yujhh97CYsddkC57SrPe4Nmw0hZbn5f+XTKGCsSfSsJyCa2v8AP9T7GqZpo/u91aULfuTvOMV3irn4qE2cRPfS88x+pm2Yu7TAv8PuB1Qlwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D542s4tE; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746617217; c=relaxed/simple;
+	bh=3OP80T1TUr1RcBZZRe44AoSvO1VcM/ywxxkRLXR8834=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=HtZxMQNfErbfZb42KzbB1rLzB2GFVpLPMghfUxa3dwq4xncAXuAxN3CWugVi+dxtNJDBKCVheYvR7AWssNtzOFx9Jt4H/VLYeytoOKWG1a53/wM4SrqpLIdBza7sAg9SVzSEOFGB6xzVGKq/2LXG0n/Dqy6ESeThKH6Z6n503FA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q38L8S9S; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D542s4tE"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-7396f13b750so7970047b3a.1;
-        Wed, 07 May 2025 04:26:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746617183; x=1747221983; darn=vger.kernel.org;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Ow8fVAyAhZ+6GF6kboqlHs4aRvukS9EKChsENbfruFA=;
-        b=D542s4tER3FYWDtlM86Y+buZ00df6joKDXhOEtppYeb/bGcBLw2Sv/xCXpV5n42pUL
-         LKFgVzNPsb35fXqZKkY1kWNyKxwNtBLfhUajOJENt6NBSBfoWTCt+6LFXLmBhZdr/Shk
-         ZalzrWi8pYg9XK6eifALltKyTGENIgBq/zzKh0GIweOUzLE7wdP4uyz5lWMtE4WaaV4q
-         y/5wQC+g8+IKKJ69Ybch+S1Pe0uqRp0d9fKUrsAHEnxVs03YV/kqonrktp7jNOBNTE/h
-         FrGlkOFwYxkrjNsC3vGyifDsBMgtg/9SYQkOH72QZ9bVKKvzBao3ww8tdYD3yMr73MFc
-         Lf0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746617183; x=1747221983;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ow8fVAyAhZ+6GF6kboqlHs4aRvukS9EKChsENbfruFA=;
-        b=lePoRJgatw9i7dOpJaztLKnQH8jRCupA4D/sb2w4jACJs0otaSz72N8PKEg+AiFJZb
-         A6/vr8fpJe8rOOASTYc6+sle0qA1N2LEece78f7hGptdfImZhpfAyB1s6kNblSRrqo5h
-         b1PPXKe/T8kL2d3NVKwbsPKShiLXmm8eASS875iCiXAqXAihHhaFJwgOBTsmGCGZ4wMA
-         /OGTPGl4Ub9iZxi4sVjmXFaml0NaITVdhbReBUkD87IoU+PF7/HQJ1xkMANgQ6xjheY1
-         q60fXRLw44ax9n5wcYdsT7HS2ak9y8NNAt/HYa+b0oykY7GvFkmQgqH+TzsTzqZHUOjW
-         xQgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUeTR8Q9ovlXg1s5RdlUMs+uwPoQGhrqfOWo1QKpM85OIpBXZ1HTtKvQeZJaD+HVrCFYLAv5YsjJqKZsS4=@vger.kernel.org, AJvYcCXfqNDuAWJ9MHCu8iZHHf/vobXmmwGXmxQa3v9hnoAjz9wETkqoEpU0xU9W9QmXkm+pEWMh@vger.kernel.org
-X-Gm-Message-State: AOJu0YynfVFqM8ScGUucPnbOmRWZF0WacxT3BYoVJwYmIMxHxaWj/4ff
-	PLFSkuGDOBXJT9QfoX5o+xLcFIOgLjGwR4cdHwWWPzLOAWaRDjmR
-X-Gm-Gg: ASbGncuaYfaM8YmEEOOEFWXo6Yv2jMlkAHrp1nEk7Lm6ND38lDVl1ds9zZPfizxS+YQ
-	qnf9qO1fYKNUTBK0LcTtpg6L+8WA69S854Ykn/CovPahWtlZb8E+vtFvpHBdJxmEMYcjv18PFMR
-	j7zHZSxCG8wqF5CwjUQBEoFXVo4R3XkAtJXSCZxgK/PMeCY54xOyiHyhY/zUYrk7b5oHX92mdGN
-	/TEeV4Gcn/SClUPJR89n6BOTn11pVyr/0sLtNILo/UQ//8XIO9nWlrucATo8/7PUAe59gbOVgrn
-	vjFZzYeA+s09EIuKgOh9exmuweIqHEla7gNWfRMXqLHg5XQbAgpsZChvkACtnasZZ01DbpmPNA=
-	=
-X-Google-Smtp-Source: AGHT+IEgVZlmNeNzpIb8J0H7aZ9IguyvrIqis9+HwejM2OlIJttzvZgHgroFKftyPxYLrsuwS556jg==
-X-Received: by 2002:a05:6a21:3298:b0:1f5:8748:76b0 with SMTP id adf61e73a8af0-2148d88baaamr4849121637.29.1746617183452;
-        Wed, 07 May 2025 04:26:23 -0700 (PDT)
-Received: from MSCND1355B05.fareast.nevint.com ([117.128.58.94])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-740590610desm11184898b3a.146.2025.05.07.04.26.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 04:26:23 -0700 (PDT)
-From: Zqiang <qiang.zhang1211@gmail.com>
-To: paulmck@kernel.org,
-	frederic@kernel.org,
-	neeraj.upadhyay@kernel.org,
-	joel@joelfernandes.org,
-	urezki@gmail.com,
-	boqun.feng@gmail.com
-Cc: qiang.zhang1211@gmail.com,
-	rcu@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] rcu/nocb: Fix possible invalid rdp's->nocb_cb_kthread pointer access
-Date: Wed,  7 May 2025 19:26:05 +0800
-Message-Id: <20250507112605.20910-3-qiang.zhang1211@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20250507112605.20910-1-qiang.zhang1211@gmail.com>
-References: <20250507112605.20910-1-qiang.zhang1211@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q38L8S9S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C6F9C4CEE7;
+	Wed,  7 May 2025 11:26:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746617216;
+	bh=3OP80T1TUr1RcBZZRe44AoSvO1VcM/ywxxkRLXR8834=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=q38L8S9S+wve2b5pG+K/5t5A5qxlxyLzXDtbSG1idYmWYm7B0pa5wJvoq+Sx7WkfM
+	 DkWdl/PgZJd1eTXt8RmLRO2hCbOAJHofDUPV8WcZ8Z69LHyAn7ccFde/96RC3pM9ys
+	 ozeckDk2e2JwX5DZnAWfD/CB16GMF4tHahQqezTig1dfwpNMgFoivSAQePFckF36rE
+	 uuUj/DJvZUagpGDN4bmba5CxkWzeB54sRO4skiR17n9y+9rlG12C5+KFS690vkTgiS
+	 OT0Yfzv8PaWwJ9e1bZ+HDtJ9kvabW4KWNkMiUTlPYi3u4H128FshaW5U5XiL9b2gxf
+	 1UwrMyGl1ahvA==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 07 May 2025 13:26:52 +0200
+Message-Id: <D9PW4M8X6TMK.33M9WF0S42KI4@kernel.org>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
+ <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
+ <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
+ "Trevor Gross" <tmgross@umich.edu>, "Danilo Krummrich" <dakr@kernel.org>,
+ "Oliver Mangold" <oliver.mangold@pm.me>, <rust-for-linux@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] rust: elaborate safety requirements for
+ `AlwaysReferenceCounted`
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
+ <aliceryhl@google.com>
+X-Mailer: aerc 0.20.1
+References: <20250506-aref-from-raw-v2-1-5a35e47f4ec2@kernel.org>
+ <D9PSH8MJ48JO.3OOA3Z3NSBGC9@kernel.org>
+ <P0Vs61xa67BWtC_H9sCVioTN9Eb9G0N6w23IVMhek_I0QzvNsTQYYs269Ud_VBv72bWdMab3i8z8YsOeYkCEvA==@protonmail.internalid> <aBscvBwCD1o0OC_v@google.com> <87frhgpym0.fsf@kernel.org>
+In-Reply-To: <87frhgpym0.fsf@kernel.org>
 
-In the preparation stage of CPU online, if the corresponding
-the rdp's->nocb_cb_kthread does not exist, will be created,
-there is a situation where the rdp's rcuop kthreads creation fails,
-and then de-offload this CPU's rdp, does not assign this CPU's
-rdp->nocb_cb_kthread pointer, but this rdp's->nocb_gp_rdp and
-rdp's->rdp_gp->nocb_gp_kthread is still valid.
+On Wed May 7, 2025 at 11:19 AM CEST, Andreas Hindborg wrote:
+> "Alice Ryhl" <aliceryhl@google.com> writes:
+>> On Wed, May 07, 2025 at 10:35:16AM +0200, Benno Lossin wrote:
+>>> On Tue May 6, 2025 at 10:29 AM CEST, Andreas Hindborg wrote:
+>>> > diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
+>>> > index 9d0471afc964..52683d686c8a 100644
+>>> > --- a/rust/kernel/types.rs
+>>> > +++ b/rust/kernel/types.rs
+>>> > @@ -409,6 +409,10 @@ pub const fn raw_get(this: *const Self) -> *mut =
+T {
+>>> >  /// Implementers must also ensure that all instances are reference-c=
+ounted. (Otherwise they
+>>> >  /// won't be able to honour the requirement that [`AlwaysRefCounted:=
+:inc_ref`] keep the object
+>>> >  /// alive.)
+>>> > +///
+>>> > +/// Implementers of this trait must ensure that values of types impl=
+ementing this trait can never be
+>>> > +/// owned by value. Instead, values must be owned and used through a=
+ pointer type. That is, a type
+>>> > +/// that implements [`Deref`].
+>>>
+>>> I don't think this covers every case, if I modify your example above
+>>> with Alice's suggestion and using `Box` instead of the stack, I get the
+>>> same problem:
+>>>
+>>>     struct Empty {}
+>>>
+>>>     unsafe impl AlwaysRefCounted for Empty {
+>>>         fn inc_ref(&self) {}
+>>>         unsafe fn dec_ref(_obj: NonNull<Self>) {}
+>>>     }
+>>>
+>>>     fn unsound() -> ARef<Empty> {
+>>>         use kernel::types::{ARef, RefCounted};
+>>>
+>>>         let data =3D Box::new(Empty {});
+>>>         let aref =3D ARef::from(&data);
+>>>
+>>>         aref
+>>>     }
+>>>
+>>> The same should be true if one uses `Arc` instead of `Box`. So, even
+>>> though we store it in a "pointer type that implements `Deref`", it is
+>>> unsound.
+>>>
+>>> I think that types that implement `AlwaysRefCounted` must only be store
+>>> inside of `ARef<T>`. So something like "Values of this trait must only
+>>> be exposed as `ARef<Self>` or `&Self`." I'm not satisfied with the
+>>> wording 'exposed', maybe you have a better word or can expand the
+>>> sentence.
+>>
+>> I mean, in some sense the problem is that Empty violates the existing
+>> requirement:
+>>
+>> Implementers must also ensure that all instances are reference-counted.
+>> (Otherwise they won't be able to honour the requirement that
+>> [`AlwaysRefCounted::inc_ref`] keep the object alive.)
+>
+> The example holds, even if you implement `inc_ref`/`dec_ref` properly,
+> right?
 
-This will cause the subsequent re-offload operation of this offline
-CPU, which will pass the conditional check and the kthread_unpark()
-will access invalid rdp's->nocb_cb_kthread pointer.
+Yes.
 
-This commit therefore use rdp's->nocb_gp_kthread instead of
-rdp_gp's->nocb_gp_kthread for safety check.
+Although one could interpret the part that Alice quoted above to mean
+the same thing as I suggested (only giving access to `ARef<Self>`, as
+any other smart pointer isn't aware of the inner refcounting of the
+value).
 
-Signed-off-by: Zqiang <qiang.zhang1211@gmail.com>
+With that interpretation, we could argue that there is nothing wrong
+with the safety requirements. But I'd say that we should definitely
+mention that one is only allowed to use `ARef<Self>`/`&Self` and not
+hand out any other ways to access `Self`.
+
 ---
- kernel/rcu/tree_nocb.h | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/kernel/rcu/tree_nocb.h b/kernel/rcu/tree_nocb.h
-index 1596812f7f12..6679140bb0b5 100644
---- a/kernel/rcu/tree_nocb.h
-+++ b/kernel/rcu/tree_nocb.h
-@@ -1146,7 +1146,6 @@ static bool rcu_nocb_rdp_offload_wait_cond(struct rcu_data *rdp)
- static int rcu_nocb_rdp_offload(struct rcu_data *rdp)
- {
- 	int wake_gp;
--	struct rcu_data *rdp_gp = rdp->nocb_gp_rdp;
- 
- 	WARN_ON_ONCE(cpu_online(rdp->cpu));
- 	/*
-@@ -1156,7 +1155,7 @@ static int rcu_nocb_rdp_offload(struct rcu_data *rdp)
- 	if (!rdp->nocb_gp_rdp)
- 		return -EINVAL;
- 
--	if (WARN_ON_ONCE(!rdp_gp->nocb_gp_kthread))
-+	if (WARN_ON_ONCE(!rdp->nocb_gp_kthread))
- 		return -EINVAL;
- 
- 	pr_info("Offloading %d\n", rdp->cpu);
-@@ -1166,7 +1165,7 @@ static int rcu_nocb_rdp_offload(struct rcu_data *rdp)
- 
- 	wake_gp = rcu_nocb_queue_toggle_rdp(rdp);
- 	if (wake_gp)
--		wake_up_process(rdp_gp->nocb_gp_kthread);
-+		wake_up_process(rdp->nocb_gp_kthread);
- 
- 	swait_event_exclusive(rdp->nocb_state_wq,
- 			      rcu_nocb_rdp_offload_wait_cond(rdp));
--- 
-2.17.1
-
+Cheers,
+Benno
