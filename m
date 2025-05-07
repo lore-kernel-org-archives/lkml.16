@@ -1,127 +1,95 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D03831C84BF
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 05:59:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtpbgbr1.qq.com (smtpbgbr1.qq.com [54.207.19.206])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED5E53209;
+	Wed,  7 May 2025 06:01:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.19.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746597585; cv=none; b=BjOcE3BtxAp27yCnp7cHl+3f7mNtDKpgrATU9Y6m33itb7BG4UqZTzJAhBqFlO56CbSagOEXa6Y2r88LSOlcO2sUaIl5dli/ZzreWyi20P9ZdqvzCxuE4iZ4oALfQciiJuHNKz6fhoqQt0GsWS6+xDoQ2PCpOWn/4KZwHkV9v2Y=
+	t=1746597697; cv=none; b=QY13DkEj6rrc6uADajLCcGafFzA8FVNJrv9gSrDLTfKrVUzcSXBlrMBbUyvxoJyP72k84z092k4Y0XfdiBkhW+6iOGdDGY5Fve+dANqW0PjCcZ/gbJFcajD/RTYflH/wuBNXQDH8emf5BGDM8j+uLjbcq1Gm5q+Jf5YJGCw80mc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746597585; c=relaxed/simple;
-	bh=6Kn8YsyQvfoTP4YCbsIyH75roaDzrVHBXDJb4ih2S+A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fdTvgQpunHBijuvfWV76NIqS/Qtszj5rXKaV7dLOCnPWwX2pJcGEYmPsj+HmABzve8AqUxrapNM1Yf4f1oQNsf0Ec1Y4WfsPbgK+yjKEqvD1xR9SQQJM0BP5Zb7SOhbTQZ4wtGWVkDWDfbo8/dJiiGIpBiKzGtgBvtir6VdwIhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0E7D32F;
-	Tue,  6 May 2025 22:59:33 -0700 (PDT)
-Received: from [192.168.0.12] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1F6C93F5A1;
-	Tue,  6 May 2025 22:59:38 -0700 (PDT)
-Message-ID: <5db14757-fd7b-441e-99b3-786f11df372b@arm.com>
-Date: Wed, 7 May 2025 11:29:36 +0530
+	s=arc-20240116; t=1746597697; c=relaxed/simple;
+	bh=owyLMd8hX1as4LmAee3vfHdMVtC6rPHCe4jax9TXDog=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NS4aQkTBiM4JqwebBvsDIureB80pDm/StMOI2RGZAk+GcZ97mgg6wv74QaIt7ACZkobv//3NQ9I5IRc+N7bNqSMyWeZWVgiVBVGbZkZ1FzsOPcfhhqL/ufkLTQqEYnxGSjHCR8jlXAGZeIULxKmRuKTuUHVHBQcN6l1lTopu+6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=izJXrBrp; arc=none smtp.client-ip=54.207.19.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="izJXrBrp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1746597661;
+	bh=YFMp6fwp6umPvxQeSd6J+Ddieu7ttoj12+2zhkifFpg=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=izJXrBrpQ/nQwr9dkjZAATfnLCu1Rla96LVU4J1mrh6V/GvTDk6TCahVPkGHosVDB
+	 Kz2Ng+yabjAbRT9217YXa4TE+LqHlHUZwbRmkQTiYU2A1F0F2BPvRaHsSQvFLuOMKW
+	 l1BZ2z2pi7l0uDyPCy5bfC1x8cLfPeABRv14sDpI=
+X-QQ-mid: zesmtpip4t1746597621t17870780
+X-QQ-Originating-IP: KjohCj6doj2ziNglKdDLK7u0qW0soYoxYWzSznlG6vg=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Wed, 07 May 2025 14:00:20 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 11213127213891153055
+EX-QQ-RecipientCnt: 8
+From: WangYuli <wangyuli@uniontech.com>
+To: richard.henderson@linaro.org,
+	mattst88@gmail.com,
+	wangyuli@uniontech.com
+Cc: linux-alpha@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	zhanjun@uniontech.com,
+	niecheng1@uniontech.com,
+	guanwentao@uniontech.com
+Subject: [RESEND PATCH] alpha/boot: Ignore vmlinux
+Date: Wed,  7 May 2025 14:00:12 +0800
+Message-ID: <47F75842218B0DDC+20250507060012.1203990-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/9] coresight: Disable programming clock properly
-To: Leo Yan <leo.yan@arm.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
- Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, coresight@lists.linaro.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com
-References: <20250423151726.372561-1-leo.yan@arm.com>
- <20250423151726.372561-5-leo.yan@arm.com>
- <f56a73a4-ae63-4a46-a493-322c4806b3a2@arm.com>
- <20250506095428.GB177796@e132581.arm.com>
-Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20250506095428.GB177796@e132581.arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: ONJthgsgJlmJPy97owjLVYlHGkmgkKumyluC1ZenO0y9ITX2V/0mzrUA
+	0jK+BSq3Wyv0BQQ/wwb3wtGyzlDIjPZtfgUf5Y38A0r0M8obF2RvLfxlCNUQTrd4H137Vrs
+	6D+va6IRMxKnSJ0MxTjVOQi6ZTviVRMywJMxfpY8K+CJUTDY9aF0iVUZDiorks+6QwWU5Kq
+	c7dh0EhFnjMGEkaKWwipCc+vCi1vORr1vSaUFp3NeMGxh+7cZ9ZAvm3yOskElemIc+3do1l
+	FJI8FARJ7gxck6JTwf/m3pj5djOSvrkzKqjzisXXVgga92ETQMBoCq4mVEz9q1ZIg5Xh1To
+	dcbAuJHBwtENs2V7n/ll+2m0o8kb3h/qLN02l3ddbb5U/orjLrhp8OXLo/3wawLdG6adxLy
+	hyGXzDUXOomQcAUR8pivH0Rw0qy2l5m8RUWotzjRb4DYsMA2FMs0w2sB23mXZdWaAwh+ocE
+	gs0XGIXJyoy0xORxaZsQyQaKJ/o7nLV11pTXiiH/JG+OCKHYkeFsWnZc0be91N8f+8pSg+r
+	nsmNPkok2JsP3KfG/fODiifIRzkjOBy1cevzIEJBGtZcm8Wi+woPchWBBTjOpYAuI3SfXpl
+	D45lYoG22CKPtJoMKbBQqmILNMg8iF0gQDMUMQiIuf1jxUZ6vp7Z1rz8DRVmlh09WWAXcke
+	lazJnwFfDNdu96tc16bncHQNT51cx0GyiDD1cABJcvxkuVgwBQkwtmpiJW/NFZpCIfz+Udl
+	u6g/XFER22HuZpFledZo+s999emOqH6QTbqwszSnqUoJm2Aro+UaZf4F3aDr1ADCqxM5shI
+	WfKt4rKfgrjyn0+bNajO3hyHFUQIQ50gP44K6if/vmw2Y/T4AgnsH2w+KdKucBc1l6yl+S6
+	qSLKrK1dZtG0GJi9JmAolVx6n4kv7K/CH6DPbG7aiPg3EOwMcBqRgh+zmzzcvr+o1ElJwBG
+	uw26/p5vx/UNyyvgB/GbOdaBZYLzLwdbIf75g4EGLjBRdFUtXtO1SNOFetBd802QWXy6I0k
+	uAddM+pn4v2Wg5jBCObdh5dRvjDdQC7eZ9WWQ+7Q==
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+X-QQ-RECHKSPAM: 0
 
+The vmlinux file would be generated when building kernel.
 
+Add it to .gitignore to ensure Git does not track it.
 
-On 5/6/25 15:24, Leo Yan wrote:
-> On Fri, May 02, 2025 at 11:40:31AM +0530, Anshuman Khandual wrote:
->> Even though this might seem to be being bike shedding, the subject
->> line above could be re-organized something like the following for
->> better clarity.
->>
->>  coresight: Properly/Appropriately disable programming clocks
-> 
-> Sure.  I will change the subject to this.
-> 
-> [...]
-> 
->>> @@ -725,8 +723,6 @@ static void debug_platform_remove(struct platform_device *pdev)
->>>  
->>>  	__debug_remove(&pdev->dev);
->>>  	pm_runtime_disable(&pdev->dev);
->>> -	if (!IS_ERR_OR_NULL(drvdata->pclk))
->>> -		clk_put(drvdata->pclk);
->>>  }
->> Should not these IS_ERR_OR_NULL() here be changed to IS_ERR() ?
-> 
-> For the case above, after changed to devm_clk_get_enabled() for the
-> enabling programming clocks, we don't need any special handling and
-> leave the clock disabling and releasing to the device model layer.
+Signed-off-by: WangYuli <wangyuli@uniontech.com>
+---
+ arch/alpha/boot/.gitignore | 2 ++
+ 1 file changed, 2 insertions(+)
+ create mode 100644 arch/alpha/boot/.gitignore
 
-So it can be left unchanged for now and cleaned up later ?
+diff --git a/arch/alpha/boot/.gitignore b/arch/alpha/boot/.gitignore
+new file mode 100644
+index 000000000000..c85710c597e7
+--- /dev/null
++++ b/arch/alpha/boot/.gitignore
+@@ -0,0 +1,2 @@
++# SPDX-License-Identifier: GPL-2.0-or-later
++vmlinux
+-- 
+2.49.0
 
-> 
->> Because now there could not be a NULL return value.
->>
->> drvdata->pclk = coresight_get_enable_apb_pclk(&pdev->dev)
->>
->> #ifdef CONFIG_PM
->> static int debug_runtime_suspend(struct device *dev)
->> {
->>         struct debug_drvdata *drvdata = dev_get_drvdata(dev);
->>
->>         if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
->>                 clk_disable_unprepare(drvdata->pclk);
->>         return 0;
->> }
->>
->> static int debug_runtime_resume(struct device *dev)
->> {
->>         struct debug_drvdata *drvdata = dev_get_drvdata(dev);
->>
->>         if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
->>                 clk_prepare_enable(drvdata->pclk);
->>         return 0;
->> }
->> #endif
-> 
->> There might more instances like these as well.
->> 	
->> git grep IS_ERR_OR_NULL drivers/hwtracing/coresight/ | grep "drvdata->pclk"
->> drivers/hwtracing/coresight/coresight-cpu-debug.c:      if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
->> drivers/hwtracing/coresight/coresight-cpu-debug.c:      if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
->> drivers/hwtracing/coresight/coresight-funnel.c: if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
->> drivers/hwtracing/coresight/coresight-funnel.c: if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
->> drivers/hwtracing/coresight/coresight-replicator.c:     if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
->> drivers/hwtracing/coresight/coresight-replicator.c:     if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
->> drivers/hwtracing/coresight/coresight-stm.c:    if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
->> drivers/hwtracing/coresight/coresight-stm.c:    if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
->> drivers/hwtracing/coresight/coresight-tpiu.c:   if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
->> drivers/hwtracing/coresight/coresight-tpiu.c:   if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
-> 
-> I would like the current patch to focus on the issue of disabling /
-> releasing the programming clocks.
-> 
-> Though the IS_ERR_OR_NULL() check is redundant, it does not cause
-> issue or regression.  The refactoring is left in patch 09 for removing
-> IS_ERR_OR_NULL() checks.
-> 
-> Does this make sense?
-
-Yes, it does now.
