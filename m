@@ -1,82 +1,121 @@
-Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.8])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AB3E1A0BF1;
-	Wed,  7 May 2025 02:48:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.8
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7416E172BD5;
+	Wed,  7 May 2025 02:49:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746586132; cv=none; b=RJ9qWS6evw7Dj/aIseuFto/akvn56biAAU+PTqPiTPZtKDzmvjH9/9AhxFzH80XomnnVmBX2knEyi1yeOAnWXiQxznpumOzZCBKNAXrxz8w7neafSDHglpvrz+OGXbbsX/8tKR/Fb2NR79o8TMcuHUU8te1Zs2x325k93X2bKSM=
+	t=1746586156; cv=none; b=bj74EQrOj2a2lNs2Fm25WnPsx6IzAobDpDpI+/6SOfDVmFVZ+VMXKgfqIo0RLrB05m3dOG6IwVeOK4xgfAPYYbFDIw6DY2P12UyFQotGLTWG/XnMRq/jyTdZsjA8k3lwtvblYwVnCK//Re86hn0HIWCCgVL6UpwFbNBS9SGoblM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746586132; c=relaxed/simple;
-	bh=ppY350V0+svbZzHsEZdQVGX9rPhPSs3KzB/WqLIZM4s=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YpkWoAkBWAMzsHp8XvAGIrhPbez75Ojl15RZs3xJUDulDn+BWqNFtSGori2fvKOWCmvHRZb57zIxkQBQEyjftM3kNmHuqQOv/ysAwnHDi2s1ysV8FHc2EU4Ot/Bw2sGnyylF+KQ6uXOqC6sghtIBz9i3n69vXN/GAiV0ZiV5R+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=Tluk4+OC; arc=none smtp.client-ip=220.197.31.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+	s=arc-20240116; t=1746586156; c=relaxed/simple;
+	bh=uymnc1ltsgShhsH06V7rrYc0WTXAor1D1tmY64y7a20=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=WBTPA0yNhCnvDU4Gj9yz5A9vUgO4JSgtP/OLSKKeFBq08ci0B1ip90eNd2hDeVuiAFXr7W142etUK3Eut/+R9DoWlYmrsqSyoOsu6L9swDstxvQzdtHzfulynQRMM6lVEMTZbMF1uwRzOmkDQg/IOkJEMkEdzf/sBOv7y0EyAWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=Xx7FW2W7; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="Tluk4+OC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=qtPcl
-	/B2RSB8VuMPGCmuJwljszoHk1RGRMG3a7CDqtA=; b=Tluk4+OC26c85N2rS+k00
-	JGakQM5vZdOENIAQnRIGAidFpzQnETRE2Vyk+KJa3R0sqBFWNbwlPJW2GSH/eyOs
-	w30MBLcHXXNuOJdtDof3o70T4Yv3r35WEKrQfJh//bnbQ+uUsVoFLNJ0IfCk5Wax
-	LW+A3GLh/yVlh70zW9LLsU=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-3 (Coremail) with SMTP id _____wD3P8x2tBpocz5dBw--.62210S2;
-	Wed, 07 May 2025 09:16:39 +0800 (CST)
-From: Honglei Wang <jameshongleiwang@126.com>
-To: tj@kernel.org,
-	void@manifault.com,
-	arighi@nvidia.com,
-	changwoo@igalia.com
-Cc: mingo@redhat.com,
-	peterz@infradead.org,
-	juri.lelli@redhat.com,
-	vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com,
-	rostedt@goodmis.org,
-	bsegall@google.com,
-	mgorman@suse.de,
-	vschneid@redhat.com,
-	joshdon@google.com,
-	brho@google.com,
-	linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org,
-	jameshongleiwang@126.com
-Subject: [RESEND PATCH v2 0/2] sched_ext: rename var for slice refill event and add helper
-Date: Wed,  7 May 2025 09:16:35 +0800
-Message-Id: <20250507011637.77589-1-jameshongleiwang@126.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Xx7FW2W7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1746586143;
+	bh=5ZtQidN6t6pZN6NQ4jAauR/nh3kZzvNrzL3ii6tWoU4=;
+	h=Date:From:To:Cc:Subject:From;
+	b=Xx7FW2W7vg+zZcqlRl+NpXdOt/VGH5heoaNYhEVQwr5cs5HEWPPUsDmDwfWDhC1DF
+	 uyudaE5jCjAgpCdNu8rPA55PN7ulZE7uukHGRQUJItx99KMptjCdUSHFUEI/h1gD3N
+	 b6StBuptpGMRJpSFb+MqkJyvcmlHcGZAHlSPczZ/mf4y0m10ManStcdLVemRQs6VCX
+	 JqDBB3mrh+03M5Dj58W5Go6g1BeLIouqV7OYrIoQ6PY9smgeabTgE/hkvqHuQBQ4PR
+	 1H9tadQjEagQMCc473zLFjn5KS4lgofNIT9v7hlY4pYhH0n30bLDMWT7hk3fDhlpSM
+	 h0zvnKthsuScw==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Zsfq15WMvz4wnp;
+	Wed,  7 May 2025 12:49:01 +1000 (AEST)
+Date: Wed, 7 May 2025 12:49:00 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
+ "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
+ David Miller <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Paolo
+ Abeni <pabeni@redhat.com>
+Cc: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>, Mengyuan Lou
+ <mengyuanlou@net-swift.com>, Networking <netdev@vger.kernel.org>, Linux
+ Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: manual merge of the tip tree with the net-next tree
+Message-ID: <20250507124900.4dad50d4@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3P8x2tBpocz5dBw--.62210S2
-X-Coremail-Antispam: 1Uf129KBjvdXoWrKw48Xr18GF4fuF4rJFy5Arb_yoWxZFgEqF
-	93uFZ3JanrZFyUGFWayF15Jr97KFW8Jrs5JF4UKrsFyr43trsrKr1kKrWkXr10gay2ywnr
-	KrnYyFy8uwnxujkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUUyE_tUUUUU==
-X-CM-SenderInfo: 5mdpv2pkrqwzphlzt0bj6rjloofrz/1tbiYBVGrWgatD0D8gACsW
+Content-Type: multipart/signed; boundary="Sig_/Lwo4oWK66gWmwmhOTn8cOzA";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-SCX_EV_ENQ_SLICE_DFL gives the impression that the event only occurs
-when the tasks were enqueued, which seems not accurate. So rename the
-variable to SCX_EV_REFILL_SLICE_DFL.
+--Sig_/Lwo4oWK66gWmwmhOTn8cOzA
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-The slice refilling with default slice always come with event
-statistics together, add a helper routine to make it cleaner.
+Hi all,
 
-Changes in v2:
-Refine the comments base on Andrea's suggestion.
+Today's linux-next merge of the tip tree got a conflict in:
 
-Honglei Wang (2):
-  sched_ext: change the variable name for slice refill event
-  sched_ext: add helper for refill task with default slice
+  drivers/net/ethernet/wangxun/txgbe/txgbe_irq.c
 
- kernel/sched/ext.c             | 36 +++++++++++++++++-----------------
- tools/sched_ext/scx_qmap.bpf.c |  4 ++--
- 2 files changed, 20 insertions(+), 20 deletions(-)
+between commit:
 
--- 
-2.45.2
+  a9843689e2de ("net: txgbe: add sriov function support")
 
+from the net-next tree and commit:
+
+  567b0a520912 ("net: Switch to irq_domain_create_*()")
+
+from the tip tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/net/ethernet/wangxun/txgbe/txgbe_irq.c
+index 3b9e831cf0ef,f2c2bd257e39..000000000000
+--- a/drivers/net/ethernet/wangxun/txgbe/txgbe_irq.c
++++ b/drivers/net/ethernet/wangxun/txgbe/txgbe_irq.c
+@@@ -198,9 -183,9 +198,9 @@@ int txgbe_setup_misc_irq(struct txgbe *
+  	if (wx->mac.type =3D=3D wx_mac_aml)
+  		goto skip_sp_irq;
+ =20
+ -	txgbe->misc.nirqs =3D 1;
+ +	txgbe->misc.nirqs =3D TXGBE_IRQ_MAX;
+- 	txgbe->misc.domain =3D irq_domain_add_simple(NULL, txgbe->misc.nirqs, 0,
+- 						   &txgbe_misc_irq_domain_ops, txgbe);
++ 	txgbe->misc.domain =3D irq_domain_create_simple(NULL, txgbe->misc.nirqs,=
+ 0,
++ 						      &txgbe_misc_irq_domain_ops, txgbe);
+  	if (!txgbe->misc.domain)
+  		return -ENOMEM;
+ =20
+
+--Sig_/Lwo4oWK66gWmwmhOTn8cOzA
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgayhwACgkQAVBC80lX
+0Gwk+gf9HhS7VLW5VY+i7AoR6LLtszPJjibhtiyE7IJ70SdfbMYSxCosHJZ6F5Yc
+gTL8qxffg2DGny7rByijfcyCWhyd4LKp04r2I9+ufiMS7IA0gdpNV02T2Ut/ZwI4
+V4H1uUzLEjzYJyvkB1U4J+KhGuKHNdaFtnRGPDdSg8irLoGsqp7fEIF1aBS855tS
+cewh6l3iChcHhDMugVB0TJd/qSZ5Jd2Zz+PBcbp89xhb0urE8tj7NgM2radeS1N/
+R5CYVtIDgoAM4c0RM/PrcS9R6IYswRpwGNjTzvP9xoCp3RgaU/XagnTM6njejxDu
+M4H4lMT0aXa0UtqvO1swJLaLRDjixg==
+=6nvI
+-----END PGP SIGNATURE-----
+
+--Sig_/Lwo4oWK66gWmwmhOTn8cOzA--
