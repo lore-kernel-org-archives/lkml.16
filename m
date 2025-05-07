@@ -1,93 +1,121 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64C2C25B69A
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 12:04:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D11725DCFE;
+	Wed,  7 May 2025 12:05:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746619500; cv=none; b=mmAliIoxi39JTrN+DK87cR7m4yMoR+D3ecIgInY7580eHd/me6z7OC3d0wqXjuNUtTGI3DzceDlhW3e6k6yHYuOWbE9xMRJJw9CR+BQjmQrV+R8EPpXbmBCNNef9UED+tHPBKiCeh/+O75wXgea6om+Z22oCLq0yfeca5T+qMTU=
+	t=1746619550; cv=none; b=fhH/HaNjb8rXO9VAGMNrUu36wgu394H96LDNmK0M26dswiNox+Pmuf2f8Qq/UXYgc5f5dnlLIJNjwEcnBsuITqn389zhSej9XxNJVUzhQaDu7UD6Gz9ediZgd7kit83SWPXnbBYN3YlYR0IQjo1+CwjlCOjcFUUeFhERuSonlbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746619500; c=relaxed/simple;
-	bh=+PpCMUgk4FbEhoWXHklabVAaqaVKA5WyEg9bsqcLB8A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dLZhGtl4rwTqJFPze+eCCbuVZRV9vQkQCPgmDJxpqPfxEaLLaC/XhDizYsWW2Gp67tX0xW71Q6lgImg/AhOCfW/7bLUV7ckvGJ1iNkwoGFhwqcD7ruTgX6xUxdqVe6L6066hu9rzJsONXgJr9dESjZyLYbIBN5ks/RxZuOjB29M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mef40GdD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746619550; c=relaxed/simple;
+	bh=usuz4EDiyG7MhMNFI7ICmDMZJlt1l2XENHcwErgJEuY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cg0Qm2vbLvofwWrsmKumERAKYouWbroO6bn2AgqPYwjoO1GQf+Aiu+Dmlmq8jQotWwI+OTt2bX+LCR03ZMvoktPl+Y0pMcxNidL9ZrzgliL2e2sKg3dbImbgmGr3giKy/sXqua7jh3wdtU8S3PY65aBL61czzqOjYXIft9Nc1jE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LcisaLPH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mef40GdD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1332FC4CEF6;
-	Wed,  7 May 2025 12:04:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LcisaLPH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1956FC4CEE7;
+	Wed,  7 May 2025 12:05:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746619499;
-	bh=+PpCMUgk4FbEhoWXHklabVAaqaVKA5WyEg9bsqcLB8A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mef40GdDEMZX/AzH/S0ZuqxQOp6MQRbj9HVTmnVbcmKx2g5vp6Kqy5Ie3994l+Yjl
-	 B62JPNIjF3/RnSDCpnoI+lk4zOAp/T1R69RtsR4GYtGtt4dyYJStR0tdQCSbFGzBaR
-	 +49vVQqjrJVRV2AGXS5/g5K/ELso8vAUarxlOQEOzP5IZe4PzWdJZqbXZUIBDM/Vzy
-	 gN2MK4Ql8K4YxwTQx4Ai8pcDEJghnVABTStsOHMG1Hex4f8G+tYI68MjYWiW0TWoZ3
-	 VI2vftbBLwIqm/C5O8hQlxmojDBlNvAeYa0om9TvqP22MEuGUQGDbKTM9z/mN2O6Jq
-	 xHUtlhbxVvEDg==
-Date: Wed, 7 May 2025 14:04:55 +0200
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Tejun Heo <tj@kernel.org>
-Cc: Marco Crivellari <marco.crivellari@suse.com>,
-	linux-kernel@vger.kernel.org,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: Re: [PATCH 0/4] Workqueue: rename system workqueue and add WQ_PERCPU
-Message-ID: <aBtMZ4_CR0svusC2@localhost.localdomain>
-References: <20250503082834.49413-1-marco.crivellari@suse.com>
- <aBlMLQl504ThYbnf@slm.duckdns.org>
- <CAAofZF60A82utmB2LiVw910cdFDiHd+fPaozUKpQwfXUqv7R_g@mail.gmail.com>
- <aBoGskbRu0RyRXMF@localhost.localdomain>
- <aBqscir2gawbEdg1@slm.duckdns.org>
+	s=k20201202; t=1746619550;
+	bh=usuz4EDiyG7MhMNFI7ICmDMZJlt1l2XENHcwErgJEuY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=LcisaLPH4Im7jUArmUG3ZoAwwzo0MQXHvIGP7fO+dd50W5G/PUFksjyBzpKmUeZIp
+	 JQmF9gEkD7MmOAxhg9GytNn9TL3kiWkl4Rq7pFvYn/51+IOY/T+GSVr8/4Z8VXB/Eh
+	 qwpo9e/tlqUCohkRZt5qqxVcLuP8DOL+RFfiuwvsHGe6FwN8XGkB0Ki27MsMgVMzms
+	 7hgdkqbm3k1lqBBhCEkDlWdMPj/UTv50syjhaAB2X7yVcAxaw3zHI//xM2jfrin94Z
+	 x9nfKzejsaHvKl5jkCb3A8p1khfPmtY3xbaLdqgmrEiIBZ7PphxoDeMYYUHFlzrYMZ
+	 mqCY/xeSA6uyw==
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30de488cf81so69936871fa.1;
+        Wed, 07 May 2025 05:05:50 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCURAmeUEioo9Mn3WbIhbhChupcVlSt84jEItBfQb7zCntE6G9PDWlHvgQK5CK35ygTPAHjj7CbZeTR0od8R@vger.kernel.org, AJvYcCVoUOFEdvDhkq+CrO7nM4oJa3Eb1qEePMNo8jK5K6ApH3Jo/+XwLCpcVx7dnswoOcZbVhUXFYZChuI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YypKWnud2vceA3j7gLY5NX5QgBTwOa00xdtrH3o11KGmW0ou0HM
+	3PQZUyzGh3DjGRVH9b0uAsqjGcILfEmipxEMfdFGkAYFpxZXGsztQrVkK9OZBbXVn6WKenS01zN
+	KtYUbC4eYcMs5mSu74SnwyZArdgY=
+X-Google-Smtp-Source: AGHT+IFT1qaInBN+T1KP7RThez/pR56nL3ca6QQyi31dhQBjUwD5FKYIbDOU0DKQ5Td+NmfDHIas0V3DKO0+3/oDgHE=
+X-Received: by 2002:a2e:a585:0:b0:30d:e104:d64b with SMTP id
+ 38308e7fff4ca-326ad33bdffmr10329931fa.39.1746619548488; Wed, 07 May 2025
+ 05:05:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aBqscir2gawbEdg1@slm.duckdns.org>
+References: <20250504095230.2932860-25-ardb+git@google.com> <20250507095255.GMaBstd1-nsMixe3Kn@fat_crate.local>
+In-Reply-To: <20250507095255.GMaBstd1-nsMixe3Kn@fat_crate.local>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Wed, 7 May 2025 14:05:37 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXGJk1JsehK3jtbR7yOKFV4UvySYbq10x8td1gM9ryHeBw@mail.gmail.com>
+X-Gm-Features: ATxdqUF-lXLC4RRpyuo_Q2IGeDqX3qyiStlTF4uqiY_d8Y7asq_2_RzRWKMrY6U
+Message-ID: <CAMj1kXGJk1JsehK3jtbR7yOKFV4UvySYbq10x8td1gM9ryHeBw@mail.gmail.com>
+Subject: Re: [RFT PATCH v2 00/23] x86: strict separation of startup code
+To: Borislav Petkov <bp@alien8.de>
+Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, 
+	linux-efi@vger.kernel.org, x86@kernel.org, Ingo Molnar <mingo@kernel.org>, 
+	Dionna Amalie Glaze <dionnaglaze@google.com>, Kevin Loughlin <kevinloughlin@google.com>, 
+	Tom Lendacky <thomas.lendacky@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Le Tue, May 06, 2025 at 02:42:26PM -1000, Tejun Heo a écrit :
-> On Tue, May 06, 2025 at 02:55:14PM +0200, Frederic Weisbecker wrote:
-> > Le Tue, May 06, 2025 at 12:10:18PM +0200, Marco Crivellari a écrit :
-> > > Hi,
-> > > 
-> > > > Can you please make a summary of the discussion here? Referring to old
-> > > > thread is useful but it'd be nice to have the rationales laid out in the
-> > > > patchset - why this is desirable, what is the transition plan and what are
-> > > > the rationales for it? Also, please include a short summary in the patches.
-> > > 
-> > > Sure, thanks for the advice.
-> > > 
-> > > > Let's keep the old names for a release or two and trigger printk_once()
-> > > > warnings about the renames. These are pretty widely used, so I think it
-> > > > warrants a bit of extra effort.
-> > > 
-> > > Good, sounds fine.
-> > > But I don't understand where printk_once() should be placed.
-> > > Can you give me some further guidance?
-> > 
-> > So one possibility to achieve this is to not do a rename of system_wq
-> > to system_percpu_wq but eventually keep system_wq around and create the
-> > new system_percpu_wq. Convert all current users of system_wq to system_percpu_wq
-> > and warn from queue_work() when system_wq is used.
-> > 
-> > I would personally prefer that we use WARN_ON_ONCE() so that this really
-> > gets noticed. Tejun what do you think?
-> 
-> I'd stick with printk_once() at least for a while. There are systems set up
-> to panic on warnings and there will be a bunch of out-of-tree usages too.
-> Let's latch it up over multiple releases.
+On Wed, 7 May 2025 at 11:53, Borislav Petkov <bp@alien8.de> wrote:
+>
+> On Sun, May 04, 2025 at 11:52:30AM +0200, Ard Biesheuvel wrote:
+> >  arch/x86/boot/compressed/Makefile              |    6 +-
+> >  arch/x86/boot/compressed/misc.h                |   12 +-
+> >  arch/x86/boot/compressed/pgtable_64.c          |   12 -
+> >  arch/x86/boot/compressed/sev-handle-vc.c       |  134 +++
+> >  arch/x86/boot/compressed/sev.c                 |  210 +---
+> >  arch/x86/boot/compressed/sev.h                 |   21 +-
+> >  arch/x86/boot/compressed/vmlinux.lds.S         |    1 +
+> >  arch/x86/boot/startup/Makefile                 |   21 +
+> >  arch/x86/boot/startup/exports.h                |   14 +
+> >  arch/x86/boot/startup/gdt_idt.c                |   17 +-
+> >  arch/x86/boot/startup/map_kernel.c             |   18 +-
+> >  arch/x86/boot/startup/sev-shared.c             |  804 +-------------
+> >  arch/x86/boot/startup/sev-startup.c            | 1169 +-------------------
+> >  arch/x86/boot/startup/sme.c                    |   45 +-
+> >  arch/x86/coco/core.c                           |    2 +
+> >  arch/x86/coco/sev/Makefile                     |    6 +-
+> >  arch/x86/coco/sev/core.c                       |  189 +++-
+> >  arch/x86/coco/sev/{sev-nmi.c => sev-noinstr.c} |   74 ++
+>
+> Can we drop the "sev-" prefix to filenames which are already in sev/
+> filepaths?
+>
 
-Fair enough!
+Sure.
 
-Thanks.
+> >  arch/x86/coco/sev/vc-handle.c                  | 1060 ++++++++++++++++++
+> >  arch/x86/coco/sev/vc-shared.c                  |  614 ++++++++++
+> >  arch/x86/include/asm/init.h                    |    6 -
+> >  arch/x86/include/asm/linkage.h                 |   10 +
+> >  arch/x86/include/asm/pgtable_64_types.h        |   43 +-
+> >  arch/x86/include/asm/setup.h                   |    2 +
+> >  arch/x86/include/asm/sev-internal.h            |   30 +-
+> >  arch/x86/include/asm/sev.h                     |   78 ++
+>
+> Pfff, sev-internal and sev.
+>
+> I guess I'll know how the new structure would look like once I go through this
+> but there are so many sev* files now.
+>
+> Can we tone that down pls, through aggregation, moving up into headers and so
+> on?
+>
 
--- 
-Frederic Weisbecker
-SUSE Labs
+I think the main issue with this code is that everything was in a
+single source file, with no structure or layering whatsoever.
+
+So I'd actually argue for splitting this up even more rather than
+bundling it all together, although the sev vs sev-internal distinction
+is a bit dubious - it would be better to split this across functional
+lines.
+
+I added sev-internal.h so that that single mother-of-all-source-files
+could be hacked up without exposing implementation details to external
+users that were hidden before. I.e., the high-level APIs that other
+callers need to use should be in sev.h, and the implementation of that
+API should be carved up meaningfully. For example, perhaps the #VC
+handling stuff (which now lives in a separate source file) could be
+exposed via sev-vc.h, and only included in places where that
+particular functionality is being used.
