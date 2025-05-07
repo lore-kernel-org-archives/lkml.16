@@ -1,115 +1,116 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22E1C28982A;
-	Wed,  7 May 2025 13:09:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EDD7288539
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 13:10:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746623358; cv=none; b=lpNgvFB8UU5QlW6qc62KI8QRvNZrNCzAQY+v0vb4kg9ii6YRa6yhSlxuq5PRnVJKmX8mP1hD/19Umo0+8IqgEiSte5NrJ8MhqkAkG7Qy73Xx/yRCTykhmKAlnNObup/wT/aP2TNmDyezegZQNm5TNuIdRQRwZEMWRxgBkj+RFoM=
+	t=1746623405; cv=none; b=odb61rxKIxd1gl6+zXuL0bRNXmCRUSApG34yEhk82gUXhBV6h7eGCbBVvPwN/pfR5WTG4I2M2WkFwaFGiupVS++5w8LVUMDN42unrjVLddzbeTYQ6gSHOIsMk2vnXFrf3XdPdwfyIB3AdchOTIewprlERJyuCh90ElBzVX/1WRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746623358; c=relaxed/simple;
-	bh=kMgdzLabAxL6YnP/fjeNcPYjDESyaG+EhzaI9fwEYGU=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=k7323D7sQVG8LEKd743fF2xtlp3h2L3wKSv34ntYioE79rTh3P8CvDWIAhqkN5ESRNdEuBtFDOgQ2TBqiBtlkfsyUiJ6X2BjHIHDbBqTrbctGVNYuGrqdilNX4XUnNa1RD3CCxL/Xc0t/iERinttXMYuQxodpmwd7Q5jUKLpic8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n9ucu/DO; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1746623405; c=relaxed/simple;
+	bh=KuFq/zeYni8KgGdHJD2LlQeGitZ5AOvXBhl3se89MLw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QfLsEwCJNakSeUFJDQ85T2dlVMnIvJR/9Ti/g5AsEZCEXz1p+x1gzp1bU651qL/9DtaYz3UupO9zbQSSaddIUFp76uemWhdWFBZyI9xJahRbEBqkb+0oRt4cWWjiWp+GCf+WCAUxKXBaPxcdlT6scEFQBPTyhJ5aXlCkSpHFoyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=V4G4vKaz; arc=none smtp.client-ip=209.85.161.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n9ucu/DO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746623356; x=1778159356;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=kMgdzLabAxL6YnP/fjeNcPYjDESyaG+EhzaI9fwEYGU=;
-  b=n9ucu/DO6/ix/9hOBLJ+e4CO/KS9Ioqi9yTxPMOrOOuL4PXc76EXOXNr
-   vsNDcAcGGgYBi5MA4EqoyzTHiREZ9+QYfAUhNf1V6I6kp8Xedxd/bv0LU
-   +DoQjBlA3SFK1SvsW8h9SR4UrvbYp6puc2MicZf3ogfYmBdYwvS8CYL4j
-   qn8L7oyO1peTdg7BWERK8T0+X8ot9ezRAsXNfNf1WTEzl1ctvKuDWhj4t
-   DuZBnKHkOBjbKs2hxLE37SPVfvwaWQq6gKTipwwkBiv53V6hJreExYSIH
-   SDwy7+M0rLzZvDfEmtTh+sl5kxAiQlWo9U9rKFoGOEHmwkYmGe1lM17Ul
-   w==;
-X-CSE-ConnectionGUID: tXsct6ByTXiKsWW4S2otRg==
-X-CSE-MsgGUID: uv6y4czrQpG26oAZ2O+Lmg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="47451592"
-X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
-   d="scan'208";a="47451592"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 06:09:15 -0700
-X-CSE-ConnectionGUID: cSqpTXqLQoiRwUgKlM9RlA==
-X-CSE-MsgGUID: TllN34sVS6+442M8ka57Vg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
-   d="scan'208";a="140000252"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.30])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 06:09:12 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 7 May 2025 16:09:09 +0300 (EEST)
-To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 5/5] Documentation: admin-guide: pm: Add documentation
- for die_id
-In-Reply-To: <20250428170316.231353-6-srinivas.pandruvada@linux.intel.com>
-Message-ID: <5b93214c-458c-c062-7a7b-45750f368c35@linux.intel.com>
-References: <20250428170316.231353-1-srinivas.pandruvada@linux.intel.com> <20250428170316.231353-6-srinivas.pandruvada@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="V4G4vKaz"
+Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-601a99977faso437366eaf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 06:10:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1746623402; x=1747228202; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KuFq/zeYni8KgGdHJD2LlQeGitZ5AOvXBhl3se89MLw=;
+        b=V4G4vKazuN6HeSTCPzxtc6q8INx9Kg8WgiFT1J0bOb54fIMeaV+JUr2bAEpDzNMzAV
+         zYqWlKUwdemdD20nnkXJf8fVc+KtwRp1ITt1dTh6zJ5I1GubdGnfBuIv0IzGWl+0rl7O
+         NSpJhH6gWg6qMR/NJwim6rJ+ZWDT9+uY1qj6M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746623402; x=1747228202;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KuFq/zeYni8KgGdHJD2LlQeGitZ5AOvXBhl3se89MLw=;
+        b=HpewvwuIPGJvFsS5CU/eIAydU2t8ihVqOpoUH1QalxsH8RLQ3Bcxd2jt+85OKHmriY
+         oLeUXMK1SeC9JuQNrAjzkIxugMIpgKUlGBEBjBHoI9pVJrdQDkJpneNTuFuUnpsnck/t
+         Z9x+4bWa8/ZQ8l/fdCICNsZu+cgvPxpUraKuVQ9GylQhmNmHbhe03yJgi6RP71I8jA+0
+         vcT/RzswbGXG2wUxWBZij6wVS8XOPycEWoysZF/iaEESM1qhxshhGgN4DlnlGFmoVNuB
+         drtF97k+76heG/bhUSsp+ZUtt0lCxyK6CoPx3vdz7ucEYGlVeXPV/K3K3MEozqP0rFgv
+         C7tw==
+X-Forwarded-Encrypted: i=1; AJvYcCXTZMcrcBiwanUdC5A4JkEUXidfOMEUA2V/I9osFCXBwjTEUjuHW1+UKdVyqLDlIZTF8Xa0WKstlAOKWUI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwszwpEILiLmjQCdBwwjeARGPcw1TnYBjzTEKWVjKs9fd7WzD1C
+	llgzIutPsDgC0yP1B7KwhtGCFnzSLEH3sz9hiCodkxOigneFyLOZm3tuJqaOIX8sB/8pDOuQkgN
+	Y6IVhGhYva9SL9filNEjK4MMwahSG6m4KTMQ+
+X-Gm-Gg: ASbGncunHvZPI/YWGCoWtaHw00LphT5CDJZylOFzlVmqU+lP93DO1MlRJQvDSRRbQhp
+	n4vgFIvYwjQf6NXI6jN8ChUt1j8XrIZcQ9eRjGDAGi2j9o6ALiXiwSG/JnHY5/wWmA5QgC5Dusa
+	QCTZQ6nHojxNyHQxN1vl9SF6Gmwf1ZCQ1udBotRxtBnttTpleV4w==
+X-Google-Smtp-Source: AGHT+IFMCSz+DMkX+SXzsy6oBemggwRgx2rch6Bt53f4enSvSdPuMeC4mItCR5WNmCzwmoMolNdmuYo2j8u88K68g3A=
+X-Received: by 2002:a4a:e203:0:b0:607:de7b:aa0b with SMTP id
+ 006d021491bc7-60828d094camr495455eaf.1.1746623402327; Wed, 07 May 2025
+ 06:10:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-1427501539-1746623171=:949"
-Content-ID: <e2fe5a41-0d7d-9ca1-9ee8-e62ba848a524@linux.intel.com>
+References: <20250506095224.176085-1-revest@chromium.org> <aBoP9ILEv-z4bRAQ@finisterre.sirena.org.uk>
+In-Reply-To: <aBoP9ILEv-z4bRAQ@finisterre.sirena.org.uk>
+From: Florent Revest <revest@chromium.org>
+Date: Wed, 7 May 2025 15:09:50 +0200
+X-Gm-Features: ATxdqUGqHGfM-ERnuNPXYXI2S2k9wJ40t1n7VxMcXPLGzQ6yF7PJYBq-4YriJMo
+Message-ID: <CABRcYmKqCVn7NbrXocyzmYif_ihkeOCvPHZ+jxMi3OPWs6EiTg@mail.gmail.com>
+Subject: Re: [PATCH 0/4] mm: Avoid sharing high VMA flag bits
+To: Mark Brown <broonie@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, catalin.marinas@arm.com, will@kernel.org, 
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
+	akpm@linux-foundation.org, thiago.bauermann@linaro.org, jackmanb@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Tue, May 6, 2025 at 3:34=E2=80=AFPM Mark Brown <broonie@kernel.org> wrot=
+e:
+>
+> On Tue, May 06, 2025 at 11:52:20AM +0200, Florent Revest wrote:
+>
+> > While staring at include/linux/mm.h, I was wondering why VM_UFFD_MINOR =
+and
+> > VM_SHADOW_STACK share the same bit on arm64. I think I gained enough co=
+nfidence
+> > now to call it a bug.
+>
+> Yes, it's a bug - it'll be an add/add conflict with those coming in via
+> different trees.
 
---8323328-1427501539-1746623171=:949
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <8e1b33c4-a768-500f-4c74-e5f8c1eff9a4@linux.intel.com>
+Thanks for the review Mark! :)
 
-On Mon, 28 Apr 2025, Srinivas Pandruvada wrote:
+I just want to make sure I fully understand the point you're making
+here, it seems that you are suggesting that 7677f7fd8be7
+("userfaultfd: add minor fault registration mode") and ae80e1629aea
+("mm: Define VM_SHADOW_STACK for arm64 when we support GCS") came in
+from two different trees and independently chose to use the same bit
+around the ~same time, is that right ? And that a conflict would have
+appeared when they'd eventually get merged into a shared tree ?
 
-> Add documentation to describe die_id attribute.
->=20
-> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> ---
-> v2:
-> Change "attributes" to "attribute"
->=20
->  .../admin-guide/pm/intel_uncore_frequency_scaling.rst        | 5 +++++
->  1 file changed, 5 insertions(+)
->=20
-> diff --git a/Documentation/admin-guide/pm/intel_uncore_frequency_scaling.=
-rst b/Documentation/admin-guide/pm/intel_uncore_frequency_scaling.rst
-> index 84608dad84bd..d7ffda6a8095 100644
-> --- a/Documentation/admin-guide/pm/intel_uncore_frequency_scaling.rst
-> +++ b/Documentation/admin-guide/pm/intel_uncore_frequency_scaling.rst
-> @@ -91,6 +91,11 @@ Attributes in each directory:
->  ``domain_id``
->  =09This attribute is used to get the power domain id of this instance.
-> =20
-> +``die_id``
-> +=09This attribute is used to get the Linux die id of this instance.
-> +=09This attribute is only present for domains with core agents and
-> +        when the CPUID leaf 0x1f presents die ID.
-> +
->  ``fabric_cluster_id``
->  =09This attribute is used to get the fabric cluster id of this instance.
-> =20
->=20
+I don't think that's what happened in this specific case though. As
+far as I can tell, the former was merged in 2021 and the latter was
+merged in late 2024. Also, since the hunks got added in very different
+parts of include/linux/mm.h, I don't think they caused a noticeable
+merge conflict. But I agree it would probably be preferable if these
+cases would cause some sort of noticeable merge conflict in the future
+...
 
-For patches #2-#5,
-
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-
-It would have been nice to use cleanup.h in #3 but there's no good=20
-alternative for no_free_ptr() that doesn't have __must_check (IIRC,=20
-somebody proposed a solution to this relatively recently but I don't see=20
-that in linux/cleanup.h currently so lets forget that for now).
-
---=20
- i.
---8323328-1427501539-1746623171=:949--
+I'll quickly respin this series to address my typos on patch 4 (sigh)
+and add your Reviewed-by tag but just to be clear, my refactorings in
+patches 2/3/4 currently focus on using VM_HIGH_ARCH macros
+consistently, to make it a bit more obvious to a reader if two
+features choose the same bit. But maybe what we would really need
+instead is a more obvious way for these bits to be mutually exclusive
+and to cause merge conflicts if they get added through independent
+trees ? For example, my colleague Brendan Jackman suggested using an
+enum for VMA flags bit offsets but I'm not sure what the sentiment is
+around that.
