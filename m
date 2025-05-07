@@ -1,162 +1,163 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 017B6266569;
-	Wed,  7 May 2025 12:19:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EF592676F9
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 12:19:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746620381; cv=none; b=rhUS+VZJq2XZ5UL3SDAupkGyzcBvN+/k2/g/l3HjsMlD5ZH8LMm5gPIT1W0pD+7PfffbRzixHoRyoEfG56ew5Zn9ELbo1YzpVvqxGWhSTsxlq5+Z/VBRqlVrb0xUw5InvDUZxrmfFz+Nn6J7IuH/iIEUiRLeS5eq/wAT+rWDNT0=
+	t=1746620386; cv=none; b=ofBAD+3YR4kybG2WtmL0BcMITwBsDs2Uak+FGFsdGlrajJ/050lYXoucQ5UFzhnha2n8o5+j7CHQCTZrC+PIcN8D5LuO5Ee+R2j4FppRPZpJ9117FrZMQclO7Xy/nzqMSvPr3z2+BvJLRJw5gv6HyaMP9ryVrm1npYUcKuQOOMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746620381; c=relaxed/simple;
-	bh=3jljKQy3JilUwk5OeTWzq9vI3w85PUGJDm3mDHSbT8o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nMDzoUtxj50ptqGdN16vbI2gG/rMnRPQS4BUNuU3Yv8G61A1U7Xxbkh5K4AiFtPQhoHRCItT7i4jMOEnAQcazg/nEWvg7/POv4OGxaOKEKsk1uq0IBL4VPuhVwqZwTc5Fa8+dVG1rylsbPCRwEoTlOPPkjjAItMwP9S8juvCrMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EQWiZG9h; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746620386; c=relaxed/simple;
+	bh=8j39bWyb9uVVAz08W3I2qYhnlhcc79hAb95yitzrSD4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ngW8K95O6RDnustdp3s0ATlNWS3JD0iocfrWLjAOBCIXgnkf6RYSKs6otMyR8+/3y8p//+HfFOwRuGV/pE1/yefK0YGdnmvs5XrwUbzRw/MzgnP689y6xRF2EaPGaMoNzaSvpZ0eRqP9xOz3chX2q7FqFgPcptvBNEI/8lFaVSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DiegJaQ8; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EQWiZG9h"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac2c663a3daso1369791866b.2;
-        Wed, 07 May 2025 05:19:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746620378; x=1747225178; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ou6MOwGHqD731U9gMCJRk94Iq+LGR7LXnbZdgEjcxuk=;
-        b=EQWiZG9h5D/duLWlAvxLI7EWqe8+Fpdou0w9enqahUiRr4GDD65nFRnZqGjAK7+vXe
-         zFA8z/X6ZaHGCPeKukJv1t/IMK+GxXso9tobjOyLEG8o07SsakwIO1MYDdR/Ey/EMQNS
-         eZ4Pg323rtvXdlGMQHhJo7J+FIqUS3WN3F/6SYpxyUp/JwDD3SDpR4X7/HEmIPVQreG/
-         OutK8FLGHq0uxcVoCVSkPM3Ee4ZGaxv+r1T6hX79qzZJTbps5YLCTVBiWs7O7Liq0Pb3
-         +UybsfXXvbjuLjj3PdtpDecjOvNJ8fvKuoRmqraGpXca+D73YcQjlfdBicn/w4PFSD/J
-         7iaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746620378; x=1747225178;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ou6MOwGHqD731U9gMCJRk94Iq+LGR7LXnbZdgEjcxuk=;
-        b=nAZA6sWlTUP63fyJu5D8pfkBK7qJyBwToSU2lhN5NhyVmTD3uT7knq5h/lX1WM38AQ
-         Ie+XKbEpUHRtK7C+krJy2TKcfZMF81cKVUct3RT1lglMeF1OOxJJwcwIHrpt0gYXuH1s
-         +Qyby537JOwzMuC91wwE84dnxlBuXXvjinY2S3xmxN2iaNozrzXUWOAha1PucG5pta77
-         ZrDSbCSaKbSmH9NUTJp12AhYFV5Jp+ppLG86pztbAa+AOCvtNMODD9/UEeIirYj3JwUz
-         RpdWYXJQpVwMpRUtx0x9RIUNnPLGUzh1Z+BHH2MFQemh17scHhWDgvgWxagffCsir+mc
-         THdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU0S/YjkXCJJvCKlGOoNDPDDJIzYPlrWgvY9yW1Dqf3s93REX5QSBpTSgzwp0fZC8jfOs7dHO2BqW9v5TE=@vger.kernel.org, AJvYcCVndks3EntTDkbpcOH/F2Q6f0nyk2O38M7EMOsiKXzwMEmFe0OUOgbiCu81dW3snrBrxisRIcZulFhZ5sT7@vger.kernel.org, AJvYcCXr/iF44hGZR9NQLF2r/6KE0ss90oBI7j4tUeQ2F+8E7fk03etol5dU0Mrfb5y4LmcvaYmxE7oxuA8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4C8os3QoDCwHmN57BlDFyRFCWTgrY14iBOIkachj6R3xnAmEH
-	nBxkOMqrYog2q2cfB1e+4JExzY1NC/IigscxnGAA6btP6aidJbhw
-X-Gm-Gg: ASbGncu4wecfRCPdyBUAv1r34VO/clI4TiO9bdYoYVEIbBT8THakaL0g4msN4/nKVsg
-	h5yRxg8oflA3LODcuT68K6Twq1F3GqgkjN0jsOm0jXVEq8w7E9BwtBZxShDzHjXZVk5nq/V8wHf
-	6aO1XBlMMmFVoDaj/HTGQujOdLo0iG+Th4TXF+gWFYNdIj4H5lB3CEIAeu9HOCbqMHgmTHJ1bbV
-	kM7Q2y80zsgdC55OoqECh2ZJxn1cLgHEwQfG0o656FeDetW00+UN1J3gjniN6CAiFXlmLQkVpJY
-	SINpoa1cdwM5WCjfBr7FLA8M57swcMEd+XQ1WdAMksAXbOw/0eRk
-X-Google-Smtp-Source: AGHT+IF8d4mvPDamh8+NAYSDDhRH4GELbHrWX7qqTJyJjvKWNL1ITeDM9+p41l0nfll4OeRP/pke9w==
-X-Received: by 2002:a17:907:3f9b:b0:ac7:ecea:8472 with SMTP id a640c23a62f3a-ad1e8bf158emr308173866b.26.1746620378128;
-        Wed, 07 May 2025 05:19:38 -0700 (PDT)
-Received: from demon-pc.localdomain ([188.27.128.5])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fa777557b9sm9350002a12.10.2025.05.07.05.19.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 05:19:37 -0700 (PDT)
-From: Cosmin Tanislav <demonsingur@gmail.com>
-To: 
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Romain Gantois <romain.gantois@bootlin.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	Cosmin Tanislav <demonsingur@gmail.com>
-Subject: [PATCH v5 9/9] i2c: atr: add passthrough flag
-Date: Wed,  7 May 2025 15:19:15 +0300
-Message-ID: <20250507121917.2364416-10-demonsingur@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250507121917.2364416-1-demonsingur@gmail.com>
-References: <20250507121917.2364416-1-demonsingur@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DiegJaQ8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746620385; x=1778156385;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=8j39bWyb9uVVAz08W3I2qYhnlhcc79hAb95yitzrSD4=;
+  b=DiegJaQ8vB1tD9xLSGiG6dAvNUoMPKrex+uB+3qmw2gIxBRqfqdrW0Z8
+   IajS1C5sgC4ASyN2CpHLkC3N+67hQoEn2VM0OqWnMNqoBfZznlAvk9gal
+   VO6h82B/3a1M5t3L7/aHzgbnu5ltE0yN8q5UChleUPlUbNqtgU8i21g8U
+   LgYv/2lAQ1VUmIVqC2yPKpjRNbBjcdoiQEtbDnZVaUA6i+iH8fq0eoQxZ
+   9Zbqmnw7g7KWSoaaQEEbGTNJYxsOK6jnCDE8n2odRhZfrlnXHpP8eB66c
+   bpzrO8ZBTnW13sh5cOJycJol6tJYEr3r7pQ4wTVWknTZVA3owtnrsjmXr
+   g==;
+X-CSE-ConnectionGUID: wbinizmlTmKQMpX8/xjdRg==
+X-CSE-MsgGUID: 8Ia3fNx9RXKXu+Xo2vLarw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="48361241"
+X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
+   d="scan'208";a="48361241"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 05:19:45 -0700
+X-CSE-ConnectionGUID: ++rTbFTeQ8ONub8yGm5hDQ==
+X-CSE-MsgGUID: HHo4MBs2S0GvySho/XDvIw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
+   d="scan'208";a="135802177"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa010.jf.intel.com with ESMTP; 07 May 2025 05:19:43 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uCdkS-0007lZ-17;
+	Wed, 07 May 2025 12:19:40 +0000
+Date: Wed, 7 May 2025 20:19:06 +0800
+From: kernel test robot <lkp@intel.com>
+To: Rujra Bhatt <braker.noob.kernel@gmail.com>, dpenkler@gmail.com,
+	gregkh@linuxfoundation.org, linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org, outreachy@lists.linux.dev
+Cc: oe-kbuild-all@lists.linux.dev, braker.noob.kernel@gmail.com
+Subject: Re: [FIRST-PATCH] staging : gpib : agilent_82350b : agilent_82350b.c
+ : fixes checks on the file
+Message-ID: <202505071942.wmYV0pa2-lkp@intel.com>
+References: <Z_-nR5Vt2A5kvbro@brak3rDesk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z_-nR5Vt2A5kvbro@brak3rDesk>
 
-Some I2C ATRs can have other I2C ATRs as children. The I2C messages of
-the child ATRs need to be forwarded as-is if the parent I2C ATR can
-only do static mapping.
+Hi Rujra,
 
-In the case of GMSL, the deserializer I2C ATR actually doesn't have I2C
-address remapping hardware capabilities, but it is able to select which
-GMSL link to talk to, allowing it to change the address of the
-serializer.
+kernel test robot noticed the following build warnings:
 
-The child ATRs need to have their alias pools defined in such a way to
-prevent overlapping addresses between them, but there's no way around
-this without orchestration between multiple ATR instances.
+[auto build test WARNING on staging/staging-testing]
+[also build test WARNING on staging/staging-next staging/staging-linus linus/master v6.15-rc5 next-20250507]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-To allow for this use-case, add a flag that allows unmapped addresses
-to be passed through, since they are already remapped by the child ATRs.
+url:    https://github.com/intel-lab-lkp/linux/commits/Rujra-Bhatt/staging-gpib-agilent_82350b-agilent_82350b-c-fixes-checks-on-the-file/20250416-205032
+base:   staging/staging-testing
+patch link:    https://lore.kernel.org/r/Z_-nR5Vt2A5kvbro%40brak3rDesk
+patch subject: [FIRST-PATCH] staging : gpib : agilent_82350b : agilent_82350b.c : fixes checks on the file
+config: x86_64-randconfig-002-20250424 (https://download.01.org/0day-ci/archive/20250507/202505071942.wmYV0pa2-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250507/202505071942.wmYV0pa2-lkp@intel.com/reproduce)
 
-There's no case where an address that has not been remapped by the child
-ATR will hit the parent ATR.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505071942.wmYV0pa2-lkp@intel.com/
 
-Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
-Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Reviewed-by: Romain Gantois <romain.gantois@bootlin.com>
----
- drivers/i2c/i2c-atr.c   | 7 +++++--
- include/linux/i2c-atr.h | 2 ++
- 2 files changed, 7 insertions(+), 2 deletions(-)
+All warnings (new ones prefixed by >>):
 
-diff --git a/drivers/i2c/i2c-atr.c b/drivers/i2c/i2c-atr.c
-index 76d70efdf190..be7d6d41e0b2 100644
---- a/drivers/i2c/i2c-atr.c
-+++ b/drivers/i2c/i2c-atr.c
-@@ -394,6 +394,9 @@ static int i2c_atr_map_msgs(struct i2c_atr_chan *chan, struct i2c_msg *msgs,
- 		c2a = i2c_atr_get_mapping_by_addr(chan, msgs[i].addr);
- 
- 		if (!c2a) {
-+			if (atr->flags & I2C_ATR_F_PASSTHROUGH)
-+				continue;
-+
- 			dev_err(atr->dev, "client 0x%02x not mapped!\n",
- 				msgs[i].addr);
- 
-@@ -486,13 +489,13 @@ static int i2c_atr_smbus_xfer(struct i2c_adapter *adap, u16 addr,
- 
- 	c2a = i2c_atr_get_mapping_by_addr(chan, addr);
- 
--	if (!c2a) {
-+	if (!c2a && !(atr->flags & I2C_ATR_F_PASSTHROUGH)) {
- 		dev_err(atr->dev, "client 0x%02x not mapped!\n", addr);
- 		mutex_unlock(&chan->alias_pairs_lock);
- 		return -ENXIO;
- 	}
- 
--	alias = c2a->alias;
-+	alias = c2a ? c2a->alias : addr;
- 
- 	mutex_unlock(&chan->alias_pairs_lock);
- 
-diff --git a/include/linux/i2c-atr.h b/include/linux/i2c-atr.h
-index 5aaab1598084..2bb54dc87c8e 100644
---- a/include/linux/i2c-atr.h
-+++ b/include/linux/i2c-atr.h
-@@ -26,9 +26,11 @@ struct i2c_atr;
-  *                    devices being added or removed from a child bus.
-  *                    The ATR pool will have to be big enough to accomodate all
-  *                    devices expected to be added to the child buses.
-+ * @I2C_ATR_F_PASSTHROUGH: Allow unmapped incoming addresses to pass through
-  */
- enum i2c_atr_flags {
- 	I2C_ATR_F_STATIC = BIT(0),
-+	I2C_ATR_F_PASSTHROUGH = BIT(1),
- };
- 
- /**
+   In file included from include/linux/percpu.h:5,
+                    from include/linux/radix-tree.h:16,
+                    from include/linux/idr.h:15,
+                    from include/linux/kernfs.h:12,
+                    from include/linux/sysfs.h:16,
+                    from include/linux/kobject.h:20,
+                    from include/linux/energy_model.h:7,
+                    from include/linux/device.h:16,
+                    from drivers/staging/gpib/include/gpib_types.h:18,
+                    from drivers/staging/gpib/include/gpibP.h:12,
+                    from drivers/staging/gpib/agilent_82350b/agilent_82350b.h:7,
+                    from drivers/staging/gpib/agilent_82350b/agilent_82350b.c:11:
+   drivers/staging/gpib/agilent_82350b/agilent_82350b.c: In function 'agilent_82350b_allocate_private':
+   drivers/staging/gpib/agilent_82350b/agilent_82350b.c:482:53: error: expected '{' before '*' token
+     482 |         board->private_data = kzalloc(sizeof(struct * board->private_data), GFP_KERNEL);
+         |                                                     ^
+   include/linux/alloc_tag.h:227:16: note: in definition of macro 'alloc_hooks_tag'
+     227 |         typeof(_do_alloc) _res;                                         \
+         |                ^~~~~~~~~
+   include/linux/slab.h:1041:49: note: in expansion of macro 'alloc_hooks'
+    1041 | #define kzalloc(...)                            alloc_hooks(kzalloc_noprof(__VA_ARGS__))
+         |                                                 ^~~~~~~~~~~
+   drivers/staging/gpib/agilent_82350b/agilent_82350b.c:482:31: note: in expansion of macro 'kzalloc'
+     482 |         board->private_data = kzalloc(sizeof(struct * board->private_data), GFP_KERNEL);
+         |                               ^~~~~~~
+   drivers/staging/gpib/agilent_82350b/agilent_82350b.c:482:53: error: expected '{' before '*' token
+     482 |         board->private_data = kzalloc(sizeof(struct * board->private_data), GFP_KERNEL);
+         |                                                     ^
+   include/linux/alloc_tag.h:231:24: note: in definition of macro 'alloc_hooks_tag'
+     231 |                 _res = _do_alloc;                                       \
+         |                        ^~~~~~~~~
+   include/linux/slab.h:1041:49: note: in expansion of macro 'alloc_hooks'
+    1041 | #define kzalloc(...)                            alloc_hooks(kzalloc_noprof(__VA_ARGS__))
+         |                                                 ^~~~~~~~~~~
+   drivers/staging/gpib/agilent_82350b/agilent_82350b.c:482:31: note: in expansion of macro 'kzalloc'
+     482 |         board->private_data = kzalloc(sizeof(struct * board->private_data), GFP_KERNEL);
+         |                               ^~~~~~~
+   drivers/staging/gpib/agilent_82350b/agilent_82350b.c:482:53: error: expected '{' before '*' token
+     482 |         board->private_data = kzalloc(sizeof(struct * board->private_data), GFP_KERNEL);
+         |                                                     ^
+   include/linux/alloc_tag.h:234:24: note: in definition of macro 'alloc_hooks_tag'
+     234 |                 _res = _do_alloc;                                       \
+         |                        ^~~~~~~~~
+   include/linux/slab.h:1041:49: note: in expansion of macro 'alloc_hooks'
+    1041 | #define kzalloc(...)                            alloc_hooks(kzalloc_noprof(__VA_ARGS__))
+         |                                                 ^~~~~~~~~~~
+   drivers/staging/gpib/agilent_82350b/agilent_82350b.c:482:31: note: in expansion of macro 'kzalloc'
+     482 |         board->private_data = kzalloc(sizeof(struct * board->private_data), GFP_KERNEL);
+         |                               ^~~~~~~
+>> drivers/staging/gpib/agilent_82350b/agilent_82350b.c:482:29: warning: assignment to 'void *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+     482 |         board->private_data = kzalloc(sizeof(struct * board->private_data), GFP_KERNEL);
+         |                             ^
+
+
+vim +482 drivers/staging/gpib/agilent_82350b/agilent_82350b.c
+
+   479	
+   480	static int agilent_82350b_allocate_private(struct gpib_board *board)
+   481	{
+ > 482		board->private_data = kzalloc(sizeof(struct * board->private_data), GFP_KERNEL);
+   483		if (!board->private_data)
+   484			return -ENOMEM;
+   485		return 0;
+   486	}
+   487	
+
 -- 
-2.49.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
