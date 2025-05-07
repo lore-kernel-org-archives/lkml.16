@@ -1,129 +1,65 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB59B134A8;
-	Wed,  7 May 2025 02:58:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F005979E1;
+	Wed,  7 May 2025 02:58:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746586731; cv=none; b=YaFYa4We5q50S/+rUdCk7p+pafAXXnJZNZFvkA82KspgoYjeHXWcegC1Lb3MlHKqWJoReYkZvPhDkO0yq7T0rTEnQvHr8g09zznXcXHPbIxy8svdj7Li8p3o16n8YlMSlPCbcRTo86DqouEAsEF63hn8L5y+Jo859IyIbIJ5+D4=
+	t=1746586730; cv=none; b=X4IiLhK/MdsF4lgMmMoqTZjnSg/f64v4s3a1zGHlyQbPfqBqSx7ZigFnLdbznzNbJIWHbb25QMD5I64wj98dDtkdNLDpQq2wE4TUPGTZt4Guc/kK1OvzhSxIM+Xengc9CGUmF5DXDu211xZY7Km0Kv3RUikmy5Mj1TM8138wQrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746586731; c=relaxed/simple;
-	bh=MmUPH4ARy9/vAzjyU9ahx/w7xXUYQgpi4F73R0SBSnA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Jxt9/XMvybFRRAl9nS9nBpu1UkyLSI96f6qC0R8Tfw9eGFaW9AW2z2KE4pbVYxvPBDoZyz08w0XuhveAKo3W7ACHV0VHE5LT+5U2GSEvSJv8/6LVGBZoU6a8mEMgVTu38twHHbAOxFYkJU4s8dG1EMKj5Ye6qBY+J+NSA8OScL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 2c49f9162aef11f0b29709d653e92f7d-20250507
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:fc6c30e8-57af-4dbe-b9c6-6dd9fc0d9916,IP:0,U
-	RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-5
-X-CID-META: VersionHash:6493067,CLOUDID:848f288d76073cecd9c059e60a8b1d35,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:nil,UR
-	L:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,S
-	PR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 2c49f9162aef11f0b29709d653e92f7d-20250507
-Received: from mail.kylinos.cn [(10.44.16.175)] by mailgw.kylinos.cn
-	(envelope-from <zhangzihuan@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 1047783727; Wed, 07 May 2025 10:58:37 +0800
-Received: from mail.kylinos.cn (localhost [127.0.0.1])
-	by mail.kylinos.cn (NSMail) with SMTP id 7A81AE006100;
-	Wed,  7 May 2025 10:58:37 +0800 (CST)
-X-ns-mid: postfix-681ACC5D-342742475
-Received: from localhost.localdomain (unknown [172.25.120.24])
-	by mail.kylinos.cn (NSMail) with ESMTPA id 24B1BE0080FF;
-	Wed,  7 May 2025 10:58:34 +0800 (CST)
-From: Zihuan Zhang <zhangzihuan@kylinos.cn>
-To: corbet@lwn.net,
-	rafael@kernel.org,
-	len.brown@intel.com,
-	pavel@kernel.org,
-	akpm@linux-foundation.org,
-	paulmck@kernel.org,
-	rostedt@goodmis.org,
-	thuth@redhat.com,
-	bp@alien8.de,
-	ardb@kernel.org,
-	gregkh@linuxfoundation.org
-Cc: linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	Zihuan Zhang <zhangzihuan@kylinos.cn>
-Subject: [PATCH v1] PM / sleep: add configurable delay for pm_test
-Date: Wed,  7 May 2025 10:57:06 +0800
-Message-Id: <20250507025706.311686-1-zhangzihuan@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1746586730; c=relaxed/simple;
+	bh=nXlSMWZFp/UNpyJGN+JfAGIB2yLICPFXWZ3dy64EAHY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=OomZXpEbS1b22y0jjOf4Uy3p6CGCaK0+opfby8iWGKVEE1GJTh4VWdba+atjeDjAWfuu7sA03EA0hjeSMH0hWpQxJn6bVdKX2wPsOfIISslkmjLBtTown76XQtoBqTarT2CLfvAYQLmK5VhWRIMwB2Us1DOmf2LEGol9R/V7Kjc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=Tvdw5ZaD; arc=none smtp.client-ip=203.29.241.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="Tvdw5ZaD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=codeconstruct.com.au; s=2022a; t=1746586726;
+	bh=nXlSMWZFp/UNpyJGN+JfAGIB2yLICPFXWZ3dy64EAHY=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=Tvdw5ZaDRfSlNK/cGmHOf7usOW3+sTa/3HirQ9VXE1cQefBjeB3YYi9ersBmWyG/H
+	 vwFdvoHzh1Lwlitl4rsZbpgE9QHj9F1wG2DeGzkNTECwZSkNCZQ70IT9SIL+dxNAS5
+	 7hZJNiZQySufSsP1Z6UDBwvL1BTjePJCwSuKBIFgfnk4+DIFdLkZpTGd9Nk/opLDNv
+	 SGEN4MwMagyXK/PmelwtAJ1hZrxgDqEJSzwfnr5Wh07y1s8XlLMEH2vqGJulBsDtwl
+	 3mhOSLlr3DIJaMHm6ka1SJZW7wN9t025Yhvwur9R1bww+9pR0zxSiLa2k+m7R0QB5d
+	 Ho3XXZMybvWEw==
+Received: from [192.168.68.112] (unknown [180.150.112.225])
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 5CD5764473;
+	Wed,  7 May 2025 10:58:46 +0800 (AWST)
+Message-ID: <59c5351d701e9dd5d8ea7d274c6362aadd22ddae.camel@codeconstruct.com.au>
+Subject: Re: [PATCH] arm64: dts: nuvoton: Add USB Hosts
+From: Andrew Jeffery <andrew@codeconstruct.com.au>
+To: "William A. Kennington III" <william@wkennington.com>, Avi Fishman
+ <avifishman70@gmail.com>, Tomer Maimon <tmaimon77@gmail.com>, Tali Perry
+ <tali.perry1@gmail.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, 
+	linux-kernel@vger.kernel.org
+Date: Wed, 07 May 2025 12:28:45 +0930
+In-Reply-To: <20250416001818.2067486-1-william@wkennington.com>
+References: <20250416001818.2067486-1-william@wkennington.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
 
-This patch turns this 5 second delay into a configurable module
-parameter, so users can determine how long to wait in this
-pseudo-hibernate state before resuming the system.
+On Tue, 2025-04-15 at 17:18 -0700, William A. Kennington III wrote:
+> The npcm 8xx chip has 2 EHCI and 2 OHCI hosts with driver support
+> already existing in the kernel.
+>=20
+> Signed-off-by: William A. Kennington III <william@wkennington.com>
 
-The configurable delay parameter has been added to suspend and
-synchronized to hibernate.
+Please rebase to address fuzz as noted here:
 
-Example (wait 30 seconds);
+https://lore.kernel.org/all/2ed50b1463f62a829f863b889ab818f492b73946.camel@=
+codeconstruct.com.au/
 
-  # echo 30 > /sys/module/hibernate/parameters/pm_test_delay
-  # echo core > /sys/power/pm_test
-
-Signed-off-by: Zihuan Zhang <zhangzihuan@kylinos.cn>
----
- Documentation/admin-guide/kernel-parameters.txt | 7 +++++++
- kernel/power/hibernate.c                        | 9 +++++++--
- 2 files changed, 14 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentat=
-ion/admin-guide/kernel-parameters.txt
-index d9fd26b95b34..082a697a3e95 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -6998,6 +6998,13 @@
- 			/sys/power/pm_test). Only available when CONFIG_PM_DEBUG
- 			is set. Default value is 5.
-=20
-+	hibernate.pm_test_delay=3D
-+			[hibernate]
-+			Sets the number of seconds to remain in a suspend test
-+			mode before resuming the system (see
-+			/sys/power/pm_test). Only available when CONFIG_PM_DEBUG
-+			is set. Default value is 5.
-+
- 	svm=3D		[PPC]
- 			Format: { on | off | y | n | 1 | 0 }
- 			This parameter controls use of the Protected
-diff --git a/kernel/power/hibernate.c b/kernel/power/hibernate.c
-index 23c0f4e6cb2f..da7533aab8d1 100644
---- a/kernel/power/hibernate.c
-+++ b/kernel/power/hibernate.c
-@@ -133,10 +133,15 @@ bool system_entering_hibernation(void)
- EXPORT_SYMBOL(system_entering_hibernation);
-=20
- #ifdef CONFIG_PM_DEBUG
-+static unsigned int pm_test_delay =3D 5;
-+module_param(pm_test_delay, uint, 0644);
-+MODULE_PARM_DESC(pm_test_delay,
-+		 "Number of seconds to wait before resuming from hibernate test");
- static void hibernation_debug_sleep(void)
- {
--	pr_info("debug: Waiting for 5 seconds.\n");
--	mdelay(5000);
-+	pr_info("hibernation debug: Waiting for %d second(s).\n",
-+			pm_test_delay);
-+	mdelay(pm_test_delay * 1000);
- }
-=20
- static int hibernation_test(int level)
---=20
-2.25.1
-
+Andrew
