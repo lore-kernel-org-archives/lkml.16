@@ -1,23 +1,23 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A1BE221FB2;
-	Wed,  7 May 2025 07:57:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A38D22236E8;
+	Wed,  7 May 2025 07:57:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746604676; cv=none; b=RADZXxuxXi+40inEEn1j/TYLONSM5fqENJ2pcEwyi5yDNOOTKp+rCImi5MWZB7pKkNu/XxL/BjiysQJq151S4yivb5r/WdRtl4zmyP0lWUwsvpzAKMSryU0u0lVst1Zdegd03lq8m1W3Lsa4lwviON9EkEtxr79UQRR75ea6fTI=
+	t=1746604676; cv=none; b=Nehiz2uqdUjDBPZdk+JZapkrCV1JcwFQkuGvyX4RLu6SWrwJ9sQE/PKI3tdacJZL47FmncNToSRUxOKmLzYSaOwKXL9zoskpEavr1SFDa+V4Edp8fJ8qrHTpibichYwNXMLDd5VNLniGO6RUx62tE6PMUT6g2PkWYYMgRbuXgxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746604676; c=relaxed/simple;
-	bh=S6TUbfdjVFWVKcVPbK7vARyJKb7pE+BLb1/YKnx+BE0=;
+	bh=thQp3d+qBp+1421q4FBpXYX3A9CpKe63smrgGiAaA9A=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=r8ddwEfRpG1hsflXSC/3glFY1US8WhYirxCuHSNhKdPfALiSGpKtdy3P7g17EJ3wCFLLXpW0vnm8H43VHUwRDhD/r5hPA91Jglrji+/FKwqmv1AN2UKgeIVFXVO8H/MnW2UNsg6Dwt2asBVc8+ZrCJyVDa3+d+hM3kp7qyLQPo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bqcrE4WO; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qfxRxkEe; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=ECe/MiILBPkuWLX0dbjNEmgTLFCICqaIq808kH8+87a5uhkzOJUx1AOWGezsAn4msXpnt7P1jjZLWvkeaPENn+ysZue2t7tPJDt6t/yn96eEQMm3htRoF7Ed+B7DQNCmAJqbvxvdppXaWGLE4s216hSsoLTiQiuUKKkzwiF/GoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WtPtY0ZC; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=iZyhO3ZK; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bqcrE4WO";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qfxRxkEe"
-Date: Wed, 07 May 2025 07:57:51 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WtPtY0ZC";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iZyhO3ZK"
+Date: Wed, 07 May 2025 07:57:52 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1746604672;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -25,12 +25,12 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Av3ImIp4OIZCrWFPW3GyAPy3j+U0Cxdn2V2fCoAh/EI=;
-	b=bqcrE4WOIRcQAvi/ZiFMiGH/9HZbfImdEqd/hDIVQ1SGZaD/qkJXFykJAH866wZOh0WyIe
-	nO8Aji9hJyAu9/NqKaLCJytGvHtq3Xsde48xtcAEcUJWoU8Sh09gGmnuMDKSN8qyOTYgPF
-	b2xqpU88Oh/2nXXhgxGLExqyhoJyG4URxATa3gbwrklWbzsIq56MlgLvtaOr3EoyYzxCMv
-	ACxhy4O0cDnLmzfapKygg6FNF7b3iRBEzZHnf/LPpbx6dI0EmAcs18eIxj+Qb2LAYrtJ8m
-	nhL6ixb5H2a9KILs1tHd+vrIUv7Fb7HVXJ5hct9/6ALLl0/WNI3xVKgNAvsFQg==
+	bh=h0OyqlAlzoiJ0AGLPwcZ9yianh71GpJzC6AaoQK9ye8=;
+	b=WtPtY0ZCst3sIUQ+fjmt5EabGnNGRXIwVyMcjMN8zZIB+lVvfOf2rklud18IU5oEypp1Lv
+	xZUP7fUWHIzyJ1dGFPZji3KUR8KI6W4DFcP6+/YSrEY0EmLl2wYSH95S9aMpk8DKGKjT5o
+	/ue8PG5jJUYz0TOP0na4n/a1Yeuh+twRQYc4SSCreJIvgu8pmMPR74qeFY8gwu90jBoKmj
+	SUUiXtzzYCm/hnbzU4B9aCEcC9+hIPoEGoqxucMGhyZTEii5A0da0udmW0L1bkW4/EqMYU
+	jOK3lZwHlvw5AKXr3J+WLjTDMsLLoh2UAbNnwHSF61sZOzS3rxjCaHTtNNxLig==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1746604672;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -38,114 +38,110 @@ DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Av3ImIp4OIZCrWFPW3GyAPy3j+U0Cxdn2V2fCoAh/EI=;
-	b=qfxRxkEeZ1qIhCim23e78enZ6lfCAvo1e8rhSqj+nG6k1SNUpDQ6WbX8AEa6psoi9EEVUx
-	VN9zhBJAMyL4AFDg==
+	bh=h0OyqlAlzoiJ0AGLPwcZ9yianh71GpJzC6AaoQK9ye8=;
+	b=iZyhO3ZKjJzQXAdqOaAOWbA3XU/aFCtW5S2xev/y5+pSXe4ThgXniKbGEjOy3ng+nUzdFU
+	LH/ise+E8SkP6RAQ==
 From: "tip-bot2 for Jiri Slaby (SUSE)" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/cleanups] irqdomain: Use irq_domain_instantiate()'s return
- value as initializers
+Subject: [tip: irq/cleanups] irqdomain: Drop irq_linear_revmap()
 Cc: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
  Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250319092951.37667-51-jirislaby@kernel.org>
-References: <20250319092951.37667-51-jirislaby@kernel.org>
+In-Reply-To: <20250319092951.37667-50-jirislaby@kernel.org>
+References: <20250319092951.37667-50-jirislaby@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174660467129.406.13202195174890278442.tip-bot2@tip-bot2>
+Message-ID: <174660467202.406.15136356950179655332.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
 The following commit has been merged into the irq/cleanups branch of tip:
 
-Commit-ID:     087a483741e262967b2ab71a8d2d314512d3f178
-Gitweb:        https://git.kernel.org/tip/087a483741e262967b2ab71a8d2d314512d3f178
+Commit-ID:     506cc474ce456fa992bde54ad8cc682c2587a820
+Gitweb:        https://git.kernel.org/tip/506cc474ce456fa992bde54ad8cc682c258=
+7a820
 Author:        Jiri Slaby (SUSE) <jirislaby@kernel.org>
-AuthorDate:    Wed, 19 Mar 2025 10:29:43 +01:00
+AuthorDate:    Wed, 19 Mar 2025 10:29:42 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Wed, 07 May 2025 09:53:25 +02:00
+CommitterDate: Wed, 07 May 2025 09:53:24 +02:00
 
-irqdomain: Use irq_domain_instantiate()'s return value as initializers
+irqdomain: Drop irq_linear_revmap()
 
-This makes the code more compact.
-
-Note that irq_domain_create_hierarchy()'s handling of size is now part of
-info's initializer (using the ternary operator). That makes more sense
-while reading it.
+irq_linear_revmap() is deprecated and unused now. So remove it.
 
 Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/all/20250319092951.37667-51-jirislaby@kernel.org
+Link: https://lore.kernel.org/all/20250319092951.37667-50-jirislaby@kernel.org
 
 ---
- include/linux/irqdomain.h | 17 +++++------------
- 1 file changed, 5 insertions(+), 12 deletions(-)
+ Documentation/core-api/irq/irq-domain.rst                    | 2 --
+ Documentation/translations/zh_CN/core-api/irq/irq-domain.rst | 2 --
+ include/linux/irqdomain.h                                    | 6 ------
+ 3 files changed, 10 deletions(-)
 
+diff --git a/Documentation/core-api/irq/irq-domain.rst b/Documentation/core-a=
+pi/irq/irq-domain.rst
+index 7624607..c365c3e 100644
+--- a/Documentation/core-api/irq/irq-domain.rst
++++ b/Documentation/core-api/irq/irq-domain.rst
+@@ -62,8 +62,6 @@ variety of methods:
+   mapping.
+ - irq_find_mapping() returns a Linux IRQ number for a given domain and
+   hwirq number, and 0 if there was no mapping
+-- irq_linear_revmap() is now identical to irq_find_mapping(), and is
+-  deprecated
+ - generic_handle_domain_irq() handles an interrupt described by a
+   domain and a hwirq number
+=20
+diff --git a/Documentation/translations/zh_CN/core-api/irq/irq-domain.rst b/D=
+ocumentation/translations/zh_CN/core-api/irq/irq-domain.rst
+index 913c3ed..4a2d3b2 100644
+--- a/Documentation/translations/zh_CN/core-api/irq/irq-domain.rst
++++ b/Documentation/translations/zh_CN/core-api/irq/irq-domain.rst
+@@ -60,8 +60,6 @@ irq_domain=E5=92=8C=E4=B8=80=E4=B8=AAhwirq=E5=8F=B7=E4=BD=
+=9C=E4=B8=BA=E5=8F=82=E6=95=B0=E3=80=82 =E5=A6=82=E6=9E=9Chwirq=E7=9A=84=E6=
+=98=A0=E5=B0=84=E8=BF=98=E4=B8=8D=E5=AD=98=E5=9C=A8=EF=BC=8C=EF=BF=BD
+=20
+ - irq_find_mapping()=E8=BF=94=E5=9B=9E=E7=BB=99=E5=AE=9A=E5=9F=9F=E5=92=8Chw=
+irq=E7=9A=84Linux IRQ=E5=8F=B7=EF=BC=8C=E5=A6=82=E6=9E=9C=E6=B2=A1=E6=9C=89=
+=E6=98=A0=E5=B0=84=E5=88=99=E8=BF=94=E5=9B=9E0=E3=80=82
+=20
+-- irq_linear_revmap()=E7=8E=B0=E4=B8=8Eirq_find_mapping()=E7=9B=B8=E5=90=8C=
+=EF=BC=8C=E5=B7=B2=E8=A2=AB=E5=BA=9F=E5=BC=83=E3=80=82
+-
+ - generic_handle_domain_irq()=E5=A4=84=E7=90=86=E4=B8=80=E4=B8=AA=E7=94=B1=
+=E5=9F=9F=E5=92=8Chwirq=E5=8F=B7=E6=8F=8F=E8=BF=B0=E7=9A=84=E4=B8=AD=E6=96=AD=
+=E3=80=82
+=20
+ =E8=AF=B7=E6=B3=A8=E6=84=8F=EF=BC=8Cirq=E5=9F=9F=E7=9A=84=E6=9F=A5=E6=89=BE=
+=E5=BF=85=E9=A1=BB=E5=8F=91=E7=94=9F=E5=9C=A8=E4=B8=8ERCU=E8=AF=BB=E4=B8=B4=
+=E7=95=8C=E5=8C=BA=E5=85=BC=E5=AE=B9=E7=9A=84=E4=B8=8A=E4=B8=8B=E6=96=87=E4=
+=B8=AD=E3=80=82
 diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
-index c8e55cd..1e38584 100644
+index 712c662..c8e55cd 100644
 --- a/include/linux/irqdomain.h
 +++ b/include/linux/irqdomain.h
-@@ -403,9 +403,8 @@ static inline struct irq_domain *irq_domain_create_nomap(struct fwnode_handle *f
- 		.ops		= ops,
- 		.host_data	= host_data,
- 	};
--	struct irq_domain *d;
-+	struct irq_domain *d = irq_domain_instantiate(&info);
- 
--	d = irq_domain_instantiate(&info);
- 	return IS_ERR(d) ? NULL : d;
+@@ -492,12 +492,6 @@ static inline unsigned int irq_find_mapping(struct irq_d=
+omain *domain,
+ 	return 0;
  }
- 
-@@ -424,9 +423,8 @@ static inline struct irq_domain *irq_domain_create_linear(struct fwnode_handle *
- 		.ops		= ops,
- 		.host_data	= host_data,
- 	};
--	struct irq_domain *d;
-+	struct irq_domain *d = irq_domain_instantiate(&info);
- 
--	d = irq_domain_instantiate(&info);
- 	return IS_ERR(d) ? NULL : d;
- }
- 
-@@ -440,9 +438,8 @@ static inline struct irq_domain *irq_domain_create_tree(struct fwnode_handle *fw
- 		.ops		= ops,
- 		.host_data	= host_data,
- 	};
--	struct irq_domain *d;
-+	struct irq_domain *d = irq_domain_instantiate(&info);
- 
--	d = irq_domain_instantiate(&info);
- 	return IS_ERR(d) ? NULL : d;
- }
- 
-@@ -554,18 +551,14 @@ static inline struct irq_domain *irq_domain_create_hierarchy(struct irq_domain *
- 	struct irq_domain_info info = {
- 		.fwnode		= fwnode,
- 		.size		= size,
--		.hwirq_max	= size,
-+		.hwirq_max	= size ? : ~0U,
- 		.ops		= ops,
- 		.host_data	= host_data,
- 		.domain_flags	= flags,
- 		.parent		= parent,
- 	};
--	struct irq_domain *d;
-+	struct irq_domain *d = irq_domain_instantiate(&info);
- 
--	if (!info.size)
--		info.hwirq_max = ~0U;
+=20
+-static inline unsigned int irq_linear_revmap(struct irq_domain *domain,
+-					     irq_hw_number_t hwirq)
+-{
+-	return irq_find_mapping(domain, hwirq);
+-}
 -
--	d = irq_domain_instantiate(&info);
- 	return IS_ERR(d) ? NULL : d;
- }
- 
+ extern const struct irq_domain_ops irq_domain_simple_ops;
+=20
+ /* stock xlate functions */
