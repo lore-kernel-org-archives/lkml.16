@@ -1,52 +1,53 @@
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58CF92116F4;
-	Wed,  7 May 2025 06:51:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5017821422A;
+	Wed,  7 May 2025 06:51:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746600696; cv=none; b=ghE2kGqLT8qqhCCL2B3fr9vUfodqzv8DxRDffGGcDDnRNpfPD/FqYA/Xms8G2PwJqis6Qe8xT5KazykftSRLn/B06I44ANwq+ZBlDVM9Xy0VXhGzXpWFSXBTFMQxU1Vel7ENv4JNKwnRwyfatjNFJtGxSc1hVa2c1jRKMBt7TCM=
+	t=1746600697; cv=none; b=msXqCuTwjqUkZGVY4Fian6NXlHy/6HqO/XuIYkf2in0Px1icnSi+WR2CR+MNrcHOMzPnGw64zhuKn6+keyHebRRnzvpijjD2xumNxzvgdSaKuBDe096C6OMgqb6nHB6n11g6+PQiwtYzUcQmzf3k0/T/lOmn1gnzL6MCzBePfn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746600696; c=relaxed/simple;
-	bh=ylNtMfjvu+q4orajowEjXHztUp21s4iaeJUauanM8oU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Pv02+ntVJjM6fYKUnGoYXMBdwduiFPJKfl2r1SYBZkJ/yoFaLwFlUWfBE76GaIiNm3pja+0wLUVxlhLAmAzKVRXmhR/pliViFtuL9dFtwogbIEbAaSAJlYD/HvcIHemL+X9n/S7uqBBAISmpmE9s+kELo2e3gZER1bfKGxUazok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=gQLkKhIF; arc=none smtp.client-ip=205.220.168.131
+	s=arc-20240116; t=1746600697; c=relaxed/simple;
+	bh=+Qk5RhgwE7mEuK1IqzbNYvEhgm1tpbkWrwLnF2n1u3Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=gqZbh33d3vM0NJIOvGqBhITeB//TFH5x74a9YuwjenuJxB+ERIYI36hcd9+VikvIyl3ZttlUYRR/xr90H6X67I2fyJjX8K0OBJOLe/cSWl+Az5S6j5TqJh3aMPIci5Xd1KZrYtHrQvGuEKoqK2ZrkmVPhaIuqGKRgo3dsaJi6TY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Grbv7hPF; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="gQLkKhIF"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5471H4Fg021655;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Grbv7hPF"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5471Glvb002516;
 	Wed, 7 May 2025 06:51:30 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=qcppdkim1; bh=l6vPSDr4+Mz2qLrL3AYZ67kUOJAkymZKwE8
-	6Gy8EOoY=; b=gQLkKhIFrGNO0TM3M3nb5nKDVb85gdqYOly41p8jTpoo/QJxstS
-	BjKg4Riwhwi1FWTS23w3+tjnBVLzjg+H/1oUcuqvJ2d/rbFyGL7MH3Ofhdcot5+Q
-	939U8qDhClHLo+TdUe8f6AYxTAPNtUXaX1RZv6TJfMKQmjuVPkqmrirmRW7WyGTR
-	Go+D7Gz+5jxKsEPKOUxBTKJO5Rkm/PGEWtBWtCR6BBTyXZq5y0WMfzbJKriX6R6B
-	pQlSmzqZqTrcru6znSRs8PYoLtetu8MumnlEjUvPunqxLMXGiuquvq4Z8keHm/C+
-	QjtIP6Qz5Ym6aiHDH8B0z2A8hzrGrWKHelQ==
+	cc:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=qcppdkim1; bh=EIXsCpHtRrV
+	EcQZ15hrtNzriFYW+XKLrIpTaz7oZEUI=; b=Grbv7hPFuDjmLzglAbfXj0JffVy
+	CZAuNZWJUGwNkjqZt18B3zi9TdlkDoYNxKx3N+lRcHVnGUDnK9fyGtTX82rYTTep
+	SXScdH7MAc08iLxC0SCQKCOzYRDVBSsFe2xBslgm99x9F3cX7YS+GxjOonrE0s7Y
+	MHv5NmOwLG0NYYRDbQak10dofcMdnbDnhhEA72F2VCfJFT7FiDxvTanBS8UBfOKK
+	dcTSHe9waTGfHXVfCiOUWc++Ckv5jP/JXymsEEABV63r/IG0mS8kuroZEcMEVRQR
+	5mYrS/C4wgXDl6cTV/bDojwZGYFn2MscHu/aIzyKLl2GlmxRB1P9LMYvYwA==
 Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46fdwtug44-1
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46fsmt17dc-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Wed, 07 May 2025 06:51:29 +0000 (GMT)
 Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 5476pPn9009493;
+	by APBLRPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 5476pPJN009491;
 	Wed, 7 May 2025 06:51:25 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 46dc7ms9r6-1
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 46dc7ms9r8-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Wed, 07 May 2025 06:51:25 +0000
 Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 5476pOCb009459;
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 5476pOF3009460;
 	Wed, 7 May 2025 06:51:24 GMT
 Received: from hu-devc-hyd-u22-c.qualcomm.com (hu-wasimn-hyd.qualcomm.com [10.147.246.180])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 5476pOus009451
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 5476pOjd009448
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Wed, 07 May 2025 06:51:24 +0000
 Received: by hu-devc-hyd-u22-c.qualcomm.com (Postfix, from userid 3944840)
-	id 3089B5AE; Wed,  7 May 2025 12:21:23 +0530 (+0530)
+	id 3AA755B1; Wed,  7 May 2025 12:21:23 +0530 (+0530)
 From: Wasim Nazir <quic_wasimn@quicinc.com>
 To: Bjorn Andersson <andersson@kernel.org>,
         Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
@@ -57,10 +58,12 @@ Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
         kernel@quicinc.com, kernel@oss.qualcomm.com,
         Wasim Nazir <quic_wasimn@quicinc.com>
-Subject: [PATCH 0/8] qcom: Refactor sa8775p/qcs9100 based ride boards
-Date: Wed,  7 May 2025 12:21:08 +0530
-Message-ID: <20250507065116.353114-1-quic_wasimn@quicinc.com>
+Subject: [PATCH 3/8] arm64: dts: qcom: sa8775p: Add ethernet card for ride & ride-r3
+Date: Wed,  7 May 2025 12:21:11 +0530
+Message-ID: <20250507065116.353114-4-quic_wasimn@quicinc.com>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250507065116.353114-1-quic_wasimn@quicinc.com>
+References: <20250507065116.353114-1-quic_wasimn@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,221 +75,762 @@ X-QCInternal: smtphost
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=VPPdn8PX c=1 sm=1 tr=0 ts=681b02f1 cx=c_pps
+X-Authority-Analysis: v=2.4 cv=U9KSDfru c=1 sm=1 tr=0 ts=681b02f1 cx=c_pps
  a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
- a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=RWzv-jsSoAz4CCN1Pp0A:9
+ a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=V7uKYF5pdr8CP6xZKmcA:9
  a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: rr26_g_ZpBZTKxir5IxYisvRJXZH2fSg
-X-Proofpoint-ORIG-GUID: rr26_g_ZpBZTKxir5IxYisvRJXZH2fSg
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA3MDA2MSBTYWx0ZWRfXxUuEkuwBm5qR
- fI3q/Qtx/5kYesAVrsFjPZ5ddbZ7AM3gjLbfLtEoLhu5r+agtUqS8Fe8xYQE7GOHE3vkM1zxYqG
- ERHB8ZFOD/Mejq13r1jqmdRTwQ4/jfdk5Rqe1TxxDJN+LuWMXyRFlD8dSbx5wqE/hgTtCyvWBMI
- BWUBb+Z8Aiv5P5FzjXVBjSaEhELPHKix7/+mMvuG4RxqF7OSRibT8oGylSPa36Dl8T1GsiHSajX
- 8umlL9ZncUrJsc5/evDXGuT67D3tCNZ0QvxCJakDzCLUnlJ1m2PaAypRxPJQFdkRizuEWYAhd1p
- J2M/z61W75DB+aiO5BGIRR7J7KWVtggnUmyAcCVorHO27vgVevnD4jHWYWwoskLxIyiz3fJQ18f
- leQESs7tqRV8IbPFx0Ay7rgY80Th3D6plxQH42QZv1uXAc8bccHKGZDiMfX/1XozCEJK+k/B
+X-Proofpoint-GUID: wpgWaEYxb_-9jWP0n9gkXCU7yIqz2Arw
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA3MDA2MiBTYWx0ZWRfXwt3O0XqT1ALq
+ z5ydeQ2tv6klvpOo6yLUs/GCENWK51rAsd91TqEasup+tyRhQTeeqrOiDaB/jstlVDbgDgH+XPU
+ S11YYHWNw6Ke9vgK9xsdPl8wxHpuhOilGJ39kobyt1ba8M5n0t/DsP26tb/WmIbpn8EAx/TJ9vo
+ s86USPF95GKm/KaE8T6FfKZGR0mCzf6LlmGXr3txoM5Bkwy54a8r7dLBrZeufmij4xTaLMuZz/v
+ j29OZB72z3D1WZtcO+HR8IgfW3TyG5gj0fdrZ6RuOa6YXbwhl7JU4kT58BIjHfp1zuHr6Fif6bH
+ dbBlW382DvO0F7RkbfXjPX46eD2lBkjGS3B0rZns+wYUCMGsAcydXY6zN4DCsx5aZFinfSS9O9Q
+ yUiFfAA+SYyEUXjIlrv8zxFpVJTJ74B4iLSFGZeRQtr58aZwp+ITKjLG1n1pXBJdevawt+FI
+X-Proofpoint-ORIG-GUID: wpgWaEYxb_-9jWP0n9gkXCU7yIqz2Arw
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-05-07_02,2025-05-06_01,2025-02-21_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 spamscore=0 suspectscore=0 adultscore=0 mlxscore=0
- bulkscore=0 clxscore=1015 lowpriorityscore=0 impostorscore=0 malwarescore=0
- mlxlogscore=999 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505070061
+ mlxscore=0 malwarescore=0 adultscore=0 bulkscore=0 spamscore=0
+ impostorscore=0 priorityscore=1501 mlxlogscore=999 phishscore=0 clxscore=1015
+ lowpriorityscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2504070000 definitions=main-2505070062
 
-This series redefine DT structure for sa8775p/qcs9100 based ride/ride-r3
-boards by introducing SOM for sa8775p, qcs9100.
-It also introduces ethernet dtsi with two variants of capabilities.
-It also refactor all common parts of ride boards to ride-common dtsi.
+Add separate ethernet card with 1G & 2.5G phy capabilities respectively.
+  *-88ea1512.dtsi is for 2x 1G - SGMII (Marvell 88EA1512-B2) phy
+  *-aqr115c.dtsi is for 2x 2.5G - HSGMII (Marvell AQR115c) phy
 
-Below are detailed explaination on each type of HW variants supported:
-
-# Ride HW information
------------------------------
-Ride is a modular hardware system with several smaller daughter cards
-connected to single backplane board and each daughter card is stacked on
-top of each other. I will try to explain each daughter card with HW
-components and how it is connected to construct the ride-hw.
-
-Backplane board:
-  - It contains an MCU (Aurix TC397), CAN/LIN transceiver,
-    Audio/GNSS/IMU-I2C signals, Fan header
-  - It holds & connects all the daughter cards.
-
-SOC card:
-  - It contains:
-    - SOM:
-      - One of QCS9100M/QAM8775p SOM.
-      - Each SOM is composed of either qcs9100/sa8775p SOC,
-        along with DDR & PMICs.
-      - Each SOM can be mounted to same SOC-daughter card of ride-hw.
-    - In addition to SOM, it also has
-      - 4x UART, 2x USB 3.1 & 1x USB 2.0
-      - Memory: 1x OSPI, 2x UFS-3.1
-      - Debug: JTAG/QDSS header
-      - PCIe0, PCIe1 & Display signals
-      - Reset button
-  - It is connected to backplain board via B2B connector.
-
-Display card:
-  - It contains:
-    - 4 eDP ports & 2 DSI-DP bridge
-    - I2C GPIO expander & I2C switch
-  - It is connected to SOC-card via B2B connector.
-
-Camera card:
-  - It contains:
-    - 4 Quad DE-serializer, each supporting 4 MIPI CSI inputs
-    - Total upto 16 Cameras ports are supported.
-  - It is connected to backplain board via B2B connector.
-
-Ethernet card:
-  - There are two variants of ethernet card each with different capabilities:
-    - [Ethernet-v1] card contains:
-      - 2x 1G RGMII phy, 2x 1G SGMII phy(enabled currently)
-      - Total 4 phy supported, only 2 phy are enabled and it is used in ride.
-    - [Ethernet-v2] card contains:
-      - 2x 1G RGMII phy, 2x 2.5G HSGMII(enabled currently) & 10G PCIe
-        based MAC+PHY controller
-      - Total 5 phy supported, only 2 phy are enabled and it is used
-        in ride-r3.
-  - Either [Ethernet-v1] or [Ethernet-v2] is connected to backplain
-    board via B2B connector.
-
-PCIe card:
-  - It contains:
-    - PCIe connections to SOC-card
-    - NVME, 2x WLBT module QCA6696/QCA6698 (Wi-Fi & bluetooth solution)
-      & GNSS module
-  - It is connected to backplain board via B2B connector & PCIe signals
-    are connected to SOC card via flyover cables.
-
-Sensor Card:
-  - It contains 3-Axix compass & 6-Axis 3D IMU (accel/gyro) module which
-    are communicating via I2C
-  - It is connected to backplain board via B2B connector.
-
-Front panel card:
-  - It does not contain any active circuitry, only ports are available
-    - Audio-in/out ports
-    - USB hub ports
-    - CAN/LIN ports
-    - 12V power off switch
-  - It is connected to backplain board via ribbon cable.
-
-
-Considering outlined h/w description, following are ride configuration
-variation each platform supporting:
-
-Between qcs9100 & sa8775p ride/ride-r3 boards, SOM is changing; And between
-ride & ride-r3 ethernet is changing.
-Excluding these differences all other cards i.e SOC, display, camera,
-PCIe, sensor, front & backplain are same and are refactored in ride-common.
-If any variant of these cards comes up in future we need to refactor
-ride-common accordingly.
-
-Since we don't have a document yet which formally describes qcs9100 ride
-board with [Ethernet-v1] card, I am removing the board and we can re-enable
-after complete documentation is available.
-
-Considering current outlines of all daughter cards, following defines
-ride/ride-r3 variant boards:
-  - sa8775p ride    : QAM8775p SOM + [Ethernet-v1] + other daughter cards
-  - sa8775p ride-r3 : QAM8775p SOM + [Ethernet-v2] + other daughter cards
-  - qcs9100 ride-r3 : QCS9100M SOM + [Ethernet-v2] + other daughter cards
-
-Below is the pictorial diagram for updated DT structure depicting all our HW.
-- SOM dtsi:
-  - qam8775p-som.dtsi specifying sa8775p based SOM having SOC, PMICs,
-    Memory-map.
-  - qcs9100-som.dtsi specifying QCS9100M based SOM having SOC, PMICs, Memory-map
-    updates.
-- sa8775p-ride-common.dtsi specifying ride common daughter cards for all ride
-  boards. This include SOC-card, display, camera, PCIe, sensor, front &
-  backplain cards.
-- Ethernet variants dtsi:
-  - sa8775p-ride-ethernet-88ea1512.dtsi specifying ethernet card which
-    uses 2x 1G - SGMII (Marvell 88EA1512-B2) phy in Main-domain
-  - sa8775p-ride-ethernet-aqr115c.dtsi specifying ethernet card which
-    uses 2x 2.5G - HSGMII (Marvell AQR115c) phy in Main-domain
-
-+---------------------------------------------------------------------------------------------------+
-|                                                                                                   |
-|                        sa8775p.dtsi                                                               |
-|                             |                                                                     |
-|                 +-----------------------+                                                         |
-|                 |                       |                                                         |
-|                 v                       v                                                         |
-|          qam8775p-som.dtsi        qcs9100-som.dtsi                                                |
-|                 |                       |                                                         |
-|                 v                       v                                                         |
-|              (AUTO)                   (IOT)                                                       |
-|                 |                       |                                                         |
-|                 |                       |                                                         |
-|                 |                       |                                                         |
-|                 | +-----------------------+---------------< sa8775p-ride-ethernet-aqr115c.dtsi    |
-|                 | |                     | |                                                       |
-|                 | | +-----------------------+----------+--< sa8775p-ride-common.dtsi              |
-|                 | | |                   | | |          |                                          |
-|       +---------+ | |                   | | |          |                                          |
-|       |         | | |                   | | |          |                                          |
-|       |         v v v                   v v v          |                                          |
-|       |   sa8775p-ride-r3.dts    qcs9100-ride-r3.dts   |                                          |
-|       |                                                |                                          |
-|       | +----------------------------------------------+                                          |
-|       | |                                                                                         |
-|       | | +------------------------------------------------< sa8775p-ride-ethernet-88ea1512.dtsi  |
-|       | | |                                                                                       |
-|       v v v                                                                                       |
-| sa8775p-ride.dts                                                                                  |
-|                                                                                                   |
-+---------------------------------------------------------------------------------------------------+
-
-This series provides code refactoring changes for sa8775p/qcs9100
-ride/ride-r3 boards from previous discussion [1] excluding any new
-features or boards.
-
-No functional impact, and it is verified with comparing decompiled DTB
-(dtx_diff and fdtdump+diff).
-The only difference is that *-som compatibility has been added in all boards
-and qcs9100-ride board is removed.
-
-[1] https://lore.kernel.org/all/20241229152332.3068172-1-quic_wasimn@quicinc.com/
-
+Signed-off-by: Wasim Nazir <quic_wasimn@quicinc.com>
 ---
-
-Wasim Nazir (8):
-  dt-bindings: arm: qcom: Remove bindings for qcs9100 ride
-  arm64: dts: qcom: qcs9100: Remove qcs9100 ride board
-  arm64: dts: qcom: sa8775p: Add ethernet card for ride & ride-r3
-  arm64: dts: qcom: sa8775p: Create ride common file
-  dt-bindings: arm: qcom: Add bindings for qam8775p SOM
-  arm64: dts: qcom: sa8775p: Introduce QAM8775p SOM
-  dt-bindings: arm: qcom: Add bindings for QCS9100M SOM
-  arm64: dts: qcom: qcs9100: Introduce QCS9100M SOM
-
- .../devicetree/bindings/arm/qcom.yaml         |   3 +-
- arch/arm64/boot/dts/qcom/Makefile             |   1 -
- arch/arm64/boot/dts/qcom/qam8775p-som.dtsi    |   9 +
- arch/arm64/boot/dts/qcom/qcs9100-ride-r3.dts  |  10 +-
- arch/arm64/boot/dts/qcom/qcs9100-ride.dts     |  11 -
- arch/arm64/boot/dts/qcom/qcs9100-som.dtsi     |   9 +
- ...75p-ride.dtsi => sa8775p-ride-common.dtsi} | 169 +--------------
  .../qcom/sa8775p-ride-ethernet-88ea1512.dtsi  | 205 ++++++++++++++++++
  .../qcom/sa8775p-ride-ethernet-aqr115c.dtsi   | 205 ++++++++++++++++++
- arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dts  |  42 +---
- arch/arm64/boot/dts/qcom/sa8775p-ride.dts     |  42 +---
- 11 files changed, 450 insertions(+), 256 deletions(-)
- create mode 100644 arch/arm64/boot/dts/qcom/qam8775p-som.dtsi
- delete mode 100644 arch/arm64/boot/dts/qcom/qcs9100-ride.dts
- create mode 100644 arch/arm64/boot/dts/qcom/qcs9100-som.dtsi
- rename arch/arm64/boot/dts/qcom/{sa8775p-ride.dtsi => sa8775p-ride-common.dtsi} (86%)
+ arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dts  |  36 +--
+ arch/arm64/boot/dts/qcom/sa8775p-ride.dts     |  36 +--
+ arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi    | 163 --------------
+ 5 files changed, 414 insertions(+), 231 deletions(-)
  create mode 100644 arch/arm64/boot/dts/qcom/sa8775p-ride-ethernet-88ea1512.dtsi
  create mode 100644 arch/arm64/boot/dts/qcom/sa8775p-ride-ethernet-aqr115c.dtsi
 
+diff --git a/arch/arm64/boot/dts/qcom/sa8775p-ride-ethernet-88ea1512.dtsi b/arch/arm64/boot/dts/qcom/sa8775p-ride-ethernet-88ea1512.dtsi
+new file mode 100644
+index 000000000000..28102b9a7dd5
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/sa8775p-ride-ethernet-88ea1512.dtsi
+@@ -0,0 +1,205 @@
++// SPDX-License-Identifier: BSD-3-Clause
++/*
++ * Copyright (c) 2025, Qualcomm Innovation Center, Inc. All rights reserved.
++ */
++
++/*
++ * Ethernet card for sa8775p based ride boards.
++ * It supports 2x 1G - SGMII (Marvell 88EA1512-B2) phy for Main domain
++ */
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++
++/ {
++	aliases {
++		ethernet0 = &ethernet0;
++		ethernet1 = &ethernet1;
++	};
++};
++
++&tlmm {
++	ethernet0_default: ethernet0-default-state {
++		ethernet0_mdc: ethernet0-mdc-pins {
++			pins = "gpio8";
++			function = "emac0_mdc";
++			drive-strength = <16>;
++			bias-pull-up;
++		};
++
++		ethernet0_mdio: ethernet0-mdio-pins {
++			pins = "gpio9";
++			function = "emac0_mdio";
++			drive-strength = <16>;
++			bias-pull-up;
++		};
++	};
++};
++
++&ethernet0 {
++	phy-handle = <&sgmii_phy0>;
++	phy-mode = "sgmii";
++
++	pinctrl-0 = <&ethernet0_default>;
++	pinctrl-names = "default";
++
++	snps,mtl-rx-config = <&mtl_rx_setup>;
++	snps,mtl-tx-config = <&mtl_tx_setup>;
++	snps,ps-speed = <1000>;
++
++	status = "okay";
++
++	mdio {
++		compatible = "snps,dwmac-mdio";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		sgmii_phy0: phy@8 {
++			compatible = "ethernet-phy-id0141.0dd4";
++			reg = <0x8>;
++			device_type = "ethernet-phy";
++			interrupts-extended = <&tlmm 7 IRQ_TYPE_EDGE_FALLING>;
++			reset-gpios = <&pmm8654au_2_gpios 8 GPIO_ACTIVE_LOW>;
++			reset-assert-us = <11000>;
++			reset-deassert-us = <70000>;
++		};
++
++		sgmii_phy1: phy@a {
++			compatible = "ethernet-phy-id0141.0dd4";
++			reg = <0xa>;
++			device_type = "ethernet-phy";
++			interrupts-extended = <&tlmm 26 IRQ_TYPE_EDGE_FALLING>;
++			reset-gpios = <&pmm8654au_2_gpios 9 GPIO_ACTIVE_LOW>;
++			reset-assert-us = <11000>;
++			reset-deassert-us = <70000>;
++		};
++	};
++
++	mtl_rx_setup: rx-queues-config {
++		snps,rx-queues-to-use = <4>;
++		snps,rx-sched-sp;
++
++		queue0 {
++			snps,dcb-algorithm;
++			snps,map-to-dma-channel = <0x0>;
++			snps,route-up;
++			snps,priority = <0x1>;
++		};
++
++		queue1 {
++			snps,dcb-algorithm;
++			snps,map-to-dma-channel = <0x1>;
++			snps,route-ptp;
++		};
++
++		queue2 {
++			snps,avb-algorithm;
++			snps,map-to-dma-channel = <0x2>;
++			snps,route-avcp;
++		};
++
++		queue3 {
++			snps,avb-algorithm;
++			snps,map-to-dma-channel = <0x3>;
++			snps,priority = <0xc>;
++		};
++	};
++
++	mtl_tx_setup: tx-queues-config {
++		snps,tx-queues-to-use = <4>;
++
++		queue0 {
++			snps,dcb-algorithm;
++		};
++
++		queue1 {
++			snps,dcb-algorithm;
++		};
++
++		queue2 {
++			snps,avb-algorithm;
++			snps,send_slope = <0x1000>;
++			snps,idle_slope = <0x1000>;
++			snps,high_credit = <0x3e800>;
++			snps,low_credit = <0xffc18000>;
++		};
++
++		queue3 {
++			snps,avb-algorithm;
++			snps,send_slope = <0x1000>;
++			snps,idle_slope = <0x1000>;
++			snps,high_credit = <0x3e800>;
++			snps,low_credit = <0xffc18000>;
++		};
++	};
++};
++
++&ethernet1 {
++	phy-handle = <&sgmii_phy1>;
++	phy-mode = "sgmii";
++
++	snps,mtl-rx-config = <&mtl_rx_setup1>;
++	snps,mtl-tx-config = <&mtl_tx_setup1>;
++	snps,ps-speed = <1000>;
++
++	status = "okay";
++
++	mtl_rx_setup1: rx-queues-config {
++		snps,rx-queues-to-use = <4>;
++		snps,rx-sched-sp;
++
++		queue0 {
++			snps,dcb-algorithm;
++			snps,map-to-dma-channel = <0x0>;
++			snps,route-up;
++			snps,priority = <0x1>;
++		};
++
++		queue1 {
++			snps,dcb-algorithm;
++			snps,map-to-dma-channel = <0x1>;
++			snps,route-ptp;
++		};
++
++		queue2 {
++			snps,avb-algorithm;
++			snps,map-to-dma-channel = <0x2>;
++			snps,route-avcp;
++		};
++
++		queue3 {
++			snps,avb-algorithm;
++			snps,map-to-dma-channel = <0x3>;
++			snps,priority = <0xc>;
++		};
++	};
++
++	mtl_tx_setup1: tx-queues-config {
++		snps,tx-queues-to-use = <4>;
++
++		queue0 {
++			snps,dcb-algorithm;
++		};
++
++		queue1 {
++			snps,dcb-algorithm;
++		};
++
++		queue2 {
++			snps,avb-algorithm;
++			snps,send_slope = <0x1000>;
++			snps,idle_slope = <0x1000>;
++			snps,high_credit = <0x3e800>;
++			snps,low_credit = <0xffc18000>;
++		};
++
++		queue3 {
++			snps,avb-algorithm;
++			snps,send_slope = <0x1000>;
++			snps,idle_slope = <0x1000>;
++			snps,high_credit = <0x3e800>;
++			snps,low_credit = <0xffc18000>;
++		};
++	};
++};
++
+diff --git a/arch/arm64/boot/dts/qcom/sa8775p-ride-ethernet-aqr115c.dtsi b/arch/arm64/boot/dts/qcom/sa8775p-ride-ethernet-aqr115c.dtsi
+new file mode 100644
+index 000000000000..98c3368f3ae8
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/sa8775p-ride-ethernet-aqr115c.dtsi
+@@ -0,0 +1,205 @@
++// SPDX-License-Identifier: BSD-3-Clause
++/*
++ * Copyright (c) 2025, Qualcomm Innovation Center, Inc. All rights reserved.
++ */
++
++/*
++ * Ethernet card for sa8775p based ride r3 boards.
++ * It supports 2x 2.5G - HSGMII (Marvell hsgmii) phy for Main domain
++ */
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++
++/ {
++	aliases {
++		ethernet0 = &ethernet0;
++		ethernet1 = &ethernet1;
++	};
++};
++
++&tlmm {
++	ethernet0_default: ethernet0-default-state {
++		ethernet0_mdc: ethernet0-mdc-pins {
++			pins = "gpio8";
++			function = "emac0_mdc";
++			drive-strength = <16>;
++			bias-pull-up;
++		};
++
++		ethernet0_mdio: ethernet0-mdio-pins {
++			pins = "gpio9";
++			function = "emac0_mdio";
++			drive-strength = <16>;
++			bias-pull-up;
++		};
++	};
++};
++
++&ethernet0 {
++	phy-handle = <&hsgmii_phy0>;
++	phy-mode = "2500base-x";
++
++	pinctrl-0 = <&ethernet0_default>;
++	pinctrl-names = "default";
++
++	snps,mtl-rx-config = <&mtl_rx_setup>;
++	snps,mtl-tx-config = <&mtl_tx_setup>;
++	snps,ps-speed = <1000>;
++
++	status = "okay";
++
++	mdio {
++		compatible = "snps,dwmac-mdio";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		hsgmii_phy0: phy@8 {
++			compatible = "ethernet-phy-id31c3.1c33";
++			reg = <0x8>;
++			device_type = "ethernet-phy";
++			interrupts-extended = <&tlmm 7 IRQ_TYPE_EDGE_FALLING>;
++			reset-gpios = <&pmm8654au_2_gpios 8 GPIO_ACTIVE_LOW>;
++			reset-assert-us = <11000>;
++			reset-deassert-us = <70000>;
++		};
++
++		hsgmii_phy1: phy@0 {
++			compatible = "ethernet-phy-id31c3.1c33";
++			reg = <0x0>;
++			device_type = "ethernet-phy";
++			interrupts-extended = <&tlmm 26 IRQ_TYPE_EDGE_FALLING>;
++			reset-gpios = <&pmm8654au_2_gpios 9 GPIO_ACTIVE_LOW>;
++			reset-assert-us = <11000>;
++			reset-deassert-us = <70000>;
++		};
++	};
++
++	mtl_rx_setup: rx-queues-config {
++		snps,rx-queues-to-use = <4>;
++		snps,rx-sched-sp;
++
++		queue0 {
++			snps,dcb-algorithm;
++			snps,map-to-dma-channel = <0x0>;
++			snps,route-up;
++			snps,priority = <0x1>;
++		};
++
++		queue1 {
++			snps,dcb-algorithm;
++			snps,map-to-dma-channel = <0x1>;
++			snps,route-ptp;
++		};
++
++		queue2 {
++			snps,avb-algorithm;
++			snps,map-to-dma-channel = <0x2>;
++			snps,route-avcp;
++		};
++
++		queue3 {
++			snps,avb-algorithm;
++			snps,map-to-dma-channel = <0x3>;
++			snps,priority = <0xc>;
++		};
++	};
++
++	mtl_tx_setup: tx-queues-config {
++		snps,tx-queues-to-use = <4>;
++
++		queue0 {
++			snps,dcb-algorithm;
++		};
++
++		queue1 {
++			snps,dcb-algorithm;
++		};
++
++		queue2 {
++			snps,avb-algorithm;
++			snps,send_slope = <0x1000>;
++			snps,idle_slope = <0x1000>;
++			snps,high_credit = <0x3e800>;
++			snps,low_credit = <0xffc18000>;
++		};
++
++		queue3 {
++			snps,avb-algorithm;
++			snps,send_slope = <0x1000>;
++			snps,idle_slope = <0x1000>;
++			snps,high_credit = <0x3e800>;
++			snps,low_credit = <0xffc18000>;
++		};
++	};
++};
++
++&ethernet1 {
++	phy-handle = <&hsgmii_phy1>;
++	phy-mode = "2500base-x";
++
++	snps,mtl-rx-config = <&mtl_rx_setup1>;
++	snps,mtl-tx-config = <&mtl_tx_setup1>;
++	snps,ps-speed = <1000>;
++
++	status = "okay";
++
++	mtl_rx_setup1: rx-queues-config {
++		snps,rx-queues-to-use = <4>;
++		snps,rx-sched-sp;
++
++		queue0 {
++			snps,dcb-algorithm;
++			snps,map-to-dma-channel = <0x0>;
++			snps,route-up;
++			snps,priority = <0x1>;
++		};
++
++		queue1 {
++			snps,dcb-algorithm;
++			snps,map-to-dma-channel = <0x1>;
++			snps,route-ptp;
++		};
++
++		queue2 {
++			snps,avb-algorithm;
++			snps,map-to-dma-channel = <0x2>;
++			snps,route-avcp;
++		};
++
++		queue3 {
++			snps,avb-algorithm;
++			snps,map-to-dma-channel = <0x3>;
++			snps,priority = <0xc>;
++		};
++	};
++
++	mtl_tx_setup1: tx-queues-config {
++		snps,tx-queues-to-use = <4>;
++
++		queue0 {
++			snps,dcb-algorithm;
++		};
++
++		queue1 {
++			snps,dcb-algorithm;
++		};
++
++		queue2 {
++			snps,avb-algorithm;
++			snps,send_slope = <0x1000>;
++			snps,idle_slope = <0x1000>;
++			snps,high_credit = <0x3e800>;
++			snps,low_credit = <0xffc18000>;
++		};
++
++		queue3 {
++			snps,avb-algorithm;
++			snps,send_slope = <0x1000>;
++			snps,idle_slope = <0x1000>;
++			snps,high_credit = <0x3e800>;
++			snps,low_credit = <0xffc18000>;
++		};
++	};
++};
++
+diff --git a/arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dts b/arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dts
+index ae065ae92478..3e2aa34763ee 100644
+--- a/arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dts
++++ b/arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dts
+@@ -1,47 +1,15 @@
+ // SPDX-License-Identifier: BSD-3-Clause
+ /*
+  * Copyright (c) 2023, Linaro Limited
++ * Copyright (c) 2025, Qualcomm Innovation Center, Inc. All rights reserved.
+  */
 
-base-commit: 33035b665157558254b3c21c3f049fd728e72368
+ /dts-v1/;
+
+ #include "sa8775p-ride.dtsi"
++#include "sa8775p-ride-ethernet-aqr115c.dtsi"
+
+ / {
+ 	model = "Qualcomm SA8775P Ride Rev3";
+ 	compatible = "qcom,sa8775p-ride-r3", "qcom,sa8775p";
+ };
+-
+-&ethernet0 {
+-	phy-mode = "2500base-x";
+-};
+-
+-&ethernet1 {
+-	phy-mode = "2500base-x";
+-};
+-
+-&mdio {
+-	compatible = "snps,dwmac-mdio";
+-	#address-cells = <1>;
+-	#size-cells = <0>;
+-
+-	sgmii_phy0: phy@8 {
+-		compatible = "ethernet-phy-id31c3.1c33";
+-		reg = <0x8>;
+-		device_type = "ethernet-phy";
+-		interrupts-extended = <&tlmm 7 IRQ_TYPE_EDGE_FALLING>;
+-		reset-gpios = <&pmm8654au_2_gpios 8 GPIO_ACTIVE_LOW>;
+-		reset-assert-us = <11000>;
+-		reset-deassert-us = <70000>;
+-	};
+-
+-	sgmii_phy1: phy@0 {
+-		compatible = "ethernet-phy-id31c3.1c33";
+-		reg = <0x0>;
+-		device_type = "ethernet-phy";
+-		interrupts-extended = <&tlmm 26 IRQ_TYPE_EDGE_FALLING>;
+-		reset-gpios = <&pmm8654au_2_gpios 9 GPIO_ACTIVE_LOW>;
+-		reset-assert-us = <11000>;
+-		reset-deassert-us = <70000>;
+-	};
+-};
+diff --git a/arch/arm64/boot/dts/qcom/sa8775p-ride.dts b/arch/arm64/boot/dts/qcom/sa8775p-ride.dts
+index 2e87fd760dbd..4e77178cf66b 100644
+--- a/arch/arm64/boot/dts/qcom/sa8775p-ride.dts
++++ b/arch/arm64/boot/dts/qcom/sa8775p-ride.dts
+@@ -1,47 +1,15 @@
+ // SPDX-License-Identifier: BSD-3-Clause
+ /*
+  * Copyright (c) 2023, Linaro Limited
++ * Copyright (c) 2025, Qualcomm Innovation Center, Inc. All rights reserved.
+  */
+
+ /dts-v1/;
+
+ #include "sa8775p-ride.dtsi"
++#include "sa8775p-ride-ethernet-88ea1512.dtsi"
+
+ / {
+ 	model = "Qualcomm SA8775P Ride";
+ 	compatible = "qcom,sa8775p-ride", "qcom,sa8775p";
+ };
+-
+-&ethernet0 {
+-	phy-mode = "sgmii";
+-};
+-
+-&ethernet1 {
+-	phy-mode = "sgmii";
+-};
+-
+-&mdio {
+-	compatible = "snps,dwmac-mdio";
+-	#address-cells = <1>;
+-	#size-cells = <0>;
+-
+-	sgmii_phy0: phy@8 {
+-		compatible = "ethernet-phy-id0141.0dd4";
+-		reg = <0x8>;
+-		device_type = "ethernet-phy";
+-		interrupts-extended = <&tlmm 7 IRQ_TYPE_EDGE_FALLING>;
+-		reset-gpios = <&pmm8654au_2_gpios 8 GPIO_ACTIVE_LOW>;
+-		reset-assert-us = <11000>;
+-		reset-deassert-us = <70000>;
+-	};
+-
+-	sgmii_phy1: phy@a {
+-		compatible = "ethernet-phy-id0141.0dd4";
+-		reg = <0xa>;
+-		device_type = "ethernet-phy";
+-		interrupts-extended = <&tlmm 26 IRQ_TYPE_EDGE_FALLING>;
+-		reset-gpios = <&pmm8654au_2_gpios 9 GPIO_ACTIVE_LOW>;
+-		reset-assert-us = <11000>;
+-		reset-deassert-us = <70000>;
+-	};
+-};
+diff --git a/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi b/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
+index 967913169539..04f02572a96b 100644
+--- a/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
++++ b/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
+@@ -13,8 +13,6 @@
+
+ / {
+ 	aliases {
+-		ethernet0 = &ethernet0;
+-		ethernet1 = &ethernet1;
+ 		i2c11 = &i2c11;
+ 		i2c18 = &i2c18;
+ 		serial0 = &uart10;
+@@ -361,151 +359,6 @@ vreg_l8e: ldo8 {
+ 	};
+ };
+
+-&ethernet0 {
+-	phy-handle = <&sgmii_phy0>;
+-
+-	pinctrl-0 = <&ethernet0_default>;
+-	pinctrl-names = "default";
+-
+-	snps,mtl-rx-config = <&mtl_rx_setup>;
+-	snps,mtl-tx-config = <&mtl_tx_setup>;
+-	snps,ps-speed = <1000>;
+-
+-	status = "okay";
+-
+-	mdio: mdio {
+-		compatible = "snps,dwmac-mdio";
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-	};
+-
+-	mtl_rx_setup: rx-queues-config {
+-		snps,rx-queues-to-use = <4>;
+-		snps,rx-sched-sp;
+-
+-		queue0 {
+-			snps,dcb-algorithm;
+-			snps,map-to-dma-channel = <0x0>;
+-			snps,route-up;
+-			snps,priority = <0x1>;
+-		};
+-
+-		queue1 {
+-			snps,dcb-algorithm;
+-			snps,map-to-dma-channel = <0x1>;
+-			snps,route-ptp;
+-		};
+-
+-		queue2 {
+-			snps,avb-algorithm;
+-			snps,map-to-dma-channel = <0x2>;
+-			snps,route-avcp;
+-		};
+-
+-		queue3 {
+-			snps,avb-algorithm;
+-			snps,map-to-dma-channel = <0x3>;
+-			snps,priority = <0xc>;
+-		};
+-	};
+-
+-	mtl_tx_setup: tx-queues-config {
+-		snps,tx-queues-to-use = <4>;
+-
+-		queue0 {
+-			snps,dcb-algorithm;
+-		};
+-
+-		queue1 {
+-			snps,dcb-algorithm;
+-		};
+-
+-		queue2 {
+-			snps,avb-algorithm;
+-			snps,send_slope = <0x1000>;
+-			snps,idle_slope = <0x1000>;
+-			snps,high_credit = <0x3e800>;
+-			snps,low_credit = <0xffc18000>;
+-		};
+-
+-		queue3 {
+-			snps,avb-algorithm;
+-			snps,send_slope = <0x1000>;
+-			snps,idle_slope = <0x1000>;
+-			snps,high_credit = <0x3e800>;
+-			snps,low_credit = <0xffc18000>;
+-		};
+-	};
+-};
+-
+-&ethernet1 {
+-	phy-handle = <&sgmii_phy1>;
+-
+-	snps,mtl-rx-config = <&mtl_rx_setup1>;
+-	snps,mtl-tx-config = <&mtl_tx_setup1>;
+-	snps,ps-speed = <1000>;
+-
+-	status = "okay";
+-
+-	mtl_rx_setup1: rx-queues-config {
+-		snps,rx-queues-to-use = <4>;
+-		snps,rx-sched-sp;
+-
+-		queue0 {
+-			snps,dcb-algorithm;
+-			snps,map-to-dma-channel = <0x0>;
+-			snps,route-up;
+-			snps,priority = <0x1>;
+-		};
+-
+-		queue1 {
+-			snps,dcb-algorithm;
+-			snps,map-to-dma-channel = <0x1>;
+-			snps,route-ptp;
+-		};
+-
+-		queue2 {
+-			snps,avb-algorithm;
+-			snps,map-to-dma-channel = <0x2>;
+-			snps,route-avcp;
+-		};
+-
+-		queue3 {
+-			snps,avb-algorithm;
+-			snps,map-to-dma-channel = <0x3>;
+-			snps,priority = <0xc>;
+-		};
+-	};
+-
+-	mtl_tx_setup1: tx-queues-config {
+-		snps,tx-queues-to-use = <4>;
+-
+-		queue0 {
+-			snps,dcb-algorithm;
+-		};
+-
+-		queue1 {
+-			snps,dcb-algorithm;
+-		};
+-
+-		queue2 {
+-			snps,avb-algorithm;
+-			snps,send_slope = <0x1000>;
+-			snps,idle_slope = <0x1000>;
+-			snps,high_credit = <0x3e800>;
+-			snps,low_credit = <0xffc18000>;
+-		};
+-
+-		queue3 {
+-			snps,avb-algorithm;
+-			snps,send_slope = <0x1000>;
+-			snps,idle_slope = <0x1000>;
+-			snps,high_credit = <0x3e800>;
+-			snps,low_credit = <0xffc18000>;
+-		};
+-	};
+-};
+-
+ &i2c11 {
+ 	clock-frequency = <400000>;
+ 	pinctrl-0 = <&qup_i2c11_default>;
+@@ -696,22 +549,6 @@ dp1_hot_plug_det: dp1-hot-plug-det-state {
+ 		bias-disable;
+ 	};
+
+-	ethernet0_default: ethernet0-default-state {
+-		ethernet0_mdc: ethernet0-mdc-pins {
+-			pins = "gpio8";
+-			function = "emac0_mdc";
+-			drive-strength = <16>;
+-			bias-pull-up;
+-		};
+-
+-		ethernet0_mdio: ethernet0-mdio-pins {
+-			pins = "gpio9";
+-			function = "emac0_mdio";
+-			drive-strength = <16>;
+-			bias-pull-up;
+-		};
+-	};
+-
+ 	qup_uart10_default: qup-uart10-state {
+ 		pins = "gpio46", "gpio47";
+ 		function = "qup1_se3";
 --
 2.49.0
 
