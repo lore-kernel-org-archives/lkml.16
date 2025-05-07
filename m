@@ -1,183 +1,124 @@
-Received: from smtp-42af.mail.infomaniak.ch (smtp-42af.mail.infomaniak.ch [84.16.66.175])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BE75233145
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 11:57:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31E41233145;
+	Wed,  7 May 2025 11:59:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746619040; cv=none; b=VlplJufh6+/xlc3GeACwwcVAjUxLyG+pLXh4lygE8TrnSrl+pRMUGS5nejYKEWOMKmtApv1zlOJG+4S8Ue21cqB6fNeKn4Zf3JOMMHwrTdnCTjUh8PPffpItUUvhy+kPMaWw6bO+FbEpEhn/WcwczdHkbn3UPO36nR9hdjCn2jU=
+	t=1746619164; cv=none; b=cYEK9qEn+1cqpnRcsXjiL3lfSOQAy27TpX53mlHwkVR1yJZHBCa0+TzxoCGPvgUNTtcX+ef0xP96+V5lFJ76a7T+2m2Q4RSCxdeRFClDIySkYx1RowZVEmJ49e/zbSVKM8kAGzGH61HJsF4n0iPr/q5JHEyoJursHptRzZnjNTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746619040; c=relaxed/simple;
-	bh=kIPJFzOybRVKUZttYLjyp0h855fjPHYRSmr7h4xhlBc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g8Zm0MTtunyKUZJdz/Mdex0TUR2iKqkI6Fa6dZeoOb6jdu+m7rlzonUVgu53+YGAJ2YpUEJ1Ho/H/pS1CI44EfVE+vTvFa+doef3qw8DEkISCUpWp88RIwCieWLs2nO8O7m1YMbCW4vmUe2LfeKZ5Vyx5EGIh0fI0kdBzTBzLpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=GM5+LqYg; arc=none smtp.client-ip=84.16.66.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	s=arc-20240116; t=1746619164; c=relaxed/simple;
+	bh=rMNcVWyizpvr9pCeVtXrkYPIJwohU5epjZ6h8slHQlg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fsYYnyyOsBx7sFHw0hNnIxiGyaj4rz0xZJ2Ymcq1u7Oe6RfLtGGF6y/2BAHAFcVLJsL+gzy7dMrLXnZLjNAn+q0cKDRWmZB6cW5ks689a/gujgqJ9vlDVCfQdzjrSLcem1xdTM+STwqbqF0iGeyyrXdbhDexJK5OilxcMVBr7NU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=plzHwW51; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="GM5+LqYg"
-Received: from smtp-4-0000.mail.infomaniak.ch (unknown [IPv6:2001:1600:7:10::a6b])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4Zstry50t6zt16;
-	Wed,  7 May 2025 13:51:30 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1746618690;
-	bh=ukRcsiWioIJpQnZONA7OOVHLy1rF/BILBsY01ynF49o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GM5+LqYgqtdWSoNl6eaQIrraLqbPVitAXzcP6S0KIDJ7OQKcfOHf3zC7G/3SwUJN3
-	 7YDEkyhiS3lDk3BxovPVOnTNfOcMkWX9Qzdeef5kNZ8gCB/YDpPzq+HJaL7m/9YbT9
-	 fCrJQlqK0c83g4qp/xga2NlY/X5iszJ0UFyvvCqg=
-Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4Zstrx6DJNzTf6;
-	Wed,  7 May 2025 13:51:29 +0200 (CEST)
-Date: Wed, 7 May 2025 13:51:28 +0200
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Kuniyuki Iwashima <kuniyu@amazon.com>
-Cc: brauner@kernel.org, alexander@mihalicyn.com, bluca@debian.org, 
-	daan.j.demeyer@gmail.com, davem@davemloft.net, david@readahead.eu, edumazet@google.com, 
-	horms@kernel.org, jack@suse.cz, jannh@google.com, kuba@kernel.org, 
-	lennart@poettering.net, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	me@yhndnzj.com, netdev@vger.kernel.org, oleg@redhat.com, pabeni@redhat.com, 
-	viro@zeniv.linux.org.uk, zbyszek@in.waw.pl, linux-security-module@vger.kernel.org
-Subject: Re: [PATCH RFC v3 08/10] net, pidfs, coredump: only allow
- coredumping tasks to connect to coredump socket
-Message-ID: <20250507.ohsaiQuoh3uo@digikod.net>
-References: <20250506-zugabe-bezog-f688fbec72d3@brauner>
- <20250506191817.14620-1-kuniyu@amazon.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="plzHwW51"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93638C4CEE7;
+	Wed,  7 May 2025 11:59:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746619163;
+	bh=rMNcVWyizpvr9pCeVtXrkYPIJwohU5epjZ6h8slHQlg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=plzHwW510uASisGKfCbRnZKXKusT8SHLLGS9YeXw4M3VTEhaxn3RiGs40p63OJK84
+	 iQ3uB9M5zq80QtE7cOHFqKSnvY2GWHikroKbWZF4yb3KhdnbbzQY1YN+WP/uc1mMyl
+	 HgnWQbo9Zf1BLue8P8dSMjg/HnX88Kmg42EVZmyGNPCAstWt4/Ny22HsTID3qgqYmq
+	 FIzeTFc8gSwiwA9R8mB/P5/uAhVXBw9yKKLo/JS6Q25d3Jwe0gfyEO72PxEKgTaTXD
+	 CKGIjKTbv6hk7TwA8ENgizR4fO7HX37QjJYmeChZw02uKwZh6wB+EvcRk1C/a0eOb8
+	 Z20Z92MXpiEJQ==
+Received: by mail-ot1-f42.google.com with SMTP id 46e09a7af769-72ec58e45baso4398994a34.2;
+        Wed, 07 May 2025 04:59:23 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUSKYDr//huQ+hh3EmgrT8FRt7pztaul/i3B5xmgKti+wun1pwMVloi0PtlXApwuqvV2UR9b7OOq6oFo0cU@vger.kernel.org, AJvYcCV9htlBgbC1iqptGYzm4R5zJ5XPC1N7jQFdP6U6ADqJfhPLqKhrBHmGhh/lgj6r5ny4ydDVoTAgqAb9@vger.kernel.org, AJvYcCWueQMzv44ayK91Jc+xMjNLf1kFyYbP3KXSDY//E+SfV7Lox3knIk09OTeDROeP19qfE6Epikyk@vger.kernel.org
+X-Gm-Message-State: AOJu0YzEziWclOkdqvJwOOB2ppCDPcZUcLZmU8gMvv/hpUaaFKdPSATJ
+	A8m7UrQK1UJgwPItk0cejuJ1lRTS/YS7J3jYPA9C8UvhSJ8McrOygu9/LAhfIhcQUcelj7qWNcQ
+	z6cEEN9/u9TWsiuPmpLIUSQKNFc8=
+X-Google-Smtp-Source: AGHT+IFQ0rnuQoFb844+kgJStSDvA/qPO+oOSqmCxZhuZGNi8wWvpNim0B2eq1+jsmFt7rTsMyHN73YANujP8kYHYWs=
+X-Received: by 2002:a05:6870:46aa:b0:29e:65ed:5c70 with SMTP id
+ 586e51a60fabf-2db5c08281bmr1892495fac.30.1746619162927; Wed, 07 May 2025
+ 04:59:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250506191817.14620-1-kuniyu@amazon.com>
-X-Infomaniak-Routing: alpha
+References: <20250506-draco-taped-15f475cd@mheyne-amazon> <20250506-shapeless-merciful-inchworm-7bfdb4@sudeepholla>
+ <35895e57-bbe2-4ff9-b1d4-4b70e28ed8a1@arm.com> <20250507-argue-rant-9f48ba38@mheyne-amazon>
+In-Reply-To: <20250507-argue-rant-9f48ba38@mheyne-amazon>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 7 May 2025 13:59:12 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0gTRcivKKVOx8YhrPyfXJBwL0x+zay9wXrWeod4Lf_Kwg@mail.gmail.com>
+X-Gm-Features: ATxdqUGtNzluXM9CbDzPKfcLxiAeEkWEA0mvdrc4rPN-g20JpiBsi9_eupPU8jU
+Message-ID: <CAJZ5v0gTRcivKKVOx8YhrPyfXJBwL0x+zay9wXrWeod4Lf_Kwg@mail.gmail.com>
+Subject: Re: [PATCH] ACPI/PPTT: fix off-by-one error
+To: "Heyne, Maximilian" <mheyne@amazon.de>
+Cc: Jeremy Linton <jeremy.linton@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, 
+	"stable@vger.kernel.org" <stable@vger.kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
+	Ard Biesheuvel <ardb@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 06, 2025 at 12:18:12PM -0700, Kuniyuki Iwashima wrote:
-> From: Christian Brauner <brauner@kernel.org>
-> Date: Tue, 6 May 2025 10:06:27 +0200
-> > On Mon, May 05, 2025 at 09:10:28PM +0200, Jann Horn wrote:
-> > > On Mon, May 5, 2025 at 8:41 PM Kuniyuki Iwashima <kuniyu@amazon.com> wrote:
-> > > > From: Christian Brauner <brauner@kernel.org>
-> > > > Date: Mon, 5 May 2025 16:06:40 +0200
-> > > > > On Mon, May 05, 2025 at 03:08:07PM +0200, Jann Horn wrote:
-> > > > > > On Mon, May 5, 2025 at 1:14 PM Christian Brauner <brauner@kernel.org> wrote:
-> > > > > > > Make sure that only tasks that actually coredumped may connect to the
-> > > > > > > coredump socket. This restriction may be loosened later in case
-> > > > > > > userspace processes would like to use it to generate their own
-> > > > > > > coredumps. Though it'd be wiser if userspace just exposed a separate
-> > > > > > > socket for that.
-> > > > > >
-> > > > > > This implementation kinda feels a bit fragile to me... I wonder if we
-> > > > > > could instead have a flag inside the af_unix client socket that says
-> > > > > > "this is a special client socket for coredumping".
-> > > > >
-> > > > > Should be easily doable with a sock_flag().
+On Wed, May 7, 2025 at 1:53=E2=80=AFPM Heyne, Maximilian <mheyne@amazon.de>=
+ wrote:
+>
+> On Tue, May 06, 2025 at 03:11:20PM -0500, Jeremy Linton wrote:
+> > Hi,
+> >
+> > On 5/6/25 8:43 AM, Sudeep Holla wrote:
+> > > On Tue, May 06, 2025 at 01:13:02PM +0000, Heyne, Maximilian wrote:
+> > > > Commit 7ab4f0e37a0f ("ACPI PPTT: Fix coding mistakes in a couple of
+> > > > sizeof() calls") corrects the processer entry size but unmasked a l=
+onger
+> > > > standing bug where the last entry in the structure can get skipped =
+due
+> > > > to an off-by-one mistake if the last entry ends exactly at the end =
+of
+> > > > the ACPI subtable.
 > > > >
-> > > > This restriction should be applied by BPF LSM.
-> > > 
-> > > I think we shouldn't allow random userspace processes to connect to
-> > > the core dump handling service and provide bogus inputs; that
-> > > unnecessarily increases the risk that a crafted coredump can be used
-> > > to exploit a bug in the service. So I think it makes sense to enforce
-> > > this restriction in the kernel.
-> > > 
-> > > My understanding is that BPF LSM creates fairly tight coupling between
-> > > userspace and the kernel implementation, and it is kind of unwieldy
-> > > for userspace. (I imagine the "man 5 core" manpage would get a bit
-> > > longer and describe more kernel implementation detail if you tried to
-> > > show how to write a BPF LSM that is capable of detecting unix domain
-> > > socket connections to a specific address that are not initiated by
-> > > core dumping.) I would like to keep it possible to implement core
-> > > userspace functionality in a best-practice way without needing eBPF.
-> > > 
-> > > > It's hard to loosen such a default restriction as someone might
-> > > > argue that's unexpected and regression.
-> > > 
-> > > If userspace wants to allow other processes to connect to the core
-> > > dumping service, that's easy to implement - userspace can listen on a
-> > > separate address that is not subject to these restrictions.
-> > 
-> > I think Kuniyuki's point is defensible. And I did discuss this with
-> > Lennart when I wrote the patch and he didn't see a point in preventing
-> > other processes from connecting to the core dump socket. He actually
-> > would like this to be possible because there's some userspace programs
-> > out there that generate their own coredumps (Python?) and he wanted them
-> > to use the general coredump socket to send them to.
-> > 
-> > I just found it more elegant to simply guarantee that only connections
-> > are made to that socket come from coredumping tasks.
-> > 
-> > But I should note there are two ways to cleanly handle this in
-> > userspace. I had already mentioned the bpf LSM in the contect of
-> > rate-limiting in an earlier posting:
-> > 
-> > (1) complex:
-> > 
-> >     Use a bpf LSM to intercept the connection request via
-> >     security_unix_stream_connect() in unix_stream_connect().
-> > 
-> >     The bpf program can simply check:
-> > 
-> >     current->signal->core_state
-> > 
-> >     and reject any connection if it isn't set to NULL.
-> > 
-> >     The big downside is that bpf (and security) need to be enabled.
-> >     Neither is guaranteed and there's quite a few users out there that
-> >     don't enable bpf.
+> > >
+> > > Unless the firmware has populated an incorrect value for the header l=
+ength, I
+> > > don't see how this is possible. The table_end should point to the add=
+ress
+> > > immediately following the last byte of the table. None of the headers=
+ are only
+> > > one byte long, so what am I missing that could explain this apparent
+> > > off-by-one issue?.
+> >
+> > More likely its because the sizeof() fix was merged without proper revi=
+ew
+> > and is wrong because the type isn't actually known on the object until =
+the
+> > header is checked.
+>
+> I agree that the type might not be known at this point but the condition
+>
+>         proc_sz =3D sizeof(struct acpi_pptt_processor);
+>           while((unsigned long)entry + proc_sz <=3D table_end)
+>
+> would make sure that there could potentially be a node of type
+> acpi_pptt_processor because there is at least space for it. If the entry
+> can't be of that size because it would go over table_end then it can't
+> be an acpi_pptt_processor.
 
-The kernel should indeed always have a minimal security policy in place,
-LSM can tailored that but we should not assume that a specific LSM with
-a specific policy is enabled/configured on the system.
+I don't follow.
 
-> > 
-> > (2) simple (and supported in this series):
-> > 
-> >     Userspace accepts a connection. It has to get SO_PEERPIDFD anyway.
-> >     It then needs to verify:
-> > 
-> >     struct pidfd_info info = {
-> >             info.mask = PIDFD_INFO_EXIT | PIDFD_INFO_COREDUMP,
-> >     };
-> > 
-> >     ioctl(pidfd, PIDFD_GET_INFO, &info);
-> >     if (!(info.mask & PIDFD_INFO_COREDUMP)) {
-> >             // Can't be from a coredumping task so we can close the
-> > 	    // connection without reading.
-> > 	    close(coredump_client_fd);
-> > 	    return;
-> >     }
-> > 
-> >     /* This has to be set and is only settable by do_coredump(). */
-> >     if (!(info.coredump_mask & PIDFD_COREDUMPED)) {
-> >             // Can't be from a coredumping task so we can close the
-> > 	    // connection without reading.
-> > 	    close(coredump_client_fd);
-> > 	    return;
-> >     }
-> > 
-> >     // Ok, this is a connection from a task that has coredumped, let's
-> >     // handle it.
+If it is an acpi_pptt_processor entry, the original condition would be
+sufficient (assuming the correctness of the table header), wouldn't
+it?
 
-What if the task send a "fake" coredump and just after that really
-coredump?  There could be a race condition on the server side when
-checking the coredump property of this pidfd.
+> Therefore, I don't think the sizeof() fix is that wrong but we just need
+> to adjust the while condition.
 
-Could we add a trusted header to the coredump payload that is always
-written by the kernel?  This would enable to read a trusted flag
-indicating if the following payload is a coredumped generated by the
-kernel or not.
+The sizeof() fix is correct, it makes the code work as designed.
 
-> > 
-> >     The crux is that the series guarantees that by the time the
-> >     connection is made the info whether the task/thread-group did
-> >     coredump is guaranteed to be available via the pidfd.
-> >  
-> > I think if we document that most coredump servers have to do (2) then
-> > this is fine. But I wouldn't mind a nod from Jann on this.
-> 
-> I like this approach (2) allowing users to filter the right client.
-> This way we can extend the application flexibly for another coredump
-> service.
+> Alternatively, we could at least make sure that we can safely access
+> (without crossing table_end) the acpi_subtable_header to check the type.
+
+Yes.
+
+> But the current approach seems cleaner to me.
+
+Why do you think so?
