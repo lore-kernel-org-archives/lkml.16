@@ -1,155 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A4EF204C3B;
-	Wed,  7 May 2025 13:28:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA13A209F2E
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 13:28:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746624493; cv=none; b=j/zTcz22Cm1ru2s3vl0dj/vflN3teljDuP9c9vqVU0y55hpO3s0eq5PDOYayZz8aqqGj+Je6RVZdRuwxPih4kkztMCI13otvrcbANizWwneuc+4CClD9M9z6feGtAwGmtSumOuDhgbQtWEkgI/we4lccPK2Y1sEySJ1kTjd7nBw=
+	t=1746624512; cv=none; b=HzKkQO4LnQrzIRXkoRdvet304adSvXhY4F4k7IkKwEGZS7cgD+VcheFB1qLrtelYUqs2crUa0vERzh9WlwxCFcYVJuXgndiL954mYHv7orXKJHqleZL4WjQJO323lT90+We9Q2NaXmo4XbTUZVCEh0PSWRyj2vMoAVnuwXR9r+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746624493; c=relaxed/simple;
-	bh=u7t3YwRqCubqZJgkioqTSzOU6Zs4YmB1mlSyEw9Mr7o=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=XeZ6Mmc7KmeCu14H31H6MGc2WCV2xyEUpiKb3VUp/sBtJAFj/y2+LwBtfQsnWYe7p6I8VENTqZm9km40BREDG122jsbIs3q2O+vhDaQBLJIFu5VHs77xad+WnySY3wetTRIvh1xuzZD9vjG2CgnH5pVbkygP2/+Leu2FzT+TLAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C+oIRqXf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746624512; c=relaxed/simple;
+	bh=SKO83lrLPvLSrF0yvTjpxd10hpm9cNWWzdkME6QznkM=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=KoCkJLWZw/HTNPWzUSzj0/jrMmkBLrSI0+ymXCq4kxOyBzVfWNGmBiGGqyu2atW+z1Hgu4byWXvpYmxp9uMHXvrjiDJDVHslwN8oeugp/G8oOuLrQB6nBOFNCAvJC4dvMUb129ZrAHijdj/sIw+aXFlMESFcZAxn4LIURuAv5Kk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=qSqkbLQX; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C+oIRqXf"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 98745C4CEE7;
-	Wed,  7 May 2025 13:28:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746624492;
-	bh=u7t3YwRqCubqZJgkioqTSzOU6Zs4YmB1mlSyEw9Mr7o=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=C+oIRqXf2RPVTUUgOoPZHXrz6HD7qSjBgFaXlGKlYoww0svSFtn3CK95j8Zgma7tY
-	 K2bR3kc7c4DUUW8NF/bEo5MjO2HZTBZpAYs5PCTofTZqve+afzr4YWLBv3WQWja4zr
-	 Zlzx2OdnlI3x3VU/g1OheR7+TGWljTYqp1F0OUPMJTnEdg4l9/bQWSrmqcX+V99dA/
-	 8Q2BwAp1QKFSbr48KBfTmKIrX1El+ILYHEA4ptpmIJJwcxBF9Hz6Gl9/RYjyMWnM14
-	 99rBuFNOYQEftkhLME237UwkGPx4oEFQ1h07BZ0mlYbFI2Rhmn/cs6gejF1cF8J/tL
-	 4i+ufbO71RyBw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83339C3ABC0;
-	Wed,  7 May 2025 13:28:12 +0000 (UTC)
-From: Ignacio Moreno Gonzalez via B4 Relay <devnull+Ignacio.MorenoGonzalez.kuka.com@kernel.org>
-Date: Wed, 07 May 2025 15:28:06 +0200
-Subject: [PATCH v5] mm: mmap: map MAP_STACK to VM_NOHUGEPAGE only if THP is
- enabled
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="qSqkbLQX"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43ce70f9afbso61364525e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 06:28:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746624508; x=1747229308; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=/xS6ETeJO5OOeAvcPqqiLsohwdJ2YixHGZA6tkjlU0Q=;
+        b=qSqkbLQXOLHXRxpof2oo2bp2TThJJlzrPTOJSKiru91QD5kl93KaW6azcZZ46jEx0e
+         5BQD7GNHeeDt09Gabgv94zwyZOPWT1JyYA1IVD6c1cHfaHw7XNqZSE1MN9lYSUlftBzT
+         5TKd3G+bLZEi+DFazrNn697sbxynlTEfuLVeZENqflsLU8IgQCQqZmR1W+j9Z7bdD2Cd
+         TcOvJ0Qp0bbggwa/Zd0GMb2dk5PfVpCwfo6Bov7/evkzmtKSXe3SGDCRFOoS+TySgx25
+         5ThKqs7tjMRH6WMIURaMKb+xiTInUJdGWmS084Mx9tz0XBQWQ0IkevIEoe84oM+W9Pnh
+         pgGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746624508; x=1747229308;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/xS6ETeJO5OOeAvcPqqiLsohwdJ2YixHGZA6tkjlU0Q=;
+        b=I7rYn7XMTTQnybIgAlmV2gEgea+eHfhJ2iB9vjJabXthVjZJW1VZp0WellRbZ1763k
+         +6AxFOE5HBqFPHxBBBbHToN/faWs1OV52MyFI1mTG0Kvx87Mors/nUx8UUFis4JixULv
+         jqcq9ulN6++yxE6tWYs46308zgfDgh+FtNCjjSB61tUQBCbJOSgGZ4p0pVxN64sVBEt9
+         A97B3OFJsPNHNtcQbl+xwfjDvLKQXO11GBnWE8ebgJlkajAhKY5mqUjRL+dydt2ZEVuX
+         7ambwSrjSFAhiQBcG/69hHi1o8FDPrDyIhnbOZcnpJW6/He0xToyA8HmOnlgO8It9IAZ
+         obrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW4rsZtTXXzggBvtTnl3BPSj5sdLpYm0luRRC8TmwHWlkkdsv9jhEV3HseXtrcJ9GrdR7chUqfHnYGtkT4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNiUBdJWdhdNyQ+RxrN2MPtPIm12d7SJFLnR1aMC7KGqkUQ8Nt
+	yMxO6jiTOaNc5RqDXPwYcC6S3MX5rwd04QS8pd6VJoqdZQiMqme0LYDOsJNNqmI=
+X-Gm-Gg: ASbGncvVKiXsxJ64yzPFj1jUp8FTb/QkjbeU8HI4gAn/fL3nv4HyHKKdw48SptFMFYh
+	+kqpGUKkcYKv/yMbAKc1Cu5iMbjJmVNUSASUkJi5nGgI69xEkXzXcx9NBrUE3fwhz+Etfdmn+Xk
+	uMeRg3zl2eqesC5kqRQWpLbw21BkFlH5UAx7lnE6/Mk1ZDa5LOILNj3OYYol2IVACRkYuGtf+3J
+	MXO1bOeeKlQu5r+4Dv5r8h5OjUYGEmC4KpTFbL7ILLHTBO5U1xWDaobbu9t/8GrpeqgpOquaLRn
+	egsqWBjCHFXHb0Qn/B/jZ1PBJqN7a8Qsv4OkoL6JwdDOEHLqWAIW3q+rRdiZDFn7lvvJYXXbHrZ
+	uayqaCrcii301jimMQW5uvC0=
+X-Google-Smtp-Source: AGHT+IF9bN7HF5C+wDfG9X0dS/E0vyZNUnflXtn/dJ+qoLVi6CW6CxKO2dfUEyTuyw8A+h4DJSAqyA==
+X-Received: by 2002:a05:600c:1ca3:b0:43d:2230:300f with SMTP id 5b1f17b1804b1-441d44734e6mr28815835e9.0.1746624507957;
+        Wed, 07 May 2025 06:28:27 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:e50:3860:705c:8900:5dbf:b4ab? ([2a01:e0a:e50:3860:705c:8900:5dbf:b4ab])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd33103dsm1051115e9.10.2025.05.07.06.28.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 07 May 2025 06:28:27 -0700 (PDT)
+Message-ID: <b1949ec7-a0b3-4c4c-a439-93afced7bb0c@baylibre.com>
+Date: Wed, 7 May 2025 15:28:26 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250507-map-map_stack-to-vm_nohugepage-only-if-thp-is-enabled-v5-1-c6c38cfefd6e@kuka.com>
-X-B4-Tracking: v=1; b=H4sIAOVfG2gC/63PzWrDMAwH8FcpPk/Dn3XS095jjOLZcmPS2CFOz
- UrJu8/pLqHHMIwOfyH0kx8k4xQwk9PhQSYsIYcUa1BvB2I7Ey8IwdVMOOWKSt7AYMa1znk2toc
- 5QRnOMXW3C46mTqd4vUPwMHcjhAwYzfcVHViU1DCHtFWO1N3jhD78PN3Pr5q7kOc03Z9nFLZ2/
- 0RF+U6xMKiPCWuPQlqn2Ed/6827TQNZwcK3yHEvwoGCZ8xTq1vZaP6CiC2i9yKi/qShLW+9oM5
- r/4LIf0FkRWQjtG0Ft9yIDbIsyy/9iVPGKAIAAA==
-X-Change-ID: 20250428-map-map_stack-to-vm_nohugepage-only-if-thp-is-enabled-ce40a1de095d
-To: lorenzo.stoakes@oracle.com
-Cc: Liam.Howlett@oracle.com, akpm@linux-foundation.org, 
- yang@os.amperecomputing.com, david@redhat.com, linux-mm@kvack.org, 
- linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
- Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746624491; l=4009;
- i=Ignacio.MorenoGonzalez@kuka.com; s=20220915; h=from:subject:message-id;
- bh=KRtim3yfth2l4PHic4jekA4cmgo5wuFooLe0ZbE9+RI=;
- b=FiOh6lew9Hv1XHsuhoxjwZdijxRDLbIWX9cpBYSWYVXzDW5CLDt21UWHU0wikslAeX5CwFivm
- fDJFj/UjWKTAkzDTmzlAaAYzx5fSBK77NOPaTPE0rCUTw3XUJo1XSkF
-X-Developer-Key: i=Ignacio.MorenoGonzalez@kuka.com; a=ed25519;
- pk=j7nClQnc5Q1IDuT4eS/rYkcLHXzxszu2jziMcJaFdBQ=
-X-Endpoint-Received: by B4 Relay for
- Ignacio.MorenoGonzalez@kuka.com/20220915 with auth_id=391
-X-Original-From: Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>
-Reply-To: Ignacio.MorenoGonzalez@kuka.com
+User-Agent: Mozilla Thunderbird
+From: Guillaume La Roque <glaroque@baylibre.com>
+Subject: Re: [PATCH] arm64: Kconfig.platforms: remove useless select for
+ ARCH_K3
+To: Nishanth Menon <nm@ti.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Andrew Davis <afd@ti.com>, vishalm@ti.com, linux-omap@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250504-kconfig-v1-1-ab0216f4fa98@baylibre.com>
+ <20250505123615.yqzdv7dlel7kyojf@degrease>
+ <fa33b7d6-8e28-40bc-9219-41dab643e88f@baylibre.com>
+Content-Language: en-US, fr
+In-Reply-To: <fa33b7d6-8e28-40bc-9219-41dab643e88f@baylibre.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-From: Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>
+Hi Nishanth,
 
-commit c4608d1bf7c6 ("mm: mmap: map MAP_STACK to VM_NOHUGEPAGE") maps
-the mmap option MAP_STACK to VM_NOHUGEPAGE. This is also done if
-CONFIG_TRANSPARENT_HUGEPAGE is not defined. But in that case, the
-VM_NOHUGEPAGE does not make sense.
+if i remove MAILBOX it's  enabled by some  non TI drivers and/or 
+ARCH_XXX which have it in deps so all TI drivers are still enabled 
+properly but not sure it's safe.
+and PM_GENERIC_DOMAINS look OK to remove it.
 
-I discovered this issue when trying to use the tool CRIU to checkpoint
-and restore a container. Our running kernel is compiled without
-CONFIG_TRANSPARENT_HUGEPAGE. CRIU parses the output of
-/proc/<pid>/smaps and saves the "nh" flag. When trying to restore the
-container, CRIU fails to restore the "nh" mappings, since madvise()
-MADV_NOHUGEPAGE always returns an error because
-CONFIG_TRANSPARENT_HUGEPAGE is not defined.
+if i try a defconfig based on android defconfig (more simple than 
+default defconfig) with only ARCH_K3 enabled i need to set 
+CONFIG_MAILBOX flag to still have same TI drivers enabled.
+let me know what you want to do.
 
-Fixes: c4608d1bf7c6 ("mm: mmap: map MAP_STACK to VM_NOHUGEPAGE")
-Cc: stable@vger.kernel.org
-Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Reviewed-by: Yang Shi <yang@os.amperecomputing.com>
-Reviewed-by: Liam R. Howlett <Liam.Howlett@oracle.com>
-Signed-off-by: Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>
----
-I discovered this issue when trying to use the tool CRIU to checkpoint
-and restore a container. Our running kernel is compiled without
-CONFIG_TRANSPARENT_HUGEPAGE. CRIU parses the output of /proc/<pid>/smaps
-and saves the "nh" flag. When trying to restore the container, CRIU
-fails to restore the "nh" mappings, since madvise() MADV_NOHUGEPAGE
-always returns an error because CONFIG_TRANSPARENT_HUGEPAGE is not
-defined.
-
-The mapping MAP_STACK -> VM_NOHUGEPAGE was introduced by commit
-c4608d1bf7c6 ("mm: mmap: map MAP_STACK to VM_NOHUGEPAGE") in order to
-fix a regression introduced by commit efa7df3e3bb5 ("mm: align larger
-anonymous mappings on THP boundaries"). The change introducing the
-regression (efa7df3e3bb5) was limited to THP kernels, but its fix
-(c4608d1bf7c6) is applied without checking if THP is set.
-
-The mapping MAP_STACK -> VM_NOHUGEPAGE should only be applied if THP is
-enabled.
----
-Changes in v5:
-- Correct typo CONFIG_TRANSPARENT_HUGETABLES -> CONFIG_TRANSPARENT_HUGEPAGE in patch description
-- Link to v4: https://lore.kernel.org/r/20250507-map-map_stack-to-vm_nohugepage-only-if-thp-is-enabled-v4-1-4837c932c2a3@kuka.com
-
-Changes in v4:
-- Correct typo CONFIG_TRANSPARENT_HUGETABLES -> CONFIG_TRANSPARENT_HUGEPAGE
-- Copy description from cover letter to commit description
-- Link to v3: https://lore.kernel.org/r/20250507-map-map_stack-to-vm_nohugepage-only-if-thp-is-enabled-v3-1-80929f30df7f@kuka.com
-
-Changes in v3:
-- Exclude non-stable patch (for huge_mm.h) from this series to avoid mixing stable and non-stable patches, as suggested by Andrew.
-- Extend description in cover letter.
-- Link to v2: https://lore.kernel.org/r/20250506-map-map_stack-to-vm_nohugepage-only-if-thp-is-enabled-v2-0-f11f0c794872@kuka.com
-
-Changes in v2:
-- [Patch 1/2] Use '#ifdef' instead of '#if defined(...)'
-- [Patch 1/2] Add 'Fixes: c4608d1bf7c6...'
-- Create [Patch 2/2]
-
-- Link to v1: https://lore.kernel.org/r/20250502-map-map_stack-to-vm_nohugepage-only-if-thp-is-enabled-v1-1-113cc634cd51@kuka.com
----
- include/linux/mman.h | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/include/linux/mman.h b/include/linux/mman.h
-index bce214fece16b9af3791a2baaecd6063d0481938..f4c6346a8fcd29b08d43f7cd9158c3eddc3383e1 100644
---- a/include/linux/mman.h
-+++ b/include/linux/mman.h
-@@ -155,7 +155,9 @@ calc_vm_flag_bits(struct file *file, unsigned long flags)
- 	return _calc_vm_trans(flags, MAP_GROWSDOWN,  VM_GROWSDOWN ) |
- 	       _calc_vm_trans(flags, MAP_LOCKED,     VM_LOCKED    ) |
- 	       _calc_vm_trans(flags, MAP_SYNC,	     VM_SYNC      ) |
-+#ifdef CONFIG_TRANSPARENT_HUGEPAGE
- 	       _calc_vm_trans(flags, MAP_STACK,	     VM_NOHUGEPAGE) |
-+#endif
- 	       arch_calc_vm_flag_bits(file, flags);
- }
- 
-
----
-base-commit: fc96b232f8e7c0a6c282f47726b2ff6a5fb341d2
-change-id: 20250428-map-map_stack-to-vm_nohugepage-only-if-thp-is-enabled-ce40a1de095d
-
-Best regards,
--- 
-Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>
-
-
+Guillaume
+Le 05/05/2025 à 15:15, Guillaume La Roque a écrit :
+> Hi,
+>
+> Le 05/05/2025 à 14:36, Nishanth Menon a écrit :
+>> On 13:24-20250504, Guillaume La Roque wrote:
+>>> After patch done on TI_MESSAGE_MANAGER[1] and TI_SCI_PROTOCOL[2] driver
+>>> select on ARCH_K3 are not needed anymore.
+>>>
+>>> Remove it and give possibility to enable this driver in modules.
+>>>
+>>> [1] https://lore.kernel.org/all/20180828005311.8529-1-nm@ti.com/
+>>> [2] 
+>>> https://lore.kernel.org/all/20250220-ti-firmware-v2-1-ff26883c6ce9@baylibre.com/
+>>>
+>>> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+>>> ---
+>>>   arch/arm64/Kconfig.platforms | 2 --
+>>>   1 file changed, 2 deletions(-)
+>>>
+>>> diff --git a/arch/arm64/Kconfig.platforms 
+>>> b/arch/arm64/Kconfig.platforms
+>>> index 8b76821f190f..5b63a42c4dff 100644
+>>> --- a/arch/arm64/Kconfig.platforms
+>>> +++ b/arch/arm64/Kconfig.platforms
+>>> @@ -138,8 +138,6 @@ config ARCH_K3
+>>>       select PM_GENERIC_DOMAINS if PM
+>>>       select MAILBOX
+>>>       select SOC_TI
+>>> -    select TI_MESSAGE_MANAGER
+>>> -    select TI_SCI_PROTOCOL
+>>>       select TI_K3_SOCINFO
+>>>       help
+>>>         This enables support for Texas Instruments' K3 multicore SoC
+>>>
+>> While at this, is it possible to remove MAILBOX and PM_GENERIC_DOMAINS
+>> from select and make them as modules?
+>>
+> good point i will confirm  and come back to you.
