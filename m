@@ -1,112 +1,126 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from server.wki.vra.mybluehostin.me (server.wki.vra.mybluehostin.me [162.240.238.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 586E5286885
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 12:54:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5619972635;
+	Wed,  7 May 2025 12:56:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.240.238.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746622482; cv=none; b=DAjla6iFJ1vQA77G92ynKbdilipKhvbo1zAObelsTQfAwIlKu3wq7B1hRR/Z+IW0j5pB2AMwEWD27uO35tNV5SzSNeMfQYUU1r1vAr39a2zFL7ls2SrdhqOuTXHHIAGPCZw4aPQN+bH9w1MK6MfX8jG/73p0XAylQKeBRANjwMM=
+	t=1746622586; cv=none; b=ulF17THrlaO5LAL+l0aFXyaATJUhWgW5amh4LAXGSRb547StBq565G+AFRip+cqaC1Ob9CHfGA0nvgWGUfDfIH08Oxd51OJABFdt4nH1yJ3KyPPYNzr4QBIin+w57vyZCDdc7aOggEVr7ZctYyTaSkJUYaxxlOtqpFvxXcj819g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746622482; c=relaxed/simple;
-	bh=rlYkutOJbTy9t4vetbaK1MFW9+WsC8kSGvqRmbg4uTo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dn95KbHjTBi6YjNj0lbuHXx4L4xdtD/y2hoIrfWcTxt0aWw4iH2NpyQdLWK3VbBdl1AwEZUSbQPGbM1yjoxiRfvyqo59YTcc1WvmyGQL6yeXcxRWGjzhli0jLZiMURAqnOOlXXQBzX1bBUDk+Kv6EVlQkkp1wlbN7FQmscO8Sjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=bQgEfzl9; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1746622586; c=relaxed/simple;
+	bh=e+KbzQH4g+FY0XrajAnoZjNDb6VWzk8lnDHWDRvx1tM=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=camcCnANmOkXc9jqC87UDLXWfquoViixkUZ0u/cD9D6en24YfE1PaVHE1ABYYLK0yf57AWAKndbhI2pL1RL83mUa5z7OnPA2GC/TfUI122WyFgGq9H+Z1tngLT//VCCbFK53T370TxmWqTaBRq/5nwTUc+7hORXsnDq7MWhf3QI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=couthit.com; spf=pass smtp.mailfrom=couthit.com; dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b=SZQ/qUqG; arc=none smtp.client-ip=162.240.238.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=couthit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=couthit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="bQgEfzl9"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5e5e8274a74so10536734a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 05:54:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1746622478; x=1747227278; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ypa3PBqDtPswGp9XxxvAriQxh6M+XVug4d/DpMvuJqc=;
-        b=bQgEfzl9HbV8Ufg4s3XJVQe96sNXP7OOsBMso7IeTpJK4VOET69YYJ7wptPA1gA8eT
-         hyO2wPLd9NNQ9HSUjdgA34EoT5aAx5KDPbmW9s+C8Ke555bjUvd6sZ0/QOxpM/q0br9S
-         PAW0e2+pDYwW8NWIqmmyRM3t5BRFt01Nm0tXBo+LMwByHGRN8BaZHxC8o5iKDbvkJC4E
-         QHLBhrEJ0XLqWnVsFYUPizrj/K01Fa6hjsj3H3ubi3FHqIl9v2E6JwcWsCtyrt/CGwZF
-         mKO6U/3Ysm0+0GGZXPgJKGq8Q87Rd55yLH8z/AdEAyaoVfXUn/gUhP5TwHUi7tAcqDtq
-         Wreg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746622478; x=1747227278;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ypa3PBqDtPswGp9XxxvAriQxh6M+XVug4d/DpMvuJqc=;
-        b=P38xgN6PPGW1+utlsdD5oTq8fsSwT4RkG2XlH3uIGzBNA8l2WECCTubdhoZnajXEWh
-         GLFcvJ0xETd3Req46OO8/Zj2WE0ilzChnZYQD/Qrq27bEDN6JHdtt8mcv1wrRaCX/J/r
-         F2jkdhfbiL9cffbfGicCdvvVDcPbAWhvDoIovYUDI7BpnyW5pjVxLac84K9Gzdt0H3Oy
-         BHNGIbdhkh1+nGUJKdlTFpDsw/zMRTqE1Y2t3ikRCA5gdjTSkjjRSMoDvS5SfdwAc8vJ
-         OfkiUXpV8MTNO0FU7bObbXAi3IFCR76CDTAbcL2N8QGMG3YBpmMdS7XAS70ptTFtfnXw
-         T1Yw==
-X-Forwarded-Encrypted: i=1; AJvYcCVk3wGn4wE/G/Kl952ezBS6nZEjWCPnxQS01TkF25PMxlqrenrFDbyRdwiPIyvF6W2FK7yFwWrXbMleU2U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwH5ks2zG9r8/hj9orsmzMf/4TxTWUK452DcqHM/yaXyB/F3RIf
-	QDkmn6vLrTxk7fyMxlmJB4BpWSU7uWQrG8OhembT37ju+4hu14E4J1svGO+Xs+Y=
-X-Gm-Gg: ASbGncuT2XxVlXe2gnP0z5n2HIiw+cT8FqmQxw442cAYorkeHQ1vylCDorCiXL+Rl5v
-	Q2ggv+KL6S4tbt7vSJI74F/9b7EFKZRmOjwMAugOA8JhQB4lSgBF/qKzZUG/QSq5KWXEfAWgRaT
-	Vr2pQaffHKdDfho219YWiuU43xY2JSSx5Fg4iV+KYlhcmOePsPDoLlg9MVWZO3Bf4EC+ElPT8jv
-	G9sRXFnYYKyOFv7xLSX8WIH0I6Fd4wN1PSDoWIrOTYeVLgdyBzvE0J5IsZQfdZHmMw6aHHz3XXT
-	hdq9ln2VePJR9TUsSih2XRzXhcmNgXM9+R2kE9RKsHJxQIahjF8=
-X-Google-Smtp-Source: AGHT+IEEHI/oSTREUk8HTc9X/nZpZu+JH0JNL8Ix0W8ZxxBaMoWEfgZFH93pE+NmBTNHIMjXerli4Q==
-X-Received: by 2002:a05:6402:2547:b0:5f6:252b:f361 with SMTP id 4fb4d7f45d1cf-5fbe9dbbe1amr2731807a12.11.1746622478474;
-        Wed, 07 May 2025 05:54:38 -0700 (PDT)
-Received: from pathway.suse.cz ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fa77b914b4sm9354161a12.51.2025.05.07.05.54.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 05:54:38 -0700 (PDT)
-Date: Wed, 7 May 2025 14:54:36 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: Bhupesh <bhupesh@igalia.com>
-Cc: akpm@linux-foundation.org, kernel-dev@igalia.com,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com,
-	laoar.shao@gmail.com, rostedt@goodmis.org,
-	mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com,
-	alexei.starovoitov@gmail.com, andrii.nakryiko@gmail.com,
-	mirq-linux@rere.qmqm.pl, peterz@infradead.org, willy@infradead.org,
-	david@redhat.com, viro@zeniv.linux.org.uk, keescook@chromium.org,
-	ebiederm@xmission.com, brauner@kernel.org, jack@suse.cz,
-	mingo@redhat.com, juri.lelli@redhat.com, bsegall@google.com,
-	mgorman@suse.de, vschneid@redhat.com
-Subject: Re: [PATCH v3 3/3] exec: Add support for 64 byte 'tsk->real_comm'
-Message-ID: <aBtYDGOAVbLHeTHF@pathway.suse.cz>
-References: <20250507110444.963779-1-bhupesh@igalia.com>
- <20250507110444.963779-4-bhupesh@igalia.com>
+	dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b="SZQ/qUqG"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=couthit.com
+	; s=default; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:
+	References:In-Reply-To:Message-ID:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=2gTucvQbJ8GVWGtpPTGszF2AAa2auKQNBW/SjILr374=; b=SZQ/qUqGsxZiV8NAzLkeiIQ29O
+	iiJq0WqtLc873MoKOpRjCjvc4DCbrrDAbP+odpVPOcMcr8ATV43UROcDdv4vwyrFv7s01iqvVGvl4
+	Fi+XWO4ihOEMpukM6PVjzlkJ0CYwDCv0ea3FD/k1DG7kx7dDezzT2ALnTmmpMS04AJExDeXU+NyBD
+	kUxSfkmpbd/UPbKxhhkafl7G4LHzj76WRdEEDSbdC+ldavKkvXQC3RGnpG9phS769vcbpC1UwM4Vc
+	qxTdapSgTM3csySTqflmlXFuGrhbN2Ln0Ry8rYkttmGiRJMuQSV8puvrD3t3I5FrswFmSWLIdnFkt
+	dDFYl6DQ==;
+Received: from [122.175.9.182] (port=34909 helo=zimbra.couthit.local)
+	by server.wki.vra.mybluehostin.me with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.98.1)
+	(envelope-from <parvathi@couthit.com>)
+	id 1uCeJl-000000000Vk-1tYs;
+	Wed, 07 May 2025 18:26:09 +0530
+Received: from zimbra.couthit.local (localhost [127.0.0.1])
+	by zimbra.couthit.local (Postfix) with ESMTPS id 9F3661784153;
+	Wed,  7 May 2025 18:26:02 +0530 (IST)
+Received: from localhost (localhost [127.0.0.1])
+	by zimbra.couthit.local (Postfix) with ESMTP id 7A93317820EC;
+	Wed,  7 May 2025 18:26:02 +0530 (IST)
+Received: from zimbra.couthit.local ([127.0.0.1])
+	by localhost (zimbra.couthit.local [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id O1H80hbzATvn; Wed,  7 May 2025 18:26:02 +0530 (IST)
+Received: from zimbra.couthit.local (zimbra.couthit.local [10.10.10.103])
+	by zimbra.couthit.local (Postfix) with ESMTP id 196861784150;
+	Wed,  7 May 2025 18:26:02 +0530 (IST)
+Date: Wed, 7 May 2025 18:26:01 +0530 (IST)
+From: Parvathi Pudi <parvathi@couthit.com>
+To: pabeni <pabeni@redhat.com>
+Cc: danishanwar <danishanwar@ti.com>, rogerq <rogerq@kernel.org>, 
+	andrew+netdev <andrew+netdev@lunn.ch>, davem <davem@davemloft.net>, 
+	edumazet <edumazet@google.com>, kuba <kuba@kernel.org>, 
+	robh <robh@kernel.org>, krzk+dt <krzk+dt@kernel.org>, 
+	conor+dt <conor+dt@kernel.org>, ssantosh <ssantosh@kernel.org>, 
+	tony <tony@atomide.com>, richardcochran <richardcochran@gmail.com>, 
+	glaroque <glaroque@baylibre.com>, schnelle <schnelle@linux.ibm.com>, 
+	m-karicheri2 <m-karicheri2@ti.com>, s hauer <s.hauer@pengutronix.de>, 
+	rdunlap <rdunlap@infradead.org>, diogo ivo <diogo.ivo@siemens.com>, 
+	basharath <basharath@couthit.com>, horms <horms@kernel.org>, 
+	jacob e keller <jacob.e.keller@intel.com>, 
+	m-malladi <m-malladi@ti.com>, 
+	javier carrasco cruz <javier.carrasco.cruz@gmail.com>, 
+	afd <afd@ti.com>, s-anna <s-anna@ti.com>, 
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, 
+	netdev <netdev@vger.kernel.org>, 
+	devicetree <devicetree@vger.kernel.org>, 
+	linux-kernel <linux-kernel@vger.kernel.org>, 
+	pratheesh <pratheesh@ti.com>, Prajith Jayarajan <prajith@ti.com>, 
+	Vignesh Raghavendra <vigneshr@ti.com>, praneeth <praneeth@ti.com>, 
+	srk <srk@ti.com>, rogerq <rogerq@ti.com>, 
+	krishna <krishna@couthit.com>, pmohan <pmohan@couthit.com>, 
+	parvathi <parvathi@couthit.com>, mohan <mohan@couthit.com>
+Message-ID: <139244603.1233564.1746622561934.JavaMail.zimbra@couthit.local>
+In-Reply-To: <19f4f38b-9962-41d6-97b7-e254db3c6dee@redhat.com>
+References: <20250503121107.1973888-1-parvathi@couthit.com> <20250503121107.1973888-4-parvathi@couthit.com> <19f4f38b-9962-41d6-97b7-e254db3c6dee@redhat.com>
+Subject: Re: [PATCH net-next v7 03/11] net: ti: prueth: Adds PRUETH HW and
+ SW configuration
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250507110444.963779-4-bhupesh@igalia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: Zimbra 8.8.15_GA_3968 (ZimbraWebClient - GC135 (Mac)/8.8.15_GA_3968)
+Thread-Topic: prueth: Adds PRUETH HW and SW configuration
+Thread-Index: AosoBOCbs5p6H60d7E7sxq4c13PHCQ==
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - server.wki.vra.mybluehostin.me
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - couthit.com
+X-Get-Message-Sender-Via: server.wki.vra.mybluehostin.me: authenticated_id: smtp@couthit.com
+X-Authenticated-Sender: server.wki.vra.mybluehostin.me: smtp@couthit.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 
-On Wed 2025-05-07 16:34:44, Bhupesh wrote:
-> Historically due to the 16-byte length of TASK_COMM_LEN, the
-> users of 'tsk->comm' are restricted to use a fixed-size target
-> buffer also of TASK_COMM_LEN for 'memcpy()' like use-cases.
+Hi,
+
+> On 5/3/25 2:10 PM, Parvathi Pudi wrote:
+>> +static int icssm_prueth_emac_config(struct prueth_emac *emac)
+>> +{
+>> +	struct prueth *prueth = emac->prueth;
+>> +
+>> +	/* PRU needs local shared RAM address for C28 */
+>> +	u32 sharedramaddr = ICSS_LOCAL_SHARED_RAM;
+>> +
+>> +	/* PRU needs real global OCMC address for C30*/
+>> +	u32 ocmcaddr = (u32)prueth->mem[PRUETH_MEM_OCMC].pa;
+>> +	void __iomem *dram_base;
+>> +	void __iomem *mac_addr;
+>> +	void __iomem *dram;
 > 
-> To fix the same, Linus suggested in [1] that we can add the
-> following union inside 'task_struct':
->        union {
->                char    comm[TASK_COMM_LEN];
->                char    real_comm[REAL_TASK_COMM_LEN];
->        };
+> Minor nit: please respect the reverse christmas tree order above.
+> 
+> /P
 
-Nit: IMHO, the prefix "real_" is misleading. The buffer size is still
-      limited and the name might be shrinked. I would suggest
-      something like:
+We will address this in the next version.
 
-	char    comm_ext[TASK_COMM_EXT_LEN];
-or
-	char    comm_64[TASK_COMM_64_LEN]
 
-> and then modify '__set_task_comm()' to pass 'tsk->real_comm'
-> to the existing users.
-
-Best Regards,
-Petr
+Thanks and Regards,
+Parvathi.
