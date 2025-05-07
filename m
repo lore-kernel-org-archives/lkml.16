@@ -1,28 +1,28 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2127.outbound.protection.outlook.com [40.107.20.127])
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2111.outbound.protection.outlook.com [40.107.21.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62EC21DF97F;
-	Wed,  7 May 2025 05:09:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.127
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A488F1F4631;
+	Wed,  7 May 2025 05:09:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.111
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746594555; cv=fail; b=nJ1atf23O7TGmjsVPDW+mghkr36XsonRcP/soqe023f9Enbb3bpsEQPOYS0UsVL46bI4gIYp2SuVHXJ8/txd3oDzc+nuRTfzqKV2Zy3rUyAk/tAJj/OXH/ZSNlJaPgOofWg9twRyVcT8XbJL3i0/r+fJub3znnPfiWZn9kYWels=
+	t=1746594558; cv=fail; b=QQiQ3+CzrthULZvpiv4hN8bJ8mUSthegqjPffdF57S8z1XjBntNSGED2z74BsBhDq9aN16bJAAEwUF4J+JJdC+xgeCLQOdb9gZzbibtAAc6K02iW/jFUfs4cOi1QaU+bq7ZwkQrxiTHl7y13vQ7hKZN7Rbd0oYBOLbWiZjyp6CQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746594555; c=relaxed/simple;
-	bh=OvojNYRj8Z7P4WrhkL5rkUXJ/mhcBeRUbaygxI/Roxk=;
+	s=arc-20240116; t=1746594558; c=relaxed/simple;
+	bh=dPZavQFdU9WyzDQHW9AWFSy6aR1mcT6quigMlcdsUjU=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FBssxjfNnDRkzzLwLxjzn6IqwAldfI+Gl+zKniwCcg8sGGjQ180XM+thtUred/zma2KnNRMW6iGR6zGPTYQAqZXwMNvPK9s5YsxKHMlQd0V0rZJ6Jh+TF3bv6+zTqtrDH4p2JSdZ5mWsz9zFm/DMXWEI4l5+WX7wsHZjdpORCtI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=phytec.de; spf=pass smtp.mailfrom=phytec.de; dkim=pass (2048-bit key) header.d=phytec.de header.i=@phytec.de header.b=PHV+bq04; arc=fail smtp.client-ip=40.107.20.127
+	 MIME-Version:Content-Type; b=gud949HKTR+R357LVLSYGJ48GgxqjwFG6GucaHe6w8GwEpnm/zseZOCEI6jW4mkF8V2NEVQv+Ns4Ij9djmXLFP5Jwqz2mpS5ssG4wlmaJZSylAuoDn6TJmb9FqURZbyAyUJNMQLQIf4n3ZI/QIi5WJQffdUtUZyepk2NmWumZEw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=phytec.de; spf=pass smtp.mailfrom=phytec.de; dkim=pass (2048-bit key) header.d=phytec.de header.i=@phytec.de header.b=cL8CONTe; arc=fail smtp.client-ip=40.107.21.111
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=phytec.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytec.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=phytec.de header.i=@phytec.de header.b="PHV+bq04"
+	dkim=pass (2048-bit key) header.d=phytec.de header.i=@phytec.de header.b="cL8CONTe"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=gikFkx4xKQLhHqhV60jPh2XCnDnRGowMC459QTK0YR/20oKk4t5WXNobla5NIzNnUuz6LPRJINACnNYZ0mg4nUClc6ehbJYJHGQ0la5WSJIFDxwv9tXda5y6xUs6ZhaDMQmhoNiSQKBAL8aygKKgAYA4plPQPssnW1qEpGqo6VftQvmzqwll8DzMwnE/n+h3Bpv8bE+ILYLXBfH2T5H80Z7UWJ4FJUTHEBsJ4jJmlFMuNA6w5cHfvR0LgAbq7E/mITxgVTM2ycC72f2N3TR8VEzVKFfpt8SkOhdif1BVsafKi2PQpFWKSi6Or8Zyp4vL3MFmFKegaHQzMIfZ96hgkA==
+ b=Rzp9D189P5UakGQJilJUiJUM8Wxks47YaASR2DPncVFhhPclo37vPIaUQ670ouDfalcjghfpMSIMVabfTOgzcF7dBn3d9MvxsMuj11d0UAse9VHjUNmKLDLTy/y02UQWEroFpQlqYYNdWvZgsQvamBi0aveNMKPhmnSy2JavyZ4EkOuP26x98dLXcu9gl+tfV7ZZLb6CHLam/q0tQiigOBr9WKV0Vp5kXuf3B8Eit6bbagb4aL2umnRgNSaGX9H/LY77Mp+c6k1YnjOzejZdQhWa5rGKsEusZdMDtFJYDz+2tMxE3kGyfK8WlZwjYPukk3P8cmBT/GAtWr3SErWggw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=L2aolKtkB4tLZ8ADBQLKLaLXwumihfzpkaKm9Ah+rgk=;
- b=vzJIHzUUHhESX6BpEiHgXOUeukkdWpQcBRzgu+0QHYxGgjaBuxH/4vwl5JNWVqqPSzM7lA4voWB9GjxJpvr8orhfqLLJfdbMcRXzJo1UIfmjgxy/MyehHwfcPRsV8oeCLNsp/w4/QSQXhywr/7XdEYI8+GHDC2OFkiICwlzOzr6On6cXwP+978N+/Qh7HVVQ5HsrJC/JjJxwRUXQM7hdM3rT1xPlpHzxvRZFfNexRdgChkLZ1tiHTT7yuxshUqZ9gGY+iTsFb9o0AyMbO7Ba05Op+AX+xsxkUZpNWdqfpsXVaBALL7Q7A/bsdrBSirWSV+WOYtzXAREBAjCSmQTbhQ==
+ bh=/fbmOctjloRnlRDmMRz/OmlYG8Y+qRDh6ehoe0ASkX4=;
+ b=Ygq5BZuAiYVbgT9SP6x1HlvBxi4Hknm9brG3HG1c/oz2mmB1/2B/gjt9kZCqTxxm1vy4izm5fJnE3A88OEZwxmGPhbpEniXdx/LlRVEtDF8wtctxJU3LTvH1JMifzn8BUIaYwro9M8l70cC1zxmpcJzFNSY/QMR92cVrYpE1Tv6gqn7zdCvO6AxzaSzR955lhOhth4AWHVuNAK4SFysLoJeoPCxyWseajV3e403g9qvPhQ1dNH0LVQjj206YaJdsYo9kf4wIx/2FHonrx1JguGtX2SBs1Gp3u862AAv8nDaFCAGsRdXHOL8p8S6CfIyOKVYNrJc7cjRi6/5/XhmEKA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
  is 91.26.50.189) smtp.rcpttodomain=ti.com smtp.mailfrom=phytec.de; dmarc=fail
  (p=quarantine sp=quarantine pct=100) action=quarantine header.from=phytec.de;
@@ -30,35 +30,35 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=phytec.de;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=L2aolKtkB4tLZ8ADBQLKLaLXwumihfzpkaKm9Ah+rgk=;
- b=PHV+bq04CnakctRplovHDYD8WKxPqHsQfEUeM7UTqGC9MMGn62e4sw4xrQF7J18zd/laE2olP9B+WeR1VR1n8L1KTzER84p+0V+IkVIXXWdE1jBUwBnH1fo7HLKVlW/61SJ2St+ZNwVkpTZ46pHZg/Wd+XQL04iL2kIXvjOnur1nOI9dOUERjVokXFuWE3QLXhMwJugQN2igeHiIZKq6BKMT1YgZSM99/8dIytoegGov5+PIay2Ajhj09NZIpZU3kCasVETR84fGASOAaJFSXpxSVWm/jHujM55cxMbWmj8ZjKtldDqls8Fx/nkrSDLRAyPMDCkfhHMiC0YWegXIfA==
-Received: from DB9PR06CA0011.eurprd06.prod.outlook.com (2603:10a6:10:1db::16)
- by AM8P195MB1027.EURP195.PROD.OUTLOOK.COM (2603:10a6:20b:1ca::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.26; Wed, 7 May
- 2025 05:09:07 +0000
-Received: from DB1PEPF000509FB.eurprd03.prod.outlook.com
- (2603:10a6:10:1db:cafe::a0) by DB9PR06CA0011.outlook.office365.com
- (2603:10a6:10:1db::16) with Microsoft SMTP Server (version=TLS1_3,
+ bh=/fbmOctjloRnlRDmMRz/OmlYG8Y+qRDh6ehoe0ASkX4=;
+ b=cL8CONTeyL5hVZ29C5QWfQaHXIr8eb9ncUSCWNdoRtBpMP6VGGYnZ1vz7y3t5U1Vtyf7vShKiYiGcBoOrkLNfs3BLiz260pbDrs4UR63wnbHTa9N5vrbyupJXrn4i9wDtGI6IcBUd/8iTlgSq+m+6gl0nm3J4J0oshLe17y8Y0EfJKq9i+FDhr62LP6bY+NHgPoI79jdfC9AqX6db+K6vguATeNqsEPOHFITFIoIZlStYRrRb6W4hnIbljsxSQeqyBQ9vsK/gu9YP5Y/C6U+bAZjhPO8x8oye/0wb3T0TDqzFQ5bbv5cRVRwwKbr+BUGuZNWZHA8FkJ2sgPn3BxDPw==
+Received: from DU7PR01CA0024.eurprd01.prod.exchangelabs.com
+ (2603:10a6:10:50f::26) by DU0P195MB1499.EURP195.PROD.OUTLOOK.COM
+ (2603:10a6:10:34b::9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.19; Wed, 7 May
+ 2025 05:09:11 +0000
+Received: from DB1PEPF00050A01.eurprd03.prod.outlook.com
+ (2603:10a6:10:50f:cafe::5b) by DU7PR01CA0024.outlook.office365.com
+ (2603:10a6:10:50f::26) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.21 via Frontend Transport; Wed,
- 7 May 2025 05:09:07 +0000
+ 7 May 2025 05:09:09 +0000
 X-MS-Exchange-Authentication-Results: spf=softfail (sender IP is 91.26.50.189)
  smtp.mailfrom=phytec.de; dkim=none (message not signed)
  header.d=none;dmarc=fail action=quarantine header.from=phytec.de;
 Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
  phytec.de discourages use of 91.26.50.189 as permitted sender)
 Received: from Diagnostix.phytec.de (91.26.50.189) by
- DB1PEPF000509FB.mail.protection.outlook.com (10.167.242.37) with Microsoft
+ DB1PEPF00050A01.mail.protection.outlook.com (10.167.242.43) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8722.18 via Frontend Transport; Wed, 7 May 2025 05:09:07 +0000
+ 15.20.8722.18 via Frontend Transport; Wed, 7 May 2025 05:09:11 +0000
 Received: from Florix.phytec.de (172.25.0.13) by Diagnostix.phytec.de
  (172.25.0.14) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Wed, 7 May
- 2025 07:09:06 +0200
+ 2025 07:09:09 +0200
 Received: from ls-radium.phytec (172.25.39.17) by Florix.phytec.de
  (172.25.0.13) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Wed, 7 May
- 2025 07:09:03 +0200
+ 2025 07:09:06 +0200
 From: Daniel Schultz <d.schultz@phytec.de>
 To: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
 	<krzk+dt@kernel.org>, <conor+dt@kernel.org>,
@@ -67,9 +67,9 @@ To: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
 	<francesco.dolcini@toradex.com>
 CC: <upstream@lists.phytec.de>, <w.egorov@phytec.de>, Daniel Schultz
 	<d.schultz@phytec.de>
-Subject: [PATCH 2/4] arm64: dts: ti: k3-am625-*: Specify Temperature Grade
-Date: Tue, 6 May 2025 22:08:45 -0700
-Message-ID: <20250507050847.912756-2-d.schultz@phytec.de>
+Subject: [PATCH 3/4] arm64: dts: ti: k3-am62a-thermal: Add Files for each Temp. Grade
+Date: Tue, 6 May 2025 22:08:46 -0700
+Message-ID: <20250507050847.912756-3-d.schultz@phytec.de>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20250507050847.912756-1-d.schultz@phytec.de>
 References: <20250507050847.912756-1-d.schultz@phytec.de>
@@ -79,236 +79,153 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 X-ClientProxiedBy: Diagnostix.phytec.de (172.25.0.14) To Florix.phytec.de
  (172.25.0.13)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB1PEPF000509FB:EE_|AM8P195MB1027:EE_
-X-MS-Office365-Filtering-Correlation-Id: fb32ab04-7421-47e9-3df5-08dd8d254b50
+X-MS-TrafficTypeDiagnostic: DB1PEPF00050A01:EE_|DU0P195MB1499:EE_
+X-MS-Office365-Filtering-Correlation-Id: 51399100-78fb-459d-3fc8-08dd8d254dda
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|82310400026|36860700013|1800799024|921020;
+	BCL:0;ARA:13230040|1800799024|82310400026|7416014|376014|36860700013|921020;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?bSMF4qLI8UyULDuQEHooTXO3UWP6jZga3bp4bWUPCgd+GK6V9sO6ttH7z3wd?=
- =?us-ascii?Q?0AjrKhtswlHdnkm6+nWh81IavFosbdkbN4labpsthynN56seT8XmvjI4TL06?=
- =?us-ascii?Q?ZXny11mJBqf+tQbTcTG6OpRGJFSA6mIHFg6ayd5zM4OgQbo/Mm/XgXhTwVp3?=
- =?us-ascii?Q?4h/uoOYMzOJ7Iih2wh6wE+nK94YyVxszm1qUiY5YbimgaDSFey1CDVFExm61?=
- =?us-ascii?Q?VvcV6HoqdKyGA4bvVUnjCt3pLqj1RHkXKDLKSNC6lKr5HtsbV7nYjH8nz1wi?=
- =?us-ascii?Q?F/kx90v8X2rUJXFj0vdn1K4QwvAsENQd1fEecJ2uMI6xire+OAfjcXjy68eV?=
- =?us-ascii?Q?6MJeppDJfuTr6G7c51/jANHKsL1HHdzSRGXCZ2DbrNCaDj/JnwdSzzof0CJ3?=
- =?us-ascii?Q?GNuKlK+cVYebpgwqsyEXjSEHyKQ6ZcQgoPEedPyswCpQ72TBa0G3OuJqFsCl?=
- =?us-ascii?Q?oHtBwvfHZgR9jC2FHpi2BJ42MmH7zYF1G0TsSa6R3N2SHdhEhTctSBA+maHn?=
- =?us-ascii?Q?TPuPCKLFVUoHB36ou/9SnbT8FYL0vTATh80LFruqU3c8W2EZyutKauo5zvns?=
- =?us-ascii?Q?Mv9ZfF7ANKULVM5jvdLNrP3KjmGix6/YkS3NOtlw2iMam4gWKVRtGLCsbADj?=
- =?us-ascii?Q?FX2B3zGSmNNhwQ3REKrBfa/TWJXaoX+RaThrnT1jO8ZiWn28KOIL5BVpZbAl?=
- =?us-ascii?Q?m7E/n58dw4R6mUDTdhptdtPK+3n6EQZNN3cLCQ0n+IWsT5FI2aO0On1h6KNh?=
- =?us-ascii?Q?WqWXykPuzS4Q6t8lJYqBtxnJowGGfUsGUMfalpLqHaPo7ZTed43igGroAjFO?=
- =?us-ascii?Q?uLqsvaZUFAeAfZPY1eYIEDUsOjp3N6gnz+PI9iA7NbivLytO9KVvUY0kS1rk?=
- =?us-ascii?Q?Pao9TCEK0Cnk2FDd7a2Qnu+OgvOnek7QIhwhlAXbYT1Uwy+vCpJcn4pkdQTX?=
- =?us-ascii?Q?WVzm6Fk/R27QU+38FlB9hwyd8kMBj9aCTvUeRVTqIvKPqhvabU0zgQLiVy/q?=
- =?us-ascii?Q?8XzvAL6KLD4bhW7Z2j/2HRO7L+E/AcZXE3smGXBqfwwA92xOH2DIFnT3uVRU?=
- =?us-ascii?Q?43+RMIpeuGzygU3TSnmfCgWo78UTsqbIi2n7acYIutAtlfN0Jreqn5s/L66G?=
- =?us-ascii?Q?7udqvdwNIrgOwj1rnNWImq6hYalg3hoRH9Ov2Llaqth5LL0lMyHb10sR/kx7?=
- =?us-ascii?Q?y1ypiCM04yf2R7bkU3XdUFYzGO5FYizVF74/mGYO2t/GlecBNBMnIhIlNpHl?=
- =?us-ascii?Q?LbipwvlMX1/ZrrNuR8yR2ZYI38Olo8chToaXZezVcZEltzcjW2ovynFFbNWZ?=
- =?us-ascii?Q?XUW5DDZNFnlb1e9GBzbtaJHinFn6DZtUNfA5O1O5wRMue0QuNsVcgDV5FmC0?=
- =?us-ascii?Q?MQogYKirAOS56Z8vAZrcuhN8ASaIs4XLqxNLcK6rUrSTHDs4RTB/MSeM5kJI?=
- =?us-ascii?Q?pkdG3zjYND2DneB/BFoju3A2FQbEUjilvHCLTZ3A45ama1r/lQH/icPvgXc7?=
- =?us-ascii?Q?ULVTr8PuDyDtrVkxGuEm5CAaE5b+BqWka2KCjhjo7tQ4kLhpaFWH0eajXg?=
- =?us-ascii?Q?=3D=3D?=
+	=?utf-8?B?TEhnL0VrRy9wcFNiUTMyMkYvTHRJRzJrVDVvZ1lKbjU1R3dhVjQxOW1vYlFh?=
+ =?utf-8?B?WFI4NEtuTWdmbTBTWTVJU3ZvNlZNZjlrc2NLZjJVa1Y1MGlxY1BvRzVZUDJz?=
+ =?utf-8?B?aXY5cTZCc0diK2k3aUFieHI2RUlyS3RHdS9WS2VsRlozb1RoT3I2TUlXRzlN?=
+ =?utf-8?B?T29Jc1BpelBnSzhYZUxvN0JERmNHTjFMSC91bHI2a3ZhZTZIM0xMT3BXWXdE?=
+ =?utf-8?B?RWlyYWwrU0VSL1ZleHFJQ0F1ZlA2c29STlRhZU5Xa29VakV6aVdaUVJQK3Q4?=
+ =?utf-8?B?OXBwcVR0bk1mQUFrMWNVTEd3MWI4YmxCUTd3REVZdVhqd1dkVlRab1pBQWtP?=
+ =?utf-8?B?UnBTV2Z4RFNxb3VwTUZpMm5lWk5EdmhMM21lc2RBcDRlRXVySGNjMnArQnBB?=
+ =?utf-8?B?RThLbElNMlF6ZEZIdnJJbmZSUjhreDhpVlJaY3Z2Q2NyanpDY2FEVjdaV0tu?=
+ =?utf-8?B?YlJWSG5ocS9VY3lOSDM5bkU3OVgvRGcxaDREa1N4UjdmQkNKVElBOFlCa3Av?=
+ =?utf-8?B?TTdLUGJaU29zei8vMU9XSHlNV2tFcU9TbFpCWVZPVDZkNUczVTBodElGZEhO?=
+ =?utf-8?B?TllEelNLM205YkhkR0Q2VUdFTnJBbm55aUdmUGVtaDhURnRHb2tEZDBTdHgv?=
+ =?utf-8?B?cXNKRWJpUE1BcUFHVE8yYzFuaDliaWhiVk9CWUJ6QXlCMzdHbXJQUUY0Y05t?=
+ =?utf-8?B?ZHo0VzlybVhBYVNJQy8xQ1Q2MytLWm9hajlENGZ6NDZmMlRTV2ZEbW1odWhN?=
+ =?utf-8?B?dU5zeHlMMVZnald3Ykh4T0JHWlZ2QjVsWlVxQk1FWDA4TFpTMGc0dy8yS2RR?=
+ =?utf-8?B?Z3JhZnFBenkvVEk5RE1sYzdkei83RFZHaXk1TktJalBISXNpSVhxOVVqTmNz?=
+ =?utf-8?B?QS8yYlBQU2tDY0MrZTNZVWIyWFFqOFZVb2RzUlRHQkkrM3RWZGE4bjVPaDVy?=
+ =?utf-8?B?eEVUbUZKS2ttZ2ZRL0xvMmp0YWlwWWlpSmp5RXBxczAxaE1MZUpDdXBnSmhN?=
+ =?utf-8?B?WGpxelZjZ2NBWlNMb01LNER5S0FNYjVqRE4rRk5SMWZiZXRyMGc3Y1d1Q0gx?=
+ =?utf-8?B?NEdUMzVpRTJrb3hyaW9LbjUrTDFTc1lmcjFtbGpqVVRySk5ONW9UUWpsbnZm?=
+ =?utf-8?B?STVabHp5U2xZblQrVFBUNE8rSCtad1BvMENRVEpFSktrQ0RMbEpDUTJqdTBR?=
+ =?utf-8?B?d3hRMHZ5dUppdzFiL0lPbXdheHNMczN0b2lvU2JOVWYrY2lDaWZZaGlsNnB1?=
+ =?utf-8?B?cU8xa1dvbWwyd01FUU55TVpYUnpNSE9ob3dZaGNlUjYwZkNTR1ZKWWp1Q1VD?=
+ =?utf-8?B?bk91NndaaGVZOEpUejhtRXNRSDRQZzVFUEs0QkRHelpnSjdLZnFkOVNUZ0pD?=
+ =?utf-8?B?QzJVY3FOZE83ZkxjbGRFZ2QxUkx6T0NuVWVabzFBZ3F3TWpWcFZyR0gzUXph?=
+ =?utf-8?B?L0dNWEg2NDN3OTNhRDZFY3poTTN3a1FHMXFqTU5sRzlqNXBoN0cwNjZhOE1I?=
+ =?utf-8?B?TWNIZ0plRGk0cnYvRFBqZVhteDZBZm5GR2FSZFpOSGptTnZWaUFYNUV1cnY1?=
+ =?utf-8?B?NFdlMmtyeG1oRmN4TzhQZGdWZGtVem1XSE12anBQSFRYU2t0RGdrRFJTUS9H?=
+ =?utf-8?B?VUc4cEJnQXlqUFhabWZ3R3VjOVlSWGtueE94UG92R3FkOVNPYjEyZGhsdGZ4?=
+ =?utf-8?B?cjd0NFljTjJFYUIxeUdZRVBJZ2d2Skk4UVhoNHFzbDE2eVRvWkozOGpkajA4?=
+ =?utf-8?B?cUVMc3RXQmNDV2tYWk5najZtZHRNVitHL0J0ZjVPMm5rbjdrQS8yWW41OS82?=
+ =?utf-8?B?VTI0VXN6ZzNSaFk5WTJleFdkSTI0b2hhdHM4aHpRMTRUeG90a0pMWnBMZ3F1?=
+ =?utf-8?B?aFRYQ2xOeThvaTRNdFR0bFVBQzY1dW4vWEM0OEFXNXN1SDVvNHlGQXhEZ21m?=
+ =?utf-8?B?ckVMd1FRVEh6MWZuQWxwNkk1YmJxUC8xMkFYY3ExdDdjWVY2T2NFbitWcHhZ?=
+ =?utf-8?B?TlJPbU1YWEk1dXA2QnJJdEJXM1Z5b2k2YlNqWlZGcDc3M0lsNys3SU9aQ243?=
+ =?utf-8?B?dGkxOGZoREJpVy9zNVZOWHRjc3dzUEkyanlNZz09?=
 X-Forefront-Antispam-Report:
-	CIP:91.26.50.189;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:Diagnostix.phytec.de;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(82310400026)(36860700013)(1800799024)(921020);DIR:OUT;SFP:1102;
+	CIP:91.26.50.189;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:Diagnostix.phytec.de;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(7416014)(376014)(36860700013)(921020);DIR:OUT;SFP:1102;
 X-OriginatorOrg: phytec.de
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2025 05:09:07.2619
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2025 05:09:11.5221
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: fb32ab04-7421-47e9-3df5-08dd8d254b50
+X-MS-Exchange-CrossTenant-Network-Message-Id: 51399100-78fb-459d-3fc8-08dd8d254dda
 X-MS-Exchange-CrossTenant-Id: e609157c-80e2-446d-9be3-9c99c2399d29
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e609157c-80e2-446d-9be3-9c99c2399d29;Ip=[91.26.50.189];Helo=[Diagnostix.phytec.de]
 X-MS-Exchange-CrossTenant-AuthSource:
-	DB1PEPF000509FB.eurprd03.prod.outlook.com
+	DB1PEPF00050A01.eurprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8P195MB1027
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0P195MB1499
 
-Specify the temperature grade in the base device tree to ensure
-correct trip points are applied for each board.
+The AM62Ax SoC supports two temperature ranges:
+* A: -40 to 105C - Extended Industrial
+* I: -40 to 125C - Automotive
+
+Add device tree include files to adjust the alert and critical trip
+points in k3-am62a-thermal based on the temperature grade.
+
+Passive trip points are always set 10C below critical.
 
 Signed-off-by: Daniel Schultz <d.schultz@phytec.de>
 ---
- arch/arm64/boot/dts/ti/k3-am62-lp-sk.dts                  | 1 +
- arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts            | 1 +
- arch/arm64/boot/dts/ti/k3-am625-phyboard-lyra-rdk.dts     | 1 +
- arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-dahlia.dts | 1 +
- arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-dev.dts    | 1 +
- arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-ivy.dts    | 1 +
- arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-mallow.dts | 1 +
- arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-yavia.dts  | 1 +
- arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-dahlia.dts    | 1 +
- arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-dev.dts       | 1 +
- arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-ivy.dts       | 1 +
- arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-mallow.dts    | 1 +
- arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-yavia.dts     | 1 +
- 13 files changed, 13 insertions(+)
+ .../dts/ti/k3-am62a-thermal-automotive.dtsi   | 28 +++++++++++++++++++
+ .../dts/ti/k3-am62a-thermal-industrial.dtsi   | 28 +++++++++++++++++++
+ 2 files changed, 56 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/ti/k3-am62a-thermal-automotive.dtsi
+ create mode 100644 arch/arm64/boot/dts/ti/k3-am62a-thermal-industrial.dtsi
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am62-lp-sk.dts b/arch/arm64/boot/dts/ti/k3-am62-lp-sk.dts
-index 8e9fc00a6b3c..cbbdb2f2c265 100644
---- a/arch/arm64/boot/dts/ti/k3-am62-lp-sk.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am62-lp-sk.dts
-@@ -8,6 +8,7 @@
- /dts-v1/;
- 
- #include "k3-am62x-sk-common.dtsi"
-+#include "k3-am62-thermal-industrial.dtsi"
- 
- / {
- 	compatible = "ti,am62-lp-sk", "ti,am625";
-diff --git a/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts b/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
-index a5469f2712f0..380bd98d3d01 100644
---- a/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
-@@ -12,6 +12,7 @@
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/input/input.h>
- #include "k3-am625.dtsi"
-+#include "k3-am62-thermal-industrial.dtsi"
- 
- / {
- 	compatible = "beagle,am625-beagleplay", "ti,am625";
-diff --git a/arch/arm64/boot/dts/ti/k3-am625-phyboard-lyra-rdk.dts b/arch/arm64/boot/dts/ti/k3-am625-phyboard-lyra-rdk.dts
-index 4fa5efdffcd7..f75e3b45e9c5 100644
---- a/arch/arm64/boot/dts/ti/k3-am625-phyboard-lyra-rdk.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am625-phyboard-lyra-rdk.dts
-@@ -10,6 +10,7 @@
- #include "k3-am625.dtsi"
- #include "k3-am62-phycore-som.dtsi"
- #include "k3-am62x-phyboard-lyra.dtsi"
-+#include "k3-am62-thermal-industrial.dtsi"
- 
- / {
- 	compatible = "phytec,am625-phyboard-lyra-rdk",
-diff --git a/arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-dahlia.dts b/arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-dahlia.dts
-index d38bfef29d71..0a70705c6536 100644
---- a/arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-dahlia.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-dahlia.dts
-@@ -12,6 +12,7 @@
- #include "k3-am62-verdin.dtsi"
- #include "k3-am62-verdin-nonwifi.dtsi"
- #include "k3-am62-verdin-dahlia.dtsi"
-+#include "k3-am62-thermal-industrial.dtsi"
- 
- / {
- 	model = "Toradex Verdin AM62 on Dahlia Board";
-diff --git a/arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-dev.dts b/arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-dev.dts
-index 31d2a3066d43..a2e5b0886820 100644
---- a/arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-dev.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-dev.dts
-@@ -12,6 +12,7 @@
- #include "k3-am62-verdin.dtsi"
- #include "k3-am62-verdin-nonwifi.dtsi"
- #include "k3-am62-verdin-dev.dtsi"
-+#include "k3-am62-thermal-industrial.dtsi"
- 
- / {
- 	model = "Toradex Verdin AM62 on Verdin Development Board";
-diff --git a/arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-ivy.dts b/arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-ivy.dts
-index 48798bf3da4f..4f711c8cceba 100644
---- a/arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-ivy.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-ivy.dts
-@@ -12,6 +12,7 @@
- #include "k3-am62-verdin.dtsi"
- #include "k3-am62-verdin-nonwifi.dtsi"
- #include "k3-am62-verdin-ivy.dtsi"
-+#include "k3-am62-thermal-industrial.dtsi"
- 
- / {
- 	model = "Toradex Verdin AM62 on Ivy Board";
-diff --git a/arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-mallow.dts b/arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-mallow.dts
-index 9cae12106e0e..7dc6765e46dc 100644
---- a/arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-mallow.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-mallow.dts
-@@ -12,6 +12,7 @@
- #include "k3-am62-verdin.dtsi"
- #include "k3-am62-verdin-nonwifi.dtsi"
- #include "k3-am62-verdin-mallow.dtsi"
-+#include "k3-am62-thermal-industrial.dtsi"
- 
- / {
- 	model = "Toradex Verdin AM62 on Mallow Board";
-diff --git a/arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-yavia.dts b/arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-yavia.dts
-index e80332e1f030..9951bb4bb355 100644
---- a/arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-yavia.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-yavia.dts
-@@ -12,6 +12,7 @@
- #include "k3-am62-verdin.dtsi"
- #include "k3-am62-verdin-nonwifi.dtsi"
- #include "k3-am62-verdin-yavia.dtsi"
-+#include "k3-am62-thermal-industrial.dtsi"
- 
- / {
- 	model = "Toradex Verdin AM62 on Yavia Board";
-diff --git a/arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-dahlia.dts b/arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-dahlia.dts
-index 3850a706edb7..5662b9885fb0 100644
---- a/arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-dahlia.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-dahlia.dts
-@@ -12,6 +12,7 @@
- #include "k3-am62-verdin.dtsi"
- #include "k3-am62-verdin-wifi.dtsi"
- #include "k3-am62-verdin-dahlia.dtsi"
-+#include "k3-am62-thermal-industrial.dtsi"
- 
- / {
- 	model = "Toradex Verdin AM62 WB on Dahlia Board";
-diff --git a/arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-dev.dts b/arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-dev.dts
-index 4b657d6d3e0d..ea92fa3904a9 100644
---- a/arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-dev.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-dev.dts
-@@ -12,6 +12,7 @@
- #include "k3-am62-verdin.dtsi"
- #include "k3-am62-verdin-wifi.dtsi"
- #include "k3-am62-verdin-dev.dtsi"
-+#include "k3-am62-thermal-industrial.dtsi"
- 
- / {
- 	model = "Toradex Verdin AM62 WB on Verdin Development Board";
-diff --git a/arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-ivy.dts b/arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-ivy.dts
-index d96d8a0ebd86..d847760fc8cd 100644
---- a/arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-ivy.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-ivy.dts
-@@ -12,6 +12,7 @@
- #include "k3-am62-verdin.dtsi"
- #include "k3-am62-verdin-wifi.dtsi"
- #include "k3-am62-verdin-ivy.dtsi"
-+#include "k3-am62-thermal-industrial.dtsi"
- 
- / {
- 	model = "Toradex Verdin AM62 WB on Ivy Board";
-diff --git a/arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-mallow.dts b/arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-mallow.dts
-index 81d834b22649..0f6fb374614f 100644
---- a/arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-mallow.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-mallow.dts
-@@ -12,6 +12,7 @@
- #include "k3-am62-verdin.dtsi"
- #include "k3-am62-verdin-wifi.dtsi"
- #include "k3-am62-verdin-mallow.dtsi"
-+#include "k3-am62-thermal-industrial.dtsi"
- 
- / {
- 	model = "Toradex Verdin AM62 WB on Mallow Board";
-diff --git a/arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-yavia.dts b/arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-yavia.dts
-index 8a2506068ac4..e9a78c03d41c 100644
---- a/arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-yavia.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-yavia.dts
-@@ -12,6 +12,7 @@
- #include "k3-am62-verdin.dtsi"
- #include "k3-am62-verdin-wifi.dtsi"
- #include "k3-am62-verdin-yavia.dtsi"
-+#include "k3-am62-thermal-industrial.dtsi"
- 
- / {
- 	model = "Toradex Verdin AM62 WB on Yavia Board";
+diff --git a/arch/arm64/boot/dts/ti/k3-am62a-thermal-automotive.dtsi b/arch/arm64/boot/dts/ti/k3-am62a-thermal-automotive.dtsi
+new file mode 100644
+index 000000000000..4d6c649657ce
+--- /dev/null
++++ b/arch/arm64/boot/dts/ti/k3-am62a-thermal-automotive.dtsi
+@@ -0,0 +1,28 @@
++// SPDX-License-Identifier: GPL-2.0-only OR MIT
++/*
++ * Copyright (C) 2025 PHYTEC Messtechnik GmbH
++ */
++
++&main0_alert {
++	temperature = <115000>;
++};
++
++&main0_crit {
++	temperature = <125000>;
++};
++
++&main1_alert {
++	temperature = <115000>;
++};
++
++&main1_crit {
++	temperature = <125000>;
++};
++
++&main2_alert {
++	temperature = <115000>;
++};
++
++&main2_crit {
++	temperature = <125000>;
++};
+diff --git a/arch/arm64/boot/dts/ti/k3-am62a-thermal-industrial.dtsi b/arch/arm64/boot/dts/ti/k3-am62a-thermal-industrial.dtsi
+new file mode 100644
+index 000000000000..f6c69db8d62a
+--- /dev/null
++++ b/arch/arm64/boot/dts/ti/k3-am62a-thermal-industrial.dtsi
+@@ -0,0 +1,28 @@
++// SPDX-License-Identifier: GPL-2.0-only OR MIT
++/*
++ * Copyright (C) 2025 PHYTEC Messtechnik GmbH
++ */
++
++&main0_alert {
++	temperature = <95000>;
++};
++
++&main0_crit {
++	temperature = <105000>;
++};
++
++&main1_alert {
++	temperature = <95000>;
++};
++
++&main1_crit {
++	temperature = <105000>;
++};
++
++&main2_alert {
++	temperature = <95000>;
++};
++
++&main2_crit {
++	temperature = <105000>;
++};
 -- 
 2.25.1
 
