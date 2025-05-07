@@ -1,369 +1,696 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C87AF20B1F4;
-	Wed,  7 May 2025 11:02:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 761D121504D;
+	Wed,  7 May 2025 11:03:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746615781; cv=none; b=qf8ie8QansAO0lMjyOyesqamTRjUqqOdB91BHbrOPK7tIht6kcAawRY9ml11xh6C7xtLB2/2xzcPTzG/9DfV1QUm6oS/haWgwmX1Url8UhlJQPICF9vzWrekMkJjQxGu5ppVCKhQpgkJtpbDRWUQhduir64OYaKVlAWd1NlrB0w=
+	t=1746615792; cv=none; b=eqBZCRXkQ7Qy4mZEd42KBVlT2xkkkR+eTRK/wacdZSaqjy1KxsbImC5RZZWjfapaiPTZmPeiyyO2PFYMC8ZQOdC+LfFxFm9lR2Nu3FmhHBJhPkcON59Z2NtrQGV8aqkz3gj3DBBdKAPeMrRs0HarJ9KIXr+JodxpELGhnKwqiTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746615781; c=relaxed/simple;
-	bh=co+3odHbt1zWjccEgbz6zjoHKiJ+hnJ1gCjdF7eOJXM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bu86qorGbRp4WtGYDnTKEmQaVnSxrFPNkdZr4UA/RnDv2fCw7WaR+SiYTPlmFnqs7R9FrXIQUz5aFiGygZfwKCamsi89sorAKh+/fp2saUFwu48D/SSywtfqb7JXi60iA5gUJI3sifKCebRO0KfNEuAByUrMyRir+4yxbI3fhKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NQopF+6R; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746615792; c=relaxed/simple;
+	bh=r0E/6u4JWkefuT+mFl4Ms/omJqZxnIW/IFr6MMSs/bk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
+	 In-Reply-To:Content-Type; b=thT47FPmUX30wzkAGIgpYlj9/rs2Jnh5s2Rqzy/Ofk4z4oiyReUQBOwQb0shdxFwozwFwRxAR4Erl3tzetW+vamgZOlG36JMamSERcIv+8ov6HLn9Nvm+xWTqak+lt8qQDdlD7sNziGMQg0WijVXRRAEVp4VZtU0Kw9STgm+xeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=iRvrMwOX; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NQopF+6R"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ac29fd22163so1132258366b.3;
-        Wed, 07 May 2025 04:02:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746615778; x=1747220578; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wA1RCs9R0+wjorugvs8gPuBKuJdfVEv7Kl8WM15CE3I=;
-        b=NQopF+6RARY+FGEcQjHlYWqn2PAL1+OAsbgKB3LLjTC6SfCw2b2Z/uoibhloYiPcIc
-         gH5i6VVTWmC/9qKaDYkWnsec6bnMUTHmw+jABJlhLTOiiUOpow+3BDLtnTzmA1dXZ6e4
-         rwwJMgI+4KgcwIRCFlU3GEdTFW4Xmg/f/atSnVHfJuqDJYCLA7SVy/+/3U8AW5UYB4cu
-         SaO1SSDGwOs62I2U05AZGNATzEYT3Ny1Rz5hn5OhdDmcOwqRTCymbi+mdDBv6EKS/hsf
-         Hp7bJDqWNPOHRy+rhG5mdZk7DTtnnR4OgizY6X5085zdc3tzSZu8/OGpiVoMQs75dxci
-         sQ+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746615778; x=1747220578;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wA1RCs9R0+wjorugvs8gPuBKuJdfVEv7Kl8WM15CE3I=;
-        b=Ndz0ZcxryJhpGjExl78QbLVKvQfs63CynoKy6vAMuVXNWiDmHtLihyAB8R9o3IWWo+
-         JHeGSnaiWRlTbk/veFhq1DL8oPc7dRZLGkSO2aqdoMIpQnLIHGtw7fLAPE4kx2wf8rKy
-         EeX3s6pF/BDdRGyIOZXcz9Twr+VweZvaaMIlfmaC+kzNsBsdgUICfJtGRoG5aBiCYlPv
-         5yRxPc38AF+ISj6t72yUyzp56i+blRjafLxctnD38Ttzyi1yZkt7xCuDscmsiJSTFWTH
-         MIXc+qLNwwUqSS0qRaeb0y4beQqFm3rPpSfl1gWbkNVzeacjhlBQI3lNHuxHlB+Fo6U8
-         QM/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWegopoWlO7Hv5rvr1FMVmbrasoQJ6h57JHB3BgqL7aqx/YukOhLQs1CGBOed2y0V7tQRCoqSO1ng9e7OB7@vger.kernel.org, AJvYcCWt0WU9j6AVtzphEIdCmB4W7kFcedALrcNzbIROusOE3OXU88kVfB46PukhYzc8CXdImh67ou+faq/GQRiT@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKM3yheZFdByXgs7J552KnpWy0b2NuxI1h09HHccXg6scKzgyf
-	oXO4S17vkTkoHFnHLUXD+IhK+byt7RF8B+yP6FcqXP8mIiYRjl4/VOAj6LLXeD2dTI6we/6v4zL
-	Gc7uDxpVB0JeKqPzjLwDVopORz54=
-X-Gm-Gg: ASbGnctGBo+sScpaq+CJIg5+nlyWqaYgYWZntJV7VtsIhzXhHIbgOmReJs8jWbC2Ua7
-	UaLR88pWui5fET3UVLykKYp2fW9PuxOg8PfIB0Ag+ytoaZtjywn7kgsGVzaL6Lqt72GQcMwFub0
-	tp/VOm4jBTIU9jc9YqAkHxSg==
-X-Google-Smtp-Source: AGHT+IGmJOcljDg0qVKwGACkmSUln0pLwi7bS9k+5ZtNAzBUFtBbohM4Qbz0zcYTxJcsS9avGrCQ8ecueXjEzNrT8G8=
-X-Received: by 2002:a17:907:7b8d:b0:aca:d6f2:c39e with SMTP id
- a640c23a62f3a-ad1e8c14806mr257565166b.23.1746615777361; Wed, 07 May 2025
- 04:02:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="iRvrMwOX"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Cc:From:References:To:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=AWNHa3xgd3Sr/ggkT06X81rSZJFRU/DXIKiItzUVpq0=; t=1746615789;
+	x=1747047789; b=iRvrMwOXGv0IwFHeTLndl2rppT3ogcWR1zd6o0cmPwYa3vMQqkLZsBml9467+
+	VZLih+UGaYoUnZP74RmVuBW7t0OOYmOFkQ6vwD4O8S+Mhw7AxRxCZHRNFv7mt1dNymAQArvrKEt6f
+	mtpWdASJIf5CmlTEV37ncIbjwk32fJRxZBexkjNlwb7gTOr9jVA+TXe1SApuWfQIMyw5SP2nLwo5o
+	Vm/XmeTR/H2AFGBGqxNI/ZMCfKsrwCLMpACsbZB4yNObYCj3WqPS3Z7UdJcgAA2qYis4u0Fv7m5uo
+	iV20zhwApVnW5X8UlhC8zybOT2YRZx35IyiNhjN+1RjYul1g0Q==;
+Received: from [2a02:8108:8984:1d00:a0cf:1912:4be:477f]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
+	id 1uCcYM-000gC8-2e;
+	Wed, 07 May 2025 13:03:06 +0200
+Message-ID: <242ebbf1-4ef0-41c3-83cb-a055c262ba4a@leemhuis.info>
+Date: Wed, 7 May 2025 13:03:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250507032926.377076-2-chenlinxuan@uniontech.com>
-In-Reply-To: <20250507032926.377076-2-chenlinxuan@uniontech.com>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Wed, 7 May 2025 13:02:45 +0200
-X-Gm-Features: ATxdqUFCvpNsMtuCuTXY_Dfsfcttlem-5BEXzZXnYCBOxHIphLZbzSLrdptFOIg
-Message-ID: <CAOQ4uxjKFXOKQxPpxtS6G_nR0tpw95w0GiO68UcWg_OBhmSY=Q@mail.gmail.com>
-Subject: Re: [RFC PATCH] fs: fuse: add backing_files control file
-To: Chen Linxuan <chenlinxuan@uniontech.com>
-Cc: Miklos Szeredi <miklos@szeredi.hu>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v4 PATCH 11/11] crypto: lib/poly1305 - Use block-only interface
+To: Herbert Xu <herbert@gondor.apana.org.au>,
+ Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+References: <cover.1745815528.git.herbert@gondor.apana.org.au>
+ <915c874caf5451d560bf26ff59f58177aa8b7c17.1745815528.git.herbert@gondor.apana.org.au>
+From: Thorsten Leemhuis <linux@leemhuis.info>
+Content-Language: de-DE, en-US
+Autocrypt: addr=linux@leemhuis.info; keydata=
+ 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 n7RI
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>
+In-Reply-To: <915c874caf5451d560bf26ff59f58177aa8b7c17.1745815528.git.herbert@gondor.apana.org.au>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1746615789;54dfe2fd;
+X-HE-SMSGID: 1uCcYM-000gC8-2e
 
-On Wed, May 7, 2025 at 5:29=E2=80=AFAM Chen Linxuan <chenlinxuan@uniontech.=
-com> wrote:
->
-> Add a new FUSE control file "/sys/fs/fuse/connections/*/backing_files"
-> that exposes the paths of all backing files currently being used in
-> FUSE mount points. This is particularly valuable for tracking and
-> debugging files used in FUSE passthrough mode.
->
-> This approach is similar to how fixed files in io_uring expose their
-> status through fdinfo, providing administrators with visibility into
-> backing file usage. By making backing files visible through the FUSE
-> control filesystem, administrators can monitor which files are being
-> used for passthrough operations and can force-close them if needed by
-> aborting the connection.
->
-> This exposure of backing files information is an important step towards
-> potentially relaxing CAP_SYS_ADMIN requirements for certain passthrough
-> operations in the future, allowing for better security analysis of
-> passthrough usage patterns.
->
-> The control file is implemented using the seq_file interface for
-> efficient handling of potentially large numbers of backing files.
-> Access permissions are set to read-only (0400) as this is an
-> informational interface.
->
-> FUSE_CTL_NUM_DENTRIES has been increased from 5 to 6 to accommodate the
-> additional control file.
->
-> Some related discussions can be found at:
->
-> Link: https://lore.kernel.org/all/4b64a41c-6167-4c02-8bae-3021270ca519@fa=
-stmail.fm/T/#mc73e04df56b8830b1d7b06b5d9f22e594fba423e
-> Link: https://lore.kernel.org/linux-fsdevel/CAOQ4uxhAY1m7ubJ3p-A3rSufw_53=
-WuDRMT1Zqe_OC0bP_Fb3Zw@mail.gmail.com/
->
+On 28.04.25 06:56, Herbert Xu wrote:
+> Now that every architecture provides a block function, use that
+> to implement the lib/poly1305 and remove the old per-arch code.
+> 
+> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 
-remove newline
+I ran into a problem today when building -next rpms for ppc64le Fedora
+using the approach and configuration used to build the kernel rpms 
+shipped in Fedora rawhide. I did not investigate yet, but I wonder if is
+was caused by the quoted change or some other change in this series
+which showed up in -next today.
 
-> Cc: Amir Goldstein <amir73il@gmail.com>
-> Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
->
+"""
+ld: warning: discarding dynamic section .glink
+ld: warning: discarding dynamic section .plt
+ld: linkage table error against `poly1305_emit_arch'
+ld: stubs don't match calculated size
+ld: can not build stubs: bad value
+ld: lib/crypto/poly1305.o: in function `poly1305_final':
+/builddir/build/BUILD/kernel-6.15.0-build/kernel-next-20250507/linux-6.15.0-0.0.next.20250507.443.vanilla.fc43.ppc64le/lib/crypto/poly1305.c:65:(.text+0x2dc): undefined reference to `poly1305_emit_arch'
+ld: /builddir/build/BUILD/kernel-6.15.0-build/kernel-next-20250507/linux-6.15.0-0.0.next.20250507.443.vanilla.fc43.ppc64le/lib/crypto/poly1305.c:65:(.text+0x378): undefined reference to `poly1305_emit_arch'
+make[2]: *** [scripts/Makefile.vmlinux:91: vmlinux] Error 1
+make[1]: *** [/builddir/build/BUILD/kernel-6.15.0-build/kernel-next-20250507/linux-6.15.0-0.0.next.20250507.443.vanilla.fc43.ppc64le/Makefile:1250: vmlinux] Error 2
+"""
+
+Full build log:
+https://download.copr.fedorainfracloud.org/results/@kernel-vanilla/next/fedora-rawhide-ppc64le/09006679-next-next-all/builder-live.log.gz
+
+Same problem occured on Fedora 40, 41 and 42 as well.
+
+Ciao, Thorsten
+
 > ---
-> Please review this patch carefully. I am new to kernel development and
-> I am not quite sure if I have followed the best practices, especially
-> in terms of seq_file, error handling and locking. I would appreciate
-> any feedback.
-
-Very nice work!
-
->
-> I have do some simply testing using libfuse example [1]. It seems to
-> work well.
-
-It would be great if you could add basic sanity tests to libfuse
-maybe in test_passthrough_hp(), but I do not see any tests for
-/sys/fs/fuse/connections.
-
-I also see that there is one kernel selftest that mounts a fuse fs
-tools/testing/selftests/memfd
-maybe that is an easier way to write a simple test to verify the
-/sys/fs/fuse/connections functionally.
-
-Anyway, I do not require that you do that as a condition for merging this p=
-atch,
-but I may require that for removing CAP_SYS_ADMIN ;)
-
->
-> [1]: https://github.com/libfuse/libfuse/blob/master/example/passthrough_h=
-p.cc
-> ---
->  fs/fuse/control.c | 129 +++++++++++++++++++++++++++++++++++++++++++++-
->  fs/fuse/fuse_i.h  |   2 +-
->  2 files changed, 129 insertions(+), 2 deletions(-)
->
-> diff --git a/fs/fuse/control.c b/fs/fuse/control.c
-> index 2a730d88cc3bd..4d1e0acc5030f 100644
-> --- a/fs/fuse/control.c
-> +++ b/fs/fuse/control.c
-> @@ -11,6 +11,7 @@
->  #include <linux/init.h>
+>  arch/arm/lib/crypto/poly1305-glue.c         | 57 -------------------
+>  arch/arm64/lib/crypto/poly1305-glue.c       | 58 -------------------
+>  arch/mips/lib/crypto/poly1305-glue.c        | 60 --------------------
+>  arch/powerpc/lib/crypto/poly1305-p10-glue.c | 63 ---------------------
+>  arch/x86/lib/crypto/poly1305_glue.c         | 60 --------------------
+>  include/crypto/poly1305.h                   | 53 ++---------------
+>  lib/crypto/poly1305.c                       | 39 ++++++++-----
+>  7 files changed, 32 insertions(+), 358 deletions(-)
+> 
+> diff --git a/arch/arm/lib/crypto/poly1305-glue.c b/arch/arm/lib/crypto/poly1305-glue.c
+> index 3ee16048ec7c..91da42b26d9c 100644
+> --- a/arch/arm/lib/crypto/poly1305-glue.c
+> +++ b/arch/arm/lib/crypto/poly1305-glue.c
+> @@ -12,7 +12,6 @@
+>  #include <linux/jump_label.h>
+>  #include <linux/kernel.h>
 >  #include <linux/module.h>
->  #include <linux/fs_context.h>
-> +#include <linux/seq_file.h>
->
->  #define FUSE_CTL_SUPER_MAGIC 0x65735543
->
-> @@ -180,6 +181,129 @@ static ssize_t fuse_conn_congestion_threshold_write=
-(struct file *file,
->         return ret;
+> -#include <linux/string.h>
+>  #include <linux/unaligned.h>
+>  
+>  asmlinkage void poly1305_block_init_arch(
+> @@ -35,17 +34,6 @@ void __weak poly1305_blocks_neon(struct poly1305_block_state *state,
+>  
+>  static __ro_after_init DEFINE_STATIC_KEY_FALSE(have_neon);
+>  
+> -void poly1305_init_arch(struct poly1305_desc_ctx *dctx, const u8 key[POLY1305_KEY_SIZE])
+> -{
+> -	dctx->s[0] = get_unaligned_le32(key + 16);
+> -	dctx->s[1] = get_unaligned_le32(key + 20);
+> -	dctx->s[2] = get_unaligned_le32(key + 24);
+> -	dctx->s[3] = get_unaligned_le32(key + 28);
+> -	dctx->buflen = 0;
+> -	poly1305_block_init_arch(&dctx->state, key);
+> -}
+> -EXPORT_SYMBOL(poly1305_init_arch);
+> -
+>  void poly1305_blocks_arch(struct poly1305_block_state *state, const u8 *src,
+>  			  unsigned int len, u32 padbit)
+>  {
+> @@ -67,51 +55,6 @@ void poly1305_blocks_arch(struct poly1305_block_state *state, const u8 *src,
 >  }
->
-> +struct fuse_backing_files_seq_state {
-> +       struct fuse_conn *fc;
-> +       int pos;
+>  EXPORT_SYMBOL_GPL(poly1305_blocks_arch);
+>  
+> -void poly1305_update_arch(struct poly1305_desc_ctx *dctx, const u8 *src,
+> -			  unsigned int nbytes)
+> -{
+> -	if (unlikely(dctx->buflen)) {
+> -		u32 bytes = min(nbytes, POLY1305_BLOCK_SIZE - dctx->buflen);
+> -
+> -		memcpy(dctx->buf + dctx->buflen, src, bytes);
+> -		src += bytes;
+> -		nbytes -= bytes;
+> -		dctx->buflen += bytes;
+> -
+> -		if (dctx->buflen == POLY1305_BLOCK_SIZE) {
+> -			poly1305_blocks_arch(&dctx->state, dctx->buf,
+> -					     POLY1305_BLOCK_SIZE, 1);
+> -			dctx->buflen = 0;
+> -		}
+> -	}
+> -
+> -	if (likely(nbytes >= POLY1305_BLOCK_SIZE)) {
+> -		poly1305_blocks_arch(&dctx->state, src, nbytes, 1);
+> -		src += round_down(nbytes, POLY1305_BLOCK_SIZE);
+> -		nbytes %= POLY1305_BLOCK_SIZE;
+> -	}
+> -
+> -	if (unlikely(nbytes)) {
+> -		dctx->buflen = nbytes;
+> -		memcpy(dctx->buf, src, nbytes);
+> -	}
+> -}
+> -EXPORT_SYMBOL(poly1305_update_arch);
+> -
+> -void poly1305_final_arch(struct poly1305_desc_ctx *dctx, u8 *dst)
+> -{
+> -	if (unlikely(dctx->buflen)) {
+> -		dctx->buf[dctx->buflen++] = 1;
+> -		memset(dctx->buf + dctx->buflen, 0,
+> -		       POLY1305_BLOCK_SIZE - dctx->buflen);
+> -		poly1305_blocks_arch(&dctx->state, dctx->buf, POLY1305_BLOCK_SIZE, 0);
+> -	}
+> -
+> -	poly1305_emit_arch(&dctx->h, dst, dctx->s);
+> -	*dctx = (struct poly1305_desc_ctx){};
+> -}
+> -EXPORT_SYMBOL(poly1305_final_arch);
+> -
+>  bool poly1305_is_arch_optimized(void)
+>  {
+>  	/* We always can use at least the ARM scalar implementation. */
+> diff --git a/arch/arm64/lib/crypto/poly1305-glue.c b/arch/arm64/lib/crypto/poly1305-glue.c
+> index d66a820e32d5..681c26557336 100644
+> --- a/arch/arm64/lib/crypto/poly1305-glue.c
+> +++ b/arch/arm64/lib/crypto/poly1305-glue.c
+> @@ -12,7 +12,6 @@
+>  #include <linux/jump_label.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+> -#include <linux/string.h>
+>  #include <linux/unaligned.h>
+>  
+>  asmlinkage void poly1305_block_init_arch(
+> @@ -30,17 +29,6 @@ EXPORT_SYMBOL_GPL(poly1305_emit_arch);
+>  
+>  static __ro_after_init DEFINE_STATIC_KEY_FALSE(have_neon);
+>  
+> -void poly1305_init_arch(struct poly1305_desc_ctx *dctx, const u8 key[POLY1305_KEY_SIZE])
+> -{
+> -	dctx->s[0] = get_unaligned_le32(key + 16);
+> -	dctx->s[1] = get_unaligned_le32(key + 20);
+> -	dctx->s[2] = get_unaligned_le32(key + 24);
+> -	dctx->s[3] = get_unaligned_le32(key + 28);
+> -	dctx->buflen = 0;
+> -	poly1305_block_init_arch(&dctx->state, key);
+> -}
+> -EXPORT_SYMBOL(poly1305_init_arch);
+> -
+>  void poly1305_blocks_arch(struct poly1305_block_state *state, const u8 *src,
+>  			  unsigned int len, u32 padbit)
+>  {
+> @@ -61,52 +49,6 @@ void poly1305_blocks_arch(struct poly1305_block_state *state, const u8 *src,
+>  }
+>  EXPORT_SYMBOL_GPL(poly1305_blocks_arch);
+>  
+> -void poly1305_update_arch(struct poly1305_desc_ctx *dctx, const u8 *src,
+> -			  unsigned int nbytes)
+> -{
+> -	if (unlikely(dctx->buflen)) {
+> -		u32 bytes = min(nbytes, POLY1305_BLOCK_SIZE - dctx->buflen);
+> -
+> -		memcpy(dctx->buf + dctx->buflen, src, bytes);
+> -		src += bytes;
+> -		nbytes -= bytes;
+> -		dctx->buflen += bytes;
+> -
+> -		if (dctx->buflen == POLY1305_BLOCK_SIZE) {
+> -			poly1305_blocks_arch(&dctx->state, dctx->buf,
+> -					     POLY1305_BLOCK_SIZE, 1);
+> -			dctx->buflen = 0;
+> -		}
+> -	}
+> -
+> -	if (likely(nbytes >= POLY1305_BLOCK_SIZE)) {
+> -		poly1305_blocks_arch(&dctx->state, src, nbytes, 1);
+> -		src += round_down(nbytes, POLY1305_BLOCK_SIZE);
+> -		nbytes %= POLY1305_BLOCK_SIZE;
+> -	}
+> -
+> -	if (unlikely(nbytes)) {
+> -		dctx->buflen = nbytes;
+> -		memcpy(dctx->buf, src, nbytes);
+> -	}
+> -}
+> -EXPORT_SYMBOL(poly1305_update_arch);
+> -
+> -void poly1305_final_arch(struct poly1305_desc_ctx *dctx, u8 *dst)
+> -{
+> -	if (unlikely(dctx->buflen)) {
+> -		dctx->buf[dctx->buflen++] = 1;
+> -		memset(dctx->buf + dctx->buflen, 0,
+> -		       POLY1305_BLOCK_SIZE - dctx->buflen);
+> -		poly1305_blocks_arch(&dctx->state, dctx->buf,
+> -				     POLY1305_BLOCK_SIZE, 0);
+> -	}
+> -
+> -	poly1305_emit_arch(&dctx->h, dst, dctx->s);
+> -	memzero_explicit(dctx, sizeof(*dctx));
+> -}
+> -EXPORT_SYMBOL(poly1305_final_arch);
+> -
+>  bool poly1305_is_arch_optimized(void)
+>  {
+>  	/* We always can use at least the ARM64 scalar implementation. */
+> diff --git a/arch/mips/lib/crypto/poly1305-glue.c b/arch/mips/lib/crypto/poly1305-glue.c
+> index 2fea4cacfe27..764a38a65200 100644
+> --- a/arch/mips/lib/crypto/poly1305-glue.c
+> +++ b/arch/mips/lib/crypto/poly1305-glue.c
+> @@ -9,7 +9,6 @@
+>  #include <linux/cpufeature.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+> -#include <linux/string.h>
+>  #include <linux/unaligned.h>
+>  
+>  asmlinkage void poly1305_block_init_arch(
+> @@ -24,65 +23,6 @@ asmlinkage void poly1305_emit_arch(const struct poly1305_state *state,
+>  				   const u32 nonce[4]);
+>  EXPORT_SYMBOL_GPL(poly1305_emit_arch);
+>  
+> -void poly1305_init_arch(struct poly1305_desc_ctx *dctx, const u8 key[POLY1305_KEY_SIZE])
+> -{
+> -	dctx->s[0] = get_unaligned_le32(key + 16);
+> -	dctx->s[1] = get_unaligned_le32(key + 20);
+> -	dctx->s[2] = get_unaligned_le32(key + 24);
+> -	dctx->s[3] = get_unaligned_le32(key + 28);
+> -	dctx->buflen = 0;
+> -	poly1305_block_init_arch(&dctx->state, key);
+> -}
+> -EXPORT_SYMBOL(poly1305_init_arch);
+> -
+> -void poly1305_update_arch(struct poly1305_desc_ctx *dctx, const u8 *src,
+> -			  unsigned int nbytes)
+> -{
+> -	if (unlikely(dctx->buflen)) {
+> -		u32 bytes = min(nbytes, POLY1305_BLOCK_SIZE - dctx->buflen);
+> -
+> -		memcpy(dctx->buf + dctx->buflen, src, bytes);
+> -		src += bytes;
+> -		nbytes -= bytes;
+> -		dctx->buflen += bytes;
+> -
+> -		if (dctx->buflen == POLY1305_BLOCK_SIZE) {
+> -			poly1305_blocks_arch(&dctx->state, dctx->buf,
+> -					     POLY1305_BLOCK_SIZE, 1);
+> -			dctx->buflen = 0;
+> -		}
+> -	}
+> -
+> -	if (likely(nbytes >= POLY1305_BLOCK_SIZE)) {
+> -		unsigned int len = round_down(nbytes, POLY1305_BLOCK_SIZE);
+> -
+> -		poly1305_blocks_arch(&dctx->state, src, len, 1);
+> -		src += len;
+> -		nbytes %= POLY1305_BLOCK_SIZE;
+> -	}
+> -
+> -	if (unlikely(nbytes)) {
+> -		dctx->buflen = nbytes;
+> -		memcpy(dctx->buf, src, nbytes);
+> -	}
+> -}
+> -EXPORT_SYMBOL(poly1305_update_arch);
+> -
+> -void poly1305_final_arch(struct poly1305_desc_ctx *dctx, u8 *dst)
+> -{
+> -	if (unlikely(dctx->buflen)) {
+> -		dctx->buf[dctx->buflen++] = 1;
+> -		memset(dctx->buf + dctx->buflen, 0,
+> -		       POLY1305_BLOCK_SIZE - dctx->buflen);
+> -		poly1305_blocks_arch(&dctx->state, dctx->buf,
+> -				     POLY1305_BLOCK_SIZE, 0);
+> -	}
+> -
+> -	poly1305_emit_arch(&dctx->h, dst, dctx->s);
+> -	*dctx = (struct poly1305_desc_ctx){};
+> -}
+> -EXPORT_SYMBOL(poly1305_final_arch);
+> -
+>  bool poly1305_is_arch_optimized(void)
+>  {
+>  	return true;
+> diff --git a/arch/powerpc/lib/crypto/poly1305-p10-glue.c b/arch/powerpc/lib/crypto/poly1305-p10-glue.c
+> index 708435beaba6..50ac802220e0 100644
+> --- a/arch/powerpc/lib/crypto/poly1305-p10-glue.c
+> +++ b/arch/powerpc/lib/crypto/poly1305-p10-glue.c
+> @@ -10,7 +10,6 @@
+>  #include <linux/jump_label.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+> -#include <linux/string.h>
+>  #include <linux/unaligned.h>
+>  
+>  asmlinkage void poly1305_p10le_4blocks(struct poly1305_block_state *state, const u8 *m, u32 mlen);
+> @@ -45,17 +44,6 @@ void poly1305_block_init_arch(struct poly1305_block_state *dctx,
+>  }
+>  EXPORT_SYMBOL_GPL(poly1305_block_init_arch);
+>  
+> -void poly1305_init_arch(struct poly1305_desc_ctx *dctx, const u8 key[POLY1305_KEY_SIZE])
+> -{
+> -	dctx->s[0] = get_unaligned_le32(key + 16);
+> -	dctx->s[1] = get_unaligned_le32(key + 20);
+> -	dctx->s[2] = get_unaligned_le32(key + 24);
+> -	dctx->s[3] = get_unaligned_le32(key + 28);
+> -	dctx->buflen = 0;
+> -	poly1305_block_init_arch(&dctx->state, key);
+> -}
+> -EXPORT_SYMBOL(poly1305_init_arch);
+> -
+>  void poly1305_blocks_arch(struct poly1305_block_state *state, const u8 *src,
+>  			  unsigned int len, u32 padbit)
+>  {
+> @@ -76,57 +64,6 @@ void poly1305_blocks_arch(struct poly1305_block_state *state, const u8 *src,
+>  }
+>  EXPORT_SYMBOL_GPL(poly1305_blocks_arch);
+>  
+> -void poly1305_update_arch(struct poly1305_desc_ctx *dctx,
+> -			  const u8 *src, unsigned int srclen)
+> -{
+> -	unsigned int bytes;
+> -
+> -	if (!static_key_enabled(&have_p10))
+> -		return poly1305_update_generic(dctx, src, srclen);
+> -
+> -	if (unlikely(dctx->buflen)) {
+> -		bytes = min(srclen, POLY1305_BLOCK_SIZE - dctx->buflen);
+> -		memcpy(dctx->buf + dctx->buflen, src, bytes);
+> -		src += bytes;
+> -		srclen -= bytes;
+> -		dctx->buflen += bytes;
+> -		if (dctx->buflen < POLY1305_BLOCK_SIZE)
+> -			return;
+> -		poly1305_blocks_arch(&dctx->state, dctx->buf,
+> -				     POLY1305_BLOCK_SIZE, 1);
+> -		dctx->buflen = 0;
+> -	}
+> -
+> -	if (likely(srclen >= POLY1305_BLOCK_SIZE)) {
+> -		poly1305_blocks_arch(&dctx->state, src, srclen, 1);
+> -		src += srclen - (srclen % POLY1305_BLOCK_SIZE);
+> -		srclen %= POLY1305_BLOCK_SIZE;
+> -	}
+> -
+> -	if (unlikely(srclen)) {
+> -		dctx->buflen = srclen;
+> -		memcpy(dctx->buf, src, srclen);
+> -	}
+> -}
+> -EXPORT_SYMBOL(poly1305_update_arch);
+> -
+> -void poly1305_final_arch(struct poly1305_desc_ctx *dctx, u8 *dst)
+> -{
+> -	if (!static_key_enabled(&have_p10))
+> -		return poly1305_final_generic(dctx, dst);
+> -
+> -	if (dctx->buflen) {
+> -		dctx->buf[dctx->buflen++] = 1;
+> -		memset(dctx->buf + dctx->buflen, 0,
+> -		       POLY1305_BLOCK_SIZE - dctx->buflen);
+> -		poly1305_blocks_arch(&dctx->state, dctx->buf,
+> -				     POLY1305_BLOCK_SIZE, 0);
+> -	}
+> -
+> -	poly1305_emit_arch(&dctx->h, dst, dctx->s);
+> -}
+> -EXPORT_SYMBOL(poly1305_final_arch);
+> -
+>  bool poly1305_is_arch_optimized(void)
+>  {
+>  	return static_key_enabled(&have_p10);
+> diff --git a/arch/x86/lib/crypto/poly1305_glue.c b/arch/x86/lib/crypto/poly1305_glue.c
+> index d98764ec3b47..f799828c5809 100644
+> --- a/arch/x86/lib/crypto/poly1305_glue.c
+> +++ b/arch/x86/lib/crypto/poly1305_glue.c
+> @@ -10,7 +10,6 @@
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+>  #include <linux/sizes.h>
+> -#include <linux/string.h>
+>  #include <linux/unaligned.h>
+>  
+>  struct poly1305_arch_internal {
+> @@ -96,65 +95,6 @@ void poly1305_emit_arch(const struct poly1305_state *ctx,
+>  }
+>  EXPORT_SYMBOL_GPL(poly1305_emit_arch);
+>  
+> -void poly1305_init_arch(struct poly1305_desc_ctx *dctx, const u8 key[POLY1305_KEY_SIZE])
+> -{
+> -	dctx->s[0] = get_unaligned_le32(&key[16]);
+> -	dctx->s[1] = get_unaligned_le32(&key[20]);
+> -	dctx->s[2] = get_unaligned_le32(&key[24]);
+> -	dctx->s[3] = get_unaligned_le32(&key[28]);
+> -	dctx->buflen = 0;
+> -	poly1305_block_init_arch(&dctx->state, key);
+> -}
+> -EXPORT_SYMBOL(poly1305_init_arch);
+> -
+> -void poly1305_update_arch(struct poly1305_desc_ctx *dctx, const u8 *src,
+> -			  unsigned int srclen)
+> -{
+> -	unsigned int bytes;
+> -
+> -	if (unlikely(dctx->buflen)) {
+> -		bytes = min(srclen, POLY1305_BLOCK_SIZE - dctx->buflen);
+> -		memcpy(dctx->buf + dctx->buflen, src, bytes);
+> -		src += bytes;
+> -		srclen -= bytes;
+> -		dctx->buflen += bytes;
+> -
+> -		if (dctx->buflen == POLY1305_BLOCK_SIZE) {
+> -			poly1305_blocks_arch(&dctx->state, dctx->buf,
+> -					     POLY1305_BLOCK_SIZE, 1);
+> -			dctx->buflen = 0;
+> -		}
+> -	}
+> -
+> -	if (likely(srclen >= POLY1305_BLOCK_SIZE)) {
+> -		bytes = round_down(srclen, POLY1305_BLOCK_SIZE);
+> -		poly1305_blocks_arch(&dctx->state, src, bytes, 1);
+> -		src += bytes;
+> -		srclen -= bytes;
+> -	}
+> -
+> -	if (unlikely(srclen)) {
+> -		dctx->buflen = srclen;
+> -		memcpy(dctx->buf, src, srclen);
+> -	}
+> -}
+> -EXPORT_SYMBOL(poly1305_update_arch);
+> -
+> -void poly1305_final_arch(struct poly1305_desc_ctx *dctx, u8 *dst)
+> -{
+> -	if (unlikely(dctx->buflen)) {
+> -		dctx->buf[dctx->buflen++] = 1;
+> -		memset(dctx->buf + dctx->buflen, 0,
+> -		       POLY1305_BLOCK_SIZE - dctx->buflen);
+> -		poly1305_blocks_arch(&dctx->state, dctx->buf,
+> -				     POLY1305_BLOCK_SIZE, 0);
+> -	}
+> -
+> -	poly1305_emit_arch(&dctx->h, dst, dctx->s);
+> -	memzero_explicit(dctx, sizeof(*dctx));
+> -}
+> -EXPORT_SYMBOL(poly1305_final_arch);
+> -
+>  bool poly1305_is_arch_optimized(void)
+>  {
+>  	return static_key_enabled(&poly1305_use_avx);
+> diff --git a/include/crypto/poly1305.h b/include/crypto/poly1305.h
+> index 027d74842cd5..e54abda8cfe9 100644
+> --- a/include/crypto/poly1305.h
+> +++ b/include/crypto/poly1305.h
+> @@ -55,55 +55,14 @@ struct poly1305_desc_ctx {
+>  	unsigned int buflen;
+>  	/* finalize key */
+>  	u32 s[4];
+> -	union {
+> -		struct {
+> -			struct poly1305_state h;
+> -			union {
+> -				struct poly1305_key opaque_r[CONFIG_CRYPTO_LIB_POLY1305_RSIZE];
+> -				struct poly1305_core_key core_r;
+> -			};
+> -		};
+> -		struct poly1305_block_state state;
+> -	};
+> +	struct poly1305_block_state state;
+>  };
+>  
+> -void poly1305_init_arch(struct poly1305_desc_ctx *desc,
+> -			const u8 key[POLY1305_KEY_SIZE]);
+> -void poly1305_init_generic(struct poly1305_desc_ctx *desc,
+> -			   const u8 key[POLY1305_KEY_SIZE]);
+> -
+> -static inline void poly1305_init(struct poly1305_desc_ctx *desc, const u8 *key)
+> -{
+> -	if (IS_ENABLED(CONFIG_CRYPTO_ARCH_HAVE_LIB_POLY1305))
+> -		poly1305_init_arch(desc, key);
+> -	else
+> -		poly1305_init_generic(desc, key);
+> -}
+> -
+> -void poly1305_update_arch(struct poly1305_desc_ctx *desc, const u8 *src,
+> -			  unsigned int nbytes);
+> -void poly1305_update_generic(struct poly1305_desc_ctx *desc, const u8 *src,
+> -			     unsigned int nbytes);
+> -
+> -static inline void poly1305_update(struct poly1305_desc_ctx *desc,
+> -				   const u8 *src, unsigned int nbytes)
+> -{
+> -	if (IS_ENABLED(CONFIG_CRYPTO_ARCH_HAVE_LIB_POLY1305))
+> -		poly1305_update_arch(desc, src, nbytes);
+> -	else
+> -		poly1305_update_generic(desc, src, nbytes);
+> -}
+> -
+> -void poly1305_final_arch(struct poly1305_desc_ctx *desc, u8 *digest);
+> -void poly1305_final_generic(struct poly1305_desc_ctx *desc, u8 *digest);
+> -
+> -static inline void poly1305_final(struct poly1305_desc_ctx *desc, u8 *digest)
+> -{
+> -	if (IS_ENABLED(CONFIG_CRYPTO_ARCH_HAVE_LIB_POLY1305))
+> -		poly1305_final_arch(desc, digest);
+> -	else
+> -		poly1305_final_generic(desc, digest);
+> -}
+> +void poly1305_init(struct poly1305_desc_ctx *desc,
+> +		   const u8 key[POLY1305_KEY_SIZE]);
+> +void poly1305_update(struct poly1305_desc_ctx *desc,
+> +		     const u8 *src, unsigned int nbytes);
+> +void poly1305_final(struct poly1305_desc_ctx *desc, u8 *digest);
+>  
+>  #if IS_ENABLED(CONFIG_CRYPTO_ARCH_HAVE_LIB_POLY1305)
+>  bool poly1305_is_arch_optimized(void);
+> diff --git a/lib/crypto/poly1305.c b/lib/crypto/poly1305.c
+> index 9fec64a599c1..4c9996864090 100644
+> --- a/lib/crypto/poly1305.c
+> +++ b/lib/crypto/poly1305.c
+> @@ -22,47 +22,60 @@ void poly1305_block_init_generic(struct poly1305_block_state *desc,
+>  }
+>  EXPORT_SYMBOL_GPL(poly1305_block_init_generic);
+>  
+> -void poly1305_init_generic(struct poly1305_desc_ctx *desc,
+> -			   const u8 key[POLY1305_KEY_SIZE])
+> +void poly1305_init(struct poly1305_desc_ctx *desc,
+> +		   const u8 key[POLY1305_KEY_SIZE])
+>  {
+>  	desc->s[0] = get_unaligned_le32(key + 16);
+>  	desc->s[1] = get_unaligned_le32(key + 20);
+>  	desc->s[2] = get_unaligned_le32(key + 24);
+>  	desc->s[3] = get_unaligned_le32(key + 28);
+>  	desc->buflen = 0;
+> -	poly1305_block_init_generic(&desc->state, key);
+> +	if (IS_ENABLED(CONFIG_CRYPTO_ARCH_HAVE_LIB_POLY1305))
+> +		poly1305_block_init_arch(&desc->state, key);
+> +	else
+> +		poly1305_block_init_generic(&desc->state, key);
+>  }
+> -EXPORT_SYMBOL_GPL(poly1305_init_generic);
+> +EXPORT_SYMBOL(poly1305_init);
+>  
+>  static inline void poly1305_blocks(struct poly1305_block_state *state,
+>  				   const u8 *src, unsigned int len)
+>  {
+> -	poly1305_blocks_generic(state, src, len, 1);
+> +	if (IS_ENABLED(CONFIG_CRYPTO_ARCH_HAVE_LIB_POLY1305))
+> +		poly1305_blocks_arch(state, src, len, 1);
+> +	else
+> +		poly1305_blocks_generic(state, src, len, 1);
+>  }
+>  
+> -void poly1305_update_generic(struct poly1305_desc_ctx *desc, const u8 *src,
+> -			     unsigned int nbytes)
+> +void poly1305_update(struct poly1305_desc_ctx *desc,
+> +		     const u8 *src, unsigned int nbytes)
+>  {
+>  	desc->buflen = BLOCK_HASH_UPDATE(poly1305_blocks, &desc->state,
+>  					 src, nbytes, POLY1305_BLOCK_SIZE,
+>  					 desc->buf, desc->buflen);
+>  }
+> -EXPORT_SYMBOL_GPL(poly1305_update_generic);
+> +EXPORT_SYMBOL(poly1305_update);
+>  
+> -void poly1305_final_generic(struct poly1305_desc_ctx *desc, u8 *dst)
+> +void poly1305_final(struct poly1305_desc_ctx *desc, u8 *dst)
+>  {
+>  	if (unlikely(desc->buflen)) {
+>  		desc->buf[desc->buflen++] = 1;
+>  		memset(desc->buf + desc->buflen, 0,
+>  		       POLY1305_BLOCK_SIZE - desc->buflen);
+> -		poly1305_blocks_generic(&desc->state, desc->buf,
+> -					POLY1305_BLOCK_SIZE, 0);
+> +		if (IS_ENABLED(CONFIG_CRYPTO_ARCH_HAVE_LIB_POLY1305))
+> +			poly1305_blocks_arch(&desc->state, desc->buf,
+> +					     POLY1305_BLOCK_SIZE, 0);
+> +		else
+> +			poly1305_blocks_generic(&desc->state, desc->buf,
+> +						POLY1305_BLOCK_SIZE, 0);
+>  	}
+>  
+> -	poly1305_emit_generic(&desc->h, dst, desc->s);
+> +	if (IS_ENABLED(CONFIG_CRYPTO_ARCH_HAVE_LIB_POLY1305))
+> +		poly1305_emit_arch(&desc->state.h, dst, desc->s);
+> +	else
+> +		poly1305_emit_generic(&desc->state.h, dst, desc->s);
+>  	*desc = (struct poly1305_desc_ctx){};
+>  }
+> -EXPORT_SYMBOL_GPL(poly1305_final_generic);
+> +EXPORT_SYMBOL(poly1305_final);
+>  
+>  MODULE_LICENSE("GPL");
+>  MODULE_AUTHOR("Martin Willi <martin@strongswan.org>");
 
-It will be more clear to call this 'backing_id'.
-It is more than an abstract pos in this context.
-
-> +};
-> +
-> +static void *fuse_backing_files_seq_start(struct seq_file *seq, loff_t *=
-pos)
-> +{
-> +       struct fuse_backing_files_seq_state *state =3D seq->private;
-> +       struct fuse_conn *fc =3D state->fc;
-> +
-> +       if (!fc)
-> +               return NULL;
-> +
-> +       spin_lock(&fc->lock);
-> +
-> +       if (*pos > idr_get_cursor(&fc->backing_files_map)) {
-
-This won't do after the ida allocator has wrapped up back to 1,
-it will not iterate the high ids.
-
-Please look at using idr_get_next() iteration, like bpf_prog_seq_ops.
-
-With that change, I don't think that you need to take the spin lock
-for iteration.
-I think that you can use rcu_read_lock() for the scope of each
-start(). next(), show()
-because we do not need to promise a "snapshot" of the backing_file at a spe=
-cific
-time. If backing files are added/removed while iterating it is undefined if=
- they
-are listed or not, just like readdir.
-
-> +               spin_unlock(&fc->lock);
-> +               return NULL;
-
-Not critical, but if you end up needing a "scoped" unlock for the
-entire iteration, you can use
-the unlock in stop() if you return ERR_PTR(ENOENT) instead of NULL in
-those error conditions.
-
-> +       }
-> +
-> +       state->pos =3D *pos;
-> +       return state;
-> +}
-> +
-> +static void *fuse_backing_files_seq_next(struct seq_file *seq, void *v,
-> +                                        loff_t *pos)
-> +{
-> +       struct fuse_backing_files_seq_state *state =3D seq->private;
-> +
-> +       (*pos)++;
-> +       state->pos =3D *pos;
-> +
-> +       if (state->pos > idr_get_cursor(&state->fc->backing_files_map)) {
-> +               spin_unlock(&state->fc->lock);
-> +               return NULL;
-> +       }
-> +
-> +       return state;
-> +}
-> +
-> +static int fuse_backing_files_seq_show(struct seq_file *seq, void *v)
-> +{
-> +       struct fuse_backing_files_seq_state *state =3D seq->private;
-> +       struct fuse_conn *fc =3D state->fc;
-> +       struct fuse_backing *fb;
-> +
-> +       fb =3D idr_find(&fc->backing_files_map, state->pos);
-
-You must fuse_backing_get/put(fb) around dereferencing fb->file
-if not holding the fc->lock.
-See fuse_passthrough_open().
-
-> +       if (!fb || !fb->file)
-> +               return 0;
-> +
-> +       seq_file_path(seq, fb->file, " \t\n\\");
-
-Pls print the backing id that is associated with the open file.
-
-I wonder out loud if we should also augment the backing fd
-information in fdinfo of specific open fuse FOPEN_PASSTHROUGH files?
-
-I am not requiring that you do that, but if you want to take a look
-I think that it could be cool to display this info, along with open_flags
-and other useful fuse_file information.
-
-Thanks,
-Amir.
-
-> +       seq_puts(seq, "\n");
-> +
-> +       return 0;
-> +}
-> +
-> +static void fuse_backing_files_seq_stop(struct seq_file *seq, void *v)
-> +{
-> +       struct fuse_backing_files_seq_state *state =3D seq->private;
-> +
-> +       if (v)
-> +               spin_unlock(&state->fc->lock);
-> +}
-> +
-> +static const struct seq_operations fuse_backing_files_seq_ops =3D {
-> +       .start =3D fuse_backing_files_seq_start,
-> +       .next =3D fuse_backing_files_seq_next,
-> +       .stop =3D fuse_backing_files_seq_stop,
-> +       .show =3D fuse_backing_files_seq_show,
-> +};
-> +
-> +static int fuse_backing_files_seq_open(struct inode *inode, struct file =
-*file)
-> +{
-> +       struct fuse_conn *fc;
-> +       struct fuse_backing_files_seq_state *state;
-> +       int err;
-> +
-> +       fc =3D fuse_ctl_file_conn_get(file);
-> +       if (!fc)
-> +               return -ENOTCONN;
-> +
-> +       err =3D seq_open(file, &fuse_backing_files_seq_ops);
-> +       if (err) {
-> +               fuse_conn_put(fc);
-> +               return err;
-> +       }
-> +
-> +       state =3D kmalloc(sizeof(*state), GFP_KERNEL);
-> +       if (!state) {
-> +               seq_release(file->f_inode, file);
-> +               fuse_conn_put(fc);
-> +               return -ENOMEM;
-> +       }
-> +
-> +       state->fc =3D fc;
-> +       state->pos =3D 0;
-> +       ((struct seq_file *)file->private_data)->private =3D state;
-> +
-> +       return 0;
-> +}
-> +
-> +static int fuse_backing_files_seq_release(struct inode *inode,
-> +                                         struct file *file)
-> +{
-> +       struct seq_file *seq =3D file->private_data;
-> +       struct fuse_backing_files_seq_state *state =3D seq->private;
-> +
-> +       if (state) {
-> +               fuse_conn_put(state->fc);
-> +               kfree(state);
-> +               seq->private =3D NULL;
-> +       }
-> +
-> +       return seq_release(inode, file);
-> +}
-> +
-> +static const struct file_operations fuse_conn_passthrough_backing_files_=
-ops =3D {
-> +       .open =3D fuse_backing_files_seq_open,
-> +       .read =3D seq_read,
-> +       .llseek =3D seq_lseek,
-> +       .release =3D fuse_backing_files_seq_release,
-> +};
-> +
->  static const struct file_operations fuse_ctl_abort_ops =3D {
->         .open =3D nonseekable_open,
->         .write =3D fuse_conn_abort_write,
-> @@ -270,7 +394,10 @@ int fuse_ctl_add_conn(struct fuse_conn *fc)
->                                  1, NULL, &fuse_conn_max_background_ops) =
-||
->             !fuse_ctl_add_dentry(parent, fc, "congestion_threshold",
->                                  S_IFREG | 0600, 1, NULL,
-> -                                &fuse_conn_congestion_threshold_ops))
-> +                                &fuse_conn_congestion_threshold_ops) ||
-> +           !fuse_ctl_add_dentry(parent, fc, "backing_files", S_IFREG | 0=
-400, 1,
-> +                                NULL,
-> +                                &fuse_conn_passthrough_backing_files_ops=
-))
->                 goto err;
->
->         return 0;
-> diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
-> index d56d4fd956db9..2830b05bb0928 100644
-> --- a/fs/fuse/fuse_i.h
-> +++ b/fs/fuse/fuse_i.h
-> @@ -46,7 +46,7 @@
->  #define FUSE_NAME_MAX (PATH_MAX - 1)
->
->  /** Number of dentries for each connection in the control filesystem */
-> -#define FUSE_CTL_NUM_DENTRIES 5
-> +#define FUSE_CTL_NUM_DENTRIES 6
->
->  /* Frequency (in seconds) of request timeout checks, if opted into */
->  #define FUSE_TIMEOUT_TIMER_FREQ 15
-> --
-> 2.43.0
->
