@@ -1,93 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9A5279E1;
-	Wed,  7 May 2025 02:57:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB59B134A8;
+	Wed,  7 May 2025 02:58:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746586654; cv=none; b=mKLe+lK8TFMHPOAtpSMRKnbKRVLqdIA3My8rUigx7RVZrm/IlmW3uNAnmJhYlBxb93Cl3xMnZ4rV2sbYrCBW6U4PmsbU01LglAM5xhhhJO7DYpw7tnAaksbEwBrijmA28gaGM6BqiX2A9863IZbieW1ejya0bkxHjM/akMR6HgE=
+	t=1746586731; cv=none; b=YaFYa4We5q50S/+rUdCk7p+pafAXXnJZNZFvkA82KspgoYjeHXWcegC1Lb3MlHKqWJoReYkZvPhDkO0yq7T0rTEnQvHr8g09zznXcXHPbIxy8svdj7Li8p3o16n8YlMSlPCbcRTo86DqouEAsEF63hn8L5y+Jo859IyIbIJ5+D4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746586654; c=relaxed/simple;
-	bh=/vzEubHwuNMF2pBidBwkQbCA050os6rVvYI9/KUiFKE=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=I5S5T1Wr8YNWf2jbSeKqCDq2NjYyhpXjSHRkeAnl5FQEkCoTYs/JtgiwEKEsCqhgssLHdspcVtRdPGGeQOQIjHAUSf3JQEyX37XiDUI8+krpwpYGkTyBmlw/2cNOQiv7yNP3MURpdkUkJg0A54AVliqGdtGl+zvKVhpcjP0+1GM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BEipz76b; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BEipz76b"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01EE8C4CEE4;
-	Wed,  7 May 2025 02:57:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746586653;
-	bh=/vzEubHwuNMF2pBidBwkQbCA050os6rVvYI9/KUiFKE=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=BEipz76b/Y9YZ5H3MlR3LfGbsb7JeKII4hi8g/2UiDGI5l9iwkl0puYFCIZoNuqGl
-	 RxiAPXJ2/7sId8yJ6Q1lljj+LxjoUOEHY6BwjZtRYebAq3xoaJ1NwGuP5wJvdj6j+v
-	 0hGatneKfnfV52pskxPRiHXFESjzqqhKS2Ov6WYpZOgn3Jg7t3kk3ApTRejFcIhCy2
-	 1F6qij6Q4t+l+vU3vmWXLe6RceCBB/8XUoaXO4IdPQjq5655dngicDWw5Yh3n0CK3q
-	 zavMzcpyh7HmMe2I1nYhIt/9UkEw1EYPVVd5kEgFvWe4LHEUCm11+R+GN3/zLK1LtQ
-	 vQDy1LzcVv+Lw==
-From: Mark Brown <broonie@kernel.org>
-To: Han Xu <han.xu@nxp.com>, Yogesh Gaur <yogeshgaur.83@gmail.com>, 
- Haibo Chen <haibo.chen@nxp.com>
-Cc: linux-spi@vger.kernel.org, imx@lists.linux.dev, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250428-flexspipatch-v3-0-61d5e8f591bc@nxp.com>
-References: <20250428-flexspipatch-v3-0-61d5e8f591bc@nxp.com>
-Subject: Re: [PATCH v3 0/5] This patch set did some clean up and add
- runtime pm support for flexspi driver
-Message-Id: <174658665186.4165102.13950594775211534528.b4-ty@kernel.org>
-Date: Wed, 07 May 2025 11:57:31 +0900
+	s=arc-20240116; t=1746586731; c=relaxed/simple;
+	bh=MmUPH4ARy9/vAzjyU9ahx/w7xXUYQgpi4F73R0SBSnA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Jxt9/XMvybFRRAl9nS9nBpu1UkyLSI96f6qC0R8Tfw9eGFaW9AW2z2KE4pbVYxvPBDoZyz08w0XuhveAKo3W7ACHV0VHE5LT+5U2GSEvSJv8/6LVGBZoU6a8mEMgVTu38twHHbAOxFYkJU4s8dG1EMKj5Ye6qBY+J+NSA8OScL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 2c49f9162aef11f0b29709d653e92f7d-20250507
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:fc6c30e8-57af-4dbe-b9c6-6dd9fc0d9916,IP:0,U
+	RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:-5
+X-CID-META: VersionHash:6493067,CLOUDID:848f288d76073cecd9c059e60a8b1d35,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:nil,UR
+	L:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,S
+	PR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 2c49f9162aef11f0b29709d653e92f7d-20250507
+Received: from mail.kylinos.cn [(10.44.16.175)] by mailgw.kylinos.cn
+	(envelope-from <zhangzihuan@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1047783727; Wed, 07 May 2025 10:58:37 +0800
+Received: from mail.kylinos.cn (localhost [127.0.0.1])
+	by mail.kylinos.cn (NSMail) with SMTP id 7A81AE006100;
+	Wed,  7 May 2025 10:58:37 +0800 (CST)
+X-ns-mid: postfix-681ACC5D-342742475
+Received: from localhost.localdomain (unknown [172.25.120.24])
+	by mail.kylinos.cn (NSMail) with ESMTPA id 24B1BE0080FF;
+	Wed,  7 May 2025 10:58:34 +0800 (CST)
+From: Zihuan Zhang <zhangzihuan@kylinos.cn>
+To: corbet@lwn.net,
+	rafael@kernel.org,
+	len.brown@intel.com,
+	pavel@kernel.org,
+	akpm@linux-foundation.org,
+	paulmck@kernel.org,
+	rostedt@goodmis.org,
+	thuth@redhat.com,
+	bp@alien8.de,
+	ardb@kernel.org,
+	gregkh@linuxfoundation.org
+Cc: linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	Zihuan Zhang <zhangzihuan@kylinos.cn>
+Subject: [PATCH v1] PM / sleep: add configurable delay for pm_test
+Date: Wed,  7 May 2025 10:57:06 +0800
+Message-Id: <20250507025706.311686-1-zhangzihuan@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c25d1
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 28 Apr 2025 18:06:42 +0800, Haibo Chen wrote:
-> PATCH1/3/4 to clean up the code, make the code more readable
-> PATCH2 add the runtime pm support
-> PATCH5 use devm_add_action_or_reset() to replace remove() callback, this can avoid
->        oops when do bind/unbind test
-> 
-> 
+This patch turns this 5 second delay into a configurable module
+parameter, so users can determine how long to wait in this
+pseudo-hibernate state before resuming the system.
 
-Applied to
+The configurable delay parameter has been added to suspend and
+synchronized to hibernate.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+Example (wait 30 seconds);
 
-Thanks!
+  # echo 30 > /sys/module/hibernate/parameters/pm_test_delay
+  # echo core > /sys/power/pm_test
 
-[1/5] spi: spi-nxp-fspi: remove the goto in probe
-      commit: 48900813abd2730a35c6e3afd1609bafac5271cc
-[2/5] spi: spi-nxp-fspi: enable runtime pm for fspi
-      commit: 97be4b919a609fc8c4bd1118502b5d26cc2f77c4
-[3/5] spi: spi-nxp-fspi: use guard(mutex) to simplify the code
-      commit: 93be516f819dcb1fdac035566381d8899d4b389c
-[4/5] spi: spi-nxp-fspi: remove the unchecked return value for nxp_fspi_clk_disable_unprep
-      commit: e0558eb74c6e082b60e03981eb7cbf0fc3780ef4
-[5/5] spi: nxp-fspi: use devm instead of remove for driver detach
-      commit: 9f7cd1bcb6363368abc954ff4e727b579813c697
+Signed-off-by: Zihuan Zhang <zhangzihuan@kylinos.cn>
+---
+ Documentation/admin-guide/kernel-parameters.txt | 7 +++++++
+ kernel/power/hibernate.c                        | 9 +++++++--
+ 2 files changed, 14 insertions(+), 2 deletions(-)
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentat=
+ion/admin-guide/kernel-parameters.txt
+index d9fd26b95b34..082a697a3e95 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -6998,6 +6998,13 @@
+ 			/sys/power/pm_test). Only available when CONFIG_PM_DEBUG
+ 			is set. Default value is 5.
+=20
++	hibernate.pm_test_delay=3D
++			[hibernate]
++			Sets the number of seconds to remain in a suspend test
++			mode before resuming the system (see
++			/sys/power/pm_test). Only available when CONFIG_PM_DEBUG
++			is set. Default value is 5.
++
+ 	svm=3D		[PPC]
+ 			Format: { on | off | y | n | 1 | 0 }
+ 			This parameter controls use of the Protected
+diff --git a/kernel/power/hibernate.c b/kernel/power/hibernate.c
+index 23c0f4e6cb2f..da7533aab8d1 100644
+--- a/kernel/power/hibernate.c
++++ b/kernel/power/hibernate.c
+@@ -133,10 +133,15 @@ bool system_entering_hibernation(void)
+ EXPORT_SYMBOL(system_entering_hibernation);
+=20
+ #ifdef CONFIG_PM_DEBUG
++static unsigned int pm_test_delay =3D 5;
++module_param(pm_test_delay, uint, 0644);
++MODULE_PARM_DESC(pm_test_delay,
++		 "Number of seconds to wait before resuming from hibernate test");
+ static void hibernation_debug_sleep(void)
+ {
+-	pr_info("debug: Waiting for 5 seconds.\n");
+-	mdelay(5000);
++	pr_info("hibernation debug: Waiting for %d second(s).\n",
++			pm_test_delay);
++	mdelay(pm_test_delay * 1000);
+ }
+=20
+ static int hibernation_test(int level)
+--=20
+2.25.1
 
