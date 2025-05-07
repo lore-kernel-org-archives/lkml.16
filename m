@@ -1,50 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 996FE221F0F;
-	Wed,  7 May 2025 07:54:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 556BB2153E2;
+	Wed,  7 May 2025 07:54:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746604483; cv=none; b=mfbc3AchSZXMXRl6pT+Scf3Cxproxk1SwOnLL3PRTEJ/wJW7Vr1WBJR63Ex2IvuIR02aMOvjLKSwtZWa2CccsQ1ddxRKxon9Qv67BahtqIooBzOdYugWjkIi4b5DPoJIUi87NnH+ICEWJJMJ3t5q+fo1vIKHp3kTXwjFbhBkaJM=
+	t=1746604491; cv=none; b=K6YjMxA02J33TdBA2eoAyWGQbgfrg+g3HWf1qFuovOzeY9QhUnc9hs6NrlZVFrKcaQtvA//6ljbKLB3s9N0ePob1J+bUZXMkDReQnS9vXvaWYhljV2SZvEpYL3sPY3Yb2ZoMkL4iqahsWmsQixRuCxLfHqiS3scn7sn/SgClaY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746604483; c=relaxed/simple;
-	bh=IVqlNaocDaKpQ/G49Jf3ESZWsV0zgwAqDWauMFaqzXc=;
+	s=arc-20240116; t=1746604491; c=relaxed/simple;
+	bh=RvNzjk0M4mARQxnDPb6DusUcGQ12+LWoRjehzoQ9+0k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qQTpfqR+T8cEEt+XdtZs28NbKArFpXF1urL5uQcPd9AgT2sS+r7H4BN+ej/+W3DPeKcx6m3BNCPXiTQQK9ZE62TQcqFkoUsSwd0sUvdSckZ+KGZwynfwg+qKvfdG5F0cYA68Suvb2kUiAgGx/ilEOyhZ/HTdYgfWKkNV6t9Me5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fG4S6iJP; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=JTt0wQZxRvNNyKdy1UniHEVVsO6O3zn+uevFoUM0ekRSczZexXdi/3PmaKrS1fJKeQiYiFJn0xy0aDHs94gKkt8wP1erT+t0Z0uq15HAm6sA0f8ABAVPnlrFhsk8oVLEbbizH2x/onFQPvTdBvXxPmUZxDg7BSyAu+oGFZGa4NI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YYPP9URb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fG4S6iJP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32E88C4CEE7;
-	Wed,  7 May 2025 07:54:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YYPP9URb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE4CCC4CEEE;
+	Wed,  7 May 2025 07:54:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746604483;
-	bh=IVqlNaocDaKpQ/G49Jf3ESZWsV0zgwAqDWauMFaqzXc=;
+	s=k20201202; t=1746604490;
+	bh=RvNzjk0M4mARQxnDPb6DusUcGQ12+LWoRjehzoQ9+0k=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fG4S6iJPzOtfKuwF5zStg02hXa10Zsaqean7bjPc3xb9WnrfCIc+ASROSDoSuHHYX
-	 bbXfkEzekQ2ppLyo6r2rvrRfpy8aQq/aVWuR+fmq3C3Jq94zIgP7JF70hSxdrqzaon
-	 rtZzHrpO+IXvAj7jF4XCO/g9BOTBPa6FkQqG+CF7PGlU4wyyl0KY4pZ8H86ak+YoVX
-	 3Y5Kj3gFgpdgRh5gMvS/0P0x1+vQMffx0CJ9fJLrpYZr/YB3NqAzbzOcPgwIZR2C86
-	 rK0aWoEHj4NFvuJSljP1Uvkc0zCSlO0nsersJ7oJj65it9rmWLV6jqb8ly3UdEHbTC
-	 Ck2++0pa0E5bw==
-Date: Wed, 7 May 2025 09:54:36 +0200
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-To: Marc Zyngier <maz@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	b=YYPP9URbYPC+uecaNokMl21TG6IAS8eM6KFsa+k+ziuulMc/0YPMlkBc/6xBJ7oVX
+	 2sQc4TQbzH7QDarjCEITyBG5jt1yqyaImSlsaKopA5Ul9y6gl7ntQDYkdF/OMJq/eZ
+	 kcjgqeqTVApPxZQCQY1RKJMpbKdbifLFwlJZCq7HdvKw5Ci8B7CgwwuaY8OShZ6qQO
+	 t2K2mNgsjVtjpg6IDPp96LiaJzpC77DdRBjlOT/r/u90RgstR6oTLYKWQ9E2sRro0P
+	 J6jgmSDJLGUEw063QNzeMCOyg7S82M48kvrZ+TUB/UGNhgUYDZqH9IJh2WreR5lg9c
+	 V4m6pM62CzCIg==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1uCZc5-000000005me-3rfW;
+	Wed, 07 May 2025 09:54:46 +0200
+Date: Wed, 7 May 2025 09:54:45 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Bjorn Andersson <andersson@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Sascha Bischoff <sascha.bischoff@arm.com>,
-	Timothy Hayes <timothy.hayes@arm.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 00/25] Arm GICv5: Host driver implementation
-Message-ID: <aBsRvOzse7z39dkh@lpieralisi>
-References: <20250506-gicv5-host-v3-0-6edd5a92fd09@kernel.org>
- <86frhhhm18.wl-maz@kernel.org>
+	Konrad Dybcio <konradybcio@kernel.org>,
+	linux-arm-msm@vger.kernel.org, linux-rtc@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/4] rtc: pm8xxx: fix uefi offset lookup
+Message-ID: <aBsRxbBb91e_sQn3@hovoldconsulting.com>
+References: <20250423075143.11157-1-johan+linaro@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,68 +50,53 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <86frhhhm18.wl-maz@kernel.org>
+In-Reply-To: <20250423075143.11157-1-johan+linaro@kernel.org>
 
-On Tue, May 06, 2025 at 03:05:39PM +0100, Marc Zyngier wrote:
-> On Tue, 06 May 2025 13:23:29 +0100,
-> Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
-> > 
-> > =============
-> > 2.5 GICv5 IWB
-> > =============
-> > 
-> > The IWB driver has been dropped owing to issues encountered with
-> > core code DOMAIN_BUS_WIRED_TO_MSI bus token handling:
-> > 
-> > https://lore.kernel.org/lkml/87tt6310hu.wl-maz@kernel.org/
+Hi Alexandre and Bjorn,
+
+On Wed, Apr 23, 2025 at 09:51:39AM +0200, Johan Hovold wrote:
+> On many Qualcomm platforms the PMIC RTC control and time registers are
+> read-only so that the RTC time can not be updated. Instead an offset
+> needs be stored in some machine-specific non-volatile memory, which a
+> driver can take into account.
 > 
-> This problem does not have much to do with DOMAIN_BUS_WIRED_TO_MSI.
+> On platforms where the offset is stored in a Qualcomm specific UEFI
+> variable the variables are also accessed in a non-standard way, which
+> means that the OS cannot assume that the variable service is available
+> by the time the driver probes.
 > 
-> The issues are that:
+> This series adds a 'qcom,uefi-rtc-info' boolean DT property to indicate
+> that the RTC offset is stored in a Qualcomm specific UEFI variable so
+> that the OS can determine whether to wait for it to become available.
 > 
-> - the core code calls into the .prepare domain on a per-interrupt
->   basis instead of on a per *device* basis. This is a complete
->   violation of the MSI API, because .prepare is when you are supposed
->   to perform resource reservation (in the GICv3 parlance, that's ITT
->   allocation + MAPD command).
+> I used such a property in v1 of the series adding support for the UEFI
+> offset [1], but mistakenly convinced myself that it was not needed given
+> that the efivars driver would need to remain built in. As Rob Clark
+> noticed, this is however not sufficient and the driver can currently
+> fail to look up the offset if the RTC driver is built in or if a
+> dependency of the efivars driver is built as a module. [2]
 > 
-> - the same function calls .prepare for a *single* interrupt,
->   effectively telling the irqchip "my device has only one interrupt".
->   Because I'm super generous (and don't like wasting precious bytes),
->   I allocate 32 LPIs at the minimum. Only snag is that I could do with
->   300+ interrupts, and calling repeatedly doesn't help at all, since
->   we cannot *grow* an ITT.
-
-On the IWB driver code that I could not post I noticed that it is
-true that the .prepare callback is called on a per-interrupt basis
-but the vector size is the domain size (ie number of wires) which
-is correct AFAICS, so the ITT size should be fine I don't get why
-it would need to grow.
-
-The difference with this series is that on v3 LPIs are allocated
-on .prepare(), we allocate them on .alloc().
-
-So yes, calling .prepare on a per-interrupt basis looks like a bug
-but if we allow reusing a deviceID (ie the "shared" thingy) it could
-be harmless.
-
-> So this code needs to be taken to the backyard and beaten into shape
-> before we can make use of it. My D05 (with its collection of MBIGENs)
-> only works by accident at the moment, as I found out yesterday, and
-> GICv5 IWB is in the same boat, since it reuses the msi-parent thing,
-> and therefore the same heuristic.
+> As with the rest of this driver, hopefully all of this goes away (for
+> future platforms) once Qualcomm fix their UEFI implementation so that
+> the time service can be used directly.
 > 
-> I guess not having the IWB immediately isn't too big a deal, but I
-> really didn't expect to find this...
+> Preferably the binding and driver fix can be merged for 6.15-rc by
+> Alexandre, while Bjorn takes the DT changes through the branch which has
+> the DT patches from v2 (which unfortunately missed 6.15 but may possibly
+> be sent as hw enablement fixups). [3]
 
-To be honest, it was expected. We found these snags while designing
-the code (that explains how IWB was structured in v1 - by the way)
-but we didn't know if the behaviour above was by construction, we
-always thought "we must be making a mistake".
+It seems we won't have RTC support in 6.15, but could you please pick
+these up for 6.16 to make sure that the RTC works also when the driver
+is built in?
 
-The same goes for the fixed eventID but I would not resume that
-discussion again, there are things that are impossible to
-know unless you are aware of the background story behind them.
+> [1] https://lore.kernel.org/all/20250120144152.11949-1-johan+linaro@kernel.org/
+> [2] https://lore.kernel.org/all/aAecIkgmTTlThKEZ@hovoldconsulting.com/
+> [3] https://lore.kernel.org/lkml/20250219134118.31017-1-johan+linaro@kernel.org/
+> 
+> Johan Hovold (4):
+>   dt-bindings: rtc: qcom-pm8xxx: add uefi-variable offset
+>   rtc: pm8xxx: fix uefi offset lookup
+>   arm64: dts: qcom: sc8280xp-x13s: describe uefi rtc offset
+>   arm64: dts: qcom: x1e80100: describe uefi rtc offset
 
-Thanks,
-Lorenzo
+Johan
