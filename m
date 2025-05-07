@@ -1,89 +1,111 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8ED218C31
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 00:34:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AF4D1E871;
+	Wed,  7 May 2025 00:41:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746578044; cv=none; b=c9uAwQ96T3xmEgEOnftL8+5CegE1nemjV5561GJDcFD5cyz5IespzEgUjdneJklsQoQypwP2Q7qzCKNQDnLdVsUaEtphe3cgmPN2+I2MNvzoUMyd2ukSPMqs4Vhvd0Bi9ZxW3nVwzePF/4gUTt5WPjZHP7c3JiFNqzMu6I79UYY=
+	t=1746578494; cv=none; b=DgnE6jlYL/SMWJtsQv6v3mIUOfI3m2tZOr3GEByXulUbUZv7icknxMC2aalIETeXPRk5bMsS5UAnUOvmmxnZ2WusNSPL7fw0EUC/M65wO3BDvK9nULdexRnnTvFGcnDy0OSXp73swa0umfVSAJeyDIoZ5z1h8PBy2awijSNieWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746578044; c=relaxed/simple;
-	bh=NdPNOq0pjB3xZhqMYIrpIyO5gfG9RcmV+YpxEba+ohY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oeo6WdWgYnzpo45SVmbLlYTWbp+1OrlWGoxRj5l82mJBrJ26+/ys4bw7yUqtjReGWTPeMc5M7e177x6Xm6skkrTsbiaw5r7rQBBnEY5SSdl/OUoSe9L9A4PA+WG9s7H7CXA97mCso1XRGemkce0PfXRhCTXIE0ZXl8ruaHxLbCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=kSKERhjT; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1746578494; c=relaxed/simple;
+	bh=548Ai+V2mwoJ45UgqwGrbboTIZXoY4ulmIfeHhWTZvw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SzaAoIsRL9RKY/CVKcDHwNHxTt5LR6Z1t0VbZohrIvhlv95PL70jZgdZep8lPJY7PsfXmeohxtQ2nFtqTnw1P668PfhUWQow2n0kNNCykKRfs9seUdTroI63SNqius6BoOGk5C6XtA82jdHJgfGFJpIS1vROVm1eDUM0QSoubx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h6JVN0M0; arc=none smtp.client-ip=209.85.160.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kSKERhjT"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-22e45088d6eso19176055ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 17:34:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h6JVN0M0"
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-47662449055so41208781cf.1;
+        Tue, 06 May 2025 17:41:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1746578042; x=1747182842; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NdPNOq0pjB3xZhqMYIrpIyO5gfG9RcmV+YpxEba+ohY=;
-        b=kSKERhjTb40FhesK3LHEgSX/XbgOFttomOzDBuk12Hn6AZ2/irEAIBct1gTc00g1qG
-         V0898JQ6yDNdFKUMon1xM6Nutrnev4/fM9hpkrWfS1O/OB9pn2QjOAUIj+uyOlkInWbK
-         69iNT0AVggJMvdaOhnR1k7kzJgMoqiGr+/OiA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746578042; x=1747182842;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1746578492; x=1747183292; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=NdPNOq0pjB3xZhqMYIrpIyO5gfG9RcmV+YpxEba+ohY=;
-        b=WkFE7cNM1xp3BqAoNJAJuHB5XWlAYQMQsipba/kEFIGTuECLTS9LcNqO56NWtPlnba
-         +ULMmHnA7zL8HOLG5Pd7j3MDQZ3kIejqzEWgT/DtZ60Ne1fcsfA/DdJQaXpIZjJmrcvs
-         q0NOHkEUlheJFnmbCyHQ2lgLGUziLN9aZ03yrx771HWrbdaadn4vbaLqk7sOLBcBaKLN
-         XajdpfXO58IG5rTl5PQ775jbUHLioS7n3JgyPeRzlBfHOfXY6UFHHVVh49ArCAu8q84N
-         Y76LF7jittk83rtZJz3k+ZtUzc2aYFxkOpcyUbhTGSzY830Rbjme/usSpuHbahCFV3Hn
-         +E1g==
-X-Forwarded-Encrypted: i=1; AJvYcCVGg69Xqn6oycq0IVHn8sGAq29f3iu5nbjaJYZ4VZQdgEgJeunmvuQW2oyZGcQCFjpLuPfKp9nkH77oeiA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvF8jcbAoZhsw4rL+Db9IM3XN1DGKksiyvGHAbFA3xr9je1c6v
-	5aIUsXnVNWU8mnbvJiqg65osu5mQ6JlZ9kqnP1HvtPY9dXzsRoY436rPgSFPUQGMvn3ccQJ09oK
-	XrQ==
-X-Gm-Gg: ASbGncsUy/MzdSiN2Os7cKsOq1K4pbYdflvjWgFWLgi5QDaMYDDLRWuzvJ3v5C+dK8J
-	f6X4a73kF/hLS8sAppQL//EQaUO78awSBN8r4WwdFd1Wsbk7GQ6Jqq/Q68mm6wd7I+Vm8m/LMne
-	dESD7KglJNPft29Idg+ofrt+SFOY4nlWpjL8cTNBo3nb707dimp6gYioBa/rR7R61PENTD2Rp2e
-	ElOlyMqiZu/lfd5RtvLKFWp+tlq81jEQlFqF+52BILM2EcxAkq+BdupaZcLbL0qrDih2WAwc1e6
-	Z2fBt0kmcfkaNReQgGyFoTwig6heCiAAR8wWptCf6QQ=
-X-Google-Smtp-Source: AGHT+IEm3hL38ThjzaykrymnEF7K2NaQu8yqxFHrqArTRPBah7mE6MXKbahuZoQJeZDMqvThzSeSIQ==
-X-Received: by 2002:a17:902:cf11:b0:224:7a4:b2a with SMTP id d9443c01a7336-22e5ea42257mr19436395ad.11.1746578041903;
-        Tue, 06 May 2025 17:34:01 -0700 (PDT)
-Received: from google.com ([2401:fa00:8f:203:761:97e0:917d:ad1e])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e5bedb84asm6854505ad.88.2025.05.06.17.33.58
+        bh=zs0cbHUy/X1CPc3qXeHo09wKGdN2bsQRYveDoPtibro=;
+        b=h6JVN0M0M+hIUzdKDImj+X5kMDoo7ZuqiXLshVzilVDYu3Aqm9VH35eo7LeILzlkvM
+         cGdy3p6BEP+5OsSzoWY5J2jk3yO5+6XXVjwYyxnS3N0gxG9irELiCSHPx8a7h9HdpmH6
+         t/xX+o+PhzUFYsEC7uBEemt3JGtA1ksYi+G8QQipbqxzTZZesKkcNS7MnuaGqhWXkDKs
+         nvHFBV98zjVzsAdXw+9dEATMUghhbcGko2fiuvg6jDsNnAUOKUF9fFjXAbPRBzPXgvml
+         h5BNyZr1cxPfQ0oCFGwzQYKoIT2I6WEzCxdV0a1m2r6VCCIHkRwpeXDc9nqYAnqvYAmC
+         VH4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746578492; x=1747183292;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zs0cbHUy/X1CPc3qXeHo09wKGdN2bsQRYveDoPtibro=;
+        b=gAMDq7Vjt6Y7/kc7oONbCIBEI17HGLY5HZOg7RS6BQZXpETDYngF770WI4mOf/uXRy
+         2LcZsXaV61k7NUx3bJIN0DVFXG3p5xKfh4V3TYgpFH7D5H6WQxZUhr0w3SxznEURlyOA
+         pCZkY7ypzRtvPrNKcjqkFHCU+8hfdD3wCfGGA0sSHEDGISzcfjjXaW6HsXNUA50CQ11f
+         dZtI58iNC/ULAtTEq58/emN4zGPy7Ld4ka6G129WjtFV0qASWNOq+4oCwubcS2XsNunK
+         Tl33HH45sYq4cRAePgGLzKTl0u5oiNrXuEjJpI0tip2rw0z4Z0jgXkJvp6u1W0gg9oS6
+         RP3w==
+X-Forwarded-Encrypted: i=1; AJvYcCUNd5NtzGZ0PMkIcOrU23ePoHvSYbZmHuGYlps/mH/SzUHWoEthQhAnanooh/PFth8j8I8xrzG2nLk2vLgL@vger.kernel.org, AJvYcCVLxxp4XdUT6AR1ulZIdtCXtehwaB7k57PEmwmUXQB7GfUxoY5Fvbyg2GbgCtjlV8O5i9AbXMauqsdO@vger.kernel.org, AJvYcCXGEP/C1eznrmp/P2h3zDMqdMPSk/ZKFamqxvCmlmVG3xa3UsOeiFLyaIDBj+poF7YRmiv043okgdaX@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0bHV52Rfb+O5RkU9G5R+XPpwhi87X2/DP+pbeOn+P/Q6YdU90
+	e5JQrWMy+z5m+8yKhhfG+/GYFnbKnKoo2OoBd87SYOcdrx2jAuZH
+X-Gm-Gg: ASbGnctfdoGicR8pKGcN/okEvTCqU8rQA0lJckKutghe0sEMDdzwxqhpL4VfYrqGnAh
+	d1195AXCy60wc+5mrcSv01sIlcxeYGa3zDyWZBcktwGB4JVBzBa9ymFLjWlpxm5kDrpAg+Ph+wu
+	Ip3XOrKRMthghS0kX368msfI/6AsMvR2lMCNau/ZtLa7BKhe3DJ6gLYxdbKvBiV8KXbQtINAL1T
+	RpBJ8w/XOWHezTAUIqIxt6Scnh67RIoGyeoTHpOyEptK8TWlyob9IttAogvhy8JleJHdWaVV8ZB
+	hQ2GLF45tEzci7cV
+X-Google-Smtp-Source: AGHT+IGVZ/pnRC0a6W8UhFRw6PLxdQ3rmQAvSYapKUv6I9ZAERpmmy7XYBPDgVEEHyeyj6Svq20t2w==
+X-Received: by 2002:a05:6214:5285:b0:6f4:c237:9709 with SMTP id 6a1803df08f44-6f542a4f69amr20264566d6.25.1746578491730;
+        Tue, 06 May 2025 17:41:31 -0700 (PDT)
+Received: from localhost ([2001:da8:7001:11::cb])
+        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6f5427813f7sm4965586d6.71.2025.05.06.17.41.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 17:34:01 -0700 (PDT)
-Date: Wed, 7 May 2025 09:33:55 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Misbah Anjum N <misanjum@linux.ibm.com>
-Cc: Ritesh Harjani <riteshh@linux.ibm.com>, senozhatsky@chromium.org, 
-	yosry.ahmed@linux.dev, linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org, 
-	maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com, 
-	christophe.leroy@csgroup.eu, naveen@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [BUG][powerpc] OOPs: Kernel access of bad area during zram swap
- write - kswapd0 crash
-Message-ID: <6r6hex7p53bsbaje4u7so7tfsz6jemazerzujzraibiah7eq4b@m5vgjaff2cdz>
-References: <89bfdedb74416156423d36d28c5b92e9@linux.ibm.com>
- <87ldrujhr5.fsf@gmail.com>
- <3374b7cf6a68364c389a260d7ec9067f@linux.ibm.com>
+        Tue, 06 May 2025 17:41:31 -0700 (PDT)
+From: Inochi Amaoto <inochiama@gmail.com>
+To: sophgo@lists.linux.dev,
+	devicetree@vger.kernel.org,
+	linux-rtc@vger.kernel.org,
+	Alexander Sverdlin <alexander.sverdlin@gmail.com>
+Cc: Inochi Amaoto <inochiama@gmail.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Jingbao Qiu <qiujingbao.dlmu@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Yangyu Chen <cyy@cyyself.name>,
+	linux-kernel@vger.kernel.org
+Subject: Re: (subset) [PATCH v14 0/3] rtc: sophgo: add rtc support for CV1800
+Date: Wed,  7 May 2025 08:41:05 +0800
+Message-ID: <174657845776.270439.14182272430991202072.b4-ty@gmail.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250315224921.3627852-1-alexander.sverdlin@gmail.com>
+References: <20250315224921.3627852-1-alexander.sverdlin@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3374b7cf6a68364c389a260d7ec9067f@linux.ibm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Hi,
+On Sat, 15 Mar 2025 23:49:11 +0100, Alexander Sverdlin wrote:
+> Real Time Clock (RTC) is an independently powered module within the chip,
+> which includes a 32KHz oscillator and a Power On Reset/POR submodule. It
+> can be used for time display and timed alarm generation.
+> 
+> This series aims to provide complete DT bindings, but the drivers are only
+> focusing on RTC implementation. Possible Power Management and remoteproc
+> can be implemented later (hence the RTC driver is using syscon, because
+> MMIO space is really interleaved among different functions).
+> 
+> [...]
 
-On (25/05/06 11:09), Misbah Anjum N wrote:
-> I am facing this issue even with the latest kernel: 6.15.0-rc4-g5721cf0b9352
-> The suspecting commit is: 44f76413496ec343da0d8292ceecdcabe3e6ec16. The
-> commit introduces zs_obj_write() function.
-> Link: https://github.com/torvalds/linux/commit/44f76413496ec343da0d8292ceecdcabe3e6ec16
+Applied to soc-for-next, thanks!
 
-Can you try the following fix
-https://lore.kernel.org/linux-mm/20250504110650.2783619-1-senozhatsky@chromium.org
+[1/3] dt-bindings: soc: sophgo: add RTC support for Sophgo CV1800 series
+      https://github.com/sophgo/linux/commit/76517429dbfd8eca16fe85482cdb8024bbbd06bd
+[2/3] soc: sophgo: cv1800: rtcsys: New driver (handling RTC only)
+      https://github.com/sophgo/linux/commit/c8754c7deab4cbfa947fa2d656cbaf83771828ef
+
+Thanks,
+Inochi
+
