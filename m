@@ -1,118 +1,172 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72F2B1519B4
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 13:44:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CA4F288CA6;
+	Wed,  7 May 2025 13:44:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746625445; cv=none; b=KT2AIWGUvUbZ8Irzl3SHngxM9b6MfB9GBGT7Im0lLFxjinjdPw869Xk8BuR8d//cUwsVcriZeE7+S+7EP3uJ84+xYf/BSH5amDKJfLnCYXPpeM+NZDpx8OMQ0CFOwQ+OyC8n8zs4DMQAuALj14jKaR49ZmGPeoU18MiRNgTLgXM=
+	t=1746625447; cv=none; b=D4LkQW90ZRzmIS+CXddPgvO8NPHhcNoXnVJ4QlIz8OJ2zT/CjD+WBF+w27ukNz/Bjy+wl1Gp3Vr4OvZaIB5JF2VO3LBrjKdTDeeGnuyMLvxVsAMs5SOpTb/swQWskwNp18ju7230OBNNuGtOXKYp2u7hNgHtujJBNuotibnsT/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746625445; c=relaxed/simple;
-	bh=bU6M64ozOuHXh4rzHPfcADY+m10TphbPzKq2+bK8xbQ=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=V3y1NbOwMhpoqHsQk033Io53Vzbo8fY+JYq/+7S/devx+Co6OSwgpkb76aTnjpY/Rlpm0d0RuJp1ncMoEcy0bS4NN3hVpLIX1k4ERb/iLaKo3JhpEuTZqKv12f7f1W1xX7SMwEa/wMksu8DY6rp/luB+dcAMh5Pmmx5McbXlb6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3d81820d5b3so129208355ab.3
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 06:44:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746625442; x=1747230242;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iDa93ES83plZpL7tb6k2OHPH5S1SQ+Bz65S5AwwmaB4=;
-        b=ieQSwq1RN8ksvo5sg+tkYHzVDpaiZyZXk5Q0Hm6BuecpzKLhyKba/hhsrNHL0T4qxr
-         qfYe8OjVjpsl4fjrlkMtp6rbI20inRdbff5xhN2cgp3nwXbf6h3WipyEgum3uZ/CoXPO
-         y/aUXnAjVoMAabKNGH3fkGGNkkPWYw865PpQ5qDnPqrhl1uVGpRwJNF6vwr3aNLJjXWx
-         7GiBaMfr44rDV49gXNBunl/r9MsEtYX8M+BK0meh6L/wA0Tv6GGt/RKKM8KU4U3uQQ98
-         3ETeaMFH5isB7XGn6R1z+Sr2pla7L9N20Zyu/6mVVFWpFjTR9KUxu7z47CU/IOqKhCcX
-         LOOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWDcibWXYjmQjhrn93lT+jt1B4Z3t+AUZzV1UbezNIrk1M28CVjMBuxzJd4FhFPSKf4A+wJO6Azj/JGP00=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxcnWNVS9czMf053LOOfr7z2GYwU+NVbNmR/GA83xR1vs/WPxeG
-	GHrUrnWh1NhLVEm3QXFHnBgBE7DRQaMzaSZOkRjE6/P6l5augl2v6yUIm40iCP/DBK6WkHNcL71
-	Noi8UbJreyqY8D+4Tr9qczuU1ayQt4U+UKzU+0zlJt4hUMmt3bMXWBJ8=
-X-Google-Smtp-Source: AGHT+IG0QsNl8GqWWKtOKaV2g1S4lDM/OBbuYY9h9Npkr0TqZ/4CCoBU6/ffn6MunDHRUwLdvmDYSAxtdJ13ywbtIlwvcYBxjTmv
+	s=arc-20240116; t=1746625447; c=relaxed/simple;
+	bh=lKfkn1qw05tjHnm/bw+QSo8I/h6JmxQj8itRkLYryQo=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=UAKMPgoqiNkCcO5jM75yj4Q9im9CZQGKPP5uaKOEtAZElPrRt0JEgqoaO/AftN2uxTsq2CIuhTxqbfeuI+8zh8E2iFIxc5Qw73zgQgKEW5kpd0NhQGU08Cm622DsSY65yBk057yhbc9tK11hpKSotnuOPMNmUhyLtT1Z0CWYQwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xH7BXXXc; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=46ks5SrH; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xH7BXXXc";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="46ks5SrH"
+Date: Wed, 07 May 2025 13:44:02 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1746625443;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UVGFQJI0fJW2b6lTcj/0uHNZLKrTHsBs7pOp+inK2jo=;
+	b=xH7BXXXccKdBLvHMsS7hIxBKMP+ALuwkbghWcPHQhiZtZcym/kpypUP7NLXpbTKR/X+1+q
+	IaHVMxz9uO+203GwlvR4Z32muy5GvirE9adZN9eZCP1jr72RQ/44tB+x+u3AO3f0ARF9vg
+	d63W0bh+PAJoY9cKa0fh/qC/GjFCrQuolw+sVws0N24ZW+j8Rtn7QIUFy5zpy1oZrhTS2P
+	WCHGnlo0Byzn/vFeUqllwHpRhFZAktaH3H6USijohvpNNVkesDFr4qdwzhRh+U0u19AKrd
+	8vT0E6AgEd3LGomCkpoSWnKQlmOvMzv87apqe2Q7elxPHMKLfMoBn1wu0aLqmw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1746625443;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UVGFQJI0fJW2b6lTcj/0uHNZLKrTHsBs7pOp+inK2jo=;
+	b=46ks5SrH1a7yi8Zvib3j78989GeDo9ABK6FYE/VAa/AVBYwRFGAUCWiCKWl9hDCpzmatwr
+	lsjs5qeCQNywEPAA==
+From: "tip-bot2 for Jiri Slaby (SUSE)" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: irq/cleanups] irqdomain: Fix kernel-doc and add it to Documentation
+Cc: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250319092951.37667-58-jirislaby@kernel.org>
+References: <20250319092951.37667-58-jirislaby@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:258e:b0:3d9:6c9a:f363 with SMTP id
- e9e14a558f8ab-3da738f9654mr28445295ab.6.1746625442548; Wed, 07 May 2025
- 06:44:02 -0700 (PDT)
-Date: Wed, 07 May 2025 06:44:02 -0700
-In-Reply-To: <tencent_E9E91EEE86CD84787A6EF82C196CD494640A@qq.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <681b63a2.050a0220.a19a9.0021.GAE@google.com>
-Subject: Re: [syzbot] [wireless?] UBSAN: array-index-out-of-bounds in ieee80211_request_ibss_scan
-From: syzbot <syzbot+4bcdddd48bb6f0be0da1@syzkaller.appspotmail.com>
-To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <174662544294.406.11237929511542030885.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Hello,
+The following commit has been merged into the irq/cleanups branch of tip:
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-UBSAN: array-index-out-of-bounds in ieee80211_request_ibss_scan
+Commit-ID:     e0de777349a3a1f97acedc876cba1ceb589fb9be
+Gitweb:        https://git.kernel.org/tip/e0de777349a3a1f97acedc876cba1ceb589fb9be
+Author:        Jiri Slaby (SUSE) <jirislaby@kernel.org>
+AuthorDate:    Wed, 19 Mar 2025 10:29:50 +01:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Wed, 07 May 2025 15:39:43 +02:00
 
-wlan1: Trigger new scan to find an IBSS to join
-------------[ cut here ]------------
-UBSAN: array-index-out-of-bounds in net/mac80211/scan.c:1214:5
-index 0 is out of range for type 'struct ieee80211_channel *[] __counted_by(n_channels)' (aka 'struct ieee80211_channel *[]')
-CPU: 0 UID: 0 PID: 47 Comm: kworker/u4:3 Not tainted 6.15.0-rc5-syzkaller-00032-g0d8d44db295c-dirty #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Workqueue: events_unbound cfg80211_wiphy_work
-Call Trace:
- <TASK>
- dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
- ubsan_epilogue+0xa/0x40 lib/ubsan.c:231
- __ubsan_handle_out_of_bounds+0xe9/0xf0 lib/ubsan.c:453
- ieee80211_request_ibss_scan+0x600/0x8b0 net/mac80211/scan.c:1214
- ieee80211_sta_find_ibss net/mac80211/ibss.c:-1 [inline]
- ieee80211_ibss_work+0xde7/0x1060 net/mac80211/ibss.c:1670
- cfg80211_wiphy_work+0x2dc/0x460 net/wireless/core.c:435
- process_one_work kernel/workqueue.c:3238 [inline]
- process_scheduled_works+0xadb/0x17a0 kernel/workqueue.c:3319
- worker_thread+0x8a0/0xda0 kernel/workqueue.c:3400
- kthread+0x70e/0x8a0 kernel/kthread.c:464
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
----[ end trace ]---
-Kernel panic - not syncing: UBSAN: panic_on_warn set ...
-CPU: 0 UID: 0 PID: 47 Comm: kworker/u4:3 Not tainted 6.15.0-rc5-syzkaller-00032-g0d8d44db295c-dirty #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Workqueue: events_unbound cfg80211_wiphy_work
-Call Trace:
- <TASK>
- dump_stack_lvl+0x99/0x250 lib/dump_stack.c:120
- panic+0x2db/0x790 kernel/panic.c:354
- check_panic_on_warn+0x89/0xb0 kernel/panic.c:243
- __ubsan_handle_out_of_bounds+0xe9/0xf0 lib/ubsan.c:453
- ieee80211_request_ibss_scan+0x600/0x8b0 net/mac80211/scan.c:1214
- ieee80211_sta_find_ibss net/mac80211/ibss.c:-1 [inline]
- ieee80211_ibss_work+0xde7/0x1060 net/mac80211/ibss.c:1670
- cfg80211_wiphy_work+0x2dc/0x460 net/wireless/core.c:435
- process_one_work kernel/workqueue.c:3238 [inline]
- process_scheduled_works+0xadb/0x17a0 kernel/workqueue.c:3319
- worker_thread+0x8a0/0xda0 kernel/workqueue.c:3400
- kthread+0x70e/0x8a0 kernel/kthread.c:464
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+irqdomain: Fix kernel-doc and add it to Documentation
+
+irqdomain.c's kernel-doc exists, but is not plugged into Documentation/
+yet.
+
+Before plugging it in, fix it first: irq_domain_get_irq_data() and
+irq_domain_set_info() were documented twice. Identically, by both
+definitions for CONFIG_IRQ_DOMAIN_HIERARCHY and !CONFIG_IRQ_DOMAIN_HIERARCHY.
+
+Therefore, switch the second kernel-doc into an ordinary comment -- change
+"/**" to simple "/*". This avoids sphinx's: WARNING: Duplicate C
+declaration
+
+Next, in commit b7b377332b96 ("irqdomain: Fix the kernel-doc and plug it
+into Documentation"), irqdomain.h's (header) kernel-doc was added into
+core-api/genericirq.rst. But given the amount of irqdomain functions and
+structures, move all these to core-api/irq/irq-domain.rst now.
+
+Finally, add these newly fixed irqdomain.c's (source) docs there as
+well.
+
+Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/all/20250319092951.37667-58-jirislaby@kernel.org
 
 
-Tested on:
+---
+ Documentation/core-api/genericirq.rst     |  2 --
+ Documentation/core-api/irq/irq-domain.rst | 20 ++++++++++++++++++++
+ kernel/irq/irqdomain.c                    |  4 ++--
+ 3 files changed, 22 insertions(+), 4 deletions(-)
 
-commit:         0d8d44db Merge tag 'for-6.15-rc5-tag' of git://git.ker..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1177282f980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=923d9ad0afad47e5
-dashboard link: https://syzkaller.appspot.com/bug?extid=4bcdddd48bb6f0be0da1
-compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=14f918f4580000
-
+diff --git a/Documentation/core-api/genericirq.rst b/Documentation/core-api/genericirq.rst
+index 25f94df..582bde9 100644
+--- a/Documentation/core-api/genericirq.rst
++++ b/Documentation/core-api/genericirq.rst
+@@ -410,8 +410,6 @@ which are used in the generic IRQ layer.
+ .. kernel-doc:: include/linux/interrupt.h
+    :internal:
+ 
+-.. kernel-doc:: include/linux/irqdomain.h
+-
+ Public Functions Provided
+ =========================
+ 
+diff --git a/Documentation/core-api/irq/irq-domain.rst b/Documentation/core-api/irq/irq-domain.rst
+index 67d45b3..a01c6ea 100644
+--- a/Documentation/core-api/irq/irq-domain.rst
++++ b/Documentation/core-api/irq/irq-domain.rst
+@@ -298,3 +298,23 @@ Debugging
+ 
+ Most of the internals of the IRQ subsystem are exposed in debugfs by
+ turning CONFIG_GENERIC_IRQ_DEBUGFS on.
++
++Structures and Public Functions Provided
++========================================
++
++This chapter contains the autogenerated documentation of the structures
++and exported kernel API functions which are used for IRQ domains.
++
++.. kernel-doc:: include/linux/irqdomain.h
++
++.. kernel-doc:: kernel/irq/irqdomain.c
++   :export:
++
++Internal Functions Provided
++===========================
++
++This chapter contains the autogenerated documentation of the internal
++functions.
++
++.. kernel-doc:: kernel/irq/irqdomain.c
++   :internal:
+diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+index 57098c7..c8b6de0 100644
+--- a/kernel/irq/irqdomain.c
++++ b/kernel/irq/irqdomain.c
+@@ -1996,7 +1996,7 @@ static void irq_domain_check_hierarchy(struct irq_domain *domain)
+ 		domain->flags |= IRQ_DOMAIN_FLAG_HIERARCHY;
+ }
+ #else	/* CONFIG_IRQ_DOMAIN_HIERARCHY */
+-/**
++/*
+  * irq_domain_get_irq_data - Get irq_data associated with @virq and @domain
+  * @domain:	domain to match
+  * @virq:	IRQ number to get irq_data
+@@ -2010,7 +2010,7 @@ struct irq_data *irq_domain_get_irq_data(struct irq_domain *domain,
+ }
+ EXPORT_SYMBOL_GPL(irq_domain_get_irq_data);
+ 
+-/**
++/*
+  * irq_domain_set_info - Set the complete data for a @virq in @domain
+  * @domain:		Interrupt domain to match
+  * @virq:		IRQ number
