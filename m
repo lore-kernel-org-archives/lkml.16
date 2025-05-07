@@ -1,155 +1,130 @@
-Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EA5F28D830
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 16:18:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A76428A706;
+	Wed,  7 May 2025 16:19:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.133.104.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746634727; cv=none; b=SIK8nMMIhcFKS2NMooTP0/OiqIZM3hz8GEDLVjc7olCPXkQu56H50UBd1w7TY3dvJNqMiMSHjXY1/QnaLyNk7Fvf/3v1WADNEBXTFa5TKaGL9yao1UzmyXfYTFg99mTh03xOw9O9SNnCS+68FVF25/LAyjvQL2WTTw/Pgg0co0k=
+	t=1746634755; cv=none; b=G6OXFyr6QohIJCC1jeB4W/nUrGmjqHuqctR3aNdKIbgVWTL45mf1a9T+d5DDWquK261SDE9kdSxbeHnqyiHMUWEfB3nZ8tk6z3j9sBrtXiqjtMQNS4Nnnh6I3fEXNIeFbY0jeCdoUkMhvhtsntPuGCIATzSBz3TfkYgmpR1eZas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746634727; c=relaxed/simple;
-	bh=GAluGqfyPVe5W1Jb76fUKRLKd/fw8v+iz9cq2F95mDI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Fw8Xbs3TX7j0oJc9HNMH8p5MUfdmCTEktEWx0Kp3CuYI2ySZGAOoB9EFLTdxeU4mOB192S5JJtCycYfc4U9ND+6uG+UFTGwMmcJXXGzaYpOMAhGeWYWHqCvO1MTC3td7TfkbN5QMQ59hMBa8c+exoAMOwEGjgfGHE2f9nVD/nIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=js9Sc0e7; arc=none smtp.client-ip=209.85.160.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1746634755; c=relaxed/simple;
+	bh=k8pqdNg1GfZESTUXWxaQOW3gbR0tXjU7ZIUJyuVxzIk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=X0zZV+k6iro/uCfSwFbgPU2zInEUg7YPpI2CkaGDWE7gziKYLBjPWyh8oNPEpRVkb+Pld58/P4NzQrjqizVIN2Xq5lO4rJQt8O1VafjoeiGF6eU6lDCImcdn7Lat9T81tfmLop4dErxN6VjvC33By7Xxv/wY83BkEPEe7st1yJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net; spf=pass smtp.mailfrom=iogearbox.net; dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b=RXAL06ao; arc=none smtp.client-ip=213.133.104.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iogearbox.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="js9Sc0e7"
-Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-2cc9045bae9so10069fac.3
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 09:18:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1746634723; x=1747239523; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=upjViEFaEDV8pwi3bE89UDVAqHk4uCfII2dkKtqh7XQ=;
-        b=js9Sc0e7Hf01XcLLk4uuEPT1dbyOKDXVmRwbgYV+XDauuuCgMMMGWwwtM3GyLd2Cxx
-         uTGGn7SL88ATBe0poCyGefLuA17+1En+a/yIhFzo8d0TtX15EcrW64mqXEtIOFa4VroH
-         2kwS0nEn3qyzj+WSoTW7CAYCi03VK/vzyrQto=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746634723; x=1747239523;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=upjViEFaEDV8pwi3bE89UDVAqHk4uCfII2dkKtqh7XQ=;
-        b=mV+vLuXRf6H1bMeKjsn9kRaHfifPnRzwqCEO8Prmcc72sbG1+rodQp6S/xdW8hZt4D
-         yalC9Bp1JGohEeutOjfhoh5KhI7+iZnGSx/badhNzAkDfA9su8zQq/F0Yu3xyWwBVVrI
-         lIYPFr//MLFI474ZfKOlheAwSYLr1O3Aw33GekO+kMXUr1p0rHSlSO21nXGqUtA+XEkt
-         jnBekzwysHvEGkul5/vjeKrI5eqTZ/biEDatrKN5GeDCn2aVwXS7jTspFFiSaD9lvFj1
-         cAgMU68stXZAv7yB4ln1vvdeEvKVGsgFkB/3OFrMqaJWN/9ksVDYyFpgBCXIT6fNd7rW
-         DP1w==
-X-Forwarded-Encrypted: i=1; AJvYcCWUDRd1j6awgYpnFgO8251iqm1Fmmvzo+Tv6u4/8qfeW86X/MJ+py9RwvvUl4doifiNCsKBwi7waDdOLZs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+gJctxDa7+Nh2t5KgYSpLiBNfr/fzfOC7Z4lb6jTH/Ik5xs/K
-	SaFAPwojHx2R2l15h+KVffPxKXBQQB1o1RxesLd9bCCM26RBZtDQdl//BuRUbpgxTOkY5yH9ZMk
-	Kyk9gyp/OJ/kqjekCK1tBvBPLFBB8gX85aFDF
-X-Gm-Gg: ASbGncvIhsW3bQTUXjjM9QTo+z+SvpEJw0LskHYLBbLX7z3/3206fvDoLIm0CtY9Wln
-	Nr83mKwmxYN2EefmudjQR2Luf1q3j2p950DQLM9I5kjX4e+ii1rxch74ansLafnZMMqdTB7Zhnn
-	SjhuEmOskYoNJULaGMtwbI+zathUUWtVeDVnO/PWXmLQ4Q/6/Y5qY=
-X-Google-Smtp-Source: AGHT+IG06GO6NGnzHXdYuy9FYMZzPpX9XA6RRfNjedz05neS+lqG6xqVuI1NQA+Rq9jjZ9XV1xQ99xAxsvZLr21m4So=
-X-Received: by 2002:a05:6870:891b:b0:2d5:d5f:3b0f with SMTP id
- 586e51a60fabf-2db5c110bc3mr836147fac.12.1746634723111; Wed, 07 May 2025
- 09:18:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b="RXAL06ao"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=kgddrne6l8Gqlt1gPOvoX/vQTZfxlnGhWB0Y9y3hEak=; b=RXAL06aoKT1XG6fxyYMCrmrIjg
+	SFy58f5ciZaf8cqfAtMTy4ruEvggyudnXZYoD0cLHKAymwGHw+3i/gbh9JTbmQS9p1DlYwGtZF2Gy
+	1eKSfsgnyDjdGYA2wfeSnPK/E3qCw5ijMXUTOfvk5wdHdCjhIgYckEnhIrvHMPgyw/2ean81P1sRt
+	Qor0bI99vERlAhLYz5UYhQI2zhTRVFdhZqEUMh+AfNvsVlOFmPxB2akVYeZuCxjVWOkTF2S6AK0Oe
+	lLQvYZO14elosfWhrFUO0RS5dBaRGuNlK6VPkom9hl7ok6HTKlb4KAhknPSjW/ZMIDPP0p1vv93PC
+	ZgegnmhA==;
+Received: from sslproxy04.your-server.de ([78.46.152.42])
+	by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96.2)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1uChU5-0003wS-11;
+	Wed, 07 May 2025 18:19:01 +0200
+Received: from [85.195.247.12] (helo=[192.168.1.114])
+	by sslproxy04.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1uChU4-0008QW-24;
+	Wed, 07 May 2025 18:19:00 +0200
+Message-ID: <d4973197-c1be-49e4-8954-cb07e7ad05ac@iogearbox.net>
+Date: Wed, 7 May 2025 18:18:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250426135954.5614-1-jszhang@kernel.org>
-In-Reply-To: <20250426135954.5614-1-jszhang@kernel.org>
-From: Jeff Xu <jeffxu@chromium.org>
-Date: Wed, 7 May 2025 09:18:31 -0700
-X-Gm-Features: ATxdqUEg19PZX8xAL4phcTTjEkVkJGWGNXEx6VSuIyaRIyEHgGAoYnTs8-k6z_o
-Message-ID: <CABi2SkXJgeLLYQEp1c7EepYzpGU+d0TsOZ5ix6PUUmJLuHyvwQ@mail.gmail.com>
-Subject: Re: [PATCH] riscv: enable mseal sysmap for RV64
-To: Jisheng Zhang <jszhang@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	Kees Cook <kees@kernel.org>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v3] xdp: Add helpers for head length, headroom,
+ and metadata length
+To: Jon Kohler <jon@nutanix.com>,
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+ Jason Wang <jasowang@redhat.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Alexei Starovoitov <ast@kernel.org>, Jesper Dangaard Brouer
+ <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>,
+ Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Cc: Jacob Keller <jacob.e.keller@intel.com>
+References: <20250506125242.2685182-1-jon@nutanix.com>
+Content-Language: en-US
+From: Daniel Borkmann <daniel@iogearbox.net>
+Autocrypt: addr=daniel@iogearbox.net; keydata=
+ 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
+In-Reply-To: <20250506125242.2685182-1-jon@nutanix.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 1.0.7/27630/Tue May  6 11:43:15 2025)
 
-Hi Jisheng
+On 5/6/25 2:52 PM, Jon Kohler wrote:
+> Introduce new XDP helpers:
+> - xdp_headlen: Similar to skb_headlen
+> - xdp_headroom: Similar to skb_headroom
+> - xdp_metadata_len: Similar to skb_metadata_len
+> 
+> Integrate these helpers into tap, tun, and XDP implementation to start.
+> 
+> No functional changes introduced.
+> 
+> Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
+> Signed-off-by: Jon Kohler <jon@nutanix.com>
 
-It seems mm maintainers might prefer arch change reviewed by arch
-maintainer and goes to arch tree, according to discussion in [1], I
-don't have an opinion on this,  adding mm maintainers as FYI.
+lgtm as well, thanks!
 
-On Sat, Apr 26, 2025 at 7:16=E2=80=AFAM Jisheng Zhang <jszhang@kernel.org> =
-wrote:
->
-> Provide support for CONFIG_MSEAL_SYSTEM_MAPPINGS for RV64, covering the
-> vdso, vvar.
->
-> Passed sysmap_is_sealed and mseal_test self tests.
-> Passed booting a buildroot rootfs image and a cli debian rootfs image.
->
-mm maintainers like to get confirmation that the arch doesn't rely on
-remapping the VDSO, VVAR, or any other special mappings, see
-discussion in [2]
-
-> Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
-> Cc: Jeff Xu <jeffxu@chromium.org>
-> ---
->  arch/riscv/Kconfig       | 1 +
->  arch/riscv/kernel/vdso.c | 2 +-
->  2 files changed, 2 insertions(+), 1 deletion(-)
-
-Please consider updating document as part of your patch:
-features/core/mseal_sys_mappings/arch-support.txt
-Documentation/userspace-api/mseal.rst
-
-Sample change in [3]
-
->
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index bbec87b79309..3cb0b05eef62 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -70,6 +70,7 @@ config RISCV
->         # LLD >=3D 14: https://github.com/llvm/llvm-project/issues/50505
->         select ARCH_SUPPORTS_LTO_CLANG if LLD_VERSION >=3D 140000
->         select ARCH_SUPPORTS_LTO_CLANG_THIN if LLD_VERSION >=3D 140000
-> +       select ARCH_SUPPORTS_MSEAL_SYSTEM_MAPPINGS if 64BIT && MMU
-The "if 64BIT && MMU" are not needed here.
-
-MMU is not checked by MSEAL_SYSTEM_MAPPINGS, which we should,  this
-can go to security/Kconfig separately. If you'd like, please submit a
-fix to mm tree directly.
-
-[1] https://lore.kernel.org/all/7EB087B72C4FBDD3+20250417132410.404043-1-wa=
-ngyuli@uniontech.com/,
-[2] https://lore.kernel.org/all/3de559d6-be19-44bc-ba8f-4c52d4bca684@lucife=
-r.local/
-[3] https://lore.kernel.org/all/648AB3031B5618C0+20250415153903.570662-1-wa=
-ngyuli@uniontech.com/
-
-Thanks
--Jeff
-
->         select ARCH_SUPPORTS_PAGE_TABLE_CHECK if MMU
->         select ARCH_SUPPORTS_PER_VMA_LOCK if MMU
->         select ARCH_SUPPORTS_RT
-> diff --git a/arch/riscv/kernel/vdso.c b/arch/riscv/kernel/vdso.c
-> index cc2895d1fbc2..3a8e038b10a2 100644
-> --- a/arch/riscv/kernel/vdso.c
-> +++ b/arch/riscv/kernel/vdso.c
-> @@ -136,7 +136,7 @@ static int __setup_additional_pages(struct mm_struct =
-*mm,
->
->         ret =3D
->            _install_special_mapping(mm, vdso_base, vdso_text_len,
-> -               (VM_READ | VM_EXEC | VM_MAYREAD | VM_MAYWRITE | VM_MAYEXE=
-C),
-> +               (VM_READ | VM_EXEC | VM_MAYREAD | VM_MAYWRITE | VM_MAYEXE=
-C | VM_SEALED_SYSMAP),
->                 vdso_info->cm);
->
->         if (IS_ERR(ret))
-> --
-> 2.47.2
->
+Acked-by: Daniel Borkmann <daniel@iogearbox.net>
