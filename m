@@ -1,111 +1,235 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D601028F53F
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 13:54:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E53028F52C;
+	Wed,  7 May 2025 13:54:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746626055; cv=none; b=sFyVkIVccdL8WjvnnWkTfd64p+NZcee20rps70O6DvMEi9tymi1N2WuXFfp5qUidu2ujWWjhNWKqfUBGIB+BDVxh66UBb2icERFkqyRKWZWY/hs8v976G3epLQdmTaB4qUeDf6bQ7XUfl/qGoorHKUHXpWHdWYDWhfASGl9acgY=
+	t=1746626055; cv=none; b=QjP6pVrJ9ndudF6LkXVxbUYcLh1fQ6DbUDG8+izIGZWq6oAVOgSHqIXn9db7zyuKTvsRF85Zkwf8cQC1VVdTQv0j11ZEzpbWwY/CoolEXVzF/AEmZ3ta7WWaztfhZExwuyFmYvW5w+UVJISUuV/vok3Dw8CE0TSkXD2HGfTmZ7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746626055; c=relaxed/simple;
-	bh=vze+17XceRJoOoG/svFEL6SEfqk9yNIzPuCH+KkVmEw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=feEBI99DvKXE3lWVugUOhP4iIdDCC2hhYPIObA9sdAt0qX2zn4mFhe6shO8prMyE091uEP0SSzmLLJi0qUCQE6GhBJJ34SZCcgu0IQV8uimqDBnYrBs463mLPnZYo18zVkxxyTOrGlgSHWYkC2nw7xPC+jgnOkJy1F6AAFA5DWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S+gt/9wC; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	bh=ujpoteh3y2y1PDQHNINRSF0NQjIFx2HCZBMLQUnsfkc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=YN1DfPwGqsl3W7CjvHGEORmaj+JeAZmfm+B/7jXz2VtTruWAas0+isGY8WJbTBRteaqx7Z3qF3Xkhs7aXTwugOddmiI9pZAFOUoC2Enlzo4wcfK7xhj8v8BMYSFIqYMG+L5HHN4iMf8b5U6hcIhkfpoPJkPxeoLUDf8bN98jSdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=mx4qpqcT; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S+gt/9wC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746626054; x=1778162054;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=vze+17XceRJoOoG/svFEL6SEfqk9yNIzPuCH+KkVmEw=;
-  b=S+gt/9wC48c2PHB4wZ0u/XYbO/42ibD/siHpSslmIrzNciPTRJIifSPF
-   QM7zllZnQBXdYE2cQBgdRmUVX8sU0DyJ1zgH0Edb1odUYmKDrbON/lFeS
-   nbPsfERSz4/5L++a7d78sEELdGkvO5nlJRcLRt0EqCx8RvtZzThh0DfwP
-   OgH3sTp8mGWUmsLFVm0rGOHFSBAOQ696yKpYCHRvz/WYqIAz1h6W78hzT
-   p1YlJpnqlU7H9giMGFcEYV0z2ms2cWrC+zRQKbu6uGq7XFTb6smyEhkNx
-   8tEHEKaDxzUoOOV/yaS6yOPoT6BQgFaJlgcUftDatCxHzJVwrf6zTS1W1
-   w==;
-X-CSE-ConnectionGUID: UtLgApf+TvmmsCkW+vqV7A==
-X-CSE-MsgGUID: y7nbrrl7Q/e9Jt6UuWL6ng==
-X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="59753294"
-X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
-   d="scan'208";a="59753294"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 06:54:14 -0700
-X-CSE-ConnectionGUID: fim/3lfsRaizCn/2Drq8kg==
-X-CSE-MsgGUID: 0E13cpX1SpSHJ4YXES9ypg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
-   d="scan'208";a="140720499"
-Received: from smile.fi.intel.com ([10.237.72.55])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 06:54:11 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uCfDr-00000003kMP-1t2w;
-	Wed, 07 May 2025 16:54:07 +0300
-Date: Wed, 7 May 2025 16:54:07 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: Ashish Kalra <ashish.kalra@amd.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Denis Mukhin <dmukhin@ford.com>
-Subject: Re: [PATCH v1 0/6] x86/boot: Enable earlyprintk on MMIO (8-bit)
-Message-ID: <aBtl_zoWwuVC6Gyi@smile.fi.intel.com>
-References: <20250502123145.4066635-1-andriy.shevchenko@linux.intel.com>
- <47a4795427d11c7c2d7713edda36d0c63c585c8d.camel@infradead.org>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="mx4qpqcT"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 8495643B65;
+	Wed,  7 May 2025 13:54:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1746626051;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Gl5cu1fpVM5Pngj8+xd4BNHbWImkARcf1UWFhUvnDsw=;
+	b=mx4qpqcTUTfxc/oB4PI5Amfdd81QB7X38desGlR1/KqPgZu6uSI2mf4DnpqKBDJbQM8WJ0
+	oEfJ28ZOs0Qrq+Z8DEW74JdJRXXY78Dru6PNODBcygB/sCKN8GtLdZe/t4jnN4Gmqp8jKD
+	ABiBWUO6bSZvvEaAwlG5Ii2lCQ1Hz7j1g6I8VTGUadjoij20YcgPDnJoTtHqsPdxSZ+SDO
+	WYb4zchsvkvCPC/V7EFACOKB0GCSI1mgFGoi7Opd18dDjTG1oLizGenOd74djTCh3z6Z6l
+	hjog1lroxk6oF3cgBBYE9sk6vAWRrErOhLmqQpwjJQyMiiFSe6gis/yLpX5EjQ==
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: davem@davemloft.net
+Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	thomas.petazzoni@bootlin.com,
+	Andrew Lunn <andrew@lunn.ch>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Russell King <linux@armlinux.org.uk>,
+	linux-arm-kernel@lists.infradead.org,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Vladimir Oltean <vladimir.oltean@nxp.com>,
+	=?UTF-8?q?K=C3=B6ry=20Maincent?= <kory.maincent@bootlin.com>,
+	=?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
+	Oleksij Rempel <o.rempel@pengutronix.de>,
+	=?UTF-8?q?Nicol=C3=B2=20Veronese?= <nicveronese@gmail.com>,
+	Simon Horman <horms@kernel.org>,
+	mwojtas@chromium.org,
+	Antoine Tenart <atenart@kernel.org>,
+	devicetree@vger.kernel.org,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Romain Gantois <romain.gantois@bootlin.com>,
+	Daniel Golle <daniel@makrotopia.org>,
+	Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+Subject: [PATCH net-next v6 11/14] net: phy: qca807x: Support SFP through phy_port interface
+Date: Wed,  7 May 2025 15:53:27 +0200
+Message-ID: <20250507135331.76021-12-maxime.chevallier@bootlin.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250507135331.76021-1-maxime.chevallier@bootlin.com>
+References: <20250507135331.76021-1-maxime.chevallier@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <47a4795427d11c7c2d7713edda36d0c63c585c8d.camel@infradead.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeejtdefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepveegtdffleffleevueellefgjeefvedvjefhheegfefgffdvfeetgeevudetffdtnecukfhppedvrgdtvdemkeeggedtmehfhedtsgemfedvheemrgeigeefmedufheiugemfhgvrgegmeegsgduieenucevlhhushhtvghrufhiiigvpeeknecurfgrrhgrmhepihhnvghtpedvrgdtvdemkeeggedtmehfhedtsgemfedvheemrgeigeefmedufheiugemfhgvrgegmeegsgduiedphhgvlhhopedvrgdtvddqkeeggedtqdhfhedtsgdqtdefvdehqdgrieegfedqudhfieguqdhfvggrgedqgegsudeirdhrvghvrdhsfhhrrdhnvghtpdhmrghilhhfrhhomhepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepfedupdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopehmrgigihhmvgdrtghhvghvr
+ ghllhhivghrsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrghrmhdqmhhsmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhg
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-On Tue, May 06, 2025 at 12:38:21PM -0700, David Woodhouse wrote:
-> On Fri, 2025-05-02 at 15:29 +0300, Andy Shevchenko wrote:
-> > Some of the platforms may have no legacy COM ports and only provide
-> > an MMIO accessible UART. Add support for such to earlyprintk for the
-> > boot phase of the kernel.
-> 
-> Aha, I understand now... you've added this *only* for the boot code,
-> and haven't added the corresponding support to the in-kernel
-> earlyprintk, in arch/x86/kernel/early_printk.c
+QCA8072/8075 may be used as combo-port PHYs, with Serdes (100/1000BaseX)
+ and Copper interfaces. The PHY has the ability to read the configuration
+it's in.  If the configuration indicates the PHY is in combo mode, allow
+registering up to 2 ports.
 
-Haven't added yet. This is part 1 only.
+Register a dedicated set of port ops to handle the serdes port, and rely
+on generic phylib SFP support for the SFP handling.
 
-> The latter does already support MMIO but it only supports a 32-bit
-> stride, not 8-bit.
-> 
-> Please could you make that consistent, and ensure the earlyprintk=
-> arguments function the same for both phases? I'm happy to add the
-> kexec-debug parts on top of *that*.
+Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+---
+ drivers/net/phy/qcom/qca807x.c | 75 +++++++++++++++-------------------
+ 1 file changed, 32 insertions(+), 43 deletions(-)
 
-It's not as easy as it looks like. I had done in the past the comparison table
-of what we have between all early*=... for serial consoles and it all so
-inconsistent to begin with. A big work needs to be fulfilled in order to put
-this mess in order. Hence this is just the first step.
-
-> It would be really helpful if we could test this in QEMU; it shouldn't
-> be that hard to make it provide a 16550 on MMIO, along the lines of the
-> one-line hack I posted yesterday.
-
-I understand. But if no go for this series, I don't won't to spend time on
-the next part.
-
-In any case, thanks for looking into this.
-
+diff --git a/drivers/net/phy/qcom/qca807x.c b/drivers/net/phy/qcom/qca807x.c
+index 1af6b5ead74b..2b1dc851214f 100644
+--- a/drivers/net/phy/qcom/qca807x.c
++++ b/drivers/net/phy/qcom/qca807x.c
+@@ -13,7 +13,7 @@
+ #include <linux/phy.h>
+ #include <linux/bitfield.h>
+ #include <linux/gpio/driver.h>
+-#include <linux/sfp.h>
++#include <linux/phy_port.h>
+ 
+ #include "../phylib.h"
+ #include "qcom.h"
+@@ -641,67 +641,55 @@ static int qca807x_phy_package_config_init_once(struct phy_device *phydev)
+ 	return ret;
+ }
+ 
+-static int qca807x_sfp_insert(void *upstream, const struct sfp_eeprom_id *id)
++static int qca807x_configure_serdes(struct phy_port *port, bool enable,
++				    phy_interface_t interface)
+ {
+-	struct phy_device *phydev = upstream;
+-	__ETHTOOL_DECLARE_LINK_MODE_MASK(support) = { 0, };
+-	phy_interface_t iface;
++	struct phy_device *phydev = port_phydev(port);
+ 	int ret;
+-	DECLARE_PHY_INTERFACE_MASK(interfaces);
+ 
+-	sfp_parse_support(phydev->sfp_bus, id, support, interfaces);
+-	iface = sfp_select_interface(phydev->sfp_bus, support);
++	if (!phydev)
++		return -ENODEV;
+ 
+-	dev_info(&phydev->mdio.dev, "%s SFP module inserted\n", phy_modes(iface));
+-
+-	switch (iface) {
+-	case PHY_INTERFACE_MODE_1000BASEX:
+-	case PHY_INTERFACE_MODE_100BASEX:
++	if (enable) {
+ 		/* Set PHY mode to PSGMII combo (1/4 copper + combo ports) mode */
+ 		ret = phy_modify(phydev,
+ 				 QCA807X_CHIP_CONFIGURATION,
+ 				 QCA807X_CHIP_CONFIGURATION_MODE_CFG_MASK,
+ 				 QCA807X_CHIP_CONFIGURATION_MODE_PSGMII_FIBER);
++		if (ret)
++			return ret;
+ 		/* Enable fiber mode autodection (1000Base-X or 100Base-FX) */
+ 		ret = phy_set_bits_mmd(phydev,
+ 				       MDIO_MMD_AN,
+ 				       QCA807X_MMD7_FIBER_MODE_AUTO_DETECTION,
+ 				       QCA807X_MMD7_FIBER_MODE_AUTO_DETECTION_EN);
+-		/* Select fiber page */
+-		ret = phy_clear_bits(phydev,
+-				     QCA807X_CHIP_CONFIGURATION,
+-				     QCA807X_BT_BX_REG_SEL);
+-
+-		phydev->port = PORT_FIBRE;
+-		break;
+-	default:
+-		dev_err(&phydev->mdio.dev, "Incompatible SFP module inserted\n");
+-		return -EINVAL;
++		if (ret)
++			return ret;
+ 	}
+ 
+-	return ret;
++	phydev->port = enable ? PORT_FIBRE : PORT_TP;
++
++	return phy_modify(phydev, QCA807X_CHIP_CONFIGURATION,
++			  QCA807X_BT_BX_REG_SEL,
++			  enable ? 0 : QCA807X_BT_BX_REG_SEL);
+ }
+ 
+-static void qca807x_sfp_remove(void *upstream)
++static const struct phy_port_ops qca807x_serdes_port_ops = {
++	.configure_mii = qca807x_configure_serdes,
++};
++
++static int qca807x_attach_port(struct phy_device *phydev, struct phy_port *port)
+ {
+-	struct phy_device *phydev = upstream;
++	if (!port->is_serdes)
++		return 0;
+ 
+-	/* Select copper page */
+-	phy_set_bits(phydev,
+-		     QCA807X_CHIP_CONFIGURATION,
+-		     QCA807X_BT_BX_REG_SEL);
++	__set_bit(PHY_INTERFACE_MODE_1000BASEX, port->interfaces);
++	__set_bit(PHY_INTERFACE_MODE_100BASEX, port->interfaces);
+ 
+-	phydev->port = PORT_TP;
+-}
++	port->ops = &qca807x_serdes_port_ops;
+ 
+-static const struct sfp_upstream_ops qca807x_sfp_ops = {
+-	.attach = phy_sfp_attach,
+-	.detach = phy_sfp_detach,
+-	.module_insert = qca807x_sfp_insert,
+-	.module_remove = qca807x_sfp_remove,
+-	.connect_phy = phy_sfp_connect_phy,
+-	.disconnect_phy = phy_sfp_disconnect_phy,
+-};
++	return 0;
++}
+ 
+ static int qca807x_probe(struct phy_device *phydev)
+ {
+@@ -743,9 +731,8 @@ static int qca807x_probe(struct phy_device *phydev)
+ 
+ 	/* Attach SFP bus on combo port*/
+ 	if (phy_read(phydev, QCA807X_CHIP_CONFIGURATION)) {
+-		ret = phy_sfp_probe(phydev, &qca807x_sfp_ops);
+-		if (ret)
+-			return ret;
++		phydev->max_n_ports = 2;
++
+ 		linkmode_set_bit(ETHTOOL_LINK_MODE_FIBRE_BIT, phydev->supported);
+ 		linkmode_set_bit(ETHTOOL_LINK_MODE_FIBRE_BIT, phydev->advertising);
+ 	}
+@@ -799,6 +786,7 @@ static struct phy_driver qca807x_drivers[] = {
+ 		.suspend	= genphy_suspend,
+ 		.cable_test_start	= qca807x_cable_test_start,
+ 		.cable_test_get_status	= qca808x_cable_test_get_status,
++		.attach_port	= qca807x_attach_port,
+ 	},
+ 	{
+ 		PHY_ID_MATCH_EXACT(PHY_ID_QCA8075),
+@@ -822,6 +810,7 @@ static struct phy_driver qca807x_drivers[] = {
+ 		.led_hw_is_supported = qca807x_led_hw_is_supported,
+ 		.led_hw_control_set = qca807x_led_hw_control_set,
+ 		.led_hw_control_get = qca807x_led_hw_control_get,
++		.attach_port	= qca807x_attach_port,
+ 	},
+ };
+ module_phy_driver(qca807x_drivers);
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.49.0
 
