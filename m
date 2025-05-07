@@ -1,72 +1,66 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C42EE280010
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 12:44:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45326280338
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 12:44:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746621874; cv=none; b=GBGhr+Lrj5XWNIUMhF0NPKArv8Nf72Md4B3oRZtHjgD02FFvViJzwKkcx84a41UaDVOYUxLjfYg3QVa1ZG9o0DXZve38pu/goB/9T8AzLUbNeK6+2qayXJjlbar2XiWER/MqskQN7is6uJiIPDTpQJmdTUg3Jr7MmBRE43pbnu8=
+	t=1746621874; cv=none; b=r2GNUwJnJTU8URg2CSKmkZEKjGUHU4Mc3ReUsFgi4ajvLCIqyBPdGFVfdL+X6onJQWAPuAB3Ga9gY7vNvn16N2QMDY952kk51wk68HJmpaBTkqhbW+o+lU2aiENkA5ItcG1DKoE+YwvA6HOmCCWalTmMd618FFn/IGKRHgmJsaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746621874; c=relaxed/simple;
-	bh=XTu13HUCjnLkPwxQ/H/XKaYBowvWqvHhZOqLV5oeU6k=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=myDLgykhiWHf/3BcrX9KW71KMEO0xN4GkjIkVG+gU3fxJaNvth9nAIc4j57g8pUOmoYTwrCwHSROV7jN5BNYT24bq8XoyZZOJMrmHXjJQhuj0UD0g9JKLyh0BPPPX2zQ7KruNvCMwuZ/M2ODXUXUW360lwSoOtUEE79SEtGVsds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gfGfJSeS; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	bh=nQujC6034IbbV1/Takj+ktYRPduuI1NiEdr6M8Bk9tM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UbliXLh+KO/4+cL2I2lQqOuEDUoXtdouQPp9bZobtn9cHAiV1bAaw9yG35Blvr9t7VrjyGDnscw9wwU1n6WsnOEjXG5q+50/qmRL5Rno9votZ3Jat9LEDfJ5GCbgSxQhqC1saMLok7dKZt8F+V/A+F0aGoXZRNBTuTriewkBwBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=kcxcIV1S; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=kj0fwJqq reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gfGfJSeS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746621871;
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="kcxcIV1S";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="kj0fwJqq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1746621870; x=1778157870;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=UaNOIapp4J5KzxMU+tHJGWnVbFnnDP/ugTkRCJiT7PY=;
+  b=kcxcIV1SUWHiDKEmQrHcfBVbAp93yBgLaqQ9msTevKDN+848jZHh3kCw
+   N6x5O5OoFNeIoM2EsejADbynAp4HI4idI+CjWWv2MF+LlydBSLX+XUO3r
+   PwD6jjVKjrkKPvoRUk2Y9iVhWvoChARWHMojQWtyCWsEEZYe6iEEtXsit
+   wMHArzYrVPRMzOfUNnHwlOziznhHRxa7NcIzk9QVX+lmTJHHpakIJEJc5
+   8jIATm6uC59emSpj2PEh1goyeLdIXOy/PEeXkqhnZ25Z5vI8s7eh/DDCy
+   ZdqUhFygiQCNfwXG25Uq5lF8W9gPU5YSjHv1mkJWAtYRECyCdozPAAhvJ
+   w==;
+X-CSE-ConnectionGUID: DrLXQv0vSxemKXNx8bmoHA==
+X-CSE-MsgGUID: TR8Z33pXRm+v+2x3xaMeBQ==
+X-IronPort-AV: E=Sophos;i="6.15,269,1739833200"; 
+   d="scan'208";a="43936346"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 07 May 2025 14:44:27 +0200
+X-CheckPoint: {681B55AB-12-C7E25413-F4312D34}
+X-MAIL-CPID: 6E8B7F67FFA38057D06757D6A4063F61_4
+X-Control-Analysis: str=0001.0A006398.681B55BB.0089,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id C0BF21609AF;
+	Wed,  7 May 2025 14:44:21 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1746621863;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TD0tIUhPEy546OOelRb04g6ZuNomWXeXg1LQ3RsW7ok=;
-	b=gfGfJSeSgmAheF+gOVZw0XyWWr9xyaFNa9/tidO+MKDc/5xKQ2T8X7j6bo4BwyVpeKxCmp
-	7q0rKD1vZloK8C6wj1yqLOuGD+/kL5nDu/h/KAqlB5Tn2gz5fRVO3rMoX4vkxrj1kG7sxG
-	zuV6iFe225tD3s+jLF5+5UCZRm5b+HQ=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-687-HGRC35I5ONm4JeRFAy2c2w-1; Wed,
- 07 May 2025 08:44:26 -0400
-X-MC-Unique: HGRC35I5ONm4JeRFAy2c2w-1
-X-Mimecast-MFC-AGG-ID: HGRC35I5ONm4JeRFAy2c2w_1746621864
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5AFA119560AF;
-	Wed,  7 May 2025 12:44:24 +0000 (UTC)
-Received: from p16v.luc.cera.cz (unknown [10.44.33.91])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7230A19560A7;
-	Wed,  7 May 2025 12:44:18 +0000 (UTC)
-From: Ivan Vecera <ivecera@redhat.com>
-To: netdev@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Prathosh Satish <Prathosh.Satish@microchip.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Lee Jones <lee@kernel.org>,
-	Andy Shevchenko <andy@kernel.org>,
-	Michal Schmidt <mschmidt@redhat.com>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Subject: [PATCH net-next v7 2/8] dt-bindings: dpll: Add support for Microchip Azurite chip family
-Date: Wed,  7 May 2025 14:43:52 +0200
-Message-ID: <20250507124358.48776-3-ivecera@redhat.com>
-In-Reply-To: <20250507124358.48776-1-ivecera@redhat.com>
-References: <20250507124358.48776-1-ivecera@redhat.com>
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=UaNOIapp4J5KzxMU+tHJGWnVbFnnDP/ugTkRCJiT7PY=;
+	b=kj0fwJqqaZdYnzp02ZZSmaFjCKy0xnCdVTH1vg3rjVYqjeGZF+pLxbMZBh4WxAsvoWwDO+
+	lXU1tFBr5T71QnznSaMTc5aPiE4RR0AitCWmZRrqBw6U8emPNxOEnlPfiSzjSIr6h29cdG
+	+m35eKK4OAnaBve+dKIcgugoRu1F6TAxFH/OcaRzPhS/Rvs1NJ/6wJrIASjZbipq7R9Zw/
+	qh53wh3NX8PTa/UMsDL2Ja0993wOyaWxLzRzBDiWii5BH10/7RnO/9EaLYVCEjmgQqUhwH
+	1H/HX5BEjlrUOCidIubhqLpR0KODCxQsOK4c3+iTJ8clmSaH5byHQguhjD7Vzg==
+From: Alexander Stein <alexander.stein@ew.tq-group.com>
+To: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>
+Cc: Alexander Stein <alexander.stein@ew.tq-group.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] arm64: Kconfig: Enable PINCTRL on i.MX platforms
+Date: Wed,  7 May 2025 14:44:13 +0200
+Message-ID: <20250507124414.3088510-1-alexander.stein@ew.tq-group.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,152 +68,27 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+X-Last-TLS-Session-Version: TLSv1.3
 
-Add DT bindings for Microchip Azurite DPLL chip family. These chips
-provide up to 5 independent DPLL channels, 10 differential or
-single-ended inputs and 10 differential or 20 single-ended outputs.
-They can be connected via I2C or SPI busses.
+Select PINCTRL for NXP i.MX SoCs.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Signed-off-by: Ivan Vecera <ivecera@redhat.com>
+Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
 ---
-v5->v6:
-* no change
-v4->v5:
-* removed compilation output from the description
-v3->v4:
-* fixed $Id
-* dpll-pin type property renamed to connection type
-v1->v3:
-* single file for both i2c & spi
-* 5 compatibles for all supported chips from the family
----
- .../bindings/dpll/microchip,zl30731.yaml      | 115 ++++++++++++++++++
- 1 file changed, 115 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dpll/microchip,zl30731.yaml
+ arch/arm64/Kconfig.platforms | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/dpll/microchip,zl30731.yaml b/Documentation/devicetree/bindings/dpll/microchip,zl30731.yaml
-new file mode 100644
-index 000000000000..17747f754b84
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dpll/microchip,zl30731.yaml
-@@ -0,0 +1,115 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/dpll/microchip,zl30731.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Microchip Azurite DPLL device
-+
-+maintainers:
-+  - Ivan Vecera <ivecera@redhat.com>
-+
-+description:
-+  Microchip Azurite DPLL (ZL3073x) is a family of DPLL devices that
-+  provides up to 5 independent DPLL channels, up to 10 differential or
-+  single-ended inputs and 10 differential or 20 single-ended outputs.
-+  These devices support both I2C and SPI interfaces.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - microchip,zl30731
-+      - microchip,zl30732
-+      - microchip,zl30733
-+      - microchip,zl30734
-+      - microchip,zl30735
-+
-+  reg:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+allOf:
-+  - $ref: /schemas/dpll/dpll-device.yaml#
-+  - $ref: /schemas/spi/spi-peripheral-props.yaml#
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    i2c {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      dpll@70 {
-+        compatible = "microchip,zl30732";
-+        reg = <0x70>;
-+        dpll-types = "pps", "eec";
-+
-+        input-pins {
-+          #address-cells = <1>;
-+          #size-cells = <0>;
-+
-+          pin@0 { /* REF0P */
-+            reg = <0>;
-+            connection-type = "ext";
-+            label = "Input 0";
-+            supported-frequencies-hz = /bits/ 64 <1 1000>;
-+          };
-+        };
-+
-+        output-pins {
-+          #address-cells = <1>;
-+          #size-cells = <0>;
-+
-+          pin@3 { /* OUT1N */
-+            reg = <3>;
-+            connection-type = "gnss";
-+            esync-control;
-+            label = "Output 1";
-+            supported-frequencies-hz = /bits/ 64 <1 10000>;
-+          };
-+        };
-+      };
-+    };
-+  - |
-+    spi {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      dpll@70 {
-+        compatible = "microchip,zl30731";
-+        reg = <0x70>;
-+        spi-max-frequency = <12500000>;
-+
-+        dpll-types = "pps";
-+
-+        input-pins {
-+          #address-cells = <1>;
-+          #size-cells = <0>;
-+
-+          pin@0 { /* REF0P */
-+            reg = <0>;
-+            connection-type = "ext";
-+            label = "Input 0";
-+            supported-frequencies-hz = /bits/ 64 <1 1000>;
-+          };
-+        };
-+
-+        output-pins {
-+          #address-cells = <1>;
-+          #size-cells = <0>;
-+
-+          pin@3 { /* OUT1N */
-+            reg = <3>;
-+            connection-type = "gnss";
-+            esync-control;
-+            label = "Output 1";
-+            supported-frequencies-hz = /bits/ 64 <1 10000>;
-+          };
-+        };
-+      };
-+    };
-+...
+diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+index a541bb029aa4e..49c3bc25e5f68 100644
+--- a/arch/arm64/Kconfig.platforms
++++ b/arch/arm64/Kconfig.platforms
+@@ -219,6 +219,7 @@ config ARCH_MXC
+ 	select ARM64_ERRATUM_845719 if COMPAT
+ 	select IMX_GPCV2
+ 	select IMX_GPCV2_PM_DOMAINS
++	select PINCTRL
+ 	select PM
+ 	select PM_GENERIC_DOMAINS
+ 	select SOC_BUS
 -- 
-2.49.0
+2.43.0
 
