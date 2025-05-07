@@ -1,91 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 545A71A0BF1;
-	Wed,  7 May 2025 17:13:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D48CF2C9D;
+	Wed,  7 May 2025 17:15:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746638026; cv=none; b=Yf5h+qpkXdkT+58AqylGrlsJw0LTUroFv78oxPNXDEhp0ciGmQxOnsm7lSUIWV69sgz7qutg2+1eoczXWlNDjW3MkZzItsyWqqpSj9rHcC8ELF9tBGKfEEZTiw06yH/Cj0vCUo6dNL5NNB6qqGnoFpB6SwJb9vjcMhwsWfk2vsQ=
+	t=1746638147; cv=none; b=TrqRmcxPjOyW6ByKPv7PGnIueSKpWlOkC2LCnTaG8iq5SpVvrfTSUWRAK4l4IbT+mLgxUI/n/W9Gqlsie/AQfuBrTxS702xpCmzezfAq3vsSj4jNGAAB62Sn4sh1xrU3pBjEQf5oqXE+FL+MCmOaMWNXQdXL21lwY8Ri9pLX06I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746638026; c=relaxed/simple;
-	bh=PmE5AMWayhcd+e54onh5bX8GqZApiSRs1f3o3moTGPc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CCZdlpZ04FAoc8qRzP8tiCzu7dDap82qyORUEN4EBlkjL3BI+h24DsaVg/8MBoE/StpoNTSB3pwmYIa/qrg865PPzuSvRneGY6h+urUWUNvbrALKD5qVuPuJW5cftRWYrt4Is9ByP6sKoRalosE4OZ1YHnqVDMOCmSRlV+W+qKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kEujl9TV; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kEujl9TV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75484C4CEE2;
-	Wed,  7 May 2025 17:13:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746638025;
-	bh=PmE5AMWayhcd+e54onh5bX8GqZApiSRs1f3o3moTGPc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kEujl9TVEBQDx+MuY1AJNXxri6mnV2fYcT60715clOBJaWQfCh+DzuWmGVKzBXe37
-	 RM89XVjYUo9Fx0AuyeKEekx/jVESLEHPY/Xf7oKAe5hCI+bBzhDU11R3Wwj9mkbmwI
-	 Ot/gf2J0geVXdc6UNy7jTN2NJihrLn/k130KUHiuLL6up9SbmjWpcr9FJk1/MvFLZM
-	 kvjOH/h2r1DCC2qrKkYndauzzceZR6dAXvOGup/9mc8PhP6b/HgKBKGY6HCVdB1jsT
-	 FWGJ6KMAbw8pgQT4yPXWaX1TNinw97P/bm8diyw+ZHu3F5y/m3jwD9U/oz59IM5o0P
-	 rTw1F1g0jfwTQ==
-Date: Wed, 7 May 2025 10:13:41 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: Thorsten Leemhuis <linux@leemhuis.info>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, oe-kbuild-all@lists.linux.dev,
-	Ard Biesheuvel <ardb@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	kernel test robot <lkp@intel.com>
-Subject: Re: [ebiggers:sha256-lib-v4 4/13] /tmp/ccoCWqTC.s: Error: local
- label `"3" (instance number 1 of a fb label)' is not defined
-Message-ID: <20250507171341.GA181648@sol>
-References: <202505071811.yYpLUbav-lkp@intel.com>
- <fe4c8f86-17d9-4e00-96e9-9f24c22c58a2@leemhuis.info>
- <c4a017e9-0169-4f7a-99a1-7ae1bbee4a19@leemhuis.info>
+	s=arc-20240116; t=1746638147; c=relaxed/simple;
+	bh=EodWvoVBr9X0H3RmTywHuGYU76j0rL2oQlt9Tkhfqc4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JxsJKf4OsYlDSqJWJ634rAGNjxV7pki4tt7s9LJOfBMEQrYMNtJkLB+RwipS+NhAhypr2ayqsIaefbH7ZbmS5eSTp7uy19Vt/H2zpXyeE90BHyiEmcGTFPbC2hGh7q3d/q2lHcRf4SMG3pyQ5P61jRi+E9yK3Bx/XAvZEPjVJCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-5242f137a1eso23058e0c.1;
+        Wed, 07 May 2025 10:15:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746638144; x=1747242944;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tjssFlw1FzpH4B0sQSNz2YHpp3SvNlCS+DZZcEssn9M=;
+        b=MIrGMvnItV69H0BBspd71AvQ2gDXSDgTjieOzJU1OLfD2QdMKjO3v/6DD83YNf5Yej
+         yM17R89TqlPYgBzCLGgKiyQVeZUnbtpLHAFWdMKQcxhCAgmPl8PkLPH0w5xqJrYkFnIj
+         twOXdVxYUYF1V9uKfrkpmPtMvpZzuDRTQ4UJ39VL+eq6A9D91BeXOjBrQG1JsnoSWQMb
+         kvvv3B7laSN8Fao8o8bZSB43pqf+nevJqrMwA32Hg59xr6j+1PoowVgwRbnpacQ92EM1
+         LbZiykYbpOojdPjLfG1X0DdyGAcDBQUbxkFJmoX1zpUUQ5T5raByOrKcSBWYpgxb+tJu
+         xYGg==
+X-Forwarded-Encrypted: i=1; AJvYcCVG2iDBZ1zME/1OB+3aRModeXjkR4kWzIS8NwYOIxCHCiByTsFGbgZs6faBrCagO9NoeOo2ZGEoFxN8@vger.kernel.org, AJvYcCVPmwvF8UrhHmG2fbR1S8+vyz73KX0GGsRDhsJLiWh+4a3Oipv9DRMyXUkwgyDUeBw6TOfX4LR6/+2gCEs+Xk/s7H4=@vger.kernel.org, AJvYcCVQ158jo6Dw3SD8b/kmSDskCizEYZrxM9XfrXrzphwTj4qpoPq+SzjSfhfzgkUyNaK9mAiboewg3SCEi9ib@vger.kernel.org, AJvYcCXBoeYlW5zU+r6tq9VWoKzNDgAhSwRnN1SV/qwwnkv02FTYuJj0OziA+xaAxFHDIZxOcpkGckkVnK8N@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx0n+H4OekdhhQQritL+/aiyd6DbaBtUvhgYfmwxYtCkyUUZIac
+	dunUd4/rn4GRbLK3/zlfJIQ9EIFYfEvK5OyxQZF+bcZtQPw4/YYvCg3jfke1
+X-Gm-Gg: ASbGnctcomxj+rkHES7aU/rfGYMmCqXvW4NEK029nPdh+sGyQpWn+l1AAsqhwDmmEG8
+	Mymxau7fa1FNjoncu2ibSEyxglDcPDfT56vZk6HdMqaZTCVtFBJYFeUN1o5SbOp+Pfl8BGY0l8Q
+	a/7Jqs72UaVThrbgD3RxswF57U1xyp6i4qjJs3PawhxMJiCDR5GwY0vKFLHO1ToUVse48GqRhcf
+	OalRfFwx3mKVHzMxJCs+3+OBDoam4zqECG7tvVAAkUEc8uYQlxx3g/xG7qazat6cri/OInEPtU6
+	qp3jb3eVVflWJTbOSsQU1qhgpcOtgDFuL7NJno8YM1FuPkG4KiuQ5vi20Bb+rboww6rfRZW6//E
+	VgkM=
+X-Google-Smtp-Source: AGHT+IH3aVDhaWRFn4FB9MgDrcU6nndPWSx0YZkPnyqHM0aXOplfWvBDjOvj6bwuy5TjEiSf1oOVvQ==
+X-Received: by 2002:a05:6122:4692:b0:529:995:5aec with SMTP id 71dfb90a1353d-52c379ccb4cmr3336141e0c.4.1746638144092;
+        Wed, 07 May 2025 10:15:44 -0700 (PDT)
+Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com. [209.85.217.52])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52ae41eb5d7sm2455492e0c.39.2025.05.07.10.15.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 07 May 2025 10:15:43 -0700 (PDT)
+Received: by mail-vs1-f52.google.com with SMTP id ada2fe7eead31-4c326617e6cso21764137.1;
+        Wed, 07 May 2025 10:15:43 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVB1+9wyrdrUm5hK3gvdbG7dnTe2vQ3GxXm1Ydmm7nMfCrqYo/bVPOY5ZRqpujolMNZcVIUjNREw9XhFYyh9zNKA3A=@vger.kernel.org, AJvYcCVCokQ6l2Daa0ZvE35e2yu6ImXytKsqTmtZHXObIZJ9cXvqBS2X5+eR8gvrP5tZ3IcOV4o2H/hjQQWd@vger.kernel.org, AJvYcCW5GGzOWJ5NWXCwfjkSkiBjikT9XydSgGOkNTMvmrAZlNQEHMnjzeMnHxTPrNFljuI19jOi7ojgyDzF71CE@vger.kernel.org, AJvYcCXoYhraIgs/iU+sgENE9bvx2bp6KhmvH1Pm2/+Lha//PZdJeQes58j5U7W18O/SyMN+6nUR+eGDjBQ3@vger.kernel.org
+X-Received: by 2002:a05:6102:5e82:b0:4c1:76a4:aee4 with SMTP id
+ ada2fe7eead31-4dc73896351mr3305611137.19.1746638143350; Wed, 07 May 2025
+ 10:15:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c4a017e9-0169-4f7a-99a1-7ae1bbee4a19@leemhuis.info>
+References: <20250410140628.4124896-1-claudiu.beznea.uj@bp.renesas.com> <20250410140628.4124896-6-claudiu.beznea.uj@bp.renesas.com>
+In-Reply-To: <20250410140628.4124896-6-claudiu.beznea.uj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 7 May 2025 19:15:31 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXcUCsa-c0oHz20huEG0cvv6zVq4OwONfrcMVSQC84XbQ@mail.gmail.com>
+X-Gm-Features: ATxdqUFFIBTCxfle3eXYQu4EEydjHa0Zh6WAfCUTIuL1cqOuLd_-RqXuGIJbNNw
+Message-ID: <CAMuHMdXcUCsa-c0oHz20huEG0cvv6zVq4OwONfrcMVSQC84XbQ@mail.gmail.com>
+Subject: Re: [PATCH 5/7] clk: renesas: rzg2l-cpg: Drop MSTOP based power
+ domain support
+To: Claudiu <claudiu.beznea@tuxon.dev>
+Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, magnus.damm@gmail.com, 
+	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, May 07, 2025 at 12:56:22PM +0200, Thorsten Leemhuis wrote:
-> [+linux-crypto and +Herbert Xu, who committed that change that showed up
-> in -next today; sorry for forgetting this earlier]
-> 
-> On 07.05.25 12:50, Thorsten Leemhuis wrote:
-> > On 07.05.25 12:25, kernel test robot wrote:
-> >> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git sha256-lib-v4
-> >> head:   849682242c36727c23430b6cfed12e4422313931
-> >> commit: 9f2dd94847c914bb716be744e12cb02f175638db [4/13] crypto: arm64/sha256 - implement library instead of shash
-> >> config: arm64-randconfig-003-20250429 (https://download.01.org/0day-ci/archive/20250507/202505071811.yYpLUbav-lkp@intel.com/config)
-> >> compiler: aarch64-linux-gcc (GCC) 9.5.0
-> >> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250507/202505071811.yYpLUbav-lkp@intel.com/reproduce)
-> >>
-> >> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> >> the same patch/commit), kindly add following tags
-> >> | Reported-by: kernel test robot <lkp@intel.com>
-> >> | Closes: https://lore.kernel.org/oe-kbuild-all/202505071811.yYpLUbav-lkp@intel.com/
-> >>
-> >> All errors (new ones prefixed by >>):
-> >>
-> >>    /tmp/ccoCWqTC.s: Assembler messages:
-> >>>> /tmp/ccoCWqTC.s: Error: local label `"3" (instance number 1 of a fb label)' is not defined
-> > 
-> > I ran into the same problem today when building -next rpms for arm64
-> > Fedora using the approach and configuration used to build the kernel
-> > rpms shipped in Fedora rawhide.
-> > 
-> > Full build log:
-> > 
-> > https://download.copr.fedorainfracloud.org/results/@kernel-vanilla/next/fedora-rawhide-aarch64/09006679-next-next-all/builder-live.log.gz
-> > 
-> > Ciao, Thorsten
+On Thu, 10 Apr 2025 at 16:06, Claudiu <claudiu.beznea@tuxon.dev> wrote:
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>
+> Since the configuration order between the individual MSTOP and CLKON bits
+> cannot be preserved with the power domain abstraction, drop the power
+> domain core code.
+>
+> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-Thanks.  https://lore.kernel.org/r/20250507170901.151548-1-ebiggers@kernel.org
-fixes this.  This was specific to CONFIG_PREEMPT_VOLUNTARY=y, which I've now
-added to the lists of configs I test...
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-- Eric
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
