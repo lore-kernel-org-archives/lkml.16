@@ -1,51 +1,50 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C370928A41F
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 15:25:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E920F28A414
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 15:25:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746631533; cv=none; b=ITDVO5p+iT4Lv/ZkQYAja+wFsoKEPpbdd4/aasd4RO0jjHoy+IoGf8EBIvalJQHw9m1gv1QeTOiDZrulv0STT3SxxgaTxzVULQ5xlKSJdDxNpSP51csWQXnwlpw5FuFYtbF6yAp/ZWnkXsao3w2PpTvXxBZZWoEo53G/2gLPXvk=
+	t=1746631546; cv=none; b=jzTdLFb8UzjA+J1V5de2lD9TuK19getocIFhVTxelpVhkFHcFdd5zQmeR7x3N+V3tcztjwihzezpKjIRuS9gEXZvLgYSeZLrV/zPLq/QMF6DcEG1OzNe5dIq4a04lIn53NPVqeb9Yax8+LytdXIG5UBJ1NbWdm4q+L1+W+Mefng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746631533; c=relaxed/simple;
-	bh=9u6IHhv8aHONgw76RB598JScZwyi11QmGPcXkfNBq9s=;
+	s=arc-20240116; t=1746631546; c=relaxed/simple;
+	bh=ENEzXWYEBJjTirVfpU7httRoblpC7+WrR/GXm7PT2gk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Zvi+i4kibi5wBdfqLa20XK/n1VU3aZvBA0Qebkx8pIsl78WrM+TAZpiCtJ0lXZyeDN8hVd2xWCoXpvm1w4E8zxvkPoQSrxZPhyFbPOqlZZcgnOY1CBqJpEvk0H0UmU8gNUVRNn3q1cIBu8mHHbPPjUqmBS2FaZwvGozvSdMvk1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AMZxXC1H; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=AFcZ1R7psZDOMMFURDGXAvYcJHuq7ZAAsQyjKPC5Bv+OO6QWsnGfoeHOJwj42T59aOsOnYURD4u+D6qIXQTum1XvSpSM1dVKoX/8p/E1C0z52NPIXkNRS3LtuoWoOBSPnGzqVVlX0BR1IH7/24qmLM3OR9ndCq66JV7YISsuW1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SQ75cwAg; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AMZxXC1H"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SQ75cwAg"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746631530;
+	s=mimecast20190719; t=1746631544;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ovtx7INMeXT1dDPekL+W5322Ce1R1P/2rCdJ/PxWOKU=;
-	b=AMZxXC1HRDJgX16jypvPhHcRBPbeUfHY7SoA7O8iOjllYWTgpyqZFW2JQ/NYwgIs4rIjKy
-	fhQ2c6haj5GD9mtyxl2veG/ejJvvnUHDDq2uDPrUJafaKMCEy8JHEHEnzAbGkYHsB0HPty
-	Cq8+pYC62ms/7xzwzhDNpJlva9iZpdE=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=xONwwyT6D9d/VjBVE7MlYwiyn1lyLwt9wh4CqMxdKtg=;
+	b=SQ75cwAgFL2uoIrLWdNro6C4gn0vCMIj6YkZKOjuQFlZPOevwZWRGNe6zDQt2HeTvW3nFu
+	TCFIfLRY4D8XPG2yXFDnsMBiCrKH5LNNiAWiiaJsCnbwfXd9O6srxHP3tbAvvf5z+RWNdG
+	o00t98C2cut9s9iOm+JiOWcwa56d0xU=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-304-SKT8nFoOOuy5tNQvPWYILQ-1; Wed,
- 07 May 2025 11:25:27 -0400
-X-MC-Unique: SKT8nFoOOuy5tNQvPWYILQ-1
-X-Mimecast-MFC-AGG-ID: SKT8nFoOOuy5tNQvPWYILQ_1746631525
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-13-2IUiTI0sPCejD9pabJM82g-1; Wed,
+ 07 May 2025 11:25:38 -0400
+X-MC-Unique: 2IUiTI0sPCejD9pabJM82g-1
+X-Mimecast-MFC-AGG-ID: 2IUiTI0sPCejD9pabJM82g_1746631536
 Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1B019180056F;
-	Wed,  7 May 2025 15:25:25 +0000 (UTC)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AAFD91955DEA;
+	Wed,  7 May 2025 15:25:36 +0000 (UTC)
 Received: from p16v.luc.cera.cz (unknown [10.44.33.91])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 56A6C30001A1;
-	Wed,  7 May 2025 15:25:19 +0000 (UTC)
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6247B30001A1;
+	Wed,  7 May 2025 15:25:31 +0000 (UTC)
 From: Ivan Vecera <ivecera@redhat.com>
 To: netdev@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+Cc: Vadim Fedorenko <vadim.fedorenko@linux.dev>,
 	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
 	Jiri Pirko <jiri@resnulli.us>,
 	Rob Herring <robh@kernel.org>,
@@ -62,9 +61,9 @@ Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-doc@vger.kernel.org
-Subject: [PATCH net-next v8 2/8] dt-bindings: dpll: Add support for Microchip Azurite chip family
-Date: Wed,  7 May 2025 17:24:58 +0200
-Message-ID: <20250507152504.85341-3-ivecera@redhat.com>
+Subject: [PATCH net-next v8 4/8] mfd: zl3073x: Add support for devlink device info
+Date: Wed,  7 May 2025 17:25:00 +0200
+Message-ID: <20250507152504.85341-5-ivecera@redhat.com>
 In-Reply-To: <20250507152504.85341-1-ivecera@redhat.com>
 References: <20250507152504.85341-1-ivecera@redhat.com>
 Precedence: bulk
@@ -76,12 +75,10 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-Add DT bindings for Microchip Azurite DPLL chip family. These chips
-provide up to 5 independent DPLL channels, 10 differential or
-single-ended inputs and 10 differential or 20 single-ended outputs.
-They can be connected via I2C or SPI busses.
+Use devlink_alloc() to allocate zl3073x_dev structure, register
+the device as a devlink device, and add devlink callback to provide
+device info.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Signed-off-by: Ivan Vecera <ivecera@redhat.com>
 ---
 v7->v8:
@@ -89,141 +86,254 @@ v7->v8:
 v6->v7:
 * no change
 v5->v6:
-* no change
-v4->v5:
-* removed compilation output from the description
-v3->v4:
-* fixed $Id
-* dpll-pin type property renamed to connection type
-v1->v3:
-* single file for both i2c & spi
-* 5 compatibles for all supported chips from the family
----
- .../bindings/dpll/microchip,zl30731.yaml      | 115 ++++++++++++++++++
- 1 file changed, 115 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dpll/microchip,zl30731.yaml
+* fixed devlink info firmware version to be running instead of fixed
+* added documentation for devlink info versions
 
-diff --git a/Documentation/devicetree/bindings/dpll/microchip,zl30731.yaml b/Documentation/devicetree/bindings/dpll/microchip,zl30731.yaml
+v4->v5:
+* use new register access helpers
+
+v3->v4:
+* pass error code from devm_add_action_or_reset() call
+
+v2->v3:
+* merged devlink device allocation, registration and device info
+  callback
+
+v1->v2:
+* dependency on NET moved to MFD_ZL3073X_CORE in Kconfig
+* devlink register managed way
+---
+ Documentation/networking/devlink/index.rst   |   1 +
+ Documentation/networking/devlink/zl3073x.rst |  37 +++++++
+ drivers/mfd/Kconfig                          |   2 +
+ drivers/mfd/zl3073x-core.c                   | 108 ++++++++++++++++++-
+ 4 files changed, 146 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/networking/devlink/zl3073x.rst
+
+diff --git a/Documentation/networking/devlink/index.rst b/Documentation/networking/devlink/index.rst
+index 8319f43b5933..250ae71f4023 100644
+--- a/Documentation/networking/devlink/index.rst
++++ b/Documentation/networking/devlink/index.rst
+@@ -98,3 +98,4 @@ parameters, info versions, and other features it supports.
+    iosm
+    octeontx2
+    sfc
++   zl3073x
+diff --git a/Documentation/networking/devlink/zl3073x.rst b/Documentation/networking/devlink/zl3073x.rst
 new file mode 100644
-index 000000000000..17747f754b84
+index 000000000000..9a6744fb2e86
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/dpll/microchip,zl30731.yaml
-@@ -0,0 +1,115 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/dpll/microchip,zl30731.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/Documentation/networking/devlink/zl3073x.rst
+@@ -0,0 +1,37 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
-+title: Microchip Azurite DPLL device
++=======================
++zl3073x devlink support
++=======================
 +
-+maintainers:
-+  - Ivan Vecera <ivecera@redhat.com>
++This document describes the devlink features implemented by the ``zl3073x``
++device driver.
 +
-+description:
-+  Microchip Azurite DPLL (ZL3073x) is a family of DPLL devices that
-+  provides up to 5 independent DPLL channels, up to 10 differential or
-+  single-ended inputs and 10 differential or 20 single-ended outputs.
-+  These devices support both I2C and SPI interfaces.
++Info versions
++=============
 +
-+properties:
-+  compatible:
-+    enum:
-+      - microchip,zl30731
-+      - microchip,zl30732
-+      - microchip,zl30733
-+      - microchip,zl30734
-+      - microchip,zl30735
++The ``zl3073x`` driver reports the following versions
 +
-+  reg:
-+    maxItems: 1
++.. list-table:: devlink info versions implemented
++    :widths: 5 5 5 90
 +
-+required:
-+  - compatible
-+  - reg
++    * - Name
++      - Type
++      - Example
++      - Description
++    * - ``asic.id``
++      - fixed
++      - 1E94
++      - Chip identification number
++    * - ``asic.rev``
++      - fixed
++      - 300
++      - Chip revision number
++    * - ``fw``
++      - running
++      - 7006
++      - Firmware version number
++    * - ``cfg.custom_ver``
++      - running
++      - 1.3.0.1
++      - Device configuration version customized by OEM
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index 7d7902ec1d89..e4eca15af175 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -2424,6 +2424,8 @@ config MFD_UPBOARD_FPGA
+ 
+ config MFD_ZL3073X_CORE
+ 	tristate
++	depends on NET
++	select NET_DEVLINK
+ 	select MFD_CORE
+ 
+ config MFD_ZL3073X_I2C
+diff --git a/drivers/mfd/zl3073x-core.c b/drivers/mfd/zl3073x-core.c
+index c408aafb0f8a..079550682510 100644
+--- a/drivers/mfd/zl3073x-core.c
++++ b/drivers/mfd/zl3073x-core.c
+@@ -8,8 +8,11 @@
+ #include <linux/export.h>
+ #include <linux/mfd/zl3073x.h>
+ #include <linux/module.h>
++#include <linux/netlink.h>
+ #include <linux/regmap.h>
++#include <linux/sprintf.h>
+ #include <linux/unaligned.h>
++#include <net/devlink.h>
+ #include "zl3073x.h"
+ #include "zl3073x-regs.h"
+ 
+@@ -375,6 +378,83 @@ int zl3073x_poll_zero_u8(struct zl3073x_dev *zldev, unsigned int reg, u8 mask)
+ }
+ EXPORT_SYMBOL_NS_GPL(zl3073x_poll_zero_u8, "ZL3073X");
+ 
++/**
++ * zl3073x_devlink_info_get - Devlink device info callback
++ * @devlink: devlink structure pointer
++ * @req: devlink request pointer to store information
++ * @extack: netlink extack pointer to report errors
++ *
++ * Return: 0 on success, <0 on error
++ */
++static int zl3073x_devlink_info_get(struct devlink *devlink,
++				    struct devlink_info_req *req,
++				    struct netlink_ext_ack *extack)
++{
++	struct zl3073x_dev *zldev = devlink_priv(devlink);
++	u16 id, revision, fw_ver;
++	char buf[16];
++	u32 cfg_ver;
++	int rc;
 +
-+allOf:
-+  - $ref: /schemas/dpll/dpll-device.yaml#
-+  - $ref: /schemas/spi/spi-peripheral-props.yaml#
++	rc = zl3073x_read_u16(zldev, ZL_REG_ID, &id);
++	if (rc)
++		return rc;
 +
-+unevaluatedProperties: false
++	snprintf(buf, sizeof(buf), "%X", id);
++	rc = devlink_info_version_fixed_put(req,
++					    DEVLINK_INFO_VERSION_GENERIC_ASIC_ID,
++					    buf);
++	if (rc)
++		return rc;
 +
-+examples:
-+  - |
-+    i2c {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
++	rc = zl3073x_read_u16(zldev, ZL_REG_REVISION, &revision);
++	if (rc)
++		return rc;
 +
-+      dpll@70 {
-+        compatible = "microchip,zl30732";
-+        reg = <0x70>;
-+        dpll-types = "pps", "eec";
++	snprintf(buf, sizeof(buf), "%X", revision);
++	rc = devlink_info_version_fixed_put(req,
++					    DEVLINK_INFO_VERSION_GENERIC_ASIC_REV,
++					    buf);
++	if (rc)
++		return rc;
 +
-+        input-pins {
-+          #address-cells = <1>;
-+          #size-cells = <0>;
++	rc = zl3073x_read_u16(zldev, ZL_REG_FW_VER, &fw_ver);
++	if (rc)
++		return rc;
 +
-+          pin@0 { /* REF0P */
-+            reg = <0>;
-+            connection-type = "ext";
-+            label = "Input 0";
-+            supported-frequencies-hz = /bits/ 64 <1 1000>;
-+          };
-+        };
++	snprintf(buf, sizeof(buf), "%u", fw_ver);
++	rc = devlink_info_version_running_put(req,
++					      DEVLINK_INFO_VERSION_GENERIC_FW,
++					      buf);
++	if (rc)
++		return rc;
 +
-+        output-pins {
-+          #address-cells = <1>;
-+          #size-cells = <0>;
++	rc = zl3073x_read_u32(zldev, ZL_REG_CUSTOM_CONFIG_VER, &cfg_ver);
++	if (rc)
++		return rc;
 +
-+          pin@3 { /* OUT1N */
-+            reg = <3>;
-+            connection-type = "gnss";
-+            esync-control;
-+            label = "Output 1";
-+            supported-frequencies-hz = /bits/ 64 <1 10000>;
-+          };
-+        };
-+      };
-+    };
-+  - |
-+    spi {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
++	/* No custom config version */
++	if (cfg_ver == U32_MAX)
++		return 0;
 +
-+      dpll@70 {
-+        compatible = "microchip,zl30731";
-+        reg = <0x70>;
-+        spi-max-frequency = <12500000>;
++	snprintf(buf, sizeof(buf), "%lu.%lu.%lu.%lu",
++		 FIELD_GET(GENMASK(31, 24), cfg_ver),
++		 FIELD_GET(GENMASK(23, 16), cfg_ver),
++		 FIELD_GET(GENMASK(15, 8), cfg_ver),
++		 FIELD_GET(GENMASK(7, 0), cfg_ver));
 +
-+        dpll-types = "pps";
++	return devlink_info_version_running_put(req, "cfg.custom_ver", buf);
++}
 +
-+        input-pins {
-+          #address-cells = <1>;
-+          #size-cells = <0>;
++static const struct devlink_ops zl3073x_devlink_ops = {
++	.info_get = zl3073x_devlink_info_get,
++};
 +
-+          pin@0 { /* REF0P */
-+            reg = <0>;
-+            connection-type = "ext";
-+            label = "Input 0";
-+            supported-frequencies-hz = /bits/ 64 <1 1000>;
-+          };
-+        };
++static void zl3073x_devlink_free(void *ptr)
++{
++	devlink_free(ptr);
++}
 +
-+        output-pins {
-+          #address-cells = <1>;
-+          #size-cells = <0>;
+ /**
+  * zl3073x_devm_alloc - allocates zl3073x device structure
+  * @dev: pointer to device structure
+@@ -386,11 +466,19 @@ EXPORT_SYMBOL_NS_GPL(zl3073x_poll_zero_u8, "ZL3073X");
+ struct zl3073x_dev *zl3073x_devm_alloc(struct device *dev)
+ {
+ 	struct zl3073x_dev *zldev;
++	struct devlink *devlink;
++	int rc;
+ 
+-	zldev = devm_kzalloc(dev, sizeof(*zldev), GFP_KERNEL);
+-	if (!zldev)
++	devlink = devlink_alloc(&zl3073x_devlink_ops, sizeof(*zldev), dev);
++	if (!devlink)
+ 		return ERR_PTR(-ENOMEM);
+ 
++	/* Add devres action to free devlink device */
++	rc = devm_add_action_or_reset(dev, zl3073x_devlink_free, devlink);
++	if (rc)
++		return ERR_PTR(rc);
 +
-+          pin@3 { /* OUT1N */
-+            reg = <3>;
-+            connection-type = "gnss";
-+            esync-control;
-+            label = "Output 1";
-+            supported-frequencies-hz = /bits/ 64 <1 10000>;
-+          };
-+        };
-+      };
-+    };
-+...
++	zldev = devlink_priv(devlink);
+ 	zldev->dev = dev;
+ 	dev_set_drvdata(zldev->dev, zldev);
+ 
+@@ -410,6 +498,11 @@ void zl3073x_dev_init_regmap_config(struct regmap_config *regmap_cfg)
+ }
+ EXPORT_SYMBOL_NS_GPL(zl3073x_dev_init_regmap_config, "ZL3073X");
+ 
++static void zl3073x_devlink_unregister(void *ptr)
++{
++	devlink_unregister(ptr);
++}
++
+ /**
+  * zl3073x_dev_probe - initialize zl3073x device
+  * @zldev: pointer to zl3073x device
+@@ -423,6 +516,7 @@ int zl3073x_dev_probe(struct zl3073x_dev *zldev,
+ 		      const struct zl3073x_chip_info *chip_info)
+ {
+ 	u16 id, revision, fw_ver;
++	struct devlink *devlink;
+ 	unsigned int i;
+ 	u32 cfg_ver;
+ 	int rc;
+@@ -463,6 +557,16 @@ int zl3073x_dev_probe(struct zl3073x_dev *zldev,
+ 		FIELD_GET(GENMASK(15, 8), cfg_ver),
+ 		FIELD_GET(GENMASK(7, 0), cfg_ver));
+ 
++	/* Register the device as devlink device */
++	devlink = priv_to_devlink(zldev);
++	devlink_register(devlink);
++
++	/* Add devres action to unregister devlink device */
++	rc = devm_add_action_or_reset(zldev->dev, zl3073x_devlink_unregister,
++				      devlink);
++	if (rc)
++		return rc;
++
+ 	return 0;
+ }
+ EXPORT_SYMBOL_NS_GPL(zl3073x_dev_probe, "ZL3073X");
 -- 
 2.49.0
 
