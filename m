@@ -1,138 +1,127 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B5FB28A705
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 16:24:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D8FC18B46E;
+	Wed,  7 May 2025 16:25:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746635089; cv=none; b=U/Q6co38WIHCqTcao3CTThze1rHDWv+hGWdlbpu3ukHIyeilpLgP2za29vGklBo2OOVo1JS9lblfh5b86XIvpqMe+ji6zD7MGWjEJ1+qeo80RQ66WxFir4jvwbPaxzIVQBZrkKC2jy64r9bEJ2TufBwDpuZnkh0CwWuqa6hHNt8=
+	t=1746635153; cv=none; b=SNJtf2g8yDBT9r3istGlxvmUjFdgNMg+YYcdnnYfs4lVzLRDNMGXeUS1jJnnJyoXxq8k4v+dV7VRDAoCVvgXmszoTjUWHxxeY6KYXddTLjV59iVZCLFpG5KsiLsmOsoqrvU6emjCfbnuP6AIEmnyC0KbLn67eeDtGnBctyxNaYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746635089; c=relaxed/simple;
-	bh=nqpCCru5vpj7hrOWoi3hKzRDHzM59HnACs2LIao0n5o=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=H8PKpnyXP4gFFnXfg6Xu7L7k6HbI8xLjGmrW0ApGVeHyptYCOQdyYqhUg4BjVAzxMrXqioLcI+r6QswJ1kt+zbYMtMh33umdIYsmpQda/1XDEEb4fNRxfzM78FlKZv2IPag9NovKRiTzmmw/1S/UBPtANZZccC5tu6E3zcAM434=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[127.0.0.1])
-	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
-	(envelope-from <a.fatoum@pengutronix.de>)
-	id 1uChZU-0001RP-2W; Wed, 07 May 2025 18:24:36 +0200
-Message-ID: <4e1600a7-24d4-454a-87d6-6528b1c4c88d@pengutronix.de>
-Date: Wed, 7 May 2025 18:24:34 +0200
+	s=arc-20240116; t=1746635153; c=relaxed/simple;
+	bh=ynMohAvFYk2a5ygZVW3OYUWpvl86XtI1iFnTixant7k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IHqbDMI32AKO5V2F4CChuEvp724QvmWd2KyGDWu9Ssn3XpjaHsG8Hobgh5mgNVXe72jpVh8DOBakv0Q+U+xZrnxkGWDJiNa5jIA7XavZzk34/hx3mqSAJxXWfQRoyhU9B+Dwh7WNbLamN0/10V9HrAwJ5hbls12VLjChLUG8Iy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MkRPRQ3s; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MkRPRQ3s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 966EFC4CEE2;
+	Wed,  7 May 2025 16:25:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746635153;
+	bh=ynMohAvFYk2a5ygZVW3OYUWpvl86XtI1iFnTixant7k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MkRPRQ3swJOUGLYg3Du7Hv3kyyX8yET1shHYF5OJJLwK64MGlOMVyXAC19n3iWTs+
+	 cUNuyL24H378vN/emgkWbZQBahmBDXbVn4hYr98SVq1m+3qCYpSCgPow6P9PtSnPrV
+	 OGIKA2jigC5KIaPCL6rMfU6vz2wmIbTCcr1e2SCqh4YSXygJAQmxPc3drlP4kZkeWU
+	 eq7yF2V4NSWLpcGuJdDyKyG4F3572HJPi3+Mi2EjaecwNkRWw8meEotAfjOFnRs0Iu
+	 7YOSElhOspecMXPSrXbUoZVd060gMPGmIenVO/2Z6fuSNo07QtqumtKKD6ZA8c3S7n
+	 ZByEltWWPPiAQ==
+Date: Wed, 7 May 2025 18:25:47 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Zqiang <qiang.zhang1211@gmail.com>
+Cc: paulmck@kernel.org, neeraj.upadhyay@kernel.org, joel@joelfernandes.org,
+	urezki@gmail.com, boqun.feng@gmail.com, rcu@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] rcu/nocb: Add Safe checks for access offloaded rdp
+Message-ID: <aBuJi3jhcp4dCbSY@localhost.localdomain>
+References: <20250507112605.20910-1-qiang.zhang1211@gmail.com>
+ <20250507112605.20910-2-qiang.zhang1211@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US, de-DE, de-BE
-From: Ahmad Fatoum <a.fatoum@pengutronix.de>
-Subject: [RFC] block: Make MMC respect REQ_NOUNMAP?
-To: "Darrick J. Wong" <djwong@kernel.org>, Christoph Hellwig <hch@lst.de>,
- Jens Axboe <axboe@kernel.dk>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: =?UTF-8?Q?Jan_L=C3=BCbbe?= <jlu@pengutronix.de>,
- "kernel@pengutronix.de" <kernel@pengutronix.de>,
- linux-block@vger.kernel.org, linux-mmc@vger.kernel.org,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
-X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250507112605.20910-2-qiang.zhang1211@gmail.com>
 
-Hi,
+Le Wed, May 07, 2025 at 07:26:04PM +0800, Zqiang a écrit :
+> For built with CONFIG_PROVE_RCU=y and CONFIG_PREEMPT_RT=y kernels,
+> Disable BH does not change the SOFTIRQ corresponding bits in
+> preempt_count(), but change current->softirq_disable_cnt, this
+> resulted in the following splat:
+> 
+> WARNING: suspicious RCU usage
+> kernel/rcu/tree_plugin.h:36 Unsafe read of RCU_NOCB offloaded state!
+> stack backtrace:
+> CPU: 0 UID: 0 PID: 22 Comm: rcuc/0
+> Call Trace:
+> [    0.407907]  <TASK>
+> [    0.407910]  dump_stack_lvl+0xbb/0xd0
+> [    0.407917]  dump_stack+0x14/0x20
+> [    0.407920]  lockdep_rcu_suspicious+0x133/0x210
+> [    0.407932]  rcu_rdp_is_offloaded+0x1c3/0x270
+> [    0.407939]  rcu_core+0x471/0x900
+> [    0.407942]  ? lockdep_hardirqs_on+0xd5/0x160
+> [    0.407954]  rcu_cpu_kthread+0x25f/0x870
+> [    0.407959]  ? __pfx_rcu_cpu_kthread+0x10/0x10
+> [    0.407966]  smpboot_thread_fn+0x34c/0xa50
+> [    0.407970]  ? trace_preempt_on+0x54/0x120
+> [    0.407977]  ? __pfx_smpboot_thread_fn+0x10/0x10
+> [    0.407982]  kthread+0x40e/0x840
+> [    0.407990]  ? __pfx_kthread+0x10/0x10
+> [    0.407994]  ? rt_spin_unlock+0x4e/0xb0
+> [    0.407997]  ? rt_spin_unlock+0x4e/0xb0
+> [    0.408000]  ? __pfx_kthread+0x10/0x10
+> [    0.408006]  ? __pfx_kthread+0x10/0x10
+> [    0.408011]  ret_from_fork+0x40/0x70
+> [    0.408013]  ? __pfx_kthread+0x10/0x10
+> [    0.408018]  ret_from_fork_asm+0x1a/0x30
+> [    0.408042]  </TASK>
+> 
+> Currently, triggering an rdp offloaded state change need the
+> corresponding rdp's CPU goes offline, and at this time the rcuc
+> kthreads has already in parking state. this means the corresponding
+> rcuc kthreads can safely read offloaded state of rdp while it's
+> corresponding cpu is online.
+> 
+> This commit therefore add softirq_count() check for
+> Preempt-RT kernels.
+> 
+> Suggested-by: Joel Fernandes <joelagnelf@nvidia.com>
+> Signed-off-by: Zqiang <qiang.zhang1211@gmail.com>
+> ---
+>  kernel/rcu/tree_plugin.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+> index 003e549f6514..a91b2322a0cd 100644
+> --- a/kernel/rcu/tree_plugin.h
+> +++ b/kernel/rcu/tree_plugin.h
+> @@ -29,7 +29,7 @@ static bool rcu_rdp_is_offloaded(struct rcu_data *rdp)
+>  		  (IS_ENABLED(CONFIG_HOTPLUG_CPU) && lockdep_is_cpus_held()) ||
+>  		  lockdep_is_held(&rdp->nocb_lock) ||
+>  		  lockdep_is_held(&rcu_state.nocb_mutex) ||
+> -		  (!(IS_ENABLED(CONFIG_PREEMPT_COUNT) && preemptible()) &&
+> +		  ((!(IS_ENABLED(CONFIG_PREEMPT_COUNT) && preemptible()) || softirq_count()) &&
+>  		   rdp == this_cpu_ptr(&rcu_data)) ||
 
-We would like to tell storage (mostly eMMC, but not exclusively though) to
-discard a block range, so it reads back zeroes and is preferably unmapped
-to give the storage device the most flexibility. For eMMCs, this is possible
-right now with blkdiscard -z (BLKZEROOUT), but digging through the code with Jan,
-I am starting to question whether eMMC is correctly implementing REQ_OP_WRITE_ZEROES
-(granted, the expected semantics seem to be spelt out nowhere).
+On a second thought, isn't "rdp == this_cpu_ptr(&rcu_data)" enough?
+The offloaded state can only change if the CPU is completely offline.
+But if the current CPU is looking at the local rdp, it means it is online
+and the rdp can't be concurrently [de]offloaded, right?
 
-Read along for what MMC does, what semantics BLKZEROOUT seems to should have,
-and what I think might need to be done to address this.
+Thanks.
 
-
-eMMC supports a number of different commands for erasing/discarding data[1].
-Relevant to my question are two commands:
-
-  DISCARD: Host no longer needs the data and doesn't care about value
-           read from it. Card may remove or unmap portions or all of it.
-
-  TRIM:    implies DISCARD and additionally guarantees to
-           return all-zero or all-ones on read.
-
-These are made available to the block layer as follows:
-
-  REQ_OP_DISCARD      -> DISCARD
-  REQ_OP_WRITE_ZEROES -> TRIM (if erased_byte == 0, otherwise
-  if all-ones, blk_queue_max_write_zeroes_sectors() is not called)
-
-Looking at it from the ioctl side:
-
-blkdev_common_ioctl(..., BLKZEROOUT, ...)
-    blk_ioctl_zeroout
-        blkdev_issue_zeroout(..., BLKDEV_ZERO_NOUNMAP)
-            __blkdev_issue_write_zeroes(..., BLKDEV_ZERO_NOUNMAP)
-	    submit_bio_wait(bio->bi_opf = REQ_NOUNMAP)
-
-__REQ_NOUNMAP has comment saying 'do not free blocks when zeroing',
-but as shown above, TRIM allows the card to unmap the indicated region.
-
-REQ_NOUNMAP has no other documentation, but virtio inverts it and translates
-it to VIRTIO_BLK_WRITE_ZEROES_FLAG_UNMAP, which is documented as follows[2]:
-
-"For write zeroes commands, if the unmap is set, the device MAY deallocate
-the specified range of sectors in the device backend storage, as if the
-discard command had been sent.".
-
-I.e. REQ_NOUNMAP -> device MAY NOT deallocate
-
-This is at odds with the MMC implementation, which ignores REQ_NOUNMAP
-completely it seems. I don't believe there is a MMC command for write zeroes
-without discard short of actually writing zeroes, so it sounds like the
-correct implementation for MMC would be:
-
-	if (req->cmd_flags & REQ_NOUNMAP)
-		// or w/e causes fallback to __blkdev_issue_zero_pages
-		return -EOPNOTSUPP;
-	// do TRIM as before
-
-Of course, this will change user visible behavior: blkdiscard -z will start
-taking much longer for most users. These users will have to migrate to
-using fallocate instead:
-
-blkdev_fallocate(mode = FALLOC_FL_ZERO_RANGE):
-	blkdev_issue_zeroout(..., BLKDEV_ZERO_NOUNMAP)
-
-blkdev_fallocate(mode = FALLOC_FL_PUNCH_HOLE)
-	blkdev_issue_zeroout(..., BLKDEV_ZERO_NOFALLBACK)
-
-So, it's not a drop-in replacement. I guess user code can punch hole
-with fallback to BLKZEROOUT if it fails in order to get back the old
-behavior.
-
-I must admit I don't even know why one would write zeroes and care about
-them remaining mapped on the storage device, but that seems to be
-what's expected with BLKZEROOUT.
-
-
-Thoughts? What did I miss?
-
-Thanks,
-Ahmad
-
-[1]: For a short and incomplete summary, see:
-     https://github.com/barebox/barebox/commit/91a11c7d50df91
-[1]: https://docs.oasis-open.org/virtio/virtio/v1.2/csd01/virtio-v1.2-csd01.html
-     5.2.6.2 Device Requirements: Device Operation
-
+>  		  rcu_current_is_nocb_kthread(rdp)),
+>  		"Unsafe read of RCU_NOCB offloaded state"
+> -- 
+> 2.17.1
+> 
+> 
 
 -- 
-Pengutronix e.K.                  |                             |
-Steuerwalder Str. 21              | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany         | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686  | Fax:   +49-5121-206917-5555 |
-
+Frederic Weisbecker
+SUSE Labs
