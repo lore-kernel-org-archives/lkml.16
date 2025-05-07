@@ -1,116 +1,132 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D6381E7C3B;
-	Wed,  7 May 2025 05:57:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ED781F4629;
+	Wed,  7 May 2025 05:58:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746597462; cv=none; b=gVZHYPup3SboQLyZVNW8oGfjtOM/6kUVT3tY1sOc7qi92wAEJyQQY6KBJYWLR3XPN71FvfvM0ta0IY1GTNwPlpw4qzkGmclmva+rmkjHonwrgh17GIzVcOJXT8eZiSM0Aks2+hptsOIndPCVJBsAiUw7FHK0y7VeMACnJtWDzto=
+	t=1746597493; cv=none; b=jc1anOIIi055mu0GKTywCf1MOYfA6lWAXh09uBqf4G5FVvjXy72jhdlJnt41mziM9bpbnD0zDJ98/h5t5qr8IrtwISi59GX+8tdenNmSAiZlO4Nr6w2aWiyYmknOYepdQVk1rOYgXalmRM2NUyPJAA9s1T5VVlrUdWv/RxIywaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746597462; c=relaxed/simple;
-	bh=cxsBgxzXrjHlyhpzEVh1b+vFhILuzbmXu0nJ51K/W74=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AT+y8eJvLjpxKQYdTj0nYArW0S1eKOgn/3EDIARm+zLB9+50QJbQapvydsbYesiQ42Hf4whG+ONNvJwlvzSfvBrq6A0ELYzsOGpDQ2t9TwptviCPBLi5UajeRfSBL2Sr1b+Nzt9BIvOWemuaXSo28TCQpVO9SFnDIqFRXuT68vo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rk67TViE; arc=none smtp.client-ip=209.85.160.179
+	s=arc-20240116; t=1746597493; c=relaxed/simple;
+	bh=noM0OddCe3nMPsrUfDxNQxDN+cqV178/y6VH8nlyRw8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rzhHzt0kVP1uahI9zVtABokHYIM4myGwYcShuxbmpDlrKb6MUHCIHz+MIV1OkpDBe/yf1MHaZx5+oVkZ+NWB4zJd5PTxbo0yjjVwlziDN2TwE70KRmF8JNmmaPsL775wwdjWPYZKUPFiSb35c29ejpkq3f/JhQZ/z+ITX2W2Zqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Alf+rWYA; arc=none smtp.client-ip=209.85.222.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rk67TViE"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-47686580529so75413381cf.2;
-        Tue, 06 May 2025 22:57:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Alf+rWYA"
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7c54b651310so1013433185a.0;
+        Tue, 06 May 2025 22:58:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746597460; x=1747202260; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HufoIjmNyVzcJFg0jomA8QUVg94XLpMUqr8P5yXKbvk=;
-        b=Rk67TViEcEHHMt2lE+EYLTAo13FknV57MTrlE4Fjv5v89wVnldFS/cGqFbIS/dfM4f
-         VRIgQPcAenePs5IMMR7yzyIjhIpUflf8G03GE2GGKu2jCZPW74+1g7NVGMKQhjalWFy+
-         3e3htvPne5W9V/NETGDb2/v0SJNRMirk2tDkxs8/ANyCre1tklA5Z6DGblBvO+TNBZUM
-         hQZHNyoGerr8hrCW2W6wH42ZUpBttO44Dg/9m6/t0XlFnGma5Ak75SmsMXeb5GwXCHQe
-         P2sZyZJefwSqArii9AR90Tw8+yuRjP6bqp7v+3q+bq/VFcgfyrd38vScp570ZEEetryY
-         +qIQ==
+        d=gmail.com; s=20230601; t=1746597490; x=1747202290; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=62xNdgK3PUfEz8Xz7n17PoKO70VX0ZqDvch6tNNuGFk=;
+        b=Alf+rWYA8F0MIy7/vQOt5N4UMZXvHS2PNOScTJ0aRyIpM2MqUNaxMlZ+q91jzwSi/L
+         0VmIs8L+2JTnL3k5gQaDZZBszqSX098BDOwzqMqr/NBcCHgoF5xsa75NwM0RhT9v63A9
+         oO9cvR5p/8Fm18y0IR4ViYbhLHRuvXTrD7LAW/mM03eizFwc7Ca5k3unYWexwpwn9k4D
+         3wKA/29a/qCqgEf1D/u0IN+ThtmAeyrX8UVDD4BJzRHum9sg7Ld2s2uAH2sLrzLyGMqv
+         SWNIW0rdXkvOLGmEoW5lqRrRBQ1lT646Goo9rfZahNPN/H4APhjlW3oKJEdQnqH4IhIJ
+         WH5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746597460; x=1747202260;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HufoIjmNyVzcJFg0jomA8QUVg94XLpMUqr8P5yXKbvk=;
-        b=j8K+AoT/C2RiLguYd1CbsC9uOBpLUJiKUfzuOkFL7UuCJlzl2Al9CxgCP20dWZimDL
-         ti0NU+kkR1Qt8r3he7jothFZmI1nP63tBszYp6XxAPW8qEitkTIQnH8QPWnq4rentHdE
-         e6xp9Bnb8Y/z/SPbStud0sPf+6f2DJW8z2mgM5rtclX9RjQkcOKWUWpbgAM0N2dinP6E
-         lua1ksKzgTjtp7x9g6U1ov3N6tFSw8JXfcY+zvdNEz97ZF9XhkqdS8Lvisutf4TxGlZd
-         neEnF2SpWzIdO7wMPseae+ukkrUTjJ0dx296AYO5jAaTzXDYYfxkZ+eJN8ugkYmIy429
-         845A==
-X-Forwarded-Encrypted: i=1; AJvYcCU7FAfatxR14/1yXOT49/fUyAknYB3Qg1JCLzdDBC5fZSM5XP2YFMJxmfQkaDcrWaD6J/MOpm9ztHHa@vger.kernel.org, AJvYcCUya08TIH/JdmLuGDoHmZhNKY9Of8IQkVyuDMnjZUx2DUgHplXAPAe/ce/G5FUJzFkT9k8yvIBtzlLg9tV/@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1FI672iKv/oR+gj8Msdl3vgu/UAmCyj+MPPxTDDQRCeuURTYv
-	AVoMCMTaYPFqPRS0/KpwtrdloZHGvQSevO2d28jwB/GVaKpB9TtTHtJeYgoBo15c4hmWaBsyqHD
-	uXEq+L1U5pYZe2+E46tedfHyozngB4RUoPKRacg==
-X-Gm-Gg: ASbGncttJ34ohiEMGhgV01TCqJLaeYc/A+AEwjMajQaemsV6j7+9cjwV91rPHuq+jti
-	ypsGkBnW54UHie+FQNkaEGUjG+9O/t9rDfkI9OMkviRlU5M8wR5HrKZuo1EGGlRk0a3y1Q4RN3a
-	hHxiF2T7MmkPRxlO0AeSIT
-X-Google-Smtp-Source: AGHT+IFRCluZQlhxPKsFdNka+okgx5aQmUZgSazAz02utL1/C+ZaDsPFqak1m4n1xLXLSRPrTvV/l0A6YJSFNyvzJeU=
-X-Received: by 2002:ac8:5ad5:0:b0:476:8d3d:adb1 with SMTP id
- d75a77b69052e-49225a42445mr25889741cf.21.1746597460173; Tue, 06 May 2025
- 22:57:40 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746597490; x=1747202290;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=62xNdgK3PUfEz8Xz7n17PoKO70VX0ZqDvch6tNNuGFk=;
+        b=QlktX2beIGjAwZJf+pydUuN3lJNh74v44ET0Z9K2rT3teyxVUwshGIyqxRVtXf9TZK
+         prcErEr46FCh84JzgHgYCZd1hc6WNu6EnZKkf0rdRQPji7GYXjVgIzICK5mlZl0omYCD
+         T9MlbmpWnHrhpMFT3attywEZJWgr0m3i+MHbsfUIz70ol/C3dNiI2VyWXngTbtftxqaP
+         6IA9mUAsPkehhP/Y4d+9uP/ncEtNZbTzoffnkEKmkCZiV5R4as7ndn1NimI1wy5Gvgkm
+         +5Dsc5qPtT0g848QaDhD4bdNcvlNU407PEn28tBjZwr6+8iGG6EIrcrWUHvLgKxIT0IQ
+         +KUg==
+X-Forwarded-Encrypted: i=1; AJvYcCXsvgW3g/Y+NzufTt+pnOck8SBB2bMf47NmvIQ1MD7v6e7eR/dntGAE4yJFsSGrooLoRNjXn9ZxuX3J1n6v@vger.kernel.org, AJvYcCXzLqB0pZqh6RlO1VLOSw1EvQbv2GIJH/nkVH2MRLv7U0SpoJCx3QNH9sUxd1imB/JZVINuVXdQab0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJ1JHpuOuwHh+TRxK2JrGJn91F4rEpBCG6R5aYYdik/KF6pmfo
+	9oDHxdYrz0FfuAgPv2vVStDCVwVStDdjJfOK5ufWQfxiKjfbvI5OpJykzaucXR4=
+X-Gm-Gg: ASbGncsa+VuEwZa1Om+GbuiCtOmCl7NOu6wdjduv3zXhaZJICaUFJz7ng4nDIddH7iC
+	QYkKztOcW842MuMccuXIQ/pcpzmdDwDX4PC2h2SRal0B01/KCD662MRkROSnYwXEH2uc3D1bcjb
+	U1JmBBDJoHvZfUI0kpXW7CnyGRMVRmaXEHKkD1ZKYrlNFd4cAZbupK9Wg/RQsKmBrwHzqe1Rkd0
+	ym1vXnxmMHB8YqKFTsrL3MHNn72ShjSrSL9Id0aLXuLmBexPG/HkWEYyNTVXioMZyjM2g67nLa0
+	/bnNd2dXNn+xFFbQKDBhSffeNBD6cLy5r7FYbKuRV6/D7tadtAoJwyVmQMEJPg==
+X-Google-Smtp-Source: AGHT+IE+Zs0zPxJ7NZCpPs3fbxcykASWphbwWyDcObU10VQPB9Wk3EyEc/S3iCZ3HP+raP3xoSY8qw==
+X-Received: by 2002:a05:622a:1356:b0:48c:4c6c:bd8d with SMTP id d75a77b69052e-49225560462mr30989061cf.2.1746597479722;
+        Tue, 06 May 2025 22:57:59 -0700 (PDT)
+Received: from c65201v1.fyre.ibm.com ([129.41.87.7])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-49223457b48sm9365871cf.68.2025.05.06.22.57.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 May 2025 22:57:58 -0700 (PDT)
+From: Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
+To: jikos@kernel.org,
+	bentiss@kernel.org,
+	jic23@kernel.org,
+	srinivas.pandruvada@linux.intel.com,
+	dlechner@baylibre.com
+Cc: linux-input@vger.kernel.org,
+	linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
+Subject: [PATCH v2] HID: sensor-hub: Fix typo and improve documentation
+Date: Tue,  6 May 2025 22:57:45 -0700
+Message-ID: <20250507055745.4069933-1-chelsyratnawat2001@gmail.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250507-vt8500-timer-updates-v1-0-6b76f7f340a6@gmail.com>
- <20250507-vt8500-timer-updates-v1-3-6b76f7f340a6@gmail.com>
- <8d3c2ab5-dfc0-4a65-94c8-48a94c850aba@kernel.org> <CABjd4YxjC13H9G+ZpQO7EcmA4quu-9OMYjc5z6W5z+f=pwkTbw@mail.gmail.com>
- <9e8f1384-ccc9-4c99-bb31-2d3868bcd418@kernel.org>
-In-Reply-To: <9e8f1384-ccc9-4c99-bb31-2d3868bcd418@kernel.org>
-From: Alexey Charkov <alchark@gmail.com>
-Date: Wed, 7 May 2025 09:57:29 +0400
-X-Gm-Features: ATxdqUFg7Y2xJtDfnU-UW7rha7DBsuYJ6UYd2cMbpsuR6mErQtZfh0ULWLYbKv4
-Message-ID: <CABjd4YwGMe=iZ_jsOLdLt0p43vP4ZSEtUa0X0xzKLA8kfatVqA@mail.gmail.com>
-Subject: Re: [PATCH 3/3] ARM: dts: vt8500: list all four timer interrupts
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 7, 2025 at 9:52=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.org=
-> wrote:
->
-> On 07/05/2025 07:48, Alexey Charkov wrote:
-> >>> diff --git a/arch/arm/boot/dts/vt8500/vt8500.dtsi b/arch/arm/boot/dts=
-/vt8500/vt8500.dtsi
-> >>> index 2ba021585d4889f29777a12473964c29f999f3a0..d1dd37220d41becece5d2=
-4fbb19aa71b01723e35 100644
-> >>> --- a/arch/arm/boot/dts/vt8500/vt8500.dtsi
-> >>> +++ b/arch/arm/boot/dts/vt8500/vt8500.dtsi
-> >>> @@ -111,7 +111,7 @@ clkuart3: uart3 {
-> >>>               timer@d8130100 {
-> >>>                       compatible =3D "via,vt8500-timer";
-> >>>                       reg =3D <0xd8130100 0x28>;
-> >>> -                     interrupts =3D <36>;
-> >>> +                     interrupts =3D <36>, <37>, <38>, <39>;
-> >>
-> >> You need to update the binding, preferably first convert it to DT sche=
-ma.
-> >
-> > The binding change [1] has been reviewed by Rob and is pending merge.
-> > Shall I fold it into this series when I send v2?
-> >
-> > [1] https://lore.kernel.org/all/20250506-via_vt8500_timer_binding-v3-1-=
-88450907503f@gmail.com/
-> Nothing explained that in cover letter or changelog. It should be
-> obvious for reviewers where the bindings patch is and what the status is.
+Includes the following corrections -
+ - Changed Measurment -> Measurement
+ - Changed clode -> close
+ - Gyro -> gyro
 
-Indeed, I should have mentioned it in the cover letter. Thanks for
-pointing it out.
+Signed-off-by: Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
+---
+Changes in v2 -
+ - Changed  X-AXIS -> X-axis
 
-Happy to resubmit the binding change as part of this series for easier
-merging and full-picture overview: I will be making a v2 anyway to
-address your other feedback.
+ include/linux/hid-sensor-hub.h | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Best regards,
-Alexey
+diff --git a/include/linux/hid-sensor-hub.h b/include/linux/hid-sensor-hub.h
+index 0f9f7df865db..e71056553108 100644
+--- a/include/linux/hid-sensor-hub.h
++++ b/include/linux/hid-sensor-hub.h
+@@ -17,7 +17,7 @@
+  * @attrib_id:		Attribute id for this attribute.
+  * @report_id:		Report id in which this information resides.
+  * @index:		Field index in the report.
+- * @units:		Measurment unit for this attribute.
++ * @units:		Measurement unit for this attribute.
+  * @unit_expo:		Exponent used in the data.
+  * @size:		Size in bytes for data size.
+  * @logical_minimum:	Logical minimum value for this attribute.
+@@ -39,8 +39,8 @@ struct hid_sensor_hub_attribute_info {
+  * struct sensor_hub_pending - Synchronous read pending information
+  * @status:		Pending status true/false.
+  * @ready:		Completion synchronization data.
+- * @usage_id:		Usage id for physical device, E.g. Gyro usage id.
+- * @attr_usage_id:	Usage Id of a field, E.g. X-AXIS for a gyro.
++ * @usage_id:		Usage id for physical device, e.g. gyro usage id.
++ * @attr_usage_id:	Usage Id of a field, e.g. X-axis for a gyro.
+  * @raw_size:		Response size for a read request.
+  * @raw_data:		Place holder for received response.
+  */
+@@ -104,10 +104,10 @@ struct hid_sensor_hub_callbacks {
+ int sensor_hub_device_open(struct hid_sensor_hub_device *hsdev);
+ 
+ /**
+-* sensor_hub_device_clode() - Close hub device
++* sensor_hub_device_close() - Close hub device
+ * @hsdev:	Hub device instance.
+ *
+-* Used to clode hid device for sensor hub.
++* Used to close hid device for sensor hub.
+ */
+ void sensor_hub_device_close(struct hid_sensor_hub_device *hsdev);
+ 
+-- 
+2.43.5
+
