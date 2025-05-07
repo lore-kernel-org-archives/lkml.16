@@ -1,58 +1,67 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 163671CAA65
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 23:22:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFF434B1E7F
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 23:26:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746660172; cv=none; b=bNHp0NU9Aw0e829vYlIl8A4h+IYHK7wJmfMyZVZN0DWnrbR6UsDJfnPA/QuJIlLhup1u8OkTh3xhBgix7YylUuXmWmn29jq2NYJ9FtjC/iJNgX/taBLB0ieqXC04oA42LGqN+Pw8BFtBXxQxBUzzPIne6wrxXdLQQmxnkE2+EQ4=
+	t=1746660382; cv=none; b=fNS9pEb3H7SegDMYySXiYoCKvFknuvTC5wf1kUoRpvYvaQ3xYGJ5NdwjpihG/gR3GjV9RBsLGDqfTcZZyyYQBjlurq6AJeyZ9Qa2tkDpQZ+M09O6Efj2Pha20F069un5UCuQG5/wjk/tRIYgcRY9MTaRyxwDixwCpMzc2mCHYEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746660172; c=relaxed/simple;
-	bh=PViTldcFrQPvzqvX8GMah1i0OURxukTx46twGfFelq0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gGWgSjpVlhmqa9kF8yBdEqdIa0fqwxu1aBhrAPbzUHfnLPVEuFchuxBwi4bNZFViZ6DyEdRfhZT+Pukww0GkEEr9x3yZ/X/y9jWYNcsBQHeYOW15zePLqrlV2pnOT7Y9Jq/IKpWQDcmY6ef16nPew9LfLGvHaWyCh835GHt/aBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iXZOoOSI; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1746660382; c=relaxed/simple;
+	bh=lu3w6P7LlMUwY8Cp9KmGVgkdFrtFQoSpFx8q4kwWKss=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=tNn+3Sh5d36NdZc9oRhypXVKatlp3kdnQbccN4V7O8LcYBb6/Tlhvxk1vgr0zqcH28vJdBTLpljKaHPw9fJmsYu+pq6oxPdEVFFRLdLGeXeYVKzkcFPGe1Z8jvGsuzFgDlxZgyISGwzMZwWmbW9w3esu5HqMZmJqyxRv8riRL64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com; spf=none smtp.mailfrom=pdp7.com; dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b=kt1Z7T47; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=pdp7.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iXZOoOSI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746660168;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jphCO6r1E5U6Br7XyDOSL+TUPQ0NZVTExvK29jnm/mg=;
-	b=iXZOoOSIVhHg36JvYsLb2SNUr+b1F/N8vsw5CtsG+BJFrErMnqMbDM53eIQmIYjK2dMuCy
-	MQnXE+RSFpFtmSn4/EPJ8EgmYPEi6dOgZLPI6RAZDP6THssoi/kFZ5Prd8er30sCvl8Juk
-	uXGEF9HADT7hpyEgTjek3k9xS2oTCsc=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-290-UzLQAsZ0O4SbayZTvPfJdg-1; Wed,
- 07 May 2025 19:22:47 -0400
-X-MC-Unique: UzLQAsZ0O4SbayZTvPfJdg-1
-X-Mimecast-MFC-AGG-ID: UzLQAsZ0O4SbayZTvPfJdg_1746660166
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D00AF1800446;
-	Wed,  7 May 2025 23:22:45 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.8])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 09DC1180049D;
-	Wed,  7 May 2025 23:22:43 +0000 (UTC)
-Date: Thu, 8 May 2025 07:22:38 +0800
-From: Baoquan He <bhe@redhat.com>
-To: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	David Hildenbrand <david@redhat.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>
-Subject: Re: [PATCH] MAINTAINERS: Add myself as vmalloc co-maintainer
-Message-ID: <aBvrPpKNz+EJZG6i@MiWiFi-R3L-srv>
-References: <20250507150257.61485-1-urezki@gmail.com>
+	dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b="kt1Z7T47"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-22e4db05fe8so5023985ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 16:26:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=pdp7-com.20230601.gappssmtp.com; s=20230601; t=1746660379; x=1747265179; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lu3w6P7LlMUwY8Cp9KmGVgkdFrtFQoSpFx8q4kwWKss=;
+        b=kt1Z7T47tzva4qrQ3ZD1rF7ef0VsC6HSHTDjFeVG7joa02f9VZE6pHWUHcQGQTYmKY
+         trH6LZi1hJsvVxNertXpAOcA2AeFV6hN0rq4qD7uIYbdOeQPMkKnviv5MN/L5AsWVbtl
+         NdS/Pv1sm0e3fmLDKQ+jeMM/ZjX8NtbaNKrTZdZ98advuDb2nWTmXeksl5rFre1+M7Pr
+         adwSEFY6ZXzwP9gNbyaAJJo/8dEn03gC0+Cxo4FzMGs+y/fUPdr0EfTSBI5P52e9Bp/L
+         zMSS5kqonY0DEPD7KT8Dp+9VJccMEdtILkgBaSjpVXjl0EjBGdsJ7oi9AIx1cxnzRVnd
+         PSOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746660379; x=1747265179;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lu3w6P7LlMUwY8Cp9KmGVgkdFrtFQoSpFx8q4kwWKss=;
+        b=AHG/LpXLJTqwzovNfzRx2fJgs9P6L8/T6YCkzdzcttpkCYs6fqw18qnCSP9R62rWMT
+         soWvSJKUSvv+Gi8janyie2vDZ4OLH7xvILrZmY75IVFHCrVjhYwWbTgzjE3id82d3dwg
+         YZBVkYzv+jq5Ux9sFYZrfAWap0lGQjYsnCt7Pa6Kst40SEuL8pgQYErMLMGfqFHc/x3g
+         aMG7hZTjbH+TGxhERbRJ+TDVlu32OJNMu3K8Kj9rsr+l5jSlUV26YCoTAlUq19FlqTXT
+         TonDYVyNhlJlbk1NCs+HrAllfnwg+JrhGtJFDoMctxJ4ZWZXbjsodJ3Qffl8+tkrpuMF
+         NRGg==
+X-Forwarded-Encrypted: i=1; AJvYcCWWOPTurhdeJtS7GsbuITQvB68QRvT+HH07bEXsueTk6p+tcxEdKV7o9xfZ6BxH6yr8SSXhXScyH2Rv2Yg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyxx/MtH9HSWCLWKTeErJPcVxrYqcuZNRRMTgKN/H7WBKqB8qs9
+	qF7T4eqnT+8W0rLN3KS5NpIcsUD4j0/Y9NT+ACCqcWhbdcbHT9X/fUINaAqAseM=
+X-Gm-Gg: ASbGncsdsM2jo3tMArG4kLku+d5yimmaaPhowzWrMWAL4s8ZCIzwpbsQQ3pJyUyy3to
+	xMLwsQh36ZkOeH5uVy8tKPUQzAOUQPpVZbeXJI66+67Ud0VdOuWElZti4lWTfAsM7VIrPKiagqK
+	hNOvhHmrpkgLqpFUqsktS1AAv4gk52Q3sI63E426iKEBl5aMB1VmRCMQ4drXduuJq/IuGrTzQrj
+	1JVnotbQE/J7rkjWErqBUcwIic+l6fc5ZszSTHzC2oYMiTi1n4VgFMS8fA11PmwJgFC5x63rZV5
+	ySeYYnfys2HS5H82LVJpAfFxBWpaBd5HZfXaTdFqGWbLEa0=
+X-Google-Smtp-Source: AGHT+IHBySKvQQUBREV+QQ4TmMCy8WuFlBBAxGTY/ZaA+bqm+UZuBvxYqnEB+yBdmDHfcCPOAdt3DA==
+X-Received: by 2002:a17:903:478d:b0:220:e924:99dd with SMTP id d9443c01a7336-22e5ecc52a4mr84664645ad.34.1746660379040;
+        Wed, 07 May 2025 16:26:19 -0700 (PDT)
+Received: from x1 (97-120-122-6.ptld.qwest.net. [97.120.122.6])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e5d633ccesm26112615ad.228.2025.05.07.16.26.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 16:26:18 -0700 (PDT)
+Date: Wed, 7 May 2025 16:26:17 -0700
+From: Drew Fustini <drew@pdp7.com>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: linux-next@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Stephen Boyd <sboyd@kernel.org>
+Subject: Add thead clk tree to linux-next
+Message-ID: <aBvsGRZqbz11HPwM@x1>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,39 +70,14 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250507150257.61485-1-urezki@gmail.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On 05/07/25 at 05:02pm, Uladzislau Rezki (Sony) wrote:
-> I have been working on the vmalloc code for several years,
-> contributing to improvements and fixes. Add myself as
-> co-maintainer ("M") alongside Andrew Morton.
-> 
-> Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
-> ---
->  MAINTAINERS | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Hi Stephen,
 
-Thanks for great help on reviewing and giving great suggestions when
-I submit patches to vmalloc code.
+I'm the maintainer of T-Head SoCs like the TH1520 and I've just created
+new branches for T-Head clk patches. Please add these to linux-next:
 
-Acked-by: Baoquan He <bhe@redhat.com>
+thead-clk-fixes git https://github.com/pdp7/linux.git#thead-clk-fixes
+thead-clk for-next git https://github.com/pdp7/linux.git#thead-clk-for-next
 
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index b2c3be5f61314..0aa8db9d0fb52 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -25983,7 +25983,7 @@ F:	tools/testing/vsock/
->  
->  VMALLOC
->  M:	Andrew Morton <akpm@linux-foundation.org>
-> -R:	Uladzislau Rezki <urezki@gmail.com>
-> +M:	Uladzislau Rezki <urezki@gmail.com>
->  L:	linux-mm@kvack.org
->  S:	Maintained
->  W:	http://www.linux-mm.org
-> -- 
-> 2.39.5
-> 
-
+Thanks,
+Drew
