@@ -1,118 +1,148 @@
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BBAE2CCDE
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 11:46:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 620E4222576
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 11:46:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746618365; cv=none; b=CpVINsfVIt/EISfE0FGCfKwsVgHE0tAOxePhcoxi44ODJhxqmHntTCCQvicfaNr5Ejwe0ILE1Zi5KaKlsx+HlW6yxpOoS7RkDjIk6mIdSgOWsk7uNrEskoWeaKFpLktr8SiDtykzJL1/AIoqbteEi4iyAtkmi49xzXawzIQcyOg=
+	t=1746618381; cv=none; b=a4QPROmHVEdrjFM2+Xng51N7ZcuM6tPGnRVEzdsn3Vg5o4DEzfCzk0DbmBpXYKbPq9IGYPv/zY8b3h5EKTZVxoL2/rHfW2Wm4SiehjelwV7MlJgz14dwXlDAmG4Fou2nUIqTo3YwbMTg6GXZ2RV88Wcy00kJvPY3FK/Ppr9j5sE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746618365; c=relaxed/simple;
-	bh=26AKvwGp96M6BovSs3jhhTygZ+qxyg9Lx1TYd8iKfPo=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=jM7tReCce3581O/MLsaANfJxJtHwmGFKTd0rqjdRQm/IWzClu9E7z/md+SYY1D6VsVrx5OsBUOhKWI/UGDZX3zYCT13KB4oEipVl0Q90BYGp8OGPWmU6Yopgf+fcpTwSTxRuVrXgX7RR0/7/kKyevCDt0gkw85sE53pGzXUwWsk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-85e310ba2f9so541141139f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 04:46:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746618363; x=1747223163;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KCITP9jylK2Q/NrxMzZhC4cdE1loXMCW6yeSyu/MKxg=;
-        b=Lp12oZgCwnmB5UrHenKW3SdjFycXWf9fQ4WTyPSWleyNJaX/zYViBt0J/VSC42WnWs
-         RBYtpXjfwgqybu7hbsPfYK8CeWowZWJbL34srGND2Z4zdUkIA7w1WvDtuk/QT4uMDN6Q
-         hBJaLqZLj3Gsi2DtVd7bAaPl7WrTA30nCi1hwUsvqyvS7VMMJcNpk7IyKMjN6uvonOjR
-         T9q1pTJly0mlT/B79Hhm/lvtIrBI+1W1+o4Fxe3pFVnmV0q13zJG44Qyxi86wvGSRY1k
-         Vfgfg5QXOtNhfCS4f0qEdJJJcYDpJR9DeltDdd8O5/G9NqFY8dLp7324jrffwjr7Yk2u
-         i3Eg==
-X-Forwarded-Encrypted: i=1; AJvYcCX0xtabdJy/7NXVrwQit1UTFyGmyMjQweMSo57M8StcNygVLHhaqaRCL0dC15o5AKV3AUMukUjlKYubTUw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yww2DWUWKzXpfmbKWuZfD36oOZu7xpFukv9ps0c/6p9ZzMhNDy8
-	CrJ6os7dPi5S7zMRYEskpj2TSj0PqsbgUI98J9gKtsLcg7u8PKeXUIcKrkR8bmiDTWnWuglutqX
-	fECXXdhYFHFETgtzrh+rpEPmPn2oyaVhOEf5dohnn71Ldq0NKUXeIcxs=
-X-Google-Smtp-Source: AGHT+IHz1c7PFIaZ7u8vhlxD93T55qlqIhoUW5Taso9Fyt01Q8A9oyV2sdzriuvD0xjOR09ahGuGLRLUlHEbMRIbi50md3azvRfU
+	s=arc-20240116; t=1746618381; c=relaxed/simple;
+	bh=vzwf0tIYzNuQhU2aD2nOcCDkbhgSc+b+ohdnlMe0oWU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nt6gcRBhleZKq1x9mbTe4fXFXJQ4+NFtO5my01yusZCC746s8Kj0mAgj7tZVgmDU6xJ5I2cJMtTULMglGHsgk+ooYaR6WKKkBwhiHlDVgfNVWl1xD7DPLpinNYCayzvxwVIFdcjO3wBo2+Y4J3q8P/8knE5gBkLmh4Jp03PGLy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=xsB8VV/w; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=QTFCvD3N; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=xsB8VV/w; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=QTFCvD3N; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="xsB8VV/w";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="QTFCvD3N";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="xsB8VV/w";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="QTFCvD3N"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 5D30E1F393;
+	Wed,  7 May 2025 11:46:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1746618378; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uy7d/ZjeDgzXAL0tpPZUP+r0mJI7QK6Hc7BG5cAHyRo=;
+	b=xsB8VV/wzKxOWv3JjdL4y9sQmiZtRmou+che2Gz6zp2spSn9+DcCINwEJWez4+P+69teeZ
+	axm5ofnvbGPJoafoQSRnI0pgwzvXt6Ny1pPDCMzGd2rfNfN9a/THsPWQiN1b88/EwSsHeO
+	iOSqpnhmhbMn+7grroA1AJWdilmBZss=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1746618378;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uy7d/ZjeDgzXAL0tpPZUP+r0mJI7QK6Hc7BG5cAHyRo=;
+	b=QTFCvD3NoBkIcmwZUzC3U/Sbx4odTDDQdBtPCbCw/gO/ofLmtbbV+TvKCHOnCVSzovweqq
+	kdhdx9Wm00T4d6Dg==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b="xsB8VV/w";
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=QTFCvD3N
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1746618378; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uy7d/ZjeDgzXAL0tpPZUP+r0mJI7QK6Hc7BG5cAHyRo=;
+	b=xsB8VV/wzKxOWv3JjdL4y9sQmiZtRmou+che2Gz6zp2spSn9+DcCINwEJWez4+P+69teeZ
+	axm5ofnvbGPJoafoQSRnI0pgwzvXt6Ny1pPDCMzGd2rfNfN9a/THsPWQiN1b88/EwSsHeO
+	iOSqpnhmhbMn+7grroA1AJWdilmBZss=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1746618378;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uy7d/ZjeDgzXAL0tpPZUP+r0mJI7QK6Hc7BG5cAHyRo=;
+	b=QTFCvD3NoBkIcmwZUzC3U/Sbx4odTDDQdBtPCbCw/gO/ofLmtbbV+TvKCHOnCVSzovweqq
+	kdhdx9Wm00T4d6Dg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 46CB013882;
+	Wed,  7 May 2025 11:46:18 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id Ch4SEQpIG2gEJQAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Wed, 07 May 2025 11:46:18 +0000
+Message-ID: <3d99da0d-b08e-416e-82bb-cd44179a424f@suse.cz>
+Date: Wed, 7 May 2025 13:46:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:148e:b0:864:4a66:f4df with SMTP id
- ca18e2360f4ac-8674728353bmr432542139f.6.1746618363360; Wed, 07 May 2025
- 04:46:03 -0700 (PDT)
-Date: Wed, 07 May 2025 04:46:03 -0700
-In-Reply-To: <tencent_06AC9518E9DAEE02CC847A366C002D4D6C0A@qq.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <681b47fb.050a0220.37980e.0403.GAE@google.com>
-Subject: Re: [syzbot] [wireless?] UBSAN: array-index-out-of-bounds in ieee80211_request_ibss_scan
-From: syzbot <syzbot+4bcdddd48bb6f0be0da1@syzkaller.appspotmail.com>
-To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/4] memcg: separate local_trylock for memcg and obj
+To: Shakeel Butt <shakeel.butt@linux.dev>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ Muchun Song <muchun.song@linux.dev>, Alexei Starovoitov <ast@kernel.org>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ Jakub Kicinski <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>,
+ linux-mm@kvack.org, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, netdev@vger.kernel.org,
+ Meta kernel team <kernel-team@meta.com>
+References: <20250506225533.2580386-1-shakeel.butt@linux.dev>
+ <20250506225533.2580386-3-shakeel.butt@linux.dev>
+From: Vlastimil Babka <vbabka@suse.cz>
+Content-Language: en-US
+In-Reply-To: <20250506225533.2580386-3-shakeel.butt@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 5D30E1F393
+X-Spam-Flag: NO
+X-Spam-Score: -3.51
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.dev:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.cz:email,suse.cz:dkim,suse.cz:mid];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.cz:+]
+X-Rspamd-Action: no action
 
-Hello,
+On 5/7/25 12:55 AM, Shakeel Butt wrote:
+> The per-cpu stock_lock protects cached memcg and cached objcg and their
+> respective fields. However there is no dependency between these fields
+> and it is better to have fine grained separate locks for cached memcg
+> and cached objcg. This decoupling of locks allows us to make the memcg
+> charge cache and objcg charge cache to be nmi safe independently.
+> 
+> At the moment, memcg charge cache is already nmi safe and this
+> decoupling will allow to make memcg charge cache work without disabling
+> irqs.
+> 
+> Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-UBSAN: array-index-out-of-bounds in ieee80211_request_ibss_scan
-
-wlan1: Trigger new scan to find an IBSS to join
-------------[ cut here ]------------
-UBSAN: array-index-out-of-bounds in net/mac80211/scan.c:1208:5
-index 0 is out of range for type 'struct ieee80211_channel *[] __counted_by(n_channels)' (aka 'struct ieee80211_channel *[]')
-CPU: 0 UID: 0 PID: 3017 Comm: kworker/u4:10 Not tainted 6.15.0-rc5-syzkaller-00032-g0d8d44db295c-dirty #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Workqueue: events_unbound cfg80211_wiphy_work
-Call Trace:
- <TASK>
- dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
- ubsan_epilogue+0xa/0x40 lib/ubsan.c:231
- __ubsan_handle_out_of_bounds+0xe9/0xf0 lib/ubsan.c:453
- ieee80211_request_ibss_scan+0x600/0x8b0 net/mac80211/scan.c:1208
- ieee80211_sta_find_ibss net/mac80211/ibss.c:-1 [inline]
- ieee80211_ibss_work+0xde7/0x1060 net/mac80211/ibss.c:1670
- cfg80211_wiphy_work+0x2dc/0x460 net/wireless/core.c:435
- process_one_work kernel/workqueue.c:3238 [inline]
- process_scheduled_works+0xadb/0x17a0 kernel/workqueue.c:3319
- worker_thread+0x8a0/0xda0 kernel/workqueue.c:3400
- kthread+0x70e/0x8a0 kernel/kthread.c:464
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
----[ end trace ]---
-Kernel panic - not syncing: UBSAN: panic_on_warn set ...
-CPU: 0 UID: 0 PID: 3017 Comm: kworker/u4:10 Not tainted 6.15.0-rc5-syzkaller-00032-g0d8d44db295c-dirty #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Workqueue: events_unbound cfg80211_wiphy_work
-Call Trace:
- <TASK>
- dump_stack_lvl+0x99/0x250 lib/dump_stack.c:120
- panic+0x2db/0x790 kernel/panic.c:354
- check_panic_on_warn+0x89/0xb0 kernel/panic.c:243
- __ubsan_handle_out_of_bounds+0xe9/0xf0 lib/ubsan.c:453
- ieee80211_request_ibss_scan+0x600/0x8b0 net/mac80211/scan.c:1208
- ieee80211_sta_find_ibss net/mac80211/ibss.c:-1 [inline]
- ieee80211_ibss_work+0xde7/0x1060 net/mac80211/ibss.c:1670
- cfg80211_wiphy_work+0x2dc/0x460 net/wireless/core.c:435
- process_one_work kernel/workqueue.c:3238 [inline]
- process_scheduled_works+0xadb/0x17a0 kernel/workqueue.c:3319
- worker_thread+0x8a0/0xda0 kernel/workqueue.c:3400
- kthread+0x70e/0x8a0 kernel/kthread.c:464
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
-Tested on:
-
-commit:         0d8d44db Merge tag 'for-6.15-rc5-tag' of git://git.ker..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=153684d4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=923d9ad0afad47e5
-dashboard link: https://syzkaller.appspot.com/bug?extid=4bcdddd48bb6f0be0da1
-compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=122571cc580000
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 
