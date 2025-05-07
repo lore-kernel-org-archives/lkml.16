@@ -1,120 +1,71 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EC701DA60F
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 17:22:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 017561C84CD;
+	Wed,  7 May 2025 17:22:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746638549; cv=none; b=YnWhGAQ57QUsCtn5vYxPGxUBSS6mnBrk+8BraNZADkPPZgvXsNVnmwP8JFcPvPpxs2nmu+J5s05/RbE142amqzu4msmcEy35QsZdxBO8J23VrdlnkVUdXU0OZu4pNWh8IMj6spO70bDzmXG5bYwWD0Ei2D0sS6AFX9t/hgt5hUg=
+	t=1746638577; cv=none; b=bP5RkfdOB0fqUP7mmGarvXAMT7oa/GgnucADeGpK+rYGhY/NG1NE4qt238mJJBpE8FDHxK+ILkWwWAe5lao1y4IVY2PlDqFgIUujn/NvhFR6hwGaMMTAMeZy9tqRQ2Z1eLnau+XmV6peA0z2xfTc6sEByl8x9uDlpd53bRpWgwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746638549; c=relaxed/simple;
-	bh=anqOEdhhZRANM9jEiZS6cy6TPdsv/8NPv0Sqp7cKB30=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WHpoZp4yLA+t0kiUDtcTHbNavxBroJ6eUNJFe3GT1WlrxoRzp3e5gTYhCabB7jiPnCoqTaMJgWOwrN7G7KMlLcUW30qDoT5/SUdfFTGPvKHq/Sa0H9lnh6XeNYebppPhXCgw8COEwlRUWrsq1IhDpK5p+xiu5HMzv7zha81Iqk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=iAgW+CoA; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="iAgW+CoA"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
-	:Subject; bh=DGwF+sCKYFLJFj1kpcCuagfnDB0QbComp1z6c97B6lw=; b=iAgW+CoAIahiifH2
-	JRHnkhoeyW/ONugmr8AXNsfFwoPNNORbCWPNWWbM88FWdzOCcRDx1X6tzXOx6lesKi9pC76nGZwrP
-	u6zbIi5pTJeJ5XZMiiptCNd7G3HCxGosqDqm1FXIypLUPznKXu/9oHvwf3z5bYD4zYhrdCMSMaTo3
-	WcN+RHwMy9byrdZWrIP8cBF658fGkEX04O/qrlw5NPpsKsjQSbhVg+q2gVeJie7INE/SQpHoJo+2v
-	IoiAiaclLWDGRD0rtHPo+L3p+3356ll1Jc6ihoHyVvi25ZrsoQp7Pcf1m4zqGelc1UaB2BrCnPREW
-	mC49A8pHn7zePtgBTw==;
-Received: from dg by mx.treblig.org with local (Exim 4.96)
-	(envelope-from <dg@treblig.org>)
-	id 1uCiTO-002EZk-33;
-	Wed, 07 May 2025 17:22:22 +0000
-Date: Wed, 7 May 2025 17:22:22 +0000
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
-To: "Feng, Kenneth" <Kenneth.Feng@amd.com>
-Cc: "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-	"Koenig, Christian" <Christian.Koenig@amd.com>,
-	"amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: questions about smu_mode2_reset_is_support and
- smu_v13_0_init_display_count
-Message-ID: <aBuWzlWN5uJqsV90@gallifrey>
-References: <aBqqCmYICO_C0nLT@gallifrey>
- <DM4PR12MB5165D85BD85BC8FC8BF7A3B48E88A@DM4PR12MB5165.namprd12.prod.outlook.com>
+	s=arc-20240116; t=1746638577; c=relaxed/simple;
+	bh=HDKb7V+WEAJmo+d8rM98LMTW0jk6VzUQLJc9CgRtF5U=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MI59bPT48AKUVCZhPvb+BDZxH/eUnd2E+SZdz2jegD3EFtcF3gfyCJtQ2VXgyGE2Zeiz8WMe5duMO8MRPNG66LqBwdDL5I2P2Wi9JAEqhGhcbP23PWuEjMCkf4iH2DQTUmcePY6TWRmAlf12LF+7NAvMBVPNforuGwBaBSXD0GU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABFB3C4CEE2;
+	Wed,  7 May 2025 17:22:52 +0000 (UTC)
+Date: Wed, 7 May 2025 13:23:02 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Petr Mladek <pmladek@suse.com>
+Cc: Bhupesh <bhupesh@igalia.com>, akpm@linux-foundation.org,
+ kernel-dev@igalia.com, linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com,
+ laoar.shao@gmail.com, mathieu.desnoyers@efficios.com,
+ arnaldo.melo@gmail.com, alexei.starovoitov@gmail.com,
+ andrii.nakryiko@gmail.com, mirq-linux@rere.qmqm.pl, peterz@infradead.org,
+ willy@infradead.org, david@redhat.com, viro@zeniv.linux.org.uk,
+ keescook@chromium.org, ebiederm@xmission.com, brauner@kernel.org,
+ jack@suse.cz, mingo@redhat.com, juri.lelli@redhat.com, bsegall@google.com,
+ mgorman@suse.de, vschneid@redhat.com
+Subject: Re: [PATCH v3 3/3] exec: Add support for 64 byte 'tsk->real_comm'
+Message-ID: <20250507132302.4aed1cf0@gandalf.local.home>
+In-Reply-To: <aBtYDGOAVbLHeTHF@pathway.suse.cz>
+References: <20250507110444.963779-1-bhupesh@igalia.com>
+	<20250507110444.963779-4-bhupesh@igalia.com>
+	<aBtYDGOAVbLHeTHF@pathway.suse.cz>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <DM4PR12MB5165D85BD85BC8FC8BF7A3B48E88A@DM4PR12MB5165.namprd12.prod.outlook.com>
-X-Chocolate: 70 percent or better cocoa solids preferably
-X-Operating-System: Linux/6.1.0-34-amd64 (x86_64)
-X-Uptime: 17:21:56 up 10 days,  1:35,  1 user,  load average: 0.15, 0.07, 0.01
-User-Agent: Mutt/2.2.12 (2023-09-09)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-* Feng, Kenneth (Kenneth.Feng@amd.com) wrote:
-> [AMD Official Use Only - AMD Internal Distribution Only]
-> 
-> Hello Dave,
+On Wed, 7 May 2025 14:54:36 +0200
+Petr Mladek <pmladek@suse.com> wrote:
 
-Hi Kenneth,
-  Thanks for the reply.
+> > To fix the same, Linus suggested in [1] that we can add the
+> > following union inside 'task_struct':
+> >        union {
+> >                char    comm[TASK_COMM_LEN];
+> >                char    real_comm[REAL_TASK_COMM_LEN];
+> >        };  
+> 
+> Nit: IMHO, the prefix "real_" is misleading. The buffer size is still
+>       limited and the name might be shrinked. I would suggest
 
-> smu_v13_0_init_display_count() is obsolete on smu13 series. It will be removed.
-> Secondly, with cod evolving, all of below can be removed as well.
->   sienna_cichlid_is_mode2_reset_supported,
->   aldebaran_is_mode2_reset_supported,
->   smu_v13_0_6_is_mode2_reset_supported
+Agreed.
 
-Great, I've sent a series to delete all those, see 20250507170145.102508-1-linux@treblig.org
+>       something like:
+> 
+> 	char    comm_ext[TASK_COMM_EXT_LEN];
+> or
+> 	char    comm_64[TASK_COMM_64_LEN]
 
-Dave
+I prefer "comm_ext" as I don't think we want to hard code the actual size.
+Who knows, in the future we may extend it again!
 
-> Thanks.
-> 
-> 
-> 
-> -----Original Message-----
-> From: Dr. David Alan Gilbert <linux@treblig.org>
-> Sent: Wednesday, May 7, 2025 8:32 AM
-> To: Deucher, Alexander <Alexander.Deucher@amd.com>; Feng, Kenneth <Kenneth.Feng@amd.com>; Koenig, Christian <Christian.Koenig@amd.com>
-> Cc: amd-gfx@lists.freedesktop.org; linux-kernel@vger.kernel.org
-> Subject: questions about smu_mode2_reset_is_support and smu_v13_0_init_display_count
-> 
-> Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
-> 
-> 
-> Hi,
->   I noticed two functions that are unused but I wasn't sure what to do with them:
-> 
-> smu_v13_0_init_display_count() isn't called/wired up, where as the
-> v11 version is wired up:
-> 
->  drivers/gpu/drm/amd/pm/swsmu/smu11/navi10_ppt.c
->      3574:      .init_display_count = smu_v11_0_init_display_count,
-> 
-> so is v13 really unused or should it be wired up in a similar way?
-> 
-> secondly, smu_mode2_reset_is_support() is uncalled, but it's the only caller through the mode2_reset_is_support() function pointer; so if smu_mode2_reset_is_support() was deleted, does it then make sense to clean up all of
->   sienna_cichlid_is_mode2_reset_supported,
->   aldebaran_is_mode2_reset_supported,
->   smu_v13_0_6_is_mode2_reset_supported
-> 
-> which that function pointer is sett to.
-> 
-> Thanks in advance,
-> 
-> Dave
-> 
-> --
->  -----Open up your eyes, open up your mind, open up your code -------
-> / Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \
-> \        dave @ treblig.org |                               | In Hex /
->  \ _________________________|_____ http://www.treblig.org   |_______/
--- 
- -----Open up your eyes, open up your mind, open up your code -------   
-/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-\        dave @ treblig.org |                               | In Hex /
- \ _________________________|_____ http://www.treblig.org   |_______/
+-- Steve
