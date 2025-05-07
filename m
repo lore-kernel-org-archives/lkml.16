@@ -1,544 +1,160 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98E16623;
-	Wed,  7 May 2025 00:09:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6A0B440C
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 00:10:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746576590; cv=none; b=mItCML2cL4eCUDKKIrgjObtbDjy+MYDxFXMDCYVq/5rVWakMzgCLj9dHnN376CaFKu9xFcQxrBPpn3uHrusugSEX7JHLmQKVgsKI22Yu8W6skH9CDTNTv0PlJzb7p2T4/MxOT6EM3i/4IYEni4V6owrv7fVp5GJwi7Uu8SliGSE=
+	t=1746576644; cv=none; b=o/D7ac1KjGhjAXMyx1RMK93Ml8KqjAuXjwMA+a3tUpuW/lFTO8IjSsKcLOhfH7ccI0zLi40ROZeclTBeSBrWHRhPMtg/wecZRCmjJMOT4VJ5ED0ewgvwdksIEzJmpY3Y6+gxVDlGSuhDlXlDaCRJri0DbfkhRCT4S9HwDASwP3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746576590; c=relaxed/simple;
-	bh=cvd6QqVkrSctNjRUZUiiHOYHZAKiY9E+ze40cYN0FBw=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ChMoYnsGf4UKSPvbzjXwfrQU9iT6po5Ves/XEXHjbNxxj8U0D0SmNnqgo8Cuk5enEEK7M4D247QI/nQFd9Ty5qT1zhkLgcVHIqm9p+iWfS1MoXM38RASlGuxt9tmIL2JERioHoTqwo/j1jkaIUrWbBnLKIP12d/4B+GRTNgfvbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=RIRc57Pc; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1746576644; c=relaxed/simple;
+	bh=JWPtOoz4EA9bjCWVXaVjCq9xtrf9Nr3J1ZEFcVK7PCQ=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=XpsPTDXjma/R4mqgqBz5UYbEjSAQEmN2abaXtTQUSBVPwgt4JpMr9pq4FzOkYzK/+JIqWWZpIM9nRE8XkfahO/ktux3y3LjPG10LE0kAxxvE71U95LJGSolXSWQKxBnnbleowhSu9LXFn1aAc9tsWUZ4/xmYOx5pUjKX77P09aM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--tjmercier.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=z6zE1Wh1; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--tjmercier.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="RIRc57Pc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1746576585; x=1778112585;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=cvd6QqVkrSctNjRUZUiiHOYHZAKiY9E+ze40cYN0FBw=;
-  b=RIRc57Pc5+mePSzr0CDGk8Yqqf5zC9xNptR+EhQhznXwu8wm3zwiYa8a
-   V5YJZUbZLYt0UIfsgUwgoSao93X3qd/JRxUd4ISFY4F9UMpS811oHReVs
-   NIoc/tf1CLin8WZgAUxn2PbdG7n/Mis4E0s/qNImWVS9Xlzz6FlngShLF
-   f3xdviOvekwB3S+7RLzctEAKZVtnhLFyKSqKtkLWQGG2fTEfsfhXsdejv
-   HeKTUf1eiFQPH21bZWBD1A6jUh6ClDdS1eWeI3Ghc3SuFK/YjJOiNS6C5
-   NvhILMniNdg5pSn3pq3Alks8yC4/ouR46OszzWbjB3jwf88Fa/aPwh2zl
-   Q==;
-X-CSE-ConnectionGUID: vwHip55HRiua4rZexlh9FQ==
-X-CSE-MsgGUID: FW45dXGATFmRo46P8+csdA==
-X-IronPort-AV: E=Sophos;i="6.15,267,1739862000"; 
-   d="scan'208";a="45985048"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 06 May 2025 17:09:42 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Tue, 6 May 2025 17:09:12 -0700
-Received: from pop-os.microchip.com (10.10.85.11) by chn-vm-ex03.mchp-main.com
- (10.10.85.151) with Microsoft SMTP Server id 15.1.2507.44 via Frontend
- Transport; Tue, 6 May 2025 17:09:11 -0700
-From: <Tristram.Ha@microchip.com>
-To: Andrew Lunn <andrew@lunn.ch>, Woojung Huh <woojung.huh@microchip.com>,
-	Russell King <linux@armlinux.org.uk>, Vladimir Oltean <olteanv@gmail.com>
-CC: Heiner Kallweit <hkallweit1@gmail.com>, Maxime Chevallier
-	<maxime.chevallier@bootlin.com>, "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, "Paolo
- Abeni" <pabeni@redhat.com>, <UNGLinuxDriver@microchip.com>,
-	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Tristram Ha
-	<tristram.ha@microchip.com>
-Subject: [PATCH net-next v2] net: dsa: microchip: Add SGMII port support to KSZ9477 switch
-Date: Tue, 6 May 2025 17:09:11 -0700
-Message-ID: <20250507000911.14825-1-Tristram.Ha@microchip.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="z6zE1Wh1"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30aa397f275so488623a91.1
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 17:10:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746576642; x=1747181442; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id
+         :mime-version:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=XbM0hT4nN9Qi5ds4e0j9GLdbgAxkWG3cIrhqKGc4+Co=;
+        b=z6zE1Wh1jqc1zVo2RKxx5qf3UqRp3AivPx8ywhzMdyJpeVk+detvcZNfuzJo2lsQWi
+         Uk8vMN9KkyX/ROSP6ZzObgY8GbTVz3MK107TuH7V+humhGnKbNXGL5FGRY1BahJBvjC0
+         v8vktJ/qKjsLNPuyFEJP2INkYu9AylF53V8Xl875YOGRJQQ4LPhlsgEGiBCkci/YWaqy
+         jtr/CE8WHzFCZJ2Nd5XHSxlgHlqp7/QWyZXYDK7soDp81xoqQ05CeU4/YU5EF2BYCxvG
+         GyZf1eGLtZsCx0SxSoHJsTI8zBml9GPoisCl77nosoteyTSwfz2Mcbc7GZVJOhAXhkYR
+         19oA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746576642; x=1747181442;
+        h=content-transfer-encoding:cc:to:from:subject:message-id
+         :mime-version:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XbM0hT4nN9Qi5ds4e0j9GLdbgAxkWG3cIrhqKGc4+Co=;
+        b=c5xNlClcs2qGNetu59WGyln6u/WtSgcsYTcbQjt0zfUQT0wqk6FDQD9ZwsMBOk9QT8
+         0KTlmjzQHBXPiS0leA9AlzvZUbOvphdeITbIkHntAhMg9mJrAjiAMMbJrIagqximJX/Q
+         l38H0/Mkw4H2j8aQy22KdGabJpsBFiRLiRu5Z6dGr3JRN8TAjvRpWq8xRXnQaBOlvztb
+         vh2v9bXYgVUkEOqU4lvBHnjgSIv8GJ4AXasweIaQQrEvT45HalaeD+orGBrM33qu7fPS
+         NS5j5FerKW8ZLyaO7ngKYuIpDUzcrWna3NWZOe4/i1VuwrOB0+y0Hl/37/g3BfhxDGsA
+         IaLQ==
+X-Gm-Message-State: AOJu0YwxR3wmmCB9zYS//VvxJUTODs9VVBQ+NIpa/8PcpB0LktYxHZXi
+	MzKwwnhOPdCASmqJpaMFxbT5osPleWXKWVmubnlZMXGTxW28jgx3sPMaldk5PHE1xklL7m8QVF6
+	icLZ6kCuK5MMLSg==
+X-Google-Smtp-Source: AGHT+IGgh9HyAs9Nj/w00VjUmiwsbbsyaNDbuDxCtSFIr9y5AQvyC41+3cohLwHox+GxYYqlbWOuGxl6mDGD8Sc=
+X-Received: from pjbpt3.prod.google.com ([2002:a17:90b:3d03:b0:2fa:15aa:4d1e])
+ (user=tjmercier job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:90b:3d8c:b0:2ee:e317:69ab with SMTP id 98e67ed59e1d1-30aabf6f73emr2662572a91.0.1746576642184;
+ Tue, 06 May 2025 17:10:42 -0700 (PDT)
+Date: Wed,  7 May 2025 00:10:31 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.1045.g170613ef41-goog
+Message-ID: <20250507001036.2278781-1-tjmercier@google.com>
+Subject: [PATCH bpf-next v3 0/5] Replace CONFIG_DMABUF_SYSFS_STATS with BPF
+From: "T.J. Mercier" <tjmercier@google.com>
+To: sumit.semwal@linaro.org, christian.koenig@amd.com, ast@kernel.org, 
+	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev, 
+	skhan@linuxfoundation.org, alexei.starovoitov@gmail.com, song@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
+	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, android-mm@google.com, 
+	simona@ffwll.ch, eddyz87@gmail.com, yonghong.song@linux.dev, 
+	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me, 
+	jolsa@kernel.org, mykolal@fb.com, "T.J. Mercier" <tjmercier@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Tristram Ha <tristram.ha@microchip.com>
+Until CONFIG_DMABUF_SYSFS_STATS was added [1] it was only possible to
+perform per-buffer accounting with debugfs which is not suitable for
+production environments. Eventually we discovered the overhead with
+per-buffer sysfs file creation/removal was significantly impacting
+allocation and free times, and exacerbated kernfs lock contention. [2]
+dma_buf_stats_setup() is responsible for 39% of single-page buffer
+creation duration, or 74% of single-page dma_buf_export() duration when
+stressing dmabuf allocations and frees.
 
-The KSZ9477 switch driver uses the XPCS driver to operate its SGMII
-port.  However there are some hardware bugs in the KSZ9477 SGMII
-module so workarounds are needed.  There was a proposal to update the
-XPCS driver to accommodate KSZ9477, but the new code is not generic
-enough to be used by other vendors.  It is better to do all these
-workarounds inside the KSZ9477 driver instead of modifying the XPCS
-driver.
+I prototyped a change from per-buffer to per-exporter statistics with a
+RCU protected list of exporter allocations that accommodates most (but
+not all) of our use-cases and avoids almost all of the sysfs overhead.
+While that adds less overhead than per-buffer sysfs, and less even than
+the maintenance of the dmabuf debugfs_list, it's still *additional*
+overhead on top of the debugfs_list and doesn't give us per-buffer info.
 
-There are 3 hardware issues.  The first is the MII_ADVERTISE register
-needs to be write once after reset for the correct code word to be
-sent.  The XPCS driver disables auto-negotiation first before
-configuring the SGMII/1000BASE-X mode and then enables it back.  The
-KSZ9477 driver then writes the MII_ADVERTISE register before enabling
-auto-negotiation.  In 1000BASE-X mode the MII_ADVERTISE register will
-be set, so KSZ9477 driver does not need to write it.
+This series uses the existing dmabuf debugfs_list to implement a BPF
+dmabuf iterator, which adds no overhead to buffer allocation/free and
+provides per-buffer info. The list has been moved outside of
+CONFIG_DEBUG_FS scope so that it is always populated. The BPF program
+loaded by userspace that extracts per-buffer information gets to define
+its own interface which avoids the lack of ABI stability with debugfs.
 
-The second issue is the MII_BMCR register needs to set the exact speed
-and duplex mode when running in SGMII mode.  During link polling the
-KSZ9477 will check the speed and duplex mode are different from
-previous ones and update the MII_BMCR register accordingly.
+This will allow us to replace our use of CONFIG_DMABUF_SYSFS_STATS, and
+the plan is to remove it from the kernel after the next longterm stable
+release.
 
-The last issue is 1000BASE-X mode does not work with auto-negotiation
-on.  The cause is the local port hardware does not know the link is up
-and so network traffic is not forwarded.  The workaround is to write 2
-additional bits when 1000BASE-X mode is configured.
+[1] https://lore.kernel.org/linux-media/20201210044400.1080308-1-hridya@goo=
+gle.com
+[2] https://lore.kernel.org/all/20220516171315.2400578-1-tjmercier@google.c=
+om
 
-Note the SGMII interrupt in the port cannot be masked.  As that
-interrupt is not handled in the KSZ9477 driver the SGMII interrupt bit
-will not be set even when the XPCS driver sets it.
+v1: https://lore.kernel.org/all/20250414225227.3642618-1-tjmercier@google.c=
+om
+v1 -> v2:
+Make the DMA buffer list independent of CONFIG_DEBUG_FS per Christian K=C3=
+=B6nig
+Add CONFIG_DMA_SHARED_BUFFER check to kernel/bpf/Makefile per kernel test r=
+obot
+Use BTF_ID_LIST_SINGLE instead of BTF_ID_LIST_GLOBAL_SINGLE per Song Liu
+Fixup comment style, mixing code/declarations, and use ASSERT_OK_FD in self=
+test per Song Liu
+Add BPF_ITER_RESCHED feature to bpf_dmabuf_reg_info per Alexei Starovoitov
+Add open-coded iterator and selftest per Alexei Starovoitov
+Add a second test buffer from the system dmabuf heap to selftests
+Use the BPF program we'll use in production for selftest per Alexei Starovo=
+itov
+  https://r.android.com/c/platform/system/bpfprogs/+/3616123/2/dmabufIter.c
+  https://r.android.com/c/platform/system/memory/libmeminfo/+/3614259/1/lib=
+dmabufinfo/dmabuf_bpf_stats.cpp
+v2: https://lore.kernel.org/all/20250504224149.1033867-1-tjmercier@google.c=
+om
+v2 -> v3:
+Rebase onto bpf-next/master
+Move get_next_dmabuf() into drivers/dma-buf/dma-buf.c, along with the
+  new get_first_dmabuf(). This avoids having to expose the dmabuf list
+  and mutex to the rest of the kernel, and keeps the dmabuf mutex
+  operations near each other in the same file. (Christian K=C3=B6nig)
+Add Christian's RB to dma-buf: Rename debugfs symbols
+Drop RFC: dma-buf: Remove DMA-BUF statistics
 
-Signed-off-by: Tristram Ha <tristram.ha@microchip.com>
----
-v2
- - add Kconfig for required XPCS driver build
+T.J. Mercier (5):
+  dma-buf: Rename debugfs symbols
+  bpf: Add dmabuf iterator
+  bpf: Add open coded dmabuf iterator
+  selftests/bpf: Add test for dmabuf_iter
+  selftests/bpf: Add test for open coded dmabuf_iter
 
- drivers/net/dsa/microchip/Kconfig      |   1 +
- drivers/net/dsa/microchip/ksz9477.c    | 191 ++++++++++++++++++++++++-
- drivers/net/dsa/microchip/ksz9477.h    |   4 +-
- drivers/net/dsa/microchip/ksz_common.c |  36 ++++-
- drivers/net/dsa/microchip/ksz_common.h |  23 ++-
- 5 files changed, 248 insertions(+), 7 deletions(-)
+ drivers/dma-buf/dma-buf.c                     |  94 +++++--
+ include/linux/dma-buf.h                       |   5 +-
+ kernel/bpf/Makefile                           |   3 +
+ kernel/bpf/dmabuf_iter.c                      | 149 ++++++++++
+ kernel/bpf/helpers.c                          |   5 +
+ .../testing/selftests/bpf/bpf_experimental.h  |   5 +
+ tools/testing/selftests/bpf/config            |   3 +
+ .../selftests/bpf/prog_tests/dmabuf_iter.c    | 258 ++++++++++++++++++
+ .../testing/selftests/bpf/progs/dmabuf_iter.c |  91 ++++++
+ 9 files changed, 591 insertions(+), 22 deletions(-)
+ create mode 100644 kernel/bpf/dmabuf_iter.c
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/dmabuf_iter.c
+ create mode 100644 tools/testing/selftests/bpf/progs/dmabuf_iter.c
 
-diff --git a/drivers/net/dsa/microchip/Kconfig b/drivers/net/dsa/microchip/Kconfig
-index 12a86585a77f..c71d3fd5dfeb 100644
---- a/drivers/net/dsa/microchip/Kconfig
-+++ b/drivers/net/dsa/microchip/Kconfig
-@@ -6,6 +6,7 @@ menuconfig NET_DSA_MICROCHIP_KSZ_COMMON
- 	select NET_DSA_TAG_NONE
- 	select NET_IEEE8021Q_HELPERS
- 	select DCB
-+	select PCS_XPCS
- 	help
- 	  This driver adds support for Microchip KSZ8, KSZ9 and
- 	  LAN937X series switch chips, being KSZ8863/8873,
-diff --git a/drivers/net/dsa/microchip/ksz9477.c b/drivers/net/dsa/microchip/ksz9477.c
-index 29fe79ea74cd..825aa570eed9 100644
---- a/drivers/net/dsa/microchip/ksz9477.c
-+++ b/drivers/net/dsa/microchip/ksz9477.c
-@@ -2,7 +2,7 @@
- /*
-  * Microchip KSZ9477 switch driver main logic
-  *
-- * Copyright (C) 2017-2024 Microchip Technology Inc.
-+ * Copyright (C) 2017-2025 Microchip Technology Inc.
-  */
- 
- #include <linux/kernel.h>
-@@ -161,6 +161,187 @@ static int ksz9477_wait_alu_sta_ready(struct ksz_device *dev)
- 					10, 1000);
- }
- 
-+static void port_sgmii_s(struct ksz_device *dev, uint port, u16 devid, u16 reg)
-+{
-+	u32 data;
-+
-+	data = (devid & MII_MMD_CTRL_DEVAD_MASK) << 16;
-+	data |= reg;
-+	ksz_pwrite32(dev, port, REG_PORT_SGMII_ADDR__4, data);
-+}
-+
-+static void port_sgmii_r(struct ksz_device *dev, uint port, u16 devid, u16 reg,
-+			 u16 *buf)
-+{
-+	port_sgmii_s(dev, port, devid, reg);
-+	ksz_pread16(dev, port, REG_PORT_SGMII_DATA__4 + 2, buf);
-+}
-+
-+static void port_sgmii_w(struct ksz_device *dev, uint port, u16 devid, u16 reg,
-+			 u16 buf)
-+{
-+	port_sgmii_s(dev, port, devid, reg);
-+	ksz_pwrite32(dev, port, REG_PORT_SGMII_DATA__4, buf);
-+}
-+
-+static int ksz9477_pcs_read(struct mii_bus *bus, int phy, int mmd, int reg)
-+{
-+	struct ksz_device *dev = bus->priv;
-+	int port = ksz_get_sgmii_port(dev);
-+	u16 val;
-+
-+	port_sgmii_r(dev, port, mmd, reg, &val);
-+
-+	/* Simulate a value to activate special code in the XPCS driver if
-+	 * supported.
-+	 */
-+	if (mmd == MDIO_MMD_PMAPMD) {
-+		if (reg == MDIO_DEVID1)
-+			val = 0x9477;
-+		else if (reg == MDIO_DEVID2)
-+			val = 0x22 << 10;
-+	} else if (mmd == MDIO_MMD_VEND2) {
-+		struct ksz_port *p = &dev->ports[port];
-+
-+		/* Need to update MII_BMCR register with the exact speed and
-+		 * duplex mode when running in SGMII mode and this register is
-+		 * used to detect connected speed in that mode.
-+		 */
-+		if (reg == MMD_SR_MII_AUTO_NEG_STATUS) {
-+			int duplex, speed;
-+
-+			if (val & SR_MII_STAT_LINK_UP) {
-+				speed = (val >> SR_MII_STAT_S) & SR_MII_STAT_M;
-+				if (speed == SR_MII_STAT_1000_MBPS)
-+					speed = SPEED_1000;
-+				else if (speed == SR_MII_STAT_100_MBPS)
-+					speed = SPEED_100;
-+				else
-+					speed = SPEED_10;
-+
-+				if (val & SR_MII_STAT_FULL_DUPLEX)
-+					duplex = DUPLEX_FULL;
-+				else
-+					duplex = DUPLEX_HALF;
-+
-+				if (!p->phydev.link ||
-+				    p->phydev.speed != speed ||
-+				    p->phydev.duplex != duplex) {
-+					u16 ctrl;
-+
-+					p->phydev.link = 1;
-+					p->phydev.speed = speed;
-+					p->phydev.duplex = duplex;
-+					port_sgmii_r(dev, port, mmd, MII_BMCR,
-+						     &ctrl);
-+					ctrl &= BMCR_ANENABLE;
-+					ctrl |= mii_bmcr_encode_fixed(speed,
-+								      duplex);
-+					port_sgmii_w(dev, port, mmd, MII_BMCR,
-+						     ctrl);
-+				}
-+			} else {
-+				p->phydev.link = 0;
-+			}
-+		} else if (reg == MII_BMSR) {
-+			p->phydev.link = (val & BMSR_LSTATUS);
-+		}
-+	}
-+	return val;
-+}
-+
-+static int ksz9477_pcs_write(struct mii_bus *bus, int phy, int mmd, int reg,
-+			     u16 val)
-+{
-+	struct ksz_device *dev = bus->priv;
-+	int port = ksz_get_sgmii_port(dev);
-+
-+	if (mmd == MDIO_MMD_VEND2) {
-+		struct ksz_port *p = &dev->ports[port];
-+
-+		if (reg == MMD_SR_MII_AUTO_NEG_CTRL) {
-+			u16 sgmii_mode = SR_MII_PCS_SGMII << SR_MII_PCS_MODE_S;
-+
-+			/* Need these bits for 1000BASE-X mode to work with
-+			 * AN on.
-+			 */
-+			if (!(val & sgmii_mode))
-+				val |= SR_MII_SGMII_LINK_UP |
-+				       SR_MII_TX_CFG_PHY_MASTER;
-+
-+			/* SGMII interrupt in the port cannot be masked, so
-+			 * make sure interrupt is not enabled as it is not
-+			 * handled.
-+			 */
-+			val &= ~SR_MII_AUTO_NEG_COMPLETE_INTR;
-+		} else if (reg == MII_BMCR) {
-+			/* The MII_ADVERTISE register needs to write once
-+			 * before doing auto-negotiation for the correct
-+			 * config_word to be sent out after reset.
-+			 */
-+			if ((val & BMCR_ANENABLE) && !p->sgmii_adv_write) {
-+				u16 adv;
-+
-+				/* The SGMII port cannot disable flow contrl
-+				 * so it is better to just advertise symmetric
-+				 * pause.
-+				 */
-+				port_sgmii_r(dev, port, mmd, MII_ADVERTISE,
-+					     &adv);
-+				adv |= ADVERTISE_1000XPAUSE;
-+				adv &= ~ADVERTISE_1000XPSE_ASYM;
-+				port_sgmii_w(dev, port, mmd, MII_ADVERTISE,
-+					     adv);
-+				p->sgmii_adv_write = 1;
-+			} else if (val & BMCR_RESET) {
-+				p->sgmii_adv_write = 0;
-+			}
-+		} else if (reg == MII_ADVERTISE) {
-+			/* XPCS driver writes to this register so there is no
-+			 * need to update it for the errata.
-+			 */
-+			p->sgmii_adv_write = 1;
-+		}
-+	}
-+	port_sgmii_w(dev, port, mmd, reg, val);
-+	return 0;
-+}
-+
-+int ksz9477_pcs_create(struct ksz_device *dev)
-+{
-+	/* This chip has a SGMII port. */
-+	if (ksz_has_sgmii_port(dev)) {
-+		int port = ksz_get_sgmii_port(dev);
-+		struct ksz_port *p = &dev->ports[port];
-+		struct phylink_pcs *pcs;
-+		struct mii_bus *bus;
-+		int ret;
-+
-+		bus = devm_mdiobus_alloc(dev->dev);
-+		if (!bus)
-+			return -ENOMEM;
-+
-+		bus->name = "ksz_pcs_mdio_bus";
-+		snprintf(bus->id, MII_BUS_ID_SIZE, "%s-pcs",
-+			 dev_name(dev->dev));
-+		bus->read_c45 = &ksz9477_pcs_read;
-+		bus->write_c45 = &ksz9477_pcs_write;
-+		bus->parent = dev->dev;
-+		bus->phy_mask = ~0;
-+		bus->priv = dev;
-+
-+		ret = devm_mdiobus_register(dev->dev, bus);
-+		if (ret)
-+			return ret;
-+
-+		pcs = xpcs_create_pcs_mdiodev(bus, 0);
-+		if (IS_ERR(pcs))
-+			return PTR_ERR(pcs);
-+		p->pcs = pcs;
-+	}
-+	return 0;
-+}
-+
- int ksz9477_reset_switch(struct ksz_device *dev)
- {
- 	u8 data8;
-@@ -978,6 +1159,14 @@ void ksz9477_get_caps(struct ksz_device *dev, int port,
- 
- 	if (dev->info->gbit_capable[port])
- 		config->mac_capabilities |= MAC_1000FD;
-+
-+	if (ksz_is_sgmii_port(dev, port)) {
-+		struct ksz_port *p = &dev->ports[port];
-+
-+		phy_interface_or(config->supported_interfaces,
-+				 config->supported_interfaces,
-+				 p->pcs->supported_interfaces);
-+	}
- }
- 
- int ksz9477_set_ageing_time(struct ksz_device *dev, unsigned int msecs)
-diff --git a/drivers/net/dsa/microchip/ksz9477.h b/drivers/net/dsa/microchip/ksz9477.h
-index d2166b0d881e..0d1a6dfda23e 100644
---- a/drivers/net/dsa/microchip/ksz9477.h
-+++ b/drivers/net/dsa/microchip/ksz9477.h
-@@ -2,7 +2,7 @@
- /*
-  * Microchip KSZ9477 series Header file
-  *
-- * Copyright (C) 2017-2022 Microchip Technology Inc.
-+ * Copyright (C) 2017-2025 Microchip Technology Inc.
-  */
- 
- #ifndef __KSZ9477_H
-@@ -97,4 +97,6 @@ void ksz9477_acl_match_process_l2(struct ksz_device *dev, int port,
- 				  u16 ethtype, u8 *src_mac, u8 *dst_mac,
- 				  unsigned long cookie, u32 prio);
- 
-+int ksz9477_pcs_create(struct ksz_device *dev);
-+
- #endif
-diff --git a/drivers/net/dsa/microchip/ksz_common.c b/drivers/net/dsa/microchip/ksz_common.c
-index b45052497f8a..c93a567a4c3b 100644
---- a/drivers/net/dsa/microchip/ksz_common.c
-+++ b/drivers/net/dsa/microchip/ksz_common.c
-@@ -2,7 +2,7 @@
- /*
-  * Microchip switch driver main logic
-  *
-- * Copyright (C) 2017-2024 Microchip Technology Inc.
-+ * Copyright (C) 2017-2025 Microchip Technology Inc.
-  */
- 
- #include <linux/delay.h>
-@@ -354,10 +354,26 @@ static void ksz9477_phylink_mac_link_up(struct phylink_config *config,
- 					int speed, int duplex, bool tx_pause,
- 					bool rx_pause);
- 
-+static struct phylink_pcs *
-+ksz_phylink_mac_select_pcs(struct phylink_config *config,
-+			   phy_interface_t interface)
-+{
-+	struct dsa_port *dp = dsa_phylink_to_port(config);
-+	struct ksz_device *dev = dp->ds->priv;
-+	struct ksz_port *p = &dev->ports[dp->index];
-+
-+	if (ksz_is_sgmii_port(dev, dp->index) &&
-+	    (interface == PHY_INTERFACE_MODE_SGMII ||
-+	    interface == PHY_INTERFACE_MODE_1000BASEX))
-+		return p->pcs;
-+	return NULL;
-+}
-+
- static const struct phylink_mac_ops ksz9477_phylink_mac_ops = {
- 	.mac_config	= ksz_phylink_mac_config,
- 	.mac_link_down	= ksz_phylink_mac_link_down,
- 	.mac_link_up	= ksz9477_phylink_mac_link_up,
-+	.mac_select_pcs	= ksz_phylink_mac_select_pcs,
- };
- 
- static const struct ksz_dev_ops ksz9477_dev_ops = {
-@@ -395,6 +411,7 @@ static const struct ksz_dev_ops ksz9477_dev_ops = {
- 	.reset = ksz9477_reset_switch,
- 	.init = ksz9477_switch_init,
- 	.exit = ksz9477_switch_exit,
-+	.pcs_create = ksz9477_pcs_create,
- };
- 
- static const struct phylink_mac_ops lan937x_phylink_mac_ops = {
-@@ -1035,8 +1052,7 @@ static const struct regmap_range ksz9477_valid_regs[] = {
- 	regmap_reg_range(0x701b, 0x701b),
- 	regmap_reg_range(0x701f, 0x7020),
- 	regmap_reg_range(0x7030, 0x7030),
--	regmap_reg_range(0x7200, 0x7203),
--	regmap_reg_range(0x7206, 0x7207),
-+	regmap_reg_range(0x7200, 0x7207),
- 	regmap_reg_range(0x7300, 0x7301),
- 	regmap_reg_range(0x7400, 0x7401),
- 	regmap_reg_range(0x7403, 0x7403),
-@@ -1552,6 +1568,7 @@ const struct ksz_chip_data ksz_switch_chips[] = {
- 				   true, false, false},
- 		.gbit_capable	= {true, true, true, true, true, true, true},
- 		.ptp_capable = true,
-+		.sgmii_port = 7,
- 		.wr_table = &ksz9477_register_set,
- 		.rd_table = &ksz9477_register_set,
- 	},
-@@ -1944,6 +1961,7 @@ const struct ksz_chip_data ksz_switch_chips[] = {
- 		.internal_phy	= {true, true, true, true,
- 				   true, false, false},
- 		.gbit_capable	= {true, true, true, true, true, true, true},
-+		.sgmii_port = 7,
- 		.wr_table = &ksz9477_register_set,
- 		.rd_table = &ksz9477_register_set,
- 	},
-@@ -2067,7 +2085,7 @@ void ksz_r_mib_stats64(struct ksz_device *dev, int port)
- 
- 	spin_unlock(&mib->stats64_lock);
- 
--	if (dev->info->phy_errata_9477) {
-+	if (dev->info->phy_errata_9477 && !ksz_is_sgmii_port(dev, port)) {
- 		ret = ksz9477_errata_monitor(dev, port, raw->tx_late_col);
- 		if (ret)
- 			dev_err(dev->dev, "Failed to monitor transmission halt\n");
-@@ -2775,6 +2793,12 @@ static int ksz_setup(struct dsa_switch *ds)
- 	if (ret)
- 		return ret;
- 
-+	if (ksz_has_sgmii_port(dev) && dev->dev_ops->pcs_create) {
-+		ret = dev->dev_ops->pcs_create(dev);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	/* set broadcast storm protection 10% rate */
- 	regmap_update_bits(ksz_regmap_16(dev), regs[S_BROADCAST_CTRL],
- 			   BROADCAST_STORM_RATE,
-@@ -3613,6 +3637,10 @@ static void ksz_phylink_mac_config(struct phylink_config *config,
- 	if (dev->info->internal_phy[port])
- 		return;
- 
-+	/* No need to configure XMII control register when using SGMII. */
-+	if (ksz_is_sgmii_port(dev, port))
-+		return;
-+
- 	if (phylink_autoneg_inband(mode)) {
- 		dev_err(dev->dev, "In-band AN not supported!\n");
- 		return;
-diff --git a/drivers/net/dsa/microchip/ksz_common.h b/drivers/net/dsa/microchip/ksz_common.h
-index dd5429ff16ee..84e9e423980d 100644
---- a/drivers/net/dsa/microchip/ksz_common.h
-+++ b/drivers/net/dsa/microchip/ksz_common.h
-@@ -1,7 +1,7 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- /* Microchip switch driver common header
-  *
-- * Copyright (C) 2017-2024 Microchip Technology Inc.
-+ * Copyright (C) 2017-2025 Microchip Technology Inc.
-  */
- 
- #ifndef __KSZ_COMMON_H
-@@ -10,6 +10,7 @@
- #include <linux/etherdevice.h>
- #include <linux/kernel.h>
- #include <linux/mutex.h>
-+#include <linux/pcs/pcs-xpcs.h>
- #include <linux/phy.h>
- #include <linux/regmap.h>
- #include <net/dsa.h>
-@@ -93,6 +94,7 @@ struct ksz_chip_data {
- 	bool internal_phy[KSZ_MAX_NUM_PORTS];
- 	bool gbit_capable[KSZ_MAX_NUM_PORTS];
- 	bool ptp_capable;
-+	u8 sgmii_port;
- 	const struct regmap_access_table *wr_table;
- 	const struct regmap_access_table *rd_table;
- };
-@@ -132,6 +134,7 @@ struct ksz_port {
- 	u32 force:1;
- 	u32 read:1;			/* read MIB counters in background */
- 	u32 freeze:1;			/* MIB counter freeze is enabled */
-+	u32 sgmii_adv_write:1;
- 
- 	struct ksz_port_mib mib;
- 	phy_interface_t interface;
-@@ -141,6 +144,7 @@ struct ksz_port {
- 	void *acl_priv;
- 	struct ksz_irq pirq;
- 	u8 num;
-+	struct phylink_pcs *pcs;
- #if IS_ENABLED(CONFIG_NET_DSA_MICROCHIP_KSZ_PTP)
- 	struct hwtstamp_config tstamp_config;
- 	bool hwts_tx_en;
-@@ -440,6 +444,8 @@ struct ksz_dev_ops {
- 	int (*reset)(struct ksz_device *dev);
- 	int (*init)(struct ksz_device *dev);
- 	void (*exit)(struct ksz_device *dev);
-+
-+	int (*pcs_create)(struct ksz_device *dev);
- };
- 
- struct ksz_device *ksz_switch_alloc(struct device *base, void *priv);
-@@ -731,6 +737,21 @@ static inline bool is_lan937x_tx_phy(struct ksz_device *dev, int port)
- 		dev->chip_id == LAN9372_CHIP_ID) && port == KSZ_PORT_4;
- }
- 
-+static inline int ksz_get_sgmii_port(struct ksz_device *dev)
-+{
-+	return dev->info->sgmii_port - 1;
-+}
-+
-+static inline bool ksz_has_sgmii_port(struct ksz_device *dev)
-+{
-+	return dev->info->sgmii_port > 0;
-+}
-+
-+static inline bool ksz_is_sgmii_port(struct ksz_device *dev, int port)
-+{
-+	return dev->info->sgmii_port == port + 1;
-+}
-+
- /* STP State Defines */
- #define PORT_TX_ENABLE			BIT(2)
- #define PORT_RX_ENABLE			BIT(1)
--- 
-2.34.1
+
+base-commit: 43745d11bfd9683abdf08ad7a5cc403d6a9ffd15
+--=20
+2.49.0.1045.g170613ef41-goog
 
