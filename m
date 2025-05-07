@@ -1,105 +1,225 @@
-Received: from smtp.smtpout.orange.fr (smtp-17.smtpout.orange.fr [80.12.242.17])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5A821DF728;
-	Wed,  7 May 2025 17:18:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FE8928A419
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 17:18:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746638321; cv=none; b=KepWIv1sYOOzxLLNwfIva7ynK+ajfXXCwpTH5Qm9NC984zJgH3j0CnRYu+jcu1QBC7idN1oL0WukRBSWJaJhFoFkZ4BwtSTYI6JHOC27W8hHZ1KBacDo5uizLPmUYsYyonSsxtcY5xUyVwWPUi0hoOCw98kTajxT+bej4S3Rczw=
+	t=1746638320; cv=none; b=h2AiLlzi+f4Ah00cfpKirIJYKXzCeSJFIFla5VQGoYh4ghjdht2kx8lroCCVRGOmkBzu1BDVb2UlME62OCEe3BzVFuhDbtFDNPklNGfXaU8WNkshjaEzDHzm+XF/ZTCbkksvFEg5V5RX33OEVV2ADxd5Uq71n6Nc2beMrRxI3UQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746638321; c=relaxed/simple;
-	bh=/P6sAh0NrXRYaP0FUPo2DCEv9cadpmfXoNKPq0fNKpo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UFJN9md1ciiYFqJF0gRIoFD7NhU1nXkjWIpKyAdDHH43bF136DGzPBtmS+e7y8Z4kvbaQ3O/ce4DBzHtCUYQphpA5hzvjzgU+ZDyJYlFBqe1ih7iu1X2l7mJ8lZhpJrSoED8oliADAVnZm8TyNWU9AoJv5i8sFUKsNoqE0CkdlM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=KubgLt9W; arc=none smtp.client-ip=80.12.242.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1746638320; c=relaxed/simple;
+	bh=6TlXcixluNZBX/cBcVtudohfU6ZkVmPkiJmfN2wbluo=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=m81tYlUBEcUdXNoXsq5/lFvh3pNuOXUjyEBZ01l6UkxtM6kRcT+qDQamENwQ5v8YqMcjLGj2R12ZsIg3QpYtp0I6REr016kHby+CmbYxUeIL3OFvPggDvNITCk7YLtO9jqx7BHhWXDsVNSQuycQY12bJSTqQjXjc592e4o5PlKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hxZuZ3r7; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="KubgLt9W"
-Received: from [192.168.1.37] ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id CiOcuTurMZu1yCiOcuMLmW; Wed, 07 May 2025 19:17:29 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1746638249;
-	bh=+X+LlhXccWqiDMD0o118ntOtyxF71TzYXOzVd7j3Sb8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=KubgLt9W2lIE32wVFKiyKm5DOQ7iOgevmvVmBnYxfb6ADsIxO/2kH1pEdeDyiqHQ4
-	 CM9xShNJ693MAo64JzJ7lYLJxoyR4NrlqpL+4nv4QDU3gjsqFJvRSSGO8BVeJ2+h8K
-	 3kPi+L+vGafQLDHGjE6obV4Hjn9/trWHtDlFUluPMUIkJ0x27EmxwtlAvffA9zvwFb
-	 5Vy0f+o0W74hKat0yv5VVrGzEiXBfl26gUu3hohhvvB17CTGV5z8RON4wIzCwOejNq
-	 zDScjd0vmgOhPgXR1DtbezseqdEQzdFH1TL2M7bmKfqSdfz1hP9rB53Aqfljn8qhi9
-	 RrXsbNpmjfRqw==
-X-ME-Helo: [192.168.1.37]
-X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
-X-ME-Date: Wed, 07 May 2025 19:17:29 +0200
-X-ME-IP: 90.11.132.44
-Message-ID: <43f5dfb3-ea3a-4f1d-b3bd-9e62f976b651@wanadoo.fr>
-Date: Wed, 7 May 2025 19:17:25 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hxZuZ3r7"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-7370e73f690so136360b3a.3
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 10:18:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746638318; x=1747243118; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pG2jzoW6yflVwdmuJU0J3q47K/+FWuNpEk3e+XtfNkY=;
+        b=hxZuZ3r7eTxurUn67KZ2gm8cw3qrBmR5yGjhb7cwhPZYBPDdug+p6ym5/sM63QQafp
+         XKMX9jNpqa2PWTXgK9PKDYAUhthzNwAX4Z9Y8lmmWTrrf9j62X8Raykw69GT8dfxorvB
+         9C+xhc6s/NmdFwgtx/AaBAXIvC+FkVbynj4XPwkzfnuRYishujdkk19cPDZ6fj3HJ2Sl
+         agX2M5tdvJsVtqJfXiULFTe4m+T1zOz1Aie/xJVD3XbNKuE73AtP9WizxPzDWmbLv5lO
+         h6b4CTFYPu7aZaitEMlAJdPdNROM1XMLmg1gdZ/oEQY+4/C9OS66YXjOgLJKRcDeb894
+         HAAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746638318; x=1747243118;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=pG2jzoW6yflVwdmuJU0J3q47K/+FWuNpEk3e+XtfNkY=;
+        b=MiqIYbjafN6xm6vKMwyyL4jeydaT5LnVt3NaZgtIHD4nbCCP+cxreE0kx3Vkkg9gQN
+         BXJ6AHzwmKERCh4Xlla4y3L4WT28PqnTVnmwUVkTP+nRzlycrTLUfdYl8kG7YbZ2zb5Y
+         GMBOJPa+hqDM09Jjb5MIFoOwRy41SEOQIz2j/1TqBkGMGVJxQ6jggzNWNVr93shkCfw4
+         AYxy2fec+k7AL1uI9DfUZdd04fIb9ZIonx2dUoJnK+gGmlLnT8+YxL7ULxpkoSsf+yv9
+         U1rKWMPKbbTLZxYHSde9iiFVKZUsMhodh6sS68nuuC4+CUAdltGQPwkUF9rYM8NfgQm0
+         Birg==
+X-Forwarded-Encrypted: i=1; AJvYcCVcos1egkv0XhlrJrS9OAMvcnlnSlA32z1iqU6ll5K3bMzUtn47bLMki6LKhY90SLoAzWjwJRyvMULm3QM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyyXL4IrzMYiAE5bTWcPjDii6tKuumieUilIYtqUYlQp51YUZIt
+	bo5XaHE6faNHPXsPjvZm0pFWp80vXj0Tka6UM/ecMOTqRTAP0BToUM9E9b5daOH4Zbe8i1KY2T7
+	lBw==
+X-Google-Smtp-Source: AGHT+IEkXQbqCRD8HRA5WYiikSGcIbX1BI2E42grwI+QpW4s0TZ41inyJORuRHkLarSfOJH8WDG3sSlB5eU=
+X-Received: from pfnd23.prod.google.com ([2002:aa7:8157:0:b0:732:858a:729f])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:2a09:b0:73e:30dc:bb9b
+ with SMTP id d2e1a72fcca58-7409cedc8b4mr5638494b3a.2.1746638318238; Wed, 07
+ May 2025 10:18:38 -0700 (PDT)
+Date: Wed, 7 May 2025 10:18:36 -0700
+In-Reply-To: <14eab14d368e68cb9c94c655349f94f44a9a15b4.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH next] regulator: tps65219: Fix erorr codes in probe()
-To: Dan Carpenter <dan.carpenter@linaro.org>,
- Shree Ramamoorthy <s-ramamoorthy@ti.com>
-Cc: Aaro Koskinen <aaro.koskinen@iki.fi>,
- Andreas Kemnade <andreas@kemnade.info>, Kevin Hilman <khilman@baylibre.com>,
- Roger Quadros <rogerq@kernel.org>, Tony Lindgren <tony@atomide.com>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel-janitors@vger.kernel.org
-References: <aBtZHEkgYGK33fWk@stanley.mountain>
-Content-Language: en-US, fr-FR
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <aBtZHEkgYGK33fWk@stanley.mountain>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250416002546.3300893-1-mlevitsk@redhat.com> <20250416002546.3300893-2-mlevitsk@redhat.com>
+ <aAgnRx2aMbNKOlXY@google.com> <14eab14d368e68cb9c94c655349f94f44a9a15b4.camel@redhat.com>
+Message-ID: <aBuV7JmMU3TcsqFW@google.com>
+Subject: Re: [PATCH 1/3] x86: KVM: VMX: Wrap GUEST_IA32_DEBUGCTL read/write
+ with access functions
+From: Sean Christopherson <seanjc@google.com>
+To: mlevitsk@redhat.com
+Cc: kvm@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
+	Paolo Bonzini <pbonzini@redhat.com>, x86@kernel.org, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, 
+	linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Le 07/05/2025 à 14:59, Dan Carpenter a écrit :
-> There is a copy and paste error and we accidentally use "PTR_ERR(rdev)"
-> instead of "error".  The "rdev" pointer is valid at this point so the
-> existing code returns a positive value instead of instead of a negative
-> error code.
-> 
-> Fixes: 38c9f98db20a ("regulator: tps65219: Add support for TPS65215 Regulator IRQs")
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-> ---
->   drivers/regulator/tps65219-regulator.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
+On Thu, May 01, 2025, mlevitsk@redhat.com wrote:
+> On Tue, 2025-04-22 at 16:33 -0700, Sean Christopherson wrote:
+> > > @@ -2653,11 +2654,17 @@ static int prepare_vmcs02(struct kvm_vcpu *vc=
+pu, struct vmcs12 *vmcs12,
+> > >  	if (vmx->nested.nested_run_pending &&
+> > >  	    (vmcs12->vm_entry_controls & VM_ENTRY_LOAD_DEBUG_CONTROLS)) {
+> > >  		kvm_set_dr(vcpu, 7, vmcs12->guest_dr7);
+> > > -		vmcs_write64(GUEST_IA32_DEBUGCTL, vmcs12->guest_ia32_debugctl);
+> > > +		new_debugctl =3D vmcs12->guest_ia32_debugctl;
+> > >  	} else {
+> > >  		kvm_set_dr(vcpu, 7, vcpu->arch.dr7);
+> > > -		vmcs_write64(GUEST_IA32_DEBUGCTL, vmx->nested.pre_vmenter_debugctl=
+);
+> > > +		new_debugctl =3D vmx->nested.pre_vmenter_debugctl;
+> > >  	}
+> > > +
+> > > +	if (CC(!vmx_set_guest_debugctl(vcpu, new_debugctl, false))) {
+> >=20
+> > The consistency check belongs in nested_vmx_check_guest_state(), only n=
+eeds to
+> > check the VM_ENTRY_LOAD_DEBUG_CONTROLS case, and should be posted as a =
+separate
+> > patch.
+>=20
+> I can move it there. Can you explain why though you want this? Is it beca=
+use of the
+> order of checks specified in the PRM?
 
-Hi,
+To be consistent with how KVM checks guest state.  The two checks in prepar=
+e_vmcs02()
+are special cases.  vmx_guest_state_valid() consumes a huge variety of stat=
+e, and
+so replicating all of its logic for vmcs12 isn't worth doing.  The check on=
+ the
+kvm_set_msr() for guest_ia32_perf_global_ctrl exists purely so that KVM doe=
+sn't
+simply ignore the return value.
 
-> 
-> diff --git a/drivers/regulator/tps65219-regulator.c b/drivers/regulator/tps65219-regulator.c
-> index b16b300d7f45..f5cd8e33e518 100644
-> --- a/drivers/regulator/tps65219-regulator.c
-> +++ b/drivers/regulator/tps65219-regulator.c
-> @@ -454,7 +454,7 @@ static int tps65219_regulator_probe(struct platform_device *pdev)
->   						  irq_type->irq_name,
->   						  &irq_data[i]);
->   		if (error)
-> -			return dev_err_probe(tps->dev, PTR_ERR(rdev),
-> +			return dev_err_probe(tps->dev, error,
->   					     "Failed to request %s IRQ %d: %d\n",
->   					     irq_type->irq_name, irq, error);
+And to a lesser degree, because KVM assumes that guest state has been sanit=
+ized
+after nested_vmx_check_guest_state() is called.  Violating that risks intro=
+ducing
+bugs, e.g. consuming vmcs12->guest_ia32_debugctl before it's been vetted co=
+uld
+theoretically be problematic.
 
-and error can also be removed in the message as well, with the 
-corresponding %d.
+> Currently GUEST_IA32_DEBUGCTL of the host is *written* in prepare_vmcs02.=
+=C2=A0
+> Should I also move this write to nested_vmx_check_guest_state?
 
->   	}
-> @@ -477,7 +477,7 @@ static int tps65219_regulator_probe(struct platform_device *pdev)
->   						  irq_type->irq_name,
->   						  &irq_data[i]);
->   		if (error)
-> -			return dev_err_probe(tps->dev, PTR_ERR(rdev),
-> +			return dev_err_probe(tps->dev, error,
->   					     "Failed to request %s IRQ %d: %d\n",
->   					     irq_type->irq_name, irq, error);
+No.  nested_vmx_check_guest_state() verifies the incoming vmcs12 state,
+prepare_vmcs02() merges the vmcs12 state with KVM's desires and fills vmcs0=
+2.
 
-Same.
+> Or should I write the value blindly in prepare_vmcs02 and then check the =
+value
+> of 'vmx->msr_ia32_debugctl' in nested_vmx_check_guest_state and fail if t=
+he value
+> contains reserved bits?=C2=A0
 
->   	}
+I don't follow.  nested_vmx_check_guest_state() is called before prepare_vm=
+cs02().
 
+> > > +bool vmx_set_guest_debugctl(struct kvm_vcpu *vcpu, u64 data, bool ho=
+st_initiated)
+> > > +{
+> > > +	u64 invalid =3D data & ~vmx_get_supported_debugctl(vcpu, host_initi=
+ated);
+> > > +
+> > > +	if (invalid & (DEBUGCTLMSR_BTF|DEBUGCTLMSR_LBR)) {
+> > > +		kvm_pr_unimpl_wrmsr(vcpu, MSR_IA32_DEBUGCTLMSR, data);
+> > > +		data &=3D ~(DEBUGCTLMSR_BTF|DEBUGCTLMSR_LBR);
+> > > +		invalid &=3D ~(DEBUGCTLMSR_BTF|DEBUGCTLMSR_LBR);
+> > > +	}
+> > > +
+> > > +	if (invalid)
+> > > +		return false;
+> > > +
+> > > +	if (is_guest_mode(vcpu) && (get_vmcs12(vcpu)->vm_exit_controls &
+> > > +					VM_EXIT_SAVE_DEBUG_CONTROLS))
+> > > +		get_vmcs12(vcpu)->guest_ia32_debugctl =3D data;
+> > > +
+> > > +	if (intel_pmu_lbr_is_enabled(vcpu) && !to_vmx(vcpu)->lbr_desc.event=
+ &&
+> > > +	    (data & DEBUGCTLMSR_LBR))
+> > > +		intel_pmu_create_guest_lbr_event(vcpu);
+> > > +
+> > > +	__vmx_set_guest_debugctl(vcpu, data);
+> > > +	return true;
+> >=20
+> > Return 0/-errno, not true/false.
+>=20
+> There are plenty of functions in this file and KVM that return boolean.
+
+That doesn't make them "right".  For helpers that are obvious predicates, t=
+hen
+absolutely use a boolean return value.  The names for nested_vmx_check_eptp=
+()
+and vmx_control_verify() aren't very good, e.g. they should be
+nested_vmx_is_valid_eptp() and vmx_is_valid_control(), but the intent is go=
+od.
+
+But for flows like modifying guest state, KVM should return 0/-errno.
+
+> e.g:=C2=A0
+>=20
+> static bool nested_vmx_check_eptp(struct kvm_vcpu *vcpu, u64 new_eptp)
+> static inline bool vmx_control_verify(u32 control, u32 low, u32 high)
+> static bool nested_evmcs_handle_vmclear(struct kvm_vcpu *vcpu, gpa_t vmpt=
+r)
+> static inline bool nested_vmx_prepare_msr_bitmap(struct kvm_vcpu *vcpu,
+> 						=C2=A0struct vmcs12 *vmcs12)
+
+These two should return 0/-errno.
+
+=20
+> static bool nested_vmx_check_eptp(struct kvm_vcpu *vcpu, u64 new_eptp)
+> static bool nested_get_vmcs12_pages(struct kvm_vcpu *vcpu)
+
+Probably should return 0/-errno, but nested_get_vmcs12_pages() is a bit of =
+a mess.
+
+> ...
+>=20
+>=20
+> I personally think that functions that emulate hardware should return boo=
+lean
+> values or some hardware specific status code (e.g VMX failure code) becau=
+se
+> the real hardware never returns -EINVAL and such.
+
+Real hardware absolutely "returns" granular error codes.  KVM even has info=
+rmal
+mappings between some of them, e.g. -EINVAL =3D=3D #GP, -EFAULT =3D=3D #PF,=
+ -EOPNOTSUPP =3D=3D #UD,
+BUG() =3D=3D 3-strike #MC.
+
+And hardware has many more ways to report errors to software. E.g. VMLAUNCH=
+ can
+#UD, #GP(0), VM-Exit, VMfailInvalid, or VMFailValid with 30+ unique reasons=
+.  #MC
+has a crazy number of possible error encodings.  And so on and so forth.
+
+Software visible error codes aside, comparing individual KVM functions to a=
+n
+overall CPU is wildly misguided.  A more appropriate comparison would be be=
+tween
+a KVM function and the ucode for a single instruction/operation.  I highly,=
+ highly
+doubt ucode flows are limited to binary yes/no outputs.
