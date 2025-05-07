@@ -1,107 +1,219 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5243D21FF5A
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 08:04:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16C9C221D80
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 08:05:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746605049; cv=none; b=jcofORu/yro+xsbN3RS4ZNTTa44hfOEMVz3vv8GgHBqtzo2/AoRlpsMBX5YncWr3z0ZcFLdKSG1bTteN3sT9LQQDvJQRg7b3czS360/d0KI4KZtNrPoJGKWQJ4jHDHN8eWAXjzd3vRw5bdbPozIwwLMar4gdWWaXTteU2RJ399o=
+	t=1746605130; cv=none; b=uaSfHsvE2iaDXDdFxwfsoKiEvZ80Vmu3pjh9tbJIKaPtlaD1xK+W2FndP9D02ieBh/pPoUylusjwNluF5lOa8vtunmcnu2iXJTzKZkGarDCseutm3WE0BrpCWNE7Tp74mlMIh61GISHgamf0LXJl9j4z3NdJpVOsCaDvQ0YzzrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746605049; c=relaxed/simple;
-	bh=KaqL+wXiWuFD5PVgN//2x9Uy1IykRrC4KAlo3OQSS/Y=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=K5mC/tUzcNsbVioApOdWGpXIrhsaMqZhclFo+j67mnjHdtWIy8J2V82rg9cxZGxrH/ULgz+FhkgQlHHWlvk31h6km0Av6OURaBaJJx0BhgnY1gaBQby2QUu8BCF94MjQ2IhvlxU7tiHbGpl05Htatz/CQSJS+9I+GStSD4KuRK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BVWPEPzy; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BVWPEPzy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746605047;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1L9rKyoo5gafZgxfVF9TUdVkYjAT0uCnIxL4ynrWXso=;
-	b=BVWPEPzyeoIFjXbkH067CNb9ncRLfGXpnqZcxH3n1t4JTWuad0J27q34eQdvBamtjjmegp
-	GOfNvjozZOVVW78+QoChXSehtR0zynxjLr0/tZ6eyP4sfcghdK1cOE7U0aKNWbjuoQLkVd
-	sEVdYn9pnxBYDKbJnt8YFph5oWhWqSs=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-393-rDBc7BnEM96dp-PCZbZ_Qw-1; Wed, 07 May 2025 04:04:06 -0400
-X-MC-Unique: rDBc7BnEM96dp-PCZbZ_Qw-1
-X-Mimecast-MFC-AGG-ID: rDBc7BnEM96dp-PCZbZ_Qw_1746605045
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43ced8c2eb7so50665075e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 01:04:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746605045; x=1747209845;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1L9rKyoo5gafZgxfVF9TUdVkYjAT0uCnIxL4ynrWXso=;
-        b=Ifjg/XTGq7hldgJXExytxfWpRf+TNer3Rraad+D2Aoalfoe5Cs8zjXxemQg7h0uvNc
-         U0ra3aGUyZPSiUy4xeHXGMYWoNaqjS3NQv8BcAZSjGjJPvA1ZXrOpPV2n20+NbXLH8bI
-         Pg2kvs1Thum0LCvyX7qxwknlPMSinwBqOMLtX/vHtmREtNAb6sdcoK2VaaI9V7Zar8q8
-         kCIfIDkA8hMgjV1/DxNeMKJe5EbONOE3x2Q7bkXBeAERG09IoTywJi0X0CvjTLfpGMfV
-         IqUMTXRSvrx4RfVNIKuNGxewIEsdH9pLZZwP95ZXw1zZRSByYc6B9+t25CF8+bPA5KxB
-         Vrqg==
-X-Forwarded-Encrypted: i=1; AJvYcCUqhQ/jI6GMlsxGeqm0ZbszmnmNbtN6QF5HUTtH5QU556HOlXgDLVjuqLj5/fSpX3/KxdK/B5IIXTgJgdw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/Ww3bVnwVcMWgOJDZsfL3NZ3BH22m0rZkSINjdX2eTIlJq0df
-	EKENc75tFn3b/TAYw/7JtzXrZ/TuS7ETDR771ukTqJsAoiQdfSdB0RbVu8hKr5Lre+71IiIqcGy
-	WlS/X1TwFrbvCszTRABz0KrfzHbaNCI3ekPQOWZPwP2cNgWOXDeTAgRBrP3tgtg==
-X-Gm-Gg: ASbGnctHxSoobmfI+YZtxQOCAuCK7g+f5/QMOBxCjREhDT7mhVu2tdlvKTIGRpiFr/E
-	M+o1bzLZqytje21BWJHMxzOiSaXlHTRqw8PvpizOgyz51IRZmlI+pSBPCE6f7ueXr9I6HqL/RXB
-	mPARl+OQMGn606L1YwZ7NMsZuv7oaPwmt8tHtu6mEzz33uB3mtVmpZjB+rQPlXRgP5LTk2mLzpc
-	gkfdek3+4U6r63RCSl9LKkeLS7zlNrDLp5GfKM/iuN2RbbkbAU0sdxNA9ZPdlOF0HM70SQ1vJkp
-	MYSMkQCwBRsBiIQ6pLvuSQnJqQRS0OUlW6PodV/onGa2A6RXzVQnBG4xplYtNziAZBqudA==
-X-Received: by 2002:a05:600c:5295:b0:441:b076:fcdf with SMTP id 5b1f17b1804b1-441d44b5e6emr16208365e9.8.1746605045116;
-        Wed, 07 May 2025 01:04:05 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE4wUqpShq9lUTv4LL8emvVajX8S6/zH0VVVy1lkz3Elvmc01LNJD4SZDrIMl3WfO7xuH02lQ==
-X-Received: by 2002:a05:600c:5295:b0:441:b076:fcdf with SMTP id 5b1f17b1804b1-441d44b5e6emr16208005e9.8.1746605044738;
-        Wed, 07 May 2025 01:04:04 -0700 (PDT)
-Received: from localhost (62-151-111-63.jazzfree.ya.com. [62.151.111.63])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441d43d07fbsm21881185e9.10.2025.05.07.01.04.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 01:04:04 -0700 (PDT)
-From: Javier Martinez Canillas <javierm@redhat.com>
-To: Jocelyn Falempe <jfalempe@redhat.com>, Thomas Zimmermann
- <tzimmermann@suse.de>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- jani.nikula@linux.intel.com, dri-devel@lists.freedesktop.org,
- rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Jocelyn Falempe <jfalempe@redhat.com>
-Subject: Re: [PATCH v2] MAINTAINERS: Add entries for drm_panic,
- drm_panic_qr_code and drm_log
-In-Reply-To: <20250507075529.263355-1-jfalempe@redhat.com>
-References: <20250507075529.263355-1-jfalempe@redhat.com>
-Date: Wed, 07 May 2025 10:04:02 +0200
-Message-ID: <877c2s26fh.fsf@minerva.mail-host-address-is-not-set>
+	s=arc-20240116; t=1746605130; c=relaxed/simple;
+	bh=nuE10YXTP2AEEebcF9P03Yz7YE72bjtBs/GDG5t5Z+U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Wy2Rk3OGSlEKOu6O78ObhQB8Le/HViaMVV1tmZ3+ysolw1t4vX1SfD0rOK0u2PWHE+Bcq2wKVt2HparBPzTOuUH6WqgogTWag2sCvz08s4yrmj5yUgs0vKbWS5e+aP+c2Vzw4CYCL+bozZmGBFWp+IAxW2VuvdiE7Q48EK6wN9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <sha@pengutronix.de>)
+	id 1uCZmD-0006r1-RL; Wed, 07 May 2025 10:05:13 +0200
+Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <sha@pengutronix.de>)
+	id 1uCZmD-001WaU-1R;
+	Wed, 07 May 2025 10:05:13 +0200
+Received: from sha by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <sha@pengutronix.de>)
+	id 1uCZmD-008QHT-0y;
+	Wed, 07 May 2025 10:05:13 +0200
+Date: Wed, 7 May 2025 10:05:13 +0200
+From: Sascha Hauer <s.hauer@pengutronix.de>
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Rob Herring <robh@kernel.org>, linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	kernel@pengutronix.de,
+	Alvin =?iso-8859-15?Q?=A6ipraga?= <alsi@bang-olufsen.dk>
+Subject: Re: [PATCH v4 2/3] dt-bindings: clock: add TI CDCE6214 binding
+Message-ID: <aBsUObKHmJkBFN04@pengutronix.de>
+References: <20250430-clk-cdce6214-v4-0-9f15e7126ac6@pengutronix.de>
+ <20250430-clk-cdce6214-v4-2-9f15e7126ac6@pengutronix.de>
+ <3ba53493700561923c4ea9ab53a1a272@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3ba53493700561923c4ea9ab53a1a272@kernel.org>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Jocelyn Falempe <jfalempe@redhat.com> writes:
+On Mon, May 05, 2025 at 10:50:49AM -0700, Stephen Boyd wrote:
+> Quoting Sascha Hauer (2025-04-30 02:01:35)
+> > diff --git a/Documentation/devicetree/bindings/clock/ti,cdce6214.yaml b/Documentation/devicetree/bindings/clock/ti,cdce6214.yaml
+> > new file mode 100644
+> > index 0000000000000..d4a3a3df9ceb9
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/clock/ti,cdce6214.yaml
+> > @@ -0,0 +1,155 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/clock/ti,cdce6214.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: TI CDCE6214 programmable clock generator with PLL
+> > +
+> > +maintainers:
+> > +  - Sascha Hauer <s.hauer@pengutronix.de>
+> > +
+> > +description: >
+> > +  Ultra-Low Power Clock Generator With One PLL, Four Differential Outputs,
+> > +  Two Inputs, and Internal EEPROM
+> > +
+> > +  https://www.ti.com/product/CDCE6214
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - ti,cdce6214
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  clocks:
+> > +    minItems: 1
+> > +    maxItems: 2
+> > +
+> > +  clock-names:
+> > +    minItems: 1
+> > +    maxItems: 1
+> > +    items:
+> > +      enum: [ priref, secref ]
+> > +
+> > +  '#address-cells':
+> > +    const: 1
+> > +
+> > +  '#size-cells':
+> > +    const: 0
+> > +
+> > +  '#clock-cells':
+> > +    const: 1
+> > +
+> > +patternProperties:
+> > +  '^clk@[0-1]$':
+> > +    type: object
+> > +    description:
+> > +      optional child node that can be used to specify input pin parameters. The reg
+> > +      properties match the CDCE6214_CLK_* defines.
+> 
+> Presumably the EEPROM is typically used to configure all this stuff? Do
+> you actually need to program this from the kernel, or are you
+> implementing all this for development purposes?
 
-Hello Jocelyn,
+The EEPROM could be used to configure this. I don't know if the final
+product will have the EEPROM programmed, but even if it is, should we
+make this mandatory?
 
-> Add myself and Javier as maintainer for drm_panic, drm_panic_qr_code
-> and drm_log.
->
-> Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
-> Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
-> ---
->
+Speaking of the EEPROM I think we should make sure that the pin
+configuration in the device tree is optional so that we do not overwrite
+settings from the EEPROM if it contains valid values.
 
-Acked-by: Javier Martinez Canillas <javierm@redhat.com>
+> > +        enum: [ cmos, lvds, lp-hcsl ]
+> > +        description:
+> > +          Clock input format.
+> 
+> Is it "Clock output format"?
+
+Yes.
+
+> 
+> > +
+> > +      ti,cmosn-mode:
+> > +        enum: [ disabled, high, low ]
+> > +        description:
+> > +          CMOSN output mode.
+> > +
+> > +      ti,cmosp-mode:
+> > +        enum: [ disabled, high, low ]
+> > +        description:
+> > +          CMOSP output mode.
+> 
+> Would 'disabled' be the absence of the property? I think we could just
+> have ti,cmosn-mode = <0> or <1> for low or high.
+
+Yes. I think we can do that.
+
+> 
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - clocks
+> > +  - '#clock-cells'
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    i2c {
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +
+> > +        clock-generator@67 {
+> > +            compatible = "ti,cdce6214";
+> > +            reg = <0x67>;
+> > +            #address-cells = <1>;
+> > +            #size-cells = <0>;
+> > +            #clock-cells = <1>;
+> > +            clocks = <&clock_ref25m>;
+> > +            clock-names = "secref";
+> > +
+> > +            clk@1 {
+> > +                reg = <1>; // CDCE6214_CLK_SECREF
+> > +                ti,clkin-fmt = "xtal";
+> > +                ti,xo-cload-femtofarads = <4400>;
+> > +                ti,xo-bias-current-microamp = <295>;
+> > +            };
+> > +
+> > +            clk@3 {
+> > +                reg = <3>; // CDCE6214_CLK_OUT1
+> > +                ti,clkout-fmt = "cmos";
+> > +                ti,cmosp-mode = "high";
+> > +                ti,cmosn-mode = "low";
+> > +            };
+> > +
+> > +            clk@4 {
+> > +                reg = <4>; // CDCE6214_CLK_OUT2
+> > +                ti,clkout-fmt = "lvds";
+> > +            };
+> > +
+> > +            clk@6 {
+> > +                reg = <6>; // CDCE6214_CLK_OUT4
+> 
+> Can you use the defines instead of numbers so we know they're the same?
+
+Yes, I could and have done that, but Krzysztof objected to it here:
+https://lore.kernel.org/all/5766d152-51e7-42f5-864f-5cb1798606a3@kernel.org/
+
+Sascha
 
 -- 
-Best regards,
-
-Javier Martinez Canillas
-Core Platforms
-Red Hat
-
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
