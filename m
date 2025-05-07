@@ -1,258 +1,257 @@
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2071.outbound.protection.outlook.com [40.107.100.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCF1E1D54D1;
-	Wed,  7 May 2025 16:52:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.71
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746636740; cv=fail; b=mC5lKNUwxlYb8NVf9GBhi0VZCguth5CtoylCZKXX8zmBIb0BZF4sCzOC2f/brfuiXjTB6JwxO6Hf8+/BN9qdPN18HgUfpjutNDoB0HqKHbt4aFN3SyPNY2huahr99TWPsPbqrU6k2NZ1vr9b7i0goWu8rVyxewBJuzJXYqMNtQQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746636740; c=relaxed/simple;
-	bh=6IGNl7CIDJK80IeoLw2Rn9rOGPJstRuM9+gCQZsxybI=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=UlBcKqVZLtLfOvdXzSberCh79oDb0HkMbt2wuraPoO6dgmQZ8h32u6J4c8F3RENxIp76Bq+cr823L7JcQLGARrySeY2XTFzAxcVhPCDbNDNTjjs0oZbdGeux2kmukm1hS2n2/k4N0jEozYjMvH1j5Yyq3L6nVN2HcMF3zMmyoPw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=tHFPsQQR; arc=fail smtp.client-ip=40.107.100.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41EE728B40E
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 16:52:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746636758; cv=none; b=FGcfDvF+H4ZRSulYmLZjfOcffGgHsI/6xICQanid5GDYGrz4nmglP1y1vGnfxC2q5WDpkeVCmvLak015BonUXCZ2I69tej7KqWbwCDuWsuDO+Jqi/q0OlORkflK8vHtjNCh/flHI1NaqYJbgUOxartITeF29IUPuTgu3lOAKgSs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746636758; c=relaxed/simple;
+	bh=SvriLAY4tqocWjR67Z1UvWSi8Z2M0izp+2Ews5nyV2w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GmFBerVO0t5nOJR6wvEg+MSjNheN7mqbGf4l25OP0zpvb20Vq0BbGw/FbFTxx9IKbAl34aFvBRA0bKyFuxWUui9tHVNv8/X9mWaiB067HjG7TYcXsjVsPzMPKE1uSojUNAX+cAHHsUgiwNsDDO55csEEHyHPDs9Go3hMpo/kBBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KM4jNbh4; arc=none smtp.client-ip=209.85.166.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="tHFPsQQR"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LzYYsPL2Aehzxu47UaZBDqCvHeGUyu94Xtzcl3HnnKJmx/tgLMGffqtaxGv/SkPuiT5jR6gXragN/fmMztwRwLiCZIhbe2Jb9snG+fHI+t2CvmgvpEo/fAjUbIa9KQhNl38Qa4qxITB9WExP+QtTNo5TIviDB7oy17vFLHqWO6hD9ymxB3/R2RhkFo+ulR+M3ArroOk/nbfV/9K4bjU//LXQ0/Xa1qDMRyStUgLGkZHP90Niybiw7XzSKpjnnqIEOFacvjdsyXzZrE4yB9W1Yfg70l1U/xFuLfDndIRqYL+KFcCNbmc+egeChnO5Cp7U8WOBFdkctsx7lcK8mZ2/wA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=d9Bc6pVpDVbBhezVBYpX/nn35Bn2A4ntrDeqPR0uqkA=;
- b=WbjJv+uFrc8ce0WmQ4A7/5HwXi0awgPphCO8wic4U+Otn9Yv9l+mradqk/mFuE4U4exxpTMb/ZpghtVeFc4yy4Zu64BHOVy/L+wMOKr3sBl9HC+PWGVt4aDDoa47XjLAs4HSBZmoPcZK4eACIhq4zW58cFffIG70fafPmQ2ZRi7yQgPodT2mr9iDF3vii2Nk68gqkykZHvbTMrw72Gpm6KhsSRJNzpzR6AMb41yAV5nxk6ItcGkn+W1Bj70MMjGVC2+KQhmwmyPtOAetOLiPEHXNg1XJ/TknZqtplTDelCDYRrNunamdpDOsI4Z4ME0xSHertCZQm0nD4EvvXLwAPQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=d9Bc6pVpDVbBhezVBYpX/nn35Bn2A4ntrDeqPR0uqkA=;
- b=tHFPsQQRcd0+Uw/uXIKO27wJNpXFsji8eYlEll5ngaHXqIAmGiKINFUNtWihLlM+AwHq+nnTjxEE2TUBptcwSh+ZM0rRmTO0ovYV713RlixHTk3qvV1ajizeM755vQ9rEljnWPqmDnbM76FLZTBveqru6X7F3wwzXoXoiGX255FGASXK3k4rjiUjoExcSWgftuA+3m79zQQ0ygW7vKyRymQw+37Xx6gws/c6LKBB8NRy+aJgFZZLQ4OYJkrc0qv3WjxOv8rm47zg1oW54FRG6p8ahobUC7KSVR5DJZOE45rDcbB0zvcMTigTS7ttMwn+uDQxK622eJkcN6H0438jYw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from SN7PR12MB8059.namprd12.prod.outlook.com (2603:10b6:806:32b::7)
- by DM3PR12MB9389.namprd12.prod.outlook.com (2603:10b6:0:46::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8699.35; Wed, 7 May 2025 16:52:09 +0000
-Received: from SN7PR12MB8059.namprd12.prod.outlook.com
- ([fe80::4ee2:654e:1fe8:4b91]) by SN7PR12MB8059.namprd12.prod.outlook.com
- ([fe80::4ee2:654e:1fe8:4b91%3]) with mapi id 15.20.8699.021; Wed, 7 May 2025
- 16:52:07 +0000
-Message-ID: <70e3482b-3181-446c-b3bd-db590008123e@nvidia.com>
-Date: Wed, 7 May 2025 12:52:04 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] rcu/nocb: Add Safe checks for access offloaded rdp
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: Zqiang <qiang.zhang1211@gmail.com>, paulmck@kernel.org,
- neeraj.upadhyay@kernel.org, joel@joelfernandes.org, urezki@gmail.com,
- boqun.feng@gmail.com, rcu@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250507112605.20910-1-qiang.zhang1211@gmail.com>
- <20250507112605.20910-2-qiang.zhang1211@gmail.com>
- <b242ab38-c488-450c-9735-11e1b666106c@nvidia.com>
- <aBuK29q6nuhTgHIq@localhost.localdomain>
-Content-Language: en-US
-From: Joel Fernandes <joelagnelf@nvidia.com>
-In-Reply-To: <aBuK29q6nuhTgHIq@localhost.localdomain>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: MN2PR06CA0013.namprd06.prod.outlook.com
- (2603:10b6:208:23d::18) To SN7PR12MB8059.namprd12.prod.outlook.com
- (2603:10b6:806:32b::7)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KM4jNbh4"
+Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-3da73d35c11so5405ab.1
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 09:52:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746636756; x=1747241556; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Hv8GwvXmYC8+EkUfOb+Rq82WOJczckO52LbqfSz6J9Q=;
+        b=KM4jNbh4F04nSkhn1YSAwNM0YfVgpnH+wIL5cb+Z4BUftWDP58ngGGBnrzGbCGmJeY
+         ueD0sCqIJ+7XW7j6PwIn+jCUcVDFEaJzUfKqmcIf+v+v+JtjYW/78l+8AQsUTlBd97ql
+         BOW2RjEhvnTDtqSKY+Aa9CYcoqXHvBW29oSexpYVYuHAvnbIukiBl6PL58cDHfszy8Lh
+         h9z1ex1N+lquIEDlcbbItBR7qhLn/XzcQA5pdEW/GZeuDTGn1CkGZZUgjzHIZHAUa520
+         G1qoenrLmzHq/haRgafrBVn0VCErinNOXdBllB+KOc72Anatwwun4eIJqdZZ5hzLVZFS
+         8Rrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746636756; x=1747241556;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Hv8GwvXmYC8+EkUfOb+Rq82WOJczckO52LbqfSz6J9Q=;
+        b=jJfHwU0Cnssm9A6En1mqC19WodUGNt06VUqX7Xgjx86XOApQX74Cg9rXKV6mRumRcz
+         DqStT7PzsaEvJJdiDZeDdf07oJTZAqCk6oNDr63Ce4Rc5jNHRBcxImIKCJ3IH0cN0DXZ
+         dUwpTsT+rNWxe5/n0RNag/HM1M1Ff4d0Oxi+NOdfhykKt6RVyEtp3JCRMFeur/qKpY8s
+         3FZiyVGFJ0MAn+PlRa1tcmmNMn5eASNhpoISAxLVPljLPGMmXl9jsUNyR3WxxRqt5g5g
+         UYivlPCUbgkuvdzasZ0ZIgu3OfKxdnclrpjMzhbSbxbtYlcUkqunDi9q958nwf4SrV14
+         bvCA==
+X-Forwarded-Encrypted: i=1; AJvYcCUNqS+062pnLBXEwsE4NgmKoxBpcUxo1rtWe/EpANSZojwXIPMAssBkt+fF8C4+IrQmRc+K2SSI6vP6ZO8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5+pmz0YlwhlVwb2eT4fiQMVylSq+/9FAc9d252Oy2iSH+FRmy
+	6HwjLFyAb633QvSoPjxfB9XAJDn/frNsZA8VfwyiiJb9ZGBciQQHx/vycwF/yr1YdFDNMoXRT9m
+	Fpa1pgZRmAoj2Ux/uXABHaIB1HZMZhGNVDaO/
+X-Gm-Gg: ASbGncumcHfaiByagi9FUaWIYO5tb+ocoZ6bmD5UbJg121uzPsetlESRKqW/E7vwsGL
+	44twc6xHNBHiuAg6rkZWgwhrLhJAuFecdqP8hu+Bdxx/E2QYf05+vt99ttdg6aLfmkZOqn454AA
+	Ja6v/LcEsaeTBOGWK1X37Mu99VJrJdT3Kn81mOJfuFF87kdtu41CI=
+X-Google-Smtp-Source: AGHT+IHk6P3Dbhek/nvVqKBGspo+Pf7s7x7KRyrupTiVsqy2UzwjoFgpSYE3fLh21rGgPLk6dWKYwmGZvVXZ1WAtABc=
+X-Received: by 2002:a05:6e02:1c0c:b0:3d8:18f8:fb02 with SMTP id
+ e9e14a558f8ab-3da740f0edcmr3325945ab.17.1746636755902; Wed, 07 May 2025
+ 09:52:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN7PR12MB8059:EE_|DM3PR12MB9389:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5e0cb3a7-d466-45f8-6826-08dd8d87809f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?UlhBNnVJS1JQNCthanNSQjkyK1JNU0hpNks5NUo1NkdtdW92Z0wvYW9Mc3A0?=
- =?utf-8?B?OFV5UnAvYVRLaUVFMmhDS1VMbitXeE0rcjI1cWxaUDRqQlNySmdFQjdFUUFH?=
- =?utf-8?B?bmowRWFUK2k1Z3BVZnVtQUZOcWw3czdhbmluYnd3MFBRV2FiUUVKdUZ4ZTVx?=
- =?utf-8?B?QThuOGh1Q21TbE5WWGNUKzFNeWJvRnF4d25BdVZaVjhTeEViR3hXaEJENUVi?=
- =?utf-8?B?czlxK0pVQXBlZEllbVExWlRqUnBITm9BL090RDZsQkpadWRub295K1IwS053?=
- =?utf-8?B?eFg0RGNnZFlLalhwRjFXYTVqQ3VKVGhJNWw2anZqYmRGU01GWERZejl2QlNZ?=
- =?utf-8?B?ZFExNFhrZzltaWxuZnRNMXFSWldkSStTc1pyUUh4V0NuVUNldEJidnkzS1Nz?=
- =?utf-8?B?Q3Vvd3p2NHVKamFBN2I0QXNhZlhUQmxCRjdNRUNneFA0aC83ZHBxQTdDc1pr?=
- =?utf-8?B?b1ljWHBkZzF2OGYxUE9vL0lpajA1THNZdFZCNkVuM3JwTWU3R2xRcUNGNTIx?=
- =?utf-8?B?eUJwWmV0YXJ4eDVQWmt2OVhSU29XN0RNSjhpNHdwdkpVT05obEpMMXNYa21C?=
- =?utf-8?B?ZzBIdVNjR2ZXdHpTNmNhWXRRbUtaVDBBaEFlN2syWUhWQk1tanIyV2xiNW5Z?=
- =?utf-8?B?dzJOS0VyYkxkM2QwM3R0K2plME1sWGNXa0RaNmswd1Uza09YaWtIMmhSMHRM?=
- =?utf-8?B?azQxT1ZBcWVFakh0b3RTUW9CbHFJbFZVeE9HUmJLa2FkSWl1SFVINkNKZGhs?=
- =?utf-8?B?MVdOVjVja2VaWDhQdDJTUVdXUG91dXI5eC9POVlDVVNHckZSdzBWcHpzcG9n?=
- =?utf-8?B?QWVudmZZaTZ4MVY3Rndrdnpma1UyL09kWklUeUl2TzBZbGR1UGtuY1ZOS3Ez?=
- =?utf-8?B?Q25ONXg2UTdxM2Q0WVpUTmtQSStDWGFoNFlrKzBwY0U4K1dHcHRWNWFVekN1?=
- =?utf-8?B?R04yekZ2N2lQM1pWbExWMnZyb0RYUDliVUtNQ2lvR2dnT3QrNnNPNnNXdmgy?=
- =?utf-8?B?a0JVek5JUnUrN2dyOUdrYkdyNGI2cS9pQk9HSmFJR0pUc0Q0NU91cUVTbXdh?=
- =?utf-8?B?U0FPMENPeHZOT0o2dmo0cHFxMjlNZE1mN3pibEUwNFFreHRGaFBlRjczN1pu?=
- =?utf-8?B?SjRCcTBCNGpWTVBYbUhscFEyUGZhaHNhWlFFcnhFMzkzRzhtelIvS08zbFc3?=
- =?utf-8?B?S2ZlQU4wb3FtWEZxQlBDN0cxeGgzZjBVdUpkQ2h1YVNjZ2FkRWs2cnhibDJ3?=
- =?utf-8?B?cnY5YUVqbGlSNmpZdHVmbzMzR21lWkZ2eTRZN09HNk4wQzRUd0s5d29RdlUz?=
- =?utf-8?B?ajNWanYyTEFiZ0JUV0xzWjFnNWZ1SnUvenpNRFhPd2ZPL1V1V3NJRzA3N2tl?=
- =?utf-8?B?OERrOGRtQWxyQjJQdjQ2MGNGbmpJZjJjeU02dW9hdlhzMWJWNERwWlh0SnNj?=
- =?utf-8?B?cjg3VEl0Zy9YdDAvTkNwYzYwV0xUQWlsdVBaa3pGN0JVVVlxQ1U1VTNsblBO?=
- =?utf-8?B?SlpqMFp6V3BreEUvSXhWU2Y2N0dlZEVUeWV4NHBaYXdFdlU0YlViZFRRT3Fr?=
- =?utf-8?B?a2dVbTROdlJrM3dyQWNlOFFld2JZTVdWY2w0cmVGMzNDZDZxNFRHSW9WdEh5?=
- =?utf-8?B?bkRyL1BrYlJYY2VQa0toNjhLdlFNMjlxWnA5RUY1T3UzcWlmRjNON0VxUk1u?=
- =?utf-8?B?K21sdlNqSFk3NUF2UlpBOFdjV3pvSERNbU10VWFXakFTOEt1OC9wOURrVXVG?=
- =?utf-8?B?TlphNWwzUUZqMnVHciswY0dVa0Nadi81NVVvVklPWjR2ZGV3R1J3RGZaMjBR?=
- =?utf-8?B?cGc2MmpMSStaRVREUFd5czN3cGtYb3dVTStqMFRwMksvbURkeFNJMzdUMFBD?=
- =?utf-8?B?bzhQL3RqSmhEbjA2bjlWSHZqTFdhMlpXWUQvNHBWbDR5eFA1dWdQcWxtNEpv?=
- =?utf-8?Q?KCtCIkvcJ/k=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB8059.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TzdRbjNFOWNoS3M3MUZ5ZUJUc3krL1R2dm9CRno5VVpZc1F4R1FEU1dhSWl4?=
- =?utf-8?B?cm90cTBaaVdhZjNVSHBaZ3U4RmRkOFkvZ0VqNTNHMXoyQ2drZjh2UlpEVnFa?=
- =?utf-8?B?N21QUVhoZDVrUTV5Tk5Fdi80cUJuTXJWMzl4ZG9veVFwaWVKRkVzbTlKRVZ2?=
- =?utf-8?B?NzdDQTNYMHhGWnhnN3NKcjI1YmFXcmZ6ZE54djhNMGh5cG1pVEg0a3UwYjZ6?=
- =?utf-8?B?dFUyOVhqUU4rRTBtb1RoNDhnT2VxSHdCNVlYM0hHbDZHcHpReklQRFBYd3dm?=
- =?utf-8?B?ZjNUM25YVmtGZCtvUmZwd1R5M2JGcmNxTGpZZE5Nc0dGNFQ4eU1kb2c2R2Iy?=
- =?utf-8?B?V1ZZT1dzSU5vMFhYdjhUVTB6d3RhQ0tjekVMRUwya1pJM2oyYmd2bXp2aktS?=
- =?utf-8?B?NkpLQkU2c25UejFUWGZDQXJmRFNNbE9JNVJ6eXp2ODBVWmtKeTZIMUFFN21n?=
- =?utf-8?B?Vm96T2xnWUFzek16aEJRcjRrMmlmbmZBRzJibjVXNDdtTURicTZIK1FYN21G?=
- =?utf-8?B?R2pwd0lxemVNOUNBNGhMSEkzSUVuVmlhbGRRLzhtekFFVVRpcTZRemNzMTNR?=
- =?utf-8?B?ODNCNEU4T05pbVlsWTQyODZyVWJ5d0lwbG1CRHdSVk9EU2hDbC90M0VBWWI2?=
- =?utf-8?B?K1dJMzZESGIrQXh5WkxqUzZzNVRxbHVCbEh2dVkxM1VQbm4yTXBVSEhEOEFT?=
- =?utf-8?B?MUVLLzhlbmY1QUlSdm5YRkpibElmWWloMXJvajlmLytUZWkrVHNzKy81eDhI?=
- =?utf-8?B?TE5mZkdQL2RjclZVZ2hCeUxzQkpuWFFLamI0NTYxTUNoOVAyZFpZaTlGeU55?=
- =?utf-8?B?MzdGa3ZDRVFaaFRTT0lNa2t1Qk0rdmNab1QzU2Q5VW9JTnduZG1sbE53OTlZ?=
- =?utf-8?B?WVlsSTJzdStUVXlWR0hXVXhZckxaVTVITURHWFY4K3pEbkFpUTVadzBuM2hz?=
- =?utf-8?B?UEZMY0RKWFZ5SjNxRGF1M0xhTXl6Y1YxVlhvd2syMnl1K1RvUThrYmpVMWVo?=
- =?utf-8?B?bVVuUkpTaHJNbXlvQWxBRzlxYTZCeDA3b3EzVitWZ2o4WmtuMUpBVWprOWxn?=
- =?utf-8?B?TjhERlk1KzJ2YUJwTmNrS2hOdG51WDJuS2hHU3FrZDYrT0JieU8rWjdBcDB4?=
- =?utf-8?B?YU9xaDEyd3d2QmUxYW5sdEExa3dTa2RPU2pWOG02enBqWnQ2V3hXWFRudWNW?=
- =?utf-8?B?eXRvV09MbG51WnRKb0FCTnUvVXNMZFQyT3RUZkFTMVJjSDEyNFlmR3lHdmFj?=
- =?utf-8?B?ZjZuSFdGV3JSZnZEdkkrVGU0eUlQYkhwcTJQZ3JpNFp6Nm5vKy9JUEJBWGxu?=
- =?utf-8?B?ZXd6RStmZDNhWmtPUStINkZHbG9yVVF6QTBINGZlV3RiSEZ3ZERSaWhRT1JO?=
- =?utf-8?B?V2NEcU1JaXZDMGl4bHNhaThCbUh4M2VxblhiS3dWNWsyRWdjNncxejY1WFJy?=
- =?utf-8?B?aEE5MU8vQ2YrS0VsdERORDJseGJ0WXVna242Z2V3QUpFQ1VDb0pWaFB2WmVo?=
- =?utf-8?B?bTN2bGdJRW9Tczcrekk3SlZxdDhVaGpSb3ZnZExSSnh3TnJFRmpFc1hQb21T?=
- =?utf-8?B?TkdFMVBrSkk3UHpuTVZlZ2ZhbnV1NU5qV1VUb2hXMFVIaXMzeXp3SXFBUUI5?=
- =?utf-8?B?ckp3NnRRK1NnNDFpdnRBbUlSWHlndEp0U1VoVVJNR0FFUnA2OXBFWkdKUXdC?=
- =?utf-8?B?Wk5HdVZGWkdpVG03bThaRUJYMlg3VEo3SllvU0FrMDg3VFJyZ0FielpMOTBP?=
- =?utf-8?B?Z1FMQ2VuRFBKZlBZREFUcDNGcXV6SVoydEsvQmNYN2M5dU5oVHMrZkVsejIz?=
- =?utf-8?B?bjJ6MmlLdGJKaTBPQyt5WmpEV1cyZ2JCclIwd01Od1dtWFR0eWdLeDRaVEFC?=
- =?utf-8?B?emRmYmZuTmh5QTJUR3RHMUdwMTRiYTdaeEpXYkdDZW5aRUxtUzVIMysvUG5j?=
- =?utf-8?B?U0lvRHV3M3pFZllkYm1rakxQdlExSW1IbVJCdjFiWG0vVkU0aDhTeERVeUo4?=
- =?utf-8?B?QS9pcjZ3NXFlV0Z3aVVvK3dHM2FYcUJTT0V2aWxrWElYdy9kRWtTQ0h0cW5B?=
- =?utf-8?B?Sm9nMnU0T2JLN2dvdW9tKzdEQ0VLTlJUN3ZKWEh2TXpLTGZNVDVjb21wS1Ju?=
- =?utf-8?Q?//OyXHp55/76CaiJtjNpKaVIv?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5e0cb3a7-d466-45f8-6826-08dd8d87809f
-X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB8059.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2025 16:52:07.6555
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: vHDOSAphqyrgosP3nu1xY1UchrYHecWwa7NpKNpfcSG7xR6VuOXO8oJy4ahjOijqSYVXkOQ7d212CMyDBSccIg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PR12MB9389
+References: <20250506164740.1317237-1-kan.liang@linux.intel.com> <20250506164740.1317237-2-kan.liang@linux.intel.com>
+In-Reply-To: <20250506164740.1317237-2-kan.liang@linux.intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 7 May 2025 09:52:24 -0700
+X-Gm-Features: ATxdqUGZfF3SPhuNJRBiWU0JCKQyrtzl5Ioq80WzxyQa4_lxXSuGDS4VJRPjkBo
+Message-ID: <CAP-5=fXgLJR2EQoK3SVrGWOKVWuZ4+ZVWFHLU8B_w2ibWtFzwg@mail.gmail.com>
+Subject: Re: [RFC PATCH 01/15] perf: Fix the throttle logic for a group
+To: kan.liang@linux.intel.com
+Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org, 
+	mark.rutland@arm.com, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, eranian@google.com, ctshao@google.com, 
+	tmricht@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, May 6, 2025 at 9:48=E2=80=AFAM <kan.liang@linux.intel.com> wrote:
+>
+> From: Kan Liang <kan.liang@linux.intel.com>
+>
+> The current throttle logic doesn't work well with a group, e.g., the
+> following sampling-read case.
+>
+> $ perf record -e "{cycles,cycles}:S" ...
+>
+> $ perf report -D | grep THROTTLE | tail -2
+>             THROTTLE events:        426  ( 9.0%)
+>           UNTHROTTLE events:        425  ( 9.0%)
+>
+> $ perf report -D | grep PERF_RECORD_SAMPLE -a4 | tail -n 5
+> 0 1020120874009167 0x74970 [0x68]: PERF_RECORD_SAMPLE(IP, 0x1):
+> ... sample_read:
+> .... group nr 2
+> ..... id 0000000000000327, value 000000000cbb993a, lost 0
+> ..... id 0000000000000328, value 00000002211c26df, lost 0
+>
+> The second cycles event has a much larger value than the first cycles
+> event in the same group.
+>
+> The current throttle logic in the generic code only logs the THROTTLE
+> event. It relies on the specific driver implementation to disable
+> events. However, for all ARCHs, the implementation is similar. It only
+> disable the event, rather than the group.
+>
+> The logic to disable the group should be generic for all ARCHs. Add the
+> logic in the generic code. The following patch will remove the buggy
+> driver-specific implementation.
+>
+> The throttle only happens when an event is overflowed. Stop the entire
+> group when any event in the group triggers the throttle. Set the
+> MAX_INTERRUPTS to the leader event to indicate the group is throttled.
+>
+> The unthrottled could happen in 3 places.
+> - event/group sched. All events in the group are scheduled one by one.
+>   All of them will be unthrottled eventually. Nothing needs to be
+>   changed.
+> - The perf_adjust_freq_unthr_events for each tick. Needs to restart the
+>   group altogether.
+> - The __perf_event_period(). The whole group needs to be restarted
+>   altogether as well.
+>
+> With the fix,
+> $ sudo perf report -D | grep PERF_RECORD_SAMPLE -a4 | tail -n 5
+> 0 3573470770332 0x12f5f8 [0x70]: PERF_RECORD_SAMPLE(IP, 0x2):
+> ... sample_read:
+> .... group nr 2
+> ..... id 0000000000000a28, value 00000004fd3dfd8f, lost 0
+> ..... id 0000000000000a29, value 00000004fd3dfd8f, lost 0
 
+Thanks Kan! The patches look good to me. As I understand it patches 2
+to 15 are just removing the logic where an event is unnecessarily
+stopped twice, so is it possible to test just this patch in isolation?
+Given the logic is generic it is applied to software events, so you
+should be able to repeat the problem with `perf record -e
+"{cpu-clock,cpu-clock}:S" ...` possibly by reducing the period or
+increasing the frequency. This would be nice to show that it fixes the
+problem more generically than just the Intel PMU.
 
-On 5/7/2025 12:31 PM, Frederic Weisbecker wrote:
-> Le Wed, May 07, 2025 at 12:06:29PM -0400, Joel Fernandes a écrit :
->>
->>
->> On 5/7/2025 7:26 AM, Zqiang wrote:
->>> For built with CONFIG_PROVE_RCU=y and CONFIG_PREEMPT_RT=y kernels,
->>> Disable BH does not change the SOFTIRQ corresponding bits in
->>> preempt_count(), but change current->softirq_disable_cnt, this
->>> resulted in the following splat:
->>>
->>> WARNING: suspicious RCU usage
->>> kernel/rcu/tree_plugin.h:36 Unsafe read of RCU_NOCB offloaded state!
->>> stack backtrace:
->>> CPU: 0 UID: 0 PID: 22 Comm: rcuc/0
->>> Call Trace:
->>> [    0.407907]  <TASK>
->>> [    0.407910]  dump_stack_lvl+0xbb/0xd0
->>> [    0.407917]  dump_stack+0x14/0x20
->>> [    0.407920]  lockdep_rcu_suspicious+0x133/0x210
->>> [    0.407932]  rcu_rdp_is_offloaded+0x1c3/0x270
->>> [    0.407939]  rcu_core+0x471/0x900
->>> [    0.407942]  ? lockdep_hardirqs_on+0xd5/0x160
->>> [    0.407954]  rcu_cpu_kthread+0x25f/0x870
->>> [    0.407959]  ? __pfx_rcu_cpu_kthread+0x10/0x10
->>> [    0.407966]  smpboot_thread_fn+0x34c/0xa50
->>> [    0.407970]  ? trace_preempt_on+0x54/0x120
->>> [    0.407977]  ? __pfx_smpboot_thread_fn+0x10/0x10
->>> [    0.407982]  kthread+0x40e/0x840
->>> [    0.407990]  ? __pfx_kthread+0x10/0x10
->>> [    0.407994]  ? rt_spin_unlock+0x4e/0xb0
->>> [    0.407997]  ? rt_spin_unlock+0x4e/0xb0
->>> [    0.408000]  ? __pfx_kthread+0x10/0x10
->>> [    0.408006]  ? __pfx_kthread+0x10/0x10
->>> [    0.408011]  ret_from_fork+0x40/0x70
->>> [    0.408013]  ? __pfx_kthread+0x10/0x10
->>> [    0.408018]  ret_from_fork_asm+0x1a/0x30
->>> [    0.408042]  </TASK>
->>>
->>> Currently, triggering an rdp offloaded state change need the
->>> corresponding rdp's CPU goes offline, and at this time the rcuc
->>> kthreads has already in parking state. this means the corresponding
->>> rcuc kthreads can safely read offloaded state of rdp while it's
->>> corresponding cpu is online.
->>>
->>> This commit therefore add softirq_count() check for
->>> Preempt-RT kernels.
->>>
->>> Suggested-by: Joel Fernandes <joelagnelf@nvidia.com>
->>> Signed-off-by: Zqiang <qiang.zhang1211@gmail.com>
->>> ---
->>>  kernel/rcu/tree_plugin.h | 2 +-
->>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
->>> index 003e549f6514..a91b2322a0cd 100644
->>> --- a/kernel/rcu/tree_plugin.h
->>> +++ b/kernel/rcu/tree_plugin.h
->>> @@ -29,7 +29,7 @@ static bool rcu_rdp_is_offloaded(struct rcu_data *rdp)
->>>  		  (IS_ENABLED(CONFIG_HOTPLUG_CPU) && lockdep_is_cpus_held()) ||
->>>  		  lockdep_is_held(&rdp->nocb_lock) ||
->>>  		  lockdep_is_held(&rcu_state.nocb_mutex) ||
->>> -		  (!(IS_ENABLED(CONFIG_PREEMPT_COUNT) && preemptible()) &&
->>> +		  ((!(IS_ENABLED(CONFIG_PREEMPT_COUNT) && preemptible()) || softirq_count()) &&
->>>  		   rdp == this_cpu_ptr(&rcu_data)) ||
->> This looks good to me. Frederic told me he'll further review and give final
->> green signal. Then I'll pull this particular one.
->>
->> One thing I was wondering -- it would be really nice if preemptible() itself
->> checked for softirq_count() by default. Or adding something like a
->> really_preemptible() which checks for both CONFIG_PREEMPT_COUNT and
->> softirq_count() along with preemptible().  I feel like this always comes back to
->> bite us in different ways, and not knowing atomicity complicates various code paths.
->>
->> Maybe a summer holidays project? ;)
-> 
-> I thought about that too but I think this is semantically incorrect.
-> In PREEMPT_RT, softirqs are actually preemptible.
-You are right, for this usecase it may not be that helpful. However, I do find
-it odd that the caller has to check CONFIG_PREEMPT_COUNT before calling
-preemptible() above, that should be implemented in the API itself.
+Ian
 
-I was more broadly referring to the recurring problem of "am I in atomic"
-context or "can I be preempted" or "can I sleep", if so do this otherwise do
-something else. For instance calling GFP_KERNEL vs GFP_ATOMIC in the memory
-allocator. Though sleeping and preemption are perhaps separate concerns. We ran
-into this during the kfree_rcu() early days as well.
-
-IIRC we have perhaps too many APIs that do similar things like in_atomic() which
-confuses everyone (I don't fully know the current state of all such APIs). Add
-PREEMPT_RT to the mix, and now we have more complications. :-/
-
-thanks,
-
- - Joel
-
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> ---
+>  kernel/events/core.c | 55 +++++++++++++++++++++++++++++++++-----------
+>  1 file changed, 41 insertions(+), 14 deletions(-)
+>
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index a84abc2b7f20..eb0dc871f4f1 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -2734,6 +2734,38 @@ void perf_event_disable_inatomic(struct perf_event=
+ *event)
+>  static void perf_log_throttle(struct perf_event *event, int enable);
+>  static void perf_log_itrace_start(struct perf_event *event);
+>
+> +static void perf_event_group_unthrottle(struct perf_event *event, bool s=
+tart_event)
+> +{
+> +       struct perf_event *leader =3D event->group_leader;
+> +       struct perf_event *sibling;
+> +
+> +       if (leader !=3D event || start_event)
+> +               leader->pmu->start(leader, 0);
+> +       leader->hw.interrupts =3D 0;
+> +
+> +       for_each_sibling_event(sibling, leader) {
+> +               if (sibling !=3D event || start_event)
+> +                       sibling->pmu->start(sibling, 0);
+> +               sibling->hw.interrupts =3D 0;
+> +       }
+> +
+> +       perf_log_throttle(leader, 1);
+> +}
+> +
+> +static void perf_event_group_throttle(struct perf_event *event)
+> +{
+> +       struct perf_event *leader =3D event->group_leader;
+> +       struct perf_event *sibling;
+> +
+> +       leader->hw.interrupts =3D MAX_INTERRUPTS;
+> +       leader->pmu->stop(leader, 0);
+> +
+> +       for_each_sibling_event(sibling, leader)
+> +               sibling->pmu->stop(sibling, 0);
+> +
+> +       perf_log_throttle(leader, 0);
+> +}
+> +
+>  static int
+>  event_sched_in(struct perf_event *event, struct perf_event_context *ctx)
+>  {
+> @@ -4389,10 +4421,8 @@ static void perf_adjust_freq_unthr_events(struct l=
+ist_head *event_list)
+>                 hwc =3D &event->hw;
+>
+>                 if (hwc->interrupts =3D=3D MAX_INTERRUPTS) {
+> -                       hwc->interrupts =3D 0;
+> -                       perf_log_throttle(event, 1);
+> -                       if (!event->attr.freq || !event->attr.sample_freq=
+)
+> -                               event->pmu->start(event, 0);
+> +                       perf_event_group_unthrottle(event,
+> +                               !event->attr.freq || !event->attr.sample_=
+freq);
+>                 }
+>
+>                 if (!event->attr.freq || !event->attr.sample_freq)
+> @@ -6421,14 +6451,6 @@ static void __perf_event_period(struct perf_event =
+*event,
+>         active =3D (event->state =3D=3D PERF_EVENT_STATE_ACTIVE);
+>         if (active) {
+>                 perf_pmu_disable(event->pmu);
+> -               /*
+> -                * We could be throttled; unthrottle now to avoid the tic=
+k
+> -                * trying to unthrottle while we already re-started the e=
+vent.
+> -                */
+> -               if (event->hw.interrupts =3D=3D MAX_INTERRUPTS) {
+> -                       event->hw.interrupts =3D 0;
+> -                       perf_log_throttle(event, 1);
+> -               }
+>                 event->pmu->stop(event, PERF_EF_UPDATE);
+>         }
+>
+> @@ -6436,6 +6458,12 @@ static void __perf_event_period(struct perf_event =
+*event,
+>
+>         if (active) {
+>                 event->pmu->start(event, PERF_EF_RELOAD);
+> +               /*
+> +                * We could be throttled; unthrottle now to avoid the tic=
+k
+> +                * trying to unthrottle while we already re-started the e=
+vent.
+> +                */
+> +               if (event->group_leader->hw.interrupts =3D=3D MAX_INTERRU=
+PTS)
+> +                       perf_event_group_unthrottle(event, false);
+>                 perf_pmu_enable(event->pmu);
+>         }
+>  }
+> @@ -10326,8 +10354,7 @@ __perf_event_account_interrupt(struct perf_event =
+*event, int throttle)
+>         if (unlikely(throttle && hwc->interrupts >=3D max_samples_per_tic=
+k)) {
+>                 __this_cpu_inc(perf_throttled_count);
+>                 tick_dep_set_cpu(smp_processor_id(), TICK_DEP_BIT_PERF_EV=
+ENTS);
+> -               hwc->interrupts =3D MAX_INTERRUPTS;
+> -               perf_log_throttle(event, 0);
+> +               perf_event_group_throttle(event);
+>                 ret =3D 1;
+>         }
+>
+> --
+> 2.38.1
+>
