@@ -1,208 +1,175 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3005815B102;
-	Wed,  7 May 2025 12:01:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47D674B1E45
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 12:01:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746619290; cv=none; b=OedT9pKpKrpniXRlsFrgaAqJvS41U9RuOBEz0tTDWkLKyLNIjYa0Ffayj5/ky9Su0euK7l+WbzxByn6xcmdPFNY5TQ2OCF6m7yIT4ywmlaKW5cxi8tbm44QUKVNmZ/kREpBc63LoOXc1088KPnfLKcSyYeeP6FBJwMHMmRLPEa0=
+	t=1746619289; cv=none; b=PMRpXPz+MdTYYNzdDHJ1Ryt26Va0cfGQT7mAe0RMzYzKkJSxsiq095ZFrvB0SSlrFBIAShyKvAAodbWsxFAZry+BUYgu7mT2Obk3STn0kCNdYW+S+bc6M6gf9kDrUs/XEqGIxVIw8yPwAD1LpciyjPsV+RG2T/C5hndEsPtOZ9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746619290; c=relaxed/simple;
-	bh=j95DCo9ba6JiWzHePPa599cGvr5ywMoKdts5CWpSZRE=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f5/gcSQa96cKtbmEUC1OOoXMaA8353mGaCOPyZWUcof0RxU6cnToqsnYj99Up5gj0ng++QaqXw9eKAPprzkU1npMjXOKOlKPXX/EyWKgYXpPXInL99g+zojSi3apGI5VQG4LPhUpYPFQVknjqg87rZ9hrSkmhnFd++osWQ5L8tE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=rOdT6gPR; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1746619289; c=relaxed/simple;
+	bh=aH4+3i8OZH7nxCS1kUVDJOYoGbnWmIhuHdgXBFhNqkU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UDN+tbsBOCq8vq7dLExlR1AqP7My1MpxQ849IK9QgSai6lFefUqOKiwxUYnz7VOTXhzd3DJYIfdD164+P9MAHJlUI1zpZeER375UOPUbB4YajqAzjFEFB4nr6JIgRra1kyXbwToy8BznPsVL1TqDE+dBuoVnfraGzJF5SOGPud0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=KqvLLeaW; arc=none smtp.client-ip=91.218.175.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rOdT6gPR"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 547C15V21501229
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 7 May 2025 07:01:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1746619265;
-	bh=c6C4oOxGjBlu5W/aodx9doW+zfgNMm+PVJPx4R0Gj5A=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=rOdT6gPRt6s2LZ3uBjsGQtHGW/+rIRkOLRFHmFGnUqj8n6M9c2y/C3h8bdP/Q3tH9
-	 9CzO/9lNJCCWhpC86JrEOAmYr4VG3vnGLO2X1cRKiK/wtq1ziiJQmmpwaCRnlcsylJ
-	 61/1UtpX7mGlg/ICWUVzU6RLbkkAfu4adHlxL1aI=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 547C14me064429
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 7 May 2025 07:01:05 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 7
- May 2025 07:01:04 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 7 May 2025 07:01:04 -0500
-Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 547C14Vm019074;
-	Wed, 7 May 2025 07:01:04 -0500
-Date: Wed, 7 May 2025 07:01:04 -0500
-From: Nishanth Menon <nm@ti.com>
-To: Sascha Hauer <s.hauer@pengutronix.de>
-CC: Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] arm64: dts: ti: k3-am625-sk: Add power/temperature
- sensors
-Message-ID: <20250507120104.4mhuaabe5auukarn@banter>
-References: <20250505-am625-sk-sensors-v1-1-688fb928b390@pengutronix.de>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="KqvLLeaW"
+Date: Wed, 7 May 2025 14:01:21 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1746619284;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RL2wxXAmed+PI/IjubgKwat4E+CcspkAjjt3L6RhK6w=;
+	b=KqvLLeaW68RPJ4At5QovaE5Sva77KYzEOsefT5qStixFTp6/uBdnq3GpuKrkvHotSROeBA
+	5QutOvgN6WqN4SLtjNl+PFwFXj1rxFGP91Sh5jNEqs8ZLG8e1KVLiAuFZO36KU+vE6MyZ/
+	HzVoE17P6zQf4aIJ4ugp1eqpwyFQe5g=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Nicolas Schier <nicolas.schier@linux.dev>
+To: Kees Cook <kees@kernel.org>
+Cc: Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Justin Stitt <justinstitt@google.com>,
+	Marco Elver <elver@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>, linux-kernel@vger.kernel.org,
+	kasan-dev@googlegroups.com, llvm@lists.linux.dev
+Subject: Re: [PATCH v3 1/3] gcc-plugins: Force full rebuild when plugins
+ change
+Message-ID: <20250507-emerald-lyrebird-of-advertising-e86beb@l-nschier-aarch64>
+References: <20250503184001.make.594-kees@kernel.org>
+ <20250503184623.2572355-1-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250505-am625-sk-sensors-v1-1-688fb928b390@pengutronix.de>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+In-Reply-To: <20250503184623.2572355-1-kees@kernel.org>
+Organization: AVM GmbH
+X-Migadu-Flow: FLOW_OUT
 
-On 15:24-20250505, Sascha Hauer wrote:
-> The AM625-SK has six power sensors and two temperature sensors connected
-> to I2C. Add them to the device tree.
+On Sat, 03 May 2025, Kees Cook wrote:
+
+> There was no dependency between the plugins changing and the rest of the
+> kernel being built. This could cause strange behaviors as instrumentation
+> could vary between targets depending on when they were built.
 > 
-> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> ---
-> The AM625-SK has six power sensors and two temperature sensors connected
-> to I2C. Add them to the device tree.
-
-Sascha,
-
-I suggest making this as overlay. The reason is as follows: AM625-SK
-among other TI evms do have automated power measurement capability from
-XDS110 (accessible via USB port for jtag - appears as a rudimentary
-menu option). The way this works is that it uses TM4C1294NCPDT to use
-I2C commands to control the INA226/231 depending on the evm.
-
-This firmware should be flashed by default on production boards (if
-not, starting up CCS[1], autodetects older firmware and updates - at
-least to my understanding) - by the way, this firmware also does test
-automation, such as boot mode switch control, reset control etc.
-
-This is the primary framework meant to be used by test automation and
-indeed it is the default inside TI.
-
-Challenge here is this: if we make this default in Linux, the test
-automation system configures the INA226/231 in a different sampling
-mode depending on usecase etc Vs what Linux does (even though the
-shunt and the bus voltage for a given INA is the same). And just like
-Linux, the firmware power measurement logic has changed over the
-years.
-
-Anyways, while I know that the SoC and TM4C can both handle
-multi-master, the challenge is the same INA controlled and
-mix-configured by two masters (and there is no synchronization between
-the two).
-
-To avoid this entire conflict and headache, I suggest adding it as
-overlay that can be applied depending on the preference of measurement
-desired.
-
-[1] https://www.ti.com/tool/CCSTUDIO
-
-> ---
->  arch/arm64/boot/dts/ti/k3-am625-sk.dts | 68 ++++++++++++++++++++++++++++++++++
->  1 file changed, 68 insertions(+)
+> Generate a new header file, gcc-plugins.h, any time the GCC plugins
+> change. Include the header file in compiler-version.h when its associated
+> feature name, GCC_PLUGINS, is defined. This will be picked up by fixdep
+> and force rebuilds where needed.
 > 
-> diff --git a/arch/arm64/boot/dts/ti/k3-am625-sk.dts b/arch/arm64/boot/dts/ti/k3-am625-sk.dts
-> index 2fbfa371934575efc4e9118a705f062bdea55f4f..e900d3134c72dc2616e3820b273d84b0db64bed5 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am625-sk.dts
-> +++ b/arch/arm64/boot/dts/ti/k3-am625-sk.dts
-> @@ -193,6 +193,74 @@ exp1: gpio@22 {
->  		pinctrl-names = "default";
->  		pinctrl-0 = <&main_gpio1_ioexp_intr_pins_default>;
->  	};
+> Add a generic "touch" kbuild command, which will be used again in
+> a following patch. Add a "normalize_path" string helper to make the
+> "TOUCH" output less ugly.
+> 
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
+> Cc: Masahiro Yamada <masahiroy@kernel.org>
+> Cc: Nicolas Schier <nicolas.schier@linux.dev>
+> Cc: Nathan Chancellor <nathan@kernel.org>
+> Cc: <linux-hardening@vger.kernel.org>
+> Cc: <linux-kbuild@vger.kernel.org>
+> ---
+>  include/linux/compiler-version.h |  4 ++++
+>  scripts/Makefile.gcc-plugins     |  2 +-
+>  scripts/Makefile.lib             | 18 ++++++++++++++++++
+>  scripts/gcc-plugins/Makefile     |  4 ++++
+>  4 files changed, 27 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/compiler-version.h b/include/linux/compiler-version.h
+> index 573fa85b6c0c..74ea11563ce3 100644
+> --- a/include/linux/compiler-version.h
+> +++ b/include/linux/compiler-version.h
+> @@ -12,3 +12,7 @@
+>   * and add dependency on include/config/CC_VERSION_TEXT, which is touched
+>   * by Kconfig when the version string from the compiler changes.
+>   */
 > +
-> +	power-sensor@40 {
-> +		compatible = "ti,ina231";
-> +		reg = <0x40>;
-> +		#io-channel-cells = <1>;
-> +		label = "vdd_core";
-> +		shunt-resistor = <10000>;
-> +		vs-supply = <&vcc_3v3_sys>;
-> +	};
-> +
-> +	power-sensor@41 {
-> +		compatible = "ti,ina231";
-> +		reg = <0x41>;
-> +		#io-channel-cells = <1>;
-> +		label = "vddr_core";
-> +		shunt-resistor = <10000>;
-> +		vs-supply = <&vcc_3v3_sys>;
-> +	};
-> +
-> +	power-sensor@45 {
-> +		compatible = "ti,ina231";
-> +		reg = <0x45>;
-> +		#io-channel-cells = <1>;
-> +		label = "dvdd_1v8";
-> +		shunt-resistor = <10000>;
-> +		vs-supply = <&vcc_3v3_sys>;
-> +	};
-> +
-> +	power-sensor@47 {
-> +		compatible = "ti,ina231";
-> +		reg = <0x47>;
-> +		#io-channel-cells = <1>;
-> +		label = "vdd_ddr";
-> +		shunt-resistor = <10000>;
-> +		vs-supply = <&vcc_3v3_sys>;
-> +	};
-> +
-> +	temperature-sensor@48 {
-> +		compatible = "ti,tmp100";
-> +		reg = <0x48>;
-> +		label = "soc";
-> +		vs-supply = <&vcc_3v3_sys>;
-> +	};
-> +
-> +	temperature-sensor@49 {
-> +		compatible = "ti,tmp100";
-> +		reg = <0x49>;
-> +		label = "ddr";
-> +		vs-supply = <&vcc_3v3_sys>;
-> +	};
-> +
-> +	power-sensor@4c {
-> +		compatible = "ti,ina231";
-> +		reg = <0x4c>;
-> +		#io-channel-cells = <1>;
-> +		label = "dvdd_3v3";
-> +		shunt-resistor = <10000>;
-> +		vs-supply = <&vcc_3v3_sys>;
-> +	};
-> +
-> +	power-sensor@4d {
-> +		compatible = "ti,ina231";
-> +		reg = <0x4d>;
-> +		#io-channel-cells = <1>;
-> +		label = "vdda_1v8";
-> +		shunt-resistor = <10000>;
-> +		vs-supply = <&vcc_3v3_sys>;
-> +	};
->  };
+> +#ifdef GCC_PLUGINS
+
+Out of curiousity:  Why can't we use CONFIG_GCC_PLUGINS here?
+
+> +#include <generated/gcc-plugins.h>
+> +#endif
+> diff --git a/scripts/Makefile.gcc-plugins b/scripts/Makefile.gcc-plugins
+> index 5b8a8378ca8a..e50dc931be49 100644
+> --- a/scripts/Makefile.gcc-plugins
+> +++ b/scripts/Makefile.gcc-plugins
+> @@ -38,7 +38,7 @@ export DISABLE_STACKLEAK_PLUGIN
 >  
->  &sdhci1 {
-> 
-> ---
-> base-commit: 92a09c47464d040866cf2b4cd052bc60555185fb
-> change-id: 20250505-am625-sk-sensors-bb255e2baa47
-> 
-> Best regards,
+>  # All the plugin CFLAGS are collected here in case a build target needs to
+>  # filter them out of the KBUILD_CFLAGS.
+> -GCC_PLUGINS_CFLAGS := $(strip $(addprefix -fplugin=$(objtree)/scripts/gcc-plugins/, $(gcc-plugin-y)) $(gcc-plugin-cflags-y))
+> +GCC_PLUGINS_CFLAGS := $(strip $(addprefix -fplugin=$(objtree)/scripts/gcc-plugins/, $(gcc-plugin-y)) $(gcc-plugin-cflags-y)) -DGCC_PLUGINS
+>  export GCC_PLUGINS_CFLAGS
+>  
+>  # Add the flags to the build!
+> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+> index 2fe73cda0bdd..6fc2a82ee3bb 100644
+> --- a/scripts/Makefile.lib
+> +++ b/scripts/Makefile.lib
+> @@ -296,6 +296,19 @@ $(foreach m, $1, \
+>  	$(addprefix $(obj)/, $(call suffix-search, $(patsubst $(obj)/%,%,$m), $2, $3))))
+>  endef
+>  
+> +# Remove ".." and "." from a path, without using "realpath"
+> +# Usage:
+> +#   $(call normalize_path,path/to/../file)
+> +define normalize_path
+> +$(strip $(eval elements :=) \
+> +$(foreach elem,$(subst /, ,$1), \
+> +	$(if $(filter-out .,$(elem)), \
+> +	     $(if $(filter ..,$(elem)), \
+> +		  $(eval elements := $(wordlist 2,$(words $(elements)),x $(elements))), \
+> +		  $(eval elements := $(elements) $(elem))))) \
+> +$(subst $(space),/,$(elements)))
+> +endef
+
+Nice :)
+
+> +
+>  # Build commands
+>  # ===========================================================================
+>  # These are shared by some Makefile.* files.
+> @@ -343,6 +356,11 @@ quiet_cmd_copy = COPY    $@
+>  $(obj)/%: $(src)/%_shipped
+>  	$(call cmd,copy)
+>  
+> +# Touch a file
+> +# ===========================================================================
+> +quiet_cmd_touch = TOUCH   $(call normalize_path,$@)
+> +      cmd_touch = touch $@
+> +
+>  # Commands useful for building a boot image
+>  # ===========================================================================
+>  #
+> diff --git a/scripts/gcc-plugins/Makefile b/scripts/gcc-plugins/Makefile
+> index 320afd3cf8e8..05b14aba41ef 100644
+> --- a/scripts/gcc-plugins/Makefile
+> +++ b/scripts/gcc-plugins/Makefile
+> @@ -66,3 +66,7 @@ quiet_cmd_plugin_cxx_o_c = HOSTCXX $@
+>  
+>  $(plugin-objs): $(obj)/%.o: $(src)/%.c FORCE
+>  	$(call if_changed_dep,plugin_cxx_o_c)
+> +
+> +$(obj)/../../include/generated/gcc-plugins.h: $(plugin-single) $(plugin-multi) FORCE
+> +	$(call if_changed,touch)
+> +always-y += ../../include/generated/gcc-plugins.h
 > -- 
-> Sascha Hauer <s.hauer@pengutronix.de>
+> 2.34.1
 > 
 
--- 
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+Tested-by: Nicolas Schier <n.schier@avm.de>
+Reviewed-by: Nicolas Schier <n.schier@avm.de>
+
