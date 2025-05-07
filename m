@@ -1,148 +1,67 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 620E4222576
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 11:46:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1995C20D51E;
+	Wed,  7 May 2025 11:46:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746618381; cv=none; b=a4QPROmHVEdrjFM2+Xng51N7ZcuM6tPGnRVEzdsn3Vg5o4DEzfCzk0DbmBpXYKbPq9IGYPv/zY8b3h5EKTZVxoL2/rHfW2Wm4SiehjelwV7MlJgz14dwXlDAmG4Fou2nUIqTo3YwbMTg6GXZ2RV88Wcy00kJvPY3FK/Ppr9j5sE=
+	t=1746618414; cv=none; b=VWUISVyAA6H3GB5qtVBAqFV3gaqnEsBrLo4Yfp+/V0gi5DTPmWacDiCQZqk1pInb+JClzgl05iVY93d9C8SsYmwAKcb4mOdbqtIGyI6nZ5tOozP7vgbXzh3IjHJWjNteIJWIYAc0FF1Ei7DZWLSpq2pVVSNQYSDo7UIeDayA5XM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746618381; c=relaxed/simple;
-	bh=vzwf0tIYzNuQhU2aD2nOcCDkbhgSc+b+ohdnlMe0oWU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nt6gcRBhleZKq1x9mbTe4fXFXJQ4+NFtO5my01yusZCC746s8Kj0mAgj7tZVgmDU6xJ5I2cJMtTULMglGHsgk+ooYaR6WKKkBwhiHlDVgfNVWl1xD7DPLpinNYCayzvxwVIFdcjO3wBo2+Y4J3q8P/8knE5gBkLmh4Jp03PGLy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=xsB8VV/w; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=QTFCvD3N; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=xsB8VV/w; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=QTFCvD3N; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1746618414; c=relaxed/simple;
+	bh=d9eoay/eQSnb1NhwL/Ylx13z5/rr9edqhJMtxsP2WNg=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=h1ObfzStKSeocbHKgnGXPZUKvzcJ5RouDNtNuRWqEaHU5asWeJOeiUmrTBp5Y6YpkXaOpGZTWleGAOFK7pBxoPsxNUfqBOf7mqQ5M2FUthFJrnV/OfOoTehFj6CQAMdHcEASJqx3xqbvitz20MuM91jTWS+G86BoMEYEQbexo1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fg4skWBD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="xsB8VV/w";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="QTFCvD3N";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="xsB8VV/w";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="QTFCvD3N"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 5D30E1F393;
-	Wed,  7 May 2025 11:46:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1746618378; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uy7d/ZjeDgzXAL0tpPZUP+r0mJI7QK6Hc7BG5cAHyRo=;
-	b=xsB8VV/wzKxOWv3JjdL4y9sQmiZtRmou+che2Gz6zp2spSn9+DcCINwEJWez4+P+69teeZ
-	axm5ofnvbGPJoafoQSRnI0pgwzvXt6Ny1pPDCMzGd2rfNfN9a/THsPWQiN1b88/EwSsHeO
-	iOSqpnhmhbMn+7grroA1AJWdilmBZss=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1746618378;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uy7d/ZjeDgzXAL0tpPZUP+r0mJI7QK6Hc7BG5cAHyRo=;
-	b=QTFCvD3NoBkIcmwZUzC3U/Sbx4odTDDQdBtPCbCw/gO/ofLmtbbV+TvKCHOnCVSzovweqq
-	kdhdx9Wm00T4d6Dg==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b="xsB8VV/w";
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=QTFCvD3N
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1746618378; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uy7d/ZjeDgzXAL0tpPZUP+r0mJI7QK6Hc7BG5cAHyRo=;
-	b=xsB8VV/wzKxOWv3JjdL4y9sQmiZtRmou+che2Gz6zp2spSn9+DcCINwEJWez4+P+69teeZ
-	axm5ofnvbGPJoafoQSRnI0pgwzvXt6Ny1pPDCMzGd2rfNfN9a/THsPWQiN1b88/EwSsHeO
-	iOSqpnhmhbMn+7grroA1AJWdilmBZss=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1746618378;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uy7d/ZjeDgzXAL0tpPZUP+r0mJI7QK6Hc7BG5cAHyRo=;
-	b=QTFCvD3NoBkIcmwZUzC3U/Sbx4odTDDQdBtPCbCw/gO/ofLmtbbV+TvKCHOnCVSzovweqq
-	kdhdx9Wm00T4d6Dg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 46CB013882;
-	Wed,  7 May 2025 11:46:18 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Ch4SEQpIG2gEJQAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Wed, 07 May 2025 11:46:18 +0000
-Message-ID: <3d99da0d-b08e-416e-82bb-cd44179a424f@suse.cz>
-Date: Wed, 7 May 2025 13:46:51 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fg4skWBD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 783ECC4CEE7;
+	Wed,  7 May 2025 11:46:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746618413;
+	bh=d9eoay/eQSnb1NhwL/Ylx13z5/rr9edqhJMtxsP2WNg=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=fg4skWBDnj93slBLBQBKydTNn/7jU2wzMW+tnUxL8WSiyii5tb49z39PhUeRFDg2r
+	 GS10uns8DgDYmXyua8FhQVBBrzLasewfKvmK5Fvzv/MzRyw/MGTxKvp+s0Mv7aKqhH
+	 3ZQva2z0gMGKUoCINJ476NUbpHynbnOaFnjM5ppz70s5/JfosZG+WFD/45tziJEw6a
+	 2NlbEFESlQlIg1Js+x+YN8P6p+ZCyTWf+5HpWb5vMN5Y7botRozWlEZ2DEZtvjN+AX
+	 +cgpW+eH3ndxtIwSm+rEcQEdiYSb4Av+CNnC+2B9jJKWt+aQcOGB+TS//eykk5ZMCF
+	 gWwoR3XazkKXg==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/4] memcg: separate local_trylock for memcg and obj
-To: Shakeel Butt <shakeel.butt@linux.dev>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Muchun Song <muchun.song@linux.dev>, Alexei Starovoitov <ast@kernel.org>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Jakub Kicinski <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>,
- linux-mm@kvack.org, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
- bpf@vger.kernel.org, netdev@vger.kernel.org,
- Meta kernel team <kernel-team@meta.com>
-References: <20250506225533.2580386-1-shakeel.butt@linux.dev>
- <20250506225533.2580386-3-shakeel.butt@linux.dev>
-From: Vlastimil Babka <vbabka@suse.cz>
-Content-Language: en-US
-In-Reply-To: <20250506225533.2580386-3-shakeel.butt@linux.dev>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 5D30E1F393
-X-Spam-Flag: NO
-X-Spam-Score: -3.51
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.51 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.dev:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.cz:email,suse.cz:dkim,suse.cz:mid];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.cz:+]
-X-Rspamd-Action: no action
+Date: Wed, 07 May 2025 13:46:50 +0200
+Message-Id: <D9PWJWUM2NDH.37S72IOWP9QI6@kernel.org>
+Cc: "Matthew Maurer" <mmaurer@google.com>, <rust-for-linux@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 7/7] rust: alloc: add Vec::insert_within_capacity
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Alice Ryhl" <aliceryhl@google.com>, "Danilo Krummrich"
+ <dakr@kernel.org>
+X-Mailer: aerc 0.20.1
+References: <20250502-vec-methods-v5-0-06d20ad9366f@google.com>
+ <20250502-vec-methods-v5-7-06d20ad9366f@google.com>
+In-Reply-To: <20250502-vec-methods-v5-7-06d20ad9366f@google.com>
 
-On 5/7/25 12:55 AM, Shakeel Butt wrote:
-> The per-cpu stock_lock protects cached memcg and cached objcg and their
-> respective fields. However there is no dependency between these fields
-> and it is better to have fine grained separate locks for cached memcg
-> and cached objcg. This decoupling of locks allows us to make the memcg
-> charge cache and objcg charge cache to be nmi safe independently.
-> 
-> At the moment, memcg charge cache is already nmi safe and this
-> decoupling will allow to make memcg charge cache work without disabling
-> irqs.
-> 
-> Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
+On Fri May 2, 2025 at 3:19 PM CEST, Alice Ryhl wrote:
+> This adds a variant of Vec::insert that does not allocate memory. This
+> makes it safe to use this function while holding a spinlock. Rust Binder
+> uses it for the range allocator fast path.
+>
+> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+Reviewed-by: Benno Lossin <lossin@kernel.org>
 
+---
+Cheers,
+Benno
+
+> ---
+>  rust/kernel/alloc/kvec.rs        | 51 ++++++++++++++++++++++++++++++++++=
++++++-
+>  rust/kernel/alloc/kvec/errors.rs | 23 ++++++++++++++++++
+>  2 files changed, 73 insertions(+), 1 deletion(-)
