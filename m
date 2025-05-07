@@ -1,87 +1,104 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C13B514A4CC
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 06:32:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2E46205E16;
+	Wed,  7 May 2025 06:32:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746599530; cv=none; b=GkvzdOnQ79BXWaIAdNVP6K+RkkiV6dIcDQZMikbKpyLmzeVyAtLLPC2i/dx+ZcPNj6clF3nhdaZBhnRtJjjEJCAp3+mrJDqj1Z4onwUdNygtKaUm2Ut05CT5XGWBoT/HGkq2l+Wl8W98hhxQ7SJG27WckonXLIB8Wrs+eyZpS20=
+	t=1746599536; cv=none; b=oGV7PFBR7a0aFGjfh6/UJWzzdhTA3wL86+KCHA9dvslvZWjWa0O3fbP1L+cHH/l7INFVQSL54xLKzxUsCnnPfGoZflhB3MCpq2xOc0hMvphuAhC2phsUMU7mBqRJebOrebbHMvqIsBbBmwGjIcPsSDnyMDZGEyW4laQ0S7W4EjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746599530; c=relaxed/simple;
-	bh=exbcRCBcXP75cDIPN2zF7G/kZPfJqnrNFxp1zshUZ+8=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=uHZjTKCWfh2ydditDGKIRHolhYiSE85PUbHySuaTDGT9B0Zb38EWoRfL8INX3a2AxdmP7HZPuLCFa7JdbDeIzFsrMTuz2avifrk9mwRrVmBOtLtdbwroOxddJopT451VmMqVs7R+QZZR9ihiz+oXMBDINM+8SFCy0nfgkddV7ew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=N/q9UBbW; arc=none smtp.client-ip=209.85.128.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1746599536; c=relaxed/simple;
+	bh=26Qv9LOixC0/nw+NcE/gYTx98MQj761PMPpsb0aVnDE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ba6YDRX5DqJIWyAKWY0FNY3qJPiR2tMykrjc1ND5/UWb9WekBw5e7sdYbuels8BbJHwym1gwaKWADRSj1kZ4clH/jBka5HvmRcAwyYnCCZWfmCuSiPuTD+D+/aDYHjib5cgaXUa0nhggA5fsBm0aA07cD5FNMFZxO16UBiluexc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S/oGkvKy; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N/q9UBbW"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-441c96c1977so21870335e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 23:32:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S/oGkvKy"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-223fb0f619dso76422665ad.1;
+        Tue, 06 May 2025 23:32:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746599527; x=1747204327; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=L8GCAFg1aaYXlvR66YXUtPzPYdtJZ6yf/ekYSx+SpVs=;
-        b=N/q9UBbWqYRUZ9PU5CLprdk2AnnJln+hsMshsMXsG/QAytTP4mYtZzhCbtHTo9wv/j
-         XrUr4ABk2zBk9UTZuZnmMDm0t/akwcqgrU75VnJoV/YFE+oLGHWFM/9LreKO6d/05hrA
-         o+fhxnnQmk59Qdx3QTJbxCr164prmf1oCTH6mHVY7DYg+HNG+0DGa3449GI69EtaPx76
-         7tdQDeGbm47k2pNgNzCPUeWzj/FiBqLXDdbbYwBm9ZbEPlPVniyJ+FBfbz0btKy4EZd/
-         /yCherlFcG/JWYP8Vm0LdzbcCJU+pgoLcqUCHj7K042jlZ8wVYkIEjgnRnxqDR9SV85J
-         YCTQ==
+        d=gmail.com; s=20230601; t=1746599534; x=1747204334; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HRumt61hIcek/cB4Zu227bKkZ9hkeOlfalxZihclBlA=;
+        b=S/oGkvKyznRTLjPaLRpJ90SUWQqt7+iA30x7zr0JGqGNdRMhuDugoWq31hNouFFx6z
+         QgvHLCqsWpKfZc5LZ4eXfiE4BBZ0mjKytvfJk1gTnUp4eTwE46JRBfz/X6nqbAOss1K/
+         Ij9GxpzFW3LCv12BupXIHdBQmaZqPplJHywpOU1w6EWqKBqmsfnwat37MQNDqDufZgRT
+         LMS2miM96YofTx+J/w/9vEe6nlVL2irHn1g3Em94p462JJUpjMdo63qLiyOf3M86hHkd
+         Bs6DWwtG9GBDWUHI/XC1xsLNDaySBpCoOLoZXceHTPUzM964KiUjLJnnXC6j6D8oNB6W
+         32zQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746599527; x=1747204327;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=L8GCAFg1aaYXlvR66YXUtPzPYdtJZ6yf/ekYSx+SpVs=;
-        b=tU0ZlD5V6SarPof4eYnV0+a3g3OhKyHqHzZX1kubn/cA6FaLHX6V+Xi3VRYCx6r1Rt
-         I/V9WAB2Y8RzJY8FLAurgcVkTybCmlVmblZuQ7lpE7yWz2+sg5pYzSecxpJJaKUS9twE
-         zckJkiEC4tEQU4amlw3YheBzD8Iffp615LJGgsXElwg9sjwGINFm6aRCRGA6VCRl6tpw
-         oswtLo+wDVnkkTgXFNGRHT/rEZ5zwiARMz4OqcTkf02pXE0bRZ+5QcfNqUVyn/U0ekRn
-         CATGvFrrfc9E6mRJ8DrhN3JYzLVdLtyB5f68mGGva0eJ5YooiyPRdc2GaXwm6V6OAScH
-         glOw==
-X-Forwarded-Encrypted: i=1; AJvYcCUTw4+aPhZqoM5Isq4fvjzm60nPyiyhmASkboco29OVR6fQRK7PRLRGxNu1rUEKQ+VjO+aGAemcjKr51mA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCgHzBiwzM5dySU5PNUl1FtFerzJQXcyuFVVcKZOdrzoZf2ONr
-	f5CeE9zH+5X8NeybBI4vOz/XFnBnlNmblDerUfuhBhU6/TmnkcGQo6NCq4oT7ENbOCfzYa2LhPd
-	rcNJQ3GGpvxZKVQ==
-X-Google-Smtp-Source: AGHT+IErajDqfwcZTf8rFmNjgBY75jdYeqJxRWcm3VL9E4WUwCBuF8N519b5ETfv2d2sPP/taqAt/46bX7Ge2ro=
-X-Received: from wmbhj13.prod.google.com ([2002:a05:600c:528d:b0:43d:58c9:bb51])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:1d08:b0:43c:fffc:7855 with SMTP id 5b1f17b1804b1-441d44c7d8cmr15872725e9.15.1746599527327;
- Tue, 06 May 2025 23:32:07 -0700 (PDT)
-Date: Wed, 7 May 2025 06:32:05 +0000
-In-Reply-To: <D9POL1CR89RN.2OOMXJAOR4XAK@nvidia.com>
+        d=1e100.net; s=20230601; t=1746599534; x=1747204334;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HRumt61hIcek/cB4Zu227bKkZ9hkeOlfalxZihclBlA=;
+        b=he+HoQW+FO48n/b5EhsWNAgfZXZVFhhunklBxQU67S+5W4bQ/ADZ7AesTwA6vdjjuh
+         sOHen4n6t58NF1D4ffw2tBZpD3c2GcRzZzsZxJppNJoprDHpAxHnrAxE7DPt5Cl6+Egh
+         FKo2UWMLrQQtVVTf7kL0OUJbarU+ezFd18dNgXJTD26AAxoMMzzs18FPQvzvmxlmXRw4
+         jB7WNMDtEOMxL4PiXOZW3C64Q1ce/7JWhgB9gjoa8JexMnA1lSq3I3V9NyoaFfwFWuce
+         D4UFxYkiszONKEu7ZBhp1Zyo/veu/U+KWkkVfnvxjE8u7j0vXBwQlwX9SEKUjuhuA9iE
+         8n2A==
+X-Forwarded-Encrypted: i=1; AJvYcCU/WOFA1oogCDBvtqUr1BACcgNZl4AapbpyzM7ObiLXaGh/FZAbeRe6yMXHW//XKBaC4JIWzjhg92NZiO8=@vger.kernel.org, AJvYcCUghRjyjeeXlw8uJwoCH+CtQoQGVGmnw0VWyGVWfcq67XTe/a6DS7Q4IccgVa6mY5ZYRhVaseFJaQZt7A==@vger.kernel.org, AJvYcCVK075mvFf0m0dOXW5ByDeiMRTNVzYe5zkZl9q5U5gXA2zM/7ejPFDJ74bdgfliGOHrK8oZglB5cMwV@vger.kernel.org
+X-Gm-Message-State: AOJu0YxUV/k89o8M7lRq7HowSieNV5a3NGIhMktHq5vkDleRZHn67Ysw
+	dehzE2wu0BTGhLy7zKjDeI7cBFsgjlEZJ88gkwvvPYlKVjXPQTy0
+X-Gm-Gg: ASbGncuODK6UOMmJh9joCqxgwIBmz6ge2y+wC+R9jOaIzxflPK2LBL7WTofqHiQwgpp
+	4UFbBIMQvxtoCWuRN4TKe4pkrQlQjujCw3DP7DHwq9vRtptI12NBKq8moCz2rfcCMJGfzzqiALc
+	JeHxVo7H3ycOgQh0yDANp0iIZrGu5LA7XGACIyrLfb4WWi5a8L1IzI/Wu2QmWYJ+erUy6w99dZy
+	eFP8nVGxX7M47MvFFkKLJE0n8bWV5Eym08jmDpU7Eo5EqJYKpFsagptNCgjNC51Dy/rArP4TuQE
+	A51O2CFwbdNvokH3ER5OUd4E/JBP+jlLt6j5E7Z+IlXL31xc/QQ=
+X-Google-Smtp-Source: AGHT+IFgQgrSwnbfJwJ7AUO/JIivWOsVdA1uyc2S9u2Ih5zSXrOB8xhKxfGlOR3DdJ5CKg0i6CQMMA==
+X-Received: by 2002:a17:902:d4c9:b0:22e:3730:e7c4 with SMTP id d9443c01a7336-22e5ece3e54mr25920265ad.37.1746599533892;
+        Tue, 06 May 2025 23:32:13 -0700 (PDT)
+Received: from Black-Pearl. ([122.162.204.119])
+        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-22e15229384sm85805295ad.206.2025.05.06.23.32.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 May 2025 23:32:13 -0700 (PDT)
+From: Charan Pedumuru <charan.pedumuru@gmail.com>
+Subject: [PATCH 0/2] dt-bindings: dma: microchip,sdhci-pic32: Add json
+ schema for text binding
+Date: Wed, 07 May 2025 06:29:34 +0000
+Message-Id: <20250507-mchp-sdhci-v1-0-ed29de05295a@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250502-vec-methods-v5-0-06d20ad9366f@google.com>
- <20250502-vec-methods-v5-6-06d20ad9366f@google.com> <D9POJZ60ZCYQ.1XBNZSXOQ9UJS@nvidia.com>
- <D9POL1CR89RN.2OOMXJAOR4XAK@nvidia.com>
-Message-ID: <aBr-ZZMBPyy0KfZH@google.com>
-Subject: Re: [PATCH v5 6/7] rust: alloc: add Vec::remove'
-From: Alice Ryhl <aliceryhl@google.com>
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: Danilo Krummrich <dakr@kernel.org>, Matthew Maurer <mmaurer@google.com>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAM79GmgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDUwMj3dzkjALd4pSM5Exdc4NEE0tzE0NzQwMTJaCGgqLUtMwKsGHRsbW
+ 1AJ7/LetcAAAA
+X-Change-ID: 20250502-mchp-sdhci-70a497417104
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+ Ulf Hansson <ulf.hansson@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-mips@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, 
+ Charan Pedumuru <charan.pedumuru@gmail.com>
+X-Mailer: b4 0.14.2
 
-On Wed, May 07, 2025 at 02:32:10PM +0900, Alexandre Courbot wrote:
-> On Wed May 7, 2025 at 2:30 PM JST, Alexandre Courbot wrote:
-> > On Fri May 2, 2025 at 10:19 PM JST, Alice Ryhl wrote:
-> >> +    /// Removes the element at the given index.
-> >> +    ///
-> >> +    /// # Panics
-> >> +    ///
-> >> +    /// Panics if the index is out of bounds.
-> >
-> > According to the commit log (and the code of the method) I think this
-> > panic section is not valid anymore?
-> 
-> Oops never mind, I didn't notice Danilo already pointed this out. >_<
+Create a YAML binding for microchip,sdhci-pic32 and modify the sdhci
+nodename in dts to match with the common mmc-controller binding.
 
-Thanks for taking a look!
+Signed-off-by: Charan Pedumuru <charan.pedumuru@gmail.com>
+---
+Charan Pedumuru (2):
+      mips: dts: pic32: pic32mzda: Rename the sdhci nodename to match with common mmc-controller binding
+      dt-binding: mmc: microchip,sdhci-pic32: convert text based binding to json schema
 
-Alice
+ .../bindings/mmc/microchip,sdhci-pic32.txt         | 29 ----------
+ .../bindings/mmc/microchip,sdhci-pic32.yaml        | 66 ++++++++++++++++++++++
+ arch/mips/boot/dts/pic32/pic32mzda.dtsi            |  2 +-
+ 3 files changed, 67 insertions(+), 30 deletions(-)
+---
+base-commit: 3e039dcc9c1320c0d33ddd51c372dcc91d3ea3c7
+change-id: 20250502-mchp-sdhci-70a497417104
+
+Best regards,
+-- 
+Charan Pedumuru <charan.pedumuru@gmail.com>
+
