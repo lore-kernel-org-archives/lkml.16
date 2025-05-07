@@ -1,98 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94B661DD877;
-	Wed,  7 May 2025 20:06:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96C571DD877
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 20:07:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746648390; cv=none; b=G9DcjzvN+gMafqzQ7s4hGn30G3vqs7Qwyob8zXmLEevjwGNkHV81yJgZjN5n6al2HvHJAo+azFHCPl4RUr6p7CJens45zAV8fytG1koY3PXFRUFELdAFcDMWbrt043NpNo9KrOkTjUf+kokg4OoRqbp1RKcy3mT6lu2CEMyQCOg=
+	t=1746648453; cv=none; b=qmNv9gqoUpxMPSLMDKsVsMynXCBBnXwMRA/WHKbSxVr2nFinqikDLvVLsAt8ea1QwoTx1nPMRDusId0IN7+i8Jm0fqWVOHgJ5zwkSQKGuVr6bsGlrJ6yvG4pXdzJNtZH5qqrBLrlFETYPwCqVgMCe8NdwsC6Ke7DelfgTfsKx7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746648390; c=relaxed/simple;
-	bh=5a9DCd5aeaRGsOQ99DfkXpo2NibiBiAJqVSk1lPL7Ms=;
+	s=arc-20240116; t=1746648453; c=relaxed/simple;
+	bh=w3+3KeoElHyRcJVg0RmvVvE2AsXALYl4aJ8aofm6AIM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UeFC9CpGvTITRTCPrI5/HO34+F2zwAwwPld3uOkPvd1d0JotLUpgQLxvfcESLTWKJOv2EN7A+Gz/5NEHQEI6f1oF+4tdLG133MArP39pLnE4vnGc9WFKIfef/CwQ6rVKj3vy6dtYb39oKrfUWohVAnR/47oqMIh4tX86/h+r7l4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E/p2ej6A; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=q4SGzstNsmVvVwjJKfWJqpZ5d2Ook63+mLuZTL1+4/5uf38XWQQu5zFZoRxdzCxnR6ztjyOFpG/yvfB7fsAw+QTSJioqyacyPeMIT5SelcV6dw5wjBxya7bf6IK0icBaSCo63Su4RtzZm5qLYC87ncLyqvE/Mpuv0u/xSptM/6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nR9sGH6m; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E/p2ej6A"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A389C4CEEE;
-	Wed,  7 May 2025 20:06:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746648390;
-	bh=5a9DCd5aeaRGsOQ99DfkXpo2NibiBiAJqVSk1lPL7Ms=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=E/p2ej6AqC6dPjbwREPzUAnHBknt3QtLWsB+5qhZafYNzSEcVhAN+68d5Rc72qKZg
-	 fgZswwXAfgp8AoU+C/nn5QmmUhFzB97bl74wWDtOCp92YaBI/0bnohXa20/DAA8uzt
-	 HHMLIsdclgTesgE9kUXcRvSI1FHGLUTB1epLrJcuQRQ73ggMUgSzVWq11xDiVeXbR0
-	 YkzjfdUvZfHowmpghA4Wj0Dv0N2nyDANASyGU1/y9mRT1Mi6NAYPOhfop0y8MCOhkd
-	 KwvUfXIRafnOJwmkqK7T3ILaeBN5gQ5OJ8VtRHa5w8Dwzc/p7b4vwT1O0f2WdeySkx
-	 9bpapE11bxCZw==
-Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-2d54b936ad9so152059fac.1;
-        Wed, 07 May 2025 13:06:30 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV573tkSbJ1N5s0MKShgLTDPx7MovTyjoP7oDCKCmjMIqU0E35ShBFcBmmzUOj1TTy2JPJLIBFKRyUt@vger.kernel.org, AJvYcCWZUvYsWKxfPEcjvHwFR4694Z7bc/IdQEGu7x4Vn64ONE3BE07yheVMHbsg+XfWoiVpGHMjJNIX3HKIJWXA@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEMj/90VMfsncWQ01DxbF2jvTs83BeextVbhfKRDxy+irnYmNl
-	tN0UQZDSy0+Ed0vkmq1qdT7kvojCso1j+E39NlAIfUXokwkHo0JD7VrdtS4ZWQJcg3Ze8poneKc
-	Ad4HbXL5EJzNsEI+xiQS67oJqNQ8=
-X-Google-Smtp-Source: AGHT+IGnydU3H8sqGsX8B4o+4mQs44hFfkMJPXHjk2ZWhlSgCaespw5/yCH5Kj1oZ4JnryyItjnwijXNg1gzS/icwOk=
-X-Received: by 2002:a05:6871:eb01:b0:2d6:2a1b:320f with SMTP id
- 586e51a60fabf-2db5be3253emr2712159fac.11.1746648389369; Wed, 07 May 2025
- 13:06:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nR9sGH6m"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5f5bef591d6so431885a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 13:07:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746648450; x=1747253250; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=w3+3KeoElHyRcJVg0RmvVvE2AsXALYl4aJ8aofm6AIM=;
+        b=nR9sGH6mEVA0ualXnhIOf0eGmjnyrDHYuzJUMqEMAoObxGxGWidjHKwv0AV+qNho6j
+         qzESypGJu7PliTxYnNFSHroPKe9sAYq2Bgrp3XMBI2+gaJe9sYRE+wmgJuGf9lYJJRwJ
+         t3iszg+DfQ5KgS/Pz/+EtXWXVAtmIr37Y+cRY4Zig8fn7EpjD0M9w9UU2VesTXbIR+9R
+         nDHi2YF9X9afEtubAbtTuWyRHcqQ+2xX/GutwbWAU8yct3KW+PJ902WrLf/queUAokpu
+         lUz+rGzWI0NFKjiIY3mb+lPSjCe4YrIXGP+A7RxQZ9QGCvDwY0BK4C06j5RbMol2RpHI
+         fxVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746648450; x=1747253250;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=w3+3KeoElHyRcJVg0RmvVvE2AsXALYl4aJ8aofm6AIM=;
+        b=sCVg7YEkxSH8Ei46YYjYJ3HhMU6a1rDYyF5uZsaHOGESvTV7E2h4tY399sYmsL6qyD
+         45gGEUheEnuck9B0pfBoNQZZlo+JYrInNdkIvkGIKvSIo3rfSAKbPf7t5RvZ669epW9a
+         8ybALAeoI7SkyZMs1XpzcSd3Ftgn2EsPiYC+iHbH5Jw7M/1Bbz73Kn7qAiAwGqaAJSNU
+         x7ZCUplzc1E5DXeuJHTVYAOoIT+p/KVoCw39EDEEj4Jd4zvhUP5NZytvdJJOql0QhPVV
+         5qjljlBYHW3V79YrABOZ0lIGepfs1RRWjG94KD4i599hDn+cUYSly/errIooKega7D5s
+         J6YQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXUYK/dw8jVvI++z5mZQrL6avcqVpQeHsRSNdIQ1/NjL7zgW2oUQd2cWp1zDoShQSHB1IxcP59w/4nZTSU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzeZ1om70dsO0qVzi7V8EIGUDVwYahGEED5PFQdD2hf+O860Oar
+	NiCPel8t5JXx9HnZsxncqrdkK4rq44DGv4D+NbtPGjVDggAx0e/XCTDwqxFCro7mgc7iEWHlPA2
+	WXLnr70Tel3KTpUIeHjrAVKDCaZboltb5B3C0
+X-Gm-Gg: ASbGncvn3QdlaA0gKTI0aJceAiOCHS9iWqHgmTu/M4mQVA321rHGfYjbBayzbGiBLdS
+	K8VwjM7CoV0u56A8npdsg9e1WRAv5zA+bpfzmuHQ5ahH0fH08bVQK+JHzmcXDs2BgcTNebEJQuu
+	lLiXfZReX1S3Td6CCoC4jUg9hfZMCmMMyOTmNHP8YTaJdMOmINZA==
+X-Google-Smtp-Source: AGHT+IHMvqtGEgVvR4tBa+A7od70iCjCW3khzHB4JCJtIHlviqns0c3QvfPzORetkebMitf8d5H+ROVKAU7eJw0lMW0=
+X-Received: by 2002:a17:907:c287:b0:ace:6c29:a98c with SMTP id
+ a640c23a62f3a-ad1e8cd7709mr423668766b.37.1746648449789; Wed, 07 May 2025
+ 13:07:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250331072311.3987967-1-andriy.shevchenko@linux.intel.com> <20250502151537.GA2724505@myrica>
-In-Reply-To: <20250502151537.GA2724505@myrica>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 7 May 2025 22:06:16 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0iOVmoUS+N5KkEBAzRjXP2OJz4G3Ypr2+1m5bHKFkKsPQ@mail.gmail.com>
-X-Gm-Features: ATxdqUGR08Rwoah6vHsSgWmAF82DpX4gvPylL0AHWH27WeSyQZeQYEPZ2nG1RoM
-Message-ID: <CAJZ5v0iOVmoUS+N5KkEBAzRjXP2OJz4G3Ypr2+1m5bHKFkKsPQ@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] ACPI: VIOT: Remove (explicitly) unused header
-To: Jean-Philippe Brucker <jean-philippe@linaro.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Robin Murphy <robin.murphy@arm.com>, linux-acpi@vger.kernel.org, iommu@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Len Brown <lenb@kernel.org>
+References: <20250506183533.1917459-1-xii@google.com> <aBqmmtST-_9oM9rF@slm.duckdns.org>
+ <CAOBoifh4BY1f4B3EfDvqWCxNSV8zwmJPNoR3bLOA7YO11uGBCQ@mail.gmail.com>
+ <aBtp98E9q37FLeMv@localhost.localdomain> <CAOBoifgp=oEC9SSgFC+4_fYgDgSH_Z_TMgwhOxxaNZmyD-ijig@mail.gmail.com>
+ <aBuaN-xtOMs17ers@slm.duckdns.org>
+In-Reply-To: <aBuaN-xtOMs17ers@slm.duckdns.org>
+From: Xi Wang <xii@google.com>
+Date: Wed, 7 May 2025 13:07:16 -0700
+X-Gm-Features: ATxdqUG12XZN0hFzKilXUEhBsiRwGA9-TUpz4QKBiobL8v5U6hVTVFV89NOFQoM
+Message-ID: <CAOBoifiv2GCeeDjax8Famu7atgkGNV0ZxxG-cfgvC857-dniqA@mail.gmail.com>
+Subject: Re: [RFC/PATCH] sched: Support moving kthreads into cpuset cgroups
+To: Tejun Heo <tj@kernel.org>
+Cc: Frederic Weisbecker <frederic@kernel.org>, linux-kernel@vger.kernel.org, 
+	cgroups@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, 
+	David Rientjes <rientjes@google.com>, Mel Gorman <mgorman@suse.de>, 
+	Valentin Schneider <vschneid@redhat.com>, Waiman Long <longman@redhat.com>, 
+	Johannes Weiner <hannes@cmpxchg.org>, =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Dan Carpenter <dan.carpenter@linaro.org>, Chen Yu <yu.c.chen@intel.com>, 
+	Kees Cook <kees@kernel.org>, Yu-Chun Lin <eleanor15x@gmail.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
+	jiangshanlai@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 2, 2025 at 5:15=E2=80=AFPM Jean-Philippe Brucker
-<jean-philippe@linaro.org> wrote:
+On Wed, May 7, 2025 at 10:36=E2=80=AFAM Tejun Heo <tj@kernel.org> wrote:
 >
-> On Mon, Mar 31, 2025 at 10:23:11AM +0300, Andy Shevchenko wrote:
-> > The fwnode.h is not supposed to be used by the drivers as it
-> > has the definitions for the core parts for different device
-> > property provider implementations. Drop it.
-> >
-> > Note, that fwnode API for drivers is provided in property.h
-> > which is included here.
-> >
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Hello,
 >
-> Reviewed-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> On Wed, May 07, 2025 at 10:23:24AM -0700, Xi Wang wrote:
+> > Overall I think your arguments depend on kernel and application threads=
+ are
+> > significantly different for cpu affinity management, but there isn't en=
+ough
+> > evidence for it. If cpuset is a bad idea for kernel threads it's probab=
+ly not
+> > a good idea for user threads either. Maybe we should just remove cpuset=
+ from
+> > kernel and let applications threads go with boot time global variables =
+and
+> > set their own cpu affinities.
 >
-> > ---
-> >  drivers/acpi/viot.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/acpi/viot.c b/drivers/acpi/viot.c
-> > index 2aa69a2fba73..c13a20365c2c 100644
-> > --- a/drivers/acpi/viot.c
-> > +++ b/drivers/acpi/viot.c
-> > @@ -19,11 +19,11 @@
-> >  #define pr_fmt(fmt) "ACPI: VIOT: " fmt
-> >
-> >  #include <linux/acpi_viot.h>
-> > -#include <linux/fwnode.h>
-> >  #include <linux/iommu.h>
-> >  #include <linux/list.h>
-> >  #include <linux/pci.h>
-> >  #include <linux/platform_device.h>
-> > +#include <linux/property.h>
-> >
-> >  struct viot_iommu {
-> >       /* Node offset within the table */
-> > --
+> I can't tell whether you're making a good faith argument. Even if you are=
+,
+> you're making one bold claim without much substance and then jumping to t=
+he
+> other extreme based on that. This isn't a productive way to discuss these
+> things.
+>
+> Thanks.
+>
+> --
+> tejun
 
-Applied as 6.16 material, thanks!
+Yes this is still serious technical discussion. Frederic made several "we c=
+an't
+have b because we already have / are working on a" statements which were no=
+t
+very actionable. Deducing to a particular case is a quick way to simplify. =
+I'd
+prefer to focus more on higher level technical tradeoffs.
+
+Overall compartmentalization limits resource (cpu) sharing which limits
+overcommit thus efficiency. cpumask restrictions are not ideal but sometime=
+s
+necessary. Dynamically configurable cpumasks are better than statically
+reserved cpus.
+
+I do think the cgroup tree structure sometimes helps and we don't have to u=
+se
+it for all cases.
+
+-Xi
