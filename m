@@ -1,254 +1,309 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2061.outbound.protection.outlook.com [40.107.237.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B11728E571;
-	Wed,  7 May 2025 13:54:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746626044; cv=none; b=L5eV+CPKJ1cy6sizUv8SP28hO2T93IDJJRKqjcwzMDHFM421prdASbgpRu2cPDsXKGnoj2qD3ESeFgHz8CVUJXF5gPSbGcqTAparNNRTHEP8LEWj7yZALE/C2SF5yN4kaNmJivuVaRSOMD47ia5Oo020HHx5IY8L5RbTIaBFHks=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746626044; c=relaxed/simple;
-	bh=KaZ/HjhPek95iDUJdjf/fHkSaJC2Cukub1t9WpMH/eo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=F5ZJ1MnsvsEbJjaYsnkrE/UwLQKF11DBmP0FXGCyoaCdK8EY4RaaqB9cQ10w7v1xfbbMgQBlLUIp6qqtiUa32+0zEk1089ZSTOQRkH0A+E1D1sTS3pyOvOlCsJST9n4dY1A4i86PMLurW+am5xWtc3X4gXhaH2tlKfaxu67hqhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=SpBlwwwd; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10E1F28E561;
+	Wed,  7 May 2025 13:54:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.61
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746626043; cv=fail; b=uf7/e5FCrRN/FpNvAo759D+WdBKNL1sclV9vDFMaQq9H7IWqqMr0EX8ZzYO0fl/zTUArOXitMRJYPA8ZdwxyQ6/9HcqtoMMb/DJI8qiVbHNMgrcEgSTRRFjebn6oyr7CPcvwoXdx3mhJ+6V8dfYJUhPP+DCYfuRVJdWIboz9Efo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746626043; c=relaxed/simple;
+	bh=aNJXZh/EshHS8C7j0/RTsSmtmSm8ppYJPya4EP+4S9g=;
+	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
+	 To:Cc:MIME-Version; b=Pr0b9k1N26zJUzbb55Rk9fGpzSaKzGwSk0rMafBIhKtiuaGakjUsIOkGzsJnsc764t3HpE3E+3zs/UOZNsU9slPcSEtIi77PKh3cvme5ierOaN4xemMrHpkvK90+xxxUtAZ0K3Pvtw8ae3rIwRK8KSu4YEEQs3eIYJWOsOeDWEk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=XbfEI6v3; arc=fail smtp.client-ip=40.107.237.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="SpBlwwwd"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id D5A3B43B65;
-	Wed,  7 May 2025 13:53:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1746626039;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iv4iDhYQhHkca747/CRXn/DJuTTj8m5s2q+KOnpvmLg=;
-	b=SpBlwwwdlUSdY1OSKMjqhMNom4sZHP82wOTaNVz2fZrYlcREU5l6An+KrVWPKfcP9gNNFQ
-	J+lw0bbQ9s5sLkE2n2ewuqaTnVTa7WdLyR9nFt2JPci65K6lQC+Egq6vDKJ/awJjwl/sDz
-	1qfRX88q2VE1NFCPWYM2NsOrDz2/dFwJDMthIG0N30xsH8pnEGii3AAanIcZyn5ROEqQq3
-	uCI6otL0ouPZ9HQg8lrFH6+fmVuis94yHl4UW6eEgVaFaqRHVzZRN/4EX9qsKaunqgnzNW
-	0aMam1JNHDd0J7PnlcoaUIsC1A7KyB1S50LWk/UbLNOjTOpAg1cn1sUNANxpiw==
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: davem@davemloft.net
-Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	thomas.petazzoni@bootlin.com,
-	Andrew Lunn <andrew@lunn.ch>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Russell King <linux@armlinux.org.uk>,
-	linux-arm-kernel@lists.infradead.org,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	=?UTF-8?q?K=C3=B6ry=20Maincent?= <kory.maincent@bootlin.com>,
-	=?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
-	Oleksij Rempel <o.rempel@pengutronix.de>,
-	=?UTF-8?q?Nicol=C3=B2=20Veronese?= <nicveronese@gmail.com>,
-	Simon Horman <horms@kernel.org>,
-	mwojtas@chromium.org,
-	Antoine Tenart <atenart@kernel.org>,
-	devicetree@vger.kernel.org,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Romain Gantois <romain.gantois@bootlin.com>,
-	Daniel Golle <daniel@makrotopia.org>,
-	Dimitri Fedrau <dimitri.fedrau@liebherr.com>
-Subject: [PATCH net-next v6 07/14] net: phy: marvell-88x2222: Support SFP through phy_port interface
-Date: Wed,  7 May 2025 15:53:23 +0200
-Message-ID: <20250507135331.76021-8-maxime.chevallier@bootlin.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250507135331.76021-1-maxime.chevallier@bootlin.com>
-References: <20250507135331.76021-1-maxime.chevallier@bootlin.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="XbfEI6v3"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=n302FMfIkj0JTK6nbUZ0dv1t3lUP4xDCsbY+cSQULUTdtre7kpSm+FMODB+jIVJxKVwxG3chYFVz957OeIV6gY3+HoSwCOTxJOynpxelJ5hRZzwgKhNAKOQ0QyOrL5miB0q87vVBc55t8h7vcSWYqdGq4yCP97VdfD0nNAb3+DcCkVFTqk4NjA00AxU7cqlnf2vF1YxLIQbBfs6uQ7rMGUAIPJsz9stv4N0j6b9aVbV180MBu/D508ZKDtMH7Qsrj1xUOBIOXVUMhRqVIi5YP4M25x5GAJiCjyS5jB8EmajNiuaUdI9Q7VCxcrkPliANmwGJsiRY2ZM3UQzn+DPg+Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=m6ZBqfoQKM33N4zK3mwmG9BJaMULtw2+GxaJhd4dj0E=;
+ b=hLzGBhEshajDJhe8mo9w7dms2PLCp87wWY+xhd0osb9guYg/eGDcDca34L+htDjEyEk560DWJj9uVLSHR5fbRM+sFjB6H1usdH6VAH1bIonaGjdhp+qkD/axZQfGmd4ssAF0/Bb91FMbazaB1j8eG09oNJ+MobVowEHH42qDWVxUDUe+kj1ohjwXBTDcNDoiC1YjpxB/SjkDs2FD3WiFswuTjEVM9OS7gTTW5Fi49gz99Hms4pnSSdSnl1dkVkYMsUzUB/+Rs9FWg6T94eJTby09L9eQb8x2JGcV2EQu8kGkIKoIooemqTSu9fSWIZ+0Ks6wOLhKQxCPgNFf7TtQiA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=m6ZBqfoQKM33N4zK3mwmG9BJaMULtw2+GxaJhd4dj0E=;
+ b=XbfEI6v3kF0EG8Wc8i8Ex54iGRIGjtt0r05WmGYmOrNJ+7NRVKokYLc+AHn9iti3KBY6OLXFiNrdtg9lt/KvZ/hcbKCjQT0TRyPtWAypylytHkzwQJoCeReWWgmxZWRMYkPzlp1RFlYtutzzqD+jEjJIjPJnsuIC4opAnKo+IRmn5yklw+Dsz4dKQjqCk0i+W4tPsyU3jOvq32uIpHc7Ld9Zp4QlAXAaaL7t9hi1ONrSdFWBuaG6QMleOg81CNKYz1zKzoEjmulbkmiuwM1f1f1F1dnj90lAXQQkY0o7ROGCm+vtpF5rQGwfozlopzJnhdeWWn5cGJ61gAxwDJZIOg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
+ by SJ0PR12MB8115.namprd12.prod.outlook.com (2603:10b6:a03:4e3::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.21; Wed, 7 May
+ 2025 13:53:53 +0000
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99%4]) with mapi id 15.20.8699.026; Wed, 7 May 2025
+ 13:53:53 +0000
+From: Alexandre Courbot <acourbot@nvidia.com>
+Date: Wed, 07 May 2025 22:52:46 +0900
+Subject: [PATCH v3 19/19] gpu: nova-core: load and run FWSEC-FRTS
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250507-nova-frts-v3-19-fcb02749754d@nvidia.com>
+References: <20250507-nova-frts-v3-0-fcb02749754d@nvidia.com>
+In-Reply-To: <20250507-nova-frts-v3-0-fcb02749754d@nvidia.com>
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Jonathan Corbet <corbet@lwn.net>
+Cc: John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>, 
+ Joel Fernandes <joelagnelf@nvidia.com>, Timur Tabi <ttabi@nvidia.com>, 
+ Alistair Popple <apopple@nvidia.com>, linux-kernel@vger.kernel.org, 
+ rust-for-linux@vger.kernel.org, nouveau@lists.freedesktop.org, 
+ dri-devel@lists.freedesktop.org, Alexandre Courbot <acourbot@nvidia.com>
+X-Mailer: b4 0.14.2
+X-ClientProxiedBy: OSTPR01CA0072.jpnprd01.prod.outlook.com
+ (2603:1096:604:21a::11) To CH2PR12MB3990.namprd12.prod.outlook.com
+ (2603:10b6:610:28::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeejtdefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepveegtdffleffleevueellefgjeefvedvjefhheegfefgffdvfeetgeevudetffdtnecukfhppedvrgdtvdemkeeggedtmehfhedtsgemfedvheemrgeigeefmedufheiugemfhgvrgegmeegsgduieenucevlhhushhtvghrufhiiigvpeegnecurfgrrhgrmhepihhnvghtpedvrgdtvdemkeeggedtmehfhedtsgemfedvheemrgeigeefmedufheiugemfhgvrgegmeegsgduiedphhgvlhhopedvrgdtvddqkeeggedtqdhfhedtsgdqtdefvdehqdgrieegfedqudhfieguqdhfvggrgedqgegsudeirdhrvghvrdhsfhhrrdhnvghtpdhmrghilhhfrhhomhepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepfedupdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopehmrgigihhmvgdrtghhvghvr
- ghllhhivghrsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrghrmhdqmhhsmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhg
-X-GND-Sasl: maxime.chevallier@bootlin.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|SJ0PR12MB8115:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7f859432-9a52-4a7d-f966-08dd8d6e9a27
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|1800799024|366016|10070799003|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?c0FzdUNPN3h4S0dMMFVnWE9xTDkrd2NKSEVTenhYYzlpVTRpeGtndTdPa0l2?=
+ =?utf-8?B?VlJzY21nL1E0VjR4Q3AzbGdHc0V3OGtqb0U2TjF5cllRZENYNDVPb254c0Q3?=
+ =?utf-8?B?Nm5tMEZzTDQzdkxNNVVZRDFKeFN2cU9LNWNiMEo3WHRvOHZmeitzdDRkeVhM?=
+ =?utf-8?B?Vmh0djV0VzlOYi9Nblk2YTFTZzFGQkRrY3RoNWtxQUhFS1IvVmtRbGVYT2VC?=
+ =?utf-8?B?bFBnU0xGZFRCNi9RNTlXTXBGVFJCZnpOK05kRTdCTW9WbGFxT2cvZGVGNjk2?=
+ =?utf-8?B?akRvUTJXZmduUlN2dDk3UFJMWFBKZFJ2T0s4YnVwV3h4T08wMHpZNlg2VThM?=
+ =?utf-8?B?allZWjQ3NWViWW1rZURBaUhoYTRFZlpHNHJzeGRuT1pQMlhtcTc4cE9DTXNL?=
+ =?utf-8?B?N25kRUlvSW9XMVpaZU5wQmxvNCtCTjJXUVk5NTBmeStValRkU2lDN2hhOWc5?=
+ =?utf-8?B?cTFzejVvV3lOdFYzSTFVS3JxN0ErODhHajI3RUdUSitoaVVUcTRXaHFxZE9E?=
+ =?utf-8?B?TjlVekY4MnY3d2RYSDR3SmdZWEUzK0VkSFFRaTN2ajRmSnY1WURWR1RJTC9U?=
+ =?utf-8?B?ZG93a25Gb0R3VmFhMzF3eVpjSVZFVVRoUnNyVzlxZEVqb1JpVEZYMmtBTExt?=
+ =?utf-8?B?cDZUaWJXR3Q0c1VYSGdEb0FTeDVCZU9zdU9zbjhmMElwMjBybGdVSmhLNm9Q?=
+ =?utf-8?B?eUtlbGFjQXZ0cisyK3dBcUQxV25jdWVDdjdXditMU1FUZUV2ZS9NUHV4OXkv?=
+ =?utf-8?B?cE5CQ0tuU0IxdEgrZ2lKMHZDQTBjUmxaMkMzRkF1bDdPdFFiY2JNemFPbk91?=
+ =?utf-8?B?dk1hUUVSazVjWlg3TGxkQStmQ3JBMUNmb2owdXllbGFuLzZZdnRFeEIrVElE?=
+ =?utf-8?B?WVZQc01Telh3ajZ5OFNqWUdvZkZFdElscHNPbTdhZTAwRnRLUWE4dm1YYnhM?=
+ =?utf-8?B?YVdyWWJ3SXVMWGZnVWlFdTV2cWJuMEpMeU9IWmJyQTkwUnQxNXdFNXRvYWU2?=
+ =?utf-8?B?SlBocWtvYXlvY2lWdURRdWh5Wm9OM1FSb3h4aUNieDNDSnB6RWZ3Z2RKb1FR?=
+ =?utf-8?B?ajVkbHdyd0FrK3VIZUEveEx2V1NBZ0dvblpuSXZXK3A3SzZPdkNOYTFjcmt0?=
+ =?utf-8?B?QUdTVDFxb2cwTW9DQURNWmV2KzdVRGpWTUozZnBiaTZSL3BnVXlRRTNmaTFN?=
+ =?utf-8?B?Q0hkWVo4Ulluckd0elNPQlN3VTJ6dTBadGdxZkp3OVpLeGJDbUMrR2xab0E2?=
+ =?utf-8?B?Y0RFeHNkUzl5WmZXMGx1U3RWcFhkMXNlV1pTemVJR2dKWms5ZXEwRzZWVy9G?=
+ =?utf-8?B?VVBGK0dOZDhvUUIvVCs2QmkxdjB1WFlKRmpQTHNyaDMzQStJR3hLbnljMk9u?=
+ =?utf-8?B?TVZUZ3p6VW9nNHZaV2NzSUptRmd4WXZkYTdoUGErQ2dhYzU1WlpZMnN5ejFv?=
+ =?utf-8?B?QmZ3M3RKZjlRenZvd1JFS2YwekhHODFtVXZTaDFxU2lqQ2pDRmE1S1JIbGVD?=
+ =?utf-8?B?M0llSFdKUTRUYW1wK01zaTlZRk5NWVR1a2g1Wis1aFBtQmVrd25GV0lnRC9a?=
+ =?utf-8?B?Y1VzZnZleEdBbDdTalhlNWk0SmplaWR0bjQyeUUzai9SVUhXdm43cGQxVG05?=
+ =?utf-8?B?SmMwaWgxVTdObHZacWIrRy9velNxWkNmaUlselZ2aU4xT0FMUEhVVDlNZmhZ?=
+ =?utf-8?B?a2RKS1F1N2xzUGlJSEJGeDcwVU9HSnd2bmhUSnlkWXF3UUZQZVBmeFRPQzVJ?=
+ =?utf-8?B?cGpQTkIrc2JORm9EMk5nS2NvWlFyRVlVNnFHT1RUNXNkQWxoRW9CSkFZRkNk?=
+ =?utf-8?B?dSs5UnNJZGY0eDFrbmpkeWNHMjVob1RZbG52cmNSVmFHQm5raHpoZ3RhVzRI?=
+ =?utf-8?B?Vk9ERXFySFAyWElXNXFFSzgwMnVpbHcwNENZSnJocTlYN3REZ2Q1M1VwZ0dD?=
+ =?utf-8?B?elZmaXVXUnViem9odXJVUHd0TnJxeENxUEViQS9pTUxxWWE4VnMzQTk1dEdr?=
+ =?utf-8?B?eGhRSjlMTXZnPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(10070799003)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Y0tWOHdjVHhXSmNkR2wyQmhwR3IvTXNYb2hnbjI5ak52Ti9BVytaelQzWDBU?=
+ =?utf-8?B?YmdDTDdWSnRveU1JRjI5VmYxNis5RXhTUm1Ma21sZUt0T290dWR2WnFhT2Rh?=
+ =?utf-8?B?OEFMZmgzSmNWRDhUQzlzdmVuL3gxcnMzcG9UeS9Ic3hqRUxDeUpZVTU1TXpj?=
+ =?utf-8?B?V2tuaUFmeTBTQnZwQnVQQ2tMcDNoQ3QzOWR0L1dzZ3AvMHpJb1FRSjZSYVE1?=
+ =?utf-8?B?eWxlcEtENG84QllwZ2tqS3JZa1ArcVdyQU9ocm5EN1lHOEV4RENpeGdRY0pr?=
+ =?utf-8?B?QUdOUzhSc3VxY2xxUWZDdjA0L3lMRjBLMjRFYllpZW55VVNieW9VckZabUsv?=
+ =?utf-8?B?eXBQOHcvT0U3T09pNm1MRFE2bTNKVEZkL3Y4RjRkVGQwZnA1Y2Vra3pyUUZC?=
+ =?utf-8?B?ZWNlVXFqem9xclJPcmxjVTk1RitKYzA3b2VleCtMNkNIZGpVN29nS2xoaUJI?=
+ =?utf-8?B?WVVkcDd4bjh4a3hzaE9nYjQ0OXU0citzU3RVenkzTXpzRk43KzhCdGorSU1w?=
+ =?utf-8?B?dCtSTG5FNEkxUTR2ajVXQ29sZWI3eFlyUEgxeHp5Y3QrUmcxR29ERHA2clFN?=
+ =?utf-8?B?R3hyYXR5bXo3VVgyb09LM0hhVkRhdlQ2cEhWeGZkRWdiRHhqVzBaMUFqTVFv?=
+ =?utf-8?B?SytIV0k5d1I2WlMwTTJQU1FJK1Nwb21JcjJrNGhkUUZXclU3REx3MTN0QkNQ?=
+ =?utf-8?B?aFNxQ2ZjbkN3ZUFKd1RCSW1xeVNsc2RSWjdXc1NMemFzS3FqY3RQU1dyQW5k?=
+ =?utf-8?B?WTZndE94K0ZCY0l2NlhQMVduV01wTDNiMFNNaFRuVHJMMVBsemFMQ0Q2aG5G?=
+ =?utf-8?B?YURrN0l5Q0VYamdCWEVJd0JMVmduWElyMWtxbC9uK0kyODFjUWoxNUVlSExw?=
+ =?utf-8?B?NmJROU5uSUdRUENCTE83V2JZdkF1WW9HeVRKa1JXSXFYZFhybGhETmZJUFZS?=
+ =?utf-8?B?aXN5WFptT0MvNkk0d0tuVEkxWldocXFKb3hqZWVyNmR2NmJrWE5RdFpWdTdj?=
+ =?utf-8?B?TmRESVhFb09PNEtKV2tpTEFDYzQ0T3pucmVINTV2cFE0NEhuQXBMYk1UYlFR?=
+ =?utf-8?B?REY1ZlVGbm8rOW5ZVysxdGRyS3JvR2dYN0hrb01iOWc1SHRETktreHJNam80?=
+ =?utf-8?B?OCsvaER1VlFmK2FNTjBORzZkd3o3dExLZEtoeGdIZS81dkptMUhhSm5DV05t?=
+ =?utf-8?B?QlFkUHVVVzhzOURTb2FJbm42TGlmYUhDMDNjNEdMSDRKalJaeUJIb0l3K1Fp?=
+ =?utf-8?B?QTRFUFh2WHBtOE55a3U1MC90aVJKc3Y0Zjg4SUY2Yy95a1Z2eWM3T2xaVVVz?=
+ =?utf-8?B?UDMrWlBVUS9JVWZUNnFEdWlJc0pNR2ZxdExsM21kRmx6WWgwSUpXbVJRT3Ju?=
+ =?utf-8?B?U3VPZGNsZWN3TmpZYXZkKzNMa3k4eVZKMmgzVlNCMUd5bnBrWjJTVFVGUzFO?=
+ =?utf-8?B?Vy9Zd3JndFJYTFlXT0pFUnFxV1kza0VGTmdUcDdjckc5aWVyQksxclNzUHlL?=
+ =?utf-8?B?aHBNcnJEK2s0OWdXamlpeEtaNFc4dVBEdktDQXZnS0w1N1crS1ByODB1aklx?=
+ =?utf-8?B?b0c3eFdEb0hLbmtsaDhHaDlKRzdtRFRhSmpzN0ljN3Y0ZWR4UHo3Wnc5OEEv?=
+ =?utf-8?B?RVFYeVk1MlRXU2JSTkliczJxMXIzUU1FOC9nTytpRkx2TlhaNUpvdW9Dcmwv?=
+ =?utf-8?B?MzBISmxpUHRHUktXYy9vUWorNW5SQWhMRElZZjV6SXk3TDhERHAwZVJZdjJF?=
+ =?utf-8?B?M293VnFjWUpVVnNTRFo4M2IybWRSYzJYQ2JuUHdGNkxWeWZ5OVNPUjdMa1Aw?=
+ =?utf-8?B?ckszUVBkOU1DZUtRd25tNUdnSEF6WjVLbG50a2ticXBRYVRyek9ob3dsV1BB?=
+ =?utf-8?B?MXNnVE1UY3pGL09KaFN6aStwM0RKeXlwQS9qakFyNXFERlpzNStObGR0WGRX?=
+ =?utf-8?B?Qkh2dzk3RXp4bXZGYlB0R21EZkpEYXg4Q3VBUlp2ZFduNE04ZUx3NVNhcXF4?=
+ =?utf-8?B?djdxMmdKUnpIS1d3emk2Ty9lcVFFYWlLT000UnB4RHBzMjBHak56a2hNTC91?=
+ =?utf-8?B?KzRvSCtHN0VBL3pEWjlWV2p3aGFKMk9iMG0xVFNzSXdNdFdvSytXb3ArdU4x?=
+ =?utf-8?B?NFhJTTRtenlIbGFEVExZSEI3Y0hmUVQ3TGt4cE9nUnpTRWl4UlozRU41WkVZ?=
+ =?utf-8?Q?4OdiVrerH1lJEHATOeEBeXoEfj0Tr9ZIhw4syuHLvu8C?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7f859432-9a52-4a7d-f966-08dd8d6e9a27
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2025 13:53:53.6494
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: SnndQxFD8REAO4gTkpWOJtn5wZ/oiteh0YG3ga3cM8vPB0S4UG3usPccWL/YklIHRrzIARBvxjT/I4iAQWq6Rw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB8115
 
-The 88x2222 PHY from Marvell only supports serialised modes as its
-line-facing interfaces. Convert that driver to the generic phylib SFP
-handling.
+With all the required pieces in place, load FWSEC-FRTS onto the GSP
+falcon, run it, and check that it successfully carved out the WPR2
+region out of framebuffer memory.
 
-Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
 ---
- drivers/net/phy/marvell-88x2222.c | 98 +++++++++++++------------------
- 1 file changed, 41 insertions(+), 57 deletions(-)
+ drivers/gpu/nova-core/falcon.rs |  3 ---
+ drivers/gpu/nova-core/gpu.rs    | 57 ++++++++++++++++++++++++++++++++++++++++-
+ drivers/gpu/nova-core/regs.rs   | 15 +++++++++++
+ 3 files changed, 71 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/phy/marvell-88x2222.c b/drivers/net/phy/marvell-88x2222.c
-index fad2f54c1eac..4812c9acc32b 100644
---- a/drivers/net/phy/marvell-88x2222.c
-+++ b/drivers/net/phy/marvell-88x2222.c
-@@ -13,7 +13,7 @@
- #include <linux/mdio.h>
- #include <linux/marvell_phy.h>
- #include <linux/of.h>
--#include <linux/sfp.h>
-+#include <linux/phy_port.h>
- #include <linux/netdevice.h>
+diff --git a/drivers/gpu/nova-core/falcon.rs b/drivers/gpu/nova-core/falcon.rs
+index b6552496ad9c5f8eeda4beaa757c7393f495072b..810a7b4ef0d55fb7bd4bfb7833d5da7df091203c 100644
+--- a/drivers/gpu/nova-core/falcon.rs
++++ b/drivers/gpu/nova-core/falcon.rs
+@@ -2,9 +2,6 @@
  
- /* Port PCS Configuration */
-@@ -473,90 +473,73 @@ static int mv2222_config_init(struct phy_device *phydev)
- 	return 0;
- }
+ //! Falcon microprocessor base support
  
--static int mv2222_sfp_insert(void *upstream, const struct sfp_eeprom_id *id)
-+static int mv2222_configure_serdes(struct phy_port *port, bool enable,
-+				   phy_interface_t interface)
- {
--	DECLARE_PHY_INTERFACE_MASK(interfaces);
--	struct phy_device *phydev = upstream;
--	phy_interface_t sfp_interface;
-+	struct phy_device *phydev = port_phydev(port);
- 	struct mv2222_data *priv;
--	struct device *dev;
--	int ret;
+-// To be removed when all code is used.
+-#![expect(dead_code)]
 -
--	__ETHTOOL_DECLARE_LINK_MODE_MASK(sfp_supported) = { 0, };
-+	int ret = 0;
+ use core::time::Duration;
+ use hal::FalconHal;
+ use kernel::bindings;
+diff --git a/drivers/gpu/nova-core/gpu.rs b/drivers/gpu/nova-core/gpu.rs
+index ad71402dbfced2aaa84800a32dbac276b9706803..896986333b76d1192c07093289eddab98fe3f26d 100644
+--- a/drivers/gpu/nova-core/gpu.rs
++++ b/drivers/gpu/nova-core/gpu.rs
+@@ -250,7 +250,7 @@ pub(crate) fn new(
  
- 	priv = phydev->priv;
--	dev = &phydev->mdio.dev;
--
--	sfp_parse_support(phydev->sfp_bus, id, sfp_supported, interfaces);
--	phydev->port = sfp_parse_port(phydev->sfp_bus, id, sfp_supported);
--	sfp_interface = sfp_select_interface(phydev->sfp_bus, sfp_supported);
--
--	dev_info(dev, "%s SFP module inserted\n", phy_modes(sfp_interface));
-+	priv->line_interface = interface;
+         let bios = Vbios::new(pdev, bar)?;
  
--	if (sfp_interface != PHY_INTERFACE_MODE_10GBASER &&
--	    sfp_interface != PHY_INTERFACE_MODE_1000BASEX &&
--	    sfp_interface != PHY_INTERFACE_MODE_SGMII) {
--		dev_err(dev, "Incompatible SFP module inserted\n");
-+	if (enable) {
-+		linkmode_and(priv->supported, phydev->supported, port->supported);
+-        let _fwsec_frts = FwsecFirmware::new(
++        let fwsec_frts = FwsecFirmware::new(
+             &gsp_falcon,
+             pdev.as_ref(),
+             bar,
+@@ -261,6 +261,61 @@ pub(crate) fn new(
+             },
+         )?;
  
--		return -EINVAL;
--	}
--
--	priv->line_interface = sfp_interface;
--	linkmode_and(priv->supported, phydev->supported, sfp_supported);
-+		ret = mv2222_config_line(phydev);
-+		if (ret < 0)
-+			return ret;
- 
--	ret = mv2222_config_line(phydev);
--	if (ret < 0)
--		return ret;
-+		if (mutex_trylock(&phydev->lock)) {
-+			ret = mv2222_config_aneg(phydev);
-+			mutex_unlock(&phydev->lock);
-+		}
- 
--	if (mutex_trylock(&phydev->lock)) {
--		ret = mv2222_config_aneg(phydev);
--		mutex_unlock(&phydev->lock);
-+	} else {
-+		linkmode_zero(priv->supported);
- 	}
- 
- 	return ret;
- }
- 
--static void mv2222_sfp_remove(void *upstream)
-+static void mv2222_port_link_up(struct phy_port *port)
- {
--	struct phy_device *phydev = upstream;
--	struct mv2222_data *priv;
--
--	priv = phydev->priv;
--
--	priv->line_interface = PHY_INTERFACE_MODE_NA;
--	linkmode_zero(priv->supported);
--	phydev->port = PORT_NONE;
--}
--
--static void mv2222_sfp_link_up(void *upstream)
--{
--	struct phy_device *phydev = upstream;
-+	struct phy_device *phydev = port_phydev(port);
- 	struct mv2222_data *priv;
- 
- 	priv = phydev->priv;
- 	priv->sfp_link = true;
- }
- 
--static void mv2222_sfp_link_down(void *upstream)
-+static void mv2222_port_link_down(struct phy_port *port)
- {
--	struct phy_device *phydev = upstream;
-+	struct phy_device *phydev = port_phydev(port);
- 	struct mv2222_data *priv;
- 
- 	priv = phydev->priv;
- 	priv->sfp_link = false;
- }
- 
--static const struct sfp_upstream_ops sfp_phy_ops = {
--	.module_insert = mv2222_sfp_insert,
--	.module_remove = mv2222_sfp_remove,
--	.link_up = mv2222_sfp_link_up,
--	.link_down = mv2222_sfp_link_down,
--	.attach = phy_sfp_attach,
--	.detach = phy_sfp_detach,
--	.connect_phy = phy_sfp_connect_phy,
--	.disconnect_phy = phy_sfp_disconnect_phy,
-+static const struct phy_port_ops mv2222_port_ops = {
-+	.link_up = mv2222_port_link_up,
-+	.link_down = mv2222_port_link_down,
-+	.configure_mii = mv2222_configure_serdes,
- };
- 
-+static int mv2222_attach_port(struct phy_device *phydev, struct phy_port *port)
-+{
-+	if (!port->is_serdes)
-+		return 0;
++        // Check that the WPR2 region does not already exists - if it does, the GPU needs to be
++        // reset.
++        if regs::NV_PFB_PRI_MMU_WPR2_ADDR_HI::read(bar).hi_val() != 0 {
++            dev_err!(
++                pdev.as_ref(),
++                "WPR2 region already exists - GPU needs to be reset to proceed\n"
++            );
++            return Err(EBUSY);
++        }
 +
-+	port->ops = &mv2222_port_ops;
++        // Reset falcon, load FWSEC-FRTS, and run it.
++        gsp_falcon.reset(bar)?;
++        gsp_falcon.dma_load(bar, &fwsec_frts)?;
++        let (mbox0, _) = gsp_falcon.boot(bar, Some(0), None)?;
++        if mbox0 != 0 {
++            dev_err!(pdev.as_ref(), "FWSEC firmware returned error {}\n", mbox0);
++            return Err(EINVAL);
++        }
 +
-+	__set_bit(PHY_INTERFACE_MODE_10GBASER, port->interfaces);
-+	__set_bit(PHY_INTERFACE_MODE_1000BASEX, port->interfaces);
-+	__set_bit(PHY_INTERFACE_MODE_SGMII, port->interfaces);
++        // SCRATCH_E contains FWSEC-FRTS' error code, if any.
++        let frts_status = regs::NV_PBUS_SW_SCRATCH_0E::read(bar).frts_err_code();
++        if frts_status != 0 {
++            dev_err!(
++                pdev.as_ref(),
++                "FWSEC-FRTS returned with error code {:#x}",
++                frts_status
++            );
++            return Err(EINVAL);
++        }
 +
-+	return 0;
-+}
++        // Check the WPR2 has been created as we requested.
++        let (wpr2_lo, wpr2_hi) = (
++            (regs::NV_PFB_PRI_MMU_WPR2_ADDR_LO::read(bar).lo_val() as u64) << 12,
++            (regs::NV_PFB_PRI_MMU_WPR2_ADDR_HI::read(bar).hi_val() as u64) << 12,
++        );
++        if wpr2_hi == 0 {
++            dev_err!(
++                pdev.as_ref(),
++                "WPR2 region not created after running FWSEC-FRTS\n"
++            );
 +
- static int mv2222_probe(struct phy_device *phydev)
- {
- 	struct device *dev = &phydev->mdio.dev;
-@@ -592,7 +575,7 @@ static int mv2222_probe(struct phy_device *phydev)
- 	priv->line_interface = PHY_INTERFACE_MODE_NA;
- 	phydev->priv = priv;
- 
--	return phy_sfp_probe(phydev, &sfp_phy_ops);
-+	return 0;
++            return Err(ENOTTY);
++        } else if wpr2_lo != fb_layout.frts.start {
++            dev_err!(
++                pdev.as_ref(),
++                "WPR2 region created at unexpected address {:#x} ; expected {:#x}\n",
++                wpr2_lo,
++                fb_layout.frts.start,
++            );
++            return Err(EINVAL);
++        }
++
++        dev_info!(pdev.as_ref(), "WPR2: {:#x}-{:#x}\n", wpr2_lo, wpr2_hi);
++        dev_info!(pdev.as_ref(), "GPU instance built\n");
++
+         Ok(pin_init!(Self {
+             spec,
+             bar: devres_bar,
+diff --git a/drivers/gpu/nova-core/regs.rs b/drivers/gpu/nova-core/regs.rs
+index 15ec9b7e69694ff198b5353d562fc1aff5eefd3f..3acec36f2d5701af4a752808e86d71d5f200359b 100644
+--- a/drivers/gpu/nova-core/regs.rs
++++ b/drivers/gpu/nova-core/regs.rs
+@@ -43,6 +43,13 @@ pub(crate) fn chipset(self) -> Result<Chipset, Error> {
+     }
  }
  
- static struct phy_driver mv2222_drivers[] = {
-@@ -609,6 +592,7 @@ static struct phy_driver mv2222_drivers[] = {
- 		.suspend = mv2222_suspend,
- 		.resume = mv2222_resume,
- 		.read_status = mv2222_read_status,
-+		.attach_port = mv2222_attach_port,
- 	},
- };
- module_phy_driver(mv2222_drivers);
++/* PBUS */
++
++// TODO: this is an array of registers.
++register!(NV_PBUS_SW_SCRATCH_0E@0x00001438  {
++    31:16   frts_err_code as u16;
++});
++
+ /* PFB */
+ 
+ register!(NV_PFB_NISO_FLUSH_SYSMEM_ADDR @ 0x00100c10 {
+@@ -59,6 +66,14 @@ pub(crate) fn chipset(self) -> Result<Chipset, Error> {
+     30:30   ecc_mode_enabled as bool;
+ });
+ 
++register!(NV_PFB_PRI_MMU_WPR2_ADDR_LO@0x001fa824  {
++    31:4    lo_val as u32;
++});
++
++register!(NV_PFB_PRI_MMU_WPR2_ADDR_HI@0x001fa828  {
++    31:4    hi_val as u32;
++});
++
+ /* PGC6 */
+ 
+ register!(NV_PGC6_AON_SECURE_SCRATCH_GROUP_05_PRIV_LEVEL_MASK @ 0x00118128 {
+
 -- 
 2.49.0
 
