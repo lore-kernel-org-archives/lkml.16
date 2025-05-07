@@ -1,99 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F2A07263A
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 09:01:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 584314B1E76;
+	Wed,  7 May 2025 09:01:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746608484; cv=none; b=m+1HmRDV2h7v1gDgj1dI/PQ1XKmXlWfyfxYHjNteplpB4OlES8LsSiImfYXymM+1WaMs/I0jEXas+INxz55L8ImPu72oZ4jnvfK3k96zPSqiJeRVdhJLiGj7/C0DpI0M5pj27/RpXyc3yjTvPddfGLCvSXbPYcIra6Il02OykEA=
+	t=1746608519; cv=none; b=bbWO/RF8EdiQMuOH1b3ZB0INi2cjP203OzKE1+i+ywBrqVf2ai4fOFwcJZd9ClbTu63IK/b4VJxpXTGTZfnP1XpIuOgvve34vybkCCr8mQYXf5IwsFqKio3vs2K5dOxJpD9CG6zIO2PWu7VCKBo4JstdrXavbhIrM3aNEvvIjVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746608484; c=relaxed/simple;
-	bh=92zK43JKrNURrOQyhvSQDoyLlgYqzYkxOJINs9dvBrE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IPKNe/fnA0f2e/QhHPKa4/06GQuAqSsGH9kFez+rFB6BKC97TJQ7Rf8ft2HBCyRijqZ3swGV3m39YMeu45itFHZPwd4wPq5lUE/TznbDlwkJvzHvUUeDc0xpD4tml6IOps5RMDWfLG1VcQsXKCgW0PlBTp7xWeODnot92/aUDuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iWsf0f4Q; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1746608519; c=relaxed/simple;
+	bh=QzOoKArIYK0+E1M+1dvu7WEya0r6ILP80kMuNHelX7w=;
+	h=From:Content-Type:Mime-Version:Subject:Message-Id:Date:Cc:To; b=RXuWg/aThQdmJj3rjVbAN648MmC1hRLPvwxJaPEj7qEW1m97Nrgp6BTweg9yzhlwvF/+cDinz8G7JIVXfRnSDHMmc5dm9uBhmA63eANfxpCYdMpaCSzK0V8ldTK9W8vHZVaR6pPIyiah15pBoHHJYfj4f1tAXpPWIBdvqG8m3DY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=nHYlIQkB; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iWsf0f4Q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746608482; x=1778144482;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=92zK43JKrNURrOQyhvSQDoyLlgYqzYkxOJINs9dvBrE=;
-  b=iWsf0f4Qt+OJCmAq5Lh8SiUg60wWIgXPekW3xKq8DX9eURStzqovC40V
-   eVvWc/Uuyh6kNIJbSSr75yCFc5bLup1FKYcN2skFKszt6LyZREWacMl9m
-   9FL6SZtuR4EyLvqFCuDy+28uTLLW7wM/Ryy5m01dbQjYHsmNkF/Fso7C2
-   HMP6+PL5V5IJ57NCLF671YkwbcJaJ18TYISd+zCa72vOuNbeAii9/ghSS
-   Ts0IZRG2j+jI3xm3w2rXTXmh9BqWpjSym3U/hAKYxnc7O+DfCGTD2vnHP
-   Qo0LFWlK4hjMIZJ3cCKADNHlOEdlelhGTCSWC3VdtmvfuHKAn0c2fyhdy
-   A==;
-X-CSE-ConnectionGUID: 1vmZ1YGvRmK52EQCdZ/34w==
-X-CSE-MsgGUID: eW56YEIVRRygsfc534TVxw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="73716009"
-X-IronPort-AV: E=Sophos;i="6.15,268,1739865600"; 
-   d="scan'208";a="73716009"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 02:01:22 -0700
-X-CSE-ConnectionGUID: 8WQe1olIQBWUw6YcxHy67A==
-X-CSE-MsgGUID: e8OWlXHRT1qne2vq3HgY7w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,268,1739865600"; 
-   d="scan'208";a="135797169"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 07 May 2025 02:01:21 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uCaeT-0007SG-1i;
-	Wed, 07 May 2025 09:01:17 +0000
-Date: Wed, 7 May 2025 17:01:10 +0800
-From: kernel test robot <lkp@intel.com>
-To: Max Kellermann <max.kellermann@ionos.com>, dhowells@redhat.com,
-	netfs@lists.linux.dev, linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev,
-	Max Kellermann <max.kellermann@ionos.com>
-Subject: Re: [PATCH 1/4] fs/netfs: convert `netfs_io_request.error` to a
- `short
-Message-ID: <202505071602.yJrZsTiu-lkp@intel.com>
-References: <20250428154859.3228933-1-max.kellermann@ionos.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="nHYlIQkB"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 546NkrLR017745;
+	Wed, 7 May 2025 09:01:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pp1; bh=90nZf1K0z0HPsegV6dHdrYZRjs/z
+	SpuRGmmuOluwzKY=; b=nHYlIQkBNYqJQYfEiOsk0M2inSRiGpLIJUYJJw6pzuPp
+	JMxTFmBFvWO/Ki8GRU62m3hNWXyZF4X0ZyGOkR/34HKRk/nDzoVd4xulcNy83ABq
+	M0TQ4mxmCKCncfrBDju0qnVJrnmw/5X9hCbMiiG6pZnzbZ1T4TrciDTXK3FGkIq5
+	Y/ZIjdRAIkTCeAP1yjJQ7Lx0HZF2LNiHGfk8o3u6mO1wyeRu305PRsxm6XcyQBs8
+	JfkN3IX9LwEepY7uGWa5E95RF9oPhKa6QCSB7Fw7WtT9E9f0hXwLiaYp7qGHmOx3
+	wse8grPDqzXdt1NVYCfmw4VdlYrS4+a9DU7IskNgOQ==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46fvd0j216-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 07 May 2025 09:01:52 +0000 (GMT)
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54791q6G013617;
+	Wed, 7 May 2025 09:01:52 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46fvd0j215-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 07 May 2025 09:01:52 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5476Efp6014082;
+	Wed, 7 May 2025 09:01:51 GMT
+Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 46dypkqn1p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 07 May 2025 09:01:51 +0000
+Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
+	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54791nBJ61669714
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 7 May 2025 09:01:49 GMT
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C311C5805F;
+	Wed,  7 May 2025 09:01:49 +0000 (GMT)
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1B2D15805B;
+	Wed,  7 May 2025 09:01:47 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.204.204.179])
+	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed,  7 May 2025 09:01:46 +0000 (GMT)
+From: Venkat <venkat88@linux.ibm.com>
+Content-Type: text/plain;
+	charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250428154859.3228933-1-max.kellermann@ionos.com>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.600.62\))
+Subject: Re: [linux-next-20250320][btrfs] Kernel OOPs while running btrfs/108
+Message-Id: <0B1A34F5-2EEB-491E-9DD0-FC128B0D9E07@linux.ibm.com>
+Date: Wed, 7 May 2025 14:31:34 +0530
+Cc: linux-btrfs@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linuxppc-dev@lists.ozlabs.org, maddy@linux.ibm.com,
+        ritesh.list@gmail.com, venkat88@linux.ibm.com, disgoel@linux.ibm.com
+To: quwenruo.btrfs@gmx.com
+X-Mailer: Apple Mail (2.3774.600.62)
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: CFlIZywmLgq2_DPEQF7X2haHWbNkvSyS
+X-Proofpoint-GUID: XbFS5lvhsm3ciNdwaecYKC0kRNwjVpvp
+X-Authority-Analysis: v=2.4 cv=LYc86ifi c=1 sm=1 tr=0 ts=681b2180 cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=9Jos5CVRofSNjZQHATQA:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA3MDA3OSBTYWx0ZWRfX2rc5guWqwzDK qY+lq16tmt2jrFG0EIRb5pl5zK7rinzeLiZAFTaiqhEGw2vFrFyRtIP9+9qVamfKh28uBb8rsmU 8bM886D+GwyeHrCrtPKRNzU+fr7PcLK3v9QAQO3caURpwJIvLwKD8m40fD5RFQVPB1wpI2JMmsj
+ KqV+oV7blo/mN9Dc/qk11jAPVx3Vj4WvSd3OKl172Hz50GuY+uMRyCR7eXF7tL0kyKt0ZLaaZrL vxbmNrKXL9OsdxwV79HRYLhT9FnV0DpkZML5DjvwIGMq4Yfm/Vo+2X/vFcxThuY8TFOgWGJIlrW dYuIN49/US6EgRXMJteZO5h4z9a3p3469AwHRDpWW13Wu1VM9Ky+63s7ppezgbo8xFNUUxgXUjN
+ sE/xYRklwe0urCcXDbTOt1dvuA9vJPrrEM4TzjoRNc0BSrj71vvFLWhLuMEDFFWhUAaJFkLq
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-07_03,2025-05-06_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=711 mlxscore=0
+ impostorscore=0 priorityscore=1501 spamscore=0 clxscore=1015 phishscore=0
+ adultscore=0 bulkscore=0 suspectscore=0 malwarescore=0 lowpriorityscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505070079
 
-Hi Max,
++Disha,
 
-kernel test robot noticed the following build errors:
+Hello Qu,
 
-[auto build test ERROR on brauner-vfs/vfs.all]
-[also build test ERROR on linus/master v6.15-rc5 next-20250506]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+I still see this failure on next-20250505. 
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Max-Kellermann/fs-netfs-reorderd-struct-fields-to-eliminate-holes/20250428-235058
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git vfs.all
-patch link:    https://lore.kernel.org/r/20250428154859.3228933-1-max.kellermann%40ionos.com
-patch subject: [PATCH 1/4] fs/netfs: convert `netfs_io_request.error` to a `short
-config: sparc-randconfig-002-20250503 (https://download.01.org/0day-ci/archive/20250507/202505071602.yJrZsTiu-lkp@intel.com/config)
-compiler: sparc64-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250507/202505071602.yJrZsTiu-lkp@intel.com/reproduce)
+May I know, when will this be fixed. 
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505071602.yJrZsTiu-lkp@intel.com/
+Same traces are seen, while running other Tests also.
 
-All errors (new ones prefixed by >>, old ones prefixed by <<):
+Disha,
 
->> ERROR: modpost: "__cmpxchg_called_with_bad_pointer" [fs/netfs/netfs.ko] undefined!
+Can you please share the details of Test and the traces.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Regards,
+Venkat.
