@@ -1,111 +1,85 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CC8372603
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 11:32:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C872AD2C;
+	Wed,  7 May 2025 11:33:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746617553; cv=none; b=t3cYp3WCgXGCrm9QRgF6+E5ZhjN1yTSXX+eOKEk2H+yT92cOCy8W+DSDmIpe6LAHesY/J+VAbRVgCRU0jw89MYma20fb5U3N1yw4CEotLfUUjPsW3S1lVZ42Ek5vuvY0Wbcx5npVhhrsMeZbXGDwgcaEqBBTcy1zWirQKhdeJ0Q=
+	t=1746617627; cv=none; b=HNybeK7ik0T132ll1KhIFM0guRIcx1DRdf2Y45XQcAfpxXOtoFSNf0+D7aqthr8wrLYzLXuJta2G3gMWIkBKuE1A+Lyh/TcZSoxU8KdGykiB+WpzN0ZUXXIyRFEf/RHJ+9kJuNY3VFk+uiuxnqOhwSZlFAsVoou+4/xG8lKf2lI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746617553; c=relaxed/simple;
-	bh=3XbAz2PGXTRyrdvEhkXrGX16BDmtijuZ4bay8iyN02Y=;
+	s=arc-20240116; t=1746617627; c=relaxed/simple;
+	bh=TdXUW3s/bibHixgCtL5pScTc/TC3t4TyB1NBSk5rNaA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uRY3JZ1Eht/7URqx5r7kQvzoH3k0gQ2tvektCxxdvf09vCIiqdDUFHdPWEPWuOxC6Amf7ziyPhEzN850KUp0P2JteN8ddu2Vc3gJBQH5jSdEAg2Ye9iSZNvtI+HZzdgf2TIEAVvQ5e7WHfUUxCZxJUv2bEcgo/XUjcKJ5zW/C6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vw5ND7Rx; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=WhLeN0kNZkbVBJOJYkOZRZaYeMhxnx6CjnqrhXdD6AjG1RTtrGN8XbXz8G5AE1A3KxjQKUH36gWVtHyYdF4j5CFM0mZxyzquSWokHt9neH55/rtBARipIZfOBKeBn3Vm1lpSGmZY82zd6WLS4+QwpHdCoa8zBapN+hJ3CVharRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=MefdPJe3; arc=none smtp.client-ip=46.255.230.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vw5ND7Rx"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-441d1ed82faso12207125e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 04:32:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746617550; x=1747222350; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Nb+zlo587RuPjZXBWr3+oLX8zkFQSZwHVEcLM+1lwB8=;
-        b=vw5ND7Rx5+lkbzZeLWZ6WPBEWTxNcVx3hSjMP6HMR3ahY7OyvaI8rC4FfJlJSZYpQp
-         eFOkcqNQhOswgb0yznonZ+TskDQt40sao3XnOlMob8Z7DFg80YhPmQ2pHJnt5iriTBYr
-         yd8Y5KH5ktQ8mppxSiaxqyvSTsMxZG/zSTxZGQCog+TAd6YCwgfTD7myefBaWW+G8b1Z
-         nof97H2C59nvdDi0VknOy8JlDYskeazSHv3glHd73lMViyQWGVnOFNWkXbrmrXEYmuU8
-         7HMg7gYzDvnwSJwjlnGcHVasJcABjBi+2XYpAvCNSfIOeSzSjTZomZmiKGTzVshTnkU/
-         kkfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746617550; x=1747222350;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Nb+zlo587RuPjZXBWr3+oLX8zkFQSZwHVEcLM+1lwB8=;
-        b=ri3znUz7q9mTY4NEoZvnIFsaSVRN/Q0WxHf64XA4nXYDIStmY5022HdHzNG8sgNE5S
-         y/OxeLm/bhtPBtw62m6BNCmWuN2qTlv8414Zi210xptXA2DrgoXRn51j+76kfWh4bH8C
-         wGGchucrzUdeBysl5RcEnf3FU7LXrtC4Q749rBQzzu3r5U3nKBcN5HvTfvfwfDVaknE1
-         Pyd84Gci4JXQLn0DMjRZ1mBja9s2NpgIbaBSujcKIDKeG48sWN8ee2WKEfc1W4g4NVxU
-         c081PYyMmpTdQmbeM3lxUCuci2Ldc4Idc8BBtFrn+uFxAyW9vB2dQqXK9MHWqfnkb1Mf
-         dWXw==
-X-Forwarded-Encrypted: i=1; AJvYcCW87F4kB6PYD5tlBCZeC5IUBo/4IkpOUN8dPFinbMWTRoIeK4V027VjF8ydh8wLYOX28hRfwZAn19rwgNQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSRauzwAEco3fHOf4gGPEmJcB5g2QHV3f810hGdRQZglejgD+4
-	unvzvN/69meu2ThPMQoFk33nUKXKnG5rMcAsOQqZ5+zUzP+A4YPu5+AB7H0a5AA=
-X-Gm-Gg: ASbGncuHj0fpuRf19payaOf/QwV/SitWQYaWjRvGpiVnGR+mEmsW7Da0dP2zgLJER95
-	V1C3Fq+aOgQxKznIz8qsVK9KS6SVP4zxK4Eed/D1buuOPHf/e/VYJFfmd6Ogi9npxyXp5KNuXNZ
-	Sjo2X3Qy4IUxfXJoh51TJvh89g4sHDcp3YbjTJQfqwkSlYM8EYRDYOJk9y98cb/rhJrBB/fO4N4
-	ZgXQeqSOEOzH1X/hk8LsK80AiL6DbV7vFdz5sEj94CsIBFVgTbMv1HgwMr7Dqh15RKGfOL4Lcu0
-	zN76uD6zZgCgJQMKwocH63CwjTYvYqgTTtpJWyiV1Gk3IQ==
-X-Google-Smtp-Source: AGHT+IEItGOXOrk5wMY3AvgagcMlmqm3t9UoMOHncdRejXrITI+PTxVIePkvuItRyBuA1HIIIAv1lQ==
-X-Received: by 2002:a05:6000:250d:b0:391:4559:8761 with SMTP id ffacd0b85a97d-3a0b4a4b31emr2533881f8f.36.1746617549892;
-        Wed, 07 May 2025 04:32:29 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a0b22bd6a3sm4059664f8f.27.2025.05.07.04.32.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 04:32:29 -0700 (PDT)
-Date: Wed, 7 May 2025 14:32:25 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: ALOK TIWARI <alok.a.tiwari@oracle.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Takahiro AKASHI <akashi.tkhro@gmail.com>
-Subject: Re: [RFC 3/7] pinctrl: introduce pinctrl_gpio_get_config()
-Message-ID: <aBtEyciwVip9FaKP@stanley.mountain>
-References: <cover.1746443762.git.dan.carpenter@linaro.org>
- <0e982ace876920162d27a521f5f460b1dd6fc929.1746443762.git.dan.carpenter@linaro.org>
- <f59c3493-4630-4cf1-8d25-d4e9fbf23498@oracle.com>
+	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="MefdPJe3"
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+	id 1102A1C0082; Wed,  7 May 2025 13:33:36 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
+	t=1746617616;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wpW6+F8wuTVSutm9gp06d9+r4fH5ttNuTrzJur8hwKA=;
+	b=MefdPJe3cHf2ywUxB3nHsVrBuG4R1zqlBRhNaq63wBme60pHlvBbyEOc+Fu9WPLSSa3SlH
+	rYaNwvZSpWlrFGXN1SzoZ55gYiEtl3Magca+bl6FJFJ5Ed11GxkEteppl6h86D/lNbygkU
+	tFlh01ohP04ldUs1ZiNW+URRF2MH3Ok=
+Date: Wed, 7 May 2025 13:33:35 +0200
+From: Pavel Machek <pavel@ucw.cz>
+To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: hdegoede@redhat.com, bentiss@kernel.org,
+	Werner Sembach <wse@tuxedocomputers.com>,
+	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v9 0/1] platform/x86/tuxedo: Add virtual LampArray for
+ TUXEDO NB04 devices
+Message-ID: <aBtFDy+Qu3RvAHur@duo.ucw.cz>
+References: <20250425210043.342288-1-wse@tuxedocomputers.com>
+ <174645314692.23202.56309255974182976.b4-ty@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="W+JKsxFKyzAcxaI8"
+Content-Disposition: inline
+In-Reply-To: <174645314692.23202.56309255974182976.b4-ty@linux.intel.com>
+
+
+--W+JKsxFKyzAcxaI8
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f59c3493-4630-4cf1-8d25-d4e9fbf23498@oracle.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 05, 2025 at 10:00:35PM +0530, ALOK TIWARI wrote:
-> > +int pinctrl_gpio_get_config(struct gpio_chip *gc, unsigned int offset, unsigned long *config)
-> > +{
-> > +	struct pinctrl_gpio_range *range;
-> > +	const struct pinconf_ops *ops;
-> > +	struct pinctrl_dev *pctldev;
-> > +	int ret, pin;
-> > +
-> > +	ret = pinctrl_get_device_gpio_range(gc, offset, &pctldev, &range);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	ops = pctldev->desc->confops;
-> > +	if (!ops || !ops->pin_config_get)
-> > +		return -EINVAL;
-> > +
-> > +	mutex_lock(&pctldev->mutex);
-> > +	pin = gpio_to_pin(range, gc, offset);
-> > +	ret = ops->pin_config_get(pctldev, pin, config);
-> 
-> can we add reason here, as now we are not calling pin_config_get_for_pin()
-> 
-> https://lore.kernel.org/all/20231002021602.260100-3-takahiro.akashi@linaro.org/
-> 
+Hi!
 
-I don't even know why I changed that.  Using pin_config_get_for_pin()
-works and it's cleaner.
+> Thank you for your contribution, it has been applied to my local
+> review-ilpo-next branch. Note it will show up in the public
+> platform-drivers-x86/review-ilpo-next branch only once I've pushed my
+> local branch there, which might take a while.
 
-regards,
-dan carpenter
+Can I ask you to Cc me with the pull request when you'll send the
+patch upstream?
 
+Thank you,
+								Pavel
+--=20
+I don't work for Nazis and criminals, and neither should you.
+Boycott Putin, Trump, and Musk!
+
+--W+JKsxFKyzAcxaI8
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCaBtFDwAKCRAw5/Bqldv6
+8ukgAJ9JPWN3q/5HPzCCEUVl6BYLgOg3/gCgnvYxOMvokW+b/2GOGUyhDWujzq8=
+=Cote
+-----END PGP SIGNATURE-----
+
+--W+JKsxFKyzAcxaI8--
