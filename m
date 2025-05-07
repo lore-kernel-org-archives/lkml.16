@@ -1,172 +1,144 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B402C221F13;
-	Wed,  7 May 2025 11:59:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8A6D233145;
+	Wed,  7 May 2025 11:59:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746619179; cv=none; b=Cu0qVAdhye1Vw69xTkEpmqnJQP2+ZhZZYNBZsLlduskY2VbXxDeDI6I6NZKskKD7D8F22Ggk9QERrREbNyGhzBtVMFHV1gcc6fep/2eixhVrXVBUIISrcXHUGrQ2LtNxjPXdD01kZ1goGlZLBXLvQzapnyz59MnVNm2we/+pfMs=
+	t=1746619200; cv=none; b=qNgB3/vAmNt4x5hhzHYn9dix16faj3Z7XerLiL9wcvBWpfHBerYb7JCGatFjuMYpwu8c41RztdaBv3z4BWoLL+5bQPwZLaiPbaSy5Jd2A05qipfYcvcUmGKS74pZ+jNSDgCg4xWtkYXa++WOU2x71Rbx0YskB6cCtjZ04AYprf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746619179; c=relaxed/simple;
-	bh=AI1HsAKecU9VCI5dP/B+WfjaQBA4Oer2ejuRed1fboI=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=HoEAfldLJVgQA79o6We7H5X89z0zLyab0D+54LCK86ntbuBqBVZdwY+Ve99xBI7QvgCwG059AdIsVLYgCRVCi3dpo8qwlBeSRW3A6gK9q07p+IOIjGkOW/aeQ9rN9WMGaQ5UPGrLnHK1L3Aecll+gm98UsIBwGf97BoeHdTAk1s=
+	s=arc-20240116; t=1746619200; c=relaxed/simple;
+	bh=8RO7qb8A2o2/SWPKRVHIg+XW346Qu4M2ikcfzJXF/Nw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C2wEOUei0Cu7GSYxID4w0Qxx62sjiAoP2weRd0iRaicBae5eW6Q7iLYdGFN2ElpAqdKvd8bm4BSFEtl4dCJuABVmB+0uwfU88naQXshtR/4ML0SYoC8/PoDHphwfk4tMamnnF/QyALXI7lgMEchSZ5yhZzOpn+L/KnJF9sF20rw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AC905339;
-	Wed,  7 May 2025 04:59:26 -0700 (PDT)
-Received: from [10.1.30.69] (Suzukis-MBP.cambridge.arm.com [10.1.30.69])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id BC54B3F5A1;
-	Wed,  7 May 2025 04:59:34 -0700 (PDT)
-Message-ID: <f4db016a-0c57-4213-8eca-75a090d7aabb@arm.com>
-Date: Wed, 7 May 2025 12:59:33 +0100
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8B3C6339;
+	Wed,  7 May 2025 04:59:46 -0700 (PDT)
+Received: from pluto (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 476B23F5A1;
+	Wed,  7 May 2025 04:59:54 -0700 (PDT)
+Date: Wed, 7 May 2025 12:59:45 +0100
+From: Cristian Marussi <cristian.marussi@arm.com>
+To: Mike Tipton <quic_mdtipton@quicinc.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>,
+	Cristian Marussi <cristian.marussi@arm.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>, arm-scmi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Peng Fan <peng.fan@oss.nxp.com>,
+	Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH v3] cpufreq: scmi: Skip SCMI devices that aren't used by
+ the CPUs
+Message-ID: <aBtLMYqcnwacGJuy@pluto>
+References: <20250428144728.871404-1-quic_mdtipton@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] coresight: add coresight Trace Network On Chip
- driver
-Content-Language: en-GB
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-To: Yuanfang Zhang <quic_yuanfang@quicinc.com>,
- Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: kernel@oss.qualcomm.com, linux-arm-msm@vger.kernel.org,
- coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250411-trace-noc-v3-0-1f19ddf7699b@quicinc.com>
- <20250411-trace-noc-v3-2-1f19ddf7699b@quicinc.com>
- <23d02991-3bc6-41e2-bb8b-a38786071c43@arm.com>
- <257fb0a5-7bf7-4a04-9f8d-d8759351584c@quicinc.com>
- <9b75b9d1-a9ed-46c9-9dba-8e3eb261dcc0@arm.com>
- <4a6a8bad-e5d9-4613-a839-5a21491ef7c4@quicinc.com>
- <069e920c-7023-4a6d-b1c6-dc87ac9d2360@arm.com>
-In-Reply-To: <069e920c-7023-4a6d-b1c6-dc87ac9d2360@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250428144728.871404-1-quic_mdtipton@quicinc.com>
 
-On 07/05/2025 09:52, Suzuki K Poulose wrote:
-> On 07/05/2025 05:26, Yuanfang Zhang wrote:
->>
->>
->> On 5/6/2025 7:20 PM, Suzuki K Poulose wrote:
->>> On 14/04/2025 10:16, Yuanfang Zhang wrote:
->>>>
->>>>
->>>> On 4/11/2025 5:59 PM, Suzuki K Poulose wrote:
->>>>> On 11/04/2025 09:57, Yuanfang Zhang wrote:
->>>>>> Add a driver to support Coresight device Trace Network On Chip 
->>>>>> (TNOC),
->>>>>> which is an integration hierarchy integrating functionalities of TPDA
->>>>>> and funnels. It aggregates the trace and transports to coresight 
->>>>>> trace
->>>>>> bus.
->>>>>>
->>>>>> Compared to current configuration, it has the following advantages:
->>>>>> 1. Reduce wires between subsystems.
->>>>>> 2. Continue cleaning the infrastructure.
->>>>>> 3. Reduce Data overhead by transporting raw data from source to 
->>>>>> target.
->>>>>>
->>>>>>      +------------------------+                
->>>>>> +-------------------------+
->>>>>>      | Video Subsystem        |                |Video 
->>>>>> Subsystem          |
->>>>>>      |       +-------------+  |                |       
->>>>>> +------------+    |
->>>>>>      |       | Video TPDM  |  |                |       | Video 
->>>>>> TPDM |    |
->>>>>>      |       +-------------+  |                |       
->>>>>> +------------+    |
->>>>>>      |            |           |                |              | 
->>>>>>           |
->>>>>>      |            v           |                |              
->>>>>> v          |
->>>>>>      |   +---------------+    |                |        
->>>>>> +-----------+    |
->>>>>>      |   | Video funnel  |    |                |        |Video 
->>>>>> TNOC |    |
->>>>>>      |   +---------------+    |                |        
->>>>>> +-----------+    |
->>>>>>      +------------|-----------+                
->>>>>> +------------|------------+
->>>>>>                   |                                         |
->>>>>>                   v-----+                                   |
->>>>>> +--------------------|---------+                         |
->>>>>> |  Multimedia        v         |                         |
->>>>>> |  Subsystem   +--------+      |                         |
->>>>>> |              |  TPDA  |      |                         v
->>>>>> |              +----|---+      |              +---------------------+
->>>>>> |                   |          |              |    Aggregator TNOC  |
->>>>>> |                   |          |              +----------|----------+
->>>>>> |                   +--        |                         |
->>>>>> |                     |        |                         |
->>>>>> |                     |        |                         |
->>>>>> |              +------v-----+  |                         |
->>>>>> |              |  Funnel    |  |                         |
->>>>>> |              +------------+  |                         |
->>>>>> +----------------|-------------+                         |
->>>>>>                     |                                       |
->>>>>>                     v                                       v
->>>>>>          +--------------------+                    
->>>>>> +------------------+
->>>>>>          |   Coresight Sink   |                    |  Coresight 
->>>>>> Sink  |
->>>>>>          +--------------------+                    
->>>>>> +------------------+
->>>>>
->>>>> If each NOC has TraceID, how do you reliably decode the trace ?
->>>>> Is there a single NOC/TPDA in the path from Source to sink ?
->>>>
->>>> Not each TNOC has TraceID, there is only one TNOC has TraceID for 
->>>> one path
->>>> from Source to sink. In the example, only the aggregator TNOC has 
->>>> traceID.
->>>> Decode trace relying on TraceID + Inport number.
->>>> It can has mutiple TNOC/TPDA in one path.
->>>
->>> So do we only describe the TNOCs that need traceId in the DT ? (e.g., 
->>> Aggregator TNOC above ?) How about Video TNOC ? Don't we allocate a
->>> trace id for it by default, when it is described ?
->>>
->>> Suzuki
->>>
->> yes, now only describe the TNOCs which need traceID, Video TNOC is 
->> another type, it is interconnect TNOC which collects trace from 
->> subsystems
->> and transfers Aggr TNOC, it doesn't have ATID. Its driver is different 
->> from this patch, I want to describe it when upstream its driver.
-
-So, if both are TNOC and there different types of them, how do you plan
-to identify, which is what ?
-
-And we also have a dt-bindings which simply says "coresight-tnoc". Isn't 
-too generic if it is meant to be "aggregator" ?
-
-Suzuki
-
-
-
-> 
-> Thanks! Please could you make sure to describe all of this when sending
-> out a patch in the cover letter ?
-> 
-> Cheers
-> Suzuki
-> 
-> 
->>
->> Yuanfang
->>
->>
->>
->>
->>
->>
+On Mon, Apr 28, 2025 at 07:47:28AM -0700, Mike Tipton wrote:
+> Currently, all SCMI devices with performance domains attempt to register
+> a cpufreq driver, even if their performance domains aren't used to
+> control the CPUs. The cpufreq framework only supports registering a
+> single driver, so only the first device will succeed. And if that device
+> isn't used for the CPUs, then cpufreq will scale the wrong domains.
 > 
 
+Hi,
+
+bit of lagging behind, my bad.
+
+
+> To avoid this, return early from scmi_cpufreq_probe() if the probing
+> SCMI device isn't referenced by the CPU device phandles.
+> 
+> This keeps the existing assumption that all CPUs are controlled by a
+> single SCMI device.
+> 
+> Signed-off-by: Mike Tipton <quic_mdtipton@quicinc.com>
+> Reviewed-by: Peng Fan <peng.fan@nxp.com>
+> ---
+> Changes in v3:
+> - Use dev_of_node(dev) instead of dev->of_node.
+> - Sanity check scmi_np.
+> - Pick up Reviewed-by from Peng.
+> - Link to v2: https://lore.kernel.org/all/20250421195206.3736128-1-quic_mdtipton@quicinc.com/
+> 
+> Changes in v2:
+> - Return -ENODEV instead of 0 for irrelevant devices.
+> - Link to v1: https://lore.kernel.org/all/20250411212941.1275572-1-quic_mdtipton@quicinc.com/
+> 
+>  drivers/cpufreq/scmi-cpufreq.c | 31 ++++++++++++++++++++++++++++++-
+>  1 file changed, 30 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/cpufreq/scmi-cpufreq.c b/drivers/cpufreq/scmi-cpufreq.c
+> index 944e899eb1be..b63992de9fc7 100644
+> --- a/drivers/cpufreq/scmi-cpufreq.c
+> +++ b/drivers/cpufreq/scmi-cpufreq.c
+> @@ -393,6 +393,35 @@ static struct cpufreq_driver scmi_cpufreq_driver = {
+>  	.set_boost	= cpufreq_boost_set_sw,
+>  };
+>  
+> +static bool scmi_dev_used_by_cpus(struct device *scmi_dev)
+> +{
+> +	struct device_node *scmi_np = dev_of_node(scmi_dev);
+> +	struct device_node *np;
+> +	struct device *cpu_dev;
+> +	int cpu, idx;
+> +
+> +	if (!scmi_np)
+> +		return false;
+> +
+> +	for_each_possible_cpu(cpu) {
+> +		cpu_dev = get_cpu_device(cpu);
+> +		if (!cpu_dev)
+> +			continue;
+> +
+> +		np = dev_of_node(cpu_dev);
+> +
+> +		if (of_parse_phandle(np, "clocks", 0) == scmi_np)
+
+Shouldn't this, on Success, be released by an of_node_put() (or, BETTER,
+by some OF-related cleanup.h magic...)
+
+> +			return true;
+> +
+> +		idx = of_property_match_string(np, "power-domain-names", "perf");
+> +
+> +		if (of_parse_phandle(np, "power-domains", idx) == scmi_np)
+
+Same.
+
+> +			return true;
+> +	}
+> +
+> +	return false;
+> +}
+> +
+>  static int scmi_cpufreq_probe(struct scmi_device *sdev)
+>  {
+>  	int ret;
+> @@ -401,7 +430,7 @@ static int scmi_cpufreq_probe(struct scmi_device *sdev)
+>  
+>  	handle = sdev->handle;
+>  
+> -	if (!handle)
+> +	if (!handle || !scmi_dev_used_by_cpus(dev))
+>  		return -ENODEV;
+>  
+>  	scmi_cpufreq_driver.driver_data = sdev;
+
+Other than the above glitches, LGTM.
+(I gave it a go on JUNO and some emulated setup..)
+
+Reviewed-by: Cristian Marussi <cristian.marussi@arm.com>
+Tested-by: Cristian Marussi <cristian.marussi@arm.com>
+
+Thanks,
+Cristian
