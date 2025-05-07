@@ -1,183 +1,241 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2117.outbound.protection.outlook.com [40.107.20.117])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D7E21DF742;
-	Wed,  7 May 2025 05:09:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746594552; cv=none; b=UIAGavYhBIPGKULGacmOagd4WmfGuymux6A+QT/6UOctSDj+S4HJyC8m/EbRvVB0rHM9dm2cBuBEdDuW4brYw/G+cdNnniY9E7vULfT2b4U3FGRz7O7xICIYi/pmKIs4nkEZd0w6X1tDY2IKwNvGRwGZtbhtkd9NskKq0Ou4QYk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746594552; c=relaxed/simple;
-	bh=Cg3lNgNXXlY3tbGP5L2tCy8t6w10UD5L5/hDeNrXlh8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rJ3/M+X9YVQGGWBHQ9kakyQCFDyjB0arDL16pBLwJHbpk5MGqeYa4eZxtKyTzUjNjDhyGsAMdYPgDZ9++0tnKZZ/xyHwoSnQ1GSXGaJZAZi8YbE8l9uUvBWVGK9uCfXIuR829aaK8OEnHOsRq/Y5ZI5dOK6ktU6+HZiPK0te1Ks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mko7YDkT; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 339E71CCB4B;
+	Wed,  7 May 2025 05:09:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.117
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746594553; cv=fail; b=WDbgTD3hBh5zNbVCfJMb5ThPle5B6bqktx+ZcYLAQoBVv1dnBgF3zSErb7rjy981QMLZ8UbyvvQF7dFGjrQSGbQYUIF2zfv9p1plpGBi9ObYv5pN2HNATtrpQ6haNwVOhyaHxUyB5g3MfFZ1fDsDDGzfwkVPh7T6YcUQT4dFYec=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746594553; c=relaxed/simple;
+	bh=kRPFOD8DHw67WlEK7UjbXmgMWbzNXDtNKIe2g6j63M8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=IbbD8kvquIwie4kWJAysbo5/o1ly2ksSCHLq3CQM8t04gN2nUirRGojjtwW401h23jCVIfc50DZCXwKNuWAjvMFJWTfgi0meHjwWb/6NoV+Zbh4IoQ3XHpkyw8jmjQd5N3dXsGl57UT7Hs8uhxU9shhfF6PZ/Zcgl4TanM/ma3k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=phytec.de; spf=pass smtp.mailfrom=phytec.de; dkim=pass (2048-bit key) header.d=phytec.de header.i=@phytec.de header.b=SquRJtQK; arc=fail smtp.client-ip=40.107.20.117
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=phytec.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytec.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mko7YDkT"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-30a509649e3so3791743a91.2;
-        Tue, 06 May 2025 22:09:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746594549; x=1747199349; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=qDfFaWqi7aHktXrAOXgC9kWrCSEA1y5g+C1t+ku3vxY=;
-        b=Mko7YDkTZNpD12w+iwfQJK2Z4a0Kdbb1Ehd7eqTQnYrEb8/qipYNqReb4YcytRg+Tf
-         8XBxBXeeNhC1shujpfoUk027AJEE5tHuMjOW39IoP98bZY2TkVT7+QAicgGBPyfCnWog
-         4+bugis547EVPXTLlsZliZuRqIZXqWidQXEu17XHa9+yCEzB2bvg+X2T+JoW4UZSdqK0
-         o5BsvAOlE7A7exnsGRpYE9GpmaTNHJ8jZhb2d4ZkexUrmbYtQ+LWZEEA9FXNVY6HEGVT
-         UPkXFP5SJ+EEp5hFrqJBBxkzm7G7LTTbrVazJhftfghfXXGSeBDCo2Oks3jxwNEboKQS
-         Fjlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746594549; x=1747199349;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qDfFaWqi7aHktXrAOXgC9kWrCSEA1y5g+C1t+ku3vxY=;
-        b=OXhWZB3ZYx7ogQvFkdMhrudwtjF+7P9hjDzyVIdUyBAl3pGd7At5Eo3t/gTOL0np1s
-         x7cs2ChPsQQ+mgzInX6NqkeVc/iFgxmLj7yfsjEdW2yYLKd1xMvyyi5J65P6ZfPr5MKe
-         FtX+P/MqVbXmHnJpEX3DK7yneI15mFDP8azm4IUu2wawHuLV9pK7nyjIyxyT2HgfpIVw
-         ydLofPJDJsx35wPp7H5uAADuvjCFmecI5mZdCCUYK5Pc2WIOWIKarEtIxnwnGkRfgbOM
-         lw/drHelm9VsRe/HIDw6zneJPziLN3xGVFvWhNVUGyfmvqmZkbep19nM5XMKyPLF21nf
-         CekA==
-X-Forwarded-Encrypted: i=1; AJvYcCUwezCLQdlQY1rsRvq2XjoTZaGrdq2Yo+Cvy/sT5gt5GwMKsAlrYu33TKEdDTwWLXua44c=@vger.kernel.org, AJvYcCWS97lFshWuhG9ap/sxqvpI6I8/nPGy1uflb6HyY3PcQfkK1eZWu9vM/vUKUks1z3vYseRFQAQy8MH74/0XxQ5g0fTV@vger.kernel.org, AJvYcCXRvTA+BhSbm90KFTCnC5Fum0Auv+QEr5TJInk6cYBWsgX36zzALT0gKsNZIgUq9b59FsQWG2GS@vger.kernel.org, AJvYcCXgBZvGwsI9lk4rBW+JXb7hNAV3omaRFnVKoGfeQRSBLRfDP/yUJPfm1k7+Ud3gWgOUAeQvJi6sS+ySC7m8@vger.kernel.org
-X-Gm-Message-State: AOJu0YxlUKN4ND+mryru0TvGHuwxdVCWk4Mim5PGtHxlRNk4gDEh0sLb
-	v2vX0fCWbXqX94KzgPhP6JhQsL/E+T3cnTZq9OfiXTPBk98Lb05G
-X-Gm-Gg: ASbGncvjKzFxBtKbCZDD80wD3Ls4ZGbPLQSxzLiBnHICkLcPyx5BRmDTuVDfzhbbxNi
-	ZMt39as3GaPaVB5jevaMpXpzV18QCi9JgEqCpCX5uKn4D/dhP9gA7igG2k+bT7GqtyvEAKQxhL0
-	j9r2B8wtzbkohx1CQ3w+ytk3mzbShhpFNeR247Gy4O4mw0dbMtR4HTzb486AP8dlzXxK9jeyWxS
-	cKI/73CaxHPigl+93iyTRUGblp6AszP84WzbhM8l8OphKVeeTS39lnsbu1M6IMk0g7myeNbczBi
-	IOrug25WaKqvmOozY3aB4vR/JOPvCC37h4S7HoYpCw==
-X-Google-Smtp-Source: AGHT+IHy0jV4YgMxOHksPhxh53RpeJAZ/E8UFT1rKsUGw11pv+I+0YyJ9AE3+lffwugInqcy6tb7uA==
-X-Received: by 2002:a17:90b:4ad0:b0:2ea:a9ac:eee1 with SMTP id 98e67ed59e1d1-30aac19d49bmr3325171a91.10.1746594549416;
-        Tue, 06 May 2025 22:09:09 -0700 (PDT)
-Received: from gmail.com ([98.97.36.253])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e61f3ad8asm7010665ad.211.2025.05.06.22.09.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 22:09:08 -0700 (PDT)
-Date: Tue, 6 May 2025 22:08:35 -0700
-From: John Fastabend <john.fastabend@gmail.com>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Jiayuan Chen <jiayuan.chen@linux.dev>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Jakub Sitnicki <jakub@cloudflare.com>,
-	Cong Wang <xiyou.wangcong@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-	Network Development <netdev@vger.kernel.org>,
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [RESEND PATCH bpf-next v4 1/2] bpf, sockmap: Introduce tracing
- capability for sockmap
-Message-ID: <20250507050835.4seu6rz35v2uqret@gmail.com>
-References: <20250506025131.136929-1-jiayuan.chen@linux.dev>
- <b776fa07-de4b-44be-ae68-8bc8c362ea81@linux.dev>
- <9c311d9944fa57cec75e06cde94496d782fe4980@linux.dev>
- <CAADnVQKK87UV9rH_YviePfUmOO3mGXQmYfN-Q9Ax5AYv+xE8zw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=phytec.de header.i=@phytec.de header.b="SquRJtQK"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=E1dPUyyll5r0BdfMquPyE2WnNjmheuMIAkDHyC6Ie0ovsehqZ/t57ffOhMy2K144wp8U1oQEinrmZx+F77iwQRcaz04ynk/AQSPrnx39j4DoYColpNhHpHamxTlN5djTyLaPbo5pUhrXIVlm/+Yze/YJBBg9kLzc+Ldsmh8dhOI5yh4HusomMDS9ZXUFX2cJnh9ndVN8Y+HiRD4udLWK/9e8zd3QS6Vc2Vk/Ct6WTHwmbr6ZJeDh+16CnuVLsK7emCi1QrStGqvrlGxS3XY6G2+3LQdSP5UYl5KUrKrZjiP30vmr8rkYrGUfpggCPNAGOSXh3zi8LDo6sLXH82UBOA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Cyg4fSPJk3Pp4YvqpxqbAb9YBc55YCyV0kWxXjB3HUs=;
+ b=LKaVi5+TXUWD5eEo/D8Gc9LBCpMixMTy588meBVf5c1+49aaD2naQJw8BHzLmNQ77SiDx4cW+E+TxOTdgjQAYc1YZbNo6vTDjwpL80XZyu1bJ9fDzAa9jdrGo2FkWVnbo94p748zhqDruO83w8k72bFKC0MeDglBSzcNOoP6ryA3GHVpW7d8lG7G9LBnt+jcmmb7j5DhfIV4ZkAiM6MR81B/5M09LJNBUWGiZQidT+ckzbCosBVk/VhLfa9xEyfj005Ao+DCGEmE1qSLBj8NoAryWcv6Vn9iEvIAKckExB3CtUoxVdkZ46IW+fWsvvnXT0cjYlwZ2AyzB0qjlO1LFA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
+ is 91.26.50.189) smtp.rcpttodomain=ti.com smtp.mailfrom=phytec.de; dmarc=fail
+ (p=quarantine sp=quarantine pct=100) action=quarantine header.from=phytec.de;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=phytec.de;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Cyg4fSPJk3Pp4YvqpxqbAb9YBc55YCyV0kWxXjB3HUs=;
+ b=SquRJtQKhSfemTPI0pD8wV58/Ehl1AMU/ndW6PE0cvm6htKPpA6uPWVFWTAJp/m5/Or+js59btGJsLmGIhEQmIYxqoGcb7aUjx4Oy+RrkcmqDMo/7FXK/LrVrki8MWO33kkl/iu5aC4a1ctwSVqJ+JeuYVZ5SiH+UvS8qM4FwedKoHrRCJfGI7ecfp3I/kZELEugyl4Uni8BkOZtH+RUD3jjwEK85nDNzIc4zxLxOuswLbXIkfag43QK8JIkN0a5HHx9WpCkyLijlHwe3GmDxXCKPX7IqRENw3CbHUDEP6X76C8DKICtYifxuQBiNkSD93nc/JSVa4TGHwRUrOUEnQ==
+Received: from DB9PR06CA0013.eurprd06.prod.outlook.com (2603:10a6:10:1db::18)
+ by PR3P195MB0681.EURP195.PROD.OUTLOOK.COM (2603:10a6:102:3a::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.26; Wed, 7 May
+ 2025 05:09:04 +0000
+Received: from DB1PEPF000509FB.eurprd03.prod.outlook.com
+ (2603:10a6:10:1db:cafe::90) by DB9PR06CA0013.outlook.office365.com
+ (2603:10a6:10:1db::18) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.21 via Frontend Transport; Wed,
+ 7 May 2025 05:09:04 +0000
+X-MS-Exchange-Authentication-Results: spf=softfail (sender IP is 91.26.50.189)
+ smtp.mailfrom=phytec.de; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=quarantine header.from=phytec.de;
+Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
+ phytec.de discourages use of 91.26.50.189 as permitted sender)
+Received: from Diagnostix.phytec.de (91.26.50.189) by
+ DB1PEPF000509FB.mail.protection.outlook.com (10.167.242.37) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8722.18 via Frontend Transport; Wed, 7 May 2025 05:09:04 +0000
+Received: from Florix.phytec.de (172.25.0.13) by Diagnostix.phytec.de
+ (172.25.0.14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Wed, 7 May
+ 2025 07:09:03 +0200
+Received: from ls-radium.phytec (172.25.39.17) by Florix.phytec.de
+ (172.25.0.13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Wed, 7 May
+ 2025 07:09:00 +0200
+From: Daniel Schultz <d.schultz@phytec.de>
+To: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
+	<krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <robertcnelson@gmail.com>,
+	<francesco.dolcini@toradex.com>
+CC: <upstream@lists.phytec.de>, <w.egorov@phytec.de>, Daniel Schultz
+	<d.schultz@phytec.de>
+Subject: [PATCH 1/4] arm64: dts: ti: k3-am62-thermal: Add Files for each Temp. Grade
+Date: Tue, 6 May 2025 22:08:44 -0700
+Message-ID: <20250507050847.912756-1-d.schultz@phytec.de>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAADnVQKK87UV9rH_YviePfUmOO3mGXQmYfN-Q9Ax5AYv+xE8zw@mail.gmail.com>
+X-ClientProxiedBy: Diagnostix.phytec.de (172.25.0.14) To Florix.phytec.de
+ (172.25.0.13)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DB1PEPF000509FB:EE_|PR3P195MB0681:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2c834b7c-a335-4dbc-1a33-08dd8d254978
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|1800799024|376014|82310400026|7416014|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?cG5POFJLSkdpaENyd1JXZWJzNFVwS1FSYVNMTWhUUG15V3p0ZForMDJHQk9U?=
+ =?utf-8?B?RGQzOFh0cWVLSCtCTm9QbTE5ZkxoUzFlSTcxdEJ1S3RQRmpNaWFTVm5OcG53?=
+ =?utf-8?B?Y3J3dkUySFlZSjEyejEvQVUxR0NUUWR0TXRyb3lQaGd0V1dHVWxETmJ3RHl5?=
+ =?utf-8?B?dmZNWUQweEQrTmNwOWR0MW9oV1BPN1V2WkNjckM1djNpVnJOaHdLakdjMW5V?=
+ =?utf-8?B?QU5Nd1dzU0N0cFZaenVpVEFqTDZUYzB1Y1VoeTNXbHJpU1NSUU8zeGZzZnJi?=
+ =?utf-8?B?VG8zc0pzd2pRdmUwSXJWOFZSNzU3OTk5ZDN1eU1meGl1cWZuL2NubVgwQXZE?=
+ =?utf-8?B?Z24wU3Z4WFQwM3ZPN2N1MFZqdkxJRTNpRW1ua1JHZmtKZDc1dS95bUdSNDFO?=
+ =?utf-8?B?TTRjK3dEeUN1U2ZnMHkwNU1GcGFRZFpnS0QrR3JUL1NUT1JVQWc1bFp3aXZS?=
+ =?utf-8?B?Mmt4RUt3RTlEUmFROTc0cEE2SFlUb1ZKVHVWNkxJeUhmckl6elRsdGtUQ0FX?=
+ =?utf-8?B?b3QrUGR0ZjcxSFI2SEtLRVJwV2JaM3ZVUjd6M2llQW4yMnZudEhObHBtWnNl?=
+ =?utf-8?B?SDBCeDl5Q3hqMXhQY2xIY1FSdzdISmt1SHc1d2RHb0M4Y3FjanFGWElXQ2VX?=
+ =?utf-8?B?Vmlac2c5eVIyN1dRV21HVjVxZVVGY3hiZ2pWTEkwYmZyRWt4dXYveUNRRnBu?=
+ =?utf-8?B?UWdUMWd1Ry8zV2l3OWROcDU0LzRhZUNFQThnMVJaejlBeStJNmxTdkdEMndp?=
+ =?utf-8?B?Q1N4UnYrYWxJL3RSNzBnVkNFOEhIWGlFd09aYlZ0SzFOVGFGK0xSM1hrNnJj?=
+ =?utf-8?B?cDJmYUtEbWdsR1hmWWorVEk1QWFIVlZrTmhLU005dnRQaUU5QmZRZUlldEx2?=
+ =?utf-8?B?WDM3UWhrK0VzMWQ0NUxpQUpocUQ1Y1NmOGtOTGJTS0FTOC9DVkd6c09EOU9K?=
+ =?utf-8?B?YmljblZVNFBOV2p1S3N0MUJxYjdSVzFyOFlrVW51OFgyUjFvMlB4cXkrd1JV?=
+ =?utf-8?B?cEZOK2tBVmM2aVFqRzFDbExMOGx1S09PTU9paFl4UHBZUWFOL050Zk9CYVll?=
+ =?utf-8?B?NnJRbFlkS3FGWjU1eDMzNHVmTjlsc2RPSjdIdzl2KzY1S3o2dnRyNlVBSnVs?=
+ =?utf-8?B?b2FlRDBXRTFiK0ZYblRGRk1KT1ZVazdpTmhscE5TbGpuWUFRM2R3cEx3OE5B?=
+ =?utf-8?B?MnJqWTBUZGFHSnA0TlZxNmJzRmY3cys4aEtUc01veGdPN0JhNmZYOU1pMklT?=
+ =?utf-8?B?WDN3cmJOb0t0b0Uva3lDdUhTWUc5anF3UmtUSTNpaXdEa2hGbFhYeURuQ1Ay?=
+ =?utf-8?B?N2tDenZaUGR4Zld4Z2lIT0tzS1liMmoyZzNHZEcvRnJNdmVQQnlxTlRUUnlT?=
+ =?utf-8?B?djRhc3oyaEpFNGVDd3U3aE9STExSVEFtNGl4MENMc3lYUHVwNHl2WjhaMlRl?=
+ =?utf-8?B?c21KanBGNFhOM1NNZjFZMzAwWjYvbUdHZitOTVpJdnlQVzFJL2pQWDdEMkZ3?=
+ =?utf-8?B?YzBTYlNtaUZxZ2YweUN4a0M2SDNSYmI2MjNHUWEvVVY2R2RVcWFsMVgvUzZH?=
+ =?utf-8?B?Kzh4MTQrT3k5a0dzdnEvRjlncHZoOUtzc1hxS2hscDFDdXV3dTdWclIrMExh?=
+ =?utf-8?B?aXI3RklvYmlaYnFMbkhYQVdUc1kxYzJteVhtQ0pGOUREdnpGS1FoZlJKRjBO?=
+ =?utf-8?B?NzY0U3JwNDFOWVNFTEF0TVFQWlhnREFYT2U4djhVZENXeHkwa0luUjJlRGNQ?=
+ =?utf-8?B?SDFXRjhyL1c0b1N6QWQ5RmxmZzQ1Z2pnTkNmZGkyQk9Ud1B1MWpwMnVCQmhk?=
+ =?utf-8?B?YXJMZ256K3BMZ0tUOUozVnVSN0thSWsvMFJNTjU0K1NyeHZXeDljMzJ4VWpB?=
+ =?utf-8?B?ZW9yZUtzOGNMU3BkdDRheTBrcmpOQVlXN3Z4dzNQTGtsQTd5T0NmM1lIY1Av?=
+ =?utf-8?B?TGZDUzRIRnBHaURQNDczWGdnV0trV2pMSmhPdHZxWWtubkllK1FnSHM3eHN1?=
+ =?utf-8?B?ZkRJMkVxcW9xTjRzWS80SVhocUhBdkorZW83SERzcFN1Wm8xUVdVRDBoQy9V?=
+ =?utf-8?B?aHNCaUhwMDlLcWFTV2JnQkhOS0xKYWR2emx3dz09?=
+X-Forefront-Antispam-Report:
+	CIP:91.26.50.189;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:Diagnostix.phytec.de;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(376014)(82310400026)(7416014)(921020);DIR:OUT;SFP:1102;
+X-OriginatorOrg: phytec.de
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2025 05:09:04.1681
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2c834b7c-a335-4dbc-1a33-08dd8d254978
+X-MS-Exchange-CrossTenant-Id: e609157c-80e2-446d-9be3-9c99c2399d29
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e609157c-80e2-446d-9be3-9c99c2399d29;Ip=[91.26.50.189];Helo=[Diagnostix.phytec.de]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DB1PEPF000509FB.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR3P195MB0681
 
-On 2025-05-06 20:43:43, Alexei Starovoitov wrote:
-> On Tue, May 6, 2025 at 8:37 PM Jiayuan Chen <jiayuan.chen@linux.dev> wrote:
-> >
-> > May 7, 2025 at 04:24, "Martin KaFai Lau" <martin.lau@linux.dev> wrote:
-> >
-> > >
-> > > On 5/5/25 7:51 PM, Jiayuan Chen wrote:
-> > >
-> > > >
-> > > > Sockmap has the same high-performance forwarding capability as XDP, but
-> > > >
-> > > >  operates at Layer 7.
-> > > >
-> > > >  Introduce tracing capability for sockmap, to trace the execution results
-> > > >
-> > > >  of BPF programs without modifying the programs themselves, similar to
-> > > >
-> > > >  the existing trace_xdp_redirect{_map}.
-> > > >
-> > >
-> > > There were advancements in bpf tracing since the trace_xdp_xxx additions.
-> > >
-> > > Have you considered the fexit bpf prog and why it is not sufficient ?
-> > >
-> >
-> > 1.This patchset prints a large amount of information (e.g. inode ID, etc.),
-> > some of which require kernel-internal helpers to access. These helpers are
-> > not currently available as kfuncs, making it difficult to implement
-> > equivalent functionality with fentry/fexit.
+The AM62x SoC supports three temperature ranges:
+* A: -40 to 105C - Extended Industrial
+* H:   0 to  95C - Commercial
+* I: -40 to 125C - Automotive
 
-If the data is useful and can't be read normally having kfuncs/etc to
-get the data makes a lot of sense to me. Then it would be useful for
-everyone presumably.
+Add device tree include files to adjust the alert and critical trip
+points in k3-am62-thermal based on the temperature grade.
 
-> >
-> > 2. skb->_sk_redir implicitly stores both a redir action and the socket address
-> > in a single field. Decoding this structure in fentry/fexit would require
-> > duplicating kernel-internal logic in BPF programs. This creates maintenance
-> > risks, as any future changes to the kernel's internal representation would
-> > necessitate corresponding updates to the BPF programs.
+Passive trip points are always set 10C below critical.
 
-If its needed we could build BPF code somewhere that decoded these
-correctly for all kernels.
+Signed-off-by: Daniel Schultz <d.schultz@phytec.de>
+---
+ .../dts/ti/k3-am62-thermal-automotive.dtsi    | 20 +++++++++++++++++++
+ .../dts/ti/k3-am62-thermal-commercial.dtsi    | 20 +++++++++++++++++++
+ .../dts/ti/k3-am62-thermal-industrial.dtsi    | 20 +++++++++++++++++++
+ 3 files changed, 60 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/ti/k3-am62-thermal-automotive.dtsi
+ create mode 100644 arch/arm64/boot/dts/ti/k3-am62-thermal-commercial.dtsi
+ create mode 100644 arch/arm64/boot/dts/ti/k3-am62-thermal-industrial.dtsi
 
-> >
-> > 3. Similar to the debate between using built-in tracepoints vs kprobes/fentry,
-> > each approach has its tradeoffs. The key advantage of a built-in tracepoint is
-> > seamless integration with existing tools like perf and bpftrace, which natively
-> > support tracepoint-based tracing. For example, simply executing
-> > 'perf trace -e 'sockmap:*' ./producer' could provide sufficient visibility
-> > without custom BPF programs.
+diff --git a/arch/arm64/boot/dts/ti/k3-am62-thermal-automotive.dtsi b/arch/arm64/boot/dts/ti/k3-am62-thermal-automotive.dtsi
+new file mode 100644
+index 000000000000..7de461da16ac
+--- /dev/null
++++ b/arch/arm64/boot/dts/ti/k3-am62-thermal-automotive.dtsi
+@@ -0,0 +1,20 @@
++// SPDX-License-Identifier: GPL-2.0-only OR MIT
++/*
++ * Copyright (C) 2025 PHYTEC Messtechnik GmbH
++ */
++
++&main0_alert {
++	temperature = <115000>;
++};
++
++&main0_crit {
++	temperature = <125000>;
++};
++
++&main1_alert {
++	temperature = <115000>;
++};
++
++&main1_crit {
++	temperature = <125000>;
++};
+diff --git a/arch/arm64/boot/dts/ti/k3-am62-thermal-commercial.dtsi b/arch/arm64/boot/dts/ti/k3-am62-thermal-commercial.dtsi
+new file mode 100644
+index 000000000000..a6845a0c513c
+--- /dev/null
++++ b/arch/arm64/boot/dts/ti/k3-am62-thermal-commercial.dtsi
+@@ -0,0 +1,20 @@
++// SPDX-License-Identifier: GPL-2.0-only OR MIT
++/*
++ * Copyright (C) 2025 PHYTEC Messtechnik GmbH
++ */
++
++&main0_alert {
++	temperature = <85000>;
++};
++
++&main0_crit {
++	temperature = <95000>;
++};
++
++&main1_alert {
++	temperature = <85000>;
++};
++
++&main1_crit {
++	temperature = <95000>;
++};
+diff --git a/arch/arm64/boot/dts/ti/k3-am62-thermal-industrial.dtsi b/arch/arm64/boot/dts/ti/k3-am62-thermal-industrial.dtsi
+new file mode 100644
+index 000000000000..eece26eebdef
+--- /dev/null
++++ b/arch/arm64/boot/dts/ti/k3-am62-thermal-industrial.dtsi
+@@ -0,0 +1,20 @@
++// SPDX-License-Identifier: GPL-2.0-only OR MIT
++/*
++ * Copyright (C) 2025 PHYTEC Messtechnik GmbH
++ */
++
++&main0_alert {
++	temperature = <95000>;
++};
++
++&main0_crit {
++	temperature = <105000>;
++};
++
++&main1_alert {
++	temperature = <95000>;
++};
++
++&main1_crit {
++	temperature = <105000>;
++};
+-- 
+2.25.1
 
-We could likely teach bpftrace a new syntax if we care?
-
-bpftrace -e 'skmsg:sendmsg: { @[socket, pid] = count_bytes(); }'
-
-might be interesting.
-
-
-> Similar to Martin I don't buy these excuses.
-> For your own debugging you can write bpftrace prog that will
-> print exact same stats and numbers without adding any kernel code.
-> 
-> We add tracepoints when they're in the path that is hard to get to
-> with tracing tools. Like functions are partially inlined.
-> Here it's not the case.
-> You want to add a tracepoint right after your own bpf prog
-> finished. All these debugging could have been part of your
-> skmsg program.
-
-I tend to agree. We've on our side found it extremely useful to have
-DEBUG infra in our BPF codes and easy ways to turn it off/on. 
-If this DEBUG is in your BPF program and you have the pretty printers
-to read it yuo can get lots of specifics about your paticular program
-logic that can't be put in the tracepoint.
-
-Thanks,
-John
-
-> 
-> pw-bot: cr
