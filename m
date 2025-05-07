@@ -1,152 +1,118 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6EAE28BAB9
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 15:47:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A41B28C010;
+	Wed,  7 May 2025 15:47:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746632834; cv=none; b=M4RjCn+iGGDf5crzxM+THFB3bdFmAdIbxJ68m/LmNajfLT6NCATR5fggDusefAHDalJF+qr+gWJTHnk39bBwbr2JVsH/9w2MmN1Uq2lO0ghPi9r3SuCcHyU3Sdu3Z4Szu3tUVgsK1PpNi+b4HT4cTG8QfY9ldP+b5K2HJNlVvgQ=
+	t=1746632837; cv=none; b=qelrjfptRpV/xYl0OlhhI9aE2tXB7V8dm4LA3LFWpwrjfaYo8EA3e8rndS9ACwGVOCaY6ww727D3B4zm3RGa0wWRt58YxobAj+LXZl+P42llpXYvfnNA7AMnm2IlkdulDwCIi4ezbq9mVCVvLZ3RW8mct94reFP5IS5T2zgeXak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746632834; c=relaxed/simple;
-	bh=Y79p7rne7cXX1nFC+SWC96eCL2o2wsDDvsZXSb0YyAc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ime+NmJ/qGNNoMCp3ZbpdpA96wUIlmTPmTeF+LpxaxKTzrz91GYk15mxsrSngKjfT2EIuY2D9vF/eo7fEA6IAjne+R641L0NVQ6QeZJ8Oln6gXfuwX/B5lBRa2C9NBiOUAFv2d6dcVw9y/CJ5ltlms6tTBPxepsXqToSRj8HWqE=
+	s=arc-20240116; t=1746632837; c=relaxed/simple;
+	bh=w2kApnDbGDviYWYaQBt9Zg0Aa/bp4BdPTRzMtx55rus=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=vFWzmoOBYrYMAoGbjBwTJ31DVX/022WmaeNX3Le8kHYYoXcxIi3rf1NBIu9hHlbNWSs52L6x4yWOsMtNmuFjRgMYDgkVgGwot+13HR82Y4gRk5bSSandzw/Wonzgis/MOPosoJvCjQX+rtBoM0/1MwJCbqJsEQMlx/2mqkHdNpA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D3BC5339;
-	Wed,  7 May 2025 08:47:01 -0700 (PDT)
-Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 56E1B3F58B;
-	Wed,  7 May 2025 08:47:08 -0700 (PDT)
-From: Yeoreum Yun <yeoreum.yun@arm.com>
-To: catalin.marinas@arm.com,
-	pcc@google.com,
-	will@kernel.org,
-	broonie@kernel.org,
-	anshuman.khandual@arm.com,
-	joey.gouly@arm.com,
-	maz@kernel.org,
-	oliver.upton@linux.dev,
-	frederic@kernel.org,
-	james.morse@arm.com,
-	hardevsinh.palaniya@siliconsignals.io,
-	huangxiaojia2@huawei.com,
-	mark.rutland@arm.com,
-	samuel.holland@sifive.com,
-	palmer@rivosinc.com,
-	charlie@rivosinc.com,
-	thiago.bauermann@linaro.org,
-	bgray@linux.ibm.com,
-	tglx@linutronix.de,
-	puranjay@kernel.org,
-	david@redhat.com,
-	yang@os.amperecomputing.com,
-	mbenes@suse.cz,
-	joel.granados@kernel.org
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Yeoreum Yun <yeoreum.yun@arm.com>
-Subject: [PATCH v4 3/7] arm64/kernel: support store-only mte tag check
-Date: Wed,  7 May 2025 16:46:50 +0100
-Message-Id: <20250507154654.1937588-4-yeoreum.yun@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250507154654.1937588-1-yeoreum.yun@arm.com>
-References: <20250507154654.1937588-1-yeoreum.yun@arm.com>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D26102008;
+	Wed,  7 May 2025 08:47:04 -0700 (PDT)
+Received: from bogus (e133711.arm.com [10.1.196.55])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3F9523F778;
+	Wed,  7 May 2025 08:47:13 -0700 (PDT)
+Date: Wed, 7 May 2025 16:47:10 +0100
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Jeremy Linton <jeremy.linton@arm.com>
+Cc: "Heyne, Maximilian" <mheyne@amazon.de>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ACPI/PPTT: fix off-by-one error
+Message-ID: <20250507-tasteful-wren-of-devotion-f010af@sudeepholla>
+References: <20250506-draco-taped-15f475cd@mheyne-amazon>
+ <214c2a2d-e0ea-4ec6-9925-05e39319e813@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <214c2a2d-e0ea-4ec6-9925-05e39319e813@arm.com>
 
-Introduce new flag -- MTE_CTRL_STORE_ONLY used to set store-only tag check.
-This flag isn't overridden by prefered tcf flag setting but set together
-with prefered setting of way to report tag check fault.
+On Wed, May 07, 2025 at 10:25:25AM -0500, Jeremy Linton wrote:
+> Hi,
+> 
+> On 5/6/25 8:13 AM, Heyne, Maximilian wrote:
+> > Commit 7ab4f0e37a0f ("ACPI PPTT: Fix coding mistakes in a couple of
+> > sizeof() calls") corrects the processer entry size but unmasked a longer
+> > standing bug where the last entry in the structure can get skipped due
+> > to an off-by-one mistake if the last entry ends exactly at the end of
+> > the ACPI subtable.
+> > 
+> > The error manifests for instance on EC2 Graviton Metal instances with
+> > 
+> >    ACPI PPTT: PPTT table found, but unable to locate core 63 (63)
+> >    [...]
+> >    ACPI: SPE must be homogeneous
+> > 
+> > Fixes: 2bd00bcd73e5 ("ACPI/PPTT: Add Processor Properties Topology Table parsing")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Maximilian Heyne <mheyne@amazon.de>
+> > ---
+> >   drivers/acpi/pptt.c | 4 ++--
+> >   1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/acpi/pptt.c b/drivers/acpi/pptt.c
+> > index f73ce6e13065d..4364da90902e5 100644
+> > --- a/drivers/acpi/pptt.c
+> > +++ b/drivers/acpi/pptt.c
+> > @@ -231,7 +231,7 @@ static int acpi_pptt_leaf_node(struct acpi_table_header *table_hdr,
+> >   			     sizeof(struct acpi_table_pptt));
+> >   	proc_sz = sizeof(struct acpi_pptt_processor);
+> 
+> This isn't really right, it should be struct acpi_subtable_header, then once
+> the header is safe, pull the length from it.
+> 
 
-Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
----
- arch/arm64/include/asm/processor.h |  2 ++
- arch/arm64/kernel/mte.c            | 11 ++++++++++-
- arch/arm64/kernel/process.c        |  6 +++++-
- 3 files changed, 17 insertions(+), 2 deletions(-)
+Ah OK. Sorry I wasn't able to understand your point earlier. I get it now.
 
-diff --git a/arch/arm64/include/asm/processor.h b/arch/arm64/include/asm/processor.h
-index 1bf1a3b16e88..61d62bfd5a7b 100644
---- a/arch/arm64/include/asm/processor.h
-+++ b/arch/arm64/include/asm/processor.h
-@@ -23,6 +23,8 @@
- #define MTE_CTRL_TCF_ASYNC		(1UL << 17)
- #define MTE_CTRL_TCF_ASYMM		(1UL << 18)
- 
-+#define MTE_CTRL_STORE_ONLY		(1UL << 19)
-+
- #ifndef __ASSEMBLY__
- 
- #include <linux/build_bug.h>
-diff --git a/arch/arm64/kernel/mte.c b/arch/arm64/kernel/mte.c
-index 2fbfd27ff5f2..e5e773844889 100644
---- a/arch/arm64/kernel/mte.c
-+++ b/arch/arm64/kernel/mte.c
-@@ -200,7 +200,7 @@ static void mte_update_sctlr_user(struct task_struct *task)
- 	 * program requested values go with what was requested.
- 	 */
- 	resolved_mte_tcf = (mte_ctrl & pref) ? pref : mte_ctrl;
--	sctlr &= ~SCTLR_EL1_TCF0_MASK;
-+	sctlr &= ~(SCTLR_EL1_TCF0_MASK | SCTLR_EL1_TCSO0_MASK);
- 	/*
- 	 * Pick an actual setting. The order in which we check for
- 	 * set bits and map into register values determines our
-@@ -212,6 +212,10 @@ static void mte_update_sctlr_user(struct task_struct *task)
- 		sctlr |= SYS_FIELD_PREP_ENUM(SCTLR_EL1, TCF0, ASYNC);
- 	else if (resolved_mte_tcf & MTE_CTRL_TCF_SYNC)
- 		sctlr |= SYS_FIELD_PREP_ENUM(SCTLR_EL1, TCF0, SYNC);
-+
-+	if (mte_ctrl & MTE_CTRL_STORE_ONLY)
-+		sctlr |= SYS_FIELD_PREP(SCTLR_EL1, TCSO0, 1);
-+
- 	task->thread.sctlr_user = sctlr;
- }
- 
-@@ -371,6 +375,9 @@ long set_mte_ctrl(struct task_struct *task, unsigned long arg)
- 	    (arg & PR_MTE_TCF_SYNC))
- 		mte_ctrl |= MTE_CTRL_TCF_ASYMM;
- 
-+	if (arg & PR_MTE_STORE_ONLY)
-+		mte_ctrl |= MTE_CTRL_STORE_ONLY;
-+
- 	task->thread.mte_ctrl = mte_ctrl;
- 	if (task == current) {
- 		preempt_disable();
-@@ -398,6 +405,8 @@ long get_mte_ctrl(struct task_struct *task)
- 		ret |= PR_MTE_TCF_ASYNC;
- 	if (mte_ctrl & MTE_CTRL_TCF_SYNC)
- 		ret |= PR_MTE_TCF_SYNC;
-+	if (mte_ctrl & MTE_CTRL_STORE_ONLY)
-+		ret |= PR_MTE_STORE_ONLY;
- 
- 	return ret;
- }
-diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
-index 42faebb7b712..cea4a23a15de 100644
---- a/arch/arm64/kernel/process.c
-+++ b/arch/arm64/kernel/process.c
-@@ -815,10 +815,14 @@ long set_tagged_addr_ctrl(struct task_struct *task, unsigned long arg)
- 	if (is_compat_thread(ti))
- 		return -EINVAL;
- 
--	if (system_supports_mte())
-+	if (system_supports_mte()) {
- 		valid_mask |= PR_MTE_TCF_SYNC | PR_MTE_TCF_ASYNC \
- 			| PR_MTE_TAG_MASK;
- 
-+		if (cpus_have_cap(ARM64_MTE_STORE_ONLY))
-+			valid_mask |= PR_MTE_STORE_ONLY;
-+	}
-+
- 	if (arg & ~valid_mask)
- 		return -EINVAL;
- 
--- 
-LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
+But just for sake of argument here, accessing entry->length before
+doing some sanity check is also risky. So ideally we should be checking
+if entry + entry->length <= table_end right ?
+
+> But then, really if we are trying to fix the original bug that the table
+> could be shorter than the data in it suggests, the struct
+> acpi_pptt_processor length plus its resources needs to be checked once the
+> subtype is known to be a processor node.
+> 
+
+Indeed.
+
+> Otherwise the original sizeof * change isn't really fixing anything.
+> 
+
+How about extending the check for entry->length ? Do you think it will
+be any better ? The entry pointer is anyway updated to jump entry->length
+ahead at the end of the loop.
+
+Regards,
+Sudeep
+
+-->8
+
+@@ -276,7 +276,7 @@ static struct acpi_pptt_processor *acpi_find_processor_node(struct acpi_table_he
+        while ((unsigned long)entry + proc_sz <= table_end) {
+                cpu_node = (struct acpi_pptt_processor *)entry;
+
+-               if (entry->length == 0) {
++               if (!entry->length || entry->length < proc_sz) {
+                        pr_warn("Invalid zero length subtable\n");
+                        break;
+                }
+
+
 
