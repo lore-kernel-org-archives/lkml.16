@@ -1,158 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50E74221714;
-	Wed,  7 May 2025 08:25:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDE15221713
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 08:26:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746606360; cv=none; b=GI2/CaLm0HwTPQYObv5QDJD+F1hlQtTaj+YARiG/Uube3RY2fPM8cPTMVcMU8BzrALpeBJ5GO1aJfa6mlg0xrwJi3zzqqDMH4w86WKHezXYpXqnTJFrwKkenQciDXk6j3EgLPe3Tw4k3rkiB92mVEBjGYOp68xdzkPUE8y+JFz4=
+	t=1746606385; cv=none; b=elm2MpmanutSW+3MZdJDtx7XY1V+BN52Hm8+oMge8Vr/vTRVrD9Ujg5nOo6svIPYqe60Mj4fmTvKhuA9EEjCHGiexumEdG6A443wadwmidMcSA8dMCZ4Xp8S3mK8CRzoXPM1XbYiAFy7Y0AsdoeXYrOeG2nb0XXKQHG4sMi7W/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746606360; c=relaxed/simple;
-	bh=NNekwt0jL97gDY8/IkIMxdxKqceQcOvhTDJ6jjqvosg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Y1dSFGYy9Qpy82WamysIHjZphXuenS5Z3yRn09sTB7kVs/XjYt+Nw/DQ4UOKQFj84Ovxr0zac3I+DnpsC/LHNopfCohKCC32d3IT4pPCeQhX75tV3PrsNlPh1UbnbEv/Ikawsgc2axIWD8S8y1YT+yXzLY5ekSr3elrLFGwh4gI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sLQCKWOE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746606385; c=relaxed/simple;
+	bh=kI/+C74UWcLguN5EGGJ+R2TAzXqsPpk/1uAJ5swPJvk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DvTDWKC1jtjigBqFKH4lC0ZEXYOnbbVfiTcr/SOKpnQ/lYVS/AafDrrSrKvCVRWF5uJKRhDZX8PWbXaXqqCNsheQ6K30Kp3OprA7dSCZXYtkDXh8dSrFiS3gB3DIdbA8XzoWz7qbmGSjcpJKpv4rEuKHSlkQDH0L1io/Jf17fj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OUIMMkv/; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sLQCKWOE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B76BC4CEEE;
-	Wed,  7 May 2025 08:25:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746606359;
-	bh=NNekwt0jL97gDY8/IkIMxdxKqceQcOvhTDJ6jjqvosg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=sLQCKWOEo0ZeQ4hHPMlBuyHB0tQKY47E4cbgbUPw8UARjsJjNrHY+9bb/tx5NT2E7
-	 2gb4x/v1fTTh+b5o3aPmmaO/OAsOmdgDE7SbN4uxcoLgvgu+5GAZVF7uqsJWE97Ml6
-	 hZx0mPX0IVzTRlXRLJIiMVG6KsyDJbg/rb39A5h5LefUpgazYNCUIb9jlNCIYeQTH4
-	 52InMMguMXKb1pm6/kokONhZdYIb3382X87AZfKDP1UAOK0OLygJRvwwjU/EHsgyyk
-	 BDpUr/e08MhAJsbp43oVzC48eZMcQrZEFb4IVn/Lcgh1Zj+i4uplSWxAPPolb+SnJF
-	 BHCi58C0XLtfA==
-Message-ID: <01b06e36-823c-4f28-8db5-dc0ee0b4c063@kernel.org>
-Date: Wed, 7 May 2025 10:25:52 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OUIMMkv/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746606382;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kI/+C74UWcLguN5EGGJ+R2TAzXqsPpk/1uAJ5swPJvk=;
+	b=OUIMMkv/AI/inIuYqMfpEOWMKmjIPo4i7q5DNbYsGAOzOsOD5Cxe6qgBIZpdwch152Qmqb
+	dpXz7RGfoi346E6/NZrGs1qBSxdtgM56E0LS/NFbtxgpwZX8QbjdRCK08mrUPkpRAfL3mc
+	ZE451nfX4aK/RMg7sQQ/kAuGX6XbCGw=
+Received: from mail-yw1-f198.google.com (mail-yw1-f198.google.com
+ [209.85.128.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-588-lt-O-66HOgmNn-0DdF3Mzw-1; Wed, 07 May 2025 04:26:21 -0400
+X-MC-Unique: lt-O-66HOgmNn-0DdF3Mzw-1
+X-Mimecast-MFC-AGG-ID: lt-O-66HOgmNn-0DdF3Mzw_1746606381
+Received: by mail-yw1-f198.google.com with SMTP id 00721157ae682-708b2494592so106962867b3.2
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 01:26:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746606381; x=1747211181;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kI/+C74UWcLguN5EGGJ+R2TAzXqsPpk/1uAJ5swPJvk=;
+        b=WUpKRV6VIPKZ0x4q2uHng+2uEJo+9xqCHL50Yr1uaSqA8NCmAC4pK61aQ4ZCkqHQNl
+         ms6BP2Q74A0/2jqJPlbN5JsOAI153ipt3BsUOokmmXJyyZos3eQDGWxdDJP8CCn1c9e4
+         rGD+WNOH+Q+yAC7Htl/LZFCG7b/h6JptYPnrnetIL1AuOl725uaZivycUXU6ewzYa1FC
+         MidacQiiegYJva1929NVD8FxGnEWShVSpotnJrM6gz2EutoUsb0623h3598gO3cF2mmq
+         hwYmo0cVCaN8ZxWioOKxHTbFI6wPNCNfB1NAAAS4+AJoy1y0By3ucnY4E9ALzrgnaKGY
+         A1Mw==
+X-Forwarded-Encrypted: i=1; AJvYcCXd6qwTLyaA8NZqV2dxAWAMl8sxwNPCUuWqdLfLTJCVWCxjo02foTbwiq7lgzgZbrZjEx5FywXpb68+dcM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzfknwkgszmS6IywFGfMlWtuyo8JbIl0yevmU7DLIg3+xPt6Y9
+	wTk6EaAct3Cv1GVOtTjR6nl0mUSpnQfciWqRJ7vEmyebeq+TEKNelmqZ18q/E0UBQYAw77jhKxZ
+	BDDVcTbPKW4iV7XeQfZrEk61lUts1GVoRpfh5PUTaLrgFJZm+HubPC8INCGtA9HU0I7JNLh0eE9
+	HsSz1OdcYJthgYp/oSGGrNV+AAVPhiKVVktepQ
+X-Gm-Gg: ASbGnctwH6l3CfGPFiCpIW5ElaVEbbwarAsqwaGIXy1Bn2qwt2Jlbs5fe2UdGWti5Dn
+	GTeECvOX1WjcOalRR02IR8S8d5VJleMMHlWW9MUMkOtq8vqgQKck70Ts2wURcrAbOvhyQFA==
+X-Received: by 2002:a05:690c:370a:b0:6fb:1c5a:80ea with SMTP id 00721157ae682-70a1db49713mr32558637b3.32.1746606380965;
+        Wed, 07 May 2025 01:26:20 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFpSC+1ia23pV+uJD2D52bGeABFvUueMfJwumFcd11s+v7+rdS8w8k4nrnN2Jgii7JxOzEH02Xj8URwB0gtc2E=
+X-Received: by 2002:a05:690c:370a:b0:6fb:1c5a:80ea with SMTP id
+ 00721157ae682-70a1db49713mr32558377b3.32.1746606380608; Wed, 07 May 2025
+ 01:26:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/6] dt-bindings: PCI: qcom,pcie-sa8775p: document
- qcs8300
-To: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
-Cc: vkoul@kernel.org, kishon@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, dmitry.baryshkov@linaro.org, neil.armstrong@linaro.org,
- abel.vesa@linaro.org, manivannan.sadhasivam@linaro.org,
- lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
- andersson@kernel.org, konradybcio@kernel.org, linux-phy@lists.infradead.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
- quic_qianyu@quicinc.com, quic_krichai@quicinc.com, quic_vbadigan@quicinc.com
-References: <20250507031019.4080541-1-quic_ziyuzhan@quicinc.com>
- <20250507031019.4080541-3-quic_ziyuzhan@quicinc.com>
- <20250507-quixotic-handsome-wallaby-4560e3@kuoka>
- <8fef4573-0527-44d8-a481-f3271d9ffa33@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
- QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
- +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
- ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
- 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
- hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
- tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
- 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
- naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
- hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
- whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
- qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
- RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
- Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
- H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
- dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
- AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
- jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
- zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
- XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <8fef4573-0527-44d8-a481-f3271d9ffa33@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250501-vsock-linger-v4-0-beabbd8a0847@rbox.co>
+ <20250501-vsock-linger-v4-3-beabbd8a0847@rbox.co> <g5wemyogxthe43rkigufv7p5wrkegbdxbleujlsrk45dmbmm4l@qdynsbqfjwbk>
+ <CAGxU2F59O7QK2Q7TeaP6GU9wHrDMTpcO94TKz72UQndXfgNLVA@mail.gmail.com> <ff959c3e-4c47-4f93-8ab8-32446bb0e0d0@rbox.co>
+In-Reply-To: <ff959c3e-4c47-4f93-8ab8-32446bb0e0d0@rbox.co>
+From: Stefano Garzarella <sgarzare@redhat.com>
+Date: Wed, 7 May 2025 10:26:09 +0200
+X-Gm-Features: ATxdqUFUbB7EP5EYdD3-nw2ShhvzgoAnjnkJi00OTnfe2xCzejcrLy_1225Kq5I
+Message-ID: <CAGxU2F77OT5_Pd6EUF1QcvPDC38e-nuhfwKmPSTau262Eey5vQ@mail.gmail.com>
+Subject: Re: [PATCH net-next v4 3/3] vsock/test: Expand linger test to ensure
+ close() does not misbehave
+To: Michal Luczaj <mhal@rbox.co>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	"Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
+	Stefan Hajnoczi <stefanha@redhat.com>, virtualization@lists.linux.dev, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 07/05/2025 10:19, Ziyue Zhang wrote:
-> 
-> On 5/7/2025 1:10 PM, Krzysztof Kozlowski wrote:
->> On Wed, May 07, 2025 at 11:10:15AM GMT, Ziyue Zhang wrote:
->>> Add compatible for qcs8300 platform, with sa8775p as the fallback.
->>>
->>> Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
->>> ---
->>>   .../bindings/pci/qcom,pcie-sa8775p.yaml       | 26 ++++++++++++++-----
->>>   1 file changed, 19 insertions(+), 7 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml
->>> index efde49d1bef8..154bb60be402 100644
->>> --- a/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml
->>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml
->>> @@ -16,7 +16,12 @@ description:
->>>   
->>>   properties:
->>>     compatible:
->>> -    const: qcom,pcie-sa8775p
->>> +    oneOf:
->>> +      - const: qcom,pcie-sa8775p
->>> +      - items:
->>> +          - enum:
->>> +              - qcom,pcie-qcs8300
->>> +          - const: qcom,pcie-sa8775p
->>>   
->>>     reg:
->>>       minItems: 6
->>> @@ -45,7 +50,7 @@ properties:
->>>   
->>>     interrupts:
->>>       minItems: 8
->>> -    maxItems: 8
->>> +    maxItems: 9
->> I don't understand why this is flexible for sa8775p. I assume this
->> wasn't tested or finished, just like your previous patch suggested.
->>
->> Please send complete bindings once you finish them or explain what
->> exactly changed in the meantime.
->>
->> Best regards,
->> Krzysztof
-> 
-> Hi Krzysztof
-> Global interrupt is optional in the PCIe driver. It is not present in 
-> the SA8775p PCIe device tree node, but it is required for the QCS8300
+On Wed, 7 May 2025 at 00:47, Michal Luczaj <mhal@rbox.co> wrote:
+>
+> On 5/6/25 11:46, Stefano Garzarella wrote:
+> > On Tue, 6 May 2025 at 11:43, Stefano Garzarella <sgarzare@redhat.com> wrote:
+> >>
+> >> On Thu, May 01, 2025 at 10:05:24AM +0200, Michal Luczaj wrote:
+> >>> There was an issue with SO_LINGER: instead of blocking until all queued
+> >>> messages for the socket have been successfully sent (or the linger timeout
+> >>> has been reached), close() would block until packets were handled by the
+> >>> peer.
+> >>
+> >> This is a new behaviour that only new kernels will follow, so I think
+> >> it is better to add a new test instead of extending a pre-existing test
+> >> that we described as "SOCK_STREAM SO_LINGER null-ptr-deref".
+> >>
+> >> The old test should continue to check the null-ptr-deref also for old
+> >> kernels, while the new test will check the new behaviour, so we can skip
+> >> the new test while testing an old kernel.
+>
+> Right, I'll split it.
+>
+> > I also saw that we don't have any test to verify that actually the
+> > lingering is working, should we add it since we are touching it?
+>
+> Yeah, I agree we should. Do you have any suggestion how this could be done
+> reliably?
 
-And hardware?
+Can we play with SO_VM_SOCKETS_BUFFER_SIZE like in credit-update tests?
 
-> I did the DTBs and yaml checks before pushing this patch. This is how
-> I became aware that `maxItem` needed to be changed to 9.
-If it is required for QCS8300, then you are supposed to make it required
-in the binding for this device. Look at other bindings.
+One peer can set it (e.g. to 1k), accept the connection, but without
+read anything. The other peer can set the linger timeout, send more
+bytes than the buffer size set by the receiver.
+At this point the extra bytes should stay on the sender socket buffer,
+so we can do the close() and it should time out, and we can check if
+it happens.
 
-Best regards,
-Krzysztof
+WDYT?
+
+Thanks,
+Stefano
+
