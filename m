@@ -1,224 +1,179 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03DEF1ACEC8;
-	Wed,  7 May 2025 23:09:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBC871ACEC8;
+	Wed,  7 May 2025 23:11:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746659365; cv=none; b=Ra+8FwTB8Tfbw7TUj4E7Ze6wEzLzEailBzF5RO3FA5sdpUyhKNOP3PdpROenn2NOBxzVThxK3aIO+t09DUQijAsQUq3O6lzg5NXoeOw1jQrqxDLDV3WJyGCpBAg5r4dnxfDJbYfjtxIUkrDxhupaAVWg5v8iD4j6XxdS84QUBgU=
+	t=1746659502; cv=none; b=ZxpOYfRKouaSOFcFrN/lo0XCbdmDi3QASX8QumjjDVDWWhMxYVaJt5n5EkMvM3TpHP/25ecpnY8IRtS0V3+JwEfs6Y+VSdYrkCK2GR2s7NP5g3eYAW/CuP3yUZ28fmrnMrSlrd69bXPkYQukjQQV2UpfWN14kaVo7811vr8LyTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746659365; c=relaxed/simple;
-	bh=KMFzgmh2r5Df+u8KVgowuji0vPzSkWx80se/kz0YMRQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PeKjyk1gSbueEx3Lz4pduur9uBGaVv49REKx6IFHgaKTbPkVns2eSKyR3Y+eyC+eavq/a9JO5TTew4meDlYIwo8hk4NSj87L18LliHdFeQ6lszF4hdt81TmQHs63v6kEIEhEHso5IxrJgv1CltitLLiJxV4c9O1zf3IwuyV0uf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=EOfFAo1F; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1746659502; c=relaxed/simple;
+	bh=RGS6xqwf+eAFdkFQCJRyKL1JWrMRM7+MAR2zJd5Lnyw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nuyjMIMXHIUZysZ0Qxym8/omqBmgiNLX4qXUvv6z8ey0zF7hU3QS1f4D6ZaaN+EEHa+CsF6NkpASes7cOF6B/l90orNgYtXvwwscZCvzR+CGvtYALSNbMQwYEaKbl2s/L9ZvRC4c1FqSO7wzeviQcRlhUgI8CHvaKYV38pMBj5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Lr6U282C; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EOfFAo1F"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=o0wgH0daWTZzvybrzGF8aoTDHaUJ4f2HlkJDU/65xBw=; b=EOfFAo1F4lXkUxfsluF8fC+AA5
-	qLkeCPpxopOz0WVewlU4Z0nxujmKcDDCa7s+lE0PYWEnslk4YxuF+cQEEUU6bOyfSCvHOvWs8FwuS
-	V5kxqwjFG2dZDt90AmxcpZMYckkCCMQXkMjbCygesJuXSE1av3H5WNIJbPq3dxdJpuZsfJaOeIM8h
-	J5VLIhZCJKjFUq4EO9JMHQAO/nRhWlBEY4FpWzQd/rr/OHPm8FzFdBLl8l/in4CzuYAbiR7BQZoFj
-	z9JGAib7VU6U+mG/t/GrlIx+eqakJwTNxCkdYQv503xLnsv9iNJ4yPloXw02ilKpn0I9xRWsjy4e2
-	9H63hs6g==;
-Received: from [50.39.124.201] (helo=[192.168.254.17])
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1uCnsj-0000000FwIO-3tGf;
-	Wed, 07 May 2025 23:09:18 +0000
-Message-ID: <e454bcf1-ae3c-41bd-b376-6560ea534925@infradead.org>
-Date: Wed, 7 May 2025 16:08:49 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Lr6U282C"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746659502; x=1778195502;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=RGS6xqwf+eAFdkFQCJRyKL1JWrMRM7+MAR2zJd5Lnyw=;
+  b=Lr6U282Cl5q18ymFBHgPqR/bb2ExnxDV+pjgkWlMyhJ+ESQ49vzmfTAo
+   ApXLQ9H1OXu5qbWaRA5kWOKzsjfWNtyCvInSWonCdBhHzCkjFConu/SVk
+   BSJqa32Pwmsf0AjI2hoA0WqX3a3smOeCsBqd8SMPLhe5IEXZAXEZsuXKv
+   z1cCNDc47OXvlUJq1+1Xn2dgAK8Jt6C+BccHHwNL6ohye+C1QyRs/qhWE
+   9mFsHQAU/JQ7rcANSf+9vrSLlUc5hQVyNWjsY/tD35oTfdgZ3pIP1Q4CV
+   Syg36cG5hMXe8mPIClsoax4IzqSNiIE+79NctEcd5H3o/1oDxSp7NMea+
+   A==;
+X-CSE-ConnectionGUID: 9cGpP0jrS+KNldGkpP5KhQ==
+X-CSE-MsgGUID: 2IoEb77HRE6Ryy6YmEVCsA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="52073731"
+X-IronPort-AV: E=Sophos;i="6.15,270,1739865600"; 
+   d="scan'208";a="52073731"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 16:11:40 -0700
+X-CSE-ConnectionGUID: n53kvqjfRue9GsXfCUf8fg==
+X-CSE-MsgGUID: A89NqrmXRgahO1BXhRqWfw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,270,1739865600"; 
+   d="scan'208";a="136042291"
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 16:11:38 -0700
+Date: Wed, 7 May 2025 16:16:45 -0700
+From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: x86@kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Michael Kelley <mhklinux@outlook.com>, devicetree@vger.kernel.org,
+	Saurabh Sengar <ssengar@linux.microsoft.com>,
+	Chris Oo <cho@microsoft.com>, linux-hyperv@vger.kernel.org,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+	Ricardo Neri <ricardo.neri@intel.com>
+Subject: Re: [PATCH v3 04/13] dt-bindings: x86: Add CPU bindings for x86
+Message-ID: <20250507231644.GB28763@ranerica-svr.sc.intel.com>
+References: <20250503191515.24041-1-ricardo.neri-calderon@linux.intel.com>
+ <20250503191515.24041-5-ricardo.neri-calderon@linux.intel.com>
+ <20250504-happy-spoonbill-of-radiance-3b9fec@kuoka>
+ <20250506045235.GB25533@ranerica-svr.sc.intel.com>
+ <20250506-alluring-beaver-of-modernism-65ff8a@kuoka>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 8/8] Documentation: ublk: document UBLK_F_RR_TAGS
-To: Uday Shankar <ushankar@purestorage.com>, Ming Lei <ming.lei@redhat.com>,
- Jens Axboe <axboe@kernel.dk>, Caleb Sander Mateos <csander@purestorage.com>,
- Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org
-References: <20250507-ublk_task_per_io-v6-0-a2a298783c01@purestorage.com>
- <20250507-ublk_task_per_io-v6-8-a2a298783c01@purestorage.com>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250507-ublk_task_per_io-v6-8-a2a298783c01@purestorage.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250506-alluring-beaver-of-modernism-65ff8a@kuoka>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 
-Hi,
-
-On 5/7/25 2:49 PM, Uday Shankar wrote:
-> Document the new flag UBLK_F_RR_TAGS along with its intended use case.
-> Also describe the new restrictions on threading model imposed by
-> ublk_drv (one (qid,tag) pair is can be served by only one thread), and
-> remove references to ubq_daemon/per-queue threads, since such a concept
-> no longer exists.
+On Tue, May 06, 2025 at 09:25:59AM +0200, Krzysztof Kozlowski wrote:
+> On Mon, May 05, 2025 at 09:52:35PM GMT, Ricardo Neri wrote:
+> > On Sun, May 04, 2025 at 06:45:59PM +0200, Krzysztof Kozlowski wrote:
+> > > On Sat, May 03, 2025 at 12:15:06PM GMT, Ricardo Neri wrote:
+> > > > Add bindings for CPUs in x86 architecture. Start by defining the `reg` and
+> > > 
+> > > What for?
+> > 
+> > Thank you for your quick feedback, Krzysztof!
+> > 
+> > Do you mean for what reason I want to start bindings for x86 CPUs? Or only
 > 
-> Signed-off-by: Uday Shankar <ushankar@purestorage.com>
-> ---
->  Documentation/block/ublk.rst | 83 ++++++++++++++++++++++++++++++++++++++------
->  1 file changed, 72 insertions(+), 11 deletions(-)
+> Yes. For which devices, what purpose.
+
+Sure, I could expand on this.
+
 > 
-> diff --git a/Documentation/block/ublk.rst b/Documentation/block/ublk.rst
-> index 854f823b46c2add01d0b65ba36aecd26c45bb65d..e9cbabdd69c5539a02463780ba5e51de0416c3f6 100644
-> --- a/Documentation/block/ublk.rst
-> +++ b/Documentation/block/ublk.rst
-> @@ -115,15 +115,15 @@ managing and controlling ublk devices with help of several control commands:
->  
->  - ``UBLK_CMD_START_DEV``
->  
-> -  After the server prepares userspace resources (such as creating per-queue
-> -  pthread & io_uring for handling ublk IO), this command is sent to the
-> +  After the server prepares userspace resources (such as creating I/O handler
-> +  threads & io_uring for handling ublk IO), this command is sent to the
->    driver for allocating & exposing ``/dev/ublkb*``. Parameters set via
->    ``UBLK_CMD_SET_PARAMS`` are applied for creating the device.
->  
->  - ``UBLK_CMD_STOP_DEV``
->  
->    Halt IO on ``/dev/ublkb*`` and remove the device. When this command returns,
-> -  ublk server will release resources (such as destroying per-queue pthread &
-> +  ublk server will release resources (such as destroying I/O handler threads &
->    io_uring).
->  
->  - ``UBLK_CMD_DEL_DEV``
-> @@ -208,15 +208,15 @@ managing and controlling ublk devices with help of several control commands:
->    modify how I/O is handled while the ublk server is dying/dead (this is called
->    the ``nosrv`` case in the driver code).
->  
-> -  With just ``UBLK_F_USER_RECOVERY`` set, after one ubq_daemon(ublk server's io
-> -  handler) is dying, ublk does not delete ``/dev/ublkb*`` during the whole
-> +  With just ``UBLK_F_USER_RECOVERY`` set, after the ublk server exits,
-> +  ublk does not delete ``/dev/ublkb*`` during the whole
->    recovery stage and ublk device ID is kept. It is ublk server's
->    responsibility to recover the device context by its own knowledge.
->    Requests which have not been issued to userspace are requeued. Requests
->    which have been issued to userspace are aborted.
->  
-> -  With ``UBLK_F_USER_RECOVERY_REISSUE`` additionally set, after one ubq_daemon
-> -  (ublk server's io handler) is dying, contrary to ``UBLK_F_USER_RECOVERY``,
-> +  With ``UBLK_F_USER_RECOVERY_REISSUE`` additionally set, after the ublk server
-> +  exits, contrary to ``UBLK_F_USER_RECOVERY``,
->    requests which have been issued to userspace are requeued and will be
->    re-issued to the new process after handling ``UBLK_CMD_END_USER_RECOVERY``.
->    ``UBLK_F_USER_RECOVERY_REISSUE`` is designed for backends who tolerate
-> @@ -241,10 +241,11 @@ can be controlled/accessed just inside this container.
->  Data plane
->  ----------
->  
-> -ublk server needs to create per-queue IO pthread & io_uring for handling IO
-> -commands via io_uring passthrough. The per-queue IO pthread
-> -focuses on IO handling and shouldn't handle any control & management
-> -tasks.
-> +The ublk server should create dedicated threads for handling I/O. Each
-> +thread should have its own io_uring through which it is notified of new
-> +I/O, and through which it can complete I/O. These dedicated threads
-> +should focus on IO handling and shouldn't handle any control &
-> +management tasks.
->  
->  The's IO is assigned by a unique tag, which is 1:1 mapping with IO
-
-   ???
-
->  request of ``/dev/ublkb*``.
-> @@ -265,6 +266,13 @@ with specified IO tag in the command data:
->    destined to ``/dev/ublkb*``. This command is sent only once from the server
->    IO pthread for ublk driver to setup IO forward environment.
->  
-> +  Once a thread issues this command against a given (qid,tag) pair, the thread
-> +  registers itself as that I/O's daemon. In the future, only that I/O's daemon
-> +  is allowed to issue commands against the I/O. If any other thread attempts
-> +  to issue a command against a (qid,tag) pair for which the thread is not the
-> +  daemon, the command will fail. Daemons can be reset only be going through
-> +  recovery.
-> +
->  - ``UBLK_IO_COMMIT_AND_FETCH_REQ``
->  
->    When an IO request is destined to ``/dev/ublkb*``, the driver stores
-> @@ -309,6 +317,59 @@ with specified IO tag in the command data:
->    ``UBLK_IO_COMMIT_AND_FETCH_REQ`` to the server, ublkdrv needs to copy
->    the server buffer (pages) read to the IO request pages.
->  
-> +Load balancing
-> +--------------
-> +
-> +A simple approach to designing a ublk server might involve selecting a
-> +number of I/O handler threads N, creating devices with N queues, and
-> +pairing up I/O handler threads with queues, so that each thread gets a
-> +unique qid, and it issues ``FETCH_REQ``s against all tags for that qid.
-> +Indeed, before the introduction of the ``UBLK_F_RR_TAGS`` feature, this
-> +was essentially the only option (*)
-
-Add ending period (full stop), please.
-
-> +
-> +This approach can run into performance issues under imbalanced load.
-> +This architecture taken together with the `blk-mq architecture
-> +<https://docs.kernel.org/block/blk-mq.html>`_ implies that there is a
-> +fixed mapping from I/O submission CPU to the ublk server thread that
-> +handles it. If the workload is CPU-bottlenecked, only allowing one ublk
-> +server thread to handle all the I/O generated from a single CPU can
-> +limit peak bandwidth.
-> +
-> +To address this issue, two changes were made:
-> +
-> +- ublk servers can now pair up threads with I/Os (i.e. (qid,tag) pairs)
-> +  arbitrarily. In particular, the preexisting restriction that all I/Os
-> +  in one queue must be served by the same thread is lifted.
-> +- ublk servers can now specify ``UBLK_F_RR_TAGS`` when creating a ublk
-> +  device to get round-robin tag allocation on each queue
-
-Add ending period (full stop), please.
-
-> +
-> +The ublk server can check for the presence of these changes by testing
-> +for the ``UBLK_F_RR_TAGS`` feature.
-> +
-> +With these changes, a ublk server can balance load as follows:
-> +
-> +- create the device with ``UBLK_F_RR_TAGS`` set in
-> +  ``ublksrv_ctrl_dev_info::flags`` when issuing the ``ADD_DEV`` command
-> +- issue ``FETCH_REQ``s from ublk server threads to (qid,tag) pairs in
-> +  a round-robin manner. For example, for a device configured with
-> +  ``nr_hw_queues=2`` and ``queue_depth=4``, and a ublk server having 4
-> +  I/O handling threads, ``FETCH_REQ``s could be issued as follows, where
-> +  each entry in the table is the pair (``ublksrv_io_cmd::q_id``,
-> +  ``ublksrv_io_cmd::tag``) in the payload of the ``FETCH_REQ``.
-> +
-> +  ======== ======== ======== ========
-> +  thread 0 thread 1 thread 2 thread 3
-> +  ======== ======== ======== ========
-> +  (0, 0)   (0, 1)   (0, 2)   (0, 3)
-> +  (1, 3)   (1, 0)   (1, 1)   (1, 2)
-> +
-> +With this setup, I/O submitted on a CPU which maps to queue 0 will be
-> +balanced across all threads instead of all landing on the same thread.
-> +Thus, a potential bottleneck is avoided.
-> +
-> +(*) technically, one I/O handling thread could service multiple queues
-
-       Technically,
-
-> +if it wanted to, but that doesn't help with imbalanced load
-
-Add ending period (full stop), please.
-
-
-> +
->  Zero copy
->  ---------
->  
+> > the `reg` property? If the former, it is to add an enable-method property to
+> > x86 CPUs. If the latter, is to show the relationship between APIC and `reg`.
+> > 
+> > > 
+> > > > `enable-method` properties and their relationship to x86 APIC ID and the
+> > > > available mechanisms to boot secondary CPUs.
+> > > > 
+> > > > Start defining bindings for Intel processors. Bindings for other vendors
+> > > > can be added later as needed.
+> > > > 
+> > > > Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+> > > > ---
+> > > 
+> > > Not really tested so only limited review follows.
+> > 
+> > Sorry, I ran make dt_binding_check but only on this schema. I missed the
+> > reported error.
+> > 
+> > > 
+> > > >  .../devicetree/bindings/x86/cpus.yaml         | 80 +++++++++++++++++++
+> > > >  1 file changed, 80 insertions(+)
+> > > >  create mode 100644 Documentation/devicetree/bindings/x86/cpus.yaml
+> > > > 
+> > > > diff --git a/Documentation/devicetree/bindings/x86/cpus.yaml b/Documentation/devicetree/bindings/x86/cpus.yaml
+> > > > new file mode 100644
+> > > > index 000000000000..108b3ad64aea
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/x86/cpus.yaml
+> > > > @@ -0,0 +1,80 @@
+> > > > +# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
+> > > > +%YAML 1.2
+> > > > +---
+> > > > +$id: http://devicetree.org/schemas/x86/cpus.yaml#
+> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > +
+> > > > +title: x86 CPUs
+> > > > +
+> > > > +maintainers:
+> > > > +  - Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+> > > > +
+> > > > +description: |
+> > > > +  Description of x86 CPUs in a system through the "cpus" node.
+> > > > +
+> > > > +  Detailed information about the CPU architecture can be found in the Intel
+> > > > +  Software Developer's Manual:
+> > > > +    https://intel.com/sdm
+> > > > +
+> > > > +properties:
+> > > > +  compatible:
+> > > > +    enum:
+> > > > +      - intel,x86
+> > > 
+> > > That's architecture, not a CPU. CPUs are like 80286, 80386, so that's
+> > > not even specific instruction set. I don't get what you need it for.
+> > 
+> > Am I to understand the the `compatible` property is not needed if the
+> > bindings apply to any x86 CPU?
 > 
+> Every device needs compatible. Its meaning is explained:
+> https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#compatible
+> 
+> If you add here a device representing CPU, then look at existing
+> bindings for CPUs how they do it.
+> 
+> It again feels like you add DT for platform which is not a real thing.
 
--- 
-~Randy
+That is correct. I struggle to enumerate specific CPUs because the `intel,
+wakeup-mailbox` enable method is implemented in the platform firmware and
+is not tied to a given processor model as required by the rules of the
+`compatible` property.
 
+> If you use DT, you do not get different rules, therefore read all
+> standard guides and tutorials (there were many, quite comprehensive).
+
+I went through various materials. Perhaps I needed to understand the rules
+better.
+
+I realize now the DeviceTree is about describing hardware not firmware and
+DT bindings are a suitable vehicle for this.
+
+Thanks for the time you spent reviewing this patchset!
+
+BR,
+Ricardo
