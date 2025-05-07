@@ -1,85 +1,116 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F4F44B1E73;
-	Wed,  7 May 2025 02:06:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA63A41C72
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 02:07:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746583581; cv=none; b=IY1Gc5fvaOH3r1SDYt1pvFA8ieI+aeafwJkIT3SkL9uN9Tsz5M/x5vUA5Y8SyTH6rk9s8ykI4iIMIbJDcNaF8/N7fRCfz9Ujd4pnXNp9fOb35Cg9EUsX0QjFi4OCxX6QePanccxNlNhIpvMvLTzgdBtsP6yv7HxfcpCwbdgwZNc=
+	t=1746583650; cv=none; b=iwWRdUJbVZXqi/gszdojK/LX8q4iKIqwzyJk3DPySmJfy6fF03tPlCFZUnTHhOkyK8gYL5+JCpHxybV1Eeb+eCHME332XOYR5sNDfGH7isuHS8eVeB1G5U49x61F9ZVtMV+mZh3PbswS/EIpkYtpVwiVAZ9RotVXh1syiP8nJsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746583581; c=relaxed/simple;
-	bh=1VsNcjYJF7cLmpBwnsKum+QPehsSemNHeONRj4/3MGQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qd5bXcATOf56jnytxLitVY7nUhQP0DuikMNODo1t+lVTOtEQrG66OZWZztT/sisNCWVSoGGDHeY1aTpBQ3sONlo3EvlkFxcWOTk6B+ybJNoyIDiV4P/GEWTloPzLpVoC/pCs9Dm37R4ENOfE2I1a285818T/oBgLEDSLj1AJh3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=I+KLeADA; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1746583650; c=relaxed/simple;
+	bh=BOl1Hjbmg6sfv+e8b7AdM2sJt3n7EOZ+HP8cM6weGGY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 References; b=ghVkDLVrCgAkOLnbFRvIdoYvUFRHVKWPsdPxKkZREZrqke/tbzjQVfePYWb+lfnOrCSXcTgtf0uJC8AJLHBfdqNEXOOUOVC7+U6R4vU24fb7uayb8WbDRUq6+yrCOEYbq+mel7oRRdWeXois0tWbtKG+k9VUZMPd88i74bot9Qs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=Pb3cEynk; arc=none smtp.client-ip=203.254.224.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="I+KLeADA"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=KJj1df+PsBvJxqQabjQE7P4OiseEZSfyi+NXcDGgpIA=; b=I+KLeADAz7ioOcZbEdbkJ0nuZC
-	ythTI48td9drp5dBgjh+lIFNCIL8NSktFBJdwoLvZZzeidp1yOz2B0ToGIo6gHgeWjGqJ/7F9im/t
-	xIlexLTCHRNUP/SC2z80LjPDIQ/O1CVZo5MvW4Vnb0m8ONPSh87J0pLagAwMzNc/sG3jOOeVcY+gA
-	knxnx9bOGjfrvUrdNfOlfD/iAl/o+TD+9Mn1DImL610KqFAnwxsS35cblxvHpEsrjOK0qwRO5YliQ
-	SkuvSKaKU9CJXmf5CGt1LmzGykosmmAL4/ecSFZeB103QF4wxAOQSSVJs07TXIaZDyACBxWHlqQbW
-	HCga9FZg==;
-Received: from [58.29.143.236] (helo=[192.168.1.6])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1uCU6e-004Ubg-RP; Wed, 07 May 2025 04:05:43 +0200
-Message-ID: <f46e0854-faad-4733-980f-11b9380b884f@igalia.com>
-Date: Wed, 7 May 2025 11:05:32 +0900
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Pb3cEynk"
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250507020724epoutp023650af2cde39dd9262386831fd94f64f~9HJIqDQwN0565905659epoutp02F
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 02:07:24 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250507020724epoutp023650af2cde39dd9262386831fd94f64f~9HJIqDQwN0565905659epoutp02F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1746583644;
+	bh=vh1sjlzdmhCkJFjPMX98BXTIFWJ0pn9mK1R1KkIvKng=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=Pb3cEynk6F8WoAo0cJo8eN35U7puwDzSpLG1/9UW7aFNG7hSJejLqqmg126pTPHNy
+	 juPkqNGjZkPZ5VnF1sWMztrKtNL+JmT1mSPNSKdRBJ6FhCO1k06SxZZ1tI03QloTYL
+	 OBAiFsQonW3lx3Tppdg8ZQMBKuwNAAkVzkVZs+4A=
+Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
+	epcas1p3.samsung.com (KnoxPortal) with ESMTPS id
+	20250507020724epcas1p3619785b5d0f5987100eee9ded9f925bc~9HJIWdcCe1697116971epcas1p3n;
+	Wed,  7 May 2025 02:07:24 +0000 (GMT)
+Received: from epcas1p4.samsung.com (unknown [182.195.36.226]) by
+	epsnrtp02.localdomain (Postfix) with ESMTP id 4Zsdtz6H9yz2SSKf; Wed,  7 May
+	2025 02:07:23 +0000 (GMT)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250507020722epcas1p1171c5e96ef474d587a1a35af8d6931bf~9HJHJU48N2947929479epcas1p1p;
+	Wed,  7 May 2025 02:07:22 +0000 (GMT)
+Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20250507020722epsmtrp274642db3c1aaac5cb6471feff3b7bd6a~9HJHIpGAQ0063700637epsmtrp2D;
+	Wed,  7 May 2025 02:07:22 +0000 (GMT)
+X-AuditID: b6c32a52-40bff70000004c16-3f-681ac05aa7c4
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	0D.A0.19478.A50CA186; Wed,  7 May 2025 11:07:22 +0900 (KST)
+Received: from wkk-400TFA-400SFA.. (unknown [10.253.99.106]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250507020722epsmtip101809ac449763400cd7224bd757d3da2~9HJG_O8Fa0522205222epsmtip1O;
+	Wed,  7 May 2025 02:07:22 +0000 (GMT)
+From: wkon-kim <wkon.kim@samsung.com>
+To: James.Bottomley@HansenPartnership.com, martin.petersen@oracle.com,
+	linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: wkon.kim@samsung.com
+Subject: [PATCH] ufs: core: Print error value as hex format on
+ ufshcd_err_handler()
+Date: Wed,  7 May 2025 11:07:18 +0900
+Message-Id: <20250507020718.7446-1-wkon.kim@samsung.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND PATCH v2 0/2] sched_ext: rename var for slice refill
- event and add helper
-To: Honglei Wang <jameshongleiwang@126.com>, tj@kernel.org,
- void@manifault.com, arighi@nvidia.com
-Cc: mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
- vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org,
- bsegall@google.com, mgorman@suse.de, vschneid@redhat.com,
- joshdon@google.com, brho@google.com, linux-kernel@vger.kernel.org,
- bpf@vger.kernel.org
-References: <20250507011637.77589-1-jameshongleiwang@126.com>
-From: Changwoo Min <changwoo@igalia.com>
-Content-Language: en-US, ko-KR, en-US-large, ko
-In-Reply-To: <20250507011637.77589-1-jameshongleiwang@126.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprOLMWRmVeSWpSXmKPExsWy7bCSnG7UAakMg4UPzSw29nNYXN41h82i
+	+/oONovlx/8xWWy+9I3FgdVj2qRTbB4fn95i8ejbsorR4/MmuQCWKC6blNSczLLUIn27BK6M
+	7ZP+shRs46y4vGAWSwPjN/YuRk4OCQETiUsvHrF0MXJxCAlsZ5R4PvMZUIIDKCEhseVLNoQp
+	LHH4cDFIuZDAe0aJe9tCQGw2AVWJ3w0HGEFaRQRaGSWe3roI1soM1Hrgli1IjbBAsMSPeQ9Z
+	QMIsQPVnLsaChHkFLCR+H7/CDHGBvMT+g2eZIeKCEidnPmEBsZmB4s1bZzNPYOSbhSQ1C0lq
+	ASPTKkbR1ILi3PTc5AJDveLE3OLSvHS95PzcTYzgsNMK2sG4bP1fvUOMTByMhxglOJiVRHjv
+	35fMEOJNSaysSi3Kjy8qzUktPsQozcGiJM6rnNOZIiSQnliSmp2aWpBaBJNl4uCUamASXv5F
+	cVq05inTT79DjsoaWjzPvme1r19QOif9RcROpUO3ln3yKFgerlZ7sGyz37vkxTO77VsnFaRM
+	X7+AtXyDscgu7oWaa6fNrHf/euTe3nqLooqdW7fxTDtWeDfz9JbFt++cO/3srwSTsdyB7lfL
+	j3dyvHv5av6f39MPVP9p6Iidstq5LPD33FfOF56+ODFB2czhcurHpbJTj6XsZVDyllw62/xc
+	n0er9wGvrQctTH7yKB+acWSD2PxS7c4tTXudvX8LMN5aWLT+o8j5ixt4bgrNZ5A6JJOle31t
+	y05nnq+XnG+vVdooELBzyrF/sZFyZ3zu8rM/XBs6YUvGiU06vQ2O/9yfm0z+JmJi6tWdd0mJ
+	pTgj0VCLuag4EQB2hhOjqgIAAA==
+X-CMS-MailID: 20250507020722epcas1p1171c5e96ef474d587a1a35af8d6931bf
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 101P
+cpgsPolicy: CPGSC10-711,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250507020722epcas1p1171c5e96ef474d587a1a35af8d6931bf
+References: <CGME20250507020722epcas1p1171c5e96ef474d587a1a35af8d6931bf@epcas1p1.samsung.com>
 
-Hi Honglei,
+It is better to print saved_err and saved_uic_err in hex format.
+Integer format is hard to spot.
 
-Looks good to me.
+[ 1024.485428] [2: kworker/u20:13:28211] exynos-ufs 17100000.ufs: ufshcd_err_handler started; HBA state eh_fatal; powered 1; shutting down 0; saved_err = 131072; saved_uic_err = 0; force_reset = 0; link is broken
 
-Acked-by: Changwoo Min <changwoo@igalia.com>
+Signed-off-by: Wonkon Kim <wkon.kim@samsung.com>
+---
+ drivers/ufs/core/ufshcd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On 5/7/25 10:16, Honglei Wang wrote:
-> SCX_EV_ENQ_SLICE_DFL gives the impression that the event only occurs
-> when the tasks were enqueued, which seems not accurate. So rename the
-> variable to SCX_EV_REFILL_SLICE_DFL.
-> 
-> The slice refilling with default slice always come with event
-> statistics together, add a helper routine to make it cleaner.
-> 
-> Changes in v2:
-> Refine the comments base on Andrea's suggestion.
-> 
-> Honglei Wang (2):
->    sched_ext: change the variable name for slice refill event
->    sched_ext: add helper for refill task with default slice
-> 
->   kernel/sched/ext.c             | 36 +++++++++++++++++-----------------
->   tools/sched_ext/scx_qmap.bpf.c |  4 ++--
->   2 files changed, 20 insertions(+), 20 deletions(-)
-> 
+diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
+index 5cb6132b8147..eb0ce35a7a9c 100644
+--- a/drivers/ufs/core/ufshcd.c
++++ b/drivers/ufs/core/ufshcd.c
+@@ -6572,7 +6572,7 @@ static void ufshcd_err_handler(struct work_struct *work)
+ 	hba = container_of(work, struct ufs_hba, eh_work);
+ 
+ 	dev_info(hba->dev,
+-		 "%s started; HBA state %s; powered %d; shutting down %d; saved_err = %d; saved_uic_err = %d; force_reset = %d%s\n",
++		 "%s started; HBA state %s; powered %d; shutting down %d; saved_err = 0x%x; saved_uic_err = 0x%x; force_reset = %d%s\n",
+ 		 __func__, ufshcd_state_name[hba->ufshcd_state],
+ 		 hba->is_powered, hba->shutting_down, hba->saved_err,
+ 		 hba->saved_uic_err, hba->force_reset,
+-- 
+2.34.1
 
