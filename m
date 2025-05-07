@@ -1,116 +1,123 @@
-Received: from smtpbgsg1.qq.com (smtpbgsg1.qq.com [54.254.200.92])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72DFA748D;
-	Wed,  7 May 2025 10:03:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.92
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B590A20FAA9
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 10:04:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746612249; cv=none; b=M8RgTVWNOwGBfdeVr2VARM5ztEx8MsSCi6vC/wMJntH/wxolbubE4LeD97POAwRZBXBWgB8JwXx0r2IYzNGYLOW67HWpgu7/fnNxQLTsmoqE4RMVqslsyOBZ/vVD+PzIVqB56i5iPfRVTn7yZZn96z5sePzMpJLIdtchRQwc+5A=
+	t=1746612250; cv=none; b=maGl4dMObHqqaMmrvAnzfS9LyUJKol0NnZWdHCtG5/GsU3YQIuslj1uNv5AOFM0Ae2I/xvkxagI7eIyF5ieMTiykZ4YzMRx3m7h7/clP7tN+lL0HN8v+vcEBj61WngRDDdmNWxr7nukxkhNDsGoCyhkpTd9LRrZRmW/eyPsKtzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746612249; c=relaxed/simple;
-	bh=ONKdy+w9gyMKFQEXUyZDqN8rmz0A1AXazcIgetb64o8=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=Sr5DXATrGqANmPhl9yoQ6BYjqYL70l4h1K0K7Fv4rZSh9kNCVgrzRU2T+77OSuXm2Iv/E9JWa2OciKMVWp5Cn2CKU5rWYloY7QoruX8VPdsv+BmaNeatFEqFFvlZZK2/8oFZDkb7URceEgTANxhUk3GnZD3tUnmCLq/hO12n+YU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=m.fudan.edu.cn; spf=pass smtp.mailfrom=m.fudan.edu.cn; dkim=pass (1024-bit key) header.d=m.fudan.edu.cn header.i=@m.fudan.edu.cn header.b=I866g5h3; arc=none smtp.client-ip=54.254.200.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=m.fudan.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=m.fudan.edu.cn
+	s=arc-20240116; t=1746612250; c=relaxed/simple;
+	bh=bCOjuFO/OeJWl7EfL/BAocHP1BtkXZ438OOIHujOMIY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H0ApN/J85+Saw6zP0XxwU+K+hUcJdZ/LnIYXu4ltur9rNcrgx5gpZG4XoFW3/cEbykNVjKKsHx4PqgX9Mpn/GhlzWWn8goBlaCqYDhxfLuQdg0EkZMcV4LmZFMjHaVIyQA3emKMaDRX56qKiyL3P4qE55fubaeQ5hrhJ9cUTsdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cIlxdgyR; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=m.fudan.edu.cn header.i=@m.fudan.edu.cn header.b="I866g5h3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=m.fudan.edu.cn;
-	s=sorc2401; t=1746612214;
-	bh=ONKdy+w9gyMKFQEXUyZDqN8rmz0A1AXazcIgetb64o8=;
-	h=Mime-Version:Subject:From:Date:Message-Id:To;
-	b=I866g5h3l/88iOQEgAMIP3SJI7+5Lxy2XkSVjn0tsufAFwHU6QJwDUQ9hGPWuEOnB
-	 72E7OjFDpZHXlBra/RKyh7aoN/88Dk1v51xMEqu0wl5eQLNhxWt3FTfoSEUJxkkTFD
-	 WksD/sHRvwOp3URtIW2mDkAXozpI1HxxLTXxrMTM=
-X-QQ-mid: zesmtpip3t1746612207t5145e6a1
-X-QQ-Originating-IP: YPTKlIROWMCFYMZ9/Uwc5rfUQLWe4dBAq2hngwjFGs8=
-Received: from smtpclient.apple ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 07 May 2025 18:03:25 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 4692290289710788905
-EX-QQ-RecipientCnt: 8
-Content-Type: text/plain;
-	charset=us-ascii
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cIlxdgyR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746612249; x=1778148249;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=bCOjuFO/OeJWl7EfL/BAocHP1BtkXZ438OOIHujOMIY=;
+  b=cIlxdgyRoZsi4n8MY/sbK0cOEK950hbeg9bbhJeGSD7MpuRUAwl7qAjZ
+   xDZ+PqOTRFlm4aV853VxKPLA4ozmx5shinoJGcC+Yajj11GP63ZzTyWzO
+   VO+L/DHAlF8UktvCINyussMge73iBcNvvTwe5N5KKwOGrGF8Mu5+yNlKR
+   hmHaCoCwHPhPQ4mXQil5Lp1os3UNk2PmuwhhjNq/gqx73luPUJMX91cRI
+   VStVA/AJmr/HZDKnbvtAyLkDHZ15LyBXJBcACN2iUGW87QqIxUrtKxEIP
+   PaBAZPVWCCpJAKUE0oQfipaSPE4WguXgqwMDrUPY9hjSerMdCuIpREf74
+   Q==;
+X-CSE-ConnectionGUID: YaivdwxhREGi3VwPDE38tg==
+X-CSE-MsgGUID: jzmXIop5R8uiJpBerZ9adg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="52147985"
+X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
+   d="scan'208";a="52147985"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 03:04:09 -0700
+X-CSE-ConnectionGUID: 9ObRoTSVTNetRpwNKzdPuQ==
+X-CSE-MsgGUID: D5EB3DOuQVSxLFoBgFSj0Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
+   d="scan'208";a="136841519"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa008.jf.intel.com with ESMTP; 07 May 2025 03:04:05 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uCbdC-0007Yl-1T;
+	Wed, 07 May 2025 10:04:02 +0000
+Date: Wed, 7 May 2025 18:03:44 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Dhaval Giani (AMD)" <dhaval@gianis.ca>, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Dhaval Giani <dhaval.giani@amd.com>,
+	Gautham Shenoy <gautham.shenoy@amd.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	"Dhaval Giani (AMD)" <dhaval@gianis.ca>
+Subject: Re: [PATCH 1/3] sched/fair: Introduce a new debugfs directory for
+ EEVDF tests
+Message-ID: <202505071739.GJbmEQJp-lkp@intel.com>
+References: <20250422-b4-eevdf-tests-v1-post-v1-1-35d158254c72@gianis.ca>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3818.100.11.1.3\))
-Subject: Re: KASAN: slab-out-of-bounds in hfsplus_bnode_read+0x268/0x290
-From: =?utf-8?B?6IOh54Sc?= <huk23@m.fudan.edu.cn>
-In-Reply-To: <d8f947a94233710bffa498d9770ef23469aff073.camel@dubeyko.com>
-Date: Wed, 7 May 2025 18:03:15 +0800
-Cc: Viacheslav Dubeyko <Slava.Dubeyko@ibm.com>,
- "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "glaubitz@physik.fu-berlin.de" <glaubitz@physik.fu-berlin.de>,
- "frank.li@vivo.com" <frank.li@vivo.com>,
- "baishuoran@hrbeu.edu.cn" <baishuoran@hrbeu.edu.cn>,
- "jjtan24@m.fudan.edu.cn" <jjtan24@m.fudan.edu.cn>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <5703A932-C5B0-4C98-BC5D-133F6E7943B3@m.fudan.edu.cn>
-References: <TYSPR06MB71580B4132B73E43C0D86517F68D2@TYSPR06MB7158.apcprd06.prod.outlook.com>
- <1058be22b49415c3065ced5242988ff81e2e9218.camel@ibm.com>
- <d8f947a94233710bffa498d9770ef23469aff073.camel@dubeyko.com>
-To: Viacheslav Dubeyko <slava@dubeyko.com>
-X-Mailer: Apple Mail (2.3818.100.11.1.3)
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpip:m.fudan.edu.cn:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: MQCbYOYzcCnkjtU6IFXzJA8EYQM7wP8wWlxy07rqQY2iix/Im8i4gSCj
-	oybCBnJdBU3D3h96YspfxxP0mLb8GhL2THPbbhXMyM3a/aKYrYAA8mcf2eWM4k+PQ6CkTcp
-	cN/lkLUStIUlxKIlVRJsgdTZ31DOKOIhQtuIJ9+4qc503zODfMJxcGQE1+tjpgmonRfNGCx
-	JblB4b/G4bp5ft4pAKhfteyrXN1qDCiY5EEuwP9ZXl75qHtNvWTOAMZ7iwQjycpEI1mZf6D
-	b+T3pEz+bTq5MHVAFSH6aXCojDGahKnxY2e3Wm5qqpnvuKaNieSdMr50+GKKr6iuVjoI8q5
-	bcR07fKUl0/pnNwbcEiNX/LfMinnEM4fyhPHNBp6QyRycbmsC8ERQxMuvxfybGxa3A6amPe
-	U6a3hCMrnYcsqosOygDoHnRd9tZFmjA9MjDonVNblb2VAm6W75jrHkrVgYWkEaD4dcntwVw
-	bHX0E0DogI+WuUvKIdUwSaIM5I1UOvsuqxtVOGGdJfkzqd7Og4BSAG19P8vp0I7U6dRqJ8E
-	UNstEJRi9muQLiFnQKMIESj9WYe+wZbg9GkrFvQdsLSaZlXBNNF5Bog/JhLDrgxZMiCuALc
-	ISNWJ8vQQfUTzB9Ocx4+KOgWUGAXPps2AhoXKP00EAFr3MP3/sciA2hSksT1DgQufk1J79s
-	LOelol/VsomWcxAWvj8mKp9bkX+tU5SBgtT7dynIgXJ+F8CpJvQ2EIsW4iTB7SH4v0g6X8D
-	6CBTCxecyGDSzAy5W8UfPTsYkQRBKoYmd5avkxYSCC5SEw2ZBAdL0SJlsZjVRFiLQEeWNRj
-	+KepM34fm7CjhOnHKZOx7rMu9IVeCx3taF9cY64+9jnSn3SJgSllZldES9Huj2qPBSJli9l
-	sEqKluU0n7Bz2bZM8Kyj7Y0psyGKgcUFmYq8J86qDpr5muwAwEMz9CHOWgaIPJi8VTeZsqU
-	bgThA+3HW8sfvbhr28/0l9Vlhy9dDK2OpyBL2D2bA7MHPYrUPNhLu3Ae50/hkaeBTjBSdr7
-	BzT3Npx/O6OmOFT/YsnazI3bivms8=
-X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
-X-QQ-RECHKSPAM: 0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250422-b4-eevdf-tests-v1-post-v1-1-35d158254c72@gianis.ca>
+
+Hi Dhaval,
+
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on c70fc32f44431bb30f9025ce753ba8be25acbba3]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Dhaval-Giani-AMD/sched-fair-Introduce-a-new-debugfs-directory-for-EEVDF-tests/20250423-082221
+base:   c70fc32f44431bb30f9025ce753ba8be25acbba3
+patch link:    https://lore.kernel.org/r/20250422-b4-eevdf-tests-v1-post-v1-1-35d158254c72%40gianis.ca
+patch subject: [PATCH 1/3] sched/fair: Introduce a new debugfs directory for EEVDF tests
+config: x86_64-kexec (https://download.01.org/0day-ci/archive/20250507/202505071739.GJbmEQJp-lkp@intel.com/config)
+compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250507/202505071739.GJbmEQJp-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505071739.GJbmEQJp-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from kernel/sched/build_utility.c:71:
+>> kernel/sched/debug.c:539:2: error: call to undeclared function 'debugfs_eevdf_testing_init'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+     539 |         debugfs_eevdf_testing_init(debugfs_sched);
+         |         ^
+   1 error generated.
 
 
-> I have the fix and I would like to check it. I am trying to use the C
-> reproducer for triggering the issue. Probably, I am doing something
-> wrong. I have complied the kernel by using the shared kernel config =
-and
-> I have compiled the C reproducer. It works several hours already and I
-> still cannot trigger the issue. Am I doing something wrong? How long
-> should I wait the issue reproduction? Could you please share the
-> correct way of the issue reproduction?
->=20
-> Thanks,
-> Slava.=20
->=20
+vim +/debugfs_eevdf_testing_init +539 kernel/sched/debug.c
 
+   534	
+   535		debugfs_create_file("debug", 0444, debugfs_sched, NULL, &sched_debug_fops);
+   536	
+   537		debugfs_fair_server_init();
+   538	
+ > 539		debugfs_eevdf_testing_init(debugfs_sched);
+   540	
+   541		return 0;
+   542	}
+   543	late_initcall(sched_init_debug);
+   544	
 
-Hi Slava,
-Thank you for taking your time.
-
-We originally obtained this issue's syz and C reproducers using =
-Syzkaller's repro tool (refer to the URL below). The issue was triggered =
-when we ran the syz reproducer through Syzkaller.
-
-Url: =
-https://github.com/google/syzkaller/blob/master/docs/reproducing_crashes.m=
-d
-
-Syzkaller also provides syz-execprog to verify whether the C program can =
-trigger the issue. We are currently in the process of verifying whether =
-the C reproducer can reliably reproduce the issue. Please allow us some =
-time to complete this verification.
-
-We'll follow up with you once we have more concrete results.
-
-Best regards,
-Kun=
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
