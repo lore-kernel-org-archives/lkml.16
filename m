@@ -1,94 +1,80 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72A511D63C0;
-	Wed,  7 May 2025 06:23:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80E711D63C0;
+	Wed,  7 May 2025 06:23:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746599015; cv=none; b=lWQ/4zeXqgY/0S8g0APhlp6iRSpv6pt4jjkVn+8zIUbvfegEzvU5qsP+GNx1uZr5TFfJSa/eH5J5vBBUsbRbKoFdbAbwNoXt9E8FrTesQ3suEY+ZhwUe+3rB/3/ufWtgZOoY9JBDbgDGU/ypXjGOQX9/FXGfMMZB1zIstgfNAMI=
+	t=1746599026; cv=none; b=N9PRRgJnjZtPdaGyMB2HKXIwj8la6AJ8Wn41gsGyLV0N1ofHxarRUj3fBqED7n/B/Xnwq/kMcbBmXyk6zbYLB7nTxOsUCy62cPPKB77cPwDTSaa6JYMPSVyByMwtCQaRvdORoNSuQzGneNNg9fAnX48Yx6o1j7XB7ksehFvl2yA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746599015; c=relaxed/simple;
-	bh=cIkyL809DpNZFCoH/QArUP8VFEysAc72R2o6zAotn8s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uuZJ+T0d2MNEWeBqPHJXX4IDI9w00FEGIVZolCEiMXb2Ck/zvPQnN4lbWR3pxU6K+mPJZFbNU3IuVR+2ei4oqjD8HBJLwbr16hdXZnytYldhUUo1BJixqmXw/JLio4cegzV3j7Xg2zwwKpt2ny4/OsZJziDu721Cyw7LBCSgHZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IHmW9loA; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746599026; c=relaxed/simple;
+	bh=dgrSBqibv6ETKNx9aChIVq4jh5ZGpoK9U31PwqgzO9Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HsrFRUwPB8xH/r/UQ1G/+qCkUOVeqV90Xm1Kp537Dt14L9s2wTcSvqoAFBkmsH34aQLC41nipb4J8tnhKIW9O5+YGLHw8lHCTlYdkwz7WKXaT9/C6locuXns2GlxqjGtKEErWDNt5j74xI7CnoPVsoav/N3rHLmgHeE2FdSA450=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jE08zf1V; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IHmW9loA"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ad1d1f57a01so419767166b.2;
-        Tue, 06 May 2025 23:23:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746599012; x=1747203812; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cIkyL809DpNZFCoH/QArUP8VFEysAc72R2o6zAotn8s=;
-        b=IHmW9loAirkl3kuj2uM15X3GAeB3qNvFNLOqeqtrydtkjj1s0jCsAeSLdUA/XO1Ezy
-         vZASGze3rUIYVt4JNs5u0neLRHoBVk5EwgdAETcy2oAn/zlTGG0HdKKeTacWWsisNe8n
-         Z+M4ajG6vqiKSp/YRcVSBllFRhS6opNY6zUbAMCyy277PnJcp4AK2xJNwJvqgKpGCnfO
-         FC5pS4Xte1w0Gn+9Ak/Nc9ahBl3No9YmE6HVwhiQ1yL01zSRSRYsEsuwLpzMjpl9PmMg
-         A0783YV2aHGaIsgEnoMeAcEzXGRD7XyMlwhEO6o7NrweKEHzFV1x89jgrX+L4AQateN2
-         mKRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746599012; x=1747203812;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cIkyL809DpNZFCoH/QArUP8VFEysAc72R2o6zAotn8s=;
-        b=O3a+3I9Opr7+NG03zVoAzSB1J73oF4ipNg7ERTH8aVhRYavwppnz9P/NWyQhp06Od7
-         4hBzaE3Wt1UP+Ivv4i1JxLcZpOZMom1cXWPn8GPB2m97Zm2yopqHfUMFPFE28xBNJiQv
-         skr8cvXiVKXQr2QKD2Jpe0cWZ5m8nkkD+l7mkoWS4k+5aVehCtSXFjc24/BNLEMxSiyl
-         5X40Uxy7A95Gdme4eP3nIwip/TBrG6DLZ3GBOfS61H0aKMSh/DZMJvfNH4bPXjmqrf50
-         ZP+lLbtSvJJ7zIwUbwb3C0nGOcy9yO4ne0SaAdIKDD6VGa0GOLIRap4Nn6gfuxdFwvLr
-         DoSg==
-X-Forwarded-Encrypted: i=1; AJvYcCUm6G+B7ZhLK3AEGPa4jeWETo2VUCsDJLsskOkOui4+cRSQWfcoZYBkULYJFkWj6diH7m3d0X+OKuIk8toC@vger.kernel.org, AJvYcCVtWJixfuBxMo1AGfjpNJQqOU/uO9vQ/bf0m+alqlyumn8TcbVroc7HgjQAZj6edrSDfNvjny4aqcQlIrKYugnd@vger.kernel.org, AJvYcCXuLOrzfBOPhhSgzvuvFBsFGcmSQUXp2MVC0/QVLbiCjhFlkBYCNghWwlv4in6Sg9De80xQblZ8CmXN@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIenmZBFe5vlQQbkNO4O07oKelZA52SP3W34vQSFNitt2CYxoa
-	3XrfuHw2pwp6fVirglGlop+VzPrx9HL12B1v+gj9uRPXKZYPxPlMqX/IGPzzaUvK3wdTlvjek7b
-	2AhpNFa3rYn+ugGmP2E+1iZXv7UE=
-X-Gm-Gg: ASbGncs6BYuY9/sG2uhGBvvdCZ0QhJKL5yHR4l/CGmyUrrQ9rtlzleyXdalORDthmkk
-	yxKfdPJV6LeSVzdEEP5yDN9hzqVtzcTm5lVpCVV3Op0pJB7qG+TEnRAKOcR8vBQdkGkLDHv9vrf
-	Bd2kzQ+GHjO8xAfKDFhpIkbg==
-X-Google-Smtp-Source: AGHT+IEOGnsBXsP4uvUcozOu4S5D2FFOy6vv8NUZdedB2gn4SM7bNNUaJ9f60KXPkDRjbmTcR5X12bulyU1oZ8EfsTI=
-X-Received: by 2002:a17:907:9d04:b0:ace:d68c:2f88 with SMTP id
- a640c23a62f3a-ad1e8bc8da8mr203523866b.20.1746599011480; Tue, 06 May 2025
- 23:23:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jE08zf1V"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7ED01C4CEE7;
+	Wed,  7 May 2025 06:23:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746599026;
+	bh=dgrSBqibv6ETKNx9aChIVq4jh5ZGpoK9U31PwqgzO9Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jE08zf1VJ4EVbUvVJ+gf3yOK+QnBOnbBa7dNVSRpg4tCuf3mjYUXeu6qZ/AfV3edJ
+	 EEGw4XJLJdr4M9eb6UGL21Ojt0vCGfk0E/4R5+UbfOXcsi1UEuu8i7pLT4DNMgaL6h
+	 v4LuXrqKJPQCargXmLkWmYSt2CNP+TOAHEVNSLth1gjdP8lt/S89FZLLzeH+s8Pv8+
+	 QSfJ7VogA1iN0uB4T6NzEz5c0bLLwiP9+YzyIAgCCikYLRKbkZr5qROLBTPwvkIPVd
+	 iC1yEu4TJRaWxg3eYKpAo7FRCPbUe468+E7XG6VYjZgK9bDyGoRQnedWzJCA1AyNn9
+	 mp2bnYzU+gcBw==
+Date: Wed, 7 May 2025 06:23:44 +0000
+From: Wei Liu <wei.liu@kernel.org>
+To: Roman Kisel <romank@linux.microsoft.com>
+Cc: ardb@kernel.org, bp@alien8.de, dave.hansen@linux.intel.com,
+	decui@microsoft.com, dimitri.sivanich@hpe.com,
+	haiyangz@microsoft.com, hpa@zytor.com, imran.f.khan@oracle.com,
+	jacob.jun.pan@linux.intel.com, jgross@suse.com,
+	justin.ernst@hpe.com, kprateek.nayak@amd.com, kyle.meyer@hpe.com,
+	kys@microsoft.com, lenb@kernel.org, mingo@redhat.com,
+	nikunj@amd.com, papaluri@amd.com, perry.yuan@amd.com,
+	peterz@infradead.org, rafael@kernel.org, russ.anderson@hpe.com,
+	steve.wahl@hpe.com, tglx@linutronix.de, thomas.lendacky@amd.com,
+	tim.c.chen@linux.intel.com, tony.luck@intel.com, wei.liu@kernel.org,
+	xin@zytor.com, yuehaibing@huawei.com, linux-acpi@vger.kernel.org,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	x86@kernel.org, apais@microsoft.com, benhill@microsoft.com,
+	bperkins@microsoft.com, sunilmut@microsoft.com
+Subject: Re: [PATCH hyperv-next v3] arch/x86: Provide the CPU number in the
+ wakeup AP callback
+Message-ID: <aBr8cNXD630JbIxP@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
+References: <20250430204720.108962-1-romank@linux.microsoft.com>
+ <aBl62kTEAnR790KF@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250506-aaeon-up-board-pinctrl-support-v5-0-3906529757d2@bootlin.com>
- <20250506-aaeon-up-board-pinctrl-support-v5-5-3906529757d2@bootlin.com>
-In-Reply-To: <20250506-aaeon-up-board-pinctrl-support-v5-5-3906529757d2@bootlin.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 7 May 2025 09:22:55 +0300
-X-Gm-Features: ATxdqUEB0Md25wpJdoWOv7e1-MgQeQTcFgtpoWyKkdk3fObqVYQHhhernqFlHnM
-Message-ID: <CAHp75Vdk5Tqykqpg_G3FZpjKjz3yBjz9dNdTu_0R4KRtLMN7=Q@mail.gmail.com>
-Subject: Re: [PATCH v5 05/12] gpio: aggregator: refactor the code to add GPIO
- desc in the forwarder
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aBl62kTEAnR790KF@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
 
-On Tue, May 6, 2025 at 6:21=E2=80=AFPM Thomas Richard
-<thomas.richard@bootlin.com> wrote:
->
-> Create a dedicated function to add a GPIO desc in the forwarder. Instead =
-of
-> passing an array of GPIO descs, now the GPIO descs are passed on by one t=
-o
-> the forwarder.
+On Tue, May 06, 2025 at 02:58:34AM +0000, Wei Liu wrote:
+> On Wed, Apr 30, 2025 at 01:47:20PM -0700, Roman Kisel wrote:
+> > When starting APs, confidential guests and paravisor guests
+> > need to know the CPU number, and the pattern of using the linear
+> > search has emerged in several places. With N processors that leads
+> > to the O(N^2) time complexity.
+> > 
+> > Provide the CPU number in the AP wake up callback so that one can
+> > get the CPU number in constant time.
+> > 
+> > Suggested-by: Michael Kelley <mhklinux@outlook.com>
+> > Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+> > Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
+> 
+> Queued to hyperv-next. Thanks.
 
-Reviewed-by: Andy Shevchenko <andy@kernel.org>
+This patch broke linux-next. I have dropped it. Please change
+numachip_wakeup_secondary.
 
---=20
-With Best Regards,
-Andy Shevchenko
+Wei.
