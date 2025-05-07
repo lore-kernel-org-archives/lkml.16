@@ -1,90 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 117171DD0D4;
-	Wed,  7 May 2025 05:00:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BFC61DDC1E;
+	Wed,  7 May 2025 05:07:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746594038; cv=none; b=i1lFrH5l1AiqlMBCV9N+XOfzE6z5xN/pIAq1KKF058Mbuk+0UZQ7Fh/eV7Xvl5pRxgjoL3fKhI0YrqtBhmBWVWg94ik98cOEcog669XZTIgVnlP4Gjg7D34LUUiZHO/q6U8vUh7Ohw3R5BtMB3uzZWfZnya05QM3SU8VhZmMZTM=
+	t=1746594440; cv=none; b=fWkMg7IUUPSeLlfsSpxk3ckP6z2HIlFkQRrh/m4x6mYsrRIpLMREJPUyGCeNHldLmmNNhr36oFkfia8zp4Cz2y2e/SaKlDZ3syNT7ye88CQi0lJ9u5QZfb2hQl6plJ2+07gEEk2GM51DQ/KzyfObqs1FkrSIQUwIVTveM85HSlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746594038; c=relaxed/simple;
-	bh=EZaPt7slz8Bt3ZiNqrOwboKLy+cCycCnigM78QQx1fg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=vGMvdlcVUmLw+h8CtSlkuwJ7ffLob4P67bXokmY7yVwnbvWG0SIC5erR1acuFDlVRFOjADzq9BJxDgNIY2rf2phsOnuhyuIbq7VB2ggZu2qHCq+TUfxqnNIwuOiT0oPRW3gc18/QEmTHP3Rn0duQ6cnm0c0xLWrvFAlIJegvt6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=g3SriADu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746594440; c=relaxed/simple;
+	bh=sZ/ABV6gSSW+142kA65SyRZuaPtGximO6kt3dOzDW64=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=r1nOlIGP9DnO5/L/GAvYt2/4xnzJ6kZbSFuOKuhECwSv06BGR+NDda1EmTNIMuGpNdYC4CjLtSnRzD5znhSUDhpI8+otp9+P5/uZ5VCF8Y9pd5zmx1H7puW3mw5s2DcgYPlYqmPDrXR6gbTFq6UtgmMeKZ90ezp2iCtluzeYcj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Gy3v3vkj; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="g3SriADu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E033C4CEE7;
-	Wed,  7 May 2025 05:00:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1746594037;
-	bh=EZaPt7slz8Bt3ZiNqrOwboKLy+cCycCnigM78QQx1fg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=g3SriADuJm/h4di3tKuU7Q2/MNIut3Cuj1XvkLUTh0XTRjSzpPA43n9I3sQrWkHdO
-	 B5ukLUrsFtO+ESMQCvhZ4/WGCTq1DDrw91Xk4BFsnHHwRkayg0xuklUq+BYqI2zZ7O
-	 yvUqPCiK+kulvNxfrRsfqf6XMZr8ImYliTAsI2l4=
-Date: Wed, 7 May 2025 07:00:34 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: Kees Cook <kees@kernel.org>, Alejandro Colomar <alx@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] EISA: Move devlist.h out of obj to always
-Message-ID: <2025050716-unframed-unstuffed-842e@gregkh>
-References: <20250423023743.work.350-kees@kernel.org>
- <1f7c8220-09e8-42ae-a611-9a21779badaf@infradead.org>
- <98d34958-e57e-40df-9196-920d40fd57f9@infradead.org>
- <202505061150.4B9A78AC13@keescook>
- <9b50a71c-4106-438b-b475-592a60307a68@infradead.org>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Gy3v3vkj"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 547576SC1275461
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 7 May 2025 00:07:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1746594426;
+	bh=e1gzbKQ5W8TsSlAR2NJvnPpyJD/XJunargVbzrDXq+I=;
+	h=From:To:CC:Subject:Date;
+	b=Gy3v3vkj65LSNGtV+UzbDlwPTsPRHhXQwAaNzjOUxF8oMLMLYxWb3aXZOxY9xXAOJ
+	 FuZAIksmEo4/11+a18Wgghwy1KjLcz0ivnndvY+lvBhsBc75ZwMpnzkUvhCWfdoIeO
+	 qz/jxZU7DGAVYAzL1KmLlj1fK8NjTylF2MlbBz/U=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 547576D6023522
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 7 May 2025 00:07:06 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 7
+ May 2025 00:07:06 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 7 May 2025 00:07:06 -0500
+Received: from prasanth-server.dhcp.ti.com (prasanth-server.dhcp.ti.com [172.24.227.142])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 547572KY114274;
+	Wed, 7 May 2025 00:07:03 -0500
+From: Prasanth Babu Mantena <p-mantena@ti.com>
+To: <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <nm@ti.com>, <vigneshr@ti.com>
+CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <u-kumar1@ti.com>
+Subject: [PATCH v2] arm64: dts: ti: k3-j721e-common-proc-board: Enable OSPI1 on J721E
+Date: Wed, 7 May 2025 10:37:01 +0530
+Message-ID: <20250507050701.3007209-1-p-mantena@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9b50a71c-4106-438b-b475-592a60307a68@infradead.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Tue, May 06, 2025 at 12:17:27PM -0700, Randy Dunlap wrote:
-> 
-> 
-> On 5/6/25 11:51 AM, Kees Cook wrote:
-> > On Tue, May 06, 2025 at 08:54:29AM -0700, Randy Dunlap wrote:
-> >> Hi Kees,
-> >>
-> >> On 4/22/25 8:50 PM, Randy Dunlap wrote:
-> >>>
-> >>>
-> >>> On 4/22/25 7:37 PM, Kees Cook wrote:
-> >>>> I put devlist.h into the wrong Makefile macro ("obj") to get it included
-> >>>> in "targets". Put it into "always" so nothing tries to link against it.
-> >>>> Solves CONFIG_EISA=y i386 build failure:
-> >>>>
-> >>>> ld: vmlinux.a: member drivers/eisa/devlist.h in archive is not an object
-> >>>>
-> >>>> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> >>>> Closes: https://lore.kernel.org/all/4a8ba1d0-d2d9-41f8-abf1-d45ec8996d10@infradead.org
-> >>>> Fixes: dd09eb0e2cc4 ("EISA: Increase length of device names")
-> >>>> Signed-off-by: Kees Cook <kees@kernel.org>
-> >>>
-> >>> Acked-by: Randy Dunlap <rdunlap@infradead.org>
-> >>> Tested-by: Randy Dunlap <rdunlap@infradead.org>
-> >>>
-> >>> Thanks.
-> >>>
-> >>
-> >> Please merge this patch. The build failure is killing lots of i386 builds.
-> >> Thanks.
-> > 
-> > AFAIK, this needs to go via Greg's tree, but I can see if I can send it
-> > to Linus directly.
-> > 
-> > -Kees
-> 
-> Greg told me that it belongs to one of your trees, but Greg did
-> merge the previous eisa/Makefile patch.
+J721E SoM has MT25QU512AB Serial NOR flash connected to
+OSPI1 controller. Enable ospi1 node in device tree.
 
-Ah, I thought that was in Kees's tree, sorry about that.  I'll take this
-then, my fault.
+Fixes: cb27354b38f3b ("arm64: dts: ti: k3-j721e: Add DT nodes for few peripherials")
+Signed-off-by: Prasanth Babu Mantena <p-mantena@ti.com>
+---
+Test log : https://gist.github.com/PrasanthBabuMantena/9dda540dce88282117de7e0e945e24ca
+ arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-greg k-h
+diff --git a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
+index e3d0ef6913b2..45311438315f 100644
+--- a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
++++ b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
+@@ -573,6 +573,7 @@ &usb1 {
+ &ospi1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mcu_fss0_ospi1_pins_default>;
++	status = "okay";
+ 
+ 	flash@0 {
+ 		compatible = "jedec,spi-nor";
+-- 
+2.34.1
+
