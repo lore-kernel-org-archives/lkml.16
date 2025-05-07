@@ -1,88 +1,128 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ED7D20E003;
-	Wed,  7 May 2025 06:32:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B8E0205E16
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 06:33:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746599550; cv=none; b=sDAyw6P6tROy7iCbrvDSazYFCt3zM/KWiIKZK80dwxdgc/c8r82YmLlpGg4/WNCZj34v0arZfNNsIanFH/WGuGD4ftT8u0enUMNQCl/MMogVOMNe/noTjYTjN5Ebr+tKxtjAYPNWR/Op7whbQOIw1x9U+0P0rB5Y18m0SDUvvX8=
+	t=1746599620; cv=none; b=pKXl1hKimdZlmM+nEaADjTTMopAkHx1rlpd7Y7Ee9B4+jOMIZCxRsfhW2U5rrDf0Z2/pZrgDTDdzTeoCczb0o2bhpyF1dclDPTTbRBdnBrCWCc+V8sn8Ma6N/83jJ117mYDw6IuujAB23e/DSt4ldaevXxzyTjx/MOOc47uvxyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746599550; c=relaxed/simple;
-	bh=/IFGVq9hMOoUxgRfDfuCDTmH8hHKD7k4p2EbG8rNVpQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=KFsujvoV7Ycf54ze2a9PvjIMh0YrHl5QPeqjFXe70vtfg2p/Zd+dgS/dFYonVpXYolvzWc6iqi37wFiBe7NmtHC/TUPHN2zq8bo+Rei7WaMZAAO0z6cj5JR73LlZgW6MEaCMEuPTyUHh7W6W7ncifhzgi6klnQge6pkKsiODrPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=evvLTzgt; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1746599620; c=relaxed/simple;
+	bh=uMAhnwLIriUAjWznAGzjKTzWgRC9VyoYGCsYbnhwUYg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=r92M2ppaifLI7ZBVg8K/rTyMnYl10K/jiLK/YTD53wra418zf6cFC1cOcJsh6ae+Yd2glBU9HSGv8b35QqmDaE3zTiAGKfiiy8e+q4nmVZ9iDfHzyqy2JhRml0tsb8KOAdL1RyLB7X/nDmdVYZjlUUcXTZjemR+ttg0j75NI6FU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=cMEN7xmz; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ionos.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="evvLTzgt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1746599543;
-	bh=VpV+Jg+FDugGwvLS7dFbqu73YoPSSo/m33nsn4yKhv0=;
-	h=Date:From:To:Cc:Subject:From;
-	b=evvLTzgtFF6P/f13hvKHLRaFRm14VefFWtGAIvYqcqEpAgUhO+9lyRwXJ3Iyzwr/H
-	 MB1nJvlsPCUlfNGhNzI1/sM9GqDe9/FxwUbh2ykEFOTrDICJrgPiHmlwVY3RsXWehl
-	 pcB7V+3lVAhr1z/owNlXYjSZ/uWkuru5JVKSES1+yCVd9Aj3859vnoYFlhhhQQF357
-	 ekTcfpOvyMpcTxJ86J5JneuvmeckMHee1/XztrendOKG7AORGMo8cTNQGgU1/M1nWo
-	 /EqWpjUPZpkCVPi2kO6+xgElXNh0kOr6QjAOFq+mpIH3A/EHq6AE9AriwCPxz/Ric7
-	 0/tNBidyEf38g==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Zslml35tZz4x43;
-	Wed,  7 May 2025 16:32:22 +1000 (AEST)
-Date: Wed, 7 May 2025 16:32:20 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Jens Axboe <axboe@kernel.dk>
-Cc: Ming Lei <ming.lei@redhat.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: build warning after merge of the block tree
-Message-ID: <20250507163220.00141d77@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="cMEN7xmz"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ac3b12e8518so1114528966b.0
+        for <linux-kernel@vger.kernel.org>; Tue, 06 May 2025 23:33:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ionos.com; s=google; t=1746599616; x=1747204416; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uMAhnwLIriUAjWznAGzjKTzWgRC9VyoYGCsYbnhwUYg=;
+        b=cMEN7xmzt9VOKuBJM5JNrWrM/7Lq51DB7puJe5wdwvUpt7HqqvjmPM5xHymuF4Etyi
+         t2epzc099X2W7iTzevkCpQ3jIjGihkFDS4h1AZ7dDpGVorTbEbOI/qpILx5Ok67XXEHW
+         wpbrqo12IGXOD3YaeMP3bfE8cm1yj4VNroFGnRb0PVKAhQZbhnzEGLmiIzmsYT2GhDk7
+         gddmuKIBSv7vQI4ivamSXIyvlVsytpHbKgRZV5eB7srownU3/mfjdbuLphqDeRWnHVVS
+         shGQuclGEIQzUOwvwZt+3F0RltGT7RzglvoKu1GviSUE7EsqFx9cfRjxDRgxaVv9Qrtz
+         vKQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746599616; x=1747204416;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uMAhnwLIriUAjWznAGzjKTzWgRC9VyoYGCsYbnhwUYg=;
+        b=ZGl5B7/+r+4iHMMRinGQN1GbBba5ZEPqNLm/zT9tF60Jzz/u3XAW7bz5hS5TkPHf/d
+         xcM5E9z2UVSt2AyRdtpmlCSTG0ma0GwIL4zTXJX31WyqkcH7XiYEEzNKTJqH5tcU9NX6
+         e4OAmwlvGlPgYBYTqxK8+5Jdvt4IiGH9t3fxboROUofC+O7mcIsiZVMYS5Hh7Ney4cs4
+         i6OfUp1zptkapXCCylSK3AKch7y2H8MgwNMLo+o5hAo6usx3OjmBM8lTu4yh5l/7l1UF
+         btO51b0lXXL8uBGJJt5q4jdJ4G4b5nXRwX6WhESvdH3mJTfUU751148XGzM9xeJmNkYy
+         6cGw==
+X-Forwarded-Encrypted: i=1; AJvYcCVoj5jkVlE8x7u6pniYLHjwIXJEoLKGabfKbcXqYlVOIDrv3V9yjyyfl4H7zN3t3qzDNXuElRKXVvhLiGg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxcZI3B9V6IQOFaOhnyO2J8IXglW49Oa34fvLrzm41hkL30lsgh
+	qdYdasfgEANVbOU+sZjgwLEfV1odTNYn5m/QdZn4C/c8jZWtjY5O5cY5FihQbOcvZEHN8tUlWug
+	+6lnVauje2tfrhURWOlSQuP1SK1OScfUoc/SQlQ==
+X-Gm-Gg: ASbGncuFg4v2vFn/1gmGUIK1iRxRfc+GYzZ5db4Kya9zhRLZLQTFYOp2qu5nGhVscMA
+	YP6Sw79hlBhwoAoVbhQhvtWHGyiZnfaH+zVE28FLKpPgJXMGpXh15NomI1Jr+w4cAFYaX7jW+Nv
+	o7zmMaCNceA5QpmCkrhbOwwoZUN2YGhQjRXdPaezG0kJia2PvsWe3wXoGyothnIQ==
+X-Google-Smtp-Source: AGHT+IHxOk1DDQlqgVtRtzVrvtv+KQ+N8hq4sPyVAvu/WTYpqvLk0tXsOwVbxO+K6hN7KxjpnpMjq49TMM7Kxdczpcs=
+X-Received: by 2002:a17:907:a08f:b0:ace:c2ab:a729 with SMTP id
+ a640c23a62f3a-ad1e8cd5fb7mr222232866b.42.1746599616299; Tue, 06 May 2025
+ 23:33:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/29X5H_RwOtum9jibuK6bfUo";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-
---Sig_/29X5H_RwOtum9jibuK6bfUo
-Content-Type: text/plain; charset=US-ASCII
+References: <20250306082615.174777-1-max.kellermann@ionos.com>
+ <20250309151907.GA178120@mail.hallyn.com> <CAKPOu+_vTuZqsBLfRH+kyphiWAtRfWq=nKAcAYu=Wn2JBAkkYg@mail.gmail.com>
+ <20250506132158.GA682102@mail.hallyn.com> <CAKPOu+9JCLVpJ-g_0WwLm5oy=9sq=c9rmoAJD6kNatpMZbbw9w@mail.gmail.com>
+ <CACmP8U+aLY7wmEqdb=a_tpDCY5LaPGb46DU+jSD3bCXX=JUAuA@mail.gmail.com>
+In-Reply-To: <CACmP8U+aLY7wmEqdb=a_tpDCY5LaPGb46DU+jSD3bCXX=JUAuA@mail.gmail.com>
+From: Max Kellermann <max.kellermann@ionos.com>
+Date: Wed, 7 May 2025 08:33:25 +0200
+X-Gm-Features: ATxdqUGgj7GRkdrDE2HhvGUTjaPAjkb2odBFmjaet1H89q27DW5giCWFSRk2X80
+Message-ID: <CAKPOu+_=ocLeEqcaSMjb5qqrvi6KAu3GYJa19Fqz_dm3a5F77w@mail.gmail.com>
+Subject: Re: [PATCH] security/commoncap: don't assume "setid" if all ids are identical
+To: "Andrew G. Morgan" <morgan@kernel.org>
+Cc: "Serge E. Hallyn" <serge@hallyn.com>, Andy Lutomirski <luto@kernel.org>, paul@paul-moore.com, 
+	jmorris@namei.org, kees@kernel.org, linux-security-module@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On Wed, May 7, 2025 at 5:16=E2=80=AFAM Andrew G. Morgan <morgan@kernel.org>=
+ wrote:
+> If a setuid program execs itself, does the presence of this code undo
+> any protection the kernel afforded it on its first invocation?
 
-After merging the block tree, today's linux-next build (htmldocs)
-produced this warning:
+What protection do you mean, and what behavior do you expect when
+setid execs itself? I see this affects:
 
-+WARNING: include/linux/blk-mq.h:532 struct member 'update_nr_hwq_lock' not=
- described in 'blk_mq_tag_set'
+1. reset effective ids to real ids (only affects NO_NEW_PRIVS)
+2. new cap_permitted cannot be higher than old cap_permitted
+3. clear cap_ambient
+4. clear pdeath_signal (in begin_new_exec)
+5. reset stack limits (in begin_new_exec)
 
-Introduced by commit
+About these (from my very limited knowledge of this part of the kernel):
 
-  98e68f67020c ("block: prevent adding/deleting disk during updating nr_hw_=
-queues")
+1. is my primary goal, and really no new privs gained by allowing the
+process to keep existing ids
+2. only ever changes anything if new cap_permitted is higher, but if
+that's the case, the is_setid check is irrelevant because __cap_gained
+is true, therefore no change with my patch
+3. as I already described, the kernel is wrong (or the documentation
+is wrong), and my patch adjusts kernel to behave as documented
+4. I don't see how this is dangerous for anything regarding re-exec;
+if pdeath_signal wasn't reset on the first exec, it's safe to keep it
+after the re-exec, too
+5. same as 4, I think
 
---=20
-Cheers,
-Stephen Rothwell
+Did I miss anything?
 
---Sig_/29X5H_RwOtum9jibuK6bfUo
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+> FWIW I ran the libcap quicktest.sh script against your change and it
+> doesn't break any capability thing I test for when making libcap
+> releases.
 
------BEGIN PGP SIGNATURE-----
+Thanks for taking the time to run these tests. I'm glad the existing
+tests didn't find any obvious bugs. If we identify an actual problem
+with my patch, let's write a new test that fails with my patch!
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmga/nQACgkQAVBC80lX
-0GzJuQf+Pyk0MRyMEHmiDZN0up0doSkse7XtrM8gvr9JY+6cnEJ6Y8OpPBYYX3c5
-9SSYKAhqklj97FYPIf6C95ZBqWvXL89X5ywhsEwURaxM4PNK6LW1pJMrXug56vAO
-Mi86Rga0mFNGiZkZBgRYTNx+w1XQO1kbAMhaYvMVRCkl2i4PxqjVMVnvcy5ckBi6
-OZSiq6XmnaMC8NahquP4EnJmyv6Pa8aUf6deR91ogzf3zs3prNlkSdrB5ctEglVy
-wI6Aea3UDwygtPLH4s0WLw/3UjJxKy3AlX4+Zge1YgmkzPJ0d6rH3bWRjcCpMZVi
-wsjLWbBdtooN4z/QF7YD3b+JmoXuoA==
-=2t4h
------END PGP SIGNATURE-----
+> That being said, in general this whole zoo of *[ug]id values
+> and their subtle behavior is not casually obvious. I'd recommend using
+> a userspace workaround for your use case, and not changing the legacy
+> behavior of the kernel.
 
---Sig_/29X5H_RwOtum9jibuK6bfUo--
+What userspace workaround would be possible? The only thing that comes
+to my mind is to apply NO_NEW_PRIVS in the child process after exec -
+but that's too late, because arbitrary untrusted code has already been
+executed at this point. This means I lose NO_NEW_PRIVS completely,
+because the attacker can simply skip the call.
+
+Max
