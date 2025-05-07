@@ -1,167 +1,224 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33DBB1ACEC8;
-	Wed,  7 May 2025 23:09:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03DEF1ACEC8;
+	Wed,  7 May 2025 23:09:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746659359; cv=none; b=gvExzpBVbw4xRTrAKdwR9tx0sK98x9AItAOpCPUGPKMR5Ub6fbET2ToxQuA7jujXdL2GpCgf3saPuQUtUYH0Y8z9ZP5NvWZh77Qk5KybJAYTj0UVmRVK3ldZK62GKEGsKeZY5wOtdcjD5AcnfOuFKJvpkD91OrJgTDZi80fwass=
+	t=1746659365; cv=none; b=Ra+8FwTB8Tfbw7TUj4E7Ze6wEzLzEailBzF5RO3FA5sdpUyhKNOP3PdpROenn2NOBxzVThxK3aIO+t09DUQijAsQUq3O6lzg5NXoeOw1jQrqxDLDV3WJyGCpBAg5r4dnxfDJbYfjtxIUkrDxhupaAVWg5v8iD4j6XxdS84QUBgU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746659359; c=relaxed/simple;
-	bh=if38SdnC0AJjNobF5sj+Z+diQFRQsDZaQWTmcM3J0z0=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=R36SoJwxghaJNxV9TCRsXK/cFUiD46/d5p4S9YVlDASq3QXM8ifAfW/P0cBaWPmvxtkwCfAhrtue+IVzWTmwXaL0KTy7/W4zmKIAmmcLVwC9uXp0NUYmLWJAhU6R2uUKI4FzxaV2cY4YcK9GXIPC6remPbRPOPH7N5DlCIKgRGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bVUT35wF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746659365; c=relaxed/simple;
+	bh=KMFzgmh2r5Df+u8KVgowuji0vPzSkWx80se/kz0YMRQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PeKjyk1gSbueEx3Lz4pduur9uBGaVv49REKx6IFHgaKTbPkVns2eSKyR3Y+eyC+eavq/a9JO5TTew4meDlYIwo8hk4NSj87L18LliHdFeQ6lszF4hdt81TmQHs63v6kEIEhEHso5IxrJgv1CltitLLiJxV4c9O1zf3IwuyV0uf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=EOfFAo1F; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bVUT35wF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4150CC4CEE2;
-	Wed,  7 May 2025 23:09:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746659358;
-	bh=if38SdnC0AJjNobF5sj+Z+diQFRQsDZaQWTmcM3J0z0=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=bVUT35wFQvPLtu0LytwChJj8OCMGL50uKSUkAw/N299dum2gMqiUCpyl5S06wAMwP
-	 LCEdm1qGVJNMvc0xia9kjE1XilBbXfDOpHCsU+MT0fvQXnKV30xtuGljLYyec6KmdU
-	 oULJXb2Q7uBOQcET4vHAELvnYz0czULBYVtQ6q33A3B4HtESvwX2yIvtSGq/aN99sv
-	 nupLajSjMLfm3Xb5VyTkcRwbKAkT+w97QNGWS/Nsk9lDPzNTbaXKMCQbpExRU3KOvb
-	 aFIvTIa68tC4XysVp57S5ddzdoZm1eOBI+/yvxN/Snhy0o+j9u8OrcZTJ8DARIVDKk
-	 8PdOrgh3+9ShA==
-Date: Wed, 7 May 2025 16:09:15 -0700 (PDT)
-From: Stefano Stabellini <sstabellini@kernel.org>
-X-X-Sender: sstabellini@ubuntu-linux-20-04-desktop
-To: John Ernberg <john.ernberg@actia.se>
-cc: Stefano Stabellini <sstabellini@kernel.org>, 
-    Juergen Gross <jgross@suse.com>, 
-    Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>, 
-    Catalin Marinas <catalin.marinas@arm.com>, 
-    Andrew Morton <akpm@linux-foundation.org>, 
-    "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>, 
-    "iommu@lists.linux.dev" <iommu@lists.linux.dev>, 
-    "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-    "imx@lists.linux.dev" <imx@lists.linux.dev>, 
-    Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH 2/2] xen: swiotlb: Implement map_resource callback
-In-Reply-To: <75266eb7-66a4-4477-ae8a-cbd1ebbee8db@actia.se>
-Message-ID: <alpine.DEB.2.22.394.2505071602570.3879245@ubuntu-linux-20-04-desktop>
-References: <20250502114043.1968976-1-john.ernberg@actia.se> <20250502114043.1968976-3-john.ernberg@actia.se> <alpine.DEB.2.22.394.2505021007460.3879245@ubuntu-linux-20-04-desktop> <75266eb7-66a4-4477-ae8a-cbd1ebbee8db@actia.se>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EOfFAo1F"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=o0wgH0daWTZzvybrzGF8aoTDHaUJ4f2HlkJDU/65xBw=; b=EOfFAo1F4lXkUxfsluF8fC+AA5
+	qLkeCPpxopOz0WVewlU4Z0nxujmKcDDCa7s+lE0PYWEnslk4YxuF+cQEEUU6bOyfSCvHOvWs8FwuS
+	V5kxqwjFG2dZDt90AmxcpZMYckkCCMQXkMjbCygesJuXSE1av3H5WNIJbPq3dxdJpuZsfJaOeIM8h
+	J5VLIhZCJKjFUq4EO9JMHQAO/nRhWlBEY4FpWzQd/rr/OHPm8FzFdBLl8l/in4CzuYAbiR7BQZoFj
+	z9JGAib7VU6U+mG/t/GrlIx+eqakJwTNxCkdYQv503xLnsv9iNJ4yPloXw02ilKpn0I9xRWsjy4e2
+	9H63hs6g==;
+Received: from [50.39.124.201] (helo=[192.168.254.17])
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1uCnsj-0000000FwIO-3tGf;
+	Wed, 07 May 2025 23:09:18 +0000
+Message-ID: <e454bcf1-ae3c-41bd-b376-6560ea534925@infradead.org>
+Date: Wed, 7 May 2025 16:08:49 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 8/8] Documentation: ublk: document UBLK_F_RR_TAGS
+To: Uday Shankar <ushankar@purestorage.com>, Ming Lei <ming.lei@redhat.com>,
+ Jens Axboe <axboe@kernel.dk>, Caleb Sander Mateos <csander@purestorage.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>,
+ Jonathan Corbet <corbet@lwn.net>
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org
+References: <20250507-ublk_task_per_io-v6-0-a2a298783c01@purestorage.com>
+ <20250507-ublk_task_per_io-v6-8-a2a298783c01@purestorage.com>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250507-ublk_task_per_io-v6-8-a2a298783c01@purestorage.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, 6 May 2025, John Ernberg wrote:
-> Hi Stefano,
-> 
-> On 5/2/25 7:20 PM, Stefano Stabellini wrote:
-> > +Christoph
-> > 
-> > On Fri, 2 May 2025, John Ernberg wrote:
-> >> Needed by the eDMA v3 DMA engine found in iommu-less SoCs such as iMX8QXP
-> >> to be able to perform DMA operations as a Xen Hardware Domain, which needs
-> >> to be able to do DMA in MMIO space.
-> 
-> Self-note: The above part of the commit message is a disaster and should 
-> read something like.
-> 
-> Needed by SoCs without an iommu (such as the iMX8QXP and it's eDMA v3 
-> engine) that need to be able to perform DMA operations in MMIO space.
-> 
-> >>
-> >> The callback implementation is basically the same as the one for direct
-> >> mapping of resources, except this also takes into account Xen page
-> >> mappings.
-> >>
-> >> There is nothing to do for unmap, just like with direct, so the unmap
-> >> callback is not needed.
-> >>
-> >> Signed-off-by: John Ernberg <john.ernberg@actia.se>
-> >>
-> >> ---
-> >>
-> >> I originally exported dma_direct_map_resource() and used that which
-> >> appeared to work, but it felt like not checking Xen page mappings wasn't
-> >> fully correct and I went with this. But if dma_direct_map_resource() is
-> >> the correct approach here then I can submit that isntead.
-> >> ---
-> >>   drivers/xen/swiotlb-xen.c | 15 +++++++++++++++
-> >>   1 file changed, 15 insertions(+)
-> >>
-> >> diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
-> >> index ef56a2500ed6..0f02fdd9128d 100644
-> >> --- a/drivers/xen/swiotlb-xen.c
-> >> +++ b/drivers/xen/swiotlb-xen.c
-> >> @@ -285,6 +285,20 @@ static void xen_swiotlb_unmap_page(struct device *hwdev, dma_addr_t dev_addr,
-> >>                                           attrs, pool);
-> >>   }
-> >>
-> >> +static dma_addr_t xen_swiotlb_map_resource(struct device *dev, phys_addr_t phys,
-> >> +                                        size_t size, enum dma_data_direction dir,
-> >> +                                        unsigned long attrs)
-> >> +{
-> >> +     dma_addr_t dev_addr = xen_phys_to_dma(dev, phys);
-> > 
-> > Yes, we need the xen_phys_to_dma call here. This is one of the reasons I
-> > don't think we can use dma_direct_map_resource() to implement
-> > map_resource
-> > 
-> > 
-> >> +     BUG_ON(dir == DMA_NONE);
-> >> +
-> >> +     if (!dma_capable(dev, dev_addr, size, false))
-> >> +             return DMA_MAPPING_ERROR;
-> > 
-> > But here you also need to check that phys+size doesn't cross a page
-> > boundary. You need to call range_straddles_page_boundary, like we do at
-> > the beginning of xen_swiotlb_map_page.
-> > 
-> > If it is possible to cross a page boundary, then we need to basically to
-> > do the same thing here as we do in xen_swiotlb_map_page where we check
-> > for:
-> > 
-> >          if (dma_capable(dev, dev_addr, size, true) &&
-> >              !range_straddles_page_boundary(phys, size) &&
-> >                  !xen_arch_need_swiotlb(dev, phys, dev_addr) &&
-> >                  !is_swiotlb_force_bounce(dev))
-> >                  goto done;
-> > 
-> > if all is well, we go with the native path, otherwise we bounce on
-> > swiotlb-xen.
-> > 
-> 
-> I'll preface this with that it's my first deep dive in DMA, so the 
-> following may entirely be me being stupid:
-> 
-> I'm not sure a straddles page boundary path makes sense.
-> 
-> This mapping is not for a RAM backed address. In the eDMA case for the 
-> iMX8QXP the `phys` coming in here is the address of a register.
+Hi,
 
-Ok, this information is important :-)
-
-I am not certain whether the map_resource interface can only be called
-for MMIO addresses or if it can also be called for RAM-backed addresses
-with a size > PAGE_SIZE. In the latter case, we could run into the issue
-I was describing.
-
-
-> I cannot see how a swiotlb bounce would fix anything if you end up
-> straddling a page boundary. At most I can see a WARN_ON with a
-> DMA_MAPPING_ERROR return if such a check would yield true.
+On 5/7/25 2:49 PM, Uday Shankar wrote:
+> Document the new flag UBLK_F_RR_TAGS along with its intended use case.
+> Also describe the new restrictions on threading model imposed by
+> ublk_drv (one (qid,tag) pair is can be served by only one thread), and
+> remove references to ubq_daemon/per-queue threads, since such a concept
+> no longer exists.
 > 
-> Let's say you want to do a DEV_TO_MEM and a check decides you need to 
-> bounce it you'd bounce an RX register address. I cannot see how that DMA 
-> would ever end up doing the expected thing.
+> Signed-off-by: Uday Shankar <ushankar@purestorage.com>
+> ---
+>  Documentation/block/ublk.rst | 83 ++++++++++++++++++++++++++++++++++++++------
+>  1 file changed, 72 insertions(+), 11 deletions(-)
 > 
-> The eDMA engine will manage the RX/TX registers for an IP block and move 
-> the data between them and RAM, where the RAM memory is mapped separately 
-> by dma_map_page (and family). And these can be swiotlb bounced via the 
-> map page callback with no problem.
+> diff --git a/Documentation/block/ublk.rst b/Documentation/block/ublk.rst
+> index 854f823b46c2add01d0b65ba36aecd26c45bb65d..e9cbabdd69c5539a02463780ba5e51de0416c3f6 100644
+> --- a/Documentation/block/ublk.rst
+> +++ b/Documentation/block/ublk.rst
+> @@ -115,15 +115,15 @@ managing and controlling ublk devices with help of several control commands:
+>  
+>  - ``UBLK_CMD_START_DEV``
+>  
+> -  After the server prepares userspace resources (such as creating per-queue
+> -  pthread & io_uring for handling ublk IO), this command is sent to the
+> +  After the server prepares userspace resources (such as creating I/O handler
+> +  threads & io_uring for handling ublk IO), this command is sent to the
+>    driver for allocating & exposing ``/dev/ublkb*``. Parameters set via
+>    ``UBLK_CMD_SET_PARAMS`` are applied for creating the device.
+>  
+>  - ``UBLK_CMD_STOP_DEV``
+>  
+>    Halt IO on ``/dev/ublkb*`` and remove the device. When this command returns,
+> -  ublk server will release resources (such as destroying per-queue pthread &
+> +  ublk server will release resources (such as destroying I/O handler threads &
+>    io_uring).
+>  
+>  - ``UBLK_CMD_DEL_DEV``
+> @@ -208,15 +208,15 @@ managing and controlling ublk devices with help of several control commands:
+>    modify how I/O is handled while the ublk server is dying/dead (this is called
+>    the ``nosrv`` case in the driver code).
+>  
+> -  With just ``UBLK_F_USER_RECOVERY`` set, after one ubq_daemon(ublk server's io
+> -  handler) is dying, ublk does not delete ``/dev/ublkb*`` during the whole
+> +  With just ``UBLK_F_USER_RECOVERY`` set, after the ublk server exits,
+> +  ublk does not delete ``/dev/ublkb*`` during the whole
+>    recovery stage and ublk device ID is kept. It is ublk server's
+>    responsibility to recover the device context by its own knowledge.
+>    Requests which have not been issued to userspace are requeued. Requests
+>    which have been issued to userspace are aborted.
+>  
+> -  With ``UBLK_F_USER_RECOVERY_REISSUE`` additionally set, after one ubq_daemon
+> -  (ublk server's io handler) is dying, contrary to ``UBLK_F_USER_RECOVERY``,
+> +  With ``UBLK_F_USER_RECOVERY_REISSUE`` additionally set, after the ublk server
+> +  exits, contrary to ``UBLK_F_USER_RECOVERY``,
+>    requests which have been issued to userspace are requeued and will be
+>    re-issued to the new process after handling ``UBLK_CMD_END_USER_RECOVERY``.
+>    ``UBLK_F_USER_RECOVERY_REISSUE`` is designed for backends who tolerate
+> @@ -241,10 +241,11 @@ can be controlled/accessed just inside this container.
+>  Data plane
+>  ----------
+>  
+> -ublk server needs to create per-queue IO pthread & io_uring for handling IO
+> -commands via io_uring passthrough. The per-queue IO pthread
+> -focuses on IO handling and shouldn't handle any control & management
+> -tasks.
+> +The ublk server should create dedicated threads for handling I/O. Each
+> +thread should have its own io_uring through which it is notified of new
+> +I/O, and through which it can complete I/O. These dedicated threads
+> +should focus on IO handling and shouldn't handle any control &
+> +management tasks.
+>  
+>  The's IO is assigned by a unique tag, which is 1:1 mapping with IO
 
-OK thanks for the explanation. Like I wrote above, if we are guaranteed
-that map_resource cannot be called for RAM-backed addresses or size is
-less than PAGE_SIZE, then your patch is good as-is. If there are no such
-guarantees, then we'll have to think a bit more about it.
+   ???
+
+>  request of ``/dev/ublkb*``.
+> @@ -265,6 +266,13 @@ with specified IO tag in the command data:
+>    destined to ``/dev/ublkb*``. This command is sent only once from the server
+>    IO pthread for ublk driver to setup IO forward environment.
+>  
+> +  Once a thread issues this command against a given (qid,tag) pair, the thread
+> +  registers itself as that I/O's daemon. In the future, only that I/O's daemon
+> +  is allowed to issue commands against the I/O. If any other thread attempts
+> +  to issue a command against a (qid,tag) pair for which the thread is not the
+> +  daemon, the command will fail. Daemons can be reset only be going through
+> +  recovery.
+> +
+>  - ``UBLK_IO_COMMIT_AND_FETCH_REQ``
+>  
+>    When an IO request is destined to ``/dev/ublkb*``, the driver stores
+> @@ -309,6 +317,59 @@ with specified IO tag in the command data:
+>    ``UBLK_IO_COMMIT_AND_FETCH_REQ`` to the server, ublkdrv needs to copy
+>    the server buffer (pages) read to the IO request pages.
+>  
+> +Load balancing
+> +--------------
+> +
+> +A simple approach to designing a ublk server might involve selecting a
+> +number of I/O handler threads N, creating devices with N queues, and
+> +pairing up I/O handler threads with queues, so that each thread gets a
+> +unique qid, and it issues ``FETCH_REQ``s against all tags for that qid.
+> +Indeed, before the introduction of the ``UBLK_F_RR_TAGS`` feature, this
+> +was essentially the only option (*)
+
+Add ending period (full stop), please.
+
+> +
+> +This approach can run into performance issues under imbalanced load.
+> +This architecture taken together with the `blk-mq architecture
+> +<https://docs.kernel.org/block/blk-mq.html>`_ implies that there is a
+> +fixed mapping from I/O submission CPU to the ublk server thread that
+> +handles it. If the workload is CPU-bottlenecked, only allowing one ublk
+> +server thread to handle all the I/O generated from a single CPU can
+> +limit peak bandwidth.
+> +
+> +To address this issue, two changes were made:
+> +
+> +- ublk servers can now pair up threads with I/Os (i.e. (qid,tag) pairs)
+> +  arbitrarily. In particular, the preexisting restriction that all I/Os
+> +  in one queue must be served by the same thread is lifted.
+> +- ublk servers can now specify ``UBLK_F_RR_TAGS`` when creating a ublk
+> +  device to get round-robin tag allocation on each queue
+
+Add ending period (full stop), please.
+
+> +
+> +The ublk server can check for the presence of these changes by testing
+> +for the ``UBLK_F_RR_TAGS`` feature.
+> +
+> +With these changes, a ublk server can balance load as follows:
+> +
+> +- create the device with ``UBLK_F_RR_TAGS`` set in
+> +  ``ublksrv_ctrl_dev_info::flags`` when issuing the ``ADD_DEV`` command
+> +- issue ``FETCH_REQ``s from ublk server threads to (qid,tag) pairs in
+> +  a round-robin manner. For example, for a device configured with
+> +  ``nr_hw_queues=2`` and ``queue_depth=4``, and a ublk server having 4
+> +  I/O handling threads, ``FETCH_REQ``s could be issued as follows, where
+> +  each entry in the table is the pair (``ublksrv_io_cmd::q_id``,
+> +  ``ublksrv_io_cmd::tag``) in the payload of the ``FETCH_REQ``.
+> +
+> +  ======== ======== ======== ========
+> +  thread 0 thread 1 thread 2 thread 3
+> +  ======== ======== ======== ========
+> +  (0, 0)   (0, 1)   (0, 2)   (0, 3)
+> +  (1, 3)   (1, 0)   (1, 1)   (1, 2)
+> +
+> +With this setup, I/O submitted on a CPU which maps to queue 0 will be
+> +balanced across all threads instead of all landing on the same thread.
+> +Thus, a potential bottleneck is avoided.
+> +
+> +(*) technically, one I/O handling thread could service multiple queues
+
+       Technically,
+
+> +if it wanted to, but that doesn't help with imbalanced load
+
+Add ending period (full stop), please.
+
+
+> +
+>  Zero copy
+>  ---------
+>  
+> 
+
+-- 
+~Randy
+
