@@ -1,108 +1,81 @@
-Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71BA721B9C7
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 12:11:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88BA61FF7B4
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 12:11:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746619879; cv=none; b=uKTepSz2ExRmbxNDokHeKEsde/XoMe7ulxnG1guyHdurHkmhkA7V94phTDgLK1DtvrEUmlSUYhXx/QokLS/4PHmw9jSCYoWV5DKSe543twVa7uiixuz3WrrQkH9gwLalIRJqniapzw2LJCmKuXgk5RjuGNZcCk0g7z9aCnI99sY=
+	t=1746619898; cv=none; b=EZANZipQdG7+aqxKtUke5JWjxWNYw/0U2OOtFgEeNhxy8I/V7S5qNX0msxA/6f639n9+zqMuZMObER4LYc5l9kBbW/kx1Lc15kfEQ1pPbJAuvSNO02tYCmo+Wr1vU2IOfcMgbTQptLqYDH7blhrUSMXZcAFbP8K9xTUwOrvNk04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746619879; c=relaxed/simple;
-	bh=ZwMl1jmbgmzYrhfYTpZjT1qj6wac4wSVs91SQ8cjA7o=;
+	s=arc-20240116; t=1746619898; c=relaxed/simple;
+	bh=3eE5blS4FgeUpqHOAwIR4SXocX5HfbFsc2jJzj2Ar8s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Eur2iGlhVJbIdCWQTHadVcJbKimg9JyN9XgL6+Hvf73jJxLq19yQHzS51eRqppWWQRIVScyfBDNwqPozNK9t0EXpkP4p92OpFfhqKI87AKZT+LgyFk8nQmRuewsGO6X8q3aJ1BuBsmYGKQETQrZoMP9N0AepJQWMdFkfUQhYcrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=xjwuKz9r; arc=none smtp.client-ip=95.215.58.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 Content-Type:Content-Disposition:In-Reply-To; b=TVufceAKx9avsd7rDx7WkhtS7ishuzuN5uvOAr58xbDVAhaOMhhwro5NkvhpQtNjv8PpqvJBJ0QKnp/hBce79KDZkfhtIYll1QQpHW02hs77fT/wK9YcrFBADi/JjG/9XkTEb1613Y04zau58l2P1Wh/8QQY8nBElDFb365TSCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=oS9Jr+7E; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="xjwuKz9r"
-Date: Wed, 7 May 2025 14:10:55 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1746619865;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=U24XQpAOzVn9OeiX2WXRKmdViNITlRLJUufl1hqU+7o=;
-	b=xjwuKz9rinwdzzhVqNnlMxNciaX3Kc9S07w8Xu5j+TKTlQIE0EraBQvW7SyAW8/aCP3oXO
-	xK+q07svcAmdGlOvay907f7wIinAGGMa1CNKwofQ7NxQTMSCDSjiqxm1g6ggK77CRwa3bs
-	lbQUUB3zYjo18Ben9b+GtAGrwB6IYuo=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Nicolas Schier <nicolas.schier@linux.dev>
-To: Kees Cook <kees@kernel.org>
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org,
-	Petr Pavlu <petr.pavlu@suse.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Justin Stitt <justinstitt@google.com>,
-	Marco Elver <elver@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>, linux-kernel@vger.kernel.org,
-	kasan-dev@googlegroups.com, llvm@lists.linux.dev
-Subject: Re: [PATCH v3 1/3] gcc-plugins: Force full rebuild when plugins
- change
-Message-ID: <20250507-overjoyed-coucal-from-betelgeuse-4eaa7b@l-nschier-aarch64>
-References: <20250503184001.make.594-kees@kernel.org>
- <20250503184623.2572355-1-kees@kernel.org>
- <20250507-emerald-lyrebird-of-advertising-e86beb@l-nschier-aarch64>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oS9Jr+7E"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=6gtZw/19cy9nmFSY5os2fTfYQ3iFqfNfyyYDRhMXkkk=; b=oS9Jr+7EjwU9rXH/Pm3dWaV/Ey
+	GEwPNVMGXnfSMLG85yAbZ7c8BClT4qtCWC6BZ6MTsuXOpx7fEX7QydFY4CphyEn634oGZtgWb8Fj6
+	V56GGyrvJU52+TW6Sw3Zxq3Mhx/2NJzk0trwp0nq94p+sI0WaiEBpM8E31rqniJlMmnA3T+1CjKk2
+	DPmtvmkdPTUJTclOoi2UNjJwMki+9FdcHGXhX+TEC6qNqf2LP/OcVvqzziS1D+v9DSYRanZDOl2Nb
+	KDNv3v1mGkdahIDtX1ebJOqjtf+n2PiB0oRVTWOpFiPfJsqt/o65j4SZVfjZbq9ZoiA4pLwtTE4Rw
+	E+ruHBtw==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uCdbS-00000004J1Q-0Izd;
+	Wed, 07 May 2025 12:10:22 +0000
+Date: Wed, 7 May 2025 13:10:21 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: akpm@linux-foundation.org, david@redhat.com, hannes@cmpxchg.org,
+	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
+	npache@redhat.com, ryan.roberts@arm.com, dev.jain@arm.com,
+	ziy@nvidia.com, vbabka@suse.cz, rppt@kernel.org, surenb@google.com,
+	mhocko@suse.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] mm: convert do_set_pmd() to take a folio
+Message-ID: <aBtNrQNlL7hjLrTZ@casper.infradead.org>
+References: <8e33c8a65b46170dfd8ba6715d2115856a55b8f6.1746609191.git.baolin.wang@linux.alibaba.com>
+ <a2faee74256c22cff2238487a86b154d5520c334.1746609191.git.baolin.wang@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250507-emerald-lyrebird-of-advertising-e86beb@l-nschier-aarch64>
-Organization: AVM GmbH
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <a2faee74256c22cff2238487a86b154d5520c334.1746609191.git.baolin.wang@linux.alibaba.com>
 
-On Wed, 07 May 2025, Nicolas Schier wrote:
+On Wed, May 07, 2025 at 05:26:13PM +0800, Baolin Wang wrote:
+> In do_set_pmd(), we always use the folio->page to build PMD mappings for
+> the entire folio. Since all callers of do_set_pmd() already hold a stable
+> folio, converting do_set_pmd() to take a folio is safe and more straightforward.
 
-> On Sat, 03 May 2025, Kees Cook wrote:
-> 
-> > There was no dependency between the plugins changing and the rest of the
-> > kernel being built. This could cause strange behaviors as instrumentation
-> > could vary between targets depending on when they were built.
-> > 
-> > Generate a new header file, gcc-plugins.h, any time the GCC plugins
-> > change. Include the header file in compiler-version.h when its associated
-> > feature name, GCC_PLUGINS, is defined. This will be picked up by fixdep
-> > and force rebuilds where needed.
-> > 
-> > Add a generic "touch" kbuild command, which will be used again in
-> > a following patch. Add a "normalize_path" string helper to make the
-> > "TOUCH" output less ugly.
-> > 
-> > Signed-off-by: Kees Cook <kees@kernel.org>
-> > ---
-> > Cc: Masahiro Yamada <masahiroy@kernel.org>
-> > Cc: Nicolas Schier <nicolas.schier@linux.dev>
-> > Cc: Nathan Chancellor <nathan@kernel.org>
-> > Cc: <linux-hardening@vger.kernel.org>
-> > Cc: <linux-kbuild@vger.kernel.org>
-> > ---
-> >  include/linux/compiler-version.h |  4 ++++
-> >  scripts/Makefile.gcc-plugins     |  2 +-
-> >  scripts/Makefile.lib             | 18 ++++++++++++++++++
-> >  scripts/gcc-plugins/Makefile     |  4 ++++
-> >  4 files changed, 27 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/include/linux/compiler-version.h b/include/linux/compiler-version.h
-> > index 573fa85b6c0c..74ea11563ce3 100644
-> > --- a/include/linux/compiler-version.h
-> > +++ b/include/linux/compiler-version.h
-> > @@ -12,3 +12,7 @@
-> >   * and add dependency on include/config/CC_VERSION_TEXT, which is touched
-> >   * by Kconfig when the version string from the compiler changes.
-> >   */
-> > +
-> > +#ifdef GCC_PLUGINS
-> 
-> Out of curiousity:  Why can't we use CONFIG_GCC_PLUGINS here?
+What testing did you do of this?
 
-... because compiler-version.h is included before kconfig.h (which 
-includes autoconf.h).  Sorry for the noise.
+> -vm_fault_t do_set_pmd(struct vm_fault *vmf, struct page *page)
+> +vm_fault_t do_set_pmd(struct vm_fault *vmf, struct folio *folio)
+>  {
+> -	struct folio *folio = page_folio(page);
+>  	struct vm_area_struct *vma = vmf->vma;
+>  	bool write = vmf->flags & FAULT_FLAG_WRITE;
+>  	unsigned long haddr = vmf->address & HPAGE_PMD_MASK;
+>  	pmd_t entry;
+>  	vm_fault_t ret = VM_FAULT_FALLBACK;
+> +	struct page *page;
 
+Because I see nowhere in this patch that you initialise 'page'.
+
+And that's really the important part.  You seem to be assuming that a
+folio will never be larger than PMD size, and I'm not comfortable with
+that assumption.  It's a limitation I put in place a few years ago so we
+didn't have to find and fix all those assumptions immediately, but I
+imagine that some day we'll want to have larger folios.
+
+So unless you can derive _which_ page in the folio we want to map from
+the vmf, NACK this patch.
