@@ -1,102 +1,101 @@
-Received: from sonic316-54.consmr.mail.gq1.yahoo.com (sonic316-54.consmr.mail.gq1.yahoo.com [98.137.69.30])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8428728E56F
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 19:35:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=98.137.69.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C6CE28E570;
+	Wed,  7 May 2025 19:36:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746646545; cv=none; b=Hm6aBgHWeHW7XdlmwjsAKGuoeTXBvuAaJPS/7BO9v86ypb7HeRQQOoJGkl0QfuGjfj7YKibAJ+ubJU+OuA1h59nG+Fp/ZS1crct631KGSzKuJ292wxblN0zwMj2LPmHYDKk9PVn6ZA+SwMO5NfczdjAGjZIGnEh79IADtdCi8xc=
+	t=1746646565; cv=none; b=Z+jNKD3MBOVbzkwIk6nYFPRPJDIcucyg/d8s+4oDMVGyAYkUDAQ4ZPLkWi0RBXyGTY/k2ZNw/KBiWxCWkwGMff1ypTq6WBQdVUo3AxXmsocxbgX6WAVwENOUb45aTG8tDcoLcWDwUMaIQUscMlEEz1Tm/wVsv3MBclf1Do7sDQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746646545; c=relaxed/simple;
-	bh=/ibJ+ZdIq4NSJpcnXBtJz4+mTK5QylfZENGb9T8Fi8o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:References; b=aROPB9xPxwot6Of5m5ZMg/hovXqJd+Lnhqqs6IsnWzWoPzP09U/5CJpc+oOGnOCXpyWXsHGgxYDfhjU1fxkiBDDFg1NtW1KGtuEWGCgVgvOS9569fMfJ0BlQeLjehco0pPvxeOrr3nG9pmOgVLxcS9ux7G5fna2HRGLjAfbnI0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aol.com; spf=pass smtp.mailfrom=aol.com; dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b=WBhdGvGO; arc=none smtp.client-ip=98.137.69.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aol.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aol.com
+	s=arc-20240116; t=1746646565; c=relaxed/simple;
+	bh=iGvi/yqa0wbn0CkanjM0OCae1/tSLVv3/DLoooCpJUQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qp3DSdIJhxVRv+RNgJm1O1tKfIcYg08RNbO+ZcNS4dNfDhD67ikqyLsyWSaVg1Co6V71/cFz3adPkeq+DV65lAk1WnU10Oxb1dKGW7grLucUZe6UF7tojyb8D/g7P3XVfxYTdUxqSbt3zo136X/vZujoaO0dHYEbM7ciBl981nI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=KC6LJOcf; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="WBhdGvGO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1746646543; bh=lmga7zKv8+wZUarLSSX0s6Q7CJ3U6AGRqKJhtN6JNfo=; h=From:To:Cc:Subject:Date:References:From:Subject:Reply-To; b=WBhdGvGOpFqNNissheUddh7dNq7WIdjxGB7lKqcf4wD0EzHOYIV7FnAjQZNG6T14onTZGi/CajL20ftR4aMJMq/4yMGtAywTfnfmritIAAwfLbJO5NmvBNQQglzyV7vYv0VMVwBcdgijrExf62lkpzrWpBmzx/LmLsL3GTnBbthp19xfqD40QVBJweeqygCgzZOiFb4D1c3Q0dgQvPyDlzzoA3dZigpIOv+vhHmxQItxhPRsBMkbPzybo+UDCFdqMnl3TDWGmV2Crl8Trdw/eZy0TPrvcDJ6joJGiGvGiso9zqCoaJbzFcVitCF3B0ROdtdMcISoY0V1XjvMcjeZbQ==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1746646543; bh=+FUTSJKU36OlC5KtC8XxzrJw3knNe9t88rza3HeSRck=; h=X-Sonic-MF:From:To:Subject:Date:From:Subject; b=ITt/M1onpNikuhDgeuQRI76KCmrlWlRQOS22outWcPhX4A7Bml0+dZN4/xDVPk2ZqJvnhUHbEKMzR/uPv2iibnGOEHSJUXn8njzITj/6bScqYbohwJWWUhXxRBW+IL0678l0o839GyevsOEuyQxio+l3zxIlXFGZOqEAP9febIej5M14Paf2+nckRyfAXuOMy8pqXj5CJi5hFMsriNeI+5Woo8/Zw9ei3DUNr2AEgOb+tM6ab4UWpCyYqUJoI6RfEmVx61cx27SQJ9dp0y48kOWTwLvz0682uBUisYzMonR9zwaRcMAZajXQs8otrZNIU/qBL0PG495/LoCTyNKW4g==
-X-YMail-OSG: r98ej.sVM1k38Qf03FFb9in0YlqEhRuo.SbCZAqOGUf7tmKaSlBz1niZj03gNAR
- rF68RuvP7P_Tfj2mtJLpxtCOxri75414SU26i39Sv908k14MOCt7AVgBBat95S2lEje.TYGpakCk
- Ta_pn6jPMCYikra9TeyKMAXunfqOvA7mBJNkcjR_TuJTVHePehMhL2HeidqoVapc45fdaQQzu0Ui
- VUpLak8.ysBvm0U3u9Wbbc8WrnCaBtJwY_I4.3aH_PzktrVzZ7JlCH4aH1UIWEn45SvLRudHYth1
- T3abILqb1LbFNHyUVU.ZnZvNoIKE1Neu2bicy7jxWyCbqftYLcCPuGa41R.1U3ZAZBhWMCwLIga8
- .lF1BE_He_sBaRA8E4tfPacEIiXyFnzTqNcjmGy8akNl56FJNLTcQn2Bk1CdRMTZYUH7.rU1QJs.
- k6CQhF.ikJE9cWBi6WmxymDHSJwoi1YY1NSmGll7tR.unxToqvkW_5MCwOnQx6.xDPPLqHEPdkac
- md6hOM4nQRnXbuEXwtT7zuzHyx3FCuC44wOmqc63XNoWaMNPyyFUSPtahLNQJo4N.U6mxTgDFD1F
- fRpHxBvuHTZr8E17CnIBJNAm0LRzl.5HDJkWCGZpPdLxPxerKhGL4gZpsjtW24SzvEeXjqalfbRJ
- X.cXfIu55yxce11YGUI7Y3qyIcry5a.Bsv9hslYQiruVS6b0hl4gyhu4k4cMutfHp3TO0I3v7Mbu
- yVd3_c3CLyLVfkQ5SpOnEcSx5irHkrn0Gw5LI_S36Grq9IMXee5s58HTLfu40xFj1udrwVT3RdVK
- 6ehddzN0arB94MxYmNSUllTK9q9_YfBPHUecMt80WGBwU.OhSoyN7OEOjPbtQ2Kp_uMXou9ltgX0
- 2e4HTh.bPszDmnQuJXWF9MbabHLHD8lkmTemsWEDqqT5murniYF8_ezU0HWYu9AEqMxLJTRZEQQK
- RFCBsGmInqzmu_MIWi.pAS_YL52wpXRx7PIQ91vtJ1LOz8pTL37TdUw.tRunhvhlBF1FHLSPzdE6
- 7GVehiqutA7_sqEmX.AsHJjfhTnQQod6Y4JruH4feAxfu491pxbOfrvWRmwmT_JzeRQdMHR9B3sW
- 1RHycUbZ5cdPtST6KGA.9GW09Dre0GI8K.rczUZy5_hcOjESVmo_KOe24UE8ztfWZzyuM33zS_z3
- BVppYdKag2wAByslR.hsz6Z7mNhX9TFACVVBxgukQqjQKxDH9ix2YKVm_YQwPQID17IagODf9L64
- UNRUh_uB9gbki_H_FKRvxxE3oc9pLd_9hDuP0zlxxk.fguvXF9JGLM19tiCv79Fk7S476lGwvtUp
- eKxnAshQb.i3ebdfAjBAn2PXmg5sw8tLk5IJ9VV49Dbh9AVQQN.i0y3.yJ1m6fn93RAsL6uPhGk6
- dChiuazrvm3teCNUqQUqKyG6F_leQ8Wx56ivQEgLiNFzpTWeGJRhmZ52sb1AoCiqMe4uHJ1AXAES
- jupJFGn1BoaWqbTcLZ6JFkeFSp.64sxXR.yINFQnvmP5IiuBWXo2dudOtLIM4F5dxe38uhrGM9yJ
- QxxJybzyHSCLQJtpo.Ry8v_dhFozoa2d1DHXw9AjLCNcGMADiysM8TmgpK4BwzA7QJaItQ3Cb9w_
- ZudOGD6M5SsfeSeblD5_PX6kptJnwNQdaKJ0uifi_WTu8KeFyBanWTHuztXTIZJe4Ou_vMyi4JR_
- AX1HCpHUVy1I3338qBQI1dHPVLP.2eb3S3ERHSQaZEEwAlpdrjmWXD6RFyKquBIU4WFVxje4ksCo
- Glk7Wx6QQ15AHnlPFb3LZrvansBFALRdfNqYd3Cj9EYxW.5vPn_I._HMu2PSB2xmwEUTZI5S7efz
- bFl.OzTHl_5U_hImmImE4WqM4sbPEFlVZ7ucuyif5rrujZo5h034QDGp.D1ujflzpUsk4_ox5x82
- Po9rP1VBMcNqK6r5YsDP2k6xx6bWWXcUcpTpsLi4y4_2iSToVggiq4sLs5EvFJ1qjlstU7.SUMfw
- boM49TstsyHp1ggknVnKi.CRXFJwd_WXs6yLaYlntpSyUBGmp83bRH8M4.PUiLUB8JNHpRDdW06R
- 6TMRn39tnM9mKjzsgTqgMhhOvz_bgJTpTg1wngix9zJUi7CHBC6MWF8NdxHlmhWnFxuo8xkVbFrE
- tjQk8j9Hxyoz.78O_1PcpvD3CSrs1ekv8LPqVZFopylcViYf_H_mZwJHsQVzDPKsl61N5NJs_x3B
- 2FSCqQxFUCa8XsR4pxzZgOb8ul2KCMqouT82Hz8JZOyuEUhm6nEf8jGxVP1cgm94Z
-X-Sonic-MF: <rubenru09@aol.com>
-X-Sonic-ID: 5588d6e7-8905-487b-99f4-71023ca18f2b
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic316.consmr.mail.gq1.yahoo.com with HTTP; Wed, 7 May 2025 19:35:43 +0000
-Received: by hermes--production-ir2-858bd4ff7b-mp79t (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 0ce168842b6194365513fec4b9b0872e;
-          Wed, 07 May 2025 18:55:10 +0000 (UTC)
-From: Ruben Wauters <rubenru09@aol.com>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org
-Cc: Ruben Wauters <rubenru09@aol.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] x86/cpu/intel: replace deprecated strcpy with strscpy
-Date: Wed,  7 May 2025 19:51:36 +0100
-Message-ID: <20250507185459.8769-1-rubenru09@aol.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="KC6LJOcf"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 6C71440E01FA;
+	Wed,  7 May 2025 19:35:59 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id dcXQVQhjsy8q; Wed,  7 May 2025 19:35:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1746646554; bh=Mr4i9nDPNN2ozb4bNdmXhguhPiB4LmuNAw2Fv4Z0jHo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KC6LJOcf+XT1CL4Ubts4m2wTVfr5/cHmkGNIfBKMBuaWZgwq2/rgPJR5laenWjWfz
+	 NDnG6tvEtss9We5IGPtkcKzsgsNyv8+MsLmQ8cz3TqRHScjBUqwaO/lGvC1oCxG4uM
+	 Xsc9wR+rAQh2Eleu6jSGjLpKUi94AIIpMzYrXGJFN38mKgOKKR6HkBjAuBNIJkj3y7
+	 pKiIZaRPAnaZVL4uK3zodX5BXYAeDdYDhUCt1pyY09CsnkZgOYVLhKkczibAXzPmsP
+	 2h23SlP/1BKP5yU4ZDTkVw7W+adWlsO8fVSVchPc11WfpZ0xdbdAXaPtCOrrcEtA8l
+	 uEiMh9vzDMp4n1HuP9yMwlgUbRw0O5nT6Vmx3MI9ababD+pBhftfYEitqGc1pLW+YF
+	 IHPRHCuSmai2SvpSith9lND1OJMuWCFO6EUCGErkmH3aWkatHcXYgWnt0nRoa8UC5x
+	 w59Kuhb+k45JQcFVe9oGBFTRciFQXGL+2Ns77g3DsOXNc8W0yhXkmrXi+WIdP46W77
+	 k1xuK5WHjUhOK5S+lyj2OH+mEB/N1Yy46BOkaXxlfemCVeWS+8TSghBwHDEzb+G7KK
+	 vL3BcHKQSbzuEX6LFxXUsSNsgrO91+q8BJ9FTIsxoP2b87rTCUj44sSeenovpf+Lpn
+	 7Ru2aPiKaQJSTu0K2+Dmp29Q=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3BC9B40E01ED;
+	Wed,  7 May 2025 19:35:47 +0000 (UTC)
+Date: Wed, 7 May 2025 21:35:39 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Yazen Ghannam <yazen.ghannam@amd.com>
+Cc: x86@kernel.org, Tony Luck <tony.luck@intel.com>,
+	linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+	Smita.KoralahalliChannabasappa@amd.com,
+	Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Subject: Re: [PATCH v3 14/17] x86/mce/amd: Enable interrupt vectors once
+ per-CPU on SMCA systems
+Message-ID: <20250507193539.GPaBu2C_Gt7ksvRHoc@fat_crate.local>
+References: <20250415-wip-mca-updates-v3-0-8ffd9eb4aa56@amd.com>
+ <20250415-wip-mca-updates-v3-14-8ffd9eb4aa56@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-References: <20250507185459.8769-1-rubenru09.ref@aol.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250415-wip-mca-updates-v3-14-8ffd9eb4aa56@amd.com>
 
-strcpy is deprecated due to lack of bounds checking.
-This patch replaces strcpy with strscpy, the recommended alternative for
-null terminated strings, to follow best practices.
+On Tue, Apr 15, 2025 at 02:55:09PM +0000, Yazen Ghannam wrote:
+> -static void deferred_error_interrupt_enable(struct cpuinfo_x86 *c)
+> -{
+> -	u32 low = 0, high = 0;
+> -	int def_offset = -1, def_new;
+> -
+> -	if (rdmsr_safe(MSR_CU_DEF_ERR, &low, &high))
+> -		return;
+> -
+> -	def_new = (low & MASK_DEF_LVTOFF) >> 4;
+> -	if (!(low & MASK_DEF_LVTOFF)) {
+> -		pr_err(FW_BUG "Your BIOS is not setting up LVT offset 0x2 for deferred error IRQs correctly.\n");
 
-Signed-off-by: Ruben Wauters <rubenru09@aol.com>
----
- arch/x86/kernel/cpu/intel.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I'm not sure why it is ok to remove that one.
 
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index 584dd55bf739..b49bba30434d 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -607,7 +607,7 @@ static void init_intel(struct cpuinfo_x86 *c)
- 		}
- 
- 		if (p)
--			strcpy(c->x86_model_id, p);
-+			strscpy(c->x86_model_id, p);
- 	}
- #endif
- 
+/me goes and digs into lore...
+
+Here's why we did it back then:
+
+https://lore.kernel.org/all/5547906E.3060701@amd.com/
+
+and apparently that was for some bulldozer BIOS.
+
+How can we trust Zen BIOS all of a sudden?
+
+;-)
+
 -- 
-2.48.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
