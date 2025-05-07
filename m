@@ -1,306 +1,202 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FA3C28C011
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 17:38:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA45628C2A9;
+	Wed,  7 May 2025 17:40:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746639532; cv=none; b=Qb6SKYYKEMh9SyV6FBC2Nw0EZIZ38UIhf6xj+s4C4VXgO8XMhjwZeajCDVb9+jXvns9s5B3rM23rvLi2Jtk/q66L8mnaHmcGLrvX6Lgg9fUrB0iPFrRiqF3GBbF2ajxrZrffv03GD3QuC9nMyPGWEV0+mxopQAddPyCTswvD2gE=
+	t=1746639653; cv=none; b=fuy/vppn/5YetEEoU2B5tdyW1rmHshantfE8f2xT3Eum0fKN4KOWR+h0OSC1BddqahzxG/QetEQTEHE5NKKf+03+kMA4ujsgwrn6hHb719PjXLw8O8M/ad63fYRCSp25vhpU3r6pnXf9HuRmMWwH3z5jN+aqjfhIHrH+F8fkRAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746639532; c=relaxed/simple;
-	bh=Kn/hs+LPbpiP4FFIVL3DRqt9XY09zw4ymjKN4i1ba/E=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=OrFbNiRx39O8ptulmHNRb0pw6dhtxaurK9Te8xSWrBuqQ64J8EgzqgtHSa4fKs9KRBK7sMl0u95FN1R27BI24u8R6nUDVUeNEKoiPXsVmJfuk10WE63/8svy6D9WTtoBXXZAJstvDdiwPmh2uufUhYTaZdiogSvS28EqknnZCb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--changyuanl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=veXJdUvv; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--changyuanl.bounces.google.com
+	s=arc-20240116; t=1746639653; c=relaxed/simple;
+	bh=Geqh+D5uJmrUbt0m4p6Vua5oZHF+A+a0M3ZiP1mG2Us=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tv3jU1KgCc13B9eSdoyQS9lnZ5JKOcSndVkWjxTKBZzZlMG9TsqOWe7N3jOltjs+Y53MBsK+Skjg1Y+RSY2ekNI6NsbH6zCA58XeDYsa6J2XgC4mWwfgOi3dc99nkJgmNPcwK5FZQlZd6AgMitesDiKI0Zc1noY8ZR6KAWNRWHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A5O6F4Va; arc=none smtp.client-ip=209.85.128.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="veXJdUvv"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-22e7343c777so1180355ad.2
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 10:38:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A5O6F4Va"
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-708b31650ffso1417687b3.0;
+        Wed, 07 May 2025 10:40:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746639529; x=1747244329; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xPKhEEOlzYIkRbPw/GeR8hWFfjD3gG75JAvhi9V0F+0=;
-        b=veXJdUvvr38Z+ouYuT3ULG3pij1pqmlSQFQDa2LX8nQU/w7cy9H7aHrhP+t+2lCjLn
-         cGXIre6xOZpvyNKHk5h+9jYB6SULNIX8nOaxwq/Pj0Mg89/UuynpJxFUgG5CBpfo832v
-         xonL6Bqc7hj1wcu5mhiwOmNX/YX9xsSpYxTHfWPMgfF775Zjka/dt96qeHXF2XvEJF/1
-         NSLPKqJlz9Yl5R8LyTfnGWDywg2u5drcGTjCmZFGLws0HjshpFg7qVX8hjZlIZ2AiELl
-         kpgy2ucP+C4mMdBGdxawPLyvSjXQq7OzdmiCqNoN50Sthub6kNJdhpjS2BJXdirSzIYI
-         eroQ==
+        d=gmail.com; s=20230601; t=1746639650; x=1747244450; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PrNi7Flwgq4EBMVYXIrmQJ3ObEoQDpAla3Oaux526gs=;
+        b=A5O6F4VaRm44RfkPbHxOApSh+gLD+ZF9kJGJoWZGeJUf1+mLHjVMgRAXmCaz/an+eR
+         yquMKc4xUYDlGMQpr/cZQtEj610gCvkA0kiyx5Hwlz1ILAmujrZDL4hvuuY8pyNUrn4V
+         UYD+iRxtJkBSJkJnr8xk+6d292Jonl5vQt3tOPJQhF81+wCcaT0Ft6uibecb4FeRPaEK
+         qArec4zZjUB51oLFlMzl8xqUGzQQYRdIHGhZE3w9jYitfDRgo4aH/NY0U6wVCMpu8Z2T
+         W4d1XAqVTKYzH6QiYgefkQ3PxyCb9Q440FzNHxBdpO7pntCpKjUwiw/SwdYPF2MsNCZd
+         O/Hg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746639529; x=1747244329;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xPKhEEOlzYIkRbPw/GeR8hWFfjD3gG75JAvhi9V0F+0=;
-        b=nAluBC9u/61/sAPkG2Iyl0nbpI8/o/EE4Q6BeYlBj6r7XqIFF/N6JkVUX+zDW2LY94
-         l4qtvyLWmKuy+te1g0rVR2BcHemhJZjMKFVrI3V1e1rJ69xxzpdJtEzXYBmQcrj0VVJy
-         4mCGQ4Ud3KZvrGZGPw5zgShuxFpmV7mAVt7ovpBPFULf8ez3u5hEYvhlS4AYsY1+YVpz
-         nzMpr688yW/iLfjX2+pBRJnxOwhFCiZvwA9Y+p6afAZU6kVKK7bu9eLeRaICUI89pfGX
-         QhV2HeH3yC8Js4p1CPn9fZxhAjUMOcBjKt4qt8T+GJlQ+W75iW1cnp5dPZjbC2FSb0gI
-         xM4A==
-X-Forwarded-Encrypted: i=1; AJvYcCUxgs7KgTM8fCdX/8xVznrv3js/2PvKjqURtEBlCKS0BErVWl4TdQdYMfnlbn25vXb1eNB7QSVbquYJh38=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSCrFGEs8oX8oBEi5AJqGu5YIYDRQUEg/Fbi1K9lkCe3CYGMBy
-	aB9O6stspnXmZpD+xJslnpzkxEvclC1kGpFNW1gM33h3ZFbtHjitxg8hvbcwfbXR5FinorMYI1n
-	3mb4/yS/ko2qqvi+zgQ==
-X-Google-Smtp-Source: AGHT+IGNfkFxMjaTsgXaQ67I1WvGAJM6TlgtahsPE6jcXmeR00somZXniUnAeUbq3tjSmORMJMl00b971pTs36O8
-X-Received: from plbiy10.prod.google.com ([2002:a17:903:130a:b0:223:242b:480a])
- (user=changyuanl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:903:d3:b0:22e:6cc6:cf77 with SMTP id d9443c01a7336-22e6cc6d267mr30697245ad.53.1746639529608;
- Wed, 07 May 2025 10:38:49 -0700 (PDT)
-Date: Wed,  7 May 2025 10:38:40 -0700
-In-Reply-To: <aBl0kUIKryH5AUD5@archie.me>
+        d=1e100.net; s=20230601; t=1746639650; x=1747244450;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PrNi7Flwgq4EBMVYXIrmQJ3ObEoQDpAla3Oaux526gs=;
+        b=UVKaI7/n9Vpt61a8hAlbcaH03U24z6ez/JImeQ6RgBq/B++NoyqX+Wn1i1EfGpNEpL
+         cAh7AoDIW5GvExStJCgafYLO8W/HST6hBXjYNaxOY6Dbb5YznXsaIt60U73fPRw9ikJn
+         Bt7psCmdR6m0SqCIphzfZKS05XZgN9ggzBQKrU+Fvl9aMHL8Xw37WDnms/5HaCkMvAvD
+         K6lRAuCwfPF/CNFK60fUlxxAEQlCs07xy79bE8H4jXQkrqjiOOndzjjsLYExJdPD4cD4
+         2NM43kMxs8UwbLhOGo93sYSkoaXQqG0t/5YKHrh7na64GkJEZUxtnKkUjvfbm+IKzExa
+         oG+g==
+X-Forwarded-Encrypted: i=1; AJvYcCW1NqQquj8mjViZ/TjL1VRf91O3LykIZ7ue8dETa++bmfvmh9GVWVwTHKcPMeuPEswzwunK/cjzepOO1IxU@vger.kernel.org, AJvYcCXeF9tJ9kiK747GQakCERlvtkL8DsQPWbJF9tI8OM59EG9SzRONWN5SL5Penj/gQ8HksQZFjl0CQkc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx99/ljHdt+Ik0z6ZAXipPZLhT+bbT1MypnTmho1Q8qF04JHKhM
+	deEGlwMdzWQSd7TPclRKfL/8rdZ+g5QqfbWsFM67X2pZc3h6tCb9
+X-Gm-Gg: ASbGnctx+oOUteAbW+jkYkZVwSG5K3GUwdrZo0uGBfFxMjUwTBdfycqcjY1EsLf0vJA
+	TM3YcVoayHVZl8uu2ouQstrn+ChnNFMegoBTBKaPu90ZeQ1B6MX+wCZsozdjfuOaUE+3huBJhIa
+	Lapytubvnfy7vOpQQKLH+Wx804X6uBUQF+gW/bgHhycdyriWn5tprgYutuPXb/1d704NYTWY6wu
+	rBcVo5vBwm3Rnhd2C/+nhFJ6YjAL+cRleF1nPcIRLMi6/m1vUjgkqb5sOP2bzYBFTIRGJM3HTNY
+	8nI8n/sSaM8UsdxwAAS88lOK
+X-Google-Smtp-Source: AGHT+IHwA2DWyR9RT5bJAp/f5MqkoySq95Z1ilqvT6eJXShFtI+LYdAuNTXzjUiKjw5FKah3AzLgLA==
+X-Received: by 2002:a05:690c:46c8:b0:709:17e4:4d27 with SMTP id 00721157ae682-70a2d0b77d9mr5083347b3.23.1746639650373;
+        Wed, 07 May 2025 10:40:50 -0700 (PDT)
+Received: from lg ([50.205.20.42])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-708c3f0825csm34282207b3.21.2025.05.07.10.40.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 10:40:49 -0700 (PDT)
+From: Fan Ni <nifan.cxl@gmail.com>
+X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
+Date: Wed, 7 May 2025 10:40:47 -0700
+To: Ira Weiny <ira.weiny@intel.com>
+Cc: Dave Jiang <dave.jiang@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
+	nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 02/19] cxl/mem: Read dynamic capacity configuration
+ from the device
+Message-ID: <aBubH5ZDVPEE8N98@lg>
+References: <20250413-dcd-type2-upstream-v9-0-1d4911a0b365@intel.com>
+ <20250413-dcd-type2-upstream-v9-2-1d4911a0b365@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <aBl0kUIKryH5AUD5@archie.me>
-X-Mailer: git-send-email 2.49.0.987.g0cc8ee98dc-goog
-Message-ID: <20250507173840.2541517-1-changyuanl@google.com>
-Subject: Re: [PATCH v7 17/18] Documentation: add documentation for KHO
-From: Changyuan Lyu <changyuanl@google.com>
-To: bagasdotme@gmail.com, akpm@linux-foundation.org
-Cc: anthony.yznaga@oracle.com, arnd@arndb.de, ashish.kalra@amd.com, 
-	benh@kernel.crashing.org, bp@alien8.de, catalin.marinas@arm.com, 
-	changyuanl@google.com, corbet@lwn.net, dave.hansen@linux.intel.com, 
-	devicetree@vger.kernel.org, dwmw2@infradead.org, ebiederm@xmission.com, 
-	graf@amazon.com, hpa@zytor.com, jgowans@amazon.com, kexec@lists.infradead.org, 
-	krzk@kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	luto@kernel.org, mark.rutland@arm.com, mingo@redhat.com, 
-	pasha.tatashin@soleen.com, pbonzini@redhat.com, peterz@infradead.org, 
-	ptyadav@amazon.de, robh@kernel.org, rostedt@goodmis.org, rppt@kernel.org, 
-	saravanak@google.com, skinsburskii@linux.microsoft.com, tglx@linutronix.de, 
-	thomas.lendacky@amd.com, will@kernel.org, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250413-dcd-type2-upstream-v9-2-1d4911a0b365@intel.com>
 
-Hi Bagas,
+On Sun, Apr 13, 2025 at 05:52:10PM -0500, Ira Weiny wrote:
+> Devices which optionally support Dynamic Capacity (DC) are configured
+> via mailbox commands.  CXL 3.2 section 9.13.3 requires the host to issue
+> the Get DC Configuration command in order to properly configure DCDs.
+> Without the Get DC Configuration command DCD can't be supported.
+> 
+> Implement the DC mailbox commands as specified in CXL 3.2 section
+> 8.2.10.9.9 (opcodes 48XXh) to read and store the DCD configuration
+> information.  Disable DCD if an invalid configuration is found.
+> 
+> Linux has no support for more than one dynamic capacity partition.  Read
+> and validate all the partitions but configure only the first partition
+> as 'dynamic ram A'.  Additional partitions can be added in the future if
+> such a device ever materializes.  Additionally is it anticipated that no
+> skips will be present from the end of the pmem partition.  Check for an
+> disallow this configuration as well.
+> 
+> Linux has no use for the trailing fields of the Get Dynamic Capacity
+> Configuration Output Payload (Total number of supported extents, number
+> of available extents, total number of supported tags, and number of
+> available tags).  Avoid defining those fields to use the more useful
+> dynamic C array.
+> 
+> Based on an original patch by Navneet Singh.
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> 
+> ---
+> Changes:
+> [iweiny: rebase]
+> [iweiny: Update spec references to 3.2]
+> [djbw: Limit to 1 partition]
+> [djbw: Avoid inter-partition skipping]
+> [djbw: s/region/partition/]
+> [djbw: remove cxl_dc_region[partition]_info->name]
+> [iweiny: adjust to lack of dcd_cmds in mds]
+> [iweiny: remove extra 'region' from names]
+> [iweiny: remove unused CXL_DYNAMIC_CAPACITY_SANITIZE_ON_RELEASE_FLAG]
+> ---
+>  drivers/cxl/core/hdm.c  |   2 +
+>  drivers/cxl/core/mbox.c | 179 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/cxl/cxl.h       |   1 +
+>  drivers/cxl/cxlmem.h    |  54 ++++++++++++++-
+>  drivers/cxl/pci.c       |   3 +
+>  5 files changed, 238 insertions(+), 1 deletion(-)
+...
+>  /* Set Timestamp CXL 3.0 Spec 8.2.9.4.2 */
+>  struct cxl_mbox_set_timestamp_in {
+>  	__le64 timestamp;
+> @@ -845,9 +871,24 @@ enum {
+>  int cxl_internal_send_cmd(struct cxl_mailbox *cxl_mbox,
+>  			  struct cxl_mbox_cmd *cmd);
+>  int cxl_dev_state_identify(struct cxl_memdev_state *mds);
+> +
+> +struct cxl_mem_dev_info {
+> +	u64 total_bytes;
+> +	u64 volatile_bytes;
+> +	u64 persistent_bytes;
+> +};
 
-On Tue, May 06, 2025 at 09:31:45 +0700, Bagas Sanjaya <bagasdotme@gmail.com> wrote:
-> On Thu, May 01, 2025 at 03:54:24PM -0700, Changyuan Lyu wrote:
-> > +This document expects that you are familiar with the base KHO
-> > +:ref:`concepts <concepts>`. If you have not read
-> The reference label is generic and can collide with future patches.
-> It should've been disambiguated as kho_concepts instead.
+Defined, but never used.
 
-I renamed `concepts` to `kho-concepts`.
+Fan
 
-> > +them yet, please do so now.
-> > +
-> > +Prerequisites
-> > +=============
-> > +
-> > +KHO is available when the ``CONFIG_KEXEC_HANDOVER`` config option is set to y
-> > +at compile time. Every KHO producer may have its own config option that you
-> when the kernel is compiled with ``CONFIG_KEXEC_HANDOVER`` set to y.
+> +
+> +struct cxl_dc_partition_info {
+> +	size_t start;
+> +	size_t size;
+> +};
+> +
+> +int cxl_dev_dc_identify(struct cxl_mailbox *mbox,
+> +			struct cxl_dc_partition_info *dc_info);
+>  int cxl_await_media_ready(struct cxl_dev_state *cxlds);
+>  int cxl_enumerate_cmds(struct cxl_memdev_state *mds);
+>  int cxl_mem_dpa_fetch(struct cxl_memdev_state *mds, struct cxl_dpa_info *info);
+> +void cxl_configure_dcd(struct cxl_memdev_state *mds, struct cxl_dpa_info *info);
+>  struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev);
+>  void set_exclusive_cxl_commands(struct cxl_memdev_state *mds,
+>  				unsigned long *cmds);
+> @@ -860,6 +901,17 @@ void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
+>  			    const uuid_t *uuid, union cxl_event *evt);
+>  int cxl_get_dirty_count(struct cxl_memdev_state *mds, u32 *count);
+>  int cxl_arm_dirty_shutdown(struct cxl_memdev_state *mds);
+> +
+> +static inline bool cxl_dcd_supported(struct cxl_memdev_state *mds)
+> +{
+> +	return mds->dcd_supported;
+> +}
+> +
+> +static inline void cxl_disable_dcd(struct cxl_memdev_state *mds)
+> +{
+> +	mds->dcd_supported = false;
+> +}
+> +
+>  int cxl_set_timestamp(struct cxl_memdev_state *mds);
+>  int cxl_poison_state_init(struct cxl_memdev_state *mds);
+>  int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index 7b14a154463c..bc40cf6e2fe9 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -998,6 +998,9 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  	if (rc)
+>  		return rc;
+>  
+> +	if (cxl_dcd_supported(mds))
+> +		cxl_configure_dcd(mds, &range_info);
+> +
+>  	rc = cxl_dpa_setup(cxlds, &range_info);
+>  	if (rc)
+>  		return rc;
+> 
+> -- 
+> 2.49.0
+> 
 
-Done.
-
-> > +need to enable if you would like to preserve their respective state acro
-> > +kexec.
-> > +
-> > <snipped>...
-> > +First, before you perform a KHO kexec, you need to move the system into
-> > +the :ref:`KHO finalization phase <finalization_phase>` ::
->
-> kho_finalization_phase to disambiguate label.
->
-
-I renamed finalization_phase to kho-finalization-phase.
-
-> > +Next, load the target payload and kexec into it. It is important that you
-> > +use the ``-s`` parameter to use the in-kernel kexec file loader, as user
-> > +space kexec tooling currently has no support for KHO with the user space
-> > +based file loader ::
-> > +
-> > +  # kexec -l Image --initrd=initrd -s
-> > +  # kexec -e
->
-> Use full paths to kernel and initramfs image.
->
-
-Done.
-
-> > +``/sys/kernel/debug/kho/out/scratch_len``
-> > +    To support continuous KHO kexecs, we need to reserve
-> > +    physically contiguous memory regions that will always stay
-> > +    available for future kexec allocations. This file describes
-> > +    the length of these memory regions. Kexec user space tooling
-> > +    can use this to determine where it should place its payload
-> > +    images.
->
-> "Length of KHO scratch region, which is a physically contiguous memory regions
-> that will always available for future kexec allocations. Kexec user space
-> tools can use this file to determine where it should place its payload images."
->
-
-Done.
-
-> > +
-> > +``/sys/kernel/debug/kho/out/scratch_phys``
-> > +    To support continuous KHO kexecs, we need to reserve
-> > +    physically contiguous memory regions that will always stay
-> > +    available for future kexec allocations. This file describes
-> > +    the physical location of these memory regions. Kexec user space
-> > +    tooling can use this to determine where it should place its
-> > +    payload images.
->
-> "Physical location of KHO scratch region. Kexec user space tools can use this
-> file in conjunction to scratch_phys to determine where it should place its
-> payload images."
->
-
-Done.
-
-> > +.. SPDX-License-Identifier: GPL-2.0-or-later
-> > +.. _concepts:
->
-> The label can be ambiguous. It should've been _kho_concepts instead.
->
-
-Done.
-
-> > +.. _finalization_phase:
->
-> The label should be _kho_finalization_phase.
->
-
-Done.
-
-> > +Generally, A KHO user serialize its state into its own FDT and instructs
-> "Generally, a KHO user ..."
-
-Done.
-
-> > +KHO to preserve the underlying memory, such that after kexec, the new kernel
-
-> > +can recover its state from the preserved FDT.
-> > +
->
-> Thanks.
->
-> --
-> An old man doll... just what I always wanted! - Clara
-
-Best,
-Changyuan
-
----- 8< ----
-
-From: Changyuan Lyu <changyuanl@google.com>
-Date: Wed, 7 May 2025 10:14:34 -0700
-Subject: [PATCH] fixup! Documentation: add documentation for KHO
-
-Signed-off-by: Changyuan Lyu <changyuanl@google.com>
----
- Documentation/admin-guide/mm/kho.rst    | 29 ++++++++++---------------
- Documentation/core-api/kho/concepts.rst |  4 ++--
- Documentation/core-api/kho/fdt.rst      |  2 +-
- 3 files changed, 15 insertions(+), 20 deletions(-)
-
-diff --git a/Documentation/admin-guide/mm/kho.rst b/Documentation/admin-guide/mm/kho.rst
-index c64aa7aadb300..6dc18ed4b8861 100644
---- a/Documentation/admin-guide/mm/kho.rst
-+++ b/Documentation/admin-guide/mm/kho.rst
-@@ -8,14 +8,14 @@ Kexec HandOver (KHO) is a mechanism that allows Linux to preserve memory
- regions, which could contain serialized system states, across kexec.
-
- This document expects that you are familiar with the base KHO
--:ref:`concepts <concepts>`. If you have not read
-+:ref:`concepts <kho-concepts>`. If you have not read
- them yet, please do so now.
-
- Prerequisites
- =============
-
--KHO is available when the ``CONFIG_KEXEC_HANDOVER`` config option is set to y
--at compile time. Every KHO producer may have its own config option that you
-+KHO is available when the kernel is compiled with ``CONFIG_KEXEC_HANDOVER``
-+set to y. Every KHO producer may have its own config option that you
- need to enable if you would like to preserve their respective state across
- kexec.
-
-@@ -29,7 +29,7 @@ Perform a KHO kexec
- ===================
-
- First, before you perform a KHO kexec, you need to move the system into
--the :ref:`KHO finalization phase <finalization_phase>` ::
-+the :ref:`KHO finalization phase <kho-finalization-phase>` ::
-
-   $ echo 1 > /sys/kernel/debug/kho/out/finalize
-
-@@ -43,7 +43,7 @@ use the ``-s`` parameter to use the in-kernel kexec file loader, as user
- space kexec tooling currently has no support for KHO with the user space
- based file loader ::
-
--  # kexec -l Image --initrd=initrd -s
-+  # kexec -l /path/to/Image --initrd /path/to/initrd -s
-   # kexec -e
-
- The new kernel will boot up and contain some of the previous kernel's state.
-@@ -89,20 +89,15 @@ stabilized.
-     as input file for the KHO payload image.
-
- ``/sys/kernel/debug/kho/out/scratch_len``
--    To support continuous KHO kexecs, we need to reserve
--    physically contiguous memory regions that will always stay
--    available for future kexec allocations. This file describes
--    the length of these memory regions. Kexec user space tooling
--    can use this to determine where it should place its payload
--    images.
-+    Lengths of KHO scratch regions, which are physically contiguous
-+    memory regions that will always stay available for future kexec
-+    allocations. Kexec user space tools can use this file to determine
-+    where it should place its payload images.
-
- ``/sys/kernel/debug/kho/out/scratch_phys``
--    To support continuous KHO kexecs, we need to reserve
--    physically contiguous memory regions that will always stay
--    available for future kexec allocations. This file describes
--    the physical location of these memory regions. Kexec user space
--    tooling can use this to determine where it should place its
--    payload images.
-+    Physical locations of KHO scratch regions. Kexec user space tools
-+    can use this file in conjunction to scratch_phys to determine where
-+    it should place its payload images.
-
- ``/sys/kernel/debug/kho/out/sub_fdts/``
-     In the KHO finalization phase, KHO producers register their own
-diff --git a/Documentation/core-api/kho/concepts.rst b/Documentation/core-api/kho/concepts.rst
-index f1826ac10da75..36d5c05cfb307 100644
---- a/Documentation/core-api/kho/concepts.rst
-+++ b/Documentation/core-api/kho/concepts.rst
-@@ -1,5 +1,5 @@
- .. SPDX-License-Identifier: GPL-2.0-or-later
--.. _concepts:
-+.. _kho-concepts:
-
- =======================
- Kexec Handover Concepts
-@@ -56,7 +56,7 @@ for boot memory allocations and as target memory for kexec blobs, some parts
- of that memory region may be reserved. These reservations are irrelevant for
- the next KHO, because kexec can overwrite even the original kernel.
-
--.. _finalization_phase:
-+.. _kho-finalization-phase:
-
- KHO finalization phase
- ======================
-diff --git a/Documentation/core-api/kho/fdt.rst b/Documentation/core-api/kho/fdt.rst
-index 4a5d53c670d4b..62505285d60d6 100644
---- a/Documentation/core-api/kho/fdt.rst
-+++ b/Documentation/core-api/kho/fdt.rst
-@@ -32,7 +32,7 @@ KHO process will be bypassed.
- Property ``fdt``
- ----------------
-
--Generally, A KHO user serialize its state into its own FDT and instructs
-+Generally, a KHO user serialize its state into its own FDT and instructs
- KHO to preserve the underlying memory, such that after kexec, the new kernel
- can recover its state from the preserved FDT.
-
---
-2.49.0.987.g0cc8ee98dc-goog
+-- 
+Fan Ni
