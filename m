@@ -1,178 +1,172 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DD211C6FF5;
-	Wed,  7 May 2025 10:01:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C431A72607;
+	Wed,  7 May 2025 10:03:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746612096; cv=none; b=AQvO1KNH8GCrM1cd67pzYNGB13ZNsHTHkOrJUIsZ5Ltz6LKSDZahLz5I1+soNzzAL021zrbNoWG6fwz+wDaRfnkTkG6cDP+usKUIDDsu0s9wQdrbn00gNAm5KuiKf81mtvCo6LjHBtMZWnXC20ueJ/une43YQyQeCqYY4yOogf8=
+	t=1746612201; cv=none; b=Cr5XopGov7cQPg/iiUs3EyvL5FVnJnT9f2gL0fSh81HaW5X3eyZkzLR/MlT1IcgxT3waZzVfy3zSSqBXl7TyZuDq8vPo1JyIAGoTt+HIbXLBr4wrkG9f0yXto+6ohjFnM2jVukHKDSbfl72D+brMfrnrAnuEj3K/JE6+P6ADAkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746612096; c=relaxed/simple;
-	bh=mGf1AsLPf5v5y8NvTo2qOGgB267TYsDCzDgn89qfu7U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QbLcVNwpShPdR2tF49xAICJU/Me6PgjsDUjjEJgYngtEn+eEid/8A8ldN3BOhjz4+OHd8/VGT8rfjG6x6ZTXgZL6NTNS+D6mSZGI9VhZ36CybuAS6l2TA7UtN5FXAWD40OBIwgwEAAU81yiZB5e+rWpNqZQuTmQiKiXb8rrsclI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ItXBZxzL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746612201; c=relaxed/simple;
+	bh=Vja99RwKaWd86Bne8CVxoLF7hXa1qZ2hU2qWEbh3rTM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DKQjl73VUtcdy/gDxY97kEQXJoTVQJppdcPqWx0lcH9sGa4bobIXds+8ds+7z+RxbM2blH37UJOe+10iPbQJpTHKfu/OzbilomBo9LyDjI1IyrkQYuAa8/GAElcvTs+YZajS5OmsuXmefuGPEMYmqu++fLxseAE8fv9SvrkEAm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qiYVkYgs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ItXBZxzL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C6ADC4CEEE;
-	Wed,  7 May 2025 10:01:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qiYVkYgs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44473C4CEEB;
+	Wed,  7 May 2025 10:03:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746612095;
-	bh=mGf1AsLPf5v5y8NvTo2qOGgB267TYsDCzDgn89qfu7U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ItXBZxzLez3WffVEhLRjWkb0m1A7x4XxacKIgzrvtNvY5q3euBOrXn+CDEm5vW6Zt
-	 rpw0Wf7x5Eb6++2SG/3J8w/3NiaHLUIuR0vBjUx7NyJ0ABD8Pek+EGk9BqJheoHBLd
-	 FeBZCGP7cYpLFmZB77J7TVaCJPooT5PfUYRaWZ8JNp+5g8AdTtCupCgh0FftyeMjrQ
-	 DhgCKhflKdb0nqC8AyPQ5DUE6CgCWvoroD5nBZSoRjARQ85KCyauh7tpt4/RSJaCYr
-	 P/D7XabeNq/owsOqZnDK3HaOJK/7UNC6R5+Q44EwDFwvKcxOOElu3feCg1vOiS2Mhi
-	 Nf6eyEvSg99tw==
-Date: Wed, 7 May 2025 12:01:28 +0200
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-To: Marc Zyngier <maz@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Sascha Bischoff <sascha.bischoff@arm.com>,
-	Timothy Hayes <timothy.hayes@arm.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 00/25] Arm GICv5: Host driver implementation
-Message-ID: <aBsveM5PqbZ9Jq4f@lpieralisi>
-References: <20250506-gicv5-host-v3-0-6edd5a92fd09@kernel.org>
- <86frhhhm18.wl-maz@kernel.org>
- <aBsRvOzse7z39dkh@lpieralisi>
- <86bjs4hjmv.wl-maz@kernel.org>
+	s=k20201202; t=1746612201;
+	bh=Vja99RwKaWd86Bne8CVxoLF7hXa1qZ2hU2qWEbh3rTM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=qiYVkYgsZJk1ojH2gUT0LuMkPaET6AsYf/tKwE/0NkUB43kU6qBoxjNwN00fGIvxT
+	 BDsNWC76g4TZw8L/HgeNyguw1F5vnOrFHOquk+1x5scGvDlx+PLRojlR8fOFLRl9uj
+	 ITq1FNep+ghls2iq7ojFYqD2EXPqBsM7FRADhnmYjdVhDUGkAZYamO1q9qXk+caIdL
+	 ZiCampwGUpIpbncLJsUrNJxgSQSIfFspt+5Goztwy8f6tbF65j8EMsSWXsanfyzP6Z
+	 iSN47YE511HkrBnFBRnmyccIxXsrYVO8w6j67aBFIRdmkxxATlvW8NjoIpF3+4d5ry
+	 6IP5gkty3xcIA==
+Message-ID: <574a67b7-bd57-4cf4-9ecb-cdcefafeb791@kernel.org>
+Date: Wed, 7 May 2025 12:03:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <86bjs4hjmv.wl-maz@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 2/6] dt-bindings: PCI: qcom,pcie-sa8775p: document
+ qcs8300
+To: Qiang Yu <quic_qianyu@quicinc.com>,
+ Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+Cc: vkoul@kernel.org, kishon@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, dmitry.baryshkov@linaro.org, neil.armstrong@linaro.org,
+ abel.vesa@linaro.org, manivannan.sadhasivam@linaro.org,
+ lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
+ andersson@kernel.org, konradybcio@kernel.org, linux-phy@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+ quic_krichai@quicinc.com, quic_vbadigan@quicinc.com
+References: <20250507031019.4080541-1-quic_ziyuzhan@quicinc.com>
+ <20250507031019.4080541-3-quic_ziyuzhan@quicinc.com>
+ <20250507-quixotic-handsome-wallaby-4560e3@kuoka>
+ <8fef4573-0527-44d8-a481-f3271d9ffa33@quicinc.com>
+ <01b06e36-823c-4f28-8db5-dc0ee0b4c063@kernel.org>
+ <c91c5357-464b-4ecc-96a5-c617048f73e5@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <c91c5357-464b-4ecc-96a5-c617048f73e5@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 07, 2025 at 10:09:44AM +0100, Marc Zyngier wrote:
-> On Wed, 07 May 2025 08:54:36 +0100,
-> Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
-> > 
-> > On Tue, May 06, 2025 at 03:05:39PM +0100, Marc Zyngier wrote:
-> > > On Tue, 06 May 2025 13:23:29 +0100,
-> > > Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
-> > > > 
-> > > > =============
-> > > > 2.5 GICv5 IWB
-> > > > =============
-> > > > 
-> > > > The IWB driver has been dropped owing to issues encountered with
-> > > > core code DOMAIN_BUS_WIRED_TO_MSI bus token handling:
-> > > > 
-> > > > https://lore.kernel.org/lkml/87tt6310hu.wl-maz@kernel.org/
-> > > 
-> > > This problem does not have much to do with DOMAIN_BUS_WIRED_TO_MSI.
-> > > 
-> > > The issues are that:
-> > > 
-> > > - the core code calls into the .prepare domain on a per-interrupt
-> > >   basis instead of on a per *device* basis. This is a complete
-> > >   violation of the MSI API, because .prepare is when you are supposed
-> > >   to perform resource reservation (in the GICv3 parlance, that's ITT
-> > >   allocation + MAPD command).
-> > > 
-> > > - the same function calls .prepare for a *single* interrupt,
-> > >   effectively telling the irqchip "my device has only one interrupt".
-> > >   Because I'm super generous (and don't like wasting precious bytes),
-> > >   I allocate 32 LPIs at the minimum. Only snag is that I could do with
-> > >   300+ interrupts, and calling repeatedly doesn't help at all, since
-> > >   we cannot *grow* an ITT.
-> > 
-> > On the IWB driver code that I could not post I noticed that it is
-> > true that the .prepare callback is called on a per-interrupt basis
-> > but the vector size is the domain size (ie number of wires) which
-> > is correct AFAICS, so the ITT size should be fine I don't get why
-> > it would need to grow.
+On 07/05/2025 11:56, Qiang Yu wrote:
 > 
-> Look again. The only reason you are getting something that *looks*
-> correct is that its_pmsi_prepare() has this nugget:
+> On 5/7/2025 4:25 PM, Krzysztof Kozlowski wrote:
+>> On 07/05/2025 10:19, Ziyue Zhang wrote:
+>>> On 5/7/2025 1:10 PM, Krzysztof Kozlowski wrote:
+>>>> On Wed, May 07, 2025 at 11:10:15AM GMT, Ziyue Zhang wrote:
+>>>>> Add compatible for qcs8300 platform, with sa8775p as the fallback.
+>>>>>
+>>>>> Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+>>>>> ---
+>>>>>    .../bindings/pci/qcom,pcie-sa8775p.yaml       | 26 ++++++++++++++-----
+>>>>>    1 file changed, 19 insertions(+), 7 deletions(-)
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml
+>>>>> index efde49d1bef8..154bb60be402 100644
+>>>>> --- a/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml
+>>>>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml
+>>>>> @@ -16,7 +16,12 @@ description:
+>>>>>    
+>>>>>    properties:
+>>>>>      compatible:
+>>>>> -    const: qcom,pcie-sa8775p
+>>>>> +    oneOf:
+>>>>> +      - const: qcom,pcie-sa8775p
+>>>>> +      - items:
+>>>>> +          - enum:
+>>>>> +              - qcom,pcie-qcs8300
+>>>>> +          - const: qcom,pcie-sa8775p
+>>>>>    
+>>>>>      reg:
+>>>>>        minItems: 6
+>>>>> @@ -45,7 +50,7 @@ properties:
+>>>>>    
+>>>>>      interrupts:
+>>>>>        minItems: 8
+>>>>> -    maxItems: 8
+>>>>> +    maxItems: 9
+>>>> I don't understand why this is flexible for sa8775p. I assume this
+>>>> wasn't tested or finished, just like your previous patch suggested.
+>>>>
+>>>> Please send complete bindings once you finish them or explain what
+>>>> exactly changed in the meantime.
+>>>>
+>>>> Best regards,
+>>>> Krzysztof
+>>> Hi Krzysztof
+>>> Global interrupt is optional in the PCIe driver. It is not present in
+>>> the SA8775p PCIe device tree node, but it is required for the QCS8300
+>> And hardware?
 > 
-> 	/* Allocate at least 32 MSIs, and always as a power of 2 */
-> 	nvec = max_t(int, 32, roundup_pow_of_two(nvec));
+> The PCIe controller on the SA8775p is also capable of generating a global
+> interrupt.
+>>> I did the DTBs and yaml checks before pushing this patch. This is how
+>>> I became aware that `maxItem` needed to be changed to 9.
+>> If it is required for QCS8300, then you are supposed to make it required
+>> in the binding for this device. Look at other bindings.
 > 
-> and that the IWB is, conveniently, in sets of 32. However, the caller
-> of this function (__msi_domain_alloc_irqs()) passes a  nvec value that
-> is always exactly *1* when allocating an interrupt.
+> The global interrupt is not mandatory. The PCIe driver can still function
+> without this interrupt, but it will offer a better user experience when
+> the device is plugged in or removed. On other platforms, the global
+> interrupt is also optional, and `minItems` and `maxItems` are set to 8 and
+> 9 respectively. Please refer to `qcom,pcie - sm8550.yaml`,
+> `qcom,pcie - sm8450.yaml`, and `qcom,pcie - x1e80100.yaml`.
+I don't know what does it prove. You cannot add requirement of global
+interrupt to existing devices because it would be an ABI break.
 
-nvec is one but this does not work for the reason above, it works
-because of AFAICS (for the IWB set-up I have):
-
-	msi_info = msi_get_domain_info(domain);
-	if (msi_info->hwsize > nvec)
-		nvec = msi_info->hwsize;
-
-> 
-> So you're just lucky that I picked a minimum ITT size that matches the
-> IWB on your model.
-
-Not really, we test with wires above 32, we end up calling .prepare()
-with the precise number of wires, don't know why that does not work for
-the MBIgen (possibly because the interrupt-controller platform devices
-are children of the "main" MBIgen platform device ? The IWB one is created
-by OF code, MBIgen has to create children, maybe that's what is
-going wrong with the device/domain hierarchy ?).
-
-> Configure your IWB to be, let's say, 256 interrupts and use the last
-> one, and you'll have a very different behaviour.
-
-See above.
-
-> > The difference with this series is that on v3 LPIs are allocated
-> > on .prepare(), we allocate them on .alloc().
-> 
-> Absolutely not. Even on v3, we never allocate LPIs in .prepare(). We
-> allocate the ITT, perform the MAPD, and that's it. That's why it's
-> called *prepare*.
-
-I supposed that's what its_lpi_alloc() does in its_create_device() but
-OK, won't mention that any further.
-
-> > So yes, calling .prepare on a per-interrupt basis looks like a bug
-> > but if we allow reusing a deviceID (ie the "shared" thingy) it could
-> > be harmless.
-> 
-> Harmless? No. It is really *bad*. It means you lose any sort of sane
-> tracking of what owns the ITT and how you can free things. Seeing a
-> devid twice is the admission that we have no idea of what is going on.
-> 
-> GICv3 is already in that sorry state, but I am hopeful that GICv5 can
-> be a bit less crap.
-
-Well, GICv5 will have to cope with designs, hopefully deviceIDs sharing
-is a thing of the past I am not eulogizing the concept :)
-
-> > > So this code needs to be taken to the backyard and beaten into shape
-> > > before we can make use of it. My D05 (with its collection of MBIGENs)
-> > > only works by accident at the moment, as I found out yesterday, and
-> > > GICv5 IWB is in the same boat, since it reuses the msi-parent thing,
-> > > and therefore the same heuristic.
-> > > 
-> > > I guess not having the IWB immediately isn't too big a deal, but I
-> > > really didn't expect to find this...
-> > 
-> > To be honest, it was expected. We found these snags while designing
-> > the code (that explains how IWB was structured in v1 - by the way)
-> > but we didn't know if the behaviour above was by construction, we
-> > always thought "we must be making a mistake".
-> 
-> Then why didn't you report it? We could have caught this very early
-> on, before the fscked-up code was in a stable release...
-
-We spotted it late March - planned to discuss the IWB design while
-reviewing v5.
-
-Thanks,
-Lorenzo
+Best regards,
+Krzysztof
