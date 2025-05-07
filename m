@@ -1,140 +1,107 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B5F76FC5;
-	Wed,  7 May 2025 11:30:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66E1D1553AA
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 11:31:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746617449; cv=none; b=Pa6KQAfW1qa3ezgx6yCr11ckmsTes7iUFarrOVCa1elJiKPqnDfQ0br6Rt8l2LKs9lLhm9gOrSUGMu+446pGtGzKiUCNf2WCXx0s8Ej6xKhMuhhQAbGqLwTff/jhuboCCXZfYOsek00P4r7iS0bCvppUSPFhJ+QsyR+fZH2zd3s=
+	t=1746617487; cv=none; b=Hsi586o75HOSxzmAB/IOld58S+DrPqq1F5jNevvmcZJ5VHZ5GFkgcG11FODcIEKw29Nd2X8PCYBe8gPYOoNFuW/Rl8VRDGmawPQ7GE7h2C3r63UmTYsh2Bjaj4U+FS5mPE2GCb/zDZyLbKMXYIprtTQ3aX85ncee2SeYcoYzrcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746617449; c=relaxed/simple;
-	bh=BT5flKrqdULW+U+spcOhTaxlNK6ECqi3PjYzjthRMyM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BENMtcagZ1fW5Et6iUtDbhVVd1Pui0ltCc2xbSwNNihCYB4Dy5LXtgE9SLtr9SyZZBzYC3yLZhCc79qTDZggX003PxcUrGyHswUiO9N9TfabRsRxZUC+yXeHfwYM7II4v47SAj1aAl1BDv/LoeSFW+E3birFCtfRfNhXEcDCpJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=bPXDLx8j; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1746617487; c=relaxed/simple;
+	bh=pEwgZPRHQzwFzvyDIQXsfWgDoSet2K+lRqvl3iPcKfk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nNvlACXCSDxO9kri8scFNa2dXONlPtdeO39CRl0GnAqQOTQHBURQ8dqals9JyDcC7XQEkf+PjyAt2WHHGvDzNbQptnrSxEn3Z9yOnGEt68uR0C0IS/nN2wID90kx8PvcfuGQACPQF5dacnfX8PCx/Y4NWdcoXZ/wdOlGdPeLFgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EhjVA1Xa; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="bPXDLx8j"
-Received: from [100.79.218.35] (unknown [4.194.122.170])
-	by linux.microsoft.com (Postfix) with ESMTPSA id E944E21180CA;
-	Wed,  7 May 2025 04:21:52 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E944E21180CA
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1746616916;
-	bh=YqDRKtZG+1qSllTV6hrI3N5y77O1WF8OhkPzBs8Ho3A=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=bPXDLx8jx7FJJIDSCZ7NsGBFopGHWZmbDslW+Q7oSJR9Gro2OQosggYFSZ7uNaIcr
-	 KeG8tJHb2PO6dKajP7Lxseu72h6RVyd0Z95E24sQNYIxXep4bSdskBlDXbj9eYpVgj
-	 Jci8uIVErP+W+D1/HJJIvNN0Gl38fMCUW83SRRcE=
-Message-ID: <be04a26f-866d-43e6-9a0b-15b91405503e@linux.microsoft.com>
-Date: Wed, 7 May 2025 16:51:50 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EhjVA1Xa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746617486; x=1778153486;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=pEwgZPRHQzwFzvyDIQXsfWgDoSet2K+lRqvl3iPcKfk=;
+  b=EhjVA1XaybqJVQdVH6eLqFve8WXVdw2UxBe24feCQT/Oins/3nIX85t3
+   /vcfgEguLVAWFs0lwmFM6GuMiJReyeLStJI/OVFZpsTM5ANksopQ6gwQy
+   QUgaHu554tvdhsnGZaxtmsaISfqJUfw2QYGgEBmjtgzt1o/rWNmFa7RdN
+   dAKQizF8rB+QjnqNvA8GcagRbmyw3bwma9pDxPLAMS44+MSya3Tk1CxZr
+   zIA8G+v4b/vKs4OEQk5Hk8XpPADWS231WqNv9PO5p3PLMWNIaWfGbXAmA
+   cgAUpHPiCzWOV1lioWprLgJxw3iy/mdTq3QnXE6XzvQTaZHEfDfxG6c7e
+   w==;
+X-CSE-ConnectionGUID: w5QplIrbQ5qZyoNKS55vFA==
+X-CSE-MsgGUID: vEfYImQcSpG90EhjfvDmGA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11425"; a="35973087"
+X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
+   d="scan'208";a="35973087"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 04:31:25 -0700
+X-CSE-ConnectionGUID: xsKlk5JLSEe3fBwSNq1BSA==
+X-CSE-MsgGUID: Yv86otj+TK+6vB0Yraph5w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
+   d="scan'208";a="140675466"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa003.jf.intel.com with ESMTP; 07 May 2025 04:31:21 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 619061BC; Wed, 07 May 2025 14:31:19 +0300 (EEST)
+Date: Wed, 7 May 2025 14:31:19 +0300
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: vbabka@suse.cz, surenb@google.com, mhocko@suse.com, 
+	jackmanb@google.com, hannes@cmpxchg.org, bp@alien8.de, tglx@linutronix.de, 
+	david@redhat.com, ast@kernel.org, linux-mm@kvack.org, linux-coco@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] mm/page_alloc: Ensure try_alloc_pages() plays well
+ with unaccepted memory
+Message-ID: <pvznson4tlwz4tavawlcotqouooemysjlv46mclo4hs3hyr43d@ek4cav7m4nrp>
+References: <20250506112509.905147-1-kirill.shutemov@linux.intel.com>
+ <20250506112509.905147-2-kirill.shutemov@linux.intel.com>
+ <20250506170034.2c6cb08808e60772c207233f@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Drivers: hv: Introduce mshv_vtl driver
-To: Saurabh Singh Sengar <ssengar@microsoft.com>,
- KY Srinivasan <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
- Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>
-Cc: Roman Kisel <romank@linux.microsoft.com>,
- Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
- Saurabh Sengar <ssengar@linux.microsoft.com>,
- Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
- Nuno Das Neves <nunodasneves@linux.microsoft.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-References: <20250506084937.624680-1-namjain@linux.microsoft.com>
- <KUZP153MB1444BE7FD66EA9CA9B4B9A97BE88A@KUZP153MB1444.APCP153.PROD.OUTLOOK.COM>
-Content-Language: en-US
-From: Naman Jain <namjain@linux.microsoft.com>
-In-Reply-To: <KUZP153MB1444BE7FD66EA9CA9B4B9A97BE88A@KUZP153MB1444.APCP153.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250506170034.2c6cb08808e60772c207233f@linux-foundation.org>
 
-
-
-On 5/7/2025 3:49 PM, Saurabh Singh Sengar wrote:
->> Provide an interface for Virtual Machine Monitor like OpenVMM and its
->> use as OpenHCL paravisor to control VTL0 (Virtual trust Level).
->> Expose devices and support IOCTLs for features like VTL creation,
->> VTL0 memory management, context switch, making hypercalls,
->> mapping VTL0 address space to VTL2 userspace, getting new VMBus
->> messages and channel events in VTL2 etc.
->>
->> Co-developed-by: Roman Kisel <romank@linux.microsoft.com>
->> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
->> Co-developed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
->> Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
->> Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
->> ---
->>
->> OpenVMM :
->> https://nam06.safelinks.protection.outlook.com/?url=https%3A%2F%2Fopenv
->> mm.dev%2Fguide%2F&data=05%7C02%7Cssengar%40microsoft.com%7Ce3b
->> 0a61c2c72423aa33408dd8c7af2e9%7C72f988bf86f141af91ab2d7cd011db47%
->> 7C1%7C0%7C638821181946438191%7CUnknown%7CTWFpbGZsb3d8eyJFbXB
->> 0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFp
->> bCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=uYUgaqKTazf0BL8ukdeUEor
->> d9hN8NidMLwE19NdprlE%3D&reserved=0
->>
->> ---
-
-<snip>
-
->> +		return -EINVAL;
->> +	if (copy_from_user(payload, (void __user *)message.payload_ptr,
->> +			   message.payload_size))
->> +		return -EFAULT;
->> +
->> +	return hv_post_message((union
+On Tue, May 06, 2025 at 05:00:34PM -0700, Andrew Morton wrote:
+> On Tue,  6 May 2025 14:25:08 +0300 "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com> wrote:
 > 
-> This function definition is in separate file which can be build as independent module, this will cause
-> problem while linking . Try building with CONFIG_HYPERV=m and check.
+> > try_alloc_pages() will not attempt to allocate memory if the system has
+> > *any* unaccepted memory. Memory is accepted as needed and can remain in
+> > the system indefinitely, causing the interface to always fail.
+> > 
+> > Rather than immediately giving up, attempt to use already accepted
+> > memory on free lists.
+> > 
+> > Pass 'alloc_flags' to cond_accept_memory() and do not accept new memory
+> > for ALLOC_TRYLOCK requests.
 > 
-> - Saurabh
+> What are the userspace-visible effects, please?
 
-Thanks for reviewing Saurabh. As CONFIG_HYPERV can be set to 'm'
-and CONFIG_MSHV_VTL depends on it, changing CONFIG_MSHV_VTL to tristate
-and a few tweaks in Makefile will fix this issue. This will ensure that
-mshv_vtl is also built as a module when hyperv is built as a module.
+I cannot say I fully understand the implications.
 
-I'll take care of this in next version.
+The interface obviously allows failure, but the caller might expect
+eventual success on retry.
 
-here is the diff for reference:
-diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
-index 57dcfcb69b88..c7f21b483377 100644
---- a/drivers/hv/Kconfig
-+++ b/drivers/hv/Kconfig
-@@ -73,7 +73,7 @@ config MSHV_ROOT
-           If unsure, say N.
+So far, only BPF uses the interface. Maybe Alexei can comment on what will
+happen if the function always fails.
 
-  config MSHV_VTL
--       bool "Microsoft Hyper-V VTL driver"
-+       tristate "Microsoft Hyper-V VTL driver"
-         depends on HYPERV && X86_64
-         depends on TRANSPARENT_HUGEPAGE
-         depends on OF
-diff --git a/drivers/hv/Makefile b/drivers/hv/Makefile
-index 5e785dae08cc..c53a0df746b7 100644
---- a/drivers/hv/Makefile
-+++ b/drivers/hv/Makefile
-@@ -15,9 +15,11 @@ hv_vmbus-$(CONFIG_HYPERV_TESTING)    += hv_debugfs.o
-  hv_utils-y := hv_util.o hv_kvp.o hv_snapshot.o hv_utils_transport.o
-  mshv_root-y := mshv_root_main.o mshv_synic.o mshv_eventfd.o mshv_irq.o \
-                mshv_root_hv_call.o mshv_portid_table.o
-+mshv_vtl-y := mshv_vtl_main.o
+I noticed the issue by code analysis because the second patch removes
+has_unaccepted_memory().
 
-  # Code that must be built-in
-  obj-$(subst m,y,$(CONFIG_HYPERV)) += hv_common.o
--obj-$(subst m,y,$(CONFIG_MSHV_ROOT)) += hv_proc.o mshv_common.o
--
--mshv_vtl-y := mshv_vtl_main.o mshv_common.o
-+obj-$(subst m,y,$(CONFIG_MSHV_ROOT)) += hv_proc.o
-+ifneq ($(CONFIG_MSHV_ROOT) $(CONFIG_MSHV_VTL),)
-+    obj-y += mshv_common.o
-+endif
+> Was the omission of cc:stable intentional?  I cannot locally determine
+> this without the above info.
+> 
+> If the cc:stable omission was indeed intentional then it would be better
+> if this series was presented as two standalone patches.
 
-Regards,
-Naman
+Given that the second patch cannot be applied to current Linus' tree
+without this one, it is better to add stable@.
+
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
