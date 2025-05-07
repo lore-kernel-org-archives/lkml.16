@@ -1,148 +1,107 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 348D1289829;
-	Wed,  7 May 2025 13:44:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F27E7289E12;
+	Wed,  7 May 2025 13:44:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746625452; cv=none; b=ITbulZcXZBNDHU9KV3T0kBT9NxBlaFlmZxqJMZARWOTCU5bBlFburcauWLoczey6XWy+Yu+mkQnM8LGfpWGdqzmNEOWIzZ1x4vzdfhGQiB03rPbdy0meNGM5XGIA/vRTcADRJw9YKYbora7S9upE8LwbjpfZCfKB6TfAt2JMMlA=
+	t=1746625453; cv=none; b=W5GgztgUGunoG8KncOYE/wim9cYwCxoU0fiz2I0gV5+Jf/ZFprCFy84SVRPwBZyp1/C7i+o+5XkjtKNusMA79Hd3tdu9KlA4yUAj0REDsUILZwaTaq/rZRANpQ74PthBIbUSQVkEjXM7yZwaoKWpmyl5skByr7ZCuJr0W1jgqIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746625452; c=relaxed/simple;
-	bh=2u0/oCW9gEKcUkBdAZp4vn2KKFZlA35wHasQ+x3brUU=;
+	s=arc-20240116; t=1746625453; c=relaxed/simple;
+	bh=LNl4AV2GBai4uPtVa5PfE4upJ9/Vr2dXpYIi6NbwmJg=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=U4Kmc+B5ylY7WiEQvsogCdlULrlKK+kCq7cyqHTkOY+kKrX3ziAME7fUAq3+UFl1Cqq8ELZxe2sGJ7M80X82xHd7925Zh5XmMC8ur0344PSKiMI5phOukRIrOtxBoDyNXM7I7vyl6u5wWe9mtig9/OUxFTUyApVFyZNOsrl/CBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZDx/veKb; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4j15gMTk; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=kxbtayHghCvqzNdUCUpfY91RHg9LfWeMNpQfAW3PLasc/6m++whSDAiDbNNb4O/6fJjU6w+QM/naeCaL5YIV9C6L+7Wnm1OrwqWIonjkn4+vAJHJM8TrOaB9klAgYj47sK7FrdYeXovaJs1nYcJI8gMfFD3siMOI8ESJ3WCdkvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TgCDLJoM; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gs7WbrTa; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZDx/veKb";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4j15gMTk"
-Date: Wed, 07 May 2025 13:44:08 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TgCDLJoM";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gs7WbrTa"
+Date: Wed, 07 May 2025 13:44:09 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746625449;
+	s=2020; t=1746625450;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=T/Waob+t7BuQkmpXrtobaRKE3jdbfnmsISjdUz4aads=;
-	b=ZDx/veKbSn5yBPBQiDWJv5AGSzp4WY6v7aRgtTYLLBy3x1xdU/q7gzU/ArF8SGUDjdoXhq
-	rZ6Sft9upJa3g7OHkQisiizhOfbc77Gbd+JlRcS4N235jwPKiBvyufBGl7WfbbFUAS6P/J
-	7abiyWcJ7h7OaG7MecutYUqBJNo+K4DuXIu9ZszTaUCUTRD8ijtRvebW8nk5/No4mMHqgc
-	iiYPiDD7oOhSMujaN3AOxtfCbVFUvUugldknzhOqDwM5WKPFsHrnOh2rMuotM6ZbKYLIEx
-	E3gmMMj0534EL3xAEs16cnFGk3AB0WTv/EsMs9nMrNLR62InAtvT+wLgqTNBcw==
+	bh=RxgLMppyu1aYGYg8WD00WgeQaEaFdmztN1gy6brFHpk=;
+	b=TgCDLJoMNpNESwHJUwbyyokXybjpJm3Is+YH0RtWk7SQxdqNI9V0Fmna6qCl5grFOFDaQK
+	wno9ptVCVdLZAbrJ+NCylc0T5oKNAh7s03jlr+xbzRWnIQLWwxAQ+8Ivz9K8IpPyo2+WvM
+	QEEInDrqTzXvTdAE2wjSEPZEqXc4rUqQ4g8r5DJ+gZ9uQIQCh1FgvS1s8RqvcyYqhx75P3
+	ROqJn8kLcVMvL98CaPDbgPZDaObTK97IFtKkw8vjseqHqsH11afmghP+YI/1aC89HZuldR
+	wWPhBFdj0lp2wVoEhb7A6Tkt6MplSp5gmPX24Oe9B8IhU52GzBmxXPCgo7BEtw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746625449;
+	s=2020e; t=1746625450;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=T/Waob+t7BuQkmpXrtobaRKE3jdbfnmsISjdUz4aads=;
-	b=4j15gMTkCdWR9ziRoiiMTZS7v81twVbVxFG8gniWCRy8vHRpPo1gbEzVp5YfKKK6KQocw2
-	6A4ZLAKVIlpwtKDQ==
+	bh=RxgLMppyu1aYGYg8WD00WgeQaEaFdmztN1gy6brFHpk=;
+	b=gs7WbrTaagI8cPLYzK1jBwuM3zh+J5MeeZPAbKXftWwCNiGmcNgl9j1Jp+8ANZuuLxIYvJ
+	Vn5257SARg53nrBw==
 From: "tip-bot2 for Jiri Slaby (SUSE)" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/cleanups] irqdomain: Drop irq_linear_revmap()
+Subject: [tip: irq/cleanups] pinctrl: keembay: Switch to irq_find_mapping()
 Cc: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Linus Walleij <linus.walleij@linaro.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250319092951.37667-50-jirislaby@kernel.org>
-References: <20250319092951.37667-50-jirislaby@kernel.org>
+In-Reply-To: <20250319092951.37667-48-jirislaby@kernel.org>
+References: <20250319092951.37667-48-jirislaby@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174662544871.406.4567040363856903773.tip-bot2@tip-bot2>
+Message-ID: <174662544939.406.13642716952371563212.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the irq/cleanups branch of tip:
 
-Commit-ID:     4d90cc80aa1f48a01ef31a936e68dcca22430de0
-Gitweb:        https://git.kernel.org/tip/4d90cc80aa1f48a01ef31a936e68dcca224=
-30de0
+Commit-ID:     377c6a8184bd97b6ea7c6a15ea6561008d710b15
+Gitweb:        https://git.kernel.org/tip/377c6a8184bd97b6ea7c6a15ea6561008d710b15
 Author:        Jiri Slaby (SUSE) <jirislaby@kernel.org>
-AuthorDate:    Wed, 19 Mar 2025 10:29:42 +01:00
+AuthorDate:    Wed, 19 Mar 2025 10:29:40 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Wed, 07 May 2025 15:39:42 +02:00
 
-irqdomain: Drop irq_linear_revmap()
+pinctrl: keembay: Switch to irq_find_mapping()
 
-irq_linear_revmap() is deprecated and unused now. So remove it.
+irq_linear_revmap() is deprecated, so remove all its uses and supersede
+them by an identical call to irq_find_mapping().
+
+[ tglx: Fix up subject prefix ]
 
 Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/all/20250319092951.37667-50-jirislaby@kernel.org
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/all/20250319092951.37667-48-jirislaby@kernel.org
 
 
 ---
- Documentation/core-api/irq/irq-domain.rst                    | 2 --
- Documentation/translations/zh_CN/core-api/irq/irq-domain.rst | 2 --
- include/linux/irqdomain.h                                    | 6 ------
- 3 files changed, 10 deletions(-)
+ drivers/pinctrl/pinctrl-keembay.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/core-api/irq/irq-domain.rst b/Documentation/core-a=
-pi/irq/irq-domain.rst
-index 7624607..c365c3e 100644
---- a/Documentation/core-api/irq/irq-domain.rst
-+++ b/Documentation/core-api/irq/irq-domain.rst
-@@ -62,8 +62,6 @@ variety of methods:
-   mapping.
- - irq_find_mapping() returns a Linux IRQ number for a given domain and
-   hwirq number, and 0 if there was no mapping
--- irq_linear_revmap() is now identical to irq_find_mapping(), and is
--  deprecated
- - generic_handle_domain_irq() handles an interrupt described by a
-   domain and a hwirq number
-=20
-diff --git a/Documentation/translations/zh_CN/core-api/irq/irq-domain.rst b/D=
-ocumentation/translations/zh_CN/core-api/irq/irq-domain.rst
-index 913c3ed..4a2d3b2 100644
---- a/Documentation/translations/zh_CN/core-api/irq/irq-domain.rst
-+++ b/Documentation/translations/zh_CN/core-api/irq/irq-domain.rst
-@@ -60,8 +60,6 @@ irq_domain=E5=92=8C=E4=B8=80=E4=B8=AAhwirq=E5=8F=B7=E4=BD=
-=9C=E4=B8=BA=E5=8F=82=E6=95=B0=E3=80=82 =E5=A6=82=E6=9E=9Chwirq=E7=9A=84=E6=
-=98=A0=E5=B0=84=E8=BF=98=E4=B8=8D=E5=AD=98=E5=9C=A8=EF=BC=8C=EF=BF=BD
-=20
- - irq_find_mapping()=E8=BF=94=E5=9B=9E=E7=BB=99=E5=AE=9A=E5=9F=9F=E5=92=8Chw=
-irq=E7=9A=84Linux IRQ=E5=8F=B7=EF=BC=8C=E5=A6=82=E6=9E=9C=E6=B2=A1=E6=9C=89=
-=E6=98=A0=E5=B0=84=E5=88=99=E8=BF=94=E5=9B=9E0=E3=80=82
-=20
--- irq_linear_revmap()=E7=8E=B0=E4=B8=8Eirq_find_mapping()=E7=9B=B8=E5=90=8C=
-=EF=BC=8C=E5=B7=B2=E8=A2=AB=E5=BA=9F=E5=BC=83=E3=80=82
--
- - generic_handle_domain_irq()=E5=A4=84=E7=90=86=E4=B8=80=E4=B8=AA=E7=94=B1=
-=E5=9F=9F=E5=92=8Chwirq=E5=8F=B7=E6=8F=8F=E8=BF=B0=E7=9A=84=E4=B8=AD=E6=96=AD=
-=E3=80=82
-=20
- =E8=AF=B7=E6=B3=A8=E6=84=8F=EF=BC=8Cirq=E5=9F=9F=E7=9A=84=E6=9F=A5=E6=89=BE=
-=E5=BF=85=E9=A1=BB=E5=8F=91=E7=94=9F=E5=9C=A8=E4=B8=8ERCU=E8=AF=BB=E4=B8=B4=
-=E7=95=8C=E5=8C=BA=E5=85=BC=E5=AE=B9=E7=9A=84=E4=B8=8A=E4=B8=8B=E6=96=87=E4=
-=B8=AD=E3=80=82
-diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
-index 712c662..c8e55cd 100644
---- a/include/linux/irqdomain.h
-+++ b/include/linux/irqdomain.h
-@@ -492,12 +492,6 @@ static inline unsigned int irq_find_mapping(struct irq_d=
-omain *domain,
- 	return 0;
- }
-=20
--static inline unsigned int irq_linear_revmap(struct irq_domain *domain,
--					     irq_hw_number_t hwirq)
--{
--	return irq_find_mapping(domain, hwirq);
--}
--
- extern const struct irq_domain_ops irq_domain_simple_ops;
-=20
- /* stock xlate functions */
+diff --git a/drivers/pinctrl/pinctrl-keembay.c b/drivers/pinctrl/pinctrl-keembay.c
+index b693f47..0d7cc82 100644
+--- a/drivers/pinctrl/pinctrl-keembay.c
++++ b/drivers/pinctrl/pinctrl-keembay.c
+@@ -1268,7 +1268,7 @@ static void keembay_gpio_irq_handler(struct irq_desc *desc)
+ 	for_each_set_clump8(bit, clump, &reg, BITS_PER_TYPE(typeof(reg))) {
+ 		pin = clump & ~KEEMBAY_GPIO_IRQ_ENABLE;
+ 		val = keembay_read_pin(kpc->base0 + KEEMBAY_GPIO_DATA_IN, pin);
+-		kmb_irq = irq_linear_revmap(gc->irq.domain, pin);
++		kmb_irq = irq_find_mapping(gc->irq.domain, pin);
+ 
+ 		/* Checks if the interrupt is enabled */
+ 		if (val && (clump & KEEMBAY_GPIO_IRQ_ENABLE))
