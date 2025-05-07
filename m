@@ -1,65 +1,32 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5129128A1C6
-	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 15:07:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97E45145B16;
+	Wed,  7 May 2025 15:08:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746630439; cv=none; b=fA5V2ct5W1l0FAjmKWR00l5RRtWleIOPiBqy8QgAWbiyxqYUuJDNgI68YUzbFj9nFJ1cgam/2OHGbbmh6wAvDDe1puEFkx6/5WzHP1PV1HH4pqRF0fAXzw+5TgRncGPSfmN/WYTEizAW8/kOQ2UCEzoBI9+UceOlZKn+4bD1p4w=
+	t=1746630503; cv=none; b=AGhz6JL5R97uiJFPukLS2407T/zcMMWwVwsY2ENXdcJfwvZnMQGF+0XDMLDJ4FTXelysMu0puqMh9Ue9dM7SqQLmq/Jc96S42hUlG1VgOlFIbO6FuIWZ+LqI0vsrGjl+cVAQLjHY5Ly8AcjJ02ehvmZoHOrpEAr5Y13P+SNKvwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746630439; c=relaxed/simple;
-	bh=pz8ye5e7M9XObP3UChOTHfnACy3PA0Ye6tCjNjm3k0w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=E7BcRu7RSPtwJyQ/hi1lIJghIG9OSZG0cFXkv7Q1y0HUo1Bw2aAuOKsjP2XOyuK3LUuC+EaseVPNnbndJ+qOYfUBf12VwqgLMxr3g6aYlBhnDAaQLfFDMRp6US2I91nIGqYoCFS6rfZdo9v3gwrt4mKNMHr3qA3m+AF2mDwMO1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IhPIAGv+; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746630503; c=relaxed/simple;
+	bh=/NP8NIpxXJrdui+MUQVIE2toGmOABlmT8JV0+yPW2TU=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=IgcgpGIaubqJyAgRKR5qgOvFgrIISowq/ep3GCgMFEH8tD0Rdz2PZpmCTuSr949+/L0CNQLxYDR0D3FSb5VJj18AqMiqfeCd6A8Ohe9a0ePQnTM2h0dhlJGM3VNXg4aOdKArogaiTGMT+1lZzB33sQ9bCcniV0Y/zZ1KiOGIw5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=iZbyWhy0; arc=none smtp.client-ip=220.197.31.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IhPIAGv+"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-442ccf0e1b3so2843465e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 08:07:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746630434; x=1747235234; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=c0SsKd1Kg0MlyI8m8KzDXP/8dIexMnrpuvni7IgTwUM=;
-        b=IhPIAGv+BadjeIGmE9UfOxWFUkWWVew1DM+20lDkEAPyw3bPsgAJfHPxdVoWUSxdrZ
-         1+JvoTl+WdxMeZtbjCcWLAgldPnfORMZRGmk9VVPzfRI4+HM5+o8uopsh1QptYe0EXYH
-         URwlTiNVsWkZmQ+jeA/VeM8bMWBt6RmwOy0o/LGslUGEDOJnhbsrsh+w1JHiB/NfAmiO
-         cb1KKERXfe2WOxvU8sIF3BknVc/F6V/+Ui76l2yfmZCdOusXC1fEO0fhrvoRZJQOvamC
-         qlLOCbkTNsms/P19BVxtFCfkNqttMzy3iPoXyukpTDW4cH70OQeESqe5mI9NbjnCBGJZ
-         6r2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746630434; x=1747235234;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=c0SsKd1Kg0MlyI8m8KzDXP/8dIexMnrpuvni7IgTwUM=;
-        b=jLCw0vAv4LCaSQgpHSoD0LlyLvWqre94AUzL2FZoOmX+PAbyC4B9l+2wHRriFn/tym
-         nNi8dbcr8O5gzUUoX+xpAPBeKhdY6T0j+0q0WxgJHLXE6/wH1+dT6RsZ7Bt+oxK1zn7i
-         sNucgVms3ksl9Veh+2bI2nIEdMlkLbmwTo2qa3BkaacQnTte7J8XjpSLkzFTvVp+fgND
-         sgOWH5ZsvPBrWaryGbBChgfHojYSj9ygoKZhphSJ6+Onh8YFpGM/2lG/JGle0S5HSG7H
-         w05hNX6UiO/IDD16F6T9cCfNzuHztHl+atgzw/9MgNfOV5/M/JPDbXOUj1eFB+PZcdOz
-         YFrA==
-X-Forwarded-Encrypted: i=1; AJvYcCVZ5OiiaB0YM0KsS3EmDmmtlzYv3G+tszsEHRNianO3xHanFSOV4GrB+wGbtQsY1kZp+sm7UVbrUn3bq04=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwSIYorJywtEJyZSyJJ7qfc1zr/OZ78FaM+8S8hKIp4Mb26ZxeL
-	tzBabaALQ09sTR1AJbasL/hNNx8J3hxUq7tdITaM28OTSjjU4FfhhwHBqk7Jeko=
-X-Gm-Gg: ASbGnctp2AP2EEekxhYtZuZI04/yl2OGcQtW4ki9QF+AowUzA9DVsA7AssHv6zYoMUf
-	sffAV2tW/+nEc2EglL9PnyheSl8DyIaYBvFUp0zGZ92Z5A8sszAgW5nFQK2ianHpXKIm2hHJHBm
-	mdMlAhQ/RB/u5rHaL1oEywaSMuWb1eaFEwlCuA5ML4z5ORQq9ExLu4JX2FLG2oSVLbis4dOarfs
-	k2h4vZp0g2IptmevaV+miAkn3c4/TAnYFx21ltYAXr6d9InvjWcR+FesRLtyc3PVhEtukDwHSme
-	2V0E8/39o9QrtDCIjQ5OQl1pzaMWIAGx79sTp1HQinn1mKeLCvBFaPmb2KpuN8FMnGrDtFcLHXr
-	D5DH6Sg==
-X-Google-Smtp-Source: AGHT+IFe/RN371zSOT3geyllQKE/3rmj0Va8MGOVysneZBCiRZTbhKgyS/SuJAtLvsGkoEeFtxE4JQ==
-X-Received: by 2002:a05:600c:1384:b0:43d:b32:40aa with SMTP id 5b1f17b1804b1-441d44bc67dmr36585625e9.3.1746630434334;
-        Wed, 07 May 2025 08:07:14 -0700 (PDT)
-Received: from [192.168.0.34] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099ae7caasm17416290f8f.54.2025.05.07.08.07.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 07 May 2025 08:07:13 -0700 (PDT)
-Message-ID: <dae06ff6-afd9-46a4-bd37-25bb367ba545@linaro.org>
-Date: Wed, 7 May 2025 16:07:12 +0100
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="iZbyWhy0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=Aak4bhl7i7wNtq2KK490ptM/CCcwRR/GDiQ+3JaJM8M=;
+	b=iZbyWhy0qCtoFQqwnzANJzhS41G7lBZ5OIu7giRsfv1/lfwgSi+kogsMPKGqIb
+	zwUNGs4RUA+qijCGO+txyFwzDZ2kF+N2oP51+PWl7EwSVAyUYQZAtgO+546rhhnP
+	sp0M+yLFIqxzMr7/JAu+5zujfjYUUBX0qS4X/41Mjs9L4=
+Received: from [192.168.71.93] (unknown [])
+	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wCXGekLdxto_mATFA--.15890S2;
+	Wed, 07 May 2025 23:06:52 +0800 (CST)
+Message-ID: <ff6abbf6-e464-4929-96e6-16e43c62db06@163.com>
+Date: Wed, 7 May 2025 23:06:51 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,45 +34,107 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 01/25] media: iris: Skip destroying internal buffer if
- not dequeued
-To: Dikshita Agarwal <quic_dikshita@quicinc.com>,
- Vikash Garodia <quic_vgarodia@quicinc.com>,
- Abhinav Kumar <quic_abhinavk@quicinc.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil
- <hverkuil@xs4all.nl>, Stefan Schmidt <stefan.schmidt@linaro.org>
-Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- Neil Armstrong <neil.armstrong@linaro.org>,
- Nicolas Dufresne <nicolas.dufresne@collabora.com>,
- Dan Carpenter <dan.carpenter@linaro.org>, stable@vger.kernel.org
-References: <20250507-video-iris-hevc-vp9-v4-0-58db3660ac61@quicinc.com>
- <20250507-video-iris-hevc-vp9-v4-1-58db3660ac61@quicinc.com>
+Subject: Re: [PATCH v3 3/3] PCI: aardvark: Remove redundant MPS configuration
+From: Hans Zhang <18255117159@163.com>
+To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
+Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
+ heiko@sntech.de, manivannan.sadhasivam@linaro.org, yue.wang@Amlogic.com,
+ neil.armstrong@linaro.org, robh@kernel.org, jingoohan1@gmail.com,
+ khilman@baylibre.com, jbrunet@baylibre.com,
+ martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-amlogic@lists.infradead.org, linux-rockchip@lists.infradead.org
+References: <20250506173439.292460-1-18255117159@163.com>
+ <20250506173439.292460-4-18255117159@163.com>
+ <20250506174110.63ayeqc4scmwjj6e@pali>
+ <8a6adc24-5f40-4f22-9842-b211e1ef5008@163.com>
 Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <20250507-video-iris-hevc-vp9-v4-1-58db3660ac61@quicinc.com>
+In-Reply-To: <8a6adc24-5f40-4f22-9842-b211e1ef5008@163.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wCXGekLdxto_mATFA--.15890S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxJw1DZw1xCw45tw43Cw43Awb_yoW5Ary8pF
+	W3XF4rAFWaqr15C3W7Xa1vgryYgasFkFy5W398G343AF9Igw1UGFy2kF4rua47Jr4IkF4j
+	vry3t3ySv3WYyaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UBSoXUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDx9Go2gbdD5DvQABsz
 
-On 07/05/2025 08:39, Dikshita Agarwal wrote:
-> Firmware might hold the DPB buffers for reference in case of sequence
-> change, so skip destroying buffers for which QUEUED flag is not removed.
-> Also, make sure that all buffers are released during streamoff.
+
+
+On 2025/5/7 23:03, Hans Zhang wrote:
 > 
-> Cc: stable@vger.kernel.org
-> Fixes: 73702f45db81 ("media: iris: allocate, initialize and queue internal buffers")
-> Reviewed-by: Vikash Garodia <quic_vgarodia@quicinc.com>
-> Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
+> 
+> On 2025/5/7 01:41, Pali Rohár wrote:
+>> On Wednesday 07 May 2025 01:34:39 Hans Zhang wrote:
+>>> The Aardvark PCIe controller enforces a fixed 512B payload size via
+>>> PCI_EXP_DEVCTL_PAYLOAD_512B, overriding hardware capabilities and PCIe
+>>> core negotiations.
+>>>
+>>> Remove explicit MPS overrides (PCI_EXP_DEVCTL_PAYLOAD and
+>>> PCI_EXP_DEVCTL_PAYLOAD_512B). MPS is now determined by the PCI core
+>>> during device initialization, leveraging root port configurations and
+>>> device-specific capabilities.
+>>>
+>>> Aligning Aardvark with the unified MPS framework ensures consistency,
+>>> avoids artificial constraints, and allows the hardware to operate at
+>>> its maximum supported payload size while adhering to PCIe 
+>>> specifications.
+>>>
+>>> Signed-off-by: Hans Zhang <18255117159@163.com>
+>>> ---
+>>>   drivers/pci/controller/pci-aardvark.c | 2 --
+>>>   1 file changed, 2 deletions(-)
+>>>
+>>> diff --git a/drivers/pci/controller/pci-aardvark.c 
+>>> b/drivers/pci/controller/pci-aardvark.c
+>>> index a29796cce420..d8852892994a 100644
+>>> --- a/drivers/pci/controller/pci-aardvark.c
+>>> +++ b/drivers/pci/controller/pci-aardvark.c
+>>> @@ -549,9 +549,7 @@ static void advk_pcie_setup_hw(struct advk_pcie 
+>>> *pcie)
+>>>       reg = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + PCI_EXP_DEVCTL);
+>>>       reg &= ~PCI_EXP_DEVCTL_RELAX_EN;
+>>>       reg &= ~PCI_EXP_DEVCTL_NOSNOOP_EN;
+>>> -    reg &= ~PCI_EXP_DEVCTL_PAYLOAD;
+>>>       reg &= ~PCI_EXP_DEVCTL_READRQ;
+>>> -    reg |= PCI_EXP_DEVCTL_PAYLOAD_512B;
+>>>       reg |= PCI_EXP_DEVCTL_READRQ_512B;
+>>>       advk_writel(pcie, reg, PCIE_CORE_PCIEXP_CAP + PCI_EXP_DEVCTL);
+>>> -- 
+>>> 2.25.1
+>>>
+>>
+>> Please do not remove this code. It is required part of the
+>> initialization of the aardvark PCI controller at the specific phase,
+>> as defined in the Armada 3700 Functional Specification.
+>>
+>> There were reported more issues with those Armada PCIe controllers for
+>> which were already sent patches to mailing list in last 5 years. But
+>> unfortunately not all fixes were taken / applied yet.
+> 
+> Hi Pali,
+> 
+> I replied to you in version v2.
+> 
+> Is the maximum MPS supported by Armada 3700 512 bytes? What are the 
+> default values of DevCap.MPS and DevCtl.MPS?
+> 
+> Because the default value of DevCtl.MPS is not 512 bytes, it needs to be 
+> configured here, right?
+> 
+> If it's my guess, RK3588 also has the same requirements as you, just 
+> like the first patch I submitted.
+> 
+> Please take a look at the communication history:
+> https://patchwork.kernel.org/project/linux-pci/patch/20250416151926.140202-1-18255117159@163.com/
+And this:
+https://patchwork.kernel.org/project/linux-pci/patch/20250425095708.32662-2-18255117159@163.com/
 
-I'll take your word for it on firmware respecting the software contract 
-on close() wrt to DMA - however I think you should split this patch into 
-two separate patches along the lines of the "also" in your commit log.
+> 
+> Please test it using patch 1/3 of this series. If there are any 
+> problems, please let me know.
+> 
+> 
+> Best regards,
+> Hans
 
-1. Skip destroying buffers for QUEUED flag
-2. Make sure all buffers are released during stream off
-
-These are two separate fixes IMO.
-
----
-bod
