@@ -1,137 +1,177 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fhigh-b2-smtp.messagingengine.com (fhigh-b2-smtp.messagingengine.com [202.12.124.153])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71B2F28BA9F;
-	Wed,  7 May 2025 19:04:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9678328C2B3;
+	Wed,  7 May 2025 19:05:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746644698; cv=none; b=gSBqzQ9BS6i2iBgMn6ta6RXCr/79osjVLCFoaiLHtIIBroXOlr+AmXmwv2Sr9AhfzWJuWaDfTLLLbIRGrVhwwbE1BfsApZ0OcLvanK/tHVg9kNrj2SuqA7xRET8SoCYkBjDBhNXA7amPaYJmxrH52Itlmp6T/ykRwSZucbxOcxg=
+	t=1746644715; cv=none; b=REFhWlFlFia1dw3kr9FFpgxKnQEfRnOpweuSOnWnAaOtQqzxl2ulTNul+wQjtZZaxi5yjcQhkuWRrtavjcWfXXPD47OUaebtlPETWVw847dCfUlbr+4mMM1pCzUbYaNcPw/QyKYfs+3stBcyqC+8sdi8auUyypJX6LCHfrev0lU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746644698; c=relaxed/simple;
-	bh=CRCiIABz/kFgdTeK7BF7RrV6jJF7IbV0KFOhjFLNr0o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eld+dsa8vz31mjm/uGV8UsUEuJI7MuxokMO7baw4Prxk7gIF/LPDnqBQjnw6wVdqC6Ulvp8/b2tuDOb944sDTVRv9t4Aq7jx0Ne433apCfNBRsfm4Im9u2XFQGBWzwbfdLg5Pcp09XRO+JxEPXdtP4srOMR29N/u4WZwcAv9smY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lhRh0Bgp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746644715; c=relaxed/simple;
+	bh=tGf22uvqp6ljOu2Ir9+zGkRohUqqKIu4eR/TQZCOymE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=eTWuc7P0WrraHvDFws/pzl/oWVdi1MqaZM7HUaqRkOJ7pLnwPu0G/3c7E2u+NQXD+mCyAIPBuLnV2dReBB8XXf7dG9qB4Ef6GwszHLatwNYVkios3x4mnN9Yo7ijnY8FDyM04flG0TnCUkJ3/pbh1EiIGR4pCazW5s4bytC+R0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=rEoZTyaA; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=NBfcRxKV; arc=none smtp.client-ip=202.12.124.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lhRh0Bgp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D653FC4CEE2;
-	Wed,  7 May 2025 19:04:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746644698;
-	bh=CRCiIABz/kFgdTeK7BF7RrV6jJF7IbV0KFOhjFLNr0o=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=lhRh0BgpAtDuVzNTHwJeeIpZV8B/fvJdYcifpSbxeLTlR4qy4A9r+y4pzZ8G8SwIq
-	 CSIscRiuqpRioY9xkq9ah4CoAGvtS52bMQn/IrpYa6s5DtvDZvPe/BGr119Socc93Q
-	 6LtsrF4ntJJJpjELtxY8qmqyAUP2mcsha+jHKZ9jLCxshFATtyP9oH1uaI3NbXkd2T
-	 T4TOR34KmE6bNQZ6kdLnw1vR5X9dn/jLMYyUyAhtAm/j9yxUdf+b+PD738FEq85M/s
-	 aUaS15NG0gL0jr7L671fyi3WPfSu8xB+Y4zsO83HLOjHfDFLXydEO+j5dFM8DnJwGI
-	 cE1Z69pdf4/1w==
-Message-ID: <e4cf6912-74fb-441f-ad05-82ea99d81020@kernel.org>
-Date: Wed, 7 May 2025 21:04:51 +0200
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="rEoZTyaA";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="NBfcRxKV"
+Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 6F5FC2540145;
+	Wed,  7 May 2025 15:05:11 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-01.internal (MEProxy); Wed, 07 May 2025 15:05:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm1; t=1746644711; x=
+	1746731111; bh=miF3+daArrTuj3CSFXguEC8BCvV5j/gzZMv3X2O2gSo=; b=r
+	EoZTyaAG5g9g0N8QP4X7Lxj4sMczAEsl5LK5mSGEkqJXj++lGB+70eRJlAMR4AJZ
+	Anb80apWUypeVz08rzEZBdi7siyjHIaD7KIuu8NELh7X8FBQGLe9TZGleXYDC4e2
+	H1npFsVGzT4/q+lkQ3VcxfvFfxM4nAa5TijjaqpqnSPrp9OiK5oQOyv+ZvrQ9h1X
+	qbQuiaaqBySCF7EQ/GosSnah5oFQHAVtw+sp7KP616Zw5rlHojgKIFYjK7qY92Qi
+	Xmo7PLOjd/wFy2upZ4/VRsMAMV3LbT6KweiUOOWeFQBh3/pK88MNuEG+Ma3tXnqj
+	wDMoSw4U61rtpkSF9z34g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
+	:x-me-sender:x-sasl-enc; s=fm3; t=1746644711; x=1746731111; bh=m
+	iF3+daArrTuj3CSFXguEC8BCvV5j/gzZMv3X2O2gSo=; b=NBfcRxKVCAZ4IRCq0
+	BP3uqt6XF1mTBasavpK6waX2NE2QKQ0WUBJ6e6YSZW7I1bt35BpZAHFOHfNJfapY
+	KBs4HvqrAxR9t9kzPXUOslJ6yTmIFBrq+ZHYxaSvr8wE4pzsCptefXkpRyGc/OQF
+	E3w2kgXoIIsga774pq+xvt626dj7OiVyunkxWQrYfv1uBftOLOtD7Jf2Gw4A5PZD
+	8YURdCjlY76VQFvLG7ILt6Wbx4Zps4+CxZLvjKAzh97AJ3NypUnnOlKlDrCrziW/
+	ehYZtrS+J0TTWiL9+iuEJhSczsEo9Mu3shcBHuLVW7E0TWPFIGdxxCH8njSmXMZc
+	iCfKQ==
+X-ME-Sender: <xms:564baO9cXRsKgWL88ATIBMpz63y5_0FiK5u80HH50XskxQQAZQ7Rjw>
+    <xme:564baOtnib5nZsBkdK_d3c3-i-UqEQkpWTAzUz87jydQGZB5QCjCV0j_q7YAE_-S5
+    PSVEZ7bSDFW0sKie4k>
+X-ME-Received: <xmr:564baEC54iEAu5suGkMYfiKym08J9JzIoLe9hWPPJMu-_CgddQmr1ppTqhyiESsl27F8m08g53awjjxZYaJm8bwm_fxTJyXGCZAX54E6qPOjrdgGQQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeejieehucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucgoteeftdduqddtud
+    culdduhedmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhho
+    mhepofgrrhhkucfrvggrrhhsohhnuceomhhpvggrrhhsohhnqdhlvghnohhvohesshhquh
+    gvsggsrdgtrgeqnecuggftrfgrthhtvghrnhepfedtvdejfeelffevhffgjeejheduteet
+    ieeguefgkefhhfegjeduueethefgvdffnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
+    hrrghmpehmrghilhhfrhhomhepmhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggs
+    rdgtrgdpnhgspghrtghpthhtohepledpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoh
+    epmhhpvggrrhhsohhnqdhlvghnohhvohesshhquhgvsggsrdgtrgdprhgtphhtthhopehh
+    uggvghhovgguvgesrhgvughhrghtrdgtohhmpdhrtghpthhtohepihhlphhordhjrghrvh
+    hinhgvnheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehikhgvphgrnhhh
+    tgesghhmrghilhdrtghomhdprhgtphhtthhopeifpggrrhhmihhnsehgmhigrdguvgdprh
+    gtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnuhigrdhinhhtvghl
+    rdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvg
+    hlrdhorhhgpdhrtghpthhtohepphhlrghtfhhorhhmqdgurhhivhgvrhdqgiekieesvhhg
+    vghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehisghmqdgrtghpihdquggvvhgvlh
+    eslhhishhtshdrshhouhhrtggvfhhorhhgvgdrnhgvth
+X-ME-Proxy: <xmx:564baGfM26v3VGdV5DtHMRY_lX2VN2TICP5_m3KWjHlnk5ojYnERhQ>
+    <xmx:564baDNWcqMmCUPnmZG1JSGM1HJGGEVhKhaLJDnLrYjQaeRDjIiPxA>
+    <xmx:564baAkiC4O8907VSsvQuYRfKnN_Hu6WzPECR6rFZcARipQ03p0VOg>
+    <xmx:564baFslO23bv4OBr7TYARf-8HPtVno7aIX09wLBnVGZo4DfjAsaow>
+    <xmx:564baDidLfvG1hNa2nTaix-moD3KMn_pP9gYnF6H8m_70HWaKvv3GiQ8>
+Feedback-ID: ibe194615:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 7 May 2025 15:05:10 -0400 (EDT)
+From: Mark Pearson <mpearson-lenovo@squebb.ca>
+To: mpearson-lenovo@squebb.ca
+Cc: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	ikepanhc@gmail.com,
+	W_Armin@gmx.de,
+	andriy.shevchenko@linux.intel.com,
+	linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	ibm-acpi-devel@lists.sourceforge.net
+Subject: [PATCH 2/2] platform/x86: export thinkpad_acpi handles
+Date: Wed,  7 May 2025 15:04:35 -0400
+Message-ID: <20250507190456.3004367-2-mpearson-lenovo@squebb.ca>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250507190456.3004367-1-mpearson-lenovo@squebb.ca>
+References: <mpearson-lenovo@squebb.ca>
+ <20250507190456.3004367-1-mpearson-lenovo@squebb.ca>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v3] xdp: Add helpers for head length, headroom,
- and metadata length
-To: Jon Kohler <jon@nutanix.com>,
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc: Zvi Effron <zeffron@riotgames.com>,
- Stanislav Fomichev <stfomichev@gmail.com>, Jason Wang <jasowang@redhat.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- John Fastabend <john.fastabend@gmail.com>, Simon Horman <horms@kernel.org>,
- "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
- Jacob Keller <jacob.e.keller@intel.com>
-References: <20250506125242.2685182-1-jon@nutanix.com>
- <aBpKLNPct95KdADM@mini-arch>
- <681b603ac8473_1e4406294a6@willemb.c.googlers.com.notmuch>
- <c8ad3f65-f70e-4c6e-9231-0ae709e87bfe@kernel.org>
- <CAC1LvL3nE14cbQx7Me6oWS88EdpGP4Gx2A0Um4g-Vuxk4m_7Rw@mail.gmail.com>
- <062e886f-7c83-4d46-97f1-ebbce3ca8212@kernel.org>
- <681b96abe7ae4_1f6aad294c9@willemb.c.googlers.com.notmuch>
- <B4F050C6-610F-4D04-88D7-7EF581DA7DF1@nutanix.com>
-Content-Language: en-US
-From: Jesper Dangaard Brouer <hawk@kernel.org>
-In-Reply-To: <B4F050C6-610F-4D04-88D7-7EF581DA7DF1@nutanix.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+Add API to be able to get the thinkpad_acpi various handles.
 
+Will use this to start pulling some of the thinkpad_acpi functionality
+into separate modules in the future.
 
-On 07/05/2025 19.47, Jon Kohler wrote:
-> 
-> 
->> On May 7, 2025, at 1:21 PM, Willem de Bruijn <willemdebruijn.kernel@gmail.com> wrote:
->>
->>
->> Jesper Dangaard Brouer wrote:
->>>
->>>
->>> On 07/05/2025 19.02, Zvi Effron wrote:
->>>> On Wed, May 7, 2025 at 9:37 AM Jesper Dangaard Brouer <hawk@kernel.org> wrote:
->>>>>
->>>>>
->>>>>
->>>>> On 07/05/2025 15.29, Willem de Bruijn wrote:
->>>>>> Stanislav Fomichev wrote:
->>>>>>> On 05/06, Jon Kohler wrote:
->>>>>>>> Introduce new XDP helpers:
->>>>>>>> - xdp_headlen: Similar to skb_headlen
->>>>>
->>>>> I really dislike xdp_headlen(). This "headlen" originates from an SKB
->>>>> implementation detail, that I don't think we should carry over into XDP
->>>>> land.
->>>>> We need to come up with something that isn't easily mis-read as the
->>>>> header-length.
->>>>
->>>> ... snip ...
->>>>
->>>>>>> + * xdp_headlen - Calculate the length of the data in an XDP buffer
->>>>
->>>> How about xdp_datalen()?
->>>
->>> Yes, I like xdp_datalen() :-)
->>
->> This is confusing in that it is the inverse of skb->data_len:
->> which is exactly the part of the data not in the skb head.
->>
->> There is value in consistent naming. I've never confused headlen
->> with header len.
->>
->> But if diverging, at least let's choose something not
->> associated with skbs with a different meaning.
-> 
-> Brainstorming a few options:
-> - xdp_head_datalen() ?
-> - xdp_base_datalen() ?
-> - xdp_base_headlen() ?
-> - xdp_buff_datalen() ?
-> - xdp_buff_headlen() ?
-> - xdp_datalen() ? (ZivE, JesperB)
-> - xdp_headlen() ? (WillemB, JonK, StanislavF, JacobK, DanielB)
-> 
+Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+---
+ drivers/platform/x86/lenovo/thinkpad_acpi.c | 18 ++++++++++++++++++
+ include/linux/thinkpad_acpi.h               | 17 +++++++++++++++++
+ 2 files changed, 35 insertions(+)
+ create mode 100644 include/linux/thinkpad_acpi.h
 
-What about keeping it really simple: xdp_buff_len() ?
+diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+index 7dd4abf47f61..0eb33b4c99cf 100644
+--- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
++++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+@@ -67,6 +67,7 @@
+ #include <linux/string.h>
+ #include <linux/string_helpers.h>
+ #include <linux/sysfs.h>
++#include <linux/thinkpad_acpi.h>
+ #include <linux/types.h>
+ #include <linux/uaccess.h>
+ #include <linux/units.h>
+@@ -606,6 +607,23 @@ TPACPI_HANDLE(hkey, ec, "\\_SB.HKEY",	/* 600e/x, 770e, 770x */
+  * ACPI helpers
+  */
+ 
++int tp_acpi_get_handle(enum tp_acpi_handle_id handle_id, acpi_handle *handle)
++{
++	switch (handle_id) {
++	case TP_ROOT_HANDLE:
++		*handle = root_handle;
++		return 0;
++	case TP_EC_HANDLE:
++		*handle = ec_handle;
++		return 0;
++	case TP_HKEY_HANDLE:
++		*handle = hkey_handle;
++		return 0;
++	}
++	return -ENODEV;
++}
++EXPORT_SYMBOL_GPL(tp_acpi_get_handle);
++
+ static int acpi_evalf(acpi_handle handle,
+ 		      int *res, char *method, char *fmt, ...)
+ {
+diff --git a/include/linux/thinkpad_acpi.h b/include/linux/thinkpad_acpi.h
+new file mode 100644
+index 000000000000..eb5273464658
+--- /dev/null
++++ b/include/linux/thinkpad_acpi.h
+@@ -0,0 +1,17 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++/*
++ * Thinkpad ACPI driver API
++ */
++
++#ifndef _TP_ACPI_H_
++#define _TP_ACPI_H_
++
++enum tp_acpi_handle_id {
++	TP_ROOT_HANDLE,
++	TP_EC_HANDLE,
++	TP_HKEY_HANDLE,
++};
++
++int tp_acpi_get_handle(enum tp_acpi_handle_id handle_id, acpi_handle *handle);
++
++#endif /* _TP_ACPI_H */
+-- 
+2.43.0
 
-Or even simpler: xdp_len() as the function documentation already
-describe this doesn't include frags.
-
-To Jon, you seems to be on a cleanup spree:
-For SKBs netstack have this diagram documented [1].  Which also explains
-the concept of a "head" buffer, which isn't a concept for XDP.  I would
-really like to see a diagram documenting both xdp_buff and xdp_frame
-data structures via ascii art, like the one for SKBs. (Hint, this is
-actually defined in the header file include/linux/skbuff.h, but
-converted to RST/HTML format.)
-
-[1] https://docs.kernel.org/networking/skbuff.html
-
---Jesper
