@@ -1,95 +1,106 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74DB91ACEC8;
-	Wed,  7 May 2025 22:11:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75981242928
+	for <linux-kernel@vger.kernel.org>; Wed,  7 May 2025 22:13:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746655877; cv=none; b=uFh81s5zDanIFh6nBFlAD9rVTjVd1Cg5SnFEhD7bQYFrZXbGQxRnq7LjG6xaSBULhyUCYFH2e2KPKrLmvt3Knc8ukZoZ1P453bj+m5e6wfnl111BmF7izpqmyLzS6oKEgKuY10Y1rueATVJZP2WwpiEosU9qF89D+CHFmyLzTpk=
+	t=1746655991; cv=none; b=rVrhuAC9ZkYCdK/ruCn1am4VHT7Tx5nJJnQ5VqpeI1utSW+3XKUGEe/90wpIOA6ociiiF4oWwSmzcl0+YJkQ113HN7T03JYpwgDlSHvi3lN35AuhRpttvujb038X4cDnNeSGguOpBblyrOoXU5UOPeG2kHqLg96XHn1RLRzi044=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746655877; c=relaxed/simple;
-	bh=tLCM/GoYG+APai4dUWJszRJSyFC4u2ftRrMwY8O+Gro=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Lxmx4aD3yEGY/JKyxkvLOGlSgDtDxBdAo7d/u7vYQdiaSgmbFmjQfo7dohtRim3HKnywLzlN3h+LVrD6Rk0v1yVxKRh7P87qpYmmDeCXLiT+xqH6wlYOMulDT8vJrYSxSusDkWEPjvyBn8yeZRv4o0m20kXGY1RMXixHmS4vBuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=Ocx+z8a1; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1746655991; c=relaxed/simple;
+	bh=YdWrWz3ZtdDCuUNMSZehjP/jint9xFF3sKvvIvZSRDo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jBx1K10XNoXQ3GQ7mb1Nm8wZkMbOQiDqs2JnJ2MA0zhEscn1cgGEd1P9ajQbiMIb4vxGi0DeQ6eNzfJfo4xQAO/7gctBrB7zGNy6ENE2abpyIRhmdiOlj16S1LwMRv85IigGWdrFKV7cag1KSqNn3vBM7mkXtywEhMMhDiJMpg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=GAkKNHv6; arc=none smtp.client-ip=209.85.128.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Ocx+z8a1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1746655870;
-	bh=i7/HWvhWvwN2iEfu4OMjEV+nd4l2NQi6u4l6OZGSROk=;
-	h=Date:From:To:Cc:Subject:From;
-	b=Ocx+z8a1r2OJIhaIDpEqreT15e+HJKrmIXEr5L2ty51UBTrvkxuWYaVW8WZ/+Tcov
-	 V+ZFpy8C4nluRnTuzVKJvP+mspjZBQkj5IExMC2awWRtK+d7PBMI/yopOBavKLx53U
-	 H8wv+BJ9eNNIROvCliExsd+o/9Q1zFortgZzNZw00qrPRVn3+MPu5+9/fu9NrK3d1y
-	 HUU5T42incIXwWyyzGTMYoB/pmR0ABPsnNRn0TUIJdZVtHdVzE6zVD0MCqidgNF25K
-	 WCmDQsvf2Q2Kw0k9M2/VxpZqxqcbN6RGM1hnn+atiWhxQAKwv9sAcIkfe/wq8UWW/X
-	 rTE7hR1P/kw+w==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Zt8by0sSMz4x8f;
-	Thu,  8 May 2025 08:11:09 +1000 (AEST)
-Date: Thu, 8 May 2025 08:11:08 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Corey Minyard <corey@minyard.net>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: Fixes tag needs some work in the ipmi tree
-Message-ID: <20250508081108.7fbdf523@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="GAkKNHv6"
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-708b9b5299eso3391477b3.3
+        for <linux-kernel@vger.kernel.org>; Wed, 07 May 2025 15:13:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1746655989; x=1747260789; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=S8icWB/oIrX/HgcLARDHS+J6ctl2NAQ5/4rcyDqZz2U=;
+        b=GAkKNHv6BvXVXyNgRgMDZq2sKPDLmdaTABIBlcDhF4jlFN+ARQ6EvA5MUnOqHzMkwF
+         G2s2gLuA5gbcG3GSQweaxllwxyw6bysGVyo7GwCB5QeHjVLIKZg3aW9zgSGd3vOXOZ0Z
+         3othp9xVTS/gm1GU4IPZPz/t1nju8YpIVRMhufUl7BnO4FFd6blItWIJNUm4tJbGOuHV
+         wsTkcJZe72orsO6nPQmtM0hRiCXMPzQuMo0hYt/FzzDGNJIG2uwcCj80O3VMd7MIWpW4
+         NHzaw19nr7/Q8jkLyTkKPut8ZwJmVkp3N4yb17E3nivUNjaQXuffr+FPVHW97V01Hb12
+         1pjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746655989; x=1747260789;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=S8icWB/oIrX/HgcLARDHS+J6ctl2NAQ5/4rcyDqZz2U=;
+        b=A7qVRIEJWhtNeHipPPn0S6m+vW89WJU2ubmNPi+RBRvhnIHQtV12wML6miO4peiJEO
+         BGFXMGyrAnl8yj9YM3Bf9r6yNnwf5FZKiHk/ORtpOrUIfbhGWQ5I62VrVhRIt8vruw4j
+         8ASz+qlZp6s6mNK9LSj1gq3kZE7XqW1flMnzyjcMrWu1PI/Kbyr5f6sP8aXaQWEy38Zn
+         Wsz7zxZ1ku2LEZOIpMJ1kBaQgioHyOMw71NioMQVRc5HITsZIgbXp5LpTc1NKxsaOOww
+         JzP2w8lYIr16UrlNbyUNvwlMlr/QmgSRWKxroEbI9YWz7T8sboda7TgWUY7jNBT9gTJM
+         KJoA==
+X-Forwarded-Encrypted: i=1; AJvYcCXxVAy98H1BIKwcQrEx2JawYyOAbTLp6q8AgLneb4pB1zd8M64l6Ra6lG7ImVUkxzG9Ed/FKVatitFR7Gs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwswUNFjCt5tRQL3rtBnUPtblM/GIVdD5BEtAh5STABkvNsClNF
+	TOCkSZshM2/vICi1Ja0OU/P9IXAz3Q6pjHjaSGJcMTIJxn7w4PPBn0DO3T6ORbK2UCIQvXXm0PB
+	g4a72OGFpvrFcfV1MXsgE4Kt8fecs14IcG8QB
+X-Gm-Gg: ASbGncuVa3gtOohbbXCco05cax+nQ7CdXuyoN6ocWQK6dVANeVdSbLpt1hzMDTdsrS7
+	LPQqbWLRR9R/GOP+TkasOYm55XDDQd69tdmQPBlXXvxNFxnQWBPw2wkK3BY38fxe+3gL3ceij89
+	i5rwOrWD1GUUU+c/go7BcE8w==
+X-Google-Smtp-Source: AGHT+IHTCvYdc4odka87i+iikS8LAezFf+6/A6Tt3o8F08N9z96rpAljDv13alcoYAwKbSxuL/6ejDA67pfnCk+qTL4=
+X-Received: by 2002:a05:690c:6012:b0:708:2604:4a10 with SMTP id
+ 00721157ae682-70a1da383f9mr73554767b3.18.1746655989211; Wed, 07 May 2025
+ 15:13:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/4mRuToLH5FEvtdig+vTYyL.";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-
---Sig_/4mRuToLH5FEvtdig+vTYyL.
-Content-Type: text/plain; charset=US-ASCII
+References: <20250507111204.2585739-1-alexjlzheng@tencent.com>
+ <CAHC9VhRx6SUqYHm7Nv6JKVzpANsnt-qPONcVqZh=hXOsWMqDBA@mail.gmail.com> <20250507212329.GY2023217@ZenIV>
+In-Reply-To: <20250507212329.GY2023217@ZenIV>
+From: Paul Moore <paul@paul-moore.com>
+Date: Wed, 7 May 2025 18:12:58 -0400
+X-Gm-Features: ATxdqUHJQjdJboeHkSfNksr62Yf4EKEM9bAdRYV7SYcjIV4GMSrXhAmnRg3v_RI
+Message-ID: <CAHC9VhScmdZLz7W=FN+mfWjf5LB7jbTJm5g-iy35hvvMgbKRfQ@mail.gmail.com>
+Subject: Re: [PATCH v2] securityfs: fix missing of d_delete() in securityfs_remove()
+To: Al Viro <viro@zeniv.linux.org.uk>
+Cc: alexjlzheng@gmail.com, Fan Wu <wufan@linux.microsoft.com>, jmorris@namei.org, 
+	serge@hallyn.com, greg@kroah.com, chrisw@osdl.org, 
+	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Jinliang Zheng <alexjlzheng@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On Wed, May 7, 2025 at 5:23=E2=80=AFPM Al Viro <viro@zeniv.linux.org.uk> wr=
+ote:
+> On Wed, May 07, 2025 at 04:10:11PM -0400, Paul Moore wrote:
+> > > In addition, securityfs_recursive_remove() avoids this problem by cal=
+ling
+> > > __d_drop() directly. As a non-recursive version, it is somewhat stran=
+ge
+> > > that securityfs_remove() does not clean up the deleted dentry.
+> > >
+> > > Fix this by adding d_delete() in securityfs_remove().
+> >
+> > I wondering why we don't simply replace all instances of
+> > securityfs_remove() with securityfs_recursive_remove(), or more likely
+> > just remove the existing securityfs_remove() and rename the
+> > securityfs_recursive_remove() to securityfs_remove().  Do any existing
+> > LSMs rely on securityfs_remove() *not* acting recursively?
+>
+> It's a bit trickier than that (there are interesting issues around
+> efi_secret_unlink() nonsense, as well as insane refcounting grabbing
+> two references where only one is needed to pin the damn thing)...
 
-In commit
+Fun :/
 
-  14bb8e8bbf92 ("ipmi: Fix parisc compilation")
-
-Fixes tag
-
-  Fixes: 54671f9a9d3 ("ipmi:si: Move SI type information into an info struc=
-ture")
-
-has these problem(s):
-
-  - SHA1 should be at least 12 digits long
-    This can be fixed for the future by setting core.abbrev to 12 (or
-    more) or (for git v2.11 or later) just making sure it is not set
-    (or set to "auto").
-
-Also, please keep all the commit message tags together at the end of
-the commit message.
+In that case, what do you think of the change suggested here by
+Jinliang Zheng where we add a d_delete() to the existing
+securityfs_remove() implementation?
 
 --=20
-Cheers,
-Stephen Rothwell
-
---Sig_/4mRuToLH5FEvtdig+vTYyL.
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgb2nwACgkQAVBC80lX
-0Gzzjwf9FzmT1JlapFu4yCs6xrn6aHhOPE7udoWzhP/OBy5LABu67L8U8+rn48B0
-7IlfI0lz1BC7Y02TrHau+RI/+hfo0whgM1KrpCXtDgdn23rUWlxJ7igHYNzrtwsw
-94lCzqR2X5wA73al0DWU5/ZpwA9J8t5D4JGPaWBb+XglRAGbxr+gxkG4SzaRkHtA
-G8V7is5oUR56aq2oh1cVABDyqFhY1nt/Nox6iIi73PdAi1gF6povGXaEADlXj2+o
-o+pRQYTPm8158HSIZOXEQ963T9wMSIltn9P8Ih5R7n4h2taNQYoDfE9G1FzhAEyC
-NbU1xnX8HQlGGxP7kPsLbA5NBITHTA==
-=/m5m
------END PGP SIGNATURE-----
-
---Sig_/4mRuToLH5FEvtdig+vTYyL.--
+paul-moore.com
