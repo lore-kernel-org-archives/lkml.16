@@ -1,48 +1,49 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 771F6213E81;
-	Wed,  7 May 2025 08:19:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24DAB1F8AC5;
+	Wed,  7 May 2025 08:20:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746605976; cv=none; b=qVOpV0YmPdruqq39LXwRt57dUHwGX/cdTRCiZt8Z6/VWJAI9zqKE81yUiEjmXBSdW6cVcuL1BaAO8hoeWXOeiawgO5t/6Z95FiBrjVDa4+vAjznLnOqh8w+VlsL1MutXoRsqQclYBSzzxlNzMf9rqbUf/PEzvkx7U3byr+I6i/Y=
+	t=1746606045; cv=none; b=bxNHPMWXc957e7pKvfOBhRSxicDb2hemE+j6MPvvgkD+E0n/fta7Rb9g3XClSuc8U2JJ4d07pIipyADDOTXVtkRpNF1PYITzki/0I7SijxVR7sqaFpMuOOUXR4MwjxJ2c5wplhemkpdJJEgG35tdGR5Euhba3SCv/8LWXCIpotE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746605976; c=relaxed/simple;
-	bh=jYMure5HfR9xY8R2EEl4NF4KRXBEPTw5WWnTNu58i84=;
+	s=arc-20240116; t=1746606045; c=relaxed/simple;
+	bh=OlyUclVXR6hk2oSEV8KIpXSo5oHLoJfFfFjwlpim1Hs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=PBRLdWq7eFW2UrJDQkM3/S+yXR/oLz9IBkIXYXqJXQXq9eUVgfV+wRYV9X0Ba/uYlU794g2KeU66vfJQZqsD8QkLLIfKXm9BLZ9FuxO4u0y+nGUnfAWo9nYd92EQ+LyRTCrlJMsa2Ag2rQE/euVgvNOLwgAhYNJq16VFOBu0XiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=abVzUuQd; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	 In-Reply-To:Content-Type; b=lhcp6D6uFQcfgp7Dk1OR7AvL+gBuMCyFi1jI5q6AY6d9Nh4fAoqzbwpDm6YXFv/nVoqwT+MPNanRJJC1TRkqpW88yEWnQF12ofKheBBHd5/uQZUjjdCdm82SbhiGXE1MhFTqc/3C8bnqnCUXQ+/2l9FosdBFmh+xRpchECwFEDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=w1/Nf1UI; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="abVzUuQd"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5471GtMt021520;
-	Wed, 7 May 2025 08:19:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	tTbDVIg2eElIftbWZJV9dE8wLCXNVHs67i9kLvRpjbk=; b=abVzUuQdZBgqTsoS
-	lXgbuiM1BGrJBL+CeOGOAg3tcbTqQynwpBmtNBgi9bCh+GWa7qz1oNAFiQT7x7nP
-	s6/gr33oQJc1tGXQOrRRW4fqwdjIHLRIyMBeiohf5/gRUz4L9T0B1+VlD71/ZBVa
-	GOnUOdWzTJCuSFQvkRM76IFygV6b2tf3i7dMpn6uo45ZyM/L0yvLF36SNQEDkTJ6
-	iG3cxlIBvZCz1COWwjiMiJD1XJ3gX7TUi73/JTKyEUsPC1Z7D9vOShWOn4P7aUea
-	Fot3GhcRFHng/nkj4Frgq3wXkvVko48Ehw9zVU3H62ooC4/q9mpjgQZI8QF0Aegt
-	JljGgA==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46fdwtur5e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 07 May 2025 08:19:21 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5478JLhH025949
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 7 May 2025 08:19:21 GMT
-Received: from [10.253.13.113] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 7 May 2025
- 01:19:14 -0700
-Message-ID: <8fef4573-0527-44d8-a481-f3271d9ffa33@quicinc.com>
-Date: Wed, 7 May 2025 16:19:12 +0800
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="w1/Nf1UI"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 5478KIxO756425
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 7 May 2025 03:20:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1746606018;
+	bh=dlQASdhbOgM7Ty1+g6FVadE+Ok2Wx4Q/VcJ+AXEeFm4=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=w1/Nf1UIMqKsI4mrIWhvls8Ww7lJsHfvs4TWwFU+ZHd7fIZDoWn4gaE1PxN8XhuTA
+	 RbVMlIEhtxKuaP7lcnn7PZiAe2j5uID7TpqdfcyswRdxd78mxKKSRvae4rYL4sHhV1
+	 Q18++KC7T4+DRulYOZd8hI6E/oBbR/vgNGbKm4fM=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 5478KIcm012894
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 7 May 2025 03:20:18 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 7
+ May 2025 03:20:17 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 7 May 2025 03:20:17 -0500
+Received: from [172.24.19.187] (lt5cd2489kgj.dhcp.ti.com [172.24.19.187])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 5478KD7n011099;
+	Wed, 7 May 2025 03:20:14 -0500
+Message-ID: <a6329e9d-409e-4f62-b26d-c4d0e49d772c@ti.com>
+Date: Wed, 7 May 2025 13:50:12 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,102 +51,244 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/6] dt-bindings: PCI: qcom,pcie-sa8775p: document
- qcs8300
-To: Krzysztof Kozlowski <krzk@kernel.org>
-CC: <vkoul@kernel.org>, <kishon@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <dmitry.baryshkov@linaro.org>, <neil.armstrong@linaro.org>,
-        <abel.vesa@linaro.org>, <manivannan.sadhasivam@linaro.org>,
-        <lpieralisi@kernel.org>, <kw@linux.com>, <bhelgaas@google.com>,
-        <andersson@kernel.org>, <konradybcio@kernel.org>,
-        <linux-phy@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <quic_qianyu@quicinc.com>,
-        <quic_krichai@quicinc.com>, <quic_vbadigan@quicinc.com>
-References: <20250507031019.4080541-1-quic_ziyuzhan@quicinc.com>
- <20250507031019.4080541-3-quic_ziyuzhan@quicinc.com>
- <20250507-quixotic-handsome-wallaby-4560e3@kuoka>
-From: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
-In-Reply-To: <20250507-quixotic-handsome-wallaby-4560e3@kuoka>
+Subject: Re: [PATCH 2/2] arm64: dts: ti: k3-j722s-evm: Add overlay for TEVI
+ OV5640
+To: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>, <nm@ti.com>,
+        <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>
+CC: <vaishnav.a@ti.com>, <r-donadkar@ti.com>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <jai.luthra@linux.dev>,
+        <linux-kernel@vger.kernel.org>, <u-kumar1@ti.com>
+References: <20250505115700.500979-1-y-abhilashchandra@ti.com>
+ <20250505115700.500979-3-y-abhilashchandra@ti.com>
+Content-Language: en-US
+From: "Kumar, Udit" <u-kumar1@ti.com>
+In-Reply-To: <20250505115700.500979-3-y-abhilashchandra@ti.com>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=VPPdn8PX c=1 sm=1 tr=0 ts=681b1789 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
- a=ikXEO7tarp_Agu9fICoA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: t4dsG6riyQwFXIemS2waFsuAtlPj0PpN
-X-Proofpoint-ORIG-GUID: t4dsG6riyQwFXIemS2waFsuAtlPj0PpN
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA3MDA3NiBTYWx0ZWRfXxFDs0yPDeK2U
- mygi0tHEanrGqf+6r37pOGJVacwBouQoo/4sVKuVT5yAUiXc51GtP0eWSm7ArUclIZP7m8tymjW
- pAc8g6S0VT1pE5ubDtlxTjFP8RZTmOpxzGi/9jtpmjTU9Y8kbrkE8hZ5hcWB83q68P6dySdTesX
- s36k3wTTfUJ28nqsg07fuHdM2rTR0NiGHm/P5lWHvB2O3TWGR830lBcGlxhHxcEkMs6Ofc3pqut
- jYj+a4XwPwAiKBvtwYlN+CqFzkbpFdISsHWLZ+L2ks5kVbjOZxF/fkzPQml5s4n/2SDxvADgbhK
- BQZzaGmF966yFla1gUNLYKXLppe4we87hVOVBAg/9c379DfSokJKIEqzDphgagbpjfnsCyvARfb
- WeBQQ5urynxy80kJ8zMEMv7ZUUNRUOsvrTFXNYe+8DL16IGTDiOme9gr5N2NY/yJdD8xCkKT
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-07_03,2025-05-06_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 spamscore=0 suspectscore=0 adultscore=0 mlxscore=0
- bulkscore=0 clxscore=1015 lowpriorityscore=0 impostorscore=0 malwarescore=0
- mlxlogscore=999 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505070076
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
+Hello Vaishnav/Abhilash
 
-On 5/7/2025 1:10 PM, Krzysztof Kozlowski wrote:
-> On Wed, May 07, 2025 at 11:10:15AM GMT, Ziyue Zhang wrote:
->> Add compatible for qcs8300 platform, with sa8775p as the fallback.
->>
->> Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
->> ---
->>   .../bindings/pci/qcom,pcie-sa8775p.yaml       | 26 ++++++++++++++-----
->>   1 file changed, 19 insertions(+), 7 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml
->> index efde49d1bef8..154bb60be402 100644
->> --- a/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml
->> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml
->> @@ -16,7 +16,12 @@ description:
->>   
->>   properties:
->>     compatible:
->> -    const: qcom,pcie-sa8775p
->> +    oneOf:
->> +      - const: qcom,pcie-sa8775p
->> +      - items:
->> +          - enum:
->> +              - qcom,pcie-qcs8300
->> +          - const: qcom,pcie-sa8775p
->>   
->>     reg:
->>       minItems: 6
->> @@ -45,7 +50,7 @@ properties:
->>   
->>     interrupts:
->>       minItems: 8
->> -    maxItems: 8
->> +    maxItems: 9
-> I don't understand why this is flexible for sa8775p. I assume this
-> wasn't tested or finished, just like your previous patch suggested.
+Thanks for patch
+
+On 5/5/2025 5:27 PM, Yemike Abhilash Chandra wrote:
+> From: Vaishnav Achath <vaishnav.a@ti.com>
 >
-> Please send complete bindings once you finish them or explain what
-> exactly changed in the meantime.
+> TechNexion TEVI OV5640 camera is a 5MP camera that can be used with
+> J722S EVM through the 22-pin CSI-RX connector. Add a reference overlay
+> for quad TEVI OV5640 modules on J722S EVM.
 >
-> Best regards,
-> Krzysztof
+> Signed-off-by: Vaishnav Achath <vaishnav.a@ti.com>
+> Signed-off-by: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
+> ---
+>   arch/arm64/boot/dts/ti/Makefile               |   4 +
+>   .../k3-j722s-evm-csi2-quad-tevi-ov5640.dtso   | 358 ++++++++++++++++++
+>   2 files changed, 362 insertions(+)
+>   create mode 100644 arch/arm64/boot/dts/ti/k3-j722s-evm-csi2-quad-tevi-ov5640.dtso
+>
+> diff --git a/arch/arm64/boot/dts/ti/Makefile b/arch/arm64/boot/dts/ti/Makefile
+> index 829a3b028466..76b750e4b8a8 100644
+> --- a/arch/arm64/boot/dts/ti/Makefile
+> +++ b/arch/arm64/boot/dts/ti/Makefile
+> @@ -123,6 +123,7 @@ dtb-$(CONFIG_ARCH_K3) += k3-j721s2-evm-pcie1-ep.dtbo
+>   dtb-$(CONFIG_ARCH_K3) += k3-am67a-beagley-ai.dtb
+>   dtb-$(CONFIG_ARCH_K3) += k3-j722s-evm.dtb
+>   dtb-$(CONFIG_ARCH_K3) += k3-j722s-evm-csi2-quad-rpi-cam-imx219.dtbo
+> [..]
+> diff --git a/arch/arm64/boot/dts/ti/k3-j722s-evm-csi2-quad-tevi-ov5640.dtso b/arch/arm64/boot/dts/ti/k3-j722s-evm-csi2-quad-tevi-ov5640.dtso
+> new file mode 100644
+> index 000000000000..537224ea60e3
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/ti/k3-j722s-evm-csi2-quad-tevi-ov5640.dtso
+> @@ -0,0 +1,358 @@
+> +// SPDX-License-Identifier: GPL-2.0-only OR MIT
+> +/*
+> + * 4 x TEVI OV5640 MIPI Camera module on RPI camera connector.
+> + *
+> + * Copyright (C) 2024 Texas Instruments Incorporated - https://www.ti.com/
+> + */
+> +
+> +/dts-v1/;
+> +/plugin/;
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include "k3-pinctrl.h"
+> +
+> +&{/} {
+> +	clk_ov5640_fixed: clock-24000000 {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <24000000>;
+> +	};
+> +
 
-Hi Krzysztof
-Global interrupt is optional in the PCIe driver. It is not present in 
-the SA8775p PCIe device tree node, but it is required for the QCS8300
-I did the DTBs and yaml checks before pushing this patch. This is how
-I became aware that `maxItem` needed to be changed to 9.
+Please check once , this is clock is 25M or 24M .
 
-BRs
-Ziyue
+As I see CDC6CE025000ADLXT/U28 is marked as 25M OSC
 
+> +	reg_2p8v: regulator-2p8v {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "2P8V";
+> +		regulator-min-microvolt = <2800000>;
+> +		regulator-max-microvolt = <2800000>;
+> +		vin-supply = <&vdd_sd_dv>;
+> +		regulator-always-on;
+> +	};
+> +
+> +	reg_1p8v: regulator-1p8v {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "1P8V";
+> +		regulator-min-microvolt = <1800000>;
+> +		regulator-max-microvolt = <1800000>;
+> +		vin-supply = <&vdd_sd_dv>;
+> +		regulator-always-on;
+> +	};
+> +
+> +	reg_3p3v: regulator-3p3v {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "3P3V";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		vin-supply = <&vdd_sd_dv>;
+> +		regulator-always-on;
+> +	};
+
+Sorry but on connector QSH-020-01-L-D-DP-A-K/J27, I see only 3v3 available.
+
+May be I am missing something here but how you are getting 1v8 and 2v8 
+supply
+
+
+> +};
+> +
+> +
+> +&main_pmx0 {
+> +	cam0_reset_pins_default: cam0-default-reset-pins {
+> +		pinctrl-single,pins = <
+> +			J722S_IOPAD(0x03c, PIN_OUTPUT, 7)
+> +		>;
+> +	};
+> +
+
+Please mark GPIO you are using for this in comment
+
+example
+
+J722S_IOPAD(0x1dc, PIN_INPUT, 0) /* (C22) MCAN0_RX */
+
+
+> +	cam1_reset_pins_default: cam1-default-reset-pins {
+> +		pinctrl-single,pins = <
+> +			J722S_IOPAD(0x044, PIN_OUTPUT, 7)
+> +		>;
+> +	};
+> +
+> +	cam2_reset_pins_default: cam2-default-reset-pins {
+> +		pinctrl-single,pins = <
+> +			J722S_IOPAD(0x04c, PIN_OUTPUT, 7)
+> +		>;
+> +	};
+> +
+> +	cam3_reset_pins_default: cam3-default-reset-pins {
+> +		pinctrl-single,pins = <
+> +			J722S_IOPAD(0x054, PIN_OUTPUT, 7)
+> +		>;
+> +	};
+> +};
+> +
+> +&exp1 {
+> +	p06-hog{
+> +		/* P06 - CSI01_MUX_SEL_2 */
+> +		gpio-hog;
+> +		gpios = <6 GPIO_ACTIVE_HIGH>;
+> +		output-high;
+> +		line-name = "CSI01_MUX_SEL_2";
+
+As per table on page 29
+
+CSI01_MUX_SEL_2 as low means, INPUT<-- A Port [CSI2 Connector]
+
+Please check, if you want to drive this line high or low
+
+> +	};
+> +
+> +	p07-hog{
+> +		/* P01 - CSI23_MUX_SEL_2 */
+> +		gpio-hog;
+> +		gpios = <7 GPIO_ACTIVE_HIGH>;
+> +		output-high;
+> +		line-name = "CSI23_MUX_SEL_2";
+> +	};
+
+Same as for CSI01_MUX_SEL_2, table on page-30
+
+
+> +};
+> +
+> +&main_gpio0 {
+> +	p15-hog {
+> +		/* P15 - CSI2_CAMERA_GPIO1 */
+> +		gpio-hog;
+> +		gpios = <15 GPIO_ACTIVE_HIGH>;
+> +		output-high;
+> +		line-name = "CSI2_CAMERA_GPIO1";
+> +	};
+> +
+> +	p17-hog {
+> +		/* P17 - CSI2_CAMERA_GPIO2 */
+> +		gpio-hog;
+> +		gpios = <17 GPIO_ACTIVE_HIGH>;
+> +		output-high;
+> +		line-name = "CSI2_CAMERA_GPIO2";
+> +	};
+> +
+> +	p19-hog {
+> +		/* P19 - CSI2_CAMERA_GPIO3 */
+> +		gpio-hog;
+> +		gpios = <19 GPIO_ACTIVE_HIGH>;
+> +		output-high;
+> +		line-name = "CSI2_CAMERA_GPIO3";
+> +	};
+> +
+> +	p21-hog {
+> +		/* P21 - CSI2_CAMERA_GPIO4 */
+> +		gpio-hog;
+> +		gpios = <21 GPIO_ACTIVE_HIGH>;
+> +		output-high;
+> +		line-name = "CSI2_CAMERA_GPIO4";
+> +	};
+
+Please check once if P21 and rest above are pin number of SOC ?
+
+
+> +};
+> +
+> +&pca9543_0 {
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +
+> +	i2c@0 {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		reg = <0>;
+> +
+> +		ov5640_0: camera@3c {
+> +			compatible = "ovti,ov5640";
+> +			reg = <0x3c>;
+> +			clocks = <&clk_ov5640_fixed>;
+> +			clock-names = "xclk";
+> +
+> +			AVDD-supply = <&reg_2p8v>;
+> +			DOVDD-supply = <&reg_1p8v>;
+> +			DVDD-supply = <&reg_3p3v>;
+> +
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&cam0_reset_pins_default>;
+
+do you think, you should have reset-gpios as property for this ov5640 
+and other nodes too ?
+
+
+> +
+> [..]
